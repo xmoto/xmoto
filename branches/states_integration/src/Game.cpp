@@ -427,6 +427,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 
   if(nKey == SDLK_RETURN && (((mod & KMOD_LALT) == KMOD_LALT) || ((mod & KMOD_RALT) == KMOD_RALT))) {
     drawLib->toogleFullscreen();
+    m_xmsession->setWindowed(m_xmsession->windowed() == false);
     return;
   }
 

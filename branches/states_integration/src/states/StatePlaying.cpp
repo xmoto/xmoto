@@ -138,7 +138,7 @@ bool StatePlaying::update()
 	  m_pGame->getDb()->stats_levelCompleted(m_pGame->getSession()->profile(),
 						 m_pGame->getMotoGame()->getLevelSrc()->Id(),
 						 m_pGame->getMotoGame()->Players()[0]->finishTime());
-	  m_pGame->updateLevelsListsOnEnd();
+	  //m_pGame->updateLevelsListsOnEnd(); to fix => send a message
 	}
 	m_pGame->getStateManager()->pushState(new StateFinished(m_pGame, this));
       } else if(v_all_dead) {

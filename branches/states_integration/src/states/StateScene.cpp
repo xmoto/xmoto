@@ -99,6 +99,10 @@ bool StateScene::update()
 
 bool StateScene::render()
 {
+  if (m_pGame->getSession()->ugly()) {
+    m_pGame->getDrawLib()->clearGraphics();
+  }
+
   try {
     if(autoZoom() == false){
       for(unsigned int i=0; i<m_pGame->getMotoGame()->getNumberCameras(); i++) {

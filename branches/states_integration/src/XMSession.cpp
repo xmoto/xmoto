@@ -234,6 +234,12 @@ void XMSession::save(UserConfig* m_Config) {
   m_Config->setBool("InitZoom",                     m_enableInitZoom);
   m_Config->setBool("DeathAnim",                    m_enableDeadAnimation);
   m_Config->setBool("AutosaveHighscoreReplays",     m_autosaveHighscoreReplays);
+  m_Config->setInteger("DisplayWidth",              m_resolutionWidth);
+  m_Config->setInteger("DisplayHeight",             m_resolutionHeight);
+  m_Config->setInteger("DisplayBPP",                m_bpp);
+  m_Config->setBool("DisplayWindowed",              m_windowed);
+  m_Config->setString("MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" :  m_menuGraphics == GFX_MEDIUM ? "Medium" : "High");
+  m_Config->setString("GameGraphics", m_gameGraphics == GFX_LOW ? "Low" :  m_gameGraphics == GFX_MEDIUM ? "Medium" : "High");
 }
 
 bool XMSession::isVerbose() const {

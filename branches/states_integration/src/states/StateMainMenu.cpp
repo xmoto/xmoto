@@ -1431,6 +1431,8 @@ void StateMainMenu::drawBackground() {
       drawlib->drawImage(Vector2f(w/2, h/2), Vector2f(w, h), m_pTitleBR);
     if(m_pTitleBL != NULL)
       drawlib->drawImage(Vector2f(0, h/2), Vector2f(w/2, h), m_pTitleBL);
+  } else {
+    m_pGame->getDrawLib()->clearGraphics();
   }
 }
 
@@ -2127,4 +2129,65 @@ void StateMainMenu::checkEventsOptions() {
   }
 
   // video tab
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:16BPP"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setBpp(16); 
+  }
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:32BPP"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setBpp(32); 
+  }
+
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
+  if(v_list->isClicked()) {
+    v_list->setClicked(false);
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
+      int nW,nH;
+
+      sscanf(pEntry->Text[0].c_str(),"%d X %d", &nW, &nH);
+      m_pGame->getSession()->setResolutionWidth(nW);
+      m_pGame->getSession()->setResolutionHeight(nH);
+    }
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:WINDOWED"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setWindowed(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENULOW"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setMenuGraphics(GFX_LOW);
+  }
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENUMEDIUM"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setMenuGraphics(GFX_MEDIUM);
+  }
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENUHIGH"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setMenuGraphics(GFX_HIGH);
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMELOW"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setGameGraphics(GFX_LOW);
+  }
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMEMEDIUM"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setGameGraphics(GFX_MEDIUM);
+  }
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMEHIGH"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setGameGraphics(GFX_HIGH);
+  }
 }

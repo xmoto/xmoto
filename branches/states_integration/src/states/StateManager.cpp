@@ -171,10 +171,6 @@ void StateManager::update()
 void StateManager::render()
 {
   if(doRender() == true){
-
-    if (m_pGame->getSession()->ugly()){
-      m_pGame->getDrawLib()->clearGraphics();
-    }
     m_pGame->getDrawLib()->resetGraphics();
 
     /* we have to draw states from the bottom of the stack to the top */
