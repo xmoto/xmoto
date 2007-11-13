@@ -106,6 +106,7 @@ void StateMainMenu::enter()
   updateControlsList();
   updateRoomsList();
   updateOptions();
+  updateAudioOptions();
 
   StateMenu::enter();
 }
@@ -947,7 +948,7 @@ UIWindow* StateMainMenu::makeWindowOptions_audio(GameApp* pGame, UIWindow* i_par
 
   v_button = new UIButton(v_window, 25, 61, GAMETEXT_8BIT, (v_window->getPosition().nWidth-40)/3, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
-  v_button->setID("8BIT");
+  v_button->setID("8BITS");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(10024);
   v_button->setContextHelp(CONTEXTHELP_8BIT);
@@ -955,7 +956,7 @@ UIWindow* StateMainMenu::makeWindowOptions_audio(GameApp* pGame, UIWindow* i_par
   v_button = new UIButton(v_window, 25+(v_window->getPosition().nWidth-40)/3, 61, GAMETEXT_16BIT,
 			  (v_window->getPosition().nWidth-40)/3, 28);    
   v_button->setType(UI_BUTTON_TYPE_RADIO);
-  v_button->setID("16BIT");
+  v_button->setID("16BITS");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(10024);
   v_button->setContextHelp(CONTEXTHELP_16BIT);
@@ -2013,9 +2014,9 @@ void StateMainMenu::updateOptions() {
   v_button->setChecked(m_pGame->getSession()->audioSampleRate() == 22050);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE44KHZ"));
   v_button->setChecked(m_pGame->getSession()->audioSampleRate() == 44100);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:8BIT"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:8BITS"));
   v_button->setChecked(m_pGame->getSession()->audioSampleBits() == 8);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:16BIT"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:16BITS"));
   v_button->setChecked(m_pGame->getSession()->audioSampleBits() == 16);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:MONO"));
   v_button->setChecked(m_pGame->getSession()->audioChannels() == 1);
@@ -2076,7 +2077,7 @@ void StateMainMenu::updateOptions() {
 
 void StateMainMenu::checkEventsOptions() {
   UIButton*    v_button;
-  UIList* v_list;
+  UIList*      v_list;
   std::string  v_id_level;
 
   // general tab
@@ -2190,4 +2191,85 @@ void StateMainMenu::checkEventsOptions() {
     v_button->setClicked(false);
     m_pGame->getSession()->setGameGraphics(GFX_HIGH);
   }
+
+  // sound
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_AUDIO"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setEnableAudio(v_button->getChecked());
+    updateAudioOptions();
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE11KHZ"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setAudioSampleRate(11025);
+  }
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE22KHZ"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setAudioSampleRate(22050);
+  }
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE44KHZ"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setAudioSampleRate(44100);
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:8BITS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setAudioSampleBits(8);
+  }
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:16BITS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setAudioSampleBits(16);
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:MONO"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setAudioChannels(1);
+  }
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:STEREO"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setAudioChannels(2);
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setEnableEngineSound(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setEnableMenuMusic(v_button->getChecked());
+  }
+}
+
+void StateMainMenu::updateAudioOptions() {
+  UIButton* v_button;
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE11KHZ"));
+  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE22KHZ"));
+  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE44KHZ"));
+  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:8BITS"));
+  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:16BITS"));
+  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:MONO"));
+  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:STEREO"));
+  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND"));
+  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
+  v_button->enableWindow(m_pGame->getSession()->enableAudio());
 }

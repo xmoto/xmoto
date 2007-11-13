@@ -91,7 +91,8 @@ class StateMainMenu : public StateMenu {
   void createRoomsList(UIList *pList);
   void updateRoomsList();
   void updateOptions();
-  
+  void updateAudioOptions();
+
   /* Main menu background / title */
   Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;      
   void drawBackground(); 

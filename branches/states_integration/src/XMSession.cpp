@@ -240,6 +240,12 @@ void XMSession::save(UserConfig* m_Config) {
   m_Config->setBool("DisplayWindowed",              m_windowed);
   m_Config->setString("MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" :  m_menuGraphics == GFX_MEDIUM ? "Medium" : "High");
   m_Config->setString("GameGraphics", m_gameGraphics == GFX_LOW ? "Low" :  m_gameGraphics == GFX_MEDIUM ? "Medium" : "High");
+  m_Config->setBool("AudioEnable",                  m_enableAudio);
+  m_Config->setInteger("AudioSampleRate",           m_audioSampleRate);
+  m_Config->setInteger("AudioSampleBits",           m_audioSampleBits);
+  m_Config->setString("AudioChannels",              m_audioChannels == 1 ? "Mono" : "Stereo");
+  m_Config->setBool("EngineSoundEnable",            m_enableAudioEngine);
+  m_Config->setBool("MenuMusic",                    m_enableMenuMusic);
 }
 
 bool XMSession::isVerbose() const {
