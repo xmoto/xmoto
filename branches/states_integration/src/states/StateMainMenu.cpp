@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "LevelsManager.h"
 #include "helpers/Log.h"
 #include "helpers/System.h"
+#include "Sound.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -89,7 +90,7 @@ StateMainMenu::~StateMainMenu()
 
 void StateMainMenu::enter()
 {
-  m_pGame->playMusic("");
+  m_pGame->playMusic("menu1");
   
   createGUIIfNeeded(m_pGame);
   m_GUI = m_sGUI;
@@ -2206,7 +2207,16 @@ void StateMainMenu::checkEventsOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_AUDIO"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
+
+    bool v_before = m_pGame->getSession()->enableAudio();
     m_pGame->getSession()->setEnableAudio(v_button->getChecked());
+    if(v_before != v_button->getChecked()) {
+      if(m_pGame->getSession()->enableAudio()) {
+	m_pGame->playMusic("menu1");
+      } else {
+	m_pGame->playMusic("");
+      }
+    }
     updateAudioOptions();
   }
 
@@ -2257,7 +2267,16 @@ void StateMainMenu::checkEventsOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
+
+    bool v_before = m_pGame->getSession()->enableMenuMusic();
     m_pGame->getSession()->setEnableMenuMusic(v_button->getChecked());
+    if(v_before != v_button->getChecked()) {
+      if(m_pGame->getSession()->enableMenuMusic()) {
+	m_pGame->playMusic("menu1");
+      } else {
+	m_pGame->playMusic("");
+      }
+    }
   }
 }
 

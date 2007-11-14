@@ -357,11 +357,7 @@ void GameApp::_Wait()
     _UpdateSettings();
 
     /* Init sound system */
-    if(m_xmsession->useGraphics()) {
-      Sound::init(&m_Config);
-      if(!Sound::isEnabled()) {
-      }    
-    }
+    Sound::init(m_xmsession);
       
     /* Init renderer */
     if(m_xmsession->useGraphics()) {
@@ -490,19 +486,17 @@ void GameApp::_Wait()
     if(m_xmsession->useGraphics()) {  
       _UpdateLoadingScreen((1.0f/9.0f) * 0,GAMETEXT_LOADINGSOUNDS);
       
-      if(Sound::isEnabled()) {
-        /* Load sounds */
-	try {
-	  for(unsigned int i=0; i<m_theme.getSoundsList().size(); i++) {
-	    Sound::loadSample(m_theme.getSoundsList()[i]->FilePath());
-	  }
-	} catch(Exception &e) {
-	  Logger::Log("*** Warning *** : %s\n", e.getMsg().c_str());
-	  /* hum, not cool */
+      /* Load sounds */
+      try {
+	for(unsigned int i=0; i<m_theme.getSoundsList().size(); i++) {
+	  Sound::loadSample(m_theme.getSoundsList()[i]->FilePath());
 	}
-	
-        Logger::Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
+      } catch(Exception &e) {
+	Logger::Log("*** Warning *** : %s\n", e.getMsg().c_str());
+	/* hum, not cool */
       }
+	
+      Logger::Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
 
       /* Find all files in the textures dir and load them */     
       UITexture::setApp(this);
@@ -662,6 +656,7 @@ void GameApp::_Wait()
     m_xmsession->save(&m_Config);
 
     Sound::uninit();
+
     delete m_Renderer;
     delete m_sysMsg;
 

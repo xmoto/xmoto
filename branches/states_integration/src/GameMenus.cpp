@@ -1927,23 +1927,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     m_Config.setBool("MenuMusic",pEnableMusicButton->getChecked());
     m_xmsession->setEnableMenuMusic(pEnableMusicButton->getChecked());
-
-    if(Sound::isEnabled()) {
-      if(pEnableAudioButton->getChecked() && pEnableMusicButton->getChecked()
-	 && Sound::isPlayingMusic() == false) {
-	try {
-	  Sound::playMusic(m_theme.getMusic("menu1")->FilePath());
-	} catch(Exception &e) {
-	  /* hum, no music */
-	}
-      } else {
-	if((pEnableAudioButton->getChecked() == false || pEnableMusicButton->getChecked() == false)
-	   && Sound::isPlayingMusic()) {
-	  Sound::stopMusic();
-	}
-      }
-    }
-      
+//
+//    if(Sound::isEnabled()) {
+//      if(pEnableAudioButton->getChecked() && pEnableMusicButton->getChecked()
+//	 && Sound::isPlayingMusic() == false) {
+//	try {
+//	  Sound::playMusic(m_theme.getMusic("menu1")->FilePath());
+//	} catch(Exception &e) {
+//	  /* hum, no music */
+//	}
+//      } else {
+//	if((pEnableAudioButton->getChecked() == false || pEnableMusicButton->getChecked() == false)
+//	   && Sound::isPlayingMusic()) {
+//	  Sound::stopMusic();
+//	}
+//      }
+//    }
+//      
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
     UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD");
     UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP");

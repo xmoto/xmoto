@@ -23,7 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 #include "VFileIO.h"
-#include "UserConfig.h"
+
+class XMSession;
 
 	/*===========================================================================
 	Sound sample
@@ -66,7 +67,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   class Sound {
     public:
       /* Static functions */
-      static void init(UserConfig *pConfig);
+      static void init(XMSession* i_session);
       static void uninit(void);
       
       static void update(void);
@@ -78,7 +79,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       static void playSampleByName(const std::string &Name,float fVolume=1.0f);
       
       /* Data interface */
-      static bool isEnabled(void) {return m_bEnable;}
       static int getSampleRate(void) {return m_nSampleRate;}
       static int getSampleBits(void) {return m_nSampleBits;}
       static int getChannels(void) {return m_nChannels;}
@@ -99,7 +99,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       static int RWops_close(SDL_RWops *context);      
     
       /* Data */
-      static bool m_bEnable;               /* From config: AudioEnable */
       static int m_nSampleRate;            /* From config: AudioSampleRate */
       static int m_nSampleBits;            /* From config: AudioSampleBits */
       static int m_nChannels;              /* From config: AudioChannels */

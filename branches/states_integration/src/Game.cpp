@@ -1567,7 +1567,7 @@ void GameApp::requestEnd() {
 }
 
 void GameApp::playMusic(const std::string& i_music) {
-  if(m_xmsession->enableMenuMusic() && Sound::isEnabled()) {
+  if( (m_xmsession->enableAudio() && m_xmsession->enableMenuMusic()) || i_music == "") {
     if(i_music != m_playingMusic) {
       try {
 	if(i_music == "") {
