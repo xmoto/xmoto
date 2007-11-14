@@ -75,7 +75,8 @@ StateMainMenu::StateMainMenu(GameApp* pGame,
   if(pSprite != NULL) {
     m_pTitleTR = pSprite->getTexture(false, true, FM_LINEAR);
   }
-  
+
+  m_require_updateFavoriteLevelsList = false;
 }
 
 StateMainMenu::~StateMainMenu()
@@ -119,6 +120,11 @@ void StateMainMenu::leave()
 void StateMainMenu::enterAfterPop()
 {
   StateMenu::enterAfterPop();
+
+  if(m_require_updateFavoriteLevelsList) {
+    updateFavoriteLevelsList();
+    m_require_updateFavoriteLevelsList = false;
+  }
 }
 
 void StateMainMenu::leaveAfterPush()
@@ -1518,12 +1524,17 @@ void StateMainMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
       m_commands.push("REPLAYS_DELETE");
     }
   }
+}
 
+void StateMainMenu::send(const std::string& i_id, const std::string& i_message) {
+  if(i_id == "STATE_MANAGER" && i_message == "FAVORITES_UPDATED") {
+    m_require_updateFavoriteLevelsList = true;
+  }
 }
 
 void StateMainMenu::executeOneCommand(std::string cmd)
 {
-  if(cmd == "UPDATEPROFILE"){
+  if(cmd == "UPDATEPROFILE") {
     updateProfile();
 
     // update packs
@@ -1559,7 +1570,6 @@ void StateMainMenu::executeOneCommand(std::string cmd)
       }
     }
   }
-
 }
 
 void StateMainMenu::updateLevelsLists() {

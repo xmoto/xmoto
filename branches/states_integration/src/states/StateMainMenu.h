@@ -54,6 +54,7 @@ class StateMainMenu : public StateMenu {
   static void clean();
   
   virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  virtual void send(const std::string& i_id, const std::string& i_message);
   virtual void executeOneCommand(std::string cmd);
 
   protected:
@@ -110,6 +111,8 @@ class StateMainMenu : public StateMenu {
   void checkEventsReplays();
   void checkEventsMainWindow();
   void checkEventsOptions();
+
+  bool m_require_updateFavoriteLevelsList;
 };
 
 #endif

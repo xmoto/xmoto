@@ -134,6 +134,7 @@ void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
     
   case SDLK_F3:
     m_pGame->switchLevelToFavorite(m_pGame->getMotoGame()->getLevelSrc()->Id(), true);
+    m_pGame->getStateManager()->sendAsynchronousMessage("FAVORITES_UPDATED");
     break;
     
   case SDLK_PAGEUP:
