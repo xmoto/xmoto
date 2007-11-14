@@ -36,28 +36,16 @@ UpdateLevelsThread::~UpdateLevelsThread()
 
 int UpdateLevelsThread::realThreadFunction()
 {
-  /*
-  for(int i=0; i<10; i++){
-    Logger::Log("UpdateLevelsThread::realThreadFunction %d", i);
-    SDL_Delay(500);
-  }
-  */
-
-  //_SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_InfoMsgBoxRect);
-  m_currentOperation = GAMETEXT_RELOADINGLEVELS;
-
-  m_pGame->getLevelsManager()->reloadLevelsFromLvl(m_pGame->getDb(), m_pGame);
+  setThreadCurrentOperation(GAMETEXT_RELOADINGLEVELS);
+  m_pGame->getLevelsManager()->reloadLevelsFromLvl(m_pDb, m_pGame);
   m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_LEVELS_LISTS");
 
-  //_SimpleMessage(GAMETEXT_RELOADINGREPLAYS, &m_InfoMsgBoxRect);
-  m_currentOperation = GAMETEXT_RELOADINGREPLAYS;
-
-  m_pGame->initReplaysFromDir();
+  setThreadCurrentOperation(GAMETEXT_RELOADINGREPLAYS);
+  m_pGame->initReplaysFromDir(m_pDb);
   m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_REPLAYS_LISTS");
   
-  m_currentOperation = "Reloading themes";
-
-  m_pGame->getThemeChoicer()->initThemesFromDir(m_pGame->getDb());
+  setThreadCurrentOperation("Reloading themes");
+  m_pGame->getThemeChoicer()->initThemesFromDir(m_pDb);
   m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
 
   return 0;

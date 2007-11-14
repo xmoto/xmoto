@@ -55,6 +55,7 @@ public:
 protected:
   virtual void checkEvents();
   virtual void updateGUI() = 0;
+  bool m_threadStarted;
 
 private:
   /* GUI */

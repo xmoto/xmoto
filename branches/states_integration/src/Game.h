@@ -196,7 +196,7 @@ class StateManager;
       std::string determineNextLevel(const std::string& i_id_level);
       std::string determinePreviousLevel(const std::string& i_id_level);
 
-      void initReplaysFromDir();
+      void initReplaysFromDir(xmDatabase* threadDb = NULL);
       void _UpdateThemesLists(void);
 
    protected:
@@ -410,7 +410,7 @@ class StateManager;
       /* Main loop utility functions */
       void _PreUpdateGUI(void);
 
-      void addReplay(const std::string& i_file);
+      void addReplay(const std::string& i_file, xmDatabase* threadDb = NULL);
 
       static UIFrame* makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config);
 

@@ -76,6 +76,19 @@ xmDatabase::xmDatabase(const std::string& i_dbFile,
     setXmDbBinPackCheckSum(i_binPackCheckSum);
   }
 }
+
+xmDatabase::xmDatabase(const std::string& i_dbFile)
+{
+  if(sqlite3_open(i_dbFile.c_str(), &m_db) != 0){
+    throw Exception("Unable to open the database ("
+		    + i_dbFile
+		    + ") : "
+		    + sqlite3_errmsg(m_db));
+  }
+
+  sqlite3_trace(m_db, sqlTrace, NULL);
+  createUserFunctions();
+}
  
 xmDatabase::~xmDatabase() {
   sqlite3_close(m_db);

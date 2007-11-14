@@ -36,6 +36,7 @@ StateUpdate::StateUpdate(GameApp* pGame,
 	    pGame)
 {
   m_name  = "StateUpdate";
+  m_threadStarted = false;
 }
 
 StateUpdate::~StateUpdate()
@@ -85,13 +86,13 @@ bool StateUpdate::render()
 
 void StateUpdate::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  StateMenu::keyDown(nKey, mod, nChar);
+  // don't call the parent keydown function. 
+  // because it would allow to press F5 again for example
   checkEvents();
 }
 
 void StateUpdate::keyUp(int nKey,   SDLMod mod)
 {
-  StateMenu::keyUp(nKey, mod);
 }
 
 void StateUpdate::mouseDown(int nButton)
@@ -132,11 +133,14 @@ void StateUpdate::createGUIIfNeeded(GameApp* pGame)
 		      drawLib->getDispHeight());
 
   /* Initialize level info viewer */
-  int x = drawLib->getDispWidth()/2-350;
-  int y = drawLib->getDispHeight()/2-250;
+  int width = drawLib->getDispWidth();
+  int height= drawLib->getDispHeight();
+
+  int x = width / 8;
+  int y = height / 4;
   std::string caption = "";
-  int nWidth  = 700;
-  int nHeight = 500;
+  int nWidth  = width * 3/4;
+  int nHeight = height / 2;
 
   UIFrame  *v_frame;
   v_frame = new UIFrame(m_sGUI, x, y, caption, nWidth, nHeight); 

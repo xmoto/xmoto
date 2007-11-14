@@ -37,6 +37,7 @@ class xmDatabase {
 	     const std::string& i_userDir,
 	     const std::string& i_binPackCheckSum,
 	     XmDatabaseUpdateInterface *i_interface = NULL);
+  xmDatabase(const std::string& i_dbFileUTF8);
   ~xmDatabase();
 
   /* RULE:

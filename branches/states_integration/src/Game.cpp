@@ -1378,32 +1378,48 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     return m_bCreditsModeActive;
   }
 
-  void GameApp::initReplaysFromDir() {
+  void GameApp::initReplaysFromDir(xmDatabase* threadDb) {
     ReplayInfo* rplInfos;
     std::vector<std::string> ReplayFiles;
     ReplayFiles = FS::findPhysFiles("Replays/*.rpl");
+    xmDatabase* pDb = NULL;
 
-    m_db->replays_add_begin();
+    if(threadDb == NULL){
+      pDb = m_db;
+    } else {
+      pDb = threadDb;
+    }
+
+    pDb->replays_add_begin();
 
     for(unsigned int i=0; i<ReplayFiles.size(); i++) {
       try {
 	/* pump events to so that windows don't think the appli is crashed */
-	SDL_PumpEvents();
+	if(threadDb == NULL){
+	  SDL_PumpEvents();
+	}
 
 	if(FS::getFileBaseName(ReplayFiles[i]) == "Latest") {
 	  continue;
 	}
-	addReplay(ReplayFiles[i]);
+	addReplay(ReplayFiles[i], pDb);
 
       } catch(Exception &e) {
 	// ok, forget this replay
       }
     }
-    m_db->replays_add_end();
+    pDb->replays_add_end();
   }
 
-  void GameApp::addReplay(const std::string& i_file) {
+  void GameApp::addReplay(const std::string& i_file, xmDatabase* threadDb) {
     ReplayInfo* rplInfos;
+    xmDatabase* pDb = NULL;
+
+    if(threadDb == NULL){
+      pDb = m_db;
+    } else {
+      pDb = threadDb;
+    }
     
     rplInfos = Replay::getReplayInfos(FS::getFileBaseName(i_file));
     if(rplInfos == NULL) {
@@ -1411,11 +1427,11 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     }
 
     try {
-      m_db->replays_add(rplInfos->Level,
-			rplInfos->Name,
-			rplInfos->Player,
-			rplInfos->IsFinished,
-			rplInfos->fFinishTime);
+      pDb->replays_add(rplInfos->Level,
+		       rplInfos->Name,
+		       rplInfos->Player,
+		       rplInfos->IsFinished,
+		       rplInfos->fFinishTime);
 
     } catch(Exception &e2) {
       delete rplInfos;
