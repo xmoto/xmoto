@@ -1394,11 +1394,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 
     for(unsigned int i=0; i<ReplayFiles.size(); i++) {
       try {
-	/* pump events to so that windows don't think the appli is crashed */
-	if(threadDb == NULL){
-	  SDL_PumpEvents();
-	}
-
 	if(FS::getFileBaseName(ReplayFiles[i]) == "Latest") {
 	  continue;
 	}
