@@ -2,6 +2,7 @@ X-Moto 0.4.0 2007-
 -----------------------
  * patch by Antti Harri and Lasse Collin (extracted from extreme tuxracer) to manage maximum texture size load
  * filter on list is for all columns
+ * new "length" packs by Mig
 	
 X-Moto 0.3.4 2007-10-17
 -----------------------
