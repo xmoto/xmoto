@@ -573,7 +573,43 @@ void LevelsManager::makePacks(xmDatabase *i_db,
   v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
   v_pack->setDescription(VPACKAGENAME_DESC_HARDEST_LEVELS);
   m_levelsPacks.push_back(v_pack);
-
+  
+  /* short levels */
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_SHORT_LEVELS),
+                          "SELECT a.id_level AS id_level, a.name AS name, b.finishTime AS sort_field "
+                          "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
+                          "AND b.finishTime < 25");                    
+  v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
+  v_pack->setDescription(VPACKAGENAME_DESC_SHORT_LEVELS);
+  m_levelsPacks.push_back(v_pack);
+  
+  /* Medium levels */
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_MEDIUM_LEVELS),
+                          "SELECT a.id_level AS id_level, a.name AS name, b.finishTime AS sort_field "
+                          "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
+                          "AND b.finishTime >= 25 AND b.finishTime < 60");
+  v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
+  v_pack->setDescription(VPACKAGENAME_DESC_MEDIUM_LEVELS);
+  m_levelsPacks.push_back(v_pack);
+  
+  /* Long levels*/
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_LONG_LEVELS),
+                          "SELECT a.id_level AS id_level, a.name AS name, b.finishTime AS sort_field "
+                          "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
+                          "AND b.finishTime >= 60 AND b.finishTime < 120");
+  v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
+  v_pack->setDescription(VPACKAGENAME_DESC_LONG_LEVELS);
+  m_levelsPacks.push_back(v_pack);
+  
+  /* Very long levels*/
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_VERY_LONG_LEVELS),
+                          "SELECT a.id_level AS id_level, a.name AS name, b.finishTime AS sort_field "
+                          "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
+                          "AND b.finishTime >= 120");
+  v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
+  v_pack->setDescription(VPACKAGENAME_DESC_VERY_LONG_LEVELS);
+  m_levelsPacks.push_back(v_pack);
+  
   /* standard packs */
   v_result = i_db->readDB("SELECT DISTINCT packName FROM levels ORDER BY UPPER(packName);",
 			  nrow);
