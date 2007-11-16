@@ -88,6 +88,11 @@ class XMSession;
       static void stopMusic();
       static bool isPlayingMusic();
 
+      static void setActiv(bool i_value);
+      static bool isActiv();
+
+      static bool m_activ;
+
     private:
       /* SDL audio callback */
       //static void audioCallback(void *pvUserData,unsigned char *pcStream,int nLen); 
@@ -110,9 +115,6 @@ class XMSession;
       static std::vector<SoundSample *> m_Samples;
       
       static Mix_Music *m_pMenuMusic;
-
-      /* Helpers */
-      //static int _GetFreePlayerSlot(void);
   };
 
 #endif

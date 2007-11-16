@@ -219,12 +219,17 @@ void XMSession::save(UserConfig* m_Config) {
   m_Config->setBool("MultiStopWhenOneFinishes",     m_multiStopWhenOneFinishes);
   m_Config->setBool("ContextHelp",                  m_enableContextHelp);
   m_Config->setString("Theme",                      m_theme);
+  m_Config->setBool("WebHighscores",                m_www);
   m_Config->setBool("CheckNewLevelsAtStartup",      m_checkNewLevelsAtStartup);
   m_Config->setBool("CheckHighscoresAtStartup",     m_checkNewHighscoresAtStartup);
   m_Config->setBool("ShowInGameWorldRecord",        m_showHighscoreInGame);
   m_Config->setString("WebHighscoreUploadLogin",    m_uploadLogin);
   m_Config->setString("WebHighscoreUploadPassword", m_uploadPassword);
   m_Config->setString("WebHighscoresIdRoom",        m_idRoom);
+  m_Config->setBool("EnableGhost",           	    m_enableGhosts);
+  m_Config->setBool("GhostStrategy_MYBEST",  	    m_ghostStrategy_MYBEST);
+  m_Config->setBool("GhostStrategy_THEBEST", 	    m_ghostStrategy_THEBEST);
+  m_Config->setBool("GhostStrategy_BESTOFROOM",     m_ghostStrategy_BESTOFROOM);
   m_Config->setBool("ShowGhostTimeDiff",            m_showGhostTimeDifference);
   m_Config->setBool("GhostMotionBlur",              m_ghostMotionBlur);
   m_Config->setBool("DisplayGhostInfo",             m_showGhostsInfos);

@@ -30,7 +30,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 int Sound::m_nSampleRate;            
 int Sound::m_nSampleBits;            
 int Sound::m_nChannels;              
-      
+bool Sound::m_activ;
+
 std::vector<SoundSample *> Sound::m_Samples;
 Mix_Music *Sound::m_pMenuMusic;
 
@@ -68,7 +69,7 @@ void Sound::init(XMSession* i_session) {
     Logger::Log("** Warning ** : failed to initialize SDL audio (%s)",SDL_GetError());
     return;
   }
-      
+ 
   int nFormat;
   if(m_nSampleBits == 8) nFormat = AUDIO_S8;
   else nFormat = AUDIO_S16;
@@ -81,6 +82,7 @@ void Sound::init(XMSession* i_session) {
   
   Mix_AllocateChannels(64);
   m_pMenuMusic = NULL;
+  m_activ = i_session->enableAudio();
 }
   
 void Sound::uninit(void) {  
@@ -171,6 +173,8 @@ SoundSample *Sound::loadSample(const std::string &File) {
 }
   
 void Sound::playSample(SoundSample *pSample,float fVolume) {
+  if(Sound::isActiv() == false) return;
+
   if(pSample == NULL) return;
 
   /* WHY OH WHY does this pause the game thread for 200-300 ms on linux??? :( */
@@ -189,6 +193,8 @@ SoundSample *Sound::findSample(const std::string &File) {
 }
 
 void Sound::playSampleByName(const std::string &Name,float fVolume) {
+  if(Sound::isActiv() == false) return;
+
   SoundSample *pSample = findSample(Name);
   if(pSample != NULL) {
     playSample(pSample,fVolume);
@@ -199,6 +205,8 @@ void Sound::playSampleByName(const std::string &Name,float fVolume) {
   Engine sound simulator
   ==============================================================================*/
 void EngineSoundSimulator::update(float fTime) {
+  if(Sound::isActiv() == false) return;
+
   if(fTime < m_fLastBangTime) m_fLastBangTime = fTime; /* manage back in the past */
   
   if(m_fRPM > 100.0f) {
@@ -220,6 +228,8 @@ void EngineSoundSimulator::update(float fTime) {
 }
 
 void Sound::playMusic(std::string i_musicPath) {
+  if(Sound::isActiv() == false) return;
+
   if(Mix_PlayingMusic() || Mix_FadingMusic()) {
     stopMusic();
   }
@@ -259,3 +269,14 @@ bool Sound::isPlayingMusic() {
   return Mix_PlayingMusic();
 }
 
+void Sound::setActiv(bool i_value) {
+  m_activ = i_value;
+
+  if(i_value == false && isPlayingMusic()) {
+    stopMusic();
+  }
+}
+
+bool Sound::isActiv() {
+  return m_activ;
+}

@@ -93,6 +93,8 @@ class StateMainMenu : public StateMenu {
   void updateRoomsList();
   void updateOptions();
   void updateAudioOptions();
+  void updateWWWOptions();
+  void updateGhostsOptions();
 
   /* Main menu background / title */
   Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;      

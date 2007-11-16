@@ -109,6 +109,8 @@ void StateMainMenu::enter()
   updateRoomsList();
   updateOptions();
   updateAudioOptions();
+  updateWWWOptions();
+  updateGhostsOptions();
 
   StateMenu::enter();
 }
@@ -2088,6 +2090,7 @@ void StateMainMenu::updateOptions() {
 
 void StateMainMenu::checkEventsOptions() {
   UIButton*    v_button;
+  UIEdit*      v_edit;
   UIList*      v_list;
   std::string  v_id_level;
 
@@ -2210,13 +2213,7 @@ void StateMainMenu::checkEventsOptions() {
 
     bool v_before = m_pGame->getSession()->enableAudio();
     m_pGame->getSession()->setEnableAudio(v_button->getChecked());
-    if(v_before != v_button->getChecked()) {
-      if(m_pGame->getSession()->enableAudio()) {
-	m_pGame->playMusic("menu1");
-      } else {
-	m_pGame->playMusic("");
-      }
-    }
+    Sound::setActiv(m_pGame->getSession()->enableAudio());
     updateAudioOptions();
   }
 
@@ -2270,13 +2267,103 @@ void StateMainMenu::checkEventsOptions() {
 
     bool v_before = m_pGame->getSession()->enableMenuMusic();
     m_pGame->getSession()->setEnableMenuMusic(v_button->getChecked());
-    if(v_before != v_button->getChecked()) {
-      if(m_pGame->getSession()->enableMenuMusic()) {
-	m_pGame->playMusic("menu1");
-      } else {
-	m_pGame->playMusic("");
-      }
+    Sound::setActiv(m_pGame->getSession()->enableAudio());
+  }
+
+  // www
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLEWEB"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setWWW(v_button->getChecked());
+    updateWWWOptions();
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setCheckNewLevelsAtStartup(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setCheckNewHighscoresAtStartup(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMEWORLDRECORD"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setShowHighscoreInGame(v_button->getChecked());
+  }
+
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOMS_LIST"));
+  if(v_list->isClicked()) {
+    v_list->setClicked(false);
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
+      m_pGame->getSession()->setIdRoom(*((std::string*)v_list->getEntries()[v_list->getSelected()]->pvUser));
     }
+  }
+
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_LOGIN"));
+  if(v_edit->hasChanged()) {
+    v_edit->setHasChanged(false);
+    m_pGame->getSession()->setUploadLogin(v_edit->getCaption());
+  }
+
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_PASSWORD"));
+  if(v_edit->hasChanged()) {
+    v_edit->setHasChanged(false);
+    m_pGame->getSession()->setUploadPassword(v_edit->getCaption());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:ENABLE_GHOSTS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setEnableGhosts(v_button->getChecked());
+    updateGhostsOptions();
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_MYBEST"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setGhostStrategy_MYBEST(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_THEBEST"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setGhostStrategy_THEBEST(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFROOM"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setGhostStrategy_BESTOFROOM(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOST_TIMEDIFFERENCE"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setShowGhostTimeDifference(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_INFOS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setShowGhostsInfos(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:HIDEGHOSTS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setHideGhosts(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:MOTION_BLUR_GHOST"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setGhostMotionBlur(v_button->getChecked());
   }
 }
 
@@ -2301,4 +2388,32 @@ void StateMainMenu::updateAudioOptions() {
   v_button->enableWindow(m_pGame->getSession()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
   v_button->enableWindow(m_pGame->getSession()->enableAudio());
+}
+
+void StateMainMenu::updateWWWOptions() {
+  UIButton* v_button;
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP"));
+  v_button->enableWindow(m_pGame->getSession()->www());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP"));
+  v_button->enableWindow(m_pGame->getSession()->www()); 
+}
+
+void StateMainMenu::updateGhostsOptions() {
+  UIButton* v_button;
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_MYBEST"));
+  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_THEBEST"));
+  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFROOM"));
+  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOST_TIMEDIFFERENCE"));
+  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_INFOS"));
+  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:HIDEGHOSTS"));
+  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:MOTION_BLUR_GHOST"));
+  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
 }
