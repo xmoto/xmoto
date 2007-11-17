@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateEditProfile.h"
 #include "StateEditWebConfig.h"
 #include "StateLevelPackViewer.h"
+#include "StateRequestKey.h"
 #include "Game.h"
 #include "XMSession.h"
 #include "drawlib/DrawLib.h"
@@ -371,6 +372,7 @@ void StateManager::cleanStates() {
   StateMainMenu::clean();
   StateMessageBox::clean();
   StatePause::clean();
+  StateRequestKey::clean();
 }
 
 int StateManager::getCurrentUpdateFPS() {

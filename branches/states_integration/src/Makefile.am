@@ -142,7 +142,10 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateUpdate.cpp          \
 		 states/StateUpdate.h            \
 		 states/StateUpdateLevels.cpp    \
-		 states/StateUpdateLevels.h
+		 states/StateUpdateLevels.h      \
+		 states/StateRequestKey.cpp      \
+		 states/StateRequestKey.h
+
 
 bz2_SOURCES = bzip2/blocksort.c     \
               bzip2/bzlib.c         \

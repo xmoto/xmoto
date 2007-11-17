@@ -568,7 +568,7 @@ class UIButtonDrawn : public UIButton {
   
   class UIList : public UIWindow {
     public:
-      UIList() {}
+    UIList() {}
       UIList(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0);
       virtual ~UIList();
 
@@ -602,6 +602,7 @@ class UIButtonDrawn : public UIButton {
       void addColumn(std::string Title,int nWidth,const std::string &Help = "");
       void setEnterButton(UIButton *pButton);
       bool isItemActivated();
+      void setItemActivated(bool i_value);
       void setHideColumn(int n);
       void unhideAllColumns(void);
       void setSort(bool bSort, int(*f)(void *pvUser1, void *pvUser2) = NULL);

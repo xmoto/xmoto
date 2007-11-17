@@ -135,7 +135,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Easy translation between keys and their codes
   ===========================================================================*/  
-  std::string InputHandler::_KeyToString(int nKey) {
+  std::string InputHandler::keyToString(int nKey) {
     int i=0;
     while(m_KeyMap[i].pcKey != NULL) {
       if(m_KeyMap[i].nKey == nKey) return m_KeyMap[i].pcKey;
@@ -266,13 +266,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           case SDL_QUIT:
             return "<<QUIT>>";
 	case SDL_MOUSEBUTTONDOWN:
-	  Ret = _KeyToString(Event.button.button);
+	  Ret = keyToString(Event.button.button);
 	  if(Ret != "") bWait = false;
 	  break;
 	case SDL_KEYDOWN:
             if(Event.key.keysym.sym == SDLK_ESCAPE) return "<<CANCEL>>";
           
-            Ret = _KeyToString(Event.key.keysym.sym);
+            Ret = keyToString(Event.key.keysym.sym);
             if(Ret != "") bWait = false;
             break;
         }
@@ -615,38 +615,38 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Get key by action...
   ===========================================================================*/  
   std::string InputHandler::getKeyByAction(const std::string &Action) {
-    if(Action == "Drive")    	return _KeyToString(m_nDriveKey[0]);
-    if(Action == "Brake")    	return _KeyToString(m_nBrakeKey[0]);
-    if(Action == "PullBack") 	return _KeyToString(m_nPullBackKey[0]);
-    if(Action == "PushForward") return _KeyToString(m_nPushForwardKey[0]);
-    if(Action == "ChangeDir")   return _KeyToString(m_nChangeDirKey[0]);
+    if(Action == "Drive")    	return keyToString(m_nDriveKey[0]);
+    if(Action == "Brake")    	return keyToString(m_nBrakeKey[0]);
+    if(Action == "PullBack") 	return keyToString(m_nPullBackKey[0]);
+    if(Action == "PushForward") return keyToString(m_nPushForwardKey[0]);
+    if(Action == "ChangeDir")   return keyToString(m_nChangeDirKey[0]);
 
-    if(Action == "Drive 2")    	  return _KeyToString(m_nDriveKey[1]);
-    if(Action == "Brake 2")    	  return _KeyToString(m_nBrakeKey[1]);
-    if(Action == "PullBack 2") 	  return _KeyToString(m_nPullBackKey[1]);
-    if(Action == "PushForward 2") return _KeyToString(m_nPushForwardKey[1]);
-    if(Action == "ChangeDir 2")   return _KeyToString(m_nChangeDirKey[1]);
+    if(Action == "Drive 2")    	  return keyToString(m_nDriveKey[1]);
+    if(Action == "Brake 2")    	  return keyToString(m_nBrakeKey[1]);
+    if(Action == "PullBack 2") 	  return keyToString(m_nPullBackKey[1]);
+    if(Action == "PushForward 2") return keyToString(m_nPushForwardKey[1]);
+    if(Action == "ChangeDir 2")   return keyToString(m_nChangeDirKey[1]);
 
-    if(Action == "Drive 3")    	  return _KeyToString(m_nDriveKey[2]);
-    if(Action == "Brake 3")    	  return _KeyToString(m_nBrakeKey[2]);
-    if(Action == "PullBack 3") 	  return _KeyToString(m_nPullBackKey[2]);
-    if(Action == "PushForward 3") return _KeyToString(m_nPushForwardKey[2]);
-    if(Action == "ChangeDir 3")   return _KeyToString(m_nChangeDirKey[2]);
+    if(Action == "Drive 3")    	  return keyToString(m_nDriveKey[2]);
+    if(Action == "Brake 3")    	  return keyToString(m_nBrakeKey[2]);
+    if(Action == "PullBack 3") 	  return keyToString(m_nPullBackKey[2]);
+    if(Action == "PushForward 3") return keyToString(m_nPushForwardKey[2]);
+    if(Action == "ChangeDir 3")   return keyToString(m_nChangeDirKey[2]);
 
-    if(Action == "Drive 4")    	  return _KeyToString(m_nDriveKey[3]);
-    if(Action == "Brake 4")    	  return _KeyToString(m_nBrakeKey[3]);
-    if(Action == "PullBack 4") 	  return _KeyToString(m_nPullBackKey[3]);
-    if(Action == "PushForward 4") return _KeyToString(m_nPushForwardKey[3]);
-    if(Action == "ChangeDir 4")   return _KeyToString(m_nChangeDirKey[3]);
+    if(Action == "Drive 4")    	  return keyToString(m_nDriveKey[3]);
+    if(Action == "Brake 4")    	  return keyToString(m_nBrakeKey[3]);
+    if(Action == "PullBack 4") 	  return keyToString(m_nPullBackKey[3]);
+    if(Action == "PushForward 4") return keyToString(m_nPushForwardKey[3]);
+    if(Action == "ChangeDir 4")   return keyToString(m_nChangeDirKey[3]);
     
     #if defined(ENABLE_ZOOMING)    
-    if(Action == "ZoomIn")   	    	return _KeyToString(m_nZoomIn);
-    if(Action == "ZoomOut")  	    	return _KeyToString(m_nZoomOut);
-    if(Action == "ZoomInit") 	    	return _KeyToString(m_nZoomInit);
-    if(Action == "CameraMoveXUp")   return _KeyToString(m_nCameraMoveXUp);
-    if(Action == "CameraMoveXDown") return _KeyToString(m_nCameraMoveXDown);
-    if(Action == "CameraMoveYUp")   return _KeyToString(m_nCameraMoveYUp);
-    if(Action == "CameraMoveYDown") return _KeyToString(m_nCameraMoveYDown);
+    if(Action == "ZoomIn")   	    	return keyToString(m_nZoomIn);
+    if(Action == "ZoomOut")  	    	return keyToString(m_nZoomOut);
+    if(Action == "ZoomInit") 	    	return keyToString(m_nZoomInit);
+    if(Action == "CameraMoveXUp")   return keyToString(m_nCameraMoveXUp);
+    if(Action == "CameraMoveXDown") return keyToString(m_nCameraMoveXDown);
+    if(Action == "CameraMoveYUp")   return keyToString(m_nCameraMoveYUp);
+    if(Action == "CameraMoveYDown") return keyToString(m_nCameraMoveYDown);
     #endif
 
     return "?";

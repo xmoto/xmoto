@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateHelp.h"
 #include "StateEditProfile.h"
 #include "StateReplaying.h"
+#include "StateRequestKey.h"
 #include "StateLevelPackViewer.h"
 #include "LevelsManager.h"
 #include "helpers/Log.h"
@@ -1533,6 +1534,10 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
   if(i_id == "STATE_MANAGER" && i_message == "FAVORITES_UPDATED") {
     m_require_updateFavoriteLevelsList = true;
   }
+
+  if(i_id == "REQUESTKEY") {
+    //printf("Change key to %s\n", i_message.c_str());
+  }
 }
 
 void StateMainMenu::executeOneCommand(std::string cmd)
@@ -2268,6 +2273,17 @@ void StateMainMenu::checkEventsOptions() {
     bool v_before = m_pGame->getSession()->enableMenuMusic();
     m_pGame->getSession()->setEnableMenuMusic(v_button->getChecked());
     Sound::setActiv(m_pGame->getSession()->enableAudio());
+  }
+
+  // controls
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:CONTROLS_TAB:KEY_ACTION_LIST"));
+  if(v_list->isItemActivated()) {
+    v_list->setItemActivated(false);
+
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
+      m_pGame->getStateManager()->pushState(new StateRequestKey(m_pGame, this));      
+    }
   }
 
   // www

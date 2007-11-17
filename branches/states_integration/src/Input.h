@@ -120,6 +120,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       void addScriptKeyHook(MotoGame *pGame,const std::string &KeyName,const std::string &FuncName);
 
       std::string getKeyByAction(const std::string &Action);
+
+      static std::string keyToString(int nKey);
     
     private:
 
@@ -170,7 +172,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       static InputKeyMap m_KeyMap[];
       
       /* Helpers */
-      std::string _KeyToString(int nKey);
       int _StringToKey(const std::string &s);
       
       /* Set default config */
