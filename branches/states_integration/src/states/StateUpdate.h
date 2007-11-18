@@ -66,6 +66,8 @@ private:
   /* GUI */
   static UIRoot* m_sGUI;
   static void createGUIIfNeeded(GameApp* pGame);
+
+  void init();
 };
 
 #endif

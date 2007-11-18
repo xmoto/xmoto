@@ -69,12 +69,14 @@ bool StateUpdateLevels::update()
     Logger::Log("thread started");
   }
 
-  // update the frame with the thread informations
-  m_progress         = m_pThread->getThreadProgress();
-  m_currentOperation = m_pThread->getThreadCurrentOperation();
-  m_currentMicroOperation = m_pThread->getThreadCurrentMicroOperation();
+  if(m_threadStarted == true){
+    // update the frame with the thread informations
+    m_progress         = m_pThread->getThreadProgress();
+    m_currentOperation = m_pThread->getThreadCurrentOperation();
+    m_currentMicroOperation = m_pThread->getThreadCurrentMicroOperation();
 
-  updateGUI();
+    updateGUI();
+  }
 
   return true;
 }

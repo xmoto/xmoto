@@ -40,13 +40,19 @@ int UpdateLevelsThread::realThreadFunction()
   m_pGame->getLevelsManager()->reloadLevelsFromLvl(m_pDb, m_pGame);
   m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_LEVELS_LISTS");
 
+  setThreadProgress(33);
+
   setThreadCurrentOperation(GAMETEXT_RELOADINGREPLAYS);
   m_pGame->initReplaysFromDir(m_pDb);
   m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_REPLAYS_LISTS");
   
-  setThreadCurrentOperation("Reloading themes");
+  setThreadProgress(66);
+
+  setThreadCurrentOperation(GAMETEXT_RELOADINGTHEMES);
   m_pGame->getThemeChoicer()->initThemesFromDir(m_pDb);
   m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
+
+  setThreadProgress(100);
 
   return 0;
 }

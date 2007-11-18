@@ -37,6 +37,10 @@ StateUpdate::StateUpdate(GameApp* pGame,
 {
   m_name             = "StateUpdate";
   m_threadStarted    = false;
+}
+
+void StateUpdate::init()
+{
   m_progress         = -1;
   m_currentOperation = "";
   m_currentMicroOperation = "";
@@ -57,6 +61,10 @@ void StateUpdate::enter()
 
 void StateUpdate::leave()
 {
+  // blank window
+  init();
+  updateGUI();
+
   StateMenu::leave();
 }
 
@@ -85,54 +93,6 @@ bool StateUpdate::render()
 
 
   return ret;
-
-#if 0
-  // draw text
-  m_GUI->setTextSolidColor(MAKE_COLOR(255,255,255,255));
-  m_GUI->putText(drawLib->getDispWidth()/2,
-		 drawLib->getDispHeight()/2,
-		 m_currentOperation,
-		 -0.5, -0.5);
-
-  FontGlyph* fg = drawlib->getFontMedium()->getGlyph(msg);
-    
-  int border = 75;
-  int nW = fg->realWidth() + border*2, nH = fg->realHeight() + border*2;
-  int nx = drawlib->getDispWidth()/2 - nW/2, ny = drawlib->getDispHeight()/2 - nH/2;
-
-  //_SimpleMessage(m_DownloadingMessage,&m_InfoMsgBoxRect,true);
-  m_GUI->setTextSolidColor(MAKE_COLOR(255,255,255,255));
-  m_GUI->putText(drawlib->getDispWidth()/2,drawlib->getDispHeight()/2, msg, -0.5, -0.5);
-
-
-
-    int nBarHeight = 15;
-    m_progress = fPercent;
-
-    
-    drawLib->drawBox(Vector2f(m_InfoMsgBoxRect.nX+10,m_InfoMsgBoxRect.nY+ m_InfoMsgBoxRect.nHeight-
-                                                   nBarHeight*2),
-            Vector2f(m_InfoMsgBoxRect.nX+m_InfoMsgBoxRect.nWidth-10,
-                     m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight),
-            0,MAKE_COLOR(0,0,0,255),0);
-            
-                
-    drawLib->drawBox(Vector2f(m_InfoMsgBoxRect.nX+10,m_InfoMsgBoxRect.nY+
-                                                   m_InfoMsgBoxRect.nHeight-
-                                                   nBarHeight*2),
-            Vector2f(m_InfoMsgBoxRect.nX + 10 + ((m_InfoMsgBoxRect.nWidth-20) * m_progress)/100,
-                     m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight),
-            0,MAKE_COLOR(255,0,0,255),0);
-
-    FontManager* v_fm = drawLib->getFontSmall();
-    FontGlyph* v_fg = v_fm->getGlyph(m_DownloadingInformation);
-    v_fm->printString(v_fg,
-		      m_InfoMsgBoxRect.nX+10,
-		      m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight*2,
-		      MAKE_COLOR(255,255,255,128));
-    drawLib->flushGraphics();
-#endif
-
 }
 
 void StateUpdate::keyDown(int nKey, SDLMod mod,int nChar)
@@ -195,29 +155,31 @@ void StateUpdate::createGUIIfNeeded(GameApp* pGame)
 
   UIFrame* v_frame;
   v_frame = new UIFrame(m_sGUI, x, y, caption, nWidth, nHeight); 
-  v_frame->setID("UPDATE_FRAME");
+  v_frame->setID("FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_TRANS);
 
   int proH = 15;
   int proX = nWidth / 32;
-  int proY = (0.75)*nHeight - proH;
+  int proY = nHeight - proH * 2;
   int proW = nWidth * (15.0/16.0);
 
   UIProgressBar* v_progress;
   v_progress = new UIProgressBar(v_frame, proX, proY, proW, proH);
-  v_progress->setID("UPDATE_PROGRESS");
+  v_progress->setID("PROGRESS");
 
   UIStatic* v_static;
-  v_static = new UIStatic(v_frame, x, y, "", width, height - proH);
-  v_static->setID("UPDATE_TEXT");
+  v_static = new UIStatic(v_frame, 0, 0, "", v_frame->getPosition().nWidth, v_frame->getPosition().nHeight - proH * 2);
+  v_static->setFont(pGame->getDrawLib()->getFontMedium());            
+  v_static->setHAlign(UI_ALIGN_CENTER);
+  v_static->setID("TEXT");
 }
 
 void StateUpdate::updateGUI()
 {
-  UIProgressBar* v_progress = reinterpret_cast<UIProgressBar*>(m_GUI->getChild("UPDATE_FRAME:UPDATE_PROGRESS"));
+  UIProgressBar* v_progress = reinterpret_cast<UIProgressBar*>(m_GUI->getChild("FRAME:PROGRESS"));
   v_progress->setProgress(m_progress);
   v_progress->setCurrentOperation(m_currentMicroOperation);
 
-  UIStatic* v_static = reinterpret_cast<UIStatic*>(m_GUI->getChild("UPDATE_FRAME:UPDATE_TEXT"));
+  UIStatic* v_static = reinterpret_cast<UIStatic*>(m_GUI->getChild("FRAME:TEXT"));
   v_static->setCaption(m_currentOperation);
 }
