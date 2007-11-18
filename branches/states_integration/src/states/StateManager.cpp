@@ -229,10 +229,9 @@ void StateManager::drawStack() {
   
   int xoff = 0;
   int yoff = m_pGame->getDrawLib()->getDispHeight();
-  int w = 150;
+  int w = 180;
   int h =  30;
   Color bg = MAKE_COLOR(255,0,0,200);
-  int font_xoff = 5;
   Color font_color = MAKE_COLOR(255,255,255,255);
 
   std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
@@ -241,7 +240,7 @@ void StateManager::drawStack() {
   while(stateIterator != m_statesStack.end()){
     m_pGame->getDrawLib()->drawBox(Vector2f(xoff, yoff - (i * h)), Vector2f(xoff + w, yoff - ((i+1) * h)), 1.0, bg);
     v_fg = v_fm->getGlyph(m_statesStack[i]->getName());
-    v_fm->printString(v_fg, xoff + font_xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, true);
+    v_fm->printString(v_fg, (w-v_fg->realWidth())/2 + xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, true);
     i++;
     stateIterator++;
   }
