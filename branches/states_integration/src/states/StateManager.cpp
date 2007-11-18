@@ -519,35 +519,3 @@ void GameState::executeOneCommand(std::string cmd)
 void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   // will display help once it will be possible to have several motogame
 }
-
-#if 0
-void GameState::simpleMessage(const std::string& msg) {
-  UIRect v_rect;
-  DrawLib* drawlib = m_pGame->getDrawLib();
- 
-  drawlib->drawBox(Vector2f(0,0), Vector2f(drawlib->getDispWidth(), drawlib->getDispHeight()), 0, MAKE_COLOR(0,0,0,170), 0);
-
-  FontGlyph* fg = drawlib->getFontMedium()->getGlyph(msg);
-    
-  int border = 75;
-  int nW = fg->realWidth() + border*2, nH = fg->realHeight() + border*2;
-  int nx = drawlib->getDispWidth()/2 - nW/2, ny = drawlib->getDispHeight()/2 - nH/2;
-    
-  v_rect.nX      = nx;
-  v_rect.nY      = ny;
-  v_rect.nWidth  = nW;
-  v_rect.nHeight = nH;
-
-  //m_GUI->putElem(nx,ny,-1,-1,UI_ELEM_FRAME_TL,false);
-  //m_GUI->putElem(nx+nW-8,ny,-1,-1,UI_ELEM_FRAME_TR,false);
-  //m_GUI->putElem(nx+nW-8,ny+nH-8,-1,-1,UI_ELEM_FRAME_BR,false);
-  //m_GUI->putElem(nx,ny+nH-8,-1,-1,UI_ELEM_FRAME_BL,false);
-  //m_GUI->putElem(nx+8,ny,nW-16,-1,UI_ELEM_FRAME_TM,false);
-  //m_GUI->putElem(nx+8,ny+nH-8,nW-16,-1,UI_ELEM_FRAME_BM,false);
-  //m_GUI->putElem(nx,ny+8,-1,nH-16,UI_ELEM_FRAME_ML,false);
-  //m_GUI->putElem(nx+nW-8,ny+8,-1,nH-16,UI_ELEM_FRAME_MR,false);
-  //m_GUI->putRect(nx+8,ny+8,nW-16,nH-16,MAKE_COLOR(0,0,0,127));
-  //m_GUI->setTextSolidColor(MAKE_COLOR(255,255,255,255));
-  //m_GUI->putText(drawlib->getDispWidth()/2,drawlib->getDispHeight()/2, msg, -0.5, -0.5);
-}
-#endif
