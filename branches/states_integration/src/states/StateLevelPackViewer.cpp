@@ -104,6 +104,7 @@ void StateLevelPackViewer::checkEvents()
     pPlayButton->setClicked(false);
     std::string i_level = pList->getSelectedLevel();
     if(i_level != "") {
+      m_pGame->setCurrentPlayingList(pList);
       StatePreplaying::setPlayAnimation(true);
       m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, i_level));
     }
