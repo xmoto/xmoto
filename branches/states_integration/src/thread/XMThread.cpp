@@ -30,16 +30,19 @@ XMThread::XMThread()
   m_pThread          = NULL;
   m_progress         = 0;
   m_currentOperation = "";
+  m_currentMicroOperation = "";
   m_pGame            = NULL;
   m_pDb              = NULL;
   m_progressMutex    = SDL_CreateMutex();
   m_curOpMutex       = SDL_CreateMutex();
+  m_curMicOpMutex    = SDL_CreateMutex();
 }
 
 XMThread::~XMThread()
 {
   SDL_DestroyMutex(m_progressMutex);
   SDL_DestroyMutex(m_curOpMutex);
+  SDL_DestroyMutex(m_curMicOpMutex);
   if(m_pDb != NULL){
     delete m_pDb;
   }
@@ -104,6 +107,17 @@ std::string XMThread::getThreadCurrentOperation()
   return curOp;
 }
 
+std::string XMThread::getThreadCurrentMicroOperation()
+{
+  std::string curMicOp;
+
+  SDL_LockMutex(m_curMicOpMutex);
+  curMicOp = m_currentMicroOperation;
+  SDL_UnlockMutex(m_curMicOpMutex);
+
+  return curMicOp;
+}
+
 void XMThread::setThreadProgress(int progress)
 {
   SDL_LockMutex(m_progressMutex);
@@ -116,6 +130,13 @@ void XMThread::setThreadCurrentOperation(std::string curOp)
   SDL_LockMutex(m_curOpMutex);
   m_currentOperation = curOp;
   SDL_UnlockMutex(m_curOpMutex);
+}
+
+void XMThread::setThreadCurrentMicroOperation(std::string curMicOp)
+{
+  SDL_LockMutex(m_curMicOpMutex);
+  m_currentMicroOperation = curMicOp;
+  SDL_UnlockMutex(m_curMicOpMutex);
 }
 
 #define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"

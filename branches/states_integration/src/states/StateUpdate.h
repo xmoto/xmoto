@@ -54,8 +54,13 @@ public:
   static void clean();
 protected:
   virtual void checkEvents();
-  virtual void updateGUI() = 0;
+  virtual void updateGUI();
   bool m_threadStarted;
+
+  // updated by the child class
+  int         m_progress;
+  std::string m_currentOperation;
+  std::string m_currentMicroOperation;
 
 private:
   /* GUI */

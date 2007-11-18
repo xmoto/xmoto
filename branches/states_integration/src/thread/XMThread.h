@@ -42,6 +42,7 @@ public:
   // return a value between 0-100
   int getThreadProgress();
   std::string getThreadCurrentOperation();
+  std::string getThreadCurrentMicroOperation();
 
   // don't use it
   static int run(void* pThreadInstance);
@@ -51,12 +52,15 @@ protected:
 
   void setThreadProgress(int progress);
   void setThreadCurrentOperation(std::string curOp);
+  void setThreadCurrentMicroOperation(std::string curMicOp);
 
   SDL_Thread* m_pThread;
   bool        m_isRunning;
 
   int         m_progress;
   std::string m_currentOperation;
+  // for example, the name of the level beeing downloaded
+  std::string m_currentMicroOperation;
 
   GameApp*    m_pGame;
   // different thread, different database connection
@@ -66,6 +70,7 @@ private:
   int threadFunctionEncapsulate();
   SDL_mutex* m_progressMutex;
   SDL_mutex* m_curOpMutex;
+  SDL_mutex* m_curMicOpMutex;
 };
   
 #endif

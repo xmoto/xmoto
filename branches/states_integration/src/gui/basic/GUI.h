@@ -468,7 +468,22 @@ class GameApp;
       Texture *m_pDarkBlobTexture;
       Texture *m_pCustomBackgroundTexture;
   };
-  
+
+class UIProgressBar : public UIWindow {
+public:
+  UIProgressBar(UIWindow *pParent, int x, int y, int nWidth, int nHeight);
+  virtual ~UIProgressBar();
+
+  virtual void paint(void);
+
+  void setProgress(int progress);
+  void setCurrentOperation(std::string curOp);
+
+private:
+  int m_progress;
+  std::string m_curOp;
+};
+
 	/*===========================================================================
 	UI button
   ===========================================================================*/

@@ -32,17 +32,11 @@ public:
 		    bool updateStatesBehind = false);
   virtual ~StateUpdateLevels();
 
-  // enter attractmode, launch thread and call mother function.
   virtual void enter();
   virtual bool update();
-  virtual bool render();
 
 protected:
   UpdateLevelsThread* m_pThread;
-  void updateGUI();
-
-  int         m_progress;
-  std::string m_currentOperation;
 };
 
 #endif

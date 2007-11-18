@@ -151,8 +151,10 @@ bool UIWindow::isUglyMode() {
     
     for(int i=0;i<getChildren().size();i++) {
       if(getChildren()[i]->getID() == X) {
-        if(XRem != "") return getChildren()[i]->getChild(XRem);
-        else return getChildren()[i];
+        if(XRem != "")
+	  return getChildren()[i]->getChild(XRem);
+        else
+	  return getChildren()[i];
       }
     }
     return NULL;
@@ -1044,4 +1046,41 @@ void UIRoot::dispatchMouseHover() {
   int nX,nY;
   GameApp::getMousePos(&nX,&nY);
   mouseHover(nX,nY);
+}
+
+UIProgressBar::UIProgressBar(UIWindow *pParent,
+			     int x, int y,
+			     int nWidth, int nHeight)
+{
+  initW(pParent, x, y, "", nWidth, nHeight);
+  m_progress = 0;
+  m_curOp    = "";
+}
+
+UIProgressBar::~UIProgressBar()
+{
+}
+
+void UIProgressBar::paint()
+{
+  int width  = getPosition().nWidth;
+  int height = getPosition().nHeight;
+  // 1.paint it black
+  putRect(0, 0, width, height, MAKE_COLOR(0,0,0,255));
+  // 2.paint progress in red
+  putRect(0, 0, width * m_progress / 100, height, MAKE_COLOR(255,0,0,255));
+  // 3.write curOp left centered
+  setFont(getApp()->getDrawLib()->getFontSmall());
+  setTextSolidColor(MAKE_COLOR(255,255,255,128));
+  putText(0, 0, m_curOp, -1.0, -1.0);
+}
+
+void UIProgressBar::setProgress(int progress)
+{
+  m_progress = progress;
+}
+
+void UIProgressBar::setCurrentOperation(std::string curOp)
+{
+  m_curOp = curOp;
 }
