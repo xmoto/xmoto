@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class StateRequestKey : public StateMenu {
   public:
   StateRequestKey(GameApp* pGame,
+		  const std::string& i_txt, 
 		  StateMenuContextReceiver* i_receiver = NULL,
 		  bool drawStateBehind    = true,
 		  bool updateStatesBehind = false);
@@ -53,9 +54,12 @@ class StateRequestKey : public StateMenu {
   virtual void checkEvents();
 
   private:
+  std::string m_txt;
+
   /* GUI */
   static UIRoot* m_sGUI;
   static void createGUIIfNeeded(GameApp* pGame);
+  void updateGUI();
 };
 
 #endif

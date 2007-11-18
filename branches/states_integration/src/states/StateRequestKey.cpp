@@ -20,13 +20,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateRequestKey.h"
 #include "Game.h"
-#include "GameText.h"
 #include "drawlib/DrawLib.h"
 
 /* static members */
 UIRoot*  StateRequestKey::m_sGUI = NULL;
 
 StateRequestKey::StateRequestKey(GameApp* pGame,
+				 const std::string& i_txt,
 				 StateMenuContextReceiver* i_receiver,
 				 bool drawStateBehind,
 				 bool updateStatesBehind):
@@ -37,6 +37,7 @@ StateMenu(drawStateBehind,
 	  false,
 	  true)
 {
+  m_txt   = i_txt;
   m_name  = "StateRequestKey";
 }
 
@@ -50,6 +51,7 @@ void StateRequestKey::enter()
 {
   createGUIIfNeeded(m_pGame);
   m_GUI = m_sGUI;
+  updateGUI();
 
   StateMenu::enter();
 }
@@ -138,12 +140,20 @@ void StateRequestKey::createGUIIfNeeded(GameApp* pGame) {
 		      pGame->getDrawLib()->getDispHeight());
 
   v_frame = new UIFrame(m_sGUI,
-			20,
-			pGame->getDrawLib()->getDispHeight()/2 - 50,
-			"", pGame->getDrawLib()->getDispWidth() -20*2, 50*2);
+			30,
+			pGame->getDrawLib()->getDispHeight()/2 - 20,
+			"", pGame->getDrawLib()->getDispWidth() -30*2, 20*2);
   v_frame->setID("FRAME");
 
-  v_someText = new UIStatic(v_frame, 0, 0, GAMETEXT_PRESSANYKEYTO, v_frame->getPosition().nWidth, v_frame->getPosition().nHeight);
-  v_someText->setFont(pGame->getDrawLib()->getFontMedium());            
+  v_someText = new UIStatic(v_frame, 0, 0, "", v_frame->getPosition().nWidth, v_frame->getPosition().nHeight);
+  v_someText->setFont(pGame->getDrawLib()->getFontSmall());            
   v_someText->setHAlign(UI_ALIGN_CENTER);
+  v_someText->setID("TXT");
+}
+
+void StateRequestKey::updateGUI() {
+  UIStatic *v_someText;
+
+  v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("FRAME:TXT"));
+  v_someText->setCaption(m_txt);
 }

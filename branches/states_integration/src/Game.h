@@ -304,8 +304,7 @@ class StateManager;
       
       /* Misc settings */
       bool m_bRecordReplays;
-      float m_fReplayFrameRate;
-            
+
       SysMessage* m_sysMsg;
 
       /* Main loop statics */
@@ -340,17 +339,10 @@ class StateManager;
       void _HandleWebConfEditor(void);
       void _HandleLevelInfoViewer(void);
       void _HandleLevelPackViewer(void);
-      void _CreateLevelListsSql(UILevelList *pAllLevels, const std::string& i_sql); // to remove, it's now in statemainmenu
-      void _CreateLevelLists(UILevelList *pAllLevels, std::string i_packageName);
-      void _CreateReplaysList(UIList *pList);
-      void _CreateThemesList(UIList *pList);
-      void _CreateRoomsList(UIList *pList);
       void _CreateLevelPackLevelList();
       void _UpdateLevelPackLevelList(const std::string& v_levelPack);
       void _UpdateActionKeyList(void);
-      void _UpdateLevelPackList(void);
       void _ChangeKeyConfig(void);
-      void _ConfigureJoystick(void);
       void _InitMenus(void);        
       void _InitMenus_MainMenu(void);
       void _DefaultOptions(void);
@@ -414,8 +406,6 @@ class StateManager;
 
       static UIFrame* makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config);
 
-      void updatePlayerTag();
-      
       /* */
       void _InitWin(bool bInitGraphics);
       void _Uninit(void);

@@ -226,7 +226,6 @@ GameApp::GameApp() {
   m_MotoGameHooks.setGameApps(this, &m_MotoGame);
   
   m_currentPlayingList = NULL;
-  m_fReplayFrameRate = 25.0;
   m_allowReplayInterpolation = true;
 
   m_db = NULL;
@@ -260,77 +259,30 @@ GameApp::GameApp() {
   Update levels lists - must be done after each completed level
   ===========================================================================*/
   void GameApp::_UpdateLevelLists(void) {
-    LevelsPack *v_levelsPack;
-
-    _CreateLevelLists((UILevelList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALLLEVELS_LIST"), VPACKAGENAME_FAVORITE_LEVELS);
-
-    _CreateLevelLists(m_pPlayNewLevelsList, VPACKAGENAME_NEW_LEVELS);
   }
 
   /*===========================================================================
   Update replays list
   ===========================================================================*/
   void GameApp::_UpdateReplaysList(void) {
-    _CreateReplaysList((UIList *)m_pReplaysWindow->getChild("REPLAY_LIST"));                       
   }
 
   void GameApp::_UpdateRoomsLists(void) {
-    _CreateRoomsList((UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOMS_LIST"));
   }
 
   void GameApp::_UpdateThemesLists(void) {
-    _CreateThemesList((UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST"));
   }
 
   /*===========================================================================
   Update settings
   ===========================================================================*/
   void GameApp::_UpdateSettings(void) {
-    std::string v_menuGraphics =   m_Config.getString("MenuGraphics");
-    if(v_menuGraphics == "Low")    m_xmsession->setMenuGraphics(GFX_LOW);
-    if(v_menuGraphics == "Medium") m_xmsession->setMenuGraphics(GFX_MEDIUM);
-    if(v_menuGraphics == "High")   m_xmsession->setMenuGraphics(GFX_HIGH);
-
-    /* Game graphics */
-    std::string s = m_Config.getString("GameGraphics");
-
-    if(m_xmsession->useGraphics()) {
-      if(s == "Low") m_Renderer->setQuality(GQ_LOW);
-      else if(s == "Medium") m_Renderer->setQuality(GQ_MEDIUM);
-      else if(s == "High") m_Renderer->setQuality(GQ_HIGH);
-    }      
-
-    /* Show mini map? && show engine counter */
-    m_xmsession->setShowMinimap(m_Config.getBool("ShowMiniMap"));
-    m_xmsession->setShowEngineCounter(m_Config.getBool("ShowEngineCounter"));
-
-    /* Replay stuff */
-    m_fReplayFrameRate = m_Config.getFloat("ReplayFrameRate");
     m_bRecordReplays = m_Config.getBool("StoreReplays");
     m_bCompressReplays = m_Config.getBool("CompressReplays");
     Replay::enableCompression(m_bCompressReplays);
 
-    /* ghost */
-    m_MotoGame.setShowGhostTimeDiff(m_xmsession->showGhostTimeDifference());
-    if(m_xmsession->useGraphics()) {
-      m_Renderer->setGhostMotionBlur(m_xmsession->ghostMotionBlur());
-    }
-
-    if(m_xmsession->useGraphics()) {
-      m_Renderer->setGhostDisplayInformation(m_xmsession->showGhostsInfos());
-      m_Renderer->setHideGhosts(m_xmsession->hideGhosts());
-    }
-
-    /* Other settings */
-    m_xmsession->setEnableMenuMusic(m_Config.getBool("MenuMusic"));
-    m_bEnableInitZoom = m_Config.getBool("InitZoom");
-    m_xmsession->setEnableDeadAnimation(m_Config.getBool("DeathAnim"));
-
     /* www */
     m_WebHighscoresURL    = m_Config.getString("WebHighscoresURL");
-
-    /* Configure proxy */
-    _ConfigureProxy();
   }
     
   /*===========================================================================
@@ -1308,8 +1260,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   }
 
   void GameApp::_UpdateLevelsLists() {
-    _UpdateLevelPackList();
-    _UpdateLevelLists();
   }
 
   void GameApp::reloadTheme() {
@@ -1673,7 +1623,7 @@ void GameApp::initReplay() {
     m_pJustPlayReplay->createReplay("Latest.rpl",
 				    m_MotoGame.getLevelSrc()->Id(),
 				    m_xmsession->profile(),
-				    m_fReplayFrameRate,
+				    m_xmsession->replayFrameRate(),
 				    sizeof(SerializedBikeState));
   }
 }

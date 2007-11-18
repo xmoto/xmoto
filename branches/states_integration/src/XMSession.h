@@ -156,6 +156,7 @@ class XMSession {
   bool showGhostsInfos() const;
   void setHideGhosts(bool i_value);
   bool hideGhosts() const;
+  float replayFrameRate() const;
 
   private:
   bool m_verbose;
@@ -215,6 +216,7 @@ class XMSession {
   bool m_ghostMotionBlur;
   bool m_showGhostsInfos;
   bool m_hideGhosts;
+  float m_replayFrameRate;
 };
 
 #endif

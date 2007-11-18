@@ -1531,13 +1531,28 @@ void StateMainMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
 }
 
 void StateMainMenu::send(const std::string& i_id, const std::string& i_message) {
+  UIList* v_list;
+
   if(i_id == "STATE_MANAGER" && i_message == "FAVORITES_UPDATED") {
     m_require_updateFavoriteLevelsList = true;
   }
 
   if(i_id == "REQUESTKEY") {
-    //printf("Change key to %s\n", i_message.c_str());
+    v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:CONTROLS_TAB:KEY_ACTION_LIST"));
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {    
+      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
+      pEntry->Text[1] = i_message;
+    }
   }
+
+//	/* Good... is the key already in use? */
+//	int nAlreadyUsedBy = _IsKeyInUse(NewKey);
+//	if(nAlreadyUsedBy > 0 && nAlreadyUsedBy != nSel) {
+//	  /* affect to the key already in use the current key */
+//	  pActionList->getEntries()[nAlreadyUsedBy]->Text[1] = pActionList->getEntries()[nSel]->Text[1];
+//	}
+//	pActionList->getEntries()[nSel]->Text[1] = NewKey;
+  //printf("Change key to %s\n", i_message.c_str());
 }
 
 void StateMainMenu::executeOneCommand(std::string cmd)
@@ -2281,8 +2296,11 @@ void StateMainMenu::checkEventsOptions() {
     v_list->setItemActivated(false);
 
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      char cBuf[1024];                
+
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
-      m_pGame->getStateManager()->pushState(new StateRequestKey(m_pGame, this));      
+      sprintf(cBuf, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
+      m_pGame->getStateManager()->pushState(new StateRequestKey(m_pGame, cBuf, this));      
     }
   }
 

@@ -637,9 +637,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pPlayerText->setFont(drawLib->getFontMedium());            
     pPlayerText->setHAlign(UI_ALIGN_RIGHT);
     pPlayerText->setID("PLAYERTAG");
-    if(m_xmsession->profile() != "") {
-      updatePlayerTag();
-    }
     
     /* new levels ? */
     m_pNewLevelsAvailable = new UIButtonDrawn(m_pMainMenu,
@@ -940,42 +937,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     p = pList->addEntry(GAMETEXT_AUTOZOOM); p->Text.push_back(m_Config.getString("KeyAutoZoom"));
     #endif
   }
-  
-  /*===========================================================================
-  Update level pack list
-  ===========================================================================*/  
-  void GameApp::_UpdateLevelPackList(void) {
-    UIPackTree *pTree = (UIPackTree *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_TREE");
-    /* get selected item */
-    std::string v_selected_packName = pTree->getSelectedEntry();
-
-    pTree->clear();
-    
-    std::string p_packName;
-    
-    for(int i=0;i<m_levelsManager.LevelsPacks().size();i++) {
-      p_packName = m_levelsManager.LevelsPacks()[i]->Name();
-
-      /* the unpackaged pack exists only in debug mode */
-      if(p_packName != "" || m_xmsession->debug()) {
-	if(p_packName == "") {
-	  p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
-	}
-	
-	pTree->addPack(m_levelsManager.LevelsPacks()[i],
-		       m_levelsManager.LevelsPacks()[i]->Group(),
-		       m_levelsManager.LevelsPacks()[i]->getNumberOfFinishedLevels(m_db, m_xmsession->profile()),
-		       m_levelsManager.LevelsPacks()[i]->getNumberOfLevels(m_db)
-		       );
-	
-      }
-    }
-
-    /* reselect the previous pack */
-    if(v_selected_packName != "") {
-      pTree->setSelectedPackByName(v_selected_packName);
-    }
-  }
 
   /*===========================================================================
   Update main menu
@@ -1241,11 +1202,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       _ChangeKeyConfig();
     }
     
-    if(pConfigJoystick && pConfigJoystick->isClicked()) {
-      _ConfigureJoystick();
-    }
-    
-
   }
 
   /*===========================================================================
@@ -1295,11 +1251,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       drawLib->flushGraphics();
   }
   
-  void GameApp::_ConfigureJoystick(void) {
-    _SimpleMessage("Nothing here yet! :)");
-    SDL_Delay(1500);
-  }
-  
   void GameApp::_ChangeKeyConfig(void) {
     /* Find out what is selected... */
     UIList *pActionList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEY_ACTION_LIST");
@@ -1324,182 +1275,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	}
 	pActionList->getEntries()[nSel]->Text[1] = NewKey;
       }      
-    }
-  }
-
-  /*===========================================================================
-  Update replays list
-  ===========================================================================*/
-  void GameApp::_CreateReplaysList(UIList *pList) {
-  }
-  
-  /*===========================================================================
-  Scan through loaded levels
-  ===========================================================================*/
-
-// to remove, it's now in statemainmenu
-  void GameApp::_CreateLevelListsSql(UILevelList *pAllLevels, const std::string& i_sql) {
-    char **v_result;
-    unsigned int nrow;
-    float v_playerHighscore, v_roomHighscore;
-    
-    if(m_xmsession->profile() == "") return;
-    
-    /* get selected item */
-    std::string v_selected_levelName = "";
-    if(pAllLevels->getSelected() >= 0 && pAllLevels->getSelected() < pAllLevels->getEntries().size()) {
-      UIListEntry *pEntry = pAllLevels->getEntries()[pAllLevels->getSelected()];
-      v_selected_levelName = pEntry->Text[0];
-    }
-    
-    pAllLevels->clear();
-
-    v_result = m_db->readDB(i_sql,
-			    nrow);
-    for(unsigned int i=0; i<nrow; i++) {
-      if(m_db->getResult(v_result, 4, i, 2) == NULL) {
-	v_playerHighscore = -1.0;
-      } else {
-	v_playerHighscore = atof(m_db->getResult(v_result, 4, i, 2));
-      }
-      
-      if(m_db->getResult(v_result, 4, i, 3) == NULL) {
-	v_roomHighscore = -1.0;
-      } else {
-	v_roomHighscore = atof(m_db->getResult(v_result, 4, i, 3));
-      }
-      
-      pAllLevels->addLevel(m_db->getResult(v_result, 4, i, 0),
-			   m_db->getResult(v_result, 4, i, 1),
-			   v_playerHighscore,
-			   v_roomHighscore
-			   );
-    }
-    m_db->read_DB_free(v_result);    
-    
-    /* reselect the previous level */
-    if(v_selected_levelName != "") {
-      int nLevel = 0;
-      for(int i=0; i<pAllLevels->getEntries().size(); i++) {
-        if(pAllLevels->getEntries()[i]->Text[0] == v_selected_levelName) {
-          nLevel = i;
-          break;
-        }
-      }
-      pAllLevels->setRealSelected(nLevel);
-    }  
-  }
-
-  void GameApp::_CreateLevelLists(UILevelList *pAllLevels, std::string i_packageName) {
-    LevelsPack *v_levelsPack = &(m_levelsManager.LevelsPackByName(i_packageName));
-    _CreateLevelListsSql(pAllLevels, v_levelsPack->getLevelsWithHighscoresQuery(m_xmsession->profile(),
-										m_xmsession->idRoom()));
-  }
-
-  void GameApp::_CreateThemesList(UIList *pList) {
-    char **v_result;
-    unsigned int nrow;
-    UIListEntry *pEntry;
-    std::string v_id_theme;
-    std::string v_ck1, v_ck2;
-
-    /* get selected item */
-    std::string v_selected_themeName = "";
-    if(pList->getSelected() >= 0 && pList->getSelected() < pList->getEntries().size()) {
-      UIListEntry *pEntry = pList->getEntries()[pList->getSelected()];
-      v_selected_themeName = pEntry->Text[0];
-    }
-
-    /* recreate the list */
-    pList->clear();
-
-    v_result = m_db->readDB("SELECT a.id_theme, a.checkSum, b.checkSum "
-			    "FROM themes AS a LEFT OUTER JOIN webthemes AS b "
-			    "ON a.id_theme=b.id_theme ORDER BY a.id_theme;",
-			    nrow);
-    for(unsigned int i=0; i<nrow; i++) {
-      v_id_theme = m_db->getResult(v_result, 3, i, 0);
-      v_ck1      = m_db->getResult(v_result, 3, i, 1);
-      if(m_db->getResult(v_result, 3, i, 2) != NULL) {
-	v_ck2      = m_db->getResult(v_result, 3, i, 2);
-      }
-
-      pEntry = pList->addEntry(v_id_theme.c_str(),
-      			       NULL);
-      if(v_ck1 == v_ck2 || v_ck2 == "") {
-	pEntry->Text.push_back(GAMETEXT_THEMEHOSTED);
-      } else {
-      	pEntry->Text.push_back(GAMETEXT_THEMEREQUIREUPDATE);
-      }
-    }
-    m_db->read_DB_free(v_result);
-
-    v_result = m_db->readDB("SELECT a.id_theme FROM webthemes AS a LEFT OUTER JOIN themes AS b "
-    			    "ON a.id_theme=b.id_theme WHERE b.id_theme IS NULL;",
-    			    nrow);
-    for(unsigned int i=0; i<nrow; i++) {
-      v_id_theme = m_db->getResult(v_result, 1, i, 0);
-      pEntry = pList->addEntry(v_id_theme.c_str(),
-    			       NULL);
-      pEntry->Text.push_back(GAMETEXT_THEMENOTHOSTED);
-    }
-    m_db->read_DB_free(v_result);
-
-    /* reselect the previous theme */
-    if(v_selected_themeName != "") {
-      int nTheme = 0;
-      for(int i=0; i<pList->getEntries().size(); i++) {
-        if(pList->getEntries()[i]->Text[0] == v_selected_themeName) {
-          nTheme = i;
-          break;
-        }
-      }
-      pList->setRealSelected(nTheme);
-    }
-
-  }
-
-  void GameApp::_CreateRoomsList(UIList *pList) {
-    UIListEntry *pEntry;
-    std::string v_selected_roomName = "";
-    char **v_result;
-    unsigned int nrow;
-    std::string v_roomName, v_roomId;
-
-    /* get selected item */
-    if(pList->getSelected() >= 0 && pList->getSelected() < pList->getEntries().size()) {
-      UIListEntry *pEntry = pList->getEntries()[pList->getSelected()];
-      v_selected_roomName = pEntry->Text[0];
-    }
-
-    /* recreate the list */
-    for(unsigned int i=0; i<pList->getEntries().size(); i++) {
-      delete pList->getEntries()[i]->pvUser;
-    }
-    pList->clear();
-
-    v_result = m_db->readDB("SELECT id_room, name FROM webrooms ORDER BY id_room ASC;",
-			    nrow);
-
-    for(unsigned int i=0; i<nrow; i++) {
-      v_roomId   = m_db->getResult(v_result, 2, i, 0);
-      v_roomName = m_db->getResult(v_result, 2, i, 1);
-      pEntry = pList->addEntry(v_roomName,
-			       reinterpret_cast<void *>(new std::string(v_roomId))
-			       );    
-    }
-    m_db->read_DB_free(v_result);
-
-    /* reselect the previous room */
-    if(v_selected_roomName != "") {
-      int nRoom = 0;
-      for(int i=0; i<pList->getEntries().size(); i++) {
-        if(pList->getEntries()[i]->Text[0] == v_selected_roomName) {
-          nRoom = i;
-          break;
-        }
-      }
-      pList->setRealSelected(nRoom);
     }
   }
 
@@ -2067,16 +1842,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //   }
 //   m_db->read_DB_free(v_result);
 
-    updatePlayerTag();
-  }
-  
-  void GameApp::updatePlayerTag() {
-    UIStatic *pPlayerTag = reinterpret_cast<UIStatic *>(m_pMainMenu->getChild("PLAYERTAG"));
-    if(pPlayerTag) {
-      if(m_xmsession->profile() != "") {
-	pPlayerTag->setCaption(std::string(GAMETEXT_PLAYER) + ": " + m_xmsession->profile() + "@" + m_WebHighscoresRoomName);
-      }
-    }
   }
 
   void GameApp::setLevelInfoFrameBestPlayer(std::string pLevelID,

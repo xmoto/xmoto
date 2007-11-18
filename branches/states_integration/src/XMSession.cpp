@@ -77,6 +77,7 @@ XMSession::XMSession() {
   m_ghostMotionBlur               = true;
   m_showGhostsInfos               = false;
   m_hideGhosts                    = false;
+  m_replayFrameRate               = 25.0;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -208,6 +209,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_ghostMotionBlur             = m_Config->getBool("GhostMotionBlur");
   m_showGhostsInfos             = m_Config->getBool("DisplayGhostInfo");
   m_hideGhosts                  = m_Config->getBool("HideGhosts");
+  m_replayFrameRate          	= m_Config->getFloat("ReplayFrameRate");
 }
 
 void XMSession::save(UserConfig* m_Config) {
@@ -251,6 +253,7 @@ void XMSession::save(UserConfig* m_Config) {
   m_Config->setString("AudioChannels",              m_audioChannels == 1 ? "Mono" : "Stereo");
   m_Config->setBool("EngineSoundEnable",            m_enableAudioEngine);
   m_Config->setBool("MenuMusic",                    m_enableMenuMusic);
+  m_Config->setFloat("ReplayFrameRate",             m_replayFrameRate);
 }
 
 bool XMSession::isVerbose() const {
@@ -672,4 +675,8 @@ void XMSession::setHideGhosts(bool i_value) {
 
 bool XMSession::hideGhosts() const {
   return m_hideGhosts;
+}
+
+float XMSession::replayFrameRate() const {
+  return m_replayFrameRate;
 }
