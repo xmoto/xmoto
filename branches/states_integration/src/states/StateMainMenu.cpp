@@ -1907,7 +1907,7 @@ void StateMainMenu::updateControlsList() {
   p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 4")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipRight4"));
   p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 4")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyChangeDir4"));
  
-#if defined(ENABLE_ZOOMING)    
+#if defined(ENABLE_ZOOMING)
   p = pList->addEntry(GAMETEXT_ZOOMIN); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyZoomIn"));
   p = pList->addEntry(GAMETEXT_ZOOMOUT); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyZoomOut"));
   p = pList->addEntry(GAMETEXT_ZOOMINIT); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyZoomInit"));   
