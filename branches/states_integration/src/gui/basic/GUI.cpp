@@ -1072,7 +1072,7 @@ void UIProgressBar::paint()
   // 3.write curOp left centered
   setFont(getApp()->getDrawLib()->getFontSmall());
   setTextSolidColor(MAKE_COLOR(255,255,255,128));
-  putText(0, 0, m_curOp, -1.0, -1.0);
+  putText(0, 0, m_curOp, 0.0, 0.0);
 }
 
 void UIProgressBar::setProgress(int progress)

@@ -77,7 +77,8 @@ class LevelsManager {
 		 const std::string& i_id_room,
 		 bool i_bDebugMode);
   void addExternalLevel(xmDatabase *i_db, std::string i_levelFile);
-  void reloadExternalLevels(xmDatabase *i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
+  void reloadExternalLevels(xmDatabase *i_db,
+			    XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
   void reloadLevelsFromLvl(xmDatabase *i_db,
 			   XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 

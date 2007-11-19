@@ -22,11 +22,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __UPDATELEVELSTHREAD_H__
 
 #include "XMThread.h"
+#include "XMotoLoadLevelsInterface.h"
+#include "XMotoLoadReplaysInterface.h"
 
-class UpdateLevelsThread : public XMThread {
+class UpdateLevelsThread : public XMThread ,
+			   public XMotoLoadLevelsInterface,
+			   public XMotoLoadReplaysInterface {
 public:
   UpdateLevelsThread();
   virtual ~UpdateLevelsThread();
+
+  virtual void loadLevelHook(std::string i_level, int i_percentage);
+  virtual void loadReplayHook(std::string i_replay, int i_percentage);
 
 private:
   virtual int realThreadFunction();

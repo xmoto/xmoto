@@ -37,22 +37,30 @@ UpdateLevelsThread::~UpdateLevelsThread()
 int UpdateLevelsThread::realThreadFunction()
 {
   setThreadCurrentOperation(GAMETEXT_RELOADINGLEVELS);
-  m_pGame->getLevelsManager()->reloadLevelsFromLvl(m_pDb, m_pGame);
+  m_pGame->getLevelsManager()->reloadLevelsFromLvl(m_pDb, this);
   m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_LEVELS_LISTS");
 
-  setThreadProgress(33);
-
   setThreadCurrentOperation(GAMETEXT_RELOADINGREPLAYS);
-  m_pGame->initReplaysFromDir(m_pDb);
+  m_pGame->initReplaysFromDir(m_pDb, this);
   m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_REPLAYS_LISTS");
   
-  setThreadProgress(66);
-
   setThreadCurrentOperation(GAMETEXT_RELOADINGTHEMES);
   m_pGame->getThemeChoicer()->initThemesFromDir(m_pDb);
   m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
 
-  setThreadProgress(100);
-
   return 0;
+}
+
+void UpdateLevelsThread::loadLevelHook(std::string i_level,
+				       int i_percentage)
+{
+  setThreadProgress(i_percentage);
+  setThreadCurrentMicroOperation(i_level);
+}
+
+void UpdateLevelsThread::loadReplayHook(std::string i_replay,
+					int i_percentage)
+{
+  setThreadProgress(i_percentage);
+  setThreadCurrentMicroOperation(i_replay);
 }

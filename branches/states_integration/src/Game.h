@@ -47,6 +47,7 @@ class LevelsManager;
 class Credits;
 class SoundSample;
 class StateManager;
+class XMotoLoadReplaysInterface;
 
    class XMMotoGameHooks : public MotoGameHooks {
    public:
@@ -196,7 +197,8 @@ class StateManager;
       std::string determineNextLevel(const std::string& i_id_level);
       std::string determinePreviousLevel(const std::string& i_id_level);
 
-      void initReplaysFromDir(xmDatabase* threadDb = NULL);
+      void initReplaysFromDir(xmDatabase* threadDb = NULL,
+			      XMotoLoadReplaysInterface* pLoadReplaysInterface = NULL);
       void _UpdateThemesLists(void);
 
    protected:

@@ -33,14 +33,12 @@ XMThread::XMThread()
   m_currentMicroOperation = "";
   m_pGame            = NULL;
   m_pDb              = NULL;
-  m_progressMutex    = SDL_CreateMutex();
   m_curOpMutex       = SDL_CreateMutex();
   m_curMicOpMutex    = SDL_CreateMutex();
 }
 
 XMThread::~XMThread()
 {
-  SDL_DestroyMutex(m_progressMutex);
   SDL_DestroyMutex(m_curOpMutex);
   SDL_DestroyMutex(m_curMicOpMutex);
   if(m_pDb != NULL){
@@ -58,10 +56,10 @@ int XMThread::run(void* pThreadInstance)
 void XMThread::startThread(GameApp* pGame)
 {
     m_pGame            = pGame;
-    m_pThread          = SDL_CreateThread(&XMThread::run, this);
-    m_isRunning        = true;
     m_progress         = 0;
     m_currentOperation = "";
+    m_pThread          = SDL_CreateThread(&XMThread::run, this);
+    m_isRunning        = true;
 }
 
 int XMThread::waitForThreadEnd()
@@ -87,13 +85,7 @@ void XMThread::killThread()
 
 int XMThread::getThreadProgress()
 {
-  int progress;
-
-  SDL_LockMutex(m_progressMutex);
-  progress = m_progress;
-  SDL_UnlockMutex(m_progressMutex);
-
-  return progress;
+  return m_progress;
 }
 
 std::string XMThread::getThreadCurrentOperation()
@@ -120,9 +112,7 @@ std::string XMThread::getThreadCurrentMicroOperation()
 
 void XMThread::setThreadProgress(int progress)
 {
-  SDL_LockMutex(m_progressMutex);
   m_progress = progress;
-  SDL_UnlockMutex(m_progressMutex);
 }
 
 void XMThread::setThreadCurrentOperation(std::string curOp)

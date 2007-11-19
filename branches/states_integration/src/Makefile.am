@@ -92,6 +92,7 @@ common_SOURCES = Image.cpp \
   WWW.h \
   WWWAppInterface.h \
   XMotoLoadLevelsInterface.h \
+  XMotoLoadReplaysInterface.h \
   Locales.h \
   Locales.cpp \
   Packager.cpp \

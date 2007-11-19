@@ -49,6 +49,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StatePlaying.h"
 #include "states/StatePreplaying.h"
 #include "states/StateMessageBox.h"
+#include "XMotoLoadReplaysInterface.h"
 
   bool GameApp::haveMouseMoved() {
     int nX,nY;
@@ -1300,22 +1301,9 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     m_MotoGame.addPenalityTime(900); /* 15 min of penality for that ! */
   }
 
-  void GameApp::loadLevelHook(std::string i_level, int i_percentage) {
-#if 0
-    std::ostringstream v_percentage;
-    v_percentage << i_percentage;
-    v_percentage << "%";
-
-    if(m_reloadingLevelsUser == false) {
-      _UpdateLoadingScreen(0, std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str() + std::string(" ") + i_level);
-    } else {
-      _SimpleMessage(GAMETEXT_RELOADINGLEVELS + std::string("\n") + v_percentage.str(), &m_InfoMsgBoxRect);
-    }
-
-    /* pump events to so that windows don't think the appli is crashed */
-    SDL_PumpEvents();
-#endif
-  }
+void GameApp::loadLevelHook(std::string i_level, int i_percentage)
+{
+}
 
   void GameApp::updatingDatabase(std::string i_message) {
     _UpdateLoadingScreen(0, i_message);
@@ -1328,7 +1316,8 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     return m_bCreditsModeActive;
   }
 
-  void GameApp::initReplaysFromDir(xmDatabase* threadDb) {
+  void GameApp::initReplaysFromDir(xmDatabase* threadDb,
+				   XMotoLoadReplaysInterface* pLoadReplaysInterface) {
     ReplayInfo* rplInfos;
     std::vector<std::string> ReplayFiles;
     ReplayFiles = FS::findPhysFiles("Replays/*.rpl");
@@ -1348,6 +1337,9 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 	  continue;
 	}
 	addReplay(ReplayFiles[i], pDb);
+	if(pLoadReplaysInterface != NULL){
+	  pLoadReplaysInterface->loadReplayHook(ReplayFiles[i], (int)((i*100)/((float)ReplayFiles.size())));
+	}
 
       } catch(Exception &e) {
 	// ok, forget this replay

@@ -70,12 +70,17 @@ bool StateUpdateLevels::update()
   }
 
   if(m_threadStarted == true){
-    // update the frame with the thread informations
-    m_progress         = m_pThread->getThreadProgress();
-    m_currentOperation = m_pThread->getThreadCurrentOperation();
-    m_currentMicroOperation = m_pThread->getThreadCurrentMicroOperation();
 
-    updateGUI();
+    // update the frame with the thread informations only when progress change
+    // to avoid spending tooo much time waiting for mutexes.
+    int progress = m_pThread->getThreadProgress();
+    if(progress != m_progress){
+      m_progress              = progress;
+      m_currentOperation      = m_pThread->getThreadCurrentOperation();
+      m_currentMicroOperation = m_pThread->getThreadCurrentMicroOperation();
+
+      updateGUI();
+    }
   }
 
   return true;
