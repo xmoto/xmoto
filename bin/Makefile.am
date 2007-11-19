@@ -11,11 +11,11 @@ xmoto.bin: package.lst
 if CROSS_COMPILING
 	echo "Cross-compiling, cannot build xmoto.bin"
 else
-  if WIN32
+if WIN32
 	echo "Windows, cannot build xmoto.bin in the src directory ; build it from the exec directory."
-  else
+else
 	if test -e $<; then ../src/xmoto --pack $@ `dirname $<`; fi
-  endif
+endif
 endif
 
 # nothing to do for package.lst, but this entry exists because this file is not included in releases.
