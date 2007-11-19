@@ -83,6 +83,7 @@ class StateMainMenu : public StateMenu {
   void updateNewLevelsList();
   void updateReplaysList();
   void updateStats();
+  void updateNewLevels();
 
   /* options */
   void createThemesList(UIList *pList);

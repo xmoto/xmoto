@@ -113,6 +113,9 @@ void StateMainMenu::enter()
   updateWWWOptions();
   updateGhostsOptions();
 
+  // check new levels
+  updateNewLevels();
+
   StateMenu::enter();
 }
 
@@ -158,6 +161,7 @@ void StateMainMenu::checkEventsMainWindow() {
   UILevelList*        v_list;
   std::string         v_id_level;
   UIQuickStartButton* v_quickstart;
+  UIButtonDrawn*      v_buttonDrawn;
 
   // quickstart
   v_quickstart = reinterpret_cast<UIQuickStartButton *>(m_GUI->getChild("MAIN:QUICKSTART"));
@@ -239,7 +243,6 @@ void StateMainMenu::checkEventsMainWindow() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-
     UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
     UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
     UIWindow* v_windowOptions = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_OPTIONS"));
@@ -253,6 +256,22 @@ void StateMainMenu::checkEventsMainWindow() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     m_pGame->getStateManager()->pushState(new StateEditProfile(m_pGame, this));
+  }
+
+  // new levels ?
+  v_buttonDrawn = reinterpret_cast<UIButtonDrawn *>(m_GUI->getChild("MAIN:NEWLEVELAVAILBLE"));
+  if(v_buttonDrawn->isClicked()) {
+    v_button->setClicked(false);
+    
+    UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
+    UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
+    UIWindow* v_windowOptions = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_OPTIONS"));
+    UITabView* v_tabView = reinterpret_cast<UITabView *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS"));
+
+    v_windowLevels->showWindow(true);
+    v_windowReplays->showWindow(false);
+    v_windowOptions->showWindow(false);
+    v_tabView->selectChildrenById("NEWLEVELS_TAB");
   }
 }
 
@@ -460,6 +479,7 @@ void StateMainMenu::createGUIIfNeeded(GameApp* pGame) {
   UIWindow* v_menu;
   UIButton* v_button;
   UIStatic* v_someText;
+  UIButtonDrawn* v_buttonDrawn;
 
   v_menu = new UIWindow(m_sGUI, 0, 0, "", m_sGUI->getPosition().nWidth, m_sGUI->getPosition().nHeight);
   v_menu->setID("MAIN");
@@ -524,6 +544,12 @@ void StateMainMenu::createGUIIfNeeded(GameApp* pGame) {
   v_someText->setFont(drawlib->getFontSmall());
   v_someText->setVAlign(UI_ALIGN_BOTTOM);
   v_someText->setHAlign(UI_ALIGN_LEFT);
+
+  /* new levels ? */
+  v_buttonDrawn = new UIButtonDrawn(v_menu, "NewLevelsAvailablePlain", "NewLevelsAvailablePlain", "NewLevelsAvailablePlain", 5, -65,
+				    GAMETEXT_NEWLEVELS_AVAIBLE, 200, 200);
+  v_buttonDrawn->setFont(drawlib->getFontSmall());      
+  v_buttonDrawn->setID("NEWLEVELAVAILBLE");
 
   // frames
   makeWindowLevels(pGame,  v_menu);
@@ -1403,29 +1429,10 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
 //    m_pLevelInfoViewReplayButton->setFont(drawlib->getFontSmall());
 //    m_pLevelInfoViewReplayButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
 //
-//    
-//    /* new levels ? */
-//    m_pNewLevelsAvailable = new UIButtonDrawn(m_pMainMenu,
-//					      "NewLevelsAvailablePlain",
-//					      "NewLevelsAvailablePlain",
-//					      "NewLevelsAvailablePlain",
-//					      5, -65,
-//					      GAMETEXT_NEWLEVELS_AVAIBLE, 200, 200);
-//    m_pNewLevelsAvailable->setFont(drawlib->getFontSmall());      
-//    m_pNewLevelsAvailable->setID("NEWLEVELAVAILBLE");
-//    
-//
-//    
 //    //m_pGameInfoWindow = new UIFrame(m_pMainMenu,47,20+getDispHeight()/2 + (m_nNumMainMenuButtons*57)/2,
 //    //                                "",207,getDispHeight() - (20+getDispHeight()/2 + (m_nNumMainMenuButtons*57)/2));
 //    //m_pGameInfoWindow->showWindow(true);
-//
-//    
-//    /* OPTIONS */
-//    m_pOptionsWindow = makeOptionsWindow(drawLib, m_pMainMenu, &m_Config);
-//    _UpdateThemesLists();
-//    _UpdateRoomsLists();
-//    /* ***** */
+
 
 
 void StateMainMenu::drawBackground() {
@@ -2450,4 +2457,11 @@ void StateMainMenu::updateGhostsOptions() {
   v_button->enableWindow(m_pGame->getSession()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:MOTION_BLUR_GHOST"));
   v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+}
+
+void StateMainMenu::updateNewLevels() {
+  UIButtonDrawn* v_buttonDrawn;
+
+  v_buttonDrawn = reinterpret_cast<UIButtonDrawn *>(m_GUI->getChild("MAIN:NEWLEVELAVAILBLE"));
+  v_buttonDrawn->showWindow(true);
 }
