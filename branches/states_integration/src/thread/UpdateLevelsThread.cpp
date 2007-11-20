@@ -37,6 +37,9 @@ UpdateLevelsThread::~UpdateLevelsThread()
 int UpdateLevelsThread::realThreadFunction()
 {
   setThreadCurrentOperation(GAMETEXT_RELOADINGLEVELS);
+  // initialize to -1, so we put it to 0 so that the current operation
+  // text is update in the state
+  setThreadProgress(0);
   m_pGame->getLevelsManager()->reloadLevelsFromLvl(m_pDb, this);
   m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_LEVELS_LISTS");
 
