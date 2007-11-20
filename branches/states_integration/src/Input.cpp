@@ -287,7 +287,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/  
   void InputHandler::configure(UserConfig *pConfig) {
     /* Set defaults */
-    _SetDefaultConfig();
+    setDefaultConfig();
   
     /* Get controller mode? (Keyboard or joystick) */
     std::string ControllerMode1 = pConfig->getString("ControllerMode1");    
@@ -529,7 +529,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Set totally default configuration - useful for when something goes wrong
   ===========================================================================*/  
-  void InputHandler::_SetDefaultConfig(void) {
+  void InputHandler::setDefaultConfig() {
     m_ControllerModeID[0] = CONTROLLER_MODE_KEYBOARD;
     m_ControllerModeID[1] = CONTROLLER_MODE_KEYBOARD;
     m_ControllerModeID[2] = CONTROLLER_MODE_KEYBOARD;
@@ -651,3 +651,66 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     return "?";
   }
+
+void InputHandler::saveConfig(UserConfig *pConfig) {
+//        if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE)
+//	m_Config.setString("KeyDrive1",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE)
+//	m_Config.setString("KeyBrake1",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT)
+//	m_Config.setString("KeyFlipLeft1",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT)
+//	m_Config.setString("KeyFlipRight1",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR)
+//	m_Config.setString("KeyChangeDir1",pActionList->getEntries()[i]->Text[1]);
+//
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE + std::string(" 2"))
+//	m_Config.setString("KeyDrive2",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE + std::string(" 2"))
+//	m_Config.setString("KeyBrake2",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT + std::string(" 2"))
+//	m_Config.setString("KeyFlipLeft2",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT + std::string(" 2"))
+//	m_Config.setString("KeyFlipRight2",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR + std::string(" 2"))
+//	m_Config.setString("KeyChangeDir2",pActionList->getEntries()[i]->Text[1]);
+//
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE + std::string(" 3"))
+//	m_Config.setString("KeyDrive3",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE + std::string(" 3"))
+//	m_Config.setString("KeyBrake3",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT + std::string(" 3"))
+//	m_Config.setString("KeyFlipLeft3",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT + std::string(" 3"))
+//	m_Config.setString("KeyFlipRight3",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR + std::string(" 3"))
+//	m_Config.setString("KeyChangeDir3",pActionList->getEntries()[i]->Text[1]);
+//
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE + std::string(" 4"))
+//	m_Config.setString("KeyDrive4",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE + std::string(" 4"))
+//	m_Config.setString("KeyBrake4",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT + std::string(" 4"))
+//	m_Config.setString("KeyFlipLeft4",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT + std::string(" 4"))
+//	m_Config.setString("KeyFlipRight4",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR + std::string(" 4"))
+//	m_Config.setString("KeyChangeDir4",pActionList->getEntries()[i]->Text[1]);
+//
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMIN)
+//	m_Config.setString("KeyZoomIn",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMOUT)
+//	m_Config.setString("KeyZoomOut",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMINIT)
+//	m_Config.setString("KeyZoomInit",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEXUP)
+//	m_Config.setString("KeyCameraMoveXUp",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEXDOWN)
+//	m_Config.setString("KeyCameraMoveXDown",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEYUP)
+//	m_Config.setString("KeyCameraMoveYUp",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEYDOWN)
+//	m_Config.setString("KeyCameraMoveYDown",pActionList->getEntries()[i]->Text[1]);
+//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_AUTOZOOM)
+//	m_Config.setString("KeyAutoZoom",pActionList->getEntries()[i]->Text[1]);
+}

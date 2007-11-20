@@ -272,6 +272,8 @@ void StateMainMenu::checkEventsMainWindow() {
     v_windowReplays->showWindow(false);
     v_windowOptions->showWindow(false);
     v_tabView->selectChildrenById("NEWLEVELS_TAB");
+
+    //checkForExtraLevels();
   }
 }
 

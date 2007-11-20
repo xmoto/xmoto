@@ -23,6 +23,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "UserConfig.h"
 
 XMSession::XMSession() {
+  setToDefault();
+}
+
+void XMSession::setToDefault() {
   /* default config */
   m_verbose          	          = false;
   m_useGraphics      	          = true;

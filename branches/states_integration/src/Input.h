@@ -123,6 +123,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
       static std::string keyToString(int nKey);
     
+      void setDefaultConfig();
+      void saveConfig(UserConfig *pConfig);
+
     private:
 
       /* Data */
@@ -174,8 +177,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Helpers */
       int _StringToKey(const std::string &s);
       
-      /* Set default config */
-      void _SetDefaultConfig(void);
       void _SetDefaultConfigToUnsetKeys();
   };
 

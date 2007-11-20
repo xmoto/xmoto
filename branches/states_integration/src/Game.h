@@ -260,9 +260,6 @@ class XMotoLoadReplaysInterface;
       UIMsgBox *m_pInfoMsgBox;
       UIRect m_InfoMsgBoxRect;
 
-      /* */
-      UIButtonDrawn* m_pNewLevelsAvailable;
-      
       /* Main menu buttons and stuff */
       int m_nNumMainMenuButtons;
       UITabView *m_pLevelPackTabs;
@@ -347,7 +344,6 @@ class XMotoLoadReplaysInterface;
       void _ChangeKeyConfig(void);
       void _InitMenus(void);        
       void _InitMenus_MainMenu(void);
-      void _DefaultOptions(void);
       void _SaveOptions(void);
       void _UpdateSettings(void);
       void _UpdateLevelLists(void);

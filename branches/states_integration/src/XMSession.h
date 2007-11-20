@@ -50,6 +50,7 @@ class XMSession {
   void load(const XMArguments* i_xmargs);
   void load(UserConfig* m_Config);
   void save(UserConfig* m_Config);
+  void setToDefault();
   bool isVerbose() const;
 
   void setUseGraphics(bool i_value);

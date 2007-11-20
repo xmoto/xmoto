@@ -33,13 +33,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Camera.h"
 
 #include "PhysSettings.h"
-#include "states/StateEditProfile.h"
-#include "states/StateLevelInfoViewer.h"
-#include "states/StateReplaying.h"
-#include "states/StatePreplaying.h"
-#include "states/StateCreditsMode.h"
-#include "states/StateLevelPackViewer.h"
-#include "states/StateEditWebConfig.h"
 
   UIFrame* GameApp::makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
     UIFrame *v_pOptionsWindow;
@@ -638,16 +631,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pPlayerText->setHAlign(UI_ALIGN_RIGHT);
     pPlayerText->setID("PLAYERTAG");
     
-    /* new levels ? */
-    m_pNewLevelsAvailable = new UIButtonDrawn(m_pMainMenu,
-					      "NewLevelsAvailablePlain",
-					      "NewLevelsAvailablePlain",
-					      "NewLevelsAvailablePlain",
-					      5, -65,
-					      GAMETEXT_NEWLEVELS_AVAIBLE, 200, 200);
-    m_pNewLevelsAvailable->setFont(drawLib->getFontSmall());      
-    m_pNewLevelsAvailable->setID("NEWLEVELAVAILBLE");
-    
     UIButton *pChangePlayerButton = new UIButton(m_pMainMenu,drawLib->getDispWidth()-115,(drawLib->getDispHeight()*80)/600,GAMETEXT_CHANGE,115,57);
     pChangePlayerButton->setType(UI_BUTTON_TYPE_SMALL);
     pChangePlayerButton->setFont(drawLib->getFontSmall());
@@ -950,19 +933,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_pLevelInfoViewReplayButton->setClicked(false);
       viewHighscoreOf();
       m_pMainMenu->showWindow(false);
-      m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
-    }
-
-    if(m_pNewLevelsAvailable->isClicked()) {
-      m_pNewLevelsAvailable->setClicked(false);
-      m_pLevelInfoFrame->showWindow(false);
-      m_pOptionsWindow->showWindow(false);
-      m_pReplaysWindow->showWindow(false);
-      m_pLevelPacksWindow->showWindow(true);
-
-      m_pLevelPackTabs->selectChildrenById("NEWLEVELS_TAB");
-
-      checkForExtraLevels();
+      //m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
     }
 
     /* level menu : */
@@ -996,31 +967,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_pLevelInfoFrame->showWindow(false);      
       m_pLevelPackTabs->setChanged(false);
     }
-
-    
-    if(m_pNewLevelsAvailable != NULL) {
-      m_pNewLevelsAvailable->showWindow(m_bWebLevelsToDownload);
-    }
     
     /* OPTIONS */
-    UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
-    UIButton *p11kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE11KHZ");
-    UIButton *p22kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE22KHZ");
-    UIButton *p44kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE44KHZ");
-    UIButton *pSample8Button = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:8BIT");
-    UIButton *pSample16Button = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:16BIT");
-    UIButton *pMonoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:MONO");
-    UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
-    UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
-    UIButton *pEnableMusicButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_MUSIC");
-	  
     UIButton *pINetConf = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:PROXYCONFIG");
     UIButton *pUpdHS = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:UPDATEHIGHSCORES");
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
     UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD");
 
-    UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
-    UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
     UIWindow *pRoomsTab = (UIWindow *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB");
     UIButton *pUpdRoomsList = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:UPDATE_ROOMS_LIST");
 	UIButton *pUploadAllHighscoresButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:REPLAY_UPLOADHIGHSCOREALL_BUTTON");
@@ -1029,86 +982,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     UIButton *pUpdSelectedTheme = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:GET_SELECTED_THEME");
     UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST");
 
-    UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
-    UIButton *pGhostStrategy_MYBEST = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_MYBEST");
-    UIButton *pGhostStrategy_THEBEST = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_THEBEST");
-    UIButton *pGhostStrategy_BESTOFROOM = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_BESTOFROOM");
-    UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
-    UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
-    UIButton *pHideGhosts = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:HIDEGHOSTS");
-    UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
-
-    UIButton *pMultiStopWhenOneFinishes = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES");
-
 	/* unfortunately because of differences betw->setClicked(false);een finishTime in webhighscores and replays table (one is rounded to 0.01s and other to 0.001s) and lack of math functions in sqlite we cannot make it with just one smart query :( */
 	if(pUploadAllHighscoresButton->isClicked()) {
 		pUploadAllHighscoresButton->setClicked(false);
 		_UploadAllHighscores();
 	}		
-	
-    if(pEnableGhost->getChecked()) {
-      pGhostStrategy_MYBEST->enableWindow(true);
-      pGhostStrategy_THEBEST->enableWindow(true);
-      pGhostStrategy_BESTOFROOM->enableWindow(true);
-      pMotionBlurGhost->enableWindow(true);
-      pDisplayGhostInfo->enableWindow(true);
-      pHideGhosts->enableWindow(true);
-      pDisplayGhostTimeDiff->enableWindow(true);
-    } else {
-      pGhostStrategy_MYBEST->enableWindow(false);
-      pGhostStrategy_THEBEST->enableWindow(false);
-      pGhostStrategy_BESTOFROOM->enableWindow(false);
-      pMotionBlurGhost->enableWindow(false);
-      pDisplayGhostInfo->enableWindow(false);
-      pHideGhosts->enableWindow(false);
-      pDisplayGhostTimeDiff->enableWindow(false);
-    }
 
-
-    if(pWebHighscores->isClicked()) {
-      pWebHighscores->setClicked(false);
-
-      if(pWebHighscores->getChecked()) {
-        pINetConf->enableWindow(true);
-        pUpdHS->enableWindow(true);
-	pCheckNewLevelsAtStartup->enableWindow(true);
-	pCheckHighscoresAtStartup->enableWindow(true);
-	pUpdThemeList->enableWindow(true);
-	pUpdSelectedTheme->enableWindow(true);
-	pRoomsTab->enableWindow(true);
-      } else {
-        pINetConf->enableWindow(false);
-        pUpdHS->enableWindow(false);
-	pCheckNewLevelsAtStartup->enableWindow(false);
-	pCheckHighscoresAtStartup->enableWindow(false);
-	pUpdThemeList->enableWindow(false);
-	pUpdSelectedTheme->enableWindow(false);
-	pRoomsTab->enableWindow(false);
-      }
-
-      enableWWW(pWebHighscores->getChecked());
-    }
-    
-    if(pEnableAudioButton) {
-      bool t=pEnableAudioButton->getChecked();
-      p11kHzButton->enableWindow(t);
-      p22kHzButton->enableWindow(t);
-      p44kHzButton->enableWindow(t);      
-      pSample8Button->enableWindow(t);
-      pSample16Button->enableWindow(t);
-      pMonoButton->enableWindow(t);
-      pStereoButton->enableWindow(t);
-      pEnableEngineSoundButton->enableWindow(t);
-      pEnableMusicButton->enableWindow(t);
-    }
-
-    if(pINetConf->isClicked()) {
-      pINetConf->setClicked(false);
-      
-      m_stateManager->pushState(new StateEditWebConfig(this));
-
-      return;
-    }
     
     if(pUpdHS->isClicked()) {
       pUpdHS->setClicked(false);
@@ -1160,43 +1039,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     } 
 
-    if(pMultiStopWhenOneFinishes->isClicked()) {
-      pMultiStopWhenOneFinishes->setClicked(false);
-
-      m_xmsession->setMultiStopWhenOneFinishes(pMultiStopWhenOneFinishes->getChecked());
-      m_Config.setBool("MultiStopWhenOneFinishes", pMultiStopWhenOneFinishes->getChecked());
-    }
-
-    UIButton *pSaveOptions = (UIButton *)m_pOptionsWindow->getChild("SAVE_BUTTON");
-    UIButton *pDefaultOptions = (UIButton *)m_pOptionsWindow->getChild("DEFAULTS_BUTTON");
-    UIList *pActionKeyList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEY_ACTION_LIST");
-    UIButton *pJoystickRB = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:JOYSTICK");
-    UIButton *pKeyboardRB = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEYBOARD");
-    UIButton *pConfigJoystick = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:CONFIGURE_JOYSTICK");
-
-    if(SDL_NumJoysticks() > 0) {    
-      if(pJoystickRB->getChecked()) {
-        pActionKeyList->enableWindow(false);
-        pConfigJoystick->enableWindow(true);
-      }
-      else if(pKeyboardRB->getChecked()) {
-        pActionKeyList->enableWindow(true);
-        pConfigJoystick->enableWindow(false);
-      }
-    }
-    else {
-      pJoystickRB->setChecked(false);
-      pKeyboardRB->setChecked(true);
-      pActionKeyList->enableWindow(true);
-      pConfigJoystick->enableWindow(false);
-    }
-    
-    if(pSaveOptions && pSaveOptions->isClicked()) {
-      _SaveOptions();
-    }
-    else if(pDefaultOptions && pDefaultOptions->isClicked()) {
-      _DefaultOptions();
-    }
+     UIList *pActionKeyList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEY_ACTION_LIST");
     
     if(pActionKeyList && pActionKeyList->isItemActivated()) {
       _ChangeKeyConfig();
@@ -1217,38 +1060,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
   void GameApp::_SimpleMessage(const std::string &Msg,UIRect *pRect,bool bNoSwap) {      
-    m_Renderer->getGUI()->paint();
-    drawLib->drawBox(Vector2f(0,0),Vector2f(drawLib->getDispWidth(),drawLib->getDispHeight()),0,MAKE_COLOR(0,0,0,170),0);
 
-    m_Renderer->getGUI()->setFont(drawLib->getFontMedium());
-    FontGlyph* fg = drawLib->getFontMedium()->getGlyph(Msg);
-    
-    int border = 75;
-    int nW = fg->realWidth() + border*2, nH = fg->realHeight() + border*2;
-    int nx = drawLib->getDispWidth()/2 - nW/2, ny = drawLib->getDispHeight()/2 - nH/2;
-    
-    if(pRect != NULL) {
-      pRect->nX = nx;
-      pRect->nY = ny;
-      pRect->nWidth = nW;
-      pRect->nHeight = nH;
-    }
-
-    m_Renderer->getGUI()->putElem(nx,ny,-1,-1,UI_ELEM_FRAME_TL,false);
-    m_Renderer->getGUI()->putElem(nx+nW-8,ny,-1,-1,UI_ELEM_FRAME_TR,false);
-    m_Renderer->getGUI()->putElem(nx+nW-8,ny+nH-8,-1,-1,UI_ELEM_FRAME_BR,false);
-    m_Renderer->getGUI()->putElem(nx,ny+nH-8,-1,-1,UI_ELEM_FRAME_BL,false);
-    m_Renderer->getGUI()->putElem(nx+8,ny,nW-16,-1,UI_ELEM_FRAME_TM,false);
-    m_Renderer->getGUI()->putElem(nx+8,ny+nH-8,nW-16,-1,UI_ELEM_FRAME_BM,false);
-    m_Renderer->getGUI()->putElem(nx,ny+8,-1,nH-16,UI_ELEM_FRAME_ML,false);
-    m_Renderer->getGUI()->putElem(nx+nW-8,ny+8,-1,nH-16,UI_ELEM_FRAME_MR,false);
-    m_Renderer->getGUI()->putRect(nx+8,ny+8,nW-16,nH-16,MAKE_COLOR(0,0,0,127));
-
-    m_Renderer->getGUI()->setTextSolidColor(MAKE_COLOR(255,255,255,255));
-    m_Renderer->getGUI()->putText(drawLib->getDispWidth()/2,drawLib->getDispHeight()/2,Msg, -0.5, -0.5);
-    
-    if(!bNoSwap)
-      drawLib->flushGraphics();
   }
   
   void GameApp::_ChangeKeyConfig(void) {
@@ -1282,77 +1094,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Options fun
   ===========================================================================*/
   void GameApp::_ImportOptions(void) {
-    UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
-    UIButton *pDeathAnim = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:DEATHANIM");
-    UIButton *pInitZoom = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:INITZOOM");
-    UIButton *pShowEngineCounter = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWENGINECOUNTER");
-
-    UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
-    UIButton *pAutosaveReplays = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:AUTOSAVEREPLAYS");
-
-    UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST");
-
-    UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
-    UIButton *p11kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE11KHZ");
-    UIButton *p22kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE22KHZ");
-    UIButton *p44kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE44KHZ");
-    UIButton *pSample8Button = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:8BIT");
-    UIButton *pSample16Button = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:16BIT");
-    UIButton *pMonoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:MONO");
-    UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
-    UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
-    UIButton *pEnableMusicButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_MUSIC");
-
-    UIButton *p16bpp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:16BPP");
-    UIButton *p32bpp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:32BPP");
-    UIList *pResList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:RES_LIST");
-    UIButton *pRunWindowed = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:RUN_WINDOWED");
-    UIButton *pMenuLow = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:MENULOW");
-    UIButton *pMenuMed = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:MENUMEDIUM");
-    UIButton *pMenuHigh = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:MENUHIGH");
-    UIButton *pGameLow = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:GAMELOW");
-    UIButton *pGameMed = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:GAMEMEDIUM");
-    UIButton *pGameHigh = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:GAMEHIGH");
-    
     UIButton *pKeyboardControl = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEYBOARD");
     UIButton *pJoystickControl = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:JOYSTICK");
-        
-    p11kHzButton->setChecked(false);
-    p22kHzButton->setChecked(false);
-    p44kHzButton->setChecked(false);
-    pSample8Button->setChecked(false);
-    pSample16Button->setChecked(false);
-    pMonoButton->setChecked(false);
-    pStereoButton->setChecked(false);
-    pEnableEngineSoundButton->setChecked(false);
-    pEnableMusicButton->setChecked(false);
-    
-    p16bpp->setChecked(false);
-    p32bpp->setChecked(false);
-    pRunWindowed->setChecked(false);
-    pMenuLow->setChecked(false);
-    pMenuMed->setChecked(false);
-    pMenuHigh->setChecked(false);
-    pGameLow->setChecked(false);
-    pGameMed->setChecked(false);
-    pGameHigh->setChecked(false);
-    
-    pKeyboardControl->setChecked(false);
-    pJoystickControl->setChecked(false);
-    
-    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
-    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD");
-    UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
-    UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
-    UIList *pRoomsList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOMS_LIST");
-
-    pWebHighscores->setChecked(m_Config.getBool("WebHighscores"));
-    pInGameWorldRecord->setChecked(m_Config.getBool("ShowInGameWorldRecord"));
-    pCheckNewLevelsAtStartup->setChecked(m_Config.getBool("CheckNewLevelsAtStartup"));
-    pCheckHighscoresAtStartup->setChecked(m_Config.getBool("CheckHighscoresAtStartup"));
 
     /* set room in the list */
-    m_WebHighscoresURL = m_Config.getString("WebHighscoresURL");
+    //m_WebHighscoresURL = m_Config.getString("WebHighscoresURL");
     //m_WebHighscoresIdRoom = m_Config.getString("WebHighscoresIdRoom");
     //std::string v_room_id = m_WebHighscoresIdRoom;
     //if(v_room_id == "") {v_room_id = DEFAULT_WEBROOM_ID;}
@@ -1363,104 +1109,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     //  }
     //}
 
-    UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
-    UIButton *pGhostStrategy_MYBEST = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_MYBEST");
-    UIButton *pGhostStrategy_THEBEST = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_THEBEST");
-    UIButton *pGhostStrategy_BESTOFROOM = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_BESTOFROOM");
-    UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
-    UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
-    UIButton *pHideGhosts = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:HIDEGHOSTS");
-    UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
-
-    pEnableGhost->setChecked(m_Config.getBool("EnableGhost"));
-    pGhostStrategy_MYBEST->setChecked(m_Config.getBool("GhostStrategy_MYBEST"));
-    pGhostStrategy_THEBEST->setChecked(m_Config.getBool("GhostStrategy_THEBEST"));
-    pGhostStrategy_BESTOFROOM->setChecked(m_Config.getBool("GhostStrategy_BESTOFROOM"));
-    pMotionBlurGhost->setChecked(m_Config.getBool("GhostMotionBlur"));
-    pDisplayGhostInfo->setChecked(m_Config.getBool("DisplayGhostInfo"));
-    pHideGhosts->setChecked(m_Config.getBool("HideGhosts"));
-    pDisplayGhostTimeDiff->setChecked(m_Config.getBool("ShowGhostTimeDiff"));
-
-    pShowMiniMap->setChecked(m_Config.getBool("ShowMiniMap"));
-    pShowEngineCounter->setChecked(m_Config.getBool("ShowEngineCounter"));
-    pInitZoom->setChecked(m_Config.getBool("InitZoom"));
-    pDeathAnim->setChecked(m_Config.getBool("DeathAnim"));
-    pContextHelp->setChecked(m_Config.getBool("ContextHelp"));
-    pAutosaveReplays->setChecked(m_xmsession->autosaveHighscoreReplays());
-
-    std::string v_themeName = m_xmsession->theme();
-    int nTheme = 0;
-    for(int i=0; i<pThemeList->getEntries().size(); i++) {
-      if(pThemeList->getEntries()[i]->Text[0] == v_themeName) {
-        nTheme = i;
-        break;
-      }
-    }
-    pThemeList->setRealSelected(nTheme);
-
-    pEnableAudioButton->setChecked(m_Config.getBool("AudioEnable"));
-
-    switch(m_Config.getInteger("AudioSampleRate")) {
-      case 11025: p11kHzButton->setChecked(true); break;
-      case 22050: p22kHzButton->setChecked(true); break;
-      case 44100: p44kHzButton->setChecked(true); break;
-      default: p22kHzButton->setChecked(true); break; /* TODO: warning */
-    }    
-    
-    switch(m_Config.getInteger("AudioSampleBits")) {
-      case 8: pSample8Button->setChecked(true); break;
-      case 16: pSample16Button->setChecked(true); break;
-      default: pSample16Button->setChecked(true); break; /* TODO: warning */
-    }
-    
-    if(m_Config.getString("AudioChannels") == "Stereo")
-      pStereoButton->setChecked(true);
-    else
-      pMonoButton->setChecked(true);
-      
-    pEnableEngineSoundButton->setChecked(m_Config.getBool("EngineSoundEnable"));      
-    pEnableMusicButton->setChecked(m_Config.getBool("MenuMusic"));
-      
-    switch(m_Config.getInteger("DisplayBPP")) {
-      case 16: p16bpp->setChecked(true); break;
-      case 32: p32bpp->setChecked(true); break;
-      default: p16bpp->setChecked(true); break; /* TODO: warning */      
-    }
-        
-    pRunWindowed->setChecked(m_Config.getBool("DisplayWindowed"));
-    
-    if(m_xmsession->menuGraphics() == GFX_LOW) {
-      pMenuLow->setChecked(true);
-    } else if(m_xmsession->menuGraphics() == GFX_MEDIUM) {
-      pMenuMed->setChecked(true);
-    } else {
-      pMenuHigh->setChecked(true);
-    }
-
-    if(m_Config.getString("GameGraphics") == "Low") 
-      pGameLow->setChecked(true);
-    else if(m_Config.getString("GameGraphics") == "Medium") 
-      pGameMed->setChecked(true);
-    else if(m_Config.getString("GameGraphics") == "High") 
-      pGameHigh->setChecked(true);
-    
-    char cBuf[256];
-    sprintf(cBuf,"%d X %d",m_Config.getInteger("DisplayWidth"),m_Config.getInteger("DisplayHeight"));
-    int nMode = -1;
-    for(int i=0;i<pResList->getEntries().size();i++) {
-      if(pResList->getEntries()[i]->Text[0] == cBuf) {
-        nMode = i;
-        break;
-      }
-    }
-    if(nMode < 0) {
-      /* TODO: warning */
-      pResList->setRealSelected(0);
-    }
-    else {
-      pResList->setRealSelected(nMode);
-    }      
-    
     /* Controls */
     if(m_Config.getString("ControllerMode1") == "Keyboard" || SDL_NumJoysticks()==0)
       pKeyboardControl->setChecked(true);
@@ -1470,275 +1118,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     _UpdateActionKeyList();
   }
   
-  void GameApp::_DefaultOptions(void) {
-    bool bNotify = false;
-    
-    /* These don't require restart */
-    m_Config.setValue("GameGraphics",m_Config.getDefaultValue("GameGraphics"));
-    m_Config.setValue("MenuGraphics",m_Config.getDefaultValue("MenuGraphics"));
-    m_Config.setValue("ShowMiniMap",m_Config.getDefaultValue("ShowMiniMap"));
-    m_Config.setValue("ShowEngineCounter",m_Config.getDefaultValue("ShowEngineCounter"));
-    m_Config.setValue("InitZoom",m_Config.getDefaultValue("InitZoom"));
-    m_Config.setValue("DeathAnim",m_Config.getDefaultValue("DeathAnim"));
-    m_Config.setValue("ContextHelp",m_Config.getDefaultValue("ContextHelp"));
-    m_Config.setValue("EngineSoundEnable",m_Config.getDefaultValue("EngineSoundEnable"));
-    m_Config.setValue("MenuMusic",m_Config.getDefaultValue("MenuMusic"));
-    
-    m_Config.setValue("ControllerMode1",m_Config.getDefaultValue("ControllerMode1"));
-    m_Config.setValue("KeyDrive1",m_Config.getDefaultValue("KeyDrive1"));
-    m_Config.setValue("KeyBrake1",m_Config.getDefaultValue("KeyBrake1"));
-    m_Config.setValue("KeyFlipLeft1",m_Config.getDefaultValue("KeyFlipLeft1"));
-    m_Config.setValue("KeyFlipRight1",m_Config.getDefaultValue("KeyFlipRight1"));
-    m_Config.setValue("KeyChangeDir1",m_Config.getDefaultValue("KeyChangeDir1"));
-    m_Config.setValue("ControllerMode2",m_Config.getDefaultValue("ControllerMode2"));
-    m_Config.setValue("KeyDrive2",m_Config.getDefaultValue("KeyDrive2"));
-    m_Config.setValue("KeyBrake2",m_Config.getDefaultValue("KeyBrake2"));
-    m_Config.setValue("KeyFlipLeft2",m_Config.getDefaultValue("KeyFlipLeft2"));
-    m_Config.setValue("KeyFlipRight2",m_Config.getDefaultValue("KeyFlipRight2"));
-    m_Config.setValue("KeyChangeDir2",m_Config.getDefaultValue("KeyChangeDir2"));
-    m_Config.setValue("ControllerMode3",m_Config.getDefaultValue("ControllerMode3"));
-    m_Config.setValue("KeyDrive3",m_Config.getDefaultValue("KeyDrive3"));
-    m_Config.setValue("KeyBrake3",m_Config.getDefaultValue("KeyBrake3"));
-    m_Config.setValue("KeyFlipLeft3",m_Config.getDefaultValue("KeyFlipLeft3"));
-    m_Config.setValue("KeyFlipRight3",m_Config.getDefaultValue("KeyFlipRight3"));
-    m_Config.setValue("KeyChangeDir3",m_Config.getDefaultValue("KeyChangeDir3"));
-    m_Config.setValue("ControllerMode4",m_Config.getDefaultValue("ControllerMode4"));
-    m_Config.setValue("KeyDrive4",m_Config.getDefaultValue("KeyDrive4"));
-    m_Config.setValue("KeyBrake4",m_Config.getDefaultValue("KeyBrake4"));
-    m_Config.setValue("KeyFlipLeft4",m_Config.getDefaultValue("KeyFlipLeft4"));
-    m_Config.setValue("KeyFlipRight4",m_Config.getDefaultValue("KeyFlipRight4"));
-    m_Config.setValue("KeyChangeDir4",m_Config.getDefaultValue("KeyChangeDir4"));
-
-    #if defined(ENABLE_ZOOMING)
-    m_Config.setValue("KeyZoomIn",m_Config.getDefaultValue("KeyZoomIn"));
-    m_Config.setValue("KeyZoomOut",m_Config.getDefaultValue("KeyZoomOut"));
-    m_Config.setValue("KeyZoomInit",m_Config.getDefaultValue("KeyZoomInit"));
-    m_Config.setValue("KeyCameraMoveXUp",m_Config.getDefaultValue("KeyCameraMoveXUp"));
-    m_Config.setValue("KeyCameraMoveXDown",m_Config.getDefaultValue("KeyCameraMoveXDown"));
-    m_Config.setValue("KeyCameraMoveYUp",m_Config.getDefaultValue("KeyCameraMoveYUp"));
-    m_Config.setValue("KeyCameraMoveYDown",m_Config.getDefaultValue("KeyCameraMoveYDown"));
-    m_Config.setValue("KeyAutoZoom",m_Config.getDefaultValue("KeyAutoZoom"));
-    #endif
-
-      m_Config.setValue("GhostMotionBlur",m_Config.getDefaultValue("GhostMotionBlur"));
-      m_Config.setValue("DisplayGhostInfo",m_Config.getDefaultValue("DisplayGhostInfo"));
-      m_Config.setValue("HideGhosts",m_Config.getDefaultValue("HideGhosts"));
-      m_Config.setValue("ShowGhostTimeDiff",m_Config.getDefaultValue("ShowGhostTimeDiff"));
-
-      m_Config.setValue("ShowInGameWorldRecord",m_Config.getDefaultValue("ShowInGameWorldRecord"));
-
-      m_Config.setValue("AutosaveHighscoreReplays", m_Config.getDefaultValue("AutosaveHighscoreReplays"));
-      m_xmsession->setAutosaveHighscoreReplays(m_Config.getBool("AutosaveHighscoreReplays"));
-
-      m_Config.setValue("CheckNewLevelsAtStartup",m_Config.getDefaultValue("CheckNewLevelsAtStartup"));
-      m_Config.setValue("CheckHighscoresAtStartup",m_Config.getDefaultValue("CheckHighscoresAtStartup"));
-
-      //m_WebHighscoresIdRoom = m_Config.getDefaultValue("WebHighscoresIdRoom");
-      //m_Config.setValue("WebHighscoresIdRoom", m_WebHighscoresIdRoom);
-    m_WebHighscoresURL = m_Config.getDefaultValue("WebHighscoresURL");
-    m_Config.setValue("WebHighscoresURL", m_WebHighscoresURL);
-    m_Config.setValue("WebHighscoreUploadLogin", m_Config.getDefaultValue("WebHighscoreUploadLogin"));
-    m_Config.setValue("WebHighscoreUploadPasword", m_Config.getDefaultValue("WebHighscoreUploadPassword"));
-    
-
-
-    /* The following require restart */
-    m_Config.setChanged(false);      
-
-    m_xmsession->setTheme(m_Config.getDefaultValue("Theme"));
-
-    m_Config.setValue("WebHighscores",m_Config.getDefaultValue("WebHighscores"));
-    
-    m_Config.setValue("EnableGhost",m_Config.getDefaultValue("EnableGhost"));
-    m_Config.setValue("GhostStrategy_MYBEST", m_Config.getDefaultValue("GhostStrategy_MYBEST"));
-    m_Config.setValue("GhostStrategy_THEBEST", m_Config.getDefaultValue("GhostStrategy_THEBEST"));
-    m_Config.setValue("GhostStrategy_BESTOFROOM", m_Config.getDefaultValue("GhostStrategy_BESTOFROOM"));
-    m_xmsession->setGhostStrategy_MYBEST(m_Config.getBool("GhostStrategy_MYBEST"));
-    m_xmsession->setGhostStrategy_THEBEST(m_Config.getBool("GhostStrategy_THEBEST"));
-    m_xmsession->setGhostStrategy_BESTOFROOM(m_Config.getBool("GhostStrategy_BESTOFROOM"));
-
-    m_Config.setValue("AudioEnable",m_Config.getDefaultValue("AudioEnable"));
-    m_Config.setValue("AudioSampleRate",m_Config.getDefaultValue("AudioSampleRate"));
-    m_Config.setValue("AudioSampleBits",m_Config.getDefaultValue("AudioSampleBits"));
-    m_Config.setValue("AudioChannels",m_Config.getDefaultValue("AudioChannels"));    
-    
-    m_Config.setValue("DisplayWidth",m_Config.getDefaultValue("DisplayWidth"));
-    m_Config.setValue("DisplayHeight",m_Config.getDefaultValue("DisplayHeight"));
-    m_Config.setValue("DisplayBPP",m_Config.getDefaultValue("DisplayBPP"));
-    m_Config.setValue("DisplayWindowed",m_Config.getDefaultValue("DisplayWindowed"));
-    
-    if(m_Config.isChanged()) bNotify = true;
-    
-    /* Notify? */
-    if(bNotify) { 
-      notifyMsg(GAMETEXT_OPTIONSREQURERESTART);
-    }    
-
-    _ImportOptions();
-  }
-  
   void GameApp::_SaveOptions(void) {
-    bool bNotify = false;
 
-    UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
-    UIButton *pShowEngineCounter = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWENGINECOUNTER");
-    UIButton *pDeathAnim = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:DEATHANIM");
-    UIButton *pInitZoom = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:INITZOOM");
-    UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
-    UIButton *pAutosaveReplays = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:AUTOSAVEREPLAYS");
-    
-    UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST");
-
-    UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
-    UIButton *p11kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE11KHZ");
-    UIButton *p22kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE22KHZ");
-    UIButton *p44kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE44KHZ");
-    UIButton *pSample8Button = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:8BIT");
-    UIButton *pSample16Button = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:16BIT");
-    UIButton *pMonoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:MONO");
-    UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
-    UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
-    UIButton *pEnableMusicButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_MUSIC");
-    
-    UIButton *p16bpp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:16BPP");
-    UIButton *p32bpp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:32BPP");
-    UIList *pResList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:RES_LIST");
-    UIButton *pRunWindowed = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:RUN_WINDOWED");
-    UIButton *pMenuLow = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:MENULOW");
-    UIButton *pMenuMed = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:MENUMEDIUM");
-    UIButton *pMenuHigh = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:MENUHIGH");
-    UIButton *pGameLow = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:GAMELOW");
-    UIButton *pGameMed = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:GAMEMEDIUM");
-    UIButton *pGameHigh = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:GAMEHIGH");
-
-    UIButton *pKeyboardControl = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEYBOARD");
-    UIButton *pJoystickControl = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:JOYSTICK");
-    UIList *pActionList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEY_ACTION_LIST");
-
-    /* First all those which don't need a restart */
-    m_Config.setBool("ShowMiniMap",pShowMiniMap->getChecked());
-    m_Config.setBool("ShowEngineCounter",pShowEngineCounter->getChecked());
-    m_Config.setBool("InitZoom",pInitZoom->getChecked());
-    m_Config.setBool("DeathAnim",pDeathAnim->getChecked());
-    m_Config.setBool("ContextHelp",pContextHelp->getChecked());
-    
-    if(pMenuLow->getChecked()) m_Config.setString("MenuGraphics","Low");
-    else if(pMenuMed->getChecked()) m_Config.setString("MenuGraphics","Medium");
-    else if(pMenuHigh->getChecked()) m_Config.setString("MenuGraphics","High");
-    
-    if(pGameLow->getChecked()) m_Config.setString("GameGraphics","Low");
-    else if(pGameMed->getChecked()) m_Config.setString("GameGraphics","Medium");
-    else if(pGameHigh->getChecked()) m_Config.setString("GameGraphics","High");
-    
-    if(pKeyboardControl->getChecked()) m_Config.setString("ControllerMode1","Keyboard");
-    else if(pJoystickControl->getChecked()) m_Config.setString("ControllerMode1","Joystick1");
-
-    for(int i=0;i<pActionList->getEntries().size();i++) {
-
-      if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE)
-	m_Config.setString("KeyDrive1",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE)
-	m_Config.setString("KeyBrake1",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT)
-	m_Config.setString("KeyFlipLeft1",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT)
-	m_Config.setString("KeyFlipRight1",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR)
-	m_Config.setString("KeyChangeDir1",pActionList->getEntries()[i]->Text[1]);
-
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE + std::string(" 2"))
-	m_Config.setString("KeyDrive2",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE + std::string(" 2"))
-	m_Config.setString("KeyBrake2",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT + std::string(" 2"))
-	m_Config.setString("KeyFlipLeft2",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT + std::string(" 2"))
-	m_Config.setString("KeyFlipRight2",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR + std::string(" 2"))
-	m_Config.setString("KeyChangeDir2",pActionList->getEntries()[i]->Text[1]);
-
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE + std::string(" 3"))
-	m_Config.setString("KeyDrive3",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE + std::string(" 3"))
-	m_Config.setString("KeyBrake3",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT + std::string(" 3"))
-	m_Config.setString("KeyFlipLeft3",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT + std::string(" 3"))
-	m_Config.setString("KeyFlipRight3",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR + std::string(" 3"))
-	m_Config.setString("KeyChangeDir3",pActionList->getEntries()[i]->Text[1]);
-
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE + std::string(" 4"))
-	m_Config.setString("KeyDrive4",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE + std::string(" 4"))
-	m_Config.setString("KeyBrake4",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT + std::string(" 4"))
-	m_Config.setString("KeyFlipLeft4",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT + std::string(" 4"))
-	m_Config.setString("KeyFlipRight4",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR + std::string(" 4"))
-	m_Config.setString("KeyChangeDir4",pActionList->getEntries()[i]->Text[1]);
-#if defined(ENABLE_ZOOMING)
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMIN)
-	m_Config.setString("KeyZoomIn",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMOUT)
-	m_Config.setString("KeyZoomOut",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMINIT)
-	m_Config.setString("KeyZoomInit",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEXUP)
-	m_Config.setString("KeyCameraMoveXUp",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEXDOWN)
-	m_Config.setString("KeyCameraMoveXDown",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEYUP)
-	m_Config.setString("KeyCameraMoveYUp",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEYDOWN)
-	m_Config.setString("KeyCameraMoveYDown",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_AUTOZOOM)
-	m_Config.setString("KeyAutoZoom",pActionList->getEntries()[i]->Text[1]);
-#endif
-    }
-    
-    m_Config.setBool("EngineSoundEnable",pEnableEngineSoundButton->getChecked());
-
-    m_Config.setBool("MenuMusic",pEnableMusicButton->getChecked());
-    m_xmsession->setEnableMenuMusic(pEnableMusicButton->getChecked());
-//
-//    if(Sound::isEnabled()) {
-//      if(pEnableAudioButton->getChecked() && pEnableMusicButton->getChecked()
-//	 && Sound::isPlayingMusic() == false) {
-//	try {
-//	  Sound::playMusic(m_theme.getMusic("menu1")->FilePath());
-//	} catch(Exception &e) {
-//	  /* hum, no music */
-//	}
-//      } else {
-//	if((pEnableAudioButton->getChecked() == false || pEnableMusicButton->getChecked() == false)
-//	   && Sound::isPlayingMusic()) {
-//	  Sound::stopMusic();
-//	}
-//      }
-//    }
-//      
-    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
-    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD");
-    UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
-    UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
-    UIList *pRoomsList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOMS_LIST");
-    UIEdit *pRoomsLogin = (UIEdit *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOM_LOGIN");
-    UIEdit *pRoomsPassword = (UIEdit *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOM_PASSWORD");
-
-    m_Config.setBool("ShowInGameWorldRecord",pInGameWorldRecord->getChecked());
-
-    m_xmsession->setAutosaveHighscoreReplays(pAutosaveReplays->getChecked());
-    m_Config.setBool("AutosaveHighscoreReplays", m_xmsession->autosaveHighscoreReplays());
-
-    m_Config.setBool("CheckNewLevelsAtStartup",pCheckNewLevelsAtStartup->getChecked());
-    m_Config.setBool("CheckHighscoresAtStartup",pCheckHighscoresAtStartup->getChecked());
-
-    if(pRoomsList->getSelected() >= 0 &&
-       pRoomsList->getSelected() < pRoomsList->getEntries().size()) {
-      char **v_result;
-      unsigned int nrow;
+//    if(pRoomsList->getSelected() >= 0 &&
+//       pRoomsList->getSelected() < pRoomsList->getEntries().size()) {
+//      char **v_result;
+//      unsigned int nrow;
 
       //m_WebHighscoresIdRoom = *((std::string*)pRoomsList->getEntries()[pRoomsList->getSelected()]->pvUser);
       //m_Config.setString("WebHighscoresIdRoom", m_WebHighscoresIdRoom);
@@ -1753,82 +1138,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //     m_db->read_DB_free(v_result);
 //
 //     m_Config.setString("WebHighscoresURL", m_WebHighscoresURL);
-    }
-
-    m_Config.setString("WebHighscoreUploadLogin", pRoomsLogin->getCaption());
-    m_Config.setString("WebHighscoreUploadPassword", pRoomsPassword->getCaption());
-    m_Config.setBool("WebHighscores",pWebHighscores->getChecked());
-
-    if(pThemeList->getSelected() >= 0 && pThemeList->getSelected() < pThemeList->getEntries().size()) {
-      UIListEntry *pEntry = pThemeList->getEntries()[pThemeList->getSelected()];
-      m_xmsession->setTheme(pEntry->Text[0]);
-      if(m_theme.Name() != pEntry->Text[0]) {
-	Logger::Log("Reloading the theme...");
-	reloadTheme();
-      }
-    }
-
-    UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
-    UIButton *pGhostStrategy_MYBEST = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_MYBEST");
-    UIButton *pGhostStrategy_THEBEST = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_THEBEST");
-    UIButton *pGhostStrategy_BESTOFROOM = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_BESTOFROOM");
-    UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
-    UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
-    UIButton *pHideGhosts = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:HIDEGHOSTS");
-    UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
-
-    m_Config.setBool("EnableGhost",pEnableGhost->getChecked());
-    m_Config.setBool("GhostStrategy_MYBEST",pGhostStrategy_MYBEST->getChecked());
-    m_Config.setBool("GhostStrategy_THEBEST",pGhostStrategy_THEBEST->getChecked());
-    m_Config.setBool("GhostStrategy_BESTOFROOM",pGhostStrategy_BESTOFROOM->getChecked());
-    m_xmsession->setGhostStrategy_MYBEST(m_Config.getBool("GhostStrategy_MYBEST"));
-    m_xmsession->setGhostStrategy_THEBEST(m_Config.getBool("GhostStrategy_THEBEST"));
-    m_xmsession->setGhostStrategy_BESTOFROOM(m_Config.getBool("GhostStrategy_BESTOFROOM"));
-    m_Config.setBool("GhostMotionBlur",pMotionBlurGhost->getChecked());
-    m_Config.setBool("DisplayGhostInfo",pDisplayGhostInfo->getChecked());
-    m_Config.setBool("HideGhosts",pHideGhosts->getChecked());
-    m_Config.setBool("ShowGhostTimeDiff",pDisplayGhostTimeDiff->getChecked());
-
-
-    /* The following require restart */
-    m_Config.setChanged(false);      
-
-    m_Config.setBool("AudioEnable",pEnableAudioButton->getChecked());
+//    }
     
-    if(p11kHzButton->getChecked()) m_Config.setInteger("AudioSampleRate",11025);
-    else if(p22kHzButton->getChecked()) m_Config.setInteger("AudioSampleRate",22050);
-    else if(p44kHzButton->getChecked()) m_Config.setInteger("AudioSampleRate",44100);
-    
-    if(pSample8Button->getChecked()) m_Config.setInteger("AudioSampleBits",8);
-    else if(pSample16Button->getChecked()) m_Config.setInteger("AudioSampleBits",16);
-    
-    if(pMonoButton->getChecked()) m_Config.setString("AudioChannels","Mono");
-    else if(pStereoButton->getChecked()) m_Config.setString("AudioChannels","Stereo");
-    
-    if(p16bpp->getChecked()) m_Config.setInteger("DisplayBPP",16);
-    else if(p32bpp->getChecked()) m_Config.setInteger("DisplayBPP",32);
-
-    if(pResList->getSelected() >= 0 && pResList->getSelected() < pResList->getEntries().size()) {
-      UIListEntry *pEntry = pResList->getEntries()[pResList->getSelected()];
-      int nW,nH;
-      sscanf(pEntry->Text[0].c_str(),"%d X %d",&nW,&nH);
-      
-      m_Config.setInteger("DisplayWidth",nW);
-      m_Config.setInteger("DisplayHeight",nH);
-    }
-    
-    m_Config.setBool("DisplayWindowed",pRunWindowed->getChecked());
-    
-    if(m_Config.isChanged()) bNotify = true;
-    
-    /* Notify? */
-    if(bNotify) { 
-      notifyMsg(GAMETEXT_OPTIONSREQURERESTART);
-    }    
-    
-    /* Update things that can be updated */
-    _UpdateSettings();
-
     /* set the room name ; set to WR if it cannot be determined */
 //   m_WebHighscoresRoomName = "WR";
 //   char **v_result;
