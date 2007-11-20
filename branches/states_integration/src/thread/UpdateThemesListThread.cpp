@@ -37,8 +37,7 @@ UpdateThemesListThread::~UpdateThemesListThread()
 int UpdateThemesListThread::realThreadFunction()
 {
   setThreadCurrentOperation(GAMETEXT_DLTHEMESLISTCHECK);
-
-  SDL_Delay(1000);
+  setThreadProgress(0);
 
   try {
     Logger::Log("WWW: Checking for new or updated themes...");
