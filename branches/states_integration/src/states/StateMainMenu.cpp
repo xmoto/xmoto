@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateReplaying.h"
 #include "StateRequestKey.h"
 #include "StateLevelPackViewer.h"
+#include "StateUpdateThemesList.h"
 #include "LevelsManager.h"
 #include "helpers/Log.h"
 #include "helpers/System.h"
@@ -1542,8 +1543,10 @@ void StateMainMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
 void StateMainMenu::send(const std::string& i_id, const std::string& i_message) {
   UIList* v_list;
 
-  if(i_id == "STATE_MANAGER" && i_message == "FAVORITES_UPDATED") {
-    m_require_updateFavoriteLevelsList = true;
+  if(i_id == "STATE_MANAGER") {
+    if(i_message == "FAVORITES_UPDATED") {
+      m_require_updateFavoriteLevelsList = true;
+    }
   }
 
   if(i_id == "REQUESTKEY") {
@@ -1602,6 +1605,10 @@ void StateMainMenu::executeOneCommand(std::string cmd)
       }
     }
   }
+
+  if(cmd == "UPDATE_THEMES_LISTS") {
+    updateThemesList();      
+  } 
 }
 
 void StateMainMenu::updateLevelsLists() {
@@ -2170,6 +2177,12 @@ void StateMainMenu::checkEventsOptions() {
 	m_pGame->reloadTheme();
       }
     }
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:UPDATE_THEMES_LIST"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getStateManager()->pushState(new StateUpdateThemesList(m_pGame));     
   }
 
   // video tab

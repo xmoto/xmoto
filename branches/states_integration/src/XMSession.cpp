@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "XMArgs.h"
 #include "UserConfig.h"
+#include "WWW.h"
 
 XMSession::XMSession() {
   setToDefault();
@@ -82,6 +83,7 @@ void XMSession::setToDefault() {
   m_showGhostsInfos               = false;
   m_hideGhosts                    = false;
   m_replayFrameRate               = 25.0;
+  m_webThemesURL                  = DEFAULT_WEBTHEMES_URL;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -214,6 +216,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_showGhostsInfos             = m_Config->getBool("DisplayGhostInfo");
   m_hideGhosts                  = m_Config->getBool("HideGhosts");
   m_replayFrameRate          	= m_Config->getFloat("ReplayFrameRate");
+  m_webThemesURL                = m_Config->getString("WebThemesURL");
 }
 
 void XMSession::save(UserConfig* m_Config) {
@@ -258,6 +261,7 @@ void XMSession::save(UserConfig* m_Config) {
   m_Config->setBool("EngineSoundEnable",            m_enableAudioEngine);
   m_Config->setBool("MenuMusic",                    m_enableMenuMusic);
   m_Config->setFloat("ReplayFrameRate",             m_replayFrameRate);
+  m_Config->setString("WebThemesURL",               m_webThemesURL);
 }
 
 bool XMSession::isVerbose() const {
@@ -683,4 +687,8 @@ bool XMSession::hideGhosts() const {
 
 float XMSession::replayFrameRate() const {
   return m_replayFrameRate;
+}
+
+std::string XMSession::webThemesURL() const {
+  return m_webThemesURL;
 }
