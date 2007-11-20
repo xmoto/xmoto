@@ -56,7 +56,7 @@ int XMThread::run(void* pThreadInstance)
 void XMThread::startThread(GameApp* pGame)
 {
     m_pGame            = pGame;
-    m_progress         = 0;
+    m_progress         = -1;
     m_currentOperation = "";
     m_pThread          = SDL_CreateThread(&XMThread::run, this);
     m_isRunning        = true;
