@@ -148,6 +148,8 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateUpdateThemesList.h      \
 		 states/StateUpdateTheme.cpp    \
 		 states/StateUpdateTheme.h      \
+		 states/StateUpdateRoomsList.cpp    \
+		 states/StateUpdateRoomssList.h      \
 		 states/StateRequestKey.cpp      \
 		 states/StateRequestKey.h
 
@@ -169,7 +171,9 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/UpdateThemesListThread.h   \
 		 thread/UpdateThemesListThread.cpp \
 		 thread/UpdateThemeThread.h        \
-		 thread/UpdateThemeThread.cpp
+		 thread/UpdateThemeThread.cpp      \
+		 thread/UpdateRoomsListThread.h    \
+		 thread/UpdateRoomsListThread.cpp 
 
 if WIN32
 common_SOURCES += $(bz2_SOURCES)

@@ -205,26 +205,6 @@ class WebRoom {
   const ProxySettings *m_proxy_settings;
 };
 
-class WebRooms {
- public:
-  WebRooms(const ProxySettings *p_proxy_settings);
-  ~WebRooms();
-
-  /* check for new rooms */
-  void update(); /* throws exceptions */
-
-  /* fill the list of avaible rooms ; does not required an internet connexion */
-  void upgrade(xmDatabase *i_db);
-
-  void setURL(const std::string &p_url) {m_rooms_url = p_url;}
-
- private:
-  const ProxySettings *m_proxy_settings;
-  std::string m_rooms_url;
-
-  std::string getXmlFileName();
-};
-
 class WebLevels {
  public:
   WebLevels(WWWAppInterface *p_WebLevelApp,

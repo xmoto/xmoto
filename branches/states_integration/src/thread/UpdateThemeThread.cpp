@@ -126,7 +126,8 @@ int UpdateThemeThread::realThreadFunction()
       v_data.v_nb_files_to_download = v_nb_files_to_download;
       
       unsigned int i = 0;
-      while(i<v_required_files->size()) {
+      while(i<v_required_files->size() && m_askThreadToEnd == false) {
+
 	// download v_required_files[i]     
 	v_destinationFile = FS::getUserDir() + std::string("/") + (*v_required_files)[i].filepath;
 	v_sourceFile = m_pGame->getSession()->webThemesURLBase() + std::string("/") + (*v_required_files)[i].filepath;
@@ -179,4 +180,9 @@ int UpdateThemeThread::realThreadFunction()
 
 void UpdateThemeThread::setTaskProgress(float p_percent) {
   setThreadProgress(p_percent);
+}
+
+void UpdateThemeThread::askThreadToEnd() {
+  setCancelAsSoonAsPossible();
+  XMThread::askThreadToEnd();
 }

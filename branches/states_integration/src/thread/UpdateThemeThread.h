@@ -30,6 +30,8 @@ public:
   virtual ~UpdateThemeThread();
   virtual void setTaskProgress(float p_percent);
 
+  virtual void askThreadToEnd();
+
 private:
   virtual int realThreadFunction();
   std::string m_id_theme;

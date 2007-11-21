@@ -160,6 +160,7 @@ class XMSession {
   float replayFrameRate() const;
   std::string webThemesURL() const;
   std::string webThemesURLBase() const;
+  std::string webRoomsURL() const;
 
   private:
   bool m_verbose;
@@ -222,6 +223,7 @@ class XMSession {
   float m_replayFrameRate;
   std::string m_webThemesURL;
   std::string m_webThemesURLBase;
+  std::string m_webRoomsURL;
 };
 
 #endif

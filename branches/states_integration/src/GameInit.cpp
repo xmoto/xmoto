@@ -500,12 +500,6 @@ void GameApp::_Wait()
 
       _UpdateLoadingScreen((1.0f/9.0f) * 2,GAMETEXT_LOADINGMENUGRAPHICS);
         
-      /* Fetch highscores from web? */
-      m_pWebRooms = new WebRooms(&m_ProxySettings);
-      m_pWebHighscores = new WebRoom(&m_ProxySettings);      
-      m_pWebHighscores->setWebsiteInfos(m_xmsession->idRoom(),
-					m_WebHighscoresURL);
-      
     if(m_xmsession->www() && m_PlaySpecificLevelFile == "" && m_PlaySpecificReplay == "") {  
       bool bSilent = true;
       try {
@@ -635,9 +629,6 @@ void GameApp::_Wait()
     if(m_pWebLevels != NULL)
     delete m_pWebLevels;
     
-    if(m_pWebRooms != NULL)
-    delete m_pWebRooms;  
-    
     if(m_xmsession->useGraphics()) {
       m_Renderer->unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
       m_Renderer->shutdown();
@@ -760,7 +751,6 @@ void GameApp::_Wait()
     m_Config.createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL);
     m_Config.createVar( "WebThemesURL",           DEFAULT_WEBTHEMES_URL);
     m_Config.createVar( "WebThemesURLBase",       DEFAULT_WEBTHEMES_SPRITESURLBASE);
-    m_Config.createVar( "WebRoomsURL",            DEFAULT_WEBROOMS_URL);
     m_Config.createVar( "WebHighscoresIdRoom",     DEFAULT_WEBROOM_ID);
 
     /* Proxy */

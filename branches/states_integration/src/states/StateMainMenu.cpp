@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateRequestKey.h"
 #include "StateLevelPackViewer.h"
 #include "StateUpdateThemesList.h"
+#include "StateUpdateRoomsList.h"
 #include "StateUpdateTheme.h"
 #include "LevelsManager.h"
 #include "helpers/Log.h"
@@ -1609,7 +1610,11 @@ void StateMainMenu::executeOneCommand(std::string cmd)
 
   if(cmd == "UPDATE_THEMES_LISTS") {
     updateThemesList();      
-  } 
+  }
+
+  if(cmd == "UPDATE_ROOMS_LISTS") {
+    updateRoomsList();      
+  }
 }
 
 void StateMainMenu::updateLevelsLists() {
@@ -2384,6 +2389,12 @@ void StateMainMenu::checkEventsOptions() {
     m_pGame->getSession()->setUploadPassword(v_edit->getCaption());
   }
 
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPDATE_ROOMS_LIST"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getStateManager()->pushState(new StateUpdateRoomsList(m_pGame));
+  }
+
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:ENABLE_GHOSTS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
@@ -2432,6 +2443,7 @@ void StateMainMenu::checkEventsOptions() {
     v_button->setClicked(false);
     m_pGame->getSession()->setGhostMotionBlur(v_button->getChecked());
   }
+
 }
 
 void StateMainMenu::updateAudioOptions() {

@@ -18,33 +18,27 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEUPDATETHEMES_H__
-#define __STATEUPDATETHEMES_H__
+#ifndef __STATEUPDATEROOMSLISTS_H__
+#define __STATEUPDATEROOMSLISTS_H__
 
 #include "StateUpdate.h"
 
-class UpdateThemeThread;
+class UpdateRoomsListThread;
 
-class StateUpdateTheme : public StateUpdate {
+class StateUpdateRoomsList : public StateUpdate {
 public:
-  StateUpdateTheme(GameApp* pGame,
-		   const std::string& i_id_theme,
-		   bool drawStateBehind    = true,
-		   bool updateStatesBehind = false);
-  virtual ~StateUpdateTheme();
+  StateUpdateRoomsList(GameApp* pGame,
+			bool drawStateBehind    = true,
+			bool updateStatesBehind = false);
+  virtual ~StateUpdateRoomsList();
 
   virtual void enter();
   virtual bool update();
 
-  virtual void keyDown(int nKey, SDLMod mod,int nChar);
-
   void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
 protected:
-  UpdateThemeThread* m_pThread;
-
- private:
-  std::string m_id_theme;
+  UpdateRoomsListThread* m_pThread;
 };
 
 #endif

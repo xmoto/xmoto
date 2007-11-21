@@ -36,7 +36,7 @@ public:
   void startThread(GameApp* pGame);
   int  waitForThreadEnd();
   bool isThreadRunning();
-  void askThreadToEnd();
+  virtual void askThreadToEnd();
   // use with care
   void killThread();
 

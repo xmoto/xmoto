@@ -195,6 +195,7 @@ class XMotoLoadReplaysInterface;
       void updateWebHighscores();
       void checkForExtraLevels();
 
+      std::string getWebRoomURL();
     
       std::string determineNextLevel(const std::string& i_id_level);
       std::string determinePreviousLevel(const std::string& i_id_level);
@@ -234,7 +235,6 @@ class XMotoLoadReplaysInterface;
 
       /* WWW */
       WebRoom *m_pWebHighscores;
-      WebRooms *m_pWebRooms;
       WebLevels *m_pWebLevels;
       ProxySettings m_ProxySettings;
       std::string m_DownloadingInformation;

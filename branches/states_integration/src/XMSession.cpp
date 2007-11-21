@@ -85,6 +85,7 @@ void XMSession::setToDefault() {
   m_replayFrameRate               = 25.0;
   m_webThemesURL                  = DEFAULT_WEBTHEMES_URL;
   m_webThemesURLBase              = DEFAULT_WEBTHEMES_SPRITESURLBASE;
+  m_webRoomsURL                   = DEFAULT_WEBROOMS_URL;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -698,4 +699,8 @@ std::string XMSession::webThemesURL() const {
 
 std::string XMSession::webThemesURLBase() const {
   return m_webThemesURLBase;
+}
+
+std::string XMSession::webRoomsURL() const {
+  return m_webRoomsURL;
 }

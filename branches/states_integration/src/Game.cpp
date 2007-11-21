@@ -218,7 +218,6 @@ GameApp::GameApp() {
  
   m_pWebHighscores = NULL;
   m_pWebLevels = NULL;
-  m_pWebRooms = NULL;
   m_fDownloadTaskProgressLast = 0;
   m_bWebHighscoresUpdatedThisSession = false;
   m_bWebLevelsToDownload = false;
@@ -612,20 +611,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   }
 
   void GameApp::_UpdateWebRooms(bool bSilent) {
-    if(!bSilent) {
-      _SimpleMessage(GAMETEXT_DLROOMSLISTCHECK,&m_InfoMsgBoxRect);
-    }  
-
-    m_pWebRooms->setURL(m_Config.getString("WebRoomsURL"));
-
-    Logger::Log("WWW: Checking for rooms list...");
-
-    try {
-      m_pWebRooms->update();
-    } catch(Exception &e) {
-      /* file probably doesn't exist */
-      Logger::Log("** Warning ** : Failed to analyse update webrooms list");    
-    }
   }
 
   void GameApp::_UpdateWebTheme(const std::string& i_id_theme, bool bNotify) {
@@ -642,16 +627,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   }
 
   void GameApp::_UpgradeWebRooms(bool bUpdateMenus) {
-    /* Upgrade high scores */
-    try {
-      m_pWebRooms->upgrade(m_db);
-      if(bUpdateMenus) {
-	_UpdateRoomsLists();
-      }
-    } catch(Exception &e) {
-      /* file probably doesn't exist */
-      Logger::Log("** Warning ** : Failed to analyse webrooms file");   
-    }
   }
 
   /*===========================================================================
@@ -1576,4 +1551,20 @@ LevelsManager* GameApp::getLevelsManager() {
 ThemeChoicer* GameApp::getThemeChoicer()
 {
   return m_themeChoicer;
+}
+
+std::string GameApp::getWebRoomURL() {
+  char **v_result;
+  unsigned int nrow;
+  std::string v_url;
+
+  v_result = m_db->readDB("SELECT highscoresUrl FROM webrooms WHERE id_room=" + m_xmsession->idRoom() + ";", nrow);
+  if(nrow != 1) {
+    m_db->read_DB_free(v_result);
+    return DEFAULT_WEBROOMS_URL;
+  }
+  v_url = m_db->getResult(v_result, 1, 0, 0);
+  m_db->read_DB_free(v_result);  
+
+  return v_url;
 }

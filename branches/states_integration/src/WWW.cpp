@@ -748,26 +748,3 @@ const std::vector<std::string> &WebLevels::getNewDownloadedLevels(void) {
 const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
   return m_webLevelsUpdatedDownloadedOK;
 }
-
-WebRooms::WebRooms(const ProxySettings *p_proxy_settings) {
-  m_proxy_settings = p_proxy_settings;
-}
-
-WebRooms::~WebRooms() {
-}
-
-void WebRooms::update() {
-  FSWeb::downloadFileBz2UsingMd5(getXmlFileName(),
-         m_rooms_url,
-         NULL,
-         NULL,
-         m_proxy_settings);
-}
-
-std::string WebRooms::getXmlFileName() {
-  return FS::getUserDir() + "/" + DEFAULT_WEBROOMS_FILENAME;
-}
-
-void WebRooms::upgrade(xmDatabase *i_db) {
-  i_db->webrooms_updateDB(getXmlFileName());
-}
