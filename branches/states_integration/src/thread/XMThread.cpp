@@ -39,6 +39,8 @@ XMThread::XMThread()
   m_curOpMutex       = SDL_CreateMutex();
   m_curMicOpMutex    = SDL_CreateMutex();
   m_sleepMutex       = SDL_CreateMutex();
+  // we have to look it so that the next time we lock it, we sleep.
+  SDL_LockMutex(m_sleepMutex);
 }
 
 XMThread::~XMThread()
