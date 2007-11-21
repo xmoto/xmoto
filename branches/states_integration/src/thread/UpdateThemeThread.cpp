@@ -44,7 +44,7 @@ int UpdateThemeThread::realThreadFunction()
   try {
     Logger::Log("WWW: Downloading a theme...");
 
-    std::string v_destinationFile;
+    std::string v_destinationFile, v_destinationFileXML, v_destinationFileXML_tmp;
     std::string v_sourceFile;
     f_curl_download_data v_data;
     char **v_result;
@@ -55,6 +55,7 @@ int UpdateThemeThread::realThreadFunction()
     bool v_onDisk = false;
     std::string v_md5Local;
     std::string v_md5Dist;
+    bool v_all_downloaded = false;
 
     v_data.v_WebApp = this;
 
@@ -83,33 +84,35 @@ int UpdateThemeThread::realThreadFunction()
     /* the destination file must be in the user dir */
     if(v_filePath != "") {
       if(FS::isInUserDir(v_filePath)) {
-	v_destinationFile = v_filePath;
+	v_destinationFileXML = v_filePath;
       }
     }
 
-    if(v_destinationFile == "") {
+    if(v_destinationFileXML == "") {
       /* determine destination file */
-      v_destinationFile = 
+      v_destinationFileXML = 
 	FS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
 	FS::getFileBaseName(v_fileUrl) + ".xml";
     }
   
-    v_themeFile = v_destinationFile;
+    v_themeFile = v_destinationFileXML;
 
     /* download the theme file */
     v_data.v_nb_files_performed   = 0;
     v_data.v_nb_files_to_download = 1;
-    FS::mkArborescence(v_destinationFile);
-    FSWeb::downloadFileBz2(v_destinationFile, v_fileUrl, FSWeb::f_curl_progress_callback_download, &v_data, m_pGame->getProxySettings());
+    FS::mkArborescence(v_destinationFileXML);
+    v_destinationFileXML_tmp = v_destinationFileXML + ".tmp";
+    FSWeb::downloadFileBz2(v_destinationFileXML_tmp, v_fileUrl, FSWeb::f_curl_progress_callback_download, &v_data, m_pGame->getProxySettings());
     
     if(m_askThreadToEnd) {
+      remove(v_destinationFileXML_tmp.c_str());
       return 0;
     }
 
     /* download all the files required */
     Theme *v_theme = new Theme();
     std::vector<ThemeFile> *v_required_files;
-    v_theme->load(v_destinationFile);
+    v_theme->load(v_destinationFileXML_tmp);
     v_required_files = v_theme->getRequiredFiles();
 
     // all files must be checked for md5sum
@@ -163,25 +166,37 @@ int UpdateThemeThread::realThreadFunction()
 	}
 	i++;
       }
+      v_all_downloaded = i == v_required_files->size();
 
       setThreadProgress(100);
-    }   
-    
-    delete v_theme;
-    
-    if(v_onDisk) {
-      m_pDb->themes_update(m_id_theme, v_themeFile);
     } else {
-      m_pDb->themes_add(m_id_theme, v_themeFile);
+      v_all_downloaded = true;
     }
- 
-    m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
+    delete v_theme;
 
- } catch(Exception &e) {
-    Logger::Log("** Warning ** : Failed to update theme %s", m_id_theme.c_str());
+    /* full downloading, put the xml */
+    if(v_all_downloaded) {
+      remove(v_destinationFileXML.c_str());
+      if(rename(v_destinationFileXML_tmp.c_str(), v_destinationFileXML.c_str()) != 0) {
+	remove(v_destinationFileXML_tmp.c_str());
+	return 1;
+      } else {
+	if(v_onDisk) {
+	  m_pDb->themes_update(m_id_theme, v_themeFile);
+	} else {
+	  m_pDb->themes_add(m_id_theme, v_themeFile);
+	}
+	m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
+      }
+    } else {
+      remove(v_destinationFileXML_tmp.c_str());
+    }
+
+  } catch(Exception &e) {
+    Logger::Log("** Warning ** : Failed to update theme %s (%s)", m_id_theme.c_str(), e.getMsg().c_str());
     return 1;
   }
-
+  
   return 0;
 }
 
