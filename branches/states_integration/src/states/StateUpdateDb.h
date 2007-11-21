@@ -27,7 +27,7 @@ class UpdateDbThread;
 
 class StateUpdateDb : public StateUpdate {
 public:
-  Stateupdatedb(GameApp* pGame,
+  StateUpdateDb(GameApp* pGame,
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false);
   virtual ~StateUpdateDb();

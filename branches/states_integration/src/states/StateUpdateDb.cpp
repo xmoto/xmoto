@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "drawlib/DrawLib.h"
 #include "StateUpdateDb.h"
-#include "thread/UpdateLevelsThread.h"
+#include "thread/UpdateDbThread.h"
 #include "helpers/Log.h"
 
 StateUpdateDb::StateUpdateDb(GameApp* pGame,
