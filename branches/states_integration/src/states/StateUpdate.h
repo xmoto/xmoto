@@ -23,12 +23,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateManager.h"
 #include "StateMenu.h"
-#include "AttractMode.h"
+#include "thread/XMThread.h"
 #include <string>
 
 class UIRoot;
 
-class StateUpdate : public StateMenu, public AttractMode {
+class StateUpdate : public StateMenu {
 public:
   StateUpdate(GameApp* pGame,
 	      bool drawStateBehind,
@@ -61,6 +61,19 @@ protected:
   int         m_progress;
   std::string m_currentOperation;
   std::string m_currentMicroOperation;
+
+  // the thread
+  XMThread*   m_pThread;
+
+  // the message displayed in the message box if the thread failed
+  std::string m_errorMessage;
+
+  // for child customization
+  virtual bool callAfterThreadFinishedOk();
+  virtual bool callBeforeLaunchingThread();
+
+  // for the message box when a thread badly finished
+  void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
 private:
   /* GUI */

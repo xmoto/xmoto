@@ -33,17 +33,13 @@ public:
 		   bool updateStatesBehind = false);
   virtual ~StateUpdateTheme();
 
-  virtual void enter();
-  virtual bool update();
-
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
 
-  void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
-
 protected:
-  UpdateThemeThread* m_pThread;
+  virtual bool callAfterThreadFinishedOk();
+  virtual bool callBeforeLaunchingThread();
 
- private:
+private:
   std::string m_id_theme;
 };
 

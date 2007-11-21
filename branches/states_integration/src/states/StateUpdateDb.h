@@ -31,12 +31,6 @@ public:
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false);
   virtual ~StateUpdateDb();
-
-  virtual void enter();
-  virtual bool update();
-
-protected:
-  UpdateDbThread* m_pThread;
 };
 
 #endif

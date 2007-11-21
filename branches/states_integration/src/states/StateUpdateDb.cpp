@@ -19,10 +19,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Game.h"
-#include "drawlib/DrawLib.h"
 #include "StateUpdateDb.h"
 #include "thread/UpdateDbThread.h"
-#include "helpers/Log.h"
 
 StateUpdateDb::StateUpdateDb(GameApp* pGame,
 				     bool drawStateBehind,
@@ -36,52 +34,4 @@ StateUpdateDb::StateUpdateDb(GameApp* pGame,
 StateUpdateDb::~StateUpdateDb()
 {
   delete m_pThread;
-}
-
-void StateUpdateDb::enter()
-{
-  StateUpdate::enter();
-
-  enterAttractMode(NO_KEY);
-}
-
-bool StateUpdateDb::update()
-{
-  if(StateUpdate::update() == false){
-    return false;
-  }
-
-  // thread finished. we leave the state.
-  if(m_threadStarted == true && m_pThread->isThreadRunning() == false){
-    m_pThread->waitForThreadEnd();
-    m_requestForEnd = true;
-    m_threadStarted = false;
-
-    Logger::Log("thread end");
-
-    return true;
-  }
-
-  if(m_threadStarted == false){
-    m_pThread->startThread(m_pGame);
-    m_threadStarted = true;
-
-    Logger::Log("thread started");
-  }
-
-  if(m_threadStarted == true){
-
-    // update the frame with the thread informations only when progress change
-    // to avoid spending tooo much time waiting for mutexes.
-    int progress = m_pThread->getThreadProgress();
-    if(progress != m_progress){
-      m_progress              = progress;
-      m_currentOperation      = m_pThread->getThreadCurrentOperation();
-      m_currentMicroOperation = m_pThread->getThreadCurrentMicroOperation();
-
-      updateGUI();
-    }
-  }
-
-  return true;
 }

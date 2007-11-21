@@ -31,14 +31,6 @@ public:
 			bool drawStateBehind    = true,
 			bool updateStatesBehind = false);
   virtual ~StateUpdateRoomsList();
-
-  virtual void enter();
-  virtual bool update();
-
-  void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
-
-protected:
-  UpdateRoomsListThread* m_pThread;
 };
 
 #endif

@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
 #include "XMSession.h"
+#include "StateMessageBox.h"
+#include "helpers/Log.h"
 
 
 /* static members */
@@ -37,12 +39,14 @@ StateUpdate::StateUpdate(GameApp* pGame,
 {
   m_name             = "StateUpdate";
   m_threadStarted    = false;
+  m_pThread          = NULL;
+  m_errorMessage     = "";
 }
 
 void StateUpdate::init()
 {
-  m_progress         = -1;
-  m_currentOperation = "";
+  m_progress              = -1;
+  m_currentOperation      = "";
   m_currentMicroOperation = "";
 }
 
@@ -84,7 +88,51 @@ void StateUpdate::checkEvents()
 
 bool StateUpdate::update()
 {
-  return StateMenu::update();
+  if(StateMenu::update() == false){
+    return false;
+  }
+
+  // thread finished. we leave the state.
+  if(m_threadStarted == true && m_pThread->isThreadRunning() == false){
+    m_threadStarted = false;
+    if(m_pThread->waitForThreadEnd() == 0) {
+      m_requestForEnd = true;
+      callAfterThreadFinishedOk();
+    }
+    else if(m_errorMessage != "") {
+      StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, m_errorMessage, UI_MSGBOX_OK);
+      v_msgboxState->setId("ERROR");
+      m_pGame->getStateManager()->pushState(v_msgboxState);
+    }
+
+    return true;
+  }
+
+  if(m_threadStarted == false){
+    if(callBeforeLaunchingThread() == false){
+      return true;
+    }
+
+    m_pThread->startThread(m_pGame);
+    m_threadStarted = true;
+
+    Logger::Log("thread started");
+  }
+
+  if(m_threadStarted == true){
+    // update the frame with the thread informations only when progress change
+    // to avoid spending tooo much time waiting for mutexes.
+    int progress = m_pThread->getThreadProgress();
+    if(progress != m_progress){
+      m_progress              = progress;
+      m_currentOperation      = m_pThread->getThreadCurrentOperation();
+      m_currentMicroOperation = m_pThread->getThreadCurrentMicroOperation();
+
+      updateGUI();
+    }
+  }
+
+  return true;  
 }
 
 bool StateUpdate::render()
@@ -97,9 +145,6 @@ bool StateUpdate::render()
 
 void StateUpdate::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  // don't call the parent keydown function. 
-  // because it would allow to press F5 again for example
-  attractModeKeyDown(nKey);
 }
 
 void StateUpdate::keyUp(int nKey,   SDLMod mod)
@@ -182,4 +227,23 @@ void StateUpdate::updateGUI()
 
   UIStatic* v_static = reinterpret_cast<UIStatic*>(m_GUI->getChild("FRAME:TEXT"));
   v_static->setCaption(m_currentOperation);
+}
+
+bool StateUpdate::callAfterThreadFinishedOk()
+{
+  return true;
+}
+
+bool StateUpdate::callBeforeLaunchingThread()
+{
+  return true;
+}
+
+void StateUpdate::send(const std::string& i_id,
+		       UIMsgBoxButton i_button,
+		       const std::string& i_input)
+{
+  if(i_id == "ERROR") {
+    m_requestForEnd = true;
+  }
 }
