@@ -149,7 +149,7 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateUpdateTheme.cpp    \
 		 states/StateUpdateTheme.h      \
 		 states/StateUpdateRoomsList.cpp    \
-		 states/StateUpdateRoomssList.h      \
+		 states/StateUpdateRoomsList.h      \
 		 states/StateRequestKey.cpp      \
 		 states/StateRequestKey.h
 
