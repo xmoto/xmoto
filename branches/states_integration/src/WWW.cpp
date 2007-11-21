@@ -24,16 +24,6 @@
 #include "db/xmDatabase.h"
 #include "md5sum/md5file.h"
 
-struct f_curl_download_data {
-  WWWAppInterface *v_WebApp;
-  int v_nb_files_to_download;
-  int v_nb_files_performed;
-};
-
-struct f_curl_upload_data {
-  WWWAppInterface *v_WebApp;
-};
-
 ProxySettings::ProxySettings() {
   m_server       = "";
   m_port         = -1;
@@ -622,8 +612,10 @@ int FSWeb::f_curl_progress_callback_download(void *clientp,
   float real_percentage_of_current_file;
 
   /* cancel if it's wanted */
-  if(data->v_WebApp->isCancelAsSoonAsPossible()) {
-    return 1;
+  if(data->v_WebApp != NULL) {
+    if(data->v_WebApp->isCancelAsSoonAsPossible()) {
+      return 1;
+    }
   }
 
   real_percentage_already_done = 
@@ -640,7 +632,9 @@ int FSWeb::f_curl_progress_callback_download(void *clientp,
     }
   }
 
-  data->v_WebApp->setTaskProgress(real_percentage_already_done + real_percentage_of_current_file);
+  if(data->v_WebApp != NULL) {
+    data->v_WebApp->setTaskProgress(real_percentage_already_done + real_percentage_of_current_file);
+  }
 
   return 0;
 }
@@ -753,162 +747,6 @@ const std::vector<std::string> &WebLevels::getNewDownloadedLevels(void) {
 
 const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
   return m_webLevelsUpdatedDownloadedOK;
-}
-
-WebThemes::WebThemes(WWWAppInterface *p_WebApp,
-         const ProxySettings *p_proxy_settings) {
-  m_proxy_settings = p_proxy_settings;
-  m_themes_url     = DEFAULT_WEBTHEMES_URL;
-  m_themes_urlBase = DEFAULT_WEBTHEMES_SPRITESURLBASE;
-  m_WebApp = p_WebApp;
-}
-
-WebThemes::~WebThemes() {
-}
-
-void WebThemes::update(xmDatabase *i_db) {
-  FSWeb::downloadFileBz2UsingMd5(getXmlFileName(),
-         m_themes_url,
-         NULL,
-         NULL,
-         m_proxy_settings);
-  i_db->webthemes_updateDB(getXmlFileName());
-}
-
-std::string WebThemes::getXmlFileName() {
-  return FS::getUserDir() + "/" + DEFAULT_WEBTHEMES_FILENAME;
-}
-
-void WebThemes::upgrade(xmDatabase *i_db, const std::string& i_id_theme) {
-  std::string v_destinationFile;
-  std::string v_sourceFile;
-  f_curl_download_data v_data;
-  char **v_result;
-  unsigned int nrow;
-  std::string v_fileUrl;
-  std::string v_filePath;
-  std::string v_themeFile;
-  bool v_onDisk = false;
-  std::string v_md5Local;
-  std::string v_md5Dist;
-
-  /* download even if the the theme is uptodate
-     it give a possibility to download file removed by mistake
-  */
-  v_result = i_db->readDB("SELECT a.fileUrl, b.filepath "
-			  "FROM webthemes AS a LEFT OUTER JOIN themes AS b "
-			  "ON a.id_theme = b.id_theme "
-			  "WHERE a.id_theme=\"" + xmDatabase::protectString(i_id_theme) + "\";",
-			  nrow);
-  if(nrow != 1) {
-    i_db->read_DB_free(v_result);
-    throw Exception("error : unable to find this theme on the web");
-  }
-
-  v_fileUrl = i_db->getResult(v_result, 2, 0, 0);
-  if(i_db->getResult(v_result, 2, 0, 1) != NULL) {
-    v_filePath = i_db->getResult(v_result, 2, 0, 1);
-    v_onDisk = true;
-  }  
-  i_db->read_DB_free(v_result);
-
-  // theme avaible on the web get it
-
-  /* the destination file must be in the user dir */
-  if(v_filePath != "") {
-    if(FS::isInUserDir(v_filePath)) {
-      v_destinationFile = v_filePath;
-    }
-  }
-
-  if(v_destinationFile == "") {
-    /* determine destination file */
-    v_destinationFile = 
-      FS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
-      FS::getFileBaseName(v_fileUrl) + ".xml";
-  } 
-  
-  v_themeFile = v_destinationFile;
-
-  /* download the theme file */
-  FS::mkArborescence(v_destinationFile);
-  FSWeb::downloadFileBz2(v_destinationFile,
-			 v_fileUrl,
-			 NULL,
-			 NULL,
-			 m_proxy_settings);
-
-  /* download all the files required */
-  Theme *v_theme = new Theme();
-  std::vector<ThemeFile> *v_required_files;
-  v_theme->load(v_destinationFile);
-  v_required_files = v_theme->getRequiredFiles();
-
-  // all files must be checked for md5sum
-  int v_nb_files_to_download = 0;
-  for(unsigned int i=0; i<v_required_files->size(); i++) {
-    if(FS::fileExists((*v_required_files)[i].filepath) == false) {
-      v_nb_files_to_download++;
-    } else {
-      v_md5Local = FS::md5sum((*v_required_files)[i].filepath);
-      v_md5Dist  = (*v_required_files)[i].filemd5;
-      if(v_md5Local != v_md5Dist && v_md5Dist != "") {
-	v_nb_files_to_download++;
-      }
-    }
-  }
-
-  if(v_nb_files_to_download != 0) {
-    int v_nb_files_performed  = 0;
-    
-    v_data.v_WebApp = m_WebApp;
-    v_data.v_nb_files_to_download = v_nb_files_to_download;
-    
-    unsigned int i = 0;
-    while(i<v_required_files->size() && m_WebApp->isCancelAsSoonAsPossible() == false) {
-      // download v_required_files[i]     
-      v_destinationFile = FS::getUserDir() + std::string("/") + (*v_required_files)[i].filepath;
-      v_sourceFile = m_themes_urlBase + 
-	std::string("/") + (*v_required_files)[i].filepath;
-      
-      /* check md5 sums */
-      v_md5Local = v_md5Dist = "";
-      if(FS::fileExists((*v_required_files)[i].filepath) == true) {
-	v_md5Local = FS::md5sum((*v_required_files)[i].filepath);
-	v_md5Dist  = (*v_required_files)[i].filemd5;
-      }
-      
-      /* if v_md5Dist == "", don't download ; it's a manually adding */
-      if(FS::fileExists((*v_required_files)[i].filepath) == false || (v_md5Local != v_md5Dist && v_md5Dist != "")) {
-	v_data.v_nb_files_performed = v_nb_files_performed;
-	
-	float v_percentage = (((float)v_nb_files_performed) * 100.0) / ((float)v_nb_files_to_download);
-	m_WebApp->setTaskProgress(v_percentage);
-	m_WebApp->setBeingDownloadedInformation((*v_required_files)[i].filepath, true);
-	
-	FS::mkArborescence(v_destinationFile);
-	
-	FSWeb::downloadFile(v_destinationFile,
-			    v_sourceFile,
-			    FSWeb::f_curl_progress_callback_download,
-			    &v_data,
-			    m_proxy_settings);
-	
-	v_nb_files_performed++;
-      }
-      m_WebApp->readEvents();
-      i++;
-    }
-    m_WebApp->setTaskProgress(100.0);
-  }    
-
-  delete v_theme;
-
-  if(v_onDisk) {
-    i_db->themes_update(i_id_theme, v_themeFile);
-  } else {
-    i_db->themes_add(i_id_theme, v_themeFile);
-  }
 }
 
 WebRooms::WebRooms(const ProxySettings *p_proxy_settings) {

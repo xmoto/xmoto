@@ -611,25 +611,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     m_bWebLevelsToDownload = m_pWebLevels->nbLevelsToGet(m_db);
   }
 
-  void GameApp::_UpdateWebThemes(bool bSilent) {
-    if(!bSilent) {
-      _SimpleMessage(GAMETEXT_DLTHEMESLISTCHECK,&m_InfoMsgBoxRect);
-    }  
-
-    m_themeChoicer->setURL(m_Config.getString("WebThemesURL"));
-
-    Logger::Log("WWW: Checking for new or updated themes...");
-
-    try {
-      m_DownloadingInformation = "";
-      m_themeChoicer->updateFromWWW(m_db);
-      _UpdateThemesLists();
-    } catch(Exception &e) {
-      /* file probably doesn't exist */
-      Logger::Log("** Warning ** : Failed to analyse web-themes file");   
-    }
-  }    
-
   void GameApp::_UpdateWebRooms(bool bSilent) {
     if(!bSilent) {
       _SimpleMessage(GAMETEXT_DLROOMSLISTCHECK,&m_InfoMsgBoxRect);
@@ -648,57 +629,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   }
 
   void GameApp::_UpdateWebTheme(const std::string& i_id_theme, bool bNotify) {
-    char **v_result;
-    unsigned int nrow;
-    std::string v_id_theme;
-    std::string v_ck1, v_ck2;
-    bool v_onDisk = false;
-    bool v_onWeb  = true;
-
-    v_result = m_db->readDB("SELECT a.id_theme, a.checkSum, b.checkSum "
-    			    "FROM themes AS a LEFT OUTER JOIN webthemes AS b "
-    			    "ON a.id_theme=b.id_theme "
-			    "WHERE a.id_theme=\"" + xmDatabase::protectString(i_id_theme) + "\";",
-    			    nrow);
-    if(nrow == 1) {
-      v_onDisk   = true;
-      v_id_theme = m_db->getResult(v_result, 3, 0, 0);
-      v_ck1      = m_db->getResult(v_result, 3, 0, 1);
-      if(m_db->getResult(v_result, 3, 0, 2) == NULL) {
-	v_onWeb = false;
-      } else {
-	v_ck2      = m_db->getResult(v_result, 3, 0, 2);
-      }
-    }
-    m_db->read_DB_free(v_result);
-
-    if(v_onWeb == false) { /* available on the disk, not on the web */
-      if(bNotify) {
-	notifyMsg(GAMETEXT_UNUPDATABLETHEMEONWEB);
-      }
-      return;
-    }
-
-
-    m_DownloadingInformation = "";
-    m_DownloadingMessage = std::string(GAMETEXT_DLTHEME) + "\n\n ";
-    try {
-      Logger::Log("WWW: Downloading a theme...");
-      clearCancelAsSoonAsPossible();
-      m_themeChoicer->updateThemeFromWWW(m_db, i_id_theme);
-      _UpdateThemesLists();
-      reloadTheme(); /* reload the theme */
-      if(bNotify) {
-	notifyMsg(GAMETEXT_THEMEUPTODATE);
-      }
-    } catch(Exception &e) {
-      /* file probably doesn't exist */
-      Logger::Log("** Warning ** : Failed to update theme ", i_id_theme.c_str());
-      if(bNotify) {
-	notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-      }
-      return;
-    }
   }
 
   void GameApp::_UpgradeWebHighscores() {

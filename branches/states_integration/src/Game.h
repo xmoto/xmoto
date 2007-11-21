@@ -128,6 +128,8 @@ class XMotoLoadReplaysInterface;
       Theme *getTheme() {
 	return &m_theme;
       };
+
+      ProxySettings* getProxySettings() { return &m_ProxySettings;}
       
       UserConfig* getUserConfig() { /* to remove */
 	return &m_Config;
@@ -364,7 +366,6 @@ class XMotoLoadReplaysInterface;
       void _InitWebConf(void);
       void _UpdateWebHighscores(bool bSilent);
       void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
-      void _UpdateWebThemes(bool bSilent);
       void _UpdateWebTheme(const std::string& i_id_theme, bool bNotify);
       void _UpgradeWebHighscores();
       void _UpdateWebRooms(bool bSilent);

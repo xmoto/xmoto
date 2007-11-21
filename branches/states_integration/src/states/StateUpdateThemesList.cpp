@@ -19,8 +19,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Game.h"
+#include "GameText.h"
 #include "drawlib/DrawLib.h"
 #include "StateUpdateThemesList.h"
+#include "StateMessageBox.h"
 #include "thread/UpdateThemesListThread.h"
 #include "helpers/Log.h"
 
@@ -53,11 +55,16 @@ bool StateUpdateThemesList::update()
 
   // thread finished. we leave the state.
   if(m_threadStarted == true && m_pThread->isThreadRunning() == false){
-    m_pThread->waitForThreadEnd();
-    m_requestForEnd = true;
-    m_threadStarted = false;
-
-    Logger::Log("thread end");
+    if(m_pThread->waitForThreadEnd() == 0) {
+      m_requestForEnd = true;
+      m_threadStarted = false;
+    } else {
+      StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame,
+							   GAMETEXT_FAILEDUPDATETHEMESLIST + std::string("\n") +
+							   GAMETEXT_CHECK_YOUR_WWW, UI_MSGBOX_OK);
+      v_msgboxState->setId("ERROR");
+      m_pGame->getStateManager()->pushState(v_msgboxState);
+    }
 
     return true;
   }
@@ -84,4 +91,10 @@ bool StateUpdateThemesList::update()
   }
 
   return true;
+}
+
+void StateUpdateThemesList::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+  if(i_id == "ERROR") {
+    m_requestForEnd = true;
+  }
 }

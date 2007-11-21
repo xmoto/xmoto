@@ -77,6 +77,17 @@ class ThemeChoice;
   };
 #endif
 
+struct f_curl_download_data {
+  WWWAppInterface *v_WebApp;
+  int v_nb_files_to_download;
+  int v_nb_files_performed;
+};
+
+struct f_curl_upload_data {
+  WWWAppInterface *v_WebApp;
+};
+
+
 class WebRoom;
 class xmDatabase;
 
@@ -255,30 +266,6 @@ class WebLevels {
   void downloadXml(); /* throw exceptions */
   static std::string getDestinationDir();
   void createDestinationDirIfRequired();
-};
-
-class WebThemes {
- public:
-  WebThemes(WWWAppInterface *p_WebApp,
-	    const ProxySettings *p_proxy_settings);
-  ~WebThemes();
-
-  /* check for new themes to download */
-  void update(xmDatabase *i_db); /* throws exceptions */
-
-  /* download a theme or just update it */
-  void upgrade(xmDatabase *i_db, const std::string& i_id_theme);
-
-  void setURL(const std::string &p_url) {m_themes_url = p_url;}
-  void setURLBase(const std::string &p_urlBase) {m_themes_urlBase = p_urlBase;}
-
- private:
-  std::string getXmlFileName();
-
-  WWWAppInterface *m_WebApp;
-  std::string m_themes_url;
-  std::string m_themes_urlBase;
-  const ProxySettings *m_proxy_settings;
 };
 
 #endif /* WEBSTUFFS */

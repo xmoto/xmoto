@@ -402,11 +402,7 @@ void GameApp::_Wait()
     m_db->read_DB_free(v_result);
 
     /* load theme */
-    m_themeChoicer = new ThemeChoicer(
-              this,
-              &m_ProxySettings
-              );
-    m_themeChoicer->setURLBase(m_Config.getString("WebThemesURLBase"));
+    m_themeChoicer = new ThemeChoicer();
     if(m_db->themes_isIndexUptodate() == false) {
       m_themeChoicer->initThemesFromDir(m_db);
     }

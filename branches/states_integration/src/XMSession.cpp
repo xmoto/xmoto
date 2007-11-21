@@ -84,6 +84,7 @@ void XMSession::setToDefault() {
   m_hideGhosts                    = false;
   m_replayFrameRate               = 25.0;
   m_webThemesURL                  = DEFAULT_WEBTHEMES_URL;
+  m_webThemesURLBase              = DEFAULT_WEBTHEMES_SPRITESURLBASE;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -217,6 +218,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_hideGhosts                  = m_Config->getBool("HideGhosts");
   m_replayFrameRate          	= m_Config->getFloat("ReplayFrameRate");
   m_webThemesURL                = m_Config->getString("WebThemesURL");
+  m_webThemesURLBase            = m_Config->getString("WebThemesURLBase");
 }
 
 void XMSession::save(UserConfig* m_Config) {
@@ -262,6 +264,7 @@ void XMSession::save(UserConfig* m_Config) {
   m_Config->setBool("MenuMusic",                    m_enableMenuMusic);
   m_Config->setFloat("ReplayFrameRate",             m_replayFrameRate);
   m_Config->setString("WebThemesURL",               m_webThemesURL);
+  m_Config->setString("WebThemesURLBase",           m_webThemesURLBase);
 }
 
 bool XMSession::isVerbose() const {
@@ -691,4 +694,8 @@ float XMSession::replayFrameRate() const {
 
 std::string XMSession::webThemesURL() const {
   return m_webThemesURL;
+}
+
+std::string XMSession::webThemesURLBase() const {
+  return m_webThemesURLBase;
 }

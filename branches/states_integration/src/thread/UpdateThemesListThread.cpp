@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "XMSession.h"
 #include "states/StateManager.h"
+#include "WWW.h"
 
 UpdateThemesListThread::UpdateThemesListThread()
   : XMThread()
@@ -40,13 +41,17 @@ int UpdateThemesListThread::realThreadFunction()
   setThreadProgress(0);
 
   try {
+    std::string v_destinationFile = FS::getUserDir() + "/" + DEFAULT_WEBTHEMES_FILENAME;
+
     Logger::Log("WWW: Checking for new or updated themes...");
-    m_pGame->getThemeChoicer()->setURL(m_pGame->getSession()->webThemesURL());
-    m_pGame->getThemeChoicer()->updateFromWWW(m_pDb);
+    FSWeb::downloadFileBz2UsingMd5(v_destinationFile, m_pGame->getSession()->webThemesURL(), NULL, NULL, m_pGame->getProxySettings());
+    setThreadProgress(90);
+    m_pDb->webthemes_updateDB(v_destinationFile);
     m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
   } catch(Exception &e) {
     /* file probably doesn't exist */
-    Logger::Log("** Warning ** : Failed to analyse web-themes file");   
+    Logger::Log("** Warning ** : Failed to analyse web-themes file");
+    return 1;
   }
 
   return 0;

@@ -445,19 +445,12 @@ class BikerTheme {
 class ThemeChoicer {
  public:
 
-  ThemeChoicer(WWWAppInterface *p_WebApp = NULL,
-	       const ProxySettings *p_proxy_settings = NULL);	       
+  ThemeChoicer();	       
   ~ThemeChoicer();
 
-  void updateFromWWW(xmDatabase *i_db);
-  void updateThemeFromWWW(xmDatabase *i_db, const std::string& i_id_theme);
-
-  void setURL(const std::string &p_url);
-  void setURLBase(const std::string &p_urlBase);
   void initThemesFromDir(xmDatabase *i_db);
 
  private:
-  WebThemes *m_webThemes;
   std::string getThemeNameFromFile(std::string p_themeFile);
 };
 

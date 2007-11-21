@@ -35,6 +35,8 @@ public:
   virtual void enter();
   virtual bool update();
 
+  void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+
 protected:
   UpdateThemesListThread* m_pThread;
 };

@@ -159,6 +159,7 @@ class XMSession {
   bool hideGhosts() const;
   float replayFrameRate() const;
   std::string webThemesURL() const;
+  std::string webThemesURLBase() const;
 
   private:
   bool m_verbose;
@@ -220,6 +221,7 @@ class XMSession {
   bool m_hideGhosts;
   float m_replayFrameRate;
   std::string m_webThemesURL;
+  std::string m_webThemesURLBase;
 };
 
 #endif

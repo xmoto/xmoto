@@ -146,6 +146,8 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateUpdateLevels.h      \
 		 states/StateUpdateThemesList.cpp    \
 		 states/StateUpdateThemesList.h      \
+		 states/StateUpdateTheme.cpp    \
+		 states/StateUpdateTheme.h      \
 		 states/StateRequestKey.cpp      \
 		 states/StateRequestKey.h
 
@@ -160,12 +162,14 @@ bz2_SOURCES = bzip2/blocksort.c     \
               bzip2/huffman.c       \
               bzip2/randtable.c
 
-thread_SOURCES = thread/XMThread.h             \
-		 thread/XMThread.cpp           \
-		 thread/UpdateLevelsThread.h   \
-		 thread/UpdateLevelsThread.cpp \
+thread_SOURCES = thread/XMThread.h                 \
+		 thread/XMThread.cpp               \
+		 thread/UpdateLevelsThread.h       \
+		 thread/UpdateLevelsThread.cpp     \
 		 thread/UpdateThemesListThread.h   \
-		 thread/UpdateThemesListThread.cpp
+		 thread/UpdateThemesListThread.cpp \
+		 thread/UpdateThemeThread.h        \
+		 thread/UpdateThemeThread.cpp
 
 if WIN32
 common_SOURCES += $(bz2_SOURCES)

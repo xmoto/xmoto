@@ -1016,14 +1016,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     }
     
-    if(pUpdThemeList->isClicked()) {
-      pUpdThemeList->setClicked(false);
-      try {
-	_UpdateWebThemes(false);
-      } catch(Exception &e) {
-	notifyMsg(GAMETEXT_FAILEDUPDATETHEMESLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-      }
-    }  
+//    if(pUpdThemeList->isClicked()) {
+//      pUpdThemeList->setClicked(false);
+//      try {
+//	_UpdateWebThemes(false);
+//      } catch(Exception &e) {
+//	notifyMsg(GAMETEXT_FAILEDUPDATETHEMESLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
+//      }
+//    }  
 
     if(pUpdSelectedTheme->isClicked()) {
       pUpdSelectedTheme->setClicked(false);

@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateRequestKey.h"
 #include "StateLevelPackViewer.h"
 #include "StateUpdateThemesList.h"
+#include "StateUpdateTheme.h"
 #include "LevelsManager.h"
 #include "helpers/Log.h"
 #include "helpers/System.h"
@@ -2182,7 +2183,17 @@ void StateMainMenu::checkEventsOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:UPDATE_THEMES_LIST"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getStateManager()->pushState(new StateUpdateThemesList(m_pGame));     
+    m_pGame->getStateManager()->pushState(new StateUpdateThemesList(m_pGame));
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:GET_SELECTED_THEME"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
+      m_pGame->getStateManager()->pushState(new StateUpdateTheme(m_pGame, pEntry->Text[0]));
+    }
   }
 
   // video tab

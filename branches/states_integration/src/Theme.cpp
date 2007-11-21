@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "md5sum/md5file.h"
 #include "db/xmDatabase.h"
 #include "helpers/Log.h"
-#include "WWW.h"
 #include "VFileIO.h"
 
 std::vector<Sprite*> Theme::getSpritesList() {
@@ -1008,22 +1007,11 @@ Color BikerTheme::getUglyWheelColor() {
   return m_UglyWheelColor;
 }
 
-ThemeChoicer::ThemeChoicer(WWWAppInterface *p_WebApp,
-			   const ProxySettings *p_proxy_settings) {                    
-  m_webThemes = new WebThemes(p_WebApp, p_proxy_settings);
+ThemeChoicer::ThemeChoicer() {
 }
 
 ThemeChoicer::~ThemeChoicer() {
-  delete m_webThemes;
 }
-
- void ThemeChoicer::setURL(const std::string &p_url) {
-   m_webThemes->setURL(p_url);
- }
-
- void ThemeChoicer::setURLBase(const std::string &p_urlBase) {
-   m_webThemes->setURLBase(p_urlBase);
- }
 
 void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
   std::vector<std::string> v_themesFiles = FS::findPhysFiles(std::string(THEMES_DIRECTORY)
@@ -1073,14 +1061,6 @@ std::string ThemeChoicer::getThemeNameFromFile(std::string p_themeFile) {
   }
   
   return m_name;
-}
-
-void ThemeChoicer::updateFromWWW(xmDatabase *i_db) {
-  m_webThemes->update(i_db);
-}
-
-void ThemeChoicer::updateThemeFromWWW(xmDatabase *i_db, const std::string& i_id_file) {
-  m_webThemes->upgrade(i_db, i_id_file);
 }
 
 SpriteBlendMode Theme::strToBlendMode(const std::string &s) {
