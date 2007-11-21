@@ -18,23 +18,23 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "UpdateLevelsThread.h"
+#include "UpdateDbThread.h"
 #include "helpers/Log.h"
 #include "VCommon.h"
 #include "GameText.h"
 #include "Game.h"
 #include "states/StateManager.h"
 
-UpdateLevelsThread::UpdateLevelsThread()
+UpdateDbThread::UpdateDbThread()
   : XMThread()
 {
 }
 
-UpdateLevelsThread::~UpdateLevelsThread()
+UpdateDbThread::~UpdateDbThread()
 {
 }
 
-int UpdateLevelsThread::realThreadFunction()
+int UpdateDbThread::realThreadFunction()
 {
   setThreadCurrentOperation(GAMETEXT_RELOADINGLEVELS);
   // initialize to -1, so we put it to 0 so that the current operation
@@ -54,14 +54,14 @@ int UpdateLevelsThread::realThreadFunction()
   return 0;
 }
 
-void UpdateLevelsThread::loadLevelHook(std::string i_level,
+void UpdateDbThread::loadLevelHook(std::string i_level,
 				       int i_percentage)
 {
   setThreadProgress(i_percentage);
   setThreadCurrentMicroOperation(i_level);
 }
 
-void UpdateLevelsThread::loadReplayHook(std::string i_replay,
+void UpdateDbThread::loadReplayHook(std::string i_replay,
 					int i_percentage)
 {
   setThreadProgress(i_percentage);

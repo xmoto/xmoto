@@ -18,25 +18,25 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEUPDATELEVELS_H__
-#define __STATEUPDATELEVELS_H__
+#ifndef __STATEUPDATEDB_H__
+#define __STATEUPDATEDB_H__
 
 #include "StateUpdate.h"
 
-class UpdateLevelsThread;
+class UpdateDbThread;
 
-class StateUpdateLevels : public StateUpdate {
+class StateUpdateDb : public StateUpdate {
 public:
-  StateUpdateLevels(GameApp* pGame,
-		    bool drawStateBehind    = true,
-		    bool updateStatesBehind = false);
-  virtual ~StateUpdateLevels();
+  Stateupdatedb(GameApp* pGame,
+		bool drawStateBehind    = true,
+		bool updateStatesBehind = false);
+  virtual ~StateUpdateDb();
 
   virtual void enter();
   virtual bool update();
 
 protected:
-  UpdateLevelsThread* m_pThread;
+  UpdateDbThread* m_pThread;
 };
 
 #endif

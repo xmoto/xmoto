@@ -18,19 +18,19 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __UPDATELEVELSTHREAD_H__
-#define __UPDATELEVELSTHREAD_H__
+#ifndef __UPDATEDBTHREAD_H__
+#define __UPDATEDBTHREAD_H__
 
 #include "XMThread.h"
 #include "XMotoLoadLevelsInterface.h"
 #include "XMotoLoadReplaysInterface.h"
 
-class UpdateLevelsThread : public XMThread ,
-			   public XMotoLoadLevelsInterface,
-			   public XMotoLoadReplaysInterface {
+class UpdateDbThread : public XMThread ,
+		       public XMotoLoadLevelsInterface,
+		       public XMotoLoadReplaysInterface {
 public:
-  UpdateLevelsThread();
-  virtual ~UpdateLevelsThread();
+  UpdateDbThread();
+  virtual ~UpdateDbThread();
 
   virtual void loadLevelHook(std::string i_level, int i_percentage);
   virtual void loadReplayHook(std::string i_replay, int i_percentage);

@@ -20,32 +20,32 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Game.h"
 #include "drawlib/DrawLib.h"
-#include "StateUpdateLevels.h"
+#include "StateUpdateDb.h"
 #include "thread/UpdateLevelsThread.h"
 #include "helpers/Log.h"
 
-StateUpdateLevels::StateUpdateLevels(GameApp* pGame,
+StateUpdateDb::StateUpdateDb(GameApp* pGame,
 				     bool drawStateBehind,
 				     bool updateStatesBehind)
   : StateUpdate(pGame, drawStateBehind, updateStatesBehind)
 {
-  m_pThread          = new UpdateLevelsThread();
-  m_name             = "StateUpdateLevels";
+  m_pThread          = new UpdateDbThread();
+  m_name             = "StateUpdateDb";
 }
 
-StateUpdateLevels::~StateUpdateLevels()
+StateUpdateDb::~StateUpdateDb()
 {
   delete m_pThread;
 }
 
-void StateUpdateLevels::enter()
+void StateUpdateDb::enter()
 {
   StateUpdate::enter();
 
   enterAttractMode(NO_KEY);
 }
 
-bool StateUpdateLevels::update()
+bool StateUpdateDb::update()
 {
   if(StateUpdate::update() == false){
     return false;
