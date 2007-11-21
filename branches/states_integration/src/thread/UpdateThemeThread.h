@@ -28,8 +28,8 @@ class UpdateThemeThread : public XMThread, public WWWAppInterface {
 public:
   UpdateThemeThread(const std::string& i_id_theme);
   virtual ~UpdateThemeThread();
-  virtual void setTaskProgress(float p_percent);
 
+  virtual void setTaskProgress(float p_percent);
   virtual void askThreadToEnd();
 
 private:

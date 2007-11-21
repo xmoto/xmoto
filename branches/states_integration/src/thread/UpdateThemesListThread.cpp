@@ -42,10 +42,14 @@ int UpdateThemesListThread::realThreadFunction()
 
   try {
     std::string v_destinationFile = FS::getUserDir() + "/" + DEFAULT_WEBTHEMES_FILENAME;
+    f_curl_download_data v_data;
 
     Logger::Log("WWW: Checking for new or updated themes...");
-    FSWeb::downloadFileBz2UsingMd5(v_destinationFile, m_pGame->getSession()->webThemesURL(), NULL, NULL, m_pGame->getProxySettings());
-    setThreadProgress(90);
+    v_data.v_WebApp = this;
+    v_data.v_nb_files_performed   = 0;
+    v_data.v_nb_files_to_download = 1;
+    FSWeb::downloadFileBz2UsingMd5(v_destinationFile, m_pGame->getSession()->webThemesURL(),
+				   FSWeb::f_curl_progress_callback_download, &v_data, m_pGame->getProxySettings());
     m_pDb->webthemes_updateDB(v_destinationFile);
     m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
   } catch(Exception &e) {
@@ -55,4 +59,8 @@ int UpdateThemesListThread::realThreadFunction()
   }
 
   return 0;
+}
+
+void UpdateThemesListThread::setTaskProgress(float p_percent) {
+  setThreadProgress(p_percent);
 }

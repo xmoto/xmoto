@@ -97,9 +97,15 @@ int UpdateThemeThread::realThreadFunction()
     v_themeFile = v_destinationFile;
 
     /* download the theme file */
+    v_data.v_nb_files_performed   = 0;
+    v_data.v_nb_files_to_download = 1;
     FS::mkArborescence(v_destinationFile);
-    FSWeb::downloadFileBz2(v_destinationFile, v_fileUrl, NULL, NULL, m_pGame->getProxySettings());
+    FSWeb::downloadFileBz2(v_destinationFile, v_fileUrl, FSWeb::f_curl_progress_callback_download, &v_data, m_pGame->getProxySettings());
     
+    if(m_askThreadToEnd) {
+      return 0;
+    }
+
     /* download all the files required */
     Theme *v_theme = new Theme();
     std::vector<ThemeFile> *v_required_files;
@@ -123,6 +129,7 @@ int UpdateThemeThread::realThreadFunction()
     if(v_nb_files_to_download != 0) {
       int v_nb_files_performed  = 0;
       
+      v_data.v_nb_files_performed   = 0;
       v_data.v_nb_files_to_download = v_nb_files_to_download;
       
       unsigned int i = 0;

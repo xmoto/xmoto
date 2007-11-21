@@ -22,11 +22,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __UPDATETHEMESLISTTHREAD_H__
 
 #include "XMThread.h"
+#include "WWWAppInterface.h"
 
-class UpdateThemesListThread : public XMThread {
+class UpdateThemesListThread : public XMThread, public WWWAppInterface {
 public:
   UpdateThemesListThread();
   virtual ~UpdateThemesListThread();
+
+  virtual void setTaskProgress(float p_percent);
 
 private:
   virtual int realThreadFunction();
