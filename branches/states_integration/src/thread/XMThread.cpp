@@ -27,6 +27,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 XMThread::XMThread()
 {
   m_isRunning        = false;
+  m_isSleeping       = false;
+  m_askThreadToEnd   = false;
+  m_askThreadToSleep = false;
   m_pThread          = NULL;
   m_progress         = 0;
   m_currentOperation = "";
@@ -35,12 +38,14 @@ XMThread::XMThread()
   m_pDb              = NULL;
   m_curOpMutex       = SDL_CreateMutex();
   m_curMicOpMutex    = SDL_CreateMutex();
+  m_sleepMutex       = SDL_CreateMutex();
 }
 
 XMThread::~XMThread()
 {
   SDL_DestroyMutex(m_curOpMutex);
   SDL_DestroyMutex(m_curMicOpMutex);
+  SDL_DestroyMutex(m_sleepMutex);
   if(m_pDb != NULL){
     delete m_pDb;
   }
@@ -58,6 +63,7 @@ void XMThread::startThread(GameApp* pGame)
     m_pGame            = pGame;
     m_progress         = -1;
     m_currentOperation = "";
+    m_askThreadToEnd   = false;
     m_pThread          = SDL_CreateThread(&XMThread::run, this);
     m_isRunning        = true;
 }
@@ -76,11 +82,38 @@ bool XMThread::isThreadRunning()
   return m_isRunning;
 }
 
+void XMThread::askThreadToEnd()
+{
+  m_askThreadToEnd = true;
+}
+
+void XMThread::askThreadToSleep()
+{
+  if(m_isSleeping == false){
+    m_askThreadToSleep = true;
+  }
+}
+
 void XMThread::killThread()
 {
   SDL_KillThread(m_pThread);
   m_pThread   = NULL;
   m_isRunning = false;
+}
+
+void XMThread::sleepThread()
+{
+  m_isSleeping = true;
+  m_askThreadToSleep = false;
+  SDL_LockMutex(m_sleepMutex);
+}
+
+void XMThread::unsleepThread()
+{
+  if(m_isSleeping == true){
+    SDL_UnlockMutex(m_sleepMutex);
+    m_isSleeping = false;
+  }
 }
 
 int XMThread::getThreadProgress()

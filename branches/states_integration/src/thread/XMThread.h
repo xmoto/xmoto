@@ -36,8 +36,12 @@ public:
   void startThread(GameApp* pGame);
   int  waitForThreadEnd();
   bool isThreadRunning();
+  void askThreadToEnd();
   // use with care
   void killThread();
+
+  void askThreadToSleep();
+  void unsleepThread();
 
   // return a value between 0-100
   int getThreadProgress();
@@ -50,12 +54,17 @@ public:
 protected:
   virtual int realThreadFunction() = 0;
 
+  void sleepThread();
+
   void setThreadProgress(int progress);
   void setThreadCurrentOperation(std::string curOp);
   void setThreadCurrentMicroOperation(std::string curMicOp);
 
   SDL_Thread* m_pThread;
   bool        m_isRunning;
+  bool        m_isSleeping;
+  bool        m_askThreadToEnd;
+  bool        m_askThreadToSleep;
 
   int         m_progress;
   std::string m_currentOperation;
@@ -68,9 +77,9 @@ protected:
 
 private:
   int threadFunctionEncapsulate();
-  SDL_mutex* m_progressMutex;
   SDL_mutex* m_curOpMutex;
   SDL_mutex* m_curMicOpMutex;
+  SDL_mutex* m_sleepMutex;
 };
   
 #endif
