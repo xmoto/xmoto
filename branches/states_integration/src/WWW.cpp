@@ -24,80 +24,6 @@
 #include "db/xmDatabase.h"
 #include "md5sum/md5file.h"
 
-ProxySettings::ProxySettings() {
-  m_server       = "";
-  m_port         = -1;
-  m_type         = CURLPROXY_HTTP;
-  m_authUser     = "";
-  m_authPassword = "";
-}
-
-void ProxySettings::setServer(std::string p_server) {
-  m_server = p_server;
-}
-
-void ProxySettings::setPort(long p_port) {
-  m_port = p_port;
-}
-
-void ProxySettings::setType(long p_type) {
-  m_type = p_type;
-}
-
-void ProxySettings::setAuthentification(std::string p_user, std::string p_password) {
-  m_authUser     = p_user;
-  m_authPassword = p_password;
-}
-
-void ProxySettings::setDefaultServer() {
-  m_server = "";
-}
-
-void ProxySettings::setDefaultPort() {
-  m_port = -1;
-}
-
-void ProxySettings::setDefaultType() {
-  m_type = CURLPROXY_HTTP;
-}
-
-void ProxySettings::setDefaultAuthentification() {
-  m_authUser     = "";
-  m_authPassword = "";
-}
-
-std::string ProxySettings::getServer() const {
-  return m_server;
-}
-
-long ProxySettings::getPort() const {
-  return m_port;
-}
-
-long ProxySettings::getType() const {
-  return m_type;
-}
-
-std::string ProxySettings::getAuthentificationUser() const {
-  return m_authUser;
-}
-
-std::string ProxySettings::getAuthentificationPassword() const {
-  return m_authPassword;
-}
-
-bool ProxySettings::useDefaultServer() const {
-  return m_server == "";
-}
-
-bool ProxySettings::useDefaultPort() const {
-  return m_port == -1;
-}
-
-bool ProxySettings::useDefaultAuthentification() const {
-  return m_authUser == "";
-}
-
 void WebRoom::downloadReplay(const std::string& i_url) {
   std::string i_rplFilename = FS::getReplaysDir()
     + "/" 
@@ -273,7 +199,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   curl_easy_setopt(v_curl, CURLOPT_FOLLOWLOCATION, 1);
 
   /* set proxy settings */
-  if(p_proxy_settings != NULL) {
+  if(p_proxy_settings != NULL && p_proxy_settings->getTypeStr() != "") {
     /* v_proxy_server because 
        after call to 
        curl_easy_setopt(v_curl, CURLOPT_PROXY, p_proxy_settings->getServer().c_str());

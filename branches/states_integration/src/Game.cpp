@@ -359,6 +359,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 
   if(nKey == SDLK_F8) {
     enableWWW(m_xmsession->www() == false);
+    getStateManager()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
     return;        
   }
 
@@ -851,41 +852,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
           return;
       }
     }    
-  }
-  
-  /*===========================================================================
-  Configure proxy
-  ===========================================================================*/
-  void GameApp::_ConfigureProxy(void) {
-    bool bFetchPortAndServer = false;
-  
-    /* Proxy? */        
-    std::string s = m_Config.getString("ProxyType");
-    if(s == "HTTP") {
-      m_ProxySettings.setType(CURLPROXY_HTTP);
-      bFetchPortAndServer = true;
-    }
-    else if(s == "SOCKS4") {
-      m_ProxySettings.setType(CURLPROXY_SOCKS4);
-      bFetchPortAndServer = true;
-    }
-    else if(s == "SOCKS5") {
-      m_ProxySettings.setType(CURLPROXY_SOCKS5);
-      bFetchPortAndServer = true;
-    }
-    else {
-      m_ProxySettings.setDefaultAuthentification();
-      m_ProxySettings.setDefaultPort();
-      m_ProxySettings.setDefaultServer();
-      m_ProxySettings.setDefaultType();
-    }
-    
-    if(bFetchPortAndServer) {
-      m_ProxySettings.setServer(m_Config.getString("ProxyServer"));
-      m_ProxySettings.setPort(m_Config.getInteger("ProxyPort"));
-      m_ProxySettings.setAuthentification(m_Config.getString("ProxyAuthUser"),
-            m_Config.getString("ProxyAuthPwd"));      
-    }
   }
   
   std::string GameApp::_getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time) {

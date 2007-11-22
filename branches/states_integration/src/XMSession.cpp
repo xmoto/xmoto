@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMArgs.h"
 #include "UserConfig.h"
 #include "WWW.h"
+#include <curl/curl.h>
 
 XMSession::XMSession() {
   setToDefault();
@@ -86,6 +87,7 @@ void XMSession::setToDefault() {
   m_webThemesURL                  = DEFAULT_WEBTHEMES_URL;
   m_webThemesURLBase              = DEFAULT_WEBTHEMES_SPRITESURLBASE;
   m_webRoomsURL                   = DEFAULT_WEBROOMS_URL;
+  m_webConfAtInit                 = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -220,6 +222,12 @@ void XMSession::load(UserConfig* m_Config) {
   m_replayFrameRate          	= m_Config->getFloat("ReplayFrameRate");
   m_webThemesURL                = m_Config->getString("WebThemesURL");
   m_webThemesURLBase            = m_Config->getString("WebThemesURLBase");
+  m_proxySettings.setType(            m_Config->getString("ProxyType"));
+  m_proxySettings.setServer(          m_Config->getString("ProxyServer"));
+  m_proxySettings.setPort(            m_Config->getInteger("ProxyPort"));
+  m_proxySettings.setAuthentification(m_Config->getString("ProxyAuthUser"),
+				      m_Config->getString("ProxyAuthPwd"));
+  m_webConfAtInit               = m_Config->getBool("WebConfAtInit");
 }
 
 void XMSession::save(UserConfig* m_Config) {
@@ -266,6 +274,12 @@ void XMSession::save(UserConfig* m_Config) {
   m_Config->setFloat("ReplayFrameRate",             m_replayFrameRate);
   m_Config->setString("WebThemesURL",               m_webThemesURL);
   m_Config->setString("WebThemesURLBase",           m_webThemesURLBase);
+  m_Config->setString("ProxyType",     		    proxySettings()->getTypeStr());
+  m_Config->setString("ProxyServer",   		    proxySettings()->getServer());
+  m_Config->setInteger("ProxyPort",    		    proxySettings()->getPort());
+  m_Config->setString("ProxyAuthUser", 		    proxySettings()->getAuthentificationUser());
+  m_Config->setString("ProxyAuthPwd" , 		    proxySettings()->getAuthentificationPassword());
+  m_Config->setBool("WebConfAtInit",                m_webConfAtInit);
 }
 
 bool XMSession::isVerbose() const {
@@ -703,4 +717,125 @@ std::string XMSession::webThemesURLBase() const {
 
 std::string XMSession::webRoomsURL() const {
   return m_webRoomsURL;
+}
+
+void XMSession::setWebConfAtInit(bool i_value) {
+  m_webConfAtInit = i_value;
+}
+
+bool XMSession::webConfAtInit() const {
+  return m_webConfAtInit;
+}
+
+ProxySettings* XMSession::proxySettings() {
+  return &m_proxySettings;
+}
+
+ProxySettings::ProxySettings() {
+  m_useProxy     = false;
+  m_server       = "";
+  m_port         = -1;
+  m_type         = CURLPROXY_HTTP;
+  m_authUser     = "";
+  m_authPassword = "";
+}
+
+void ProxySettings::setServer(std::string p_server) {
+  m_server = p_server;
+}
+
+void ProxySettings::setPort(long p_port) {
+  m_port = p_port;
+}
+
+void ProxySettings::setType(const std::string& p_type) {
+  m_useProxy = true;
+
+  if(p_type == "SOCKS4") {
+    m_type = CURLPROXY_SOCKS4;
+  } else if(p_type == "SOCKS5") {
+    m_type = CURLPROXY_SOCKS5;
+  } else if(p_type == "HTTP") {
+    m_type = CURLPROXY_HTTP;
+  } else {
+    m_useProxy = false;
+  }
+}
+
+void ProxySettings::setAuthentification(std::string p_user, std::string p_password) {
+  m_authUser     = p_user;
+  m_authPassword = p_password;
+}
+
+void ProxySettings::setDefaultServer() {
+  m_server = "";
+}
+
+void ProxySettings::setDefaultPort() {
+  m_port = -1;
+}
+
+void ProxySettings::setDefaultType() {
+  m_useProxy = false;
+  m_type = CURLPROXY_HTTP;
+}
+
+void ProxySettings::setDefaultAuthentification() {
+  m_authUser     = "";
+  m_authPassword = "";
+}
+
+std::string ProxySettings::getServer() const {
+  return m_server;
+}
+
+long ProxySettings::getPort() const {
+  return m_port;
+}
+
+long ProxySettings::getType() const {
+  return m_type;
+}
+
+std::string ProxySettings::getTypeStr() const {
+  if(m_useProxy == false) return "";
+
+  switch(m_type) {
+
+  case CURLPROXY_SOCKS4:
+    return "SOCKS4";
+    break;
+
+   case CURLPROXY_SOCKS5:
+    return "SOCKS5";
+    break;   
+   
+
+  case CURLPROXY_HTTP:
+    return "HTTP";
+    break;
+
+  default:
+    return "";
+  }
+}
+
+std::string ProxySettings::getAuthentificationUser() const {
+  return m_authUser;
+}
+
+std::string ProxySettings::getAuthentificationPassword() const {
+  return m_authPassword;
+}
+
+bool ProxySettings::useDefaultServer() const {
+  return m_server == "";
+}
+
+bool ProxySettings::useDefaultPort() const {
+  return m_port == -1;
+}
+
+bool ProxySettings::useDefaultAuthentification() const {
+  return m_authUser == "";
 }

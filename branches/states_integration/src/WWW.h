@@ -35,6 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "WWWAppInterface.h"
 #include "Theme.h"
+#include "XMSession.h"
 #include "XMBuild.h"
 class ThemeChoice;
 
@@ -90,38 +91,6 @@ struct f_curl_upload_data {
 
 class WebRoom;
 class xmDatabase;
-
-class ProxySettings {
- public:
-  ProxySettings();
-  void setServer(std::string p_server);
-  void setPort(long p_port);
-  void setType(long p_type); /* CURLPROXY_HTTP OR CURLPROXY_SOCKS5 */
-  void setAuthentification(std::string p_user, std::string p_password);
-
-  void setDefaultServer();
-  void setDefaultPort();
-  void setDefaultType();
-  void setDefaultAuthentification();
-
-  std::string getServer() const;
-  long getPort() const;
-  long getType() const; /* CURLPROXY_HTTP OR CURLPROXY_SOCKS5 */
-  std::string getAuthentificationUser() const;
-  std::string getAuthentificationPassword() const;
-
-  /* default means : curl try to find default values (no proxy, or environment vars) */
-  bool useDefaultServer() const;
-  bool useDefaultPort() const;
-  bool useDefaultAuthentification() const;
-
- private:
-  std::string m_server;
-  long m_port;
-  long m_type;
-  std::string m_authUser;
-  std::string m_authPassword;
-};
 
 class FSWeb {
  public:

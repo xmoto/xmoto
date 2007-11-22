@@ -102,7 +102,7 @@ int UpdateThemeThread::realThreadFunction()
     v_data.v_nb_files_to_download = 1;
     FS::mkArborescence(v_destinationFileXML);
     v_destinationFileXML_tmp = v_destinationFileXML + ".tmp";
-    FSWeb::downloadFileBz2(v_destinationFileXML_tmp, v_fileUrl, FSWeb::f_curl_progress_callback_download, &v_data, m_pGame->getProxySettings());
+    FSWeb::downloadFileBz2(v_destinationFileXML_tmp, v_fileUrl, FSWeb::f_curl_progress_callback_download, &v_data, m_pGame->getSession()->proxySettings());
     
     if(m_askThreadToEnd) {
       remove(v_destinationFileXML_tmp.c_str());
@@ -160,7 +160,7 @@ int UpdateThemeThread::realThreadFunction()
 	  FS::mkArborescence(v_destinationFile);
 	  
 	  FSWeb::downloadFile(v_destinationFile, v_sourceFile, FSWeb::f_curl_progress_callback_download, &v_data,
-			      m_pGame->getProxySettings());
+			      m_pGame->getSession()->proxySettings());
 	  
 	  v_nb_files_performed++;
 	}

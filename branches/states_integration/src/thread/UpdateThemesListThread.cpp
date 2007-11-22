@@ -49,7 +49,7 @@ int UpdateThemesListThread::realThreadFunction()
     v_data.v_nb_files_performed   = 0;
     v_data.v_nb_files_to_download = 1;
     FSWeb::downloadFileBz2UsingMd5(v_destinationFile, m_pGame->getSession()->webThemesURL(),
-				   FSWeb::f_curl_progress_callback_download, &v_data, m_pGame->getProxySettings());
+				   FSWeb::f_curl_progress_callback_download, &v_data, m_pGame->getSession()->proxySettings());
     m_pDb->webthemes_updateDB(v_destinationFile);
     m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
   } catch(Exception &e) {

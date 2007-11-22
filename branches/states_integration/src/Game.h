@@ -129,8 +129,6 @@ class XMotoLoadReplaysInterface;
 	return &m_theme;
       };
 
-      ProxySettings* getProxySettings() { return &m_ProxySettings;}
-      
       UserConfig* getUserConfig() { /* to remove */
 	return &m_Config;
       }
@@ -190,7 +188,6 @@ class XMotoLoadReplaysInterface;
       // list played
       void setCurrentPlayingList(UILevelList *i_levelsList) {m_currentPlayingList = i_levelsList;}
 
-      void _ConfigureProxy(void);
       void _ImportOptions(void);
       void updateWebHighscores();
       void checkForExtraLevels();

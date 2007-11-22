@@ -46,7 +46,7 @@ int UpdateRoomsListThread::realThreadFunction()
     Logger::Log("WWW: Checking for rooms...");
 
     /* download xml file */
-    FSWeb::downloadFileBz2UsingMd5(v_destinationFile, m_pGame->getSession()->webRoomsURL(), NULL, NULL, m_pGame->getProxySettings());
+    FSWeb::downloadFileBz2UsingMd5(v_destinationFile, m_pGame->getSession()->webRoomsURL(), NULL, NULL, m_pGame->getSession()->proxySettings());
     setThreadProgress(90);
     m_pDb->webrooms_updateDB(v_destinationFile);
     m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_ROOMS_LISTS");

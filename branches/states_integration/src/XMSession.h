@@ -44,6 +44,40 @@ enum GraphicsLevel {
   GFX_HIGH
 };
 
+class ProxySettings {
+ public:
+  ProxySettings();
+  void setServer(std::string p_server);
+  void setPort(long p_port);
+  void setType(const std::string& p_type); /* CURLPROXY_HTTP OR CURLPROXY_SOCKS5 */
+  void setAuthentification(std::string p_user, std::string p_password);
+
+  void setDefaultServer();
+  void setDefaultPort();
+  void setDefaultType();
+  void setDefaultAuthentification();
+
+  std::string getServer() const;
+  long getPort() const;
+  long getType() const;
+  std::string getTypeStr() const;
+  std::string getAuthentificationUser() const;
+  std::string getAuthentificationPassword() const;
+
+  /* default means : curl try to find default values (no proxy, or environment vars) */
+  bool useDefaultServer() const;
+  bool useDefaultPort() const;
+  bool useDefaultAuthentification() const;
+
+ private:
+  bool m_useProxy;
+  std::string m_server;
+  long m_port;
+  long m_type;
+  std::string m_authUser;
+  std::string m_authPassword;
+};
+
 class XMSession {
   public:
   XMSession();
@@ -161,6 +195,9 @@ class XMSession {
   std::string webThemesURL() const;
   std::string webThemesURLBase() const;
   std::string webRoomsURL() const;
+  ProxySettings* proxySettings();
+  void setWebConfAtInit(bool i_value);
+  bool webConfAtInit() const;
 
   private:
   bool m_verbose;
@@ -224,6 +261,8 @@ class XMSession {
   std::string m_webThemesURL;
   std::string m_webThemesURLBase;
   std::string m_webRoomsURL;
+  ProxySettings m_proxySettings;
+  bool m_webConfAtInit;
 };
 
 #endif

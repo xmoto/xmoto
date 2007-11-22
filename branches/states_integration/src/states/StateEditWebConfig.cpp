@@ -50,11 +50,8 @@ void StateEditWebConfig::enter()
   m_GUI = m_sGUI;
   updateGUI();
 
-  if(m_pGame->getUserConfig()->getBool("WebConfAtInit") == true) {
+  if(m_pGame->getSession()->webConfAtInit()) {
     // show the message box
-    UIFrame *v_frame = reinterpret_cast<UIFrame *>(m_GUI->getChild("EDITWEBCONF_FRAME"));
-    v_frame->showWindow(false);
-
     StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, std::string(GAMETEXT_ALLOWINTERNETCONN),
 							 UI_MSGBOX_YES|UI_MSGBOX_NO);
     v_msgboxState->setId("EDITWEBCONF");
@@ -81,7 +78,7 @@ void StateEditWebConfig::leaveAfterPush()
 
 void StateEditWebConfig::checkEvents()
 {
-    /* Get some pointers */
+  /* Get some pointers */
   UIButton *pDirectConn = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITWEBCONF_FRAME:DIRECTCONN"));
   UIButton *pHTTPConn   = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITWEBCONF_FRAME:HTTPPROXY"));
   UIButton *pSOCKS4Conn = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITWEBCONF_FRAME:SOCKS4PROXY"));
@@ -91,6 +88,14 @@ void StateEditWebConfig::checkEvents()
   UIEdit   *pPort       = reinterpret_cast<UIEdit *>(m_GUI->getChild("EDITWEBCONF_FRAME:SUBFRAME:PORTEDIT"));    
   UIEdit   *pLogin      = reinterpret_cast<UIEdit *>(m_GUI->getChild("EDITWEBCONF_FRAME:SUBFRAME:LOGINEDIT")); 
   UIEdit   *pPassword   = reinterpret_cast<UIEdit *>(m_GUI->getChild("EDITWEBCONF_FRAME:SUBFRAME:PASSWORDEDIT"));     
+
+  if(pDirectConn->isClicked() || pHTTPConn->isClicked() || pSOCKS4Conn->isClicked() || pSOCKS5Conn->isClicked()) {
+    pDirectConn->setClicked(false);
+    pHTTPConn->setClicked(false);
+    pSOCKS4Conn->setClicked(false);
+    pSOCKS5Conn->setClicked(false);
+    updateGUIRights();
+  }
 
   /* OK button pressed? */
   if(pConnOK->isClicked()) {
@@ -104,41 +109,17 @@ void StateEditWebConfig::checkEvents()
       ProxyType = "SOCKS4";
     else if(pSOCKS5Conn->getChecked())
       ProxyType = "SOCKS5";
+    else
+      ProxyType = "";
 
-    m_pGame->getUserConfig()->setString("ProxyType", ProxyType);
-        
-    if(ProxyType != "") {
-      int nPort = atoi(pPort->getCaption().c_str());
-      if(nPort > 0)
-	m_pGame->getUserConfig()->setInteger("ProxyPort",nPort);
-      else
-	m_pGame->getUserConfig()->setInteger("ProxyPort",-1);          
-
-      m_pGame->getUserConfig()->setString("ProxyServer",pServer->getCaption());
-      m_pGame->getUserConfig()->setString("ProxyAuthUser",pLogin->getCaption());
-      m_pGame->getUserConfig()->setString("ProxyAuthPwd" ,pPassword->getCaption());
-    }
+    m_pGame->getSession()->proxySettings()->setType(ProxyType);
+    m_pGame->getSession()->proxySettings()->setPort(atoi(pPort->getCaption().c_str()));
+    m_pGame->getSession()->proxySettings()->setServer(pServer->getCaption());
+    m_pGame->getSession()->proxySettings()->setAuthentification(pLogin->getCaption(), pPassword->getCaption());
+    m_pGame->getSession()->setWWW(true);
+    m_pGame->getStateManager()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
 
     m_requestForEnd = true;
-
-    m_pGame->_ConfigureProxy();
-    m_pGame->updateWebHighscores();
-    m_pGame->getUserConfig()->setBool("WebHighscores", true);
-    m_pGame->_ImportOptions();
-  }      
-
-  /* Direct connection selected? If so, no need to enabled proxy editing */
-  if(pDirectConn->getChecked()) {
-    pServer->enableWindow(false);
-    pPort->enableWindow(false);
-    pLogin->enableWindow(false);
-    pPassword->enableWindow(false);
-  }            
-  else {
-    pServer->enableWindow(true);
-    pPort->enableWindow(true);
-    pLogin->enableWindow(true);
-    pPassword->enableWindow(true);
   }
 }
 
@@ -230,7 +211,6 @@ void StateEditWebConfig::createGUIIfNeeded(GameApp* pGame)
   pConn1->setID("DIRECTCONN");
   pConn1->setFont(drawLib->getFontSmall());
   pConn1->setGroup(radioButtonsGroup);
-  pConn1->setChecked(true);
   pConn1->setContextHelp(CONTEXTHELP_DIRECTCONN);
 
   UIButton *pConn2 = new UIButton(v_frame,25,88,GAMETEXT_USINGHTTPPROXY,(v_frame->getPosition().nWidth-160),28);
@@ -301,6 +281,32 @@ void StateEditWebConfig::createGUIIfNeeded(GameApp* pGame)
   pProxyPasswordEdit->setContextHelp(CONTEXTHELP_PROXYPASSWORD);
 }
 
+void StateEditWebConfig::updateGUIRights() {
+  UIButton *pDirectConn = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITWEBCONF_FRAME:DIRECTCONN"));
+  UIButton *pHTTPConn   = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITWEBCONF_FRAME:HTTPPROXY"));
+  UIButton *pSOCKS4Conn = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITWEBCONF_FRAME:SOCKS4PROXY"));
+  UIButton *pSOCKS5Conn = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITWEBCONF_FRAME:SOCKS5PROXY"));
+  UIButton *pConnOK     = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITWEBCONF_FRAME:PROXYOK"));
+  UIEdit   *pServer     = reinterpret_cast<UIEdit *>(m_GUI->getChild("EDITWEBCONF_FRAME:SUBFRAME:SERVEREDIT"));
+  UIEdit   *pPort       = reinterpret_cast<UIEdit *>(m_GUI->getChild("EDITWEBCONF_FRAME:SUBFRAME:PORTEDIT"));    
+  UIEdit   *pLogin      = reinterpret_cast<UIEdit *>(m_GUI->getChild("EDITWEBCONF_FRAME:SUBFRAME:LOGINEDIT")); 
+  UIEdit   *pPassword   = reinterpret_cast<UIEdit *>(m_GUI->getChild("EDITWEBCONF_FRAME:SUBFRAME:PASSWORDEDIT"));     
+
+  /* Direct connection selected? If so, no need to enabled proxy editing */
+  if(pDirectConn->getChecked()) {
+    pServer->enableWindow(false);
+    pPort->enableWindow(false);
+    pLogin->enableWindow(false);
+    pPassword->enableWindow(false);
+  }            
+  else {
+    pServer->enableWindow(true);
+    pPort->enableWindow(true);
+    pLogin->enableWindow(true);
+    pPassword->enableWindow(true);
+  }
+}
+
 void StateEditWebConfig::updateGUI()
 {
   /* Get some pointers */
@@ -320,16 +326,16 @@ void StateEditWebConfig::updateGUI()
   pSOCKS5Conn->setChecked(false);
 
   /* Read config */
-  pServer->setCaption(m_pGame->getUserConfig()->getString("ProxyServer"));
+  pServer->setCaption(m_pGame->getSession()->proxySettings()->getServer());
   char cBuf[256] = "";
-  int  n = m_pGame->getUserConfig()->getInteger("ProxyPort");
+  int  n = m_pGame->getSession()->proxySettings()->getPort();
   if(n > 0)
     sprintf(cBuf,"%d",n);
   pPort->setCaption(cBuf);
-  pLogin->setCaption(m_pGame->getUserConfig()->getString("ProxyAuthUser"));
-  pPassword->setCaption(m_pGame->getUserConfig()->getString("ProxyAuthPwd"));
+  pLogin->setCaption(m_pGame->getSession()->proxySettings()->getAuthentificationUser());
+  pPassword->setCaption(m_pGame->getSession()->proxySettings()->getAuthentificationPassword());
 
-  std::string proxyType = m_pGame->getUserConfig()->getString("ProxyType");
+  std::string proxyType = m_pGame->getSession()->proxySettings()->getTypeStr();
   if(proxyType == "HTTP")
     pHTTPConn->setChecked(true);
   else if(proxyType == "SOCKS4")
@@ -341,6 +347,8 @@ void StateEditWebConfig::updateGUI()
 
   /* Make sure OK button is activated */
   pConnOK->makeActive();
+
+  updateGUIRights();
 }
 void StateEditWebConfig::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
 {
@@ -351,8 +359,6 @@ void StateEditWebConfig::send(const std::string& i_id, UIMsgBoxButton i_button, 
   case UI_MSGBOX_YES:
     /* Show the actual web config editor */
     m_pGame->getSession()->setWWW(true);
-    v_frame = reinterpret_cast<UIFrame *>(m_GUI->getChild("EDITWEBCONF_FRAME"));
-    v_frame->showWindow(true);
     break;
   case UI_MSGBOX_NO:
     /* No internet connection thank you */
@@ -361,6 +367,5 @@ void StateEditWebConfig::send(const std::string& i_id, UIMsgBoxButton i_button, 
     break;
   }
 
-  m_pGame->getUserConfig()->setBool("WebHighscores", m_pGame->getSession()->www());
-  m_pGame->getUserConfig()->setBool("WebConfAtInit", false);
+  m_pGame->getSession()->setWebConfAtInit(false);
 }

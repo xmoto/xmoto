@@ -38,6 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "LevelsManager.h"
 #include "helpers/Log.h"
 #include "helpers/System.h"
+#include "StateEditWebConfig.h"
 #include "Sound.h"
 
 /* static members */
@@ -1549,6 +1550,10 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
     if(i_message == "FAVORITES_UPDATED") {
       m_require_updateFavoriteLevelsList = true;
     }
+
+    if(i_message == "CHANGE_WWW_ACCESS") {
+      m_commands.push("CHANGE_WWW_ACCESS");
+    }
   }
 
   if(i_id == "REQUESTKEY") {
@@ -1614,6 +1619,10 @@ void StateMainMenu::executeOneCommand(std::string cmd)
 
   if(cmd == "UPDATE_ROOMS_LISTS") {
     updateRoomsList();      
+  }
+
+  if(cmd == "CHANGE_WWW_ACCESS") {
+    updateWWWOptions();
   }
 }
 
@@ -2343,6 +2352,12 @@ void StateMainMenu::checkEventsOptions() {
   }
 
   // www
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:PROXYCONFIG"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getStateManager()->pushState(new StateEditWebConfig(m_pGame));
+  }
+
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLEWEB"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
@@ -2471,6 +2486,9 @@ void StateMainMenu::updateAudioOptions() {
 
 void StateMainMenu::updateWWWOptions() {
   UIButton* v_button;
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLEWEB"));
+  v_button->setChecked(m_pGame->getSession()->www());
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP"));
   v_button->enableWindow(m_pGame->getSession()->www());
