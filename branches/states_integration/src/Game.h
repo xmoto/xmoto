@@ -199,7 +199,6 @@ class XMotoLoadReplaysInterface;
 
       void initReplaysFromDir(xmDatabase* threadDb = NULL,
 			      XMotoLoadReplaysInterface* pLoadReplaysInterface = NULL);
-      void _UpdateThemesLists(void);
 
    protected:
       void createDefaultConfig();
@@ -338,20 +337,13 @@ class XMotoLoadReplaysInterface;
       void _HandleLevelInfoViewer(void);
       void _HandleLevelPackViewer(void);
       void _CreateLevelPackLevelList();
-      void _UpdateLevelPackLevelList(const std::string& v_levelPack);
       void _UpdateActionKeyList(void);
       void _ChangeKeyConfig(void);
       void _InitMenus(void);        
       void _InitMenus_MainMenu(void);
       void _SaveOptions(void);
-      void _UpdateSettings(void);
-      void _UpdateLevelLists(void);
-      void _UpdateReplaysList(void);
-
-      void _UpdateLevelsLists();
       void _UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore);
 
-      void _UpdateRoomsLists(void);
       void _GameScreenshot(void);
     
       void _UpdateLoadingScreen(float fDone, const std::string &NextTask);
@@ -363,12 +355,11 @@ class XMotoLoadReplaysInterface;
       void _InitWebConf(void);
       void _UpdateWebHighscores(bool bSilent);
       void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
-      void _UpdateWebTheme(const std::string& i_id_theme, bool bNotify);
       void _UpgradeWebHighscores();
-      void _UpdateWebRooms(bool bSilent);
-      void _UpgradeWebRooms(bool bUpdateMenus);
       void _DownloadExtraLevels(void);
       void _UploadAllHighscores();
+
+      void _UpdateSettings();
 
       void enableWWW(bool bValue);
       void enableFps(bool bValue);

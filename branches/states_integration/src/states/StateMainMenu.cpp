@@ -83,6 +83,8 @@ StateMainMenu::StateMainMenu(GameApp* pGame,
   }
 
   m_require_updateFavoriteLevelsList = false;
+  m_require_updateReplaysList        = false;
+  m_require_updateLevelsList         = false;
 }
 
 StateMainMenu::~StateMainMenu()
@@ -135,6 +137,17 @@ void StateMainMenu::enterAfterPop()
   if(m_require_updateFavoriteLevelsList) {
     updateFavoriteLevelsList();
     m_require_updateFavoriteLevelsList = false;
+  }
+
+  if(m_require_updateReplaysList) {
+    updateReplaysList();
+    m_require_updateReplaysList = false;
+  }
+
+  if(m_require_updateLevelsList) {
+    updateLevelsPacksList();
+    updateLevelsLists(); 
+    m_require_updateLevelsList = false;
   }
 }
 
@@ -369,6 +382,7 @@ void StateMainMenu::checkEventsLevelsFavoriteTab() {
     if(v_id_level != "") {
       m_pGame->getLevelsManager()->delFromFavorite(m_pGame->getDb(), m_pGame->getSession()->profile(), v_id_level);
       updateFavoriteLevelsList();
+      m_pGame->getStateManager()->sendAsynchronousMessage("FAVORITES_UPDATED");
     }
   }
 }
@@ -1550,9 +1564,17 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
     if(i_message == "FAVORITES_UPDATED") {
       m_require_updateFavoriteLevelsList = true;
     }
-
+    
     if(i_message == "CHANGE_WWW_ACCESS") {
       m_commands.push("CHANGE_WWW_ACCESS");
+    }
+    
+   if(i_message == "REPLAYS_UPDATED") {
+     m_require_updateReplaysList = true;
+    }
+
+   if(i_message == "LEVELS_UPDATED") {
+     m_require_updateLevelsList = true;
     }
   }
 
@@ -1609,6 +1631,7 @@ void StateMainMenu::executeOneCommand(std::string cmd)
 	  Logger::Log(e.getMsg().c_str());
 	}
 	updateReplaysList();
+	m_pGame->getStateManager()->sendAsynchronousMessage("REPLAYS_UPDATED");
       }
     }
   }
@@ -1640,6 +1663,7 @@ void StateMainMenu::createLevelLists(UILevelList *i_list, const std::string& i_p
 void StateMainMenu::updateFavoriteLevelsList() {
   createLevelLists((UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:FAVORITE_LIST"),
 		   VPACKAGENAME_FAVORITE_LEVELS);
+  updateLevelsPackInPackList(VPACKAGENAME_FAVORITE_LEVELS);  
 }
 
 void StateMainMenu::updateNewLevelsList() {
@@ -2520,4 +2544,13 @@ void StateMainMenu::updateNewLevels() {
 
   v_buttonDrawn = reinterpret_cast<UIButtonDrawn *>(m_GUI->getChild("MAIN:NEWLEVELAVAILBLE"));
   v_buttonDrawn->showWindow(true);
+}
+
+void StateMainMenu::updateLevelsPackInPackList(const std::string& v_levelPack) {
+  UIPackTree *pTree = (UIPackTree *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:PACK_TAB:PACK_TREE");
+  LevelsPack *v_pack = &(m_pGame->getLevelsManager()->LevelsPackByName(v_levelPack));
+  
+  pTree->updatePack(v_pack,
+		    v_pack->getNumberOfFinishedLevels(m_pGame->getDb(), m_pGame->getSession()->profile()),
+		    v_pack->getNumberOfLevels(m_pGame->getDb()));
 }

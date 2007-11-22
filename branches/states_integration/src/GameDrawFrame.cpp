@@ -60,7 +60,7 @@ void GameApp::_PreUpdateGUI(void) {
       
       /* current theme should be updated when there are new levels */
       //_UpdateWebThemes(true);
-      _UpdateWebTheme(m_xmsession->theme(), false);      
+      //_UpdateWebTheme(m_xmsession->theme(), false);      
     }
     else if(Button == UI_MSGBOX_NO) {
       delete m_pInfoMsgBox;

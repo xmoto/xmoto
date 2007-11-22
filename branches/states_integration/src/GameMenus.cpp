@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "gui/specific/GUIXMoto.h"
 #include "xmscene/Camera.h"
+#include "states/StateManager.h"
 
 #include "PhysSettings.h"
 
@@ -711,8 +712,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     /* OPTIONS */
     m_pOptionsWindow = makeOptionsWindow(drawLib, m_pMainMenu, &m_Config);
-    _UpdateThemesLists();
-    _UpdateRoomsLists();
     /* ***** */
 
     m_pLevelPacksWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,"",drawLib->getDispWidth()-220-20,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);      
@@ -968,76 +967,43 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_pLevelPackTabs->setChanged(false);
     }
     
-    /* OPTIONS */
-    UIButton *pINetConf = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:PROXYCONFIG");
-    UIButton *pUpdHS = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:UPDATEHIGHSCORES");
-    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
-    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD");
-
-    UIWindow *pRoomsTab = (UIWindow *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB");
-    UIButton *pUpdRoomsList = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:UPDATE_ROOMS_LIST");
-	UIButton *pUploadAllHighscoresButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:REPLAY_UPLOADHIGHSCOREALL_BUTTON");
-			
-    UIButton *pUpdThemeList = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:UPDATE_THEMES_LIST");
-    UIButton *pUpdSelectedTheme = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:GET_SELECTED_THEME");
-    UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST");
-
-	/* unfortunately because of differences betw->setClicked(false);een finishTime in webhighscores and replays table (one is rounded to 0.01s and other to 0.001s) and lack of math functions in sqlite we cannot make it with just one smart query :( */
-	if(pUploadAllHighscoresButton->isClicked()) {
-		pUploadAllHighscoresButton->setClicked(false);
-		_UploadAllHighscores();
-	}		
-
-    
-    if(pUpdHS->isClicked()) {
-      pUpdHS->setClicked(false);
-      try {
-	_UpdateWebHighscores(false);
-	_UpgradeWebHighscores();    
-	_UpdateWebLevels(false);  
-
-	m_levelsManager.makePacks(m_db,
-				  m_xmsession->profile(),
-				  m_Config.getString("WebHighscoresIdRoom"),
-				  m_xmsession->debug());
-	_UpdateLevelsLists();
-      } catch(Exception &e) {
-	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-      }
-    }
-
-    if(pUpdRoomsList->isClicked()) {
-      pUpdRoomsList->setClicked(false);
-      try {
-    	_UpdateWebRooms(false);
-    	_UpgradeWebRooms(true);    
-      } catch(Exception &e) {
-    	notifyMsg(GAMETEXT_FAILEDDLROOMSLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-      }
-    }
-    
-//    if(pUpdThemeList->isClicked()) {
-//      pUpdThemeList->setClicked(false);
+//    /* OPTIONS */
+//    UIButton *pINetConf = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:PROXYCONFIG");
+//    UIButton *pUpdHS = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:UPDATEHIGHSCORES");
+//    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
+//    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD");
+//
+//    UIWindow *pRoomsTab = (UIWindow *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB");
+//    UIButton *pUpdRoomsList = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:UPDATE_ROOMS_LIST");
+//	UIButton *pUploadAllHighscoresButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:REPLAY_UPLOADHIGHSCOREALL_BUTTON");
+//			
+//    UIButton *pUpdThemeList = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:UPDATE_THEMES_LIST");
+//    UIButton *pUpdSelectedTheme = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:GET_SELECTED_THEME");
+//    UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST");
+//
+//	/* unfortunately because of differences betw->setClicked(false);een finishTime in webhighscores and replays table (one is rounded to 0.01s and other to 0.001s) and lack of math functions in sqlite we cannot make it with just one smart query :( */
+//	if(pUploadAllHighscoresButton->isClicked()) {
+//		pUploadAllHighscoresButton->setClicked(false);
+//		_UploadAllHighscores();
+//	}		
+//
+//    
+//    if(pUpdHS->isClicked()) {
+//      pUpdHS->setClicked(false);
 //      try {
-//	_UpdateWebThemes(false);
+//	_UpdateWebHighscores(false);
+//	_UpgradeWebHighscores();    
+//	_UpdateWebLevels(false);  
+//
+//	m_levelsManager.makePacks(m_db,
+//				  m_xmsession->profile(),
+//				  m_Config.getString("WebHighscoresIdRoom"),
+//				  m_xmsession->debug());
+//	_UpdateLevelsLists();
 //      } catch(Exception &e) {
-//	notifyMsg(GAMETEXT_FAILEDUPDATETHEMESLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
+//	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
 //      }
-//    }  
-
-    if(pUpdSelectedTheme->isClicked()) {
-      pUpdSelectedTheme->setClicked(false);
-      try {
-	if(!pThemeList->isBranchHidden() && pThemeList->getSelected()>=0) {
-	  if(!pThemeList->getEntries().empty()) {
-	    UIListEntry *pEntry = pThemeList->getEntries()[pThemeList->getSelected()];
-	    _UpdateWebTheme(pEntry->Text[0], true);
-	  }
-	}
-      } catch(Exception &e) {
-	notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-      }
-    } 
+//    }
 
      UIList *pActionKeyList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEY_ACTION_LIST");
     
@@ -1230,7 +1196,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       _SimpleMessage(GAMETEXT_DLHIGHSCORE,&m_InfoMsgBoxRect);
       m_pWebHighscores->downloadReplay(v_fileUrl);
       addReplay(v_replayName);
-      _UpdateReplaysList();
+      getStateManager()->sendAsynchronousMessage("REPLAYS_UPDATED");
       
       /* not very nice : make a new search to be sure the replay is here */
       /* because it could have been downloaded but unplayable : for macosx for example */
@@ -1244,14 +1210,3 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
     m_PlaySpecificReplay = v_replayName;
   }
-
-  void GameApp::_UpdateLevelPackLevelList(const std::string& v_levelPack) {
-    UIPackTree *pTree = (UIPackTree *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_TREE");
-    LevelsPack *v_pack = &(m_levelsManager.LevelsPackByName(v_levelPack));
-
-    pTree->updatePack(v_pack,
-		      v_pack->getNumberOfFinishedLevels(m_db, m_xmsession->profile()),
-		      v_pack->getNumberOfLevels(m_db)
-		      );
-  }
-

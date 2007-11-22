@@ -117,6 +117,7 @@ void StateLevelPackViewer::checkEvents()
 
     if(v_id_level != "") {
       m_pGame->addLevelToFavorite(v_id_level);
+      m_pGame->getStateManager()->sendAsynchronousMessage("FAVORITES_UPDATED");
     }
   }
 

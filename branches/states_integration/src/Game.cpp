@@ -256,24 +256,6 @@ GameApp::GameApp() {
   }
   
   /*===========================================================================
-  Update levels lists - must be done after each completed level
-  ===========================================================================*/
-  void GameApp::_UpdateLevelLists(void) {
-  }
-
-  /*===========================================================================
-  Update replays list
-  ===========================================================================*/
-  void GameApp::_UpdateReplaysList(void) {
-  }
-
-  void GameApp::_UpdateRoomsLists(void) {
-  }
-
-  void GameApp::_UpdateThemesLists(void) {
-  }
-
-  /*===========================================================================
   Update settings
   ===========================================================================*/
   void GameApp::_UpdateSettings(void) {
@@ -511,7 +493,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     } else {
       /* Update replay list to reflect changes */
       addReplay(v_outputfile);
-      _UpdateReplaysList();
+      getStateManager()->sendAsynchronousMessage("REPLAYS_UPDATED");
     }
   }
 
@@ -611,12 +593,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     m_bWebLevelsToDownload = m_pWebLevels->nbLevelsToGet(m_db);
   }
 
-  void GameApp::_UpdateWebRooms(bool bSilent) {
-  }
-
-  void GameApp::_UpdateWebTheme(const std::string& i_id_theme, bool bNotify) {
-  }
-
   void GameApp::_UpgradeWebHighscores() {
     /* Upgrade high scores */
     try {
@@ -625,9 +601,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       /* file probably doesn't exist */
       Logger::Log("** Warning ** : Failed to analyse web-highscores file");   
     }
-  }
-
-  void GameApp::_UpgradeWebRooms(bool bUpdateMenus) {
   }
 
   /*===========================================================================
@@ -663,7 +636,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 					    );
 
          /* Update level lists */
-	_UpdateLevelsLists();
+	getStateManager()->sendAsynchronousMessage("LEVELS_UPDATED");	
       }
   }
 
@@ -911,7 +884,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 	  _SimpleMessage(GAMETEXT_DLGHOST,&m_InfoMsgBoxRect);
 	  m_pWebHighscores->downloadReplay(v_fileUrl);
 	  addReplay(v_replayName);
-	  _UpdateReplaysList();
+	  getStateManager()->sendAsynchronousMessage("REPLAYS_UPDATED");
 	  res = std::string("Replays/") + v_replayName + std::string(".rpl");
 	} catch(Exception &e) {
 	  /* do nothing */
@@ -1131,9 +1104,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     m_MotoGame.setAutoZoomCamera();
   }
 
-  void GameApp::_UpdateLevelsLists() {
-  }
-
   void GameApp::reloadTheme() {
     try {
       m_theme.load(m_db->themes_getFileName(m_xmsession->theme()));
@@ -1338,8 +1308,6 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
 
 void GameApp::addLevelToFavorite(const std::string& i_levelId) {
   m_levelsManager.addToFavorite(m_db, m_xmsession->profile(), i_levelId);
-  _UpdateLevelPackLevelList(VPACKAGENAME_FAVORITE_LEVELS);
-  _UpdateLevelLists();
 }
 
 void GameApp::switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage) {
@@ -1354,9 +1322,6 @@ void GameApp::switchLevelToFavorite(const std::string& i_levelId, bool v_display
       m_sysMsg->displayText(GAMETEXT_LEVEL_ADDED_TO_FAVORITE);
     }
   }
-
-  _UpdateLevelPackLevelList(VPACKAGENAME_FAVORITE_LEVELS);
-  _UpdateLevelLists();
 }
 
 void GameApp::switchFollowCamera() {
@@ -1468,9 +1433,9 @@ void GameApp::finalizeReplay(bool i_finished) {
 }
 
 void GameApp::updateLevelsListsOnEnd() {
-  _UpdateLevelsLists();
-  _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
-			 m_MotoGame.Players()[0]->finishTime());
+//  _UpdateLevelsLists();
+//  _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
+//			 m_MotoGame.Players()[0]->finishTime());
 }
 
 Replay* GameApp::getCurrentReplay() {
@@ -1503,7 +1468,7 @@ void GameApp::updateWebHighscores()
 				m_xmsession->profile(),
 				m_xmsession->idRoom(),
 				m_xmsession->debug());
-      _UpdateLevelsLists();
+      getStateManager()->sendAsynchronousMessage("LEVELS_UPDATED");
     } catch(Exception &e) {
       notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
     }

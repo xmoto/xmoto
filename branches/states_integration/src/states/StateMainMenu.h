@@ -106,6 +106,7 @@ class StateMainMenu : public StateMenu {
   UILevelList* buildQuickStartList();
   void createLevelListsSql(UILevelList* io_levelsList, const std::string& i_sql);
   void createLevelLists(UILevelList *i_list, const std::string& i_packageName);
+  void updateLevelsPackInPackList(const std::string& v_levelPack);
 
   void checkEventsLevelsFavoriteTab();
   void checkEventsLevelsNewTab();
@@ -116,6 +117,8 @@ class StateMainMenu : public StateMenu {
   void checkEventsOptions();
 
   bool m_require_updateFavoriteLevelsList;
+  bool m_require_updateReplaysList;
+  bool m_require_updateLevelsList;
 };
 
 #endif
