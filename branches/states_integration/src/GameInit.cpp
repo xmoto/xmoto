@@ -499,36 +499,8 @@ void GameApp::_Wait()
       UIWindow::setDrawLib(getDrawLib());
 
       _UpdateLoadingScreen((1.0f/9.0f) * 2,GAMETEXT_LOADINGMENUGRAPHICS);
+    }
         
-    if(m_xmsession->www() && m_PlaySpecificLevelFile == "" && m_PlaySpecificReplay == "") {  
-      bool bSilent = true;
-      try {
-	if(m_xmsession->checkNewHighscoresAtStartup()) {
-	  _UpdateLoadingScreen((1.0f/9.0f) * 3,GAMETEXT_DLHIGHSCORES);      
-	  _UpdateWebHighscores(bSilent);
-	  _UpgradeWebHighscores();
-	}
-      } catch(Exception &e) {
-	/* No internet connection, probably... (just use the latest times, if any) */
-	Logger::Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());              
-	if(!bSilent)
-	  notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-      }
-      
-      if(m_xmsession->checkNewLevelsAtStartup()) {
-	try {
-	  _UpdateLoadingScreen((1.0f/9.0f) * 4,GAMETEXT_DLLEVELSCHECK);      
-	  _UpdateWebLevels(bSilent);       
-	} catch(Exception &e) {
-	  Logger::Log("** Warning ** : Failed to update web-levels [%s]",e.getMsg().c_str());              
-	  if(!bSilent)
-	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-	}
-      }
-      
-    }
-    }
-
     /* Should we clean the level cache? (can also be done when disabled) */
     if(v_xmArgs->isOptCleanCache()) {
       LevelsManager::cleanCache();
@@ -540,7 +512,7 @@ void GameApp::_Wait()
      quit();
      return;
     }
-
+        
     /* requires graphics now */
     if(m_xmsession->useGraphics() == false) {
       return;
@@ -559,7 +531,6 @@ void GameApp::_Wait()
 			      m_xmsession->profile(),
 			      m_xmsession->idRoom(),
 			      m_xmsession->debug());     
-
 
     /* Initialize menu system */
     _InitMenus();
@@ -608,7 +579,7 @@ void GameApp::_Wait()
     }
     drawFrame();
     drawLib->flushGraphics();
-    
+
     /* final initialisation so that xmoto seems to be loaded fastly */
 
     /* Update stats */
@@ -618,7 +589,7 @@ void GameApp::_Wait()
 
     Logger::Log("UserInit ended at %.3f", GameApp::getXMTime());
   }
-    
+
   /*===========================================================================
   Shutdown game
   ===========================================================================*/

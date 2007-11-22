@@ -151,7 +151,9 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateUpdateRoomsList.cpp \
 		 states/StateUpdateRoomsList.h   \
 		 states/StateRequestKey.cpp      \
-		 states/StateRequestKey.h
+		 states/StateRequestKey.h        \
+		 states/StateMultiUpdate.cpp     \
+		 states/StateMultiUpdate.h
 
 
 bz2_SOURCES = bzip2/blocksort.c     \
@@ -173,7 +175,9 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/UpdateThemeThread.h        \
 		 thread/UpdateThemeThread.cpp      \
 		 thread/UpdateRoomsListThread.h    \
-		 thread/UpdateRoomsListThread.cpp 
+		 thread/UpdateRoomsListThread.cpp  \
+		 thread/XMThreads.cpp              \
+		 thread/XMThreads.h
 
 if WIN32
 common_SOURCES += $(bz2_SOURCES)

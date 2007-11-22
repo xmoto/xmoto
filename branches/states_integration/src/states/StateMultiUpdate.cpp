@@ -1,0 +1,159 @@
+/*=============================================================================
+XMOTO
+
+This file is part of XMOTO.
+
+XMOTO is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+XMOTO is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with XMOTO; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+=============================================================================*/
+
+#include "drawlib/DrawLib.h"
+#include "helpers/Log.h"
+#include "StateMultiUpdate.h"
+#include "Game.h"
+
+/* static members */
+UIRoot* StateMultiUpdate::m_sGUI = NULL;
+
+StateMultiUpdate::StateMultiUpdate(GameApp* pGame,
+	    bool drawStateBehind,
+	    bool updateStatesBehind)
+  : StateMenu(drawStateBehind,
+	      updateStatesBehind,
+	      pGame)
+{
+  m_numberThreadDisplayed = 0;
+}
+
+void StateMultiUpdate::init()
+{
+  std::map<std::string id, ThreadInfos* pInfos>::iterator iter;
+  for(iter = m_threadsInfos.begin();
+      iter != m_threadsInfos.end();
+      iter++){
+    ThreadInfos* pInfos  = iter->second;
+    initThreadInfos(pInfos);
+  }
+}
+
+StateMultiUpdate::~StateMultiUpdate()
+{
+}
+
+void StateMultiUpdate::enter()
+{
+  createGUIIfNeeded(m_pGame);
+  m_GUI = m_sGUI;
+
+  StateMenu::enter();
+}
+
+void StateMultiUpdate::leave()
+{
+  // blank window
+  init();
+  updateGUI();
+
+  StateMenu::leave();
+}
+
+bool StateMultiUpdate::update()
+{
+  if(StateMenu::update() == false){
+    return false;
+  }
+
+  std::map<std::string id, ThreadInfos* pInfos>::iterator iter;
+  for(iter = m_threadsInfos.begin();
+      iter != m_threadsInfos.end();
+      iter++){
+    std::string  id      = iter->first;
+    ThreadInfos* pInfos  = iter->second;
+    XMThread*    pThread = m_threads.getThread(id);
+
+    if(pInfos->m_threadStarted == true && pThread->isThreadRunning() == false){
+      pInfos->m_threadStarted  = false;
+      pInfos->m_threadFinished = false;
+      if(pThread->waitForThreadEnd() != 0) {
+	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, pInfos->m_errorMessage, UI_MSGBOX_OK);
+	v_msgboxState->setId("ERROR");
+	m_pGame->getStateManager()->pushState(v_msgboxState);
+      }
+    }
+
+    if(pInfos->m_threadStarted == false && pInfos->m_threadFinished == false){
+      pThread->startThread(m_pGame);
+      pInfos->m_threadStarted = true;
+
+      Logger::Log("thread " + id + " started");
+    }
+
+    if(pInfos->m_threadStarted == true){
+      int progress = pThread->getThreadProgress();
+      if(progress != pInfos->m_progress){
+	pInfos->m_progress              = progress;
+	pInfos->m_currentOperation      = pThread->getThreadCurrentOperation();
+	pInfos->m_currentMicroOperation = pThread->getThreadCurrentMicroOperation();
+      }
+    }
+  }
+
+  return true;
+}
+
+void StateMultiUpdate::keyDown(int nKey, SDLMod mod, int nChar)
+{
+}
+
+void StateMultiUpdate::keyUp(int nKey, SDLMod mod)
+{
+}
+
+void StateMultiUpdate::clean()
+{
+  if(StateMultiUpdate::m_sGUI != NULL) {
+    delete StateMultiUpdate::m_sGUI;
+    StateMultiUpdate::m_sGUI = NULL;
+  }
+}
+
+void StateMultiUpdate::checkEvents()
+{
+}
+
+void StateMultiUpdate::updateGUI()
+{
+}
+
+void StateMultiUpdate::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
+{
+}
+
+void StateMultiUpdate::initThreadInfos(ThreadInfos* pInfos)
+{
+  pInfos->m_threadStarted         = false;
+  pInfos->m_threadFinished        = false;
+  pInfos->m_progress              = -1;
+  pInfos->m_currentOperation      = "";
+  pInfos->m_currentMicroOperation = "";
+  pInfos->m_errorMessage          = "";
+}
+
+void StateMultiUpdate::createGUIIfNeeded(GameApp* pGame)
+{
+  if(m_sGUI != NULL)
+    return;
+
+
+}

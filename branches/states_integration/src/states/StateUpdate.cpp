@@ -41,6 +41,7 @@ StateUpdate::StateUpdate(GameApp* pGame,
   m_threadStarted    = false;
   m_pThread          = NULL;
   m_errorMessage     = "";
+  init();
 }
 
 void StateUpdate::init()
@@ -70,16 +71,6 @@ void StateUpdate::leave()
   updateGUI();
 
   StateMenu::leave();
-}
-
-void StateUpdate::enterAfterPop()
-{
-  StateMenu::enterAfterPop();
-}
-
-void StateUpdate::leaveAfterPush()
-{
-  StateMenu::leaveAfterPush();
 }
 
 void StateUpdate::checkEvents()
@@ -135,35 +126,12 @@ bool StateUpdate::update()
   return true;  
 }
 
-bool StateUpdate::render()
-{
-  bool ret = StateMenu::render();
-
-
-  return ret;
-}
-
 void StateUpdate::keyDown(int nKey, SDLMod mod,int nChar)
 {
 }
 
 void StateUpdate::keyUp(int nKey,   SDLMod mod)
 {
-}
-
-void StateUpdate::mouseDown(int nButton)
-{
-  StateMenu::mouseDown(nButton);
-}
-
-void StateUpdate::mouseDoubleClick(int nButton)
-{
-  StateMenu::mouseDoubleClick(nButton);
-}
-
-void StateUpdate::mouseUp(int nButton)
-{
-  StateMenu::mouseUp(nButton);
 }
 
 void StateUpdate::clean()
