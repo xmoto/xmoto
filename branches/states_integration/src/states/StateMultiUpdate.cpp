@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "helpers/Log.h"
 #include "StateMultiUpdate.h"
+#include "thread/XMThread.h"
+#include "StateMessageBox.h"
 #include "Game.h"
 
 /* static members */
@@ -38,7 +40,7 @@ StateMultiUpdate::StateMultiUpdate(GameApp* pGame,
 
 void StateMultiUpdate::init()
 {
-  std::map<std::string id, ThreadInfos* pInfos>::iterator iter;
+  std::map<std::string, ThreadInfos*>::iterator iter;
   for(iter = m_threadsInfos.begin();
       iter != m_threadsInfos.end();
       iter++){
@@ -74,7 +76,7 @@ bool StateMultiUpdate::update()
     return false;
   }
 
-  std::map<std::string id, ThreadInfos* pInfos>::iterator iter;
+  std::map<std::string, ThreadInfos*>::iterator iter;
   for(iter = m_threadsInfos.begin();
       iter != m_threadsInfos.end();
       iter++){
@@ -96,7 +98,8 @@ bool StateMultiUpdate::update()
       pThread->startThread(m_pGame);
       pInfos->m_threadStarted = true;
 
-      Logger::Log("thread " + id + " started");
+      std::string msg = "thread " + id + " started";
+      Logger::Log(msg.c_str());
     }
 
     if(pInfos->m_threadStarted == true){

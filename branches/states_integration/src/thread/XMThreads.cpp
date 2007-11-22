@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "XMThreads.h"
-#include "VExcept.h"
+#include "XMThread.h"
 
 XMThreads::XMThreads()
 {
@@ -28,7 +28,7 @@ XMThreads::XMThreads()
 XMThreads::~XMThreads()
 {
   // emergency stop.
-  std::map<std::string id, XMThread* pThread>::iterator iter;
+  std::map<std::string, XMThread*>::iterator iter;
   iter = m_threads.begin();
 
   while(iter != m_threads.end()){
@@ -49,10 +49,12 @@ void XMThreads::addThread(std::string threadId, XMThread* pThread)
 
 void XMThreads::removeThread(std::string threadId)
 {
-  delete m_threads.erase(threadId);
+  XMThread* pThread = m_threads[threadId];
+  delete pThread;
+  m_threads.erase(threadId);
 }
 
 XMThread* XMThreads::getThread(std::string threadId)
 {
-  return m_threads[threadId]->second;
+  return m_threads[threadId];
 }

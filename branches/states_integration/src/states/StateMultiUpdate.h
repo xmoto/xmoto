@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEUPDATE_H__
 
 #include "StateMenu.h"
+#include "thread/XMThreads.h"
 #include <map>
 
 class UIRoot;
@@ -68,7 +69,7 @@ protected:
   void initThreadInfos(ThreadInfos* pInfos);
 
   XMThreads m_threads;
-  std::map<std::string id, ThreadInfos* pInfos> m_threadsInfos;
+  std::map<std::string, ThreadInfos*> m_threadsInfos;
   int m_numberThreadDisplayed;
 
 private:

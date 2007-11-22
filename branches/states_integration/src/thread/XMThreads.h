@@ -37,7 +37,7 @@ class XMThreads {
   XMThread* getThread(std::string threadId);
 
  protected:
-  std::map<std::string id, XMThread* pThread> m_threads;
+  std::map<std::string, XMThread*> m_threads;
 };
 
 #endif
