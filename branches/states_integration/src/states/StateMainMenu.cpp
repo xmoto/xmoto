@@ -2576,6 +2576,11 @@ void StateMainMenu::updateGhostsOptions() {
   v_button->enableWindow(m_pGame->getSession()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:MOTION_BLUR_GHOST"));
   v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  
+  if(m_pGame->getDrawLib()->useShaders() == false) {
+    v_button->enableWindow(false);
+    v_button->setChecked(false);
+  }
 }
 
 void StateMainMenu::updateNewLevels() {
