@@ -29,6 +29,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateDeadJust.h"
 #include "StateDeadMenu.h"
 #include "Sound.h"
+#include "xmscene/Camera.h"
+#include "xmscene/Bike.h"
 
 StatePlaying::StatePlaying(GameApp* pGame):
   StateScene(pGame)
@@ -199,6 +201,63 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
       setAutoZoom(true);
     }
     break;
+
+#if defined(ENABLE_ZOOMING)
+  case SDLK_KP7:
+    /* Zoom in */
+    for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
+      m_pGame->getMotoGame()->Cameras()[i]->zoom(0.002);
+    }
+    break;
+
+  case SDLK_KP9:
+    /* Zoom out */
+    for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
+      m_pGame->getMotoGame()->Cameras()[i]->zoom(-0.002);
+    }
+    break;
+
+  case SDLK_HOME:
+    for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
+      m_pGame->getMotoGame()->Cameras()[i]->initCamera();
+    }
+    break;
+
+  case SDLK_KP6:
+    for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
+      m_pGame->getMotoGame()->Cameras()[i]->moveCamera(1.0, 0.0);
+    }
+    break;
+
+  case SDLK_KP4:
+    for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
+      m_pGame->getMotoGame()->Cameras()[i]->moveCamera(-1.0, 0.0);
+    }
+    break;
+
+  case SDLK_KP8:
+    for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
+      m_pGame->getMotoGame()->Cameras()[i]->moveCamera(0.0, 1.0);
+    }
+    break;
+
+  case SDLK_KP2:
+    for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
+      m_pGame->getMotoGame()->Cameras()[i]->moveCamera(0.0, -1.0);
+    }
+    break;
+
+  case SDLK_KP0:
+    if((mod & KMOD_LCTRL) == KMOD_LCTRL) {
+      for(unsigned int i=0; i<m_pGame->getMotoGame()->Players().size(); i++) {
+	if(m_pGame->getMotoGame()->Cameras().size() > 0) {
+	  m_pGame->TeleportationCheatTo(i, Vector2f(m_pGame->getMotoGame()->Cameras()[0]->getCameraPositionX(),
+						    m_pGame->getMotoGame()->Cameras()[0]->getCameraPositionY()));
+	}
+      }
+    }
+    break;
+#endif
     
   default:
     /* Notify the controller */

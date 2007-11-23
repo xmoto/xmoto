@@ -52,15 +52,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     "Pull",            ACTION_PULL,          
     "Push",            ACTION_PUSH,       
     "ChangeDirection", ACTION_CHANGEDIR,     
-    #if defined(ENABLE_ZOOMING)    
-      "ZoomIn",          ACTION_ZOOMIN,     
-      "ZoomOut",         ACTION_ZOOMOUT,
-      "ZoomInit",        ACTION_ZOOMINIT,
-      "CameraMoveXUp",   ACTION_CAMERAMOVEXUP,
-      "CameraMoveXDown", ACTION_CAMERAMOVEXDOWN,
-      "CameraMoveYUp",   ACTION_CAMERAMOVEYUP,
-      "CameraMoveYDown", ACTION_CAMERAMOVEYDOWN,
-    #endif
     NULL
   };
 */
@@ -145,7 +136,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return ""; /* unknown! */
   }
   
-  int InputHandler::_StringToKey(const std::string &s) {
+  int InputHandler::stringToKey(const std::string &s) {
     int i=0;
     while(m_KeyMap[i].pcKey != NULL) {
       if(s == m_KeyMap[i].pcKey) return m_KeyMap[i].nKey;
@@ -168,6 +159,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
         
     m_pActiveJoystick1 = NULL;
+    loadConfig(pConfig);
   }
   
   void InputHandler::uninit(void) {
@@ -285,7 +277,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Read configuration
   ===========================================================================*/  
-  void InputHandler::configure(UserConfig *pConfig) {
+  void InputHandler::loadConfig(UserConfig *pConfig) {
     /* Set defaults */
     setDefaultConfig();
   
@@ -300,11 +292,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(ControllerMode1 == "Keyboard") {
       /* We're using the keyboard */
       m_ControllerModeID[0] = CONTROLLER_MODE_KEYBOARD;
-      m_nDriveKey[0] = _StringToKey(pConfig->getString("KeyDrive1"));
-      m_nBrakeKey[0] = _StringToKey(pConfig->getString("KeyBrake1"));
-      m_nPullBackKey[0] = _StringToKey(pConfig->getString("KeyFlipLeft1"));
-      m_nPushForwardKey[0] = _StringToKey(pConfig->getString("KeyFlipRight1"));
-      m_nChangeDirKey[0] = _StringToKey(pConfig->getString("KeyChangeDir1"));
+      m_nDriveKey[0] = stringToKey(pConfig->getString("KeyDrive1"));
+      m_nBrakeKey[0] = stringToKey(pConfig->getString("KeyBrake1"));
+      m_nPullBackKey[0] = stringToKey(pConfig->getString("KeyFlipLeft1"));
+      m_nPushForwardKey[0] = stringToKey(pConfig->getString("KeyFlipRight1"));
+      m_nChangeDirKey[0] = stringToKey(pConfig->getString("KeyChangeDir1"));
     } else {
       /* We're using joystick 1 */
       m_ControllerModeID[0] = CONTROLLER_MODE_JOYSTICK1;      
@@ -342,33 +334,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_ControllerModeID[2] = CONTROLLER_MODE_KEYBOARD;
     m_ControllerModeID[3] = CONTROLLER_MODE_KEYBOARD;
 
-    m_nDriveKey[1]    	 = _StringToKey(pConfig->getString("KeyDrive2"));
-    m_nBrakeKey[1]    	 = _StringToKey(pConfig->getString("KeyBrake2"));
-    m_nPullBackKey[1] 	 = _StringToKey(pConfig->getString("KeyFlipLeft2"));
-    m_nPushForwardKey[1] = _StringToKey(pConfig->getString("KeyFlipRight2"));
-    m_nChangeDirKey[1]   = _StringToKey(pConfig->getString("KeyChangeDir2"));
+    m_nDriveKey[1]    	 = stringToKey(pConfig->getString("KeyDrive2"));
+    m_nBrakeKey[1]    	 = stringToKey(pConfig->getString("KeyBrake2"));
+    m_nPullBackKey[1] 	 = stringToKey(pConfig->getString("KeyFlipLeft2"));
+    m_nPushForwardKey[1] = stringToKey(pConfig->getString("KeyFlipRight2"));
+    m_nChangeDirKey[1]   = stringToKey(pConfig->getString("KeyChangeDir2"));
 
-    m_nDriveKey[2]    	 = _StringToKey(pConfig->getString("KeyDrive3"));
-    m_nBrakeKey[2]    	 = _StringToKey(pConfig->getString("KeyBrake3"));
-    m_nPullBackKey[2] 	 = _StringToKey(pConfig->getString("KeyFlipLeft3"));
-    m_nPushForwardKey[2] = _StringToKey(pConfig->getString("KeyFlipRight3"));
-    m_nChangeDirKey[2]   = _StringToKey(pConfig->getString("KeyChangeDir3"));
+    m_nDriveKey[2]    	 = stringToKey(pConfig->getString("KeyDrive3"));
+    m_nBrakeKey[2]    	 = stringToKey(pConfig->getString("KeyBrake3"));
+    m_nPullBackKey[2] 	 = stringToKey(pConfig->getString("KeyFlipLeft3"));
+    m_nPushForwardKey[2] = stringToKey(pConfig->getString("KeyFlipRight3"));
+    m_nChangeDirKey[2]   = stringToKey(pConfig->getString("KeyChangeDir3"));
 
-    m_nDriveKey[3]    	 = _StringToKey(pConfig->getString("KeyDrive4"));
-    m_nBrakeKey[3]    	 = _StringToKey(pConfig->getString("KeyBrake4"));
-    m_nPullBackKey[3] 	 = _StringToKey(pConfig->getString("KeyFlipLeft4"));
-    m_nPushForwardKey[3] = _StringToKey(pConfig->getString("KeyFlipRight4"));
-    m_nChangeDirKey[3]   = _StringToKey(pConfig->getString("KeyChangeDir4"));
-    
-#if defined(ENABLE_ZOOMING)          
-    m_nZoomIn   = _StringToKey(pConfig->getString("KeyZoomIn"));
-    m_nZoomOut  = _StringToKey(pConfig->getString("KeyZoomOut"));
-    m_nZoomInit = _StringToKey(pConfig->getString("KeyZoomInit"));
-    m_nCameraMoveXUp   = _StringToKey(pConfig->getString("KeyCameraMoveXUp"));
-    m_nCameraMoveXDown = _StringToKey(pConfig->getString("KeyCameraMoveXDown"));
-    m_nCameraMoveYUp   = _StringToKey(pConfig->getString("KeyCameraMoveYUp"));
-    m_nCameraMoveYDown = _StringToKey(pConfig->getString("KeyCameraMoveYDown"));
-#endif
+    m_nDriveKey[3]    	 = stringToKey(pConfig->getString("KeyDrive4"));
+    m_nBrakeKey[3]    	 = stringToKey(pConfig->getString("KeyBrake4"));
+    m_nPullBackKey[3] 	 = stringToKey(pConfig->getString("KeyFlipLeft4"));
+    m_nPushForwardKey[3] = stringToKey(pConfig->getString("KeyFlipRight4"));
+    m_nChangeDirKey[3]   = stringToKey(pConfig->getString("KeyChangeDir4"));
     
     /* All good? */
     bool isUserKeyOk = true;
@@ -379,13 +361,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     }
 
-    if(isUserKeyOk == false
-#if defined(ENABLE_ZOOMING)
-       || m_nZoomIn<0 || m_nZoomOut <0 || m_nZoomInit <0
-       || m_nCameraMoveXUp<0 || m_nCameraMoveXDown<0 
-       || m_nCameraMoveYUp<0 || m_nCameraMoveYDown<0
-#endif
-       ) {
+    if(isUserKeyOk == false) {
       Logger::Log("** Warning ** : Invalid keyboard configuration!");
       _SetDefaultConfigToUnsetKeys();
     }    
@@ -397,7 +373,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void InputHandler::addScriptKeyHook(MotoGame *pGame,const std::string &KeyName,const std::string &FuncName) {
     if(m_nNumScriptKeyHooks < MAX_SCRIPT_KEY_HOOKS) {
       m_ScriptKeyHooks[m_nNumScriptKeyHooks].FuncName = FuncName;
-      m_ScriptKeyHooks[m_nNumScriptKeyHooks].nKey = _StringToKey(KeyName);
+      m_ScriptKeyHooks[m_nNumScriptKeyHooks].nKey = stringToKey(KeyName);
       m_ScriptKeyHooks[m_nNumScriptKeyHooks].pGame = pGame;
       m_nNumScriptKeyHooks++;
     }
@@ -435,55 +411,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
        }
      }
    }
-
-#if defined(ENABLE_ZOOMING)          
-      if(m_nZoomIn == nKey) {
-	/* Zoom in */
-	for(unsigned int i=0; i<i_cameras.size(); i++) {
-	  i_cameras[i]->zoom(0.002);
-	}
-      } 
-      else if(m_nZoomOut == nKey) {
-	/* Zoom out */
-	for(unsigned int i=0; i<i_cameras.size(); i++) {
-	  i_cameras[i]->zoom(-0.002);
-	}
-      }
-      else if(m_nZoomInit == nKey) {
-	/* Zoom init */
-	for(unsigned int i=0; i<i_cameras.size(); i++) {
-	  i_cameras[i]->initCamera();
-	}
-      }
-      else if(m_nCameraMoveXUp == nKey) {
-	for(unsigned int i=0; i<i_cameras.size(); i++) {
-	  i_cameras[i]->moveCamera(1.0, 0.0);
-	}
-      }
-      else if(m_nCameraMoveXDown == nKey) {
-	for(unsigned int i=0; i<i_cameras.size(); i++) {
-	  i_cameras[i]->moveCamera(-1.0, 0.0);
-	}
-      }
-      else if(m_nCameraMoveYUp == nKey) {
-	for(unsigned int i=0; i<i_cameras.size(); i++) {
-	  i_cameras[i]->moveCamera(0.0, 1.0);
-	}
-      }
-      else if(m_nCameraMoveYDown == nKey) {
-	for(unsigned int i=0; i<i_cameras.size(); i++) {
-	  i_cameras[i]->moveCamera(0.0, -1.0);
-	}
-      } else if(nKey == SDLK_KP0 && ((mod & KMOD_LCTRL) == KMOD_LCTRL)) {
-	for(unsigned int i=0; i<i_bikers.size(); i++) {
-	  if(i_cameras.size() > 0) {
-	    pGameApp->TeleportationCheatTo(i, Vector2f(i_cameras[0]->getCameraPositionX(),
-						       i_cameras[0]->getCameraPositionY()));
-	  }
-	}
-      }
-#endif
-      
+     
       break;
       case INPUT_KEY_UP:
    for(unsigned int i=0; i<i_bikers.size(); i++) {
@@ -559,15 +487,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_nPushForwardKey[3] = SDLK_i;
     m_nChangeDirKey[3]   = SDLK_n;
     
-    #if defined(ENABLE_ZOOMING)    
-      m_nZoomIn          = SDLK_KP7;
-      m_nZoomOut         = SDLK_KP9;
-      m_nZoomInit        = SDLK_HOME;
-      m_nCameraMoveXUp   = SDLK_KP6;
-      m_nCameraMoveXDown = SDLK_KP4;
-      m_nCameraMoveYUp   = SDLK_KP8;
-      m_nCameraMoveYDown = SDLK_KP2;
-    #endif
   }  
 
   void InputHandler::_SetDefaultConfigToUnsetKeys() {
@@ -599,16 +518,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(m_nPullBackKey[3]    < 0) { m_nPullBackKey[3]    = SDLK_h;     }
     if(m_nPushForwardKey[3] < 0) { m_nPushForwardKey[3] = SDLK_i;    }
     if(m_nChangeDirKey[3]   < 0) { m_nChangeDirKey[3]   = SDLK_n;    }
-   
-    #if defined(ENABLE_ZOOMING)
-    if(m_nZoomIn          < 0) { m_nZoomIn          = SDLK_KP7;   }
-    if(m_nZoomOut         < 0) { m_nZoomOut         = SDLK_KP9; }
-    if(m_nZoomInit        < 0) { m_nZoomInit        = SDLK_HOME; }
-    if(m_nCameraMoveXUp   < 0) { m_nCameraMoveXUp   = SDLK_KP6; }
-    if(m_nCameraMoveXDown < 0) { m_nCameraMoveXDown = SDLK_KP4; }
-    if(m_nCameraMoveYUp   < 0) { m_nCameraMoveYUp   = SDLK_KP8; }
-    if(m_nCameraMoveYDown < 0) { m_nCameraMoveYDown = SDLK_KP2; }
-    #endif
   }
 
   /*===========================================================================
@@ -638,79 +547,73 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(Action == "PullBack 4") 	  return keyToString(m_nPullBackKey[3]);
     if(Action == "PushForward 4") return keyToString(m_nPushForwardKey[3]);
     if(Action == "ChangeDir 4")   return keyToString(m_nChangeDirKey[3]);
-    
-    #if defined(ENABLE_ZOOMING)    
-    if(Action == "ZoomIn")   	    	return keyToString(m_nZoomIn);
-    if(Action == "ZoomOut")  	    	return keyToString(m_nZoomOut);
-    if(Action == "ZoomInit") 	    	return keyToString(m_nZoomInit);
-    if(Action == "CameraMoveXUp")   return keyToString(m_nCameraMoveXUp);
-    if(Action == "CameraMoveXDown") return keyToString(m_nCameraMoveXDown);
-    if(Action == "CameraMoveYUp")   return keyToString(m_nCameraMoveYUp);
-    if(Action == "CameraMoveYDown") return keyToString(m_nCameraMoveYDown);
-    #endif
 
     return "?";
   }
 
 void InputHandler::saveConfig(UserConfig *pConfig) {
-//        if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE)
-//	m_Config.setString("KeyDrive1",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE)
-//	m_Config.setString("KeyBrake1",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT)
-//	m_Config.setString("KeyFlipLeft1",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT)
-//	m_Config.setString("KeyFlipRight1",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR)
-//	m_Config.setString("KeyChangeDir1",pActionList->getEntries()[i]->Text[1]);
-//
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE + std::string(" 2"))
-//	m_Config.setString("KeyDrive2",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE + std::string(" 2"))
-//	m_Config.setString("KeyBrake2",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT + std::string(" 2"))
-//	m_Config.setString("KeyFlipLeft2",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT + std::string(" 2"))
-//	m_Config.setString("KeyFlipRight2",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR + std::string(" 2"))
-//	m_Config.setString("KeyChangeDir2",pActionList->getEntries()[i]->Text[1]);
-//
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE + std::string(" 3"))
-//	m_Config.setString("KeyDrive3",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE + std::string(" 3"))
-//	m_Config.setString("KeyBrake3",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT + std::string(" 3"))
-//	m_Config.setString("KeyFlipLeft3",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT + std::string(" 3"))
-//	m_Config.setString("KeyFlipRight3",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR + std::string(" 3"))
-//	m_Config.setString("KeyChangeDir3",pActionList->getEntries()[i]->Text[1]);
-//
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE + std::string(" 4"))
-//	m_Config.setString("KeyDrive4",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE + std::string(" 4"))
-//	m_Config.setString("KeyBrake4",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT + std::string(" 4"))
-//	m_Config.setString("KeyFlipLeft4",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT + std::string(" 4"))
-//	m_Config.setString("KeyFlipRight4",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR + std::string(" 4"))
-//	m_Config.setString("KeyChangeDir4",pActionList->getEntries()[i]->Text[1]);
-//
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMIN)
-//	m_Config.setString("KeyZoomIn",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMOUT)
-//	m_Config.setString("KeyZoomOut",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMINIT)
-//	m_Config.setString("KeyZoomInit",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEXUP)
-//	m_Config.setString("KeyCameraMoveXUp",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEXDOWN)
-//	m_Config.setString("KeyCameraMoveXDown",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEYUP)
-//	m_Config.setString("KeyCameraMoveYUp",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEYDOWN)
-//	m_Config.setString("KeyCameraMoveYDown",pActionList->getEntries()[i]->Text[1]);
-//      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_AUTOZOOM)
-//	m_Config.setString("KeyAutoZoom",pActionList->getEntries()[i]->Text[1]);
+  std::string n;
+
+  for(unsigned int i=0; i<4; i++) {
+    switch(i) {
+    case 0:
+      n = "1";
+      break;
+    case 1:
+      n = "2";
+      break;
+    case 2:
+      n = "3";
+      break;
+    case 3:
+      n = "4";
+      break;
+    }
+
+    pConfig->setString("KeyDrive"     + n, keyToString(m_nDriveKey[i]));
+    pConfig->setString("KeyBrake"     + n, keyToString(m_nBrakeKey[i]));
+    pConfig->setString("KeyFlipLeft"  + n, keyToString(m_nPullBackKey[i]));
+    pConfig->setString("KeyFlipRight" + n, keyToString(m_nPushForwardKey[i]));
+    pConfig->setString("KeyChangeDir" + n, keyToString(m_nChangeDirKey[i]));
+  }
+}
+
+void InputHandler::setDRIVE(int i_player, int i_value) {
+  m_nDriveKey[i_player] = i_value;
+}
+
+int InputHandler::getDRIVE(int i_player) const {
+  return m_nDriveKey[i_player];
+}
+
+void InputHandler::setBRAKE(int i_player, int i_value) {
+  m_nBrakeKey[i_player] = i_value;
+}
+
+int InputHandler::getBRAKE(int i_player) const {
+  return m_nBrakeKey[i_player];
+}
+
+void InputHandler::setFLIPLEFT(int i_player, int i_value) {
+  m_nPullBackKey[i_player] = i_value;
+}
+
+int InputHandler::getFLIPLEFT(int i_player) const {
+  return m_nPullBackKey[i_player];
+}
+
+void InputHandler::setFLIPRIGHT(int i_player, int i_value) {
+  m_nPushForwardKey[i_player] = i_value;
+}
+
+int InputHandler::getFLIPRIGHT(int i_player) const {
+  return m_nPushForwardKey[i_player];
+}
+
+void InputHandler::setCHANGEDIR(int i_player, int i_value) {
+  m_nChangeDirKey[i_player] = i_value;
+}
+
+int InputHandler::getCHANGEDIR(int i_player) const {
+  return m_nChangeDirKey[i_player];
 }

@@ -612,6 +612,7 @@ void GameApp::_Wait()
     delete m_pJustPlayReplay;
     
     m_xmsession->save(&m_Config);
+    m_InputHandler.saveConfig(&m_Config);
 
     Sound::uninit();
 

@@ -1004,56 +1004,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
 //      }
 //    }
-
-     UIList *pActionKeyList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEY_ACTION_LIST");
     
-    if(pActionKeyList && pActionKeyList->isItemActivated()) {
-      _ChangeKeyConfig();
-    }
-    
-  }
-
-  /*===========================================================================
-  Change a key config/joystick stuff
-  ===========================================================================*/
-  int GameApp::_IsKeyInUse(const std::string &Key) {
-    UIList *pActionList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEY_ACTION_LIST");
-
-    for(int i=0;i<pActionList->getEntries().size();i++) {
-      if(pActionList->getEntries()[i]->Text[1] == Key) return i;
-    }
-    return -1;
   }
   
   void GameApp::_SimpleMessage(const std::string &Msg,UIRect *pRect,bool bNoSwap) {      
 
-  }
-  
-  void GameApp::_ChangeKeyConfig(void) {
-    /* Find out what is selected... */
-    UIList *pActionList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEY_ACTION_LIST");
-    int nSel = pActionList->getSelected();
-    if(nSel >= 0 && nSel < pActionList->getEntries().size()) {
-      char cBuf[1024];                
-      sprintf(cBuf,GAMETEXT_PRESSANYKEYTO,pActionList->getEntries()[nSel]->Text[0].c_str());
-      _SimpleMessage(cBuf);
-      
-      /* Wait for a key */
-      std::string NewKey = m_InputHandler.waitForKey();
-      if(NewKey == "<<QUIT>>") {
-	/* Quit! */
-	quit();
-      }        
-      else if(NewKey != "<<CANCEL>>" && NewKey != "") {
-	/* Good... is the key already in use? */
-	int nAlreadyUsedBy = _IsKeyInUse(NewKey);
-	if(nAlreadyUsedBy > 0 && nAlreadyUsedBy != nSel) {
-	  /* affect to the key already in use the current key */
-	  pActionList->getEntries()[nAlreadyUsedBy]->Text[1] = pActionList->getEntries()[nSel]->Text[1];
-	}
-	pActionList->getEntries()[nSel]->Text[1] = NewKey;
-      }      
-    }
   }
 
   /*===========================================================================

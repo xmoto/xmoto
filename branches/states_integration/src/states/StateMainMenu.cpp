@@ -110,14 +110,7 @@ void StateMainMenu::enter()
   updateStats();
   
   // update options
-  updateThemesList();
-  updateResolutionsList();
-  updateControlsList();
-  updateRoomsList();
   updateOptions();
-  updateAudioOptions();
-  updateWWWOptions();
-  updateGhostsOptions();
 
   // check new levels
   updateNewLevels();
@@ -266,6 +259,15 @@ void StateMainMenu::checkEventsMainWindow() {
     v_windowLevels->showWindow(false);
     v_windowReplays->showWindow(false);
     v_windowOptions->showWindow(v_windowOptions->isHidden());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:DEFAULTS_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    m_pGame->getInputHandler()->setDefaultConfig();
+    m_pGame->getSession()->setToDefault();
+    updateOptions();
   }
 
   // edit profile
@@ -1582,18 +1584,55 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
     v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:CONTROLS_TAB:KEY_ACTION_LIST"));
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {    
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
+
+      // is key used
+      for(int i=0;i<v_list->getEntries().size();i++) {
+	if(v_list->getEntries()[i]->Text[1] == i_message) {
+	  // switch keys
+	  v_list->getEntries()[i]->Text[1]  = pEntry->Text[1];
+	}
+      }
       pEntry->Text[1] = i_message;
+
+      for(int i=0; i<4; i++) {
+	std::string n;
+	switch(i) {
+	case 0:
+	  n = "";
+	  break;
+	case 1:
+	  n = " 2";
+	  break;
+	case 2:
+	  n = " 3";
+	  break;
+	case 3:
+	  n = " 4";
+	  break;
+	}
+
+	if(pEntry->Text[0] == GAMETEXT_DRIVE + n) {
+	  m_pGame->getInputHandler()->setDRIVE(i, InputHandler::stringToKey(i_message));
+	}
+
+	if(pEntry->Text[0] == GAMETEXT_BRAKE + n) {
+	  m_pGame->getInputHandler()->setBRAKE(i, InputHandler::stringToKey(i_message));
+	}
+
+	if(pEntry->Text[0] == GAMETEXT_FLIPLEFT + n) {
+	  m_pGame->getInputHandler()->setFLIPLEFT(i, InputHandler::stringToKey(i_message));
+	}
+
+	if(pEntry->Text[0] == GAMETEXT_FLIPRIGHT + n) {
+	  m_pGame->getInputHandler()->setFLIPRIGHT(i, InputHandler::stringToKey(i_message));
+	}
+
+	if(pEntry->Text[0] == GAMETEXT_CHANGEDIR + n) {
+	  m_pGame->getInputHandler()->setCHANGEDIR(i, InputHandler::stringToKey(i_message));
+	}
+      }
     }
   }
-
-//	/* Good... is the key already in use? */
-//	int nAlreadyUsedBy = _IsKeyInUse(NewKey);
-//	if(nAlreadyUsedBy > 0 && nAlreadyUsedBy != nSel) {
-//	  /* affect to the key already in use the current key */
-//	  pActionList->getEntries()[nAlreadyUsedBy]->Text[1] = pActionList->getEntries()[nSel]->Text[1];
-//	}
-//	pActionList->getEntries()[nSel]->Text[1] = NewKey;
-  //printf("Change key to %s\n", i_message.c_str());
 }
 
 void StateMainMenu::executeOneCommand(std::string cmd)
@@ -1937,41 +1976,30 @@ void StateMainMenu::updateControlsList() {
   pList->clear();
     
   UIListEntry *p;
-    
-  p = pList->addEntry(GAMETEXT_DRIVE); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyDrive1"));
-  p = pList->addEntry(GAMETEXT_BRAKE); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyBrake1"));
-  p = pList->addEntry(GAMETEXT_FLIPLEFT); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipLeft1"));
-  p = pList->addEntry(GAMETEXT_FLIPRIGHT); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipRight1"));
-  p = pList->addEntry(GAMETEXT_CHANGEDIR); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyChangeDir1"));
 
-  p = pList->addEntry(GAMETEXT_DRIVE + std::string(" 2")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyDrive2"));
-  p = pList->addEntry(GAMETEXT_BRAKE + std::string(" 2")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyBrake2"));
-  p = pList->addEntry(GAMETEXT_FLIPLEFT + std::string(" 2")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipLeft2"));
-  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 2")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipRight2"));
-  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 2")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyChangeDir2"));
-   
-  p = pList->addEntry(GAMETEXT_DRIVE + std::string(" 3")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyDrive3"));
-  p = pList->addEntry(GAMETEXT_BRAKE + std::string(" 3")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyBrake3"));
-  p = pList->addEntry(GAMETEXT_FLIPLEFT + std::string(" 3")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipLeft3"));
-  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 3")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipRight3"));
-  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 3")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyChangeDir3"));
+  p = pList->addEntry(GAMETEXT_DRIVE); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getDRIVE(0)));
+  p = pList->addEntry(GAMETEXT_BRAKE); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getBRAKE(0)));
+  p = pList->addEntry(GAMETEXT_FLIPLEFT); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getFLIPLEFT(0)));
+  p = pList->addEntry(GAMETEXT_FLIPRIGHT); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getFLIPRIGHT(0)));
+  p = pList->addEntry(GAMETEXT_CHANGEDIR); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getCHANGEDIR(0)));
 
-  p = pList->addEntry(GAMETEXT_DRIVE + std::string(" 4")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyDrive4"));
-  p = pList->addEntry(GAMETEXT_BRAKE + std::string(" 4")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyBrake4"));
-  p = pList->addEntry(GAMETEXT_FLIPLEFT + std::string(" 4")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipLeft4"));
-  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 4")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipRight4"));
-  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 4")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyChangeDir4"));
- 
-#if defined(ENABLE_ZOOMING)
-  p = pList->addEntry(GAMETEXT_ZOOMIN); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyZoomIn"));
-  p = pList->addEntry(GAMETEXT_ZOOMOUT); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyZoomOut"));
-  p = pList->addEntry(GAMETEXT_ZOOMINIT); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyZoomInit"));   
-  p = pList->addEntry(GAMETEXT_CAMERAMOVEXUP); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyCameraMoveXUp"));
-  p = pList->addEntry(GAMETEXT_CAMERAMOVEXDOWN); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyCameraMoveXDown"));
-  p = pList->addEntry(GAMETEXT_CAMERAMOVEYUP); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyCameraMoveYUp"));
-  p = pList->addEntry(GAMETEXT_CAMERAMOVEYDOWN); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyCameraMoveYDown"));
-  p = pList->addEntry(GAMETEXT_AUTOZOOM); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyAutoZoom"));
-#endif
+  p = pList->addEntry(GAMETEXT_DRIVE     + std::string(" 2")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getDRIVE(1)));
+  p = pList->addEntry(GAMETEXT_BRAKE     + std::string(" 2")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getBRAKE(1)));
+  p = pList->addEntry(GAMETEXT_FLIPLEFT  + std::string(" 2")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getFLIPLEFT(1)));
+  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 2")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getFLIPRIGHT(1)));
+  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 2")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getCHANGEDIR(1)));
+
+  p = pList->addEntry(GAMETEXT_DRIVE     + std::string(" 3")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getDRIVE(2)));
+  p = pList->addEntry(GAMETEXT_BRAKE     + std::string(" 3")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getBRAKE(2)));
+  p = pList->addEntry(GAMETEXT_FLIPLEFT  + std::string(" 3")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getFLIPLEFT(2)));
+  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 3")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getFLIPRIGHT(2)));
+  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 3")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getCHANGEDIR(2)));
+
+  p = pList->addEntry(GAMETEXT_DRIVE     + std::string(" 4")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getDRIVE(3)));
+  p = pList->addEntry(GAMETEXT_BRAKE     + std::string(" 4")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getBRAKE(3)));
+  p = pList->addEntry(GAMETEXT_FLIPLEFT  + std::string(" 4")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getFLIPLEFT(3)));
+  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 4")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getFLIPRIGHT(3)));
+  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 4")); p->Text.push_back(InputHandler::keyToString(m_pGame->getInputHandler()->getCHANGEDIR(3)));
 }
 
 void StateMainMenu::createRoomsList(UIList *pList) {
@@ -2161,6 +2189,17 @@ void StateMainMenu::updateOptions() {
   v_button->setChecked(m_pGame->getSession()->hideGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:MOTION_BLUR_GHOST"));
   v_button->setChecked(m_pGame->getSession()->ghostMotionBlur());
+
+  // update rights on the options
+  updateAudioOptions();
+  updateWWWOptions();
+  updateGhostsOptions();
+
+  // update lists in options
+  updateThemesList();
+  updateResolutionsList();
+  updateControlsList();
+  updateRoomsList();
 }
 
 void StateMainMenu::checkEventsOptions() {

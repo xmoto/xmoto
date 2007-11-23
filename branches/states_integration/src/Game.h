@@ -338,7 +338,6 @@ class XMotoLoadReplaysInterface;
       void _HandleLevelPackViewer(void);
       void _CreateLevelPackLevelList();
       void _UpdateActionKeyList(void);
-      void _ChangeKeyConfig(void);
       void _InitMenus(void);        
       void _InitMenus_MainMenu(void);
       void _SaveOptions(void);
@@ -350,9 +349,6 @@ class XMotoLoadReplaysInterface;
       
       void _SimpleMessage(const std::string &Msg,UIRect *pRect=NULL,bool bNoSwap=false);
       
-      int _IsKeyInUse(const std::string &Key);
-  
-      void _InitWebConf(void);
       void _UpdateWebHighscores(bool bSilent);
       void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
       void _UpgradeWebHighscores();

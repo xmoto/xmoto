@@ -64,9 +64,6 @@ void StatePreplaying::enter()
   m_pGame->playMusic("");
   pWorld->setDeathAnim(m_pGame->getSession()->enableDeadAnimation());
 
-  /* Initialize controls */
-  m_pGame->getInputHandler()->configure(m_pGame->getUserConfig());
-
   try {
     pWorld->loadLevel(m_pGame->getDb(), m_idlevel);
   } catch(Exception &e) {

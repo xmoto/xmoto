@@ -193,6 +193,10 @@ int UpdateThemeThread::realThreadFunction()
     }
 
   } catch(Exception &e) {
+    if(m_askThreadToEnd) {
+      return 0;
+    }
+
     Logger::Log("** Warning ** : Failed to update theme %s (%s)", m_id_theme.c_str(), e.getMsg().c_str());
     return 1;
   }

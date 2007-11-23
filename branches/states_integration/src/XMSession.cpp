@@ -26,10 +26,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 XMSession::XMSession() {
   setToDefault();
+
+  /* don't set them by default */
+  m_webConfAtInit = true;
+  m_profile       = "";
 }
 
 void XMSession::setToDefault() {
-  /* default config */
   m_verbose          	          = false;
   m_useGraphics      	          = true;
   m_resolutionWidth  	          = 800;
@@ -42,7 +45,6 @@ void XMSession::setToDefault() {
   m_benchmark 	     	          = false;
   m_debug     	     	          = false;
   m_sqlTrace  	     	          = false;
-  m_profile   	     	          = "";
   m_gdebug    	     	          = false;
   m_timedemo  	     	          = false;
   m_fps       	     	          = false;
@@ -87,7 +89,6 @@ void XMSession::setToDefault() {
   m_webThemesURL                  = DEFAULT_WEBTHEMES_URL;
   m_webThemesURLBase              = DEFAULT_WEBTHEMES_SPRITESURLBASE;
   m_webRoomsURL                   = DEFAULT_WEBROOMS_URL;
-  m_webConfAtInit                 = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
