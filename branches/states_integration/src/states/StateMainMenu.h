@@ -116,6 +116,8 @@ class StateMainMenu : public StateMenu {
   void checkEventsMainWindow();
   void checkEventsOptions();
 
+  void uploadAllHighscores();
+
   bool m_require_updateFavoriteLevelsList;
   bool m_require_updateReplaysList;
   bool m_require_updateLevelsList;

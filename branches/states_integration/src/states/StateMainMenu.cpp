@@ -574,6 +574,18 @@ void StateMainMenu::createGUIIfNeeded(GameApp* pGame) {
   v_buttonDrawn->setFont(drawlib->getFontSmall());      
   v_buttonDrawn->setID("NEWLEVELAVAILBLE");
 
+  // info frame
+  UIWindow* v_infoFrame = new UIWindow(v_menu, 0, m_sGUI->getPosition().nHeight/2 + (5*57)/2, "", 220, 100);
+  //v_infoFrame->showWindow(false);
+  v_someText = new UIStatic(v_infoFrame, 0, 5, "", 220, 50);
+  v_someText->setFont(drawlib->getFontSmall());
+  v_someText->setHAlign(UI_ALIGN_CENTER);
+  v_someText->setID("BESTPLAYER");
+  UIButton* v_infoButton = new UIButton(v_infoFrame, 22, 40, GAMETEXT_VIEWTHEHIGHSCORE, 176, 40);
+  v_infoButton->setFont(drawlib->getFontSmall());
+  v_infoButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
+  v_infoButton->setID("BESTPLAYER_VIEW");
+
   // frames
   makeWindowLevels(pGame,  v_menu);
   makeWindowReplays(pGame, v_menu);
@@ -1973,18 +1985,36 @@ void StateMainMenu::createThemesList(UIList *pList) {
 }
 
 void StateMainMenu::updateThemesList() {
-  createThemesList(reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:THEMES_LIST")));
+  UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:THEMES_LIST"));
+  createThemesList(v_list);
+
+  std::string v_themeName = m_pGame->getSession()->theme();
+  int nTheme = 0;
+  for(int i=0; i<v_list->getEntries().size(); i++) {
+    if(v_list->getEntries()[i]->Text[0] == v_themeName) {
+      nTheme = i;
+      break;
+    }
+  }
+  v_list->setRealSelected(nTheme); 
 }
 
 void StateMainMenu::updateResolutionsList() {
   UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
+  char cBuf[256];
+  sprintf(cBuf, "%d X %d", m_pGame->getSession()->resolutionWidth(), m_pGame->getSession()->resolutionHeight());
+  int nMode = 0;
 
   v_list->clear();
   std::vector<std::string>* modes = System::getDisplayModes(m_pGame->getSession()->windowed());
   for(int i=0; i < modes->size(); i++) {
     v_list->addEntry((*modes)[i].c_str());
+    if(std::string((*modes)[i]) == std::string(cBuf)) {
+      nMode = i;
+    }
   }
   delete modes;
+  v_list->setRealSelected(nMode);
 }
 
 void StateMainMenu::updateControlsList() {
@@ -2101,36 +2131,11 @@ void StateMainMenu::updateOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:AUTOSAVEREPLAYS"));
   v_button->setChecked(m_pGame->getSession()->autosaveHighscoreReplays());
 
-  // theme
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:THEMES_LIST"));
-  std::string v_themeName = m_pGame->getSession()->theme();
-  int nTheme = 0;
-  for(int i=0; i<v_list->getEntries().size(); i++) {
-    if(v_list->getEntries()[i]->Text[0] == v_themeName) {
-      nTheme = i;
-      break;
-    }
-  }
-  v_list->setRealSelected(nTheme);  
-
-
   // video
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:16BPP"));
   v_button->setChecked(m_pGame->getSession()->bpp() == 16);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:32BPP"));
-  v_button->setChecked(m_pGame->getSession()->bpp() == 32);
-
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
-  char cBuf[256];
-  sprintf(cBuf, "%d X %d", m_pGame->getSession()->resolutionWidth(), m_pGame->getSession()->resolutionHeight());
-  int nMode = 0;
-  for(int i=0; i<v_list->getEntries().size(); i++) {
-    if(v_list->getEntries()[i]->Text[0] == std::string(cBuf)) {
-      nMode = i;
-      break;
-    }
-  }
-  v_list->setRealSelected(nMode);  
+  v_button->setChecked(m_pGame->getSession()->bpp() == 32); 
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:WINDOWED"));
   v_button->setChecked(m_pGame->getSession()->windowed());
@@ -2614,4 +2619,44 @@ void StateMainMenu::updateLevelsPackInPackList(const std::string& v_levelPack) {
   pTree->updatePack(v_pack,
 		    v_pack->getNumberOfFinishedLevels(m_pGame->getDb(), m_pGame->getSession()->profile()),
 		    v_pack->getNumberOfLevels(m_pGame->getDb()));
+}
+
+void StateMainMenu::uploadAllHighscores() {
+//    /* 1 is the main room ; don't allow full upload on it */
+//    if(m_pGame->getSession()->idRoom() == "1") return;
+//
+//    _UpdateWebHighscores(false);
+//    char **v_result;
+//    unsigned int nrow;
+//    std::string v_previousIdLevel, v_currentIdLevel;
+//
+//	std::string query = "SELECT r.id_level, r.name FROM replays r "
+//    "LEFT OUTER JOIN webhighscores h "
+//    "ON (r.id_level = h.id_level AND h.id_room=" + m_pGame->getSession()->idRoom() + ") "
+//    "INNER JOIN weblevels l ON r.id_level = l.id_level "
+//    "WHERE r.id_profile=\"" + xmDatabase::protectString(m_pGame->getSession()->profile()) + "\" "
+//    "AND r.isFinished "
+//    "AND ( (h.id_room IS NULL) OR xm_floord(h.finishTime*100.0) > xm_floord(r.finishTime*100.0)) "
+//    "ORDER BY r.id_level, r.finishTime;";
+//    v_result = m_pGame->getDb()->readDB(query, nrow);
+//
+//    try {
+//      for (int i = 0; i<nrow; i++) {
+//	std::ostringstream v_percentage;
+//	v_percentage << std::setprecision (1);
+//	v_percentage << (i*100.0/nrow);
+//
+//	v_currentIdLevel = m_db->getResult(v_result, 2, i, 0);
+//	
+//	/* send only the best of the replay by level */
+//	if(v_previousIdLevel != v_currentIdLevel) {
+//	  v_previousIdLevel = v_currentIdLevel;
+//	  _SimpleMessage(GAMETEXT_UPLOADING_HIGHSCORE + std::string("\n") + v_percentage.str() + "%");
+//	  uploadHighscore(m_db->getResult(v_result, 2, i, 1), false);
+//	}
+//      }
+//    } catch(Exception &e) {
+//      notifyMsg(e.getMsg());
+//    }
+//    m_db->read_DB_free(v_result);
 }

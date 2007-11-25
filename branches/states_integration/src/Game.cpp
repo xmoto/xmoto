@@ -1317,51 +1317,6 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
       }
   }
 
-
-  void GameApp::uploadHighscore(std::string p_replayname, bool b_notify) {
-  }
-
-
-  void GameApp::_UploadAllHighscores() {
-    /* 1 is the main room ; don't allow full upload on it */
-    if(m_xmsession->idRoom() == "1") return;
-
-    _UpdateWebHighscores(false);
-    char **v_result;
-    unsigned int nrow;
-    std::string v_previousIdLevel, v_currentIdLevel;
-
-	std::string query = "SELECT r.id_level, r.name FROM replays r "
-    "LEFT OUTER JOIN webhighscores h "
-    "ON (r.id_level = h.id_level AND h.id_room=" + m_xmsession->idRoom() + ") "
-    "INNER JOIN weblevels l ON r.id_level = l.id_level "
-    "WHERE r.id_profile=\"" + xmDatabase::protectString(m_xmsession->profile()) + "\" "
-    "AND r.isFinished "
-    "AND ( (h.id_room IS NULL) OR xm_floord(h.finishTime*100.0) > xm_floord(r.finishTime*100.0)) "
-    "ORDER BY r.id_level, r.finishTime;";
-    v_result = m_db->readDB(query, nrow);
-
-    try {
-      for (int i = 0; i<nrow; i++) {
-	std::ostringstream v_percentage;
-	v_percentage << std::setprecision (1);
-	v_percentage << (i*100.0/nrow);
-
-	v_currentIdLevel = m_db->getResult(v_result, 2, i, 0);
-	
-	/* send only the best of the replay by level */
-	if(v_previousIdLevel != v_currentIdLevel) {
-	  v_previousIdLevel = v_currentIdLevel;
-	  _SimpleMessage(GAMETEXT_UPLOADING_HIGHSCORE + std::string("\n") + v_percentage.str() + "%");
-	  uploadHighscore(m_db->getResult(v_result, 2, i, 1), false);
-	}
-      }
-    } catch(Exception &e) {
-      notifyMsg(e.getMsg());
-    }
-    m_db->read_DB_free(v_result);
-  }
-
 void GameApp::updateWebHighscores()
 {
   if(!m_bWebHighscoresUpdatedThisSession) {        

@@ -683,7 +683,7 @@ FRAME_BR (187,198) (8x8)
 #endif
 
     /* Context help? */
-    if(m_bShowContextMenu) {
+    if(m_bShowContextMenu && isDisabled() == false) {
       int nContextHelpHeight = 20;
       
       /* Shade out bottom of screen */

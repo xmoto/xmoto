@@ -49,7 +49,6 @@ StateLevelPackViewer::~StateLevelPackViewer()
 
 }
 
-
 void StateLevelPackViewer::enter()
 {
   createGUIIfNeeded(m_pGame);
@@ -133,7 +132,7 @@ void StateLevelPackViewer::checkEvents()
     pList->randomize();
   }
 
-#if 0  
+#if 0
   /* level menu : */
   /* any list clicked ? */
   if(pList->isChanged()) {
@@ -158,7 +157,6 @@ void StateLevelPackViewer::checkEvents()
     m_pGame->viewHighscoreOf();
     m_GUI->showWindow(false);
     m_pMainMenu->showWindow(false);      
-    m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
     m_pGame->getStateManager()->pushState(new StateReplaying(m_pGame, m_PlaySpecificReplay));
   }
 #endif
@@ -300,18 +298,16 @@ void StateLevelPackViewer::createGUIIfNeeded(GameApp* pGame)
   pLevelPackCancel->setContextHelp(CONTEXTHELP_CLOSE_LEVEL_PACK);
 
   /* level info frame */
-#if 0
-  m_pPackLevelInfoFrame = new UIWindow(v_frame,419,400,"",275,100);
-  m_pPackLevelInfoFrame->showWindow(false);
-  m_pPackBestPlayerText = new UIStatic(m_pPackLevelInfoFrame, 0, 5,"", 275, 50);
-  m_pPackBestPlayerText->setHAlign(UI_ALIGN_RIGHT);
-  m_pPackBestPlayerText->setFont(drawLib->getFontSmall());
-  m_pPackBestPlayerText->setHAlign(UI_ALIGN_CENTER);
-  m_pPackBestPlayerText->showWindow(true);
-  m_pPackLevelInfoViewReplayButton = new UIButton(m_pPackLevelInfoFrame,50,40, GAMETEXT_VIEWTHEHIGHSCORE,175,40);
-  m_pPackLevelInfoViewReplayButton->setFont(drawLib->getFontSmall());
-  m_pPackLevelInfoViewReplayButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
-#endif
+  UIWindow* v_infoFrame = new UIWindow(v_frame, 420 + (v_frame->getPosition().nWidth - 400 -220 -20)/2, v_frame->getPosition().nHeight-100, "", 220, 100);
+  //v_infoFrame->showWindow(false);
+  pSomeText = new UIStatic(v_infoFrame, 0, 5, "", 220, 50);
+  pSomeText->setFont(drawLib->getFontSmall());
+  pSomeText->setHAlign(UI_ALIGN_CENTER);
+  pSomeText->setID("BESTPLAYER");
+  UIButton* v_infoButton = new UIButton(v_infoFrame, 22, 40, GAMETEXT_VIEWTHEHIGHSCORE, 176, 40);
+  v_infoButton->setFont(drawLib->getFontSmall());
+  v_infoButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
+  v_infoButton->setID("BESTPLAYER_VIEW");
 }
 
 void StateLevelPackViewer::updateGUI()

@@ -145,7 +145,6 @@ class XMotoLoadReplaysInterface;
       void initReplay();
       void isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room);
       void saveReplay(const std::string &Name);
-      void uploadHighscore(std::string p_replayname, bool b_notify = true);
       void switchFollowCamera();
 
       // ask the game to close as soon as possible
@@ -321,8 +320,6 @@ class XMotoLoadReplaysInterface;
       void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
       void _UpgradeWebHighscores();
       void _DownloadExtraLevels(void);
-      void _UploadAllHighscores();
-
 
       std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time);
