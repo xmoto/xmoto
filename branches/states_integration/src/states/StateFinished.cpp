@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "Sound.h"
 #include "StateMessageBox.h"
+#include "StateUploadHighscore.h"
 #include "StateMenuContextReceiver.h"
 
 /* static members */
@@ -183,7 +184,8 @@ void StateFinished::checkEvents() {
   if(pUploadButton->isClicked()) {
     pUploadButton->setClicked(false);
 
-    m_pGame->uploadHighscore("Latest");
+    std::string v_replayPath = FS::getUserDir() + "/Replays/Latest.rpl";
+    m_pGame->getStateManager()->pushState(new StateUploadHighscore(m_pGame, v_replayPath));
   }
 
   UIButton *pAbortButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:ABORT_BUTTON"));
