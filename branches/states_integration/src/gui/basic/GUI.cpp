@@ -45,7 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
 bool UIWindow::isUglyMode() {
-  return getApp()->isUglyMode();
+  return getApp()->getSession()->ugly();
 }
 
   /*===========================================================================
@@ -683,7 +683,7 @@ FRAME_BR (187,198) (8x8)
 #endif
 
     /* Context help? */
-    if(m_bShowContextMenu && isDisabled() == false) {
+    if(m_bShowContextMenu) {
       int nContextHelpHeight = 20;
       
       /* Shade out bottom of screen */

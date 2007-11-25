@@ -44,7 +44,6 @@ class LevelsPack;
 class UIWindow;
 class UILevelList;
 class LevelsManager;
-class Credits;
 class SoundSample;
 class StateManager;
 class XMotoLoadReplaysInterface;
@@ -101,8 +100,6 @@ class XMotoLoadReplaysInterface;
 
       void TeleportationCheatTo(int i_player, Vector2f i_position);
 
-      bool creditsModeActive();
-
       void initCameras(int nbPlayer);
 
       void setSpecificReplay(const std::string& i_replay);
@@ -119,8 +116,6 @@ class XMotoLoadReplaysInterface;
       bool haveMouseMoved(void);
       
       Img *grabScreen(void);
-      bool isUglyMode();
-      /* */
 
       DrawLib *getDrawLib() {
 	return drawLib;
@@ -183,8 +178,6 @@ class XMotoLoadReplaysInterface;
 				       );
       void viewHighscoreOf();
 
-      std::string getHighscoresRoomName() { return m_WebHighscoresRoomName;}
-
       // list played
       void setCurrentPlayingList(UILevelList *i_levelsList) {m_currentPlayingList = i_levelsList;}
 
@@ -193,6 +186,7 @@ class XMotoLoadReplaysInterface;
       void checkForExtraLevels();
 
       std::string getWebRoomURL();
+      std::string getWebRoomName();
     
       std::string determineNextLevel(const std::string& i_id_level);
       std::string determinePreviousLevel(const std::string& i_id_level);
@@ -237,13 +231,8 @@ class XMotoLoadReplaysInterface;
       std::string m_DownloadingMessage;
       float m_fDownloadTaskProgressLast;
 
-      std::string m_WebHighscoresURL;
-      std::string m_WebHighscoresRoomName;
-
       bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
       bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
-      
-      bool m_bCreditsModeActive;
       
       ThemeChoicer *m_themeChoicer;
 

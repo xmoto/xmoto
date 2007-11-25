@@ -1038,43 +1038,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
    
     _UpdateActionKeyList();
   }
-  
-  void GameApp::_SaveOptions(void) {
-
-//    if(pRoomsList->getSelected() >= 0 &&
-//       pRoomsList->getSelected() < pRoomsList->getEntries().size()) {
-//      char **v_result;
-//      unsigned int nrow;
-
-      //m_WebHighscoresIdRoom = *((std::string*)pRoomsList->getEntries()[pRoomsList->getSelected()]->pvUser);
-      //m_Config.setString("WebHighscoresIdRoom", m_WebHighscoresIdRoom);
-
-//     v_result = m_db->readDB("SELECT highscoresUrl FROM webrooms WHERE id_room=" + m_WebHighscoresIdRoom + ";",
-//			      nrow);
-//     if(nrow == 1) {
-//	m_WebHighscoresURL = m_db->getResult(v_result, 1, 0, 0);
-//     } else {
-//	m_WebHighscoresURL = "";
-//     }
-//     m_db->read_DB_free(v_result);
-//
-//     m_Config.setString("WebHighscoresURL", m_WebHighscoresURL);
-//    }
-    
-    /* set the room name ; set to WR if it cannot be determined */
-//   m_WebHighscoresRoomName = "WR";
-//   char **v_result;
-//   unsigned int nrow;
-//   v_result = m_db->readDB("SELECT name "
-//			    "FROM webrooms "
-//			    "WHERE id_room=" + m_WebHighscoresIdRoom + ";",
-//			    nrow);
-//   if(nrow == 1) {
-//     m_WebHighscoresRoomName = m_db->getResult(v_result, 1, 0, 0);
-//   }
-//   m_db->read_DB_free(v_result);
-
-  }
 
   void GameApp::setLevelInfoFrameBestPlayer(std::string pLevelID,
 					    UIWindow *i_pLevelInfoFrame,

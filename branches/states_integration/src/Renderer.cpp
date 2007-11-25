@@ -839,7 +839,7 @@ int GameRenderer::nbParticlesRendered() const {
       y2_cam += bottomLeft.y;
     }
 
-    if(getParent()->isUglyMode() == false) {
+    if(getParent()->getSession()->ugly() == false) {
       pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForFlower());
       if(pType == NULL) {
 	pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForFlower());
@@ -847,7 +847,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
     
     if(nStrawberriesLeft > 0) {
-      if(getParent()->isUglyMode() == false) {
+      if(getParent()->getSession()->ugly() == false) {
 	pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());
       if(pType == NULL) {
 	pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());

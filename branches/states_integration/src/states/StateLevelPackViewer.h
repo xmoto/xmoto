@@ -51,6 +51,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     virtual void mouseDoubleClick(int nButton);
     virtual void mouseUp(int nButton);
 
+    virtual void send(const std::string& i_id, const std::string& i_message);
+
     void checkEvents();
     static void clean();
     
@@ -61,6 +63,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     void updateGUI();
     
     LevelsPack* m_pActiveLevelPack;
+    bool m_require_updateLevelsList;
   };
 
 #endif

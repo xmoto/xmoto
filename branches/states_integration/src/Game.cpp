@@ -166,11 +166,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     SDL_Quit();
   }
   
-
-  bool GameApp::isUglyMode() {
-    return m_xmsession->ugly();
-  }
-
 GameApp::~GameApp() {
   if(m_db != NULL) {
     delete m_db;
@@ -253,18 +248,6 @@ GameApp::GameApp() {
       }
     }
     return v_res;
-  }
-  
-  /*===========================================================================
-  Update settings
-  ===========================================================================*/
-  void GameApp::_UpdateSettings(void) {
-    m_bRecordReplays = m_Config.getBool("StoreReplays");
-    m_bCompressReplays = m_Config.getBool("CompressReplays");
-    Replay::enableCompression(m_bCompressReplays);
-
-    /* www */
-    m_WebHighscoresURL    = m_Config.getString("WebHighscoresURL");
   }
     
   /*===========================================================================
@@ -445,16 +428,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   void GameApp::mouseUp(int nButton) {
     m_stateManager->mouseUp(nButton);
   }
-      
-  /*===========================================================================
-  Notification popup
-  ===========================================================================*/
-  void GameApp::notifyMsg(std::string Msg) {
-    if(m_pNotifyMsgBox != NULL) delete m_pNotifyMsgBox;
-    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-    m_pNotifyMsgBox = m_Renderer->getGUI()->msgBox(Msg,(UIMsgBoxButton)(UI_MSGBOX_OK));
-  }
-  
+
   /*===========================================================================
   Save a replay
   ===========================================================================*/
@@ -562,270 +536,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
      
     return v_roomName + ": " + GAMETEXT_WORLDRECORDNA;
   }
-
-  void GameApp::_UpdateWebHighscores(bool bSilent) {
-    if(!bSilent) {
-      _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_InfoMsgBoxRect);
-    }
-
-    m_bWebHighscoresUpdatedThisSession = true;
-    
-    /* Try downloading the highscores */
-    m_pWebHighscores->setWebsiteInfos(m_xmsession->idRoom(),
-				      m_WebHighscoresURL);
-    Logger::Log("WWW: Checking for new highscores...");
-    m_pWebHighscores->update();
-  }
-
-  void GameApp::_UpdateWebLevels(bool bSilent, bool bEnableWeb) {
-    if(!bSilent) {
-      _SimpleMessage(GAMETEXT_DLLEVELSCHECK,&m_InfoMsgBoxRect);
-    }
-
-    /* Try download levels list */
-    if(m_pWebLevels == NULL) {
-      m_pWebLevels = new WebLevels(this,&m_ProxySettings);
-    }
-    m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
-    Logger::Log("WWW: Checking for new or updated levels...");
-
-    m_pWebLevels->update(m_db);
-    m_bWebLevelsToDownload = m_pWebLevels->nbLevelsToGet(m_db);
-  }
-
-  void GameApp::_UpgradeWebHighscores() {
-    /* Upgrade high scores */
-    try {
-      m_pWebHighscores->upgrade(m_db);
-    } catch(Exception &e) {
-      /* file probably doesn't exist */
-      Logger::Log("** Warning ** : Failed to analyse web-highscores file");   
-    }
-  }
-
-  /*===========================================================================
-  Extra WWW levels
-  ===========================================================================*/
-  void GameApp::_DownloadExtraLevels(void) {
-      /* Download extra levels */
-      m_DownloadingInformation = "";
-      m_DownloadingMessage = std::string(GAMETEXT_DLLEVELS) + "\n\n ";
-
-      if(m_pWebLevels != NULL) {
-        try {                  
-          Logger::Log("WWW: Downloading levels...");
-          clearCancelAsSoonAsPossible();
-          m_pWebLevels->upgrade(m_db);
-	  m_bWebLevelsToDownload = false;
-        } 
-        catch(Exception &e) {
-          Logger::Log("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
-  
-          if(m_pInfoMsgBox != NULL) {
-            delete m_pInfoMsgBox;
-            m_pInfoMsgBox = NULL;
-          }
-          notifyMsg(GAMETEXT_FAILEDDLLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-        }
-
-        /* Got some new levels... load them! */
-        Logger::Log("Loading new and updated levels...");
-	m_levelsManager.updateLevelsFromLvl(m_db,
-					    m_pWebLevels->getNewDownloadedLevels(),
-					    m_pWebLevels->getUpdatedDownloadedLevels()
-					    );
-
-         /* Update level lists */
-	getStateManager()->sendAsynchronousMessage("LEVELS_UPDATED");	
-      }
-  }
-
-  void GameApp::checkForExtraLevels(void) {
-    /* Check for extra levels */
-    try {
-      _SimpleMessage(GAMETEXT_CHECKINGFORLEVELS);
-      
-      if(m_pWebLevels == NULL) {
-	m_pWebLevels = new WebLevels(this,&m_ProxySettings);
-      }
-      m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
-        
-      Logger::Log("WWW: Checking for new or updated levels...");
-      clearCancelAsSoonAsPossible();
-
-      m_pWebLevels->update(m_db);
-      int nULevels=0;
-      nULevels = m_pWebLevels->nbLevelsToGet(m_db);
-      m_bWebLevelsToDownload = nULevels!=0;
-
-      Logger::Log("WWW: %d new or updated level%s found",nULevels,nULevels==1?"":"s");
-
-      if(nULevels == 0) {
-	notifyMsg(GAMETEXT_NONEWLEVELS);
-      }        
-      else {
-	/* Ask user whether he want to download levels or snot */
-	if(m_pInfoMsgBox == NULL) {
-	  char cBuf[256];
-	  snprintf(cBuf, 256, GAMETEXT_NEWLEVELAVAIL(nULevels), nULevels);
-	  m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-	  m_pInfoMsgBox = m_Renderer->getGUI()->msgBox(cBuf, (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
-	}
-      }
-    } catch(Exception &e) {
-      Logger::Log("** Warning ** : Unable to check for extra levels [%s]",e.getMsg().c_str());
-      if(m_pInfoMsgBox != NULL) {
-	delete m_pInfoMsgBox;
-	m_pInfoMsgBox = NULL;
-      }
-
-      std::string v_msg = GAMETEXT_FAILEDCHECKLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
-      m_stateManager->pushState(new StateMessageBox(NULL, this, v_msg, UI_MSGBOX_OK));
-    } 
-  }
-
-  /*===========================================================================
-  WWWAppInterface implementation
-  ===========================================================================*/
-  bool GameApp::shouldLevelBeUpdated(const std::string &LevelID) {
-    if(m_updateAutomaticallyLevels) {
-      return true;
-    }
-
-    /* Hmm... ask user whether this level should be updated */
-    bool bRet = true;
-    bool bDialogBoxOpen = true;
-    char cBuf[1024];
-    char **v_result;
-    unsigned int nrow;
-    std::string v_levelName;
-    std::string v_levelFileName;
-
-    v_result = m_db->readDB("SELECT name, filepath "
-			    "FROM levels "
-			    "WHERE id_level=\"" + xmDatabase::protectString(LevelID) + "\";",
-			    nrow);
-    if(nrow != 1) {
-      m_db->read_DB_free(v_result);
-      return true;
-    }
-
-    v_levelName     = m_db->getResult(v_result, 2, 0, 0);
-    v_levelFileName = m_db->getResult(v_result, 2, 0, 1);
-    m_db->read_DB_free(v_result);
-
-    sprintf(cBuf,(std::string(GAMETEXT_WANTTOUPDATELEVEL) + "\n(%s)").c_str(), v_levelName.c_str(),
-	    v_levelFileName.c_str());
-    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-    UIMsgBox *pMsgBox = m_Renderer->getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
-
-    while(bDialogBoxOpen) {
-      SDL_PumpEvents();
-      
-      SDL_Event Event;
-      while(SDL_PollEvent(&Event)) {
-	/* What event? */
-	switch(Event.type) {
-	case SDL_QUIT:  
-	  /* Force quit */
-	  quit();
-	  setCancelAsSoonAsPossible();
-	  return false;
-	case SDL_MOUSEBUTTONDOWN:
-	  mouseDown(Event.button.button);
-	  break;
-	case SDL_MOUSEBUTTONUP:
-	  mouseUp(Event.button.button);
-	  break;
-	}
-      }
-      
-      UIMsgBoxButton Button = pMsgBox->getClicked();
-      if(Button != UI_MSGBOX_NOTHING) {
-	if(Button == UI_MSGBOX_NO) {
-	  bRet = false;
-	}
-	if(Button == UI_MSGBOX_YES_FOR_ALL) {
-	  m_updateAutomaticallyLevels = true;
-	}
-	bDialogBoxOpen = false;
-      }
-      
-      m_Renderer->getGUI()->dispatchMouseHover();
-      
-      m_Renderer->getGUI()->paint();
-      
-      UIRect TempRect;
-      
-      //if(m_pCursor != NULL) {        
-      //	int nMX,nMY;
-      //	getMousePos(&nMX,&nMY);      
-      //	drawLib->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
-      //}
-      
-      drawLib->flushGraphics();
-    }
-    
-    delete pMsgBox;
-    setTaskProgress(m_fDownloadTaskProgressLast);
-    
-    return bRet;        
-  }
-        
-  void GameApp::setTaskProgress(float fPercent) {
-    int nBarHeight = 15;
-    m_fDownloadTaskProgressLast = fPercent;
-    readEvents();
-
-    _SimpleMessage(m_DownloadingMessage,&m_InfoMsgBoxRect,true);
-    
-    drawLib->drawBox(Vector2f(m_InfoMsgBoxRect.nX+10,m_InfoMsgBoxRect.nY+ m_InfoMsgBoxRect.nHeight-
-                                                   nBarHeight*2),
-            Vector2f(m_InfoMsgBoxRect.nX+m_InfoMsgBoxRect.nWidth-10,
-                     m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight),
-            0,MAKE_COLOR(0,0,0,255),0);
-            
-                
-    drawLib->drawBox(Vector2f(m_InfoMsgBoxRect.nX+10,m_InfoMsgBoxRect.nY+
-                                                   m_InfoMsgBoxRect.nHeight-
-                                                   nBarHeight*2),
-            Vector2f(m_InfoMsgBoxRect.nX+10+((m_InfoMsgBoxRect.nWidth-20)*(int)fPercent)/100,
-                     m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight),
-            0,MAKE_COLOR(255,0,0,255),0);
-
-    FontManager* v_fm = drawLib->getFontSmall();
-    FontGlyph* v_fg = v_fm->getGlyph(m_DownloadingInformation);
-    v_fm->printString(v_fg,
-		      m_InfoMsgBoxRect.nX+10,
-		      m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight*2,
-		      MAKE_COLOR(255,255,255,128));
-    drawLib->flushGraphics();
-  }
-  
-  void GameApp::setBeingDownloadedInformation(const std::string &p_information,bool bNew) {
-    m_DownloadingInformation = p_information;
-  }
-  
-  void GameApp::readEvents(void) {
-    /* Check for events */ 
-    SDL_PumpEvents();
-    
-    SDL_Event Event;
-    while(SDL_PollEvent(&Event)) {
-      /* What event? */
-      switch(Event.type) {
-        case SDL_KEYDOWN: 
-          if(Event.key.keysym.sym == SDLK_ESCAPE)
-            setCancelAsSoonAsPossible();
-          break;
-        case SDL_QUIT:  
-          /* Force quit */
-          quit();
-          setCancelAsSoonAsPossible();
-          return;
-      }
-    }    
-  }
   
   std::string GameApp::_getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time) {
     char **v_result;
@@ -917,41 +627,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     return res;
   }
 
-  void GameApp::uploadHighscore(std::string p_replayname, bool b_notify) {
-    std::string v_msg;
-
-    try {
-      bool v_msg_status_ok;
-      clearCancelAsSoonAsPossible();
-      m_DownloadingInformation = "";
-      m_DownloadingMessage = GAMETEXT_UPLOADING_HIGHSCORE;
-      FSWeb::uploadReplay(FS::getUserDir() + "/Replays/" + p_replayname + ".rpl",
-        m_xmsession->idRoom(),
-        m_Config.getString("WebHighscoreUploadLogin"),
-        m_Config.getString("WebHighscoreUploadPassword"),
-        m_Config.getString("WebHighscoreUploadURL"),
-        this,
-        &m_ProxySettings,
-        v_msg_status_ok,
-        v_msg);
-      if(v_msg_status_ok) {
-	if(b_notify) {
-	  notifyMsg(v_msg);
-	}
-      } else {
-	if(b_notify) {
-	  notifyMsg(std::string(GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE) + "\n" + v_msg);
-	}
-      }
-    } catch(Exception &e) {
-      if(b_notify) {
-	notifyMsg(GAMETEXT_UPLOAD_HIGHSCORE_ERROR + std::string("\n") + v_msg);
-      } else {
-	throw Exception(GAMETEXT_UPLOAD_HIGHSCORE_ERROR + std::string("\n") + v_msg);
-      }
-    }
-  }
-
   TColor GameApp::getColorFromPlayerNumber(int i_player) {
     // try to find nice colors for first player, then automatic
     switch(i_player) {
@@ -977,46 +652,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     }
 
     return TColor(255, 255, 255, 0);
-  }
-
-  void GameApp::_UploadAllHighscores() {
-    /* 1 is the main room ; don't allow full upload on it */
-    if(m_xmsession->idRoom() == "1") return;
-
-    _UpdateWebHighscores(false);
-    char **v_result;
-    unsigned int nrow;
-    std::string v_previousIdLevel, v_currentIdLevel;
-
-	std::string query = "SELECT r.id_level, r.name FROM replays r "
-    "LEFT OUTER JOIN webhighscores h "
-    "ON (r.id_level = h.id_level AND h.id_room=" + m_xmsession->idRoom() + ") "
-    "INNER JOIN weblevels l ON r.id_level = l.id_level "
-    "WHERE r.id_profile=\"" + xmDatabase::protectString(m_xmsession->profile()) + "\" "
-    "AND r.isFinished "
-    "AND ( (h.id_room IS NULL) OR xm_floord(h.finishTime*100.0) > xm_floord(r.finishTime*100.0)) "
-    "ORDER BY r.id_level, r.finishTime;";
-    v_result = m_db->readDB(query, nrow);
-
-    try {
-      for (int i = 0; i<nrow; i++) {
-	std::ostringstream v_percentage;
-	v_percentage << std::setprecision (1);
-	v_percentage << (i*100.0/nrow);
-
-	v_currentIdLevel = m_db->getResult(v_result, 2, i, 0);
-	
-	/* send only the best of the replay by level */
-	if(v_previousIdLevel != v_currentIdLevel) {
-	  v_previousIdLevel = v_currentIdLevel;
-	  _SimpleMessage(GAMETEXT_UPLOADING_HIGHSCORE + std::string("\n") + v_percentage.str() + "%");
-	  uploadHighscore(m_db->getResult(v_result, 2, i, 1), false);
-	}
-      }
-    } catch(Exception &e) {
-      notifyMsg(e.getMsg());
-    }
-    m_db->read_DB_free(v_result);
   }
 
   TColor GameApp::getUglyColorFromPlayerNumber(int i_player) {
@@ -1142,21 +777,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     m_MotoGame.addPenalityTime(900); /* 15 min of penality for that ! */
   }
 
-void GameApp::loadLevelHook(std::string i_level, int i_percentage)
-{
-}
-
-  void GameApp::updatingDatabase(std::string i_message) {
-    _UpdateLoadingScreen(0, i_message);
-
-    /* pump events to so that windows don't think the appli is crashed */
-    SDL_PumpEvents();
-  }
-
-  bool GameApp::creditsModeActive() {
-    return m_bCreditsModeActive;
-  }
-
   void GameApp::initReplaysFromDir(xmDatabase* threadDb,
 				   XMotoLoadReplaysInterface* pLoadReplaysInterface) {
     ReplayInfo* rplInfos;
@@ -1215,16 +835,6 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
       delete rplInfos;
       throw e2;
     }
-  }
-
-  void GameApp::_UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore) {
-    //    if(m_pActiveLevelPack == NULL)
-    //      return;
-
-    UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST"); 
-    if(pList == NULL) return;
-
-    pList->updateLevel(i_id_level, i_playerHighscore);
   }
 
   void GameApp::setSpecificReplay(const std::string& i_replay) {
@@ -1432,12 +1042,6 @@ void GameApp::finalizeReplay(bool i_finished) {
   m_pJustPlayReplay->finishReplay(i_finished, i_finished ? m_MotoGame.Players()[0]->finishTime() : 0.0);
 }
 
-void GameApp::updateLevelsListsOnEnd() {
-//  _UpdateLevelsLists();
-//  _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
-//			 m_MotoGame.Players()[0]->finishTime());
-}
-
 Replay* GameApp::getCurrentReplay() {
   return m_pJustPlayReplay;
 }
@@ -1453,25 +1057,6 @@ void GameApp::initReplay() {
 				    m_xmsession->profile(),
 				    m_xmsession->replayFrameRate(),
 				    sizeof(SerializedBikeState));
-  }
-}
-
-void GameApp::updateWebHighscores()
-{
-  if(!m_bWebHighscoresUpdatedThisSession) {        
-    try {
-      _UpdateWebHighscores(false);
-      _UpgradeWebHighscores();  
-      _UpdateWebLevels(false);
-
-      m_levelsManager.makePacks(m_db,
-				m_xmsession->profile(),
-				m_xmsession->idRoom(),
-				m_xmsession->debug());
-      getStateManager()->sendAsynchronousMessage("LEVELS_UPDATED");
-    } catch(Exception &e) {
-      notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-    }
   }
 }
 
@@ -1499,3 +1084,436 @@ std::string GameApp::getWebRoomURL() {
 
   return v_url;
 }
+
+std::string GameApp::getWebRoomName() {
+  char **v_result;
+  unsigned int nrow;
+  std::string v_name;
+
+  /* set the room name ; set to WR if it cannot be determined */
+  v_name = "WR";
+
+  v_result = m_db->readDB("SELECT name FROM webrooms WHERE id_room=" + m_xmsession->idRoom() + ";", nrow);
+  if(nrow == 1) {
+    v_name = m_db->getResult(v_result, 1, 0, 0);
+  }
+  m_db->read_DB_free(v_result);
+
+  return v_name;
+}
+
+/****************/
+
+  void GameApp::_UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore) {
+    //    if(m_pActiveLevelPack == NULL)
+    //      return;
+
+    UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST"); 
+    if(pList == NULL) return;
+
+    pList->updateLevel(i_id_level, i_playerHighscore);
+  }
+
+
+
+
+void GameApp::updateLevelsListsOnEnd() {
+//  _UpdateLevelsLists();
+//  _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
+//			 m_MotoGame.Players()[0]->finishTime());
+}
+
+
+
+void GameApp::loadLevelHook(std::string i_level, int i_percentage)
+{
+}
+
+  void GameApp::updatingDatabase(std::string i_message) {
+    _UpdateLoadingScreen(0, i_message);
+
+    /* pump events to so that windows don't think the appli is crashed */
+    SDL_PumpEvents();
+  }
+
+
+  void GameApp::checkForExtraLevels(void) {
+    /* Check for extra levels */
+    try {
+      _SimpleMessage(GAMETEXT_CHECKINGFORLEVELS);
+      
+      if(m_pWebLevels == NULL) {
+	m_pWebLevels = new WebLevels(this,&m_ProxySettings);
+      }
+      m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
+        
+      Logger::Log("WWW: Checking for new or updated levels...");
+      clearCancelAsSoonAsPossible();
+
+      m_pWebLevels->update(m_db);
+      int nULevels=0;
+      nULevels = m_pWebLevels->nbLevelsToGet(m_db);
+      m_bWebLevelsToDownload = nULevels!=0;
+
+      Logger::Log("WWW: %d new or updated level%s found",nULevels,nULevels==1?"":"s");
+
+      if(nULevels == 0) {
+	notifyMsg(GAMETEXT_NONEWLEVELS);
+      }        
+      else {
+	/* Ask user whether he want to download levels or snot */
+	if(m_pInfoMsgBox == NULL) {
+	  char cBuf[256];
+	  snprintf(cBuf, 256, GAMETEXT_NEWLEVELAVAIL(nULevels), nULevels);
+	  m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+	  m_pInfoMsgBox = m_Renderer->getGUI()->msgBox(cBuf, (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+	}
+      }
+    } catch(Exception &e) {
+      Logger::Log("** Warning ** : Unable to check for extra levels [%s]",e.getMsg().c_str());
+      if(m_pInfoMsgBox != NULL) {
+	delete m_pInfoMsgBox;
+	m_pInfoMsgBox = NULL;
+      }
+
+      std::string v_msg = GAMETEXT_FAILEDCHECKLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+      m_stateManager->pushState(new StateMessageBox(NULL, this, v_msg, UI_MSGBOX_OK));
+    } 
+  }
+
+  /*===========================================================================
+  WWWAppInterface implementation
+  ===========================================================================*/
+  bool GameApp::shouldLevelBeUpdated(const std::string &LevelID) {
+    if(m_updateAutomaticallyLevels) {
+      return true;
+    }
+
+    /* Hmm... ask user whether this level should be updated */
+    bool bRet = true;
+    bool bDialogBoxOpen = true;
+    char cBuf[1024];
+    char **v_result;
+    unsigned int nrow;
+    std::string v_levelName;
+    std::string v_levelFileName;
+
+    v_result = m_db->readDB("SELECT name, filepath "
+			    "FROM levels "
+			    "WHERE id_level=\"" + xmDatabase::protectString(LevelID) + "\";",
+			    nrow);
+    if(nrow != 1) {
+      m_db->read_DB_free(v_result);
+      return true;
+    }
+
+    v_levelName     = m_db->getResult(v_result, 2, 0, 0);
+    v_levelFileName = m_db->getResult(v_result, 2, 0, 1);
+    m_db->read_DB_free(v_result);
+
+    sprintf(cBuf,(std::string(GAMETEXT_WANTTOUPDATELEVEL) + "\n(%s)").c_str(), v_levelName.c_str(),
+	    v_levelFileName.c_str());
+    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+    UIMsgBox *pMsgBox = m_Renderer->getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
+
+    while(bDialogBoxOpen) {
+      SDL_PumpEvents();
+      
+      SDL_Event Event;
+      while(SDL_PollEvent(&Event)) {
+	/* What event? */
+	switch(Event.type) {
+	case SDL_QUIT:  
+	  /* Force quit */
+	  quit();
+	  setCancelAsSoonAsPossible();
+	  return false;
+	case SDL_MOUSEBUTTONDOWN:
+	  mouseDown(Event.button.button);
+	  break;
+	case SDL_MOUSEBUTTONUP:
+	  mouseUp(Event.button.button);
+	  break;
+	}
+      }
+      
+      UIMsgBoxButton Button = pMsgBox->getClicked();
+      if(Button != UI_MSGBOX_NOTHING) {
+	if(Button == UI_MSGBOX_NO) {
+	  bRet = false;
+	}
+	if(Button == UI_MSGBOX_YES_FOR_ALL) {
+	  m_updateAutomaticallyLevels = true;
+	}
+	bDialogBoxOpen = false;
+      }
+      
+      m_Renderer->getGUI()->dispatchMouseHover();
+      
+      m_Renderer->getGUI()->paint();
+      
+      UIRect TempRect;
+      
+      //if(m_pCursor != NULL) {        
+      //	int nMX,nMY;
+      //	getMousePos(&nMX,&nMY);      
+      //	drawLib->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
+      //}
+      
+      drawLib->flushGraphics();
+    }
+    
+    delete pMsgBox;
+    setTaskProgress(m_fDownloadTaskProgressLast);
+    
+    return bRet;        
+  }
+        
+  void GameApp::setTaskProgress(float fPercent) {
+    int nBarHeight = 15;
+    m_fDownloadTaskProgressLast = fPercent;
+    readEvents();
+
+    _SimpleMessage(m_DownloadingMessage,&m_InfoMsgBoxRect,true);
+    
+    drawLib->drawBox(Vector2f(m_InfoMsgBoxRect.nX+10,m_InfoMsgBoxRect.nY+ m_InfoMsgBoxRect.nHeight-
+                                                   nBarHeight*2),
+            Vector2f(m_InfoMsgBoxRect.nX+m_InfoMsgBoxRect.nWidth-10,
+                     m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight),
+            0,MAKE_COLOR(0,0,0,255),0);
+            
+                
+    drawLib->drawBox(Vector2f(m_InfoMsgBoxRect.nX+10,m_InfoMsgBoxRect.nY+
+                                                   m_InfoMsgBoxRect.nHeight-
+                                                   nBarHeight*2),
+            Vector2f(m_InfoMsgBoxRect.nX+10+((m_InfoMsgBoxRect.nWidth-20)*(int)fPercent)/100,
+                     m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight),
+            0,MAKE_COLOR(255,0,0,255),0);
+
+    FontManager* v_fm = drawLib->getFontSmall();
+    FontGlyph* v_fg = v_fm->getGlyph(m_DownloadingInformation);
+    v_fm->printString(v_fg,
+		      m_InfoMsgBoxRect.nX+10,
+		      m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight*2,
+		      MAKE_COLOR(255,255,255,128));
+    drawLib->flushGraphics();
+  }
+  
+  void GameApp::setBeingDownloadedInformation(const std::string &p_information,bool bNew) {
+    m_DownloadingInformation = p_information;
+  }
+  
+  void GameApp::readEvents(void) {
+    /* Check for events */ 
+    SDL_PumpEvents();
+    
+    SDL_Event Event;
+    while(SDL_PollEvent(&Event)) {
+      /* What event? */
+      switch(Event.type) {
+        case SDL_KEYDOWN: 
+          if(Event.key.keysym.sym == SDLK_ESCAPE)
+            setCancelAsSoonAsPossible();
+          break;
+        case SDL_QUIT:  
+          /* Force quit */
+          quit();
+          setCancelAsSoonAsPossible();
+          return;
+      }
+    }    
+  }
+
+  /*===========================================================================
+  Update settings
+  ===========================================================================*/
+  void GameApp::_UpdateSettings(void) {
+    m_bRecordReplays = m_Config.getBool("StoreReplays");
+    m_bCompressReplays = m_Config.getBool("CompressReplays");
+    Replay::enableCompression(m_bCompressReplays);
+  }
+
+      
+  /*===========================================================================
+  Notification popup
+  ===========================================================================*/
+  void GameApp::notifyMsg(std::string Msg) {
+    if(m_pNotifyMsgBox != NULL) delete m_pNotifyMsgBox;
+    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+    m_pNotifyMsgBox = m_Renderer->getGUI()->msgBox(Msg,(UIMsgBoxButton)(UI_MSGBOX_OK));
+  }
+  
+
+  void GameApp::_UpdateWebHighscores(bool bSilent) {
+    if(!bSilent) {
+      _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_InfoMsgBoxRect);
+    }
+
+    m_bWebHighscoresUpdatedThisSession = true;
+    
+    /* Try downloading the highscores */
+    m_pWebHighscores->setWebsiteInfos(m_xmsession->idRoom(), getWebRoomURL());
+    Logger::Log("WWW: Checking for new highscores...");
+    m_pWebHighscores->update();
+  }
+
+  void GameApp::_UpdateWebLevels(bool bSilent, bool bEnableWeb) {
+    if(!bSilent) {
+      _SimpleMessage(GAMETEXT_DLLEVELSCHECK,&m_InfoMsgBoxRect);
+    }
+
+    /* Try download levels list */
+    if(m_pWebLevels == NULL) {
+      m_pWebLevels = new WebLevels(this,&m_ProxySettings);
+    }
+    m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
+    Logger::Log("WWW: Checking for new or updated levels...");
+
+    m_pWebLevels->update(m_db);
+    m_bWebLevelsToDownload = m_pWebLevels->nbLevelsToGet(m_db);
+  }
+
+  void GameApp::_UpgradeWebHighscores() {
+    /* Upgrade high scores */
+    try {
+      m_pWebHighscores->upgrade(m_db);
+    } catch(Exception &e) {
+      /* file probably doesn't exist */
+      Logger::Log("** Warning ** : Failed to analyse web-highscores file");   
+    }
+  }
+
+  /*===========================================================================
+  Extra WWW levels
+  ===========================================================================*/
+  void GameApp::_DownloadExtraLevels(void) {
+      /* Download extra levels */
+      m_DownloadingInformation = "";
+      m_DownloadingMessage = std::string(GAMETEXT_DLLEVELS) + "\n\n ";
+
+      if(m_pWebLevels != NULL) {
+        try {                  
+          Logger::Log("WWW: Downloading levels...");
+          clearCancelAsSoonAsPossible();
+          m_pWebLevels->upgrade(m_db);
+	  m_bWebLevelsToDownload = false;
+        } 
+        catch(Exception &e) {
+          Logger::Log("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
+  
+          if(m_pInfoMsgBox != NULL) {
+            delete m_pInfoMsgBox;
+            m_pInfoMsgBox = NULL;
+          }
+          notifyMsg(GAMETEXT_FAILEDDLLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
+        }
+
+        /* Got some new levels... load them! */
+        Logger::Log("Loading new and updated levels...");
+	m_levelsManager.updateLevelsFromLvl(m_db,
+					    m_pWebLevels->getNewDownloadedLevels(),
+					    m_pWebLevels->getUpdatedDownloadedLevels()
+					    );
+
+         /* Update level lists */
+	getStateManager()->sendAsynchronousMessage("LEVELS_UPDATED");	
+      }
+  }
+
+
+  void GameApp::uploadHighscore(std::string p_replayname, bool b_notify) {
+    std::string v_msg;
+
+    try {
+      bool v_msg_status_ok;
+      clearCancelAsSoonAsPossible();
+      m_DownloadingInformation = "";
+      m_DownloadingMessage = GAMETEXT_UPLOADING_HIGHSCORE;
+      FSWeb::uploadReplay(FS::getUserDir() + "/Replays/" + p_replayname + ".rpl",
+        m_xmsession->idRoom(),
+        m_Config.getString("WebHighscoreUploadLogin"),
+        m_Config.getString("WebHighscoreUploadPassword"),
+        m_Config.getString("WebHighscoreUploadURL"),
+        this,
+        &m_ProxySettings,
+        v_msg_status_ok,
+        v_msg);
+      if(v_msg_status_ok) {
+	if(b_notify) {
+	  notifyMsg(v_msg);
+	}
+      } else {
+	if(b_notify) {
+	  notifyMsg(std::string(GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE) + "\n" + v_msg);
+	}
+      }
+    } catch(Exception &e) {
+      if(b_notify) {
+	notifyMsg(GAMETEXT_UPLOAD_HIGHSCORE_ERROR + std::string("\n") + v_msg);
+      } else {
+	throw Exception(GAMETEXT_UPLOAD_HIGHSCORE_ERROR + std::string("\n") + v_msg);
+      }
+    }
+  }
+
+
+  void GameApp::_UploadAllHighscores() {
+    /* 1 is the main room ; don't allow full upload on it */
+    if(m_xmsession->idRoom() == "1") return;
+
+    _UpdateWebHighscores(false);
+    char **v_result;
+    unsigned int nrow;
+    std::string v_previousIdLevel, v_currentIdLevel;
+
+	std::string query = "SELECT r.id_level, r.name FROM replays r "
+    "LEFT OUTER JOIN webhighscores h "
+    "ON (r.id_level = h.id_level AND h.id_room=" + m_xmsession->idRoom() + ") "
+    "INNER JOIN weblevels l ON r.id_level = l.id_level "
+    "WHERE r.id_profile=\"" + xmDatabase::protectString(m_xmsession->profile()) + "\" "
+    "AND r.isFinished "
+    "AND ( (h.id_room IS NULL) OR xm_floord(h.finishTime*100.0) > xm_floord(r.finishTime*100.0)) "
+    "ORDER BY r.id_level, r.finishTime;";
+    v_result = m_db->readDB(query, nrow);
+
+    try {
+      for (int i = 0; i<nrow; i++) {
+	std::ostringstream v_percentage;
+	v_percentage << std::setprecision (1);
+	v_percentage << (i*100.0/nrow);
+
+	v_currentIdLevel = m_db->getResult(v_result, 2, i, 0);
+	
+	/* send only the best of the replay by level */
+	if(v_previousIdLevel != v_currentIdLevel) {
+	  v_previousIdLevel = v_currentIdLevel;
+	  _SimpleMessage(GAMETEXT_UPLOADING_HIGHSCORE + std::string("\n") + v_percentage.str() + "%");
+	  uploadHighscore(m_db->getResult(v_result, 2, i, 1), false);
+	}
+      }
+    } catch(Exception &e) {
+      notifyMsg(e.getMsg());
+    }
+    m_db->read_DB_free(v_result);
+  }
+
+void GameApp::updateWebHighscores()
+{
+  if(!m_bWebHighscoresUpdatedThisSession) {        
+    try {
+      _UpdateWebHighscores(false);
+      _UpgradeWebHighscores();  
+      _UpdateWebLevels(false);
+
+      m_levelsManager.makePacks(m_db,
+				m_xmsession->profile(),
+				m_xmsession->idRoom(),
+				m_xmsession->debug());
+      getStateManager()->sendAsynchronousMessage("LEVELS_UPDATED");
+    } catch(Exception &e) {
+      notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
+    }
+  }
+}
+
+/* key down */

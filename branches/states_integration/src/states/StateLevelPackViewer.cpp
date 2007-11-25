@@ -41,6 +41,7 @@ StateLevelPackViewer::StateLevelPackViewer(GameApp*    pGame,
 {
   m_name             = "StateLevelPackViewer";
   m_pActiveLevelPack = pActiveLevelPack;
+  m_require_updateLevelsList = false;
 }
 
 StateLevelPackViewer::~StateLevelPackViewer()
@@ -66,6 +67,11 @@ void StateLevelPackViewer::leave()
 
 void StateLevelPackViewer::enterAfterPop()
 {
+  if(m_require_updateLevelsList) {
+    updateGUI();   
+    m_require_updateLevelsList = false;
+  }
+
   StateMenu::enterAfterPop();
 }
 
@@ -176,6 +182,18 @@ bool StateLevelPackViewer::render()
 {
   return StateMenu::render();
 }
+
+void StateLevelPackViewer::send(const std::string& i_id, const std::string& i_message) {
+  if(i_id == "STATE_MANAGER") {
+    if(i_message == "LEVELS_UPDATED") {
+      m_require_updateLevelsList = true;
+      return;
+    }
+  }
+
+  StateMenu::send(i_id, i_message);
+}
+
 
 void StateLevelPackViewer::keyDown(int nKey, SDLMod mod,int nChar)
 {

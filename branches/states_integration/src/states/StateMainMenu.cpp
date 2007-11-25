@@ -585,7 +585,7 @@ void StateMainMenu::updateProfile() {
   std::string v_caption;
 
   if(m_pGame->getSession()->profile() != "") {
-    v_caption = std::string(GAMETEXT_PLAYER) + ": " + m_pGame->getSession()->profile() + "@" + m_pGame->getHighscoresRoomName();
+    v_caption = std::string(GAMETEXT_PLAYER) + ": " + m_pGame->getSession()->profile() + "@" + m_pGame->getWebRoomName();
   }
 
   v_playerTag->setCaption(v_caption);
@@ -1565,19 +1565,18 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
   if(i_id == "STATE_MANAGER") {
     if(i_message == "FAVORITES_UPDATED") {
       m_require_updateFavoriteLevelsList = true;
-    }
-    
-    if(i_message == "CHANGE_WWW_ACCESS") {
-      m_commands.push("CHANGE_WWW_ACCESS");
+      return;
     }
     
    if(i_message == "REPLAYS_UPDATED") {
      m_require_updateReplaysList = true;
+     return;
     }
 
    if(i_message == "LEVELS_UPDATED") {
      m_require_updateLevelsList = true;
-    }
+     return;
+   }
   }
 
   if(i_id == "REQUESTKEY") {
@@ -1632,7 +1631,10 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
 	}
       }
     }
+    return;
   }
+
+  StateMenu::send(i_id, i_message);
 }
 
 void StateMainMenu::executeOneCommand(std::string cmd)
