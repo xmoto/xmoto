@@ -535,9 +535,6 @@ void GameApp::_Wait()
       m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
     }
     else {
-      /* final initialisation */
-      Logger::Log("UserPreInit ended at %.3f", GameApp::getXMTime());
-
       /* display what must be displayed */
       StateMainMenu* pMainMenu = new StateMainMenu(this);
       m_stateManager->pushState(pMainMenu);
