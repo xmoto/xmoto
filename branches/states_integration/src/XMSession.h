@@ -198,6 +198,10 @@ class XMSession {
   ProxySettings* proxySettings();
   void setWebConfAtInit(bool i_value);
   bool webConfAtInit() const;
+  bool storeReplays() const;
+  bool compressReplays() const;
+  bool enableReplayInterpolation() const;
+  void setEnableReplayInterpolation(bool i_value);
 
   private:
   bool m_verbose;
@@ -230,7 +234,7 @@ class XMSession {
   bool m_showMinimap;
   bool m_multiStopWhenOneFinishes; /* in multiplayer, stop the game when one finishes the level */
   bool m_enableMenuMusic;
-  bool m_enableInitZoom;
+  bool m_enableInitZoom; /* true: Perform initial level scroll/zoom */
   bool m_enableDeadAnimation;
   GraphicsLevel m_menuGraphics;
   GraphicsLevel m_gameGraphics;
@@ -263,6 +267,10 @@ class XMSession {
   std::string m_webRoomsURL;
   ProxySettings m_proxySettings;
   bool m_webConfAtInit;
+  bool m_storeReplays;
+  bool m_compressReplays;
+  bool m_enableReplayInterpolation;
 };
 
 #endif
+

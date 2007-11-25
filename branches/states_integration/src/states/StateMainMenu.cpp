@@ -2048,9 +2048,20 @@ void StateMainMenu::createRoomsList(UIList *pList) {
   }
 }
 
-
 void StateMainMenu::updateRoomsList() {
-  createRoomsList(reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOMS_LIST")));
+  UIList* v_list;
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOMS_LIST"));
+
+  createRoomsList(v_list);
+
+  std::string v_id_room = m_pGame->getSession()->idRoom();
+  if(v_id_room == "") {v_id_room = DEFAULT_WEBROOM_ID;}
+  for(int i=0; i<v_list->getEntries().size(); i++) {
+    if((*(std::string*)v_list->getEntries()[i]->pvUser) == v_id_room) {
+      v_list->setRealSelected(i);
+      break;
+    }
+  }
 }
 
 void StateMainMenu::updateOptions() {
@@ -2156,17 +2167,6 @@ void StateMainMenu::updateOptions() {
   v_button->setChecked(m_pGame->getSession()->checkNewLevelsAtStartup());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMEWORLDRECORD"));
   v_button->setChecked(m_pGame->getSession()->showHighscoreInGame());
-
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOMS_LIST"));
-
-  std::string v_id_room = m_pGame->getSession()->idRoom();
-  if(v_id_room == "") {v_id_room = DEFAULT_WEBROOM_ID;}
-  for(int i=0; i<v_list->getEntries().size(); i++) {
-    if((*(std::string*)v_list->getEntries()[i]->pvUser) == v_id_room) {
-      v_list->setRealSelected(i);
-      break;
-    }
-  }
 
   v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_LOGIN"));
   v_edit->setCaption(m_pGame->getSession()->uploadLogin());
@@ -2454,6 +2454,7 @@ void StateMainMenu::checkEventsOptions() {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       m_pGame->getSession()->setIdRoom(*((std::string*)v_list->getEntries()[v_list->getSelected()]->pvUser));
+      updateProfile();
     }
   }
 

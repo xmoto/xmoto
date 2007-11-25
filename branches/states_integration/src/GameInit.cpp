@@ -347,15 +347,6 @@ void GameApp::_Wait()
   Initialize game
   ===========================================================================*/
   void GameApp::userInit(XMArguments* v_xmArgs) {
-    /* Reset timers */
-    m_fLastPerfStateTime = 0.0f;
-    
-    /* And stuff */
-    m_nJustDeadShade = 0;
-    
-    /* Init some config */
-    _UpdateSettings();
-
     /* Init sound system */
     Sound::init(m_xmsession);
       
@@ -512,6 +503,7 @@ void GameApp::_Wait()
 
     /* build handler */
     m_InputHandler.init(&m_Config);
+    Replay::enableCompression(m_xmsession->compressReplays());
     
     /* load packs */
     LevelsManager::checkPrerequires();

@@ -35,6 +35,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "drawlib/DrawLib.h"
 #include "SysMessage.h"
+#include "GameText.h"
+#include "xmscene/Camera.h"
 
 #define MENU_SHADING_TIME 0.3
 #define MENU_SHADING_VALUE 150
@@ -516,5 +518,79 @@ void GameState::executeOneCommand(std::string cmd)
 }
 
 void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
-  // will display help once it will be possible to have several motogame
+  if(nKey == SDLK_F12) {
+    m_pGame->gameScreenshot();
+    return;        
+  }
+
+  if(nKey == SDLK_F8) {
+    m_pGame->enableWWW(m_pGame->getSession()->www() == false);
+    m_pGame->getStateManager()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
+    return;        
+  }
+
+  if(nKey == SDLK_F7) {
+    m_pGame->enableFps(m_pGame->getSession()->fps() == false);
+    return;        
+  }
+
+  if(nKey == SDLK_F9) {
+    m_pGame->switchUglyMode(m_pGame->getSession()->ugly() == false);
+    if(m_pGame->getSession()->ugly()) {
+      m_pGame->getSysMessage()->displayText(SYS_MSG_UGLY_MODE_ENABLED);
+    } else {
+      m_pGame->getSysMessage()->displayText(SYS_MSG_UGLY_MODE_DISABLED);
+    }
+    return;        
+  }
+
+  if(nKey == SDLK_RETURN && (((mod & KMOD_LALT) == KMOD_LALT) || ((mod & KMOD_RALT) == KMOD_RALT))) {
+    m_pGame->getDrawLib()->toogleFullscreen();
+    m_pGame->getSession()->setWindowed(m_pGame->getSession()->windowed() == false);
+    return;
+  }
+
+  if(nKey == SDLK_F10) {
+    m_pGame->switchTestThemeMode(m_pGame->getSession()->testTheme() == false);
+    if(m_pGame->getSession()->testTheme()) {
+      m_pGame->getSysMessage()->displayText(SYS_MSG_THEME_MODE_ENABLED);
+    } else {
+      m_pGame->getSysMessage()->displayText(SYS_MSG_THEME_MODE_DISABLED);
+    }
+    return;        
+  }
+
+  if(nKey == SDLK_F11) {
+    m_pGame->switchUglyOverMode(m_pGame->getSession()->uglyOver() == false);
+    if(m_pGame->getSession()->uglyOver()) {
+      m_pGame->getSysMessage()->displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
+    } else {
+      m_pGame->getSysMessage()->displayText(SYS_MSG_UGLY_OVER_MODE_DISABLED);
+    }
+    return;        
+  }
+
+  /* activate/desactivate interpolation */
+  if(nKey == SDLK_i && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
+    m_pGame->getSession()->setEnableReplayInterpolation(!m_pGame->getSession()->enableReplayInterpolation());
+    if(m_pGame->getSession()->enableReplayInterpolation()) {
+      m_pGame->getSysMessage()->displayText(SYS_MSG_INTERPOLATION_ENABLED);
+    } else {
+      m_pGame->getSysMessage()->displayText(SYS_MSG_INTERPOLATION_DISABLED);
+    }
+
+    for(unsigned int i=0; i<m_pGame->getMotoGame()->Players().size(); i++) {
+      m_pGame->getMotoGame()->Players()[i]->setInterpolation(m_pGame->getSession()->enableReplayInterpolation());
+    }
+
+    return;
+  }
+
+  if(nKey == SDLK_m && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
+    for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
+      m_pGame->getMotoGame()->Cameras()[i]->setMirrored(m_pGame->getMotoGame()->Cameras()[i]->isMirrored() == false);
+    }
+    m_pGame->getInputHandler()->setMirrored(m_pGame->getMotoGame()->Cameras()[0]->isMirrored());
+  }
+
 }

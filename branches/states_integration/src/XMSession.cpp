@@ -89,6 +89,9 @@ void XMSession::setToDefault() {
   m_webThemesURL                  = DEFAULT_WEBTHEMES_URL;
   m_webThemesURLBase              = DEFAULT_WEBTHEMES_SPRITESURLBASE;
   m_webRoomsURL                   = DEFAULT_WEBROOMS_URL;
+  m_storeReplays                  = true;
+  m_compressReplays               = true;
+  m_enableReplayInterpolation     = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -229,6 +232,8 @@ void XMSession::load(UserConfig* m_Config) {
   m_proxySettings.setAuthentification(m_Config->getString("ProxyAuthUser"),
 				      m_Config->getString("ProxyAuthPwd"));
   m_webConfAtInit               = m_Config->getBool("WebConfAtInit");
+  m_storeReplays                = m_Config->getBool("StoreReplays");
+  m_compressReplays             = m_Config->getBool("CompressReplays");
 }
 
 void XMSession::save(UserConfig* m_Config) {
@@ -281,6 +286,8 @@ void XMSession::save(UserConfig* m_Config) {
   m_Config->setString("ProxyAuthUser", 		    proxySettings()->getAuthentificationUser());
   m_Config->setString("ProxyAuthPwd" , 		    proxySettings()->getAuthentificationPassword());
   m_Config->setBool("WebConfAtInit",                m_webConfAtInit);
+  m_Config->setBool("StoreReplays",                 m_storeReplays);
+  m_Config->setBool("CompressReplays",              m_compressReplays);
 }
 
 bool XMSession::isVerbose() const {
@@ -726,6 +733,22 @@ void XMSession::setWebConfAtInit(bool i_value) {
 
 bool XMSession::webConfAtInit() const {
   return m_webConfAtInit;
+}
+
+bool XMSession::storeReplays() const {
+  return m_storeReplays;
+}
+
+bool XMSession::compressReplays() const {
+  return m_compressReplays;
+}
+
+bool XMSession::enableReplayInterpolation() const {
+  return m_enableReplayInterpolation;
+}
+
+void XMSession::setEnableReplayInterpolation(bool i_value) {
+  m_enableReplayInterpolation = i_value;
 }
 
 ProxySettings* XMSession::proxySettings() {

@@ -189,7 +189,6 @@ GameApp::GameApp() {
   m_xmsession = new XMSession();
   m_sysMsg = NULL;
 
-  m_bEnableInitZoom=true;
   m_pNotifyMsgBox=NULL;
   m_pInfoMsgBox=NULL;
 
@@ -203,14 +202,10 @@ GameApp::GameApp() {
   m_pGameInfoWindow=NULL;
   m_fFrameTime = 0;
   m_fFPS_Rate = 0;
-  m_b50FpsMode = false;
   m_pJustPlayReplay = NULL;
   m_updateAutomaticallyLevels = false;
   m_reloadingLevelsUser = false;
 
-  m_bRecordReplays = true;
-  m_bCompressReplays = true;
- 
   m_pWebHighscores = NULL;
   m_pWebLevels = NULL;
   m_fDownloadTaskProgressLast = 0;
@@ -221,7 +216,6 @@ GameApp::GameApp() {
   m_MotoGameHooks.setGameApps(this, &m_MotoGame);
   
   m_currentPlayingList = NULL;
-  m_allowReplayInterpolation = true;
 
   m_db = NULL;
 
@@ -253,7 +247,7 @@ GameApp::GameApp() {
   /*===========================================================================
   Screenshooting
   ===========================================================================*/
-  void GameApp::_GameScreenshot(void) {
+  void GameApp::gameScreenshot() {
     //    Img *pShot = getDrawLib()->grabScreen(2);      
     Img *pShot = getDrawLib()->grabScreen();
     FileHandle *pfh;
@@ -316,94 +310,6 @@ GameApp::GameApp() {
   Key down event
   ===========================================================================*/
 void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
-  /* No matter what, F12 always equals a screenshot */
-  if(nKey == SDLK_F12) {
-    _GameScreenshot();
-    return;        
-  }
-
-  if(nKey == SDLK_F8) {
-    enableWWW(m_xmsession->www() == false);
-    getStateManager()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
-    return;        
-  }
-
-  if(nKey == SDLK_F7) {
-    enableFps(m_xmsession->fps() == false);
-    return;        
-  }
-
-  if(nKey == SDLK_F9) {
-    switchUglyMode(m_xmsession->ugly() == false);
-    if(m_xmsession->ugly()) {
-      m_sysMsg->displayText(SYS_MSG_UGLY_MODE_ENABLED);
-    } else {
-      m_sysMsg->displayText(SYS_MSG_UGLY_MODE_DISABLED);
-    }
-    return;        
-  }
-
-  if(nKey == SDLK_RETURN && (((mod & KMOD_LALT) == KMOD_LALT) || ((mod & KMOD_RALT) == KMOD_RALT))) {
-    drawLib->toogleFullscreen();
-    m_xmsession->setWindowed(m_xmsession->windowed() == false);
-    return;
-  }
-
-  if(nKey == SDLK_F10) {
-    switchTestThemeMode(m_xmsession->testTheme() == false);
-    if(m_xmsession->testTheme()) {
-      m_sysMsg->displayText(SYS_MSG_THEME_MODE_ENABLED);
-    } else {
-      m_sysMsg->displayText(SYS_MSG_THEME_MODE_DISABLED);
-    }
-    return;        
-  }
-
-  if(nKey == SDLK_F11) {
-    switchUglyOverMode(m_xmsession->uglyOver() == false);
-    if(m_xmsession->uglyOver()) {
-      m_sysMsg->displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
-    } else {
-      m_sysMsg->displayText(SYS_MSG_UGLY_OVER_MODE_DISABLED);
-    }
-    return;        
-  }
-
-  /* activate/desactivate interpolation */
-  if(nKey == SDLK_i && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
-    m_allowReplayInterpolation = !m_allowReplayInterpolation;
-    if(m_allowReplayInterpolation) {
-      m_sysMsg->displayText(SYS_MSG_INTERPOLATION_ENABLED);
-    } else {
-      m_sysMsg->displayText(SYS_MSG_INTERPOLATION_DISABLED);
-    }
-
-    for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-      m_MotoGame.Players()[i]->setInterpolation(m_allowReplayInterpolation);
-    }
-
-    return;
-  }
-
-  if(nKey == SDLK_m && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
-    for(unsigned int i=0; i<m_MotoGame.Cameras().size(); i++) {
-      m_MotoGame.Cameras()[i]->setMirrored(m_MotoGame.Cameras()[i]->isMirrored() == false);
-    }
-    m_InputHandler.setMirrored(m_MotoGame.Cameras()[0]->isMirrored());
-  }
-    
-  /* If message box... */
-  if(m_pNotifyMsgBox) {
-    if(nKey == SDLK_ESCAPE) {
-      delete m_pNotifyMsgBox;
-      m_pNotifyMsgBox = NULL;
-    }    
-    else
-      m_Renderer->getGUI()->keyDown(nKey, mod, nChar);      
-    return;
-  }
-  
-
   m_stateManager->keyDown(nKey, mod, nChar);
 }
 
@@ -1050,7 +956,7 @@ void GameApp::initReplay() {
   if(m_pJustPlayReplay != NULL) delete m_pJustPlayReplay;
   m_pJustPlayReplay = NULL;
 
-  if(m_bRecordReplays && m_xmsession->multiNbPlayers() == 1) {
+  if(m_xmsession->storeReplays() && m_xmsession->multiNbPlayers() == 1) {
     m_pJustPlayReplay = new Replay;
     m_pJustPlayReplay->createReplay("Latest.rpl",
 				    m_MotoGame.getLevelSrc()->Id(),
@@ -1323,16 +1229,6 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
       }
     }    
   }
-
-  /*===========================================================================
-  Update settings
-  ===========================================================================*/
-  void GameApp::_UpdateSettings(void) {
-    m_bRecordReplays = m_Config.getBool("StoreReplays");
-    m_bCompressReplays = m_Config.getBool("CompressReplays");
-    Replay::enableCompression(m_bCompressReplays);
-  }
-
       
   /*===========================================================================
   Notification popup
@@ -1516,4 +1412,4 @@ void GameApp::updateWebHighscores()
   }
 }
 
-/* key down */
+/* key down is to clean */

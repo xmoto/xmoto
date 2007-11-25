@@ -181,7 +181,6 @@ class XMotoLoadReplaysInterface;
       // list played
       void setCurrentPlayingList(UILevelList *i_levelsList) {m_currentPlayingList = i_levelsList;}
 
-      void _ImportOptions(void);
       void updateWebHighscores();
       void checkForExtraLevels();
 
@@ -194,31 +193,26 @@ class XMotoLoadReplaysInterface;
       void initReplaysFromDir(xmDatabase* threadDb = NULL,
 			      XMotoLoadReplaysInterface* pLoadReplaysInterface = NULL);
 
+      void gameScreenshot();
+      void enableWWW(bool bValue);
+      void enableFps(bool bValue);
+      void switchUglyMode(bool bUgly);
+      void switchTestThemeMode(bool mode);
+      void switchUglyOverMode(bool mode);
+
+
    protected:
       void createDefaultConfig();
 
     private:   
-      /* Data */
-      bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
-
-      bool m_bCompressReplays;                  /* true: compress replays with zlib */
-
       ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
-      bool m_allowReplayInterpolation;
-
       InputHandler m_InputHandler;              /* The glorious input handler */
       MotoGame m_MotoGame;                      /* Game object */      
       XMMotoGameHooks m_MotoGameHooks;
       GameRenderer* m_Renderer;                  /* Renderer */
-      int m_nFrame;                             /* Frame # */
        
-      double m_fLastPerfStateTime;   
-      double m_fLastPhysTime;                  /* When the last physic was computed */
-      double m_fStartTime;                      
-      
       std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
 
-      bool m_b50FpsMode;
       bool m_reloadingLevelsUser;
       
       Replay *m_pJustPlayReplay;
@@ -272,9 +266,6 @@ class XMotoLoadReplaysInterface;
 
       /* if true, don't ask for updating levels */
       bool m_updateAutomaticallyLevels;
-
-      /* In-game JUSTDEAD menu fun */
-      int m_nJustDeadShade;
      
       /* Internet connection configurator */
       UIFrame *m_pWebConfEditor;      
@@ -287,9 +278,6 @@ class XMotoLoadReplaysInterface;
       UIMsgBox *m_pSaveReplayMsgBox;    
 
       LevelsManager m_levelsManager;
-      
-      /* Misc settings */
-      bool m_bRecordReplays;
 
       SysMessage* m_sysMsg;
 
@@ -321,18 +309,9 @@ class XMotoLoadReplaysInterface;
       /* Helpers */
       void _Wait();
       void _HandleMainMenu(void);  
-      void _HandleJustDeadMenu(void);
-      void _HandleWebConfEditor(void);
-      void _HandleLevelInfoViewer(void);
-      void _HandleLevelPackViewer(void);
-      void _CreateLevelPackLevelList();
-      void _UpdateActionKeyList(void);
       void _InitMenus(void);        
       void _InitMenus_MainMenu(void);
-      void _SaveOptions(void);
       void _UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore);
-
-      void _GameScreenshot(void);
     
       void _UpdateLoadingScreen(float fDone, const std::string &NextTask);
       
@@ -344,32 +323,10 @@ class XMotoLoadReplaysInterface;
       void _DownloadExtraLevels(void);
       void _UploadAllHighscores();
 
-      void _UpdateSettings();
-
-      void enableWWW(bool bValue);
-      void enableFps(bool bValue);
 
       std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time);
-
-      void switchUglyMode(bool bUgly);
-      void switchTestThemeMode(bool mode);
-      void switchUglyOverMode(bool mode);
-
-      void statePrestart_step();
-      void prestartAnimation_init();
-      void prestartAnimation_step();
-      
-      void zoomAnimation1_init();
-      bool zoomAnimation1_step();
-      void zoomAnimation1_abort();
-      
-      void zoomAnimation2_init();
-      bool zoomAnimation2_step();
-      void zoomAnimation2_init_unzoom();
-      bool zoomAnimation2_unstep();
-      void zoomAnimation2_abort();
 
       /* Main loop utility functions */
       void _PreUpdateGUI(void);

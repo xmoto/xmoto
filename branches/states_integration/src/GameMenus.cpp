@@ -711,7 +711,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pReplayList->setEnterButton( pShowButton );
     
     /* OPTIONS */
-    m_pOptionsWindow = makeOptionsWindow(drawLib, m_pMainMenu, &m_Config);
+    //m_pOptionsWindow = makeOptionsWindow(drawLib, m_pMainMenu, &m_Config);
     /* ***** */
 
     m_pLevelPacksWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,"",drawLib->getDispWidth()-220-20,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);      
@@ -869,55 +869,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* Hide menus */
     m_pMainMenu->showWindow(false);
-    
-    /* Update options */
-    _ImportOptions();
-  }
-
-
-  /*===========================================================================
-  Update action key list (options)
-  ===========================================================================*/  
-  void GameApp::_UpdateActionKeyList(void) {
-    UIList *pList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEY_ACTION_LIST");
-    pList->clear();
-    
-    UIListEntry *p;
-    
-    p = pList->addEntry(GAMETEXT_DRIVE); p->Text.push_back(m_Config.getString("KeyDrive1"));
-    p = pList->addEntry(GAMETEXT_BRAKE); p->Text.push_back(m_Config.getString("KeyBrake1"));
-    p = pList->addEntry(GAMETEXT_FLIPLEFT); p->Text.push_back(m_Config.getString("KeyFlipLeft1"));
-    p = pList->addEntry(GAMETEXT_FLIPRIGHT); p->Text.push_back(m_Config.getString("KeyFlipRight1"));
-    p = pList->addEntry(GAMETEXT_CHANGEDIR); p->Text.push_back(m_Config.getString("KeyChangeDir1"));
-
-    p = pList->addEntry(GAMETEXT_DRIVE + std::string(" 2")); p->Text.push_back(m_Config.getString("KeyDrive2"));
-    p = pList->addEntry(GAMETEXT_BRAKE + std::string(" 2")); p->Text.push_back(m_Config.getString("KeyBrake2"));
-    p = pList->addEntry(GAMETEXT_FLIPLEFT + std::string(" 2")); p->Text.push_back(m_Config.getString("KeyFlipLeft2"));
-    p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 2")); p->Text.push_back(m_Config.getString("KeyFlipRight2"));
-    p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 2")); p->Text.push_back(m_Config.getString("KeyChangeDir2"));
-   
-    p = pList->addEntry(GAMETEXT_DRIVE + std::string(" 3")); p->Text.push_back(m_Config.getString("KeyDrive3"));
-    p = pList->addEntry(GAMETEXT_BRAKE + std::string(" 3")); p->Text.push_back(m_Config.getString("KeyBrake3"));
-    p = pList->addEntry(GAMETEXT_FLIPLEFT + std::string(" 3")); p->Text.push_back(m_Config.getString("KeyFlipLeft3"));
-    p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 3")); p->Text.push_back(m_Config.getString("KeyFlipRight3"));
-    p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 3")); p->Text.push_back(m_Config.getString("KeyChangeDir3"));
-
-    p = pList->addEntry(GAMETEXT_DRIVE + std::string(" 4")); p->Text.push_back(m_Config.getString("KeyDrive4"));
-    p = pList->addEntry(GAMETEXT_BRAKE + std::string(" 4")); p->Text.push_back(m_Config.getString("KeyBrake4"));
-    p = pList->addEntry(GAMETEXT_FLIPLEFT + std::string(" 4")); p->Text.push_back(m_Config.getString("KeyFlipLeft4"));
-    p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 4")); p->Text.push_back(m_Config.getString("KeyFlipRight4"));
-    p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 4")); p->Text.push_back(m_Config.getString("KeyChangeDir4"));
- 
-    #if defined(ENABLE_ZOOMING)    
-    p = pList->addEntry(GAMETEXT_ZOOMIN); p->Text.push_back(m_Config.getString("KeyZoomIn"));
-    p = pList->addEntry(GAMETEXT_ZOOMOUT); p->Text.push_back(m_Config.getString("KeyZoomOut"));
-    p = pList->addEntry(GAMETEXT_ZOOMINIT); p->Text.push_back(m_Config.getString("KeyZoomInit"));   
-    p = pList->addEntry(GAMETEXT_CAMERAMOVEXUP); p->Text.push_back(m_Config.getString("KeyCameraMoveXUp"));
-    p = pList->addEntry(GAMETEXT_CAMERAMOVEXDOWN); p->Text.push_back(m_Config.getString("KeyCameraMoveXDown"));
-    p = pList->addEntry(GAMETEXT_CAMERAMOVEYUP); p->Text.push_back(m_Config.getString("KeyCameraMoveYUp"));
-    p = pList->addEntry(GAMETEXT_CAMERAMOVEYDOWN); p->Text.push_back(m_Config.getString("KeyCameraMoveYDown"));
-    p = pList->addEntry(GAMETEXT_AUTOZOOM); p->Text.push_back(m_Config.getString("KeyAutoZoom"));
-    #endif
   }
 
   /*===========================================================================
@@ -1009,34 +960,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
   void GameApp::_SimpleMessage(const std::string &Msg,UIRect *pRect,bool bNoSwap) {      
 
-  }
-
-  /*===========================================================================
-  Options fun
-  ===========================================================================*/
-  void GameApp::_ImportOptions(void) {
-    UIButton *pKeyboardControl = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEYBOARD");
-    UIButton *pJoystickControl = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:JOYSTICK");
-
-    /* set room in the list */
-    //m_WebHighscoresURL = m_Config.getString("WebHighscoresURL");
-    //m_WebHighscoresIdRoom = m_Config.getString("WebHighscoresIdRoom");
-    //std::string v_room_id = m_WebHighscoresIdRoom;
-    //if(v_room_id == "") {v_room_id = DEFAULT_WEBROOM_ID;}
-    //for(int i=0; i<pRoomsList->getEntries().size(); i++) {
-    //  if((*(std::string*)pRoomsList->getEntries()[i]->pvUser) == v_room_id) {
-    //	pRoomsList->setRealSelected(i);
-    //	break;
-    //  }
-    //}
-
-    /* Controls */
-    if(m_Config.getString("ControllerMode1") == "Keyboard" || SDL_NumJoysticks()==0)
-      pKeyboardControl->setChecked(true);
-    else if(m_Config.getString("ControllerMode1") == "Joystick1")
-      pJoystickControl->setChecked(true);
-   
-    _UpdateActionKeyList();
   }
 
   void GameApp::setLevelInfoFrameBestPlayer(std::string pLevelID,
