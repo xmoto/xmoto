@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define THEME_DEFAULT_THEMENAME "Classic"
 #define DEFAULT_WEBROOM_ID      "1"
+#define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
 
 /*
   XMSession   : current session options

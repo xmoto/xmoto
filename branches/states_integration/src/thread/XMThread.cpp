@@ -66,8 +66,8 @@ void XMThread::startThread(GameApp* pGame)
     m_progress         = -1;
     m_currentOperation = "";
     m_askThreadToEnd   = false;
+    m_isRunning        = true; // set before running the thread
     m_pThread          = SDL_CreateThread(&XMThread::run, this);
-    m_isRunning        = true;
 }
 
 int XMThread::waitForThreadEnd()
@@ -163,8 +163,6 @@ void XMThread::setThreadCurrentMicroOperation(std::string curMicOp)
   m_currentMicroOperation = curMicOp;
   SDL_UnlockMutex(m_curMicOpMutex);
 }
-
-#define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
 
 int XMThread::threadFunctionEncapsulate()
 {

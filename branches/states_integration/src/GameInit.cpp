@@ -50,8 +50,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateMainMenu.h"
 #include "states/StateMessageBox.h"
 
-#define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
-
 #if defined(WIN32)
 int SDL_main(int nNumArgs,char **ppcArgs) {
 #else

@@ -87,7 +87,6 @@ bool StateUpdate::update()
   // thread finished. we leave the state.
   if(m_threadStarted == true && m_pThread->isThreadRunning() == false){
     m_threadStarted = false;
-
     int v_thread_res = m_pThread->waitForThreadEnd();
     onThreadFinishes(v_thread_res);
 
