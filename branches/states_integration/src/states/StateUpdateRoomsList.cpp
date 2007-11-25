@@ -30,7 +30,7 @@ StateUpdateRoomsList::StateUpdateRoomsList(GameApp* pGame,
 {
   m_pThread          = new UpdateRoomsListThread();
   m_name             = "StateUpdateRoomsList";
-  m_errorMessage     = GAMETEXT_FAILEDDLROOMSLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+  m_msg              = GAMETEXT_FAILEDDLROOMSLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
 }
 
 StateUpdateRoomsList::~StateUpdateRoomsList()

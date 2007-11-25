@@ -18,17 +18,21 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEUPDATETHEMESLISTS_H__
-#define __STATEUPDATETHEMESLISTS_H__
+#ifndef __STATEUPLOADHIGHSCORE_H__
+#define __STATEUPLOADHIGHSCORE_H__
 
 #include "StateUpdate.h"
 
-class StateUpdateThemesList : public StateUpdate {
-public:
-  StateUpdateThemesList(GameApp* pGame,
-			bool drawStateBehind    = true,
-			bool updateStatesBehind = false);
-  virtual ~StateUpdateThemesList();
+class StateUploadHighscore : public StateUpdate {
+  public:
+  StateUploadHighscore(GameApp* pGame,
+		       const std::string& i_replayPath,
+		       bool drawStateBehind    = true,
+		       bool updateStatesBehind = false);
+  virtual ~StateUploadHighscore();
+  
+  protected:
+  virtual void onThreadFinishes(bool i_res);
 };
 
 #endif

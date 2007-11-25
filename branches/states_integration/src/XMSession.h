@@ -202,6 +202,12 @@ class XMSession {
   bool compressReplays() const;
   bool enableReplayInterpolation() const;
   void setEnableReplayInterpolation(bool i_value);
+  std::string uploadHighscoreUrl() const;
+  std::string screenshotFormat() const;
+  std::string language() const;
+  void setNotifyAtInit(bool i_value);
+  bool notifyAtInit() const;
+  std::string webLevelsUrl() const;
 
   private:
   bool m_verbose;
@@ -256,6 +262,7 @@ class XMSession {
   bool m_showHighscoreInGame;
   std::string m_uploadLogin;
   std::string m_uploadPassword;
+  std::string m_uploadHighscoreUrl;
   std::string m_idRoom;
   bool m_showGhostTimeDifference;
   bool m_ghostMotionBlur;
@@ -270,6 +277,10 @@ class XMSession {
   bool m_storeReplays;
   bool m_compressReplays;
   bool m_enableReplayInterpolation;
+  std::string m_screenshotFormat;
+  std::string m_language;
+  bool m_notifyAtInit;
+  std::string m_webLevelsUrl;
 };
 
 #endif

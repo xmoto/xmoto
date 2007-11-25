@@ -139,7 +139,7 @@ int main(int nNumArgs,char **ppcArgs) {
     Logger::setVerbose(m_xmsession->isVerbose());
 
 #ifdef USE_GETTEXT
-    std::string v_locale = Locales::init(m_Config.getString("Language"));
+    std::string v_locale = Locales::init(m_xmsession->language());
 #endif
 
     Logger::Log("compiled at "__DATE__" "__TIME__);
@@ -545,9 +545,9 @@ void GameApp::_Wait()
       } 
  
       /* Should we show a notification box? (with important one-time info) */
-      if(m_Config.getBool("NotifyAtInit")) {
+      if(m_xmsession->notifyAtInit()) {
 	m_stateManager->pushState(new StateMessageBox(NULL, this, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));
-	m_Config.setBool("NotifyAtInit", false); 
+	m_xmsession->setNotifyAtInit(false);
       }
     }
 

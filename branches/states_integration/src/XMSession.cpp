@@ -92,6 +92,10 @@ void XMSession::setToDefault() {
   m_storeReplays                  = true;
   m_compressReplays               = true;
   m_enableReplayInterpolation     = true;
+  m_uploadHighscoreUrl            = DEFAULT_UPLOADREPLAY_URL;
+  m_screenshotFormat              = "png";
+  m_notifyAtInit                  = true;
+  m_webLevelsUrl                  = DEFAULT_WEBLEVELS_URL;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -218,6 +222,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_showHighscoreInGame         = m_Config->getBool("ShowInGameWorldRecord");
   m_uploadLogin                 = m_Config->getString("WebHighscoreUploadLogin");
   m_uploadPassword              = m_Config->getString("WebHighscoreUploadPassword");
+  m_uploadHighscoreUrl          = m_Config->getString("WebHighscoreUploadURL");
   m_idRoom                      = m_Config->getString("WebHighscoresIdRoom");
   m_showGhostTimeDifference     = m_Config->getBool("ShowGhostTimeDiff");
   m_ghostMotionBlur             = m_Config->getBool("GhostMotionBlur");
@@ -234,6 +239,10 @@ void XMSession::load(UserConfig* m_Config) {
   m_webConfAtInit               = m_Config->getBool("WebConfAtInit");
   m_storeReplays                = m_Config->getBool("StoreReplays");
   m_compressReplays             = m_Config->getBool("CompressReplays");
+  m_screenshotFormat            = m_Config->getString("ScreenshotFormat");
+  m_language                    = m_Config->getString("Language");
+  m_notifyAtInit                = m_Config->getBool("NotifyAtInit");
+  m_webLevelsUrl                = m_Config->getString("WebLevelsURL");
 }
 
 void XMSession::save(UserConfig* m_Config) {
@@ -288,6 +297,10 @@ void XMSession::save(UserConfig* m_Config) {
   m_Config->setBool("WebConfAtInit",                m_webConfAtInit);
   m_Config->setBool("StoreReplays",                 m_storeReplays);
   m_Config->setBool("CompressReplays",              m_compressReplays);
+  m_Config->setString("WebHighscoreUploadURL",      m_uploadHighscoreUrl);
+  m_Config->setString("Language",                   m_language);
+  m_Config->setBool("NotifyAtInit",                 m_notifyAtInit);
+  m_Config->setString("WebLevelsURL",               m_webLevelsUrl);
 }
 
 bool XMSession::isVerbose() const {
@@ -749,6 +762,30 @@ bool XMSession::enableReplayInterpolation() const {
 
 void XMSession::setEnableReplayInterpolation(bool i_value) {
   m_enableReplayInterpolation = i_value;
+}
+
+std::string XMSession::uploadHighscoreUrl() const {
+  return m_uploadHighscoreUrl;
+}
+
+std::string XMSession::screenshotFormat() const {
+  return m_screenshotFormat;
+}
+
+std::string XMSession::language() const {
+  return m_language;
+}
+
+void XMSession::setNotifyAtInit(bool i_value) {
+  m_notifyAtInit = i_value;
+}
+
+bool XMSession::notifyAtInit() const {
+  return m_notifyAtInit;
+}
+
+std::string XMSession::webLevelsUrl() const {
+  return m_webLevelsUrl;
 }
 
 ProxySettings* XMSession::proxySettings() {

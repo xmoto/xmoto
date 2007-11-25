@@ -30,7 +30,7 @@ StateUpdateThemesList::StateUpdateThemesList(GameApp* pGame,
 {
   m_pThread          = new UpdateThemesListThread();
   m_name             = "StateUpdateThemesList";
-  m_errorMessage     = GAMETEXT_FAILEDUPDATETHEMESLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+  m_msg              = GAMETEXT_FAILEDUPDATETHEMESLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
 }
 
 StateUpdateThemesList::~StateUpdateThemesList()

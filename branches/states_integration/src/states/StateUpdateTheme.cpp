@@ -34,7 +34,7 @@ StateUpdateTheme::StateUpdateTheme(GameApp* pGame,
   m_pThread          = new UpdateThemeThread(i_id_theme);
   m_name             = "StateUpdateTheme";
   m_id_theme         = i_id_theme;
-  m_errorMessage     = GAMETEXT_FAILEDGETSELECTEDTHEME + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+  m_msg              = GAMETEXT_FAILEDGETSELECTEDTHEME + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
 }
 
 StateUpdateTheme::~StateUpdateTheme()

@@ -18,17 +18,27 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEUPDATETHEMESLISTS_H__
-#define __STATEUPDATETHEMESLISTS_H__
+#include "Game.h"
+#include "GameText.h"
+#include "StateUploadHighscore.h"
+#include "thread/UploadHighscoreThread.h"
 
-#include "StateUpdate.h"
+StateUploadHighscore::StateUploadHighscore(GameApp* pGame,
+					   const std::string& i_replayPath,
+					   bool drawStateBehind,
+					   bool updateStatesBehind)
+: StateUpdate(pGame, drawStateBehind, updateStatesBehind)
+{
+  m_pThread          = new UploadHighscoreThread(i_replayPath);
+  m_name             = "StateUploadHighscore";
+  m_messageOnSuccess = true;
+}
 
-class StateUpdateThemesList : public StateUpdate {
-public:
-  StateUpdateThemesList(GameApp* pGame,
-			bool drawStateBehind    = true,
-			bool updateStatesBehind = false);
-  virtual ~StateUpdateThemesList();
-};
+StateUploadHighscore::~StateUploadHighscore()
+{
+  delete m_pThread;
+}
 
-#endif
+void StateUploadHighscore::onThreadFinishes(bool i_res) {
+  m_msg = ((UploadHighscoreThread*) m_pThread)->getMsg();
+}

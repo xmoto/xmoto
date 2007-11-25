@@ -285,8 +285,6 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   std::string v_local_file;
   v_local_file = FS::getUserDir() + "/" + DEFAULT_REPLAYUPLOAD_MSGFILE;
 
-  //printf("%s\n", v_local_file.c_str());
-
   struct curl_httppost *v_post, *v_last;
 
   Logger::Log(std::string("Uploading replay " + p_replayFilename).c_str());
@@ -337,7 +335,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   curl_easy_setopt(v_curl, CURLOPT_HTTPHEADER, v_headers);
 
   /* set proxy settings */
-  if(p_proxy_settings != NULL) {
+  if(p_proxy_settings != NULL && p_proxy_settings->getTypeStr() != "") {
     /* v_proxy_server because 
        after call to 
        curl_easy_setopt(v_curl, CURLOPT_PROXY, p_proxy_settings->getServer().c_str());

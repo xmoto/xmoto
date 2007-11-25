@@ -260,7 +260,7 @@ GameApp::GameApp() {
 
     v_ShotsDir = FS::getUserDir() + std::string("/Screenshots");
     FS::mkArborescenceDir(v_ShotsDir);
-    v_ShotExtension = m_Config.getString("ScreenshotFormat");
+    v_ShotExtension = m_xmsession->screenshotFormat();
     
     /* User preference for format? must be either jpeg or png */
     if(v_ShotExtension != "jpeg" && v_ShotExtension != "jpg" && v_ShotExtension != "png") {
@@ -1051,7 +1051,7 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
       if(m_pWebLevels == NULL) {
 	m_pWebLevels = new WebLevels(this,&m_ProxySettings);
       }
-      m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
+      m_pWebLevels->setURL(m_xmsession->webLevelsUrl());
         
       Logger::Log("WWW: Checking for new or updated levels...");
       clearCancelAsSoonAsPossible();
@@ -1262,7 +1262,7 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
     if(m_pWebLevels == NULL) {
       m_pWebLevels = new WebLevels(this,&m_ProxySettings);
     }
-    m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
+    m_pWebLevels->setURL(m_xmsession->webLevelsUrl());
     Logger::Log("WWW: Checking for new or updated levels...");
 
     m_pWebLevels->update(m_db);
@@ -1318,38 +1318,6 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
 
 
   void GameApp::uploadHighscore(std::string p_replayname, bool b_notify) {
-    std::string v_msg;
-
-    try {
-      bool v_msg_status_ok;
-      clearCancelAsSoonAsPossible();
-      m_DownloadingInformation = "";
-      m_DownloadingMessage = GAMETEXT_UPLOADING_HIGHSCORE;
-      FSWeb::uploadReplay(FS::getUserDir() + "/Replays/" + p_replayname + ".rpl",
-        m_xmsession->idRoom(),
-        m_Config.getString("WebHighscoreUploadLogin"),
-        m_Config.getString("WebHighscoreUploadPassword"),
-        m_Config.getString("WebHighscoreUploadURL"),
-        this,
-        &m_ProxySettings,
-        v_msg_status_ok,
-        v_msg);
-      if(v_msg_status_ok) {
-	if(b_notify) {
-	  notifyMsg(v_msg);
-	}
-      } else {
-	if(b_notify) {
-	  notifyMsg(std::string(GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE) + "\n" + v_msg);
-	}
-      }
-    } catch(Exception &e) {
-      if(b_notify) {
-	notifyMsg(GAMETEXT_UPLOAD_HIGHSCORE_ERROR + std::string("\n") + v_msg);
-      } else {
-	throw Exception(GAMETEXT_UPLOAD_HIGHSCORE_ERROR + std::string("\n") + v_msg);
-      }
-    }
   }
 
 

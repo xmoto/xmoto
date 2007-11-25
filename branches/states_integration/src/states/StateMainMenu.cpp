@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateLevelPackViewer.h"
 #include "StateUpdateThemesList.h"
 #include "StateUpdateRoomsList.h"
+#include "StateUploadHighscore.h"
 #include "StateUpdateTheme.h"
 #include "LevelsManager.h"
 #include "helpers/Log.h"
@@ -1645,7 +1646,7 @@ void StateMainMenu::executeOneCommand(std::string cmd)
     // update packs
     m_pGame->getLevelsManager()->makePacks(m_pGame->getDb(),
 					   m_pGame->getSession()->profile(),
-					   m_pGame->getUserConfig()->getString("WebHighscoresIdRoom"),
+					   m_pGame->getSession()->idRoom(),
 					   m_pGame->getSession()->debug());
 
     // update lists and stats
@@ -1837,6 +1838,19 @@ void StateMainMenu::checkEventsReplays() {
     updateReplaysList();      
   }
 
+  // upload
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_UPLOADHIGHSCORE_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
+      if(pListEntry != NULL) {
+	std::string v_replayPath = FS::getUserDir() + "/Replays/" + pListEntry->Text[0] + ".rpl";
+	m_pGame->getStateManager()->pushState(new StateUploadHighscore(m_pGame, v_replayPath));	  
+      }
+    }
+  }
 
 //    if(pReplaysList->getEntries().empty()) {
 //      pReplaysShowButton->enableWindow(false);

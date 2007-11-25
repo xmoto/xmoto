@@ -18,17 +18,24 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEUPDATETHEMESLISTS_H__
-#define __STATEUPDATETHEMESLISTS_H__
+#ifndef __UPLOADHIGHSCORETHREAD_H__
+#define __UPLOADHIGHSCORETHREAD_H__
 
-#include "StateUpdate.h"
+#include "XMThread.h"
+#include "WWWAppInterface.h"
 
-class StateUpdateThemesList : public StateUpdate {
-public:
-  StateUpdateThemesList(GameApp* pGame,
-			bool drawStateBehind    = true,
-			bool updateStatesBehind = false);
-  virtual ~StateUpdateThemesList();
+class UploadHighscoreThread : public XMThread, public WWWAppInterface {
+  public:
+  UploadHighscoreThread(const std::string& i_highscorePath);
+  virtual ~UploadHighscoreThread();
+  std::string getMsg() const;
+
+  void setTaskProgress(float p_percent);
+
+private:
+  virtual int realThreadFunction();
+  std::string m_msg;
+  std::string m_highscorePath;
 };
 
 #endif

@@ -100,7 +100,7 @@ void StateEditProfile::checkEvents() {
     }
 
     /* Should we jump to the web config now? */
-    if(m_pGame->getUserConfig()->getBool("WebConfAtInit") == true) {
+    if(m_pGame->getSession()->webConfAtInit()) {
       m_pGame->getStateManager()->replaceState(new StateEditWebConfig(m_pGame));
     }else{
       m_requestForEnd = true;

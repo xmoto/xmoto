@@ -40,7 +40,8 @@ StateUpdate::StateUpdate(GameApp* pGame,
   m_name             = "StateUpdate";
   m_threadStarted    = false;
   m_pThread          = NULL;
-  m_errorMessage     = "";
+  m_msg              = "";
+  m_messageOnSuccess = false;
   init();
 }
 
@@ -86,12 +87,23 @@ bool StateUpdate::update()
   // thread finished. we leave the state.
   if(m_threadStarted == true && m_pThread->isThreadRunning() == false){
     m_threadStarted = false;
-    if(m_pThread->waitForThreadEnd() == 0) {
-      m_requestForEnd = true;
+
+    int v_thread_res = m_pThread->waitForThreadEnd();
+    onThreadFinishes(v_thread_res);
+
+    if(v_thread_res == 0) {
       callAfterThreadFinishedOk();
+
+      if(m_messageOnSuccess) {
+	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, m_msg, UI_MSGBOX_OK);
+	v_msgboxState->setId("SUCCESS");
+	m_pGame->getStateManager()->pushState(v_msgboxState);
+      } else {
+	m_requestForEnd = true;
+      }
     }
-    else if(m_errorMessage != "") {
-      StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, m_errorMessage, UI_MSGBOX_OK);
+    else {
+      StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, m_msg, UI_MSGBOX_OK);
       v_msgboxState->setId("ERROR");
       m_pGame->getStateManager()->pushState(v_msgboxState);
     }
@@ -211,7 +223,10 @@ void StateUpdate::send(const std::string& i_id,
 		       UIMsgBoxButton i_button,
 		       const std::string& i_input)
 {
-  if(i_id == "ERROR") {
+  if(i_id == "ERROR" || i_id == "SUCCESS") {
     m_requestForEnd = true;
   }
+}
+
+void StateUpdate::onThreadFinishes(bool i_res) {
 }

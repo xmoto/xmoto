@@ -60,7 +60,8 @@ protected:
   XMThread*   m_pThread;
 
   // the message displayed in the message box if the thread failed
-  std::string m_errorMessage;
+  std::string m_msg;
+  bool m_messageOnSuccess; // display the message, even if the thread succed
 
   // for child customization
   virtual bool callAfterThreadFinishedOk();
@@ -68,6 +69,8 @@ protected:
 
   // for the message box when a thread badly finished
   void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+
+  virtual void onThreadFinishes(bool i_res);
 
 private:
   /* GUI */
