@@ -333,8 +333,6 @@ class XMotoLoadReplaysInterface;
 
       void addReplay(const std::string& i_file, xmDatabase* threadDb = NULL);
 
-      static UIFrame* makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config);
-
       /* */
       void _InitWin(bool bInitGraphics);
       void _Uninit(void);
