@@ -18,29 +18,23 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __XMTHREADS_H__
-#define __XMTHREADS_H__
+#ifndef __UPDATEHIGHSCORESTHREAD_H__
+#define __UPLOADHIGHSCORETHREAD_H__
 
-#include <string>
-#include <map>
+#include "XMThread.h"
+#include "WWWAppInterface.h"
 
-class XMThread;
+class UpdateHighscoresThread : public XMThread, public WWWAppInterface {
+  public:
+  UploadHighscoreThread(const std::string& i_highscorePath);
+  virtual ~UploadHighscoreThread();
+  std::string getMsg() const;
 
-class XMThreads {
- public:
-  XMThreads();
-  virtual ~XMThreads();
+  void setTaskProgress(float p_percent);
 
-  void addThread(std::string threadId, XMThread* pThread);
-  // delete the XMThread
-  void removeThread(std::string threadId);
-  XMThread* getThread(std::string threadId);
-
-  int getNumberThreads();
-  int getNumberRunningThreads();
-
- protected:
-  std::map<std::string, XMThread*> m_threads;
+private:
+  virtual int realThreadFunction();
+  std::string m_msg;
+  std::string m_highscorePath;
 };
 
-#endif

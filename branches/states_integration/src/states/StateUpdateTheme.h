@@ -34,7 +34,7 @@ public:
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
 
 protected:
-  virtual bool callAfterThreadFinishedOk();
+  virtual void callAfterThreadFinished(int threadResult);
   virtual bool callBeforeLaunchingThread();
 
 private:

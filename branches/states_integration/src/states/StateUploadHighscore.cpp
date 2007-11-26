@@ -39,6 +39,7 @@ StateUploadHighscore::~StateUploadHighscore()
   delete m_pThread;
 }
 
-void StateUploadHighscore::onThreadFinishes(bool i_res) {
+void StateUploadHighscore::callAfterThreadFinished(int threadResult)
+{
   m_msg = ((UploadHighscoreThread*) m_pThread)->getMsg();
 }

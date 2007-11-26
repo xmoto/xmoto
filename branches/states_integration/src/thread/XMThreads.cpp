@@ -58,3 +58,26 @@ XMThread* XMThreads::getThread(std::string threadId)
 {
   return m_threads[threadId];
 }
+
+int XMThreads::getNumberThreads()
+{
+  return m_threads.size();
+}
+
+int XMThreads::getNumberRunningThreads()
+{
+  int nb = 0;
+  
+  std::map<std::string, XMThread*>::iterator iter;
+  iter = m_threads.begin();
+
+  while(iter != m_threads.end()){
+    if(iter->second->isThreadRunning() == true){
+      nb++;
+    }
+
+    iter++;
+  }
+
+  return nb;
+}

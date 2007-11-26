@@ -36,6 +36,7 @@ StateMultiUpdate::StateMultiUpdate(GameApp* pGame,
 	      pGame)
 {
   m_numberThreadDisplayed = 0;
+  m_numberThreadRunning   = 0;
 }
 
 void StateMultiUpdate::init()
@@ -86,7 +87,7 @@ bool StateMultiUpdate::update()
 
     if(pInfos->m_threadStarted == true && pThread->isThreadRunning() == false){
       pInfos->m_threadStarted  = false;
-      pInfos->m_threadFinished = false;
+      pInfos->m_threadFinished = true;
       if(pThread->waitForThreadEnd() != 0) {
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, pInfos->m_errorMessage, UI_MSGBOX_OK);
 	v_msgboxState->setId("ERROR");
@@ -137,6 +138,12 @@ void StateMultiUpdate::checkEvents()
 
 void StateMultiUpdate::updateGUI()
 {
+  int nbRunning = m_threads.getNumberRunningThreads();
+  if(m_numberThreadDisplayed != nbRunning){
+    // create of remove progress bars
+  }
+
+  // update progress bars
 }
 
 void StateMultiUpdate::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
@@ -158,5 +165,26 @@ void StateMultiUpdate::createGUIIfNeeded(GameApp* pGame)
   if(m_sGUI != NULL)
     return;
 
+  DrawLib* drawLib = pGame->getDrawLib();
 
+  m_sGUI = new UIRoot();
+  m_sGUI->setApp(pGame);
+  m_sGUI->setFont(drawLib->getFontSmall()); 
+  m_sGUI->setPosition(0, 0,
+		      drawLib->getDispWidth(),
+		      drawLib->getDispHeight());
+
+  int width = drawLib->getDispWidth();
+  int height= drawLib->getDispHeight();
+
+  int x = width / 8;
+  int y = height / 4;
+  std::string caption = "Multi threads in progress";
+  int nWidth  = width * 3/4;
+  int nHeight = height / 2;
+
+  UIFrame* v_frame;
+  v_frame = new UIFrame(m_sGUI, x, y, caption, nWidth, nHeight); 
+  v_frame->setID("FRAME");
+  v_frame->setStyle(UI_FRAMESTYLE_TRANS);
 }

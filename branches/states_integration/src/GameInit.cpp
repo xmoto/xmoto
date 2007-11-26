@@ -457,7 +457,7 @@ void GameApp::_Wait()
     }
 
     if(m_xmsession->useGraphics()) {  
-      _UpdateLoadingScreen((1.0f/9.0f) * 0,GAMETEXT_LOADINGSOUNDS);
+      _UpdateLoadingScreen(0, GAMETEXT_LOADINGSOUNDS);
       
       /* Load sounds */
       try {

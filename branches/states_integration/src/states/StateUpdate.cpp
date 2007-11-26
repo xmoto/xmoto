@@ -39,6 +39,7 @@ StateUpdate::StateUpdate(GameApp* pGame,
 {
   m_name             = "StateUpdate";
   m_threadStarted    = false;
+  m_threadFinished   = false;
   m_pThread          = NULL;
   m_msg              = "";
   m_messageOnSuccess = false;
@@ -86,13 +87,12 @@ bool StateUpdate::update()
 
   // thread finished. we leave the state.
   if(m_threadStarted == true && m_pThread->isThreadRunning() == false){
-    m_threadStarted = false;
+    m_threadStarted  = false;
+    m_threadFinished = true;
     int v_thread_res = m_pThread->waitForThreadEnd();
-    onThreadFinishes(v_thread_res);
+    callAfterThreadFinished(v_thread_res);
 
     if(v_thread_res == 0) {
-      callAfterThreadFinishedOk();
-
       if(m_messageOnSuccess) {
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, m_msg, UI_MSGBOX_OK);
 	v_msgboxState->setId("SUCCESS");
@@ -110,7 +110,7 @@ bool StateUpdate::update()
     return true;
   }
 
-  if(m_threadStarted == false){
+  if(m_threadStarted == false && m_threadFinished == false){
     if(callBeforeLaunchingThread() == false){
       return true;
     }
@@ -208,9 +208,8 @@ void StateUpdate::updateGUI()
   v_static->setCaption(m_currentOperation);
 }
 
-bool StateUpdate::callAfterThreadFinishedOk()
+void StateUpdate::callAfterThreadFinished(int threadResult)
 {
-  return true;
 }
 
 bool StateUpdate::callBeforeLaunchingThread()

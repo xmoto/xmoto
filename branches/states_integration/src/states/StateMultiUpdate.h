@@ -71,6 +71,7 @@ protected:
   XMThreads m_threads;
   std::map<std::string, ThreadInfos*> m_threadsInfos;
   int m_numberThreadDisplayed;
+  int m_numberThreadRunning;
 
 private:
   /* GUI */

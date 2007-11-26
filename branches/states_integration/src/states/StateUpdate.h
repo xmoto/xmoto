@@ -50,6 +50,7 @@ protected:
   virtual void checkEvents();
   virtual void updateGUI();
   bool m_threadStarted;
+  bool m_threadFinished;
 
   // updated by the child class
   int         m_progress;
@@ -64,7 +65,7 @@ protected:
   bool m_messageOnSuccess; // display the message, even if the thread succed
 
   // for child customization
-  virtual bool callAfterThreadFinishedOk();
+  virtual void callAfterThreadFinished(int threadResult);
   virtual bool callBeforeLaunchingThread();
 
   // for the message box when a thread badly finished

@@ -32,7 +32,7 @@ class StateUploadHighscore : public StateUpdate {
   virtual ~StateUploadHighscore();
   
   protected:
-  virtual void onThreadFinishes(bool i_res);
+  virtual void callAfterThreadFinished(int threadResult);
 };
 
 #endif

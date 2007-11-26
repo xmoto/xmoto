@@ -42,19 +42,17 @@ StateUpdateTheme::~StateUpdateTheme()
   delete m_pThread;
 }
 
-bool StateUpdateTheme::callAfterThreadFinishedOk()
+void StateUpdateTheme::callAfterThreadFinished(int threadResult)
 {
-  m_pGame->reloadTheme();
-  return true;
+  if(threadResult == 0){
+    m_pGame->reloadTheme();
+  }
 }
 
 bool StateUpdateTheme::callBeforeLaunchingThread()
 {
   char **v_result;
   unsigned int nrow;
-  std::string v_id_theme;
-  std::string v_ck1, v_ck2;
-  bool v_onDisk = false;
   bool v_onWeb  = true;
 
   v_result = m_pGame->getDb()->readDB("SELECT a.id_theme, a.checkSum, b.checkSum "
@@ -63,13 +61,8 @@ bool StateUpdateTheme::callBeforeLaunchingThread()
 				      "WHERE a.id_theme=\"" + xmDatabase::protectString(m_id_theme) + "\";",
 				      nrow);
   if(nrow == 1) {
-    v_onDisk   = true;
-    v_id_theme = m_pGame->getDb()->getResult(v_result, 3, 0, 0);
-    v_ck1      = m_pGame->getDb()->getResult(v_result, 3, 0, 1);
     if(m_pGame->getDb()->getResult(v_result, 3, 0, 2) == NULL) {
       v_onWeb = false;
-    } else {
-      v_ck2 = m_pGame->getDb()->getResult(v_result, 3, 0, 2);
     }
   }
   m_pGame->getDb()->read_DB_free(v_result);
