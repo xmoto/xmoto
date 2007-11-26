@@ -287,7 +287,17 @@ icndata_DATA = xmoto_icone_x.ico
 
 EXTRA_DIST = $(icndata_DATA)
 
-# Force svn_version.o to always be remade
-svn_version.$(OBJEXT): FORCE
-FORCE:
+# Force svn_version.o to always be remade if necessary
 
+svnCheck:
+	if test -d $(srcdir)/.svn; then \
+	  if ! test -f svnVersion -a "`cat svnVersion`" = "`svnversion -n $(srcdir)`"; then \
+	    svnversion -n $(srcdir) > svnVersion; \
+	  fi; \
+	fi
+
+svnVersion:
+	 svnversion -n $(srcdir) > svnVersion
+
+svn_version.$(OBJEXT): svnVersion
+	
