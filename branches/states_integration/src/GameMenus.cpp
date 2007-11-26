@@ -408,37 +408,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 					    UIButton *i_pLevelInfoViewReplayButton,
 					    UIStatic *i_pBestPlayerText
 					    ) {
-    char **v_result;
-    unsigned int nrow;
-    std::string v_levelAuthor;
-    std::string v_fileUrl;
-    
-    v_result = m_db->readDB("SELECT id_profile, fileUrl "
-			    "FROM webhighscores WHERE id_level=\"" + 
-			    xmDatabase::protectString(pLevelID) + "\" "
-			    "AND id_room=" + m_xmsession->idRoom() + ";",
-			    nrow);
-    if(nrow == 0) {
-      i_pLevelInfoFrame->showWindow(false);
-      m_pLevelToShowOnViewHighscore = "";
-      m_db->read_DB_free(v_result);
-      return;
-    }
-    v_levelAuthor = m_db->getResult(v_result, 2, 0, 0);
-    v_fileUrl     = m_db->getResult(v_result, 2, 0, 1);
-    m_db->read_DB_free(v_result);
 
-    i_pLevelInfoFrame->showWindow(true);
-    i_pBestPlayerText->setCaption((std::string(GAMETEXT_BESTPLAYER) + " : " +
-				   v_levelAuthor).c_str());
-    m_pLevelToShowOnViewHighscore = pLevelID;
-    
-    /* search if the replay is already downloaded */
-    if(m_db->replays_exists(FS::getFileBaseName(v_fileUrl))) {
-      i_pLevelInfoViewReplayButton->enableWindow(true);
-    } else {
-      i_pLevelInfoViewReplayButton->enableWindow(m_xmsession->www());
-    }
   }
 
   void GameApp::viewHighscoreOf() {

@@ -153,6 +153,8 @@ class XMotoLoadReplaysInterface;
       TColor getColorFromPlayerNumber(int i_player);
       TColor getUglyColorFromPlayerNumber(int i_player);
 
+      bool getHighscoreInfos(const std::string& i_id_level, std::string* io_id_profile, std::string* io_url, bool* o_isAccessible);
+
       //
       xmDatabase*    getDb();
       LevelsManager* getLevelsManager();

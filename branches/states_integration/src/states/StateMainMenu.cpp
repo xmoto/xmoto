@@ -116,6 +116,9 @@ void StateMainMenu::enter()
   // check new levels
   updateNewLevels();
 
+  // upate info frame
+  updateInfoFrame();
+
   StateMenu::enter();
 }
 
@@ -165,6 +168,9 @@ void StateMainMenu::checkEvents() {
 
   // options
   checkEventsOptions();
+
+  // update info frame for any event while it's quite long to determine which one are required
+  updateInfoFrame();
 }
 
 void StateMainMenu::checkEventsMainWindow() {
@@ -2659,4 +2665,26 @@ void StateMainMenu::uploadAllHighscores() {
 //      notifyMsg(e.getMsg());
 //    }
 //    m_db->read_DB_free(v_result);
+}
+
+void StateMainMenu::updateInfoFrame() {
+//  UILevelList* v_list  = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
+//  UIStatic* v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("FRAME:INFO_FRAME:BESTPLAYER")); 
+//  UIButton* v_button   = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:INFO_FRAME:BESTPLAYER_VIEW"));
+//  UIWindow* v_window   = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:INFO_FRAME"));
+//
+//  std::string v_id_level = v_list->getSelectedLevel();
+//  std::string v_id_profile;
+//  std::string v_url;
+//  bool        v_isAccessible;
+//
+//  if(v_id_level != "") {
+//    if(m_pGame->getHighscoreInfos(v_id_level, &v_id_profile, &v_url, &v_isAccessible)) {
+//      v_someText->setCaption(std::string(GAMETEXT_BESTPLAYER) + " : " + v_id_profile);
+//      v_button->enableWindow(v_isAccessible);
+//      v_window->showWindow(true);
+//    } else {
+//      v_window->showWindow(false);
+//    }
+//  }
 }

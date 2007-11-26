@@ -1009,6 +1009,32 @@ std::string GameApp::getWebRoomName() {
   return v_name;
 }
 
+bool GameApp::getHighscoreInfos(const std::string& i_id_level, std::string* o_id_profile, std::string* o_url, bool* o_isAccessible) {
+  char **v_result;
+  unsigned int nrow;
+    
+  v_result = m_db->readDB("SELECT id_profile, fileUrl FROM webhighscores WHERE id_level=\"" + 
+			  xmDatabase::protectString(i_id_level) + "\" AND id_room=" + m_xmsession->idRoom() + ";",
+			  nrow);
+  if(nrow == 0) {
+    m_db->read_DB_free(v_result);
+    return false;
+  }
+
+  *o_id_profile = m_db->getResult(v_result, 2, 0, 0);
+  *o_url        = m_db->getResult(v_result, 2, 0, 1);
+  m_db->read_DB_free(v_result);
+
+  /* search if the replay is already downloaded */
+  if(m_db->replays_exists(FS::getFileBaseName(*o_url))) {
+    *o_isAccessible = true;
+  } else {
+    *o_isAccessible = m_xmsession->www();
+  }
+
+  return true;
+}
+
 /****************/
 
   void GameApp::_UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore) {
