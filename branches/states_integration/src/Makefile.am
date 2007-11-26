@@ -8,15 +8,9 @@ SVNDEF = -D'SVN_REV="$(shell if test -d $(srcdir)/.svn; then svnversion -n $(src
 
 AM_CXXFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" -DLOCALESDIR=\"$(LOCALESDIR)\" -DALLOW_ZOOMING=$(ALLOW_ZOOMING) $(GL_CFLAGS) $(SDL_CFLAGS) -DUSE_OPENGL=$(USE_OPENGL) -DUSE_SDLGFX=$(USE_SDLGFX) $(SVNDEF)
 AM_CFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" -DLOCALESDIR=\"$(LOCALESDIR)\" -DALLOW_ZOOMING=$(ALLOW_ZOOMING) $(GL_CFLAGS) $(SDL_CFLAGS) -DUSE_OPENGL=$(USE_OPENGL) -DUSE_SDLGFX=$(USE_SDLGFX) $(SVNDEF)
+# AM_LDFLAGS = -s
 
-# Force svn_version.o to always be remade if necessary
-RUNCHECKSVN = $(shell if test -d $(srcdir)/.svn; then if ! test -f svnVersion -a "`cat svnVersion`" = "`svnversion -n $(srcdir)`"; then svnversion -n $(srcdir) > svnVersion; fi; fi)
-
-svnVersion:
-	 svnversion -n $(srcdir) > svnVersion
-
-svn_version.$(OBJEXT): svnVersion
-	
+#AM_LDFLAGS=
 
 image_SOURCES = image/tim.cpp image/tim_io_stdio.cpp \
   image/tim_jpeg.cpp image/tim_memory_crt.cpp \
@@ -292,3 +286,20 @@ icndatadir = $(datadir)/@PACKAGE@
 icndata_DATA = xmoto_icone_x.ico
 
 EXTRA_DIST = $(icndata_DATA)
+
+# Force svn_version.o to always be remade if necessary
+all: svnCheck
+	@echo svnCheck
+
+svnCheck:
+	if test -d $(srcdir)/.svn; then \
+	  if ! test -f svnVersion -a "`cat svnVersion`" = "`svnversion -n $(srcdir)`"; then \
+	    svnversion -n $(srcdir) > svnVersion; \
+	  fi; \
+	fi
+
+svnVersion:
+	 svnversion -n $(srcdir) > svnVersion
+
+svn_version.$(OBJEXT): svnVersion
+	
