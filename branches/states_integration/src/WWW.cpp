@@ -33,15 +33,11 @@ void WebRoom::downloadReplay(const std::string& i_url) {
   FSWeb::downloadFile(i_rplFilename, i_url, NULL, NULL, m_proxy_settings);
 }
 
-WebRoom::WebRoom(const ProxySettings *p_proxy_settings) {
-  std::string v_userDir;
-  v_userDir = FS::getUserDir();
-  m_userFilename =  v_userDir 
+WebRoom::WebRoom() {
+  m_userFilename = FS::getUserDir()
     + "/" 
     + DEFAULT_WEBHIGHSCORES_FILENAME;
   m_webhighscores_url = DEFAULT_WEBHIGHSCORES_URL;
-
-  m_proxy_settings = p_proxy_settings;
 }
 
 WebRoom::~WebRoom() {
@@ -51,18 +47,21 @@ std::string WebRoom::getRoomId() const {
   return m_roomId;
 }
 
-void WebRoom::setWebsiteInfos(const std::string& i_id_room, const std::string& i_webhighscores_url) {
+void WebRoom::setWebsiteInfos(const std::string& i_id_room,
+			      const std::string& i_webhighscores_url,
+			      const ProxySettings* pProxySettings) {
   m_webhighscores_url = i_webhighscores_url;
-  m_roomId = i_id_room;
+  m_roomId            = i_id_room;
+  m_proxy_settings    = pProxySettings;
 }
 
 void WebRoom::update() {
   /* download xml file */
   FSWeb::downloadFileBz2UsingMd5(m_userFilename,
-         m_webhighscores_url,
-         NULL,
-         NULL,
-         m_proxy_settings);
+				 m_webhighscores_url,
+				 NULL,
+				 NULL,
+				 m_proxy_settings);
 }
 
 void WebRoom::upgrade(xmDatabase *i_db) {
@@ -456,14 +455,19 @@ void FSWeb::uploadReplayAnalyseMsg(std::string p_filename,
   p_msg = pc;
 }
 
-WebLevels::WebLevels(WWWAppInterface *p_WebLevelApp,
-         const ProxySettings *p_proxy_settings) {
+WebLevels::WebLevels(WWWAppInterface *p_WebLevelApp) {
   m_WebLevelApp    = p_WebLevelApp;
-  m_proxy_settings = p_proxy_settings;
+  m_proxy_settings = NULL;
   m_levels_url     = DEFAULT_WEBLEVELS_URL;
 }
 
 WebLevels::~WebLevels() {
+}
+
+void WebLevels::setWebsiteInfos(const std::string &p_url, const ProxySettings* p_proxy_settings)
+{
+  m_levels_url     = p_url;
+  m_proxy_settings = p_proxy_settings;
 }
 
 std::string WebLevels::getXmlFileName() {

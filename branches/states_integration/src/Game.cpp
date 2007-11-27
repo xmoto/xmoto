@@ -976,35 +976,43 @@ ThemeChoicer* GameApp::getThemeChoicer()
   return m_themeChoicer;
 }
 
-std::string GameApp::getWebRoomURL() {
+std::string GameApp::getWebRoomURL(xmDatabase* pDb) {
   char **v_result;
   unsigned int nrow;
   std::string v_url;
 
-  v_result = m_db->readDB("SELECT highscoresUrl FROM webrooms WHERE id_room=" + m_xmsession->idRoom() + ";", nrow);
+  if(pDb == NULL){
+    pDb = m_db;
+  }
+
+  v_result = pDb->readDB("SELECT highscoresUrl FROM webrooms WHERE id_room=" + m_xmsession->idRoom() + ";", nrow);
   if(nrow != 1) {
-    m_db->read_DB_free(v_result);
+    pDb->read_DB_free(v_result);
     return DEFAULT_WEBROOMS_URL;
   }
-  v_url = m_db->getResult(v_result, 1, 0, 0);
-  m_db->read_DB_free(v_result);  
+  v_url = pDb->getResult(v_result, 1, 0, 0);
+  pDb->read_DB_free(v_result);  
 
   return v_url;
 }
 
-std::string GameApp::getWebRoomName() {
+std::string GameApp::getWebRoomName(xmDatabase* pDb) {
   char **v_result;
   unsigned int nrow;
   std::string v_name;
 
+  if(pDb == NULL){
+    pDb = m_db;
+  }
+
   /* set the room name ; set to WR if it cannot be determined */
   v_name = "WR";
 
-  v_result = m_db->readDB("SELECT name FROM webrooms WHERE id_room=" + m_xmsession->idRoom() + ";", nrow);
+  v_result = pDb->readDB("SELECT name FROM webrooms WHERE id_room=" + m_xmsession->idRoom() + ";", nrow);
   if(nrow == 1) {
-    v_name = m_db->getResult(v_result, 1, 0, 0);
+    v_name = pDb->getResult(v_result, 1, 0, 0);
   }
-  m_db->read_DB_free(v_result);
+  pDb->read_DB_free(v_result);
 
   return v_name;
 }
@@ -1076,9 +1084,9 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
       _SimpleMessage(GAMETEXT_CHECKINGFORLEVELS);
       
       if(m_pWebLevels == NULL) {
-	m_pWebLevels = new WebLevels(this,&m_ProxySettings);
+	m_pWebLevels = new WebLevels(this);
       }
-      m_pWebLevels->setURL(m_xmsession->webLevelsUrl());
+      m_pWebLevels->setWebsiteInfos(m_xmsession->webLevelsUrl(), &m_ProxySettings);
         
       Logger::Log("WWW: Checking for new or updated levels...");
       clearCancelAsSoonAsPossible();
@@ -1267,45 +1275,6 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
   }
   
 
-  void GameApp::_UpdateWebHighscores(bool bSilent) {
-    if(!bSilent) {
-      _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_InfoMsgBoxRect);
-    }
-
-    m_bWebHighscoresUpdatedThisSession = true;
-    
-    /* Try downloading the highscores */
-    m_pWebHighscores->setWebsiteInfos(m_xmsession->idRoom(), getWebRoomURL());
-    Logger::Log("WWW: Checking for new highscores...");
-    m_pWebHighscores->update();
-  }
-
-  void GameApp::_UpdateWebLevels(bool bSilent, bool bEnableWeb) {
-    if(!bSilent) {
-      _SimpleMessage(GAMETEXT_DLLEVELSCHECK,&m_InfoMsgBoxRect);
-    }
-
-    /* Try download levels list */
-    if(m_pWebLevels == NULL) {
-      m_pWebLevels = new WebLevels(this,&m_ProxySettings);
-    }
-    m_pWebLevels->setURL(m_xmsession->webLevelsUrl());
-    Logger::Log("WWW: Checking for new or updated levels...");
-
-    m_pWebLevels->update(m_db);
-    m_bWebLevelsToDownload = m_pWebLevels->nbLevelsToGet(m_db);
-  }
-
-  void GameApp::_UpgradeWebHighscores() {
-    /* Upgrade high scores */
-    try {
-      m_pWebHighscores->upgrade(m_db);
-    } catch(Exception &e) {
-      /* file probably doesn't exist */
-      Logger::Log("** Warning ** : Failed to analyse web-highscores file");   
-    }
-  }
-
   /*===========================================================================
   Extra WWW levels
   ===========================================================================*/
@@ -1343,23 +1312,5 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
       }
   }
 
-void GameApp::updateWebHighscores()
-{
-  if(!m_bWebHighscoresUpdatedThisSession) {        
-    try {
-      _UpdateWebHighscores(false);
-      _UpgradeWebHighscores();  
-      _UpdateWebLevels(false);
-
-      m_levelsManager.makePacks(m_db,
-				m_xmsession->profile(),
-				m_xmsession->idRoom(),
-				m_xmsession->debug());
-      getStateManager()->sendAsynchronousMessage("LEVELS_UPDATED");
-    } catch(Exception &e) {
-      notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-    }
-  }
-}
 
 /* key down is to clean */

@@ -155,14 +155,16 @@ class FSWeb {
 
 class WebRoom {
  public:
-  WebRoom(const ProxySettings *p_proxy_settings);
+  WebRoom();
   ~WebRoom();
 
   void update(); /* throws exceptions */
   void upgrade(xmDatabase *i_db); /* throws exceptions */
 
   /* return NULL if no data found */
-  void setWebsiteInfos(const std::string& i_id_room, const std::string& i_webhighscores_url);
+  void setWebsiteInfos(const std::string& i_id_room,
+		       const std::string& i_webhighscores_url,
+		       const ProxySettings* pProxySettings);
   std::string getRoomId() const;
 
   void downloadReplay(const std::string& i_url);
@@ -176,8 +178,7 @@ class WebRoom {
 
 class WebLevels {
  public:
-  WebLevels(WWWAppInterface *p_WebLevelApp,
-	    const ProxySettings *p_proxy_settings);
+  WebLevels(WWWAppInterface *p_WebLevelApp);
   ~WebLevels();
 
   /* check for new levels to download */
@@ -193,7 +194,7 @@ class WebLevels {
   const std::vector<std::string> &getUpdatedDownloadedLevels();
   
   /* Set URL */
-  void setURL(const std::string &p_url) {m_levels_url = p_url;}
+  void setWebsiteInfos(const std::string &p_url, const ProxySettings* p_proxy_settings);
 
   static std::string getDestinationFile(std::string p_url);
 

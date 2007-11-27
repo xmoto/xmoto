@@ -185,8 +185,8 @@ class XMotoLoadReplaysInterface;
       void updateWebHighscores();
       void checkForExtraLevels();
 
-      std::string getWebRoomURL();
-      std::string getWebRoomName();
+      std::string getWebRoomURL(xmDatabase* pDb = NULL);
+      std::string getWebRoomName(xmDatabase* pDb = NULL);
     
       std::string determineNextLevel(const std::string& i_id_level);
       std::string determinePreviousLevel(const std::string& i_id_level);
@@ -318,9 +318,7 @@ class XMotoLoadReplaysInterface;
       
       void _SimpleMessage(const std::string &Msg,UIRect *pRect=NULL,bool bNoSwap=false);
       
-      void _UpdateWebHighscores(bool bSilent);
       void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
-      void _UpgradeWebHighscores();
       void _DownloadExtraLevels(void);
 
       std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
