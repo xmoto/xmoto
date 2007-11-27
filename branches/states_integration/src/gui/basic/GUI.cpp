@@ -185,6 +185,15 @@ bool UIWindow::isUglyMode() {
     return false; /* nope :) */
   }
 
+  bool UIWindow::isVisible() {
+    for(UIWindow *p=this;p!=NULL;p=p->getParent()) {
+      if(p->m_bHide) {
+        return false;
+      }
+    }    
+    return true;
+  }
+
   bool UIWindow::isBranchHidden(void) {
     for(UIWindow *p=this;p!=NULL;p=p->getParent()) {
       if(p->m_bHide) {

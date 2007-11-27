@@ -582,7 +582,8 @@ void StateMainMenu::createGUIIfNeeded(GameApp* pGame) {
 
   // info frame
   UIWindow* v_infoFrame = new UIWindow(v_menu, 0, m_sGUI->getPosition().nHeight/2 + (5*57)/2, "", 220, 100);
-  //v_infoFrame->showWindow(false);
+  v_infoFrame->showWindow(false);
+  v_infoFrame->setID("INFO_FRAME");
   v_someText = new UIStatic(v_infoFrame, 0, 5, "", 220, 50);
   v_someText->setFont(drawlib->getFontSmall());
   v_someText->setHAlign(UI_ALIGN_CENTER);
@@ -2668,23 +2669,37 @@ void StateMainMenu::uploadAllHighscores() {
 }
 
 void StateMainMenu::updateInfoFrame() {
-//  UILevelList* v_list  = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
-//  UIStatic* v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("FRAME:INFO_FRAME:BESTPLAYER")); 
-//  UIButton* v_button   = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:INFO_FRAME:BESTPLAYER_VIEW"));
-//  UIWindow* v_window   = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:INFO_FRAME"));
-//
-//  std::string v_id_level = v_list->getSelectedLevel();
-//  std::string v_id_profile;
-//  std::string v_url;
-//  bool        v_isAccessible;
-//
-//  if(v_id_level != "") {
-//    if(m_pGame->getHighscoreInfos(v_id_level, &v_id_profile, &v_url, &v_isAccessible)) {
-//      v_someText->setCaption(std::string(GAMETEXT_BESTPLAYER) + " : " + v_id_profile);
-//      v_button->enableWindow(v_isAccessible);
-//      v_window->showWindow(true);
-//    } else {
-//      v_window->showWindow(false);
-//    }
-//  }
+  UIStatic* v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:INFO_FRAME:BESTPLAYER")); 
+  UIButton* v_button   = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:INFO_FRAME:BESTPLAYER_VIEW"));
+  UIWindow* v_window   = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:INFO_FRAME"));
+
+  UILevelList* v_newLevelsList      = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST");
+  UILevelList* v_favoriteLevelsList = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:FAVORITE_LIST");
+  UILevelList* v_list = NULL;
+
+  if(v_newLevelsList->isVisible() == true) {
+    v_list = v_newLevelsList;
+  } else if(v_favoriteLevelsList->isVisible() == true) {
+    v_list = v_favoriteLevelsList;
+  }
+
+  if(v_list == NULL) {
+    v_window->showWindow(false);
+    return;
+  }
+
+  std::string v_id_level = v_list->getSelectedLevel();
+  std::string v_id_profile;
+  std::string v_url;
+  bool        v_isAccessible;
+
+  if(v_id_level != "") {
+    if(m_pGame->getHighscoreInfos(v_id_level, &v_id_profile, &v_url, &v_isAccessible)) {
+      v_someText->setCaption(std::string(GAMETEXT_BESTPLAYER) + " : " + v_id_profile);
+      v_button->enableWindow(v_isAccessible);
+      v_window->showWindow(true);
+    } else {
+      v_window->showWindow(false);
+    }
+  }
 }

@@ -222,7 +222,8 @@ class GameApp;
       float getOpacity(void);
       bool isHidden(void) {return m_bHide;}
       bool isBranchHidden(void);
-      bool isDisabled(void);
+      bool isDisabled(void); // recursive to parents
+      bool isVisible(); // recursive to parents
       void showWindow(bool b);      
       void enableWindow(bool b) {m_bDisable=!b;}
       bool isActive(void);

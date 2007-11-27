@@ -49,6 +49,12 @@ xmDatabase::xmDatabase(const std::string& i_dbFile,
   sqlite3_trace(m_db, sqlTrace, NULL);
   createUserFunctions();
 
+//  if(sqlite3_threadsafe() == 0) {
+//    Logger::Log("** Warning ** Sqlite is not threadSafe !!!");
+//  } else {
+//    Logger::Log("Sqlite is threadSafe");
+//  }
+
   v_version = getXmDbVersion();
   Logger::Log("XmDb version is %i", v_version);
 
