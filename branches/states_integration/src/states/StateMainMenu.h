@@ -118,6 +118,7 @@ class StateMainMenu : public StateMenu {
 
   void uploadAllHighscores();
   void updateInfoFrame();
+  void updateReplaysRights();
 
   bool m_require_updateFavoriteLevelsList;
   bool m_require_updateReplaysList;

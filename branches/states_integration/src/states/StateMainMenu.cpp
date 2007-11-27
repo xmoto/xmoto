@@ -1677,7 +1677,7 @@ void StateMainMenu::executeOneCommand(std::string cmd)
   }
 
   if(cmd == "REPLAYS_DELETE") {
-    UILevelList* v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST"));
+    UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST"));
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       if(pEntry != NULL) {
@@ -1805,6 +1805,8 @@ void StateMainMenu::updateReplaysList() {
   UIEdit*      v_edit;
   v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_FILTER"));
   v_list->setFilter(v_edit->getCaption());
+
+  updateReplaysRights();
 }
 
 void StateMainMenu::checkEventsReplays() {
@@ -1819,6 +1821,13 @@ void StateMainMenu::checkEventsReplays() {
   if(v_edit->hasChanged()) {
     v_edit->setHasChanged(false);
     v_list->setFilter(v_edit->getCaption());
+    updateReplaysRights();
+  }
+
+  /* list changed */
+  if(v_list->isChanged()) {
+    v_list->setChanged(false);
+    updateReplaysRights();
   }
 
   // show
@@ -1845,6 +1854,7 @@ void StateMainMenu::checkEventsReplays() {
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
 	v_msgboxState->setId("REPLAYS_DELETE");
 	m_pGame->getStateManager()->pushState(v_msgboxState);	
+	updateReplaysRights();
       }
     }
   }
@@ -1854,7 +1864,7 @@ void StateMainMenu::checkEventsReplays() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-    updateReplaysList();      
+    updateReplaysList();
   }
 
   // upload
@@ -2700,6 +2710,43 @@ void StateMainMenu::updateInfoFrame() {
       v_window->showWindow(true);
     } else {
       v_window->showWindow(false);
+    }
+  }
+}
+
+void StateMainMenu::updateReplaysRights() {
+  UIList*   v_list   = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST"));
+  UIButton* v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_UPLOADHIGHSCORE_BUTTON"));
+
+  std::string v_replay;
+  ReplayInfo* rplInfos;
+
+  if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+    UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
+    if(pEntry != NULL) {
+      v_replay = pEntry->Text[0];
+
+      rplInfos = Replay::getReplayInfos(v_replay);
+      if(rplInfos != NULL) {
+	if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == m_pGame->getSession()->profile()) {
+	  char **v_result;
+	  unsigned int nrow;
+	  float v_finishTime;
+		
+	  v_result = m_pGame->getDb()->readDB("SELECT finishTime FROM webhighscores WHERE id_level=\"" + 
+					      xmDatabase::protectString(rplInfos->Level) + "\" AND id_room=" +
+					      m_pGame->getSession()->idRoom() + ";",
+					      nrow);
+	  if(nrow == 0) {
+	    v_button->enableWindow(true);
+	    m_pGame->getDb()->read_DB_free(v_result);
+	  } else {
+	    v_finishTime = atof(m_pGame->getDb()->getResult(v_result, 1, 0, 0));
+	    m_pGame->getDb()->read_DB_free(v_result);
+	    v_button->enableWindow(rplInfos->fFinishTime < v_finishTime);
+	  }  	      
+	}
+      }
     }
   }
 }
