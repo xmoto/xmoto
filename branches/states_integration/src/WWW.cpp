@@ -33,42 +33,56 @@ void WebRoom::downloadReplay(const std::string& i_url) {
   FSWeb::downloadFile(i_rplFilename, i_url, NULL, NULL, m_proxy_settings);
 }
 
-WebRoom::WebRoom() {
-  m_userFilename = FS::getUserDir()
+WebRoom::WebRoom(WWWAppInterface* p_WebRoomApp)
+{
+  m_userFilename      = FS::getUserDir()
     + "/" 
     + DEFAULT_WEBHIGHSCORES_FILENAME;
   m_webhighscores_url = DEFAULT_WEBHIGHSCORES_URL;
+  m_WebRoomApp        = p_WebRoomApp;
 }
 
-WebRoom::~WebRoom() {
+WebRoom::~WebRoom()
+{
 }
 
-std::string WebRoom::getRoomId() const {
+std::string WebRoom::getRoomId() const
+{
   return m_roomId;
 }
 
 void WebRoom::setWebsiteInfos(const std::string& i_id_room,
 			      const std::string& i_webhighscores_url,
-			      const ProxySettings* pProxySettings) {
+			      const ProxySettings* pProxySettings)
+{
   m_webhighscores_url = i_webhighscores_url;
   m_roomId            = i_id_room;
   m_proxy_settings    = pProxySettings;
 }
 
-void WebRoom::update() {
+void WebRoom::update()
+{
   /* download xml file */
+  f_curl_download_data v_data;
+
+  v_data.v_WebApp               = m_WebRoomApp;
+  v_data.v_nb_files_performed   = 0;
+  v_data.v_nb_files_to_download = 1;
+
   FSWeb::downloadFileBz2UsingMd5(m_userFilename,
 				 m_webhighscores_url,
-				 NULL,
-				 NULL,
+				 FSWeb::f_curl_progress_callback_download,
+				 &v_data,
 				 m_proxy_settings);
 }
 
-void WebRoom::upgrade(xmDatabase *i_db) {
+void WebRoom::upgrade(xmDatabase *i_db)
+{
   i_db->webhighscores_updateDB(m_userFilename, m_webhighscores_url);
 }
 
-size_t FSWeb::writeData(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+size_t FSWeb::writeData(void *ptr, size_t size, size_t nmemb, FILE *stream)
+{
   return fwrite (ptr, size, nmemb, stream);
 }
 
@@ -474,12 +488,19 @@ std::string WebLevels::getXmlFileName() {
   return FS::getUserDir() + "/" + DEFAULT_WEBLEVELS_FILENAME;
 }
 
-void WebLevels::downloadXml() {
+void WebLevels::downloadXml()
+{
+  f_curl_download_data v_data;
+
+  v_data.v_WebApp               = m_WebLevelApp;
+  v_data.v_nb_files_performed   = 0;
+  v_data.v_nb_files_to_download = 1;
+
   FSWeb::downloadFileBz2UsingMd5(getXmlFileName(),
-         m_levels_url,
-         NULL,
-         NULL,
-         m_proxy_settings);
+				 m_levels_url,
+				 FSWeb::f_curl_progress_callback_download,
+				 &v_data,
+				 m_proxy_settings);
 }
 
 std::string WebLevels::getDestinationDir() {
@@ -610,7 +631,8 @@ void WebLevels::upgrade(xmDatabase *i_db) {
   try {
     /* download levels */
     for(unsigned int i=0; i<nrow; i++) {
-      if(m_WebLevelApp->isCancelAsSoonAsPossible()) break;
+      if(m_WebLevelApp->isCancelAsSoonAsPossible())
+	break;
 
       v_levelId    = i_db->getResult(v_result, 4, i, 0);
       v_levelName  = i_db->getResult(v_result, 4, i, 1);

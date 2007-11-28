@@ -18,35 +18,24 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __CHECKWWWTHREAD_H__
-#define __CHECKWWWTHREAD_H__
+#ifndef __STATEUPGRADELEVES_H__
+#define __STATEUPGRADELEVES_H__
 
-#include "XMThread.h"
-#include "WWWAppInterface.h"
+#include "StateUpdate.h"
 
-class WebRoom;
-class WebLevels;
+class StateUpgradeLevels : public StateUpdate {
+public:
+  StateUpgradeLevels(GameApp* pGame,
+		     bool drawStateBehind    = true,
+		     bool updateStatesBehind = false);
+  virtual ~StateUpgradeLevels();
 
-class CheckWwwThread : public XMThread, public WWWAppInterface {
-  public:
-  // when forceUpdate is false, use the values in xmsession
-  // to know which part has to be updated
-  CheckWwwThread(bool forceUpdate = false);
-  virtual ~CheckWwwThread();
-  std::string getMsg() const;
+  virtual void send(const std::string& i_id,
+		    UIMsgBoxButton i_button,
+		    const std::string& i_input);
+  virtual void executeOneCommand(std::string cmd);
 
-  void setTaskProgress(float p_percent);
-
-private:
-  void updateWebHighscores();
-  void upgradeWebHighscores();
-  void updateWebLevels();
-
-  virtual int realThreadFunction();
-  std::string m_msg;
-  bool        m_forceUpdate;
-  WebRoom*    m_pWebRoom;
-  WebLevels*  m_pWebLevels;
+  void callAfterThreadFinished(int threadResult);
 };
 
 #endif

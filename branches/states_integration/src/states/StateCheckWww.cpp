@@ -18,35 +18,26 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __CHECKWWWTHREAD_H__
-#define __CHECKWWWTHREAD_H__
+#include "Game.h"
+#include "StateCheckWww.h"
+#include "thread/CheckWwwThread.h"
 
-#include "XMThread.h"
-#include "WWWAppInterface.h"
+StateCheckWww::StateCheckWww(GameApp* pGame,
+			     bool forceUpdate,
+			     bool drawStateBehind,
+			     bool updateStatesBehind)
+  : StateUpdate(pGame, drawStateBehind, updateStatesBehind)
+{
+  m_pThread = new CheckWwwThread(forceUpdate);
+  m_name    = "StateCheckWww";
+}
 
-class WebRoom;
-class WebLevels;
+StateCheckWww::~StateCheckWww()
+{
+  delete m_pThread;
+}
 
-class CheckWwwThread : public XMThread, public WWWAppInterface {
-  public:
-  // when forceUpdate is false, use the values in xmsession
-  // to know which part has to be updated
-  CheckWwwThread(bool forceUpdate = false);
-  virtual ~CheckWwwThread();
-  std::string getMsg() const;
-
-  void setTaskProgress(float p_percent);
-
-private:
-  void updateWebHighscores();
-  void upgradeWebHighscores();
-  void updateWebLevels();
-
-  virtual int realThreadFunction();
-  std::string m_msg;
-  bool        m_forceUpdate;
-  WebRoom*    m_pWebRoom;
-  WebLevels*  m_pWebLevels;
-};
-
-#endif
+void StateCheckWww::callAfterThreadFinished(int threadResult)
+{
+  m_msg = ((CheckWwwThread*)m_pThread)->getMsg();
+}

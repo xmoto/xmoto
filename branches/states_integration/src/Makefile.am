@@ -155,7 +155,11 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateRequestKey.cpp      \
 		 states/StateRequestKey.h        \
 		 states/StateMultiUpdate.cpp     \
-		 states/StateMultiUpdate.h
+		 states/StateMultiUpdate.h       \
+		 states/StateCheckWww.cpp        \
+		 states/StateCheckWww.h          \
+		 states/StateUpgradeLevels.cpp   \
+		 states/StateUpgradeLevels.h
 
 
 bz2_SOURCES = bzip2/blocksort.c     \
@@ -181,7 +185,11 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/UploadHighscoreThread.h    \
 		 thread/UploadHighscoreThread.cpp  \
 		 thread/XMThreads.cpp              \
-		 thread/XMThreads.h
+		 thread/XMThreads.h                \
+		 thread/CheckWwwThread.cpp         \
+		 thread/CheckWwwThread.h           \
+		 thread/UpgradeLevelsThread.cpp    \
+		 thread/UpgradeLevelsThread.h
 
 if WIN32
 common_SOURCES += $(bz2_SOURCES)
@@ -302,4 +310,3 @@ svnVersion:
 	 svnversion -n $(srcdir) > svnVersion
 
 svn_version.$(OBJEXT): svnVersion
-	

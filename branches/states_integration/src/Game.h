@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 #include "db/xmDatabaseUpdateInterface.h"
 #include "XMotoLoadLevelsInterface.h"
-#include "WWWAppInterface.h"
 #include "Input.h"
 #include "WWW.h"
 #include "LevelsManager.h"
@@ -63,20 +62,12 @@ class XMotoLoadReplaysInterface;
    /*===========================================================================
    Game application
    ===========================================================================*/
-   class GameApp : public XMotoLoadLevelsInterface, public XmDatabaseUpdateInterface, public WWWAppInterface {
+   class GameApp : public XMotoLoadLevelsInterface, public XmDatabaseUpdateInterface {
      public:
      GameApp();
      ~GameApp();
            
     void run(int nNumArgs, char **ppcArgs);
-
-        /* WWWAppInterface implementation */ 
-        virtual void setTaskProgress(float fPercent);
-
-        virtual void setBeingDownloadedInformation(const std::string &p_information,bool p_bNew = true);
-        virtual void readEvents(void);
-        
-        virtual bool shouldLevelBeUpdated(const std::string &LevelID);
 
 	/* load level */
 	void loadLevelHook(std::string i_level, int i_percentage);
@@ -183,7 +174,6 @@ class XMotoLoadReplaysInterface;
       void setCurrentPlayingList(UILevelList *i_levelsList) {m_currentPlayingList = i_levelsList;}
 
       void updateWebHighscores();
-      void checkForExtraLevels();
 
       std::string getWebRoomURL(xmDatabase* pDb = NULL);
       std::string getWebRoomName(xmDatabase* pDb = NULL);
@@ -309,9 +299,6 @@ class XMotoLoadReplaysInterface;
 
       /* Helpers */
       void _Wait();
-      void _HandleMainMenu(void);  
-      void _InitMenus(void);        
-      void _InitMenus_MainMenu(void);
       void _UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore);
     
       void _UpdateLoadingScreen(float fDone, const std::string &NextTask);

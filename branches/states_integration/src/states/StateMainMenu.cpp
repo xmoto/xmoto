@@ -36,6 +36,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateUpdateRoomsList.h"
 #include "StateUploadHighscore.h"
 #include "StateUpdateTheme.h"
+#include "StateCheckWww.h"
+#include "StateUpgradeLevels.h"
 #include "LevelsManager.h"
 #include "helpers/Log.h"
 #include "helpers/System.h"
@@ -120,6 +122,8 @@ void StateMainMenu::enter()
   updateInfoFrame();
 
   StateMenu::enter();
+
+  m_pGame->getStateManager()->pushState(new StateCheckWww(m_pGame));
 }
 
 void StateMainMenu::leave()
@@ -299,7 +303,7 @@ void StateMainMenu::checkEventsMainWindow() {
     v_windowOptions->showWindow(false);
     v_tabView->selectChildrenById("NEWLEVELS_TAB");
 
-    //checkForExtraLevels();
+    m_pGame->getStateManager()->pushState(new StateUpgradeLevels(m_pGame));
   }
 }
 
@@ -434,7 +438,7 @@ void StateMainMenu::checkEventsLevelsNewTab() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-    m_pGame->checkForExtraLevels();
+    m_pGame->getStateManager()->pushState(new StateUpgradeLevels(m_pGame));
   }
 
 }
@@ -1676,8 +1680,7 @@ void StateMainMenu::executeOneCommand(std::string cmd)
     return;
   }
 
-  if(cmd == "REPLAYS_DELETE") {
-    UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST"));
+  else if(cmd == "REPLAYS_DELETE") {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       if(pEntry != NULL) {
@@ -1697,16 +1700,30 @@ void StateMainMenu::executeOneCommand(std::string cmd)
     }
   }
 
-  if(cmd == "UPDATE_THEMES_LISTS") {
+  else if(cmd == "UPDATE_THEMES_LISTS") {
     updateThemesList();      
   }
 
-  if(cmd == "UPDATE_ROOMS_LISTS") {
+  else if(cmd == "UPDATE_ROOMS_LISTS") {
     updateRoomsList();      
   }
 
-  if(cmd == "CHANGE_WWW_ACCESS") {
+  else if(cmd == "CHANGE_WWW_ACCESS") {
     updateWWWOptions();
+  }
+
+  else if(cmd == "NEW_LEVELS_TO_DOWNLOAD"){
+    UIButtonDrawn* v_buttonDrawn;
+
+    v_buttonDrawn = reinterpret_cast<UIButtonDrawn *>(m_GUI->getChild("MAIN:NEWLEVELAVAILBLE"));
+    v_buttonDrawn->showWindow(true);
+  }
+
+  else if(cmd == "NO_NEW_LEVELS_TO_DOWNLOAD"){
+    UIButtonDrawn* v_buttonDrawn;
+
+    v_buttonDrawn = reinterpret_cast<UIButtonDrawn *>(m_GUI->getChild("MAIN:NEWLEVELAVAILBLE"));
+    v_buttonDrawn->showWindow(false);
   }
 }
 
@@ -2459,6 +2476,12 @@ void StateMainMenu::checkEventsOptions() {
     m_pGame->getStateManager()->pushState(new StateEditWebConfig(m_pGame));
   }
 
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:UPDATEHIGHSCORES"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getStateManager()->pushState(new StateCheckWww(m_pGame, true));
+  }
+
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLEWEB"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
@@ -2626,7 +2649,7 @@ void StateMainMenu::updateNewLevels() {
   UIButtonDrawn* v_buttonDrawn;
 
   v_buttonDrawn = reinterpret_cast<UIButtonDrawn *>(m_GUI->getChild("MAIN:NEWLEVELAVAILBLE"));
-  v_buttonDrawn->showWindow(true);
+  v_buttonDrawn->showWindow(false);
 }
 
 void StateMainMenu::updateLevelsPackInPackList(const std::string& v_levelPack) {
@@ -2640,7 +2663,8 @@ void StateMainMenu::updateLevelsPackInPackList(const std::string& v_levelPack) {
 
 void StateMainMenu::uploadAllHighscores() {
 //    /* 1 is the main room ; don't allow full upload on it */
-//    if(m_pGame->getSession()->idRoom() == "1") return;
+//    if(m_pGame->getSession()->idRoom() == "1")
+//      return;
 //
 //    _UpdateWebHighscores(false);
 //    char **v_result;

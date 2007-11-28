@@ -31,15 +31,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 CheckWwwThread::CheckWwwThread(bool forceUpdate)
   : XMThread()
 {
-  m_forceUpdate   = forceUpdatep;
-  m_pWebRoom      = new WebRoom();
+  m_forceUpdate   = forceUpdate;
+  m_pWebRoom      = new WebRoom(this);
   m_pWebLevels    = new WebLevels(this);
 }
 
 CheckWwwThread::~CheckWwwThread()
 {
-  delete m_pWebRoom();
-  delete m_pWebLevels();
+  delete m_pWebRoom;
+  delete m_pWebLevels;
 }
 
 void CheckWwwThread::updateWebHighscores()
@@ -60,14 +60,14 @@ void CheckWwwThread::upgradeWebHighscores()
 
 void CheckWwwThread::updateWebLevels()
 {
-  //_SimpleMessage(GAMETEXT_DLLEVELSCHECK, &m_InfoMsgBoxRect);
-
   Logger::Log("WWW: Checking for new or updated levels...");
 
   /* Try download levels list */
-  m_pWebLevels->update(m_db);
-  if(m_pWebLevels->nbLevelsToGet(m_db) != 0){
+  m_pWebLevels->update(m_pDb);
+  if(m_pWebLevels->nbLevelsToGet(m_pDb) != 0){
     m_pGame->getStateManager()->sendAsynchronousMessage("NEW_LEVELS_TO_DOWNLOAD");
+  } else {
+    m_pGame->getStateManager()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
   }
 }
 
@@ -75,8 +75,8 @@ int CheckWwwThread::realThreadFunction()
 {
   if(m_pGame->getSession()->www() == true){
     ProxySettings* pProxySettings = m_pGame->getSession()->proxySettings();
-    std::string    webRoomUrl     = getWebRoomURL(m_pDb);
-    std::string    webRoomName    = getWebRoomName(m_pDb);
+    std::string    webRoomUrl     = m_pGame->getWebRoomURL(m_pDb);
+    std::string    webRoomName    = m_pGame->getWebRoomName(m_pDb);
     std::string    webLevelsUrl   = m_pGame->getSession()->webLevelsUrl();
 
     m_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);
@@ -94,29 +94,35 @@ int CheckWwwThread::realThreadFunction()
       } catch (Exception& e) {
 	Logger::Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());
 	if(m_forceUpdate == true){
-	  //notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
+	  m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+	  return 1;
 	}
       }
     }
+
+    setThreadProgress(100);
 
     if(m_forceUpdate == true
        || m_pGame->getSession()->checkNewLevelsAtStartup() == true){
       try {
 	setThreadCurrentOperation(GAMETEXT_DLLEVELSCHECK);
-	setThreadProgress(50);
+	setThreadProgress(0);
 
 	updateWebLevels();
 
       } catch (Exception& e){
 	Logger::Log("** Warning ** : Failed to update web-levels [%s]",e.getMsg().c_str());
 	if(m_forceUpdate == true){
-	  //notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
+	  m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+	  return 1;
 	}
       }
     }
   }
 
   setThreadProgress(100);
+
+  return 0;
 }
 
 std::string CheckWwwThread::getMsg() const

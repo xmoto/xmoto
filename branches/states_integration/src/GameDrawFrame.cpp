@@ -41,6 +41,7 @@ void GameApp::drawFrame(void) {
 }
 
 void GameApp::_PreUpdateGUI(void) {
+#if 0
   /* What about the notify box then? */
   if(m_pNotifyMsgBox != NULL) {
     if(m_pNotifyMsgBox->getClicked() == UI_MSGBOX_OK) {
@@ -67,4 +68,5 @@ void GameApp::_PreUpdateGUI(void) {
       m_pInfoMsgBox = NULL;
     }
   }
+#endif
 }

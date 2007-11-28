@@ -510,9 +510,6 @@ void GameApp::_Wait()
 			      m_xmsession->idRoom(),
 			      m_xmsession->debug());     
 
-    /* Initialize menu system */
-    _InitMenus();
-
     /* What to do? */
     if(m_PlaySpecificLevelFile != "") {
       try {

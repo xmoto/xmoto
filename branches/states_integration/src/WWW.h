@@ -155,11 +155,11 @@ class FSWeb {
 
 class WebRoom {
  public:
-  WebRoom();
+  WebRoom(WWWAppInterface* p_WebRoomApp);
   ~WebRoom();
 
   void update(); /* throws exceptions */
-  void upgrade(xmDatabase *i_db); /* throws exceptions */
+  void upgrade(xmDatabase* i_db); /* throws exceptions */
 
   /* return NULL if no data found */
   void setWebsiteInfos(const std::string& i_id_room,
@@ -170,22 +170,23 @@ class WebRoom {
   void downloadReplay(const std::string& i_url);
 
  private:
+  WWWAppInterface* m_WebRoomApp;
   std::string m_userFilename;
   std::string m_webhighscores_url;
   std::string m_roomId;
-  const ProxySettings *m_proxy_settings;
+  const ProxySettings* m_proxy_settings;
 };
 
 class WebLevels {
  public:
-  WebLevels(WWWAppInterface *p_WebLevelApp);
+  WebLevels(WWWAppInterface* p_WebLevelApp);
   ~WebLevels();
 
   /* check for new levels to download */
-  void update(xmDatabase *i_db); /* throws exceptions */
+  void update(xmDatabase* i_db); /* throws exceptions */
 
   /* download new levels */
-  void upgrade(xmDatabase *i_db); /* throws exceptions */
+  void upgrade(xmDatabase* i_db); /* throws exceptions */
   
   /* Get names of new files downloaded OK */
   const std::vector<std::string> &getNewDownloadedLevels();
@@ -202,7 +203,7 @@ class WebLevels {
   int nbLevelsToGet(xmDatabase *i_db) const;
 
  private:
-  WWWAppInterface *m_WebLevelApp;
+  WWWAppInterface* m_WebLevelApp;
 
   std::vector<std::string> m_webLevelsNewDownloadedOK; /* file names of those levels 
            which where downloaded OK (so we can load them right away) and which are new */
