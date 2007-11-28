@@ -1680,7 +1680,8 @@ void StateMainMenu::executeOneCommand(std::string cmd)
     return;
   }
 
-  else if(cmd == "REPLAYS_DELETE") {
+   else if(cmd == "REPLAYS_DELETE") {
+    UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST"));
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       if(pEntry != NULL) {
