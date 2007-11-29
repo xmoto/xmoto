@@ -370,7 +370,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
          std::string("Replays/") + RealName + std::string(".rpl"),
          v_outputfile)) {
       Logger::Log("** Warning ** : Failed to save replay: %s",Name.c_str());
-      notifyMsg(GAMETEXT_FAILEDTOSAVEREPLAY);
+      //notifyMsg(GAMETEXT_FAILEDTOSAVEREPLAY);
     } else {
       /* Update replay list to reflect changes */
       addReplay(v_outputfile);
@@ -498,7 +498,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       if(m_xmsession->www()) {
 	/* download the replay */
 	try {
-	  _SimpleMessage(GAMETEXT_DLGHOST,&m_InfoMsgBoxRect);
+	  //_SimpleMessage(GAMETEXT_DLGHOST,&m_InfoMsgBoxRect);
 	  m_pWebHighscores->downloadReplay(v_fileUrl);
 	  addReplay(v_replayName);
 	  getStateManager()->sendAsynchronousMessage("REPLAYS_UPDATED");
@@ -1078,13 +1078,10 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
   }
 
         
+void GameApp::drawFrame(void) {
+  Sound::update();
+  m_InputHandler.updateInput(m_MotoGame.Players());
   
-      
-  /*===========================================================================
-  Notification popup
-  ===========================================================================*/
-  void GameApp::notifyMsg(std::string Msg) {
-  }
-
-
-/* key down is to clean */
+  m_stateManager->update();
+  m_stateManager->render(); 
+}

@@ -31,6 +31,7 @@ UpgradeLevelsThread::UpgradeLevelsThread(GameState* pCallingState)
   m_pWebLevels    = new WebLevels(this);
   m_pCallingState = pCallingState;
   m_updateAutomaticallyLevels = false;
+  m_msg = "";
 }
 
 UpgradeLevelsThread::~UpgradeLevelsThread()

@@ -159,7 +159,9 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateCheckWww.cpp        \
 		 states/StateCheckWww.h          \
 		 states/StateUpgradeLevels.cpp   \
-		 states/StateUpgradeLevels.h
+		 states/StateUpgradeLevels.h     \
+		 states/StateDownloadGhost.cpp   \
+		 states/StateDownloadGhost.h
 
 
 bz2_SOURCES = bzip2/blocksort.c     \
@@ -189,7 +191,9 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/CheckWwwThread.cpp         \
 		 thread/CheckWwwThread.h           \
 		 thread/UpgradeLevelsThread.cpp    \
-		 thread/UpgradeLevelsThread.h
+		 thread/UpgradeLevelsThread.h      \
+		 thread/DownloadGhostThread.cpp    \
+		 thread/DownloadGhostThread.h
 
 if WIN32
 common_SOURCES += $(bz2_SOURCES)
@@ -209,7 +213,7 @@ endif
 bin_PROGRAMS = xmoto
 
 xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
-  GameMenus.cpp GUIBestTimes.cpp \
+  GUIBestTimes.cpp \
   Renderer.cpp Replay.cpp Sound.cpp \
   LuaLibGame.h LuaLibGame.cpp \
   UserConfig.cpp \
@@ -240,7 +244,6 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   Credits.h \
   Credits.cpp \
   GameInit.cpp \
-  GameDrawFrame.cpp \
   LevelsManager.h \
   LevelsManager.cpp \
   SysMessage.h \

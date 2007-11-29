@@ -128,7 +128,8 @@ void StatePreplaying::enter()
     /* add the ghosts */
     if(m_pGame->getSession()->enableGhosts()) {
       try {
-	m_pGame->addGhosts(pWorld, m_pGame->getTheme());
+	// not working for the moment and causes segfault
+	// m_pGame->addGhosts(pWorld, m_pGame->getTheme());
       } catch(Exception &e) {
 	/* anyway */
       }

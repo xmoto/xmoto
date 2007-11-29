@@ -30,7 +30,16 @@ void WebRoom::downloadReplay(const std::string& i_url) {
     + FS::getFileBaseName(i_url) 
     + ".rpl";
 
-  FSWeb::downloadFile(i_rplFilename, i_url, NULL, NULL, m_proxy_settings);
+  /* download xml file */
+  f_curl_download_data v_data;
+
+  v_data.v_WebApp               = m_WebRoomApp;
+  v_data.v_nb_files_performed   = 0;
+  v_data.v_nb_files_to_download = 1;
+
+  FSWeb::downloadFile(i_rplFilename, i_url,
+		      FSWeb::f_curl_progress_callback_download,
+		      &v_data, m_proxy_settings);
 }
 
 WebRoom::WebRoom(WWWAppInterface* p_WebRoomApp)

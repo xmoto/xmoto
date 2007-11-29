@@ -86,7 +86,6 @@ class XMotoLoadReplaysInterface;
       /* Methods */
       MotoGame* getMotoGame();
 
-      void notifyMsg(std::string Msg);      
       void reloadTheme();
 
       void TeleportationCheatTo(int i_player, Vector2f i_position);
@@ -163,13 +162,6 @@ class XMotoLoadReplaysInterface;
       static std::string splitText(const std::string &str, int p_breakLineLength);
       void addLevelToFavorite(const std::string& i_levelId);
 
-      void setLevelInfoFrameBestPlayer(std::string pLevelID,
-				       UIWindow *i_pLevelInfoFrame,
-				       UIButton *i_pLevelInfoViewReplayButton,
-				       UIStatic *i_pBestPlayerText
-				       );
-      void viewHighscoreOf();
-
       // list played
       void setCurrentPlayingList(UILevelList *i_levelsList) {m_currentPlayingList = i_levelsList;}
 
@@ -191,6 +183,7 @@ class XMotoLoadReplaysInterface;
       void switchTestThemeMode(bool mode);
       void switchUglyOverMode(bool mode);
 
+      void addReplay(const std::string& i_file, xmDatabase* threadDb = NULL);
 
    protected:
       void createDefaultConfig();
@@ -303,19 +296,12 @@ class XMotoLoadReplaysInterface;
     
       void _UpdateLoadingScreen(float fDone, const std::string &NextTask);
       
-      void _SimpleMessage(const std::string &Msg,UIRect *pRect=NULL,bool bNoSwap=false);
-      
       void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
       void _DownloadExtraLevels(void);
 
       std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time);
-
-      /* Main loop utility functions */
-      void _PreUpdateGUI(void);
-
-      void addReplay(const std::string& i_file, xmDatabase* threadDb = NULL);
 
       /* */
       void _InitWin(bool bInitGraphics);

@@ -93,7 +93,7 @@ bool StateUpdate::update()
     callAfterThreadFinished(v_thread_res);
 
     if(v_thread_res == 0) {
-      if(m_messageOnSuccess) {
+      if(m_messageOnSuccess && m_msg != "") {
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, m_msg, UI_MSGBOX_OK);
 	v_msgboxState->setId("SUCCESS");
 	m_pGame->getStateManager()->pushState(v_msgboxState);
