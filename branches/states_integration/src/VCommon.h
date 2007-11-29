@@ -34,10 +34,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifdef HAVE_SDL_FRAMEWORK
   #include <SDL.h>
   #include <SDL_mixer.h>
+  #include <SDL_thread.h>
+  #include <SDL_mutex.h>
 #else
   #define USE_RWOPS
   #include <SDL/SDL.h>
   #include <SDL/SDL_mixer.h>
+  #include <SDL/SDL_thread.h>
+  #include <SDL/SDL_mutex.h>
 #endif
 
 // Some places #define _T, which we want for a template parameter

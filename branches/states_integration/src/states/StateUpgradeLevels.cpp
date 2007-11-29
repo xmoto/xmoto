@@ -31,6 +31,7 @@ StateUpgradeLevels::StateUpgradeLevels(GameApp* pGame,
 {
   m_pThread = new UpgradeLevelsThread(this);
   m_name    = "StateUpgradeLevels";
+  m_curUpdLevelName = "";
 }
 
 StateUpgradeLevels::~StateUpgradeLevels()
@@ -51,6 +52,19 @@ void StateUpgradeLevels::send(const std::string& i_id, UIMsgBoxButton i_button, 
       break;
     }
   }
+  else if(i_id == "ASKING_LEVEL_UPDATE"){
+    switch(i_button){
+    case UI_MSGBOX_YES:
+      m_pThread->unsleepThread("YES");
+      break;
+    case UI_MSGBOX_NO:
+      m_pThread->unsleepThread("NO");
+      break;
+    case UI_MSGBOX_YES_FOR_ALL:
+      m_pThread->unsleepThread("YES_FOR_ALL");
+      break;
+    }
+  }
   else {
     StateUpdate::send(i_id, i_button, i_input);
   }
@@ -59,7 +73,7 @@ void StateUpgradeLevels::send(const std::string& i_id, UIMsgBoxButton i_button, 
 void StateUpgradeLevels::executeOneCommand(std::string cmd)
 {
   if(cmd == "NEWLEVELAVAILABLE"){
-    int nULevels = 1;
+    int nULevels = m_pGame->getDb()->levels_nbLevelsToDownload();
     char cBuf[256];
     snprintf(cBuf, 256, GAMETEXT_NEWLEVELAVAIL(nULevels), nULevels);
 
@@ -69,9 +83,33 @@ void StateUpgradeLevels::executeOneCommand(std::string cmd)
     v_state->setId("DOWNLOAD_LEVELS");
     m_pGame->getStateManager()->pushState(v_state);
   }
+  else if(cmd == "ASKINGLEVELUPDATE"){
+    char cBuf[256];
+    snprintf(cBuf, 256, GAMETEXT_WANTTOUPDATELEVEL, m_curUpdLevelName.c_str());
+
+    StateMessageBox* v_state = new StateMessageBox(this, m_pGame, cBuf,
+						   (UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
+    v_state->setId("ASKING_LEVEL_UPDATE");
+    m_pGame->getStateManager()->pushState(v_state);
+  }
 }
 
 void StateUpgradeLevels::callAfterThreadFinished(int threadResult)
 {
   m_msg = ((UpgradeLevelsThread*)m_pThread)->getMsg();
+}
+
+void StateUpgradeLevels::keyDown(int nKey, SDLMod mod,int nChar) {
+  switch(nKey) {
+  case SDLK_ESCAPE:
+    if(m_threadStarted == true) {
+      m_pThread->askThreadToEnd();
+    }
+    break;
+  }
+}
+
+void StateUpgradeLevels::setCurrentUpdatedLevel(std::string levelName)
+{
+  m_curUpdLevelName = levelName;
 }

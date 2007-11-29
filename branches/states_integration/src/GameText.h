@@ -106,10 +106,10 @@ Central place to keep many in-game text strings
     ":Mateusz Kosibowicz (" + std::string(_("Polish")) + ");"                                \
     ":Lucas Manzari (" + std::string(_("Italian")) + ");"                                    \
     ":Lukas Klingsbo (" + std::string(_("Swedish")) + ");"                                   \
-    ":Jan Kaláb (" + std::string(_("Czech")) + ");"                                          \
+    ":Jan KalÃ¡b (" + std::string(_("Czech")) + ");"                                          \
     ":" + std::string(_("Mikhail Brinchuk")) + " (" + std::string(_("Russian")) + ");"       \
     ":Lucas Hermann Negri (" + std::string(_("Brazilian Portuguese")) + ");"                 \
-    ":Jānis Rūcis (" + std::string(_("Latvian")) + ");"                 \
+    ":JÄnis RÅ«cis (" + std::string(_("Latvian")) + ");"                 \
     ":;"                                                                                     \
     + std::string(_("Main testers")) +                                                       \
     ":Jose Alberto Coelho;"                                                                  \
@@ -152,6 +152,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DLHIGHSCORES         _("Downloading high-scores...")
 #define GAMETEXT_DLLEVELS             _("Downloading extra levels...\nPress ESC to abort.")
 #define GAMETEXT_DLLEVELSCHECK        _("Checking for new levels...")
+#define GAMETEXT_LOADNEWLEVELS        _("Loading new and updated levels...")
 #define GAMETEXT_DLROOMSLISTCHECK     _("Checking for existing rooms...")
 #define GAMETEXT_DLTHEME              _("Downloading theme data required by new levels...\nPress ESC to abort.")
 #define GAMETEXT_DLTHEMESLISTCHECK    _("Checking for new themes...")

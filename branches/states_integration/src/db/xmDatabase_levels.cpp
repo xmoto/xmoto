@@ -55,6 +55,18 @@ void xmDatabase::levels_updateDB(const std::vector<Level *>&    i_levels,
   simpleSql("COMMIT;");
 }
 
+int xmDatabase::levels_nbLevelsToDownload()
+{
+  char **v_result;
+  unsigned int nrow;
+  v_result = readDB("SELECT a.name FROM weblevels AS a "
+		    "LEFT OUTER JOIN levels AS b ON a.id_level=b.id_level "
+		    "WHERE b.id_level IS NULL OR a.checkSum <> b.checkSum;",
+		    nrow);
+  read_DB_free(v_result);
+  return nrow;  
+}
+
 bool xmDatabase::levels_isIndexUptodate() const {
   return m_requiredLevelsUpdateAfterInit == false;
 }

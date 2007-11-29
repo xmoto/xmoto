@@ -36,6 +36,11 @@ public:
   virtual void executeOneCommand(std::string cmd);
 
   void callAfterThreadFinished(int threadResult);
+  void keyDown(int nKey, SDLMod mod,int nChar);
+
+  void setCurrentUpdatedLevel(std::string levelName);
+private:
+  std::string m_curUpdLevelName;
 };
 
 #endif

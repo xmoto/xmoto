@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 struct SDL_Thread;
 struct SDL_mutex;
+struct SDL_cond;
+
 class GameApp;
 class xmDatabase;
 
@@ -41,7 +43,9 @@ public:
   void killThread();
 
   void askThreadToSleep();
-  void unsleepThread();
+  // you can unsleep a thread and give him an info about
+  // what happens during its sleep
+  void unsleepThread(std::string infos = "");
 
   // return a value between 0-100
   int getThreadProgress();
@@ -71,6 +75,8 @@ protected:
   // for example, the name of the level beeing downloaded
   std::string m_currentMicroOperation;
 
+  std::string m_wakeUpInfos;
+
   GameApp*    m_pGame;
   // different thread, different database connection
   xmDatabase* m_pDb;
@@ -80,6 +86,7 @@ private:
   SDL_mutex* m_curOpMutex;
   SDL_mutex* m_curMicOpMutex;
   SDL_mutex* m_sleepMutex;
+  SDL_cond*  m_sleepCond;
 };
   
 #endif

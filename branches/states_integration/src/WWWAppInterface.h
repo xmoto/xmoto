@@ -37,8 +37,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     void setCancelAsSoonAsPossible() {m_cancel_as_soon_as_possible = true;}
     bool isCancelAsSoonAsPossible() {return m_cancel_as_soon_as_possible;}
 
-
-  /* the following is to be removed for xmoto with the states */
     void clearCancelAsSoonAsPossible() {m_cancel_as_soon_as_possible = false;}
 
     /* p_isNew is true if it's a new level, false if it's just an update */

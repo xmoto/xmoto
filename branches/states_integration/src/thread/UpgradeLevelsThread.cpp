@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "GameText.h"
 #include "states/StateManager.h"
+#include "states/StateUpgradeLevels.h"
 
 UpgradeLevelsThread::UpgradeLevelsThread(GameState* pCallingState)
   : XMThread()
@@ -39,130 +40,61 @@ UpgradeLevelsThread::~UpgradeLevelsThread()
 
 void UpgradeLevelsThread::setBeingDownloadedInformation(const std::string &p_information, bool p_isNew)
 {
-#if 0
-  void GameApp::setBeingDownloadedInformation(const std::string &p_information,bool bNew) {
-    m_DownloadingInformation = p_information;
-  }
-#endif  
+  Logger::Log(("setBeingDownloadedInformation" + p_information).c_str());
+  setThreadCurrentMicroOperation(p_information);
 }
 
 void UpgradeLevelsThread::readEvents()
 {
-#if 0
-  void GameApp::readEvents(void) {
-    /* Check for events */ 
-    SDL_PumpEvents();
-    
-    SDL_Event Event;
-    while(SDL_PollEvent(&Event)) {
-      /* What event? */
-      switch(Event.type) {
-        case SDL_KEYDOWN: 
-          if(Event.key.keysym.sym == SDLK_ESCAPE)
-            setCancelAsSoonAsPossible();
-          break;
-        case SDL_QUIT:  
-          /* Force quit */
-          quit();
-          setCancelAsSoonAsPossible();
-          return;
-      }
-    }    
+  if(m_askThreadToEnd == true){
+    setCancelAsSoonAsPossible();
   }
-#endif
 }
 
 bool UpgradeLevelsThread::shouldLevelBeUpdated(const std::string &LevelID)
 {
-#if 0  
-  /*===========================================================================
-  WWWAppInterface implementation
-  ===========================================================================*/
-  bool GameApp::shouldLevelBeUpdated(const std::string &LevelID) {
-    if(m_updateAutomaticallyLevels) {
-      return true;
-    }
-
-    /* Hmm... ask user whether this level should be updated */
-    bool bRet = true;
-    bool bDialogBoxOpen = true;
-    char cBuf[1024];
-    char **v_result;
-    unsigned int nrow;
-    std::string v_levelName;
-    std::string v_levelFileName;
-
-    v_result = m_db->readDB("SELECT name, filepath "
-			    "FROM levels "
-			    "WHERE id_level=\"" + xmDatabase::protectString(LevelID) + "\";",
-			    nrow);
-    if(nrow != 1) {
-      m_db->read_DB_free(v_result);
-      return true;
-    }
-
-    v_levelName     = m_db->getResult(v_result, 2, 0, 0);
-    v_levelFileName = m_db->getResult(v_result, 2, 0, 1);
-    m_db->read_DB_free(v_result);
-
-    sprintf(cBuf,(std::string(GAMETEXT_WANTTOUPDATELEVEL) + "\n(%s)").c_str(), v_levelName.c_str(),
-	    v_levelFileName.c_str());
-    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-    UIMsgBox *pMsgBox = m_Renderer->getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
-
-    while(bDialogBoxOpen) {
-      SDL_PumpEvents();
-      
-      SDL_Event Event;
-      while(SDL_PollEvent(&Event)) {
-	/* What event? */
-	switch(Event.type) {
-	case SDL_QUIT:  
-	  /* Force quit */
-	  quit();
-	  setCancelAsSoonAsPossible();
-	  return false;
-	case SDL_MOUSEBUTTONDOWN:
-	  mouseDown(Event.button.button);
-	  break;
-	case SDL_MOUSEBUTTONUP:
-	  mouseUp(Event.button.button);
-	  break;
-	}
-      }
-      
-      UIMsgBoxButton Button = pMsgBox->getClicked();
-      if(Button != UI_MSGBOX_NOTHING) {
-	if(Button == UI_MSGBOX_NO) {
-	  bRet = false;
-	}
-	if(Button == UI_MSGBOX_YES_FOR_ALL) {
-	  m_updateAutomaticallyLevels = true;
-	}
-	bDialogBoxOpen = false;
-      }
-      
-      m_Renderer->getGUI()->dispatchMouseHover();
-      
-      m_Renderer->getGUI()->paint();
-      
-      UIRect TempRect;
-      
-      //if(m_pCursor != NULL) {        
-      //	int nMX,nMY;
-      //	getMousePos(&nMX,&nMY);      
-      //	drawLib->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
-      //}
-      
-      drawLib->flushGraphics();
-    }
-    
-    delete pMsgBox;
-    setTaskProgress(m_fDownloadTaskProgressLast);
-    
-    return bRet;        
+  if(m_updateAutomaticallyLevels == true){
+    return true;
   }
-#endif
+
+  /* Hmm... ask user whether this level should be updated */
+  char **v_result;
+  unsigned int nrow;
+  std::string v_levelName;
+  std::string v_levelFileName;
+
+  v_result = m_pDb->readDB("SELECT name, filepath "
+			   "FROM levels "
+			   "WHERE id_level=\"" + xmDatabase::protectString(LevelID) + "\";",
+			   nrow);
+  if(nrow != 1) {
+    m_pDb->read_DB_free(v_result);
+    return true;
+  }
+
+  v_levelName     = m_pDb->getResult(v_result, 2, 0, 0);
+  v_levelFileName = m_pDb->getResult(v_result, 2, 0, 1);
+  m_pDb->read_DB_free(v_result);
+
+  ((StateUpgradeLevels*)m_pCallingState)->setCurrentUpdatedLevel(v_levelName);
+
+  // message box
+  m_pGame->getStateManager()->sendAsynchronousMessage("ASKINGLEVELUPDATE");
+  sleepThread();
+
+  if(m_wakeUpInfos == "NO"){
+    return false;
+  }
+  else if(m_wakeUpInfos == "YES"){
+    return true;
+  }
+  else if(m_wakeUpInfos == "YES_FOR_ALL"){
+    m_updateAutomaticallyLevels = true;
+    return true;
+  }
+  else{
+    return false;
+  }
 }
 
 int UpgradeLevelsThread::realThreadFunction()
@@ -195,6 +127,7 @@ int UpgradeLevelsThread::realThreadFunction()
       return 1;
     }
     else {
+      m_pGame->getStateManager()->sendAsynchronousMessage("NEW_LEVELS_TO_DOWNLOAD");
       m_pGame->getStateManager()->sendAsynchronousMessage("NEWLEVELAVAILABLE");
     }
   } catch (Exception& e) {
@@ -206,18 +139,12 @@ int UpgradeLevelsThread::realThreadFunction()
 
   setThreadProgress(100);
 
-  Logger::Log("before sleeping");
-
   // sleep while we don't have the user response
   sleepThread();
-
-  Logger::Log("after sleeping");
 
   if(m_askThreadToEnd == true){
     return 0;
   }
-
-  Logger::Log("lets downloading");
 
   setThreadCurrentOperation(GAMETEXT_DLLEVELS);
   setThreadProgress(0);
@@ -228,7 +155,6 @@ int UpgradeLevelsThread::realThreadFunction()
     clearCancelAsSoonAsPossible();
 
     m_pWebLevels->upgrade(m_pDb);
-    m_pGame->getStateManager()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
   }
   catch(Exception& e) {
     m_msg = GAMETEXT_FAILEDDLLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
@@ -237,15 +163,24 @@ int UpgradeLevelsThread::realThreadFunction()
     return 1;
   }
 
+  if(m_askThreadToEnd == true){
+    return 0;
+  }
+
   /* Got some new levels... load them! */
   Logger::Log("Loading new and updated levels...");
 
+  setThreadCurrentOperation(GAMETEXT_LOADNEWLEVELS);
+  setThreadProgress(0);
+
   m_pGame->getLevelsManager()->updateLevelsFromLvl(m_pDb,
-						  m_pWebLevels->getNewDownloadedLevels(),
-						  m_pWebLevels->getUpdatedDownloadedLevels());
+						   m_pWebLevels->getNewDownloadedLevels(),
+						   m_pWebLevels->getUpdatedDownloadedLevels(),
+						   this);
 
   /* Update level lists */
-  m_pGame->getStateManager()->sendAsynchronousMessage("LEVELS_UPDATED");	
+  m_pGame->getStateManager()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
+  m_pGame->getStateManager()->sendAsynchronousMessage("LEVELS_UPDATED");
 
   return 0;
 }

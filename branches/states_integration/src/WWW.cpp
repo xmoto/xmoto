@@ -589,14 +589,7 @@ int FSWeb::f_curl_progress_callback_download(void *clientp,
 }
 
 int WebLevels::nbLevelsToGet(xmDatabase *i_db) const {
-  char **v_result;
-  unsigned int nrow;
-  v_result = i_db->readDB("SELECT a.name FROM weblevels AS a "
-			  "LEFT OUTER JOIN levels AS b ON a.id_level=b.id_level "
-			  "WHERE b.id_level IS NULL OR a.checkSum <> b.checkSum;",
-			  nrow);
-  i_db->read_DB_free(v_result);
-  return nrow;
+  return i_db->levels_nbLevelsToDownload();
 }
 
 void WebLevels::upgrade(xmDatabase *i_db) {

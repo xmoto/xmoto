@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "db/xmDatabase.h"
 #include "helpers/Log.h"
 #include "VFileIO.h"
+#include "WWWAppInterface.h"
 
 LevelsPack::LevelsPack(std::string i_name, const std::string& i_sql, bool i_ascSort) {
   m_name         = i_name;
@@ -775,8 +776,11 @@ void LevelsManager::printLevelsList(xmDatabase *i_db) const {
 
 void LevelsManager::updateLevelsFromLvl(xmDatabase *i_db,
 					const std::vector<std::string> &NewLvl,
-					const std::vector<std::string> &UpdatedLvl) {
+					const std::vector<std::string> &UpdatedLvl,
+					WWWAppInterface* pCaller) {
   Level *v_level;
+  int   current = 0;
+  float total   = 100.0 / (float)(NewLvl.size() + UpdatedLvl.size());
 
   i_db->levels_cleanNew();
 
@@ -786,6 +790,9 @@ void LevelsManager::updateLevelsFromLvl(xmDatabase *i_db,
     v_level = new Level();
 
     try {
+      pCaller->setTaskProgress(current * total);
+      current++;
+
       v_level->setFileName(NewLvl[i]);
       bCached = v_level->loadReducedFromFile();
       
@@ -820,6 +827,10 @@ void LevelsManager::updateLevelsFromLvl(xmDatabase *i_db,
     try {
       v_level->setFileName(UpdatedLvl[i]);
       bCached = v_level->loadReducedFromFile();
+
+      pCaller->setTaskProgress(current * total);
+      pCaller->setBeingDownloadedInformation(v_level->Name());
+      current++;
 
       i_db->levels_update(v_level->Id(),
 			  v_level->FileName(),

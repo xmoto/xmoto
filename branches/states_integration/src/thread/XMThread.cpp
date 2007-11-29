@@ -19,8 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "XMThread.h"
-#include "SDL_thread.h"
-#include "SDL_mutex.h"
+#include "VCommon.h"
 #include "Game.h"
 #include "helpers/Log.h"
 
@@ -39,8 +38,8 @@ XMThread::XMThread()
   m_curOpMutex       = SDL_CreateMutex();
   m_curMicOpMutex    = SDL_CreateMutex();
   m_sleepMutex       = SDL_CreateMutex();
-  // we have to look it so that the next time we lock it, we sleep.
-  SDL_LockMutex(m_sleepMutex);
+  m_sleepCond        = SDL_CreateCond();
+  m_wakeUpInfos      = "";
 }
 
 XMThread::~XMThread()
@@ -48,6 +47,7 @@ XMThread::~XMThread()
   SDL_DestroyMutex(m_curOpMutex);
   SDL_DestroyMutex(m_curMicOpMutex);
   SDL_DestroyMutex(m_sleepMutex);
+  SDL_DestroyCond(m_sleepCond);
   if(m_pDb != NULL){
     delete m_pDb;
   }
@@ -105,16 +105,25 @@ void XMThread::killThread()
 
 void XMThread::sleepThread()
 {
+  SDL_LockMutex(m_sleepMutex);
+
   m_isSleeping = true;
   m_askThreadToSleep = false;
-  SDL_LockMutex(m_sleepMutex);
+
+  SDL_CondWait(m_sleepCond, m_sleepMutex);
+  SDL_UnlockMutex(m_sleepMutex);
 }
 
-void XMThread::unsleepThread()
+void XMThread::unsleepThread(std::string infos)
 {
   if(m_isSleeping == true){
-    SDL_UnlockMutex(m_sleepMutex);
+    SDL_LockMutex(m_sleepMutex);
+    SDL_CondSignal(m_sleepCond);
+
     m_isSleeping = false;
+    m_wakeUpInfos = infos;
+
+    SDL_UnlockMutex(m_sleepMutex);
   }
 }
 

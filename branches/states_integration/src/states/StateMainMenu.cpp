@@ -305,6 +305,18 @@ void StateMainMenu::checkEventsMainWindow() {
 
     m_pGame->getStateManager()->pushState(new StateUpgradeLevels(m_pGame));
   }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:INFO_FRAME:BESTPLAYER_VIEW"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+#if 0  
+    /* view highscore button clicked */
+    viewHighscoreOf();
+    setState(GS_REPLAYING);
+#endif
+
+  }
 }
 
 void StateMainMenu::checkEventsLevelsMultiTab() {

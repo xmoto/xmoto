@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "db/xmDatabase.h"
 #include "XMotoLoadLevelsInterface.h"
 
+class WWWAppInterface;
+
 class LevelsPack {
   public:
   LevelsPack(std::string i_name, const std::string& i_sql, bool i_ascSort = true);
@@ -86,7 +88,8 @@ class LevelsManager {
   /* to reload levels already loaded (it will put them into the updateLevels list) */
   /* create the newLevels.xml file */
   void updateLevelsFromLvl(xmDatabase *i_db, const std::vector<std::string> &NewLvl,
-			   const std::vector<std::string> &UpdatedLvl);
+			   const std::vector<std::string> &UpdatedLvl,
+			   WWWAppInterface* pCaller);
 
   const std::vector<LevelsPack *> &LevelsPacks();
 
