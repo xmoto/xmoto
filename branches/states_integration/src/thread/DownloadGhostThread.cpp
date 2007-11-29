@@ -47,18 +47,17 @@ int DownloadGhostThread::realThreadFunction()
   std::string v_fileUrl;
   std::string v_replayName;
 
-  v_result = m_pDb->readDB("SELECT id_profile, fileUrl "
-			  "FROM webhighscores WHERE id_level=\"" + 
-			  xmDatabase::protectString(m_levelId) + "\" "
-			  "AND id_room=" + m_pGame->getSession()->idRoom() + ";",
-			  nrow);
+  v_result = m_pDb->readDB("SELECT fileUrl "
+			   "FROM webhighscores WHERE id_level=\"" + 
+			   xmDatabase::protectString(m_levelId) + "\" "
+			   "AND id_room=" + m_pGame->getSession()->idRoom() + ";",
+			   nrow);
   if(nrow == 0) {
     m_pDb->read_DB_free(v_result);
     return 0;
   }
 
-  v_levelAuthor = m_pDb->getResult(v_result, 2, 0, 0);
-  v_fileUrl     = m_pDb->getResult(v_result, 2, 0, 1);
+  v_fileUrl     = m_pDb->getResult(v_result, 2, 0, 0);
   v_replayName  = FS::getFileBaseName(v_fileUrl);
   m_pDb->read_DB_free(v_result);
 
