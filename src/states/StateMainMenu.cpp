@@ -470,6 +470,23 @@ void StateMainMenu::keyDown(int nKey, SDLMod mod,int nChar)
     m_pGame->getStateManager()->pushState(new StateHelp(m_pGame));
     break;
 
+  case SDLK_ESCAPE:{
+    UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
+    UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
+    UIWindow* v_windowOptions = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_OPTIONS"));
+
+    if(v_windowLevels->isHidden() == false){
+      v_windowLevels->showWindow(false);
+    }
+    else if(v_windowReplays->isHidden() == false){
+      v_windowReplays->showWindow(false);
+    }
+    else if(v_windowOptions->isHidden() == false){
+      v_windowOptions->showWindow(false);
+    }
+  }
+    break;
+
   default:
     StateMenu::keyDown(nKey, mod, nChar);
     checkEvents();

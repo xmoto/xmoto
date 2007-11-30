@@ -110,7 +110,10 @@ bool StateHelp::render()
 void StateHelp::keyDown(int nKey, SDLMod mod,int nChar)
 {
   StateMenu::keyDown(nKey, mod, nChar);
-  checkEvents();
+
+  if(nKey == SDLK_ESCAPE){
+    m_requestForEnd = true;
+  }
 }
 
 void StateHelp::keyUp(int nKey, SDLMod mod)
