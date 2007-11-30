@@ -22,12 +22,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATELEVELPACKVIEWER_H__
 
 #include "StateManager.h"
+#include "StateMenu.h"
 
-  class StateLevelPackViewer : public GameState {
+  class UIRoot;
+  class LevelsPack;
+
+  class StateLevelPackViewer : public StateMenu {
   public:
-    StateLevelPackViewer(bool drawStateBehind,
-			 bool updateStatesBehind,
-			 GameApp* pGame);
+    StateLevelPackViewer(GameApp*    pGame,
+			 LevelsPack* pActiveLevelPack,
+			 bool drawStateBehind    = true,
+			 bool updateStatesBehind = true);
     virtual ~StateLevelPackViewer();
 
     virtual void enter();
@@ -37,8 +42,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     virtual void enterAfterPop();
     virtual void leaveAfterPush();
 
-    virtual void update();
-    virtual void render();
+    virtual bool update();
+    virtual bool render();
     /* input */
     virtual void keyDown(int nKey, SDLMod mod,int nChar);
     virtual void keyUp(int nKey,   SDLMod mod);
@@ -46,7 +51,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     virtual void mouseDoubleClick(int nButton);
     virtual void mouseUp(int nButton);
 
+    virtual void send(const std::string& i_id, const std::string& i_message);
+
+    void checkEvents();
+    static void clean();
+    
   private:
+    /* GUI */
+    static UIRoot* m_sGUI;
+    static void createGUIIfNeeded(GameApp* pGame);
+    void updateGUI();
+    
+    LevelsPack* m_pActiveLevelPack;
+    bool m_require_updateLevelsList;
+
+    void updateInfoFrame();
+    std::string getInfoFrameLevelId();
   };
 
 #endif

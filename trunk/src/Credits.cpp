@@ -137,7 +137,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(nC < 0) nC = 0;
       if(nC > 255) nC = 255;
       
-      if(!m_pApp->isUglyMode())
+      if(!m_pApp->getSession()->ugly())
         m_pApp->getDrawLib()->drawBox(Vector2f(0,0),Vector2f(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,nC),0);      
       
       /* Render text */
@@ -163,7 +163,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         nY += 30;
       }
       
-      if(!m_pApp->isUglyMode()) {
+      if(!m_pApp->getSession()->ugly()) {
         /* Render fancyness */
 	m_pApp->getDrawLib()->setBlendMode(BLEND_MODE_A);
 	m_pApp->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
@@ -194,7 +194,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         if(nC2 > 255) nC2 = 255;
         const char *pc = "X-Moto";
         
-        if(!m_pApp->isUglyMode()) {
+        if(!m_pApp->getSession()->ugly()) {
           m_pApp->getDrawLib()->drawBox(Vector2f(0,0),Vector2f(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,nC2),0);      
         }
         

@@ -74,6 +74,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Painting
   ===========================================================================*/
   void UIFrame::paint(void) {  
+
     /* This depends on the style */
     switch(m_Style) {
       case UI_FRAMESTYLE_MENU:
@@ -99,7 +100,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         putElem(8,getPosition().nHeight-8,getPosition().nWidth-16,-1,UI_ELEM_FRAME_BM,false);
         putElem(0,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_ML,false);
         putElem(getPosition().nWidth-8,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_MR,false);
-        putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
+        putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,200));
       }
       break;
       case UI_FRAMESTYLE_LEFTTAG: {
@@ -141,15 +142,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         m_bMinimized = true;
         m_fMinMaxTime = getApp()->getXMTime();
       }    
-
+      
       int nTargetX,nTargetY;
       if(m_bMinimized) {
-        //setPosition(m_nMinimizedX,m_nMinimizedY,getPosition().nWidth,getPosition().nHeight);
         nTargetX = m_nMinimizedX;
         nTargetY = m_nMinimizedY;
       }
       else {
-        //setPosition(m_nMaximizedX,m_nMaximizedY,getPosition().nWidth,getPosition().nHeight);
         nTargetX = m_nMaximizedX;
         nTargetY = m_nMaximizedY;
       }
@@ -157,18 +156,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Are window at target position? */
       if(getPosition().nX != nTargetX) {
         int nDiffX = nTargetX - getPosition().nX;
-        int nVelX = nDiffX / 10;
+        int nVelX = nDiffX / 4;
         if(getPosition().nX < nTargetX && nVelX==0) nVelX = 1;
         if(getPosition().nX > nTargetX && nVelX==0) nVelX = -1;
-        setPosition(getPosition().nX+nVelX,getPosition().nY,getPosition().nWidth,getPosition().nHeight);
+        setPosition(getPosition().nX+nVelX, getPosition().nY,getPosition().nWidth, getPosition().nHeight);
       }
       
       if(getPosition().nY != nTargetY) {
         int nDiffY = nTargetY - getPosition().nY;
-        int nVelY = nDiffY / 10;
+        int nVelY = nDiffY / 4;
         if(getPosition().nY < nTargetY && nVelY==0) nVelY = 1;
         if(getPosition().nY > nTargetY && nVelY==0) nVelY = -1;
-        setPosition(getPosition().nX,getPosition().nY+nVelY,getPosition().nWidth,getPosition().nHeight);
+        setPosition(getPosition().nX, getPosition().nY+nVelY, getPosition().nWidth, getPosition().nHeight);
       }
       
       /* If this takes too long, just set the position */
@@ -215,4 +214,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
   void UIFrame::setMinimized(bool b) {
     m_bMinimized = b;
+
+    if(m_bMinimizable) {      
+      int nTargetX,nTargetY;
+      if(m_bMinimized) {
+        nTargetX = m_nMinimizedX;
+        nTargetY = m_nMinimizedY;
+      }
+      else {
+        nTargetX = m_nMaximizedX;
+        nTargetY = m_nMaximizedY;
+      }
+      
+      setPosition(nTargetX, nTargetY, getPosition().nWidth, getPosition().nHeight);
+    }
   }

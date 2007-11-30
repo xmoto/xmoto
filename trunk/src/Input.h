@@ -74,14 +74,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     ACTION_DRIVE,             /* Param: Throttle [0; 1] or Brake [-1; 0] */
     ACTION_PULL,              /* Param: Pull back on the handle bar [0; 1] or push forward on the handle bar [-1; 0] */
     ACTION_CHANGEDIR,         /* Param: None */
-    ACTION_ZOOMIN,            /* Param: None */
-    ACTION_ZOOMOUT,           /* Param: None */
-    ACTION_ZOOMINIT,          /* Param: None */
-    ACTION_CAMERAMOVEXUP,
-    ACTION_CAMERAMOVEXDOWN,
-    ACTION_CAMERAMOVEYUP,
-    ACTION_CAMERAMOVEYDOWN,
-    ACTION_AUTOZOOMOUT        /* Param: None */
   };
     
   struct InputAction {
@@ -106,7 +98,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     void reset();
     void setMirrored(bool i_value);
 
-      void configure(UserConfig *pConfig);
+      void loadConfig(UserConfig *pConfig);
       void handleInput(InputEventType Type,int nKey,SDLMod mod,
 		       std::vector<Biker*>& i_bikers,
 		       std::vector<Camera*>& i_cameras,
@@ -120,7 +112,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       void addScriptKeyHook(MotoGame *pGame,const std::string &KeyName,const std::string &FuncName);
 
       std::string getKeyByAction(const std::string &Action);
-    
+
+      static std::string keyToString(int nKey);
+      static int stringToKey(const std::string &s);
+
+      void setDefaultConfig();
+      void saveConfig(UserConfig *pConfig);
+      void setDRIVE(int i_player, int i_value);
+      int getDRIVE(int i_player) const;
+      void setBRAKE(int i_player, int i_value);
+      int getBRAKE(int i_player) const;
+      void setFLIPLEFT(int i_player, int i_value);
+      int getFLIPLEFT(int i_player) const;
+      void setFLIPRIGHT(int i_player, int i_value);
+      int getFLIPRIGHT(int i_player) const;
+      void setCHANGEDIR(int i_player, int i_value);
+      int getCHANGEDIR(int i_player) const;
+
     private:
 
       /* Data */
@@ -138,14 +146,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       int m_nPullBackKey[4];
       int m_nPushForwardKey[4];
       int m_nChangeDirKey[4];
-      int m_nZoomIn;
-      int m_nZoomOut;
-      int m_nZoomInit;
-      int m_nAutoZoom;
-      int m_nCameraMoveXUp;
-      int m_nCameraMoveXDown;
-      int m_nCameraMoveYUp;
-      int m_nCameraMoveYDown;
 
       /* For ControllerMode1 = CONTROLLER_MODE_JOYSTICK1 */
       SDL_Joystick *m_pActiveJoystick1;
@@ -169,12 +169,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       static InputActionType m_ActionTypeTable[];
       static InputKeyMap m_KeyMap[];
       
-      /* Helpers */
-      std::string _KeyToString(int nKey);
-      int _StringToKey(const std::string &s);
-      
-      /* Set default config */
-      void _SetDefaultConfig(void);
+      /* Helpers */     
       void _SetDefaultConfigToUnsetKeys();
   };
 

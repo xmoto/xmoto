@@ -135,7 +135,7 @@ class GameApp;
   class UIWindow {
     protected:
       void _InitWindow(void) {
-        m_pParent=NULL;m_pApp=NULL;
+        m_pParent=NULL;
         m_Pos.nX=m_Pos.nY=m_Pos.nWidth=m_Pos.nHeight=0;        
         m_bHide = false;
         m_bDisable = false;
@@ -202,12 +202,11 @@ class GameApp;
     
       /* Data interface */
       UIWindow *getPrimaryChild(void) {return m_pPrimaryChild;}
-      void setPrimaryChild(UIWindow *p) {m_pPrimaryChild = p;}
+      void setPrimaryChild(UIWindow *p) {m_pPrimaryChild = p; if(m_pPrimaryChild != NULL) {m_pPrimaryChild->setActive(true);}}
       FontManager *getFont() {return m_curFont;}
       void setFont(FontManager *pFont) {m_curFont = pFont;}
       UIWindow *getParent(void) {return m_pParent;}
-      GameApp *getApp(void) {return m_pApp;}
-      void setApp(GameApp *pApp) {m_pApp=pApp;}
+      virtual GameApp *getApp(void) {return getParent()->getApp();}
       void setID(std::string ID) {m_ID=ID;}
       std::string getID(void) {return m_ID;}      
       std::vector<UIWindow *> &getChildren(void) {return m_Children;}
@@ -223,10 +222,11 @@ class GameApp;
       float getOpacity(void);
       bool isHidden(void) {return m_bHide;}
       bool isBranchHidden(void);
-      bool isDisabled(void);
+      bool isDisabled(void); // recursive to parents
+      bool isVisible(); // recursive to parents
       void showWindow(bool b);      
-      void enableWindow(bool b) {m_bDisable=!b; if(!b) m_bActive=false;}
-      bool isActive(void) {return m_bActive;}
+      void enableWindow(bool b) {m_bDisable=!b;}
+      bool isActive(void);
       void setActive(bool b) {m_bActive = b;}
       int getGroup(void) {return m_nGroup;}
       void setGroup(int n) {m_nGroup = n;}
@@ -255,7 +255,6 @@ class GameApp;
       UIWindow *m_pParent;                      /* Parent window */
       std::string m_ID;                         /* Non-unique id */
       std::vector<UIWindow *> m_Children;       /* Child windows */  
-      GameApp *m_pApp;                              /* Application */      
       UIRect m_Pos;                             /* Position */
       std::string m_Caption;                    /* Caption */
       FontManager* m_curFont;
@@ -470,7 +469,22 @@ class GameApp;
       Texture *m_pDarkBlobTexture;
       Texture *m_pCustomBackgroundTexture;
   };
-  
+
+class UIProgressBar : public UIWindow {
+public:
+  UIProgressBar(UIWindow *pParent, int x, int y, int nWidth, int nHeight);
+  virtual ~UIProgressBar();
+
+  virtual void paint(void);
+
+  void setProgress(int progress);
+  void setCurrentOperation(std::string curOp);
+
+private:
+  int m_progress;
+  std::string m_curOp;
+};
+
 	/*===========================================================================
 	UI button
   ===========================================================================*/
@@ -517,7 +531,7 @@ class GameApp;
       void setType(UIButtonType Type) {m_Type = Type;}
       void setClicked(bool b) {m_bClicked=b;}
       void setChecked(bool b) {
-        if(m_Type == UI_BUTTON_TYPE_RADIO) _UncheckGroup(getGroup());
+        if(m_Type == UI_BUTTON_TYPE_RADIO && b) _UncheckGroup(getGroup());
         m_bChecked=b;
       }
       bool getChecked(void) {return m_bChecked;}
@@ -570,7 +584,7 @@ class UIButtonDrawn : public UIButton {
   
   class UIList : public UIWindow {
     public:
-      UIList() {}
+    UIList() {}
       UIList(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0);
       virtual ~UIList();
 
@@ -604,6 +618,7 @@ class UIButtonDrawn : public UIButton {
       void addColumn(std::string Title,int nWidth,const std::string &Help = "");
       void setEnterButton(UIButton *pButton);
       bool isItemActivated();
+      void setItemActivated(bool i_value);
       void setHideColumn(int n);
       void unhideAllColumns(void);
       void setSort(bool bSort, int(*f)(void *pvUser1, void *pvUser2) = NULL);
@@ -760,7 +775,9 @@ class UIButtonDrawn : public UIButton {
   class UIRoot : public UIWindow {
     public:
       UIRoot() {
-        _InitWindow();        
+	m_pApp=NULL;
+	m_bShowContextMenu = true;
+        _InitWindow();
       }
     
       /* Methods */
@@ -779,18 +796,23 @@ class UIButtonDrawn : public UIButton {
       void deactivate(UIWindow *pWindow);
 
       void enableContextMenuDrawing(bool b) {m_bShowContextMenu=b;}
-      void clearContext(void) {m_CurrentContextHelp = "";}
+      void clearContextHelp(void) {m_CurrentContextHelp = "";}
       
       void activateUp(void);
       void activateDown(void);
       void activateLeft(void);
       void activateRight(void);
             
+      void setApp(GameApp *pApp) {m_pApp=pApp;}
+      virtual GameApp *getApp(void) {return m_pApp;}
+      void dispatchMouseHover();
+
     private:
       /* Data */
       bool m_bShowContextMenu;
       std::string m_CurrentContextHelp;
-            
+      GameApp *m_pApp; /* Application */      
+
       /* Helpers */      
       bool _RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey, SDLMod mod,int nChar);
       bool _RootMouseEvent(UIWindow *pWindow,UIRootMouseEvent Event,int x,int y);

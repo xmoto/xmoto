@@ -224,7 +224,7 @@ class DrawLib {
   
   virtual bool isExtensionSupported(std::string Ext) = 0;
   void setDontUseGLExtensions(bool dont_use);
-  virtual Img *grabScreen() = 0;
+  virtual Img *grabScreen(int i_reduce = 1) = 0;
 
   /*
    * set the reference drawing size

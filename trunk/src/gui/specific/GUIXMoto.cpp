@@ -238,8 +238,6 @@ UIQuickStartButton::UIQuickStartButton(UIWindow *pParent,
   : UIButtonDrawn(pParent, "RoundButtonUnpressed", "RoundButtonPressed", "RoundButtonHover",
 		  x, y, Caption, nWidth, nHeight) {
   Sprite *v_sprite;
-  m_qualityMIN = m_qualityMIN = 0;
-  m_qualityMAX = m_qualityMAX = 0;
   m_uncheckedTex = m_qualityTex = m_difficultyTex = NULL;
 
   v_sprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "qsChoiceUnchecked");
@@ -262,9 +260,19 @@ UIQuickStartButton::UIQuickStartButton(UIWindow *pParent,
   m_difficultyMIN = i_difficultyMIN;
   m_qualityMAX    = i_qualityMAX;
   m_difficultyMAX = i_difficultyMAX;
+
+  m_hasChanged = false;
 }
 
 UIQuickStartButton::~UIQuickStartButton() {
+}
+
+bool UIQuickStartButton::hasChanged() {
+  return m_hasChanged;
+}
+
+void UIQuickStartButton::setHasChanged(bool i_value) {
+  m_hasChanged = i_value;
 }
 
 void UIQuickStartButton::paint() {
@@ -349,11 +357,14 @@ void UIQuickStartButton::mouseLDown(int x, int y) {
     for(unsigned int i=0; i<5; i++) {
       if(isXYInCircle(x, y, getQualityPoint(v_center, v_ray, i), UIQUICKSTART_BORDER/2)) {
 	if(i+1 < m_qualityMIN) {
+	  m_hasChanged = true;
 	  m_qualityMIN = i+1;
 	} else {
 	  if(i+1 > m_qualityMAX) {
+	    m_hasChanged = true;
 	    m_qualityMAX = i+1;
 	  } else {
+	    m_hasChanged = true;
 	    m_qualityMIN = m_qualityMAX = i+1;
 	  }
 	}
@@ -364,17 +375,21 @@ void UIQuickStartButton::mouseLDown(int x, int y) {
     for(unsigned int i=0; i<5; i++) {
       if(isXYInCircle(x, y, getDifficultyPoint(v_center, v_ray, i), UIQUICKSTART_BORDER/2)) {
 	if(i+1 < m_difficultyMIN) {
+	  m_hasChanged = true;
 	  m_difficultyMIN = i+1;
 	} else {
 	  if(i+1 > m_difficultyMAX) {
+	    m_hasChanged = true;
 	    m_difficultyMAX = i+1;
 	  } else {
+	    m_hasChanged = true;
 	    m_difficultyMIN = m_difficultyMAX = i+1;
 	  }
 	}
       }
     }
   }
+
 }
 
 int UIQuickStartButton::getQualityMIN() const {

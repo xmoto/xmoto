@@ -107,7 +107,7 @@ Central place to keep many in-game text strings
     ":Mateusz Kosibowicz (" + std::string(_("Polish")) + ");"                                \
     ":Lucas Manzari (" + std::string(_("Italian")) + ");"                                    \
     ":Lukas Klingsbo (" + std::string(_("Swedish")) + ");"                                   \
-    ":Jan Kaláb (" + std::string(_("Czech")) + ");"                                          \
+    ":Jan KalÃ¡b (" + std::string(_("Czech")) + ");"                                          \
     ":" + std::string(_("Mikhail Brinchuk")) + " (" + std::string(_("Russian")) + ");"       \
     ":Lucas Hermann Negri (" + std::string(_("Brazilian Portuguese")) + ");"                 \
     ":Jānis Rūcis (" + std::string(_("Latvian")) + ");"                                      \
@@ -123,6 +123,7 @@ Central place to keep many in-game text strings
     ":Samuel Mimram ("      + std::string(_("for Debian packaging"))      	     + ");"  \
     ":Dark ("               + std::string(_("for Gentoo packaging"))      	     + ");"  \
     ":Olivier Blin (" 	    + std::string(_("for Mandriva packaging"))    	     + ");"  \
+    ":Dmitry Marakasov ("   + std::string(_("for FreeBSD packaging"))                + ");"  \
     ":Balazs Rozsa (" 	    + std::string(_("for across/elma"))           	     + ");"  \
     ":Yves Berquin (" 	    + std::string(_("for making tinyxml"))        	     + ");"  \
     ":L. Peter Deutsch ("   + std::string(_("for the MD5 code"))          	     + ");"  \
@@ -153,6 +154,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DLHIGHSCORES         _("Downloading high-scores...")
 #define GAMETEXT_DLLEVELS             _("Downloading extra levels...\nPress ESC to abort.")
 #define GAMETEXT_DLLEVELSCHECK        _("Checking for new levels...")
+#define GAMETEXT_LOADNEWLEVELS        _("Loading new and updated levels...")
 #define GAMETEXT_DLROOMSLISTCHECK     _("Checking for existing rooms...")
 #define GAMETEXT_DLTHEME              _("Downloading theme data required by new levels...\nPress ESC to abort.")
 #define GAMETEXT_DLTHEMESLISTCHECK    _("Checking for new themes...")
@@ -321,6 +323,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_RANDOMIZE            _("Randomize")
 #define GAMETEXT_RELOADINGLEVELS      _("Reloading levels...")
 #define GAMETEXT_RELOADINGREPLAYS     _("Reloading replays...")
+#define GAMETEXT_RELOADINGTHEMES      _("Reloading themes...")
 #define GAMETEXT_REPLAY               _("Replay")
 #define GAMETEXT_REPLAYHELPTEXT(current_speed) _("Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:") + current_speed + "x"
 #define GAMETEXT_REPLAYHELPTEXTNOREWIND(current_speed) _("Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:") + current_speed + "x"

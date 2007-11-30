@@ -45,7 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
 bool UIWindow::isUglyMode() {
-  return getApp()->isUglyMode();
+  return getApp()->getSession()->ugly();
 }
 
   /*===========================================================================
@@ -79,7 +79,6 @@ bool UIWindow::isUglyMode() {
     setOpacity(100.0f);
     m_pParent = pParent;
     getParent()->addChildW(this);
-    setApp(getParent()->getApp());    
   } 
   
   void UIWindow::freeW(void) {
@@ -101,6 +100,10 @@ bool UIWindow::isUglyMode() {
     }
   }
   
+  bool UIWindow::isActive() {
+    return m_bActive;
+  }
+
   UIRoot *UIWindow::getRoot(void) {
     UIRoot *pRoot = NULL;
     for(UIWindow *p=this;p!=NULL;p=p->getParent()) {
@@ -148,8 +151,10 @@ bool UIWindow::isUglyMode() {
     
     for(int i=0;i<getChildren().size();i++) {
       if(getChildren()[i]->getID() == X) {
-        if(XRem != "") return getChildren()[i]->getChild(XRem);
-        else return getChildren()[i];
+        if(XRem != "")
+	  return getChildren()[i]->getChild(XRem);
+        else
+	  return getChildren()[i];
       }
     }
     return NULL;
@@ -178,6 +183,15 @@ bool UIWindow::isUglyMode() {
       }
     }    
     return false; /* nope :) */
+  }
+
+  bool UIWindow::isVisible() {
+    for(UIWindow *p=this;p!=NULL;p=p->getParent()) {
+      if(p->m_bHide) {
+        return false;
+      }
+    }    
+    return true;
   }
 
   bool UIWindow::isBranchHidden(void) {
@@ -549,7 +563,7 @@ bool UIWindow::isUglyMode() {
     getApp()->getDrawLib()->endDraw();
     
     /* Active? If so we want a nice blinking overlay */
-    if(bActive) {
+    if(bActive && bDisabled == false) {
       float s = 160 + 76*sin(getApp()->getXMTime()*10);
       int n = (int)s;
       if(n<0) n=0;
@@ -678,7 +692,7 @@ FRAME_BR (187,198) (8x8)
 #endif
 
     /* Context help? */
-    if(m_bShowContextMenu) {
+    if(m_bShowContextMenu && isDisabled() == false) {
       int nContextHelpHeight = 20;
       
       /* Shade out bottom of screen */
@@ -753,7 +767,6 @@ FRAME_BR (187,198) (8x8)
           activateRight();
           return true;
       }
-      
       return false;
     }
     return true;
@@ -766,13 +779,13 @@ FRAME_BR (187,198) (8x8)
   bool UIRoot::_RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey, SDLMod mod,int nChar) {
     /* Hidden or disabled? */
     if(pWindow->isHidden() || pWindow->isDisabled()) return false;
-        
+
     /* First try if any children want it */
     for(int i=0;i<pWindow->getChildren().size();i++) {
       if(_RootKeyEvent(pWindow->getChildren()[i],Event,nKey,mod,nChar))
         return true;
-    } 
-    
+    }
+
     /* Try this */
     if(pWindow != this && pWindow->isActive()) {
       bool b = false;
@@ -793,7 +806,7 @@ FRAME_BR (187,198) (8x8)
   bool UIRoot::_RootMouseEvent(UIWindow *pWindow,UIRootMouseEvent Event,int x,int y) {
     /* Hidden or disabled? */
     if(pWindow->isHidden() || pWindow->isDisabled()) return false;
-    
+
     /* All root mouse events are handled the same... - first remap coords */
     int wx = x - pWindow->getPosition().nX;    
     int wy = y - pWindow->getPosition().nY;    
@@ -840,6 +853,8 @@ FRAME_BR (187,198) (8x8)
           case UI_ROOT_MOUSE_WHEEL_DOWN: pWindow->mouseWheelDown(wx,wy); break;
           case UI_ROOT_MOUSE_DOUBLE_CLICK: pWindow->mouseLDoubleClick(wx,wy); break;
         }
+      } else {
+	m_CurrentContextHelp = "";
       }
       
       /* Mkay */
@@ -1035,3 +1050,46 @@ FRAME_BR (187,198) (8x8)
   void UIRoot::activateRight(void) {
     _ActivateByVector(1,0);
   }
+
+void UIRoot::dispatchMouseHover() {
+  int nX,nY;
+  GameApp::getMousePos(&nX,&nY);
+  mouseHover(nX,nY);
+}
+
+UIProgressBar::UIProgressBar(UIWindow *pParent,
+			     int x, int y,
+			     int nWidth, int nHeight)
+{
+  initW(pParent, x, y, "", nWidth, nHeight);
+  m_progress = 0;
+  m_curOp    = "";
+}
+
+UIProgressBar::~UIProgressBar()
+{
+}
+
+void UIProgressBar::paint()
+{
+  int width  = getPosition().nWidth;
+  int height = getPosition().nHeight;
+  // 1.paint it black
+  putRect(0, 0, width, height, MAKE_COLOR(0,0,0,255));
+  // 2.paint progress in red
+  putRect(0, 0, width * m_progress / 100, height, MAKE_COLOR(255,0,0,255));
+  // 3.write curOp left centered
+  setFont(getApp()->getDrawLib()->getFontSmall());
+  setTextSolidColor(MAKE_COLOR(255,255,255,128));
+  putText(0, 0, m_curOp, 0.0, 0.0);
+}
+
+void UIProgressBar::setProgress(int progress)
+{
+  m_progress = progress;
+}
+
+void UIProgressBar::setCurrentOperation(std::string curOp)
+{
+  m_curOp = curOp;
+}

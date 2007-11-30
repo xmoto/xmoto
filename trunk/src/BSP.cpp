@@ -22,9 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Convex polygon generation using BSP trees.
  */
 #include "BSP.h"
-#include "VFileIO.h"
 #include "helpers/Log.h"
-#include "Game.h"
 
 #define PLANE_LIMIT_VALUE 0.0001
 #define T_LIMIT_VALUE     0.0001
@@ -134,13 +132,6 @@ std::vector<BSPPoly *> &BSP::compute() {
     RootPoly.addVertice(m_lines[i]->P0());
   }
 
-  //Vector2f GlobalMin = GlobalBox.getBMin();
-  //Vector2f GlobalMax = GlobalBox.getBMax();
-  //RootPoly.addVertice(Vector2f(GlobalMin.x,GlobalMin.y) ); 
-  //RootPoly.addVertice(Vector2f(GlobalMin.x,GlobalMax.y) ); 
-  //RootPoly.addVertice(Vector2f(GlobalMax.x,GlobalMax.y) ); 
-  //RootPoly.addVertice(Vector2f(GlobalMax.x,GlobalMin.y) ); 
-    
   /* Start the recursion */
   recurse(&RootPoly, m_lines);
 
@@ -194,7 +185,6 @@ void BSP::recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines) {
     }
     else {
       /* Split the mess */
-    //  printf("(subdividing)\n");
 
       std::vector<BSPLine *> Front,Back;      
       splitLines(Lines,Front,Back,pBestSplitter);

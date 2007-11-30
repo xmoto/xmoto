@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "WWW.h"
 #include "helpers/Log.h"
+#include "XMSession.h"
 
 #define XMDB_VERSION 15
 
@@ -47,6 +48,12 @@ xmDatabase::xmDatabase(const std::string& i_dbFile,
 
   sqlite3_trace(m_db, sqlTrace, NULL);
   createUserFunctions();
+
+//  if(sqlite3_threadsafe() == 0) {
+//    Logger::Log("** Warning ** Sqlite is not threadSafe !!!");
+//  } else {
+//    Logger::Log("Sqlite is threadSafe");
+//  }
 
   v_version = getXmDbVersion();
   Logger::Log("XmDb version is %i", v_version);
@@ -74,6 +81,19 @@ xmDatabase::xmDatabase(const std::string& i_dbFile,
     setXmDbUserDir(i_userDir);
     setXmDbBinPackCheckSum(i_binPackCheckSum);
   }
+}
+
+xmDatabase::xmDatabase(const std::string& i_dbFile)
+{
+  if(sqlite3_open(i_dbFile.c_str(), &m_db) != 0){
+    throw Exception("Unable to open the database ("
+		    + i_dbFile
+		    + ") : "
+		    + sqlite3_errmsg(m_db));
+  }
+
+  sqlite3_trace(m_db, sqlTrace, NULL);
+  createUserFunctions();
 }
  
 xmDatabase::~xmDatabase() {

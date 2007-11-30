@@ -22,12 +22,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATELEVELINFOVIEWER_H__
 
 #include "StateManager.h"
+#include "StateMenu.h"
 
-  class StateLevelInfoViewer : public GameState {
+  class UIRoot;
+
+  class StateLevelInfoViewer : public StateMenu {
   public:
-    StateLevelInfoViewer(bool drawStateBehind,
-			 bool updateStatesBehind,
-			 GameApp* pGame);
+    StateLevelInfoViewer(GameApp* pGame,
+			 const std::string& level,
+			 bool drawStateBehind    = true,
+			 bool updateStatesBehind = true
+			 );			 
     virtual ~StateLevelInfoViewer();
 
     virtual void enter();
@@ -37,8 +42,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     virtual void enterAfterPop();
     virtual void leaveAfterPush();
 
-    virtual void update();
-    virtual void render();
+    virtual bool update();
+    virtual bool render();
     /* input */
     virtual void keyDown(int nKey, SDLMod mod,int nChar);
     virtual void keyUp(int nKey,   SDLMod mod);
@@ -46,7 +51,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     virtual void mouseDoubleClick(int nButton);
     virtual void mouseUp(int nButton);
 
+    static void clean();
+
+  protected:
+    virtual void checkEvents();
+
   private:
+    /* GUI */
+    static UIRoot* m_sGUI;
+    static void createGUIIfNeeded(GameApp* pGame);
+    void updateGUI();
+
+    void updateLevelInfoViewerBestTimes();
+    void updateLevelInfoViewerReplays();
+
+    std::string m_level;
   };
 
 #endif

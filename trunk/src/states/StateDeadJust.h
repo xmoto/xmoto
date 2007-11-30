@@ -21,32 +21,30 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATEDEADJUST_H__
 #define __STATEDEADJUST_H__
 
-#include "StateManager.h"
+#include "StateScene.h"
 
-  class StateDeadJust : public GameState {
+class StateDeadJust : public StateScene {
   public:
-    StateDeadJust(bool drawStateBehind,
-		  bool updateStatesBehind,
-		  GameApp* pGame);
-    virtual ~StateDeadJust();
-
-    virtual void enter();
-    virtual void leave();
-    /* called when a new state is pushed or poped on top of the
-       current one*/
-    virtual void enterAfterPop();
-    virtual void leaveAfterPush();
-
-    virtual void update();
-    virtual void render();
-    /* input */
-    virtual void keyDown(int nKey, SDLMod mod,int nChar);
-    virtual void keyUp(int nKey,   SDLMod mod);
-    virtual void mouseDown(int nButton);
-    virtual void mouseDoubleClick(int nButton);
-    virtual void mouseUp(int nButton);
+  StateDeadJust(GameApp* pGame);
+  virtual ~StateDeadJust();
+  
+  virtual void enter();
+  virtual void leave();
+  /* called when a new state is pushed or poped on top of the
+     current one*/
+  virtual void enterAfterPop();
+  virtual void leaveAfterPush();
+  
+  virtual bool update();
+  virtual bool render();
+  /* input */
+  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void keyUp(int nKey,   SDLMod mod);
+  virtual void mouseDown(int nButton);
+  virtual void mouseDoubleClick(int nButton);
+  virtual void mouseUp(int nButton);
 
   private:
-  };
+};
 
 #endif

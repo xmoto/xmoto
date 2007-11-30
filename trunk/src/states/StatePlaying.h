@@ -21,32 +21,36 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATEPLAYING_H__
 #define __STATEPLAYING_H__
 
-#include "StateManager.h"
+#include "StateScene.h"
 
-  class StatePlaying : public GameState {
+class StatePlaying : public StateScene {
   public:
-    StatePlaying(bool drawStateBehind,
-		 bool updateStatesBehind,
-		 GameApp* pGame);
-    virtual ~StatePlaying();
-
-    virtual void enter();
-    virtual void leave();
-    /* called when a new state is pushed or poped on top of the
-       current one*/
-    virtual void enterAfterPop();
-    virtual void leaveAfterPush();
-
-    virtual void update();
-    virtual void render();
-    /* input */
-    virtual void keyDown(int nKey, SDLMod mod,int nChar);
-    virtual void keyUp(int nKey,   SDLMod mod);
-    virtual void mouseDown(int nButton);
-    virtual void mouseDoubleClick(int nButton);
-    virtual void mouseUp(int nButton);
+  StatePlaying(GameApp* pGame);
+  virtual ~StatePlaying();
+  
+  virtual void enter();
+  virtual void leave();
+  /* called when a new state is pushed or poped on top of the
+     current one*/
+  virtual void enterAfterPop();
+  virtual void leaveAfterPush();
+  
+  virtual bool update();
+  virtual bool render();
+  /* input */
+  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void keyUp(int nKey,   SDLMod mod);
+  virtual void mouseDown(int nButton);
+  virtual void mouseDoubleClick(int nButton);
+  virtual void mouseUp(int nButton);
+  
+  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
   private:
-  };
+  bool m_bAutoZoomInitialized;
+  bool m_autoZoom; /* true : the key is pressed so that it zooms out to see the level */
+  int m_autoZoomStep;
+
+};
 
 #endif

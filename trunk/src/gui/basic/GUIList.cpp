@@ -234,6 +234,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return m_bItemActivated;
   }
 
+  void UIList::setItemActivated(bool i_value) {
+    m_bItemActivated = i_value;
+  }
+
   void UIList::setHideColumn(int n) {
     m_nColumnHideFlags |= (1<<n);
   }
@@ -312,8 +316,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     bool bDisabled = isDisabled();
     bool bActive = isActive();
-
-    m_bItemActivated = false;
 
     /* Draw list frame */
     if(isUglyMode()) {

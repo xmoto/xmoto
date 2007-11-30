@@ -33,18 +33,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Task management */
     virtual void setTaskProgress(float p_percent) = 0;
 
-    /* p_isNew is true if it's a new level, false if it's just an update */
-    virtual void setBeingDownloadedInformation(const std::string &p_information,bool p_isNew=true) = 0;
-
-    virtual void readEvents() = 0;
-
-    /* Ask the user whether he want a level to be updated */
-    virtual bool shouldLevelBeUpdated(const std::string &LevelID) = 0;
-
     /* Data interface */
     void setCancelAsSoonAsPossible() {m_cancel_as_soon_as_possible = true;}
-    void clearCancelAsSoonAsPossible() {m_cancel_as_soon_as_possible = false;}
     bool isCancelAsSoonAsPossible() {return m_cancel_as_soon_as_possible;}
+
+    void clearCancelAsSoonAsPossible() {m_cancel_as_soon_as_possible = false;}
+
+    /* p_isNew is true if it's a new level, false if it's just an update */
+  virtual void setBeingDownloadedInformation(const std::string &p_information,bool p_isNew=true) {}
+
+  virtual void readEvents() {};
+
+    /* Ask the user whether he want a level to be updated */
+  virtual bool shouldLevelBeUpdated(const std::string &LevelID) {};
+
+
 
   private:
     /* Data */

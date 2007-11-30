@@ -54,7 +54,6 @@ private:
 class Camera {
 public:
   Camera(Vector2i upperleft, Vector2i downright){
-    m_fSpeedMultiply = 1.0f;
     m_fScale         = ZOOM_DEFAULT;
     m_cameraOffsetX  = CAMERA_OFFSETX_DEFAULT;
     m_cameraOffsetY  = CAMERA_OFFSETY_DEFAULT;
@@ -76,7 +75,6 @@ public:
 
   void prepareForNewLevel();
 
-  void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
   void setScroll(bool isSmooth, const Vector2f& gravity);
   void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
 				  float &p_fDesiredVerticalScrollShift,
@@ -116,7 +114,6 @@ private:
   float m_cameraOffsetY;
   Biker* m_playerToFollow;
 
-  float m_fSpeedMultiply;
   Vector2f m_Scroll;
   float m_fCurrentHorizontalScrollShift;
   float m_fCurrentVerticalScrollShift;

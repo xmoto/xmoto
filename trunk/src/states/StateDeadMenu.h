@@ -22,31 +22,47 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEDEADMENU_H__
 
 #include "StateManager.h"
+#include "StateMenu.h"
 
-  class StateDeadMenu : public GameState {
+class UIRoot;
+
+class StateDeadMenu : public StateMenu {
   public:
-    StateDeadMenu(bool drawStateBehind,
-		  bool updateStatesBehind,
-		  GameApp* pGame);
-    virtual ~StateDeadMenu();
+  StateDeadMenu(GameApp* pGame,
+		bool i_doShadeAnim,
+		StateMenuContextReceiver* i_receiver = NULL,
+		bool drawStateBehind    = true,
+		bool updateStatesBehind = false
+		);
+  virtual ~StateDeadMenu();
+  
+  virtual void enter();
+  virtual void leave();
+  /* called when a new state is pushed or poped on top of the
+     current one*/
+  virtual void enterAfterPop();
+  virtual void leaveAfterPush();
+  
+  virtual bool update();
+  virtual bool render();
+  /* input */
+  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void keyUp(int nKey,   SDLMod mod);
+  virtual void mouseDown(int nButton);
+  virtual void mouseDoubleClick(int nButton);
+  virtual void mouseUp(int nButton);
 
-    virtual void enter();
-    virtual void leave();
-    /* called when a new state is pushed or poped on top of the
-       current one*/
-    virtual void enterAfterPop();
-    virtual void leaveAfterPush();
+  static void clean();
 
-    virtual void update();
-    virtual void render();
-    /* input */
-    virtual void keyDown(int nKey, SDLMod mod,int nChar);
-    virtual void keyUp(int nKey,   SDLMod mod);
-    virtual void mouseDown(int nButton);
-    virtual void mouseDoubleClick(int nButton);
-    virtual void mouseUp(int nButton);
+  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+
+ protected:
+  virtual void checkEvents();
 
   private:
-  };
+  /* GUI */
+  static UIRoot* m_sGUI;
+  static void createGUIIfNeeded(GameApp* pGame);
+};
 
 #endif

@@ -89,7 +89,7 @@ class DrawLibOpenGL : public DrawLib {
   
   virtual FontManager* getFontManager(const std::string &i_fontFile, unsigned int i_fontSize);
   
-  virtual Img *grabScreen(void);
+  virtual Img *grabScreen(int i_reduce = 1);
   virtual bool isExtensionSupported(std::string Ext);
 
   /* Extensions */
