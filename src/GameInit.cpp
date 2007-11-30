@@ -43,7 +43,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/specific/GUIXMoto.h"
 #include "Credits.h"
 
-#define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
+#include "states/StateManager.h"
+#include "states/StateEditProfile.h"
+#include "states/StateReplaying.h"
+#include "states/StatePreplaying.h"
+#include "states/StateMainMenu.h"
+#include "states/StateMessageBox.h"
 
 #if defined(WIN32)
 int SDL_main(int nNumArgs,char **ppcArgs) {
@@ -78,6 +83,7 @@ int main(int nNumArgs,char **ppcArgs) {
 
   void GameApp::run(int nNumArgs,char **ppcArgs) {
     XMArguments v_xmArgs;
+    GameState* pState;
 
     /* check args */
     try {
@@ -131,7 +137,7 @@ int main(int nNumArgs,char **ppcArgs) {
     Logger::setVerbose(m_xmsession->isVerbose());
 
 #ifdef USE_GETTEXT
-    std::string v_locale = Locales::init(m_Config.getString("Language"));
+    std::string v_locale = Locales::init(m_xmsession->language());
 #endif
 
     Logger::Log("compiled at "__DATE__" "__TIME__);
@@ -191,84 +197,107 @@ int main(int nNumArgs,char **ppcArgs) {
 
     /* Enter the main loop */
     while(!m_bQuit) {
-      if(!drawLib->isNoGraphics()) {
-        /* Handle SDL events */            
-        SDL_PumpEvents();
+      /* Handle SDL events */            
+      SDL_PumpEvents();
         
-        SDL_Event Event;
-        while(SDL_PollEvent(&Event)) {
-          int ch=0;
-          static int nLastMouseClickX = -100,nLastMouseClickY = -100;
-          static int nLastMouseClickButton = -100;
-          static float fLastMouseClickTime = 0.0f;
-          int nX,nY;
+      SDL_Event Event;
+      while(SDL_PollEvent(&Event)) {
+	int ch=0;
+	static int nLastMouseClickX = -100,nLastMouseClickY = -100;
+	static int nLastMouseClickButton = -100;
+	static float fLastMouseClickTime = 0.0f;
+	int nX,nY;
 
-          /* What event? */
-          switch(Event.type) {
-            case SDL_KEYDOWN: 
-              if((Event.key.keysym.unicode&0xff80)==0) {
-                ch = Event.key.keysym.unicode & 0x7F;
-              }
-              keyDown(Event.key.keysym.sym, Event.key.keysym.mod, ch);            
-              break;
-            case SDL_KEYUP: 
-              keyUp(Event.key.keysym.sym, Event.key.keysym.mod);            
-              break;
-            case SDL_QUIT:  
-              /* Force quit */
-              quit();
-              break;
-            case SDL_MOUSEBUTTONDOWN:
-              /* Pass ordinary click */
-              mouseDown(Event.button.button);
+	/* What event? */
+	switch(Event.type) {
+	case SDL_KEYDOWN: 
+	  if((Event.key.keysym.unicode&0xff80)==0) {
+	    ch = Event.key.keysym.unicode & 0x7F;
+	  }
+	  keyDown(Event.key.keysym.sym, Event.key.keysym.mod, ch);            
+	  break;
+	case SDL_KEYUP: 
+	  keyUp(Event.key.keysym.sym, Event.key.keysym.mod);            
+	  break;
+	case SDL_QUIT:  
+	  /* Force quit */
+	  quit();
+	  break;
+	case SDL_MOUSEBUTTONDOWN:
+	  /* Pass ordinary click */
+	  mouseDown(Event.button.button);
               
-              /* Is this a double click? */
-              getMousePos(&nX,&nY);
-              if(nX == nLastMouseClickX &&
-                 nY == nLastMouseClickY &&
-                 nLastMouseClickButton == Event.button.button &&
-                 (getXMTime() - fLastMouseClickTime) < 0.250f) {                
-
-                /* Pass double click */
-                mouseDoubleClick(Event.button.button);                
-              }
-              fLastMouseClickTime = getXMTime();
-              nLastMouseClickX = nX;
-              nLastMouseClickY = nY;
-              nLastMouseClickButton = Event.button.button;
-            
-              break;
-            case SDL_MOUSEBUTTONUP:
-              mouseUp(Event.button.button);
-              break;
-          }
-        }
-          
-        /* Clear screen */  
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	if (isUglyMode()){
-	  drawLib->clearGraphics();
+	  /* Is this a double click? */
+	  getMousePos(&nX,&nY);
+	  if(nX == nLastMouseClickX &&
+	     nY == nLastMouseClickY &&
+	     nLastMouseClickButton == Event.button.button &&
+	     (getXMTime() - fLastMouseClickTime) < 0.250f) {                
+	    
+	    /* Pass double click */
+	    mouseDoubleClick(Event.button.button);                
+	  }
+	  fLastMouseClickTime = getXMTime();
+	  nLastMouseClickX = nX;
+	  nLastMouseClickY = nY;
+	  nLastMouseClickButton = Event.button.button;
+	  
+	  break;
+	case SDL_MOUSEBUTTONUP:
+	  mouseUp(Event.button.button);
+	  break;
 	}
-        drawLib->resetGraphics();
 
       }
-      
+
       /* Update user app */
       drawFrame();
-      
-      if(!drawLib->isNoGraphics()) {
-        /* Swap buffers */
-       drawLib->flushGraphics();
-        
-        /* Does app want us to delay a bit after the frame? */
-        if(m_nFrameDelay > 0)
-	  SDL_Delay(m_nFrameDelay);
-      }
+
+       _Wait();
     }
     
     /* Shutdown */
     _Uninit();
   }
+
+void GameApp::_Wait()
+{
+  if(m_lastFrameTimeStamp < 0){
+    m_lastFrameTimeStamp = getXMTimeInt();
+  }
+
+  /* Does app want us to delay a bit after the frame? */
+  int currentTimeStamp        = getXMTimeInt();
+  int currentFrameMinDuration = 1000/m_stateManager->getMaxFps();
+  int lastFrameDuration       = currentTimeStamp - m_lastFrameTimeStamp;
+  // late from the lasts frame is not forget
+  int delta = currentFrameMinDuration - (lastFrameDuration + m_frameLate);
+
+  if(delta > 0){
+    // we're in advance
+    // -> sleep
+    int beforeSleep = getXMTimeInt();
+    SDL_Delay(delta);
+    int afterSleep  = getXMTimeInt();
+    int sleepTime   = afterSleep - beforeSleep;
+
+    // now that we have sleep, see if we don't have too much sleep
+    if(sleepTime > delta){
+      int tooMuchSleep = sleepTime - delta;
+      m_frameLate      = tooMuchSleep;
+    } else{
+      m_frameLate = 0;
+    }
+  }
+  else{
+    // we're late
+    // -> update late time
+    m_frameLate = (-delta);
+  }
+
+  // the sleeping time is not included in the next frame time
+  m_lastFrameTimeStamp = getXMTimeInt();
+}
 
 
   /*===========================================================================
@@ -316,27 +345,8 @@ int main(int nNumArgs,char **ppcArgs) {
   Initialize game
   ===========================================================================*/
   void GameApp::userInit(XMArguments* v_xmArgs) {
-    Sprite* pSprite;
-
-    /* Reset timers */
-    m_fLastFrameTime = 0.0f;
-    m_fLastPerfStateTime = 0.0f;
-    m_fLastPhysTime = getXMTime() - PHYS_STEP_SIZE;
-    
-    /* And stuff */
-    m_nPauseShade = 0;
-    m_nJustDeadShade = 0;
-    m_nFinishShade = 0;
-    
-    /* Init some config */
-    _UpdateSettings();
-
     /* Init sound system */
-    if(m_xmsession->useGraphics()) {
-      Sound::init(&m_Config);
-      if(!Sound::isEnabled()) {
-      }    
-    }
+    Sound::init(m_xmsession);
       
     /* Init renderer */
     if(m_xmsession->useGraphics()) {
@@ -346,7 +356,7 @@ int main(int nNumArgs,char **ppcArgs) {
       m_Renderer->setGameObject( &m_MotoGame );        
       m_Renderer->setDebug(m_xmsession->debug());
 
-      m_Renderer->setGhostMotionBlur( m_bGhostMotionBlur );
+      m_Renderer->setGhostMotionBlur(m_xmsession->ghostMotionBlur());
     }    
 
     /* Tell collision system whether we want debug-info or not */
@@ -367,25 +377,9 @@ int main(int nNumArgs,char **ppcArgs) {
     if(m_xmsession->sqlTrace()) {
       m_db->setTrace(m_xmsession->sqlTrace());
     }
-    /* set the room name ; set to WR if it cannot be determined */
-    m_WebHighscoresRoomName = "WR";
-    char **v_result;
-    unsigned int nrow;
-    v_result = m_db->readDB("SELECT name "
-			    "FROM webrooms "
-			    "WHERE id_room=" + m_WebHighscoresIdRoom + ";",
-			    nrow);
-    if(nrow == 1) {
-      m_WebHighscoresRoomName = m_db->getResult(v_result, 1, 0, 0);
-    }
-    m_db->read_DB_free(v_result);
 
     /* load theme */
-    m_themeChoicer = new ThemeChoicer(
-              this,
-              &m_ProxySettings
-              );
-    m_themeChoicer->setURLBase(m_Config.getString("WebThemesURLBase"));
+    m_themeChoicer = new ThemeChoicer();
     if(m_db->themes_isIndexUptodate() == false) {
       m_themeChoicer->initThemesFromDir(m_db);
     }
@@ -463,90 +457,27 @@ int main(int nNumArgs,char **ppcArgs) {
     }
 
     if(m_xmsession->useGraphics()) {  
-      _UpdateLoadingScreen((1.0f/9.0f) * 0,GAMETEXT_LOADINGSOUNDS);
+      _UpdateLoadingScreen(0, GAMETEXT_LOADINGSOUNDS);
       
-      if(Sound::isEnabled()) {
-        /* Load sounds */
-	try {
-	  for(unsigned int i=0; i<m_theme.getSoundsList().size(); i++) {
-	    Sound::loadSample(m_theme.getSoundsList()[i]->FilePath());
-	  }
-	} catch(Exception &e) {
-	  Logger::Log("*** Warning *** : %s\n", e.getMsg().c_str());
-	  /* hum, not cool */
+      /* Load sounds */
+      try {
+	for(unsigned int i=0; i<m_theme.getSoundsList().size(); i++) {
+	  Sound::loadSample(m_theme.getSoundsList()[i]->FilePath());
 	}
-	
-        Logger::Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
+      } catch(Exception &e) {
+	Logger::Log("*** Warning *** : %s\n", e.getMsg().c_str());
+	/* hum, not cool */
       }
+	
+      Logger::Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
 
       /* Find all files in the textures dir and load them */     
       UITexture::setApp(this);
       UIWindow::setDrawLib(getDrawLib());
 
       _UpdateLoadingScreen((1.0f/9.0f) * 2,GAMETEXT_LOADINGMENUGRAPHICS);
+    }
         
-      /* Load title screen textures + cursor + stuff */
-      m_pTitleBL = NULL;
-      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleBL");
-      if(pSprite != NULL) {
-        m_pTitleBL = pSprite->getTexture(false, true, FM_LINEAR);
-      }
-
-      m_pTitleBR = NULL;
-      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleBR");
-      if(pSprite != NULL) {
-        m_pTitleBR = pSprite->getTexture(false, true, FM_LINEAR);
-      }
-
-      m_pTitleTL = NULL;
-      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleTL");
-      if(pSprite != NULL) {
-        m_pTitleTL = pSprite->getTexture(false, true, FM_LINEAR);
-      }
-
-      m_pTitleTR = NULL;
-      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleTR");
-      if(pSprite != NULL) {
-        m_pTitleTR = pSprite->getTexture(false, true, FM_LINEAR);
-      }
-
-      m_pCursor = NULL;
-
-      /* Fetch highscores from web? */
-      m_pWebRooms = new WebRooms(&m_ProxySettings);
-      m_pWebHighscores = new WebRoom(&m_ProxySettings);      
-      m_pWebHighscores->setWebsiteInfos(m_WebHighscoresIdRoom,
-					m_WebHighscoresURL);
-      
-    if(m_xmsession->www() && m_PlaySpecificLevelFile == "" && m_PlaySpecificReplay == "") {  
-      bool bSilent = true;
-      try {
-	if(m_bEnableCheckHighscoresAtStartup) {
-	  _UpdateLoadingScreen((1.0f/9.0f) * 3,GAMETEXT_DLHIGHSCORES);      
-	  _UpdateWebHighscores(bSilent);
-	  _UpgradeWebHighscores();
-	}
-      } catch(Exception &e) {
-	/* No internet connection, probably... (just use the latest times, if any) */
-	Logger::Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());              
-	if(!bSilent)
-	  notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-      }
-      
-      if(m_bEnableCheckNewLevelsAtStartup) {
-	try {
-	  _UpdateLoadingScreen((1.0f/9.0f) * 4,GAMETEXT_DLLEVELSCHECK);      
-	  _UpdateWebLevels(bSilent);       
-	} catch(Exception &e) {
-	  Logger::Log("** Warning ** : Failed to update web-levels [%s]",e.getMsg().c_str());              
-	  if(!bSilent)
-	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-	}
-      }
-      
-    }
-    }
-
     /* Should we clean the level cache? (can also be done when disabled) */
     if(v_xmArgs->isOptCleanCache()) {
       LevelsManager::cleanCache();
@@ -558,7 +489,8 @@ int main(int nNumArgs,char **ppcArgs) {
      quit();
      return;
     }
-
+        
+    /* requires graphics now */
     if(m_xmsession->useGraphics() == false) {
       return;
     }
@@ -566,9 +498,17 @@ int main(int nNumArgs,char **ppcArgs) {
     /* Initialize renderer */
     _UpdateLoadingScreen((1.0f/9.0f) * 6,GAMETEXT_INITRENDERER);
     m_Renderer->init();
+
+    /* build handler */
+    m_InputHandler.init(&m_Config);
+    Replay::enableCompression(m_xmsession->compressReplays());
     
-    /* Initialize menu system */
-    _InitMenus();
+    /* load packs */
+    LevelsManager::checkPrerequires();
+    m_levelsManager.makePacks(m_db,
+			      m_xmsession->profile(),
+			      m_xmsession->idRoom(),
+			      m_xmsession->debug());     
 
     /* What to do? */
     if(m_PlaySpecificLevelFile != "") {
@@ -579,66 +519,38 @@ int main(int nNumArgs,char **ppcArgs) {
 	m_PlaySpecificLevelId = m_PlaySpecificLevelFile;
       }
     }
-    if((m_PlaySpecificLevelId != "") && m_xmsession->useGraphics()) {
+    if((m_PlaySpecificLevelId != "")) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
-      m_StateAfterPlaying = GS_MENU;
-      setState(GS_PREPLAYING);
+      StatePreplaying::setPlayAnimation(true);
+      m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId));
       Logger::Log("Playing as '%s'...", m_xmsession->profile().c_str());
     }
     else if(m_PlaySpecificReplay != "") {
       /* ======= PLAY SPECIFIC REPLAY ======= */
-      m_StateAfterPlaying = GS_MENU;
-      setState(GS_REPLAYING);
+      m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
     }
     else {
-      /* Graphics? */
-      if(m_xmsession->useGraphics() == false)
-        throw Exception("menu requires graphics");
-        
+      /* display what must be displayed */
+      StateMainMenu* pMainMenu = new StateMainMenu(this);
+      m_stateManager->pushState(pMainMenu);
+
       /* Do we have a player profile? */
       if(m_xmsession->profile() == "") {
-        setState(GS_EDIT_PROFILES);
-      }
-      else if(m_Config.getBool("WebConfAtInit")) {
-        /* We need web-config */
-        _InitWebConf();
-        setState(GS_EDIT_WEBCONFIG);
-      }
-      else {
-        /* Enter the menu */
-        setState(GS_MENU);
+	m_stateManager->pushState(new StateEditProfile(this, pMainMenu));
+      } 
+ 
+      /* Should we show a notification box? (with important one-time info) */
+      if(m_xmsession->notifyAtInit()) {
+	m_stateManager->pushState(new StateMessageBox(NULL, this, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));
+	m_xmsession->setNotifyAtInit(false);
       }
     }
 
-    /* build handler */
-    m_InputHandler.init(&m_Config); // must be initialized before call to drawFrame
-
-    /* final initialisation */
-    Logger::Log("UserPreInit ended at %.3f", GameApp::getXMTime());
-    /* display what must be displayed */
-    if (isUglyMode()){
+    if (m_xmsession->ugly()){
       drawLib->clearGraphics();
     }
     drawFrame();
     drawLib->flushGraphics();
-    
-    /* final initialisation so that xmoto seems to be loaded fastly */
-    
-    /* load packs */
-    LevelsManager::checkPrerequires();
-    m_levelsManager.makePacks(m_db,
-			      m_xmsession->profile(),
-			      m_Config.getString("WebHighscoresIdRoom"),
-			      m_xmsession->debug());     
-    
-    /* load levels lists */
-    _UpdateLevelsLists();
-
-    /* load cursor */
-    pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Cursor");
-    if(pSprite != NULL) {
-      m_pCursor = pSprite->getTexture(false, true, FM_LINEAR);
-    }
 
     /* Update stats */
     if(m_xmsession->profile() != "") {
@@ -647,7 +559,7 @@ int main(int nNumArgs,char **ppcArgs) {
 
     Logger::Log("UserInit ended at %.3f", GameApp::getXMTime());
   }
-    
+
   /*===========================================================================
   Shutdown game
   ===========================================================================*/
@@ -657,12 +569,6 @@ int main(int nNumArgs,char **ppcArgs) {
         
     if(m_pWebLevels != NULL)
     delete m_pWebLevels;
-    
-    if(m_pWebRooms != NULL)
-    delete m_pWebRooms;  
-    
-    if(m_pCredits != NULL)
-    delete m_pCredits;
     
     if(m_xmsession->useGraphics()) {
       m_Renderer->unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
@@ -675,19 +581,13 @@ int main(int nNumArgs,char **ppcArgs) {
     if(m_pJustPlayReplay != NULL)
     delete m_pJustPlayReplay;
     
-    if(m_xmsession->profile() != "") 
-    m_Config.setString("DefaultProfile", m_xmsession->profile());
-    
+    m_xmsession->save(&m_Config);
+    m_InputHandler.saveConfig(&m_Config);
+
     Sound::uninit();
+
     delete m_Renderer;
     delete m_sysMsg;
-
-    if(m_xmsession->useGraphics()) {
-      m_Config.setInteger("QSQualityMIN",    m_pQuickStart->getQualityMIN());
-      m_Config.setInteger("QSDifficultyMIN", m_pQuickStart->getDifficultyMIN());
-      m_Config.setInteger("QSQualityMAX",    m_pQuickStart->getQualityMAX());
-      m_Config.setInteger("QSDifficultyMAX", m_pQuickStart->getDifficultyMAX());
-    }
 
     m_Config.saveFile();
   }  
@@ -704,7 +604,7 @@ int main(int nNumArgs,char **ppcArgs) {
     m_Config.createVar( "DisplayHeight",          "600" );
     m_Config.createVar( "DisplayBPP",             "32" );
     m_Config.createVar( "DisplayWindowed",        "false" );
-    m_Config.createVar( "MenuBackgroundGraphics", "High" );
+    m_Config.createVar( "MenuGraphics",           "High" );
     m_Config.createVar( "GameGraphics",           "High" );
     m_Config.createVar( "DrawLib",                "OPENGL" );
         
@@ -751,9 +651,8 @@ int main(int nNumArgs,char **ppcArgs) {
       m_Config.createVar( "KeyCameraMoveXDown",     "Pad 4" );
       m_Config.createVar( "KeyCameraMoveYUp",       "Pad 8" );
       m_Config.createVar( "KeyCameraMoveYDown",     "Pad 2" );
-      m_Config.createVar( "KeyAutoZoom",            "Pad 5" );
     #endif
-       
+     
     /* joystick */
     m_Config.createVar( "JoyIdx1",                "0" );
     m_Config.createVar( "JoyAxisPrim1",           "1" );
@@ -794,7 +693,6 @@ int main(int nNumArgs,char **ppcArgs) {
     m_Config.createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL);
     m_Config.createVar( "WebThemesURL",           DEFAULT_WEBTHEMES_URL);
     m_Config.createVar( "WebThemesURLBase",       DEFAULT_WEBTHEMES_SPRITESURLBASE);
-    m_Config.createVar( "WebRoomsURL",            DEFAULT_WEBROOMS_URL);
     m_Config.createVar( "WebHighscoresIdRoom",     DEFAULT_WEBROOM_ID);
 
     /* Proxy */

@@ -22,31 +22,46 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEPAUSE_H__
 
 #include "StateManager.h"
+#include "StateMenu.h"
 
-  class StatePause : public GameState {
+class UIRoot;
+
+class StatePause : public StateMenu {
   public:
-    StatePause(bool drawStateBehind,
-	       bool updateStatesBehind,
-	       GameApp* pGame);
-    virtual ~StatePause();
+  StatePause(GameApp* pGame,
+	     StateMenuContextReceiver* i_receiver = NULL,
+	     bool drawStateBehind    = true,
+	     bool updateStatesBehind = false
+	     );
+  virtual ~StatePause();
+  
+  virtual void enter();
+  virtual void leave();
+  /* called when a new state is pushed or poped on top of the
+     current one*/
+  virtual void enterAfterPop();
+  virtual void leaveAfterPush();
+  
+  virtual bool update();
+  virtual bool render();
+  /* input */
+  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void keyUp(int nKey,   SDLMod mod);
+  virtual void mouseDown(int nButton);
+  virtual void mouseDoubleClick(int nButton);
+  virtual void mouseUp(int nButton);
+  
+  static void clean();
 
-    virtual void enter();
-    virtual void leave();
-    /* called when a new state is pushed or poped on top of the
-       current one*/
-    virtual void enterAfterPop();
-    virtual void leaveAfterPush();
+  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
-    virtual void update();
-    virtual void render();
-    /* input */
-    virtual void keyDown(int nKey, SDLMod mod,int nChar);
-    virtual void keyUp(int nKey,   SDLMod mod);
-    virtual void mouseDown(int nButton);
-    virtual void mouseDoubleClick(int nButton);
-    virtual void mouseUp(int nButton);
+ protected:
+  virtual void checkEvents();
 
   private:
-  };
+  /* GUI */
+  static UIRoot* m_sGUI;
+  static void createGUIIfNeeded(GameApp* pGame);
+};
 
 #endif

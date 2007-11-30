@@ -92,7 +92,7 @@ class DrawLibSDLgfx:public DrawLib {
    **/
   virtual void flushGraphics();
   
-  virtual Img *grabScreen(void);
+  virtual Img *grabScreen(int i_reduce = 1);
   virtual bool isExtensionSupported(std::string Ext);
   
   virtual FontManager* getFontManager(const std::string &i_fontFile, int i_fontSize);

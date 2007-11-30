@@ -24,136 +24,74 @@
 #include "db/xmDatabase.h"
 #include "md5sum/md5file.h"
 
-struct f_curl_download_data {
-  WWWAppInterface *v_WebApp;
-  int v_nb_files_to_download;
-  int v_nb_files_performed;
-};
-
-struct f_curl_upload_data {
-  WWWAppInterface *v_WebApp;
-};
-
-ProxySettings::ProxySettings() {
-  m_server       = "";
-  m_port         = -1;
-  m_type         = CURLPROXY_HTTP;
-  m_authUser     = "";
-  m_authPassword = "";
-}
-
-void ProxySettings::setServer(std::string p_server) {
-  m_server = p_server;
-}
-
-void ProxySettings::setPort(long p_port) {
-  m_port = p_port;
-}
-
-void ProxySettings::setType(long p_type) {
-  m_type = p_type;
-}
-
-void ProxySettings::setAuthentification(std::string p_user, std::string p_password) {
-  m_authUser     = p_user;
-  m_authPassword = p_password;
-}
-
-void ProxySettings::setDefaultServer() {
-  m_server = "";
-}
-
-void ProxySettings::setDefaultPort() {
-  m_port = -1;
-}
-
-void ProxySettings::setDefaultType() {
-  m_type = CURLPROXY_HTTP;
-}
-
-void ProxySettings::setDefaultAuthentification() {
-  m_authUser     = "";
-  m_authPassword = "";
-}
-
-std::string ProxySettings::getServer() const {
-  return m_server;
-}
-
-long ProxySettings::getPort() const {
-  return m_port;
-}
-
-long ProxySettings::getType() const {
-  return m_type;
-}
-
-std::string ProxySettings::getAuthentificationUser() const {
-  return m_authUser;
-}
-
-std::string ProxySettings::getAuthentificationPassword() const {
-  return m_authPassword;
-}
-
-bool ProxySettings::useDefaultServer() const {
-  return m_server == "";
-}
-
-bool ProxySettings::useDefaultPort() const {
-  return m_port == -1;
-}
-
-bool ProxySettings::useDefaultAuthentification() const {
-  return m_authUser == "";
-}
-
 void WebRoom::downloadReplay(const std::string& i_url) {
   std::string i_rplFilename = FS::getReplaysDir()
     + "/" 
     + FS::getFileBaseName(i_url) 
     + ".rpl";
 
-  FSWeb::downloadFile(i_rplFilename, i_url, NULL, NULL, m_proxy_settings);
+  /* download xml file */
+  f_curl_download_data v_data;
+
+  v_data.v_WebApp               = m_WebRoomApp;
+  v_data.v_nb_files_performed   = 0;
+  v_data.v_nb_files_to_download = 1;
+
+  FSWeb::downloadFile(i_rplFilename, i_url,
+		      FSWeb::f_curl_progress_callback_download,
+		      &v_data, m_proxy_settings);
 }
 
-WebRoom::WebRoom(const ProxySettings *p_proxy_settings) {
-  std::string v_userDir;
-  v_userDir = FS::getUserDir();
-  m_userFilename =  v_userDir 
+WebRoom::WebRoom(WWWAppInterface* p_WebRoomApp)
+{
+  m_userFilename      = FS::getUserDir()
     + "/" 
     + DEFAULT_WEBHIGHSCORES_FILENAME;
   m_webhighscores_url = DEFAULT_WEBHIGHSCORES_URL;
-
-  m_proxy_settings = p_proxy_settings;
+  m_WebRoomApp        = p_WebRoomApp;
 }
 
-WebRoom::~WebRoom() {
+WebRoom::~WebRoom()
+{
 }
 
-std::string WebRoom::getRoomId() const {
+std::string WebRoom::getRoomId() const
+{
   return m_roomId;
 }
 
-void WebRoom::setWebsiteInfos(const std::string& i_id_room, const std::string& i_webhighscores_url) {
+void WebRoom::setWebsiteInfos(const std::string& i_id_room,
+			      const std::string& i_webhighscores_url,
+			      const ProxySettings* pProxySettings)
+{
   m_webhighscores_url = i_webhighscores_url;
-  m_roomId = i_id_room;
+  m_roomId            = i_id_room;
+  m_proxy_settings    = pProxySettings;
 }
 
-void WebRoom::update() {
+void WebRoom::update()
+{
   /* download xml file */
+  f_curl_download_data v_data;
+
+  v_data.v_WebApp               = m_WebRoomApp;
+  v_data.v_nb_files_performed   = 0;
+  v_data.v_nb_files_to_download = 1;
+
   FSWeb::downloadFileBz2UsingMd5(m_userFilename,
-         m_webhighscores_url,
-         NULL,
-         NULL,
-         m_proxy_settings);
+				 m_webhighscores_url,
+				 FSWeb::f_curl_progress_callback_download,
+				 &v_data,
+				 m_proxy_settings);
 }
 
-void WebRoom::upgrade(xmDatabase *i_db) {
+void WebRoom::upgrade(xmDatabase *i_db)
+{
   i_db->webhighscores_updateDB(m_userFilename, m_webhighscores_url);
 }
 
-size_t FSWeb::writeData(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+size_t FSWeb::writeData(void *ptr, size_t size, size_t nmemb, FILE *stream)
+{
   return fwrite (ptr, size, nmemb, stream);
 }
 
@@ -283,7 +221,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   curl_easy_setopt(v_curl, CURLOPT_FOLLOWLOCATION, 1);
 
   /* set proxy settings */
-  if(p_proxy_settings != NULL) {
+  if(p_proxy_settings != NULL && p_proxy_settings->getTypeStr() != "") {
     /* v_proxy_server because 
        after call to 
        curl_easy_setopt(v_curl, CURLOPT_PROXY, p_proxy_settings->getServer().c_str());
@@ -369,8 +307,6 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   std::string v_local_file;
   v_local_file = FS::getUserDir() + "/" + DEFAULT_REPLAYUPLOAD_MSGFILE;
 
-  //printf("%s\n", v_local_file.c_str());
-
   struct curl_httppost *v_post, *v_last;
 
   Logger::Log(std::string("Uploading replay " + p_replayFilename).c_str());
@@ -421,7 +357,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   curl_easy_setopt(v_curl, CURLOPT_HTTPHEADER, v_headers);
 
   /* set proxy settings */
-  if(p_proxy_settings != NULL) {
+  if(p_proxy_settings != NULL && p_proxy_settings->getTypeStr() != "") {
     /* v_proxy_server because 
        after call to 
        curl_easy_setopt(v_curl, CURLOPT_PROXY, p_proxy_settings->getServer().c_str());
@@ -542,26 +478,38 @@ void FSWeb::uploadReplayAnalyseMsg(std::string p_filename,
   p_msg = pc;
 }
 
-WebLevels::WebLevels(WWWAppInterface *p_WebLevelApp,
-         const ProxySettings *p_proxy_settings) {
+WebLevels::WebLevels(WWWAppInterface *p_WebLevelApp) {
   m_WebLevelApp    = p_WebLevelApp;
-  m_proxy_settings = p_proxy_settings;
+  m_proxy_settings = NULL;
   m_levels_url     = DEFAULT_WEBLEVELS_URL;
 }
 
 WebLevels::~WebLevels() {
 }
 
+void WebLevels::setWebsiteInfos(const std::string &p_url, const ProxySettings* p_proxy_settings)
+{
+  m_levels_url     = p_url;
+  m_proxy_settings = p_proxy_settings;
+}
+
 std::string WebLevels::getXmlFileName() {
   return FS::getUserDir() + "/" + DEFAULT_WEBLEVELS_FILENAME;
 }
 
-void WebLevels::downloadXml() {
+void WebLevels::downloadXml()
+{
+  f_curl_download_data v_data;
+
+  v_data.v_WebApp               = m_WebLevelApp;
+  v_data.v_nb_files_performed   = 0;
+  v_data.v_nb_files_to_download = 1;
+
   FSWeb::downloadFileBz2UsingMd5(getXmlFileName(),
-         m_levels_url,
-         NULL,
-         NULL,
-         m_proxy_settings);
+				 m_levels_url,
+				 FSWeb::f_curl_progress_callback_download,
+				 &v_data,
+				 m_proxy_settings);
 }
 
 std::string WebLevels::getDestinationDir() {
@@ -622,8 +570,10 @@ int FSWeb::f_curl_progress_callback_download(void *clientp,
   float real_percentage_of_current_file;
 
   /* cancel if it's wanted */
-  if(data->v_WebApp->isCancelAsSoonAsPossible()) {
-    return 1;
+  if(data->v_WebApp != NULL) {
+    if(data->v_WebApp->isCancelAsSoonAsPossible()) {
+      return 1;
+    }
   }
 
   real_percentage_already_done = 
@@ -640,20 +590,15 @@ int FSWeb::f_curl_progress_callback_download(void *clientp,
     }
   }
 
-  data->v_WebApp->setTaskProgress(real_percentage_already_done + real_percentage_of_current_file);
+  if(data->v_WebApp != NULL) {
+    data->v_WebApp->setTaskProgress(real_percentage_already_done + real_percentage_of_current_file);
+  }
 
   return 0;
 }
 
 int WebLevels::nbLevelsToGet(xmDatabase *i_db) const {
-  char **v_result;
-  unsigned int nrow;
-  v_result = i_db->readDB("SELECT a.name FROM weblevels AS a "
-			  "LEFT OUTER JOIN levels AS b ON a.id_level=b.id_level "
-			  "WHERE b.id_level IS NULL OR a.checkSum <> b.checkSum;",
-			  nrow);
-  i_db->read_DB_free(v_result);
-  return nrow;
+  return i_db->levels_nbLevelsToDownload();
 }
 
 void WebLevels::upgrade(xmDatabase *i_db) {
@@ -688,7 +633,8 @@ void WebLevels::upgrade(xmDatabase *i_db) {
   try {
     /* download levels */
     for(unsigned int i=0; i<nrow; i++) {
-      if(m_WebLevelApp->isCancelAsSoonAsPossible()) break;
+      if(m_WebLevelApp->isCancelAsSoonAsPossible())
+	break;
 
       v_levelId    = i_db->getResult(v_result, 4, i, 0);
       v_levelName  = i_db->getResult(v_result, 4, i, 1);
@@ -753,183 +699,4 @@ const std::vector<std::string> &WebLevels::getNewDownloadedLevels(void) {
 
 const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
   return m_webLevelsUpdatedDownloadedOK;
-}
-
-WebThemes::WebThemes(WWWAppInterface *p_WebApp,
-         const ProxySettings *p_proxy_settings) {
-  m_proxy_settings = p_proxy_settings;
-  m_themes_url     = DEFAULT_WEBTHEMES_URL;
-  m_themes_urlBase = DEFAULT_WEBTHEMES_SPRITESURLBASE;
-  m_WebApp = p_WebApp;
-}
-
-WebThemes::~WebThemes() {
-}
-
-void WebThemes::update(xmDatabase *i_db) {
-  FSWeb::downloadFileBz2UsingMd5(getXmlFileName(),
-         m_themes_url,
-         NULL,
-         NULL,
-         m_proxy_settings);
-  i_db->webthemes_updateDB(getXmlFileName());
-}
-
-std::string WebThemes::getXmlFileName() {
-  return FS::getUserDir() + "/" + DEFAULT_WEBTHEMES_FILENAME;
-}
-
-void WebThemes::upgrade(xmDatabase *i_db, const std::string& i_id_theme) {
-  std::string v_destinationFile;
-  std::string v_sourceFile;
-  f_curl_download_data v_data;
-  char **v_result;
-  unsigned int nrow;
-  std::string v_fileUrl;
-  std::string v_filePath;
-  std::string v_themeFile;
-  bool v_onDisk = false;
-  std::string v_md5Local;
-  std::string v_md5Dist;
-
-  /* download even if the the theme is uptodate
-     it give a possibility to download file removed by mistake
-  */
-  v_result = i_db->readDB("SELECT a.fileUrl, b.filepath "
-			  "FROM webthemes AS a LEFT OUTER JOIN themes AS b "
-			  "ON a.id_theme = b.id_theme "
-			  "WHERE a.id_theme=\"" + xmDatabase::protectString(i_id_theme) + "\";",
-			  nrow);
-  if(nrow != 1) {
-    i_db->read_DB_free(v_result);
-    throw Exception("error : unable to find this theme on the web");
-  }
-
-  v_fileUrl = i_db->getResult(v_result, 2, 0, 0);
-  if(i_db->getResult(v_result, 2, 0, 1) != NULL) {
-    v_filePath = i_db->getResult(v_result, 2, 0, 1);
-    v_onDisk = true;
-  }  
-  i_db->read_DB_free(v_result);
-
-  // theme avaible on the web get it
-
-  /* the destination file must be in the user dir */
-  if(v_filePath != "") {
-    if(FS::isInUserDir(v_filePath)) {
-      v_destinationFile = v_filePath;
-    }
-  }
-
-  if(v_destinationFile == "") {
-    /* determine destination file */
-    v_destinationFile = 
-      FS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
-      FS::getFileBaseName(v_fileUrl) + ".xml";
-  } 
-  
-  v_themeFile = v_destinationFile;
-
-  /* download the theme file */
-  FS::mkArborescence(v_destinationFile);
-  FSWeb::downloadFileBz2(v_destinationFile,
-			 v_fileUrl,
-			 NULL,
-			 NULL,
-			 m_proxy_settings);
-
-  /* download all the files required */
-  Theme *v_theme = new Theme();
-  std::vector<ThemeFile> *v_required_files;
-  v_theme->load(v_destinationFile);
-  v_required_files = v_theme->getRequiredFiles();
-
-  // all files must be checked for md5sum
-  int v_nb_files_to_download = 0;
-  for(unsigned int i=0; i<v_required_files->size(); i++) {
-    if(FS::fileExists((*v_required_files)[i].filepath) == false) {
-      v_nb_files_to_download++;
-    } else {
-      v_md5Local = FS::md5sum((*v_required_files)[i].filepath);
-      v_md5Dist  = (*v_required_files)[i].filemd5;
-      if(v_md5Local != v_md5Dist && v_md5Dist != "") {
-	v_nb_files_to_download++;
-      }
-    }
-  }
-
-  if(v_nb_files_to_download != 0) {
-    int v_nb_files_performed  = 0;
-    
-    v_data.v_WebApp = m_WebApp;
-    v_data.v_nb_files_to_download = v_nb_files_to_download;
-    
-    unsigned int i = 0;
-    while(i<v_required_files->size() && m_WebApp->isCancelAsSoonAsPossible() == false) {
-      // download v_required_files[i]     
-      v_destinationFile = FS::getUserDir() + std::string("/") + (*v_required_files)[i].filepath;
-      v_sourceFile = m_themes_urlBase + 
-	std::string("/") + (*v_required_files)[i].filepath;
-      
-      /* check md5 sums */
-      v_md5Local = v_md5Dist = "";
-      if(FS::fileExists((*v_required_files)[i].filepath) == true) {
-	v_md5Local = FS::md5sum((*v_required_files)[i].filepath);
-	v_md5Dist  = (*v_required_files)[i].filemd5;
-      }
-      
-      /* if v_md5Dist == "", don't download ; it's a manually adding */
-      if(FS::fileExists((*v_required_files)[i].filepath) == false || (v_md5Local != v_md5Dist && v_md5Dist != "")) {
-	v_data.v_nb_files_performed = v_nb_files_performed;
-	
-	float v_percentage = (((float)v_nb_files_performed) * 100.0) / ((float)v_nb_files_to_download);
-	m_WebApp->setTaskProgress(v_percentage);
-	m_WebApp->setBeingDownloadedInformation((*v_required_files)[i].filepath, true);
-	
-	FS::mkArborescence(v_destinationFile);
-	
-	FSWeb::downloadFile(v_destinationFile,
-			    v_sourceFile,
-			    FSWeb::f_curl_progress_callback_download,
-			    &v_data,
-			    m_proxy_settings);
-	
-	v_nb_files_performed++;
-      }
-      m_WebApp->readEvents();
-      i++;
-    }
-    m_WebApp->setTaskProgress(100.0);
-  }    
-
-  delete v_theme;
-
-  if(v_onDisk) {
-    i_db->themes_update(i_id_theme, v_themeFile);
-  } else {
-    i_db->themes_add(i_id_theme, v_themeFile);
-  }
-}
-
-WebRooms::WebRooms(const ProxySettings *p_proxy_settings) {
-  m_proxy_settings = p_proxy_settings;
-}
-
-WebRooms::~WebRooms() {
-}
-
-void WebRooms::update() {
-  FSWeb::downloadFileBz2UsingMd5(getXmlFileName(),
-         m_rooms_url,
-         NULL,
-         NULL,
-         m_proxy_settings);
-}
-
-std::string WebRooms::getXmlFileName() {
-  return FS::getUserDir() + "/" + DEFAULT_WEBROOMS_FILENAME;
-}
-
-void WebRooms::upgrade(xmDatabase *i_db) {
-  i_db->webrooms_updateDB(getXmlFileName());
 }

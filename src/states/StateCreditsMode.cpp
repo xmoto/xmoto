@@ -19,74 +19,80 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateCreditsMode.h"
+#include "Credits.h"
+#include "xmscene/BikePlayer.h"
+#include "GameText.h"
+#include "Game.h"
 
-StateCreditsMode::StateCreditsMode(bool drawStateBehind,
-				   bool updateStatesBehind,
-				   GameApp* pGame):
-  GameState(drawStateBehind,
-	    updateStatesBehind,
-	    pGame)
+StateCreditsMode::StateCreditsMode(GameApp* pGame, const std::string& i_replay):
+  StateReplaying(pGame, i_replay)
 {
-
+  m_credits = new Credits();
+  m_name    = "StateCreditsMode";
 }
 
 StateCreditsMode::~StateCreditsMode()
 {
-
+  delete m_credits;
 }
-
 
 void StateCreditsMode::enter()
 {
-
+  StateReplaying::enter();
+  m_pGame->getGameRenderer()->hideReplayHelp();
+  m_pGame->getGameRenderer()->setShowTimePanel(false);
+  m_pGame->getGameRenderer()->setShowMinimap(false);
+  m_pGame->getMotoGame()->setInfos("");
+  m_credits->init(m_pGame, m_replayBiker->getFinishTime(), 4, 4, std::string(GAMETEXT_CREDITS).c_str());
 }
 
 void StateCreditsMode::leave()
 {
-
+  StateReplaying::leave();
 }
 
 void StateCreditsMode::enterAfterPop()
 {
-
+  StateReplaying::enterAfterPop();
 }
 
 void StateCreditsMode::leaveAfterPush()
 {
-
+  StateReplaying::leaveAfterPush();
 }
 
-void StateCreditsMode::update()
+bool StateCreditsMode::update()
 {
-
+  return StateReplaying::update();
 }
 
-void StateCreditsMode::render()
+bool StateCreditsMode::render()
 {
-
+  if(StateReplaying::render() == false){
+    return false;
+  }
+  m_credits->render(m_pGame->getMotoGame()->getTime());
+  return true;
 }
 
 void StateCreditsMode::keyDown(int nKey, SDLMod mod,int nChar)
 {
-
+  m_requestForEnd = true;
+  closePlaying();
 }
 
 void StateCreditsMode::keyUp(int nKey,   SDLMod mod)
 {
-
 }
 
 void StateCreditsMode::mouseDown(int nButton)
 {
-
 }
 
 void StateCreditsMode::mouseDoubleClick(int nButton)
 {
-
 }
 
 void StateCreditsMode::mouseUp(int nButton)
 {
-
 }

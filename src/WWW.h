@@ -35,6 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "WWWAppInterface.h"
 #include "Theme.h"
+#include "XMSession.h"
 #include "XMBuild.h"
 class ThemeChoice;
 
@@ -52,7 +53,6 @@ class ThemeChoice;
 #define DEFAULT_REPLAYUPLOAD_MSGFILE      "UploadReplayMsg.xml"
 #define DEFAULT_WEBROOMS_URL              "http://xmoto.tuxfamily.org/rooms.xml"
 #define DEFAULT_WEBROOMS_FILENAME         "webrooms.xml"
-#define DEFAULT_WEBROOM_ID                "1"
 #define DEFAULT_WEBROOM_NAME              "WR"
 
 #define WWW_AGENT ("xmoto-" + XMBuild::getVersionString(true))
@@ -78,40 +78,19 @@ class ThemeChoice;
   };
 #endif
 
+struct f_curl_download_data {
+  WWWAppInterface *v_WebApp;
+  int v_nb_files_to_download;
+  int v_nb_files_performed;
+};
+
+struct f_curl_upload_data {
+  WWWAppInterface *v_WebApp;
+};
+
+
 class WebRoom;
 class xmDatabase;
-
-class ProxySettings {
- public:
-  ProxySettings();
-  void setServer(std::string p_server);
-  void setPort(long p_port);
-  void setType(long p_type); /* CURLPROXY_HTTP OR CURLPROXY_SOCKS5 */
-  void setAuthentification(std::string p_user, std::string p_password);
-
-  void setDefaultServer();
-  void setDefaultPort();
-  void setDefaultType();
-  void setDefaultAuthentification();
-
-  std::string getServer() const;
-  long getPort() const;
-  long getType() const; /* CURLPROXY_HTTP OR CURLPROXY_SOCKS5 */
-  std::string getAuthentificationUser() const;
-  std::string getAuthentificationPassword() const;
-
-  /* default means : curl try to find default values (no proxy, or environment vars) */
-  bool useDefaultServer() const;
-  bool useDefaultPort() const;
-  bool useDefaultAuthentification() const;
-
- private:
-  std::string m_server;
-  long m_port;
-  long m_type;
-  std::string m_authUser;
-  std::string m_authPassword;
-};
 
 class FSWeb {
  public:
@@ -176,56 +155,38 @@ class FSWeb {
 
 class WebRoom {
  public:
-  WebRoom(const ProxySettings *p_proxy_settings);
+  WebRoom(WWWAppInterface* p_WebRoomApp);
   ~WebRoom();
 
   void update(); /* throws exceptions */
-  void upgrade(xmDatabase *i_db); /* throws exceptions */
+  void upgrade(xmDatabase* i_db); /* throws exceptions */
 
   /* return NULL if no data found */
-  void setWebsiteInfos(const std::string& i_id_room, const std::string& i_webhighscores_url);
+  void setWebsiteInfos(const std::string& i_id_room,
+		       const std::string& i_webhighscores_url,
+		       const ProxySettings* pProxySettings);
   std::string getRoomId() const;
 
   void downloadReplay(const std::string& i_url);
 
  private:
+  WWWAppInterface* m_WebRoomApp;
   std::string m_userFilename;
   std::string m_webhighscores_url;
   std::string m_roomId;
-  const ProxySettings *m_proxy_settings;
-};
-
-class WebRooms {
- public:
-  WebRooms(const ProxySettings *p_proxy_settings);
-  ~WebRooms();
-
-  /* check for new rooms */
-  void update(); /* throws exceptions */
-
-  /* fill the list of avaible rooms ; does not required an internet connexion */
-  void upgrade(xmDatabase *i_db);
-
-  void setURL(const std::string &p_url) {m_rooms_url = p_url;}
-
- private:
-  const ProxySettings *m_proxy_settings;
-  std::string m_rooms_url;
-
-  std::string getXmlFileName();
+  const ProxySettings* m_proxy_settings;
 };
 
 class WebLevels {
  public:
-  WebLevels(WWWAppInterface *p_WebLevelApp,
-	    const ProxySettings *p_proxy_settings);
+  WebLevels(WWWAppInterface* p_WebLevelApp);
   ~WebLevels();
 
   /* check for new levels to download */
-  void update(xmDatabase *i_db); /* throws exceptions */
+  void update(xmDatabase* i_db); /* throws exceptions */
 
   /* download new levels */
-  void upgrade(xmDatabase *i_db); /* throws exceptions */
+  void upgrade(xmDatabase* i_db); /* throws exceptions */
   
   /* Get names of new files downloaded OK */
   const std::vector<std::string> &getNewDownloadedLevels();
@@ -234,7 +195,7 @@ class WebLevels {
   const std::vector<std::string> &getUpdatedDownloadedLevels();
   
   /* Set URL */
-  void setURL(const std::string &p_url) {m_levels_url = p_url;}
+  void setWebsiteInfos(const std::string &p_url, const ProxySettings* p_proxy_settings);
 
   static std::string getDestinationFile(std::string p_url);
 
@@ -242,7 +203,7 @@ class WebLevels {
   int nbLevelsToGet(xmDatabase *i_db) const;
 
  private:
-  WWWAppInterface *m_WebLevelApp;
+  WWWAppInterface* m_WebLevelApp;
 
   std::vector<std::string> m_webLevelsNewDownloadedOK; /* file names of those levels 
            which where downloaded OK (so we can load them right away) and which are new */
@@ -256,30 +217,6 @@ class WebLevels {
   void downloadXml(); /* throw exceptions */
   static std::string getDestinationDir();
   void createDestinationDirIfRequired();
-};
-
-class WebThemes {
- public:
-  WebThemes(WWWAppInterface *p_WebApp,
-	    const ProxySettings *p_proxy_settings);
-  ~WebThemes();
-
-  /* check for new themes to download */
-  void update(xmDatabase *i_db); /* throws exceptions */
-
-  /* download a theme or just update it */
-  void upgrade(xmDatabase *i_db, const std::string& i_id_theme);
-
-  void setURL(const std::string &p_url) {m_themes_url = p_url;}
-  void setURLBase(const std::string &p_urlBase) {m_themes_urlBase = p_urlBase;}
-
- private:
-  std::string getXmlFileName();
-
-  WWWAppInterface *m_WebApp;
-  std::string m_themes_url;
-  std::string m_themes_urlBase;
-  const ProxySettings *m_proxy_settings;
 };
 
 #endif /* WEBSTUFFS */

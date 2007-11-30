@@ -358,7 +358,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     /*===========================================================================
   Grab screen contents
   ===========================================================================*/
-  Img *DrawLibSDLgfx::grabScreen(void) {
+  Img *DrawLibSDLgfx::grabScreen(int i_reduce) {
     Img *pImg = new Img;
 
     pImg->createEmpty(m_nDispWidth, m_nDispHeight);

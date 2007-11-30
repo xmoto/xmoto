@@ -65,6 +65,8 @@ helpers_SOURCES = helpers/VMath.h             \
                   helpers/Environment.cpp \
 		  helpers/Log.h \
 		  helpers/Log.cpp \
+		  helpers/System.h \
+		  helpers/System.cpp \
                   iqsort.h
 
 common_SOURCES = Image.cpp \
@@ -90,6 +92,7 @@ common_SOURCES = Image.cpp \
   WWW.h \
   WWWAppInterface.h \
   XMotoLoadLevelsInterface.h \
+  XMotoLoadReplaysInterface.h \
   Locales.h \
   Locales.cpp \
   Packager.cpp \
@@ -101,6 +104,16 @@ states_SOURCES = states/StateManager.h       	  \
                  states/StateManager.cpp     	  \
                  states/StateMenu.h          	  \
                  states/StateMenu.cpp        	  \
+                 states/StateScene.h          	  \
+                 states/StateScene.cpp        	  \
+                 states/StateMainMenu.h       	  \
+                 states/StateMainMenu.cpp      	  \
+                 states/StateHelp.h          	  \
+                 states/StateHelp.cpp        	  \
+		 states/StateMessageBoxReceiver.h \
+		 states/StateMenuContextReceiver.h \
+	         states/StateMessageBox.h      	  \
+                 states/StateMessageBox.cpp    	  \
                  states/StatePause.h         	  \
                  states/StatePause.cpp       	  \
                  states/StateDeadJust.h      	  \
@@ -124,7 +137,32 @@ states_SOURCES = states/StateManager.h       	  \
                  states/StatePreplaying.h        \
                  states/StatePreplaying.cpp      \
                  states/StateReplaying.h         \
-                 states/StateReplaying.cpp
+                 states/StateReplaying.cpp       \
+		 states/AttractMode.cpp          \
+		 states/AttractMode.h            \
+		 states/StateUpdate.cpp          \
+		 states/StateUpdate.h            \
+		 states/StateUpdateDb.cpp        \
+		 states/StateUpdateDb.h          \
+		 states/StateUpdateThemesList.cpp\
+		 states/StateUpdateThemesList.h  \
+		 states/StateUpdateTheme.cpp     \
+		 states/StateUpdateTheme.h       \
+		 states/StateUpdateRoomsList.cpp \
+		 states/StateUpdateRoomsList.h   \
+		 states/StateUploadHighscore.cpp \
+		 states/StateUploadHighscore.h   \
+		 states/StateRequestKey.cpp      \
+		 states/StateRequestKey.h        \
+		 states/StateMultiUpdate.cpp     \
+		 states/StateMultiUpdate.h       \
+		 states/StateCheckWww.cpp        \
+		 states/StateCheckWww.h          \
+		 states/StateUpgradeLevels.cpp   \
+		 states/StateUpgradeLevels.h     \
+		 states/StateDownloadGhost.cpp   \
+		 states/StateDownloadGhost.h
+
 
 bz2_SOURCES = bzip2/blocksort.c     \
               bzip2/bzlib.c         \
@@ -136,6 +174,27 @@ bz2_SOURCES = bzip2/blocksort.c     \
               bzip2/huffman.c       \
               bzip2/randtable.c
 
+thread_SOURCES = thread/XMThread.h                 \
+		 thread/XMThread.cpp               \
+		 thread/UpdateDbThread.h           \
+		 thread/UpdateDbThread.cpp         \
+		 thread/UpdateThemesListThread.h   \
+		 thread/UpdateThemesListThread.cpp \
+		 thread/UpdateThemeThread.h        \
+		 thread/UpdateThemeThread.cpp      \
+		 thread/UpdateRoomsListThread.h    \
+		 thread/UpdateRoomsListThread.cpp  \
+		 thread/UploadHighscoreThread.h    \
+		 thread/UploadHighscoreThread.cpp  \
+		 thread/XMThreads.cpp              \
+		 thread/XMThreads.h                \
+		 thread/CheckWwwThread.cpp         \
+		 thread/CheckWwwThread.h           \
+		 thread/UpgradeLevelsThread.cpp    \
+		 thread/UpgradeLevelsThread.h      \
+		 thread/DownloadGhostThread.cpp    \
+		 thread/DownloadGhostThread.h
+
 if WIN32
 common_SOURCES += $(bz2_SOURCES)
 endif
@@ -144,6 +203,7 @@ common_SOURCES += $(gui_basic_SOURCES)
 common_SOURCES += $(gui_specific_SOURCES)
 common_SOURCES += $(drawlib_SOURCES)
 common_SOURCES += $(states_SOURCES)
+common_SOURCES += $(thread_SOURCES)
 
 common_LDADD = $(GL_LIBS) $(SDL_LIBS) $(LIBINTL)
 if WIN32
@@ -153,7 +213,7 @@ endif
 bin_PROGRAMS = xmoto
 
 xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
-  GameMenus.cpp GUIBestTimes.cpp \
+  GUIBestTimes.cpp \
   Renderer.cpp Replay.cpp Sound.cpp \
   LuaLibGame.h LuaLibGame.cpp \
   UserConfig.cpp \
@@ -184,7 +244,6 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   Credits.h \
   Credits.cpp \
   GameInit.cpp \
-  GameDrawFrame.cpp \
   LevelsManager.h \
   LevelsManager.cpp \
   SysMessage.h \
@@ -239,7 +298,18 @@ icndata_DATA = xmoto_icone_x.ico
 
 EXTRA_DIST = $(icndata_DATA)
 
-# Force svn_version.o to always be remade
-svn_version.$(OBJEXT): FORCE
-FORCE:
+# Force svn_version.o to always be remade if necessary
+all: svnCheck
+	@echo svnCheck
 
+svnCheck:
+	if test -d $(srcdir)/.svn; then \
+	  if ! test -f svnVersion -a "`cat svnVersion`" = "`svnversion -n $(srcdir)`"; then \
+	    svnversion -n $(srcdir) > svnVersion; \
+	  fi; \
+	fi
+
+svnVersion:
+	 svnversion -n $(srcdir) > svnVersion
+
+svn_version.$(OBJEXT): svnVersion

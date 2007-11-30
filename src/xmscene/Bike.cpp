@@ -143,25 +143,24 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
   m_EngineSound = new EngineSoundSimulator();
 
   /* sound engine */
-  if(Sound::isEnabled()) {
-    try {
-      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine00")->FilePath()));
-      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine01")->FilePath()));
-      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine02")->FilePath()));
-      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine03")->FilePath()));
-      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine04")->FilePath()));
-      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine05")->FilePath()));
-      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine06")->FilePath()));
-      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine07")->FilePath()));
-      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine08")->FilePath()));
-      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine09")->FilePath()));
-      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine10")->FilePath()));
-      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine11")->FilePath()));
-      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine12")->FilePath()));
-    } catch(Exception &e) {
-      /* hum, no nice */
-    }
+  try {
+    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine00")->FilePath()));
+    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine01")->FilePath()));
+    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine02")->FilePath()));
+    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine03")->FilePath()));
+    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine04")->FilePath()));
+    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine05")->FilePath()));
+    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine06")->FilePath()));
+    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine07")->FilePath()));
+    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine08")->FilePath()));
+    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine09")->FilePath()));
+    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine10")->FilePath()));
+    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine11")->FilePath()));
+    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine12")->FilePath()));
+  } catch(Exception &e) {
+    /* hum, no nice */
   }
+
   m_playSound = true;
   m_dead      = false;
   m_deadTime  = 0.0;
@@ -206,11 +205,9 @@ void Biker::updateToTime(float i_time, float i_timeStep,
   if(isFinished() || isDead()) return;
 
   /* sound */
-  if(Sound::isEnabled()) {
-    m_EngineSound->setRPM(getBikeEngineRPM());
-    if(m_playSound) {
-      m_EngineSound->update(i_time);
-    }
+  m_EngineSound->setRPM(getBikeEngineRPM());
+  if(m_playSound) {
+    m_EngineSound->update(i_time);
   }
 }
 

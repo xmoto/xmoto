@@ -71,8 +71,6 @@ class xmDatabase;
 #define THEME_GHOST_UGLYRIDERCOLOR MAKE_COLOR(100,100,128,255)
 #define THEME_GHOST_UGLYWHEELCOLOR MAKE_COLOR(100,100,128,255)
 
-#define THEME_DEFAULT_THEMENAME "Classic"
-
   enum SpriteType {
     SPRITE_TYPE_ANIMATION,
     SPRITE_TYPE_BIKERPART,
@@ -447,19 +445,12 @@ class BikerTheme {
 class ThemeChoicer {
  public:
 
-  ThemeChoicer(WWWAppInterface *p_WebApp = NULL,
-	       const ProxySettings *p_proxy_settings = NULL);	       
+  ThemeChoicer();	       
   ~ThemeChoicer();
 
-  void updateFromWWW(xmDatabase *i_db);
-  void updateThemeFromWWW(xmDatabase *i_db, const std::string& i_id_theme);
-
-  void setURL(const std::string &p_url);
-  void setURLBase(const std::string &p_urlBase);
   void initThemesFromDir(xmDatabase *i_db);
 
  private:
-  WebThemes *m_webThemes;
   std::string getThemeNameFromFile(std::string p_themeFile);
 };
 

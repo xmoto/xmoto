@@ -60,34 +60,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     getGUI()->setPosition(0,0,getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
     getGUI()->setFont(getParent()->getDrawLib()->getFontSmall());    
 
-    /* new highscore ! */
-    m_pInGameNewHighscore = new UIWindow(getGUI(),405,475,"",200,100);
-    m_pInGameNewHighscore->showWindow(false);
-
-    m_pNewHighscorePersonal_str = new UIStatic(m_pInGameNewHighscore,
-					       0, 5,
-					       GAMETEXT_NEWHIGHSCOREPERSONAL,
-					       200, 20);
-    m_pNewHighscorePersonal_str->setFont(getParent()->getDrawLib()->getFontSmall());
-    m_pNewHighscorePersonal_str->setHAlign(UI_ALIGN_CENTER);
-    m_pNewHighscorePersonal_str->showWindow(false);
-
-    m_pNewHighscoreBest_str = new UIStatic(m_pInGameNewHighscore,
-					   0, 0,
-					   GAMETEXT_NEWHIGHSCORE,
-					   200, 30);
-    m_pNewHighscoreBest_str->setFont(getParent()->getDrawLib()->getFontMedium());
-    m_pNewHighscoreBest_str->setHAlign(UI_ALIGN_CENTER);
-    m_pNewHighscoreBest_str->showWindow(false);
-
-    m_pNewHighscoreSave_str = new UIStatic(m_pInGameNewHighscore,
-					   0, 25,
-					   "",
-					   200, 20);
-    m_pNewHighscoreSave_str->setFont(getParent()->getDrawLib()->getFontSmall());
-    m_pNewHighscoreSave_str->setHAlign(UI_ALIGN_CENTER);
-    m_pNewHighscoreSave_str->showWindow(false);
-
     /* Overlays? */
     m_Overlay.init(getParent()->getDrawLib(),512,512);
 
@@ -97,7 +69,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Called to prepare renderer for new level
   ===========================================================================*/
-  void GameRenderer::prepareForNewLevel(bool bCreditsMode) {
+  void GameRenderer::prepareForNewLevel() {
     int numberCamera = getGameObject()->getNumberCameras();
     if(numberCamera > 1){
       numberCamera++;
@@ -107,8 +79,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       getGameObject()->getCamera()->prepareForNewLevel();
     }
     
-    m_bCreditsMode = bCreditsMode;
-
     m_screenBBox.reset();
 
     m_fNextGhostInfoUpdate = 0.0f;
@@ -577,7 +547,7 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Main rendering function
   ===========================================================================*/
-  void GameRenderer::render(bool bIsPaused) {
+  void GameRenderer::render() {
     bool v_found;
     MotoGame* pGame   = getGameObject();
     Camera*   pCamera = pGame->getCamera();
@@ -795,7 +765,7 @@ int GameRenderer::nbParticlesRendered() const {
 
     /* minimap + counter */
     if(pCamera->getPlayerToFollow() != NULL) {
-      if(showMinimap() && m_bCreditsMode == false) {
+      if(showMinimap()) {
 	if(pCamera->getPlayerToFollow()->getState()->Dir == DD_LEFT
 	   && showEngineCounter() == false
 	   && pGame->getNumberCameras() == 1) {
@@ -818,27 +788,23 @@ int GameRenderer::nbParticlesRendered() const {
 		
     getParent()->getDrawLib()->getMenuCamera()->setCamera2d();
 
-    if(m_bCreditsMode == false) {
+    if(m_showTimePanel) {
       renderTimePanel();
-      renderReplayHelpMessage();
-    }
-
-    if(m_bCreditsMode == false) {
-      /* And then the game messages */
-      _RenderGameMessages();            
-      
       /* If there's strawberries in the level, tell the user how many there's left */
       _RenderGameStatus();
     }
 
-    if(m_bCreditsMode == false) {
-      FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
-      FontGlyph* v_fg = v_fm->getGlyph(pGame->getInfos());
-      v_fm->printString(v_fg,
-			5,
-			getParent()->getDrawLib()->getDispHeight() - v_fg->realHeight() - 2,
-			MAKE_COLOR(255,255,255,255), true);
-    }
+    renderReplayHelpMessage();
+
+    /* And then the game messages */
+    _RenderGameMessages();            
+
+    FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
+    FontGlyph* v_fg = v_fm->getGlyph(pGame->getInfos());
+    v_fm->printString(v_fg,
+		      5,
+		      getParent()->getDrawLib()->getDispHeight() - v_fg->realHeight() - 2,
+		      MAKE_COLOR(255,255,255,255), true);
   }
 
   /*===========================================================================
@@ -875,7 +841,7 @@ int GameRenderer::nbParticlesRendered() const {
       y2_cam += bottomLeft.y;
     }
 
-    if(getParent()->isUglyMode() == false) {
+    if(getParent()->getSession()->ugly() == false) {
       pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForFlower());
       if(pType == NULL) {
 	pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForFlower());
@@ -883,7 +849,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
     
     if(nStrawberriesLeft > 0) {
-      if(getParent()->isUglyMode() == false) {
+      if(getParent()->getSession()->ugly() == false) {
 	pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());
       if(pType == NULL) {
 	pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());
@@ -1917,40 +1883,6 @@ int GameRenderer::nbParticlesRendered() const {
       
     }
   }
-  
-  void GameRenderer::showMsgNewPersonalHighscore(std::string p_save) {
-    m_pInGameNewHighscore->showWindow(true);
-    m_pNewHighscorePersonal_str->showWindow(true);
-    m_pNewHighscoreBest_str->showWindow(false);
-    if(p_save == "") {
-      m_pNewHighscoreSave_str->showWindow(false);
-    } else {
-      char v_str[256];
-      snprintf(v_str, 256, GAMETEXT_SAVE_AS, p_save.c_str());
-
-      m_pNewHighscoreSave_str->showWindow(true);
-      m_pNewHighscoreSave_str->setCaption(v_str);
-    }
-  }
-  
-  void GameRenderer::showMsgNewBestHighscore(std::string p_save) {
-    m_pInGameNewHighscore->showWindow(true);
-    m_pNewHighscorePersonal_str->showWindow(false);
-    m_pNewHighscoreBest_str->showWindow(true);
-    if(p_save == "") {
-      m_pNewHighscoreSave_str->showWindow(false);
-    } else {
-      char v_str[256];
-      snprintf(v_str, 256, GAMETEXT_SAVE_AS, p_save.c_str());
-
-      m_pNewHighscoreSave_str->showWindow(true);
-      m_pNewHighscoreSave_str->setCaption(v_str);
-    }
-  }
-
-  void GameRenderer::hideMsgNewHighscore() {
-    m_pInGameNewHighscore->showWindow(false);
-  }
 
   /*===========================================================================
   Rendering helpers
@@ -2066,6 +1998,10 @@ int GameRenderer::nbParticlesRendered() const {
   bool GameRenderer::showMinimap() const {
     return m_showMinimap;
   }
+
+void GameRenderer::setShowTimePanel(bool i_value) {
+  m_showTimePanel = i_value;
+}
 
   bool GameRenderer::showEngineCounter() const {
     return m_showEngineCounter;
