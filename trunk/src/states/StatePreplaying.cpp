@@ -378,6 +378,10 @@ void StatePreplaying::executeOneCommand(std::string cmd)
 
 bool StatePreplaying::needToDownloadGhost()
 {
+  if(m_pGame->getSession()->www() == false){
+    return false;
+  }
+
   char **v_result;
   unsigned int nrow;
   std::string res;
