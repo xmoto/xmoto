@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "xmscene/BikePlayer.h"
 #include "StateMessageBox.h"
+#include "StateDownloadGhost.h"
 #include "drawlib/DrawLib.h"
 
 #define PRESTART_ANIMATION_MARGIN_SIZE 5
@@ -43,6 +44,9 @@ StatePreplaying::StatePreplaying(GameApp* pGame, const std::string i_idlevel):
 {
   m_name  = "StatePreplaying";
   m_idlevel = i_idlevel;
+
+  m_secondInitPhaseDone = false;
+  m_ghostDownloaded     = false;
 }
 
 StatePreplaying::~StatePreplaying()
@@ -124,16 +128,6 @@ void StatePreplaying::enter()
       pWorld->setAutoZoomCamera();
       pWorld->getCamera()->setPlayerToFollow(pWorld->Players()[0]);
     }
-
-    /* add the ghosts */
-    if(m_pGame->getSession()->enableGhosts()) {
-      try {
-	// not working for the moment and causes segfault
-	// m_pGame->addGhosts(pWorld, m_pGame->getTheme());
-      } catch(Exception &e) {
-	/* anyway */
-      }
-    }
   } catch(Exception &e) {
     Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
     pWorld->endLevel();
@@ -141,25 +135,11 @@ void StatePreplaying::enter()
     return;
   }
 
-  /* Prepare level */
-  m_pGame->getGameRenderer()->prepareForNewLevel();
-
-  /* go directly to playing */
-  if(m_playAnimation == false) {
-    m_pGame->getStateManager()->replaceState(new StatePlaying(m_pGame)); 
+  if(needToDownloadGhost() == true){
+    m_pGame->getStateManager()->pushState(new StateDownloadGhost(m_pGame, m_idlevel));
+  } else {
+    m_ghostDownloaded = true;
   }
-
-  /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
-  pWorld->setAutoZoomCamera();
-
-  /* display level name */
-  pWorld->gameMessage(pWorld->getLevelSrc()->Name(),
-		      false,
-		      PRESTART_ANIMATION_LEVEL_MSG_DURATION);
-
-  zoomAnimation1_init();
-  
-  setAutoZoom(shouldBeAnimated());
 }
 
 bool StatePreplaying::shouldBeAnimated() const {
@@ -187,7 +167,16 @@ bool StatePreplaying::update()
     return false;
   }
 
-  //StateScene::update(); // don't update the scene in preplaying mode
+  if(m_ghostDownloaded == false){
+    Logger::Log("ghostdownloaded");
+    return true;
+  }
+
+  if(m_secondInitPhaseDone == false){
+    Logger::Log("begin second init phase");
+    secondInitPhase();
+    m_secondInitPhaseDone = true;
+  }
 
   if(shouldBeAnimated()) {
     if(zoomAnimation1_step() == false) {
@@ -205,6 +194,10 @@ bool StatePreplaying::update()
 
 bool StatePreplaying::render()
 {
+  if(m_secondInitPhaseDone == false){
+    return false;
+  }
+
   StateScene::render();
   return true;
 }
@@ -330,4 +323,80 @@ bool StatePreplaying::zoomAnimation1_step() {
 void StatePreplaying::zoomAnimation1_abort() {
   m_pGame->getMotoGame()->getCamera()->setZoom(m_fPrePlayStartInitZoom); // because the man can change ugly mode while the animation
   m_pGame->getMotoGame()->getCamera()->setCameraPosition(m_fPrePlayStartCameraX, m_fPrePlayStartCameraY);
+}
+
+void StatePreplaying::secondInitPhase()
+{
+  MotoGame* pWorld = m_pGame->getMotoGame();
+
+  try {
+    /* add the ghosts */
+    if(m_pGame->getSession()->enableGhosts()) {
+      try {
+	m_pGame->addGhosts(pWorld, m_pGame->getTheme());
+      } catch(Exception &e) {
+	/* anyway */
+      }
+    }
+  } catch(Exception &e) {
+    Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
+    pWorld->endLevel();
+    m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    return;
+  }
+
+  /* Prepare level */
+  m_pGame->getGameRenderer()->prepareForNewLevel();
+
+  /* go directly to playing */
+  if(m_playAnimation == false) {
+    m_pGame->getStateManager()->replaceState(new StatePlaying(m_pGame)); 
+  }
+
+  /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
+  pWorld->setAutoZoomCamera();
+
+  /* display level name */
+  pWorld->gameMessage(pWorld->getLevelSrc()->Name(),
+		      false,
+		      PRESTART_ANIMATION_LEVEL_MSG_DURATION);
+
+  zoomAnimation1_init();
+  
+  setAutoZoom(shouldBeAnimated());
+}
+
+void StatePreplaying::executeOneCommand(std::string cmd)
+{
+  if(cmd == "GHOST_DOWNLOADED"){
+    m_ghostDownloaded = true;
+  }
+  else {
+    StateScene::executeOneCommand(cmd);
+  }
+}
+
+bool StatePreplaying::needToDownloadGhost()
+{
+  char **v_result;
+  unsigned int nrow;
+  std::string res;
+  std::string v_replayName;
+  std::string v_fileUrl;
+
+  v_result = m_pGame->getDb()->readDB("SELECT fileUrl FROM webhighscores "
+			   "WHERE id_room=" + m_pGame->getSession()->idRoom() + " "
+			   "AND id_level=\"" + xmDatabase::protectString(m_idlevel) + "\";",
+			   nrow);    
+  if(nrow == 0) {
+    m_pGame->getDb()->read_DB_free(v_result);
+    return false;
+  }
+
+  v_fileUrl = m_pGame->getDb()->getResult(v_result, 1, 0, 0);
+  v_replayName = FS::getFileBaseName(v_fileUrl);
+  m_pGame->getDb()->read_DB_free(v_result);
+
+  /* search if the replay is already downloaded */
+  return (m_pGame->getDb()->replays_exists(v_replayName) == false);
 }

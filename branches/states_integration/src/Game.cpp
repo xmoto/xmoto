@@ -469,48 +469,36 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     return res;
   }
 
-  std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time) {
-    char **v_result;
-    unsigned int nrow;
-    std::string res;
-    std::string v_replayName;
-    std::string v_fileUrl;
+std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time)
+{
+  char **v_result;
+  unsigned int nrow;
+  std::string res;
+  std::string v_replayName;
+  std::string v_fileUrl;
 
-    v_result = m_db->readDB("SELECT fileUrl, finishTime FROM webhighscores "
-			    "WHERE id_room=" + m_xmsession->idRoom() + " "
-			    "AND id_level=\"" + xmDatabase::protectString(p_levelId) + "\";",
-			    nrow);    
-    if(nrow == 0) {
-      p_time = -1.0;
-      m_db->read_DB_free(v_result);
-      return "";
-    }
-
-    v_fileUrl = m_db->getResult(v_result, 2, 0, 0);
-    v_replayName = FS::getFileBaseName(v_fileUrl);
-    p_time = atof(m_db->getResult(v_result, 2, 0, 1));
+  v_result = m_db->readDB("SELECT fileUrl, finishTime FROM webhighscores "
+			  "WHERE id_room=" + m_xmsession->idRoom() + " "
+			  "AND id_level=\"" + xmDatabase::protectString(p_levelId) + "\";",
+			  nrow);    
+  if(nrow == 0) {
+    p_time = -1.0;
     m_db->read_DB_free(v_result);
-
-    /* search if the replay is already downloaded */
-    if(m_db->replays_exists(v_replayName)) {
-      res = std::string("Replays/") + v_replayName + std::string(".rpl");
-    } else {
-      if(m_xmsession->www()) {
-	/* download the replay */
-	try {
-	  //_SimpleMessage(GAMETEXT_DLGHOST,&m_InfoMsgBoxRect);
-	  m_pWebHighscores->downloadReplay(v_fileUrl);
-	  addReplay(v_replayName);
-	  getStateManager()->sendAsynchronousMessage("REPLAYS_UPDATED");
-	  res = std::string("Replays/") + v_replayName + std::string(".rpl");
-	} catch(Exception &e) {
-	  /* do nothing */
-	  enableWWW(false);
-	}
-      }
-    }
-    return res;
+    return "";
   }
+
+  v_fileUrl = m_db->getResult(v_result, 2, 0, 0);
+  v_replayName = FS::getFileBaseName(v_fileUrl);
+  p_time = atof(m_db->getResult(v_result, 2, 0, 1));
+  m_db->read_DB_free(v_result);
+
+  /* search if the replay is already downloaded */
+  if(m_db->replays_exists(v_replayName)) {
+    return std::string("Replays/") + v_replayName + std::string(".rpl");
+  } else {
+    return "";
+  }
+}
 
   std::string GameApp::_getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time) {
     char **v_result;

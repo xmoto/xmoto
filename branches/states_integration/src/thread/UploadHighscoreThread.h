@@ -32,8 +32,9 @@ class UploadHighscoreThread : public XMThread, public WWWAppInterface {
 
   void setTaskProgress(float p_percent);
 
-private:
   virtual int realThreadFunction();
+
+private:
   std::string m_msg;
   std::string m_highscorePath;
 };

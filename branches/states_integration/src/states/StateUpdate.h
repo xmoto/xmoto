@@ -62,7 +62,10 @@ protected:
 
   // the message displayed in the message box if the thread failed
   std::string m_msg;
-  bool m_messageOnSuccess; // display the message, even if the thread succed
+  // display the message, even if the thread succed
+  bool m_messageOnSuccess;
+  // dont display the message when the thread failed
+  bool m_messageOnFailure;
 
   // for child customization
   virtual void callAfterThreadFinished(int threadResult);

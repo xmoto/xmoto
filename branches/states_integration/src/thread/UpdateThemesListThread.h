@@ -31,7 +31,6 @@ public:
 
   virtual void setTaskProgress(float p_percent);
 
-private:
   virtual int realThreadFunction();
 };
 

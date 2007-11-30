@@ -43,6 +43,7 @@ StateUpdate::StateUpdate(GameApp* pGame,
   m_pThread          = NULL;
   m_msg              = "";
   m_messageOnSuccess = false;
+  m_messageOnFailure = true;
   init();
 }
 
@@ -93,7 +94,7 @@ bool StateUpdate::update()
     callAfterThreadFinished(v_thread_res);
 
     if(v_thread_res == 0) {
-      if(m_messageOnSuccess && m_msg != "") {
+      if(m_messageOnSuccess == true && m_msg != "") {
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, m_msg, UI_MSGBOX_OK);
 	v_msgboxState->setId("SUCCESS");
 	m_pGame->getStateManager()->pushState(v_msgboxState);
@@ -102,9 +103,11 @@ bool StateUpdate::update()
       }
     }
     else {
-      StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, m_msg, UI_MSGBOX_OK);
-      v_msgboxState->setId("ERROR");
-      m_pGame->getStateManager()->pushState(v_msgboxState);
+      if(m_messageOnFailure == true && m_msg != "") {
+	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, m_msg, UI_MSGBOX_OK);
+	v_msgboxState->setId("ERROR");
+	m_pGame->getStateManager()->pushState(v_msgboxState);
+      }
     }
 
     Logger::Log("thread ended");

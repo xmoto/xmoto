@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "states/StateManager.h"
 #include "states/StateDownloadGhost.h"
+#include "helpers/Log.h"
 
 DownloadGhostThread::DownloadGhostThread(GameState* pCallingState,
 					 std::string levelId)
@@ -31,7 +32,7 @@ DownloadGhostThread::DownloadGhostThread(GameState* pCallingState,
   m_pWebRoom      = new WebRoom(this);
   m_pCallingState = pCallingState;
   m_msg     = "";
-  m_levelId = "";
+  m_levelId = levelId;
 }
 
 DownloadGhostThread::~DownloadGhostThread()
@@ -53,25 +54,28 @@ int DownloadGhostThread::realThreadFunction()
 			   "AND id_room=" + m_pGame->getSession()->idRoom() + ";",
 			   nrow);
   if(nrow == 0) {
+    Logger::Log("nrow == 0");
     m_pDb->read_DB_free(v_result);
     return 0;
   }
 
-  v_fileUrl     = m_pDb->getResult(v_result, 2, 0, 0);
+  v_fileUrl     = m_pDb->getResult(v_result, 1, 0, 0);
   v_replayName  = FS::getFileBaseName(v_fileUrl);
   m_pDb->read_DB_free(v_result);
 
   if(m_pDb->replays_exists(v_replayName)) {
+    Logger::Log("replay exists");
     ((StateDownloadGhost*)m_pCallingState)->setReplay(v_replayName);
     return 0;
   }
 
   if(m_pGame->getSession()->www() == false) {
+    Logger::Log("www == false");
     return 0;
   }
 
   try {
-    setThreadCurrentOperation(GAMETEXT_DLHIGHSCORE);
+    setThreadCurrentOperation(GAMETEXT_DLGHOST);
     setThreadProgress(0);
 
     ProxySettings* pProxySettings = m_pGame->getSession()->proxySettings();

@@ -35,7 +35,6 @@ public:
   virtual void loadLevelHook(std::string i_level, int i_percentage);
   virtual void loadReplayHook(std::string i_replay, int i_percentage);
 
-private:
   virtual int realThreadFunction();
 };
 

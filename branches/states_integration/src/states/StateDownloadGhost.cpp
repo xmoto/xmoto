@@ -20,13 +20,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Game.h"
 #include "StateDownloadGhost.h"
+#include "StateReplaying.h"
+#include "thread/DownloadGhostThread.h"
+#include "helpers/Log.h"
 
 StateDownloadGhost::StateDownloadGhost(GameApp* pGame,
-		   bool drawStateBehind,
-		   bool updateStatesBehind)
+				       std::string levelId,
+				       bool launchReplaying,
+				       bool drawStateBehind,
+				       bool updateStatesBehind)
   : StateUpdate(pGame, drawStateBehind, updateStatesBehind)
 {
-  m_replayName = "";
+  m_pThread         = new DownloadGhostThread(this, levelId);
+  m_name            = "StateDownloadGhost";
+  m_replayName      = "";
+  m_launchReplaying = launchReplaying;
+  // we don't want a message box on failure.
+  m_messageOnFailure = launchReplaying;
 }
 
 StateDownloadGhost::~StateDownloadGhost()
@@ -36,4 +46,18 @@ StateDownloadGhost::~StateDownloadGhost()
 void StateDownloadGhost::setReplay(std::string replayName)
 {
   m_replayName = replayName;
+}
+
+void StateDownloadGhost::callAfterThreadFinished(int threadResult)
+{
+  m_msg = ((DownloadGhostThread*)m_pThread)->getMsg();
+
+  if(threadResult == 0 && m_launchReplaying == true){
+    std::string msg = "Replay to play: " + m_replayName;
+    Logger::Log(msg.c_str());
+    m_pGame->getStateManager()->replaceState(new StateReplaying(m_pGame, m_replayName));
+  }
+  else{
+    m_pGame->getStateManager()->sendAsynchronousMessage("GHOST_DOWNLOADED");
+  }
 }

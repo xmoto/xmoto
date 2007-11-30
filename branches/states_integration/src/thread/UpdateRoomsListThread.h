@@ -28,7 +28,6 @@ public:
   UpdateRoomsListThread();
   virtual ~UpdateRoomsListThread();
 
-private:
   virtual int realThreadFunction();
 };
 

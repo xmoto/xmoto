@@ -38,6 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateUpdateTheme.h"
 #include "StateCheckWww.h"
 #include "StateUpgradeLevels.h"
+#include "StateDownloadGhost.h"
 #include "LevelsManager.h"
 #include "helpers/Log.h"
 #include "helpers/System.h"
@@ -310,12 +311,7 @@ void StateMainMenu::checkEventsMainWindow() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-#if 0  
-    /* view highscore button clicked */
-    viewHighscoreOf();
-    setState(GS_REPLAYING);
-#endif
-
+    m_pGame->getStateManager()->pushState(new StateDownloadGhost(m_pGame, getInfoFrameLevelId(), true));
   }
 }
 
@@ -2720,22 +2716,12 @@ void StateMainMenu::updateInfoFrame() {
   UIButton* v_button   = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:INFO_FRAME:BESTPLAYER_VIEW"));
   UIWindow* v_window   = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:INFO_FRAME"));
 
-  UILevelList* v_newLevelsList      = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST");
-  UILevelList* v_favoriteLevelsList = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:FAVORITE_LIST");
-  UILevelList* v_list = NULL;
-
-  if(v_newLevelsList->isVisible() == true) {
-    v_list = v_newLevelsList;
-  } else if(v_favoriteLevelsList->isVisible() == true) {
-    v_list = v_favoriteLevelsList;
-  }
-
-  if(v_list == NULL) {
+  std::string v_id_level = getInfoFrameLevelId();
+  if(v_id_level == ""){
     v_window->showWindow(false);
     return;
   }
 
-  std::string v_id_level = v_list->getSelectedLevel();
   std::string v_id_profile;
   std::string v_url;
   bool        v_isAccessible;
@@ -2785,5 +2771,25 @@ void StateMainMenu::updateReplaysRights() {
 	}
       }
     }
+  }
+}
+
+std::string StateMainMenu::getInfoFrameLevelId()
+{
+  UILevelList* v_newLevelsList      = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST");
+  UILevelList* v_favoriteLevelsList = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:FAVORITE_LIST");
+  UILevelList* v_list               = NULL;
+
+  if(v_newLevelsList->isVisible() == true) {
+    v_list = v_newLevelsList;
+  } else if(v_favoriteLevelsList->isVisible() == true) {
+    v_list = v_favoriteLevelsList;
+  }
+
+  if(v_list == NULL) {
+    return "";
+  }
+  else{
+    return v_list->getSelectedLevel();
   }
 }

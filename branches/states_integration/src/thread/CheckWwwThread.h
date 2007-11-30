@@ -37,12 +37,13 @@ class CheckWwwThread : public XMThread, public WWWAppInterface {
 
   void setTaskProgress(float p_percent);
 
+  virtual int realThreadFunction();
+
 private:
   void updateWebHighscores();
   void upgradeWebHighscores();
   void updateWebLevels();
 
-  virtual int realThreadFunction();
   std::string m_msg;
   bool        m_forceUpdate;
   WebRoom*    m_pWebRoom;

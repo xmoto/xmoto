@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "states/StatePreplaying.h"
 #include "states/StateLevelInfoViewer.h"
+#include "states/StateDownloadGhost.h"
 
 /* static members */
 UIRoot*  StateLevelPackViewer::m_sGUI = NULL;
@@ -83,13 +84,14 @@ void StateLevelPackViewer::leaveAfterPush()
 void StateLevelPackViewer::checkEvents()
 {
   /* Get buttons and list */
-  UIButton *pCancelButton             = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:CANCEL_BUTTON"));
-  UIButton *pPlayButton               = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:PLAY_BUTTON"));
-  UIButton *pLevelInfoButton          = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:INFO_BUTTON"));
-  UIButton *pLevelAddToFavoriteButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:ADDTOFAVORITE_BUTTON"));
-  UIButton *pLevelRandomizeButton     = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:RANDOMIZE_BUTTON"));
-  UILevelList *pList                  = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
-  UIEdit *pLevelFilterEdit            = reinterpret_cast<UIEdit *>(m_GUI->getChild("FRAME:LEVEL_FILTER"));   
+  UIButton* pCancelButton             = reinterpret_cast<UIButton*>(m_GUI->getChild("FRAME:CANCEL_BUTTON"));
+  UIButton* pPlayButton               = reinterpret_cast<UIButton*>(m_GUI->getChild("FRAME:PLAY_BUTTON"));
+  UIButton* pLevelInfoButton          = reinterpret_cast<UIButton*>(m_GUI->getChild("FRAME:INFO_BUTTON"));
+  UIButton* pLevelAddToFavoriteButton = reinterpret_cast<UIButton*>(m_GUI->getChild("FRAME:ADDTOFAVORITE_BUTTON"));
+  UIButton* pLevelRandomizeButton     = reinterpret_cast<UIButton*>(m_GUI->getChild("FRAME:RANDOMIZE_BUTTON"));
+  UIButton* pShowHighscore            = reinterpret_cast<UIButton*>(m_GUI->getChild("FRAME:INFO_FRAME:BESTPLAYER_VIEW"));
+  UILevelList* pList                  = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
+  UIEdit* pLevelFilterEdit            = reinterpret_cast<UIEdit *>(m_GUI->getChild("FRAME:LEVEL_FILTER"));   
 
   /* check filter */
   if(pLevelFilterEdit != NULL) {
@@ -140,16 +142,10 @@ void StateLevelPackViewer::checkEvents()
     updateInfoFrame();
   }
 
-#if 0  
-  /* view highscore button clicked */
-  if(m_pPackLevelInfoViewReplayButton->isClicked()) {
-    m_pPackLevelInfoViewReplayButton->setClicked(false);
-    m_pGame->viewHighscoreOf();
-    m_GUI->showWindow(false);
-    m_pMainMenu->showWindow(false);      
-    m_pGame->getStateManager()->pushState(new StateReplaying(m_pGame, m_PlaySpecificReplay));
+  if(pShowHighscore != NULL && pShowHighscore->isClicked() == true){
+    pShowHighscore->setClicked(false);
+    m_pGame->getStateManager()->pushState(new StateDownloadGhost(m_pGame, getInfoFrameLevelId(), true));
   }
-#endif
 
   if(pLevelInfoButton!=NULL && pLevelInfoButton->isClicked()) {
     pLevelInfoButton->setClicked(false);
@@ -182,11 +178,13 @@ void StateLevelPackViewer::send(const std::string& i_id, const std::string& i_me
   StateMenu::send(i_id, i_message);
 }
 
-
 void StateLevelPackViewer::keyDown(int nKey, SDLMod mod,int nChar)
 {
   StateMenu::keyDown(nKey, mod, nChar);
-  checkEvents();
+
+  if(nKey == SDLK_ESCAPE){
+    m_requestForEnd = true;
+  }
 }
 
 void StateLevelPackViewer::keyUp(int nKey,   SDLMod mod)
@@ -395,4 +393,10 @@ void StateLevelPackViewer::updateInfoFrame() {
       v_window->showWindow(false);
     }
   }
+}
+
+std::string StateLevelPackViewer::getInfoFrameLevelId()
+{
+  UILevelList* v_list  = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
+  return v_list->getSelectedLevel();
 }

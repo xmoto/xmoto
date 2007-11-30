@@ -26,14 +26,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class StateDownloadGhost : public StateUpdate {
 public:
   StateDownloadGhost(GameApp* pGame,
+		     std::string levelId,
+		     bool launchReplaying    = false,
 		     bool drawStateBehind    = true,
 		     bool updateStatesBehind = false);
   virtual ~StateDownloadGhost();
 
   void setReplay(std::string replayName);
 
+protected:
+  void callAfterThreadFinished(int threadResult);
+  
 private:
   std::string m_replayName;
+  bool        m_launchReplaying;
 };
 
 #endif

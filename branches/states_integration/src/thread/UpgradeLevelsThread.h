@@ -39,8 +39,9 @@ public:
   virtual void readEvents();
   virtual bool shouldLevelBeUpdated(const std::string &LevelID);
 
-private:
   virtual int realThreadFunction();
+
+private:
   WebLevels*  m_pWebLevels;
   GameState*  m_pCallingState;
 

@@ -47,6 +47,13 @@ class StatePreplaying : public StateScene {
   static void setPlayAnimation(bool i_value);
 
   private:
+  void executeOneCommand(std::string cmd);
+  bool needToDownloadGhost();
+
+  void secondInitPhase();
+  bool m_secondInitPhaseDone;
+  bool m_ghostDownloaded;
+
   std::string m_idlevel;
 
   bool shouldBeAnimated() const; // return true wether the animation shoud be done

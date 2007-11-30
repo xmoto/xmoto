@@ -120,6 +120,8 @@ class StateMainMenu : public StateMenu {
   void updateInfoFrame();
   void updateReplaysRights();
 
+  std::string getInfoFrameLevelId();
+
   bool m_require_updateFavoriteLevelsList;
   bool m_require_updateReplaysList;
   bool m_require_updateLevelsList;

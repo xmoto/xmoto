@@ -53,10 +53,10 @@ public:
   std::string getThreadCurrentMicroOperation();
 
   // don't use it
-  static int run(void* pThreadInstance);
+  static  int run(void* pThreadInstance);
+  virtual int realThreadFunction() = 0;
 
 protected:
-  virtual int realThreadFunction() = 0;
 
   void sleepThread();
 

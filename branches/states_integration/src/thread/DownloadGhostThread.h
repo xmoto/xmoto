@@ -36,8 +36,9 @@ public:
   void setTaskProgress(float p_percent);
   std::string getMsg() const;
 
-private:
   int realThreadFunction();
+
+private:
 
   WebRoom*    m_pWebRoom;
   GameState*  m_pCallingState;
