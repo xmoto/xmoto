@@ -63,6 +63,7 @@ function makeNSI {
   echo "        File libiconv2.dll"
   echo "        File sqlite3.dll"
   echo "        File SDL_ttf.dll"
+  echo "        File mingwm10.dll"
   echo "	File COPYING.txt"
   echo "	File ChangeLog.txt"
   echo
