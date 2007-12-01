@@ -348,11 +348,6 @@ void StatePreplaying::secondInitPhase()
   /* Prepare level */
   m_pGame->getGameRenderer()->prepareForNewLevel();
 
-  /* go directly to playing */
-  if(m_playAnimation == false) {
-    m_pGame->getStateManager()->replaceState(new StatePlaying(m_pGame)); 
-  }
-
   /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
   pWorld->setAutoZoomCamera();
 
