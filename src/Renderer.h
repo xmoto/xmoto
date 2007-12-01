@@ -29,13 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class ParticlesSource;
  
   /*===========================================================================
-  Quality settings
-  ===========================================================================*/
-  enum GraphQuality {
-    GQ_LOW,GQ_MEDIUM,GQ_HIGH    
-  };
-
-  /*===========================================================================
   Graphical debug info
   ===========================================================================*/
   struct GraphDebugInfo {
@@ -129,11 +122,6 @@ class ParticlesSource;
   public:
     GameRenderer(DrawLib* i_drawLib) {
       m_drawLib = i_drawLib;
-      m_bDebug=false;
-      m_Quality=GQ_HIGH;
-      m_bGhostMotionBlur = true;
-      m_displayGhostInformation = false;
-      m_hideGhosts = false;
       m_theme = NULL;
       m_previousEngineSpeed = -1.0;
       m_previousEngineLinVel = -1.0;
@@ -141,8 +129,6 @@ class ParticlesSource;
       m_sizeMultOfEntitiesWhichMakeWin = 1.0;
       m_showMinimap = true;
       m_showEngineCounter = true;
-      m_bTestThemeMode = false;
-      m_bUglyOverMode  = false;
       m_showTimePanel = true;
     }
     ~GameRenderer() {_Free();}
@@ -164,11 +150,6 @@ class ParticlesSource;
     MotoGame *getGameObject(void) {return m_pMotoGame;}
     void setParent(GameApp *pParent) {m_pParent=pParent;}
     GameApp *getParent(void) {return m_pParent;}
-    void setDebug(bool bDebug) {m_bDebug = bDebug;}
-    void setUglyMode(bool bUglyMode) {m_bUglyMode = bUglyMode;}
-    void setTestThemeMode(bool bTestThemeMode) {m_bTestThemeMode = bTestThemeMode;}
-    void setUglyOverMode(bool bUglyOverMode) {m_bUglyOverMode = bUglyOverMode;}
-    bool isDebug(void) {return m_bDebug;}
     UIRoot *getGUI(void) {return &m_GUI;}
     void setBestTime(const std::string& s) {m_bestTime = s;}
     void showReplayHelp(float p_speed, bool bAllowRewind);
@@ -176,10 +157,6 @@ class ParticlesSource;
     void setWorldRecordTime(const std::string &s) {m_worldRecordTime = s;}
 
     std::string getBestTime(void) {return m_bestTime;}
-    void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
-    void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
-    void setGhostDisplayInformation(bool i_display);
-    void setHideGhosts(bool i_value);
 
     float SizeMultOfEntitiesToTake() const;
     float SizeMultOfEntitiesWhichMakeWin() const;
@@ -206,11 +183,6 @@ class ParticlesSource;
       
     MotoGame *m_pMotoGame;        /* Game object, so we know what to draw. */
     GameApp *m_pParent;               /* Our owner, so we know where to draw. */
-      
-    bool m_bDebug;
-    bool m_bUglyMode;
-    bool m_bTestThemeMode;
-    bool m_bUglyOverMode;
 
     UIRoot m_GUI;                 /* GUI root */
       
@@ -224,18 +196,13 @@ class ParticlesSource;
       
     float m_fNextGhostInfoUpdate;
     int m_nGhostInfoTrans;
-    bool m_displayGhostInformation;
-    bool m_hideGhosts;
 
     float m_previousEngineSpeed;
-	float m_previousEngineLinVel;
+    float m_previousEngineLinVel;
 	
     bool m_showMinimap;
     bool m_showEngineCounter;
     bool m_showTimePanel;
-
-    GraphQuality m_Quality;
-    bool m_bGhostMotionBlur;
       
     /* FBO overlay */
     SFXOverlay m_Overlay;

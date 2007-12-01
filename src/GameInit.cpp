@@ -354,9 +354,6 @@ void GameApp::_Wait()
       switchTestThemeMode(m_xmsession->testTheme());
       m_Renderer->setParent( (GameApp *)this );
       m_Renderer->setGameObject( &m_MotoGame );        
-      m_Renderer->setDebug(m_xmsession->debug());
-
-      m_Renderer->setGhostMotionBlur(m_xmsession->ghostMotionBlur());
     }    
 
     /* Tell collision system whether we want debug-info or not */

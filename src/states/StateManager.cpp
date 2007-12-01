@@ -195,7 +195,7 @@ void StateManager::render()
     // STACK
     //if(m_pGame->getSession()->debug()) {
       drawStack();
-      //}
+    //}
 
     // SYSMESSAGE
     m_pGame->getSysMessage()->render();

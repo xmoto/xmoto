@@ -93,9 +93,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* do not load into the graphic card blocks which won't be
 	 displayed. On ati card with free driver, levels like green
 	 hill zone act 2 don't work if there's too much vertex loaded */
-      if(m_Quality != GQ_HIGH && Blocks[i]->getLayer() != -1)
+      if(getParent()->getSession()->gameGraphics() != GFX_HIGH && Blocks[i]->getLayer() != -1)
 	continue;
-      if(m_Quality == GQ_LOW && Blocks[i]->isBackground() == true)
+      if(getParent()->getSession()->gameGraphics() == GFX_LOW && Blocks[i]->isBackground() == true)
 	continue;
 
       bool dynamicBlock = false;
@@ -496,15 +496,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   void GameRenderer::_RenderGhost(Biker* i_ghost, int i) {
     /* Render ghost - ugly mode? */
-    if(m_bUglyMode == false) {
-      if(m_hideGhosts == false) { /* ghosts can be hidden, but don't hide text */
+    if(getParent()->getSession()->ugly() == false) {
+      if(getParent()->getSession()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
 
 	// can't use the same overlay for the multi cameras,
 	// because the fade is made using all the cameras,
 	// there should be one overlay per camera.
 	int nbCamera = getGameObject()->getNumberCameras();
 	/* No not ugly, fancy! Render into overlay? */      
-	if(m_bGhostMotionBlur
+	if(getParent()->getSession()->ghostMotionBlur()
 	   && getParent()->getDrawLib()->useFBOs()
 	   && nbCamera == 1) {
 	  m_Overlay.beginRendering();
@@ -513,7 +513,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	_RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(), i_ghost->getBikeTheme(), true,
 		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
 	
-	if(m_bGhostMotionBlur
+	if(getParent()->getSession()->ghostMotionBlur()
 	   && getParent()->getDrawLib()->useFBOs()
 	   && nbCamera == 1) {
 	  m_Overlay.endRendering();
@@ -522,7 +522,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
  
       if(i_ghost->getDescription() != "") {
-	if(m_nGhostInfoTrans > 0 && m_displayGhostInformation) {
+	if(m_nGhostInfoTrans > 0 && getParent()->getSession()->showGhostsInfos()) {
 	  _RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i*3.0,-1.5f),
 			    i_ghost->getDescription(),
 			    MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
@@ -530,8 +530,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     }
     
-    if(m_bUglyMode) {
-      if(m_hideGhosts == false) { /* ghosts can be hidden, but don't hide text */
+    if(getParent()->getSession()->ugly()) {
+      if(getParent()->getSession()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
 	_RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(),
 		    i_ghost->getBikeTheme(),
 		    true,
@@ -574,7 +574,7 @@ int GameRenderer::nbParticlesRendered() const {
     m_screenBBox.addPointToAABB2f(v2);
 
     /* SKY! */
-    if(m_bUglyMode == false) {
+    if(getParent()->getSession()->ugly() == false) {
       _RenderSky(pGame->getLevelSrc()->Sky()->Zoom(),
 		 pGame->getLevelSrc()->Sky()->Offset(),
 		 pGame->getLevelSrc()->Sky()->TextureColor(),
@@ -594,12 +594,12 @@ int GameRenderer::nbParticlesRendered() const {
     getParent()->getDrawLib()->setRotateZ(rotationAngle);
     getParent()->getDrawLib()->setTranslate(-pCamera->getCameraPositionX(), -pCamera->getCameraPositionY());
 
-    if(m_Quality == GQ_HIGH && m_bUglyMode == false) {
+    if(getParent()->getSession()->gameGraphics() == GFX_HIGH && getParent()->getSession()->ugly() == false) {
       /* background level blocks */
       _RenderLayers(false);
     }
 
-    if(m_Quality != GQ_LOW && m_bUglyMode == false) {
+    if(getParent()->getSession()->gameGraphics() != GFX_LOW && getParent()->getSession()->ugly() == false) {
       /* Background blocks */
       _RenderDynamicBlocks(true);
       _RenderBackground();
@@ -608,7 +608,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
     _RenderSprites(false,true);
 
-    if(m_Quality == GQ_HIGH && m_bUglyMode == false) {
+    if(getParent()->getSession()->gameGraphics() == GFX_HIGH && getParent()->getSession()->ugly() == false) {
       /* Render particles (back!) */    
        _RenderParticles(false);
     }
@@ -621,7 +621,7 @@ int GameRenderer::nbParticlesRendered() const {
     _RenderSprites(false,false);
 
     /* zones */
-    if(m_bUglyOverMode) {
+    if(getParent()->getSession()->uglyOver()) {
       for(unsigned int i=0; i<pGame->getLevelSrc()->Zones().size(); i++) {
 	_RenderZone(pGame->getLevelSrc()->Zones()[i]);
       }
@@ -678,7 +678,7 @@ int GameRenderer::nbParticlesRendered() const {
       }
     }
     
-    if(m_Quality == GQ_HIGH && m_bUglyMode == false) {
+    if(getParent()->getSession()->gameGraphics() == GFX_HIGH && getParent()->getSession()->ugly() == false) {
       /* Render particles (front!) */    
       _RenderParticles(true);
     }
@@ -687,11 +687,11 @@ int GameRenderer::nbParticlesRendered() const {
     _RenderSprites(true,false);
 
     /* and finally finally, front layers */
-    if(m_Quality == GQ_HIGH && m_bUglyMode == false) {
+    if(getParent()->getSession()->gameGraphics() == GFX_HIGH && getParent()->getSession()->ugly() == false) {
       _RenderLayers(true);
     }
 
-    if(isDebug()) {
+    if(getParent()->getSession()->debug()) {
       /* Draw some collision handling debug info */
       CollisionSystem *pc = pGame->getCollisionHandler();
       for(int i=0;i<pc->m_CheckedLines.size();i++) {
@@ -778,7 +778,7 @@ int GameRenderer::nbParticlesRendered() const {
 	}
       }
       if(showEngineCounter()
-	 && m_bUglyMode == false
+	 && getParent()->getSession()->ugly() == false
 	 && pGame->getNumberCameras() == 1) {
 	renderEngineCounter(getParent()->getDrawLib()->getDispWidth()-128,
 			    getParent()->getDrawLib()->getDispHeight()-128,128,128,
@@ -1018,7 +1018,7 @@ int GameRenderer::nbParticlesRendered() const {
     float v_height;
     std::string v_sprite_type;
 
-    if(m_bUglyMode == false) {
+    if(getParent()->getSession()->ugly() == false) {
       switch(pSprite->Speciality()) {
       case ET_KILL:
 	v_sprite_type = getGameObject()->getLevelSrc()->SpriteForWecker();
@@ -1154,7 +1154,7 @@ int GameRenderer::nbParticlesRendered() const {
       }    
     }
     /* If this is debug-mode, also draw entity's area of effect */
-    if(isDebug() || m_bTestThemeMode || m_bUglyMode) {
+    if(getParent()->getSession()->debug() || getParent()->getSession()->testTheme() || getParent()->getSession()->ugly()) {
       Vector2f C = pSprite->DynamicPosition();
       Color v_color;
       
@@ -1189,7 +1189,7 @@ int GameRenderer::nbParticlesRendered() const {
     /* sort blocks on their texture */
     std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
 
-    if(m_bUglyMode == false) {
+    if(getParent()->getSession()->ugly() == false) {
       for(int i=0; i<Blocks.size(); i++) {
 	/* Are we rendering background blocks or what? */
 	if(Blocks[i]->isBackground() != bBackground)
@@ -1285,7 +1285,7 @@ int GameRenderer::nbParticlesRendered() const {
       }
 
       /* Render all special edges (if quality!=low) */
-      if(m_Quality != GQ_LOW) {
+      if(getParent()->getSession()->gameGraphics() != GFX_LOW) {
 	for(int i=0;i<Blocks.size();i++) {
 	  if(Blocks[i]->isBackground() == bBackground){
 	    _RenderBlockEdges(Blocks[i]);
@@ -1295,7 +1295,7 @@ int GameRenderer::nbParticlesRendered() const {
 
     }
 
-    if(m_bUglyMode || m_bUglyOverMode) {
+    if(getParent()->getSession()->ugly() || getParent()->getSession()->uglyOver()) {
       for(int i=0; i<Blocks.size(); i++) {
 	/* Are we rendering background blocks or what? */
 	if(Blocks[i]->isBackground() != bBackground)
@@ -1474,7 +1474,7 @@ int GameRenderer::nbParticlesRendered() const {
       std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
 
       /* Ugly mode? */
-      if(m_bUglyMode == false) {
+      if(getParent()->getSession()->ugly() == false) {
 	/* Render all non-background blocks */
 	/* Static geoms... */
 	for(int i=0;i<Blocks.size();i++) {
@@ -1484,7 +1484,7 @@ int GameRenderer::nbParticlesRendered() const {
 	}
 
 	/* Render all special edges (if quality!=low) */
-	if(m_Quality != GQ_LOW) {
+	if(getParent()->getSession()->gameGraphics() != GFX_LOW) {
 	  for(int i=0;i<Blocks.size();i++) {
 	    if(Blocks[i]->isBackground() == false) {
 	    _RenderBlockEdges(Blocks[i]);
@@ -1493,7 +1493,7 @@ int GameRenderer::nbParticlesRendered() const {
 	}
       }
 
-      if(m_bUglyMode) {
+      if(getParent()->getSession()->ugly()) {
 	for(int i=0;i<Blocks.size();i++) {
 	  if(Blocks[i]->isBackground() == false) {
 	    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
@@ -1507,7 +1507,7 @@ int GameRenderer::nbParticlesRendered() const {
 	}
       }
 
-      if(m_bUglyOverMode) {
+      if(getParent()->getSession()->uglyOver()) {
 	for(int i=0; i<Blocks.size(); i++) {
 	  for(int j=0; j<Blocks[i]->ConvexBlocks().size(); j++) {
 
@@ -1556,7 +1556,7 @@ int GameRenderer::nbParticlesRendered() const {
   float uZoom = 1.0 / i_zoom;
   float uDriftZoom = 1.0 / i_driftZoom;
 
-  if(m_Quality != GQ_HIGH) {
+  if(getParent()->getSession()->gameGraphics() != GFX_HIGH) {
     i_drifted = false;
   }
   
@@ -1626,7 +1626,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
 
     /* Render all special edges (if quality != low) */
-    if(m_Quality != GQ_LOW) {
+    if(getParent()->getSession()->gameGraphics() != GFX_LOW) {
       for(int i=0;i<Blocks.size();i++) {
 	if(Blocks[i]->isBackground() == true) {
 	  _RenderBlockEdges(Blocks[i]);
@@ -1675,7 +1675,7 @@ int GameRenderer::nbParticlesRendered() const {
       _RenderBlock(block);
     }
     /* Render all special edges (if quality!=low) */
-    if(m_Quality != GQ_LOW) {
+    if(getParent()->getSession()->gameGraphics() != GFX_LOW) {
       for(int i=0;i<Blocks.size();i++) {
 	_RenderBlockEdges(Blocks[i]);
       }
@@ -1985,14 +1985,6 @@ int GameRenderer::nbParticlesRendered() const {
 
   void GameRenderer::setSizeMultOfEntitiesWhichMakeWin(float i_sizeMult) {
     m_sizeMultOfEntitiesWhichMakeWin = i_sizeMult;
-  }
-
-  void GameRenderer::setGhostDisplayInformation(bool i_display) {
-    m_displayGhostInformation = i_display;
-  }
-
-  void GameRenderer::setHideGhosts(bool i_value) {
-    m_hideGhosts = i_value;
   }
 
   bool GameRenderer::showMinimap() const {

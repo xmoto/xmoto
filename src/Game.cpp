@@ -584,17 +584,14 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
     } else {
       SDL_ShowCursor(SDL_ENABLE);
     }
-    m_Renderer->setUglyMode(bUgly);
   }
 
   void GameApp::switchTestThemeMode(bool mode) {
     m_xmsession->setTestTheme(mode);
-    m_Renderer->setTestThemeMode(mode);
   }
 
   void GameApp::switchUglyOverMode(bool mode) {
     m_xmsession->setUglyOver(mode);
-    m_Renderer->setUglyOverMode(mode);
   }
 
   void GameApp::initCameras(int nbPlayer) {
