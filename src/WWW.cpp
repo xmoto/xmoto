@@ -49,6 +49,7 @@ WebRoom::WebRoom(WWWAppInterface* p_WebRoomApp)
     + DEFAULT_WEBHIGHSCORES_FILENAME;
   m_webhighscores_url = DEFAULT_WEBHIGHSCORES_URL;
   m_WebRoomApp        = p_WebRoomApp;
+  m_proxy_settings    = NULL;
 }
 
 WebRoom::~WebRoom()
@@ -139,28 +140,28 @@ void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
     if(FS::isFileReadable(p_local_file) == true) {
       std::string v_md5Local  = FS::md5sum(p_local_file);
       if(v_md5Local != "") {
-  std::string v_md5File = p_local_file + ".md5";
+	std::string v_md5File = p_local_file + ".md5";
   
-  /* remove in case it already exists */
-  remove(v_md5File.c_str());
-  downloadFile(v_md5File,
-         p_web_file + ".md5",
-         NULL, /* nothing for this */
-         NULL,
-         p_proxy_settings
-         );
-
-  std::string v_md5Web = md5Contents(v_md5File);
-  remove(v_md5File.c_str());
-  if(v_md5Web != "") {
-    require_dwd = v_md5Web != v_md5Local;
-  }
+	/* remove in case it already exists */
+	remove(v_md5File.c_str());
+	downloadFile(v_md5File,
+		     p_web_file + ".md5",
+		     NULL, /* nothing for this */
+		     NULL,
+		     p_proxy_settings
+		     );
+	
+	std::string v_md5Web = md5Contents(v_md5File);
+	remove(v_md5File.c_str());
+	if(v_md5Web != "") {
+	  require_dwd = v_md5Web != v_md5Local;
+	}
       }
     }
   } catch(Exception &e) {
     /* no pb, just dwd */
   }
-    
+
   if(require_dwd) {
     FSWeb::downloadFileBz2(p_local_file,
          p_web_file,

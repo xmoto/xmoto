@@ -859,7 +859,9 @@ long ProxySettings::getType() const {
 }
 
 std::string ProxySettings::getTypeStr() const {
-  if(m_useProxy == false) return "";
+  if(m_useProxy == false) {
+    return "";
+  }
 
   switch(m_type) {
 

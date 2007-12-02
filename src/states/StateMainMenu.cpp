@@ -35,6 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateUpdateThemesList.h"
 #include "StateUpdateRoomsList.h"
 #include "StateUploadHighscore.h"
+#include "StateUploadAllHighscores.h"
 #include "StateUpdateTheme.h"
 #include "StateCheckWww.h"
 #include "StateUpgradeLevels.h"
@@ -1234,7 +1235,7 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(GameApp* pGame, UIWindow* i_par
   v_button = new UIButton(v_window, v_window->getPosition().nWidth/2 + 5, v_window->getPosition().nHeight - 100, GAMETEXT_UPLOAD_ALL_HIGHSCORES, 215, 57);
   v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_LARGE);
-  v_button->setID("REPLAY_UPLOADHIGHSCOREALL_BUTTON");
+  v_button->setID("UPLOADHIGHSCOREALL_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE_ALL);	
 }
 
@@ -1487,24 +1488,6 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
 
   return v_window;
 }
-
-//
-//    /* level info frame */
-//    m_pLevelInfoFrame = new UIWindow(m_pMainMenu,0,drawlib->getDispHeight()/2 - (m_nNumMainMenuButtons*57)/2 + m_nNumMainMenuButtons*57,"",220,100);
-//    m_pLevelInfoFrame->showWindow(false);
-//    m_pBestPlayerText = new UIStatic(m_pLevelInfoFrame, 0, 5,"", 220, 50);
-//    m_pBestPlayerText->setFont(drawlib->getFontSmall());
-//    m_pBestPlayerText->setHAlign(UI_ALIGN_CENTER);
-//    m_pBestPlayerText->showWindow(true);
-//    m_pLevelInfoViewReplayButton = new UIButton(m_pLevelInfoFrame,22,40, GAMETEXT_VIEWTHEHIGHSCORE,176,40);
-//    m_pLevelInfoViewReplayButton->setFont(drawlib->getFontSmall());
-//    m_pLevelInfoViewReplayButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
-//
-//    //m_pGameInfoWindow = new UIFrame(m_pMainMenu,47,20+getDispHeight()/2 + (m_nNumMainMenuButtons*57)/2,
-//    //                                "",207,getDispHeight() - (20+getDispHeight()/2 + (m_nNumMainMenuButtons*57)/2));
-//    //m_pGameInfoWindow->showWindow(true);
-
-
 
 void StateMainMenu::drawBackground() {
   if(m_pGame->getSession()->menuGraphics() != GFX_LOW && m_pGame->getSession()->ugly() == false) {
@@ -1923,64 +1906,6 @@ void StateMainMenu::checkEventsReplays() {
       }
     }
   }
-
-//    if(pReplaysList->getEntries().empty()) {
-//      pReplaysShowButton->enableWindow(false);
-//      pReplaysDeleteButton->enableWindow(false);
-//    }
-//    else {
-//      pReplaysShowButton->enableWindow(true);
-//      pReplaysDeleteButton->enableWindow(true);
-//    }
-//    
-//    if(pReplaysList->isChanged()) {
-//      pReplaysList->setChanged(false);
-//      pUploadHighscoreButton->enableWindow(false);
-//
-//      if(m_xmsession->www()) {
-//	if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
-//	  UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
-//	  if(pListEntry != NULL) {
-//	    ReplayInfo* rplInfos;
-//	    rplInfos = Replay::getReplayInfos(pListEntry->Text[0]);
-//	    if(rplInfos != NULL) {
-//	      if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == m_xmsession->profile()) {
-//		
-//		char **v_result;
-//		unsigned int nrow;
-//		float v_finishTime;
-//		
-//		v_result = m_db->readDB("SELECT finishTime "
-//					"FROM webhighscores WHERE id_level=\"" + 
-//					xmDatabase::protectString(rplInfos->Level) + "\""
-//					"AND id_room=" + m_WebHighscoresIdRoom + ";",
-//					nrow);
-//		if(nrow == 0) {
-//		  pUploadHighscoreButton->enableWindow(true);
-//		  m_db->read_DB_free(v_result);
-//		} else {
-//		  v_finishTime = atof(m_db->getResult(v_result, 1, 0, 0));
-//		  m_db->read_DB_free(v_result);
-//		  pUploadHighscoreButton->enableWindow(rplInfos->fFinishTime < v_finishTime);
-//		}  	      
-//	      }
-//	      delete rplInfos; 
-//	    }
-//	  }
-//	}
-//      }
-//    }
-//    
-//    if(pUploadHighscoreButton->isClicked()) {
-//      pReplaysList->setClicked(false);
-//      if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
-//        UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
-//        if(pListEntry != NULL) {
-//	  uploadHighscore(pListEntry->Text[0]);
-//	}
-//      }
-//    }
-//
 }
 
 void StateMainMenu::createThemesList(UIList *pList) {
@@ -2561,6 +2486,12 @@ void StateMainMenu::checkEventsOptions() {
     m_pGame->getStateManager()->pushState(new StateUpdateRoomsList(m_pGame));
   }
 
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPLOADHIGHSCOREALL_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getStateManager()->pushState(new StateUploadAllHighscores(m_pGame));
+  }
+
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:ENABLE_GHOSTS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
@@ -2685,47 +2616,6 @@ void StateMainMenu::updateLevelsPackInPackList(const std::string& v_levelPack) {
   pTree->updatePack(v_pack,
 		    v_pack->getNumberOfFinishedLevels(m_pGame->getDb(), m_pGame->getSession()->profile()),
 		    v_pack->getNumberOfLevels(m_pGame->getDb()));
-}
-
-void StateMainMenu::uploadAllHighscores() {
-//    /* 1 is the main room ; don't allow full upload on it */
-//    if(m_pGame->getSession()->idRoom() == "1")
-//      return;
-//
-//    _UpdateWebHighscores(false);
-//    char **v_result;
-//    unsigned int nrow;
-//    std::string v_previousIdLevel, v_currentIdLevel;
-//
-//	std::string query = "SELECT r.id_level, r.name FROM replays r "
-//    "LEFT OUTER JOIN webhighscores h "
-//    "ON (r.id_level = h.id_level AND h.id_room=" + m_pGame->getSession()->idRoom() + ") "
-//    "INNER JOIN weblevels l ON r.id_level = l.id_level "
-//    "WHERE r.id_profile=\"" + xmDatabase::protectString(m_pGame->getSession()->profile()) + "\" "
-//    "AND r.isFinished "
-//    "AND ( (h.id_room IS NULL) OR xm_floord(h.finishTime*100.0) > xm_floord(r.finishTime*100.0)) "
-//    "ORDER BY r.id_level, r.finishTime;";
-//    v_result = m_pGame->getDb()->readDB(query, nrow);
-//
-//    try {
-//      for (int i = 0; i<nrow; i++) {
-//	std::ostringstream v_percentage;
-//	v_percentage << std::setprecision (1);
-//	v_percentage << (i*100.0/nrow);
-//
-//	v_currentIdLevel = m_db->getResult(v_result, 2, i, 0);
-//	
-//	/* send only the best of the replay by level */
-//	if(v_previousIdLevel != v_currentIdLevel) {
-//	  v_previousIdLevel = v_currentIdLevel;
-//	  _SimpleMessage(GAMETEXT_UPLOADING_HIGHSCORE + std::string("\n") + v_percentage.str() + "%");
-//	  uploadHighscore(m_db->getResult(v_result, 2, i, 1), false);
-//	}
-//      }
-//    } catch(Exception &e) {
-//      notifyMsg(e.getMsg());
-//    }
-//    m_db->read_DB_free(v_result);
 }
 
 void StateMainMenu::updateInfoFrame() {

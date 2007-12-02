@@ -294,6 +294,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_NUMLEVELS            _("# Levels")
 #define GAMETEXT_OK                   _("OK")  
 #define GAMETEXT_OPEN                 _("Open")
+#define GAMETEXT_OPERATION_COMPLETED  _("Operation completed")
 #define GAMETEXT_OPTIONS              _("Options")
 #define GAMETEXT_OPTIONSREQURERESTART _("Some options will not take effect before next restart!")
 #define GAMETEXT_PACK_AUTHORS 	      _("By author")

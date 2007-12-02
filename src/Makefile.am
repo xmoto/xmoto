@@ -152,6 +152,8 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateUpdateRoomsList.h   \
 		 states/StateUploadHighscore.cpp \
 		 states/StateUploadHighscore.h   \
+		 states/StateUploadAllHighscores.cpp \
+		 states/StateUploadAllHighscores.h   \
 		 states/StateRequestKey.cpp      \
 		 states/StateRequestKey.h        \
 		 states/StateMultiUpdate.cpp     \
@@ -186,6 +188,8 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/UpdateRoomsListThread.cpp  \
 		 thread/UploadHighscoreThread.h    \
 		 thread/UploadHighscoreThread.cpp  \
+		 thread/UploadAllHighscoresThread.h    \
+		 thread/UploadAllHighscoresThread.cpp  \
 		 thread/XMThreads.cpp              \
 		 thread/XMThreads.h                \
 		 thread/CheckWwwThread.cpp         \
