@@ -155,6 +155,7 @@ int UpgradeLevelsThread::realThreadFunction()
 
     clearCancelAsSoonAsPossible();
 
+    setThreadCurrentMicroOperation("");
     m_pWebLevels->upgrade(m_pDb);
   }
   catch(Exception& e) {

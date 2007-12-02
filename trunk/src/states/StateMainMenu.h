@@ -116,7 +116,6 @@ class StateMainMenu : public StateMenu {
   void checkEventsMainWindow();
   void checkEventsOptions();
 
-  void uploadAllHighscores();
   void updateInfoFrame();
   void updateReplaysRights();
 

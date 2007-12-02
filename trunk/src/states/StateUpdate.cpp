@@ -107,6 +107,8 @@ bool StateUpdate::update()
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, m_msg, UI_MSGBOX_OK);
 	v_msgboxState->setId("ERROR");
 	m_pGame->getStateManager()->pushState(v_msgboxState);
+      } else {
+	m_requestForEnd = true;
       }
     }
 
