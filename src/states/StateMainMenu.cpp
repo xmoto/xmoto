@@ -2052,15 +2052,20 @@ void StateMainMenu::createRoomsList(UIList *pList) {
   }
   pList->clear();
 
-  v_result = m_pGame->getDb()->readDB("SELECT id_room, name FROM webrooms ORDER BY id_room ASC;",
-				      nrow);
-
+  // WR room
+  v_result = m_pGame->getDb()->readDB("SELECT id_room, name FROM webrooms WHERE id_room = 1;", nrow);
   for(unsigned int i=0; i<nrow; i++) {
     v_roomId   = m_pGame->getDb()->getResult(v_result, 2, i, 0);
     v_roomName = m_pGame->getDb()->getResult(v_result, 2, i, 1);
-    pEntry = pList->addEntry(v_roomName,
-			     reinterpret_cast<void *>(new std::string(v_roomId))
-			     );    
+    pEntry = pList->addEntry(v_roomName, reinterpret_cast<void *>(new std::string(v_roomId)));    
+  }
+  m_pGame->getDb()->read_DB_free(v_result);
+
+  v_result = m_pGame->getDb()->readDB("SELECT id_room, name FROM webrooms ORDER BY name;", nrow);
+  for(unsigned int i=0; i<nrow; i++) {
+    v_roomId   = m_pGame->getDb()->getResult(v_result, 2, i, 0);
+    v_roomName = m_pGame->getDb()->getResult(v_result, 2, i, 1);
+    pEntry = pList->addEntry(v_roomName, reinterpret_cast<void *>(new std::string(v_roomId)));    
   }
   m_pGame->getDb()->read_DB_free(v_result);
 
