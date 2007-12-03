@@ -53,6 +53,7 @@ void CheckWwwThread::upgradeWebHighscores()
 {
   try {
     m_pWebRoom->upgrade(m_pDb);
+    m_pGame->getStateManager()->sendAsynchronousMessage("HIGHSCORES_UPDATED");
   } catch (Exception& e) {
     Logger::Log("** Warning ** : Failed to analyse web-highscores file");   
   }

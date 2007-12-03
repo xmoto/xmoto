@@ -451,7 +451,7 @@ class GameApp;
 
       /* Methods */
       virtual void paint(void);
-      virtual bool offerMouseEvent(void) {return false;}
+      virtual bool offerMouseEvent(void) {return m_allowContextHelp;}
       
       /* Data interface */
       void setVAlign(UIAlign Align) {m_VAlign=Align;}
@@ -460,6 +460,7 @@ class GameApp;
       UIAlign getHAlign(void) {return m_HAlign;}
       void setBackgroundShade(bool b) {m_bBackgroundShade=b;}
       void setBackground(Texture *p) {m_pCustomBackgroundTexture = p;}
+      void setAllowContextHelp(bool i_value);
 
     private:
       /* Data */
@@ -468,6 +469,8 @@ class GameApp;
 
       Texture *m_pDarkBlobTexture;
       Texture *m_pCustomBackgroundTexture;
+
+      bool m_allowContextHelp;
   };
 
 class UIProgressBar : public UIWindow {

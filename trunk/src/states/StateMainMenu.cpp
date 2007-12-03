@@ -1605,7 +1605,7 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
      return;
     }
 
-   if(i_message == "LEVELS_UPDATED") {
+   if(i_message == "LEVELS_UPDATED" || i_message == "HIGHSCORES_UPDATED") {
      m_require_updateLevelsList = true;
      return;
    }
