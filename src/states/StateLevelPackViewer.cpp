@@ -169,7 +169,7 @@ bool StateLevelPackViewer::render()
 
 void StateLevelPackViewer::send(const std::string& i_id, const std::string& i_message) {
   if(i_id == "STATE_MANAGER") {
-    if(i_message == "LEVELS_UPDATED") {
+    if(i_message == "LEVELS_UPDATED" || i_message == "HIGHSCORES_UPDATED") {
       m_require_updateLevelsList = true;
       return;
     }
@@ -259,11 +259,18 @@ void StateLevelPackViewer::createGUIIfNeeded(GameApp* pGame)
   pLevelFilterEdit->setID("LEVEL_FILTER");
   pLevelFilterEdit->setContextHelp(CONTEXTHELP_LEVEL_FILTER);
 
-  UILevelList *pLevelPackLevelList = new UILevelList(v_frame,20,100,"",400, 380);
+  UILevelList *pLevelPackLevelList = new UILevelList(v_frame,20,100,"",400, 370);
   pLevelPackLevelList->setFont(drawLib->getFontSmall());
   pLevelPackLevelList->setContextHelp(CONTEXTHELP_SELECT_LEVEL_IN_LEVEL_PACK);
   pLevelPackLevelList->setID("LEVEL_LIST");
   pLevelPackLevelList->setEnterButton( pLevelPackPlay );
+
+  pSomeText = new UIStatic(v_frame, 20, 100 + 370 - 10, "", 400, 50);
+  pSomeText->setFont(drawLib->getFontSmall());
+  pSomeText->setHAlign(UI_ALIGN_CENTER);
+  pSomeText->setID("MINISTAT");
+  pSomeText->setAllowContextHelp(true);
+  pSomeText->setContextHelp(CONTEXTHELP_MINISTATTIMEFORPACKLEVEL);
 
   UIButton *pLevelPackInfo = new UIButton(v_frame,450,107,GAMETEXT_LEVELINFO,207,57);
   pLevelPackInfo->setFont(drawLib->getFontSmall());
@@ -301,6 +308,9 @@ void StateLevelPackViewer::createGUIIfNeeded(GameApp* pGame)
 
 void StateLevelPackViewer::updateGUI()
 {
+  float v_totalProfileTime   = 0.0;
+  float v_totalHighscoreTime = 0.0;
+
   char **v_result;
   unsigned int nrow;
   float v_playerHighscore;
@@ -345,12 +355,23 @@ void StateLevelPackViewer::updateGUI()
       v_playerHighscore = -1.0;
     } else {
       v_playerHighscore = atof(pDb->getResult(v_result, 4, i, 2));
+      v_totalProfileTime += v_playerHighscore;
     }
 
     if(pDb->getResult(v_result, 4, i, 3) == NULL) {
       v_roomHighscore = -1.0;
+      if(v_playerHighscore > 0.0) {
+	v_totalHighscoreTime += v_playerHighscore; // add player time in case he has a better score than room, to not have to update www
+      }
     } else {
       v_roomHighscore = atof(pDb->getResult(v_result, 4, i, 3));
+      if(v_playerHighscore > 0.0 && v_playerHighscore < v_roomHighscore) {
+	v_totalHighscoreTime += v_playerHighscore; // add player time in case he has a better score than room, to not have to update www
+      } else {
+	if(v_playerHighscore > 0.0) {
+	  v_totalHighscoreTime += v_roomHighscore; // only make sum on levels that the player finished
+	}
+      }
     }
 
     pList->addLevel(pDb->getResult(v_result, 4, i, 0),
@@ -371,6 +392,10 @@ void StateLevelPackViewer::updateGUI()
     }
     pList->setRealSelected(nLevel);
   }
+
+  /* ministat pack */
+  UIStatic* pSomeText = reinterpret_cast<UIStatic *>(m_GUI->getChild("FRAME:MINISTAT"));
+  pSomeText->setCaption(GameApp::formatTime(v_totalProfileTime) + " / " + GameApp::formatTime(v_totalHighscoreTime));
 }
 
 void StateLevelPackViewer::updateInfoFrame() {

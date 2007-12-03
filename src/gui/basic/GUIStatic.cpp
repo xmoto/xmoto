@@ -41,7 +41,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	}
         
         m_pCustomBackgroundTexture = NULL;
+	m_allowContextHelp = false;
   }
+
+void UIStatic::setAllowContextHelp(bool i_value) {
+  m_allowContextHelp = true;
+}
 
   /*===========================================================================
   Painting

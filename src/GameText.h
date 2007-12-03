@@ -259,6 +259,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_LOW                  _("Low")
 #define GAMETEXT_MEDIUM               _("Medium")
 #define GAMETEXT_MENUGFX              _("Menu Graphics")
+#define CONTEXTHELP_MINISTATTIMEFORPACKLEVEL _("Total time you scored / total highscore time for levels you finished")
 #define GAMETEXT_MISSINGTEXTURES      _("Level references unknown textures, it could be unplayable!")
 #define GAMETEXT_MONO                 _("Mono")
 #define GAMETEXT_MOSTPLAYEDLEVELSFOLLOW _("Following are your most played levels")
