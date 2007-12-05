@@ -51,7 +51,6 @@ StateDeadMenu::~StateDeadMenu()
 void StateDeadMenu::enter()
 {
   m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
-  m_pGame->playMusic("");
   
   createGUIIfNeeded(m_pGame);
   m_GUI = m_sGUI;

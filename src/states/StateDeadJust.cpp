@@ -42,7 +42,6 @@ void StateDeadJust::enter()
   m_pGame->getMotoGame()->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
   m_pGame->getMotoGame()->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
   m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
-  m_pGame->playMusic("");
 }
 
 void StateDeadJust::leave()
