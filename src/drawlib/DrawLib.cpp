@@ -312,17 +312,33 @@ Camera* DrawLib::getMenuCamera(){
   Primitive: box
   ===========================================================================*/
   void DrawLib::drawImage(const Vector2f &a,const Vector2f &b,Texture *pTexture,Color Tint) {
+    drawImage(a, Vector2f(b.x, a.y), b, Vector2f(a.x, b.y), pTexture, Tint);
+  }
+
+  void DrawLib::drawImage(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Texture *pTexture, Color Tint) {
+    float v_absorb = 0.0;
+
     setTexture(pTexture,BLEND_MODE_A);
     startDraw(DRAW_MODE_POLYGON);
     setColor(Tint);
-    glTexCoord(0.01, 0.01);
+
+    if(a.x == d.x && a.y == b.y && c.x == b.x && c.y == d.y) { // simple case, no rotation.
+      v_absorb = 0.00;
+    } else {
+      /* because rotation can make approximation error and 1 pixel of one side of the
+	 picture could be map on the other side, */
+      v_absorb = 0.01; 
+    }
+
+    glTexCoord(v_absorb, v_absorb);
     glVertexSP(a.x, a.y);
-    glTexCoord(0.99, 0.01);
-    glVertexSP(b.x, a.y);
-    glTexCoord(0.99, 0.99);
+    glTexCoord(1.00 - v_absorb, v_absorb);
     glVertexSP(b.x, b.y);
-    glTexCoord(0.01, 0.99);
-    glVertexSP(a.x, b.y);
+    glTexCoord(1.00 - v_absorb, 1.00 - v_absorb);
+    glVertexSP(c.x, c.y);
+    glTexCoord(v_absorb, 1.0 - v_absorb);
+    glVertexSP(d.x, d.y);
+
     endDraw();
   }
 

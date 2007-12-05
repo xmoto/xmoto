@@ -245,62 +245,62 @@ void XMSession::load(UserConfig* m_Config) {
   m_webLevelsUrl                = m_Config->getString("WebLevelsURL");
 }
 
-void XMSession::save(UserConfig* m_Config) {
-  m_Config->setString("DefaultProfile",             m_profile);
-  m_Config->setInteger("QSQualityMIN",              m_quickStartQualityMIN);
-  m_Config->setInteger("QSQualityMAX",              m_quickStartQualityMAX);
-  m_Config->setInteger("QSDifficultyMIN",           m_quickStartDifficultyMIN);
-  m_Config->setInteger("QSDifficultyMAX",           m_quickStartDifficultyMAX);
-  m_Config->setBool("MultiStopWhenOneFinishes",     m_multiStopWhenOneFinishes);
-  m_Config->setBool("ContextHelp",                  m_enableContextHelp);
-  m_Config->setString("Theme",                      m_theme);
-  m_Config->setBool("WebHighscores",                m_www);
-  m_Config->setBool("CheckNewLevelsAtStartup",      m_checkNewLevelsAtStartup);
-  m_Config->setBool("CheckHighscoresAtStartup",     m_checkNewHighscoresAtStartup);
-  m_Config->setBool("ShowInGameWorldRecord",        m_showHighscoreInGame);
-  m_Config->setString("WebHighscoreUploadLogin",    m_uploadLogin);
-  m_Config->setString("WebHighscoreUploadPassword", m_uploadPassword);
-  m_Config->setString("WebHighscoresIdRoom",        m_idRoom);
-  m_Config->setBool("EnableGhost",           	    m_enableGhosts);
-  m_Config->setBool("GhostStrategy_MYBEST",  	    m_ghostStrategy_MYBEST);
-  m_Config->setBool("GhostStrategy_THEBEST", 	    m_ghostStrategy_THEBEST);
-  m_Config->setBool("GhostStrategy_BESTOFROOM",     m_ghostStrategy_BESTOFROOM);
-  m_Config->setBool("ShowGhostTimeDiff",            m_showGhostTimeDifference);
-  m_Config->setBool("GhostMotionBlur",              m_ghostMotionBlur);
-  m_Config->setBool("DisplayGhostInfo",             m_showGhostsInfos);
-  m_Config->setBool("HideGhosts",                   m_hideGhosts);
-  m_Config->setBool("ShowMiniMap",                  m_showMinimap);
-  m_Config->setBool("ShowEngineCounter",            m_showEngineCounter);
-  m_Config->setBool("InitZoom",                     m_enableInitZoom);
-  m_Config->setBool("DeathAnim",                    m_enableDeadAnimation);
-  m_Config->setBool("AutosaveHighscoreReplays",     m_autosaveHighscoreReplays);
-  m_Config->setInteger("DisplayWidth",              m_resolutionWidth);
-  m_Config->setInteger("DisplayHeight",             m_resolutionHeight);
-  m_Config->setInteger("DisplayBPP",                m_bpp);
-  m_Config->setBool("DisplayWindowed",              m_windowed);
-  m_Config->setString("MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium" : "High");
-  m_Config->setString("GameGraphics", m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium" : "High");
-  m_Config->setBool("AudioEnable",                  m_enableAudio);
-  m_Config->setInteger("AudioSampleRate",           m_audioSampleRate);
-  m_Config->setInteger("AudioSampleBits",           m_audioSampleBits);
-  m_Config->setString("AudioChannels",              m_audioChannels == 1 ? "Mono" : "Stereo");
-  m_Config->setBool("EngineSoundEnable",            m_enableAudioEngine);
-  m_Config->setBool("MenuMusic",                    m_enableMenuMusic);
-  m_Config->setFloat("ReplayFrameRate",             m_replayFrameRate);
-  m_Config->setString("WebThemesURL",               m_webThemesURL);
-  m_Config->setString("WebThemesURLBase",           m_webThemesURLBase);
-  m_Config->setString("ProxyType",     		    proxySettings()->getTypeStr());
-  m_Config->setString("ProxyServer",   		    proxySettings()->getServer());
-  m_Config->setInteger("ProxyPort",    		    proxySettings()->getPort());
-  m_Config->setString("ProxyAuthUser", 		    proxySettings()->getAuthentificationUser());
-  m_Config->setString("ProxyAuthPwd" , 		    proxySettings()->getAuthentificationPassword());
-  m_Config->setBool("WebConfAtInit",                m_webConfAtInit);
-  m_Config->setBool("StoreReplays",                 m_storeReplays);
-  m_Config->setBool("CompressReplays",              m_compressReplays);
-  m_Config->setString("WebHighscoreUploadURL",      m_uploadHighscoreUrl);
-  m_Config->setString("Language",                   m_language);
-  m_Config->setBool("NotifyAtInit",                 m_notifyAtInit);
-  m_Config->setString("WebLevelsURL",               m_webLevelsUrl);
+void XMSession::save(UserConfig* v_config) {
+  v_config->setString("DefaultProfile",             m_profile);
+  v_config->setInteger("QSQualityMIN",              m_quickStartQualityMIN);
+  v_config->setInteger("QSQualityMAX",              m_quickStartQualityMAX);
+  v_config->setInteger("QSDifficultyMIN",           m_quickStartDifficultyMIN);
+  v_config->setInteger("QSDifficultyMAX",           m_quickStartDifficultyMAX);
+  v_config->setBool("MultiStopWhenOneFinishes",     m_multiStopWhenOneFinishes);
+  v_config->setBool("ContextHelp",                  m_enableContextHelp);
+  v_config->setString("Theme",                      m_theme);
+  v_config->setBool("WebHighscores",                m_www);
+  v_config->setBool("CheckNewLevelsAtStartup",      m_checkNewLevelsAtStartup);
+  v_config->setBool("CheckHighscoresAtStartup",     m_checkNewHighscoresAtStartup);
+  v_config->setBool("ShowInGameWorldRecord",        m_showHighscoreInGame);
+  v_config->setString("WebHighscoreUploadLogin",    m_uploadLogin);
+  v_config->setString("WebHighscoreUploadPassword", m_uploadPassword);
+  v_config->setString("WebHighscoresIdRoom",        m_idRoom);
+  v_config->setBool("EnableGhost",           	    m_enableGhosts);
+  v_config->setBool("GhostStrategy_MYBEST",  	    m_ghostStrategy_MYBEST);
+  v_config->setBool("GhostStrategy_THEBEST", 	    m_ghostStrategy_THEBEST);
+  v_config->setBool("GhostStrategy_BESTOFROOM",     m_ghostStrategy_BESTOFROOM);
+  v_config->setBool("ShowGhostTimeDiff",            m_showGhostTimeDifference);
+  v_config->setBool("GhostMotionBlur",              m_ghostMotionBlur);
+  v_config->setBool("DisplayGhostInfo",             m_showGhostsInfos);
+  v_config->setBool("HideGhosts",                   m_hideGhosts);
+  v_config->setBool("ShowMiniMap",                  m_showMinimap);
+  v_config->setBool("ShowEngineCounter",            m_showEngineCounter);
+  v_config->setBool("InitZoom",                     m_enableInitZoom);
+  v_config->setBool("DeathAnim",                    m_enableDeadAnimation);
+  v_config->setBool("AutosaveHighscoreReplays",     m_autosaveHighscoreReplays);
+  v_config->setInteger("DisplayWidth",              m_resolutionWidth);
+  v_config->setInteger("DisplayHeight",             m_resolutionHeight);
+  v_config->setInteger("DisplayBPP",                m_bpp);
+  v_config->setBool("DisplayWindowed",              m_windowed);
+  v_config->setString("MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium" : "High");
+  v_config->setString("GameGraphics", m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium" : "High");
+  v_config->setBool("AudioEnable",                  m_enableAudio);
+  v_config->setInteger("AudioSampleRate",           m_audioSampleRate);
+  v_config->setInteger("AudioSampleBits",           m_audioSampleBits);
+  v_config->setString("AudioChannels",              m_audioChannels == 1 ? "Mono" : "Stereo");
+  v_config->setBool("EngineSoundEnable",            m_enableAudioEngine);
+  v_config->setBool("MenuMusic",                    m_enableMenuMusic);
+  v_config->setFloat("ReplayFrameRate",             m_replayFrameRate);
+  v_config->setString("WebThemesURL",               m_webThemesURL);
+  v_config->setString("WebThemesURLBase",           m_webThemesURLBase);
+  v_config->setString("ProxyType",     		    proxySettings()->getTypeStr());
+  v_config->setString("ProxyServer",   		    proxySettings()->getServer());
+  v_config->setInteger("ProxyPort",    		    proxySettings()->getPort());
+  v_config->setString("ProxyAuthUser", 		    proxySettings()->getAuthentificationUser());
+  v_config->setString("ProxyAuthPwd" , 		    proxySettings()->getAuthentificationPassword());
+  v_config->setBool("WebConfAtInit",                m_webConfAtInit);
+  v_config->setBool("StoreReplays",                 m_storeReplays);
+  v_config->setBool("CompressReplays",              m_compressReplays);
+  v_config->setString("WebHighscoreUploadURL",      m_uploadHighscoreUrl);
+  v_config->setString("Language",                   m_language);
+  v_config->setBool("NotifyAtInit",                 m_notifyAtInit);
+  v_config->setString("WebLevelsURL",               m_webLevelsUrl);
 }
 
 bool XMSession::isVerbose() const {
@@ -901,4 +901,133 @@ bool ProxySettings::useDefaultPort() const {
 
 bool ProxySettings::useDefaultAuthentification() const {
   return m_authUser == "";
+}
+
+void XMSession::createDefaultConfig(UserConfig* v_config) {
+  v_config->createVar( "Language" , "");
+  v_config->createVar( "Theme",                  THEME_DEFAULT_THEMENAME);    
+
+  /* Display */
+  v_config->createVar( "DisplayWidth",           "800" );
+  v_config->createVar( "DisplayHeight",          "600" );
+  v_config->createVar( "DisplayBPP",             "32" );
+  v_config->createVar( "DisplayWindowed",        "false" );
+  v_config->createVar( "MenuGraphics",           "High" );
+  v_config->createVar( "GameGraphics",           "High" );
+  v_config->createVar( "DrawLib",                "OPENGL" );
+        
+  /* Audio */
+  v_config->createVar( "AudioEnable",            "true" );
+  v_config->createVar( "AudioSampleRate",        "22050" );
+  v_config->createVar( "AudioSampleBits",        "16" );
+  v_config->createVar( "AudioChannels",          "Mono" );
+  v_config->createVar( "EngineSoundEnable",      "true" );
+
+  /* Controls */
+  v_config->createVar( "ControllerMode1",        "Keyboard" );
+  v_config->createVar( "KeyDrive1",              "Up" );
+  v_config->createVar( "KeyBrake1",              "Down" );
+  v_config->createVar( "KeyFlipLeft1",           "Left" );
+  v_config->createVar( "KeyFlipRight1",          "Right" );
+  v_config->createVar( "KeyChangeDir1",          "Space" );
+  v_config->createVar( "ControllerMode2",        "Keyboard" );
+  v_config->createVar( "KeyDrive2",              "A" );
+  v_config->createVar( "KeyBrake2",              "Q" );
+  v_config->createVar( "KeyFlipLeft2",           "Z" );
+  v_config->createVar( "KeyFlipRight2",          "E" );
+  v_config->createVar( "KeyChangeDir2",          "W" );
+  v_config->createVar( "ControllerMode3",        "Keyboard" );
+  v_config->createVar( "KeyDrive3",              "R" );
+  v_config->createVar( "KeyBrake3",              "F" );
+  v_config->createVar( "KeyFlipLeft3",           "T" );
+  v_config->createVar( "KeyFlipRight3",          "Y" );
+  v_config->createVar( "KeyChangeDir3",          "V" );
+  v_config->createVar( "ControllerMode4",        "Keyboard" );
+  v_config->createVar( "KeyDrive4",              "Y" );
+  v_config->createVar( "KeyBrake4",              "H" );
+  v_config->createVar( "KeyFlipLeft4",           "U" );
+  v_config->createVar( "KeyFlipRight4",          "I" );
+  v_config->createVar( "KeyChangeDir4",          "N" );
+    
+  v_config->createVar( "AutosaveHighscoreReplays", "true");
+
+  v_config->createVar( "KeyZoomIn",              "Pad 7" );
+  v_config->createVar( "KeyZoomOut",             "Pad 9" );
+  v_config->createVar( "KeyZoomInit",            "Home" );
+  v_config->createVar( "KeyCameraMoveXUp",       "Pad 6" );
+  v_config->createVar( "KeyCameraMoveXDown",     "Pad 4" );
+  v_config->createVar( "KeyCameraMoveYUp",       "Pad 8" );
+  v_config->createVar( "KeyCameraMoveYDown",     "Pad 2" );
+     
+  /* joystick */
+  v_config->createVar( "JoyIdx1",                "0" );
+  v_config->createVar( "JoyAxisPrim1",           "1" );
+  v_config->createVar( "JoyAxisPrimMax1",        "32760" );
+  v_config->createVar( "JoyAxisPrimMin1",        "-32760" );
+  v_config->createVar( "JoyAxisPrimUL1",         "1024" );
+  v_config->createVar( "JoyAxisPrimLL1",         "-1024" );
+  v_config->createVar( "JoyAxisSec1",            "0" );
+  v_config->createVar( "JoyAxisSecMax1",         "32760" );
+  v_config->createVar( "JoyAxisSecMin1",         "-32760" );
+  v_config->createVar( "JoyAxisSecUL1",          "1024" );
+  v_config->createVar( "JoyAxisSecLL1",          "-1024" );
+  v_config->createVar( "JoyButtonChangeDir1",    "0" );
+
+  /* Misc */
+  v_config->createVar( "DefaultProfile",         "" );
+  v_config->createVar( "ScreenshotFormat",       "png" );
+  v_config->createVar( "NotifyAtInit",           "true" );
+  v_config->createVar( "ShowMiniMap",            "true" );
+  v_config->createVar( "ShowEngineCounter",      "false" );
+
+  v_config->createVar( "StoreReplays",           "true" );
+  v_config->createVar( "ReplayFrameRate",        "25" );
+  v_config->createVar( "CompressReplays",        "true" );
+  v_config->createVar( "ContextHelp",            "true" );
+  v_config->createVar( "MenuMusic",              "true" );    
+  v_config->createVar( "InitZoom",               "true" );
+  v_config->createVar( "DeathAnim",              "true" );
+
+  v_config->createVar( "WebHighscores",            "false" );
+  v_config->createVar( "CheckHighscoresAtStartup", "true" );
+  v_config->createVar( "CheckNewLevelsAtStartup",  "true" );
+  v_config->createVar( "ShowInGameWorldRecord",    "false" );
+  v_config->createVar( "WebConfAtInit",            "true" );
+    
+  /* Webstuff */
+  v_config->createVar( "WebHighscoresURL",       DEFAULT_WEBHIGHSCORES_URL );
+  v_config->createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL);
+  v_config->createVar( "WebThemesURL",           DEFAULT_WEBTHEMES_URL);
+  v_config->createVar( "WebThemesURLBase",       DEFAULT_WEBTHEMES_SPRITESURLBASE);
+  v_config->createVar( "WebHighscoresIdRoom",     DEFAULT_WEBROOM_ID);
+
+  /* Proxy */
+  v_config->createVar( "ProxyType",              "" ); /* (blank), HTTP, SOCKS4, or SOCKS5 */
+  v_config->createVar( "ProxyServer",            "" ); /* (may include user/pass and port) */
+  v_config->createVar( "ProxyPort",              "-1" );
+  v_config->createVar( "ProxyAuthUser",          "" ); 
+  v_config->createVar( "ProxyAuthPwd",           "" );
+
+  /* auto upload */
+  v_config->createVar( "WebHighscoreUploadURL", DEFAULT_UPLOADREPLAY_URL);
+  v_config->createVar( "WebHighscoreUploadLogin"    , "");
+  v_config->createVar( "WebHighscoreUploadPassword" , ""); 
+
+  v_config->createVar( "EnableGhost"        , "true");
+  v_config->createVar( "GhostStrategy_MYBEST", "true");
+  v_config->createVar( "GhostStrategy_THEBEST", "false");
+  v_config->createVar( "GhostStrategy_BESTOFROOM", "false");
+  v_config->createVar( "ShowGhostTimeDiff"  , "true");
+  v_config->createVar( "DisplayGhostInfo"   , "false");
+  v_config->createVar( "HideGhosts"   , "false");
+  v_config->createVar( "GhostMotionBlur"    , "true" );
+
+  /* quick start button */
+  v_config->createVar("QSQualityMIN",    "1");
+  v_config->createVar("QSDifficultyMIN", "1");
+  v_config->createVar("QSQualityMAX",    "5");
+  v_config->createVar("QSDifficultyMAX", "5");
+
+  /* multi */
+  v_config->createVar("MultiStopWhenOneFinishes" , "true");
 }

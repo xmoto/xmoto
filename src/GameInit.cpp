@@ -81,7 +81,13 @@ int main(int nNumArgs,char **ppcArgs) {
   return 0;
 }
 
-  void GameApp::run(int nNumArgs,char **ppcArgs) {
+void GameApp::run(int nNumArgs,char **ppcArgs) {
+  run_load(nNumArgs,ppcArgs);
+  run_loop();
+  run_unload();
+}
+
+void GameApp::run_load(int nNumArgs,char **ppcArgs) {
     XMArguments v_xmArgs;
     GameState* pState;
 
@@ -126,7 +132,7 @@ int main(int nNumArgs,char **ppcArgs) {
     Logger::init(FS::getUserDir() + "/xmoto.log");
 
     /* load config file */
-    createDefaultConfig();
+    XMSession::createDefaultConfig(&m_Config);
     m_Config.loadFile();
 
     /* load session */
@@ -194,71 +200,74 @@ int main(int nNumArgs,char **ppcArgs) {
 
     /* Now perform user init */
     userInit(&v_xmArgs);
+}
 
-    /* Enter the main loop */
-    while(!m_bQuit) {
-      /* Handle SDL events */            
-      SDL_PumpEvents();
-        
-      SDL_Event Event;
-      while(SDL_PollEvent(&Event)) {
-	int ch=0;
-	static int nLastMouseClickX = -100,nLastMouseClickY = -100;
-	static int nLastMouseClickButton = -100;
-	static float fLastMouseClickTime = 0.0f;
-	int nX,nY;
+void GameApp::run_loop() {
+  while(!m_bQuit) {
+    /* Handle SDL events */            
+    SDL_PumpEvents();
+    
+    SDL_Event Event;
+    while(SDL_PollEvent(&Event)) {
+      int ch=0;
+      static int nLastMouseClickX = -100,nLastMouseClickY = -100;
+      static int nLastMouseClickButton = -100;
+      static float fLastMouseClickTime = 0.0f;
+      int nX,nY;
 
-	/* What event? */
-	switch(Event.type) {
-	case SDL_KEYDOWN: 
-	  if((Event.key.keysym.unicode&0xff80)==0) {
-	    ch = Event.key.keysym.unicode & 0x7F;
-	  }
-	  keyDown(Event.key.keysym.sym, Event.key.keysym.mod, ch);            
-	  break;
-	case SDL_KEYUP: 
-	  keyUp(Event.key.keysym.sym, Event.key.keysym.mod);            
-	  break;
-	case SDL_QUIT:  
-	  /* Force quit */
-	  quit();
-	  break;
-	case SDL_MOUSEBUTTONDOWN:
-	  /* Pass ordinary click */
-	  mouseDown(Event.button.button);
-              
-	  /* Is this a double click? */
-	  getMousePos(&nX,&nY);
-	  if(nX == nLastMouseClickX &&
-	     nY == nLastMouseClickY &&
-	     nLastMouseClickButton == Event.button.button &&
-	     (getXMTime() - fLastMouseClickTime) < 0.250f) {                
-	    
-	    /* Pass double click */
-	    mouseDoubleClick(Event.button.button);                
-	  }
-	  fLastMouseClickTime = getXMTime();
-	  nLastMouseClickX = nX;
-	  nLastMouseClickY = nY;
-	  nLastMouseClickButton = Event.button.button;
-	  
-	  break;
-	case SDL_MOUSEBUTTONUP:
-	  mouseUp(Event.button.button);
-	  break;
+      /* What event? */
+      switch(Event.type) {
+      case SDL_KEYDOWN: 
+	if((Event.key.keysym.unicode&0xff80)==0) {
+	  ch = Event.key.keysym.unicode & 0x7F;
 	}
-
+	keyDown(Event.key.keysym.sym, Event.key.keysym.mod, ch);            
+	break;
+      case SDL_KEYUP: 
+	keyUp(Event.key.keysym.sym, Event.key.keysym.mod);            
+	break;
+      case SDL_QUIT:  
+	/* Force quit */
+	quit();
+	break;
+      case SDL_MOUSEBUTTONDOWN:
+	/* Pass ordinary click */
+	mouseDown(Event.button.button);
+              
+	/* Is this a double click? */
+	getMousePos(&nX,&nY);
+	if(nX == nLastMouseClickX &&
+	   nY == nLastMouseClickY &&
+	   nLastMouseClickButton == Event.button.button &&
+	   (getXMTime() - fLastMouseClickTime) < 0.250f) {                
+	    
+	  /* Pass double click */
+	  mouseDoubleClick(Event.button.button);                
+	}
+	fLastMouseClickTime = getXMTime();
+	nLastMouseClickX = nX;
+	nLastMouseClickY = nY;
+	nLastMouseClickButton = Event.button.button;
+	  
+	break;
+      case SDL_MOUSEBUTTONUP:
+	mouseUp(Event.button.button);
+	break;
       }
 
-      /* Update user app */
-      drawFrame();
-
-       _Wait();
     }
-    
-    /* Shutdown */
-    _Uninit();
+
+    /* Update user app */
+    drawFrame();
+
+    _Wait();
   }
+}
+
+void GameApp::run_unload() {
+    _Uninit();
+}
+
 
 void GameApp::_Wait()
 {
@@ -588,138 +597,3 @@ void GameApp::_Wait()
 
     m_Config.saveFile();
   }  
-  
-  /*===========================================================================
-  Create the default config
-  ===========================================================================*/
-  void GameApp::createDefaultConfig(void) {
-    m_Config.createVar( "Language" , "");
-    m_Config.createVar( "Theme",                  THEME_DEFAULT_THEMENAME);    
-
-    /* Display */
-    m_Config.createVar( "DisplayWidth",           "800" );
-    m_Config.createVar( "DisplayHeight",          "600" );
-    m_Config.createVar( "DisplayBPP",             "32" );
-    m_Config.createVar( "DisplayWindowed",        "false" );
-    m_Config.createVar( "MenuGraphics",           "High" );
-    m_Config.createVar( "GameGraphics",           "High" );
-    m_Config.createVar( "DrawLib",                "OPENGL" );
-        
-    /* Audio */
-    m_Config.createVar( "AudioEnable",            "true" );
-    m_Config.createVar( "AudioSampleRate",        "22050" );
-    m_Config.createVar( "AudioSampleBits",        "16" );
-    m_Config.createVar( "AudioChannels",          "Mono" );
-    m_Config.createVar( "EngineSoundEnable",      "true" );
-
-    /* Controls */
-    m_Config.createVar( "ControllerMode1",        "Keyboard" );
-    m_Config.createVar( "KeyDrive1",              "Up" );
-    m_Config.createVar( "KeyBrake1",              "Down" );
-    m_Config.createVar( "KeyFlipLeft1",           "Left" );
-    m_Config.createVar( "KeyFlipRight1",          "Right" );
-    m_Config.createVar( "KeyChangeDir1",          "Space" );
-    m_Config.createVar( "ControllerMode2",        "Keyboard" );
-    m_Config.createVar( "KeyDrive2",              "A" );
-    m_Config.createVar( "KeyBrake2",              "Q" );
-    m_Config.createVar( "KeyFlipLeft2",           "Z" );
-    m_Config.createVar( "KeyFlipRight2",          "E" );
-    m_Config.createVar( "KeyChangeDir2",          "W" );
-    m_Config.createVar( "ControllerMode3",        "Keyboard" );
-    m_Config.createVar( "KeyDrive3",              "R" );
-    m_Config.createVar( "KeyBrake3",              "F" );
-    m_Config.createVar( "KeyFlipLeft3",           "T" );
-    m_Config.createVar( "KeyFlipRight3",          "Y" );
-    m_Config.createVar( "KeyChangeDir3",          "V" );
-    m_Config.createVar( "ControllerMode4",        "Keyboard" );
-    m_Config.createVar( "KeyDrive4",              "Y" );
-    m_Config.createVar( "KeyBrake4",              "H" );
-    m_Config.createVar( "KeyFlipLeft4",           "U" );
-    m_Config.createVar( "KeyFlipRight4",          "I" );
-    m_Config.createVar( "KeyChangeDir4",          "N" );
-    
-    m_Config.createVar( "AutosaveHighscoreReplays", "true");
-
-    #if defined(ENABLE_ZOOMING)
-      m_Config.createVar( "KeyZoomIn",              "Pad 7" );
-      m_Config.createVar( "KeyZoomOut",             "Pad 9" );
-      m_Config.createVar( "KeyZoomInit",            "Home" );
-      m_Config.createVar( "KeyCameraMoveXUp",       "Pad 6" );
-      m_Config.createVar( "KeyCameraMoveXDown",     "Pad 4" );
-      m_Config.createVar( "KeyCameraMoveYUp",       "Pad 8" );
-      m_Config.createVar( "KeyCameraMoveYDown",     "Pad 2" );
-    #endif
-     
-    /* joystick */
-    m_Config.createVar( "JoyIdx1",                "0" );
-    m_Config.createVar( "JoyAxisPrim1",           "1" );
-    m_Config.createVar( "JoyAxisPrimMax1",        "32760" );
-    m_Config.createVar( "JoyAxisPrimMin1",        "-32760" );
-    m_Config.createVar( "JoyAxisPrimUL1",         "1024" );
-    m_Config.createVar( "JoyAxisPrimLL1",         "-1024" );
-    m_Config.createVar( "JoyAxisSec1",            "0" );
-    m_Config.createVar( "JoyAxisSecMax1",         "32760" );
-    m_Config.createVar( "JoyAxisSecMin1",         "-32760" );
-    m_Config.createVar( "JoyAxisSecUL1",          "1024" );
-    m_Config.createVar( "JoyAxisSecLL1",          "-1024" );
-    m_Config.createVar( "JoyButtonChangeDir1",    "0" );
-
-    /* Misc */
-    m_Config.createVar( "DefaultProfile",         "" );
-    m_Config.createVar( "ScreenshotFormat",       "png" );
-    m_Config.createVar( "NotifyAtInit",           "true" );
-    m_Config.createVar( "ShowMiniMap",            "true" );
-    m_Config.createVar( "ShowEngineCounter",      "false" );
-
-    m_Config.createVar( "StoreReplays",           "true" );
-    m_Config.createVar( "ReplayFrameRate",        "25" );
-    m_Config.createVar( "CompressReplays",        "true" );
-    m_Config.createVar( "ContextHelp",            "true" );
-    m_Config.createVar( "MenuMusic",              "true" );    
-    m_Config.createVar( "InitZoom",               "true" );
-    m_Config.createVar( "DeathAnim",              "true" );
-
-    m_Config.createVar( "WebHighscores",            "false" );
-    m_Config.createVar( "CheckHighscoresAtStartup", "true" );
-    m_Config.createVar( "CheckNewLevelsAtStartup",  "true" );
-    m_Config.createVar( "ShowInGameWorldRecord",    "false" );
-    m_Config.createVar( "WebConfAtInit",            "true" );
-    
-    /* Webstuff */
-    m_Config.createVar( "WebHighscoresURL",       DEFAULT_WEBHIGHSCORES_URL );
-    m_Config.createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL);
-    m_Config.createVar( "WebThemesURL",           DEFAULT_WEBTHEMES_URL);
-    m_Config.createVar( "WebThemesURLBase",       DEFAULT_WEBTHEMES_SPRITESURLBASE);
-    m_Config.createVar( "WebHighscoresIdRoom",     DEFAULT_WEBROOM_ID);
-
-    /* Proxy */
-    m_Config.createVar( "ProxyType",              "" ); /* (blank), HTTP, SOCKS4, or SOCKS5 */
-    m_Config.createVar( "ProxyServer",            "" ); /* (may include user/pass and port) */
-    m_Config.createVar( "ProxyPort",              "-1" );
-    m_Config.createVar( "ProxyAuthUser",          "" ); 
-    m_Config.createVar( "ProxyAuthPwd",           "" );
-
-    /* auto upload */
-    m_Config.createVar( "WebHighscoreUploadURL", DEFAULT_UPLOADREPLAY_URL);
-    m_Config.createVar( "WebHighscoreUploadLogin"    , "");
-    m_Config.createVar( "WebHighscoreUploadPassword" , ""); 
-
-    m_Config.createVar( "EnableGhost"        , "true");
-    m_Config.createVar( "GhostStrategy_MYBEST", "true");
-    m_Config.createVar( "GhostStrategy_THEBEST", "false");
-    m_Config.createVar( "GhostStrategy_BESTOFROOM", "false");
-    m_Config.createVar( "ShowGhostTimeDiff"  , "true");
-    m_Config.createVar( "DisplayGhostInfo"   , "false");
-    m_Config.createVar( "HideGhosts"   , "false");
-    m_Config.createVar( "GhostMotionBlur"    , "true" );
-
-    /* quick start button */
-    m_Config.createVar("QSQualityMIN",    "1");
-    m_Config.createVar("QSDifficultyMIN", "1");
-    m_Config.createVar("QSQualityMAX",    "5");
-    m_Config.createVar("QSDifficultyMAX", "5");
-
-    /* multi */
-    m_Config.createVar("MultiStopWhenOneFinishes" , "true");
-  }
-
