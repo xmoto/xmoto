@@ -192,6 +192,10 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
     if(m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false) {
       m_pGame->getMotoGame()->fastrewind(1);
       m_stopToUpdate = false;
+    } else {
+      // rerun the replay
+      closePlaying();
+      m_pGame->getStateManager()->replaceState(new StateReplaying(m_pGame, m_replay)); 
     }
     break;
 
