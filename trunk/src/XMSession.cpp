@@ -171,6 +171,10 @@ void XMSession::load(const XMArguments* i_xmargs) {
     m_testTheme = true;
   }
 
+  if(i_xmargs->isOptNoSound()) {
+    m_enableAudio = false;
+  }
+
 }
 
 void XMSession::load(UserConfig* m_Config) {
