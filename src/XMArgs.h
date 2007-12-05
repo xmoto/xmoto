@@ -74,6 +74,7 @@ class XMArguments {
   std::string getOpt_replayInfos_file() const;
   bool isOptConfigPath() const;
   std::string getOpt_configPath_path() const;
+  bool isOptNoSound() const;
 
   private:
   /* pack options */
@@ -98,6 +99,7 @@ class XMArguments {
   bool m_opt_drawlib;
   std::string m_drawlib_lib;
   bool m_opt_ugly;
+  bool m_opt_nosound;
 
   /* config */
   bool m_opt_configpath;

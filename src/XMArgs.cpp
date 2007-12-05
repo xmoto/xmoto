@@ -58,6 +58,7 @@ XMArguments::XMArguments() {
   m_opt_cleanCache    = false;
   m_opt_gdebug        = false;
   m_opt_configpath    = false;
+  m_opt_nosound       = false;
 }
 
 void XMArguments::parse(int i_argc, char **i_argv) {
@@ -98,6 +99,8 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       }      
     } else if(v_opt == "--nogfx") {
       m_opt_nogfx = true;
+    } else if(v_opt == "--nosound") {
+      m_opt_nosound = true;
     } else if(v_opt == "-v" || v_opt == "--verbose") {
       m_opt_verbose = true;
     } else if(v_opt == "-res" || v_opt == "--resolution") {
@@ -420,6 +423,10 @@ std::string XMArguments::getOpt_replayInfos_file() const {
 
 bool XMArguments::isOptConfigPath() const {
   return m_opt_configpath;
+}
+
+bool XMArguments::isOptNoSound() const {
+  return m_opt_nosound;
 }
 
 std::string XMArguments::getOpt_configPath_path() const {
