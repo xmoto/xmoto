@@ -87,6 +87,7 @@ class XMSession {
   void save(UserConfig* m_Config);
   void setToDefault();
   bool isVerbose() const;
+  static void createDefaultConfig(UserConfig* v_config);
 
   void setUseGraphics(bool i_value);
   bool useGraphics() const;

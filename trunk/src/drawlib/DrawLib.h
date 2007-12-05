@@ -221,7 +221,8 @@ class DrawLib {
 		       0, Color Front = -1);
   virtual void drawImage(const Vector2f & a, const Vector2f & b,
 			 Texture * pTexture, Color Tint = -1);
-  
+  virtual void drawImage(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Texture *pTexture, Color Tint = -1);
+
   virtual bool isExtensionSupported(std::string Ext) = 0;
   void setDontUseGLExtensions(bool dont_use);
   virtual Img *grabScreen(int i_reduce = 1) = 0;

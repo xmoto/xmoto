@@ -54,12 +54,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Init at game start-up
   ===========================================================================*/
   void GameRenderer::init(void) { 
-          
-    /* Init GUI */
-    getGUI()->setApp(getParent());
-    getGUI()->setPosition(0,0,getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
-    getGUI()->setFont(getParent()->getDrawLib()->getFontSmall());    
-
     /* Overlays? */
     m_Overlay.init(getParent()->getDrawLib(),512,512);
 
@@ -1890,6 +1884,9 @@ int GameRenderer::nbParticlesRendered() const {
   void GameRenderer::_RenderAlphaBlendedSection(Texture *pTexture,
                                                 const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3,
 						const TColor&  i_filterColor) {
+    //    getParent()->getDrawLib()->drawImage(p1, p2, p3, p0, pTexture,
+    //				 MAKE_COLOR(i_filterColor.Red(), i_filterColor.Green(), i_filterColor.Blue(), 255));
+
     getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
     getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
     getParent()->getDrawLib()->setColorRGB(i_filterColor.Red(), i_filterColor.Green(), i_filterColor.Blue());

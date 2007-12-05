@@ -150,7 +150,6 @@ class ParticlesSource;
     MotoGame *getGameObject(void) {return m_pMotoGame;}
     void setParent(GameApp *pParent) {m_pParent=pParent;}
     GameApp *getParent(void) {return m_pParent;}
-    UIRoot *getGUI(void) {return &m_GUI;}
     void setBestTime(const std::string& s) {m_bestTime = s;}
     void showReplayHelp(float p_speed, bool bAllowRewind);
     void hideReplayHelp();
@@ -184,8 +183,6 @@ class ParticlesSource;
     MotoGame *m_pMotoGame;        /* Game object, so we know what to draw. */
     GameApp *m_pParent;               /* Our owner, so we know where to draw. */
 
-    UIRoot m_GUI;                 /* GUI root */
-      
     Theme *m_theme;
 
     float m_fZoom;

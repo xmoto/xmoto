@@ -67,7 +67,10 @@ class XMotoLoadReplaysInterface;
      GameApp();
      ~GameApp();
            
-    void run(int nNumArgs, char **ppcArgs);
+    void run(int nNumArgs,char **ppcArgs);
+    void run_load(int nNumArgs,char **ppcArgs);
+    void run_loop();
+    void run_unload();
 
 	/* load level */
 	void loadLevelHook(std::string i_level, int i_percentage);
