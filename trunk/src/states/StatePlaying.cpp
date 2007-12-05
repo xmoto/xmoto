@@ -56,7 +56,6 @@ void StatePlaying::enter()
 
   try {
     m_pGame->getMotoGame()->playLevel();
-    m_pGame->playMusic(m_pGame->getMotoGame()->getLevelSrc()->Music());
   } catch(Exception &e) {
     Logger::Log("** Warning ** : level '%s' cannot be loaded", m_pGame->getMotoGame()->getLevelSrc()->Name().c_str());
 

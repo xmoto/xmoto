@@ -65,7 +65,7 @@ void StatePreplaying::enter()
   m_pGame->getGameRenderer()->setShowMinimap(false);
   m_pGame->getGameRenderer()->setShowTimePanel(false);
   m_pGame->getGameRenderer()->hideReplayHelp();
-  m_pGame->playMusic("");
+
   pWorld->setDeathAnim(m_pGame->getSession()->enableDeadAnimation());
 
   try {
@@ -139,6 +139,13 @@ void StatePreplaying::enter()
     m_pGame->getStateManager()->pushState(new StateDownloadGhost(m_pGame, m_idlevel));
   } else {
     m_ghostDownloaded = true;
+  }
+
+  // music
+  if(m_playAnimation) {
+    m_pGame->playMusic("");
+  } else {
+    m_pGame->playMusic(m_pGame->getMotoGame()->getLevelSrc()->Music());
   }
 }
 

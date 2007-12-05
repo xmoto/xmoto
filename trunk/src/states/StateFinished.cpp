@@ -58,7 +58,6 @@ void StateFinished::enter()
   bool v_is_a_personnal_highscore;
 
   m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
-  m_pGame->playMusic("");
 
   createGUIIfNeeded(m_pGame);
   m_GUI = m_sGUI;
