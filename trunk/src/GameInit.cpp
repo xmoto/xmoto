@@ -356,7 +356,9 @@ void GameApp::_Wait()
   void GameApp::userInit(XMArguments* v_xmArgs) {
     /* Init sound system */
     Sound::init(m_xmsession);
-      
+
+    m_stateManager = new StateManager(this);
+
     /* Init renderer */
     if(m_xmsession->useGraphics()) {
       switchUglyMode(m_xmsession->ugly());
@@ -589,6 +591,8 @@ void GameApp::_Wait()
     
     m_xmsession->save(&m_Config);
     m_InputHandler.saveConfig(&m_Config);
+
+    delete m_stateManager;
 
     Sound::uninit();
 

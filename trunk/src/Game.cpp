@@ -167,8 +167,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
 GameApp::~GameApp() {
-  delete m_stateManager;
-
   if(m_db != NULL) {
     delete m_db;
   }
@@ -219,7 +217,7 @@ GameApp::GameApp() {
 
   m_db = NULL;
 
-  m_stateManager       = new StateManager(this);
+  m_stateManager       = NULL;
   m_lastFrameTimeStamp = -1;
   m_frameLate          = 0;
 }
