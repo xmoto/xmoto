@@ -78,8 +78,6 @@ class XMotoLoadReplaysInterface;
 
       /* ** */
       void drawFrame(void);
-      void userInit(XMArguments* v_xmArgs);
-      void userShutdown(void);
       void keyDown(int nKey, SDLMod mod,int nChar);
       void keyUp(int nKey, SDLMod mod);
       void mouseDown(int nButton);
@@ -305,7 +303,6 @@ class XMotoLoadReplaysInterface;
 
       /* */
       void _InitWin(bool bInitGraphics);
-      void _Uninit(void);
   };
 
 #endif

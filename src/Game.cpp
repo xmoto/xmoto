@@ -148,24 +148,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     atexit(TTF_Quit);
   }
 
-  /*===========================================================================
-  Uninit 
-  ===========================================================================*/
-  void GameApp::_Uninit(void) {
-    /* Tell user app to turn off */
-    userShutdown();
 
-    if(m_xmsession->useGraphics()) {
-      /* Uninit drawing library */
-      drawLib->unInit();
-    }
-    
-    Logger::uninit();
-    
-    /* Shutdown SDL */
-    SDL_Quit();
-  }
-  
 GameApp::~GameApp() {
   if(m_db != NULL) {
     delete m_db;

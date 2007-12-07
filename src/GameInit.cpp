@@ -88,118 +88,317 @@ void GameApp::run(int nNumArgs,char **ppcArgs) {
 }
 
 void GameApp::run_load(int nNumArgs,char **ppcArgs) {
-    XMArguments v_xmArgs;
-    GameState* pState;
+  XMArguments v_xmArgs;
+  GameState* pState;
 
-    /* check args */
-    try {
-      v_xmArgs.parse(nNumArgs, ppcArgs);
-    } catch (Exception &e) {
-      printf("syntax error : %s\n", e.getMsg().c_str());
-      v_xmArgs.help(nNumArgs >= 1 ? ppcArgs[0] : "xmoto");
-      return; /* abort */
-    }
+  /* check args */
+  try {
+    v_xmArgs.parse(nNumArgs, ppcArgs);
+  } catch (Exception &e) {
+    printf("syntax error : %s\n", e.getMsg().c_str());
+    v_xmArgs.help(nNumArgs >= 1 ? ppcArgs[0] : "xmoto");
+    return; /* abort */
+  }
 
-    /* help */
-    if(v_xmArgs.isOptHelp()) {
-      v_xmArgs.help(nNumArgs >= 1 ? ppcArgs[0] : "xmoto");
-      return;
-    }
+  /* help */
+  if(v_xmArgs.isOptHelp()) {
+    v_xmArgs.help(nNumArgs >= 1 ? ppcArgs[0] : "xmoto");
+    return;
+  }
 
-    /* init sub-systems */
-    SwapEndian::Swap_Init();
-    srand(time(NULL));
+  /* init sub-systems */
+  SwapEndian::Swap_Init();
+  srand(time(NULL));
 
-    /* package / unpackage */
-    if(v_xmArgs.isOptPack()) {
-      Packager::go(v_xmArgs.getOpt_pack_bin() == "" ? "xmoto.bin" : v_xmArgs.getOpt_pack_bin(),
-		   v_xmArgs.getOpt_pack_dir() == "" ? "."         : v_xmArgs.getOpt_pack_dir());
-      return;
-    }
-    if(v_xmArgs.isOptUnPack()) {
-      Packager::goUnpack(v_xmArgs.getOpt_unpack_bin() == "" ? "xmoto.bin" : v_xmArgs.getOpt_unpack_bin(),
-			 v_xmArgs.getOpt_unpack_dir() == "" ? "."         : v_xmArgs.getOpt_unpack_dir(),
-			 v_xmArgs.getOpt_unpack_noList() == false);
-      return;
-    }
-    /* ***** */
+  /* package / unpackage */
+  if(v_xmArgs.isOptPack()) {
+    Packager::go(v_xmArgs.getOpt_pack_bin() == "" ? "xmoto.bin" : v_xmArgs.getOpt_pack_bin(),
+		 v_xmArgs.getOpt_pack_dir() == "" ? "."         : v_xmArgs.getOpt_pack_dir());
+    return;
+  }
+  if(v_xmArgs.isOptUnPack()) {
+    Packager::goUnpack(v_xmArgs.getOpt_unpack_bin() == "" ? "xmoto.bin" : v_xmArgs.getOpt_unpack_bin(),
+		       v_xmArgs.getOpt_unpack_dir() == "" ? "."         : v_xmArgs.getOpt_unpack_dir(),
+		       v_xmArgs.getOpt_unpack_noList() == false);
+    return;
+  }
+  /* ***** */
 
-    if(v_xmArgs.isOptConfigPath()) {
-      FS::init("xmoto", "xmoto.bin", "xmoto.log", v_xmArgs.getOpt_configPath_path());
-    } else {
-      FS::init("xmoto", "xmoto.bin", "xmoto.log");
-    }
-    Logger::init(FS::getUserDir() + "/xmoto.log");
+  if(v_xmArgs.isOptConfigPath()) {
+    FS::init("xmoto", "xmoto.bin", "xmoto.log", v_xmArgs.getOpt_configPath_path());
+  } else {
+    FS::init("xmoto", "xmoto.bin", "xmoto.log");
+  }
+  Logger::init(FS::getUserDir() + "/xmoto.log");
 
-    /* load config file */
-    XMSession::createDefaultConfig(&m_Config);
-    m_Config.loadFile();
-
-    /* load session */
-    m_xmsession->load(&m_Config); /* overload default session by userConfig */
-    m_xmsession->load(&v_xmArgs); /* overload default session by xmargs     */
-
-    /* apply verbose mode */
-    Logger::setVerbose(m_xmsession->isVerbose());
+  /* load config file, the session */
+  XMSession::createDefaultConfig(&m_Config);
+  m_Config.loadFile();
+  m_xmsession->load(&m_Config); /* overload default session by userConfig */
+  m_xmsession->load(&v_xmArgs); /* overload default session by xmargs     */
+  Logger::setVerbose(m_xmsession->isVerbose()); /* apply verbose mode */
 
 #ifdef USE_GETTEXT
     std::string v_locale = Locales::init(m_xmsession->language());
 #endif
 
-    Logger::Log("compiled at "__DATE__" "__TIME__);
-    if(SwapEndian::bigendien) {
-      Logger::Log("Systeme is bigendien");
-    } else {
-      Logger::Log("Systeme is littleendien");
-    }
-
-    Logger::Log("User directory: %s", FS::getUserDir().c_str());
-    Logger::Log("Data directory: %s", FS::getDataDir().c_str());
+  Logger::Log("compiled at "__DATE__" "__TIME__);
+  if(SwapEndian::bigendien) {
+    Logger::Log("Systeme is bigendien");
+  } else {
+    Logger::Log("Systeme is littleendien");
+  }
+  Logger::Log("User directory: %s", FS::getUserDir().c_str());
+  Logger::Log("Data directory: %s", FS::getDataDir().c_str());
 
 #ifdef USE_GETTEXT
-    Logger::Log("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
+  Logger::Log("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
 #endif
 
-    if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos()) {
-      m_xmsession->setUseGraphics(false);
+  if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos()) {
+    m_xmsession->setUseGraphics(false);
+  }
+
+  _InitWin(m_xmsession->useGraphics());
+
+  if(m_xmsession->useGraphics()) {
+    /* init drawLib */
+    drawLib = DrawLib::DrawLibFromName(m_xmsession->drawlib());
+    
+    if(drawLib == NULL) {
+      throw Exception("Drawlib not initialized");
     }
 
-    _InitWin(m_xmsession->useGraphics());
+    m_Renderer = new GameRenderer(drawLib);
+    m_Renderer->setTheme(&m_theme);
+    m_MotoGame.setRenderer(m_Renderer);
+    m_sysMsg = new SysMessage(drawLib);
+    
+    drawLib->setNoGraphics(m_xmsession->useGraphics() == false);
+    drawLib->setDontUseGLExtensions(m_xmsession->glExts() == false);
 
-    if(m_xmsession->useGraphics()) {
-      /* init drawLib */
-      drawLib = DrawLib::DrawLibFromName(m_xmsession->drawlib());
-
-      if(drawLib == NULL) {
-	throw Exception("Drawlib not initialized");
-      }
-
-      m_Renderer = new GameRenderer(drawLib);
-      m_Renderer->setTheme(&m_theme);
-      m_MotoGame.setRenderer(m_Renderer);
-      m_sysMsg = new SysMessage(drawLib);
-
-      drawLib->setNoGraphics(m_xmsession->useGraphics() == false);
-      drawLib->setDontUseGLExtensions(m_xmsession->glExts() == false);
-
-      /* Init! */
-      drawLib->init(m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(), m_xmsession->bpp(), m_xmsession->windowed(), &m_theme);
-      /* drawlib can change the final resolution if it fails, then, reinit session one's */
-      m_xmsession->setResolutionWidth(drawLib->getDispWidth());
-      m_xmsession->setResolutionHeight(drawLib->getDispHeight());
-      m_xmsession->setBpp(drawLib->getDispBPP());
-      m_xmsession->setWindowed(drawLib->getWindowed());
-      Logger::Log("Resolution: %ix%i (%i bpp)", m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(), m_xmsession->bpp());
-      /* */
-
-      if(!drawLib->isNoGraphics()) {        
-	drawLib->setDrawDims(m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(),
-			     m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight());
-      }
+    /* Init! */
+    drawLib->init(m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(), m_xmsession->bpp(), m_xmsession->windowed(), &m_theme);
+    /* drawlib can change the final resolution if it fails, then, reinit session one's */
+    m_xmsession->setResolutionWidth(drawLib->getDispWidth());
+    m_xmsession->setResolutionHeight(drawLib->getDispHeight());
+    m_xmsession->setBpp(drawLib->getDispBPP());
+    m_xmsession->setWindowed(drawLib->getWindowed());
+    Logger::Log("Resolution: %ix%i (%i bpp)", m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(), m_xmsession->bpp());
+    /* */
+    
+    if(!drawLib->isNoGraphics()) {        
+      drawLib->setDrawDims(m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(),
+			   m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight());
     }
+  }
 
-    /* Now perform user init */
-    userInit(&v_xmArgs);
+  /* Init sound system */
+  Sound::init(m_xmsession);
+
+  m_stateManager = new StateManager(this);
+
+  /* Init renderer */
+  if(m_xmsession->useGraphics()) {
+    switchUglyMode(m_xmsession->ugly());
+    switchTestThemeMode(m_xmsession->testTheme());
+    m_Renderer->setParent( (GameApp *)this );
+    m_Renderer->setGameObject( &m_MotoGame );        
+  }    
+
+  /* Tell collision system whether we want debug-info or not */
+  m_MotoGame.getCollisionHandler()->setDebug(m_xmsession->debug());
+
+  if(m_xmsession->useGraphics()) {
+    if(m_xmsession->gDebug()) m_Renderer->loadDebugInfo(m_xmsession->gDebugFile());
+  }
+
+  /* database */
+  m_db = new xmDatabase(DATABASE_FILE,
+			m_xmsession->profile() == "" ? std::string("") : m_xmsession->profile(),
+			FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
+			m_xmsession->useGraphics() ? this : NULL);
+  if(m_xmsession->sqlTrace()) {
+    m_db->setTrace(m_xmsession->sqlTrace());
+  }
+
+  /* load theme */
+  m_themeChoicer = new ThemeChoicer();
+  if(m_db->themes_isIndexUptodate() == false) {
+    m_themeChoicer->initThemesFromDir(m_db);
+  }
+  try {
+    reloadTheme();
+  } catch(Exception &e) {
+    /* if the theme cannot be loaded, try to reload from files */
+    /* perhaps that the xm.db comes from an other computer */
+    Logger::Log("** warning ** : Theme cannot be reload, try to update themes into the database");
+    m_themeChoicer->initThemesFromDir(m_db);
+    reloadTheme();
+  }
+  
+  /* load levels */
+  if(m_db->levels_isIndexUptodate() == false) {
+      m_levelsManager.reloadLevelsFromLvl(m_db, m_xmsession->useGraphics() ? this : NULL);
+  }
+  m_levelsManager.reloadExternalLevels(m_db, m_xmsession->useGraphics() ? this : NULL);
+  
+  /* Update replays */
+  if(m_db->replays_isIndexUptodate() == false) {
+    initReplaysFromDir();
+  }
+  
+  /* List replays? */  
+  if(v_xmArgs.isOptListReplays()) {
+    char **v_result;
+    unsigned int nrow;
+    
+    printf("\nReplay                    Level                     Player\n");
+    printf("-----------------------------------------------------------------------\n");
+    
+    v_result = m_db->readDB("SELECT a.name, a.id_profile, b.name "
+			    "FROM replays AS a INNER JOIN levels AS b "
+			    "ON a.id_level = b.id_level;", nrow);
+    if(nrow == 0) {
+      printf("(none)\n");
+    } else {
+	for(unsigned int i=0; i<nrow; i++) {
+	  //m_db->getResult(v_result, 4, i, 0)
+	  printf("%-25s %-25s %-25s\n",
+		 m_db->getResult(v_result, 3, i, 0),
+		 m_db->getResult(v_result, 3, i, 2),
+		 m_db->getResult(v_result, 3, i, 1)
+		 );
+	}
+    }
+    m_db->read_DB_free(v_result);
+    quit();
+    return;
+  }
+  
+  if(v_xmArgs.isOptReplayInfos()) {
+    Replay v_replay;
+    std::string v_levelId;
+      std::string v_player;
+    
+    v_levelId = v_replay.openReplay(v_xmArgs.getOpt_replayInfos_file(), v_player, true);
+    if(v_levelId == "") {
+      throw Exception("Invalid replay");
+    }
+    
+    quit();
+    return;	
+  }
+  
+  if(v_xmArgs.isOptLevelID()) {
+    m_PlaySpecificLevelId = v_xmArgs.getOpt_levelID_id();
+  }
+  if(v_xmArgs.isOptLevelFile()) {
+    m_PlaySpecificLevelFile = v_xmArgs.getOpt_levelFile_file();
+  }
+  if(v_xmArgs.isOptReplay()) {
+    m_PlaySpecificReplay = v_xmArgs.getOpt_replay_file();
+  }
+  
+  if(m_xmsession->useGraphics()) {  
+    _UpdateLoadingScreen(0, GAMETEXT_LOADINGSOUNDS);
+    
+    /* Load sounds */
+    try {
+      for(unsigned int i=0; i<m_theme.getSoundsList().size(); i++) {
+	Sound::loadSample(m_theme.getSoundsList()[i]->FilePath());
+      }
+    } catch(Exception &e) {
+      Logger::Log("*** Warning *** : %s\n", e.getMsg().c_str());
+      /* hum, not cool */
+    }
+    
+    Logger::Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
+    
+    /* Find all files in the textures dir and load them */     
+    UITexture::setApp(this);
+    UIWindow::setDrawLib(getDrawLib());
+    
+    _UpdateLoadingScreen((1.0f/9.0f) * 2,GAMETEXT_LOADINGMENUGRAPHICS);
+  }
+  
+  /* Should we clean the level cache? (can also be done when disabled) */
+  if(v_xmArgs.isOptCleanCache()) {
+    LevelsManager::cleanCache();
+  }
+  
+  /* -listlevels? */
+  if(v_xmArgs.isOptListLevels()) {
+    m_levelsManager.printLevelsList(m_db);
+    quit();
+    return;
+  }
+  
+  /* requires graphics now */
+  if(m_xmsession->useGraphics() == false) {
+    return;
+  }
+  
+  /* Initialize renderer */
+  _UpdateLoadingScreen((1.0f/9.0f) * 6,GAMETEXT_INITRENDERER);
+  m_Renderer->init();
+  
+  /* build handler */
+  m_InputHandler.init(&m_Config);
+  Replay::enableCompression(m_xmsession->compressReplays());
+  
+  /* load packs */
+  LevelsManager::checkPrerequires();
+  m_levelsManager.makePacks(m_db, m_xmsession->profile(), m_xmsession->idRoom(), m_xmsession->debug());     
+  
+  /* What to do? */
+  if(m_PlaySpecificLevelFile != "") {
+    try {
+      m_levelsManager.addExternalLevel(m_db, m_PlaySpecificLevelFile);
+      m_PlaySpecificLevelId = m_levelsManager.LevelByFileName(m_db, m_PlaySpecificLevelFile);
+    } catch(Exception &e) {
+      m_PlaySpecificLevelId = m_PlaySpecificLevelFile;
+    }
+  }
+  if((m_PlaySpecificLevelId != "")) {
+    /* ======= PLAY SPECIFIC LEVEL ======= */
+      StatePreplaying::setPlayAnimation(true);
+      m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId));
+      Logger::Log("Playing as '%s'...", m_xmsession->profile().c_str());
+    }
+  else if(m_PlaySpecificReplay != "") {
+    /* ======= PLAY SPECIFIC REPLAY ======= */
+    m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
+    }
+  else {
+    /* display what must be displayed */
+    StateMainMenu* pMainMenu = new StateMainMenu(this);
+    m_stateManager->pushState(pMainMenu);
+    
+    /* Do we have a player profile? */
+    if(m_xmsession->profile() == "") {
+      m_stateManager->pushState(new StateEditProfile(this, pMainMenu));
+    } 
+    
+    /* Should we show a notification box? (with important one-time info) */
+    if(m_xmsession->notifyAtInit()) {
+      m_stateManager->pushState(new StateMessageBox(NULL, this, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));
+      m_xmsession->setNotifyAtInit(false);
+    }
+  }
+  
+  if (m_xmsession->ugly()){
+    drawLib->clearGraphics();
+  }
+  drawFrame();
+  drawLib->flushGraphics();
+  
+  /* Update stats */
+  if(m_xmsession->profile() != "") {
+    m_db->stats_xmotoStarted(m_xmsession->profile());
+  }
+  
+  Logger::Log("UserInit ended at %.3f", GameApp::getXMTime());
 }
 
 void GameApp::run_loop() {
@@ -265,7 +464,47 @@ void GameApp::run_loop() {
 }
 
 void GameApp::run_unload() {
-    _Uninit();
+  if(m_pWebHighscores != NULL) {
+    delete m_pWebHighscores;
+  }        
+
+  if(m_pWebLevels != NULL) {
+    delete m_pWebLevels;
+  }    
+
+  if(m_xmsession->useGraphics()) {
+    m_Renderer->unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
+    m_Renderer->shutdown();
+    m_InputHandler.uninit();
+  }
+    
+  delete m_themeChoicer;
+    
+  if(m_pJustPlayReplay != NULL) {
+    delete m_pJustPlayReplay;
+  }    
+
+  m_xmsession->save(&m_Config);
+  m_InputHandler.saveConfig(&m_Config);
+
+  delete m_stateManager;
+
+  Sound::uninit();
+
+  delete m_Renderer;
+  delete m_sysMsg;
+
+  m_Config.saveFile();
+  
+  if(m_xmsession->useGraphics()) {
+    /* Uninit drawing library */
+    drawLib->unInit();
+  }
+    
+  Logger::uninit();
+    
+  /* Shutdown SDL */
+  SDL_Quit();
 }
 
 
@@ -349,255 +588,3 @@ void GameApp::_Wait()
 		      MAKE_COLOR(255,255,255,255));      
     getDrawLib()->flushGraphics();
   }
-  
-  /*===========================================================================
-  Initialize game
-  ===========================================================================*/
-  void GameApp::userInit(XMArguments* v_xmArgs) {
-    /* Init sound system */
-    Sound::init(m_xmsession);
-
-    m_stateManager = new StateManager(this);
-
-    /* Init renderer */
-    if(m_xmsession->useGraphics()) {
-      switchUglyMode(m_xmsession->ugly());
-      switchTestThemeMode(m_xmsession->testTheme());
-      m_Renderer->setParent( (GameApp *)this );
-      m_Renderer->setGameObject( &m_MotoGame );        
-    }    
-
-    /* Tell collision system whether we want debug-info or not */
-    m_MotoGame.getCollisionHandler()->setDebug(m_xmsession->debug());
-    
-    /* Data time! */
-    Logger::Log("Loading data...");
-
-    if(m_xmsession->useGraphics()) {
-      if(m_xmsession->gDebug()) m_Renderer->loadDebugInfo(m_xmsession->gDebugFile());
-    }
-
-    /* database */
-    m_db = new xmDatabase(DATABASE_FILE,
-			  m_xmsession->profile() == "" ? std::string("") : m_xmsession->profile(),
-			  FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
-			  m_xmsession->useGraphics() ? this : NULL);
-    if(m_xmsession->sqlTrace()) {
-      m_db->setTrace(m_xmsession->sqlTrace());
-    }
-
-    /* load theme */
-    m_themeChoicer = new ThemeChoicer();
-    if(m_db->themes_isIndexUptodate() == false) {
-      m_themeChoicer->initThemesFromDir(m_db);
-    }
-    try {
-      reloadTheme();
-    } catch(Exception &e) {
-      /* if the theme cannot be loaded, try to reload from files */
-      /* perhaps that the xm.db comes from an other computer */
-      Logger::Log("** warning ** : Theme cannot be reload, try to update themes into the database");
-      m_themeChoicer->initThemesFromDir(m_db);
-      reloadTheme();
-    }
-
-    /* load levels */
-    if(m_db->levels_isIndexUptodate() == false) {
-      m_levelsManager.reloadLevelsFromLvl(m_db, m_xmsession->useGraphics() ? this : NULL);
-    }
-    m_levelsManager.reloadExternalLevels(m_db, m_xmsession->useGraphics() ? this : NULL);
-
-    /* Update replays */
-    if(m_db->replays_isIndexUptodate() == false) {
-      initReplaysFromDir();
-    }
-
-    /* List replays? */  
-    if(v_xmArgs->isOptListReplays()) {
-      char **v_result;
-      unsigned int nrow;
-
-      printf("\nReplay                    Level                     Player\n");
-      printf("-----------------------------------------------------------------------\n");
-
-      v_result = m_db->readDB("SELECT a.name, a.id_profile, b.name "
-			      "FROM replays AS a INNER JOIN levels AS b "
-			      "ON a.id_level = b.id_level;", nrow);
-      if(nrow == 0) {
-	printf("(none)\n");
-      } else {
-	for(unsigned int i=0; i<nrow; i++) {
-	  //m_db->getResult(v_result, 4, i, 0)
-	  printf("%-25s %-25s %-25s\n",
-		 m_db->getResult(v_result, 3, i, 0),
-		 m_db->getResult(v_result, 3, i, 2),
-		 m_db->getResult(v_result, 3, i, 1)
-		 );
-	}
-      }
-      m_db->read_DB_free(v_result);
-      quit();
-      return;
-    }
-    
-    if(v_xmArgs->isOptReplayInfos()) {
-      Replay v_replay;
-      std::string v_levelId;
-      std::string v_player;
-      
-      v_levelId = v_replay.openReplay(v_xmArgs->getOpt_replayInfos_file(), v_player, true);
-      if(v_levelId == "") {
-	throw Exception("Invalid replay");
-      }
-      
-      quit();
-      return;	
-    }
-    
-    if(v_xmArgs->isOptLevelID()) {
-      m_PlaySpecificLevelId = v_xmArgs->getOpt_levelID_id();
-    }
-    if(v_xmArgs->isOptLevelFile()) {
-      m_PlaySpecificLevelFile = v_xmArgs->getOpt_levelFile_file();
-    }
-    if(v_xmArgs->isOptReplay()) {
-      m_PlaySpecificReplay = v_xmArgs->getOpt_replay_file();
-    }
-
-    if(m_xmsession->useGraphics()) {  
-      _UpdateLoadingScreen(0, GAMETEXT_LOADINGSOUNDS);
-      
-      /* Load sounds */
-      try {
-	for(unsigned int i=0; i<m_theme.getSoundsList().size(); i++) {
-	  Sound::loadSample(m_theme.getSoundsList()[i]->FilePath());
-	}
-      } catch(Exception &e) {
-	Logger::Log("*** Warning *** : %s\n", e.getMsg().c_str());
-	/* hum, not cool */
-      }
-	
-      Logger::Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
-
-      /* Find all files in the textures dir and load them */     
-      UITexture::setApp(this);
-      UIWindow::setDrawLib(getDrawLib());
-
-      _UpdateLoadingScreen((1.0f/9.0f) * 2,GAMETEXT_LOADINGMENUGRAPHICS);
-    }
-        
-    /* Should we clean the level cache? (can also be done when disabled) */
-    if(v_xmArgs->isOptCleanCache()) {
-      LevelsManager::cleanCache();
-    }
-
-    /* -listlevels? */
-    if(v_xmArgs->isOptListLevels()) {
-      m_levelsManager.printLevelsList(m_db);
-     quit();
-     return;
-    }
-        
-    /* requires graphics now */
-    if(m_xmsession->useGraphics() == false) {
-      return;
-    }
-
-    /* Initialize renderer */
-    _UpdateLoadingScreen((1.0f/9.0f) * 6,GAMETEXT_INITRENDERER);
-    m_Renderer->init();
-
-    /* build handler */
-    m_InputHandler.init(&m_Config);
-    Replay::enableCompression(m_xmsession->compressReplays());
-    
-    /* load packs */
-    LevelsManager::checkPrerequires();
-    m_levelsManager.makePacks(m_db,
-			      m_xmsession->profile(),
-			      m_xmsession->idRoom(),
-			      m_xmsession->debug());     
-
-    /* What to do? */
-    if(m_PlaySpecificLevelFile != "") {
-      try {
-	m_levelsManager.addExternalLevel(m_db, m_PlaySpecificLevelFile);
-	m_PlaySpecificLevelId = m_levelsManager.LevelByFileName(m_db, m_PlaySpecificLevelFile);
-      } catch(Exception &e) {
-	m_PlaySpecificLevelId = m_PlaySpecificLevelFile;
-      }
-    }
-    if((m_PlaySpecificLevelId != "")) {
-      /* ======= PLAY SPECIFIC LEVEL ======= */
-      StatePreplaying::setPlayAnimation(true);
-      m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId));
-      Logger::Log("Playing as '%s'...", m_xmsession->profile().c_str());
-    }
-    else if(m_PlaySpecificReplay != "") {
-      /* ======= PLAY SPECIFIC REPLAY ======= */
-      m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
-    }
-    else {
-      /* display what must be displayed */
-      StateMainMenu* pMainMenu = new StateMainMenu(this);
-      m_stateManager->pushState(pMainMenu);
-
-      /* Do we have a player profile? */
-      if(m_xmsession->profile() == "") {
-	m_stateManager->pushState(new StateEditProfile(this, pMainMenu));
-      } 
- 
-      /* Should we show a notification box? (with important one-time info) */
-      if(m_xmsession->notifyAtInit()) {
-	m_stateManager->pushState(new StateMessageBox(NULL, this, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));
-	m_xmsession->setNotifyAtInit(false);
-      }
-    }
-
-    if (m_xmsession->ugly()){
-      drawLib->clearGraphics();
-    }
-    drawFrame();
-    drawLib->flushGraphics();
-
-    /* Update stats */
-    if(m_xmsession->profile() != "") {
-      m_db->stats_xmotoStarted(m_xmsession->profile());
-    }
-
-    Logger::Log("UserInit ended at %.3f", GameApp::getXMTime());
-  }
-
-  /*===========================================================================
-  Shutdown game
-  ===========================================================================*/
-  void GameApp::userShutdown(void) {  
-    if(m_pWebHighscores != NULL)
-    delete m_pWebHighscores;
-        
-    if(m_pWebLevels != NULL)
-    delete m_pWebLevels;
-    
-    if(m_xmsession->useGraphics()) {
-      m_Renderer->unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
-      m_Renderer->shutdown();
-      m_InputHandler.uninit();
-    }
-    
-    delete m_themeChoicer;
-    
-    if(m_pJustPlayReplay != NULL)
-    delete m_pJustPlayReplay;
-    
-    m_xmsession->save(&m_Config);
-    m_InputHandler.saveConfig(&m_Config);
-
-    delete m_stateManager;
-
-    Sound::uninit();
-
-    delete m_Renderer;
-    delete m_sysMsg;
-
-    m_Config.saveFile();
-  }  
