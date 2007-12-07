@@ -58,6 +58,7 @@ void StateLevelPackViewer::enter()
   updateGUI();
   updateInfoFrame();
 
+  m_pGame->playMusic("menu1");
   StateMenu::enter();
 }
 
@@ -73,6 +74,7 @@ void StateLevelPackViewer::enterAfterPop()
     m_require_updateLevelsList = false;
   }
 
+  m_pGame->playMusic("menu1");
   StateMenu::enterAfterPop();
 }
 
