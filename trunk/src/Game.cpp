@@ -205,7 +205,6 @@ GameApp::GameApp() {
   m_fFPS_Rate = 0;
   m_pJustPlayReplay = NULL;
   m_updateAutomaticallyLevels = false;
-  m_reloadingLevelsUser = false;
 
   m_pWebHighscores = NULL;
   m_pWebLevels = NULL;
@@ -1028,41 +1027,24 @@ bool GameApp::getHighscoreInfos(const std::string& i_id_level, std::string* o_id
   return true;
 }
 
-/****************/
-
-  void GameApp::_UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore) {
-    //    if(m_pActiveLevelPack == NULL)
-    //      return;
-
-    UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST"); 
-    if(pList == NULL) return;
-
-    pList->updateLevel(i_id_level, i_playerHighscore);
-  }
-
-
-
-
-void GameApp::updateLevelsListsOnEnd() {
-//  _UpdateLevelsLists();
-//  _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
-//			 m_MotoGame.Players()[0]->finishTime());
-}
-
-
-
 void GameApp::loadLevelHook(std::string i_level, int i_percentage)
 {
+  std::ostringstream v_percentage;
+  v_percentage << i_percentage;
+  v_percentage << "%";
+  _UpdateLoadingScreen(0, std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str() + std::string(" ") + i_level);
+
+  /* pump events to so that windows don't think the appli is crashed */
+  SDL_PumpEvents();
 }
 
-  void GameApp::updatingDatabase(std::string i_message) {
-    _UpdateLoadingScreen(0, i_message);
+void GameApp::updatingDatabase(std::string i_message) {
+  _UpdateLoadingScreen(0, i_message);
 
-    /* pump events to so that windows don't think the appli is crashed */
-    SDL_PumpEvents();
-  }
+  /* pump events to so that windows don't think the appli is crashed */
+  SDL_PumpEvents();
+}
 
-        
 void GameApp::drawFrame(void) {
   Sound::update();
   m_InputHandler.updateInput(m_MotoGame.Players());
