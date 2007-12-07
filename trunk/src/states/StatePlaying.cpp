@@ -68,6 +68,7 @@ void StatePlaying::enter()
   }
 
   setScoresTimes();
+  m_pGame->playMusic(m_pGame->getMotoGame()->getLevelSrc()->Music());
 }
 
 void StatePlaying::leave()

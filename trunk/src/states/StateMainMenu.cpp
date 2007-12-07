@@ -101,9 +101,7 @@ StateMainMenu::~StateMainMenu()
 
 
 void StateMainMenu::enter()
-{
-  m_pGame->playMusic("menu1");
-  
+{ 
   createGUIIfNeeded(m_pGame);
   m_GUI = m_sGUI;
 
@@ -122,6 +120,8 @@ void StateMainMenu::enter()
 
   // upate info frame
   updateInfoFrame();
+
+  m_pGame->playMusic("menu1");
 
   StateMenu::enter();
 
@@ -152,6 +152,8 @@ void StateMainMenu::enterAfterPop()
     updateLevelsLists(); 
     m_require_updateLevelsList = false;
   }
+
+  m_pGame->playMusic("menu1");
 }
 
 void StateMainMenu::leaveAfterPush()
