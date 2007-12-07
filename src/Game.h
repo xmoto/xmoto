@@ -160,7 +160,6 @@ class XMotoLoadReplaysInterface;
 
       /* call to close the replay */
       void finalizeReplay(bool i_finished);
-      void updateLevelsListsOnEnd();
 
       static std::string splitText(const std::string &str, int p_breakLineLength);
       void addLevelToFavorite(const std::string& i_levelId);
@@ -200,7 +199,6 @@ class XMotoLoadReplaysInterface;
        
       std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
 
-      bool m_reloadingLevelsUser;
       
       Replay *m_pJustPlayReplay;
 
@@ -295,7 +293,6 @@ class XMotoLoadReplaysInterface;
 
       /* Helpers */
       void _Wait();
-      void _UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore);
     
       void _UpdateLoadingScreen(float fDone, const std::string &NextTask);
       
