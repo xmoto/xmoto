@@ -83,6 +83,18 @@ void xmDatabase::levels_delToFavorite(const std::string& i_profile, const std::s
 	    + "\" AND  id_level=\"" + protectString(i_id_level)+ "\";");
 }
 
+void xmDatabase::levels_addToBlacklist(const std::string& i_profile, const std::string& i_id_level) {
+  simpleSql("INSERT INTO levels_blacklist(id_profile, id_level) "
+	    "VALUES(\"" + protectString(i_profile)
+	    + "\", \""  + protectString(i_id_level)+ "\");");
+}
+
+void xmDatabase::levels_delToBlacklist(const std::string& i_profile, const std::string& i_id_level) {
+  simpleSql("DELETE FROM levels_blacklist "
+	    "WHERE id_profile=\""   + protectString(i_profile)
+	    + "\" AND  id_level=\"" + protectString(i_id_level)+ "\";");
+}
+
 void xmDatabase::updateDB_favorite(const std::string& i_profile,
 				   XmDatabaseUpdateInterface *i_interface) {
   XMLDocument v_favoriteLevelsXml;

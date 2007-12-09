@@ -136,6 +136,13 @@ void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
     m_pGame->switchLevelToFavorite(m_pGame->getMotoGame()->getLevelSrc()->Id(), true);
     m_pGame->getStateManager()->sendAsynchronousMessage("FAVORITES_UPDATED");
     break;
+
+  case SDLK_b: // ctrl+b
+    if((mod & KMOD_LCTRL) || (mod & KMOD_RCTRL)) {
+      m_pGame->switchLevelToBlacklist(m_pGame->getMotoGame()->getLevelSrc()->Id(), true);
+      m_pGame->getStateManager()->sendAsynchronousMessage("BLACKLISTEDLEVELS_UPDATED");
+    }
+    break;
     
   case SDLK_PAGEUP:
     nextLevel();

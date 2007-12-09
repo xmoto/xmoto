@@ -806,6 +806,20 @@ void GameApp::switchLevelToFavorite(const std::string& i_levelId, bool v_display
   }
 }
 
+void GameApp::switchLevelToBlacklist(const std::string& i_levelId, bool v_displayMessage) {
+  if(m_levelsManager.isInBlacklist(m_db, m_xmsession->profile(), i_levelId)) {
+    m_levelsManager.delFromBlacklist(m_db, m_xmsession->profile(), i_levelId);
+    if(v_displayMessage) {
+      m_sysMsg->displayText(GAMETEXT_LEVEL_DELETED_FROM_BLACKLIST);
+    }
+  } else {
+    m_levelsManager.addToBlacklist(m_db, m_xmsession->profile(), i_levelId);
+    if(v_displayMessage) {
+      m_sysMsg->displayText(GAMETEXT_LEVEL_ADDED_TO_BLACKLIST);
+    }
+  }
+}
+
 void GameApp::switchFollowCamera() {
   m_Renderer->switchFollow();
 
