@@ -41,6 +41,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_8BIT                 _("8-bit")
 #define GAMETEXT_ABORT                _("Quit level")
 #define GAMETEXT_ADDTOFAVORITE       _("Add to favorite")
+#define GAMETEXT_ADDTOBLACKLIST       _("Add to blacklist")
 #define GAMETEXT_ACTION               _("Action")
 #define GAMETEXT_ALL                  _("All (on this computer)")
 #define GAMETEXT_ALL_LEVELS           _("All levels")
@@ -144,6 +145,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DELETEREPLAYMESSAGE  _("Do you really want to delete replay?")
 #define GAMETEXT_DELETE               _("Delete")
 #define GAMETEXT_DELETEFROMFAVORITE  _("Delete from favorite")
+#define GAMETEXT_DELETEFROMBLACKLIST  _("Delete from blacklist")
 #define GAMETEXT_DELETEPROFILE        _("Delete")
 #define GAMETEXT_DESCRIPTION          _("Description")
 #define GAMETEXT_DISPLAYGHOSTTIMEDIFF _("Display Ghost time difference")
@@ -215,6 +217,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  Return - " + std::string(_("Restart the level")) + "\n" \
 "  PageDown/PageUp - " + std::string(_("Previous/Next level")) + "\n" \
 "  F3 - " + std::string(_("Add/remove to favorite levels")) + "\n"\ 
+"  ctrl+B - " + std::string(_("Add/remove to blacklisted levels")) + "\n"\ 
 "  F8 - " + std::string(_("Enable/disable web")) + "\n" \
 "  F9 - " + std::string(_("Enable/disable ugly mode")) + "\n" \
 "  F5 - " + std::string(_("Reload levels, themes and replays from directories")) + "\n" \
@@ -241,6 +244,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_LEVEL                _("Level")
 #define GAMETEXT_LEVEL_ADDED_TO_FAVORITE     _("Added to favorites")
 #define GAMETEXT_LEVEL_DELETED_FROM_FAVORITE _("Deleted from favorites")
+#define GAMETEXT_LEVEL_ADDED_TO_BLACKLIST     _("Added to blacklist")
+#define GAMETEXT_LEVEL_DELETED_FROM_BLACKLIST _("Deleted from blacklist")
 #define GAMETEXT_LEVELINFO            _("Level Info...")
 #define GAMETEXT_LEVELNAME            _("Level Name")
 #define GAMETEXT_LEVELCANNOTBELOADED  _("Level '%s' cannot be loaded")
@@ -537,6 +542,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_ALL_LEVELS                 _("All levels")
 #define VPACKAGENAME_NEW_LEVELS                 _("New and updated levels")
 #define VPACKAGENAME_FAVORITE_LEVELS            _("Favorite levels")
+#define VPACKAGENAME_BLACKLIST_LEVELS            _("Blacklisted levels")
 #define VPACKAGENAME_NICEST_LEVELS              _("Nicest levels")
 #define VPACKAGENAME_HARDEST_LEVELS             _("Hardest levels")
 #define VPACKAGENAME_EASIEST_LEVELS             _("Easiest levels")
@@ -569,6 +575,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_DESC_ALL_LEVELS                 _("All X-Moto levels")
 #define VPACKAGENAME_DESC_NEW_LEVELS                 _("New and updated levels since your last check")
 #define VPACKAGENAME_DESC_FAVORITE_LEVELS            _("Your favorite levels")
+#define VPACKAGENAME_DESC_BLACKLIST_LEVELS            _("Your blacklisted levels")
 #define VPACKAGENAME_DESC_NICEST_LEVELS          _("Nicest X-Moto levels according to the web votes")
 #define VPACKAGENAME_DESC_HARDEST_LEVELS         _("Hardest X-Moto levels according to the web votes")
 #define VPACKAGENAME_DESC_EASIEST_LEVELS         _("Easiest X-Moto levels according to the web votes")

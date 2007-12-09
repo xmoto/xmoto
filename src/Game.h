@@ -121,6 +121,7 @@ class XMotoLoadReplaysInterface;
 
       XMSession* getSession();
       void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
+      void switchLevelToBlacklist(const std::string& i_levelId, bool v_displayMessage = false);
 
       bool isThereANextLevel(const std::string& i_id_level);
       bool isThereAPreviousLevel(const std::string& i_id_level); 

@@ -76,6 +76,8 @@ class xmDatabase {
   bool levels_isIndexUptodate() const;
   void levels_addToFavorite(const std::string& i_profile, const std::string& i_id_level);
   void levels_delToFavorite(const std::string& i_profile, const std::string& i_id_level);
+  void levels_addToBlacklist(const std::string& i_profile, const std::string& i_id_level);
+  void levels_delToBlacklist(const std::string& i_profile, const std::string& i_id_level);
   void levels_cleanNew();
   void levels_addToNew(const std::string& i_id_level, bool i_isAnUpdate);
 

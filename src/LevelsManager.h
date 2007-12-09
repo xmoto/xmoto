@@ -102,6 +102,11 @@ class LevelsManager {
   void addToFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
   void delFromFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
 
+  bool isInBlacklist(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
+  void addToBlacklist(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
+  void delFromBlacklist(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
+
+
   static std::string getQuickStartPackQuery(xmDatabase *i_db,
 					    unsigned int i_qualityMIN, unsigned int i_difficultyMIN,
 					    unsigned int i_qualityMAX, unsigned int i_difficultyMAX,
