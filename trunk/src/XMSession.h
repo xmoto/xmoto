@@ -210,6 +210,8 @@ class XMSession {
   void setNotifyAtInit(bool i_value);
   bool notifyAtInit() const;
   std::string webLevelsUrl() const;
+  bool mirrorMode() const;
+  void setMirrorMode(bool i_value);
 
   private:
   bool m_verbose;
@@ -283,6 +285,7 @@ class XMSession {
   std::string m_language;
   bool m_notifyAtInit;
   std::string m_webLevelsUrl;
+  bool m_mirrorMode;
 };
 
 #endif

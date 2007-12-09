@@ -587,10 +587,12 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   }
 
   if(nKey == SDLK_m && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
+    m_pGame->getSession()->setMirrorMode(m_pGame->getSession()->mirrorMode() == false);
+
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
-      m_pGame->getMotoGame()->Cameras()[i]->setMirrored(m_pGame->getMotoGame()->Cameras()[i]->isMirrored() == false);
+      m_pGame->getMotoGame()->Cameras()[i]->setMirrored(m_pGame->getSession()->mirrorMode());
     }
-    m_pGame->getInputHandler()->setMirrored(m_pGame->getMotoGame()->Cameras()[0]->isMirrored());
+    m_pGame->getInputHandler()->setMirrored(m_pGame->getSession()->mirrorMode());
   }
 
 }

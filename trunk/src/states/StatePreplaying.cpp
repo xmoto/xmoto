@@ -94,8 +94,6 @@ void StatePreplaying::enter()
   m_pGame->initReplay();
       
   try {
-    m_pGame->getInputHandler()->reset();
-    //m_InputHandler.setMirrored(m_MotoGame.getCamera()->isMirrored());
     pWorld->prePlayLevel(m_pGame->getInputHandler(), m_pGame->getCurrentReplay(), true);
     pWorld->setInfos("");
 	
@@ -128,6 +126,14 @@ void StatePreplaying::enter()
       pWorld->setAutoZoomCamera();
       pWorld->getCamera()->setPlayerToFollow(pWorld->Players()[0]);
     }
+
+    // reset handler, set mirror mode
+    m_pGame->getInputHandler()->reset();
+    for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
+      pWorld->Cameras()[i]->setMirrored(m_pGame->getSession()->mirrorMode());
+    }
+    m_pGame->getInputHandler()->setMirrored(m_pGame->getSession()->mirrorMode());    
+
   } catch(Exception &e) {
     Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
     pWorld->endLevel();
