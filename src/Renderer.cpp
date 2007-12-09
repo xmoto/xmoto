@@ -367,6 +367,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     getParent()->getDrawLib()->setClipRect(bottomLeft.x + x+1,
 			 y+1 - y_translate,
 			 nWidth-2,nHeight-2);
+
 #ifdef ENABLE_OPENGL
     glEnable(GL_SCISSOR_TEST);
     glLoadIdentity();

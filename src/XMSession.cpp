@@ -96,6 +96,7 @@ void XMSession::setToDefault() {
   m_screenshotFormat              = "png";
   m_notifyAtInit                  = true;
   m_webLevelsUrl                  = DEFAULT_WEBLEVELS_URL;
+  m_mirrorMode                    = false;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -790,6 +791,14 @@ bool XMSession::notifyAtInit() const {
 
 std::string XMSession::webLevelsUrl() const {
   return m_webLevelsUrl;
+}
+
+bool XMSession::mirrorMode() const {
+  return m_mirrorMode;
+}
+
+void XMSession::setMirrorMode(bool i_value) {
+  m_mirrorMode = i_value;
 }
 
 ProxySettings* XMSession::proxySettings() {
