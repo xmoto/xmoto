@@ -622,7 +622,9 @@ void LevelsManager::makePacks(xmDatabase *i_db,
                           "SELECT a.id_level AS id_level, a.name AS name, b.finishTime AS sort_field "
                           "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-                          "WHERE b.finishTime < 25 AND c.id_level IS NULL");                    
+			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
+                          "WHERE b.finishTime < 25 AND c.id_level IS NULL "
+			  "AND (d.crappy IS NULL OR d.crappy=0) ");           
   v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
   v_pack->setDescription(VPACKAGENAME_DESC_SHORT_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -632,7 +634,9 @@ void LevelsManager::makePacks(xmDatabase *i_db,
                           "SELECT a.id_level AS id_level, a.name AS name, b.finishTime AS sort_field "
                           "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-                          "WHERE b.finishTime >= 25 AND b.finishTime < 60 AND c.id_level IS NULL");
+			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
+                          "WHERE b.finishTime >= 25 AND b.finishTime < 60 AND c.id_level IS NULL "
+			  "AND (d.crappy IS NULL OR d.crappy=0) ");
   v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
   v_pack->setDescription(VPACKAGENAME_DESC_MEDIUM_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -642,7 +646,9 @@ void LevelsManager::makePacks(xmDatabase *i_db,
                           "SELECT a.id_level AS id_level, a.name AS name, b.finishTime AS sort_field "
                           "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-                          "WHERE b.finishTime >= 60 AND b.finishTime < 120 AND c.id_level IS NULL");
+			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
+                          "WHERE b.finishTime >= 60 AND b.finishTime < 120 AND c.id_level IS NULL "
+			  "AND (d.crappy IS NULL OR d.crappy=0) ");
   v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
   v_pack->setDescription(VPACKAGENAME_DESC_LONG_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -652,7 +658,9 @@ void LevelsManager::makePacks(xmDatabase *i_db,
                           "SELECT a.id_level AS id_level, a.name AS name, b.finishTime AS sort_field "
                           "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-                          "WHERE b.finishTime >= 120 AND c.id_level IS NULL");
+			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
+                          "WHERE b.finishTime >= 120 AND c.id_level IS NULL "
+			  "AND (d.crappy IS NULL OR d.crappy=0) ");
   v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
   v_pack->setDescription(VPACKAGENAME_DESC_VERY_LONG_LEVELS);
   m_levelsPacks.push_back(v_pack);
