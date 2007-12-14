@@ -51,6 +51,9 @@ StateManager::StateManager(GameApp* pGame)
   m_renderFpsNbFrame = 0;
   m_updateFpsNbFrame = 0;
 
+  m_lastFpsTime  = 0.0;
+  m_renderPeriod = 1.0;
+
   m_maxUpdateFps  = 50;
   m_maxRenderFps  = 50;
   m_maxFps        = 50;
