@@ -34,6 +34,7 @@ bool Sound::m_activ;
 
 std::vector<SoundSample *> Sound::m_Samples;
 Mix_Music *Sound::m_pMenuMusic;
+bool  Sound::m_isInitialized = false;
 
 void Sound::init(XMSession* i_session) {
   /* Get user configuration */
@@ -83,6 +84,7 @@ void Sound::init(XMSession* i_session) {
   Mix_AllocateChannels(64);
   m_pMenuMusic = NULL;
   m_activ = i_session->enableAudio();
+  m_isInitialized = true;
 }
   
 void Sound::uninit(void) {  
@@ -103,8 +105,13 @@ void Sound::uninit(void) {
     Mix_FreeMusic(m_pMenuMusic);
   }
   
+  m_isInitialized = false;
 }
-  
+
+bool Sound::isInitialized() {
+  return m_isInitialized;
+}
+
 void Sound::update(void) {
 }
 
