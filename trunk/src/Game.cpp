@@ -199,6 +199,7 @@ GameApp::GameApp() {
   m_currentPlayingList = NULL;
 
   m_db = NULL;
+  m_themeChoicer = NULL;
 
   m_stateManager       = NULL;
   m_lastFrameTimeStamp = -1;

@@ -97,12 +97,14 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   } catch (Exception &e) {
     printf("syntax error : %s\n", e.getMsg().c_str());
     v_xmArgs.help(nNumArgs >= 1 ? ppcArgs[0] : "xmoto");
+    quit();
     return; /* abort */
   }
 
   /* help */
   if(v_xmArgs.isOptHelp()) {
     v_xmArgs.help(nNumArgs >= 1 ? ppcArgs[0] : "xmoto");
+    quit();
     return;
   }
 
@@ -114,12 +116,14 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   if(v_xmArgs.isOptPack()) {
     Packager::go(v_xmArgs.getOpt_pack_bin() == "" ? "xmoto.bin" : v_xmArgs.getOpt_pack_bin(),
 		 v_xmArgs.getOpt_pack_dir() == "" ? "."         : v_xmArgs.getOpt_pack_dir());
+    quit();
     return;
   }
   if(v_xmArgs.isOptUnPack()) {
     Packager::goUnpack(v_xmArgs.getOpt_unpack_bin() == "" ? "xmoto.bin" : v_xmArgs.getOpt_unpack_bin(),
 		       v_xmArgs.getOpt_unpack_dir() == "" ? "."         : v_xmArgs.getOpt_unpack_dir(),
 		       v_xmArgs.getOpt_unpack_noList() == false);
+    quit();
     return;
   }
   /* ***** */
@@ -196,10 +200,9 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   /* Init sound system */
   Sound::init(m_xmsession);
 
-  m_stateManager = new StateManager(this);
-
   /* Init renderer */
   if(m_xmsession->useGraphics()) {
+    m_stateManager = new StateManager(this);
     switchUglyMode(m_xmsession->ugly());
     switchTestThemeMode(m_xmsession->testTheme());
     m_Renderer->setParent( (GameApp *)this );
@@ -336,6 +339,7 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   
   /* requires graphics now */
   if(m_xmsession->useGraphics() == false) {
+    quit();
     return;
   }
   
@@ -472,36 +476,49 @@ void GameApp::run_unload() {
     delete m_pWebLevels;
   }    
 
-  if(m_xmsession->useGraphics()) {
+  if(m_Renderer != NULL) {
     m_Renderer->unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
     m_Renderer->shutdown();
     m_InputHandler.uninit();
   }
-    
-  delete m_themeChoicer;
+
+  if(m_themeChoicer != NULL) {
+    delete m_themeChoicer;
+  }
     
   if(m_pJustPlayReplay != NULL) {
     delete m_pJustPlayReplay;
   }    
 
-  m_xmsession->save(&m_Config);
-  m_InputHandler.saveConfig(&m_Config);
-
-  delete m_stateManager;
-
-  Sound::uninit();
-
-  delete m_Renderer;
-  delete m_sysMsg;
-
-  m_Config.saveFile();
+  if(m_stateManager != NULL) {
+    delete m_stateManager;
+  }
   
-  if(m_xmsession->useGraphics()) {
-    /* Uninit drawing library */
+  if(Sound::isInitialized()) {
+    Sound::uninit();
+  }
+
+  if(m_Renderer != NULL) {
+    delete m_Renderer;
+  }
+  
+  if(m_sysMsg != NULL) {
+    delete m_sysMsg;
+  }
+
+  if(drawLib != NULL) { /* save config only if drawLib was initialized */
+    m_xmsession->save(&m_Config);
+    m_InputHandler.saveConfig(&m_Config);
+    m_Config.saveFile();
+  }
+
+  if(drawLib != NULL) {
     drawLib->unInit();
   }
     
-  Logger::uninit();
+  if(Logger::isInitialized()) {
+    Logger::uninit();
+  }
     
   /* Shutdown SDL */
   SDL_Quit();

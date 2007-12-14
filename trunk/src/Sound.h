@@ -69,6 +69,7 @@ class XMSession;
       /* Static functions */
       static void init(XMSession* i_session);
       static void uninit(void);
+      static bool isInitialized();
       
       static void update(void);
       
@@ -115,6 +116,7 @@ class XMSession;
       static std::vector<SoundSample *> m_Samples;
       
       static Mix_Music *m_pMenuMusic;
+      static bool  m_isInitialized;
   };
 
 #endif
