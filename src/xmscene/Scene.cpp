@@ -828,8 +828,10 @@ void MotoGame::cleanPlayers() {
       for(unsigned int i=0; i<m_ghosts.size(); i++) {
 	m_ghosts[i]->updateDiffToPlayer(m_myLastStrawberries);
       }
-      DisplayDiffFromGhost();
 
+      if(m_showGhostTimeDiff) {
+	DisplayDiffFromGhost();
+      }
     }
   }
 

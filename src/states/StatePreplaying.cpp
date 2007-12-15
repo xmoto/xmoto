@@ -67,6 +67,7 @@ void StatePreplaying::enter()
   m_pGame->getGameRenderer()->hideReplayHelp();
 
   pWorld->setDeathAnim(m_pGame->getSession()->enableDeadAnimation());
+  pWorld->setShowGhostTimeDiff(m_pGame->getSession()->showGhostTimeDifference());
 
   try {
     pWorld->loadLevel(m_pGame->getDb(), m_idlevel);
@@ -132,7 +133,7 @@ void StatePreplaying::enter()
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
       pWorld->Cameras()[i]->setMirrored(m_pGame->getSession()->mirrorMode());
     }
-    m_pGame->getInputHandler()->setMirrored(m_pGame->getSession()->mirrorMode());    
+    m_pGame->getInputHandler()->setMirrored(m_pGame->getSession()->mirrorMode());
 
   } catch(Exception &e) {
     Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
