@@ -113,7 +113,7 @@ int UpgradeLevelsThread::realThreadFunction()
 
     clearCancelAsSoonAsPossible();
 
-    m_pWebLevels->update(m_pDb);
+    m_pWebLevels->update(m_pDb, m_pGame->getSession()->useCrappyPack());
 
     int nULevels=0;
     nULevels = m_pWebLevels->nbLevelsToGet(m_pDb);

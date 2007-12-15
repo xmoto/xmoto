@@ -1198,6 +1198,13 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(GameApp* pGame, UIWindow* i_par
   v_button->setGroup(50123);
   v_button->setContextHelp(CONTEXTHELP_INGAME_WORLD_RECORD);
 
+  v_button = new UIButton(v_window, 5, 157, GAMETEXT_USECRAPPYINFORMATION, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("USECRAPPYINFORMATION");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(50123);
+  v_button->setContextHelp(CONTEXTHELP_USECRAPPYINFORMATION);
+
   v_window = new UIWindow(v_roomsTabs, 20, 40, GAMETEXT_WWWROOMSTAB, v_roomsTabs->getPosition().nWidth-40,
 			  v_roomsTabs->getPosition().nHeight);
   v_window->setID("ROOMS_TAB");
@@ -1680,7 +1687,8 @@ void StateMainMenu::executeOneCommand(std::string cmd)
     m_pGame->getLevelsManager()->makePacks(m_pGame->getDb(),
 					   m_pGame->getSession()->profile(),
 					   m_pGame->getSession()->idRoom(),
-					   m_pGame->getSession()->debug());
+					   m_pGame->getSession()->debug(),
+					   m_pGame->getSession()->useCrappyPack());
 
     // update lists and stats
     updateLevelsPacksList();
@@ -2178,6 +2186,8 @@ void StateMainMenu::updateOptions() {
   v_button->setChecked(m_pGame->getSession()->checkNewHighscoresAtStartup());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMEWORLDRECORD"));
   v_button->setChecked(m_pGame->getSession()->showHighscoreInGame());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:USECRAPPYINFORMATION"));
+  v_button->setChecked(m_pGame->getSession()->useCrappyPack());
 
   v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_LOGIN"));
   v_edit->setCaption(m_pGame->getSession()->uploadLogin());
@@ -2463,6 +2473,12 @@ void StateMainMenu::checkEventsOptions() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     m_pGame->getSession()->setShowHighscoreInGame(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:USECRAPPYINFORMATION"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setUseCrappyPack(v_button->getChecked());
   }
 
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOMS_LIST"));

@@ -77,7 +77,8 @@ class LevelsManager {
   void makePacks(xmDatabase *i_db,
 		 const std::string& i_playerName,
 		 const std::string& i_id_room,
-		 bool i_bDebugMode);
+		 bool i_bDebugMode,
+		 bool i_useCrappyPack);
   void addExternalLevel(xmDatabase *i_db, std::string i_levelFile);
   void reloadExternalLevels(xmDatabase *i_db,
 			    XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
