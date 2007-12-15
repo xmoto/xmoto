@@ -64,7 +64,7 @@ void CheckWwwThread::updateWebLevels()
   Logger::Log("WWW: Checking for new or updated levels...");
 
   /* Try download levels list */
-  m_pWebLevels->update(m_pDb);
+  m_pWebLevels->update(m_pDb, m_pGame->getSession()->useCrappyPack());
   if(m_pWebLevels->nbLevelsToGet(m_pDb) != 0){
     m_pGame->getStateManager()->sendAsynchronousMessage("NEW_LEVELS_TO_DOWNLOAD");
   } else {

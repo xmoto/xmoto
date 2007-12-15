@@ -97,6 +97,7 @@ void XMSession::setToDefault() {
   m_notifyAtInit                  = true;
   m_webLevelsUrl                  = DEFAULT_WEBLEVELS_URL;
   m_mirrorMode                    = false;
+  m_useCrappyPack                 = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -248,6 +249,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_language                    = m_Config->getString("Language");
   m_notifyAtInit                = m_Config->getBool("NotifyAtInit");
   m_webLevelsUrl                = m_Config->getString("WebLevelsURL");
+  m_useCrappyPack               = m_Config->getBool("UseCrappyPack");
 }
 
 void XMSession::save(UserConfig* v_config) {
@@ -306,6 +308,7 @@ void XMSession::save(UserConfig* v_config) {
   v_config->setString("Language",                   m_language);
   v_config->setBool("NotifyAtInit",                 m_notifyAtInit);
   v_config->setString("WebLevelsURL",               m_webLevelsUrl);
+  v_config->setBool("UseCrappyPack",                m_useCrappyPack);
 }
 
 bool XMSession::isVerbose() const {
@@ -801,6 +804,14 @@ void XMSession::setMirrorMode(bool i_value) {
   m_mirrorMode = i_value;
 }
 
+bool XMSession::useCrappyPack() const {
+  return m_useCrappyPack;
+}
+
+void XMSession::setUseCrappyPack(bool i_value) {
+  m_useCrappyPack = i_value;
+}
+
 ProxySettings* XMSession::proxySettings() {
   return &m_proxySettings;
 }
@@ -1006,6 +1017,7 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
   v_config->createVar( "CheckNewLevelsAtStartup",  "true" );
   v_config->createVar( "ShowInGameWorldRecord",    "false" );
   v_config->createVar( "WebConfAtInit",            "true" );
+  v_config->createVar( "UseCrappyPack",            "true" );
     
   /* Webstuff */
   v_config->createVar( "WebHighscoresURL",       DEFAULT_WEBHIGHSCORES_URL );

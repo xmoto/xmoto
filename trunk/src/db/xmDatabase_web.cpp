@@ -183,7 +183,7 @@ float xmDatabase::webrooms_getHighscoreTime(const std::string& i_id_room,
   return atof(v_res.c_str());
 }
 
-void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
+void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile, bool i_useCrappyPack) {
   XMLDocument v_webLXml;
   TiXmlDocument *v_webLXmlData;
   TiXmlElement *v_webLXmlDataElement;
@@ -247,11 +247,15 @@ void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
       if(pc == NULL) continue;
       v_creationDate = pc;
 
-      pc = pVarElem->Attribute("crappy");
-      if(pc == NULL) {
-	v_crappy = "0";
+      if(i_useCrappyPack) {
+	pc = pVarElem->Attribute("crappy");
+	if(pc == NULL) {
+	  v_crappy = "0";
+	} else {
+	  v_crappy = std::string(pc) == "true" ? "1" : "0";
+	}
       } else {
-	v_crappy = std::string(pc) == "true" ? "1" : "0";
+	v_crappy = "0";
       }
 
       // add the level

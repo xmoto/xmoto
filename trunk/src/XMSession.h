@@ -212,6 +212,8 @@ class XMSession {
   std::string webLevelsUrl() const;
   bool mirrorMode() const;
   void setMirrorMode(bool i_value);
+  bool useCrappyPack() const;
+  void setUseCrappyPack(bool i_value);
 
   private:
   bool m_verbose;
@@ -286,6 +288,7 @@ class XMSession {
   bool m_notifyAtInit;
   std::string m_webLevelsUrl;
   bool m_mirrorMode;
+  bool m_useCrappyPack;
 };
 
 #endif
