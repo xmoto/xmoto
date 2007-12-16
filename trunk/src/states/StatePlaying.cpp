@@ -193,7 +193,10 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
 
   case SDLK_RETURN:
     /* retart immediatly the level */
-    restartLevel();
+    if(mod == KMOD_NONE) {
+      restartLevel();
+    }
+
     break;
 
   case SDLK_KP5:

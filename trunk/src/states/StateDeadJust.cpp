@@ -82,8 +82,10 @@ void StateDeadJust::keyDown(int nKey, SDLMod mod,int nChar)
     break;
 
   case SDLK_RETURN:
-    /* retart immediatly the level */
-    restartLevel();
+    if(mod == KMOD_NONE) {
+      /* retart immediatly the level */
+      restartLevel();
+    }
     break;
 
   default:
