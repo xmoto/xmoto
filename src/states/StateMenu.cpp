@@ -90,7 +90,9 @@ bool StateMenu::render()
 void StateMenu::keyDown(int nKey, SDLMod mod,int nChar)
 {
   GameState::keyDown(nKey, mod, nChar);
-  m_GUI->keyDown(nKey, mod, nChar);
+  if(mod == KMOD_NONE) {
+    m_GUI->keyDown(nKey, mod, nChar);
+  }
   checkEvents();
 
   if(nKey == SDLK_F5){
