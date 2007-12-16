@@ -366,10 +366,9 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   }
   if((m_PlaySpecificLevelId != "")) {
     /* ======= PLAY SPECIFIC LEVEL ======= */
-      StatePreplaying::setPlayAnimation(true);
-      m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId));
-      Logger::Log("Playing as '%s'...", m_xmsession->profile().c_str());
-    }
+    m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId, false));
+    Logger::Log("Playing as '%s'...", m_xmsession->profile().c_str());
+  }
   else if(m_PlaySpecificReplay != "") {
     /* ======= PLAY SPECIFIC REPLAY ======= */
     m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
