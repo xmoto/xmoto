@@ -353,7 +353,7 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   
   /* load packs */
   LevelsManager::checkPrerequires();
-  m_levelsManager.makePacks(m_db, m_xmsession->profile(), m_xmsession->idRoom(), m_xmsession->debug(), m_xmsession->useCrappyPack());
+  m_levelsManager.makePacks(m_db, m_xmsession->profile(), m_xmsession->idRoom(), m_xmsession->debug());
   
   /* What to do? */
   if(m_PlaySpecificLevelFile != "") {

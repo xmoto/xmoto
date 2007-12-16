@@ -205,8 +205,7 @@ bool LevelsManager::doesLevelsPackExist(const std::string &i_name) const {
 void LevelsManager::makePacks(xmDatabase *i_db,
 			      const std::string& i_playerName,
 			      const std::string& i_id_room,
-			      bool i_bDebugMode,
-			      bool i_useCrappyPack) {
+			      bool i_bDebugMode) {
   LevelsPack *v_pack;
   char **v_result;
   unsigned int nrow;
@@ -297,17 +296,15 @@ void LevelsManager::makePacks(xmDatabase *i_db,
   m_levelsPacks.push_back(v_pack);
 
   /* crappy levels */
-  if(i_useCrappyPack) {
-    v_pack = new LevelsPack(std::string(VPACKAGENAME_CRAPPY_LEVELS),
-			    "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
-			    "FROM levels AS a LEFT OUTER JOIN weblevels AS b "
-			    "ON a.id_level=b.id_level "
-			    "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			    "WHERE b.crappy=1 AND c.id_level IS NULL");
-    v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-    v_pack->setDescription(VPACKAGENAME_DESC_CRAPPY_LEVELS);
-    m_levelsPacks.push_back(v_pack);
-  }
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_CRAPPY_LEVELS),
+			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
+			  "FROM levels AS a LEFT OUTER JOIN weblevels AS b "
+			  "ON a.id_level=b.id_level "
+			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
+			  "WHERE b.crappy=1 AND c.id_level IS NULL");
+  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  v_pack->setDescription(VPACKAGENAME_DESC_CRAPPY_LEVELS);
+  m_levelsPacks.push_back(v_pack);
 
   /* rooms */
   /* levels with no highscore */

@@ -1687,8 +1687,7 @@ void StateMainMenu::executeOneCommand(std::string cmd)
     m_pGame->getLevelsManager()->makePacks(m_pGame->getDb(),
 					   m_pGame->getSession()->profile(),
 					   m_pGame->getSession()->idRoom(),
-					   m_pGame->getSession()->debug(),
-					   m_pGame->getSession()->useCrappyPack());
+					   m_pGame->getSession()->debug());
 
     // update lists and stats
     updateLevelsPacksList();
