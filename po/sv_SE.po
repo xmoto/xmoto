@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-12 21:31+0100\n"
+"POT-Creation-Date: 2007-12-16 15:39+0100\n"
 "PO-Revision-Date: 2007-10-10 20:31+0200\n"
 "Last-Translator: Lukas <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Swedish\n"
@@ -70,7 +70,7 @@ msgstr "Handling"
 msgid "All (on this computer)"
 msgstr "Alla (på den här datorn)"
 
-#: src/GameText.h:47 src/GameText.h:543
+#: src/GameText.h:47 src/GameText.h:545
 msgid "All levels"
 msgstr "Alla banor"
 
@@ -579,15 +579,15 @@ msgstr "Ditt bästa"
 msgid "Type"
 msgstr "Skriv"
 
-#: src/GameText.h:201 src/GameText.h:537
+#: src/GameText.h:201 src/GameText.h:539
 msgid "The highscore of the room"
 msgstr "Rumets rekord"
 
-#: src/GameText.h:202 src/GameText.h:535
+#: src/GameText.h:202 src/GameText.h:537
 msgid "The best of my replays (on this computer)"
 msgstr "De bästa av mina repriser (på den här datorn)"
 
-#: src/GameText.h:203 src/GameText.h:536
+#: src/GameText.h:203 src/GameText.h:538
 msgid "The best of the replays (on this computer)"
 msgstr "De bästa repriserna (på den här datorn)"
 
@@ -1011,7 +1011,7 @@ msgstr "Webbröstningar"
 msgid "Statistics"
 msgstr "Statistik"
 
-#: src/GameText.h:314 src/GameText.h:553
+#: src/GameText.h:314 src/GameText.h:555
 msgid "By best driver"
 msgstr "Av bästa förare"
 
@@ -1271,69 +1271,73 @@ msgid "Uploading the highscore..."
 msgstr "Laddar upp rekord..."
 
 #: src/GameText.h:379
+msgid "Use crappy information"
+msgstr ""
+
+#: src/GameText.h:380
 msgid "Use Environment Vars"
 msgstr "Använd Miljövariabler"
 
-#: src/GameText.h:380
+#: src/GameText.h:381
 msgid "Use Profile"
 msgstr "Använd profil"
 
-#: src/GameText.h:381
+#: src/GameText.h:382
 msgid "Using HTTP Proxy"
 msgstr "Använder HTTP Proxy"
 
-#: src/GameText.h:382
+#: src/GameText.h:383
 msgid "Using SOCKS4 Proxy"
 msgstr "Använder SOCKS4 Proxy "
 
-#: src/GameText.h:383
+#: src/GameText.h:384
 msgid "Using SOCKS5 Proxy"
 msgstr "Använder SOCKS5 Proxy"
 
-#: src/GameText.h:384
+#: src/GameText.h:385
 msgid "Video"
 msgstr "Video"
 
-#: src/GameText.h:385
+#: src/GameText.h:386
 msgid "View"
 msgstr "Visa"
 
-#: src/GameText.h:386
+#: src/GameText.h:387
 msgid "View the highscore"
 msgstr "Visa highscoren"
 
-#: src/GameText.h:387
+#: src/GameText.h:388
 #, c-format
 msgid "Do you want to update level \"%s\"?"
 msgstr "Vill du uppdatera bana \"%s\"?"
 
-#: src/GameText.h:388
+#: src/GameText.h:389
 msgid "Warning"
 msgstr "Varning"
 
-#: src/GameText.h:390
+#: src/GameText.h:391
 msgid "Main"
 msgstr "Huvudinställningar"
 
-#: src/GameText.h:391
+#: src/GameText.h:392
 msgid "WWW"
 msgstr "WWW"
 
-#: src/GameText.h:392
+#: src/GameText.h:393
 msgid "Rooms"
 msgstr "Rum"
 
-#: src/GameText.h:394
+#: src/GameText.h:395
 #, c-format
 msgid "%d hours"
 msgstr "%d timmar"
 
-#: src/GameText.h:395
+#: src/GameText.h:396
 #, c-format
 msgid "%d minutes"
 msgstr "%d minuter "
 
-#: src/GameText.h:396
+#: src/GameText.h:397
 #, c-format
 msgid ""
 "(Stats since: %s)\n"
@@ -1345,425 +1349,429 @@ msgstr ""
 "X-Moto startades %d gånger; %d gånger har banor startats (%d olika banor), \n"
 "%d dödsolyckor, %d klarade, och %d omstartade. /n Tid spelat: %s"
 
-#: src/GameText.h:399
+#: src/GameText.h:400
 #, c-format
 msgid "%d plays, %d deaths, %d finishes, and %d restarts"
 msgstr "%d startningar, %d dödsolyckor, %d klarade, och %d omstartade"
 
-#: src/GameText.h:400
+#: src/GameText.h:401
 #, c-format
 msgid "%d seconds"
 msgstr "%d sekunder"
 
-#: src/GameText.h:401
+#: src/GameText.h:402
 msgid "Yes"
 msgstr "Ja"
 
-#: src/GameText.h:402
+#: src/GameText.h:403
 msgid "Yes to all"
 msgstr "Ja till alla"
 
-#: src/GameText.h:403
+#: src/GameText.h:404
 msgid "Zoom in"
 msgstr "Zooma in"
 
-#: src/GameText.h:404
+#: src/GameText.h:405
 msgid "Reinitialize zoom"
 msgstr "Ominitiera zoomen"
 
-#: src/GameText.h:405
+#: src/GameText.h:406
 msgid "Zoom out"
 msgstr "Zooma ut"
 
-#: src/GameText.h:408
+#: src/GameText.h:409
 msgid "Download the latest X-Moto world records and check for new levels"
 msgstr "Ladda ner de senaste X-moto Världsrekorden och leta efter nya banor"
 
-#: src/GameText.h:409
+#: src/GameText.h:410
 msgid "Configure how you are connected to the Internet"
 msgstr "Konfigruera hur du ansluter till Internet"
 
-#: src/GameText.h:410
+#: src/GameText.h:411
 msgid "Play this level again"
 msgstr "Spela den här banan igen"
 
-#: src/GameText.h:411
+#: src/GameText.h:412
 msgid "Save a replay for later viewing"
 msgstr "Spara repris för att se senare"
 
-#: src/GameText.h:412
+#: src/GameText.h:413
 msgid "Play next level"
 msgstr "Spela nästa bana"
 
-#: src/GameText.h:413
+#: src/GameText.h:414
 msgid "Back to the main menu"
 msgstr "Tillbaka till huvudmenyn"
 
-#: src/GameText.h:414
+#: src/GameText.h:415
 msgid "Quit the game"
 msgstr "Avslutat spelet"
 
-#: src/GameText.h:415
+#: src/GameText.h:416
 msgid "Back to the game"
 msgstr "Tillbaka till spelet"
 
-#: src/GameText.h:416
+#: src/GameText.h:417
 msgid "Try this level again from the beginning"
 msgstr "Försök den här banan igen från början"
 
-#: src/GameText.h:417
+#: src/GameText.h:418
 msgid "Play next level instead"
 msgstr "Spela nästa bana istället"
 
-#: src/GameText.h:418
+#: src/GameText.h:419
 msgid "Try this level again"
 msgstr "Försök den här banan igen"
 
-#: src/GameText.h:419
+#: src/GameText.h:420
 msgid "Built-in and stand-alone external levels"
 msgstr "Inbyggda och självständiga externa banor"
 
-#: src/GameText.h:420
+#: src/GameText.h:421
 msgid "Levels grouped together in level packs"
 msgstr "Banor grupperade tillsammans i \"level packs\""
 
-#: src/GameText.h:421
+#: src/GameText.h:422
 msgid "Browse levels available to you"
 msgstr "Bläddra igenom banor som är tillgängliga för dig"
 
-#: src/GameText.h:422
+#: src/GameText.h:423
 msgid "View list of recorded replays"
 msgstr "Kolla listan av inspelade repriser"
 
-#: src/GameText.h:423
+#: src/GameText.h:424
 msgid "Configure X-Moto preferences"
 msgstr "Konfigruera X-Moto's inställningar"
 
-#: src/GameText.h:424
+#: src/GameText.h:425
 msgid "Instructions of how to play X-Moto"
 msgstr "Instruktioner - Hur man spelar X-Moto"
 
-#: src/GameText.h:425
+#: src/GameText.h:426
 msgid "Change player profile"
 msgstr "Byt spelarprofil"
 
-#: src/GameText.h:426
+#: src/GameText.h:427
 msgid "Play tutorial of how to play the game"
 msgstr "Spela handledning om hur man spelar spelet"
 
-#: src/GameText.h:427
+#: src/GameText.h:428
 msgid "Play the selected level"
 msgstr "Spela den markerade banan"
 
-#: src/GameText.h:428
+#: src/GameText.h:429
 msgid "View general information about the level, best times, and replays"
 msgstr "Se allmän information om banan, bästa tider, och repriser"
 
-#: src/GameText.h:429
+#: src/GameText.h:430
 msgid "Run the selected replay"
 msgstr "Kör den valda reprisen"
 
-#: src/GameText.h:430
+#: src/GameText.h:431
 msgid "Permanently delete the selected replay"
 msgstr "Ta bort de valda repriserna permanent"
 
-#: src/GameText.h:431
+#: src/GameText.h:432
 msgid "Show replays of all players in list"
 msgstr "Visa repriser av alla spelare i listan"
 
-#: src/GameText.h:432
+#: src/GameText.h:433
 msgid "General X-Moto preferences"
 msgstr "Allmäna X-Moto inställningar"
 
-#: src/GameText.h:433
+#: src/GameText.h:434
 msgid "Configure graphical options"
 msgstr "Konfigruera grafiska inställningar"
 
-#: src/GameText.h:434
+#: src/GameText.h:435
 msgid "Configure audio options"
 msgstr "Konfigruera ljud inställningar"
 
-#: src/GameText.h:435
+#: src/GameText.h:436
 msgid "Configure control options"
 msgstr "Konfigruera kontroll inställningar"
 
-#: src/GameText.h:436
+#: src/GameText.h:437
 msgid "Save options"
 msgstr "Spara inställningar"
 
-#: src/GameText.h:437
+#: src/GameText.h:438
 msgid "Revert options to defaults"
 msgstr "Sätt tillbaka inställningar till grundinställning"
 
-#: src/GameText.h:438
+#: src/GameText.h:439
 msgid "Show a map of your surroundings when playing"
 msgstr "Visa en karta över ömrådet när man spelar"
 
-#: src/GameText.h:439
+#: src/GameText.h:440
 msgid "Automatically download best times off the net when the game starts"
 msgstr "Ladda automatiskt ner rekordtider från nätet när spelet startas"
 
-#: src/GameText.h:440
+#: src/GameText.h:441
 msgid "Show the World Record for a given level when playing"
 msgstr "Visa  världsrekordet för en given bana när man spelar"
 
-#: src/GameText.h:441
+#: src/GameText.h:442
+msgid "Use crappy information from the website to update the crappy pack"
+msgstr ""
+
+#: src/GameText.h:443
 msgid "Enable high-color graphics"
 msgstr "Aktivera high-color grafik"
 
-#: src/GameText.h:442
+#: src/GameText.h:444
 msgid "Enable true-color graphics"
 msgstr "Aktivera true-color grafik"
 
-#: src/GameText.h:443
+#: src/GameText.h:445
 msgid "Select graphics resolution"
 msgstr "Välj upplösning"
 
-#: src/GameText.h:444
+#: src/GameText.h:446
 msgid "Run the game in a window"
 msgstr "Kör spelet i ett fönster"
 
-#: src/GameText.h:445
+#: src/GameText.h:447
 msgid "Not so fancy menu graphics"
 msgstr "Inte så snygg menygrafik"
 
-#: src/GameText.h:446
+#: src/GameText.h:448
 msgid "A bit more fancy menu graphics"
 msgstr "Lite snyggare menygrafik"
 
-#: src/GameText.h:447
+#: src/GameText.h:449
 msgid "Fanciest menu graphics"
 msgstr "Snyggaste menygrafiken"
 
-#: src/GameText.h:448
+#: src/GameText.h:450
 msgid "Disable most graphics not important to the gameplay"
 msgstr "Stäng av det mesta av grafiken som inte är så viktig för att spela"
 
-#: src/GameText.h:449
+#: src/GameText.h:451
 msgid "Disable some of the most resource-intensive graphics, like particles"
 msgstr "Stäng lite av den mest krävande grafiken, typ partiklar"
 
-#: src/GameText.h:450
+#: src/GameText.h:452
 msgid "Enable all graphical effects"
 msgstr "Sätt på alla grafiska effekter"
 
-#: src/GameText.h:451
+#: src/GameText.h:453
 msgid "Turn on sound effects"
 msgstr "Stäng av ljudeffekter"
 
-#: src/GameText.h:452
+#: src/GameText.h:454
 msgid "Poor sound quality"
 msgstr "Dålig ljudkvalité"
 
-#: src/GameText.h:453
+#: src/GameText.h:455
 msgid "Normal sound quality"
 msgstr "Normal ljudkvalité"
 
-#: src/GameText.h:454
+#: src/GameText.h:456
 msgid "Best sound quality"
 msgstr "Bäst ljudkvalité"
 
-#: src/GameText.h:455
+#: src/GameText.h:457
 msgid "8-bit sound samples, poor quality"
 msgstr "8-bit ljudstycken, dålig kvalité"
 
-#: src/GameText.h:456
+#: src/GameText.h:458
 msgid "16-bit sound samples, good quality"
 msgstr "16-bit ljudstycken, bra kvalité"
 
-#: src/GameText.h:457
+#: src/GameText.h:459
 msgid "Mono (single channel) audio"
 msgstr "Mono (en kanal) ljud"
 
-#: src/GameText.h:458
+#: src/GameText.h:460
 msgid "Stereo (two channel) audio"
 msgstr "Stereo (två kanaler) ljud"
 
-#: src/GameText.h:459
+#: src/GameText.h:461
 msgid "Turn on engine noise"
 msgstr "Sätt på motorljud"
 
-#: src/GameText.h:460
+#: src/GameText.h:462
 msgid "Select action to re-configure to another key"
 msgstr "Välj handling för att omkonfigruera till en annan knapp"
 
-#: src/GameText.h:461
+#: src/GameText.h:463
 msgid "View contents of level pack"
 msgstr "Se innehåll av ban-paket"
 
-#: src/GameText.h:462
+#: src/GameText.h:464
 msgid "Select a player profile to use"
 msgstr "Välj en spelarprofil att använda"
 
-#: src/GameText.h:463
+#: src/GameText.h:465
 msgid "Use the selected player profile"
 msgstr "Använd den valda spelarprofilen"
 
-#: src/GameText.h:464
+#: src/GameText.h:466
 msgid "Create new player profile"
 msgstr "Skapa ny spelar profil"
 
-#: src/GameText.h:465
+#: src/GameText.h:467
 msgid "Permanently delete selected player profile, including best times"
 msgstr "Ta permanent bort den valda spelarprofilen, inklusive rekordtider"
 
-#: src/GameText.h:466
+#: src/GameText.h:468
 msgid "Select a level in the level pack to play"
 msgstr "Välj en bana i ban-paketet att spela"
 
-#: src/GameText.h:467
+#: src/GameText.h:469
 msgid "Close level pack"
 msgstr "Stäng ban-paket"
 
-#: src/GameText.h:468
+#: src/GameText.h:470
 msgid "General information about the level"
 msgstr "Allmän information om banan"
 
-#: src/GameText.h:469
+#: src/GameText.h:471
 msgid "View best times for the level"
 msgstr "Se rekord tiderna för banan"
 
-#: src/GameText.h:470
+#: src/GameText.h:472
 msgid "View locally stored replays of the level"
 msgstr "Se de lokalt sparade repriserna av banan"
 
-#: src/GameText.h:471
+#: src/GameText.h:473
 msgid "Only show personal best times for this level"
 msgstr "Visa endast personligt rekord för den här banan"
 
-#: src/GameText.h:472
+#: src/GameText.h:474
 msgid "Show all best times for this level"
 msgstr "Visa alla rekordtider för den här banan"
 
-#: src/GameText.h:473
+#: src/GameText.h:475
 msgid "Only show personal replays for this level"
 msgstr "Visa endast personliga repriser av den här banan"
 
-#: src/GameText.h:474
+#: src/GameText.h:476
 msgid "Show all replays for this level"
 msgstr "Visa alla repriser av den här banan"
 
-#: src/GameText.h:475
+#: src/GameText.h:477
 msgid "Run selected replay"
 msgstr "Kör markerad repris"
 
-#: src/GameText.h:476
+#: src/GameText.h:478
 msgid "Show helpful help strings such as this one"
 msgstr "Visa hjälpfulla hjälpsträngar så som den här"
 
-#: src/GameText.h:477
+#: src/GameText.h:479
 msgid ""
 "Let X-Moto look for more levels on the net, and install them automatically"
 msgstr ""
 "Låt X-Moto kolla efter mer banor på nätet och installera dem automatiskt"
 
-#: src/GameText.h:478
+#: src/GameText.h:480
 msgid "Select this if you got a direct connection to the Internet"
 msgstr "Välj den här ifall du har direkt anslutning till Internet"
 
-#: src/GameText.h:479
+#: src/GameText.h:481
 msgid "Select this if you connect to the Internet through an HTTP proxy"
 msgstr "Välj den här ifall du ansluter till Internet genom en HTTP proxy"
 
-#: src/GameText.h:480
+#: src/GameText.h:482
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
 msgstr "Välj den här ifall du ansluter till Internet genom en SOCKS4 proxy"
 
-#: src/GameText.h:481
+#: src/GameText.h:483
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
 msgstr "Välj den här ifall du ansluter till Internet genom en SOCKS5 proxy"
 
-#: src/GameText.h:482
+#: src/GameText.h:484
 msgid "Use these settings"
 msgstr "Använd de här inställningarna"
 
-#: src/GameText.h:483
+#: src/GameText.h:485
 msgid "Write the IP address or host name of proxy server to use"
 msgstr "Skriv IP adressen eller hostnamnet av proxy servern som ska användas"
 
-#: src/GameText.h:484
+#: src/GameText.h:486
 msgid "Write the port number used by the proxy server"
 msgstr "Skriv portnummret som används av proxy servern"
 
-#: src/GameText.h:485
+#: src/GameText.h:487
 msgid "New levels and levels updated from the Internet"
 msgstr "Helt nya banor och uppdaterade banor ifrån Internet"
 
-#: src/GameText.h:487
+#: src/GameText.h:489
 msgid "Show the ghost if possible in the game"
 msgstr "Visa spöke i spelet ifall det går"
 
-#: src/GameText.h:488
+#: src/GameText.h:490
 msgid "Choose which ghost to display"
 msgstr "Välj vilket spöke som skall visas"
 
-#: src/GameText.h:489
+#: src/GameText.h:491
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr "Gör sudd-effekt för spöket (ifall ditt grafikkort stödjer det)"
 
-#: src/GameText.h:490
+#: src/GameText.h:492
 msgid "When starting a level with a ghost, display who the ghost is of"
 msgstr "När en bana startas med spöke, visa vems spöke det är"
 
-#: src/GameText.h:491
+#: src/GameText.h:493
 msgid "Display the time difference between the ghost and you"
 msgstr "Visa tidsskillnaden mellan spöket och dig"
 
-#: src/GameText.h:492
+#: src/GameText.h:494
 msgid "If you make a highscore it will automatically be saved as a replay"
 msgstr "Ifall du sätter ett rekord så sparas det automatiskt en repris"
 
-#: src/GameText.h:493
+#: src/GameText.h:495
 msgid "View the replay of the room's highscore"
 msgstr "Se repris av rumets rekord"
 
-#: src/GameText.h:495
+#: src/GameText.h:497
 msgid "Check for new levels at startup"
 msgstr "Leta efter nya banor vid uppstart"
 
-#: src/GameText.h:496
+#: src/GameText.h:498
 msgid "Check for new highscores at startup"
 msgstr "Leta efter nya rekord vid uppstart"
 
-#: src/GameText.h:498
+#: src/GameText.h:500
 msgid "Show various statistics about X-Moto"
 msgstr "Visa olika statistik om X-Moto"
 
-#: src/GameText.h:499
+#: src/GameText.h:501
 msgid "Update statistics (also happens each time X-Moto is started)"
 msgstr "Uppdater statistik (görs också varje gång X-Moto startas)"
 
-#: src/GameText.h:500
+#: src/GameText.h:502
 msgid "Enables background music in the main menu"
 msgstr "Aktivera bakgrundsmusik för huvudmenyn"
 
-#: src/GameText.h:502
+#: src/GameText.h:504
 msgid "Choose the X-Moto graphics theme"
 msgstr "Välj X-moto's grafiska tema"
 
-#: src/GameText.h:503
+#: src/GameText.h:505
 msgid "Check for new themes on the web"
 msgstr "Leta efter nya teman på Internet"
 
-#: src/GameText.h:504
+#: src/GameText.h:506
 msgid "Download or update the selected theme"
 msgstr "Ladda ner eller uppdatera det markerade temat"
 
-#: src/GameText.h:505
+#: src/GameText.h:507
 msgid "Upload the replay on the website of highscores"
 msgstr "Ladda upp reprisen på webbsiten med rekord"
 
-#: src/GameText.h:506
+#: src/GameText.h:508
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
 "Ladda upp dina bästa repriser till ditt rum (användbart när det är nyskapat)"
 
-#: src/GameText.h:507
+#: src/GameText.h:509
 msgid "Configure the main www options"
 msgstr "Konfigruera huvud WWW inställningar"
 
-#: src/GameText.h:508
+#: src/GameText.h:510
 msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
@@ -1771,107 +1779,107 @@ msgstr ""
 "Välj var upp/nedladdning av repriser och rekord ska ske (för mer "
 "information, kolla webbsiten)"
 
-#: src/GameText.h:509
+#: src/GameText.h:511
 msgid "Choose your room"
 msgstr "Välj ditt rum"
 
-#: src/GameText.h:510
+#: src/GameText.h:512
 msgid "Get the rooms list from the web"
 msgstr "Hämta rumslistan ifrån Internet"
 
-#: src/GameText.h:511
+#: src/GameText.h:513
 msgid "Upload of highscore requires to log in (Except for WR)"
 msgstr "Ladda upp rekord som behöver inloggning(Gäller inte WR)"
 
-#: src/GameText.h:512
+#: src/GameText.h:514
 msgid "Upload of highscore requires a password (Except for WR)"
 msgstr "Ladda upp rekord som behöver lösenord (Gäller inte WR)"
 
-#: src/GameText.h:513
+#: src/GameText.h:515
 msgid "Show the speedometer when playing"
 msgstr "Visa hastighetsmätare när man spelar"
 
-#: src/GameText.h:514
+#: src/GameText.h:516
 msgid "Enable animation of bike falling apart when dead"
 msgstr "Sätt på animationen av crossen som ramlar isär när man dör"
 
-#: src/GameText.h:515
+#: src/GameText.h:517
 msgid "Automatically scroll over the level before starting playing it"
 msgstr "Scrolla automatiskt över banan innan man spelar den"
 
-#: src/GameText.h:516
+#: src/GameText.h:518
 msgid "View the X-Moto credits"
 msgstr "Se X-Moto credits"
 
-#: src/GameText.h:517
+#: src/GameText.h:519
 msgid "Name of replay"
 msgstr "Namn på repris"
 
-#: src/GameText.h:518
+#: src/GameText.h:520
 msgid "Level played in replay"
 msgstr "Bana spelad i repris"
 
-#: src/GameText.h:519
+#: src/GameText.h:521
 msgid "Player who recorded the replay"
 msgstr "Spelare som gjorde reprisens rekord"
 
-#: src/GameText.h:520
+#: src/GameText.h:522
 msgid "Click to select screen resolution"
 msgstr "Klicka för att välja skärmupplösning"
 
-#: src/GameText.h:521
+#: src/GameText.h:523
 msgid "Completed levels / total number of levels in pack"
 msgstr "Klarade banor / antalet banor i ban-paket"
 
-#: src/GameText.h:522
+#: src/GameText.h:524
 msgid "Name of level pack"
 msgstr "Namn på ban-paket"
 
-#: src/GameText.h:523
+#: src/GameText.h:525
 msgid "Add the level to the favorite levels list"
 msgstr "Lägg till banan i favoritbanor"
 
-#: src/GameText.h:524
+#: src/GameText.h:526
 msgid "Delete the level from the favorite levels list"
 msgstr "Ta bort bana från favoritbanor"
 
-#: src/GameText.h:525
+#: src/GameText.h:527
 msgid "Puzzle the levels pack list"
 msgstr "Pussla ban-paket listan"
 
-#: src/GameText.h:526
+#: src/GameText.h:528
 msgid "Enter text to filter the level list"
 msgstr "Skriv text för att filtrera listan med banor"
 
-#: src/GameText.h:527
+#: src/GameText.h:529
 msgid "Choose the number of players"
 msgstr "Välj antalet spelare"
 
-#: src/GameText.h:528
+#: src/GameText.h:530
 msgid "Your proxy login"
 msgstr "Ditt proxy login"
 
-#: src/GameText.h:529
+#: src/GameText.h:531
 msgid "Your password associated with your login"
 msgstr "Ditt lösenord sammankopplat med ditt inloggningsnamn"
 
-#: src/GameText.h:530
+#: src/GameText.h:532
 msgid "Enter text to filter the replay list"
 msgstr "Skriv text för att filtrera listan med repriser"
 
-#: src/GameText.h:531
+#: src/GameText.h:533
 msgid "Press to play X-Moto immediately"
 msgstr "Tryck för att spela X-Moto direkt"
 
-#: src/GameText.h:532
+#: src/GameText.h:534
 msgid "Increase or decrease the quality of the levels selected"
 msgstr "Höj eller sänk kvalitén på de valda banorna"
 
-#: src/GameText.h:533
+#: src/GameText.h:535
 msgid "Increase or decrease the difficulty of the levels selected"
 msgstr "Höj eller sänk svårigheten på de valda banorna"
 
-#: src/GameText.h:534
+#: src/GameText.h:536
 msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
@@ -1879,317 +1887,317 @@ msgstr ""
 "Stanna spelet så fort en spelare klarar banan eller fortsätt så länge en "
 "spelare kör"
 
-#: src/GameText.h:538
+#: src/GameText.h:540
 msgid "Don't show the ghosts while playing"
 msgstr "Visa inte spöket medans man spelar"
 
-#: src/GameText.h:540
+#: src/GameText.h:542
 msgid "Levels with no highscore"
 msgstr "Banor utan rekord"
 
-#: src/GameText.h:541 src/GameText.h:574
+#: src/GameText.h:543 src/GameText.h:576
 msgid "Levels you have not completed"
 msgstr "Banor som du inte har klarat"
 
-#: src/GameText.h:542
+#: src/GameText.h:544
 msgid "You're not the highscore holder"
 msgstr "Där du inte har rekordet"
 
-#: src/GameText.h:544
+#: src/GameText.h:546
 msgid "New and updated levels"
 msgstr "Nya och uppdaterade banor"
 
-#: src/GameText.h:545
+#: src/GameText.h:547
 msgid "Favorite levels"
 msgstr "Favorit banor"
 
-#: src/GameText.h:546
+#: src/GameText.h:548
 #, fuzzy
 msgid "Blacklisted levels"
 msgstr "Opaketerade banor"
 
-#: src/GameText.h:547
+#: src/GameText.h:549
 msgid "Nicest levels"
 msgstr "Skönaste banorna"
 
-#: src/GameText.h:548
+#: src/GameText.h:550
 msgid "Hardest levels"
 msgstr "Svåraste banorna"
 
-#: src/GameText.h:549
+#: src/GameText.h:551
 msgid "Easiest levels"
 msgstr "Lättaste banorna"
 
-#: src/GameText.h:550
+#: src/GameText.h:552
 msgid "Crappiest levels"
 msgstr "Lodigaste banorna"
 
-#: src/GameText.h:551
+#: src/GameText.h:553
 msgid "Scripted levels"
 msgstr "Scriptade banor"
 
-#: src/GameText.h:552
+#: src/GameText.h:554
 msgid "Musical levels"
 msgstr "Musikalbanor"
 
-#: src/GameText.h:554
+#: src/GameText.h:556
 msgid "Last played levels"
 msgstr "Senast spelade banor"
 
-#: src/GameText.h:555
+#: src/GameText.h:557
 msgid "Never played levels"
 msgstr "Aldrig spelade banor"
 
-#: src/GameText.h:556
+#: src/GameText.h:558
 msgid "Most played levels"
 msgstr "Mest spelade banor"
 
-#: src/GameText.h:557
+#: src/GameText.h:559
 msgid "Less played levels (but played)"
 msgstr "Minst spelade banor (som har blivit spelade)"
 
-#: src/GameText.h:558
+#: src/GameText.h:560
 msgid "Last highscores"
 msgstr "Senaste rekord"
 
-#: src/GameText.h:559
+#: src/GameText.h:561
 msgid "Last levels"
 msgstr "Senaste banor"
 
-#: src/GameText.h:560
+#: src/GameText.h:562
 msgid "Oldest highscores"
 msgstr "Äldsta rekord"
 
-#: src/GameText.h:561
+#: src/GameText.h:563
 msgid "Platinum"
 msgstr "Platina"
 
-#: src/GameText.h:562
+#: src/GameText.h:564
 msgid "Gold"
 msgstr "Guld"
 
-#: src/GameText.h:563
+#: src/GameText.h:565
 msgid "Silver"
 msgstr "Silver"
 
-#: src/GameText.h:564
+#: src/GameText.h:566
 msgid "Bronze"
 msgstr "Brons"
 
-#: src/GameText.h:565
+#: src/GameText.h:567
 msgid "No medal"
 msgstr "Ingen medalj"
 
-#: src/GameText.h:566
+#: src/GameText.h:568
 msgid "My levels"
 msgstr "Mina banor"
 
-#: src/GameText.h:567
+#: src/GameText.h:569
 msgid "Crappy levels"
 msgstr "Lodiga banorna"
 
-#: src/GameText.h:568
+#: src/GameText.h:570
 #, fuzzy
 msgid "Shortest levels"
 msgstr "Svåraste banorna"
 
-#: src/GameText.h:569
+#: src/GameText.h:571
 #, fuzzy
 msgid "Medium levels"
 msgstr "Mina banor"
 
-#: src/GameText.h:570
+#: src/GameText.h:572
 #, fuzzy
 msgid "Long levels"
 msgstr "Laddar banor..."
 
-#: src/GameText.h:571
+#: src/GameText.h:573
 #, fuzzy
 msgid "Very long levels"
 msgstr "Laddar om banor..."
 
-#: src/GameText.h:573
+#: src/GameText.h:575
 msgid "Levels with no highscore in your room"
 msgstr "Banor utan rekord i ditt rum"
 
-#: src/GameText.h:575
+#: src/GameText.h:577
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Någon i ditt rum har gjort ett bättre rekord än ditt"
 
-#: src/GameText.h:576
+#: src/GameText.h:578
 msgid "All X-Moto levels"
 msgstr "Alla X-Moto banor"
 
-#: src/GameText.h:577
+#: src/GameText.h:579
 msgid "New and updated levels since your last check"
 msgstr "Nya och uppdaterade banor sedan din senaste koll"
 
-#: src/GameText.h:578
+#: src/GameText.h:580
 msgid "Your favorite levels"
 msgstr "Dina favorit banor"
 
-#: src/GameText.h:579
+#: src/GameText.h:581
 #, fuzzy
 msgid "Your blacklisted levels"
 msgstr "Dina favorit banor"
 
-#: src/GameText.h:580
+#: src/GameText.h:582
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Skönaste X-Moto banorna enligt Internet rösterna"
 
-#: src/GameText.h:581
+#: src/GameText.h:583
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Svåraste X-Moto banorna enligt Internet rösterna"
 
-#: src/GameText.h:582
+#: src/GameText.h:584
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Lättaste X-Moto banorna enligt Internet rösterna"
 
-#: src/GameText.h:583
+#: src/GameText.h:585
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Lodigaste X-Moto banorna enligt Internet-rösterna"
 
-#: src/GameText.h:584
+#: src/GameText.h:586
 msgid "X-Moto levels which are dynamic"
 msgstr "X-Moto banor som är dynamiska"
 
-#: src/GameText.h:585
+#: src/GameText.h:587
 msgid "X-Moto levels with a background music"
 msgstr "X-Moto banor som har bakgrundsmusik"
 
-#: src/GameText.h:586
+#: src/GameText.h:588
 msgid "Last levels you have played"
 msgstr "Senaste banorna du har spelat"
 
-#: src/GameText.h:587
+#: src/GameText.h:589
 msgid "X-Moto levels you never played"
 msgstr "X-Moto banor du aldrig spelat"
 
-#: src/GameText.h:588
+#: src/GameText.h:590
 msgid "X-Moto levels you have played the most"
 msgstr "X-Moto banor du har spelat mest"
 
-#: src/GameText.h:589
+#: src/GameText.h:591
 msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto banor du bara har spelat ett fåtal gånger"
 
-#: src/GameText.h:590
+#: src/GameText.h:592
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "X-Moto banor som har ett nyligen gjort rekord i ditt rum"
 
-#: src/GameText.h:591
+#: src/GameText.h:593
 msgid "Last created X-Moto levels"
 msgstr "Senast skapade X-Moto banor"
 
-#: src/GameText.h:592
+#: src/GameText.h:594
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto banor som har ett gammalt rekord i ditt rum"
 
-#: src/GameText.h:593
+#: src/GameText.h:595
 msgid "You have the room highscore"
 msgstr "Du har rumets rekord"
 
-#: src/GameText.h:594
+#: src/GameText.h:596
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Din personliga rekordtid är nästan lika bra som rummets (95%)"
 
-#: src/GameText.h:595
+#: src/GameText.h:597
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Din personliga rekordtid är nästan lika bra som rummets (90%-95%)"
 
-#: src/GameText.h:596
+#: src/GameText.h:598
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Din personliga rekordtid är nästan lika bra som rummets (80%-90%)"
 
-#: src/GameText.h:597
+#: src/GameText.h:599
 msgid "The room highscore is really better than your own highscore"
 msgstr "Rummets rekord är grymt mycket bättre än ditt eget"
 
-#: src/GameText.h:598
+#: src/GameText.h:600
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Ban-paket  \"%s\""
 
-#: src/GameText.h:599
+#: src/GameText.h:601
 #, c-format
 msgid "Highscores by %s"
 msgstr "Rekord av %s"
 
-#: src/GameText.h:600
+#: src/GameText.h:602
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Externa banor (de som du la i 'My levels' mappen)"
 
-#: src/GameText.h:601
+#: src/GameText.h:603
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr "Banor som är märkta 'lodig' är dolda i alla andra paket"
 
-#: src/GameText.h:602
+#: src/GameText.h:604
 msgid "The shortest levels (less than 25 seconds)"
 msgstr ""
 
-#: src/GameText.h:603
+#: src/GameText.h:605
 msgid "The medium levels (25 seconds to 60)"
 msgstr ""
 
-#: src/GameText.h:604
+#: src/GameText.h:606
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr ""
 
-#: src/GameText.h:605
+#: src/GameText.h:607
 msgid "The longest levels (more than 2 minutes)"
 msgstr ""
 
-#: src/GameText.h:607
+#: src/GameText.h:609
 msgid "Ugly mode enabled"
 msgstr "Fult läge på"
 
-#: src/GameText.h:608
+#: src/GameText.h:610
 msgid "Ugly mode disabled"
 msgstr "Fult läge av"
 
-#: src/GameText.h:609
+#: src/GameText.h:611
 msgid "Theme mode enabled"
 msgstr "Tema läge på"
 
-#: src/GameText.h:610
+#: src/GameText.h:612
 msgid "Theme mode disabled"
 msgstr "Tema läge av"
 
-#: src/GameText.h:611
+#: src/GameText.h:613
 msgid "UglyOver mode enabled"
 msgstr "UglyOver läge på"
 
-#: src/GameText.h:612
+#: src/GameText.h:614
 msgid "UglyOver mode disabled"
 msgstr "UglyOver läge av"
 
-#: src/GameText.h:613
+#: src/GameText.h:615
 msgid "Web connection enabled"
 msgstr "Internet anslutning möjliggjord"
 
-#: src/GameText.h:614
+#: src/GameText.h:616
 msgid "Web connection disabled"
 msgstr "Internet anslutning omöjliggjord"
 
-#: src/GameText.h:615
+#: src/GameText.h:617
 msgid "Replay interpolation enabled"
 msgstr "Repriskurva på"
 
-#: src/GameText.h:616
+#: src/GameText.h:618
 msgid "Replay interpolation disabled"
 msgstr "Repriskurva av"
 
-#: src/GameText.h:617
+#: src/GameText.h:619
 msgid "Fps enabled"
 msgstr "Fps påslagen"
 
-#: src/GameText.h:618
+#: src/GameText.h:620
 msgid "Fps disabled"
 msgstr "Fps avslagen"
 
-#: src/GameText.h:621
+#: src/GameText.h:623
 msgid "FontGroup:GENERAL"
 msgstr "FontGrup:GENERAL"
 
