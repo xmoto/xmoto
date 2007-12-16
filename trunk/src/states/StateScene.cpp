@@ -247,8 +247,7 @@ void StateScene::restartLevel(bool i_reloadLevel) {
     }
   }
 
-  StatePreplaying::setPlayAnimation(false);
-  m_pGame->getStateManager()->replaceState(new StatePreplaying(m_pGame, v_level));
+  m_pGame->getStateManager()->replaceState(new StatePreplaying(m_pGame, v_level, true));
 }
 
 void StateScene::nextLevel(bool i_positifOrder) {
@@ -269,8 +268,7 @@ void StateScene::nextLevel(bool i_positifOrder) {
     }
 
     closePlaying();
-    StatePreplaying::setPlayAnimation(true);
-    m_pGame->getStateManager()->replaceState(new StatePreplaying(m_pGame, v_nextLevel));
+    m_pGame->getStateManager()->replaceState(new StatePreplaying(m_pGame, v_nextLevel, v_currentLevel == v_nextLevel));
   }
 }
 

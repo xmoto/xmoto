@@ -217,8 +217,7 @@ void StateMainMenu::checkEventsMainWindow() {
     } catch(Exception &e) {
       v_id_level = "tut1";
     }
-    StatePreplaying::setPlayAnimation(true);
-    m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, v_id_level));    
+    m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, v_id_level, false));
   }
 
   // quit
@@ -377,8 +376,7 @@ void StateMainMenu::checkEventsLevelsFavoriteTab() {
 
     if(v_id_level != "") {
       m_pGame->setCurrentPlayingList(v_list);
-      StatePreplaying::setPlayAnimation(true);
-      m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, v_id_level));
+      m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, v_id_level, false));
     }
   }
 
@@ -426,8 +424,7 @@ void StateMainMenu::checkEventsLevelsNewTab() {
 
     if(v_id_level != "") {
       m_pGame->setCurrentPlayingList(v_list);
-      StatePreplaying::setPlayAnimation(true);
-      m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, v_id_level));
+      m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, v_id_level, false));
     }
   }
 

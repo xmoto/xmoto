@@ -37,9 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* logf(PRESTART_ANIMATION_CURVE + 1.0) = 1.386294361*/
 #define LOGF_PRE_ANIM_TIME_ADDED_ONE 1.386294361
 
-bool StatePreplaying::m_playAnimation = true;
-
-StatePreplaying::StatePreplaying(GameApp* pGame, const std::string i_idlevel):
+StatePreplaying::StatePreplaying(GameApp* pGame, const std::string i_idlevel, bool i_sameLevel):
   StateScene(pGame)
 {
   m_name  = "StatePreplaying";
@@ -47,6 +45,10 @@ StatePreplaying::StatePreplaying(GameApp* pGame, const std::string i_idlevel):
 
   m_secondInitPhaseDone = false;
   m_ghostDownloaded     = false;
+
+  m_sameLevel = i_sameLevel;
+  /* if the level is not the same, ask to play the animation */
+  m_playAnimation = m_sameLevel == false;
 }
 
 StatePreplaying::~StatePreplaying()
@@ -194,10 +196,10 @@ bool StatePreplaying::update()
 
   if(shouldBeAnimated()) {
     if(zoomAnimation1_step() == false) {
-      setPlayAnimation(false); // disable anim
+      m_playAnimation = false;
     }
   } else { /* animation has been rupted */
-    setPlayAnimation(false); // disable anim
+    m_playAnimation = false; // disable anim
     zoomAnimation1_abort();
     m_pGame->getStateManager()->replaceState(new StatePlaying(m_pGame));
   }
@@ -218,7 +220,7 @@ bool StatePreplaying::render()
 
 void StatePreplaying::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  setPlayAnimation(false);
+  m_playAnimation = false;
 }
 
 void StatePreplaying::keyUp(int nKey,   SDLMod mod)
@@ -235,10 +237,6 @@ void StatePreplaying::mouseDoubleClick(int nButton)
 
 void StatePreplaying::mouseUp(int nButton)
 {
-}
-
-void StatePreplaying::setPlayAnimation(bool i_value) {
-  m_playAnimation = i_value;
 }
 
 void StatePreplaying::zoomAnimation1_init() {
@@ -366,9 +364,11 @@ void StatePreplaying::secondInitPhase()
   pWorld->setAutoZoomCamera();
 
   /* display level name */
-  pWorld->gameMessage(pWorld->getLevelSrc()->Name(),
-		      false,
-		      PRESTART_ANIMATION_LEVEL_MSG_DURATION);
+  if(m_sameLevel == false) {
+    pWorld->gameMessage(pWorld->getLevelSrc()->Name(),
+			false,
+			PRESTART_ANIMATION_LEVEL_MSG_DURATION);
+  }
 
   zoomAnimation1_init();
   

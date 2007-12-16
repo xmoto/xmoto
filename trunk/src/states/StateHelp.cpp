@@ -71,8 +71,7 @@ void StateHelp::checkEvents() {
 
     try {
       m_pGame->setCurrentPlayingList(NULL);
-      StatePreplaying::setPlayAnimation(true);
-      m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, "tut1"));
+      m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, "tut1", false));
     } catch(Exception &e) {
     }
   }

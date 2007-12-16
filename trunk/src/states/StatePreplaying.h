@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StatePreplaying : public StateScene {
   public:
-  StatePreplaying(GameApp* pGame, const std::string i_idlevel);
+  StatePreplaying(GameApp* pGame, const std::string i_idlevel, bool i_sameLevel);
   virtual ~StatePreplaying();
   
   virtual void enter();
@@ -44,8 +44,6 @@ class StatePreplaying : public StateScene {
   virtual void mouseDoubleClick(int nButton);
   virtual void mouseUp(int nButton);
 
-  static void setPlayAnimation(bool i_value);
-
   private:
   void executeOneCommand(std::string cmd);
   bool needToDownloadGhost();
@@ -57,8 +55,8 @@ class StatePreplaying : public StateScene {
   std::string m_idlevel;
 
   bool shouldBeAnimated() const; // return true wether the animation shoud be done
-
-  static bool m_playAnimation; // must the animation be played ; must be rearmed each time you play a new level
+  bool m_playAnimation; // must the animation be played ; must be rearmed each time you play a new level
+  bool m_sameLevel;
 
   /* animation */
   float m_fPrePlayStartTime;
