@@ -910,7 +910,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 void UIList::setFilter(std::string i_filter) {
   m_filter = i_filter;
-  m_filteredItems = 0;
   
   std::string v_entry_lower;
   std::string v_filter_lower;
@@ -934,11 +933,20 @@ void UIList::setFilter(std::string i_filter) {
     }
 
     m_Entries[i]->bFiltered = v_filter;
-    if(v_filter) {
+  }
+  
+  checkForFilteredEntries();
+}
+
+void UIList::checkForFilteredEntries() {
+  m_filteredItems = 0;
+
+  for(int i=0;i<m_Entries.size();i++) {
+    if(m_Entries[i]->bFiltered) {
       m_filteredItems++;
     }
   }
-  
+
   /* repair the scroll bar */
   m_nScroll = 0;
   setRealSelected(getSelected());
