@@ -44,6 +44,9 @@ XMThread::XMThread()
 
 XMThread::~XMThread()
 {
+  if(isThreadRunning() == true){
+    killThread();
+  }
   SDL_DestroyMutex(m_curOpMutex);
   SDL_DestroyMutex(m_curMicOpMutex);
   SDL_DestroyMutex(m_sleepMutex);

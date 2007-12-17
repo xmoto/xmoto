@@ -184,7 +184,6 @@ bool StatePreplaying::update()
   }
 
   if(m_ghostDownloaded == false){
-    Logger::Log("ghostdownloaded");
     return true;
   }
 
@@ -211,10 +210,15 @@ bool StatePreplaying::update()
 bool StatePreplaying::render()
 {
   if(m_secondInitPhaseDone == false){
-    return false;
-  }
+    int width  = m_pGame->getDrawLib()->getDispWidth();
+    int height = m_pGame->getDrawLib()->getDispHeight();
 
-  StateScene::render();
+    m_pGame->getDrawLib()->drawBox(Vector2f(0,     height),
+				   Vector2f(width, 0),
+				   0.0, MAKE_COLOR(0,0,0,255));
+  } else {
+    StateScene::render();
+  }
   return true;
 }
 

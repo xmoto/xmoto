@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "drawlib/DrawLib.h"
 #include "StateUpdateDb.h"
+#include "helpers/Log.h"
 
 StateMenu::StateMenu(bool drawStateBehind,
 		     bool updateStatesBehind,
@@ -90,7 +91,8 @@ bool StateMenu::render()
 void StateMenu::keyDown(int nKey, SDLMod mod,int nChar)
 {
   GameState::keyDown(nKey, mod, nChar);
-  if(mod == KMOD_NONE) {
+
+  if((mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0) {
     m_GUI->keyDown(nKey, mod, nChar);
   }
   checkEvents();
