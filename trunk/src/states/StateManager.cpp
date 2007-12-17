@@ -213,7 +213,7 @@ void StateManager::render()
     }
 
     m_pGame->getDrawLib()->flushGraphics();
-       
+
     m_renderFpsNbFrame++;
   }
 }
@@ -236,16 +236,30 @@ void StateManager::drawStack() {
   int yoff = m_pGame->getDrawLib()->getDispHeight();
   int w = 180;
   int h =  30;
-  Color bg = MAKE_COLOR(255,0,0,200);
-  Color font_color = MAKE_COLOR(255,255,255,255);
+  Color bg_none     = MAKE_COLOR(0,0,0,200);
+  Color bg_updated  = MAKE_COLOR(255,0,0,200);
+  Color bg_rendered = MAKE_COLOR(0,255,0,200);
+  Color font_color  = MAKE_COLOR(255,255,255,255);
 
   std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
   v_fm = m_pGame->getDrawLib()->getFontSmall();
 
   while(stateIterator != m_statesStack.end()){
-    m_pGame->getDrawLib()->drawBox(Vector2f(xoff, yoff - (i * h)), Vector2f(xoff + w, yoff - ((i+1) * h)), 1.0, bg);
+    Color bg_render = bg_none;
+    Color bg_update = bg_none;
+
+    if(m_statesStack[i]->updateStatesBehind() == true){
+      bg_update = bg_updated;
+    }
+    if(m_statesStack[i]->isHide() == false){
+      bg_render = bg_rendered;
+    }
+
+    m_pGame->getDrawLib()->drawBox(Vector2f(xoff,     yoff - (i * h)), Vector2f(xoff + w/2, yoff - ((i+1) * h)), 1.0, bg_update);
+    m_pGame->getDrawLib()->drawBox(Vector2f(xoff+w/2, yoff - (i * h)), Vector2f(xoff + w,   yoff - ((i+1) * h)), 1.0, bg_render);
     v_fg = v_fm->getGlyph(m_statesStack[i]->getName());
     v_fm->printString(v_fg, (w-v_fg->realWidth())/2 + xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, true);
+
     i++;
     stateIterator++;
   }
@@ -271,31 +285,36 @@ void StateManager::drawCursor() {
 
 void StateManager::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  if(m_statesStack.size() == 0) return;
+  if(m_statesStack.size() == 0)
+    return;
   (m_statesStack.back())->keyDown(nKey, mod, nChar);
 }
 
 void StateManager::keyUp(int nKey,   SDLMod mod)
 {
-  if(m_statesStack.size() == 0) return;
+  if(m_statesStack.size() == 0)
+    return;
   (m_statesStack.back())->keyUp(nKey, mod);
 }
 
 void StateManager::mouseDown(int nButton)
 {
-  if(m_statesStack.size() == 0) return;
+  if(m_statesStack.size() == 0)
+    return;
   (m_statesStack.back())->mouseDown(nButton);
 }
 
 void StateManager::mouseDoubleClick(int nButton)
 {
-  if(m_statesStack.size() == 0) return;
+  if(m_statesStack.size() == 0)
+    return;
   (m_statesStack.back())->mouseDoubleClick(nButton);
 }
 
 void StateManager::mouseUp(int nButton)
 {
-  if(m_statesStack.size() == 0) return;
+  if(m_statesStack.size() == 0)
+    return;
   (m_statesStack.back())->mouseUp(nButton);
 }
 
@@ -547,7 +566,7 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
     return;        
   }
 
-  if(nKey == SDLK_RETURN && (((mod & KMOD_LALT) == KMOD_LALT) || ((mod & KMOD_RALT) == KMOD_RALT))) {
+  if(nKey == SDLK_RETURN && (mod & KMOD_ALT) != 0) {
     m_pGame->getDrawLib()->toogleFullscreen();
     m_pGame->getSession()->setWindowed(m_pGame->getSession()->windowed() == false);
     return;
@@ -574,7 +593,7 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   }
 
   /* activate/desactivate interpolation */
-  if(nKey == SDLK_i && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
+  if(nKey == SDLK_i && (mod & KMOD_CTRL) != 0) {
     m_pGame->getSession()->setEnableReplayInterpolation(!m_pGame->getSession()->enableReplayInterpolation());
     if(m_pGame->getSession()->enableReplayInterpolation()) {
       m_pGame->getSysMessage()->displayText(SYS_MSG_INTERPOLATION_ENABLED);
@@ -589,7 +608,7 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
     return;
   }
 
-  if(nKey == SDLK_m && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
+  if(nKey == SDLK_m && (mod & KMOD_CTRL) != 0) {
     m_pGame->getSession()->setMirrorMode(m_pGame->getSession()->mirrorMode() == false);
 
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {

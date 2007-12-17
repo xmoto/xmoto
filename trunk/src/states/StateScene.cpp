@@ -126,33 +126,24 @@ bool StateScene::render()
 
 void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  switch(nKey) {
-
-  case SDLK_F2:
+  if(nKey == SDLK_F2){
     m_pGame->switchFollowCamera();
-    break;
-    
-  case SDLK_F3:
+  }
+  else if(nKey == SDLK_F3){
     m_pGame->switchLevelToFavorite(m_pGame->getMotoGame()->getLevelSrc()->Id(), true);
     m_pGame->getStateManager()->sendAsynchronousMessage("FAVORITES_UPDATED");
-    break;
-
-  case SDLK_b: // ctrl+b
-    if((mod & KMOD_LCTRL) || (mod & KMOD_RCTRL)) {
-      m_pGame->switchLevelToBlacklist(m_pGame->getMotoGame()->getLevelSrc()->Id(), true);
-      m_pGame->getStateManager()->sendAsynchronousMessage("BLACKLISTEDLEVELS_UPDATED");
-    }
-    break;
-    
-  case SDLK_PAGEUP:
+  }
+  else if(nKey == SDLK_b && (mod & KMOD_CTRL) != 0){
+    m_pGame->switchLevelToBlacklist(m_pGame->getMotoGame()->getLevelSrc()->Id(), true);
+    m_pGame->getStateManager()->sendAsynchronousMessage("BLACKLISTEDLEVELS_UPDATED");
+  }
+  else if(nKey == SDLK_PAGEUP){
     nextLevel();
-    break;
-
-  case SDLK_PAGEDOWN:
+  }
+  else if(nKey == SDLK_PAGEDOWN){
     nextLevel(false);
-    break;
-
-  default:
+  }
+  else{
     GameState::keyDown(nKey, mod, nChar);
   }
 }

@@ -75,22 +75,15 @@ bool StateDeadJust::render()
 
 void StateDeadJust::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  switch(nKey) {
-
-  case SDLK_ESCAPE:
+  if(nKey == SDLK_ESCAPE) {
     m_pGame->getStateManager()->pushState(new StateDeadMenu(m_pGame, false, this));
-    break;
-
-  case SDLK_RETURN:
-    if(mod == KMOD_NONE) {
-      /* retart immediatly the level */
-      restartLevel();
-    }
-    break;
-
-  default:
+  }
+  else if(nKey == SDLK_RETURN && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0) {
+    /* retart immediatly the level */
+    restartLevel();
+  }
+  else {
     StateScene::keyDown(nKey, mod, nChar);
-
   }
 }
 

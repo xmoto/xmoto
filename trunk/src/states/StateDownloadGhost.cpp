@@ -41,6 +41,7 @@ StateDownloadGhost::StateDownloadGhost(GameApp* pGame,
 
 StateDownloadGhost::~StateDownloadGhost()
 {
+  delete m_pThread;
 }
 
 void StateDownloadGhost::setReplay(std::string replayName)

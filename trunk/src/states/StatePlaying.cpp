@@ -182,94 +182,77 @@ bool StatePlaying::render()
 
 void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  switch(nKey) {
-
-  case SDLK_ESCAPE:
+  if(nKey == SDLK_ESCAPE){
     if(isLockedScene() == false) {
       /* Escape pauses */
       m_pGame->getStateManager()->pushState(new StatePause(m_pGame, this));
     }
-    break;
-
-  case SDLK_RETURN:
-    /* retart immediatly the level */
-    if(mod == KMOD_NONE) {
-      restartLevel();
-    }
-
-    break;
-
-  case SDLK_KP5:
+  }
+  else if(nKey == SDLK_RETURN && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0){
+    restartLevel();
+  }
+  else if(nKey == SDLK_KP5){
     if(autoZoom() == false) {
       setAutoZoom(true);
     }
-    break;
+  }
 
 #if defined(ENABLE_ZOOMING)
-  case SDLK_KP7:
+  else if(nKey == SDLK_KP7){
     /* Zoom in */
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
       m_pGame->getMotoGame()->Cameras()[i]->zoom(0.002);
     }
-    break;
-
-  case SDLK_KP9:
+  }
+  else if(nKey == SDLK_KP9){
     /* Zoom out */
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
       m_pGame->getMotoGame()->Cameras()[i]->zoom(-0.002);
     }
-    break;
-
-  case SDLK_HOME:
+  }
+  else if(nKey == SDLK_HOME){
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
       m_pGame->getMotoGame()->Cameras()[i]->initCamera();
     }
-    break;
-
-  case SDLK_KP6:
+  }
+  else if(nKey == SDLK_KP6){
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
       m_pGame->getMotoGame()->Cameras()[i]->moveCamera(1.0, 0.0);
     }
-    break;
-
-  case SDLK_KP4:
+  }
+  else if(nKey == SDLK_KP4){
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
       m_pGame->getMotoGame()->Cameras()[i]->moveCamera(-1.0, 0.0);
     }
-    break;
-
-  case SDLK_KP8:
+  }
+  else if(nKey == SDLK_KP8){
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
       m_pGame->getMotoGame()->Cameras()[i]->moveCamera(0.0, 1.0);
     }
-    break;
-
-  case SDLK_KP2:
+  }
+  else if(nKey == SDLK_KP2){
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
       m_pGame->getMotoGame()->Cameras()[i]->moveCamera(0.0, -1.0);
     }
-    break;
-
-  case SDLK_KP0:
-    if((mod & KMOD_LCTRL) == KMOD_LCTRL) {
-      for(unsigned int i=0; i<m_pGame->getMotoGame()->Players().size(); i++) {
-	if(m_pGame->getMotoGame()->Cameras().size() > 0) {
-	  m_pGame->TeleportationCheatTo(i, Vector2f(m_pGame->getMotoGame()->Cameras()[0]->getCameraPositionX(),
-						    m_pGame->getMotoGame()->Cameras()[0]->getCameraPositionY()));
-	}
+  }
+  else if(nKey == SDLK_KP0 && (mod & KMOD_LCTRL) == KMOD_LCTRL){
+    for(unsigned int i=0; i<m_pGame->getMotoGame()->Players().size(); i++) {
+      if(m_pGame->getMotoGame()->Cameras().size() > 0) {
+	m_pGame->TeleportationCheatTo(i, Vector2f(m_pGame->getMotoGame()->Cameras()[0]->getCameraPositionX(),
+						  m_pGame->getMotoGame()->Cameras()[0]->getCameraPositionY()));
       }
     }
-    break;
+  }
 #endif
-    
-  default:
+
+  else {
     /* Notify the controller */
     m_pGame->getInputHandler()->handleInput(INPUT_KEY_DOWN, nKey, mod,
 					    m_pGame->getMotoGame()->Players(),
 					    m_pGame->getMotoGame()->Cameras(),
 					    m_pGame);
   }
-  
+
   StateScene::keyDown(nKey, mod, nChar);
 }
 
