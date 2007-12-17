@@ -191,7 +191,7 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
   else if(nKey == SDLK_RETURN && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0){
     restartLevel();
   }
-  else if(nKey == SDLK_KP5){
+  else if(nKey == SDLK_TAB){
     if(autoZoom() == false) {
       setAutoZoom(true);
     }
@@ -260,7 +260,7 @@ void StatePlaying::keyUp(int nKey, SDLMod mod)
 {
   switch(nKey) {
 
-  case SDLK_KP5:
+  case SDLK_TAB:
     if(autoZoom() && autoZoomStep() == 1) {
       setAutoZoomStep(2);
     }
