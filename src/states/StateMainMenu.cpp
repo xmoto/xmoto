@@ -1773,18 +1773,15 @@ void StateMainMenu::updateLevelsPacksList() {
 
   /* get selected item */
   std::string v_selected_packName = pTree->getSelectedEntry();
-  std::string p_packName;
   LevelsManager* v_lm = m_pGame->getLevelsManager();
 
   pTree->clear();
     
   for(int i=0; i<v_lm->LevelsPacks().size(); i++) {
-    p_packName = v_lm->LevelsPacks()[i]->Name();
-
     /* the unpackaged pack exists only in debug mode */
-    if(p_packName != "" || m_pGame->getSession()->debug()) {
-      if(p_packName == "") {
-	p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
+    if(v_lm->LevelsPacks()[i]->Name() != "" || m_pGame->getSession()->debug()) {
+      if(v_lm->LevelsPacks()[i]->Name() == "") {
+	v_lm->LevelsPacks()[i]->setName(GAMETEXT_UNPACKED_LEVELS_PACK);
       }
 	
       pTree->addPack(v_lm->LevelsPacks()[i],
