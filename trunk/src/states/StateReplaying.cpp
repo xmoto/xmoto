@@ -67,7 +67,6 @@ void StateReplaying::enter()
 								m_pGame->getSession()->enableEngineSound());
       m_pGame->getMotoGame()->getCamera()->setPlayerToFollow(m_replayBiker);
     } catch(Exception &e) {
-      abortPlaying();
       m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, "Unable to read the replay: " + e.getMsg(), UI_MSGBOX_OK));
       return;
     }
@@ -76,7 +75,6 @@ void StateReplaying::enter()
     try {
       m_pGame->getMotoGame()->loadLevel(m_pGame->getDb(), m_replayBiker->levelId());
     } catch(Exception &e) {
-      abortPlaying();
       m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, e.getMsg(), UI_MSGBOX_OK));
       return;
     }
