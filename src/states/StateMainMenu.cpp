@@ -148,8 +148,12 @@ void StateMainMenu::enterAfterPop()
   }
 
   if(m_require_updateLevelsList) {
+    m_pGame->getLevelsManager()->makePacks(m_pGame->getDb(),
+					   m_pGame->getSession()->profile(),
+					   m_pGame->getSession()->idRoom(),
+					   m_pGame->getSession()->debug());
     updateLevelsPacksList();
-    updateLevelsLists(); 
+    updateLevelsLists();
     m_require_updateLevelsList = false;
   }
 
@@ -2593,8 +2597,21 @@ void StateMainMenu::updateWWWOptions() {
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP"));
   v_button->enableWindow(m_pGame->getSession()->www());
+
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP"));
-  v_button->enableWindow(m_pGame->getSession()->www()); 
+  v_button->enableWindow(m_pGame->getSession()->www());
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:PROXYCONFIG"));
+  v_button->enableWindow(m_pGame->getSession()->www());
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:UPDATEHIGHSCORES"));
+  v_button->enableWindow(m_pGame->getSession()->www());
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPDATE_ROOMS_LIST"));
+  v_button->enableWindow(m_pGame->getSession()->www());
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPLOADHIGHSCOREALL_BUTTON"));
+  v_button->enableWindow(m_pGame->getSession()->www());
 }
 
 void StateMainMenu::updateGhostsOptions() {
