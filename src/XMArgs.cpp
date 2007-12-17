@@ -448,6 +448,7 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t-ll, --listlevels\n\t\tOutputs a list of all installed levels.\n");
   printf("\t-lr, --listreplays\n\t\tOutputs a list of all replays.\n");
   printf("\t--nowww\n\t\tDisable web connection at startup.\n");
+  printf("\t--nosound\n\t\tDisable sound at startup.\n");
   printf("\t-res, --resolution WIDTHxHEIGHT\n\t\tSpecifies display resolution to use.\n");
   printf("\t--bpp BITS\n\t\tTry to use this display color bit depth.\n");
   printf("\t-fs, --fullscreen\n\t\tForces fullscreen mode.\n");
