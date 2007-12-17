@@ -166,6 +166,8 @@ void UIPackTree::addPack(LevelsPack* i_levelsPack,
   v_level_nb << "/";
   v_level_nb << i_nbLevels;
   p->Text.push_back(v_level_nb.str());
+  p->bFiltered = i_nbLevels == 0; // filter packs with 0 levels
+  checkForFilteredEntries();
 }
 
 void UIPackTree::updatePack(LevelsPack* i_levelsPack,
@@ -179,9 +181,11 @@ void UIPackTree::updatePack(LevelsPack* i_levelsPack,
 	  v_level_nb << "/";
 	  v_level_nb << i_nbLevels;
 	  getEntries()[i]->Text[1] = v_level_nb.str();
+	  getEntries()[i]->bFiltered == i_nbLevels == 0;
       }
     }
   }
+  checkForFilteredEntries();
 }
 
 LevelsPack* UIPackTree::getSelectedPack() {

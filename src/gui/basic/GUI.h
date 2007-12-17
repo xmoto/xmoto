@@ -637,6 +637,7 @@ class UIButtonDrawn : public UIButton {
       void setChanged(bool b);
 
       void setFilter(std::string i_filter);
+      void checkForFilteredEntries(); // ask the list to check for filtered entries (if you manually set bFiltered to true)
 
     private:
       /* Data */
