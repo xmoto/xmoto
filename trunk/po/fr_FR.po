@@ -1194,7 +1194,7 @@ msgstr "Tutorial"
 
 #: src/GameText.h:366
 msgid "Unpacked levels"
-msgstr "Niveaux non packages"
+msgstr "Niveaux non packagés"
 
 #: src/GameText.h:367
 msgid ""

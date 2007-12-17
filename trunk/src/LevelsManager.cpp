@@ -133,6 +133,10 @@ std::string LevelsPack::Name() const {
   return m_name;
 }
 
+void LevelsPack::setName(const std::string& i_name) {
+  m_name = i_name;
+}
+
 void LevelsPack::setDescription(const std::string& i_description) {
   m_description = i_description;
 }

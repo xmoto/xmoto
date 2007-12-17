@@ -34,6 +34,7 @@ class LevelsPack {
   ~LevelsPack();
 
   std::string Name() const;
+  void setName(const std::string& i_name);
   bool ShowTimes() const;
   bool ShowWebTimes() const;
   void setShowTimes(bool i_showTimes);
