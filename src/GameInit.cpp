@@ -346,7 +346,7 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   GameRenderer::instance()->init(drawLib);
   
   /* build handler */
-  m_InputHandler.init(&m_Config);
+  InputHandler::instance()->init(&m_Config);
   Replay::enableCompression(XMSession::instance()->compressReplays());
   
   /* load packs */
@@ -476,7 +476,7 @@ void GameApp::run_unload() {
   if(GameRenderer::instance() != NULL) {
     GameRenderer::instance()->unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
     GameRenderer::instance()->shutdown();
-    m_InputHandler.uninit();
+    InputHandler::instance()->uninit();
   }
 
   if(m_themeChoicer != NULL) {
@@ -501,7 +501,7 @@ void GameApp::run_unload() {
 
   if(drawLib != NULL) { /* save config only if drawLib was initialized */
     XMSession::instance()->save(&m_Config);
-    m_InputHandler.saveConfig(&m_Config);
+    InputHandler::instance()->saveConfig(&m_Config);
     m_Config.saveFile();
   }
 
@@ -512,7 +512,12 @@ void GameApp::run_unload() {
   if(Logger::isInitialized()) {
     Logger::uninit();
   }
-    
+
+  InputHandler::instance()->destroy();
+  LevelsManager::instance()->destroy();
+  Theme::instance()->destroy();
+  XMSession::instance()->destroy();
+
   /* Shutdown SDL */
   SDL_Quit();
 }

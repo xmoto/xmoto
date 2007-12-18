@@ -97,7 +97,7 @@ void StatePreplaying::enter()
   m_pGame->initReplay();
       
   try {
-    pWorld->prePlayLevel(m_pGame->getInputHandler(), m_pGame->getCurrentReplay(), true);
+    pWorld->prePlayLevel(InputHandler::instance(), m_pGame->getCurrentReplay(), true);
     pWorld->setInfos("");
 	
     /* add the players */
@@ -131,11 +131,11 @@ void StatePreplaying::enter()
     }
 
     // reset handler, set mirror mode
-    m_pGame->getInputHandler()->reset();
+    InputHandler::instance()->reset();
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
       pWorld->Cameras()[i]->setMirrored(XMSession::instance()->mirrorMode());
     }
-    m_pGame->getInputHandler()->setMirrored(XMSession::instance()->mirrorMode());
+    InputHandler::instance()->setMirrored(XMSession::instance()->mirrorMode());
 
   } catch(Exception &e) {
     Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());

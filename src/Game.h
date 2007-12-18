@@ -141,7 +141,6 @@ class XMotoLoadReplaysInterface;
 
       //
       xmDatabase*    getDb();
-      InputHandler*  getInputHandler();
       ThemeChoicer*  getThemeChoicer();
 
       SysMessage* getSysMessage() { return m_sysMsg;}
@@ -180,7 +179,6 @@ class XMotoLoadReplaysInterface;
 
     private:   
       ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
-      InputHandler m_InputHandler;              /* The glorious input handler */
       MotoGame m_MotoGame;                      /* Game object */      
       XMMotoGameHooks m_MotoGameHooks;
        

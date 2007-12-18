@@ -247,7 +247,7 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
 
   else {
     /* Notify the controller */
-    m_pGame->getInputHandler()->handleInput(INPUT_KEY_DOWN, nKey, mod,
+    InputHandler::instance()->handleInput(INPUT_KEY_DOWN, nKey, mod,
 					    m_pGame->getMotoGame()->Players(),
 					    m_pGame->getMotoGame()->Cameras(),
 					    m_pGame);
@@ -267,7 +267,7 @@ void StatePlaying::keyUp(int nKey, SDLMod mod)
     break;
     
   default:
-    m_pGame->getInputHandler()->handleInput(INPUT_KEY_UP,nKey,mod,
+    InputHandler::instance()->handleInput(INPUT_KEY_UP,nKey,mod,
 					    m_pGame->getMotoGame()->Players(),
 					    m_pGame->getMotoGame()->Cameras(),
 					    m_pGame);
@@ -277,7 +277,7 @@ void StatePlaying::keyUp(int nKey, SDLMod mod)
 
 void StatePlaying::mouseDown(int nButton)
 {
-  m_pGame->getInputHandler()->handleInput(INPUT_KEY_DOWN,nButton,KMOD_NONE,
+  InputHandler::instance()->handleInput(INPUT_KEY_DOWN,nButton,KMOD_NONE,
 			     m_pGame->getMotoGame()->Players(),
 			     m_pGame->getMotoGame()->Cameras(),
 			     m_pGame);
@@ -292,7 +292,7 @@ void StatePlaying::mouseDoubleClick(int nButton)
 
 void StatePlaying::mouseUp(int nButton)
 {
-  m_pGame->getInputHandler()->handleInput(INPUT_KEY_UP,nButton,KMOD_NONE,
+  InputHandler::instance()->handleInput(INPUT_KEY_UP,nButton,KMOD_NONE,
 			     m_pGame->getMotoGame()->Players(),
 			     m_pGame->getMotoGame()->Cameras(),
 			     m_pGame);

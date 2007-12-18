@@ -619,7 +619,7 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
       m_pGame->getMotoGame()->Cameras()[i]->setMirrored(XMSession::instance()->mirrorMode());
     }
-    m_pGame->getInputHandler()->setMirrored(XMSession::instance()->mirrorMode());
+    InputHandler::instance()->setMirrored(XMSession::instance()->mirrorMode());
   }
 
 }

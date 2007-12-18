@@ -94,8 +94,8 @@ void StateReplaying::enter()
     }
     
     /* Init level */    
-    m_pGame->getInputHandler()->reset();
-    m_pGame->getMotoGame()->prePlayLevel(m_pGame->getInputHandler(), NULL, false);
+    InputHandler::instance()->reset();
+    m_pGame->getMotoGame()->prePlayLevel(InputHandler::instance(), NULL, false);
     
     /* add the ghosts */
     if(XMSession::instance()->enableGhosts()) {
