@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateManager.h"
 
+class CameraAnimation;
+
 class StateScene : public GameState {
  public:
  StateScene(GameApp* pGame, bool i_doShade = false, bool i_doShadeAnim = false);
@@ -53,7 +55,6 @@ class StateScene : public GameState {
  double m_fLastPhysTime; /* When the last frama was initiated */
  bool   m_isLockedScene;
  bool   m_autoZoom;      /* true : the key is pressed so that it zooms out to see the level */
- int    m_autoZoomStep;
 
  void setScoresTimes();
  void restartLevel(bool i_reloadLevel = false);
@@ -67,35 +68,9 @@ class StateScene : public GameState {
  void setAutoZoom(bool i_value);
  bool autoZoom() const;
  void runAutoZoom();
- int autoZoomStep() const;
- void setAutoZoomStep(int n);
 
- float m_fPrePlayStartTime;
- float m_fPrePlayStartInitZoom;
- float m_fPrePlayStartCameraX;
- float m_fPrePlayStartCameraY;
- float m_fPreCameraStartX;
- float m_fPreCameraStartY;
- float m_fPreCameraFinalX;
- float m_fPreCameraFinalY;
- float m_zoomX;
- float m_zoomY;
- float m_zoomU;
- float static_time;
- float fAnimPlayStartZoom;
- float fAnimPlayStartCameraX; 
- float fAnimPlayStartCameraY;
- float fAnimPlayFinalZoom;
- float fAnimPlayFinalCameraX1;
- float fAnimPlayFinalCameraY1;
- float fAnimPlayFinalCameraX2;
- float fAnimPlayFinalCameraY2;
-
- void zoomAnimation1_init();
- void zoomAnimation2_init();
- bool zoomAnimation2_step();
- void zoomAnimation2_init_unzoom();
- bool zoomAnimation2_unstep();
+ /* animation */
+ CameraAnimation* m_cameraAnim;
 };
 
 #endif

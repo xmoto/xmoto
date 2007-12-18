@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateScene.h"
 
+class CameraAnimation;
+
 class StatePreplaying : public StateScene {
   public:
   StatePreplaying(GameApp* pGame, const std::string i_idlevel, bool i_sameLevel);
@@ -59,24 +61,7 @@ class StatePreplaying : public StateScene {
   bool m_sameLevel;
 
   /* animation */
-  float m_fPrePlayStartTime;
-  float m_fPrePlayStartInitZoom;
-  float m_fPrePlayStartCameraX;
-  float m_fPrePlayStartCameraY;
-  float m_fPrePlayCameraLastX;
-  float m_fPrePlayCameraLastY;
-  float m_fPreCameraStartX;
-  float m_fPreCameraStartY;
-  float m_fPreCameraFinalX;
-  float m_fPreCameraFinalY;
-  float m_zoomX;
-  float m_zoomY;
-  float m_zoomU;
-  float static_time;
-
-  void zoomAnimation1_init();
-  bool zoomAnimation1_step();
-  void zoomAnimation1_abort();
+  CameraAnimation* m_cameraAnim;
 };
 
 #endif

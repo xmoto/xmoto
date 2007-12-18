@@ -98,6 +98,7 @@ common_SOURCES = Image.cpp \
   Locales.cpp \
   Packager.cpp \
   Packager.h \
+  CameraAnimation.h CameraAnimation.cpp \
   svn_version.h \
   svn_version.cpp
 

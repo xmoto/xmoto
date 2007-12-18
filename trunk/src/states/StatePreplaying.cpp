@@ -29,13 +29,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "StateDownloadGhost.h"
 #include "drawlib/DrawLib.h"
+#include "CameraAnimation.h"
 
-#define PRESTART_ANIMATION_MARGIN_SIZE 5
-#define PRESTART_ANIMATION_TIME 2.0
-#define PRESTART_ANIMATION_CURVE 3.0
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 1.0
-/* logf(PRESTART_ANIMATION_CURVE + 1.0) = 1.386294361*/
-#define LOGF_PRE_ANIM_TIME_ADDED_ONE 1.386294361
 
 StatePreplaying::StatePreplaying(GameApp* pGame, const std::string i_idlevel, bool i_sameLevel):
   StateScene(pGame)
@@ -49,11 +45,15 @@ StatePreplaying::StatePreplaying(GameApp* pGame, const std::string i_idlevel, bo
   m_sameLevel = i_sameLevel;
   /* if the level is not the same, ask to play the animation */
   m_playAnimation = m_sameLevel == false;
+
+  m_cameraAnim = NULL;
 }
 
 StatePreplaying::~StatePreplaying()
 {
-
+  if(m_cameraAnim != NULL) {
+    delete m_cameraAnim;
+  }
 }
 
 
@@ -194,12 +194,12 @@ bool StatePreplaying::update()
   }
 
   if(shouldBeAnimated()) {
-    if(zoomAnimation1_step() == false) {
+    if(m_cameraAnim->step() == false) {
       m_playAnimation = false;
     }
   } else { /* animation has been rupted */
     m_playAnimation = false; // disable anim
-    zoomAnimation1_abort();
+    m_cameraAnim->uninit();
     StateManager::instance()->replaceState(new StatePlaying(m_pGame));
   }
   m_pGame->getMotoGame()->updateGameMessages();
@@ -243,104 +243,6 @@ void StatePreplaying::mouseUp(int nButton)
 {
 }
 
-void StatePreplaying::zoomAnimation1_init() {
-  DrawLib* drawLib = m_pGame->getDrawLib();
-
-  m_fPrePlayStartTime = GameApp::getXMTime();
-  m_fPrePlayStartInitZoom = m_pGame->getMotoGame()->getCamera()->getCurrentZoom();  // because the man can change ugly mode while the animation
-  m_fPrePlayStartCameraX  = m_pGame->getMotoGame()->getCamera()->getCameraPositionX();
-  m_fPrePlayStartCameraY  = m_pGame->getMotoGame()->getCamera()->getCameraPositionY();
-  
-  m_zoomX = (2.0 * ((float)drawLib->getDispWidth() / (float)drawLib->getDispHeight())) / (m_pGame->getMotoGame()->getLevelSrc()->RightLimit() - m_pGame->getMotoGame()->getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
-  m_zoomY = 2.0 /(m_pGame->getMotoGame()->getLevelSrc()->TopLimit() - m_pGame->getMotoGame()->getLevelSrc()->BottomLimit()+2*PRESTART_ANIMATION_MARGIN_SIZE);
-  
-  if (m_zoomX > m_zoomY){
-    float visibleHeight,cameraStartHeight;
-    
-    m_zoomU=m_zoomX;
-    static_time = (m_pGame->getMotoGame()->getLevelSrc()->TopLimit() - m_pGame->getMotoGame()->getLevelSrc()->BottomLimit()) / (2.0/m_zoomU);
-    
-    visibleHeight = 2.0/m_zoomU;
-    cameraStartHeight= visibleHeight/2.0;
-    
-    m_fPreCameraStartX = (m_pGame->getMotoGame()->getLevelSrc()->RightLimit() + m_pGame->getMotoGame()->getLevelSrc()->LeftLimit())/2;
-    m_fPreCameraStartY = m_pGame->getMotoGame()->getLevelSrc()->TopLimit() - cameraStartHeight + PRESTART_ANIMATION_MARGIN_SIZE;
-    m_fPreCameraFinalX = (m_pGame->getMotoGame()->getLevelSrc()->RightLimit() + m_pGame->getMotoGame()->getLevelSrc()->LeftLimit())/2;
-    m_fPreCameraFinalY = m_pGame->getMotoGame()->getLevelSrc()->BottomLimit() + cameraStartHeight - PRESTART_ANIMATION_MARGIN_SIZE;
-    
-    if ( fabs(m_fPreCameraStartY - m_fPrePlayStartCameraY) > fabs(m_fPreCameraFinalY - m_fPrePlayStartCameraY)) {
-      float f;
-      f = m_fPreCameraFinalY;
-      m_fPreCameraFinalY = m_fPreCameraStartY;
-	m_fPreCameraStartY = f;
-    }
-    
-  } else {
-    float visibleWidth,cameraStartLeft;
-    
-    m_zoomU=m_zoomY;
-    static_time = (m_pGame->getMotoGame()->getLevelSrc()->RightLimit() - m_pGame->getMotoGame()->getLevelSrc()->LeftLimit()) / ((2.0 * ((float)drawLib->getDispWidth() / (float)drawLib->getDispHeight()))/m_zoomU);
-    
-    visibleWidth = (2.0 * ((float)drawLib->getDispWidth() / (float)drawLib->getDispHeight()))/m_zoomU;
-    cameraStartLeft = visibleWidth/2.0;
-    
-    m_fPreCameraStartX = m_pGame->getMotoGame()->getLevelSrc()->RightLimit() - cameraStartLeft + PRESTART_ANIMATION_MARGIN_SIZE;
-    m_fPreCameraStartY = (m_pGame->getMotoGame()->getLevelSrc()->BottomLimit() + m_pGame->getMotoGame()->getLevelSrc()->TopLimit())/2;
-    m_fPreCameraFinalX = m_pGame->getMotoGame()->getLevelSrc()->LeftLimit() + cameraStartLeft - PRESTART_ANIMATION_MARGIN_SIZE;
-    m_fPreCameraFinalY = (m_pGame->getMotoGame()->getLevelSrc()->BottomLimit() + m_pGame->getMotoGame()->getLevelSrc()->TopLimit())/2;
-    
-    if ( fabs(m_fPreCameraStartX - m_fPrePlayStartCameraX) > fabs(m_fPreCameraFinalX - m_fPrePlayStartCameraX)) {
-      float f;
-      f = m_fPreCameraFinalX;
-      m_fPreCameraFinalX = m_fPreCameraStartX;
-      m_fPreCameraStartX = f;
-    }
-  }
-}
-
-bool StatePreplaying::zoomAnimation1_step() {
-  if(GameApp::getXMTime() > m_fPrePlayStartTime + static_time + PRESTART_ANIMATION_TIME) {
-    return false;
-  }
-  if(GameApp::getXMTime() > m_fPrePlayStartTime + static_time){
-    float zx, zy, zz;
-
-    zz = logf(PRESTART_ANIMATION_CURVE * ((PRESTART_ANIMATION_TIME + static_time - GameApp::getXMTime() + m_fPrePlayStartTime) / (PRESTART_ANIMATION_TIME)) + 1.0) / LOGF_PRE_ANIM_TIME_ADDED_ONE * (m_fPrePlayStartInitZoom - m_zoomU);
-    
-    m_pGame->getMotoGame()->getCamera()->setZoom(m_fPrePlayStartInitZoom - zz);
-    
-    zx = (PRESTART_ANIMATION_TIME + static_time - GameApp::getXMTime() + m_fPrePlayStartTime)
-      / (PRESTART_ANIMATION_TIME) 
-      * (m_fPrePlayStartCameraX - m_fPrePlayCameraLastX);
-    zy =  (PRESTART_ANIMATION_TIME + static_time - GameApp::getXMTime() + m_fPrePlayStartTime)
-      / (PRESTART_ANIMATION_TIME) 
-      * (m_fPrePlayStartCameraY - m_fPrePlayCameraLastY);
-    
-    m_pGame->getMotoGame()->getCamera()->setCameraPosition(m_fPrePlayStartCameraX-zx, m_fPrePlayStartCameraY-zy);
-  } else {
-    float zx,zy;
-    
-    m_pGame->getMotoGame()->getCamera()->setZoom(m_zoomU);
-    
-    zx  = (static_time - GameApp::getXMTime() + m_fPrePlayStartTime) / (static_time) 
-      * (m_fPreCameraStartX - m_fPreCameraFinalX);
-    
-    zy = (static_time - GameApp::getXMTime() + m_fPrePlayStartTime) / (static_time) 
-      * (m_fPreCameraStartY - m_fPreCameraFinalY);
-    
-    m_pGame->getMotoGame()->getCamera()->setCameraPosition( m_fPreCameraStartX  - zx, m_fPreCameraStartY - zy);
-    
-    m_fPrePlayCameraLastX= m_fPreCameraStartX - zx;
-    m_fPrePlayCameraLastY= m_fPreCameraStartY - zy;
-  }
-  return true;
-}
-
-void StatePreplaying::zoomAnimation1_abort() {
-  m_pGame->getMotoGame()->getCamera()->setZoom(m_fPrePlayStartInitZoom); // because the man can change ugly mode while the animation
-  m_pGame->getMotoGame()->getCamera()->setCameraPosition(m_fPrePlayStartCameraX, m_fPrePlayStartCameraY);
-}
-
 void StatePreplaying::secondInitPhase()
 {
   MotoGame* pWorld = m_pGame->getMotoGame();
@@ -365,7 +267,13 @@ void StatePreplaying::secondInitPhase()
   GameRenderer::instance()->prepareForNewLevel();
 
   /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
+  // animation
   pWorld->setAutoZoomCamera();
+  if(m_cameraAnim != NULL) {
+    delete m_cameraAnim;
+  }
+  m_cameraAnim = new ZoomingCameraAnimation(pWorld->getCamera(), m_pGame->getDrawLib(), m_pGame->getMotoGame());
+  m_cameraAnim->init();
 
   /* display level name */
   if(m_sameLevel == false) {
@@ -373,8 +281,6 @@ void StatePreplaying::secondInitPhase()
 			false,
 			PRESTART_ANIMATION_LEVEL_MSG_DURATION);
   }
-
-  zoomAnimation1_init();
   
   setAutoZoom(shouldBeAnimated());
 }
