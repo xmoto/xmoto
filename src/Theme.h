@@ -448,14 +448,10 @@ class BikerTheme {
 
 class ThemeChoicer {
  public:
-
-  ThemeChoicer();	       
-  ~ThemeChoicer();
-
-  void initThemesFromDir(xmDatabase *i_db);
+  static void initThemesFromDir(xmDatabase *i_db);
 
  private:
-  std::string getThemeNameFromFile(std::string p_themeFile);
+  static std::string getThemeNameFromFile(std::string p_themeFile);
 };
 
 #endif /* __THEME_H__ */

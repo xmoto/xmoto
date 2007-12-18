@@ -141,7 +141,6 @@ class XMotoLoadReplaysInterface;
 
       //
       xmDatabase*    getDb();
-      ThemeChoicer*  getThemeChoicer();
 
       SysMessage* getSysMessage() { return m_sysMsg;}
 
@@ -198,8 +197,6 @@ class XMotoLoadReplaysInterface;
       bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
       bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
       
-      ThemeChoicer *m_themeChoicer;
-
       /* Sound effects */
       SoundSample *m_pEndOfLevelSFX;
       SoundSample *m_pStrawberryPickupSFX;

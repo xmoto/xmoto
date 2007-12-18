@@ -1007,12 +1007,6 @@ Color BikerTheme::getUglyWheelColor() {
   return m_UglyWheelColor;
 }
 
-ThemeChoicer::ThemeChoicer() {
-}
-
-ThemeChoicer::~ThemeChoicer() {
-}
-
 void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
   std::vector<std::string> v_themesFiles = FS::findPhysFiles(std::string(THEMES_DIRECTORY)
 								   + std::string("/*.xml"), true);

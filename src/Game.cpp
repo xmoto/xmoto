@@ -197,7 +197,6 @@ GameApp::GameApp() {
   m_currentPlayingList = NULL;
 
   m_db = NULL;
-  m_themeChoicer = NULL;
 
   m_lastFrameTimeStamp = -1;
   m_frameLate          = 0;
@@ -922,11 +921,6 @@ void GameApp::initReplay() {
 				    XMSession::instance()->replayFrameRate(),
 				    sizeof(SerializedBikeState));
   }
-}
-
-ThemeChoicer* GameApp::getThemeChoicer()
-{
-  return m_themeChoicer;
 }
 
 std::string GameApp::getWebRoomURL(xmDatabase* pDb) {
