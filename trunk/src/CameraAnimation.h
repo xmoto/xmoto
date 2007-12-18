@@ -43,6 +43,9 @@ class CameraAnimation {
   const Vector2f& initialPosition() const;
   float initialZoom() const;
 
+  float initialEntitiesToTakeZoom();
+  float initialEntitiesWhichMakeWinZoom();
+
  protected:
   Camera*   m_camera;
   DrawLib*  m_drawLib;
@@ -54,6 +57,8 @@ class CameraAnimation {
   // initial values
   float    m_I_cameraZoom;
   Vector2f m_I_cameraPosition;
+  float    m_I_entitiesToTakeZoom;
+  float    m_I_entitiesWhichMakeWin;
 
   // usable values
   float m_startTime;
@@ -81,6 +86,10 @@ class AutoZoomCameraAnimation : public CameraAnimation {
   Vector2f m_fAnimPlayStartCamera;
   Vector2f m_fPrePlayStartCamera;
   float    m_startTimeUnzooming;
+  float    m_entitiesToTakeZoom;
+  float    m_entitiesWhichMakeWinZoom;
+  bool     m_entitiesGrowing;
+  float    m_previousZoomTime;
 };
 
 class ZoomingCameraAnimation : public CameraAnimation {
