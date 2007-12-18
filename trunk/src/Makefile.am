@@ -67,7 +67,8 @@ helpers_SOURCES = helpers/VMath.h             \
 		  helpers/Log.cpp \
 		  helpers/System.h \
 		  helpers/System.cpp \
-                  iqsort.h
+                  iqsort.h \
+		  helpers/Singleton.h
 
 common_SOURCES = Image.cpp \
   VBezier.cpp PolyDraw.h PolyDraw.cpp \
