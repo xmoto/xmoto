@@ -173,7 +173,7 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
       throw Exception("Drawlib not initialized");
     }
 
-    m_sysMsg = new SysMessage(drawLib);
+    SysMessage::instance()->setDrawLib(drawLib);
     
     drawLib->setNoGraphics(XMSession::instance()->useGraphics() == false);
     drawLib->setDontUseGLExtensions(XMSession::instance()->glExts() == false);
@@ -489,10 +489,7 @@ void GameApp::run_unload() {
   }
 
   GameRenderer::instance()->destroy();
-  
-  if(m_sysMsg != NULL) {
-    delete m_sysMsg;
-  }
+  SysMessage::instance()->destroy();  
 
   if(drawLib != NULL) { /* save config only if drawLib was initialized */
     XMSession::instance()->save(&m_Config);

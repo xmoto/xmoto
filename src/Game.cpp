@@ -167,8 +167,6 @@ GameApp::GameApp() {
   m_bQuit = false;
   drawLib = NULL;
   
-  m_sysMsg = NULL;
-
   m_pNotifyMsgBox=NULL;
   m_pInfoMsgBox=NULL;
 
@@ -269,18 +267,18 @@ GameApp::GameApp() {
   void GameApp::enableFps(bool bValue) {
     XMSession::instance()->setFps(XMSession::instance()->fps() == false);
     if(XMSession::instance()->fps()) {
-      m_sysMsg->displayText(SYS_MSG_FPS_ENABLED);
+      SysMessage::instance()->displayText(SYS_MSG_FPS_ENABLED);
     } else {
-      m_sysMsg->displayText(SYS_MSG_FPS_DISABLED);
+      SysMessage::instance()->displayText(SYS_MSG_FPS_DISABLED);
     }
   }
 
   void GameApp::enableWWW(bool bValue) {
     XMSession::instance()->setWWW(XMSession::instance()->www() == false);
     if(XMSession::instance()->www()) {
-      m_sysMsg->displayText(SYS_MSG_WWW_ENABLED);
+      SysMessage::instance()->displayText(SYS_MSG_WWW_ENABLED);
     } else {
-      m_sysMsg->displayText(SYS_MSG_WWW_DISABLED);
+      SysMessage::instance()->displayText(SYS_MSG_WWW_DISABLED);
     }
   }
 
@@ -789,12 +787,12 @@ void GameApp::switchLevelToFavorite(const std::string& i_levelId, bool v_display
   if(LevelsManager::instance()->isInFavorite(m_db, XMSession::instance()->profile(), i_levelId)) {
     LevelsManager::instance()->delFromFavorite(m_db, XMSession::instance()->profile(), i_levelId);
     if(v_displayMessage) {
-      m_sysMsg->displayText(GAMETEXT_LEVEL_DELETED_FROM_FAVORITE);
+      SysMessage::instance()->displayText(GAMETEXT_LEVEL_DELETED_FROM_FAVORITE);
     }
   } else {
     LevelsManager::instance()->addToFavorite(m_db, XMSession::instance()->profile(), i_levelId);
     if(v_displayMessage) {
-      m_sysMsg->displayText(GAMETEXT_LEVEL_ADDED_TO_FAVORITE);
+      SysMessage::instance()->displayText(GAMETEXT_LEVEL_ADDED_TO_FAVORITE);
     }
   }
 }
@@ -803,12 +801,12 @@ void GameApp::switchLevelToBlacklist(const std::string& i_levelId, bool v_displa
   if(LevelsManager::instance()->isInBlacklist(m_db, XMSession::instance()->profile(), i_levelId)) {
     LevelsManager::instance()->delFromBlacklist(m_db, XMSession::instance()->profile(), i_levelId);
     if(v_displayMessage) {
-      m_sysMsg->displayText(GAMETEXT_LEVEL_DELETED_FROM_BLACKLIST);
+      SysMessage::instance()->displayText(GAMETEXT_LEVEL_DELETED_FROM_BLACKLIST);
     }
   } else {
     LevelsManager::instance()->addToBlacklist(m_db, XMSession::instance()->profile(), i_levelId);
     if(v_displayMessage) {
-      m_sysMsg->displayText(GAMETEXT_LEVEL_ADDED_TO_BLACKLIST);
+      SysMessage::instance()->displayText(GAMETEXT_LEVEL_ADDED_TO_BLACKLIST);
     }
   }
 }
@@ -816,9 +814,9 @@ void GameApp::switchLevelToBlacklist(const std::string& i_levelId, bool v_displa
 void GameApp::switchFollowCamera() {
   GameRenderer::instance()->switchFollow();
 
-  m_sysMsg->displayText(m_MotoGame.getCamera()->
-			getPlayerToFollow()->
-			getQuickDescription());
+  SysMessage::instance()->displayText(m_MotoGame.getCamera()->
+				      getPlayerToFollow()->
+				      getQuickDescription());
 }
 
 MotoGame* GameApp::getMotoGame() {
