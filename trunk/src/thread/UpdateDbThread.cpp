@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "Game.h"
 #include "states/StateManager.h"
+#include "Theme.h"
 
 UpdateDbThread::UpdateDbThread()
   : XMThread()
@@ -47,7 +48,7 @@ int UpdateDbThread::realThreadFunction()
   StateManager::instance()->sendSynchronousMessage("UPDATE_REPLAYS_LISTS");
   
   setThreadCurrentOperation(GAMETEXT_RELOADINGTHEMES);
-  m_pGame->getThemeChoicer()->initThemesFromDir(m_pDb);
+  ThemeChoicer::initThemesFromDir(m_pDb);
   StateManager::instance()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
 
   return 0;

@@ -224,9 +224,8 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   }
 
   /* load theme */
-  m_themeChoicer = new ThemeChoicer();
   if(m_db->themes_isIndexUptodate() == false) {
-    m_themeChoicer->initThemesFromDir(m_db);
+    ThemeChoicer::initThemesFromDir(m_db);
   }
   try {
     reloadTheme();
@@ -234,7 +233,7 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
     /* if the theme cannot be loaded, try to reload from files */
     /* perhaps that the xm.db comes from an other computer */
     Logger::Log("** warning ** : Theme cannot be reload, try to update themes into the database");
-    m_themeChoicer->initThemesFromDir(m_db);
+    ThemeChoicer::initThemesFromDir(m_db);
     reloadTheme();
   }
   
@@ -479,10 +478,6 @@ void GameApp::run_unload() {
     InputHandler::instance()->uninit();
   }
 
-  if(m_themeChoicer != NULL) {
-    delete m_themeChoicer;
-  }
-    
   if(m_pJustPlayReplay != NULL) {
     delete m_pJustPlayReplay;
   }    
