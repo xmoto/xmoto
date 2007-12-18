@@ -172,7 +172,6 @@ class Biker;
       void SetBlockRotation(std::string pBlockID, float pAngle);
       void SetEntityDrawAngle(std::string pEntityID, float pAngle);
 
-      void setRenderer(GameRenderer *p_renderer);
       void CameraZoom(float pZoom);
       void CameraMove(float p_x, float p_y);
       void CameraRotate(float i_angle);

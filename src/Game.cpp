@@ -166,7 +166,6 @@ GameApp::~GameApp() {
 GameApp::GameApp() {
   m_bQuit = false;
   drawLib = NULL;
-  m_Renderer = NULL;
   
   m_sysMsg = NULL;
 
@@ -816,7 +815,7 @@ void GameApp::switchLevelToBlacklist(const std::string& i_levelId, bool v_displa
 }
 
 void GameApp::switchFollowCamera() {
-  m_Renderer->switchFollow();
+  GameRenderer::instance()->switchFollow();
 
   m_sysMsg->displayText(m_MotoGame.getCamera()->
 			getPlayerToFollow()->
@@ -895,10 +894,6 @@ void GameApp::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
   v_best_room_time = (int)(100.0 * m_db->webrooms_getHighscoreTime(XMSession::instance()->idRoom(), m_MotoGame.getLevelSrc()->Id()));
   o_room = (v_current_time < v_best_room_time
 	    || v_best_room_time < 0);
-}
-
-GameRenderer* GameApp::getGameRenderer() {
-  return m_Renderer;
 }
 
 InputHandler* GameApp::getInputHandler() {

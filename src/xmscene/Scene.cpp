@@ -48,7 +48,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     m_showGhostTimeDiff = true;
 
-    m_renderer      = NULL;
     m_motoGameHooks = NULL;
 
     m_speed_factor = 1.00f;
@@ -996,10 +995,6 @@ void MotoGame::cleanPlayers() {
   i++;
       }
     }
-  }
-
-  void MotoGame::setRenderer(GameRenderer *p_renderer) {
-    m_renderer = p_renderer;
   }
 
   void MotoGame::CameraZoom(float pZoom) {

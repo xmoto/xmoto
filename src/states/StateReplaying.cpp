@@ -54,8 +54,8 @@ void StateReplaying::enter()
   char *v_res;
 
   m_stopToUpdate = false;
-  m_pGame->getGameRenderer()->setShowEngineCounter(false);
-  m_pGame->getGameRenderer()->setShowTimePanel(true);
+  GameRenderer::instance()->setShowEngineCounter(false);
+  GameRenderer::instance()->setShowTimePanel(true);
   m_replayBiker = NULL;
   
   try {  
@@ -115,10 +115,10 @@ void StateReplaying::enter()
 	     );
     m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name() + " " + std::string(c_tmp));
     
-    m_pGame->getGameRenderer()->prepareForNewLevel();
+    GameRenderer::instance()->prepareForNewLevel();
     m_pGame->playMusic(m_pGame->getMotoGame()->getLevelSrc()->Music());
 
-    m_pGame->getGameRenderer()->showReplayHelp(m_pGame->getMotoGame()->getSpeed(),
+    GameRenderer::instance()->showReplayHelp(m_pGame->getMotoGame()->getSpeed(),
 					       m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false);
     // highscores
     setScoresTimes();    
@@ -208,20 +208,20 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
   case SDLK_SPACE:
     /* pause */
     m_pGame->getMotoGame()->pause();
-    m_pGame->getGameRenderer()->showReplayHelp(m_pGame->getMotoGame()->getSpeed(), m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false);
+    GameRenderer::instance()->showReplayHelp(m_pGame->getMotoGame()->getSpeed(), m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false);
     break;
 
   case SDLK_UP:
     /* faster */
     m_pGame->getMotoGame()->faster();
-    m_pGame->getGameRenderer()->showReplayHelp(m_pGame->getMotoGame()->getSpeed(), m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false);
+    GameRenderer::instance()->showReplayHelp(m_pGame->getMotoGame()->getSpeed(), m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false);
     break;
 
   case SDLK_DOWN:
     /* slower */
     m_pGame->getMotoGame()->slower();
     m_stopToUpdate = false;
-    m_pGame->getGameRenderer()->showReplayHelp(m_pGame->getMotoGame()->getSpeed(), m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false);
+    GameRenderer::instance()->showReplayHelp(m_pGame->getMotoGame()->getSpeed(), m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false);
     break;
 
   default:

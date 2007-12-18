@@ -48,9 +48,9 @@ void StatePlaying::enter()
 {
   StateScene::enter();
 
-  m_pGame->getGameRenderer()->setShowEngineCounter(XMSession::instance()->showEngineCounter());
-  m_pGame->getGameRenderer()->setShowMinimap(XMSession::instance()->showMinimap());
-  m_pGame->getGameRenderer()->setShowTimePanel(true);
+  GameRenderer::instance()->setShowEngineCounter(XMSession::instance()->showEngineCounter());
+  GameRenderer::instance()->setShowMinimap(XMSession::instance()->showMinimap());
+  GameRenderer::instance()->setShowTimePanel(true);
 
   m_bAutoZoomInitialized = false;
 

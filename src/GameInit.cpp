@@ -168,13 +168,11 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   if(XMSession::instance()->useGraphics()) {
     /* init drawLib */
     drawLib = DrawLib::DrawLibFromName(XMSession::instance()->drawlib());
-    
+
     if(drawLib == NULL) {
       throw Exception("Drawlib not initialized");
     }
 
-    m_Renderer = new GameRenderer(drawLib);
-    m_MotoGame.setRenderer(m_Renderer);
     m_sysMsg = new SysMessage(drawLib);
     
     drawLib->setNoGraphics(XMSession::instance()->useGraphics() == false);
@@ -204,15 +202,16 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
     StateManager::instance()->init(this);
     switchUglyMode(XMSession::instance()->ugly());
     switchTestThemeMode(XMSession::instance()->testTheme());
-    m_Renderer->setParent( (GameApp *)this );
-    m_Renderer->setGameObject( &m_MotoGame );        
+    GameRenderer::instance()->setParent( (GameApp *)this );
+    GameRenderer::instance()->setGameObject( &m_MotoGame );        
   }    
 
   /* Tell collision system whether we want debug-info or not */
   m_MotoGame.getCollisionHandler()->setDebug(XMSession::instance()->debug());
 
   if(XMSession::instance()->useGraphics()) {
-    if(XMSession::instance()->gDebug()) m_Renderer->loadDebugInfo(XMSession::instance()->gDebugFile());
+    if(XMSession::instance()->gDebug())
+      GameRenderer::instance()->loadDebugInfo(XMSession::instance()->gDebugFile());
   }
 
   /* database */
@@ -344,7 +343,7 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   
   /* Initialize renderer */
   _UpdateLoadingScreen((1.0f/9.0f) * 6,GAMETEXT_INITRENDERER);
-  m_Renderer->init();
+  GameRenderer::instance()->init(drawLib);
   
   /* build handler */
   m_InputHandler.init(&m_Config);
@@ -474,9 +473,9 @@ void GameApp::run_unload() {
     delete m_pWebLevels;
   }    
 
-  if(m_Renderer != NULL) {
-    m_Renderer->unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
-    m_Renderer->shutdown();
+  if(GameRenderer::instance() != NULL) {
+    GameRenderer::instance()->unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
+    GameRenderer::instance()->shutdown();
     m_InputHandler.uninit();
   }
 
@@ -494,9 +493,7 @@ void GameApp::run_unload() {
     Sound::uninit();
   }
 
-  if(m_Renderer != NULL) {
-    delete m_Renderer;
-  }
+  GameRenderer::instance()->destroy();
   
   if(m_sysMsg != NULL) {
     delete m_sysMsg;

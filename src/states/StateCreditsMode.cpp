@@ -39,9 +39,9 @@ StateCreditsMode::~StateCreditsMode()
 void StateCreditsMode::enter()
 {
   StateReplaying::enter();
-  m_pGame->getGameRenderer()->hideReplayHelp();
-  m_pGame->getGameRenderer()->setShowTimePanel(false);
-  m_pGame->getGameRenderer()->setShowMinimap(false);
+  GameRenderer::instance()->hideReplayHelp();
+  GameRenderer::instance()->setShowTimePanel(false);
+  GameRenderer::instance()->setShowMinimap(false);
   m_pGame->getMotoGame()->setInfos("");
   m_credits->init(m_pGame, m_replayBiker->getFinishTime(), 4, 4, std::string(GAMETEXT_CREDITS).c_str());
 }

@@ -63,10 +63,10 @@ void StatePreplaying::enter()
 
   StateScene::enter();
 
-  m_pGame->getGameRenderer()->setShowEngineCounter(false);
-  m_pGame->getGameRenderer()->setShowMinimap(false);
-  m_pGame->getGameRenderer()->setShowTimePanel(false);
-  m_pGame->getGameRenderer()->hideReplayHelp();
+  GameRenderer::instance()->setShowEngineCounter(false);
+  GameRenderer::instance()->setShowMinimap(false);
+  GameRenderer::instance()->setShowTimePanel(false);
+  GameRenderer::instance()->hideReplayHelp();
 
   pWorld->setDeathAnim(XMSession::instance()->enableDeadAnimation());
   pWorld->setShowGhostTimeDiff(XMSession::instance()->showGhostTimeDifference());
@@ -362,7 +362,7 @@ void StatePreplaying::secondInitPhase()
   }
 
   /* Prepare level */
-  m_pGame->getGameRenderer()->prepareForNewLevel();
+  GameRenderer::instance()->prepareForNewLevel();
 
   /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
   pWorld->setAutoZoomCamera();
