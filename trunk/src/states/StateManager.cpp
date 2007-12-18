@@ -41,9 +41,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define MENU_SHADING_TIME 0.3
 #define MENU_SHADING_VALUE 150
 
-StateManager::StateManager(GameApp* pGame)
+StateManager::StateManager()
 {
-  m_pGame = pGame;
+  m_pGame = NULL;
 
   m_currentRenderFps = 0;
   m_currentUpdateFps = 0;
@@ -61,6 +61,11 @@ StateManager::StateManager(GameApp* pGame)
   m_curRenderFps  = 50;
 
   m_cursor = NULL;
+}
+
+void StateManager::init(GameApp* pGame)
+{
+  m_pGame = pGame;
 }
 
 StateManager::~StateManager()
@@ -191,12 +196,12 @@ void StateManager::render()
     }
 
     // FPS
-    if(m_pGame->getSession()->fps()) {
+    if(XMSession::instance()->fps()) {
       drawFps();
     }
 
     // STACK
-    if(m_pGame->getSession()->debug()) {
+    if(XMSession::instance()->debug()) {
       drawStack();
     }
 
@@ -270,13 +275,13 @@ void StateManager::drawCursor() {
 
   if(m_cursor == NULL) {
     /* load cursor */
-    pSprite = m_pGame->getTheme()->getSprite(SPRITE_TYPE_UI, "Cursor");
+    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "Cursor");
     if(pSprite != NULL) {
       m_cursor = pSprite->getTexture(false, true, FM_LINEAR);
     }
   }
 
-  if(m_cursor != NULL && m_pGame->getSession()->ugly() == false) {
+  if(m_cursor != NULL && XMSession::instance()->ugly() == false) {
     int nMX,nMY;
     GameApp::getMousePos(&nMX, &nMY);      
     m_pGame->getDrawLib()->drawImage(Vector2f(nMX-2,nMY-2), Vector2f(nMX+30,nMY+30), m_cursor);
@@ -488,7 +493,7 @@ void GameState::enter() {
 
 bool GameState::render() {
   // shade
-  if(m_pGame->getSession()->ugly() == false && m_doShade) {
+  if(XMSession::instance()->ugly() == false && m_doShade) {
     float v_currentTime = GameApp::getXMTime();
     int   v_nShade;
     
@@ -546,19 +551,19 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   }
 
   if(nKey == SDLK_F8) {
-    m_pGame->enableWWW(m_pGame->getSession()->www() == false);
-    m_pGame->getStateManager()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
+    m_pGame->enableWWW(XMSession::instance()->www() == false);
+    StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
     return;        
   }
 
   if(nKey == SDLK_F7) {
-    m_pGame->enableFps(m_pGame->getSession()->fps() == false);
+    m_pGame->enableFps(XMSession::instance()->fps() == false);
     return;        
   }
 
   if(nKey == SDLK_F9) {
-    m_pGame->switchUglyMode(m_pGame->getSession()->ugly() == false);
-    if(m_pGame->getSession()->ugly()) {
+    m_pGame->switchUglyMode(XMSession::instance()->ugly() == false);
+    if(XMSession::instance()->ugly()) {
       m_pGame->getSysMessage()->displayText(SYS_MSG_UGLY_MODE_ENABLED);
     } else {
       m_pGame->getSysMessage()->displayText(SYS_MSG_UGLY_MODE_DISABLED);
@@ -568,13 +573,13 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
 
   if(nKey == SDLK_RETURN && (mod & KMOD_ALT) != 0) {
     m_pGame->getDrawLib()->toogleFullscreen();
-    m_pGame->getSession()->setWindowed(m_pGame->getSession()->windowed() == false);
+    XMSession::instance()->setWindowed(XMSession::instance()->windowed() == false);
     return;
   }
 
   if(nKey == SDLK_F10) {
-    m_pGame->switchTestThemeMode(m_pGame->getSession()->testTheme() == false);
-    if(m_pGame->getSession()->testTheme()) {
+    m_pGame->switchTestThemeMode(XMSession::instance()->testTheme() == false);
+    if(XMSession::instance()->testTheme()) {
       m_pGame->getSysMessage()->displayText(SYS_MSG_THEME_MODE_ENABLED);
     } else {
       m_pGame->getSysMessage()->displayText(SYS_MSG_THEME_MODE_DISABLED);
@@ -583,8 +588,8 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   }
 
   if(nKey == SDLK_F11) {
-    m_pGame->switchUglyOverMode(m_pGame->getSession()->uglyOver() == false);
-    if(m_pGame->getSession()->uglyOver()) {
+    m_pGame->switchUglyOverMode(XMSession::instance()->uglyOver() == false);
+    if(XMSession::instance()->uglyOver()) {
       m_pGame->getSysMessage()->displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
     } else {
       m_pGame->getSysMessage()->displayText(SYS_MSG_UGLY_OVER_MODE_DISABLED);
@@ -594,27 +599,27 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
 
   /* activate/desactivate interpolation */
   if(nKey == SDLK_i && (mod & KMOD_CTRL) != 0) {
-    m_pGame->getSession()->setEnableReplayInterpolation(!m_pGame->getSession()->enableReplayInterpolation());
-    if(m_pGame->getSession()->enableReplayInterpolation()) {
+    XMSession::instance()->setEnableReplayInterpolation(!XMSession::instance()->enableReplayInterpolation());
+    if(XMSession::instance()->enableReplayInterpolation()) {
       m_pGame->getSysMessage()->displayText(SYS_MSG_INTERPOLATION_ENABLED);
     } else {
       m_pGame->getSysMessage()->displayText(SYS_MSG_INTERPOLATION_DISABLED);
     }
 
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Players().size(); i++) {
-      m_pGame->getMotoGame()->Players()[i]->setInterpolation(m_pGame->getSession()->enableReplayInterpolation());
+      m_pGame->getMotoGame()->Players()[i]->setInterpolation(XMSession::instance()->enableReplayInterpolation());
     }
 
     return;
   }
 
   if(nKey == SDLK_m && (mod & KMOD_CTRL) != 0) {
-    m_pGame->getSession()->setMirrorMode(m_pGame->getSession()->mirrorMode() == false);
+    XMSession::instance()->setMirrorMode(XMSession::instance()->mirrorMode() == false);
 
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
-      m_pGame->getMotoGame()->Cameras()[i]->setMirrored(m_pGame->getSession()->mirrorMode());
+      m_pGame->getMotoGame()->Cameras()[i]->setMirrored(XMSession::instance()->mirrorMode());
     }
-    m_pGame->getInputHandler()->setMirrored(m_pGame->getSession()->mirrorMode());
+    m_pGame->getInputHandler()->setMirrored(XMSession::instance()->mirrorMode());
   }
 
 }

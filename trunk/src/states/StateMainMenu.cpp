@@ -64,25 +64,25 @@ StateMainMenu::StateMainMenu(GameApp* pGame,
 
   /* Load title screen textures */
   m_pTitleBL = NULL;
-  pSprite = pGame->getTheme()->getSprite(SPRITE_TYPE_UI, "TitleBL");
+  pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "TitleBL");
   if(pSprite != NULL) {
     m_pTitleBL = pSprite->getTexture(false, true, FM_LINEAR);
   }
 
   m_pTitleBR = NULL;
-  pSprite = pGame->getTheme()->getSprite(SPRITE_TYPE_UI, "TitleBR");
+  pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "TitleBR");
   if(pSprite != NULL) {
     m_pTitleBR = pSprite->getTexture(false, true, FM_LINEAR);
   }
 
   m_pTitleTL = NULL;
-  pSprite = pGame->getTheme()->getSprite(SPRITE_TYPE_UI, "TitleTL");
+  pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "TitleTL");
   if(pSprite != NULL) {
     m_pTitleTL = pSprite->getTexture(false, true, FM_LINEAR);
   }
 
   m_pTitleTR = NULL;
-  pSprite = pGame->getTheme()->getSprite(SPRITE_TYPE_UI, "TitleTR");
+  pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "TitleTR");
   if(pSprite != NULL) {
     m_pTitleTR = pSprite->getTexture(false, true, FM_LINEAR);
   }
@@ -125,7 +125,7 @@ void StateMainMenu::enter()
 
   StateMenu::enter();
 
-  m_pGame->getStateManager()->pushState(new StateCheckWww(m_pGame));
+  StateManager::instance()->pushState(new StateCheckWww(m_pGame));
 }
 
 void StateMainMenu::leave()
@@ -148,10 +148,10 @@ void StateMainMenu::enterAfterPop()
   }
 
   if(m_require_updateLevelsList) {
-    m_pGame->getLevelsManager()->makePacks(m_pGame->getDb(),
-					   m_pGame->getSession()->profile(),
-					   m_pGame->getSession()->idRoom(),
-					   m_pGame->getSession()->debug());
+    LevelsManager::instance()->makePacks(m_pGame->getDb(),
+					   XMSession::instance()->profile(),
+					   XMSession::instance()->idRoom(),
+					   XMSession::instance()->debug());
     updateLevelsPacksList();
     updateLevelsLists();
     m_require_updateLevelsList = false;
@@ -198,10 +198,10 @@ void StateMainMenu::checkEventsMainWindow() {
   if(v_quickstart->hasChanged()) {
     v_quickstart->setHasChanged(false);
 
-    m_pGame->getSession()->setQuickStartQualityMIN(v_quickstart->getQualityMIN());
-    m_pGame->getSession()->setQuickStartQualityMAX(v_quickstart->getQualityMAX());
-    m_pGame->getSession()->setQuickStartDifficultyMIN(v_quickstart->getDifficultyMIN());
-    m_pGame->getSession()->setQuickStartDifficultyMAX(v_quickstart->getDifficultyMAX());
+    XMSession::instance()->setQuickStartQualityMIN(v_quickstart->getQualityMIN());
+    XMSession::instance()->setQuickStartQualityMAX(v_quickstart->getQualityMAX());
+    XMSession::instance()->setQuickStartDifficultyMIN(v_quickstart->getDifficultyMIN());
+    XMSession::instance()->setQuickStartDifficultyMAX(v_quickstart->getDifficultyMAX());
   }
 
   if(v_quickstart->isClicked()) {
@@ -221,7 +221,7 @@ void StateMainMenu::checkEventsMainWindow() {
     } catch(Exception &e) {
       v_id_level = "tut1";
     }
-    m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, v_id_level, false));
+    StateManager::instance()->pushState(new StatePreplaying(m_pGame, v_id_level, false));
   }
 
   // quit
@@ -230,14 +230,14 @@ void StateMainMenu::checkEventsMainWindow() {
     v_button->setClicked(false);
     StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
     v_msgboxState->setId("QUIT");
-    m_pGame->getStateManager()->pushState(v_msgboxState);
+    StateManager::instance()->pushState(v_msgboxState);
   }
 
   // help
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:HELP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getStateManager()->pushState(new StateHelp(m_pGame));
+    StateManager::instance()->pushState(new StateHelp(m_pGame));
   }
 
   // levels
@@ -284,7 +284,7 @@ void StateMainMenu::checkEventsMainWindow() {
     v_button->setClicked(false);
 
     m_pGame->getInputHandler()->setDefaultConfig();
-    m_pGame->getSession()->setToDefault();
+    XMSession::instance()->setToDefault();
     updateOptions();
   }
 
@@ -292,7 +292,7 @@ void StateMainMenu::checkEventsMainWindow() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:CHANGEPLAYERBUTTON"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getStateManager()->pushState(new StateEditProfile(m_pGame, this));
+    StateManager::instance()->pushState(new StateEditProfile(m_pGame, this));
   }
 
   // new levels ?
@@ -310,14 +310,14 @@ void StateMainMenu::checkEventsMainWindow() {
     v_windowOptions->showWindow(false);
     v_tabView->selectChildrenById("NEWLEVELS_TAB");
 
-    m_pGame->getStateManager()->pushState(new StateUpgradeLevels(m_pGame));
+    StateManager::instance()->pushState(new StateUpgradeLevels(m_pGame));
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:INFO_FRAME:BESTPLAYER_VIEW"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-    m_pGame->getStateManager()->pushState(new StateDownloadGhost(m_pGame, getInfoFrameLevelId(), true));
+    StateManager::instance()->pushState(new StateDownloadGhost(m_pGame, getInfoFrameLevelId(), true));
   }
 }
 
@@ -329,7 +329,7 @@ void StateMainMenu::checkEventsLevelsMultiTab() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-    m_pGame->getSession()->setMultiStopWhenOneFinishes(v_button->getChecked());
+    XMSession::instance()->setMultiStopWhenOneFinishes(v_button->getChecked());
   }
 
   // multi players
@@ -340,7 +340,7 @@ void StateMainMenu::checkEventsLevelsMultiTab() {
     if(v_button->isClicked()) {
       v_button->setClicked(false);
       if(v_button->getChecked()) {
-	m_pGame->getSession()->setMultiNbPlayers(i+1);
+	XMSession::instance()->setMultiNbPlayers(i+1);
       }
     }
   }
@@ -360,7 +360,7 @@ void StateMainMenu::checkEventsLevelsPackTab()
 
     LevelsPack* nSelectedPack = v_packTree->getSelectedPack();
     if(nSelectedPack != NULL){
-      m_pGame->getStateManager()->pushState(new StateLevelPackViewer(m_pGame, nSelectedPack));
+      StateManager::instance()->pushState(new StateLevelPackViewer(m_pGame, nSelectedPack));
     }
   }
 }
@@ -380,7 +380,7 @@ void StateMainMenu::checkEventsLevelsFavoriteTab() {
 
     if(v_id_level != "") {
       m_pGame->setCurrentPlayingList(v_list);
-      m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, v_id_level, false));
+      StateManager::instance()->pushState(new StatePreplaying(m_pGame, v_id_level, false));
     }
   }
 
@@ -393,7 +393,7 @@ void StateMainMenu::checkEventsLevelsFavoriteTab() {
     v_id_level = v_list->getSelectedLevel();
 
     if(v_id_level != "") {
-      m_pGame->getStateManager()->pushState(new StateLevelInfoViewer(m_pGame, v_id_level));
+      StateManager::instance()->pushState(new StateLevelInfoViewer(m_pGame, v_id_level));
     }
   }
 
@@ -406,9 +406,9 @@ void StateMainMenu::checkEventsLevelsFavoriteTab() {
     v_id_level = v_list->getSelectedLevel();
 
     if(v_id_level != "") {
-      m_pGame->getLevelsManager()->delFromFavorite(m_pGame->getDb(), m_pGame->getSession()->profile(), v_id_level);
+      LevelsManager::instance()->delFromFavorite(m_pGame->getDb(), XMSession::instance()->profile(), v_id_level);
       updateFavoriteLevelsList();
-      m_pGame->getStateManager()->sendAsynchronousMessage("FAVORITES_UPDATED");
+      StateManager::instance()->sendAsynchronousMessage("FAVORITES_UPDATED");
     }
   }
 }
@@ -428,7 +428,7 @@ void StateMainMenu::checkEventsLevelsNewTab() {
 
     if(v_id_level != "") {
       m_pGame->setCurrentPlayingList(v_list);
-      m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, v_id_level, false));
+      StateManager::instance()->pushState(new StatePreplaying(m_pGame, v_id_level, false));
     }
   }
 
@@ -441,7 +441,7 @@ void StateMainMenu::checkEventsLevelsNewTab() {
     v_id_level = v_list->getSelectedLevel();
 
     if(v_id_level != "") {
-      m_pGame->getStateManager()->pushState(new StateLevelInfoViewer(m_pGame, v_id_level));
+      StateManager::instance()->pushState(new StateLevelInfoViewer(m_pGame, v_id_level));
     }
   }
 
@@ -450,7 +450,7 @@ void StateMainMenu::checkEventsLevelsNewTab() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-    m_pGame->getStateManager()->pushState(new StateUpgradeLevels(m_pGame));
+    StateManager::instance()->pushState(new StateUpgradeLevels(m_pGame));
   }
 
 }
@@ -471,7 +471,7 @@ void StateMainMenu::keyDown(int nKey, SDLMod mod,int nChar)
   switch(nKey) {
 
   case SDLK_F1:
-    m_pGame->getStateManager()->pushState(new StateHelp(m_pGame));
+    StateManager::instance()->pushState(new StateHelp(m_pGame));
     break;
 
   case SDLK_ESCAPE:{
@@ -579,10 +579,10 @@ void StateMainMenu::createGUIIfNeeded(GameApp* pGame) {
 					m_sGUI->getPosition().nWidth  -180 -60,
 					m_sGUI->getPosition().nHeight -180 -30,
 					GAMETEXT_QUICKSTART, 180, 180,
-					pGame->getSession()->quickStartQualityMIN(),
-					pGame->getSession()->quickStartDifficultyMIN(),
-					pGame->getSession()->quickStartQualityMAX(),
-					pGame->getSession()->quickStartDifficultyMAX()
+					XMSession::instance()->quickStartQualityMIN(),
+					XMSession::instance()->quickStartDifficultyMIN(),
+					XMSession::instance()->quickStartQualityMAX(),
+					XMSession::instance()->quickStartDifficultyMAX()
 					);
   v_quickStart->setFont(drawlib->getFontSmall());
   v_quickStart->setID("QUICKSTART");
@@ -637,8 +637,8 @@ void StateMainMenu::updateProfile() {
   UIStatic* v_playerTag = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:PLAYERTAG"));
   std::string v_caption;
 
-  if(m_pGame->getSession()->profile() != "") {
-    v_caption = std::string(GAMETEXT_PLAYER) + ": " + m_pGame->getSession()->profile() + "@" + m_pGame->getWebRoomName();
+  if(XMSession::instance()->profile() != "") {
+    v_caption = std::string(GAMETEXT_PLAYER) + ": " + XMSession::instance()->profile() + "@" + m_pGame->getWebRoomName();
   }
 
   v_playerTag->setCaption(v_caption);
@@ -698,7 +698,7 @@ void StateMainMenu::updateStats() {
 				      "SUM(b.nbRestarted), count(b.id_level) "
 				      "FROM stats_profiles AS a INNER JOIN stats_profiles_levels AS b "
 				      "ON a.id_profile=b.id_profile "
-				      "WHERE a.id_profile=\"" + xmDatabase::protectString(m_pGame->getSession()->profile()) + "\" "
+				      "WHERE a.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
 				      "GROUP BY a.id_profile;",
 				      nrow);
   
@@ -749,7 +749,7 @@ void StateMainMenu::updateStats() {
   v_result = m_pGame->getDb()->readDB("SELECT a.name, b.nbPlayed, b.nbDied, "
 				      "b.nbCompleted, b.nbRestarted, b.playedTime "
 				      "FROM levels AS a INNER JOIN stats_profiles_levels AS b ON a.id_level=b.id_level "
-				      "WHERE id_profile=\"" + xmDatabase::protectString(m_pGame->getSession()->profile()) + "\" "
+				      "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
 				      "ORDER BY nbPlayed DESC LIMIT 10;",
 				      nrow);
   
@@ -1500,7 +1500,7 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
 }
 
 void StateMainMenu::drawBackground() {
-  if(m_pGame->getSession()->menuGraphics() != GFX_LOW && m_pGame->getSession()->ugly() == false) {
+  if(XMSession::instance()->menuGraphics() != GFX_LOW && XMSession::instance()->ugly() == false) {
     DrawLib* drawlib = m_pGame->getDrawLib();
     int w = drawlib->getDispWidth();
     int h = drawlib->getDispHeight();
@@ -1532,7 +1532,7 @@ UILevelList* StateMainMenu::buildQuickStartList() {
 							    v_quickStart->getDifficultyMIN(),
 							    v_quickStart->getQualityMAX(),
 							    v_quickStart->getDifficultyMAX(),
-							    m_pGame->getSession()->profile(), m_pGame->getSession()->idRoom()));
+							    XMSession::instance()->profile(), XMSession::instance()->idRoom()));
   return v_list;
 }
 
@@ -1685,10 +1685,10 @@ void StateMainMenu::executeOneCommand(std::string cmd)
     updateProfile();
 
     // update packs
-    m_pGame->getLevelsManager()->makePacks(m_pGame->getDb(),
-					   m_pGame->getSession()->profile(),
-					   m_pGame->getSession()->idRoom(),
-					   m_pGame->getSession()->debug());
+    LevelsManager::instance()->makePacks(m_pGame->getDb(),
+					   XMSession::instance()->profile(),
+					   XMSession::instance()->idRoom(),
+					   XMSession::instance()->debug());
 
     // update lists and stats
     updateLevelsPacksList();
@@ -1714,7 +1714,7 @@ void StateMainMenu::executeOneCommand(std::string cmd)
 	  Logger::Log(e.getMsg().c_str());
 	}
 	updateReplaysList();
-	m_pGame->getStateManager()->sendAsynchronousMessage("REPLAYS_UPDATED");
+	StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
       }
     }
   }
@@ -1752,9 +1752,9 @@ void StateMainMenu::updateLevelsLists() {
 }
 
 void StateMainMenu::createLevelLists(UILevelList *i_list, const std::string& i_packageName) {
-  LevelsPack *v_levelsPack = &(m_pGame->getLevelsManager()->LevelsPackByName(i_packageName));
-  createLevelListsSql(i_list, v_levelsPack->getLevelsWithHighscoresQuery(m_pGame->getSession()->profile(),
-									 m_pGame->getSession()->idRoom()));
+  LevelsPack *v_levelsPack = &(LevelsManager::instance()->LevelsPackByName(i_packageName));
+  createLevelListsSql(i_list, v_levelsPack->getLevelsWithHighscoresQuery(XMSession::instance()->profile(),
+									 XMSession::instance()->idRoom()));
 }
 
 void StateMainMenu::updateFavoriteLevelsList() {
@@ -1773,13 +1773,13 @@ void StateMainMenu::updateLevelsPacksList() {
 
   /* get selected item */
   std::string v_selected_packName = pTree->getSelectedEntry();
-  LevelsManager* v_lm = m_pGame->getLevelsManager();
+  LevelsManager* v_lm = LevelsManager::instance();
 
   pTree->clear();
     
   for(int i=0; i<v_lm->LevelsPacks().size(); i++) {
     /* the unpackaged pack exists only in debug mode */
-    if(v_lm->LevelsPacks()[i]->Name() != "" || m_pGame->getSession()->debug()) {
+    if(v_lm->LevelsPacks()[i]->Name() != "" || XMSession::instance()->debug()) {
       if(v_lm->LevelsPacks()[i]->Name() == "") {
 	v_lm->LevelsPacks()[i]->setName(GAMETEXT_UNPACKED_LEVELS_PACK);
       }
@@ -1787,7 +1787,7 @@ void StateMainMenu::updateLevelsPacksList() {
       pTree->addPack(v_lm->LevelsPacks()[i],
 		     v_lm->LevelsPacks()[i]->Group(),
 		     v_lm->LevelsPacks()[i]->getNumberOfFinishedLevels(m_pGame->getDb(),
-								       m_pGame->getSession()->profile()),
+								       XMSession::instance()->profile()),
 		     v_lm->LevelsPacks()[i]->getNumberOfLevels(m_pGame->getDb())
 		     );
       
@@ -1823,7 +1823,7 @@ void StateMainMenu::updateReplaysList() {
   } else {
     v_sql = "SELECT a.name, a.id_profile, b.name FROM replays AS a "
       "INNER JOIN levels AS b ON a.id_level = b.id_level "
-      "WHERE a.id_profile=\"" + xmDatabase::protectString(m_pGame->getSession()->profile()) + "\";";
+      "WHERE a.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\";";
   }
 
   v_result = m_pGame->getDb()->readDB(v_sql, nrow);
@@ -1871,7 +1871,7 @@ void StateMainMenu::checkEventsReplays() {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
-	m_pGame->getStateManager()->pushState(new StateReplaying(m_pGame, pListEntry->Text[0]));	  
+	StateManager::instance()->pushState(new StateReplaying(m_pGame, pListEntry->Text[0]));	  
       }
     }
   }
@@ -1886,7 +1886,7 @@ void StateMainMenu::checkEventsReplays() {
       if(pListEntry != NULL) {
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
 	v_msgboxState->setId("REPLAYS_DELETE");
-	m_pGame->getStateManager()->pushState(v_msgboxState);	
+	StateManager::instance()->pushState(v_msgboxState);	
 	updateReplaysRights();
       }
     }
@@ -1909,7 +1909,7 @@ void StateMainMenu::checkEventsReplays() {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
 	std::string v_replayPath = FS::getUserDir() + "/Replays/" + pListEntry->Text[0] + ".rpl";
-	m_pGame->getStateManager()->pushState(new StateUploadHighscore(m_pGame, v_replayPath));	  
+	StateManager::instance()->pushState(new StateUploadHighscore(m_pGame, v_replayPath));	  
       }
     }
   }
@@ -1980,7 +1980,7 @@ void StateMainMenu::updateThemesList() {
   UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:THEMES_LIST"));
   createThemesList(v_list);
 
-  std::string v_themeName = m_pGame->getSession()->theme();
+  std::string v_themeName = XMSession::instance()->theme();
   int nTheme = 0;
   for(int i=0; i<v_list->getEntries().size(); i++) {
     if(v_list->getEntries()[i]->Text[0] == v_themeName) {
@@ -1994,11 +1994,11 @@ void StateMainMenu::updateThemesList() {
 void StateMainMenu::updateResolutionsList() {
   UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
   char cBuf[256];
-  sprintf(cBuf, "%d X %d", m_pGame->getSession()->resolutionWidth(), m_pGame->getSession()->resolutionHeight());
+  sprintf(cBuf, "%d X %d", XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight());
   int nMode = 0;
 
   v_list->clear();
-  std::vector<std::string>* modes = System::getDisplayModes(m_pGame->getSession()->windowed());
+  std::vector<std::string>* modes = System::getDisplayModes(XMSession::instance()->windowed());
   for(int i=0; i < modes->size(); i++) {
     v_list->addEntry((*modes)[i].c_str());
     if(std::string((*modes)[i]) == std::string(cBuf)) {
@@ -2095,7 +2095,7 @@ void StateMainMenu::updateRoomsList() {
 
   createRoomsList(v_list);
 
-  std::string v_id_room = m_pGame->getSession()->idRoom();
+  std::string v_id_room = XMSession::instance()->idRoom();
   if(v_id_room == "") {v_id_room = DEFAULT_WEBROOM_ID;}
   for(int i=0; i<v_list->getEntries().size(); i++) {
     if((*(std::string*)v_list->getEntries()[i]->pvUser) == v_id_room) {
@@ -2112,103 +2112,103 @@ void StateMainMenu::updateOptions() {
 
   // level tab (multi)
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES"));
-  v_button->setChecked(m_pGame->getSession()->MultiStopWhenOneFinishes());
+  v_button->setChecked(XMSession::instance()->MultiStopWhenOneFinishes());
 
   // options/general
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:SHOWMINIMAP"));
-  v_button->setChecked(m_pGame->getSession()->showMinimap());
+  v_button->setChecked(XMSession::instance()->showMinimap());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:SHOWENGINECOUNTER"));
-  v_button->setChecked(m_pGame->getSession()->showEngineCounter());
+  v_button->setChecked(XMSession::instance()->showEngineCounter());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:INITZOOM"));
-  v_button->setChecked(m_pGame->getSession()->enableInitZoom());
+  v_button->setChecked(XMSession::instance()->enableInitZoom());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:DEATHANIM"));
-  v_button->setChecked(m_pGame->getSession()->enableDeadAnimation());
+  v_button->setChecked(XMSession::instance()->enableDeadAnimation());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:ENABLECONTEXTHELP"));
-  v_button->setChecked(m_pGame->getSession()->enableContextHelp());
+  v_button->setChecked(XMSession::instance()->enableContextHelp());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:AUTOSAVEREPLAYS"));
-  v_button->setChecked(m_pGame->getSession()->autosaveHighscoreReplays());
+  v_button->setChecked(XMSession::instance()->autosaveHighscoreReplays());
 
   // video
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:16BPP"));
-  v_button->setChecked(m_pGame->getSession()->bpp() == 16);
+  v_button->setChecked(XMSession::instance()->bpp() == 16);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:32BPP"));
-  v_button->setChecked(m_pGame->getSession()->bpp() == 32); 
+  v_button->setChecked(XMSession::instance()->bpp() == 32); 
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:WINDOWED"));
-  v_button->setChecked(m_pGame->getSession()->windowed());
+  v_button->setChecked(XMSession::instance()->windowed());
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENULOW"));
-  v_button->setChecked(m_pGame->getSession()->menuGraphics() == GFX_LOW);
+  v_button->setChecked(XMSession::instance()->menuGraphics() == GFX_LOW);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENUMEDIUM"));
-  v_button->setChecked(m_pGame->getSession()->menuGraphics() == GFX_MEDIUM);
+  v_button->setChecked(XMSession::instance()->menuGraphics() == GFX_MEDIUM);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENUHIGH"));
-  v_button->setChecked(m_pGame->getSession()->menuGraphics() == GFX_HIGH);
+  v_button->setChecked(XMSession::instance()->menuGraphics() == GFX_HIGH);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMELOW"));
-  v_button->setChecked(m_pGame->getSession()->gameGraphics() == GFX_LOW);
+  v_button->setChecked(XMSession::instance()->gameGraphics() == GFX_LOW);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMEMEDIUM"));
-  v_button->setChecked(m_pGame->getSession()->gameGraphics() == GFX_MEDIUM);
+  v_button->setChecked(XMSession::instance()->gameGraphics() == GFX_MEDIUM);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMEHIGH"));
-  v_button->setChecked(m_pGame->getSession()->gameGraphics() == GFX_HIGH);
+  v_button->setChecked(XMSession::instance()->gameGraphics() == GFX_HIGH);
 
   // audio
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_AUDIO"));
-  v_button->setChecked(m_pGame->getSession()->enableAudio());
+  v_button->setChecked(XMSession::instance()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE11KHZ"));
-  v_button->setChecked(m_pGame->getSession()->audioSampleRate() == 11025);
+  v_button->setChecked(XMSession::instance()->audioSampleRate() == 11025);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE22KHZ"));
-  v_button->setChecked(m_pGame->getSession()->audioSampleRate() == 22050);
+  v_button->setChecked(XMSession::instance()->audioSampleRate() == 22050);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE44KHZ"));
-  v_button->setChecked(m_pGame->getSession()->audioSampleRate() == 44100);
+  v_button->setChecked(XMSession::instance()->audioSampleRate() == 44100);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:8BITS"));
-  v_button->setChecked(m_pGame->getSession()->audioSampleBits() == 8);
+  v_button->setChecked(XMSession::instance()->audioSampleBits() == 8);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:16BITS"));
-  v_button->setChecked(m_pGame->getSession()->audioSampleBits() == 16);
+  v_button->setChecked(XMSession::instance()->audioSampleBits() == 16);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:MONO"));
-  v_button->setChecked(m_pGame->getSession()->audioChannels() == 1);
+  v_button->setChecked(XMSession::instance()->audioChannels() == 1);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:STEREO"));
-  v_button->setChecked(m_pGame->getSession()->audioChannels() == 2);
+  v_button->setChecked(XMSession::instance()->audioChannels() == 2);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND"));
-  v_button->setChecked(m_pGame->getSession()->enableEngineSound());
+  v_button->setChecked(XMSession::instance()->enableEngineSound());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
-  v_button->setChecked(m_pGame->getSession()->enableMenuMusic());
+  v_button->setChecked(XMSession::instance()->enableMenuMusic());
 
   // controls
 
   // www
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLEWEB"));
-  v_button->setChecked(m_pGame->getSession()->www());
+  v_button->setChecked(XMSession::instance()->www());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP"));
-  v_button->setChecked(m_pGame->getSession()->checkNewLevelsAtStartup());
+  v_button->setChecked(XMSession::instance()->checkNewLevelsAtStartup());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP"));
-  v_button->setChecked(m_pGame->getSession()->checkNewHighscoresAtStartup());
+  v_button->setChecked(XMSession::instance()->checkNewHighscoresAtStartup());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMEWORLDRECORD"));
-  v_button->setChecked(m_pGame->getSession()->showHighscoreInGame());
+  v_button->setChecked(XMSession::instance()->showHighscoreInGame());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:USECRAPPYINFORMATION"));
-  v_button->setChecked(m_pGame->getSession()->useCrappyPack());
+  v_button->setChecked(XMSession::instance()->useCrappyPack());
 
   v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_LOGIN"));
-  v_edit->setCaption(m_pGame->getSession()->uploadLogin());
+  v_edit->setCaption(XMSession::instance()->uploadLogin());
   v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_PASSWORD"));
-  v_edit->setCaption(m_pGame->getSession()->uploadPassword());
+  v_edit->setCaption(XMSession::instance()->uploadPassword());
 
   // ghosts
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:ENABLE_GHOSTS"));
-  v_button->setChecked(m_pGame->getSession()->enableGhosts());
+  v_button->setChecked(XMSession::instance()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_MYBEST"));
-  v_button->setChecked(m_pGame->getSession()->ghostStrategy_MYBEST());
+  v_button->setChecked(XMSession::instance()->ghostStrategy_MYBEST());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_THEBEST"));
-  v_button->setChecked(m_pGame->getSession()->ghostStrategy_THEBEST());
+  v_button->setChecked(XMSession::instance()->ghostStrategy_THEBEST());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFROOM"));
-  v_button->setChecked(m_pGame->getSession()->ghostStrategy_BESTOFROOM());
+  v_button->setChecked(XMSession::instance()->ghostStrategy_BESTOFROOM());
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOST_TIMEDIFFERENCE"));
-  v_button->setChecked(m_pGame->getSession()->showGhostTimeDifference());
+  v_button->setChecked(XMSession::instance()->showGhostTimeDifference());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_INFOS"));
-  v_button->setChecked(m_pGame->getSession()->showGhostsInfos());
+  v_button->setChecked(XMSession::instance()->showGhostsInfos());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:HIDEGHOSTS"));
-  v_button->setChecked(m_pGame->getSession()->hideGhosts());
+  v_button->setChecked(XMSession::instance()->hideGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:MOTION_BLUR_GHOST"));
-  v_button->setChecked(m_pGame->getSession()->ghostMotionBlur());
+  v_button->setChecked(XMSession::instance()->ghostMotionBlur());
 
   // update rights on the options
   updateAudioOptions();
@@ -2232,37 +2232,37 @@ void StateMainMenu::checkEventsOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:SHOWMINIMAP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setShowMinimap(v_button->getChecked()); 
+    XMSession::instance()->setShowMinimap(v_button->getChecked()); 
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:SHOWENGINECOUNTER"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setShowEngineCounter(v_button->getChecked()); 
+    XMSession::instance()->setShowEngineCounter(v_button->getChecked()); 
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:INITZOOM"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setEnableInitZoom(v_button->getChecked()); 
+    XMSession::instance()->setEnableInitZoom(v_button->getChecked()); 
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:DEATHANIM"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setEnableDeadAnimation(v_button->getChecked()); 
+    XMSession::instance()->setEnableDeadAnimation(v_button->getChecked()); 
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:ENABLECONTEXTHELP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setEnableContextHelp(v_button->getChecked()); 
+    XMSession::instance()->setEnableContextHelp(v_button->getChecked()); 
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:AUTOSAVEREPLAYS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setAutosaveHighscoreReplays(v_button->getChecked()); 
+    XMSession::instance()->setAutosaveHighscoreReplays(v_button->getChecked()); 
   }
 
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:THEMES_LIST"));
@@ -2270,8 +2270,8 @@ void StateMainMenu::checkEventsOptions() {
     v_list->setClicked(false);
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
-      m_pGame->getSession()->setTheme(pEntry->Text[0]);
-      if(m_pGame->getTheme()->Name() != m_pGame->getSession()->theme()) {
+      XMSession::instance()->setTheme(pEntry->Text[0]);
+      if(Theme::instance()->Name() != XMSession::instance()->theme()) {
 	m_pGame->reloadTheme();
       }
     }
@@ -2280,7 +2280,7 @@ void StateMainMenu::checkEventsOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:UPDATE_THEMES_LIST"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getStateManager()->pushState(new StateUpdateThemesList(m_pGame));
+    StateManager::instance()->pushState(new StateUpdateThemesList(m_pGame));
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:GET_SELECTED_THEME"));
@@ -2289,7 +2289,7 @@ void StateMainMenu::checkEventsOptions() {
 
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
-      m_pGame->getStateManager()->pushState(new StateUpdateTheme(m_pGame, pEntry->Text[0]));
+      StateManager::instance()->pushState(new StateUpdateTheme(m_pGame, pEntry->Text[0]));
     }
   }
 
@@ -2297,12 +2297,12 @@ void StateMainMenu::checkEventsOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:16BPP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setBpp(16); 
+    XMSession::instance()->setBpp(16); 
   }
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:32BPP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setBpp(32); 
+    XMSession::instance()->setBpp(32); 
   }
 
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
@@ -2313,47 +2313,47 @@ void StateMainMenu::checkEventsOptions() {
       int nW,nH;
 
       sscanf(pEntry->Text[0].c_str(),"%d X %d", &nW, &nH);
-      m_pGame->getSession()->setResolutionWidth(nW);
-      m_pGame->getSession()->setResolutionHeight(nH);
+      XMSession::instance()->setResolutionWidth(nW);
+      XMSession::instance()->setResolutionHeight(nH);
     }
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:WINDOWED"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setWindowed(v_button->getChecked());
+    XMSession::instance()->setWindowed(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENULOW"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setMenuGraphics(GFX_LOW);
+    XMSession::instance()->setMenuGraphics(GFX_LOW);
   }
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENUMEDIUM"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setMenuGraphics(GFX_MEDIUM);
+    XMSession::instance()->setMenuGraphics(GFX_MEDIUM);
   }
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENUHIGH"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setMenuGraphics(GFX_HIGH);
+    XMSession::instance()->setMenuGraphics(GFX_HIGH);
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMELOW"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setGameGraphics(GFX_LOW);
+    XMSession::instance()->setGameGraphics(GFX_LOW);
   }
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMEMEDIUM"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setGameGraphics(GFX_MEDIUM);
+    XMSession::instance()->setGameGraphics(GFX_MEDIUM);
   }
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMEHIGH"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setGameGraphics(GFX_HIGH);
+    XMSession::instance()->setGameGraphics(GFX_HIGH);
   }
 
   // sound
@@ -2361,63 +2361,63 @@ void StateMainMenu::checkEventsOptions() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-    bool v_before = m_pGame->getSession()->enableAudio();
-    m_pGame->getSession()->setEnableAudio(v_button->getChecked());
-    Sound::setActiv(m_pGame->getSession()->enableAudio());
+    bool v_before = XMSession::instance()->enableAudio();
+    XMSession::instance()->setEnableAudio(v_button->getChecked());
+    Sound::setActiv(XMSession::instance()->enableAudio());
     updateAudioOptions();
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE11KHZ"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setAudioSampleRate(11025);
+    XMSession::instance()->setAudioSampleRate(11025);
   }
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE22KHZ"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setAudioSampleRate(22050);
+    XMSession::instance()->setAudioSampleRate(22050);
   }
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE44KHZ"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setAudioSampleRate(44100);
+    XMSession::instance()->setAudioSampleRate(44100);
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:8BITS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setAudioSampleBits(8);
+    XMSession::instance()->setAudioSampleBits(8);
   }
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:16BITS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setAudioSampleBits(16);
+    XMSession::instance()->setAudioSampleBits(16);
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:MONO"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setAudioChannels(1);
+    XMSession::instance()->setAudioChannels(1);
   }
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:STEREO"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setAudioChannels(2);
+    XMSession::instance()->setAudioChannels(2);
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setEnableEngineSound(v_button->getChecked());
+    XMSession::instance()->setEnableEngineSound(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-    bool v_before = m_pGame->getSession()->enableMenuMusic();
-    m_pGame->getSession()->setEnableMenuMusic(v_button->getChecked());
-    Sound::setActiv(m_pGame->getSession()->enableAudio());
+    bool v_before = XMSession::instance()->enableMenuMusic();
+    XMSession::instance()->setEnableMenuMusic(v_button->getChecked());
+    Sound::setActiv(XMSession::instance()->enableAudio());
   }
 
   // controls
@@ -2430,7 +2430,7 @@ void StateMainMenu::checkEventsOptions() {
 
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       sprintf(cBuf, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
-      m_pGame->getStateManager()->pushState(new StateRequestKey(m_pGame, cBuf, this));      
+      StateManager::instance()->pushState(new StateRequestKey(m_pGame, cBuf, this));      
     }
   }
 
@@ -2438,44 +2438,44 @@ void StateMainMenu::checkEventsOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:PROXYCONFIG"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getStateManager()->pushState(new StateEditWebConfig(m_pGame));
+    StateManager::instance()->pushState(new StateEditWebConfig(m_pGame));
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:UPDATEHIGHSCORES"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getStateManager()->pushState(new StateCheckWww(m_pGame, true));
+    StateManager::instance()->pushState(new StateCheckWww(m_pGame, true));
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLEWEB"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setWWW(v_button->getChecked());
+    XMSession::instance()->setWWW(v_button->getChecked());
     updateWWWOptions();
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setCheckNewLevelsAtStartup(v_button->getChecked());
+    XMSession::instance()->setCheckNewLevelsAtStartup(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setCheckNewHighscoresAtStartup(v_button->getChecked());
+    XMSession::instance()->setCheckNewHighscoresAtStartup(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMEWORLDRECORD"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setShowHighscoreInGame(v_button->getChecked());
+    XMSession::instance()->setShowHighscoreInGame(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:USECRAPPYINFORMATION"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setUseCrappyPack(v_button->getChecked());
+    XMSession::instance()->setUseCrappyPack(v_button->getChecked());
   }
 
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOMS_LIST"));
@@ -2483,7 +2483,7 @@ void StateMainMenu::checkEventsOptions() {
     v_list->setClicked(false);
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
-      m_pGame->getSession()->setIdRoom(*((std::string*)v_list->getEntries()[v_list->getSelected()]->pvUser));
+      XMSession::instance()->setIdRoom(*((std::string*)v_list->getEntries()[v_list->getSelected()]->pvUser));
       updateProfile();
     }
   }
@@ -2491,74 +2491,74 @@ void StateMainMenu::checkEventsOptions() {
   v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_LOGIN"));
   if(v_edit->hasChanged()) {
     v_edit->setHasChanged(false);
-    m_pGame->getSession()->setUploadLogin(v_edit->getCaption());
+    XMSession::instance()->setUploadLogin(v_edit->getCaption());
   }
 
   v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_PASSWORD"));
   if(v_edit->hasChanged()) {
     v_edit->setHasChanged(false);
-    m_pGame->getSession()->setUploadPassword(v_edit->getCaption());
+    XMSession::instance()->setUploadPassword(v_edit->getCaption());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPDATE_ROOMS_LIST"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getStateManager()->pushState(new StateUpdateRoomsList(m_pGame));
+    StateManager::instance()->pushState(new StateUpdateRoomsList(m_pGame));
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPLOADHIGHSCOREALL_BUTTON"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getStateManager()->pushState(new StateUploadAllHighscores(m_pGame));
+    StateManager::instance()->pushState(new StateUploadAllHighscores(m_pGame));
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:ENABLE_GHOSTS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setEnableGhosts(v_button->getChecked());
+    XMSession::instance()->setEnableGhosts(v_button->getChecked());
     updateGhostsOptions();
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_MYBEST"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setGhostStrategy_MYBEST(v_button->getChecked());
+    XMSession::instance()->setGhostStrategy_MYBEST(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_THEBEST"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setGhostStrategy_THEBEST(v_button->getChecked());
+    XMSession::instance()->setGhostStrategy_THEBEST(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFROOM"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setGhostStrategy_BESTOFROOM(v_button->getChecked());
+    XMSession::instance()->setGhostStrategy_BESTOFROOM(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOST_TIMEDIFFERENCE"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setShowGhostTimeDifference(v_button->getChecked());
+    XMSession::instance()->setShowGhostTimeDifference(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_INFOS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setShowGhostsInfos(v_button->getChecked());
+    XMSession::instance()->setShowGhostsInfos(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:HIDEGHOSTS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setHideGhosts(v_button->getChecked());
+    XMSession::instance()->setHideGhosts(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:MOTION_BLUR_GHOST"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getSession()->setGhostMotionBlur(v_button->getChecked());
+    XMSession::instance()->setGhostMotionBlur(v_button->getChecked());
   }
 
 }
@@ -2567,67 +2567,67 @@ void StateMainMenu::updateAudioOptions() {
   UIButton* v_button;
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE11KHZ"));
-  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button->enableWindow(XMSession::instance()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE22KHZ"));
-  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button->enableWindow(XMSession::instance()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE44KHZ"));
-  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button->enableWindow(XMSession::instance()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:8BITS"));
-  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button->enableWindow(XMSession::instance()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:16BITS"));
-  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button->enableWindow(XMSession::instance()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:MONO"));
-  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button->enableWindow(XMSession::instance()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:STEREO"));
-  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button->enableWindow(XMSession::instance()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND"));
-  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button->enableWindow(XMSession::instance()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
-  v_button->enableWindow(m_pGame->getSession()->enableAudio());
+  v_button->enableWindow(XMSession::instance()->enableAudio());
 }
 
 void StateMainMenu::updateWWWOptions() {
   UIButton* v_button;
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLEWEB"));
-  v_button->setChecked(m_pGame->getSession()->www());
+  v_button->setChecked(XMSession::instance()->www());
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP"));
-  v_button->enableWindow(m_pGame->getSession()->www());
+  v_button->enableWindow(XMSession::instance()->www());
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP"));
-  v_button->enableWindow(m_pGame->getSession()->www());
+  v_button->enableWindow(XMSession::instance()->www());
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:PROXYCONFIG"));
-  v_button->enableWindow(m_pGame->getSession()->www());
+  v_button->enableWindow(XMSession::instance()->www());
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:UPDATEHIGHSCORES"));
-  v_button->enableWindow(m_pGame->getSession()->www());
+  v_button->enableWindow(XMSession::instance()->www());
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPDATE_ROOMS_LIST"));
-  v_button->enableWindow(m_pGame->getSession()->www());
+  v_button->enableWindow(XMSession::instance()->www());
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPLOADHIGHSCOREALL_BUTTON"));
-  v_button->enableWindow(m_pGame->getSession()->www());
+  v_button->enableWindow(XMSession::instance()->www());
 }
 
 void StateMainMenu::updateGhostsOptions() {
   UIButton* v_button;
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_MYBEST"));
-  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  v_button->enableWindow(XMSession::instance()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_THEBEST"));
-  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  v_button->enableWindow(XMSession::instance()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFROOM"));
-  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  v_button->enableWindow(XMSession::instance()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOST_TIMEDIFFERENCE"));
-  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  v_button->enableWindow(XMSession::instance()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_INFOS"));
-  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  v_button->enableWindow(XMSession::instance()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:HIDEGHOSTS"));
-  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  v_button->enableWindow(XMSession::instance()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:MOTION_BLUR_GHOST"));
-  v_button->enableWindow(m_pGame->getSession()->enableGhosts());
+  v_button->enableWindow(XMSession::instance()->enableGhosts());
   
   if(m_pGame->getDrawLib()->useShaders() == false) {
     v_button->enableWindow(false);
@@ -2644,10 +2644,10 @@ void StateMainMenu::updateNewLevels() {
 
 void StateMainMenu::updateLevelsPackInPackList(const std::string& v_levelPack) {
   UIPackTree *pTree = (UIPackTree *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:PACK_TAB:PACK_TREE");
-  LevelsPack *v_pack = &(m_pGame->getLevelsManager()->LevelsPackByName(v_levelPack));
+  LevelsPack *v_pack = &(LevelsManager::instance()->LevelsPackByName(v_levelPack));
   
   pTree->updatePack(v_pack,
-		    v_pack->getNumberOfFinishedLevels(m_pGame->getDb(), m_pGame->getSession()->profile()),
+		    v_pack->getNumberOfFinishedLevels(m_pGame->getDb(), XMSession::instance()->profile()),
 		    v_pack->getNumberOfLevels(m_pGame->getDb()));
 }
 
@@ -2691,14 +2691,14 @@ void StateMainMenu::updateReplaysRights() {
 
       rplInfos = Replay::getReplayInfos(v_replay);
       if(rplInfos != NULL) {
-	if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == m_pGame->getSession()->profile()) {
+	if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == XMSession::instance()->profile()) {
 	  char **v_result;
 	  unsigned int nrow;
 	  float v_finishTime;
 		
 	  v_result = m_pGame->getDb()->readDB("SELECT finishTime FROM webhighscores WHERE id_level=\"" + 
 					      xmDatabase::protectString(rplInfos->Level) + "\" AND id_room=" +
-					      m_pGame->getSession()->idRoom() + ";",
+					      XMSession::instance()->idRoom() + ";",
 					      nrow);
 	  if(nrow == 0) {
 	    v_button->enableWindow(true);

@@ -42,7 +42,7 @@ int UploadAllHighscoresThread::realThreadFunction()
   setThreadProgress(0);
 
   /* 1 is the main room ; don't allow full upload on it */
-  if(m_pGame->getSession()->idRoom() == "1") {
+  if(XMSession::instance()->idRoom() == "1") {
     return 0;
   }
 
@@ -50,7 +50,7 @@ int UploadAllHighscoresThread::realThreadFunction()
   try {
     setThreadCurrentOperation(GAMETEXT_DLHIGHSCORES);
     WebRoom *v_pWebRoom = new WebRoom(this);
-    ProxySettings* pProxySettings = m_pGame->getSession()->proxySettings();
+    ProxySettings* pProxySettings = XMSession::instance()->proxySettings();
     std::string    webRoomUrl     = m_pGame->getWebRoomURL(m_pDb);
     std::string    webRoomName    = m_pGame->getWebRoomName(m_pDb);
 
@@ -73,10 +73,10 @@ int UploadAllHighscoresThread::realThreadFunction()
 
     std::string query = "SELECT r.id_level, r.name, lvl.name FROM replays r "
       "LEFT OUTER JOIN webhighscores h "
-      "ON (r.id_level = h.id_level AND h.id_room=" + m_pGame->getSession()->idRoom() + ") "
+      "ON (r.id_level = h.id_level AND h.id_room=" + XMSession::instance()->idRoom() + ") "
       "INNER JOIN weblevels l ON r.id_level = l.id_level "
       "INNER JOIN levels lvl ON r.id_level = lvl.id_level "
-      "WHERE r.id_profile=\"" + xmDatabase::protectString(m_pGame->getSession()->profile()) + "\" "
+      "WHERE r.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
       "AND r.isFinished "
       "AND ( (h.id_room IS NULL) OR xm_floord(h.finishTime*100.0) > xm_floord(r.finishTime*100.0)) "
       "ORDER BY r.id_level, r.finishTime;";
@@ -101,11 +101,11 @@ int UploadAllHighscoresThread::realThreadFunction()
 	    bool v_msg_status_ok;
 	    v_replayPath = FS::getUserDir() + "/Replays/" + v_replay + ".rpl";
 	    FSWeb::uploadReplay(v_replayPath,
-				m_pGame->getSession()->idRoom(),
-				m_pGame->getSession()->uploadLogin(),
-				m_pGame->getSession()->uploadPassword(),
-				m_pGame->getSession()->uploadHighscoreUrl(),
-				this, m_pGame->getSession()->proxySettings(), v_msg_status_ok, m_msg);
+				XMSession::instance()->idRoom(),
+				XMSession::instance()->uploadLogin(),
+				XMSession::instance()->uploadPassword(),
+				XMSession::instance()->uploadHighscoreUrl(),
+				this, XMSession::instance()->proxySettings(), v_msg_status_ok, m_msg);
 	    if(v_msg_status_ok == false) {
 	      Logger::Log(std::string("Failed to upload " + v_replay).c_str());
 	    }

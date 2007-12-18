@@ -46,10 +46,10 @@ int UpdateRoomsListThread::realThreadFunction()
     Logger::Log("WWW: Checking for rooms...");
 
     /* download xml file */
-    FSWeb::downloadFileBz2UsingMd5(v_destinationFile, m_pGame->getSession()->webRoomsURL(), NULL, NULL, m_pGame->getSession()->proxySettings());
+    FSWeb::downloadFileBz2UsingMd5(v_destinationFile, XMSession::instance()->webRoomsURL(), NULL, NULL, XMSession::instance()->proxySettings());
     setThreadProgress(90);
     m_pDb->webrooms_updateDB(v_destinationFile);
-    m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_ROOMS_LISTS");
+    StateManager::instance()->sendSynchronousMessage("UPDATE_ROOMS_LISTS");
   } catch(Exception &e) {
     /* file probably doesn't exist */
     Logger::Log("** Warning ** : Failed to analyse webrooms file");

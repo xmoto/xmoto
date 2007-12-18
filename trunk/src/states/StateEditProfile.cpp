@@ -90,7 +90,7 @@ void StateEditProfile::checkEvents() {
     if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
       UIListEntry *pEntry = pList->getEntries()[nIdx];
 
-      m_pGame->getSession()->setProfile(pEntry->Text[0]);
+      XMSession::instance()->setProfile(pEntry->Text[0]);
       m_pGame->getDb()->stats_xmotoStarted(pEntry->Text[0]);
 
       // tell the menu to update the displayed profile
@@ -100,8 +100,8 @@ void StateEditProfile::checkEvents() {
     }
 
     /* Should we jump to the web config now? */
-    if(m_pGame->getSession()->webConfAtInit()) {
-      m_pGame->getStateManager()->replaceState(new StateEditWebConfig(m_pGame));
+    if(XMSession::instance()->webConfAtInit()) {
+      StateManager::instance()->replaceState(new StateEditWebConfig(m_pGame));
     }else{
       m_requestForEnd = true;
     }
@@ -115,7 +115,7 @@ void StateEditProfile::checkEvents() {
     StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, std::string(GAMETEXT_ENTERPLAYERNAME) + ":",
 							 UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, "");
     v_msgboxState->setId("NEWPROFILE");
-    m_pGame->getStateManager()->pushState(v_msgboxState);
+    StateManager::instance()->pushState(v_msgboxState);
   }
 
   // delete profile
@@ -126,7 +126,7 @@ void StateEditProfile::checkEvents() {
     StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, std::string(GAMETEXT_DELETEPLAYERMESSAGE),
 							 UI_MSGBOX_YES|UI_MSGBOX_NO);
     v_msgboxState->setId("DELETEPROFILE");
-    m_pGame->getStateManager()->pushState(v_msgboxState);
+    StateManager::instance()->pushState(v_msgboxState);
   }
 }
 
@@ -250,7 +250,7 @@ void StateEditProfile::createProfileList(GameApp* pGame) {
     for(unsigned int i=0; i<nrow; i++) {
       v_profile = pGame->getDb()->getResult(v_result, 1, i, 0);
       pList->addEntry(v_profile);
-      if(pGame->getSession()->profile() == v_profile) {
+      if(XMSession::instance()->profile() == v_profile) {
 	pList->setRealSelected(i);
       }
     }

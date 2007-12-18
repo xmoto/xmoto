@@ -48,8 +48,8 @@ void StatePlaying::enter()
 {
   StateScene::enter();
 
-  m_pGame->getGameRenderer()->setShowEngineCounter(m_pGame->getSession()->showEngineCounter());
-  m_pGame->getGameRenderer()->setShowMinimap(m_pGame->getSession()->showMinimap());
+  m_pGame->getGameRenderer()->setShowEngineCounter(XMSession::instance()->showEngineCounter());
+  m_pGame->getGameRenderer()->setShowMinimap(XMSession::instance()->showMinimap());
   m_pGame->getGameRenderer()->setShowTimePanel(true);
 
   m_bAutoZoomInitialized = false;
@@ -64,7 +64,7 @@ void StatePlaying::enter()
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, cBuf, UI_MSGBOX_OK);
     v_msgboxState->setId("ERROR");
-    m_pGame->getStateManager()->pushState(v_msgboxState);
+    StateManager::instance()->pushState(v_msgboxState);
   }
 
   setScoresTimes();
@@ -112,7 +112,7 @@ bool StatePlaying::update()
       }
     }
     
-    if(v_one_still_play == false || m_pGame->getSession()->MultiStopWhenOneFinishes()) { // let people continuing when one finished or not
+    if(v_one_still_play == false || XMSession::instance()->MultiStopWhenOneFinishes()) { // let people continuing when one finished or not
       if(v_one_finished) {
 	/* You're done maaaan! :D */
 	
@@ -130,19 +130,19 @@ bool StatePlaying::update()
 	  }
 	}
 	if(m_pGame->getMotoGame()->Players().size() == 1) {
-	  m_pGame->getDb()->profiles_addFinishTime(m_pGame->getSession()->profile(), m_pGame->getMotoGame()->getLevelSrc()->Id(),
+	  m_pGame->getDb()->profiles_addFinishTime(XMSession::instance()->profile(), m_pGame->getMotoGame()->getLevelSrc()->Id(),
 						   TimeStamp, v_finish_time);
 	}
 	
 	/* Update stats */
 	/* update stats only in one player mode */
 	if(m_pGame->getMotoGame()->Players().size() == 1) {       
-	  m_pGame->getDb()->stats_levelCompleted(m_pGame->getSession()->profile(),
+	  m_pGame->getDb()->stats_levelCompleted(XMSession::instance()->profile(),
 						 m_pGame->getMotoGame()->getLevelSrc()->Id(),
 						 m_pGame->getMotoGame()->Players()[0]->finishTime());
-	  m_pGame->getStateManager()->sendAsynchronousMessage("LEVELS_UPDATED");
+	  StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
 	}
-	m_pGame->getStateManager()->pushState(new StateFinished(m_pGame, this));
+	StateManager::instance()->pushState(new StateFinished(m_pGame, this));
       } else if(v_all_dead) {
 	/* You're dead maan! */
 	if(m_pGame->isAReplayToSave()) {
@@ -151,21 +151,21 @@ bool StatePlaying::update()
 
 	/* Update stats */        
 	if(m_pGame->getMotoGame()->Players().size() == 1) {
-	  m_pGame->getDb()->stats_died(m_pGame->getSession()->profile(),
+	  m_pGame->getDb()->stats_died(XMSession::instance()->profile(),
 				       m_pGame->getMotoGame()->getLevelSrc()->Id(),
 				       m_pGame->getMotoGame()->getTime());
 	}                
 
 	/* Play the DIE!!! sound */
 	try {
-	  Sound::playSampleByName(m_pGame->getTheme()->getSound("Headcrash")->FilePath(), 0.3);
+	  Sound::playSampleByName(Theme::instance()->getSound("Headcrash")->FilePath(), 0.3);
 	} catch(Exception &e) {
 	}
 
-	if(m_pGame->getSession()->enableDeadAnimation()) {
-	  m_pGame->getStateManager()->replaceState(new StateDeadJust(m_pGame));
+	if(XMSession::instance()->enableDeadAnimation()) {
+	  StateManager::instance()->replaceState(new StateDeadJust(m_pGame));
 	} else {
-	  m_pGame->getStateManager()->pushState(new StateDeadMenu(m_pGame, true, this));
+	  StateManager::instance()->pushState(new StateDeadMenu(m_pGame, true, this));
 	}
       }
     }
@@ -185,7 +185,7 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
   if(nKey == SDLK_ESCAPE){
     if(isLockedScene() == false) {
       /* Escape pauses */
-      m_pGame->getStateManager()->pushState(new StatePause(m_pGame, this));
+      StateManager::instance()->pushState(new StatePause(m_pGame, this));
     }
   }
   else if(nKey == SDLK_RETURN && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0){

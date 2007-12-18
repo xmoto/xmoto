@@ -244,17 +244,17 @@ UIQuickStartButton::UIQuickStartButton(UIWindow *pParent,
   Sprite *v_sprite;
   m_uncheckedTex = m_qualityTex = m_difficultyTex = NULL;
 
-  v_sprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "qsChoiceUnchecked");
+  v_sprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "qsChoiceUnchecked");
   if(v_sprite != NULL) {
     m_uncheckedTex = v_sprite->getTexture();
   }
 
-  v_sprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "qsChoiceQuality");
+  v_sprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "qsChoiceQuality");
   if(v_sprite != NULL) {
     m_qualityTex = v_sprite->getTexture();
   }
 
-  v_sprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "qsChoiceDifficulty");
+  v_sprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "qsChoiceDifficulty");
   if(v_sprite != NULL) {
     m_difficultyTex = v_sprite->getTexture();
   }

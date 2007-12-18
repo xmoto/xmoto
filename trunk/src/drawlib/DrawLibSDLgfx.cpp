@@ -266,8 +266,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   }
 
   void DrawLibSDLgfx::init(unsigned int nDispWidth, unsigned int nDispHeight,
-			   unsigned int nDispBPP, bool bWindowed,
-			   Theme * ptheme)
+			   unsigned int nDispBPP, bool bWindowed)
   {
     /* Set suggestions */
     m_nDispWidth = nDispWidth;

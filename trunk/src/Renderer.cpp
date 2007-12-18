@@ -87,9 +87,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* do not load into the graphic card blocks which won't be
 	 displayed. On ati card with free driver, levels like green
 	 hill zone act 2 don't work if there's too much vertex loaded */
-      if(getParent()->getSession()->gameGraphics() != GFX_HIGH && Blocks[i]->getLayer() != -1)
+      if(XMSession::instance()->gameGraphics() != GFX_HIGH && Blocks[i]->getLayer() != -1)
 	continue;
-      if(getParent()->getSession()->gameGraphics() == GFX_LOW && Blocks[i]->isBackground() == true)
+      if(XMSession::instance()->gameGraphics() == GFX_LOW && Blocks[i]->isBackground() == true)
 	continue;
 
       bool dynamicBlock = false;
@@ -111,7 +111,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       else{
 	Center = Blocks[i]->DynamicPosition();
       }
-      Sprite* pSprite = getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE,
+      Sprite* pSprite = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
 							   Blocks[i]->Texture());
       Texture *pTexture = NULL;
 
@@ -287,7 +287,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     p2 = Vector2f(x+nWidth, getParent()->getDrawLib()->getDispHeight()-y);
     p3 = Vector2f(x,        getParent()->getDrawLib()->getDispHeight()-y);
 
-	pSprite = (MiscSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
+	pSprite = (MiscSprite*) Theme::instance()->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
 	if(pSprite != NULL) {
 		pTexture = pSprite->getTexture();
 		if(pTexture != NULL) {
@@ -491,15 +491,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   void GameRenderer::_RenderGhost(Biker* i_ghost, int i) {
     /* Render ghost - ugly mode? */
-    if(getParent()->getSession()->ugly() == false) {
-      if(getParent()->getSession()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
+    if(XMSession::instance()->ugly() == false) {
+      if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
 
 	// can't use the same overlay for the multi cameras,
 	// because the fade is made using all the cameras,
 	// there should be one overlay per camera.
 	int nbCamera = getGameObject()->getNumberCameras();
 	/* No not ugly, fancy! Render into overlay? */      
-	if(getParent()->getSession()->ghostMotionBlur()
+	if(XMSession::instance()->ghostMotionBlur()
 	   && getParent()->getDrawLib()->useFBOs()
 	   && nbCamera == 1) {
 	  m_Overlay.beginRendering();
@@ -508,7 +508,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	_RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(), i_ghost->getBikeTheme(), true,
 		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
 	
-	if(getParent()->getSession()->ghostMotionBlur()
+	if(XMSession::instance()->ghostMotionBlur()
 	   && getParent()->getDrawLib()->useFBOs()
 	   && nbCamera == 1) {
 	  m_Overlay.endRendering();
@@ -517,7 +517,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
  
       if(i_ghost->getDescription() != "") {
-	if(m_nGhostInfoTrans > 0 && getParent()->getSession()->showGhostsInfos()) {
+	if(m_nGhostInfoTrans > 0 && XMSession::instance()->showGhostsInfos()) {
 	  _RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i*3.0,-1.5f),
 			    i_ghost->getDescription(),
 			    MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
@@ -525,8 +525,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     }
     
-    if(getParent()->getSession()->ugly()) {
-      if(getParent()->getSession()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
+    if(XMSession::instance()->ugly()) {
+      if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
 	_RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(),
 		    i_ghost->getBikeTheme(),
 		    true,
@@ -569,7 +569,7 @@ int GameRenderer::nbParticlesRendered() const {
     m_screenBBox.addPointToAABB2f(v2);
 
     /* SKY! */
-    if(getParent()->getSession()->ugly() == false) {
+    if(XMSession::instance()->ugly() == false) {
       _RenderSky(pGame->getLevelSrc()->Sky()->Zoom(),
 		 pGame->getLevelSrc()->Sky()->Offset(),
 		 pGame->getLevelSrc()->Sky()->TextureColor(),
@@ -589,12 +589,12 @@ int GameRenderer::nbParticlesRendered() const {
     getParent()->getDrawLib()->setRotateZ(rotationAngle);
     getParent()->getDrawLib()->setTranslate(-pCamera->getCameraPositionX(), -pCamera->getCameraPositionY());
 
-    if(getParent()->getSession()->gameGraphics() == GFX_HIGH && getParent()->getSession()->ugly() == false) {
+    if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* background level blocks */
       _RenderLayers(false);
     }
 
-    if(getParent()->getSession()->gameGraphics() != GFX_LOW && getParent()->getSession()->ugly() == false) {
+    if(XMSession::instance()->gameGraphics() != GFX_LOW && XMSession::instance()->ugly() == false) {
       /* Background blocks */
       _RenderDynamicBlocks(true);
       _RenderBackground();
@@ -603,7 +603,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
     _RenderSprites(false,true);
 
-    if(getParent()->getSession()->gameGraphics() == GFX_HIGH && getParent()->getSession()->ugly() == false) {
+    if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* Render particles (back!) */    
        _RenderParticles(false);
     }
@@ -616,7 +616,7 @@ int GameRenderer::nbParticlesRendered() const {
     _RenderSprites(false,false);
 
     /* zones */
-    if(getParent()->getSession()->uglyOver()) {
+    if(XMSession::instance()->uglyOver()) {
       for(unsigned int i=0; i<pGame->getLevelSrc()->Zones().size(); i++) {
 	_RenderZone(pGame->getLevelSrc()->Zones()[i]);
       }
@@ -673,7 +673,7 @@ int GameRenderer::nbParticlesRendered() const {
       }
     }
     
-    if(getParent()->getSession()->gameGraphics() == GFX_HIGH && getParent()->getSession()->ugly() == false) {
+    if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* Render particles (front!) */    
       _RenderParticles(true);
     }
@@ -682,11 +682,11 @@ int GameRenderer::nbParticlesRendered() const {
     _RenderSprites(true,false);
 
     /* and finally finally, front layers */
-    if(getParent()->getSession()->gameGraphics() == GFX_HIGH && getParent()->getSession()->ugly() == false) {
+    if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
       _RenderLayers(true);
     }
 
-    if(getParent()->getSession()->debug()) {
+    if(XMSession::instance()->debug()) {
       /* Draw some collision handling debug info */
       CollisionSystem *pc = pGame->getCollisionHandler();
       for(int i=0;i<pc->m_CheckedLines.size();i++) {
@@ -773,7 +773,7 @@ int GameRenderer::nbParticlesRendered() const {
 	}
       }
       if(showEngineCounter()
-	 && getParent()->getSession()->ugly() == false
+	 && XMSession::instance()->ugly() == false
 	 && pGame->getNumberCameras() == 1) {
 	renderEngineCounter(getParent()->getDrawLib()->getDispWidth()-128,
 			    getParent()->getDrawLib()->getDispHeight()-128,128,128,
@@ -836,18 +836,18 @@ int GameRenderer::nbParticlesRendered() const {
       y2_cam += bottomLeft.y;
     }
 
-    if(getParent()->getSession()->ugly() == false) {
-      pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForFlower());
+    if(XMSession::instance()->ugly() == false) {
+      pType = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForFlower());
       if(pType == NULL) {
-	pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForFlower());
+	pType = Theme::instance()->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForFlower());
       }
     }
     
     if(nStrawberriesLeft > 0) {
-      if(getParent()->getSession()->ugly() == false) {
-	pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());
+      if(XMSession::instance()->ugly() == false) {
+	pType = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());
       if(pType == NULL) {
-	pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());
+	pType = Theme::instance()->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());
       }
       }
       nQuantity = nStrawberriesLeft;
@@ -914,7 +914,7 @@ int GameRenderer::nbParticlesRendered() const {
       p4 = p4 * 50.0f;
 
       MiscSprite* pType;
-      pType = (MiscSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_MISC, "Arrow");
+      pType = (MiscSprite*) Theme::instance()->getSprite(SPRITE_TYPE_MISC, "Arrow");
       if(pType != NULL) {
 	_RenderAlphaBlendedSectionSP(pType->getTexture(),p1+C,p2+C,p3+C,p4+C);      
       }
@@ -1013,7 +1013,7 @@ int GameRenderer::nbParticlesRendered() const {
     float v_height;
     std::string v_sprite_type;
 
-    if(getParent()->getSession()->ugly() == false) {
+    if(XMSession::instance()->ugly() == false) {
       switch(pSprite->Speciality()) {
       case ET_KILL:
 	v_sprite_type = getGameObject()->getLevelSrc()->SpriteForWecker();
@@ -1029,7 +1029,7 @@ int GameRenderer::nbParticlesRendered() const {
       }
 
       /* search the sprite as an animation */
-      v_animationSpriteType = (AnimationSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, v_sprite_type);
+      v_animationSpriteType = (AnimationSprite*) Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, v_sprite_type);
       /* if the sprite is not an animation, it's perhaps a decoration */
       if(v_animationSpriteType != NULL) {
         v_spriteType = v_animationSpriteType;
@@ -1046,7 +1046,7 @@ int GameRenderer::nbParticlesRendered() const {
           v_height = v_animationSpriteType->getHeight();
         }
       } else {
-        v_decorationSpriteType = (DecorationSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_DECORATION, v_sprite_type);
+        v_decorationSpriteType = (DecorationSprite*) Theme::instance()->getSprite(SPRITE_TYPE_DECORATION, v_sprite_type);
         v_spriteType = v_decorationSpriteType;
 
         if(v_decorationSpriteType != NULL) {
@@ -1149,7 +1149,7 @@ int GameRenderer::nbParticlesRendered() const {
       }    
     }
     /* If this is debug-mode, also draw entity's area of effect */
-    if(getParent()->getSession()->debug() || getParent()->getSession()->testTheme() || getParent()->getSession()->ugly()) {
+    if(XMSession::instance()->debug() || XMSession::instance()->testTheme() || XMSession::instance()->ugly()) {
       Vector2f C = pSprite->DynamicPosition();
       Color v_color;
       
@@ -1184,7 +1184,7 @@ int GameRenderer::nbParticlesRendered() const {
     /* sort blocks on their texture */
     std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
 
-    if(getParent()->getSession()->ugly() == false) {
+    if(XMSession::instance()->ugly() == false) {
       for(int i=0; i<Blocks.size(); i++) {
 	/* Are we rendering background blocks or what? */
 	if(Blocks[i]->isBackground() != bBackground)
@@ -1280,7 +1280,7 @@ int GameRenderer::nbParticlesRendered() const {
       }
 
       /* Render all special edges (if quality!=low) */
-      if(getParent()->getSession()->gameGraphics() != GFX_LOW) {
+      if(XMSession::instance()->gameGraphics() != GFX_LOW) {
 	for(int i=0;i<Blocks.size();i++) {
 	  if(Blocks[i]->isBackground() == bBackground){
 	    _RenderBlockEdges(Blocks[i]);
@@ -1290,7 +1290,7 @@ int GameRenderer::nbParticlesRendered() const {
 
     }
 
-    if(getParent()->getSession()->ugly() || getParent()->getSession()->uglyOver()) {
+    if(XMSession::instance()->ugly() || XMSession::instance()->uglyOver()) {
       for(int i=0; i<Blocks.size(); i++) {
 	/* Are we rendering background blocks or what? */
 	if(Blocks[i]->isBackground() != bBackground)
@@ -1397,7 +1397,7 @@ int GameRenderer::nbParticlesRendered() const {
 	if(v_blockVertexA->EdgeEffect() != "") {
 
 	  if(v_blockVertexA->EdgeEffect() != v_previousEdgeEffect) {
-	    pType = (EdgeEffectSprite*)getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
+	    pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
 	    v_previousEdgeEffect = v_blockVertexA->EdgeEffect();
 
 	    if(pType != NULL) {
@@ -1469,7 +1469,7 @@ int GameRenderer::nbParticlesRendered() const {
       std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
 
       /* Ugly mode? */
-      if(getParent()->getSession()->ugly() == false) {
+      if(XMSession::instance()->ugly() == false) {
 	/* Render all non-background blocks */
 	/* Static geoms... */
 	for(int i=0;i<Blocks.size();i++) {
@@ -1479,7 +1479,7 @@ int GameRenderer::nbParticlesRendered() const {
 	}
 
 	/* Render all special edges (if quality!=low) */
-	if(getParent()->getSession()->gameGraphics() != GFX_LOW) {
+	if(XMSession::instance()->gameGraphics() != GFX_LOW) {
 	  for(int i=0;i<Blocks.size();i++) {
 	    if(Blocks[i]->isBackground() == false) {
 	    _RenderBlockEdges(Blocks[i]);
@@ -1488,7 +1488,7 @@ int GameRenderer::nbParticlesRendered() const {
 	}
       }
 
-      if(getParent()->getSession()->ugly()) {
+      if(XMSession::instance()->ugly()) {
 	for(int i=0;i<Blocks.size();i++) {
 	  if(Blocks[i]->isBackground() == false) {
 	    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
@@ -1502,7 +1502,7 @@ int GameRenderer::nbParticlesRendered() const {
 	}
       }
 
-      if(getParent()->getSession()->uglyOver()) {
+      if(XMSession::instance()->uglyOver()) {
 	for(int i=0; i<Blocks.size(); i++) {
 	  for(int j=0; j<Blocks[i]->ConvexBlocks().size(); j++) {
 
@@ -1551,11 +1551,11 @@ int GameRenderer::nbParticlesRendered() const {
   float uZoom = 1.0 / i_zoom;
   float uDriftZoom = 1.0 / i_driftZoom;
 
-  if(getParent()->getSession()->gameGraphics() != GFX_HIGH) {
+  if(XMSession::instance()->gameGraphics() != GFX_HIGH) {
     i_drifted = false;
   }
   
-  pType = (TextureSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE,
+  pType = (TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
 							      pGame->getLevelSrc()->Sky()->Texture());
   
   if(pType != NULL) {
@@ -1621,7 +1621,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
 
     /* Render all special edges (if quality != low) */
-    if(getParent()->getSession()->gameGraphics() != GFX_LOW) {
+    if(XMSession::instance()->gameGraphics() != GFX_LOW) {
       for(int i=0;i<Blocks.size();i++) {
 	if(Blocks[i]->isBackground() == true) {
 	  _RenderBlockEdges(Blocks[i]);
@@ -1670,7 +1670,7 @@ int GameRenderer::nbParticlesRendered() const {
       _RenderBlock(block);
     }
     /* Render all special edges (if quality!=low) */
-    if(getParent()->getSession()->gameGraphics() != GFX_LOW) {
+    if(XMSession::instance()->gameGraphics() != GFX_LOW) {
       for(int i=0;i<Blocks.size();i++) {
 	_RenderBlockEdges(Blocks[i]);
       }
@@ -1963,10 +1963,6 @@ int GameRenderer::nbParticlesRendered() const {
       getParent()->getDrawLib()->glVertex( Vector2f(C.x + fRadius*sin(r),C.y + fRadius*cos(r)) );
     }      
     getParent()->getDrawLib()->endDraw();
-  }
-
-  void GameRenderer::setTheme(Theme *p_theme) {
-    m_theme = p_theme;
   }
 
   float GameRenderer::SizeMultOfEntitiesToTake() const {

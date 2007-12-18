@@ -158,7 +158,7 @@ GameApp::~GameApp() {
     delete drawLib;
   }
 
-  delete m_xmsession;
+  XMSession::instance()->destroy();
 
   StateManager::cleanStates();
 }
@@ -168,7 +168,6 @@ GameApp::GameApp() {
   drawLib = NULL;
   m_Renderer = NULL;
   
-  m_xmsession = new XMSession();
   m_sysMsg = NULL;
 
   m_pNotifyMsgBox=NULL;
@@ -194,14 +193,13 @@ GameApp::GameApp() {
   m_bWebLevelsToDownload = false;
   
   m_MotoGame.setHooks(&m_MotoGameHooks);
-  m_MotoGameHooks.setGameApps(this, &m_MotoGame);
+  m_MotoGameHooks.setGameApps(&m_MotoGame);
   
   m_currentPlayingList = NULL;
 
   m_db = NULL;
   m_themeChoicer = NULL;
 
-  m_stateManager       = NULL;
   m_lastFrameTimeStamp = -1;
   m_frameLate          = 0;
 }
@@ -242,7 +240,7 @@ GameApp::GameApp() {
 
     v_ShotsDir = FS::getUserDir() + std::string("/Screenshots");
     FS::mkArborescenceDir(v_ShotsDir);
-    v_ShotExtension = m_xmsession->screenshotFormat();
+    v_ShotExtension = XMSession::instance()->screenshotFormat();
     
     /* User preference for format? must be either jpeg or png */
     if(v_ShotExtension != "jpeg" && v_ShotExtension != "jpg" && v_ShotExtension != "png") {
@@ -271,8 +269,8 @@ GameApp::GameApp() {
   }
 
   void GameApp::enableFps(bool bValue) {
-    m_xmsession->setFps(m_xmsession->fps() == false);
-    if(m_xmsession->fps()) {
+    XMSession::instance()->setFps(XMSession::instance()->fps() == false);
+    if(XMSession::instance()->fps()) {
       m_sysMsg->displayText(SYS_MSG_FPS_ENABLED);
     } else {
       m_sysMsg->displayText(SYS_MSG_FPS_DISABLED);
@@ -280,8 +278,8 @@ GameApp::GameApp() {
   }
 
   void GameApp::enableWWW(bool bValue) {
-    m_xmsession->setWWW(m_xmsession->www() == false);
-    if(m_xmsession->www()) {
+    XMSession::instance()->setWWW(XMSession::instance()->www() == false);
+    if(XMSession::instance()->www()) {
       m_sysMsg->displayText(SYS_MSG_WWW_ENABLED);
     } else {
       m_sysMsg->displayText(SYS_MSG_WWW_DISABLED);
@@ -292,29 +290,29 @@ GameApp::GameApp() {
   Key down event
   ===========================================================================*/
 void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
-  m_stateManager->keyDown(nKey, mod, nChar);
+  StateManager::instance()->keyDown(nKey, mod, nChar);
 }
 
 /*===========================================================================
   Key up event
   ===========================================================================*/
   void GameApp::keyUp(int nKey, SDLMod mod) {
-    m_stateManager->keyUp(nKey, mod);
+    StateManager::instance()->keyUp(nKey, mod);
   }
 
   /*===========================================================================
   Mouse events
   ===========================================================================*/
   void GameApp::mouseDoubleClick(int nButton) {
-    m_stateManager->mouseDoubleClick(nButton);
+    StateManager::instance()->mouseDoubleClick(nButton);
   }
 
   void GameApp::mouseDown(int nButton) {
-    m_stateManager->mouseDown(nButton);
+    StateManager::instance()->mouseDown(nButton);
   }
 
   void GameApp::mouseUp(int nButton) {
-    m_stateManager->mouseUp(nButton);
+    StateManager::instance()->mouseUp(nButton);
   }
 
   /*===========================================================================
@@ -355,7 +353,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     } else {
       /* Update replay list to reflect changes */
       addReplay(v_outputfile);
-      getStateManager()->sendAsynchronousMessage("REPLAYS_UPDATED");
+      StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
     }
   }
 
@@ -404,7 +402,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 			    "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
 			    "ON (a.id_room = b.id_room "
 			    "AND b.id_level=\"" + xmDatabase::protectString(LevelID) + "\") "
-			    "WHERE a.id_room=" + m_xmsession->idRoom() + ";",
+			    "WHERE a.id_room=" + XMSession::instance()->idRoom() + ";",
 			    nrow);
     if(nrow != 1) {
       /* should not happend */
@@ -433,7 +431,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     p_time = -1.0;
 
     v_result = m_db->readDB("SELECT name, finishTime FROM replays "
-			    "WHERE id_profile=\"" + xmDatabase::protectString(m_xmsession->profile()) + "\" "
+			    "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
 			    "AND   id_level=\""   + xmDatabase::protectString(p_levelId) + "\" "
 			    "AND   isFinished=1 "
 			    "ORDER BY finishTime LIMIT 1;",
@@ -459,7 +457,7 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
   std::string v_fileUrl;
 
   v_result = m_db->readDB("SELECT fileUrl, finishTime FROM webhighscores "
-			  "WHERE id_room=" + m_xmsession->idRoom() + " "
+			  "WHERE id_room=" + XMSession::instance()->idRoom() + " "
 			  "AND id_level=\"" + xmDatabase::protectString(p_levelId) + "\";",
 			  nrow);    
   if(nrow == 0) {
@@ -537,7 +535,7 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
     switch(i_player) {
       
       case 0:
-      v_color = m_theme.getPlayerTheme()->getUglyRiderColor();
+      v_color = Theme::instance()->getPlayerTheme()->getUglyRiderColor();
       return TColor(GET_RED(v_color), GET_GREEN(v_color), GET_BLUE(v_color));      
       break;
       
@@ -559,7 +557,7 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
   }
 
   void GameApp::switchUglyMode(bool bUgly) {
-    m_xmsession->setUgly(bUgly);
+    XMSession::instance()->setUgly(bUgly);
     if(bUgly == false) {
       SDL_ShowCursor(SDL_DISABLE);        
     } else {
@@ -568,11 +566,11 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
   }
 
   void GameApp::switchTestThemeMode(bool mode) {
-    m_xmsession->setTestTheme(mode);
+    XMSession::instance()->setTestTheme(mode);
   }
 
   void GameApp::switchUglyOverMode(bool mode) {
-    m_xmsession->setUglyOver(mode);
+    XMSession::instance()->setUglyOver(mode);
   }
 
   void GameApp::initCameras(int nbPlayer) {
@@ -614,31 +612,27 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
 
   void GameApp::reloadTheme() {
     try {
-      m_theme.load(m_db->themes_getFileName(m_xmsession->theme()));
+      Theme::instance()->load(m_db->themes_getFileName(XMSession::instance()->theme()));
     } catch(Exception &e) {
       /* unable to load the theme, load the default one */
-      m_theme.load(m_db->themes_getFileName(THEME_DEFAULT_THEMENAME));
+      Theme::instance()->load(m_db->themes_getFileName(THEME_DEFAULT_THEMENAME));
     }
   }
 
   void XMMotoGameHooks::OnTakeEntity() {
     /* Play yummy-yummy sound */
-    if(m_GameApp != NULL) {
-      try {
-	Sound::playSampleByName(m_GameApp->getTheme()->getSound
-				(m_MotoGame->getLevelSrc()->SoundForPickUpStrawberry())->FilePath());
-      } catch(Exception &e) {
-      }
+    try {
+      Sound::playSampleByName(Theme::instance()->getSound(m_MotoGame->getLevelSrc()->SoundForPickUpStrawberry())->FilePath());
+    } catch(Exception &e) {
     }
   }
-  
-  void XMMotoGameHooks::setGameApps(GameApp *i_GameApp, MotoGame *i_MotoGame) {
-    m_GameApp = i_GameApp;
+
+  void XMMotoGameHooks::setGameApps(MotoGame *i_MotoGame) {
     m_MotoGame = i_MotoGame;
   }
 
   XMMotoGameHooks::XMMotoGameHooks() {
-    m_GameApp = NULL;
+    m_MotoGame = NULL;
   }
   
   XMMotoGameHooks::~XMMotoGameHooks() {
@@ -730,7 +724,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
   float v_player_fFinishTime;
 
   /* first, add the best of the room -- because if mybest or thebest = bestofroom, i prefer to see writen bestofroom */
-  if(m_xmsession->ghostStrategy_BESTOFROOM()) {
+  if(XMSession::instance()->ghostStrategy_BESTOFROOM()) {
     std::string v_replay_MYBEST_tmp;
     v_replay_MYBEST_tmp = _getGhostReplayPath_bestOfThePlayer(i_motogame->getLevelSrc()->Id(), v_player_fFinishTime);
     v_replay_BESTOFROOM = _getGhostReplayPath_bestOfTheRoom(i_motogame->getLevelSrc()->Id(), v_fFinishTime);
@@ -742,8 +736,8 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
     
     if(v_replay_BESTOFROOM != "") {
 	m_MotoGame.addGhostFromFile(v_replay_BESTOFROOM,
-				    m_db->webrooms_getName(m_xmsession->idRoom()),
-				    &m_theme, m_theme.getGhostTheme(),
+				    m_db->webrooms_getName(XMSession::instance()->idRoom()),
+				    Theme::instance(), Theme::instance()->getGhostTheme(),
 				    TColor(255,255,255,0),
 				    TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
 					   GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
@@ -754,7 +748,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
   }
 
   /* second, add your best */
-  if(m_xmsession->ghostStrategy_MYBEST()) {
+  if(XMSession::instance()->ghostStrategy_MYBEST()) {
     v_replay_MYBEST = _getGhostReplayPath_bestOfThePlayer(i_motogame->getLevelSrc()->Id(), v_fFinishTime);
     if(v_replay_MYBEST != "") {
       if(v_replay_MYBEST != v_replay_BESTOFROOM) {
@@ -771,7 +765,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
   }
 
   /* third, the best locally */
-  if(m_xmsession->ghostStrategy_THEBEST()) {
+  if(XMSession::instance()->ghostStrategy_THEBEST()) {
     v_replay_THEBEST = _getGhostReplayPath_bestOfLocal(i_motogame->getLevelSrc()->Id(), v_fFinishTime);
     if(v_replay_THEBEST != "") {
       if(v_replay_THEBEST != v_replay_MYBEST && v_replay_THEBEST != v_replay_BESTOFROOM) { /* don't add two times the same ghost */
@@ -790,17 +784,17 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
 }
 
 void GameApp::addLevelToFavorite(const std::string& i_levelId) {
-  m_levelsManager.addToFavorite(m_db, m_xmsession->profile(), i_levelId);
+  LevelsManager::instance()->addToFavorite(m_db, XMSession::instance()->profile(), i_levelId);
 }
 
 void GameApp::switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage) {
-  if(m_levelsManager.isInFavorite(m_db, m_xmsession->profile(), i_levelId)) {
-    m_levelsManager.delFromFavorite(m_db, m_xmsession->profile(), i_levelId);
+  if(LevelsManager::instance()->isInFavorite(m_db, XMSession::instance()->profile(), i_levelId)) {
+    LevelsManager::instance()->delFromFavorite(m_db, XMSession::instance()->profile(), i_levelId);
     if(v_displayMessage) {
       m_sysMsg->displayText(GAMETEXT_LEVEL_DELETED_FROM_FAVORITE);
     }
   } else {
-    m_levelsManager.addToFavorite(m_db, m_xmsession->profile(), i_levelId);
+    LevelsManager::instance()->addToFavorite(m_db, XMSession::instance()->profile(), i_levelId);
     if(v_displayMessage) {
       m_sysMsg->displayText(GAMETEXT_LEVEL_ADDED_TO_FAVORITE);
     }
@@ -808,13 +802,13 @@ void GameApp::switchLevelToFavorite(const std::string& i_levelId, bool v_display
 }
 
 void GameApp::switchLevelToBlacklist(const std::string& i_levelId, bool v_displayMessage) {
-  if(m_levelsManager.isInBlacklist(m_db, m_xmsession->profile(), i_levelId)) {
-    m_levelsManager.delFromBlacklist(m_db, m_xmsession->profile(), i_levelId);
+  if(LevelsManager::instance()->isInBlacklist(m_db, XMSession::instance()->profile(), i_levelId)) {
+    LevelsManager::instance()->delFromBlacklist(m_db, XMSession::instance()->profile(), i_levelId);
     if(v_displayMessage) {
       m_sysMsg->displayText(GAMETEXT_LEVEL_DELETED_FROM_BLACKLIST);
     }
   } else {
-    m_levelsManager.addToBlacklist(m_db, m_xmsession->profile(), i_levelId);
+    LevelsManager::instance()->addToBlacklist(m_db, XMSession::instance()->profile(), i_levelId);
     if(v_displayMessage) {
       m_sysMsg->displayText(GAMETEXT_LEVEL_ADDED_TO_BLACKLIST);
     }
@@ -829,10 +823,6 @@ void GameApp::switchFollowCamera() {
 			getQuickDescription());
 }
 
-XMSession* GameApp::getSession() {
-  return m_xmsession;
-}
-
 MotoGame* GameApp::getMotoGame() {
   return &m_MotoGame;
 }
@@ -842,7 +832,7 @@ void GameApp::requestEnd() {
 }
 
 void GameApp::playMusic(const std::string& i_music) {
-  if( (m_xmsession->enableAudio() && m_xmsession->enableMenuMusic()) || i_music == "") {
+  if( (XMSession::instance()->enableAudio() && XMSession::instance()->enableMenuMusic()) || i_music == "") {
     if(i_music != m_playingMusic) {
       try {
 	if(i_music == "") {
@@ -850,7 +840,7 @@ void GameApp::playMusic(const std::string& i_music) {
 	  Sound::stopMusic();
 	} else {
 	  m_playingMusic = i_music;
-	  Sound::playMusic(m_theme.getMusic(i_music)->FilePath());
+	  Sound::playMusic(Theme::instance()->getMusic(i_music)->FilePath());
 	}
       } catch(Exception &e) {
 	Logger::Log("** Warning ** : PlayMusic(%s) failed", i_music.c_str());
@@ -888,7 +878,7 @@ void GameApp::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
   v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
 			  "id_level=\"" + 
 			  xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
-			  "AND id_profile=\"" + xmDatabase::protectString(m_xmsession->profile())  + "\";",
+			  "AND id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile())  + "\";",
 			  nrow);
   v_res = m_db->getResult(v_result, 1, 0, 0);
   if(v_res != NULL) {
@@ -902,13 +892,9 @@ void GameApp::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
 		|| v_best_personal_time < 0);
 
   /* search a better webhighscore */
-  v_best_room_time = (int)(100.0 * m_db->webrooms_getHighscoreTime(m_xmsession->idRoom(), m_MotoGame.getLevelSrc()->Id()));
+  v_best_room_time = (int)(100.0 * m_db->webrooms_getHighscoreTime(XMSession::instance()->idRoom(), m_MotoGame.getLevelSrc()->Id()));
   o_room = (v_current_time < v_best_room_time
 	    || v_best_room_time < 0);
-}
-
-StateManager* GameApp::getStateManager() {
-  return m_stateManager;
 }
 
 GameRenderer* GameApp::getGameRenderer() {
@@ -937,18 +923,14 @@ void GameApp::initReplay() {
   if(m_pJustPlayReplay != NULL) delete m_pJustPlayReplay;
   m_pJustPlayReplay = NULL;
 
-  if(m_xmsession->storeReplays() && m_xmsession->multiNbPlayers() == 1) {
+  if(XMSession::instance()->storeReplays() && XMSession::instance()->multiNbPlayers() == 1) {
     m_pJustPlayReplay = new Replay;
     m_pJustPlayReplay->createReplay("Latest.rpl",
 				    m_MotoGame.getLevelSrc()->Id(),
-				    m_xmsession->profile(),
-				    m_xmsession->replayFrameRate(),
+				    XMSession::instance()->profile(),
+				    XMSession::instance()->replayFrameRate(),
 				    sizeof(SerializedBikeState));
   }
-}
-
-LevelsManager* GameApp::getLevelsManager() {
-  return &m_levelsManager;
 }
 
 ThemeChoicer* GameApp::getThemeChoicer()
@@ -965,7 +947,7 @@ std::string GameApp::getWebRoomURL(xmDatabase* pDb) {
     pDb = m_db;
   }
 
-  v_result = pDb->readDB("SELECT highscoresUrl FROM webrooms WHERE id_room=" + m_xmsession->idRoom() + ";", nrow);
+  v_result = pDb->readDB("SELECT highscoresUrl FROM webrooms WHERE id_room=" + XMSession::instance()->idRoom() + ";", nrow);
   if(nrow != 1) {
     pDb->read_DB_free(v_result);
     return DEFAULT_WEBROOMS_URL;
@@ -988,7 +970,7 @@ std::string GameApp::getWebRoomName(xmDatabase* pDb) {
   /* set the room name ; set to WR if it cannot be determined */
   v_name = "WR";
 
-  v_result = pDb->readDB("SELECT name FROM webrooms WHERE id_room=" + m_xmsession->idRoom() + ";", nrow);
+  v_result = pDb->readDB("SELECT name FROM webrooms WHERE id_room=" + XMSession::instance()->idRoom() + ";", nrow);
   if(nrow == 1) {
     v_name = pDb->getResult(v_result, 1, 0, 0);
   }
@@ -1002,7 +984,7 @@ bool GameApp::getHighscoreInfos(const std::string& i_id_level, std::string* o_id
   unsigned int nrow;
     
   v_result = m_db->readDB("SELECT id_profile, fileUrl FROM webhighscores WHERE id_level=\"" + 
-			  xmDatabase::protectString(i_id_level) + "\" AND id_room=" + m_xmsession->idRoom() + ";",
+			  xmDatabase::protectString(i_id_level) + "\" AND id_room=" + XMSession::instance()->idRoom() + ";",
 			  nrow);
   if(nrow == 0) {
     m_db->read_DB_free(v_result);
@@ -1017,7 +999,7 @@ bool GameApp::getHighscoreInfos(const std::string& i_id_level, std::string* o_id
   if(m_db->replays_exists(FS::getFileBaseName(*o_url))) {
     *o_isAccessible = true;
   } else {
-    *o_isAccessible = m_xmsession->www();
+    *o_isAccessible = XMSession::instance()->www();
   }
 
   return true;
@@ -1045,6 +1027,6 @@ void GameApp::drawFrame(void) {
   Sound::update();
   m_InputHandler.updateInput(m_MotoGame.Players());
   
-  m_stateManager->update();
-  m_stateManager->render(); 
+  StateManager::instance()->update();
+  StateManager::instance()->render(); 
 }

@@ -45,7 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
 bool UIWindow::isUglyMode() {
-  return getApp()->getSession()->ugly();
+  return XMSession::instance()->ugly();
 }
 
   /*===========================================================================
@@ -909,17 +909,17 @@ FRAME_BR (187,198) (8x8)
     
     Sprite *pSprite;
 
-    pSprite = m_pApp->getTheme()->getSprite(SPRITE_TYPE_UI, "Misc");
+    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "Misc");
     if(pSprite != NULL) {
       m_pUIElemTexture = pSprite->getTexture(false,true, FM_NEAREST);
     }
 
-    pSprite = m_pApp->getTheme()->getSprite(SPRITE_TYPE_UI, "MiscDisabled");
+    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MiscDisabled");
     if(pSprite != NULL) {
       m_pUIElemTextureD = pSprite->getTexture(false,true, FM_NEAREST);
     }
 
-    pSprite = m_pApp->getTheme()->getSprite(SPRITE_TYPE_UI, "MiscActive");
+    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MiscActive");
     if(pSprite != NULL) {
       m_pUIElemTextureA = pSprite->getTexture(false,true, FM_NEAREST);
     }

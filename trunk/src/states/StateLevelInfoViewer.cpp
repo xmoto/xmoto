@@ -109,7 +109,7 @@ void StateLevelInfoViewer::checkEvents()
       if(pListEntry != NULL && !pListEntry->Text.empty()) {
 	/* Do it captain */
 	std::string playSpecificReplay = pListEntry->Text[0];
-	m_pGame->getStateManager()->pushState(new StateReplaying(m_pGame, playSpecificReplay));
+	StateManager::instance()->pushState(new StateReplaying(m_pGame, playSpecificReplay));
       }
     }
   }
@@ -384,7 +384,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
   UIButton* pLV_BestTimes_All         = reinterpret_cast<UIButton*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_ALL"));
   UIStatic* pLV_BestTimes_WorldRecord = reinterpret_cast<UIStatic*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_WORLDRECORD"));
 
-  if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_pGame->getSession()->profile() != "" &&
+  if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && XMSession::instance()->profile() != "" &&
      pLV_BestTimes_WorldRecord != NULL) {
 
     /* Create list */
@@ -404,21 +404,21 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
       m_pGame->getDb()->read_DB_free(v_result);
     } else {      
       v_result = m_pGame->getDb()->readDB("SELECT finishTime FROM profile_completedLevels "
-			      "WHERE id_profile=\"" + xmDatabase::protectString(m_pGame->getSession()->profile())  + "\" "
+			      "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile())  + "\" "
 			      "AND   id_level=\""   + xmDatabase::protectString(m_level)    + "\" "
 			      "ORDER BY finishTime LIMIT 10;",
 			      nrow);
       for(unsigned int i=0; i<nrow; i++) {
 	v_finishTime  = atof(m_pGame->getDb()->getResult(v_result, 1, i, 0));
 	UIListEntry *pEntry = pList->addEntry(m_pGame->formatTime(v_finishTime));
-	pEntry->Text.push_back(m_pGame->getSession()->profile());
+	pEntry->Text.push_back(XMSession::instance()->profile());
       }
       m_pGame->getDb()->read_DB_free(v_result);
     }
 
       
     /* Get record */
-    if(m_pGame->getSession()->www()) {
+    if(XMSession::instance()->www()) {
       char **v_result;
       unsigned int nrow;
       std::string v_roomName;
@@ -429,7 +429,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
 			      "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
 			      "ON (a.id_room = b.id_room "
 			      "AND b.id_level=\"" + xmDatabase::protectString(m_level) + "\") "
-			      "WHERE a.id_room=" + m_pGame->getSession()->idRoom() + ";",
+			      "WHERE a.id_room=" + XMSession::instance()->idRoom() + ";",
 			      nrow);
       if(nrow != 1) {
 	pLV_BestTimes_WorldRecord->setCaption("");
@@ -465,7 +465,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerReplays() {
   UIButton *pLV_Replays_All        = reinterpret_cast<UIButton*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_ALL"));
   UIButton *pLV_Replays_Show       = reinterpret_cast<UIButton*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_SHOW"));
 
-  if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_pGame->getSession()->profile() != "" &&
+  if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && XMSession::instance()->profile() != "" &&
      pLV_Replays_Show != NULL) {
     char **v_result;
     unsigned int nrow;
@@ -480,7 +480,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerReplays() {
     else if(pLV_Replays_Personal->getChecked()) {
       v_sql = "SELECT name, id_profile, isFinished, finishTime FROM replays "
 	"WHERE id_level=\""   + xmDatabase::protectString(m_level) + "\" "
-	"AND   id_profile=\"" + xmDatabase::protectString(m_pGame->getSession()->profile()) + "\";";
+	"AND   id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\";";
     }
       
     /* Create list */

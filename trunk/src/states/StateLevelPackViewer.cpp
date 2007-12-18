@@ -116,7 +116,7 @@ void StateLevelPackViewer::checkEvents()
     std::string i_level = pList->getSelectedLevel();
     if(i_level != "") {
       m_pGame->setCurrentPlayingList(pList);
-      m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, i_level, false));
+      StateManager::instance()->pushState(new StatePreplaying(m_pGame, i_level, false));
     }
   }
 
@@ -127,7 +127,7 @@ void StateLevelPackViewer::checkEvents()
 
     if(v_id_level != "") {
       m_pGame->addLevelToFavorite(v_id_level);
-      m_pGame->getStateManager()->sendAsynchronousMessage("FAVORITES_UPDATED");
+      StateManager::instance()->sendAsynchronousMessage("FAVORITES_UPDATED");
     }
   }
 
@@ -145,7 +145,7 @@ void StateLevelPackViewer::checkEvents()
 
   if(pShowHighscore != NULL && pShowHighscore->isClicked() == true){
     pShowHighscore->setClicked(false);
-    m_pGame->getStateManager()->pushState(new StateDownloadGhost(m_pGame, getInfoFrameLevelId(), true));
+    StateManager::instance()->pushState(new StateDownloadGhost(m_pGame, getInfoFrameLevelId(), true));
   }
 
   if(pLevelInfoButton!=NULL && pLevelInfoButton->isClicked()) {
@@ -153,7 +153,7 @@ void StateLevelPackViewer::checkEvents()
 
     std::string v_id_level = pList->getSelectedLevel();
     if(v_id_level != "") {
-      m_pGame->getStateManager()->pushState(new StateLevelInfoViewer(m_pGame, v_id_level));
+      StateManager::instance()->pushState(new StateLevelInfoViewer(m_pGame, v_id_level));
     }
   }
 }
@@ -348,8 +348,8 @@ void StateLevelPackViewer::updateGUI()
     pList->hideRoomBestTime();
   }
 
-  v_result = pDb->readDB(m_pActiveLevelPack->getLevelsWithHighscoresQuery(m_pGame->getSession()->profile(),
-									  m_pGame->getSession()->idRoom()),
+  v_result = pDb->readDB(m_pActiveLevelPack->getLevelsWithHighscoresQuery(XMSession::instance()->profile(),
+									  XMSession::instance()->idRoom()),
 				      nrow);
   for(unsigned int i=0; i<nrow; i++) {
     if(pDb->getResult(v_result, 4, i, 2) == NULL) {

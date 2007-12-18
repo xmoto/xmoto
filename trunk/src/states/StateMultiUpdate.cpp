@@ -91,7 +91,7 @@ bool StateMultiUpdate::update()
       if(pThread->waitForThreadEnd() != 0) {
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, pInfos->m_errorMessage, UI_MSGBOX_OK);
 	v_msgboxState->setId("ERROR");
-	m_pGame->getStateManager()->pushState(v_msgboxState);
+	StateManager::instance()->pushState(v_msgboxState);
       }
     }
 

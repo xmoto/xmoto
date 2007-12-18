@@ -29,7 +29,7 @@ class DrawLibOpenGL : public DrawLib {
   virtual ~DrawLibOpenGL();
 
   virtual void init(unsigned int nDispWidth, unsigned int nDispHeight, unsigned int nDispBPP,
-		    bool bWindowed, Theme * ptheme);
+		    bool bWindowed);
   virtual void unInit();
 
   virtual void glVertexSP(float x, float y);

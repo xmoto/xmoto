@@ -51,7 +51,7 @@ int DownloadGhostThread::realThreadFunction()
   v_result = m_pDb->readDB("SELECT fileUrl "
 			   "FROM webhighscores WHERE id_level=\"" + 
 			   xmDatabase::protectString(m_levelId) + "\" "
-			   "AND id_room=" + m_pGame->getSession()->idRoom() + ";",
+			   "AND id_room=" + XMSession::instance()->idRoom() + ";",
 			   nrow);
   if(nrow == 0) {
     Logger::Log("nrow == 0");
@@ -69,7 +69,7 @@ int DownloadGhostThread::realThreadFunction()
     return 0;
   }
 
-  if(m_pGame->getSession()->www() == false) {
+  if(XMSession::instance()->www() == false) {
     Logger::Log("www == false");
     return 0;
   }
@@ -78,7 +78,7 @@ int DownloadGhostThread::realThreadFunction()
     setThreadCurrentOperation(GAMETEXT_DLGHOST);
     setThreadProgress(0);
 
-    ProxySettings* pProxySettings = m_pGame->getSession()->proxySettings();
+    ProxySettings* pProxySettings = XMSession::instance()->proxySettings();
     std::string    webRoomUrl     = m_pGame->getWebRoomURL(m_pDb);
     std::string    webRoomName    = m_pGame->getWebRoomName(m_pDb);
 
@@ -86,7 +86,7 @@ int DownloadGhostThread::realThreadFunction()
 
     m_pWebRoom->downloadReplay(v_fileUrl);
     m_pGame->addReplay(v_replayName);
-    m_pGame->getStateManager()->sendAsynchronousMessage("REPLAYS_UPDATED");
+    StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
       
     setThreadProgress(100);
 

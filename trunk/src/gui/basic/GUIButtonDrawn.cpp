@@ -35,17 +35,17 @@ UIButtonDrawn::UIButtonDrawn(UIWindow *pParent,
     m_border = 0;
     m_textureUnpressed = m_texturePressed = m_textureHover = NULL;
 
-    v_sprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, i_spritePressed);
+    v_sprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, i_spritePressed);
     if(v_sprite != NULL) {
       m_texturePressed = v_sprite->getTexture();
     }
 
-    v_sprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, i_spriteUnpressed);
+    v_sprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, i_spriteUnpressed);
     if(v_sprite != NULL) {
       m_textureUnpressed = v_sprite->getTexture();
     }
 
-    v_sprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, i_spriteHover);
+    v_sprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, i_spriteHover);
     if(v_sprite != NULL) {
       m_textureHover = v_sprite->getTexture();
     }

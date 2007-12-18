@@ -45,11 +45,11 @@ int UploadHighscoreThread::realThreadFunction()
     bool v_msg_status_ok;
     
     FSWeb::uploadReplay(m_highscorePath,
-			m_pGame->getSession()->idRoom(),
-			m_pGame->getSession()->uploadLogin(),
-			m_pGame->getSession()->uploadPassword(),
-			m_pGame->getSession()->uploadHighscoreUrl(),
-			this, m_pGame->getSession()->proxySettings(), v_msg_status_ok, m_msg);
+			XMSession::instance()->idRoom(),
+			XMSession::instance()->uploadLogin(),
+			XMSession::instance()->uploadPassword(),
+			XMSession::instance()->uploadHighscoreUrl(),
+			this, XMSession::instance()->proxySettings(), v_msg_status_ok, m_msg);
     if(v_msg_status_ok) {
       return 0;
     } else {

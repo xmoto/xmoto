@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Level.h"
 #include "db/xmDatabase.h"
 #include "XMotoLoadLevelsInterface.h"
+#include "helpers/Singleton.h"
 
 class WWWAppInterface;
 
@@ -62,12 +63,14 @@ class LevelsPack {
   std::string m_description;
 };
 
-class LevelsManager {
+class LevelsManager : public Singleton<LevelsManager> {
+  friend class Singleton<LevelsManager>;
 
-  public:
+private:
   LevelsManager();
   ~LevelsManager();
 
+public:
   LevelsPack& LevelsPackByName(const std::string &i_name);
   std::string LevelByFileName(xmDatabase *i_db, const std::string& i_fileName);
   bool doesLevelExist(xmDatabase *i_db, const std::string& i_id);

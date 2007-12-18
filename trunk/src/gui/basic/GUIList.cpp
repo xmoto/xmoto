@@ -552,7 +552,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           if(m_nVisibleSelected>=0 && m_nVisibleSelected<m_Entries.size()-m_filteredItems && m_pEnterButton != NULL) {
             m_pEnterButton->setClicked(true);
 	    try {
-	      Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
+	      Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
 	    } catch(Exception &e) {
 	    }
           }
@@ -739,7 +739,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           m_pEnterButton->setClicked(true);       
           
 	  try {
-	    Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
+	    Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
 	  } catch(Exception &e) {
 	  }
         }
