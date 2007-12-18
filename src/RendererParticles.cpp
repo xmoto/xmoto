@@ -68,7 +68,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(i_source->SpriteName() == "Star") {
 
       AnimationSprite *pStarAnimation;
-      pStarAnimation = (AnimationSprite*) getParent()->getTheme()
+      pStarAnimation = (AnimationSprite*) Theme::instance()
       ->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForStar());
 
       if(pStarAnimation != NULL) {
@@ -86,7 +86,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	DecorationSprite *pStarDecoration;
 
 	/* search as a simple decoration, not nice, crappy crappy */
-	pStarDecoration = (DecorationSprite*) getParent()->getTheme()
+	pStarDecoration = (DecorationSprite*) Theme::instance()
 	->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForStar());
 	if(pStarDecoration != NULL) {
 	
@@ -102,7 +102,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	}
       }
     } else if(i_source->SpriteName() == "Fire") {
-      EffectSprite* pFireType = (EffectSprite*) getParent()->getTheme()
+      EffectSprite* pFireType = (EffectSprite*) Theme::instance()
       ->getSprite(SPRITE_TYPE_EFFECT, "Fire1");
 
       if(pFireType != NULL) {
@@ -117,9 +117,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	getParent()->getDrawLib()->removePropertiesAfterEnd();
       }
     } else if(i_source->SpriteName() == "Smoke") {
-      EffectSprite* pSmoke1Type = (EffectSprite*) getParent()->getTheme()
+      EffectSprite* pSmoke1Type = (EffectSprite*) Theme::instance()
       ->getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
-      EffectSprite* pSmoke2Type = (EffectSprite*) getParent()->getTheme()
+      EffectSprite* pSmoke2Type = (EffectSprite*) Theme::instance()
       ->getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
 
       if(pSmoke1Type != NULL && pSmoke2Type != NULL) {
@@ -148,7 +148,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	getParent()->getDrawLib()->removePropertiesAfterEnd();
       }
     } else if(i_source->SpriteName() == "Debris1") {
-      EffectSprite* pDebrisType = (EffectSprite*) getParent()->getTheme()
+      EffectSprite* pDebrisType = (EffectSprite*) Theme::instance()
       ->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
 
       if(pDebrisType != NULL) {

@@ -53,7 +53,7 @@ void CheckWwwThread::upgradeWebHighscores()
 {
   try {
     m_pWebRoom->upgrade(m_pDb);
-    m_pGame->getStateManager()->sendAsynchronousMessage("HIGHSCORES_UPDATED");
+    StateManager::instance()->sendAsynchronousMessage("HIGHSCORES_UPDATED");
   } catch (Exception& e) {
     Logger::Log("** Warning ** : Failed to analyse web-highscores file");   
   }
@@ -64,27 +64,27 @@ void CheckWwwThread::updateWebLevels()
   Logger::Log("WWW: Checking for new or updated levels...");
 
   /* Try download levels list */
-  m_pWebLevels->update(m_pDb, m_pGame->getSession()->useCrappyPack());
+  m_pWebLevels->update(m_pDb, XMSession::instance()->useCrappyPack());
   if(m_pWebLevels->nbLevelsToGet(m_pDb) != 0){
-    m_pGame->getStateManager()->sendAsynchronousMessage("NEW_LEVELS_TO_DOWNLOAD");
+    StateManager::instance()->sendAsynchronousMessage("NEW_LEVELS_TO_DOWNLOAD");
   } else {
-    m_pGame->getStateManager()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
+    StateManager::instance()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
   }
 }
 
 int CheckWwwThread::realThreadFunction()
 {
-  if(m_pGame->getSession()->www() == true){
-    ProxySettings* pProxySettings = m_pGame->getSession()->proxySettings();
+  if(XMSession::instance()->www() == true){
+    ProxySettings* pProxySettings = XMSession::instance()->proxySettings();
     std::string    webRoomUrl     = m_pGame->getWebRoomURL(m_pDb);
     std::string    webRoomName    = m_pGame->getWebRoomName(m_pDb);
-    std::string    webLevelsUrl   = m_pGame->getSession()->webLevelsUrl();
+    std::string    webLevelsUrl   = XMSession::instance()->webLevelsUrl();
 
     m_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);
     m_pWebLevels->setWebsiteInfos(webLevelsUrl, pProxySettings);
 
     if(m_forceUpdate == true
-       || m_pGame->getSession()->checkNewHighscoresAtStartup() == true){
+       || XMSession::instance()->checkNewHighscoresAtStartup() == true){
       try {
 	setThreadCurrentOperation(GAMETEXT_DLHIGHSCORES);
 	setThreadProgress(0);
@@ -104,7 +104,7 @@ int CheckWwwThread::realThreadFunction()
     setThreadProgress(100);
 
     if(m_forceUpdate == true
-       || m_pGame->getSession()->checkNewLevelsAtStartup() == true){
+       || XMSession::instance()->checkNewLevelsAtStartup() == true){
       try {
 	setThreadCurrentOperation(GAMETEXT_DLLEVELSCHECK);
 	setThreadProgress(0);

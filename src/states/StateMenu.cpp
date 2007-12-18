@@ -54,7 +54,7 @@ StateMenu::~StateMenu()
 void StateMenu::enter()
 {
   GameState::enter();
-  m_GUI->enableContextMenuDrawing(m_pGame->getSession()->enableContextHelp());
+  m_GUI->enableContextMenuDrawing(XMSession::instance()->enableContextHelp());
 }
 
 void StateMenu::leave()
@@ -98,7 +98,7 @@ void StateMenu::keyDown(int nKey, SDLMod mod,int nChar)
   checkEvents();
 
   if(nKey == SDLK_F5){
-    m_pGame->getStateManager()->pushState(new StateUpdateDb(m_pGame));
+    StateManager::instance()->pushState(new StateUpdateDb(m_pGame));
   }
 }
 

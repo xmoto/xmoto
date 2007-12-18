@@ -90,7 +90,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* Draw front wheel */
     /* Ugly mode? */
-    if(getParent()->getSession()->ugly()) {
+    if(XMSession::instance()->ugly()) {
       o0 = Vector2f(-pBikeParms->WR,0);
       o1 = Vector2f(0,pBikeParms->WR);
       o2 = Vector2f(pBikeParms->WR,0);
@@ -116,7 +116,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     /* Ugly mode? */
 
-    if(getParent()->getSession()->ugly() == false) {
+    if(XMSession::instance()->ugly() == false) {
       pSprite = p_theme->getWheel();
       if(pSprite != NULL) {
 	pTexture = pSprite->getTexture(false, false, FM_LINEAR);
@@ -126,7 +126,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     }
 
-    if(getParent()->getSession()->ugly() || getParent()->getSession()->testTheme()) {
+    if(XMSession::instance()->ugly() || XMSession::instance()->testTheme()) {
       getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
       getParent()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
       getParent()->getDrawLib()->glVertex(p0+C);    
@@ -142,7 +142,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* Draw rear wheel */        
     /* Ugly mode? */
-    if(getParent()->getSession()->ugly()) {
+    if(XMSession::instance()->ugly()) {
       o0 = Vector2f(-pBikeParms->WR,0);
       o1 = Vector2f(0,pBikeParms->WR);
       o2 = Vector2f(pBikeParms->WR,0);
@@ -167,7 +167,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Rc = (p0 + p1 + p2 + p3) * 0.25f + C;
     
     /* Ugly mode? */
-    if(getParent()->getSession()->ugly() == false) {
+    if(XMSession::instance()->ugly() == false) {
       pSprite = p_theme->getWheel();
       if(pSprite != NULL) {
 	pTexture = pSprite->getTexture(false, false, FM_LINEAR);
@@ -177,7 +177,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     }
 
-    if(getParent()->getSession()->ugly() || getParent()->getSession()->testTheme()) {
+    if(XMSession::instance()->ugly() || XMSession::instance()->testTheme()) {
       getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
       getParent()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
       getParent()->getDrawLib()->glVertex(p0+C);    
@@ -191,7 +191,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       _RenderCircle(16,p_theme->getUglyWheelColor(),C,pBikeParms->WR);
     }
 
-    if(!getParent()->getSession()->ugly()) {
+    if(!XMSession::instance()->ugly()) {
       /* Draw swing arm */
       if(pBike->Dir == DD_RIGHT) {       
         Sv = pBike->SwingAnchorP - Rc;
@@ -276,7 +276,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
       /* Draw rider */
-    if(getParent()->getSession()->ugly() == false) { 
+    if(XMSession::instance()->ugly() == false) { 
       /* torso */
       renderBodyPart(pBike->Dir == DD_RIGHT ? pBike->ShoulderP  : pBike->Shoulder2P,
 		     pBike->Dir == DD_RIGHT ? pBike->LowerBodyP : pBike->LowerBody2P,
@@ -340,7 +340,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     if(pBike->Dir == DD_RIGHT) {
-      if(getParent()->getSession()->ugly() || getParent()->getSession()->testTheme()) {
+      if(XMSession::instance()->ugly() || XMSession::instance()->testTheme()) {
         /* Draw it ugly */
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
 	getParent()->getDrawLib()->setColor(MAKE_COLOR(i_filterUglyColor.Red(),
@@ -361,7 +361,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     }
     else if(pBike->Dir == DD_LEFT) {
-      if(getParent()->getSession()->ugly() || getParent()->getSession()->testTheme()) {
+      if(XMSession::instance()->ugly() || XMSession::instance()->testTheme()) {
         /* Draw it ugly */
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
 	getParent()->getDrawLib()->setColor(MAKE_COLOR(i_filterUglyColor.Red(),

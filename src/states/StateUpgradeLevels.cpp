@@ -81,7 +81,7 @@ void StateUpgradeLevels::executeOneCommand(std::string cmd)
     StateMessageBox* v_state = new StateMessageBox(this, m_pGame, cBuf,
 						   (UI_MSGBOX_YES|UI_MSGBOX_NO));
     v_state->setId("DOWNLOAD_LEVELS");
-    m_pGame->getStateManager()->pushState(v_state);
+    StateManager::instance()->pushState(v_state);
   }
   else if(cmd == "ASKINGLEVELUPDATE"){
     char cBuf[256];
@@ -90,7 +90,7 @@ void StateUpgradeLevels::executeOneCommand(std::string cmd)
     StateMessageBox* v_state = new StateMessageBox(this, m_pGame, cBuf,
 						   (UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
     v_state->setId("ASKING_LEVEL_UPDATE");
-    m_pGame->getStateManager()->pushState(v_state);
+    StateManager::instance()->pushState(v_state);
   }
 }
 

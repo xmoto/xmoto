@@ -63,11 +63,11 @@ void StateReplaying::enter()
 
     try {
       m_replayBiker = m_pGame->getMotoGame()->addReplayFromFile(m_replay,
-								m_pGame->getTheme(), m_pGame->getTheme()->getPlayerTheme(),
-								m_pGame->getSession()->enableEngineSound());
+								Theme::instance(), Theme::instance()->getPlayerTheme(),
+								XMSession::instance()->enableEngineSound());
       m_pGame->getMotoGame()->getCamera()->setPlayerToFollow(m_replayBiker);
     } catch(Exception &e) {
-      m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, "Unable to read the replay: " + e.getMsg(), UI_MSGBOX_OK));
+      StateManager::instance()->replaceState(new StateMessageBox(NULL, m_pGame, "Unable to read the replay: " + e.getMsg(), UI_MSGBOX_OK));
       return;
     }
     
@@ -75,7 +75,7 @@ void StateReplaying::enter()
     try {
       m_pGame->getMotoGame()->loadLevel(m_pGame->getDb(), m_replayBiker->levelId());
     } catch(Exception &e) {
-      m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, e.getMsg(), UI_MSGBOX_OK));
+      StateManager::instance()->replaceState(new StateMessageBox(this, m_pGame, e.getMsg(), UI_MSGBOX_OK));
       return;
     }
     
@@ -89,7 +89,7 @@ void StateReplaying::enter()
       sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
 	      m_pGame->getMotoGame()->getLevelSrc()->getRequiredVersion().c_str());
       abortPlaying();
-      m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, cBuf, UI_MSGBOX_OK));
+      StateManager::instance()->replaceState(new StateMessageBox(this, m_pGame, cBuf, UI_MSGBOX_OK));
       return;
     }
     
@@ -98,9 +98,9 @@ void StateReplaying::enter()
     m_pGame->getMotoGame()->prePlayLevel(m_pGame->getInputHandler(), NULL, false);
     
     /* add the ghosts */
-    if(m_pGame->getSession()->enableGhosts()) {
+    if(XMSession::instance()->enableGhosts()) {
       try {
-	m_pGame->addGhosts(m_pGame->getMotoGame(), m_pGame->getTheme());
+	m_pGame->addGhosts(m_pGame->getMotoGame(), Theme::instance());
       } catch(Exception &e) {
 	/* anyway */
       }
@@ -124,7 +124,7 @@ void StateReplaying::enter()
     setScoresTimes();    
   } catch(Exception &e) {
     abortPlaying();
-    m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    StateManager::instance()->replaceState(new StateMessageBox(this, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     return;
   }
 }
@@ -193,7 +193,7 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
     } else {
       // rerun the replay
       closePlaying();
-      m_pGame->getStateManager()->replaceState(new StateReplaying(m_pGame, m_replay)); 
+      StateManager::instance()->replaceState(new StateReplaying(m_pGame, m_replay)); 
     }
     break;
 

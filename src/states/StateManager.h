@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateMessageBoxReceiver.h"
 #include "StateMenuContextReceiver.h"
+#include "helpers/Singleton.h"
 
 class GameApp;
 
@@ -139,10 +140,15 @@ class GameState : public StateMessageBoxReceiver,
     float m_nShadeTime;
   };
 
-  class StateManager {
-  public:
-    StateManager(GameApp* pGame);
+  class StateManager : public Singleton<StateManager> {
+    friend class Singleton<StateManager>;
+
+  private:
+    StateManager();
     ~StateManager();
+
+  public:
+    void init(GameApp* pGame);
 
     void pushState(GameState* pNewState);
     GameState* popState();

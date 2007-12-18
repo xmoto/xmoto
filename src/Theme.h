@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 
 #include "VTexture.h"
+#include "helpers/Singleton.h"
 
 class Texture;
 class WWWAppInterface;
@@ -339,11 +340,14 @@ struct ThemeFile {
   std::string filemd5;
 };
 
-class Theme {
-  public:
+class Theme : public Singleton<Theme> {
+  friend class Singleton<Theme>;
+
+private:
   Theme();
   ~Theme();
  
+public:
   void load(std::string p_themeFile);
 
   std::string Name() const;

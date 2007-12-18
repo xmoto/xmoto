@@ -50,12 +50,12 @@ void StateEditWebConfig::enter()
   m_GUI = m_sGUI;
   updateGUI();
 
-  if(m_pGame->getSession()->webConfAtInit()) {
+  if(XMSession::instance()->webConfAtInit()) {
     // show the message box
     StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, std::string(GAMETEXT_ALLOWINTERNETCONN),
 							 UI_MSGBOX_YES|UI_MSGBOX_NO);
     v_msgboxState->setId("EDITWEBCONF");
-    m_pGame->getStateManager()->pushState(v_msgboxState);
+    StateManager::instance()->pushState(v_msgboxState);
   }
 
   StateMenu::enter();
@@ -112,12 +112,12 @@ void StateEditWebConfig::checkEvents()
     else
       ProxyType = "";
 
-    m_pGame->getSession()->proxySettings()->setType(ProxyType);
-    m_pGame->getSession()->proxySettings()->setPort(atoi(pPort->getCaption().c_str()));
-    m_pGame->getSession()->proxySettings()->setServer(pServer->getCaption());
-    m_pGame->getSession()->proxySettings()->setAuthentification(pLogin->getCaption(), pPassword->getCaption());
-    m_pGame->getSession()->setWWW(true);
-    m_pGame->getStateManager()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
+    XMSession::instance()->proxySettings()->setType(ProxyType);
+    XMSession::instance()->proxySettings()->setPort(atoi(pPort->getCaption().c_str()));
+    XMSession::instance()->proxySettings()->setServer(pServer->getCaption());
+    XMSession::instance()->proxySettings()->setAuthentification(pLogin->getCaption(), pPassword->getCaption());
+    XMSession::instance()->setWWW(true);
+    StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
 
     m_requestForEnd = true;
   }
@@ -326,16 +326,16 @@ void StateEditWebConfig::updateGUI()
   pSOCKS5Conn->setChecked(false);
 
   /* Read config */
-  pServer->setCaption(m_pGame->getSession()->proxySettings()->getServer());
+  pServer->setCaption(XMSession::instance()->proxySettings()->getServer());
   char cBuf[256] = "";
-  int  n = m_pGame->getSession()->proxySettings()->getPort();
+  int  n = XMSession::instance()->proxySettings()->getPort();
   if(n > 0)
     sprintf(cBuf,"%d",n);
   pPort->setCaption(cBuf);
-  pLogin->setCaption(m_pGame->getSession()->proxySettings()->getAuthentificationUser());
-  pPassword->setCaption(m_pGame->getSession()->proxySettings()->getAuthentificationPassword());
+  pLogin->setCaption(XMSession::instance()->proxySettings()->getAuthentificationUser());
+  pPassword->setCaption(XMSession::instance()->proxySettings()->getAuthentificationPassword());
 
-  std::string proxyType = m_pGame->getSession()->proxySettings()->getTypeStr();
+  std::string proxyType = XMSession::instance()->proxySettings()->getTypeStr();
   if(proxyType == "HTTP")
     pHTTPConn->setChecked(true);
   else if(proxyType == "SOCKS4")
@@ -358,14 +358,14 @@ void StateEditWebConfig::send(const std::string& i_id, UIMsgBoxButton i_button, 
   switch(i_button){
   case UI_MSGBOX_YES:
     /* Show the actual web config editor */
-    m_pGame->getSession()->setWWW(true);
+    XMSession::instance()->setWWW(true);
     break;
   case UI_MSGBOX_NO:
     /* No internet connection thank you */
-    m_pGame->getSession()->setWWW(false);
+    XMSession::instance()->setWWW(false);
     m_requestForEnd = true;
     break;
   }
 
-  m_pGame->getSession()->setWebConfAtInit(false);
+  XMSession::instance()->setWebConfAtInit(false);
 }

@@ -102,7 +102,7 @@ int UpdateThemeThread::realThreadFunction()
     v_data.v_nb_files_to_download = 1;
     FS::mkArborescence(v_destinationFileXML);
     v_destinationFileXML_tmp = v_destinationFileXML + ".tmp";
-    FSWeb::downloadFileBz2(v_destinationFileXML_tmp, v_fileUrl, FSWeb::f_curl_progress_callback_download, &v_data, m_pGame->getSession()->proxySettings());
+    FSWeb::downloadFileBz2(v_destinationFileXML_tmp, v_fileUrl, FSWeb::f_curl_progress_callback_download, &v_data, XMSession::instance()->proxySettings());
     
     if(m_askThreadToEnd) {
       remove(v_destinationFileXML_tmp.c_str());
@@ -110,7 +110,7 @@ int UpdateThemeThread::realThreadFunction()
     }
 
     /* download all the files required */
-    Theme *v_theme = new Theme();
+    Theme *v_theme = Theme::instance();
     std::vector<ThemeFile> *v_required_files;
     v_theme->load(v_destinationFileXML_tmp);
     v_required_files = v_theme->getRequiredFiles();
@@ -140,7 +140,7 @@ int UpdateThemeThread::realThreadFunction()
 
 	// download v_required_files[i]     
 	v_destinationFile = FS::getUserDir() + std::string("/") + (*v_required_files)[i].filepath;
-	v_sourceFile = m_pGame->getSession()->webThemesURLBase() + std::string("/") + (*v_required_files)[i].filepath;
+	v_sourceFile = XMSession::instance()->webThemesURLBase() + std::string("/") + (*v_required_files)[i].filepath;
 	
 	/* check md5 sums */
 	v_md5Local = v_md5Dist = "";
@@ -160,7 +160,7 @@ int UpdateThemeThread::realThreadFunction()
 	  FS::mkArborescence(v_destinationFile);
 	  
 	  FSWeb::downloadFile(v_destinationFile, v_sourceFile, FSWeb::f_curl_progress_callback_download, &v_data,
-			      m_pGame->getSession()->proxySettings());
+			      XMSession::instance()->proxySettings());
 	  
 	  v_nb_files_performed++;
 	}
@@ -172,7 +172,6 @@ int UpdateThemeThread::realThreadFunction()
     } else {
       v_all_downloaded = true;
     }
-    delete v_theme;
 
     /* full downloading, put the xml */
     if(v_all_downloaded) {
@@ -186,7 +185,7 @@ int UpdateThemeThread::realThreadFunction()
 	} else {
 	  m_pDb->themes_add(m_id_theme, v_themeFile);
 	}
-	m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
+	StateManager::instance()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
       }
     } else {
       remove(v_destinationFileXML_tmp.c_str());

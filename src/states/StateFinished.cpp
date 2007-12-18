@@ -86,14 +86,14 @@ void StateFinished::enter()
     /* upload button */
     if(v_is_a_room_highscore) {
       /* active upload button */
-      if(m_pGame->getSession()->www()) {
+      if(XMSession::instance()->www()) {
 	v_uploadButton->enableWindow(v_is_a_room_highscore);
       }
     }
 
     /* autosave */
     if(v_is_a_room_highscore || v_is_a_personnal_highscore) {
-      if(m_pGame->getSession()->autosaveHighscoreReplays()) {
+      if(XMSession::instance()->autosaveHighscoreReplays()) {
 	std::string v_replayName;
 	char v_str[256];
 	v_replayName = Replay::giveAutomaticName();
@@ -108,7 +108,7 @@ void StateFinished::enter()
   if(v_is_a_room_highscore || v_is_a_personnal_highscore) {
     /* play a sound */
     try {
-      Sound::playSampleByName(m_pGame->getTheme()->getSound("NewHighscore")->FilePath());
+      Sound::playSampleByName(Theme::instance()->getSound("NewHighscore")->FilePath());
     } catch(Exception &e) {
     }
   }
@@ -125,7 +125,7 @@ void StateFinished::enter()
   }
 
   UIBestTimes *v_pBestTimes = reinterpret_cast<UIBestTimes *>(m_GUI->getChild("BESTTIMES"));
-  makeBestTimesWindow(v_pBestTimes, m_pGame->getDb(), m_pGame->getSession()->profile(), m_pGame->getMotoGame()->getLevelSrc()->Id(),
+  makeBestTimesWindow(v_pBestTimes, m_pGame->getDb(), XMSession::instance()->profile(), m_pGame->getMotoGame()->getLevelSrc()->Id(),
 		      v_finish_time, TimeStamp);
 
   StateMenu::enter();
@@ -176,7 +176,7 @@ void StateFinished::checkEvents() {
     StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
 							 UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, Replay::giveAutomaticName());
     v_msgboxState->setId("SAVEREPLAY");
-    m_pGame->getStateManager()->pushState(v_msgboxState);
+    StateManager::instance()->pushState(v_msgboxState);
   }
 
   UIButton *pUploadButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:UPLOAD_BUTTON"));
@@ -184,7 +184,7 @@ void StateFinished::checkEvents() {
     pUploadButton->setClicked(false);
 
     std::string v_replayPath = FS::getUserDir() + "/Replays/Latest.rpl";
-    m_pGame->getStateManager()->pushState(new StateUploadHighscore(m_pGame, v_replayPath));
+    StateManager::instance()->pushState(new StateUploadHighscore(m_pGame, v_replayPath));
   }
 
   UIButton *pAbortButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:ABORT_BUTTON"));
@@ -203,7 +203,7 @@ void StateFinished::checkEvents() {
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
     v_msgboxState->setId("QUIT");
-    m_pGame->getStateManager()->pushState(v_msgboxState);
+    StateManager::instance()->pushState(v_msgboxState);
   }
 }
 

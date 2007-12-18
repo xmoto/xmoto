@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __XMCONF_H__
 
 #include <string>
+#include "helpers/Singleton.h"
 
 #define THEME_DEFAULT_THEMENAME "Classic"
 #define DEFAULT_WEBROOM_ID      "1"
@@ -79,9 +80,14 @@ class ProxySettings {
   std::string m_authPassword;
 };
 
-class XMSession {
-  public:
+class XMSession : public Singleton<XMSession> {
+  friend class Singleton<XMSession>;
+
+private:
   XMSession();
+  virtual ~XMSession() {};
+
+public:
   void load(const XMArguments* i_xmargs);
   void load(UserConfig* m_Config);
   void save(UserConfig* m_Config);

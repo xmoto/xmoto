@@ -48,22 +48,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_pMenuBR = NULL;
     
     Sprite *pSprite;
-    pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "MenuTL");
+    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MenuTL");
     if(pSprite != NULL) {
       m_pMenuTL = pSprite->getTexture(false,true, FM_NEAREST);
     }
 
-    pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "MenuTR");
+    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MenuTR");
     if(pSprite != NULL) {
       m_pMenuTR = pSprite->getTexture(false,true, FM_NEAREST);
     }
 
-    pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "MenuBL");
+    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MenuBL");
     if(pSprite != NULL) {
       m_pMenuBL = pSprite->getTexture(false,true, FM_NEAREST);
     }
 
-    pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "MenuBR");
+    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MenuBR");
     if(pSprite != NULL) {
       m_pMenuBR = pSprite->getTexture(false,true, FM_NEAREST);
     }

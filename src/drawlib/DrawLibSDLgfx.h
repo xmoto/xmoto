@@ -30,7 +30,7 @@ class DrawLibSDLgfx:public DrawLib {
   virtual ~DrawLibSDLgfx();
   
   virtual void init(unsigned int nDispWidth, unsigned int nDispHeight,
-		    unsigned int nDispBPP, bool bWindowed, Theme * ptheme);
+		    unsigned int nDispBPP, bool bWindowed);
   virtual void unInit();
 
   virtual void glVertexSP(float x, float y);

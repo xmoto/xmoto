@@ -39,16 +39,16 @@ int UpdateDbThread::realThreadFunction()
   // initialize to -1, so we put it to 0 so that the current operation
   // text is update in the state
   setThreadProgress(0);
-  m_pGame->getLevelsManager()->reloadLevelsFromLvl(m_pDb, this);
-  m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_LEVELS_LISTS");
+  LevelsManager::instance()->reloadLevelsFromLvl(m_pDb, this);
+  StateManager::instance()->sendSynchronousMessage("UPDATE_LEVELS_LISTS");
 
   setThreadCurrentOperation(GAMETEXT_RELOADINGREPLAYS);
   m_pGame->initReplaysFromDir(m_pDb, this);
-  m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_REPLAYS_LISTS");
+  StateManager::instance()->sendSynchronousMessage("UPDATE_REPLAYS_LISTS");
   
   setThreadCurrentOperation(GAMETEXT_RELOADINGTHEMES);
   m_pGame->getThemeChoicer()->initThemesFromDir(m_pDb);
-  m_pGame->getStateManager()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
+  StateManager::instance()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
 
   return 0;
 }

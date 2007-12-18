@@ -31,7 +31,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class XMArguments;
 class xmDatabase;
-class XMSession;
 class Img;
 class SysMessage;
 class GameApp;
@@ -42,20 +41,17 @@ class WebLevels;
 class LevelsPack;
 class UIWindow;
 class UILevelList;
-class LevelsManager;
 class SoundSample;
-class StateManager;
 class XMotoLoadReplaysInterface;
 
    class XMMotoGameHooks : public MotoGameHooks {
    public:
      XMMotoGameHooks();
      virtual ~XMMotoGameHooks();
-     void setGameApps(GameApp *i_GameApp, MotoGame *i_MotoGame);
+     void setGameApps(MotoGame *i_MotoGame);
      void OnTakeEntity();
 
    private:
-     GameApp  *m_GameApp;
      MotoGame *m_MotoGame;
    };
 
@@ -111,15 +107,11 @@ class XMotoLoadReplaysInterface;
       DrawLib *getDrawLib() {
 	return drawLib;
       };
-      Theme *getTheme() {
-	return &m_theme;
-      };
 
       UserConfig* getUserConfig() { /* to remove */
 	return &m_Config;
       }
 
-      XMSession* getSession();
       void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
       void switchLevelToBlacklist(const std::string& i_levelId, bool v_displayMessage = false);
 
@@ -149,8 +141,6 @@ class XMotoLoadReplaysInterface;
 
       //
       xmDatabase*    getDb();
-      LevelsManager* getLevelsManager();
-      StateManager*  getStateManager();
       GameRenderer*  getGameRenderer();
       InputHandler*  getInputHandler();
       ThemeChoicer*  getThemeChoicer();
@@ -261,8 +251,6 @@ class XMotoLoadReplaysInterface;
       /* Replay saving UI fun */
       UIMsgBox *m_pSaveReplayMsgBox;    
 
-      LevelsManager m_levelsManager;
-
       SysMessage* m_sysMsg;
 
       /* Main loop statics */
@@ -277,12 +265,8 @@ class XMotoLoadReplaysInterface;
 
       UserConfig m_Config;
       
-      Theme m_theme;
       DrawLib *drawLib;
 
-      XMSession* m_xmsession;
-      StateManager* m_stateManager;
-      
       /* Run-time fun */
       bool m_bQuit;		/* Quit flag */
 

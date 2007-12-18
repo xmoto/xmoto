@@ -80,7 +80,7 @@ bool UpgradeLevelsThread::shouldLevelBeUpdated(const std::string &LevelID)
   ((StateUpgradeLevels*)m_pCallingState)->setCurrentUpdatedLevel(v_levelName);
 
   // message box
-  m_pGame->getStateManager()->sendAsynchronousMessage("ASKINGLEVELUPDATE");
+  StateManager::instance()->sendAsynchronousMessage("ASKINGLEVELUPDATE");
   sleepThread();
 
   if(m_wakeUpInfos == "NO"){
@@ -105,15 +105,15 @@ int UpgradeLevelsThread::realThreadFunction()
     setThreadCurrentOperation(GAMETEXT_CHECKINGFORLEVELS);
     setThreadProgress(0);
       
-    ProxySettings* pProxySettings = m_pGame->getSession()->proxySettings();
-    std::string    webLevelsUrl   = m_pGame->getSession()->webLevelsUrl();
+    ProxySettings* pProxySettings = XMSession::instance()->proxySettings();
+    std::string    webLevelsUrl   = XMSession::instance()->webLevelsUrl();
     m_pWebLevels->setWebsiteInfos(webLevelsUrl, pProxySettings);
 
     Logger::Log("WWW: Checking for new or updated levels...");
 
     clearCancelAsSoonAsPossible();
 
-    m_pWebLevels->update(m_pDb, m_pGame->getSession()->useCrappyPack());
+    m_pWebLevels->update(m_pDb, XMSession::instance()->useCrappyPack());
 
     int nULevels=0;
     nULevels = m_pWebLevels->nbLevelsToGet(m_pDb);
@@ -128,8 +128,8 @@ int UpgradeLevelsThread::realThreadFunction()
       return 1;
     }
     else {
-      m_pGame->getStateManager()->sendAsynchronousMessage("NEW_LEVELS_TO_DOWNLOAD");
-      m_pGame->getStateManager()->sendAsynchronousMessage("NEWLEVELAVAILABLE");
+      StateManager::instance()->sendAsynchronousMessage("NEW_LEVELS_TO_DOWNLOAD");
+      StateManager::instance()->sendAsynchronousMessage("NEWLEVELAVAILABLE");
     }
   } catch (Exception& e) {
     Logger::Log("** Warning ** : Unable to check for extra levels [%s]", e.getMsg().c_str());
@@ -175,14 +175,14 @@ int UpgradeLevelsThread::realThreadFunction()
   setThreadCurrentOperation(GAMETEXT_LOADNEWLEVELS);
   setThreadProgress(0);
 
-  m_pGame->getLevelsManager()->updateLevelsFromLvl(m_pDb,
+  LevelsManager::instance()->updateLevelsFromLvl(m_pDb,
 						   m_pWebLevels->getNewDownloadedLevels(),
 						   m_pWebLevels->getUpdatedDownloadedLevels(),
 						   this);
 
   /* Update level lists */
-  m_pGame->getStateManager()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
-  m_pGame->getStateManager()->sendAsynchronousMessage("LEVELS_UPDATED");
+  StateManager::instance()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
+  StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
 
   return 0;
 }

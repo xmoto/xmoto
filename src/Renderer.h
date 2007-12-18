@@ -122,7 +122,6 @@ class ParticlesSource;
   public:
     GameRenderer(DrawLib* i_drawLib) {
       m_drawLib = i_drawLib;
-      m_theme = NULL;
       m_previousEngineSpeed = -1.0;
       m_previousEngineLinVel = -1.0;
       m_sizeMultOfEntitiesToTake = 1.0;
@@ -137,7 +136,6 @@ class ParticlesSource;
     void init(void); /* only called at start-up, and not per-level */
     void shutdown(void);
 
-    void setTheme(Theme *p_theme);
     void render();
     void renderMiniMap(int x,int y,int nWidth,int nHeight);
     void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed, float pLinVel = -1);
@@ -182,8 +180,6 @@ class ParticlesSource;
       
     MotoGame *m_pMotoGame;        /* Game object, so we know what to draw. */
     GameApp *m_pParent;               /* Our owner, so we know where to draw. */
-
-    Theme *m_theme;
 
     float m_fZoom;
 

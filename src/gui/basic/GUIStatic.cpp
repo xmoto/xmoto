@@ -35,7 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         
         m_pDarkBlobTexture = NULL;
 	Sprite *pSprite;
-	pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "DarkBlob");
+	pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "DarkBlob");
 	if(pSprite != NULL) {
 	  m_pDarkBlobTexture = pSprite->getTexture(false,true, FM_NEAREST);
 	}

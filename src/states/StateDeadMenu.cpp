@@ -97,7 +97,7 @@ void StateDeadMenu::checkEvents() {
     StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
 							 UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, Replay::giveAutomaticName());
     v_msgboxState->setId("SAVEREPLAY");
-    m_pGame->getStateManager()->pushState(v_msgboxState);
+    StateManager::instance()->pushState(v_msgboxState);
   }
 
   UIButton *pPlaynextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:PLAYNEXT_BUTTON"));
@@ -126,7 +126,7 @@ void StateDeadMenu::checkEvents() {
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
     v_msgboxState->setId("QUIT");
-    m_pGame->getStateManager()->pushState(v_msgboxState);
+    StateManager::instance()->pushState(v_msgboxState);
   }
 
 }

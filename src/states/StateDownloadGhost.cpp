@@ -56,9 +56,9 @@ void StateDownloadGhost::callAfterThreadFinished(int threadResult)
   if(threadResult == 0 && m_launchReplaying == true){
     std::string msg = "Replay to play: " + m_replayName;
     Logger::Log(msg.c_str());
-    m_pGame->getStateManager()->replaceState(new StateReplaying(m_pGame, m_replayName));
+    StateManager::instance()->replaceState(new StateReplaying(m_pGame, m_replayName));
   }
   else{
-    m_pGame->getStateManager()->sendAsynchronousMessage("GHOST_DOWNLOADED");
+    StateManager::instance()->sendAsynchronousMessage("GHOST_DOWNLOADED");
   }
 }

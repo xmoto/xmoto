@@ -68,8 +68,8 @@ void StatePreplaying::enter()
   m_pGame->getGameRenderer()->setShowTimePanel(false);
   m_pGame->getGameRenderer()->hideReplayHelp();
 
-  pWorld->setDeathAnim(m_pGame->getSession()->enableDeadAnimation());
-  pWorld->setShowGhostTimeDiff(m_pGame->getSession()->showGhostTimeDifference());
+  pWorld->setDeathAnim(XMSession::instance()->enableDeadAnimation());
+  pWorld->setShowGhostTimeDiff(XMSession::instance()->showGhostTimeDifference());
 
   try {
     pWorld->loadLevel(m_pGame->getDb(), m_idlevel);
@@ -77,7 +77,7 @@ void StatePreplaying::enter()
     Logger::Log("** Warning ** : level '%s' cannot be loaded", m_idlevel.c_str());
     char cBuf[256];
     sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED, m_idlevel.c_str());
-    m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, cBuf, UI_MSGBOX_OK));
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, m_pGame, cBuf, UI_MSGBOX_OK));
     return;
   }
 
@@ -89,7 +89,7 @@ void StatePreplaying::enter()
     sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
 	    pWorld->getLevelSrc()->getRequiredVersion().c_str());
     pWorld->endLevel();
-    m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, cBuf, UI_MSGBOX_OK));
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, m_pGame, cBuf, UI_MSGBOX_OK));
     return;
   }
 
@@ -101,7 +101,7 @@ void StatePreplaying::enter()
     pWorld->setInfos("");
 	
     /* add the players */
-    int v_nbPlayer = m_pGame->getSession()->multiNbPlayers();
+    int v_nbPlayer = XMSession::instance()->multiNbPlayers();
     Logger::Log("Preplay level for %i player(s)", v_nbPlayer);
 
     m_pGame->initCameras(v_nbPlayer);
@@ -109,10 +109,10 @@ void StatePreplaying::enter()
       pWorld->setCurrentCamera(i);
       pWorld->getCamera()->setPlayerToFollow(pWorld->addPlayerBiker(pWorld->getLevelSrc()->PlayerStart(),
 								    DD_RIGHT,
-								    m_pGame->getTheme(), m_pGame->getTheme()->getPlayerTheme(),
+								    Theme::instance(), Theme::instance()->getPlayerTheme(),
 								    m_pGame->getColorFromPlayerNumber(i),
 								    m_pGame->getUglyColorFromPlayerNumber(i),
-								    m_pGame->getSession()->enableEngineSound()));
+								    XMSession::instance()->enableEngineSound()));
     }
 
     // if there's more camera than player (ex: 3 players and 4 cameras),
@@ -133,19 +133,19 @@ void StatePreplaying::enter()
     // reset handler, set mirror mode
     m_pGame->getInputHandler()->reset();
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
-      pWorld->Cameras()[i]->setMirrored(m_pGame->getSession()->mirrorMode());
+      pWorld->Cameras()[i]->setMirrored(XMSession::instance()->mirrorMode());
     }
-    m_pGame->getInputHandler()->setMirrored(m_pGame->getSession()->mirrorMode());
+    m_pGame->getInputHandler()->setMirrored(XMSession::instance()->mirrorMode());
 
   } catch(Exception &e) {
     Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
     pWorld->endLevel();
-    m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     return;
   }
 
   if(needToDownloadGhost() == true){
-    m_pGame->getStateManager()->pushState(new StateDownloadGhost(m_pGame, m_idlevel));
+    StateManager::instance()->pushState(new StateDownloadGhost(m_pGame, m_idlevel));
   } else {
     m_ghostDownloaded = true;
   }
@@ -159,7 +159,7 @@ void StatePreplaying::enter()
 }
 
 bool StatePreplaying::shouldBeAnimated() const {
-  return m_playAnimation && m_pGame->getSession()->enableInitZoom() && m_pGame->getSession()->ugly() == false;
+  return m_playAnimation && XMSession::instance()->enableInitZoom() && XMSession::instance()->ugly() == false;
 }
 
 void StatePreplaying::leave()
@@ -200,7 +200,7 @@ bool StatePreplaying::update()
   } else { /* animation has been rupted */
     m_playAnimation = false; // disable anim
     zoomAnimation1_abort();
-    m_pGame->getStateManager()->replaceState(new StatePlaying(m_pGame));
+    StateManager::instance()->replaceState(new StatePlaying(m_pGame));
   }
   m_pGame->getMotoGame()->updateGameMessages();
 
@@ -347,9 +347,9 @@ void StatePreplaying::secondInitPhase()
 
   try {
     /* add the ghosts */
-    if(m_pGame->getSession()->enableGhosts()) {
+    if(XMSession::instance()->enableGhosts()) {
       try {
-	m_pGame->addGhosts(pWorld, m_pGame->getTheme());
+	m_pGame->addGhosts(pWorld, Theme::instance());
       } catch(Exception &e) {
 	/* anyway */
       }
@@ -357,7 +357,7 @@ void StatePreplaying::secondInitPhase()
   } catch(Exception &e) {
     Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
     pWorld->endLevel();
-    m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     return;
   }
 
@@ -391,7 +391,7 @@ void StatePreplaying::executeOneCommand(std::string cmd)
 
 bool StatePreplaying::needToDownloadGhost()
 {
-  if(m_pGame->getSession()->www() == false){
+  if(XMSession::instance()->www() == false){
     return false;
   }
 
@@ -402,7 +402,7 @@ bool StatePreplaying::needToDownloadGhost()
   std::string v_fileUrl;
 
   v_result = m_pGame->getDb()->readDB("SELECT fileUrl FROM webhighscores "
-			   "WHERE id_room=" + m_pGame->getSession()->idRoom() + " "
+			   "WHERE id_room=" + XMSession::instance()->idRoom() + " "
 			   "AND id_level=\"" + xmDatabase::protectString(m_idlevel) + "\";",
 			   nrow);    
   if(nrow == 0) {

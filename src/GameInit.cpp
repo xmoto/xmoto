@@ -138,12 +138,12 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   /* load config file, the session */
   XMSession::createDefaultConfig(&m_Config);
   m_Config.loadFile();
-  m_xmsession->load(&m_Config); /* overload default session by userConfig */
-  m_xmsession->load(&v_xmArgs); /* overload default session by xmargs     */
-  Logger::setVerbose(m_xmsession->isVerbose()); /* apply verbose mode */
+  XMSession::instance()->load(&m_Config); /* overload default session by userConfig */
+  XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
+  Logger::setVerbose(XMSession::instance()->isVerbose()); /* apply verbose mode */
 
 #ifdef USE_GETTEXT
-    std::string v_locale = Locales::init(m_xmsession->language());
+    std::string v_locale = Locales::init(XMSession::instance()->language());
 #endif
 
   Logger::Log("compiled at "__DATE__" "__TIME__);
@@ -160,69 +160,68 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
 #endif
 
   if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos()) {
-    m_xmsession->setUseGraphics(false);
+    XMSession::instance()->setUseGraphics(false);
   }
 
-  _InitWin(m_xmsession->useGraphics());
+  _InitWin(XMSession::instance()->useGraphics());
 
-  if(m_xmsession->useGraphics()) {
+  if(XMSession::instance()->useGraphics()) {
     /* init drawLib */
-    drawLib = DrawLib::DrawLibFromName(m_xmsession->drawlib());
+    drawLib = DrawLib::DrawLibFromName(XMSession::instance()->drawlib());
     
     if(drawLib == NULL) {
       throw Exception("Drawlib not initialized");
     }
 
     m_Renderer = new GameRenderer(drawLib);
-    m_Renderer->setTheme(&m_theme);
     m_MotoGame.setRenderer(m_Renderer);
     m_sysMsg = new SysMessage(drawLib);
     
-    drawLib->setNoGraphics(m_xmsession->useGraphics() == false);
-    drawLib->setDontUseGLExtensions(m_xmsession->glExts() == false);
+    drawLib->setNoGraphics(XMSession::instance()->useGraphics() == false);
+    drawLib->setDontUseGLExtensions(XMSession::instance()->glExts() == false);
 
     /* Init! */
-    drawLib->init(m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(), m_xmsession->bpp(), m_xmsession->windowed(), &m_theme);
+    drawLib->init(XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp(), XMSession::instance()->windowed());
     /* drawlib can change the final resolution if it fails, then, reinit session one's */
-    m_xmsession->setResolutionWidth(drawLib->getDispWidth());
-    m_xmsession->setResolutionHeight(drawLib->getDispHeight());
-    m_xmsession->setBpp(drawLib->getDispBPP());
-    m_xmsession->setWindowed(drawLib->getWindowed());
-    Logger::Log("Resolution: %ix%i (%i bpp)", m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(), m_xmsession->bpp());
+    XMSession::instance()->setResolutionWidth(drawLib->getDispWidth());
+    XMSession::instance()->setResolutionHeight(drawLib->getDispHeight());
+    XMSession::instance()->setBpp(drawLib->getDispBPP());
+    XMSession::instance()->setWindowed(drawLib->getWindowed());
+    Logger::Log("Resolution: %ix%i (%i bpp)", XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp());
     /* */
     
     if(!drawLib->isNoGraphics()) {        
-      drawLib->setDrawDims(m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(),
-			   m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight());
+      drawLib->setDrawDims(XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(),
+			   XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight());
     }
   }
 
   /* Init sound system */
-  Sound::init(m_xmsession);
+  Sound::init(XMSession::instance());
 
   /* Init renderer */
-  if(m_xmsession->useGraphics()) {
-    m_stateManager = new StateManager(this);
-    switchUglyMode(m_xmsession->ugly());
-    switchTestThemeMode(m_xmsession->testTheme());
+  if(XMSession::instance()->useGraphics()) {
+    StateManager::instance()->init(this);
+    switchUglyMode(XMSession::instance()->ugly());
+    switchTestThemeMode(XMSession::instance()->testTheme());
     m_Renderer->setParent( (GameApp *)this );
     m_Renderer->setGameObject( &m_MotoGame );        
   }    
 
   /* Tell collision system whether we want debug-info or not */
-  m_MotoGame.getCollisionHandler()->setDebug(m_xmsession->debug());
+  m_MotoGame.getCollisionHandler()->setDebug(XMSession::instance()->debug());
 
-  if(m_xmsession->useGraphics()) {
-    if(m_xmsession->gDebug()) m_Renderer->loadDebugInfo(m_xmsession->gDebugFile());
+  if(XMSession::instance()->useGraphics()) {
+    if(XMSession::instance()->gDebug()) m_Renderer->loadDebugInfo(XMSession::instance()->gDebugFile());
   }
 
   /* database */
   m_db = new xmDatabase(DATABASE_FILE,
-			m_xmsession->profile() == "" ? std::string("") : m_xmsession->profile(),
+			XMSession::instance()->profile() == "" ? std::string("") : XMSession::instance()->profile(),
 			FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
-			m_xmsession->useGraphics() ? this : NULL);
-  if(m_xmsession->sqlTrace()) {
-    m_db->setTrace(m_xmsession->sqlTrace());
+			XMSession::instance()->useGraphics() ? this : NULL);
+  if(XMSession::instance()->sqlTrace()) {
+    m_db->setTrace(XMSession::instance()->sqlTrace());
   }
 
   /* load theme */
@@ -242,9 +241,9 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   
   /* load levels */
   if(m_db->levels_isIndexUptodate() == false) {
-      m_levelsManager.reloadLevelsFromLvl(m_db, m_xmsession->useGraphics() ? this : NULL);
+      LevelsManager::instance()->reloadLevelsFromLvl(m_db, XMSession::instance()->useGraphics() ? this : NULL);
   }
-  m_levelsManager.reloadExternalLevels(m_db, m_xmsession->useGraphics() ? this : NULL);
+  LevelsManager::instance()->reloadExternalLevels(m_db, XMSession::instance()->useGraphics() ? this : NULL);
   
   /* Update replays */
   if(m_db->replays_isIndexUptodate() == false) {
@@ -303,13 +302,13 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
     m_PlaySpecificReplay = v_xmArgs.getOpt_replay_file();
   }
   
-  if(m_xmsession->useGraphics()) {  
+  if(XMSession::instance()->useGraphics()) {  
     _UpdateLoadingScreen(0, GAMETEXT_LOADINGSOUNDS);
     
     /* Load sounds */
     try {
-      for(unsigned int i=0; i<m_theme.getSoundsList().size(); i++) {
-	Sound::loadSample(m_theme.getSoundsList()[i]->FilePath());
+      for(unsigned int i=0; i<Theme::instance()->getSoundsList().size(); i++) {
+	Sound::loadSample(Theme::instance()->getSoundsList()[i]->FilePath());
       }
     } catch(Exception &e) {
       Logger::Log("*** Warning *** : %s\n", e.getMsg().c_str());
@@ -332,13 +331,13 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   
   /* -listlevels? */
   if(v_xmArgs.isOptListLevels()) {
-    m_levelsManager.printLevelsList(m_db);
+    LevelsManager::instance()->printLevelsList(m_db);
     quit();
     return;
   }
   
   /* requires graphics now */
-  if(m_xmsession->useGraphics() == false) {
+  if(XMSession::instance()->useGraphics() == false) {
     quit();
     return;
   }
@@ -349,56 +348,56 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   
   /* build handler */
   m_InputHandler.init(&m_Config);
-  Replay::enableCompression(m_xmsession->compressReplays());
+  Replay::enableCompression(XMSession::instance()->compressReplays());
   
   /* load packs */
   LevelsManager::checkPrerequires();
-  m_levelsManager.makePacks(m_db, m_xmsession->profile(), m_xmsession->idRoom(), m_xmsession->debug());
+  LevelsManager::instance()->makePacks(m_db, XMSession::instance()->profile(), XMSession::instance()->idRoom(), XMSession::instance()->debug());
   
   /* What to do? */
   if(m_PlaySpecificLevelFile != "") {
     try {
-      m_levelsManager.addExternalLevel(m_db, m_PlaySpecificLevelFile);
-      m_PlaySpecificLevelId = m_levelsManager.LevelByFileName(m_db, m_PlaySpecificLevelFile);
+      LevelsManager::instance()->addExternalLevel(m_db, m_PlaySpecificLevelFile);
+      m_PlaySpecificLevelId = LevelsManager::instance()->LevelByFileName(m_db, m_PlaySpecificLevelFile);
     } catch(Exception &e) {
       m_PlaySpecificLevelId = m_PlaySpecificLevelFile;
     }
   }
   if((m_PlaySpecificLevelId != "")) {
     /* ======= PLAY SPECIFIC LEVEL ======= */
-    m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId, false));
-    Logger::Log("Playing as '%s'...", m_xmsession->profile().c_str());
+    StateManager::instance()->pushState(new StatePreplaying(this, m_PlaySpecificLevelId, false));
+    Logger::Log("Playing as '%s'...", XMSession::instance()->profile().c_str());
   }
   else if(m_PlaySpecificReplay != "") {
     /* ======= PLAY SPECIFIC REPLAY ======= */
-    m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
+    StateManager::instance()->pushState(new StateReplaying(this, m_PlaySpecificReplay));
     }
   else {
     /* display what must be displayed */
     StateMainMenu* pMainMenu = new StateMainMenu(this);
-    m_stateManager->pushState(pMainMenu);
+    StateManager::instance()->pushState(pMainMenu);
     
     /* Do we have a player profile? */
-    if(m_xmsession->profile() == "") {
-      m_stateManager->pushState(new StateEditProfile(this, pMainMenu));
+    if(XMSession::instance()->profile() == "") {
+      StateManager::instance()->pushState(new StateEditProfile(this, pMainMenu));
     } 
     
     /* Should we show a notification box? (with important one-time info) */
-    if(m_xmsession->notifyAtInit()) {
-      m_stateManager->pushState(new StateMessageBox(NULL, this, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));
-      m_xmsession->setNotifyAtInit(false);
+    if(XMSession::instance()->notifyAtInit()) {
+      StateManager::instance()->pushState(new StateMessageBox(NULL, this, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));
+      XMSession::instance()->setNotifyAtInit(false);
     }
   }
   
-  if (m_xmsession->ugly()){
+  if (XMSession::instance()->ugly()){
     drawLib->clearGraphics();
   }
   drawFrame();
   drawLib->flushGraphics();
   
   /* Update stats */
-  if(m_xmsession->profile() != "") {
-    m_db->stats_xmotoStarted(m_xmsession->profile());
+  if(XMSession::instance()->profile() != "") {
+    m_db->stats_xmotoStarted(XMSession::instance()->profile());
   }
   
   Logger::Log("UserInit ended at %.3f", GameApp::getXMTime());
@@ -489,9 +488,7 @@ void GameApp::run_unload() {
     delete m_pJustPlayReplay;
   }    
 
-  if(m_stateManager != NULL) {
-    delete m_stateManager;
-  }
+  StateManager::instance()->destroy();
   
   if(Sound::isInitialized()) {
     Sound::uninit();
@@ -506,7 +503,7 @@ void GameApp::run_unload() {
   }
 
   if(drawLib != NULL) { /* save config only if drawLib was initialized */
-    m_xmsession->save(&m_Config);
+    XMSession::instance()->save(&m_Config);
     m_InputHandler.saveConfig(&m_Config);
     m_Config.saveFile();
   }
@@ -532,7 +529,7 @@ void GameApp::_Wait()
 
   /* Does app want us to delay a bit after the frame? */
   int currentTimeStamp        = getXMTimeInt();
-  int currentFrameMinDuration = 1000/m_stateManager->getMaxFps();
+  int currentFrameMinDuration = 1000/StateManager::instance()->getMaxFps();
   int lastFrameDuration       = currentTimeStamp - m_lastFrameTimeStamp;
   // late from the lasts frame is not forget
   int delta = currentFrameMinDuration - (lastFrameDuration + m_frameLate);
