@@ -206,7 +206,7 @@ void StateManager::render()
     }
 
     // SYSMESSAGE
-    m_pGame->getSysMessage()->render();
+    SysMessage::instance()->render();
 
     // CURSOR
     if(m_statesStack.size() > 0) {
@@ -564,9 +564,9 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   if(nKey == SDLK_F9) {
     m_pGame->switchUglyMode(XMSession::instance()->ugly() == false);
     if(XMSession::instance()->ugly()) {
-      m_pGame->getSysMessage()->displayText(SYS_MSG_UGLY_MODE_ENABLED);
+      SysMessage::instance()->displayText(SYS_MSG_UGLY_MODE_ENABLED);
     } else {
-      m_pGame->getSysMessage()->displayText(SYS_MSG_UGLY_MODE_DISABLED);
+      SysMessage::instance()->displayText(SYS_MSG_UGLY_MODE_DISABLED);
     }
     return;        
   }
@@ -580,9 +580,9 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   if(nKey == SDLK_F10) {
     m_pGame->switchTestThemeMode(XMSession::instance()->testTheme() == false);
     if(XMSession::instance()->testTheme()) {
-      m_pGame->getSysMessage()->displayText(SYS_MSG_THEME_MODE_ENABLED);
+      SysMessage::instance()->displayText(SYS_MSG_THEME_MODE_ENABLED);
     } else {
-      m_pGame->getSysMessage()->displayText(SYS_MSG_THEME_MODE_DISABLED);
+      SysMessage::instance()->displayText(SYS_MSG_THEME_MODE_DISABLED);
     }
     return;        
   }
@@ -590,9 +590,9 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   if(nKey == SDLK_F11) {
     m_pGame->switchUglyOverMode(XMSession::instance()->uglyOver() == false);
     if(XMSession::instance()->uglyOver()) {
-      m_pGame->getSysMessage()->displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
+      SysMessage::instance()->displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
     } else {
-      m_pGame->getSysMessage()->displayText(SYS_MSG_UGLY_OVER_MODE_DISABLED);
+      SysMessage::instance()->displayText(SYS_MSG_UGLY_OVER_MODE_DISABLED);
     }
     return;        
   }
@@ -601,9 +601,9 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   if(nKey == SDLK_i && (mod & KMOD_CTRL) != 0) {
     XMSession::instance()->setEnableReplayInterpolation(!XMSession::instance()->enableReplayInterpolation());
     if(XMSession::instance()->enableReplayInterpolation()) {
-      m_pGame->getSysMessage()->displayText(SYS_MSG_INTERPOLATION_ENABLED);
+      SysMessage::instance()->displayText(SYS_MSG_INTERPOLATION_ENABLED);
     } else {
-      m_pGame->getSysMessage()->displayText(SYS_MSG_INTERPOLATION_DISABLED);
+      SysMessage::instance()->displayText(SYS_MSG_INTERPOLATION_DISABLED);
     }
 
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Players().size(); i++) {

@@ -22,19 +22,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __SYSMESSAGE_H__
 
 #include <string>
+#include "helpers/Singleton.h"
 
 class DrawLib;
 
-class SysMessage {
-  public:
+class SysMessage : public Singleton<SysMessage> {
+  friend class Singleton<SysMessage>;
 
-  SysMessage(DrawLib* i_drawLib);
+private:
+  SysMessage();
   ~SysMessage();
 
+public:
+  void setDrawLib(DrawLib* i_drawLib);
   void displayText(std::string i_msg);
   void render();
 
-  private:
+private:
   std::string m_txt;
   float m_startDisplay;
   DrawLib* m_drawLib;

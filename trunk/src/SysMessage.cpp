@@ -25,12 +25,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define SYSMSG_DISPLAY_TIME 1.6
 #define SYSMSG_DISPLAY_DECREASE_TIME 0.75
 
-SysMessage::SysMessage(DrawLib* i_drawLib) {
+SysMessage::SysMessage() {
   m_startDisplay = GameApp::getXMTime() - SYSMSG_DISPLAY_TIME;
-  m_drawLib = i_drawLib;
 }
 
 SysMessage::~SysMessage() {
+}
+
+void SysMessage::setDrawLib(DrawLib* i_drawLib)
+{
+  m_drawLib = i_drawLib;  
 }
 
 void SysMessage::displayText(std::string i_msg) {
@@ -39,7 +43,8 @@ void SysMessage::displayText(std::string i_msg) {
 }
 
 void SysMessage::render() {
-  if(m_drawLib == NULL) return;
+  if(m_drawLib == NULL)
+    return;
 
   float v_time = GameApp::getXMTime();
 

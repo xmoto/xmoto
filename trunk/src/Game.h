@@ -32,7 +32,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class XMArguments;
 class xmDatabase;
 class Img;
-class SysMessage;
 class GameApp;
 class DrawLib;
 class WebRoom;
@@ -142,8 +141,6 @@ class XMotoLoadReplaysInterface;
       //
       xmDatabase*    getDb();
 
-      SysMessage* getSysMessage() { return m_sysMsg;}
-
       /* call to close the replay */
       void finalizeReplay(bool i_finished);
 
@@ -243,8 +240,6 @@ class XMotoLoadReplaysInterface;
       
       /* Replay saving UI fun */
       UIMsgBox *m_pSaveReplayMsgBox;    
-
-      SysMessage* m_sysMsg;
 
       /* Main loop statics */
       double m_fFrameTime;
