@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Sound.h"
 #include "xmscene/Camera.h"
 #include "xmscene/Bike.h"
+#include "CameraAnimation.h"
 
 StatePlaying::StatePlaying(GameApp* pGame):
   StateScene(pGame)
@@ -261,8 +262,10 @@ void StatePlaying::keyUp(int nKey, SDLMod mod)
   switch(nKey) {
 
   case SDLK_TAB:
-    if(autoZoom() && autoZoomStep() == 1) {
-      setAutoZoomStep(2);
+    if(m_cameraAnim != NULL) {
+      if(autoZoom() && m_cameraAnim->allowNextStep()) {
+	m_cameraAnim->goNextStep();
+      }
     }
     break;
     
