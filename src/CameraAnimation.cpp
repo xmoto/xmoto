@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 #include "Game.h"
 #include "drawlib/DrawLib.h"
+#include "Renderer.h"
 
 #define PRESTART_ANIMATION_MARGIN_SIZE   5
 #define PRESTART_ANIMATION_TIME        2.0
@@ -63,11 +64,23 @@ void CameraAnimation::init() {
   m_I_cameraPosition = Vector2f(m_camera->getCameraPositionX(), m_camera->getCameraPositionY());
   m_startTime        = GameApp::getXMTime();
   m_allowNextStep    = false;
+  m_I_entitiesToTakeZoom   = GameRenderer::instance()->SizeMultOfEntitiesToTake();
+  m_I_entitiesWhichMakeWin = GameRenderer::instance()->SizeMultOfEntitiesWhichMakeWin();
 }
 
 void CameraAnimation::uninit() {
   m_camera->setZoom(m_I_cameraZoom);
   m_camera->setCameraPosition(m_I_cameraPosition.x, m_I_cameraPosition.y);
+  GameRenderer::instance()->setSizeMultOfEntitiesToTake(m_I_entitiesToTakeZoom);
+  GameRenderer::instance()->setSizeMultOfEntitiesWhichMakeWin(m_I_entitiesWhichMakeWin);
+}
+
+float CameraAnimation::initialEntitiesToTakeZoom() {
+  return m_I_entitiesToTakeZoom;
+}
+
+float CameraAnimation::initialEntitiesWhichMakeWinZoom() {
+  return m_I_entitiesWhichMakeWin;
 }
 
 bool CameraAnimation::step() {
@@ -144,6 +157,10 @@ void AutoZoomCameraAnimation::init() {
   m_fAnimPlayStartCamera.y = m_camera->getCameraPositionY();
   m_step = 1;
   m_allowNextStep = true;
+  m_entitiesToTakeZoom       = GameRenderer::instance()->SizeMultOfEntitiesToTake();
+  m_entitiesWhichMakeWinZoom = GameRenderer::instance()->SizeMultOfEntitiesWhichMakeWin();
+  m_entitiesGrowing = true;
+  m_previousZoomTime = -1.0;
 }
 
 void AutoZoomCameraAnimation::uninit() {
@@ -166,7 +183,34 @@ bool AutoZoomCameraAnimation::step() {
       zx = (m_fAnimPlayFinalCamera1.x - m_fAnimPlayFinalCamera2.x) * (sin((GameApp::getXMTime() - startTime() - INPLAY_ANIMATION_TIME) * 2 * 3.1415927 / INPLAY_ANIMATION_SPEED - 3.1415927/2) + 1) / 2;
       zy = (m_fAnimPlayFinalCamera1.y - m_fAnimPlayFinalCamera2.y) * (sin((GameApp::getXMTime() - startTime() - INPLAY_ANIMATION_TIME) * 2 * 3.1415927 / INPLAY_ANIMATION_SPEED - 3.1415927/2) + 1) / 2;
       m_camera->setCameraPosition(m_fAnimPlayFinalCamera1.x - zx,m_fAnimPlayFinalCamera1.y - zy);
-      return true;
+
+      if(m_previousZoomTime < 0.0) {
+	m_previousZoomTime = GameApp::getXMTime();
+      } else {
+	if(GameApp::getXMTime() - m_previousZoomTime > 0.03) { /* do it regularly */
+	  m_previousZoomTime = GameApp::getXMTime();	  
+
+	  if(m_entitiesGrowing) {
+	    if(m_entitiesToTakeZoom < initialZoom() / m_fAnimPlayFinalZoom) {
+	      m_entitiesToTakeZoom       += initialZoom() - m_fAnimPlayFinalZoom;
+	      m_entitiesWhichMakeWinZoom += initialZoom() - m_fAnimPlayFinalZoom;
+	    } else {
+	      m_entitiesGrowing = false;
+	    }
+	  } else {
+	    if(m_entitiesToTakeZoom > initialEntitiesToTakeZoom()) {
+	      m_entitiesToTakeZoom       -= initialZoom() - m_fAnimPlayFinalZoom;
+	      m_entitiesWhichMakeWinZoom -= initialZoom() - m_fAnimPlayFinalZoom;
+	    } else {
+	      m_entitiesGrowing = true;
+	    }
+	  }
+	  GameRenderer::instance()->setSizeMultOfEntitiesToTake(m_entitiesToTakeZoom);
+	  GameRenderer::instance()->setSizeMultOfEntitiesWhichMakeWin(m_entitiesWhichMakeWinZoom);
+	}
+      }
+
+     return true;
     }
 
     coeff = (GameApp::getXMTime() - startTime()) / (INPLAY_ANIMATION_TIME);
@@ -204,6 +248,17 @@ bool AutoZoomCameraAnimation::step() {
     
     m_camera->setZoom(m_fAnimPlayStartZoom - zz);
     m_camera->setCameraPosition(m_fAnimPlayStartCamera.x - zx, m_fAnimPlayStartCamera.y - zy);
+
+    if(m_entitiesWhichMakeWinZoom > initialEntitiesWhichMakeWinZoom()) {
+      m_entitiesWhichMakeWinZoom -= 0.2;
+      GameRenderer::instance()->setSizeMultOfEntitiesWhichMakeWin(m_entitiesWhichMakeWinZoom);
+    }
+
+    if(m_entitiesToTakeZoom > initialEntitiesToTakeZoom()) {
+      m_entitiesToTakeZoom -= 0.2;
+      GameRenderer::instance()->setSizeMultOfEntitiesToTake(m_entitiesToTakeZoom);
+    }
+
     return true;
 
     break;

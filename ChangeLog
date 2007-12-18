@@ -6,6 +6,7 @@ X-Moto 0.4.0 2007-
  * filter on list is for all columns
  * ctrl+b to add/remove from blacklisted levels list
  * ctrl+m to use mirror mode
+ * tab to autozoom
  * new "length" packs by Mig
 	
 X-Moto 0.3.4 2007-10-17
