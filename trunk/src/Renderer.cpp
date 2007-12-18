@@ -53,8 +53,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Init at game start-up
   ===========================================================================*/
-  void GameRenderer::init(void) { 
+  void GameRenderer::init(DrawLib* i_drawLib) { 
     /* Overlays? */
+    m_drawLib = i_drawLib;
     m_Overlay.init(getParent()->getDrawLib(),512,512);
 
     m_nParticlesRendered = 0;

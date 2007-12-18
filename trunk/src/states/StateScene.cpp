@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "StatePreplaying.h"
 #include "helpers/Log.h"
+#include "Renderer.h"
 
 #define INPLAY_ANIMATION_TIME 1.0
 #define INPLAY_ANIMATION_SPEED 10
@@ -107,14 +108,14 @@ bool StateScene::render()
     if(autoZoom() == false){
       for(unsigned int i=0; i<m_pGame->getMotoGame()->getNumberCameras(); i++) {
 	m_pGame->getMotoGame()->setCurrentCamera(i);
-	m_pGame->getGameRenderer()->render();
+	GameRenderer::instance()->render();
       }
     } else {
       m_pGame->getMotoGame()->setAutoZoomCamera();
-      m_pGame->getGameRenderer()->render();
+      GameRenderer::instance()->render();
     }
 
-    ParticlesSource::setAllowParticleGeneration(m_pGame->getGameRenderer()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
+    ParticlesSource::setAllowParticleGeneration(GameRenderer::instance()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
   } catch(Exception &e) {
     StateManager::instance()->replaceState(new StateMessageBox(NULL, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
   }
@@ -203,12 +204,12 @@ void StateScene::setScoresTimes() {
     }
     m_pGame->getDb()->read_DB_free(v_result);
     
-    m_pGame->getGameRenderer()->setBestTime(T1 + std::string(" / ") + T2);
+    GameRenderer::instance()->setBestTime(T1 + std::string(" / ") + T2);
 
     if(XMSession::instance()->showHighscoreInGame()) {
-      m_pGame->getGameRenderer()->setWorldRecordTime(m_pGame->getWorldRecord(m_pGame->getMotoGame()->getLevelSrc()->Id()));
+      GameRenderer::instance()->setWorldRecordTime(m_pGame->getWorldRecord(m_pGame->getMotoGame()->getLevelSrc()->Id()));
     } else {
-      m_pGame->getGameRenderer()->setWorldRecordTime("");
+      GameRenderer::instance()->setWorldRecordTime("");
     }
 
 }
@@ -228,7 +229,7 @@ void StateScene::restartLevel(bool i_reloadLevel) {
   v_level = m_pGame->getMotoGame()->getLevelSrc()->Id();
   m_pGame->getMotoGame()->resetFollow();
   m_pGame->getMotoGame()->endLevel();
-  m_pGame->getGameRenderer()->unprepareForNewLevel();
+  GameRenderer::instance()->unprepareForNewLevel();
   
   if(i_reloadLevel) {
     try {
@@ -278,7 +279,7 @@ void StateScene::closePlaying() {
   m_pGame->getMotoGame()->resetFollow();
   m_pGame->getMotoGame()->endLevel();
   m_pGame->getInputHandler()->resetScriptKeyHooks();                     
-  m_pGame->getGameRenderer()->unprepareForNewLevel();
+  GameRenderer::instance()->unprepareForNewLevel();
 }
 
 bool StateScene::isLockedScene() const {

@@ -141,7 +141,6 @@ class XMotoLoadReplaysInterface;
 
       //
       xmDatabase*    getDb();
-      GameRenderer*  getGameRenderer();
       InputHandler*  getInputHandler();
       ThemeChoicer*  getThemeChoicer();
 
@@ -184,7 +183,6 @@ class XMotoLoadReplaysInterface;
       InputHandler m_InputHandler;              /* The glorious input handler */
       MotoGame m_MotoGame;                      /* Game object */      
       XMMotoGameHooks m_MotoGameHooks;
-      GameRenderer* m_Renderer;                  /* Renderer */
        
       std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
 

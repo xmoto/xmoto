@@ -118,10 +118,11 @@ class ParticlesSource;
   /*===========================================================================
     Game rendering class
     ===========================================================================*/
-  class GameRenderer {
-  public:
-    GameRenderer(DrawLib* i_drawLib) {
-      m_drawLib = i_drawLib;
+  class GameRenderer : public Singleton<GameRenderer> {
+    friend class Singleton<GameRenderer>;
+
+  private:
+    GameRenderer() {
       m_previousEngineSpeed = -1.0;
       m_previousEngineLinVel = -1.0;
       m_sizeMultOfEntitiesToTake = 1.0;
@@ -130,10 +131,14 @@ class ParticlesSource;
       m_showEngineCounter = true;
       m_showTimePanel = true;
     }
-    ~GameRenderer() {_Free();}
+    ~GameRenderer() {
+      _Free();
+    }
+
+  public:
     
     /* Methods */
-    void init(void); /* only called at start-up, and not per-level */
+    void init(DrawLib* i_drawLib); /* only called at start-up, and not per-level */
     void shutdown(void);
 
     void render();
