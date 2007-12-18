@@ -896,10 +896,6 @@ void GameApp::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
 	    || v_best_room_time < 0);
 }
 
-InputHandler* GameApp::getInputHandler() {
-  return &m_InputHandler;
-}
-
 void GameApp::finalizeReplay(bool i_finished) {
   if(m_MotoGame.Players().size() != 1) return;
 
@@ -1020,7 +1016,7 @@ void GameApp::updatingDatabase(std::string i_message) {
 
 void GameApp::drawFrame(void) {
   Sound::update();
-  m_InputHandler.updateInput(m_MotoGame.Players());
+  InputHandler::instance()->updateInput(m_MotoGame.Players());
   
   StateManager::instance()->update();
   StateManager::instance()->render(); 

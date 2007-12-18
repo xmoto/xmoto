@@ -278,7 +278,7 @@ void StateScene::abortPlaying() {
 void StateScene::closePlaying() {
   m_pGame->getMotoGame()->resetFollow();
   m_pGame->getMotoGame()->endLevel();
-  m_pGame->getInputHandler()->resetScriptKeyHooks();                     
+  InputHandler::instance()->resetScriptKeyHooks();                     
   GameRenderer::instance()->unprepareForNewLevel();
 }
 
