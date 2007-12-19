@@ -25,13 +25,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "Renderer.h"
 
-#define PRESTART_ANIMATION_MARGIN_SIZE   5
+#define PRESTART_ANIMATION_MARGIN_SIZE   5.0
 #define PRESTART_ANIMATION_TIME        2.0
 #define PRESTART_ANIMATION_CURVE       3.0
 /* logf(PRESTART_ANIMATION_CURVE + 1.0) = 1.386294361*/
 #define LOGF_PRE_ANIM_TIME_ADDED_ONE   1.386294361
 #define INPLAY_ANIMATION_TIME          1.0
 #define INPLAY_ANIMATION_SPEED          10
+#define INPLAY_ANIMATION_MAX_OFFSET    0.5
 
 CameraAnimation::CameraAnimation(Camera* i_camera, DrawLib* i_drawLib, MotoGame* i_motoGame) {
   m_step         = 0;
@@ -182,6 +183,20 @@ bool AutoZoomCameraAnimation::step() {
       float zx, zy;
       zx = (m_fAnimPlayFinalCamera1.x - m_fAnimPlayFinalCamera2.x) * (sin((GameApp::getXMTime() - startTime() - INPLAY_ANIMATION_TIME) * 2 * 3.1415927 / INPLAY_ANIMATION_SPEED - 3.1415927/2) + 1) / 2;
       zy = (m_fAnimPlayFinalCamera1.y - m_fAnimPlayFinalCamera2.y) * (sin((GameApp::getXMTime() - startTime() - INPLAY_ANIMATION_TIME) * 2 * 3.1415927 / INPLAY_ANIMATION_SPEED - 3.1415927/2) + 1) / 2;
+
+      // maximize speed
+      // INPLAY_ANIMATION_MAX_OFFSET
+      if((m_fAnimPlayFinalCamera1.x - zx) - m_camera->getCameraPositionX() > INPLAY_ANIMATION_MAX_OFFSET) {
+	zx = m_fAnimPlayFinalCamera1.x - m_camera->getCameraPositionX() - (INPLAY_ANIMATION_MAX_OFFSET);
+      } else if((m_fAnimPlayFinalCamera1.x - zx) - m_camera->getCameraPositionX() < -(INPLAY_ANIMATION_MAX_OFFSET)) {
+	zx = m_fAnimPlayFinalCamera1.x - m_camera->getCameraPositionX() + INPLAY_ANIMATION_MAX_OFFSET;
+      }
+      if((m_fAnimPlayFinalCamera1.y - zy) - m_camera->getCameraPositionY() > INPLAY_ANIMATION_MAX_OFFSET) {
+	zy = m_fAnimPlayFinalCamera1.y - m_camera->getCameraPositionY() - (INPLAY_ANIMATION_MAX_OFFSET);
+      } else if((m_fAnimPlayFinalCamera1.y - zy) - m_camera->getCameraPositionY() < -(INPLAY_ANIMATION_MAX_OFFSET)) {
+	zy = m_fAnimPlayFinalCamera1.y - m_camera->getCameraPositionY() + INPLAY_ANIMATION_MAX_OFFSET;
+      }
+
       m_camera->setCameraPosition(m_fAnimPlayFinalCamera1.x - zx,m_fAnimPlayFinalCamera1.y - zy);
 
       if(m_previousZoomTime < 0.0) {
