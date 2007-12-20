@@ -49,7 +49,7 @@ StateManager::StateManager()
   m_renderFpsNbFrame = 0;
   m_updateFpsNbFrame = 0;
 
-  m_lastFpsTime  = 0.0;
+  m_lastFpsTime  = 0;
   m_renderPeriod = 1.0;
 
   m_maxUpdateFps  = 50;
@@ -501,6 +501,8 @@ bool GameState::render() {
 			      drawLib->getDispHeight()),
 		     0, MAKE_COLOR(0,0,0, v_nShade));
   }
+
+  return true;
 }
 
 std::string GameState::getId() const {

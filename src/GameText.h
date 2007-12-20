@@ -216,9 +216,9 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  Esc - " + std::string(_("Pause")) + "\n" \
 "  Return - " + std::string(_("Restart the level")) + "\n" \
 "  PageDown/PageUp - " + std::string(_("Previous/Next level")) + "\n" \
-"  F3 - " + std::string(_("Add/remove to favorite levels")) + "\n"\ 
-"  ctrl+B - " + std::string(_("Add/remove to blacklisted levels")) + "\n"\ 
-"  ctrl+M - " + std::string(_("change mirror mode")) + "\n"\ 
+"  F3 - " + std::string(_("Add/remove to favorite levels")) + "\n"\
+"  ctrl+B - " + std::string(_("Add/remove to blacklisted levels")) + "\n"\
+"  ctrl+M - " + std::string(_("change mirror mode")) + "\n"\
 "  F8 - " + std::string(_("Enable/disable web")) + "\n" \
 "  F9 - " + std::string(_("Enable/disable ugly mode")) + "\n" \
 "  F5 - " + std::string(_("Reload levels, themes and replays from directories")) + "\n" \

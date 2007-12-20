@@ -85,6 +85,7 @@ float CameraAnimation::initialEntitiesWhichMakeWinZoom() {
 }
 
 bool CameraAnimation::step() {
+  return true;
 }
 
 void CameraAnimation::goNextStep() {
