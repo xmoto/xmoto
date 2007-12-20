@@ -25,13 +25,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateCheckWww : public StateUpdate {
 public:
-  StateCheckWww(GameApp* pGame,
-		bool forceUpdate        = false,
+  StateCheckWww(bool forceUpdate        = false,
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false);
   virtual ~StateCheckWww();
 
   void callAfterThreadFinished(int threadResult);
+
+protected:
+  virtual void checkEvents() {}
 };
 
 #endif

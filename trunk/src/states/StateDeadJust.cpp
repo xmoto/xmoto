@@ -23,60 +23,33 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateDeadMenu.h"
 #include "GameText.h"
 
-StateDeadJust::StateDeadJust(GameApp* pGame):
-StateScene(pGame, true, true)
+StateDeadJust::StateDeadJust()
+  : StateScene(true, true)
 {
   m_name    = "StateDeadJust";
 }
 
 StateDeadJust::~StateDeadJust()
 {
-
 }
 
 
 void StateDeadJust::enter()
 {
   StateScene::enter();
-  m_pGame->getMotoGame()->clearGameMessages();
-  m_pGame->getMotoGame()->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
-  m_pGame->getMotoGame()->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
-  m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
-}
 
-void StateDeadJust::leave()
-{
-}
-
-void StateDeadJust::enterAfterPop()
-{
-
-}
-
-void StateDeadJust::leaveAfterPush()
-{
-
-}
-
-bool StateDeadJust::update()
-{
-  if(doUpdate() == false){
-    return false;
-  }
+  MotoGame* world = GameApp::instance()->getMotoGame();
   
-  StateScene::update();
-}
-
-bool StateDeadJust::render()
-{
-  StateScene::render();
-  return true;
+  world->clearGameMessages();
+  world->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
+  world->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
+  world->setInfos(world->getLevelSrc()->Name());
 }
 
 void StateDeadJust::keyDown(int nKey, SDLMod mod,int nChar)
 {
   if(nKey == SDLK_ESCAPE) {
-    StateManager::instance()->pushState(new StateDeadMenu(m_pGame, false, this));
+    StateManager::instance()->pushState(new StateDeadMenu(false, this));
   }
   else if(nKey == SDLK_RETURN && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0) {
     /* retart immediatly the level */
@@ -85,24 +58,4 @@ void StateDeadJust::keyDown(int nKey, SDLMod mod,int nChar)
   else {
     StateScene::keyDown(nKey, mod, nChar);
   }
-}
-
-void StateDeadJust::keyUp(int nKey,   SDLMod mod)
-{
-  StateScene::keyUp(nKey, mod);
-}
-
-void StateDeadJust::mouseDown(int nButton)
-{
-  StateScene::mouseDown(nButton);
-}
-
-void StateDeadJust::mouseDoubleClick(int nButton)
-{
-  StateScene::mouseDoubleClick(nButton);
-}
-
-void StateDeadJust::mouseUp(int nButton)
-{
-  StateScene::mouseUp(nButton);
 }

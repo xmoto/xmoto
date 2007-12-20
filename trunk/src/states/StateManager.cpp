@@ -43,8 +43,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 StateManager::StateManager()
 {
-  m_pGame = NULL;
-
   m_currentRenderFps = 0;
   m_currentUpdateFps = 0;
 
@@ -61,11 +59,6 @@ StateManager::StateManager()
   m_curRenderFps  = 50;
 
   m_cursor = NULL;
-}
-
-void StateManager::init(GameApp* pGame)
-{
-  m_pGame = pGame;
 }
 
 StateManager::~StateManager()
@@ -110,7 +103,7 @@ void StateManager::flush() {
   }
 
   if(m_statesStack.size() == 0) {
-    m_pGame->requestEnd();
+    GameApp::instance()->requestEnd();
   }
 }
 
@@ -182,7 +175,8 @@ void StateManager::update()
 void StateManager::render()
 {
   if(doRender() == true){
-    m_pGame->getDrawLib()->resetGraphics();
+    DrawLib* drawLib = GameApp::instance()->getDrawLib();
+    drawLib->resetGraphics();
 
     /* we have to draw states from the bottom of the stack to the top */
     std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
@@ -217,7 +211,7 @@ void StateManager::render()
       drawCursor(); // to remove after state managing
     }
 
-    m_pGame->getDrawLib()->flushGraphics();
+    drawLib->flushGraphics();
 
     m_renderFpsNbFrame++;
   }
@@ -227,7 +221,7 @@ void StateManager::drawFps() {
   char cTemp[256];        
   sprintf(cTemp, "u(%i) d(%i)", getCurrentUpdateFPS(), getCurrentRenderFPS());
 
-  FontManager* v_fm = m_pGame->getDrawLib()->getFontSmall();
+  FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg = v_fm->getGlyph(cTemp);
   v_fm->printString(v_fg, 0, 130, MAKE_COLOR(255,255,255,255), true);
 }
@@ -236,9 +230,10 @@ void StateManager::drawStack() {
   int i = 0;
   FontGlyph* v_fg;
   FontManager* v_fm;
-  
+  DrawLib* drawLib = GameApp::instance()->getDrawLib();
+
   int xoff = 0;
-  int yoff = m_pGame->getDrawLib()->getDispHeight();
+  int yoff = drawLib->getDispHeight();
   int w = 180;
   int h =  30;
   Color bg_none     = MAKE_COLOR(0,0,0,200);
@@ -247,7 +242,7 @@ void StateManager::drawStack() {
   Color font_color  = MAKE_COLOR(255,255,255,255);
 
   std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
-  v_fm = m_pGame->getDrawLib()->getFontSmall();
+  v_fm = drawLib->getFontSmall();
 
   while(stateIterator != m_statesStack.end()){
     Color bg_render = bg_none;
@@ -260,8 +255,8 @@ void StateManager::drawStack() {
       bg_render = bg_rendered;
     }
 
-    m_pGame->getDrawLib()->drawBox(Vector2f(xoff,     yoff - (i * h)), Vector2f(xoff + w/2, yoff - ((i+1) * h)), 1.0, bg_update);
-    m_pGame->getDrawLib()->drawBox(Vector2f(xoff+w/2, yoff - (i * h)), Vector2f(xoff + w,   yoff - ((i+1) * h)), 1.0, bg_render);
+    drawLib->drawBox(Vector2f(xoff,     yoff - (i * h)), Vector2f(xoff + w/2, yoff - ((i+1) * h)), 1.0, bg_update);
+    drawLib->drawBox(Vector2f(xoff+w/2, yoff - (i * h)), Vector2f(xoff + w,   yoff - ((i+1) * h)), 1.0, bg_render);
     v_fg = v_fm->getGlyph(m_statesStack[i]->getName());
     v_fm->printString(v_fg, (w-v_fg->realWidth())/2 + xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, true);
 
@@ -284,7 +279,7 @@ void StateManager::drawCursor() {
   if(m_cursor != NULL && XMSession::instance()->ugly() == false) {
     int nMX,nMY;
     GameApp::getMousePos(&nMX, &nMY);      
-    m_pGame->getDrawLib()->drawImage(Vector2f(nMX-2,nMY-2), Vector2f(nMX+30,nMY+30), m_cursor);
+    GameApp::instance()->getDrawLib()->drawImage(Vector2f(nMX-2,nMY-2), Vector2f(nMX+30,nMY+30), m_cursor);
   }
 }
 
@@ -398,7 +393,6 @@ void StateManager::cleanStates() {
   StateLevelInfoViewer::clean();
   StateLevelPackViewer::clean();
   StateMainMenu::clean();
-  StateMessageBox::clean();
   StatePause::clean();
   StateRequestKey::clean();
 }
@@ -446,14 +440,12 @@ void StateManager::sendAsynchronousMessage(std::string cmd)
 
 GameState::GameState(bool drawStateBehind,
 		     bool updateStatesBehind,
-		     GameApp* pGame,
 		     bool i_doShade,
 		     bool i_doShadeAnim)
 {
   m_isHide             = false;
   m_drawStateBehind    = drawStateBehind;
   m_updateStatesBehind = updateStatesBehind;
-  m_pGame              = pGame;
   m_requestForEnd      = false;
 
   // default rendering and update fps
@@ -502,13 +494,12 @@ bool GameState::render() {
     } else {
       v_nShade = MENU_SHADING_VALUE;
     }
-    
-    m_pGame->getDrawLib()->drawBox(Vector2f(0,0),
-				   Vector2f(m_pGame->getDrawLib()->getDispWidth(),
-					    m_pGame->getDrawLib()->getDispHeight()),
-				   0,
-				   MAKE_COLOR(0,0,0, v_nShade)
-				   );
+
+    DrawLib* drawLib = GameApp::instance()->getDrawLib();
+    drawLib->drawBox(Vector2f(0,0),
+		     Vector2f(drawLib->getDispWidth(),
+			      drawLib->getDispHeight()),
+		     0, MAKE_COLOR(0,0,0, v_nShade));
   }
 }
 
@@ -527,7 +518,6 @@ void GameState::send(const std::string& i_id, UIMsgBoxButton i_button, const std
 
 void GameState::send(const std::string& i_id, const std::string& i_message)
 {
-  
 }
 
 void GameState::executeCommands()
@@ -545,24 +535,26 @@ void GameState::executeOneCommand(std::string cmd)
 }
 
 void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
+  GameApp* gameApp = GameApp::instance();
+
   if(nKey == SDLK_F12) {
-    m_pGame->gameScreenshot();
+    gameApp->gameScreenshot();
     return;        
   }
 
   if(nKey == SDLK_F8) {
-    m_pGame->enableWWW(XMSession::instance()->www() == false);
+    gameApp->enableWWW(XMSession::instance()->www() == false);
     StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
     return;        
   }
 
   if(nKey == SDLK_F7) {
-    m_pGame->enableFps(XMSession::instance()->fps() == false);
+    gameApp->enableFps(XMSession::instance()->fps() == false);
     return;        
   }
 
   if(nKey == SDLK_F9) {
-    m_pGame->switchUglyMode(XMSession::instance()->ugly() == false);
+    gameApp->switchUglyMode(XMSession::instance()->ugly() == false);
     if(XMSession::instance()->ugly()) {
       SysMessage::instance()->displayText(SYS_MSG_UGLY_MODE_ENABLED);
     } else {
@@ -572,13 +564,13 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   }
 
   if(nKey == SDLK_RETURN && (mod & KMOD_ALT) != 0) {
-    m_pGame->getDrawLib()->toogleFullscreen();
+    gameApp->getDrawLib()->toogleFullscreen();
     XMSession::instance()->setWindowed(XMSession::instance()->windowed() == false);
     return;
   }
 
   if(nKey == SDLK_F10) {
-    m_pGame->switchTestThemeMode(XMSession::instance()->testTheme() == false);
+    gameApp->switchTestThemeMode(XMSession::instance()->testTheme() == false);
     if(XMSession::instance()->testTheme()) {
       SysMessage::instance()->displayText(SYS_MSG_THEME_MODE_ENABLED);
     } else {
@@ -588,7 +580,7 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   }
 
   if(nKey == SDLK_F11) {
-    m_pGame->switchUglyOverMode(XMSession::instance()->uglyOver() == false);
+    gameApp->switchUglyOverMode(XMSession::instance()->uglyOver() == false);
     if(XMSession::instance()->uglyOver()) {
       SysMessage::instance()->displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
     } else {
@@ -606,8 +598,8 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
       SysMessage::instance()->displayText(SYS_MSG_INTERPOLATION_DISABLED);
     }
 
-    for(unsigned int i=0; i<m_pGame->getMotoGame()->Players().size(); i++) {
-      m_pGame->getMotoGame()->Players()[i]->setInterpolation(XMSession::instance()->enableReplayInterpolation());
+    for(unsigned int i=0; i<gameApp->getMotoGame()->Players().size(); i++) {
+      gameApp->getMotoGame()->Players()[i]->setInterpolation(XMSession::instance()->enableReplayInterpolation());
     }
 
     return;
@@ -616,8 +608,8 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   if(nKey == SDLK_m && (mod & KMOD_CTRL) != 0) {
     XMSession::instance()->setMirrorMode(XMSession::instance()->mirrorMode() == false);
 
-    for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
-      m_pGame->getMotoGame()->Cameras()[i]->setMirrored(XMSession::instance()->mirrorMode());
+    for(unsigned int i=0; i<gameApp->getMotoGame()->Cameras().size(); i++) {
+      gameApp->getMotoGame()->Cameras()[i]->setMirrored(XMSession::instance()->mirrorMode());
     }
     InputHandler::instance()->setMirrored(XMSession::instance()->mirrorMode());
   }

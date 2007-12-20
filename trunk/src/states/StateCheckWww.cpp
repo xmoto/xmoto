@@ -18,15 +18,13 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "Game.h"
 #include "StateCheckWww.h"
 #include "thread/CheckWwwThread.h"
 
-StateCheckWww::StateCheckWww(GameApp* pGame,
-			     bool forceUpdate,
+StateCheckWww::StateCheckWww(bool forceUpdate,
 			     bool drawStateBehind,
 			     bool updateStatesBehind)
-  : StateUpdate(pGame, drawStateBehind, updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind)
 {
   m_pThread = new CheckWwwThread(forceUpdate);
   m_name    = "StateCheckWww";

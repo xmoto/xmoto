@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Input.h"
 #include "WWW.h"
 #include "LevelsManager.h"
+#include "helpers/Singleton.h"
 
 class XMArguments;
 class xmDatabase;
@@ -43,239 +44,239 @@ class UILevelList;
 class SoundSample;
 class XMotoLoadReplaysInterface;
 
-   class XMMotoGameHooks : public MotoGameHooks {
-   public:
-     XMMotoGameHooks();
-     virtual ~XMMotoGameHooks();
-     void setGameApps(MotoGame *i_MotoGame);
-     void OnTakeEntity();
+class XMMotoGameHooks : public MotoGameHooks {
+public:
+  XMMotoGameHooks();
+  virtual ~XMMotoGameHooks();
+  void setGameApps(MotoGame *i_MotoGame);
+  void OnTakeEntity();
 
-   private:
-     MotoGame *m_MotoGame;
-   };
+private:
+  MotoGame *m_MotoGame;
+};
 
-   /*===========================================================================
-   Game application
-   ===========================================================================*/
-   class GameApp : public XMotoLoadLevelsInterface, public XmDatabaseUpdateInterface {
-     public:
-     GameApp();
-     ~GameApp();
-           
-    void run(int nNumArgs,char **ppcArgs);
-    void run_load(int nNumArgs,char **ppcArgs);
-    void run_loop();
-    void run_unload();
+/*===========================================================================
+  Game application
+  ===========================================================================*/
+class GameApp : public XMotoLoadLevelsInterface,
+		public XmDatabaseUpdateInterface,
+		public Singleton<GameApp> {
+  friend class Singleton<GameApp>;
 
-	/* load level */
-	void loadLevelHook(std::string i_level, int i_percentage);
-	void updatingDatabase(std::string i_message);
+private:
+  GameApp();
+  ~GameApp();
 
-      /* ** */
-      void drawFrame(void);
-      void keyDown(int nKey, SDLMod mod,int nChar);
-      void keyUp(int nKey, SDLMod mod);
-      void mouseDown(int nButton);
-      void mouseDoubleClick(int nButton);
-      void mouseUp(int nButton);
+public:
+  void run(int nNumArgs,char **ppcArgs);
+  void run_load(int nNumArgs,char **ppcArgs);
+  void run_loop();
+  void run_unload();
 
-      /* Methods */
-      MotoGame* getMotoGame();
+  /* load level */
+  void loadLevelHook(std::string i_level, int i_percentage);
+  void updatingDatabase(std::string i_message);
 
-      void reloadTheme();
+  /* ** */
+  void drawFrame(void);
+  void keyDown(int nKey, SDLMod mod,int nChar);
+  void keyUp(int nKey, SDLMod mod);
+  void mouseDown(int nButton);
+  void mouseDoubleClick(int nButton);
+  void mouseUp(int nButton);
 
-      void TeleportationCheatTo(int i_player, Vector2f i_position);
+  /* Methods */
+  MotoGame* getMotoGame();
 
-      void initCameras(int nbPlayer);
+  void reloadTheme();
 
-      void setSpecificReplay(const std::string& i_replay);
-      void setSpecificLevelId(const std::string& i_levelID);
-      void setSpecificLevelFile(const std::string& i_leveFile);
+  void TeleportationCheatTo(int i_player, Vector2f i_position);
 
-      /* */
-      static double getXMTime(void);
-      static int    getXMTimeInt(void);
-      static std::string getTimeStamp(void);
-      void quit(void);
-      static std::string formatTime(float fSecs);
-      static void getMousePos(int *pnX, int *pnY);
-      bool haveMouseMoved(void);
+  void initCameras(int nbPlayer);
+
+  void setSpecificReplay(const std::string& i_replay);
+  void setSpecificLevelId(const std::string& i_levelID);
+  void setSpecificLevelFile(const std::string& i_leveFile);
+
+  /* */
+  static double getXMTime(void);
+  static int    getXMTimeInt(void);
+  static std::string getTimeStamp(void);
+  void quit(void);
+  static std::string formatTime(float fSecs);
+  static void getMousePos(int *pnX, int *pnY);
+  bool haveMouseMoved(void);
       
-      Img *grabScreen(void);
+  Img *grabScreen(void);
 
-      DrawLib *getDrawLib() {
-	return drawLib;
-      };
-
-      UserConfig* getUserConfig() { /* to remove */
-	return &m_Config;
-      }
-
-      void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
-      void switchLevelToBlacklist(const std::string& i_levelId, bool v_displayMessage = false);
-
-      bool isThereANextLevel(const std::string& i_id_level);
-      bool isThereAPreviousLevel(const std::string& i_id_level); 
-
-      std::string getWorldRecord(const std::string &LevelID);
-
-      void addGhosts(MotoGame* i_motogame, Theme* i_theme);
-
-      // to call while playing
-      void playMusic(const std::string& i_music); // "" => no music
-      bool isAReplayToSave() const;
-      Replay* getCurrentReplay();
-      void initReplay();
-      void isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room);
-      void saveReplay(const std::string &Name);
-      void switchFollowCamera();
-
-      // ask the game to close as soon as possible
-      void requestEnd();
-
-      TColor getColorFromPlayerNumber(int i_player);
-      TColor getUglyColorFromPlayerNumber(int i_player);
-
-      bool getHighscoreInfos(const std::string& i_id_level, std::string* io_id_profile, std::string* io_url, bool* o_isAccessible);
-
-      //
-      xmDatabase*    getDb();
-
-      /* call to close the replay */
-      void finalizeReplay(bool i_finished);
-
-      static std::string splitText(const std::string &str, int p_breakLineLength);
-      void addLevelToFavorite(const std::string& i_levelId);
-
-      // list played
-      void setCurrentPlayingList(UILevelList *i_levelsList) {m_currentPlayingList = i_levelsList;}
-
-      void updateWebHighscores();
-
-      std::string getWebRoomURL(xmDatabase* pDb = NULL);
-      std::string getWebRoomName(xmDatabase* pDb = NULL);
-    
-      std::string determineNextLevel(const std::string& i_id_level);
-      std::string determinePreviousLevel(const std::string& i_id_level);
-
-      void initReplaysFromDir(xmDatabase* threadDb = NULL,
-			      XMotoLoadReplaysInterface* pLoadReplaysInterface = NULL);
-
-      void gameScreenshot();
-      void enableWWW(bool bValue);
-      void enableFps(bool bValue);
-      void switchUglyMode(bool bUgly);
-      void switchTestThemeMode(bool mode);
-      void switchUglyOverMode(bool mode);
-
-      void addReplay(const std::string& i_file, xmDatabase* threadDb = NULL);
-
-   protected:
-      void createDefaultConfig();
-
-    private:   
-      ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
-      MotoGame m_MotoGame;                      /* Game object */      
-      XMMotoGameHooks m_MotoGameHooks;
-       
-      std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
-
-      
-      Replay *m_pJustPlayReplay;
-
-      /* WWW */
-      WebRoom *m_pWebHighscores;
-      WebLevels *m_pWebLevels;
-      ProxySettings m_ProxySettings;
-      std::string m_DownloadingInformation;
-      std::string m_DownloadingMessage;
-      float m_fDownloadTaskProgressLast;
-
-      bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
-      bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
-      
-      /* Sound effects */
-      SoundSample *m_pEndOfLevelSFX;
-      SoundSample *m_pStrawberryPickupSFX;
-      SoundSample *m_pWreckerTouchSFX;
-      SoundSample *m_pDieSFX;
-      
-      /* Various popups */
-      UIMsgBox *m_pNotifyMsgBox;
-      UIMsgBox *m_pInfoMsgBox;
-      UIRect m_InfoMsgBoxRect;
-
-      /* Main menu buttons and stuff */
-      int m_nNumMainMenuButtons;
-      UITabView *m_pLevelPackTabs;
-      UIButton *m_pMainMenuButtons[10];
-      UIFrame *m_pOptionsWindow,*m_pPlayWindow,*m_pReplaysWindow,*m_pLevelPacksWindow;
-      UIWindow *m_pMainMenu;
-      UIFrame *m_pGameInfoWindow;
-      
-      /* LEVEL lists */
-      UILevelList *m_currentPlayingList;
-      UILevelList *m_pAllLevelsList;
-      UILevelList *m_pPlayNewLevelsList;
-
-      UIWindow *m_pLevelInfoFrame;
-      UIButton *m_pLevelInfoViewReplayButton;      
-      UIStatic *m_pBestPlayerText;
-
-      UIWindow *m_pPackLevelInfoFrame;
-      UIButton *m_pPackLevelInfoViewReplayButton;      
-      UIStatic *m_pPackBestPlayerText;
-
-      std::string    m_pLevelToShowOnViewHighscore;
-
-      /* if true, don't ask for updating levels */
-      bool m_updateAutomaticallyLevels;
-     
-      /* Internet connection configurator */
-      UIFrame *m_pWebConfEditor;      
-      UIMsgBox *m_pWebConfMsgBox;    
-
-      /* Level pack viewer fun */
-      UIFrame *m_pLevelPackViewer;  
-      
-      /* Replay saving UI fun */
-      UIMsgBox *m_pSaveReplayMsgBox;    
-
-      /* Main loop statics */
-      double m_fFrameTime;
-      float m_fFPS_Rate;
-      
-      std::string m_PlaySpecificReplay;
-      std::string m_PlaySpecificLevelId;
-      std::string m_PlaySpecificLevelFile;
-
-      xmDatabase *m_db;
-
-      UserConfig m_Config;
-      
-      DrawLib *drawLib;
-
-      /* Run-time fun */
-      bool m_bQuit;		/* Quit flag */
-
-      // calculate sleeping time
-      int m_lastFrameTimeStamp;
-      int m_frameLate;
-
-      /* Helpers */
-      void _Wait();
-    
-      void _UpdateLoadingScreen(float fDone, const std::string &NextTask);
-      
-      void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
-      void _DownloadExtraLevels(void);
-
-      std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
-      std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time);
-      std::string _getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time);
-
-      /* */
-      void _InitWin(bool bInitGraphics);
+  DrawLib *getDrawLib() {
+    return drawLib;
   };
+
+  UserConfig* getUserConfig() { /* to remove */
+    return &m_Config;
+  }
+
+  void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
+  void switchLevelToBlacklist(const std::string& i_levelId, bool v_displayMessage = false);
+
+  bool isThereANextLevel(const std::string& i_id_level);
+  bool isThereAPreviousLevel(const std::string& i_id_level); 
+
+  std::string getWorldRecord(const std::string &LevelID);
+
+  void addGhosts(MotoGame* i_motogame, Theme* i_theme);
+
+  // to call while playing
+  void playMusic(const std::string& i_music); // "" => no music
+  bool isAReplayToSave() const;
+  Replay* getCurrentReplay();
+  void initReplay();
+  void isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room);
+  void saveReplay(const std::string &Name);
+  void switchFollowCamera();
+
+  // ask the game to close as soon as possible
+  void requestEnd();
+
+  TColor getColorFromPlayerNumber(int i_player);
+  TColor getUglyColorFromPlayerNumber(int i_player);
+
+  bool getHighscoreInfos(const std::string& i_id_level, std::string* io_id_profile, std::string* io_url, bool* o_isAccessible);
+
+  /* call to close the replay */
+  void finalizeReplay(bool i_finished);
+
+  static std::string splitText(const std::string &str, int p_breakLineLength);
+  void addLevelToFavorite(const std::string& i_levelId);
+
+  // list played
+  void setCurrentPlayingList(UILevelList *i_levelsList) {m_currentPlayingList = i_levelsList;}
+
+  void updateWebHighscores();
+
+  std::string getWebRoomURL(xmDatabase* pDb = NULL);
+  std::string getWebRoomName(xmDatabase* pDb = NULL);
+    
+  std::string determineNextLevel(const std::string& i_id_level);
+  std::string determinePreviousLevel(const std::string& i_id_level);
+
+  void initReplaysFromDir(xmDatabase* threadDb = NULL,
+			  XMotoLoadReplaysInterface* pLoadReplaysInterface = NULL);
+
+  void gameScreenshot();
+  void enableWWW(bool bValue);
+  void enableFps(bool bValue);
+  void switchUglyMode(bool bUgly);
+  void switchTestThemeMode(bool mode);
+  void switchUglyOverMode(bool mode);
+
+  void addReplay(const std::string& i_file, xmDatabase* threadDb = NULL);
+
+protected:
+  void createDefaultConfig();
+
+private:   
+  ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
+  MotoGame m_MotoGame;                      /* Game object */      
+  XMMotoGameHooks m_MotoGameHooks;
+       
+  std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
+
+      
+  Replay *m_pJustPlayReplay;
+
+  /* WWW */
+  WebRoom *m_pWebHighscores;
+  WebLevels *m_pWebLevels;
+  ProxySettings m_ProxySettings;
+  std::string m_DownloadingInformation;
+  std::string m_DownloadingMessage;
+  float m_fDownloadTaskProgressLast;
+
+  bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
+  bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
+      
+  /* Sound effects */
+  SoundSample *m_pEndOfLevelSFX;
+  SoundSample *m_pStrawberryPickupSFX;
+  SoundSample *m_pWreckerTouchSFX;
+  SoundSample *m_pDieSFX;
+      
+  /* Various popups */
+  UIMsgBox *m_pNotifyMsgBox;
+  UIMsgBox *m_pInfoMsgBox;
+  UIRect m_InfoMsgBoxRect;
+
+  /* Main menu buttons and stuff */
+  int m_nNumMainMenuButtons;
+  UITabView *m_pLevelPackTabs;
+  UIButton *m_pMainMenuButtons[10];
+  UIFrame *m_pOptionsWindow,*m_pPlayWindow,*m_pReplaysWindow,*m_pLevelPacksWindow;
+  UIWindow *m_pMainMenu;
+  UIFrame *m_pGameInfoWindow;
+      
+  /* LEVEL lists */
+  UILevelList *m_currentPlayingList;
+  UILevelList *m_pAllLevelsList;
+  UILevelList *m_pPlayNewLevelsList;
+
+  UIWindow *m_pLevelInfoFrame;
+  UIButton *m_pLevelInfoViewReplayButton;      
+  UIStatic *m_pBestPlayerText;
+
+  UIWindow *m_pPackLevelInfoFrame;
+  UIButton *m_pPackLevelInfoViewReplayButton;      
+  UIStatic *m_pPackBestPlayerText;
+
+  std::string    m_pLevelToShowOnViewHighscore;
+
+  /* if true, don't ask for updating levels */
+  bool m_updateAutomaticallyLevels;
+     
+  /* Internet connection configurator */
+  UIFrame *m_pWebConfEditor;      
+  UIMsgBox *m_pWebConfMsgBox;    
+
+  /* Level pack viewer fun */
+  UIFrame *m_pLevelPackViewer;  
+      
+  /* Replay saving UI fun */
+  UIMsgBox *m_pSaveReplayMsgBox;    
+
+  /* Main loop statics */
+  double m_fFrameTime;
+  float m_fFPS_Rate;
+      
+  std::string m_PlaySpecificReplay;
+  std::string m_PlaySpecificLevelId;
+  std::string m_PlaySpecificLevelFile;
+
+  UserConfig m_Config;
+      
+  DrawLib *drawLib;
+
+  /* Run-time fun */
+  bool m_bQuit;		/* Quit flag */
+
+  // calculate sleeping time
+  int m_lastFrameTimeStamp;
+  int m_frameLate;
+
+  /* Helpers */
+  void _Wait();
+    
+  void _UpdateLoadingScreen(float fDone, const std::string &NextTask);
+      
+  void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
+  void _DownloadExtraLevels(void);
+
+  std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
+  std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time);
+  std::string _getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time);
+
+  /* */
+  void _InitWin(bool bInitGraphics);
+};
 
 #endif

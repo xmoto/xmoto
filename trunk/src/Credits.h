@@ -24,34 +24,35 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "gui/basic/GUI.h"
 
-  /*===========================================================================
+/*===========================================================================
   Credits class
-  ===========================================================================*/
-  class Credits {
-    public:
-      /* Types */
-      struct Entry {
-        std::string Left, Right;
-      };
-    
-      /* Construction/destruction */
-      Credits();
-      ~Credits();
-      
-      /* Methods */
-      void init(GameApp* v_pApp, float fBackgroundReplayLength,float fFadeInLength,float fFadeOutLength,const char *pcCredits);
-      void render(float fTime);
-      bool isFinished(void);
-      
-    private:
-      /* Data */
-      std::vector<Entry *> m_Entries;
-      float m_fTime,m_fReplayLength,m_fFadeIn,m_fFadeOut;
-      bool m_bBlackBackground;
-      FontManager* m_font;
-      GameApp *m_pApp;
-      bool m_bFinished;
+===========================================================================*/
+class Credits {
+public:
+  /* Types */
+  struct Entry {
+    std::string Left, Right;
   };
-
+    
+  /* Construction/destruction */
+  Credits();
+  ~Credits();
+      
+  /* Methods */
+  void init(float fBackgroundReplayLength,
+	    float fFadeInLength,
+	    float fFadeOutLength,
+	    const char *pcCredits);
+  void render(float fTime);
+  bool isFinished(void);
+      
+private:
+  /* Data */
+  std::vector<Entry *> m_Entries;
+  float m_fTime,m_fReplayLength,m_fFadeIn,m_fFadeOut;
+  bool m_bBlackBackground;
+  FontManager* m_font;
+  bool m_bFinished;
+};
 
 #endif

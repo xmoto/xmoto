@@ -150,9 +150,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 GameApp::~GameApp() {
-  if(m_db != NULL) {
-    delete m_db;
-  }
+  xmDatabase::destroy("main");
 
   if(drawLib != NULL) {
     delete drawLib;
@@ -193,8 +191,6 @@ GameApp::GameApp() {
   m_MotoGameHooks.setGameApps(&m_MotoGame);
   
   m_currentPlayingList = NULL;
-
-  m_db = NULL;
 
   m_lastFrameTimeStamp = -1;
   m_frameLate          = 0;
@@ -393,8 +389,9 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     std::string v_roomName;
     std::string v_id_profile;
     float       v_finishTime;
+    xmDatabase* v_pDb = xmDatabase::instance("main");
 
-    v_result = m_db->readDB("SELECT a.name, b.id_profile, b.finishTime "
+    v_result = v_pDb->readDB("SELECT a.name, b.id_profile, b.finishTime "
 			    "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
 			    "ON (a.id_room = b.id_room "
 			    "AND b.id_level=\"" + xmDatabase::protectString(LevelID) + "\") "
@@ -402,15 +399,15 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 			    nrow);
     if(nrow != 1) {
       /* should not happend */
-      m_db->read_DB_free(v_result);
+      v_pDb->read_DB_free(v_result);
       return std::string("WR: ") + GAMETEXT_WORLDRECORDNA;
     }
-    v_roomName = m_db->getResult(v_result, 3, 0, 0);
-    if(m_db->getResult(v_result, 3, 0, 1) != NULL) {
-      v_id_profile = m_db->getResult(v_result, 3, 0, 1);
-      v_finishTime = atof(m_db->getResult(v_result, 3, 0, 2));
+    v_roomName = v_pDb->getResult(v_result, 3, 0, 0);
+    if(v_pDb->getResult(v_result, 3, 0, 1) != NULL) {
+      v_id_profile = v_pDb->getResult(v_result, 3, 0, 1);
+      v_finishTime = atof(v_pDb->getResult(v_result, 3, 0, 2));
     }
-    m_db->read_DB_free(v_result);
+    v_pDb->read_DB_free(v_result);
     
     if(v_id_profile != "") {
       return v_roomName + ": " + GameApp::formatTime(v_finishTime) + std::string(" (") + v_id_profile + std::string(")");
@@ -423,24 +420,25 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     char **v_result;
     unsigned int nrow;
     std::string res;
+    xmDatabase* v_pDb = xmDatabase::instance("main");
 
     p_time = -1.0;
 
-    v_result = m_db->readDB("SELECT name, finishTime FROM replays "
+    v_result = v_pDb->readDB("SELECT name, finishTime FROM replays "
 			    "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
 			    "AND   id_level=\""   + xmDatabase::protectString(p_levelId) + "\" "
 			    "AND   isFinished=1 "
 			    "ORDER BY finishTime LIMIT 1;",
 			    nrow);    
     if(nrow == 0) {
-      m_db->read_DB_free(v_result);
+      v_pDb->read_DB_free(v_result);
       return "";
     }
 
-    res = std::string("Replays/") + m_db->getResult(v_result, 2, 0, 0) + std::string(".rpl");
-    p_time = atof(m_db->getResult(v_result, 2, 0, 1));
+    res = std::string("Replays/") + v_pDb->getResult(v_result, 2, 0, 0) + std::string(".rpl");
+    p_time = atof(v_pDb->getResult(v_result, 2, 0, 1));
 
-    m_db->read_DB_free(v_result);
+    v_pDb->read_DB_free(v_result);
     return res;
   }
 
@@ -451,24 +449,25 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
   std::string res;
   std::string v_replayName;
   std::string v_fileUrl;
+  xmDatabase* v_pDb = xmDatabase::instance("main");
 
-  v_result = m_db->readDB("SELECT fileUrl, finishTime FROM webhighscores "
+  v_result = v_pDb->readDB("SELECT fileUrl, finishTime FROM webhighscores "
 			  "WHERE id_room=" + XMSession::instance()->idRoom() + " "
 			  "AND id_level=\"" + xmDatabase::protectString(p_levelId) + "\";",
 			  nrow);    
   if(nrow == 0) {
     p_time = -1.0;
-    m_db->read_DB_free(v_result);
+    v_pDb->read_DB_free(v_result);
     return "";
   }
 
-  v_fileUrl = m_db->getResult(v_result, 2, 0, 0);
+  v_fileUrl = v_pDb->getResult(v_result, 2, 0, 0);
   v_replayName = FS::getFileBaseName(v_fileUrl);
-  p_time = atof(m_db->getResult(v_result, 2, 0, 1));
-  m_db->read_DB_free(v_result);
+  p_time = atof(v_pDb->getResult(v_result, 2, 0, 1));
+  v_pDb->read_DB_free(v_result);
 
   /* search if the replay is already downloaded */
-  if(m_db->replays_exists(v_replayName)) {
+  if(v_pDb->replays_exists(v_replayName)) {
     return std::string("Replays/") + v_replayName + std::string(".rpl");
   } else {
     return "";
@@ -479,21 +478,22 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
     char **v_result;
     unsigned int nrow;
     std::string res;
+    xmDatabase* v_pDb = xmDatabase::instance("main");
 
-    v_result = m_db->readDB("SELECT a.name, a.finishTime FROM replays AS a INNER JOIN stats_profiles AS b "
+    v_result = v_pDb->readDB("SELECT a.name, a.finishTime FROM replays AS a INNER JOIN stats_profiles AS b "
 			    "ON a.id_profile = b.id_profile "
 			    "WHERE a.id_level=\""   + xmDatabase::protectString(p_levelId) + "\" "
 			    "AND   a.isFinished=1 "
 			    "ORDER BY a.finishTime LIMIT 1;",
 			    nrow);    
     if(nrow == 0) {
-      m_db->read_DB_free(v_result);
+      v_pDb->read_DB_free(v_result);
       return "";
     }
 
-    res = std::string("Replays/") + m_db->getResult(v_result, 2, 0, 0) + std::string(".rpl");
-    p_time = atof(m_db->getResult(v_result, 2, 0, 1));
-    m_db->read_DB_free(v_result);
+    res = std::string("Replays/") + v_pDb->getResult(v_result, 2, 0, 0) + std::string(".rpl");
+    p_time = atof(v_pDb->getResult(v_result, 2, 0, 1));
+    v_pDb->read_DB_free(v_result);
     return res;
   }
 
@@ -608,10 +608,10 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
 
   void GameApp::reloadTheme() {
     try {
-      Theme::instance()->load(m_db->themes_getFileName(XMSession::instance()->theme()));
+      Theme::instance()->load(xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme()));
     } catch(Exception &e) {
       /* unable to load the theme, load the default one */
-      Theme::instance()->load(m_db->themes_getFileName(THEME_DEFAULT_THEMENAME));
+      Theme::instance()->load(xmDatabase::instance("main")->themes_getFileName(THEME_DEFAULT_THEMENAME));
     }
   }
 
@@ -648,7 +648,7 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
     xmDatabase* pDb = NULL;
 
     if(threadDb == NULL){
-      pDb = m_db;
+      pDb = xmDatabase::instance("main");
     } else {
       pDb = threadDb;
     }
@@ -677,7 +677,7 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
     xmDatabase* pDb = NULL;
 
     if(threadDb == NULL){
-      pDb = m_db;
+      pDb = xmDatabase::instance("main");
     } else {
       pDb = threadDb;
     }
@@ -732,7 +732,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
     
     if(v_replay_BESTOFROOM != "") {
 	m_MotoGame.addGhostFromFile(v_replay_BESTOFROOM,
-				    m_db->webrooms_getName(XMSession::instance()->idRoom()),
+				    xmDatabase::instance("main")->webrooms_getName(XMSession::instance()->idRoom()),
 				    Theme::instance(), Theme::instance()->getGhostTheme(),
 				    TColor(255,255,255,0),
 				    TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
@@ -780,17 +780,17 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
 }
 
 void GameApp::addLevelToFavorite(const std::string& i_levelId) {
-  LevelsManager::instance()->addToFavorite(m_db, XMSession::instance()->profile(), i_levelId);
+  LevelsManager::instance()->addToFavorite(XMSession::instance()->profile(), i_levelId);
 }
 
 void GameApp::switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage) {
-  if(LevelsManager::instance()->isInFavorite(m_db, XMSession::instance()->profile(), i_levelId)) {
-    LevelsManager::instance()->delFromFavorite(m_db, XMSession::instance()->profile(), i_levelId);
+  if(LevelsManager::instance()->isInFavorite(XMSession::instance()->profile(), i_levelId)) {
+    LevelsManager::instance()->delFromFavorite(XMSession::instance()->profile(), i_levelId);
     if(v_displayMessage) {
       SysMessage::instance()->displayText(GAMETEXT_LEVEL_DELETED_FROM_FAVORITE);
     }
   } else {
-    LevelsManager::instance()->addToFavorite(m_db, XMSession::instance()->profile(), i_levelId);
+    LevelsManager::instance()->addToFavorite(XMSession::instance()->profile(), i_levelId);
     if(v_displayMessage) {
       SysMessage::instance()->displayText(GAMETEXT_LEVEL_ADDED_TO_FAVORITE);
     }
@@ -798,13 +798,13 @@ void GameApp::switchLevelToFavorite(const std::string& i_levelId, bool v_display
 }
 
 void GameApp::switchLevelToBlacklist(const std::string& i_levelId, bool v_displayMessage) {
-  if(LevelsManager::instance()->isInBlacklist(m_db, XMSession::instance()->profile(), i_levelId)) {
-    LevelsManager::instance()->delFromBlacklist(m_db, XMSession::instance()->profile(), i_levelId);
+  if(LevelsManager::instance()->isInBlacklist(XMSession::instance()->profile(), i_levelId)) {
+    LevelsManager::instance()->delFromBlacklist(XMSession::instance()->profile(), i_levelId);
     if(v_displayMessage) {
       SysMessage::instance()->displayText(GAMETEXT_LEVEL_DELETED_FROM_BLACKLIST);
     }
   } else {
-    LevelsManager::instance()->addToBlacklist(m_db, XMSession::instance()->profile(), i_levelId);
+    LevelsManager::instance()->addToBlacklist(XMSession::instance()->profile(), i_levelId);
     if(v_displayMessage) {
       SysMessage::instance()->displayText(GAMETEXT_LEVEL_ADDED_TO_BLACKLIST);
     }
@@ -846,10 +846,6 @@ void GameApp::playMusic(const std::string& i_music) {
   }
 }
 
-xmDatabase* GameApp::getDb() {
-  return m_db;
-}
-
 bool GameApp::isAReplayToSave() const {
   return m_pJustPlayReplay != NULL;
 }
@@ -861,6 +857,7 @@ void GameApp::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
   char **v_result;
   unsigned int nrow;
   char *v_res;
+  xmDatabase *pDb = xmDatabase::instance("main");
 
   o_personal = o_room = false;
 
@@ -871,24 +868,24 @@ void GameApp::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
   v_current_time = (int)(100.0 * m_MotoGame.Players()[0]->finishTime());
 
   /* get best player result */
-  v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+  v_result = pDb->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
 			  "id_level=\"" + 
 			  xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
 			  "AND id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile())  + "\";",
 			  nrow);
-  v_res = m_db->getResult(v_result, 1, 0, 0);
+  v_res = pDb->getResult(v_result, 1, 0, 0);
   if(v_res != NULL) {
     v_best_personal_time = (int)(100.0 * (atof(v_res) + 0.001)); /* + 0.001 because it is converted into a float */
   } else {
     /* should never happend because the score is already stored */
     v_best_personal_time = -1;
   }
-  m_db->read_DB_free(v_result);
+  pDb->read_DB_free(v_result);
   o_personal = (v_current_time <= v_best_personal_time
 		|| v_best_personal_time < 0);
 
   /* search a better webhighscore */
-  v_best_room_time = (int)(100.0 * m_db->webrooms_getHighscoreTime(XMSession::instance()->idRoom(), m_MotoGame.getLevelSrc()->Id()));
+  v_best_room_time = (int)(100.0 * pDb->webrooms_getHighscoreTime(XMSession::instance()->idRoom(), m_MotoGame.getLevelSrc()->Id()));
   o_room = (v_current_time < v_best_room_time
 	    || v_best_room_time < 0);
 }
@@ -927,7 +924,7 @@ std::string GameApp::getWebRoomURL(xmDatabase* pDb) {
   std::string v_url;
 
   if(pDb == NULL){
-    pDb = m_db;
+    pDb = xmDatabase::instance("main");
   }
 
   v_result = pDb->readDB("SELECT highscoresUrl FROM webrooms WHERE id_room=" + XMSession::instance()->idRoom() + ";", nrow);
@@ -947,7 +944,7 @@ std::string GameApp::getWebRoomName(xmDatabase* pDb) {
   std::string v_name;
 
   if(pDb == NULL){
-    pDb = m_db;
+    pDb = xmDatabase::instance("main");
   }
 
   /* set the room name ; set to WR if it cannot be determined */
@@ -965,21 +962,22 @@ std::string GameApp::getWebRoomName(xmDatabase* pDb) {
 bool GameApp::getHighscoreInfos(const std::string& i_id_level, std::string* o_id_profile, std::string* o_url, bool* o_isAccessible) {
   char **v_result;
   unsigned int nrow;
-    
-  v_result = m_db->readDB("SELECT id_profile, fileUrl FROM webhighscores WHERE id_level=\"" + 
+  xmDatabase *pDb = xmDatabase::instance("main");
+
+  v_result = pDb->readDB("SELECT id_profile, fileUrl FROM webhighscores WHERE id_level=\"" + 
 			  xmDatabase::protectString(i_id_level) + "\" AND id_room=" + XMSession::instance()->idRoom() + ";",
 			  nrow);
   if(nrow == 0) {
-    m_db->read_DB_free(v_result);
+    pDb->read_DB_free(v_result);
     return false;
   }
 
-  *o_id_profile = m_db->getResult(v_result, 2, 0, 0);
-  *o_url        = m_db->getResult(v_result, 2, 0, 1);
-  m_db->read_DB_free(v_result);
+  *o_id_profile = pDb->getResult(v_result, 2, 0, 0);
+  *o_url        = pDb->getResult(v_result, 2, 0, 1);
+  pDb->read_DB_free(v_result);
 
   /* search if the replay is already downloaded */
-  if(m_db->replays_exists(FS::getFileBaseName(*o_url))) {
+  if(pDb->replays_exists(FS::getFileBaseName(*o_url))) {
     *o_isAccessible = true;
   } else {
     *o_isAccessible = XMSession::instance()->www();

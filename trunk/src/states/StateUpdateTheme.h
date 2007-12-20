@@ -25,8 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateUpdateTheme : public StateUpdate {
 public:
-  StateUpdateTheme(GameApp* pGame,
-		   const std::string& i_id_theme,
+  StateUpdateTheme(const std::string& i_id_theme,
 		   bool drawStateBehind    = true,
 		   bool updateStatesBehind = false);
   virtual ~StateUpdateTheme();
@@ -36,6 +35,7 @@ public:
 protected:
   virtual void callAfterThreadFinished(int threadResult);
   virtual bool callBeforeLaunchingThread();
+  virtual void checkEvents() {}
 
 private:
   std::string m_id_theme;

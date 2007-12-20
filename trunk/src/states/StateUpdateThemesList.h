@@ -25,10 +25,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateUpdateThemesList : public StateUpdate {
 public:
-  StateUpdateThemesList(GameApp* pGame,
-			bool drawStateBehind    = true,
+  StateUpdateThemesList(bool drawStateBehind    = true,
 			bool updateStatesBehind = false);
   virtual ~StateUpdateThemesList();
+
+protected:
+  virtual void checkEvents() {}
 };
 
 #endif

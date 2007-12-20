@@ -112,8 +112,7 @@ class Biker;
 
     /* update of the structure */
     void loadLevel(xmDatabase *i_db, const std::string& i_id_level);
-    void prePlayLevel(InputHandler *i_inputHandler,
-		      Replay *recordingReplay,
+    void prePlayLevel(Replay *recordingReplay,
 		      bool i_playEvents);
 
     void playLevel();

@@ -28,52 +28,33 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StateEditWebConfig::m_sGUI = NULL;
 
-StateEditWebConfig::StateEditWebConfig(GameApp* pGame,
-				       bool drawStateBehind,
-				       bool updateStatesBehind):
-  StateMenu(drawStateBehind,
-	    updateStatesBehind,
-	    pGame)
+StateEditWebConfig::StateEditWebConfig(bool drawStateBehind,
+				       bool updateStatesBehind)
+  : StateMenu(drawStateBehind,
+	      updateStatesBehind)
 {
   m_name    = "StateEditWebConfig";
 }
 
 StateEditWebConfig::~StateEditWebConfig()
 {
-
 }
-
 
 void StateEditWebConfig::enter()
 {
-  createGUIIfNeeded(m_pGame);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
   updateGUI();
 
   if(XMSession::instance()->webConfAtInit()) {
     // show the message box
-    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, std::string(GAMETEXT_ALLOWINTERNETCONN),
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, std::string(GAMETEXT_ALLOWINTERNETCONN),
 							 UI_MSGBOX_YES|UI_MSGBOX_NO);
     v_msgboxState->setId("EDITWEBCONF");
     StateManager::instance()->pushState(v_msgboxState);
   }
 
   StateMenu::enter();
-}
-
-void StateEditWebConfig::leave()
-{
-  StateMenu::leave();
-}
-
-void StateEditWebConfig::enterAfterPop()
-{
-  StateMenu::enterAfterPop();
-}
-
-void StateEditWebConfig::leaveAfterPush()
-{
-  StateMenu::leaveAfterPush();
 }
 
 void StateEditWebConfig::checkEvents()
@@ -123,41 +104,6 @@ void StateEditWebConfig::checkEvents()
   }
 }
 
-bool StateEditWebConfig::update()
-{
-  return StateMenu::update();
-}
-
-bool StateEditWebConfig::render()
-{
-  return StateMenu::render();
-}
-
-void StateEditWebConfig::keyDown(int nKey, SDLMod mod,int nChar)
-{
-  StateMenu::keyDown(nKey, mod, nChar);
-}
-
-void StateEditWebConfig::keyUp(int nKey,   SDLMod mod)
-{
-  StateMenu::keyUp(nKey, mod);
-}
-
-void StateEditWebConfig::mouseDown(int nButton)
-{
-  StateMenu::mouseDown(nButton);
-}
-
-void StateEditWebConfig::mouseDoubleClick(int nButton)
-{
-  StateMenu::mouseDoubleClick(nButton);
-}
-
-void StateEditWebConfig::mouseUp(int nButton)
-{
-  StateMenu::mouseUp(nButton);
-}
-
 void StateEditWebConfig::clean()
 {
   if(StateEditWebConfig::m_sGUI != NULL) {
@@ -166,7 +112,7 @@ void StateEditWebConfig::clean()
   }
 }
 
-void StateEditWebConfig::createGUIIfNeeded(GameApp* pGame)
+void StateEditWebConfig::createGUIIfNeeded()
 {
   UIStatic *pSomeText;
   UIFrame  *v_frame;
@@ -174,10 +120,9 @@ void StateEditWebConfig::createGUIIfNeeded(GameApp* pGame)
   if(m_sGUI != NULL)
     return;
 
-  DrawLib* drawLib = pGame->getDrawLib();
+  DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
   m_sGUI = new UIRoot();
-  m_sGUI->setApp(pGame);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
 		      drawLib->getDispWidth(),

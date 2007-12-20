@@ -22,10 +22,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateUpdateDb.h"
 #include "thread/UpdateDbThread.h"
 
-StateUpdateDb::StateUpdateDb(GameApp* pGame,
-				     bool drawStateBehind,
-				     bool updateStatesBehind)
-  : StateUpdate(pGame, drawStateBehind, updateStatesBehind)
+StateUpdateDb::StateUpdateDb(bool drawStateBehind,
+			     bool updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind)
 {
   m_pThread          = new UpdateDbThread();
   m_name             = "StateUpdateDb";

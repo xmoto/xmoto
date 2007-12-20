@@ -28,13 +28,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 StateMenu::StateMenu(bool drawStateBehind,
 		     bool updateStatesBehind,
-		     GameApp* pGame,
 		     StateMenuContextReceiver* i_receiver,
 		     bool i_doShade,
 		     bool i_doShadeAnim):
   GameState(drawStateBehind,
 	    updateStatesBehind,
-	    pGame,
 	    i_doShade, i_doShadeAnim)
 {
   m_GUI        = NULL;
@@ -47,9 +45,7 @@ StateMenu::StateMenu(bool drawStateBehind,
 
 StateMenu::~StateMenu()
 {
-
 }
-
 
 void StateMenu::enter()
 {
@@ -98,7 +94,7 @@ void StateMenu::keyDown(int nKey, SDLMod mod,int nChar)
   checkEvents();
 
   if(nKey == SDLK_F5){
-    StateManager::instance()->pushState(new StateUpdateDb(m_pGame));
+    StateManager::instance()->pushState(new StateUpdateDb());
   }
 }
 

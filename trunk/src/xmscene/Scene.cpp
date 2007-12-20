@@ -332,8 +332,7 @@ void MotoGame::cleanPlayers() {
   /*===========================================================================
     Prepare the specified level for playing through this game object
     ===========================================================================*/
-  void MotoGame::prePlayLevel(InputHandler *i_inputHandler,
-			      Replay *recordingReplay,
+  void MotoGame::prePlayLevel(Replay *recordingReplay,
 			      bool i_playEvents) {
     m_playEvents = i_playEvents;
     /* load the level if not */
@@ -342,7 +341,7 @@ void MotoGame::cleanPlayers() {
     }
     
     /* Create Lua state */
-    m_luaGame = new LuaLibGame(this, i_inputHandler);
+    m_luaGame = new LuaLibGame(this);
     
     /* Clear collision system */
     m_Collision.reset();

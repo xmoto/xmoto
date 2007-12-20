@@ -25,8 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateUpgradeLevels : public StateUpdate {
 public:
-  StateUpgradeLevels(GameApp* pGame,
-		     bool drawStateBehind    = true,
+  StateUpgradeLevels(bool drawStateBehind    = true,
 		     bool updateStatesBehind = false);
   virtual ~StateUpgradeLevels();
 
@@ -39,6 +38,10 @@ public:
   void keyDown(int nKey, SDLMod mod,int nChar);
 
   void setCurrentUpdatedLevel(std::string levelName);
+
+protected:
+  virtual void checkEvents() {}
+
 private:
   std::string m_curUpdLevelName;
 };

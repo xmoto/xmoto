@@ -35,7 +35,7 @@ public:
   XMThread();
   virtual ~XMThread();
 
-  void startThread(GameApp* pGame);
+  void startThread();
   int  waitForThreadEnd();
   bool isThreadRunning();
   virtual void askThreadToEnd();
@@ -77,7 +77,6 @@ protected:
 
   std::string m_wakeUpInfos;
 
-  GameApp*    m_pGame;
   // different thread, different database connection
   xmDatabase* m_pDb;
 

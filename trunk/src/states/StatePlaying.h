@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StatePlaying : public StateScene {
   public:
-  StatePlaying(GameApp* pGame);
+  StatePlaying();
   virtual ~StatePlaying();
   
   virtual void enter();
@@ -33,15 +33,13 @@ class StatePlaying : public StateScene {
   /* called when a new state is pushed or poped on top of the
      current one*/
   virtual void enterAfterPop();
-  virtual void leaveAfterPush();
   
   virtual bool update();
-  virtual bool render();
+
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
   virtual void keyUp(int nKey,   SDLMod mod);
   virtual void mouseDown(int nButton);
-  virtual void mouseDoubleClick(int nButton);
   virtual void mouseUp(int nButton);
   
   virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);

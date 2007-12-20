@@ -95,7 +95,7 @@ lua_Number X_luaL_check_number(lua_State *L,int narg) {
   return d;    
 }
 
-LuaLibGame::LuaLibGame(MotoGame *i_pMotoGame, InputHandler *i_pActiveInputHandler) {
+LuaLibGame::LuaLibGame(MotoGame *i_pMotoGame) {
   m_pL = lua_open();
   luaopen_base(m_pL);   
   luaopen_math(m_pL);
@@ -103,7 +103,7 @@ LuaLibGame::LuaLibGame(MotoGame *i_pMotoGame, InputHandler *i_pActiveInputHandle
   luaL_openlib(m_pL, "Game", m_gameFuncs, 0);
 
   m_pMotoGame           = i_pMotoGame;
-  m_pActiveInputHandler = i_pActiveInputHandler;
+  m_pActiveInputHandler = InputHandler::instance();
 }
 
 LuaLibGame::~LuaLibGame() {

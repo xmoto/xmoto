@@ -175,10 +175,9 @@ int UpgradeLevelsThread::realThreadFunction()
   setThreadCurrentOperation(GAMETEXT_LOADNEWLEVELS);
   setThreadProgress(0);
 
-  LevelsManager::instance()->updateLevelsFromLvl(m_pDb,
-						   m_pWebLevels->getNewDownloadedLevels(),
-						   m_pWebLevels->getUpdatedDownloadedLevels(),
-						   this);
+  LevelsManager::instance()->updateLevelsFromLvl(m_pWebLevels->getNewDownloadedLevels(),
+						 m_pWebLevels->getUpdatedDownloadedLevels(),
+						 this, m_pDb);
 
   /* Update level lists */
   StateManager::instance()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");

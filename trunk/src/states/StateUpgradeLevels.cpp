@@ -18,16 +18,15 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "Game.h"
 #include "StateUpgradeLevels.h"
 #include "StateMessageBox.h"
 #include "thread/UpgradeLevelsThread.h"
 #include "GameText.h"
+#include "db/xmDatabase.h"
 
-StateUpgradeLevels::StateUpgradeLevels(GameApp* pGame,
-				       bool drawStateBehind,
+StateUpgradeLevels::StateUpgradeLevels(bool drawStateBehind,
 				       bool updateStatesBehind)
-  : StateUpdate(pGame, drawStateBehind, updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind)
 {
   m_pThread = new UpgradeLevelsThread(this);
   m_name    = "StateUpgradeLevels";
@@ -73,12 +72,12 @@ void StateUpgradeLevels::send(const std::string& i_id, UIMsgBoxButton i_button, 
 void StateUpgradeLevels::executeOneCommand(std::string cmd)
 {
   if(cmd == "NEWLEVELAVAILABLE"){
-    int nULevels = m_pGame->getDb()->levels_nbLevelsToDownload();
+    int nULevels = xmDatabase::instance("main")->levels_nbLevelsToDownload();
     char cBuf[256];
     snprintf(cBuf, 256, GAMETEXT_NEWLEVELAVAIL(nULevels), nULevels);
 
     /* Ask user whether he want to download levels or snot */
-    StateMessageBox* v_state = new StateMessageBox(this, m_pGame, cBuf,
+    StateMessageBox* v_state = new StateMessageBox(this, cBuf,
 						   (UI_MSGBOX_YES|UI_MSGBOX_NO));
     v_state->setId("DOWNLOAD_LEVELS");
     StateManager::instance()->pushState(v_state);
@@ -87,7 +86,7 @@ void StateUpgradeLevels::executeOneCommand(std::string cmd)
     char cBuf[256];
     snprintf(cBuf, 256, GAMETEXT_WANTTOUPDATELEVEL, m_curUpdLevelName.c_str());
 
-    StateMessageBox* v_state = new StateMessageBox(this, m_pGame, cBuf,
+    StateMessageBox* v_state = new StateMessageBox(this, cBuf,
 						   (UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
     v_state->setId("ASKING_LEVEL_UPDATE");
     StateManager::instance()->pushState(v_state);

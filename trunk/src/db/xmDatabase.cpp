@@ -29,12 +29,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 bool xmDatabase::Trace = false;
 
-xmDatabase::xmDatabase(const std::string& i_dbFile,
-		       const std::string& i_profile,
-		       const std::string& i_gameDir,
-		       const std::string& i_userDir,
-		       const std::string& i_binPackCheckSum,
-		       XmDatabaseUpdateInterface *i_interface) {
+xmDatabase::xmDatabase()
+{
+}
+
+void xmDatabase::init(const std::string& i_dbFile,
+		      const std::string& i_profile,
+		      const std::string& i_gameDir,
+		      const std::string& i_userDir,
+		      const std::string& i_binPackCheckSum,
+		      XmDatabaseUpdateInterface *i_interface) {
   int v_version;
 
   m_requiredLevelsUpdateAfterInit  = false;
@@ -83,7 +87,7 @@ xmDatabase::xmDatabase(const std::string& i_dbFile,
   }
 }
 
-xmDatabase::xmDatabase(const std::string& i_dbFile)
+void xmDatabase::init(const std::string& i_dbFile)
 {
   if(sqlite3_open(i_dbFile.c_str(), &m_db) != 0){
     throw Exception("Unable to open the database ("

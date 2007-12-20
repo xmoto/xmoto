@@ -776,13 +776,9 @@ class UIButtonDrawn : public UIButton {
     int x,y;
   };
   
-  class UIRoot : public UIWindow {
-    public:
-      UIRoot() {
-	m_pApp=NULL;
-	m_bShowContextMenu = true;
-        _InitWindow();
-      }
+class UIRoot : public UIWindow {
+public:
+  UIRoot();
     
       /* Methods */
       virtual void paint(void);            
@@ -807,7 +803,7 @@ class UIButtonDrawn : public UIButton {
       void activateLeft(void);
       void activateRight(void);
             
-      void setApp(GameApp *pApp) {m_pApp=pApp;}
+      void setApp(GameApp *pApp) {}
       virtual GameApp *getApp(void) {return m_pApp;}
       void dispatchMouseHover();
 

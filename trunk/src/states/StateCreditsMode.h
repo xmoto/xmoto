@@ -27,20 +27,14 @@ class Credits;
 
 class StateCreditsMode : public StateReplaying {
   public:
-  StateCreditsMode(GameApp* pGame, const std::string& i_replay);
+  StateCreditsMode(const std::string& i_replay);
   virtual ~StateCreditsMode();
   
   virtual void enter();
-  virtual void leave();
-  /* called when a new state is pushed or poped on top of the
-     current one*/
-    virtual void enterAfterPop();
-  virtual void leaveAfterPush();
   
-  virtual bool update();
   virtual bool render();
   /* input */
-    virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void keyDown(int nKey, SDLMod mod,int nChar);
   virtual void keyUp(int nKey,   SDLMod mod);
   virtual void mouseDown(int nButton);
   virtual void mouseDoubleClick(int nButton);

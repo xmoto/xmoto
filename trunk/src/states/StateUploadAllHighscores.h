@@ -24,14 +24,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateUpdate.h"
 
 class StateUploadAllHighscores : public StateUpdate {
-  public:
-  StateUploadAllHighscores(GameApp* pGame,
-			   bool drawStateBehind    = true,
+public:
+  StateUploadAllHighscores(bool drawStateBehind    = true,
 			   bool updateStatesBehind = false);
   virtual ~StateUploadAllHighscores();
-  
-  protected:
+
+protected:
   virtual void callAfterThreadFinished(int threadResult);
+  virtual void checkEvents() {}
 };
 
 #endif

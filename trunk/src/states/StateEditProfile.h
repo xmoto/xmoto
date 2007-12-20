@@ -29,28 +29,16 @@ class StateMenuContextReceiver;
 
 class StateEditProfile : public StateMenu {
 public:
-  StateEditProfile(GameApp* pGame,
-		   StateMenuContextReceiver* i_receiver = NULL,
+  StateEditProfile(StateMenuContextReceiver* i_receiver = NULL,
 		   bool drawStateBehind    = true,
 		   bool updateStatesBehind = false
 		   );
   virtual ~StateEditProfile();
   
   virtual void enter();
-  virtual void leave();
-  /* called when a new state is pushed or poped on top of the
-     current one*/
-  virtual void enterAfterPop();
-  virtual void leaveAfterPush();
   
-  virtual bool update();
-  virtual bool render();
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
-  virtual void keyUp(int nKey,   SDLMod mod);
-  virtual void mouseDown(int nButton);
-  virtual void mouseDoubleClick(int nButton);
-  virtual void mouseUp(int nButton);
 
   static void clean();
   virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
@@ -59,11 +47,11 @@ protected:
   virtual void checkEvents();
   
 private:
-  static void createProfileList(GameApp* pGame);
+  static void createProfileList();
 
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(GameApp* pGame);
+  static void createGUIIfNeeded();
   StateMenuContextReceiver* m_receiver;  
 };
 

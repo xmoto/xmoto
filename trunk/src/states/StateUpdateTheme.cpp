@@ -25,11 +25,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "thread/UpdateThemeThread.h"
 #include "helpers/Log.h"
 
-StateUpdateTheme::StateUpdateTheme(GameApp* pGame,
-				   const std::string& i_id_theme,
+StateUpdateTheme::StateUpdateTheme(const std::string& i_id_theme,
 				   bool drawStateBehind,
 				   bool updateStatesBehind)
-  : StateUpdate(pGame, drawStateBehind, updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind)
 {
   m_pThread          = new UpdateThemeThread(i_id_theme);
   m_name             = "StateUpdateTheme";
@@ -45,7 +44,7 @@ StateUpdateTheme::~StateUpdateTheme()
 void StateUpdateTheme::callAfterThreadFinished(int threadResult)
 {
   if(threadResult == 0){
-    m_pGame->reloadTheme();
+    GameApp::instance()->reloadTheme();
   }
 }
 
@@ -55,20 +54,20 @@ bool StateUpdateTheme::callBeforeLaunchingThread()
   unsigned int nrow;
   bool v_onWeb  = true;
 
-  v_result = m_pGame->getDb()->readDB("SELECT a.id_theme, a.checkSum, b.checkSum "
-				      "FROM themes AS a LEFT OUTER JOIN webthemes AS b "
-				      "ON a.id_theme=b.id_theme "
-				      "WHERE a.id_theme=\"" + xmDatabase::protectString(m_id_theme) + "\";",
-				      nrow);
+  v_result = xmDatabase::instance("main")->readDB("SELECT a.id_theme, a.checkSum, b.checkSum "
+						  "FROM themes AS a LEFT OUTER JOIN webthemes AS b "
+						  "ON a.id_theme=b.id_theme "
+						  "WHERE a.id_theme=\"" + xmDatabase::protectString(m_id_theme) + "\";",
+						  nrow);
   if(nrow == 1) {
-    if(m_pGame->getDb()->getResult(v_result, 3, 0, 2) == NULL) {
+    if(xmDatabase::instance("main")->getResult(v_result, 3, 0, 2) == NULL) {
       v_onWeb = false;
     }
   }
-  m_pGame->getDb()->read_DB_free(v_result);
+  xmDatabase::instance("main")->read_DB_free(v_result);
 
   if(v_onWeb == false) { /* available on the disk, not on the web */
-    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_UNUPDATABLETHEMEONWEB, UI_MSGBOX_OK);
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_UNUPDATABLETHEMEONWEB, UI_MSGBOX_OK);
     v_msgboxState->setId("ERROR");
     StateManager::instance()->pushState(v_msgboxState);
     return false;

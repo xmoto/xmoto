@@ -39,8 +39,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define NB_PARTICLES_TO_RENDER_LIMITATION 130
 
 
-StateScene::StateScene(GameApp* pGame, bool i_doShade, bool i_doShadeAnim):
-GameState(false, false, pGame, i_doShade, i_doShadeAnim)
+StateScene::StateScene(bool i_doShade, bool i_doShadeAnim)
+  : GameState(false, false, i_doShade, i_doShadeAnim)
 {
   m_fLastPhysTime = -1.0;
   // while playing, we want 100 fps for the physic
@@ -56,7 +56,6 @@ StateScene::~StateScene()
   }
 }
 
-
 void StateScene::enter()
 {
   GameState::enter();
@@ -66,21 +65,12 @@ void StateScene::enter()
   m_autoZoom      = false;
 }
 
-void StateScene::leave()
-{
-
-}
-
-void StateScene::enterAfterPop()
-{
-}
-
-void StateScene::leaveAfterPush()
-{
-}
-
 bool StateScene::update()
 {
+  if(doUpdate() == false){
+    return false;
+  }
+  
   int nPhysSteps = 0;
 
   if(isLockedScene() == false) {  
@@ -88,10 +78,13 @@ bool StateScene::update()
       m_fLastPhysTime = GameApp::getXMTime();
     }
 
+    GameApp*  pGame = GameApp::instance();
+    MotoGame* pWorld = pGame->getMotoGame();
+
     // don't update if that's not required
     // don't do this infinitely, maximum miss 10 frames, then give up
     while ((m_fLastPhysTime + PHYS_STEP_SIZE <= GameApp::getXMTime()) && (nPhysSteps < 10)) {
-      m_pGame->getMotoGame()->updateLevel(PHYS_STEP_SIZE, m_pGame->getCurrentReplay());
+      pWorld->updateLevel(PHYS_STEP_SIZE, pGame->getCurrentReplay());
       m_fLastPhysTime += PHYS_STEP_SIZE;
       nPhysSteps++;    
     }
@@ -104,24 +97,27 @@ bool StateScene::update()
 
 bool StateScene::render()
 {
+  GameApp*  pGame = GameApp::instance();
+  MotoGame* pWorld = pGame->getMotoGame();
+
   if (XMSession::instance()->ugly()) {
-    m_pGame->getDrawLib()->clearGraphics();
+    pGame->getDrawLib()->clearGraphics();
   }
 
   try {
     if(autoZoom() == false){
-      for(unsigned int i=0; i<m_pGame->getMotoGame()->getNumberCameras(); i++) {
-	m_pGame->getMotoGame()->setCurrentCamera(i);
+      for(unsigned int i=0; i<pWorld->getNumberCameras(); i++) {
+	pWorld->setCurrentCamera(i);
 	GameRenderer::instance()->render();
       }
     } else {
-      m_pGame->getMotoGame()->setAutoZoomCamera();
+      pWorld->setAutoZoomCamera();
       GameRenderer::instance()->render();
     }
 
     ParticlesSource::setAllowParticleGeneration(GameRenderer::instance()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
   } catch(Exception &e) {
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
   }
 
   GameState::render();
@@ -131,15 +127,18 @@ bool StateScene::render()
 
 void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
 {
+  GameApp*  pGame = GameApp::instance();
+  MotoGame* pWorld = pGame->getMotoGame();
+
   if(nKey == SDLK_F2){
-    m_pGame->switchFollowCamera();
+    pGame->switchFollowCamera();
   }
   else if(nKey == SDLK_F3){
-    m_pGame->switchLevelToFavorite(m_pGame->getMotoGame()->getLevelSrc()->Id(), true);
+    pGame->switchLevelToFavorite(pWorld->getLevelSrc()->Id(), true);
     StateManager::instance()->sendAsynchronousMessage("FAVORITES_UPDATED");
   }
   else if(nKey == SDLK_b && (mod & KMOD_CTRL) != 0){
-    m_pGame->switchLevelToBlacklist(m_pGame->getMotoGame()->getLevelSrc()->Id(), true);
+    pGame->switchLevelToBlacklist(pWorld->getLevelSrc()->Id(), true);
     StateManager::instance()->sendAsynchronousMessage("BLACKLISTEDLEVELS_UPDATED");
   }
   else if(nKey == SDLK_PAGEUP){
@@ -153,22 +152,6 @@ void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
   }
 }
 
-void StateScene::keyUp(int nKey, SDLMod mod)
-{
-}
-
-void StateScene::mouseDown(int nButton)
-{
-}
-
-void StateScene::mouseDoubleClick(int nButton)
-{
-}
-
-void StateScene::mouseUp(int nButton)
-{
-}
-
 void StateScene::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "ERROR") {
     m_commands.push("ERROR");
@@ -180,108 +163,115 @@ void StateScene::send(const std::string& i_id, const std::string& i_message) {
 }
 
 void StateScene::setScoresTimes() {
-    char **v_result;
-    unsigned int nrow;
-    char *v_res;  
-    std::string T1 = "--:--:--", T2 = "--:--:--";
+  char **v_result;
+  unsigned int nrow;
+  char *v_res;  
+  std::string T1 = "--:--:--", T2 = "--:--:--";
+  MotoGame* pWorld = GameApp::instance()->getMotoGame();
 
-    /* get best result */
-    v_result = m_pGame->getDb()->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-					"id_level=\"" + 
-					xmDatabase::protectString(m_pGame->getMotoGame()->getLevelSrc()->Id()) + "\";",
-					nrow);
-    v_res = m_pGame->getDb()->getResult(v_result, 1, 0, 0);
-    if(v_res != NULL) {
-      T1 = GameApp::formatTime(atof(v_res));
-    }
-    m_pGame->getDb()->read_DB_free(v_result);
+  /* get best result */
+  v_result = xmDatabase::instance("main")->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+						  "id_level=\"" + 
+						  xmDatabase::protectString(pWorld->getLevelSrc()->Id()) + "\";",
+						  nrow);
+  v_res = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
+  if(v_res != NULL) {
+    T1 = GameApp::formatTime(atof(v_res));
+  }
+  xmDatabase::instance("main")->read_DB_free(v_result);
     
-    /* get best player result */
-    v_result = m_pGame->getDb()->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-					"id_level=\"" + 
-					xmDatabase::protectString(m_pGame->getMotoGame()->getLevelSrc()->Id()) + "\" " + 
-					"AND id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile())  + "\";",
-					nrow);
-    v_res = m_pGame->getDb()->getResult(v_result, 1, 0, 0);
-    if(v_res != NULL) {
-      T2 = GameApp::formatTime(atof(v_res));
-    }
-    m_pGame->getDb()->read_DB_free(v_result);
+  /* get best player result */
+  v_result = xmDatabase::instance("main")->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+						  "id_level=\"" + 
+						  xmDatabase::protectString(pWorld->getLevelSrc()->Id()) + "\" " + 
+						  "AND id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile())  + "\";",
+						  nrow);
+  v_res = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
+  if(v_res != NULL) {
+    T2 = GameApp::formatTime(atof(v_res));
+  }
+  xmDatabase::instance("main")->read_DB_free(v_result);
     
-    GameRenderer::instance()->setBestTime(T1 + std::string(" / ") + T2);
+  GameRenderer::instance()->setBestTime(T1 + std::string(" / ") + T2);
 
-    if(XMSession::instance()->showHighscoreInGame()) {
-      GameRenderer::instance()->setWorldRecordTime(m_pGame->getWorldRecord(m_pGame->getMotoGame()->getLevelSrc()->Id()));
-    } else {
-      GameRenderer::instance()->setWorldRecordTime("");
-    }
-
+  if(XMSession::instance()->showHighscoreInGame()) {
+    GameRenderer::instance()->setWorldRecordTime(GameApp::instance()->getWorldRecord(pWorld->getLevelSrc()->Id()));
+  } else {
+    GameRenderer::instance()->setWorldRecordTime("");
+  }
 }
 
 void StateScene::restartLevel(bool i_reloadLevel) {
   std::string v_level;
+  MotoGame* pWorld = GameApp::instance()->getMotoGame();
 
   /* Update stats */        
-  if(m_pGame->getMotoGame()->Players().size() == 1) {
-    if(m_pGame->getMotoGame()->Players()[0]->isDead() == false) {
-      m_pGame->getDb()->stats_levelRestarted(XMSession::instance()->profile(),
-				 m_pGame->getMotoGame()->getLevelSrc()->Id(),
-				 m_pGame->getMotoGame()->getTime());
+  if(pWorld->Players().size() == 1) {
+    if(pWorld->Players()[0]->isDead() == false) {
+      xmDatabase::instance("main")->stats_levelRestarted(XMSession::instance()->profile(),
+				 pWorld->getLevelSrc()->Id(),
+				 pWorld->getTime());
     }
   }  
 
-  v_level = m_pGame->getMotoGame()->getLevelSrc()->Id();
-  m_pGame->getMotoGame()->resetFollow();
-  m_pGame->getMotoGame()->endLevel();
+  v_level = pWorld->getLevelSrc()->Id();
+  pWorld->resetFollow();
+  pWorld->endLevel();
   GameRenderer::instance()->unprepareForNewLevel();
   
   if(i_reloadLevel) {
     try {
-      Level::removeFromCache(m_pGame->getDb(), v_level);
+      Level::removeFromCache(xmDatabase::instance("main"), v_level);
     } catch(Exception &e) {
       // hum, not nice
     }
   }
 
-  StateManager::instance()->replaceState(new StatePreplaying(m_pGame, v_level, true));
+  StateManager::instance()->replaceState(new StatePreplaying(v_level, true));
 }
 
 void StateScene::nextLevel(bool i_positifOrder) {
-  std::string v_currentLevel = m_pGame->getMotoGame()->getLevelSrc()->Id();
+  GameApp*  pGame  = GameApp::instance();
+  MotoGame* pWorld = pGame->getMotoGame();
+
+  std::string v_currentLevel = pWorld->getLevelSrc()->Id();
   std::string v_nextLevel;
 
   if(i_positifOrder) {
-    v_nextLevel = m_pGame->determineNextLevel(v_currentLevel);
+    v_nextLevel = pGame->determineNextLevel(v_currentLevel);
   } else {
-    v_nextLevel = m_pGame->determinePreviousLevel(v_currentLevel);
+    v_nextLevel = pGame->determinePreviousLevel(v_currentLevel);
   }
 
   if(v_nextLevel != "") {
-    if(m_pGame->getMotoGame()->Players().size() == 1) {
-      m_pGame->getDb()->stats_abortedLevel(XMSession::instance()->profile(),
-					   v_currentLevel,
-					   m_pGame->getMotoGame()->getTime());
+    if(pWorld->Players().size() == 1) {
+      xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->profile(),
+						       v_currentLevel,
+						       pWorld->getTime());
     }
 
     closePlaying();
-    StateManager::instance()->replaceState(new StatePreplaying(m_pGame, v_nextLevel, v_currentLevel == v_nextLevel));
+    StateManager::instance()->replaceState(new StatePreplaying(v_nextLevel, v_currentLevel == v_nextLevel));
   }
 }
 
-
 void StateScene::abortPlaying() {
-  if(m_pGame->getMotoGame()->Players().size() == 1) {
-    m_pGame->getDb()->stats_abortedLevel(XMSession::instance()->profile(),
-					 m_pGame->getMotoGame()->getLevelSrc()->Id(),
-					 m_pGame->getMotoGame()->getTime());
+  MotoGame* pWorld = GameApp::instance()->getMotoGame();
+
+  if(pWorld->Players().size() == 1) {
+    xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->profile(),
+						     pWorld->getLevelSrc()->Id(),
+						     pWorld->getTime());
   }
   
   closePlaying();
 }
 
 void StateScene::closePlaying() {
-  m_pGame->getMotoGame()->resetFollow();
-  m_pGame->getMotoGame()->endLevel();
+  MotoGame* pWorld = GameApp::instance()->getMotoGame();
+
+  pWorld->resetFollow();
+  pWorld->endLevel();
   InputHandler::instance()->resetScriptKeyHooks();                     
   GameRenderer::instance()->unprepareForNewLevel();
 }
@@ -304,7 +294,10 @@ void StateScene::setAutoZoom(bool i_value) {
     if(m_cameraAnim != NULL) {
       delete m_cameraAnim;
     }
-    m_cameraAnim = new AutoZoomCameraAnimation(m_pGame->getMotoGame()->getCamera(), m_pGame->getDrawLib(), m_pGame->getMotoGame());
+    GameApp*  pGame = GameApp::instance();
+    m_cameraAnim = new AutoZoomCameraAnimation(pGame->getMotoGame()->getCamera(),
+					       pGame->getDrawLib(),
+					       pGame->getMotoGame());
     m_cameraAnim->init();
   }
 

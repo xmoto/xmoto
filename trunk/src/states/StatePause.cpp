@@ -29,13 +29,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StatePause::m_sGUI = NULL;
 
-StatePause::StatePause(GameApp* pGame,
-		       StateMenuContextReceiver* i_receiver,
+StatePause::StatePause(StateMenuContextReceiver* i_receiver,
 		       bool drawStateBehind,
 		       bool updateStatesBehind):
   StateMenu(drawStateBehind,
 	    updateStatesBehind,
-	    pGame,
 	    i_receiver,
 	    true)
 {
@@ -49,14 +47,17 @@ StatePause::~StatePause()
 
 void StatePause::enter()
 {
-  m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
+  GameApp* pGame = GameApp::instance();
+  MotoGame* world = pGame->getMotoGame();
+
+  world->setInfos(world->getLevelSrc()->Name());
   
-  createGUIIfNeeded(m_pGame);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   /* reset the playnext button */
   UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:PLAYNEXT_BUTTON"));
-  playNextButton->enableWindow(m_pGame->isThereANextLevel(m_pGame->getMotoGame()->getLevelSrc()->Id()));
+  playNextButton->enableWindow(pGame->isThereANextLevel(world->getLevelSrc()->Id()));
 
   StateMenu::enter();
 }
@@ -64,17 +65,7 @@ void StatePause::enter()
 void StatePause::leave()
 {
   StateMenu::leave();
-  m_pGame->getMotoGame()->setInfos("");
-}
-
-void StatePause::enterAfterPop()
-{
-  StateMenu::enterAfterPop();
-}
-
-void StatePause::leaveAfterPush()
-{
-  StateMenu::leaveAfterPush();
+  GameApp::instance()->getMotoGame()->setInfos("");
 }
 
 void StatePause::checkEvents() {
@@ -120,20 +111,10 @@ void StatePause::checkEvents() {
   if(pQuitButton->isClicked()) {
     pQuitButton->setClicked(false);
 
-    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
     v_msgboxState->setId("QUIT");
     StateManager::instance()->pushState(v_msgboxState);
   }
-}
-
-bool StatePause::update()
-{
-  return StateMenu::update();
-}
-
-bool StatePause::render()
-{
-  return StateMenu::render();
 }
 
 void StatePause::keyDown(int nKey, SDLMod mod,int nChar)
@@ -146,35 +127,14 @@ void StatePause::keyDown(int nKey, SDLMod mod,int nChar)
     break;
 
   case SDLK_F3:
-    m_pGame->switchLevelToFavorite(m_pGame->getMotoGame()->getLevelSrc()->Id(), true);
+    GameApp::instance()->switchLevelToFavorite(GameApp::instance()->getMotoGame()->getLevelSrc()->Id(), true);
     break;
 
   default:
     StateMenu::keyDown(nKey, mod, nChar);
     checkEvents();
     break;
-
   }
-}
-
-void StatePause::keyUp(int nKey, SDLMod mod)
-{
-  StateMenu::keyUp(nKey, mod);
-}
-
-void StatePause::mouseDown(int nButton)
-{
-  StateMenu::mouseDown(nButton);
-}
-
-void StatePause::mouseDoubleClick(int nButton)
-{
-  StateMenu::mouseDoubleClick(nButton);
-}
-
-void StatePause::mouseUp(int nButton)
-{
-  StateMenu::mouseUp(nButton);
 }
 
 void StatePause::clean() {
@@ -184,55 +144,57 @@ void StatePause::clean() {
   }
 }
 
-void StatePause::createGUIIfNeeded(GameApp* pGame) {
+void StatePause::createGUIIfNeeded() {
   UIButton *v_button;
   UIFrame  *v_frame;
 
-  if(m_sGUI != NULL) return;
+  if(m_sGUI != NULL)
+    return;
+
+  DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
   m_sGUI = new UIRoot();
-  m_sGUI->setApp(pGame);
-  m_sGUI->setFont(pGame->getDrawLib()->getFontSmall()); 
+  m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      pGame->getDrawLib()->getDispWidth(),
-		      pGame->getDrawLib()->getDispHeight());
+		      drawLib->getDispWidth(),
+		      drawLib->getDispHeight());
   
   
   v_frame = new UIFrame(m_sGUI,
-			pGame->getDrawLib()->getDispWidth()/2  - 400/2,
-			pGame->getDrawLib()->getDispHeight()/2 - 540/2,
+			drawLib->getDispWidth()/2  - 400/2,
+			drawLib->getDispHeight()/2 - 540/2,
 			"", 400, 540);
   v_frame->setID("PAUSE_FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_MENU);
 
   UIStatic *pPauseText = new UIStatic(v_frame, 0, 100, GAMETEXT_PAUSE, v_frame->getPosition().nWidth, 36);
-  pPauseText->setFont(pGame->getDrawLib()->getFontMedium());
+  pPauseText->setFont(drawLib->getFontMedium());
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 0*57, GAMETEXT_RESUME, 207, 57);
   v_button->setID("RESUME_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BACK_TO_GAME);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawLib->getFontSmall());
   v_frame->setPrimaryChild(v_button); /* default button */
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 1*57, GAMETEXT_RESTART, 207, 57);
   v_button->setID("RESTART_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_TRY_LEVEL_AGAIN_FROM_BEGINNING);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawLib->getFontSmall());
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 2*57, GAMETEXT_PLAYNEXT, 207, 57);
   v_button->setID("PLAYNEXT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_PLAY_NEXT_INSTEAD);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawLib->getFontSmall());
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 3*57, GAMETEXT_ABORT, 207, 57);
   v_button->setID("ABORT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawLib->getFontSmall());
   
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 4*57, GAMETEXT_QUIT, 207, 57);
   v_button->setID("QUIT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawLib->getFontSmall());
 
 }
 
@@ -241,7 +203,7 @@ void StatePause::send(const std::string& i_id, UIMsgBoxButton i_button, const st
     switch(i_button) {
     case UI_MSGBOX_YES:
       m_requestForEnd = true;
-      m_pGame->requestEnd();
+      GameApp::instance()->requestEnd();
       break;
     case UI_MSGBOX_NO:
       return;

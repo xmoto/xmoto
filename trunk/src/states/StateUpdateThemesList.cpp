@@ -18,19 +18,17 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "Game.h"
 #include "GameText.h"
 #include "StateUpdateThemesList.h"
 #include "thread/UpdateThemesListThread.h"
 
-StateUpdateThemesList::StateUpdateThemesList(GameApp* pGame,
-				     bool drawStateBehind,
-				     bool updateStatesBehind)
-  : StateUpdate(pGame, drawStateBehind, updateStatesBehind)
+StateUpdateThemesList::StateUpdateThemesList(bool drawStateBehind,
+					     bool updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind)
 {
-  m_pThread          = new UpdateThemesListThread();
-  m_name             = "StateUpdateThemesList";
-  m_msg              = GAMETEXT_FAILEDUPDATETHEMESLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+  m_pThread = new UpdateThemesListThread();
+  m_name    = "StateUpdateThemesList";
+  m_msg     = GAMETEXT_FAILEDUPDATETHEMESLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
 }
 
 StateUpdateThemesList::~StateUpdateThemesList()

@@ -27,24 +27,15 @@ class CameraAnimation;
 
 class StateScene : public GameState {
  public:
- StateScene(GameApp* pGame, bool i_doShade = false, bool i_doShadeAnim = false);
+ StateScene(bool i_doShade = false, bool i_doShadeAnim = false);
  virtual ~StateScene();
  
  virtual void enter();
- virtual void leave();
- /* called when a new state is pushed or poped on top of the
-    current one*/
- virtual void enterAfterPop();
- virtual void leaveAfterPush();
  
  virtual bool update();
  virtual bool render();
  /* input */
  virtual void keyDown(int nKey, SDLMod mod,int nChar);
- virtual void keyUp(int nKey,   SDLMod mod);
- virtual void mouseDown(int nButton);
- virtual void mouseDoubleClick(int nButton);
- virtual void mouseUp(int nButton);
 
  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
  virtual void send(const std::string& i_id, const std::string& i_message);

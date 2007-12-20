@@ -26,8 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "UserConfig.h"
 #include "Renderer.h"
 
-	class GameApp;
-
   /*===========================================================================
   Controller modes
   ===========================================================================*/
@@ -106,8 +104,7 @@ public:
   void loadConfig(UserConfig *pConfig);
   void handleInput(InputEventType Type,int nKey,SDLMod mod,
 		   std::vector<Biker*>& i_bikers,
-		   std::vector<Camera*>& i_cameras,
-		   GameApp *pGameApp);      
+		   std::vector<Camera*>& i_cameras);      
   std::string waitForKey(void);
   void updateInput(std::vector<Biker*>& i_bikers);
   void init(UserConfig *pConfig);

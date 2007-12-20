@@ -30,8 +30,7 @@ class UIRoot;
 
 class StateUpdate : public StateMenu {
 public:
-  StateUpdate(GameApp* pGame,
-	      bool drawStateBehind,
+  StateUpdate(bool drawStateBehind,
 	      bool updateStatesBehind);			 
   virtual ~StateUpdate();
 
@@ -47,7 +46,6 @@ public:
   static void clean();
 
 protected:
-  virtual void checkEvents();
   virtual void updateGUI();
   bool m_threadStarted;
   bool m_threadFinished;
@@ -79,7 +77,7 @@ protected:
 private:
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(GameApp* pGame);
+  static void createGUIIfNeeded();
 
   void init();
 };

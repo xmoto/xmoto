@@ -24,48 +24,39 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateManager.h"
 #include "StateMenu.h"
 
-  class UIRoot;
+class UIRoot;
 
-  class StateLevelInfoViewer : public StateMenu {
-  public:
-    StateLevelInfoViewer(GameApp* pGame,
-			 const std::string& level,
-			 bool drawStateBehind    = true,
-			 bool updateStatesBehind = true
-			 );			 
-    virtual ~StateLevelInfoViewer();
+class StateLevelInfoViewer : public StateMenu {
+public:
+  StateLevelInfoViewer(const std::string& level,
+		       bool drawStateBehind    = true,
+		       bool updateStatesBehind = true
+		       );			 
+  virtual ~StateLevelInfoViewer();
 
-    virtual void enter();
-    virtual void leave();
-    /* called when a new state is pushed or poped on top of the
-       current one*/
-    virtual void enterAfterPop();
-    virtual void leaveAfterPush();
+  virtual void enter();
+  /* called when a new state is pushed or poped on top of the
+     current one*/
+  virtual void enterAfterPop();
 
-    virtual bool update();
-    virtual bool render();
-    /* input */
-    virtual void keyDown(int nKey, SDLMod mod,int nChar);
-    virtual void keyUp(int nKey,   SDLMod mod);
-    virtual void mouseDown(int nButton);
-    virtual void mouseDoubleClick(int nButton);
-    virtual void mouseUp(int nButton);
+  /* input */
+  virtual void keyDown(int nKey, SDLMod mod, int nChar);
 
-    static void clean();
+  static  void clean();
 
-  protected:
-    virtual void checkEvents();
+protected:
+  virtual void checkEvents();
 
-  private:
-    /* GUI */
-    static UIRoot* m_sGUI;
-    static void createGUIIfNeeded(GameApp* pGame);
-    void updateGUI();
+private:
+  /* GUI */
+  static UIRoot* m_sGUI;
+  static void createGUIIfNeeded();
+  void updateGUI();
 
-    void updateLevelInfoViewerBestTimes();
-    void updateLevelInfoViewerReplays();
+  void updateLevelInfoViewerBestTimes();
+  void updateLevelInfoViewerReplays();
 
-    std::string m_level;
-  };
+  std::string m_level;
+};
 
 #endif

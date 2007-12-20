@@ -24,49 +24,40 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateManager.h"
 #include "StateMenu.h"
 
-  class UIRoot;
-  class LevelsPack;
+class UIRoot;
+class LevelsPack;
 
-  class StateLevelPackViewer : public StateMenu {
-  public:
-    StateLevelPackViewer(GameApp*    pGame,
-			 LevelsPack* pActiveLevelPack,
-			 bool drawStateBehind    = true,
-			 bool updateStatesBehind = true);
-    virtual ~StateLevelPackViewer();
+class StateLevelPackViewer : public StateMenu {
+public:
+  StateLevelPackViewer(LevelsPack* pActiveLevelPack,
+		       bool drawStateBehind    = true,
+		       bool updateStatesBehind = true);
+  virtual ~StateLevelPackViewer();
 
-    virtual void enter();
-    virtual void leave();
-    /* called when a new state is pushed or poped on top of the
-       current one*/
-    virtual void enterAfterPop();
-    virtual void leaveAfterPush();
+  virtual void enter();
+  /* called when a new state is pushed or poped on top of the
+     current one*/
+  virtual void enterAfterPop();
 
-    virtual bool update();
-    virtual bool render();
-    /* input */
-    virtual void keyDown(int nKey, SDLMod mod,int nChar);
-    virtual void keyUp(int nKey,   SDLMod mod);
-    virtual void mouseDown(int nButton);
-    virtual void mouseDoubleClick(int nButton);
-    virtual void mouseUp(int nButton);
+  /* input */
+  virtual void keyDown(int nKey, SDLMod mod,int nChar);
 
-    virtual void send(const std::string& i_id, const std::string& i_message);
+  virtual void send(const std::string& i_id, const std::string& i_message);
 
-    void checkEvents();
-    static void clean();
+  void checkEvents();
+  static void clean();
     
-  private:
-    /* GUI */
-    static UIRoot* m_sGUI;
-    static void createGUIIfNeeded(GameApp* pGame);
-    void updateGUI();
+private:
+  /* GUI */
+  static UIRoot* m_sGUI;
+  static void createGUIIfNeeded();
+  void updateGUI();
     
-    LevelsPack* m_pActiveLevelPack;
-    bool m_require_updateLevelsList;
+  LevelsPack* m_pActiveLevelPack;
+  bool m_require_updateLevelsList;
 
-    void updateInfoFrame();
-    std::string getInfoFrameLevelId();
-  };
+  void updateInfoFrame();
+  std::string getInfoFrameLevelId();
+};
 
 #endif

@@ -31,7 +31,6 @@ class StateMenu : public GameState {
  public:
   StateMenu(bool drawStateBehind,
 	    bool updateStatesBehind,
-	    GameApp* pGame,
 	    StateMenuContextReceiver* i_receiver = NULL,
 	    bool i_doShade     = false,
 	    bool i_doShadeAnim = true);

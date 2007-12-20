@@ -28,12 +28,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot* StateMultiUpdate::m_sGUI = NULL;
 
-StateMultiUpdate::StateMultiUpdate(GameApp* pGame,
-	    bool drawStateBehind,
-	    bool updateStatesBehind)
+StateMultiUpdate::StateMultiUpdate(bool drawStateBehind,
+				   bool updateStatesBehind)
   : StateMenu(drawStateBehind,
-	      updateStatesBehind,
-	      pGame)
+	      updateStatesBehind)
 {
   m_numberThreadDisplayed = 0;
   m_numberThreadRunning   = 0;
@@ -56,7 +54,7 @@ StateMultiUpdate::~StateMultiUpdate()
 
 void StateMultiUpdate::enter()
 {
-  createGUIIfNeeded(m_pGame);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   StateMenu::enter();
@@ -89,14 +87,14 @@ bool StateMultiUpdate::update()
       pInfos->m_threadStarted  = false;
       pInfos->m_threadFinished = true;
       if(pThread->waitForThreadEnd() != 0) {
-	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, pInfos->m_errorMessage, UI_MSGBOX_OK);
+	StateMessageBox* v_msgboxState = new StateMessageBox(this, pInfos->m_errorMessage, UI_MSGBOX_OK);
 	v_msgboxState->setId("ERROR");
 	StateManager::instance()->pushState(v_msgboxState);
       }
     }
 
     if(pInfos->m_threadStarted == false && pInfos->m_threadFinished == false){
-      pThread->startThread(m_pGame);
+      pThread->startThread();
       pInfos->m_threadStarted = true;
 
       std::string msg = "thread " + id + " started";
@@ -160,15 +158,14 @@ void StateMultiUpdate::initThreadInfos(ThreadInfos* pInfos)
   pInfos->m_errorMessage          = "";
 }
 
-void StateMultiUpdate::createGUIIfNeeded(GameApp* pGame)
+void StateMultiUpdate::createGUIIfNeeded()
 {
   if(m_sGUI != NULL)
     return;
 
-  DrawLib* drawLib = pGame->getDrawLib();
+  DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
   m_sGUI = new UIRoot();
-  m_sGUI->setApp(pGame);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
 		      drawLib->getDispWidth(),

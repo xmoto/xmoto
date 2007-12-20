@@ -28,14 +28,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StateDeadMenu::m_sGUI = NULL;
 
-StateDeadMenu::StateDeadMenu(GameApp* pGame,
-			     bool i_doShadeAnim,
+StateDeadMenu::StateDeadMenu(bool i_doShadeAnim,
 			     StateMenuContextReceiver* i_receiver,
 			     bool drawStateBehind,
 			     bool updateStatesBehind):
   StateMenu(drawStateBehind,
 	    updateStatesBehind,
-	    pGame,
 	    i_receiver,
 	    true,
 	    i_doShadeAnim)
@@ -50,33 +48,26 @@ StateDeadMenu::~StateDeadMenu()
 
 void StateDeadMenu::enter()
 {
-  m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
+  GameApp* gameApp = GameApp::instance();
+  MotoGame* world = gameApp->getMotoGame();
+
+  world->setInfos(world->getLevelSrc()->Name());
   
-  createGUIIfNeeded(m_pGame);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:PLAYNEXT_BUTTON"));
-  playNextButton->enableWindow(m_pGame->isThereANextLevel(m_pGame->getMotoGame()->getLevelSrc()->Id()));
+  playNextButton->enableWindow(gameApp->isThereANextLevel(world->getLevelSrc()->Id()));
 
   UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:SAVEREPLAY_BUTTON"));
-  saveReplayButton->enableWindow(m_pGame->isAReplayToSave());
+  saveReplayButton->enableWindow(gameApp->isAReplayToSave());
 
   StateMenu::enter();
 }
 
 void StateDeadMenu::leave()
 {
-  m_pGame->getMotoGame()->setInfos("");
-}
-
-void StateDeadMenu::enterAfterPop()
-{
-  StateMenu::enterAfterPop();
-}
-
-void StateDeadMenu::leaveAfterPush()
-{
-  StateMenu::leaveAfterPush();
+  GameApp::instance()->getMotoGame()->setInfos("");
 }
 
 void StateDeadMenu::checkEvents() {
@@ -94,7 +85,7 @@ void StateDeadMenu::checkEvents() {
   if(pSavereplayButton->isClicked()) {
     pSavereplayButton->setClicked(false);
 
-    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
 							 UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, Replay::giveAutomaticName());
     v_msgboxState->setId("SAVEREPLAY");
     StateManager::instance()->pushState(v_msgboxState);
@@ -124,21 +115,11 @@ void StateDeadMenu::checkEvents() {
   if(pQuitButton->isClicked()) {
     pQuitButton->setClicked(false);
 
-    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
     v_msgboxState->setId("QUIT");
     StateManager::instance()->pushState(v_msgboxState);
   }
 
-}
-
-bool StateDeadMenu::update()
-{
-  return StateMenu::update();
-}
-
-bool StateDeadMenu::render()
-{
-  return StateMenu::render();
 }
 
 void StateDeadMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
@@ -146,7 +127,7 @@ void StateDeadMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
     switch(i_button) {
     case UI_MSGBOX_YES:
       m_requestForEnd = true;
-      m_pGame->requestEnd();
+      GameApp::instance()->requestEnd();
       break;
     case UI_MSGBOX_NO:
       return;
@@ -154,7 +135,7 @@ void StateDeadMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
     }
   } else if(i_id == "SAVEREPLAY") {
     if(i_button == UI_MSGBOX_OK) {
-      m_pGame->saveReplay(i_input);
+      GameApp::instance()->saveReplay(i_input);
     }
   }
 }
@@ -179,26 +160,6 @@ void StateDeadMenu::keyDown(int nKey, SDLMod mod,int nChar)
   }
 }
 
-void StateDeadMenu::keyUp(int nKey,   SDLMod mod)
-{
-  StateMenu::keyUp(nKey, mod);
-}
-
-void StateDeadMenu::mouseDown(int nButton)
-{
-  StateMenu::mouseDown(nButton);
-}
-
-void StateDeadMenu::mouseDoubleClick(int nButton)
-{
-  StateMenu::mouseDoubleClick(nButton);
-}
-
-void StateDeadMenu::mouseUp(int nButton)
-{
-  StateMenu::mouseUp(nButton);
-}
-
 void StateDeadMenu::clean() {
   if(StateDeadMenu::m_sGUI != NULL) {
     delete StateDeadMenu::m_sGUI;
@@ -206,53 +167,54 @@ void StateDeadMenu::clean() {
   }
 }
 
-void StateDeadMenu::createGUIIfNeeded(GameApp* pGame) {
+void StateDeadMenu::createGUIIfNeeded() {
   UIButton *v_button;
   UIFrame  *v_frame;
 
-  if(m_sGUI != NULL) return;
+  if(m_sGUI != NULL)
+    return;
+
+  DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
   m_sGUI = new UIRoot();
-  m_sGUI->setApp(pGame);
-  m_sGUI->setFont(pGame->getDrawLib()->getFontSmall()); 
+  m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      pGame->getDrawLib()->getDispWidth(),
-		      pGame->getDrawLib()->getDispHeight());
+		      drawLib->getDispWidth(),
+		      drawLib->getDispHeight());
 
   v_frame = new UIFrame(m_sGUI,
-			pGame->getDrawLib()->getDispWidth()/2  - 400/2,
-			pGame->getDrawLib()->getDispHeight()/2 - 540/2,
+			drawLib->getDispWidth()/2  - 400/2,
+			drawLib->getDispHeight()/2 - 540/2,
 			"", 400, 540);
   v_frame->setID("DEADMENU_FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_MENU);
 
   UIStatic *pDeadText = new UIStatic(v_frame, 0, 100, GAMETEXT_JUSTDEAD, v_frame->getPosition().nWidth, 36);
-  pDeadText->setFont(pGame->getDrawLib()->getFontMedium());
+  pDeadText->setFont(drawLib->getFontMedium());
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 0*57, GAMETEXT_TRYAGAIN, 207, 57);
   v_button->setID("TRYAGAIN_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_TRY_LEVEL_AGAIN);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawLib->getFontSmall());
   v_frame->setPrimaryChild(v_button); /* default button */
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 1*57, GAMETEXT_SAVEREPLAY, 207, 57);
   v_button->setID("SAVEREPLAY_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_SAVE_A_REPLAY);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawLib->getFontSmall());
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 2*57, GAMETEXT_PLAYNEXT, 207, 57);
   v_button->setID("PLAYNEXT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_PLAY_NEXT_LEVEL);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawLib->getFontSmall());
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 3*57, GAMETEXT_ABORT, 207, 57);
   v_button->setID("ABORT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawLib->getFontSmall());
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 4*57, GAMETEXT_QUIT, 207, 57);
   v_button->setID("QUIT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
-
+  v_button->setFont(drawLib->getFontSmall());
 }
