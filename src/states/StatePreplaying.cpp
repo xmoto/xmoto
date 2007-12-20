@@ -251,7 +251,7 @@ void StatePreplaying::secondInitPhase()
   }
 
   /* Prepare level */
-  GameRenderer::instance()->prepareForNewLevel();
+  GameRenderer::instance()->prepareForNewLevel(pWorld);
 
   /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
   // animation

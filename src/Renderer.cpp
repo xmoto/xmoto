@@ -50,6 +50,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   };
 
+GameRenderer::GameRenderer() {
+  m_previousEngineSpeed = -1.0;
+  m_previousEngineLinVel = -1.0;
+  m_sizeMultOfEntitiesToTake = 1.0;
+  m_sizeMultOfEntitiesWhichMakeWin = 1.0;
+  m_showMinimap = true;
+  m_showEngineCounter = true;
+  m_showTimePanel = true;
+}
+GameRenderer::~GameRenderer() {
+  _Free();
+}
+
   /*===========================================================================
   Init at game start-up
   ===========================================================================*/
@@ -64,14 +77,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Called to prepare renderer for new level
   ===========================================================================*/
-  void GameRenderer::prepareForNewLevel() {
-    int numberCamera = getGameObject()->getNumberCameras();
+  void GameRenderer::prepareForNewLevel(MotoGame* i_scene) {
+    int numberCamera = i_scene->getNumberCameras();
     if(numberCamera > 1){
       numberCamera++;
     }
     for(int i=0; i<numberCamera; i++){
-      getGameObject()->setCurrentCamera(i);
-      getGameObject()->getCamera()->prepareForNewLevel();
+      i_scene->setCurrentCamera(i);
+      i_scene->getCamera()->prepareForNewLevel();
     }
     
     m_screenBBox.reset();
@@ -80,7 +93,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_nGhostInfoTrans      = 255;
 
     /* Optimize scene */
-    std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
+    std::vector<Block *> Blocks = i_scene->getLevelSrc()->Blocks();
     int nVertexBytes = 0;
   
     for(int i=0; i<Blocks.size(); i++) {
@@ -122,12 +135,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	} catch(Exception &e) {
 	  Logger::Log("** Warning ** : Texture '%s' not found!",
 	      Blocks[i]->Texture().c_str());
-	  getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);   
+	  i_scene->gameMessage(GAMETEXT_MISSINGTEXTURES,true);   
 	}
       } else {
 	Logger::Log("** Warning ** : Texture '%s' not found!",
 	    Blocks[i]->Texture().c_str());
-	getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
+	i_scene->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
       }
 
       Geom* pSuitableGeom = new Geom;
@@ -342,15 +355,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #define MINIMAPZOOM 5.0f
   #define MINIMAPALPHA 128
   #define MINIVERTEX(Px,Py) \
-    getParent()->getDrawLib()->glVertexSP(x + nWidth/2 + (float)(Px - getGameObject()->getCamera()->getCameraPositionX())*MINIMAPZOOM, \
-                          y + nHeight/2 - (float)(Py - getGameObject()->getCamera()->getCameraPositionY())*MINIMAPZOOM);    
+    getParent()->getDrawLib()->glVertexSP(x + nWidth/2 + (float)(Px - i_scene->getCamera()->getCameraPositionX())*MINIMAPZOOM, \
+                          y + nHeight/2 - (float)(Py - i_scene->getCamera()->getCameraPositionY())*MINIMAPZOOM);    
 
-  void GameRenderer::renderMiniMap(int x,int y,int nWidth,int nHeight) {
-    Biker* pBiker = getGameObject()->getCamera()->getPlayerToFollow();
+void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int nHeight) {
+    Biker* pBiker = i_scene->getCamera()->getPlayerToFollow();
     // do not render it if it's the autozoom camera (in multi), or the player is dead (in multi), or no player is followed
-    if(getGameObject()->getCurrentCamera() == getGameObject()->getNumberCameras()
+    if(i_scene->getCurrentCamera() == i_scene->getNumberCameras()
        || ((pBiker == NULL || (pBiker != NULL && pBiker->isDead() == true))
-	   && getGameObject()->getNumberCameras() > 1)){
+	   && i_scene->getNumberCameras() > 1)){
       return;
     }
 
@@ -358,11 +371,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 				       MAKE_COLOR(0,0,0,MINIMAPALPHA),
 				       MAKE_COLOR(255,255,255,MINIMAPALPHA));
     // the scissor zone is in the screen coordinates
-    Vector2i bottomLeft = getGameObject()->getCamera()->getDispBottomLeft();
+    Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();
 
     int y_translate = bottomLeft.y/2;
     if(bottomLeft.y != getParent()->getDrawLib()->getDispHeight()
-       || getGameObject()->getNumberCameras() == 1){
+       || i_scene->getNumberCameras() == 1){
       y_translate = 0;
     }
     getParent()->getDrawLib()->setClipRect(bottomLeft.x + x+1,
@@ -378,19 +391,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       input:  position on the screen (in the minimap area)
       output: position in the level
     */
-#define MAP_TO_LEVEL_X(mapX) ((mapX) - x - nWidth/2)/MINIMAPZOOM  + getGameObject()->getCamera()->getCameraPositionX()
-#define MAP_TO_LEVEL_Y(mapY) ((mapY) - y - nHeight/2)/MINIMAPZOOM + getGameObject()->getCamera()->getCameraPositionY()
+#define MAP_TO_LEVEL_X(mapX) ((mapX) - x - nWidth/2)/MINIMAPZOOM  + i_scene->getCamera()->getCameraPositionX()
+#define MAP_TO_LEVEL_Y(mapY) ((mapY) - y - nHeight/2)/MINIMAPZOOM + i_scene->getCamera()->getCameraPositionY()
     AABB mapBBox;
     mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x), MAP_TO_LEVEL_Y(y));
     mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x+nWidth), MAP_TO_LEVEL_Y(y+nHeight));
 
     /* TOFIX::Draw the static blocks only once in a texture, and reuse it after */
     /* Render blocks */
-    MotoGame *pGame = getGameObject();
     std::vector<Block*> Blocks;
 
     for(int layer=-1; layer<=0; layer++){
-      Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(mapBBox, layer);
+      Blocks = i_scene->getCollisionHandler()->getStaticBlocksNearPosition(mapBBox, layer);
       for(int i=0; i<Blocks.size(); i++) {
 
 	/* Don't draw background blocks neither dynamic ones */
@@ -414,7 +426,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* Render dynamic blocks */
     /* display only visible dyn blocks */
-    Blocks = pGame->getCollisionHandler()->getDynBlocksNearPosition(mapBBox);
+    Blocks = i_scene->getCollisionHandler()->getDynBlocksNearPosition(mapBBox);
 
     /* TOFIX::do not calculate this again. (already done in Block.cpp) */
     for(int i=0; i<Blocks.size(); i++) {
@@ -448,18 +460,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       input: position in the level
       output: position on the screen (draw in the minimap area)
     */
-#define LEVEL_TO_SCREEN_X(elemPosX) (x + nWidth/2  + (float)((elemPosX) - getGameObject()->getCamera()->getCameraPositionX()) * MINIMAPZOOM)
-#define LEVEL_TO_SCREEN_Y(elemPosY) (y + nHeight/2 - (float)((elemPosY) - getGameObject()->getCamera()->getCameraPositionY()) * MINIMAPZOOM)
+#define LEVEL_TO_SCREEN_X(elemPosX) (x + nWidth/2  + (float)((elemPosX) - i_scene->getCamera()->getCameraPositionX()) * MINIMAPZOOM)
+#define LEVEL_TO_SCREEN_Y(elemPosY) (y + nHeight/2 - (float)((elemPosY) - i_scene->getCamera()->getCameraPositionY()) * MINIMAPZOOM)
 
-    for(unsigned int i=0; i<getGameObject()->Players().size(); i++) {
-      Vector2f bikePos(LEVEL_TO_SCREEN_X(getGameObject()->Players()[i]->getState()->CenterP.x),
-		       LEVEL_TO_SCREEN_Y(getGameObject()->Players()[i]->getState()->CenterP.y));
+    for(unsigned int i=0; i<i_scene->Players().size(); i++) {
+      Vector2f bikePos(LEVEL_TO_SCREEN_X(i_scene->Players()[i]->getState()->CenterP.x),
+		       LEVEL_TO_SCREEN_Y(i_scene->Players()[i]->getState()->CenterP.y));
       getParent()->getDrawLib()->drawCircle(bikePos, 3, 0, MAKE_COLOR(255,255,255,255), 0);
     }
     
     /* Render ghost position too? */
-    for(unsigned int i=0; i<getGameObject()->Ghosts().size(); i++) {
-      Ghost* v_ghost = getGameObject()->Ghosts()[i];
+    for(unsigned int i=0; i<i_scene->Ghosts().size(); i++) {
+      Ghost* v_ghost = i_scene->Ghosts()[i];
 
       Vector2f ghostPos(LEVEL_TO_SCREEN_X(v_ghost->getState()->CenterP.x),
 			LEVEL_TO_SCREEN_Y(v_ghost->getState()->CenterP.y));
@@ -467,7 +479,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     /* FIX::display only visible entities */
-    std::vector<Entity*> Entities = pGame->getCollisionHandler()->getEntitiesNearPosition(mapBBox);
+    std::vector<Entity*> Entities = i_scene->getCollisionHandler()->getEntitiesNearPosition(mapBBox);
 
     for(int i=0;i<Entities.size();i++) {
       Vector2f entityPos(LEVEL_TO_SCREEN_X(Entities[i]->DynamicPosition().x),
@@ -490,7 +502,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     getParent()->getDrawLib()->setClipRect(0,0,getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
   }
 
-  void GameRenderer::_RenderGhost(Biker* i_ghost, int i) {
+void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
     /* Render ghost - ugly mode? */
     if(XMSession::instance()->ugly() == false) {
       if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
@@ -498,7 +510,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	// can't use the same overlay for the multi cameras,
 	// because the fade is made using all the cameras,
 	// there should be one overlay per camera.
-	int nbCamera = getGameObject()->getNumberCameras();
+	int nbCamera = i_scene->getNumberCameras();
 	/* No not ugly, fancy! Render into overlay? */      
 	if(XMSession::instance()->ghostMotionBlur()
 	   && getParent()->getDrawLib()->useFBOs()
@@ -543,15 +555,14 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Main rendering function
   ===========================================================================*/
-  void GameRenderer::render() {
+  void GameRenderer::render(MotoGame* i_scene) {
     bool v_found;
-    MotoGame* pGame   = getGameObject();
-    Camera*   pCamera = pGame->getCamera();
+    Camera*   pCamera = i_scene->getCamera();
 
     m_nParticlesRendered = 0;
     
     m_fZoom = 60.0f;    
-    pCamera->setScroll(true, pGame->getGravity());
+    pCamera->setScroll(true, i_scene->getGravity());
     pCamera->setCamera2d();
 
     /* calculate screen AABB to show only visible entities and dyn blocks */
@@ -571,12 +582,13 @@ int GameRenderer::nbParticlesRendered() const {
 
     /* SKY! */
     if(XMSession::instance()->ugly() == false) {
-      _RenderSky(pGame->getLevelSrc()->Sky()->Zoom(),
-		 pGame->getLevelSrc()->Sky()->Offset(),
-		 pGame->getLevelSrc()->Sky()->TextureColor(),
-		 pGame->getLevelSrc()->Sky()->DriftZoom(),
-		 pGame->getLevelSrc()->Sky()->DriftTextureColor(),
-		 pGame->getLevelSrc()->Sky()->Drifted());
+      _RenderSky(i_scene,
+		 i_scene->getLevelSrc()->Sky()->Zoom(),
+		 i_scene->getLevelSrc()->Sky()->Offset(),
+		 i_scene->getLevelSrc()->Sky()->TextureColor(),
+		 i_scene->getLevelSrc()->Sky()->DriftZoom(),
+		 i_scene->getLevelSrc()->Sky()->DriftTextureColor(),
+		 i_scene->getLevelSrc()->Sky()->Drifted());
     }    
 
     pCamera->setCamera3d();
@@ -592,44 +604,44 @@ int GameRenderer::nbParticlesRendered() const {
 
     if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* background level blocks */
-      _RenderLayers(false);
+      _RenderLayers(i_scene, false);
     }
 
     if(XMSession::instance()->gameGraphics() != GFX_LOW && XMSession::instance()->ugly() == false) {
       /* Background blocks */
-      _RenderDynamicBlocks(true);
-      _RenderBackground();
+      _RenderDynamicBlocks(i_scene, true);
+      _RenderBackground(i_scene);
       
       /* ... then render background sprites ... */      
     }
-    _RenderSprites(false,true);
+    _RenderSprites(i_scene, false,true);
 
     if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* Render particles (back!) */    
-       _RenderParticles(false);
+      _RenderParticles(i_scene, false);
     }
 
     /* ... covered by blocks ... */
-    _RenderDynamicBlocks(false);
-    _RenderBlocks();
+    _RenderDynamicBlocks(i_scene, false);
+    _RenderBlocks(i_scene);
 
     /* ... then render "middleground" sprites ... */
-    _RenderSprites(false,false);
+    _RenderSprites(i_scene, false,false);
 
     /* zones */
     if(XMSession::instance()->uglyOver()) {
-      for(unsigned int i=0; i<pGame->getLevelSrc()->Zones().size(); i++) {
-	_RenderZone(pGame->getLevelSrc()->Zones()[i]);
+      for(unsigned int i=0; i<i_scene->getLevelSrc()->Zones().size(); i++) {
+	_RenderZone(i_scene->getLevelSrc()->Zones()[i]);
       }
     }
 
     /* ghosts */
     v_found = false;
     int v_found_i = 0;
-    for(unsigned int i=0; i<pGame->Ghosts().size(); i++) {
-      Ghost* v_ghost = pGame->Ghosts()[i];
+    for(unsigned int i=0; i<i_scene->Ghosts().size(); i++) {
+      Ghost* v_ghost = i_scene->Ghosts()[i];
       if(v_ghost != pCamera->getPlayerToFollow()) {
-	_RenderGhost(v_ghost, i);
+	_RenderGhost(i_scene, v_ghost, i);
       } else {
 	v_found = true;
 	v_found_i = i;
@@ -637,13 +649,13 @@ int GameRenderer::nbParticlesRendered() const {
     }
     /* draw the player to follow over the others */
     if(v_found) {
-      _RenderGhost(pGame->Ghosts()[v_found_i], v_found_i);
+      _RenderGhost(i_scene, i_scene->Ghosts()[v_found_i], v_found_i);
     }
 
     /* ... followed by the bike ... */
     v_found = false;
-    for(unsigned int i=0; i<pGame->Players().size(); i++) {
-      Biker* v_player = pGame->Players()[i];
+    for(unsigned int i=0; i<i_scene->Players().size(); i++) {
+      Biker* v_player = i_scene->Players()[i];
       if(v_player != pCamera->getPlayerToFollow()) {
 	_RenderBike(v_player->getState(),
 		    v_player->getState()->Parameters(),
@@ -665,7 +677,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
 
     /* ghost information */
-    if(pGame->getTime() > m_fNextGhostInfoUpdate) {
+    if(i_scene->getTime() > m_fNextGhostInfoUpdate) {
       if(m_nGhostInfoTrans > 0) {
 	if(m_fNextGhostInfoUpdate > 1.5f) {
 	  m_nGhostInfoTrans-=16;
@@ -676,20 +688,20 @@ int GameRenderer::nbParticlesRendered() const {
     
     if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* Render particles (front!) */    
-      _RenderParticles(true);
+      _RenderParticles(i_scene, true);
     }
     
     /* ... and finally the foreground sprites! */
-    _RenderSprites(true,false);
+    _RenderSprites(i_scene, true,false);
 
     /* and finally finally, front layers */
     if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
-      _RenderLayers(true);
+      _RenderLayers(i_scene, true);
     }
 
     if(XMSession::instance()->debug()) {
       /* Draw some collision handling debug info */
-      CollisionSystem *pc = pGame->getCollisionHandler();
+      CollisionSystem *pc = i_scene->getCollisionHandler();
       for(int i=0;i<pc->m_CheckedLines.size();i++) {
         getParent()->getDrawLib()->setLineWidth(3);
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
@@ -764,18 +776,18 @@ int GameRenderer::nbParticlesRendered() const {
       if(showMinimap()) {
 	if(pCamera->getPlayerToFollow()->getState()->Dir == DD_LEFT
 	   && showEngineCounter() == false
-	   && pGame->getNumberCameras() == 1) {
-	  renderMiniMap(getParent()->getDrawLib()->getDispWidth()-150,
+	   && i_scene->getNumberCameras() == 1) {
+	  renderMiniMap(i_scene, getParent()->getDrawLib()->getDispWidth()-150,
 			getParent()->getDrawLib()->getDispHeight()-100,
 			150,100);
 	} else {
-	  renderMiniMap(0,getParent()->getDrawLib()->getDispHeight()-100,
+	  renderMiniMap(i_scene, 0,getParent()->getDrawLib()->getDispHeight()-100,
 			150,100);
 	}
       }
       if(showEngineCounter()
 	 && XMSession::instance()->ugly() == false
-	 && pGame->getNumberCameras() == 1) {
+	 && i_scene->getNumberCameras() == 1) {
 	renderEngineCounter(getParent()->getDrawLib()->getDispWidth()-128,
 			    getParent()->getDrawLib()->getDispHeight()-128,128,128,
 			    pCamera->getPlayerToFollow()->getBikeEngineSpeed());
@@ -785,18 +797,18 @@ int GameRenderer::nbParticlesRendered() const {
     getParent()->getDrawLib()->getMenuCamera()->setCamera2d();
 
     if(m_showTimePanel) {
-      renderTimePanel();
+      renderTimePanel(i_scene);
       /* If there's strawberries in the level, tell the user how many there's left */
-      _RenderGameStatus();
+      _RenderGameStatus(i_scene);
     }
 
-    renderReplayHelpMessage();
+    renderReplayHelpMessage(i_scene);
 
     /* And then the game messages */
-    _RenderGameMessages();            
+    _RenderGameMessages(i_scene);            
 
     FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
-    FontGlyph* v_fg = v_fm->getGlyph(pGame->getInfos());
+    FontGlyph* v_fg = v_fm->getGlyph(i_scene->getInfos());
     v_fm->printString(v_fg,
 		      5,
 		      getParent()->getDrawLib()->getDispHeight() - v_fg->realHeight() - 2,
@@ -806,12 +818,11 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Game status rendering
   ===========================================================================*/
-  void GameRenderer::_RenderGameStatus(void) {
+  void GameRenderer::_RenderGameStatus(MotoGame* i_scene) {
     Sprite* pType = NULL;
-    MotoGame *pGame = getGameObject();
 
     // do not render it if it's the autozoom camera or ...
-    if(getGameObject()->getCurrentCamera() == getGameObject()->getNumberCameras()) {
+    if(i_scene->getCurrentCamera() == i_scene->getNumberCameras()) {
       return;
     }
     
@@ -820,11 +831,11 @@ int GameRenderer::nbParticlesRendered() const {
     float x2 = 100;
     float y2 = 27;
 
-    int nStrawberriesLeft = pGame->getLevelSrc()->countToTakeEntities();
+    int nStrawberriesLeft = i_scene->getLevelSrc()->countToTakeEntities();
     int nQuantity = 0;
     Vector2i bottomLeft(0,0);
-    if(getGameObject()->getNumberCameras() > 1){
-      bottomLeft = getGameObject()->getCamera()->getDispBottomLeft();
+    if(i_scene->getNumberCameras() > 1){
+      bottomLeft = i_scene->getCamera()->getDispBottomLeft();
     }
 
     // adapt to the current camera
@@ -838,17 +849,17 @@ int GameRenderer::nbParticlesRendered() const {
     }
 
     if(XMSession::instance()->ugly() == false) {
-      pType = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForFlower());
+      pType = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, i_scene->getLevelSrc()->SpriteForFlower());
       if(pType == NULL) {
-	pType = Theme::instance()->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForFlower());
+	pType = Theme::instance()->getSprite(SPRITE_TYPE_DECORATION, i_scene->getLevelSrc()->SpriteForFlower());
       }
     }
     
     if(nStrawberriesLeft > 0) {
       if(XMSession::instance()->ugly() == false) {
-	pType = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());
+	pType = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, i_scene->getLevelSrc()->SpriteForStrawberry());
       if(pType == NULL) {
-	pType = Theme::instance()->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());
+	pType = Theme::instance()->getSprite(SPRITE_TYPE_DECORATION, i_scene->getLevelSrc()->SpriteForStrawberry());
       }
       }
       nQuantity = nStrawberriesLeft;
@@ -888,16 +899,14 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Game message rendering
   ===========================================================================*/
-  void GameRenderer::_RenderGameMessages(void) {
-    MotoGame *pGame = getGameObject();
-
+  void GameRenderer::_RenderGameMessages(MotoGame* i_scene) {
     /* Arrow messages */
-    ArrowPointer *pArrow = &pGame->getArrowPointer();
+    ArrowPointer *pArrow = &(i_scene->getArrowPointer());
     if(pArrow->nArrowPointerMode != 0) {
       Vector2f C;
       if(pArrow->nArrowPointerMode == 1) {          
-        C=Vector2f(getParent()->getDrawLib()->getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x - getGameObject()->getCamera()->getCameraPositionX())*m_fZoom,
-                  getParent()->getDrawLib()->getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y - getGameObject()->getCamera()->getCameraPositionY())*m_fZoom);      
+        C=Vector2f(getParent()->getDrawLib()->getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x - i_scene->getCamera()->getCameraPositionX())*m_fZoom,
+                  getParent()->getDrawLib()->getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y - i_scene->getCamera()->getCameraPositionY())*m_fZoom);      
       }
       else if(pArrow->nArrowPointerMode == 2) {          
         C.x=(getParent()->getDrawLib()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
@@ -922,9 +931,9 @@ int GameRenderer::nbParticlesRendered() const {
     }
         
     /* Messages */
-    if(pGame != NULL) {
-      for(int i=0;i<pGame->getGameMessage().size();i++) {
-        GameMessage *pMsg = pGame->getGameMessage()[i];
+    if(i_scene != NULL) {
+      for(int i=0;i<i_scene->getGameMessage().size();i++) {
+        GameMessage *pMsg = i_scene->getGameMessage()[i];
 	FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
 	FontGlyph* v_fg = v_fm->getGlyph(pMsg->Text);
 	v_fm->printString(v_fg,
@@ -938,8 +947,7 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Sprite rendering main
   ===========================================================================*/
-  void GameRenderer::_RenderSprites(bool bForeground,bool bBackground) {
-    MotoGame *pGame = getGameObject();
+void GameRenderer::_RenderSprites(MotoGame* i_scene, bool bForeground,bool bBackground) {
     Entity *pEnt;
 
     AABB screenBigger;
@@ -954,10 +962,10 @@ int GameRenderer::nbParticlesRendered() const {
 				  screenMax.y+ENTITY_OFFSET);
 
     /* DONE::display only visible entities */
-    std::vector<Entity*> Entities = getGameObject()->getCollisionHandler()->getEntitiesNearPosition(screenBigger);
+    std::vector<Entity*> Entities = i_scene->getCollisionHandler()->getEntitiesNearPosition(screenBigger);
 
     int nbNearEntities = Entities.size();
-    int nbTotalEntities = getGameObject()->getLevelSrc()->Entities().size();
+    int nbTotalEntities = i_scene->getLevelSrc()->Entities().size();
 
     //printf("draw %d entities on %d\n", nbNearEntities, nbTotalEntities);
 
@@ -968,17 +976,17 @@ int GameRenderer::nbParticlesRendered() const {
         case ET_NONE:
           /* Middleground? (not foreground, not background) */
           if(pEnt->Z() == 0.0f && !bForeground && !bBackground) {
-            _RenderSprite(pEnt);  
+            _RenderSprite(i_scene, pEnt);  
           } 
           else {
             /* In front? */
             if(pEnt->Z() > 0.0f && bForeground) {
-              _RenderSprite(pEnt);
+              _RenderSprite(i_scene, pEnt);
             } 
             else {
               /* Those in back? */
               if(pEnt->Z() < 0.0f && bBackground) {
-                _RenderSprite(pEnt);
+                _RenderSprite(i_scene, pEnt);
               }
             }
           }
@@ -987,13 +995,13 @@ int GameRenderer::nbParticlesRendered() const {
           if(!bForeground && !bBackground) {
 	    switch(pEnt->Speciality()) {
 	    case ET_MAKEWIN:
-	      _RenderSprite(pEnt, m_sizeMultOfEntitiesWhichMakeWin);
+	      _RenderSprite(i_scene, pEnt, m_sizeMultOfEntitiesWhichMakeWin);
 	      break;
 	    case ET_ISTOTAKE:
-	      _RenderSprite(pEnt, m_sizeMultOfEntitiesToTake);
+	      _RenderSprite(i_scene, pEnt, m_sizeMultOfEntitiesToTake);
 	      break;
 	    default:	      
-	      _RenderSprite(pEnt);
+	      _RenderSprite(i_scene, pEnt);
 	    }
           }
           break;
@@ -1004,7 +1012,7 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Render a sprite
   ===========================================================================*/
-  void GameRenderer::_RenderSprite(Entity *pSprite, float i_sizeMult) {  
+void GameRenderer::_RenderSprite(MotoGame* i_scene, Entity *pSprite, float i_sizeMult) {  
     Sprite* v_spriteType;
     AnimationSprite* v_animationSpriteType;
     DecorationSprite* v_decorationSpriteType;
@@ -1017,13 +1025,13 @@ int GameRenderer::nbParticlesRendered() const {
     if(XMSession::instance()->ugly() == false) {
       switch(pSprite->Speciality()) {
       case ET_KILL:
-	v_sprite_type = getGameObject()->getLevelSrc()->SpriteForWecker();
+	v_sprite_type = i_scene->getLevelSrc()->SpriteForWecker();
         break;
       case ET_MAKEWIN:
-	v_sprite_type = getGameObject()->getLevelSrc()->SpriteForFlower();
+	v_sprite_type = i_scene->getLevelSrc()->SpriteForFlower();
         break;
       case ET_ISTOTAKE:
-	v_sprite_type = getGameObject()->getLevelSrc()->SpriteForStrawberry();
+	v_sprite_type = i_scene->getLevelSrc()->SpriteForStrawberry();
         break;
       default:
 	v_sprite_type = pSprite->SpriteName();
@@ -1176,11 +1184,9 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Blocks (dynamic)
   ===========================================================================*/
-  void GameRenderer::_RenderDynamicBlocks(bool bBackground) {
-    MotoGame *pGame = getGameObject();
-
+void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
     /* FIX::display only visible dyn blocks */
-    std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getDynBlocksNearPosition(m_screenBBox);
+    std::vector<Block *> Blocks = i_scene->getCollisionHandler()->getDynBlocksNearPosition(m_screenBBox);
 
     /* sort blocks on their texture */
     std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
@@ -1457,14 +1463,13 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Blocks (static)
   ===========================================================================*/
-  void GameRenderer::_RenderBlocks(void) {
-    MotoGame *pGame = getGameObject();
+  void GameRenderer::_RenderBlocks(MotoGame* i_scene) {
 
     for(int layer=-1; layer<=0; layer++){
       std::vector<Block *> Blocks;
 
       /* Render all non-background blocks */
-      Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox, layer);
+      Blocks = i_scene->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox, layer);
 
       /* sort blocks on their texture */
       std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
@@ -1544,9 +1549,8 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Sky.
   ===========================================================================*/
-  void GameRenderer::_RenderSky(float i_zoom, float i_offset, const TColor& i_color,
+void GameRenderer::_RenderSky(MotoGame* i_scene, float i_zoom, float i_offset, const TColor& i_color,
 																float i_driftZoom, const TColor& i_driftColor, bool i_drifted) {
-  MotoGame *pGame = getGameObject();
   TextureSprite* pType;
   float fDrift = 0.0;
   float uZoom = 1.0 / i_zoom;
@@ -1557,7 +1561,7 @@ int GameRenderer::nbParticlesRendered() const {
   }
   
   pType = (TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
-							      pGame->getLevelSrc()->Sky()->Texture());
+							      i_scene->getLevelSrc()->Sky()->Texture());
   
   if(pType != NULL) {
     if(i_drifted) {
@@ -1572,13 +1576,13 @@ int GameRenderer::nbParticlesRendered() const {
       fDrift = getParent()->getXMTime() / 25.0f;
     }
     
-    getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+ fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset);
+    getParent()->getDrawLib()->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+ fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset);
     getParent()->getDrawLib()->glVertexSP(0,0);
-    getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+uZoom+ fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset);
+    getParent()->getDrawLib()->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+uZoom+ fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset);
     getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
-    getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+uZoom+ fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset+uZoom);
+    getParent()->getDrawLib()->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+uZoom+ fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset+uZoom);
     getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
-    getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+ fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset+uZoom);
+    getParent()->getDrawLib()->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+ fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset+uZoom);
     getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
     getParent()->getDrawLib()->endDraw();
     
@@ -1587,18 +1591,18 @@ int GameRenderer::nbParticlesRendered() const {
       getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
       getParent()->getDrawLib()->setColorRGBA(i_driftColor.Red(), i_driftColor.Green(), i_driftColor.Blue(), i_driftColor.Alpha());
       fDrift = getParent()->getXMTime() / 15.0f;
-      getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset + fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset);
+      getParent()->getDrawLib()->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset + fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset);
       getParent()->getDrawLib()->glVertexSP(0,0);
-      getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+uDriftZoom + fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset);
+      getParent()->getDrawLib()->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+uDriftZoom + fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset);
       getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
-      getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+uDriftZoom + fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset+uDriftZoom);
+      getParent()->getDrawLib()->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+uDriftZoom + fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset+uDriftZoom);
       getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
-      getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset + fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset+uDriftZoom);
+      getParent()->getDrawLib()->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset + fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset+uDriftZoom);
       getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
       getParent()->getDrawLib()->endDraw();
     }
   } else {
-    Logger::Log(std::string("** Invalid sky " + pGame->getLevelSrc()->Sky()->Texture()).c_str());
+    Logger::Log(std::string("** Invalid sky " + i_scene->getLevelSrc()->Sky()->Texture()).c_str());
     getParent()->getDrawLib()->clearGraphics();
   } 
  }
@@ -1606,11 +1610,9 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   And background rendering
   ===========================================================================*/
-  void GameRenderer::_RenderBackground(void) { 
-    MotoGame *pGame = getGameObject();
-
+  void GameRenderer::_RenderBackground(MotoGame* i_scene) { 
     /* Render STATIC background blocks */
-    std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox);
+    std::vector<Block *> Blocks = i_scene->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox);
 
     /* sort blocks on their texture */
     std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
@@ -1631,18 +1633,18 @@ int GameRenderer::nbParticlesRendered() const {
     }
   }
 
-  void GameRenderer::_RenderLayer(int layer) {
+void GameRenderer::_RenderLayer(MotoGame* i_scene, int layer) {
     if(getParent()->getDrawLib()->getBackend() != DrawLib::backend_OpenGl) {
       return;
     }
 
-    Vector2f layerOffset = getGameObject()->getLevelSrc()->getLayerOffset(layer);
+    Vector2f layerOffset = i_scene->getLevelSrc()->getLayerOffset(layer);
 
     /* get bounding box in the layer depending on its offset */
     Vector2f size = m_screenBBox.getBMax() - m_screenBBox.getBMin();
 
-    Vector2f levelLeftTop = Vector2f(getGameObject()->getLevelSrc()->LeftLimit(),
-				     getGameObject()->getLevelSrc()->TopLimit());
+    Vector2f levelLeftTop = Vector2f(i_scene->getLevelSrc()->LeftLimit(),
+				     i_scene->getLevelSrc()->TopLimit());
 
     Vector2f levelViewLeftTop = Vector2f(m_screenBBox.getBMin().x,
 					 m_screenBBox.getBMin().y+size.y);
@@ -1656,7 +1658,7 @@ int GameRenderer::nbParticlesRendered() const {
     layerBBox.addPointToAABB2f(levelLeftTop.x + translationInLayer.x + size.x,
 			       levelLeftTop.y + translationInLayer.y - size.y);
 
-    std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getBlocksNearPositionInLayer(layerBBox, layer);
+    std::vector<Block *> Blocks = i_scene->getCollisionHandler()->getBlocksNearPositionInLayer(layerBBox, layer);
     /* sort blocks on their texture */
     std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
 
@@ -1680,12 +1682,12 @@ int GameRenderer::nbParticlesRendered() const {
 #endif
   }
 
-  void GameRenderer::_RenderLayers(bool renderFront) { 
+void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) { 
     /* Render background level blocks */
-    int nbLayer = getGameObject()->getLevelSrc()->getNumberLayer();
+    int nbLayer = i_scene->getLevelSrc()->getNumberLayer();
     for(int layer=0; layer<nbLayer; layer++){
-      if(getGameObject()->getLevelSrc()->isLayerFront(layer) == renderFront){
-	_RenderLayer(layer);
+      if(i_scene->getLevelSrc()->isLayerFront(layer) == renderFront){
+	_RenderLayer(i_scene, layer);
       }
     }
   }
@@ -2002,19 +2004,19 @@ void GameRenderer::setShowTimePanel(bool i_value) {
     m_showEngineCounter = i_value;
   }
 
-  void GameRenderer::switchFollow() {
-    if(getGameObject()->getCamera()->getPlayerToFollow() == NULL) return;
+  void GameRenderer::switchFollow(MotoGame* i_scene) {
+    if(i_scene->getCamera()->getPlayerToFollow() == NULL) return;
 
     /* search into the player */
-    for(unsigned i=0; i<getGameObject()->Players().size(); i++) {
-      if(getGameObject()->Players()[i] == getGameObject()->getCamera()->getPlayerToFollow()) {
-	if(i<getGameObject()->Players().size()-1) {
-	  getGameObject()->getCamera()->setPlayerToFollow(getGameObject()->Players()[i+1]);
+    for(unsigned i=0; i<i_scene->Players().size(); i++) {
+      if(i_scene->Players()[i] == i_scene->getCamera()->getPlayerToFollow()) {
+	if(i<i_scene->Players().size()-1) {
+	  i_scene->getCamera()->setPlayerToFollow(i_scene->Players()[i+1]);
 	} else {
-	  if(getGameObject()->Ghosts().size() > 0) {
-	    getGameObject()->getCamera()->setPlayerToFollow(getGameObject()->Ghosts()[0]);
+	  if(i_scene->Ghosts().size() > 0) {
+	    i_scene->getCamera()->setPlayerToFollow(i_scene->Ghosts()[0]);
 	  } else {
-	    getGameObject()->getCamera()->setPlayerToFollow(getGameObject()->Players()[0]);
+	    i_scene->getCamera()->setPlayerToFollow(i_scene->Players()[0]);
 	  }
 	}
 	return;
@@ -2022,15 +2024,15 @@ void GameRenderer::setShowTimePanel(bool i_value) {
     }
 
     /* search into the ghost */
-    for(unsigned i=0; i<getGameObject()->Ghosts().size(); i++) {
-      if(getGameObject()->Ghosts()[i] == getGameObject()->getCamera()->getPlayerToFollow()) {
-	if(i<getGameObject()->Ghosts().size()-1) {
-	  getGameObject()->getCamera()->setPlayerToFollow(getGameObject()->Ghosts()[i+1]);
+    for(unsigned i=0; i<i_scene->Ghosts().size(); i++) {
+      if(i_scene->Ghosts()[i] == i_scene->getCamera()->getPlayerToFollow()) {
+	if(i<i_scene->Ghosts().size()-1) {
+	  i_scene->getCamera()->setPlayerToFollow(i_scene->Ghosts()[i+1]);
 	} else {
-	  if(getGameObject()->Players().size() > 0) {
-	    getGameObject()->getCamera()->setPlayerToFollow(getGameObject()->Players()[0]);
+	  if(i_scene->Players().size() > 0) {
+	    i_scene->getCamera()->setPlayerToFollow(i_scene->Players()[0]);
 	  } else {
-	    getGameObject()->getCamera()->setPlayerToFollow(getGameObject()->Ghosts()[0]);
+	    i_scene->getCamera()->setPlayerToFollow(i_scene->Ghosts()[0]);
 	  }
 	}
 	return;
@@ -2039,18 +2041,18 @@ void GameRenderer::setShowTimePanel(bool i_value) {
   }
 
 
-void GameRenderer::renderTimePanel() {
+void GameRenderer::renderTimePanel(MotoGame* i_scene) {
   int x, y;
   FontGlyph* v_fg;
 
   // do not render it if it's the autozoom camera or ...
-  if(getGameObject()->getCurrentCamera() == getGameObject()->getNumberCameras()) {
+  if(i_scene->getCurrentCamera() == i_scene->getNumberCameras()) {
     return;
   }
 
   unsigned int width  = getParent()->getDrawLib()->getDispWidth();
   unsigned int height = getParent()->getDrawLib()->getDispHeight();
-  Biker* pBiker = getGameObject()->getCamera()->getPlayerToFollow();
+  Biker* pBiker = i_scene->getCamera()->getPlayerToFollow();
 
   /* render game time */
   FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
@@ -2062,19 +2064,19 @@ void GameRenderer::renderTimePanel() {
       if(pBiker->isFinished()) {
 	v_fg = v_fm->getGlyph(getParent()->formatTime(pBiker->finishTime()));
       } else {
-	v_fg = v_fm->getGlyph(getParent()->formatTime(getGameObject()->getTime()));
+	v_fg = v_fm->getGlyph(getParent()->formatTime(i_scene->getTime()));
       }
     }
   } else {
-    v_fg = v_fm->getGlyph(getParent()->formatTime(getGameObject()->getTime()));
+    v_fg = v_fm->getGlyph(getParent()->formatTime(i_scene->getTime()));
   }
 
-  switch(getGameObject()->getCurrentCamera()) {
+  switch(i_scene->getCurrentCamera()) {
   case 0:
     x=0; y=0;
     break;
   case 1:
-    if(getGameObject()->getNumberCameras() == 2) {
+    if(i_scene->getNumberCameras() == 2) {
       x=0; y=height/2;
     } else {
 	x=width/2; y=0;
@@ -2093,7 +2095,7 @@ void GameRenderer::renderTimePanel() {
 		    MAKE_COLOR(255,255,255,255), true);
 
   /* next things must be rendered only the first camera */
-  if(getGameObject()->getCurrentCamera() != 0) return;
+  if(i_scene->getCurrentCamera() != 0) return;
 
   v_fm = getParent()->getDrawLib()->getFontSmall();
 
@@ -2105,9 +2107,9 @@ void GameRenderer::renderTimePanel() {
   
 }
 
-void GameRenderer::renderReplayHelpMessage() {
+void GameRenderer::renderReplayHelpMessage(MotoGame* i_scene) {
   /* next things must be rendered only the first camera */
-  if(getGameObject()->getCurrentCamera() != 0) return;
+  if(i_scene->getCurrentCamera() != 0) return;
 
   FontManager* v_fm = getParent()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg = v_fm->getGlyph(m_replayHelp);

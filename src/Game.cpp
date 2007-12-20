@@ -812,7 +812,7 @@ void GameApp::switchLevelToBlacklist(const std::string& i_levelId, bool v_displa
 }
 
 void GameApp::switchFollowCamera() {
-  GameRenderer::instance()->switchFollow();
+  GameRenderer::instance()->switchFollow(&m_MotoGame);
 
   SysMessage::instance()->displayText(m_MotoGame.getCamera()->
 				      getPlayerToFollow()->
