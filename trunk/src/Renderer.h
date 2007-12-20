@@ -121,61 +121,50 @@ class ParticlesSource;
   class GameRenderer : public Singleton<GameRenderer> {
     friend class Singleton<GameRenderer>;
 
-  private:
-    GameRenderer() {
-      m_previousEngineSpeed = -1.0;
-      m_previousEngineLinVel = -1.0;
-      m_sizeMultOfEntitiesToTake = 1.0;
-      m_sizeMultOfEntitiesWhichMakeWin = 1.0;
-      m_showMinimap = true;
-      m_showEngineCounter = true;
-      m_showTimePanel = true;
-    }
-    ~GameRenderer() {
-      _Free();
-    }
-
   public:
-    
-    /* Methods */
     void init(DrawLib* i_drawLib); /* only called at start-up, and not per-level */
     void shutdown(void);
+    void render(MotoGame* i_scene);
 
-    void render();
-    void renderMiniMap(int x,int y,int nWidth,int nHeight);
-    void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed, float pLinVel = -1);
-    void prepareForNewLevel();
+    void prepareForNewLevel(MotoGame* i_scene);
     void unprepareForNewLevel(void);
-    void loadDebugInfo(std::string File);
-      
-    /* Data interface */
-    void setGameObject(MotoGame *pMotoGame) {m_pMotoGame=pMotoGame;}
-    MotoGame *getGameObject(void) {return m_pMotoGame;}
-    void setParent(GameApp *pParent) {m_pParent=pParent;}
-    GameApp *getParent(void) {return m_pParent;}
-    void setBestTime(const std::string& s) {m_bestTime = s;}
-    void showReplayHelp(float p_speed, bool bAllowRewind);
-    void hideReplayHelp();
-    void setWorldRecordTime(const std::string &s) {m_worldRecordTime = s;}
 
-    std::string getBestTime(void) {return m_bestTime;}
+    void loadDebugInfo(std::string File);
 
     float SizeMultOfEntitiesToTake() const;
     float SizeMultOfEntitiesWhichMakeWin() const;
     void setSizeMultOfEntitiesToTake(float i_sizeMult);
-    void setSizeMultOfEntitiesWhichMakeWin(float i_sizeMult);
-
-    bool showMinimap() const;
-    bool showEngineCounter() const;
-    void setShowMinimap(bool i_value);
-    void setShowEngineCounter(bool i_value);
-    void setShowTimePanel(bool i_value);
-
-    void switchFollow();
+    void setSizeMultOfEntitiesWhichMakeWin(float i_sizeMult);    
 
     int nbParticlesRendered() const;
+    void setBestTime(const std::string& s) {m_bestTime = s;}
+    void setWorldRecordTime(const std::string &s) {m_worldRecordTime = s;}
+    void setShowMinimap(bool i_value);
+    void setShowTimePanel(bool i_value);
+    void hideReplayHelp();
+    bool showEngineCounter() const;
+    void setShowEngineCounter(bool i_value);
+    bool showMinimap() const;
+    void showReplayHelp(float p_speed, bool bAllowRewind);
+    void switchFollow(MotoGame* i_scene);
+
+    void setParent(GameApp *pParent) {m_pParent=pParent;}
 
   private:
+
+    /* Methods */
+
+    void renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int nHeight);
+    void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed, float pLinVel = -1);
+      
+    /* Data interface */
+    GameApp *getParent(void) {return m_pParent;}
+
+    std::string getBestTime(void) {return m_bestTime;}
+
+    GameRenderer();
+    ~GameRenderer();
+
     /* Data */
     DrawLib* m_drawLib;
     std::vector<GraphDebugInfo *> m_DebugInfo;
@@ -183,7 +172,6 @@ class ParticlesSource;
     std::vector<Geom *> m_StaticGeoms;
     std::vector<Geom *> m_DynamicGeoms;
       
-    MotoGame *m_pMotoGame;        /* Game object, so we know what to draw. */
     GameApp *m_pParent;               /* Our owner, so we know where to draw. */
 
     float m_fZoom;
@@ -216,8 +204,8 @@ class ParticlesSource;
 	void renderEngineCounterNeedle(int nWidth, int nHeight, Vector2f center, float value);
 	
 	
-    void _RenderSprites(bool bForeground,bool bBackground);
-    void _RenderSprite(Entity *pSprite, float i_sizeMult = 1.0);
+	void _RenderSprites(MotoGame* i_scene, bool bForeground,bool bBackground);
+	void _RenderSprite(MotoGame* i_scene, Entity *pSprite, float i_sizeMult = 1.0);
     void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme,
 		     bool i_renderBikeFront = true,
 		     const TColor&  i_filterColor = TColor(255, 255, 255, 0),
@@ -232,24 +220,24 @@ class ParticlesSource;
 			DriveDir i_direction,
 			int i_90_rotation = 0
 			);
-    void _RenderBlocks(void);
+    void _RenderBlocks(MotoGame* i_scene);
     void _RenderBlock(Block* block);
     void _RenderBlockEdges(Block* block);
-    void _RenderDynamicBlocks(bool bBackground=false);
-    void _RenderBackground(void);
-    void _RenderLayers(bool renderFront);
-    void _RenderLayer(int layer);
-    void _RenderSky(float i_zoom, float i_offset, const TColor& i_color,
+    void _RenderDynamicBlocks(MotoGame* i_scene, bool bBackground=false);
+    void _RenderBackground(MotoGame* i_scene);
+    void _RenderLayers(MotoGame* i_scene, bool renderFront);
+    void _RenderLayer(MotoGame* i_scene, int layer);
+    void _RenderSky(MotoGame* i_scene, float i_zoom, float i_offset, const TColor& i_color,
 		    float i_driftZoom, const TColor &i_driftColor, bool i_drifted);
-    void _RenderGameMessages(void); 
-    void _RenderGameStatus(void);
-    void _RenderParticles(bool bFront=true);
+    void _RenderGameMessages(MotoGame* i_scene); 
+    void _RenderGameStatus(MotoGame* i_scene);
+    void _RenderParticles(MotoGame* i_scene, bool bFront=true);
     void _RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c);
-    void _RenderParticle(ParticlesSource *i_source);
+    void _RenderParticle(MotoGame* i_scene, ParticlesSource *i_source);
     void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
     void _RenderZone(Zone *i_zone);
 
-    void _RenderGhost(Biker* i_ghost, int i);
+    void _RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i);
 
     void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
     void _RenderDebugInfo(void);
@@ -262,8 +250,8 @@ class ParticlesSource;
     void _RenderCircle(int nSteps,Color CircleColor,const Vector2f &C,float fRadius);
     void _deleteGeoms(std::vector<Geom *>& geom);
 
-    void renderTimePanel();
-    void renderReplayHelpMessage();
+    void renderTimePanel(MotoGame* i_scene);
+    void renderReplayHelpMessage(MotoGame* i_scene);
 
     /* _Free */
     void _Free(void);

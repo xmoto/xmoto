@@ -108,11 +108,11 @@ bool StateScene::render()
     if(autoZoom() == false){
       for(unsigned int i=0; i<pWorld->getNumberCameras(); i++) {
 	pWorld->setCurrentCamera(i);
-	GameRenderer::instance()->render();
+	GameRenderer::instance()->render(pGame->getMotoGame());
       }
     } else {
       pWorld->setAutoZoomCamera();
-      GameRenderer::instance()->render();
+      GameRenderer::instance()->render(pGame->getMotoGame());
     }
 
     ParticlesSource::setAllowParticleGeneration(GameRenderer::instance()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);

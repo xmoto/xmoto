@@ -114,7 +114,7 @@ void StateReplaying::enter()
 	     m_replayBiker->playerName().c_str());
     pWorld->setInfos(pWorld->getLevelSrc()->Name() + " " + std::string(c_tmp));
     
-    GameRenderer::instance()->prepareForNewLevel();
+    GameRenderer::instance()->prepareForNewLevel(pWorld);
     pGame->playMusic(pWorld->getLevelSrc()->Music());
 
     GameRenderer::instance()->showReplayHelp(pWorld->getSpeed(),

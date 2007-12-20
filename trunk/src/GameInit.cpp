@@ -200,7 +200,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     switchUglyMode(XMSession::instance()->ugly());
     switchTestThemeMode(XMSession::instance()->testTheme());
     GameRenderer::instance()->setParent( (GameApp *)this );
-    GameRenderer::instance()->setGameObject( &m_MotoGame );        
   }    
 
   /* Tell collision system whether we want debug-info or not */

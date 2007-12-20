@@ -63,13 +63,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     getParent()->getDrawLib()->endDrawKeepProperties();
   }
 
-  void GameRenderer::_RenderParticle(ParticlesSource *i_source) {
+void GameRenderer::_RenderParticle(MotoGame* i_scene, ParticlesSource *i_source) {
 
     if(i_source->SpriteName() == "Star") {
 
       AnimationSprite *pStarAnimation;
       pStarAnimation = (AnimationSprite*) Theme::instance()
-      ->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForStar());
+      ->getSprite(SPRITE_TYPE_ANIMATION, i_scene->getLevelSrc()->SpriteForStar());
 
       if(pStarAnimation != NULL) {
 
@@ -87,7 +87,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 	/* search as a simple decoration, not nice, crappy crappy */
 	pStarDecoration = (DecorationSprite*) Theme::instance()
-	->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForStar());
+	->getSprite(SPRITE_TYPE_DECORATION, i_scene->getLevelSrc()->SpriteForStar());
 	if(pStarDecoration != NULL) {
 	
 	  getParent()->getDrawLib()->setTexture(pStarDecoration->getTexture(),BLEND_MODE_A);
@@ -167,7 +167,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
   
-  void GameRenderer::_RenderParticles(bool bFront) {
+void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
     AABB screenBigger;
     Vector2f screenMin = m_screenBBox.getBMin();
     Vector2f screenMax = m_screenBBox.getBMax();
@@ -179,21 +179,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     screenBigger.addPointToAABB2f(screenMax.x+ENTITY_OFFSET,
 				  screenMax.y+ENTITY_OFFSET);
 
-    std::vector<Entity*> Entities = getGameObject()->getCollisionHandler()->getEntitiesNearPosition(screenBigger);
+    std::vector<Entity*> Entities = i_scene->getCollisionHandler()->getEntitiesNearPosition(screenBigger);
     for(unsigned int i = 0; i < Entities.size(); i++) {
       Entity* v_entity = Entities[i];
       if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
 	if((v_entity->Z() >= 0.0) == bFront) {
-	  _RenderParticle((ParticlesSource*) v_entity);
+	  _RenderParticle(i_scene, (ParticlesSource*) v_entity);
 	}
       }
     }
 
-    for(unsigned int i = 0; i < getGameObject()->getLevelSrc()->EntitiesExterns().size(); i++) {
-      Entity* v_entity = getGameObject()->getLevelSrc()->EntitiesExterns()[i];
+    for(unsigned int i = 0; i < i_scene->getLevelSrc()->EntitiesExterns().size(); i++) {
+      Entity* v_entity = i_scene->getLevelSrc()->EntitiesExterns()[i];
       if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
 	if((v_entity->Z() >= 0.0) == bFront) {
-	  _RenderParticle((ParticlesSource*) v_entity);
+	  _RenderParticle(i_scene, (ParticlesSource*) v_entity);
 	  }
       }
     }
