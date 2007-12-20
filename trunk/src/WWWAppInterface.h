@@ -45,7 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   virtual void readEvents() {};
 
     /* Ask the user whether he want a level to be updated */
-  virtual bool shouldLevelBeUpdated(const std::string &LevelID) {};
+  virtual bool shouldLevelBeUpdated(const std::string &LevelID) {return false;};
 
 
 

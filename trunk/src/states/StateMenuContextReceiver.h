@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateMenuContextReceiver {
   public:
+  virtual ~StateMenuContextReceiver() {};
   virtual void send(const std::string& i_id, const std::string& i_message) = 0;
 };
 

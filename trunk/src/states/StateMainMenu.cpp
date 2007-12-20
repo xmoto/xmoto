@@ -623,6 +623,7 @@ UIWindow* StateMainMenu::makeWindowStats(UIWindow* i_parent) {
   v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_STATISTICS, v_window->getPosition().nWidth, 36);
   v_someText->setFont(drawlib->getFontMedium());
 
+  return v_window;
 }
 
 void StateMainMenu::updateStats() {
@@ -814,70 +815,70 @@ UIWindow* StateMainMenu::makeWindowOptions_general(UIWindow* i_parent) {
   UIList*    v_list;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
-  UIWindow* v_generalTab = new UIWindow(i_parent, 20, 40, GAMETEXT_GENERAL,
-					i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
-  v_generalTab->setID("GENERAL_TAB");
+  v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_GENERAL,
+			  i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
+  v_window->setID("GENERAL_TAB");
   
-  v_button = new UIButton(v_generalTab, 5, 33-28-10, GAMETEXT_SHOWMINIMAP, (v_generalTab->getPosition().nWidth-40)/2, 28);
+  v_button = new UIButton(v_window, 5, 33-28-10, GAMETEXT_SHOWMINIMAP, (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("SHOWMINIMAP");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_MINI_MAP);
   
-  v_button = new UIButton(v_generalTab, 5, 63-28-10, GAMETEXT_SHOWENGINECOUNTER, (v_generalTab->getPosition().nWidth-40)/2, 28);
+  v_button = new UIButton(v_window, 5, 63-28-10, GAMETEXT_SHOWENGINECOUNTER, (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("SHOWENGINECOUNTER");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_ENGINE_COUNTER);
 
-  v_button = new UIButton(v_generalTab, 5+(v_generalTab->getPosition().nWidth-40)/2, 33-28-10, GAMETEXT_INITZOOM,
-			  (v_generalTab->getPosition().nWidth-40)/2, 28);
+  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth-40)/2, 33-28-10, GAMETEXT_INITZOOM,
+			  (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("INITZOOM");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_INITZOOM);
 
-  v_button = new UIButton(v_generalTab, 5+(v_generalTab->getPosition().nWidth-40)/2, 63-28-10, GAMETEXT_DEATHANIM,
-			  (v_generalTab->getPosition().nWidth-40)/2, 28);
+  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth-40)/2, 63-28-10, GAMETEXT_DEATHANIM,
+			  (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("DEATHANIM");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_DEATHANIM);
 
-  v_button = new UIButton(v_generalTab, 5, 93-28-10, GAMETEXT_ENABLECONTEXTHELP, v_generalTab->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 93-28-10, GAMETEXT_ENABLECONTEXTHELP, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("ENABLECONTEXTHELP");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_SHOWCONTEXTHELP);
  
-  v_button = new UIButton(v_generalTab, 5, 123-28-10, GAMETEXT_AUTOSAVEREPLAYS, v_generalTab->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 123-28-10, GAMETEXT_AUTOSAVEREPLAYS, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("AUTOSAVEREPLAYS");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_AUTOSAVEREPLAYS);
    
-  v_list = new UIList(v_generalTab, 5, 120, "", 
-		      v_generalTab->getPosition().nWidth-10, v_generalTab->getPosition().nHeight-125-90);
+  v_list = new UIList(v_window, 5, 120, "", 
+		      v_window->getPosition().nWidth-10, v_window->getPosition().nHeight-125-90);
   v_list->setID("THEMES_LIST");
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_THEMES, (v_list->getPosition().nWidth*3) / 5);
   v_list->addColumn("", (v_list->getPosition().nWidth*2) / 5);
   v_list->setContextHelp(CONTEXTHELP_THEMES);
 
-  v_button = new UIButton(v_generalTab, v_generalTab->getPosition().nWidth -200 -200, v_generalTab->getPosition().nHeight - 95,
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth -200 -200, v_window->getPosition().nHeight - 95,
 			  GAMETEXT_UPDATETHEMESLIST, 207, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
   v_button->setID("UPDATE_THEMES_LIST");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_UPDATETHEMESLIST);
 
-  v_button = new UIButton(v_generalTab, v_generalTab->getPosition().nWidth -200, v_generalTab->getPosition().nHeight - 95,
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth -200, v_window->getPosition().nHeight - 95,
 			  GAMETEXT_GETSELECTEDTHEME, 207, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
   v_button->setID("GET_SELECTED_THEME");
@@ -979,6 +980,8 @@ UIWindow* StateMainMenu::makeWindowOptions_video(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(20025);
   v_button->setContextHelp(CONTEXTHELP_HIGH_GAME);
+
+  return v_window;
 }
 
 UIWindow* StateMainMenu::makeWindowOptions_audio(UIWindow* i_parent) {
@@ -1061,6 +1064,8 @@ UIWindow* StateMainMenu::makeWindowOptions_audio(UIWindow* i_parent) {
   v_button->setID("ENABLE_MENU_MUSIC");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_MUSIC);
+
+  return v_window;
 }
 
 UIWindow* StateMainMenu::makeWindowOptions_controls(UIWindow* i_parent) {
@@ -1096,6 +1101,8 @@ UIWindow* StateMainMenu::makeWindowOptions_controls(UIWindow* i_parent) {
 //  v_button->setType(UI_BUTTON_TYPE_LARGE);
 //  v_button->setID("CONFIGURE_JOYSTICK");
 //  v_button->setFont(drawlib->getFontSmall());
+
+  return v_window;
 }
 
 UIWindow* StateMainMenu::makeWindowOptions_rooms(UIWindow* i_parent) {
@@ -1210,6 +1217,8 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_button->setType(UI_BUTTON_TYPE_LARGE);
   v_button->setID("UPLOADHIGHSCOREALL_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE_ALL);	
+
+  return v_window;
 }
 
 UIWindow* StateMainMenu::makeWindowOptions_ghosts(UIWindow* i_parent) {
@@ -1269,6 +1278,8 @@ UIWindow* StateMainMenu::makeWindowOptions_ghosts(UIWindow* i_parent) {
   v_button->setID("MOTION_BLUR_GHOST");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_MOTIONBLURGHOST);
+
+  return v_window;
 }
 
 UIWindow* StateMainMenu::makeWindowOptions(UIWindow* i_parent) {
@@ -2018,7 +2029,7 @@ void StateMainMenu::createRoomsList(UIList *pList) {
 
   /* recreate the list */
   for(unsigned int i=0; i<pList->getEntries().size(); i++) {
-    delete pList->getEntries()[i]->pvUser;
+    delete reinterpret_cast<std::string *>(pList->getEntries()[i]->pvUser);
   }
   pList->clear();
 

@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateMessageBoxReceiver {
   public:
+  virtual ~StateMessageBoxReceiver() {};
   virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) = 0;
 };
 
