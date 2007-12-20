@@ -18,16 +18,13 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "Game.h"
-#include "GameText.h"
 #include "StateUploadHighscore.h"
 #include "thread/UploadHighscoreThread.h"
 
-StateUploadHighscore::StateUploadHighscore(GameApp* pGame,
-					   const std::string& i_replayPath,
+StateUploadHighscore::StateUploadHighscore(const std::string& i_replayPath,
 					   bool drawStateBehind,
 					   bool updateStatesBehind)
-: StateUpdate(pGame, drawStateBehind, updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind)
 {
   m_pThread          = new UploadHighscoreThread(i_replayPath);
   m_name             = "StateUploadHighscore";

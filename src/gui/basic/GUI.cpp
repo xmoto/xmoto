@@ -626,6 +626,13 @@ FRAME_BR (187,198) (8x8)
   /*===========================================================================
   Root window
   ===========================================================================*/
+UIRoot::UIRoot()
+{
+  m_pApp = GameApp::instance();
+  m_bShowContextMenu = true;
+  _InitWindow();
+}
+
   void UIRoot::_ClipRect(UIRect *pRect,UIRect *pClipWith) {
     /* Find the area shared by the two */
     int nMinX = pRect->nX < pClipWith->nX ? pClipWith->nX : pRect->nX;
@@ -905,8 +912,6 @@ FRAME_BR (187,198) (8x8)
   }
   
   void UITexture::setApp(GameApp *pApp) {
-    m_pApp = pApp;
-    
     Sprite *pSprite;
 
     pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "Misc");
@@ -926,7 +931,7 @@ FRAME_BR (187,198) (8x8)
   }
   
   /* Static class data */  
-  GameApp *UITexture::m_pApp = NULL;
+  GameApp *UITexture::m_pApp = GameApp::instance();
   Texture *UITexture::m_pUIElemTexture = NULL;
   Texture *UITexture::m_pUIElemTextureD = NULL;
   Texture *UITexture::m_pUIElemTextureA = NULL;

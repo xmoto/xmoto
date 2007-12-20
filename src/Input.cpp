@@ -384,8 +384,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/  
   void InputHandler::handleInput(InputEventType Type,int nKey,SDLMod mod,
 				 std::vector<Biker*>& i_bikers,
-				 std::vector<Camera*>& i_cameras,
-				 GameApp *pGameApp) {
+				 std::vector<Camera*>& i_cameras) {
 //#m_MotoGame.Players()[i]->isDead() == false) {
 //
     /* Update controller 1 */

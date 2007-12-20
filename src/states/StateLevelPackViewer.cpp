@@ -32,13 +32,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StateLevelPackViewer::m_sGUI = NULL;
 
-StateLevelPackViewer::StateLevelPackViewer(GameApp*    pGame,
-					   LevelsPack* pActiveLevelPack,
+StateLevelPackViewer::StateLevelPackViewer(LevelsPack* pActiveLevelPack,
 					   bool drawStateBehind,
 					   bool updateStatesBehind):
   StateMenu(drawStateBehind,
-	    updateStatesBehind,
-	    pGame)
+	    updateStatesBehind)
 {
   m_name             = "StateLevelPackViewer";
   m_pActiveLevelPack = pActiveLevelPack;
@@ -52,19 +50,14 @@ StateLevelPackViewer::~StateLevelPackViewer()
 
 void StateLevelPackViewer::enter()
 {
-  createGUIIfNeeded(m_pGame);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   updateGUI();
   updateInfoFrame();
 
-  m_pGame->playMusic("menu1");
+  GameApp::instance()->playMusic("menu1");
   StateMenu::enter();
-}
-
-void StateLevelPackViewer::leave()
-{
-  StateMenu::leave();
 }
 
 void StateLevelPackViewer::enterAfterPop()
@@ -74,13 +67,8 @@ void StateLevelPackViewer::enterAfterPop()
     m_require_updateLevelsList = false;
   }
 
-  m_pGame->playMusic("menu1");
+  GameApp::instance()->playMusic("menu1");
   StateMenu::enterAfterPop();
-}
-
-void StateLevelPackViewer::leaveAfterPush()
-{
-  StateMenu::leaveAfterPush();
 }
 
 void StateLevelPackViewer::checkEvents()
@@ -115,8 +103,8 @@ void StateLevelPackViewer::checkEvents()
     pPlayButton->setClicked(false);
     std::string i_level = pList->getSelectedLevel();
     if(i_level != "") {
-      m_pGame->setCurrentPlayingList(pList);
-      StateManager::instance()->pushState(new StatePreplaying(m_pGame, i_level, false));
+      GameApp::instance()->setCurrentPlayingList(pList);
+      StateManager::instance()->pushState(new StatePreplaying(i_level, false));
     }
   }
 
@@ -126,7 +114,7 @@ void StateLevelPackViewer::checkEvents()
     std::string v_id_level = pList->getSelectedLevel();
 
     if(v_id_level != "") {
-      m_pGame->addLevelToFavorite(v_id_level);
+      GameApp::instance()->addLevelToFavorite(v_id_level);
       StateManager::instance()->sendAsynchronousMessage("FAVORITES_UPDATED");
     }
   }
@@ -145,7 +133,7 @@ void StateLevelPackViewer::checkEvents()
 
   if(pShowHighscore != NULL && pShowHighscore->isClicked() == true){
     pShowHighscore->setClicked(false);
-    StateManager::instance()->pushState(new StateDownloadGhost(m_pGame, getInfoFrameLevelId(), true));
+    StateManager::instance()->pushState(new StateDownloadGhost(getInfoFrameLevelId(), true));
   }
 
   if(pLevelInfoButton!=NULL && pLevelInfoButton->isClicked()) {
@@ -153,19 +141,9 @@ void StateLevelPackViewer::checkEvents()
 
     std::string v_id_level = pList->getSelectedLevel();
     if(v_id_level != "") {
-      StateManager::instance()->pushState(new StateLevelInfoViewer(m_pGame, v_id_level));
+      StateManager::instance()->pushState(new StateLevelInfoViewer(v_id_level));
     }
   }
-}
-
-bool StateLevelPackViewer::update()
-{
-  return StateMenu::update();
-}
-
-bool StateLevelPackViewer::render()
-{
-  return StateMenu::render();
 }
 
 void StateLevelPackViewer::send(const std::string& i_id, const std::string& i_message) {
@@ -188,26 +166,6 @@ void StateLevelPackViewer::keyDown(int nKey, SDLMod mod,int nChar)
   }
 }
 
-void StateLevelPackViewer::keyUp(int nKey,   SDLMod mod)
-{
-  StateMenu::keyUp(nKey, mod);
-}
-
-void StateLevelPackViewer::mouseDown(int nButton)
-{
-  StateMenu::mouseDown(nButton);
-}
-
-void StateLevelPackViewer::mouseDoubleClick(int nButton)
-{
-  StateMenu::mouseDoubleClick(nButton);
-}
-
-void StateLevelPackViewer::mouseUp(int nButton)
-{
-  StateMenu::mouseUp(nButton);
-}
-
 void StateLevelPackViewer::clean()
 {
   if(StateLevelPackViewer::m_sGUI != NULL) {
@@ -216,15 +174,14 @@ void StateLevelPackViewer::clean()
   }
 }
 
-void StateLevelPackViewer::createGUIIfNeeded(GameApp* pGame)
+void StateLevelPackViewer::createGUIIfNeeded()
 {
   if(m_sGUI != NULL)
     return;
 
-  DrawLib* drawLib = pGame->getDrawLib();
+  DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
   m_sGUI = new UIRoot();
-  m_sGUI->setApp(pGame);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
 		      drawLib->getDispWidth(),
@@ -316,7 +273,7 @@ void StateLevelPackViewer::updateGUI()
   unsigned int nrow;
   float v_playerHighscore;
   float v_roomHighscore;
-  xmDatabase* pDb = m_pGame->getDb();
+  xmDatabase* pDb = xmDatabase::instance("main");
 
   UIStatic *pTitle = reinterpret_cast<UIStatic*>(m_GUI->getChild("FRAME:VIEWER_TITLE"));
   pTitle->setCaption(m_pActiveLevelPack->Name());
@@ -411,7 +368,7 @@ void StateLevelPackViewer::updateInfoFrame() {
   bool        v_isAccessible;
 
   if(v_id_level != "") {
-    if(m_pGame->getHighscoreInfos(v_id_level, &v_id_profile, &v_url, &v_isAccessible)) {
+    if(GameApp::instance()->getHighscoreInfos(v_id_level, &v_id_profile, &v_url, &v_isAccessible)) {
       v_someText->setCaption(std::string(GAMETEXT_BESTPLAYER) + " : " + v_id_profile);
       v_button->enableWindow(v_isAccessible);
       v_window->showWindow(true);

@@ -49,13 +49,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
 
-StateMainMenu::StateMainMenu(GameApp* pGame,
-			     bool drawStateBehind,
-			     bool updateStatesBehind
-			     ):
+StateMainMenu::StateMainMenu(bool drawStateBehind,
+			     bool updateStatesBehind):
   StateMenu(drawStateBehind,
-	    updateStatesBehind,
-	    pGame)
+	    updateStatesBehind)
 {
   Sprite* pSprite;
 
@@ -102,7 +99,7 @@ StateMainMenu::~StateMainMenu()
 
 void StateMainMenu::enter()
 { 
-  createGUIIfNeeded(m_pGame);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   // updates
@@ -121,16 +118,11 @@ void StateMainMenu::enter()
   // upate info frame
   updateInfoFrame();
 
-  m_pGame->playMusic("menu1");
+  GameApp::instance()->playMusic("menu1");
 
   StateMenu::enter();
 
-  StateManager::instance()->pushState(new StateCheckWww(m_pGame));
-}
-
-void StateMainMenu::leave()
-{
-  StateMenu::leave();
+  StateManager::instance()->pushState(new StateCheckWww());
 }
 
 void StateMainMenu::enterAfterPop()
@@ -148,21 +140,15 @@ void StateMainMenu::enterAfterPop()
   }
 
   if(m_require_updateLevelsList) {
-    LevelsManager::instance()->makePacks(m_pGame->getDb(),
-					   XMSession::instance()->profile(),
-					   XMSession::instance()->idRoom(),
-					   XMSession::instance()->debug());
+    LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
+					 XMSession::instance()->idRoom(),
+					 XMSession::instance()->debug());
     updateLevelsPacksList();
     updateLevelsLists();
     m_require_updateLevelsList = false;
   }
 
-  m_pGame->playMusic("menu1");
-}
-
-void StateMainMenu::leaveAfterPush()
-{
-  StateMenu::leaveAfterPush();
+  GameApp::instance()->playMusic("menu1");
 }
 
 void StateMainMenu::checkEvents() {  
@@ -216,19 +202,19 @@ void StateMainMenu::checkEventsMainWindow() {
       if(m_quickStartList->getEntries().size() == 0) {
 	throw Exception("Empty quick start list");
       }
-      m_pGame->setCurrentPlayingList(m_quickStartList);
+      GameApp::instance()->setCurrentPlayingList(m_quickStartList);
       v_id_level = m_quickStartList->getLevel(0);
     } catch(Exception &e) {
       v_id_level = "tut1";
     }
-    StateManager::instance()->pushState(new StatePreplaying(m_pGame, v_id_level, false));
+    StateManager::instance()->pushState(new StatePreplaying(v_id_level, false));
   }
 
   // quit
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:QUIT"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
     v_msgboxState->setId("QUIT");
     StateManager::instance()->pushState(v_msgboxState);
   }
@@ -237,7 +223,7 @@ void StateMainMenu::checkEventsMainWindow() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:HELP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    StateManager::instance()->pushState(new StateHelp(m_pGame));
+    StateManager::instance()->pushState(new StateHelp());
   }
 
   // levels
@@ -292,7 +278,7 @@ void StateMainMenu::checkEventsMainWindow() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:CHANGEPLAYERBUTTON"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    StateManager::instance()->pushState(new StateEditProfile(m_pGame, this));
+    StateManager::instance()->pushState(new StateEditProfile(this));
   }
 
   // new levels ?
@@ -310,14 +296,14 @@ void StateMainMenu::checkEventsMainWindow() {
     v_windowOptions->showWindow(false);
     v_tabView->selectChildrenById("NEWLEVELS_TAB");
 
-    StateManager::instance()->pushState(new StateUpgradeLevels(m_pGame));
+    StateManager::instance()->pushState(new StateUpgradeLevels());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:INFO_FRAME:BESTPLAYER_VIEW"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-    StateManager::instance()->pushState(new StateDownloadGhost(m_pGame, getInfoFrameLevelId(), true));
+    StateManager::instance()->pushState(new StateDownloadGhost(getInfoFrameLevelId(), true));
   }
 }
 
@@ -360,7 +346,7 @@ void StateMainMenu::checkEventsLevelsPackTab()
 
     LevelsPack* nSelectedPack = v_packTree->getSelectedPack();
     if(nSelectedPack != NULL){
-      StateManager::instance()->pushState(new StateLevelPackViewer(m_pGame, nSelectedPack));
+      StateManager::instance()->pushState(new StateLevelPackViewer(nSelectedPack));
     }
   }
 }
@@ -379,8 +365,8 @@ void StateMainMenu::checkEventsLevelsFavoriteTab() {
     v_id_level = v_list->getSelectedLevel();
 
     if(v_id_level != "") {
-      m_pGame->setCurrentPlayingList(v_list);
-      StateManager::instance()->pushState(new StatePreplaying(m_pGame, v_id_level, false));
+      GameApp::instance()->setCurrentPlayingList(v_list);
+      StateManager::instance()->pushState(new StatePreplaying(v_id_level, false));
     }
   }
 
@@ -393,7 +379,7 @@ void StateMainMenu::checkEventsLevelsFavoriteTab() {
     v_id_level = v_list->getSelectedLevel();
 
     if(v_id_level != "") {
-      StateManager::instance()->pushState(new StateLevelInfoViewer(m_pGame, v_id_level));
+      StateManager::instance()->pushState(new StateLevelInfoViewer(v_id_level));
     }
   }
 
@@ -406,7 +392,7 @@ void StateMainMenu::checkEventsLevelsFavoriteTab() {
     v_id_level = v_list->getSelectedLevel();
 
     if(v_id_level != "") {
-      LevelsManager::instance()->delFromFavorite(m_pGame->getDb(), XMSession::instance()->profile(), v_id_level);
+      LevelsManager::instance()->delFromFavorite(XMSession::instance()->profile(), v_id_level);
       updateFavoriteLevelsList();
       StateManager::instance()->sendAsynchronousMessage("FAVORITES_UPDATED");
     }
@@ -427,8 +413,8 @@ void StateMainMenu::checkEventsLevelsNewTab() {
     v_id_level = v_list->getSelectedLevel();
 
     if(v_id_level != "") {
-      m_pGame->setCurrentPlayingList(v_list);
-      StateManager::instance()->pushState(new StatePreplaying(m_pGame, v_id_level, false));
+      GameApp::instance()->setCurrentPlayingList(v_list);
+      StateManager::instance()->pushState(new StatePreplaying(v_id_level, false));
     }
   }
 
@@ -441,7 +427,7 @@ void StateMainMenu::checkEventsLevelsNewTab() {
     v_id_level = v_list->getSelectedLevel();
 
     if(v_id_level != "") {
-      StateManager::instance()->pushState(new StateLevelInfoViewer(m_pGame, v_id_level));
+      StateManager::instance()->pushState(new StateLevelInfoViewer(v_id_level));
     }
   }
 
@@ -450,14 +436,9 @@ void StateMainMenu::checkEventsLevelsNewTab() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-    StateManager::instance()->pushState(new StateUpgradeLevels(m_pGame));
+    StateManager::instance()->pushState(new StateUpgradeLevels());
   }
 
-}
-
-bool StateMainMenu::update()
-{
-  return StateMenu::update();
 }
 
 bool StateMainMenu::render()
@@ -471,7 +452,7 @@ void StateMainMenu::keyDown(int nKey, SDLMod mod,int nChar)
   switch(nKey) {
 
   case SDLK_F1:
-    StateManager::instance()->pushState(new StateHelp(m_pGame));
+    StateManager::instance()->pushState(new StateHelp());
     break;
 
   case SDLK_ESCAPE:{
@@ -499,26 +480,6 @@ void StateMainMenu::keyDown(int nKey, SDLMod mod,int nChar)
   }
 }
 
-void StateMainMenu::keyUp(int nKey,   SDLMod mod)
-{
-  StateMenu::keyUp(nKey, mod);
-}
-
-void StateMainMenu::mouseDown(int nButton)
-{
-  StateMenu::mouseDown(nButton);
-}
-
-void StateMainMenu::mouseDoubleClick(int nButton)
-{
-  StateMenu::mouseDoubleClick(nButton);
-}
-
-void StateMainMenu::mouseUp(int nButton)
-{
-  StateMenu::mouseUp(nButton);
-}
-
 void StateMainMenu::clean() {
   if(StateMainMenu::m_sGUI != NULL) {
     delete StateMainMenu::m_sGUI;
@@ -526,13 +487,13 @@ void StateMainMenu::clean() {
   }
 }
 
-void StateMainMenu::createGUIIfNeeded(GameApp* pGame) {
-  if(m_sGUI != NULL) return;
-  DrawLib* drawlib = pGame->getDrawLib();
+void StateMainMenu::createGUIIfNeeded() {
+  if(m_sGUI != NULL)
+    return;
 
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   m_sGUI = new UIRoot();
-  m_sGUI->setApp(pGame);
   m_sGUI->setFont(drawlib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
 		      drawlib->getDispWidth(),
@@ -627,10 +588,10 @@ void StateMainMenu::createGUIIfNeeded(GameApp* pGame) {
   v_infoButton->setID("BESTPLAYER_VIEW");
 
   // frames
-  makeWindowLevels(pGame,  v_menu);
-  makeWindowReplays(pGame, v_menu);
-  makeWindowOptions(pGame, v_menu);
-  makeWindowStats(pGame, v_menu);
+  makeWindowLevels( v_menu);
+  makeWindowReplays(v_menu);
+  makeWindowOptions(v_menu);
+  makeWindowStats(v_menu);
 }
 
 void StateMainMenu::updateProfile() {
@@ -638,17 +599,17 @@ void StateMainMenu::updateProfile() {
   std::string v_caption;
 
   if(XMSession::instance()->profile() != "") {
-    v_caption = std::string(GAMETEXT_PLAYER) + ": " + XMSession::instance()->profile() + "@" + m_pGame->getWebRoomName();
+    v_caption = std::string(GAMETEXT_PLAYER) + ": " + XMSession::instance()->profile() + "@" + GameApp::instance()->getWebRoomName();
   }
 
   v_playerTag->setCaption(v_caption);
 }
 
-UIWindow* StateMainMenu::makeWindowStats(GameApp* pGame, UIWindow* i_parent) {
+UIWindow* StateMainMenu::makeWindowStats(UIWindow* i_parent) {
   UIStatic* v_someText;
   UIFrame* v_window;
   UIButton* v_button;
-  DrawLib* drawlib = pGame->getDrawLib();
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIFrame(i_parent, 220, drawlib->getDispHeight()*7/30, GAMETEXT_STATS, drawlib->getDispWidth()-200,
 			 drawlib->getDispHeight() -40 -drawlib->getDispHeight()/5 -10);      
@@ -685,6 +646,7 @@ void StateMainMenu::updateStats() {
   int   v_nbRestarted     = 0;
   int   v_nbDiffLevels    = 0;
   std::string v_level_name= "";
+  xmDatabase* pDb = xmDatabase::instance("main");
   
   if(v_window != NULL){
     delete v_window;
@@ -693,7 +655,7 @@ void StateMainMenu::updateStats() {
   v_window = new UIWindow(i_parent, x, y, "", nWidth, nHeight);
   v_window->setID("REPORT");
  
-  v_result = m_pGame->getDb()->readDB("SELECT a.nbStarts, a.since, SUM(b.playedTime), "
+  v_result = pDb->readDB("SELECT a.nbStarts, a.since, SUM(b.playedTime), "
 				      "SUM(b.nbPlayed), SUM(b.nbDied), SUM(b.nbCompleted), "
 				      "SUM(b.nbRestarted), count(b.id_level) "
 				      "FROM stats_profiles AS a INNER JOIN stats_profiles_levels AS b "
@@ -703,20 +665,20 @@ void StateMainMenu::updateStats() {
 				      nrow);
   
   if(nrow == 0) {
-    m_pGame->getDb()->read_DB_free(v_result);
+    pDb->read_DB_free(v_result);
     return;
   }
   
-  v_nbStarts        = atoi(m_pGame->getDb()->getResult(v_result, 8, 0, 0));
-  v_since           =      m_pGame->getDb()->getResult(v_result, 8, 0, 1);
-  v_totalPlayedTime = atof(m_pGame->getDb()->getResult(v_result, 8, 0, 2));
-  v_nbPlayed        = atoi(m_pGame->getDb()->getResult(v_result, 8, 0, 3));
-  v_nbDied          = atoi(m_pGame->getDb()->getResult(v_result, 8, 0, 4));
-  v_nbCompleted     = atoi(m_pGame->getDb()->getResult(v_result, 8, 0, 5));
-  v_nbRestarted     = atoi(m_pGame->getDb()->getResult(v_result, 8, 0, 6));
-  v_nbDiffLevels    = atoi(m_pGame->getDb()->getResult(v_result, 8, 0, 7));
+  v_nbStarts        = atoi(pDb->getResult(v_result, 8, 0, 0));
+  v_since           =      pDb->getResult(v_result, 8, 0, 1);
+  v_totalPlayedTime = atof(pDb->getResult(v_result, 8, 0, 2));
+  v_nbPlayed        = atoi(pDb->getResult(v_result, 8, 0, 3));
+  v_nbDied          = atoi(pDb->getResult(v_result, 8, 0, 4));
+  v_nbCompleted     = atoi(pDb->getResult(v_result, 8, 0, 5));
+  v_nbRestarted     = atoi(pDb->getResult(v_result, 8, 0, 6));
+  v_nbDiffLevels    = atoi(pDb->getResult(v_result, 8, 0, 7));
   
-  m_pGame->getDb()->read_DB_free(v_result);
+  pDb->read_DB_free(v_result);
   
   /* Per-player info */
   char cBuf[512];
@@ -738,15 +700,15 @@ void StateMainMenu::updateStats() {
   UIStatic *pText = new UIStatic(v_window, 0, 0, cBuf, nWidth, 80);
   pText->setHAlign(UI_ALIGN_LEFT);
   pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
-  pText->setFont(m_pGame->getDrawLib()->getFontSmall());
+  pText->setFont(GameApp::instance()->getDrawLib()->getFontSmall());
   
   /* Per-level stats */      
   pText = new UIStatic(v_window,0,90, std::string(GAMETEXT_MOSTPLAYEDLEVELSFOLLOW) + ":",nWidth,20);
   pText->setHAlign(UI_ALIGN_LEFT);
   pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
-  pText->setFont(m_pGame->getDrawLib()->getFontSmall());      
+  pText->setFont(GameApp::instance()->getDrawLib()->getFontSmall());      
   
-  v_result = m_pGame->getDb()->readDB("SELECT a.name, b.nbPlayed, b.nbDied, "
+  v_result = pDb->readDB("SELECT a.name, b.nbPlayed, b.nbDied, "
 				      "b.nbCompleted, b.nbRestarted, b.playedTime "
 				      "FROM levels AS a INNER JOIN stats_profiles_levels AS b ON a.id_level=b.id_level "
 				      "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
@@ -757,12 +719,12 @@ void StateMainMenu::updateStats() {
   for(int i=0; i<nrow; i++) {
     if(cy + 45 > nHeight) break; /* out of window */
     
-    v_level_name      =      m_pGame->getDb()->getResult(v_result, 6, i, 0);
-    v_totalPlayedTime = atof(m_pGame->getDb()->getResult(v_result, 6, i, 5));
-    v_nbDied          = atoi(m_pGame->getDb()->getResult(v_result, 6, i, 2));
-    v_nbPlayed        = atoi(m_pGame->getDb()->getResult(v_result, 6, i, 1));
-    v_nbCompleted     = atoi(m_pGame->getDb()->getResult(v_result, 6, i, 3));
-    v_nbRestarted     = atoi(m_pGame->getDb()->getResult(v_result, 6, i, 4));
+    v_level_name      =      pDb->getResult(v_result, 6, i, 0);
+    v_totalPlayedTime = atof(pDb->getResult(v_result, 6, i, 5));
+    v_nbDied          = atoi(pDb->getResult(v_result, 6, i, 2));
+    v_nbPlayed        = atoi(pDb->getResult(v_result, 6, i, 1));
+    v_nbCompleted     = atoi(pDb->getResult(v_result, 6, i, 3));
+    v_nbRestarted     = atoi(pDb->getResult(v_result, 6, i, 4));
     
     sprintf(cBuf,("[%s] %s:\n   " + std::string(GAMETEXT_XMOTOLEVELSTATS)).c_str(),
 	    GameApp::formatTime(v_totalPlayedTime).c_str(), v_level_name.c_str(),
@@ -771,19 +733,20 @@ void StateMainMenu::updateStats() {
     pText = new UIStatic(v_window, 0, cy, cBuf, nWidth, 45);
     pText->setHAlign(UI_ALIGN_LEFT);        
     pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
-    pText->setFont(m_pGame->getDrawLib()->getFontSmall());
+    pText->setFont(GameApp::instance()->getDrawLib()->getFontSmall());
     
     cy += 45;
   }  
-  m_pGame->getDb()->read_DB_free(v_result);
+  pDb->read_DB_free(v_result);
 }
 
-UIWindow* StateMainMenu::makeWindowReplays(GameApp* pGame, UIWindow* i_parent) {
+UIWindow* StateMainMenu::makeWindowReplays(UIWindow* i_parent) {
   UIWindow* v_window;
   UIStatic* v_someText;
   UIEdit*   v_edit;
   UIButton *v_button, *v_showButton;
   UIList*   v_list;
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIFrame(i_parent, 220, i_parent->getPosition().nHeight*7/30, "",
 			 i_parent->getPosition().nWidth -220 -20,
@@ -792,19 +755,19 @@ UIWindow* StateMainMenu::makeWindowReplays(GameApp* pGame, UIWindow* i_parent) {
   v_window->showWindow(false);
    
   v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_REPLAYS, v_window->getPosition().nWidth, 36);
-  v_someText->setFont(pGame->getDrawLib()->getFontMedium());
+  v_someText->setFont(drawlib->getFontMedium());
 
   v_someText = new UIStatic(v_window, 10, 35, std::string(GAMETEXT_FILTER) + ":", 90, 25);
-  v_someText->setFont(pGame->getDrawLib()->getFontSmall());
+  v_someText->setFont(drawlib->getFontSmall());
   v_someText->setHAlign(UI_ALIGN_RIGHT);
   v_edit = new UIEdit(v_window, 110, 35, "", 200, 25);
-  v_edit->setFont(pGame->getDrawLib()->getFontSmall());
+  v_edit->setFont(drawlib->getFontSmall());
   v_edit->setID("REPLAYS_FILTER");
   v_edit->setContextHelp(CONTEXTHELP_REPLAYS_FILTER);
 
   /* show button */
   v_button = new UIButton(v_window, 5, v_window->getPosition().nHeight-68, GAMETEXT_SHOW, 105, 57);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setID("REPLAYS_SHOW_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_RUN_REPLAY);
@@ -812,14 +775,14 @@ UIWindow* StateMainMenu::makeWindowReplays(GameApp* pGame, UIWindow* i_parent) {
 
   /* delete button */
   v_button = new UIButton(v_window, 105, v_window->getPosition().nHeight-68, GAMETEXT_DELETE, 105, 57);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setID("REPLAYS_DELETE_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_DELETE_REPLAY);
 
   /* upload button */
   v_button = new UIButton(v_window, 199, v_window->getPosition().nHeight-68, GAMETEXT_UPLOAD_HIGHSCORE, 186, 57);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setID("REPLAYS_UPLOADHIGHSCORE_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
@@ -827,7 +790,7 @@ UIWindow* StateMainMenu::makeWindowReplays(GameApp* pGame, UIWindow* i_parent) {
   /* filter */
   v_button = new UIButton(v_window, v_window->getPosition().nWidth-105, v_window->getPosition().nHeight-68,
 			  GAMETEXT_LISTALL, 115, 57);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setChecked(false);
   v_button->setID("REPLAYS_LIST_ALL");
@@ -836,7 +799,7 @@ UIWindow* StateMainMenu::makeWindowReplays(GameApp* pGame, UIWindow* i_parent) {
   /* list */
   v_list = new UIList(v_window, 20, 65, "", v_window->getPosition().nWidth-40, v_window->getPosition().nHeight-115-25);
   v_list->setID("REPLAYS_LIST");
-  v_list->setFont(pGame->getDrawLib()->getFontSmall());
+  v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_REPLAY, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_REPLAYCOL);
   v_list->addColumn(GAMETEXT_LEVEL,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_REPLAYLEVELCOL);
   v_list->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
@@ -845,11 +808,11 @@ UIWindow* StateMainMenu::makeWindowReplays(GameApp* pGame, UIWindow* i_parent) {
   return v_window;
 }
 
-UIWindow* StateMainMenu::makeWindowOptions_general(GameApp* pGame, UIWindow* i_parent) {
+UIWindow* StateMainMenu::makeWindowOptions_general(UIWindow* i_parent) {
   UIWindow*  v_window;
   UIButton*  v_button;
   UIList*    v_list;
-  DrawLib* drawlib = pGame->getDrawLib();
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   UIWindow* v_generalTab = new UIWindow(i_parent, 20, 40, GAMETEXT_GENERAL,
 					i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
@@ -924,12 +887,12 @@ UIWindow* StateMainMenu::makeWindowOptions_general(GameApp* pGame, UIWindow* i_p
   return v_window;
 }
 
-UIWindow* StateMainMenu::makeWindowOptions_video(GameApp* pGame, UIWindow* i_parent) {
+UIWindow* StateMainMenu::makeWindowOptions_video(UIWindow* i_parent) {
   UIWindow*  v_window;
   UIButton*  v_button;
   UIList*    v_list;
   UIStatic*  v_someText;
-  DrawLib* drawlib = pGame->getDrawLib();
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_VIDEO, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
   v_window->setID("VIDEO_TAB");
@@ -1018,11 +981,11 @@ UIWindow* StateMainMenu::makeWindowOptions_video(GameApp* pGame, UIWindow* i_par
   v_button->setContextHelp(CONTEXTHELP_HIGH_GAME);
 }
 
-UIWindow* StateMainMenu::makeWindowOptions_audio(GameApp* pGame, UIWindow* i_parent) {
+UIWindow* StateMainMenu::makeWindowOptions_audio(UIWindow* i_parent) {
   UIWindow*  v_window;
   UIButton*  v_button;
   UIList*    v_list;
-  DrawLib* drawlib = pGame->getDrawLib();
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_AUDIO, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
   v_window->setID("AUDIO_TAB");
@@ -1100,11 +1063,11 @@ UIWindow* StateMainMenu::makeWindowOptions_audio(GameApp* pGame, UIWindow* i_par
   v_button->setContextHelp(CONTEXTHELP_MUSIC);
 }
 
-UIWindow* StateMainMenu::makeWindowOptions_controls(GameApp* pGame, UIWindow* i_parent) {
+UIWindow* StateMainMenu::makeWindowOptions_controls(UIWindow* i_parent) {
   UIWindow*  v_window;
   UIButton*  v_button;
   UIList*    v_list;
-  DrawLib* drawlib = pGame->getDrawLib();
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_CONTROLS, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
   v_window->setID("CONTROLS_TAB");
@@ -1135,13 +1098,13 @@ UIWindow* StateMainMenu::makeWindowOptions_controls(GameApp* pGame, UIWindow* i_
 //  v_button->setFont(drawlib->getFontSmall());
 }
 
-UIWindow* StateMainMenu::makeWindowOptions_rooms(GameApp* pGame, UIWindow* i_parent) {
+UIWindow* StateMainMenu::makeWindowOptions_rooms(UIWindow* i_parent) {
   UIWindow*  v_window;
   UIButton*  v_button;
   UIList*    v_list;
   UIStatic*  v_someText;
   UIEdit*    v_edit;
-  DrawLib* drawlib = pGame->getDrawLib();
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIWindow(i_parent, 0, 26, GAMETEXT_WWWTAB, i_parent->getPosition().nWidth, i_parent->getPosition().nHeight);
   v_window->setID("WWW_TAB");
@@ -1249,11 +1212,11 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(GameApp* pGame, UIWindow* i_par
   v_button->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE_ALL);	
 }
 
-UIWindow* StateMainMenu::makeWindowOptions_ghosts(GameApp* pGame, UIWindow* i_parent) {
+UIWindow* StateMainMenu::makeWindowOptions_ghosts(UIWindow* i_parent) {
   UIWindow*  v_window;
   UIButton*  v_button;
   UIList*    v_list;
-  DrawLib* drawlib = pGame->getDrawLib();
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_GHOSTTAB, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
   v_window->setID("GHOSTS_TAB");
@@ -1308,12 +1271,12 @@ UIWindow* StateMainMenu::makeWindowOptions_ghosts(GameApp* pGame, UIWindow* i_pa
   v_button->setContextHelp(CONTEXTHELP_MOTIONBLURGHOST);
 }
 
-UIWindow* StateMainMenu::makeWindowOptions(GameApp* pGame, UIWindow* i_parent) {
+UIWindow* StateMainMenu::makeWindowOptions(UIWindow* i_parent) {
   UIWindow *v_window, *v_frame;
   UIStatic*  v_someText;
   UITabView* v_tabview;
   UIButton*  v_button;
-  DrawLib* drawlib = pGame->getDrawLib();
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIFrame(i_parent, 220, i_parent->getPosition().nHeight*7/30, "",
 			 i_parent->getPosition().nWidth -220 -20,
@@ -1322,7 +1285,7 @@ UIWindow* StateMainMenu::makeWindowOptions(GameApp* pGame, UIWindow* i_parent) {
   v_window->showWindow(false);
    
   v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_OPTIONS, v_window->getPosition().nWidth, 36);
-  v_someText->setFont(pGame->getDrawLib()->getFontMedium());
+  v_someText->setFont(drawlib->getFontMedium());
 
   v_tabview  = new UITabView(v_window, 20, 40, "", v_window->getPosition().nWidth-40, v_window->getPosition().nHeight-115);
   v_tabview->setID("TABS");
@@ -1332,12 +1295,12 @@ UIWindow* StateMainMenu::makeWindowOptions(GameApp* pGame, UIWindow* i_parent) {
   v_tabview->setTabContextHelp(2, CONTEXTHELP_AUDIO_OPTIONS);
   v_tabview->setTabContextHelp(3, CONTEXTHELP_CONTROL_OPTIONS);
 
-  v_frame = makeWindowOptions_general(pGame, v_tabview);
-  v_frame = makeWindowOptions_video(pGame, v_tabview);
-  v_frame = makeWindowOptions_audio(pGame, v_tabview);
-  v_frame = makeWindowOptions_controls(pGame, v_tabview);
-  v_frame = makeWindowOptions_rooms(pGame, v_tabview);
-  v_frame = makeWindowOptions_ghosts(pGame, v_tabview);
+  v_frame = makeWindowOptions_general(v_tabview);
+  v_frame = makeWindowOptions_video(v_tabview);
+  v_frame = makeWindowOptions_audio(v_tabview);
+  v_frame = makeWindowOptions_controls(v_tabview);
+  v_frame = makeWindowOptions_rooms(v_tabview);
+  v_frame = makeWindowOptions_ghosts(v_tabview);
 
   v_button = new UIButton(v_window, 20, v_window->getPosition().nHeight-68, GAMETEXT_DEFAULTS, 115, 57);
   v_button->setID("DEFAULTS_BUTTON");
@@ -1348,12 +1311,13 @@ UIWindow* StateMainMenu::makeWindowOptions(GameApp* pGame, UIWindow* i_parent) {
   return v_window;
 }
 
-UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
+UIWindow* StateMainMenu::makeWindowLevels(UIWindow* i_parent) {
   UIWindow*    v_window;
   UIStatic*    v_someText;
   UIButton*    v_button;
   UIPackTree*  v_packTree;
   UILevelList* v_list;
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIFrame(i_parent, 220, i_parent->getPosition().nHeight*7/30, "",
 			 i_parent->getPosition().nWidth -220 -20,
@@ -1362,12 +1326,12 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
   v_window->showWindow(false);
    
   v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_LEVELS, v_window->getPosition().nWidth, 36);
-  v_someText->setFont(pGame->getDrawLib()->getFontMedium());
+  v_someText->setFont(drawlib->getFontMedium());
 
   /* tabs */
   UITabView *v_levelTabs = new UITabView(v_window, 20, 40, "",
 					 v_window->getPosition().nWidth-40, v_window->getPosition().nHeight-60);
-  v_levelTabs->setFont(pGame->getDrawLib()->getFontSmall());
+  v_levelTabs->setFont(drawlib->getFontSmall());
   v_levelTabs->setID("TABS");
   v_levelTabs->setTabContextHelp(0, CONTEXTHELP_LEVEL_PACKS);
   v_levelTabs->setTabContextHelp(1, CONTEXTHELP_BUILT_IN_AND_EXTERNALS);
@@ -1381,13 +1345,13 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
   /* open button */
   v_button = new UIButton(v_packTab, 11, v_packTab->getPosition().nHeight-57-45, GAMETEXT_OPEN, 115, 57);
   v_button->setType(UI_BUTTON_TYPE_SMALL);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawlib->getFontSmall());
   v_button->setID("PACK_OPEN_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_VIEW_LEVEL_PACK);
   
   /* pack list */
   v_packTree = new UIPackTree(v_packTab, 10, 0, "", v_packTab->getPosition().nWidth-20, v_packTab->getPosition().nHeight-105);      
-  v_packTree->setFont(pGame->getDrawLib()->getFontSmall());
+  v_packTree->setFont(drawlib->getFontSmall());
   v_packTree->setID("PACK_TREE");
   v_packTree->setEnterButton(v_button);
 
@@ -1400,27 +1364,27 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
   /* favorite go button */
   v_button = new UIButton(v_favoriteTab, 0, v_favoriteTab->getPosition().nHeight-103, GAMETEXT_STARTLEVEL, 105, 57);
   v_button->setType(UI_BUTTON_TYPE_SMALL);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawlib->getFontSmall());
   v_button->setID("PLAY_GO_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
 
   /* favorite list */
   v_list = new UILevelList(v_favoriteTab, 0, 0, "", v_favoriteTab->getPosition().nWidth, v_favoriteTab->getPosition().nHeight-105);     
   v_list->setID("FAVORITE_LIST");
-  v_list->setFont(pGame->getDrawLib()->getFontSmall());
+  v_list->setFont(drawlib->getFontSmall());
   v_list->setSort(true);
   v_list->setEnterButton(v_button);
 
   /* favorite other buttons */
   v_button= new UIButton(v_favoriteTab, 105, v_favoriteTab->getPosition().nHeight-103, GAMETEXT_SHOWINFO, 105, 57);
   v_button->setType(UI_BUTTON_TYPE_SMALL);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawlib->getFontSmall());
   v_button->setID("LEVEL_INFO_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_LEVEL_INFO);
   
   v_button= new UIButton(v_favoriteTab, v_favoriteTab->getPosition().nWidth-187, v_favoriteTab->getPosition().nHeight-103, GAMETEXT_DELETEFROMFAVORITE, 187, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawlib->getFontSmall());
   v_button->setID("DELETE_FROM_FAVORITE_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_DELETEFROMFAVORITE);
   
@@ -1433,13 +1397,13 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
   /* new levels tab go button */
   v_button = new UIButton(v_newLevelsTab, 0, v_newLevelsTab->getPosition().nHeight-103, GAMETEXT_STARTLEVEL, 105, 57);
   v_button->setType(UI_BUTTON_TYPE_SMALL);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawlib->getFontSmall());
   v_button->setID("PLAY_GO_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
 
   /* new levels list */
   v_list = new UILevelList(v_newLevelsTab, 0, 0, "", v_newLevelsTab->getPosition().nWidth, v_newLevelsTab->getPosition().nHeight-105);     
-  v_list->setFont(pGame->getDrawLib()->getFontSmall());
+  v_list->setFont(drawlib->getFontSmall());
   v_list->setID("NEWLEVELS_LIST");
   v_list->setSort(true);
   v_list->setEnterButton(v_button);
@@ -1447,14 +1411,14 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
   /* new levels tab other buttons */
   v_button = new UIButton(v_newLevelsTab, 105, v_newLevelsTab->getPosition().nHeight-103, GAMETEXT_SHOWINFO, 105, 57);
   v_button->setType(UI_BUTTON_TYPE_SMALL);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawlib->getFontSmall());
   v_button->setID("LEVEL_INFO_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_LEVEL_INFO);
 
   v_button = new UIButton(v_newLevelsTab, v_newLevelsTab->getPosition().nWidth-187, v_newLevelsTab->getPosition().nHeight-103,
 			  GAMETEXT_DOWNLOADLEVELS, 187, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawlib->getFontSmall());
   v_button->setID("DOWNLOAD_LEVELS_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_DOWNLOADLEVELS);
 
@@ -1465,7 +1429,7 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
   v_multiOptionsTab->setID("MULTI_TAB");
 
   v_someText = new UIStatic(v_multiOptionsTab, 10, 0, GAMETEXT_NB_PLAYERS, v_multiOptionsTab->getPosition().nWidth, 40);
-  v_someText->setFont(pGame->getDrawLib()->getFontMedium());
+  v_someText->setFont(drawlib->getFontMedium());
   v_someText->setHAlign(UI_ALIGN_LEFT);
 
   // choice of the number of players
@@ -1477,7 +1441,7 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
 
     v_button = new UIButton(v_multiOptionsTab, 0, 40+(i*20), strPlayer, v_multiOptionsTab->getPosition().nWidth, 28);
     v_button->setType(UI_BUTTON_TYPE_RADIO);
-    v_button->setFont(pGame->getDrawLib()->getFontSmall());
+    v_button->setFont(drawlib->getFontSmall());
     v_button->setID("MULTINB_" + s_nbPlayers.str());
     v_button->setGroup(10200);
     v_button->setContextHelp(CONTEXTHELP_MULTI);
@@ -1491,7 +1455,7 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
   v_button = new UIButton(v_multiOptionsTab, 0, v_multiOptionsTab->getPosition().nHeight - 40 - 28 - 10,
 			  GAMETEXT_MULTISTOPWHENONEFINISHES, v_multiOptionsTab->getPosition().nWidth,28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setFont(drawlib->getFontSmall());
   v_button->setID("ENABLEMULTISTOPWHENONEFINISHES");
   v_button->setGroup(50050);
   v_button->setContextHelp(CONTEXTHELP_MULTISTOPWHENONEFINISHES);    
@@ -1500,8 +1464,9 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
 }
 
 void StateMainMenu::drawBackground() {
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
+
   if(XMSession::instance()->menuGraphics() != GFX_LOW && XMSession::instance()->ugly() == false) {
-    DrawLib* drawlib = m_pGame->getDrawLib();
     int w = drawlib->getDispWidth();
     int h = drawlib->getDispHeight();
 
@@ -1514,7 +1479,7 @@ void StateMainMenu::drawBackground() {
     if(m_pTitleBL != NULL)
       drawlib->drawImage(Vector2f(0, h/2), Vector2f(w/2, h), m_pTitleBL);
   } else {
-    m_pGame->getDrawLib()->clearGraphics();
+    drawlib->clearGraphics();
   }
 }
 
@@ -1527,8 +1492,7 @@ UILevelList* StateMainMenu::buildQuickStartList() {
   v_list->showWindow(false);
   
   createLevelListsSql(v_list,
-		      LevelsManager::getQuickStartPackQuery(m_pGame->getDb(),
-							    v_quickStart->getQualityMIN(),
+		      LevelsManager::getQuickStartPackQuery(v_quickStart->getQualityMIN(),
 							    v_quickStart->getDifficultyMIN(),
 							    v_quickStart->getQualityMAX(),
 							    v_quickStart->getDifficultyMAX(),
@@ -1550,28 +1514,28 @@ void StateMainMenu::createLevelListsSql(UILevelList *io_levelsList, const std::s
   
   io_levelsList->clear();
   
-  v_result = m_pGame->getDb()->readDB(i_sql,
+  v_result = xmDatabase::instance("main")->readDB(i_sql,
 				      nrow);
   for(unsigned int i=0; i<nrow; i++) {
-    if(m_pGame->getDb()->getResult(v_result, 4, i, 2) == NULL) {
+    if(xmDatabase::instance("main")->getResult(v_result, 4, i, 2) == NULL) {
       v_playerHighscore = -1.0;
     } else {
-      v_playerHighscore = atof(m_pGame->getDb()->getResult(v_result, 4, i, 2));
+      v_playerHighscore = atof(xmDatabase::instance("main")->getResult(v_result, 4, i, 2));
     }
     
-    if(m_pGame->getDb()->getResult(v_result, 4, i, 3) == NULL) {
+    if(xmDatabase::instance("main")->getResult(v_result, 4, i, 3) == NULL) {
       v_roomHighscore = -1.0;
     } else {
-      v_roomHighscore = atof(m_pGame->getDb()->getResult(v_result, 4, i, 3));
+      v_roomHighscore = atof(xmDatabase::instance("main")->getResult(v_result, 4, i, 3));
     }
     
-    io_levelsList->addLevel(m_pGame->getDb()->getResult(v_result, 4, i, 0),
-			    m_pGame->getDb()->getResult(v_result, 4, i, 1),
+    io_levelsList->addLevel(xmDatabase::instance("main")->getResult(v_result, 4, i, 0),
+			    xmDatabase::instance("main")->getResult(v_result, 4, i, 1),
 			    v_playerHighscore,
 			    v_roomHighscore
 			    );
   }
-  m_pGame->getDb()->read_DB_free(v_result);    
+  xmDatabase::instance("main")->read_DB_free(v_result);    
   
   /* reselect the previous level */
   if(v_selected_levelName != "") {
@@ -1590,7 +1554,7 @@ void StateMainMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
   if(i_id == "QUIT") {
     if(i_button == UI_MSGBOX_YES) {
       m_requestForEnd = true;
-      m_pGame->requestEnd();
+      GameApp::instance()->requestEnd();
     }
   }
 
@@ -1685,10 +1649,9 @@ void StateMainMenu::executeOneCommand(std::string cmd)
     updateProfile();
 
     // update packs
-    LevelsManager::instance()->makePacks(m_pGame->getDb(),
-					   XMSession::instance()->profile(),
-					   XMSession::instance()->idRoom(),
-					   XMSession::instance()->debug());
+    LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
+					 XMSession::instance()->idRoom(),
+					 XMSession::instance()->debug());
 
     // update lists and stats
     updateLevelsPacksList();
@@ -1709,7 +1672,7 @@ void StateMainMenu::executeOneCommand(std::string cmd)
 	  Logger::Log(e.getMsg().c_str());
 	}
 	try {
-	  m_pGame->getDb()->replays_delete(pEntry->Text[0]);
+	  xmDatabase::instance("main")->replays_delete(pEntry->Text[0]);
 	} catch(Exception &e) {
 	  Logger::Log(e.getMsg().c_str());
 	}
@@ -1786,9 +1749,9 @@ void StateMainMenu::updateLevelsPacksList() {
 	
       pTree->addPack(v_lm->LevelsPacks()[i],
 		     v_lm->LevelsPacks()[i]->Group(),
-		     v_lm->LevelsPacks()[i]->getNumberOfFinishedLevels(m_pGame->getDb(),
+		     v_lm->LevelsPacks()[i]->getNumberOfFinishedLevels(xmDatabase::instance("main"),
 								       XMSession::instance()->profile()),
-		     v_lm->LevelsPacks()[i]->getNumberOfLevels(m_pGame->getDb())
+		     v_lm->LevelsPacks()[i]->getNumberOfLevels(xmDatabase::instance("main"))
 		     );
       
     }
@@ -1826,13 +1789,13 @@ void StateMainMenu::updateReplaysList() {
       "WHERE a.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\";";
   }
 
-  v_result = m_pGame->getDb()->readDB(v_sql, nrow);
+  v_result = xmDatabase::instance("main")->readDB(v_sql, nrow);
   for(unsigned int i=0; i<nrow; i++) {
-    UIListEntry *pEntry = v_list->addEntry(m_pGame->getDb()->getResult(v_result, 3, i, 0));
-    pEntry->Text.push_back(m_pGame->getDb()->getResult(v_result, 3, i, 2));
-    pEntry->Text.push_back(m_pGame->getDb()->getResult(v_result, 3, i, 1));
+    UIListEntry *pEntry = v_list->addEntry(xmDatabase::instance("main")->getResult(v_result, 3, i, 0));
+    pEntry->Text.push_back(xmDatabase::instance("main")->getResult(v_result, 3, i, 2));
+    pEntry->Text.push_back(xmDatabase::instance("main")->getResult(v_result, 3, i, 1));
   }
-  m_pGame->getDb()->read_DB_free(v_result); 
+  xmDatabase::instance("main")->read_DB_free(v_result); 
 
   // apply the filter
   UIEdit*      v_edit;
@@ -1871,7 +1834,7 @@ void StateMainMenu::checkEventsReplays() {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
-	StateManager::instance()->pushState(new StateReplaying(m_pGame, pListEntry->Text[0]));	  
+	StateManager::instance()->pushState(new StateReplaying(pListEntry->Text[0]));	  
       }
     }
   }
@@ -1884,7 +1847,7 @@ void StateMainMenu::checkEventsReplays() {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
-	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
+	StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
 	v_msgboxState->setId("REPLAYS_DELETE");
 	StateManager::instance()->pushState(v_msgboxState);	
 	updateReplaysRights();
@@ -1909,7 +1872,7 @@ void StateMainMenu::checkEventsReplays() {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
 	std::string v_replayPath = FS::getUserDir() + "/Replays/" + pListEntry->Text[0] + ".rpl";
-	StateManager::instance()->pushState(new StateUploadHighscore(m_pGame, v_replayPath));	  
+	StateManager::instance()->pushState(new StateUploadHighscore(v_replayPath));	  
       }
     }
   }
@@ -1932,15 +1895,15 @@ void StateMainMenu::createThemesList(UIList *pList) {
   /* recreate the list */
   pList->clear();
   
-  v_result = m_pGame->getDb()->readDB("SELECT a.id_theme, a.checkSum, b.checkSum "
+  v_result = xmDatabase::instance("main")->readDB("SELECT a.id_theme, a.checkSum, b.checkSum "
 				      "FROM themes AS a LEFT OUTER JOIN webthemes AS b "
 				      "ON a.id_theme=b.id_theme ORDER BY a.id_theme;",
 			  nrow);
   for(unsigned int i=0; i<nrow; i++) {
-    v_id_theme = m_pGame->getDb()->getResult(v_result, 3, i, 0);
-    v_ck1      = m_pGame->getDb()->getResult(v_result, 3, i, 1);
-    if(m_pGame->getDb()->getResult(v_result, 3, i, 2) != NULL) {
-      v_ck2      = m_pGame->getDb()->getResult(v_result, 3, i, 2);
+    v_id_theme = xmDatabase::instance("main")->getResult(v_result, 3, i, 0);
+    v_ck1      = xmDatabase::instance("main")->getResult(v_result, 3, i, 1);
+    if(xmDatabase::instance("main")->getResult(v_result, 3, i, 2) != NULL) {
+      v_ck2      = xmDatabase::instance("main")->getResult(v_result, 3, i, 2);
     }
     
     pEntry = pList->addEntry(v_id_theme.c_str(),
@@ -1951,17 +1914,17 @@ void StateMainMenu::createThemesList(UIList *pList) {
       pEntry->Text.push_back(GAMETEXT_THEMEREQUIREUPDATE);
     }
   }
-  m_pGame->getDb()->read_DB_free(v_result);
+  xmDatabase::instance("main")->read_DB_free(v_result);
   
-  v_result = m_pGame->getDb()->readDB("SELECT a.id_theme FROM webthemes AS a LEFT OUTER JOIN themes AS b "
+  v_result = xmDatabase::instance("main")->readDB("SELECT a.id_theme FROM webthemes AS a LEFT OUTER JOIN themes AS b "
 				      "ON a.id_theme=b.id_theme WHERE b.id_theme IS NULL;",
 				      nrow);
   for(unsigned int i=0; i<nrow; i++) {
-    v_id_theme = m_pGame->getDb()->getResult(v_result, 1, i, 0);
+    v_id_theme = xmDatabase::instance("main")->getResult(v_result, 1, i, 0);
     pEntry = pList->addEntry(v_id_theme.c_str(), NULL);
     pEntry->Text.push_back(GAMETEXT_THEMENOTHOSTED);
   }
-  m_pGame->getDb()->read_DB_free(v_result);
+  xmDatabase::instance("main")->read_DB_free(v_result);
   
   /* reselect the previous theme */
   if(v_selected_themeName != "") {
@@ -2060,21 +2023,21 @@ void StateMainMenu::createRoomsList(UIList *pList) {
   pList->clear();
 
   // WR room
-  v_result = m_pGame->getDb()->readDB("SELECT id_room, name FROM webrooms WHERE id_room = 1;", nrow);
+  v_result = xmDatabase::instance("main")->readDB("SELECT id_room, name FROM webrooms WHERE id_room = 1;", nrow);
   for(unsigned int i=0; i<nrow; i++) {
-    v_roomId   = m_pGame->getDb()->getResult(v_result, 2, i, 0);
-    v_roomName = m_pGame->getDb()->getResult(v_result, 2, i, 1);
+    v_roomId   = xmDatabase::instance("main")->getResult(v_result, 2, i, 0);
+    v_roomName = xmDatabase::instance("main")->getResult(v_result, 2, i, 1);
     pEntry = pList->addEntry(v_roomName, reinterpret_cast<void *>(new std::string(v_roomId)));    
   }
-  m_pGame->getDb()->read_DB_free(v_result);
+  xmDatabase::instance("main")->read_DB_free(v_result);
 
-  v_result = m_pGame->getDb()->readDB("SELECT id_room, name FROM webrooms ORDER BY name;", nrow);
+  v_result = xmDatabase::instance("main")->readDB("SELECT id_room, name FROM webrooms ORDER BY name;", nrow);
   for(unsigned int i=0; i<nrow; i++) {
-    v_roomId   = m_pGame->getDb()->getResult(v_result, 2, i, 0);
-    v_roomName = m_pGame->getDb()->getResult(v_result, 2, i, 1);
+    v_roomId   = xmDatabase::instance("main")->getResult(v_result, 2, i, 0);
+    v_roomName = xmDatabase::instance("main")->getResult(v_result, 2, i, 1);
     pEntry = pList->addEntry(v_roomName, reinterpret_cast<void *>(new std::string(v_roomId)));    
   }
-  m_pGame->getDb()->read_DB_free(v_result);
+  xmDatabase::instance("main")->read_DB_free(v_result);
 
   /* reselect the previous room */
   if(v_selected_roomName != "") {
@@ -2272,7 +2235,7 @@ void StateMainMenu::checkEventsOptions() {
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       XMSession::instance()->setTheme(pEntry->Text[0]);
       if(Theme::instance()->Name() != XMSession::instance()->theme()) {
-	m_pGame->reloadTheme();
+	GameApp::instance()->reloadTheme();
       }
     }
   }
@@ -2280,7 +2243,7 @@ void StateMainMenu::checkEventsOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:UPDATE_THEMES_LIST"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    StateManager::instance()->pushState(new StateUpdateThemesList(m_pGame));
+    StateManager::instance()->pushState(new StateUpdateThemesList());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:GET_SELECTED_THEME"));
@@ -2289,7 +2252,7 @@ void StateMainMenu::checkEventsOptions() {
 
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
-      StateManager::instance()->pushState(new StateUpdateTheme(m_pGame, pEntry->Text[0]));
+      StateManager::instance()->pushState(new StateUpdateTheme(pEntry->Text[0]));
     }
   }
 
@@ -2430,7 +2393,7 @@ void StateMainMenu::checkEventsOptions() {
 
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       sprintf(cBuf, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
-      StateManager::instance()->pushState(new StateRequestKey(m_pGame, cBuf, this));      
+      StateManager::instance()->pushState(new StateRequestKey(cBuf, this));      
     }
   }
 
@@ -2438,13 +2401,13 @@ void StateMainMenu::checkEventsOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:PROXYCONFIG"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    StateManager::instance()->pushState(new StateEditWebConfig(m_pGame));
+    StateManager::instance()->pushState(new StateEditWebConfig());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:UPDATEHIGHSCORES"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    StateManager::instance()->pushState(new StateCheckWww(m_pGame, true));
+    StateManager::instance()->pushState(new StateCheckWww(true));
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLEWEB"));
@@ -2503,13 +2466,13 @@ void StateMainMenu::checkEventsOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPDATE_ROOMS_LIST"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    StateManager::instance()->pushState(new StateUpdateRoomsList(m_pGame));
+    StateManager::instance()->pushState(new StateUpdateRoomsList());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPLOADHIGHSCOREALL_BUTTON"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    StateManager::instance()->pushState(new StateUploadAllHighscores(m_pGame));
+    StateManager::instance()->pushState(new StateUploadAllHighscores());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:ENABLE_GHOSTS"));
@@ -2629,7 +2592,7 @@ void StateMainMenu::updateGhostsOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:MOTION_BLUR_GHOST"));
   v_button->enableWindow(XMSession::instance()->enableGhosts());
   
-  if(m_pGame->getDrawLib()->useShaders() == false) {
+  if(GameApp::instance()->getDrawLib()->useShaders() == false) {
     v_button->enableWindow(false);
     v_button->setChecked(false);
   }
@@ -2647,8 +2610,8 @@ void StateMainMenu::updateLevelsPackInPackList(const std::string& v_levelPack) {
   LevelsPack *v_pack = &(LevelsManager::instance()->LevelsPackByName(v_levelPack));
   
   pTree->updatePack(v_pack,
-		    v_pack->getNumberOfFinishedLevels(m_pGame->getDb(), XMSession::instance()->profile()),
-		    v_pack->getNumberOfLevels(m_pGame->getDb()));
+		    v_pack->getNumberOfFinishedLevels(xmDatabase::instance("main"), XMSession::instance()->profile()),
+		    v_pack->getNumberOfLevels(xmDatabase::instance("main")));
 }
 
 void StateMainMenu::updateInfoFrame() {
@@ -2667,7 +2630,7 @@ void StateMainMenu::updateInfoFrame() {
   bool        v_isAccessible;
 
   if(v_id_level != "") {
-    if(m_pGame->getHighscoreInfos(v_id_level, &v_id_profile, &v_url, &v_isAccessible)) {
+    if(GameApp::instance()->getHighscoreInfos(v_id_level, &v_id_profile, &v_url, &v_isAccessible)) {
       v_someText->setCaption(std::string(GAMETEXT_BESTPLAYER) + " : " + v_id_profile);
       v_button->enableWindow(v_isAccessible);
       v_window->showWindow(true);
@@ -2696,16 +2659,16 @@ void StateMainMenu::updateReplaysRights() {
 	  unsigned int nrow;
 	  float v_finishTime;
 		
-	  v_result = m_pGame->getDb()->readDB("SELECT finishTime FROM webhighscores WHERE id_level=\"" + 
+	  v_result = xmDatabase::instance("main")->readDB("SELECT finishTime FROM webhighscores WHERE id_level=\"" + 
 					      xmDatabase::protectString(rplInfos->Level) + "\" AND id_room=" +
 					      XMSession::instance()->idRoom() + ";",
 					      nrow);
 	  if(nrow == 0) {
 	    v_button->enableWindow(true);
-	    m_pGame->getDb()->read_DB_free(v_result);
+	    xmDatabase::instance("main")->read_DB_free(v_result);
 	  } else {
-	    v_finishTime = atof(m_pGame->getDb()->getResult(v_result, 1, 0, 0));
-	    m_pGame->getDb()->read_DB_free(v_result);
+	    v_finishTime = atof(xmDatabase::instance("main")->getResult(v_result, 1, 0, 0));
+	    xmDatabase::instance("main")->read_DB_free(v_result);
 	    v_button->enableWindow(rplInfos->fFinishTime < v_finishTime);
 	  }  	      
 	}

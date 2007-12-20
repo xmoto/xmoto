@@ -25,14 +25,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StateRequestKey::m_sGUI = NULL;
 
-StateRequestKey::StateRequestKey(GameApp* pGame,
-				 const std::string& i_txt,
+StateRequestKey::StateRequestKey(const std::string& i_txt,
 				 StateMenuContextReceiver* i_receiver,
 				 bool drawStateBehind,
 				 bool updateStatesBehind):
 StateMenu(drawStateBehind,
 	  updateStatesBehind,
-	  pGame,
 	  i_receiver,
 	  false,
 	  true)
@@ -43,41 +41,15 @@ StateMenu(drawStateBehind,
 
 StateRequestKey::~StateRequestKey()
 {
-
 }
-
 
 void StateRequestKey::enter()
 {
-  createGUIIfNeeded(m_pGame);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
   updateGUI();
 
   StateMenu::enter();
-}
-
-void StateRequestKey::leave()
-{
-}
-
-void StateRequestKey::enterAfterPop()
-{
-  StateMenu::enterAfterPop();
-}
-
-void StateRequestKey::leaveAfterPush()
-{
-  StateMenu::leaveAfterPush();
-}
-
-bool StateRequestKey::update()
-{
-  return StateMenu::update();
-}
-
-bool StateRequestKey::render()
-{
-  return StateMenu::render();
 }
 
 void StateRequestKey::keyDown(int nKey, SDLMod mod,int nChar)
@@ -100,25 +72,6 @@ void StateRequestKey::keyDown(int nKey, SDLMod mod,int nChar)
   }
 }
 
-void StateRequestKey::keyUp(int nKey, SDLMod mod)
-{
-}
-
-void StateRequestKey::mouseDown(int nButton)
-{
-}
-
-void StateRequestKey::mouseDoubleClick(int nButton)
-{
-}
-
-void StateRequestKey::mouseUp(int nButton)
-{
-}
-
-void StateRequestKey::checkEvents() {
-}
-
 void StateRequestKey::clean() {
   if(StateRequestKey::m_sGUI != NULL) {
     delete StateRequestKey::m_sGUI;
@@ -126,27 +79,28 @@ void StateRequestKey::clean() {
   }
 }
 
-void StateRequestKey::createGUIIfNeeded(GameApp* pGame) {
+void StateRequestKey::createGUIIfNeeded() {
   UIStatic *v_someText;
   UIFrame  *v_frame;
 
-  if(m_sGUI != NULL) return;
+  if(m_sGUI != NULL)
+    return;
+
+  DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
   m_sGUI = new UIRoot();
-  m_sGUI->setApp(pGame);
-  m_sGUI->setFont(pGame->getDrawLib()->getFontSmall()); 
+  m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      pGame->getDrawLib()->getDispWidth(),
-		      pGame->getDrawLib()->getDispHeight());
+		      drawLib->getDispWidth(),
+		      drawLib->getDispHeight());
 
-  v_frame = new UIFrame(m_sGUI,
-			30,
-			pGame->getDrawLib()->getDispHeight()/2 - 20,
-			"", pGame->getDrawLib()->getDispWidth() -30*2, 20*2);
+  v_frame = new UIFrame(m_sGUI,	30,
+			drawLib->getDispHeight()/2 - 20, "",
+			drawLib->getDispWidth() -30*2, 20*2);
   v_frame->setID("FRAME");
 
   v_someText = new UIStatic(v_frame, 0, 0, "", v_frame->getPosition().nWidth, v_frame->getPosition().nHeight);
-  v_someText->setFont(pGame->getDrawLib()->getFontSmall());            
+  v_someText->setFont(drawLib->getFontSmall());            
   v_someText->setHAlign(UI_ALIGN_CENTER);
   v_someText->setID("TXT");
 }

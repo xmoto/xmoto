@@ -33,7 +33,6 @@ XMThread::XMThread()
   m_progress         = 0;
   m_currentOperation = "";
   m_currentMicroOperation = "";
-  m_pGame            = NULL;
   m_pDb              = NULL;
   m_curOpMutex       = SDL_CreateMutex();
   m_curMicOpMutex    = SDL_CreateMutex();
@@ -51,9 +50,7 @@ XMThread::~XMThread()
   SDL_DestroyMutex(m_curMicOpMutex);
   SDL_DestroyMutex(m_sleepMutex);
   SDL_DestroyCond(m_sleepCond);
-  if(m_pDb != NULL){
-    delete m_pDb;
-  }
+  xmDatabase::destroy("thread");
 }
 
 int XMThread::run(void* pThreadInstance)
@@ -63,9 +60,8 @@ int XMThread::run(void* pThreadInstance)
   return thisThread->threadFunctionEncapsulate();
 }
 
-void XMThread::startThread(GameApp* pGame)
+void XMThread::startThread()
 {
-    m_pGame            = pGame;
     m_progress         = -1;
     m_currentOperation = "";
     m_askThreadToEnd   = false;
@@ -178,7 +174,9 @@ void XMThread::setThreadCurrentMicroOperation(std::string curMicOp)
 
 int XMThread::threadFunctionEncapsulate()
 {
-  m_pDb = new xmDatabase(DATABASE_FILE);
+  // we can only have one thread at once.
+  m_pDb = xmDatabase::instance("thread");
+  m_pDb->init(DATABASE_FILE);
 
   int returnValue = realThreadFunction();
   m_isRunning     = false;

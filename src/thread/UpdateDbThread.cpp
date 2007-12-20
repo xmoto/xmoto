@@ -44,7 +44,7 @@ int UpdateDbThread::realThreadFunction()
   StateManager::instance()->sendSynchronousMessage("UPDATE_LEVELS_LISTS");
 
   setThreadCurrentOperation(GAMETEXT_RELOADINGREPLAYS);
-  m_pGame->initReplaysFromDir(m_pDb, this);
+  GameApp::instance()->initReplaysFromDir(m_pDb, this);
   StateManager::instance()->sendSynchronousMessage("UPDATE_REPLAYS_LISTS");
   
   setThreadCurrentOperation(GAMETEXT_RELOADINGTHEMES);

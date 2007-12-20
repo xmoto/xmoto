@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "Game.h"
 
-StateCreditsMode::StateCreditsMode(GameApp* pGame, const std::string& i_replay):
-  StateReplaying(pGame, i_replay)
+StateCreditsMode::StateCreditsMode(const std::string& i_replay):
+  StateReplaying(i_replay)
 {
   m_credits = new Credits();
   m_name    = "StateCreditsMode";
@@ -39,31 +39,15 @@ StateCreditsMode::~StateCreditsMode()
 void StateCreditsMode::enter()
 {
   StateReplaying::enter();
-  GameRenderer::instance()->hideReplayHelp();
-  GameRenderer::instance()->setShowTimePanel(false);
-  GameRenderer::instance()->setShowMinimap(false);
-  m_pGame->getMotoGame()->setInfos("");
-  m_credits->init(m_pGame, m_replayBiker->getFinishTime(), 4, 4, std::string(GAMETEXT_CREDITS).c_str());
-}
 
-void StateCreditsMode::leave()
-{
-  StateReplaying::leave();
-}
+  GameRenderer* renderer = GameRenderer::instance();
+  renderer->hideReplayHelp();
+  renderer->setShowTimePanel(false);
+  renderer->setShowMinimap(false);
 
-void StateCreditsMode::enterAfterPop()
-{
-  StateReplaying::enterAfterPop();
-}
+  GameApp::instance()->getMotoGame()->setInfos("");
 
-void StateCreditsMode::leaveAfterPush()
-{
-  StateReplaying::leaveAfterPush();
-}
-
-bool StateCreditsMode::update()
-{
-  return StateReplaying::update();
+  m_credits->init(m_replayBiker->getFinishTime(), 4, 4, std::string(GAMETEXT_CREDITS).c_str());
 }
 
 bool StateCreditsMode::render()
@@ -71,7 +55,7 @@ bool StateCreditsMode::render()
   if(StateReplaying::render() == false){
     return false;
   }
-  m_credits->render(m_pGame->getMotoGame()->getTime());
+  m_credits->render(GameApp::instance()->getMotoGame()->getTime());
   return true;
 }
 

@@ -25,20 +25,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 #include <vector>
 #include "xmDatabaseUpdateInterface.h"
+#include "helpers/MultiSingleton.h"
 
 class Level;
 
-class xmDatabase {
+class xmDatabase : public MultiSingleton<xmDatabase> {
+  friend class MultiSingleton<xmDatabase>;
 
-  public:
-  xmDatabase(const std::string& i_dbFileUTF8,
-	     const std::string& i_profile,
-	     const std::string& i_gameDir,
-	     const std::string& i_userDir,
-	     const std::string& i_binPackCheckSum,
-	     XmDatabaseUpdateInterface *i_interface = NULL);
-  xmDatabase(const std::string& i_dbFileUTF8);
-  ~xmDatabase();
+private:
+  xmDatabase();
+  virtual ~xmDatabase();
+
+public:
+  void init(const std::string& i_dbFileUTF8,
+	    const std::string& i_profile,
+	    const std::string& i_gameDir,
+	    const std::string& i_userDir,
+	    const std::string& i_binPackCheckSum,
+	    XmDatabaseUpdateInterface *i_interface = NULL);
+  void init(const std::string& i_dbFileUTF8);
 
   /* RULE:
      all write access must be done from class xmDatabase

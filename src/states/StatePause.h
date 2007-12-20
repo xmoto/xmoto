@@ -28,8 +28,7 @@ class UIRoot;
 
 class StatePause : public StateMenu {
   public:
-  StatePause(GameApp* pGame,
-	     StateMenuContextReceiver* i_receiver = NULL,
+  StatePause(StateMenuContextReceiver* i_receiver = NULL,
 	     bool drawStateBehind    = true,
 	     bool updateStatesBehind = false
 	     );
@@ -37,19 +36,9 @@ class StatePause : public StateMenu {
   
   virtual void enter();
   virtual void leave();
-  /* called when a new state is pushed or poped on top of the
-     current one*/
-  virtual void enterAfterPop();
-  virtual void leaveAfterPush();
   
-  virtual bool update();
-  virtual bool render();
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
-  virtual void keyUp(int nKey,   SDLMod mod);
-  virtual void mouseDown(int nButton);
-  virtual void mouseDoubleClick(int nButton);
-  virtual void mouseUp(int nButton);
   
   static void clean();
 
@@ -61,7 +50,7 @@ class StatePause : public StateMenu {
   private:
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(GameApp* pGame);
+  static void createGUIIfNeeded();
 };
 
 #endif

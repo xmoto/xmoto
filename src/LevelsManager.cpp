@@ -206,13 +206,13 @@ bool LevelsManager::doesLevelsPackExist(const std::string &i_name) const {
   return false;
 }
 
-void LevelsManager::makePacks(xmDatabase *i_db,
-			      const std::string& i_playerName,
+void LevelsManager::makePacks(const std::string& i_playerName,
 			      const std::string& i_id_room,
 			      bool i_bDebugMode) {
   LevelsPack *v_pack;
   char **v_result;
   unsigned int nrow;
+  xmDatabase *i_db = xmDatabase::instance("main");
 
   cleanPacks();
 
@@ -731,8 +731,8 @@ const std::vector<LevelsPack *>& LevelsManager::LevelsPacks() {
   return m_levelsPacks;
 }
 
-void LevelsManager::reloadExternalLevels(xmDatabase *i_db,
-					 XMotoLoadLevelsInterface *i_loadLevelsInterface) {
+void LevelsManager::reloadExternalLevels(XMotoLoadLevelsInterface *i_loadLevelsInterface) {
+  xmDatabase *i_db = xmDatabase::instance("main");
   std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/MyLevels/*.lvl", true);
 
   i_db->levels_add_begin(true);
@@ -751,7 +751,7 @@ void LevelsManager::reloadExternalLevels(xmDatabase *i_db,
       bCached = v_level->loadReducedFromFile();
       
       // Check for ID conflict
-      if(doesLevelExist(i_db, v_level->Id())) {
+      if(doesLevelExist(v_level->Id())) {
 	throw Exception("Duplicate level ID");
       }
       i_db->levels_add(v_level->Id(),
@@ -774,8 +774,9 @@ void LevelsManager::reloadExternalLevels(xmDatabase *i_db,
   i_db->levels_add_end();
 }
 
-void LevelsManager::addExternalLevel(xmDatabase *i_db, std::string i_levelFile) {
+void LevelsManager::addExternalLevel(std::string i_levelFile) {
 
+  xmDatabase *i_db = xmDatabase::instance("main");
   Level *v_level = new Level();
   try {
     bool bCached = false;
@@ -784,7 +785,7 @@ void LevelsManager::addExternalLevel(xmDatabase *i_db, std::string i_levelFile) 
     bCached = v_level->loadReducedFromFile();
       
     // Check for ID conflict
-    if(doesLevelExist(i_db, v_level->Id())) {
+    if(doesLevelExist(v_level->Id())) {
       throw Exception("Duplicate level ID");
     }
     i_db->levels_add(v_level->Id(),
@@ -805,8 +806,14 @@ void LevelsManager::addExternalLevel(xmDatabase *i_db, std::string i_levelFile) 
   delete v_level;
 }
 
-void LevelsManager::reloadLevelsFromLvl(xmDatabase *i_db,
-					XMotoLoadLevelsInterface *i_loadLevelsInterface) {
+void LevelsManager::reloadLevelsFromLvl(xmDatabase* i_threadDb, XMotoLoadLevelsInterface *i_loadLevelsInterface) {
+  xmDatabase* i_db;
+
+  if(i_threadDb != NULL)
+    i_db = i_threadDb;
+  else
+    i_db = xmDatabase::instance("main");
+
   std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl", true);
 
   i_db->levels_add_begin(false);
@@ -827,7 +834,7 @@ void LevelsManager::reloadLevelsFromLvl(xmDatabase *i_db,
       bCached = v_level->loadReducedFromFile();
       
       // Check for ID conflict
-      if(doesLevelExist(i_db, v_level->Id())) {
+      if(doesLevelExist(v_level->Id())) {
 	throw Exception("Duplicate level ID");
       }
       i_db->levels_add(v_level->Id(),
@@ -858,7 +865,7 @@ void LevelsManager::reloadLevelsFromLvl(xmDatabase *i_db,
 
   i_db->levels_add_end();
 
-  reloadExternalLevels(i_db, i_loadLevelsInterface);
+  reloadExternalLevels(i_loadLevelsInterface);
 }
 
 void LevelsManager::checkPrerequires() {
@@ -881,10 +888,11 @@ void LevelsManager::cleanCache() {
   }
 }
 
-std::string LevelsManager::LevelByFileName(xmDatabase *i_db, const std::string& i_fileName) {
+std::string LevelsManager::LevelByFileName(const std::string& i_fileName) {
     char **v_result;
     unsigned int nrow;
     std::string v_id_level;
+    xmDatabase *i_db = xmDatabase::instance("main");
 
     v_result = i_db->readDB("SELECT id_level FROM levels WHERE filepath=\"" +
 			    xmDatabase::protectString(i_fileName) + "\";",
@@ -900,10 +908,10 @@ std::string LevelsManager::LevelByFileName(xmDatabase *i_db, const std::string& 
     return v_id_level;
 }
 
-bool LevelsManager::doesLevelExist(xmDatabase *i_db,
-				   const std::string& i_id) {
+bool LevelsManager::doesLevelExist(const std::string& i_id) {
   char **v_result;
   unsigned int nrow;
+  xmDatabase *i_db = xmDatabase::instance("main");
 
   v_result = i_db->readDB("SELECT id_level "
 			  "FROM levels "
@@ -914,9 +922,10 @@ bool LevelsManager::doesLevelExist(xmDatabase *i_db,
   return nrow != 0;
 }
 
-void LevelsManager::printLevelsList(xmDatabase *i_db) const {
+void LevelsManager::printLevelsList() const {
   char **v_result;
   unsigned int nrow;
+  xmDatabase *i_db = xmDatabase::instance("main");
 
   printf("%-40s %-40s\n", "Id", "Name");
 
@@ -930,13 +939,18 @@ void LevelsManager::printLevelsList(xmDatabase *i_db) const {
   i_db->read_DB_free(v_result);
 }
 
-void LevelsManager::updateLevelsFromLvl(xmDatabase *i_db,
-					const std::vector<std::string> &NewLvl,
+void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
 					const std::vector<std::string> &UpdatedLvl,
-					WWWAppInterface* pCaller) {
+					WWWAppInterface* pCaller,
+					xmDatabase* i_threadDb) {
   Level *v_level;
   int   current = 0;
   float total   = 100.0 / (float)(NewLvl.size() + UpdatedLvl.size());
+  xmDatabase *i_db;
+  if(i_threadDb == NULL)
+    i_db = xmDatabase::instance("main");
+  else
+    i_db = i_threadDb;
 
   i_db->levels_cleanNew();
 
@@ -953,7 +967,7 @@ void LevelsManager::updateLevelsFromLvl(xmDatabase *i_db,
       bCached = v_level->loadReducedFromFile();
       
       // Check for ID conflict
-      if(doesLevelExist(i_db, v_level->Id())) {
+      if(doesLevelExist(v_level->Id())) {
 	throw Exception("Duplicate level ID");
       }
       i_db->levels_add(v_level->Id(),
@@ -1009,10 +1023,11 @@ void LevelsManager::updateLevelsFromLvl(xmDatabase *i_db,
   }
 }
 
-bool LevelsManager::isInFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level) {
+bool LevelsManager::isInFavorite(std::string i_profile, const std::string& i_id_level) {
   unsigned int nrow;
   char **v_result;
   int v_n;
+  xmDatabase *i_db = xmDatabase::instance("main");
 
   /* check if the level is already into the favorite list */
   v_result = i_db->readDB("SELECT COUNT(id_level) "
@@ -1026,24 +1041,27 @@ bool LevelsManager::isInFavorite(xmDatabase *i_db, std::string i_profile, const 
   return v_n != 0;
 }
 
-void LevelsManager::addToFavorite(xmDatabase *i_db, std::string i_profile,
+void LevelsManager::addToFavorite(std::string i_profile,
 				  const std::string& i_id_level) {
-  if(isInFavorite(i_db, i_profile, i_id_level) == false) {
+  xmDatabase *i_db = xmDatabase::instance("main");
+  if(isInFavorite(i_profile, i_id_level) == false) {
     i_db->levels_addToFavorite(i_profile, i_id_level);
   }
 }
 
-void LevelsManager::delFromFavorite(xmDatabase *i_db, std::string i_profile,
+void LevelsManager::delFromFavorite(std::string i_profile,
 				    const std::string& i_id_level) {
-  if(isInFavorite(i_db, i_profile, i_id_level)) {
+  xmDatabase *i_db = xmDatabase::instance("main");
+  if(isInFavorite(i_profile, i_id_level)) {
     i_db->levels_delToFavorite(i_profile, i_id_level);
   }
 }
 
-bool LevelsManager::isInBlacklist(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level) {
+bool LevelsManager::isInBlacklist(std::string i_profile, const std::string& i_id_level) {
   unsigned int nrow;
   char **v_result;
   int v_n;
+  xmDatabase *i_db = xmDatabase::instance("main");
 
   /* check if the level is already into the blacklist list */
   v_result = i_db->readDB("SELECT COUNT(id_level) "
@@ -1057,28 +1075,30 @@ bool LevelsManager::isInBlacklist(xmDatabase *i_db, std::string i_profile, const
   return v_n != 0;
 }
 
-void LevelsManager::addToBlacklist(xmDatabase *i_db, std::string i_profile,
+void LevelsManager::addToBlacklist(std::string i_profile,
 				  const std::string& i_id_level) {
-  if(isInBlacklist(i_db, i_profile, i_id_level) == false) {
+  xmDatabase *i_db = xmDatabase::instance("main");
+  if(isInBlacklist(i_profile, i_id_level) == false) {
     i_db->levels_addToBlacklist(i_profile, i_id_level);
   }
 }
 
-void LevelsManager::delFromBlacklist(xmDatabase *i_db, std::string i_profile,
+void LevelsManager::delFromBlacklist(std::string i_profile,
 				    const std::string& i_id_level) {
-  if(isInBlacklist(i_db, i_profile, i_id_level)) {
+  xmDatabase *i_db = xmDatabase::instance("main");
+  if(isInBlacklist(i_profile, i_id_level)) {
     i_db->levels_delToBlacklist(i_profile, i_id_level);
   }
 }
 
-std::string LevelsManager::getQuickStartPackQuery(xmDatabase *i_db,
-						  unsigned int i_qualityMIN, unsigned int i_difficultyMIN,
+std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN, unsigned int i_difficultyMIN,
 						  unsigned int i_qualityMAX, unsigned int i_difficultyMAX,
 						  const std::string& i_profile, const std::string& i_id_room) {
   /* SELECT id_level, name, profile_best_finishTime, web_highscore */
   char **v_result;
   unsigned int nrow;
   char *v_res;
+  xmDatabase *i_db = xmDatabase::instance("main");
 
   /* if xmoto run only 1 time, run the tutorial pack */
   bool v_tutorials = false;

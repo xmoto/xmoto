@@ -76,8 +76,8 @@ int CheckWwwThread::realThreadFunction()
 {
   if(XMSession::instance()->www() == true){
     ProxySettings* pProxySettings = XMSession::instance()->proxySettings();
-    std::string    webRoomUrl     = m_pGame->getWebRoomURL(m_pDb);
-    std::string    webRoomName    = m_pGame->getWebRoomName(m_pDb);
+    std::string    webRoomUrl     = GameApp::instance()->getWebRoomURL(m_pDb);
+    std::string    webRoomName    = GameApp::instance()->getWebRoomName(m_pDb);
     std::string    webLevelsUrl   = XMSession::instance()->webLevelsUrl();
 
     m_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);

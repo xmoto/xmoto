@@ -30,8 +30,7 @@ class xmDatabase;
 
 class StateFinished : public StateMenu {
   public:
-  StateFinished(GameApp* pGame,
-		StateMenuContextReceiver* i_receiver = NULL,
+  StateFinished(StateMenuContextReceiver* i_receiver = NULL,
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false
 		);
@@ -39,35 +38,29 @@ class StateFinished : public StateMenu {
   
   virtual void enter();
   virtual void leave();
-  /* called when a new state is pushed or poped on top of the
-     current one*/
-  virtual void enterAfterPop();
-  virtual void leaveAfterPush();
   
-  virtual bool update();
-  virtual bool render();
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
-  virtual void keyUp(int nKey,   SDLMod mod);
-  virtual void mouseDown(int nButton);
-  virtual void mouseDoubleClick(int nButton);
-  virtual void mouseUp(int nButton);
   
   static void clean();
 
-  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  virtual void send(const std::string& i_id,
+		    UIMsgBoxButton i_button,
+		    const std::string& i_input);
   
  protected:
   virtual void checkEvents();
 
   private:
-  void makeBestTimesWindow(UIBestTimes* pWindow, xmDatabase* i_db,
-			   const std::string& PlayerName, const std::string& LevelID,
-			   float fFinishTime, const std::string& TimeStamp);      
+  void makeBestTimesWindow(UIBestTimes* pWindow,
+			   const std::string& PlayerName,
+			   const std::string& LevelID,
+			   float fFinishTime,
+			   const std::string& TimeStamp);      
 
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(GameApp* pGame);
+  static void createGUIIfNeeded();
 };
 
 #endif

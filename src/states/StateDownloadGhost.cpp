@@ -18,18 +18,16 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "Game.h"
 #include "StateDownloadGhost.h"
 #include "StateReplaying.h"
 #include "thread/DownloadGhostThread.h"
 #include "helpers/Log.h"
 
-StateDownloadGhost::StateDownloadGhost(GameApp* pGame,
-				       std::string levelId,
+StateDownloadGhost::StateDownloadGhost(std::string levelId,
 				       bool launchReplaying,
 				       bool drawStateBehind,
 				       bool updateStatesBehind)
-  : StateUpdate(pGame, drawStateBehind, updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind)
 {
   m_pThread         = new DownloadGhostThread(this, levelId);
   m_name            = "StateDownloadGhost";
@@ -56,7 +54,7 @@ void StateDownloadGhost::callAfterThreadFinished(int threadResult)
   if(threadResult == 0 && m_launchReplaying == true){
     std::string msg = "Replay to play: " + m_replayName;
     Logger::Log(msg.c_str());
-    StateManager::instance()->replaceState(new StateReplaying(m_pGame, m_replayName));
+    StateManager::instance()->replaceState(new StateReplaying(m_replayName));
   }
   else{
     StateManager::instance()->sendAsynchronousMessage("GHOST_DOWNLOADED");

@@ -51,23 +51,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateMessageBox.h"
 
 #if defined(WIN32)
-int SDL_main(int nNumArgs,char **ppcArgs) {
+int SDL_main(int nNumArgs, char **ppcArgs) {
 #else
-int main(int nNumArgs,char **ppcArgs) {
+int main(int nNumArgs, char **ppcArgs) {
 #endif
   /* Start application */
   try {     
     /* Setup basic info */
-    GameApp vapp;
-
-    vapp.run(nNumArgs,ppcArgs);
+    GameApp::instance()->run(nNumArgs, ppcArgs);
   }
   catch (Exception &e) {
     if(Logger::isInitialized()) {
       Logger::Log((std::string("Exception: ") + e.getMsg()).c_str());
     }    
 
-    printf("fatal exception : %s\n",e.getMsg().c_str());        
+    printf("fatal exception : %s\n", e.getMsg().c_str());        
     SDL_Quit(); /* make sure SDL shuts down gracefully */
     
 #if defined(WIN32)
@@ -81,13 +79,13 @@ int main(int nNumArgs,char **ppcArgs) {
   return 0;
 }
 
-void GameApp::run(int nNumArgs,char **ppcArgs) {
-  run_load(nNumArgs,ppcArgs);
+void GameApp::run(int nNumArgs, char** ppcArgs) {
+  run_load(nNumArgs, ppcArgs);
   run_loop();
   run_unload();
 }
 
-void GameApp::run_load(int nNumArgs,char **ppcArgs) {
+void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   XMArguments v_xmArgs;
   GameState* pState;
 
@@ -199,7 +197,6 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
 
   /* Init renderer */
   if(XMSession::instance()->useGraphics()) {
-    StateManager::instance()->init(this);
     switchUglyMode(XMSession::instance()->ugly());
     switchTestThemeMode(XMSession::instance()->testTheme());
     GameRenderer::instance()->setParent( (GameApp *)this );
@@ -215,17 +212,18 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   }
 
   /* database */
-  m_db = new xmDatabase(DATABASE_FILE,
-			XMSession::instance()->profile() == "" ? std::string("") : XMSession::instance()->profile(),
-			FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
-			XMSession::instance()->useGraphics() ? this : NULL);
+  xmDatabase* pDb = xmDatabase::instance("main");
+  pDb->init(DATABASE_FILE,
+	    XMSession::instance()->profile() == "" ? std::string("") : XMSession::instance()->profile(),
+	    FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
+	    XMSession::instance()->useGraphics() ? this : NULL);
   if(XMSession::instance()->sqlTrace()) {
-    m_db->setTrace(XMSession::instance()->sqlTrace());
+    pDb->setTrace(XMSession::instance()->sqlTrace());
   }
 
   /* load theme */
-  if(m_db->themes_isIndexUptodate() == false) {
-    ThemeChoicer::initThemesFromDir(m_db);
+  if(pDb->themes_isIndexUptodate() == false) {
+    ThemeChoicer::initThemesFromDir(pDb);
   }
   try {
     reloadTheme();
@@ -233,18 +231,18 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
     /* if the theme cannot be loaded, try to reload from files */
     /* perhaps that the xm.db comes from an other computer */
     Logger::Log("** warning ** : Theme cannot be reload, try to update themes into the database");
-    ThemeChoicer::initThemesFromDir(m_db);
+    ThemeChoicer::initThemesFromDir(pDb);
     reloadTheme();
   }
   
   /* load levels */
-  if(m_db->levels_isIndexUptodate() == false) {
-      LevelsManager::instance()->reloadLevelsFromLvl(m_db, XMSession::instance()->useGraphics() ? this : NULL);
+  if(pDb->levels_isIndexUptodate() == false) {
+      LevelsManager::instance()->reloadLevelsFromLvl(NULL, XMSession::instance()->useGraphics() ? this : NULL);
   }
-  LevelsManager::instance()->reloadExternalLevels(m_db, XMSession::instance()->useGraphics() ? this : NULL);
+  LevelsManager::instance()->reloadExternalLevels(XMSession::instance()->useGraphics() ? this : NULL);
   
   /* Update replays */
-  if(m_db->replays_isIndexUptodate() == false) {
+  if(pDb->replays_isIndexUptodate() == false) {
     initReplaysFromDir();
   }
   
@@ -256,22 +254,22 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
     printf("\nReplay                    Level                     Player\n");
     printf("-----------------------------------------------------------------------\n");
     
-    v_result = m_db->readDB("SELECT a.name, a.id_profile, b.name "
+    v_result = pDb->readDB("SELECT a.name, a.id_profile, b.name "
 			    "FROM replays AS a INNER JOIN levels AS b "
 			    "ON a.id_level = b.id_level;", nrow);
     if(nrow == 0) {
       printf("(none)\n");
     } else {
 	for(unsigned int i=0; i<nrow; i++) {
-	  //m_db->getResult(v_result, 4, i, 0)
+	  //pDb->getResult(v_result, 4, i, 0)
 	  printf("%-25s %-25s %-25s\n",
-		 m_db->getResult(v_result, 3, i, 0),
-		 m_db->getResult(v_result, 3, i, 2),
-		 m_db->getResult(v_result, 3, i, 1)
+		 pDb->getResult(v_result, 3, i, 0),
+		 pDb->getResult(v_result, 3, i, 2),
+		 pDb->getResult(v_result, 3, i, 1)
 		 );
 	}
     }
-    m_db->read_DB_free(v_result);
+    pDb->read_DB_free(v_result);
     quit();
     return;
   }
@@ -329,7 +327,7 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   
   /* -listlevels? */
   if(v_xmArgs.isOptListLevels()) {
-    LevelsManager::instance()->printLevelsList(m_db);
+    LevelsManager::instance()->printLevelsList();
     quit();
     return;
   }
@@ -350,39 +348,39 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   
   /* load packs */
   LevelsManager::checkPrerequires();
-  LevelsManager::instance()->makePacks(m_db, XMSession::instance()->profile(), XMSession::instance()->idRoom(), XMSession::instance()->debug());
+  LevelsManager::instance()->makePacks(XMSession::instance()->profile(), XMSession::instance()->idRoom(), XMSession::instance()->debug());
   
   /* What to do? */
   if(m_PlaySpecificLevelFile != "") {
     try {
-      LevelsManager::instance()->addExternalLevel(m_db, m_PlaySpecificLevelFile);
-      m_PlaySpecificLevelId = LevelsManager::instance()->LevelByFileName(m_db, m_PlaySpecificLevelFile);
+      LevelsManager::instance()->addExternalLevel(m_PlaySpecificLevelFile);
+      m_PlaySpecificLevelId = LevelsManager::instance()->LevelByFileName(m_PlaySpecificLevelFile);
     } catch(Exception &e) {
       m_PlaySpecificLevelId = m_PlaySpecificLevelFile;
     }
   }
   if((m_PlaySpecificLevelId != "")) {
     /* ======= PLAY SPECIFIC LEVEL ======= */
-    StateManager::instance()->pushState(new StatePreplaying(this, m_PlaySpecificLevelId, false));
+    StateManager::instance()->pushState(new StatePreplaying(m_PlaySpecificLevelId, false));
     Logger::Log("Playing as '%s'...", XMSession::instance()->profile().c_str());
   }
   else if(m_PlaySpecificReplay != "") {
     /* ======= PLAY SPECIFIC REPLAY ======= */
-    StateManager::instance()->pushState(new StateReplaying(this, m_PlaySpecificReplay));
+    StateManager::instance()->pushState(new StateReplaying(m_PlaySpecificReplay));
     }
   else {
     /* display what must be displayed */
-    StateMainMenu* pMainMenu = new StateMainMenu(this);
+    StateMainMenu* pMainMenu = new StateMainMenu();
     StateManager::instance()->pushState(pMainMenu);
     
     /* Do we have a player profile? */
     if(XMSession::instance()->profile() == "") {
-      StateManager::instance()->pushState(new StateEditProfile(this, pMainMenu));
+      StateManager::instance()->pushState(new StateEditProfile(pMainMenu));
     } 
     
     /* Should we show a notification box? (with important one-time info) */
     if(XMSession::instance()->notifyAtInit()) {
-      StateManager::instance()->pushState(new StateMessageBox(NULL, this, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));
+      StateManager::instance()->pushState(new StateMessageBox(NULL, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));
       XMSession::instance()->setNotifyAtInit(false);
     }
   }
@@ -395,7 +393,7 @@ void GameApp::run_load(int nNumArgs,char **ppcArgs) {
   
   /* Update stats */
   if(XMSession::instance()->profile() != "") {
-    m_db->stats_xmotoStarted(XMSession::instance()->profile());
+    pDb->stats_xmotoStarted(XMSession::instance()->profile());
   }
   
   Logger::Log("UserInit ended at %.3f", GameApp::getXMTime());
@@ -482,14 +480,14 @@ void GameApp::run_unload() {
     delete m_pJustPlayReplay;
   }    
 
-  StateManager::instance()->destroy();
+  StateManager::destroy();
   
   if(Sound::isInitialized()) {
     Sound::uninit();
   }
 
-  GameRenderer::instance()->destroy();
-  SysMessage::instance()->destroy();  
+  GameRenderer::destroy();
+  SysMessage::destroy();  
 
   if(drawLib != NULL) { /* save config only if drawLib was initialized */
     XMSession::instance()->save(&m_Config);
@@ -505,10 +503,10 @@ void GameApp::run_unload() {
     Logger::uninit();
   }
 
-  InputHandler::instance()->destroy();
-  LevelsManager::instance()->destroy();
-  Theme::instance()->destroy();
-  XMSession::instance()->destroy();
+  InputHandler::destroy();
+  LevelsManager::destroy();
+  Theme::destroy();
+  XMSession::destroy();
 
   /* Shutdown SDL */
   SDL_Quit();

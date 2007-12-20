@@ -28,13 +28,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StateLevelInfoViewer::m_sGUI = NULL;
 
-StateLevelInfoViewer::StateLevelInfoViewer(GameApp* pGame,
-					   const std::string& level,
+StateLevelInfoViewer::StateLevelInfoViewer(const std::string& level,
 					   bool drawStateBehind,
 					   bool updateStatesBehind):
   StateMenu(drawStateBehind,
-	    updateStatesBehind,
-	    pGame)
+	    updateStatesBehind)
 {
   m_level = level;
   m_name  = "StateLevelInfoViewer";
@@ -48,29 +46,19 @@ StateLevelInfoViewer::~StateLevelInfoViewer()
 
 void StateLevelInfoViewer::enter()
 { 
-  createGUIIfNeeded(m_pGame);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
   updateGUI();
 
-  m_pGame->playMusic("menu1");
+  GameApp::instance()->playMusic("menu1");
 
   StateMenu::enter();
 }
 
-void StateLevelInfoViewer::leave()
-{
-  StateMenu::leave();
-}
-
 void StateLevelInfoViewer::enterAfterPop()
 {
-  m_pGame->playMusic("menu1");
+  GameApp::instance()->playMusic("menu1");
   StateMenu::enterAfterPop();
-}
-
-void StateLevelInfoViewer::leaveAfterPush()
-{
-  StateMenu::leaveAfterPush();
 }
 
 void StateLevelInfoViewer::checkEvents()
@@ -109,20 +97,10 @@ void StateLevelInfoViewer::checkEvents()
       if(pListEntry != NULL && !pListEntry->Text.empty()) {
 	/* Do it captain */
 	std::string playSpecificReplay = pListEntry->Text[0];
-	StateManager::instance()->pushState(new StateReplaying(m_pGame, playSpecificReplay));
+	StateManager::instance()->pushState(new StateReplaying(playSpecificReplay));
       }
     }
   }
-}
-
-bool StateLevelInfoViewer::update()
-{
-  return StateMenu::update();
-}
-
-bool StateLevelInfoViewer::render()
-{
-  return StateMenu::render();
 }
 
 void StateLevelInfoViewer::keyDown(int nKey, SDLMod mod,int nChar)
@@ -134,26 +112,6 @@ void StateLevelInfoViewer::keyDown(int nKey, SDLMod mod,int nChar)
   }
 }
 
-void StateLevelInfoViewer::keyUp(int nKey,   SDLMod mod)
-{
-  StateMenu::keyUp(nKey, mod);
-}
-
-void StateLevelInfoViewer::mouseDown(int nButton)
-{
-  StateMenu::mouseDown(nButton);
-}
-
-void StateLevelInfoViewer::mouseDoubleClick(int nButton)
-{
-  StateMenu::mouseDoubleClick(nButton);
-}
-
-void StateLevelInfoViewer::mouseUp(int nButton)
-{
-  StateMenu::mouseUp(nButton);
-}
-
 void StateLevelInfoViewer::clean()
 {
   if(StateLevelInfoViewer::m_sGUI != NULL) {
@@ -162,15 +120,14 @@ void StateLevelInfoViewer::clean()
   }
 }
 
-void StateLevelInfoViewer::createGUIIfNeeded(GameApp* pGame)
+void StateLevelInfoViewer::createGUIIfNeeded()
 {
   if(m_sGUI != NULL)
     return;
 
-  DrawLib* drawLib = pGame->getDrawLib();
+  DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
   m_sGUI = new UIRoot();
-  m_sGUI->setApp(pGame);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
 		      drawLib->getDispWidth(),
@@ -329,21 +286,21 @@ void StateLevelInfoViewer::updateGUI() {
   std::string v_levelPack;
   std::string v_levelDateStr;
 
-  v_result = m_pGame->getDb()->readDB("SELECT name, author, description, packName, date_str "
+  v_result = xmDatabase::instance("main")->readDB("SELECT name, author, description, packName, date_str "
 				      "FROM levels WHERE id_level=\"" + 
 				      xmDatabase::protectString(m_level) + "\";",
 				      nrow);
   if(nrow == 0) {
-    m_pGame->getDb()->read_DB_free(v_result);
+    xmDatabase::instance("main")->read_DB_free(v_result);
     return;
   }
 
-  v_levelName        = m_pGame->getDb()->getResult(v_result, 5, 0, 0);
-  v_levelAuthor      = m_pGame->getDb()->getResult(v_result, 5, 0, 1);
-  v_levelDescription = m_pGame->getDb()->getResult(v_result, 5, 0, 2);
-  v_levelPack        = m_pGame->getDb()->getResult(v_result, 5, 0, 3);
-  v_levelDateStr     = m_pGame->getDb()->getResult(v_result, 5, 0, 4);
-  m_pGame->getDb()->read_DB_free(v_result);
+  v_levelName        = xmDatabase::instance("main")->getResult(v_result, 5, 0, 0);
+  v_levelAuthor      = xmDatabase::instance("main")->getResult(v_result, 5, 0, 1);
+  v_levelDescription = xmDatabase::instance("main")->getResult(v_result, 5, 0, 2);
+  v_levelPack        = xmDatabase::instance("main")->getResult(v_result, 5, 0, 3);
+  v_levelDateStr     = xmDatabase::instance("main")->getResult(v_result, 5, 0, 4);
+  xmDatabase::instance("main")->read_DB_free(v_result);
 
   /* Set information */
 
@@ -390,30 +347,30 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
     /* Create list */
     pList->clear();
     if(pLV_BestTimes_All->getChecked()) {
-      v_result = m_pGame->getDb()->readDB("SELECT finishTime, id_profile FROM profile_completedLevels "
+      v_result = xmDatabase::instance("main")->readDB("SELECT finishTime, id_profile FROM profile_completedLevels "
 			      "WHERE id_level=\""   + xmDatabase::protectString(m_level)    + "\" "
 			      "ORDER BY finishTime LIMIT 10;",
 			      nrow);
       for(unsigned int i=0; i<nrow; i++) {
-	v_finishTime  = atof(m_pGame->getDb()->getResult(v_result, 2, i, 0));
-	v_profile     =      m_pGame->getDb()->getResult(v_result, 2, i, 1);
+	v_finishTime  = atof(xmDatabase::instance("main")->getResult(v_result, 2, i, 0));
+	v_profile     =      xmDatabase::instance("main")->getResult(v_result, 2, i, 1);
 
-	UIListEntry *pEntry = pList->addEntry(m_pGame->formatTime(v_finishTime));
+	UIListEntry *pEntry = pList->addEntry(GameApp::instance()->formatTime(v_finishTime));
 	pEntry->Text.push_back(v_profile);
       }
-      m_pGame->getDb()->read_DB_free(v_result);
+      xmDatabase::instance("main")->read_DB_free(v_result);
     } else {      
-      v_result = m_pGame->getDb()->readDB("SELECT finishTime FROM profile_completedLevels "
+      v_result = xmDatabase::instance("main")->readDB("SELECT finishTime FROM profile_completedLevels "
 			      "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile())  + "\" "
 			      "AND   id_level=\""   + xmDatabase::protectString(m_level)    + "\" "
 			      "ORDER BY finishTime LIMIT 10;",
 			      nrow);
       for(unsigned int i=0; i<nrow; i++) {
-	v_finishTime  = atof(m_pGame->getDb()->getResult(v_result, 1, i, 0));
-	UIListEntry *pEntry = pList->addEntry(m_pGame->formatTime(v_finishTime));
+	v_finishTime  = atof(xmDatabase::instance("main")->getResult(v_result, 1, i, 0));
+	UIListEntry *pEntry = pList->addEntry(GameApp::instance()->formatTime(v_finishTime));
 	pEntry->Text.push_back(XMSession::instance()->profile());
       }
-      m_pGame->getDb()->read_DB_free(v_result);
+      xmDatabase::instance("main")->read_DB_free(v_result);
     }
 
       
@@ -425,7 +382,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
       std::string v_id_profile;
       float       v_finishTime;
 
-      v_result = m_pGame->getDb()->readDB("SELECT a.name, b.id_profile, b.finishTime "
+      v_result = xmDatabase::instance("main")->readDB("SELECT a.name, b.id_profile, b.finishTime "
 			      "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
 			      "ON (a.id_room = b.id_room "
 			      "AND b.id_level=\"" + xmDatabase::protectString(m_level) + "\") "
@@ -435,18 +392,18 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
 	pLV_BestTimes_WorldRecord->setCaption("");
 	return;
       }
-      v_roomName = m_pGame->getDb()->getResult(v_result, 3, 0, 0);
-      if(m_pGame->getDb()->getResult(v_result, 3, 0, 1) != NULL) {
-	v_id_profile = m_pGame->getDb()->getResult(v_result, 3, 0, 1);
-	v_finishTime = atof(m_pGame->getDb()->getResult(v_result, 3, 0, 2));
+      v_roomName = xmDatabase::instance("main")->getResult(v_result, 3, 0, 0);
+      if(xmDatabase::instance("main")->getResult(v_result, 3, 0, 1) != NULL) {
+	v_id_profile = xmDatabase::instance("main")->getResult(v_result, 3, 0, 1);
+	v_finishTime = atof(xmDatabase::instance("main")->getResult(v_result, 3, 0, 2));
       }
-      m_pGame->getDb()->read_DB_free(v_result);
+      xmDatabase::instance("main")->read_DB_free(v_result);
 
       if(v_id_profile != "") {
 	char c_tmp[1024];
 	snprintf(c_tmp, 1024,
 		 GAMETEXT_BY_PLAYER, v_id_profile.c_str());
-	pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + m_pGame->formatTime(v_finishTime) +
+	pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + GameApp::instance()->formatTime(v_finishTime) +
 					      " " + std::string(c_tmp));
       } else {
 	pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + GAMETEXT_WORLDRECORDNA);
@@ -486,18 +443,18 @@ void StateLevelInfoViewer::updateLevelInfoViewerReplays() {
     /* Create list */
     pList->clear();
 
-    v_result = m_pGame->getDb()->readDB(v_sql, nrow);
+    v_result = xmDatabase::instance("main")->readDB(v_sql, nrow);
     for(unsigned int i=0; i<nrow; i++) {
-      UIListEntry *pEntry = pList->addEntry(m_pGame->getDb()->getResult(v_result, 4, i, 0));
-      pEntry->Text.push_back(m_pGame->getDb()->getResult(v_result, 4, i, 1));
+      UIListEntry *pEntry = pList->addEntry(xmDatabase::instance("main")->getResult(v_result, 4, i, 0));
+      pEntry->Text.push_back(xmDatabase::instance("main")->getResult(v_result, 4, i, 1));
 	
-      if(m_pGame->getDb()->getResult(v_result, 4, i, 2) == "0") {
+      if(xmDatabase::instance("main")->getResult(v_result, 4, i, 2) == "0") {
 	pEntry->Text.push_back("("+ std::string(GAMETEXT_NOTFINISHED) + ")");
       } else {
-	pEntry->Text.push_back(m_pGame->formatTime(atof(m_pGame->getDb()->getResult(v_result, 4, i, 3))));
+	pEntry->Text.push_back(GameApp::instance()->formatTime(atof(xmDatabase::instance("main")->getResult(v_result, 4, i, 3))));
       }
     }
-    m_pGame->getDb()->read_DB_free(v_result);
+    xmDatabase::instance("main")->read_DB_free(v_result);
       
     /* Clean up */
     pLV_Replays_Personal->enableWindow(true);

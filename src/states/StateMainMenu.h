@@ -29,27 +29,18 @@ class UILevelList;
 
 class StateMainMenu : public StateMenu {
   public:
-  StateMainMenu(GameApp* pGame,
-		bool drawStateBehind    = false,
-		bool updateStatesBehind = false
-		);
+  StateMainMenu(bool drawStateBehind    = false,
+		bool updateStatesBehind = false);
   virtual ~StateMainMenu();
   
   virtual void enter();
-  virtual void leave();
   /* called when a new state is pushed or poped on top of the
      current one*/
   virtual void enterAfterPop();
-  virtual void leaveAfterPush();
   
-  virtual bool update();
   virtual bool render();
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
-  virtual void keyUp(int nKey,   SDLMod mod);
-  virtual void mouseDown(int nButton);
-  virtual void mouseDoubleClick(int nButton);
-  virtual void mouseUp(int nButton);
   
   static void clean();
   
@@ -63,17 +54,17 @@ class StateMainMenu : public StateMenu {
   private:
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(GameApp* pGame);
-  static UIWindow* makeWindowReplays(GameApp* pGame, UIWindow* i_parent);
-  static UIWindow* makeWindowOptions(GameApp* pGame, UIWindow* i_parent);
-  static UIWindow* makeWindowLevels(GameApp* pGame, UIWindow* i_parent);
-  static UIWindow* makeWindowStats(GameApp* pGame, UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_general(GameApp* pGame, UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_video(GameApp* pGame, UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_audio(GameApp* pGame, UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_controls(GameApp* pGame, UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_rooms(GameApp* pGame, UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_ghosts(GameApp* pGame, UIWindow* i_parent);
+  static void createGUIIfNeeded();
+  static UIWindow* makeWindowReplays(UIWindow* i_parent);
+  static UIWindow* makeWindowOptions(UIWindow* i_parent);
+  static UIWindow* makeWindowLevels(UIWindow* i_parent);
+  static UIWindow* makeWindowStats(UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_general(UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_video(UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_audio(UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_controls(UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_rooms(UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_ghosts(UIWindow* i_parent);
 
   void updateProfile();
 

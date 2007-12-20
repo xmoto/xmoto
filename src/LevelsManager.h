@@ -72,47 +72,44 @@ private:
 
 public:
   LevelsPack& LevelsPackByName(const std::string &i_name);
-  std::string LevelByFileName(xmDatabase *i_db, const std::string& i_fileName);
-  bool doesLevelExist(xmDatabase *i_db, const std::string& i_id);
+  std::string LevelByFileName(const std::string& i_fileName);
+  bool doesLevelExist(const std::string& i_id);
 
   bool doesLevelsPackExist(const std::string &i_name) const;
 
   /* to load or reload levels from files */
-  void makePacks(xmDatabase *i_db,
-		 const std::string& i_playerName,
+  void makePacks(const std::string& i_playerName,
 		 const std::string& i_id_room,
 		 bool i_bDebugMode);
-  void addExternalLevel(xmDatabase *i_db, std::string i_levelFile);
-  void reloadExternalLevels(xmDatabase *i_db,
-			    XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
-  void reloadLevelsFromLvl(xmDatabase *i_db,
-			   XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
+  void addExternalLevel(std::string i_levelFile);
+  void reloadExternalLevels(XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
+  void reloadLevelsFromLvl(xmDatabase* i_threadDb = NULL, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 
   /* to load news levels */
   /* to reload levels already loaded (it will put them into the updateLevels list) */
   /* create the newLevels.xml file */
-  void updateLevelsFromLvl(xmDatabase *i_db, const std::vector<std::string> &NewLvl,
+  void updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
 			   const std::vector<std::string> &UpdatedLvl,
-			   WWWAppInterface* pCaller);
+			   WWWAppInterface* pCaller,
+			   xmDatabase* i_threadDb = NULL);
 
   const std::vector<LevelsPack *> &LevelsPacks();
 
   static void checkPrerequires();
   static void cleanCache();
   
-  void printLevelsList(xmDatabase *i_db) const;
+  void printLevelsList() const;
 
-  bool isInFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
-  void addToFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
-  void delFromFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
+  bool isInFavorite(std::string i_profile, const std::string& i_id_level);
+  void addToFavorite(std::string i_profile, const std::string& i_id_level);
+  void delFromFavorite(std::string i_profile, const std::string& i_id_level);
 
-  bool isInBlacklist(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
-  void addToBlacklist(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
-  void delFromBlacklist(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
+  bool isInBlacklist(std::string i_profile, const std::string& i_id_level);
+  void addToBlacklist(std::string i_profile, const std::string& i_id_level);
+  void delFromBlacklist(std::string i_profile, const std::string& i_id_level);
 
 
-  static std::string getQuickStartPackQuery(xmDatabase *i_db,
-					    unsigned int i_qualityMIN, unsigned int i_difficultyMIN,
+  static std::string getQuickStartPackQuery(unsigned int i_qualityMIN, unsigned int i_difficultyMIN,
 					    unsigned int i_qualityMAX, unsigned int i_difficultyMAX,
 					    const std::string& i_profile, const std::string& i_id_room);
 

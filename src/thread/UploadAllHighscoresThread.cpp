@@ -51,8 +51,8 @@ int UploadAllHighscoresThread::realThreadFunction()
     setThreadCurrentOperation(GAMETEXT_DLHIGHSCORES);
     WebRoom *v_pWebRoom = new WebRoom(this);
     ProxySettings* pProxySettings = XMSession::instance()->proxySettings();
-    std::string    webRoomUrl     = m_pGame->getWebRoomURL(m_pDb);
-    std::string    webRoomName    = m_pGame->getWebRoomName(m_pDb);
+    std::string    webRoomUrl     = GameApp::instance()->getWebRoomURL(m_pDb);
+    std::string    webRoomName    = GameApp::instance()->getWebRoomName(m_pDb);
 
     v_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);
     v_pWebRoom->update();
@@ -80,12 +80,12 @@ int UploadAllHighscoresThread::realThreadFunction()
       "AND r.isFinished "
       "AND ( (h.id_room IS NULL) OR xm_floord(h.finishTime*100.0) > xm_floord(r.finishTime*100.0)) "
       "ORDER BY r.id_level, r.finishTime;";
-    v_result = m_pGame->getDb()->readDB(query, nrow);
+    v_result = m_pDb->readDB(query, nrow);
     m_nbFiles = nrow;
 
     try {
       for (int i = 0; i<nrow; i++) {
-	v_currentIdLevel = m_pGame->getDb()->getResult(v_result, 3, i, 0);
+	v_currentIdLevel = m_pDb->getResult(v_result, 3, i, 0);
 
 	/* send only the best of the replay by level */
 	if(v_previousIdLevel != v_currentIdLevel) {
@@ -93,8 +93,8 @@ int UploadAllHighscoresThread::realThreadFunction()
 
 	  m_percentage = i*100.0/nrow;
 	  setThreadProgress(m_percentage);
-	  v_replay    = m_pGame->getDb()->getResult(v_result, 3, i, 1);
-	  v_levelName = m_pGame->getDb()->getResult(v_result, 3, i, 2);
+	  v_replay    = m_pDb->getResult(v_result, 3, i, 1);
+	  v_levelName = m_pDb->getResult(v_result, 3, i, 2);
 	  setThreadCurrentMicroOperation(v_replay + " (" + v_levelName + ")");
 
 	  try {
@@ -118,7 +118,7 @@ int UploadAllHighscoresThread::realThreadFunction()
     } catch(Exception &e) {
       m_msg = e.getMsg();
     }
-    m_pGame->getDb()->read_DB_free(v_result);
+    m_pDb->read_DB_free(v_result);
     
     return 0;
 }

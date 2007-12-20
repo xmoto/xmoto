@@ -30,12 +30,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StateUpdate::m_sGUI = NULL;
 
-StateUpdate::StateUpdate(GameApp* pGame,
-			 bool drawStateBehind,
+StateUpdate::StateUpdate(bool drawStateBehind,
 			 bool updateStatesBehind):
   StateMenu(drawStateBehind,
-	    updateStatesBehind,
-	    pGame)
+	    updateStatesBehind)
 {
   m_name             = "StateUpdate";
   m_threadStarted    = false;
@@ -56,12 +54,11 @@ void StateUpdate::init()
 
 StateUpdate::~StateUpdate()
 {
-
 }
 
 void StateUpdate::enter()
 {
-  createGUIIfNeeded(m_pGame);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   StateMenu::enter();
@@ -74,10 +71,6 @@ void StateUpdate::leave()
   updateGUI();
 
   StateMenu::leave();
-}
-
-void StateUpdate::checkEvents()
-{
 }
 
 bool StateUpdate::update()
@@ -95,7 +88,7 @@ bool StateUpdate::update()
 
     if(v_thread_res == 0) {
       if(m_messageOnSuccess == true && m_msg != "") {
-	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, m_msg, UI_MSGBOX_OK);
+	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_msg, UI_MSGBOX_OK);
 	v_msgboxState->setId("SUCCESS");
 	StateManager::instance()->pushState(v_msgboxState);
       } else {
@@ -104,7 +97,7 @@ bool StateUpdate::update()
     }
     else {
       if(m_messageOnFailure == true && m_msg != "") {
-	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, m_msg, UI_MSGBOX_OK);
+	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_msg, UI_MSGBOX_OK);
 	v_msgboxState->setId("ERROR");
 	StateManager::instance()->pushState(v_msgboxState);
       } else {
@@ -122,7 +115,7 @@ bool StateUpdate::update()
       return true;
     }
 
-    m_pThread->startThread(m_pGame);
+    m_pThread->startThread();
     m_threadStarted = true;
 
     Logger::Log("thread started");
@@ -160,15 +153,14 @@ void StateUpdate::clean()
   }
 }
 
-void StateUpdate::createGUIIfNeeded(GameApp* pGame)
+void StateUpdate::createGUIIfNeeded()
 {
   if(m_sGUI != NULL)
     return;
 
-  DrawLib* drawLib = pGame->getDrawLib();
+  DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
   m_sGUI = new UIRoot();
-  m_sGUI->setApp(pGame);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
 		      drawLib->getDispWidth(),
@@ -200,7 +192,7 @@ void StateUpdate::createGUIIfNeeded(GameApp* pGame)
 
   UIStatic* v_static;
   v_static = new UIStatic(v_frame, 0, 0, "", v_frame->getPosition().nWidth, v_frame->getPosition().nHeight - proH * 2);
-  v_static->setFont(pGame->getDrawLib()->getFontMedium());            
+  v_static->setFont(drawLib->getFontMedium());            
   v_static->setHAlign(UI_ALIGN_CENTER);
   v_static->setID("TEXT");
 }

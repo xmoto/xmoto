@@ -27,7 +27,7 @@ class CameraAnimation;
 
 class StatePreplaying : public StateScene {
   public:
-  StatePreplaying(GameApp* pGame, const std::string i_idlevel, bool i_sameLevel);
+  StatePreplaying(const std::string i_idlevel, bool i_sameLevel);
   virtual ~StatePreplaying();
   
   virtual void enter();
@@ -41,10 +41,6 @@ class StatePreplaying : public StateScene {
   virtual bool render();
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
-  virtual void keyUp(int nKey,   SDLMod mod);
-  virtual void mouseDown(int nButton);
-  virtual void mouseDoubleClick(int nButton);
-  virtual void mouseUp(int nButton);
 
   private:
   void executeOneCommand(std::string cmd);

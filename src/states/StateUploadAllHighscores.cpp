@@ -18,15 +18,12 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "Game.h"
-#include "GameText.h"
 #include "StateUploadAllHighscores.h"
 #include "thread/UploadAllHighscoresThread.h"
 
-StateUploadAllHighscores::StateUploadAllHighscores(GameApp* pGame,
-					   bool drawStateBehind,
-					   bool updateStatesBehind)
-: StateUpdate(pGame, drawStateBehind, updateStatesBehind)
+StateUploadAllHighscores::StateUploadAllHighscores(bool drawStateBehind,
+						   bool updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind)
 {
   m_pThread          = new UploadAllHighscoresThread();
   m_name             = "StateUploadAllHighscores";

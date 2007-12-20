@@ -60,7 +60,7 @@ class InputHandler;
 
 class LuaLibGame {
 public:
-  LuaLibGame(MotoGame *i_pMotoGame, InputHandler *i_pActiveInputHandler);
+  LuaLibGame(MotoGame *i_pMotoGame);
   ~LuaLibGame();
 
   void loadScript(const std::string& i_scriptCode, const std::string& i_scriptFilename);

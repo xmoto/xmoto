@@ -29,8 +29,7 @@ class UIRoot;
 
 class StateMultiUpdate : public StateMenu {
 public:
-  StateMultiUpdate(GameApp* pGame,
-		   bool drawStateBehind,
+  StateMultiUpdate(bool drawStateBehind,
 		   bool updateStatesBehind);
   virtual ~StateMultiUpdate();
 
@@ -76,7 +75,7 @@ protected:
 private:
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(GameApp* pGame);
+  static void createGUIIfNeeded();
 
   void init();
 };
