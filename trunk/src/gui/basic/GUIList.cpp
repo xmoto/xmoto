@@ -186,13 +186,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     n = (y - LinesStartY() - m_nScroll) / m_rowHeight;
-    unsigned int n_j = 0;
-    for(unsigned int i = 0; i<=n; i++) {
+
+    unsigned int n_filtered  = 0;
+    unsigned int n_ok        = 0;
+    unsigned int i           = 0;
+    while(n_ok <= n && i<m_Entries.size()) {
       if(m_Entries[i]->bFiltered) {
-	n_j++;
+	n_filtered++;
+      } else {
+	n_ok++;
       }
+      i++;
     }
-    n += n_j;
+    n += n_filtered;
 
     if(n < 0 || n >= m_Entries.size()) {
       return -1;
