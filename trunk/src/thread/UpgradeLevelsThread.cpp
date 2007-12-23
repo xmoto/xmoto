@@ -117,7 +117,6 @@ int UpgradeLevelsThread::realThreadFunction()
 
     int nULevels=0;
     nULevels = m_pWebLevels->nbLevelsToGet(m_pDb);
-    bool bWebLevelsToDownload = (nULevels != 0);
 
     Logger::Log("WWW: %d new or updated level%s found",
 		nULevels,
@@ -188,7 +187,7 @@ int UpgradeLevelsThread::realThreadFunction()
 
 void UpgradeLevelsThread::setTaskProgress(float p_percent)
 {
-  setThreadProgress(p_percent);
+  setThreadProgress((int)p_percent);
 }
 
 std::string UpgradeLevelsThread::getMsg() const

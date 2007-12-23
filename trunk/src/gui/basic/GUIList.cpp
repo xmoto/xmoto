@@ -188,7 +188,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     unsigned int n_filtered  = 0;
     unsigned int n_ok        = 0;
     unsigned int i           = 0;
-    while(n_ok <= n && i<m_Entries.size()) {
+    while((n >=0 && n_ok <= (unsigned int)n) && i<m_Entries.size()) {
       if(m_Entries[i]->bFiltered) {
 	n_filtered++;
       } else {

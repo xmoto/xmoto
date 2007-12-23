@@ -212,7 +212,7 @@ void Biker::updateToTime(float i_time, float i_timeStep,
 }
 
 bool Biker::isTouching(const Entity* i_entity) const {
-  for(int i=0; i<m_entitiesTouching.size(); i++) {
+  for(unsigned int i=0; i<m_entitiesTouching.size(); i++) {
     if(m_entitiesTouching[i] == i_entity) {
       return true;
     }
@@ -230,7 +230,7 @@ Biker::touch Biker::setTouching(Entity* i_entity, bool i_touching) {
     m_entitiesTouching.push_back(i_entity);
     return added;
   } else {
-    for(int i=0; i<m_entitiesTouching.size(); i++) {
+    for(unsigned int i=0; i<m_entitiesTouching.size(); i++) {
       if(m_entitiesTouching[i] == i_entity) {
 	m_entitiesTouching.erase(m_entitiesTouching.begin() + i);
 	return removed;
@@ -259,7 +259,7 @@ Biker::touch Biker::setTouching(Zone* i_zone, bool i_isTouching) {
     m_zonesTouching.push_back(i_zone);
     return added;
   } else {
-    for(int i=0; i<m_zonesTouching.size(); i++) {
+    for(unsigned int i=0; i<m_zonesTouching.size(); i++) {
       if(m_zonesTouching[i] == i_zone) {
 	m_zonesTouching.erase(m_zonesTouching.begin() + i);
 	return removed;

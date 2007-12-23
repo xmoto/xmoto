@@ -42,7 +42,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Entity.h"
 
 #include <curl/curl.h>
-#include <iomanip.h>
+#include <iomanip>
 #include "states/StateManager.h"
 #include "states/StatePause.h"
 #include "states/StateDeadMenu.h"
@@ -222,7 +222,6 @@ GameApp::GameApp() {
   void GameApp::gameScreenshot() {
     //    Img *pShot = getDrawLib()->grabScreen(2);      
     Img *pShot = getDrawLib()->grabScreen();
-    FileHandle *pfh;
 
     std::string v_ShotsDir;
     std::string v_ShotExtension;
@@ -316,9 +315,10 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     std::string RealName = Name;
     
     /* Strip illegal characters from name */
-    int i=0;
+    unsigned int i=0;
     while(1) {
-      if(i >= RealName.length()) break;
+      if(i >= RealName.length())
+	break;
       
       if((RealName[i] >= 'a' && RealName[i] <= 'z') ||
          (RealName[i] >= 'A' && RealName[i] <= 'Z') ||
@@ -371,7 +371,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       return "";
     }
 
-    for(int i=1;i<m_currentPlayingList->getEntries().size();i++) {
+    for(unsigned int i=1;i<m_currentPlayingList->getEntries().size();i++) {
       if((*((std::string*)m_currentPlayingList->getEntries()[i]->pvUser)) == i_id_level) {
 	return *((std::string*)m_currentPlayingList->getEntries()[i-1]->pvUser);
       }
@@ -388,7 +388,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     unsigned int nrow;
     std::string v_roomName;
     std::string v_id_profile;
-    float       v_finishTime;
+    float       v_finishTime = 0.0f;
     xmDatabase* v_pDb = xmDatabase::instance("main");
 
     v_result = v_pDb->readDB("SELECT a.name, b.id_profile, b.finishTime "
@@ -642,7 +642,6 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
 
   void GameApp::initReplaysFromDir(xmDatabase* threadDb,
 				   XMotoLoadReplaysInterface* pLoadReplaysInterface) {
-    ReplayInfo* rplInfos;
     std::vector<std::string> ReplayFiles;
     ReplayFiles = FS::findPhysFiles("Replays/*.rpl");
     xmDatabase* pDb = NULL;

@@ -133,5 +133,5 @@ std::string CheckWwwThread::getMsg() const
 
 void CheckWwwThread::setTaskProgress(float p_percent)
 {
-  setThreadProgress(p_percent);
+  setThreadProgress((int)p_percent);
 }

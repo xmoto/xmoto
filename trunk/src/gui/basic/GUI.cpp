@@ -473,7 +473,8 @@ bool UIWindow::isUglyMode() {
     Texture *vTexture = NULL;
     
     struct _ElemTable {
-      UIElem E; int nX,nY,nWidth,nHeight;
+      UIElem E;
+      int nX, nY, nWidth, nHeight;
     };
     
     static _ElemTable Table[] = {
@@ -506,7 +507,7 @@ bool UIWindow::isUglyMode() {
       {UI_ELEM_FRAME_BL,169,198,8,8},
       {UI_ELEM_FRAME_BM,172,198,20,8},
       {UI_ELEM_FRAME_BR,187,198,8,8},
-      (UIElem)-1
+      {(UIElem)-1,-1,-1,-1,-1}
     };
         
     int nElem = 0;
@@ -519,15 +520,16 @@ bool UIWindow::isUglyMode() {
       nElem++;
     }
     
-    if(p==NULL) return;
+    if(p==NULL)
+      return;
     
     int w = nWidth;
     int h = nHeight;
-//    if (h <0){
-//      return;
-//    }
-    if(w < 0) w = p->nWidth;
-    if(h < 0) h = p->nHeight;
+
+    if(w < 0)
+      w = p->nWidth;
+    if(h < 0)
+      h = p->nHeight;
     
     float fX1 = ((float)p->nX) / 256.0f;
     float fY1 = ((float)p->nY) / 256.0f;

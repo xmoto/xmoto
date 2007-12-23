@@ -37,7 +37,7 @@ void xmDatabase::webrooms_addRoom(const std::string& i_id_room, const std::strin
 }
 
 std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscoresFile,
-					const std::string& i_websource) {
+					       const std::string& i_websource) {
   XMLDocument v_webHSXml;
   TiXmlDocument *v_webHSXmlData;
   TiXmlElement *v_webHSXmlDataElement;
@@ -50,7 +50,7 @@ std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscore
   std::string v_time;
   std::string v_date;
   float v_fTime;
-  int pos_1, pos_2, pos_3;
+  unsigned int pos_1, pos_2;
 
   try {
     simpleSql("BEGIN TRANSACTION;");
@@ -92,22 +92,30 @@ std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscore
 	) {
       
       pc = pVarElem->Attribute("level_id");
-      if(pc == NULL) { continue; }
+      if(pc == NULL) {
+	continue;
+      }
       v_levelId = pc;
 
       pc = pVarElem->Attribute("player");
-      if(pc == NULL) { continue; }
+      if(pc == NULL) {
+	continue;
+      }
       v_player = pc;
 
       /* time */
       pc = pVarElem->Attribute("time");
-      if(pc == NULL) { continue; }
+      if(pc == NULL) {
+	continue;
+      }
       v_time = pc;
 
       pos_1 = v_time.find(":", 0);
-      if(pos_1 == std::string::npos || pos_1 == v_time.length()-1) continue;
+      if(pos_1 == std::string::npos || pos_1 == v_time.length()-1)
+	continue;
       pos_2 = v_time.find(":", pos_1+1);
-      if(pos_2 == std::string::npos) continue;    
+      if(pos_2 == std::string::npos)
+	continue;
 
       v_fTime =
 	atof(v_time.substr(0, pos_1).c_str()) * 60.0        +
@@ -119,12 +127,16 @@ std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscore
 
       /* replay */
       pc = pVarElem->Attribute("replay");
-      if(pc == NULL) { continue; }
+      if(pc == NULL) {
+	continue;
+      }
       v_rplUrl = pc;
 
       /* date */
       pc = pVarElem->Attribute("date");
-      if(pc == NULL) { continue; }
+      if(pc == NULL) {
+	continue;
+      }
       v_date = pc;
 
       std::ostringstream v_secondTime;
@@ -213,38 +225,47 @@ void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile, bool i_u
     while(pVarElem != NULL) {
     
       pc = pVarElem->Attribute("level_id");
-      if(pc == NULL) continue;
+      if(pc == NULL)
+	continue;
       v_levelId = pc;
 	
       pc = pVarElem->Attribute("name");
-      if(pc == NULL) continue;
+      if(pc == NULL)
+	continue;
       v_levelName = pc;
 	  
       pc = pVarElem->Attribute("url");
-      if(pc == NULL) continue;
+      if(pc == NULL)
+	continue;
       v_url = pc;  
 	    
       pc = pVarElem->Attribute("sum");
-      if(pc == NULL) continue;
+      if(pc == NULL)
+	continue;
       v_MD5sum_web = pc;
 	      
       /* web informations */
       pc = pVarElem->Attribute("web_difficulty");
-      if(pc == NULL) continue;
+      if(pc == NULL)
+	continue;
       v_difficulty = pc;
-      for(int i=0; i<v_difficulty.length(); i++) {
-	if(v_difficulty[i] == ',') v_difficulty[i] = '.';
+      for(unsigned int i=0; i<v_difficulty.length(); i++) {
+	if(v_difficulty[i] == ',')
+	  v_difficulty[i] = '.';
       }
 
       pc = pVarElem->Attribute("web_quality");
-      if(pc == NULL) continue;
+      if(pc == NULL)
+	continue;
       v_quality = pc;
-      for(int i=0; i<v_quality.length(); i++) {
-	if(v_quality[i] == ',') v_quality[i] = '.';
+      for(unsigned int i=0; i<v_quality.length(); i++) {
+	if(v_quality[i] == ',')
+	  v_quality[i] = '.';
       }
 
       pc = pVarElem->Attribute("creation_date");
-      if(pc == NULL) continue;
+      if(pc == NULL)
+	continue;
       v_creationDate = pc;
 
       if(i_useCrappyPack) {

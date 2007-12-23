@@ -184,7 +184,7 @@ void StateUpdate::createGUIIfNeeded()
   int proH = 15;
   int proX = nWidth / 32;
   int proY = nHeight - proH * 2;
-  int proW = nWidth * (15.0/16.0);
+  int proW = (int)(nWidth * (15.0/16.0));
 
   UIProgressBar* v_progress;
   v_progress = new UIProgressBar(v_frame, proX, proY, proW, proH);

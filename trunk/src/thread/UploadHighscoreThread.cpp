@@ -67,5 +67,5 @@ std::string UploadHighscoreThread::getMsg() const {
 }
 
 void UploadHighscoreThread::setTaskProgress(float p_percent) {
-  setThreadProgress(p_percent);
+  setThreadProgress((int)p_percent);
 }

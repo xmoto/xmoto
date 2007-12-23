@@ -249,7 +249,6 @@ int xmDatabase::getXmDbVersion() {
 
 void xmDatabase::updateXmDbVersion(int i_newVersion) {
   std::ostringstream v_newVersion;
-  char *errMsg;
   std::string v_errMsg;
 
   v_newVersion << i_newVersion;
@@ -261,7 +260,6 @@ void xmDatabase::updateXmDbVersion(int i_newVersion) {
 void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
 				      const std::string& i_profile,
 				      XmDatabaseUpdateInterface *i_interface) {
-  char *errMsg;
   std::string v_errMsg;
 
   /* no break in this swicth ! */
@@ -489,7 +487,7 @@ void xmDatabase::simpleSql(const std::string& i_sql) {
 }
 
 void xmDatabase::debugResult(char **i_result, int ncolumn, unsigned int nrow) {
-  for(int i=0; i<ncolumn*(nrow+1); i++) {
+  for(unsigned int i=0; i<ncolumn*(nrow+1); i++) {
     printf("result[%i] = %s\n", i, i_result[i]);
   }
 }
@@ -527,7 +525,7 @@ void xmDatabase::read_DB_free(char **i_result) {
 std::string xmDatabase::protectString(const std::string& i_str) {
   std::string v_res;
 
-  for(int i=0; i<i_str.length(); i++) {
+  for(unsigned int i=0; i<i_str.length(); i++) {
     switch(i_str[i]) {
     case '"':
       v_res.append("\"\"");

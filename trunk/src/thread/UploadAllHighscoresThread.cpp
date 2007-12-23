@@ -84,14 +84,14 @@ int UploadAllHighscoresThread::realThreadFunction()
     m_nbFiles = nrow;
 
     try {
-      for (int i = 0; i<nrow; i++) {
+      for (unsigned int i = 0; i<nrow; i++) {
 	v_currentIdLevel = m_pDb->getResult(v_result, 3, i, 0);
 
 	/* send only the best of the replay by level */
 	if(v_previousIdLevel != v_currentIdLevel) {
 	  v_previousIdLevel = v_currentIdLevel;
 
-	  m_percentage = i*100.0/nrow;
+	  m_percentage = (int)(i*100.0/nrow);
 	  setThreadProgress(m_percentage);
 	  v_replay    = m_pDb->getResult(v_result, 3, i, 1);
 	  v_levelName = m_pDb->getResult(v_result, 3, i, 2);

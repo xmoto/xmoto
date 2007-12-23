@@ -154,7 +154,7 @@ int UpdateThemeThread::realThreadFunction()
 	  v_data.v_nb_files_performed = v_nb_files_performed;
 	  
 	  float v_percentage = (((float)v_nb_files_performed) * 100.0) / ((float)v_nb_files_to_download);
-	  setThreadProgress(v_percentage);
+	  setThreadProgress((int)v_percentage);
 	  setThreadCurrentMicroOperation((*v_required_files)[i].filepath);
 	  
 	  FS::mkArborescence(v_destinationFile);
@@ -204,7 +204,7 @@ int UpdateThemeThread::realThreadFunction()
 }
 
 void UpdateThemeThread::setTaskProgress(float p_percent) {
-  setThreadProgress(p_percent);
+  setThreadProgress((int)p_percent);
 }
 
 void UpdateThemeThread::askThreadToEnd() {

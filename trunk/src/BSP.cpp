@@ -300,8 +300,9 @@ void BSP::splitPoly(BSPPoly *pPoly, BSPPoly *pFront, BSPPoly *pBack, BSPLine *pL
       bool bSplit = false;
       
       /* Next vertex? */
-      int j=i+1;
-      if(j==pPoly->Vertices().size()) j=0;
+      unsigned int j = i+1;
+      if(j == pPoly->Vertices().size())
+	j=0;
       
       /* Which sides should we add this corner to? */
       if(Rels[i] == SPR_ON_PLANE) {

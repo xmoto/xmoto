@@ -50,7 +50,7 @@ class ParticlesSource;
       nVertexBufferID = nTexCoordBufferID = 0;
     }
     
-    int nNumVertices;
+    unsigned int nNumVertices;
     GeomCoord *pVertices;
     GeomCoord *pTexCoords;
     
@@ -247,7 +247,7 @@ class ParticlesSource;
     void _RenderAdditiveBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
     void _RenderAlphaBlendedSectionSP(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
     void _RenderRectangle(const Vector2f& i_p1, const Vector2f& i_p2, const Color& i_color);
-    void _RenderCircle(int nSteps,Color CircleColor,const Vector2f &C,float fRadius);
+    void _RenderCircle(unsigned int nSteps,Color CircleColor,const Vector2f &C,float fRadius);
     void _deleteGeoms(std::vector<Geom *>& geom);
 
     void renderTimePanel(MotoGame* i_scene);

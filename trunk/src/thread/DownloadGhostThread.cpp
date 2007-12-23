@@ -108,7 +108,7 @@ int DownloadGhostThread::realThreadFunction()
 
 void DownloadGhostThread::setTaskProgress(float p_percent)
 {
-  setThreadProgress(p_percent);
+  setThreadProgress((int)p_percent);
 }
 
 std::string DownloadGhostThread::getMsg() const
