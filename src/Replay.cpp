@@ -54,14 +54,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void Replay::_FreeReplay(void) {
 
     /* Get rid of replay events */
-    for(int i=0;i<m_ReplayEvents.size();i++) {
+    for(unsigned int i=0;i<m_ReplayEvents.size();i++) {
       delete m_ReplayEvents[i]->Event;
       delete m_ReplayEvents[i];
     }
     m_ReplayEvents.clear();
 
     /* Dealloc chunks */
-    for(int i=0;i<m_Chunks.size();i++) {
+    for(unsigned int i=0;i<m_Chunks.size();i++) {
       if(m_Chunks[i]->pcChunkData != NULL) {
         delete [] m_Chunks[i]->pcChunkData;
       }
@@ -144,7 +144,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     FS::writeInt_LE(pfh,m_Chunks.size());
     
     /* Write chunks */    
-    for(int i=0;i<m_Chunks.size();i++) {
+    for(unsigned int i=0;i<m_Chunks.size();i++) {
       FS::writeInt_LE(pfh,m_Chunks[i]->nNumStates);
       
       /* Compression enabled? */
@@ -299,7 +299,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	throw Exception("Replay with no chunk !");
       }
 
-      for(int i=0;i<nNumChunks;i++) {
+      for(unsigned int i=0;i<nNumChunks;i++) {
 	if(bDisplayInformation) {
 	  printf("Chunk %02i\n", i);
 	}  
@@ -372,7 +372,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* unserialize events */
     MotoGame::unserializeGameEvents(this, &m_ReplayEvents, bDisplayInformation);
     initOutput(1024);
-    for(int i=0; i<m_ReplayEvents.size(); i++) {
+    for(unsigned int i=0; i<m_ReplayEvents.size(); i++) {
       m_ReplayEvents[i]->Event->serialize(*this);
     }
 
@@ -501,7 +501,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_bEndOfFile = false;
 
     /* resetting events */
-    for(int i=0;i<m_ReplayEvents.size();i++) {
+    for(unsigned int i=0;i<m_ReplayEvents.size();i++) {
       m_ReplayEvents[i]->bPassed = false;
     }
   }

@@ -201,7 +201,7 @@ GameApp::GameApp() {
     char c[2] = {' ', '\0'};    
     int lineLength = 0;
 
-    for(int i=0; i<str.length(); i++) {
+    for(unsigned int i=0; i<str.length(); i++) {
       if((lineLength > p_breakLineLength && str[i] == ' ') ||
         str[i] == '\n') {
         c[0] = '\n';
@@ -354,7 +354,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       return "";
     }
 
-    for(int i=0;i<m_currentPlayingList->getEntries().size()-1;i++) {
+    for(unsigned int i=0;i<m_currentPlayingList->getEntries().size()-1;i++) {
       if((*((std::string*)m_currentPlayingList->getEntries()[i]->pvUser)) == i_id_level) {
 	return *((std::string*)m_currentPlayingList->getEntries()[i+1]->pvUser);
       }

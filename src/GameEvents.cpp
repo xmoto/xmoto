@@ -57,7 +57,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     //char c[n];
     //Buffer.readBuf(c, n);
     //c[n-1] = '\0';
-    //for(int i=0; i<n-1; i++) {
+    //for(unsigned int i=0; i<n-1; i++) {
     //  if(c[i] == '\0') {
     //	c[i] = '0';
     //  } else {

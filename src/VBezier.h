@@ -47,7 +47,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     private:
       /* Helper functions */
-      float _SectionLength(float t1,float t2,int nSteps,float fGuestimate);
+      float _SectionLength(float t1, float t2, unsigned int nSteps, float fGuestimate);
     
       /* Data */
       Vector3f m_P[4];        /* Coefficients */
@@ -75,31 +75,35 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       
       /* Methods */
       void startCreation(int nMaxPoints);
-      void finishCreation(void);
+      void finishCreation();
       void addPoint(BezierShapePoint &p);
-      float length(void);
+      float length();
       Vector3f step(float t);
       
       /* Data interface */
-      int getNumPoints(void) {return m_nNumPoints;}
-      BezierShapePoint &getPoint(int n) {
-        if(n<0 || n>=m_nNumPoints) throw Exception("bezier shape point index out of bounds");
+      int getNumPoints() {
+	return m_nNumPoints;
+      }
+      BezierShapePoint &getPoint(unsigned int n) {
+        if(n >= m_nNumPoints)
+	  throw Exception("bezier shape point index out of bounds");
         return m_pPoints[n];
       }      
-      BezierCurve &getCurve(int n) {
-        if(n<0 || n>=m_nNumPoints) throw Exception("bezier shape curve index out of bounds");        
+      BezierCurve &getCurve(unsigned int n) {
+        if(n >= m_nNumPoints)
+	  throw Exception("bezier shape curve index out of bounds");
         return m_pCurves[n];
       }
       
     private:
       /* Helper functions */
-      float _UpdateLength(void);
+      float _UpdateLength();
     
       /* Data */
       BezierShapePoint *m_pPoints;
       BezierCurve *m_pCurves;
       float *m_pfCurveLengths;
-      int m_nMaxPoints,m_nNumPoints;
+      unsigned int m_nMaxPoints, m_nNumPoints;
       float m_fLength;
   };  
 

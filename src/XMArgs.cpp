@@ -228,7 +228,7 @@ std::string XMArguments::levelArg2levelId(std::string i_arg) {
           
   /* If it is a plain number */
   bool v_isANumber =  true;
-  for(int i=0; i<v_res.length(); i++) {
+  for(unsigned int i=0; i<v_res.length(); i++) {
     if(v_res[i] < '0' || v_res[i] > '9') {
       v_isANumber = false;
     }

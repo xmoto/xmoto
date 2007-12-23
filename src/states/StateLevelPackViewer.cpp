@@ -342,7 +342,7 @@ void StateLevelPackViewer::updateGUI()
   /* reselect the previous level */
   if(v_selected_levelName != "") {
     int nLevel = 0;
-    for(int i=0; i<pList->getEntries().size(); i++) {
+    for(unsigned int i=0; i<pList->getEntries().size(); i++) {
       if(pList->getEntries()[i]->Text[0] == v_selected_levelName) {
 	nLevel = i;
 	break;

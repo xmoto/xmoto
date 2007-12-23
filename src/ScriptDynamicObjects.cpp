@@ -188,7 +188,7 @@ void SDynamicEntityMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
   float addvx = 0.0, addvy = 0.0, addvAngle = 0.0;
 
   if(i_nbCents > 0) {
-    for(int i=0; i<i_nbCents; i++) {
+    for(unsigned int i=0; i<i_nbCents; i++) {
       performXY(&vx, &vy, &vAngle);
       addvx += vx;
       addvy += vy;
@@ -248,7 +248,7 @@ void SDynamicBlockMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
   float addvx = 0.0, addvy = 0.0, addvAngle = 0.0;
 
   if(i_nbCents > 0) {
-    for(int i=0; i<i_nbCents; i++) {
+    for(unsigned int i=0; i<i_nbCents; i++) {
       performXY(&vx, &vy, &vAngle);
       addvx += vx;
       addvy += vy;

@@ -43,7 +43,6 @@ StateEditProfile::StateEditProfile(StateMenuContextReceiver* i_receiver,
 
 StateEditProfile::~StateEditProfile()
 {
-
 }
 
 void StateEditProfile::enter()
@@ -68,7 +67,7 @@ void StateEditProfile::checkEvents() {
     if(pList == NULL) {
       throw Exception("EDITPROFILE_FRAME:PROFILE_LIST is NULL");
     }
-    int nIdx = pList->getSelected();
+    unsigned int nIdx = pList->getSelected();
     if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
       UIListEntry *pEntry = pList->getEntries()[nIdx];
 
@@ -226,7 +225,7 @@ void StateEditProfile::send(const std::string& i_id, UIMsgBoxButton i_button, co
 {
   if(i_id == "NEWPROFILE"){
     switch(i_button){
-    case UI_MSGBOX_OK:
+    case UI_MSGBOX_OK:{
       std::string PlayerName = i_input;
       try {
 	xmDatabase::instance("main")->stats_createProfile(PlayerName);
@@ -236,14 +235,17 @@ void StateEditProfile::send(const std::string& i_id, UIMsgBoxButton i_button, co
       createProfileList();
       break;
     }
+    default:
+      break;
+    }
   }
   else if (i_id == "DELETEPROFILE"){
     switch(i_button){
-    case UI_MSGBOX_YES:
+    case UI_MSGBOX_YES:{
       /* Delete selected profile */
       UIList *pList = reinterpret_cast<UIList *>(m_GUI->getChild("EDITPROFILE_FRAME:PROFILE_LIST"));
       if(pList != NULL) {
-	int nIdx = pList->getSelected();
+	unsigned int nIdx = pList->getSelected();
 	if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
 	  UIListEntry *pEntry = pList->getEntries()[nIdx];
 	  
@@ -252,6 +254,9 @@ void StateEditProfile::send(const std::string& i_id, UIMsgBoxButton i_button, co
 	  createProfileList();              
 	}
       }
+      break;
+    }
+    default:
       break;
     }
   }

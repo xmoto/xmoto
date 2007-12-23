@@ -91,7 +91,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       return ScrollBarBarHeight();
     }
 
-    return v_visible / ((float)m_Entries.size() - m_filteredItems) * ((float) ScrollBarBarHeight()) +1;
+    return (int)(v_visible / ((float)m_Entries.size() - m_filteredItems) * ((float) ScrollBarBarHeight()) + 1);
   }
 
   int UIList::ScrollBarScrollerStartX() {
@@ -105,7 +105,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       return ScrollBarArrowHeight() + LineMargeY();
     }
 
-    return LineMargeY() + ScrollBarArrowHeight() + (((float)-m_nScroll)/((float)RowHeight()) / ((float)m_Entries.size() - m_filteredItems) * ((float) ScrollBarBarHeight()));
+    return (int)(LineMargeY() + ScrollBarArrowHeight() + (((float)-m_nScroll)/((float)RowHeight()) / ((float)m_Entries.size() - m_filteredItems) * ((float) ScrollBarBarHeight())));
   }
 
   void UIList::setScrollBarScrollerStartY(float y) {
@@ -115,7 +115,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       return;
     }
 
-    _Scroll(-m_nScroll + ((-y + LineMargeY() + ScrollBarArrowHeight() + ScrollBarScrollerHeight()/2.0) * ((float)RowHeight()) * ((float)m_Entries.size() - m_filteredItems) / ((float) ScrollBarBarHeight())));
+    _Scroll((int)(-m_nScroll + ((-y + LineMargeY() + ScrollBarArrowHeight() + ScrollBarScrollerHeight()/2.0) * ((float)RowHeight()) * ((float)m_Entries.size() - m_filteredItems) / ((float) ScrollBarBarHeight()))));
   }
 
   float UIList::ScrollNbVisibleItems() {
@@ -170,13 +170,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return m_Columns;
   }
   
-  int UIList::getSelected(void) {
+  unsigned int UIList::getSelected(void) {
     return m_nRealSelected;
   }
 
   int UIList::getRowAtPosition(int x, int y) {
-    int n;
-
     if(y <= LinesStartY()) {
       return -1;
     }
@@ -185,7 +183,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       return -1;
     }
 
-    n = (y - LinesStartY() - m_nScroll) / m_rowHeight;
+    int n = (y - LinesStartY() - m_nScroll) / m_rowHeight;
 
     unsigned int n_filtered  = 0;
     unsigned int n_ok        = 0;
@@ -200,7 +198,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
     n += n_filtered;
 
-    if(n < 0 || n >= m_Entries.size()) {
+    if(n < 0 || (unsigned int)n >= m_Entries.size()) {
       return -1;
     }
 
@@ -213,16 +211,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     int nHX = LineMargeX();
-  
-    for(int i=0;i<m_Columns.size();i++) {
+
+    for(unsigned int i=0; i<m_Columns.size(); i++) {
       if(!(m_nColumnHideFlags & (1<<i))) {
 	int nW = m_ColumnWidths[i];
-      
-	for(int j=i+1;j<m_Columns.size();j++) {
+
+	for(unsigned int j=i+1; j<m_Columns.size(); j++) {
 	  if(m_nColumnHideFlags & (1<<j))
 	    nW += m_ColumnWidths[i]; 
 	}           
-      
+
 	/* Mouse in this one? */
 	if(x >= nHX && x <= nHX + nW)
 	  return i;
@@ -353,21 +351,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
         
     /* Draw column headers */
-    int nHX = 6,nHY = 6;
+    int nHX = 6, nHY = 6;
     setTextSolidColor(MAKE_COLOR(188,186,67,255));
-    for(int i=0;i<m_Columns.size();i++) {
+    for(unsigned int i=0; i<m_Columns.size(); i++) {
       if(!(m_nColumnHideFlags & (1<<i))) {
         putText(nHX,nHY,m_Columns[i]);
         nHX += m_ColumnWidths[i]; 
         
         /* Next columns disabled? If so, make more room to this one */
-        for(int j=i+1;j<m_Columns.size();j++) {
+        for(unsigned int j=i+1; j<m_Columns.size(); j++) {
           if(m_nColumnHideFlags & (1<<j))
             nHX += m_ColumnWidths[i]; 
         }           
       }
     }
-    putRect(6,m_headerHeight+6,getPosition().nWidth-12,2,MAKE_COLOR(188,186,67,255));
+    putRect(6, m_headerHeight+6, getPosition().nWidth-12, 2, MAKE_COLOR(188,186,67,255));
 
     /* Render list */    
     if(!isMouseLDown()) {
@@ -401,7 +399,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     setScissor(m_lineMargeX,LinesStartY(),LinesWidth(),LinesHeight());
       
     int m_numEntryDisplayed = 0;
-    for(int i=0;i<m_Entries.size();i++) {
+    for(unsigned int i=0;i<m_Entries.size();i++) {
       if(m_Entries[i]->bFiltered == false) {
 
 	if(m_Entries[i]->bUseOwnProperties) {
@@ -483,11 +481,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  std::string txt_to_display;
 					
 	  int x = 0;
-	  for(int j=0;j<m_Entries[i]->Text.size();j++) {
+	  for(unsigned int j=0; j<m_Entries[i]->Text.size(); j++) {
 	    if(!(m_nColumnHideFlags & (1<<j))) {
 	      /* Next columns disabled? If so, make more room to this one */
 	      int nExtraRoom = 0;
-	      for(int k=j+1;k<m_Columns.size();k++) {
+	      for(unsigned int k=j+1; k<m_Columns.size(); k++) {
 		if(m_nColumnHideFlags & (1<<k))
 		  nExtraRoom += m_ColumnWidths[i]; 
 	      }           
@@ -555,15 +553,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }    
     else {
       /* Find out what item is affected */
-      for(int i=0;i<m_Entries.size()-m_filteredItems;i++) {
+      for(int i=0; i<(int)(m_Entries.size()-m_filteredItems); i++) {
         int yy = m_nScroll + LinesStartY() + i*m_rowHeight;
-        if(x >= m_lineMargeX && x <getPosition().nWidth-6 &&
-          y >= yy && y < yy+m_rowHeight) {
+        if(x >= m_lineMargeX && x <getPosition().nWidth-6
+	   && y >= yy && y < yy+m_rowHeight) {
           /* Select this */
-					setVisibleSelected(i);
+	  setVisibleSelected(i);
           
           /* AND invoke enter-button */
-          if(m_nVisibleSelected>=0 && m_nVisibleSelected<m_Entries.size()-m_filteredItems && m_pEnterButton != NULL) {
+          if(m_nVisibleSelected >= 0
+	     && m_nVisibleSelected < (int)(m_Entries.size()-m_filteredItems)
+	     && m_pEnterButton != NULL) {
             m_pEnterButton->setClicked(true);
 	    try {
 	      Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
@@ -601,10 +601,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }    
     else {
       /* Find out what item is affected */
-      for(int i=0;i<m_Entries.size()-m_filteredItems;i++) {
+      for(int i=0; i<(int)(m_Entries.size()-m_filteredItems); i++) {
         int yy = m_nScroll + LinesStartY() + i*m_rowHeight;
-        if(x >= m_lineMargeX && x <getPosition().nWidth-6 &&
-          y >= yy && y < yy+m_rowHeight) {
+        if(x >= m_lineMargeX && x <getPosition().nWidth-6
+	   && y >= yy && y < yy+m_rowHeight) {
           /* Select this */
 	  setVisibleSelected(i);
           break;
@@ -665,20 +665,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     p->bFiltered = false;
     p->bUseOwnProperties = false;
 
-    if(i_position >=0 && i_position<m_Entries.size()) {
+    if(i_position >=0 && (unsigned int)i_position<m_Entries.size()) {
       m_Entries.insert(m_Entries.begin() + i_position, p);
       return p;
     }
 
     /* Make a temp. lowercase text */
     std::string LCText = Text;
-    for(int i=0;i<LCText.length();i++)
+    for(unsigned int i=0; i<LCText.length(); i++)
       LCText[i] = tolower(LCText[i]);
     
     /* Sorted? */
     if(m_bSort) {
       /* Yeah, keep it alphabetical, please */
-      for(int i=0;i<m_Entries.size();i++) {
+      for(unsigned int i=0; i<m_Entries.size(); i++) {
 
 	if(pvUser != NULL && m_Entries[i]->pvUser != NULL && m_fsort != NULL) {
 	  if(m_fsort(pvUser, m_Entries[i]->pvUser) < 0) {
@@ -689,7 +689,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	} else {
 	  /* Make lowercase before comparing */
 	  std::string LC = m_Entries[i]->Text[0];
-	  for(int j=0;j<LC.length();j++)  
+	  for(unsigned int j=0; j<LC.length(); j++)  
 	    LC[j] = tolower(LC[j]);
 	  
 	  if(LCText < LC) {
@@ -729,7 +729,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Free entries
   ===========================================================================*/
   void UIList::_FreeUIList(void) {
-    for(int i=0;i<m_Entries.size();i++)
+    for(unsigned int i=0; i<m_Entries.size(); i++)
       delete m_Entries[i];
     m_Entries.clear();
   }
@@ -749,7 +749,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     switch(nKey) {
       case SDLK_RETURN: 
         /* Uhh... send this to the default button, if any. And if anything is selected */
-        if(m_nVisibleSelected>=0 && m_nVisibleSelected<m_Entries.size()-m_filteredItems && m_pEnterButton != NULL) {
+        if(m_nVisibleSelected>=0
+	   && m_nVisibleSelected < (int)(m_Entries.size()-m_filteredItems)
+	   && m_pEnterButton != NULL) {
           m_pEnterButton->setClicked(true);       
           
 	  try {
@@ -770,7 +772,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         }
         return true;
       case SDLK_DOWN:
-        if(m_nVisibleSelected >= m_Entries.size()-m_filteredItems - 1)
+        if(m_nVisibleSelected >= (int)(m_Entries.size() - m_filteredItems - 1))
           getRoot()->activateDown();
         else {
           setVisibleSelected(m_nVisibleSelected + 1);
@@ -787,7 +789,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         return true;
       case SDLK_PAGEDOWN:
         for(int i=0;i<10;i++) {
-          if(m_nVisibleSelected >= m_Entries.size()-m_filteredItems - 1)
+          if(m_nVisibleSelected >= (int)(m_Entries.size() - m_filteredItems - 1))
             break;
           else {
             setVisibleSelected(m_nVisibleSelected + 1);
@@ -807,28 +809,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Maybe it's a character? If so, try jumping to a suitable place in the list */
     if(nChar != 0) {
       bool bContinue;
-      int nPos = 0;
+      unsigned int nPos = 0;
       
       do {
         bContinue = false;
         
         /* Look at character number 'nPos' in all entries */
-        for(int i=0;i<m_Entries.size();i++) {
-					if(m_Entries[i]->bFiltered == false) {
-						int nEntryIdx = i + m_nRealSelected + 1; /* always start looking at the next */
-						nEntryIdx %= m_Entries.size();
+        for(unsigned int i=0; i<m_Entries.size(); i++) {
+	  if(m_Entries[i]->bFiltered == false) {
+	    int nEntryIdx = i + m_nRealSelected + 1; /* always start looking at the next */
+	    nEntryIdx %= m_Entries.size();
         
-						if(m_Entries[nEntryIdx]->Text[0].length() > nPos) {
-							if(tolower(m_Entries[nEntryIdx]->Text[0].at(nPos)) == tolower(nChar)) {
-								/* Nice, select this one */
-								setVisibleSelected(nEntryIdx);
-								bContinue = false;
-								return true;
-							}
+	    if(m_Entries[nEntryIdx]->Text[0].length() > nPos) {
+	      if(tolower(m_Entries[nEntryIdx]->Text[0].at(nPos)) == tolower(nChar)) {
+		/* Nice, select this one */
+		setVisibleSelected(nEntryIdx);
+		bContinue = false;
+		return true;
+	      }
             
-							bContinue = true;
-						}
-					}
+	      bContinue = true;
+	    }
+	  }
         }
         
         nPos++;
@@ -839,48 +841,50 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return false;
   }
   
-  void UIList::setRealSelected(int n) {
-		if(n>=m_Entries.size()) return;
+  void UIList::setRealSelected(unsigned int n) {
+    if(n >= m_Entries.size())
+      return;
 
     m_bChanged = true;
-		if(m_filteredItems == 0) { // special case because it happends often
-			m_nRealSelected    = n;
-			m_nVisibleSelected = n;
-		} else {
-			m_nRealSelected = n;
-			m_nVisibleSelected = 0;
-			for(int i=0; i<m_nRealSelected; i++) {
-				if(m_Entries[i]->bFiltered == false) {
-					m_nVisibleSelected++;
-				}
-			}
-		}
+    if(m_filteredItems == 0) { // special case because it happends often
+      m_nRealSelected    = n;
+      m_nVisibleSelected = n;
+    } else {
+      m_nRealSelected = n;
+      m_nVisibleSelected = 0;
+      for(unsigned int i=0; i<m_nRealSelected; i++) {
+	if(m_Entries[i]->bFiltered == false) {
+	  m_nVisibleSelected++;
+	}
+      }
+    }
     _NewlySelectedItem();
   }
 
-	void UIList::setVisibleSelected(int n) {
-		if(n>=m_Entries.size()) return;
+void UIList::setVisibleSelected(unsigned int n) {
+  if(n >= m_Entries.size())
+    return;
 
-		m_bChanged = true;
-		if(m_filteredItems == 0) { // special case because it happends often
-			m_nRealSelected    = n;
-			m_nVisibleSelected = n;
-		} else {
-			m_nVisibleSelected = n;
-			m_nRealSelected    = 0;
+  m_bChanged = true;
+  if(m_filteredItems == 0) { // special case because it happends often
+    m_nRealSelected    = n;
+    m_nVisibleSelected = n;
+  } else {
+    m_nVisibleSelected = n;
+    m_nRealSelected    = 0;
 		
-			int v=0;
-			for(int i=0; i<m_Entries.size(); i++) {
-				if(m_Entries[i]->bFiltered == false) {
-					if(v == n) {
-						m_nRealSelected = i;
-					}
-					v++;
-				}
-			}
-		}
-		_NewlySelectedItem();
+    unsigned int v=0;
+    for(unsigned int i=0; i<m_Entries.size(); i++) {
+      if(m_Entries[i]->bFiltered == false) {
+	if(v == n) {
+	  m_nRealSelected = i;
 	}
+	v++;
+      }
+    }
+  }
+  _NewlySelectedItem();
+}
 
   /*===========================================================================
   Called when a entry is selected
@@ -929,16 +933,16 @@ void UIList::setFilter(std::string i_filter) {
   std::string v_filter_lower;
   
   v_filter_lower = m_filter;
-  for(int j=0; j<v_filter_lower.length(); j++) {
+  for(unsigned int j=0; j<v_filter_lower.length(); j++) {
     v_filter_lower[j] = tolower(v_filter_lower[j]);
   }	
   
-  for(int i=0;i<m_Entries.size();i++) {
+  for(unsigned int i=0; i<m_Entries.size(); i++) {
     bool v_filter = true;
-    for(int j=0; j<m_Entries[i]->Text.size(); j++) {
+    for(unsigned int j=0; j<m_Entries[i]->Text.size(); j++) {
       v_entry_lower = m_Entries[i]->Text[j];
-      for(int j=0; j<v_entry_lower.length(); j++) {
-	v_entry_lower[j] = tolower(v_entry_lower[j]);
+      for(unsigned int k=0; k<v_entry_lower.length(); k++) {
+	v_entry_lower[k] = tolower(v_entry_lower[k]);
       }		
     
       if(v_entry_lower.find(v_filter_lower, 0) != std::string::npos) {
@@ -955,7 +959,7 @@ void UIList::setFilter(std::string i_filter) {
 void UIList::checkForFilteredEntries() {
   m_filteredItems = 0;
 
-  for(int i=0;i<m_Entries.size();i++) {
+  for(unsigned int i=0; i<m_Entries.size(); i++) {
     if(m_Entries[i]->bFiltered) {
       m_filteredItems++;
     }

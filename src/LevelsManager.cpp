@@ -96,7 +96,7 @@ int LevelsPack::getNumberOfFinishedLevels(xmDatabase *i_db, const std::string& i
 void LevelsPack::setHintsFromFile() {
   std::vector<std::string> LpkFiles = FS::findPhysFiles("Levels/*.lpk", true);
 
-  for(int i=0; i<LpkFiles.size(); i++) {
+  for(unsigned int i=0; i<LpkFiles.size(); i++) {
     XMLDocument XML; 
     XML.readFromFile(LpkFiles[i]);
     TiXmlDocument *pDoc = XML.getLowLevelAccess();
@@ -182,14 +182,14 @@ void LevelsManager::clean() {
 
 void LevelsManager::cleanPacks() {
   /* delete existing packs */
-  for(int i=0;i<m_levelsPacks.size();i++) {
+  for(unsigned int i=0;i<m_levelsPacks.size();i++) {
     delete m_levelsPacks[i];
   }
   m_levelsPacks.clear();
 }
 
 LevelsPack& LevelsManager::LevelsPackByName(const std::string &i_name) {
-  for(int i=0; i<m_levelsPacks.size(); i++) {
+  for(unsigned int i=0; i<m_levelsPacks.size(); i++) {
     if(m_levelsPacks[i]->Name() == i_name) {
       return *m_levelsPacks[i];
     }
@@ -198,7 +198,7 @@ LevelsPack& LevelsManager::LevelsPackByName(const std::string &i_name) {
 }
 
 bool LevelsManager::doesLevelsPackExist(const std::string &i_name) const {
-  for(int i=0; i<m_levelsPacks.size(); i++) {
+  for(unsigned int i=0; i<m_levelsPacks.size(); i++) {
     if(m_levelsPacks[i]->Name() == i_name) {
       return true;
     }
@@ -731,13 +731,13 @@ const std::vector<LevelsPack *>& LevelsManager::LevelsPacks() {
   return m_levelsPacks;
 }
 
-void LevelsManager::reloadExternalLevels(XMotoLoadLevelsInterface *i_loadLevelsInterface) {
-  xmDatabase *i_db = xmDatabase::instance("main");
+void LevelsManager::reloadExternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface)
+{
   std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/MyLevels/*.lvl", true);
 
   i_db->levels_add_begin(true);
 
-  for(int i=0; i<LvlFiles.size(); i++) {
+  for(unsigned int i=0; i<LvlFiles.size(); i++) {
     bool bCached = false;
 
     Level *v_level = new Level();
@@ -751,7 +751,7 @@ void LevelsManager::reloadExternalLevels(XMotoLoadLevelsInterface *i_loadLevelsI
       bCached = v_level->loadReducedFromFile();
       
       // Check for ID conflict
-      if(doesLevelExist(v_level->Id())) {
+      if(doesLevelExist(v_level->Id(), i_db)) {
 	throw Exception("Duplicate level ID");
       }
       i_db->levels_add(v_level->Id(),
@@ -785,7 +785,7 @@ void LevelsManager::addExternalLevel(std::string i_levelFile) {
     bCached = v_level->loadReducedFromFile();
       
     // Check for ID conflict
-    if(doesLevelExist(v_level->Id())) {
+    if(doesLevelExist(v_level->Id(), i_db)) {
       throw Exception("Duplicate level ID");
     }
     i_db->levels_add(v_level->Id(),
@@ -814,11 +814,17 @@ void LevelsManager::reloadLevelsFromLvl(xmDatabase* i_threadDb, XMotoLoadLevelsI
   else
     i_db = xmDatabase::instance("main");
 
+  reloadInternalLevels(i_db, i_loadLevelsInterface);
+  reloadExternalLevels(i_db, i_loadLevelsInterface);
+}
+
+void LevelsManager::reloadInternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface)
+{
   std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl", true);
 
   i_db->levels_add_begin(false);
 
-  for(int i=0; i<LvlFiles.size(); i++) {
+  for(unsigned int i=0; i<LvlFiles.size(); i++) {
     bool bCached = false;
     int v_isExternal;
 
@@ -834,7 +840,7 @@ void LevelsManager::reloadLevelsFromLvl(xmDatabase* i_threadDb, XMotoLoadLevelsI
       bCached = v_level->loadReducedFromFile();
       
       // Check for ID conflict
-      if(doesLevelExist(v_level->Id())) {
+      if(doesLevelExist(v_level->Id(), i_db)) {
 	throw Exception("Duplicate level ID");
       }
       i_db->levels_add(v_level->Id(),
@@ -864,8 +870,6 @@ void LevelsManager::reloadLevelsFromLvl(xmDatabase* i_threadDb, XMotoLoadLevelsI
   }
 
   i_db->levels_add_end();
-
-  reloadExternalLevels(i_loadLevelsInterface);
 }
 
 void LevelsManager::checkPrerequires() {
@@ -883,7 +887,7 @@ void LevelsManager::checkPrerequires() {
 void LevelsManager::cleanCache() {
   /* Find all .blv-files in the directory */
   std::vector<std::string> BlvFiles = FS::findPhysFiles("LCache/*.blv");
-  for(int i=0; i<BlvFiles.size(); i++) {
+  for(unsigned int i=0; i<BlvFiles.size(); i++) {
     FS::deleteFile(BlvFiles[i]);
   }
 }
@@ -908,10 +912,9 @@ std::string LevelsManager::LevelByFileName(const std::string& i_fileName) {
     return v_id_level;
 }
 
-bool LevelsManager::doesLevelExist(const std::string& i_id) {
+bool LevelsManager::doesLevelExist(const std::string& i_id, xmDatabase* i_db) {
   char **v_result;
   unsigned int nrow;
-  xmDatabase *i_db = xmDatabase::instance("main");
 
   v_result = i_db->readDB("SELECT id_level "
 			  "FROM levels "
@@ -955,7 +958,7 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
   i_db->levels_cleanNew();
 
   /* new */
-  for(int i=0; i<NewLvl.size(); i++) {
+  for(unsigned int i=0; i<NewLvl.size(); i++) {
     bool bCached = false;
     v_level = new Level();
 
@@ -967,7 +970,7 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
       bCached = v_level->loadReducedFromFile();
       
       // Check for ID conflict
-      if(doesLevelExist(v_level->Id())) {
+      if(doesLevelExist(v_level->Id(), i_db)) {
 	throw Exception("Duplicate level ID");
       }
       i_db->levels_add(v_level->Id(),
@@ -990,7 +993,7 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
   }
 
   /* updated */
-  for(int i=0; i<UpdatedLvl.size(); i++) {
+  for(unsigned int i=0; i<UpdatedLvl.size(); i++) {
     bool bCached = false;
     v_level = new Level();
 

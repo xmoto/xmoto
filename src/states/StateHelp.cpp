@@ -89,7 +89,6 @@ void StateHelp::keyDown(int nKey, SDLMod mod,int nChar)
 }
 
 void StateHelp::createGUI() {
-  UIButton *v_button;
   UIFrame  *v_frame;
   UIStatic *v_someText;
   GameApp* pGame = GameApp::instance();

@@ -81,8 +81,8 @@ class UIQuickStartButton : public UIButtonDrawn {
 		     int x=0, int y=0,
 		     std::string Caption="",
 		     int nWidth=0, int nHeight=0,
-		     int i_qualityMIN=0, int i_difficultyMIN=0,
-		     int i_qualityMAX=0, int i_difficultyMAX=0);
+		     unsigned int i_qualityMIN=0, unsigned int i_difficultyMIN=0,
+		     unsigned int i_qualityMAX=0, unsigned int i_difficultyMAX=0);
   ~UIQuickStartButton();
   
   virtual void paint();
@@ -97,8 +97,8 @@ class UIQuickStartButton : public UIButtonDrawn {
 
  private:
   Texture *m_uncheckedTex, *m_qualityTex, *m_difficultyTex;
-  int m_qualityMIN, m_difficultyMIN;
-  int m_qualityMAX, m_difficultyMAX;
+  unsigned int m_qualityMIN, m_difficultyMIN;
+  unsigned int m_qualityMAX, m_difficultyMAX;
   bool m_hasChanged;
 
   Vector2i getQualityPoint(const Vector2i& i_center, unsigned int i_ray, unsigned int i_value);

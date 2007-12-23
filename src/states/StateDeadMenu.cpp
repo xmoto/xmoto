@@ -43,7 +43,6 @@ StateDeadMenu::StateDeadMenu(bool i_doShadeAnim,
 
 StateDeadMenu::~StateDeadMenu()
 {
-
 }
 
 void StateDeadMenu::enter()
@@ -132,6 +131,8 @@ void StateDeadMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
     case UI_MSGBOX_NO:
       return;
       break;
+    default:
+      break;
     }
   } else if(i_id == "SAVEREPLAY") {
     if(i_button == UI_MSGBOX_OK) {
@@ -142,21 +143,16 @@ void StateDeadMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
 
 void StateDeadMenu::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  switch(nKey) {
-
-  case SDLK_ESCAPE:
+  if(nKey == SDLK_ESCAPE){
     /* quit this state */
     if(m_receiver != NULL) {
       m_receiver->send(getId(), "ABORT");
     }
     m_requestForEnd = true;
-    break;
-
-  default:
+  }
+  else {
     StateMenu::keyDown(nKey, mod, nChar);
     checkEvents();
-    break;
-
   }
 }
 

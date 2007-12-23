@@ -154,7 +154,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 
     /* Open all joysticks */
-    for(int i=0;i<SDL_NumJoysticks();i++) {
+    for(unsigned int i=0;i<SDL_NumJoysticks();i++) {
       m_Joysticks.push_back( SDL_JoystickOpen(i) );
     }
         
@@ -164,7 +164,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
   void InputHandler::uninit(void) {
     /* Close all joysticks */
-    for(int i=0;i<m_Joysticks.size();i++) {
+    for(unsigned int i=0;i<m_Joysticks.size();i++) {
       SDL_JoystickClose( m_Joysticks[i] );
     }
   
@@ -217,7 +217,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       i_bikers[0]->getControler()->stopContols();
       
       /* Update buttons */
-      for(int i=0;i<SDL_JoystickNumButtons(m_pActiveJoystick1);i++) {
+      for(unsigned int i=0;i<SDL_JoystickNumButtons(m_pActiveJoystick1);i++) {
         if(SDL_JoystickGetButton(m_pActiveJoystick1,i)) {
           if(!m_JoyButtonsPrev[i]) {
             /* Click! */
@@ -323,7 +323,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	
 	/* Init all joystick buttons */
 	m_JoyButtonsPrev.clear();
-	for(int i=0;i<SDL_JoystickNumButtons(m_pActiveJoystick1);i++) {
+	for(unsigned int i=0;i<SDL_JoystickNumButtons(m_pActiveJoystick1);i++) {
 	  m_JoyButtonsPrev.push_back(false);
 	}
 	
@@ -444,7 +444,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     /* Have the script hooked this key? */
     if(Type == INPUT_KEY_DOWN) {
-      for(int i=0;i<m_nNumScriptKeyHooks;i++) {
+      for(unsigned int i=0;i<m_nNumScriptKeyHooks;i++) {
 	if(m_ScriptKeyHooks[i].nKey == nKey) {
 	  /* Invoke script */
 	  m_ScriptKeyHooks[i].pGame->getLuaLibGame()->scriptCallVoid(m_ScriptKeyHooks[i].FuncName);

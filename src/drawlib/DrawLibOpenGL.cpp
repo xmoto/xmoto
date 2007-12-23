@@ -1,22 +1,22 @@
 /*=============================================================================
-XMOTO
+  XMOTO
 
-This file is part of XMOTO.
+  This file is part of XMOTO.
 
-XMOTO is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
+  XMOTO is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-XMOTO is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+  XMOTO is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with XMOTO; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-=============================================================================*/
+  You should have received a copy of the GNU General Public License
+  along with XMOTO; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  =============================================================================*/
 
 /* 
  *  Simple 2D drawing library, built closely on top of OpenGL.
@@ -37,12 +37,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class GLFontGlyphLetter;
 
 class GLFontGlyph : public FontGlyph {
- public:
+public:
   /* for simple glyph */
   GLFontGlyph(const std::string& i_value);
 
   /* a glyph from other glyphs */
-/*kejo:why not just grrr create a copy contructor*/
+  /*kejo:why not just grrr create a copy contructor*/
   GLFontGlyph(const std::string& i_value,
 	      HashNamespace::hash_map<const char*, GLFontGlyphLetter*, HashNamespace::hash<const char*>, hashcmp_str>& i_glyphsLetters);
   virtual ~GLFontGlyph();
@@ -54,7 +54,7 @@ class GLFontGlyph : public FontGlyph {
   unsigned int realHeight()    const;
   unsigned int firstLineDrawHeight() const;
 
- protected:
+protected:
   std::string m_value;
   unsigned int m_drawWidth, m_drawHeight;
   unsigned int m_realWidth, m_realHeight;
@@ -64,18 +64,18 @@ class GLFontGlyph : public FontGlyph {
 };
 
 class GLFontGlyphLetter : public GLFontGlyph {
- public:
+public:
   GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf);
   virtual ~GLFontGlyphLetter();
   GLuint GLID() const;  
 
- private:
+private:
   GLuint m_GLID;  
 };
 
 
 class GLFontManager : public FontManager {
- public:
+public:
   GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, unsigned int i_fontSize);
   virtual ~GLFontManager();
 
@@ -88,7 +88,7 @@ class GLFontManager : public FontManager {
 
   virtual unsigned int nbGlyphsInMemory();
 
- private:
+private:
   std::vector<GLFontGlyph*> m_glyphsList;
   HashNamespace::hash_map<const char*, GLFontGlyph*, HashNamespace::hash<const char*>, hashcmp_str> m_glyphs;
 
@@ -99,370 +99,372 @@ class GLFontManager : public FontManager {
 
 
 
- DrawLibOpenGL::~DrawLibOpenGL(){
-   if(m_fontSmall != NULL) {
-     delete m_fontSmall;
-   }
-
-   if(m_fontMedium != NULL) {
-     delete m_fontMedium;
-   }
-
-   if(m_fontBig != NULL) {
-     delete m_fontBig;
-   }
- }
-
- DrawLibOpenGL::DrawLibOpenGL() : DrawLib(){
-   m_fontSmall  = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 14);
-   m_fontMedium = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 22);
-   m_fontBig    = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 60);
- };
- 
-  /*===========================================================================
-  Transform an OpenGL vertex to pure 2D 
-  ===========================================================================*/
-  void DrawLibOpenGL::glVertexSP(float x,float y) {
-	  glVertex2f(x, m_nActualHeight - y);
+DrawLibOpenGL::~DrawLibOpenGL(){
+  if(m_fontSmall != NULL) {
+    delete m_fontSmall;
   }
 
-  void DrawLibOpenGL::glVertex(float x,float y) {
-	  glVertex2f(x,y);
+  if(m_fontMedium != NULL) {
+    delete m_fontMedium;
   }
 
-  void DrawLibOpenGL::glTexCoord(float x,float y){
-    glTexCoord2f(x,y);
-  } 
-
-  void DrawLibOpenGL::screenProjVertex(float *x,float *y) {
-    *y = m_nActualHeight - (*y);
+  if(m_fontBig != NULL) {
+    delete m_fontBig;
   }
-
-  void DrawLibOpenGL::setClipRect(int x , int y , unsigned int w , unsigned int h){
-    glScissor(x,m_nDispHeight - (y+h),w,h);
-    
-    m_nLScissorX = x;
-    m_nLScissorY = y;
-    m_nLScissorW = w;
-    m_nLScissorH = h;
-  }
-
-  void DrawLibOpenGL::setClipRect(SDL_Rect * clip_rect){
-        if (clip_rect != NULL){
-  	  setClipRect(clip_rect->x,clip_rect->y,clip_rect->w,clip_rect->h);
-	}
-  }
-
-  void DrawLibOpenGL::getClipRect(int *px,int *py,int *pnWidth,int *pnHeight) {
-    *px = m_nLScissorX;
-    *py = m_nLScissorY;
-    *pnWidth = m_nLScissorW;
-    *pnHeight = m_nLScissorH;
-  }  
-  
-  void DrawLibOpenGL::setScale(float x,float y){
-    glScalef(x,y,1);
-  }
-  void DrawLibOpenGL::setTranslate(float x,float y){
-    glTranslatef(x,y, 0);
-  }
-
-  void DrawLibOpenGL::setMirrorY() {
-    glRotatef(180, 0, 1, 0);
-  }
-
-  void DrawLibOpenGL::setRotateZ(float i_angle) {
-    if(i_angle != 0.0) { /* not nice to compare a float, but the main case */
-      glRotatef(i_angle, 0, 0, 1);
-    }
-  }
-
-  void DrawLibOpenGL::setLineWidth(float width){
-    glLineWidth(width);
-  }
- 
-  void DrawLibOpenGL::init(unsigned int nDispWidth,unsigned int nDispHeight,unsigned int nDispBPP,bool bWindowed){
-
-    
-    /* Set suggestions */
-    m_nDispWidth = nDispWidth;
-    m_nDispHeight = nDispHeight;
-    m_nDispBPP = nDispBPP;
-    m_bWindowed = bWindowed;
-
-    /* Get some video info */
-    const SDL_VideoInfo *pVidInfo=SDL_GetVideoInfo();
-    if(pVidInfo==NULL)
-      throw Exception("(1) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
-  
-    /* Determine target bit depth */
-    if(m_bWindowed) 
-      /* In windowed mode we can't tinker with the bit-depth */
-      m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;      
-
-    /* Setup GL stuff */
-    /* 2005-10-05 ... note that we no longer ask for explicit settings... it's
-                      better to do it per auto */
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1); 
-  
-    /* Create video flags */
-    int nFlags = SDL_OPENGL;
-    if(!m_bWindowed) nFlags|=SDL_FULLSCREEN;
-  
-    /* At last, try to "set the video mode" */
-    if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,m_nDispBPP,nFlags))==NULL) {
-      Logger::Log("** Warning ** : Tried to set video mode %ix%i @ %i-bit, but SDL failed (%s)\n"
-		  "                Now SDL will try determining a proper mode itself.", m_nDispWidth, m_nDispHeight, m_nDispBPP, SDL_GetError());
-      m_nDispBPP = 0;
-
-      /* Hmm, try letting it decide the BPP automatically */
-      if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags))==NULL) {       
-        /* Still no luck */
-        Logger::Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
-        m_nDispWidth = 800; m_nDispHeight = 600; m_nDispBPP = 0;       
-        m_bWindowed = true;
-        if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL))==NULL) {       
-          throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
-        }       
-      }
-    }
-    
-    /* Retrieve actual configuration */
-    pVidInfo=SDL_GetVideoInfo();
-    if(pVidInfo==NULL)
-      throw Exception("(2) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
-                    
-    m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;
-
-    /* Did we get a z-buffer? */        
-    int nDepthBits;
-    SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE,&nDepthBits);
-    if(nDepthBits == 0)
-      throw Exception("no depth buffer");  
-  
-		m_menuCamera = new Camera(Vector2i(0,0),
-															Vector2i(m_nDispWidth,m_nDispHeight));
-		m_menuCamera->setCamera2d();
-    
-    glClearDepth(1);
-    glDepthFunc(GL_LEQUAL);
-    
-    /* Enable unicode translation and key repeats */
-    SDL_EnableUNICODE(1);         
-    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
-     
-    /* Output some general info */
-    Logger:: Log("GL: %s (%s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR));
-    if(glGetString(GL_RENDERER) == NULL || 
-       glGetString(GL_VENDOR) == NULL) {
-      Logger::Log("** Warning ** : GL strings NULL!");
-      throw Exception("GL strings are NULL!");
-    }
-    
-    /* Windows: check whether we are using the standard GDI OpenGL software driver... If
-       so make sure the user is warned */
-    #if defined(WIN32) 
-      if(!strcmp(reinterpret_cast<const char *>(glGetString(GL_RENDERER)),"GDI Generic") &&
-         !strcmp(reinterpret_cast<const char *>(glGetString(GL_VENDOR)),"Microsoft Corporation")) {
-        Logger::Log("** Warning ** : No GL hardware acceleration!");
-        //m_UserNotify = "It seems that no OpenGL hardware acceleration is available!\n"
-        //               "Please make sure OpenGL is configured properly.";
-      }
-    #endif
-    
-    /* Init OpenGL extensions */
-    if(m_bDontUseGLExtensions) {
-      m_bVBOSupported = false;
-      m_bFBOSupported = false;
-      m_bShadersSupported = false;
-    }
-    else {
-      m_bVBOSupported = isExtensionSupported("GL_ARB_vertex_buffer_object");
-      m_bFBOSupported = isExtensionSupported("GL_EXT_framebuffer_object");
-      
-      m_bShadersSupported = isExtensionSupported("GL_ARB_fragment_shader") &&
-                            isExtensionSupported("GL_ARB_vertex_shader") &&
-                            isExtensionSupported("GL_ARB_shader_objects");
-    }
-    
-    if(m_bVBOSupported) {
-      glGenBuffersARB=(PFNGLGENBUFFERSARBPROC)SDL_GL_GetProcAddress("glGenBuffersARB");
-      glBindBufferARB=(PFNGLBINDBUFFERARBPROC)SDL_GL_GetProcAddress("glBindBufferARB");
-      glBufferDataARB=(PFNGLBUFFERDATAARBPROC)SDL_GL_GetProcAddress("glBufferDataARB");
-      glDeleteBuffersARB=(PFNGLDELETEBUFFERSARBPROC)SDL_GL_GetProcAddress("glDeleteBuffersARB");      
-
-      glEnableClientState( GL_VERTEX_ARRAY );   
-      glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-          
-      Logger::Log("GL: using ARB_vertex_buffer_object");    
-    }
-    else
-      Logger::Log("GL: not using ARB_vertex_buffer_object");    
-      
-    if(m_bFBOSupported) {
-      glIsRenderbufferEXT = (PFNGLISRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsRenderbufferEXT");
-      glBindRenderbufferEXT = (PFNGLBINDRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindRenderbufferEXT");
-      glDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteRenderbuffersEXT");
-      glGenRenderbuffersEXT = (PFNGLGENRENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenRenderbuffersEXT");
-      glRenderbufferStorageEXT = (PFNGLRENDERBUFFERSTORAGEEXTPROC)SDL_GL_GetProcAddress("glRenderbufferStorageEXT");
-      glGetRenderbufferParameterivEXT = (PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetRenderbufferParameterivEXT");
-      glIsFramebufferEXT = (PFNGLISFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsFramebufferEXT");
-      glBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindFramebufferEXT");
-      glDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteFramebuffersEXT");
-      glGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenFramebuffersEXT");
-      glCheckFramebufferStatusEXT = (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)SDL_GL_GetProcAddress("glCheckFramebufferStatusEXT");
-      glFramebufferTexture1DEXT = (PFNGLFRAMEBUFFERTEXTURE1DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture1DEXT");
-      glFramebufferTexture2DEXT = (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture2DEXT");
-      glFramebufferTexture3DEXT = (PFNGLFRAMEBUFFERTEXTURE3DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture3DEXT");
-      glFramebufferRenderbufferEXT = (PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glFramebufferRenderbufferEXT");
-      glGetFramebufferAttachmentParameterivEXT = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetFramebufferAttachmentParameterivEXT");
-      glGenerateMipmapEXT = (PFNGLGENERATEMIPMAPEXTPROC)SDL_GL_GetProcAddress("glGenerateMipmapEXT");
-          
-      Logger::Log("GL: using EXT_framebuffer_object");
-    }
-    else
-      Logger::Log("GL: not using EXT_framebuffer_object");
-      
-    if(m_bShadersSupported) {
-      glBindAttribLocationARB = (PFNGLBINDATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glBindAttribLocationARB");
-      glGetActiveAttribARB = (PFNGLGETACTIVEATTRIBARBPROC)SDL_GL_GetProcAddress("glGetActiveAttribARB");
-      glGetAttribLocationARB = (PFNGLGETATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glGetAttribLocationARB");
-      glDeleteObjectARB = (PFNGLDELETEOBJECTARBPROC)SDL_GL_GetProcAddress("glDeleteObjectARB");
-      glGetHandleARB = (PFNGLGETHANDLEARBPROC)SDL_GL_GetProcAddress("glGetHandleARB");
-      glDetachObjectARB = (PFNGLDETACHOBJECTARBPROC)SDL_GL_GetProcAddress("glDetachObjectARB");
-      glCreateShaderObjectARB = (PFNGLCREATESHADEROBJECTARBPROC)SDL_GL_GetProcAddress("glCreateShaderObjectARB");
-      glShaderSourceARB = (PFNGLSHADERSOURCEARBPROC)SDL_GL_GetProcAddress("glShaderSourceARB");
-      glCompileShaderARB = (PFNGLCOMPILESHADERARBPROC)SDL_GL_GetProcAddress("glCompileShaderARB");
-      glCreateProgramObjectARB = (PFNGLCREATEPROGRAMOBJECTARBPROC)SDL_GL_GetProcAddress("glCreateProgramObjectARB");
-      glAttachObjectARB = (PFNGLATTACHOBJECTARBPROC)SDL_GL_GetProcAddress("glAttachObjectARB");
-      glLinkProgramARB = (PFNGLLINKPROGRAMARBPROC)SDL_GL_GetProcAddress("glLinkProgramARB");
-      glUseProgramObjectARB = (PFNGLUSEPROGRAMOBJECTARBPROC)SDL_GL_GetProcAddress("glUseProgramObjectARB");
-      glValidateProgramARB = (PFNGLVALIDATEPROGRAMARBPROC)SDL_GL_GetProcAddress("glValidateProgramARB");
-      glUniform1fARB = (PFNGLUNIFORM1FARBPROC)SDL_GL_GetProcAddress("glUniform1fARB");
-      glUniform2fARB = (PFNGLUNIFORM2FARBPROC)SDL_GL_GetProcAddress("glUniform2fARB");
-      glUniform3fARB = (PFNGLUNIFORM3FARBPROC)SDL_GL_GetProcAddress("glUniform3fARB");
-      glUniform4fARB = (PFNGLUNIFORM4FARBPROC)SDL_GL_GetProcAddress("glUniform4fARB");
-      glUniform1iARB = (PFNGLUNIFORM1IARBPROC)SDL_GL_GetProcAddress("glUniform1iARB");
-      glUniform2iARB = (PFNGLUNIFORM2IARBPROC)SDL_GL_GetProcAddress("glUniform2iARB");
-      glUniform3iARB = (PFNGLUNIFORM3IARBPROC)SDL_GL_GetProcAddress("glUniform3iARB");
-      glUniform4iARB = (PFNGLUNIFORM4IARBPROC)SDL_GL_GetProcAddress("glUniform4iARB");
-      glUniform1fvARB = (PFNGLUNIFORM1FVARBPROC)SDL_GL_GetProcAddress("glUniform1fvARB");
-      glUniform2fvARB = (PFNGLUNIFORM2FVARBPROC)SDL_GL_GetProcAddress("glUniform2fvARB");
-      glUniform3fvARB = (PFNGLUNIFORM3FVARBPROC)SDL_GL_GetProcAddress("glUniform3fvARB");
-      glUniform4fvARB = (PFNGLUNIFORM4FVARBPROC)SDL_GL_GetProcAddress("glUniform4fvARB");
-      glUniform1ivARB = (PFNGLUNIFORM1IVARBPROC)SDL_GL_GetProcAddress("glUniform1ivARB");
-      glUniform2ivARB = (PFNGLUNIFORM2IVARBPROC)SDL_GL_GetProcAddress("glUniform2ivARB");
-      glUniform3ivARB = (PFNGLUNIFORM3IVARBPROC)SDL_GL_GetProcAddress("glUniform3ivARB");
-      glUniform4ivARB = (PFNGLUNIFORM4IVARBPROC)SDL_GL_GetProcAddress("glUniform4ivARB");
-      glUniformMatrix2fvARB = (PFNGLUNIFORMMATRIX2FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix2fvARB");
-      glUniformMatrix3fvARB = (PFNGLUNIFORMMATRIX3FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix3fvARB");
-      glUniformMatrix4fvARB = (PFNGLUNIFORMMATRIX4FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix4fvARB");
-      glGetObjectParameterfvARB = (PFNGLGETOBJECTPARAMETERFVARBPROC)SDL_GL_GetProcAddress("glGetObjectParameterfvARB");
-      glGetObjectParameterivARB = (PFNGLGETOBJECTPARAMETERIVARBPROC)SDL_GL_GetProcAddress("glGetObjectParameterivARB");
-      glGetInfoLogARB = (PFNGLGETINFOLOGARBPROC)SDL_GL_GetProcAddress("glGetInfoLogARB");
-      glGetAttachedObjectsARB = (PFNGLGETATTACHEDOBJECTSARBPROC)SDL_GL_GetProcAddress("glGetAttachedObjectsARB");
-      glGetUniformLocationARB = (PFNGLGETUNIFORMLOCATIONARBPROC)SDL_GL_GetProcAddress("glGetUniformLocationARB");
-      glGetActiveUniformARB = (PFNGLGETACTIVEUNIFORMARBPROC)SDL_GL_GetProcAddress("glGetActiveUniformARB");
-      glGetUniformfvARB = (PFNGLGETUNIFORMFVARBPROC)SDL_GL_GetProcAddress("glGetUniformfvARB");
-      glGetUniformivARB = (PFNGLGETUNIFORMIVARBPROC)SDL_GL_GetProcAddress("glGetUniformivARB");
-      glGetShaderSourceARB = (PFNGLGETSHADERSOURCEARBPROC)SDL_GL_GetProcAddress("glGetShaderSourceARB");    
-        
-      Logger::Log("GL: using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
-    }
-    else
-      Logger::Log("GL: not using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
-    
-    /* Set background color to black */
-    glClearColor(0.0f,0.0f,0.0f,0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapBuffers();  
 }
 
-  void DrawLibOpenGL::unInit(){
+DrawLibOpenGL::DrawLibOpenGL() : DrawLib(){
+  m_fontSmall  = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 14);
+  m_fontMedium = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 22);
+  m_fontBig    = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 60);
+};
+ 
+/*===========================================================================
+  Transform an OpenGL vertex to pure 2D 
+  ===========================================================================*/
+void DrawLibOpenGL::glVertexSP(float x,float y) {
+  glVertex2f(x, m_nActualHeight - y);
+}
+
+void DrawLibOpenGL::glVertex(float x,float y) {
+  glVertex2f(x,y);
+}
+
+void DrawLibOpenGL::glTexCoord(float x,float y){
+  glTexCoord2f(x,y);
+} 
+
+void DrawLibOpenGL::screenProjVertex(float *x,float *y) {
+  *y = m_nActualHeight - (*y);
+}
+
+void DrawLibOpenGL::setClipRect(int x , int y , unsigned int w , unsigned int h){
+  glScissor(x,m_nDispHeight - (y+h),w,h);
+    
+  m_nLScissorX = x;
+  m_nLScissorY = y;
+  m_nLScissorW = w;
+  m_nLScissorH = h;
+}
+
+void DrawLibOpenGL::setClipRect(SDL_Rect * clip_rect){
+  if (clip_rect != NULL){
+    setClipRect(clip_rect->x,clip_rect->y,clip_rect->w,clip_rect->h);
   }
+}
+
+void DrawLibOpenGL::getClipRect(int *px,int *py,int *pnWidth,int *pnHeight) {
+  *px = m_nLScissorX;
+  *py = m_nLScissorY;
+  *pnWidth = m_nLScissorW;
+  *pnHeight = m_nLScissorH;
+}  
+  
+void DrawLibOpenGL::setScale(float x,float y){
+  glScalef(x,y,1);
+}
+void DrawLibOpenGL::setTranslate(float x,float y){
+  glTranslatef(x,y, 0);
+}
+
+void DrawLibOpenGL::setMirrorY() {
+  glRotatef(180, 0, 1, 0);
+}
+
+void DrawLibOpenGL::setRotateZ(float i_angle) {
+  if(i_angle != 0.0) { /* not nice to compare a float, but the main case */
+    glRotatef(i_angle, 0, 0, 1);
+  }
+}
+
+void DrawLibOpenGL::setLineWidth(float width){
+  glLineWidth(width);
+}
+ 
+void DrawLibOpenGL::init(unsigned int nDispWidth,unsigned int nDispHeight,unsigned int nDispBPP,bool bWindowed){
+
+    
+  /* Set suggestions */
+  m_nDispWidth = nDispWidth;
+  m_nDispHeight = nDispHeight;
+  m_nDispBPP = nDispBPP;
+  m_bWindowed = bWindowed;
+
+  /* Get some video info */
+  const SDL_VideoInfo *pVidInfo=SDL_GetVideoInfo();
+  if(pVidInfo==NULL)
+    throw Exception("(1) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
+  
+  /* Determine target bit depth */
+  if(m_bWindowed) 
+    /* In windowed mode we can't tinker with the bit-depth */
+    m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;      
+
+  /* Setup GL stuff */
+  /* 2005-10-05 ... note that we no longer ask for explicit settings... it's
+     better to do it per auto */
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1); 
+  
+  /* Create video flags */
+  int nFlags = SDL_OPENGL;
+  if(!m_bWindowed) nFlags|=SDL_FULLSCREEN;
+  
+  /* At last, try to "set the video mode" */
+  if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,m_nDispBPP,nFlags))==NULL) {
+    Logger::Log("** Warning ** : Tried to set video mode %ix%i @ %i-bit, but SDL failed (%s)\n"
+		"                Now SDL will try determining a proper mode itself.", m_nDispWidth, m_nDispHeight, m_nDispBPP, SDL_GetError());
+    m_nDispBPP = 0;
+
+    /* Hmm, try letting it decide the BPP automatically */
+    if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags))==NULL) {       
+      /* Still no luck */
+      Logger::Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
+      m_nDispWidth = 800; m_nDispHeight = 600; m_nDispBPP = 0;       
+      m_bWindowed = true;
+      if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL))==NULL) {       
+	throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
+      }       
+    }
+  }
+    
+  /* Retrieve actual configuration */
+  pVidInfo=SDL_GetVideoInfo();
+  if(pVidInfo==NULL)
+    throw Exception("(2) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
+                    
+  m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;
+
+  /* Did we get a z-buffer? */        
+  int nDepthBits;
+  SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE,&nDepthBits);
+  if(nDepthBits == 0)
+    throw Exception("no depth buffer");  
+  
+  m_menuCamera = new Camera(Vector2i(0,0),
+			    Vector2i(m_nDispWidth,m_nDispHeight));
+  m_menuCamera->setCamera2d();
+    
+  glClearDepth(1);
+  glDepthFunc(GL_LEQUAL);
+    
+  /* Enable unicode translation and key repeats */
+  SDL_EnableUNICODE(1);         
+  SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
+     
+  /* Output some general info */
+  Logger:: Log("GL: %s (%s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR));
+  if(glGetString(GL_RENDERER) == NULL || 
+     glGetString(GL_VENDOR) == NULL) {
+    Logger::Log("** Warning ** : GL strings NULL!");
+    throw Exception("GL strings are NULL!");
+  }
+    
+  /* Windows: check whether we are using the standard GDI OpenGL software driver... If
+     so make sure the user is warned */
+#if defined(WIN32) 
+  if(!strcmp(reinterpret_cast<const char *>(glGetString(GL_RENDERER)),"GDI Generic") &&
+     !strcmp(reinterpret_cast<const char *>(glGetString(GL_VENDOR)),"Microsoft Corporation")) {
+    Logger::Log("** Warning ** : No GL hardware acceleration!");
+    //m_UserNotify = "It seems that no OpenGL hardware acceleration is available!\n"
+    //               "Please make sure OpenGL is configured properly.";
+  }
+#endif
+    
+  /* Init OpenGL extensions */
+  if(m_bDontUseGLExtensions) {
+    m_bVBOSupported = false;
+    m_bFBOSupported = false;
+    m_bShadersSupported = false;
+  }
+  else {
+    m_bVBOSupported = isExtensionSupported("GL_ARB_vertex_buffer_object");
+    m_bFBOSupported = isExtensionSupported("GL_EXT_framebuffer_object");
+      
+    m_bShadersSupported = isExtensionSupported("GL_ARB_fragment_shader") &&
+      isExtensionSupported("GL_ARB_vertex_shader") &&
+      isExtensionSupported("GL_ARB_shader_objects");
+  }
+    
+  if(m_bVBOSupported) {
+    glGenBuffersARB=(PFNGLGENBUFFERSARBPROC)SDL_GL_GetProcAddress("glGenBuffersARB");
+    glBindBufferARB=(PFNGLBINDBUFFERARBPROC)SDL_GL_GetProcAddress("glBindBufferARB");
+    glBufferDataARB=(PFNGLBUFFERDATAARBPROC)SDL_GL_GetProcAddress("glBufferDataARB");
+    glDeleteBuffersARB=(PFNGLDELETEBUFFERSARBPROC)SDL_GL_GetProcAddress("glDeleteBuffersARB");      
+
+    glEnableClientState( GL_VERTEX_ARRAY );   
+    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+          
+    Logger::Log("GL: using ARB_vertex_buffer_object");    
+  }
+  else
+    Logger::Log("GL: not using ARB_vertex_buffer_object");    
+      
+  if(m_bFBOSupported) {
+    glIsRenderbufferEXT = (PFNGLISRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsRenderbufferEXT");
+    glBindRenderbufferEXT = (PFNGLBINDRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindRenderbufferEXT");
+    glDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteRenderbuffersEXT");
+    glGenRenderbuffersEXT = (PFNGLGENRENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenRenderbuffersEXT");
+    glRenderbufferStorageEXT = (PFNGLRENDERBUFFERSTORAGEEXTPROC)SDL_GL_GetProcAddress("glRenderbufferStorageEXT");
+    glGetRenderbufferParameterivEXT = (PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetRenderbufferParameterivEXT");
+    glIsFramebufferEXT = (PFNGLISFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsFramebufferEXT");
+    glBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindFramebufferEXT");
+    glDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteFramebuffersEXT");
+    glGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenFramebuffersEXT");
+    glCheckFramebufferStatusEXT = (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)SDL_GL_GetProcAddress("glCheckFramebufferStatusEXT");
+    glFramebufferTexture1DEXT = (PFNGLFRAMEBUFFERTEXTURE1DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture1DEXT");
+    glFramebufferTexture2DEXT = (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture2DEXT");
+    glFramebufferTexture3DEXT = (PFNGLFRAMEBUFFERTEXTURE3DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture3DEXT");
+    glFramebufferRenderbufferEXT = (PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glFramebufferRenderbufferEXT");
+    glGetFramebufferAttachmentParameterivEXT = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetFramebufferAttachmentParameterivEXT");
+    glGenerateMipmapEXT = (PFNGLGENERATEMIPMAPEXTPROC)SDL_GL_GetProcAddress("glGenerateMipmapEXT");
+          
+    Logger::Log("GL: using EXT_framebuffer_object");
+  }
+  else
+    Logger::Log("GL: not using EXT_framebuffer_object");
+      
+  if(m_bShadersSupported) {
+    glBindAttribLocationARB = (PFNGLBINDATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glBindAttribLocationARB");
+    glGetActiveAttribARB = (PFNGLGETACTIVEATTRIBARBPROC)SDL_GL_GetProcAddress("glGetActiveAttribARB");
+    glGetAttribLocationARB = (PFNGLGETATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glGetAttribLocationARB");
+    glDeleteObjectARB = (PFNGLDELETEOBJECTARBPROC)SDL_GL_GetProcAddress("glDeleteObjectARB");
+    glGetHandleARB = (PFNGLGETHANDLEARBPROC)SDL_GL_GetProcAddress("glGetHandleARB");
+    glDetachObjectARB = (PFNGLDETACHOBJECTARBPROC)SDL_GL_GetProcAddress("glDetachObjectARB");
+    glCreateShaderObjectARB = (PFNGLCREATESHADEROBJECTARBPROC)SDL_GL_GetProcAddress("glCreateShaderObjectARB");
+    glShaderSourceARB = (PFNGLSHADERSOURCEARBPROC)SDL_GL_GetProcAddress("glShaderSourceARB");
+    glCompileShaderARB = (PFNGLCOMPILESHADERARBPROC)SDL_GL_GetProcAddress("glCompileShaderARB");
+    glCreateProgramObjectARB = (PFNGLCREATEPROGRAMOBJECTARBPROC)SDL_GL_GetProcAddress("glCreateProgramObjectARB");
+    glAttachObjectARB = (PFNGLATTACHOBJECTARBPROC)SDL_GL_GetProcAddress("glAttachObjectARB");
+    glLinkProgramARB = (PFNGLLINKPROGRAMARBPROC)SDL_GL_GetProcAddress("glLinkProgramARB");
+    glUseProgramObjectARB = (PFNGLUSEPROGRAMOBJECTARBPROC)SDL_GL_GetProcAddress("glUseProgramObjectARB");
+    glValidateProgramARB = (PFNGLVALIDATEPROGRAMARBPROC)SDL_GL_GetProcAddress("glValidateProgramARB");
+    glUniform1fARB = (PFNGLUNIFORM1FARBPROC)SDL_GL_GetProcAddress("glUniform1fARB");
+    glUniform2fARB = (PFNGLUNIFORM2FARBPROC)SDL_GL_GetProcAddress("glUniform2fARB");
+    glUniform3fARB = (PFNGLUNIFORM3FARBPROC)SDL_GL_GetProcAddress("glUniform3fARB");
+    glUniform4fARB = (PFNGLUNIFORM4FARBPROC)SDL_GL_GetProcAddress("glUniform4fARB");
+    glUniform1iARB = (PFNGLUNIFORM1IARBPROC)SDL_GL_GetProcAddress("glUniform1iARB");
+    glUniform2iARB = (PFNGLUNIFORM2IARBPROC)SDL_GL_GetProcAddress("glUniform2iARB");
+    glUniform3iARB = (PFNGLUNIFORM3IARBPROC)SDL_GL_GetProcAddress("glUniform3iARB");
+    glUniform4iARB = (PFNGLUNIFORM4IARBPROC)SDL_GL_GetProcAddress("glUniform4iARB");
+    glUniform1fvARB = (PFNGLUNIFORM1FVARBPROC)SDL_GL_GetProcAddress("glUniform1fvARB");
+    glUniform2fvARB = (PFNGLUNIFORM2FVARBPROC)SDL_GL_GetProcAddress("glUniform2fvARB");
+    glUniform3fvARB = (PFNGLUNIFORM3FVARBPROC)SDL_GL_GetProcAddress("glUniform3fvARB");
+    glUniform4fvARB = (PFNGLUNIFORM4FVARBPROC)SDL_GL_GetProcAddress("glUniform4fvARB");
+    glUniform1ivARB = (PFNGLUNIFORM1IVARBPROC)SDL_GL_GetProcAddress("glUniform1ivARB");
+    glUniform2ivARB = (PFNGLUNIFORM2IVARBPROC)SDL_GL_GetProcAddress("glUniform2ivARB");
+    glUniform3ivARB = (PFNGLUNIFORM3IVARBPROC)SDL_GL_GetProcAddress("glUniform3ivARB");
+    glUniform4ivARB = (PFNGLUNIFORM4IVARBPROC)SDL_GL_GetProcAddress("glUniform4ivARB");
+    glUniformMatrix2fvARB = (PFNGLUNIFORMMATRIX2FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix2fvARB");
+    glUniformMatrix3fvARB = (PFNGLUNIFORMMATRIX3FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix3fvARB");
+    glUniformMatrix4fvARB = (PFNGLUNIFORMMATRIX4FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix4fvARB");
+    glGetObjectParameterfvARB = (PFNGLGETOBJECTPARAMETERFVARBPROC)SDL_GL_GetProcAddress("glGetObjectParameterfvARB");
+    glGetObjectParameterivARB = (PFNGLGETOBJECTPARAMETERIVARBPROC)SDL_GL_GetProcAddress("glGetObjectParameterivARB");
+    glGetInfoLogARB = (PFNGLGETINFOLOGARBPROC)SDL_GL_GetProcAddress("glGetInfoLogARB");
+    glGetAttachedObjectsARB = (PFNGLGETATTACHEDOBJECTSARBPROC)SDL_GL_GetProcAddress("glGetAttachedObjectsARB");
+    glGetUniformLocationARB = (PFNGLGETUNIFORMLOCATIONARBPROC)SDL_GL_GetProcAddress("glGetUniformLocationARB");
+    glGetActiveUniformARB = (PFNGLGETACTIVEUNIFORMARBPROC)SDL_GL_GetProcAddress("glGetActiveUniformARB");
+    glGetUniformfvARB = (PFNGLGETUNIFORMFVARBPROC)SDL_GL_GetProcAddress("glGetUniformfvARB");
+    glGetUniformivARB = (PFNGLGETUNIFORMIVARBPROC)SDL_GL_GetProcAddress("glGetUniformivARB");
+    glGetShaderSourceARB = (PFNGLGETSHADERSOURCEARBPROC)SDL_GL_GetProcAddress("glGetShaderSourceARB");    
+        
+    Logger::Log("GL: using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
+  }
+  else
+    Logger::Log("GL: not using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
+    
+  /* Set background color to black */
+  glClearColor(0.0f,0.0f,0.0f,0.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+  SDL_GL_SwapBuffers();  
+}
+
+void DrawLibOpenGL::unInit(){
+}
         
   
-  /*===========================================================================
+/*===========================================================================
   Check for OpenGL extension
   ===========================================================================*/
-  bool DrawLibOpenGL::isExtensionSupported(std::string Ext) {
-    const unsigned char *pcExtensions = NULL;
-    const unsigned char *pcStart;
-    unsigned char *pcWhere,*pcTerminator;
+bool DrawLibOpenGL::isExtensionSupported(std::string Ext) {
+  const unsigned char *pcExtensions = NULL;
+  const unsigned char *pcStart;
+  unsigned char *pcWhere,*pcTerminator;
     
-    pcExtensions = glGetString(GL_EXTENSIONS);
-    if(pcExtensions == NULL) {
-      Logger::Log("Failed to determine OpenGL extensions. Try stopping all other\n"
-          "applications that might use your OpenGL hardware.\n"
-          "If it still doesn't work, please create a detailed bug report.\n"
-          );
-      throw Exception("glGetString() : NULL");
-    }
-    
-    pcStart = pcExtensions;
-    while(1) {
-      pcWhere = (unsigned char *)strstr((const char*)pcExtensions,Ext.c_str());
-      if(pcWhere == NULL) break;
-      pcTerminator = pcWhere + Ext.length();
-      if(pcWhere == pcStart || *(pcWhere-1) == ' ')
-        if(*pcTerminator == ' ' || *pcTerminator == '\0')
-          return true;
-      pcStart = pcTerminator;
-    }
-    return false;
+  pcExtensions = glGetString(GL_EXTENSIONS);
+  if(pcExtensions == NULL) {
+    Logger::Log("Failed to determine OpenGL extensions. Try stopping all other\n"
+		"applications that might use your OpenGL hardware.\n"
+		"If it still doesn't work, please create a detailed bug report.\n"
+		);
+    throw Exception("glGetString() : NULL");
   }
+    
+  pcStart = pcExtensions;
+  while(1) {
+    pcWhere = (unsigned char *)strstr((const char*)pcExtensions,Ext.c_str());
+    if(pcWhere == NULL) break;
+    pcTerminator = pcWhere + Ext.length();
+    if(pcWhere == pcStart || *(pcWhere-1) == ' ')
+      if(*pcTerminator == ' ' || *pcTerminator == '\0')
+	return true;
+    pcStart = pcTerminator;
+  }
+  return false;
+}
   
-    /*===========================================================================
+/*===========================================================================
   Grab screen contents
   ===========================================================================*/
-  Img *DrawLibOpenGL::grabScreen(int i_reduce) {
-    int v_imgH = m_nDispHeight / i_reduce;
-    int v_imgW = m_nDispWidth  / i_reduce;
+Img *DrawLibOpenGL::grabScreen(int i_reduce) {
+  unsigned int v_imgH = m_nDispHeight / i_reduce;
+  unsigned int v_imgW = m_nDispWidth  / i_reduce;
 
-    Img *pImg = new Img;
+  Img *pImg = new Img;
     
-    pImg->createEmpty(v_imgW, v_imgH);
-    Color *pPixels = pImg->getPixels();
-    unsigned char *pcTemp = new unsigned char [m_nDispWidth*3];
+  pImg->createEmpty(v_imgW, v_imgH);
+  Color *pPixels = pImg->getPixels();
+  unsigned char *pcTemp = new unsigned char [m_nDispWidth*3];
   
-    /* Select frontbuffer */
-    glReadBuffer(GL_FRONT);
+  /* Select frontbuffer */
+  glReadBuffer(GL_FRONT);
 
-    for(unsigned int i=0; i<v_imgH; i++) {
-      glReadPixels(0, i*i_reduce, m_nDispWidth, 1, GL_RGB, GL_UNSIGNED_BYTE, pcTemp);
-      for(unsigned int j=0; j<v_imgW; j++) {
-	pPixels[(v_imgH - i - 1) * v_imgW + j] = MAKE_COLOR(pcTemp[j*i_reduce*3], pcTemp[j*i_reduce*3+1], pcTemp[j*i_reduce*3+2], 255);
-      }
-    }  
+  for(unsigned int i=0; i<v_imgH; i++) {
+    glReadPixels(0, i*i_reduce, m_nDispWidth, 1, GL_RGB, GL_UNSIGNED_BYTE, pcTemp);
+    for(unsigned int j=0; j<v_imgW; j++) {
+      pPixels[(v_imgH - i - 1) * v_imgW + j] = MAKE_COLOR(pcTemp[j*i_reduce*3], pcTemp[j*i_reduce*3+1], pcTemp[j*i_reduce*3+2], 255);
+    }
+  }  
     
-    delete [] pcTemp;
-    return pImg;            
-  }
+  delete [] pcTemp;
+  return pImg;            
+}
   
-  void DrawLibOpenGL::startDraw(DrawMode mode){
-	  switch(mode){
-		  case DRAW_MODE_POLYGON:
-		    glBegin(GL_POLYGON);
-		    break;
-		  case DRAW_MODE_LINE_LOOP:
-		    glBegin(GL_LINE_LOOP);
-		    break;
-		  case DRAW_MODE_LINE_STRIP:
-		   glBegin(GL_LINE_STRIP);
-		   break;
-	  };
-  }
+void DrawLibOpenGL::startDraw(DrawMode mode){
+  switch(mode){
+  case DRAW_MODE_POLYGON:
+    glBegin(GL_POLYGON);
+    break;
+  case DRAW_MODE_LINE_LOOP:
+    glBegin(GL_LINE_LOOP);
+    break;
+  case DRAW_MODE_LINE_STRIP:
+    glBegin(GL_LINE_STRIP);
+    break;
+  default:
+    break;
+  };
+}
   
-  void DrawLibOpenGL::endDraw(){
-	glEnd();
-        if (m_texture != NULL){
-          glDisable(GL_TEXTURE_2D);
-          m_texture = NULL;
-        }
-	if (m_blendMode != BLEND_MODE_NONE){
-         glDisable(GL_BLEND);
-	}
+void DrawLibOpenGL::endDraw(){
+  glEnd();
+  if (m_texture != NULL){
+    glDisable(GL_TEXTURE_2D);
+    m_texture = NULL;
   }
+  if (m_blendMode != BLEND_MODE_NONE){
+    glDisable(GL_BLEND);
+  }
+}
 
 void DrawLibOpenGL::endDrawKeepProperties() {
   glEnd();
@@ -478,64 +480,62 @@ void DrawLibOpenGL::removePropertiesAfterEnd() {
   }
 }
 
-  void DrawLibOpenGL::setColor(Color color){
-    glColor4ub(GET_RED(color),GET_GREEN(color),GET_BLUE(color),GET_ALPHA(color));
-  }
+void DrawLibOpenGL::setColor(Color color){
+  glColor4ub(GET_RED(color),GET_GREEN(color),GET_BLUE(color),GET_ALPHA(color));
+}
 
-  void DrawLibOpenGL::setTexture(Texture *texture,BlendMode blendMode){
-    setBlendMode(blendMode);
-    if (texture != NULL){
-      /* bind texture only if different than the current one */
-      if(m_texture == NULL || texture->Name != m_texture->Name){
-	glBindTexture(GL_TEXTURE_2D,texture->nID);
-      }
-      glEnable(GL_TEXTURE_2D);
-    } else {
-       //so the texture is set to null
-       //if the texture was not null we need
-       //to disable the current texture
-       if (m_texture != NULL){
-         glDisable(GL_TEXTURE_2D);
-       }
+void DrawLibOpenGL::setTexture(Texture *texture,BlendMode blendMode){
+  setBlendMode(blendMode);
+  if (texture != NULL){
+    /* bind texture only if different than the current one */
+    if(m_texture == NULL || texture->Name != m_texture->Name){
+      glBindTexture(GL_TEXTURE_2D,texture->nID);
     }
-    m_texture = texture;
-  } 
+    glEnable(GL_TEXTURE_2D);
+  } else {
+    //so the texture is set to null
+    //if the texture was not null we need
+    //to disable the current texture
+    if (m_texture != NULL){
+      glDisable(GL_TEXTURE_2D);
+    }
+  }
+  m_texture = texture;
+} 
   
-  void DrawLibOpenGL::setBlendMode(BlendMode blendMode){
-    if (blendMode != BLEND_MODE_NONE){
-      glEnable(GL_BLEND);
-      if (blendMode == BLEND_MODE_A){
-        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-      } else {
-        glBlendFunc(GL_ONE,GL_ONE);
-      }
+void DrawLibOpenGL::setBlendMode(BlendMode blendMode){
+  if(blendMode != BLEND_MODE_NONE){
+    glEnable(GL_BLEND);
+    if (blendMode == BLEND_MODE_A){
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     } else {
-       if (m_blendMode != NULL){
-         glDisable(GL_BLEND);
-       }
+      glBlendFunc(GL_ONE, GL_ONE);
     }
-    m_blendMode = blendMode;
+  } else {
+    glDisable(GL_BLEND);
   }
+  m_blendMode = blendMode;
+}
 
-      void DrawLibOpenGL::clearGraphics(){
-           /* Clear screen */
-          glClear(GL_COLOR_BUFFER_BIT);
-      }
+void DrawLibOpenGL::clearGraphics(){
+  /* Clear screen */
+  glClear(GL_COLOR_BUFFER_BIT);
+}
       
-      /**
-       * Flush the graphics. In memory graphics will now be displayed
-       **/
-      void DrawLibOpenGL::flushGraphics(){
-           /* Swap buffers */
-          SDL_GL_SwapBuffers();
-      }
+/**
+ * Flush the graphics. In memory graphics will now be displayed
+ **/
+void DrawLibOpenGL::flushGraphics(){
+  /* Swap buffers */
+  SDL_GL_SwapBuffers();
+}
 
-  FontManager* DrawLibOpenGL::getFontManager(const std::string &i_fontFile, unsigned int i_fontSize) {
-    return new GLFontManager(this, i_fontFile, i_fontSize);
-  }
+FontManager* DrawLibOpenGL::getFontManager(const std::string &i_fontFile, unsigned int i_fontSize) {
+  return new GLFontManager(this, i_fontFile, i_fontSize);
+}
 
 GLFontGlyphLetter::GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf)
- : GLFontGlyph(i_value) {
+  : GLFontGlyph(i_value) {
   SDL_Surface* v_surf;
   SDL_Surface* v_image;
   SDL_Rect v_area;
@@ -618,16 +618,17 @@ GLFontGlyph::GLFontGlyph(const std::string& i_value) {
 GLFontGlyph::GLFontGlyph(const std::string& i_value,
 			 HashNamespace::hash_map<const char*, GLFontGlyphLetter*, HashNamespace::hash<const char*>, hashcmp_str>& i_glyphsLetters) {
   GLFontGlyph* v_glyph;
-  std::string v_char;
+  std::string  v_char;
 
-  m_value = i_value;
+  m_value     = i_value;
   m_realWidth = m_realHeight = 0;
 
-  if(i_value == "") return; /* do nothing for empty strings */
+  if(i_value == "")
+    return; /* do nothing for empty strings */
 
-  int n=0;
-  int v_maxHeight = 0;
-  int v_curWidth = 0;
+  unsigned int n  = 0;
+  unsigned int v_maxHeight = 0;
+  unsigned int v_curWidth  = 0;
   bool v_firstLineInitialized = false;
   while(n < i_value.size()) {
     v_char = utf8::getNextChar(i_value, n);
@@ -642,15 +643,19 @@ GLFontGlyph::GLFontGlyph(const std::string& i_value,
     } else {
       v_glyph = i_glyphsLetters[v_char.c_str()];
       if(v_glyph != NULL) {
-	if(v_glyph->realHeight() > v_maxHeight) v_maxHeight = v_glyph->realHeight();
-	if(v_curWidth != 0) v_curWidth += UTF8_INTERCHAR_SPACE;
+	if(v_glyph->realHeight() > v_maxHeight)
+	  v_maxHeight = v_glyph->realHeight();
+	if(v_curWidth != 0)
+	  v_curWidth += UTF8_INTERCHAR_SPACE;
 	v_curWidth += v_glyph->realWidth();
-	if(v_curWidth > m_realWidth) m_realWidth = v_curWidth;
+	if(v_curWidth > m_realWidth)
+	  m_realWidth = v_curWidth;
       }
     }
   }
   /* last line */
-  if(v_char != "\n") m_realHeight += v_maxHeight;
+  if(v_char != "\n")
+    m_realHeight += v_maxHeight;
   if(v_firstLineInitialized == false) {	
     m_firstLineDrawHeight = v_maxHeight;
   }
@@ -733,7 +738,7 @@ FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
   if(v_glyph != NULL) return v_glyph;
 
   /* make sure that chars exists into the hashmap before continuing */
-  int n = 0;
+  unsigned int n = 0;
   std::string v_char;
   while(n < i_string.size()) {
     v_char = utf8::getNextChar(i_string, n);
@@ -756,7 +761,7 @@ FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
 }
 
 void GLFontManager::printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
-      Color c1, Color c2, Color c3, Color c4, bool i_shadowEffect) {
+				    Color c1, Color c2, Color c3, Color c4, bool i_shadowEffect) {
 
   if(i_shadowEffect) {
     printStringGradOne(i_glyph, i_x,   i_y,   INVERT_COLOR(c1), INVERT_COLOR(c2), INVERT_COLOR(c3), INVERT_COLOR(c4));
@@ -767,16 +772,17 @@ void GLFontManager::printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
 }
 
 void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
-      Color c1, Color c2, Color c3, Color c4) {
+				       Color c1, Color c2, Color c3, Color c4) {
 
   GLFontGlyph* v_glyph = (GLFontGlyph*) i_glyph;
   GLFontGlyphLetter* v_glyphLetter;
   int v_x, v_y;
-  int n = 0;
+  unsigned int n = 0;
   std::string v_char;
-  int v_lineHeight;
+  unsigned int v_lineHeight;
 
-  if(v_glyph->Value() == "") return;
+  if(v_glyph->Value() == "")
+    return;
 
   v_y = -i_y + m_drawLib->getDispHeight() - v_glyph->firstLineDrawHeight();/* la taille de la 1ere ligne */
   v_x = i_x;

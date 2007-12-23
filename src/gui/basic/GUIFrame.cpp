@@ -104,8 +104,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
       break;
       case UI_FRAMESTYLE_LEFTTAG: {
-          int nTagWidth = 20;      
-      
 	  if(isUglyMode()) {
 	    putRect(0, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
 	    putRect(0, 0, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));

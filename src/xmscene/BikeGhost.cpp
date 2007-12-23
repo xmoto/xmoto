@@ -57,7 +57,7 @@ void Ghost::execReplayEvents(float i_time, MotoGame *i_motogame) {
   v_replayEvents = m_replay->getEvents();
   
   /* Start looking for events that should be passed */
-  for(int i=0;i<v_replayEvents->size();i++) {
+  for(unsigned int i=0;i<v_replayEvents->size();i++) {
     /* Not passed? And with a time stamp that tells it should have happened
        by now? */
     if(!(*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->Event->getEventTime() < i_time) {
@@ -122,7 +122,7 @@ void Ghost::initLastToTakeEntities(Level* i_level) {
   m_diffToPlayer = 0.0;
 
   /* Start looking for events */
-  for(int i=0; i<v_replayEvents->size(); i++) {
+  for(unsigned int i=0; i<v_replayEvents->size(); i++) {
     MotoGameEvent *v_event = (*v_replayEvents)[i]->Event;
       
     if(v_event->getType() == GAME_EVENT_ENTITY_DESTROYED) {
@@ -139,8 +139,6 @@ float Ghost::diffToPlayer() const {
 }
 
 void Ghost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
-  int v_n;
-    
   /* no strawberry, no update */
   if(i_lastToTakeEntities.size() == 0) {
     return;

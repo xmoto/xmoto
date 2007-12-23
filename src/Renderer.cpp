@@ -82,7 +82,7 @@ GameRenderer::~GameRenderer() {
     if(numberCamera > 1){
       numberCamera++;
     }
-    for(int i=0; i<numberCamera; i++){
+    for(unsigned int i=0; i<numberCamera; i++){
       i_scene->setCurrentCamera(i);
       i_scene->getCamera()->prepareForNewLevel();
     }
@@ -96,7 +96,7 @@ GameRenderer::~GameRenderer() {
     std::vector<Block *> Blocks = i_scene->getLevelSrc()->Blocks();
     int nVertexBytes = 0;
   
-    for(int i=0; i<Blocks.size(); i++) {
+    for(unsigned int i=0; i<Blocks.size(); i++) {
 
       /* do not load into the graphic card blocks which won't be
 	 displayed. On ati card with free driver, levels like green
@@ -209,7 +209,7 @@ GameRenderer::~GameRenderer() {
   void GameRenderer::_deleteGeoms(std::vector<Geom *>& geom)
   {
     /* Clean up optimized scene */
-    for(int i=0;i<geom.size();i++) { 
+    for(unsigned int i=0;i<geom.size();i++) { 
       for(int j=0;j<geom[i]->Polys.size();j++) { 
 #ifdef ENABLE_OPENGL
         if(geom[i]->Polys[j]->nVertexBufferID) {
@@ -403,7 +403,7 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
 
     for(int layer=-1; layer<=0; layer++){
       Blocks = i_scene->getCollisionHandler()->getStaticBlocksNearPosition(mapBBox, layer);
-      for(int i=0; i<Blocks.size(); i++) {
+      for(unsigned int i=0; i<Blocks.size(); i++) {
 
 	/* Don't draw background blocks neither dynamic ones */
 	if(Blocks[i]->isBackground() == false && Blocks[i]->getLayer() == -1) {
@@ -429,7 +429,7 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
     Blocks = i_scene->getCollisionHandler()->getDynBlocksNearPosition(mapBBox);
 
     /* TOFIX::do not calculate this again. (already done in Block.cpp) */
-    for(int i=0; i<Blocks.size(); i++) {
+    for(unsigned int i=0; i<Blocks.size(); i++) {
       if(Blocks[i]->isBackground() == false && Blocks[i]->getLayer() == -1) {
 	std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
 	for(int j=0; j<ConvexBlocks.size(); j++) {
@@ -481,7 +481,7 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
     /* FIX::display only visible entities */
     std::vector<Entity*> Entities = i_scene->getCollisionHandler()->getEntitiesNearPosition(mapBBox);
 
-    for(int i=0;i<Entities.size();i++) {
+    for(unsigned int i=0;i<Entities.size();i++) {
       Vector2f entityPos(LEVEL_TO_SCREEN_X(Entities[i]->DynamicPosition().x),
 			 LEVEL_TO_SCREEN_Y(Entities[i]->DynamicPosition().y));
       if(Entities[i]->DoesMakeWin()) {
@@ -702,7 +702,7 @@ int GameRenderer::nbParticlesRendered() const {
     if(XMSession::instance()->debug()) {
       /* Draw some collision handling debug info */
       CollisionSystem *pc = i_scene->getCollisionHandler();
-      for(int i=0;i<pc->m_CheckedLines.size();i++) {
+      for(unsigned int i=0;i<pc->m_CheckedLines.size();i++) {
         getParent()->getDrawLib()->setLineWidth(3);
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
 	getParent()->getDrawLib()->setColorRGB(255,0,0);
@@ -711,7 +711,7 @@ int GameRenderer::nbParticlesRendered() const {
 	getParent()->getDrawLib()->endDraw();
         getParent()->getDrawLib()->setLineWidth(2);
       }
-      for(int i=0;i<pc->m_CheckedCells.size();i++) {
+      for(unsigned int i=0;i<pc->m_CheckedCells.size();i++) {
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
 	getParent()->getDrawLib()->setColorRGB(255,0,0);
 
@@ -721,7 +721,7 @@ int GameRenderer::nbParticlesRendered() const {
         getParent()->getDrawLib()->glVertex(pc->m_CheckedCells[i].x1,pc->m_CheckedCells[i].y2);
 	getParent()->getDrawLib()->endDraw();
       }
-      for(int i=0;i<pc->m_CheckedLinesW.size();i++) {
+      for(unsigned int i=0;i<pc->m_CheckedLinesW.size();i++) {
         getParent()->getDrawLib()->setLineWidth(1);
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
 	getParent()->getDrawLib()->setColorRGB(0,255,0);
@@ -730,7 +730,7 @@ int GameRenderer::nbParticlesRendered() const {
 	getParent()->getDrawLib()->endDraw();
         getParent()->getDrawLib()->setLineWidth(1);
       }
-      for(int i=0;i<pc->m_CheckedCellsW.size();i++) {
+      for(unsigned int i=0;i<pc->m_CheckedCellsW.size();i++) {
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
 	getParent()->getDrawLib()->setColorRGB(0,255,0);
         getParent()->getDrawLib()->glVertex(pc->m_CheckedCellsW[i].x1,pc->m_CheckedCellsW[i].y1);
@@ -741,7 +741,7 @@ int GameRenderer::nbParticlesRendered() const {
       }
 
       std::vector<Entity*>& v = pc->getCheckedEntities();
-      for(int i=0; i<v.size(); i++) {
+      for(unsigned int i=0; i<v.size(); i++) {
 	// draw entities in the cells
 	Entity* pSprite = v[i];
 	Vector2f C = pSprite->DynamicPosition();
@@ -932,7 +932,7 @@ int GameRenderer::nbParticlesRendered() const {
         
     /* Messages */
     if(i_scene != NULL) {
-      for(int i=0;i<i_scene->getGameMessage().size();i++) {
+      for(unsigned int i=0;i<i_scene->getGameMessage().size();i++) {
         GameMessage *pMsg = i_scene->getGameMessage()[i];
 	FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
 	FontGlyph* v_fg = v_fm->getGlyph(pMsg->Text);
@@ -969,7 +969,7 @@ void GameRenderer::_RenderSprites(MotoGame* i_scene, bool bForeground,bool bBack
 
     //printf("draw %d entities on %d\n", nbNearEntities, nbTotalEntities);
 
-    for(int i=0;i<Entities.size();i++) {
+    for(unsigned int i=0;i<Entities.size();i++) {
       pEnt = Entities[i];
 
       switch(pEnt->Speciality()) {
@@ -1105,7 +1105,7 @@ void GameRenderer::_RenderSprite(MotoGame* i_scene, Entity *pSprite, float i_siz
 	  float beta;
 	  float v_ray;
 	  
-	  for(int i=0; i<4; i++) {
+	  for(unsigned int i=0; i<4; i++) {
 	    v_ray = sqrt((p[i].x*p[i].x) + (p[i].y*p[i].y));
 	    beta = 0.0;
 
@@ -1192,7 +1192,7 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
     std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
 
     if(XMSession::instance()->ugly() == false) {
-      for(int i=0; i<Blocks.size(); i++) {
+      for(unsigned int i=0; i<Blocks.size(); i++) {
 	/* Are we rendering background blocks or what? */
 	if(Blocks[i]->isBackground() != bBackground)
 	  continue;
@@ -1288,7 +1288,7 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 
       /* Render all special edges (if quality!=low) */
       if(XMSession::instance()->gameGraphics() != GFX_LOW) {
-	for(int i=0;i<Blocks.size();i++) {
+	for(unsigned int i=0;i<Blocks.size();i++) {
 	  if(Blocks[i]->isBackground() == bBackground){
 	    _RenderBlockEdges(Blocks[i]);
 	  }
@@ -1298,7 +1298,7 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
     }
 
     if(XMSession::instance()->ugly() || XMSession::instance()->uglyOver()) {
-      for(int i=0; i<Blocks.size(); i++) {
+      for(unsigned int i=0; i<Blocks.size(); i++) {
 	/* Are we rendering background blocks or what? */
 	if(Blocks[i]->isBackground() != bBackground)
 	  continue;
@@ -1478,7 +1478,7 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
       if(XMSession::instance()->ugly() == false) {
 	/* Render all non-background blocks */
 	/* Static geoms... */
-	for(int i=0;i<Blocks.size();i++) {
+	for(unsigned int i=0;i<Blocks.size();i++) {
 	  if(Blocks[i]->isBackground() == false) {
 	    _RenderBlock(Blocks[i]);
 	  }
@@ -1486,7 +1486,7 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 
 	/* Render all special edges (if quality!=low) */
 	if(XMSession::instance()->gameGraphics() != GFX_LOW) {
-	  for(int i=0;i<Blocks.size();i++) {
+	  for(unsigned int i=0;i<Blocks.size();i++) {
 	    if(Blocks[i]->isBackground() == false) {
 	    _RenderBlockEdges(Blocks[i]);
 	    }
@@ -1495,7 +1495,7 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
       }
 
       if(XMSession::instance()->ugly()) {
-	for(int i=0;i<Blocks.size();i++) {
+	for(unsigned int i=0;i<Blocks.size();i++) {
 	  if(Blocks[i]->isBackground() == false) {
 	    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
 	    getParent()->getDrawLib()->setColorRGB(255,255,255);
@@ -1509,7 +1509,7 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
       }
 
       if(XMSession::instance()->uglyOver()) {
-	for(int i=0; i<Blocks.size(); i++) {
+	for(unsigned int i=0; i<Blocks.size(); i++) {
 	  for(int j=0; j<Blocks[i]->ConvexBlocks().size(); j++) {
 
 	    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
@@ -1617,7 +1617,7 @@ void GameRenderer::_RenderSky(MotoGame* i_scene, float i_zoom, float i_offset, c
     /* sort blocks on their texture */
     std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
 
-    for(int i=0;i<Blocks.size();i++) {
+    for(unsigned int i=0;i<Blocks.size();i++) {
       if(Blocks[i]->isBackground() == true) {
 	_RenderBlock(Blocks[i]);
       }
@@ -1625,7 +1625,7 @@ void GameRenderer::_RenderSky(MotoGame* i_scene, float i_zoom, float i_offset, c
 
     /* Render all special edges (if quality != low) */
     if(XMSession::instance()->gameGraphics() != GFX_LOW) {
-      for(int i=0;i<Blocks.size();i++) {
+      for(unsigned int i=0;i<Blocks.size();i++) {
 	if(Blocks[i]->isBackground() == true) {
 	  _RenderBlockEdges(Blocks[i]);
 	}
@@ -1666,7 +1666,7 @@ void GameRenderer::_RenderLayer(MotoGame* i_scene, int layer) {
     glPushMatrix();
     glTranslatef(translateVector.x, translateVector.y, 0);
 
-    for(int i=0; i<Blocks.size(); i++) {
+    for(unsigned int i=0; i<Blocks.size(); i++) {
       Block* block = Blocks[i];
       int geom = block->getGeom();
 
@@ -1674,7 +1674,7 @@ void GameRenderer::_RenderLayer(MotoGame* i_scene, int layer) {
     }
     /* Render all special edges (if quality!=low) */
     if(XMSession::instance()->gameGraphics() != GFX_LOW) {
-      for(int i=0;i<Blocks.size();i++) {
+      for(unsigned int i=0;i<Blocks.size();i++) {
 	_RenderBlockEdges(Blocks[i]);
       }
     }
@@ -1707,7 +1707,7 @@ void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) {
   Debug info. Note how this is leaked into the void and nobody cares :) 
   ===========================================================================*/
   void GameRenderer::_RenderDebugInfo(void) {
-    for(int i=0;i<m_DebugInfo.size();i++) {
+    for(unsigned int i=0;i<m_DebugInfo.size();i++) {
       if(m_DebugInfo[i]->Type == "@WHITEPOLYGONS") {
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
 	getParent()->getDrawLib()->setColorRGB(255,255,255);
@@ -1961,7 +1961,7 @@ void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) {
   void GameRenderer::_RenderCircle(int nSteps,Color CircleColor,const Vector2f &C,float fRadius) {
     getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
     getParent()->getDrawLib()->setColor(CircleColor);
-    for(int i=0;i<nSteps;i++) {
+    for(unsigned int i=0;i<nSteps;i++) {
       float r = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
       getParent()->getDrawLib()->glVertex( Vector2f(C.x + fRadius*sin(r),C.y + fRadius*cos(r)) );
     }      

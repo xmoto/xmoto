@@ -33,7 +33,7 @@ Credits::Credits() {
   
 Credits::~Credits() {
   /* Free all entries */
-  for(int i=0;i<m_Entries.size();i++)
+  for(unsigned int i=0;i<m_Entries.size();i++)
     delete m_Entries[i];
   m_Entries.clear();
 }
@@ -71,7 +71,7 @@ void Credits::init(float fBackgroundReplayLength,
   int nBufLen = 0;
   std::string Left,Right;
     
-  for(int i=0;i<nL;i++) {
+  for(unsigned int i=0;i<nL;i++) {
     if(pcCredits[i] == ':') {
       /* Got left part of entry */
       cBuf[nBufLen] = '\0';
@@ -147,7 +147,7 @@ void Credits::render(float fTime) {
     int nScroll = 20 + drawLib->getDispHeight() - fTime * 20;
     int nY = 0;
       
-    for(int i=0;i<m_Entries.size();i++) {
+    for(unsigned int i=0;i<m_Entries.size();i++) {
       if(nY < 0) continue;
       Color Yellow = MAKE_COLOR(255,255,64,32);
       Color White = MAKE_COLOR(255,255,255,255);

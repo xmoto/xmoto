@@ -120,7 +120,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     int nHeaderHeight=24;
     int nCX = 8;
 
-    for(int i=0;i<getChildren().size();i++) {
+    for(unsigned int i=0;i<getChildren().size();i++) {
       FontManager* v_fm = m_drawLib->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
       int v_width = v_fg->realWidth();
@@ -133,7 +133,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
   
-  void UITabView::setTabContextHelp(int nTab,const std::string &s) {
+  void UITabView::setTabContextHelp(unsigned int nTab, const std::string &s) {
     if(nTab >= m_TabContextHelp.size()) {
       m_TabContextHelp.resize(nTab+1);
       m_TabContextHelp[nTab] = s;
@@ -145,14 +145,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     int nHeaderHeight=24;
     int nCX = 8;
 
-    for(int i=0;i<getChildren().size();i++) {
+    for(unsigned int i=0;i<getChildren().size();i++) {
       FontManager* v_fm = m_drawLib->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
       int v_width = v_fg->realWidth();
 
       if(x >= nCX-8 && y >= -4 && x < nCX+16+v_width && y < nHeaderHeight) {
         /* This one! */
-        if(i<m_TabContextHelp.size())
+        if(i < m_TabContextHelp.size())
           return m_TabContextHelp[i];
         return "";
       }
