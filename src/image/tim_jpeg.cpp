@@ -472,227 +472,246 @@ int tim_jpeg_load_exif(tim_session_t *pSession,tim_image_info_t *pInfo,void *pvH
 Load function
 ==============================================================================*/
 
-int tim_jpeg_load(tim_session_t *pSession,tim_image_t **ppImage,tim_image_info_t *pInfo,
-                  char *pcSource) {
-	void *pvHandle;
-	struct jpeg_decompress_struct ci;
-	tim_error_mgr_t Err;
-	tim_image_t *pImage;
-	int nRowStride,i,nOffset;
-	char *pc;
-	JSAMPARRAY Buffer;
-	tim_jpeg_pixel_t *pScan;
-	int nRet;
-	tim_image_info_t EXIF;
+int tim_jpeg_load(tim_session_t*    pSession, tim_image_t** ppImage,
+		  tim_image_info_t* pInfo,    char*         pcSource)
+{
+  void *pvHandle;
+  struct jpeg_decompress_struct ci;
+  tim_error_mgr_t Err;
+  tim_image_t *pImage;
+  unsigned int nRowStride, nOffset;
+  char *pc;
+  JSAMPARRAY Buffer;
+  tim_jpeg_pixel_t *pScan;
+  int nRet;
+  tim_image_info_t EXIF;
 	
-	/* Open source file */
-	pvHandle=tim_open(pSession,pcSource,TIM_IM_READ);
-	if(!pvHandle)
-		return TIM_RV_ERR_NOT_FOUND;
+  /* Open source file */
+  pvHandle = tim_open(pSession, pcSource, TIM_IM_READ);
+  if(!pvHandle)
+    return TIM_RV_ERR_NOT_FOUND;
 		
-	/* Should we try to retrieve any EXIF stuff? */
-	if(!tim_is_hint(pSession,".jpg","jpeg_ignore_exif")) {
-		nRet=tim_jpeg_load_exif(pSession,&EXIF,pvHandle);
-		if(nRet!=TIM_RV_OK) {
-			tim_close(pSession,pvHandle);
-			return nRet;
-		}
-	}
-	else memset(&EXIF,0,sizeof(EXIF));
+  /* Should we try to retrieve any EXIF stuff? */
+  if(!tim_is_hint(pSession, ".jpg", "jpeg_ignore_exif")) {
+    nRet=tim_jpeg_load_exif(pSession,&EXIF,pvHandle);
+    if(nRet!=TIM_RV_OK) {
+      tim_close(pSession,pvHandle);
+      return nRet;
+    }
+  }
+  else {
+    memset(&EXIF, 0, sizeof(EXIF));
+  }
 			
-	/* Set client data */
-	ci.client_data=(void *)pSession;
+  /* Set client data */
+  ci.client_data=(void *)pSession;
 			
-	/* Setup error manager */
-	ci.err=jpeg_std_error(&Err.Public);
-	Err.nNumMessages=0;
-	Err.Public.error_exit=tim_jpeg_error_exit;
-	Err.Public.output_message=tim_jpeg_output_message;
+  /* Setup error manager */
+  ci.err=jpeg_std_error(&Err.Public);
+  Err.nNumMessages = 0;
+  Err.Public.error_exit = tim_jpeg_error_exit;
+  Err.Public.output_message = tim_jpeg_output_message;
 	
-	/* Setup setjmp (nooo) */
-	if(setjmp(Err.SetJmp)) {
-		/* This is where we go on errors... */
-		jpeg_destroy_decompress(&ci);		
-		tim_free(pSession,ci.src);
-		tim_close(pSession,pvHandle);
-		return TIM_RV_ERR_LIBRARY;
-	}
+  /* Setup setjmp (nooo) */
+  if(setjmp(Err.SetJmp)) {
+    /* This is where we go on errors... */
+    jpeg_destroy_decompress(&ci);		
+    tim_free(pSession, ci.src);
+    tim_close(pSession, pvHandle);
+    return TIM_RV_ERR_LIBRARY;
+  }
 	
-	/* Create decompression object */
-	jpeg_create_decompress(&ci);
+  /* Create decompression object */
+  jpeg_create_decompress(&ci);
 	
-	/* Tell IJG where to find the image */
-	tim_jpeg_setup_src(pSession,&ci,pvHandle);
+  /* Tell IJG where to find the image */
+  tim_jpeg_setup_src(pSession, &ci, pvHandle);
 
-	/* Read header */
-	jpeg_read_header(&ci,TRUE);
+  /* Read header */
+  jpeg_read_header(&ci, TRUE);
 	
-	/* Make sure we get RGB */
-	ci.out_color_space=JCS_RGB;
-	ci.out_color_components=3;
+  /* Make sure we get RGB */
+  ci.out_color_space = JCS_RGB;
+  ci.out_color_components = 3;
 		
-	/* Hints? */
-	switch(tim_get_hint_int(pSession,".jpg","jpeg_downscale",1)) {
-		case 2: ci.scale_num=1; ci.scale_denom=2; break; /* Scale by 1/2 */
-		case 4: ci.scale_num=1; ci.scale_denom=4; break; /* Scale by 1/4 */
-		case 8: ci.scale_num=1; ci.scale_denom=8; break; /* Scale by 1/8 */		
-	}
+  /* Hints? */
+  switch(tim_get_hint_int(pSession, ".jpg", "jpeg_downscale", 1)) {
+  case 2: /* Scale by 1/2 */
+    ci.scale_num=1;
+    ci.scale_denom=2;
+    break;
+  case 4: /* Scale by 1/4 */
+    ci.scale_num=1;
+    ci.scale_denom=4;
+    break;
+  case 8: /* Scale by 1/8 */
+    ci.scale_num=1;
+    ci.scale_denom=8;
+    break;
+  }
 		
-	if(tim_is_hint(pSession,".jpg","jpeg_no_fancy_upsampling")) ci.do_fancy_upsampling=FALSE;
+  if(tim_is_hint(pSession, ".jpg", "jpeg_no_fancy_upsampling")){
+    ci.do_fancy_upsampling = FALSE;
+  }
 
-	pc=tim_get_hint(pSession,".jpg","jpeg_dct_method","ifast");
-	if(!stricmp(pc,"islow")) ci.dct_method=JDCT_ISLOW;
-	else if(!stricmp(pc,"float")) ci.dct_method=JDCT_FLOAT;
-	else ci.dct_method=JDCT_IFAST;
+  pc=tim_get_hint(pSession, ".jpg", "jpeg_dct_method", "ifast");
+  if(!stricmp(pc, "islow"))
+    ci.dct_method = JDCT_ISLOW;
+  else if(!stricmp(pc, "float"))
+    ci.dct_method = JDCT_FLOAT;
+  else
+    ci.dct_method = JDCT_IFAST;
 	
-	/* Only retrieve info? */
-	if(pInfo) {
-		/* Infomode! */
-		memcpy(pInfo,&EXIF,sizeof(EXIF)); /* Did we get some EXIF? */
-		pInfo->nWidth=ci.image_width / ci.scale_denom;
-		pInfo->nHeight=ci.image_height / ci.scale_denom;
-		pInfo->PixelType=TIM_PT_RGB24;		
-	}
-	else {
-		/* Start decompressing... */
-		jpeg_start_decompress(&ci);
+  /* Only retrieve info? */
+  if(pInfo) {
+    /* Infomode! */
+    memcpy(pInfo, &EXIF, sizeof(EXIF)); /* Did we get some EXIF? */
+    pInfo->nWidth    = ci.image_width  / ci.scale_denom;
+    pInfo->nHeight   = ci.image_height / ci.scale_denom;
+    pInfo->PixelType = TIM_PT_RGB24;		
+  }
+  else {
+    /* Start decompressing... */
+    jpeg_start_decompress(&ci);
 
-		/* Allocate image */
-		pImage=tim_create_image(pSession,ci.output_width,ci.output_height,TIM_PT_RGB24);
-		if(!pImage) ERREXIT(&ci,0);
-		*ppImage=pImage;
+    /* Allocate image */
+    pImage = tim_create_image(pSession, ci.output_width, ci.output_height, TIM_PT_RGB24);
+    if(!pImage)
+      ERREXIT(&ci, 0);
+    *ppImage=pImage;
 
-		memcpy(&pImage->Info,&EXIF,sizeof(EXIF)); /* Did we get some EXIF? */
-		pImage->Info.nWidth=ci.output_width;
-		pImage->Info.nHeight=ci.output_height;
-		pImage->Info.PixelType=TIM_PT_RGB24;		
+    memcpy(&pImage->Info, &EXIF, sizeof(EXIF)); /* Did we get some EXIF? */
+    pImage->Info.nWidth    = ci.output_width;
+    pImage->Info.nHeight   = ci.output_height;
+    pImage->Info.PixelType = TIM_PT_RGB24;		
 
-		nRowStride=ci.output_width*ci.out_color_components;
-		Buffer=(*ci.mem->alloc_sarray)((j_common_ptr)&ci,JPOOL_IMAGE,nRowStride,1);
+    nRowStride = ci.output_width*ci.out_color_components;
+    Buffer = (*ci.mem->alloc_sarray)((j_common_ptr)&ci, JPOOL_IMAGE, nRowStride, 1);
 		
-		/* Decode */
-		while(ci.output_scanline < ci.output_height) {
-			/* Read scanline */
-			jpeg_read_scanlines(&ci,Buffer,1);
-			pScan=(tim_jpeg_pixel_t *)Buffer[0];
+    /* Decode */
+    while(ci.output_scanline < ci.output_height) {
+      /* Read scanline */
+      jpeg_read_scanlines(&ci, Buffer, 1);
+      pScan=(tim_jpeg_pixel_t *)Buffer[0];
 			
-			/* Set channel data */
-			for(i=0;i<ci.output_width;i++) {
-				/* Calculate position in channels */
-				nOffset=i+(ci.output_scanline-1)*ci.output_width;
+      /* Set channel data */
+      for(unsigned int i=0; i<ci.output_width; i++) {
+	/* Calculate position in channels */
+	nOffset = i + (ci.output_scanline-1)*ci.output_width;
 				
-				/* Copy pixel */
-				pImage->pRGB[nOffset].r=pScan[i].r;
-				pImage->pRGB[nOffset].g=pScan[i].g;
-				pImage->pRGB[nOffset].b=pScan[i].b;
-			}		
-		}
+	/* Copy pixel */
+	pImage->pRGB[nOffset].r = pScan[i].r;
+	pImage->pRGB[nOffset].g = pScan[i].g;
+	pImage->pRGB[nOffset].b = pScan[i].b;
+      }		
+    }
 	
-		/* End */
-		jpeg_finish_decompress(&ci);
-	}
+    /* End */
+    jpeg_finish_decompress(&ci);
+  }
 		
-	/* Clean up */
-	jpeg_destroy_decompress(&ci);
-	tim_free(pSession,ci.src);
-	tim_close(pSession,pvHandle);
+  /* Clean up */
+  jpeg_destroy_decompress(&ci);
+  tim_free(pSession,ci.src);
+  tim_close(pSession,pvHandle);
 
-	/* OK */
-	return TIM_RV_OK;
+  /* OK */
+  return TIM_RV_OK;
 }
 
 /*==============================================================================
 Save function
 ==============================================================================*/
 
-int tim_jpeg_save(tim_image_t *pImage,char *pcTarget) {
-	void *pvHandle;
-	struct jpeg_compress_struct ci;
-	tim_error_mgr_t Err;
-	int i,nOffset;
-	tim_jpeg_pixel_t *pScan;
-	JSAMPROW RowPointer[1];
-		
-	/* Open source file */
-	pvHandle=tim_open(pImage->pSession,pcTarget,TIM_IM_WRITE);
-	if(!pvHandle)
-		return TIM_RV_ERR_COULD_NOT_PERFORM;
-		
-	/* Set client data */
-	ci.client_data=(void *)pImage->pSession;
-			
-	/* Setup error manager */
-	ci.err=jpeg_std_error(&Err.Public);
-	Err.nNumMessages=0;
-	Err.Public.error_exit=tim_jpeg_error_exit;
-	Err.Public.output_message=tim_jpeg_output_message;
-	
-	/* Setup setjmp (nooo) */
-	if(setjmp(Err.SetJmp)) {
-		/* This is where we go on errors... */
-		jpeg_destroy_compress(&ci);		
-		tim_free(pImage->pSession,ci.dest);
-		tim_close(pImage->pSession,pvHandle);
-		return TIM_RV_ERR_LIBRARY;
-	}
+int tim_jpeg_save(tim_image_t *pImage, char *pcTarget) {
+  void *pvHandle;
+  struct jpeg_compress_struct ci;
+  tim_error_mgr_t Err;
+  unsigned int i, nOffset;
+  tim_jpeg_pixel_t *pScan;
+  JSAMPROW RowPointer[1];
 
-	/* Create compression object */
-	jpeg_create_compress(&ci);
-	
-	/* Set destination */
-  tim_jpeg_setup_dest(pImage->pSession,&ci,pvHandle);	
-  
-  /* Set options and parametres for compression */
-  ci.image_width=pImage->Info.nWidth;
-  ci.image_height=pImage->Info.nHeight;
-  ci.input_components=3;
-  ci.in_color_space=JCS_RGB;
+  /* Open source file */
+  pvHandle=tim_open(pImage->pSession,pcTarget,TIM_IM_WRITE);
+  if(!pvHandle)
+    return TIM_RV_ERR_COULD_NOT_PERFORM;
 
-	/* Set defaults */
-  jpeg_set_defaults(&ci);
-  
-  /* Set quality */
-  jpeg_set_quality(&ci,tim_get_hint_int(pImage->pSession,".jpg","jpeg_quality",95),TRUE);
-  
-  /* Begin */
-  jpeg_start_compress(&ci,TRUE);
-  pScan=(tim_jpeg_pixel_t *)tim_alloc(pImage->pSession,ci.image_width*ci.input_components);
-  if(!pScan) ERREXIT(&ci,0);
-     
-  while(ci.next_scanline<ci.image_height) {
-		nOffset=ci.next_scanline*ci.image_width;
-		
-		for(i=0;i<ci.image_width;i++) {
-			switch(pImage->Info.PixelType) {
-				case TIM_PT_RGB24:
-					pScan[i].r=pImage->pRGB[nOffset+i].r;		
-					pScan[i].g=pImage->pRGB[nOffset+i].g;		
-					pScan[i].b=pImage->pRGB[nOffset+i].b;		
-					break;
-				case TIM_PT_RGBA32:
-					pScan[i].r=pImage->pRGBA[nOffset+i].r;		
-					pScan[i].g=pImage->pRGBA[nOffset+i].g;		
-					pScan[i].b=pImage->pRGBA[nOffset+i].b;		
-					break;
-				default:
-					pScan[i].r=pScan[i].g=pScan[i].b=0;
-			}
-		}	
-		
-    RowPointer[0]=&((JSAMPLE *)pScan)[0];
-    jpeg_write_scanlines(&ci,RowPointer,1);
+  /* Set client data */
+  ci.client_data = (void *)pImage->pSession;
+
+  /* Setup error manager */
+  ci.err = jpeg_std_error(&Err.Public);
+  Err.nNumMessages = 0;
+  Err.Public.error_exit = tim_jpeg_error_exit;
+  Err.Public.output_message = tim_jpeg_output_message;
+
+  /* Setup setjmp (nooo) */
+  if(setjmp(Err.SetJmp)) {
+    /* This is where we go on errors... */
+    jpeg_destroy_compress(&ci);		
+    tim_free(pImage->pSession, ci.dest);
+    tim_close(pImage->pSession, pvHandle);
+    return TIM_RV_ERR_LIBRARY;
   }
-  
-  tim_free(pImage->pSession,pScan);
-  
+
+  /* Create compression object */
+  jpeg_create_compress(&ci);
+
+  /* Set destination */
+  tim_jpeg_setup_dest(pImage->pSession, &ci, pvHandle);	
+
+  /* Set options and parametres for compression */
+  ci.image_width      = pImage->Info.nWidth;
+  ci.image_height     = pImage->Info.nHeight;
+  ci.input_components = 3;
+  ci.in_color_space   = JCS_RGB;
+
+  /* Set defaults */
+  jpeg_set_defaults(&ci);
+
+  /* Set quality */
+  jpeg_set_quality(&ci, tim_get_hint_int(pImage->pSession, ".jpg", "jpeg_quality", 95), TRUE);
+
+  /* Begin */
+  jpeg_start_compress(&ci, TRUE);
+  pScan = (tim_jpeg_pixel_t *)tim_alloc(pImage->pSession,ci.image_width*ci.input_components);
+  if(!pScan)
+    ERREXIT(&ci,0);
+
+  while(ci.next_scanline < ci.image_height) {
+    nOffset = ci.next_scanline*ci.image_width;
+
+    for(i=0; i<ci.image_width; i++) {
+      switch(pImage->Info.PixelType) {
+      case TIM_PT_RGB24:
+	pScan[i].r=pImage->pRGB[nOffset+i].r;		
+	pScan[i].g=pImage->pRGB[nOffset+i].g;		
+	pScan[i].b=pImage->pRGB[nOffset+i].b;		
+	break;
+      case TIM_PT_RGBA32:
+	pScan[i].r=pImage->pRGBA[nOffset+i].r;		
+	pScan[i].g=pImage->pRGBA[nOffset+i].g;		
+	pScan[i].b=pImage->pRGBA[nOffset+i].b;		
+	break;
+      default:
+	pScan[i].r = pScan[i].g = pScan[i].b = 0;
+      }
+    }	
+
+    RowPointer[0] = &((JSAMPLE *)pScan)[0];
+    jpeg_write_scanlines(&ci, RowPointer, 1);
+  }
+
+  tim_free(pImage->pSession, pScan);
+
   /* Clean up */
   jpeg_finish_compress(&ci);
-	tim_free(pImage->pSession,ci.dest);
-	tim_close(pImage->pSession,pvHandle);    
+  tim_free(pImage->pSession, ci.dest);
+  tim_close(pImage->pSession, pvHandle);    
   jpeg_destroy_compress(&ci);
 
-	/* OK */
-	return TIM_RV_OK;
+  /* OK */
+  return TIM_RV_OK;
 }
 
 /*==============================================================================

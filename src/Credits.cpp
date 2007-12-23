@@ -66,12 +66,12 @@ void Credits::init(float fBackgroundReplayLength,
   m_bFinished = false;
 
   /* Parse credits string */
-  int nL = strlen(pcCredits);
+  unsigned int nL = strlen(pcCredits);
   char cBuf[256];
-  int nBufLen = 0;
-  std::string Left,Right;
+  unsigned int nBufLen = 0;
+  std::string Left, Right;
     
-  for(unsigned int i=0;i<nL;i++) {
+  for(unsigned int i=0; i<nL; i++) {
     if(pcCredits[i] == ':') {
       /* Got left part of entry */
       cBuf[nBufLen] = '\0';
@@ -144,7 +144,7 @@ void Credits::render(float fTime) {
       drawLib->drawBox(Vector2f(0,0),Vector2f(drawLib->getDispWidth(),drawLib->getDispHeight()),0,MAKE_COLOR(0,0,0,nC),0);      
       
     /* Render text */
-    int nScroll = 20 + drawLib->getDispHeight() - fTime * 20;
+    int nScroll = (int)(20 + drawLib->getDispHeight() - fTime * 20);
     int nY = 0;
       
     for(unsigned int i=0;i<m_Entries.size();i++) {

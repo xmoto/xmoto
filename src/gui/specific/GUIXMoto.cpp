@@ -66,9 +66,12 @@ void UILevelList::hideRoomBestTime() {
 }
 
 void UILevelList::clear() {
-  for(unsigned int i=0; i<getEntries().size(); i++) {
-    delete getEntries()[i]->pvUser;
-  }
+
+  // can't delete void*, it's undefined...
+  //
+  //  for(unsigned int i=0; i<getEntries().size(); i++) {
+  //    delete getEntries()[i]->pvUser;
+  //  }
   UIList::clear();
 }
 
@@ -180,8 +183,8 @@ void UIPackTree::updatePack(LevelsPack* i_levelsPack,
 	  v_level_nb << i_nbFinishedLevels;
 	  v_level_nb << "/";
 	  v_level_nb << i_nbLevels;
-	  getEntries()[i]->Text[1] = v_level_nb.str();
-	  getEntries()[i]->bFiltered == i_nbLevels == 0;
+	  getEntries()[i]->Text[1]   = v_level_nb.str();
+	  getEntries()[i]->bFiltered = (i_nbLevels == 0);
       }
     }
   }

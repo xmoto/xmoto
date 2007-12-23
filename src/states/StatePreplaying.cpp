@@ -102,11 +102,11 @@ void StatePreplaying::enter()
     pWorld->setInfos("");
 	
     /* add the players */
-    int v_nbPlayer = XMSession::instance()->multiNbPlayers();
+    unsigned int v_nbPlayer = XMSession::instance()->multiNbPlayers();
     Logger::Log("Preplay level for %i player(s)", v_nbPlayer);
 
     pGame->initCameras(v_nbPlayer);
-    for(int i=0; i<v_nbPlayer; i++) {
+    for(unsigned int i=0; i<v_nbPlayer; i++) {
       pWorld->setCurrentCamera(i);
       pWorld->getCamera()->setPlayerToFollow(pWorld->addPlayerBiker(pWorld->getLevelSrc()->PlayerStart(),
 								    DD_RIGHT,
@@ -119,7 +119,7 @@ void StatePreplaying::enter()
     // if there's more camera than player (ex: 3 players and 4 cameras),
     // then, make the remaining cameras follow the first player
     if(v_nbPlayer < pWorld->getNumberCameras()){
-      for(int i=v_nbPlayer; i<pWorld->getNumberCameras(); i++){
+      for(unsigned int i=v_nbPlayer; i<pWorld->getNumberCameras(); i++){
 	pWorld->setCurrentCamera(i);
 	pWorld->getCamera()->setPlayerToFollow(pWorld->Players()[0]);
       }

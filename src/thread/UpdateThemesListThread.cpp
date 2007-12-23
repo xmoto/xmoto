@@ -62,5 +62,5 @@ int UpdateThemesListThread::realThreadFunction()
 }
 
 void UpdateThemesListThread::setTaskProgress(float p_percent) {
-  setThreadProgress(p_percent);
+  setThreadProgress((int)p_percent);
 }

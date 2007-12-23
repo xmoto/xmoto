@@ -62,7 +62,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       void loadState(SerializedBikeState& state);  
       void peekState(SerializedBikeState& state); /* get current state */
       
-      void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize);
+      void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,unsigned int nStateSize);
       void saveReplay(void);
       std::string openReplay(const std::string &FileName, std::string &Player, bool bDisplayInformation = false);
       static void deleteReplay(std::string ReplayName);
@@ -95,16 +95,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     private: 
       /* Data */ 
       std::vector<ReplayStateChunk*> m_Chunks;
-      int m_nCurChunk;
+      unsigned int m_nCurChunk;
       float m_nCurState; /* is a float so that manage slow */   
       std::string m_FileName,m_LevelID,m_PlayerName;
       float m_fFrameRate;
-      int m_nStateSize;
+      unsigned int m_nStateSize;
       bool m_bFinished;
       bool m_bEndOfFile;
       float m_fFinishTime;
       char *m_pcInputEventsData;
-      int m_nInputEventsDataSize;
+      unsigned int m_nInputEventsDataSize;
  
       /* Helpers */
       void _FreeReplay(void);

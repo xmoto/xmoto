@@ -49,6 +49,8 @@ void StateUpgradeLevels::send(const std::string& i_id, UIMsgBoxButton i_button, 
       m_pThread->askThreadToEnd();
       m_pThread->unsleepThread();
       break;
+    default:
+      break;
     }
   }
   else if(i_id == "ASKING_LEVEL_UPDATE"){
@@ -61,6 +63,8 @@ void StateUpgradeLevels::send(const std::string& i_id, UIMsgBoxButton i_button, 
       break;
     case UI_MSGBOX_YES_FOR_ALL:
       m_pThread->unsleepThread("YES_FOR_ALL");
+      break;
+    default:
       break;
     }
   }

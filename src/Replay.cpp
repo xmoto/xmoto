@@ -81,7 +81,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     saveReplay();
   }
   
-  void Replay::createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize) {
+  void Replay::createReplay(const std::string &FileName, const std::string &LevelID,
+			    const std::string &Player, float fFrameRate, unsigned int nStateSize) {
     m_FileName = FileName;
     m_LevelID = LevelID;
     m_PlayerName = Player;
@@ -288,7 +289,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
       
       /* Read chunks */
-      int nNumChunks = FS::readInt_LE(pfh);
+      unsigned int nNumChunks = FS::readInt_LE(pfh);
       if(bDisplayInformation) {
 	printf("%-30s: %i\n", "Number of chunks", nNumChunks);
       }
@@ -408,60 +409,60 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
   int Replay::CurrentFrame() const {
-    return m_nCurChunk * STATES_PER_CHUNK + m_nCurState + 1;
+    return (int)(m_nCurChunk * STATES_PER_CHUNK + m_nCurState + 1);
   }
 
   bool Replay::nextNormalState() {
     return nextState(1);
   }
 
-  bool Replay::nextState(float p_frames) {
-    m_bEndOfFile = false;
+bool Replay::nextState(float p_frames) {
+  m_bEndOfFile = false;
 
-    m_nCurState += p_frames;
+  m_nCurState += p_frames;
 
-    /* end or start of a chunk */
-    if(m_nCurState >= STATES_PER_CHUNK || m_nCurState < 0.0) {
+  /* end or start of a chunk */
+  if(m_nCurState >= STATES_PER_CHUNK || m_nCurState < 0.0) {
 
-      /* go on the following chunk */
-      if(m_nCurState >= STATES_PER_CHUNK) { /* end of a chunk */
-  if(m_nCurChunk < m_Chunks.size() -1) {
-    m_nCurState = m_nCurState - m_Chunks[m_nCurChunk]->nNumStates -1;
-    m_nCurChunk++;
-  }
-      } else {
-  if(m_nCurState < 0.0) { /* start of a chunk */
-    if(m_nCurChunk > 0) {
-      m_nCurState = m_nCurState + m_Chunks[m_nCurChunk-1]->nNumStates -1;
-      m_nCurChunk--;
+    /* go on the following chunk */
+    if(m_nCurState >= STATES_PER_CHUNK) { /* end of a chunk */
+      if(m_nCurChunk < m_Chunks.size() - 1) {
+	m_nCurState = m_nCurState - m_Chunks[m_nCurChunk]->nNumStates -1;
+	m_nCurChunk++;
+      }
+    } else {
+      if(m_nCurState < 0.0) { /* start of a chunk */
+	if(m_nCurChunk > 0) {
+	  m_nCurState = m_nCurState + m_Chunks[m_nCurChunk-1]->nNumStates -1;
+	  m_nCurChunk--;
+	}
+      }
     }
-  }
-      }
 
-      /* if that's the beginning */
-      if(m_nCurState < 0.0) {
-  m_nCurState = 0.0;
-      }
+    /* if that's the beginning */
+    if(m_nCurState < 0.0) {
+      m_nCurState = 0.0;
+    }
 
-      /* if that's end */
-      if(m_nCurState >= m_Chunks[m_nCurChunk]->nNumStates) {
-  m_nCurState = m_Chunks[m_nCurChunk]->nNumStates -1;
-  return false;
-      }
+    /* if that's end */
+    if(m_nCurState >= m_Chunks[m_nCurChunk]->nNumStates) {
+      m_nCurState = m_Chunks[m_nCurChunk]->nNumStates -1;
+      return false;
+    }
       
-    } else { /* that's not the end or the start of the chunk */
+  } else { /* that's not the end or the start of the chunk */
 
-      /* if that's the beginning, do nothing */
+    /* if that's the beginning, do nothing */
 
-      /* if that's end */
-      if(m_nCurState >= m_Chunks[m_nCurChunk]->nNumStates) {
-  m_nCurState = m_Chunks[m_nCurChunk]->nNumStates -1;
-  return false;
-      }
+    /* if that's end */
+    if(m_nCurState >= m_Chunks[m_nCurChunk]->nNumStates) {
+      m_nCurState = m_Chunks[m_nCurChunk]->nNumStates -1;
+      return false;
     }
-    
-    return true;
   }
+    
+  return true;
+}
 
   void Replay::loadState(SerializedBikeState& state) {
     /* (11th july, 2006) rasmus: i've swapped the two following lines, it apparently fixes
@@ -537,8 +538,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
       std::string LevelID = FS::readString(pfh);
       std::string Player  = FS::readString(pfh);
-      float fFrameRate    = FS::readFloat_LE(pfh);
-      int nStateSize      = FS::readInt_LE(pfh);
+      /*float fFrameRate    = */ FS::readFloat_LE(pfh);
+      /*int nStateSize      = */ FS::readInt_LE(pfh);
       bool bFinished      = FS::readBool(pfh);
       float fFinishTime   = FS::readFloat_LE(pfh);
                 
