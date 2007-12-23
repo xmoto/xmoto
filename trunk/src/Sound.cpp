@@ -91,7 +91,7 @@ void Sound::uninit(void) {
   Mix_CloseAudio();
   
   /* Free loaded samples */
-  for(int i=0;i<m_Samples.size();i++) {
+  for(unsigned int i=0;i<m_Samples.size();i++) {
     Mix_FreeChunk(m_Samples[i]->pChunk);
     delete m_Samples[i];
   }
@@ -192,7 +192,7 @@ void Sound::playSample(SoundSample *pSample,float fVolume) {
 }
   
 SoundSample *Sound::findSample(const std::string &File) {
-  for(int i=0;i<m_Samples.size();i++) {
+  for(unsigned int i=0;i<m_Samples.size();i++) {
     if(m_Samples[i]->Name == File)
       return m_Samples[i];
   }

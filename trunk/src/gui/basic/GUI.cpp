@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "drawlib/DrawLib.h"
 #include "Game.h"
+#include "helpers/Log.h"
 
   DrawLib* UIWindow::m_drawLib = NULL;
 
@@ -52,7 +53,7 @@ bool UIWindow::isUglyMode() {
   Base window init/shutdown
   ===========================================================================*/
   bool UIWindow::haveChildW(UIWindow *pWindow) {
-    for(int i=0;i<m_Children.size();i++)
+    for(unsigned int i=0;i<m_Children.size();i++)
       if(m_Children[i] == pWindow) return true;
     return false;
   }
@@ -63,7 +64,7 @@ bool UIWindow::isUglyMode() {
   }    
   
   void UIWindow::removeChildW(UIWindow *pWindow) {
-    for(int i=0;i<m_Children.size();i++) {
+    for(unsigned int i=0;i<m_Children.size();i++) {
       if(m_Children[i] == pWindow) {
         m_Children.erase(m_Children.begin() + i);
         return;
@@ -105,7 +106,6 @@ bool UIWindow::isUglyMode() {
   }
 
   UIRoot *UIWindow::getRoot(void) {
-    UIRoot *pRoot = NULL;
     for(UIWindow *p=this;p!=NULL;p=p->getParent()) {
       if(p->getParent() == NULL) {
         return reinterpret_cast<UIRoot *>(p);
@@ -116,7 +116,7 @@ bool UIWindow::isUglyMode() {
   }
   
   void UIWindow::enableChildren(bool bState) {
-    for(int i=0;i<m_Children.size();i++)
+    for(unsigned int i=0;i<m_Children.size();i++)
       m_Children[i]->enableWindow(bState);
   }
 
@@ -149,7 +149,7 @@ bool UIWindow::isUglyMode() {
       XRem = Child.substr(s+1,Child.length()-s-1);
     }
     
-    for(int i=0;i<getChildren().size();i++) {
+    for(unsigned int i=0;i<getChildren().size();i++) {
       if(getChildren()[i]->getID() == X) {
         if(XRem != "")
 	  return getChildren()[i]->getChild(XRem);
@@ -216,7 +216,7 @@ bool UIWindow::isUglyMode() {
   ===========================================================================*/  
   UIMsgBoxButton UIMsgBox::getClicked(void) {
     /* Go through buttons... anything clicked? */
-    for(int i=0;i<m_nNumButtons;i++) {
+    for(unsigned int i=0;i<m_nNumButtons;i++) {
       if(m_pButtons[i]->isClicked()) {  
         if(m_pButtons[i]->getCaption() == GAMETEXT_OK) return UI_MSGBOX_OK;
         if(m_pButtons[i]->getCaption() == GAMETEXT_CANCEL) return UI_MSGBOX_CANCEL;
@@ -230,7 +230,7 @@ bool UIWindow::isUglyMode() {
   
   bool UIMsgBox::setClicked(std::string Text) {
     bool b=false;
-    for(int i=0;i<m_nNumButtons;i++) {
+    for(unsigned int i=0;i<m_nNumButtons;i++) {
       if(m_pButtons[i]->getCaption() == Text) {
         m_pButtons[i]->setClicked(true);
         b = true;
@@ -241,7 +241,7 @@ bool UIWindow::isUglyMode() {
   
   void UIMsgBox::_ReEnableSiblings(void) {
     UIWindow *pParent = getParent();
-    for(int i=0;i<pParent->getChildren().size()-1;i++) {
+    for(unsigned int i=0;i<pParent->getChildren().size()-1;i++) {
       pParent->getChildren()[i]->enableWindow(m_SiblingStates[i]);
     }
   }
@@ -249,12 +249,12 @@ bool UIWindow::isUglyMode() {
   void UIMsgBox::paint(void) {
     /* Should the OK button be disabled? (if any) */
     if(m_bTextInput && m_TextInput.empty()) {
-      for(int i=0;i<m_nNumButtons;i++) {
+      for(unsigned int i=0;i<m_nNumButtons;i++) {
         if(m_pButtons[i]->getCaption() == GAMETEXT_OK) m_pButtons[i]->enableWindow(false);
       }
     }
     else {
-      for(int i=0;i<m_nNumButtons;i++) {
+      for(unsigned int i=0;i<m_nNumButtons;i++) {
         if(m_pButtons[i]->getCaption() == GAMETEXT_OK) m_pButtons[i]->enableWindow(true);
       }
     }   
@@ -306,18 +306,23 @@ bool UIWindow::isUglyMode() {
   }
   
   UIMsgBox *UIWindow::msgBox(std::string Text,UIMsgBoxButton Buttons,bool bTextInput,bool bQuery) {
-    int nNumButtons=0;
+    unsigned int nNumButtons = 0;
     
-    if(Buttons & UI_MSGBOX_OK) nNumButtons++;
-    if(Buttons & UI_MSGBOX_CANCEL) nNumButtons++;
-    if(Buttons & UI_MSGBOX_YES) nNumButtons++;
-    if(Buttons & UI_MSGBOX_NO) nNumButtons++;
-    if(Buttons & UI_MSGBOX_YES_FOR_ALL) nNumButtons++;
+    if(Buttons & UI_MSGBOX_OK)
+      nNumButtons++;
+    if(Buttons & UI_MSGBOX_CANCEL)
+      nNumButtons++;
+    if(Buttons & UI_MSGBOX_YES)
+      nNumButtons++;
+    if(Buttons & UI_MSGBOX_NO)
+      nNumButtons++;
+    if(Buttons & UI_MSGBOX_YES_FOR_ALL)
+      nNumButtons++;
 
     /* Determine size of contents */
     FontGlyph* v_fg = m_curFont->getGlyph(Text);
 
-    int nButtonSize = 57;
+    const unsigned int nButtonSize = 57;
     int w = (v_fg->realWidth() > nNumButtons*115 ? (v_fg->realWidth()) : nNumButtons*115) + 16 + 100;
     int h = v_fg->realHeight() + nButtonSize + 24 + 100;
     
@@ -334,7 +339,7 @@ bool UIWindow::isUglyMode() {
     
     /* Disable all siblings (if there's not already a msg-box) */
     //if(!m_bActiveMsgBox) {
-      for(int i=0;i<getChildren().size()-1;i++) {      
+      for(unsigned int i=0;i<getChildren().size()-1;i++) {      
         pMsgBox->getSiblingStates().push_back(!getChildren()[i]->isDisabled());
         getChildren()[i]->enableWindow(false);     
       }
@@ -424,9 +429,9 @@ bool UIWindow::isUglyMode() {
     FontManager* v_fm = m_curFont;
     FontGlyph* v_fg = v_fm->getGlyph(Text);
     v_fm->printStringGrad(v_fg,
-		      getAbsPosX()+x + ((int)((float)v_fg->realWidth()) * i_xper),
-		      getAbsPosY()+y + ((int)((float)v_fg->realHeight()) * i_yper),
-		      c0, c1, c2, c3);
+			  getAbsPosX()+x + (int)(((float)v_fg->realWidth()) * i_xper),
+			  getAbsPosY()+y + (int)(((float)v_fg->realHeight()) * i_yper),
+			  c0, c1, c2, c3);
     o_width  = v_fg->realWidth();
     o_height = v_fg->realHeight();
 }
@@ -472,35 +477,35 @@ bool UIWindow::isUglyMode() {
     };
     
     static _ElemTable Table[] = {
-      UI_ELEM_LARGE_BUTTON_UP,0,0,207,57,
-      UI_ELEM_LARGE_BUTTON_DOWN,0,57,207,57,
-      UI_ELEM_SMALL_BUTTON_UP,0,114,115,57,
-      UI_ELEM_SMALL_BUTTON_DOWN,115,114,115,57,
-      UI_ELEM_CHECKBUTTON_UNCHECKED_UP,222,0,34,34,
-      UI_ELEM_CHECKBUTTON_UNCHECKED_DOWN,222,34,34,34,
-      UI_ELEM_CHECKBUTTON_CHECKED_UP,222,68,34,34,
-      UI_ELEM_CHECKBUTTON_CHECKED_DOWN,222,222,34,34,
-      UI_ELEM_RADIOBUTTON_UNCHECKED_UP,34,222,34,34,
-      UI_ELEM_RADIOBUTTON_UNCHECKED_DOWN,68,222,34,34,
-      UI_ELEM_RADIOBUTTON_CHECKED_UP,102,222,34,34,
-      UI_ELEM_RADIOBUTTON_CHECKED_DOWN,0,222,34,34,
-      UI_ELEM_SCROLLBUTTON_DOWN_UP,1,180,20,20,
-      UI_ELEM_SCROLLBUTTON_DOWN_DOWN,22,180,20,20,
-      UI_ELEM_SCROLLBUTTON_UP_UP,43,180,20,20,
-      UI_ELEM_SCROLLBUTTON_UP_DOWN,64,180,20,20,
-      UI_ELEM_SCROLLBUTTON_RIGHT_UP,85,180,20,20,
-      UI_ELEM_SCROLLBUTTON_RIGHT_DOWN,106,180,20,20,
-      UI_ELEM_SCROLLBUTTON_LEFT_UP,127,180,20,20,
-      UI_ELEM_SCROLLBUTTON_LEFT_DOWN,148,180,20,20,
-      UI_ELEM_FRAME_TL,169,180,8,8,
-      UI_ELEM_FRAME_TM,172,180,20,8,
-      UI_ELEM_FRAME_TR,187,180,8,8,
-      UI_ELEM_FRAME_ML,169,189,8,8,
-      UI_ELEM_FRAME_MM,178,184,8,20,
-      UI_ELEM_FRAME_MR,187,184,8,20,
-      UI_ELEM_FRAME_BL,169,198,8,8,
-      UI_ELEM_FRAME_BM,172,198,20,8,
-      UI_ELEM_FRAME_BR,187,198,8,8,
+      {UI_ELEM_LARGE_BUTTON_UP,0,0,207,57},
+      {UI_ELEM_LARGE_BUTTON_DOWN,0,57,207,57},
+      {UI_ELEM_SMALL_BUTTON_UP,0,114,115,57},
+      {UI_ELEM_SMALL_BUTTON_DOWN,115,114,115,57},
+      {UI_ELEM_CHECKBUTTON_UNCHECKED_UP,222,0,34,34},
+      {UI_ELEM_CHECKBUTTON_UNCHECKED_DOWN,222,34,34,34},
+      {UI_ELEM_CHECKBUTTON_CHECKED_UP,222,68,34,34},
+      {UI_ELEM_CHECKBUTTON_CHECKED_DOWN,222,222,34,34},
+      {UI_ELEM_RADIOBUTTON_UNCHECKED_UP,34,222,34,34},
+      {UI_ELEM_RADIOBUTTON_UNCHECKED_DOWN,68,222,34,34},
+      {UI_ELEM_RADIOBUTTON_CHECKED_UP,102,222,34,34},
+      {UI_ELEM_RADIOBUTTON_CHECKED_DOWN,0,222,34,34},
+      {UI_ELEM_SCROLLBUTTON_DOWN_UP,1,180,20,20},
+      {UI_ELEM_SCROLLBUTTON_DOWN_DOWN,22,180,20,20},
+      {UI_ELEM_SCROLLBUTTON_UP_UP,43,180,20,20},
+      {UI_ELEM_SCROLLBUTTON_UP_DOWN,64,180,20,20},
+      {UI_ELEM_SCROLLBUTTON_RIGHT_UP,85,180,20,20},
+      {UI_ELEM_SCROLLBUTTON_RIGHT_DOWN,106,180,20,20},
+      {UI_ELEM_SCROLLBUTTON_LEFT_UP,127,180,20,20},
+      {UI_ELEM_SCROLLBUTTON_LEFT_DOWN,148,180,20,20},
+      {UI_ELEM_FRAME_TL,169,180,8,8},
+      {UI_ELEM_FRAME_TM,172,180,20,8},
+      {UI_ELEM_FRAME_TR,187,180,8,8},
+      {UI_ELEM_FRAME_ML,169,189,8,8},
+      {UI_ELEM_FRAME_MM,178,184,8,20},
+      {UI_ELEM_FRAME_MR,187,184,8,20},
+      {UI_ELEM_FRAME_BL,169,198,8,8},
+      {UI_ELEM_FRAME_BM,172,198,20,8},
+      {UI_ELEM_FRAME_BR,187,198,8,8},
       (UIElem)-1
     };
         
@@ -668,7 +673,7 @@ UIRoot::UIRoot()
       pWindow->paint();
 
       /* Draw children */
-      for(int i=0;i<pWindow->getChildren().size();i++) {
+      for(unsigned int i=0;i<pWindow->getChildren().size();i++) {
 /*        printf("child: %s\n",pWindow->getChildren()[i]->getCaption().c_str());
         printf("Draw Rect: %d %d %d %d\n",WindowRect.nX,WindowRect.nY,WindowRect.nWidth,WindowRect.nHeight);*/
         _RootPaint(x+pWindow->getPosition().nX,y+pWindow->getPosition().nY,pWindow->getChildren()[i],&WindowRect);      
@@ -691,7 +696,7 @@ UIRoot::UIRoot()
     glEnable(GL_SCISSOR_TEST);
 #endif
 
-    for(int i=0;i<getChildren().size();i++)
+    for(unsigned int i=0;i<getChildren().size();i++)
       _RootPaint(0,0,getChildren()[i],&Screen);
 
 #ifdef ENABLE_OPENGL
@@ -788,7 +793,7 @@ UIRoot::UIRoot()
     if(pWindow->isHidden() || pWindow->isDisabled()) return false;
 
     /* First try if any children want it */
-    for(int i=0;i<pWindow->getChildren().size();i++) {
+    for(unsigned int i=0;i<pWindow->getChildren().size();i++) {
       if(_RootKeyEvent(pWindow->getChildren()[i],Event,nKey,mod,nChar))
         return true;
     }
@@ -829,7 +834,7 @@ UIRoot::UIRoot()
       }      
 
       /* Recurse children */
-      for(int i=pWindow->getChildren().size()-1;i>=0;i--) {
+      for(int i=(int)pWindow->getChildren().size()-1; i>=0; i--) {
         if(pWindow->getChildren()[i]->offerMouseEvent()) {
           if(_RootMouseEvent(pWindow->getChildren()[i],Event,wx,wy)) return true;
         }
@@ -874,7 +879,7 @@ UIRoot::UIRoot()
   
   void UIRoot::deactivate(UIWindow *pWindow) {
     pWindow->setActive(false);
-    for(int i=0;i<pWindow->getChildren().size();i++) {
+    for(unsigned int i=0;i<pWindow->getChildren().size();i++) {
       deactivate(pWindow->getChildren()[i]);
     }
   }
@@ -939,8 +944,10 @@ UIRoot::UIRoot()
   /*===========================================================================
   Activation maps
   ===========================================================================*/
-  int UIRoot::_UpdateActivationMap(UIWindow *pWindow,UIRootActCandidate *pMap,int nNum,int nMax) {
-    if(nNum >= nMax) return nNum;
+  unsigned int UIRoot::_UpdateActivationMap(UIWindow *pWindow, UIRootActCandidate *pMap,
+					    unsigned int nNum, unsigned int nMax) {
+    if(nNum >= nMax)
+      return nNum;
   
     /* Find all windows which accepts activations, and list them in a nice structure */
     if(!pWindow->isDisabled() && pWindow->offerActivation()) {
@@ -951,7 +958,7 @@ UIRoot::UIRoot()
     }
     
     /* Recurse */
-    for(int i=0;i<pWindow->getChildren().size();i++) {
+    for(unsigned int i=0;i<pWindow->getChildren().size();i++) {
       if(!pWindow->isHidden() && !pWindow->isDisabled())
         nNum = _UpdateActivationMap(pWindow->getChildren()[i],pMap,nNum,nMax);
     }
@@ -960,21 +967,21 @@ UIRoot::UIRoot()
     return nNum;
   }
 
-  int UIRoot::_GetActiveIdx(UIRootActCandidate *pMap,int nNum) {
-    for(int i=0;i<nNum;i++)
+  int UIRoot::_GetActiveIdx(UIRootActCandidate *pMap, unsigned int nNum) {
+    for(unsigned int i=0; i<nNum; i++)
       if(pMap[i].pWindow->isActive())
         return i;
     return -1;
   }
 
-  void UIRoot::_ActivateByVector(int dx,int dy) {
+  void UIRoot::_ActivateByVector(int dx, int dy) {
     /* Update the activation map */
     UIRootActCandidate Map[128];
-    int nNum = _UpdateActivationMap(this,Map,0,128);
+    unsigned int nNum = _UpdateActivationMap(this, Map, 0, 128);
     
     if(nNum > 0) {
       /* Find the currently active window */
-      int nActive = _GetActiveIdx(Map,nNum);
+      int nActive = _GetActiveIdx(Map, nNum);
       
       /* No active? */
       if(nActive < 0) {
@@ -989,13 +996,13 @@ UIRoot::UIRoot()
       else {
         /* Okay, determine where to go from here */
         /* Calculate a "best estimate" rating for each candidate, and select the best */
-        int nBest=-1,nBestRating;
-        for(int i=0;i<nNum;i++) {
-          if(i!=nActive) {
+        int nBest = -1;
+	unsigned int uActive = nActive;
+        for(unsigned int i=0; i<nNum; i++) {
+          if(i != uActive) {
             /* Calculate rating */
-            int vx = Map[i].x - Map[nActive].x;
-            int vy = Map[i].y - Map[nActive].y;
-            int nDistSq = vx*vx + vy*vy;
+            int vx = Map[i].x - Map[uActive].x;
+            int vy = Map[i].y - Map[uActive].y;
             int nRating = 0;
             float xx1 = vx, yy1 = vy;
             float fDist = sqrt(xx1*xx1 + yy1*yy1);
@@ -1003,19 +1010,17 @@ UIRoot::UIRoot()
             xx1 /= fDist; yy1 /= fDist;
             float xx2 = dx, yy2 = dy;
            
-            float fAngle;            
-            fAngle = (acos(xx1*xx2 + yy1*yy2) / 3.14159f) * 180.0f;
+            float fAngle = (acos(xx1*xx2 + yy1*yy2) / 3.14159f) * 180.0f;
             if((vx<0 && dx<0) || (vx>0 && dx>0) || (vy<0 && dy<0) || (vy>0 && dy>0)) {
               if(fAngle < 45.0f)
-                nRating = 200-fAngle + 1000 - fDist;
+                nRating = 200 - (int)(fAngle + fDist) + 1000;
             }
             
             /* Good? */
-            if(nRating>0 && (nBest<0 || nRating > nBestRating)) {
+            if(nRating > 0 && nBest < 0) {
               nBest = i;
-              nBestRating = nRating;
-            }       
-          }          
+            }
+          }
         }
         
         /* Did we get something? */

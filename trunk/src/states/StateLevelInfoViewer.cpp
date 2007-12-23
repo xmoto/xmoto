@@ -380,7 +380,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
       unsigned int nrow;
       std::string v_roomName;
       std::string v_id_profile;
-      float       v_finishTime;
+      float       v_finishTime = 0.0f;
 
       v_result = xmDatabase::instance("main")->readDB("SELECT a.name, b.id_profile, b.finishTime "
 			      "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "

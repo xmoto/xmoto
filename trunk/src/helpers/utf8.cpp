@@ -62,13 +62,14 @@ std::vector<std::string> utf8::split_utf8_string(const std::string &src) {
   return ret;
 }
 
-std::string utf8::getNextChar(const std::string &src, int& io_pos) {
+std::string utf8::getNextChar(const std::string& src, unsigned int& io_pos) {
   std::string v_res;
   const int size = byte_size_from_utf8_first(src[io_pos]);
   if(io_pos + size > src.size())
     throw Exception("Invalid utf-8 char");
   v_res = src.substr(io_pos, size);
   io_pos += size;
+
   return v_res;
 }
 

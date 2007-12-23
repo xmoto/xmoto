@@ -228,10 +228,6 @@ void StateEditWebConfig::createGUIIfNeeded()
 
 void StateEditWebConfig::updateGUIRights() {
   UIButton *pDirectConn = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITWEBCONF_FRAME:DIRECTCONN"));
-  UIButton *pHTTPConn   = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITWEBCONF_FRAME:HTTPPROXY"));
-  UIButton *pSOCKS4Conn = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITWEBCONF_FRAME:SOCKS4PROXY"));
-  UIButton *pSOCKS5Conn = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITWEBCONF_FRAME:SOCKS5PROXY"));
-  UIButton *pConnOK     = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITWEBCONF_FRAME:PROXYOK"));
   UIEdit   *pServer     = reinterpret_cast<UIEdit *>(m_GUI->getChild("EDITWEBCONF_FRAME:SUBFRAME:SERVEREDIT"));
   UIEdit   *pPort       = reinterpret_cast<UIEdit *>(m_GUI->getChild("EDITWEBCONF_FRAME:SUBFRAME:PORTEDIT"));    
   UIEdit   *pLogin      = reinterpret_cast<UIEdit *>(m_GUI->getChild("EDITWEBCONF_FRAME:SUBFRAME:LOGINEDIT")); 
@@ -297,8 +293,6 @@ void StateEditWebConfig::updateGUI()
 }
 void StateEditWebConfig::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
 {
-  UIFrame *v_frame;
-
   /* The yes/no box open? */
   switch(i_button){
   case UI_MSGBOX_YES:
@@ -309,6 +303,8 @@ void StateEditWebConfig::send(const std::string& i_id, UIMsgBoxButton i_button, 
     /* No internet connection thank you */
     XMSession::instance()->setWWW(false);
     m_requestForEnd = true;
+    break;
+  default:
     break;
   }
 

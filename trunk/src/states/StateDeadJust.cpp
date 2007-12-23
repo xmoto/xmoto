@@ -33,7 +33,6 @@ StateDeadJust::~StateDeadJust()
 {
 }
 
-
 void StateDeadJust::enter()
 {
   StateScene::enter();

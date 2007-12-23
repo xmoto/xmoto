@@ -93,11 +93,11 @@ BSP::BSP() {
 }
 
 BSP::~BSP() {
-  for(int i=0;i<m_lines.size();i++) {
+  for(unsigned int i=0;i<m_lines.size();i++) {
     delete m_lines[i];
   }
 
-  for(int i=0;i<m_polys.size();i++) {
+  for(unsigned int i=0;i<m_polys.size();i++) {
     delete m_polys[i];
   }
 }
@@ -120,7 +120,7 @@ std::vector<BSPPoly *> &BSP::compute() {
      the entire region enclosed by the input linedefs */
   AABB GlobalBox;
 
-  for(int i=0;i<m_lines.size();i++) {
+  for(unsigned int i=0;i<m_lines.size();i++) {
     GlobalBox.addPointToAABB2f(m_lines[i]->P0());
     GlobalBox.addPointToAABB2f(m_lines[i]->P1());
   }
@@ -172,7 +172,7 @@ void BSP::recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines) {
       } else {
 
 	Logger::Log("** Warning ** : Lines causing the trouble are :");
-	for(int i=0;i<Lines.size();i++) {
+	for(unsigned int i=0;i<Lines.size();i++) {
 	  Logger::Log("%.5f %.5f ; %.5f %.5f",
 		      Lines[i]->P0().x, Lines[i]->P0().y, Lines[i]->P1().x, Lines[i]->P1().y);
 	}
@@ -205,9 +205,9 @@ void BSP::recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines) {
       }      
 
       /* Clean up */
-      for(int i=0;i<Front.size();i++)
+      for(unsigned int i=0;i<Front.size();i++)
         delete Front[i];
-      for(int i=0;i<Back.size();i++)
+      for(unsigned int i=0;i<Back.size();i++)
         delete Back[i];
     }
   }
@@ -296,7 +296,7 @@ void BSP::splitPoly(BSPPoly *pPoly, BSPPoly *pFront, BSPPoly *pBack, BSPLine *pL
   }
   else {
     /* We need to divide the polygon */
-    for(int i=0;i<pPoly->Vertices().size();i++) {
+    for(unsigned int i=0;i<pPoly->Vertices().size();i++) {
       bool bSplit = false;
       
       /* Next vertex? */
@@ -376,7 +376,7 @@ void BSP::splitLines(std::vector<BSPLine *> &Lines,std::vector<BSPLine *> &Front
   }
   
   /* Try splitting all the lines -- and collect a bunch of stats about it */
-  for(int i=0;i<Lines.size();i++) {
+  for(unsigned int i=0;i<Lines.size();i++) {
     /* Look at this... determined the signed point-plane distance for each ends of the line to split */
     double d0 = pLine->Normal().dot(pLine->P0() - Lines[i]->P0());
     double d1 = pLine->Normal().dot(pLine->P0() - Lines[i]->P1());

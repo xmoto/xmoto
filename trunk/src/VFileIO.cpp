@@ -170,7 +170,7 @@ void FS::_FindFilesRecursive(const std::string &DirX,const std::string &Wildcard
       if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
 	std::string F = Dir + std::string("/") + std::string(fd.name);
 	bool bFound = false;
-	for(int k = 0;k<List.size();k++) {
+	for(unsigned int k=0; k<List.size(); k++) {
 	  if(getFileBaseName(List[k]) == getFileBaseName(F)) {  
 	    bFound = true;
 	    break;
@@ -274,7 +274,7 @@ std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
 	  if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
 	    std::string F = UDirToSearch + std::string(fd.name);
 	    bool bFound = false;
-	    for(int k = 0;k<Result.size();k++) {
+	    for(unsigned int k=0; k<Result.size(); k++) {
 	      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
 		bFound = true;
 		break;
@@ -300,7 +300,7 @@ std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
 	if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
 	  std::string F = DataDirToSearch + std::string(fd.name);
 	  bool bFound = false;
-	  for(int k = 0;k<Result.size();k++) {
+	  for(unsigned int k=0; k<Result.size(); k++) {
 	    if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
 	      bFound = true;
 	      break;
@@ -424,7 +424,7 @@ std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
     }
   }
     
-  //	for(int i=0;i<Result.size();i++) printf("%s\n",Result[i].c_str());
+  //	for(unsigned int i=0;i<Result.size();i++) printf("%s\n",Result[i].c_str());
 
   /* Return file listing */
   return Result;

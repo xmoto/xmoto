@@ -66,7 +66,7 @@ void UILevelList::hideRoomBestTime() {
 }
 
 void UILevelList::clear() {
-  for(int i=0; i<getEntries().size(); i++) {
+  for(unsigned int i=0; i<getEntries().size(); i++) {
     delete getEntries()[i]->pvUser;
   }
   UIList::clear();
@@ -129,7 +129,7 @@ void UIPackTree::addPack(LevelsPack* i_levelsPack,
 
   /* looking the categorie */
   int found = -1;
-  for(int i=0; i<getEntries().size(); i++) {
+  for(unsigned int i=0; i<getEntries().size(); i++) {
     if(getEntries()[i]->pvUser == NULL) {
       if(getEntries()[i]->Text[0] == i_categorie) {
 	found = i;
@@ -141,8 +141,8 @@ void UIPackTree::addPack(LevelsPack* i_levelsPack,
   /* the categorie exists, add the entry */
   if(found != -1) {
     /* sort */
-    int position;
-    for(position = found+1; position<getEntries().size(); position++) {
+    unsigned int position = found+1;
+    for(; position<getEntries().size(); position++) {
       /* next categorie => break */
       if(getEntries()[position]->pvUser == NULL) {
 	break;
@@ -200,7 +200,7 @@ LevelsPack* UIPackTree::getSelectedPack() {
 
 void UIPackTree::setSelectedPackByName(const std::string& i_levelsPackName) {
   int nPack = 0;
-  for(int i=0; i<getEntries().size(); i++) {
+  for(unsigned int i=0; i<getEntries().size(); i++) {
     if(getEntries()[i]->pvUser != NULL) {
       if(getEntries()[i]->Text[0] == i_levelsPackName) {
 	nPack = i;
@@ -237,8 +237,8 @@ UIQuickStartButton::UIQuickStartButton(UIWindow *pParent,
 				       int x, int y,
 				       std::string Caption,
 				       int nWidth, int nHeight,
-				       int i_qualityMIN, int i_difficultyMIN,
-				       int i_qualityMAX, int i_difficultyMAX)
+				       unsigned int i_qualityMIN, unsigned int i_difficultyMIN,
+				       unsigned int i_qualityMAX, unsigned int i_difficultyMAX)
   : UIButtonDrawn(pParent, "RoundButtonUnpressed", "RoundButtonPressed", "RoundButtonHover",
 		  x, y, Caption, nWidth, nHeight) {
   Sprite *v_sprite;
@@ -280,12 +280,9 @@ void UIQuickStartButton::setHasChanged(bool i_value) {
 }
 
 void UIQuickStartButton::paint() {
-  float v_angle;
   Vector2i v_point;
-
   Vector2i v_center = Vector2i(getAbsPosX() + getPosition().nWidth/2,
 			       getAbsPosY() + getPosition().nHeight/2);
-
   unsigned int v_ray = getPosition().nWidth/2 - UIQUICKSTART_BORDER;
 
   if(isUglyMode()) {
@@ -295,9 +292,9 @@ void UIQuickStartButton::paint() {
   UIButtonDrawn::paint();
 
   /* draw the quality stars */
-  for(unsigned int i=0; i<5; i++) {
+  const unsigned int numberStar = 5;
+  for(unsigned int i=0; i<numberStar; i++) {
     v_point = getQualityPoint(v_center, v_ray, i);
-
 
     if(i >= m_qualityMIN-1 && i < m_qualityMAX) {
       if(isUglyMode()) {
@@ -306,7 +303,7 @@ void UIQuickStartButton::paint() {
       } else {
 	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
 			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
-			     m_qualityTex, -1);
+			     m_qualityTex);
       }
     } else {
       if(isUglyMode()) {
@@ -315,7 +312,7 @@ void UIQuickStartButton::paint() {
       } else {
 	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
 			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
-			     m_uncheckedTex, -1);
+			     m_uncheckedTex);
       }
     }
   }
@@ -331,7 +328,7 @@ void UIQuickStartButton::paint() {
       } else {
 	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
 			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
-			     m_difficultyTex, -1);
+			     m_difficultyTex);
       }
     } else {
       if(isUglyMode()) {
@@ -340,7 +337,7 @@ void UIQuickStartButton::paint() {
       } else {
 	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
 			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
-			     m_uncheckedTex, -1);
+			     m_uncheckedTex);
       }
     }
   }
@@ -417,7 +414,7 @@ Vector2i UIQuickStartButton::getQualityPoint(const Vector2i& i_center, unsigned 
   Vector2i v_point;
 
   v_angle = (i_value * (M_PI/8.0)) - M_PI/2.0 + M_PI/10.0;
-  v_point = Vector2i(cos(v_angle) * (i_ray + UIQUICKSTART_BORDER/2), sin(v_angle) * (i_ray + UIQUICKSTART_BORDER/2));
+  v_point = Vector2i((int)(cos(v_angle) * (i_ray + UIQUICKSTART_BORDER/2)), (int)(sin(v_angle) * (i_ray + UIQUICKSTART_BORDER/2)));
   return i_center - v_point;
 }
 
@@ -426,7 +423,7 @@ Vector2i UIQuickStartButton::getDifficultyPoint(const Vector2i& i_center, unsign
   Vector2i v_point;
 
   v_angle = (i_value * (-M_PI/8.0)) - M_PI/2.0 - M_PI/10.0;
-  v_point = Vector2i(cos(v_angle) * (i_ray + UIQUICKSTART_BORDER/2), sin(v_angle) * (i_ray + UIQUICKSTART_BORDER/2));
+  v_point = Vector2i((int)(cos(v_angle) * (i_ray + UIQUICKSTART_BORDER/2)), (int)(sin(v_angle) * (i_ray + UIQUICKSTART_BORDER/2)));
   return i_center - v_point;
 }
 

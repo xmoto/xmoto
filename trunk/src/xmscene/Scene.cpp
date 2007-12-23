@@ -69,7 +69,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void MotoGame::loadLevel(xmDatabase *i_db, const std::string& i_id_level) {
     char **v_result;
     unsigned int nrow;
-    bool bCached;
 
     m_pLevelSrc = new Level();
     try {
@@ -134,13 +133,13 @@ void MotoGame::cleanPlayers() {
   /*===========================================================================
     Add game message
     ===========================================================================*/
-  void MotoGame::gameMessage(std::string Text,bool bOnce, float fDuration) {
+  void MotoGame::gameMessage(std::string Text, bool bOnce, float fDuration) {
     /* "unique"? */
     GameMessage *pMsg = NULL;
     
     if(bOnce) {
       /* Yeah, if there's another "unique", replace it */
-      for(int i=0;i<m_GameMessages.size();i++) {
+      for(unsigned int i=0;i<m_GameMessages.size();i++) {
         if(m_GameMessages[i]->bOnce) {
           pMsg = m_GameMessages[i];
           break;
@@ -162,7 +161,7 @@ void MotoGame::cleanPlayers() {
 	std::string v_txtRest = Text;
 	int n = v_txtRest.find_first_of("\n");
 
-	while(n >= 0 && n < v_txtRest.length()) {
+	while(n >= 0 && (unsigned int)n < v_txtRest.length()) {
 	  pMsg = new GameMessage;
 	  pMsg->fRemoveTime = getTime() + fDuration;
 	  pMsg->bNew = true;
@@ -193,7 +192,7 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::clearGameMessages(void) {
-    for(int i=0;i<m_GameMessages.size();i++)
+    for(unsigned int i=0 ;i<m_GameMessages.size() ;i++)
       m_GameMessages[i]->fRemoveTime=0.0f;
   }
 
@@ -276,7 +275,7 @@ void MotoGame::cleanPlayers() {
     }
 
     /* Entities scheduled for termination? */
-    for(int i=0;i<m_DelSchedule.size();i++) {
+    for(unsigned int i=0;i<m_DelSchedule.size();i++) {
       _KillEntity(m_DelSchedule[i]);
     }
     m_DelSchedule.clear();
@@ -301,7 +300,8 @@ void MotoGame::cleanPlayers() {
     /* Handle game messages (keep them in place) */
     int i=0;
     while(1) {
-      if(i >= m_GameMessages.size()) break;      
+      if(i < 0 || (unsigned int)i >= m_GameMessages.size())
+	break;      
       if(getTime() > m_GameMessages[i]->fRemoveTime) {
         m_GameMessages[i]->nAlpha -= 2;
         
@@ -510,7 +510,7 @@ void MotoGame::cleanPlayers() {
     }
     
     /* Get rid of game messages */
-    for(int i=0;i<m_GameMessages.size();i++)
+    for(unsigned int i=0; i<m_GameMessages.size(); i++)
       delete m_GameMessages[i];
     m_GameMessages.clear();
 
@@ -546,8 +546,8 @@ void MotoGame::cleanPlayers() {
     LevelBoundsMax.x = m_pLevelSrc->RightLimit();
     LevelBoundsMin.y = m_pLevelSrc->BottomLimit();
     LevelBoundsMax.y = m_pLevelSrc->TopLimit();
-    for(int i=0;i<InBlocks.size();i++) { 
-      for(int j=0;j<InBlocks[i]->Vertices().size();j++) {
+    for(unsigned int i=0; i<InBlocks.size(); i++) { 
+      for(unsigned int j=0; j<InBlocks[i]->Vertices().size(); j++) {
         LevelBoundsMin.x = InBlocks[i]->InitialPosition().x+InBlocks[i]->Vertices()[j]->Position().x < LevelBoundsMin.x ? 
           InBlocks[i]->InitialPosition().x+InBlocks[i]->Vertices()[j]->Position().x : LevelBoundsMin.x;
         LevelBoundsMin.y = InBlocks[i]->InitialPosition().y+InBlocks[i]->Vertices()[j]->Position().y < LevelBoundsMin.y ? 
@@ -681,7 +681,7 @@ void MotoGame::cleanPlayers() {
     ===========================================================================*/
   void MotoGame::_UpdateZones(void) {
     /* Check player touching for each zone */
-    for(int i=0;i<m_pLevelSrc->Zones().size();i++) {
+    for(unsigned int i=0;i<m_pLevelSrc->Zones().size();i++) {
       Zone *pZone = m_pLevelSrc->Zones()[i];
 
       for(unsigned int j=0; j<m_players.size(); j++) {
@@ -741,7 +741,7 @@ void MotoGame::cleanPlayers() {
 	std::vector<Entity*> entities = m_Collision.getEntitiesNearPosition(BBox);
 	
 	/* Do player touch anything? */
-	for(int i=0;i<entities.size();i++) {
+	for(unsigned int i=0; i<entities.size(); i++) {
 	  /* Test against the biker aabb first */
 	  if(true){
 	    /* Head? */
@@ -795,7 +795,7 @@ void MotoGame::cleanPlayers() {
     ===========================================================================*/
   void MotoGame::deleteEntity(Entity *pEntity) {
     /* Already scheduled for deletion? */
-    for(int i=0;i<m_DelSchedule.size();i++)
+    for(unsigned int i=0; i<m_DelSchedule.size(); i++)
       if(m_DelSchedule[i] == pEntity) return;
     m_DelSchedule.push_back(pEntity);
   }
@@ -964,16 +964,16 @@ void MotoGame::cleanPlayers() {
   }
   
   void MotoGame::cleanScriptDynamicObjects() {
-    for(int i=0; i<m_SDynamicObjects.size(); i++) {
+    for(unsigned int i=0; i<m_SDynamicObjects.size(); i++) {
       delete m_SDynamicObjects[i];
     }
     m_SDynamicObjects.clear();
   }
 
   void MotoGame::nextStateScriptDynamicObjects(int i_nbCents) {
-    int i = 0;
+    unsigned int i = 0;
 
-    while(i<m_SDynamicObjects.size()) {
+    while(i < m_SDynamicObjects.size()) {
       if(m_SDynamicObjects[i]->nextState(this, i_nbCents) == false) {
 	delete m_SDynamicObjects[i];
         m_SDynamicObjects.erase(m_SDynamicObjects.begin() + i);
@@ -984,14 +984,14 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::removeSDynamicOfObject(std::string pObject) {
-    int i = 0;
+    unsigned int i = 0;
 
-    while(i<m_SDynamicObjects.size()) {
+    while(i < m_SDynamicObjects.size()) {
       if(m_SDynamicObjects[i]->getObjectId() == pObject) {
-  delete m_SDynamicObjects[i];
+	delete m_SDynamicObjects[i];
         m_SDynamicObjects.erase(m_SDynamicObjects.begin() + i);
       } else {
-  i++;
+	i++;
       }
     }
   }
@@ -1106,9 +1106,9 @@ void MotoGame::cleanPlayers() {
 
     /* special case for the last strawberry : if we are touching the end, finish the level */
     if(getNbRemainingStrawberries() == 0) {
-      for(int j=0; j<m_players.size(); j++) {
+      for(unsigned int j=0; j<m_players.size(); j++) {
 	if(m_players[j]->isDead() == false) {
-	  for(int i=0; i<m_players[j]->EntitiesTouching().size(); i++) {
+	  for(unsigned int i=0; i<m_players[j]->EntitiesTouching().size(); i++) {
 	    if(m_players[j]->EntitiesTouching()[i]->DoesMakeWin()) {
 	      makePlayerWin(j);
 	    }
@@ -1210,14 +1210,14 @@ void MotoGame::cleanPlayers() {
   Camera* MotoGame::getCamera(){
     return m_cameras[m_currentCamera];
   }
-  int MotoGame::getNumberCameras(){
+  unsigned int MotoGame::getNumberCameras(){
     // the last camera is the autozoom one
     return m_cameras.size()==1?1:m_cameras.size()-1;
   }
-  void MotoGame::setCurrentCamera(int currentCamera){
+  void MotoGame::setCurrentCamera(unsigned int currentCamera){
     m_currentCamera = currentCamera;
   }
-  int MotoGame::getCurrentCamera(){
+  unsigned int MotoGame::getCurrentCamera(){
     return m_currentCamera;
   }
   void MotoGame::addCamera(Vector2i upperleft, Vector2i downright){
@@ -1225,12 +1225,12 @@ void MotoGame::cleanPlayers() {
     m_cameras.back()->initCamera();
   }
   void MotoGame::resetFollow(){
-    for(int i=0; i<m_cameras.size(); i++){
+    for(unsigned int i=0; i<m_cameras.size(); i++){
       m_cameras[i]->setPlayerToFollow(NULL);
     }
   }
   void MotoGame::removeCameras(){
-    for(int i=0; i<m_cameras.size(); i++){
+    for(unsigned int i=0; i<m_cameras.size(); i++){
       delete m_cameras[i];
     }
     m_cameras.clear();

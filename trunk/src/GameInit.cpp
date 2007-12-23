@@ -238,7 +238,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(pDb->levels_isIndexUptodate() == false) {
       LevelsManager::instance()->reloadLevelsFromLvl(NULL, XMSession::instance()->useGraphics() ? this : NULL);
   }
-  LevelsManager::instance()->reloadExternalLevels(XMSession::instance()->useGraphics() ? this : NULL);
+  LevelsManager::instance()->reloadExternalLevels(pDb, XMSession::instance()->useGraphics() ? this : NULL);
   
   /* Update replays */
   if(pDb->replays_isIndexUptodate() == false) {

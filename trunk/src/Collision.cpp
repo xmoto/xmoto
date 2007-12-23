@@ -46,7 +46,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
   #define CD_EPSILON              0.01f
 
-  #define EMPTY_AND_CLEAR_VECTOR(v) for(int i=0;i<(v).size();i++) {\
+  #define EMPTY_AND_CLEAR_VECTOR(v) for(unsigned int i=0;i<(v).size();i++) {\
                                       delete (v)[i]; \
                                     } \
                                     (v).clear()
@@ -71,7 +71,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_staticBlocksHandler.reset();
     m_staticBlocksHandlerSecondLayer.reset();
 
-    for(int i=0; i<m_layerBlocksHandlers.size(); i++){
+    for(unsigned int i=0; i<m_layerBlocksHandlers.size(); i++){
       delete m_layerBlocksHandlers[i];
     }
     m_layerBlocksHandlers.clear();
@@ -125,7 +125,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 					     Vector2f(m_fMaxX, m_fMaxY),
 					     m_nGridWidth, m_nGridHeight);
 
-    for(int i=0; i<numberBackgroundLayers; i++){
+    for(unsigned int i=0; i<numberBackgroundLayers; i++){
       ElementHandler<Block>* pHandler = new ElementHandler<Block>();
       pHandler->setDims(Vector2f(m_fMinX, m_fMinY),
 			Vector2f(m_fMaxX, m_fMaxY),
@@ -262,7 +262,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     BBox.addPointToAABB2f(fMaxX, fMaxY);
     std::vector<Block*> blocks = getDynBlocksNearPosition(BBox);
 
-    for(int i=0; i<blocks.size(); i++){
+    for(unsigned int i=0; i<blocks.size(); i++){
       Block* pBlock = blocks[i];
       if(pBlock->isBackground() == true)
 	continue;
@@ -374,7 +374,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     BBox.addPointToAABB2f(fMaxX, fMaxY);
     std::vector<Block*> blocks = getDynBlocksNearPosition(BBox);
 
-    for(int i=0; i<blocks.size(); i++){
+    for(unsigned int i=0; i<blocks.size(); i++){
       Block* pBlock = blocks[i];
       if(pBlock->isBackground() == true)
 	continue;
@@ -593,7 +593,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     BBox.addPointToAABB2f(fMaxX, fMaxY);
     std::vector<Block*> blocks = getDynBlocksNearPosition(BBox);
 
-    for(int i=0; i<blocks.size(); i++){
+    for(unsigned int i=0; i<blocks.size(); i++){
       Block* pBlock = blocks[i];
       if(pBlock->isBackground() == true)
 	continue;
@@ -658,7 +658,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     p->fCellHeight = m_fCellHeight;
     
     int nEmpty = 0;
-    for(int i=0;i<m_nGridWidth*m_nGridHeight;i++) {
+    for(unsigned int i=0;i<m_nGridWidth*m_nGridHeight;i++) {
       if(m_pGrid[i].Lines.empty()) nEmpty++;
     }
     
@@ -715,7 +715,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     int i;    
     if(nNumContacts == nMaxContacts) return nNumContacts;
     
-    for(int i=0;i<nNumContacts;i++) {
+    for(unsigned int i=0;i<nNumContacts;i++) {
       if(fabs(pContacts[i].geom.pos[0] - pc->geom.pos[0]) < 0.1f &&
          fabs(pContacts[i].geom.pos[1] - pc->geom.pos[1]) < 0.1f) return nNumContacts;
     }
@@ -1000,7 +1000,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ElementHandler<T>::_removeColElementFromCells(ColElement* pColElem)
   {
     /* for each grid cell with the ColElem in it */
-    for(int i=0; i<pColElem->gridCells.size(); i++){
+    for(unsigned int i=0; i<pColElem->gridCells.size(); i++){
       int cell = pColElem->gridCells[i];
 
       for(int j=0; j<m_pGrid[cell].ColElements.size(); j++){
@@ -1032,7 +1032,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   template <class T> ElementHandler<T>::ColElement*
   ElementHandler<T>::_getAndRemoveColElement(T* id)
   {
-    for(int i=0; i<m_ColElements.size(); i++){
+    for(unsigned int i=0; i<m_ColElements.size(); i++){
       if(m_ColElements[i]->id == id){
 	ColElement* pColElem = m_ColElements[i];
 	m_ColElements.erase(m_ColElements.begin()+i);
@@ -1046,7 +1046,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   template <class T> ElementHandler<T>::ColElement*
   ElementHandler<T>::_getColElement(T* id)
   {
-    for(int i=0; i<m_ColElements.size(); i++){
+    for(unsigned int i=0; i<m_ColElements.size(); i++){
       if(m_ColElements[i]->id == id){
 	return m_ColElements[i];
       }      

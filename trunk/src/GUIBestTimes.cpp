@@ -50,7 +50,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     setFont(m_drawLib->getFontSmall());    
     putText(40,64,std::string(GAMETEXT_ALLRECORDS) + ": ");
-    for(int i=0;i<m_Col1.size();i++) {
+    for(unsigned int i=0;i<m_Col1.size();i++) {
       if(i == m_nHighlight1) {
         setTextSolidColor(MAKE_COLOR(255,255,0,255));
       }
@@ -60,7 +60,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     putText(40,100 + 16*m_Col1.size(),std::string(GAMETEXT_PERSONALRECORDS) + ":");
-    for(int i=0;i<m_Col3.size();i++) {
+    for(unsigned int i=0;i<m_Col3.size();i++) {
       if(i == m_nHighlight2) {
         setTextSolidColor(MAKE_COLOR(255,255,0,255));
       }

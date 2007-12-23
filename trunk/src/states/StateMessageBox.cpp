@@ -70,6 +70,8 @@ void StateMessageBox::checkEvents() {
     break;
   case UI_MSGBOX_YES_FOR_ALL:
     break;
+  default:
+    break;
   }
 
   m_requestForEnd = true;

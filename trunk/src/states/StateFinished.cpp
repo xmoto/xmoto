@@ -206,6 +206,8 @@ void StateFinished::send(const std::string& i_id, UIMsgBoxButton i_button, const
     case UI_MSGBOX_NO:
       return;
       break;
+    default:
+      break;
     }
   } else if(i_id == "SAVEREPLAY") {
     if(i_button == UI_MSGBOX_OK) {

@@ -161,7 +161,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       
       /* Convert line array into something OpenGL will eat */
       char **ppc = new char*[Lines.size()];
-      for(int i=0;i<Lines.size();i++) {
+      for(unsigned int i=0;i<Lines.size();i++) {
         char *pc = new char[Lines[i].length() + 1];
         strcpy(pc,Lines[i].c_str());
         ppc[i] = pc;
@@ -212,7 +212,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }  
 
   void SFXOverlay::_FreeShaderSource(char **ppc,int nNumLines) {
-    for(int i=0;i<nNumLines;i++) {
+    for(unsigned int i=0;i<nNumLines;i++) {
       delete [] ppc[i];
     }
     delete [] ppc;

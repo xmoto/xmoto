@@ -208,6 +208,8 @@ void StatePause::send(const std::string& i_id, UIMsgBoxButton i_button, const st
     case UI_MSGBOX_NO:
       return;
       break;
+    default:
+      break;
     }
   }
 }

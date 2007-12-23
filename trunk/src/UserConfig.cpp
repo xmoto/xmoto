@@ -68,7 +68,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    FS::writeLine(pfh,"");
 	    FS::writeLine(pfh,"<userconfig>");
 	    
-	    for(int i=0;i<m_Vars.size();i++) {
+	    for(unsigned int i=0;i<m_Vars.size();i++) {
 	      char cBuf[256];
 	      sprintf(cBuf,"\t<var name=\"%s\" value=\"%s\"/>",XML::str2xmlstr(m_Vars[i]->Name).c_str(),XML::str2xmlstr(m_Vars[i]->Value).c_str());
 	      FS::writeLine(pfh,cBuf);
@@ -173,14 +173,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Free config
   ===========================================================================*/
   void UserConfig::_FreeUserConfig(void) {
-    for(int i=0;i<m_Vars.size();i++) delete m_Vars[i];
+    for(unsigned int i=0;i<m_Vars.size();i++) delete m_Vars[i];
   }
 	    
   /*===========================================================================
   Misc helpers
   ===========================================================================*/
 	UserConfigVar *UserConfig::_FindVarByName(std::string Name) {
-	  for(int i=0;i<m_Vars.size();i++) {
+	  for(unsigned int i=0;i<m_Vars.size();i++) {
 	    if(m_Vars[i]->Name == Name) return m_Vars[i];
 	  }
 	  return NULL;

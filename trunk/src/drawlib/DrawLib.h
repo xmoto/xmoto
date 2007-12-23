@@ -215,13 +215,13 @@ class DrawLib {
   /* Methods - primitives */
   virtual void drawCircle(const Vector2f & Center, float fRadius,
 			  float fBorder = 1.0f, Color Back =
-			  0, Color Front = -1);
+			  0, Color Front = 0xFFFFFFFF);
   virtual void drawBox(const Vector2f & A, const Vector2f & B,
 		       float fBorder = 1.0f, Color Back =
-		       0, Color Front = -1);
+		       0, Color Front = 0xFFFFFFFF);
   virtual void drawImage(const Vector2f & a, const Vector2f & b,
-			 Texture * pTexture, Color Tint = -1);
-  virtual void drawImage(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Texture *pTexture, Color Tint = -1);
+			 Texture * pTexture, Color Tint = 0xFFFFFFFF);
+  virtual void drawImage(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Texture *pTexture, Color Tint = 0xFFFFFFFF);
 
   virtual bool isExtensionSupported(std::string Ext) = 0;
   void setDontUseGLExtensions(bool dont_use);

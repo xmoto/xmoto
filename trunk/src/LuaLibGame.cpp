@@ -283,7 +283,7 @@ int LuaLibGame::L_Game_Log(lua_State *pL) {
   /* no event for this */
   
   std::string Out;
-  for(int i=0;i<lua_gettop(pL);i++) 
+  for(unsigned int i=0;i<lua_gettop(pL);i++) 
     Out.append(luaL_checkstring(pL,i+1));
   Logger::Log((char *)Out.c_str());    
   return 0;    
@@ -332,7 +332,7 @@ int LuaLibGame::L_Game_Message(lua_State *pL) {
 
   /* Convert all arguments to strings */
   std::string Out;
-  for(int i=0;i<lua_gettop(pL);i++) 
+  for(unsigned int i=0;i<lua_gettop(pL);i++) 
     Out.append(_(luaL_checkstring(pL, i+1)));
   
   m_exec_world->createGameEvent(new MGE_Message(m_exec_world->getTime(), Out));
@@ -344,7 +344,7 @@ int LuaLibGame::L_Game_IsPlayerInZone(lua_State *pL) {
   bool res = false;
   Zone* v_zone = m_exec_world->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1));
 
-  for(int i=0; i<m_exec_world->Players().size(); i++) {
+  for(unsigned int i=0; i<m_exec_world->Players().size(); i++) {
     if(m_exec_world->Players()[i]->isTouching(v_zone)) {
       res = true;
     }

@@ -603,7 +603,7 @@ int WebLevels::nbLevelsToGet(xmDatabase *i_db) const {
 }
 
 void WebLevels::upgrade(xmDatabase *i_db) {
-  char **v_result;
+  char **v_result = NULL;
   unsigned int nrow;
   std::string v_levelId;
   std::string v_levelName;

@@ -76,7 +76,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   std::string XML::str2xmlstr(std::string str) {
     std::string v_res = "";
-    for(int i=0; i<str.length(); i++) {
+    for(unsigned int i=0; i<str.length(); i++) {
       switch(str[i]) {
       case '&':
   v_res.append("&amp;");

@@ -173,7 +173,6 @@ void StateMainMenu::checkEvents() {
 
 void StateMainMenu::checkEventsMainWindow() {
   UIButton*           v_button;
-  UILevelList*        v_list;
   std::string         v_id_level;
   UIQuickStartButton* v_quickstart;
   UIButtonDrawn*      v_buttonDrawn;
@@ -608,7 +607,6 @@ void StateMainMenu::updateProfile() {
 UIWindow* StateMainMenu::makeWindowStats(UIWindow* i_parent) {
   UIStatic* v_someText;
   UIFrame* v_window;
-  UIButton* v_button;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIFrame(i_parent, 220, drawlib->getDispHeight()*7/30, GAMETEXT_STATS, drawlib->getDispWidth()-200,
@@ -717,7 +715,7 @@ void StateMainMenu::updateStats() {
 				      nrow);
   
   int cy = 110;
-  for(int i=0; i<nrow; i++) {
+  for(unsigned int i=0; i<nrow; i++) {
     if(cy + 45 > nHeight) break; /* out of window */
     
     v_level_name      =      pDb->getResult(v_result, 6, i, 0);
@@ -987,7 +985,6 @@ UIWindow* StateMainMenu::makeWindowOptions_video(UIWindow* i_parent) {
 UIWindow* StateMainMenu::makeWindowOptions_audio(UIWindow* i_parent) {
   UIWindow*  v_window;
   UIButton*  v_button;
-  UIList*    v_list;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_AUDIO, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
@@ -1070,7 +1067,6 @@ UIWindow* StateMainMenu::makeWindowOptions_audio(UIWindow* i_parent) {
 
 UIWindow* StateMainMenu::makeWindowOptions_controls(UIWindow* i_parent) {
   UIWindow*  v_window;
-  UIButton*  v_button;
   UIList*    v_list;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
@@ -1224,7 +1220,6 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(UIWindow* i_parent) {
 UIWindow* StateMainMenu::makeWindowOptions_ghosts(UIWindow* i_parent) {
   UIWindow*  v_window;
   UIButton*  v_button;
-  UIList*    v_list;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_GHOSTTAB, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
@@ -1518,7 +1513,7 @@ void StateMainMenu::createLevelListsSql(UILevelList *io_levelsList, const std::s
   
   /* get selected item */
   std::string v_selected_levelName = "";
-  if(io_levelsList->getSelected() >= 0 && io_levelsList->getSelected() < io_levelsList->getEntries().size()) {
+  if((io_levelsList->getSelected() >= 0) && (io_levelsList->getSelected() < io_levelsList->getEntries().size())) {
     UIListEntry *pEntry = io_levelsList->getEntries()[io_levelsList->getSelected()];
     v_selected_levelName = pEntry->Text[0];
   }
@@ -1551,7 +1546,7 @@ void StateMainMenu::createLevelListsSql(UILevelList *io_levelsList, const std::s
   /* reselect the previous level */
   if(v_selected_levelName != "") {
     int nLevel = 0;
-    for(int i=0; i<io_levelsList->getEntries().size(); i++) {
+    for(unsigned int i=0; i<io_levelsList->getEntries().size(); i++) {
       if(io_levelsList->getEntries()[i]->Text[0] == v_selected_levelName) {
 	nLevel = i;
 	break;
@@ -1602,7 +1597,7 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
 
       // is key used
-      for(int i=0;i<v_list->getEntries().size();i++) {
+      for(unsigned int i=0;i<v_list->getEntries().size();i++) {
 	if(v_list->getEntries()[i]->Text[1] == i_message) {
 	  // switch keys
 	  v_list->getEntries()[i]->Text[1]  = pEntry->Text[1];
@@ -1656,6 +1651,8 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
 
 void StateMainMenu::executeOneCommand(std::string cmd)
 {
+  UIListEntry *pEntry = NULL;
+
   if(cmd == "UPDATEPROFILE") {
     updateProfile();
 
@@ -1675,7 +1672,7 @@ void StateMainMenu::executeOneCommand(std::string cmd)
    else if(cmd == "REPLAYS_DELETE") {
     UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST"));
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
-      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
+      pEntry = v_list->getEntries()[v_list->getSelected()];
       if(pEntry != NULL) {
 	try {
 	  Replay::deleteReplay(pEntry->Text[0]);
@@ -1751,7 +1748,7 @@ void StateMainMenu::updateLevelsPacksList() {
 
   pTree->clear();
     
-  for(int i=0; i<v_lm->LevelsPacks().size(); i++) {
+  for(unsigned int i=0; i<v_lm->LevelsPacks().size(); i++) {
     /* the unpackaged pack exists only in debug mode */
     if(v_lm->LevelsPacks()[i]->Name() != "" || XMSession::instance()->debug()) {
       if(v_lm->LevelsPacks()[i]->Name() == "") {
@@ -1940,7 +1937,7 @@ void StateMainMenu::createThemesList(UIList *pList) {
   /* reselect the previous theme */
   if(v_selected_themeName != "") {
     int nTheme = 0;
-    for(int i=0; i<pList->getEntries().size(); i++) {
+    for(unsigned int i=0; i<pList->getEntries().size(); i++) {
       if(pList->getEntries()[i]->Text[0] == v_selected_themeName) {
 	nTheme = i;
 	break;
@@ -1956,7 +1953,7 @@ void StateMainMenu::updateThemesList() {
 
   std::string v_themeName = XMSession::instance()->theme();
   int nTheme = 0;
-  for(int i=0; i<v_list->getEntries().size(); i++) {
+  for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
     if(v_list->getEntries()[i]->Text[0] == v_themeName) {
       nTheme = i;
       break;
@@ -1973,7 +1970,7 @@ void StateMainMenu::updateResolutionsList() {
 
   v_list->clear();
   std::vector<std::string>* modes = System::getDisplayModes(XMSession::instance()->windowed());
-  for(int i=0; i < modes->size(); i++) {
+  for(unsigned int i=0; i < modes->size(); i++) {
     v_list->addEntry((*modes)[i].c_str());
     if(std::string((*modes)[i]) == std::string(cBuf)) {
       nMode = i;
@@ -2053,7 +2050,7 @@ void StateMainMenu::createRoomsList(UIList *pList) {
   /* reselect the previous room */
   if(v_selected_roomName != "") {
     int nRoom = 0;
-    for(int i=0; i<pList->getEntries().size(); i++) {
+    for(unsigned int i=0; i<pList->getEntries().size(); i++) {
       if(pList->getEntries()[i]->Text[0] == v_selected_roomName) {
 	nRoom = i;
 	break;
@@ -2071,7 +2068,7 @@ void StateMainMenu::updateRoomsList() {
 
   std::string v_id_room = XMSession::instance()->idRoom();
   if(v_id_room == "") {v_id_room = DEFAULT_WEBROOM_ID;}
-  for(int i=0; i<v_list->getEntries().size(); i++) {
+  for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
     if((*(std::string*)v_list->getEntries()[i]->pvUser) == v_id_room) {
       v_list->setRealSelected(i);
       break;
@@ -2081,7 +2078,6 @@ void StateMainMenu::updateRoomsList() {
 
 void StateMainMenu::updateOptions() {
   UIButton* v_button;
-  UIList*   v_list;
   UIEdit*   v_edit;
 
   // level tab (multi)
@@ -2335,7 +2331,7 @@ void StateMainMenu::checkEventsOptions() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-    bool v_before = XMSession::instance()->enableAudio();
+    XMSession::instance()->enableAudio();
     XMSession::instance()->setEnableAudio(v_button->getChecked());
     Sound::setActiv(XMSession::instance()->enableAudio());
     updateAudioOptions();
@@ -2389,7 +2385,7 @@ void StateMainMenu::checkEventsOptions() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-    bool v_before = XMSession::instance()->enableMenuMusic();
+    XMSession::instance()->enableMenuMusic();
     XMSession::instance()->setEnableMenuMusic(v_button->getChecked());
     Sound::setActiv(XMSession::instance()->enableAudio());
   }
@@ -2456,7 +2452,7 @@ void StateMainMenu::checkEventsOptions() {
   if(v_list->isClicked()) {
     v_list->setClicked(false);
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
-      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
+      v_list->getEntries()[v_list->getSelected()];
       XMSession::instance()->setIdRoom(*((std::string*)v_list->getEntries()[v_list->getSelected()]->pvUser));
       updateProfile();
     }

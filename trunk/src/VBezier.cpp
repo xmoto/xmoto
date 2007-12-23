@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VBezier.h"
 
-  #define BEZIER_LENGTH_THRESHOLD   0.01f
-  #define BEZIER_LENGTH_MAX_STEPS   100
+#define BEZIER_LENGTH_THRESHOLD   0.01f
+#define BEZIER_LENGTH_MAX_STEPS   100
     
   /*===========================================================================
   Calculate point on cubic bezier curve
@@ -40,22 +40,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Approximate full length of the curve
   ===========================================================================*/
-  float BezierCurve::length(void) {
+  float BezierCurve::length() {
     return _SectionLength(0.0f,1.0f,1,0.0f);
   }
     
   /*===========================================================================
   Calculate length recurvively 
   ===========================================================================*/  
-  float BezierCurve::_SectionLength(float t1,float t2,int nSteps,float fGuestimate) {
+  float BezierCurve::_SectionLength(float t1, float t2,
+				    unsigned int nSteps,
+				    float fGuestimate) {
     Vector3f Prev;
     float fLength=0.0f;
     
     /* Don't recurse too much */
-    if(nSteps > BEZIER_LENGTH_MAX_STEPS) return fGuestimate;
+    if(nSteps > BEZIER_LENGTH_MAX_STEPS)
+      return fGuestimate;
     
     /* Step through it */
-    for(int i=0;i<=nSteps;i++) {
+    for(unsigned int i=0; i<=nSteps; i++) {
       Vector3f P = step(t1+((t2-t1)*(float)i)/(float)nSteps);
     
       if(i!=0) {
@@ -74,7 +77,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }       
     
     /* Return length */
-    return _SectionLength(0.0f,1.0f,nSteps+1,fLength);
+    return _SectionLength(0.0f, 1.0f, nSteps+1, fLength);
   }
 
   /*===========================================================================
@@ -92,13 +95,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Call this when all points are added
   ===========================================================================*/  
-  void BezierShape::finishCreation(void) {
+  void BezierShape::finishCreation() {
     /* Okay, create shape curves */
-    for(int i=0;i<m_nNumPoints;i++) {
+    for(unsigned int i=0;i<m_nNumPoints;i++) {
       /* Next point? */
       int j;
-      if(i+1 == m_nNumPoints) j=0;
-      else j=i+1;
+      if(i+1 == m_nNumPoints)
+	j=0;
+      else
+	j=i+1;
     
       /* Do this curve */
       m_pCurves[i].setP(0,m_pPoints[i].Pos);
@@ -117,7 +122,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Add point to shape NOT finished with finishCreation()
   ===========================================================================*/  
   void BezierShape::addPoint(BezierShapePoint &p) {
-    if(m_nNumPoints >= m_nMaxPoints) throw Exception("overfull bezier shape");
+    if(m_nNumPoints >= m_nMaxPoints)
+      throw Exception("overfull bezier shape");
     m_pPoints[m_nNumPoints].c1 = p.c1;
     m_pPoints[m_nNumPoints].c2 = p.c2;
     m_pPoints[m_nNumPoints].Pos = p.Pos;
@@ -127,9 +133,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================  
   Sum up the length of the sections
   ===========================================================================*/  
-  float BezierShape::_UpdateLength(void) {
+  float BezierShape::_UpdateLength() {
     float fLength = 0.0f;
-    for(int i=0;i<m_nNumPoints;i++) {
+    for(unsigned int i=0; i<m_nNumPoints; i++) {
       fLength += m_pfCurveLengths[i];
     }
     m_fLength = fLength;
@@ -139,7 +145,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================  
   Return length
   ===========================================================================*/  
-  float BezierShape::length(void) {
+  float BezierShape::length() {
     return m_fLength;
   }  
   
@@ -152,7 +158,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     /* Go through the curves, look for the one in question */
     //float ta = t, da = 0.0f;
-    //for(int i=0;i<m_nNumPoints;i++) {
+    //for(unsigned int i=0;i<m_nNumPoints;i++) {
       //float t0 = da,t1 = da + m_pfCurveLengths[i];
       //if(fDist >= t0 && fDist < t1) {
         /* Grats, you've found your curve section! */

@@ -231,9 +231,9 @@ class Biker;
       std::vector<Camera*>& Cameras();
 
       Camera* getCamera();
-      int  getNumberCameras();
-      void setCurrentCamera(int currentCamera);
-      int  getCurrentCamera();
+      unsigned int  getNumberCameras();
+      void setCurrentCamera(unsigned int currentCamera);
+      unsigned int  getCurrentCamera();
       void addCamera(Vector2i upperleft, Vector2i downright);
       void resetFollow();
       void removeCameras();
@@ -291,8 +291,8 @@ class Biker;
             
       bool m_playEvents;
 
-		std::vector<Camera*> m_cameras;
-		int m_currentCamera;
+      std::vector<Camera*> m_cameras;
+      unsigned int m_currentCamera;
 
       void cleanGhosts();
       void cleanPlayers();

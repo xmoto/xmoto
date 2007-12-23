@@ -46,9 +46,6 @@ void StateReplaying::enter()
 {
   StateScene::enter();
 
-  char **v_result;
-  unsigned int nrow;
-  char *v_res;
   GameApp*  pGame  = GameApp::instance();
   MotoGame* pWorld = pGame->getMotoGame();
 

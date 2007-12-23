@@ -73,7 +73,7 @@ private:
 public:
   LevelsPack& LevelsPackByName(const std::string &i_name);
   std::string LevelByFileName(const std::string& i_fileName);
-  bool doesLevelExist(const std::string& i_id);
+  bool doesLevelExist(const std::string& i_id, xmDatabase* i_db);
 
   bool doesLevelsPackExist(const std::string &i_name) const;
 
@@ -82,7 +82,6 @@ public:
 		 const std::string& i_id_room,
 		 bool i_bDebugMode);
   void addExternalLevel(std::string i_levelFile);
-  void reloadExternalLevels(XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
   void reloadLevelsFromLvl(xmDatabase* i_threadDb = NULL, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 
   /* to load news levels */
@@ -112,10 +111,12 @@ public:
   static std::string getQuickStartPackQuery(unsigned int i_qualityMIN, unsigned int i_difficultyMIN,
 					    unsigned int i_qualityMAX, unsigned int i_difficultyMAX,
 					    const std::string& i_profile, const std::string& i_id_room);
+  void reloadExternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 
   private:
   void clean();
   void cleanPacks();
+  void reloadInternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 
   std::vector<LevelsPack *> m_levelsPacks;
 };
