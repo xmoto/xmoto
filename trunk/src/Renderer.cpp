@@ -772,16 +772,8 @@ int GameRenderer::nbParticlesRendered() const {
     /* minimap + counter */
     if(pCamera->getPlayerToFollow() != NULL) {
       if(showMinimap()) {
-	if(pCamera->getPlayerToFollow()->getState()->Dir == DD_LEFT
-	   && showEngineCounter() == false
-	   && i_scene->getNumberCameras() == 1) {
-	  renderMiniMap(i_scene, getParent()->getDrawLib()->getDispWidth()-150,
-			getParent()->getDrawLib()->getDispHeight()-100,
-			150,100);
-	} else {
-	  renderMiniMap(i_scene, 0,getParent()->getDrawLib()->getDispHeight()-100,
-			150,100);
-	}
+	renderMiniMap(i_scene, 0, getParent()->getDrawLib()->getDispHeight()-100,
+		      150,100);
       }
       if(showEngineCounter()
 	 && XMSession::instance()->ugly() == false
