@@ -188,7 +188,7 @@ void SDynamicEntityMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
   float addvx = 0.0, addvy = 0.0, addvAngle = 0.0;
 
   if(i_nbCents > 0) {
-    for(unsigned int i=0; i<i_nbCents; i++) {
+    for(int i=0; i<i_nbCents; i++) {
       performXY(&vx, &vy, &vAngle);
       addvx += vx;
       addvy += vy;
@@ -211,7 +211,8 @@ std::string SDynamicEntityMove::getObjectId() {
   return m_entity;
 }
 
-SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicRotation(pInitAngle, pRadius, pPeriod) {
+SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime)
+  : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicRotation(pInitAngle, pRadius, pPeriod) {
 }
 
 SDynamicEntityRotation::~SDynamicEntityRotation() {
@@ -248,7 +249,7 @@ void SDynamicBlockMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
   float addvx = 0.0, addvy = 0.0, addvAngle = 0.0;
 
   if(i_nbCents > 0) {
-    for(unsigned int i=0; i<i_nbCents; i++) {
+    for(int i=0; i<i_nbCents; i++) {
       performXY(&vx, &vy, &vAngle);
       addvx += vx;
       addvy += vy;

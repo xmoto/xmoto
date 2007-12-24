@@ -84,7 +84,7 @@ class ParticlesSource;
       }
     
       /* Methods */
-      void init(DrawLib* i_drawLib,int nWidth,int nHeight);
+      void init(DrawLib* i_drawLib, unsigned int nWidth, unsigned int nHeight);
       void cleanUp(void);
       void beginRendering(void);
       void endRendering(void);
@@ -104,9 +104,9 @@ class ParticlesSource;
       GLhandleARB m_ProgramID;
 
       /* Helpers */
-      char **_LoadShaderSource(const std::string &File,int *pnNumLines);
-      void _FreeShaderSource(char **ppc,int nNumLines);
-      bool _SetShaderSource(GLhandleARB ShaderID,const std::string &File);
+      char **_LoadShaderSource(const std::string &File, unsigned int *pnNumLines);
+      void _FreeShaderSource(char **ppc, unsigned int nNumLines);
+      bool _SetShaderSource(GLhandleARB ShaderID, const std::string &File);
 #endif
       
       

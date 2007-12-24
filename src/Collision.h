@@ -102,7 +102,7 @@ class Zone;
 
     /* helpers */
     ColElement* _getColElement(T* id){
-      for(int i=0; i<m_ColElements.size(); i++){
+      for(unsigned int i=0; i<m_ColElements.size(); i++){
 	if(m_ColElements[i]->id == id){
 	  return m_ColElements[i];
 	}
@@ -114,7 +114,7 @@ class Zone;
     void _addColElementInCells(ColElement* pColElem);
 
     ColElement* _getAndRemoveColElement(T* id){
-      for(int i=0; i<m_ColElements.size(); i++){
+      for(unsigned int i=0; i<m_ColElements.size(); i++){
 	if(m_ColElements[i]->id == id){
 	  ColElement* pColElem = m_ColElements[i];
 	  m_ColElements.erase(m_ColElements.begin()+i);
@@ -154,7 +154,7 @@ class Zone;
     void reset(void);
     void setDims(float fMinX,float fMinY,
 		 float fMaxX,float fMaxY,
-		 int numberBackgroundLayers,
+		 unsigned int numberBackgroundLayers,
 		 std::vector<Vector2f>& layerOffsets);
     void defineLine(float x1,float y1,float x2,float y2, float grip);
 

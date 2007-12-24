@@ -35,7 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Init and clean up
   ===========================================================================*/
-  void SFXOverlay::init(DrawLib* i_drawLib,int nWidth,int nHeight) {    
+  void SFXOverlay::init(DrawLib* i_drawLib, unsigned int nWidth, unsigned int nHeight) {
 #ifdef ENABLE_OPENGL
     m_drawLib = i_drawLib;
     
@@ -44,55 +44,55 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
     if(m_drawLib->useFBOs()) {
       /* Create overlay */
-  	  glEnable(GL_TEXTURE_2D);
+      glEnable(GL_TEXTURE_2D);
 
-	    ((DrawLibOpenGL*)m_drawLib)->glGenFramebuffersEXT(1,&m_FrameBufferID);
-	    glGenTextures(1,&m_DynamicTextureID);
-	    glBindTexture(GL_TEXTURE_2D,m_DynamicTextureID);
-	    glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,nWidth,nHeight,0,GL_RGB,GL_UNSIGNED_BYTE,0);
+      ((DrawLibOpenGL*)m_drawLib)->glGenFramebuffersEXT(1,&m_FrameBufferID);
+      glGenTextures(1,&m_DynamicTextureID);
+      glBindTexture(GL_TEXTURE_2D,m_DynamicTextureID);
+      glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,nWidth,nHeight,0,GL_RGB,GL_UNSIGNED_BYTE,0);
 
-	    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     	
-  	  glDisable(GL_TEXTURE_2D);
+      glDisable(GL_TEXTURE_2D);
   	  
-  	  /* Shaders? */
-  	  m_bUseShaders = m_drawLib->useShaders();
+      /* Shaders? */
+      m_bUseShaders = m_drawLib->useShaders();
   	  
-  	  if(m_bUseShaders) {
-  	    m_VertShaderID = ((DrawLibOpenGL*)m_drawLib)->glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
-  	    m_FragShaderID = ((DrawLibOpenGL*)m_drawLib)->glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+      if(m_bUseShaders) {
+	m_VertShaderID = ((DrawLibOpenGL*)m_drawLib)->glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
+	m_FragShaderID = ((DrawLibOpenGL*)m_drawLib)->glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
     	  
-  	    if(!_SetShaderSource(m_VertShaderID,"SFXOverlay.vert") ||
-  	      !_SetShaderSource(m_FragShaderID,"SFXOverlay.frag"))
-  	      m_bUseShaders = false;
-  	    else {
-  	      /* Source loaded good... Now create the program */
-  	      m_ProgramID = ((DrawLibOpenGL*)m_drawLib)->glCreateProgramObjectARB();
+	if(!_SetShaderSource(m_VertShaderID,"SFXOverlay.vert") ||
+	   !_SetShaderSource(m_FragShaderID,"SFXOverlay.frag"))
+	  m_bUseShaders = false;
+	else {
+	  /* Source loaded good... Now create the program */
+	  m_ProgramID = ((DrawLibOpenGL*)m_drawLib)->glCreateProgramObjectARB();
     	    
-  	      /* Attach our shaders to it */
-  	      ((DrawLibOpenGL*)m_drawLib)->glAttachObjectARB(m_ProgramID,m_VertShaderID);
-  	      ((DrawLibOpenGL*)m_drawLib)->glAttachObjectARB(m_ProgramID,m_FragShaderID);
+	  /* Attach our shaders to it */
+	  ((DrawLibOpenGL*)m_drawLib)->glAttachObjectARB(m_ProgramID,m_VertShaderID);
+	  ((DrawLibOpenGL*)m_drawLib)->glAttachObjectARB(m_ProgramID,m_FragShaderID);
     	    
-  	      /* Link it */
-  	      ((DrawLibOpenGL*)m_drawLib)->glLinkProgramARB(m_ProgramID);
+	  /* Link it */
+	  ((DrawLibOpenGL*)m_drawLib)->glLinkProgramARB(m_ProgramID);
 
           int nStatus = 0;
           ((DrawLibOpenGL*)m_drawLib)->glGetObjectParameterivARB(m_ProgramID,
-            GL_OBJECT_LINK_STATUS_ARB,(GLint*)&nStatus);
+								 GL_OBJECT_LINK_STATUS_ARB,(GLint*)&nStatus);
           if(!nStatus) {
             Logger::Log("-- Failed to link SFXOverlay shader program --");
             
             /* Retrieve info-log */
             int nInfoLogLen = 0;
             ((DrawLibOpenGL*)m_drawLib)->glGetObjectParameterivARB(m_ProgramID,
-              GL_OBJECT_INFO_LOG_LENGTH_ARB,(GLint*)&nInfoLogLen);
-		        char *pcInfoLog = new char[nInfoLogLen];
-		        int nCharsWritten = 0;
-		        ((DrawLibOpenGL*)m_drawLib)->glGetInfoLogARB(m_ProgramID,nInfoLogLen,
-		          (GLsizei*)&nCharsWritten,pcInfoLog);
-		        Logger::Log(pcInfoLog);
-		        delete [] pcInfoLog;
+								   GL_OBJECT_INFO_LOG_LENGTH_ARB,(GLint*)&nInfoLogLen);
+	    char *pcInfoLog = new char[nInfoLogLen];
+	    int nCharsWritten = 0;
+	    ((DrawLibOpenGL*)m_drawLib)->glGetInfoLogARB(m_ProgramID,nInfoLogLen,
+							 (GLsizei*)&nCharsWritten,pcInfoLog);
+	    Logger::Log(pcInfoLog);
+	    delete [] pcInfoLog;
       			
             m_bUseShaders = false;
           }
@@ -100,8 +100,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
             /* Linked OK! */          
           }
         }
-  	  }  	     
-  	}
+      }  	     
+    }
 #endif
   }
   
@@ -148,7 +148,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Load shader source
   ===========================================================================*/
-  char **SFXOverlay::_LoadShaderSource(const std::string &File,int *pnNumLines) {
+  char **SFXOverlay::_LoadShaderSource(const std::string &File, unsigned int *pnNumLines) {
     FileHandle *pfh = FS::openIFile(std::string("Shaders/") + File);
     if(pfh != NULL) {
       /* Load lines */
@@ -174,15 +174,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return NULL;
   }
 
-  bool SFXOverlay::_SetShaderSource(GLhandleARB ShaderID,const std::string &File) {
+  bool SFXOverlay::_SetShaderSource(GLhandleARB ShaderID, const std::string &File) {
     /* Try loading file */
-    int nNumLines;
-    char **ppc = _LoadShaderSource(File,&nNumLines);
-    if(ppc == NULL) return false; /* no shader */
-    
+    unsigned int nNumLines;
+    char **ppc = _LoadShaderSource(File, &nNumLines);
+    if(ppc == NULL)
+      return false; /* no shader */
+
     /* Pass it to OpenGL */
     ((DrawLibOpenGL*)m_drawLib)->glShaderSourceARB(ShaderID,nNumLines,(const GLcharARB **)ppc,NULL);
-    
+
     /* Compile it! */
     ((DrawLibOpenGL*)m_drawLib)->glCompileShaderARB(ShaderID);
     int nStatus = 0;
@@ -191,7 +192,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(!nStatus) {
       _FreeShaderSource(ppc,nNumLines);
       Logger::Log("-- Failed to compile shader: %s --",File.c_str());
-      
+
       /* Retrieve info-log */
       int nInfoLogLen = 0;
       ((DrawLibOpenGL*)m_drawLib)->glGetObjectParameterivARB(ShaderID,
@@ -202,16 +203,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 		    (GLsizei*)&nCharsWritten,pcInfoLog);
 		  Logger::Log(pcInfoLog);
 		  delete [] pcInfoLog;
-			
+	
       return false;
     }
-    
+
     /* Free source */
     _FreeShaderSource(ppc,nNumLines);
     return true;
   }  
 
-  void SFXOverlay::_FreeShaderSource(char **ppc,int nNumLines) {
+  void SFXOverlay::_FreeShaderSource(char **ppc, unsigned int nNumLines) {
     for(unsigned int i=0;i<nNumLines;i++) {
       delete [] ppc[i];
     }
@@ -236,7 +237,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
       m_drawLib->startDraw(DRAW_MODE_POLYGON);
-      m_drawLib->setColorRGBA(0,0,0,f * 255);
+      m_drawLib->setColorRGBA(0, 0, 0, (int)(f * 255));
       glVertex2f(0,0);
       glVertex2f(1,0);
       glVertex2f(1,1);
@@ -287,7 +288,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       glDisable(GL_BLEND);
 
       if(m_bUseShaders)
-        ((DrawLibOpenGL*)m_drawLib)->glUseProgramObjectARB(NULL);
+        ((DrawLibOpenGL*)m_drawLib)->glUseProgramObjectARB(0);
 
       glPopMatrix();
       glMatrixMode(GL_PROJECTION);

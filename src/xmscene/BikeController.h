@@ -23,12 +23,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class BikeController {
   public:
+  BikeController();
 
   float Drive() const;
   float Pull() const;
   bool ChangeDir() const;
 
+  // joystick
   void setDrive(float i_drive);
+
+  // keyboard
+  void setBreak(float i_break);
+  void setThrottle(float i_throttle);
+
   void setPull(float i_pull);
   void setChangeDir(bool i_changeDir);
 
@@ -38,6 +45,15 @@ class BikeController {
   float m_drive;    /* Throttle [0; 1] or Brake [-1; 0] */
   float m_pull;     /* Pull back on the handle bar [0; 1] or push forward on the handle bar [-1; 0] */
   bool m_changeDir; /* Change direction */
+
+  // store this two key pressed in order to be able to brake while
+  // accelerating, and going on accelerating when you release the
+  // brakes
+  bool m_accelerate;
+  bool m_brake;
+  // throttle [0; 1], break [0; 1]
+  float m_throttle;
+  float m_break;
 };
 
 #endif /* BIKECONTROLER */

@@ -31,7 +31,6 @@
     Decoding of event stream
     ===========================================================================*/
   void MotoGame::unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation) {
-    MotoGameEvent *v_event;
     RecordedGameEvent *p;    
 
     try {

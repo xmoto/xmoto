@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Sound.h"
 #include "PhysSettings.h"
 #include "Input.h"
-#include "db/xmDatabase.h";
+#include "db/xmDatabase.h"
 #include "helpers/Log.h"
 
 #include <curl/curl.h>
@@ -87,7 +87,6 @@ void GameApp::run(int nNumArgs, char** ppcArgs) {
 
 void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   XMArguments v_xmArgs;
-  GameState* pState;
 
   /* check args */
   try {

@@ -88,7 +88,7 @@ void StateMenu::keyDown(int nKey, SDLMod mod,int nChar)
 {
   GameState::keyDown(nKey, mod, nChar);
 
-  if((mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0) {
+  if((mod & (KMOD_CTRL|KMOD_ALT|KMOD_META)) == 0) {
     m_GUI->keyDown(nKey, mod, nChar);
   }
   checkEvents();

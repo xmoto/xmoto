@@ -283,9 +283,12 @@ int LuaLibGame::L_Game_Log(lua_State *pL) {
   /* no event for this */
   
   std::string Out;
-  for(unsigned int i=0;i<lua_gettop(pL);i++) 
-    Out.append(luaL_checkstring(pL,i+1));
-  Logger::Log((char *)Out.c_str());    
+
+  for(int i=0; i<lua_gettop(pL); i++)
+    Out.append(luaL_checkstring(pL, i+1));
+
+  Logger::Log((char *)Out.c_str());
+
   return 0;    
 }
   
@@ -332,7 +335,7 @@ int LuaLibGame::L_Game_Message(lua_State *pL) {
 
   /* Convert all arguments to strings */
   std::string Out;
-  for(unsigned int i=0;i<lua_gettop(pL);i++) 
+  for(int i=0;i<lua_gettop(pL);i++) 
     Out.append(_(luaL_checkstring(pL, i+1)));
   
   m_exec_world->createGameEvent(new MGE_Message(m_exec_world->getTime(), Out));
@@ -513,34 +516,34 @@ int LuaLibGame::L_Game_SetBlockRotation(lua_State *pL) {
 int LuaLibGame::L_Game_SetDynamicEntityRotation(lua_State *pL) {
   /* event for this */    
   m_exec_world->createGameEvent(new MGE_SetDynamicEntityRotation(m_exec_world->getTime(),
-								luaL_checkstring(pL,1),
-								X_luaL_check_number(pL,2),
-								X_luaL_check_number(pL,3),
-								X_luaL_check_number(pL,4),
-								X_luaL_check_number(pL,5),
-								X_luaL_check_number(pL,6))); 
+								 luaL_checkstring(pL,1),
+								 X_luaL_check_number(pL,2),
+								 X_luaL_check_number(pL,3),
+								 X_luaL_check_number(pL,4),
+								 (int)X_luaL_check_number(pL,5),
+								 (int)X_luaL_check_number(pL,6))); 
   return 0;
 }
 
 int LuaLibGame::L_Game_SetDynamicEntitySelfRotation(lua_State *pL) {
   /* event for this */
   m_exec_world->createGameEvent(new MGE_SetDynamicEntitySelfRotation(m_exec_world->getTime(),
-									   luaL_checkstring(pL,1),
-									   X_luaL_check_number(pL,2),
-									   X_luaL_check_number(pL,3),
-									   X_luaL_check_number(pL,4))); 
+								     luaL_checkstring(pL,1),
+								     X_luaL_check_number(pL,2),
+								     (int)X_luaL_check_number(pL,3),
+								     (int)X_luaL_check_number(pL,4))); 
   return 0;
 }
 
 int LuaLibGame::L_Game_SetDynamicEntityTranslation(lua_State *pL) {
   /* event for this */    
   m_exec_world->createGameEvent(new MGE_SetDynamicEntityTranslation(m_exec_world->getTime(),
-								   luaL_checkstring(pL,1),
-								   X_luaL_check_number(pL,2),
-								   X_luaL_check_number(pL,3),
-								   X_luaL_check_number(pL,4),
-								   X_luaL_check_number(pL,5),
-								   X_luaL_check_number(pL,6)));
+								    luaL_checkstring(pL,1),
+								    X_luaL_check_number(pL,2),
+								    X_luaL_check_number(pL,3),
+								    X_luaL_check_number(pL,4),
+								    (int)X_luaL_check_number(pL,5),
+								    (int)X_luaL_check_number(pL,6)));
   return 0;
 }
 
@@ -554,34 +557,34 @@ int LuaLibGame::L_Game_SetDynamicEntityNone(lua_State *pL) {
 int LuaLibGame::L_Game_SetDynamicBlockRotation(lua_State *pL) {
   /* event for this */
   m_exec_world->createGameEvent(new MGE_SetDynamicBlockRotation(m_exec_world->getTime(),
-							       luaL_checkstring(pL,1),
-							       X_luaL_check_number(pL,2),
-							       X_luaL_check_number(pL,3),
-							       X_luaL_check_number(pL,4),
-							       X_luaL_check_number(pL,5),
-							       X_luaL_check_number(pL,6))); 
+								luaL_checkstring(pL,1),
+								X_luaL_check_number(pL,2),
+								X_luaL_check_number(pL,3),
+								X_luaL_check_number(pL,4),
+								(int)X_luaL_check_number(pL,5),
+								(int)X_luaL_check_number(pL,6)));
   return 0;
 }
 
 int LuaLibGame::L_Game_SetDynamicBlockSelfRotation(lua_State *pL) {
   /* event for this */
   m_exec_world->createGameEvent(new MGE_SetDynamicBlockSelfRotation(m_exec_world->getTime(),
-									  luaL_checkstring(pL,1),
-									  X_luaL_check_number(pL,2),
-									  X_luaL_check_number(pL,3),
-									  X_luaL_check_number(pL,4))); 
+								    luaL_checkstring(pL,1),
+								    X_luaL_check_number(pL,2),
+								    (int)X_luaL_check_number(pL,3),
+								    (int)X_luaL_check_number(pL,4))); 
   return 0;
 }
 
 int LuaLibGame::L_Game_SetDynamicBlockTranslation(lua_State *pL) {
   /* event for this */    
   m_exec_world->createGameEvent(new MGE_SetDynamicBlockTranslation(m_exec_world->getTime(),
-								  luaL_checkstring(pL,1),
-								  X_luaL_check_number(pL,2),
-								  X_luaL_check_number(pL,3),
-								  X_luaL_check_number(pL,4),
-								  X_luaL_check_number(pL,5),
-								  X_luaL_check_number(pL,6)));
+								   luaL_checkstring(pL,1),
+								   X_luaL_check_number(pL,2),
+								   X_luaL_check_number(pL,3),
+								   X_luaL_check_number(pL,4),
+								   (int)X_luaL_check_number(pL,5),
+								   (int)X_luaL_check_number(pL,6)));
   return 0;
 }
 
@@ -640,9 +643,9 @@ int LuaLibGame::L_Game_PenaltyTime(lua_State *pL) {
 int LuaLibGame::L_Game_IsAPlayerInZone(lua_State *pL) {
   /* no event for this */
   Zone* v_zone = m_exec_world->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1));
-  int v_player = X_luaL_check_number(pL, 2);
+  int v_player = (int)X_luaL_check_number(pL, 2);
 
-  if(v_player < 0 || v_player >= m_exec_world->Players().size()) {
+  if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
     std::ostringstream v_txt_player;
     v_txt_player << v_player;
     throw Exception("Invalid player " + v_txt_player.str());
@@ -655,9 +658,9 @@ int LuaLibGame::L_Game_IsAPlayerInZone(lua_State *pL) {
 int LuaLibGame::L_Game_SetAPlayerPosition(lua_State *pL) {
   /* event for this */
   bool bRight  = X_luaL_check_number(pL,3) > 0.0f;
-  int v_player = X_luaL_check_number(pL,4);
+  int v_player = (int)X_luaL_check_number(pL,4);
 
-  if(v_player < 0 || v_player >= m_exec_world->Players().size()) {
+  if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
     std::ostringstream v_txt_player;
     v_txt_player << v_player;
     printf("player is %i\n", v_player);
@@ -677,9 +680,9 @@ int LuaLibGame::L_Game_GetAPlayerPosition(lua_State *pL) {
   float x = 0.0, y = 0.0;
   DriveDir v_direction = DD_RIGHT;
 
-  int v_player = X_luaL_check_number(pL,1);
+  int v_player = (int)X_luaL_check_number(pL,1);
 
-  if(v_player < 0 || v_player >= m_exec_world->Players().size()) {
+  if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
     std::ostringstream v_txt_player;
     v_txt_player << v_player;
     throw Exception("Invalid player " + v_txt_player.str());
@@ -697,9 +700,9 @@ int LuaLibGame::L_Game_GetAPlayerPosition(lua_State *pL) {
 }
 
 int LuaLibGame::L_Game_KillAPlayer(lua_State *pL) {
-  int v_player = X_luaL_check_number(pL,1);
+  int v_player = (int)X_luaL_check_number(pL,1);
 
-  if(v_player < 0 || v_player >= m_exec_world->Players().size()) {
+  if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
     std::ostringstream v_txt_player;
     v_txt_player << v_player;
     throw Exception("Invalid player " + v_txt_player.str());
@@ -710,9 +713,9 @@ int LuaLibGame::L_Game_KillAPlayer(lua_State *pL) {
 }
 
 int LuaLibGame::L_Game_WinAPlayer(lua_State *pL) {
-  int v_player = X_luaL_check_number(pL,1);
+  int v_player = (int)X_luaL_check_number(pL,1);
 
-  if(v_player < 0 || v_player >= m_exec_world->Players().size()) {
+  if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
     std::ostringstream v_txt_player;
     v_txt_player << v_player;
     throw Exception("Invalid player " + v_txt_player.str());
@@ -742,9 +745,8 @@ int LuaLibGame::L_Game_CameraAdaptToGravity(lua_State *pL) {
 int LuaLibGame::L_Game_AddForceToPlayer(lua_State *pL) {
   /* event for this */
   m_exec_world->createGameEvent(new MGE_AddForceToPlayer(m_exec_world->getTime(),
-							       Vector2f(X_luaL_check_number(pL,1),
-									X_luaL_check_number(pL,2)),
-							       X_luaL_check_number(pL,3)
-							       ));
+							 Vector2f(X_luaL_check_number(pL,1),
+								  X_luaL_check_number(pL,2)),
+							 (int)X_luaL_check_number(pL,3)));
   return 0;
 }  

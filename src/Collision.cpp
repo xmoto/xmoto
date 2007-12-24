@@ -82,7 +82,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/
   void CollisionSystem::setDims(float fMinX,float fMinY,
 				float fMaxX,float fMaxY,
-				int numberBackgroundLayers,
+				unsigned int numberBackgroundLayers,
 				std::vector<Vector2f>& layerOffsets) {
     /* Find suitable grid properties - first horizontal */
     /* The choice of the number of cell in the grid is quite
@@ -90,11 +90,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
        As a consequence, I DECIDE to fix the size of the cells to 3x3. */
 
     /* Horizontal */
-    m_nGridWidth = ceil((fMaxX - fMinX)/3.0);
+    m_nGridWidth = (int)(ceil((fMaxX - fMinX)/3.0));
     m_fCellWidth = (fMaxX - fMinX)/m_nGridWidth;
 
     /* Then vertical */
-    m_nGridHeight = ceil((fMaxY - fMinY)/3.0);
+    m_nGridHeight = (int)ceil((fMaxY - fMinY)/3.0);
     m_fCellHeight = (fMaxY - fMinY)/m_nGridHeight;
 
     /* Set bounding box */
@@ -245,10 +245,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     int nMaxCX = (int)floor(((fMaxX - m_fMinX + CD_EPSILON) * (float)m_nGridWidth) / (m_fMaxX - m_fMinX));
     int nMaxCY = (int)floor(((fMaxY - m_fMinY + CD_EPSILON) * (float)m_nGridHeight) / (m_fMaxY - m_fMinY));
     
-    if(nMinCX < 0) nMinCX = 0;
-    if(nMinCY < 0) nMinCY = 0;
-    if(nMaxCX > m_nGridWidth-1) nMaxCX = m_nGridWidth-1;
-    if(nMaxCY > m_nGridHeight-1) nMaxCY = m_nGridHeight-1;        
+    if(nMinCX < 0)
+      nMinCX = 0;
+    if(nMinCY < 0)
+      nMinCY = 0;
+    if(nMaxCX > m_nGridWidth-1)
+      nMaxCX = m_nGridWidth-1;
+    if(nMaxCY > m_nGridHeight-1)
+      nMaxCY = m_nGridHeight-1;
     
     if(m_bDebugFlag) {
       m_CheckedLines.clear();
@@ -267,7 +271,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(pBlock->isBackground() == true)
 	continue;
       std::vector<Line*>& blockLines = pBlock->getCollisionLines();
-      for(int j=0; j<blockLines.size(); j++){
+      for(unsigned int j=0; j<blockLines.size(); j++){
 	if(_CheckCircleAndLine(blockLines[j], x, y, r)){
 	  return true;
 	}
@@ -294,7 +298,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         /* TODO: currently we will probably check the same lines several times each... AVOID THAT! */
         
         /* Check all lines in cell */
-        for(int j=0;j<m_pGrid[i].Lines.size();j++) {  
+        for(unsigned int j=0; j<m_pGrid[i].Lines.size(); j++) {  
           if(m_bDebugFlag)
             m_CheckedLines.push_back(m_pGrid[i].Lines[j]);
             
@@ -379,13 +383,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(pBlock->isBackground() == true)
 	continue;
       std::vector<Line*>& blockLines = pBlock->getCollisionLines();
-      for(int j=0; j<blockLines.size(); j++){
+      for(unsigned int j=0; j<blockLines.size(); j++){
 
 	/* Is the beginning "behind" the line? */
 	float vx = blockLines[j]->x2 - blockLines[j]->x1;
 	float vy = blockLines[j]->y2 - blockLines[j]->y1;
-	float enx = -vy;
-	float eny = vx;
 
 	/* Too small? */
 	if(fabs(vx) < 0.0001f && fabs(vy) < 0.0001f) {
@@ -418,12 +420,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         int i = cx + cy*m_nGridWidth;
             
         /* Empty? That would be nice */
-        if(m_pGrid[i].Lines.empty()) continue;
+        if(m_pGrid[i].Lines.empty())
+	  continue;
         
         /* TODO: currently we will probably check the same lines several times each... AVOID THAT! */
         
         /* Check all lines in cell */
-        for(int j=0;j<m_pGrid[i].Lines.size();j++) {
+        for(unsigned int j=0;j<m_pGrid[i].Lines.size();j++) {
           /* Is the beginning "behind" the line? */
 	  // nicolas : it seems not work
           float vx = m_pGrid[i].Lines[j]->x2 - m_pGrid[i].Lines[j]->x1;
@@ -598,7 +601,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(pBlock->isBackground() == true)
 	continue;
       std::vector<Line*>& blockLines = pBlock->getCollisionLines();
-      for(int j=0; j<blockLines.size(); j++){
+      for(unsigned int j=0; j<blockLines.size(); j++){
 	int nOldC = nNumC;
 	nNumC = _CollideCircleAndLine(blockLines[j], x, y, r,
 				      pContacts,nNumC,nMaxC,
@@ -610,8 +613,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     /* For each cell we might have touched something in... */
-    for(int cx=nMinCX;cx<=nMaxCX;cx++) {
-      for(int cy=nMinCY;cy<=nMaxCY;cy++) {
+    for(int cx=nMinCX; cx<=nMaxCX; cx++) {
+      for(int cy=nMinCY; cy<=nMaxCY; cy++) {
         int i = cx + cy*m_nGridWidth;
 
         if(m_bDebugFlag) {
@@ -624,12 +627,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         }
             
         /* Empty? That would be nice */
-        if(m_pGrid[i].Lines.empty()) continue;
+        if(m_pGrid[i].Lines.empty())
+	  continue;
         
         /* TODO: currently we will probably check the same lines several times each... AVOID THAT! */
         
         /* Check all lines in cell */
-        for(int j=0;j<m_pGrid[i].Lines.size();j++) {
+        for(unsigned int j=0; j<m_pGrid[i].Lines.size(); j++) {
           nNumC = _CollideCircleAndLine(m_pGrid[i].Lines[j],x,y,r,pContacts,nNumC,nMaxC,
 					m_pGrid[i].Lines[j]->fGrip);
         }          
@@ -658,8 +662,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     p->fCellHeight = m_fCellHeight;
     
     int nEmpty = 0;
-    for(unsigned int i=0;i<m_nGridWidth*m_nGridHeight;i++) {
-      if(m_pGrid[i].Lines.empty()) nEmpty++;
+    for(int i=0; i<m_nGridWidth*m_nGridHeight; i++) {
+      if(m_pGrid[i].Lines.empty())
+	nEmpty++;
     }
     
     p->fPercentageOfEmptyCells = (100.0f * (float)nEmpty) / (float)(m_nGridWidth*m_nGridHeight);
@@ -711,17 +716,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return 0.0f;
   }
   
-  int CollisionSystem::_AddContactToList(dContact *pContacts,int nNumContacts,dContact *pc,int nMaxContacts) {
-    int i;    
-    if(nNumContacts == nMaxContacts) return nNumContacts;
+  int CollisionSystem::_AddContactToList(dContact *pContacts, int nNumContacts,dContact *pc,int nMaxContacts) {
+    if(nNumContacts == nMaxContacts)
+      return nNumContacts;
     
-    for(unsigned int i=0;i<nNumContacts;i++) {
+    for(int i=0; i<nNumContacts; i++) {
       if(fabs(pContacts[i].geom.pos[0] - pc->geom.pos[0]) < 0.1f &&
-         fabs(pContacts[i].geom.pos[1] - pc->geom.pos[1]) < 0.1f) return nNumContacts;
+         fabs(pContacts[i].geom.pos[1] - pc->geom.pos[1]) < 0.1f)
+	return nNumContacts;
     }
-    //printf(" [%f %f]  [%f %f]\n",pc->geom.pos[0],pc->geom.pos[1],
-      //pc->geom.normal[0],pc->geom.normal[1]);
-    memcpy(&pContacts[nNumContacts],pc,sizeof(dContact));
+
+    memcpy(&pContacts[nNumContacts], pc, sizeof(dContact));
     nNumContacts++;
     return nNumContacts;
   }
@@ -937,7 +942,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 	int cell = i+j*m_gridWidth;
 	std::vector<ColElement*>& gridCellColElements = m_pGrid[cell].ColElements;
-	for(int k=0; k<gridCellColElements.size(); k++){
+	for(unsigned int k=0; k<gridCellColElements.size(); k++){
 	  if(gridCellColElements[k]->curCheck != m_curCheck){
 	    
 	    gridCellColElements[k]->curCheck = m_curCheck;
@@ -1003,7 +1008,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     for(unsigned int i=0; i<pColElem->gridCells.size(); i++){
       int cell = pColElem->gridCells[i];
 
-      for(int j=0; j<m_pGrid[cell].ColElements.size(); j++){
+      for(unsigned int j=0; j<m_pGrid[cell].ColElements.size(); j++){
 	if(m_pGrid[cell].ColElements[j] == pColElem){
 
 	  /* remove ColElem from cell*/

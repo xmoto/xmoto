@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeAnchors.h"
 #include "PhysSettings.h"
 #include "../Collision.h"
-#include "Zone.h";
+#include "Zone.h"
 #include "../Game.h"
 
 /* This is the magic depth factor :)  - tweak to obtain max. stability */
