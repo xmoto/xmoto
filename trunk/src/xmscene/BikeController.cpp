@@ -29,8 +29,6 @@ void BikeController::stopContols() {
   m_drive      = 0.0;      
   m_pull       = 0.0;  
   m_changeDir  = false;
-  m_accelerate = false;
-  m_brake      = false;
   m_throttle   = 0.0;
   m_break      = 0.0;
 }
@@ -55,13 +53,31 @@ void BikeController::setDrive(float i_drive)
 void BikeController::setThrottle(float i_throttle)
 {
   m_throttle = i_throttle;
-  m_drive = m_throttle - m_break;
+  if(m_throttle > 0.0f){
+    m_drive = m_throttle;
+  }
+  else if(m_throttle == 0.0f){
+    if(m_break != 0.0f){
+      m_drive = -m_break;
+    } else {
+      m_drive = 0.0f;
+    }
+  }
 }
 
 void BikeController::setBreak(float i_break)
 {
   m_break = i_break;
-  m_drive = m_throttle - m_break;
+  if(m_break > 0.0f){
+    m_drive = -m_break;
+  }
+  else if(m_break == 0.0f){
+    if(m_throttle != 0.0f){
+      m_drive = m_throttle;
+    } else {
+      m_drive = 0.0f;
+    }
+  }
 }
 
 void BikeController::setPull(float i_pull) {

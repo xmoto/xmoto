@@ -49,8 +49,6 @@ class BikeController {
   // store this two key pressed in order to be able to brake while
   // accelerating, and going on accelerating when you release the
   // brakes
-  bool m_accelerate;
-  bool m_brake;
   // throttle [0; 1], break [0; 1]
   float m_throttle;
   float m_break;
