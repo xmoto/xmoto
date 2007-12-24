@@ -35,6 +35,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void InputHandler::reset() {
     m_mirrored = false;
     resetScriptKeyHooks();
+    for(unsigned int i=0; i<4; i++){
+      m_changeDirKeyAlreadyPress[i] = false;
+    }
   }
 
   void InputHandler::setMirrored(bool i_value) {
@@ -406,6 +409,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    /* Push forward */
 	    i_bikers[i]->getControler()->setPull(-1.0f);            
 	  }
+	  else if(m_nChangeDirKey[i] == nKey) {
+	    /* Change dir */
+	    if(m_changeDirKeyAlreadyPress[i] == false){
+	      i_bikers[i]->getControler()->setChangeDir(true);
+	      m_changeDirKeyAlreadyPress[i] = true;
+	    }
+	  }
 	}
       }
 
@@ -432,8 +442,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    i_bikers[i]->getControler()->setPull(0.0f);            
 	  }
 	  else if(m_nChangeDirKey[i] == nKey) {
-	    /* Change dir */
-	    i_bikers[i]->getControler()->setChangeDir(true);
+	    m_changeDirKeyAlreadyPress[i] = false;
 	  }
 	}
       }

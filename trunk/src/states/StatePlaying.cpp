@@ -51,8 +51,6 @@ void StatePlaying::enter()
   GameRenderer::instance()->setShowMinimap(XMSession::instance()->showMinimap());
   GameRenderer::instance()->setShowTimePanel(true);
 
-  m_bAutoZoomInitialized = false;
-
   MotoGame* world = GameApp::instance()->getMotoGame();
 
   try {
@@ -242,10 +240,13 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
 #endif
 
   else {
-    /* Notify the controller */
-    InputHandler::instance()->handleInput(INPUT_KEY_DOWN, nKey, mod,
+    // to avoid people changing direction during the autozoom
+    if(m_autoZoom == false){
+      /* Notify the controller */
+      InputHandler::instance()->handleInput(INPUT_KEY_DOWN, nKey, mod,
 					    world->Players(),
 					    world->Cameras());
+    }
   }
 
   StateScene::keyDown(nKey, mod, nChar);

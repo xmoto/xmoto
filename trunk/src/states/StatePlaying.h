@@ -43,12 +43,6 @@ class StatePlaying : public StateScene {
   virtual void mouseUp(int nButton);
   
   virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
-
-  private:
-  bool m_bAutoZoomInitialized;
-  bool m_autoZoom; /* true : the key is pressed so that it zooms out to see the level */
-  int m_autoZoomStep;
-
 };
 
 #endif
