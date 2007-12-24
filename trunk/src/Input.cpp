@@ -57,70 +57,70 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
   /* Key code to string table */  
   InputKeyMap InputHandler::m_KeyMap[] = {
-    "Up",              SDLK_UP,
-    "Down",            SDLK_DOWN,
-    "Left",            SDLK_LEFT,
-    "Right",           SDLK_RIGHT,
-    "Space",           SDLK_SPACE,
-    "A",               SDLK_a,
-    "B",               SDLK_b,
-    "C",               SDLK_c,
-    "D",               SDLK_d,
-    "E",               SDLK_e,
-    "F",               SDLK_f,
-    "G",               SDLK_g,
-    "H",               SDLK_h,
-    "I",               SDLK_i,
-    "J",               SDLK_j,
-    "K",               SDLK_k,
-    "L",               SDLK_l,
-    "M",               SDLK_m,
-    "N",               SDLK_n,
-    "O",               SDLK_o,
-    "P",               SDLK_p,
-    "Q",               SDLK_q,
-    "R",               SDLK_r,
-    "S",               SDLK_s,
-    "T",               SDLK_t,
-    "U",               SDLK_u,
-    "V",               SDLK_v,
-    "W",               SDLK_w,
-    "X",               SDLK_x,
-    "Y",               SDLK_y,
-    "Z",               SDLK_z,
-    "1",               SDLK_1,
-    "2",               SDLK_2,
-    "3",               SDLK_3,
-    "4",               SDLK_4,
-    "5",               SDLK_5,
-    "6",               SDLK_6,
-    "7",               SDLK_7,
-    "8",               SDLK_8,
-    "9",               SDLK_9,
-    "0",               SDLK_0,
-    "PageUp",          SDLK_PAGEUP,
-    "PageDown",        SDLK_PAGEDOWN,
-    "Home",            SDLK_HOME,
-    "End",             SDLK_END,
-    "Return",          SDLK_RETURN,
-    "Left Click",      SDL_BUTTON_LEFT,
-    "Right Click",     SDL_BUTTON_RIGHT,
-    "Middle Click",    SDL_BUTTON_MIDDLE,
-    "Wheel down",      SDL_BUTTON_WHEELDOWN,
-    "Wheel up",        SDL_BUTTON_WHEELUP,
-    "Pad 0", SDLK_KP0,
-    "Pad 1", SDLK_KP1,
-    "Pad 2", SDLK_KP2,
-    "Pad 3", SDLK_KP3,
-    "Pad 4", SDLK_KP4,
-    "Pad 5", SDLK_KP5,
-    "Pad 6", SDLK_KP6,
-    "Pad 7", SDLK_KP7,
-    "Pad 8", SDLK_KP8,
-    "Pad 9", SDLK_KP9,
+    {"Up",              SDLK_UP},
+    {"Down",            SDLK_DOWN},
+    {"Left",            SDLK_LEFT},
+    {"Right",           SDLK_RIGHT},
+    {"Space",           SDLK_SPACE},
+    {"A",               SDLK_a},
+    {"B",               SDLK_b},
+    {"C",               SDLK_c},
+    {"D",               SDLK_d},
+    {"E",               SDLK_e},
+    {"F",               SDLK_f},
+    {"G",               SDLK_g},
+    {"H",               SDLK_h},
+    {"I",               SDLK_i},
+    {"J",               SDLK_j},
+    {"K",               SDLK_k},
+    {"L",               SDLK_l},
+    {"M",               SDLK_m},
+    {"N",               SDLK_n},
+    {"O",               SDLK_o},
+    {"P",               SDLK_p},
+    {"Q",               SDLK_q},
+    {"R",               SDLK_r},
+    {"S",               SDLK_s},
+    {"T",               SDLK_t},
+    {"U",               SDLK_u},
+    {"V",               SDLK_v},
+    {"W",               SDLK_w},
+    {"X",               SDLK_x},
+    {"Y",               SDLK_y},
+    {"Z",               SDLK_z},
+    {"1",               SDLK_1},
+    {"2",               SDLK_2},
+    {"3",               SDLK_3},
+    {"4",               SDLK_4},
+    {"5",               SDLK_5},
+    {"6",               SDLK_6},
+    {"7",               SDLK_7},
+    {"8",               SDLK_8},
+    {"9",               SDLK_9},
+    {"0",               SDLK_0},
+    {"PageUp",          SDLK_PAGEUP},
+    {"PageDown",        SDLK_PAGEDOWN},
+    {"Home",            SDLK_HOME},
+    {"End",             SDLK_END},
+    {"Return",          SDLK_RETURN},
+    {"Left Click",      SDL_BUTTON_LEFT},
+    {"Right Click",     SDL_BUTTON_RIGHT},
+    {"Middle Click",    SDL_BUTTON_MIDDLE},
+    {"Wheel down",      SDL_BUTTON_WHEELDOWN},
+    {"Wheel up",        SDL_BUTTON_WHEELUP},
+    {"Pad 0", SDLK_KP0},
+    {"Pad 1", SDLK_KP1},
+    {"Pad 2", SDLK_KP2},
+    {"Pad 3", SDLK_KP3},
+    {"Pad 4", SDLK_KP4},
+    {"Pad 5", SDLK_KP5},
+    {"Pad 6", SDLK_KP6},
+    {"Pad 7", SDLK_KP7},
+    {"Pad 8", SDLK_KP8},
+    {"Pad 9", SDLK_KP9},
 
     /* TODO: add more */
-    NULL    
+    {NULL, 0}
   };
   
   /*===========================================================================
@@ -154,20 +154,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 
     /* Open all joysticks */
-    for(unsigned int i=0;i<SDL_NumJoysticks();i++) {
-      m_Joysticks.push_back( SDL_JoystickOpen(i) );
+    for(int i=0; i<SDL_NumJoysticks(); i++) {
+      m_Joysticks.push_back(SDL_JoystickOpen(i));
     }
-        
+
     m_pActiveJoystick1 = NULL;
     loadConfig(pConfig);
   }
-  
+
   void InputHandler::uninit(void) {
     /* Close all joysticks */
-    for(unsigned int i=0;i<m_Joysticks.size();i++) {
-      SDL_JoystickClose( m_Joysticks[i] );
+    for(unsigned int i=0; i<m_Joysticks.size(); i++) {
+      SDL_JoystickClose(m_Joysticks[i]);
     }
-  
+
     /* No more joysticking */
     SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
   }
@@ -217,7 +217,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       i_bikers[0]->getControler()->stopContols();
       
       /* Update buttons */
-      for(unsigned int i=0;i<SDL_JoystickNumButtons(m_pActiveJoystick1);i++) {
+      for(int i=0; i<SDL_JoystickNumButtons(m_pActiveJoystick1); i++) {
         if(SDL_JoystickGetButton(m_pActiveJoystick1,i)) {
           if(!m_JoyButtonsPrev[i]) {
             /* Click! */
@@ -323,10 +323,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	
 	/* Init all joystick buttons */
 	m_JoyButtonsPrev.clear();
-	for(unsigned int i=0;i<SDL_JoystickNumButtons(m_pActiveJoystick1);i++) {
+	for(int i=0; i<SDL_JoystickNumButtons(m_pActiveJoystick1); i++) {
 	  m_JoyButtonsPrev.push_back(false);
 	}
-	
+
       }
     }
 
@@ -385,66 +385,64 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void InputHandler::handleInput(InputEventType Type,int nKey,SDLMod mod,
 				 std::vector<Biker*>& i_bikers,
 				 std::vector<Camera*>& i_cameras) {
-//#m_MotoGame.Players()[i]->isDead() == false) {
-//
     /* Update controller 1 */
     /* Keyboard controlled */
- switch(Type) {
-   case INPUT_KEY_DOWN:
-   for(unsigned int i=0; i<i_bikers.size(); i++) {
-     if(m_ControllerModeID[i] == CONTROLLER_MODE_KEYBOARD) {
-       if(m_nDriveKey[i] == nKey) {
-	 /* Start driving */
-	 i_bikers[i]->getControler()->setDrive(1.0f);
-       } else if(m_nBrakeKey[i] == nKey) {
-	  /* Brake */
-	  i_bikers[i]->getControler()->setDrive(-1.0f);
-       } else if((m_nPullBackKey[i]    == nKey && m_mirrored == false) ||
-		 (m_nPushForwardKey[i] == nKey && m_mirrored)) {
-		   /* Pull back */
-		   i_bikers[i]->getControler()->setPull(1.0f);
-       } else if((m_nPushForwardKey[i] == nKey && m_mirrored == false) ||
-		 (m_nPullBackKey[i]    == nKey && m_mirrored)) {
-		   /* Push forward */
-		   i_bikers[i]->getControler()->setPull(-1.0f);            
-       }
-     }
-   }
-     
+    switch(Type) {
+    case INPUT_KEY_DOWN:
+      for(unsigned int i=0; i<i_bikers.size(); i++) {
+	if(m_ControllerModeID[i] == CONTROLLER_MODE_KEYBOARD) {
+	  if(m_nDriveKey[i] == nKey) {
+	    /* Start driving */
+	    i_bikers[i]->getControler()->setThrottle(1.0f);
+	  } else if(m_nBrakeKey[i] == nKey) {
+	    /* Brake */
+	    i_bikers[i]->getControler()->setBreak(1.0f);
+	  } else if((m_nPullBackKey[i]    == nKey && m_mirrored == false) ||
+		    (m_nPushForwardKey[i] == nKey && m_mirrored)) {
+	    /* Pull back */
+	    i_bikers[i]->getControler()->setPull(1.0f);
+	  } else if((m_nPushForwardKey[i] == nKey && m_mirrored == false) ||
+		    (m_nPullBackKey[i]    == nKey && m_mirrored)) {
+	    /* Push forward */
+	    i_bikers[i]->getControler()->setPull(-1.0f);            
+	  }
+	}
+      }
+
       break;
-      case INPUT_KEY_UP:
-   for(unsigned int i=0; i<i_bikers.size(); i++) {
-     if(m_ControllerModeID[i] == CONTROLLER_MODE_KEYBOARD) {
-	if(m_nDriveKey[i] == nKey) {
-	  /* Stop driving */
-	  i_bikers[i]->getControler()->setDrive(0.0f);
+    case INPUT_KEY_UP:
+      for(unsigned int i=0; i<i_bikers.size(); i++) {
+	if(m_ControllerModeID[i] == CONTROLLER_MODE_KEYBOARD) {
+	  if(m_nDriveKey[i] == nKey) {
+	    /* Stop driving */
+	    i_bikers[i]->getControler()->setThrottle(0.0f);
+	  }
+	  else if(m_nBrakeKey[i] == nKey) {
+	    /* Don't brake */
+	    i_bikers[i]->getControler()->setBreak(0.0f);
+	  }
+	  else if((m_nPullBackKey[i]    == nKey && m_mirrored == false) ||
+		  (m_nPushForwardKey[i] == nKey && m_mirrored)) {
+	    /* Pull back */
+	    i_bikers[i]->getControler()->setPull(0.0f);
+	  }
+	  else if((m_nPushForwardKey[i] == nKey && m_mirrored == false) ||
+		  (m_nPullBackKey[i]    == nKey && m_mirrored)) {
+	    /* Push forward */
+	    i_bikers[i]->getControler()->setPull(0.0f);            
+	  }
+	  else if(m_nChangeDirKey[i] == nKey) {
+	    /* Change dir */
+	    i_bikers[i]->getControler()->setChangeDir(true);
+	  }
 	}
-	else if(m_nBrakeKey[i] == nKey) {
-	  /* Don't brake */
-	  i_bikers[i]->getControler()->setDrive(0.0f);
-	}
-	else if((m_nPullBackKey[i]    == nKey && m_mirrored == false) ||
-		(m_nPushForwardKey[i] == nKey && m_mirrored)) {
-	  /* Pull back */
-	  i_bikers[i]->getControler()->setPull(0.0f);
-	}
-	else if((m_nPushForwardKey[i] == nKey && m_mirrored == false) ||
-		(m_nPullBackKey[i]    == nKey && m_mirrored)) {
-	  /* Push forward */
-	  i_bikers[i]->getControler()->setPull(0.0f);            
-	}
-	else if(m_nChangeDirKey[i] == nKey) {
-	  /* Change dir */
-	  i_bikers[i]->getControler()->setChangeDir(true);
-	}
-     }
-   }
-   break;
- }
-    
+      }
+      break;
+    }
+
     /* Have the script hooked this key? */
     if(Type == INPUT_KEY_DOWN) {
-      for(unsigned int i=0;i<m_nNumScriptKeyHooks;i++) {
+      for(int i=0; i<m_nNumScriptKeyHooks; i++) {
 	if(m_ScriptKeyHooks[i].nKey == nKey) {
 	  /* Invoke script */
 	  m_ScriptKeyHooks[i].pGame->getLuaLibGame()->scriptCallVoid(m_ScriptKeyHooks[i].FuncName);
@@ -452,7 +450,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     }
   }
-  
+
   /*===========================================================================
   Set totally default configuration - useful for when something goes wrong
   ===========================================================================*/  

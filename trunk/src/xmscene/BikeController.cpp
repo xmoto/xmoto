@@ -20,10 +20,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "BikeController.h"
 
+BikeController::BikeController()
+{
+  stopContols();
+}
+
 void BikeController::stopContols() {
-  m_drive     = 0.0;      
-  m_pull      = 0.0;  
-  m_changeDir = false;
+  m_drive      = 0.0;      
+  m_pull       = 0.0;  
+  m_changeDir  = false;
+  m_accelerate = false;
+  m_brake      = false;
+  m_throttle   = 0.0;
+  m_break      = 0.0;
 }
 
 float BikeController::Drive() const {
@@ -38,8 +47,21 @@ bool BikeController::ChangeDir() const {
   return m_changeDir;
 }
 
-void BikeController::setDrive(float i_drive) {
+void BikeController::setDrive(float i_drive)
+{
   m_drive = i_drive;
+}
+
+void BikeController::setThrottle(float i_throttle)
+{
+  m_throttle = i_throttle;
+  m_drive = m_throttle - m_break;
+}
+
+void BikeController::setBreak(float i_break)
+{
+  m_break = i_break;
+  m_drive = m_throttle - m_break;
 }
 
 void BikeController::setPull(float i_pull) {

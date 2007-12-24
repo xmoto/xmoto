@@ -43,7 +43,7 @@ void xmDatabase::levels_updateDB(const std::vector<Level *>&    i_levels,
   simpleSql("BEGIN TRANSACTION;");
   simpleSql("DELETE FROM levels;");
 
-  for(int i=0; i<i_levels.size(); i++) {
+  for(unsigned int i=0; i<i_levels.size(); i++) {
     levels_add(i_levels[i]->Id()      , i_levels[i]->FileName(), i_levels[i]->Name(),
 	       i_levels[i]->Checksum(), i_levels[i]->Author()  , i_levels[i]->Description(),
 	       i_levels[i]->Date()    , i_levels[i]->Pack()    , i_levels[i]->PackNum(),
