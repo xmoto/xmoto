@@ -148,6 +148,8 @@ private:
   int m_nPullBackKey[4];
   int m_nPushForwardKey[4];
   int m_nChangeDirKey[4];
+  // to avoid key repetition
+  bool m_changeDirKeyAlreadyPress[4];
 
   /* For ControllerMode1 = CONTROLLER_MODE_JOYSTICK1 */
   SDL_Joystick *m_pActiveJoystick1;
