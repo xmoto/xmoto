@@ -181,6 +181,13 @@ void StateManager::render()
     /* we have to draw states from the bottom of the stack to the top */
     std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
 
+    // erase screen if the first state allow somebody to write before (it means that it has potentially some transparent parts)
+    if(m_statesStack.size() > 0) {
+      if(m_statesStack[0]->drawStatesBehind()) {
+	drawLib->clearGraphics();
+      }
+    }
+
     while(stateIterator != m_statesStack.end()){
       if((*stateIterator)->isHide() == false){
 	(*stateIterator)->render();
