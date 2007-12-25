@@ -246,6 +246,47 @@ bool UIWindow::isUglyMode() {
     }
   }
 
+void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
+  for(unsigned int i=0; i<m_nNumButtons; i++) {
+
+    if(i_button == UI_MSGBOX_OK) {
+      if(m_pButtons[i]->getCaption() == GAMETEXT_OK) {
+	m_pButtons[i]->makeActive();
+	return;
+      }
+    }
+
+   if(i_button == UI_MSGBOX_CANCEL) {
+      if(m_pButtons[i]->getCaption() == GAMETEXT_CANCEL) {
+	m_pButtons[i]->makeActive();
+	return;
+      }
+    }
+
+   if(i_button == UI_MSGBOX_YES) {
+      if(m_pButtons[i]->getCaption() == GAMETEXT_YES) {
+	m_pButtons[i]->makeActive();
+	return;
+      }
+    }
+
+   if(i_button == UI_MSGBOX_NO) {
+      if(m_pButtons[i]->getCaption() == GAMETEXT_NO) {
+	m_pButtons[i]->makeActive();
+	return;
+      }
+    }
+
+   if(i_button == UI_MSGBOX_YES_FOR_ALL) {
+      if(m_pButtons[i]->getCaption() == GAMETEXT_YES_FOR_ALL) {
+	m_pButtons[i]->makeActive();
+	return;
+      }
+    }
+
+  }
+}
+
   void UIMsgBox::paint(void) {
     /* Should the OK button be disabled? (if any) */
     if(m_bTextInput && m_TextInput.empty()) {

@@ -45,6 +45,7 @@ public:
 
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  void makeActiveButton(UIMsgBoxButton i_button);
 
 protected:
   virtual void checkEvents();
