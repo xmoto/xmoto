@@ -295,6 +295,7 @@ void StateScene::setAutoZoom(bool i_value) {
       delete m_cameraAnim;
     }
     GameApp*  pGame = GameApp::instance();
+    pGame->getMotoGame()->setAutoZoomCamera();
     m_cameraAnim = new AutoZoomCameraAnimation(pGame->getMotoGame()->getCamera(),
 					       pGame->getDrawLib(),
 					       pGame->getMotoGame());
