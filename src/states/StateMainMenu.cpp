@@ -215,6 +215,7 @@ void StateMainMenu::checkEventsMainWindow() {
     v_button->setClicked(false);
     StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
     v_msgboxState->setId("QUIT");
+    v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
     StateManager::instance()->pushState(v_msgboxState);
   }
 
@@ -1857,6 +1858,7 @@ void StateMainMenu::checkEventsReplays() {
       if(pListEntry != NULL) {
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
 	v_msgboxState->setId("REPLAYS_DELETE");
+	v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
 	StateManager::instance()->pushState(v_msgboxState);	
 	updateReplaysRights();
       }

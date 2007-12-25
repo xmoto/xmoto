@@ -408,6 +408,8 @@ public:
   /* Data interface */
   void addButton(UIButton *p) {m_pButtons[m_nNumButtons++] = p;}
   std::vector<bool> &getSiblingStates(void) {return m_SiblingStates;}
+
+  void makeActiveButton(UIMsgBoxButton i_button);
       
 private:
   /* Data */

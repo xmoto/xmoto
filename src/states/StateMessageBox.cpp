@@ -45,6 +45,10 @@ StateMessageBox::~StateMessageBox()
   delete m_GUI;
 }
 
+void StateMessageBox::makeActiveButton(UIMsgBoxButton i_button) {
+  m_msgbox->makeActiveButton(i_button);
+}
+
 void StateMessageBox::leave()
 {
   if(m_receiver != NULL) {
