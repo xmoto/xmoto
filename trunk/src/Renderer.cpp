@@ -246,48 +246,48 @@ GameRenderer::~GameRenderer() {
 #define ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR (1.0/30)
 
     float pSpeed_eff;
-	float pLinVel_eff;
+    float pLinVel_eff;
 
-	if (pSpeed > ENGINECOUNTER_MAX_SPEED)
-		pSpeed = ENGINECOUNTER_MAX_SPEED;
+    if (pSpeed > ENGINECOUNTER_MAX_SPEED)
+      pSpeed = ENGINECOUNTER_MAX_SPEED;
 	
-	if (pLinVel > ENGINECOUNTER_MAX_SPEED)
-		pLinVel = ENGINECOUNTER_MAX_SPEED;	
+    if (pLinVel > ENGINECOUNTER_MAX_SPEED)
+      pLinVel = ENGINECOUNTER_MAX_SPEED;	
 	
-	/* don't make line too nasty */
-	if(m_previousEngineSpeed < 0.0) {
-		pSpeed_eff = pSpeed;
-		m_previousEngineSpeed = pSpeed_eff;
+    /* don't make line too nasty */
+    if(m_previousEngineSpeed < 0.0) {
+      pSpeed_eff = pSpeed;
+      m_previousEngineSpeed = pSpeed_eff;
+    } else {
+      if( labs((int)(pSpeed - m_previousEngineSpeed)) > ENGINECOUNTER_MAX_DIFF) {
+	if(pSpeed - m_previousEngineSpeed > 0) {
+	  pSpeed_eff = m_previousEngineSpeed + ENGINECOUNTER_MAX_DIFF;
 	} else {
-		if( labs((int)(pSpeed - m_previousEngineSpeed) > ENGINECOUNTER_MAX_DIFF)) {
-			if(pSpeed - m_previousEngineSpeed > 0) {
-				pSpeed_eff = m_previousEngineSpeed + ENGINECOUNTER_MAX_DIFF;
-			} else {
-				pSpeed_eff = m_previousEngineSpeed - ENGINECOUNTER_MAX_DIFF;
-			}
-			m_previousEngineSpeed = pSpeed_eff;
-		} else {
-			/* speed change is to small - ignore it to smooth counter moves*/
-			pSpeed_eff = m_previousEngineSpeed;
-		}
+	  pSpeed_eff = m_previousEngineSpeed - ENGINECOUNTER_MAX_DIFF;
 	}
+	m_previousEngineSpeed = pSpeed_eff;
+      } else {
+	/* speed change is to small - ignore it to smooth counter moves*/
+	pSpeed_eff = m_previousEngineSpeed;
+      }
+    }
 	
-	if (m_previousEngineLinVel < 0.0) {
-		pLinVel_eff = pLinVel;
-		m_previousEngineLinVel = pLinVel_eff;
+    if (m_previousEngineLinVel < 0.0) {
+      pLinVel_eff = pLinVel;
+      m_previousEngineLinVel = pLinVel_eff;
+    } else {
+      if( labs((int)(pLinVel - m_previousEngineLinVel)) > ENGINECOUNTER_MAX_DIFF) {
+	if(pLinVel - m_previousEngineLinVel > 0) {
+	  pLinVel_eff = m_previousEngineLinVel + ENGINECOUNTER_MAX_DIFF;
 	} else {
-		if( labs((int)(pLinVel - m_previousEngineLinVel) > ENGINECOUNTER_MAX_DIFF)) {
-			if(pLinVel - m_previousEngineLinVel > 0) {
-				pLinVel_eff = m_previousEngineLinVel + ENGINECOUNTER_MAX_DIFF;
-			} else {
-				pLinVel_eff = m_previousEngineLinVel - ENGINECOUNTER_MAX_DIFF;
-			}
-			m_previousEngineLinVel = pLinVel_eff;
-		} else {
-			/* speed change is to small - ignore it to smooth counter moves*/
-			pLinVel_eff = m_previousEngineLinVel;
-		}
+	  pLinVel_eff = m_previousEngineLinVel - ENGINECOUNTER_MAX_DIFF;
 	}
+	m_previousEngineLinVel = pLinVel_eff;
+      } else {
+	/* speed change is to small - ignore it to smooth counter moves*/
+	pLinVel_eff = m_previousEngineLinVel;
+      }
+    }
 
     Sprite *pSprite;
     Texture *pTexture;
@@ -299,52 +299,52 @@ GameRenderer::~GameRenderer() {
     p2 = Vector2f(x+nWidth, getParent()->getDrawLib()->getDispHeight()-y);
     p3 = Vector2f(x,        getParent()->getDrawLib()->getDispHeight()-y);
 
-	pSprite = (MiscSprite*) Theme::instance()->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
-	if(pSprite != NULL) {
-		pTexture = pSprite->getTexture();
-		if(pTexture != NULL) {
-			_RenderAlphaBlendedSection(pTexture, p0, p1, p2, p3);
+    pSprite = (MiscSprite*) Theme::instance()->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
+    if(pSprite != NULL) {
+      pTexture = pSprite->getTexture();
+      if(pTexture != NULL) {
+	_RenderAlphaBlendedSection(pTexture, p0, p1, p2, p3);
 
-			getParent()->getDrawLib()->setColorRGB(255,50,50);
-			renderEngineCounterNeedle(nWidth, nHeight, p3, pSpeed_eff);
-			getParent()->getDrawLib()->setColorRGB(50,50,255);
-			if (pLinVel_eff > -1) {
-				renderEngineCounterNeedle(nWidth, nHeight, p3, pLinVel_eff);
-			}
-		}
+	getParent()->getDrawLib()->setColorRGB(255,50,50);
+	renderEngineCounterNeedle(nWidth, nHeight, p3, pSpeed_eff);
+	getParent()->getDrawLib()->setColorRGB(50,50,255);
+	if (pLinVel_eff > -1) {
+	  renderEngineCounterNeedle(nWidth, nHeight, p3, pLinVel_eff);
 	}
+      }
+    }
   }
-    
+
   void GameRenderer::renderEngineCounterNeedle(int nWidth, int nHeight, Vector2f center, float value) {
-	  float coefw = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nWidth;
-	  float coefh = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nHeight;  
-	  Vector2f pcenter = center + Vector2f(ENGINECOUNTER_CENTERX   * coefw,
-							  - ENGINECOUNTER_CENTERY * coefh);
+    float coefw = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nWidth;
+    float coefh = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nHeight;  
+    Vector2f pcenter = center + Vector2f(ENGINECOUNTER_CENTERX   * coefw,
+					 - ENGINECOUNTER_CENTERY * coefh);
 
-	  Vector2f pcenterl = pcenter + Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
-			  * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
-				 sinf(value / 360.0  * (2.0 * 3.14159) + (3.14159/2))
-						 * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
+    Vector2f pcenterl = pcenter + Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
+					   * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
+					   sinf(value / 360.0  * (2.0 * 3.14159) + (3.14159/2))
+					   * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
 
-	  Vector2f pcenterr = pcenter - Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
-			  * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
-				 sinf(value / 360.0  * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
-						 * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
+    Vector2f pcenterr = pcenter - Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
+					   * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
+					   sinf(value / 360.0  * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
+					   * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
 
-	  Vector2f pdest    = pcenter + Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
-			  * (ENGINECOUNTER_RADIUS) * coefw, sinf(value / 360.0  * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * coefh);
+    Vector2f pdest    = pcenter + Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
+					   * (ENGINECOUNTER_RADIUS) * coefw, sinf(value / 360.0  * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * coefh);
 
-	  Vector2f pbottom   = pcenter - Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
-			  * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR,
-				 sinf(value / 360.0  * (2.0 * 3.14159)
+    Vector2f pbottom   = pcenter - Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
+					    * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR,
+					    sinf(value / 360.0  * (2.0 * 3.14159)
 						 + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR);
 	  
-	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	  getParent()->getDrawLib()->glVertex(pdest);
-	  getParent()->getDrawLib()->glVertex(pcenterl);
-	  getParent()->getDrawLib()->glVertex(pbottom);
-	  getParent()->getDrawLib()->glVertex(pcenterr);
-	  getParent()->getDrawLib()->endDraw();
+    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+    getParent()->getDrawLib()->glVertex(pdest);
+    getParent()->getDrawLib()->glVertex(pcenterl);
+    getParent()->getDrawLib()->glVertex(pbottom);
+    getParent()->getDrawLib()->glVertex(pcenterr);
+    getParent()->getDrawLib()->endDraw();
   }
   
   /*===========================================================================
@@ -1369,80 +1369,94 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
     }
   }
 
-  void GameRenderer::_RenderBlockEdges(Block* block)
-  {
-    BlockVertex* v_blockVertexA;
-    BlockVertex* v_blockVertexB;
+void GameRenderer::_RenderBlockEdges(Block* block)
+{
+  //      glCallList(block->getDisplayList());
+  /* FIXME::is the edge of a dyn block rotated with the dyn block ?? */
 
-    //      glCallList(block->getDisplayList());
-    /* FIXME::is the edge of a dyn block rotated with the dyn block ?? */
+  // we won't do four loops depending on the edge drawing type.
+  // instead we use a function pointer
+  void (Block::*calculateEdgePosition)(Vector2f, Vector2f,
+				       Vector2f&, Vector2f&,
+				       Vector2f&, Vector2f&,
+				       float, float) = NULL;
+  switch(block->getEdgeDrawMethod()){
+  case Block::Under:
+    calculateEdgePosition = &Block::calculateEdgePosition_under;
+    break;
+  case Block::Over:
+    calculateEdgePosition = &Block::calculateEdgePosition_over;
+    break;
+  case Block::Inside:
+    calculateEdgePosition = &Block::calculateEdgePosition_inside;
+    break;
+  case Block::Outside:
+    calculateEdgePosition = &Block::calculateEdgePosition_outside;
+    break;
+  }
 
-    if(block->Vertices().size() > 0) {
+  if(block->Vertices().size() > 0) {
+    BlockVertex*      v_blockVertexA;
+    BlockVertex*      v_blockVertexB;
+    EdgeEffectSprite* pType;
+    std::string v_previousEdgeEffect = "";
+    pType = NULL;
 
-      EdgeEffectSprite* pType;
-      std::string v_previousEdgeEffect = "";
-      pType = NULL;
+    for(unsigned int j=0; j<block->Vertices().size(); j++) {
+      v_blockVertexA = block->Vertices()[j];
+      if(v_blockVertexA->EdgeEffect() != "") {
 
-      for(unsigned int j=0; j<block->Vertices().size(); j++) {
-	v_blockVertexA = block->Vertices()[j];
-	if(v_blockVertexA->EdgeEffect() != "") {
+	if(v_blockVertexA->EdgeEffect() != v_previousEdgeEffect) {
+	  pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
+	  v_previousEdgeEffect = v_blockVertexA->EdgeEffect();
 
-	  if(v_blockVertexA->EdgeEffect() != v_previousEdgeEffect) {
-	    pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
-	    v_previousEdgeEffect = v_blockVertexA->EdgeEffect();
-
-	    if(pType != NULL) {
-	      getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
-	    }
-	  }
-
-	  v_blockVertexB = block->Vertices()[(j+1) % block->Vertices().size()];
-	  
-	  Vector2f vAPos = v_blockVertexA->Position();
-	  Vector2f vBPos = v_blockVertexB->Position();
-	  
-	  /* link A to B */
-	  float fXScale,fDepth;
-	  
 	  if(pType != NULL) {
-	    fXScale = pType->getScale();
-	    fDepth  = pType->getDepth();
-	    
-	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	    getParent()->getDrawLib()->setColorRGB(255,255,255);
-	    
-	    float v_border; // add a small border because polygons are a bit larger to avoid gap polygon pb.
-	    if(fDepth > 0) {
-	      v_border = 0.01;
-	    } else {
-	      v_border = -0.01;
-	    }
-	    
-	    
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,
-						  0.01);
-	    getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,
-								 block->DynamicPosition().y + v_border));
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,
-						  0.01);
-	    getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,
-								 block->DynamicPosition().y + v_border));
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,
-						  0.99);
-	    getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,
-								 block->DynamicPosition().y) + Vector2f(0,-fDepth));
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,
-						  0.99);
-	    getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,
-								 block->DynamicPosition().y) + Vector2f(0,-fDepth));
-	    
-	    getParent()->getDrawLib()->endDrawKeepProperties();
+	    getParent()->getDrawLib()->setTexture(pType->getTexture(), BLEND_MODE_A);
+	  } else {
+	    continue;
 	  }
 	}
+
+	v_blockVertexB = block->Vertices()[(j+1) % block->Vertices().size()];
+
+	Vector2f vAPos = v_blockVertexA->Position();
+	Vector2f vBPos = v_blockVertexB->Position();
+	Vector2f v1, v2, v3, v4;
+
+	/* link A to B */
+	float fXScale = pType->getScale();
+	float fDepth  = pType->getDepth();
+	// add a small border because polygons are a bit larger to avoid gap polygon pb.
+	float v_border; 
+	if(fDepth > 0) {
+	  v_border = 0.01;
+	} else {
+	  v_border = -0.01;
+	}
+
+	(block->*calculateEdgePosition)(vAPos, vBPos, v1, v2, v3, v4, v_border, fDepth);
+
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	getParent()->getDrawLib()->setColorRGB(255,255,255);
+
+	getParent()->getDrawLib()->glTexCoord((vAPos.x)*fXScale, 0.01);
+	getParent()->getDrawLib()->glVertex(v1.x, v1.y);
+
+	getParent()->getDrawLib()->glTexCoord((vBPos.x)*fXScale, 0.01);
+	getParent()->getDrawLib()->glVertex(v2.x, v2.y);
+
+	getParent()->getDrawLib()->glTexCoord((vBPos.x)*fXScale, 0.99);
+	getParent()->getDrawLib()->glVertex(v3.x, v3.y);
+
+	getParent()->getDrawLib()->glTexCoord((vAPos.x)*fXScale, 0.99);
+	getParent()->getDrawLib()->glVertex(v4.x, v4.y);
+
+	getParent()->getDrawLib()->endDrawKeepProperties();
       }
-      getParent()->getDrawLib()->removePropertiesAfterEnd();
     }
+    getParent()->getDrawLib()->removePropertiesAfterEnd();
   }
+}
 
   /*===========================================================================
   Blocks (static)
