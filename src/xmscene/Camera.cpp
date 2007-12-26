@@ -29,7 +29,6 @@ Camera::Camera(Vector2i upperleft, Vector2i downright){
   setRenderSurface(upperleft, downright);
   m_mirrored = false;
   m_rotationAngle = 0.0;
-  m_lastSpeedTime = GameApp::getXMTime();
 }
 
 void Camera::prepareForNewLevel() {
@@ -39,6 +38,7 @@ void Camera::prepareForNewLevel() {
   m_recenter_camera_fast = true;
   m_rotationAngle = 0.0;
   m_desiredRotationAngle = 0.0;
+  m_lastSpeedTime = 0.0;
   setScroll(false, Vector2f(0, -9.81));
 }
 

@@ -114,6 +114,7 @@ void StatePreplaying::enter()
 								    pGame->getColorFromPlayerNumber(i),
 								    pGame->getUglyColorFromPlayerNumber(i),
 								    XMSession::instance()->enableEngineSound()));
+      pWorld->getCamera()->setScroll(false, pWorld->getGravity());
     }
 
     // if there's more camera than player (ex: 3 players and 4 cameras),
@@ -122,6 +123,7 @@ void StatePreplaying::enter()
       for(unsigned int i=v_nbPlayer; i<pWorld->getNumberCameras(); i++){
 	pWorld->setCurrentCamera(i);
 	pWorld->getCamera()->setPlayerToFollow(pWorld->Players()[0]);
+	pWorld->getCamera()->setScroll(false, pWorld->getGravity());
       }
     }
 
@@ -129,6 +131,7 @@ void StatePreplaying::enter()
       // make the zoom camera follow the first player
       pWorld->setAutoZoomCamera();
       pWorld->getCamera()->setPlayerToFollow(pWorld->Players()[0]);
+      pWorld->getCamera()->setScroll(false, pWorld->getGravity());
     }
 
     // reset handler, set mirror mode

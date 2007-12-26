@@ -63,6 +63,7 @@ void StateReplaying::enter()
 						Theme::instance()->getPlayerTheme(),
 						XMSession::instance()->enableEngineSound());
       pWorld->getCamera()->setPlayerToFollow(m_replayBiker);
+      pWorld->getCamera()->setScroll(false, pWorld->getGravity());
     } catch(Exception &e) {
       StateManager::instance()->replaceState(new StateMessageBox(NULL, "Unable to read the replay: " + e.getMsg(), UI_MSGBOX_OK));
       return;
