@@ -1791,17 +1791,21 @@ void StateMainMenu::updateReplaysList() {
   std::string PlayerSearch;
   if(v_listAll) {
     v_sql = "SELECT a.name, a.id_profile, b.name FROM replays AS a "
-      "INNER JOIN levels AS b ON a.id_level = b.id_level;";
+      "LEFT OUTER JOIN levels AS b ON a.id_level = b.id_level;";
   } else {
     v_sql = "SELECT a.name, a.id_profile, b.name FROM replays AS a "
-      "INNER JOIN levels AS b ON a.id_level = b.id_level "
+      "LEFT OUTER JOIN levels AS b ON a.id_level = b.id_level "
       "WHERE a.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\";";
   }
 
   v_result = xmDatabase::instance("main")->readDB(v_sql, nrow);
   for(unsigned int i=0; i<nrow; i++) {
     UIListEntry *pEntry = v_list->addEntry(xmDatabase::instance("main")->getResult(v_result, 3, i, 0));
-    pEntry->Text.push_back(xmDatabase::instance("main")->getResult(v_result, 3, i, 2));
+    if(xmDatabase::instance("main")->getResult(v_result, 3, i, 2) == NULL) {
+      pEntry->Text.push_back(GAMETEXT_UNKNOWN);
+    } else {
+      pEntry->Text.push_back(xmDatabase::instance("main")->getResult(v_result, 3, i, 2));
+    }
     pEntry->Text.push_back(xmDatabase::instance("main")->getResult(v_result, 3, i, 1));
   }
   xmDatabase::instance("main")->read_DB_free(v_result); 

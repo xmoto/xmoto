@@ -363,6 +363,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_TIME                 _("Time")
 #define GAMETEXT_TRYAGAIN             _("Try This Level Again")
 #define GAMETEXT_TUTORIAL             _("Tutorial")
+#define GAMETEXT_UNKNOWN              _("Unknown")
 #define GAMETEXT_UNPACKED_LEVELS_PACK _("Unpacked levels")
 #define GAMETEXT_UNUPDATABLETHEMEONWEB _("Can't update this theme !\nThe theme is not avaible on the web\nor your theme list is not up to date")
 #define GAMETEXT_UPDATE               _("Update")
