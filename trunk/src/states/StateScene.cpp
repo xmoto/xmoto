@@ -88,6 +88,11 @@ bool StateScene::update()
       m_fLastPhysTime += PHYS_STEP_SIZE;
       nPhysSteps++;    
     }
+
+    // update camera scrolling
+    for(unsigned int i=0; i<pWorld->Cameras().size(); i++) {
+      pWorld->Cameras()[i]->setScroll(true, pWorld->getGravity());
+    }
   }
 
   runAutoZoom();
