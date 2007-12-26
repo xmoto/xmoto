@@ -180,6 +180,30 @@ class Block {
   void setLayer(int layer) {
     m_layer = layer;
   }
+
+  typedef enum{Under, Over, Inside, Outside} EdgeDrawMethod;
+  EdgeDrawMethod getEdgeDrawMethod(){
+    return m_edgeDrawMethod;
+  }
+
+  // calculate edge position
+  void calculateEdgePosition_under(Vector2f i_vA, Vector2f i_vB,
+				   Vector2f& o_v1, Vector2f& o_v2,
+				   Vector2f& o_v3, Vector2f& o_v4,
+				   float i_border, float i_depth);
+  void calculateEdgePosition_over(Vector2f i_vA, Vector2f i_vB,
+				  Vector2f& o_v1, Vector2f& o_v2,
+				  Vector2f& o_v3, Vector2f& o_v4,
+				  float i_border, float i_depth);
+  void calculateEdgePosition_inside(Vector2f i_vA, Vector2f i_vB,
+				    Vector2f& o_v1, Vector2f& o_v2,
+				    Vector2f& o_v3, Vector2f& o_v4,
+				    float i_border, float i_depth);
+  void calculateEdgePosition_outside(Vector2f i_vA, Vector2f i_vB,
+				     Vector2f& o_v1, Vector2f& o_v2,
+				     Vector2f& o_v3, Vector2f& o_v4,
+				     float i_border, float i_depth);
+
 private:
   std::string m_id;           /* Block ID */
   std::string m_texture;      /* Texture to use... */
@@ -215,6 +239,8 @@ private:
 
   void addPoly(BSPPoly* i_poly, CollisionSystem& io_collisionSystem);
   void updateCollisionLines();
+
+  EdgeDrawMethod m_edgeDrawMethod;
 };
 
 #endif /* __BLOCK_H__ */
