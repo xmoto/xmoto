@@ -559,8 +559,7 @@ int GameRenderer::nbParticlesRendered() const {
 
     m_nParticlesRendered = 0;
     
-    m_fZoom = 60.0f;    
-    pCamera->setScroll(true, i_scene->getGravity());
+    m_fZoom = 60.0f;
     pCamera->setCamera2d();
 
     /* calculate screen AABB to show only visible entities and dyn blocks */

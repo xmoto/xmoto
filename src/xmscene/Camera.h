@@ -53,15 +53,7 @@ private:
 
 class Camera {
 public:
-  Camera(Vector2i upperleft, Vector2i downright){
-    m_fScale         = ZOOM_DEFAULT;
-    m_cameraOffsetX  = CAMERA_OFFSETX_DEFAULT;
-    m_cameraOffsetY  = CAMERA_OFFSETY_DEFAULT;
-    m_playerToFollow = NULL;
-    setRenderSurface(upperleft, downright);
-    m_mirrored = false;
-    m_rotationAngle = 0.0;
-  }
+  Camera(Vector2i upperleft, Vector2i downright);
   void zoom(float p_f);
   void setZoom(float p_f);
   void initZoom();
@@ -121,6 +113,8 @@ private:
   bool  m_recenter_camera_fast;
 
   RenderSurface m_renderSurf;
+
+  float m_lastSpeedTime;
 };
 
 #endif

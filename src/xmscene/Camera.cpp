@@ -19,6 +19,18 @@
   =============================================================================*/
 
 #include "Camera.h"
+#include "Game.h"
+
+Camera::Camera(Vector2i upperleft, Vector2i downright){
+  m_fScale         = ZOOM_DEFAULT;
+  m_cameraOffsetX  = CAMERA_OFFSETX_DEFAULT;
+  m_cameraOffsetY  = CAMERA_OFFSETY_DEFAULT;
+  m_playerToFollow = NULL;
+  setRenderSurface(upperleft, downright);
+  m_mirrored = false;
+  m_rotationAngle = 0.0;
+  m_lastSpeedTime = GameApp::getXMTime();
+}
 
 void Camera::prepareForNewLevel() {
   m_fCurrentHorizontalScrollShift = 0.0f;
@@ -111,8 +123,14 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   float v_move_camera_max;
   float v_fDesiredHorizontalScrollShift = 0.0;
   float v_fDesiredVerticalScrollShift   = 0.0;
+  float v_newSpeedTime;
 
   if(m_playerToFollow == NULL) {
+    return;
+  }
+
+  v_newSpeedTime = GameApp::getXMTime();
+  if( (v_newSpeedTime - m_lastSpeedTime) < 0.15) {
     return;
   }
 
@@ -128,7 +146,7 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   } else {
     v_move_camera_max = 0.01;
   }
-
+    
   /* Determine scroll */
   m_Scroll = -m_playerToFollow->getState()->CenterP;
 
@@ -142,7 +160,7 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
     /* remove fast move once the camera is set correctly */
     m_recenter_camera_fast = false;
   }
-    
+
   if(v_fDesiredHorizontalScrollShift != m_fCurrentHorizontalScrollShift) {
     float d = v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift;
     if(fabs(d)<v_move_camera_max || isSmooth == false) {
@@ -168,7 +186,7 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
       m_fCurrentVerticalScrollShift += 0.01f;
     }
   }
-    
+
   m_Scroll += Vector2f(m_fCurrentHorizontalScrollShift,
 		       m_fCurrentVerticalScrollShift);
 }
