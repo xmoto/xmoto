@@ -841,20 +841,75 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return false;
   }
   
-  void UIList::setRealSelected(unsigned int n) {
-    if(n >= m_Entries.size())
-      return;
+void UIList::adaptRealSelectedOnVisibleEntries() { // m_nRealSelected must be >= 0 and < size()
+  bool v_found;
 
-    m_bChanged = true;
-    if(m_filteredItems == 0) { // special case because it happends often
-      m_nRealSelected    = n;
-      m_nVisibleSelected = n;
+  if(m_Entries.size() == 0) {
+    return;
+  }
+
+  // search after
+  int v_nx = m_nRealSelected; // don't do +1 because it could go over list size ; signed because it can be under 0
+  v_found = false;
+  while(v_nx < (int) getEntries().size() && v_found == false) {
+    if(m_Entries[v_nx]->bFiltered == false) {
+      v_found = true;
     } else {
-      m_nRealSelected = n;
+      v_nx++; // get the next one
+    }
+  }
+  if(v_found) {
+    m_nRealSelected = v_nx;
+    return;
+  }
+
+  // search before
+  v_nx = m_nRealSelected; // don't do -1 to not go under 0
+  v_found = false;
+  while(v_nx >= 0 && v_found == false) {
+    if(m_Entries[v_nx]->bFiltered == false) {
+      v_found = true;
+    } else {
+      v_nx--; // get the previous one
+    }
+  }
+  if(v_found) {
+    m_nRealSelected = v_nx;
+    return ;
+  }
+
+  // no visible entry
+  m_nRealSelected = 0;
+}
+
+  void UIList::setRealSelected(unsigned int n) {
+    if( n < 0 || n >= m_Entries.size()) {
+      // error case
+      m_nRealSelected    = 0;
       m_nVisibleSelected = 0;
+      adaptRealSelectedOnVisibleEntries();
       for(unsigned int i=0; i<m_nRealSelected; i++) {
 	if(m_Entries[i]->bFiltered == false) {
 	  m_nVisibleSelected++;
+	}
+      }
+    } else {
+      m_bChanged = true;
+      if(m_filteredItems == 0) { // special case because it happends often
+	m_nRealSelected    = n;
+	m_nVisibleSelected = n;
+      } else {
+	m_nRealSelected = n;
+	
+	if(m_Entries[m_nRealSelected]->bFiltered) {
+	  adaptRealSelectedOnVisibleEntries();
+	}
+	
+	m_nVisibleSelected = 0;
+	for(unsigned int i=0; i<m_nRealSelected; i++) {
+	  if(m_Entries[i]->bFiltered == false) {
+	    m_nVisibleSelected++;
+	  }
 	}
       }
     }
