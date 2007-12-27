@@ -393,7 +393,6 @@ void StateMainMenu::checkEventsLevelsFavoriteTab() {
 
     if(v_id_level != "") {
       LevelsManager::instance()->delFromFavorite(XMSession::instance()->profile(), v_id_level);
-      updateFavoriteLevelsList();
       StateManager::instance()->sendAsynchronousMessage("FAVORITES_UPDATED");
     }
   }
@@ -1577,17 +1576,33 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
 
   if(i_id == "STATE_MANAGER") {
     if(i_message == "FAVORITES_UPDATED") {
-      m_require_updateFavoriteLevelsList = true;
+      if(StateManager::instance()->isTopOfTheStates(this)) {
+	updateFavoriteLevelsList();
+      } else {
+	m_require_updateFavoriteLevelsList = true;
+      }
       return;
     }
     
    if(i_message == "REPLAYS_UPDATED") {
-     m_require_updateReplaysList = true;
+     if(StateManager::instance()->isTopOfTheStates(this)) {
+       updateReplaysList();
+     } else {
+       m_require_updateReplaysList = true;
+     }
      return;
     }
 
    if(i_message == "LEVELS_UPDATED" || i_message == "HIGHSCORES_UPDATED" || i_message == "BLACKLISTEDLEVELS_UPDATED") {
-     m_require_updateLevelsList = true;
+     if(StateManager::instance()->isTopOfTheStates(this)) {
+       LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
+					    XMSession::instance()->idRoom(),
+					    XMSession::instance()->debug());
+       updateLevelsPacksList();
+       updateLevelsLists();
+     } else {
+       m_require_updateLevelsList = true;
+     }
      return;
    }
   }
@@ -1685,7 +1700,6 @@ void StateMainMenu::executeOneCommand(std::string cmd)
 	} catch(Exception &e) {
 	  Logger::Log(e.getMsg().c_str());
 	}
-	updateReplaysList();
 	StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
       }
     }
@@ -1873,7 +1887,6 @@ void StateMainMenu::checkEventsReplays() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST_ALL"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-
     updateReplaysList();
   }
 

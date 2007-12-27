@@ -404,6 +404,14 @@ void StateManager::cleanStates() {
   StateRequestKey::clean();
 }
 
+bool StateManager::isTopOfTheStates(GameState* i_state) {
+  if(m_statesStack.size() == 0) {
+    return false;
+  }
+
+  return m_statesStack[m_statesStack.size()-1] == i_state;
+}
+
 int StateManager::getCurrentUpdateFPS() {
   return m_currentUpdateFps;
 }
