@@ -92,6 +92,8 @@ std::vector<ThemeFile>* Theme::getRequiredFiles() {
 void Theme::load(std::string p_themeFile) {
   Logger::Log(std::string("Loading theme from file " + p_themeFile).c_str());
 
+  m_requiredFiles.clear();
+
   cleanSprites(); /* removing existing sprites */
   cleanMusics();
   cleanSounds();
