@@ -1510,14 +1510,16 @@ void StateMainMenu::createLevelListsSql(UILevelList *io_levelsList, const std::s
   char **v_result;
   unsigned int nrow;
   float v_playerHighscore, v_roomHighscore;
-  
+
   /* get selected item */
   std::string v_selected_levelName = "";
+  int v_selected;
   if((io_levelsList->getSelected() >= 0) && (io_levelsList->getSelected() < io_levelsList->getEntries().size())) {
     UIListEntry *pEntry = io_levelsList->getEntries()[io_levelsList->getSelected()];
     v_selected_levelName = pEntry->Text[0];
   }
-  
+  v_selected = io_levelsList->getSelected();
+
   io_levelsList->clear();
   
   v_result = xmDatabase::instance("main")->readDB(i_sql,
@@ -1546,12 +1548,17 @@ void StateMainMenu::createLevelListsSql(UILevelList *io_levelsList, const std::s
   /* reselect the previous level */
   if(v_selected_levelName != "") {
     int nLevel = 0;
+    bool v_found = false;
     for(unsigned int i=0; i<io_levelsList->getEntries().size(); i++) {
       if(io_levelsList->getEntries()[i]->Text[0] == v_selected_levelName) {
 	nLevel = i;
+	v_found = true;
 	break;
       }
-      }
+    }
+    if(v_found == false) {
+      nLevel = v_selected;
+    }
     io_levelsList->setRealSelected(nLevel);
   }
 }
@@ -1794,11 +1801,13 @@ void StateMainMenu::updateReplaysList() {
   unsigned int nrow;
   bool v_listAll;
   UIList* v_list;
+  int v_selected;
 
   v_listAll = ((UIButton *) m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST_ALL"))->getChecked();
   v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST");
 
   /* Clear list */
+  v_selected = v_list->getSelected();
   v_list->clear();
     
   /* Enumerate replays */
@@ -1823,6 +1832,8 @@ void StateMainMenu::updateReplaysList() {
     pEntry->Text.push_back(xmDatabase::instance("main")->getResult(v_result, 3, i, 1));
   }
   xmDatabase::instance("main")->read_DB_free(v_result); 
+
+  v_list->setRealSelected(v_selected);
 
   // apply the filter
   UIEdit*      v_edit;
@@ -2700,6 +2711,8 @@ void StateMainMenu::updateReplaysRights() {
 	}
       }
     }
+  } else {
+    v_button->enableWindow(false);
   }
 }
 

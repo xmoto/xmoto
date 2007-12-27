@@ -669,6 +669,9 @@ private:
   std::string m_filter;
   unsigned int m_filteredItems;
 
+  //
+  void adaptRealSelectedOnVisibleEntries();
+
   /* draw */
   int HeaderHeight();
   int HeaderSubBorderHeight();
