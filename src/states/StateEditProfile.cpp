@@ -117,7 +117,6 @@ void StateEditProfile::keyDown(int nKey, SDLMod mod,int nChar)
 
   default:
     StateMenu::keyDown(nKey, mod, nChar);
-    checkEvents();
     break;
   }
 }
