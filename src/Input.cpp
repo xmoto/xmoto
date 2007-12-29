@@ -155,6 +155,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void InputHandler::init(UserConfig *pConfig) {
     /* Initialize joysticks (if any) */
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+    
+    /* Enable unicode translation and key repeats */
+    SDL_EnableUNICODE(1);         
+    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
 
     /* Open all joysticks */
     for(int i=0; i<SDL_NumJoysticks(); i++) {

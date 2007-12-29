@@ -246,10 +246,6 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,unsigned int nDispHeight,unsign
     
   glClearDepth(1);
   glDepthFunc(GL_LEQUAL);
-    
-  /* Enable unicode translation and key repeats */
-  SDL_EnableUNICODE(1);         
-  SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
      
   /* Output some general info */
   Logger:: Log("GL: %s (%s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR));
