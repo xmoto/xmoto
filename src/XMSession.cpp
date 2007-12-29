@@ -37,7 +37,7 @@ void XMSession::setToDefault() {
   m_resolutionWidth  	          = 800;
   m_resolutionHeight 	          = 600;
   m_bpp              	          = 32;
-  m_windowed         	          = false;
+  m_windowed         	          = true;
   m_glExts           	          = true;
   m_drawlib          	          = "OPENGL";
   m_www              	          = true;
