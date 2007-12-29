@@ -37,7 +37,6 @@ class XMArguments {
   std::string getOpt_unpack_dir()    const;
   bool        getOpt_unpack_noList() const;
   bool isOptVerbose() const;
-  bool isOptNoGfx() const;
   bool isOptRes() const;
   int  getOpt_res_dispWidth() const;
   int  getOpt_res_dispHeight() const;
@@ -87,7 +86,6 @@ class XMArguments {
   bool m_unpack_noList;
 
   /* graphics */
-  bool m_opt_nogfx;
   bool m_opt_res;
   int m_res_dispWidth;
   int m_res_dispHeight;

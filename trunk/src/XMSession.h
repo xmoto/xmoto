@@ -223,7 +223,6 @@ public:
 
   private:
   bool m_verbose;
-  bool m_useGraphics;
   int  m_resolutionWidth;
   int  m_resolutionHeight;
   int  m_bpp;
