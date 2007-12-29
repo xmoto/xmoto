@@ -29,6 +29,10 @@ Camera::Camera(Vector2i upperleft, Vector2i downright){
   setRenderSurface(upperleft, downright);
   m_mirrored = false;
   m_rotationAngle = 0.0;
+  m_lastSpeedTime = 0.0;
+  m_previous_driver_dir  = DD_LEFT;
+  m_fCurrentHorizontalScrollShift = 0.0f;
+  m_fCurrentVerticalScrollShift = 0.0f;
 }
 
 void Camera::prepareForNewLevel() {

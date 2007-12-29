@@ -376,12 +376,12 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
     pc = pVarSubElem->Attribute("sum");
     if(pc != NULL) { v_sum = pc; };
 
-    if(isAFileOutOfDate(THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
-			v_fileBase + std::string(buf) + std::string(".") + v_fileExtension) == false) {
-      v_anim->addFrame(v_centerX, v_centerY, v_width, v_height, v_delay);
+    if(n < 100) {
+      sprintf(buf, "%02i", n);
 
-      if(n < 100) {
-	sprintf(buf, "%02i", n);
+      if(isAFileOutOfDate(THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
+			  v_fileBase + std::string(buf) + std::string(".") + v_fileExtension) == false) {
+	v_anim->addFrame(v_centerX, v_centerY, v_width, v_height, v_delay);
 
 	ThemeFile v_file = {THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
 			    v_fileBase + std::string(buf) + std::string(".") + v_fileExtension,
@@ -639,6 +639,7 @@ BikerTheme* Theme::getGhostTheme() {
 Sprite::Sprite(Theme* p_associated_theme, std::string v_name) {
   m_associated_theme = p_associated_theme;
   m_name = v_name;
+  m_blendmode = SPRITE_BLENDMODE_DEFAULT;
 }
 
 Sprite::~Sprite() {
