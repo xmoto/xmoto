@@ -193,7 +193,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   }
 
   /* Init sound system */
-  Sound::init(XMSession::instance());
+  if(v_useGraphics) {
+    Sound::init(XMSession::instance());
+  }
 
   /* Init renderer */
   if(v_useGraphics) {
@@ -302,29 +304,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(v_xmArgs.isOptReplay()) {
     m_PlaySpecificReplay = v_xmArgs.getOpt_replay_file();
   }
-  
-  if(v_useGraphics) {  
-    _UpdateLoadingScreen(0, GAMETEXT_LOADINGSOUNDS);
-    
-    /* Load sounds */
-    try {
-      for(unsigned int i=0; i<Theme::instance()->getSoundsList().size(); i++) {
-	Sound::loadSample(Theme::instance()->getSoundsList()[i]->FilePath());
-      }
-    } catch(Exception &e) {
-      Logger::Log("*** Warning *** : %s\n", e.getMsg().c_str());
-      /* hum, not cool */
-    }
-    
-    Logger::Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
-    
-    /* Find all files in the textures dir and load them */     
-    UITexture::setApp(this);
-    UIWindow::setDrawLib(getDrawLib());
-    
-    _UpdateLoadingScreen((1.0f/9.0f) * 2,GAMETEXT_LOADINGMENUGRAPHICS);
-  }
-  
+ 
   /* Should we clean the level cache? (can also be done when disabled) */
   if(v_xmArgs.isOptCleanCache()) {
     LevelsManager::cleanCache();
@@ -343,8 +323,25 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     return;
   }
   
+  _UpdateLoadingScreen(0, GAMETEXT_INITMENUS);
+
+  /* Load sounds */
+  try {
+    for(unsigned int i=0; i<Theme::instance()->getSoundsList().size(); i++) {
+      Sound::loadSample(Theme::instance()->getSoundsList()[i]->FilePath());
+    }
+  } catch(Exception &e) {
+    Logger::Log("*** Warning *** : %s\n", e.getMsg().c_str());
+    /* hum, not cool */
+  }
+    
+  Logger::Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
+    
+  /* Find all files in the textures dir and load them */     
+  UITexture::setApp(this);
+  UIWindow::setDrawLib(getDrawLib());
+
   /* Initialize renderer */
-  _UpdateLoadingScreen((1.0f/9.0f) * 6,GAMETEXT_INITRENDERER);
   GameRenderer::instance()->init(drawLib);
   
   /* build handler */

@@ -923,7 +923,7 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
   v_config->createVar( "DisplayWidth",           "800" );
   v_config->createVar( "DisplayHeight",          "600" );
   v_config->createVar( "DisplayBPP",             "32" );
-  v_config->createVar( "DisplayWindowed",        "false" );
+  v_config->createVar( "DisplayWindowed",        "true" );
   v_config->createVar( "MenuGraphics",           "High" );
   v_config->createVar( "GameGraphics",           "High" );
   v_config->createVar( "DrawLib",                "OPENGL" );
