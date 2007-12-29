@@ -102,26 +102,22 @@ void StateMainMenu::enter()
   createGUIIfNeeded();
   m_GUI = m_sGUI;
 
-  // updates
+  GameApp::instance()->playMusic("menu1");
+
+  StateMenu::enter();
+
   updateProfile();
+  updateOptions();
+  updateNewLevels(); // check new levels
+  updateInfoFrame();
+
+  // show it before updating lists (which can take some time)
+  StateManager::instance()->render(); 
   updateLevelsPacksList();
   updateLevelsLists();
   updateReplaysList();
   updateStats();
   
-  // update options
-  updateOptions();
-
-  // check new levels
-  updateNewLevels();
-
-  // upate info frame
-  updateInfoFrame();
-
-  GameApp::instance()->playMusic("menu1");
-
-  StateMenu::enter();
-
   StateManager::instance()->pushState(new StateCheckWww());
 }
 
