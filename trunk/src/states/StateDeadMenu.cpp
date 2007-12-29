@@ -152,7 +152,6 @@ void StateDeadMenu::keyDown(int nKey, SDLMod mod,int nChar)
   }
   else {
     StateMenu::keyDown(nKey, mod, nChar);
-    checkEvents();
   }
 }
 

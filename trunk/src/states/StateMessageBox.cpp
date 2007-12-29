@@ -61,22 +61,8 @@ void StateMessageBox::checkEvents() {
 
   if(Button == UI_MSGBOX_NOTHING)
     return;
-  m_clickedButton = Button;
 
-  switch(Button) {
-  case UI_MSGBOX_OK:
-    break;
-  case UI_MSGBOX_CANCEL:
-    break;
-  case UI_MSGBOX_YES:
-    break;
-  case UI_MSGBOX_NO:
-    break;
-  case UI_MSGBOX_YES_FOR_ALL:
-    break;
-  default:
-    break;
-  }
+  m_clickedButton = Button;
 
   m_requestForEnd = true;
 }
@@ -86,7 +72,6 @@ void StateMessageBox::keyDown(int nKey, SDLMod mod,int nChar)
   switch(nKey) {
   default:
     StateMenu::keyDown(nKey, mod, nChar);
-    checkEvents();
     break;
   }
 }

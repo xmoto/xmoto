@@ -473,7 +473,6 @@ void StateMainMenu::keyDown(int nKey, SDLMod mod,int nChar)
 
   default:
     StateMenu::keyDown(nKey, mod, nChar);
-    checkEvents();
     break;
 
   }
