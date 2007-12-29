@@ -45,6 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/System.h"
 #include "StateEditWebConfig.h"
 #include "Sound.h"
+#include "thread/CheckWwwThread.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -117,8 +118,10 @@ void StateMainMenu::enter()
   updateLevelsLists();
   updateReplaysList();
   updateStats();
-  
-  StateManager::instance()->pushState(new StateCheckWww());
+
+  if(CheckWwwThread::isNeeded()) {
+    StateManager::instance()->pushState(new StateCheckWww());
+  }
 }
 
 void StateMainMenu::enterAfterPop()
