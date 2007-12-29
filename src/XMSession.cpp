@@ -34,7 +34,6 @@ XMSession::XMSession() {
 
 void XMSession::setToDefault() {
   m_verbose          	          = false;
-  m_useGraphics      	          = true;
   m_resolutionWidth  	          = 800;
   m_resolutionHeight 	          = 600;
   m_bpp              	          = 32;
@@ -103,9 +102,6 @@ void XMSession::setToDefault() {
 void XMSession::load(const XMArguments* i_xmargs) {
   if(i_xmargs->isOptVerbose()) {
     m_verbose = true;
-  }
-  if(i_xmargs->isOptNoGfx()) {
-    m_useGraphics = false;
   }
   if(i_xmargs->isOptRes()) {
     m_resolutionWidth  = i_xmargs->getOpt_res_dispWidth();
@@ -313,14 +309,6 @@ void XMSession::save(UserConfig* v_config) {
 
 bool XMSession::isVerbose() const {
   return m_verbose;
-}
-
-bool XMSession::useGraphics() const {
-  return m_useGraphics;
-}
-
-void XMSession::setUseGraphics(bool i_value) {
-  m_useGraphics = i_value;
 }
 
 int XMSession::resolutionWidth() const {

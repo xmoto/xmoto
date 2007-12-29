@@ -28,7 +28,6 @@ XMArguments::XMArguments() {
   m_opt_pack   	      = false;
   m_opt_unpack 	      = false;
   m_unpack_noList     = false;
-  m_opt_nogfx         = false;
   m_opt_res 	      = false;
   m_res_dispWidth     = 0;
   m_res_dispHeight    = 0;
@@ -97,8 +96,6 @@ void XMArguments::parse(int i_argc, char **i_argv) {
 	m_unpack_noList = true;
 	i++;
       }      
-    } else if(v_opt == "--nogfx") {
-      m_opt_nogfx = true;
     } else if(v_opt == "--nosound") {
       m_opt_nosound = true;
     } else if(v_opt == "-v" || v_opt == "--verbose") {
@@ -281,10 +278,6 @@ bool XMArguments::isOptVerbose() const {
   return m_opt_verbose;
 }
 
-bool XMArguments::isOptNoGfx() const {
-  return m_opt_nogfx;
-}
-
 bool XMArguments::isOptRes() const {
   return m_opt_res;
 }
@@ -453,7 +446,6 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t--bpp BITS\n\t\tTry to use this display color bit depth.\n");
   printf("\t-fs, --fullscreen\n\t\tForces fullscreen mode.\n");
   printf("\t-win, --windowed\n\t\tForces windowed mode.\n");
-  printf("\t--nogfx\n\t\tDon't show any graphical elements.\n");
   printf("\t-v, --verbose\n\t\tBe verbose.\n");
   printf("\t--noexts\n\t\tDon't use any OpenGL extensions.\n");
   printf("\t--fps\n\t\tDisplay framerate.\n");

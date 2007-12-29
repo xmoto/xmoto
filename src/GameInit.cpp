@@ -87,6 +87,7 @@ void GameApp::run(int nNumArgs, char** ppcArgs) {
 
 void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   XMArguments v_xmArgs;
+  bool v_useGraphics = true;
 
   /* check args */
   try {
@@ -157,12 +158,12 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 #endif
 
   if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos()) {
-    XMSession::instance()->setUseGraphics(false);
+    v_useGraphics = false;
   }
 
-  _InitWin(XMSession::instance()->useGraphics());
+  _InitWin(v_useGraphics);
 
-  if(XMSession::instance()->useGraphics()) {
+  if(v_useGraphics) {
     /* init drawLib */
     drawLib = DrawLib::DrawLibFromName(XMSession::instance()->drawlib());
 
@@ -172,7 +173,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 
     SysMessage::instance()->setDrawLib(drawLib);
     
-    drawLib->setNoGraphics(XMSession::instance()->useGraphics() == false);
+    drawLib->setNoGraphics(v_useGraphics == false);
     drawLib->setDontUseGLExtensions(XMSession::instance()->glExts() == false);
 
     /* Init! */
@@ -195,7 +196,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   Sound::init(XMSession::instance());
 
   /* Init renderer */
-  if(XMSession::instance()->useGraphics()) {
+  if(v_useGraphics) {
     switchUglyMode(XMSession::instance()->ugly());
     switchTestThemeMode(XMSession::instance()->testTheme());
     GameRenderer::instance()->setParent( (GameApp *)this );
@@ -204,7 +205,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   /* Tell collision system whether we want debug-info or not */
   m_MotoGame.getCollisionHandler()->setDebug(XMSession::instance()->debug());
 
-  if(XMSession::instance()->useGraphics()) {
+  if(v_useGraphics) {
     if(XMSession::instance()->gDebug())
       GameRenderer::instance()->loadDebugInfo(XMSession::instance()->gDebugFile());
   }
@@ -214,7 +215,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   pDb->init(DATABASE_FILE,
 	    XMSession::instance()->profile() == "" ? std::string("") : XMSession::instance()->profile(),
 	    FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
-	    XMSession::instance()->useGraphics() ? this : NULL);
+	    v_useGraphics ? this : NULL);
   if(XMSession::instance()->sqlTrace()) {
     pDb->setTrace(XMSession::instance()->sqlTrace());
   }
@@ -235,9 +236,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   
   /* load levels */
   if(pDb->levels_isIndexUptodate() == false) {
-      LevelsManager::instance()->reloadLevelsFromLvl(NULL, XMSession::instance()->useGraphics() ? this : NULL);
+      LevelsManager::instance()->reloadLevelsFromLvl(NULL, v_useGraphics ? this : NULL);
   }
-  LevelsManager::instance()->reloadExternalLevels(pDb, XMSession::instance()->useGraphics() ? this : NULL);
+  LevelsManager::instance()->reloadExternalLevels(pDb, v_useGraphics ? this : NULL);
   
   /* Update replays */
   if(pDb->replays_isIndexUptodate() == false) {
@@ -253,19 +254,25 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     printf("-----------------------------------------------------------------------\n");
     
     v_result = pDb->readDB("SELECT a.name, a.id_profile, b.name "
-			    "FROM replays AS a INNER JOIN levels AS b "
+			    "FROM replays AS a LEFT OUTER JOIN levels AS b "
 			    "ON a.id_level = b.id_level;", nrow);
     if(nrow == 0) {
       printf("(none)\n");
     } else {
-	for(unsigned int i=0; i<nrow; i++) {
-	  //pDb->getResult(v_result, 4, i, 0)
-	  printf("%-25s %-25s %-25s\n",
-		 pDb->getResult(v_result, 3, i, 0),
-		 pDb->getResult(v_result, 3, i, 2),
-		 pDb->getResult(v_result, 3, i, 1)
-		 );
+      std::string v_levelName;
+
+      for(unsigned int i=0; i<nrow; i++) {
+	if(pDb->getResult(v_result, 3, i, 2) == NULL) {
+	  v_levelName = GAMETEXT_UNKNOWN;
+	} else {
+	  v_levelName = pDb->getResult(v_result, 3, i, 2);
 	}
+	printf("%-25s %-25s %-25s\n",
+	       pDb->getResult(v_result, 3, i, 0),
+	       v_levelName.c_str(),
+	       pDb->getResult(v_result, 3, i, 1)
+	       );
+      }
     }
     pDb->read_DB_free(v_result);
     quit();
@@ -296,7 +303,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     m_PlaySpecificReplay = v_xmArgs.getOpt_replay_file();
   }
   
-  if(XMSession::instance()->useGraphics()) {  
+  if(v_useGraphics) {  
     _UpdateLoadingScreen(0, GAMETEXT_LOADINGSOUNDS);
     
     /* Load sounds */
@@ -331,7 +338,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   }
   
   /* requires graphics now */
-  if(XMSession::instance()->useGraphics() == false) {
+  if(v_useGraphics == false) {
     quit();
     return;
   }
