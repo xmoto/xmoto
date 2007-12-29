@@ -39,6 +39,8 @@ class CheckWwwThread : public XMThread, public WWWAppInterface {
 
   virtual int realThreadFunction();
 
+  static bool isNeeded(); // return false if it's not necessary to run it
+
 private:
   void updateWebHighscores();
   void upgradeWebHighscores();
