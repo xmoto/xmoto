@@ -1,4 +1,4 @@
-SUBDIRS = src bin extra po
+SUBDIRS = intl src bin extra po
 
 man_MANS = xmoto.6.gz
 

@@ -147,7 +147,7 @@ AC_SUBST([ALLOW_ZOOMING])
 dnl Can't build xmoto.bin if we're cross-compiling
 AM_CONDITIONAL(CROSS_COMPILING,test "$cross_compiling" = yes)
 
-AC_OUTPUT(Makefile bin/Makefile po/Makefile.in src/Makefile extra/Makefile)
+AC_OUTPUT(Makefile bin/Makefile po/Makefile.in src/Makefile extra/Makefile intl/Makefile)
 
 # display is something is missing
 displayRequirement() {

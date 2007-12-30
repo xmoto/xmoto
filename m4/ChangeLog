@@ -1,3 +1,27 @@
+2007-12-30  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* codeset.m4: Upgrade to gettext-0.16.1.
+	* intl.m4: New file, from gettext-0.16.1.
+	* intldir.m4: New file, from gettext-0.16.1.
+	* intmax.m4: Upgrade to gettext-0.16.1.
+	* inttypes_h.m4: Upgrade to gettext-0.16.1.
+	* inttypes-pri.m4: Upgrade to gettext-0.16.1.
+	* lock.m4: New file, from gettext-0.16.1.
+	* longdouble.m4: Upgrade to gettext-0.16.1.
+	* longlong.m4: Upgrade to gettext-0.16.1.
+	* size_max.m4: Upgrade to gettext-0.16.1.
+	* stdint_h.m4: Upgrade to gettext-0.16.1.
+	* ulonglong.m4: Upgrade to gettext-0.16.1.
+	* visibility.m4: New file, from gettext-0.16.1.
+
+2007-12-30  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* gettext.m4: Upgrade to gettext-0.16.1.
+	* lib-link.m4: Upgrade to gettext-0.16.1.
+	* lib-prefix.m4: Upgrade to gettext-0.16.1.
+	* nls.m4: Upgrade to gettext-0.16.1.
+	* po.m4: Upgrade to gettext-0.16.1.
+
 2006-09-04  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* codeset.m4: New file, from gettext-0.14.5.

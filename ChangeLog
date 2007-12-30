@@ -1,3 +1,12 @@
+2007-12-30  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (SUBDIRS): Add intl.
+	* configure.in (AC_OUTPUT): Add intl/Makefile.
+
+2007-12-30  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (SUBDIRS): Remove intl.
+
 X-Moto 0.4.0 2007-
 -----------------------
  * lot of code rewritten/cleaned
