@@ -48,15 +48,21 @@ StateDeadMenu::~StateDeadMenu()
 void StateDeadMenu::enter()
 {
   GameApp* gameApp = GameApp::instance();
-  MotoGame* world = gameApp->getMotoGame();
+  std::string v_id_level;
 
-  world->setInfos(world->getLevelSrc()->Name());
+  if(GameApp::instance()->getScenes().size() > 0) {
+    v_id_level = GameApp::instance()->getScenes()[0]->getLevelSrc()->Id();
+  }
+
+  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+    GameApp::instance()->getScenes()[i]->setInfos(GameApp::instance()->getScenes()[i]->getLevelSrc()->Name());
+  }
   
   createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:PLAYNEXT_BUTTON"));
-  playNextButton->enableWindow(gameApp->isThereANextLevel(world->getLevelSrc()->Id()));
+  playNextButton->enableWindow(gameApp->isThereANextLevel(v_id_level));
 
   UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:SAVEREPLAY_BUTTON"));
   saveReplayButton->enableWindow(gameApp->isAReplayToSave());
@@ -66,7 +72,9 @@ void StateDeadMenu::enter()
 
 void StateDeadMenu::leave()
 {
-  GameApp::instance()->getMotoGame()->setInfos("");
+  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+    GameApp::instance()->getScenes()[i]->setInfos("");
+  }
 }
 
 void StateDeadMenu::checkEvents() {

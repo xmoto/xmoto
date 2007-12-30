@@ -102,11 +102,9 @@ public:
   void setMirrored(bool i_value);
 
   void loadConfig(UserConfig *pConfig);
-  void handleInput(InputEventType Type,int nKey,SDLMod mod,
-		   std::vector<Biker*>& i_bikers,
-		   std::vector<Camera*>& i_cameras);      
+  void handleInput(InputEventType Type,int nKey,SDLMod mod);      
   std::string waitForKey(void);
-  void updateInput(std::vector<Biker*>& i_bikers);
+  void updateInput();
   void init(UserConfig *pConfig);
   void uninit(void);
       

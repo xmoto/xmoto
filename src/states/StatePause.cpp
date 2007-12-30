@@ -48,16 +48,23 @@ StatePause::~StatePause()
 void StatePause::enter()
 {
   GameApp* pGame = GameApp::instance();
-  MotoGame* world = pGame->getMotoGame();
+  std::string v_id_level;
 
-  world->setInfos(world->getLevelSrc()->Name());
+  if(GameApp::instance()->getScenes().size() > 0) {
+    v_id_level = GameApp::instance()->getScenes()[0]->getLevelSrc()->Id();
+  }
+
+  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+    GameApp::instance()->getScenes()[i]->setInfos(GameApp::instance()->getScenes()[i]->getLevelSrc()->Name());
+  }
+
   
   createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   /* reset the playnext button */
   UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:PLAYNEXT_BUTTON"));
-  playNextButton->enableWindow(pGame->isThereANextLevel(world->getLevelSrc()->Id()));
+  playNextButton->enableWindow(pGame->isThereANextLevel(v_id_level));
 
   StateMenu::enter();
 }
@@ -65,7 +72,10 @@ void StatePause::enter()
 void StatePause::leave()
 {
   StateMenu::leave();
-  GameApp::instance()->getMotoGame()->setInfos("");
+
+  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+    GameApp::instance()->getScenes()[i]->setInfos("");
+  }
 }
 
 void StatePause::checkEvents() {
@@ -127,7 +137,9 @@ void StatePause::keyDown(int nKey, SDLMod mod,int nChar)
     break;
 
   case SDLK_F3:
-    GameApp::instance()->switchLevelToFavorite(GameApp::instance()->getMotoGame()->getLevelSrc()->Id(), true);
+    if(GameApp::instance()->getScenes().size() > 0) { // just add the first world
+      GameApp::instance()->switchLevelToFavorite(GameApp::instance()->getScenes()[0]->getLevelSrc()->Id(), true);
+    }
     break;
 
   default:

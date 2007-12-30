@@ -47,7 +47,6 @@ void StateReplaying::enter()
   StateScene::enter();
 
   GameApp*  pGame  = GameApp::instance();
-  MotoGame* pWorld = pGame->getMotoGame();
 
   m_stopToUpdate = false;
   GameRenderer::instance()->setShowEngineCounter(false);
@@ -58,12 +57,14 @@ void StateReplaying::enter()
     pGame->initCameras(1); // init camera for only one player
 
     try {
-      m_replayBiker = pWorld->addReplayFromFile(m_replay,
-						Theme::instance(),
-						Theme::instance()->getPlayerTheme(),
-						XMSession::instance()->enableEngineSound());
-      pWorld->getCamera()->setPlayerToFollow(m_replayBiker);
-      pWorld->getCamera()->setScroll(false, pWorld->getGravity());
+      if(GameApp::instance()->getScenes().size() > 0) {
+	m_replayBiker = GameApp::instance()->getScenes()[0]->addReplayFromFile(m_replay,
+									       Theme::instance(),
+									       Theme::instance()->getPlayerTheme(),
+									       XMSession::instance()->enableEngineSound());
+	GameApp::instance()->getScenes()[0]->getCamera()->setPlayerToFollow(m_replayBiker);
+	GameApp::instance()->getScenes()[0]->getCamera()->setScroll(false, GameApp::instance()->getScenes()[0]->getGravity());
+      }
     } catch(Exception &e) {
       StateManager::instance()->replaceState(new StateMessageBox(NULL, "Unable to read the replay: " + e.getMsg(), UI_MSGBOX_OK));
       return;
@@ -71,34 +72,44 @@ void StateReplaying::enter()
 
     /* Fine, open the level */
     try {
-      pWorld->loadLevel(xmDatabase::instance("main"), m_replayBiker->levelId());
+      if(m_replayBiker != NULL) {
+	for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+	  GameApp::instance()->getScenes()[i]->loadLevel(xmDatabase::instance("main"), m_replayBiker->levelId());
+	}
+      }
     } catch(Exception &e) {
       StateManager::instance()->replaceState(new StateMessageBox(this, e.getMsg(), UI_MSGBOX_OK));
       return;
     }
     
-    if(pWorld->getLevelSrc()->isXMotoTooOld()) {
-      Logger::Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",
-		  m_replayBiker->levelId().c_str(),
-		  m_replay.c_str()
-		  );
-
-      char cBuf[256];
-      sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
-	      pWorld->getLevelSrc()->getRequiredVersion().c_str());
-      abortPlaying();
-      StateManager::instance()->replaceState(new StateMessageBox(this, cBuf, UI_MSGBOX_OK));
-      return;
+    for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+      if(GameApp::instance()->getScenes()[i]->getLevelSrc()->isXMotoTooOld()) {
+	Logger::Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",
+		    m_replayBiker->levelId().c_str(),
+		    m_replay.c_str()
+		    );
+	
+	char cBuf[256];
+	sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
+		GameApp::instance()->getScenes()[i]->getLevelSrc()->getRequiredVersion().c_str());
+	abortPlaying();
+	StateManager::instance()->replaceState(new StateMessageBox(this, cBuf, UI_MSGBOX_OK));
+	return;
+      }
     }
     
     /* Init level */    
     InputHandler::instance()->reset();
-    pWorld->prePlayLevel(NULL, false);
-    
+    for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+      GameApp::instance()->getScenes()[i]->prePlayLevel(NULL, false);
+    }    
+
     /* add the ghosts */
     if(XMSession::instance()->enableGhosts()) {
       try {
-	pGame->addGhosts(pWorld, Theme::instance());
+	for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+	  pGame->addGhosts(GameApp::instance()->getScenes()[i], Theme::instance());
+	}
       } catch(Exception &e) {
 	/* anyway */
       }
@@ -110,13 +121,22 @@ void StateReplaying::enter()
     snprintf(c_tmp, 1024,
 	     GAMETEXT_BY_PLAYER,
 	     m_replayBiker->playerName().c_str());
-    pWorld->setInfos(pWorld->getLevelSrc()->Name() + " " + std::string(c_tmp));
-    
-    GameRenderer::instance()->prepareForNewLevel(pWorld);
-    pGame->playMusic(pWorld->getLevelSrc()->Music());
+    for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+      GameApp::instance()->getScenes()[i]->setInfos(GameApp::instance()->getScenes()[i]->getLevelSrc()->Name() + " " + std::string(c_tmp));
+    }    
 
-    GameRenderer::instance()->showReplayHelp(pWorld->getSpeed(),
-					     pWorld->getLevelSrc()->isScripted() == false);
+    GameRenderer::instance()->prepareForNewLevel();
+
+    if(GameApp::instance()->getScenes().size() > 0) {
+      // play music of the first world
+      GameApp::instance()->playMusic(GameApp::instance()->getScenes()[0]->getLevelSrc()->Music());
+    }
+
+    if(GameApp::instance()->getScenes().size() > 0) {
+      GameRenderer::instance()->showReplayHelp(GameApp::instance()->getScenes()[0]->getSpeed(),
+					       GameApp::instance()->getScenes()[0]->getLevelSrc()->isScripted() == false);
+    }
+
     // highscores
     setScoresTimes();    
   } catch(Exception &e) {
@@ -128,7 +148,9 @@ void StateReplaying::enter()
 
 void StateReplaying::leave()
 {
-  GameApp::instance()->getMotoGame()->setInfos("");
+  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+    GameApp::instance()->getScenes()[i]->setInfos("");
+  }
 }
 
 bool StateReplaying::update()
@@ -140,7 +162,9 @@ bool StateReplaying::update()
     m_stopToUpdate = true;
     
     if(m_replayBiker->isFinished()) {
-      GameApp::instance()->getMotoGame()->setTime(m_replayBiker->finishTime());
+      for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+	GameApp::instance()->getScenes()[i]->setTime(m_replayBiker->finishTime());
+      }
     }
   }
 
@@ -150,7 +174,6 @@ bool StateReplaying::update()
 void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
 {
   GameApp*  pGame  = GameApp::instance();
-  MotoGame* pWorld = pGame->getMotoGame();
 
   switch(nKey) {
     
@@ -162,18 +185,24 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
   case SDLK_RIGHT:
     /* Right arrow key: fast forward */
     if(m_stopToUpdate == false) {
-      pWorld->fastforward(1);
+      for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+	GameApp::instance()->getScenes()[i]->fastforward(1);
+      }
     }
     break;
 
   case SDLK_LEFT:
-    if(pWorld->getLevelSrc()->isScripted() == false) {
-      pWorld->fastrewind(1);
-      m_stopToUpdate = false;
-    } else {
-      // rerun the replay
-      closePlaying();
-      StateManager::instance()->replaceState(new StateReplaying(m_replay));
+    if(GameApp::instance()->getScenes().size() > 0) {
+      if(GameApp::instance()->getScenes()[0]->getLevelSrc()->isScripted() == false) {
+	for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+	  GameApp::instance()->getScenes()[i]->fastrewind(1);
+	}
+	m_stopToUpdate = false;
+      } else {
+	// rerun the replay
+	closePlaying();
+	StateManager::instance()->replaceState(new StateReplaying(m_replay));
+      }
     }
     break;
 
@@ -182,29 +211,43 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
     break;
     
   case SDLK_F3:
-    pGame->switchLevelToFavorite(pWorld->getLevelSrc()->Id(), true);
+    if(GameApp::instance()->getScenes().size() > 0) {
+      pGame->switchLevelToFavorite(GameApp::instance()->getScenes()[0]->getLevelSrc()->Id(), true);
+    }
     break;
     
   case SDLK_SPACE:
     /* pause */
-    pWorld->pause();
-    GameRenderer::instance()->showReplayHelp(pWorld->getSpeed(),
-					     pWorld->getLevelSrc()->isScripted() == false);
+    for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+      GameApp::instance()->getScenes()[i]->pause();
+    }
+    if(GameApp::instance()->getScenes().size() > 0) {
+      GameRenderer::instance()->showReplayHelp(GameApp::instance()->getScenes()[0]->getSpeed(),
+					       GameApp::instance()->getScenes()[0]->getLevelSrc()->isScripted() == false);
+    }
     break;
 
   case SDLK_UP:
     /* faster */
-    pWorld->faster();
-    GameRenderer::instance()->showReplayHelp(pWorld->getSpeed(),
-					     pWorld->getLevelSrc()->isScripted() == false);
+    for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+      GameApp::instance()->getScenes()[i]->faster();
+    }
+    if(GameApp::instance()->getScenes().size() > 0) {
+      GameRenderer::instance()->showReplayHelp(GameApp::instance()->getScenes()[0]->getSpeed(),
+					       GameApp::instance()->getScenes()[0]->getLevelSrc()->isScripted() == false);
+    }
     break;
 
   case SDLK_DOWN:
     /* slower */
-    pWorld->slower();
+    for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+      GameApp::instance()->getScenes()[i]->slower();
+    }
     m_stopToUpdate = false;
-    GameRenderer::instance()->showReplayHelp(pWorld->getSpeed(),
-					     pWorld->getLevelSrc()->isScripted() == false);
+    if(GameApp::instance()->getScenes().size() > 0) {
+      GameRenderer::instance()->showReplayHelp(GameApp::instance()->getScenes()[0]->getSpeed(),
+					       GameApp::instance()->getScenes()[0]->getLevelSrc()->isScripted() == false);
+    }
     break;
 
   default:

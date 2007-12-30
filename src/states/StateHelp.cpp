@@ -42,7 +42,10 @@ StateHelp::~StateHelp()
 void StateHelp::leave()
 {
   StateMenu::leave();
-  GameApp::instance()->getMotoGame()->setInfos("");
+
+  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+    GameApp::instance()->getScenes()[i]->setInfos("");
+  }
 }
 
 void StateHelp::checkEvents() {

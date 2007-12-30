@@ -37,12 +37,12 @@ void StateDeadJust::enter()
 {
   StateScene::enter();
 
-  MotoGame* world = GameApp::instance()->getMotoGame();
-  
-  world->clearGameMessages();
-  world->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
-  world->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
-  world->setInfos(world->getLevelSrc()->Name());
+  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+    GameApp::instance()->getScenes()[i]->clearGameMessages();
+    GameApp::instance()->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
+    GameApp::instance()->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
+    GameApp::instance()->getScenes()[i]->setInfos(GameApp::instance()->getScenes()[i]->getLevelSrc()->Name());
+  }
 }
 
 void StateDeadJust::keyDown(int nKey, SDLMod mod,int nChar)

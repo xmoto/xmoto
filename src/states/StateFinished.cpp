@@ -54,16 +54,22 @@ void StateFinished::enter()
   bool v_is_a_room_highscore;
   bool v_is_a_personnal_highscore;
   GameApp*  pGame = GameApp::instance();
-  MotoGame* world = pGame->getMotoGame();
+  std::string v_id_level;
 
-  world->setInfos(world->getLevelSrc()->Name());
+  if(GameApp::instance()->getScenes().size() > 0) {
+    v_id_level = GameApp::instance()->getScenes()[0]->getLevelSrc()->Id();
+  }
+
+  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+    GameApp::instance()->getScenes()[i]->setInfos(GameApp::instance()->getScenes()[i]->getLevelSrc()->Name());
+  }
 
   createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   /* reset the playnext button */
   UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:PLAYNEXT_BUTTON"));
-  playNextButton->enableWindow(pGame->isThereANextLevel(world->getLevelSrc()->Id()));
+  playNextButton->enableWindow(pGame->isThereANextLevel(v_id_level));
 
   UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:SAVEREPLAY_BUTTON"));
   saveReplayButton->enableWindow(pGame->isAReplayToSave());
@@ -124,7 +130,7 @@ void StateFinished::enter()
   }
 
   UIBestTimes *v_pBestTimes = reinterpret_cast<UIBestTimes *>(m_GUI->getChild("BESTTIMES"));
-  makeBestTimesWindow(v_pBestTimes, XMSession::instance()->profile(), world->getLevelSrc()->Id(),
+  makeBestTimesWindow(v_pBestTimes, XMSession::instance()->profile(), v_id_level,
 		      v_finish_time, TimeStamp);
 
   StateMenu::enter();
@@ -133,7 +139,9 @@ void StateFinished::enter()
 void StateFinished::leave()
 {
   StateMenu::leave();
-  GameApp::instance()->getMotoGame()->setInfos("");
+  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+    GameApp::instance()->getScenes()[i]->setInfos("");
+  }
 }
 
 void StateFinished::checkEvents() {

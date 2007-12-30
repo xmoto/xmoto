@@ -204,9 +204,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     GameRenderer::instance()->setParent( (GameApp *)this );
   }    
 
-  /* Tell collision system whether we want debug-info or not */
-  m_MotoGame.getCollisionHandler()->setDebug(XMSession::instance()->debug());
-
   if(v_useGraphics) {
     if(XMSession::instance()->gDebug())
       GameRenderer::instance()->loadDebugInfo(XMSession::instance()->gDebugFile());

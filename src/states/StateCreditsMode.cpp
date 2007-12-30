@@ -45,7 +45,9 @@ void StateCreditsMode::enter()
   renderer->setShowTimePanel(false);
   renderer->setShowMinimap(false);
 
-  GameApp::instance()->getMotoGame()->setInfos("");
+  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+    GameApp::instance()->getScenes()[i]->setInfos("");
+  }
 
   m_credits->init(m_replayBiker->getFinishTime(), 4, 4, std::string(GAMETEXT_CREDITS).c_str());
 }
@@ -55,7 +57,11 @@ bool StateCreditsMode::render()
   if(StateReplaying::render() == false){
     return false;
   }
-  m_credits->render(GameApp::instance()->getMotoGame()->getTime());
+
+  if(GameApp::instance()->getScenes().size() > 0) {
+    m_credits->render(GameApp::instance()->getScenes()[0]->getTime());
+  }
+
   return true;
 }
 

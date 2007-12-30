@@ -126,7 +126,7 @@ class ParticlesSource;
     void shutdown(void);
     void render(MotoGame* i_scene);
 
-    void prepareForNewLevel(MotoGame* i_scene);
+    void prepareForNewLevel();
     void unprepareForNewLevel(void);
 
     void loadDebugInfo(std::string File);
