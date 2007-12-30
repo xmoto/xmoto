@@ -187,8 +187,6 @@ bool StatePlaying::update()
 
 void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  GameApp*  pGame = GameApp::instance();
-
   if(nKey == SDLK_ESCAPE){
     if(isLockedScene() == false) {
       /* Escape pauses */
@@ -260,8 +258,8 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
     for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
       for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Players().size(); i++) {
 	if(GameApp::instance()->getScenes()[j]->Cameras().size() > 0) {
-	  pGame->TeleportationCheatTo(i, Vector2f(GameApp::instance()->getScenes()[j]->Cameras()[0]->getCameraPositionX(),
-						  GameApp::instance()->getScenes()[j]->Cameras()[0]->getCameraPositionY()));
+	  GameApp::instance()->TeleportationCheatTo(i, Vector2f(GameApp::instance()->getScenes()[j]->Cameras()[0]->getCameraPositionX(),
+								GameApp::instance()->getScenes()[j]->Cameras()[0]->getCameraPositionY()));
 	}
       }
     }
