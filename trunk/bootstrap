@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if ! aclocal -I config $ACLOCAL_FLAGS -I m4
+if ! aclocal $ACLOCAL_FLAGS -I m4
 then
     echo "aclocal failed !"                2>&1
     echo "aclocal >= 1.9.6 is required !"  2>&1
