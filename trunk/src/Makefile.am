@@ -264,6 +264,8 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   db/xmDatabase_web.cpp \
   db/xmDatabase_themes.cpp \
   db/xmDatabaseUpdateInterface.h \
+  Universe.h   \
+  Universe.cpp \
   xmscene/BasicSceneStructs.h \
   xmscene/Scene.h \
   xmscene/Scene.cpp \
