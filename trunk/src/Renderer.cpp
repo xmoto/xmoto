@@ -77,14 +77,23 @@ GameRenderer::~GameRenderer() {
   /*===========================================================================
   Called to prepare renderer for new level
   ===========================================================================*/
-  void GameRenderer::prepareForNewLevel(MotoGame* i_scene) {
-    unsigned int numberCamera = i_scene->getNumberCameras();
-    if(numberCamera > 1){
-      numberCamera++;
+  void GameRenderer::prepareForNewLevel() {
+    Level *v_level; // level of the first world
+    if(GameApp::instance()->getScenes().size() <= 0) {
+      return;
     }
-    for(unsigned int i=0; i<numberCamera; i++){
-      i_scene->setCurrentCamera(i);
-      i_scene->getCamera()->prepareForNewLevel();
+
+    v_level = GameApp::instance()->getScenes()[0]->getLevelSrc();
+
+    for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
+      unsigned int numberCamera = GameApp::instance()->getScenes()[j]->getNumberCameras();
+      if(numberCamera > 1){
+	numberCamera++;
+      }
+      for(unsigned int i=0; i<numberCamera; i++){
+	GameApp::instance()->getScenes()[j]->setCurrentCamera(i);
+	GameApp::instance()->getScenes()[j]->getCamera()->prepareForNewLevel();
+      }
     }
     
     m_screenBBox.reset();
@@ -93,7 +102,7 @@ GameRenderer::~GameRenderer() {
     m_nGhostInfoTrans      = 255;
 
     /* Optimize scene */
-    std::vector<Block *> Blocks = i_scene->getLevelSrc()->Blocks();
+    std::vector<Block *> Blocks = v_level->Blocks();
     int nVertexBytes = 0;
   
     for(unsigned int i=0; i<Blocks.size(); i++) {
@@ -135,12 +144,17 @@ GameRenderer::~GameRenderer() {
 	} catch(Exception &e) {
 	  Logger::Log("** Warning ** : Texture '%s' not found!",
 	      Blocks[i]->Texture().c_str());
-	  i_scene->gameMessage(GAMETEXT_MISSINGTEXTURES,true);   
+
+	  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+	    GameApp::instance()->getScenes()[i]->gameMessage(GAMETEXT_MISSINGTEXTURES,true);
+	  }
 	}
       } else {
 	Logger::Log("** Warning ** : Texture '%s' not found!",
 	    Blocks[i]->Texture().c_str());
-	i_scene->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
+	for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
+	  GameApp::instance()->getScenes()[i]->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
+	}
       }
 
       Geom* pSuitableGeom = new Geom;
@@ -1407,11 +1421,15 @@ void GameRenderer::_RenderBlockEdges(Block* block)
 
 	if(v_blockVertexA->EdgeEffect() != v_previousEdgeEffect) {
 	  pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
+	  if(pType == NULL) {
+	    Logger::Log(std::string("** Invalid edge effect " + v_blockVertexA->EdgeEffect()).c_str());
+	  }
 	  v_previousEdgeEffect = v_blockVertexA->EdgeEffect();
 
 	  if(pType != NULL) {
 	    getParent()->getDrawLib()->setTexture(pType->getTexture(), BLEND_MODE_A);
 	  } else {
+	    v_previousEdgeEffect = "";
 	    continue;
 	  }
 	}

@@ -86,7 +86,7 @@ public:
   void mouseUp(int nButton);
 
   /* Methods */
-  MotoGame* getMotoGame();
+  std::vector<MotoGame*>& getScenes();
 
   void reloadTheme();
 
@@ -173,12 +173,14 @@ public:
 
   void addReplay(const std::string& i_file, xmDatabase* threadDb = NULL);
 
+  void removeAllWorlds();
+
 protected:
   void createDefaultConfig();
 
 private:   
   ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
-  MotoGame m_MotoGame;                      /* Game object */      
+  std::vector<MotoGame*> m_scenes; /* Game objects */
   XMMotoGameHooks m_MotoGameHooks;
        
   std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */

@@ -615,8 +615,10 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
       SysMessage::instance()->displayText(SYS_MSG_INTERPOLATION_DISABLED);
     }
 
-    for(unsigned int i=0; i<gameApp->getMotoGame()->Players().size(); i++) {
-      gameApp->getMotoGame()->Players()[i]->setInterpolation(XMSession::instance()->enableReplayInterpolation());
+    for(unsigned int j=0; j<gameApp->getScenes().size(); j++) {
+      for(unsigned int i=0; i<gameApp->getScenes()[j]->Players().size(); i++) {
+	gameApp->getScenes()[j]->Players()[i]->setInterpolation(XMSession::instance()->enableReplayInterpolation());
+      }
     }
 
     return;
@@ -625,8 +627,10 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   if(nKey == SDLK_m && (mod & KMOD_CTRL) != 0) {
     XMSession::instance()->setMirrorMode(XMSession::instance()->mirrorMode() == false);
 
-    for(unsigned int i=0; i<gameApp->getMotoGame()->Cameras().size(); i++) {
-      gameApp->getMotoGame()->Cameras()[i]->setMirrored(XMSession::instance()->mirrorMode());
+    for(unsigned int j=0; j<gameApp->getScenes().size(); j++) {
+      for(unsigned int i=0; i<gameApp->getScenes()[j]->Cameras().size(); i++) {
+	gameApp->getScenes()[j]->Cameras()[i]->setMirrored(XMSession::instance()->mirrorMode());
+      }
     }
     InputHandler::instance()->setMirrored(XMSession::instance()->mirrorMode());
   }

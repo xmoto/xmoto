@@ -59,6 +59,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_pLevelSrc = NULL;
 
     m_luaGame = NULL;
+
+    m_currentCamera = 0;
   }
   
   MotoGame::~MotoGame() {

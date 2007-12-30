@@ -215,13 +215,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Input device update
   ===========================================================================*/  
-  void InputHandler::updateInput(std::vector<Biker*>& i_bikers) {
+  void InputHandler::updateInput() {
+    Biker* v_biker;
+
+    if(GameApp::instance()->getScenes().size() <= 0) {
+      return;
+    }
+    
+    if(GameApp::instance()->getScenes()[0]->Players().size() <= 0) {
+      return;
+    }
+
+    v_biker = GameApp::instance()->getScenes()[0]->Players()[0]; // only for the first player for the moment
+
     /* Joystick? */
     /* joystick only for player 1 */
      if(m_ControllerModeID[0] == CONTROLLER_MODE_JOYSTICK1 && m_pActiveJoystick1 != NULL) {
       SDL_JoystickUpdate();     
 
-      i_bikers[0]->getControler()->stopContols();
+      v_biker->getControler()->stopContols();
       
       /* Update buttons */
       for(int i=0; i<SDL_JoystickNumButtons(m_pActiveJoystick1); i++) {
@@ -229,7 +241,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           if(!m_JoyButtonsPrev[i]) {
             /* Click! */
             if(m_nJoyButtonChangeDir1 == i) {
-              i_bikers[0]->getControler()->setChangeDir(true);
+              v_biker->getControler()->setChangeDir(true);
             }
           }
 
@@ -241,9 +253,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       
       /** Update axis */           
       int nRawPrim = SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisPrim1);
-      i_bikers[0]->getControler()->setDrive(-joyRawToFloat(nRawPrim, m_nJoyAxisPrimMin1, m_nJoyAxisPrimLL1, m_nJoyAxisPrimUL1, m_nJoyAxisPrimMax1));
+      v_biker->getControler()->setDrive(-joyRawToFloat(nRawPrim, m_nJoyAxisPrimMin1, m_nJoyAxisPrimLL1, m_nJoyAxisPrimUL1, m_nJoyAxisPrimMax1));
       int nRawSec = SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisSec1);
-      i_bikers[0]->getControler()->setPull(-joyRawToFloat(nRawSec, m_nJoyAxisSecMin1, m_nJoyAxisSecLL1, m_nJoyAxisSecUL1, m_nJoyAxisSecMax1));
+      v_biker->getControler()->setPull(-joyRawToFloat(nRawSec, m_nJoyAxisSecMin1, m_nJoyAxisSecLL1, m_nJoyAxisSecUL1, m_nJoyAxisSecMax1));
     }
   }
   
@@ -389,66 +401,83 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Handle an input event
   ===========================================================================*/  
-  void InputHandler::handleInput(InputEventType Type,int nKey,SDLMod mod,
-				 std::vector<Biker*>& i_bikers,
-				 std::vector<Camera*>& i_cameras) {
+  void InputHandler::handleInput(InputEventType Type,int nKey,SDLMod mod) {
+    unsigned int p, pW;
+    Biker *v_biker;
+
     /* Update controller 1 */
     /* Keyboard controlled */
     switch(Type) {
     case INPUT_KEY_DOWN:
-      for(unsigned int i=0; i<i_bikers.size(); i++) {
-	if(m_ControllerModeID[i] == CONTROLLER_MODE_KEYBOARD) {
-	  if(m_nDriveKey[i] == nKey) {
-	    /* Start driving */
-	    i_bikers[i]->getControler()->setThrottle(1.0f);
-	  } else if(m_nBrakeKey[i] == nKey) {
-	    /* Brake */
-	    i_bikers[i]->getControler()->setBreak(1.0f);
-	  } else if((m_nPullBackKey[i]    == nKey && m_mirrored == false) ||
-		    (m_nPushForwardKey[i] == nKey && m_mirrored)) {
-	    /* Pull back */
-	    i_bikers[i]->getControler()->setPull(1.0f);
-	  } else if((m_nPushForwardKey[i] == nKey && m_mirrored == false) ||
-		    (m_nPullBackKey[i]    == nKey && m_mirrored)) {
-	    /* Push forward */
-	    i_bikers[i]->getControler()->setPull(-1.0f);            
-	  }
-	  else if(m_nChangeDirKey[i] == nKey) {
-	    /* Change dir */
-	    if(m_changeDirKeyAlreadyPress[i] == false){
-	      i_bikers[i]->getControler()->setChangeDir(true);
-	      m_changeDirKeyAlreadyPress[i] = true;
+      p = 0; // player number p
+      pW = 0; // number of players in the previous worlds
+      for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
+	for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Players().size(); i++) {
+	  v_biker = GameApp::instance()->getScenes()[j]->Players()[i];
+
+	  if(m_ControllerModeID[p] == CONTROLLER_MODE_KEYBOARD) {
+	    if(m_nDriveKey[p] == nKey) {
+	      /* Start driving */
+	      v_biker->getControler()->setThrottle(1.0f);
+	    } else if(m_nBrakeKey[p] == nKey) {
+	      /* Brake */
+	      v_biker->getControler()->setBreak(1.0f);
+	    } else if((m_nPullBackKey[p]    == nKey && m_mirrored == false) ||
+		      (m_nPushForwardKey[p] == nKey && m_mirrored)) {
+	      /* Pull back */
+	      v_biker->getControler()->setPull(1.0f);
+	    } else if((m_nPushForwardKey[p] == nKey && m_mirrored == false) ||
+		      (m_nPullBackKey[p]    == nKey && m_mirrored)) {
+	      /* Push forward */
+	      v_biker->getControler()->setPull(-1.0f);            
+	    }
+	    else if(m_nChangeDirKey[p] == nKey) {
+	      /* Change dir */
+	      if(m_changeDirKeyAlreadyPress[p] == false){
+		v_biker->getControler()->setChangeDir(true);
+		m_changeDirKeyAlreadyPress[p] = true;
+	      }
 	    }
 	  }
+	  p++;
 	}
+	pW+= GameApp::instance()->getScenes()[j]->Players().size();
       }
 
       break;
     case INPUT_KEY_UP:
-      for(unsigned int i=0; i<i_bikers.size(); i++) {
-	if(m_ControllerModeID[i] == CONTROLLER_MODE_KEYBOARD) {
-	  if(m_nDriveKey[i] == nKey) {
-	    /* Stop driving */
-	    i_bikers[i]->getControler()->setThrottle(0.0f);
+      p = 0; // player number p
+      pW = 0; // number of players in the previous worlds
+      for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
+	for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Players().size(); i++) {
+	  v_biker = GameApp::instance()->getScenes()[j]->Players()[i];
+
+	  if(m_ControllerModeID[p] == CONTROLLER_MODE_KEYBOARD) {
+	    if(m_nDriveKey[p] == nKey) {
+	      /* Stop driving */
+	      v_biker->getControler()->setThrottle(0.0f);
+	    }
+	    else if(m_nBrakeKey[p] == nKey) {
+	      /* Don't brake */
+	      v_biker->getControler()->setBreak(0.0f);
+	    }
+	    else if((m_nPullBackKey[p]    == nKey && m_mirrored == false) ||
+		    (m_nPushForwardKey[p] == nKey && m_mirrored)) {
+	      /* Pull back */
+	      v_biker->getControler()->setPull(0.0f);
+	    }
+	    else if((m_nPushForwardKey[p] == nKey && m_mirrored == false) ||
+		    (m_nPullBackKey[p]    == nKey && m_mirrored)) {
+	      /* Push forward */
+	      v_biker->getControler()->setPull(0.0f);            
+	    }
+	    else if(m_nChangeDirKey[p] == nKey) {
+	      m_changeDirKeyAlreadyPress[p] = false;
+	    }
 	  }
-	  else if(m_nBrakeKey[i] == nKey) {
-	    /* Don't brake */
-	    i_bikers[i]->getControler()->setBreak(0.0f);
-	  }
-	  else if((m_nPullBackKey[i]    == nKey && m_mirrored == false) ||
-		  (m_nPushForwardKey[i] == nKey && m_mirrored)) {
-	    /* Pull back */
-	    i_bikers[i]->getControler()->setPull(0.0f);
-	  }
-	  else if((m_nPushForwardKey[i] == nKey && m_mirrored == false) ||
-		  (m_nPullBackKey[i]    == nKey && m_mirrored)) {
-	    /* Push forward */
-	    i_bikers[i]->getControler()->setPull(0.0f);            
-	  }
-	  else if(m_nChangeDirKey[i] == nKey) {
-	    m_changeDirKeyAlreadyPress[i] = false;
-	  }
+	  p++;
 	}
+	pW+= GameApp::instance()->getScenes()[j]->Players().size();
       }
       break;
     }
