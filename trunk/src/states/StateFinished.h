@@ -27,10 +27,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class UIRoot;
 class UIBestTimes;
 class xmDatabase;
+class Universe;
 
 class StateFinished : public StateMenu {
   public:
-  StateFinished(StateMenuContextReceiver* i_receiver = NULL,
+  StateFinished(Universe* i_universe,
+		StateMenuContextReceiver* i_receiver = NULL,
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false
 		);
@@ -50,6 +52,7 @@ class StateFinished : public StateMenu {
   
  protected:
   virtual void checkEvents();
+  Universe* m_universe;
 
   private:
   void makeBestTimesWindow(UIBestTimes* pWindow,

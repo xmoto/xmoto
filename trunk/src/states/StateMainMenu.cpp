@@ -46,6 +46,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateEditWebConfig.h"
 #include "Sound.h"
 #include "thread/CheckWwwThread.h"
+#include "Replay.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;

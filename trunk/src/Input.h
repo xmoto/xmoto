@@ -102,9 +102,9 @@ public:
   void setMirrored(bool i_value);
 
   void loadConfig(UserConfig *pConfig);
-  void handleInput(InputEventType Type,int nKey,SDLMod mod);      
+  void handleInput(Universe* i_universe, InputEventType Type,int nKey,SDLMod mod);      
   std::string waitForKey(void);
-  void updateInput();
+  void updateUniverseInput(Universe* i_universe);
   void init(UserConfig *pConfig);
   void uninit(void);
       

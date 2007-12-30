@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateDeadJust : public StateScene {
   public:
-  StateDeadJust();
+  StateDeadJust(Universe* i_universe);
   virtual ~StateDeadJust();
   
   virtual void enter();

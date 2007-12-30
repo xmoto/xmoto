@@ -23,9 +23,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeParameters.h"
 #include "BikeAnchors.h"
 #include "PhysSettings.h"
-#include "../Collision.h"
+#include "Collision.h"
 #include "Zone.h"
-#include "../Game.h"
+#include "Game.h"
+#include "Replay.h"
 
 /* This is the magic depth factor :)  - tweak to obtain max. stability */
 #define DEPTH_FACTOR    2

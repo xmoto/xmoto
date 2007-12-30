@@ -44,17 +44,6 @@ class UILevelList;
 class SoundSample;
 class XMotoLoadReplaysInterface;
 
-class XMMotoGameHooks : public MotoGameHooks {
-public:
-  XMMotoGameHooks();
-  virtual ~XMMotoGameHooks();
-  void setGameApps(MotoGame *i_MotoGame);
-  void OnTakeEntity();
-
-private:
-  MotoGame *m_MotoGame;
-};
-
 /*===========================================================================
   Game application
   ===========================================================================*/
@@ -85,14 +74,7 @@ public:
   void mouseDoubleClick(int nButton);
   void mouseUp(int nButton);
 
-  /* Methods */
-  std::vector<MotoGame*>& getScenes();
-
   void reloadTheme();
-
-  void TeleportationCheatTo(int i_player, Vector2f i_position);
-
-  void initCameras(int nbPlayer);
 
   void setSpecificReplay(const std::string& i_replay);
   void setSpecificLevelId(const std::string& i_levelID);
@@ -129,12 +111,6 @@ public:
 
   // to call while playing
   void playMusic(const std::string& i_music); // "" => no music
-  bool isAReplayToSave() const;
-  Replay* getCurrentReplay();
-  void initReplay();
-  void isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room);
-  void saveReplay(const std::string &Name);
-  void switchFollowCamera();
 
   // ask the game to close as soon as possible
   void requestEnd();
@@ -143,9 +119,6 @@ public:
   TColor getUglyColorFromPlayerNumber(int i_player);
 
   bool getHighscoreInfos(const std::string& i_id_level, std::string* io_id_profile, std::string* io_url, bool* o_isAccessible);
-
-  /* call to close the replay */
-  void finalizeReplay(bool i_finished);
 
   static std::string splitText(const std::string &str, int p_breakLineLength);
   void addLevelToFavorite(const std::string& i_levelId);
@@ -173,20 +146,13 @@ public:
 
   void addReplay(const std::string& i_file, xmDatabase* threadDb = NULL);
 
-  void removeAllWorlds();
-
 protected:
   void createDefaultConfig();
 
 private:   
   ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
-  std::vector<MotoGame*> m_scenes; /* Game objects */
-  XMMotoGameHooks m_MotoGameHooks;
-       
-  std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
 
-      
-  Replay *m_pJustPlayReplay;
+  std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
 
   /* WWW */
   WebRoom *m_pWebHighscores;

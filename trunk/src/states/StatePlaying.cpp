@@ -32,9 +32,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Camera.h"
 #include "xmscene/Bike.h"
 #include "CameraAnimation.h"
+#include "Universe.h"
 
-StatePlaying::StatePlaying():
-  StateScene()
+StatePlaying::StatePlaying(Universe* i_universe):
+  StateScene(i_universe)
 {
   m_name  = "StatePlaying";
 }
@@ -53,9 +54,11 @@ void StatePlaying::enter()
 
   std::string v_level_name;
   try {
-    for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-      v_level_name = GameApp::instance()->getScenes()[i]->getLevelSrc()->Name();
-      GameApp::instance()->getScenes()[i]->playLevel();
+    if(m_universe != NULL) {
+      for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	v_level_name = m_universe->getScenes()[i]->getLevelSrc()->Name();
+	m_universe->getScenes()[i]->playLevel();
+      }
     }
   }
   catch(Exception &e) {
@@ -71,16 +74,20 @@ void StatePlaying::enter()
 
   setScoresTimes();
 
-  if(GameApp::instance()->getScenes().size() > 0) {
-    // play music of the first world
-    GameApp::instance()->playMusic(GameApp::instance()->getScenes()[0]->getLevelSrc()->Music());
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      // play music of the first world
+      GameApp::instance()->playMusic(m_universe->getScenes()[0]->getLevelSrc()->Music());
+    }
   }
 }
 
 void StatePlaying::leave()
 {
-  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-    GameApp::instance()->getScenes()[i]->setInfos("");
+  if(m_universe != NULL) {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      m_universe->getScenes()[i]->setInfos("");
+    }
   }
 }
 
@@ -101,18 +108,20 @@ bool StatePlaying::update()
     bool v_one_still_play = false;
     bool v_one_finished   = false;
     
-    for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-      for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Players().size(); i++) {
-	if(GameApp::instance()->getScenes()[j]->Players()[i]->isDead() == false) {
-	  v_all_dead = false;
-	}
-	if(GameApp::instance()->getScenes()[j]->Players()[i]->isFinished()) {
-	  v_one_finished = true;
-	}
-	
-	if(GameApp::instance()->getScenes()[j]->Players()[i]->isFinished() == false &&
-	   GameApp::instance()->getScenes()[j]->Players()[i]->isDead() == false) {
-	  v_one_still_play = true;
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Players().size(); i++) {
+	  if(m_universe->getScenes()[j]->Players()[i]->isDead() == false) {
+	    v_all_dead = false;
+	  }
+	  if(m_universe->getScenes()[j]->Players()[i]->isFinished()) {
+	    v_one_finished = true;
+	  }
+	  
+	  if(m_universe->getScenes()[j]->Players()[i]->isFinished() == false &&
+	     m_universe->getScenes()[j]->Players()[i]->isDead() == false) {
+	    v_one_still_play = true;
+	  }
 	}
       }
     }
@@ -122,48 +131,58 @@ bool StatePlaying::update()
 	/* You're done maaaan! :D */
 
 	/* finalize the replay */
-	if(pGame->isAReplayToSave()) {
-	  pGame->finalizeReplay(true);
+	if(m_universe != NULL) {
+	  if(m_universe->isAReplayToSave()) {
+	    m_universe->finalizeReplay(true);
+	  }
 	}
 
 	/* update profiles */
-	if(GameApp::instance()->getScenes().size() == 1) {
-	  if(GameApp::instance()->getScenes()[0]->Players().size() == 1) {
-	    float v_finish_time = 0.0;
-	    std::string TimeStamp = pGame->getTimeStamp();
-	    if(GameApp::instance()->getScenes()[0]->Players()[0]->isFinished()) {
-	      v_finish_time  = GameApp::instance()->getScenes()[0]->Players()[0]->finishTime();
+	if(m_universe != NULL) {
+	  if(m_universe->getScenes().size() == 1) {
+	    if(m_universe->getScenes()[0]->Players().size() == 1) {
+	      float v_finish_time = 0.0;
+	      std::string TimeStamp = pGame->getTimeStamp();
+	      if(m_universe->getScenes()[0]->Players()[0]->isFinished()) {
+		v_finish_time  = m_universe->getScenes()[0]->Players()[0]->finishTime();
+	      }
+	      xmDatabase::instance("main")->profiles_addFinishTime(XMSession::instance()->profile(),
+								   m_universe->getScenes()[0]->getLevelSrc()->Id(),
+								   TimeStamp,
+								   v_finish_time);
 	    }
-	    xmDatabase::instance("main")->profiles_addFinishTime(XMSession::instance()->profile(),
-								 GameApp::instance()->getScenes()[0]->getLevelSrc()->Id(),
-								 TimeStamp,
-								 v_finish_time);
 	  }
-	}
+	}	  
 
 	/* Update stats */
 	/* update stats only in one player mode */
-	if(GameApp::instance()->getScenes().size() == 1) {
-	  if(GameApp::instance()->getScenes()[0]->Players().size() == 1) {
-	    xmDatabase::instance("main")->stats_levelCompleted(XMSession::instance()->profile(),
-							       GameApp::instance()->getScenes()[0]->getLevelSrc()->Id(),
-							       GameApp::instance()->getScenes()[0]->Players()[0]->finishTime());
-	    StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
+	if(m_universe != NULL) {
+	  if(m_universe->getScenes().size() == 1) {
+	    if(m_universe->getScenes()[0]->Players().size() == 1) {
+	      xmDatabase::instance("main")->stats_levelCompleted(XMSession::instance()->profile(),
+								 m_universe->getScenes()[0]->getLevelSrc()->Id(),
+								 m_universe->getScenes()[0]->Players()[0]->finishTime());
+	      StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
+	    }
 	  }
 	}
-	StateManager::instance()->pushState(new StateFinished(this));
+	StateManager::instance()->pushState(new StateFinished(m_universe, this));
       } else if(v_all_dead) {
 	/* You're dead maan! */
-	if(pGame->isAReplayToSave()) {
-	  pGame->finalizeReplay(false);
+	if(m_universe != NULL) {	
+	  if(m_universe->isAReplayToSave()) {
+	    m_universe->finalizeReplay(false);
+	  }
 	}
 
 	/* Update stats */
-	if(GameApp::instance()->getScenes().size() == 1) {
-	  if(GameApp::instance()->getScenes()[0]->Players().size() == 1) {
-	    xmDatabase::instance("main")->stats_died(XMSession::instance()->profile(),
-						     GameApp::instance()->getScenes()[0]->getLevelSrc()->Id(),
-						     GameApp::instance()->getScenes()[0]->getTime());
+	if(m_universe != NULL) {
+	  if(m_universe->getScenes().size() == 1) {
+	    if(m_universe->getScenes()[0]->Players().size() == 1) {
+	      xmDatabase::instance("main")->stats_died(XMSession::instance()->profile(),
+						       m_universe->getScenes()[0]->getLevelSrc()->Id(),
+						       m_universe->getScenes()[0]->getTime());
+	    }
 	  }
 	}
 
@@ -174,9 +193,9 @@ bool StatePlaying::update()
 	}
 
 	if(XMSession::instance()->enableDeadAnimation()) {
-	  StateManager::instance()->replaceState(new StateDeadJust());
+	  StateManager::instance()->replaceState(new StateDeadJust(m_universe));
 	} else {
-	  StateManager::instance()->pushState(new StateDeadMenu(true, this));
+	  StateManager::instance()->pushState(new StateDeadMenu(m_universe, true, this));
 	}
       }
     }
@@ -190,7 +209,7 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
   if(nKey == SDLK_ESCAPE){
     if(isLockedScene() == false) {
       /* Escape pauses */
-      StateManager::instance()->pushState(new StatePause(this));
+      StateManager::instance()->pushState(new StatePause(m_universe, this));
     }
   }
   else if(nKey == SDLK_RETURN && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0){
@@ -205,61 +224,77 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
 #if defined(ENABLE_ZOOMING)
   else if(nKey == SDLK_KP7){
     /* Zoom in */
-    for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-      for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Cameras().size(); i++) {
-	GameApp::instance()->getScenes()[j]->Cameras()[i]->zoom(0.002);
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->zoom(0.002);
+	}
       }
     }
   }
   else if(nKey == SDLK_KP9){
     /* Zoom out */
-    for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-      for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Cameras().size(); i++) {
-	GameApp::instance()->getScenes()[j]->Cameras()[i]->zoom(-0.002);
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->zoom(-0.002);
+	}
       }
     }
   }
   else if(nKey == SDLK_HOME){
-    for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-      for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Cameras().size(); i++) {
-	GameApp::instance()->getScenes()[j]->Cameras()[i]->initCamera();
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->initCamera();
+	}
       }
     }
   }
   else if(nKey == SDLK_KP6){
-    for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-      for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Cameras().size(); i++) {
-	GameApp::instance()->getScenes()[j]->Cameras()[i]->moveCamera(1.0, 0.0);
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->moveCamera(1.0, 0.0);
+	}
       }
     }
   }
   else if(nKey == SDLK_KP4){
-    for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-      for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Cameras().size(); i++) {
-	GameApp::instance()->getScenes()[j]->Cameras()[i]->moveCamera(-1.0, 0.0);
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->moveCamera(-1.0, 0.0);
+	}
       }
     }
   }
   else if(nKey == SDLK_KP8){
-    for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-      for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Cameras().size(); i++) {
-	GameApp::instance()->getScenes()[j]->Cameras()[i]->moveCamera(0.0, 1.0);
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->moveCamera(0.0, 1.0);
+	}
       }
     }
   }
   else if(nKey == SDLK_KP2){
-    for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-      for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Cameras().size(); i++) {
-	GameApp::instance()->getScenes()[j]->Cameras()[i]->moveCamera(0.0, -1.0);
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->moveCamera(0.0, -1.0);
+	}
       }
     }
   }
   else if(nKey == SDLK_KP0 && (mod & KMOD_LCTRL) == KMOD_LCTRL){
-    for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-      for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Players().size(); i++) {
-	if(GameApp::instance()->getScenes()[j]->Cameras().size() > 0) {
-	  GameApp::instance()->TeleportationCheatTo(i, Vector2f(GameApp::instance()->getScenes()[j]->Cameras()[0]->getCameraPositionX(),
-								GameApp::instance()->getScenes()[j]->Cameras()[0]->getCameraPositionY()));
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Players().size(); i++) {
+	  if(m_universe->getScenes()[j]->Cameras().size() > 0) {
+	    m_universe->TeleportationCheatTo(i, Vector2f(m_universe->getScenes()[j]->Cameras()[0]->getCameraPositionX(),
+							 m_universe->getScenes()[j]->Cameras()[0]->getCameraPositionY()));
+	  }
 	}
       }
     }
@@ -270,7 +305,7 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
     // to avoid people changing direction during the autozoom
     if(m_autoZoom == false){
       /* Notify the controller */
-      InputHandler::instance()->handleInput(INPUT_KEY_DOWN, nKey, mod);
+      InputHandler::instance()->handleInput(m_universe, INPUT_KEY_DOWN, nKey, mod);
     }
   }
 
@@ -290,21 +325,21 @@ void StatePlaying::keyUp(int nKey, SDLMod mod)
     break;
     
   default:
-    InputHandler::instance()->handleInput(INPUT_KEY_UP, nKey, mod);
+    InputHandler::instance()->handleInput(m_universe, INPUT_KEY_UP, nKey, mod);
     StateScene::keyUp(nKey, mod);
   }
 }
 
 void StatePlaying::mouseDown(int nButton)
 {
-  InputHandler::instance()->handleInput(INPUT_KEY_DOWN, nButton, KMOD_NONE);
+  InputHandler::instance()->handleInput(m_universe, INPUT_KEY_DOWN, nButton, KMOD_NONE);
 
   StateScene::mouseDown(nButton);
 }
 
 void StatePlaying::mouseUp(int nButton)
 {
-  InputHandler::instance()->handleInput(INPUT_KEY_UP, nButton, KMOD_NONE);
+  InputHandler::instance()->handleInput(m_universe, INPUT_KEY_UP, nButton, KMOD_NONE);
 
   StateScene::mouseUp(nButton);
 }

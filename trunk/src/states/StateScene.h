@@ -24,10 +24,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateManager.h"
 
 class CameraAnimation;
+class Universe;
 
 class StateScene : public GameState {
  public:
  StateScene(bool i_doShade = false, bool i_doShadeAnim = false);
+ StateScene(Universe* i_universe, bool i_doShade = false, bool i_doShadeAnim = false); // for state which doesn't create the universe
  virtual ~StateScene();
  
  virtual void enter();
@@ -62,6 +64,8 @@ class StateScene : public GameState {
 
  /* animation */
  CameraAnimation* m_cameraAnim;
+
+ Universe* m_universe;
 };
 
 #endif

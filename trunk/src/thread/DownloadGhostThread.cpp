@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateManager.h"
 #include "states/StateDownloadGhost.h"
 #include "helpers/Log.h"
+#include "VFileIO.h"
 
 DownloadGhostThread::DownloadGhostThread(GameState* pCallingState,
 					 std::string levelId)
@@ -86,7 +87,6 @@ int DownloadGhostThread::realThreadFunction()
 
     m_pWebRoom->downloadReplay(v_fileUrl);
     GameApp::instance()->addReplay(v_replayName);
-    StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
       
     setThreadProgress(100);
 

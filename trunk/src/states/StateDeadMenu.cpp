@@ -24,11 +24,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "StateMessageBox.h"
 #include "StateMenuContextReceiver.h"
+#include "Universe.h"
+#include "Replay.h"
 
 /* static members */
 UIRoot*  StateDeadMenu::m_sGUI = NULL;
 
-StateDeadMenu::StateDeadMenu(bool i_doShadeAnim,
+StateDeadMenu::StateDeadMenu(Universe* i_universe,
+			     bool i_doShadeAnim,
 			     StateMenuContextReceiver* i_receiver,
 			     bool drawStateBehind,
 			     bool updateStatesBehind):
@@ -39,6 +42,7 @@ StateDeadMenu::StateDeadMenu(bool i_doShadeAnim,
 	    i_doShadeAnim)
 {
   m_name    = "StateDeadMenu";
+  m_universe = i_universe;
 }
 
 StateDeadMenu::~StateDeadMenu()
@@ -50,12 +54,16 @@ void StateDeadMenu::enter()
   GameApp* gameApp = GameApp::instance();
   std::string v_id_level;
 
-  if(GameApp::instance()->getScenes().size() > 0) {
-    v_id_level = GameApp::instance()->getScenes()[0]->getLevelSrc()->Id();
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      v_id_level = m_universe->getScenes()[0]->getLevelSrc()->Id();
+    }
   }
 
-  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-    GameApp::instance()->getScenes()[i]->setInfos(GameApp::instance()->getScenes()[i]->getLevelSrc()->Name());
+  if(m_universe != NULL) {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name());
+    }
   }
   
   createGUIIfNeeded();
@@ -64,16 +72,20 @@ void StateDeadMenu::enter()
   UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:PLAYNEXT_BUTTON"));
   playNextButton->enableWindow(gameApp->isThereANextLevel(v_id_level));
 
-  UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:SAVEREPLAY_BUTTON"));
-  saveReplayButton->enableWindow(gameApp->isAReplayToSave());
+  if(m_universe != NULL) {
+    UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:SAVEREPLAY_BUTTON"));
+    saveReplayButton->enableWindow(m_universe->isAReplayToSave());
+  }
 
   StateMenu::enter();
 }
 
 void StateDeadMenu::leave()
 {
-  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-    GameApp::instance()->getScenes()[i]->setInfos("");
+  if(m_universe != NULL) {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      m_universe->getScenes()[i]->setInfos("");
+    }
   }
 }
 
@@ -144,7 +156,9 @@ void StateDeadMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
     }
   } else if(i_id == "SAVEREPLAY") {
     if(i_button == UI_MSGBOX_OK) {
-      GameApp::instance()->saveReplay(i_input);
+      if(m_universe != NULL) {
+	m_universe->saveReplay(i_input);
+      }
     }
   }
 }

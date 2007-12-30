@@ -42,6 +42,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SysMessage.h"
 #include "gui/specific/GUIXMoto.h"
 #include "Credits.h"
+#include "Replay.h"
 
 #include "states/StateManager.h"
 #include "states/StateEditProfile.h"
@@ -474,10 +475,6 @@ void GameApp::run_unload() {
     GameRenderer::instance()->shutdown();
     InputHandler::instance()->uninit();
   }
-
-  if(m_pJustPlayReplay != NULL) {
-    delete m_pJustPlayReplay;
-  }    
 
   StateManager::destroy();
   

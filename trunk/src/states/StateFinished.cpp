@@ -27,11 +27,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "StateUploadHighscore.h"
 #include "StateMenuContextReceiver.h"
+#include "Universe.h"
+#include "Replay.h"
 
 /* static members */
 UIRoot* StateFinished::m_sGUI = NULL;
 
-StateFinished::StateFinished(StateMenuContextReceiver* i_receiver,
+StateFinished::StateFinished(Universe* i_universe,
+			     StateMenuContextReceiver* i_receiver,
 			     bool drawStateBehind,
 			     bool updateStatesBehind
 			     ) :
@@ -41,6 +44,7 @@ StateFinished::StateFinished(StateMenuContextReceiver* i_receiver,
 	    true)
 {
   m_name    = "StateFinished";
+  m_universe = i_universe;
 }
 
 StateFinished::~StateFinished()
@@ -51,17 +55,21 @@ void StateFinished::enter()
 {
   float v_finish_time = 0.0;
   std::string TimeStamp;
-  bool v_is_a_room_highscore;
-  bool v_is_a_personnal_highscore;
+  bool v_is_a_room_highscore = false;
+  bool v_is_a_personnal_highscore = false;
   GameApp*  pGame = GameApp::instance();
   std::string v_id_level;
 
-  if(GameApp::instance()->getScenes().size() > 0) {
-    v_id_level = GameApp::instance()->getScenes()[0]->getLevelSrc()->Id();
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      v_id_level = m_universe->getScenes()[0]->getLevelSrc()->Id();
+    }
   }
 
-  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-    GameApp::instance()->getScenes()[i]->setInfos(GameApp::instance()->getScenes()[i]->getLevelSrc()->Name());
+  if(m_universe != NULL) {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name());
+    }
   }
 
   createGUIIfNeeded();
@@ -71,8 +79,10 @@ void StateFinished::enter()
   UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:PLAYNEXT_BUTTON"));
   playNextButton->enableWindow(pGame->isThereANextLevel(v_id_level));
 
-  UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:SAVEREPLAY_BUTTON"));
-  saveReplayButton->enableWindow(pGame->isAReplayToSave());
+  if(m_universe != NULL) {
+    UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:SAVEREPLAY_BUTTON"));
+    saveReplayButton->enableWindow(m_universe->isAReplayToSave());
+  }
 
   UIButton* v_uploadButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:UPLOAD_BUTTON"));
   v_uploadButton->enableWindow(false);
@@ -83,28 +93,32 @@ void StateFinished::enter()
   UIStatic* v_pNewHighscoreSaved_str = reinterpret_cast<UIStatic *>(m_GUI->getChild("HIGHSCORESAVEDSTR_STATIC"));
   v_pNewHighscoreSaved_str->setCaption("");
 
-  pGame->isTheCurrentPlayAHighscore(v_is_a_personnal_highscore, v_is_a_room_highscore);
+  if(m_universe != NULL) {
+    m_universe->isTheCurrentPlayAHighscore(v_is_a_personnal_highscore, v_is_a_room_highscore);
+  }
 
   /* replay */
-  if(pGame->isAReplayToSave()) {
+  if(m_universe != NULL) {
+    if(m_universe->isAReplayToSave()) {
 
-    /* upload button */
-    if(v_is_a_room_highscore) {
-      /* active upload button */
-      if(XMSession::instance()->www()) {
-	v_uploadButton->enableWindow(v_is_a_room_highscore);
+      /* upload button */
+      if(v_is_a_room_highscore) {
+	/* active upload button */
+	if(XMSession::instance()->www()) {
+	  v_uploadButton->enableWindow(v_is_a_room_highscore);
+	}
       }
-    }
-
-    /* autosave */
-    if(v_is_a_room_highscore || v_is_a_personnal_highscore) {
-      if(XMSession::instance()->autosaveHighscoreReplays()) {
-	std::string v_replayName;
-	char v_str[256];
-	v_replayName = Replay::giveAutomaticName();
-	pGame->saveReplay(v_replayName);
-	snprintf(v_str, 256, GAMETEXT_SAVE_AS, v_replayName.c_str());
-	v_pNewHighscoreSaved_str->setCaption(v_str);
+      
+      /* autosave */
+      if(v_is_a_room_highscore || v_is_a_personnal_highscore) {
+	if(XMSession::instance()->autosaveHighscoreReplays()) {
+	  std::string v_replayName;
+	  char v_str[256];
+	  v_replayName = Replay::giveAutomaticName();
+	  m_universe->saveReplay(v_replayName);
+	  snprintf(v_str, 256, GAMETEXT_SAVE_AS, v_replayName.c_str());
+	  v_pNewHighscoreSaved_str->setCaption(v_str);
+	}
       }
     }
   }
@@ -139,8 +153,11 @@ void StateFinished::enter()
 void StateFinished::leave()
 {
   StateMenu::leave();
-  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-    GameApp::instance()->getScenes()[i]->setInfos("");
+
+  if(m_universe != NULL) {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      m_universe->getScenes()[i]->setInfos("");
+    }
   }
 }
 
@@ -219,7 +236,9 @@ void StateFinished::send(const std::string& i_id, UIMsgBoxButton i_button, const
     }
   } else if(i_id == "SAVEREPLAY") {
     if(i_button == UI_MSGBOX_OK) {
-      GameApp::instance()->saveReplay(i_input);
+      if(m_universe != NULL) {
+	m_universe->saveReplay(i_input);
+      }
     }
   }
 }

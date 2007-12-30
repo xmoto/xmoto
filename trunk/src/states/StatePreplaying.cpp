@@ -30,6 +30,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateDownloadGhost.h"
 #include "drawlib/DrawLib.h"
 #include "CameraAnimation.h"
+#include "Universe.h"
+#include "VFileIO.h"
 
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 1.0
 
@@ -68,60 +70,62 @@ void StatePreplaying::enter()
   GameRenderer::instance()->setShowTimePanel(false);
   GameRenderer::instance()->hideReplayHelp();
 
-  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-    GameApp::instance()->getScenes()[i]->setDeathAnim(XMSession::instance()->enableDeadAnimation());
-    GameApp::instance()->getScenes()[i]->setShowGhostTimeDiff(XMSession::instance()->showGhostTimeDifference());
+  m_universe =  new Universe();
+  m_universe->addScene();
+
+  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+    m_universe->getScenes()[i]->setDeathAnim(XMSession::instance()->enableDeadAnimation());
+    m_universe->getScenes()[i]->setShowGhostTimeDiff(XMSession::instance()->showGhostTimeDifference());
   }
 
   try {
-    for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-      GameApp::instance()->getScenes()[i]->loadLevel(xmDatabase::instance("main"), m_idlevel);
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      m_universe->getScenes()[i]->loadLevel(xmDatabase::instance("main"), m_idlevel);
     }
   } catch(Exception &e) {
     Logger::Log("** Warning ** : level '%s' cannot be loaded", m_idlevel.c_str());
     char cBuf[256];
     sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED, m_idlevel.c_str());
+    delete m_universe;
     StateManager::instance()->replaceState(new StateMessageBox(NULL, cBuf, UI_MSGBOX_OK));
     return;
   }
 
-  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-    if(GameApp::instance()->getScenes()[i]->getLevelSrc()->isXMotoTooOld()) {
+  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+    if(m_universe->getScenes()[i]->getLevelSrc()->isXMotoTooOld()) {
       Logger::Log("** Warning ** : level '%s' requires newer X-Moto",
-		  GameApp::instance()->getScenes()[i]->getLevelSrc()->Name().c_str());
+		  m_universe->getScenes()[i]->getLevelSrc()->Name().c_str());
       
       char cBuf[256];
       sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
-	      GameApp::instance()->getScenes()[i]->getLevelSrc()->getRequiredVersion().c_str());
-
-      for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-	GameApp::instance()->getScenes()[j]->endLevel();
-      }
+	      m_universe->getScenes()[i]->getLevelSrc()->getRequiredVersion().c_str());
+      
+      delete m_universe;
       StateManager::instance()->replaceState(new StateMessageBox(NULL, cBuf, UI_MSGBOX_OK));
       return;
     }
   }
 
-  /* Start playing right away */     
-  pGame->initReplay();
-      
+  /* Start playing right away */
+  m_universe->initReplay();
+
   try {
-    for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-      GameApp::instance()->getScenes()[i]->prePlayLevel(pGame->getCurrentReplay(), true);
-      GameApp::instance()->getScenes()[i]->setInfos("");
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      m_universe->getScenes()[i]->prePlayLevel(m_universe->getCurrentReplay(), true);
+      m_universe->getScenes()[i]->setInfos("");
     }
 	
     /* add the players */
     unsigned int v_nbPlayer = XMSession::instance()->multiNbPlayers();
     Logger::Log("Preplay level for %i player(s)", v_nbPlayer);
 
-    pGame->initCameras(v_nbPlayer);
-   
+    m_universe->initCameras(v_nbPlayer);
+
     if(true) { // monoworld
-      MotoGame* v_world = GameApp::instance()->getScenes()[0];
+      MotoGame* v_world = m_universe->getScenes()[0];
 
       for(unsigned int i=0; i<v_nbPlayer; i++) {
-	v_world = GameApp::instance()->getScenes()[0];
+	v_world = m_universe->getScenes()[0];
 	v_world->setCurrentCamera(i);
 	v_world->getCamera()->setPlayerToFollow(v_world->addPlayerBiker(v_world->getLevelSrc()->PlayerStart(),
 									DD_RIGHT,
@@ -135,39 +139,37 @@ void StatePreplaying::enter()
 
     // if there's more camera than player (ex: 3 players and 4 cameras),
     // then, make the remaining cameras follow the first player
-    if(GameApp::instance()->getScenes().size() == 1) {
-      if(v_nbPlayer < GameApp::instance()->getScenes()[0]->getNumberCameras()){
-	for(unsigned int i=v_nbPlayer; i<GameApp::instance()->getScenes()[0]->getNumberCameras(); i++){
-	  GameApp::instance()->getScenes()[0]->setCurrentCamera(i);
-	  GameApp::instance()->getScenes()[0]->getCamera()->setPlayerToFollow(GameApp::instance()->getScenes()[0]->Players()[0]);
-	  GameApp::instance()->getScenes()[0]->getCamera()->setScroll(false, GameApp::instance()->getScenes()[0]->getGravity());
+    if(m_universe->getScenes().size() == 1) {
+      if(v_nbPlayer < m_universe->getScenes()[0]->getNumberCameras()){
+	for(unsigned int i=v_nbPlayer; i<m_universe->getScenes()[0]->getNumberCameras(); i++){
+	  m_universe->getScenes()[0]->setCurrentCamera(i);
+	  m_universe->getScenes()[0]->getCamera()->setPlayerToFollow(m_universe->getScenes()[0]->Players()[0]);
+	  m_universe->getScenes()[0]->getCamera()->setScroll(false, m_universe->getScenes()[0]->getGravity());
 	}
       }
     }
 
-      for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-	if(GameApp::instance()->getScenes()[i]->getNumberCameras() > 1){
-	  // make the zoom camera follow the first player
-	  GameApp::instance()->getScenes()[i]->setAutoZoomCamera();
-	  GameApp::instance()->getScenes()[i]->getCamera()->setPlayerToFollow(GameApp::instance()->getScenes()[i]->Players()[0]);
-	  GameApp::instance()->getScenes()[i]->getCamera()->setScroll(false, GameApp::instance()->getScenes()[i]->getGravity());
-	}
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      if(m_universe->getScenes()[i]->getNumberCameras() > 1){
+	// make the zoom camera follow the first player
+	m_universe->getScenes()[i]->setAutoZoomCamera();
+	m_universe->getScenes()[i]->getCamera()->setPlayerToFollow(m_universe->getScenes()[i]->Players()[0]);
+	m_universe->getScenes()[i]->getCamera()->setScroll(false, m_universe->getScenes()[i]->getGravity());
       }
+    }
 
     // reset handler, set mirror mode
     InputHandler::instance()->reset();
-    for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-      for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Cameras().size(); i++) {
-	GameApp::instance()->getScenes()[j]->Cameras()[i]->setMirrored(XMSession::instance()->mirrorMode());
+    for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+      for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	m_universe->getScenes()[j]->Cameras()[i]->setMirrored(XMSession::instance()->mirrorMode());
       }
     }
     InputHandler::instance()->setMirrored(XMSession::instance()->mirrorMode());
 
   } catch(Exception &e) {
     Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
-    for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-      GameApp::instance()->getScenes()[i]->endLevel();
-    }
+    delete m_universe;
     StateManager::instance()->replaceState(new StateMessageBox(NULL, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     return;
   }
@@ -182,9 +184,9 @@ void StatePreplaying::enter()
   if(m_playAnimation) {
     pGame->playMusic("");
   } else {
-    if(GameApp::instance()->getScenes().size() > 0) {
+    if(m_universe->getScenes().size() > 0) {
       // play music of the first world
-      GameApp::instance()->playMusic(GameApp::instance()->getScenes()[0]->getLevelSrc()->Music());
+      GameApp::instance()->playMusic(m_universe->getScenes()[0]->getLevelSrc()->Music());
     }
   }
 }
@@ -225,16 +227,22 @@ bool StatePreplaying::update()
   }
 
   if(shouldBeAnimated()) {
-    if(m_cameraAnim->step() == false) {
-      m_playAnimation = false;
+    if(m_cameraAnim != NULL) {
+      if(m_cameraAnim->step() == false) {
+	m_playAnimation = false;
+      }
     }
   } else { /* animation has been rupted */
     m_playAnimation = false; // disable anim
-    m_cameraAnim->uninit();
-    StateManager::instance()->replaceState(new StatePlaying());
+    if(m_cameraAnim != NULL) {
+      m_cameraAnim->uninit();
+    }
+    StateManager::instance()->replaceState(new StatePlaying(m_universe));
   }
-  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-    GameApp::instance()->getScenes()[i]->updateGameMessages();
+  if(m_universe != NULL) {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      m_universe->getScenes()[i]->updateGameMessages();
+    }
   }
 
   return true;
@@ -269,8 +277,10 @@ void StatePreplaying::secondInitPhase()
     /* add the ghosts */
     if(XMSession::instance()->enableGhosts()) {
       try {
-	for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-	  pGame->addGhosts(GameApp::instance()->getScenes()[i], Theme::instance());
+	if(m_universe != NULL) {
+	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	    pGame->addGhosts(m_universe->getScenes()[i], Theme::instance());
+	  }
 	}
       } catch(Exception &e) {
 	/* anyway */
@@ -278,33 +288,35 @@ void StatePreplaying::secondInitPhase()
     }
   } catch(Exception &e) {
     Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
-    for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-      GameApp::instance()->getScenes()[i]->endLevel();
-    }
+    closePlaying();
     StateManager::instance()->replaceState(new StateMessageBox(NULL, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     return;
   }
 
   /* Prepare level */
-  GameRenderer::instance()->prepareForNewLevel();
+  GameRenderer::instance()->prepareForNewLevel(m_universe);
 
   /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
   // animation
   if(m_cameraAnim != NULL) {
     delete m_cameraAnim;
   }
-  if(GameApp::instance()->getScenes().size() > 0) {
-    GameApp::instance()->getScenes()[0]->setAutoZoomCamera();
-    m_cameraAnim = new ZoomingCameraAnimation(GameApp::instance()->getScenes()[0]->getCamera(), pGame->getDrawLib(), GameApp::instance()->getScenes()[0]);
-    m_cameraAnim->init();
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      m_universe->getScenes()[0]->setAutoZoomCamera();
+      m_cameraAnim = new ZoomingCameraAnimation(m_universe->getScenes()[0]->getCamera(), pGame->getDrawLib(), m_universe->getScenes()[0]);
+      m_cameraAnim->init();
+    }
   }
 
   /* display level name */
   if(m_sameLevel == false) {
-    for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-      GameApp::instance()->getScenes()[i]->gameMessage(GameApp::instance()->getScenes()[i]->getLevelSrc()->Name(),
-						       false,
-						       PRESTART_ANIMATION_LEVEL_MSG_DURATION);
+    if(m_universe != NULL) {
+      for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	m_universe->getScenes()[i]->gameMessage(m_universe->getScenes()[i]->getLevelSrc()->Name(),
+						false,
+						PRESTART_ANIMATION_LEVEL_MSG_DURATION);
+      }
     }
   }
   

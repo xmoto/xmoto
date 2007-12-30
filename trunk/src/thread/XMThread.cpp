@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "Game.h"
 #include "helpers/Log.h"
+#include "VFileIO.h"
 
 XMThread::XMThread()
 {
