@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "states/StateManager.h"
 #include "WWW.h"
+#include "VFileIO.h"
 
 UploadHighscoreThread::UploadHighscoreThread(const std::string& i_highscorePath)
   : XMThread()

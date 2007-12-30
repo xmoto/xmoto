@@ -25,11 +25,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "helpers/Log.h"
 #include "StateMenuContextReceiver.h"
+#include "Universe.h"
 
 /* static members */
 UIRoot*  StatePause::m_sGUI = NULL;
 
-StatePause::StatePause(StateMenuContextReceiver* i_receiver,
+StatePause::StatePause(Universe* i_universe,
+		       StateMenuContextReceiver* i_receiver,
 		       bool drawStateBehind,
 		       bool updateStatesBehind):
   StateMenu(drawStateBehind,
@@ -38,6 +40,7 @@ StatePause::StatePause(StateMenuContextReceiver* i_receiver,
 	    true)
 {
   m_name  = "StatePause";
+  m_universe = i_universe;
 }
 
 StatePause::~StatePause()
@@ -47,15 +50,19 @@ StatePause::~StatePause()
 
 void StatePause::enter()
 {
-  GameApp* pGame = GameApp::instance();
   std::string v_id_level;
+  GameApp*  pGame = GameApp::instance();
 
-  if(GameApp::instance()->getScenes().size() > 0) {
-    v_id_level = GameApp::instance()->getScenes()[0]->getLevelSrc()->Id();
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      v_id_level = m_universe->getScenes()[0]->getLevelSrc()->Id();
+    }
   }
 
-  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-    GameApp::instance()->getScenes()[i]->setInfos(GameApp::instance()->getScenes()[i]->getLevelSrc()->Name());
+  if(m_universe != NULL) {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name());
+    }
   }
 
   
@@ -73,8 +80,10 @@ void StatePause::leave()
 {
   StateMenu::leave();
 
-  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-    GameApp::instance()->getScenes()[i]->setInfos("");
+  if(m_universe != NULL) {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      m_universe->getScenes()[i]->setInfos("");
+    }
   }
 }
 
@@ -137,8 +146,10 @@ void StatePause::keyDown(int nKey, SDLMod mod,int nChar)
     break;
 
   case SDLK_F3:
-    if(GameApp::instance()->getScenes().size() > 0) { // just add the first world
-      GameApp::instance()->switchLevelToFavorite(GameApp::instance()->getScenes()[0]->getLevelSrc()->Id(), true);
+    if(m_universe != NULL) {
+      if(m_universe->getScenes().size() > 0) { // just add the first world
+	GameApp::instance()->switchLevelToFavorite(m_universe->getScenes()[0]->getLevelSrc()->Id(), true);
+      }
     }
     break;
 

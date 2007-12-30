@@ -18,8 +18,46 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
+#include <vector>
+#include "xmscene/Scene.h"
+
+class MotoGame;
+class XMMotoGameHooks;
+
+class XMMotoGameHooks : public MotoGameHooks {
+public:
+  XMMotoGameHooks();
+  virtual ~XMMotoGameHooks();
+  void setGameApps(MotoGame *i_MotoGame);
+  void OnTakeEntity();
+
+private:
+  MotoGame *m_MotoGame;
+};
+
 class Universe {
   public:
   Universe();
   ~Universe();
+
+  std::vector<MotoGame*>& getScenes();
+  void addScene();
+
+  Replay* getCurrentReplay();
+  bool isAReplayToSave() const;
+  void initReplay();
+  void finalizeReplay(bool i_finished);   /* call to close the replay */
+  void saveReplay(const std::string &Name);
+  void isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room);
+  void TeleportationCheatTo(int i_player, Vector2f i_position);
+  void switchFollowCamera();
+  void initCameras(int nbPlayer);
+
+  private:
+  std::vector<MotoGame*>        m_scenes; /* Game objects */
+  std::vector<XMMotoGameHooks*> m_motoGameHooks;
+  Replay *m_pJustPlayReplay;
+
+  void removeAllWorlds();
+
 };

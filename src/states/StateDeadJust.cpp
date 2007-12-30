@@ -22,9 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "StateDeadMenu.h"
 #include "GameText.h"
+#include "Universe.h"
 
-StateDeadJust::StateDeadJust()
-  : StateScene(true, true)
+StateDeadJust::StateDeadJust(Universe* i_universe)
+: StateScene(i_universe, true, true)
 {
   m_name    = "StateDeadJust";
 }
@@ -37,18 +38,20 @@ void StateDeadJust::enter()
 {
   StateScene::enter();
 
-  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-    GameApp::instance()->getScenes()[i]->clearGameMessages();
-    GameApp::instance()->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
-    GameApp::instance()->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
-    GameApp::instance()->getScenes()[i]->setInfos(GameApp::instance()->getScenes()[i]->getLevelSrc()->Name());
+  if(m_universe != NULL) {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      m_universe->getScenes()[i]->clearGameMessages();
+      m_universe->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
+      m_universe->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
+      m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name());
+    }
   }
 }
 
 void StateDeadJust::keyDown(int nKey, SDLMod mod,int nChar)
 {
   if(nKey == SDLK_ESCAPE) {
-    StateManager::instance()->pushState(new StateDeadMenu(false, this));
+    StateManager::instance()->pushState(new StateDeadMenu(m_universe, false, this));
   }
   else if(nKey == SDLK_RETURN && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0) {
     /* retart immediatly the level */

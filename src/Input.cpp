@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "xmscene/Camera.h"
 #include "xmscene/BikeController.h"
+#include "Universe.h"
 
   InputHandler::InputHandler() {
     reset();
@@ -215,18 +216,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Input device update
   ===========================================================================*/  
-  void InputHandler::updateInput() {
+  void InputHandler::updateUniverseInput(Universe* i_universe) {
     Biker* v_biker;
 
-    if(GameApp::instance()->getScenes().size() <= 0) {
+    if(i_universe == NULL) {
+      return;
+    }
+
+    if(i_universe->getScenes().size() <= 0) {
       return;
     }
     
-    if(GameApp::instance()->getScenes()[0]->Players().size() <= 0) {
+    if(i_universe->getScenes()[0]->Players().size() <= 0) {
       return;
     }
 
-    v_biker = GameApp::instance()->getScenes()[0]->Players()[0]; // only for the first player for the moment
+    v_biker = i_universe->getScenes()[0]->Players()[0]; // only for the first player for the moment
 
     /* Joystick? */
     /* joystick only for player 1 */
@@ -401,7 +406,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Handle an input event
   ===========================================================================*/  
-  void InputHandler::handleInput(InputEventType Type,int nKey,SDLMod mod) {
+void InputHandler::handleInput(Universe* i_universe, InputEventType Type,int nKey,SDLMod mod) {
     unsigned int p, pW;
     Biker *v_biker;
 
@@ -411,9 +416,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     case INPUT_KEY_DOWN:
       p = 0; // player number p
       pW = 0; // number of players in the previous worlds
-      for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-	for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Players().size(); i++) {
-	  v_biker = GameApp::instance()->getScenes()[j]->Players()[i];
+      for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<i_universe->getScenes()[j]->Players().size(); i++) {
+	  v_biker = i_universe->getScenes()[j]->Players()[i];
 
 	  if(m_ControllerModeID[p] == CONTROLLER_MODE_KEYBOARD) {
 	    if(m_nDriveKey[p] == nKey) {
@@ -441,16 +446,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  }
 	  p++;
 	}
-	pW+= GameApp::instance()->getScenes()[j]->Players().size();
+	pW+= i_universe->getScenes()[j]->Players().size();
       }
 
       break;
     case INPUT_KEY_UP:
       p = 0; // player number p
       pW = 0; // number of players in the previous worlds
-      for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-	for(unsigned int i=0; i<GameApp::instance()->getScenes()[j]->Players().size(); i++) {
-	  v_biker = GameApp::instance()->getScenes()[j]->Players()[i];
+      for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<i_universe->getScenes()[j]->Players().size(); i++) {
+	  v_biker = i_universe->getScenes()[j]->Players()[i];
 
 	  if(m_ControllerModeID[p] == CONTROLLER_MODE_KEYBOARD) {
 	    if(m_nDriveKey[p] == nKey) {
@@ -477,7 +482,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  }
 	  p++;
 	}
-	pW+= GameApp::instance()->getScenes()[j]->Players().size();
+	pW+= i_universe->getScenes()[j]->Players().size();
       }
       break;
     }

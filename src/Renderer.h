@@ -24,10 +24,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "xmscene/Scene.h"
 #include "gui/basic/GUI.h"
-#include "Replay.h"
 
 class ParticlesSource;
- 
+class Universe; 
+
   /*===========================================================================
   Graphical debug info
   ===========================================================================*/
@@ -126,7 +126,7 @@ class ParticlesSource;
     void shutdown(void);
     void render(MotoGame* i_scene);
 
-    void prepareForNewLevel();
+    void prepareForNewLevel(Universe* i_universe);
     void unprepareForNewLevel(void);
 
     void loadDebugInfo(std::string File);

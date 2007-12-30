@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikePlayer.h"
 #include "GameText.h"
 #include "Game.h"
+#include "Universe.h"
 
 StateCreditsMode::StateCreditsMode(const std::string& i_replay):
   StateReplaying(i_replay)
@@ -45,8 +46,10 @@ void StateCreditsMode::enter()
   renderer->setShowTimePanel(false);
   renderer->setShowMinimap(false);
 
-  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-    GameApp::instance()->getScenes()[i]->setInfos("");
+  if(m_universe != NULL) {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      m_universe->getScenes()[i]->setInfos("");
+    }
   }
 
   m_credits->init(m_replayBiker->getFinishTime(), 4, 4, std::string(GAMETEXT_CREDITS).c_str());
@@ -58,8 +61,10 @@ bool StateCreditsMode::render()
     return false;
   }
 
-  if(GameApp::instance()->getScenes().size() > 0) {
-    m_credits->render(GameApp::instance()->getScenes()[0]->getTime());
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      m_credits->render(m_universe->getScenes()[0]->getTime());
+    }
   }
 
   return true;

@@ -38,6 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Entity.h"
 #include "xmscene/Zone.h"
 #include "xmscene/SkyApparence.h"
+#include "Universe.h"
 
 #ifdef ENABLE_OPENGL
 #include "drawlib/DrawLibOpenGL.h"
@@ -77,22 +78,27 @@ GameRenderer::~GameRenderer() {
   /*===========================================================================
   Called to prepare renderer for new level
   ===========================================================================*/
-  void GameRenderer::prepareForNewLevel() {
+  void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     Level *v_level; // level of the first world
-    if(GameApp::instance()->getScenes().size() <= 0) {
+
+    if(i_universe == NULL) {
       return;
     }
 
-    v_level = GameApp::instance()->getScenes()[0]->getLevelSrc();
+    if(i_universe->getScenes().size() <= 0) {
+      return;
+    }
 
-    for(unsigned int j=0; j<GameApp::instance()->getScenes().size(); j++) {
-      unsigned int numberCamera = GameApp::instance()->getScenes()[j]->getNumberCameras();
+    v_level = i_universe->getScenes()[0]->getLevelSrc();
+
+    for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
+      unsigned int numberCamera = i_universe->getScenes()[j]->getNumberCameras();
       if(numberCamera > 1){
 	numberCamera++;
       }
       for(unsigned int i=0; i<numberCamera; i++){
-	GameApp::instance()->getScenes()[j]->setCurrentCamera(i);
-	GameApp::instance()->getScenes()[j]->getCamera()->prepareForNewLevel();
+	i_universe->getScenes()[j]->setCurrentCamera(i);
+	i_universe->getScenes()[j]->getCamera()->prepareForNewLevel();
       }
     }
     
@@ -145,15 +151,15 @@ GameRenderer::~GameRenderer() {
 	  Logger::Log("** Warning ** : Texture '%s' not found!",
 	      Blocks[i]->Texture().c_str());
 
-	  for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-	    GameApp::instance()->getScenes()[i]->gameMessage(GAMETEXT_MISSINGTEXTURES,true);
+	  for(unsigned int i=0; i<i_universe->getScenes().size(); i++) {
+	    i_universe->getScenes()[i]->gameMessage(GAMETEXT_MISSINGTEXTURES,true);
 	  }
 	}
       } else {
 	Logger::Log("** Warning ** : Texture '%s' not found!",
 	    Blocks[i]->Texture().c_str());
-	for(unsigned int i=0; i<GameApp::instance()->getScenes().size(); i++) {
-	  GameApp::instance()->getScenes()[i]->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
+	for(unsigned int i=0; i<i_universe->getScenes().size(); i++) {
+	  i_universe->getScenes()[i]->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
 	}
       }
 

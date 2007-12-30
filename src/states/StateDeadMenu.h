@@ -25,10 +25,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMenu.h"
 
 class UIRoot;
+class Universe;
 
 class StateDeadMenu : public StateMenu {
   public:
-  StateDeadMenu(bool i_doShadeAnim,
+  StateDeadMenu(Universe* i_universe,
+		bool i_doShadeAnim,
 		StateMenuContextReceiver* i_receiver = NULL,
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false
@@ -47,6 +49,7 @@ class StateDeadMenu : public StateMenu {
 
  protected:
   virtual void checkEvents();
+  Universe* m_universe;
 
   private:
   /* GUI */
