@@ -521,50 +521,48 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
   }
 
 void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
-    /* Render ghost - ugly mode? */
-    if(XMSession::instance()->ugly() == false) {
-      if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
+  /* Render ghost - ugly mode? */
+  if(XMSession::instance()->ugly() == false) {
+    if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
 
-	// can't use the same overlay for the multi cameras,
-	// because the fade is made using all the cameras,
-	// there should be one overlay per camera.
-	int nbCamera = i_scene->getNumberCameras();
-	/* No not ugly, fancy! Render into overlay? */      
-	if(XMSession::instance()->ghostMotionBlur()
-	   && getParent()->getDrawLib()->useFBOs()
-	   && nbCamera == 1) {
-	  m_Overlay.beginRendering();
-	  m_Overlay.fade(0.15);
-	}
-	_RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(), i_ghost->getBikeTheme(), true,
-		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
-	
-	if(XMSession::instance()->ghostMotionBlur()
-	   && getParent()->getDrawLib()->useFBOs()
-	   && nbCamera == 1) {
-	  m_Overlay.endRendering();
-	  m_Overlay.present();
-	}
+      // can't use the same overlay for the multi cameras,
+      // because the fade is made using all the cameras,
+      // there should be one overlay per camera.
+      int nbCamera = i_scene->getNumberCameras();
+      /* No not ugly, fancy! Render into overlay? */      
+      if(XMSession::instance()->ghostMotionBlur()
+	 && nbCamera == 1) {
+	m_Overlay.beginRendering();
+	m_Overlay.fade(0.15);
       }
- 
-      if(i_ghost->getDescription() != "") {
-	if(m_nGhostInfoTrans > 0 && XMSession::instance()->showGhostsInfos()) {
-	  _RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i*3.0,-1.5f),
-			    i_ghost->getDescription(),
-			    MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
-	}
+      _RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(), i_ghost->getBikeTheme(), true,
+		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
+	
+      if(XMSession::instance()->ghostMotionBlur()
+	 && nbCamera == 1) {
+	m_Overlay.endRendering();
+	m_Overlay.present();
       }
     }
-    
-    if(XMSession::instance()->ugly()) {
-      if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
-	_RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(),
-		    i_ghost->getBikeTheme(),
-		    true,
-		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
+ 
+    if(i_ghost->getDescription() != "") {
+      if(m_nGhostInfoTrans > 0 && XMSession::instance()->showGhostsInfos()) {
+	_RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i*3.0,-1.5f),
+			  i_ghost->getDescription(),
+			  MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
       }
     }
   }
+    
+  if(XMSession::instance()->ugly()) {
+    if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
+      _RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(),
+		  i_ghost->getBikeTheme(),
+		  true,
+		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
+    }
+  }
+}
 
 int GameRenderer::nbParticlesRendered() const {
   return m_nParticlesRendered;
