@@ -144,6 +144,22 @@ AC_ARG_WITH([enable-zoom],
 )
 AC_SUBST([ALLOW_ZOOMING])
 
+dnl asian font
+if test "$target_os" = "mingw32" # windows...
+then
+  DEFAULT_ASIAN_TTF_FILE="Textures/Fonts/bkai00mp.ttf"
+else
+  DEFAULT_ASIAN_TTF_FILE="/usr/share/fonts/truetype/arphic/bkai00mp.ttf"
+fi
+
+AC_ARG_WITH([asian-ttf-file],
+  [AS_HELP_STRING([--with-asian-ttf-file=],
+    [Asian ttf file])],
+  [ASIAN_TTF_FILE="$withval"],
+  [ASIAN_TTF_FILE="$DEFAULT_ASIAN_TTF_FILE"]
+)
+AC_SUBST([ASIAN_TTF_FILE])
+
 dnl Can't build xmoto.bin if we're cross-compiling
 AM_CONDITIONAL(CROSS_COMPILING,test "$cross_compiling" = yes)
 
@@ -183,6 +199,8 @@ echo
 echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "Locales" "$use_gettext" "yes" "gettext"
 echo   "+-----------------+------------+-----------------------------------------------------+"
+displayRequirement "asian ttf file" "$ASIAN_TTF_FILE" "$ASIAN_TTF_FILE" "$ASIAN_TTF_FILE"
+echo   "+-----------------+------------+-----------------------------------------------------+"
 displayVersion "Lua" "$USE_LUA_VERSION"
 echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "Zoom" "$with_enable_zoom" "1" "--with-enable-zoom=1"
@@ -191,4 +209,5 @@ displayRequirement "OpenGl" "$USE_OPENGL" "1" "--with-renderer-openGl=1"
 echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "sdlGfx" "$USE_SDLGFX" "1" "--with-renderer-sdlGfx=1 (unsafe)"
 echo   "+-----------------+------------+-----------------------------------------------------+"
+
 echo "target os: ""$target_os"

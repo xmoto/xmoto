@@ -25,7 +25,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 
 #define DRAW_FONT_FILE_GENERAL "Textures/Fonts/DejaVuSans.ttf"
-#define DRAW_FONT_FILE_ASIAN   "Textures/Fonts/asian.ttf"
+
+#ifdef ASIAN_TTF_FILE
+#define DRAW_FONT_FILE_ASIAN ASIAN_TTF_FILE
+#else
+#define DRAW_FONT_FILE_ASIAN "Textures/Fonts/asian.ttf"
+#endif
 
 #ifdef ENABLE_OPENGL
 #include "DrawLibOpenGL.h"
