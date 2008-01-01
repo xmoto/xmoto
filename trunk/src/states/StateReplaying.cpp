@@ -70,6 +70,7 @@ void StateReplaying::enter()
       }
     } catch(Exception &e) {
       delete m_universe;
+      m_universe = NULL;
       StateManager::instance()->replaceState(new StateMessageBox(NULL, "Unable to read the replay: " + e.getMsg(), UI_MSGBOX_OK));
       return;
     }
@@ -83,6 +84,7 @@ void StateReplaying::enter()
       }
     } catch(Exception &e) {
       delete m_universe;
+      m_universe = NULL;
       StateManager::instance()->replaceState(new StateMessageBox(this, e.getMsg(), UI_MSGBOX_OK));
       return;
     }

@@ -89,6 +89,7 @@ void StatePreplaying::enter()
     char cBuf[256];
     sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED, m_idlevel.c_str());
     delete m_universe;
+    m_universe = NULL;
     StateManager::instance()->replaceState(new StateMessageBox(NULL, cBuf, UI_MSGBOX_OK));
     return;
   }
@@ -103,6 +104,7 @@ void StatePreplaying::enter()
 	      m_universe->getScenes()[i]->getLevelSrc()->getRequiredVersion().c_str());
       
       delete m_universe;
+      m_universe = NULL;
       StateManager::instance()->replaceState(new StateMessageBox(NULL, cBuf, UI_MSGBOX_OK));
       return;
     }
@@ -183,6 +185,7 @@ void StatePreplaying::enter()
   } catch(Exception &e) {
     Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
     delete m_universe;
+    m_universe = NULL;
     StateManager::instance()->replaceState(new StateMessageBox(NULL, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     return;
   }
