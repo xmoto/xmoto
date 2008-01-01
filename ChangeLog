@@ -1,16 +1,9 @@
-2007-12-30  gettextize  <bug-gnu-gettext@gnu.org>
-
-	* Makefile.am (SUBDIRS): Add intl.
-	* configure.in (AC_OUTPUT): Add intl/Makefile.
-
-2007-12-30  gettextize  <bug-gnu-gettext@gnu.org>
-
-	* Makefile.am (SUBDIRS): Remove intl.
 
 X-Moto 0.4.0 2007-
 -----------------------
  * lot of code rewritten/cleaned
  * multi-threading (mainling for www connexions ; require that g++ uses posix thread model (g++ -v to check))
+ * chineese translation, ttf font is "/usr/share/fonts/truetype/arphic/bkai00mp.ttf", it can be changed via the configure script (--with-asian-ttf-file) ; (this font is required to be able to play if locale is cn_CN)
  * patch by Antti Harri and Lasse Collin (extracted from extreme tuxracer) to manage maximum texture size load
  * filter on list is for all columns
  * ctrl+b to add/remove from blacklisted levels list
