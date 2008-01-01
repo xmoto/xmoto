@@ -88,6 +88,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_pLevelSrc->loadReducedFromFile();
     } catch(Exception &e) {
       delete m_pLevelSrc;
+      m_pLevelSrc = NULL;
       throw e;
     }
   }
