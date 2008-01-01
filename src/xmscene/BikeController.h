@@ -41,6 +41,8 @@ class BikeController {
 
   void stopContols();
 
+  void breakBreaks();
+
   private:
   float m_drive;    /* Throttle [0; 1] or Brake [-1; 0] */
   float m_pull;     /* Pull back on the handle bar [0; 1] or push forward on the handle bar [-1; 0] */
@@ -52,6 +54,9 @@ class BikeController {
   // throttle [0; 1], break [0; 1]
   float m_throttle;
   float m_break;
+
+  // broken key
+  bool m_brokenBreaks;
 };
 
 #endif /* BIKECONTROLER */

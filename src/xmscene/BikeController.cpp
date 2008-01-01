@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 BikeController::BikeController()
 {
+  m_brokenBreaks = false;
   stopContols();
 }
 
@@ -67,6 +68,10 @@ void BikeController::setThrottle(float i_throttle)
 
 void BikeController::setBreak(float i_break)
 {
+  if(m_brokenBreaks) {
+    return;
+  }
+
   m_break = i_break;
   if(m_break > 0.0f){
     m_drive = -m_break;
@@ -86,4 +91,10 @@ void BikeController::setPull(float i_pull) {
 
 void BikeController::setChangeDir(bool i_changeDir) {
   m_changeDir = i_changeDir;
+  breakBreaks();
+}
+
+void BikeController::breakBreaks() {
+  m_break = 0.0;
+  m_brokenBreaks = true;
 }
