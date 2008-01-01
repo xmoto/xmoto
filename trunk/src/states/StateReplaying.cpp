@@ -55,10 +55,9 @@ void StateReplaying::enter()
   m_replayBiker = NULL;
 
   m_universe =  new Universe();
-  m_universe->addScene();
 
   try {
-    m_universe->initCameras(1); // init camera for only one player
+    m_universe->initPlay(1, false);
 
     try {
       if(m_universe->getScenes().size() > 0) {
