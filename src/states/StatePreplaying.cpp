@@ -63,6 +63,7 @@ void StatePreplaying::enter()
 {
   GameApp*  pGame  = GameApp::instance();
   unsigned int v_nbPlayer = XMSession::instance()->multiNbPlayers();
+  bool v_multiScenes = false;
 
   StateScene::enter();
 
@@ -72,7 +73,7 @@ void StatePreplaying::enter()
   GameRenderer::instance()->hideReplayHelp();
 
   m_universe =  new Universe();
-  m_universe->initPlay(v_nbPlayer, false);
+  m_universe->initPlay(v_nbPlayer, v_multiScenes);
 
   for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
     m_universe->getScenes()[i]->setDeathAnim(XMSession::instance()->enableDeadAnimation());
@@ -119,11 +120,26 @@ void StatePreplaying::enter()
     /* add the players */
     Logger::Log("Preplay level for %i player(s)", v_nbPlayer);
 
-    if(true) { // monoworld
+    if(v_multiScenes == false) { // monoworld
       MotoGame* v_world = m_universe->getScenes()[0];
 
       for(unsigned int i=0; i<v_nbPlayer; i++) {
 	v_world->setCurrentCamera(i);
+	v_world->getCamera()->setPlayerToFollow(v_world->addPlayerBiker(v_world->getLevelSrc()->PlayerStart(),
+									DD_RIGHT,
+									Theme::instance(), Theme::instance()->getPlayerTheme(),
+									pGame->getColorFromPlayerNumber(i),
+									pGame->getUglyColorFromPlayerNumber(i),
+									XMSession::instance()->enableEngineSound()));
+	v_world->getCamera()->setScroll(false, v_world->getGravity());
+      }
+    } else { // multiworlds
+      MotoGame* v_world;
+
+      for(unsigned int i=0; i<v_nbPlayer; i++) {
+	v_world = m_universe->getScenes()[i];
+	v_world->setCurrentCamera(0);
+
 	v_world->getCamera()->setPlayerToFollow(v_world->addPlayerBiker(v_world->getLevelSrc()->PlayerStart(),
 									DD_RIGHT,
 									Theme::instance(), Theme::instance()->getPlayerTheme(),
