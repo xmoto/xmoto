@@ -62,6 +62,7 @@ StatePreplaying::~StatePreplaying()
 void StatePreplaying::enter()
 {
   GameApp*  pGame  = GameApp::instance();
+  unsigned int v_nbPlayer = XMSession::instance()->multiNbPlayers();
 
   StateScene::enter();
 
@@ -71,7 +72,7 @@ void StatePreplaying::enter()
   GameRenderer::instance()->hideReplayHelp();
 
   m_universe =  new Universe();
-  m_universe->addScene();
+  m_universe->initPlay(v_nbPlayer, false);
 
   for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
     m_universe->getScenes()[i]->setDeathAnim(XMSession::instance()->enableDeadAnimation());
@@ -116,16 +117,12 @@ void StatePreplaying::enter()
     }
 	
     /* add the players */
-    unsigned int v_nbPlayer = XMSession::instance()->multiNbPlayers();
     Logger::Log("Preplay level for %i player(s)", v_nbPlayer);
-
-    m_universe->initCameras(v_nbPlayer);
 
     if(true) { // monoworld
       MotoGame* v_world = m_universe->getScenes()[0];
 
       for(unsigned int i=0; i<v_nbPlayer; i++) {
-	v_world = m_universe->getScenes()[0];
 	v_world->setCurrentCamera(i);
 	v_world->getCamera()->setPlayerToFollow(v_world->addPlayerBiker(v_world->getLevelSrc()->PlayerStart(),
 									DD_RIGHT,
@@ -153,7 +150,7 @@ void StatePreplaying::enter()
       if(m_universe->getScenes()[i]->getNumberCameras() > 1){
 	// make the zoom camera follow the first player
 	m_universe->getScenes()[i]->setAutoZoomCamera();
-	m_universe->getScenes()[i]->getCamera()->setPlayerToFollow(m_universe->getScenes()[i]->Players()[0]);
+ 	m_universe->getScenes()[i]->getCamera()->setPlayerToFollow(m_universe->getScenes()[i]->Players()[0]);
 	m_universe->getScenes()[i]->getCamera()->setScroll(false, m_universe->getScenes()[i]->getGravity());
       }
     }

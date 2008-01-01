@@ -41,7 +41,7 @@ class Universe {
   ~Universe();
 
   std::vector<MotoGame*>& getScenes();
-  void addScene();
+  void initPlay(int i_nbPlayer, bool i_multiScenes);
 
   Replay* getCurrentReplay();
   bool isAReplayToSave() const;
@@ -51,7 +51,6 @@ class Universe {
   void isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room);
   void TeleportationCheatTo(int i_player, Vector2f i_position);
   void switchFollowCamera();
-  void initCameras(int nbPlayer);
 
   private:
   std::vector<MotoGame*>        m_scenes; /* Game objects */
@@ -60,4 +59,6 @@ class Universe {
 
   void removeAllWorlds();
 
+  void initCameras(int nbPlayer); // init camera according to the number of players and the existing scenes
+  void addScene();
 };

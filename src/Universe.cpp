@@ -84,6 +84,19 @@ void Universe::removeAllWorlds() {
   m_scenes.clear();
 }
 
+void Universe::initPlay(int i_nbPlayer, bool i_multiScenes) {
+  if(i_multiScenes) {
+    for(int i=0; i<i_nbPlayer; i++) {
+      addScene();
+    }
+  } else {
+    // only one scene
+    addScene();
+  }
+
+  initCameras(i_nbPlayer);
+}
+
 void Universe::initCameras(int nbPlayer) {
   int width  = GameApp::instance()->getDrawLib()->getDispWidth();
   int height = GameApp::instance()->getDrawLib()->getDispHeight();
@@ -101,19 +114,38 @@ void Universe::initCameras(int nbPlayer) {
   case 2:
     m_scenes[0]->addCamera(Vector2i(0,height/2),
 			   Vector2i(width, height));
-    m_scenes[0]->addCamera(Vector2i(0,0),
-			   Vector2i(width, height/2));
+    if(m_scenes.size() == 1) {
+      m_scenes[0]->addCamera(Vector2i(0,0),
+			     Vector2i(width, height/2));
+    } else {
+      m_scenes[1]->addCamera(Vector2i(0,0),
+			     Vector2i(width, height/2));
+    }
     break;
-    case 3:
+  case 3:
   case 4:
-    m_scenes[0]->addCamera(Vector2i(0,height/2),
-			   Vector2i(width/2, height));
-    m_scenes[0]->addCamera(Vector2i(width/2,height/2),
-			   Vector2i(width, height));
-    m_scenes[0]->addCamera(Vector2i(0,0),
-			   Vector2i(width/2, height/2));
-    m_scenes[0]->addCamera(Vector2i(width/2,0),
-			   Vector2i(width, height/2));
+    if(m_scenes.size() == 1) {
+      m_scenes[0]->addCamera(Vector2i(0,height/2),
+			     Vector2i(width/2, height));
+      m_scenes[0]->addCamera(Vector2i(width/2,height/2),
+			     Vector2i(width, height));
+      m_scenes[0]->addCamera(Vector2i(0,0),
+			     Vector2i(width/2, height/2));
+      m_scenes[0]->addCamera(Vector2i(width/2,0),
+			     Vector2i(width, height/2));
+    } else {
+      m_scenes[0]->addCamera(Vector2i(0,height/2),
+			     Vector2i(width/2, height));
+      m_scenes[1]->addCamera(Vector2i(width/2,height/2),
+			     Vector2i(width, height));
+      m_scenes[2]->addCamera(Vector2i(0,0),
+			     Vector2i(width/2, height/2));
+
+      if(nbPlayer == 4) {
+	m_scenes[3]->addCamera(Vector2i(width/2,0),
+			       Vector2i(width, height/2));
+      }
+    }
     break;
   }
   
@@ -123,7 +155,9 @@ void Universe::initCameras(int nbPlayer) {
 			   Vector2i(width, height));
   }
   // current cam is autozoom one
-    m_scenes[0]->setAutoZoomCamera();
+  for(unsigned int i=0; i<m_scenes.size(); i++) {
+    m_scenes[i]->setAutoZoomCamera();
+  }
 }
 
 
