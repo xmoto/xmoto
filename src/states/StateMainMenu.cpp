@@ -318,6 +318,14 @@ void StateMainMenu::checkEventsLevelsMultiTab() {
     XMSession::instance()->setMultiStopWhenOneFinishes(v_button->getChecked());
   }
 
+  // multi scenes
+  v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:MULTISCENES"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    XMSession::instance()->setMultiScenes(v_button->getChecked() == false);
+  }
+
   // multi players
   for(unsigned int i=0; i<4; i++) {
     std::ostringstream s_nbPlayers;
@@ -1457,6 +1465,14 @@ UIWindow* StateMainMenu::makeWindowLevels(UIWindow* i_parent) {
     }
   }
 
+  v_button = new UIButton(v_multiOptionsTab, 0, v_multiOptionsTab->getPosition().nHeight - 40 - 28 - 28 - 10,
+			  GAMETEXT_MULTISCENES, v_multiOptionsTab->getPosition().nWidth,28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setID("MULTISCENES");
+  v_button->setGroup(50051);
+  v_button->setContextHelp(CONTEXTHELP_MULTISCENES); 
+
   v_button = new UIButton(v_multiOptionsTab, 0, v_multiOptionsTab->getPosition().nHeight - 40 - 28 - 10,
 			  GAMETEXT_MULTISTOPWHENONEFINISHES, v_multiOptionsTab->getPosition().nWidth,28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
@@ -2112,6 +2128,8 @@ void StateMainMenu::updateOptions() {
   // level tab (multi)
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES"));
   v_button->setChecked(XMSession::instance()->MultiStopWhenOneFinishes());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:MULTISCENES"));
+  v_button->setChecked(XMSession::instance()->multiScenes() == false);
 
   // options/general
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:SHOWMINIMAP"));

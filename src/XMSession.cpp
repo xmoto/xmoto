@@ -68,7 +68,8 @@ void XMSession::setToDefault() {
   m_quickStartDifficultyMIN       = 1;
   m_quickStartDifficultyMAX       = 5;
   m_multiNbPlayers                = 1;
-  m_multiEnablStopWheNoneFinishes = true;
+  m_multiScenes                   = false;
+  m_multiEnableStopWheNoneFinishes = true;
   m_enableContextHelp             = true;
   m_theme                         = THEME_DEFAULT_THEMENAME;
   m_enableAudio                   = true;
@@ -576,11 +577,19 @@ int XMSession::multiNbPlayers() const {
   return m_multiNbPlayers;
 }
 
-void XMSession::setMultiEnablStopWheNoneFinishes(bool i_value) {
+void XMSession::setMultiScenes(bool i_value) {
+  m_multiScenes = i_value;
+}
+
+bool XMSession::multiScenes() const {
+  return m_multiScenes;
+}
+
+void XMSession::setMultiEnableStopWheNoneFinishes(bool i_value) {
   m_multiStopWhenOneFinishes = i_value;
 }
 
-bool XMSession::multiEnablStopWheNoneFinishes() const {
+bool XMSession::multiEnableStopWheNoneFinishes() const {
   return m_multiStopWhenOneFinishes;
 }
 
