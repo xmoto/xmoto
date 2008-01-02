@@ -65,9 +65,6 @@ void StatePreplaying::enter()
   unsigned int v_nbPlayer = XMSession::instance()->multiNbPlayers();
   bool v_multiScenes = XMSession::instance()->multiScenes();
 
-  v_nbPlayer = 2;
-  v_multiScenes = true;
-
   StateScene::enter();
 
   GameRenderer::instance()->setShowEngineCounter(false);
