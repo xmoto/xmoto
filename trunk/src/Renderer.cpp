@@ -93,8 +93,6 @@ GameRenderer::~GameRenderer() {
       return;
     }
 
-    v_level = i_universe->getScenes()[0]->getLevelSrc();
-
     for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
       unsigned int numberCamera = i_universe->getScenes()[j]->getNumberCameras();
       if(numberCamera > 1){
@@ -112,6 +110,9 @@ GameRenderer::~GameRenderer() {
     m_nGhostInfoTrans      = 255;
 
     /* Optimize scene */
+
+    for(unsigned int u=0; u<i_universe->getScenes().size(); u++) {
+    v_level = i_universe->getScenes()[u]->getLevelSrc();
     std::vector<Block *> Blocks = v_level->Blocks();
     int nVertexBytes = 0;
   
@@ -222,9 +223,9 @@ GameRenderer::~GameRenderer() {
 #endif
       }
     }
-    
-
     Logger::Log("GL: %d kB vertex buffers",    nVertexBytes/1024);
+    }    
+
   }
 
   /*===========================================================================

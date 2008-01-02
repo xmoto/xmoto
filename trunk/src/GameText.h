@@ -271,6 +271,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_MOSTPLAYEDLEVELSFOLLOW _("Following are your most played levels")
 #define GAMETEXT_MOTIONBLURGHOST      _("Motion blur ghost")
 #define GAMETEXT_MULTI                _("Multi")
+#define GAMETEXT_MULTISCENES          _("Collaborativ mode")
 #define GAMETEXT_MULTISTOPWHENONEFINISHES _("Stop the game once a player ends the level")
 #define GAMETEXT_NB_PLAYERS           _("Number of players")
 #define GAMETEXT_NEW                  _("New")
@@ -539,6 +540,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_GHOST_STRATEGY_THEBEST _("The best of the replays (on this computer)")
 #define CONTEXTHELP_GHOST_STRATEGY_BESTOFROOM _("The highscore of the room")
 #define CONTEXTHELP_HIDEGHOSTS _("Don't show the ghosts while playing")
+#define CONTEXTHELP_MULTISCENES _("The scene is shared by all the players")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

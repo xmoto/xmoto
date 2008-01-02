@@ -63,7 +63,7 @@ void StatePreplaying::enter()
 {
   GameApp*  pGame  = GameApp::instance();
   unsigned int v_nbPlayer = XMSession::instance()->multiNbPlayers();
-  bool v_multiScenes = false;
+  bool v_multiScenes = XMSession::instance()->multiScenes();
 
   StateScene::enter();
 

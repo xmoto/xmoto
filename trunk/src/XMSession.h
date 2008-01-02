@@ -163,8 +163,10 @@ public:
   int quickStartDifficultyMAX() const;
   void setMultiNbPlayers(int i_value);
   int multiNbPlayers() const;
-  void setMultiEnablStopWheNoneFinishes(bool i_value);
-  bool multiEnablStopWheNoneFinishes() const;
+  void setMultiScenes(bool i_value);
+  bool multiScenes() const;
+  void setMultiEnableStopWheNoneFinishes(bool i_value);
+  bool multiEnableStopWheNoneFinishes() const;
   void setEnableContextHelp(bool i_value);
   bool enableContextHelp() const;
   void setTheme(const std::string& i_value);
@@ -260,7 +262,8 @@ public:
   int m_quickStartDifficultyMIN;
   int m_quickStartDifficultyMAX;
   int m_multiNbPlayers;
-  bool m_multiEnablStopWheNoneFinishes;
+  bool m_multiScenes;
+  bool m_multiEnableStopWheNoneFinishes;
   bool m_enableContextHelp;
   std::string m_theme;
   bool m_enableAudio;
