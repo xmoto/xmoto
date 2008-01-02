@@ -229,8 +229,6 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   Replay.h \
   Sound.h \
   UserConfig.h \
-  RendererParticles.cpp \
-  RendererBike.cpp \
   Input.cpp \
   Input.h \
   GameSerializer.cpp \
