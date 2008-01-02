@@ -202,7 +202,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(v_useGraphics) {
     switchUglyMode(XMSession::instance()->ugly());
     switchTestThemeMode(XMSession::instance()->testTheme());
-    GameRenderer::instance()->setParent( (GameApp *)this );
   }    
 
   if(v_useGraphics) {
