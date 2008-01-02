@@ -98,7 +98,7 @@ GameRenderer::~GameRenderer() {
     // can't use the same overlay for the multi cameras,
     // because the fade is made using all the cameras,
     // there should be one overlay per camera.
-    if(i_universe->getScenes().size() > 0) {
+    if(i_universe->getScenes().size() > 1) {
       m_allowGhostEffect = false;
     } else {
       m_allowGhostEffect = i_universe->getScenes()[0]->getNumberCameras() == 1;
