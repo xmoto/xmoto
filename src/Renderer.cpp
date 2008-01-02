@@ -84,6 +84,7 @@ GameRenderer::~GameRenderer() {
   ===========================================================================*/
   void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     Level *v_level; // level of the first world
+    int n_sameSceneAs;
 
     if(i_universe == NULL) {
       return;
@@ -93,6 +94,7 @@ GameRenderer::~GameRenderer() {
       return;
     }
 
+    // init camera
     for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
       unsigned int numberCamera = i_universe->getScenes()[j]->getNumberCameras();
       if(numberCamera > 1){
@@ -112,119 +114,127 @@ GameRenderer::~GameRenderer() {
     /* Optimize scene */
 
     for(unsigned int u=0; u<i_universe->getScenes().size(); u++) {
-    v_level = i_universe->getScenes()[u]->getLevelSrc();
-    std::vector<Block *> Blocks = v_level->Blocks();
-    int nVertexBytes = 0;
+      v_level = i_universe->getScenes()[u]->getLevelSrc();
+
+      n_sameSceneAs = -1;
+      // set to the universe which has the same level to init geoms only 1 time if the level is loaded several times
+      for(unsigned int v=0; v<u; v++) {
+	if(i_universe->getScenes()[u]->getLevelSrc()->Id() == i_universe->getScenes()[v]->getLevelSrc()->Id()) {
+	  n_sameSceneAs = v;
+	  break;
+	}
+      }
+
+      std::vector<Block *> Blocks = v_level->Blocks();
+      int nVertexBytes = 0;
   
-    for(unsigned int i=0; i<Blocks.size(); i++) {
+      for(unsigned int i=0; i<Blocks.size(); i++) {
 
-      /* do not load into the graphic card blocks which won't be
-	 displayed. On ati card with free driver, levels like green
-	 hill zone act 2 don't work if there's too much vertex loaded */
-      if(XMSession::instance()->gameGraphics() != GFX_HIGH && Blocks[i]->getLayer() != -1)
-	continue;
-      if(XMSession::instance()->gameGraphics() == GFX_LOW && Blocks[i]->isBackground() == true)
-	continue;
+	/* do not load into the graphic card blocks which won't be
+	   displayed. On ati card with free driver, levels like green
+	   hill zone act 2 don't work if there's too much vertex loaded */
+	if(XMSession::instance()->gameGraphics() != GFX_HIGH && Blocks[i]->getLayer() != -1)
+	  continue;
+	if(XMSession::instance()->gameGraphics() == GFX_LOW && Blocks[i]->isBackground() == true)
+	  continue;
 
-      bool dynamicBlock = false;
-      std::vector<Geom *>* pGeoms;
-      if(Blocks[i]->isDynamic() == true){
-	dynamicBlock = true;
-	pGeoms = &m_DynamicGeoms;
-      }
-      else{
-	pGeoms = &m_StaticGeoms;
-      }
+	bool dynamicBlock = false;
+	std::vector<Geom *>* pGeoms;
+	if(Blocks[i]->isDynamic() == true){
+	  dynamicBlock = true;
+	  pGeoms = &m_DynamicGeoms;
+	}
+	else{
+	  pGeoms = &m_StaticGeoms;
+	}
 
-      std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
-      Vector2f Center;
-      if(dynamicBlock == true){
-      	Center.x = 0.0;
-      	Center.y = 0.0;
-      }
-      else{
-	Center = Blocks[i]->DynamicPosition();
-      }
-      Sprite* pSprite = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
-							   Blocks[i]->Texture());
-      Texture *pTexture = NULL;
+	std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
+	Vector2f Center;
+	if(dynamicBlock == true){
+	  Center.x = 0.0;
+	  Center.y = 0.0;
+	}
+	else{
+	  Center = Blocks[i]->DynamicPosition();
+	}
+	Sprite* pSprite = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->Texture());
+	Texture *pTexture = NULL;
 
-      if(pSprite != NULL) {
-	try {
-	  pTexture = pSprite->getTexture();
-	} catch(Exception &e) {
-	  Logger::Log("** Warning ** : Texture '%s' not found!",
-	      Blocks[i]->Texture().c_str());
-
-	  for(unsigned int i=0; i<i_universe->getScenes().size(); i++) {
-	    i_universe->getScenes()[i]->gameMessage(GAMETEXT_MISSINGTEXTURES,true);
+	if(pSprite != NULL) {
+	  try {
+	    pTexture = pSprite->getTexture();
+	  } catch(Exception &e) {
+	    Logger::Log("** Warning ** : Texture '%s' not found!", Blocks[i]->Texture().c_str());
+	    i_universe->getScenes()[u]->gameMessage(GAMETEXT_MISSINGTEXTURES,true);
 	  }
+	} else {
+	  Logger::Log("** Warning ** : Texture '%s' not found!", Blocks[i]->Texture().c_str());
+	  i_universe->getScenes()[u]->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
 	}
-      } else {
-	Logger::Log("** Warning ** : Texture '%s' not found!",
-	    Blocks[i]->Texture().c_str());
-	for(unsigned int i=0; i<i_universe->getScenes().size(); i++) {
-	  i_universe->getScenes()[i]->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
-	}
-      }
 
-      Geom* pSuitableGeom = new Geom;
-      pSuitableGeom->pTexture = pTexture;
-      int geomIndex = pGeoms->size();
-      pGeoms->push_back(pSuitableGeom);
-      Blocks[i]->setGeom(geomIndex);
-
-      for(unsigned int j=0; j<ConvexBlocks.size(); j++) {
-	Vector2f v_center = Vector2f(0.0, 0.0);
-
-        GeomPoly *pPoly = new GeomPoly;
-        pSuitableGeom->Polys.push_back(pPoly);
-        
-        pPoly->nNumVertices = ConvexBlocks[j]->Vertices().size();
-        pPoly->pVertices    = new GeomCoord[ pPoly->nNumVertices ];
-        pPoly->pTexCoords   = new GeomCoord[ pPoly->nNumVertices ];
-        
-        for(unsigned int k=0; k<pPoly->nNumVertices; k++) {
-          pPoly->pVertices[k].x = Center.x + ConvexBlocks[j]->Vertices()[k]->Position().x;
-          pPoly->pVertices[k].y = Center.y + ConvexBlocks[j]->Vertices()[k]->Position().y;
-          pPoly->pTexCoords[k].x = ConvexBlocks[j]->Vertices()[k]->TexturePosition().x;
-          pPoly->pTexCoords[k].y = ConvexBlocks[j]->Vertices()[k]->TexturePosition().y;
-
-	  v_center += Vector2f(pPoly->pVertices[k].x, pPoly->pVertices[k].y);
-        }
-	v_center /= pPoly->nNumVertices;
-
-	/* fix the gap problem with polygons */
-	float a = 0.003; /* seems to be a good value, put negativ value to make it worst */
-	for(unsigned int k=0; k<pPoly->nNumVertices; k++) {
-	  Vector2f V = Vector2f(pPoly->pVertices[k].x - v_center.x,
-				pPoly->pVertices[k].y - v_center.y);
-	  if(V.length() != 0.0) {
-	    V.normalize();
-	    V *= a;
-	    pPoly->pVertices[k].x += V.x;
-	    pPoly->pVertices[k].y += V.y;
-	  }
-	}
-        
-        nVertexBytes += pPoly->nNumVertices * ( 4 * sizeof(float) );
+	// add the geom
+	if(n_sameSceneAs == -1) {
+	  Geom* pSuitableGeom = new Geom;
+	  pSuitableGeom->pTexture = pTexture;
+	  int geomIndex = pGeoms->size();
+	  pGeoms->push_back(pSuitableGeom);
+	  Blocks[i]->setGeom(geomIndex);
+	  
+	  for(unsigned int j=0; j<ConvexBlocks.size(); j++) {
+	    Vector2f v_center = Vector2f(0.0, 0.0);
+	    
+	    GeomPoly *pPoly = new GeomPoly;
+	    pSuitableGeom->Polys.push_back(pPoly);
+	    
+	    pPoly->nNumVertices = ConvexBlocks[j]->Vertices().size();
+	    pPoly->pVertices    = new GeomCoord[ pPoly->nNumVertices ];
+	    pPoly->pTexCoords   = new GeomCoord[ pPoly->nNumVertices ];
+	    
+	    for(unsigned int k=0; k<pPoly->nNumVertices; k++) {
+	      pPoly->pVertices[k].x = Center.x + ConvexBlocks[j]->Vertices()[k]->Position().x;
+	      pPoly->pVertices[k].y = Center.y + ConvexBlocks[j]->Vertices()[k]->Position().y;
+	      pPoly->pTexCoords[k].x = ConvexBlocks[j]->Vertices()[k]->TexturePosition().x;
+	      pPoly->pTexCoords[k].y = ConvexBlocks[j]->Vertices()[k]->TexturePosition().y;
+	      
+	      v_center += Vector2f(pPoly->pVertices[k].x, pPoly->pVertices[k].y);
+	    }
+	    v_center /= pPoly->nNumVertices;
+	    
+	    /* fix the gap problem with polygons */
+	    float a = 0.003; /* seems to be a good value, put negativ value to make it worst */
+	    for(unsigned int k=0; k<pPoly->nNumVertices; k++) {
+	      Vector2f V = Vector2f(pPoly->pVertices[k].x - v_center.x, pPoly->pVertices[k].y - v_center.y);
+	      if(V.length() != 0.0) {
+		V.normalize();
+		V *= a;
+		pPoly->pVertices[k].x += V.x;
+		pPoly->pVertices[k].y += V.y;
+	      }
+	    }
+	    
+	    nVertexBytes += pPoly->nNumVertices * ( 4 * sizeof(float) );
 #ifdef ENABLE_OPENGL        
-        /* Use VBO optimization? */
-	if(GameApp::instance()->getDrawLib()->useVBOs()) {
-	  /* Copy static coordinates unto video memory */
-	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
-	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
-	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
-
-	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
-	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
-	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
-	}
+	    /* Use VBO optimization? */
+	    if(GameApp::instance()->getDrawLib()->useVBOs()) {
+	      /* Copy static coordinates unto video memory */
+	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
+	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
+	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
+	      
+	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
+	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
+	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
+	    }
 #endif
+	  }
+	  Logger::Log("GL: %d kB vertex buffers",    nVertexBytes/1024);
+	} else { // the geoms already exist in level n_sameSceneAs
+	  // assum that blocks loading of levels have the same number (i)
+	  Blocks[i]->setGeom(i_universe->getScenes()[n_sameSceneAs]->getLevelSrc()->Blocks()[i]->getGeom());
+	}
+	//
       }
     }
-    Logger::Log("GL: %d kB vertex buffers",    nVertexBytes/1024);
-    }    
 
   }
 
