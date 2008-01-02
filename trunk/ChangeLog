@@ -6,6 +6,7 @@ X-Moto 0.4.0 2007-
  * chineese translation, ttf font is "/usr/share/fonts/truetype/arphic/bkai00mp.ttf", it can be changed via the configure script (--with-asian-ttf-file) ; (this font is required to be able to play if locale is cn_CN)
  * patch by Antti Harri and Lasse Collin (extracted from extreme tuxracer) to manage maximum texture size load
  * filter on list is for all columns
+ * multiscenes mode for multiplayers (each player has his own scene)
  * ctrl+b to add/remove from blacklisted levels list
  * ctrl+m to use mirror mode
  * tab to autozoom

@@ -167,6 +167,8 @@ private:
   std::string m_replayHelp;
   std::string m_worldRecordTime;
 
+  bool m_allowGhostEffect; // ask to not do the ghost effect
+
   float m_fNextGhostInfoUpdate;
   int m_nGhostInfoTrans;
 

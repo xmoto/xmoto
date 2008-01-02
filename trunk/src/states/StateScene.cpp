@@ -138,9 +138,9 @@ bool StateScene::render()
       }
     } else {
       if(m_universe != NULL) {
-	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	  m_universe->getScenes()[i]->setAutoZoomCamera();
-	  GameRenderer::instance()->render(m_universe->getScenes()[i]);
+	if(m_universe->getScenes().size() > 0) {
+	  m_universe->getScenes()[0]->setAutoZoomCamera();
+	  GameRenderer::instance()->render(m_universe->getScenes()[0]);
 	}
       }
     }

@@ -1466,12 +1466,12 @@ UIWindow* StateMainMenu::makeWindowLevels(UIWindow* i_parent) {
   }
 
   v_button = new UIButton(v_multiOptionsTab, 0, v_multiOptionsTab->getPosition().nHeight - 40 - 28 - 28 - 10,
-			  GAMETEXT_MULTISCENES, v_multiOptionsTab->getPosition().nWidth,28);
+			  GAMETEXT_NOMULTISCENES, v_multiOptionsTab->getPosition().nWidth,28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setFont(drawlib->getFontSmall());
   v_button->setID("MULTISCENES");
   v_button->setGroup(50051);
-  v_button->setContextHelp(CONTEXTHELP_MULTISCENES); 
+  v_button->setContextHelp(CONTEXTHELP_NOMULTISCENES); 
 
   v_button = new UIButton(v_multiOptionsTab, 0, v_multiOptionsTab->getPosition().nHeight - 40 - 28 - 10,
 			  GAMETEXT_MULTISTOPWHENONEFINISHES, v_multiOptionsTab->getPosition().nWidth,28);
