@@ -64,6 +64,7 @@ GameRenderer::GameRenderer() {
   m_showMinimap = true;
   m_showEngineCounter = true;
   m_showTimePanel = true;
+  m_allowGhostEffect = true;
 }
 GameRenderer::~GameRenderer() {
 }
@@ -92,6 +93,15 @@ GameRenderer::~GameRenderer() {
 
     if(i_universe->getScenes().size() <= 0) {
       return;
+    }
+
+    // can't use the same overlay for the multi cameras,
+    // because the fade is made using all the cameras,
+    // there should be one overlay per camera.
+    if(i_universe->getScenes().size() > 0) {
+      m_allowGhostEffect = false;
+    } else {
+      m_allowGhostEffect = i_universe->getScenes()[0]->getNumberCameras() == 1;
     }
 
     // init camera
@@ -235,7 +245,7 @@ GameRenderer::~GameRenderer() {
 	//
       }
     }
-
+    
   }
 
   /*===========================================================================
@@ -539,14 +549,9 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
   /* Render ghost - ugly mode? */
   if(XMSession::instance()->ugly() == false) {
     if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
-
-      // can't use the same overlay for the multi cameras,
-      // because the fade is made using all the cameras,
-      // there should be one overlay per camera.
-      int nbCamera = i_scene->getNumberCameras();
       /* No not ugly, fancy! Render into overlay? */      
       if(XMSession::instance()->ghostMotionBlur()
-	 && nbCamera == 1) {
+	 && m_allowGhostEffect) {
 	m_Overlay.beginRendering();
 	m_Overlay.fade(0.15);
       }
@@ -554,7 +559,7 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
 		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
 	
       if(XMSession::instance()->ghostMotionBlur()
-	 && nbCamera == 1) {
+	 && m_allowGhostEffect) {
 	m_Overlay.endRendering();
 	m_Overlay.present();
       }
