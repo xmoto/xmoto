@@ -91,7 +91,6 @@ void BikeController::setPull(float i_pull) {
 
 void BikeController::setChangeDir(bool i_changeDir) {
   m_changeDir = i_changeDir;
-  breakBreaks();
 }
 
 void BikeController::breakBreaks() {
