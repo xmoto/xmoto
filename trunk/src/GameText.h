@@ -295,7 +295,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
                                       "All kinds of feedback are highly appreciated, so the game\n" \
                                       "can get better.\n" \
                                       "Mail bugs, ideas, comments, feature requests, hatemail, etc\n" \
-                                      "to nicolas at adenis-lamarre dot fr\n" \
+                                      "to xmoto@tuxfamily.org\n" \
                                       "\n" \
                                       "Also visit http://xmoto.tuxfamily.org to make sure you've\n" \
                                       "got the latest version.")
