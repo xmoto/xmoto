@@ -44,7 +44,7 @@
 <sprite type="Texture" name="DegradOrange" file="DegradOrange_168.jpg" />
 <sprite type="Texture" name="fuego" file="fuego_189.jpg" />
 <sprite type="Texture" name="helltiles" file="helltiles_176.jpg" />
-<sprite type="Texture" name="MarbleTilePurple" file="MarbleTilePurple_179.jpg" />
+<sprite type="Texture" name="MarbleTilePurple_light" file="MarbleTilePurple_179.jpg" />
 <sprite type="Texture" name="MarbleTilePurple" file="MarbleTilePurple_178.jpg" />
 <sprite type="Texture" name="Metal" file="Metal_190.jpg" />
 <sprite type="Texture" name="Metal2" file="Metal2_191.jpg" />
