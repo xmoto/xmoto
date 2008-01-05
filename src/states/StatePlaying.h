@@ -43,6 +43,12 @@ class StatePlaying : public StateScene {
   virtual void mouseUp(int nButton);
   
   virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+
+  private:
+  void onOneFinish();
+  void onAllDead();
+
+  bool m_gameIsFinished;
 };
 
 #endif

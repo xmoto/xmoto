@@ -37,7 +37,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 StatePlaying::StatePlaying(Universe* i_universe):
   StateScene(i_universe)
 {
-  m_name  = "StatePlaying";
+  m_name = "StatePlaying";
+  m_gameIsFinished = false;
 }
 
 StatePlaying::~StatePlaying()
@@ -47,6 +48,8 @@ StatePlaying::~StatePlaying()
 void StatePlaying::enter()
 {
   StateScene::enter();
+
+  m_gameIsFinished = false;
 
   GameRenderer::instance()->setShowEngineCounter(XMSession::instance()->showEngineCounter());
   GameRenderer::instance()->setShowMinimap(XMSession::instance()->showMinimap());
@@ -101,8 +104,6 @@ bool StatePlaying::update()
   if(StateScene::update() == false)
     return false;
 
-  GameApp*  pGame = GameApp::instance();
-
   if(isLockedScene() == false) {
     bool v_all_dead       = true;
     bool v_one_still_play = false;
@@ -126,76 +127,16 @@ bool StatePlaying::update()
       }
     }
     
-    if(v_one_still_play == false || XMSession::instance()->MultiStopWhenOneFinishes()) { // let people continuing when one finished or not
-      if(v_one_finished) {
-	/* You're done maaaan! :D */
-
-	/* finalize the replay */
-	if(m_universe != NULL) {
-	  if(m_universe->isAReplayToSave()) {
-	    m_universe->finalizeReplay(true);
-	  }
-	}
-
-	/* update profiles */
-	if(m_universe != NULL) {
-	  if(m_universe->getScenes().size() == 1) {
-	    if(m_universe->getScenes()[0]->Players().size() == 1) {
-	      float v_finish_time = 0.0;
-	      std::string TimeStamp = pGame->getTimeStamp();
-	      if(m_universe->getScenes()[0]->Players()[0]->isFinished()) {
-		v_finish_time  = m_universe->getScenes()[0]->Players()[0]->finishTime();
-	      }
-	      xmDatabase::instance("main")->profiles_addFinishTime(XMSession::instance()->profile(),
-								   m_universe->getScenes()[0]->getLevelSrc()->Id(),
-								   TimeStamp,
-								   v_finish_time);
-	    }
-	  }
-	}	  
-
-	/* Update stats */
-	/* update stats only in one player mode */
-	if(m_universe != NULL) {
-	  if(m_universe->getScenes().size() == 1) {
-	    if(m_universe->getScenes()[0]->Players().size() == 1) {
-	      xmDatabase::instance("main")->stats_levelCompleted(XMSession::instance()->profile(),
-								 m_universe->getScenes()[0]->getLevelSrc()->Id(),
-								 m_universe->getScenes()[0]->Players()[0]->finishTime());
-	      StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
-	    }
-	  }
-	}
-	StateManager::instance()->pushState(new StateFinished(m_universe, this));
-      } else if(v_all_dead) {
-	/* You're dead maan! */
-	if(m_universe != NULL) {	
-	  if(m_universe->isAReplayToSave()) {
-	    m_universe->finalizeReplay(false);
-	  }
-	}
-
-	/* Update stats */
-	if(m_universe != NULL) {
-	  if(m_universe->getScenes().size() == 1) {
-	    if(m_universe->getScenes()[0]->Players().size() == 1) {
-	      xmDatabase::instance("main")->stats_died(XMSession::instance()->profile(),
-						       m_universe->getScenes()[0]->getLevelSrc()->Id(),
-						       m_universe->getScenes()[0]->getTime());
-	    }
-	  }
-	}
-
-	/* Play the DIE!!! sound */
-	try {
-	  Sound::playSampleByName(Theme::instance()->getSound("Headcrash")->FilePath(), 0.3);
-	} catch(Exception &e) {
-	}
-
-	if(XMSession::instance()->enableDeadAnimation()) {
-	  StateManager::instance()->replaceState(new StateDeadJust(m_universe));
-	} else {
-	  StateManager::instance()->pushState(new StateDeadMenu(m_universe, true, this));
+    if(m_gameIsFinished == false) {
+      if(v_one_still_play == false || XMSession::instance()->MultiStopWhenOneFinishes()) { // let people continuing when one finished or not
+	if(v_one_finished) {
+	  /* You're done maaaan! :D */
+	  onOneFinish();
+	  m_gameIsFinished = true;
+	} else if(v_all_dead) {
+	  /* You're dead maan! */
+	  onAllDead();
+	  m_gameIsFinished = true;
 	}
       }
     }
@@ -347,5 +288,78 @@ void StatePlaying::mouseUp(int nButton)
 void StatePlaying::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "ERROR") {
     m_commands.push("ERROR");
+  }
+}
+
+void StatePlaying::onOneFinish() {
+  GameApp*  pGame = GameApp::instance();
+
+  /* finalize the replay */
+  if(m_universe != NULL) {
+    if(m_universe->isAReplayToSave()) {
+      m_universe->finalizeReplay(true);
+    }
+  }
+  
+  /* update profiles */
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() == 1) {
+      if(m_universe->getScenes()[0]->Players().size() == 1) {
+	float v_finish_time = 0.0;
+	std::string TimeStamp = pGame->getTimeStamp();
+	if(m_universe->getScenes()[0]->Players()[0]->isFinished()) {
+	  v_finish_time  = m_universe->getScenes()[0]->Players()[0]->finishTime();
+	}
+	xmDatabase::instance("main")->profiles_addFinishTime(XMSession::instance()->profile(),
+							     m_universe->getScenes()[0]->getLevelSrc()->Id(),
+							     TimeStamp,
+							     v_finish_time);
+      }
+    }
+  }	  
+  
+  /* Update stats */
+  /* update stats only in one player mode */
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() == 1) {
+      if(m_universe->getScenes()[0]->Players().size() == 1) {
+	xmDatabase::instance("main")->stats_levelCompleted(XMSession::instance()->profile(),
+							   m_universe->getScenes()[0]->getLevelSrc()->Id(),
+							   m_universe->getScenes()[0]->Players()[0]->finishTime());
+	StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
+      }
+    }
+  }
+  StateManager::instance()->pushState(new StateFinished(m_universe, this));
+}
+
+void StatePlaying::onAllDead() {  
+  if(m_universe != NULL) {	
+    if(m_universe->isAReplayToSave()) {
+      m_universe->finalizeReplay(false);
+    }
+  }
+  
+  /* Update stats */
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() == 1) {
+      if(m_universe->getScenes()[0]->Players().size() == 1) {
+	xmDatabase::instance("main")->stats_died(XMSession::instance()->profile(),
+						 m_universe->getScenes()[0]->getLevelSrc()->Id(),
+						 m_universe->getScenes()[0]->getTime());
+      }
+    }
+  }
+  
+  /* Play the DIE!!! sound */
+  try {
+    Sound::playSampleByName(Theme::instance()->getSound("Headcrash")->FilePath(), 0.3);
+  } catch(Exception &e) {
+  }
+  
+  if(XMSession::instance()->enableDeadAnimation()) {
+    StateManager::instance()->replaceState(new StateDeadJust(m_universe));
+  } else {
+    StateManager::instance()->pushState(new StateDeadMenu(m_universe, true, this));
   }
 }
