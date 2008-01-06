@@ -23,12 +23,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "thread/UpgradeLevelsThread.h"
 #include "GameText.h"
 #include "db/xmDatabase.h"
+#include "XMSession.h"
 
 StateUpgradeLevels::StateUpgradeLevels(bool drawStateBehind,
 				       bool updateStatesBehind)
   : StateUpdate(drawStateBehind, updateStatesBehind)
 {
-  m_pThread = new UpgradeLevelsThread(this);
+  m_pThread = new UpgradeLevelsThread(this, XMSession::instance()->theme());
   m_name    = "StateUpgradeLevels";
   m_curUpdLevelName = "";
 }

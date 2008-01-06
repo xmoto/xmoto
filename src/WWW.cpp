@@ -634,8 +634,11 @@ void WebLevels::upgrade(xmDatabase *i_db) {
   try {
     /* download levels */
     for(unsigned int i=0; i<nrow; i++) {
-      if(m_WebLevelApp->isCancelAsSoonAsPossible())
-	break;
+      if(m_WebLevelApp != NULL) {
+	if(m_WebLevelApp->isCancelAsSoonAsPossible()) {
+	  break;
+	}
+      }
 
       v_levelId    = i_db->getResult(v_result, 4, i, 0);
       v_levelName  = i_db->getResult(v_result, 4, i, 1);
@@ -681,13 +684,19 @@ void WebLevels::upgrade(xmDatabase *i_db) {
 	} else {
 	  m_webLevelsNewDownloadedOK.push_back(v_destFile);
 	}
-      }    
+      }  
       
       v_nb_levels_performed++;
-      m_WebLevelApp->readEvents(); 
     }
   } catch(Exception &e) {
     i_db->read_DB_free(v_result);
+
+    if(m_WebLevelApp != NULL) { // this is not an error in this case
+      if(m_WebLevelApp->isCancelAsSoonAsPossible()) {
+	return;
+      }
+    }
+
     throw e;
   }
   m_WebLevelApp->setTaskProgress(100.0);
@@ -700,4 +709,213 @@ const std::vector<std::string> &WebLevels::getNewDownloadedLevels(void) {
 
 const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
   return m_webLevelsUpdatedDownloadedOK;
+}
+
+void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WWWAppInterface* i_WebLevelApp) {
+  bool i_askThreadToEnd = false;
+
+  if(i_WebLevelApp != NULL) {
+    if(i_WebLevelApp->isCancelAsSoonAsPossible()) {
+      return;
+    }
+  }
+
+  try {
+    Logger::Log("WWW: Downloading a theme...");
+    
+    std::string v_destinationFile, v_destinationFileXML, v_destinationFileXML_tmp;
+    std::string v_sourceFile;
+    f_curl_download_data v_data;
+    char **v_result;
+    unsigned int nrow;
+    std::string v_fileUrl;
+    std::string v_filePath;
+    std::string v_themeFile;
+    bool v_onDisk = false;
+    std::string v_md5Local;
+    std::string v_md5Dist;
+    bool v_all_downloaded = false;
+
+    v_data.v_WebApp = i_WebLevelApp;
+    
+    /* download even if the the theme is uptodate
+       it give a possibility to download file removed by mistake
+    */
+    v_result = i_pDb->readDB("SELECT a.fileUrl, b.filepath "
+			     "FROM webthemes AS a LEFT OUTER JOIN themes AS b "
+			     "ON a.id_theme = b.id_theme "
+			     "WHERE a.id_theme=\"" + xmDatabase::protectString(i_id_theme) + "\";",
+			     nrow);
+    if(nrow != 1) {
+      i_pDb->read_DB_free(v_result);
+      throw Exception("Unable to found the theme on the website");
+    }
+    
+    v_fileUrl = i_pDb->getResult(v_result, 2, 0, 0);
+    if(i_pDb->getResult(v_result, 2, 0, 1) != NULL) {
+      v_filePath = i_pDb->getResult(v_result, 2, 0, 1);
+      v_onDisk = true;
+    }  
+    i_pDb->read_DB_free(v_result);
+    
+    // theme avaible on the web get it
+    
+    /* the destination file must be in the user dir */
+    if(v_filePath != "") {
+      if(FS::isInUserDir(v_filePath)) {
+	v_destinationFileXML = v_filePath;
+      }
+    }
+
+    if(v_destinationFileXML == "") {
+      /* determine destination file */
+      v_destinationFileXML = 
+	FS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
+	FS::getFileBaseName(v_fileUrl) + ".xml";
+    }
+  
+    v_themeFile = v_destinationFileXML;
+    
+    /* download the theme file */
+    v_data.v_nb_files_performed   = 0;
+    v_data.v_nb_files_to_download = 1;
+    FS::mkArborescence(v_destinationFileXML);
+    v_destinationFileXML_tmp = v_destinationFileXML + ".tmp";
+    FSWeb::downloadFileBz2(v_destinationFileXML_tmp, v_fileUrl, FSWeb::f_curl_progress_callback_download, &v_data, XMSession::instance()->proxySettings());
+    
+    if(i_WebLevelApp != NULL) {
+      if(i_WebLevelApp->isCancelAsSoonAsPossible()) {
+	remove(v_destinationFileXML_tmp.c_str());
+	return;
+      }
+    }
+
+    /* download all the files required */
+    Theme *v_theme = Theme::instance();
+    std::vector<ThemeFile> *v_required_files;
+    v_theme->load(v_destinationFileXML_tmp);
+    v_required_files = v_theme->getRequiredFiles();
+
+    // all files must be checked for md5sum
+    int v_nb_files_to_download = 0;
+    for(unsigned int i=0; i<v_required_files->size(); i++) {
+      if(FS::fileExists((*v_required_files)[i].filepath) == false) {
+	v_nb_files_to_download++;
+      } else {
+	v_md5Local = FS::md5sum((*v_required_files)[i].filepath);
+	v_md5Dist  = (*v_required_files)[i].filemd5;
+	if(v_md5Local != v_md5Dist && v_md5Dist != "") {
+	  v_nb_files_to_download++;
+	}
+      }
+    }
+    
+    if(v_nb_files_to_download != 0) {
+      int v_nb_files_performed  = 0;
+      
+      v_data.v_nb_files_performed   = 0;
+      v_data.v_nb_files_to_download = v_nb_files_to_download;
+      
+      unsigned int i = 0;
+      if(i_WebLevelApp != NULL) {
+	if(i_WebLevelApp->isCancelAsSoonAsPossible()) {
+	  i_askThreadToEnd = true;
+	}
+      }
+
+      while(i<v_required_files->size() && i_askThreadToEnd == false) {
+	// download v_required_files[i]     
+	v_destinationFile = FS::getUserDir() + std::string("/") + (*v_required_files)[i].filepath;
+	v_sourceFile = XMSession::instance()->webThemesURLBase() + std::string("/") + (*v_required_files)[i].filepath;
+	
+	/* check md5 sums */
+	v_md5Local = v_md5Dist = "";
+	if(FS::fileExists((*v_required_files)[i].filepath) == true) {
+	  v_md5Local = FS::md5sum((*v_required_files)[i].filepath);
+	  v_md5Dist  = (*v_required_files)[i].filemd5;
+	}
+	
+	/* if v_md5Dist == "", don't download ; it's a manually adding */
+	if(FS::fileExists((*v_required_files)[i].filepath) == false || (v_md5Local != v_md5Dist && v_md5Dist != "")) {
+	  v_data.v_nb_files_performed = v_nb_files_performed;
+	  
+	  float v_percentage = (((float)v_nb_files_performed) * 100.0) / ((float)v_nb_files_to_download);
+	  if(i_WebLevelApp != NULL) {
+	    i_WebLevelApp->setTaskProgress(v_percentage);
+	    i_WebLevelApp->setBeingDownloadedInformation((*v_required_files)[i].filepath);
+	  }
+
+	  FS::mkArborescence(v_destinationFile);
+	  
+	  FSWeb::downloadFile(v_destinationFile, v_sourceFile, FSWeb::f_curl_progress_callback_download, &v_data,
+			      XMSession::instance()->proxySettings());
+	  
+	  v_nb_files_performed++;
+	}
+	i++;
+
+	if(i_WebLevelApp != NULL) {
+	  if(i_WebLevelApp->isCancelAsSoonAsPossible()) {
+	    i_askThreadToEnd = true;
+	  }
+	}
+      }
+      v_all_downloaded = i == v_required_files->size();
+
+      if(i_WebLevelApp != NULL) {
+	i_WebLevelApp->setTaskProgress(100);
+      }
+    } else {
+      v_all_downloaded = true;
+    }
+
+    /* full downloading, put the xml */
+    if(v_all_downloaded) {
+      remove(v_destinationFileXML.c_str());
+      if(rename(v_destinationFileXML_tmp.c_str(), v_destinationFileXML.c_str()) != 0) {
+	remove(v_destinationFileXML_tmp.c_str());
+	throw Exception("Failed to update the theme");
+	return;
+      } else {
+	if(v_onDisk) {
+	  i_pDb->themes_update(i_id_theme, v_themeFile);
+	} else {
+	  i_pDb->themes_add(i_id_theme, v_themeFile);
+	}
+      }
+    } else {
+      remove(v_destinationFileXML_tmp.c_str());
+    }
+
+  } catch(Exception &e) {
+    if(i_WebLevelApp != NULL) {
+      if(i_WebLevelApp->isCancelAsSoonAsPossible()) {
+	return;
+      }
+    }
+    
+    Logger::Log("** Warning ** : Failed to update theme %s (%s)", i_id_theme.c_str(), e.getMsg().c_str());
+    throw Exception("Failed to update the theme");
+    return;
+  }
+  
+}
+
+void WebThemes::updateThemeList(xmDatabase* i_pDb, WWWAppInterface* i_WebLevelApp) {
+  std::string v_destinationFile = FS::getUserDir() + "/" + DEFAULT_WEBTHEMES_FILENAME;
+  f_curl_download_data v_data;
+  
+  if(i_WebLevelApp != NULL) {
+    if(i_WebLevelApp->isCancelAsSoonAsPossible()) {
+      return;
+    }
+  }
+
+  Logger::Log("WWW: Checking for new or updated themes...");
+  v_data.v_WebApp = i_WebLevelApp;
+  v_data.v_nb_files_performed   = 0;
+  v_data.v_nb_files_to_download = 1;
+  FSWeb::downloadFileBz2UsingMd5(v_destinationFile, XMSession::instance()->webThemesURL(),
+				 FSWeb::f_curl_progress_callback_download, &v_data, XMSession::instance()->proxySettings());
+  i_pDb->webthemes_updateDB(v_destinationFile);
 }

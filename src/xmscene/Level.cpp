@@ -625,11 +625,10 @@ void Level::loadXML(void) {
 	m_layerOffsets.push_back(offset);
 	m_isLayerFront.push_back(XML::getOption(pElem, "frontlayer", "false") == "true");
       }
-      for(int i=0; i<m_numberLayer; i++){
-	Logger::Log("Level::loadXML offsets layer %d: %f, %f isfront: %s",
-		  i, m_layerOffsets[i].x, m_layerOffsets[i].y,
-		  m_isLayerFront[i]?"true":"false");
-      }
+//      for(int i=0; i<m_numberLayer; i++){
+//	Logger::Log("Level::loadXML offsets layer %d: %f, %f isfront: %s",
+//		    i, m_layerOffsets[i].x, m_layerOffsets[i].y, m_isLayerFront[i]?"true":"false");
+//      }
     }
 
     /* replacement theme */

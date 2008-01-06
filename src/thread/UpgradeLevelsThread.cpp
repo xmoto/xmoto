@@ -25,13 +25,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateManager.h"
 #include "states/StateUpgradeLevels.h"
 
-UpgradeLevelsThread::UpgradeLevelsThread(GameState* pCallingState)
+UpgradeLevelsThread::UpgradeLevelsThread(GameState* pCallingState, const std::string& i_id_theme)
   : XMThread()
 {
   m_pWebLevels    = new WebLevels(this);
   m_pCallingState = pCallingState;
   m_updateAutomaticallyLevels = false;
   m_msg = "";
+  m_id_theme = i_id_theme;
 }
 
 UpgradeLevelsThread::~UpgradeLevelsThread()
@@ -43,13 +44,6 @@ void UpgradeLevelsThread::setBeingDownloadedInformation(const std::string &p_inf
 {
   Logger::Log(("setBeingDownloadedInformation" + p_information).c_str());
   setThreadCurrentMicroOperation(p_information);
-}
-
-void UpgradeLevelsThread::readEvents()
-{
-  if(m_askThreadToEnd == true){
-    setCancelAsSoonAsPossible();
-  }
 }
 
 bool UpgradeLevelsThread::shouldLevelBeUpdated(const std::string &LevelID)
@@ -155,6 +149,12 @@ int UpgradeLevelsThread::realThreadFunction()
     clearCancelAsSoonAsPossible();
 
     setThreadCurrentMicroOperation("");
+
+    // update theme before upgrading levels
+    WebThemes::updateThemeList(m_pDb, this);
+    WebThemes::updateTheme(m_pDb, m_id_theme, this);
+    StateManager::instance()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
+
     m_pWebLevels->upgrade(m_pDb);
   }
   catch(Exception& e) {
@@ -162,10 +162,6 @@ int UpgradeLevelsThread::realThreadFunction()
     Logger::Log("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
 
     return 1;
-  }
-
-  if(m_askThreadToEnd == true){
-    return 0;
   }
 
   /* Got some new levels... load them! */
@@ -194,3 +190,9 @@ std::string UpgradeLevelsThread::getMsg() const
 {
   return m_msg;
 }
+
+void UpgradeLevelsThread::askThreadToEnd() {
+  setCancelAsSoonAsPossible();
+  XMThread::askThreadToEnd();
+}
+
