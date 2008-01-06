@@ -42,16 +42,8 @@ int UpdateThemesListThread::realThreadFunction()
   setThreadProgress(0);
 
   try {
-    std::string v_destinationFile = FS::getUserDir() + "/" + DEFAULT_WEBTHEMES_FILENAME;
-    f_curl_download_data v_data;
-
-    Logger::Log("WWW: Checking for new or updated themes...");
-    v_data.v_WebApp = this;
-    v_data.v_nb_files_performed   = 0;
-    v_data.v_nb_files_to_download = 1;
-    FSWeb::downloadFileBz2UsingMd5(v_destinationFile, XMSession::instance()->webThemesURL(),
-				   FSWeb::f_curl_progress_callback_download, &v_data, XMSession::instance()->proxySettings());
-    m_pDb->webthemes_updateDB(v_destinationFile);
+    clearCancelAsSoonAsPossible();
+    WebThemes::updateThemeList(m_pDb, this);
     StateManager::instance()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
   } catch(Exception &e) {
     /* file probably doesn't exist */
