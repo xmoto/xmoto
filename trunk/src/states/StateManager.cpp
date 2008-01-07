@@ -424,6 +424,10 @@ bool StateManager::doRender()
 {
   m_renderCounter += 1.0;
 
+  if(XMSession::instance()->timedemo()) {
+    return true;
+  }
+
   if(m_renderCounter >= m_renderPeriod){
     m_renderCounter -= m_renderPeriod;
     return true;
