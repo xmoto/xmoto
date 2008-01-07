@@ -169,9 +169,16 @@ bool StateReplaying::update()
   if(StateScene::update() == false)
     return false;
   
-  if(m_replayBiker->isDead() || m_replayBiker->isFinished()) {
+  if(m_replayBiker->isDead() || m_replayBiker->isFinished() && m_stopToUpdate == false) {
     m_stopToUpdate = true;
-    
+
+    if(XMSession::instance()->benchmark()) {
+      m_requestForEnd = true;
+      closePlaying();
+      printf(" * %i frames rendered in %.2f seconds\n", m_benchmarkNbFrame, GameApp::getXMTime() - m_benchmarkStartTime);
+      printf(" * Average framerate: %.2f fps\n", ((double)m_benchmarkNbFrame) / (GameApp::getXMTime() - m_benchmarkStartTime));
+    }
+
     if(m_replayBiker->isFinished()) {
       if(m_universe != NULL) {
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {

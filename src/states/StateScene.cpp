@@ -47,6 +47,10 @@ StateScene::StateScene(bool i_doShade, bool i_doShadeAnim)
     m_showCursor = false;
     m_cameraAnim = NULL;
     m_universe   = NULL;
+
+    m_benchmarkNbFrame   = 0;
+    m_benchmarkStartTime = GameApp::getXMTime();
+
 }
 
 StateScene::StateScene(Universe* i_universe, bool i_doShade, bool i_doShadeAnim)
@@ -58,6 +62,9 @@ StateScene::StateScene(Universe* i_universe, bool i_doShade, bool i_doShadeAnim)
   m_showCursor = false;
   m_cameraAnim = NULL;
   m_universe   = i_universe;
+
+  m_benchmarkNbFrame   = 0;
+  m_benchmarkStartTime = GameApp::getXMTime();  
 }
 
 StateScene::~StateScene()
@@ -74,6 +81,10 @@ void StateScene::enter()
   ParticlesSource::setAllowParticleGeneration(true);
   m_isLockedScene = false;
   m_autoZoom      = false;
+
+  m_benchmarkNbFrame   = 0;
+  m_benchmarkStartTime = GameApp::getXMTime();
+
 }
 
 bool StateScene::update()
@@ -151,6 +162,7 @@ bool StateScene::render()
   }
 
   GameState::render();
+  m_benchmarkNbFrame++;
 
   return true;
 }

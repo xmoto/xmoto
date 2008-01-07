@@ -66,6 +66,9 @@ class StateScene : public GameState {
  CameraAnimation* m_cameraAnim;
 
  Universe* m_universe;
+
+ int m_benchmarkNbFrame;
+ float m_benchmarkStartTime;
 };
 
 #endif
