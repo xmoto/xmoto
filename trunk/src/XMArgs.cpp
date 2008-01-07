@@ -455,8 +455,8 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t--sqlTrace\n\t\tEnable sql trace mode.\n");
   printf("\t-td, --timedemo\n\t\tNo delaying, maximum framerate.\n");
   printf("\t\ta good OpenGL-enabled video card.\n");
-  printf("\t--benchmark\n\t\tOnly meaningful when combined with -replay\n");
-  printf("\t\tand -timedemo. Useful to determine the graphics\n");
+  printf("\t--benchmark\n\t\tOnly meaningful when combined with --replay\n");
+  printf("\t\tand --timedemo. Useful to determine the graphics\n");
   printf("\t\tperformance.\n");
   printf("\t--cleancache\n\t\tDeletes the content of the level cache.\n");
   printf("\t--drawlib DRAWLIB\n\t\tChoose the render to use (default one is OPENGL if available).\n");
