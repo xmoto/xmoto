@@ -434,7 +434,7 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\tFILE\n\t\tOpen the replay or the level from file FILE.\n");
   printf("\t-l, --level ID\n\t\tStart playing the given level right away.\n");
   printf("\t--levelFile FILE\n\t\tStart playing the given level right away.\n");
-  printf("\t-r, -replay NAME\n\t\tPlayback replay with the given name.\n");    
+  printf("\t-r, --replay NAME\n\t\tPlayback replay with the given name.\n");    
   printf("\t-ri, --replayInfos REPLAY NAME\n\t\tDisplay information about a replay.\n");    
   printf("\t-p, --profile NAME\n\t\tUse the profile NAME as the player profile.\n");
   printf("\t--configpath PATH\n\t\tUse the path PATH as the xmoto configuration path.\n");
