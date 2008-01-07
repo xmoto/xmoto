@@ -456,7 +456,9 @@ void GameApp::run_loop() {
     /* Update user app */
     drawFrame();
 
-    _Wait();
+    if(XMSession::instance()->timedemo() == false) {
+      _Wait();
+    }
   }
 }
 
