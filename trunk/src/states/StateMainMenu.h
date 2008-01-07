@@ -111,6 +111,7 @@ class StateMainMenu : public StateMenu {
   void updateReplaysRights();
 
   std::string getInfoFrameLevelId();
+  void setInputKey(const std::string& i_strKey, const std::string& i_key);
 
   bool m_require_updateFavoriteLevelsList;
   bool m_require_updateReplaysList;

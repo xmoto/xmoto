@@ -1639,52 +1639,59 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
 	if(v_list->getEntries()[i]->Text[1] == i_message) {
 	  // switch keys
 	  v_list->getEntries()[i]->Text[1]  = pEntry->Text[1];
+	  setInputKey(v_list->getEntries()[i]->Text[0], v_list->getEntries()[i]->Text[1]);
 	}
       }
       pEntry->Text[1] = i_message;
-
-      for(int i=0; i<4; i++) {
-	std::string n;
-	switch(i) {
-	case 0:
-	  n = "";
-	  break;
-	case 1:
-	  n = " 2";
-	  break;
-	case 2:
-	  n = " 3";
-	  break;
-	case 3:
-	  n = " 4";
-	  break;
-	}
-
-	if(pEntry->Text[0] == GAMETEXT_DRIVE + n) {
-	  InputHandler::instance()->setDRIVE(i, InputHandler::stringToKey(i_message));
-	}
-
-	if(pEntry->Text[0] == GAMETEXT_BRAKE + n) {
-	  InputHandler::instance()->setBRAKE(i, InputHandler::stringToKey(i_message));
-	}
-
-	if(pEntry->Text[0] == GAMETEXT_FLIPLEFT + n) {
-	  InputHandler::instance()->setFLIPLEFT(i, InputHandler::stringToKey(i_message));
-	}
-
-	if(pEntry->Text[0] == GAMETEXT_FLIPRIGHT + n) {
-	  InputHandler::instance()->setFLIPRIGHT(i, InputHandler::stringToKey(i_message));
-	}
-
-	if(pEntry->Text[0] == GAMETEXT_CHANGEDIR + n) {
-	  InputHandler::instance()->setCHANGEDIR(i, InputHandler::stringToKey(i_message));
-	}
-      }
+      setInputKey(pEntry->Text[0], i_message);
     }
     return;
   }
 
   StateMenu::send(i_id, i_message);
+}
+
+void StateMainMenu::setInputKey(const std::string& i_strKey, const std::string& i_key) {
+  std::string n;
+
+  for(int i=0; i<4; i++) {
+    n = "";
+
+    switch(i) {
+    case 0:
+      n = "";
+      break;
+    case 1:
+      n = " 2";
+      break;
+    case 2:
+      n = " 3";
+      break;
+    case 3:
+      n = " 4";
+      break;
+    }
+
+    if(i_strKey == GAMETEXT_DRIVE + n) {
+      InputHandler::instance()->setDRIVE(i, InputHandler::stringToKey(i_key));
+    }
+    
+    if(i_strKey == GAMETEXT_BRAKE + n) {
+      InputHandler::instance()->setBRAKE(i, InputHandler::stringToKey(i_key));
+    }
+    
+    if(i_strKey == GAMETEXT_FLIPLEFT + n) {
+      InputHandler::instance()->setFLIPLEFT(i, InputHandler::stringToKey(i_key));
+    }
+    
+    if(i_strKey == GAMETEXT_FLIPRIGHT + n) {
+      InputHandler::instance()->setFLIPRIGHT(i, InputHandler::stringToKey(i_key));
+    }
+    
+    if(i_strKey == GAMETEXT_CHANGEDIR + n) {
+      InputHandler::instance()->setCHANGEDIR(i, InputHandler::stringToKey(i_key));
+    }
+  }
 }
 
 void StateMainMenu::executeOneCommand(std::string cmd)
