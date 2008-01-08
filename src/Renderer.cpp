@@ -65,6 +65,8 @@ GameRenderer::GameRenderer() {
   m_showEngineCounter = true;
   m_showTimePanel = true;
   m_allowGhostEffect = true;
+  m_currentEdgeEffect = "";
+  m_currentEdgeSprite = NULL;
 }
 GameRenderer::~GameRenderer() {
 }
@@ -83,175 +85,390 @@ GameRenderer::~GameRenderer() {
   /*===========================================================================
   Called to prepare renderer for new level
   ===========================================================================*/
-  void GameRenderer::prepareForNewLevel(Universe* i_universe) {
-    Level *v_level; // level of the first world
-    int n_sameSceneAs;
+void GameRenderer::prepareForNewLevel(Universe* i_universe) {
+  // level of the first world
+  Level* v_level;
+  int n_sameSceneAs;
 
-    if(i_universe == NULL) {
-      return;
-    }
-
-    if(i_universe->getScenes().size() <= 0) {
-      return;
-    }
-
-    // can't use the same overlay for the multi cameras,
-    // because the fade is made using all the cameras,
-    // there should be one overlay per camera.
-    if(i_universe->getScenes().size() > 1) {
-      m_allowGhostEffect = false;
-    } else {
-      m_allowGhostEffect = i_universe->getScenes()[0]->getNumberCameras() == 1;
-    }
-
-    // init camera
-    for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
-      unsigned int numberCamera = i_universe->getScenes()[j]->getNumberCameras();
-      if(numberCamera > 1){
-	numberCamera++;
-      }
-      for(unsigned int i=0; i<numberCamera; i++){
-	i_universe->getScenes()[j]->setCurrentCamera(i);
-	i_universe->getScenes()[j]->getCamera()->prepareForNewLevel();
-      }
-    }
-    
-    m_screenBBox.reset();
-
-    m_fNextGhostInfoUpdate = 0.0f;
-    m_nGhostInfoTrans      = 255;
-
-    /* Optimize scene */
-
-    for(unsigned int u=0; u<i_universe->getScenes().size(); u++) {
-      v_level = i_universe->getScenes()[u]->getLevelSrc();
-
-      n_sameSceneAs = -1;
-      // set to the universe which has the same level to init geoms only 1 time if the level is loaded several times
-      for(unsigned int v=0; v<u; v++) {
-	if(i_universe->getScenes()[u]->getLevelSrc()->Id() == i_universe->getScenes()[v]->getLevelSrc()->Id()) {
-	  n_sameSceneAs = v;
-	  break;
-	}
-      }
-
-      std::vector<Block *> Blocks = v_level->Blocks();
-      int nVertexBytes = 0;
-  
-      for(unsigned int i=0; i<Blocks.size(); i++) {
-
-	/* do not load into the graphic card blocks which won't be
-	   displayed. On ati card with free driver, levels like green
-	   hill zone act 2 don't work if there's too much vertex loaded */
-	if(XMSession::instance()->gameGraphics() != GFX_HIGH && Blocks[i]->getLayer() != -1)
-	  continue;
-	if(XMSession::instance()->gameGraphics() == GFX_LOW && Blocks[i]->isBackground() == true)
-	  continue;
-
-	bool dynamicBlock = false;
-	std::vector<Geom *>* pGeoms;
-	if(Blocks[i]->isDynamic() == true){
-	  dynamicBlock = true;
-	  pGeoms = &m_DynamicGeoms;
-	}
-	else{
-	  pGeoms = &m_StaticGeoms;
-	}
-
-	std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
-	Vector2f Center;
-	if(dynamicBlock == true){
-	  Center.x = 0.0;
-	  Center.y = 0.0;
-	}
-	else{
-	  Center = Blocks[i]->DynamicPosition();
-	}
-	Sprite* pSprite = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->Texture());
-	Texture *pTexture = NULL;
-
-	if(pSprite != NULL) {
-	  try {
-	    pTexture = pSprite->getTexture();
-	  } catch(Exception &e) {
-	    Logger::Log("** Warning ** : Texture '%s' not found!", Blocks[i]->Texture().c_str());
-	    i_universe->getScenes()[u]->gameMessage(GAMETEXT_MISSINGTEXTURES,true);
-	  }
-	} else {
-	  Logger::Log("** Warning ** : Texture '%s' not found!", Blocks[i]->Texture().c_str());
-	  i_universe->getScenes()[u]->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
-	}
-
-	// add the geom
-	if(n_sameSceneAs == -1) {
-	  Geom* pSuitableGeom = new Geom;
-	  pSuitableGeom->pTexture = pTexture;
-	  int geomIndex = pGeoms->size();
-	  pGeoms->push_back(pSuitableGeom);
-	  Blocks[i]->setGeom(geomIndex);
-	  
-	  for(unsigned int j=0; j<ConvexBlocks.size(); j++) {
-	    Vector2f v_center = Vector2f(0.0, 0.0);
-	    
-	    GeomPoly *pPoly = new GeomPoly;
-	    pSuitableGeom->Polys.push_back(pPoly);
-	    
-	    pPoly->nNumVertices = ConvexBlocks[j]->Vertices().size();
-	    pPoly->pVertices    = new GeomCoord[ pPoly->nNumVertices ];
-	    pPoly->pTexCoords   = new GeomCoord[ pPoly->nNumVertices ];
-	    
-	    for(unsigned int k=0; k<pPoly->nNumVertices; k++) {
-	      pPoly->pVertices[k].x = Center.x + ConvexBlocks[j]->Vertices()[k]->Position().x;
-	      pPoly->pVertices[k].y = Center.y + ConvexBlocks[j]->Vertices()[k]->Position().y;
-	      pPoly->pTexCoords[k].x = ConvexBlocks[j]->Vertices()[k]->TexturePosition().x;
-	      pPoly->pTexCoords[k].y = ConvexBlocks[j]->Vertices()[k]->TexturePosition().y;
-	      
-	      v_center += Vector2f(pPoly->pVertices[k].x, pPoly->pVertices[k].y);
-	    }
-	    v_center /= pPoly->nNumVertices;
-	    
-	    /* fix the gap problem with polygons */
-	    float a = 0.003; /* seems to be a good value, put negativ value to make it worst */
-	    for(unsigned int k=0; k<pPoly->nNumVertices; k++) {
-	      Vector2f V = Vector2f(pPoly->pVertices[k].x - v_center.x, pPoly->pVertices[k].y - v_center.y);
-	      if(V.length() != 0.0) {
-		V.normalize();
-		V *= a;
-		pPoly->pVertices[k].x += V.x;
-		pPoly->pVertices[k].y += V.y;
-	      }
-	    }
-	    
-	    nVertexBytes += pPoly->nNumVertices * ( 4 * sizeof(float) );
-#ifdef ENABLE_OPENGL        
-	    /* Use VBO optimization? */
-	    if(GameApp::instance()->getDrawLib()->useVBOs()) {
-	      /* Copy static coordinates unto video memory */
-	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
-	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
-	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
-	      
-	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
-	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
-	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
-	    }
-#endif
-	  }
-	  Logger::Log("GL: %d kB vertex buffers",    nVertexBytes/1024);
-	} else { // the geoms already exist in level n_sameSceneAs
-	  // assum that blocks loading of levels have the same number (i)
-	  Blocks[i]->setGeom(i_universe->getScenes()[n_sameSceneAs]->getLevelSrc()->Blocks()[i]->getGeom());
-	}
-	//
-      }
-    }
-    
+  if(i_universe == NULL) {
+    return;
   }
+  if(i_universe->getScenes().size() <= 0) {
+    return;
+  }
+
+  // can't use the same overlay for the multi cameras,
+  // because the fade is made using all the cameras,
+  // there should be one overlay per camera.
+  if(i_universe->getScenes().size() > 1) {
+    m_allowGhostEffect = false;
+  } else {
+    m_allowGhostEffect = (i_universe->getScenes()[0]->getNumberCameras() == 1);
+  }
+
+  initCameras(i_universe);
+
+  m_screenBBox.reset();
+
+  m_fNextGhostInfoUpdate = 0.0f;
+  m_nGhostInfoTrans      = 255;
+
+  /* Optimize scene */
+  for(unsigned int u=0; u<i_universe->getScenes().size(); u++) {
+    v_level = i_universe->getScenes()[u]->getLevelSrc();
+
+    n_sameSceneAs = -1;
+    // set to the universe which has the same level to init geoms
+    // only 1 time if the level is loaded several times
+    for(unsigned int v=0; v<u; v++) {
+      if(i_universe->getScenes()[u]->getLevelSrc()->Id() == i_universe->getScenes()[v]->getLevelSrc()->Id()) {
+	n_sameSceneAs = v;
+	break;
+      }
+    }
+
+    std::vector<Block *> Blocks = v_level->Blocks();
+    int nVertexBytes = 0;
+
+    for(unsigned int i=0; i<Blocks.size(); i++) {
+      /* do not load into the graphic card blocks which won't be
+	 displayed. On ati card with free driver, levels like green
+	 hill zone act 2 doesn't work if there's too much vertex loaded */
+      if(XMSession::instance()->gameGraphics() != GFX_HIGH
+	 && Blocks[i]->getLayer() != -1)
+	continue;
+      if(XMSession::instance()->gameGraphics() == GFX_LOW
+	 && Blocks[i]->isBackground() == true)
+	continue;
+
+      nVertexBytes += loadBlock(Blocks[i], i_universe, u, n_sameSceneAs, i);
+    }
+
+    Logger::Log("GL: %d kB vertex buffers", nVertexBytes/1024);
+  }
+}
+
+void GameRenderer::initCameras(Universe* i_universe)
+{
+  for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
+    unsigned int numberCamera = i_universe->getScenes()[j]->getNumberCameras();
+    if(numberCamera > 1){
+      numberCamera++;
+    }
+    for(unsigned int i=0; i<numberCamera; i++){
+      i_universe->getScenes()[j]->setCurrentCamera(i);
+      i_universe->getScenes()[j]->getCamera()->prepareForNewLevel();
+    }
+  }
+}
+
+int GameRenderer::loadBlock(Block* pBlock,
+			    Universe* i_universe,
+			    unsigned int currentScene,
+			    int sameSceneAs,
+			    int blockIndex)
+{
+  MotoGame* pScene  = i_universe->getScenes()[currentScene];
+  int nVertexBytes  = 0;
+  bool dynamicBlock = false;
+  std::vector<Geom *>* pGeoms;
+  if(pBlock->isDynamic() == true){
+    dynamicBlock = true;
+    pGeoms = &m_DynamicGeoms;
+  }
+  else{
+    pGeoms = &m_StaticGeoms;
+  }
+
+  Vector2f Center;
+  if(dynamicBlock == true){
+    Center.x = 0.0;
+    Center.y = 0.0;
+  }
+  else{
+    Center = pBlock->DynamicPosition();
+  }
+
+  Texture* pTexture = loadTexture(pBlock->Texture());
+  if(pTexture == NULL){
+    pScene->gameMessage(GAMETEXT_MISSINGTEXTURES, true);
+  }
+
+  // add the geom
+  if(sameSceneAs == -1) {
+    nVertexBytes += loadBlockGeom(pBlock, pGeoms, pTexture, Center, pScene);
+    nVertexBytes += loadBlockEdge(pBlock, Center, pScene);
+    return nVertexBytes;
+
+  } else {
+    // the geoms already exist in level sameSceneAs
+    // assum that blocks loading of levels have the same number (i)
+    Block* pBlockFromOtherLevel = i_universe->getScenes()[sameSceneAs]->getLevelSrc()->Blocks()[blockIndex];
+    pBlock->setGeom(pBlockFromOtherLevel->getGeom());
+
+    // the edge geoms already exist too
+    for(unsigned int i=0;
+	i<pBlockFromOtherLevel->getEdgeGeoms().size();
+	i++){
+      pBlock->addEdgeGeom(pBlockFromOtherLevel->getEdgeGeoms()[i]);
+    }
+
+    return 0;
+  }
+}
+
+int GameRenderer::loadBlockGeom(Block* pBlock,
+				std::vector<Geom *>* pGeoms,
+				Texture* pTexture,
+				Vector2f Center,
+				MotoGame* pScene)
+{
+  std::vector<ConvexBlock *> ConvexBlocks = pBlock->ConvexBlocks();
+  int nVertexBytes  = 0;
+  Geom* pSuitableGeom = new Geom;
+  pSuitableGeom->pTexture = pTexture;
+  int geomIndex = pGeoms->size();
+  pGeoms->push_back(pSuitableGeom);
+  pBlock->setGeom(geomIndex);
+
+  for(unsigned int j=0; j<ConvexBlocks.size(); j++) {
+    Vector2f v_center = Vector2f(0.0, 0.0);
+
+    GeomPoly *pPoly = new GeomPoly;
+    pSuitableGeom->Polys.push_back(pPoly);
+
+    pPoly->nNumVertices = ConvexBlocks[j]->Vertices().size();
+    pPoly->pVertices    = new GeomCoord[ pPoly->nNumVertices ];
+    pPoly->pTexCoords   = new GeomCoord[ pPoly->nNumVertices ];
+
+    for(unsigned int k=0; k<pPoly->nNumVertices; k++) {
+      pPoly->pVertices[k].x  = Center.x + ConvexBlocks[j]->Vertices()[k]->Position().x;
+      pPoly->pVertices[k].y  = Center.y + ConvexBlocks[j]->Vertices()[k]->Position().y;
+      pPoly->pTexCoords[k].x = ConvexBlocks[j]->Vertices()[k]->TexturePosition().x;
+      pPoly->pTexCoords[k].y = ConvexBlocks[j]->Vertices()[k]->TexturePosition().y;
+
+      v_center += Vector2f(pPoly->pVertices[k].x, pPoly->pVertices[k].y);
+    }
+    v_center /= pPoly->nNumVertices;
+
+    /* fix the gap problem with polygons */
+    float a = 0.003; /* seems to be a good value, put negativ value to make it worst */
+    for(unsigned int k=0; k<pPoly->nNumVertices; k++) {
+      Vector2f V = Vector2f(pPoly->pVertices[k].x - v_center.x, pPoly->pVertices[k].y - v_center.y);
+      if(V.length() != 0.0) {
+	V.normalize();
+	V *= a;
+	pPoly->pVertices[k].x += V.x;
+	pPoly->pVertices[k].y += V.y;
+      }
+    }
+
+    nVertexBytes += pPoly->nNumVertices * (4 * sizeof(float));
+#ifdef ENABLE_OPENGL        
+    /* Use VBO optimization? */
+    if(GameApp::instance()->getDrawLib()->useVBOs()) {
+      /* Copy static coordinates unto video memory */
+      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
+      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
+      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
+
+      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
+      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
+      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
+    }
+#endif
+  }
+
+  return nVertexBytes;
+}
+
+int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene)
+{
+  int nVertexBytes  = 0;
+  if(XMSession::instance()->gameGraphics() != GFX_LOW){
+    m_currentEdgeEffect = "";
+    m_currentEdgeSprite = NULL;
+
+    // create edge texture
+    std::vector<BlockVertex *>& vertices = pBlock->Vertices();
+    for(unsigned int j=0; j<vertices.size(); j++){
+      BlockVertex* vertexA = vertices[j];
+      std::string edgeEffect = vertexA->EdgeEffect();
+      if(edgeEffect == "")
+	continue;
+
+      BlockVertex* vertexB  = vertices[(j+1) % vertices.size()];
+      Texture*     pTexture = loadTexture(edgeEffect, SPRITE_TYPE_EDGEEFFECT);
+      if(pTexture == NULL){
+	pScene->gameMessage(GAMETEXT_MISSINGTEXTURES, true);
+	continue;
+      }
+
+      EdgeEffectSprite* pType = NULL;
+      if(edgeEffect != m_currentEdgeEffect) {
+	pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, edgeEffect);
+	if(pType == NULL) {
+	  Logger::Log("** Invalid edge effect %s", edgeEffect.c_str());
+	  continue;
+	}
+
+	if(pType != NULL) {
+	  m_currentEdgeSprite = pType;
+	  m_currentEdgeEffect = edgeEffect;
+	}
+      }
+
+      int geomIndex = edgeGeomExists(pBlock, pTexture->Name);
+      Logger::Log("geomIndex=%d", geomIndex);
+      if(geomIndex < 0){
+	// create a new one
+	Geom* pGeom = new Geom;
+	geomIndex = m_edgeGeoms.size();
+	m_edgeGeoms.push_back(pGeom);
+	pBlock->addEdgeGeom(geomIndex);
+	pGeom->pTexture = pTexture;
+	GeomPoly *pPoly = new GeomPoly;
+	pGeom->Polys.push_back(pPoly);
+
+	Logger::Log("  Create new geom %d. texture=%s. poly=%x", geomIndex, pTexture->Name.c_str(), pPoly);
+      }
+      Geom*     pGeom = m_edgeGeoms[geomIndex];
+      GeomPoly* pPoly = pGeom->Polys[0];
+
+      Vector2f v1, v2, v3, v4;
+      if(calculateEdgePosition(pBlock, vertexA, vertexB, Center, v1, v2, v3 ,v4) == false)
+	continue;
+
+      float fXScale = m_currentEdgeSprite->getScale();
+      pPoly->nNumVertices += 4;
+      pPoly->pVertices    = (GeomCoord*)realloc(pPoly->pVertices,
+						pPoly->nNumVertices * sizeof(GeomCoord));
+      pPoly->pTexCoords   = (GeomCoord*)realloc(pPoly->pTexCoords ,
+						pPoly->nNumVertices * sizeof(GeomCoord));
+      nVertexBytes += (4 * sizeof(float));
+
+      pPoly->pVertices[pPoly->nNumVertices-4].x  = v1.x;
+      pPoly->pVertices[pPoly->nNumVertices-4].y  = v1.y;
+      pPoly->pTexCoords[pPoly->nNumVertices-4].x = vertexA->Position().x*fXScale;
+      pPoly->pTexCoords[pPoly->nNumVertices-4].y = 0.01;
+      pPoly->pVertices[pPoly->nNumVertices-3].x  = v2.x;
+      pPoly->pVertices[pPoly->nNumVertices-3].y  = v2.y;
+      pPoly->pTexCoords[pPoly->nNumVertices-3].x = vertexB->Position().x*fXScale;
+      pPoly->pTexCoords[pPoly->nNumVertices-3].y = 0.01;
+      pPoly->pVertices[pPoly->nNumVertices-2].x  = v3.x;
+      pPoly->pVertices[pPoly->nNumVertices-2].y  = v3.y;
+      pPoly->pTexCoords[pPoly->nNumVertices-2].x = vertexB->Position().x*fXScale;
+      pPoly->pTexCoords[pPoly->nNumVertices-2].y = 0.99;
+      pPoly->pVertices[pPoly->nNumVertices-1].x  = v4.x;
+      pPoly->pVertices[pPoly->nNumVertices-1].y  = v4.y;
+      pPoly->pTexCoords[pPoly->nNumVertices-1].x = vertexA->Position().x*fXScale;
+      pPoly->pTexCoords[pPoly->nNumVertices-1].y = 0.99;
+    }
+
+#ifdef ENABLE_OPENGL        
+    /* Use VBO optimization? */
+    if(GameApp::instance()->getDrawLib()->useVBOs()) {
+      for(unsigned int k=0; k<pBlock->getEdgeGeoms().size(); k++){
+	int geom = pBlock->getEdgeGeoms()[k];
+	for(unsigned int l=0;l<m_edgeGeoms[geom]->Polys.size();l++) {          
+	  GeomPoly *pPoly = m_edgeGeoms[geom]->Polys[l];
+
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
+
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
+	}
+      }
+    }
+#endif
+  }
+
+  return nVertexBytes;
+}
+
+bool GameRenderer::calculateEdgePosition(Block*       pBlock,
+					 BlockVertex* vertexA,
+					 BlockVertex* vertexB,
+					 Vector2f     center,
+					 Vector2f& v1, Vector2f& v2,
+					 Vector2f& v3, Vector2f& v4)
+{
+  void (Block::*calculateEdgePosition)(Vector2f,  Vector2f,
+				       Vector2f&, Vector2f&,
+				       Vector2f&, Vector2f&,
+				       float,     float, Vector2f) = NULL;
+  switch(pBlock->getEdgeDrawMethod()){
+  case Block::Under:
+    calculateEdgePosition = &Block::calculateEdgePosition_under;
+    break;
+  case Block::Over:
+    calculateEdgePosition = &Block::calculateEdgePosition_over;
+    break;
+  case Block::Inside:
+    calculateEdgePosition = &Block::calculateEdgePosition_inside;
+    break;
+  case Block::Outside:
+    calculateEdgePosition = &Block::calculateEdgePosition_outside;
+    break;
+  }
+
+  Vector2f vAPos = vertexA->Position();
+  Vector2f vBPos = vertexB->Position();
+
+  if(m_currentEdgeSprite == NULL || m_currentEdgeEffect == "")
+    return false;
+
+  /* link A to B */
+  float fDepth  = m_currentEdgeSprite->getDepth();
+  // add a small border because polygons are a bit larger to avoid gap polygon pb.
+  float v_border; 
+  if(fDepth > 0)
+    v_border = 0.01;
+  else
+    v_border = -0.01;
+
+  (pBlock->*calculateEdgePosition)(vAPos, vBPos, v1, v2, v3, v4, v_border, fDepth, center);
+
+  return true;
+}
+
+Texture* GameRenderer::loadTexture(std::string textureName, enum SpriteType type)
+{
+  Sprite*  pSprite  = Theme::instance()->getSprite(type, textureName);
+  Texture* pTexture = NULL;
+
+  if(pSprite != NULL) {
+    try {
+      pTexture = pSprite->getTexture();
+    } catch(Exception &e) {
+      Logger::Log("** Warning ** : Texture '%s' not found!", textureName.c_str());
+    }
+  } else {
+    Logger::Log("** Warning ** : Texture '%s' not found!", textureName.c_str());
+  }
+
+  return pTexture;
+}
+
+int GameRenderer::edgeGeomExists(Block* pBlock, std::string texture)
+{
+  std::vector<int>& edgeGeoms = pBlock->getEdgeGeoms();
+
+  for(unsigned int i=0; i<edgeGeoms.size(); i++){
+    if(m_edgeGeoms[edgeGeoms[i]]->pTexture->Name == texture)
+      return edgeGeoms[i];
+  }
+
+  return -1;
+}
 
   /*===========================================================================
   Called when we don't want to play the level anymore
   ===========================================================================*/
-  void GameRenderer::_deleteGeoms(std::vector<Geom *>& geom)
+  void GameRenderer::_deleteGeoms(std::vector<Geom *>& geom, bool useFree)
   {
     /* Clean up optimized scene */
     for(unsigned int i=0;i<geom.size();i++) { 
@@ -262,10 +479,15 @@ GameRenderer::~GameRenderer() {
           ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glDeleteBuffersARB(1, (GLuint *) &geom[i]->Polys[j]->nTexCoordBufferID);
         }
 #endif
-      
-        delete [] geom[i]->Polys[j]->pTexCoords;
-        delete [] geom[i]->Polys[j]->pVertices;
-        delete geom[i]->Polys[j];
+
+	if(useFree == true){
+	  free(geom[i]->Polys[j]->pTexCoords);
+	  free(geom[i]->Polys[j]->pVertices);
+	}else {
+	  delete [] geom[i]->Polys[j]->pTexCoords;
+	  delete [] geom[i]->Polys[j]->pVertices;
+	}
+	delete geom[i]->Polys[j];
       }
       delete geom[i];
     }
@@ -275,6 +497,7 @@ GameRenderer::~GameRenderer() {
   void GameRenderer::unprepareForNewLevel(void) {
     _deleteGeoms(m_StaticGeoms);
     _deleteGeoms(m_DynamicGeoms);
+    _deleteGeoms(m_edgeGeoms, true);
   }
   
   void GameRenderer::renderEngineCounter(int x, int y, int nWidth,int nHeight, float pSpeed, float pLinVel) {
@@ -1275,6 +1498,8 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 	    }
 	  }
 
+	  _RenderBlockEdges(block);
+
 	  glPopMatrix();
 
 	  glDisableClientState(GL_VERTEX_ARRAY);
@@ -1307,16 +1532,16 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 
 	}
       }
-
-      /* Render all special edges (if quality!=low) */
-      if(XMSession::instance()->gameGraphics() != GFX_LOW) {
-	for(unsigned int i=0;i<Blocks.size();i++) {
-	  if(Blocks[i]->isBackground() == bBackground){
-	    _RenderBlockEdges(Blocks[i]);
+      if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
+	/* Render all special edges (if quality!=low) */
+	if(XMSession::instance()->gameGraphics() != GFX_LOW) {
+	  for(unsigned int i=0;i<Blocks.size();i++) {
+	    if(Blocks[i]->isBackground() == bBackground){
+	      _RenderBlockEdges(Blocks[i]);
+	    }
 	  }
 	}
       }
-
     }
 
     if(XMSession::instance()->ugly() || XMSession::instance()->uglyOver()) {
@@ -1387,6 +1612,8 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 	}
       }
 
+      _RenderBlockEdges(block);
+
       glDisableClientState(GL_VERTEX_ARRAY);
       glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #endif
@@ -1407,96 +1634,38 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
     }
   }
 
-void GameRenderer::_RenderBlockEdges(Block* block)
+void GameRenderer::_RenderBlockEdges(Block* pBlock)
 {
-  //      glCallList(block->getDisplayList());
-  /* FIXME::is the edge of a dyn block rotated with the dyn block ?? */
+  if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
+    for(unsigned int i=0; i<pBlock->getEdgeGeoms().size(); i++){
+      int geom = pBlock->getEdgeGeoms()[i];
+      GameApp::instance()->getDrawLib()->setTexture(m_edgeGeoms[geom]->pTexture, BLEND_MODE_A);
+      GameApp::instance()->getDrawLib()->setColorRGB(255, 255, 255);
 
-  // we won't do four loops depending on the edge drawing type.
-  // instead we use a function pointer
-  void (Block::*calculateEdgePosition)(Vector2f, Vector2f,
-				       Vector2f&, Vector2f&,
-				       Vector2f&, Vector2f&,
-				       float, float) = NULL;
-  switch(block->getEdgeDrawMethod()){
-  case Block::Under:
-    calculateEdgePosition = &Block::calculateEdgePosition_under;
-    break;
-  case Block::Over:
-    calculateEdgePosition = &Block::calculateEdgePosition_over;
-    break;
-  case Block::Inside:
-    calculateEdgePosition = &Block::calculateEdgePosition_inside;
-    break;
-  case Block::Outside:
-    calculateEdgePosition = &Block::calculateEdgePosition_outside;
-    break;
-  }
+      /* VBO optimized? */
+      if(GameApp::instance()->getDrawLib()->useVBOs()) {
+	for(unsigned int j=0;j<m_edgeGeoms[geom]->Polys.size();j++) {          
+	  GeomPoly *pPoly = m_edgeGeoms[geom]->Polys[j];
 
-  if(block->Vertices().size() > 0) {
-    BlockVertex*      v_blockVertexA;
-    BlockVertex*      v_blockVertexB;
-    EdgeEffectSprite* pType;
-    std::string v_previousEdgeEffect = "";
-    pType = NULL;
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
+	  glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
 
-    for(unsigned int j=0; j<block->Vertices().size(); j++) {
-      v_blockVertexA = block->Vertices()[j];
-      if(v_blockVertexA->EdgeEffect() != "") {
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
+	  glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
 
-	if(v_blockVertexA->EdgeEffect() != v_previousEdgeEffect) {
-	  pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
-	  if(pType == NULL) {
-	    Logger::Log(std::string("** Invalid edge effect " + v_blockVertexA->EdgeEffect()).c_str());
-	  }
-	  v_previousEdgeEffect = v_blockVertexA->EdgeEffect();
-
-	  if(pType != NULL) {
-	    GameApp::instance()->getDrawLib()->setTexture(pType->getTexture(), BLEND_MODE_A);
-	  } else {
-	    v_previousEdgeEffect = "";
-	    continue;
-	  }
+	  glDrawArrays(GL_QUADS, 0, pPoly->nNumVertices);
+	}      
+      } else {
+	for(unsigned int j=0;j<m_edgeGeoms[geom]->Polys.size();j++) {          
+	  GeomPoly *pPoly = m_edgeGeoms[geom]->Polys[j];
+	  glVertexPointer(2,   GL_FLOAT, 0, pPoly->pVertices);
+	  glTexCoordPointer(2, GL_FLOAT, 0, pPoly->pTexCoords);
+	  glDrawArrays(GL_QUADS, 0, pPoly->nNumVertices);
 	}
-
-	v_blockVertexB = block->Vertices()[(j+1) % block->Vertices().size()];
-
-	Vector2f vAPos = v_blockVertexA->Position();
-	Vector2f vBPos = v_blockVertexB->Position();
-	Vector2f v1, v2, v3, v4;
-
-	/* link A to B */
-	float fXScale = pType->getScale();
-	float fDepth  = pType->getDepth();
-	// add a small border because polygons are a bit larger to avoid gap polygon pb.
-	float v_border; 
-	if(fDepth > 0) {
-	  v_border = 0.01;
-	} else {
-	  v_border = -0.01;
-	}
-
-	(block->*calculateEdgePosition)(vAPos, vBPos, v1, v2, v3, v4, v_border, fDepth);
-
-	GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	GameApp::instance()->getDrawLib()->setColorRGB(255,255,255);
-
-	GameApp::instance()->getDrawLib()->glTexCoord((vAPos.x)*fXScale, 0.01);
-	GameApp::instance()->getDrawLib()->glVertex(v1.x, v1.y);
-
-	GameApp::instance()->getDrawLib()->glTexCoord((vBPos.x)*fXScale, 0.01);
-	GameApp::instance()->getDrawLib()->glVertex(v2.x, v2.y);
-
-	GameApp::instance()->getDrawLib()->glTexCoord((vBPos.x)*fXScale, 0.99);
-	GameApp::instance()->getDrawLib()->glVertex(v3.x, v3.y);
-
-	GameApp::instance()->getDrawLib()->glTexCoord((vAPos.x)*fXScale, 0.99);
-	GameApp::instance()->getDrawLib()->glVertex(v4.x, v4.y);
-
-	GameApp::instance()->getDrawLib()->endDrawKeepProperties();
       }
     }
-    GameApp::instance()->getDrawLib()->removePropertiesAfterEnd();
+  } else if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
+    // SDLGFX::TODO
   }
 }
 
@@ -1523,12 +1692,13 @@ void GameRenderer::_RenderBlockEdges(Block* block)
 	    _RenderBlock(Blocks[i]);
 	  }
 	}
-
-	/* Render all special edges (if quality!=low) */
-	if(XMSession::instance()->gameGraphics() != GFX_LOW) {
-	  for(unsigned int i=0;i<Blocks.size();i++) {
-	    if(Blocks[i]->isBackground() == false) {
-	    _RenderBlockEdges(Blocks[i]);
+	if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
+	  /* Render all special edges (if quality!=low) */
+	  if(XMSession::instance()->gameGraphics() != GFX_LOW) {
+	    for(unsigned int i=0;i<Blocks.size();i++) {
+	      if(Blocks[i]->isBackground() == false) {
+		_RenderBlockEdges(Blocks[i]);
+	      }
 	    }
 	  }
 	}
@@ -1663,11 +1833,13 @@ void GameRenderer::_RenderSky(MotoGame* i_scene, float i_zoom, float i_offset, c
       }
     }
 
-    /* Render all special edges (if quality != low) */
-    if(XMSession::instance()->gameGraphics() != GFX_LOW) {
-      for(unsigned int i=0;i<Blocks.size();i++) {
-	if(Blocks[i]->isBackground() == true) {
-	  _RenderBlockEdges(Blocks[i]);
+    if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
+      /* Render all special edges (if quality != low) */
+      if(XMSession::instance()->gameGraphics() != GFX_LOW) {
+	for(unsigned int i=0;i<Blocks.size();i++) {
+	  if(Blocks[i]->isBackground() == true) {
+	    _RenderBlockEdges(Blocks[i]);
+	  }
 	}
       }
     }
@@ -1710,12 +1882,6 @@ void GameRenderer::_RenderLayer(MotoGame* i_scene, int layer) {
       Block* block = Blocks[i];
 
       _RenderBlock(block);
-    }
-    /* Render all special edges (if quality!=low) */
-    if(XMSession::instance()->gameGraphics() != GFX_LOW) {
-      for(unsigned int i=0;i<Blocks.size();i++) {
-	_RenderBlockEdges(Blocks[i]);
-      }
     }
     glPopMatrix();
 #endif

@@ -128,9 +128,9 @@ class Block {
   bool isLayer() const;
   float Grip() const;
   float TextureScale() const;
-  std::vector<BlockVertex *>& Vertices();
+  std::vector<BlockVertex*>& Vertices();
   /* called many many many times, so we inline it */
-  inline std::vector<ConvexBlock *>& ConvexBlocks() {
+  inline std::vector<ConvexBlock*>& ConvexBlocks() {
     return m_convexBlocks;
   }
 
@@ -181,6 +181,10 @@ class Block {
     m_layer = layer;
   }
 
+  void addEdgeGeom(int geom);
+  std::vector<int>& getEdgeGeoms();
+  bool edgeGeomExists(std::string texture);
+
   typedef enum{Under, Over, Inside, Outside} EdgeDrawMethod;
   EdgeDrawMethod getEdgeDrawMethod(){
     return m_edgeDrawMethod;
@@ -190,19 +194,19 @@ class Block {
   void calculateEdgePosition_under(Vector2f i_vA, Vector2f i_vB,
 				   Vector2f& o_v1, Vector2f& o_v2,
 				   Vector2f& o_v3, Vector2f& o_v4,
-				   float i_border, float i_depth);
+				   float i_border, float i_depth, Vector2f center);
   void calculateEdgePosition_over(Vector2f i_vA, Vector2f i_vB,
 				  Vector2f& o_v1, Vector2f& o_v2,
 				  Vector2f& o_v3, Vector2f& o_v4,
-				  float i_border, float i_depth);
+				  float i_border, float i_depth, Vector2f center);
   void calculateEdgePosition_inside(Vector2f i_vA, Vector2f i_vB,
 				    Vector2f& o_v1, Vector2f& o_v2,
 				    Vector2f& o_v3, Vector2f& o_v4,
-				    float i_border, float i_depth);
+				    float i_border, float i_depth, Vector2f center);
   void calculateEdgePosition_outside(Vector2f i_vA, Vector2f i_vB,
 				     Vector2f& o_v1, Vector2f& o_v2,
 				     Vector2f& o_v3, Vector2f& o_v4,
-				     float i_border, float i_depth);
+				     float i_border, float i_depth, Vector2f center);
 
 private:
   std::string m_id;           /* Block ID */
@@ -213,6 +217,8 @@ private:
 
   std::vector<BlockVertex *> m_vertices;     /* Vertices of block */
   std::vector<ConvexBlock *> m_convexBlocks; /* Convex Blocks */
+  // one geom for each edge texture
+  std::vector<int> m_edgeGeoms;
 
   bool  m_background;                   /* Background block */
   bool  m_dynamic;

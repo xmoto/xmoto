@@ -26,7 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/basic/GUI.h"
 
 class ParticlesSource;
-class Universe; 
+class Universe;
+class BlockVertex;
 
   /*===========================================================================
   Graphical debug info
@@ -162,6 +163,7 @@ private:
       
   std::vector<Geom*> m_StaticGeoms;
   std::vector<Geom*> m_DynamicGeoms;
+  std::vector<Geom*> m_edgeGeoms;
 
   std::string m_bestTime;
   std::string m_replayHelp;
@@ -186,7 +188,10 @@ private:
 
   float m_sizeMultOfEntitiesToTake;
   float m_sizeMultOfEntitiesWhichMakeWin;
-  int m_nParticlesRendered;
+  int   m_nParticlesRendered;
+  std::string       m_currentEdgeEffect;
+  EdgeEffectSprite* m_currentEdgeSprite;
+
 
   /* Subroutines */
 	
@@ -237,10 +242,23 @@ private:
   void _RenderAlphaBlendedSectionSP(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
   void _RenderRectangle(const Vector2f& i_p1, const Vector2f& i_p2, const Color& i_color);
   void _RenderCircle(unsigned int nSteps,Color CircleColor,const Vector2f &C,float fRadius);
-  void _deleteGeoms(std::vector<Geom *>& geom);
+  void _deleteGeoms(std::vector<Geom *>& geom, bool useFree=false);
 
   void renderTimePanel(MotoGame* i_scene);
   void renderReplayHelpMessage(MotoGame* i_scene);
+
+  Texture* loadTexture(std::string textureName, enum SpriteType type=SPRITE_TYPE_TEXTURE);
+  int  edgeGeomExists(Block* pBlock, std::string texture);
+  void initCameras(Universe* i_universe);
+  int  loadBlock(Block* pBlock, Universe* i_universe, unsigned int currentScene, int sameSceneAs, int blockIndex);
+  int  loadBlockGeom(Block* pBlock, std::vector<Geom *>* pGeoms, Texture* pTexture, Vector2f Center, MotoGame* pScene);
+  int  loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene);
+  bool calculateEdgePosition(Block* pBlock,
+			     BlockVertex* vertexA,
+			     BlockVertex* vertexB,
+			     Vector2f center,
+			     Vector2f& v1, Vector2f& v2,
+			     Vector2f& v3, Vector2f& v4);
 };
 
 #endif
