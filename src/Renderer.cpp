@@ -319,7 +319,6 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
       }
 
       int geomIndex = edgeGeomExists(pBlock, pTexture->Name);
-      Logger::Log("geomIndex=%d", geomIndex);
       if(geomIndex < 0){
 	// create a new one
 	Geom* pGeom = new Geom;
@@ -329,8 +328,6 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
 	pGeom->pTexture = pTexture;
 	GeomPoly *pPoly = new GeomPoly;
 	pGeom->Polys.push_back(pPoly);
-
-	Logger::Log("  Create new geom %d. texture=%s. poly=%x", geomIndex, pTexture->Name.c_str(), pPoly);
       }
       Geom*     pGeom = m_edgeGeoms[geomIndex];
       GeomPoly* pPoly = pGeom->Polys[0];
