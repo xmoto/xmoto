@@ -98,10 +98,8 @@ int CheckWwwThread::realThreadFunction()
 
       } catch (Exception& e) {
 	Logger::Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());
-	if(m_forceUpdate == true){
-	  m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
-	  return 1;
-	}
+	m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+	return 1;
       }
     }
 
@@ -117,10 +115,8 @@ int CheckWwwThread::realThreadFunction()
 
       } catch (Exception& e){
 	Logger::Log("** Warning ** : Failed to update web-levels [%s]",e.getMsg().c_str());
-	if(m_forceUpdate == true){
-	  m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
-	  return 1;
-	}
+	m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+	return 1;
       }
     }
   }
