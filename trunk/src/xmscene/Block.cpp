@@ -93,16 +93,21 @@ Block::~Block() {
   for(unsigned int i=0; i<m_vertices.size(); i++) {
     delete m_vertices[i];
   }
+  m_vertices.clear();
 
   /* delete convex blocks */
   for(unsigned int i=0; i<m_convexBlocks.size(); i++) {
     delete m_convexBlocks[i];
   }
+  m_convexBlocks.clear();
 
   /* delete collision lines */
   for(unsigned int i=0; i<m_collisionLines.size(); i++) {
     delete m_collisionLines[i];
   }
+  m_collisionLines.clear();
+
+  m_edgeGeoms.clear();
 }
 
 void Block::setCenter(const Vector2f& i_center) {
@@ -554,48 +559,64 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   return pBlock;
 }
 
+void Block::addEdgeGeom(int geom)
+{
+  m_edgeGeoms.push_back(geom);
+}
+
+std::vector<int>& Block::getEdgeGeoms()
+{
+  return m_edgeGeoms;
+}
+
 void Block::calculateEdgePosition_under(Vector2f i_vA, Vector2f i_vB,
 					Vector2f& o_v1, Vector2f& o_v2,
 					Vector2f& o_v3, Vector2f& o_v4,
-					float i_border, float i_depth)
+					float i_border, float i_depth,
+					Vector2f center)
 {
-  o_v1 = i_vA + Vector2f(m_dynamicPosition.x, m_dynamicPosition.y + i_border);
+  o_v1 = i_vA + Vector2f(center.x, center.y + i_border);
 
-  o_v2 = i_vB + Vector2f(m_dynamicPosition.x, m_dynamicPosition.y + i_border);
+  o_v2 = i_vB + Vector2f(center.x, center.y + i_border);
 
   o_v3 = i_vB
-    + Vector2f(m_dynamicPosition.x, m_dynamicPosition.y)
+    + Vector2f(center.x, center.y)
     + Vector2f(0, -i_depth);
 
   o_v4 = i_vA
-    + Vector2f(m_dynamicPosition.x, m_dynamicPosition.y)
+    + Vector2f(center.x, center.y)
     + Vector2f(0, -i_depth);
 }
 
 void Block::calculateEdgePosition_over(Vector2f i_vA, Vector2f i_vB,
 				       Vector2f& o_v1, Vector2f& o_v2,
 				       Vector2f& o_v3, Vector2f& o_v4,
-				       float i_border, float i_depth)
+				       float i_border, float i_depth,
+				       Vector2f center)
 {
   o_v1 = i_vA
-    + Vector2f(m_dynamicPosition.x, m_dynamicPosition.y)
+    + Vector2f(center.x, center.y)
     + Vector2f(0, i_depth);
 
   o_v2 = i_vB
-    + Vector2f(m_dynamicPosition.x, m_dynamicPosition.y)
+    + Vector2f(center.x, center.y)
     + Vector2f(0, i_depth);
 
-  o_v3 = i_vB + Vector2f(m_dynamicPosition.x, m_dynamicPosition.y + i_border);
+  o_v3 = i_vB + Vector2f(center.x, center.y + i_border);
 
-  o_v4 = i_vA + Vector2f(m_dynamicPosition.x, m_dynamicPosition.y + i_border);
+  o_v4 = i_vA + Vector2f(center.x, center.y + i_border);
 
 }
 
 void Block::calculateEdgePosition_inside(Vector2f i_vA, Vector2f i_vB,
 					 Vector2f& o_v1, Vector2f& o_v2,
 					 Vector2f& o_v3, Vector2f& o_v4,
-					 float i_border, float i_depth)
+					 float i_border, float i_depth,
+					 Vector2f center)
 {
+  /* we want to calculate the point on the normal of (i_vA,i_vB) which
+     is at the distance i_depth of i_vA */
+
   /*
   o_v1 = i_vA + Vector2f(m_dynamicPosition.x, m_dynamicPosition.y + i_border);;
   o_v2 = i_vB + Vector2f(m_dynamicPosition.x, m_dynamicPosition.y + i_border);;
@@ -607,6 +628,7 @@ void Block::calculateEdgePosition_inside(Vector2f i_vA, Vector2f i_vB,
 void Block::calculateEdgePosition_outside(Vector2f i_vA, Vector2f i_vB,
 					  Vector2f& o_v1, Vector2f& o_v2,
 					  Vector2f& o_v3, Vector2f& o_v4,
-					  float i_border, float i_depth)
+					  float i_border, float i_depth,
+					  Vector2f center)
 {
 }
