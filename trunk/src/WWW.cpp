@@ -207,7 +207,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
 
   /* download the file */
   v_curl = curl_easy_init();
-  if(v_curl == false) {
+  if(v_curl == NULL) {
     fclose(v_destinationFile);
     throw Exception("error : unable to init curl"); 
   }
@@ -319,7 +319,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   }
       
   v_curl = curl_easy_init();
-  if(v_curl == false) {
+  if(v_curl == NULL) {
     fclose(v_destinationFile);
     remove(v_local_file.c_str());
     throw Exception("error : unable to init curl"); 
