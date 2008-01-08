@@ -43,7 +43,9 @@ int UpdateThemesListThread::realThreadFunction()
 
   try {
     clearCancelAsSoonAsPossible();
+    setSafeKill(true);
     WebThemes::updateThemeList(m_pDb, this);
+    setSafeKill(false);
     StateManager::instance()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
   } catch(Exception &e) {
     /* file probably doesn't exist */

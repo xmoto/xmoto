@@ -46,7 +46,9 @@ void CheckWwwThread::updateWebHighscores()
 {
   Logger::Log("WWW: Checking for new highscores...");
 
+  setSafeKill(true);
   m_pWebRoom->update();
+  setSafeKill(false);
 }
 
 void CheckWwwThread::upgradeWebHighscores()
@@ -64,7 +66,10 @@ void CheckWwwThread::updateWebLevels()
   Logger::Log("WWW: Checking for new or updated levels...");
 
   /* Try download levels list */
+  setSafeKill(true);
   m_pWebLevels->update(m_pDb, XMSession::instance()->useCrappyPack());
+  setSafeKill(false);
+
   if(m_pWebLevels->nbLevelsToGet(m_pDb) != 0){
     StateManager::instance()->sendAsynchronousMessage("NEW_LEVELS_TO_DOWNLOAD");
   } else {

@@ -31,6 +31,7 @@ public:
   virtual ~StateCheckWww();
 
   void callAfterThreadFinished(int threadResult);
+  virtual void keyDown(int nKey, SDLMod mod,int nChar);
 
 protected:
   virtual void checkEvents() {}

@@ -28,6 +28,7 @@ public:
   StateUpdateThemesList(bool drawStateBehind    = true,
 			bool updateStatesBehind = false);
   virtual ~StateUpdateThemesList();
+  void keyDown(int nKey, SDLMod mod,int nChar);
 
 protected:
   virtual void checkEvents() {}

@@ -107,7 +107,9 @@ int UpgradeLevelsThread::realThreadFunction()
 
     clearCancelAsSoonAsPossible();
 
+    setSafeKill(true);
     m_pWebLevels->update(m_pDb, XMSession::instance()->useCrappyPack());
+    setSafeKill(false);
 
     int nULevels=0;
     nULevels = m_pWebLevels->nbLevelsToGet(m_pDb);
@@ -151,10 +153,14 @@ int UpgradeLevelsThread::realThreadFunction()
     setThreadCurrentMicroOperation("");
 
     // update theme before upgrading levels
+    setSafeKill(true);
     WebThemes::updateThemeList(m_pDb, this);
     WebThemes::updateTheme(m_pDb, m_id_theme, this);
+    setSafeKill(false);
+
     StateManager::instance()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
 
+    // don't safe kill here
     m_pWebLevels->upgrade(m_pDb);
   }
   catch(Exception& e) {

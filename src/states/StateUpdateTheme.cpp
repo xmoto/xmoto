@@ -80,7 +80,8 @@ void StateUpdateTheme::keyDown(int nKey, SDLMod mod,int nChar) {
   switch(nKey) {
   case SDLK_ESCAPE:
     if(m_threadStarted == true) {
-      m_pThread->askThreadToEnd();
+      m_messageOnFailure = false;
+      m_pThread->safeKill();
     }
     break;
   }

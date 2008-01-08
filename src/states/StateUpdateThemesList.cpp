@@ -35,3 +35,14 @@ StateUpdateThemesList::~StateUpdateThemesList()
 {
   delete m_pThread;
 }
+
+void StateUpdateThemesList::keyDown(int nKey, SDLMod mod,int nChar) {
+  switch(nKey) {
+  case SDLK_ESCAPE:
+    if(m_threadStarted == true) {
+      m_messageOnFailure = false;
+      m_pThread->safeKill();
+    }
+    break;
+  }
+}
