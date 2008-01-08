@@ -218,6 +218,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   curl_easy_setopt(v_curl, CURLOPT_TIMEOUT, DEFAULT_TRANSFERT_TIMEOUT);
   curl_easy_setopt(v_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFERT_CONNECT_TIMEOUT);
   curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  v_www_agent.c_str());
+  curl_easy_setopt(v_curl, CURLOPT_NOSIGNAL, 1);
   curl_easy_setopt(v_curl, CURLOPT_FAILONERROR, 1);
   curl_easy_setopt(v_curl, CURLOPT_FOLLOWLOCATION, 1);
 
@@ -348,6 +349,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   curl_easy_setopt(v_curl, CURLOPT_WRITEDATA, v_destinationFile);
   curl_easy_setopt(v_curl, CURLOPT_WRITEFUNCTION, FSWeb::writeData);
   curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  v_www_agent.c_str());
+  curl_easy_setopt(v_curl, CURLOPT_NOSIGNAL, 1);
   curl_easy_setopt(v_curl, CURLOPT_FAILONERROR, 1);
   curl_easy_setopt(v_curl, CURLOPT_FOLLOWLOCATION, 1);
   curl_easy_setopt(v_curl, CURLOPT_ENCODING, "gzip,deflate");
