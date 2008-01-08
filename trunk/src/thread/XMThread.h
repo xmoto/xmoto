@@ -56,6 +56,9 @@ public:
   static  int run(void* pThreadInstance);
   virtual int realThreadFunction() = 0;
 
+  // as to kill the thread as soon it is in a safe state
+  void safeKill();
+
 protected:
 
   void sleepThread();
@@ -63,6 +66,8 @@ protected:
   void setThreadProgress(int progress);
   void setThreadCurrentOperation(std::string curOp);
   void setThreadCurrentMicroOperation(std::string curMicOp);
+
+  void setSafeKill(bool i_value);
 
   SDL_Thread* m_pThread;
   bool        m_isRunning;
@@ -86,6 +91,8 @@ private:
   SDL_mutex* m_curMicOpMutex;
   SDL_mutex* m_sleepMutex;
   SDL_cond*  m_sleepCond;
+  bool m_safeKill;
+  bool m_askSafeKill;
 };
   
 #endif

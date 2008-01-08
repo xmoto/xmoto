@@ -44,8 +44,10 @@ int UpdateThemeThread::realThreadFunction()
 
   try {
     clearCancelAsSoonAsPossible();
+    setSafeKill(true);
     WebThemes::updateThemeList(m_pDb, this);
     WebThemes::updateTheme(m_pDb, m_id_theme, this);
+    setSafeKill(false);
     StateManager::instance()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
   } catch(Exception &e) {
     Logger::Log(e.getMsg().c_str());

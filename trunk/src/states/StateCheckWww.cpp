@@ -39,3 +39,13 @@ void StateCheckWww::callAfterThreadFinished(int threadResult)
 {
   m_msg = ((CheckWwwThread*)m_pThread)->getMsg();
 }
+
+void StateCheckWww::keyDown(int nKey, SDLMod mod,int nChar) {
+  switch(nKey) {
+  case SDLK_ESCAPE:
+    if(m_threadStarted == true) {
+      m_pThread->safeKill();
+    }
+    break;
+  }
+}

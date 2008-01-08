@@ -40,6 +40,8 @@ XMThread::XMThread()
   m_sleepMutex       = SDL_CreateMutex();
   m_sleepCond        = SDL_CreateCond();
   m_wakeUpInfos      = "";
+  m_safeKill         = false;
+  m_askSafeKill      = false;
 }
 
 XMThread::~XMThread()
@@ -98,6 +100,7 @@ void XMThread::askThreadToSleep()
 
 void XMThread::killThread()
 {
+  Logger::Log("Kill violently the thread");
   SDL_KillThread(m_pThread);
   m_pThread   = NULL;
   m_isRunning = false;
@@ -124,6 +127,24 @@ void XMThread::unsleepThread(std::string infos)
     m_wakeUpInfos = infos;
 
     SDL_UnlockMutex(m_sleepMutex);
+  }
+}
+
+void XMThread::setSafeKill(bool i_value) {
+  m_safeKill = i_value;
+
+  // kill if it was asked
+  if(m_safeKill && m_isRunning && m_askSafeKill) {
+    killThread();
+  }
+}
+
+void XMThread::safeKill() {
+  m_askSafeKill = true;
+
+  // kill if thread is in a safe state
+  if(m_safeKill && m_isRunning) {
+    killThread();
   }
 }
 

@@ -107,7 +107,7 @@ void StateUpgradeLevels::keyDown(int nKey, SDLMod mod,int nChar) {
   switch(nKey) {
   case SDLK_ESCAPE:
     if(m_threadStarted == true) {
-      m_pThread->askThreadToEnd();
+      m_pThread->safeKill();
     }
     break;
   }
