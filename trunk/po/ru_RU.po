@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-01-09 21:12+0100\n"
 "PO-Revision-Date: 2007-05-04 23:56+0200\n"
-"Last-Translator: Mikhail Brinchuk aka Thecentury <thecentury@gmail.com>\n"
+"Last-Translator: AvovA <avova@rbcmail.ru>\n"
 "Language-Team: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -857,7 +857,6 @@ msgid "Multi"
 msgstr "Мульти"
 
 #: src/GameText.h:274
-#, fuzzy
 msgid "Semi-cooperative mode"
 msgstr "Полу-кооперативный режим"
 
@@ -947,10 +946,10 @@ msgid ""
 msgstr ""
 "Важное замечание!\n"
 "\n"
-"Это бета-версия X-Moto!\n"
+"Это версия X-Moto находится в активной разработке!\n"
 "Обратная связь всякого рода крайне важна, поскольку игра\n"
 "может стать лучше.\n"
-"Отправляйте сообщения об ошибках, идеи, комментарии, запросы новой "
+"Отправляйте сообщения об ошибках, идеи, комментарии, запросы новой\n"
 "функциональности, письма с угрозами и тому подобное\n"
 "по адресу xmoto@tuxfamily.org\n"
 "\n"
@@ -1213,7 +1212,6 @@ msgid "Unpacked levels"
 msgstr "Незапакованные уровни"
 
 #: src/GameText.h:369
-#, fuzzy
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
@@ -1256,7 +1254,6 @@ msgid "Upload all highscores"
 msgstr "Загрузить все рекорды"
 
 #: src/GameText.h:378
-#, fuzzy
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
