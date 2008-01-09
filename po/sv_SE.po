@@ -1,16 +1,17 @@
-# translation of sv_SE.po to Swedish
-# Copyright (C) 2007 Free Software Foundation, Inc.
+# translation of sv_SE.po to Svenska
+# Copyright (C) 2007, 2008 Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Lukas <lukas.klingsbo@piratpartiet.se>, 2007.
+# Lukas Klingsbo <lukas.klingsbo@piratpartiet.se>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-01-09 21:12+0100\n"
-"PO-Revision-Date: 2007-10-10 20:31+0200\n"
-"Last-Translator: Lukas <lukas.klingsbo@piratpartiet.se>\n"
-"Language-Team: Swedish\n"
+"PO-Revision-Date: 2008-01-09 21:02+0100\n"
+"Last-Translator: Lukas Klingsbo <lukas.klingsbo@piratpartiet.se>\n"
+"Language-Team: Svenska <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -58,9 +59,8 @@ msgid "Add to favorite"
 msgstr "Lägg till som favorit"
 
 #: src/GameText.h:44
-#, fuzzy
 msgid "Add to blacklist"
-msgstr "Lägg till som favorit"
+msgstr "Svartlista"
 
 #: src/GameText.h:45
 msgid "Action"
@@ -250,9 +250,8 @@ msgid "Latvian"
 msgstr "Lettiska"
 
 #: src/GameText.h:115
-#, fuzzy
 msgid "Danish"
-msgstr "Spanska"
+msgstr "Danska"
 
 #: src/GameText.h:117
 msgid "Main testers"
@@ -279,9 +278,8 @@ msgid "for Mandriva packaging"
 msgstr "för Mandriva paketering"
 
 #: src/GameText.h:127
-#, fuzzy
 msgid "for FreeBSD packaging"
-msgstr "för Debian paketering"
+msgstr "för FreeBSD paketering"
 
 #: src/GameText.h:128
 msgid "for across/elma"
@@ -356,9 +354,8 @@ msgid "Delete from favorite"
 msgstr "Ta bort från favoriter"
 
 #: src/GameText.h:148
-#, fuzzy
 msgid "Delete from blacklist"
-msgstr "Ta bort från favoriter"
+msgstr "Ta bort svartlistning"
 
 #: src/GameText.h:150
 msgid "Description"
@@ -401,9 +398,8 @@ msgid "Checking for new levels..."
 msgstr "Kollar efter nya banor..."
 
 #: src/GameText.h:159
-#, fuzzy
 msgid "Loading new and updated levels..."
-msgstr "Nya och uppdaterade banor"
+msgstr "Laddar nya och uppdaterade banor..."
 
 #: src/GameText.h:160
 msgid "Checking for existing rooms..."
@@ -645,13 +641,12 @@ msgid "Add/remove to favorite levels"
 msgstr "Lägg till/ta bort banan ifrån favoritbanor"
 
 #: src/GameText.h:220
-#, fuzzy
 msgid "Add/remove to blacklisted levels"
-msgstr "Lägg till/ta bort banan ifrån favoritbanor"
+msgstr "Lägg till/ta bort banan ifrån svartlistade banor"
 
 #: src/GameText.h:221
 msgid "change mirror mode"
-msgstr ""
+msgstr "ändra spegelläge"
 
 #: src/GameText.h:222
 msgid "Enable/disable web"
@@ -758,14 +753,12 @@ msgid "Deleted from favorites"
 msgstr "Borttagen från favoriter"
 
 #: src/GameText.h:248
-#, fuzzy
 msgid "Added to blacklist"
-msgstr "Tilllagd till favoriter"
+msgstr "Tillagd till svartlistan"
 
 #: src/GameText.h:249
-#, fuzzy
 msgid "Deleted from blacklist"
-msgstr "Borttagen från favoriter"
+msgstr "Borttagen från svartlistan"
 
 #: src/GameText.h:250
 msgid "Level Info..."
@@ -843,7 +836,7 @@ msgstr "Meny Grafik"
 
 #: src/GameText.h:268
 msgid "Total time you scored / total highscore time for levels you finished"
-msgstr ""
+msgstr "Total tid du tog poäng / total rekordtid för banor du har klarat"
 
 #: src/GameText.h:269
 msgid "Level references unknown textures, it could be unplayable!"
@@ -866,8 +859,9 @@ msgid "Multi"
 msgstr "Flera spelare"
 
 #: src/GameText.h:274
+#, fuzzy
 msgid "Semi-cooperative mode"
-msgstr ""
+msgstr "semi-samarbetsvilligt läge"
 
 #: src/GameText.h:275
 msgid "Stop the game once a player ends the level"
@@ -977,7 +971,7 @@ msgstr "Öppna"
 
 #: src/GameText.h:305
 msgid "Operation completed"
-msgstr ""
+msgstr "Operation slutförd"
 
 #: src/GameText.h:306
 msgid "Options"
@@ -1022,7 +1016,7 @@ msgstr "Av bästa förare"
 
 #: src/GameText.h:316
 msgid "By length"
-msgstr ""
+msgstr "På längd"
 
 #: src/GameText.h:318
 msgid "Password"
@@ -1093,9 +1087,8 @@ msgid "Reloading replays..."
 msgstr "Laddar om repriser..."
 
 #: src/GameText.h:335
-#, fuzzy
 msgid "Reloading themes..."
-msgstr "Laddar om banor..."
+msgstr "Laddar om teman..."
 
 #: src/GameText.h:336
 msgid "Replay"
@@ -1216,7 +1209,7 @@ msgstr "Genomgång"
 
 #: src/GameText.h:367
 msgid "Unknown"
-msgstr ""
+msgstr "Okänd"
 
 #: src/GameText.h:368
 msgid "Unpacked levels"
@@ -1283,7 +1276,7 @@ msgstr "Laddar upp rekord..."
 
 #: src/GameText.h:381
 msgid "Use crappy information"
-msgstr ""
+msgstr "Använd \"lodig\" information"
 
 #: src/GameText.h:382
 msgid "Use Environment Vars"
@@ -1525,6 +1518,7 @@ msgstr "Visa  världsrekordet för en given bana när man spelar"
 #: src/GameText.h:444
 msgid "Use crappy information from the website to update the crappy pack"
 msgstr ""
+"Använd \"Crappy\"-informationen på hemsidan för att uppdatera lodiga banor"
 
 #: src/GameText.h:445
 msgid "Enable high-color graphics"
@@ -1904,7 +1898,7 @@ msgstr "Visa inte spöket medans man spelar"
 
 #: src/GameText.h:543
 msgid "The scene is shared by all the players"
-msgstr ""
+msgstr "Scenen är delad av alla spelare"
 
 #: src/GameText.h:545
 msgid "Levels with no highscore"
@@ -1927,9 +1921,8 @@ msgid "Favorite levels"
 msgstr "Favorit banor"
 
 #: src/GameText.h:551
-#, fuzzy
 msgid "Blacklisted levels"
-msgstr "Opaketerade banor"
+msgstr "Svartlistade banor"
 
 #: src/GameText.h:552
 msgid "Nicest levels"
@@ -2012,24 +2005,20 @@ msgid "Crappy levels"
 msgstr "Lodiga banorna"
 
 #: src/GameText.h:573
-#, fuzzy
 msgid "Shortest levels"
-msgstr "Svåraste banorna"
+msgstr "Kortaste banorna"
 
 #: src/GameText.h:574
-#, fuzzy
 msgid "Medium levels"
-msgstr "Mina banor"
+msgstr "Medium banor"
 
 #: src/GameText.h:575
-#, fuzzy
 msgid "Long levels"
-msgstr "Laddar banor..."
+msgstr "Långa banor"
 
 #: src/GameText.h:576
-#, fuzzy
 msgid "Very long levels"
-msgstr "Laddar om banor..."
+msgstr "Väldigt långa banor"
 
 #: src/GameText.h:578
 msgid "Levels with no highscore in your room"
@@ -2052,9 +2041,8 @@ msgid "Your favorite levels"
 msgstr "Dina favorit banor"
 
 #: src/GameText.h:584
-#, fuzzy
 msgid "Your blacklisted levels"
-msgstr "Dina favorit banor"
+msgstr "Dina svartlistade banor"
 
 #: src/GameText.h:585
 msgid "Nicest X-Moto levels according to the web votes"
@@ -2150,19 +2138,19 @@ msgstr "Banor som är märkta 'lodig' är dolda i alla andra paket"
 
 #: src/GameText.h:607
 msgid "The shortest levels (less than 25 seconds)"
-msgstr ""
+msgstr "De kortaste banorna(mindre än 25 sekunder)"
 
 #: src/GameText.h:608
 msgid "The medium levels (25 seconds to 60)"
-msgstr ""
+msgstr "Medel långa banor(25-60 sekunder)"
 
 #: src/GameText.h:609
 msgid "The long levels (1 minute to 2 minutes)"
-msgstr ""
+msgstr "De långa banorna(1-2 minuter)"
 
 #: src/GameText.h:610
 msgid "The longest levels (more than 2 minutes)"
-msgstr ""
+msgstr "De längsta banorna(Längre än 2 minuter)"
 
 #: src/GameText.h:612
 msgid "Ugly mode enabled"
