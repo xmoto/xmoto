@@ -37,12 +37,9 @@ StateUpdateThemesList::~StateUpdateThemesList()
 }
 
 void StateUpdateThemesList::keyDown(int nKey, SDLMod mod,int nChar) {
-  switch(nKey) {
-  case SDLK_ESCAPE:
+  if(nKey == SDLK_k && (mod & KMOD_CTRL) != 0) {
     if(m_threadStarted == true) {
-      m_messageOnFailure = false;
       m_pThread->safeKill();
     }
-    break;
   }
 }
