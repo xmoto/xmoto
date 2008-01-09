@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-01-09 21:12+0100\n"
-"PO-Revision-Date: 2008-01-08 23:41+0100\n"
+"PO-Revision-Date: 2008-01-09 21:17+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -859,7 +859,6 @@ msgid "Multi"
 msgstr "Multi"
 
 #: src/GameText.h:274
-#, fuzzy
 msgid "Semi-cooperative mode"
 msgstr "Režim čiastočnej spolupráce"
 
@@ -936,7 +935,6 @@ msgid "Not finished"
 msgstr "Nedokončené"
 
 #: src/GameText.h:292
-#, fuzzy
 msgid ""
 "Important note!\n"
 "\n"
@@ -954,8 +952,8 @@ msgstr ""
 "Toto je vývojová verzia X-Moto!\n"
 "Všetky druhy spätnej väzby sú vítané, takto sa\n"
 "môže hra stále zlepšovať.\n"
-"Hlásenia chýb, nápady, komentáre, prosby, atď\n"
-"posielajte na neckelmann@gmail.com\n"
+"Hlásenia chýb, nápady, komentáre, prosby, nenávistné maily atď\n"
+"posielajte na xmoto@tuxfamily.org\n"
 "\n"
 "Rovnako navštívte http://xmoto.tuxfamily.org, aby ste sa uistili,\n"
 "že používate najnovšiu verziu."
@@ -1219,7 +1217,6 @@ msgid "Unpacked levels"
 msgstr "Nerozbalené levely"
 
 #: src/GameText.h:369
-#, fuzzy
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
@@ -1262,7 +1259,6 @@ msgid "Upload all highscores"
 msgstr "Uploadovať všetky rekordy"
 
 #: src/GameText.h:378
-#, fuzzy
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
