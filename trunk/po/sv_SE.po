@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-01-09 21:12+0100\n"
-"PO-Revision-Date: 2008-01-09 21:02+0100\n"
+"PO-Revision-Date: 2008-01-09 21:59+0100\n"
 "Last-Translator: Lukas Klingsbo <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -859,9 +859,8 @@ msgid "Multi"
 msgstr "Flera spelare"
 
 #: src/GameText.h:274
-#, fuzzy
 msgid "Semi-cooperative mode"
-msgstr "semi-samarbetsvilligt läge"
+msgstr "Semi-samarbetsvilligtläge"
 
 #: src/GameText.h:275
 msgid "Stop the game once a player ends the level"
@@ -934,7 +933,6 @@ msgid "Not finished"
 msgstr "Inte klarad"
 
 #: src/GameText.h:292
-#, fuzzy
 msgid ""
 "Important note!\n"
 "\n"
@@ -949,8 +947,8 @@ msgid ""
 msgstr ""
 "Viktig notering!\n"
 "\n"
-"Det här är en utvecklings version av X-moto!\n"
-"All sorts  feedback är mycket tacksamt, så att spelet\n"
+"Det här är en utvecklingsversion av X-Moto!\n"
+"All sorts  feedback är mycket tacksam, så att spelet\n"
 "kan bli bättre\n"
 "Maila buggar, idéer, kommentarer, hatbrev och liknande\n"
 "till nicolas at adenis-lamarre dot fr\n"
@@ -1216,14 +1214,13 @@ msgid "Unpacked levels"
 msgstr "Opaketerade banor"
 
 #: src/GameText.h:369
-#, fuzzy
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
 "or your theme list is not up to date"
 msgstr ""
 "Kan inte uppdatera det här temat !\n"
-"Temat är inte tillgängligt på Internet\n"
+"Temat är inte tillgängligt på Webben\n"
 "eller så är din tema lista inte uppdaterad"
 
 #: src/GameText.h:370
@@ -1259,12 +1256,11 @@ msgid "Upload all highscores"
 msgstr "Ladda upp alla rekord"
 
 #: src/GameText.h:378
-#, fuzzy
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr ""
-"Ett oväntat fel har inträffat. Det kanske är något problem på hemsidan."
+"Ett oväntat fel har inträffat. Det kanske är något problem på websidan."
 
 #: src/GameText.h:379
 msgid "Oh no !"
