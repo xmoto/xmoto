@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-01-09 19:51+0100\n"
+"POT-Creation-Date: 2008-01-09 21:12+0100\n"
 "PO-Revision-Date: 2006-12-21 21:14+0100\n"
 "Last-Translator: Jens Erler <mothbox@gmx.net>\n"
 "Language-Team: German\n"
@@ -862,7 +862,7 @@ msgid "Multi"
 msgstr "Mehrspieler"
 
 #: src/GameText.h:274
-msgid "Semi-collaborativ mode"
+msgid "Semi-cooperative mode"
 msgstr ""
 
 #: src/GameText.h:275
@@ -1223,9 +1223,10 @@ msgid "Unpacked levels"
 msgstr "Entpackte Level"
 
 #: src/GameText.h:369
+#, fuzzy
 msgid ""
 "Can't update this theme !\n"
-"The theme is not avaible on the web\n"
+"The theme is not available on the web\n"
 "or your theme list is not up to date"
 msgstr ""
 "Kann das Thema nicht aktualisieren!\n"
@@ -1265,8 +1266,9 @@ msgid "Upload all highscores"
 msgstr "Bestzeiten hochladen"
 
 #: src/GameText.h:378
+#, fuzzy
 msgid ""
-"An unexpected error has occured. There may be some problems with the web "
+"An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr ""
 "Ein unerwarteter Fehler ist aufgetreten.\n"
