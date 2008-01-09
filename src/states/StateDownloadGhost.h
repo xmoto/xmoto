@@ -33,6 +33,8 @@ public:
 
   void setReplay(std::string replayName);
 
+  void keyDown(int nKey, SDLMod mod,int nChar);
+
 protected:
   void callAfterThreadFinished(int threadResult);
   virtual void checkEvents() {}

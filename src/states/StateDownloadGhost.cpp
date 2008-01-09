@@ -60,3 +60,11 @@ void StateDownloadGhost::callAfterThreadFinished(int threadResult)
     StateManager::instance()->sendAsynchronousMessage("GHOST_DOWNLOADED");
   }
 }
+
+void StateDownloadGhost::keyDown(int nKey, SDLMod mod,int nChar) {
+  if(nKey == SDLK_k && (mod & KMOD_CTRL) != 0) {
+    if(m_threadStarted == true) {
+      m_pThread->safeKill();
+    }
+  }
+}
