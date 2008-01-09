@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-01-09 19:51+0100\n"
+"POT-Creation-Date: 2008-01-09 21:12+0100\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Jan Kaláb <pitel@nomi.cz>\n"
 "Language-Team: X-Moto\n"
@@ -875,7 +875,7 @@ msgid "Multi"
 msgstr "Více"
 
 #: src/GameText.h:274
-msgid "Semi-collaborativ mode"
+msgid "Semi-cooperative mode"
 msgstr ""
 
 #: src/GameText.h:275
@@ -1233,9 +1233,10 @@ msgid "Unpacked levels"
 msgstr "Rozbalené úrovně"
 
 #: src/GameText.h:369
+#, fuzzy
 msgid ""
 "Can't update this theme !\n"
-"The theme is not avaible on the web\n"
+"The theme is not available on the web\n"
 "or your theme list is not up to date"
 msgstr ""
 "Nemohu aktualizovat tento motiv !\n"
@@ -1277,7 +1278,7 @@ msgstr "Poslat nejlepší jízdy"
 #: src/GameText.h:378
 #, fuzzy
 msgid ""
-"An unexpected error has occured. There may be some problems with the web "
+"An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr ""
 "Nastala neočekávaná chyba\n"

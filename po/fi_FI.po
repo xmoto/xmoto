@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-01-09 19:51+0100\n"
+"POT-Creation-Date: 2008-01-09 21:12+0100\n"
 "PO-Revision-Date: 2007-10-17 14:34+0200\n"
 "Last-Translator: Maximum <max@mymail.fi>\n"
 "Language-Team: \n"
@@ -856,7 +856,8 @@ msgid "Multi"
 msgstr "Moninpeli"
 
 #: src/GameText.h:274
-msgid "Semi-collaborativ mode"
+#, fuzzy
+msgid "Semi-cooperative mode"
 msgstr "Semi-yhteistyöllinen tila"
 
 #: src/GameText.h:275
@@ -1212,9 +1213,10 @@ msgid "Unpacked levels"
 msgstr "Paketoimattomat kentät"
 
 #: src/GameText.h:369
+#, fuzzy
 msgid ""
 "Can't update this theme !\n"
-"The theme is not avaible on the web\n"
+"The theme is not available on the web\n"
 "or your theme list is not up to date"
 msgstr ""
 "Ei voida päivittää tätä teemaa !\n"
@@ -1254,8 +1256,9 @@ msgid "Upload all highscores"
 msgstr "Lähetä kaikki huipputulokset"
 
 #: src/GameText.h:378
+#, fuzzy
 msgid ""
-"An unexpected error has occured. There may be some problems with the web "
+"An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr "Odottamaton virhe ilmennyt. Web- sivulla saattaa olla ongelmia."
 

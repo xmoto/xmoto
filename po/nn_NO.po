@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-MOTO 3.0.0\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-01-09 19:51+0100\n"
+"POT-Creation-Date: 2008-01-09 21:12+0100\n"
 "PO-Revision-Date: 2007-06-12 17:26+0100\n"
 "Last-Translator: Wilhelm Francke <wilhelm.francke@gmail.com>\n"
 "Language-Team: English <en@li.org>\n"
@@ -883,7 +883,7 @@ msgid "Multi"
 msgstr "Multi"
 
 #: src/GameText.h:274
-msgid "Semi-collaborativ mode"
+msgid "Semi-cooperative mode"
 msgstr ""
 
 #: src/GameText.h:275
@@ -1243,9 +1243,10 @@ msgid "Unpacked levels"
 msgstr "Upakkede leveler"
 
 #: src/GameText.h:369
+#, fuzzy
 msgid ""
 "Can't update this theme !\n"
-"The theme is not avaible on the web\n"
+"The theme is not available on the web\n"
 "or your theme list is not up to date"
 msgstr ""
 "Kan ikke oppdatere dette themet!\n"
@@ -1287,7 +1288,7 @@ msgstr "Last opp alle rekorder"
 #: src/GameText.h:378
 #, fuzzy
 msgid ""
-"An unexpected error has occured. There may be some problems with the web "
+"An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr ""
 "En uventet feil oppstod\n"
