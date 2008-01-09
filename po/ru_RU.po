@@ -1,7 +1,7 @@
-# Translation of X-Moto to Russian.
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
-# Mikhail Brinchuk <thecentury@gmail.com>, 2007.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
@@ -59,7 +59,7 @@ msgstr "Добавить в избранное"
 
 #: src/GameText.h:44
 msgid "Add to blacklist"
-msgstr "Добавить в исключенные"
+msgstr "Добавить в игнор-лист"
 
 #: src/GameText.h:45
 msgid "Action"
@@ -278,7 +278,7 @@ msgstr "за пакет Mandriva"
 
 #: src/GameText.h:127
 msgid "for FreeBSD packaging"
-msgstr "за пакет FreeBSD"
+msgstr "за пакет для FreeBSD"
 
 #: src/GameText.h:128
 msgid "for across/elma"
@@ -354,7 +354,7 @@ msgstr "Удалить из избранных"
 
 #: src/GameText.h:148
 msgid "Delete from blacklist"
-msgstr "Удалить из исключенных"
+msgstr "Удалить из игнор-листа"
 
 #: src/GameText.h:150
 msgid "Description"
@@ -389,7 +389,7 @@ msgid ""
 "Downloading extra levels...\n"
 "Press ESC to abort."
 msgstr ""
-"Загружаются дополнительные уровни...\n"
+"Хагружаются дополнительные уровни...\n"
 "Нажмите ESC, чтобы отменить загрузку."
 
 #: src/GameText.h:158
@@ -398,7 +398,7 @@ msgstr "Поиск новых уровней"
 
 #: src/GameText.h:159
 msgid "Loading new and updated levels..."
-msgstr "Зарузка новых и обновленных уровней"
+msgstr "Загрузка новых и обновленных уровней"
 
 #: src/GameText.h:160
 msgid "Checking for existing rooms..."
@@ -639,11 +639,11 @@ msgstr "Добавить/удалить из избранных уровней"
 
 #: src/GameText.h:220
 msgid "Add/remove to blacklisted levels"
-msgstr "Добавить/удалить из исключенных уровней"
+msgstr "Добавить/удалить из игнора"
 
 #: src/GameText.h:221
 msgid "change mirror mode"
-msgstr "изменить режим зеркала"
+msgstr "переключить  зеркальный режим"
 
 #: src/GameText.h:222
 msgid "Enable/disable web"
@@ -719,7 +719,7 @@ msgstr "Джойстик"
 
 #: src/GameText.h:240
 msgid "Oops!"
-msgstr "Ой!"
+msgstr "Блин!"
 
 #: src/GameText.h:241
 msgid "Press ENTER to try again"
@@ -751,11 +751,11 @@ msgstr "Удалён из избранных"
 
 #: src/GameText.h:248
 msgid "Added to blacklist"
-msgstr "Добавлено в исключенные"
+msgstr "Добавлен в игнор"
 
 #: src/GameText.h:249
 msgid "Deleted from blacklist"
-msgstr "Удалён из исключенных"
+msgstr "Удалён из игнора"
 
 #: src/GameText.h:250
 msgid "Level Info..."
@@ -833,9 +833,7 @@ msgstr "Графика меню"
 
 #: src/GameText.h:268
 msgid "Total time you scored / total highscore time for levels you finished"
-msgstr ""
-"Общее время, которое вы набрали / общее время для уровней, в которых вы "
-"финишировали"
+msgstr "Суммарное ваше время / суммарный рекорд для пройденных уровней "
 
 #: src/GameText.h:269
 msgid "Level references unknown textures, it could be unplayable!"
@@ -860,7 +858,7 @@ msgstr "Мульти"
 
 #: src/GameText.h:274
 msgid "Semi-collaborativ mode"
-msgstr "Режим частичного сотрудничества"
+msgstr "Полу-кооперативный режим"
 
 #: src/GameText.h:275
 msgid "Stop the game once a player ends the level"
@@ -891,9 +889,9 @@ msgstr "Новый личный рекорд!"
 #, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
-msgstr[0] "Доступен %d новый или обновленный уровень. Загрузить?"
-msgstr[1] "Доступно %d новых или обновленных уровня. Загрузить?"
-msgstr[2] "Доступно %d новых или обновленных уровней. Загрузить?"
+msgstr[0] "Доступен %d новый или обновленный уровень. Загрузить ?"
+msgstr[1] "Доступно %d новых или обновленных уровня. Загрузить ?"
+msgstr[2] "Доступно %d новых или обновленных уровней. Загрузить ?"
 
 #: src/GameText.h:284
 msgid "New Levels"
@@ -934,7 +932,6 @@ msgid "Not finished"
 msgstr "Не завершен"
 
 #: src/GameText.h:292
-#, fuzzy
 msgid ""
 "Important note!\n"
 "\n"
@@ -954,10 +951,9 @@ msgstr ""
 "может стать лучше.\n"
 "Отправляйте сообщения об ошибках, идеи, комментарии, запросы новой "
 "функциональности, письма с угрозами и тому подобное\n"
-"по адресу nicolas собака adenis-lamarre точка fr\n"
+"по адресу xmoto@tuxfamily.org\n"
 "\n"
-"Также посетите http://xmoto.tuxfamily.org чтобы удостовериться, что у вас\n"
-"последняя версия."
+"Также посетите http://xmoto.tuxfamily.org чтобы скачать последнюю версию."
 
 #: src/GameText.h:302
 msgid "# Levels"
@@ -1017,7 +1013,7 @@ msgstr "Лучшие водители"
 
 #: src/GameText.h:316
 msgid "By length"
-msgstr "По длине"
+msgstr "По продолжительности"
 
 #: src/GameText.h:318
 msgid "Password"
@@ -1090,7 +1086,7 @@ msgstr "Перезагрузка демок"
 
 #: src/GameText.h:335
 msgid "Reloading themes..."
-msgstr "Перезагрузка тем..."
+msgstr "Перезагрузка тем"
 
 #: src/GameText.h:336
 msgid "Replay"
@@ -1275,7 +1271,7 @@ msgstr "Загрузка рекорда на сервер..."
 
 #: src/GameText.h:381
 msgid "Use crappy information"
-msgstr "Использовать неудачную информацию"
+msgstr "Использовать информацию о плохих уровнях"
 
 #: src/GameText.h:382
 msgid "Use Environment Vars"
@@ -1518,8 +1514,7 @@ msgstr "Показывать мировой рекорд уровня во вр�
 
 #: src/GameText.h:444
 msgid "Use crappy information from the website to update the crappy pack"
-msgstr ""
-"Использовать неудачную информацию с сайта для обновления неудачного пакета"
+msgstr "Скачать с сервера список плохих уровней для плохого пака"
 
 #: src/GameText.h:445
 msgid "Enable high-color graphics"
@@ -1657,7 +1652,7 @@ msgstr "Показывать только ваши демки на этом ур
 
 #: src/GameText.h:478
 msgid "Show all replays for this level"
-msgstr "Показывать все демки на этом уровне"
+msgstr "Показывать все дэмки на этом уровне"
 
 #: src/GameText.h:479
 msgid "Run selected replay"
@@ -1676,22 +1671,19 @@ msgstr ""
 
 #: src/GameText.h:482
 msgid "Select this if you got a direct connection to the Internet"
-msgstr "Выберите этот пункт, если у вас прямое соединение с интернетом"
+msgstr "Выберите, если у вас прямое соединение с интернетом"
 
 #: src/GameText.h:483
 msgid "Select this if you connect to the Internet through an HTTP proxy"
-msgstr ""
-"Выберите этот пункт, если у вас соединение с интернетом через HTTP прокси"
+msgstr "Выберите, если у вас соединение с интернетом через HTTP прокси"
 
 #: src/GameText.h:484
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
-msgstr ""
-"Выберите этот пункт, если у вас соединение с интернетом через SOCKS4 прокси"
+msgstr "Выберите, если у вас соединение с интернетом через SOCKS4 прокси"
 
 #: src/GameText.h:485
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
-msgstr ""
-"Выберите этот пункт, если у вас соединение с интернетом через SOCKS5 прокси"
+msgstr "Выберите, если у вас соединение с интернетом через SOCKS5 прокси"
 
 #: src/GameText.h:486
 msgid "Use these settings"
@@ -1734,7 +1726,7 @@ msgstr "Показывать разницу времени между Призр
 
 #: src/GameText.h:496
 msgid "If you make a highscore it will automatically be saved as a replay"
-msgstr "Если вы установить рекорд, то автоматически будет сохранена демка"
+msgstr "Если вы установить рекорд, то автоматически будет сохрана демка"
 
 #: src/GameText.h:497
 msgid "View the replay of the room's highscore"
@@ -1754,7 +1746,7 @@ msgstr "Показать различную статистику о X-Moto"
 
 #: src/GameText.h:503
 msgid "Update statistics (also happens each time X-Moto is started)"
-msgstr "Обновить статистику (она также обновляется при перезапуске X-Moto)"
+msgstr "Обновить статистику (она так же обновляется при перезапуске X-Moto)"
 
 #: src/GameText.h:504
 msgid "Enables background music in the main menu"
@@ -1792,7 +1784,7 @@ msgid ""
 "information, check the website)"
 msgstr ""
 "Выбрать куда и откуда загружать демки, списки рекордов (для дополнительной "
-"информации посетите сайт)"
+"информации, проверьте сайт)"
 
 #: src/GameText.h:513
 msgid "Choose your room"
@@ -1902,7 +1894,7 @@ msgstr "Увеличить или уменьшить сложность выбр
 msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
-msgstr "Остановить игру, если один из игроков финишировал, или играть дальше"
+msgstr "Остановить игру если один из игроков финишировал или играть дальше"
 
 #: src/GameText.h:542
 msgid "Don't show the ghosts while playing"
@@ -1910,7 +1902,7 @@ msgstr "Не показывать призраков во время игры"
 
 #: src/GameText.h:543
 msgid "The scene is shared by all the players"
-msgstr "Сцена разделяется между всеми игроками"
+msgstr "Игроки находятся на уровне вместе"
 
 #: src/GameText.h:545
 msgid "Levels with no highscore"
@@ -1934,7 +1926,7 @@ msgstr "Избранные уровни"
 
 #: src/GameText.h:551
 msgid "Blacklisted levels"
-msgstr "Исключенные уровни"
+msgstr "Игнорируемые уровни"
 
 #: src/GameText.h:552
 msgid "Nicest levels"
@@ -2018,7 +2010,7 @@ msgstr "Неудачные уровни"
 
 #: src/GameText.h:573
 msgid "Shortest levels"
-msgstr "Самые короткие уровни"
+msgstr "Короткие уровни"
 
 #: src/GameText.h:574
 msgid "Medium levels"
@@ -2030,7 +2022,7 @@ msgstr "Длинные уровни"
 
 #: src/GameText.h:576
 msgid "Very long levels"
-msgstr "Очень длинные уровни"
+msgstr "Очень длиннные уровни"
 
 #: src/GameText.h:578
 msgid "Levels with no highscore in your room"
@@ -2054,7 +2046,7 @@ msgstr "Ваши избранные уровни"
 
 #: src/GameText.h:584
 msgid "Your blacklisted levels"
-msgstr "Ваши исключенные уровни"
+msgstr "Игнорируемые уровни"
 
 #: src/GameText.h:585
 msgid "Nicest X-Moto levels according to the web votes"
@@ -2150,19 +2142,19 @@ msgstr "Неудачные уровни не видны в других набо
 
 #: src/GameText.h:607
 msgid "The shortest levels (less than 25 seconds)"
-msgstr "Самые короткие уровни (менее 25 секунд)"
+msgstr "Самые короткие уровни(меньше 25 секунд)"
 
 #: src/GameText.h:608
 msgid "The medium levels (25 seconds to 60)"
-msgstr "Средние уровни (от 25 до 60 секунд)"
+msgstr "Средние уровни (25-60 секунд"
 
 #: src/GameText.h:609
 msgid "The long levels (1 minute to 2 minutes)"
-msgstr "Длинные уровни (от 1 до 2 минут)"
+msgstr "Длинные уровни (1-2 минуты)"
 
 #: src/GameText.h:610
 msgid "The longest levels (more than 2 minutes)"
-msgstr "Самые длинные уровни (более 2 минут)"
+msgstr "Самые продолжительные уровни (больше 2 минут)"
 
 #: src/GameText.h:612
 msgid "Ugly mode enabled"
@@ -2320,7 +2312,7 @@ msgid ""
 "how you play the game."
 msgstr ""
 "Это короткий уровень, обучающий\n"
-"основам игры."
+"основам игры"
 
 #: src/LevelsText.h:41
 msgid "Please stay put and follow the instructions! :)"
@@ -2357,8 +2349,8 @@ msgid ""
 "The next jump is a bit trickier. You'll need all the\n"
 "speed you can get to reach the other side..."
 msgstr ""
-"Следующий прыжок сложнее.\n"
-"Чтобы допрыгнуть, нужна максимальная скорость..."
+"Следующий прыжок сложнее. \n"
+"Чтобы допрыгнуть нужна максимальная скорость..."
 
 #: src/LevelsText.h:47
 msgid "Now for the most difficult jump in this tutorial!"
@@ -2378,7 +2370,7 @@ msgid ""
 "wheel up."
 msgstr ""
 "Делайте так:\n"
-"Разгоняйтесь до максимума и, когда достигните обрыва,\n"
+"Разгоняйтесь до максимума и когда достигните обрыва\n"
 "потяните на себя переднее колесо"
 
 #: src/LevelsText.h:50 src/LevelsText.h:63
@@ -2554,7 +2546,7 @@ msgstr ""
 #~ msgstr "воздухе, попробуйте настроить ваше положение левой"
 
 #~ msgid "and right arrow keys, so you'll land on your wheels."
-#~ msgstr "и правой стрелками, так, чтобы приземлиться на колеса."
+#~ msgstr "и правой стрелками, так, чтобы преземлиться на колеса."
 
 #~ msgid "speed you can get to reach the other side..."
 #~ msgstr ""
@@ -2611,10 +2603,10 @@ msgstr ""
 #~ msgstr "Теперь попробуйте немного более сложное препятствие..."
 
 #~ msgid "This time keep your hands off the left and right arrow keys,"
-#~ msgstr "На этот раз не нажимайте кнопки 'налево' и 'направо',"
+#~ msgstr "На этот раз уберите не жмите кнопоки лево и право,"
 
 #~ msgid "they're not delicate enough to help you keep balance."
-#~ msgstr "они недостаточно точны, чтобы помочь вам сохранить равновесие."
+#~ msgstr "они недостаточно деликатны чтобы помочь вам сохранить равновесие."
 
 #~ msgid "Instead regulate your angle by accelerating and braking."
 #~ msgstr "Вместо этого, регулируйте угол ускорением и торможением."
