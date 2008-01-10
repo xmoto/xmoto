@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-01-09 21:12+0100\n"
-"PO-Revision-Date: 2008-01-09 14:25+0100\n"
+"PO-Revision-Date: 2008-01-10 09:30+0100\n"
 "Last-Translator: Mateusz Kosibowicz <mateusz.kosibowcz@gmail.com>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -855,7 +855,6 @@ msgid "Multi"
 msgstr "Multi"
 
 #: src/GameText.h:274
-#, fuzzy
 msgid "Semi-cooperative mode"
 msgstr "Tryb współpracy"
 
@@ -931,7 +930,6 @@ msgid "Not finished"
 msgstr "Nie ukończono"
 
 #: src/GameText.h:292
-#, fuzzy
 msgid ""
 "Important note!\n"
 "\n"
@@ -946,13 +944,13 @@ msgid ""
 msgstr ""
 "Ważna informacja!\n"
 "\n"
-"Jest to rozwojowa wersja X-Moto\n"
+"Jest to rozwojowa wersja X-Moto!\n"
 "Wszystkie uwagi są mile widziane, pozwoli to ulepszać grę\n"
 "Wyślij wszystkie komentarze, pomysły, prośby itd.\n"
-"na nicolas (malpa) adenis-lamarre (kropka) fr \n"
+"na xmoto@tuxfamily.org\n"
 "\n"
-"Odwiedź też http://xmoto.tuxfamily.org. Upewnij się, że\n"
-"masz najnowszą wersję"
+"Odwiedź też http://xmoto.tuxfamily.org, by upewnić się, że\n"
+"masz najnowszą wersję gry"
 
 #: src/GameText.h:302
 msgid "# Levels"
@@ -1210,7 +1208,6 @@ msgid "Unpacked levels"
 msgstr "Poziomy pojedyncze"
 
 #: src/GameText.h:369
-#, fuzzy
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
@@ -1253,13 +1250,11 @@ msgid "Upload all highscores"
 msgstr "Wyślij wszystkie rekordy"
 
 #: src/GameText.h:378
-#, fuzzy
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr ""
-"Nastąpił niespodziewany błąd\n"
-"Nasz serwis www ma problemy"
+"Nastąpił niespodziewany błąd. Mogły wystąpić problemy z naszym serwisem www."
 
 #: src/GameText.h:379
 msgid "Oh no !"
