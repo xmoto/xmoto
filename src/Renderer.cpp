@@ -2084,24 +2084,8 @@ void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) {
   void GameRenderer::_RenderAlphaBlendedSection(Texture *pTexture,
                                                 const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3,
 						const TColor&  i_filterColor) {
-    //    GameApp::instance()->getDrawLib()->drawImage(p1, p2, p3, p0, pTexture,
-    //				 MAKE_COLOR(i_filterColor.Red(), i_filterColor.Green(), i_filterColor.Blue(), 255));
-
-    GameApp::instance()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
-    GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-    GameApp::instance()->getDrawLib()->setColorRGB(i_filterColor.Red(), i_filterColor.Green(), i_filterColor.Blue());
-
-    /* because rotation can make approximation error and 1 pixel of one side of the
-     picture could be map on the other side, */
-    GameApp::instance()->getDrawLib()->glTexCoord(0.01,0.99);
-    GameApp::instance()->getDrawLib()->glVertex(p0.x,p0.y);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.99,0.99);
-    GameApp::instance()->getDrawLib()->glVertex(p1.x,p1.y);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.99,0.01);
-    GameApp::instance()->getDrawLib()->glVertex(p2.x,p2.y);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.01,0.01);
-    GameApp::instance()->getDrawLib()->glVertex(p3.x,p3.y);
-    GameApp::instance()->getDrawLib()->endDraw();
+    GameApp::instance()->getDrawLib()->drawImage(p3, p2, p1, p0, pTexture,
+						 MAKE_COLOR(i_filterColor.Red(), i_filterColor.Green(), i_filterColor.Blue(), 255));
   }
   
   void GameRenderer::_RenderAdditiveBlendedSection(Texture *pTexture,
@@ -2126,21 +2110,8 @@ void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) {
   /* Screen-space version of the above */
   void GameRenderer::_RenderAlphaBlendedSectionSP(Texture *pTexture,
                                                   const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
-
-    /* because rotation can make approximation error and 1 pixel of one side of the
-     picture could be map on the other side, */
-    GameApp::instance()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
-    GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-    GameApp::instance()->getDrawLib()->setColorRGB(255,255,255);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.01, 0.99);
-    GameApp::instance()->getDrawLib()->glVertexSP(p0.x,p0.y);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.99, 0.99);
-    GameApp::instance()->getDrawLib()->glVertexSP(p1.x,p1.y);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.99, 0.01);
-    GameApp::instance()->getDrawLib()->glVertexSP(p2.x,p2.y);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.01, 0.01);
-    GameApp::instance()->getDrawLib()->glVertexSP(p3.x,p3.y);
-    GameApp::instance()->getDrawLib()->endDraw();
+    GameApp::instance()->getDrawLib()->drawImage(p3, p2, p1, p0, pTexture,
+						 MAKE_COLOR(255, 255, 255, 255), true);
   }
   
   void GameRenderer::_RenderRectangle(const Vector2f& i_p1, const Vector2f& i_p2, const Color& i_color) {
@@ -2335,19 +2306,9 @@ void GameRenderer::renderReplayHelpMessage(MotoGame* i_scene) {
     p2 = C + p2 * fSize;
     p3 = C + p3 * fSize;
     p4 = C + p4 * fSize;
-    
-    GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-    //convert the TColor to a Color 
-    GameApp::instance()->getDrawLib()->setColor(MAKE_COLOR(c.Red(), c.Green(), c.Blue(), c.Alpha()));
-    GameApp::instance()->getDrawLib()->glTexCoord(0.01, 0.01);
-    GameApp::instance()->getDrawLib()->glVertex(p1);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.99, 0.01);
-    GameApp::instance()->getDrawLib()->glVertex(p2);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.99, 0.99);
-    GameApp::instance()->getDrawLib()->glVertex(p3);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.01, 0.99);
-    GameApp::instance()->getDrawLib()->glVertex(p4);
-    GameApp::instance()->getDrawLib()->endDrawKeepProperties();
+
+
+    GameApp::instance()->getDrawLib()->drawImageTextureSet(p1, p2, p3, p4, MAKE_COLOR(c.Red(), c.Green(), c.Blue(), c.Alpha()), false, true);
   }
 
 void GameRenderer::_RenderParticle(MotoGame* i_scene, ParticlesSource *i_source) {

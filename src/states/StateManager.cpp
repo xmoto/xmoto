@@ -286,7 +286,7 @@ void StateManager::drawCursor() {
   if(m_cursor != NULL && XMSession::instance()->ugly() == false) {
     int nMX,nMY;
     GameApp::getMousePos(&nMX, &nMY);      
-    GameApp::instance()->getDrawLib()->drawImage(Vector2f(nMX-2,nMY-2), Vector2f(nMX+30,nMY+30), m_cursor);
+    GameApp::instance()->getDrawLib()->drawImage(Vector2f(nMX-2,nMY-2), Vector2f(nMX+30,nMY+30), m_cursor, 0xFFFFFFFF, true);
   }
 }
 
