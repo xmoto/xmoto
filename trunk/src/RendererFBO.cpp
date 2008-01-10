@@ -267,11 +267,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(m_bUseShaders)
         ((DrawLibOpenGL*)m_drawLib)->glUseProgramObjectARB(m_ProgramID);
 
-      glEnable(GL_BLEND);
-      glBlendFunc(GL_ONE,GL_ONE);
-      
+      m_drawLib->setBlendMode(BLEND_MODE_B);
       glEnable(GL_TEXTURE_2D);
       glBindTexture(GL_TEXTURE_2D,m_DynamicTextureID);
+
+      // 0.01 and 0.99 not nice, should be replaced by DrawLib::drawImage, but m_dynamictextureid is not a texture
       m_drawLib->startDraw(DRAW_MODE_POLYGON);
       m_drawLib->setColorRGB(255,255,255);
       glTexCoord2f(0.01,0.01);
@@ -283,9 +283,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       glTexCoord2f(0.01,0.99);
       glVertex2f(0,m_drawLib->getDispHeight());
       m_drawLib->endDraw();
-      glDisable(GL_TEXTURE_2D);
 
-      glDisable(GL_BLEND);
+      glDisable(GL_TEXTURE_2D);
 
       if(m_bUseShaders)
         ((DrawLibOpenGL*)m_drawLib)->glUseProgramObjectARB(0);

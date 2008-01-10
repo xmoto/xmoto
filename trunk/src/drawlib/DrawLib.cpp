@@ -316,18 +316,26 @@ Camera* DrawLib::getMenuCamera(){
   /*===========================================================================
   Primitive: box
   ===========================================================================*/
-  void DrawLib::drawImage(const Vector2f &a,const Vector2f &b,Texture *pTexture,Color Tint) {
-    drawImage(a, Vector2f(b.x, a.y), b, Vector2f(a.x, b.y), pTexture, Tint);
+  void DrawLib::drawImage(const Vector2f &a,const Vector2f &b,Texture *pTexture,Color Tint, bool i_coordsReversed) {
+    drawImage(a, Vector2f(b.x, a.y), b, Vector2f(a.x, b.y), pTexture, Tint, i_coordsReversed);
   }
 
-  void DrawLib::drawImage(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Texture *pTexture, Color Tint) {
+  void DrawLib::drawImage(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Texture *pTexture, Color Tint, bool i_coordsReversed) {
+    setTexture(pTexture,BLEND_MODE_A);
+    drawImageTextureSet(a, b, c, d, Tint, i_coordsReversed);
+  }
+
+void DrawLib::drawImageTextureSet(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Color Tint, bool i_coordsReversed, bool i_keepDrawProperties) {
     float v_absorb = 0.0;
 
-    setTexture(pTexture,BLEND_MODE_A);
     startDraw(DRAW_MODE_POLYGON);
     setColor(Tint);
 
-    if(a.x == d.x && a.y == b.y && c.x == b.x && c.y == d.y) { // simple case, no rotation.
+    if(a.x == d.x && a.y == b.y && c.x == b.x && c.y == d.y ||
+       d.x == c.x && d.y == a.y && b.x == a.x && b.y == c.y ||
+       c.x == b.x && c.y == d.y && a.x == d.x && a.y == b.y ||
+       b.x == a.x && b.y == c.y && d.x == c.x && d.y == a.y
+       ) { // simple case, no rotation, 90, 180, 270
       v_absorb = 0.00;
     } else {
       /* because rotation can make approximation error and 1 pixel of one side of the
@@ -335,16 +343,31 @@ Camera* DrawLib::getMenuCamera(){
       v_absorb = 0.01; 
     }
 
-    glTexCoord(v_absorb, v_absorb);
-    glVertexSP(a.x, a.y);
-    glTexCoord(1.00 - v_absorb, v_absorb);
-    glVertexSP(b.x, b.y);
-    glTexCoord(1.00 - v_absorb, 1.00 - v_absorb);
-    glVertexSP(c.x, c.y);
-    glTexCoord(v_absorb, 1.0 - v_absorb);
-    glVertexSP(d.x, d.y);
+    if(i_coordsReversed) {
+      glTexCoord(v_absorb, v_absorb);
+      glVertexSP(a.x, a.y);
+      glTexCoord(1.00 - v_absorb, v_absorb);
+      glVertexSP(b.x, b.y);
+      glTexCoord(1.00 - v_absorb, 1.00 - v_absorb);
+      glVertexSP(c.x, c.y);
+      glTexCoord(v_absorb, 1.0 - v_absorb);
+      glVertexSP(d.x, d.y);
+    } else {
+      glTexCoord(v_absorb, v_absorb);
+      glVertex(a.x, a.y);
+      glTexCoord(1.00 - v_absorb, v_absorb);
+      glVertex(b.x, b.y);
+      glTexCoord(1.00 - v_absorb, 1.00 - v_absorb);
+      glVertex(c.x, c.y);
+      glTexCoord(v_absorb, 1.0 - v_absorb);
+      glVertex(d.x, d.y);
+    }    
 
-    endDraw();
+    if(i_keepDrawProperties) {
+      endDrawKeepProperties();
+    } else {
+      endDraw();
+    }
   }
 
   void DrawLib::toogleFullscreen() {

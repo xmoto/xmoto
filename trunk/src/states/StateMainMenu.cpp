@@ -1492,13 +1492,13 @@ void StateMainMenu::drawBackground() {
     int h = drawlib->getDispHeight();
 
     if(m_pTitleTL != NULL)
-      drawlib->drawImage(Vector2f(0, 0), Vector2f(w/2, h/2), m_pTitleTL);
+      drawlib->drawImage(Vector2f(0, 0), Vector2f(w/2, h/2), m_pTitleTL, 0xFFFFFFFF, true);
     if(m_pTitleTR != NULL)
-      drawlib->drawImage(Vector2f(w/2, 0), Vector2f(w, h/2), m_pTitleTR);
+      drawlib->drawImage(Vector2f(w/2, 0), Vector2f(w, h/2), m_pTitleTR, 0xFFFFFFFF, true);
     if(m_pTitleBR != NULL)
-      drawlib->drawImage(Vector2f(w/2, h/2), Vector2f(w, h), m_pTitleBR);
+      drawlib->drawImage(Vector2f(w/2, h/2), Vector2f(w, h), m_pTitleBR, 0xFFFFFFFF, true);
     if(m_pTitleBL != NULL)
-      drawlib->drawImage(Vector2f(0, h/2), Vector2f(w/2, h), m_pTitleBL);
+      drawlib->drawImage(Vector2f(0, h/2), Vector2f(w/2, h), m_pTitleBL, 0xFFFFFFFF, true);
   } else {
     drawlib->clearGraphics();
   }

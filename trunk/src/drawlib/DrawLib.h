@@ -220,8 +220,9 @@ class DrawLib {
 		       float fBorder = 1.0f, Color Back =
 		       0, Color Front = 0xFFFFFFFF);
   virtual void drawImage(const Vector2f & a, const Vector2f & b,
-			 Texture * pTexture, Color Tint = 0xFFFFFFFF);
-  virtual void drawImage(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Texture *pTexture, Color Tint = 0xFFFFFFFF);
+			 Texture * pTexture, Color Tint = 0xFFFFFFFF, bool i_coordsReversed = false);
+  virtual void drawImage(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Texture *pTexture, Color Tint = 0xFFFFFFFF, bool i_coordsReversed = false);
+  virtual void drawImageTextureSet(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Color Tint, bool i_coordsReversed = false, bool i_keepDrawProperties = false);
 
   virtual bool isExtensionSupported(std::string Ext) = 0;
   void setDontUseGLExtensions(bool dont_use);
