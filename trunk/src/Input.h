@@ -99,6 +99,7 @@ public:
       
   /* Methods */
   void reset();
+  void dealWithActivedKeys(Universe* i_universe); // apply already pressed keys
   void setMirrored(bool i_value);
 
   void loadConfig(UserConfig *pConfig);

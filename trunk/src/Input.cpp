@@ -41,6 +41,47 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
 
+  void InputHandler::dealWithActivedKeys(Universe* i_universe) {
+    Uint8 *v_keystate = SDL_GetKeyState(NULL);
+    unsigned int p, pW;
+    Biker *v_biker;
+
+    p = 0; // player number p
+    pW = 0; // number of players in the previous worlds
+    for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
+      for(unsigned int i=0; i<i_universe->getScenes()[j]->Players().size(); i++) {
+	v_biker = i_universe->getScenes()[j]->Players()[i];
+	
+	if(m_ControllerModeID[p] == CONTROLLER_MODE_KEYBOARD) {
+	  if(v_keystate[m_nDriveKey[p]] == 1) {
+	    /* Start driving */
+	    v_biker->getControler()->setThrottle(1.0f);
+	  } else if(v_keystate[m_nBrakeKey[p]] == 1) {
+	    /* Brake */
+	    v_biker->getControler()->setBreak(1.0f);
+	  } else if((v_keystate[m_nPullBackKey[p]]    == 1 && m_mirrored == false) ||
+		    (v_keystate[m_nPushForwardKey[p]] == 1 && m_mirrored)) {
+	      /* Pull back */
+	    v_biker->getControler()->setPull(1.0f);
+	  } else if((v_keystate[m_nPushForwardKey[p]] == 1 && m_mirrored == false) ||
+		    (v_keystate[m_nPullBackKey[p]]    == 1 && m_mirrored)) {
+	    /* Push forward */
+	    v_biker->getControler()->setPull(-1.0f);            
+	  }
+	  else if(v_keystate[m_nChangeDirKey[p]] == 1) {
+	    /* Change dir */
+	    if(m_changeDirKeyAlreadyPress[p] == false){
+	      v_biker->getControler()->setChangeDir(true);
+	      m_changeDirKeyAlreadyPress[p] = true;
+	    }
+	  }
+	}
+	  p++;
+      }
+	pW+= i_universe->getScenes()[j]->Players().size();
+    }
+  }
+
   void InputHandler::setMirrored(bool i_value) {
     m_mirrored = i_value;
   }
