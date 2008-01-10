@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Camera.h"
 #include "StateMessageBox.h"
 #include "Universe.h"
+#include "Trainer.h"
 
 StateReplaying::StateReplaying(const std::string& i_replay) :
   StateScene()
@@ -268,6 +269,20 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
       }
     }
     break;
+
+#if defined(ENABLE_ZOOMING)
+  case SDLK_KP0:			        	//TRAINER
+    /* store current bike position (for trainer) */
+    if(m_universe != NULL) {
+      for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+        Trainer::instance()->storePosition( m_universe->getScenes()[i]->getLevelSrc()->Id(),
+                                            m_universe->getScenes()[i]->getPlayerPosition(0) );
+        //TODO: bool getPlayerFaceDir (int i_player)
+      }
+    }
+    break;
+#endif
+
 
   default:
     StateScene::keyDown(nKey, mod, nChar);
