@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Bike.h"
 #include "CameraAnimation.h"
 #include "Universe.h"
+#include "Trainer.h"
 
 StatePlaying::StatePlaying(Universe* i_universe):
   StateScene(i_universe)
@@ -237,6 +238,45 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
 							 m_universe->getScenes()[j]->Cameras()[0]->getCameraPositionY()));
 	  }
 	}
+      }
+    }
+  }
+  else if(nKey == SDLK_KP0 && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0){        //TRAINER
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+        Trainer::instance()->storePosition( m_universe->getScenes()[j]->getLevelSrc()->Id(),
+                                            m_universe->getScenes()[j]->getPlayerPosition(0) );
+          //TODO: bool getPlayerFaceDir (int i_player)
+      }
+    }
+  }
+  else if(nKey == SDLK_BACKSPACE){                                      //TRAINER
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+        if( Trainer::instance()->isRestorePositionAvailable( m_universe->getScenes()[j]->getLevelSrc()->Id() ) ) {
+          Vector2f pos = Trainer::instance()->getCurrentRestorePosition( m_universe->getScenes()[j]->getLevelSrc()->Id() );
+          m_universe->TeleportationCheatTo(0, pos );
+        }
+      }
+    }
+  }
+  else if(nKey == SDLK_KP_MINUS){        //TRAINER
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+        if( Trainer::instance()->isRestorePositionAvailable( m_universe->getScenes()[j]->getLevelSrc()->Id() ) ) {
+          Vector2f pos = Trainer::instance()->getPreviousRestorePosition( m_universe->getScenes()[j]->getLevelSrc()->Id() );
+          m_universe->TeleportationCheatTo(0, pos );
+        }
+      }
+    }
+  }
+  else if(nKey == SDLK_KP_PLUS){        //TRAINER
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+        if( Trainer::instance()->isRestorePositionAvailable( m_universe->getScenes()[j]->getLevelSrc()->Id() ) ) {
+          Vector2f pos = Trainer::instance()->getNextRestorePosition( m_universe->getScenes()[j]->getLevelSrc()->Id() );
+          m_universe->TeleportationCheatTo(0, pos );
+        }
       }
     }
   }
