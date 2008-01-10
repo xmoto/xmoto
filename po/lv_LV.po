@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-01-09 21:12+0100\n"
-"PO-Revision-Date: 2007-10-14 16:25+0300\n"
+"PO-Revision-Date: 2008-01-10 00:23+0200\n"
 "Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
 "Language-Team: Latvian\n"
 "MIME-Version: 1.0\n"
@@ -58,9 +58,8 @@ msgid "Add to favorite"
 msgstr "Pielikt iecienītajiem"
 
 #: src/GameText.h:44
-#, fuzzy
 msgid "Add to blacklist"
-msgstr "Pielikt iecienītajiem"
+msgstr "Ielikt melnajā sarakstā"
 
 #: src/GameText.h:45
 msgid "Action"
@@ -280,9 +279,8 @@ msgid "for Mandriva packaging"
 msgstr "par Mandriva pakošanu"
 
 #: src/GameText.h:127
-#, fuzzy
 msgid "for FreeBSD packaging"
-msgstr "par Debian pakošanu"
+msgstr "par FreeBSD pakošanu"
 
 #: src/GameText.h:128
 msgid "for across/elma"
@@ -357,9 +355,8 @@ msgid "Delete from favorite"
 msgstr "Dzēst no iecienītajiem"
 
 #: src/GameText.h:148
-#, fuzzy
 msgid "Delete from blacklist"
-msgstr "Dzēst no iecienītajiem"
+msgstr "Dzēst no melnā saraksta"
 
 #: src/GameText.h:150
 msgid "Description"
@@ -402,9 +399,8 @@ msgid "Checking for new levels..."
 msgstr "Tiek meklēti jauni līmeņi..."
 
 #: src/GameText.h:159
-#, fuzzy
 msgid "Loading new and updated levels..."
-msgstr "Jauni un atjaunoti līmeņi"
+msgstr "Tiek ielādēti jauni un atjaunoti līmeņi..."
 
 #: src/GameText.h:160
 msgid "Checking for existing rooms..."
@@ -644,14 +640,18 @@ msgstr "Iepriekšējais/nākošais līmenis"
 msgid "Add/remove to favorite levels"
 msgstr "Pievienot/dzēst no iecienītajiem līmeņiem"
 
+# XXX
+# Change "Add/remove to" to "Add to/remove from".
 #: src/GameText.h:220
-#, fuzzy
 msgid "Add/remove to blacklisted levels"
-msgstr "Pievienot/dzēst no iecienītajiem līmeņiem"
+msgstr "Pievienot/dzēst no melnā saraksta"
 
+# XXX
+# "change" should  be capitalised  for consistency with  other strings
+# and maybe changed to "Toggle".
 #: src/GameText.h:221
 msgid "change mirror mode"
-msgstr ""
+msgstr "Ieslēgt/izslēgt spoguļrežīmu"
 
 #: src/GameText.h:222
 msgid "Enable/disable web"
@@ -756,14 +756,12 @@ msgid "Deleted from favorites"
 msgstr "Izdzēsts no iecienītajiem"
 
 #: src/GameText.h:248
-#, fuzzy
 msgid "Added to blacklist"
-msgstr "Pievienots iecienītajiem"
+msgstr "Ielikts melnajā sarakstā"
 
 #: src/GameText.h:249
-#, fuzzy
 msgid "Deleted from blacklist"
-msgstr "Izdzēsts no iecienītajiem"
+msgstr "Izdzēsts no melnā saraksta"
 
 #: src/GameText.h:250
 msgid "Level Info..."
@@ -843,7 +841,7 @@ msgstr "Izvēlņu grafikas"
 
 #: src/GameText.h:268
 msgid "Total time you scored / total highscore time for levels you finished"
-msgstr ""
+msgstr "Tavu rekordu kopīgais laiks / izieto līmeņu rekordu kopīgais laiks"
 
 #: src/GameText.h:269
 msgid "Level references unknown textures, it could be unplayable!"
@@ -869,7 +867,7 @@ msgstr "Multi"
 
 #: src/GameText.h:274
 msgid "Semi-cooperative mode"
-msgstr ""
+msgstr "Daļēji apvienotais režīms"
 
 #: src/GameText.h:275
 msgid "Stop the game once a player ends the level"
@@ -946,7 +944,6 @@ msgid "Not finished"
 msgstr "Nav pabeigts"
 
 #: src/GameText.h:292
-#, fuzzy
 msgid ""
 "Important note!\n"
 "\n"
@@ -966,7 +963,7 @@ msgstr ""
 "veida atsauksmes.\n"
 "Sūti ziņojumus par kļūdām, idejas, komentārus,\n"
 "lūgumus ieviest jaunas iespējas, naida vēstules utt.\n"
-"uz nicolas at adenis-lamarre dot fr\n"
+"uz xmoto@tuxfamily.org\n"
 "\n"
 "Un neaizmirsti apmeklēt http://xmoto.tuxfamily.org,\n"
 "lai pārliecinātos, ka tavās rokās nonākusi visjaunākā versija."
@@ -985,7 +982,7 @@ msgstr "Atvērt"
 
 #: src/GameText.h:305
 msgid "Operation completed"
-msgstr ""
+msgstr "Darbība pabeigta"
 
 #: src/GameText.h:306
 msgid "Options"
@@ -1029,7 +1026,7 @@ msgstr "Pēc labākā braucēja"
 
 #: src/GameText.h:316
 msgid "By length"
-msgstr ""
+msgstr "Pēc garuma"
 
 #: src/GameText.h:318
 msgid "Password"
@@ -1103,9 +1100,8 @@ msgid "Reloading replays..."
 msgstr "Tiek pārlādēti ieraksti..."
 
 #: src/GameText.h:335
-#, fuzzy
 msgid "Reloading themes..."
-msgstr "Tiek pārlādēti līmeņi..."
+msgstr "Tiek pārlādētas tēmas..."
 
 #: src/GameText.h:336
 msgid "Replay"
@@ -1224,20 +1220,19 @@ msgstr "Pamācība"
 
 #: src/GameText.h:367
 msgid "Unknown"
-msgstr ""
+msgstr "Nezināms"
 
 #: src/GameText.h:368
 msgid "Unpacked levels"
 msgstr "Atpakotie līmeņi"
 
 #: src/GameText.h:369
-#, fuzzy
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
 "or your theme list is not up to date"
 msgstr ""
-"Šo tēmu nevar atjaunot!\n"
+"Šo tēmu nav iespējams atjaunot!\n"
 "Tēma nav pieejama tīmeklī vai\n"
 "tavs tēmu saraksts ir novecojis."
 
@@ -1276,11 +1271,10 @@ msgid "Upload all highscores"
 msgstr "Iesniegt visus rekordus"
 
 #: src/GameText.h:378
-#, fuzzy
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
-msgstr "Notikusi negaidīta kļūda. Iespējams, ka radušās problēmas ar serveri."
+msgstr "Notikusi negaidīta kļūda. Iespējams, ka serverī radušās problēmas."
 
 #: src/GameText.h:379
 msgid "Oh no !"
@@ -1292,7 +1286,7 @@ msgstr "Rekords tiek augšupielādēts..."
 
 #: src/GameText.h:381
 msgid "Use crappy information"
-msgstr ""
+msgstr "Izmantot draņķīguma informāciju"
 
 #: src/GameText.h:382
 msgid "Use Environment Vars"
@@ -1537,6 +1531,7 @@ msgstr "Rādīt dotā līmeņa pasaules rekordu spēles laikā"
 #: src/GameText.h:444
 msgid "Use crappy information from the website to update the crappy pack"
 msgstr ""
+"Lietot draņķīguma informāciju no servera, lai atjaunotu draņķīgo līmeņu paku"
 
 #: src/GameText.h:445
 msgid "Enable high-color graphics"
@@ -1921,7 +1916,7 @@ msgstr "Nerādīt spokus spēles laikā"
 
 #: src/GameText.h:543
 msgid "The scene is shared by all the players"
-msgstr ""
+msgstr "Līmenī vienlaicīgi atrodas visi spēlētāji"
 
 #: src/GameText.h:545
 msgid "Levels with no highscore"
@@ -1944,9 +1939,8 @@ msgid "Favorite levels"
 msgstr "Iecienītie līmeņi"
 
 #: src/GameText.h:551
-#, fuzzy
 msgid "Blacklisted levels"
-msgstr "Atpakotie līmeņi"
+msgstr "Līmeņu melnais saraksts"
 
 #: src/GameText.h:552
 msgid "Nicest levels"
@@ -2029,24 +2023,20 @@ msgid "Crappy levels"
 msgstr "Draņķīgi līmeņi"
 
 #: src/GameText.h:573
-#, fuzzy
 msgid "Shortest levels"
-msgstr "Visgrūtākie līmeņi"
+msgstr "Visīsākie līmeņi"
 
 #: src/GameText.h:574
-#, fuzzy
 msgid "Medium levels"
-msgstr "Mani līmeņi"
+msgstr "Vidēja garuma līmeņi"
 
 #: src/GameText.h:575
-#, fuzzy
 msgid "Long levels"
-msgstr "Tiek ielādēti līmeņi..."
+msgstr "Gari līmeņi"
 
 #: src/GameText.h:576
-#, fuzzy
 msgid "Very long levels"
-msgstr "Tiek pārlādēti līmeņi..."
+msgstr "Ļoti gari līmeņi"
 
 #: src/GameText.h:578
 msgid "Levels with no highscore in your room"
@@ -2069,9 +2059,8 @@ msgid "Your favorite levels"
 msgstr "Tavi iecienītākie līmeņi"
 
 #: src/GameText.h:584
-#, fuzzy
 msgid "Your blacklisted levels"
-msgstr "Tavi iecienītākie līmeņi"
+msgstr "Tavi melnajā sarakstā esošie līmeņi"
 
 #: src/GameText.h:585
 msgid "Nicest X-Moto levels according to the web votes"
@@ -2169,19 +2158,19 @@ msgstr "Līmeņi, kas atzīmēti kā \"draņķīgi\", netiek rādīti citās pak
 
 #: src/GameText.h:607
 msgid "The shortest levels (less than 25 seconds)"
-msgstr ""
+msgstr "Visīsākie līmeņi (īsāki par 25 sekundēm)"
 
 #: src/GameText.h:608
 msgid "The medium levels (25 seconds to 60)"
-msgstr ""
+msgstr "Vidēja garuma līmeņi (no 25 līdz 60 sekundēm)"
 
 #: src/GameText.h:609
 msgid "The long levels (1 minute to 2 minutes)"
-msgstr ""
+msgstr "Gari līmeņi (no 1 minūtes līdz 2 minūtēm)"
 
 #: src/GameText.h:610
 msgid "The longest levels (more than 2 minutes)"
-msgstr ""
+msgstr "Visgarākie līmeņi (garāki par 2 minūtēm)"
 
 #: src/GameText.h:612
 msgid "Ugly mode enabled"
