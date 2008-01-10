@@ -203,7 +203,7 @@ displayRequirement "asian ttf file" "$ASIAN_TTF_FILE" "$ASIAN_TTF_FILE" "$ASIAN_
 echo   "+-----------------+------------+-----------------------------------------------------+"
 displayVersion "Lua" "$USE_LUA_VERSION"
 echo   "+-----------------+------------+-----------------------------------------------------+"
-displayRequirement "Zoom" "$with_enable_zoom" "1" "--with-enable-zoom=1"
+displayRequirement "Zoom" "$with_enable_zoom" "1" "--with-enable-zoom=1 (for non official packages)"
 echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "OpenGl" "$USE_OPENGL" "1" "--with-renderer-openGl=1"
 echo   "+-----------------+------------+-----------------------------------------------------+"
