@@ -175,6 +175,7 @@ void StatePreplaying::enter()
 
     // reset handler, set mirror mode
     InputHandler::instance()->reset();
+    InputHandler::instance()->dealWithActivedKeys(m_universe);
     for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
       for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
 	m_universe->getScenes()[j]->Cameras()[i]->setMirrored(XMSession::instance()->mirrorMode());
