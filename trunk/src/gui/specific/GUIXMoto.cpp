@@ -306,7 +306,7 @@ void UIQuickStartButton::paint() {
       } else {
 	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
 			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
-			     m_qualityTex);
+			     m_qualityTex, 0xFFFFFFFF, true);
       }
     } else {
       if(isUglyMode()) {
@@ -315,7 +315,7 @@ void UIQuickStartButton::paint() {
       } else {
 	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
 			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
-			     m_uncheckedTex);
+			     m_uncheckedTex, 0xFFFFFFFF, true);
       }
     }
   }
@@ -331,7 +331,7 @@ void UIQuickStartButton::paint() {
       } else {
 	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
 			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
-			     m_difficultyTex);
+			     m_difficultyTex, 0xFFFFFFFF, true);
       }
     } else {
       if(isUglyMode()) {
@@ -340,7 +340,7 @@ void UIQuickStartButton::paint() {
       } else {
 	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
 			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
-			     m_uncheckedTex);
+			     m_uncheckedTex, 0xFFFFFFFF, true);
       }
     }
   }
