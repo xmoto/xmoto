@@ -487,8 +487,8 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
   void UIWindow::putImage(int x,int y,int nWidth,int nHeight,Texture *pImage) {
     if(pImage != NULL) {
       getApp()->getDrawLib()->drawImage(Vector2f(x+getAbsPosX(),y+getAbsPosY()),
-                          Vector2f(x+nWidth+getAbsPosX(),y+nHeight+getAbsPosY()),
-                          pImage,MAKE_COLOR(255,255,255,(int)(255*getOpacity()/100)));
+					Vector2f(x+nWidth+getAbsPosX(),y+nHeight+getAbsPosY()),
+					pImage,MAKE_COLOR(255,255,255,(int)(255*getOpacity()/100)), true);
     }
   }
   
