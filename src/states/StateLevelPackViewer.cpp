@@ -55,6 +55,7 @@ void StateLevelPackViewer::enter()
 
   updateGUI();
   updateInfoFrame();
+  updateRights(); // update rights after updateinfoframe because it can hide the infoframe
 
   GameApp::instance()->playMusic("menu1");
   StateMenu::enter();
@@ -89,6 +90,7 @@ void StateLevelPackViewer::checkEvents()
       pLevelFilterEdit->setHasChanged(false);
       pList->setFilter(pLevelFilterEdit->getCaption());
       updateInfoFrame();
+      updateRights();
     }
   }
 
@@ -129,6 +131,7 @@ void StateLevelPackViewer::checkEvents()
   if(pList->isChanged()) {
     pList->setChanged(false);
     updateInfoFrame();
+    updateRights();
   }
 
   if(pShowHighscore != NULL && pShowHighscore->isClicked() == true){
@@ -295,7 +298,8 @@ void StateLevelPackViewer::updateGUI()
   UIEdit *pLevelFilterEdit = reinterpret_cast<UIEdit *>(m_GUI->getChild("FRAME:LEVEL_FILTER"));  
   pLevelFilterEdit->setCaption("");
   pList->setFilter("");
-  
+  updateRights();  
+
   /* Obey hints */
   pList->unhideAllColumns();
   if(!m_pActiveLevelPack->ShowTimes()) {
@@ -360,7 +364,7 @@ void StateLevelPackViewer::updateInfoFrame() {
   UILevelList* v_list  = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
   UIStatic* v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("FRAME:INFO_FRAME:BESTPLAYER")); 
   UIButton* v_button   = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:INFO_FRAME:BESTPLAYER_VIEW"));
-  UIWindow* v_window   = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:INFO_FRAME"));
+  UIWindow* v_window   = reinterpret_cast<UIWindow *>(m_GUI->getChild("FRAME:INFO_FRAME"));
 
   std::string v_id_level = v_list->getSelectedLevel();
   std::string v_id_profile;
@@ -382,4 +386,19 @@ std::string StateLevelPackViewer::getInfoFrameLevelId()
 {
   UILevelList* v_list  = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
   return v_list->getSelectedLevel();
+}
+
+void StateLevelPackViewer::updateRights() {
+  UIButton* v_button;
+  UILevelList* v_list   = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
+  UIWindow* v_infoFrame = reinterpret_cast<UIWindow*>(m_GUI->getChild("FRAME:INFO_FRAME"));
+
+  v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("FRAME:PLAY_BUTTON"));
+  v_button->enableWindow(v_list->nbVisibleItems() > 0);
+  v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("FRAME:INFO_BUTTON"));
+  v_button->enableWindow(v_list->nbVisibleItems() > 0);
+  v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("FRAME:ADDTOFAVORITE_BUTTON"));
+  v_button->enableWindow(v_list->nbVisibleItems() > 0);
+
+  v_infoFrame->showWindow(v_list->nbVisibleItems() > 0);
 }

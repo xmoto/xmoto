@@ -2708,7 +2708,7 @@ void StateMainMenu::updateReplaysRights() {
   std::string v_replay;
   ReplayInfo* rplInfos;
 
-  if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+  if(v_list->nbVisibleItems() > 0) {
     UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
     if(pEntry != NULL) {
       v_replay = pEntry->Text[0];
@@ -2738,6 +2738,13 @@ void StateMainMenu::updateReplaysRights() {
   } else {
     v_button->enableWindow(false);
   }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_SHOW_BUTTON"));
+  v_button->enableWindow(v_list->nbVisibleItems() > 0);
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_DELETE_BUTTON"));
+  v_button->enableWindow(v_list->nbVisibleItems() > 0);
+
 }
 
 std::string StateMainMenu::getInfoFrameLevelId()
