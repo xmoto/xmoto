@@ -85,6 +85,7 @@ void StateScene::enter()
   m_benchmarkNbFrame   = 0;
   m_benchmarkStartTime = GameApp::getXMTime();
 
+  m_fLastPhysTime = GameApp::getXMTime();
 }
 
 bool StateScene::update()
@@ -98,10 +99,6 @@ bool StateScene::update()
   int nPhysSteps = 0;
 
   if(isLockedScene() == false) {  
-    if(m_fLastPhysTime < 0.0) {
-      m_fLastPhysTime = GameApp::getXMTime();
-    }
-
     // don't update if that's not required
     // don't do this infinitely, maximum miss 10 frames, then give up
     while ((m_fLastPhysTime + PHYS_STEP_SIZE <= GameApp::getXMTime()) && (nPhysSteps < 10)) {
@@ -111,7 +108,12 @@ bool StateScene::update()
 	}
       }
       m_fLastPhysTime += PHYS_STEP_SIZE;
-      nPhysSteps++;    
+      nPhysSteps++;
+    }
+
+    // if the delay is too long, reinitialize
+    if(m_fLastPhysTime + PHYS_STEP_SIZE < GameApp::getXMTime()) {
+      m_fLastPhysTime = GameApp::getXMTime();
     }
 
     // update camera scrolling
