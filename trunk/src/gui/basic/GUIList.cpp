@@ -1032,3 +1032,7 @@ void UIList::checkForFilteredEntries() {
     }
     return "";
   }
+
+int UIList::nbVisibleItems() const {
+  return m_Entries.size() - m_filteredItems;
+}

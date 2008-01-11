@@ -58,6 +58,8 @@ private:
 
   void updateInfoFrame();
   std::string getInfoFrameLevelId();
+
+  void updateRights();
 };
 
 #endif

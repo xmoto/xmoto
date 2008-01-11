@@ -641,6 +641,8 @@ public:
   void setFilter(std::string i_filter);
   void checkForFilteredEntries(); // ask the list to check for filtered entries (if you manually set bFiltered to true)
 
+  int nbVisibleItems() const;
+
 private:
   /* Data */
   bool m_bChanged;
