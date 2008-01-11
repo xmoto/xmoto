@@ -221,7 +221,7 @@ class DrawLib {
 		       0, Color Front = 0xFFFFFFFF);
   virtual void drawImage(const Vector2f & a, const Vector2f & b,
 			 Texture * pTexture, Color Tint = 0xFFFFFFFF, bool i_coordsReversed = false);
-  virtual void drawImage(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Texture *pTexture, Color Tint = 0xFFFFFFFF, bool i_coordsReversed = false);
+  virtual void drawImage(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Texture *pTexture, Color Tint = 0xFFFFFFFF, bool i_coordsReversed = false, BlendMode i_blendMode = BLEND_MODE_A);
   virtual void drawImageTextureSet(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Color Tint, bool i_coordsReversed = false, bool i_keepDrawProperties = false);
 
   virtual bool isExtensionSupported(std::string Ext) = 0;

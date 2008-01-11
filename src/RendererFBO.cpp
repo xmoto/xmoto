@@ -271,19 +271,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       glEnable(GL_TEXTURE_2D);
       glBindTexture(GL_TEXTURE_2D,m_DynamicTextureID);
 
-      // 0.01 and 0.99 not nice, should be replaced by DrawLib::drawImage, but m_dynamictextureid is not a texture
-      m_drawLib->startDraw(DRAW_MODE_POLYGON);
-      m_drawLib->setColorRGB(255,255,255);
-      glTexCoord2f(0.01,0.01);
-      glVertex2f(0,0);
-      glTexCoord2f(0.99,0.01);
-      glVertex2f(m_drawLib->getDispWidth(),0);
-      glTexCoord2f(0.99,0.99);
-      glVertex2f(m_drawLib->getDispWidth(),m_drawLib->getDispHeight());
-      glTexCoord2f(0.01,0.99);
-      glVertex2f(0,m_drawLib->getDispHeight());
-      m_drawLib->endDraw();
-
+      m_drawLib->drawImageTextureSet(Vector2f(0.0, 0.0),
+				     Vector2f(m_drawLib->getDispWidth(), 0.0),
+				     Vector2f(m_drawLib->getDispWidth(), m_drawLib->getDispHeight()),
+				     Vector2f(0.0, m_drawLib->getDispHeight()),
+				     MAKE_COLOR(255,255,255,255));
       glDisable(GL_TEXTURE_2D);
 
       if(m_bUseShaders)

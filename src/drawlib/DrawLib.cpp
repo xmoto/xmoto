@@ -320,8 +320,8 @@ Camera* DrawLib::getMenuCamera(){
     drawImage(a, Vector2f(b.x, a.y), b, Vector2f(a.x, b.y), pTexture, Tint, i_coordsReversed);
   }
 
-  void DrawLib::drawImage(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Texture *pTexture, Color Tint, bool i_coordsReversed) {
-    setTexture(pTexture,BLEND_MODE_A);
+void DrawLib::drawImage(const Vector2f &a,const Vector2f &b, const Vector2f &c,const Vector2f &d, Texture *pTexture, Color Tint, bool i_coordsReversed, BlendMode i_blendMode) {
+    setTexture(pTexture, i_blendMode);
     drawImageTextureSet(a, b, c, d, Tint, i_coordsReversed);
   }
 
