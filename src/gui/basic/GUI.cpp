@@ -1025,7 +1025,7 @@ UIRoot::UIRoot()
     if(nNum > 0) {
       /* Find the currently active window */
       int nActive = _GetActiveIdx(Map, nNum);
-      
+
       /* No active? */
       if(nActive < 0) {
         /* Simply activate the first */        
@@ -1039,7 +1039,8 @@ UIRoot::UIRoot()
       else {
         /* Okay, determine where to go from here */
         /* Calculate a "best estimate" rating for each candidate, and select the best */
-        int nBest = -1;
+        int nBest          = -1;
+	int nCurrentRating = -1;
 	unsigned int uActive = nActive;
         for(unsigned int i=0; i<nNum; i++) {
           if(i != uActive) {
@@ -1055,13 +1056,20 @@ UIRoot::UIRoot()
            
             float fAngle = (acos(xx1*xx2 + yy1*yy2) / 3.14159f) * 180.0f;
             if((vx<0 && dx<0) || (vx>0 && dx>0) || (vy<0 && dy<0) || (vy>0 && dy>0)) {
-              if(fAngle < 45.0f)
-                nRating = 200 - (int)(fAngle + fDist) + 1000;
-            }
+              if(fAngle < 45.0f) {
+                nRating = 1500 - (int)(fAngle + fDist*2) + 1000;
+	      } else {
+		nRating = 1500 - (int)(fAngle + fDist*2) + 500;
+	      }
+            } else {
+	      nRating = 1500 - (int)(fAngle + fDist*3) + 100;
+	    }
             
             /* Good? */
-            if(nRating > 0 && nBest < 0) {
+            if(nRating > 0 && nRating > nCurrentRating) {
+	      nCurrentRating = nRating;
               nBest = i;
+	      //printf("best is %i (rating=%i)\n", nBest, nRating);
             }
           }
         }
