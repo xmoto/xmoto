@@ -2090,21 +2090,7 @@ void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) {
   
   void GameRenderer::_RenderAdditiveBlendedSection(Texture *pTexture,
                                                    const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
-
-    /* because rotation can make approximation error and 1 pixel of one side of the
-     picture could be map on the other side, */
-    GameApp::instance()->getDrawLib()->setTexture(pTexture,BLEND_MODE_B);
-    GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-    GameApp::instance()->getDrawLib()->setColorRGB(255,255,255);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.01, 0.99);
-    GameApp::instance()->getDrawLib()->glVertex(p0.x,p0.y);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.99, 0.99);
-    GameApp::instance()->getDrawLib()->glVertex(p1.x,p1.y);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.99, 0.01);
-    GameApp::instance()->getDrawLib()->glVertex(p2.x,p2.y);
-    GameApp::instance()->getDrawLib()->glTexCoord(0.01, 0.01);
-    GameApp::instance()->getDrawLib()->glVertex(p3.x,p3.y);
-    GameApp::instance()->getDrawLib()->endDraw();
+    GameApp::instance()->getDrawLib()->drawImage(p0, p1, p2, p3, pTexture, MAKE_COLOR(255, 255, 255, 255), false, BLEND_MODE_B);
   }
   
   /* Screen-space version of the above */
