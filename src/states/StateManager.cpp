@@ -130,6 +130,18 @@ GameState* StateManager::replaceState(GameState* pNewState)
   return pPreviousState;
 }
 
+bool StateManager::needUpdateOrRender() {
+  if(m_hasFocus) { // m_isVisible is not needed while xmoto is rendered after each event (including expose event)
+    return true;
+  }
+
+  if(m_statesStack.size() == 0) {
+    return false;
+  }
+
+  return m_statesStack[m_statesStack.size()-1]->updateWhenUnvisible();
+}
+
 void StateManager::update()
 {
   // if there is no focus, don't update if the top state won't be updated

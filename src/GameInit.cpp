@@ -398,79 +398,94 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   Logger::Log("UserInit ended at %.3f", GameApp::getXMTime());
 }
 
+void GameApp::manageEvent(SDL_Event* Event) {
+  int ch=0;
+  static int nLastMouseClickX = -100,nLastMouseClickY = -100;
+  static int nLastMouseClickButton = -100;
+  static float fLastMouseClickTime = 0.0f;
+  int nX,nY;
+  
+  /* What event? */
+  switch(Event->type) {
+  case SDL_KEYDOWN: 
+    if((Event->key.keysym.unicode&0xff80)==0) {
+      ch = Event->key.keysym.unicode & 0x7F;
+    }
+    keyDown(Event->key.keysym.sym, Event->key.keysym.mod, ch);            
+    break;
+  case SDL_KEYUP: 
+    keyUp(Event->key.keysym.sym, Event->key.keysym.mod);            
+    break;
+  case SDL_QUIT:  
+    /* Force quit */
+    quit();
+    break;
+  case SDL_MOUSEBUTTONDOWN:
+    /* Pass ordinary click */
+    mouseDown(Event->button.button);
+    
+    /* Is this a double click? */
+    getMousePos(&nX,&nY);
+    if(nX == nLastMouseClickX &&
+       nY == nLastMouseClickY &&
+       nLastMouseClickButton == Event->button.button &&
+       (getXMTime() - fLastMouseClickTime) < 0.250f) {                
+      
+      /* Pass double click */
+      mouseDoubleClick(Event->button.button);                
+    }
+    fLastMouseClickTime = getXMTime();
+    nLastMouseClickX = nX;
+    nLastMouseClickY = nY;
+    nLastMouseClickButton = Event->button.button;
+    
+    break;
+  case SDL_MOUSEBUTTONUP:
+    mouseUp(Event->button.button);
+    break;
+    
+  case SDL_ACTIVEEVENT:
+    
+    if((Event->active.state & SDL_APPMOUSEFOCUS) != 0) { // mouse focus
+      if(m_hasKeyboardFocus == false) {
+	changeFocus(Event->active.gain == 1);
+      }
+      m_hasMouseFocus = (Event->active.gain == 1);
+    }
+    
+    if((Event->active.state & SDL_APPINPUTFOCUS) != 0) { // keyboard focus
+      if(m_hasMouseFocus == false) {
+	changeFocus(Event->active.gain == 1);
+      }
+      m_hasKeyboardFocus = (Event->active.gain == 1);
+    }
+    
+    if((Event->active.state & SDL_APPACTIVE) != 0) {
+      changeVisibility(Event->active.gain == 1);
+      m_isIconified = (Event->active.gain == 0);
+    }
+    
+  }
+}
+
 void GameApp::run_loop() {
+  SDL_Event Event;
+
   while(!m_bQuit) {
     /* Handle SDL events */            
     SDL_PumpEvents();
-    
-    SDL_Event Event;
-    while(SDL_PollEvent(&Event)) {
-      int ch=0;
-      static int nLastMouseClickX = -100,nLastMouseClickY = -100;
-      static int nLastMouseClickButton = -100;
-      static float fLastMouseClickTime = 0.0f;
-      int nX,nY;
 
-      /* What event? */
-      switch(Event.type) {
-      case SDL_KEYDOWN: 
-	if((Event.key.keysym.unicode&0xff80)==0) {
-	  ch = Event.key.keysym.unicode & 0x7F;
-	}
-	keyDown(Event.key.keysym.sym, Event.key.keysym.mod, ch);            
-	break;
-      case SDL_KEYUP: 
-	keyUp(Event.key.keysym.sym, Event.key.keysym.mod);            
-	break;
-      case SDL_QUIT:  
-	/* Force quit */
-	quit();
-	break;
-      case SDL_MOUSEBUTTONDOWN:
-	/* Pass ordinary click */
-	mouseDown(Event.button.button);
-              
-	/* Is this a double click? */
-	getMousePos(&nX,&nY);
-	if(nX == nLastMouseClickX &&
-	   nY == nLastMouseClickY &&
-	   nLastMouseClickButton == Event.button.button &&
-	   (getXMTime() - fLastMouseClickTime) < 0.250f) {                
-	    
-	  /* Pass double click */
-	  mouseDoubleClick(Event.button.button);                
-	}
-	fLastMouseClickTime = getXMTime();
-	nLastMouseClickX = nX;
-	nLastMouseClickY = nY;
-	nLastMouseClickButton = Event.button.button;
-	  
-	break;
-      case SDL_MOUSEBUTTONUP:
-	mouseUp(Event.button.button);
-	break;
-
-      case SDL_ACTIVEEVENT:
-
-	if((Event.active.state & SDL_APPMOUSEFOCUS) != 0) { // mouse focus
-	  if(m_hasKeyboardFocus == false) {
-	    changeFocus(Event.active.gain == 1);
-	  }
-	  m_hasMouseFocus = (Event.active.gain == 1);
-	}
-
-	if((Event.active.state & SDL_APPINPUTFOCUS) != 0) { // keyboard focus
-	  if(m_hasMouseFocus == false) {
-	    changeFocus(Event.active.gain == 1);
-	  }
-	  m_hasKeyboardFocus = (Event.active.gain == 1);
-	}
-	
-	if((Event.active.state & SDL_APPACTIVE) != 0) {
-	  changeVisibility(Event.active.gain == 1);
-	  m_isIconified = (Event.active.gain == 0);
-	}
-
+    // wait on event if xmoto won't be update/rendered
+    if(StateManager::instance()->needUpdateOrRender()) {
+      while(SDL_PollEvent(&Event)) {
+	manageEvent(&Event);
+      }
+    } else {
+      if(SDL_WaitEvent(&Event) == 1) {
+	manageEvent(&Event);
+      }
+      while(SDL_PollEvent(&Event)) {
+	manageEvent(&Event);
       }
     }
 

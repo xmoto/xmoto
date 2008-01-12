@@ -168,6 +168,8 @@ public:
   void changeFocus(bool i_hasFocus);
   void changeVisibility(bool i_visible);
 
+  bool needUpdateOrRender();
+
   // to display on the screen
   int getCurrentUpdateFPS();
   int getCurrentRenderFPS();
