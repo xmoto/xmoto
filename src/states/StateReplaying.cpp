@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "Universe.h"
 #include "Trainer.h"
+#include "SysMessage.h"
 
 StateReplaying::StateReplaying(const std::string& i_replay) :
   StateScene()
@@ -278,6 +279,9 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
         Trainer::instance()->storePosition( m_universe->getScenes()[i]->getLevelSrc()->Id(),
                                             m_universe->getScenes()[i]->getPlayerPosition(0) );
         //TODO: bool getPlayerFaceDir (int i_player)
+        char sysmsg[256];
+        snprintf(sysmsg, 256, SYS_MSG_TRAIN_STORED, Trainer::instance()->getMaxRestoreIndex()+1);
+        SysMessage::instance()->displayText(sysmsg);
       }
     }
     break;

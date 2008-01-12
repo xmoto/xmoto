@@ -35,6 +35,8 @@ private:
 
 public:
   bool isRestorePositionAvailable( std::string levelId );
+  int getCurrentRestoreIndex();
+  int getMaxRestoreIndex();
   Vector2f getCurrentRestorePosition( std::string levelId );
   Vector2f getPreviousRestorePosition( std::string levelId );
   Vector2f getNextRestorePosition( std::string levelId );
