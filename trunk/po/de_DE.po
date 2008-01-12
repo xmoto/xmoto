@@ -1,6 +1,5 @@
 # translation of de.po to Deutsch
-# Jonathan Sieber <jonathan_sieber@yahoo.de>, 2006.
-# Jens Erler <mothbox@gmx.net>, 2007.
+# Jens Erler <mothbox@gmx.net>, 2007,2008.
 # 
 # 
 msgid ""
@@ -57,9 +56,8 @@ msgid "Add to favorite"
 msgstr "Zu den Favoriten"
 
 #: src/GameText.h:44
-#, fuzzy
 msgid "Add to blacklist"
-msgstr "Zu den Favoriten"
+msgstr "Auf die Schwarze Liste"
 
 #: src/GameText.h:45
 msgid "Action"
@@ -277,9 +275,8 @@ msgid "for Mandriva packaging"
 msgstr "Mandriva-Pakete"
 
 #: src/GameText.h:127
-#, fuzzy
 msgid "for FreeBSD packaging"
-msgstr "Debian-Pakete"
+msgstr "FreeBSD-Pakete"
 
 #: src/GameText.h:128
 msgid "for across/elma"
@@ -354,9 +351,8 @@ msgid "Delete from favorite"
 msgstr "Aus Liste entfernen"
 
 #: src/GameText.h:148
-#, fuzzy
 msgid "Delete from blacklist"
-msgstr "Aus Liste entfernen"
+msgstr "Von der Schwarzen Liste streichen"
 
 #: src/GameText.h:150
 msgid "Description"
@@ -399,9 +395,8 @@ msgid "Checking for new levels..."
 msgstr "Suche nach neuen Levels..."
 
 #: src/GameText.h:159
-#, fuzzy
 msgid "Loading new and updated levels..."
-msgstr "Neue und aktualisierte Levels"
+msgstr "Lade neue und aktualisierte Levels..."
 
 #: src/GameText.h:160
 msgid "Checking for existing rooms..."
@@ -641,9 +636,8 @@ msgid "Add/remove to favorite levels"
 msgstr "Level der Favoritenliste hinzufügen/entfernen"
 
 #: src/GameText.h:220
-#, fuzzy
 msgid "Add/remove to blacklisted levels"
-msgstr "Level der Favoritenliste hinzufügen/entfernen"
+msgstr "Level der Schwarzen Liste hinzufügen/entfernen"
 
 #: src/GameText.h:221
 msgid "change mirror mode"
@@ -754,14 +748,12 @@ msgid "Deleted from favorites"
 msgstr "Aus Favoriten entfernt"
 
 #: src/GameText.h:248
-#, fuzzy
 msgid "Added to blacklist"
-msgstr "Zu Favoriten hinzugefügt"
+msgstr "Zur Schwarzen Liste hinzugefügt"
 
 #: src/GameText.h:249
-#, fuzzy
 msgid "Deleted from blacklist"
-msgstr "Aus Favoriten entfernt"
+msgstr "Von der Schwarzen Liste gestrichen"
 
 #: src/GameText.h:250
 msgid "Level Info..."
@@ -863,7 +855,7 @@ msgstr "Mehrspieler"
 
 #: src/GameText.h:274
 msgid "Semi-cooperative mode"
-msgstr ""
+msgstr "Halb-kooperatives Spiel"
 
 #: src/GameText.h:275
 msgid "Stop the game once a player ends the level"
@@ -936,7 +928,6 @@ msgid "Not finished"
 msgstr "Nicht beendet"
 
 #: src/GameText.h:292
-#, fuzzy
 msgid ""
 "Important note!\n"
 "\n"
@@ -955,7 +946,7 @@ msgstr ""
 "Jede Art von Rückmeldung wird gerne gesehen, so dass\n"
 "das Spiel fortwährend verbessert werden kann.\n"
 "Bitte schicke Fehler, Ideen, Kommentare, Funktionen, Beleidigungen, usw.\n"
-"an nicolas at adenis-lamarre dot fr.\n"
+"an xmoto@tuxfamily.org.\n"
 "\n"
 "Besuche auch http://xmoto.tuxfamily.org, um zu sehen,\n"
 "ob du die neueste Version von X-Moto hast."
@@ -1019,7 +1010,7 @@ msgstr "Bester Fahrer"
 
 #: src/GameText.h:316
 msgid "By length"
-msgstr ""
+msgstr "Nach Distanz"
 
 #: src/GameText.h:318
 msgid "Password"
@@ -1092,9 +1083,8 @@ msgid "Reloading replays..."
 msgstr "Lade Replays..."
 
 #: src/GameText.h:335
-#, fuzzy
 msgid "Reloading themes..."
-msgstr "Lade Levels..."
+msgstr "Lade Theme neu..."
 
 #: src/GameText.h:336
 msgid "Replay"
@@ -1223,13 +1213,12 @@ msgid "Unpacked levels"
 msgstr "Entpackte Level"
 
 #: src/GameText.h:369
-#, fuzzy
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
 "or your theme list is not up to date"
 msgstr ""
-"Kann das Thema nicht aktualisieren!\n"
+"Kann das Theme nicht aktualisieren!\n"
 "Das Thema ist nicht im Internet verfügbar,\n"
 "oder die Themen-Liste ist nicht aktuell."
 
@@ -1266,13 +1255,12 @@ msgid "Upload all highscores"
 msgstr "Bestzeiten hochladen"
 
 #: src/GameText.h:378
-#, fuzzy
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr ""
 "Ein unerwarteter Fehler ist aufgetreten.\n"
-"Die Website hat eventuell Probleme."
+"Eventuell gibt es Probleme mit der Verbindung."
 
 #: src/GameText.h:379
 msgid "Oh no !"
@@ -1284,7 +1272,7 @@ msgstr "Lade Bestzeit hoch..."
 
 #: src/GameText.h:381
 msgid "Use crappy information"
-msgstr ""
+msgstr "Paket 'Ausschuss-Levels' verwenden"
 
 #: src/GameText.h:382
 msgid "Use Environment Vars"
@@ -1527,7 +1515,7 @@ msgstr "Weltrekord beim Spielen anzeigen"
 
 #: src/GameText.h:444
 msgid "Use crappy information from the website to update the crappy pack"
-msgstr ""
+msgstr "Markieren, um sehr schlechte Levels aus dem Levelpool zu verstecken"
 
 #: src/GameText.h:445
 msgid "Enable high-color graphics"
@@ -1944,9 +1932,8 @@ msgid "Favorite levels"
 msgstr "Favoriten"
 
 #: src/GameText.h:551
-#, fuzzy
 msgid "Blacklisted levels"
-msgstr "Entpackte Level"
+msgstr "Level auf der Schwarzen Liste"
 
 #: src/GameText.h:552
 msgid "Nicest levels"
@@ -2029,24 +2016,20 @@ msgid "Crappy levels"
 msgstr "Ausschuss-Levels"
 
 #: src/GameText.h:573
-#, fuzzy
 msgid "Shortest levels"
-msgstr "Schwerste Levels"
+msgstr "Kürzeste Distanz"
 
 #: src/GameText.h:574
-#, fuzzy
 msgid "Medium levels"
-msgstr "Meine Levels"
+msgstr "Mittlere Distanz"
 
 #: src/GameText.h:575
-#, fuzzy
 msgid "Long levels"
-msgstr "Lade Levels..."
+msgstr "Lange Distanz"
 
 #: src/GameText.h:576
-#, fuzzy
 msgid "Very long levels"
-msgstr "Lade Levels..."
+msgstr "Marathon-Distanz"
 
 #: src/GameText.h:578
 msgid "Levels with no highscore in your room"
@@ -2069,9 +2052,8 @@ msgid "Your favorite levels"
 msgstr "Favoriten"
 
 #: src/GameText.h:584
-#, fuzzy
 msgid "Your blacklisted levels"
-msgstr "Favoriten"
+msgstr "Schwarze Liste"
 
 #: src/GameText.h:585
 msgid "Nicest X-Moto levels according to the web votes"
@@ -2165,23 +2147,22 @@ msgstr "Externe Levels (eigenständig im 'My Levels' Ordner platziert)"
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr ""
 "Diese als Ausschuss markierten Levels bleiben für andere Pakete unsichtbar."
-"Diese als Ausschuss markierten Levels bleiben für andere Pakete unsichtbar."
 
 #: src/GameText.h:607
 msgid "The shortest levels (less than 25 seconds)"
-msgstr ""
+msgstr "Die kürzesten Levels (weniger als 25 Sekunden)"
 
 #: src/GameText.h:608
 msgid "The medium levels (25 seconds to 60)"
-msgstr ""
+msgstr "Die mittlere Distanz (25 bis 60 Sekunden)"
 
 #: src/GameText.h:609
 msgid "The long levels (1 minute to 2 minutes)"
-msgstr ""
+msgstr "Lange Levels (1 bis 2 Minuten)"
 
 #: src/GameText.h:610
 msgid "The longest levels (more than 2 minutes)"
-msgstr ""
+msgstr "Marathon Levels (länger als 2 Minuten)"
 
 #: src/GameText.h:612
 msgid "Ugly mode enabled"
