@@ -59,6 +59,10 @@ StateManager::StateManager()
   m_curRenderFps  = 50;
 
   m_cursor = NULL;
+
+  // assume focus and visibility at startup
+  m_isVisible = true;
+  m_hasFocus  = true;
 }
 
 StateManager::~StateManager()
@@ -128,6 +132,15 @@ GameState* StateManager::replaceState(GameState* pNewState)
 
 void StateManager::update()
 {
+  // if there is no focus, don't update if the top state won't be updated
+  if(m_hasFocus == false) {
+    if(m_statesStack.size() > 0) {
+      if(m_statesStack[m_statesStack.size()-1]->updateWhenUnvisible() == false) {
+	return;
+      }
+    }
+  }
+
   // flush states
   flush();
 
@@ -174,6 +187,10 @@ void StateManager::update()
 
 void StateManager::render()
 {
+  if(m_isVisible == false) {
+    return;
+  }
+
   if(doRender() == true){
     DrawLib* drawLib = GameApp::instance()->getDrawLib();
     drawLib->resetGraphics();
@@ -323,6 +340,14 @@ void StateManager::mouseUp(int nButton)
   if(m_statesStack.size() == 0)
     return;
   (m_statesStack.back())->mouseUp(nButton);
+}
+
+void StateManager::changeFocus(bool i_hasFocus) {
+  m_hasFocus = i_hasFocus;
+}
+
+void StateManager::changeVisibility(bool i_visible) {
+  m_isVisible = i_visible;
 }
 
 void StateManager::calculateWhichStateIsRendered()

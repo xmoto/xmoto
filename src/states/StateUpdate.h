@@ -38,6 +38,7 @@ public:
   virtual void leave();
 
   virtual bool update();
+  virtual bool updateWhenUnvisible() {return true;}
 
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
