@@ -41,6 +41,18 @@ bool Trainer::isRestorePositionAvailable( std::string levelId )
 }
 
 
+int Trainer::getCurrentRestoreIndex()
+{
+  return m_storePosReadIndex;
+}
+
+
+int Trainer::getMaxRestoreIndex()
+{
+  return (int)m_storePos.size()-1;
+}
+
+
 Vector2f Trainer::getCurrentRestorePosition( std::string levelId )
 {
   if( levelId != m_forLevelId )

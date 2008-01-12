@@ -622,6 +622,10 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define SYS_MSG_FPS_ENABLED             _("Fps enabled")
 #define SYS_MSG_FPS_DISABLED            _("Fps disabled")
 
+#define SYS_MSG_TRAIN_NO_RESTORE_AVAIL  _("No training positions stored")
+#define SYS_MSG_TRAIN_RESTORING         _("Training position #%i restored (%i positions available)")
+#define SYS_MSG_TRAIN_STORED            _("Stored as training position #%i")
+
 // font to use to choice the GROUP : currently, two groups, GENERAL and ASIAN
 #define FONT_GROUP _("FontGroup:GENERAL")
 

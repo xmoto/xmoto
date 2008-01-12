@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "CameraAnimation.h"
 #include "Universe.h"
 #include "Trainer.h"
+#include "SysMessage.h"
 
 StatePlaying::StatePlaying(Universe* i_universe):
   StateScene(i_universe)
@@ -247,15 +248,24 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
         Trainer::instance()->storePosition( m_universe->getScenes()[j]->getLevelSrc()->Id(),
                                             m_universe->getScenes()[j]->getPlayerPosition(0) );
           //TODO: bool getPlayerFaceDir (int i_player)
+        char sysmsg[256];
+        snprintf(sysmsg, 256, SYS_MSG_TRAIN_STORED, Trainer::instance()->getMaxRestoreIndex()+1);
+        SysMessage::instance()->displayText(sysmsg);
       }
     }
   }
-  else if(nKey == SDLK_BACKSPACE){                                      //TRAINER
+  else if(nKey == SDLK_BACKSPACE){       //TRAINER
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
         if( Trainer::instance()->isRestorePositionAvailable( m_universe->getScenes()[j]->getLevelSrc()->Id() ) ) {
           Vector2f pos = Trainer::instance()->getCurrentRestorePosition( m_universe->getScenes()[j]->getLevelSrc()->Id() );
           m_universe->TeleportationCheatTo(0, pos );
+          char sysmsg[256];
+          snprintf(sysmsg, 256, SYS_MSG_TRAIN_RESTORING, Trainer::instance()->getCurrentRestoreIndex()+1,
+                                                         Trainer::instance()->getMaxRestoreIndex()+1);
+          SysMessage::instance()->displayText(sysmsg);
+        } else {
+          SysMessage::instance()->displayText(SYS_MSG_TRAIN_NO_RESTORE_AVAIL);
         }
       }
     }
@@ -266,6 +276,12 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
         if( Trainer::instance()->isRestorePositionAvailable( m_universe->getScenes()[j]->getLevelSrc()->Id() ) ) {
           Vector2f pos = Trainer::instance()->getPreviousRestorePosition( m_universe->getScenes()[j]->getLevelSrc()->Id() );
           m_universe->TeleportationCheatTo(0, pos );
+          char sysmsg[256];
+          snprintf(sysmsg, 256, SYS_MSG_TRAIN_RESTORING, Trainer::instance()->getCurrentRestoreIndex()+1,
+                                                         Trainer::instance()->getMaxRestoreIndex()+1);
+          SysMessage::instance()->displayText(sysmsg);
+        } else {
+          SysMessage::instance()->displayText(SYS_MSG_TRAIN_NO_RESTORE_AVAIL);
         }
       }
     }
@@ -276,6 +292,12 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
         if( Trainer::instance()->isRestorePositionAvailable( m_universe->getScenes()[j]->getLevelSrc()->Id() ) ) {
           Vector2f pos = Trainer::instance()->getNextRestorePosition( m_universe->getScenes()[j]->getLevelSrc()->Id() );
           m_universe->TeleportationCheatTo(0, pos );
+          char sysmsg[256];
+          snprintf(sysmsg, 256, SYS_MSG_TRAIN_RESTORING, Trainer::instance()->getCurrentRestoreIndex()+1,
+                                                         Trainer::instance()->getMaxRestoreIndex()+1);
+          SysMessage::instance()->displayText(sysmsg);
+        } else {
+          SysMessage::instance()->displayText(SYS_MSG_TRAIN_NO_RESTORE_AVAIL);
         }
       }
     }
