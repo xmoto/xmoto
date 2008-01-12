@@ -73,6 +73,8 @@ public:
   void mouseDown(int nButton);
   void mouseDoubleClick(int nButton);
   void mouseUp(int nButton);
+  void changeFocus(bool i_hasFocus);
+  void changeVisibility(bool i_visible);
 
   void reloadTheme();
 
@@ -245,6 +247,12 @@ private:
 
   /* */
   void _InitWin(bool bInitGraphics);
+
+
+  // focus
+  bool m_hasMouseFocus;
+  bool m_hasKeyboardFocus;
+  bool m_isIconified;
 };
 
 #endif

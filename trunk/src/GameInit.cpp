@@ -449,8 +449,29 @@ void GameApp::run_loop() {
       case SDL_MOUSEBUTTONUP:
 	mouseUp(Event.button.button);
 	break;
-      }
 
+      case SDL_ACTIVEEVENT:
+
+	if((Event.active.state & SDL_APPMOUSEFOCUS) != 0) { // mouse focus
+	  if(m_hasKeyboardFocus == false) {
+	    changeFocus(Event.active.gain == 1);
+	  }
+	  m_hasMouseFocus = (Event.active.gain == 1);
+	}
+
+	if((Event.active.state & SDL_APPINPUTFOCUS) != 0) { // keyboard focus
+	  if(m_hasMouseFocus == false) {
+	    changeFocus(Event.active.gain == 1);
+	  }
+	  m_hasKeyboardFocus = (Event.active.gain == 1);
+	}
+	
+	if((Event.active.state & SDL_APPACTIVE) != 0) {
+	  changeVisibility(Event.active.gain == 1);
+	  m_isIconified = (Event.active.gain == 0);
+	}
+
+      }
     }
 
     /* Update user app */

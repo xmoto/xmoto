@@ -190,6 +190,11 @@ GameApp::GameApp() {
 
   m_lastFrameTimeStamp = -1;
   m_frameLate          = 0;
+
+  // assume all focus at startup
+  m_hasMouseFocus    = true;
+  m_hasKeyboardFocus = true;
+  m_isIconified      = false;
 }
     
   std::string GameApp::splitText(const std::string &str, int p_breakLineLength) {
@@ -286,6 +291,14 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   void GameApp::keyUp(int nKey, SDLMod mod) {
     StateManager::instance()->keyUp(nKey, mod);
   }
+
+void GameApp::changeFocus(bool i_hasFocus) {
+  StateManager::instance()->changeFocus(i_hasFocus);
+}
+
+void GameApp::changeVisibility(bool i_visible) {
+  StateManager::instance()->changeVisibility(i_visible);
+}
 
   /*===========================================================================
   Mouse events

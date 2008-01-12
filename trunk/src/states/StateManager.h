@@ -44,6 +44,8 @@ public:
   // return true if update/render was done
   virtual bool update() {return false;}
   virtual bool render();
+  virtual bool updateWhenUnvisible() {return false;}
+
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
   virtual void keyUp(int nKey,   SDLMod mod) {}
@@ -163,6 +165,8 @@ public:
   void mouseDown(int nButton);
   void mouseDoubleClick(int nButton);
   void mouseUp(int nButton);
+  void changeFocus(bool i_hasFocus);
+  void changeVisibility(bool i_visible);
 
   // to display on the screen
   int getCurrentUpdateFPS();
@@ -188,6 +192,9 @@ private:
   void drawFps();
   void drawStack();
   void drawCursor();
+
+  bool m_isVisible;
+  bool m_hasFocus;
 
   std::vector<GameState*> m_statesStack;
 

@@ -9,6 +9,7 @@ X-Moto 0.4.0 2007-
  * multiscenes mode for multiplayers (each player has his own scene)
  * ctrl+b to add/remove from blacklisted levels list
  * ctrl+m to use mirror mode
+ * resource use reduced when xmoto is iconified or focus is lost
  * tab to autozoom
  * new "length" packs by Mig
 	
