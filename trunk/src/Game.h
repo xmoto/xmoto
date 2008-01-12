@@ -151,7 +151,9 @@ public:
 protected:
   void createDefaultConfig();
 
-private:   
+private:
+  void manageEvent(SDL_Event* Event);
+
   ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
 
   std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
