@@ -831,7 +831,7 @@ msgstr "Menügrafik"
 
 #: src/GameText.h:268
 msgid "Total time you scored / total highscore time for levels you finished"
-msgstr ""
+msgstr "Persönliche Gesamtzeit abgeschlossener Levels / Erreichbare Gesamtzeit"
 
 #: src/GameText.h:269
 msgid "Level references unknown textures, it could be unplayable!"
@@ -1909,7 +1909,7 @@ msgstr "Geister in Wiederholungen verstecken"
 
 #: src/GameText.h:543
 msgid "The scene is shared by all the players"
-msgstr ""
+msgstr "Hierbei befinden sich alle Spieler zusammen im Level"
 
 #: src/GameText.h:545
 msgid "Levels with no highscore"
