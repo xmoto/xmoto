@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-01-09 21:12+0100\n"
+"POT-Creation-Date: 2008-01-13 18:43+0100\n"
 "PO-Revision-Date: 2008-01-01 22:30+0100\n"
 "Last-Translator: Avova\n"
 "Language-Team: X-Moto\n"
@@ -2173,7 +2173,21 @@ msgstr ""
 msgid "Fps disabled"
 msgstr ""
 
+#: src/GameText.h:625
+msgid "No training positions stored"
+msgstr ""
+
 #: src/GameText.h:626
+#, c-format
+msgid "Training position %i/%i restored"
+msgstr ""
+
+#: src/GameText.h:627
+#, c-format
+msgid "Stored as training position %i"
+msgstr ""
+
+#: src/GameText.h:630
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:ASIAN"
 
