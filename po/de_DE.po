@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-01-12 21:48+0100\n"
+"POT-Creation-Date: 2008-01-13 12:06+0100\n"
 "PO-Revision-Date: 2006-12-21 21:14+0100\n"
 "Last-Translator: Jens Erler <mothbox@gmx.net>\n"
 "Language-Team: German\n"
@@ -2214,17 +2214,17 @@ msgstr "Frames/Sekunde-Anzeige deaktiviert"
 
 #: src/GameText.h:625
 msgid "No training positions stored"
-msgstr "Noch keine Trainingspositionen gespeichert"
+msgstr "Keine Trainingspositionen gespeichert"
 
 #: src/GameText.h:626
 #, c-format
-msgid "Training position #%i restored (%i positions available)"
-msgstr "Trainingsposition #%i wiederhergestellt (%i Positionen verfügbar)"
+msgid "Training position %i/%i restored"
+msgstr "Trainingsposition %i/%i wiederhergestellt"
 
 #: src/GameText.h:627
 #, c-format
-msgid "Stored as training position #%i"
-msgstr "Gespeichert als Trainingsposition #%i"
+msgid "Stored as training position %i"
+msgstr "Gespeichert als Trainingsposition %i"
 
 #: src/GameText.h:630
 msgid "FontGroup:GENERAL"
