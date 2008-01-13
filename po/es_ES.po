@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-01-09 21:12+0100\n"
+"POT-Creation-Date: 2008-01-13 18:43+0100\n"
 "PO-Revision-Date: 2007-05-03 02:11+0200\n"
 "Last-Translator: Trullo\n"
 "Language-Team:  <XMoto>\n"
@@ -2260,7 +2260,21 @@ msgstr ""
 msgid "Fps disabled"
 msgstr "Modo feo desactivado"
 
+#: src/GameText.h:625
+msgid "No training positions stored"
+msgstr ""
+
 #: src/GameText.h:626
+#, c-format
+msgid "Training position %i/%i restored"
+msgstr ""
+
+#: src/GameText.h:627
+#, c-format
+msgid "Stored as training position %i"
+msgstr ""
+
+#: src/GameText.h:630
 msgid "FontGroup:GENERAL"
 msgstr ""
 
