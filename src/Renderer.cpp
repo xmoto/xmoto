@@ -113,9 +113,12 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
   m_fNextGhostInfoUpdate = 0.0f;
   m_nGhostInfoTrans      = 255;
 
+
   /* Optimize scene */
   for(unsigned int u=0; u<i_universe->getScenes().size(); u++) {
     v_level = i_universe->getScenes()[u]->getLevelSrc();
+
+    Logger::Log("Loading level %s", v_level->Name().c_str());
 
     n_sameSceneAs = -1;
     // set to the universe which has the same level to init geoms
@@ -289,18 +292,27 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
     m_currentEdgeEffect = "";
     m_currentEdgeSprite = NULL;
 
+    Logger::Log("block %s nb vertex: %d", pBlock->Id().c_str(), pBlock->Vertices().size());
+
+    Vector2f oldC2, oldB2;
+    bool useOld = false;
+
     // create edge texture
     std::vector<BlockVertex *>& vertices = pBlock->Vertices();
     for(unsigned int j=0; j<vertices.size(); j++){
       BlockVertex* vertexA = vertices[j];
       std::string edgeEffect = vertexA->EdgeEffect();
-      if(edgeEffect == "")
+      if(edgeEffect == "") {
+	useOld = false;
 	continue;
+      }
 
       BlockVertex* vertexB  = vertices[(j+1) % vertices.size()];
-      Texture*     pTexture = loadTexture(edgeEffect, SPRITE_TYPE_EDGEEFFECT);
+      BlockVertex* vertexC  = vertices[(j+2) % vertices.size()];
+      Texture*     pTexture = loadTextureEdge(edgeEffect);
       if(pTexture == NULL){
 	pScene->gameMessage(GAMETEXT_MISSINGTEXTURES, true);
+	useOld = false;
 	continue;
       }
 
@@ -309,13 +321,12 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
 	pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, edgeEffect);
 	if(pType == NULL) {
 	  Logger::Log("** Invalid edge effect %s", edgeEffect.c_str());
+	  useOld = false;
 	  continue;
 	}
 
-	if(pType != NULL) {
-	  m_currentEdgeSprite = pType;
-	  m_currentEdgeEffect = edgeEffect;
-	}
+	m_currentEdgeSprite = pType;
+	m_currentEdgeEffect = edgeEffect;
       }
 
       int geomIndex = edgeGeomExists(pBlock, pTexture->Name);
@@ -332,11 +343,18 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
       Geom*     pGeom = m_edgeGeoms[geomIndex];
       GeomPoly* pPoly = pGeom->Polys[0];
 
-      Vector2f v1, v2, v3, v4;
-      if(calculateEdgePosition(pBlock, vertexA, vertexB, Center, v1, v2, v3 ,v4) == false)
-	continue;
+      Vector2f a1, b1, b2, a2, c1, c2;
+      calculateEdgePosition(pBlock,
+			    vertexA, vertexB, vertexC,
+			    Center,
+			    a1, b1, b2, a2, c1, c2,
+			    oldC2, oldB2, useOld);
 
-      float fXScale = m_currentEdgeSprite->getScale();
+      float ua1, ub1, ub2, ua2;
+      calculateEdgeTexture(pBlock,
+			   a1, b1, b2, a2,
+			   &ua1, &ub1, &ub2, &ua2);
+
       pPoly->nNumVertices += 4;
       pPoly->pVertices    = (GeomCoord*)realloc(pPoly->pVertices,
 						pPoly->nNumVertices * sizeof(GeomCoord));
@@ -344,22 +362,26 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
 						pPoly->nNumVertices * sizeof(GeomCoord));
       nVertexBytes += (4 * sizeof(float));
 
-      pPoly->pVertices[pPoly->nNumVertices-4].x  = v1.x;
-      pPoly->pVertices[pPoly->nNumVertices-4].y  = v1.y;
-      pPoly->pTexCoords[pPoly->nNumVertices-4].x = vertexA->Position().x*fXScale;
+      pPoly->pVertices[pPoly->nNumVertices-4].x  = a1.x;
+      pPoly->pVertices[pPoly->nNumVertices-4].y  = a1.y;
+      pPoly->pTexCoords[pPoly->nNumVertices-4].x = ua1;
       pPoly->pTexCoords[pPoly->nNumVertices-4].y = 0.01;
-      pPoly->pVertices[pPoly->nNumVertices-3].x  = v2.x;
-      pPoly->pVertices[pPoly->nNumVertices-3].y  = v2.y;
-      pPoly->pTexCoords[pPoly->nNumVertices-3].x = vertexB->Position().x*fXScale;
+      pPoly->pVertices[pPoly->nNumVertices-3].x  = b1.x;
+      pPoly->pVertices[pPoly->nNumVertices-3].y  = b1.y;
+      pPoly->pTexCoords[pPoly->nNumVertices-3].x = ub1;
       pPoly->pTexCoords[pPoly->nNumVertices-3].y = 0.01;
-      pPoly->pVertices[pPoly->nNumVertices-2].x  = v3.x;
-      pPoly->pVertices[pPoly->nNumVertices-2].y  = v3.y;
-      pPoly->pTexCoords[pPoly->nNumVertices-2].x = vertexB->Position().x*fXScale;
+      pPoly->pVertices[pPoly->nNumVertices-2].x  = b2.x;
+      pPoly->pVertices[pPoly->nNumVertices-2].y  = b2.y;
+      pPoly->pTexCoords[pPoly->nNumVertices-2].x = ub2;
       pPoly->pTexCoords[pPoly->nNumVertices-2].y = 0.99;
-      pPoly->pVertices[pPoly->nNumVertices-1].x  = v4.x;
-      pPoly->pVertices[pPoly->nNumVertices-1].y  = v4.y;
-      pPoly->pTexCoords[pPoly->nNumVertices-1].x = vertexA->Position().x*fXScale;
+      pPoly->pVertices[pPoly->nNumVertices-1].x  = a2.x;
+      pPoly->pVertices[pPoly->nNumVertices-1].y  = a2.y;
+      pPoly->pTexCoords[pPoly->nNumVertices-1].x = ua2;
       pPoly->pTexCoords[pPoly->nNumVertices-1].y = 0.99;
+
+      useOld = true;
+      oldB2   = b2;
+      oldC2   = c2;
     }
 
 #ifdef ENABLE_OPENGL        
@@ -386,37 +408,19 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
   return nVertexBytes;
 }
 
-bool GameRenderer::calculateEdgePosition(Block*       pBlock,
-					 BlockVertex* vertexA,
-					 BlockVertex* vertexB,
+void GameRenderer::calculateEdgePosition(Block* pBlock,
+					 BlockVertex* vertexA1,
+					 BlockVertex* vertexB1,
+					 BlockVertex* vertexC1,
 					 Vector2f     center,
-					 Vector2f& v1, Vector2f& v2,
-					 Vector2f& v3, Vector2f& v4)
+					 Vector2f& A1, Vector2f& B1,
+					 Vector2f& B2, Vector2f& A2,
+					 Vector2f& C1, Vector2f& C2,
+					 Vector2f oldC2, Vector2f oldB2, bool useOld)
 {
-  void (Block::*calculateEdgePosition)(Vector2f,  Vector2f,
-				       Vector2f&, Vector2f&,
-				       Vector2f&, Vector2f&,
-				       float,     float, Vector2f) = NULL;
-  switch(pBlock->getEdgeDrawMethod()){
-  case Block::Under:
-    calculateEdgePosition = &Block::calculateEdgePosition_under;
-    break;
-  case Block::Over:
-    calculateEdgePosition = &Block::calculateEdgePosition_over;
-    break;
-  case Block::Inside:
-    calculateEdgePosition = &Block::calculateEdgePosition_inside;
-    break;
-  case Block::Outside:
-    calculateEdgePosition = &Block::calculateEdgePosition_outside;
-    break;
-  }
-
-  Vector2f vAPos = vertexA->Position();
-  Vector2f vBPos = vertexB->Position();
-
-  if(m_currentEdgeSprite == NULL || m_currentEdgeEffect == "")
-    return false;
+  Vector2f vAPos = vertexA1->Position();
+  Vector2f vBPos = vertexB1->Position();
+  Vector2f vCPos = vertexC1->Position();
 
   /* link A to B */
   float fDepth  = m_currentEdgeSprite->getDepth();
@@ -427,14 +431,95 @@ bool GameRenderer::calculateEdgePosition(Block*       pBlock,
   else
     v_border = -0.01;
 
-  (pBlock->*calculateEdgePosition)(vAPos, vBPos, v1, v2, v3, v4, v_border, fDepth, center);
-
-  return true;
+  switch(pBlock->getEdgeDrawMethod()){
+  case Block::Under:
+    pBlock->calculateEdgePosition_under(vAPos, vBPos, A1, B1, B2, A2, v_border, fDepth, center);
+    break;
+  case Block::Over:
+    pBlock->calculateEdgePosition_over( vAPos, vBPos, A1, B1, B2, A2, v_border, fDepth, center);
+    break;
+  case Block::Inside:
+    pBlock->calculateEdgePosition_inside(vAPos, vBPos, vCPos, A1, B1, B2, A2, C1, C2, v_border, fDepth, center, oldC2, oldB2, useOld);
+    break;
+  case Block::Outside:
+    pBlock->calculateEdgePosition_outside(vAPos, vBPos, vCPos, A1, B1, B2, A2, C1, C2, v_border, fDepth, center, oldC2, oldB2, useOld);
+    break;
+  }
 }
 
-Texture* GameRenderer::loadTexture(std::string textureName, enum SpriteType type)
+void GameRenderer::calculateEdgeTexture(Block* pBlock,
+					Vector2f A1, Vector2f B1,
+					Vector2f B2, Vector2f A2,
+					float* ua1, float* ub1,
+					float* ub2, float* ua2)
 {
-  Sprite*  pSprite  = Theme::instance()->getSprite(type, textureName);
+  float fXScale = m_currentEdgeSprite->getScale();
+
+  switch(pBlock->getEdgeDrawMethod()){
+  case Block::Inside:
+  case Block::Outside:{
+    Vector2f N1(-B1.y+A1.y, B1.x-A1.x);
+
+    if(N1.x == 0.0 && N1.y == 0.0){
+      Logger::Log("normal is null for block %s vertex (%f,%f)", pBlock->Id().c_str(), A1.x, A1.y);
+    }
+
+    N1.normalize();
+
+    if(N1.x > 0.0 && N1.y > 00 || N1.x < 0.0 && N1.y < 0.0){
+      *ua1 = A1.x*fXScale*N1.y - A1.y*fXScale*N1.x;
+      *ub1 = B1.x*fXScale*N1.y - B1.y*fXScale*N1.x;
+    } else {
+      *ua1 = A1.x*fXScale*fabs(N1.y) + A1.y*fXScale*fabs(N1.x);
+      *ub1 = B1.x*fXScale*fabs(N1.y) + B1.y*fXScale*fabs(N1.x);
+    }
+
+    Vector2f N2(-B2.y+A2.y, B2.x-A2.x);
+
+    if(N2.x == 0.0 && N2.y == 0.0){
+      Logger::Log("normal is null for block %s vertex (%f,%f)", pBlock->Id().c_str(), A2.x, A2.y);
+    }
+
+    N2.normalize();
+
+    if(N2.x > 0.0 && N2.y > 00 || N2.x < 0.0 && N2.y < 0.0){
+      *ua2 = A2.x*fXScale*N2.y - A2.y*fXScale*N2.x;
+      *ub2 = B2.x*fXScale*N2.y - B2.y*fXScale*N2.x;
+    } else {
+      *ua2 = A2.x*fXScale*fabs(N2.y) + A2.y*fXScale*fabs(N2.x);
+      *ub2 = B2.x*fXScale*fabs(N2.y) + B2.y*fXScale*fabs(N2.x);
+    }
+  }
+    break;
+  case Block::Under:
+  case Block::Over:
+    *ua1 = *ua2 = A1.x*fXScale;
+    *ub1 = *ub2 = B1.x*fXScale;
+    break;
+  }
+}
+
+Texture* GameRenderer::loadTexture(std::string textureName)
+{
+  Sprite*  pSprite  = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, textureName);
+  Texture* pTexture = NULL;
+
+  if(pSprite != NULL) {
+    try {
+      pTexture = pSprite->getTexture();
+    } catch(Exception &e) {
+      Logger::Log("** Warning ** : Texture '%s' not found!", textureName.c_str());
+    }
+  } else {
+    Logger::Log("** Warning ** : Texture '%s' not found!", textureName.c_str());
+  }
+
+  return pTexture;
+}
+
+Texture* GameRenderer::loadTextureEdge(std::string textureName)
+{
+  EdgeEffectSprite* pSprite  = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, textureName);
   Texture* pTexture = NULL;
 
   if(pSprite != NULL) {

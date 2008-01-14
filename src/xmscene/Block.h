@@ -191,22 +191,32 @@ class Block {
   }
 
   // calculate edge position
-  void calculateEdgePosition_under(Vector2f i_vA, Vector2f i_vB,
-				   Vector2f& o_v1, Vector2f& o_v2,
-				   Vector2f& o_v3, Vector2f& o_v4,
-				   float i_border, float i_depth, Vector2f center);
-  void calculateEdgePosition_over(Vector2f i_vA, Vector2f i_vB,
-				  Vector2f& o_v1, Vector2f& o_v2,
-				  Vector2f& o_v3, Vector2f& o_v4,
-				  float i_border, float i_depth, Vector2f center);
-  void calculateEdgePosition_inside(Vector2f i_vA, Vector2f i_vB,
-				    Vector2f& o_v1, Vector2f& o_v2,
-				    Vector2f& o_v3, Vector2f& o_v4,
-				    float i_border, float i_depth, Vector2f center);
-  void calculateEdgePosition_outside(Vector2f i_vA, Vector2f i_vB,
-				     Vector2f& o_v1, Vector2f& o_v2,
-				     Vector2f& o_v3, Vector2f& o_v4,
-				     float i_border, float i_depth, Vector2f center);
+  void calculateEdgePosition_under(Vector2f  i_vA, Vector2f i_vB,
+				   Vector2f& o_a1, Vector2f& o_b1,
+				   Vector2f& o_b2, Vector2f& o_a2,
+				   float i_border, float i_depth,
+				   Vector2f  i_center);
+  void calculateEdgePosition_over(Vector2f  i_vA, Vector2f i_vB,
+				  Vector2f& o_a1, Vector2f& o_b1,
+				  Vector2f& o_b2, Vector2f& o_a2,
+				  float i_border, float i_depth,
+				  Vector2f  i_center);
+  void calculateEdgePosition_inside(Vector2f  i_vA1, Vector2f i_vB1, Vector2f i_vC1,
+				    Vector2f& o_a1,  Vector2f& o_b1,
+				    Vector2f& o_b2,  Vector2f& o_a2,
+				    Vector2f& o_c1,  Vector2f& o_c2,
+				    float i_border,  float i_depth,
+				    Vector2f  center,
+				    Vector2f  i_oldC2, Vector2f i_oldB2,
+				    bool i_useOld);
+  void calculateEdgePosition_outside(Vector2f i_vA1, Vector2f i_vB1, Vector2f i_vC1,
+				    Vector2f& o_a1,  Vector2f& o_b1,
+				    Vector2f& o_b2,  Vector2f& o_a2,
+				    Vector2f& o_c1,  Vector2f& o_c2,
+				    float i_border,  float i_depth,
+				    Vector2f  center,
+				    Vector2f  i_oldC2, Vector2f i_oldB2,
+				    bool i_useOld);
 
 private:
   std::string m_id;           /* Block ID */

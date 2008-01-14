@@ -470,25 +470,28 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
   } else {
     pBlock->setGrip(DEFAULT_PHYS_WHEEL_GRIP);
   }
-  
+
+  float lastX = 0.0;
+  float lastY = 0.0;
+  bool  firstVertex = true;
   /* Get vertices */
   for(TiXmlElement *pj = pElem->FirstChildElement(); pj!=NULL; pj=pj->NextSiblingElement()) {
     if(!strcmp(pj->Value(),"vertex")) {
       /* Alloc */
-      BlockVertex *pVertex = new BlockVertex(Vector2f(atof( XML::getOption(pj,"x","0").c_str() ),
-                                                      atof( XML::getOption(pj,"y","0").c_str() )),
-                                             XML::getOption(pj,"edge",""));
-      
+      BlockVertex *pVertex = new BlockVertex(Vector2f(atof( XML::getOption(pj, "x", "0").c_str()),
+                                                      atof( XML::getOption(pj, "y", "0").c_str())),
+                                             XML::getOption(pj, "edge", ""));
+
       std::string k;
       Vector2f v_TexturePosition;
-      k = XML::getOption(pj,"tx","");
+      k = XML::getOption(pj, "tx", "");
       if(k != "") {
         v_TexturePosition.x = atof( k.c_str() );
       } else {
         v_TexturePosition.x = pVertex->Position().x * pBlock->TextureScale();
       }
-      
-      k = XML::getOption(pj,"ty","");
+
+      k = XML::getOption(pj, "ty", "");
       if(k != "") {
         v_TexturePosition.y = atof( k.c_str() );
       } else {
@@ -502,9 +505,22 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
                               atoi(XML::getOption(pj,"a","255").c_str())
                               );
       pVertex->setColor(v_color);
-      
+
+      if(firstVertex == true){
+	firstVertex = false;	
+      }
+      else {
+	if(lastX == pVertex->Position().x
+	   && lastY == pVertex->Position().y){
+	  delete pVertex;
+	  continue;
+	}
+      }
+
       /* Add it */
       pBlock->Vertices().push_back( pVertex );
+      lastX = pVertex->Position().x;
+      lastY = pVertex->Position().y;
     }
   }
 
@@ -569,66 +585,127 @@ std::vector<int>& Block::getEdgeGeoms()
   return m_edgeGeoms;
 }
 
-void Block::calculateEdgePosition_under(Vector2f i_vA, Vector2f i_vB,
-					Vector2f& o_v1, Vector2f& o_v2,
-					Vector2f& o_v3, Vector2f& o_v4,
-					float i_border, float i_depth,
+void Block::calculateEdgePosition_under(Vector2f  i_vA,  Vector2f i_vB,
+					Vector2f& o_a1,  Vector2f& o_b1,
+					Vector2f& o_b2,  Vector2f& o_a2,
+					float i_border,  float i_depth,
 					Vector2f center)
 {
-  o_v1 = i_vA + Vector2f(center.x, center.y + i_border);
-
-  o_v2 = i_vB + Vector2f(center.x, center.y + i_border);
-
-  o_v3 = i_vB
-    + Vector2f(center.x, center.y)
-    + Vector2f(0, -i_depth);
-
-  o_v4 = i_vA
-    + Vector2f(center.x, center.y)
-    + Vector2f(0, -i_depth);
+  o_a1 = i_vA + center + Vector2f(0, i_border);
+  o_b1 = i_vB + center + Vector2f(0, i_border);
+  o_b2 = i_vB + center + Vector2f(0, -i_depth);
+  o_a2 = i_vA + center + Vector2f(0, -i_depth);
 }
 
-void Block::calculateEdgePosition_over(Vector2f i_vA, Vector2f i_vB,
-				       Vector2f& o_v1, Vector2f& o_v2,
-				       Vector2f& o_v3, Vector2f& o_v4,
-				       float i_border, float i_depth,
+void Block::calculateEdgePosition_over(Vector2f i_vA,   Vector2f i_vB,
+				       Vector2f& o_a1,  Vector2f& o_b1,
+				       Vector2f& o_b2,  Vector2f& o_a2,
+				       float i_border,  float i_depth,
 				       Vector2f center)
 {
-  o_v1 = i_vA
-    + Vector2f(center.x, center.y)
-    + Vector2f(0, i_depth);
-
-  o_v2 = i_vB
-    + Vector2f(center.x, center.y)
-    + Vector2f(0, i_depth);
-
-  o_v3 = i_vB + Vector2f(center.x, center.y + i_border);
-
-  o_v4 = i_vA + Vector2f(center.x, center.y + i_border);
-
+  o_a1 = i_vA + center + Vector2f(0, i_depth);
+  o_b1 = i_vB + center + Vector2f(0, i_depth);
+  o_b2 = i_vB + center + Vector2f(0, i_border);
+  o_a2 = i_vA + center + Vector2f(0, i_border);
 }
 
-void Block::calculateEdgePosition_inside(Vector2f i_vA, Vector2f i_vB,
-					 Vector2f& o_v1, Vector2f& o_v2,
-					 Vector2f& o_v3, Vector2f& o_v4,
-					 float i_border, float i_depth,
-					 Vector2f center)
+void Block::calculateEdgePosition_inside(Vector2f i_vA1,  Vector2f i_vB1, Vector2f i_vC1,
+					 Vector2f& o_a1,  Vector2f& o_b1,
+					 Vector2f& o_b2,  Vector2f& o_a2,
+					 Vector2f& o_c1,  Vector2f& o_c2,
+					 float i_border,  float i_depth,
+					 Vector2f center,
+					 Vector2f i_oldC2, Vector2f i_oldB2,
+					 bool i_useOld)
 {
-  /* we want to calculate the point on the normal of (i_vA,i_vB) which
-     is at the distance i_depth of i_vA */
+  /* we want to calculate the point on the normal of vector(vA1,vB1)
+     which is at the distance depth of vA1. let's call that point vA2
 
-  /*
-  o_v1 = i_vA + Vector2f(m_dynamicPosition.x, m_dynamicPosition.y + i_border);;
-  o_v2 = i_vB + Vector2f(m_dynamicPosition.x, m_dynamicPosition.y + i_border);;
-  o_v3 = ;
-  o_v4 = ;
+     as vector(vA1,vB1) and vector(vA1,vA2) are perpendicular, their
+     dot product equals zero
+     (vB1.x-vA1.x)*(vA2.x-vA1.x)+(vB1.y-vA1.y)*(vA2.y-vA1.y) = 0
+
+     vA2 is on the circle of center vA1 and radius depth
+     (vA2.x-vA1.x)^2 + (vA2.y-vA1.y)^2 = depth^2
+
+     from this two equations and a ti89, we find the values of vA2.x
+     and vA2.y, which are tooooo big expressions, so, let's ask Avova
+     the maths teacher from the irc channel:
+
+     vA2 = vA1 +/- t*N
+     t   = depth / length(Nab)
+     Nab = normal(vB1-vA1) = vector(-vB1.y+vA1.y, vB1.x-vA1.x)
+     and the equation is ((vA1+t*Nab)-vA1)^2 = depth^2
+
+     which gives:
+
+     Nab.x  = -vB1.y+vA1.y
+     Nab.y  = vB1.x-vA1.x
+     t    = depth / sqrt((-vB1.y+vA1.y)^2 + (vB1.x-vA1.x)^2)
+     vA2.x = vA1.x +/- t * (Nab.x)
+     vA2.y = vA1.y +/- t * (Nab.y)
+
+     far easier !
+
+     depending on the (A1, B1, C1) angle, there's gaps and overlaps
+     between two consecutive edges, so we fix it by calculating B2 as
+     the intersection of (A2, AB2) and (C2, CB2) let's use Cramer
+     formula to calculate it. (TODO::a nice graphic to explain
+     it). AB2 is on the normal of vector(A1,B1) and CB2 is on the
+     normal of vector(B1,C1), both are at distance depth on the
+     normal.
   */
+
+  o_a1 = i_vA1 + Vector2f(center.x, center.y + i_border);
+  o_b1 = i_vB1 + Vector2f(center.x, center.y + i_border);
+  o_c1 = i_vC1 + Vector2f(center.x, center.y + i_border);
+
+  Vector2f ab2;
+  if(i_useOld == true){
+    // oldB2 is new A2 and oldC2 is new AB2
+    o_a2 = i_oldB2;
+    ab2  = i_oldC2;
+  } else {
+    Vector2f Nab(-i_vB1.y+i_vA1.y, i_vB1.x-i_vA1.x);
+    float t = i_depth / sqrt(Nab.x*Nab.x + Nab.y*Nab.y);
+    Vector2f vA2( i_vA1.x - t * Nab.x, i_vA1.y - t * Nab.y);
+    Vector2f vAB2(i_vB1.x - t * Nab.x, i_vB1.y - t * Nab.y);
+    o_a2 = vA2  + center;
+    ab2  = vAB2 + center;
+  }
+
+  Vector2f Nbc(-i_vC1.y+i_vB1.y, i_vC1.x-i_vB1.x);
+  float t = i_depth / sqrt(Nbc.x*Nbc.x + Nbc.y*Nbc.y);
+  Vector2f vC2( i_vC1.x - t * Nbc.x, i_vC1.y - t * Nbc.y);
+  Vector2f vBC2(i_vB1.x - t * Nbc.x, i_vB1.y - t * Nbc.y);
+
+  Vector2f bc2 = vBC2 + center;
+  o_c2 = vC2 + center;
+
+  // equations of lines (A2, AB2) and (BC2, C2)
+  // a*x + b*y = e
+  // c*x + d*y = f
+  float a,b,c, d,e,f;
+  a = o_a2.y - ab2.y;
+  b = ab2.x  - o_a2.x;
+  e = a*o_a2.x + b*o_a2.y;
+
+  c = bc2.y  - o_c2.y;
+  d = o_c2.x - bc2.x;
+  f = c*o_c2.x + d*o_c2.y;
+
+  // calculate intersection point with Cramer's formula
+  float divider  = a*d - b*c;
+  o_b2 = Vector2f((e*d - b*f) / divider, (a*f - e*c) / divider);
 }
 
-void Block::calculateEdgePosition_outside(Vector2f i_vA, Vector2f i_vB,
-					  Vector2f& o_v1, Vector2f& o_v2,
-					  Vector2f& o_v3, Vector2f& o_v4,
-					  float i_border, float i_depth,
-					  Vector2f center)
+void Block::calculateEdgePosition_outside(Vector2f i_vA1,  Vector2f i_vB1, Vector2f i_vC1,
+					  Vector2f& o_a1,  Vector2f& o_b1,
+					  Vector2f& o_b2,  Vector2f& o_a2,
+					  Vector2f& o_c1,  Vector2f& o_c2,
+					  float i_border,  float i_depth,
+					  Vector2f center,
+					  Vector2f i_oldC2, Vector2f i_oldB2,
+					  bool i_useOld)
 {
 }

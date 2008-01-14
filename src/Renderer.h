@@ -247,18 +247,27 @@ private:
   void renderTimePanel(MotoGame* i_scene);
   void renderReplayHelpMessage(MotoGame* i_scene);
 
-  Texture* loadTexture(std::string textureName, enum SpriteType type=SPRITE_TYPE_TEXTURE);
+  Texture* loadTexture(std::string textureName);
+  Texture* loadTextureEdge(std::string textureName);
   int  edgeGeomExists(Block* pBlock, std::string texture);
   void initCameras(Universe* i_universe);
   int  loadBlock(Block* pBlock, Universe* i_universe, unsigned int currentScene, int sameSceneAs, int blockIndex);
   int  loadBlockGeom(Block* pBlock, std::vector<Geom *>* pGeoms, Texture* pTexture, Vector2f Center, MotoGame* pScene);
   int  loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene);
-  bool calculateEdgePosition(Block* pBlock,
-			     BlockVertex* vertexA,
-			     BlockVertex* vertexB,
-			     Vector2f center,
-			     Vector2f& v1, Vector2f& v2,
-			     Vector2f& v3, Vector2f& v4);
+  void calculateEdgePosition(Block* pBlock,
+			     BlockVertex* vertexA1,
+			     BlockVertex* vertexB1,
+			     BlockVertex* vertexC1,
+			     Vector2f     center,
+			     Vector2f& A1, Vector2f& B1,
+			     Vector2f& B2, Vector2f& A2,
+			     Vector2f& C1, Vector2f& C2,
+			     Vector2f oldC2, Vector2f oldB2, bool useOld);
+  void calculateEdgeTexture(Block* pBlock,
+			    Vector2f A1, Vector2f B1,
+			    Vector2f B2, Vector2f A2,
+			    float* ua1, float* ub1,
+			    float* ub2, float* ua2);
 };
 
 #endif
