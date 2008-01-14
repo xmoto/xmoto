@@ -135,8 +135,11 @@ class Vector2 {
   
   inline _T normalize(void) {
     _T v=length();
-    if(v == 0) throw Exception("null vector normalize");
-    x /= v; y /= v;
+    if(v == 0.0f){
+      throw Exception("null vector normalize");
+    }
+    x /= v;
+    y /= v;
     return v;
   }
   
