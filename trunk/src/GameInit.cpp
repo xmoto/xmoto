@@ -559,6 +559,12 @@ void GameApp::_Wait()
   // late from the lasts frame is not forget
   int delta = currentFrameMinDuration - (lastFrameDuration + m_frameLate);
 
+  // if we have toooo much late (1/10 second), let reset delta
+  int maxDelta = -100;
+  if(delta < maxDelta){
+    delta = 0;
+  }
+
   if(delta > 0){
     // we're in advance
     // -> sleep
@@ -568,11 +574,9 @@ void GameApp::_Wait()
     int sleepTime   = afterSleep - beforeSleep;
 
     // now that we have sleep, see if we don't have too much sleep
-    if(sleepTime > delta){
+    if(sleepTime >= delta){
       int tooMuchSleep = sleepTime - delta;
       m_frameLate      = tooMuchSleep;
-    } else{
-      m_frameLate = 0;
     }
   }
   else{
