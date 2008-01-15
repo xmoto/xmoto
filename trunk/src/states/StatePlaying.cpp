@@ -85,6 +85,9 @@ void StatePlaying::enter()
       GameApp::instance()->playMusic(m_universe->getScenes()[0]->getLevelSrc()->Music());
     }
   }
+
+  // read keys for more reactivity
+  InputHandler::instance()->dealWithActivedKeys(m_universe);
 }
 
 void StatePlaying::leave()
