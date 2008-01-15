@@ -200,10 +200,15 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
 	if(m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime > 0.0) {
 	  /* INTERPOLATED FRAME */
 	  SerializedBikeState ibs;
-	  float v_interpolation_value =
-	    (i_time - m_previous_ghostBikeState.fGameTime)
-	    /(m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime);
-	  
+	  float v_interpolation_value;
+
+	  if(m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime <= 0.0) {
+	    v_interpolation_value = 0.0;
+	  } else {
+	    v_interpolation_value = (i_time - m_previous_ghostBikeState.fGameTime) 
+	      /(m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime);
+	  }	  
+
 	  BikeState::interpolateGameState(&m_previous_ghostBikeState,
 					  &m_next_ghostBikeState,
 					  &ibs,

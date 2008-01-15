@@ -349,11 +349,12 @@ BikerTheme* Biker::getBikeTheme() {
   void BikeState::interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t) {
     /* First of all inherit everything from A */
     memcpy(p,pA,sizeof(SerializedBikeState));
-    
+
+    // linear interpolation
     /* Interpolate away! The frame is the most important... */
     p->fFrameX = pA->fFrameX + (pB->fFrameX - pA->fFrameX)*t;
     p->fFrameY = pA->fFrameY + (pB->fFrameY - pA->fFrameY)*t;
-    
+
     p->fGameTime = pA->fGameTime + (pB->fGameTime - pA->fGameTime)*t;
   }
 
