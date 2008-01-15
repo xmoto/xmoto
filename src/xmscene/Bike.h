@@ -114,7 +114,7 @@ class BikeState {
   BikeAnchors* Anchors();
   BikeParameters* Parameters();
 
-  static void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
+  static void interpolateGameState(std::vector<SerializedBikeState*> &i_ghostBikeStates ,SerializedBikeState *p,float t);
   static void updateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
 
   static signed char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
