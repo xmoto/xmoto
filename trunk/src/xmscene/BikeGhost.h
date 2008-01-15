@@ -56,11 +56,10 @@ class Ghost : public Biker {
   std::string m_info;
   bool m_isActiv;
 
-  /* because we have not the real one, but the one before and the one after */
-  SerializedBikeState m_previous_ghostBikeState;
-  SerializedBikeState m_next_ghostBikeState;
+ /* because we have not the real one, but the one before and the one after */
+ std::vector<SerializedBikeState*> m_ghostBikeStates;
 
-  void execReplayEvents(float i_time, MotoGame *i_motogame);
+ void execReplayEvents(float i_time, MotoGame *i_motogame);
 };
 
 #endif

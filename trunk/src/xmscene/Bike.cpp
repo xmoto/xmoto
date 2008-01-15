@@ -346,17 +346,54 @@ BikerTheme* Biker::getBikeTheme() {
   /*===========================================================================
     Game state interpolation for smoother replays 
     ===========================================================================*/
-  void BikeState::interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t) {
-    /* First of all inherit everything from A */
-    memcpy(p,pA,sizeof(SerializedBikeState));
+void BikeState::interpolateGameState(std::vector<SerializedBikeState*> &i_ghostBikeStates ,SerializedBikeState *p,float t) {
 
-    // linear interpolation
-    /* Interpolate away! The frame is the most important... */
-    p->fFrameX = pA->fFrameX + (pB->fFrameX - pA->fFrameX)*t;
-    p->fFrameY = pA->fFrameY + (pB->fFrameY - pA->fFrameY)*t;
+  // linear interpolation
+  SerializedBikeState *pA, *pB;
+  pA = i_ghostBikeStates[i_ghostBikeStates.size()/2-1];
+  pB = i_ghostBikeStates[i_ghostBikeStates.size()/2];
 
-    p->fGameTime = pA->fGameTime + (pB->fGameTime - pA->fGameTime)*t;
-  }
+  /* First of all inherit everything from A */
+  memcpy(p,pA,sizeof(SerializedBikeState));
+  
+  /* Interpolate away! The frame is the most important... */
+  p->fFrameX = pA->fFrameX + (pB->fFrameX - pA->fFrameX)*t;
+  p->fFrameY = pA->fFrameY + (pB->fFrameY - pA->fFrameY)*t;
+  
+  p->fGameTime = pA->fGameTime + (pB->fGameTime - pA->fGameTime)*t;
+  //
+
+
+//  // cubique
+//  SerializedBikeState *pA, *pB, *pC, *pD;
+//  double t2 = t*t;
+//  double x0,x1,x2,x3;
+//  double y0,y1,y2,y3;
+//
+//  pA = i_ghostBikeStates[i_ghostBikeStates.size()/2-1-1];
+//  pB = i_ghostBikeStates[i_ghostBikeStates.size()/2-1];
+//  pC = i_ghostBikeStates[i_ghostBikeStates.size()/2];
+//  pD = i_ghostBikeStates[i_ghostBikeStates.size()/2+1];
+//
+//  /* First of all inherit everything from A */
+//  memcpy(p,pA,sizeof(SerializedBikeState));
+//
+//  x0 = pD->fFrameX - pC->fFrameX - pA->fFrameX + pB->fFrameX;
+//  x1 = pA->fFrameX - pB->fFrameX - x0;
+//  x2 = pC->fFrameX - pA->fFrameX;
+//  x3 = pB->fFrameX;
+//  p->fFrameX = x0*t*t2 + x1*t2 + x2*t + x3;
+//
+//  y0 = pD->fFrameY - pC->fFrameY - pA->fFrameY + pB->fFrameY;
+//  y1 = pA->fFrameY - pB->fFrameY - y0;
+//  y2 = pC->fFrameY - pA->fFrameY;
+//  y3 = pB->fFrameY;
+//  p->fFrameY = y0*t*t2 + y1*t2 + y2*t + y3;
+//
+//  p->fGameTime = pB->fGameTime + (pC->fGameTime - pB->fGameTime)*t;
+//  //
+
+}
 
   void BikeState::updateStateFromReplay(SerializedBikeState *pReplayState,
           BikeState *pBikeS) 
