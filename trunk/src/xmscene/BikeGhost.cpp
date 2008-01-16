@@ -195,16 +195,29 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
     SerializedBikeState* v_state;
 
     // m_ghostBikeStates.size()/2 : first state in the feature
-    if(m_ghostBikeStates[m_ghostBikeStates.size()/2]->fGameTime < i_time && m_replay->endOfFile() == false) {
+    if(m_ghostBikeStates[m_ghostBikeStates.size()/2]->fGameTime < i_time) {
+
       do {
+	// move the bikestates
 	v_state = m_ghostBikeStates[0];
 	for(unsigned int i=0; i<m_ghostBikeStates.size()-1; i++) {
 	  m_ghostBikeStates[i] = m_ghostBikeStates[i+1];
 	}
 	m_ghostBikeStates[m_ghostBikeStates.size()-1] = v_state;
-	m_replay->loadState(*(m_ghostBikeStates[m_ghostBikeStates.size()-1]));
-      } while(m_ghostBikeStates[m_ghostBikeStates.size()/2]->fGameTime < i_time && m_replay->endOfFile() == false);
+
+	if(m_replay->endOfFile()) {
+	  // copy n-1 to n
+	  memcpy(m_ghostBikeStates[m_ghostBikeStates.size()-1], m_ghostBikeStates[m_ghostBikeStates.size()-1-1], sizeof(SerializedBikeState));
+	} else {
+	  // read the replay
+	  m_replay->loadState(*(m_ghostBikeStates[m_ghostBikeStates.size()-1]));
+	}
+
+      } while(m_ghostBikeStates[m_ghostBikeStates.size()/2]->fGameTime < i_time &&
+	      m_ghostBikeStates[m_ghostBikeStates.size()/2]->fGameTime > m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->fGameTime);
+
       BikeState::updateStateFromReplay(m_ghostBikeStates[m_ghostBikeStates.size()/2-1], &m_bikeState);
+
     } else { /* interpolation */
       /* do interpolation if it doesn't seems to be a teleportation or something like that */
       /* in fact, this is not nice ; the best way would be to test if there is a teleport event between the two frames */
