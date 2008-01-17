@@ -99,11 +99,15 @@ class BikeState {
     Vector2f PrevPHq;     /* Previous error (player hand) */
     Vector2f PrevPFq2;    /* Previous error (player foot) (Alt.) */
     Vector2f PrevPHq2;    /* Previous error (player hand) (Alt.) */
+
+    float GameTime; // time of the state, for replays;
     
     /* Bonusinfo */    
   BikeState();
   ~BikeState();
   
+  BikeState& operator=(const BikeState& i_copy);
+
   void reInitializeSpeed();
   void physicalUpdate();
   void reInitializeAnchors();
@@ -114,8 +118,8 @@ class BikeState {
   BikeAnchors* Anchors();
   BikeParameters* Parameters();
 
-  static void interpolateGameState(std::vector<SerializedBikeState*> &i_ghostBikeStates ,SerializedBikeState *p,float t);
-  static void updateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
+  static void interpolateGameState(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t);
+  static void convertStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
 
   static signed char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
   static float _Map8BitsToCoord(float fRef,float fMaxDiff,signed char c);
@@ -127,6 +131,9 @@ class BikeState {
   float m_curBrake, m_curEngine;    
   BikeParameters* m_bikeParameters;
   BikeAnchors*    m_bikeAnchors;
+
+  static void interpolateGameStateLinear(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t);
+  static void interpolateGameStateCubic(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t);
 };
 
 class Biker {

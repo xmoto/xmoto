@@ -42,16 +42,15 @@ Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
   // 4 states for cubical interpolation
 
   // 50% of states are before the time T, 50% are after
-  m_ghostBikeStates.push_back(new SerializedBikeState());
-  m_ghostBikeStates.push_back(new SerializedBikeState());
-  m_ghostBikeStates.push_back(new SerializedBikeState());
-  m_ghostBikeStates.push_back(new SerializedBikeState());
+  m_ghostBikeStates.push_back(new BikeState());
+  m_ghostBikeStates.push_back(new BikeState());
+  m_ghostBikeStates.push_back(new BikeState());
+  m_ghostBikeStates.push_back(new BikeState());
 
   for(unsigned int i=0; i<m_ghostBikeStates.size(); i++) {
-    m_replay->peekState(*(m_ghostBikeStates[i]));
+    m_replay->peekState(m_ghostBikeStates[i]);
   }
-
-  BikeState::updateStateFromReplay(m_ghostBikeStates[0], &m_bikeState);
+  m_bikeState = *(m_ghostBikeStates[0]);
 
   m_diffToPlayer = 0.0;
 
@@ -60,6 +59,9 @@ Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
 }
 
 Ghost::~Ghost() {
+  for(unsigned int i=0; i<m_ghostBikeStates.size(); i++) {
+    delete m_ghostBikeStates[i];
+  }
 }
 
 void Ghost::execReplayEvents(float i_time, MotoGame *i_motogame) {
@@ -170,10 +172,10 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
 
   /* back in the past */
   // m_ghostBikeStates.size()/2-1 : it's the more recent frame in the past
-  if(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->fGameTime > i_time) {
-    m_replay->fastrewind(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->fGameTime - i_time);
+  if(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime > i_time) {
+    m_replay->fastrewind(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime - i_time);
     for(unsigned int i=0; i<m_ghostBikeStates.size(); i++) {
-      m_replay->peekState(*(m_ghostBikeStates[i]));
+      m_replay->peekState(m_ghostBikeStates[i]);
     }
 
     m_finished = false;
@@ -181,9 +183,9 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
   }
 
   /* stop the motor at the end */
-  if(m_replay->endOfFile() && m_ghostBikeStates[m_ghostBikeStates.size()-1]->fGameTime <= i_time) { // end of file, and interpolation is finished (before last future frame is in the feature)
+  if(m_replay->endOfFile() && m_ghostBikeStates[m_ghostBikeStates.size()-1]->GameTime <= i_time) { // end of file, and interpolation is finished (before last future frame is in the feature)
     m_bikeState.fBikeEngineRPM = 0.0;
-    BikeState::updateStateFromReplay(m_ghostBikeStates[m_ghostBikeStates.size()-1], &m_bikeState); // put the last frame
+    m_bikeState = *(m_ghostBikeStates[m_ghostBikeStates.size()-1]); // put the last frame
 
     if(m_replay->didFinish()) {
       m_finished   = true;
@@ -192,11 +194,11 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
       m_dead = true;
     }
   } else {
-    SerializedBikeState* v_state;
+    BikeState* v_state;
 
     // m_ghostBikeStates.size()/2 : first state in the feature
-    if(m_ghostBikeStates[m_ghostBikeStates.size()/2]->fGameTime < i_time) {
-
+    if(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime < i_time) {
+      
       do {
 	// move the bikestates
 	v_state = m_ghostBikeStates[0];
@@ -207,42 +209,40 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
 
 	if(m_replay->endOfFile()) {
 	  // copy n-1 to n
-	  memcpy(m_ghostBikeStates[m_ghostBikeStates.size()-1], m_ghostBikeStates[m_ghostBikeStates.size()-1-1], sizeof(SerializedBikeState));
+	  *(m_ghostBikeStates[m_ghostBikeStates.size()-1]) = *(m_ghostBikeStates[m_ghostBikeStates.size()-1-1]);
 	} else {
 	  // read the replay
-	  m_replay->loadState(*(m_ghostBikeStates[m_ghostBikeStates.size()-1]));
+	  m_replay->loadState(m_ghostBikeStates[m_ghostBikeStates.size()-1]);
+	  m_replay->loadState(&m_bikeState);
 	}
 
-      } while(m_ghostBikeStates[m_ghostBikeStates.size()/2]->fGameTime < i_time &&
-	      m_ghostBikeStates[m_ghostBikeStates.size()/2]->fGameTime > m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->fGameTime);
-
-      BikeState::updateStateFromReplay(m_ghostBikeStates[m_ghostBikeStates.size()/2-1], &m_bikeState);
-
+      } while(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime < i_time &&
+	      m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime > m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime);
+      
+      m_bikeState = *(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]);
     } else { /* interpolation */
       /* do interpolation if it doesn't seems to be a teleportation or something like that */
       /* in fact, this is not nice ; the best way would be to test if there is a teleport event between the two frames */
-      float v_distance = Vector2f(Vector2f(m_ghostBikeStates[m_ghostBikeStates.size()/2]->fFrameX,
-					   m_ghostBikeStates[m_ghostBikeStates.size()/2]->fFrameY) -
-				  Vector2f(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->fFrameX,
-					   m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->fFrameY)
+      float v_distance = Vector2f(Vector2f(m_ghostBikeStates[m_ghostBikeStates.size()/2]->CenterP.x,
+					   m_ghostBikeStates[m_ghostBikeStates.size()/2]->CenterP.y) -
+				  Vector2f(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->CenterP.x,
+					   m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->CenterP.y)
 				  ).length();
       bool v_can_interpolate =
 	// interpolate only if the frame are near in the time
-	m_ghostBikeStates[m_ghostBikeStates.size()/2]->fGameTime - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->fGameTime < INTERPOLATION_MAXIMUM_TIME &&
+	m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime < INTERPOLATION_MAXIMUM_TIME &&
 	// interpolate only if the state are near in the space
 	v_distance < INTERPOLATION_MAXIMUM_SPACE;
 
       if(m_doInterpolation && v_can_interpolate) {
-	if(m_ghostBikeStates[m_ghostBikeStates.size()/2]->fGameTime - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->fGameTime > 0.0) {
+	if(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime > 0.0) {
 	  /* INTERPOLATED FRAME */
-	  SerializedBikeState ibs;
 	  float v_interpolation_value;
 
-	  v_interpolation_value = (i_time - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->fGameTime) 
-	    /(m_ghostBikeStates[m_ghostBikeStates.size()/2]->fGameTime - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->fGameTime);
+	  v_interpolation_value = (i_time - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime) 
+	    /(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime);
 
-	  BikeState::interpolateGameState(m_ghostBikeStates, &ibs, v_interpolation_value);
-	  BikeState::updateStateFromReplay(&ibs, &m_bikeState);
+	  BikeState::interpolateGameState(m_ghostBikeStates, &m_bikeState, v_interpolation_value);
 	}
       }
     }

@@ -286,4 +286,21 @@ bool circleTouchCircle2f(const Vector2f &Cp1,float Cr1,const Vector2f &Cp2,float
   return (d < Cr1+Cr2);
 }
 
+float interpolation_cubic(float i_a, float i_b, float i_c, float i_d, float t) {
+  double t2 = t*t;
+  double x0,x1,x2,x3;
+  float v_res;
 
+  x0 = i_d - i_c - i_a + i_b;
+  x1 = i_a - i_b - x0;
+  x2 = i_c - i_a;
+  x3 = i_b;
+  v_res = x0*t*t2 + x1*t2 + x2*t + x3;
+
+  return v_res;
+}
+
+Vector2f interpolation_cubic(Vector2f i_a, Vector2f i_b, Vector2f i_c, Vector2f i_d, float t) {
+  return Vector2f(interpolation_cubic(i_a.x, i_b.x, i_c.x, i_d.x, t),
+		  interpolation_cubic(i_a.y, i_b.y, i_c.y, i_d.y, t));
+}

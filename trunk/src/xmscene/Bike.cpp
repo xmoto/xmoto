@@ -37,6 +37,72 @@ BikeState::BikeState() {
 
   reInitializeSpeed();
   reInitializeAnchors();
+
+  GameTime = 0.0;
+}
+
+BikeState& BikeState::operator=(const BikeState& i_copy) {
+  this->m_curBrake = i_copy.m_curBrake;
+  this->m_curEngine = i_copy.m_curEngine;
+
+  *(this->m_bikeParameters) = *(i_copy.m_bikeParameters);
+  *(this->m_bikeAnchors)    = *(i_copy.m_bikeAnchors);
+
+  this->Dir = i_copy.Dir;
+  this->fBikeEngineRPM = i_copy.fBikeEngineRPM;
+  this->RearWheelP = i_copy.RearWheelP;
+  this->FrontWheelP = i_copy.FrontWheelP;
+  this->SwingAnchorP = i_copy.SwingAnchorP;
+  this->FrontAnchorP = i_copy.FrontAnchorP;
+  this->SwingAnchor2P = i_copy.SwingAnchor2P;
+  this->FrontAnchor2P = i_copy.FrontAnchor2P;
+  this->CenterP = i_copy.CenterP;
+  this->PlayerTorsoP = i_copy.PlayerTorsoP;
+  this->PlayerULegP = i_copy.PlayerULegP;
+  this->PlayerLLegP = i_copy.PlayerLLegP;
+  this->PlayerUArmP = i_copy.PlayerUArmP;
+  this->PlayerLArmP = i_copy.PlayerLArmP;
+  this->PlayerTorso2P = i_copy.PlayerTorso2P;
+  this->PlayerULeg2P = i_copy.PlayerULeg2P;
+  this->PlayerLLeg2P = i_copy.PlayerLLeg2P;
+  this->PlayerUArm2P = i_copy.PlayerUArm2P;
+  this->PlayerLArm2P = i_copy.PlayerLArm2P;
+  this->WantedHandP = i_copy.WantedHandP;
+  this->WantedFootP = i_copy.WantedFootP;
+  this->WantedHand2P = i_copy.WantedHand2P;
+  this->WantedFoot2P = i_copy.WantedFoot2P;    
+  this->HandP = i_copy.HandP;
+  this->ElbowP = i_copy.ElbowP;
+  this->ShoulderP = i_copy.ShoulderP;
+  this->LowerBodyP = i_copy.LowerBodyP;
+  this->KneeP = i_copy.KneeP;
+  this->FootP = i_copy.FootP;
+  this->HeadP = i_copy.HeadP;
+  this->Hand2P = i_copy.Hand2P;
+  this->Elbow2P = i_copy.Elbow2P;
+  this->Shoulder2P = i_copy.Shoulder2P;
+  this->LowerBody2P = i_copy.LowerBody2P;
+  this->Knee2P = i_copy.Knee2P;
+  this->Foot2P = i_copy.Foot2P;
+  this->Head2P = i_copy.Head2P;
+  this->RRearWheelP = i_copy.RRearWheelP;
+  this->RFrontWheelP = i_copy.RFrontWheelP;
+  this->PrevRq = i_copy.PrevRq;
+  this->PrevFq = i_copy.PrevFq;
+  this->PrevPFq = i_copy.PrevPFq;
+  this->PrevPHq = i_copy.PrevPHq;
+  this->PrevPFq2 = i_copy.PrevPFq2;
+  this->PrevPHq2 = i_copy.PrevPHq2;
+  
+  this->GameTime = i_copy.GameTime;
+
+  for(unsigned int i=0; i<4; i++) {
+    fFrontWheelRot[i] = i_copy.fFrontWheelRot[i];
+    fRearWheelRot[i]  = i_copy.fRearWheelRot[i];
+    fFrameRot[i]      = i_copy.fFrameRot[i];
+  }
+
+  return *this;
 }
 
 BikeState::~BikeState() {
@@ -342,39 +408,60 @@ BikerTheme* Biker::getBikeTheme() {
   return m_bikerTheme;
 }
 
-
   /*===========================================================================
     Game state interpolation for smoother replays 
     ===========================================================================*/
-void BikeState::interpolateGameState(std::vector<SerializedBikeState*> &i_ghostBikeStates ,SerializedBikeState *p,float t) {
-
-//#define INTERPOLATION_LINEAR
-#define INTERPOLATION_CUBIQUE 1
-
-
-#ifdef INTERPOLATION_LINEAR
-  // linear interpolation
-  SerializedBikeState *pA, *pB;
+void BikeState::interpolateGameStateLinear(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t) {
+  BikeState *pA, *pB;
   pA = i_ghostBikeStates[i_ghostBikeStates.size()/2-1];
   pB = i_ghostBikeStates[i_ghostBikeStates.size()/2];
-
+  
   /* First of all inherit everything from A */
-  memcpy(p,pA,sizeof(SerializedBikeState));
+  *p = *pA;
   
-  /* Interpolate away! The frame is the most important... */
-  p->fFrameX = pA->fFrameX + (pB->fFrameX - pA->fFrameX)*t;
-  p->fFrameY = pA->fFrameY + (pB->fFrameY - pA->fFrameY)*t;
+  if(pA->Dir != pB->Dir) {
+    return;
+  }
   
-  p->fGameTime = pA->fGameTime + (pB->fGameTime - pA->fGameTime)*t;
-  //
-#endif
+  p->CenterP = pA->CenterP + (pB->CenterP - pA->CenterP)*t;
+  p->RearWheelP = pA->RearWheelP + (pB->RearWheelP - pA->RearWheelP)*t;
+  p->FrontWheelP = pA->FrontWheelP + (pB->FrontWheelP - pA->FrontWheelP)*t;
+  p->fBikeEngineRPM = pA->fBikeEngineRPM + (pB->fBikeEngineRPM - pA->fBikeEngineRPM)*t;
+  
+  for(unsigned int i=0; i<4; i++) {
+    //p->fFrontWheelRot[i] = pA->fFrontWheelRot[i] + (pB->fFrontWheelRot[i] - pA->fFrontWheelRot[i])*t;
+    //p->fRearWheelRot[i] = pA->fRearWheelRot[i] + (pB->fRearWheelRot[i] - pA->fRearWheelRot[i])*t;
+    p->fFrameRot[i] = pA->fFrameRot[i] + (pB->fFrameRot[i] - pA->fFrameRot[i])*t;
+  }
+  
+  if(pA->Dir == DD_RIGHT) {
+    p->HeadP = pA->HeadP + (pB->HeadP - pA->HeadP)*t;
+    p->HandP = pA->HandP + (pB->HandP - pA->HandP)*t;
+    p->ElbowP = pA->ElbowP + (pB->ElbowP - pA->ElbowP)*t;
+    p->ShoulderP = pA->ShoulderP + (pB->ShoulderP - pA->ShoulderP)*t;
+    p->LowerBodyP = pA->LowerBodyP + (pB->LowerBodyP - pA->LowerBodyP)*t;
+    p->KneeP = pA->KneeP + (pB->KneeP - pA->KneeP)*t;
+    p->FootP = pA->FootP + (pB->FootP - pA->FootP)*t;
+    p->SwingAnchorP = pA->SwingAnchorP + (pB->SwingAnchorP - pA->SwingAnchorP)*t;
+    p->FrontAnchorP = pA->FrontAnchorP + (pB->FrontAnchorP - pA->FrontAnchorP)*t;
+    
+  } else {
+    p->Head2P = pA->Head2P + (pB->Head2P - pA->Head2P)*t;
+    p->Hand2P = pA->Hand2P + (pB->Hand2P - pA->Hand2P)*t;
+    p->Elbow2P = pA->Elbow2P + (pB->Elbow2P - pA->Elbow2P)*t;
+    p->Shoulder2P = pA->Shoulder2P + (pB->Shoulder2P - pA->Shoulder2P)*t;
+    p->LowerBody2P = pA->LowerBody2P + (pB->LowerBody2P - pA->LowerBody2P)*t;
+    p->Knee2P = pA->Knee2P + (pB->Knee2P - pA->Knee2P)*t;
+    p->Foot2P = pA->Foot2P + (pB->Foot2P - pA->Foot2P)*t;
+    p->SwingAnchor2P = pA->SwingAnchor2P + (pB->SwingAnchor2P - pA->SwingAnchor2P)*t;
+    p->FrontAnchor2P = pA->FrontAnchor2P + (pB->FrontAnchor2P - pA->FrontAnchor2P)*t;
+  }
+  
+  p->GameTime = pA->GameTime + (pB->GameTime - pA->GameTime)*t;
+}
 
-#ifdef INTERPOLATION_CUBIQUE
-  // cubique
-  SerializedBikeState *pA, *pB, *pC, *pD;
-  double t2 = t*t;
-  double x0,x1,x2,x3;
-  double y0,y1,y2,y3;
+void BikeState::interpolateGameStateCubic(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t) {
+  BikeState *pA, *pB, *pC, *pD;
 
   pA = i_ghostBikeStates[i_ghostBikeStates.size()/2-1-1];
   pB = i_ghostBikeStates[i_ghostBikeStates.size()/2-1];
@@ -382,26 +469,65 @@ void BikeState::interpolateGameState(std::vector<SerializedBikeState*> &i_ghostB
   pD = i_ghostBikeStates[i_ghostBikeStates.size()/2+1];
 
   /* First of all inherit everything from A */
-  memcpy(p,pB,sizeof(SerializedBikeState));
+  *p = *pB;
 
-  x0 = pD->fFrameX - pC->fFrameX - pA->fFrameX + pB->fFrameX;
-  x1 = pA->fFrameX - pB->fFrameX - x0;
-  x2 = pC->fFrameX - pA->fFrameX;
-  x3 = pB->fFrameX;
-  p->fFrameX = x0*t*t2 + x1*t2 + x2*t + x3;
+  if(pA->Dir != pB->Dir || pB->Dir != pC->Dir || pC->Dir != pD->Dir) {
+    return;
+  }
 
-  y0 = pD->fFrameY - pC->fFrameY - pA->fFrameY + pB->fFrameY;
-  y1 = pA->fFrameY - pB->fFrameY - y0;
-  y2 = pC->fFrameY - pA->fFrameY;
-  y3 = pB->fFrameY;
-  p->fFrameY = y0*t*t2 + y1*t2 + y2*t + y3;
+  p->CenterP = interpolation_cubic(pA->CenterP, pB->CenterP, pC->CenterP, pD->CenterP, t);
+  p->RearWheelP = interpolation_cubic(pA->RearWheelP, pB->RearWheelP, pC->RearWheelP, pD->RearWheelP, t);
+  p->FrontWheelP = interpolation_cubic(pA->FrontWheelP, pB->FrontWheelP, pC->FrontWheelP, pD->FrontWheelP, t);
+  p->FrontWheelP = interpolation_cubic(pA->FrontWheelP, pB->FrontWheelP, pC->FrontWheelP, pD->FrontWheelP, t);
+  p->fBikeEngineRPM = interpolation_cubic(pA->fBikeEngineRPM, pB->fBikeEngineRPM, pC->fBikeEngineRPM, pD->fBikeEngineRPM, t);
 
-  p->fGameTime = pB->fGameTime + (pC->fGameTime - pB->fGameTime)*t;
-  //
-#endif
+  for(unsigned int i=0; i<4; i++) {
+    //p->fFrontWheelRot[i]
+    //p->fRearWheelRot[i]
+    p->fFrameRot[i] = interpolation_cubic(pA->fFrameRot[i], pB->fFrameRot[i], pC->fFrameRot[i], pD->fFrameRot[i], t);
+  }
+  
+  if(pB->Dir == DD_RIGHT) {
+    p->HeadP = interpolation_cubic(pA->HeadP, pB->HeadP, pC->HeadP, pD->HeadP, t);
+    p->HandP = interpolation_cubic(pA->HandP, pB->HandP, pC->HandP, pD->HandP, t);
+    p->ElbowP = interpolation_cubic(pA->ElbowP, pB->ElbowP, pC->ElbowP, pD->ElbowP, t);
+    p->ShoulderP = interpolation_cubic(pA->ShoulderP, pB->ShoulderP, pC->ShoulderP, pD->ShoulderP, t);
+    p->LowerBodyP = interpolation_cubic(pA->LowerBodyP, pB->LowerBodyP, pC->LowerBodyP, pD->LowerBodyP, t);
+    p->KneeP = interpolation_cubic(pA->KneeP, pB->KneeP, pC->KneeP, pD->KneeP, t);
+    p->FootP = interpolation_cubic(pA->FootP, pB->FootP, pC->FootP, pD->FootP, t);
+    p->SwingAnchorP = interpolation_cubic(pA->SwingAnchorP, pB->SwingAnchorP, pC->SwingAnchorP, pD->SwingAnchorP, t);
+    p->FrontAnchorP = interpolation_cubic(pA->FrontAnchorP, pB->FrontAnchorP, pC->FrontAnchorP, pD->FrontAnchorP, t);
+  } else {
+    p->Head2P = interpolation_cubic(pA->Head2P, pB->Head2P, pC->Head2P, pD->Head2P, t);
+    p->Hand2P = interpolation_cubic(pA->Hand2P, pB->Hand2P, pC->Hand2P, pD->Hand2P, t);
+    p->Elbow2P = interpolation_cubic(pA->Elbow2P, pB->Elbow2P, pC->Elbow2P, pD->Elbow2P, t);
+    p->Shoulder2P = interpolation_cubic(pA->Shoulder2P, pB->Shoulder2P, pC->Shoulder2P, pD->Shoulder2P, t);
+    p->LowerBody2P = interpolation_cubic(pA->LowerBody2P, pB->LowerBody2P, pC->LowerBody2P, pD->LowerBody2P, t);
+    p->Knee2P = interpolation_cubic(pA->Knee2P, pB->Knee2P, pC->Knee2P, pD->Knee2P, t);
+    p->Foot2P = interpolation_cubic(pA->Foot2P, pB->Foot2P, pC->Foot2P, pD->Foot2P, t);
+    p->SwingAnchor2P = interpolation_cubic(pA->SwingAnchor2P, pB->SwingAnchor2P, pC->SwingAnchor2P, pD->SwingAnchor2P, t);
+    p->FrontAnchor2P = interpolation_cubic(pA->FrontAnchor2P, pB->FrontAnchor2P, pC->FrontAnchor2P, pD->FrontAnchor2P, t);
+  }
+
+  p->GameTime = pB->GameTime + (pC->GameTime - pB->GameTime)*t;
 }
 
-  void BikeState::updateStateFromReplay(SerializedBikeState *pReplayState,
+void BikeState::interpolateGameState(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p, float t) {
+  BikeState *pA, *pB, *pC, *pD;
+
+  pA = i_ghostBikeStates[i_ghostBikeStates.size()/2-1-1];
+  pB = i_ghostBikeStates[i_ghostBikeStates.size()/2-1];
+  pC = i_ghostBikeStates[i_ghostBikeStates.size()/2];
+  pD = i_ghostBikeStates[i_ghostBikeStates.size()/2+1];
+
+  if(pA->Dir == pB->Dir && pB->Dir == pC->Dir && pC->Dir == pD->Dir) {
+    interpolateGameStateCubic(i_ghostBikeStates, p, t);
+  } else {
+    interpolateGameStateLinear(i_ghostBikeStates, p, t);
+  }
+}
+
+  void BikeState::convertStateFromReplay(SerializedBikeState *pReplayState,
           BikeState *pBikeS) 
   {
     bool bUpdateRider=true,bUpdateAltRider=true;
@@ -497,6 +623,9 @@ void BikeState::interpolateGameState(std::vector<SerializedBikeState*> &i_ghostB
     pBikeS->RFrontWheelP.y = pBikeS->Anchors()->Fp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->Fp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
     pBikeS->RRearWheelP.x = pBikeS->Anchors()->Rp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->Rp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
     pBikeS->RRearWheelP.y = pBikeS->Anchors()->Rp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->Rp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;     
+
+    // time
+    pBikeS->GameTime = pReplayState->fGameTime;
   }
 
 void Biker::addBodyForce(const Vector2f& i_force) {
