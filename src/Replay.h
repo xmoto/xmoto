@@ -28,6 +28,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define STATES_PER_CHUNK 512
 
+class BikeState;
+
   /*===========================================================================
   Structs
   ===========================================================================*/  
@@ -59,8 +61,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Methods */
       void storeState(const SerializedBikeState& state);
       /* go and get the next state */
-      void loadState(SerializedBikeState& state);  
-      void peekState(SerializedBikeState& state); /* get current state */
+      void loadState(BikeState* state);  
+      void peekState(BikeState* state); /* get current state */
       
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,unsigned int nStateSize);
       void saveReplay(void);

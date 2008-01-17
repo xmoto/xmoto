@@ -57,7 +57,7 @@ class Ghost : public Biker {
   bool m_isActiv;
 
  /* because we have not the real one, but the one before and the one after */
- std::vector<SerializedBikeState*> m_ghostBikeStates;
+ std::vector<BikeState*> m_ghostBikeStates;
 
  void execReplayEvents(float i_time, MotoGame *i_motogame);
 };

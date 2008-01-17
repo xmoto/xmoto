@@ -331,5 +331,8 @@ class AABB {
 float randomNum(float fMin,float fMax);
 int randomIntNum(int nMin, int nMax);
 
+float interpolation_cubic(float i_a, float i_b, float i_c, float i_d, float t);
+Vector2f interpolation_cubic(Vector2f i_a, Vector2f i_b, Vector2f i_c, Vector2f i_d, float t);
+
 #endif
 

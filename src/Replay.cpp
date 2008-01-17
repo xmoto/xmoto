@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "helpers/SwapEndian.h"
 #include "GameEvents.h"
+#include "xmscene/Bike.h"
 
   bool Replay::m_bEnableCompression = true;
 
@@ -464,7 +465,7 @@ bool Replay::nextState(float p_frames) {
   return true;
 }
 
-  void Replay::loadState(SerializedBikeState& state) {
+  void Replay::loadState(BikeState* state) {
     /* (11th july, 2006) rasmus: i've swapped the two following lines, it apparently fixes
        interpolation in replays, but i don't know if it break something else */  
     peekState(state);
@@ -477,12 +478,14 @@ bool Replay::nextState(float p_frames) {
     }
   }
   
-  void Replay::peekState(SerializedBikeState& state) {
+  void Replay::peekState(BikeState* state) {
+    SerializedBikeState v_bs;
+
     /* Like loadState() but this one does not advance the cursor... it just takes a peek */
-    memcpy((char *)&state,
-     &m_Chunks[m_nCurChunk]->pcChunkData[((int)m_nCurState)*m_nStateSize],
-     m_nStateSize);
-    SwapEndian::LittleSerializedBikeState(state);
+    memcpy((char *)&v_bs, &m_Chunks[m_nCurChunk]->pcChunkData[((int)m_nCurState)*m_nStateSize], m_nStateSize);
+    SwapEndian::LittleSerializedBikeState(v_bs);
+
+    BikeState::convertStateFromReplay(&v_bs, state);
   }
   
   std::string Replay::giveAutomaticName() {
