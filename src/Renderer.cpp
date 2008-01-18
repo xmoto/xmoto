@@ -750,7 +750,7 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string texture)
 void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int nHeight) {
     Biker* pBiker = i_scene->getCamera()->getPlayerToFollow();
     // do not render it if it's the autozoom camera (in multi), or the player is dead (in multi), or no player is followed
-    if(i_scene->getCurrentCamera() == i_scene->getNumberCameras()
+    if(i_scene->isAutoZoomCamera() == true
        || ((pBiker == NULL || (pBiker != NULL && pBiker->isDead() == true))
 	   && i_scene->getNumberCameras() > 1)){
       return;
@@ -1165,7 +1165,7 @@ int GameRenderer::nbParticlesRendered() const {
 			    pCamera->getPlayerToFollow()->getBikeEngineSpeed());
       }
     }
-		
+
     GameApp::instance()->getDrawLib()->getMenuCamera()->setCamera2d();
 
     if(m_showTimePanel) {
@@ -1194,7 +1194,7 @@ int GameRenderer::nbParticlesRendered() const {
     Sprite* pType = NULL;
 
     // do not render it if it's the autozoom camera or ...
-    if(i_scene->getCurrentCamera() == i_scene->getNumberCameras()) {
+    if(i_scene->isAutoZoomCamera() == true) {
       return;
     }
     
@@ -2325,12 +2325,13 @@ void GameRenderer::renderTimePanel(MotoGame* i_scene) {
   FontGlyph* v_fg;
 
   // do not render it if it's the autozoom camera or ...
-  if(i_scene->getCurrentCamera() == i_scene->getNumberCameras()) {
+  if(i_scene->isAutoZoomCamera() == true){
     return;
   }
 
   unsigned int width  = GameApp::instance()->getDrawLib()->getDispWidth();
   unsigned int height = GameApp::instance()->getDrawLib()->getDispHeight();
+
   Biker* pBiker = i_scene->getCamera()->getPlayerToFollow();
 
   /* render game time */
@@ -2368,23 +2369,22 @@ void GameRenderer::renderTimePanel(MotoGame* i_scene) {
     x=width/2; y=height/2;
     break;
   }
-  
+
   v_fm->printString(v_fg,
 		    x, y,
 		    MAKE_COLOR(255,255,255,255), true);
 
-  /* next things must be rendered only the first camera */
+  /* next things must be rendered only by the first camera */
   if(i_scene->getCurrentCamera() != 0)
     return;
 
   v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
 
   v_fg = v_fm->getGlyph(m_bestTime);
-  v_fm->printString(v_fg, 0, 28, MAKE_COLOR(255,255,255,255), true);
+  v_fm->printString(v_fg, x, y+28, MAKE_COLOR(255,255,255,255), true);
 
   v_fg = v_fm->getGlyph(m_worldRecordTime);
-  v_fm->printString(v_fg, 0, 48, MAKE_COLOR(255,255,255,255), true);
-  
+  v_fm->printString(v_fg, x, y+48, MAKE_COLOR(255,255,255,255), true);
 }
 
 void GameRenderer::renderReplayHelpMessage(MotoGame* i_scene) {

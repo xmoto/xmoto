@@ -332,3 +332,7 @@ float Camera::guessDesiredAngleRotation() {
 Vector2i Camera::getDispBottomLeft() {
   return Vector2i(m_renderSurf.upperleft().x, m_renderSurf.downright().y);
 }
+
+Vector2i Camera::getDispTopLeft() {
+  return m_renderSurf.upperleft();
+}
