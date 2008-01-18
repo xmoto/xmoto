@@ -33,6 +33,8 @@ class TiXmlElement;
 class BSPPoly;
 class Block;
 
+#define DEFAULT_EDGE_ANGLE 270.0f
+
 /*===========================================================================
   Convex block vertex
   ===========================================================================*/
@@ -133,6 +135,9 @@ class Block {
   inline std::vector<ConvexBlock*>& ConvexBlocks() {
     return m_convexBlocks;
   }
+  typedef enum{angle, inside, outside} EdgeDrawMethod;
+  EdgeDrawMethod getEdgeDrawMethod();
+  float edgeAngle();
 
   void setTexture(const std::string& i_texture);
   void setTextureScale(float i_textureScale);
@@ -142,17 +147,18 @@ class Block {
   void setIsLayer(bool i_isLayer);
   void setGrip(float i_grip);
   void setCenter(const Vector2f& i_center);
+  void setEdgeDrawMethod(EdgeDrawMethod method);
+  // in degres, not radian
+  void setEdgeAngle(float angle);
 
-	/* position where to display ; do not consider block center */
+  /* position where to display ; do not consider block center */
   void setDynamicPosition(const Vector2f& i_dynamicPosition);
-
-	/* postion where to display - the center */
+  /* postion where to display - the center */
   void setDynamicPositionAccordingToCenter(const Vector2f& i_dynamicPosition);
-
-	/* angle position ; consider of the block center */
+  /* angle position ; consider of the block center */
   void setDynamicRotation(float i_dynamicRotation);
 
-  int loadToPlay(CollisionSystem& io_collisionSystem); /* load for playing */
+  int loadToPlay(CollisionSystem& io_collisionSystem);
   void unloadToPlay();
 
   void saveXml(FileHandle *i_pfh);
@@ -168,12 +174,6 @@ class Block {
   void setGeom(int geom) {
     m_geom = geom;
   }
-  int getDisplayList() {
-    return m_displayList;
-  }
-  void setDisplayList(int displayList) {
-    m_displayList = displayList;
-  }
   int getLayer() {
     return m_layer;
   }
@@ -185,52 +185,36 @@ class Block {
   std::vector<int>& getEdgeGeoms();
   bool edgeGeomExists(std::string texture);
 
-  typedef enum{Under, Over, Inside, Outside} EdgeDrawMethod;
-  EdgeDrawMethod getEdgeDrawMethod(){
-    return m_edgeDrawMethod;
-  }
 
   // calculate edge position
-  void calculateEdgePosition_under(Vector2f  i_vA, Vector2f i_vB,
+  void calculateEdgePosition_angle(Vector2f  i_vA, Vector2f i_vB,
 				   Vector2f& o_a1, Vector2f& o_b1,
 				   Vector2f& o_b2, Vector2f& o_a2,
 				   float i_border, float i_depth,
-				   Vector2f  i_center);
-  void calculateEdgePosition_over(Vector2f  i_vA, Vector2f i_vB,
-				  Vector2f& o_a1, Vector2f& o_b1,
-				  Vector2f& o_b2, Vector2f& o_a2,
-				  float i_border, float i_depth,
-				  Vector2f  i_center);
-  void calculateEdgePosition_inside(Vector2f  i_vA1, Vector2f i_vB1, Vector2f i_vC1,
+				   Vector2f  i_center, float i_angle);
+  void calculateEdgePosition_inout(Vector2f  i_vA1, Vector2f i_vB1, Vector2f i_vC1,
 				    Vector2f& o_a1,  Vector2f& o_b1,
 				    Vector2f& o_b2,  Vector2f& o_a2,
 				    Vector2f& o_c1,  Vector2f& o_c2,
 				    float i_border,  float i_depth,
 				    Vector2f  center,
 				    Vector2f  i_oldC2, Vector2f i_oldB2,
-				    bool i_useOld);
-  void calculateEdgePosition_outside(Vector2f i_vA1, Vector2f i_vB1, Vector2f i_vC1,
-				    Vector2f& o_a1,  Vector2f& o_b1,
-				    Vector2f& o_b2,  Vector2f& o_a2,
-				    Vector2f& o_c1,  Vector2f& o_c2,
-				    float i_border,  float i_depth,
-				    Vector2f  center,
-				    Vector2f  i_oldC2, Vector2f i_oldB2,
-				    bool i_useOld);
+				    bool i_useOld, bool i_AisLast,
+				    bool& o_swapDone, bool i_inside);
 
 private:
-  std::string m_id;           /* Block ID */
-  std::string m_texture;      /* Texture to use... */
-  float m_textureScale;       /* Texture scaling constant to use */
-  Vector2f m_initialPosition; /* Position */
-  float m_initialRotation;       
+  std::string m_id;
+  std::string m_texture;
+  float       m_textureScale;
+  Vector2f    m_initialPosition;
+  float       m_initialRotation;       
 
-  std::vector<BlockVertex *> m_vertices;     /* Vertices of block */
-  std::vector<ConvexBlock *> m_convexBlocks; /* Convex Blocks */
+  std::vector<BlockVertex*> m_vertices;
+  std::vector<ConvexBlock*> m_convexBlocks;
   // one geom for each edge texture
   std::vector<int> m_edgeGeoms;
 
-  bool  m_background;                   /* Background block */
+  bool  m_background;
   bool  m_dynamic;
   bool  m_isLayer;
   // the background layer of the block.
@@ -243,8 +227,6 @@ private:
 
   // the geom used to render the block
   int   m_geom;
-  // the display list used to render the block edges in opengl
-  int   m_displayList;
 
   /* properties for dynamic */
   float m_dynamicRotation;  /* Block rotation */
@@ -257,6 +239,10 @@ private:
   void updateCollisionLines();
 
   EdgeDrawMethod m_edgeDrawMethod;
+  float m_edgeAngle;
+
+  std::string edgeToString(EdgeDrawMethod method);
+  EdgeDrawMethod stringToEdge(std::string method);
 };
 
 #endif /* __BLOCK_H__ */

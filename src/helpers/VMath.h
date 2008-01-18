@@ -29,6 +29,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/
 #define VECTOR_COMPARE_EPSILON    0.001f
 #define PI 3.14159265
+#define rad2deg(x) ((x)*57.295779524)
+#define deg2rad(x) ((x)*0.017453292)
 
 template <typename _T>
 class Vector2 {
@@ -330,6 +332,10 @@ class AABB {
 
 float randomNum(float fMin,float fMax);
 int randomIntNum(int nMin, int nMax);
+
+void intersectLineLine2fCramer(Vector2f& A1, Vector2f& A2, Vector2f& B1, Vector2f& B2, Vector2f& contactPoint);
+void calculatePointOnNormal(Vector2f& A1, Vector2f& B1, float length, bool inside, Vector2f& A2, Vector2f& B2);
+void calculatePointOnVector(Vector2f& A1, Vector2f& A2, float length, Vector2f& newA2);
 
 float interpolation_cubic(float i_a, float i_b, float i_c, float i_d, float t);
 Vector2f interpolation_cubic(Vector2f i_a, Vector2f i_b, Vector2f i_c, Vector2f i_d, float t);

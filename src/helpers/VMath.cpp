@@ -286,6 +286,43 @@ bool circleTouchCircle2f(const Vector2f &Cp1,float Cr1,const Vector2f &Cp2,float
   return (d < Cr1+Cr2);
 }
 
+void intersectLineLine2fCramer(Vector2f& A1, Vector2f& A2, Vector2f& B1, Vector2f& B2, Vector2f& contactPoint)
+{
+  // equations of lines (A1, A2) and (B1, B2)
+  // a*x + b*y = e
+  // c*x + d*y = f
+  float a,b,c, d,e,f;
+  a = A1.y - A2.y;
+  b = A2.x - A1.x;
+  e = a*A1.x + b*A1.y;
+
+  c = B1.y - B2.y;
+  d = B2.x - B1.x;
+  f = c*B2.x + d*B2.y;
+
+  // calculate intersection point with Cramer's formula
+  float divider = a*d - b*c;
+  contactPoint = Vector2f((e*d - b*f) / divider, (a*f - e*c) / divider);
+}
+
+void calculatePointOnNormal(Vector2f& A1, Vector2f& B1, float length, bool inside, Vector2f& A2, Vector2f& B2)
+{
+  Vector2f N(-B1.y+A1.y, B1.x-A1.x);
+  float t = length / sqrt(N.x*N.x + N.y*N.y);
+  if(inside == true){
+    t = -t;
+  }
+  A2 = Vector2f(A1.x + t * N.x, A1.y + t * N.y);
+  B2 = Vector2f(B1.x + t * N.x, B1.y + t * N.y);
+}
+
+void calculatePointOnVector(Vector2f& A1, Vector2f& A2, float length, Vector2f& newA2)
+{
+  Vector2f A(A2.x-A1.x, A2.y-A1.y);
+  float t = length / sqrt(A.x*A.x + A.y*A.y);
+  newA2 = Vector2f(A1.x + t * A.x, A1.y + t * A.y);
+}
+
 float interpolation_cubic(float i_a, float i_b, float i_c, float i_d, float t) {
   double t2 = t*t;
   double x0,x1,x2,x3;

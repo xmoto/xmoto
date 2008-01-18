@@ -262,12 +262,13 @@ private:
 			     Vector2f& A1, Vector2f& B1,
 			     Vector2f& B2, Vector2f& A2,
 			     Vector2f& C1, Vector2f& C2,
-			     Vector2f oldC2, Vector2f oldB2, bool useOld);
+			     Vector2f oldC2, Vector2f oldB2, bool useOld,
+			     bool AisLast, bool& swapDone);
   void calculateEdgeTexture(Block* pBlock,
-			    Vector2f A1, Vector2f B1,
-			    Vector2f B2, Vector2f A2,
-			    float* ua1, float* ub1,
-			    float* ub2, float* ua2);
+			    Vector2f A1,   Vector2f B1,
+			    Vector2f B2,   Vector2f A2,
+			    Vector2f& ua1, Vector2f& ub1,
+			    Vector2f& ub2, Vector2f& ua2);
 };
 
 #endif
