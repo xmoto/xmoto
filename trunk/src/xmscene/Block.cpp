@@ -85,7 +85,8 @@ Block::Block(std::string i_id) {
   m_isBBoxDirty      = true;
   m_geom             = -1;
   m_layer            = -1;
-  m_edgeDrawMethod   = Under;
+  m_edgeDrawMethod   = angle;
+  m_edgeAngle        = DEFAULT_EDGE_ANGLE;
 }
 
 Block::~Block() {
@@ -133,10 +134,10 @@ void Block::updateCollisionLines() {
 
   /* Build rotation matrix for block */
   float fR[4]; 
-  fR[0] =  cos(DynamicRotation());
-  fR[1] = -sin(DynamicRotation());
-  fR[2] =  sin(DynamicRotation()); 
-  fR[3] =  cos(DynamicRotation());
+  fR[0] =  cosf(DynamicRotation());
+  fR[1] = -sinf(DynamicRotation());
+  fR[2] =  sinf(DynamicRotation()); 
+  fR[3] =  cosf(DynamicRotation());
   unsigned int z = 0;
 
   m_isBBoxDirty = true;
@@ -416,12 +417,24 @@ void Block::saveXml(FileHandle *i_pfh) {
     layer << m_layer;
     v_position = v_position + " layerid=\"" + layer.str() + "\"";
   }
-  
+
+  v_position = v_position + " />";
+
   FS::writeLineF(i_pfh, (char*) v_position.c_str());
   
   if(Grip() != DEFAULT_PHYS_WHEEL_GRIP) {
     FS::writeLineF(i_pfh,"\t\t<physics grip=\"%f\"/>", Grip());
   }
+
+  if(getEdgeDrawMethod() != angle && edgeAngle() != DEFAULT_EDGE_ANGLE){
+    std::string v_edgeDraw = edgeToString(getEdgeDrawMethod());
+    std::ostringstream v_angle;
+    v_angle << edgeAngle();
+    std::string v_edge = "\t\t<edges drawmethod=\"" + v_edgeDraw
+      + "\" angle=\"" + v_angle.str() + "\" />";
+    FS::writeLineF(i_pfh, (char*)v_edge.c_str());
+  }
+
   FS::writeLineF(i_pfh,"\t\t<usetexture id=\"%s\"/>", Texture().c_str());
   for(unsigned int j=0;j<Vertices().size();j++) {
     if(Vertices()[j]->EdgeEffect() != "")
@@ -441,34 +454,47 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
   
   Block *pBlock = new Block(XML::getOption(pElem, "id"));
   pBlock->setTexture("default");
-        
-  TiXmlElement *pUseTextureElem = XML::findElement(*i_xmlSource, pElem,std::string("usetexture"));
-  TiXmlElement *pPositionElem   = XML::findElement(*i_xmlSource, pElem,std::string("position"));                
-  TiXmlElement *pPhysicsElem    = XML::findElement(*i_xmlSource, pElem,std::string("physics"));          
-        
+
+  TiXmlElement* pUseTextureElem = XML::findElement(*i_xmlSource, pElem, std::string("usetexture"));
+  TiXmlElement* pPositionElem   = XML::findElement(*i_xmlSource, pElem, std::string("position"));
+  TiXmlElement* pPhysicsElem    = XML::findElement(*i_xmlSource, pElem, std::string("physics"));
+  TiXmlElement* pEdgeElem       = XML::findElement(*i_xmlSource, pElem, std::string("edges"));
+
+
   if(pUseTextureElem != NULL) {
     pBlock->setTexture(XML::getOption(pUseTextureElem,"id", "default"));
     pBlock->setTextureScale(atof(XML::getOption(pUseTextureElem,"scale","1").c_str()));
   }
-   
+
   if(pPositionElem != NULL) {
     pBlock->setInitialPosition(Vector2f(atof( XML::getOption(pPositionElem,"x","0").c_str() ),
                                         atof( XML::getOption(pPositionElem,"y","0").c_str() )
                                         )
                                );
-          
+
     pBlock->setBackground(XML::getOption(pPositionElem,"background","false") == "true");
     pBlock->setDynamic(XML::getOption(pPositionElem,"dynamic","false") == "true");
     pBlock->setIsLayer(XML::getOption(pPositionElem,"islayer","false") == "true");
     pBlock->setLayer(atoi(XML::getOption(pPositionElem,"layerid","-1").c_str()));
  }
-   
+
   if(pPhysicsElem != NULL) {
     char str[5];
     snprintf(str, 5, "%f", DEFAULT_PHYS_WHEEL_GRIP);
     pBlock->setGrip(atof(XML::getOption(pPhysicsElem, "grip", str).c_str()));
   } else {
     pBlock->setGrip(DEFAULT_PHYS_WHEEL_GRIP);
+  }
+
+  if(pEdgeElem != NULL) {
+    // angle is the default one
+    std::string methodStr = XML::getOption(pEdgeElem, "drawmethod", "angle");
+    pBlock->setEdgeDrawMethod(pBlock->stringToEdge(methodStr));
+    // 270 is the default one for the 'angle' edge draw method, not used for the others
+    pBlock->setEdgeAngle(atof(XML::getOption(pEdgeElem, "angle", "270.0").c_str()));
+  } else {
+    pBlock->setEdgeDrawMethod(angle);
+    pBlock->setEdgeAngle(DEFAULT_EDGE_ANGLE);
   }
 
   float lastX = 0.0;
@@ -537,6 +563,8 @@ void Block::saveBinary(FileHandle *i_pfh) {
       FS::writeFloat_LE(i_pfh, InitialPosition().x);
       FS::writeFloat_LE(i_pfh, InitialPosition().y);
       FS::writeFloat_LE(i_pfh, Grip());
+      FS::writeInt_LE(i_pfh,   getEdgeDrawMethod());
+      FS::writeFloat_LE(i_pfh, edgeAngle());
 
       FS::writeShort_LE(i_pfh, Vertices().size());
         
@@ -561,6 +589,8 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   v_Position.y = FS::readFloat_LE(i_pfh);
   pBlock->setInitialPosition(v_Position);
   pBlock->setGrip(FS::readFloat_LE(i_pfh));
+  pBlock->setEdgeDrawMethod((EdgeDrawMethod)FS::readInt_LE(i_pfh));
+  pBlock->setEdgeAngle(FS::readFloat_LE(i_pfh));
   
   int nNumVertices = FS::readShort_LE(i_pfh);
   pBlock->Vertices().reserve(nNumVertices);
@@ -585,38 +615,33 @@ std::vector<int>& Block::getEdgeGeoms()
   return m_edgeGeoms;
 }
 
-void Block::calculateEdgePosition_under(Vector2f  i_vA,  Vector2f i_vB,
+void Block::calculateEdgePosition_angle(Vector2f  i_vA,  Vector2f i_vB,
 					Vector2f& o_a1,  Vector2f& o_b1,
 					Vector2f& o_b2,  Vector2f& o_a2,
 					float i_border,  float i_depth,
-					Vector2f center)
+					Vector2f center, float i_angle)
 {
-  o_a1 = i_vA + center + Vector2f(0, i_border);
-  o_b1 = i_vB + center + Vector2f(0, i_border);
-  o_b2 = i_vB + center + Vector2f(0, -i_depth);
-  o_a2 = i_vA + center + Vector2f(0, -i_depth);
+  // welcome the allmighty sin and cos
+  float radAngle  = deg2rad(i_angle);
+  float cosfAngle = cosf(radAngle);
+  float sinfAngle = sinf(radAngle);
+  Vector2f borderV(cosfAngle*i_border, sinfAngle*i_border);
+  Vector2f depthV( cosfAngle*i_depth,  sinfAngle*i_depth);
+  o_a1 = i_vA + center - borderV;
+  o_b1 = i_vB + center - borderV;
+  o_b2 = i_vB + center + depthV;
+  o_a2 = i_vA + center + depthV;
 }
 
-void Block::calculateEdgePosition_over(Vector2f i_vA,   Vector2f i_vB,
-				       Vector2f& o_a1,  Vector2f& o_b1,
-				       Vector2f& o_b2,  Vector2f& o_a2,
-				       float i_border,  float i_depth,
-				       Vector2f center)
-{
-  o_a1 = i_vA + center + Vector2f(0, i_depth);
-  o_b1 = i_vB + center + Vector2f(0, i_depth);
-  o_b2 = i_vB + center + Vector2f(0, i_border);
-  o_a2 = i_vA + center + Vector2f(0, i_border);
-}
-
-void Block::calculateEdgePosition_inside(Vector2f i_vA1,  Vector2f i_vB1, Vector2f i_vC1,
-					 Vector2f& o_a1,  Vector2f& o_b1,
-					 Vector2f& o_b2,  Vector2f& o_a2,
-					 Vector2f& o_c1,  Vector2f& o_c2,
-					 float i_border,  float i_depth,
-					 Vector2f center,
-					 Vector2f i_oldC2, Vector2f i_oldB2,
-					 bool i_useOld)
+void Block::calculateEdgePosition_inout(Vector2f i_vA1,  Vector2f i_vB1, Vector2f i_vC1,
+					Vector2f& o_a1,  Vector2f& o_b1,
+					Vector2f& o_b2,  Vector2f& o_a2,
+					Vector2f& o_c1,  Vector2f& o_c2,
+					float i_border,  float i_depth,
+					Vector2f center,
+					Vector2f i_oldC2, Vector2f i_oldB2,
+					bool i_useOld, bool i_AisLast,
+					bool& o_swapDone, bool i_inside)
 {
   /* we want to calculate the point on the normal of vector(vA1,vB1)
      which is at the distance depth of vA1. let's call that point vA2
@@ -651,61 +676,128 @@ void Block::calculateEdgePosition_inside(Vector2f i_vA1,  Vector2f i_vB1, Vector
      between two consecutive edges, so we fix it by calculating B2 as
      the intersection of (A2, AB2) and (C2, CB2) let's use Cramer
      formula to calculate it. (TODO::a nice graphic to explain
-     it). AB2 is on the normal of vector(A1,B1) and CB2 is on the
-     normal of vector(B1,C1), both are at distance depth on the
+     it). point AB2 is on the normal of vector(A1,B1) and point CB2 is
+     on the normal of vector(B1,C1), both are at distance depth on the
      normal.
+
+     and there can be a problem if lines (A1,A2) and (B1,B2)
+     intersects in a way that the resulting quad is concave
+
+     the code actually doesn't work well... it's some wip
   */
+  if(i_inside == true){
+    // inside
+    o_swapDone = false;
 
-  o_a1 = i_vA1 + Vector2f(center.x, center.y + i_border);
-  o_b1 = i_vB1 + Vector2f(center.x, center.y + i_border);
-  o_c1 = i_vC1 + Vector2f(center.x, center.y + i_border);
+    o_a1 = i_vA1 + Vector2f(center.x, center.y + i_border);
+    o_b1 = i_vB1 + Vector2f(center.x, center.y + i_border);
+    o_c1 = i_vC1 + Vector2f(center.x, center.y + i_border);
 
-  Vector2f ab2;
-  if(i_useOld == true){
-    // oldB2 is new A2 and oldC2 is new AB2
-    o_a2 = i_oldB2;
-    ab2  = i_oldC2;
+    Vector2f ab2;
+    if(i_useOld == true){
+      // oldB2 is new A2 and oldC2 is new AB2
+      o_a2 = i_oldB2;
+      ab2  = i_oldC2;
+    } else {
+      Vector2f vA2;
+      Vector2f vAB2;
+      calculatePointOnNormal(i_vA1, i_vB1, i_depth, true, vA2, vAB2);
+      o_a2 = vA2  + center;
+      ab2  = vAB2 + center;
+    }
+
+    if(i_AisLast == true){
+      o_b2 = ab2;
+      // we don't calculate c2, but we don't care as A is last
+    }
+    else {
+      Vector2f bc2;
+      Vector2f vC2;
+      Vector2f vBC2;
+      calculatePointOnNormal(i_vB1, i_vC1, i_depth, true, vBC2, vC2);
+      bc2  = vBC2 + center;
+      o_c2 = vC2 + center;
+
+      intersectLineLine2fCramer(o_a2, ab2, bc2, o_c2, o_b2);
+      // line (b1,b2) lenght has to be i_depth
+      //      calculatePointOnVector(o_b1, o_b2, i_depth, o_b2);
+    }
+
+#if 0    
+    // it's possible that the resulting quad is concave, so we have to
+    // calculate the intersection point of lines (A1, A2) and (B1, B2)
+    Vector2f inter;
+    intersectLineLine2fCramer(o_a1, o_a2, o_b1, o_b2, inter);
+    AABB aabbA;
+    aabbA.addPointToAABB2f(o_a1);
+    aabbA.addPointToAABB2f(o_a2);
+    AABB aabbB;
+    aabbB.addPointToAABB2f(o_b1);
+    aabbB.addPointToAABB2f(o_b2);
+    Logger::Log("(%f,%f) (%f,%f) (%f,%f) (%f,%f) inter: (%f,%f)",
+		o_a1.x, o_a1.y, o_a2.x, o_a2.y,
+		o_b1.x, o_b1.y, o_b2.x, o_b2.y,
+		inter.x, inter.y);
+    Logger::Log("aabbA: (%f,%f)(%f,%f)",
+		aabbA.getBMin().x, aabbA.getBMin().y,
+		aabbA.getBMax().x, aabbA.getBMax().y);
+    Logger::Log("aabbB: (%f,%f)(%f,%f)",
+		aabbB.getBMin().x, aabbB.getBMin().y,
+		aabbB.getBMax().x, aabbB.getBMax().y);
+    if(aabbA.pointTouchAABB2f(inter) == true && aabbB.pointTouchAABB2f(inter) == true){
+      Vector2f tmp = o_a2;
+      o_a2 = o_b2;
+      o_b2 = tmp;
+      o_swapDone = true;
+      Logger::Log("swap done");
+    }
+#endif
   } else {
-    Vector2f Nab(-i_vB1.y+i_vA1.y, i_vB1.x-i_vA1.x);
-    float t = i_depth / sqrt(Nab.x*Nab.x + Nab.y*Nab.y);
-    Vector2f vA2( i_vA1.x - t * Nab.x, i_vA1.y - t * Nab.y);
-    Vector2f vAB2(i_vB1.x - t * Nab.x, i_vB1.y - t * Nab.y);
-    o_a2 = vA2  + center;
-    ab2  = vAB2 + center;
+    // outside
   }
-
-  Vector2f Nbc(-i_vC1.y+i_vB1.y, i_vC1.x-i_vB1.x);
-  float t = i_depth / sqrt(Nbc.x*Nbc.x + Nbc.y*Nbc.y);
-  Vector2f vC2( i_vC1.x - t * Nbc.x, i_vC1.y - t * Nbc.y);
-  Vector2f vBC2(i_vB1.x - t * Nbc.x, i_vB1.y - t * Nbc.y);
-
-  Vector2f bc2 = vBC2 + center;
-  o_c2 = vC2 + center;
-
-  // equations of lines (A2, AB2) and (BC2, C2)
-  // a*x + b*y = e
-  // c*x + d*y = f
-  float a,b,c, d,e,f;
-  a = o_a2.y - ab2.y;
-  b = ab2.x  - o_a2.x;
-  e = a*o_a2.x + b*o_a2.y;
-
-  c = bc2.y  - o_c2.y;
-  d = o_c2.x - bc2.x;
-  f = c*o_c2.x + d*o_c2.y;
-
-  // calculate intersection point with Cramer's formula
-  float divider  = a*d - b*c;
-  o_b2 = Vector2f((e*d - b*f) / divider, (a*f - e*c) / divider);
 }
 
-void Block::calculateEdgePosition_outside(Vector2f i_vA1,  Vector2f i_vB1, Vector2f i_vC1,
-					  Vector2f& o_a1,  Vector2f& o_b1,
-					  Vector2f& o_b2,  Vector2f& o_a2,
-					  Vector2f& o_c1,  Vector2f& o_c2,
-					  float i_border,  float i_depth,
-					  Vector2f center,
-					  Vector2f i_oldC2, Vector2f i_oldB2,
-					  bool i_useOld)
+Block::EdgeDrawMethod Block::getEdgeDrawMethod()
 {
+  return m_edgeDrawMethod;
+}
+
+float Block::edgeAngle()
+{
+  return m_edgeAngle;
+}
+
+void Block::setEdgeDrawMethod(EdgeDrawMethod method)
+{
+  m_edgeDrawMethod = method;
+}
+
+void Block::setEdgeAngle(float angle)
+{
+  m_edgeAngle = angle;
+}
+
+std::string Block::edgeToString(Block::EdgeDrawMethod method)
+{
+  switch(method){
+  case inside:
+    return std::string("inside");
+    break;
+  case outside:
+    return std::string("outside");
+    break;
+  default:
+    return std::string("angle");
+    break;
+  }
+}
+
+Block::EdgeDrawMethod Block::stringToEdge(std::string method)
+{
+  if(method == "inside")
+    return inside;
+  else if(method == "outside")
+    return outside;
+  else
+    return angle;
 }

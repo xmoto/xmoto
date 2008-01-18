@@ -38,7 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Collision.h"
 #include "Scene.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 18
+#define CACHE_LEVEL_FORMAT_VERSION 19
 
 Level::Level() {
   m_xmotoTooOld = false;

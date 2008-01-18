@@ -292,13 +292,46 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
     m_currentEdgeEffect = "";
     m_currentEdgeSprite = NULL;
 
-    Logger::Log("block %s nb vertex: %d", pBlock->Id().c_str(), pBlock->Vertices().size());
-
     Vector2f oldC2, oldB2;
-    bool useOld = false;
+    bool useOld   = false;
+    bool swapDone = false;
 
     // create edge texture
     std::vector<BlockVertex *>& vertices = pBlock->Vertices();
+
+    // if the last and the first vertex have edge effect, we have to
+    // calculate oldC2 and oldB2
+    if(vertices.size() > 1){
+      BlockVertex* lastVertex   = vertices[vertices.size()-1];
+      BlockVertex* firstVertex  = vertices[0];
+      BlockVertex* secondVertex = vertices[1];
+
+      if(lastVertex->EdgeEffect() != "" && firstVertex->EdgeEffect() != ""){
+	EdgeEffectSprite* pType = NULL;
+	pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, firstVertex->EdgeEffect());
+	if(pType == NULL) {
+	  Logger::Log("** Invalid edge effect %s", firstVertex->EdgeEffect().c_str());
+	  useOld = false;
+	}
+	else{
+	  m_currentEdgeSprite = pType;
+	  m_currentEdgeEffect = firstVertex->EdgeEffect();
+
+	  Vector2f a1, b1, b2, a2, c1, c2;
+	  calculateEdgePosition(pBlock,
+				lastVertex, firstVertex, secondVertex,
+				Center,
+				a1, b1, b2, a2, c1, c2,
+				oldC2, oldB2, useOld, false, swapDone);
+	  oldC2 = c2;
+	  oldB2 = b2;
+	  useOld = true;
+	  m_currentEdgeSprite = NULL;
+	  m_currentEdgeEffect = "";
+	}
+      }
+    }
+
     for(unsigned int j=0; j<vertices.size(); j++){
       BlockVertex* vertexA = vertices[j];
       std::string edgeEffect = vertexA->EdgeEffect();
@@ -309,6 +342,9 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
 
       BlockVertex* vertexB  = vertices[(j+1) % vertices.size()];
       BlockVertex* vertexC  = vertices[(j+2) % vertices.size()];
+
+      bool AisLast = (vertexB->EdgeEffect() == "");
+
       Texture*     pTexture = loadTextureEdge(edgeEffect);
       if(pTexture == NULL){
 	pScene->gameMessage(GAMETEXT_MISSINGTEXTURES, true);
@@ -348,12 +384,12 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
 			    vertexA, vertexB, vertexC,
 			    Center,
 			    a1, b1, b2, a2, c1, c2,
-			    oldC2, oldB2, useOld);
+			    oldC2, oldB2, useOld, AisLast, swapDone);
 
-      float ua1, ub1, ub2, ua2;
+      Vector2f ua1, ub1, ub2, ua2;
       calculateEdgeTexture(pBlock,
 			   a1, b1, b2, a2,
-			   &ua1, &ub1, &ub2, &ua2);
+			   ua1, ub1, ub2, ua2);
 
       pPoly->nNumVertices += 4;
       pPoly->pVertices    = (GeomCoord*)realloc(pPoly->pVertices,
@@ -364,23 +400,27 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
 
       pPoly->pVertices[pPoly->nNumVertices-4].x  = a1.x;
       pPoly->pVertices[pPoly->nNumVertices-4].y  = a1.y;
-      pPoly->pTexCoords[pPoly->nNumVertices-4].x = ua1;
-      pPoly->pTexCoords[pPoly->nNumVertices-4].y = 0.01;
+      pPoly->pTexCoords[pPoly->nNumVertices-4].x = ua1.x;
+      pPoly->pTexCoords[pPoly->nNumVertices-4].y = ua1.y;
       pPoly->pVertices[pPoly->nNumVertices-3].x  = b1.x;
       pPoly->pVertices[pPoly->nNumVertices-3].y  = b1.y;
-      pPoly->pTexCoords[pPoly->nNumVertices-3].x = ub1;
-      pPoly->pTexCoords[pPoly->nNumVertices-3].y = 0.01;
+      pPoly->pTexCoords[pPoly->nNumVertices-3].x = ub1.x;
+      pPoly->pTexCoords[pPoly->nNumVertices-3].y = ub1.y;
       pPoly->pVertices[pPoly->nNumVertices-2].x  = b2.x;
       pPoly->pVertices[pPoly->nNumVertices-2].y  = b2.y;
-      pPoly->pTexCoords[pPoly->nNumVertices-2].x = ub2;
-      pPoly->pTexCoords[pPoly->nNumVertices-2].y = 0.99;
+      pPoly->pTexCoords[pPoly->nNumVertices-2].x = ub2.x;
+      pPoly->pTexCoords[pPoly->nNumVertices-2].y = ub2.y;
       pPoly->pVertices[pPoly->nNumVertices-1].x  = a2.x;
       pPoly->pVertices[pPoly->nNumVertices-1].y  = a2.y;
-      pPoly->pTexCoords[pPoly->nNumVertices-1].x = ua2;
-      pPoly->pTexCoords[pPoly->nNumVertices-1].y = 0.99;
+      pPoly->pTexCoords[pPoly->nNumVertices-1].x = ua2.x;
+      pPoly->pTexCoords[pPoly->nNumVertices-1].y = ub2.y;
 
       useOld = true;
-      oldB2   = b2;
+      if(swapDone == true){
+	oldB2 = a2;
+      }else{
+	oldB2 = b2;
+      }
       oldC2   = c2;
     }
 
@@ -416,7 +456,8 @@ void GameRenderer::calculateEdgePosition(Block* pBlock,
 					 Vector2f& A1, Vector2f& B1,
 					 Vector2f& B2, Vector2f& A2,
 					 Vector2f& C1, Vector2f& C2,
-					 Vector2f oldC2, Vector2f oldB2, bool useOld)
+					 Vector2f oldC2, Vector2f oldB2, bool useOld,
+					 bool AisLast, bool& swapDone)
 {
   Vector2f vAPos = vertexA1->Position();
   Vector2f vBPos = vertexB1->Position();
@@ -432,17 +473,14 @@ void GameRenderer::calculateEdgePosition(Block* pBlock,
     v_border = -0.01;
 
   switch(pBlock->getEdgeDrawMethod()){
-  case Block::Under:
-    pBlock->calculateEdgePosition_under(vAPos, vBPos, A1, B1, B2, A2, v_border, fDepth, center);
+  case Block::angle:
+    pBlock->calculateEdgePosition_angle(vAPos, vBPos, A1, B1, B2, A2, v_border, fDepth, center, pBlock->edgeAngle());
     break;
-  case Block::Over:
-    pBlock->calculateEdgePosition_over( vAPos, vBPos, A1, B1, B2, A2, v_border, fDepth, center);
+  case Block::inside:
+    pBlock->calculateEdgePosition_inout(vAPos, vBPos, vCPos, A1, B1, B2, A2, C1, C2, v_border, fDepth, center, oldC2, oldB2, useOld, AisLast, swapDone, true);
     break;
-  case Block::Inside:
-    pBlock->calculateEdgePosition_inside(vAPos, vBPos, vCPos, A1, B1, B2, A2, C1, C2, v_border, fDepth, center, oldC2, oldB2, useOld);
-    break;
-  case Block::Outside:
-    pBlock->calculateEdgePosition_outside(vAPos, vBPos, vCPos, A1, B1, B2, A2, C1, C2, v_border, fDepth, center, oldC2, oldB2, useOld);
+  case Block::outside:
+    pBlock->calculateEdgePosition_inout(vAPos, vBPos, vCPos, A1, B1, B2, A2, C1, C2, v_border, fDepth, center, oldC2, oldB2, useOld, AisLast, swapDone, false);
     break;
   }
 }
@@ -450,14 +488,14 @@ void GameRenderer::calculateEdgePosition(Block* pBlock,
 void GameRenderer::calculateEdgeTexture(Block* pBlock,
 					Vector2f A1, Vector2f B1,
 					Vector2f B2, Vector2f A2,
-					float* ua1, float* ub1,
-					float* ub2, float* ua2)
+					Vector2f& ua1, Vector2f& ub1,
+					Vector2f& ub2, Vector2f& ua2)
 {
   float fXScale = m_currentEdgeSprite->getScale();
 
   switch(pBlock->getEdgeDrawMethod()){
-  case Block::Inside:
-  case Block::Outside:{
+  case Block::inside:
+  case Block::outside:{
     Vector2f N1(-B1.y+A1.y, B1.x-A1.x);
 
     if(N1.x == 0.0 && N1.y == 0.0){
@@ -466,13 +504,8 @@ void GameRenderer::calculateEdgeTexture(Block* pBlock,
 
     N1.normalize();
 
-    if(N1.x > 0.0 && N1.y > 00 || N1.x < 0.0 && N1.y < 0.0){
-      *ua1 = A1.x*fXScale*N1.y - A1.y*fXScale*N1.x;
-      *ub1 = B1.x*fXScale*N1.y - B1.y*fXScale*N1.x;
-    } else {
-      *ua1 = A1.x*fXScale*fabs(N1.y) + A1.y*fXScale*fabs(N1.x);
-      *ub1 = B1.x*fXScale*fabs(N1.y) + B1.y*fXScale*fabs(N1.x);
-    }
+    ua1.x = A1.x*fXScale*N1.y - A1.y*fXScale*N1.x;
+    ub1.x = B1.x*fXScale*N1.y - B1.y*fXScale*N1.x;
 
     Vector2f N2(-B2.y+A2.y, B2.x-A2.x);
 
@@ -482,19 +515,27 @@ void GameRenderer::calculateEdgeTexture(Block* pBlock,
 
     N2.normalize();
 
-    if(N2.x > 0.0 && N2.y > 00 || N2.x < 0.0 && N2.y < 0.0){
-      *ua2 = A2.x*fXScale*N2.y - A2.y*fXScale*N2.x;
-      *ub2 = B2.x*fXScale*N2.y - B2.y*fXScale*N2.x;
+    ua2.x = A2.x*fXScale*N2.y - A2.y*fXScale*N2.x;
+    ub2.x = B2.x*fXScale*N2.y - B2.y*fXScale*N2.x;
+
+    bool drawInside = (pBlock->getEdgeDrawMethod() == Block::inside);
+    if(drawInside == true){
+      ua1.y = ub1.y = 0.01;
+      ua2.y = ub2.y = 0.99;
     } else {
-      *ua2 = A2.x*fXScale*fabs(N2.y) + A2.y*fXScale*fabs(N2.x);
-      *ub2 = B2.x*fXScale*fabs(N2.y) + B2.y*fXScale*fabs(N2.x);
+      ua1.y = ub1.y = 0.99;
+      ua2.y = ub2.y = 0.01;
     }
   }
     break;
-  case Block::Under:
-  case Block::Over:
-    *ua1 = *ua2 = A1.x*fXScale;
-    *ub1 = *ub2 = B1.x*fXScale;
+  case Block::angle:{
+    // all the unwanted children of cos and sin
+    float radAngle = deg2rad(pBlock->edgeAngle());
+    ua1.x = ua2.x = A1.x*fXScale*sinf(radAngle) - A1.y*fXScale*cosf(radAngle);
+    ua1.y = ub1.y = 0.01;
+    ub1.x = ub2.x = B1.x*fXScale*sinf(radAngle) - B1.y*fXScale*cosf(radAngle);
+    ua2.y = ub2.y = 0.99;
+  }
     break;
   }
 }
@@ -785,8 +826,8 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
 	  GameApp::instance()->getDrawLib()->setColorRGB(128,128,128);
 	  /* Build rotation matrix for block */
 	  float fR[4];
-	  fR[0] = cos(Blocks[i]->DynamicRotation()); fR[1] = -sin(Blocks[i]->DynamicRotation());
-	  fR[2] = sin(Blocks[i]->DynamicRotation()); fR[3] = cos(Blocks[i]->DynamicRotation());
+	  fR[0] = cosf(Blocks[i]->DynamicRotation()); fR[1] = -sinf(Blocks[i]->DynamicRotation());
+	  fR[2] = sinf(Blocks[i]->DynamicRotation()); fR[3] = cosf(Blocks[i]->DynamicRotation());
 	  for(unsigned int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
 	    ConvexBlockVertex *pVertex = ConvexBlocks[j]->Vertices()[k];
 	    
@@ -1437,17 +1478,17 @@ void GameRenderer::_RenderSprite(MotoGame* i_scene, Entity *pSprite, float i_siz
 	    beta = 0.0;
 
 	    if(p[i].x >= 0.0 && p[i].y >= 0.0) {
-	      beta = acos(p[i].x / v_ray);
+	      beta = acosf(p[i].x / v_ray);
 	    } else if(p[i].x < 0.0 && p[i].y >= 0.0) {
-	      beta = acos(p[i].y / v_ray) + M_PI / 2.0;
+	      beta = acosf(p[i].y / v_ray) + M_PI / 2.0;
 	    } else if(p[i].x < 0.0 && p[i].y < 0.0) {
-	      beta = acos(-p[i].x / v_ray) + M_PI;
+	      beta = acosf(-p[i].x / v_ray) + M_PI;
 	    } else {
-	      beta = acos(-p[i].y / v_ray) - M_PI / 2.0;
+	      beta = acosf(-p[i].y / v_ray) - M_PI / 2.0;
 	    }
 	    
-	    p[i].x = (cos(pSprite->DrawAngle() + beta) * v_ray);
-	    p[i].y = (sin(pSprite->DrawAngle() + beta) * v_ray);
+	    p[i].x = (cosf(pSprite->DrawAngle() + beta) * v_ray);
+	    p[i].y = (sinf(pSprite->DrawAngle() + beta) * v_ray);
 	  }
 	  //pSprite->setDrawAngle(pSprite->DrawAngle() + 0.01);
 	}
@@ -1528,17 +1569,14 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 	/* Build rotation matrix for block */
 	float fR[4];
 	float rotation = block->DynamicRotation();
-	fR[0] =  cos(rotation);
-	fR[2] =  sin(rotation);
+	fR[0] =  cosf(rotation);
+	fR[2] =  sinf(rotation);
 	fR[1] = -fR[2];
 	fR[3] =  fR[0];
 
 	Vector2f dynRotCenter = block->DynamicRotationCenter();
 	Vector2f dynPos       = block->DynamicPosition();
 	int geom = block->getGeom();
-
-// 57.295779524 = 180/pi
-#define rad2deg(x) ((x)*57.295779524)
 
 	if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
 #ifdef ENABLE_OPENGL
@@ -1635,8 +1673,8 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 	/* Build rotation matrix for block */
 	float fR[4];
 	float rotation = Blocks[i]->DynamicRotation();
-	fR[0] =  cos(rotation);
-	fR[2] =  sin(rotation);
+	fR[0] =  cosf(rotation);
+	fR[2] =  sinf(rotation);
 	fR[1] = -fR[2];
 	fR[3] =  fR[0];
 
@@ -1719,6 +1757,7 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 void GameRenderer::_RenderBlockEdges(Block* pBlock)
 {
   if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     for(unsigned int i=0; i<pBlock->getEdgeGeoms().size(); i++){
       int geom = pBlock->getEdgeGeoms()[i];
       GameApp::instance()->getDrawLib()->setTexture(m_edgeGeoms[geom]->pTexture, BLEND_MODE_A);
@@ -1746,6 +1785,7 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
 	}
       }
     }
+    //    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   } else if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
     // SDLGFX::TODO
   }
@@ -2201,7 +2241,7 @@ void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) {
     GameApp::instance()->getDrawLib()->setColor(CircleColor);
     for(unsigned int i=0;i<nSteps;i++) {
       float r = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
-      GameApp::instance()->getDrawLib()->glVertex( Vector2f(C.x + fRadius*sin(r),C.y + fRadius*cos(r)) );
+      GameApp::instance()->getDrawLib()->glVertex( Vector2f(C.x + fRadius*sinf(r),C.y + fRadius*cosf(r)) );
     }      
     GameApp::instance()->getDrawLib()->endDraw();
   }
