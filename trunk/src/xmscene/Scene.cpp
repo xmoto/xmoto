@@ -1249,6 +1249,10 @@ void MotoGame::cleanPlayers() {
     }
   }
 
+bool MotoGame::isAutoZoomCamera(){
+  return (getCurrentCamera() == getNumberCameras());
+}
+
   std::vector<Camera*>& MotoGame::Cameras() {
     return m_cameras;
   }

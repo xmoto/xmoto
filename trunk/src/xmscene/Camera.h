@@ -87,6 +87,7 @@ public:
     return m_renderSurf.size().y;
   }
   Vector2i getDispBottomLeft();
+  Vector2i getDispTopLeft();
 
   bool isMirrored();
   void setMirrored(bool i_value);
