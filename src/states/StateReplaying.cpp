@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Universe.h"
 #include "Trainer.h"
 #include "SysMessage.h"
+#include "VideoRecorder.h"
 
 StateReplaying::StateReplaying(const std::string& i_replay) :
   StateScene()

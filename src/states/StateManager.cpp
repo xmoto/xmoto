@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SysMessage.h"
 #include "GameText.h"
 #include "xmscene/Camera.h"
+#include "VideoRecorder.h"
 
 #define MENU_SHADING_TIME 0.3
 #define MENU_SHADING_VALUE 150
@@ -63,12 +64,24 @@ StateManager::StateManager()
   // assume focus and visibility at startup
   m_isVisible = true;
   m_hasFocus  = true;
+
+  m_videoRecorder = NULL;
+  // video
+  if(XMSession::instance()->enableVideoRecording()) {
+    m_videoRecorder = new VideoRecorder(XMSession::instance()->videoRecordName(),
+					XMSession::instance()->videoRecordingDivision(),
+					XMSession::instance()->videoRecordingFramerate());
+  }
 }
 
 StateManager::~StateManager()
 {
   while(m_statesStack.size() != 0){
     delete popState();
+  }
+
+  if(m_videoRecorder != NULL) {
+    delete m_videoRecorder;
   }
 }
 
@@ -199,6 +212,8 @@ void StateManager::update()
 
 void StateManager::render()
 {
+  std::vector<GameState*>::iterator stateIterator;
+
   if(m_isVisible == false) {
     return;
   }
@@ -207,9 +222,6 @@ void StateManager::render()
     DrawLib* drawLib = GameApp::instance()->getDrawLib();
     drawLib->resetGraphics();
 
-    /* we have to draw states from the bottom of the stack to the top */
-    std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
-
     // erase screen if the first state allow somebody to write before (it means that it has potentially some transparent parts)
     if(m_statesStack.size() > 0) {
       if(m_statesStack[0]->drawStatesBehind()) {
@@ -217,6 +229,8 @@ void StateManager::render()
       }
     }
 
+    /* we have to draw states from the bottom of the stack to the top */
+    stateIterator = m_statesStack.begin();
     while(stateIterator != m_statesStack.end()){
       if((*stateIterator)->isHide() == false){
 	(*stateIterator)->render();
@@ -248,9 +262,21 @@ void StateManager::render()
     }
 
     drawLib->flushGraphics();
-
     m_renderFpsNbFrame++;
+
+    stateIterator = m_statesStack.begin();
+    while(stateIterator != m_statesStack.end()){
+      if((*stateIterator)->isHide() == false){
+	(*stateIterator)->onRenderFlush();
+      }
+      
+      stateIterator++;
+    }
   }
+}
+
+VideoRecorder* StateManager::getVideoRecorder() {
+  return m_videoRecorder;
 }
 
 void StateManager::drawFps() {

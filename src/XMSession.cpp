@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "UserConfig.h"
 #include "WWW.h"
 #include <curl/curl.h>
+#include "VideoRecorder.h"
 
 XMSession::XMSession() {
   setToDefault();
@@ -98,6 +99,9 @@ void XMSession::setToDefault() {
   m_webLevelsUrl                  = DEFAULT_WEBLEVELS_URL;
   m_mirrorMode                    = false;
   m_useCrappyPack                 = true;
+  m_enableVideoRecording          = false;
+  m_videoRecordingDivision        = VR_DEFAULT_DIVISION;
+  m_videoRecordingFramerate       = VR_DEFAULT_FRAMERATE;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -172,6 +176,23 @@ void XMSession::load(const XMArguments* i_xmargs) {
 
   if(i_xmargs->isOptNoSound()) {
     m_enableAudio = false;
+  }
+
+  if(i_xmargs->isOptVideoRecording()) {
+    m_enableVideoRecording = true;
+    m_videoRecordName = i_xmargs->getOptVideoRecording_name();
+  }
+
+  if(i_xmargs->isOptVideoRecordingDivision()) {
+    m_videoRecordingDivision = i_xmargs->getOptVideoRecordingDivision_value();
+  } else {
+    m_videoRecordingDivision = VR_DEFAULT_DIVISION;
+  }
+
+  if(i_xmargs->isOptVideoRecordingFramerate()) {
+    m_videoRecordingFramerate = i_xmargs->getOptVideoRecordingFramerate_value();
+  } else {
+    m_videoRecordingFramerate = VR_DEFAULT_FRAMERATE;
   }
 
 }
@@ -470,6 +491,22 @@ void XMSession::setEnableEngineSound(bool i_value) {
 
 bool XMSession::enableEngineSound() const {
   return m_enableEngineSound;
+}
+
+bool XMSession::enableVideoRecording() const {
+  return m_enableVideoRecording;
+}
+
+std::string XMSession::videoRecordName() const {
+  return m_videoRecordName;
+}
+
+int XMSession::videoRecordingDivision() const {
+  return m_videoRecordingDivision;
+}
+
+int XMSession::videoRecordingFramerate() const {
+  return m_videoRecordingFramerate;
 }
 
 void XMSession::setShowEngineCounter(bool i_value) {

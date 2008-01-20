@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMenuContextReceiver.h"
 #include "helpers/Singleton.h"
 
+class VideoRecorder;
+
 class GameState : public StateMessageBoxReceiver,
 		  public StateMenuContextReceiver {
 public:
@@ -45,6 +47,7 @@ public:
   virtual bool update() {return false;}
   virtual bool render();
   virtual bool updateWhenUnvisible() {return false;}
+  virtual void onRenderFlush() {}
 
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
@@ -184,6 +187,9 @@ public:
     return m_maxFps;
   }
 
+  // video recorder
+  VideoRecorder* getVideoRecorder();
+
   /* ask to states to clean themself */
   static void cleanStates();
 
@@ -226,6 +232,10 @@ private:
 
   // cursor
   Texture* m_cursor;
+
+  // video
+  VideoRecorder* m_videoRecorder;
+
 };
 
 #endif

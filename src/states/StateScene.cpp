@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "CameraAnimation.h"
 #include "Renderer.h"
 #include "Universe.h"
+#include "VideoRecorder.h"
 
 #define INPLAY_ANIMATION_TIME 1.0
 #define INPLAY_ANIMATION_SPEED 10
@@ -50,7 +51,6 @@ StateScene::StateScene(bool i_doShade, bool i_doShadeAnim)
 
     m_benchmarkNbFrame   = 0;
     m_benchmarkStartTime = GameApp::getXMTime();
-
 }
 
 StateScene::StateScene(Universe* i_universe, bool i_doShade, bool i_doShadeAnim)
@@ -86,6 +86,7 @@ void StateScene::enter()
   m_benchmarkStartTime = GameApp::getXMTime();
 
   m_fLastPhysTime = GameApp::getXMTime();
+
 }
 
 bool StateScene::update()
@@ -167,6 +168,17 @@ bool StateScene::render()
   m_benchmarkNbFrame++;
 
   return true;
+}
+
+void StateScene::onRenderFlush() {
+  // take a screenshot
+  if(XMSession::instance()->enableVideoRecording()) {
+    if(StateManager::instance()->getVideoRecorder() != NULL) {
+      if(m_universe->getScenes().size() > 0) {
+	StateManager::instance()->getVideoRecorder()->read(m_universe->getScenes()[0]->getTime());
+      }
+    }
+  }
 }
 
 void StateScene::keyDown(int nKey, SDLMod mod,int nChar)

@@ -25,39 +25,42 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sstream>
 
 XMArguments::XMArguments() {
-  m_opt_pack   	      = false;
-  m_opt_unpack 	      = false;
-  m_unpack_noList     = false;
-  m_opt_res 	      = false;
-  m_res_dispWidth     = 0;
-  m_res_dispHeight    = 0;
-  m_opt_bpp           = false;
-  m_bpp_value 	      = 0;
-  m_opt_fs            = false;
-  m_opt_win           = false;
-  m_opt_noexts        = false;
-  m_opt_drawlib       = false;
-  m_opt_ugly          = false;
-  m_opt_nowww         = false;
-  m_opt_help          = false;
-  m_opt_verbose       = false;
-  m_opt_debug         = false;
-  m_opt_sqlTrace      = false;
-  m_opt_fps           = false;
-  m_opt_replay        = false;
-  m_opt_listReplays   = false;
-  m_opt_replayInfos   = false;
-  m_opt_levelID       = false;
-  m_opt_levelFile     = false;
-  m_opt_listLevels    = false;
-  m_opt_profile       = false;
-  m_opt_timedemo      = false;
-  m_opt_testTheme     = false;
-  m_opt_benchmark     = false;
-  m_opt_cleanCache    = false;
-  m_opt_gdebug        = false;
-  m_opt_configpath    = false;
-  m_opt_nosound       = false;
+  m_opt_pack   	       = false;
+  m_opt_unpack 	       = false;
+  m_unpack_noList      = false;
+  m_opt_res 	       = false;
+  m_res_dispWidth      = 0;
+  m_res_dispHeight     = 0;
+  m_opt_bpp            = false;
+  m_bpp_value 	       = 0;
+  m_opt_fs             = false;
+  m_opt_win            = false;
+  m_opt_noexts         = false;
+  m_opt_drawlib        = false;
+  m_opt_ugly           = false;
+  m_opt_nowww          = false;
+  m_opt_help           = false;
+  m_opt_verbose        = false;
+  m_opt_debug          = false;
+  m_opt_sqlTrace       = false;
+  m_opt_fps            = false;
+  m_opt_replay         = false;
+  m_opt_listReplays    = false;
+  m_opt_replayInfos    = false;
+  m_opt_levelID        = false;
+  m_opt_levelFile      = false;
+  m_opt_listLevels     = false;
+  m_opt_profile        = false;
+  m_opt_timedemo       = false;
+  m_opt_testTheme      = false;
+  m_opt_benchmark      = false;
+  m_opt_cleanCache     = false;
+  m_opt_gdebug         = false;
+  m_opt_configpath     = false;
+  m_opt_nosound        = false;
+  m_opt_videoRecording = false;
+  m_opt_videoRecordingDivision  = false;
+  m_opt_videoRecordingFramerate = false;
 }
 
 void XMArguments::parse(int i_argc, char **i_argv) {
@@ -199,6 +202,30 @@ void XMArguments::parse(int i_argc, char **i_argv) {
 	throw SyntaxError("missing config path");
       }
       m_configpath_path = i_argv[i+1];
+      i++;
+    } else if(v_opt == "--videoRecording") {
+      m_opt_videoRecording = true;
+      if(i+1 >= i_argc) {
+	throw SyntaxError("missing video name");
+      }
+      m_opt_videoRecording_name = i_argv[i+1];
+      i++;
+    } else if(v_opt == "--videoRecordingSizeDivision") {
+      m_opt_videoRecordingDivision = true;
+      if(i+1 >= i_argc) {
+	throw SyntaxError("missing value");
+      }
+      m_opt_videoRecordingDivision_value = atoi(i_argv[i+1]);
+      i++;
+    } else if(v_opt == "--videoRecordingFramerate") {
+      m_opt_videoRecordingFramerate = true;
+      if(i+1 >= i_argc) {
+	throw SyntaxError("missing value");
+      }
+      m_opt_videoRecordingFramerate_value = atoi(i_argv[i+1]);
+      if(m_opt_videoRecordingFramerate_value < 1) {
+	m_opt_videoRecordingFramerate_value = 1;
+      }
       i++;
     } else {
       /* check if the parameter is a file */
@@ -426,6 +453,30 @@ std::string XMArguments::getOpt_configPath_path() const {
   return m_configpath_path;
 }
 
+bool XMArguments::isOptVideoRecording() const {
+  return m_opt_videoRecording;
+}
+
+std::string XMArguments::getOptVideoRecording_name() const {
+  return m_opt_videoRecording_name;
+}
+
+bool XMArguments::isOptVideoRecordingDivision() const {
+  return m_opt_videoRecordingDivision;
+}
+
+int XMArguments::getOptVideoRecordingDivision_value() const {
+  return m_opt_videoRecordingDivision_value;
+}
+
+bool XMArguments::isOptVideoRecordingFramerate() const {
+  return m_opt_videoRecordingFramerate;
+}
+
+int XMArguments::getOptVideoRecordingFramerate_value() const {
+  return m_opt_videoRecordingFramerate_value;
+}
+
 void XMArguments::help(const std::string& i_cmd) {
   printf("X-Moto %s\n", XMBuild::getVersionString().c_str());
   printf("usage:  %s [options]\n"
@@ -459,6 +510,9 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t\tand --timedemo. Useful to determine the graphics\n");
   printf("\t\tperformance.\n");
   printf("\t--cleancache\n\t\tDeletes the content of the level cache.\n");
+  printf("\t--videoRecording\n\t\tEnable video recording.\n");
+  printf("\t--videoRecordingSizeDivision DIVISION\n\t\tChange video size (1=full, 2=50%%, 4=25%%).\n");
+  printf("\t--videoRecordingSizeFramerate FRAMERATE\n\t\tChange video framerate.\n");
   printf("\t--drawlib DRAWLIB\n\t\tChoose the render to use (default one is OPENGL if available).\n");
   printf("\t-h, -?, -help, --help\n\t\tDisplay this message.\n");
   printf("\t--pack [BIN] [DIR]\n\t\tBuild the BIN package from directory DIR.\n");
