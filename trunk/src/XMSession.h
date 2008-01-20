@@ -222,6 +222,10 @@ public:
   void setMirrorMode(bool i_value);
   bool useCrappyPack() const;
   void setUseCrappyPack(bool i_value);
+  bool enableVideoRecording() const;
+  std::string videoRecordName() const;
+  int videoRecordingDivision() const;
+  int videoRecordingFramerate() const;
 
   private:
   bool m_verbose;
@@ -297,6 +301,10 @@ public:
   std::string m_webLevelsUrl;
   bool m_mirrorMode;
   bool m_useCrappyPack;
+  bool m_enableVideoRecording;
+  std::string m_videoRecordName;
+  int m_videoRecordingDivision;
+  int m_videoRecordingFramerate;
 };
 
 #endif

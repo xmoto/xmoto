@@ -220,8 +220,7 @@ GameApp::GameApp() {
   /*===========================================================================
   Screenshooting
   ===========================================================================*/
-  void GameApp::gameScreenshot() {
-    //    Img *pShot = getDrawLib()->grabScreen(2);      
+  void GameApp::gameScreenshot() {     
     Img *pShot = getDrawLib()->grabScreen();
 
     std::string v_ShotsDir;

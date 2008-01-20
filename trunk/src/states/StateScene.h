@@ -36,6 +36,8 @@ class StateScene : public GameState {
  
  virtual bool update();
  virtual bool render();
+ virtual void onRenderFlush();
+
  /* input */
  virtual void keyDown(int nKey, SDLMod mod,int nChar);
 
@@ -69,6 +71,7 @@ class StateScene : public GameState {
 
  int m_benchmarkNbFrame;
  float m_benchmarkStartTime;
+
 };
 
 #endif

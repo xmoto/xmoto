@@ -12,6 +12,7 @@ X-Moto 0.4.0 2007-01-
  * resource use reduced when xmoto is iconified or focus is lost
  * tab to autozoom
  * smoother replay interpolation
+ * some command line options to generate pictures (so that you can convert easily replays to videos (transcode command line is written in the log))
  * new "length" packs by Mig
 	
 X-Moto 0.3.4 2007-10-17

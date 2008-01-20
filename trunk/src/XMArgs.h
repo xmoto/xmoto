@@ -74,6 +74,12 @@ class XMArguments {
   bool isOptConfigPath() const;
   std::string getOpt_configPath_path() const;
   bool isOptNoSound() const;
+  bool isOptVideoRecording() const;
+  std::string getOptVideoRecording_name() const;
+  bool isOptVideoRecordingDivision() const;
+  int getOptVideoRecordingDivision_value() const;
+  bool isOptVideoRecordingFramerate() const;
+  int getOptVideoRecordingFramerate_value() const;
 
   private:
   /* pack options */
@@ -138,6 +144,14 @@ class XMArguments {
   bool m_opt_testTheme;
   bool m_opt_benchmark;
   bool m_opt_cleanCache;
+
+  /* video */
+  bool m_opt_videoRecording;
+  std::string m_opt_videoRecording_name;
+  bool m_opt_videoRecordingDivision;
+  int m_opt_videoRecordingDivision_value;
+  bool m_opt_videoRecordingFramerate;
+  int m_opt_videoRecordingFramerate_value;
 
   /* at command line, you can pass [0-9]* for level of id _iLXX_ */
   static std::string levelArg2levelId(std::string i_arg);
