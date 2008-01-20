@@ -112,7 +112,8 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
 
   m_fNextGhostInfoUpdate = 0.0f;
   m_nGhostInfoTrans      = 255;
-
+  m_sizeMultOfEntitiesToTake       = 1.0;
+  m_sizeMultOfEntitiesWhichMakeWin = 1.0;
 
   /* Optimize scene */
   for(unsigned int u=0; u<i_universe->getScenes().size(); u++) {
