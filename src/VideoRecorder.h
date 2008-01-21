@@ -36,7 +36,8 @@ class VideoRecorder {
   int m_division;
   std::string m_directory;
   int   m_framerate;
-  float m_lastRead;
   int   m_nbFrames;
+
+	FILE* m_fd;
 };
 
