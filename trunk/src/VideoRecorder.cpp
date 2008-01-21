@@ -26,30 +26,40 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 
 VideoRecorder::VideoRecorder(const std::string& i_videoName, int i_division, int i_frameRate) {
+  	std::string v_listFile;
+
     m_name      = i_videoName;
     m_division  = i_division;
     m_framerate = i_frameRate;
-    m_lastRead  = -1.0;
     m_nbFrames  = 0;
 
     m_directory = FS::getUserDir() + "/Videos/" + i_videoName;
+		v_listFile = m_directory + "/pictures.lst";
 
-    if(FS::isDir(m_directory) == false) {
-      FS::mkArborescenceDir(m_directory);
-    }
+    if(FS::isDir(m_directory)) {
+			throw Exception("Video directory already exists");
+		}
+
+		FS::mkArborescenceDir(m_directory);
 
     Logger::Log("Video recording:");
-    Logger::Log("find %s | sort > /tmp/list.lst && transcode -i /tmp/list.lst -x imlist,null -y xvid,null -f %i -g %ix%i --use_rgb -z -o %s/movie.avi -H 0",
-		m_directory.c_str(),
+    Logger::Log("transcode -i %s -x imlist,null -y xvid,null -f %i -g %ix%i --use_rgb -z -o %s/%s.avi -H 0",
+  	v_listFile.c_str(),
 		m_framerate,
 		GameApp::instance()->getDrawLib()->getDispWidth()/i_division,
 		GameApp::instance()->getDrawLib()->getDispHeight()/i_division,
-		std::string(FS::getUserDir() + "/Videos/").c_str()
+  	std::string(FS::getUserDir() + "/Videos").c_str(),
+  	m_name.c_str()
 		);
 
+		m_fd = fopen(v_listFile.c_str(), "w");
+		if(m_fd == NULL) {
+			throw Exception("Unable to open file " + v_listFile);
+		}
 }
 
 VideoRecorder::~VideoRecorder() {
+	fclose(m_fd);
 }
 
 void VideoRecorder::read(float i_time) {
@@ -57,18 +67,19 @@ void VideoRecorder::read(float i_time) {
   std::string v_frameName;
   char vName[9];
 
-  if( (m_lastRead < 0.0 || i_time - m_lastRead >= 1.0/((float)m_framerate)) == false) {
-    return;
-  }
-  m_lastRead = i_time;
+	if( i_time * ((float) m_framerate) < ((float)m_nbFrames)) {
+		return;
+	}
 
   // frame name
   snprintf(vName, 9, "%08i", m_nbFrames);
-  v_frameName = std::string(vName) + ".jpg";
+  v_frameName = m_directory + "/" + std::string(vName) + ".jpg";
 
   // take the screenshot
   pShot = GameApp::instance()->getDrawLib()->grabScreen(m_division); 
-  pShot->saveFile(m_directory + "/" + v_frameName);
+  pShot->saveFile(v_frameName);
   delete pShot;
+
+	fprintf(m_fd, "%s\n", v_frameName.c_str());
   m_nbFrames++;
 }

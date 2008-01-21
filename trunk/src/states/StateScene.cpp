@@ -102,7 +102,8 @@ bool StateScene::update()
   if(isLockedScene() == false) {  
     // don't update if that's not required
     // don't do this infinitely, maximum miss 10 frames, then give up
-    while ((m_fLastPhysTime + PHYS_STEP_SIZE <= GameApp::getXMTime()) && (nPhysSteps < 10)) {
+		// in videoRecording mode, don't try to do more to allow to record at a good framerate
+    while ((m_fLastPhysTime + PHYS_STEP_SIZE <= GameApp::getXMTime()) && nPhysSteps < 10 && (XMSession::instance()->enableVideoRecording() == false || nPhysSteps == 0)) {
       if(m_universe != NULL) {
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	  m_universe->getScenes()[i]->updateLevel(PHYS_STEP_SIZE, m_universe->getCurrentReplay());
