@@ -35,31 +35,44 @@ char* ngettext(char* msgid, char* msgid_plural, unsigned long int n) {
 }
 #endif
 
-std::string Locales::init(std::string i_locale) {
-#ifdef USE_GETTEXT
-  char *locale;
-  char* btd;
-  char* cs;
+std::string Locales::changeLocale(const std::string& i_locale) {
+  char *locale = NULL;
 
-  if(i_locale != "") {
-    try {
+  try {
+    if(i_locale != "") {
       // this var is looked by gettext in priority (and it is set on most environment, then change it to change the lang)
       set_environment_variable("LANGUAGE", i_locale);
-    } catch(Exception &e) {
-      /* hum, ok */
     }
+  } catch(Exception &e) {
+    /* hum, ok */
   }
 
 #ifdef WIN32
-  /* gettext at 0.13 - not enought for LC_MESSAGE */
-  /* LC_CTYPE seems to work */
-  locale = setlocale(LC_CTYPE, "");
+    /* gettext at 0.13 - not enought for LC_MESSAGE */
+    /* LC_CTYPE seems to work */
+    locale = setlocale(LC_CTYPE, "");
 #else
-  locale = setlocale(LC_MESSAGES, "");
+    locale = setlocale(LC_CTYPE, "");
+    locale = setlocale(LC_MESSAGES, "");
 #endif
 
   if(locale == NULL) {
     return "";
+  }
+
+  return locale;
+}
+
+std::string Locales::init(std::string i_locale) {
+#ifdef USE_GETTEXT
+  std::string locale;
+  char* btd;
+  char* cs;
+
+  locale = changeLocale(i_locale);
+
+  if(locale == "") {
+    return locale;
   }
 
   textdomain(PACKAGE_LANG);
@@ -74,4 +87,3 @@ std::string Locales::init(std::string i_locale) {
 #endif
   return "";
 }
-
