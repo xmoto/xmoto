@@ -818,6 +818,10 @@ std::string XMSession::language() const {
   return m_language;
 }
 
+void XMSession::setLanguage(const std::string& i_value) {
+  m_language = i_value;
+}
+
 void XMSession::setNotifyAtInit(bool i_value) {
   m_notifyAtInit = i_value;
 }

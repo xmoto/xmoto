@@ -215,6 +215,7 @@ public:
   std::string uploadHighscoreUrl() const;
   std::string screenshotFormat() const;
   std::string language() const;
+  void setLanguage(const std::string& i_value);
   void setNotifyAtInit(bool i_value);
   bool notifyAtInit() const;
   std::string webLevelsUrl() const;

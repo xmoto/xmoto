@@ -1284,6 +1284,129 @@ UIWindow* StateMainMenu::makeWindowOptions_ghosts(UIWindow* i_parent) {
   return v_window;
 }
 
+UIWindow* StateMainMenu::makeWindowOptions_language(UIWindow* i_parent) {
+  UIWindow*  v_window;
+  UIList* v_list;
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
+  UIListEntry *pEntry;
+  unsigned int n = 0;
+
+  v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_LANGUAGETAB, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
+  v_window->setID("LANGUAGE_TAB");
+  v_window->showWindow(false);
+
+  /* list */
+  v_list = new UIList(v_window, 0, 0, "", v_window->getPosition().nWidth, v_window->getPosition().nHeight-40-20);
+  v_list->setID("LANGUAGE_LIST");
+  v_list->setFont(drawlib->getFontSmall());
+  v_list->addColumn(GAMETEXT_LANGUAGE_NAME, v_list->getPosition().nWidth - 160, CONTEXTHELP_LANGUAGE_NAME);
+  v_list->addColumn(GAMETEXT_LANGUAGE_CODE,160,CONTEXTHELP_LANGUAGE_CODE);
+
+  pEntry = v_list->addEntry(GAMETEXT_AUTOMATIC, NULL);
+  pEntry->Text.push_back("");
+  if(XMSession::instance()->language() == "") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("Català", NULL);
+  pEntry->Text.push_back("ca_ES");
+  if(XMSession::instance()->language() == "ca_ES") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("", NULL);
+  pEntry->Text.push_back("cs_CZ");
+  if(XMSession::instance()->language() == "cs_CZ") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("Dansk", NULL);
+  pEntry->Text.push_back("da_DK");
+  if(XMSession::instance()->language() == "da_DK") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("Deutch", NULL);
+  pEntry->Text.push_back("de_DE");
+  if(XMSession::instance()->language() == "de_DE") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("American", NULL);
+  pEntry->Text.push_back("en_US");
+  if(XMSession::instance()->language() == "en_US") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("Español", NULL);
+  pEntry->Text.push_back("es_ES");
+  if(XMSession::instance()->language() == "es_ES") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("", NULL);
+  pEntry->Text.push_back("fi_FI");
+  if(XMSession::instance()->language() == "fi_FI") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("Français", NULL);
+  pEntry->Text.push_back("fr_FR");
+  if(XMSession::instance()->language() == "fr_FR") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("Italiano", NULL);
+  pEntry->Text.push_back("it_IT");
+  if(XMSession::instance()->language() == "it_IT") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("", NULL);
+  pEntry->Text.push_back("lv_LV");
+  if(XMSession::instance()->language() == "lv_LV") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("Norsk", NULL);
+  pEntry->Text.push_back("nb_NO");
+  if(XMSession::instance()->language() == "nb_NO") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("Norsk", NULL);
+  pEntry->Text.push_back("nn_NO");
+  if(XMSession::instance()->language() == "nn_NO") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("Norsk", NULL);
+  pEntry->Text.push_back("no_NO");
+  if(XMSession::instance()->language() == "no_NO") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("", NULL);
+  pEntry->Text.push_back("pl_PL");
+  if(XMSession::instance()->language() == "pl_PL") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("", NULL);
+  pEntry->Text.push_back("pt_BR");
+  if(XMSession::instance()->language() == "pt_BR") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("", NULL);
+  pEntry->Text.push_back("pt_PT");
+  if(XMSession::instance()->language() == "pt_PT") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("Русский", NULL);
+  pEntry->Text.push_back("ru_RU");
+  if(XMSession::instance()->language() == "ru_RU") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("", NULL);
+  pEntry->Text.push_back("sk_SK");
+  if(XMSession::instance()->language() == "sk_SK") v_list->setRealSelected(n);
+  n++;
+
+  pEntry = v_list->addEntry("Svenska", NULL);
+  pEntry->Text.push_back("sv_SE");
+  if(XMSession::instance()->language() == "sv_SE") v_list->setRealSelected(n);
+  n++;
+
+  return v_window;
+}
+
+
+
 UIWindow* StateMainMenu::makeWindowOptions(UIWindow* i_parent) {
   UIWindow *v_window, *v_frame;
   UIStatic*  v_someText;
@@ -1307,6 +1430,7 @@ UIWindow* StateMainMenu::makeWindowOptions(UIWindow* i_parent) {
   v_tabview->setTabContextHelp(1, CONTEXTHELP_VIDEO_OPTIONS);
   v_tabview->setTabContextHelp(2, CONTEXTHELP_AUDIO_OPTIONS);
   v_tabview->setTabContextHelp(3, CONTEXTHELP_CONTROL_OPTIONS);
+  //v_tabview->setTabContextHelp(4, CONTEXTHELP_LANGUAGE_OPTIONS); // LANGTAB
 
   v_frame = makeWindowOptions_general(v_tabview);
   v_frame = makeWindowOptions_video(v_tabview);
@@ -1314,6 +1438,7 @@ UIWindow* StateMainMenu::makeWindowOptions(UIWindow* i_parent) {
   v_frame = makeWindowOptions_controls(v_tabview);
   v_frame = makeWindowOptions_rooms(v_tabview);
   v_frame = makeWindowOptions_ghosts(v_tabview);
+  //v_frame = makeWindowOptions_language(v_tabview); // LANGTAB
 
   v_button = new UIButton(v_window, 20, v_window->getPosition().nHeight-68, GAMETEXT_DEFAULTS, 115, 57);
   v_button->setID("DEFAULTS_BUTTON");
@@ -2585,6 +2710,22 @@ void StateMainMenu::checkEventsOptions() {
     XMSession::instance()->setGhostMotionBlur(v_button->getChecked());
   }
 
+  // language
+  // LANGTAB
+  /*
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:LANGUAGE_TAB:LANGUAGE_LIST"));
+  if(v_list->isClicked()) {
+    v_list->setClicked(false);
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
+      XMSession::instance()->setLanguage(pEntry->Text[1]);      
+      //std::string v_locale = Locales::changeLocale(XMSession::instance()->language());
+      //Logger::Log("Locales changed to '%s'", v_locale.c_str());
+      //StateManager::instance()->refreshStaticCaptions();
+    }
+  }
+  */
+
 }
 
 void StateMainMenu::updateAudioOptions() {
@@ -2765,4 +2906,27 @@ std::string StateMainMenu::getInfoFrameLevelId()
   else{
     return v_list->getSelectedLevel();
   }
+}
+
+void StateMainMenu::refreshStaticCaptions() {
+  UIButton* v_button;
+
+  if(m_sGUI == NULL) {
+    return;
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_sGUI->getChild("MAIN:LEVELS"));
+  v_button->setCaption(GAMETEXT_LEVELS);
+
+  v_button = reinterpret_cast<UIButton *>(m_sGUI->getChild("MAIN:REPLAYS"));
+  v_button->setCaption(GAMETEXT_REPLAYS);
+
+  v_button = reinterpret_cast<UIButton *>(m_sGUI->getChild("MAIN:OPTIONS"));
+  v_button->setCaption(GAMETEXT_OPTIONS);
+
+  v_button = reinterpret_cast<UIButton *>(m_sGUI->getChild("MAIN:HELP"));
+  v_button->setCaption(GAMETEXT_HELP);
+
+  v_button = reinterpret_cast<UIButton *>(m_sGUI->getChild("MAIN:QUIT"));
+  v_button->setCaption(GAMETEXT_QUIT);
 }
