@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define PACKAGE_LANG "xmoto"
 
+std::string Locales::default_LANGUAGE;
+
 #ifndef USE_GETTEXT
 char* ngettext(char* msgid, char* msgid_plural, unsigned long int n) {
   if(n > 1) {
@@ -42,6 +44,8 @@ std::string Locales::changeLocale(const std::string& i_locale) {
     if(i_locale != "") {
       // this var is looked by gettext in priority (and it is set on most environment, then change it to change the lang)
       set_environment_variable("LANGUAGE", i_locale);
+    } else {
+      set_environment_variable("LANGUAGE", default_LANGUAGE);
     }
   } catch(Exception &e) {
     /* hum, ok */
@@ -68,6 +72,8 @@ std::string Locales::init(std::string i_locale) {
   std::string locale;
   char* btd;
   char* cs;
+
+  default_LANGUAGE = get_environment_variable("LANGUAGE");
 
   locale = changeLocale(i_locale);
 

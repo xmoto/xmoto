@@ -24,5 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 
 void set_environment_variable(const std::string& i_variable, const std::string& i_value);
+std::string get_environment_variable(const std::string& i_variable);
 
 #endif

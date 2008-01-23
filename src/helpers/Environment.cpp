@@ -69,3 +69,15 @@ void set_environment_variable(const std::string& i_variable, const std::string& 
       throw Exception("Set Env failed");
     }
 }
+
+std::string get_environment_variable(const std::string& i_variable) {
+#ifdef WIN32
+  return "";
+#else
+  char* v_res =  getenv(i_variable.c_str());
+  if(v_res == NULL) {
+    return "";
+  }
+  return v_res;
+#endif
+}

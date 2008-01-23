@@ -38,7 +38,7 @@ class Locales {
   /* return the locales set */
   static std::string init(std::string i_locale = "");
   static std::string changeLocale(const std::string& i_locale);
-
+  static std::string default_LANGUAGE;
 };
 
 #endif /* __LOCALES_H__ */
