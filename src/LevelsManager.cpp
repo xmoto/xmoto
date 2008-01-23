@@ -349,7 +349,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.id_room=" + i_id_room + " "
 			  "AND (c.crappy IS NULL OR c.crappy=0) AND d.id_level IS NULL "
-			  "ORDER by b.date DESC LIMIT 50", false);
+			  "ORDER by b.date DESC LIMIT 100", false);
   v_pack->setDescription(VPACKAGENAME_DESC_LAST_HIGHSCORES);
   m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
@@ -361,7 +361,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "weblevels AS b ON a.id_level = b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE (b.crappy IS NULL OR b.crappy=0) AND c.id_level IS NULL "
-			  "ORDER by b.creationDate DESC LIMIT 50", false);
+			  "ORDER by b.creationDate DESC LIMIT 100", false);
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
   v_pack->setDescription(VPACKAGENAME_DESC_LAST_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -375,7 +375,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.id_room=" + i_id_room + " "
 			  "AND (c.crappy IS NULL OR c.crappy=0) AND d.id_level IS NULL "
-			  "ORDER by b.date ASC LIMIT 50");
+			  "ORDER by b.date ASC LIMIT 100");
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
   v_pack->setDescription(VPACKAGENAME_DESC_OLDEST_HIGHSCORES);
   m_levelsPacks.push_back(v_pack);
@@ -518,7 +518,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "AND (c.crappy IS NULL OR c.crappy=0) "
 			  "AND d.id_level IS NULL "
 			  "ORDER BY b.last_play_date DESC "
-			  "LIMIT 50", false);
+			  "LIMIT 100", false);
   v_pack->setGroup(GAMETEXT_PACK_STATS);
   v_pack->setDescription(VPACKAGENAME_DESC_LAST_PLAYED);
   m_levelsPacks.push_back(v_pack);
@@ -547,7 +547,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE (c.crappy IS NULL OR c.crappy=0) AND d.id_level IS NULL "
-			  "ORDER BY b.nbPlayed DESC LIMIT 50", false);
+			  "ORDER BY b.nbPlayed DESC LIMIT 100", false);
   v_pack->setGroup(GAMETEXT_PACK_STATS);
   v_pack->setDescription(VPACKAGENAME_DESC_MOST_PLAYED);
   m_levelsPacks.push_back(v_pack);
@@ -562,7 +562,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.nbPlayed > 0 "
 			  "AND (c.crappy IS NULL OR c.crappy=0) AND d.id_level IS NULL "
-			  "ORDER BY b.nbPlayed ASC LIMIT 50");
+			  "ORDER BY b.nbPlayed ASC LIMIT 100");
   v_pack->setGroup(GAMETEXT_PACK_STATS);
   v_pack->setDescription(VPACKAGENAME_DESC_LESS_PLAYED);
   m_levelsPacks.push_back(v_pack);
@@ -575,7 +575,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "WHERE b.quality >= 4.5 "
 			  "AND (b.crappy IS NULL OR b.crappy=0) "
 			  "AND c.id_level IS NULL "
-			  "ORDER BY b.quality DESC LIMIT 50", false);
+			  "ORDER BY b.quality DESC LIMIT 100", false);
   v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
   v_pack->setDescription(VPACKAGENAME_DESC_NICEST_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -589,7 +589,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			    "WHERE b.quality <= 1.5 "
 			    "AND (b.crappy IS NULL OR b.crappy=0) "
 			    "AND c.id_level IS NULL "
-			    "ORDER BY b.quality ASC LIMIT 50");
+			    "ORDER BY b.quality ASC LIMIT 100");
     v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
     v_pack->setDescription(VPACKAGENAME_DESC_CRAPPIEST_LEVELS);
     m_levelsPacks.push_back(v_pack);
@@ -603,7 +603,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "WHERE b.difficulty <= 1.5 "
 			  "AND (b.crappy IS NULL OR b.crappy=0) "
 			  "AND c.id_level IS NULL "
-			  "ORDER BY b.difficulty ASC LIMIT 50");
+			  "ORDER BY b.difficulty ASC LIMIT 100");
   v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
   v_pack->setDescription(VPACKAGENAME_DESC_EASIEST_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -616,7 +616,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "WHERE b.difficulty >= 4.5 "
 			  "AND (b.crappy IS NULL OR b.crappy=0) "
 			  "AND c.id_level IS NULL "
-			  "ORDER BY b.difficulty DESC LIMIT 50", false);
+			  "ORDER BY b.difficulty DESC LIMIT 100", false);
   v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
   v_pack->setDescription(VPACKAGENAME_DESC_HARDEST_LEVELS);
   m_levelsPacks.push_back(v_pack);

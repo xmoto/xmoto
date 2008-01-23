@@ -192,6 +192,7 @@ public:
 
   /* ask to states to clean themself */
   static void cleanStates();
+  static void refreshStaticCaptions();
 
 private:
   void calculateWhichStateIsRendered();

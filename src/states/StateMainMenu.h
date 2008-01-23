@@ -43,6 +43,7 @@ class StateMainMenu : public StateMenu {
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
   
   static void clean();
+  static void refreshStaticCaptions();
   
   virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
   virtual void send(const std::string& i_id, const std::string& i_message);
@@ -65,6 +66,7 @@ class StateMainMenu : public StateMenu {
   static UIWindow* makeWindowOptions_controls(UIWindow* i_parent);
   static UIWindow* makeWindowOptions_rooms(UIWindow* i_parent);
   static UIWindow* makeWindowOptions_ghosts(UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_language(UIWindow* i_parent);
 
   void updateProfile();
 
