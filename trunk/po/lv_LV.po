@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-01-23 21:11+0100\n"
-"PO-Revision-Date: 2008-01-10 00:23+0200\n"
+"PO-Revision-Date: 2008-01-24 01:03+0200\n"
 "Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
 "Language-Team: Latvian\n"
 "MIME-Version: 1.0\n"
@@ -93,7 +93,7 @@ msgstr "Autors"
 
 #: src/GameText.h:54
 msgid "Automatic"
-msgstr ""
+msgstr "Automātiski"
 
 #: src/GameText.h:55
 msgid "Automatic saving of replays"
@@ -749,15 +749,15 @@ msgstr "Taustiņdēlis"
 
 #: src/GameText.h:246
 msgid "Language"
-msgstr ""
+msgstr "Valoda"
 
 #: src/GameText.h:247
 msgid "Language name"
-msgstr ""
+msgstr "Valodas nosaukums"
 
 #: src/GameText.h:248
 msgid "Language code"
-msgstr ""
+msgstr "Valodas kods"
 
 #: src/GameText.h:249
 msgid "Level"
@@ -1935,18 +1935,16 @@ msgid "The scene is shared by all the players"
 msgstr "Līmenī vienlaicīgi atrodas visi spēlētāji"
 
 #: src/GameText.h:548
-#, fuzzy
 msgid "Change the X-Moto language"
-msgstr "Izvēlies X-Moto grafisko tēmu"
+msgstr "Mainīt X-Moto valodu"
 
 #: src/GameText.h:549
-#, fuzzy
 msgid "Name of the language"
-msgstr "Ieraksta nosaukums"
+msgstr "Valodas nosaukums"
 
 #: src/GameText.h:550
 msgid "Code of the language"
-msgstr ""
+msgstr "Valodas kods"
 
 #: src/GameText.h:552
 msgid "Levels with no highscore"
@@ -2252,17 +2250,17 @@ msgstr "Kadru skaitītājs deaktivizēts"
 
 #: src/GameText.h:632
 msgid "No training positions stored"
-msgstr ""
+msgstr "Nav saglabātu apmācības pozīciju"
 
 #: src/GameText.h:633
 #, c-format
 msgid "Training position %i/%i restored"
-msgstr ""
+msgstr "Atjaunota apmācības pozīcija %i/%i"
 
 #: src/GameText.h:634
 #, c-format
 msgid "Stored as training position %i"
-msgstr ""
+msgstr "Saglabāta apmācības pozīcija %i"
 
 #: src/GameText.h:637
 msgid "FontGroup:GENERAL"

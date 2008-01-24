@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-01-23 21:11+0100\n"
-"PO-Revision-Date: 2008-01-09 21:17+0100\n"
+"PO-Revision-Date: 2008-01-23 22:38+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -94,7 +94,7 @@ msgstr "Autor"
 
 #: src/GameText.h:54
 msgid "Automatic"
-msgstr ""
+msgstr "Automatika"
 
 #: src/GameText.h:55
 msgid "Automatic saving of replays"
@@ -744,15 +744,15 @@ msgstr "Klávesnica"
 
 #: src/GameText.h:246
 msgid "Language"
-msgstr ""
+msgstr "Jazyk"
 
 #: src/GameText.h:247
 msgid "Language name"
-msgstr ""
+msgstr "Názov jazyka"
 
 #: src/GameText.h:248
 msgid "Language code"
-msgstr ""
+msgstr "Kód jazyka"
 
 #: src/GameText.h:249
 msgid "Level"
@@ -1919,18 +1919,16 @@ msgid "The scene is shared by all the players"
 msgstr "Scéna je zdieľaná všetkými hráčmi"
 
 #: src/GameText.h:548
-#, fuzzy
 msgid "Change the X-Moto language"
-msgstr "Vybrať X-Moto grafickú tému"
+msgstr "Zmeniť jazyk X-Moto"
 
 #: src/GameText.h:549
-#, fuzzy
 msgid "Name of the language"
-msgstr "Názov záznamu"
+msgstr "Názov jazyka"
 
 #: src/GameText.h:550
 msgid "Code of the language"
-msgstr ""
+msgstr "Kód jazyka"
 
 #: src/GameText.h:552
 msgid "Levels with no highscore"
@@ -2241,17 +2239,17 @@ msgstr "Fps vypnuté"
 
 #: src/GameText.h:632
 msgid "No training positions stored"
-msgstr ""
+msgstr "Neboli uložené žiadne tréningové pozície"
 
 #: src/GameText.h:633
 #, c-format
 msgid "Training position %i/%i restored"
-msgstr ""
+msgstr "Tréningová pozícia %i/%i obnovená"
 
 #: src/GameText.h:634
 #, c-format
 msgid "Stored as training position %i"
-msgstr ""
+msgstr "Uložené ako tréningová pozícia %i"
 
 #: src/GameText.h:637
 msgid "FontGroup:GENERAL"
