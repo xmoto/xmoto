@@ -1312,7 +1312,7 @@ UIWindow* StateMainMenu::makeWindowOptions_language(UIWindow* i_parent) {
   if(XMSession::instance()->language() == "ca_ES") v_list->setRealSelected(n);
   n++;
 
-  pEntry = v_list->addEntry("", NULL);
+  pEntry = v_list->addEntry("Èesky", NULL);
   pEntry->Text.push_back("cs_CZ");
   if(XMSession::instance()->language() == "cs_CZ") v_list->setRealSelected(n);
   n++;
@@ -1352,7 +1352,7 @@ UIWindow* StateMainMenu::makeWindowOptions_language(UIWindow* i_parent) {
   if(XMSession::instance()->language() == "it_IT") v_list->setRealSelected(n);
   n++;
 
-  pEntry = v_list->addEntry("", NULL);
+  pEntry = v_list->addEntry("LatvieÅ¡u", NULL);
   pEntry->Text.push_back("lv_LV");
   if(XMSession::instance()->language() == "lv_LV") v_list->setRealSelected(n);
   n++;
@@ -1392,7 +1392,7 @@ UIWindow* StateMainMenu::makeWindowOptions_language(UIWindow* i_parent) {
   if(XMSession::instance()->language() == "ru_RU") v_list->setRealSelected(n);
   n++;
 
-  pEntry = v_list->addEntry("", NULL);
+  pEntry = v_list->addEntry("Slovensky", NULL);
   pEntry->Text.push_back("sk_SK");
   if(XMSession::instance()->language() == "sk_SK") v_list->setRealSelected(n);
   n++;
