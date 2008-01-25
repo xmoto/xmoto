@@ -743,7 +743,7 @@ msgstr "Клавиатура"
 
 #: src/GameText.h:246
 msgid "Language"
-msgstr ""
+msgstr "Язык"
 
 #: src/GameText.h:247
 msgid "Language name"
@@ -1336,7 +1336,7 @@ msgstr "Основные"
 
 #: src/GameText.h:398
 msgid "WWW"
-msgstr "Интернет"
+msgstr "Сеть"
 
 #: src/GameText.h:399
 msgid "Rooms"

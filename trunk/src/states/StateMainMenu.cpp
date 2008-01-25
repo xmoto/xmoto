@@ -47,6 +47,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Sound.h"
 #include "thread/CheckWwwThread.h"
 #include "Replay.h"
+#include "Languages.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -1307,101 +1308,11 @@ UIWindow* StateMainMenu::makeWindowOptions_language(UIWindow* i_parent) {
   if(XMSession::instance()->language() == "") v_list->setRealSelected(n);
   n++;
 
-  pEntry = v_list->addEntry("Català", NULL);
-  pEntry->Text.push_back("ca_ES");
-  if(XMSession::instance()->language() == "ca_ES") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("Èesky", NULL);
-  pEntry->Text.push_back("cs_CZ");
-  if(XMSession::instance()->language() == "cs_CZ") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("Dansk", NULL);
-  pEntry->Text.push_back("da_DK");
-  if(XMSession::instance()->language() == "da_DK") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("Deutch", NULL);
-  pEntry->Text.push_back("de_DE");
-  if(XMSession::instance()->language() == "de_DE") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("American", NULL);
-  pEntry->Text.push_back("en_US");
-  if(XMSession::instance()->language() == "en_US") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("Español", NULL);
-  pEntry->Text.push_back("es_ES");
-  if(XMSession::instance()->language() == "es_ES") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("", NULL);
-  pEntry->Text.push_back("fi_FI");
-  if(XMSession::instance()->language() == "fi_FI") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("Français", NULL);
-  pEntry->Text.push_back("fr_FR");
-  if(XMSession::instance()->language() == "fr_FR") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("Italiano", NULL);
-  pEntry->Text.push_back("it_IT");
-  if(XMSession::instance()->language() == "it_IT") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("LatvieÅ¡u", NULL);
-  pEntry->Text.push_back("lv_LV");
-  if(XMSession::instance()->language() == "lv_LV") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("Norsk", NULL);
-  pEntry->Text.push_back("nb_NO");
-  if(XMSession::instance()->language() == "nb_NO") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("Norsk", NULL);
-  pEntry->Text.push_back("nn_NO");
-  if(XMSession::instance()->language() == "nn_NO") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("Norsk", NULL);
-  pEntry->Text.push_back("no_NO");
-  if(XMSession::instance()->language() == "no_NO") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("", NULL);
-  pEntry->Text.push_back("pl_PL");
-  if(XMSession::instance()->language() == "pl_PL") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("", NULL);
-  pEntry->Text.push_back("pt_BR");
-  if(XMSession::instance()->language() == "pt_BR") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("", NULL);
-  pEntry->Text.push_back("pt_PT");
-  if(XMSession::instance()->language() == "pt_PT") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("Русский", NULL);
-  pEntry->Text.push_back("ru_RU");
-  if(XMSession::instance()->language() == "ru_RU") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("Slovensky", NULL);
-  pEntry->Text.push_back("sk_SK");
-  if(XMSession::instance()->language() == "sk_SK") v_list->setRealSelected(n);
-  n++;
-
-  pEntry = v_list->addEntry("Svenska", NULL);
-  pEntry->Text.push_back("sv_SE");
-  if(XMSession::instance()->language() == "sv_SE") v_list->setRealSelected(n);
-  n++;
-
+  for(unsigned int i=0; i<NB_LANGUAGES; i++) {
+    pEntry = v_list->addEntry(LANGUAGES[i][LANGUAGE_NAME], NULL);
+    pEntry->Text.push_back(LANGUAGES[i][LANGUAGE_CODE]);
+    if(XMSession::instance()->language() == LANGUAGES[i][LANGUAGE_CODE]) v_list->setRealSelected(i+1);
+  }
   return v_window;
 }
 
@@ -1430,7 +1341,7 @@ UIWindow* StateMainMenu::makeWindowOptions(UIWindow* i_parent) {
   v_tabview->setTabContextHelp(1, CONTEXTHELP_VIDEO_OPTIONS);
   v_tabview->setTabContextHelp(2, CONTEXTHELP_AUDIO_OPTIONS);
   v_tabview->setTabContextHelp(3, CONTEXTHELP_CONTROL_OPTIONS);
-  //v_tabview->setTabContextHelp(4, CONTEXTHELP_LANGUAGE_OPTIONS); // LANGTAB
+  v_tabview->setTabContextHelp(4, CONTEXTHELP_LANGUAGE_OPTIONS);
 
   v_frame = makeWindowOptions_general(v_tabview);
   v_frame = makeWindowOptions_video(v_tabview);
@@ -1438,7 +1349,7 @@ UIWindow* StateMainMenu::makeWindowOptions(UIWindow* i_parent) {
   v_frame = makeWindowOptions_controls(v_tabview);
   v_frame = makeWindowOptions_rooms(v_tabview);
   v_frame = makeWindowOptions_ghosts(v_tabview);
-  //v_frame = makeWindowOptions_language(v_tabview); // LANGTAB
+  v_frame = makeWindowOptions_language(v_tabview);
 
   v_button = new UIButton(v_window, 20, v_window->getPosition().nHeight-68, GAMETEXT_DEFAULTS, 115, 57);
   v_button->setID("DEFAULTS_BUTTON");
@@ -2711,8 +2622,6 @@ void StateMainMenu::checkEventsOptions() {
   }
 
   // language
-  // LANGTAB
-  /*
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:LANGUAGE_TAB:LANGUAGE_LIST"));
   if(v_list->isClicked()) {
     v_list->setClicked(false);
@@ -2724,7 +2633,6 @@ void StateMainMenu::checkEventsOptions() {
       //StateManager::instance()->refreshStaticCaptions();
     }
   }
-  */
 
 }
 
