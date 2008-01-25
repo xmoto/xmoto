@@ -93,6 +93,7 @@ common_SOURCES = Image.cpp \
   XMotoLoadReplaysInterface.h \
   Locales.h \
   Locales.cpp \
+  Languages.h \
   Packager.cpp \
   Packager.h \
   CameraAnimation.h CameraAnimation.cpp \
