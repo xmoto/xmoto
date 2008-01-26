@@ -29,7 +29,7 @@ char* LANGUAGES[NB_LANGUAGES][2] = {
   {"Català",     "ca_ES"},
   {"Èesky",      "cs_CZ"},
   {"Dansk",      "da_DK"},
-  {"Deutch",     "de_DE"},
+  {"Deutsch",    "de_DE"},
   {"American",   "en_US"},
   {"Español",    "es_ES"},
   {"Suomi",      "fi_FI"},
