@@ -91,7 +91,7 @@ msgstr "Autor"
 
 #: src/GameText.h:54
 msgid "Automatic"
-msgstr ""
+msgstr "Automatisch"
 
 #: src/GameText.h:55
 msgid "Automatic saving of replays"
@@ -741,15 +741,15 @@ msgstr "Tastatur"
 
 #: src/GameText.h:246
 msgid "Language"
-msgstr ""
+msgstr "Sprache"
 
 #: src/GameText.h:247
 msgid "Language name"
-msgstr ""
+msgstr "Sprache"
 
 #: src/GameText.h:248
 msgid "Language code"
-msgstr ""
+msgstr "Sprach-Code"
 
 #: src/GameText.h:249
 msgid "Level"
@@ -1928,18 +1928,16 @@ msgid "The scene is shared by all the players"
 msgstr "Hierbei befinden sich alle Spieler zusammen im Level"
 
 #: src/GameText.h:548
-#, fuzzy
 msgid "Change the X-Moto language"
-msgstr "Grafik-Thema für X-Moto anzeigen"
+msgstr "X-Moto Sprache ändern"
 
 #: src/GameText.h:549
-#, fuzzy
 msgid "Name of the language"
-msgstr "Name des Replays"
+msgstr "Sprache"
 
 #: src/GameText.h:550
 msgid "Code of the language"
-msgstr ""
+msgstr "Code der Sprache"
 
 #: src/GameText.h:552
 msgid "Levels with no highscore"
