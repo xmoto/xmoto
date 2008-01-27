@@ -93,7 +93,7 @@ msgstr "Автор"
 
 #: src/GameText.h:54
 msgid "Automatic"
-msgstr ""
+msgstr "Автоматически"
 
 #: src/GameText.h:55
 msgid "Automatic saving of replays"
@@ -747,11 +747,11 @@ msgstr "Язык"
 
 #: src/GameText.h:247
 msgid "Language name"
-msgstr ""
+msgstr "Язык"
 
 #: src/GameText.h:248
 msgid "Language code"
-msgstr ""
+msgstr "Код языка"
 
 #: src/GameText.h:249
 msgid "Level"
@@ -1921,18 +1921,16 @@ msgid "The scene is shared by all the players"
 msgstr "Игроки находятся на уровне вместе"
 
 #: src/GameText.h:548
-#, fuzzy
 msgid "Change the X-Moto language"
-msgstr "Выбрать внешний вид мотоциклиста"
+msgstr "Выбрать язык"
 
 #: src/GameText.h:549
-#, fuzzy
 msgid "Name of the language"
-msgstr "Имя демки"
+msgstr "Язык"
 
 #: src/GameText.h:550
 msgid "Code of the language"
-msgstr ""
+msgstr "Код языка"
 
 #: src/GameText.h:552
 msgid "Levels with no highscore"
@@ -2236,17 +2234,17 @@ msgstr "Показ Кдр/Сек выключен"
 
 #: src/GameText.h:632
 msgid "No training positions stored"
-msgstr ""
+msgstr "Нет сохранённых тренировочных положений"
 
 #: src/GameText.h:633
 #, c-format
 msgid "Training position %i/%i restored"
-msgstr ""
+msgstr "Восстановлен %i/%i тренировочный рубеж "
 
 #: src/GameText.h:634
 #, c-format
 msgid "Stored as training position %i"
-msgstr ""
+msgstr "Сохранено как %i тренировочная позиция"
 
 #: src/GameText.h:637
 msgid "FontGroup:GENERAL"
