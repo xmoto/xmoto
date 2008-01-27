@@ -1,5 +1,5 @@
 
-X-Moto 0.4.0 2007-01-
+X-Moto 0.4.0 2007-01-27
 -----------------------
  * lot of code rewritten/cleaned
  * multi-threading (mainling for www connexions ; require that g++ uses posix thread model (g++ -v to check))
