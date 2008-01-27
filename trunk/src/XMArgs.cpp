@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMBuild.h"
 #include "VFileIO.h"
 #include <sstream>
+#include <stdlib.h>
 
 XMArguments::XMArguments() {
   m_opt_pack   	       = false;
