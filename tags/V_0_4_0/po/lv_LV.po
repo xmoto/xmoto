@@ -1,0 +1,2625 @@
+# Latvian translations for xmoto package.
+# Copyright (C) 2007 X-Moto Development Team
+# This file is distributed under the same license as the xmoto package.
+# Jānis Rūcis <parasti@gmail.com>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xmoto 0.3.4\n"
+"Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
+"POT-Creation-Date: 2008-01-23 21:11+0100\n"
+"PO-Revision-Date: 2008-01-24 01:03+0200\n"
+"Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
+"Language-Team: Latvian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
+
+#: src/GameText.h:33
+msgid "en_EN"
+msgstr "lv_LV"
+
+#: src/GameText.h:35
+msgid "11 kHz"
+msgstr "11 kHz"
+
+#: src/GameText.h:36
+msgid "16-bit"
+msgstr "16 biti"
+
+#: src/GameText.h:37
+msgid "16 bits per pixel"
+msgstr "16 biti uz pikseli"
+
+#: src/GameText.h:38
+msgid "22 kHz"
+msgstr "22 kHz"
+
+#: src/GameText.h:39
+msgid "32 bits per pixel"
+msgstr "32 biti uz pikseli"
+
+#: src/GameText.h:40
+msgid "44 kHz"
+msgstr "44 kHz"
+
+#: src/GameText.h:41
+msgid "8-bit"
+msgstr "8 biti"
+
+#: src/GameText.h:42
+msgid "Quit level"
+msgstr "Pamest līmeni"
+
+#: src/GameText.h:43
+msgid "Add to favorite"
+msgstr "Pielikt iecienītajiem"
+
+#: src/GameText.h:44
+msgid "Add to blacklist"
+msgstr "Ielikt melnajā sarakstā"
+
+#: src/GameText.h:45
+msgid "Action"
+msgstr "Darbība"
+
+#: src/GameText.h:46 src/GameText.h:51
+msgid "All (on this computer)"
+msgstr "Visi (uz šī datora)"
+
+#: src/GameText.h:47 src/GameText.h:555
+msgid "All levels"
+msgstr "Visi līmeņi"
+
+#: src/GameText.h:48
+msgid ""
+"Do you want to allow X-Moto connecting\n"
+"to the Internet to look for more levels\n"
+"and best times of other players?"
+msgstr ""
+"Vai ļaut X-Moto pieslēgties internetam,\n"
+"lai meklētu jaunus līmeņus un citu\n"
+"spēlētāju labākos rezultātus?"
+
+#: src/GameText.h:52 src/GameText.h:93
+msgid "Audio"
+msgstr "Audio"
+
+#: src/GameText.h:53
+msgid "Author"
+msgstr "Autors"
+
+#: src/GameText.h:54
+msgid "Automatic"
+msgstr "Automātiski"
+
+#: src/GameText.h:55
+msgid "Automatic saving of replays"
+msgstr "Automātiska ierakstu saglabāšana"
+
+#: src/GameText.h:56
+msgid "Auto zoom"
+msgstr "Automātiska tālummaiņa"
+
+#: src/GameText.h:57
+msgid "Best Times"
+msgstr "Labākie laiki"
+
+#: src/GameText.h:58
+msgid "Best player"
+msgstr "Labākais spēlētājs"
+
+#: src/GameText.h:59
+msgid "Brake"
+msgstr "Bremzēt"
+
+#: src/GameText.h:60
+#, c-format
+msgid "(by %s)"
+msgstr "(%s izpildījumā)"
+
+#: src/GameText.h:61
+msgid "Move Camera to left"
+msgstr "Pārvietot kameru pa kreisi"
+
+#: src/GameText.h:62
+msgid "Move Camera to right"
+msgstr "Pārvietot kameru pa labi"
+
+#: src/GameText.h:63
+msgid "Move Camera down"
+msgstr "Pārvietot kameru uz leju"
+
+#: src/GameText.h:64
+msgid "Move Camera up"
+msgstr "Pārvietot kameru uz augšu"
+
+#: src/GameText.h:65
+msgid "Cancel"
+msgstr "Atcelt"
+
+#: src/GameText.h:66
+msgid "Change..."
+msgstr "Mainīt..."
+
+#: src/GameText.h:67
+msgid "Change direction"
+msgstr "Mainīt virzienu"
+
+#: src/GameText.h:68
+msgid "Change Key..."
+msgstr "Mainīt taustiņu..."
+
+#: src/GameText.h:69
+msgid "Checking for new or updated levels..."
+msgstr "Tiek meklēti jauni vai atjaunoti līmeņi..."
+
+#: src/GameText.h:70
+msgid "Choose Level"
+msgstr "Izvēlies līmeni"
+
+#: src/GameText.h:71
+msgid "Close"
+msgstr "Aizvērt"
+
+#: src/GameText.h:72
+msgid "Configure Joystick..."
+msgstr "Konfigurēt vadības sviru..."
+
+#: src/GameText.h:73
+msgid "Controls"
+msgstr "Vadība"
+
+#: src/GameText.h:76
+msgid "Lead Programming"
+msgstr "Galvenā programmēšana"
+
+#: src/GameText.h:82
+msgid "Additional Programming"
+msgstr "Papildu programmēšana"
+
+# "Grafikas" izklausās galīgi garām, bet šobrīd nav pilnīgi nekādu ideju
+# par to, ko likt vietā.
+#: src/GameText.h:89
+msgid "Graphics"
+msgstr "Grafikas"
+
+#: src/GameText.h:97
+msgid "MacOS X Support"
+msgstr "Mac OS X atbalsts"
+
+#: src/GameText.h:101
+msgid "Localization"
+msgstr "Lokalizācija"
+
+#: src/GameText.h:102
+msgid "Slovak"
+msgstr "slovāku val."
+
+#: src/GameText.h:103
+msgid "French"
+msgstr "franciski"
+
+#: src/GameText.h:104
+msgid "Norwegian"
+msgstr "norvēģiski"
+
+#: src/GameText.h:105
+msgid "German"
+msgstr "vāciski"
+
+#: src/GameText.h:106
+msgid "Finnish"
+msgstr "somiski"
+
+#: src/GameText.h:107
+msgid "Catalan"
+msgstr "katalāņu val."
+
+#: src/GameText.h:108
+msgid "Spanish"
+msgstr "spāniski"
+
+#: src/GameText.h:109
+msgid "Polish"
+msgstr "poliski"
+
+#: src/GameText.h:110
+msgid "Italian"
+msgstr "itāliski"
+
+#: src/GameText.h:111
+msgid "Swedish"
+msgstr "zviedriski"
+
+#: src/GameText.h:112
+msgid "Czech"
+msgstr "čehu val."
+
+#: src/GameText.h:113
+msgid "Mikhail Brinchuk"
+msgstr "Mikhail Brinchuk"
+
+#: src/GameText.h:113
+msgid "Russian"
+msgstr "krieviski"
+
+#: src/GameText.h:114
+msgid "Brazilian Portuguese"
+msgstr "Brazīlijas portugāļu val."
+
+#: src/GameText.h:115
+msgid "Latvian"
+msgstr "latviski"
+
+#: src/GameText.h:116
+msgid "Danish"
+msgstr "dāniski"
+
+#: src/GameText.h:118
+msgid "Main testers"
+msgstr "Galvenie testētāji"
+
+#: src/GameText.h:123
+msgid "Thanks to"
+msgstr "Paldies"
+
+#: src/GameText.h:124
+msgid "for KDE/gnome integration"
+msgstr "par KDE/GNOME integrāciju"
+
+#: src/GameText.h:125
+msgid "for Debian packaging"
+msgstr "par Debian pakošanu"
+
+#: src/GameText.h:126
+msgid "for Gentoo packaging"
+msgstr "par Gentoo pakošanu"
+
+#: src/GameText.h:127
+msgid "for Mandriva packaging"
+msgstr "par Mandriva pakošanu"
+
+#: src/GameText.h:128
+msgid "for FreeBSD packaging"
+msgstr "par FreeBSD pakošanu"
+
+#: src/GameText.h:129
+msgid "for across/elma"
+msgstr "par Across/Elma"
+
+#: src/GameText.h:130
+msgid "for making tinyxml"
+msgstr "par TinyXML izstrādāšanu"
+
+#: src/GameText.h:131
+msgid "for the MD5 code"
+msgstr "par MD5 kodu"
+
+#: src/GameText.h:133
+msgid "Everyone who have made levels"
+msgstr "Visiem, kas taisījuši līmeņus"
+
+#: src/GameText.h:134
+msgid "People who have provided bug reports"
+msgstr "Tiem, kas ziņojuši par kļūdām"
+
+#: src/GameText.h:135
+msgid "Anyone who has helped in any way"
+msgstr "Ikvienam, kas jebkādā veidā palīdzējis"
+
+#: src/GameText.h:137
+msgid "Credits"
+msgstr "Titri"
+
+#: src/GameText.h:138
+msgid "Player"
+msgstr "Spēlētājs"
+
+#: src/GameText.h:139
+msgid "Date"
+msgstr "Datums"
+
+#: src/GameText.h:140
+msgid "Upgrading database"
+msgstr "Tiek atjaunināta datubāze"
+
+#: src/GameText.h:141
+msgid "Upgrading database stats for the profile"
+msgstr "Tiek atjaunināta profila datubāzes statistika"
+
+#: src/GameText.h:142
+msgid "Upgrading database profile"
+msgstr "Tiek atjaunināts datubāzes profils"
+
+#: src/GameText.h:143
+msgid "Death Animation"
+msgstr "Bojāejas animācija"
+
+#: src/GameText.h:144
+msgid "Defaults"
+msgstr "Sākotnējie"
+
+#: src/GameText.h:145
+msgid "Do you really want to delete player?"
+msgstr "Vai tiešām dzēst spēlētāju?"
+
+#: src/GameText.h:146
+msgid "Do you really want to delete replay?"
+msgstr "Vai tiešām dzēst ierakstu?"
+
+#: src/GameText.h:147 src/GameText.h:150
+msgid "Delete"
+msgstr "Dzēst"
+
+#: src/GameText.h:148
+msgid "Delete from favorite"
+msgstr "Dzēst no iecienītajiem"
+
+#: src/GameText.h:149
+msgid "Delete from blacklist"
+msgstr "Dzēst no melnā saraksta"
+
+#: src/GameText.h:151
+msgid "Description"
+msgstr "Apraksts"
+
+#: src/GameText.h:152
+msgid "Display Ghost time difference"
+msgstr "Rādīt spoka laika atšķirību"
+
+#: src/GameText.h:153
+msgid "Display Ghost Information"
+msgstr "Rādīt spoka informāciju"
+
+#: src/GameText.h:154
+msgid "Direct Connection"
+msgstr "Tiešs pieslēgums"
+
+#: src/GameText.h:155
+msgid "Downloading the ghost..."
+msgstr "Tiek lejupielādēts spoks..."
+
+#: src/GameText.h:156
+msgid "Downloading the highscore..."
+msgstr "Tiek lejupielādēts rekords..."
+
+#: src/GameText.h:157
+msgid "Downloading high-scores..."
+msgstr "Tiek lejupielādēti rekordi..."
+
+#: src/GameText.h:158
+msgid ""
+"Downloading extra levels...\n"
+"Press ESC to abort."
+msgstr ""
+"Tiek lejupielādēti jauni līmeņi...\n"
+"Nospied ESC, lai pārtrauktu."
+
+#: src/GameText.h:159
+msgid "Checking for new levels..."
+msgstr "Tiek meklēti jauni līmeņi..."
+
+#: src/GameText.h:160
+msgid "Loading new and updated levels..."
+msgstr "Tiek ielādēti jauni un atjaunoti līmeņi..."
+
+#: src/GameText.h:161
+msgid "Checking for existing rooms..."
+msgstr "Tiek meklētas esošās istabas..."
+
+#: src/GameText.h:162
+msgid ""
+"Downloading theme data required by new levels...\n"
+"Press ESC to abort."
+msgstr ""
+"Tiek lejupielādēti jauniem līmeņiem\n"
+"nepieciešamie tēmas dati...\n"
+"Nospied ESC, lai pārtrauktu."
+
+#: src/GameText.h:163
+msgid "Checking for new themes..."
+msgstr "Tiek meklētas jaunas tēmas..."
+
+#: src/GameText.h:164
+msgid "Get More Levels!"
+msgstr "Iegūt jaunus līmeņus!"
+
+#: src/GameText.h:165
+msgid "Drive"
+msgstr "Braukt"
+
+#: src/GameText.h:166
+msgid "Enable Audio"
+msgstr "Aktivizēt audio"
+
+#: src/GameText.h:167
+msgid "Check new levels at startup"
+msgstr "Sākot meklēt jaunus līmeņus"
+
+#: src/GameText.h:168
+msgid "Check new highscores at startup"
+msgstr "Sākot meklēt jaunus rekordus"
+
+#: src/GameText.h:169
+msgid "Enable Context Help"
+msgstr "Aktivizēt konteksta palīdzību"
+
+#: src/GameText.h:170
+msgid "Enable Engine Sound"
+msgstr "Aktivizēt dzinēja skaņu"
+
+#: src/GameText.h:171
+msgid "Enable Ghost"
+msgstr "Aktivizēt spoku"
+
+#: src/GameText.h:172
+msgid "Show World Record in-game"
+msgstr "Rādīt pasaules rekordu spēles laikā"
+
+#: src/GameText.h:173
+msgid "Enable Music"
+msgstr "Aktivizēt mūziku"
+
+#: src/GameText.h:174
+msgid "Enable WWW Access"
+msgstr "Aktivizēt pieeju tīmeklim"
+
+#: src/GameText.h:175
+msgid "Enter player name"
+msgstr "Ievadi spēlētāja vārdu"
+
+#: src/GameText.h:176
+msgid "Enter name of replay"
+msgstr "Ievadi ieraksta nosaukumu"
+
+#: src/GameText.h:177
+msgid "There are errors in the level, don't expect it to be playable!"
+msgstr "Līmenī ir kļūdas.  Neceri, ka tas būs spēlējams!"
+
+#: src/GameText.h:178
+msgid "Check your Internet connection !"
+msgstr "Pārbaudi savu interneta pieslēgumu!"
+
+#: src/GameText.h:179
+msgid "Failed to check for levels."
+msgstr "Neizdevās meklēt līmeņus."
+
+#: src/GameText.h:180
+msgid "Failed to download high-scores."
+msgstr "Neizdevās lejupielādēt rekordus."
+
+#: src/GameText.h:181
+msgid "Failed to download levels."
+msgstr "Neizdevās lejupielādēt līmeņus."
+
+#: src/GameText.h:182
+msgid "Failed to download the replay."
+msgstr "Neizdevās lejupielādēt ierakstu."
+
+#: src/GameText.h:183
+msgid "Failed to download the rooms list."
+msgstr "Neizdevās lejupielādēt istabu sarakstu."
+
+#: src/GameText.h:184
+msgid "Failed to get the selected theme"
+msgstr "Neizdevās iegūt izvēlēto tēmu."
+
+#: src/GameText.h:185
+msgid "Failed to initialize level!"
+msgstr "Neizdevās sagatavot līmeni!"
+
+#: src/GameText.h:186
+msgid "Failed to load replay!"
+msgstr "Neizdevās ielādēt ierakstu!"
+
+#: src/GameText.h:187
+msgid ""
+"Failed to save replay!\n"
+"Maybe you should try with another name?"
+msgstr ""
+"Neizdevās saglabāt ierakstu!\n"
+"Varbūt pamēģini citu nosaukumu?"
+
+#: src/GameText.h:188
+msgid "Failed to update the theme list"
+msgstr "Neizdevās atjaunot tēmu sarakstu."
+
+#: src/GameText.h:189
+msgid "File"
+msgstr "Fails"
+
+#: src/GameText.h:190
+msgid "Filter"
+msgstr "Filtrēt"
+
+#: src/GameText.h:191
+msgid "Finished!"
+msgstr "Finišs!"
+
+#: src/GameText.h:192
+msgid "Finish Time"
+msgstr "Finiša laiks"
+
+#: src/GameText.h:193
+msgid "Flip left"
+msgstr "Svērties pa kreisi"
+
+#: src/GameText.h:194
+msgid "Flip right"
+msgstr "Svērties pa labi"
+
+#: src/GameText.h:195
+msgid "Game Graphics"
+msgstr "Spēles grafikas"
+
+#: src/GameText.h:196
+msgid "General"
+msgstr "Vispārīgi"
+
+#: src/GameText.h:197
+msgid "General Info"
+msgstr "Vispārīga info"
+
+#: src/GameText.h:198
+msgid "Get this theme"
+msgstr "Iegūt šo tēmu"
+
+#: src/GameText.h:199
+msgid "Local best"
+msgstr "Vietējais labākais"
+
+#: src/GameText.h:200
+msgid "Your best"
+msgstr "Tavs labākais"
+
+#: src/GameText.h:201
+msgid "Type"
+msgstr "Tips"
+
+#: src/GameText.h:202 src/GameText.h:545
+msgid "The highscore of the room"
+msgstr "Istabas rekords"
+
+#: src/GameText.h:203 src/GameText.h:543
+msgid "The best of my replays (on this computer)"
+msgstr "Labākais no maniem ierakstiem (uz šī datora)"
+
+#: src/GameText.h:204 src/GameText.h:544
+msgid "The best of the replays (on this computer)"
+msgstr "Labākais no ierakstiem (uz šī datora)"
+
+#: src/GameText.h:205
+#, c-format
+msgid "Ghost of %s"
+msgstr "%s spoks"
+
+#: src/GameText.h:206
+msgid "Ghost"
+msgstr "Spoks"
+
+#: src/GameText.h:207
+msgid "Help"
+msgstr "Palīdzība"
+
+#: src/GameText.h:211
+msgid "You control your bike using the keyboard"
+msgstr "Tu vadi savu motociklu, izmantojot taustiņdēli"
+
+#: src/GameText.h:212
+msgid "Accelerates"
+msgstr "Uzņemt ātrumu"
+
+#: src/GameText.h:213
+msgid "Brakes"
+msgstr "Bremzēt"
+
+#: src/GameText.h:214
+msgid "Rotates it counter-clockwise"
+msgstr "Griezties pretēji pulksteņa rādītāja virzienam"
+
+#: src/GameText.h:215
+msgid "Rotates it clockwise"
+msgstr "Griezties pulksteņa rādītāja virzienā"
+
+#: src/GameText.h:216
+msgid "Turns around and drives in the other direction"
+msgstr "Apgriezties un braukt pretējā virzienā"
+
+#: src/GameText.h:217 src/GameText.h:321
+msgid "Pause"
+msgstr "Pauze"
+
+#: src/GameText.h:218
+msgid "Restart the level"
+msgstr "Sākt līmeni no jauna"
+
+#: src/GameText.h:219
+msgid "Previous/Next level"
+msgstr "Iepriekšējais/nākošais līmenis"
+
+#: src/GameText.h:220
+msgid "Add/remove to favorite levels"
+msgstr "Pievienot/dzēst no iecienītajiem līmeņiem"
+
+# XXX
+# Change "Add/remove to" to "Add to/remove from".
+#: src/GameText.h:221
+msgid "Add/remove to blacklisted levels"
+msgstr "Pievienot/dzēst no melnā saraksta"
+
+# XXX
+# "change" should  be capitalised  for consistency with  other strings
+# and maybe changed to "Toggle".
+#: src/GameText.h:222
+msgid "change mirror mode"
+msgstr "Ieslēgt/izslēgt spoguļrežīmu"
+
+#: src/GameText.h:223
+msgid "Enable/disable web"
+msgstr "Aktivizēt/deaktivizēt tīmekli"
+
+#: src/GameText.h:224
+msgid "Enable/disable ugly mode"
+msgstr "Aktivizēt/deaktivizēt neglīto režīmu"
+
+#: src/GameText.h:225
+msgid "Reload levels, themes and replays from directories"
+msgstr "Atkārtoti ielādēt līmeņus, tēmas un ierakstus no mapēm"
+
+#: src/GameText.h:226
+msgid "Take a screenshot"
+msgstr "Saglabāt ekrāna attēlu"
+
+#: src/GameText.h:228
+msgid ""
+"Find all the strawberries and touch the flower to finish\n"
+"the level."
+msgstr "Atrodi visas zemenes un pieskaries ziedam, lai pabeigtu līmeni."
+
+#: src/GameText.h:229
+msgid ""
+"Read the README file or check out the website at\n"
+"http://xmoto.tuxfamily.org for more information."
+msgstr ""
+"Lai uzzinātu vairāk, palasi README failu vai apmeklē\n"
+"http://xmoto.tuxfamily.org."
+
+#: src/GameText.h:231
+msgid "Hide ghosts"
+msgstr "Paslēpt spokus"
+
+#: src/GameText.h:232
+msgid "High"
+msgstr "Augsta"
+
+#: src/GameText.h:233
+msgid "Levels are being added into the database. Please wait."
+msgstr "Līmeņi tiek ievietoti datubāzē. Lūdzu, uzgaidi."
+
+#: src/GameText.h:234
+msgid "Internet Configuration"
+msgstr "Interneta konfigurācija"
+
+#: src/GameText.h:235
+msgid "Initializing input system..."
+msgstr "Ievades sistēmas sagatavošana..."
+
+#: src/GameText.h:236
+msgid "Initializing menus..."
+msgstr "Izvēlņu sagatavošana..."
+
+#: src/GameText.h:237
+msgid "Initializing renderer..."
+msgstr "Renderētāja sagatavošana..."
+
+#: src/GameText.h:238
+msgid "Initializing text renderer..."
+msgstr "Teksta renderētāja sagatavošana..."
+
+#: src/GameText.h:239
+msgid "View Level Initially"
+msgstr "Sākumā parādīt līmeni"
+
+#: src/GameText.h:240
+msgid "Joystick"
+msgstr "Vadības svira"
+
+#: src/GameText.h:241
+msgid "Oops!"
+msgstr "Ak vai!"
+
+#: src/GameText.h:242
+msgid "Press ENTER to try again"
+msgstr "Nospied ENTER, lai mēģinātu vēlreiz"
+
+#: src/GameText.h:243
+msgid "Press ESC to display the menu"
+msgstr "Nospied ESC, lai parādītu izvēlni"
+
+#: src/GameText.h:244
+msgid "Key"
+msgstr "Taustiņš"
+
+#: src/GameText.h:245
+msgid "Keyboard"
+msgstr "Taustiņdēlis"
+
+#: src/GameText.h:246
+msgid "Language"
+msgstr "Valoda"
+
+#: src/GameText.h:247
+msgid "Language name"
+msgstr "Valodas nosaukums"
+
+#: src/GameText.h:248
+msgid "Language code"
+msgstr "Valodas kods"
+
+#: src/GameText.h:249
+msgid "Level"
+msgstr "Līmenis"
+
+#: src/GameText.h:250
+msgid "Added to favorites"
+msgstr "Pievienots iecienītajiem"
+
+#: src/GameText.h:251
+msgid "Deleted from favorites"
+msgstr "Izdzēsts no iecienītajiem"
+
+#: src/GameText.h:252
+msgid "Added to blacklist"
+msgstr "Ielikts melnajā sarakstā"
+
+#: src/GameText.h:253
+msgid "Deleted from blacklist"
+msgstr "Izdzēsts no melnā saraksta"
+
+#: src/GameText.h:254
+msgid "Level Info..."
+msgstr "Līmeņa info..."
+
+#: src/GameText.h:255
+msgid "Level Name"
+msgstr "Līmeņa nosaukums"
+
+#: src/GameText.h:256
+#, c-format
+msgid "Level '%s' cannot be loaded"
+msgstr "Līmeni \"%s\" nevar ielādēt"
+
+#: src/GameText.h:257
+msgid "Level Pack"
+msgstr "Līmeņu paka"
+
+#: src/GameText.h:258
+msgid "Level Packs"
+msgstr "Līmeņu pakas"
+
+#: src/GameText.h:259
+#, c-format
+msgid "Level '%s' required by replay!"
+msgstr "Ierakstam vajadzīgs līmenis \"%s\"!"
+
+#: src/GameText.h:260
+msgid "Levels"
+msgstr "Līmeņi"
+
+#: src/GameText.h:261
+msgid "List All"
+msgstr ""
+"Rādīt\n"
+"visus"
+
+#: src/GameText.h:262
+msgid "Loading..."
+msgstr "Ielādēšana..."
+
+#: src/GameText.h:263
+msgid "Loading levels..."
+msgstr "Tiek ielādēti līmeņi..."
+
+#: src/GameText.h:264
+msgid "Loading menu graphics..."
+msgstr "Tiek ielādētas izvēlņu grafikas..."
+
+#: src/GameText.h:265
+msgid "Loading replays..."
+msgstr "Tiek ielādēti ieraksti..."
+
+#: src/GameText.h:266
+msgid "Loading sounds..."
+msgstr "Tiek ielādētas skaņas..."
+
+#: src/GameText.h:267
+msgid "Loading textures..."
+msgstr "Tiek ielādētas tekstūras..."
+
+#: src/GameText.h:268
+msgid "Login"
+msgstr "Lietotājvārds"
+
+#: src/GameText.h:269
+msgid "Low"
+msgstr "Zema"
+
+#: src/GameText.h:270
+msgid "Medium"
+msgstr "Vidēja"
+
+#: src/GameText.h:271
+msgid "Menu Graphics"
+msgstr "Izvēlņu grafikas"
+
+#: src/GameText.h:272
+msgid "Total time you scored / total highscore time for levels you finished"
+msgstr "Tavu rekordu kopīgais laiks / izieto līmeņu rekordu kopīgais laiks"
+
+#: src/GameText.h:273
+msgid "Level references unknown textures, it could be unplayable!"
+msgstr ""
+"Līmenis satur norādes uz nezināmām tekstūrām.\n"
+"Iespējams, ka tas nav spēlējams!"
+
+#: src/GameText.h:274
+msgid "Mono"
+msgstr "Mono"
+
+#: src/GameText.h:275
+msgid "Following are your most played levels"
+msgstr "Šie ir tavi visspēlētākie līmeņi"
+
+#: src/GameText.h:276
+msgid "Motion blur ghost"
+msgstr "Spoks kustībā izplūdis"
+
+#: src/GameText.h:277
+msgid "Multi"
+msgstr "Multi"
+
+#: src/GameText.h:278
+msgid "Semi-cooperative mode"
+msgstr "Daļēji apvienotais režīms"
+
+#: src/GameText.h:279
+msgid "Stop the game once a player ends the level"
+msgstr "Pārtraukt spēli, kad spēlētājs pabeidz līmeni"
+
+#: src/GameText.h:280
+msgid "Number of players"
+msgstr "Spēlētāju skaits"
+
+#: src/GameText.h:281
+msgid "New"
+msgstr "Jauns"
+
+#: src/GameText.h:282
+#, c-format
+msgid "X-Moto %s or newer required to load level"
+msgstr ""
+"Līmeņa ielādēšanai nepieciešama X-Moto %s\n"
+"vai jaunāka versija"
+
+#: src/GameText.h:283
+msgid "New highscore!"
+msgstr "Jauns rekords!"
+
+#: src/GameText.h:284
+msgid "New personal highscore!"
+msgstr "Jauns personīgais rekords!"
+
+# Tas pēdējais ir tāds padraņķīgs, bet nekas labāks nenāk prātā.
+#: src/GameText.h:285
+#, c-format
+msgid "%i new or updated level available. Download now ?"
+msgid_plural "%i new or updated levels available. Download now ?"
+msgstr[0] "Pieejams %d jauns vai atjaunots līmenis. Lejupielādēt?"
+msgstr[1] "Pieejami %d jauni vai atjaunoti līmeņi. Lejupielādēt?"
+msgstr[2] "Pieejami %d jauni vai atjaunoti līmeņi. Lejupielādēt?"
+
+#: src/GameText.h:288
+msgid "New Levels"
+msgstr "Jauni līmeņi"
+
+#: src/GameText.h:289
+msgid "New levels available!"
+msgstr "Pieejami jauni līmeņi!"
+
+#: src/GameText.h:290
+msgid "New Profile..."
+msgstr "Jauns profils..."
+
+#: src/GameText.h:291
+msgid "No"
+msgstr "Nē"
+
+#: src/GameText.h:292
+msgid ""
+"No new or updated levels available.\n"
+"\n"
+"Try again another time."
+msgstr ""
+"Nav jaunu vai atjaunotu līmeņu.\n"
+"\n"
+"Mēģini citreiz."
+
+#: src/GameText.h:293
+msgid "No level following this one, sorry."
+msgstr "Pēc šī līmeņa nav citu līmeņu."
+
+#: src/GameText.h:294
+msgid "No statistics for this profile."
+msgstr "Šim profilam nav statistikas."
+
+#: src/GameText.h:295
+msgid "Not finished"
+msgstr "Nav pabeigts"
+
+#: src/GameText.h:296
+msgid ""
+"Important note!\n"
+"\n"
+"This is an in development version of X-Moto!\n"
+"All kinds of feedback are highly appreciated, so the game\n"
+"can get better.\n"
+"Mail bugs, ideas, comments, feature requests, hatemail, etc\n"
+"to xmoto@tuxfamily.org\n"
+"\n"
+"Also visit http://xmoto.tuxfamily.org to make sure you've\n"
+"got the latest version."
+msgstr ""
+"Svarīga piezīme!\n"
+"\n"
+"Šī X-Moto versija atrodas izstrādāšanas fāzē!\n"
+"Lai spēli varētu uzlabot, vērā tiek ņemtas visa\n"
+"veida atsauksmes.\n"
+"Sūti ziņojumus par kļūdām, idejas, komentārus,\n"
+"lūgumus ieviest jaunas iespējas, naida vēstules utt.\n"
+"uz xmoto@tuxfamily.org\n"
+"\n"
+"Un neaizmirsti apmeklēt http://xmoto.tuxfamily.org,\n"
+"lai pārliecinātos, ka tavās rokās nonākusi visjaunākā versija."
+
+#: src/GameText.h:306
+msgid "# Levels"
+msgstr "# līmeņi"
+
+#: src/GameText.h:307
+msgid "OK"
+msgstr "Labi"
+
+#: src/GameText.h:308
+msgid "Open"
+msgstr "Atvērt"
+
+#: src/GameText.h:309
+msgid "Operation completed"
+msgstr "Darbība pabeigta"
+
+#: src/GameText.h:310
+msgid "Options"
+msgstr "Iestatījumi"
+
+#: src/GameText.h:311
+msgid "Some options will not take effect before next restart!"
+msgstr "Dažas izmaiņas stāsies spēkā tikai pēc restartēšanas!"
+
+#: src/GameText.h:312
+msgid "By author"
+msgstr "Pēc autora"
+
+#: src/GameText.h:313
+msgid "Medals"
+msgstr "Medaļas"
+
+#: src/GameText.h:314 src/GameText.h:349
+msgid "Room"
+msgstr "Istaba"
+
+#: src/GameText.h:315
+msgid "Special"
+msgstr "Īpašās"
+
+#: src/GameText.h:316
+msgid "Standard"
+msgstr "Standarta"
+
+#: src/GameText.h:317
+msgid "Web votes"
+msgstr "Tīmekļa balsojums"
+
+#: src/GameText.h:318 src/GameText.h:360
+msgid "Statistics"
+msgstr "Statistika"
+
+#: src/GameText.h:319 src/GameText.h:565
+msgid "By best driver"
+msgstr "Pēc labākā braucēja"
+
+#: src/GameText.h:320
+msgid "By length"
+msgstr "Pēc garuma"
+
+#: src/GameText.h:322
+msgid "Password"
+msgstr "Parole"
+
+#: src/GameText.h:323 src/GameText.h:324
+msgid "Personal"
+msgstr "Personīgie"
+
+#: src/GameText.h:325
+#, c-format
+msgid "%i player"
+msgid_plural "%i players"
+msgstr[0] "%i spēlētājs"
+msgstr[1] "%i spēlētāji"
+msgstr[2] "%i spēlētāju"
+
+#: src/GameText.h:326
+msgid "Player Profile"
+msgstr "Spēlētāja profils"
+
+#: src/GameText.h:327
+msgid "Player Profiles"
+msgstr "Spēlētāju profili"
+
+#: src/GameText.h:328
+msgid "Play Next Level"
+msgstr "Spēlēt nākošo līmeni"
+
+#: src/GameText.h:329
+msgid "Port"
+msgstr "Ports"
+
+#: src/GameText.h:330
+#, c-format
+msgid "Press key you want to '%s' or ESC to cancel..."
+msgstr ""
+"Nospied taustiņu \"%s\" darbībai\n"
+"vai ESC, lai atceltu izmaiņas..."
+
+#: src/GameText.h:331
+msgid "Proxy Server"
+msgstr "Starpnieks"
+
+#: src/GameText.h:332
+msgid "Configure Proxy..."
+msgstr "Konfigurēt starpnieku..."
+
+#: src/GameText.h:333
+msgid "Quick start"
+msgstr "Ātrais starts"
+
+#: src/GameText.h:334
+msgid "Quit Game"
+msgstr "Pamest spēli"
+
+#: src/GameText.h:335
+msgid "Do you really want to quit?"
+msgstr "Vai tiešām pamest spēli?"
+
+#: src/GameText.h:336
+msgid "Randomize"
+msgstr "Sajaukt"
+
+#: src/GameText.h:337
+msgid "Reloading levels..."
+msgstr "Tiek pārlādēti līmeņi..."
+
+#: src/GameText.h:338
+msgid "Reloading replays..."
+msgstr "Tiek pārlādēti ieraksti..."
+
+#: src/GameText.h:339
+msgid "Reloading themes..."
+msgstr "Tiek pārlādētas tēmas..."
+
+#: src/GameText.h:340
+msgid "Replay"
+msgstr "Ieraksts"
+
+#: src/GameText.h:341
+msgid "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
+msgstr ""
+"Stāt[esc] ||[atstarpe]  << >>[pa kreisi/pa labi]  < >[augšup/lejup]   Ātrums:"
+
+#: src/GameText.h:342
+msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
+msgstr "Stāt[esc] ||[atstarpe] >>[pa labi] < >[augšup/lejup]   Ātrums:"
+
+#: src/GameText.h:344
+msgid "The replay can't be played!"
+msgstr "Ierakstu nevar parādīt!"
+
+#: src/GameText.h:345
+#, c-format
+msgid "Replay of %s"
+msgstr "%s ieraksts"
+
+#: src/GameText.h:346
+msgid "Replays"
+msgstr "Ieraksti"
+
+#: src/GameText.h:347
+msgid "Restart This Level"
+msgstr "Sākt līmeni no jauna"
+
+#: src/GameText.h:348
+msgid "Resume Playing"
+msgstr "Turpināt spēli"
+
+#: src/GameText.h:350
+msgid "Run Windowed"
+msgstr "Rādīt logā"
+
+#: src/GameText.h:351
+msgid "Save"
+msgstr "Saglabāt"
+
+#: src/GameText.h:352
+#, c-format
+msgid "Saved as %s"
+msgstr "Saglabāts kā %s"
+
+#: src/GameText.h:353
+msgid "Save Replay"
+msgstr "Saglabāt ierakstu"
+
+#: src/GameText.h:354
+msgid "Screen Resolution"
+msgstr "Ekrāna izšķirtspēja"
+
+#: src/GameText.h:355
+msgid "Show"
+msgstr "Parādīt"
+
+#: src/GameText.h:356
+msgid "Speedometer"
+msgstr "Spidometrs"
+
+#: src/GameText.h:357
+msgid "Info..."
+msgstr "Info..."
+
+#: src/GameText.h:358
+msgid "Show Mini Map"
+msgstr "Rādīt minikarti"
+
+#: src/GameText.h:359
+msgid "Play!"
+msgstr "Spēlēt!"
+
+#: src/GameText.h:361
+msgid "STATS"
+msgstr "STATISTIKA"
+
+#: src/GameText.h:362
+msgid "Stereo"
+msgstr "Stereo"
+
+#: src/GameText.h:363
+msgid "Theme"
+msgstr "Tēma"
+
+#: src/GameText.h:364
+msgid "Available"
+msgstr "Pieejama"
+
+#: src/GameText.h:365
+msgid "To download"
+msgstr "Tiks lejupielādēta"
+
+#: src/GameText.h:366
+msgid "To be updated"
+msgstr "Tiks atjaunota"
+
+#: src/GameText.h:367
+msgid "The theme is now up to date"
+msgstr "Tēma ir atjaunota"
+
+#: src/GameText.h:368
+msgid "Time"
+msgstr "Laiks"
+
+#: src/GameText.h:369
+msgid "Try This Level Again"
+msgstr "Mēģināt vēlreiz"
+
+#: src/GameText.h:370
+msgid "Tutorial"
+msgstr "Pamācība"
+
+#: src/GameText.h:371
+msgid "Unknown"
+msgstr "Nezināms"
+
+#: src/GameText.h:372
+msgid "Unpacked levels"
+msgstr "Atpakotie līmeņi"
+
+#: src/GameText.h:373
+msgid ""
+"Can't update this theme !\n"
+"The theme is not available on the web\n"
+"or your theme list is not up to date"
+msgstr ""
+"Šo tēmu nav iespējams atjaunot!\n"
+"Tēma nav pieejama tīmeklī vai\n"
+"tavs tēmu saraksts ir novecojis."
+
+#: src/GameText.h:374
+msgid "Update"
+msgstr "Atjaunot"
+
+#: src/GameText.h:375
+msgid "Updated"
+msgstr "Atjaunots"
+
+#: src/GameText.h:376
+msgid "Check WWW"
+msgstr "Pārbaudīt WWW"
+
+#: src/GameText.h:377
+msgid "Update the rooms list"
+msgstr "Atjaunot istabu sarakstu"
+
+#: src/GameText.h:378
+msgid "Update the theme list"
+msgstr "Atjaunot tēmu sarakstu"
+
+#: src/GameText.h:379
+msgid "Updating level lists..."
+msgstr "Tiek atjaunoti līmeņu saraksti..."
+
+# Šis ir izņēmuma gadījums.  "Augšupielādēt" ir pārāk garš, tādēļ šeit
+# izmantoju "iesniegt".
+#: src/GameText.h:380
+msgid "Upload highscore"
+msgstr "Iesniegt rekordu"
+
+#: src/GameText.h:381
+msgid "Upload all highscores"
+msgstr "Iesniegt visus rekordus"
+
+#: src/GameText.h:382
+msgid ""
+"An unexpected error has occurred. There may be some problems with the web "
+"site."
+msgstr "Notikusi negaidīta kļūda. Iespējams, ka serverī radušās problēmas."
+
+#: src/GameText.h:383
+msgid "Oh no !"
+msgstr "Ak nē!"
+
+#: src/GameText.h:384
+msgid "Uploading the highscore..."
+msgstr "Rekords tiek augšupielādēts..."
+
+#: src/GameText.h:385
+msgid "Use crappy information"
+msgstr "Izmantot draņķīguma informāciju"
+
+#: src/GameText.h:386
+msgid "Use Environment Vars"
+msgstr "Lietot vides mainīgos"
+
+#: src/GameText.h:387
+msgid "Use Profile"
+msgstr "Lietot profilu"
+
+#: src/GameText.h:388
+msgid "Using HTTP Proxy"
+msgstr "Izmantojot HTTP starpnieku"
+
+#: src/GameText.h:389
+msgid "Using SOCKS4 Proxy"
+msgstr "Izmantojot SOCKS4 starpnieku"
+
+#: src/GameText.h:390
+msgid "Using SOCKS5 Proxy"
+msgstr "Izmantojot SOCKS5 starpnieku"
+
+#: src/GameText.h:391
+msgid "Video"
+msgstr "Video"
+
+#: src/GameText.h:392
+msgid "View"
+msgstr "Parādīt"
+
+#: src/GameText.h:393
+msgid "View the highscore"
+msgstr "Parādīt rekordu"
+
+#: src/GameText.h:394
+#, c-format
+msgid "Do you want to update level \"%s\"?"
+msgstr "Vai atjaunot līmeni \"%s\"?"
+
+#: src/GameText.h:395
+msgid "Warning"
+msgstr "Brīdinājums"
+
+#: src/GameText.h:397
+msgid "Main"
+msgstr "Galvenie"
+
+#: src/GameText.h:398
+msgid "WWW"
+msgstr "WWW"
+
+#: src/GameText.h:399
+msgid "Rooms"
+msgstr "Istabas"
+
+#: src/GameText.h:401
+#, c-format
+msgid "%d hours"
+msgstr "%d stundas"
+
+#: src/GameText.h:402
+#, c-format
+msgid "%d minutes"
+msgstr "%d minūtes"
+
+#: src/GameText.h:403
+#, c-format
+msgid ""
+"(Stats since: %s)\n"
+"X-Moto started %d times; %d plays (%d different levels),\n"
+"%d deaths, %d finishes, and %d restarts.\n"
+"Time played: %s"
+msgstr ""
+"(Statistika kopš: %s)\n"
+"X-Moto sākts %d reizes; %d spēles (%d dažādi līmeņi),\n"
+"%d bojāejas, %d finiši un %d reizes sākts no jauna.\n"
+"Spēlē pavadītais laiks: %s"
+
+#: src/GameText.h:406
+#, c-format
+msgid "%d plays, %d deaths, %d finishes, and %d restarts"
+msgstr "%d spēles, %d bojāejas, %d finiši un %d reizes sākts no jauna"
+
+#: src/GameText.h:407
+#, c-format
+msgid "%d seconds"
+msgstr "%d sekundes"
+
+#: src/GameText.h:408
+msgid "Yes"
+msgstr "Jā"
+
+#: src/GameText.h:409
+msgid "Yes to all"
+msgstr "Jā (visiem)"
+
+#: src/GameText.h:410
+msgid "Zoom in"
+msgstr "Pietuvināt"
+
+#: src/GameText.h:411
+msgid "Reinitialize zoom"
+msgstr "Atcelt tālummaiņu"
+
+#: src/GameText.h:412
+msgid "Zoom out"
+msgstr "Attālināt"
+
+#: src/GameText.h:415
+msgid "Download the latest X-Moto world records and check for new levels"
+msgstr ""
+"Lejupielādēt X-Moto jaunākos pasaules rekordus un meklēt jaunus līmeņus"
+
+#: src/GameText.h:416
+msgid "Configure how you are connected to the Internet"
+msgstr "Norādi savu interneta pieslēgumu"
+
+#: src/GameText.h:417
+msgid "Play this level again"
+msgstr "Spēlēt šo līmeni vēlreiz"
+
+#: src/GameText.h:418
+msgid "Save a replay for later viewing"
+msgstr "Saglabāt ierakstu, ko noskatīties citreiz"
+
+#: src/GameText.h:419
+msgid "Play next level"
+msgstr "Spēlēt nākošo līmeni"
+
+#: src/GameText.h:420
+msgid "Back to the main menu"
+msgstr "Atpakaļ uz galveno izvēlni"
+
+#: src/GameText.h:421
+msgid "Quit the game"
+msgstr "Pamest spēli"
+
+#: src/GameText.h:422
+msgid "Back to the game"
+msgstr "Atpakaļ uz spēli"
+
+#: src/GameText.h:423
+msgid "Try this level again from the beginning"
+msgstr "Mēģināt šo līmeni vēlreiz no sākuma"
+
+#: src/GameText.h:424
+msgid "Play next level instead"
+msgstr "Spēlēt nākošo līmeni šī vietā"
+
+#: src/GameText.h:425
+msgid "Try this level again"
+msgstr "Mēģināt šo līmeni vēlreiz"
+
+#: src/GameText.h:426
+msgid "Built-in and stand-alone external levels"
+msgstr "Iebūvētie un savrupi ārējie līmeņi"
+
+#: src/GameText.h:427
+msgid "Levels grouped together in level packs"
+msgstr "Līmeņi, kas apkopoti līmeņu pakās"
+
+#: src/GameText.h:428
+msgid "Browse levels available to you"
+msgstr "Pārlūkot visus pieejamos līmeņus"
+
+#: src/GameText.h:429
+msgid "View list of recorded replays"
+msgstr "Apskatīt sarakstu ar saglabātajiem ierakstiem"
+
+#: src/GameText.h:430
+msgid "Configure X-Moto preferences"
+msgstr "Konfigurēt X-Moto iestatījumus"
+
+#: src/GameText.h:431
+msgid "Instructions of how to play X-Moto"
+msgstr "X-Moto spēlēšanas instrukcijas"
+
+#: src/GameText.h:432
+msgid "Change player profile"
+msgstr "Mainīt spēlētāja profilu"
+
+#: src/GameText.h:433
+msgid "Play tutorial of how to play the game"
+msgstr "Spēlēt pamācību"
+
+#: src/GameText.h:434
+msgid "Play the selected level"
+msgstr "Spēlēt izvēlēto līmeni"
+
+#: src/GameText.h:435
+msgid "View general information about the level, best times, and replays"
+msgstr ""
+"Aplūkot vispārīgu informāciju par līmeni, labākajiem laikiem un ierakstiem"
+
+#: src/GameText.h:436
+msgid "Run the selected replay"
+msgstr "Parādīt izvēlēto ierakstu"
+
+#: src/GameText.h:437
+msgid "Permanently delete the selected replay"
+msgstr "Neatgriezeniski dzēst izvēlēto ierakstu"
+
+#: src/GameText.h:438
+msgid "Show replays of all players in list"
+msgstr "Rādīt visu sarakstā minēto spēlētāju ierakstus"
+
+#: src/GameText.h:439
+msgid "General X-Moto preferences"
+msgstr "Vispārīgi X-Moto iestatījumi"
+
+#: src/GameText.h:440
+msgid "Configure graphical options"
+msgstr "Konfigurēt grafiskās iespējas"
+
+#: src/GameText.h:441
+msgid "Configure audio options"
+msgstr "Konfigurēt audio iespējas"
+
+#: src/GameText.h:442
+msgid "Configure control options"
+msgstr "Konfigurēt vadības iespējas"
+
+#: src/GameText.h:443
+msgid "Save options"
+msgstr "Saglabāt iestatījumus"
+
+#: src/GameText.h:444
+msgid "Revert options to defaults"
+msgstr "Lietot iestatījumu sākotnējās vērtības"
+
+#: src/GameText.h:445
+msgid "Show a map of your surroundings when playing"
+msgstr "Rādīt apkārtnes karti spēles laikā"
+
+#: src/GameText.h:446
+msgid "Automatically download best times off the net when the game starts"
+msgstr "Sākot spēli, automātiski lejupielādēt labākos laikus no tīmekļa"
+
+#: src/GameText.h:447
+msgid "Show the World Record for a given level when playing"
+msgstr "Rādīt dotā līmeņa pasaules rekordu spēles laikā"
+
+#: src/GameText.h:448
+msgid "Use crappy information from the website to update the crappy pack"
+msgstr ""
+"Lietot draņķīguma informāciju no servera, lai atjaunotu draņķīgo līmeņu paku"
+
+#: src/GameText.h:449
+msgid "Enable high-color graphics"
+msgstr "Aktivizēt high-color grafikas"
+
+#: src/GameText.h:450
+msgid "Enable true-color graphics"
+msgstr "Aktivizēt true-color grafikas"
+
+#: src/GameText.h:451
+msgid "Select graphics resolution"
+msgstr "Izvēlies ekrāna izšķirtspēju"
+
+#: src/GameText.h:452
+msgid "Run the game in a window"
+msgstr "Rādīt spēli savā logā"
+
+#: src/GameText.h:453
+msgid "Not so fancy menu graphics"
+msgstr "Zemas kvalitātes izvēlņu grafikas"
+
+#: src/GameText.h:454
+msgid "A bit more fancy menu graphics"
+msgstr "Augstākas kvalitātes izvēlņu grafikas"
+
+#: src/GameText.h:455
+msgid "Fanciest menu graphics"
+msgstr "Visaugstākās kvalitātes izvēlņu grafikas"
+
+#: src/GameText.h:456
+msgid "Disable most graphics not important to the gameplay"
+msgstr "Deaktivizēt lielāko daļu to grafiku, kas nav būtiskas spēlei"
+
+#: src/GameText.h:457
+msgid "Disable some of the most resource-intensive graphics, like particles"
+msgstr ""
+"Deaktivizēt dažas no resursu ziņā visintensīvākajām grafikām, piemēram, "
+"daļiņas"
+
+#: src/GameText.h:458
+msgid "Enable all graphical effects"
+msgstr "Aktivizēt visus grafiskos efektus"
+
+#: src/GameText.h:459
+msgid "Turn on sound effects"
+msgstr "Ieslēgt skaņu efektus"
+
+#: src/GameText.h:460
+msgid "Poor sound quality"
+msgstr "Zema skaņas kvalitāte"
+
+#: src/GameText.h:461
+msgid "Normal sound quality"
+msgstr "Normāla skaņas kvalitāte"
+
+#: src/GameText.h:462
+msgid "Best sound quality"
+msgstr "Visaugstākā skaņas kvalitāte"
+
+#: src/GameText.h:463
+msgid "8-bit sound samples, poor quality"
+msgstr "8 bitu skaņu paraugi, zema kvalitāte"
+
+#: src/GameText.h:464
+msgid "16-bit sound samples, good quality"
+msgstr "16 bitu skaņu paraugi, augsta kvalitāte"
+
+#: src/GameText.h:465
+msgid "Mono (single channel) audio"
+msgstr "Mono (viena kanāla) skaņa"
+
+#: src/GameText.h:466
+msgid "Stereo (two channel) audio"
+msgstr "Stereo (divu kanālu) skaņa"
+
+#: src/GameText.h:467
+msgid "Turn on engine noise"
+msgstr "Ieslēgt dzinēja trokšņus"
+
+#: src/GameText.h:468
+msgid "Select action to re-configure to another key"
+msgstr "Izvēlies darbību, kurai piešķirt citu taustiņu"
+
+#: src/GameText.h:469
+msgid "View contents of level pack"
+msgstr "Apskatīt līmeņu pakas saturu"
+
+#: src/GameText.h:470
+msgid "Select a player profile to use"
+msgstr "Izvēlies spēlētāja profilu"
+
+#: src/GameText.h:471
+msgid "Use the selected player profile"
+msgstr "Lietot izvēlēto spēlētāja profilu"
+
+#: src/GameText.h:472
+msgid "Create new player profile"
+msgstr "Izveidot jaunu spēlētāja profilu"
+
+#: src/GameText.h:473
+msgid "Permanently delete selected player profile, including best times"
+msgstr ""
+"Neatgriezeniski dzēst izvēlēto spēlētāja profilu, ieskaitot labākos laikus"
+
+#: src/GameText.h:474
+msgid "Select a level in the level pack to play"
+msgstr "Izvēlies spēlējamo līmeni līmeņu pakā"
+
+#: src/GameText.h:475
+msgid "Close level pack"
+msgstr "Aizvērt līmeņu paku"
+
+#: src/GameText.h:476
+msgid "General information about the level"
+msgstr "Vispārīga informācija par līmeni"
+
+#: src/GameText.h:477
+msgid "View best times for the level"
+msgstr "Apskatīt līmeņa labākos laikus"
+
+#: src/GameText.h:478
+msgid "View locally stored replays of the level"
+msgstr "Apskatīt līmeņa ierakstus, kas saglabāti uz šī datora"
+
+#: src/GameText.h:479
+msgid "Only show personal best times for this level"
+msgstr "Rādīt tikai personīgos šī līmeņa labākos laikus"
+
+#: src/GameText.h:480
+msgid "Show all best times for this level"
+msgstr "Rādīt visus šī līmeņa labākos laikus"
+
+#: src/GameText.h:481
+msgid "Only show personal replays for this level"
+msgstr "Rādīt tikai personīgos šī līmeņa ierakstus"
+
+#: src/GameText.h:482
+msgid "Show all replays for this level"
+msgstr "Rādīt visus šī līmeņa ierakstus"
+
+#: src/GameText.h:483
+msgid "Run selected replay"
+msgstr "Parādīt izvēlēto ierakstu"
+
+#: src/GameText.h:484
+msgid "Show helpful help strings such as this one"
+msgstr "Rādīt izpalīdzīgus teksta ziņojumus (tādus kā šis)"
+
+#: src/GameText.h:485
+msgid ""
+"Let X-Moto look for more levels on the net, and install them automatically"
+msgstr "Ļaut X-Moto meklēt tīmeklī jaunus līmeņus un automātiski tos instalēt"
+
+#: src/GameText.h:486
+msgid "Select this if you got a direct connection to the Internet"
+msgstr "Izvēlies šo, ja tev ir tiešs pieslēgums internetam"
+
+#: src/GameText.h:487
+msgid "Select this if you connect to the Internet through an HTTP proxy"
+msgstr "Izvēlies šo, ja tu lieto HTTP starpnieku, lai pieslēgtos internetam"
+
+#: src/GameText.h:488
+msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
+msgstr "Izvēlies šo, ja tu lieto SOCKS4 starpnieku, lai pieslēgtos internetam"
+
+#: src/GameText.h:489
+msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
+msgstr "Izvēlies šo, ja tu lieto SOCKS5 starpnieku, lai pieslēgtos internetam"
+
+#: src/GameText.h:490
+msgid "Use these settings"
+msgstr "Lietot šos iestatījumus"
+
+#: src/GameText.h:491
+msgid "Write the IP address or host name of proxy server to use"
+msgstr "Ieraksti izmantojamā starpniekservera IP adresi vai vārdu"
+
+#: src/GameText.h:492
+msgid "Write the port number used by the proxy server"
+msgstr "Ieraksti starpniekservera izmantoto porta numuru"
+
+#: src/GameText.h:493
+msgid "New levels and levels updated from the Internet"
+msgstr "Jauni līmeņi un līmeņi, kas atjaunoti no interneta"
+
+#: src/GameText.h:495
+msgid "Show the ghost if possible in the game"
+msgstr "Ja iespējams, rādīt spoku spēles laikā"
+
+#: src/GameText.h:496
+msgid "Choose which ghost to display"
+msgstr "Izvēlies, kuru spoku rādīt"
+
+#: src/GameText.h:497
+msgid ""
+"Make motion blur effect for the ghost (if supported by your graphics card)"
+msgstr ""
+"Lietot \"kustībā izplūdis\" efektu, zīmējot spoku (ja to ļauj tava "
+"videokarte)"
+
+#: src/GameText.h:498
+msgid "When starting a level with a ghost, display who the ghost is of"
+msgstr "Sākot līmeni ar spoku, parādīt informāciju par spoka īpašnieku"
+
+#: src/GameText.h:499
+msgid "Display the time difference between the ghost and you"
+msgstr "Parādīt laika atšķirību starp spoku un tevi"
+
+#: src/GameText.h:500
+msgid "If you make a highscore it will automatically be saved as a replay"
+msgstr "Uzstādot rekordu, tā ieraksts tiks automātiski saglabāts"
+
+#: src/GameText.h:501
+msgid "View the replay of the room's highscore"
+msgstr "Parādīt istabas rekorda ierakstu"
+
+#: src/GameText.h:503
+msgid "Check for new levels at startup"
+msgstr "Sākot spēli, meklēt jaunus līmeņus"
+
+#: src/GameText.h:504
+msgid "Check for new highscores at startup"
+msgstr "Sākot spēli, meklēt jaunus rekordus"
+
+#: src/GameText.h:506
+msgid "Show various statistics about X-Moto"
+msgstr "Rādīt dažādu X-Moto statistiku"
+
+#: src/GameText.h:507
+msgid "Update statistics (also happens each time X-Moto is started)"
+msgstr "Atjaunot statistiku (tas tiek darīts arī katru reizi, sākot X-Moto)"
+
+#: src/GameText.h:508
+msgid "Enables background music in the main menu"
+msgstr "Aktivizēt fona mūziku galvenajā izvēlnē"
+
+#: src/GameText.h:510
+msgid "Choose the X-Moto graphics theme"
+msgstr "Izvēlies X-Moto grafisko tēmu"
+
+#: src/GameText.h:511
+msgid "Check for new themes on the web"
+msgstr "Meklēt tīmeklī jaunas tēmas"
+
+#: src/GameText.h:512
+msgid "Download or update the selected theme"
+msgstr "Lejupielādēt vai atjaunot izvēlēto tēmu"
+
+#: src/GameText.h:513
+msgid "Upload the replay on the website of highscores"
+msgstr "Augšupielādēt ierakstu rekordu serverī"
+
+#: src/GameText.h:514
+msgid "Upload your best replays to your room (useful when it is just created)"
+msgstr ""
+"Augšupielādē savus labākos ierakstus istabā (noderīgi, kad tā ir tikko "
+"izveidota)"
+
+#: src/GameText.h:515
+msgid "Configure the main www options"
+msgstr "Konfigurēt galvenos WWW iestatījumus"
+
+#: src/GameText.h:516
+msgid ""
+"Choose where to upload/download replays, highscore lists (for more "
+"information, check the website)"
+msgstr ""
+"Izvēlies, kur augšup-/lejupielādēt ierakstus un rekordu sarakstus (lai "
+"uzzinātu vairāk, apmeklē mājas lapu)"
+
+#: src/GameText.h:517
+msgid "Choose your room"
+msgstr "Izvēlies savu istabu"
+
+#: src/GameText.h:518
+msgid "Get the rooms list from the web"
+msgstr "Lejupielādēt istabu sarakstu no tīmekļa"
+
+#: src/GameText.h:519
+msgid "Upload of highscore requires to log in (Except for WR)"
+msgstr "Lai augšupielādētu rekordus, jānorāda lietotājvārds (izņemot WR)"
+
+#: src/GameText.h:520
+msgid "Upload of highscore requires a password (Except for WR)"
+msgstr "Lai augšupielādētu rekordus, jānorāda parole (izņemot WR)"
+
+#: src/GameText.h:521
+msgid "Show the speedometer when playing"
+msgstr "Rādīt spidometru spēles laikā"
+
+#: src/GameText.h:522
+msgid "Enable animation of bike falling apart when dead"
+msgstr "Aktivizēt motocikla izjukšanas animāciju"
+
+#: src/GameText.h:523
+msgid "Automatically scroll over the level before starting playing it"
+msgstr "Automātiski pirms spēles parādīt visu līmeni"
+
+#: src/GameText.h:524
+msgid "View the X-Moto credits"
+msgstr "Noskatīties X-Moto titrus"
+
+#: src/GameText.h:525
+msgid "Name of replay"
+msgstr "Ieraksta nosaukums"
+
+#: src/GameText.h:526
+msgid "Level played in replay"
+msgstr "Ierakstā redzamais līmenis"
+
+#: src/GameText.h:527
+msgid "Player who recorded the replay"
+msgstr "Spēlētājs, kas veica ierakstu"
+
+#: src/GameText.h:528
+msgid "Click to select screen resolution"
+msgstr "Noklikšķini, lai izvēlētos ekrāna izšķirtspēju"
+
+#: src/GameText.h:529
+msgid "Completed levels / total number of levels in pack"
+msgstr "Pabeigti līmeņi / līmeņu skaits pakā"
+
+#: src/GameText.h:530
+msgid "Name of level pack"
+msgstr "Līmeņu pakas nosaukums"
+
+#: src/GameText.h:531
+msgid "Add the level to the favorite levels list"
+msgstr "Pievienot līmeni iecienītajiem līmeņiem"
+
+#: src/GameText.h:532
+msgid "Delete the level from the favorite levels list"
+msgstr "Dzēst līmeni no iecienītajiem līmeņiem"
+
+#: src/GameText.h:533
+msgid "Puzzle the levels pack list"
+msgstr "Sajaukt līmeņu sarakstu"
+
+#: src/GameText.h:534
+msgid "Enter text to filter the level list"
+msgstr "Ievadi tekstu līmeņu saraksta filtrēšanai"
+
+#: src/GameText.h:535
+msgid "Choose the number of players"
+msgstr "Izvēlies spēlētāju skaitu"
+
+#: src/GameText.h:536
+msgid "Your proxy login"
+msgstr "Tavs starpnieksevera lietotājvārds"
+
+#: src/GameText.h:537
+msgid "Your password associated with your login"
+msgstr "Parole, kas saistīta ar tavu lietotājvārdu"
+
+#: src/GameText.h:538
+msgid "Enter text to filter the replay list"
+msgstr "Ievadi tekstu ierakstu saraksta filtrēšanai"
+
+#: src/GameText.h:539
+msgid "Press to play X-Moto immediately"
+msgstr "Uzreiz sākt spēlēt X-Moto"
+
+#: src/GameText.h:540
+msgid "Increase or decrease the quality of the levels selected"
+msgstr "Palielināt vai samazināt atlasīto līmeņu kvalitāti"
+
+#: src/GameText.h:541
+msgid "Increase or decrease the difficulty of the levels selected"
+msgstr "Palielināt vai samazināt atlasīto līmeņu grūtības pakāpi"
+
+#: src/GameText.h:542
+msgid ""
+"Stop the game once a player ends the level or continue while a player is "
+"running"
+msgstr ""
+"Pārtraukt spēli, kad spēlētājs pabeidz līmeni, vai turpināt, kamēr kāds "
+"spēlētājs vēl spēlē"
+
+#: src/GameText.h:546
+msgid "Don't show the ghosts while playing"
+msgstr "Nerādīt spokus spēles laikā"
+
+#: src/GameText.h:547
+msgid "The scene is shared by all the players"
+msgstr "Līmenī vienlaicīgi atrodas visi spēlētāji"
+
+#: src/GameText.h:548
+msgid "Change the X-Moto language"
+msgstr "Mainīt X-Moto valodu"
+
+#: src/GameText.h:549
+msgid "Name of the language"
+msgstr "Valodas nosaukums"
+
+#: src/GameText.h:550
+msgid "Code of the language"
+msgstr "Valodas kods"
+
+#: src/GameText.h:552
+msgid "Levels with no highscore"
+msgstr "Līmeņi bez rekorda"
+
+#: src/GameText.h:553 src/GameText.h:586
+msgid "Levels you have not completed"
+msgstr "Nepabeigti līmeņi"
+
+#: src/GameText.h:554
+msgid "You're not the highscore holder"
+msgstr "Tu neesi rekorda īpašnieks"
+
+#: src/GameText.h:556
+msgid "New and updated levels"
+msgstr "Jauni un atjaunoti līmeņi"
+
+#: src/GameText.h:557
+msgid "Favorite levels"
+msgstr "Iecienītie līmeņi"
+
+#: src/GameText.h:558
+msgid "Blacklisted levels"
+msgstr "Līmeņu melnais saraksts"
+
+#: src/GameText.h:559
+msgid "Nicest levels"
+msgstr "Vistīkamākie līmeņi"
+
+#: src/GameText.h:560
+msgid "Hardest levels"
+msgstr "Visgrūtākie līmeņi"
+
+#: src/GameText.h:561
+msgid "Easiest levels"
+msgstr "Visvieglākie līmeņi"
+
+#: src/GameText.h:562
+msgid "Crappiest levels"
+msgstr "Visdraņķīgākie līmeņi"
+
+#: src/GameText.h:563
+msgid "Scripted levels"
+msgstr "Programmētie līmeņi"
+
+#: src/GameText.h:564
+msgid "Musical levels"
+msgstr "Muzikālie līmeņi"
+
+#: src/GameText.h:566
+msgid "Last played levels"
+msgstr "Pēdējie spēlētie līmeņi"
+
+#: src/GameText.h:567
+msgid "Never played levels"
+msgstr "Nekad nespēlētie līmeņi"
+
+#: src/GameText.h:568
+msgid "Most played levels"
+msgstr "Visspēlētākie līmeņi"
+
+#: src/GameText.h:569
+msgid "Less played levels (but played)"
+msgstr "Retāk spēlētie līmeņi (bet spēlētie)"
+
+#: src/GameText.h:570
+msgid "Last highscores"
+msgstr "Pēdējie rekordi"
+
+#: src/GameText.h:571
+msgid "Last levels"
+msgstr "Pēdējie līmeņi"
+
+#: src/GameText.h:572
+msgid "Oldest highscores"
+msgstr "Visvecākie rekordi"
+
+#: src/GameText.h:573
+msgid "Platinum"
+msgstr "Platīns"
+
+#: src/GameText.h:574
+msgid "Gold"
+msgstr "Zelts"
+
+#: src/GameText.h:575
+msgid "Silver"
+msgstr "Sudrabs"
+
+#: src/GameText.h:576
+msgid "Bronze"
+msgstr "Bronza"
+
+#: src/GameText.h:577
+msgid "No medal"
+msgstr "Bez medaļas"
+
+#: src/GameText.h:578
+msgid "My levels"
+msgstr "Mani līmeņi"
+
+#: src/GameText.h:579
+msgid "Crappy levels"
+msgstr "Draņķīgi līmeņi"
+
+#: src/GameText.h:580
+msgid "Shortest levels"
+msgstr "Visīsākie līmeņi"
+
+#: src/GameText.h:581
+msgid "Medium levels"
+msgstr "Vidēja garuma līmeņi"
+
+#: src/GameText.h:582
+msgid "Long levels"
+msgstr "Gari līmeņi"
+
+#: src/GameText.h:583
+msgid "Very long levels"
+msgstr "Ļoti gari līmeņi"
+
+#: src/GameText.h:585
+msgid "Levels with no highscore in your room"
+msgstr "Līmeņi bez rekorda tavā istabā"
+
+#: src/GameText.h:587
+msgid "Somebody in the room made a better highscore than yours"
+msgstr "Kāds istabā ir uzstādījis labāku rekordu par tavējo"
+
+#: src/GameText.h:588
+msgid "All X-Moto levels"
+msgstr "Visi X-Moto līmeņi"
+
+#: src/GameText.h:589
+msgid "New and updated levels since your last check"
+msgstr "Jauni un atjaunoti līmeņi kopš pēdējās pārbaudes"
+
+#: src/GameText.h:590
+msgid "Your favorite levels"
+msgstr "Tavi iecienītākie līmeņi"
+
+#: src/GameText.h:591
+msgid "Your blacklisted levels"
+msgstr "Tavi melnajā sarakstā esošie līmeņi"
+
+#: src/GameText.h:592
+msgid "Nicest X-Moto levels according to the web votes"
+msgstr "Vistīkamākie X-Moto līmeņi, spriežot pēc tīmekļa balsojuma"
+
+#: src/GameText.h:593
+msgid "Hardest X-Moto levels according to the web votes"
+msgstr "Visgrūtākie X-Moto līmeņi, spriežot pēc tīmekļa balsojuma"
+
+#: src/GameText.h:594
+msgid "Easiest X-Moto levels according to the web votes"
+msgstr "Visvieglākie X-Moto līmeņi, spriežot pēc tīmekļa balsojuma"
+
+#: src/GameText.h:595
+msgid "Crappiest X-Moto levels according to the web votes"
+msgstr "Visdraņķīgākie X-Moto līmeņi, spriežot pēc tīmekļa balsojuma"
+
+#: src/GameText.h:596
+msgid "X-Moto levels which are dynamic"
+msgstr "Interaktīvi X-Moto līmeņi"
+
+#: src/GameText.h:597
+msgid "X-Moto levels with a background music"
+msgstr "X-Moto līmeņi ar fona mūziku"
+
+#: src/GameText.h:598
+msgid "Last levels you have played"
+msgstr "Pēdējie tevis spēlētie līmeņi"
+
+#: src/GameText.h:599
+msgid "X-Moto levels you never played"
+msgstr "X-Moto līmeņi, kurus nekad neesi spēlējis"
+
+#: src/GameText.h:600
+msgid "X-Moto levels you have played the most"
+msgstr "X-Moto līmeņi, kurus esi spēlējis visbiežāk"
+
+#: src/GameText.h:601
+msgid "X-Moto levels you have played only a few times"
+msgstr "X-Moto līmeņi, kurus esi spēlējis tikai dažas reizes"
+
+#: src/GameText.h:602
+msgid "X-Moto levels having a recent highscore in your room"
+msgstr "X-Moto līmeņi ar nesenu rekordu tavā istabā"
+
+#: src/GameText.h:603
+msgid "Last created X-Moto levels"
+msgstr "Pēdējie izveidotie X-Moto līmeņi"
+
+#: src/GameText.h:604
+msgid "X-Moto levels having an old highscore in your room"
+msgstr "X-Moto līmeņi ar veciem rekordiem tavā istabā"
+
+#: src/GameText.h:605
+msgid "You have the room highscore"
+msgstr "Tu esi istabas rekorda īpašnieks"
+
+#: src/GameText.h:606
+msgid "Your personal highscore finish time is almost the room highscore (95%)"
+msgstr "Tava rekorda finiša laiks daudz neatšķiras no istabas rekorda (95%)"
+
+#: src/GameText.h:607
+msgid ""
+"Your personal highscore finish time is almost the room highscore (90%-95%)"
+msgstr ""
+"Tava rekorda finiša laiks daudz neatšķiras no istabas rekorda (90%-95%)"
+
+#: src/GameText.h:608
+msgid ""
+"Your personal highscore finish time is almost the room highscore (80%-90%)"
+msgstr ""
+"Tava rekorda finiša laiks daudz neatšķiras no istabas rekorda (80%-90%)"
+
+#: src/GameText.h:609
+msgid "The room highscore is really better than your own highscore"
+msgstr "Istabas rekords ir daudz labāks par tavu personīgo rekordu"
+
+#: src/GameText.h:610
+#, c-format
+msgid "Level pack \"%s\""
+msgstr "Līmeņu paka \"%s\""
+
+#: src/GameText.h:611
+#, c-format
+msgid "Highscores by %s"
+msgstr "%s rekordi"
+
+#: src/GameText.h:612
+msgid "External levels (the one you put into the 'My levels' directory)"
+msgstr "Ārējie līmeņi (tie, kas atrodas \"My levels\" mapē)"
+
+#: src/GameText.h:613
+msgid "Levels marked 'crappy' are hidden in all other packs"
+msgstr "Līmeņi, kas atzīmēti kā \"draņķīgi\", netiek rādīti citās pakās"
+
+#: src/GameText.h:614
+msgid "The shortest levels (less than 25 seconds)"
+msgstr "Visīsākie līmeņi (īsāki par 25 sekundēm)"
+
+#: src/GameText.h:615
+msgid "The medium levels (25 seconds to 60)"
+msgstr "Vidēja garuma līmeņi (no 25 līdz 60 sekundēm)"
+
+#: src/GameText.h:616
+msgid "The long levels (1 minute to 2 minutes)"
+msgstr "Gari līmeņi (no 1 minūtes līdz 2 minūtēm)"
+
+#: src/GameText.h:617
+msgid "The longest levels (more than 2 minutes)"
+msgstr "Visgarākie līmeņi (garāki par 2 minūtēm)"
+
+#: src/GameText.h:619
+msgid "Ugly mode enabled"
+msgstr "Neglītais režīms aktivizēts"
+
+#: src/GameText.h:620
+msgid "Ugly mode disabled"
+msgstr "Neglītais režīms deaktivizēts"
+
+#: src/GameText.h:621
+msgid "Theme mode enabled"
+msgstr "Tēmas režīms aktivizēts"
+
+#: src/GameText.h:622
+msgid "Theme mode disabled"
+msgstr "Tēmas režīms deaktivizēts"
+
+#: src/GameText.h:623
+msgid "UglyOver mode enabled"
+msgstr "Neglītā režīma pārklājums aktivizēts"
+
+#: src/GameText.h:624
+msgid "UglyOver mode disabled"
+msgstr "Neglītā režīma pārklājums deaktivizēts"
+
+#: src/GameText.h:625
+msgid "Web connection enabled"
+msgstr "Tīmekļa pieslēgums aktivizēts"
+
+#: src/GameText.h:626
+msgid "Web connection disabled"
+msgstr "Tīmekļa pieslēgums deaktivizēts"
+
+#: src/GameText.h:627
+msgid "Replay interpolation enabled"
+msgstr "Ieraksta interpolācija aktivizēta"
+
+#: src/GameText.h:628
+msgid "Replay interpolation disabled"
+msgstr "Ieraksta interpolācija deaktivizēta"
+
+#: src/GameText.h:629
+msgid "Fps enabled"
+msgstr "Kadru skaitītājs aktivizēts"
+
+#: src/GameText.h:630
+msgid "Fps disabled"
+msgstr "Kadru skaitītājs deaktivizēts"
+
+#: src/GameText.h:632
+msgid "No training positions stored"
+msgstr "Nav saglabātu apmācības pozīciju"
+
+#: src/GameText.h:633
+#, c-format
+msgid "Training position %i/%i restored"
+msgstr "Atjaunota apmācības pozīcija %i/%i"
+
+#: src/GameText.h:634
+#, c-format
+msgid "Stored as training position %i"
+msgstr "Saglabāta apmācības pozīcija %i"
+
+#: src/GameText.h:637
+msgid "FontGroup:GENERAL"
+msgstr "FontGroup:GENERAL"
+
+#: src/LevelsText.h:21
+msgid "First let's take a look at the user interface..."
+msgstr "Vispirms aplūkosim lietotāja interfeisu."
+
+#: src/LevelsText.h:22
+msgid "In the upper left corner, you've got your timers"
+msgstr "Augšējā kreisajā stūrī atrodas taimeri."
+
+#: src/LevelsText.h:23
+msgid "The big one is your current time"
+msgstr "Lielākais rāda tavu šībrīža laiku."
+
+#: src/LevelsText.h:24
+msgid ""
+"The small one to the right is your own best time\n"
+"for the current level..."
+msgstr ""
+"Mazais, pa labi, rāda tavu labāko rezultātu\n"
+"šajā līmenī..."
+
+#: src/LevelsText.h:25
+msgid ""
+"... and the one to the left is the best of all\n"
+"on this computer."
+msgstr ""
+"... un tas, pa kreisi, rāda labāko no visiem\n"
+"rezultātiem šajā datorā."
+
+#: src/LevelsText.h:26
+msgid ""
+"Down here there's the minimap, which shows the level\n"
+"around you, so you know where you're heading."
+msgstr ""
+"Šeit, apakšā, atrodas minikarte. Tajā redzams\n"
+"apkārt esošais līmenis, lai tu zinātu, kurp dodies."
+
+#: src/LevelsText.h:27
+msgid "Now let's look at your controls."
+msgstr "Tagad apskatīsim vadību."
+
+#: src/LevelsText.h:28
+msgid "(You seem to be using a joystick, can't help with that :P)"
+msgstr "(Izskatās, ka tu lieto vadības sviru. Neko darīt :P)"
+
+# XXX
+# Hard-coded word order.  Here it is not a problem in Latvian, but it
+# might be in other languages.  More below.
+#: src/LevelsText.h:29
+msgid ": Drive forward"
+msgstr ": braukt uz priekšu"
+
+#: src/LevelsText.h:30
+msgid ": Brake"
+msgstr ": bremzēt"
+
+#: src/LevelsText.h:31
+msgid ": Change direction"
+msgstr ": mainīt virzienu"
+
+#: src/LevelsText.h:32
+msgid ": Rotate anti-clockwise"
+msgstr ": griezties pretēji pulksteņa rādītāja virzienam"
+
+#: src/LevelsText.h:33
+msgid ": Rotate clockwise"
+msgstr ": griezties pulksteņa rādītāja virzienā"
+
+#: src/LevelsText.h:34
+msgid "Okay. The red dot on your minimap is a strawberry."
+msgstr "Minikartē redzamais sarkanais punkts ir zemene."
+
+#: src/LevelsText.h:35
+msgid ""
+"The primary objective of the game is for you\n"
+"to collect all of them, and then find the flower."
+msgstr ""
+"Tavs galvenais uzdevums spēlē ir savākt\n"
+"visas zemenes un pēc tam sameklēt ziedu."
+
+#: src/LevelsText.h:36
+msgid ""
+"The icon to the right of your time,\n"
+"indicates how many strawberries still left."
+msgstr ""
+"Ikona, kas atrodas pa labi no tava laika,\n"
+"rāda, cik daudz zemeņu vēl jāsavāc."
+
+#: src/LevelsText.h:37
+msgid "Drive in its direction..."
+msgstr "Tagad dodies tās virzienā..."
+
+#: src/LevelsText.h:38
+msgid ""
+"When done, head for the flower.\n"
+"It's the purple dot on your minimap."
+msgstr ""
+"Kad tas izdarīts, dodies pie zieda.\n"
+"Tas minikartē attēlots kā purpursarkans punkts."
+
+#: src/LevelsText.h:39
+msgid "Welcome to X-Moto!"
+msgstr "Laipni lūdzam X-Moto!"
+
+#: src/LevelsText.h:40
+msgid ""
+"This level is a short tutorial of\n"
+"how you play the game."
+msgstr "Šis līmenis ir īsa pamācība spēles spēlēšanā."
+
+#: src/LevelsText.h:41
+msgid "Please stay put and follow the instructions! :)"
+msgstr "Lūdzu, negrozies un seko norādījumiem! :)"
+
+#: src/LevelsText.h:42
+msgid "Pick up the strawberry by touching it"
+msgstr "Savāc zemeni, tai pieskaroties."
+
+#: src/LevelsText.h:43
+msgid "Touch it to finish the level. Good luck with the rest :)"
+msgstr "Pieskaries tam, lai pabeigtu līmeni. Lai veicas turpmāk! :)"
+
+#: src/LevelsText.h:44
+msgid "The first jump you're going to perform is very easy."
+msgstr "Tavs pirmais lēciens būs ļoti viegls."
+
+#: src/LevelsText.h:45
+msgid ""
+"Drive to the left, accelerate, and when you are in\n"
+"the air, try to adjust your attitude with the left\n"
+"and right arrow keys, so you'll land on your wheels."
+msgstr ""
+"Dodies pa kreisi, uzņem ātrumu un, kad esi gaisā,\n"
+"centies regulēt savu stāvokli pārmaiņus gan ar labo,\n"
+"gan kreiso bulttaustiņu, lai nokristu uz riteņiem."
+
+#: src/LevelsText.h:46
+msgid ""
+"The next jump is a bit trickier. You'll need all the\n"
+"speed you can get to reach the other side..."
+msgstr ""
+"Nākošais lēciens ir nedaudz sarežģītāks. Šeit tev\n"
+"būs vajadzīgs viss iespējamais ātrums, lai tiktu\n"
+"otrā pusē."
+
+#: src/LevelsText.h:47
+msgid "Now for the most difficult jump in this tutorial!"
+msgstr "Tagad ķeramies pie visgrūtākā lēciena šajā pamācībā!"
+
+#: src/LevelsText.h:48
+msgid "This time, speed alone won't do the job..."
+msgstr "Šoreiz ar ātrumu vien nebūs līdzēts..."
+
+#: src/LevelsText.h:49
+msgid ""
+"Here's the plan:\n"
+"Again, you'll have to obtain maximum speed, but when\n"
+"you reach the edge of the jump, pull the bike's front\n"
+"wheel up."
+msgstr ""
+"Plāns ir šāds:\n"
+"Arī šoreiz tev būs jāuzņem liels ātrums, taču,\n"
+"sasniedzot aizas malu, tev jāparauj motocikla\n"
+"priekšējais ritenis uz augšu."
+
+#: src/LevelsText.h:50 src/LevelsText.h:63
+msgid ""
+"That will cause the rear suspension to increase the\n"
+"length of the jump.\n"
+"Try it..."
+msgstr ""
+"Tas liks aizmugurējā riteņa atsperēm saspringt\n"
+"un tādējādi paildzināt lēcienu.\n"
+"Pamēģini..."
+
+#: src/LevelsText.h:51
+msgid "This tutorial will teach you the basics of jumping."
+msgstr "Šajā pamācībā tu iepazīsies ar lēkšanas pamatiem."
+
+# XXX
+# Hard-coded word order.
+#: src/LevelsText.h:52
+msgid ""
+"Remember you can turn around your bike\n"
+"by pressing :"
+msgstr ""
+"Atceries, ka vari apgriezt motociklu,\n"
+"nospiežot "
+
+#: src/LevelsText.h:53
+msgid "That was pretty easy, right?"
+msgstr "Diezgan viegli, vai ne?"
+
+#: src/LevelsText.h:54
+msgid ""
+"Accelerate NOW! Obtain maximum speed, and try to\n"
+"keep the front wheel at the ground..."
+msgstr ""
+"Uzņem ātrumu! Brauc cik ātri vien iespējams, un\n"
+"centies turēt priekšējo riteni pie zemes."
+
+#: src/LevelsText.h:55
+msgid "Nice jump there! :)"
+msgstr "Lielisks lēciens! :)"
+
+#: src/LevelsText.h:56
+msgid "Congrats, you're now a master jumper!"
+msgstr "Tagad tu esi īsts lēkšanas meistars!"
+
+#: src/LevelsText.h:57
+msgid ""
+"The basic idea is that when driving on the rear wheel,\n"
+"your head is lowered quite a lot..."
+msgstr ""
+"Galvenā doma ir tāda, ka, pārvietojoties uz aizmugurējā\n"
+"riteņa, tava galva atrodas diezgan zemu."
+
+#: src/LevelsText.h:58
+msgid ""
+"The difficult part is to keep the balance.\n"
+"When the distance you have to drive is quite short,\n"
+"you don't need to keep the balance."
+msgstr ""
+"Grūtākais ir saglabāt līdzsvaru.\n"
+"Ja veicamais attālums ir samērā neliels,\n"
+"līdzvars nav jāsaglabā."
+
+#: src/LevelsText.h:59
+msgid ""
+"Accelerate (slowly) to the right with the front wheel raising.\n"
+"Just before your head hit the block, make a quick left/right\n"
+"combination, and you should be on the other side.\n"
+"Try it..."
+msgstr ""
+"Lēnām dodies pa labi, tā lai priekšējais ritenis celtos uz augšu.\n"
+"Tieši pirms tam, kad tavai galvai būtu jāatsitas pret apmali,\n"
+"izdari strauju pa kreisi/pa labi kombināciju, un tev vajadzētu\n"
+"veiksmīgi nonākt otrā pusē.\n"
+"Pamēģini!"
+
+#: src/LevelsText.h:60
+msgid ""
+"Now you'll try a bit more difficult one...\n"
+"This time keep your hands off the left and right arrow keys,\n"
+"they're not delicate enough to help you keep balance."
+msgstr ""
+"Nākošais būs nedaudz grūtāks...\n"
+"Šoreiz neķeries klāt labajam un kreisajam bulttaustiņam,\n"
+"tie nav pietiekoši smalki, lai palīdzētu noturēt līdzsvaru."
+
+#: src/LevelsText.h:61
+msgid ""
+"Instead regulate your angle by accelerating and braking.\n"
+"Try to drive a bit back and forth on your rear wheel,\n"
+"keeping the bike as steady as possible..."
+msgstr ""
+"Tā vietā, lai regulētu leņķi, palielini un samazini ātrumu.\n"
+"Pamēģini pabraukāt turp un atpakaļ uz aizmugurējā riteņa,\n"
+"turot motociklu pēc iespējas stabilāku."
+
+#: src/LevelsText.h:62
+msgid "Try getting under the next obstacle when you feel you're ready."
+msgstr "Kad esi sagatavojies, pamēģini pakļūt zem nākošā šķēršļa."
+
+#: src/LevelsText.h:64
+msgid ""
+"This tutorial will teach you to rear-wheel through\n"
+"areas where the ceiling is low.\n"
+"Beware that this can be pretty difficult :)"
+msgstr ""
+"Šī pamācība iepazīstinās tevi ar pārvietošanos uz\n"
+"aizmugurējā riteņa vietās ar zemiem griestiem.\n"
+"Ņem vērā, ka tas var būt diezgan grūti :)"
+
+#: src/LevelsText.h:65
+msgid "Not that difficult, right?"
+msgstr "Nebija nemaz tik grūti, vai ne?"
+
+#: src/LevelsText.h:66
+msgid "Nice! Now try the next one, it's a bit more difficult..."
+msgstr "Labi! Tagad pamēģini nākošo; tas ir nedaudz grūtāks..."
+
+#: src/LevelsText.h:67
+msgid "Good job! The next one is even more difficult..."
+msgstr "Lieliski! Taču nākošais ir vēl grūtāks..."
+
+#: src/LevelsText.h:68
+msgid ""
+"Now for the final one... It's not that long, but instead\n"
+"there's even less room for your precious head. Good luck! :)"
+msgstr ""
+"Un tagad pēdējais! Tas nav tik garš, taču šoreiz\n"
+"šeit ir vēl mazāk vietas tavai galvai.  Lai veicas! :)"
+
+#~ msgid "Added to the favorite"
+#~ msgstr "Pievienots iecienītajiem"
+
+#~ msgid "Delete from the favorite"
+#~ msgstr "Izdzēsts no iecienītajiem"
+
+#~ msgid "Already used!"
+#~ msgstr "Jau aizņemts!"
+
+#~ msgid "Built-In Levels"
+#~ msgstr "Iebūvētie līmeņi"
+
+#~ msgid "External Levels"
+#~ msgstr "Ārējie līmeņi"
+
+#~ msgid "Official built-in levels"
+#~ msgstr "Oficiālie iebūvētie līmeņi"
+
+#~ msgid "Unofficial stand-alone external levels"
+#~ msgstr "Neoficiāli atsevišķi ārējie līmeņi"
+
+#~ msgid ""
+#~ "Failed to check for levels.\n"
+#~ "Check your Internet connection!"
+#~ msgstr ""
+#~ "Neizdevās meklēt līmeņus.\n"
+#~ "Pārbaudi savu interneta pieslēgumu!"
+
+#~ msgid ""
+#~ "Failed to download high-scores.\n"
+#~ "Check your Internet connection!"
+#~ msgstr ""
+#~ "Neizdevās lejupielādēt rekordus.\n"
+#~ "Pārbaudi savu interneta pieslēgumu!"
+
+#~ msgid ""
+#~ "Failed to download the replay.\n"
+#~ "Check your Internet connection!"
+#~ msgstr ""
+#~ "Neizdevās lejupielādēt ierakstu.\n"
+#~ "Pārbaudi savu interneta pieslēgumu!"
+
+#~ msgid ""
+#~ "Failed to get the selected theme\n"
+#~ "Check your Internet connection!"
+#~ msgstr ""
+#~ "Neizdevās iegūt izvēlēto tēmu\n"
+#~ "Pārbaudi savu interneta pieslēgumu!"
+
+#~ msgid ""
+#~ "Failed to update the theme list\n"
+#~ "Check your Internet connection!"
+#~ msgstr ""
+#~ "Neizdevās atjaunot tēmu sarakstu!\n"
+#~ "Pārbaudi savu interneta pieslēgumu!"
+
+#~ msgid "%d new or updated levels available. Download now?"
+#~ msgstr "Pieejami %d jauni vai atjaunoti līmeņi. Lejupielādēt?"
+
+#~ msgid "Musical"
+#~ msgstr "Muzikālie"
+
+#~ msgid "Reload levels from Levels dir (if you create a new level)"
+#~ msgstr "Pārlādēt līmeņus no Levels mapes (ja esi izveidojis jaunu līmeni)"

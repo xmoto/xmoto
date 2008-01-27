@@ -1,0 +1,3 @@
+version=3
+
+http://xmoto.tuxfamily.org/ .*/xmoto-([\d\.]+)-src\.tar\.gz
