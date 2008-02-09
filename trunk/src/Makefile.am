@@ -318,6 +318,8 @@ svnCheck:
 	fi
 
 svnVersion:
-	 svnversion -n $(srcdir) > svnVersion
+	if test -d $(srcdir)/.svn; then \
+	  svnversion -n $(srcdir) > svnVersion; \
+	fi
 
 svn_version.$(OBJEXT): svnVersion
