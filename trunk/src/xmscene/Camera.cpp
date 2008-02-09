@@ -290,8 +290,8 @@ void Camera::adaptRotationAngleToGravity(Vector2f& gravity) {
 
   m_desiredRotationAngle = ((m_desiredRotationAngle * 180.0) / M_PI) - 90.0;
   m_desiredRotationAngle = (float)((int)((m_desiredRotationAngle) + 360.0) % 360);
-  printf("Gravity (%.2f, %.2f)\n", gravity.x, gravity.y);
-  printf("Desired Angle = %.2f\n", m_desiredRotationAngle < 0.0 ? m_desiredRotationAngle+360.0 : m_desiredRotationAngle);
+  //printf("Gravity (%.2f, %.2f)\n", gravity.x, gravity.y);
+  //printf("Desired Angle = %.2f\n", m_desiredRotationAngle < 0.0 ? m_desiredRotationAngle+360.0 : m_desiredRotationAngle);
 }
 
 
