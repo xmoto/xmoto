@@ -208,11 +208,11 @@ bool LevelsManager::doesLevelsPackExist(const std::string &i_name) const {
 
 void LevelsManager::makePacks(const std::string& i_playerName,
 			      const std::string& i_id_room,
-			      bool i_bDebugMode) {
+			      bool i_bDebugMode,
+			      xmDatabase *i_db) {
   LevelsPack *v_pack;
   char **v_result;
   unsigned int nrow;
-  xmDatabase *i_db = xmDatabase::instance("main");
 
   cleanPacks();
 
@@ -774,9 +774,7 @@ void LevelsManager::reloadExternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterf
   i_db->levels_add_end();
 }
 
-void LevelsManager::addExternalLevel(std::string i_levelFile) {
-
-  xmDatabase *i_db = xmDatabase::instance("main");
+void LevelsManager::addExternalLevel(std::string i_levelFile, xmDatabase *i_db) {
   Level *v_level = new Level();
   try {
     bool bCached = false;
@@ -806,14 +804,7 @@ void LevelsManager::addExternalLevel(std::string i_levelFile) {
   delete v_level;
 }
 
-void LevelsManager::reloadLevelsFromLvl(xmDatabase* i_threadDb, XMotoLoadLevelsInterface *i_loadLevelsInterface) {
-  xmDatabase* i_db;
-
-  if(i_threadDb != NULL)
-    i_db = i_threadDb;
-  else
-    i_db = xmDatabase::instance("main");
-
+void LevelsManager::reloadLevelsFromLvl(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface) {
   reloadInternalLevels(i_db, i_loadLevelsInterface);
   reloadExternalLevels(i_db, i_loadLevelsInterface);
 }
@@ -892,11 +883,10 @@ void LevelsManager::cleanCache() {
   }
 }
 
-std::string LevelsManager::LevelByFileName(const std::string& i_fileName) {
+std::string LevelsManager::LevelByFileName(const std::string& i_fileName, xmDatabase *i_db) {
     char **v_result;
     unsigned int nrow;
     std::string v_id_level;
-    xmDatabase *i_db = xmDatabase::instance("main");
 
     v_result = i_db->readDB("SELECT id_level FROM levels WHERE filepath=\"" +
 			    xmDatabase::protectString(i_fileName) + "\";",
@@ -925,10 +915,9 @@ bool LevelsManager::doesLevelExist(const std::string& i_id, xmDatabase* i_db) {
   return nrow != 0;
 }
 
-void LevelsManager::printLevelsList() const {
+void LevelsManager::printLevelsList(xmDatabase *i_db) const {
   char **v_result;
   unsigned int nrow;
-  xmDatabase *i_db = xmDatabase::instance("main");
 
   printf("%-40s %-40s\n", "Id", "Name");
 
@@ -945,15 +934,10 @@ void LevelsManager::printLevelsList() const {
 void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
 					const std::vector<std::string> &UpdatedLvl,
 					WWWAppInterface* pCaller,
-					xmDatabase* i_threadDb) {
+					xmDatabase* i_db) {
   Level *v_level;
   int   current = 0;
   float total   = 100.0 / (float)(NewLvl.size() + UpdatedLvl.size());
-  xmDatabase *i_db;
-  if(i_threadDb == NULL)
-    i_db = xmDatabase::instance("main");
-  else
-    i_db = i_threadDb;
 
   i_db->levels_cleanNew();
 
@@ -1026,11 +1010,10 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
   }
 }
 
-bool LevelsManager::isInFavorite(std::string i_profile, const std::string& i_id_level) {
+bool LevelsManager::isInFavorite(std::string i_profile, const std::string& i_id_level, xmDatabase *i_db) {
   unsigned int nrow;
   char **v_result;
   int v_n;
-  xmDatabase *i_db = xmDatabase::instance("main");
 
   /* check if the level is already into the favorite list */
   v_result = i_db->readDB("SELECT COUNT(id_level) "
@@ -1045,26 +1028,23 @@ bool LevelsManager::isInFavorite(std::string i_profile, const std::string& i_id_
 }
 
 void LevelsManager::addToFavorite(std::string i_profile,
-				  const std::string& i_id_level) {
-  xmDatabase *i_db = xmDatabase::instance("main");
-  if(isInFavorite(i_profile, i_id_level) == false) {
+				  const std::string& i_id_level, xmDatabase *i_db) {
+  if(isInFavorite(i_profile, i_id_level, i_db) == false) {
     i_db->levels_addToFavorite(i_profile, i_id_level);
   }
 }
 
 void LevelsManager::delFromFavorite(std::string i_profile,
-				    const std::string& i_id_level) {
-  xmDatabase *i_db = xmDatabase::instance("main");
-  if(isInFavorite(i_profile, i_id_level)) {
+				    const std::string& i_id_level, xmDatabase *i_db) {
+  if(isInFavorite(i_profile, i_id_level, i_db)) {
     i_db->levels_delToFavorite(i_profile, i_id_level);
   }
 }
 
-bool LevelsManager::isInBlacklist(std::string i_profile, const std::string& i_id_level) {
+bool LevelsManager::isInBlacklist(std::string i_profile, const std::string& i_id_level, xmDatabase *i_db) {
   unsigned int nrow;
   char **v_result;
   int v_n;
-  xmDatabase *i_db = xmDatabase::instance("main");
 
   /* check if the level is already into the blacklist list */
   v_result = i_db->readDB("SELECT COUNT(id_level) "
@@ -1079,29 +1059,26 @@ bool LevelsManager::isInBlacklist(std::string i_profile, const std::string& i_id
 }
 
 void LevelsManager::addToBlacklist(std::string i_profile,
-				  const std::string& i_id_level) {
-  xmDatabase *i_db = xmDatabase::instance("main");
-  if(isInBlacklist(i_profile, i_id_level) == false) {
+				   const std::string& i_id_level, xmDatabase *i_db) {
+  if(isInBlacklist(i_profile, i_id_level, i_db) == false) {
     i_db->levels_addToBlacklist(i_profile, i_id_level);
   }
 }
 
 void LevelsManager::delFromBlacklist(std::string i_profile,
-				    const std::string& i_id_level) {
-  xmDatabase *i_db = xmDatabase::instance("main");
-  if(isInBlacklist(i_profile, i_id_level)) {
+				     const std::string& i_id_level, xmDatabase *i_db) {
+  if(isInBlacklist(i_profile, i_id_level, i_db)) {
     i_db->levels_delToBlacklist(i_profile, i_id_level);
   }
 }
 
 std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN, unsigned int i_difficultyMIN,
 						  unsigned int i_qualityMAX, unsigned int i_difficultyMAX,
-						  const std::string& i_profile, const std::string& i_id_room) {
+						  const std::string& i_profile, const std::string& i_id_room, xmDatabase *i_db) {
   /* SELECT id_level, name, profile_best_finishTime, web_highscore */
   char **v_result;
   unsigned int nrow;
   char *v_res;
-  xmDatabase *i_db = xmDatabase::instance("main");
 
   /* if xmoto run only 1 time, run the tutorial pack */
   bool v_tutorials = false;

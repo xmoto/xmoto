@@ -67,7 +67,11 @@ class BikeState;
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,unsigned int nStateSize);
       void saveReplay(void);
       std::string openReplay(const std::string &FileName, std::string &Player, bool bDisplayInformation = false);
+
       static void deleteReplay(std::string ReplayName);
+      static void cleanReplays(xmDatabase *i_db);
+      static int  cleanReplaysNb(xmDatabase *i_db); // nb replays that cleanReplays() would clean
+
       void reinitialize();
       std::string getLevelId();
 

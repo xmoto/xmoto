@@ -309,7 +309,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   
   /* -listlevels? */
   if(v_xmArgs.isOptListLevels()) {
-    LevelsManager::instance()->printLevelsList();
+    LevelsManager::instance()->printLevelsList(xmDatabase::instance("main"));
     quit();
     return;
   }
@@ -347,13 +347,13 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   
   /* load packs */
   LevelsManager::checkPrerequires();
-  LevelsManager::instance()->makePacks(XMSession::instance()->profile(), XMSession::instance()->idRoom(), XMSession::instance()->debug());
+  LevelsManager::instance()->makePacks(XMSession::instance()->profile(), XMSession::instance()->idRoom(), XMSession::instance()->debug(), xmDatabase::instance("main"));
   
   /* What to do? */
   if(m_PlaySpecificLevelFile != "") {
     try {
-      LevelsManager::instance()->addExternalLevel(m_PlaySpecificLevelFile);
-      m_PlaySpecificLevelId = LevelsManager::instance()->LevelByFileName(m_PlaySpecificLevelFile);
+      LevelsManager::instance()->addExternalLevel(m_PlaySpecificLevelFile, xmDatabase::instance("main"));
+      m_PlaySpecificLevelId = LevelsManager::instance()->LevelByFileName(m_PlaySpecificLevelFile, xmDatabase::instance("main"));
     } catch(Exception &e) {
       m_PlaySpecificLevelId = m_PlaySpecificLevelFile;
     }
