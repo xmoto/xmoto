@@ -158,7 +158,7 @@ int UpgradeLevelsThread::realThreadFunction()
     WebThemes::updateTheme(m_pDb, m_id_theme, this);
     setSafeKill(false);
 
-    StateManager::instance()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
+    StateManager::instance()->sendAsynchronousMessage("UPDATE_THEMES_LISTS");
 
     // don't safe kill here
     m_pWebLevels->upgrade(m_pDb);

@@ -46,7 +46,7 @@ int UpdateThemesListThread::realThreadFunction()
     setSafeKill(true);
     WebThemes::updateThemeList(m_pDb, this);
     setSafeKill(false);
-    StateManager::instance()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
+    StateManager::instance()->sendAsynchronousMessage("UPDATE_THEMES_LISTS");
   } catch(Exception &e) {
     /* file probably doesn't exist */
     Logger::Log("** Warning ** : Failed to analyse web-themes file");
