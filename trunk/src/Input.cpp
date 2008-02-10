@@ -56,24 +56,52 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  if(v_keystate[m_nDriveKey[p]] == 1) {
 	    /* Start driving */
 	    v_biker->getControler()->setThrottle(1.0f);
-	  } else if(v_keystate[m_nBrakeKey[p]] == 1) {
+	  } else {
+	    v_biker->getControler()->setThrottle(0.0f);
+	  }
+
+	  if(v_keystate[m_nBrakeKey[p]] == 1) {
 	    /* Brake */
 	    v_biker->getControler()->setBreak(1.0f);
-	  } else if((v_keystate[m_nPullBackKey[p]]    == 1 && m_mirrored == false) ||
-		    (v_keystate[m_nPushForwardKey[p]] == 1 && m_mirrored)) {
-	      /* Pull back */
-	    v_biker->getControler()->setPull(1.0f);
-	  } else if((v_keystate[m_nPushForwardKey[p]] == 1 && m_mirrored == false) ||
-		    (v_keystate[m_nPullBackKey[p]]    == 1 && m_mirrored)) {
-	    /* Push forward */
-	    v_biker->getControler()->setPull(-1.0f);            
+	  } else {
+	    v_biker->getControler()->setBreak(0.0f);
 	  }
-	  else if(v_keystate[m_nChangeDirKey[p]] == 1) {
+
+	  if(m_mirrored) {
+	    if(v_keystate[m_nPushForwardKey[p]] == 1) {
+	       v_biker->getControler()->setPull(1.0f);
+	    } else {
+	      v_biker->getControler()->setPull(0.0f);
+	    }
+	  } else {
+
+	  }
+
+	  // pull
+	  if((v_keystate[m_nPullBackKey[p]]    == 1 && m_mirrored == false) ||
+	     (v_keystate[m_nPushForwardKey[p]] == 1 && m_mirrored)) {
+	    /* Pull back */
+	    v_biker->getControler()->setPull(1.0f);
+	  } else {
+
+	    // push // must be in pull else block to not set pull to 0
+	    if((v_keystate[m_nPushForwardKey[p]] == 1 && m_mirrored == false) ||
+	       (v_keystate[m_nPullBackKey[p]]    == 1 && m_mirrored)) {
+	      /* Push forward */
+	      v_biker->getControler()->setPull(-1.0f);
+	    } else {
+	      v_biker->getControler()->setPull(0.0f);
+	    }
+	  }
+
+	  if(v_keystate[m_nChangeDirKey[p]] == 1) {
 	    /* Change dir */
 	    if(m_changeDirKeyAlreadyPress[p] == false){
 	      v_biker->getControler()->setChangeDir(true);
 	      m_changeDirKeyAlreadyPress[p] = true;
 	    }
+	  } else {
+	    m_changeDirKeyAlreadyPress[p] = false;
 	  }
 	}
 	  p++;
