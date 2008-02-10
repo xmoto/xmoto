@@ -176,7 +176,16 @@ void StateScene::onRenderFlush() {
   if(XMSession::instance()->enableVideoRecording()) {
     if(StateManager::instance()->getVideoRecorder() != NULL) {
       if(m_universe->getScenes().size() > 0) {
-	StateManager::instance()->getVideoRecorder()->read(m_universe->getScenes()[0]->getTime());
+	if( (XMSession::instance()->videoRecordingStartTime() < 0 ||
+	     XMSession::instance()->videoRecordingStartTime() <= m_universe->getScenes()[0]->getTime() * 100
+	     )
+	    &&
+	    (XMSession::instance()->videoRecordingEndTime() < 0 ||
+	     XMSession::instance()->videoRecordingEndTime() >= m_universe->getScenes()[0]->getTime() * 100
+	     )
+	    ) {
+	  StateManager::instance()->getVideoRecorder()->read(m_universe->getScenes()[0]->getTime());
+	}
       }
     }
   }
@@ -265,9 +274,13 @@ void StateScene::setScoresTimes() {
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
     
-  GameRenderer::instance()->setBestTime(T1 + std::string(" / ") + T2);
+  if(XMSession::instance()->hidePlayingInformation() == false) {
+    GameRenderer::instance()->setBestTime(T1 + std::string(" / ") + T2);
+  } else {
+    GameRenderer::instance()->setBestTime("");
+  }
 
-  if(XMSession::instance()->showHighscoreInGame()) {
+  if(XMSession::instance()->showHighscoreInGame() && XMSession::instance()->hidePlayingInformation() == false) {
     GameRenderer::instance()->setWorldRecordTime(GameApp::instance()->getWorldRecord(v_id_level));
   } else {
     GameRenderer::instance()->setWorldRecordTime("");

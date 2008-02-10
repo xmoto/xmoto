@@ -227,6 +227,9 @@ public:
   std::string videoRecordName() const;
   int videoRecordingDivision() const;
   int videoRecordingFramerate() const;
+  int videoRecordingStartTime();
+  int videoRecordingEndTime();
+  bool hidePlayingInformation();
 
   private:
   bool m_verbose;
@@ -306,6 +309,9 @@ public:
   std::string m_videoRecordName;
   int m_videoRecordingDivision;
   int m_videoRecordingFramerate;
+  int m_videoRecordingStartTime;
+  int m_videoRecordingEndTime;
+  bool m_hidePlayingInformation;
 };
 
 #endif

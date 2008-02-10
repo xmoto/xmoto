@@ -80,6 +80,11 @@ class XMArguments {
   int getOptVideoRecordingDivision_value() const;
   bool isOptVideoRecordingFramerate() const;
   int getOptVideoRecordingFramerate_value() const;
+  bool isOptVideoRecordingStartTime() const;
+  int getOptVideoRecordingStartTime_value() const;
+  bool isOptVideoRecordingEndTime() const;
+  int getOptVideoRecordingEndTime_value() const;
+  bool isOptHidePlayingInformation() const;
 
   private:
   /* pack options */
@@ -152,6 +157,11 @@ class XMArguments {
   int m_opt_videoRecordingDivision_value;
   bool m_opt_videoRecordingFramerate;
   int m_opt_videoRecordingFramerate_value;
+  bool m_opt_videoRecordingStartTime; /* value in cent of seconds, a negativ value for always */
+  int m_opt_videoRecordingStartTime_value;
+  bool m_opt_videoRecordingEndTime; /* value in cent of seconds, a negativ value for always */
+  int m_opt_videoRecordingEndTime_value;
+  bool m_opt_hidePlayingInformation;
 
   /* at command line, you can pass [0-9]* for level of id _iLXX_ */
   static std::string levelArg2levelId(std::string i_arg);

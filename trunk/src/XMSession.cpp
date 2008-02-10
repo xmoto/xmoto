@@ -102,6 +102,9 @@ void XMSession::setToDefault() {
   m_enableVideoRecording          = false;
   m_videoRecordingDivision        = VR_DEFAULT_DIVISION;
   m_videoRecordingFramerate       = VR_DEFAULT_FRAMERATE;
+  m_videoRecordingStartTime       = -1;
+  m_videoRecordingEndTime         = -1;
+  m_hidePlayingInformation        = false;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -193,6 +196,18 @@ void XMSession::load(const XMArguments* i_xmargs) {
     m_videoRecordingFramerate = i_xmargs->getOptVideoRecordingFramerate_value();
   } else {
     m_videoRecordingFramerate = VR_DEFAULT_FRAMERATE;
+  }
+
+  if(i_xmargs->isOptVideoRecordingStartTime()) {
+    m_videoRecordingStartTime = i_xmargs->getOptVideoRecordingStartTime_value();
+  }
+
+  if(i_xmargs->isOptVideoRecordingEndTime()) {
+    m_videoRecordingEndTime = i_xmargs->getOptVideoRecordingEndTime_value();
+  }
+
+  if(i_xmargs->isOptHidePlayingInformation()) {
+    m_hidePlayingInformation = true;
   }
 
 }
@@ -507,6 +522,18 @@ int XMSession::videoRecordingDivision() const {
 
 int XMSession::videoRecordingFramerate() const {
   return m_videoRecordingFramerate;
+}
+
+int XMSession::videoRecordingStartTime() {
+  return m_videoRecordingStartTime;
+}
+
+int XMSession::videoRecordingEndTime() {
+  return m_videoRecordingEndTime;
+}
+
+bool XMSession::hidePlayingInformation() {
+  return m_hidePlayingInformation;
 }
 
 void XMSession::setShowEngineCounter(bool i_value) {
