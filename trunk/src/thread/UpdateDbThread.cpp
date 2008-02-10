@@ -41,15 +41,15 @@ int UpdateDbThread::realThreadFunction()
   // text is update in the state
   setThreadProgress(0);
   LevelsManager::instance()->reloadLevelsFromLvl(m_pDb, this);
-  StateManager::instance()->sendSynchronousMessage("UPDATE_LEVELS_LISTS");
+  StateManager::instance()->sendAsynchronousMessage("UPDATE_LEVELS_LISTS");
 
   setThreadCurrentOperation(GAMETEXT_RELOADINGREPLAYS);
   GameApp::instance()->initReplaysFromDir(m_pDb, this);
-  StateManager::instance()->sendSynchronousMessage("UPDATE_REPLAYS_LISTS");
+  StateManager::instance()->sendAsynchronousMessage("UPDATE_REPLAYS_LISTS");
   
   setThreadCurrentOperation(GAMETEXT_RELOADINGTHEMES);
   ThemeChoicer::initThemesFromDir(m_pDb);
-  StateManager::instance()->sendSynchronousMessage("UPDATE_THEMES_LISTS");
+  StateManager::instance()->sendAsynchronousMessage("UPDATE_THEMES_LISTS");
 
   return 0;
 }
