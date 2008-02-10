@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <windows.h>
 #include <winbase.h>
 #endif
+#include <stdlib.h>
+#include <string.h>
 
 void set_environment_variable(const std::string& i_variable, const std::string& i_value) {
     bool v_set = false;
