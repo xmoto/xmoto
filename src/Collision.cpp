@@ -51,6 +51,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
                                     } \
                                     (v).clear()
 
+CollisionSystem::CollisionSystem() {
+  m_pGrid = NULL;
+  m_bDebugFlag=false;
+}
+
+CollisionSystem::~CollisionSystem() {
+  reset();
+}
+
   /*===========================================================================
   Reset collision system
   ===========================================================================*/
