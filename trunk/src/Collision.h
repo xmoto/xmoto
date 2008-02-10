@@ -147,8 +147,8 @@ class Zone;
   ===========================================================================*/
   class CollisionSystem {
   public:
-    CollisionSystem() {m_pGrid = NULL; m_bDebugFlag=false;}
-    ~CollisionSystem() {reset();}
+    CollisionSystem();
+    ~CollisionSystem();
     
     /* Methods */
     void reset(void);
