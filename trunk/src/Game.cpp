@@ -683,17 +683,17 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
 }
 
 void GameApp::addLevelToFavorite(const std::string& i_levelId) {
-  LevelsManager::instance()->addToFavorite(XMSession::instance()->profile(), i_levelId);
+  LevelsManager::instance()->addToFavorite(XMSession::instance()->profile(), i_levelId, xmDatabase::instance("main"));
 }
 
 void GameApp::switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage) {
-  if(LevelsManager::instance()->isInFavorite(XMSession::instance()->profile(), i_levelId)) {
-    LevelsManager::instance()->delFromFavorite(XMSession::instance()->profile(), i_levelId);
+  if(LevelsManager::instance()->isInFavorite(XMSession::instance()->profile(), i_levelId, xmDatabase::instance("main"))) {
+    LevelsManager::instance()->delFromFavorite(XMSession::instance()->profile(), i_levelId, xmDatabase::instance("main"));
     if(v_displayMessage) {
       SysMessage::instance()->displayText(GAMETEXT_LEVEL_DELETED_FROM_FAVORITE);
     }
   } else {
-    LevelsManager::instance()->addToFavorite(XMSession::instance()->profile(), i_levelId);
+    LevelsManager::instance()->addToFavorite(XMSession::instance()->profile(), i_levelId, xmDatabase::instance("main"));
     if(v_displayMessage) {
       SysMessage::instance()->displayText(GAMETEXT_LEVEL_ADDED_TO_FAVORITE);
     }
@@ -701,13 +701,13 @@ void GameApp::switchLevelToFavorite(const std::string& i_levelId, bool v_display
 }
 
 void GameApp::switchLevelToBlacklist(const std::string& i_levelId, bool v_displayMessage) {
-  if(LevelsManager::instance()->isInBlacklist(XMSession::instance()->profile(), i_levelId)) {
-    LevelsManager::instance()->delFromBlacklist(XMSession::instance()->profile(), i_levelId);
+  if(LevelsManager::instance()->isInBlacklist(XMSession::instance()->profile(), i_levelId, xmDatabase::instance("main"))) {
+    LevelsManager::instance()->delFromBlacklist(XMSession::instance()->profile(), i_levelId, xmDatabase::instance("main"));
     if(v_displayMessage) {
       SysMessage::instance()->displayText(GAMETEXT_LEVEL_DELETED_FROM_BLACKLIST);
     }
   } else {
-    LevelsManager::instance()->addToBlacklist(XMSession::instance()->profile(), i_levelId);
+    LevelsManager::instance()->addToBlacklist(XMSession::instance()->profile(), i_levelId, xmDatabase::instance("main"));
     if(v_displayMessage) {
       SysMessage::instance()->displayText(GAMETEXT_LEVEL_ADDED_TO_BLACKLIST);
     }

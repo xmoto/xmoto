@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/SwapEndian.h"
 #include "GameEvents.h"
 #include "xmscene/Bike.h"
+#include "db/xmDatabase.h"
 
   bool Replay::m_bEnableCompression = true;
 
@@ -575,3 +576,32 @@ bool Replay::nextState(float p_frames) {
     float nNumStates = (fSeconds * m_fFrameRate);
     nextState(-nNumStates);
   } 
+
+void Replay::cleanReplays(xmDatabase *i_db) {
+}
+
+int  Replay::cleanReplaysNb(xmDatabase *i_db) {
+  char **v_result;
+  unsigned int nrow;
+  int n;
+
+  /* SELECT replay of from replay_% and %-%-% %_% which are not best replays for the (id_level, id_room, id_profile) if id_profile is in profiles or (id_level, id_room) else */
+
+//  SELECT name
+//  FROM replays AS a
+//  LEFT OUTER JOIN webhighscores AS b ON (a.id_level = b.id_level AND b.fileUrl NOT LIKE '%/' + a.name + '.rpl')
+//  WHERE a.name LIKE 'replay_%'
+//  AND   
+// ;
+
+//  v_result = i_db->readDB("SELECT count(name) FROM replays;", nrow);
+//  if(nrow != 1) {
+//    i_db->read_DB_free(v_result);
+//    throw Exception("Unable to determine the number of replays to clean");
+//  }
+//  n = atoi(i_db->getResult(v_result, 1, 0, 0));
+//  i_db->read_DB_free(v_result);
+  n = 0;
+
+  return n;
+}

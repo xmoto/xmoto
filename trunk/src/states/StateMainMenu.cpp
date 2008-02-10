@@ -143,7 +143,8 @@ void StateMainMenu::enterAfterPop()
   if(m_require_updateLevelsList) {
     LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
 					 XMSession::instance()->idRoom(),
-					 XMSession::instance()->debug());
+					 XMSession::instance()->debug(),
+					 xmDatabase::instance("main"));
     updateLevelsPacksList();
     updateLevelsLists();
     m_require_updateLevelsList = false;
@@ -401,7 +402,7 @@ void StateMainMenu::checkEventsLevelsFavoriteTab() {
     v_id_level = v_list->getSelectedLevel();
 
     if(v_id_level != "") {
-      LevelsManager::instance()->delFromFavorite(XMSession::instance()->profile(), v_id_level);
+      LevelsManager::instance()->delFromFavorite(XMSession::instance()->profile(), v_id_level, xmDatabase::instance("main"));
       StateManager::instance()->sendAsynchronousMessage("FAVORITES_UPDATED");
     }
   }
@@ -773,7 +774,7 @@ UIWindow* StateMainMenu::makeWindowReplays(UIWindow* i_parent) {
   v_edit->setContextHelp(CONTEXTHELP_REPLAYS_FILTER);
 
   /* show button */
-  v_button = new UIButton(v_window, 5, v_window->getPosition().nHeight-68, GAMETEXT_SHOW, 105, 57);
+  v_button = new UIButton(v_window, 5, v_window->getPosition().nHeight-68, GAMETEXT_SHOW, 110, 57);
   v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setID("REPLAYS_SHOW_BUTTON");
@@ -781,18 +782,26 @@ UIWindow* StateMainMenu::makeWindowReplays(UIWindow* i_parent) {
   v_showButton = v_button;
 
   /* delete button */
-  v_button = new UIButton(v_window, 105, v_window->getPosition().nHeight-68, GAMETEXT_DELETE, 105, 57);
+  v_button = new UIButton(v_window, 110, v_window->getPosition().nHeight-68, GAMETEXT_DELETE, 115, 57);
   v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setID("REPLAYS_DELETE_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_DELETE_REPLAY);
 
   /* upload button */
-  v_button = new UIButton(v_window, 199, v_window->getPosition().nHeight-68, GAMETEXT_UPLOAD_HIGHSCORE, 186, 57);
+  v_button = new UIButton(v_window, 220, v_window->getPosition().nHeight-68, GAMETEXT_UPLOAD_HIGHSCORE, 130, 57);
   v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setID("REPLAYS_UPLOADHIGHSCORE_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
+
+  /* clean */
+  v_button = new UIButton(v_window, 345, v_window->getPosition().nHeight-68, GAMETEXT_CLEAN, 116, 57);
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setID("REPLAYS_CLEAN_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_REPLAYS_CLEAN);
+  v_button->showWindow(false);
 
   /* filter */
   v_button = new UIButton(v_window, v_window->getPosition().nWidth-105, v_window->getPosition().nHeight-68,
@@ -1553,7 +1562,8 @@ UILevelList* StateMainMenu::buildQuickStartList() {
 							    v_quickStart->getDifficultyMIN(),
 							    v_quickStart->getQualityMAX(),
 							    v_quickStart->getDifficultyMAX(),
-							    XMSession::instance()->profile(), XMSession::instance()->idRoom()));
+							    XMSession::instance()->profile(), XMSession::instance()->idRoom(),
+							    xmDatabase::instance("main")));
   return v_list;
 }
 
@@ -1655,7 +1665,8 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
      if(StateManager::instance()->isTopOfTheStates(this)) {
        LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
 					    XMSession::instance()->idRoom(),
-					    XMSession::instance()->debug());
+					    XMSession::instance()->debug(),
+					    xmDatabase::instance("main"));
        updateLevelsPacksList();
        updateLevelsLists();
      } else {
@@ -1740,7 +1751,8 @@ void StateMainMenu::executeOneCommand(std::string cmd)
     // update packs
     LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
 					 XMSession::instance()->idRoom(),
-					 XMSession::instance()->debug());
+					 XMSession::instance()->debug(),
+					 xmDatabase::instance("main"));
 
     // update lists and stats
     updateLevelsPacksList();
@@ -1971,6 +1983,27 @@ void StateMainMenu::checkEventsReplays() {
 	StateManager::instance()->pushState(new StateUploadHighscore(v_replayPath));	  
       }
     }
+  }
+
+  // clean
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_CLEAN_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+   
+    int n;
+    char v_buf[256];
+    StateMessageBox* v_msgboxState;
+
+    n = Replay::cleanReplaysNb(xmDatabase::instance("main"));
+    if(n > 0) {
+      snprintf(v_buf, 256, GAMETEXT_CLEAN_CONFIRM(n), n);
+      v_msgboxState = new StateMessageBox(this, v_buf, UI_MSGBOX_YES|UI_MSGBOX_NO);
+      v_msgboxState->setId("CLEAN_REPLAYS");
+      v_msgboxState->makeActiveButton(UI_MSGBOX_NO);
+    } else {
+      v_msgboxState = new StateMessageBox(this, GAMETEXT_CLEAN_NOTHING_TO_DO, UI_MSGBOX_OK);
+    }
+    StateManager::instance()->pushState(v_msgboxState); 
   }
 }
 
