@@ -1,7 +1,8 @@
 X-Moto 0.4.0 200
 -----------------------
  * remove svnversion dependency for compilation
-
+ * fix .desktop file
+	
 X-Moto 0.4.0 2007-01-27
 -----------------------
  * lot of code rewritten/cleaned
