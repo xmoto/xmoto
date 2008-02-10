@@ -101,6 +101,8 @@ void StatePlaying::leave()
 
 void StatePlaying::enterAfterPop()
 {
+  // recheck keys
+  InputHandler::instance()->dealWithActivedKeys(m_universe);
   m_fLastPhysTime = GameApp::getXMTime();
 }
 
