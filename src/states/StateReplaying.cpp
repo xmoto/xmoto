@@ -54,7 +54,15 @@ void StateReplaying::enter()
 
   m_stopToUpdate = false;
   GameRenderer::instance()->setShowEngineCounter(false);
-  GameRenderer::instance()->setShowTimePanel(true);
+
+  if(XMSession::instance()->hidePlayingInformation() == false) {
+    GameRenderer::instance()->setShowMinimap(XMSession::instance()->showMinimap());
+    GameRenderer::instance()->setShowTimePanel(true);
+  } else {
+    GameRenderer::instance()->setShowMinimap(false);
+    GameRenderer::instance()->setShowTimePanel(false);
+  }
+
   m_replayBiker = NULL;
 
   m_universe =  new Universe();
@@ -128,13 +136,16 @@ void StateReplaying::enter()
     
     /* *** */
     
-    char c_tmp[1024];
-    snprintf(c_tmp, 1024,
-	     GAMETEXT_BY_PLAYER,
-	     m_replayBiker->playerName().c_str());
-
-    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-      m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name() + " " + std::string(c_tmp));
+    if(XMSession::instance()->hidePlayingInformation() == false) {
+      // display replay informations
+      char c_tmp[1024];
+      snprintf(c_tmp, 1024,
+	       GAMETEXT_BY_PLAYER,
+	       m_replayBiker->playerName().c_str());
+      
+      for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name() + " " + std::string(c_tmp));
+      }
     }
 
     GameRenderer::instance()->prepareForNewLevel(m_universe);
@@ -144,7 +155,7 @@ void StateReplaying::enter()
       GameApp::instance()->playMusic(m_universe->getScenes()[0]->getLevelSrc()->Music());
     }
 
-    if(m_universe->getScenes().size() > 0) {
+    if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
       GameRenderer::instance()->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
 					       m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
     }
@@ -238,7 +249,7 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
 	m_universe->getScenes()[i]->pause();
       }
 
-      if(m_universe->getScenes().size() > 0) {
+      if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
 	GameRenderer::instance()->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
 						 m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
       }
@@ -251,7 +262,7 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	m_universe->getScenes()[i]->faster();
       }
-      if(m_universe->getScenes().size() > 0) {
+      if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
 	GameRenderer::instance()->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
 						 m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
       }
@@ -265,7 +276,7 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
 	m_universe->getScenes()[i]->slower();
       }
       m_stopToUpdate = false;
-      if(m_universe->getScenes().size() > 0) {
+      if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
 	GameRenderer::instance()->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
 						 m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
       }

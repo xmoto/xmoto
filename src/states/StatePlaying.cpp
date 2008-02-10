@@ -53,9 +53,15 @@ void StatePlaying::enter()
 
   m_gameIsFinished = false;
 
-  GameRenderer::instance()->setShowEngineCounter(XMSession::instance()->showEngineCounter());
-  GameRenderer::instance()->setShowMinimap(XMSession::instance()->showMinimap());
-  GameRenderer::instance()->setShowTimePanel(true);
+  if(XMSession::instance()->hidePlayingInformation() == false) {
+    GameRenderer::instance()->setShowEngineCounter(XMSession::instance()->showEngineCounter());
+    GameRenderer::instance()->setShowMinimap(XMSession::instance()->showMinimap());
+    GameRenderer::instance()->setShowTimePanel(true);
+  } else {
+    GameRenderer::instance()->setShowEngineCounter(false);
+    GameRenderer::instance()->setShowMinimap(false);
+    GameRenderer::instance()->setShowTimePanel(false);
+  }
 
   std::string v_level_name;
   try {

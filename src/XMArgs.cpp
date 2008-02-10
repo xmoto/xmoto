@@ -62,6 +62,9 @@ XMArguments::XMArguments() {
   m_opt_videoRecording = false;
   m_opt_videoRecordingDivision  = false;
   m_opt_videoRecordingFramerate = false;
+  m_opt_videoRecordingStartTime = -1;
+  m_opt_videoRecordingEndTime   = -1;
+  m_opt_hidePlayingInformation  = false;
 }
 
 void XMArguments::parse(int i_argc, char **i_argv) {
@@ -227,6 +230,23 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       if(m_opt_videoRecordingFramerate_value < 1) {
 	m_opt_videoRecordingFramerate_value = 1;
       }
+      i++;
+    } else if(v_opt == "--videoRecordingStartTime") {
+      m_opt_videoRecordingStartTime = true;
+      if(i+1 >= i_argc) {
+	throw SyntaxError("missing value");
+      }
+      m_opt_videoRecordingStartTime_value = atoi(i_argv[i+1]);
+      i++;
+    } else if(v_opt == "--videoRecordingEndTime") {
+      m_opt_videoRecordingEndTime = true;
+      if(i+1 >= i_argc) {
+	throw SyntaxError("missing value");
+      }
+      m_opt_videoRecordingEndTime_value = atoi(i_argv[i+1]);
+      i++;
+    } else if(v_opt == "--hidePlayingInformation") {
+      m_opt_hidePlayingInformation = true;
       i++;
     } else {
       /* check if the parameter is a file */
@@ -478,6 +498,26 @@ int XMArguments::getOptVideoRecordingFramerate_value() const {
   return m_opt_videoRecordingFramerate_value;
 }
 
+bool XMArguments::isOptVideoRecordingStartTime() const {
+  return m_opt_videoRecordingStartTime;
+}
+
+int XMArguments::getOptVideoRecordingStartTime_value() const {
+  return m_opt_videoRecordingStartTime_value;
+}
+
+bool XMArguments::isOptVideoRecordingEndTime() const {
+  return m_opt_videoRecordingEndTime;
+}
+
+int XMArguments::getOptVideoRecordingEndTime_value() const {
+  return m_opt_videoRecordingEndTime_value;
+}
+
+bool XMArguments::isOptHidePlayingInformation() const {
+  return m_opt_hidePlayingInformation;
+}
+
 void XMArguments::help(const std::string& i_cmd) {
   printf("X-Moto %s\n", XMBuild::getVersionString().c_str());
   printf("usage:  %s [options]\n"
@@ -514,6 +554,9 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t--videoRecording\n\t\tEnable video recording.\n");
   printf("\t--videoRecordingSizeDivision DIVISION\n\t\tChange video size (1=full, 2=50%%, 4=25%%).\n");
   printf("\t--videoRecordingSizeFramerate FRAMERATE\n\t\tChange video framerate.\n");
+  printf("\t--videoRecordingStartTime NBCENTSOFSECONDS\n\t\tStart recording video after this game time.\n");
+  printf("\t--videoRecordingEndTime NBCENTSOFSECONDS\n\t\tStop recording video after this game time.\n");
+  printf("\t--hidePlayingInformation\n\t\tDon't show some information while playing/replaying ; usefull to make nicer video.\n");
   printf("\t--drawlib DRAWLIB\n\t\tChoose the render to use (default one is OPENGL if available).\n");
   printf("\t-h, -?, -help, --help\n\t\tDisplay this message.\n");
   printf("\t--pack [BIN] [DIR]\n\t\tBuild the BIN package from directory DIR.\n");
