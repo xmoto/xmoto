@@ -74,9 +74,9 @@ void XMSession::setToDefault() {
   m_enableContextHelp             = true;
   m_theme                         = THEME_DEFAULT_THEMENAME;
   m_enableAudio                   = true;
-  m_audioSampleRate               = 22050;
+  m_audioSampleRate               = 44100;
   m_audioSampleBits               = 16;
-  m_audioChannels                 = 1;
+  m_audioChannels                 = 2;
   m_enableAudioEngine             = true;
   m_checkNewLevelsAtStartup       = true;
   m_checkNewHighscoresAtStartup   = true;
@@ -1007,9 +1007,9 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
         
   /* Audio */
   v_config->createVar( "AudioEnable",            "true" );
-  v_config->createVar( "AudioSampleRate",        "22050" );
+  v_config->createVar( "AudioSampleRate",        "44100" );
   v_config->createVar( "AudioSampleBits",        "16" );
-  v_config->createVar( "AudioChannels",          "Mono" );
+  v_config->createVar( "AudioChannels",          "Stereo" );
   v_config->createVar( "EngineSoundEnable",      "true" );
 
   /* Controls */
