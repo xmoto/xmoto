@@ -2246,14 +2246,12 @@ msgid "Fps disabled"
 msgstr "Fps désactivé"
 
 #: src/GameText.h:635
-#, fuzzy
 msgid "Audio enabled"
-msgstr "Fps activé"
+msgstr "Son activé"
 
 #: src/GameText.h:636
-#, fuzzy
 msgid "Audio disabled"
-msgstr "Fps désactivé"
+msgstr "Son désactivé"
 
 #: src/GameText.h:638
 msgid "No training positions stored"
