@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto Portuguese Translation v1.0\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-02-10 18:32+0100\n"
+"POT-Creation-Date: 2008-02-11 18:51+0100\n"
 "PO-Revision-Date: 2007-07-31 19:19-0000\n"
 "Last-Translator: Luís Miguel Fonseca Garcia <LuisG280@hotmail.com>\n"
 "Language-Team: LT <LuisG280@hotmail.com>\n"
@@ -2326,21 +2326,31 @@ msgstr ""
 msgid "Fps disabled"
 msgstr "Modo Ugly desactivado"
 
+#: src/GameText.h:635
+#, fuzzy
+msgid "Audio enabled"
+msgstr "Modo Ugly activado"
+
 #: src/GameText.h:636
+#, fuzzy
+msgid "Audio disabled"
+msgstr "Modo Ugly desactivado"
+
+#: src/GameText.h:638
 msgid "No training positions stored"
 msgstr ""
 
-#: src/GameText.h:637
+#: src/GameText.h:639
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr ""
 
-#: src/GameText.h:638
+#: src/GameText.h:640
 #, c-format
 msgid "Stored as training position %i"
 msgstr ""
 
-#: src/GameText.h:641
+#: src/GameText.h:643
 msgid "FontGroup:GENERAL"
 msgstr ""
 

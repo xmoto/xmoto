@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-02-10 18:32+0100\n"
+"POT-Creation-Date: 2008-02-11 18:51+0100\n"
 "PO-Revision-Date: 2008-01-27 21:26+0100\n"
 "Last-Translator: Kristian Jagd <Kristian_jagd@hotmail.com>\n"
 "Language-Team: Dansk <LL@li.org>\n"
@@ -2241,21 +2241,31 @@ msgstr "Visning af Fps sat til"
 msgid "Fps disabled"
 msgstr "Visning af Fps taget fra"
 
+#: src/GameText.h:635
+#, fuzzy
+msgid "Audio enabled"
+msgstr "Visning af Fps sat til"
+
 #: src/GameText.h:636
+#, fuzzy
+msgid "Audio disabled"
+msgstr "Visning af Fps taget fra"
+
+#: src/GameText.h:638
 msgid "No training positions stored"
 msgstr ""
 
-#: src/GameText.h:637
+#: src/GameText.h:639
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr ""
 
-#: src/GameText.h:638
+#: src/GameText.h:640
 #, c-format
 msgid "Stored as training position %i"
 msgstr ""
 
-#: src/GameText.h:641
+#: src/GameText.h:643
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 

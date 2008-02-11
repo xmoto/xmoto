@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-02-10 18:32+0100\n"
+"POT-Creation-Date: 2008-02-11 18:51+0100\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Nicolas Adenis-Lamarre\n"
 "Language-Team: X-Moto\n"
@@ -159,6 +159,7 @@ msgid "Clean"
 msgstr "Nettoyer"
 
 #: src/GameText.h:72
+#, c-format
 msgid "Are you sure you want to delete %i replay"
 msgid_plural "Are you sure you want to delete %i replay"
 msgstr[0] "Voulez-vous vraiment supprimer %i replay ?"
@@ -2244,21 +2245,31 @@ msgstr "Fps activé"
 msgid "Fps disabled"
 msgstr "Fps désactivé"
 
+#: src/GameText.h:635
+#, fuzzy
+msgid "Audio enabled"
+msgstr "Fps activé"
+
 #: src/GameText.h:636
+#, fuzzy
+msgid "Audio disabled"
+msgstr "Fps désactivé"
+
+#: src/GameText.h:638
 msgid "No training positions stored"
 msgstr "Pas de position stockée"
 
-#: src/GameText.h:637
+#: src/GameText.h:639
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr "Position %i/%i restorée"
 
-#: src/GameText.h:638
+#: src/GameText.h:640
 #, c-format
 msgid "Stored as training position %i"
 msgstr "Position %i stockée"
 
-#: src/GameText.h:641
+#: src/GameText.h:643
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 

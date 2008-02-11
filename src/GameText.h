@@ -632,6 +632,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define SYS_MSG_INTERPOLATION_DISABLED 	_("Replay interpolation disabled")
 #define SYS_MSG_FPS_ENABLED             _("Fps enabled")
 #define SYS_MSG_FPS_DISABLED            _("Fps disabled")
+#define SYS_MSG_AUDIO_ENABLED           _("Audio enabled")
+#define SYS_MSG_AUDIO_DISABLED          _("Audio disabled")
 
 #define SYS_MSG_TRAIN_NO_RESTORE_AVAIL  _("No training positions stored")
 #define SYS_MSG_TRAIN_RESTORING         _("Training position %i/%i restored")
