@@ -1674,6 +1674,7 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
      }
      return;
    }
+
   }
 
   if(i_id == "REQUESTKEY") {
@@ -1792,6 +1793,10 @@ void StateMainMenu::executeOneCommand(std::string cmd)
 
   else if(cmd == "CHANGE_WWW_ACCESS") {
     updateWWWOptions();
+  }
+
+  else if(cmd == "ENABLEAUDIO_CHANGED") {
+    updateAudioOptions();
   }
 
   else if(cmd == "NEW_LEVELS_TO_DOWNLOAD"){
@@ -2508,7 +2513,6 @@ void StateMainMenu::checkEventsOptions() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-    XMSession::instance()->enableMenuMusic();
     XMSession::instance()->setEnableMenuMusic(v_button->getChecked());
     Sound::setActiv(XMSession::instance()->enableAudio());
   }
@@ -2672,6 +2676,8 @@ void StateMainMenu::checkEventsOptions() {
 void StateMainMenu::updateAudioOptions() {
   UIButton* v_button;
 
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_AUDIO"));
+  v_button->setChecked(XMSession::instance()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE11KHZ"));
   v_button->enableWindow(XMSession::instance()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE22KHZ"));

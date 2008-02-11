@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-02-10 18:32+0100\n"
+"POT-Creation-Date: 2008-02-11 18:51+0100\n"
 "PO-Revision-Date: 2008-01-23 22:38+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
@@ -2260,21 +2260,31 @@ msgstr "Fps zapnuté"
 msgid "Fps disabled"
 msgstr "Fps vypnuté"
 
+#: src/GameText.h:635
+#, fuzzy
+msgid "Audio enabled"
+msgstr "Fps zapnuté"
+
 #: src/GameText.h:636
+#, fuzzy
+msgid "Audio disabled"
+msgstr "Fps vypnuté"
+
+#: src/GameText.h:638
 msgid "No training positions stored"
 msgstr "Neboli uložené žiadne tréningové pozície"
 
-#: src/GameText.h:637
+#: src/GameText.h:639
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr "Tréningová pozícia %i/%i obnovená"
 
-#: src/GameText.h:638
+#: src/GameText.h:640
 #, c-format
 msgid "Stored as training position %i"
 msgstr "Uložené ako tréningová pozícia %i"
 
-#: src/GameText.h:641
+#: src/GameText.h:643
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 

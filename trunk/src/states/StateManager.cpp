@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateRequestKey.h"
 #include "Game.h"
 #include "XMSession.h"
+#include "Sound.h"
 #include "drawlib/DrawLib.h"
 #include "SysMessage.h"
 #include "GameText.h"
@@ -702,6 +703,17 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
     XMSession::instance()->setMirrorMode(XMSession::instance()->mirrorMode() == false);
     InputHandler::instance()->setMirrored(XMSession::instance()->mirrorMode());
     StateManager::instance()->sendAsynchronousMessage("MIRRORMODE_CHANGED");
+  }
+
+  if(nKey == SDLK_s && (mod & KMOD_CTRL) != 0) {
+    XMSession::instance()->setEnableAudio(! XMSession::instance()->enableAudio());
+    Sound::setActiv(XMSession::instance()->enableAudio());
+    if(XMSession::instance()->enableAudio()) {
+      SysMessage::instance()->displayText(SYS_MSG_AUDIO_ENABLED);
+    } else {
+      SysMessage::instance()->displayText(SYS_MSG_AUDIO_DISABLED);
+    }
+    StateManager::instance()->sendAsynchronousMessage("ENABLEAUDIO_CHANGED");
   }
 
 }

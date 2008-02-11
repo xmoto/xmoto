@@ -1,8 +1,10 @@
-X-Moto 0.4.0 200
+X-Moto 0.4.1 2007-
 -----------------------
  * remove svnversion dependency for compilation
  * fix .desktop file
  * fix sqlite troubles	
+ * some new options to make videos
+ * ctrl+s : enable/disable sound
 
 X-Moto 0.4.0 2007-01-27
 -----------------------
