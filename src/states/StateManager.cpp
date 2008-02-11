@@ -706,6 +706,7 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   }
 
   if(nKey == SDLK_s && (mod & KMOD_CTRL) != 0) {
+    GameApp::instance()->playMusic(""); // tell the game the last music played is "" otherwise, it doesn't know when music is disable then enable back
     XMSession::instance()->setEnableAudio(! XMSession::instance()->enableAudio());
     Sound::setActiv(XMSession::instance()->enableAudio());
     if(XMSession::instance()->enableAudio()) {
