@@ -24,6 +24,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "XMSession.h"
 #include "StateReplaying.h"
+#include "StateMessageBox.h"
+#include "Replay.h"
+#include "helpers/Log.h"
 
 /* static members */
 UIRoot*  StateLevelInfoViewer::m_sGUI = NULL;
@@ -69,6 +72,7 @@ void StateLevelInfoViewer::checkEvents()
   UIButton *pLV_Replays_Personal   = reinterpret_cast<UIButton*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_PERSONAL"));
   UIButton *pLV_Replays_All        = reinterpret_cast<UIButton*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_ALL"));
   UIButton *pLV_Replays_Show       = reinterpret_cast<UIButton*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_SHOW"));
+  UIButton *pLV_Replays_Delete       = reinterpret_cast<UIButton*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_DELETE"));
   UIList   *pLV_Replays_List       = reinterpret_cast<UIList*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_LIST"));
 
   /* Check buttons */
@@ -98,6 +102,64 @@ void StateLevelInfoViewer::checkEvents()
 	/* Do it captain */
 	std::string playSpecificReplay = pListEntry->Text[0];
 	StateManager::instance()->pushState(new StateReplaying(playSpecificReplay));
+      }
+    }
+  }
+
+  if(pLV_Replays_Delete->isClicked()) {
+    pLV_Replays_Delete->setClicked(false);
+    /* delete replay ? */
+    if(pLV_Replays_List->getSelected() >= 0 && pLV_Replays_List->getSelected() < pLV_Replays_List->getEntries().size()) {
+      UIListEntry *pListEntry = pLV_Replays_List->getEntries()[pLV_Replays_List->getSelected()];
+      if(pListEntry != NULL && !pListEntry->Text.empty()) {
+	/* Do it captain */
+	std::string playSpecificReplay = pListEntry->Text[0];
+
+	StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
+	v_msgboxState->setId("REPLAYS_DELETE");
+	v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
+	StateManager::instance()->pushState(v_msgboxState);
+      }
+    }
+  }
+}
+
+void StateLevelInfoViewer::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+  if(i_id == "REPLAYS_DELETE") {
+    if(i_button == UI_MSGBOX_YES) {
+      m_commands.push("REPLAYS_DELETE");
+    }
+    return;
+  }
+}
+
+void StateLevelInfoViewer::send(const std::string& i_id, const std::string& i_message) {
+  if(i_message == "REPLAYS_UPDATED") {
+    updateLevelInfoViewerReplays();
+    return;
+  }
+}
+
+void StateLevelInfoViewer::executeOneCommand(std::string cmd) {
+  UIListEntry *pEntry = NULL;
+
+  if(cmd == "REPLAYS_DELETE") {
+    UIList* v_list = reinterpret_cast<UIList*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_LIST"));
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      pEntry = v_list->getEntries()[v_list->getSelected()];
+      if(pEntry != NULL) {
+	try {
+	  Replay::deleteReplay(pEntry->Text[0]);
+	} catch(Exception &e) {
+	  Logger::Log(e.getMsg().c_str());
+	}
+	try {
+	  xmDatabase::instance("main")->replays_delete(pEntry->Text[0]);
+	} catch(Exception &e) {
+	  Logger::Log(e.getMsg().c_str());
+	}
+	StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
+	updateLevelInfoViewerReplays();
       }
     }
   }
@@ -275,6 +337,12 @@ void StateLevelInfoViewer::createGUIIfNeeded()
   pLV_Replays_Show->setID("LEVEL_VIEWER_REPLAYS_SHOW");
   pLV_Replays_Show->setContextHelp(CONTEXTHELP_RUN_SELECTED_REPLAY);
   pLV_Replays_List->setEnterButton( pLV_Replays_Show );
+
+  UIButton *pLV_Replays_Delete = new UIButton(pLVTab_Replays,115,pLVTab_Replays->getPosition().nHeight-50,GAMETEXT_DELETE,115,57);
+  pLV_Replays_Delete->setFont(drawLib->getFontSmall());
+  pLV_Replays_Delete->setType(UI_BUTTON_TYPE_SMALL);
+  pLV_Replays_Delete->setID("LEVEL_VIEWER_REPLAYS_DELETE");
+  pLV_Replays_Delete->setContextHelp(CONTEXTHELP_DELETE_REPLAY);
 }
 
 void StateLevelInfoViewer::updateGUI() {
@@ -421,6 +489,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerReplays() {
   UIButton *pLV_Replays_Personal   = reinterpret_cast<UIButton*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_PERSONAL"));
   UIButton *pLV_Replays_All        = reinterpret_cast<UIButton*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_ALL"));
   UIButton *pLV_Replays_Show       = reinterpret_cast<UIButton*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_SHOW"));
+  int v_selected;
 
   if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && XMSession::instance()->profile() != "" &&
      pLV_Replays_Show != NULL) {
@@ -441,6 +510,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerReplays() {
     }
       
     /* Create list */
+    v_selected = pList->getSelected();
     pList->clear();
 
     v_result = xmDatabase::instance("main")->readDB(v_sql, nrow);
@@ -455,7 +525,8 @@ void StateLevelInfoViewer::updateLevelInfoViewerReplays() {
       }
     }
     xmDatabase::instance("main")->read_DB_free(v_result);
-      
+    pList->setRealSelected(v_selected);
+
     /* Clean up */
     pLV_Replays_Personal->enableWindow(true);
     pLV_Replays_All->enableWindow(true);

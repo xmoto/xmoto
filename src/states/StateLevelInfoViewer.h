@@ -47,6 +47,10 @@ public:
 protected:
   virtual void checkEvents();
 
+  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  virtual void send(const std::string& i_id, const std::string& i_message);
+  virtual void executeOneCommand(std::string cmd);
+
 private:
   /* GUI */
   static UIRoot* m_sGUI;
