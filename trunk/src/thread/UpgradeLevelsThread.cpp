@@ -94,6 +94,8 @@ bool UpgradeLevelsThread::shouldLevelBeUpdated(const std::string &LevelID)
 
 int UpgradeLevelsThread::realThreadFunction()
 {
+  int v_exit_code = 0;
+
   /* Check for extra levels */
   try {
     setThreadCurrentOperation(GAMETEXT_CHECKINGFORLEVELS);
@@ -167,7 +169,7 @@ int UpgradeLevelsThread::realThreadFunction()
     m_msg = GAMETEXT_FAILEDDLLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
     Logger::Log("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
 
-    return 1;
+    v_exit_code = 1;
   }
 
   /* Got some new levels... load them! */
@@ -184,7 +186,7 @@ int UpgradeLevelsThread::realThreadFunction()
   StateManager::instance()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
   StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
 
-  return 0;
+  return v_exit_code;
 }
 
 void UpgradeLevelsThread::setTaskProgress(float p_percent)
