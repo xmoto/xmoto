@@ -320,6 +320,8 @@ svnCheck:
 svnVersion:
 	if test -d $(srcdir)/.svn; then \
 	  svnversion -n $(srcdir) > svnVersion; \
+	else \
+	  echo "exported" > svnVersion; \
 	fi
 
 svn_version.$(OBJEXT): svnVersion
