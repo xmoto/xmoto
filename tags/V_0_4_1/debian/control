@@ -1,0 +1,26 @@
+Source: xmoto
+Section: games
+Priority: optional
+Maintainer: Samuel Mimram <smimram@debian.org>
+Build-Depends: debhelper (>= 4.0.0), dpkg-dev (>= 1.13.19), dpatch, autotools-dev, libsdl1.2-dev, libsdl-ttf2.0-dev, libsdl-mixer1.2-dev, libjpeg62-dev, libpng12-dev, zlib1g-dev, xlibmesa-gl-dev | libgl-dev, libode0-dev, liblua5.1-0, liblua5.1-0-dev, libcurl4-gnutls-dev, libbz2-dev, libsqlite3-dev
+Standards-Version: 3.7.2
+
+Package: xmoto
+Architecture: any
+Depends: ${shlibs:Depends}, xmoto-data (= ${source:Version})
+Suggests: xmoto-edit
+Description: 2D motocross platform game
+ X-Moto is a challenging 2D motocross platform game, where physics play
+ an all important role in the gameplay. You need to control your bike to
+ its limit, if you want to have a chance finishing the more difficult of
+ the challenges.
+
+Package: xmoto-data
+Architecture: all
+Description: 2D motocross platform game
+ X-Moto is a challenging 2D motocross platform game, where physics play
+ an all important role in the gameplay. You need to control your bike to
+ its limit, if you want to have a chance finishing the more difficult of
+ the challenges.
+ .
+ This package contains the data files needed by xmoto.
