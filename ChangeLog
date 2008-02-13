@@ -1,4 +1,4 @@
-X-Moto 0.4.1 2007-
+X-Moto 0.4.1 2007-02-13
 -----------------------
  * remove svnversion dependency for compilation
  * fix .desktop file
