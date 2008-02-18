@@ -49,6 +49,7 @@ class StatePreplaying : public StateScene {
   void secondInitPhase();
   bool m_secondInitPhaseDone;
   bool m_ghostDownloaded;
+  bool m_ghostDownloading_failed;
 
   std::string m_idlevel;
 

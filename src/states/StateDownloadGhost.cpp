@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateReplaying.h"
 #include "thread/DownloadGhostThread.h"
 #include "helpers/Log.h"
+#include "Game.h"
 
 StateDownloadGhost::StateDownloadGhost(std::string levelId,
 				       bool launchReplaying,
@@ -51,13 +52,19 @@ void StateDownloadGhost::callAfterThreadFinished(int threadResult)
 {
   m_msg = ((DownloadGhostThread*)m_pThread)->getMsg();
 
-  if(threadResult == 0 && m_launchReplaying == true){
-    std::string msg = "Replay to play: " + m_replayName;
-    Logger::Log(msg.c_str());
-    StateManager::instance()->replaceState(new StateReplaying(m_replayName));
-  }
-  else{
-    StateManager::instance()->sendAsynchronousMessage("GHOST_DOWNLOADED");
+  if(threadResult != 0) {
+    GameApp::instance()->enableWWW(false);
+    StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
+    StateManager::instance()->sendSynchronousMessage("GHOST_DOWNLOADING_FAILED");
+  } else {
+    if(threadResult == 0 && m_launchReplaying == true){
+      std::string msg = "Replay to play: " + m_replayName;
+      Logger::Log(msg.c_str());
+      StateManager::instance()->replaceState(new StateReplaying(m_replayName));
+    }
+    else{
+      StateManager::instance()->sendAsynchronousMessage("GHOST_DOWNLOADED");
+    }
   }
 }
 
