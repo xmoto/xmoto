@@ -371,6 +371,11 @@ void StateLevelPackViewer::updateInfoFrame() {
   std::string v_url;
   bool        v_isAccessible;
 
+  if(v_list->nbVisibleItems() <= 0) {
+    v_window->showWindow(false);
+    return;
+  }
+
   if(v_id_level != "") {
     if(GameApp::instance()->getHighscoreInfos(v_id_level, &v_id_profile, &v_url, &v_isAccessible)) {
       v_someText->setCaption(std::string(GAMETEXT_BESTPLAYER) + " : " + v_id_profile);
@@ -399,6 +404,4 @@ void StateLevelPackViewer::updateRights() {
   v_button->enableWindow(v_list->nbVisibleItems() > 0);
   v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("FRAME:ADDTOFAVORITE_BUTTON"));
   v_button->enableWindow(v_list->nbVisibleItems() > 0);
-
-  v_infoFrame->showWindow(v_list->nbVisibleItems() > 0);
 }

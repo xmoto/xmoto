@@ -217,12 +217,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
    
   void DBuffer::operator >>(std::string &s) {
     int n;
-    char c[256];
+    char c[512];
     *this >> n;
 
     if(n <= 0) {
       throw Exception("Unable to read the string !");
     }
+    if(n >= 512) {
+      throw Exception("Unable to read the string (max allowed length is 512)");
+    }
+
     this->readBuf(c, n);
     c[n] = '\0';
     s = c;

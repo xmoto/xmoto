@@ -43,6 +43,7 @@ StatePreplaying::StatePreplaying(const std::string i_idlevel, bool i_sameLevel):
 
   m_secondInitPhaseDone = false;
   m_ghostDownloaded     = false;
+  m_ghostDownloading_failed = false;
 
   m_sameLevel = i_sameLevel;
   /* if the level is not the same, ask to play the animation */
@@ -232,12 +233,11 @@ bool StatePreplaying::update()
     return false;
   }
 
-  if(m_ghostDownloaded == false){
+  if(m_ghostDownloaded == false && m_ghostDownloading_failed == false){
     return true;
   }
 
   if(m_secondInitPhaseDone == false){
-    Logger::Log("begin second init phase");
     secondInitPhase();
     m_secondInitPhaseDone = true;
   }
@@ -343,6 +343,8 @@ void StatePreplaying::executeOneCommand(std::string cmd)
 {
   if(cmd == "GHOST_DOWNLOADED"){
     m_ghostDownloaded = true;
+  } else if (cmd == "GHOST_DOWNLOADING_FAILED") {
+    m_ghostDownloading_failed = true;
   }
   else {
     StateScene::executeOneCommand(cmd);
