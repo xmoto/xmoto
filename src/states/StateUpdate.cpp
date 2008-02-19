@@ -220,9 +220,7 @@ void StateUpdate::send(const std::string& i_id,
 		       UIMsgBoxButton i_button,
 		       const std::string& i_input)
 {
-  Logger::Log("StateUpdate::send");
   if(i_id == "ERROR" || i_id == "SUCCESS") {
-    Logger::Log("avant requestforend");
     m_requestForEnd = true;
   }
 }
