@@ -56,6 +56,7 @@ XMArguments::XMArguments() {
   m_opt_testTheme      = false;
   m_opt_benchmark      = false;
   m_opt_cleanCache     = false;
+  m_opt_cleanNoWWWLevels = false;
   m_opt_gdebug         = false;
   m_opt_configpath     = false;
   m_opt_nosound        = false;
@@ -193,6 +194,8 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       m_opt_benchmark = true;
     } else if(v_opt == "--cleancache") {
       m_opt_cleanCache = true;
+    } else if(v_opt == "--cleanNoWWWLevels") {
+      m_opt_cleanNoWWWLevels = true;
     } else if(v_opt == "-ri" || v_opt == "--replayInfos") {
       m_opt_replayInfos = true;
       if(i+1 >= i_argc) {
@@ -454,6 +457,10 @@ bool XMArguments::isOptCleanCache() const {
   return m_opt_cleanCache;
 }
 
+bool XMArguments::isOptCleanNoWWWLevels() const {
+  return m_opt_cleanNoWWWLevels;
+}
+
 bool XMArguments::isOptReplayInfos() const {
   return m_opt_replayInfos;
 }
@@ -551,6 +558,7 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t\tand --timedemo. Useful to determine the graphics\n");
   printf("\t\tperformance.\n");
   printf("\t--cleancache\n\t\tDeletes the content of the level cache.\n");
+  printf("\t--cleanNoWWWLevels\n\t\tCheck web levels list and remove levels which are not available on the web.\n");
   printf("\t--videoRecording\n\t\tEnable video recording.\n");
   printf("\t--videoRecordingSizeDivision DIVISION\n\t\tChange video size (1=full, 2=50%%, 4=25%%).\n");
   printf("\t--videoRecordingSizeFramerate FRAMERATE\n\t\tChange video framerate.\n");

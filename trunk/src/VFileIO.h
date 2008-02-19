@@ -86,6 +86,10 @@ class FS {
   static std::vector<std::string> findPhysFiles(std::string Files,bool bRecurse = false);
   
   static bool copyFile(const std::string &From,const std::string &To, std::string &To_really_done); /* To_really_done is out : it is the name of the file really written */
+
+  // you can rename only user files
+  static bool renameUserFile(const std::string &From,const std::string &To);
+
   static void deleteFile(const std::string &File);
   
   static FileHandle *openOFile(std::string Path);

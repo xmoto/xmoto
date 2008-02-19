@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmDatabase.h"
 #include "xmscene/Level.h"
 #include "VXml.h"
+#include "helpers/Log.h"
+#include "VFileIO.h"
 
 void xmDatabase::levels_add_begin(bool i_isToReload) {
   simpleSql("BEGIN TRANSACTION;");
@@ -200,4 +202,41 @@ void xmDatabase::levels_update(const std::string& i_id_level,
 	    std::string(i_isScripted  ? "1" : "0") + ", isToReload=" +
 	    std::string(i_isToReload  ? "1" : "0") + " WHERE id_level=\"" +
 	    protectString(i_id_level)    + "\";");
+}
+
+void xmDatabase::levels_cleanNoWWWLevels() {
+  char **v_result;
+  unsigned int nrow;
+  std::string v_name, v_filepath, v_id_level;
+  std::string v_savePath = FS::getUserDir() + std::string("/Trash/Levels");
+  std::string v_basename;
+
+  // make directory for levels
+  FS::mkArborescenceDir(v_savePath);
+
+  v_result = readDB("SELECT a.id_level, a.name, a.filepath "
+		    "FROM levels AS a LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level "
+		    "WHERE b.id_level IS NULL AND isToReload=0;",
+		    nrow);
+  for(unsigned int i=0; i<nrow; i++) {
+    v_id_level = getResult(v_result, 3, i, 0);
+    v_name     = getResult(v_result, 3, i, 1);
+    v_filepath = getResult(v_result, 3, i, 2);
+
+    if(FS::isInUserDir(v_filepath)) { // remove only files of the user dir
+      Logger::Log("Removing level %s (%s)", v_name.c_str(), v_filepath.c_str());
+      try {
+	simpleSql("DELETE FROM levels WHERE id_level=\"" + protectString(v_id_level) + "\";");
+
+	v_basename  = FS::getFileBaseName(v_filepath);
+	if(FS::renameUserFile(v_filepath, v_savePath + "/" + v_basename + ".lvl") == false) {
+	  Logger::Log("Unable to move the file into the trash");
+	}
+      } catch(Exception &e) {
+	Logger::Log("Removing the level failed !");
+      }
+
+    }
+  }
+  read_DB_free(v_result);
 }

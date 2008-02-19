@@ -1016,6 +1016,10 @@ bool FS::copyFile(const std::string &From,const std::string &To, std::string &To
   /* OK */
   return true;
 }
+
+bool FS::renameUserFile(const std::string &From,const std::string &To) {
+  return rename(From.c_str(), To.c_str()) == 0;
+}
   
 /*===========================================================================
   Initialize file system fun

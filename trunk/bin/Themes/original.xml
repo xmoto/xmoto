@@ -196,7 +196,7 @@
 <sprite type="EdgeEffect" name="Grass"      file="EdgeGrass1.png"      scale="0.5" depth="0.3" />
 <sprite type="EdgeEffect" name="EdgeGrass2" file="EdgeGrass1.png"      scale="0.27" depth="0.75" />
 <sprite type="EdgeEffect" name="GrayBricks" file="EdgeGrayBricks1.jpg" scale="0.8" depth="0.3" />
-<sprite type="EdgeEffect" name="Ice1"       file="EdgeIce1.png"        scale="0.5" depth="0.3" />
+<sprite type="EdgeEffect" name="Ice1"       file="EdgeIce1.png"        scale="0.6" depth="1.5" />
 <sprite type="EdgeEffect" name="RedBricks"  file="EdgeRedBricks1.jpg"  scale="0.8" depth="0.3" />
 <sprite type="EdgeEffect" name="GrassAlt"   file="EdgeGrassAlt1.png"   scale="0.5" depth="0.6" />
 <sprite type="EdgeEffect" name="GrassAlt2"  file="EdgeGrassAlt1.png"   scale="0.5" depth="0.9" />
