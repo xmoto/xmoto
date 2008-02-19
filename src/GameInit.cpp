@@ -307,6 +307,11 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     LevelsManager::cleanCache();
   }
   
+  /* Should we clean non www levels ? */
+  if(v_xmArgs.isOptCleanNoWWWLevels()) {
+    pDb->levels_cleanNoWWWLevels();
+  }  
+
   /* -listlevels? */
   if(v_xmArgs.isOptListLevels()) {
     LevelsManager::instance()->printLevelsList(xmDatabase::instance("main"));

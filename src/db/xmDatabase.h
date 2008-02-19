@@ -102,6 +102,7 @@ public:
 		     const std::string& i_music, bool i_isScripted,
 		     bool i_isToReload);
   void levels_add_end();
+  void levels_cleanNoWWWLevels();
 
   /* replays */
   bool replays_isIndexUptodate() const;

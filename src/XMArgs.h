@@ -69,6 +69,7 @@ class XMArguments {
   bool isOptTestTheme() const;
   bool isOptBenchmark() const;
   bool isOptCleanCache() const;
+  bool isOptCleanNoWWWLevels() const;
   bool isOptReplayInfos() const;
   std::string getOpt_replayInfos_file() const;
   bool isOptConfigPath() const;
@@ -149,6 +150,7 @@ class XMArguments {
   bool m_opt_testTheme;
   bool m_opt_benchmark;
   bool m_opt_cleanCache;
+  bool m_opt_cleanNoWWWLevels;
 
   /* video */
   bool m_opt_videoRecording;
