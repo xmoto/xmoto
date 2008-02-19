@@ -142,6 +142,9 @@ public:
   float webrooms_getHighscoreTime(const std::string& i_id_room,
 				  const std::string& i_id_level); /* or a negativ value if not */
 
+  /* data fixes */
+  void fixStatsProfilesLevelsNbCompleted();
+
   private:
   sqlite3 *m_db;
   bool m_requiredLevelsUpdateAfterInit;

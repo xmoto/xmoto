@@ -262,6 +262,7 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   db/xmDatabase_replays.cpp \
   db/xmDatabase_web.cpp \
   db/xmDatabase_themes.cpp \
+  db/xmDatabase_fixes.cpp \
   db/xmDatabaseUpdateInterface.h \
   Universe.h   \
   Universe.cpp \
