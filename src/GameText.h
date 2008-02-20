@@ -403,10 +403,16 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 
 #define GAMETEXT_XHOURS               _("%d hours") 
 #define GAMETEXT_XMINUTES             _("%d minutes")
-#define GAMETEXT_XMOTOGLOBALSTATS     _("(Stats since: %s)\n"                                         \
-                                      "X-Moto started %d times; %d plays (%d different levels),\n"  \
-                                      "%d deaths, %d finishes, and %d restarts.\nTime played: %s")
-#define GAMETEXT_XMOTOLEVELSTATS      _("%d plays, %d deaths, %d finishes, and %d restarts")
+
+#define GAMETEXT_XMOTOGLOBALSTATS_SINCE        _("Stats since: %s")
+#define GAMETEXT_XMOTOGLOBALSTATS_START(A)     ngettext("X-Moto started %d time", "X-Moto started %d times", A)
+#define GAMETEXT_XMOTOGLOBALSTATS_DIFFERENT(A) ngettext("%d different level", "%d different levels", A)
+#define GAMETEXT_XMOTOGLOBALSTATS_TIMEPLAYED   _("Time played: %s")
+#define GAMETEXT_XMOTOLEVELSTATS_PLAYS(A)    ngettext("%d play", "%d plays", A)
+#define GAMETEXT_XMOTOLEVELSTATS_DEATHS(A)   ngettext("%d death", "%d deaths", A)
+#define GAMETEXT_XMOTOLEVELSTATS_FINISHED(A) ngettext("%d finished", "%d finished", A)
+#define GAMETEXT_XMOTOLEVELSTATS_RESTART(A)  ngettext("%d restart", "%d restarts", A)
+
 #define GAMETEXT_XSECONDS             _("%d seconds")
 #define GAMETEXT_YES                  _("Yes")
 #define GAMETEXT_YES_FOR_ALL          _("Yes to all")
