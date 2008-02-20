@@ -695,15 +695,23 @@ void StateMainMenu::updateStats() {
   int nMinutes = (((int)v_totalPlayedTime) / (60)) - nHours*60;
   int nSeconds = (((int)v_totalPlayedTime)) - nMinutes*60 - nHours*3600;
   if(nHours > 0)
-    sprintf(cTime,(std::string(GAMETEXT_XHOURS) + ", " + std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_XSECONDS)).c_str(),nHours,nMinutes,nSeconds);
+    snprintf(cTime, 512, (std::string(GAMETEXT_XHOURS) + ", " + std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_XSECONDS)).c_str(),nHours,nMinutes,nSeconds);
   else if(nMinutes > 0)
-    sprintf(cTime,(std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_XSECONDS)).c_str(),nMinutes,nSeconds);
+    snprintf(cTime, 512, (std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_XSECONDS)).c_str(),nMinutes,nSeconds);
   else
-    sprintf(cTime,GAMETEXT_XSECONDS,nSeconds);
+    snprintf(cTime, 512, GAMETEXT_XSECONDS,nSeconds);
   
-  sprintf(cBuf,GAMETEXT_XMOTOGLOBALSTATS,      
-	  v_since.c_str(), v_nbStarts, v_nbPlayed, v_nbDiffLevels,
-	  v_nbDied, v_nbCompleted, v_nbRestarted, cTime);                           
+  snprintf(cBuf, 512, std::string(std::string("(") +
+				  GAMETEXT_XMOTOGLOBALSTATS_SINCE                     + std::string(")\n")  +
+				  GAMETEXT_XMOTOGLOBALSTATS_START(v_nbStarts)         + std::string("; ")   +
+				  GAMETEXT_XMOTOLEVELSTATS_PLAYS(v_nbPlayed)          + std::string(" (")   +
+				  GAMETEXT_XMOTOGLOBALSTATS_DIFFERENT(v_nbDiffLevels) + std::string("),\n") +
+				  GAMETEXT_XMOTOLEVELSTATS_DEATHS(v_nbDied)           + std::string(", ")   +
+				  GAMETEXT_XMOTOLEVELSTATS_FINISHED(v_nbCompleted)    + std::string(", ")   +
+				  GAMETEXT_XMOTOLEVELSTATS_RESTART(v_nbRestarted)     + std::string(".\n")  +
+				  GAMETEXT_XMOTOGLOBALSTATS_TIMEPLAYED).c_str(),
+	   v_since.c_str(), v_nbStarts, v_nbPlayed, v_nbDiffLevels,
+	   v_nbDied, v_nbCompleted, v_nbRestarted, cTime);                           
   
   UIStatic *pText = new UIStatic(v_window, 0, 0, cBuf, nWidth, 80);
   pText->setHAlign(UI_ALIGN_LEFT);
@@ -734,9 +742,12 @@ void StateMainMenu::updateStats() {
     v_nbCompleted     = atoi(pDb->getResult(v_result, 6, i, 3));
     v_nbRestarted     = atoi(pDb->getResult(v_result, 6, i, 4));
     
-    sprintf(cBuf,("[%s] %s:\n   " + std::string(GAMETEXT_XMOTOLEVELSTATS)).c_str(),
-	    GameApp::formatTime(v_totalPlayedTime).c_str(), v_level_name.c_str(),
-	    v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestarted);
+    snprintf(cBuf, 512, ("[%s] %s:\n   " + std::string(GAMETEXT_XMOTOLEVELSTATS_PLAYS(v_nbPlayed)       + std::string(", ") +
+						       GAMETEXT_XMOTOLEVELSTATS_DEATHS(v_nbDied)        + std::string(", ") +
+						       GAMETEXT_XMOTOLEVELSTATS_FINISHED(v_nbCompleted) + std::string(", ") +
+						       GAMETEXT_XMOTOLEVELSTATS_RESTART(v_nbRestarted))).c_str(),
+	     GameApp::formatTime(v_totalPlayedTime).c_str(), v_level_name.c_str(),
+	     v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestarted);
     
     pText = new UIStatic(v_window, 0, cy, cBuf, nWidth, 45);
     pText->setHAlign(UI_ALIGN_LEFT);        
@@ -2091,7 +2102,7 @@ void StateMainMenu::updateThemesList() {
 void StateMainMenu::updateResolutionsList() {
   UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
   char cBuf[256];
-  sprintf(cBuf, "%d X %d", XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight());
+  snprintf(cBuf, 256, "%d X %d", XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight());
   int nMode = 0;
 
   v_list->clear();
@@ -2526,7 +2537,7 @@ void StateMainMenu::checkEventsOptions() {
       char cBuf[1024];                
 
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
-      sprintf(cBuf, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
+      snprintf(cBuf, 1024, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
       StateManager::instance()->pushState(new StateRequestKey(cBuf, this));      
     }
   }
