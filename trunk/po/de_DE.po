@@ -159,21 +159,19 @@ msgid "Choose Level"
 msgstr "Level wählen"
 
 #: src/GameText.h:71
-#, fuzzy
 msgid "Clean"
-msgstr "Catalanisch"
+msgstr "Säubern"
 
 #: src/GameText.h:72
-#, fuzzy, c-format
+#, c-format
 msgid "Are you sure you want to delete %i replay"
 msgid_plural "Are you sure you want to delete %i replay"
-msgstr[0] "Das Replay wirklich löschen?"
-msgstr[1] "Das Replay wirklich löschen?"
+msgstr[0] "Replay %i wirklich löschen?"
+msgstr[1] "Die %i Replays wirklich löschen?"
 
 #: src/GameText.h:73
-#, fuzzy
 msgid "There is no replay to clean"
-msgstr "Das Theme ist jetzt aktuell"
+msgstr "Kein Replay in der Liste"
 
 #: src/GameText.h:74
 msgid "Close"
@@ -301,7 +299,7 @@ msgstr "FreeBSD-Pakete"
 
 #: src/GameText.h:132
 msgid "for across/elma"
-msgstr "Across/Elma"
+msgstr "für Across/Elma"
 
 #: src/GameText.h:133
 msgid "for making tinyxml"
@@ -317,7 +315,7 @@ msgstr "Alle, die Levels beigesteuert haben,"
 
 #: src/GameText.h:137
 msgid "People who have provided bug reports"
-msgstr "alle, die Bug-Reports gesendet haben,"
+msgstr "alle, die Fehler berichtet haben,"
 
 #: src/GameText.h:138
 msgid "Anyone who has helped in any way"
@@ -401,7 +399,7 @@ msgstr "Lade Highscore herunter..."
 
 #: src/GameText.h:160
 msgid "Downloading high-scores..."
-msgstr "Lade Highscores herunter..."
+msgstr "Lade Bestzeiten herunter..."
 
 #: src/GameText.h:161
 msgid ""
@@ -812,7 +810,7 @@ msgstr "Level-Pakete"
 #: src/GameText.h:262
 #, c-format
 msgid "Level '%s' required by replay!"
-msgstr "Level '%s' wird von dem Replay benötigt!"
+msgstr "Das Level '%s' wird von dem Replay benötigt!"
 
 #: src/GameText.h:263
 msgid "Levels"
@@ -1280,9 +1278,8 @@ msgid "Updating level lists..."
 msgstr "Aktualisiere Level-Liste..."
 
 #: src/GameText.h:383
-#, fuzzy
 msgid "Upload"
-msgstr "Aktualisiert"
+msgstr "Hochladen"
 
 #: src/GameText.h:384
 msgid "Upload all highscores"
@@ -1372,56 +1369,56 @@ msgid "%d minutes"
 msgstr "%d Minuten"
 
 #: src/GameText.h:407
-#, fuzzy, c-format
+#, c-format
 msgid "Stats since: %s"
-msgstr "Statistiken"
+msgstr "Statistiken seit %s"
 
 #: src/GameText.h:408
 #, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "X-Moto wurde %d Mal gestartet"
+msgstr[1] "X-Moto wurde %d Mal gestartet"
 
 #: src/GameText.h:409
 #, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "nur %d Level"
+msgstr[1] "%d verschiedene Levels"
 
 #: src/GameText.h:410
 #, c-format
 msgid "Time played: %s"
-msgstr ""
+msgstr "Spielzeit: %s"
 
 #: src/GameText.h:411
-#, fuzzy, c-format
+#, c-format
 msgid "%d play"
 msgid_plural "%d plays"
-msgstr[0] "%i Spieler"
-msgstr[1] "%i Spieler"
+msgstr[0] "%d Spiel"
+msgstr[1] "%d Spiele"
 
 #: src/GameText.h:412
 #, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d Tod"
+msgstr[1] "%d Tode"
 
 #: src/GameText.h:413
-#, fuzzy, c-format
+#, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
-msgstr[0] "Nicht beendet"
-msgstr[1] "Nicht beendet"
+msgstr[0] "%d beendet"
+msgstr[1] "%d beendet"
 
 #: src/GameText.h:414
 #, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d Neustart"
+msgstr[1] "%d Neustarts"
 
 #: src/GameText.h:416
 #, c-format
@@ -1522,7 +1519,7 @@ msgstr "Spielerprofil wechseln"
 
 #: src/GameText.h:442
 msgid "Play tutorial of how to play the game"
-msgstr "Spieleinführung spielen"
+msgstr "Einführung spielen"
 
 #: src/GameText.h:443
 msgid "Play the selected level"
@@ -1575,7 +1572,7 @@ msgstr "Eine Karte der Umgebung beim Spielen anzeigen"
 #: src/GameText.h:455
 msgid "Automatically download best times off the net when the game starts"
 msgstr ""
-"Automatisch Highscores aus dem Netz laden, wenn das Spiel gestartet wird"
+"Automatisch Bestzeiten aus dem Netz laden, wenn das Spiel gestartet wird"
 
 #: src/GameText.h:456
 msgid "Show the World Record for a given level when playing"
@@ -1993,7 +1990,7 @@ msgstr "Code der Sprache"
 
 #: src/GameText.h:560
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
-msgstr ""
+msgstr "Von X-Moto als unwichtig eingestufte Replays löschen"
 
 #: src/GameText.h:562
 msgid "Levels with no highscore"
@@ -2297,14 +2294,12 @@ msgid "Fps disabled"
 msgstr "Frames/Sekunde-Anzeige deaktiviert"
 
 #: src/GameText.h:641
-#, fuzzy
 msgid "Audio enabled"
-msgstr "Frames/Sekunde-Anzeige aktiviert"
+msgstr "Audio aktiviert"
 
 #: src/GameText.h:642
-#, fuzzy
 msgid "Audio disabled"
-msgstr "Frames/Sekunde-Anzeige deaktiviert"
+msgstr "Audio deaktiviert"
 
 #: src/GameText.h:644
 msgid "No training positions stored"
@@ -2604,20 +2599,3 @@ msgid ""
 msgstr ""
 "Dies ist die letzte Hürde! Nicht so lang, dafür aber\n"
 "ist die Decke noch niedriger. Viel Glück!"
-
-#~ msgid ""
-#~ "(Stats since: %s)\n"
-#~ "X-Moto started %d times; %d plays (%d different levels),\n"
-#~ "%d deaths, %d finishes, and %d restarts.\n"
-#~ "Time played: %s"
-#~ msgstr ""
-#~ "(Statistiken seit: %s)\n"
-#~ "X-Moto wurde %d mal gestartet; %d Spiele (%d unterschiedliche Level),\n"
-#~ "%d Tode, %d mal abgeschlossen, und %d Neustarts.\n"
-#~ "Gespielte Zeit: %s"
-
-#~ msgid "%d plays, %d deaths, %d finishes, and %d restarts"
-#~ msgstr "%d Spiele, %d Tode, %d Abgeschlossene Levels, und %d Neustarts"
-
-#~ msgid "Upload highscore"
-#~ msgstr "Bestzeit hochladen"
