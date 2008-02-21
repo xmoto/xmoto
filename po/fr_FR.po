@@ -1361,6 +1361,7 @@ msgid "%d minutes"
 msgstr "%d minutes"
 
 #: src/GameText.h:407
+#, c-format
 msgid "Stats since: %s"
 msgstr "Statistiques depuis: %s"
 
