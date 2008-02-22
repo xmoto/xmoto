@@ -236,7 +236,6 @@ void FSWeb::downloadFile(const std::string &p_local_file,
       + p_proxy_settings->getAuthentificationPassword();
 
     if(p_proxy_settings->useDefaultServer() == false) {
-      Logger::Log(std::string("set proxy ->" + v_proxy_server).c_str());
       curl_easy_setopt(v_curl, CURLOPT_PROXY, v_proxy_server.c_str());
     }
     
@@ -247,7 +246,6 @@ void FSWeb::downloadFile(const std::string &p_local_file,
     curl_easy_setopt(v_curl, CURLOPT_PROXYTYPE, p_proxy_settings->getType());
    
     if(p_proxy_settings->useDefaultAuthentification() == false) {
-      Logger::Log(std::string("set proxy authentification ->" + v_proxy_auth_str).c_str());
       curl_easy_setopt(v_curl, CURLOPT_PROXYUSERPWD,
            v_proxy_auth_str.c_str());
     }
@@ -373,7 +371,6 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
       + p_proxy_settings->getAuthentificationPassword();
 
     if(p_proxy_settings->useDefaultServer() == false) {
-      Logger::Log(std::string("set proxy ->" + v_proxy_server).c_str());
       curl_easy_setopt(v_curl, CURLOPT_PROXY, v_proxy_server.c_str());
     }
     
@@ -384,7 +381,6 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
     curl_easy_setopt(v_curl, CURLOPT_PROXYTYPE, p_proxy_settings->getType());
    
     if(p_proxy_settings->useDefaultAuthentification() == false) {
-      Logger::Log(std::string("set proxy authentification ->" + v_proxy_auth_str).c_str());
       curl_easy_setopt(v_curl, CURLOPT_PROXYUSERPWD,
            v_proxy_auth_str.c_str());
     }
