@@ -115,6 +115,33 @@
 <sprite type="Texture" name="BubbleLight" file="BubbleLight_370.jpg" />
 <sprite type="Texture" name="Lava" file="Lava_372.jpg" />
 <sprite type="Texture" name="snow_sprite" file="snow_sprite_377.png" />
+<sprite type="Texture" name="Orange1InRainbows" file="Orange1InRainbows_466.png" />
+<sprite type="Texture" name="ArcticsBlue1" file="ArcticsBlue1_417.jpg" />
+<sprite type="Texture" name="ArcticsBlue2" file="ArcticsBlue2_418.jpg" />
+<sprite type="Texture" name="ArcticsBlue3" file="ArcticsBlue3_419.jpg" />
+<sprite type="Texture" name="ArcticsRed1" file="ArcticsRed1_420.jpg" />
+<sprite type="Texture" name="ArcticsRed2" file="ArcticsRed2_421.jpg" />
+<sprite type="Texture" name="ArcticsRed3" file="ArcticsRed3_422.jpg" />
+<sprite type="Texture" name="autumn" file="autumn_481.jpg" />
+<sprite type="Texture" name="Blue1InRainbows" file="Blue1InRainbows_465.png" />
+<sprite type="Texture" name="Blue2InRainbows" file="Blue2InRainbows_470.png" />
+<sprite type="Texture" name="crystal_tex" file="crystal_tex_487.png" />
+<sprite type="Texture" name="Flesh01" file="Flesh01_410.jpg" />
+<sprite type="Texture" name="glass_blue" file="glass_blue_473.png" />
+<sprite type="Texture" name="glass_green" file="glass_green_475.png" />
+<sprite type="Texture" name="glass_red" file="glass_red_474.png" />
+<sprite type="Texture" name="greek" file="greek_486.png" />
+<sprite type="Texture" name="GreenInRainbows" file="GreenInRainbows_467.png" />
+<sprite type="Texture" name="moresand" file="moresand_484.png" />
+<sprite type="Texture" name="moresand2" file="moresand2_485.png" />
+<sprite type="Texture" name="mud" file="mud_497.jpg" />
+<sprite type="Texture" name="Orange2InRainbows" file="Orange2InRainbows_468.png" />
+<sprite type="Texture" name="Peau" file="Peau_416.png" />
+<sprite type="Texture" name="RedInRainbows" file="RedInRainbows_469.png" />
+<sprite type="Texture" name="shadow1" file="shadow1_423.png" />
+<sprite type="Texture" name="shadow2" file="shadow2_424.png" />
+<sprite type="Texture" name="white" file="white_472.jpg" />
+<sprite type="Texture" name="YellowInRainbows" file="YellowInRainbows_464.png" />
 
 <sprite type="Entity" name="Strawberry"  fileBase="Strawberry"  fileExtension="png" width="1" height="1" delay="0.05">
 <frame centerX="0.5" centerY="0.5" />
@@ -192,20 +219,24 @@
 <sprite type="Effect" name="Smoke1"    	     file="Smoke1.png" />
 <sprite type="Effect" name="Smoke2"    	     file="Smoke2.png" />
 
-<sprite type="EdgeEffect" name="BlueBricks" file="EdgeBlueBricks1.jpg" scale="0.8" depth="0.3" />
-<sprite type="EdgeEffect" name="Grass"      file="EdgeGrass1.png"      scale="0.5" depth="0.3" />
-<sprite type="EdgeEffect" name="EdgeGrass2" file="EdgeGrass1.png"      scale="0.27" depth="0.75" />
-<sprite type="EdgeEffect" name="GrayBricks" file="EdgeGrayBricks1.jpg" scale="0.8" depth="0.3" />
-<sprite type="EdgeEffect" name="Ice1"       file="EdgeIce1.png"        scale="0.6" depth="1.5" />
-<sprite type="EdgeEffect" name="RedBricks"  file="EdgeRedBricks1.jpg"  scale="0.8" depth="0.3" />
-<sprite type="EdgeEffect" name="GrassAlt"   file="EdgeGrassAlt1.png"   scale="0.5" depth="0.6" />
-<sprite type="EdgeEffect" name="GrassAlt2"  file="EdgeGrassAlt1.png"   scale="0.5" depth="0.9" />
-<sprite type="EdgeEffect" name="EdgeCSite1" file="EdgeCSite1_209.png"  scale="0.9" depth="0.35" />
-<sprite type="EdgeEffect" name="darken" file="darken_288.png" scale="0.7" depth="0.2" />
+<sprite type="EdgeEffect" name="BlueBricks" 	 file="EdgeBlueBricks1.jpg" scale="0.8" depth="0.3" />
+<sprite type="EdgeEffect" name="Grass"      	 file="EdgeGrass1.png"      scale="0.5" depth="0.3" />
+<sprite type="EdgeEffect" name="EdgeGrass2" 	 file="EdgeGrass1.png"      scale="0.27" depth="0.75" />
+<sprite type="EdgeEffect" name="GrayBricks" 	 file="EdgeGrayBricks1.jpg" scale="0.8" depth="0.3" />
+<sprite type="EdgeEffect" name="Ice1"       	 file="EdgeIce1.png"        scale="0.6" depth="1.5" />
+<sprite type="EdgeEffect" name="RedBricks"  	 file="EdgeRedBricks1.jpg"  scale="0.8" depth="0.3" />
+<sprite type="EdgeEffect" name="GrassAlt"   	 file="EdgeGrassAlt1.png"   scale="0.5" depth="0.6" />
+<sprite type="EdgeEffect" name="GrassAlt2"  	 file="EdgeGrassAlt1.png"   scale="0.5" depth="0.9" />
+<sprite type="EdgeEffect" name="EdgeCSite1" 	 file="EdgeCSite1_209.png"  scale="0.9" depth="0.35" />
+<sprite type="EdgeEffect" name="darken"     	 file="darken_288.png" scale="0.7" depth="0.2" />
 <sprite type="EdgeEffect" name="KRWBlueRockEdge" file="KRWBlueRockEdge_252.png" scale="1.0" depth="1.0" />
-<sprite type="EdgeEffect" name="street" file="street_245.png" scale="1" depth="0.4" />
-<sprite type="EdgeEffect" name="bluen" file="bluen_365.png" scale="0.7" depth="0.2" />
-<sprite type="EdgeEffect" name="lighten" file="lighten_369.png" scale="0.7" depth="0.2" />
+<sprite type="EdgeEffect" name="street"          file="street_245.png" scale="1" depth="0.4" />
+<sprite type="EdgeEffect" name="bluen"           file="bluen_365.png" scale="0.7" depth="0.2" />
+<sprite type="EdgeEffect" name="lighten"         file="lighten_369.png" scale="0.7" depth="0.2" />
+<sprite type="EdgeEffect" name="Bloodeffect"     file="Bloodeffect_407.png" scale="2" depth="2" />
+<sprite type="EdgeEffect" name="dirt_fx"         file="dirt_fx_471.png" scale="1" depth="1" />
+<sprite type="EdgeEffect" name="stone_fx"        file="stone_fx_483.png" scale="1" depth="1" />
+<sprite type="EdgeEffect" name="street2"         file="street2_404.png" scale="1" depth="0.4" />
 
 <sprite type="Misc" name="Arrow" file="Arrow.png" />
 <sprite type="Misc" name="EngineCounter" file="enginecounter.png" />
@@ -329,6 +360,12 @@
 <sprite type="Entity" name="cow" file="cow_379.png" width="2" height="2" centerX="1.0" centerY="0.8" />
 <sprite type="Entity" name="tree" file="tree_381.png" width="7" height="7" centerX="3.5" centerY="1.2" />
 
+<sprite type="Entity" name="KeyBrake" file="KeyBrake_500.png" width="1" height="1" centerX="0.5" centerY="0.5" />
+<sprite type="Entity" name="KeyDrive" file="KeyDrive_499.png" width="1" height="1" centerX="0.5" centerY="0.5" />
+<sprite type="Entity" name="KeyLeft" file="KeyLeft_501.png" width="1" height="1" centerX="0.5" centerY="0.5" />
+<sprite type="Entity" name="KeyRight" file="KeyRight_502.png" width="1" height="1" centerX="0.5" centerY="0.5" />
+
+
 <sprite type="Entity" name="checkball" fileBase="checkball_235_" fileExtension="png" width="1" height="1" delay="0.05">
 <frame />
 <frame />
@@ -412,6 +449,44 @@
 <frame />
 <frame />
 <frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+</sprite>
+
+<sprite type="Entity" name="smiley" fileBase="smiley_480_" fileExtension="png">
+<frame />
+<frame />
+<frame />
+<frame />
+</sprite>
+
+<sprite type="Entity" name="Teleport" fileBase="Teleport_505_" fileExtension="png" width="4.0" height="4.2" centerX="2.1" centerY="1.5">
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+</sprite>
+
+<sprite type="Entity" name="TheX" fileBase="TheX_488_" fileExtension="png">
 <frame />
 <frame />
 <frame />
