@@ -902,9 +902,14 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
 	m_Overlay.beginRendering();
 	m_Overlay.fade(0.15);
       }
-      _RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(), i_ghost->getBikeTheme(), true,
-		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
-	
+
+      try {
+	_RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(), i_ghost->getBikeTheme(), true,
+		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
+      } catch(Exception &e) {
+	i_scene->gameMessage("Unable to render the ghost", true);
+      }
+
       if(XMSession::instance()->ghostMotionBlur()
 	 && m_allowGhostEffect) {
 	m_Overlay.endRendering();
@@ -1038,23 +1043,31 @@ int GameRenderer::nbParticlesRendered() const {
     for(unsigned int i=0; i<i_scene->Players().size(); i++) {
       Biker* v_player = i_scene->Players()[i];
       if(v_player != pCamera->getPlayerToFollow()) {
-	_RenderBike(v_player->getState(),
-		    v_player->getState()->Parameters(),
-		    v_player->getBikeTheme(),
-		    v_player->getRenderBikeFront(),
-		    v_player->getColorFilter(),
-		    v_player->getUglyColorFilter());
+	try {
+	  _RenderBike(v_player->getState(),
+		      v_player->getState()->Parameters(),
+		      v_player->getBikeTheme(),
+		      v_player->getRenderBikeFront(),
+		      v_player->getColorFilter(),
+		      v_player->getUglyColorFilter());
+	} catch(Exception &e) {
+	  i_scene->gameMessage("Unable to render the biker", true);
+	}
       } else {
 	v_found = true;
       }
     }
     if(v_found) {
-      _RenderBike(pCamera->getPlayerToFollow()->getState(),
-		  pCamera->getPlayerToFollow()->getState()->Parameters(),
-		  pCamera->getPlayerToFollow()->getBikeTheme(),
-		  pCamera->getPlayerToFollow()->getRenderBikeFront(),
-		  pCamera->getPlayerToFollow()->getColorFilter(),
-		  pCamera->getPlayerToFollow()->getUglyColorFilter());
+      try {
+	_RenderBike(pCamera->getPlayerToFollow()->getState(),
+		    pCamera->getPlayerToFollow()->getState()->Parameters(),
+		    pCamera->getPlayerToFollow()->getBikeTheme(),
+		    pCamera->getPlayerToFollow()->getRenderBikeFront(),
+		    pCamera->getPlayerToFollow()->getColorFilter(),
+		    pCamera->getPlayerToFollow()->getUglyColorFilter());
+      } catch(Exception &e) {
+	i_scene->gameMessage("Unable to render the biker", true);
+      }
     }
 
     /* ghost information */
@@ -1341,6 +1354,8 @@ void GameRenderer::_RenderSprites(MotoGame* i_scene, bool bForeground,bool bBack
     for(unsigned int i=0; i<Entities.size(); i++) {
       pEnt = Entities[i];
 
+      try {
+
       switch(pEnt->Speciality()) {
         case ET_NONE:
           /* Middleground? (not foreground, not background) */
@@ -1375,8 +1390,12 @@ void GameRenderer::_RenderSprites(MotoGame* i_scene, bool bForeground,bool bBack
           }
           break;
       }
+      } catch(Exception &e) {
+	i_scene->gameMessage("Unable to render a sprite", true);
+      }
+
     }
-  }
+}
 
   /*===========================================================================
   Render a sprite
@@ -2539,25 +2558,29 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
     screenBigger.addPointToAABB2f(screenMax.x+ENTITY_OFFSET,
 				  screenMax.y+ENTITY_OFFSET);
 
-    std::vector<Entity*> Entities = i_scene->getCollisionHandler()->getEntitiesNearPosition(screenBigger);
-    for(unsigned int i = 0; i < Entities.size(); i++) {
-      Entity* v_entity = Entities[i];
-      if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
-	if((v_entity->Z() >= 0.0) == bFront) {
-	  _RenderParticle(i_scene, (ParticlesSource*) v_entity);
+    try {
+      std::vector<Entity*> Entities = i_scene->getCollisionHandler()->getEntitiesNearPosition(screenBigger);
+      for(unsigned int i = 0; i < Entities.size(); i++) {
+	Entity* v_entity = Entities[i];
+	if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
+	  if((v_entity->Z() >= 0.0) == bFront) {
+	    _RenderParticle(i_scene, (ParticlesSource*) v_entity);
+	  }
 	}
       }
-    }
-
-    for(unsigned int i = 0; i < i_scene->getLevelSrc()->EntitiesExterns().size(); i++) {
-      Entity* v_entity = i_scene->getLevelSrc()->EntitiesExterns()[i];
-      if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
-	if((v_entity->Z() >= 0.0) == bFront) {
-	  _RenderParticle(i_scene, (ParticlesSource*) v_entity);
+      
+      for(unsigned int i = 0; i < i_scene->getLevelSrc()->EntitiesExterns().size(); i++) {
+	Entity* v_entity = i_scene->getLevelSrc()->EntitiesExterns()[i];
+	if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
+	  if((v_entity->Z() >= 0.0) == bFront) {
+	    _RenderParticle(i_scene, (ParticlesSource*) v_entity);
 	  }
+	}
       }
+    } catch(Exception &e) {
+      i_scene->gameMessage("Unable to render particles", true);      
     }
-  }
+}
 
   void GameRenderer::renderBodyPart(const Vector2f& i_from, const Vector2f& i_to,
 				    float i_c11, float i_c12,
