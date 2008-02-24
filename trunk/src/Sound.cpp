@@ -218,22 +218,24 @@ void EngineSoundSimulator::update(float fTime) {
   if(fTime < m_fLastBangTime)
     m_fLastBangTime = fTime; /* manage back in the past */
   
-  if(m_fRPM > 100.0f) {
-    /* Calculate the delay between the samples */
-    float fInterval = (60.0f / m_fRPM) * 1.0f;
-    
-    if(fTime - m_fLastBangTime > fInterval) {
-      /* Stroke! Determine a random sample to use */
-      float x = ((float)rand()) / (float)RAND_MAX; /* linux likes insanely high RAND_MAX'es */
-      int   i = (int)(((float)m_BangSamples.size())*x);
-      if(i < 0)
-	i = 0;
-      if((unsigned int)i >= m_BangSamples.size())
-	i = m_BangSamples.size()-1;
+  if(m_BangSamples.size() > 0) {
+    if(m_fRPM > 100.0f) {
+      /* Calculate the delay between the samples */
+      float fInterval = (60.0f / m_fRPM) * 1.0f;
       
-      /* Play it */
-      Mix_PlayChannel(-1,m_BangSamples[i]->pChunk,0);
-      m_fLastBangTime = fTime;
+      if(fTime - m_fLastBangTime > fInterval) {
+	/* Stroke! Determine a random sample to use */
+	float x = ((float)rand()) / (float)RAND_MAX; /* linux likes insanely high RAND_MAX'es */
+	int   i = (int)(((float)m_BangSamples.size())*x);
+	if(i < 0)
+	  i = 0;
+	if((unsigned int)i >= m_BangSamples.size())
+	  i = m_BangSamples.size()-1;
+	
+	/* Play it */
+	Mix_PlayChannel(-1,m_BangSamples[i]->pChunk,0);
+	m_fLastBangTime = fTime;
+      }
     }
   }
 }
