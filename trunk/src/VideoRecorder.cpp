@@ -62,14 +62,14 @@ VideoRecorder::~VideoRecorder() {
 	fclose(m_fd);
 }
 
-void VideoRecorder::read(float i_time) {
+void VideoRecorder::read(int i_time) {
   Img *pShot;
   std::string v_frameName;
   char vName[9];
 
-	if( i_time * ((float) m_framerate) < ((float)m_nbFrames)) {
-		return;
-	}
+  if( (i_time/100.0) * ((float) m_framerate) < ((float)m_nbFrames)) {
+    return;
+  }
 
   // frame name
   snprintf(vName, 9, "%08i", m_nbFrames);

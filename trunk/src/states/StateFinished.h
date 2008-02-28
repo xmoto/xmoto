@@ -58,8 +58,7 @@ class StateFinished : public StateMenu {
   void makeBestTimesWindow(UIBestTimes* pWindow,
 			   const std::string& PlayerName,
 			   const std::string& LevelID,
-			   float fFinishTime,
-			   const std::string& TimeStamp);      
+			   int i_finishTime);      
 
   /* GUI */
   static UIRoot* m_sGUI;

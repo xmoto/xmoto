@@ -29,7 +29,7 @@ class VideoRecorder {
   VideoRecorder(const std::string& i_videoName, int i_division = VR_DEFAULT_DIVISION, int i_frameRate = VR_DEFAULT_FRAMERATE);
   ~VideoRecorder();
 
-  void read(float i_time);
+  void read(int i_time);
 
   private:
   std::string m_name;

@@ -21,24 +21,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameEvents.h"
 #include "helpers/SwapEndian.h"
 #include "DBuffer.h"
+#include "Game.h"
 #include "xmscene/Level.h"
 #include "ScriptDynamicObjects.h"
 
-  MotoGameEvent::MotoGameEvent(float p_fEventTime) {
-    m_fEventTime = p_fEventTime;
+  MotoGameEvent::MotoGameEvent(int p_eventTime) {
+    m_eventTime = p_eventTime;
   }
 
   MotoGameEvent::~MotoGameEvent() {
   }
 
   void MotoGameEvent::serialize(DBuffer &Buffer) {
-    Buffer << m_fEventTime;
+    Buffer << GameApp::timeToFloat(m_eventTime);
     Buffer << (int) (this->getType());
   }
 
   MotoGameEvent* MotoGameEvent::getUnserialized(DBuffer &Buffer, bool bDisplayInformation) {
     MotoGameEvent* v_event;
     float v_fEventTime;
+    int v_eventTime;
     GameEventType v_eventType;
     int i_tmp;
 
@@ -70,79 +72,80 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /*****/
 
     Buffer >> v_fEventTime;
+    v_eventTime = GameApp::floatToTime(v_fEventTime);
     Buffer >> i_tmp;
     v_eventType = (GameEventType) i_tmp;
 
     if(MGE_PlayersDie::SgetType() == v_eventType) {
-      v_event = new MGE_PlayersDie(v_fEventTime);
+      v_event = new MGE_PlayersDie(v_eventTime);
     } else if(MGE_PlayersEnterZone::SgetType() == v_eventType) {
-      v_event = new MGE_PlayersEnterZone(v_fEventTime);
+      v_event = new MGE_PlayersEnterZone(v_eventTime);
     } else if(MGE_PlayersLeaveZone::SgetType() == v_eventType) {
-      v_event = new MGE_PlayersLeaveZone(v_fEventTime);
+      v_event = new MGE_PlayersLeaveZone(v_eventTime);
     } else if(MGE_PlayersToucheEntity::SgetType() == v_eventType) {
-      v_event = new MGE_PlayersToucheEntity(v_fEventTime);
+      v_event = new MGE_PlayersToucheEntity(v_eventTime);
     } else if(MGE_EntityDestroyed::SgetType() == v_eventType) {
-      v_event = new MGE_EntityDestroyed(v_fEventTime);
+      v_event = new MGE_EntityDestroyed(v_eventTime);
     } else if(MGE_ClearMessages::SgetType() == v_eventType) {
-      v_event = new MGE_ClearMessages(v_fEventTime);
+      v_event = new MGE_ClearMessages(v_eventTime);
     } else if(MGE_PlaceInGameArrow::SgetType() == v_eventType) {
-      v_event = new MGE_PlaceInGameArrow(v_fEventTime);
+      v_event = new MGE_PlaceInGameArrow(v_eventTime);
     } else if(MGE_PlaceScreenarrow::SgetType() == v_eventType) {
-      v_event = new MGE_PlaceScreenarrow(v_fEventTime);
+      v_event = new MGE_PlaceScreenarrow(v_eventTime);
     } else if(MGE_HideArrow::SgetType() == v_eventType) {
-      v_event = new MGE_HideArrow(v_fEventTime);
+      v_event = new MGE_HideArrow(v_eventTime);
     } else if(MGE_Message::SgetType() == v_eventType) {
-      v_event = new MGE_Message(v_fEventTime);
+      v_event = new MGE_Message(v_eventTime);
     } else if(MGE_MoveBlock::SgetType() == v_eventType) {
-      v_event = new MGE_MoveBlock(v_fEventTime);
+      v_event = new MGE_MoveBlock(v_eventTime);
     } else if(MGE_SetBlockPos::SgetType() == v_eventType) {
-      v_event = new MGE_SetBlockPos(v_fEventTime);
+      v_event = new MGE_SetBlockPos(v_eventTime);
     } else if(MGE_SetGravity::SgetType() == v_eventType) {
-      v_event = new MGE_SetGravity(v_fEventTime);
+      v_event = new MGE_SetGravity(v_eventTime);
     } else if(MGE_SetPlayersPosition::SgetType() == v_eventType) {
-      v_event = new MGE_SetPlayersPosition(v_fEventTime);
+      v_event = new MGE_SetPlayersPosition(v_eventTime);
     } else if(MGE_SetEntityPos::SgetType() == v_eventType) {
-      v_event = new MGE_SetEntityPos(v_fEventTime);
+      v_event = new MGE_SetEntityPos(v_eventTime);
     } else if(MGE_SetBlockCenter::SgetType() == v_eventType) {
-      v_event = new MGE_SetBlockCenter(v_fEventTime);
+      v_event = new MGE_SetBlockCenter(v_eventTime);
     } else if(MGE_SetBlockRotation::SgetType() == v_eventType) {
-      v_event = new MGE_SetBlockRotation(v_fEventTime);
+      v_event = new MGE_SetBlockRotation(v_eventTime);
     } else if(MGE_SetDynamicEntityRotation::SgetType() == v_eventType) {
-      v_event = new MGE_SetDynamicEntityRotation(v_fEventTime);
+      v_event = new MGE_SetDynamicEntityRotation(v_eventTime);
     } else if(MGE_SetDynamicEntityTranslation::SgetType() == v_eventType) {
-      v_event = new MGE_SetDynamicEntityTranslation(v_fEventTime);
+      v_event = new MGE_SetDynamicEntityTranslation(v_eventTime);
     } else if(MGE_SetDynamicEntityNone::SgetType() == v_eventType) {
-      v_event = new MGE_SetDynamicEntityNone(v_fEventTime);
+      v_event = new MGE_SetDynamicEntityNone(v_eventTime);
     } else if(MGE_SetDynamicBlockRotation::SgetType() == v_eventType) {
-      v_event = new MGE_SetDynamicBlockRotation(v_fEventTime);
+      v_event = new MGE_SetDynamicBlockRotation(v_eventTime);
     } else if(MGE_SetDynamicBlockTranslation::SgetType() == v_eventType) {
-      v_event = new MGE_SetDynamicBlockTranslation(v_fEventTime);
+      v_event = new MGE_SetDynamicBlockTranslation(v_eventTime);
     } else if(MGE_SetDynamicBlockNone::SgetType() == v_eventType) {
-      v_event = new MGE_SetDynamicBlockNone(v_fEventTime);
+      v_event = new MGE_SetDynamicBlockNone(v_eventTime);
     } else if(MGE_CameraMove::SgetType() == v_eventType) {
-      v_event = new MGE_CameraMove(v_fEventTime);
+      v_event = new MGE_CameraMove(v_eventTime);
     } else if(MGE_CameraZoom::SgetType() == v_eventType) {
-      v_event = new MGE_CameraZoom(v_fEventTime);
+      v_event = new MGE_CameraZoom(v_eventTime);
     } else if(MGE_PenalityTime::SgetType() == v_eventType) {
-      v_event = new MGE_PenalityTime(v_fEventTime);
+      v_event = new MGE_PenalityTime(v_eventTime);
     } else if(MGE_SetPlayerPosition::SgetType() == v_eventType) {
-      v_event = new MGE_SetPlayerPosition(v_fEventTime);
+      v_event = new MGE_SetPlayerPosition(v_eventTime);
     } else if(MGE_PlayerDies::SgetType() == v_eventType) {
-      v_event = new MGE_PlayerDies(v_fEventTime);
+      v_event = new MGE_PlayerDies(v_eventTime);
     } else if(MGE_PlayerEntersZone::SgetType() == v_eventType) {
-      v_event = new MGE_PlayerEntersZone(v_fEventTime);
+      v_event = new MGE_PlayerEntersZone(v_eventTime);
     } else if(MGE_PlayerLeavesZone::SgetType() == v_eventType) {
-      v_event = new MGE_PlayerLeavesZone(v_fEventTime);
+      v_event = new MGE_PlayerLeavesZone(v_eventTime);
     } else if(MGE_PlayerTouchesEntity::SgetType() == v_eventType) {
-      v_event = new MGE_PlayerTouchesEntity(v_fEventTime);
+      v_event = new MGE_PlayerTouchesEntity(v_eventTime);
     } else if(MGE_SetDynamicBlockSelfRotation::SgetType() == v_eventType) {
-      v_event = new MGE_SetDynamicBlockSelfRotation(v_fEventTime);
+      v_event = new MGE_SetDynamicBlockSelfRotation(v_eventTime);
     } else if(MGE_SetDynamicEntitySelfRotation::SgetType() == v_eventType) {
-      v_event = new MGE_SetDynamicEntitySelfRotation(v_fEventTime);
+      v_event = new MGE_SetDynamicEntitySelfRotation(v_eventTime);
     } else if(MGE_CameraRotate::SgetType() == v_eventType) {
-      v_event = new MGE_CameraRotate(v_fEventTime);
+      v_event = new MGE_CameraRotate(v_eventTime);
     } else if(MGE_CameraAdaptToGravity::SgetType() == v_eventType) {
-      v_event = new MGE_CameraAdaptToGravity(v_fEventTime);
+      v_event = new MGE_CameraAdaptToGravity(v_eventTime);
     } else {
       std::ostringstream error_type;
       error_type << (int) v_eventType;
@@ -150,7 +153,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
     v_event->unserialize(Buffer);
     if(bDisplayInformation) {
-      printf("   %6.2f %-27s\n", v_fEventTime, v_event->toString().c_str());
+      printf("   %6.2f %-27s\n", v_eventTime/100.0, v_event->toString().c_str());
     }
 
     return v_event;
@@ -159,18 +162,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void MotoGameEvent::revert(MotoGame *p_pMotoGame) {
   }
 
-  float MotoGameEvent::getEventTime() {
-    return m_fEventTime;
+  int MotoGameEvent::getEventTime() {
+    return m_eventTime;
   }
 
   //////////////////////////////
-  MGE_PlayersDie::MGE_PlayersDie(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_PlayersDie::MGE_PlayersDie(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_bKilledByWrecker = false;
   }
 
-  MGE_PlayersDie::MGE_PlayersDie(float p_fEventTime, bool p_bKilledByWrecker) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_PlayersDie::MGE_PlayersDie(int p_eventTime, bool p_bKilledByWrecker) 
+    : MotoGameEvent(p_eventTime) {
       m_bKilledByWrecker = p_bKilledByWrecker;
   }
 
@@ -202,14 +205,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_PlayerDies::MGE_PlayerDies(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_PlayerDies::MGE_PlayerDies(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_bKilledByWrecker = false;
     m_player           = 0;
   }
 
-  MGE_PlayerDies::MGE_PlayerDies(float p_fEventTime, bool p_bKilledByWrecker, int i_player) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_PlayerDies::MGE_PlayerDies(int p_eventTime, bool p_bKilledByWrecker, int i_player) 
+    : MotoGameEvent(p_eventTime) {
       m_bKilledByWrecker = p_bKilledByWrecker;
       m_player           = i_player;
   }
@@ -242,13 +245,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_PlayersEnterZone::MGE_PlayersEnterZone(float p_fEventTime) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_PlayersEnterZone::MGE_PlayersEnterZone(int p_eventTime) 
+    : MotoGameEvent(p_eventTime) {
       m_zone = NULL;
     }
 
-  MGE_PlayersEnterZone::MGE_PlayersEnterZone(float p_fEventTime, Zone *p_zone) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_PlayersEnterZone::MGE_PlayersEnterZone(int p_eventTime, Zone *p_zone) 
+    : MotoGameEvent(p_eventTime) {
       m_zone = p_zone;
     }
 
@@ -281,14 +284,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_PlayerEntersZone::MGE_PlayerEntersZone(float p_fEventTime) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_PlayerEntersZone::MGE_PlayerEntersZone(int p_eventTime) 
+    : MotoGameEvent(p_eventTime) {
       m_zone   = NULL;
       m_player = 0;
     }
 
-  MGE_PlayerEntersZone::MGE_PlayerEntersZone(float p_fEventTime, Zone *p_zone, int i_player) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_PlayerEntersZone::MGE_PlayerEntersZone(int p_eventTime, Zone *p_zone, int i_player) 
+    : MotoGameEvent(p_eventTime) {
       m_zone   = p_zone;
       m_player = i_player;
     }
@@ -322,13 +325,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_PlayersLeaveZone::MGE_PlayersLeaveZone(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_PlayersLeaveZone::MGE_PlayersLeaveZone(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_zone = NULL;
   }
 
-  MGE_PlayersLeaveZone::MGE_PlayersLeaveZone(float p_fEventTime, Zone *p_zone) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_PlayersLeaveZone::MGE_PlayersLeaveZone(int p_eventTime, Zone *p_zone) 
+    : MotoGameEvent(p_eventTime) {
       m_zone = p_zone;
   }
 
@@ -360,14 +363,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_PlayerLeavesZone::MGE_PlayerLeavesZone(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_PlayerLeavesZone::MGE_PlayerLeavesZone(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_zone   = NULL;
     m_player = 0;
   }
 
-  MGE_PlayerLeavesZone::MGE_PlayerLeavesZone(float p_fEventTime, Zone *p_zone, int i_player) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_PlayerLeavesZone::MGE_PlayerLeavesZone(int p_eventTime, Zone *p_zone, int i_player) 
+    : MotoGameEvent(p_eventTime) {
       m_zone   = p_zone;
       m_player = i_player;
   }
@@ -400,14 +403,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_PlayersToucheEntity::MGE_PlayersToucheEntity(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_PlayersToucheEntity::MGE_PlayersToucheEntity(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_entityID = "";
     m_bTouchedWithHead = false;
   }
 
-  MGE_PlayersToucheEntity::MGE_PlayersToucheEntity(float p_fEventTime, std::string p_entityID, bool p_bTouchedWithHead) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_PlayersToucheEntity::MGE_PlayersToucheEntity(int p_eventTime, std::string p_entityID, bool p_bTouchedWithHead) 
+    : MotoGameEvent(p_eventTime) {
       m_entityID = p_entityID;
       m_bTouchedWithHead = p_bTouchedWithHead;
     }
@@ -440,16 +443,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_PlayerTouchesEntity::MGE_PlayerTouchesEntity(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_PlayerTouchesEntity::MGE_PlayerTouchesEntity(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_entityID = "";
     m_bTouchedWithHead = false;
     m_player = 0;
   }
 
-  MGE_PlayerTouchesEntity::MGE_PlayerTouchesEntity(float p_fEventTime, std::string p_entityID,
+  MGE_PlayerTouchesEntity::MGE_PlayerTouchesEntity(int p_eventTime, std::string p_entityID,
 						   bool p_bTouchedWithHead, int i_player) 
-    : MotoGameEvent(p_fEventTime) {
+    : MotoGameEvent(p_eventTime) {
       m_entityID = p_entityID;
       m_bTouchedWithHead = p_bTouchedWithHead;
       m_player = i_player;
@@ -484,13 +487,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_EntityDestroyed::MGE_EntityDestroyed(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_EntityDestroyed::MGE_EntityDestroyed(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_entitySize = 0.0;
   }
 
-  MGE_EntityDestroyed::MGE_EntityDestroyed(float p_fEventTime, std::string i_entityId, EntitySpeciality i_entityType, Vector2f i_entityPosition, float i_entitySize)
-    : MotoGameEvent(p_fEventTime) {
+  MGE_EntityDestroyed::MGE_EntityDestroyed(int p_eventTime, std::string i_entityId, EntitySpeciality i_entityType, Vector2f i_entityPosition, float i_entitySize)
+    : MotoGameEvent(p_eventTime) {
       m_entityId       = i_entityId;
       m_entityType     = i_entityType;
       m_entityPosition = i_entityPosition;
@@ -563,8 +566,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_ClearMessages::MGE_ClearMessages(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_ClearMessages::MGE_ClearMessages(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
   }
 
   MGE_ClearMessages::~MGE_ClearMessages() {
@@ -594,17 +597,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_PlaceInGameArrow::MGE_PlaceInGameArrow(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_PlaceInGameArrow::MGE_PlaceInGameArrow(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_x = 0.0;
     m_y = 0.0;
     m_angle = 0.0;
   }
 
-  MGE_PlaceInGameArrow::MGE_PlaceInGameArrow(float p_fEventTime,
+  MGE_PlaceInGameArrow::MGE_PlaceInGameArrow(int p_eventTime,
                                              float p_x, float p_y,
                                              float p_angle) 
-    : MotoGameEvent(p_fEventTime){
+    : MotoGameEvent(p_eventTime){
       m_x = p_x;
       m_y = p_y;
       m_angle = p_angle;
@@ -643,17 +646,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_PlaceScreenarrow::MGE_PlaceScreenarrow(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_PlaceScreenarrow::MGE_PlaceScreenarrow(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_x = 0.0;
     m_y = 0.0;
     m_angle = 0.0;
   }
 
-  MGE_PlaceScreenarrow::MGE_PlaceScreenarrow(float p_fEventTime,
+  MGE_PlaceScreenarrow::MGE_PlaceScreenarrow(int p_eventTime,
                                              float p_x, float p_y,
                                              float p_angle) 
-    : MotoGameEvent(p_fEventTime) {
+    : MotoGameEvent(p_eventTime) {
       m_x = p_x;
       m_y = p_y;
       m_angle = p_angle;
@@ -692,8 +695,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_HideArrow::MGE_HideArrow(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_HideArrow::MGE_HideArrow(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
   }
 
   MGE_HideArrow::~MGE_HideArrow() {
@@ -723,13 +726,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_Message::MGE_Message(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_Message::MGE_Message(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_message = "";
   }
 
-  MGE_Message::MGE_Message(float p_fEventTime, std::string p_message) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_Message::MGE_Message(int p_eventTime, std::string p_message) 
+    : MotoGameEvent(p_eventTime) {
       m_message = p_message;
     }
 
@@ -762,17 +765,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_MoveBlock::MGE_MoveBlock(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_MoveBlock::MGE_MoveBlock(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_blockID = "";
     m_x = 0.0;
     m_y = 0.0;
   }
 
-  MGE_MoveBlock::MGE_MoveBlock(float p_fEventTime,
+  MGE_MoveBlock::MGE_MoveBlock(int p_eventTime,
                                std::string p_blockID,
                                float p_x, float p_y)  
-    : MotoGameEvent(p_fEventTime){
+    : MotoGameEvent(p_eventTime){
       m_blockID = p_blockID;
       m_x = p_x;
       m_y = p_y;
@@ -811,17 +814,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_SetBlockPos::MGE_SetBlockPos(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_SetBlockPos::MGE_SetBlockPos(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_blockID = "";
     m_x = 0.0;
     m_y = 0.0;
   }
 
-  MGE_SetBlockPos::MGE_SetBlockPos(float p_fEventTime,
+  MGE_SetBlockPos::MGE_SetBlockPos(int p_eventTime,
                                    std::string p_blockID,
                                    float p_x, float p_y) 
-  : MotoGameEvent(p_fEventTime) {
+  : MotoGameEvent(p_eventTime) {
     m_blockID = p_blockID;
     m_x = p_x;
     m_y = p_y;
@@ -860,14 +863,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_SetGravity::MGE_SetGravity(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_SetGravity::MGE_SetGravity(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_x = 0.0;
     m_y = 0.0;
   }
 
-  MGE_SetGravity::MGE_SetGravity(float p_fEventTime, float p_x, float p_y) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_SetGravity::MGE_SetGravity(int p_eventTime, float p_x, float p_y) 
+    : MotoGameEvent(p_eventTime) {
       m_x = p_x;
       m_y = p_y;
   }
@@ -903,17 +906,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_SetPlayersPosition::MGE_SetPlayersPosition(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_SetPlayersPosition::MGE_SetPlayersPosition(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_x = 0.0;
     m_y = 0.0;
     m_bRight = 0.0;
   }
 
-  MGE_SetPlayersPosition::MGE_SetPlayersPosition(float p_fEventTime,
+  MGE_SetPlayersPosition::MGE_SetPlayersPosition(int p_eventTime,
                                                float p_x, float p_y,
                                                bool p_bRight) 
-    : MotoGameEvent(p_fEventTime) {
+    : MotoGameEvent(p_eventTime) {
       m_x = p_x;
       m_y = p_y;
       m_bRight = p_bRight;
@@ -954,20 +957,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_SetPlayerPosition::MGE_SetPlayerPosition(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_SetPlayerPosition::MGE_SetPlayerPosition(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_x = 0.0;
     m_y = 0.0;
     m_bRight = 0.0;
     m_player = 0;
   }
 
-  MGE_SetPlayerPosition::MGE_SetPlayerPosition(float p_fEventTime,
+  MGE_SetPlayerPosition::MGE_SetPlayerPosition(int p_eventTime,
                                                float p_x, float p_y,
                                                bool p_bRight,
 					       int i_player
 					       ) 
-    : MotoGameEvent(p_fEventTime) {
+    : MotoGameEvent(p_eventTime) {
       m_x = p_x;
       m_y = p_y;
       m_bRight = p_bRight;
@@ -1009,17 +1012,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_SetEntityPos::MGE_SetEntityPos(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_SetEntityPos::MGE_SetEntityPos(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_entityID = "";
     m_x = 0.0;
     m_y = 0.0;
   }
 
-  MGE_SetEntityPos::MGE_SetEntityPos(float p_fEventTime,
+  MGE_SetEntityPos::MGE_SetEntityPos(int p_eventTime,
                                      std::string p_entityID,
                                      float p_x, float p_y)  
-  : MotoGameEvent(p_fEventTime){
+  : MotoGameEvent(p_eventTime){
     m_entityID = p_entityID;
     m_x = p_x;
     m_y = p_y;
@@ -1058,17 +1061,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_SetBlockCenter::MGE_SetBlockCenter(float p_fEventTime) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_SetBlockCenter::MGE_SetBlockCenter(int p_eventTime) 
+    : MotoGameEvent(p_eventTime) {
       m_blockID = "";
       m_x = 0.0;
       m_y = 0.0;
     }
 
-  MGE_SetBlockCenter::MGE_SetBlockCenter(float p_fEventTime,
+  MGE_SetBlockCenter::MGE_SetBlockCenter(int p_eventTime,
                                          std::string p_blockID,
                                          float p_x, float p_y) 
-    : MotoGameEvent(p_fEventTime) {
+    : MotoGameEvent(p_eventTime) {
       m_blockID = p_blockID;
       m_x = p_x;
       m_y = p_y;
@@ -1107,16 +1110,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_SetBlockRotation::MGE_SetBlockRotation(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_SetBlockRotation::MGE_SetBlockRotation(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_blockID = "";
     m_angle = 0.0;
   }
 
-  MGE_SetBlockRotation::MGE_SetBlockRotation(float p_fEventTime,
+  MGE_SetBlockRotation::MGE_SetBlockRotation(int p_eventTime,
                                              std::string p_blockID,
                                              float p_angle) 
-    : MotoGameEvent(p_fEventTime) {
+    : MotoGameEvent(p_eventTime) {
       m_blockID = p_blockID;
       m_angle = p_angle;
   }
@@ -1152,28 +1155,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_SetDynamicEntityRotation::MGE_SetDynamicEntityRotation(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_SetDynamicEntityRotation::MGE_SetDynamicEntityRotation(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_entityID   = "";
     m_fInitAngle = 0.0;
     m_fRadius    = 0.0;
-    m_fPeriod    = 0.0;
+    m_period     = 0;
     m_startTime  = 0;
     m_endTime    = 0;
   }
 
-  MGE_SetDynamicEntityRotation::MGE_SetDynamicEntityRotation(float p_fEventTime,
+  MGE_SetDynamicEntityRotation::MGE_SetDynamicEntityRotation(int p_eventTime,
                                                              std::string p_entityID,
                                                              float p_fInitAngle,
                                                              float p_fRadius,
-                                                             float p_fPeriod,
+                                                             int p_period,
                                                              int   p_startTime,
                                                              int   p_endTime) 
-    : MotoGameEvent(p_fEventTime) {
+    : MotoGameEvent(p_eventTime) {
       m_entityID   = p_entityID;
       m_fInitAngle = p_fInitAngle;
       m_fRadius    = p_fRadius;
-      m_fPeriod    = p_fPeriod;
+      m_period    = p_period;
       m_startTime  = p_startTime;
       m_endTime    = p_endTime;
     }
@@ -1184,7 +1187,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void MGE_SetDynamicEntityRotation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicEntityRotation(m_entityID,
                    m_fInitAngle, m_fRadius,
-                   m_fPeriod,
+                   m_period,
                    m_startTime, m_endTime));
   }
 
@@ -1193,18 +1196,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer << m_entityID;
     Buffer << m_fInitAngle;
     Buffer << m_fRadius;
-    Buffer << m_fPeriod;
+    Buffer << GameApp::timeToFloat(m_period);
     Buffer << m_startTime;
     Buffer << m_endTime;
   }
   
   void MGE_SetDynamicEntityRotation::unserialize(DBuffer &Buffer) {
+    float v_fperiod;
+
     Buffer >> m_entityID;
     Buffer >> m_fInitAngle;
     Buffer >> m_fRadius;
-    Buffer >> m_fPeriod;
+    Buffer >> v_fperiod;
     Buffer >> m_startTime;
     Buffer >> m_endTime;
+
+    m_period = GameApp::floatToTime(v_fperiod);
   }
 
   GameEventType MGE_SetDynamicEntityRotation::SgetType() {
@@ -1220,28 +1227,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_SetDynamicEntityTranslation::MGE_SetDynamicEntityTranslation(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_SetDynamicEntityTranslation::MGE_SetDynamicEntityTranslation(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
       m_entityID   = "";
       m_x = 0.0;
       m_y = 0.0;
-      m_fPeriod    = 0.0;
+      m_period     = 0;
       m_startTime  = 0;
       m_endTime    = 0;
   }
 
-  MGE_SetDynamicEntityTranslation::MGE_SetDynamicEntityTranslation(float p_fEventTime,  
+  MGE_SetDynamicEntityTranslation::MGE_SetDynamicEntityTranslation(int p_eventTime,  
                                                                    std::string p_entityID,
                                                                    float p_x,
                                                                    float p_y,
-                                                                   float p_fPeriod,
+                                                                   int p_period,
                                                                    int   p_startTime,
                                                                    int   p_endTime) 
-    : MotoGameEvent(p_fEventTime) {
+    : MotoGameEvent(p_eventTime) {
       m_entityID   = p_entityID;
       m_x = p_x;
       m_y = p_y;
-      m_fPeriod    = p_fPeriod;
+      m_period     = p_period;
       m_startTime  = p_startTime;
       m_endTime    = p_endTime;
     }
@@ -1252,7 +1259,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void MGE_SetDynamicEntityTranslation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicEntityTranslation(m_entityID,
                 m_x, m_y,
-                m_fPeriod,
+                m_period,
                 m_startTime, m_endTime));
   }
 
@@ -1261,18 +1268,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer << m_entityID;
     Buffer << m_x;
     Buffer << m_y;
-    Buffer << m_fPeriod;
+    Buffer << GameApp::timeToFloat(m_period);
     Buffer << m_startTime;
     Buffer << m_endTime;
   }
   
   void MGE_SetDynamicEntityTranslation::unserialize(DBuffer &Buffer) {
+    float v_fperiod;
+
     Buffer >> m_entityID;
     Buffer >> m_x;
     Buffer >> m_y;
-    Buffer >> m_fPeriod;
+    Buffer >> v_fperiod;
     Buffer >> m_startTime;
     Buffer >> m_endTime;
+
+    m_period = GameApp::floatToTime(v_fperiod);
   }
 
   GameEventType MGE_SetDynamicEntityTranslation::SgetType() {
@@ -1288,13 +1299,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_SetDynamicEntityNone::MGE_SetDynamicEntityNone(float p_fEventTime) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_SetDynamicEntityNone::MGE_SetDynamicEntityNone(int p_eventTime) 
+    : MotoGameEvent(p_eventTime) {
       m_entityID = "";
     }
 
-  MGE_SetDynamicEntityNone::MGE_SetDynamicEntityNone(float p_fEventTime, std::string p_entityID)
-    : MotoGameEvent(p_fEventTime) {
+  MGE_SetDynamicEntityNone::MGE_SetDynamicEntityNone(int p_eventTime, std::string p_entityID)
+    : MotoGameEvent(p_eventTime) {
       m_entityID = p_entityID;
     }
 
@@ -1327,28 +1338,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_SetDynamicBlockRotation::MGE_SetDynamicBlockRotation(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_SetDynamicBlockRotation::MGE_SetDynamicBlockRotation(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_blockID   = "";
     m_fInitAngle = 0.0;
     m_fRadius    = 0.0;
-    m_fPeriod    = 0.0;
+    m_period    = 0;
     m_startTime  = 0;
     m_endTime    = 0;
   }
 
-  MGE_SetDynamicBlockRotation::MGE_SetDynamicBlockRotation(float p_fEventTime,
+  MGE_SetDynamicBlockRotation::MGE_SetDynamicBlockRotation(int p_eventTime,
                                                            std::string p_blockID,
                                                            float p_fInitAngle,
                                                            float p_fRadius,
-                                                           float p_fPeriod,
+                                                           int p_period,
                                                            int   p_startTime,
                                                            int   p_endTime) 
-    : MotoGameEvent(p_fEventTime) {
+    : MotoGameEvent(p_eventTime) {
       m_blockID   = p_blockID;
       m_fInitAngle = p_fInitAngle;
       m_fRadius    = p_fRadius;
-      m_fPeriod    = p_fPeriod;
+      m_period    = p_period;
       m_startTime  = p_startTime;
       m_endTime    = p_endTime;
     }
@@ -1359,7 +1370,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void MGE_SetDynamicBlockRotation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicBlockRotation(m_blockID,
                   m_fInitAngle, m_fRadius,
-                  m_fPeriod,
+                  m_period,
                   m_startTime, m_endTime));
   }
 
@@ -1368,18 +1379,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer << m_blockID;
     Buffer << m_fInitAngle;
     Buffer << m_fRadius;
-    Buffer << m_fPeriod;
+    Buffer << GameApp::timeToFloat(m_period);
     Buffer << m_startTime;
     Buffer << m_endTime;
   }
   
   void MGE_SetDynamicBlockRotation::unserialize(DBuffer &Buffer) {
+    float v_fperiod;
+
     Buffer >> m_blockID;
     Buffer >> m_fInitAngle;
     Buffer >> m_fRadius;
-    Buffer >> m_fPeriod;
+    Buffer >> v_fperiod;
     Buffer >> m_startTime;
     Buffer >> m_endTime;
+
+    m_period = GameApp::floatToTime(v_fperiod);
   }
 
   GameEventType MGE_SetDynamicBlockRotation::SgetType() {
@@ -1395,28 +1410,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_SetDynamicBlockTranslation::MGE_SetDynamicBlockTranslation(float p_fEventTime) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_SetDynamicBlockTranslation::MGE_SetDynamicBlockTranslation(int p_eventTime) 
+    : MotoGameEvent(p_eventTime) {
       m_blockID   = "";
       m_x = 0.0;
       m_y = 0.0;
-      m_fPeriod    = 0.0;
+      m_period     = 0;
       m_startTime  = 0;
       m_endTime    = 0;
     }
 
-  MGE_SetDynamicBlockTranslation::MGE_SetDynamicBlockTranslation(float p_fEventTime,  
+  MGE_SetDynamicBlockTranslation::MGE_SetDynamicBlockTranslation(int p_eventTime,  
                                                                  std::string p_blockID,
                                                                  float p_x,
                                                                  float p_y,
-                                                                 float p_fPeriod,
+                                                                 int p_period,
                                                                  int   p_startTime,
                                                                  int   p_endTime) 
-    : MotoGameEvent(p_fEventTime) {
+    : MotoGameEvent(p_eventTime) {
       m_blockID   = p_blockID;
       m_x = p_x;
       m_y = p_y;
-      m_fPeriod    = p_fPeriod;
+      m_period     = p_period;
       m_startTime  = p_startTime;
       m_endTime    = p_endTime;
     }
@@ -1427,7 +1442,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void MGE_SetDynamicBlockTranslation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicBlockTranslation(m_blockID,
                      m_x, m_y,
-                     m_fPeriod,
+                     m_period,
                      m_startTime, m_endTime));
   }
 
@@ -1436,18 +1451,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer << m_blockID;
     Buffer << m_x;
     Buffer << m_y;
-    Buffer << m_fPeriod;
+    Buffer << GameApp::timeToFloat(m_period);
     Buffer << m_startTime;
     Buffer << m_endTime;
   }
   
   void MGE_SetDynamicBlockTranslation::unserialize(DBuffer &Buffer) {
+    float v_fperiod;
+
     Buffer >> m_blockID;
     Buffer >> m_x;
     Buffer >> m_y;
-    Buffer >> m_fPeriod;
+    Buffer >> v_fperiod;
     Buffer >> m_startTime;
     Buffer >> m_endTime;
+
+    m_period = GameApp::floatToTime(v_fperiod);
   }
 
   GameEventType MGE_SetDynamicBlockTranslation::SgetType() {
@@ -1463,13 +1482,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_SetDynamicBlockNone::MGE_SetDynamicBlockNone(float p_fEventTime) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_SetDynamicBlockNone::MGE_SetDynamicBlockNone(int p_eventTime) 
+    : MotoGameEvent(p_eventTime) {
       m_blockID = "";
     }
 
-  MGE_SetDynamicBlockNone::MGE_SetDynamicBlockNone(float p_fEventTime, std::string p_blockID) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_SetDynamicBlockNone::MGE_SetDynamicBlockNone(int p_eventTime, std::string p_blockID) 
+    : MotoGameEvent(p_eventTime) {
       m_blockID = p_blockID;
     }
 
@@ -1502,14 +1521,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_CameraMove::MGE_CameraMove(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_CameraMove::MGE_CameraMove(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_moveX = 0.0;
     m_moveY = 0.0;
   }
 
-  MGE_CameraMove::MGE_CameraMove(float p_fEventTime, float p_moveX, float p_moveY)
-  : MotoGameEvent(p_fEventTime) {
+  MGE_CameraMove::MGE_CameraMove(int p_eventTime, float p_moveX, float p_moveY)
+  : MotoGameEvent(p_eventTime) {
     m_moveX = p_moveX;
     m_moveY = p_moveY;
   }
@@ -1548,13 +1567,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_CameraZoom::MGE_CameraZoom(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_CameraZoom::MGE_CameraZoom(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_zoom = 0.0;
   }
 
-  MGE_CameraZoom::MGE_CameraZoom(float p_fEventTime, float p_zoom) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_CameraZoom::MGE_CameraZoom(int p_eventTime, float p_zoom) 
+    : MotoGameEvent(p_eventTime) {
       m_zoom = p_zoom;
     }
 
@@ -1591,13 +1610,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   //////////////////////////////
 
-  MGE_PenalityTime::MGE_PenalityTime(float p_fEventTime)
-  : MotoGameEvent(p_fEventTime) {
-    m_penalityTime = 0.0;
+  MGE_PenalityTime::MGE_PenalityTime(int p_eventTime)
+  : MotoGameEvent(p_eventTime) {
+    m_penalityTime = 0;
   }
 
-  MGE_PenalityTime::MGE_PenalityTime(float p_fEventTime, float p_penatityTime) 
-    : MotoGameEvent(p_fEventTime) {
+  MGE_PenalityTime::MGE_PenalityTime(int p_eventTime, int p_penatityTime) 
+    : MotoGameEvent(p_eventTime) {
       m_penalityTime = p_penatityTime;
   }
 
@@ -1609,11 +1628,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   void MGE_PenalityTime::serialize(DBuffer &Buffer) {
-    Buffer << m_penalityTime;
+    Buffer << GameApp::timeToFloat(m_penalityTime);
   }
 
   void MGE_PenalityTime::unserialize(DBuffer &Buffer) {
-    Buffer >> m_penalityTime;
+    float v_fpenalityTime;
+    Buffer >> v_fpenalityTime;
+    m_penalityTime = GameApp::floatToTime(v_fpenalityTime);
   }
  
   GameEventType MGE_PenalityTime::SgetType() {
@@ -1630,22 +1651,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   //////////////////////////////
 
-  MGE_SetDynamicBlockSelfRotation::MGE_SetDynamicBlockSelfRotation(float p_fEventTime)
-  : MotoGameEvent(p_fEventTime) {
+  MGE_SetDynamicBlockSelfRotation::MGE_SetDynamicBlockSelfRotation(int p_eventTime)
+  : MotoGameEvent(p_eventTime) {
     m_blockID   = "";
-    m_fPeriod    = 0.0;
+    m_period    = 0;
     m_startTime  = 0;
     m_endTime    = 0;
   }
   
-  MGE_SetDynamicBlockSelfRotation::MGE_SetDynamicBlockSelfRotation(float p_fEventTime,
+  MGE_SetDynamicBlockSelfRotation::MGE_SetDynamicBlockSelfRotation(int p_eventTime,
 								   std::string p_blockID,
-								   float p_fPeriod,
+								   int p_period,
 								   int   p_startTime,
 								 int   p_endTime)
-  : MotoGameEvent(p_fEventTime){
+  : MotoGameEvent(p_eventTime){
     m_blockID   = p_blockID;
-    m_fPeriod   = p_fPeriod;
+    m_period   = p_period;
     m_startTime = p_startTime;
     m_endTime   = p_endTime;
   }
@@ -1655,23 +1676,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
   void MGE_SetDynamicBlockSelfRotation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicBlockSelfRotation(m_blockID,
-								m_fPeriod,
+								m_period,
 								m_startTime, m_endTime));  
   }
   
   void MGE_SetDynamicBlockSelfRotation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
     Buffer << m_blockID;
-    Buffer << m_fPeriod;
+    Buffer << GameApp::timeToFloat(m_period);
     Buffer << m_startTime;
     Buffer << m_endTime;
   }
   
   void MGE_SetDynamicBlockSelfRotation::unserialize(DBuffer &Buffer) {
+    float v_fperiod;
+
     Buffer >> m_blockID;
-    Buffer >> m_fPeriod;
+    Buffer >> v_fperiod;
     Buffer >> m_startTime;
     Buffer >> m_endTime;
+
+    m_period = GameApp::floatToTime(v_fperiod);
   }
   
   GameEventType MGE_SetDynamicBlockSelfRotation::SgetType() {
@@ -1688,22 +1713,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   //////////////////////////////
 
-  MGE_SetDynamicEntitySelfRotation::MGE_SetDynamicEntitySelfRotation(float p_fEventTime)
-  : MotoGameEvent(p_fEventTime) {
+  MGE_SetDynamicEntitySelfRotation::MGE_SetDynamicEntitySelfRotation(int p_eventTime)
+  : MotoGameEvent(p_eventTime) {
     m_entityID   = "";
-    m_fPeriod    = 0.0;
+    m_period    = 0;
     m_startTime  = 0;
     m_endTime    = 0;
   }
   
-  MGE_SetDynamicEntitySelfRotation::MGE_SetDynamicEntitySelfRotation(float p_fEventTime,
+  MGE_SetDynamicEntitySelfRotation::MGE_SetDynamicEntitySelfRotation(int p_eventTime,
 								     std::string p_entityID,
-								     float p_fPeriod,
+								     int p_period,
 								     int   p_startTime,
 								     int   p_endTime)
-  : MotoGameEvent(p_fEventTime){
+  : MotoGameEvent(p_eventTime){
     m_entityID   = p_entityID;
-    m_fPeriod   = p_fPeriod;
+    m_period   = p_period;
     m_startTime = p_startTime;
     m_endTime   = p_endTime;
   }
@@ -1713,23 +1738,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
   void MGE_SetDynamicEntitySelfRotation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicEntitySelfRotation(m_entityID,
-								 m_fPeriod,
+								 m_period,
 								 m_startTime, m_endTime));  
   }
   
   void MGE_SetDynamicEntitySelfRotation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
     Buffer << m_entityID;
-    Buffer << m_fPeriod;
+    Buffer << GameApp::timeToFloat(m_period);
     Buffer << m_startTime;
     Buffer << m_endTime;
   }
   
   void MGE_SetDynamicEntitySelfRotation::unserialize(DBuffer &Buffer) {
+    float v_fperiod;
+
     Buffer >> m_entityID;
-    Buffer >> m_fPeriod;
+    Buffer >> v_fperiod;
     Buffer >> m_startTime;
     Buffer >> m_endTime;
+
+    m_period = GameApp::floatToTime(v_fperiod);
   }
   
   GameEventType MGE_SetDynamicEntitySelfRotation::SgetType() {
@@ -1745,13 +1774,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_CameraRotate::MGE_CameraRotate(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_CameraRotate::MGE_CameraRotate(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_angle = 0.0;
   }
 
-  MGE_CameraRotate::MGE_CameraRotate(float p_fEventTime, float p_angle)
-  : MotoGameEvent(p_fEventTime) {
+  MGE_CameraRotate::MGE_CameraRotate(int p_eventTime, float p_angle)
+  : MotoGameEvent(p_eventTime) {
     m_angle = p_angle;
   }
 
@@ -1787,8 +1816,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_CameraAdaptToGravity::MGE_CameraAdaptToGravity(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_CameraAdaptToGravity::MGE_CameraAdaptToGravity(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
   }
 
   MGE_CameraAdaptToGravity::~MGE_CameraAdaptToGravity() {
@@ -1821,17 +1850,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
-  MGE_AddForceToPlayer::MGE_AddForceToPlayer(float p_fEventTime) 
-  : MotoGameEvent(p_fEventTime) {
+  MGE_AddForceToPlayer::MGE_AddForceToPlayer(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
     m_force = Vector2f(0.0, 0.0);
     m_player = 0;
   }
 
-  MGE_AddForceToPlayer::MGE_AddForceToPlayer(float p_fEventTime,
+  MGE_AddForceToPlayer::MGE_AddForceToPlayer(int p_eventTime,
 					     const Vector2f& i_force,
 					     int i_player
 					     ) 
-    : MotoGameEvent(p_fEventTime) {
+    : MotoGameEvent(p_eventTime) {
       m_force = i_force;
       m_player = i_player;
     }

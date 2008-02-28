@@ -269,13 +269,13 @@ void StateLevelPackViewer::createGUIIfNeeded()
 
 void StateLevelPackViewer::updateGUI()
 {
-  float v_totalProfileTime   = 0.0;
-  float v_totalHighscoreTime = 0.0;
+  int v_totalProfileTime   = 0;
+  int v_totalHighscoreTime = 0;
 
   char **v_result;
   unsigned int nrow;
-  float v_playerHighscore;
-  float v_roomHighscore;
+  int v_playerHighscore;
+  int v_roomHighscore;
   xmDatabase* pDb = xmDatabase::instance("main");
 
   UIStatic *pTitle = reinterpret_cast<UIStatic*>(m_GUI->getChild("FRAME:VIEWER_TITLE"));
@@ -314,23 +314,23 @@ void StateLevelPackViewer::updateGUI()
 				      nrow);
   for(unsigned int i=0; i<nrow; i++) {
     if(pDb->getResult(v_result, 4, i, 2) == NULL) {
-      v_playerHighscore = -1.0;
+      v_playerHighscore = -1;
     } else {
-      v_playerHighscore = atof(pDb->getResult(v_result, 4, i, 2));
+      v_playerHighscore = atoi(pDb->getResult(v_result, 4, i, 2));
       v_totalProfileTime += v_playerHighscore;
     }
 
     if(pDb->getResult(v_result, 4, i, 3) == NULL) {
-      v_roomHighscore = -1.0;
-      if(v_playerHighscore > 0.0) {
+      v_roomHighscore = -1;
+      if(v_playerHighscore > 0) {
 	v_totalHighscoreTime += v_playerHighscore; // add player time in case he has a better score than room, to not have to update www
       }
     } else {
-      v_roomHighscore = atof(pDb->getResult(v_result, 4, i, 3));
-      if(v_playerHighscore > 0.0 && v_playerHighscore < v_roomHighscore) {
+      v_roomHighscore = atoi(pDb->getResult(v_result, 4, i, 3));
+      if(v_playerHighscore > 0 && v_playerHighscore < v_roomHighscore) {
 	v_totalHighscoreTime += v_playerHighscore; // add player time in case he has a better score than room, to not have to update www
       } else {
-	if(v_playerHighscore > 0.0) {
+	if(v_playerHighscore > 0) {
 	  v_totalHighscoreTime += v_roomHighscore; // only make sum on levels that the player finished
 	}
       }
@@ -396,7 +396,6 @@ std::string StateLevelPackViewer::getInfoFrameLevelId()
 void StateLevelPackViewer::updateRights() {
   UIButton* v_button;
   UILevelList* v_list   = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
-  UIWindow* v_infoFrame = reinterpret_cast<UIWindow*>(m_GUI->getChild("FRAME:INFO_FRAME"));
 
   v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("FRAME:PLAY_BUTTON"));
   v_button->enableWindow(v_list->nbVisibleItems() > 0);

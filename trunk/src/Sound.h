@@ -44,10 +44,10 @@ class XMSession;
   ===========================================================================*/
   class EngineSoundSimulator {
     public:
-      EngineSoundSimulator() {m_fRPM = 0.0f; m_fLastBangTime=0.0f;}
+      EngineSoundSimulator() {m_fRPM = 0.0f; m_lastBangTime=0;}
       
       /* Methods */
-      void update(float fTime);
+      void update(int i_time);
       
       /* Data interface */
       void setRPM(float f) {m_fRPM = f;}
@@ -58,7 +58,7 @@ class XMSession;
       /* Data */
       std::vector<SoundSample *> m_BangSamples;
       float m_fRPM;
-      float m_fLastBangTime;
+      int m_lastBangTime;
   };
  
 	/*===========================================================================

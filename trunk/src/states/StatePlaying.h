@@ -35,6 +35,9 @@ class StatePlaying : public StateScene {
   virtual void enterAfterPop();
   
   virtual bool update();
+  virtual void abortPlaying();
+  virtual void nextLevel(bool i_positifOrder = true);
+  virtual void restartLevel(bool i_reloadLevel = false);
 
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);

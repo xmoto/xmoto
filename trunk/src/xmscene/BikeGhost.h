@@ -33,11 +33,11 @@ class Ghost : public Biker {
 
   std::string playerName();
   std::string levelId();
-  float getFinishTime();
+  int getFinishTime();
   void initLastToTakeEntities(Level* i_level);
   void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
   float diffToPlayer() const;
-  virtual void updateToTime(float i_time, float i_timeStep,
+  virtual void updateToTime(int i_time, int i_timeStep,
 			    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			    MotoGame *i_motogame);
   void setInfo(std::string i_info);
@@ -59,7 +59,7 @@ class Ghost : public Biker {
  /* because we have not the real one, but the one before and the one after */
  std::vector<BikeState*> m_ghostBikeStates;
 
- void execReplayEvents(float i_time, MotoGame *i_motogame);
+ void execReplayEvents(int i_time, MotoGame *i_motogame);
 };
 
 #endif

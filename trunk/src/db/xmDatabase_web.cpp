@@ -47,9 +47,9 @@ std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscore
   std::string v_levelId;
   std::string v_player;
   std::string v_rplUrl;
-  std::string v_time;
+  std::string v_strtime;
   std::string v_date;
-  float v_fTime;
+  int v_time;
   unsigned int pos_1, pos_2;
 
   try {
@@ -108,22 +108,19 @@ std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscore
       if(pc == NULL) {
 	continue;
       }
-      v_time = pc;
+      v_strtime = pc;
 
-      pos_1 = v_time.find(":", 0);
-      if(pos_1 == std::string::npos || pos_1 == v_time.length()-1)
+      pos_1 = v_strtime.find(":", 0);
+      if(pos_1 == std::string::npos || pos_1 == v_strtime.length()-1)
 	continue;
-      pos_2 = v_time.find(":", pos_1+1);
+      pos_2 = v_strtime.find(":", pos_1+1);
       if(pos_2 == std::string::npos)
 	continue;
 
-      v_fTime =
-	atof(v_time.substr(0, pos_1).c_str()) * 60.0        +
-	atof(v_time.substr(pos_1+1, pos_2-pos_1-1).c_str()) +
-	atof(v_time.substr(pos_2+1, v_time.length()-pos_2-1).c_str()) / 100.0 +
-	0.001;
-      // +0.001 add an infinite value because website value are 2 numbers after .
-      // and 71.17 for example becomes 71.169999
+      v_time =
+	atoi(v_strtime.substr(0, pos_1).c_str())               * 6000 +
+	atoi(v_strtime.substr(pos_1+1, pos_2-pos_1-1).c_str()) * 100  +
+        atoi(v_strtime.substr(pos_2+1, v_strtime.length()-pos_2-1).c_str());
 
       /* replay */
       pc = pVarElem->Attribute("replay");
@@ -140,7 +137,7 @@ std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscore
       v_date = pc;
 
       std::ostringstream v_secondTime;
-      v_secondTime << v_fTime;
+      v_secondTime << v_time;
 
       simpleSql("INSERT INTO webhighscores(id_room, id_level, id_profile, finishTime, date, fileUrl)"
 		"VALUES("   + v_roomId   + ", \"" +
@@ -175,8 +172,8 @@ std::string xmDatabase::webrooms_getName(const std::string& i_id_room) {
   return v_res;
 }
 
-float xmDatabase::webrooms_getHighscoreTime(const std::string& i_id_room,
-					    const std::string& i_id_level) {
+int xmDatabase::webrooms_getHighscoreTime(const std::string& i_id_room,
+					  const std::string& i_id_level) {
   char **v_result;
   unsigned int nrow;
   std::string v_res;
@@ -187,12 +184,12 @@ float xmDatabase::webrooms_getHighscoreTime(const std::string& i_id_room,
 		    nrow);
   if(nrow != 1) {
     read_DB_free(v_result);
-    return -1.0; /* not found */
+    return -1; /* not found */
   }
   v_res = getResult(v_result, 1, 0, 0);
 
   read_DB_free(v_result);
-  return atof(v_res.c_str());
+  return atoi(v_res.c_str());
 }
 
 void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile, bool i_useCrappyPack) {

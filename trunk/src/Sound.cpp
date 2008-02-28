@@ -211,19 +211,19 @@ void Sound::playSampleByName(const std::string &Name,float fVolume) {
 /*==============================================================================
   Engine sound simulator
   ==============================================================================*/
-void EngineSoundSimulator::update(float fTime) {
+void EngineSoundSimulator::update(int i_time) {
   if(Sound::isActiv() == false)
     return;
 
-  if(fTime < m_fLastBangTime)
-    m_fLastBangTime = fTime; /* manage back in the past */
+  if(i_time < m_lastBangTime)
+    m_lastBangTime = i_time; /* manage back in the past */
   
   if(m_BangSamples.size() > 0) {
     if(m_fRPM > 100.0f) {
       /* Calculate the delay between the samples */
-      float fInterval = (60.0f / m_fRPM) * 1.0f;
+      int v_interval = (int)(60.0 * 120.0 / m_fRPM);
       
-      if(fTime - m_fLastBangTime > fInterval) {
+      if(i_time - m_lastBangTime > v_interval) {
 	/* Stroke! Determine a random sample to use */
 	float x = ((float)rand()) / (float)RAND_MAX; /* linux likes insanely high RAND_MAX'es */
 	int   i = (int)(((float)m_BangSamples.size())*x);
@@ -231,10 +231,9 @@ void EngineSoundSimulator::update(float fTime) {
 	  i = 0;
 	if((unsigned int)i >= m_BangSamples.size())
 	  i = m_BangSamples.size()-1;
-	
 	/* Play it */
 	Mix_PlayChannel(-1,m_BangSamples[i]->pChunk,0);
-	m_fLastBangTime = fTime;
+	m_lastBangTime = i_time;
       }
     }
   }

@@ -86,8 +86,13 @@ public:
   static double getXMTime(void);
   static int    getXMTimeInt(void);
   static std::string getTimeStamp(void);
+
+  // these two functions exists because old xmoto time storage was float for seconds. Int for hundreads is better.
+  static float timeToFloat(int i_time);
+  static int floatToTime(float ftime);
+
   void quit(void);
-  static std::string formatTime(float fSecs);
+  static std::string formatTime(int i_time);
   static void getMousePos(int *pnX, int *pnY);
   bool haveMouseMoved(void);
       
@@ -243,9 +248,9 @@ private:
   void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
   void _DownloadExtraLevels(void);
 
-  std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
-  std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time);
-  std::string _getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time);
+  std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, int &p_time);
+  std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, int &p_time);
+  std::string _getGhostReplayPath_bestOfTheRoom(std::string p_levelId, int &p_time);
 
   /* */
   void _InitWin(bool bInitGraphics);

@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Universe.h"
 #include "VFileIO.h"
 
-#define PRESTART_ANIMATION_LEVEL_MSG_DURATION 1.0
+#define PRESTART_ANIMATION_LEVEL_MSG_DURATION 100
 
 StatePreplaying::StatePreplaying(const std::string i_idlevel, bool i_sameLevel):
   StateScene()

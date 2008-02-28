@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmDatabase.h"
 #include "GameText.h"
 #include "VFileIO.h"
+#include "Game.h"
 #include "helpers/VExcept.h"
 #include <sstream>
 #include <math.h>
@@ -33,7 +34,7 @@ void xmDatabase::updateDB_profiles(XmDatabaseUpdateInterface *i_interface) {
   std::string v_id_level;
   std::string v_replay;
   std::string v_timeStamp;
-  float       v_fTime;
+  int         v_time;
   short       v_nVersion;
   /* Open binary file for input */
   FileHandle *pfh = FS::openIFile("players.bin");
@@ -84,10 +85,10 @@ void xmDatabase::updateDB_profiles(XmDatabaseUpdateInterface *i_interface) {
 	  v_replay    = FS::readString(pfh);
 	  v_timeStamp = FS::readString(pfh);
 	  v_timeStamp = v_timeStamp.substr(9, 10) + " " + v_timeStamp.substr(0, 8);
-	  v_fTime     = FS::readFloat_LE(pfh);
+	  v_time     = GameApp::floatToTime(FS::readFloat_LE(pfh));
 
 	  /* insert row */
-	  profiles_addFinishTime(v_playerName, v_id_level, v_timeStamp, v_fTime);
+	  profiles_addFinishTime(v_playerName, v_id_level, v_timeStamp, v_time);
 
 	  v_id_level = FS::readString(pfh);
 	}
@@ -103,10 +104,9 @@ void xmDatabase::updateDB_profiles(XmDatabaseUpdateInterface *i_interface) {
 }
 
 void xmDatabase::profiles_addFinishTime(const std::string& i_profile, const std::string& i_id_level,
-					const std::string& i_timeStamp, float i_finishTime) {
-  std::ostringstream v_fTime_str;
-  /* to be sure it's rounded, but over */
-  v_fTime_str << std::fixed << (floor(i_finishTime * 1000.0))/1000.0;
+					const std::string& i_timeStamp, int i_finishTime) {
+  std::ostringstream v_time_str;
+  v_time_str << i_finishTime;
   std::string v_timeToKeep;
   char **v_result;
   unsigned int nrow;
@@ -117,7 +117,7 @@ void xmDatabase::profiles_addFinishTime(const std::string& i_profile, const std:
 	    "\"" + protectString(i_profile) + "\", " +
 	    "\"" + protectString(i_id_level)   + "\", " +
 	    "\"" + i_timeStamp       	       + "\", " +
-	    v_fTime_str.str()        	       + ");");
+	    v_time_str.str()        	       + ");");
   
   /* keep only the top 10 */
   v_result = readDB("SELECT finishTime FROM profile_completedLevels "

@@ -81,7 +81,7 @@ struct RecordedGameEvent {
 
 class MotoGameEvent {
   public:
-  MotoGameEvent(float p_fEventTime);
+  MotoGameEvent(int p_eventTime);
   virtual ~MotoGameEvent();
 
   virtual void doAction(MotoGame *p_pMotoGame)          = 0;
@@ -93,16 +93,16 @@ class MotoGameEvent {
   virtual std::string toString() = 0;
 
   static MotoGameEvent* getUnserialized(DBuffer &Buffer, bool bDisplayInformation = false);
-  float getEventTime();
+  int getEventTime();
 
   protected:
-  float m_fEventTime;
+  int m_eventTime;
 };
 
 class MGE_PlayersDie : public MotoGameEvent {
  public:
-  MGE_PlayersDie(float p_fEventTime);
-  MGE_PlayersDie(float p_fEventTime, bool p_bKilledByWrecker);
+  MGE_PlayersDie(int p_eventTime);
+  MGE_PlayersDie(int p_eventTime, bool p_bKilledByWrecker);
   ~MGE_PlayersDie();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -119,8 +119,8 @@ class MGE_PlayersDie : public MotoGameEvent {
 
 class MGE_PlayerDies : public MotoGameEvent {
  public:
-  MGE_PlayerDies(float p_fEventTime);
-  MGE_PlayerDies(float p_fEventTime, bool p_bKilledByWrecker, int i_player);
+  MGE_PlayerDies(int p_eventTime);
+  MGE_PlayerDies(int p_eventTime, bool p_bKilledByWrecker, int i_player);
   ~MGE_PlayerDies();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -138,8 +138,8 @@ class MGE_PlayerDies : public MotoGameEvent {
 
 class MGE_PlayersEnterZone : public MotoGameEvent {
  public:
-  MGE_PlayersEnterZone(float p_fEventTime);
-  MGE_PlayersEnterZone(float p_fEventTime, Zone *p_zone);
+  MGE_PlayersEnterZone(int p_eventTime);
+  MGE_PlayersEnterZone(int p_eventTime, Zone *p_zone);
   ~MGE_PlayersEnterZone();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -156,8 +156,8 @@ class MGE_PlayersEnterZone : public MotoGameEvent {
 
 class MGE_PlayerEntersZone : public MotoGameEvent {
  public:
-  MGE_PlayerEntersZone(float p_fEventTime);
-  MGE_PlayerEntersZone(float p_fEventTime, Zone *p_zone, int i_player);
+  MGE_PlayerEntersZone(int p_eventTime);
+  MGE_PlayerEntersZone(int p_eventTime, Zone *p_zone, int i_player);
   ~MGE_PlayerEntersZone();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -175,8 +175,8 @@ class MGE_PlayerEntersZone : public MotoGameEvent {
 
 class MGE_PlayersLeaveZone : public MotoGameEvent {
  public:
-  MGE_PlayersLeaveZone(float p_fEventTime);
-  MGE_PlayersLeaveZone(float p_fEventTime, Zone *p_zone);
+  MGE_PlayersLeaveZone(int p_eventTime);
+  MGE_PlayersLeaveZone(int p_eventTime, Zone *p_zone);
   ~MGE_PlayersLeaveZone();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -193,8 +193,8 @@ class MGE_PlayersLeaveZone : public MotoGameEvent {
 
 class MGE_PlayerLeavesZone : public MotoGameEvent {
  public:
-  MGE_PlayerLeavesZone(float p_fEventTime);
-  MGE_PlayerLeavesZone(float p_fEventTime, Zone *p_zone, int i_player);
+  MGE_PlayerLeavesZone(int p_eventTime);
+  MGE_PlayerLeavesZone(int p_eventTime, Zone *p_zone, int i_player);
   ~MGE_PlayerLeavesZone();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -212,8 +212,8 @@ class MGE_PlayerLeavesZone : public MotoGameEvent {
 
 class MGE_PlayersToucheEntity : public MotoGameEvent {
  public:
-  MGE_PlayersToucheEntity(float p_fEventTime);
-  MGE_PlayersToucheEntity(float p_fEventTime, std::string p_entityID, bool p_bTouchedWithHead);
+  MGE_PlayersToucheEntity(int p_eventTime);
+  MGE_PlayersToucheEntity(int p_eventTime, std::string p_entityID, bool p_bTouchedWithHead);
   ~MGE_PlayersToucheEntity();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -231,8 +231,8 @@ class MGE_PlayersToucheEntity : public MotoGameEvent {
 
 class MGE_PlayerTouchesEntity : public MotoGameEvent {
  public:
-  MGE_PlayerTouchesEntity(float p_fEventTime);
-  MGE_PlayerTouchesEntity(float p_fEventTime, std::string p_entityID, bool p_bTouchedWithHead, int i_player);
+  MGE_PlayerTouchesEntity(int p_eventTime);
+  MGE_PlayerTouchesEntity(int p_eventTime, std::string p_entityID, bool p_bTouchedWithHead, int i_player);
   ~MGE_PlayerTouchesEntity();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -251,8 +251,8 @@ class MGE_PlayerTouchesEntity : public MotoGameEvent {
 
 class MGE_EntityDestroyed : public MotoGameEvent {
  public:
-  MGE_EntityDestroyed(float p_fEventTime);
-  MGE_EntityDestroyed(float p_fEventTime, std::string i_entityId, EntitySpeciality i_entityType, Vector2f i_entityPosition, float i_entitySize);
+  MGE_EntityDestroyed(int p_eventTime);
+  MGE_EntityDestroyed(int p_eventTime, std::string i_entityId, EntitySpeciality i_entityType, Vector2f i_entityPosition, float i_entitySize);
   ~MGE_EntityDestroyed();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -275,7 +275,7 @@ class MGE_EntityDestroyed : public MotoGameEvent {
 
 class MGE_ClearMessages : public MotoGameEvent {
  public:
-  MGE_ClearMessages(float p_fEventTime);
+  MGE_ClearMessages(int p_eventTime);
   ~MGE_ClearMessages();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -291,8 +291,8 @@ class MGE_ClearMessages : public MotoGameEvent {
 
 class MGE_PlaceInGameArrow : public MotoGameEvent {
  public:
-  MGE_PlaceInGameArrow(float p_fEventTime);
-  MGE_PlaceInGameArrow(float p_fEventTime, float p_x, float p_y, float p_angle);
+  MGE_PlaceInGameArrow(int p_eventTime);
+  MGE_PlaceInGameArrow(int p_eventTime, float p_x, float p_y, float p_angle);
   ~MGE_PlaceInGameArrow();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -310,8 +310,8 @@ class MGE_PlaceInGameArrow : public MotoGameEvent {
 
 class MGE_PlaceScreenarrow : public MotoGameEvent {
  public:
-  MGE_PlaceScreenarrow(float p_fEventTime);
-  MGE_PlaceScreenarrow(float p_fEventTime, float p_x, float p_y, float p_angle);
+  MGE_PlaceScreenarrow(int p_eventTime);
+  MGE_PlaceScreenarrow(int p_eventTime, float p_x, float p_y, float p_angle);
   ~MGE_PlaceScreenarrow();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -329,7 +329,7 @@ class MGE_PlaceScreenarrow : public MotoGameEvent {
 
 class MGE_HideArrow : public MotoGameEvent {
  public:
-  MGE_HideArrow(float p_fEventTime);
+  MGE_HideArrow(int p_eventTime);
   ~MGE_HideArrow();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -345,8 +345,8 @@ class MGE_HideArrow : public MotoGameEvent {
 
 class MGE_Message : public MotoGameEvent {
  public:
-  MGE_Message(float p_fEventTime);
-  MGE_Message(float p_fEventTime, std::string p_message);
+  MGE_Message(int p_eventTime);
+  MGE_Message(int p_eventTime, std::string p_message);
   ~MGE_Message();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -363,8 +363,8 @@ class MGE_Message : public MotoGameEvent {
 
 class MGE_MoveBlock : public MotoGameEvent {
  public:
-  MGE_MoveBlock(float p_fEventTime);
-  MGE_MoveBlock(float p_fEventTime, std::string p_blockID, float p_x, float p_y);
+  MGE_MoveBlock(int p_eventTime);
+  MGE_MoveBlock(int p_eventTime, std::string p_blockID, float p_x, float p_y);
   ~MGE_MoveBlock();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -382,8 +382,8 @@ class MGE_MoveBlock : public MotoGameEvent {
 
 class MGE_SetBlockPos : public MotoGameEvent {
  public:
-  MGE_SetBlockPos(float p_fEventTime);
-  MGE_SetBlockPos(float p_fEventTime, std::string p_blockID, float p_x, float p_y);
+  MGE_SetBlockPos(int p_eventTime);
+  MGE_SetBlockPos(int p_eventTime, std::string p_blockID, float p_x, float p_y);
   ~MGE_SetBlockPos();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -401,8 +401,8 @@ class MGE_SetBlockPos : public MotoGameEvent {
 
 class MGE_SetGravity : public MotoGameEvent {
  public:
-  MGE_SetGravity(float p_fEventTime);
-  MGE_SetGravity(float p_fEventTime, float p_x, float p_y);
+  MGE_SetGravity(int p_eventTime);
+  MGE_SetGravity(int p_eventTime, float p_x, float p_y);
   ~MGE_SetGravity();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -419,8 +419,8 @@ class MGE_SetGravity : public MotoGameEvent {
 
 class MGE_SetPlayersPosition : public MotoGameEvent {
  public:
-  MGE_SetPlayersPosition(float p_fEventTime);
-  MGE_SetPlayersPosition(float p_fEventTime, float p_x, float p_y, bool p_bRight);
+  MGE_SetPlayersPosition(int p_eventTime);
+  MGE_SetPlayersPosition(int p_eventTime, float p_x, float p_y, bool p_bRight);
   ~MGE_SetPlayersPosition();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -438,8 +438,8 @@ class MGE_SetPlayersPosition : public MotoGameEvent {
 
 class MGE_SetPlayerPosition : public MotoGameEvent {
  public:
-  MGE_SetPlayerPosition(float p_fEventTime);
-  MGE_SetPlayerPosition(float p_fEventTime, float p_x, float p_y, bool p_bRight, int i_player);
+  MGE_SetPlayerPosition(int p_eventTime);
+  MGE_SetPlayerPosition(int p_eventTime, float p_x, float p_y, bool p_bRight, int i_player);
   ~MGE_SetPlayerPosition();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -458,8 +458,8 @@ class MGE_SetPlayerPosition : public MotoGameEvent {
 
 class MGE_AddForceToPlayer : public MotoGameEvent {
  public:
-  MGE_AddForceToPlayer(float p_fEventTime);
-  MGE_AddForceToPlayer(float p_fEventTime, const Vector2f& i_force, int i_player);
+  MGE_AddForceToPlayer(int p_eventTime);
+  MGE_AddForceToPlayer(int p_eventTime, const Vector2f& i_force, int i_player);
   ~MGE_AddForceToPlayer();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -477,8 +477,8 @@ class MGE_AddForceToPlayer : public MotoGameEvent {
 
 class MGE_SetEntityPos : public MotoGameEvent {
  public:
-  MGE_SetEntityPos(float p_fEventTime);
-  MGE_SetEntityPos(float p_fEventTime, std::string p_entityID, float p_x, float p_y);
+  MGE_SetEntityPos(int p_eventTime);
+  MGE_SetEntityPos(int p_eventTime, std::string p_entityID, float p_x, float p_y);
   ~MGE_SetEntityPos();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -496,8 +496,8 @@ class MGE_SetEntityPos : public MotoGameEvent {
 
 class MGE_SetBlockCenter : public MotoGameEvent {
  public:
-  MGE_SetBlockCenter(float p_fEventTime);
-  MGE_SetBlockCenter(float p_fEventTime, std::string p_blockID, float p_x, float p_y);
+  MGE_SetBlockCenter(int p_eventTime);
+  MGE_SetBlockCenter(int p_eventTime, std::string p_blockID, float p_x, float p_y);
   ~MGE_SetBlockCenter();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -515,8 +515,8 @@ class MGE_SetBlockCenter : public MotoGameEvent {
 
 class MGE_SetBlockRotation : public MotoGameEvent {
  public:
-  MGE_SetBlockRotation(float p_fEventTime);
-  MGE_SetBlockRotation(float p_fEventTime, std::string p_blockID, float p_angle);
+  MGE_SetBlockRotation(int p_eventTime);
+  MGE_SetBlockRotation(int p_eventTime, std::string p_blockID, float p_angle);
   ~MGE_SetBlockRotation();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -534,10 +534,10 @@ class MGE_SetBlockRotation : public MotoGameEvent {
 
 class MGE_SetDynamicBlockSelfRotation : public MotoGameEvent {
  public:
-  MGE_SetDynamicBlockSelfRotation(float p_fEventTime);
-  MGE_SetDynamicBlockSelfRotation(float p_fEventTime,
+  MGE_SetDynamicBlockSelfRotation(int p_eventTime);
+  MGE_SetDynamicBlockSelfRotation(int p_eventTime,
 				  std::string p_blockID,
-				  float p_fPeriod,
+				  int   p_period,
 				  int   p_startTime,
 				  int   p_endTime);
   ~MGE_SetDynamicBlockSelfRotation();
@@ -553,19 +553,19 @@ class MGE_SetDynamicBlockSelfRotation : public MotoGameEvent {
  private:
   std::string m_blockID;
   float m_angle;
-  float m_fPeriod;
+  int m_period;
   int   m_startTime;
   int   m_endTime;
 };
 
 class MGE_SetDynamicEntityRotation : public MotoGameEvent {
  public:
-  MGE_SetDynamicEntityRotation(float p_fEventTime);
-  MGE_SetDynamicEntityRotation(float p_fEventTime,
+  MGE_SetDynamicEntityRotation(int p_eventTime);
+  MGE_SetDynamicEntityRotation(int p_eventTime,
                                std::string p_entityID,
                                float p_fInitAngle,
                                float p_fRadius,
-                               float p_fPeriod,
+                               int   p_period,
                                int   p_startTime,
                                int   p_endTime);
   ~MGE_SetDynamicEntityRotation();
@@ -582,17 +582,17 @@ class MGE_SetDynamicEntityRotation : public MotoGameEvent {
   std::string m_entityID;
   float m_fInitAngle;
   float m_fRadius;
-  float m_fPeriod;
+  int   m_period;
   int   m_startTime;
   int   m_endTime;
 };
 
 class MGE_SetDynamicEntitySelfRotation : public MotoGameEvent {
  public:
-  MGE_SetDynamicEntitySelfRotation(float p_fEventTime);
-  MGE_SetDynamicEntitySelfRotation(float p_fEventTime,
+  MGE_SetDynamicEntitySelfRotation(int p_eventTime);
+  MGE_SetDynamicEntitySelfRotation(int p_eventTime,
 				  std::string p_entityID,
-				  float p_fPeriod,
+				  int   p_period,
 				  int   p_startTime,
 				  int   p_endTime);
   ~MGE_SetDynamicEntitySelfRotation();
@@ -608,19 +608,19 @@ class MGE_SetDynamicEntitySelfRotation : public MotoGameEvent {
  private:
   std::string m_entityID;
   float m_angle;
-  float m_fPeriod;
+  int m_period;
   int   m_startTime;
   int   m_endTime;
 };
 
 class MGE_SetDynamicEntityTranslation : public MotoGameEvent {
  public:
-  MGE_SetDynamicEntityTranslation(float p_fEventTime);
-  MGE_SetDynamicEntityTranslation(float p_fEventTime,  
+  MGE_SetDynamicEntityTranslation(int p_eventTime);
+  MGE_SetDynamicEntityTranslation(int p_eventTime,  
                                   std::string p_entityID,
                                   float p_x,
                                   float p_y,
-                                  float p_fPeriod,
+                                  int   p_period,
                                   int   p_startTime,
                                   int   p_endTime);
   ~MGE_SetDynamicEntityTranslation();
@@ -636,15 +636,15 @@ class MGE_SetDynamicEntityTranslation : public MotoGameEvent {
  private:
   std::string m_entityID;
   float m_x, m_y;
-  float m_fPeriod;
+  int   m_period;
   int   m_startTime;
   int   m_endTime;
 };
 
 class MGE_SetDynamicEntityNone : public MotoGameEvent {
  public:
-  MGE_SetDynamicEntityNone(float p_fEventTime);
-  MGE_SetDynamicEntityNone(float p_fEventTime, std::string p_entityID);
+  MGE_SetDynamicEntityNone(int p_eventTime);
+  MGE_SetDynamicEntityNone(int p_eventTime, std::string p_entityID);
   ~MGE_SetDynamicEntityNone();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -661,12 +661,12 @@ class MGE_SetDynamicEntityNone : public MotoGameEvent {
 
 class MGE_SetDynamicBlockRotation : public MotoGameEvent {
  public:
-  MGE_SetDynamicBlockRotation(float p_fEventTime);
-  MGE_SetDynamicBlockRotation(float p_fEventTime,
+  MGE_SetDynamicBlockRotation(int p_eventTime);
+  MGE_SetDynamicBlockRotation(int p_eventTime,
                               std::string p_blockID,
                               float p_fInitAngle,
                               float p_fRadius,
-                              float p_fPeriod,
+                              int   p_period,
                               int   p_startTime,
                               int   p_endTime);
   ~MGE_SetDynamicBlockRotation();
@@ -683,19 +683,19 @@ class MGE_SetDynamicBlockRotation : public MotoGameEvent {
   std::string m_blockID;
   float m_fInitAngle;
   float m_fRadius;
-  float m_fPeriod;
+  int   m_period;
   int   m_startTime;
   int   m_endTime;
 };
 
 class MGE_SetDynamicBlockTranslation : public MotoGameEvent {
  public:
-  MGE_SetDynamicBlockTranslation(float p_fEventTime);
-  MGE_SetDynamicBlockTranslation(float p_fEventTime,  
+  MGE_SetDynamicBlockTranslation(int p_eventTime);
+  MGE_SetDynamicBlockTranslation(int p_eventTime,  
                                  std::string p_blockID,
                                  float p_x,
                                  float p_y,
-                                 float p_fPeriod,
+                                 int   p_period,
                                  int   p_startTime,
                                  int   p_endTime);
   ~MGE_SetDynamicBlockTranslation();
@@ -711,15 +711,15 @@ class MGE_SetDynamicBlockTranslation : public MotoGameEvent {
  private:
   std::string m_blockID;
   float m_x, m_y;
-  float m_fPeriod;
+  int   m_period;
   int   m_startTime;
   int   m_endTime;
 };
 
 class MGE_SetDynamicBlockNone : public MotoGameEvent {
  public:
-  MGE_SetDynamicBlockNone(float p_fEventTime);
-  MGE_SetDynamicBlockNone(float p_fEventTime, std::string p_blockID);
+  MGE_SetDynamicBlockNone(int p_eventTime);
+  MGE_SetDynamicBlockNone(int p_eventTime, std::string p_blockID);
   ~MGE_SetDynamicBlockNone();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -736,8 +736,8 @@ class MGE_SetDynamicBlockNone : public MotoGameEvent {
 
 class MGE_CameraMove : public MotoGameEvent {
  public:
-  MGE_CameraMove(float p_fEventTime);
-  MGE_CameraMove(float p_fEventTime, float p_moveX, float p_moveY);
+  MGE_CameraMove(int p_eventTime);
+  MGE_CameraMove(int p_eventTime, float p_moveX, float p_moveY);
   ~MGE_CameraMove();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -754,8 +754,8 @@ class MGE_CameraMove : public MotoGameEvent {
 
 class MGE_CameraZoom : public MotoGameEvent {
  public:
-  MGE_CameraZoom(float p_fEventTime);
-  MGE_CameraZoom(float p_fEventTime, float p_zoom);
+  MGE_CameraZoom(int p_eventTime);
+  MGE_CameraZoom(int p_eventTime, float p_zoom);
   ~MGE_CameraZoom();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -772,8 +772,8 @@ class MGE_CameraZoom : public MotoGameEvent {
 
 class MGE_PenalityTime : public MotoGameEvent {
  public:
-  MGE_PenalityTime(float p_fEventTime);
-  MGE_PenalityTime(float p_fEventTime, float p_penatityTime);
+  MGE_PenalityTime(int p_eventTime);
+  MGE_PenalityTime(int p_eventTime, int p_penatityTime);
   ~MGE_PenalityTime();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -785,13 +785,13 @@ class MGE_PenalityTime : public MotoGameEvent {
   std::string toString();
 
  private:
-  float m_penalityTime;
+  int m_penalityTime;
 };
 
 class MGE_CameraRotate : public MotoGameEvent {
  public:
-  MGE_CameraRotate(float p_fEventTime);
-  MGE_CameraRotate(float p_fEventTime, float p_angle);
+  MGE_CameraRotate(int p_eventTime);
+  MGE_CameraRotate(int p_eventTime, float p_angle);
   ~MGE_CameraRotate();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -808,7 +808,7 @@ class MGE_CameraRotate : public MotoGameEvent {
 
 class MGE_CameraAdaptToGravity : public MotoGameEvent {
  public:
-  MGE_CameraAdaptToGravity(float p_fEventTime);
+  MGE_CameraAdaptToGravity(int p_eventTime);
   ~MGE_CameraAdaptToGravity();
 
   void doAction(MotoGame *p_pMotoGame);

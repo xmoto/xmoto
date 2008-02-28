@@ -67,7 +67,7 @@ PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_g
   m_bSqueeking=false;
   m_nStillFrames = 0;
   m_clearDynamicTouched = false;
-  m_fLastSqueekTime = 0.0f;
+  m_lastSqueekTime = 0;
 
   m_forceToAdd = Vector2f(0.0, 0.0);
 
@@ -89,7 +89,7 @@ std::string PlayerBiker::getQuickDescription() const {
   return GAMETEXT_PLAYER;
 }
 
-void PlayerBiker::updateToTime(float i_time, float i_timeStep,
+void PlayerBiker::updateToTime(int i_time, int i_timeStep,
 			       CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			       MotoGame *i_motogame) {
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
@@ -110,10 +110,10 @@ void PlayerBiker::updateToTime(float i_time, float i_timeStep,
 
   /* Squeeking? */
   if(isSqueeking()) {
-    if(i_time - m_fLastSqueekTime > 0.1f) {
+    if(i_time - m_lastSqueekTime > 1) {
       /* (this is crappy, not enabled) */
       //Sound::playSampleByName("Sounds/Squeek.ogg",m_MotoGame.howMuchSqueek());
-      m_fLastSqueekTime = i_time;
+      m_lastSqueekTime = i_time;
     }
   }
 
@@ -162,7 +162,7 @@ void PlayerBiker::uninitPhysics(void) {
   dCloseODE();
 }
 
-void PlayerBiker::updatePhysics(float i_time, float fTimeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
+void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
   /* No wheel spin per default */
   m_bWheelSpin = false;
 
@@ -255,10 +255,10 @@ void PlayerBiker::updatePhysics(float i_time, float fTimeStep, CollisionSystem *
   // when you want to rotate in opposite direction  (m_BikeC.Pull() * m_fLastAttitudeDir < 0) it's true
   //  benetnash: I don't think It will affect highscores in any way
   if(isDead() == false && isFinished() == false) {
-    if((m_BikeC.Pull() != 0.0f) && (i_time > m_fNextAttitudeCon /*XXX*/ || (m_BikeC.Pull() * m_fLastAttitudeDir < 0) /*XXX*/ )) {
+    if((m_BikeC.Pull() != 0.0f) && (i_time/100.0 > m_fNextAttitudeCon /*XXX*/ || (m_BikeC.Pull() * m_fLastAttitudeDir < 0) /*XXX*/ )) {
       m_fAttitudeCon = m_BikeC.Pull() * PHYS_RIDER_ATTITUDE_TORQUE;
       m_fLastAttitudeDir = m_fAttitudeCon;
-      m_fNextAttitudeCon = i_time + (0.6f * fabsf(m_BikeC.Pull()));
+      m_fNextAttitudeCon = (i_time/100.0) + (0.6f * fabsf(m_BikeC.Pull()));
     }
   }
 
@@ -691,7 +691,7 @@ void PlayerBiker::updatePhysics(float i_time, float fTimeStep, CollisionSystem *
   m_bikeState.PrevPHq2 = PHq;
 
   /* Perform world simulation step */
-  dWorldQuickStep(m_WorldID,fTimeStep*PHYS_SPEED);
+  dWorldQuickStep(m_WorldID,((float)i_timeStep/100.0)*PHYS_SPEED);
   //dWorldStep(m_WorldID,fTimeStep*PHYS_SPEED);
 
   /* Empty contact joint group */

@@ -78,7 +78,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }    
     return cBuf;
   }
-  
+
+  float GameApp::timeToFloat(int i_time) {
+    return ((float)(i_time)) / 100.0 + 0.001; // add 0.001 to avoid 100 => 0.0099999
+  }
+
+  int GameApp::floatToTime(float ftime) {
+    return (int)(ftime*100.0);
+  }
+
   double GameApp::getXMTime(void) {
     return SDL_GetTicks() / 1000.0f;
   }
@@ -87,23 +95,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return SDL_GetTicks();
   }
 
-  std::string GameApp::formatTime(float fSecs) {
+  std::string GameApp::formatTime(int i_time) {
     char cBuf[256];
     int nM, nS, nH;
-    float nHres;
 
-    nM = (int)(fSecs/60.0);
-    nS = (int)(fSecs - ((float)nM)*60.0);
-    nHres = (fSecs - ((float)nM)*60.0 - ((float)nS));
-    nH = (int)(nHres * 100.0);
+    nM = i_time/6000;
+    nS = (i_time - nM*6000)/100;
+    nH = i_time - nM*6000 - nS*100;
 
-    /* hum, case, in which 0.9800 * 100.0 => 0.9799999*/
-    if(((int)(nHres * 100.0)) < ((int)((nHres * 100.0) + 0.001))) {
-      nH = ((int)((nHres * 100.0) + 0.001));
-      nH %= 100;
-    }
-
-    sprintf(cBuf,"%02d:%02d:%02d", nM, nS, nH);
+    snprintf(cBuf, 256, "%02d:%02d:%02d", nM, nS, nH);
     return cBuf;
   }
   
@@ -353,7 +353,7 @@ void GameApp::changeVisibility(bool i_visible) {
     unsigned int nrow;
     std::string v_roomName;
     std::string v_id_profile;
-    float       v_finishTime = 0.0f;
+    int       v_finishTime = 0;
     xmDatabase* v_pDb = xmDatabase::instance("main");
 
     v_result = v_pDb->readDB("SELECT a.name, b.id_profile, b.finishTime "
@@ -370,7 +370,7 @@ void GameApp::changeVisibility(bool i_visible) {
     v_roomName = v_pDb->getResult(v_result, 3, 0, 0);
     if(v_pDb->getResult(v_result, 3, 0, 1) != NULL) {
       v_id_profile = v_pDb->getResult(v_result, 3, 0, 1);
-      v_finishTime = atof(v_pDb->getResult(v_result, 3, 0, 2));
+      v_finishTime = atoi(v_pDb->getResult(v_result, 3, 0, 2));
     }
     v_pDb->read_DB_free(v_result);
     
@@ -381,13 +381,13 @@ void GameApp::changeVisibility(bool i_visible) {
     return v_roomName + ": " + GAMETEXT_WORLDRECORDNA;
   }
   
-  std::string GameApp::_getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time) {
+  std::string GameApp::_getGhostReplayPath_bestOfThePlayer(std::string p_levelId, int &p_time) {
     char **v_result;
     unsigned int nrow;
     std::string res;
     xmDatabase* v_pDb = xmDatabase::instance("main");
 
-    p_time = -1.0;
+    p_time = -1;
 
     v_result = v_pDb->readDB("SELECT name, finishTime FROM replays "
 			    "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
@@ -401,13 +401,13 @@ void GameApp::changeVisibility(bool i_visible) {
     }
 
     res = std::string("Replays/") + v_pDb->getResult(v_result, 2, 0, 0) + std::string(".rpl");
-    p_time = atof(v_pDb->getResult(v_result, 2, 0, 1));
+    p_time = atoi(v_pDb->getResult(v_result, 2, 0, 1));
 
     v_pDb->read_DB_free(v_result);
     return res;
   }
 
-std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time)
+std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, int &p_time)
 {
   char **v_result;
   unsigned int nrow;
@@ -421,14 +421,14 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
 			  "AND id_level=\"" + xmDatabase::protectString(p_levelId) + "\";",
 			  nrow);    
   if(nrow == 0) {
-    p_time = -1.0;
+    p_time = -1;
     v_pDb->read_DB_free(v_result);
     return "";
   }
 
   v_fileUrl = v_pDb->getResult(v_result, 2, 0, 0);
   v_replayName = FS::getFileBaseName(v_fileUrl);
-  p_time = atof(v_pDb->getResult(v_result, 2, 0, 1));
+  p_time = atoi(v_pDb->getResult(v_result, 2, 0, 1));
   v_pDb->read_DB_free(v_result);
 
   /* search if the replay is already downloaded */
@@ -439,7 +439,7 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
   }
 }
 
-  std::string GameApp::_getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time) {
+  std::string GameApp::_getGhostReplayPath_bestOfLocal(std::string p_levelId, int &p_time) {
     char **v_result;
     unsigned int nrow;
     std::string res;
@@ -457,7 +457,7 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
     }
 
     res = std::string("Replays/") + v_pDb->getResult(v_result, 2, 0, 0) + std::string(".rpl");
-    p_time = atof(v_pDb->getResult(v_result, 2, 0, 1));
+    p_time = atoi(v_pDb->getResult(v_result, 2, 0, 1));
     v_pDb->read_DB_free(v_result);
     return res;
   }
@@ -594,7 +594,7 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, fl
 		       rplInfos->Name,
 		       rplInfos->Player,
 		       rplInfos->IsFinished,
-		       rplInfos->fFinishTime);
+		       rplInfos->finishTime);
       StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
 
     } catch(Exception &e2) {
@@ -619,17 +619,17 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
   std::string v_replay_MYBEST;
   std::string v_replay_THEBEST;
   std::string v_replay_BESTOFROOM;
-  float v_fFinishTime;
-  float v_player_fFinishTime;
+  int v_finishTime;
+  int v_player_finishTime;
 
   /* first, add the best of the room -- because if mybest or thebest = bestofroom, i prefer to see writen bestofroom */
   if(XMSession::instance()->ghostStrategy_BESTOFROOM()) {
     std::string v_replay_MYBEST_tmp;
-    v_replay_MYBEST_tmp = _getGhostReplayPath_bestOfThePlayer(i_motogame->getLevelSrc()->Id(), v_player_fFinishTime);
-    v_replay_BESTOFROOM = _getGhostReplayPath_bestOfTheRoom(i_motogame->getLevelSrc()->Id(), v_fFinishTime);
+    v_replay_MYBEST_tmp = _getGhostReplayPath_bestOfThePlayer(i_motogame->getLevelSrc()->Id(), v_player_finishTime);
+    v_replay_BESTOFROOM = _getGhostReplayPath_bestOfTheRoom(i_motogame->getLevelSrc()->Id(), v_finishTime);
 
     /* add MYBEST if MYBEST if better the  BESTOF ROOM */
-    if(v_player_fFinishTime > 0.0 && (v_fFinishTime < 0.0 || v_player_fFinishTime < v_fFinishTime)) {
+    if(v_player_finishTime > 0 && (v_finishTime < 0 || v_player_finishTime < v_finishTime)) {
       v_replay_BESTOFROOM = v_replay_MYBEST_tmp;
     }
     
@@ -648,7 +648,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
 
   /* second, add your best */
   if(XMSession::instance()->ghostStrategy_MYBEST()) {
-    v_replay_MYBEST = _getGhostReplayPath_bestOfThePlayer(i_motogame->getLevelSrc()->Id(), v_fFinishTime);
+    v_replay_MYBEST = _getGhostReplayPath_bestOfThePlayer(i_motogame->getLevelSrc()->Id(), v_finishTime);
     if(v_replay_MYBEST != "") {
       if(v_replay_MYBEST != v_replay_BESTOFROOM) {
 	i_motogame->addGhostFromFile(v_replay_MYBEST, GAMETEXT_GHOST_BEST,
@@ -665,7 +665,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
 
   /* third, the best locally */
   if(XMSession::instance()->ghostStrategy_THEBEST()) {
-    v_replay_THEBEST = _getGhostReplayPath_bestOfLocal(i_motogame->getLevelSrc()->Id(), v_fFinishTime);
+    v_replay_THEBEST = _getGhostReplayPath_bestOfLocal(i_motogame->getLevelSrc()->Id(), v_finishTime);
     if(v_replay_THEBEST != "") {
       if(v_replay_THEBEST != v_replay_MYBEST && v_replay_THEBEST != v_replay_BESTOFROOM) { /* don't add two times the same ghost */
 	i_motogame->addGhostFromFile(v_replay_THEBEST, GAMETEXT_GHOST_LOCAL,

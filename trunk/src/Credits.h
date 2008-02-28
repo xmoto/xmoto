@@ -39,17 +39,17 @@ public:
   ~Credits();
       
   /* Methods */
-  void init(float fBackgroundReplayLength,
-	    float fFadeInLength,
-	    float fFadeOutLength,
+  void init(int backgroundReplayLength,
+	    int fadeInLength,
+	    int fadeOutLength,
 	    const char *pcCredits);
-  void render(float fTime);
+  void render(int i_time);
   bool isFinished(void);
       
 private:
   /* Data */
   std::vector<Entry *> m_Entries;
-  float m_fTime,m_fReplayLength,m_fFadeIn,m_fFadeOut;
+  int m_time,m_replayLength,m_fadeIn,m_fadeOut;
   bool m_bBlackBackground;
   FontManager* m_font;
   bool m_bFinished;

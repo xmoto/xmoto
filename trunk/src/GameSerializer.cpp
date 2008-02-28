@@ -26,6 +26,7 @@
 #include "helpers/Log.h"
 #include "GameEvents.h"
 #include "DBuffer.h"
+#include "Game.h"
   
   /*===========================================================================
     Decoding of event stream
@@ -57,9 +58,9 @@
   /*===========================================================================
     Serializer
     ===========================================================================*/
-  void MotoGame::getSerializedBikeState(BikeState *i_bikeState, float i_fTime, SerializedBikeState *pState) {
+  void MotoGame::getSerializedBikeState(BikeState *i_bikeState, int i_time, SerializedBikeState *pState) {
     /* Get. */
-    pState->fGameTime = i_fTime;
+    pState->fGameTime = GameApp::timeToFloat(i_time);
     
     if(i_bikeState->Dir == DD_LEFT) pState->cFlags = SER_BIKE_STATE_DIR_LEFT;
     else if(i_bikeState->Dir == DD_RIGHT) pState->cFlags = SER_BIKE_STATE_DIR_RIGHT;

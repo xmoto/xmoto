@@ -42,11 +42,11 @@ bool Credits::isFinished(void) {
   return m_bFinished;
 }
   
-void Credits::init(float fBackgroundReplayLength,
-		   float fFadeInLength,
-		   float fFadeOutLength,
+void Credits::init(int backgroundReplayLength,
+		   int fadeInLength,
+		   int fadeOutLength,
 		   const char *pcCredits) {
-  if(fBackgroundReplayLength <= 0) {
+  if(backgroundReplayLength <= 0) {
     /* No replay or empty replay, just use black background */
     m_bBlackBackground = true;
   }
@@ -54,12 +54,12 @@ void Credits::init(float fBackgroundReplayLength,
     /* Setup credits */
     m_bBlackBackground = false;
 
-    m_fReplayLength = fBackgroundReplayLength;
-    m_fFadeIn = fFadeInLength;
-    m_fFadeOut = fFadeOutLength;
+    m_replayLength = backgroundReplayLength;
+    m_fadeIn = fadeInLength;
+    m_fadeOut = fadeOutLength;
       
-    if(m_fFadeIn + m_fFadeOut + 3 > m_fReplayLength) {
-      m_fFadeIn = m_fFadeOut = (m_fReplayLength - 3) / 2;
+    if(m_fadeIn + m_fadeOut + 300 > m_replayLength) {
+      m_fadeIn = m_fadeOut = (m_replayLength - 300) / 2;
     }
   }
 
@@ -110,33 +110,33 @@ void Credits::init(float fBackgroundReplayLength,
   }
     
   /* Start from the beginning... */
-  m_fTime = 0;
+  m_time = 0;
 }
   
-void Credits::render(float fTime) {
-  m_fTime = fTime;
+void Credits::render(int i_time) {
+  m_time = i_time;
   
   if(!m_bFinished) {
     DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
     /* Calculate fade... */
-    float fFade = 0;        
-        
+    float fade = 0.0;
+
     /* Fading in? */
-    if(m_fTime < 3) {
-      fFade = 1;
+    if(m_time < 300) {
+      fade = 1;
     }
-    else if(m_fTime < m_fFadeIn + 3) {
-      fFade = 1 - ((m_fTime - 3) / m_fFadeIn);
+    else if(m_time < m_fadeIn + 300) {
+      fade = 1.0 - ((m_time - 300) / ((float)m_fadeIn));
     }
     /* Fading out? */
-    else if(m_fTime > m_fReplayLength - m_fFadeOut) {
-      fFade = (m_fTime - (m_fReplayLength - m_fFadeOut)) / m_fFadeOut;
+    else if(m_time > m_replayLength - m_fadeOut) {
+      fade = (m_time - (m_replayLength - m_fadeOut)) / m_fadeOut;
     }
             
-    fFade = CREDITS_DARKNESS + fFade * (1 - CREDITS_DARKNESS);
+    fade = CREDITS_DARKNESS + fade * (1.0 - CREDITS_DARKNESS);
 
-    int nC = (int)(fFade * 255);
+    int nC = (int)(fade * 255);
     if(nC < 0) nC = 0;
     if(nC > 255) nC = 255;
       
@@ -144,7 +144,7 @@ void Credits::render(float fTime) {
       drawLib->drawBox(Vector2f(0,0),Vector2f(drawLib->getDispWidth(),drawLib->getDispHeight()),0,MAKE_COLOR(0,0,0,nC),0);      
       
     /* Render text */
-    int nScroll = (int)(20 + drawLib->getDispHeight() - fTime * 20);
+    int nScroll = (int)(20 + drawLib->getDispHeight() - i_time/100.0 * 20);
     int nY = 0;
       
     for(unsigned int i=0;i<m_Entries.size();i++) {
@@ -189,10 +189,10 @@ void Credits::render(float fTime) {
 
     }
       
-    if(m_fTime > m_fReplayLength - 4) {
-      float fFinalFadeIn = (m_fTime - (m_fReplayLength - 4)) / 4;
-      if(fFinalFadeIn > 1) fFinalFadeIn = 1;
-      int nC2 = (int)(fFinalFadeIn * 255);
+    if(m_time > m_replayLength - 400) {
+      int finalFadeIn = (m_time - (m_replayLength - 400)) / 4;
+      if(finalFadeIn > 100) finalFadeIn = 100;
+      int nC2 = (int)(finalFadeIn/100.0 * 255);
       if(nC2 < 0) nC2 = 0;
       if(nC2 > 255) nC2 = 255;
       const char *pc = "X-Moto";

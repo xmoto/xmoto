@@ -378,7 +378,7 @@ void StatePlaying::onOneFinish() {
   if(m_universe != NULL) {
     if(m_universe->getScenes().size() == 1) {
       if(m_universe->getScenes()[0]->Players().size() == 1) {
-	float v_finish_time = 0.0;
+	int v_finish_time = 0;
 	std::string TimeStamp = pGame->getTimeStamp();
 	if(m_universe->getScenes()[0]->Players()[0]->isFinished()) {
 	  v_finish_time  = m_universe->getScenes()[0]->Players()[0]->finishTime();
@@ -387,6 +387,7 @@ void StatePlaying::onOneFinish() {
 							     m_universe->getScenes()[0]->getLevelSrc()->Id(),
 							     TimeStamp,
 							     v_finish_time);
+	StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
       }
     }
   }	  
@@ -400,6 +401,7 @@ void StatePlaying::onOneFinish() {
 							   m_universe->getScenes()[0]->getLevelSrc()->Id(),
 							   m_universe->getScenes()[0]->Players()[0]->finishTime());
 	StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
+	StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
       }
     }
   }
@@ -420,6 +422,7 @@ void StatePlaying::onAllDead() {
 	xmDatabase::instance("main")->stats_died(XMSession::instance()->profile(),
 						 m_universe->getScenes()[0]->getLevelSrc()->Id(),
 						 m_universe->getScenes()[0]->getTime());
+	StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
       }
     }
   }
@@ -435,4 +438,79 @@ void StatePlaying::onAllDead() {
   } else {
     StateManager::instance()->pushState(new StateDeadMenu(m_universe, true, this));
   }
+}
+
+void StatePlaying::abortPlaying() {
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() == 1) {
+      if(m_universe->getScenes()[0]->Players().size() == 1) {
+	if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
+	   m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
+	  xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->profile(),
+							   m_universe->getScenes()[0]->getLevelSrc()->Id(),
+							   m_universe->getScenes()[0]->getTime());
+	  StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
+	}
+      }
+    }
+  }
+
+  StateScene::abortPlaying();
+}
+
+void StatePlaying::nextLevel(bool i_positifOrder) {
+  GameApp*  pGame  = GameApp::instance();
+  std::string v_nextLevel;
+  std::string v_currentLevel;
+  
+  // take the level id of the first world
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      v_currentLevel = m_universe->getScenes()[0]->getLevelSrc()->Id();
+    }
+  }
+
+  if(i_positifOrder) {
+    v_nextLevel = pGame->determineNextLevel(v_currentLevel);
+  } else {
+    v_nextLevel = pGame->determinePreviousLevel(v_currentLevel);
+  }
+
+  /* update stats */
+  if(v_nextLevel != "") {
+    if(m_universe != NULL) {
+      if(m_universe->getScenes().size() == 1) {
+	if(m_universe->getScenes()[0]->Players().size() == 1) {
+	  if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
+	     m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
+	    xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->profile(),
+							     v_currentLevel,
+							     m_universe->getScenes()[0]->getTime());
+	    StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
+	  }
+	}
+      }
+    }
+  }
+
+  StateScene::nextLevel(i_positifOrder);
+}
+
+void StatePlaying::restartLevel(bool i_reloadLevel) {
+  /* Update stats */
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() == 1) {
+      if(m_universe->getScenes()[0]->Players().size() == 1) {
+	if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
+	   m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
+	  xmDatabase::instance("main")->stats_levelRestarted(XMSession::instance()->profile(),
+							     m_universe->getScenes()[0]->getLevelSrc()->Id(),
+							     m_universe->getScenes()[0]->getTime());
+	  StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
+	}
+      }
+    }
+  }
+
+  StateScene::restartLevel(i_reloadLevel);
 }

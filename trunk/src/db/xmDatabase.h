@@ -61,16 +61,16 @@ public:
   void stats_destroyProfile(const std::string& i_profile);
   void stats_levelCompleted(const std::string &PlayerName,
 			    const std::string &LevelID,
-			    float fPlayTime);
+			    int i_playTime);
   void stats_died(const std::string &PlayerName,
 		  const std::string &LevelID,
-		  float fPlayTime);
+		  int i_playTime);
   void stats_abortedLevel(const std::string &PlayerName,
 			  const std::string &LevelID,
-			  float fPlayTime);
+			  int i_playTime);
   void stats_levelRestarted(const std::string &PlayerName,
 			    const std::string &LevelID,
-			    float fPlayTime);
+			    int i_playTime);
   void stats_xmotoStarted(const std::string &PlayerName);
 
   /* levels */
@@ -111,7 +111,7 @@ public:
 		   const std::string& i_name,
 		   const std::string& i_id_profile,
 		   bool               i_isFinished,
-		   float              i_finishTime);
+		   int                i_finishTime);
   void replays_add_end();
   void replays_delete(const std::string& i_replay);
   bool replays_exists(const std::string& i_name);
@@ -130,7 +130,7 @@ public:
 
   /* profiles */
   void profiles_addFinishTime(const std::string& i_profile, const std::string& i_id_level,
-			      const std::string& i_timeStamp, float i_finishTime);
+			      const std::string& i_timeStamp, int i_finishTime);
 
   /* web */
   std::string webhighscores_updateDB(const std::string& i_webhighscoresFile,
@@ -139,8 +139,8 @@ public:
   void webrooms_updateDB(const std::string& i_webroomsFile);
   void webthemes_updateDB(const std::string& i_webThemesFile);
   std::string webrooms_getName(const std::string& i_id_room);
-  float webrooms_getHighscoreTime(const std::string& i_id_room,
-				  const std::string& i_id_level); /* or a negativ value if not */
+  int webrooms_getHighscoreTime(const std::string& i_id_room,
+				const std::string& i_id_level); /* or a negativ value if not */
 
   /* data fixes */
   void fixStatsProfilesLevelsNbCompleted();

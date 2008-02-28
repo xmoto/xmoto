@@ -52,7 +52,7 @@ void StateCreditsMode::enter()
     }
   }
 
-  m_credits->init(m_replayBiker->getFinishTime(), 4, 4, std::string(GAMETEXT_CREDITS).c_str());
+  m_credits->init(m_replayBiker->getFinishTime(), 400, 400, std::string(GAMETEXT_CREDITS).c_str());
 }
 
 bool StateCreditsMode::render()

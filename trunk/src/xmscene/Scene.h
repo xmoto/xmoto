@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BasicSceneStructs.h"
 #include "Bike.h"
 
-#define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 5.0
+#define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 500
 
 class Level;
 class BikeState;
@@ -87,7 +87,7 @@ struct GameReqPlayerPos {
 struct GameMessage {
   bool bNew;                        /* Uninitialized */
   Vector2f Pos,Vel;                 /* Screen position/velocity of message */
-  float fRemoveTime;                /* The time when it should be removed */
+  int removeTime;                   /* The time when it should be removed */
   std::string Text;                 /* The text */
   int nAlpha;                       /* Alpha amount */
   bool bOnce;                       /* Unique message */
@@ -116,7 +116,7 @@ public:
 		    bool i_playEvents);
 
   void playLevel();
-  void updateLevel(float fTimeStep, Replay *i_recordedReplay = NULL);
+  void updateLevel(int timeStep, Replay *i_recordedReplay = NULL);
   void endLevel();
 
   /* entities */
@@ -126,13 +126,13 @@ public:
   /* messages */
   void gameMessage(std::string Text,
 		   bool bOnce = false,
-		   float fDuration = MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION);
+		   int duration = MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION);
   void clearGameMessages();
   void updateGameMessages();
   std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
 
   /* serialization */
-  static void getSerializedBikeState(BikeState *i_bikeState, float i_fTime, SerializedBikeState *pState);
+  static void getSerializedBikeState(BikeState *i_bikeState, int i_time, SerializedBikeState *pState);
   static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation = false);
 
   /* events */
@@ -152,8 +152,8 @@ public:
   /* Data interface */
   Level *getLevelSrc(void) {return m_pLevelSrc;}
 
-  float getTime(void) {return m_fTime;}
-  void setTime(float f) {m_fTime=f;}
+  int getTime(void) {return m_time;}
+  void setTime(int t) {m_time=t;}
   ArrowPointer &getArrowPointer(void) {return m_Arrow;}
   CollisionSystem *getCollisionHandler(void) {return &m_Collision;}
 
@@ -184,7 +184,7 @@ public:
   void entityDestroyed(const std::string& i_entityId);
   void addDynamicObject(SDynamicObject* p_obj);
   void removeSDynamicOfObject(std::string pObject);
-  void addPenalityTime(float fTime);
+  void addPenalityTime(int i_time);
 
   void createKillEntityEvent(std::string p_entityID);
 
@@ -212,8 +212,8 @@ public:
 
   bool doesPlayEvents() const;
 
-  void fastforward(float fSeconds);
-  void fastrewind(float fSeconds);
+  void fastforward(int i_time);
+  void fastrewind(int i_time);
   void pause();
   void faster();
   void slower();
@@ -244,10 +244,9 @@ private:
 
   /* Data */
   std::queue<MotoGameEvent*> m_GameEventQueue;
-  float m_fTime;
-  float m_fLastStateSerializationTime; 
-  float m_speed_factor; /* nb hundreadths to increment each time ;
-			   is a float so that manage slow */
+  int m_time;
+  int m_lastStateSerializationTime; 
+  float m_speed_factor; /* nb hundreadths to increment each time ; is a float so that manage slow */
   bool  m_is_paused;
 
   MotoGameHooks *m_motoGameHooks;
@@ -277,7 +276,7 @@ private:
   int m_nLastEventSeq;
 
   /* for EveryHundreath function */
-  float m_lastCallToEveryHundreath;
+  int m_lastCallToEveryHundreath;
   bool m_playEvents;
 
   std::vector<Camera*> m_cameras;

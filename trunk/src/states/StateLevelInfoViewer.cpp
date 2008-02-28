@@ -401,7 +401,7 @@ void StateLevelInfoViewer::updateGUI() {
 void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
   char **v_result;
   unsigned int nrow;
-  float v_finishTime;
+  int v_finishTime;
   std::string v_profile;
 
   UIList*   pList                     = reinterpret_cast<UIList*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_LIST"));
@@ -420,7 +420,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
 			      "ORDER BY finishTime LIMIT 10;",
 			      nrow);
       for(unsigned int i=0; i<nrow; i++) {
-	v_finishTime  = atof(xmDatabase::instance("main")->getResult(v_result, 2, i, 0));
+	v_finishTime  = atoi(xmDatabase::instance("main")->getResult(v_result, 2, i, 0));
 	v_profile     =      xmDatabase::instance("main")->getResult(v_result, 2, i, 1);
 
 	UIListEntry *pEntry = pList->addEntry(GameApp::instance()->formatTime(v_finishTime));
@@ -434,7 +434,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
 			      "ORDER BY finishTime LIMIT 10;",
 			      nrow);
       for(unsigned int i=0; i<nrow; i++) {
-	v_finishTime  = atof(xmDatabase::instance("main")->getResult(v_result, 1, i, 0));
+	v_finishTime  = atoi(xmDatabase::instance("main")->getResult(v_result, 1, i, 0));
 	UIListEntry *pEntry = pList->addEntry(GameApp::instance()->formatTime(v_finishTime));
 	pEntry->Text.push_back(XMSession::instance()->profile());
       }
@@ -448,7 +448,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
       unsigned int nrow;
       std::string v_roomName;
       std::string v_id_profile;
-      float       v_finishTime = 0.0f;
+      int       v_finishTime = 0;
 
       v_result = xmDatabase::instance("main")->readDB("SELECT a.name, b.id_profile, b.finishTime "
 			      "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
@@ -463,7 +463,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
       v_roomName = xmDatabase::instance("main")->getResult(v_result, 3, 0, 0);
       if(xmDatabase::instance("main")->getResult(v_result, 3, 0, 1) != NULL) {
 	v_id_profile = xmDatabase::instance("main")->getResult(v_result, 3, 0, 1);
-	v_finishTime = atof(xmDatabase::instance("main")->getResult(v_result, 3, 0, 2));
+	v_finishTime = atoi(xmDatabase::instance("main")->getResult(v_result, 3, 0, 2));
       }
       xmDatabase::instance("main")->read_DB_free(v_result);
 
@@ -521,7 +521,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerReplays() {
       if(xmDatabase::instance("main")->getResult(v_result, 4, i, 2) == "0") {
 	pEntry->Text.push_back("("+ std::string(GAMETEXT_NOTFINISHED) + ")");
       } else {
-	pEntry->Text.push_back(GameApp::instance()->formatTime(atof(xmDatabase::instance("main")->getResult(v_result, 4, i, 3))));
+	pEntry->Text.push_back(GameApp::instance()->formatTime(atoi(xmDatabase::instance("main")->getResult(v_result, 4, i, 3))));
       }
     }
     xmDatabase::instance("main")->read_DB_free(v_result);

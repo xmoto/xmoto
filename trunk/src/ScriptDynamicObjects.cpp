@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Entity.h"
 #include "xmscene/Block.h"
 
-SDynamicObject::SDynamicObject(int p_startTime, int p_endTime, float pPeriod) {
+SDynamicObject::SDynamicObject(int p_startTime, int p_endTime, int pPeriod) {
   m_time = 0;
   m_startTime = p_startTime;
   m_endTime   = p_endTime;
@@ -40,7 +40,7 @@ bool SDynamicObject::nextState(MotoGame* v_motoGame, int i_nbCents) {
 
   v_realNbCents = i_nbCents;
 
-  if(m_time >= m_endTime && m_endTime != 0.0) {
+  if(m_time >= m_endTime && m_endTime != 0) {
     return false;
   }
 
@@ -48,14 +48,14 @@ bool SDynamicObject::nextState(MotoGame* v_motoGame, int i_nbCents) {
     v_realNbCents -= m_startTime - m_time;
   }
 
-  if(m_time + i_nbCents > m_endTime && m_endTime != 0.0) {
+  if(m_time + i_nbCents > m_endTime && m_endTime != 0) {
     v_realNbCents -= m_time + i_nbCents - m_endTime;
   }
   
   performMove(v_motoGame, v_realNbCents);
 
   m_time += i_nbCents;
-  if(m_time >= m_endTime && m_endTime != 0.0) {
+  if(m_time >= m_endTime && m_endTime != 0) {
     return false;
   }
 
@@ -63,10 +63,10 @@ bool SDynamicObject::nextState(MotoGame* v_motoGame, int i_nbCents) {
 }
 
 bool SDynamicObject::isTimeToMove() {
-  return m_time >= m_startTime && (m_time <= m_endTime || m_endTime == 0.0);
+  return m_time >= m_startTime && (m_time <= m_endTime || m_endTime == 0);
 }
 
-float SDynamicObject::Period() const {
+int SDynamicObject::Period() const {
   return m_period;
 }
 
@@ -85,11 +85,11 @@ void SDynamicTranslation::performXY(float *vx, float *vy) {
   }
 }
 
-SDynamicRotation::SDynamicRotation(float pInitAngle, float pRadius, float
+SDynamicRotation::SDynamicRotation(float pInitAngle, float pRadius, int
 pPeriod) {
   m_Speed = 0.0;
-  if(pPeriod != 0.0) {
-    m_Speed = (2 * M_PI) / pPeriod;
+  if(pPeriod != 0) {
+    m_Speed = (2 * M_PI) / ((float)(pPeriod));
   }
 
   m_Angle   = pInitAngle;
@@ -104,7 +104,7 @@ pPeriod) {
 SDynamicRotation::~SDynamicRotation() {
 }
 
-SDynamicTranslation::SDynamicTranslation(float pX, float pY, float pPeriod) {
+SDynamicTranslation::SDynamicTranslation(float pX, float pY, int pPeriod) {
   float m_Z;
 
   m_X     = pX;
@@ -114,8 +114,8 @@ SDynamicTranslation::SDynamicTranslation(float pX, float pY, float pPeriod) {
   m_Z      = sqrt(m_X * m_X + m_Y * m_Y);
 
   m_Speed  = 0.0;
-  if(pPeriod != 0.0) {
-    m_Speed  = (m_Z * 2) / pPeriod;
+  if(pPeriod != 0) {
+    m_Speed  = (m_Z * 2) / ((float)(pPeriod));
   }
 
   m_moveX = 0.0;
@@ -146,7 +146,7 @@ void SDynamicRotation::performXY(float *vx, float *vy) {
   m_Angle += m_Speed;
 }
 
-SDynamicSelfRotation::SDynamicSelfRotation(float i_period) {
+SDynamicSelfRotation::SDynamicSelfRotation(int i_period) {
   m_period = i_period;
   m_totalAngle = 0.0;
   m_incr = 0;
@@ -156,14 +156,14 @@ SDynamicSelfRotation::~SDynamicSelfRotation() {
 }
 
 void SDynamicSelfRotation::performXY(float *vAngle) {
-  *vAngle = (2 * M_PI) / m_period;
+  *vAngle = (2 * M_PI) / ((float) m_period);
   m_incr++;
   m_totalAngle += *vAngle;
 
   /* to limit sum error */
-  if( (m_period > 0.0 && m_incr >= ((int)m_period)) ||
-      (m_period < 0.0 && m_incr >= ((int)-m_period)) ) {
-    float v_realSum = (((float) m_incr) * (2 * M_PI)) / m_period;
+  if( (m_period > 0 && m_incr >= m_period) ||
+      (m_period < 0 && m_incr >= -m_period) ) {
+    float v_realSum = (((float) m_incr) * (2 * M_PI)) / ((float) m_period);
     *vAngle += v_realSum - m_totalAngle;
     m_incr = 0;
     m_totalAngle = 0.0;
@@ -172,7 +172,7 @@ void SDynamicSelfRotation::performXY(float *vAngle) {
 
 /* entity */
 
-SDynamicEntityMove::SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime, float pPeriod) : SDynamicObject(p_startTime, p_endTime, pPeriod){
+SDynamicEntityMove::SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime, int pPeriod) : SDynamicObject(p_startTime, p_endTime, pPeriod){
   m_entity = pEntity;
 }
 
@@ -211,14 +211,14 @@ std::string SDynamicEntityMove::getObjectId() {
   return m_entity;
 }
 
-SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime)
+SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, int pPeriod, int p_startTime, int p_endTime)
   : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicRotation(pInitAngle, pRadius, pPeriod) {
 }
 
 SDynamicEntityRotation::~SDynamicEntityRotation() {
 }
 
-SDynamicEntityTranslation::SDynamicEntityTranslation(std::string pEntity, float pX, float pY, float pPeriod, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicTranslation(pX, pY, pPeriod) {
+SDynamicEntityTranslation::SDynamicEntityTranslation(std::string pEntity, float pX, float pY, int pPeriod, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicTranslation(pX, pY, pPeriod) {
 }
 
 SDynamicEntityTranslation::~SDynamicEntityTranslation() {
@@ -236,7 +236,7 @@ void SDynamicEntityTranslation::performXY(float *vx, float *vy, float *vAngle) {
 
 /* block */
 
-SDynamicBlockMove::SDynamicBlockMove(std::string pBlock, int p_startTime, int p_endTime, float pPeriod) : SDynamicObject(p_startTime, p_endTime, pPeriod){
+SDynamicBlockMove::SDynamicBlockMove(std::string pBlock, int p_startTime, int p_endTime, int pPeriod) : SDynamicObject(p_startTime, p_endTime, pPeriod){
   m_block = pBlock;
 }
 
@@ -272,13 +272,13 @@ std::string SDynamicBlockMove::getObjectId() {
   return m_block;
 }
 
-SDynamicBlockRotation::SDynamicBlockRotation(std::string pBlock, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime) : SDynamicBlockMove(pBlock, p_startTime, p_endTime, pPeriod), SDynamicRotation(pInitAngle, pRadius, pPeriod) {
+SDynamicBlockRotation::SDynamicBlockRotation(std::string pBlock, float pInitAngle, float pRadius, int pPeriod, int p_startTime, int p_endTime) : SDynamicBlockMove(pBlock, p_startTime, p_endTime, pPeriod), SDynamicRotation(pInitAngle, pRadius, pPeriod) {
 }
 
 SDynamicBlockRotation::~SDynamicBlockRotation() {
 }
 
-SDynamicBlockTranslation::SDynamicBlockTranslation(std::string pBlock, float pX, float pY, float pPeriod, int p_startTime, int p_endTime) : SDynamicBlockMove(pBlock, p_startTime, p_endTime, pPeriod), SDynamicTranslation(pX, pY, pPeriod) {
+SDynamicBlockTranslation::SDynamicBlockTranslation(std::string pBlock, float pX, float pY, int pPeriod, int p_startTime, int p_endTime) : SDynamicBlockMove(pBlock, p_startTime, p_endTime, pPeriod), SDynamicTranslation(pX, pY, pPeriod) {
 }
 
 SDynamicBlockTranslation::~SDynamicBlockTranslation() {
@@ -294,7 +294,7 @@ void SDynamicBlockTranslation::performXY(float *vx, float *vy, float *vAngle) {
   SDynamicTranslation::performXY(vx, vy);
 }
 
-SDynamicBlockSelfRotation::SDynamicBlockSelfRotation(std::string pBlock, float pPeriod, int p_startTime, int p_endTime)
+SDynamicBlockSelfRotation::SDynamicBlockSelfRotation(std::string pBlock, int pPeriod, int p_startTime, int p_endTime)
   : SDynamicBlockMove(pBlock, p_startTime, p_endTime, pPeriod), SDynamicSelfRotation(pPeriod){
   
 }
@@ -307,7 +307,7 @@ void SDynamicBlockSelfRotation::performXY(float *vx, float *vy, float *vAngle) {
   SDynamicSelfRotation::performXY(vAngle);
 }
 
-SDynamicEntitySelfRotation::SDynamicEntitySelfRotation(std::string pEntity, float pPeriod, int p_startTime, int p_endTime)
+SDynamicEntitySelfRotation::SDynamicEntitySelfRotation(std::string pEntity, int pPeriod, int p_startTime, int p_endTime)
   : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicSelfRotation(pPeriod){
   
 }
