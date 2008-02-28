@@ -100,7 +100,7 @@ class BikeState {
     Vector2f PrevPFq2;    /* Previous error (player foot) (Alt.) */
     Vector2f PrevPHq2;    /* Previous error (player hand) (Alt.) */
 
-    float GameTime; // time of the state, for replays;
+    int GameTime; // time of the state, for replays;
     
     /* Bonusinfo */    
   BikeState();
@@ -149,17 +149,17 @@ class Biker {
   virtual std::string getQuickDescription() const = 0;
   virtual std::string getDescription() const = 0;
   virtual float getBikeEngineRPM();
-  virtual void  updateToTime(float i_time, float i_timeStep,
+  virtual void  updateToTime(int i_time, int i_timeStep,
 			     CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			     MotoGame *i_motogame);
   void setPlaySound(bool i_value);
 
-  void setFinished(bool i_value, float i_finishTime);
-  void setDead(bool i_value, float i_deadTime);
+  void setFinished(bool i_value, int i_finishTime);
+  void setDead(bool i_value, int i_deadTime);
   bool isFinished() const;
-  float finishTime() const;
+  int finishTime() const;
   bool isDead() const;
-  float deadTime() const;
+  int deadTime() const;
   BikerTheme* getBikeTheme();
   virtual BikeController* getControler();
   virtual bool  isWheelSpinning();
@@ -197,9 +197,9 @@ class Biker {
   BikeState m_bikeState;
   EngineSoundSimulator* m_EngineSound;
   bool m_finished;
-  float m_finishTime;
+  int m_finishTime;
   bool m_dead;
-  float m_deadTime;
+  int m_deadTime;
   OnBikerHooks* m_bikerHooks;
   bool m_bodyDetach;
   std::vector<Entity *> m_entitiesTouching;

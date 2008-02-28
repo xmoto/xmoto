@@ -165,7 +165,7 @@ void Universe::TeleportationCheatTo(int i_player, Vector2f i_position) {
   if(m_scenes.size() > 0) {
     m_scenes[0]->setPlayerPosition(i_player, i_position.x, i_position.y, true);
     m_scenes[0]->getCamera()->initCamera();
-    // m_scenes[0]->addPenalityTime(900); /* 15 min of penality for that ! */
+    // m_scenes[0]->addPenalityTime(90000); /* 15 min of penality for that ! */
     if(m_pJustPlayReplay != NULL) {    /* ... and no replay of course ! */
       delete m_pJustPlayReplay;
       m_pJustPlayReplay = NULL;
@@ -202,7 +202,7 @@ void Universe::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
     return;
   }
 
-  v_current_time = (int)(100.0 * m_scenes[0]->Players()[0]->finishTime());
+  v_current_time = m_scenes[0]->Players()[0]->finishTime();
 
   /* get best player result */
   v_result = pDb->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
@@ -212,7 +212,7 @@ void Universe::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
 			  nrow);
   v_res = pDb->getResult(v_result, 1, 0, 0);
   if(v_res != NULL) {
-    v_best_personal_time = (int)(100.0 * (atof(v_res) + 0.001)); /* + 0.001 because it is converted into a float */
+    v_best_personal_time = atoi(v_res);
   } else {
     /* should never happend because the score is already stored */
     v_best_personal_time = -1;
@@ -222,9 +222,8 @@ void Universe::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
 		|| v_best_personal_time < 0);
 
   /* search a better webhighscore */
-  v_best_room_time = (int)(100.0 * pDb->webrooms_getHighscoreTime(XMSession::instance()->idRoom(), m_scenes[0]->getLevelSrc()->Id()));
-  o_room = (v_current_time < v_best_room_time
-	    || v_best_room_time < 0);
+  v_best_room_time = pDb->webrooms_getHighscoreTime(XMSession::instance()->idRoom(), m_scenes[0]->getLevelSrc()->Id());
+  o_room = (v_current_time < v_best_room_time || v_best_room_time < 0);
 }
 
 bool Universe::isAReplayToSave() const {
@@ -244,7 +243,7 @@ void Universe::finalizeReplay(bool i_finished) {
   SerializedBikeState BikeState;
   MotoGame::getSerializedBikeState(m_scenes[0]->Players()[0]->getState(), m_scenes[0]->getTime(), &BikeState);
   m_pJustPlayReplay->storeState(BikeState);
-  m_pJustPlayReplay->finishReplay(i_finished, i_finished ? m_scenes[0]->Players()[0]->finishTime() : 0.0);
+  m_pJustPlayReplay->finishReplay(i_finished, i_finished ? m_scenes[0]->Players()[0]->finishTime() : 0);
 }
 
 Replay* Universe::getCurrentReplay() {

@@ -40,7 +40,7 @@ class BikeState;
     std::string Player;
     std::string Level;
     bool  IsFinished;
-    float fFinishTime;
+    int finishTime;
   };
   
   /* Replays states (frames) are grouped together in chunks for easy
@@ -75,15 +75,15 @@ class BikeState;
       void reinitialize();
       std::string getLevelId();
 
-      void finishReplay(bool bFinished,float fFinishTime);
+      void finishReplay(bool bFinished,int finishTime);
       int CurrentFrame() const;
 
-      void fastforward(float fSeconds);
-      void fastrewind(float fSeconds);
+      void fastforward(int i_time);
+      void fastrewind(int i_time);
 
       /* Data interface */
       bool didFinish(void) {return m_bFinished;}
-      float getFinishTime(void) {return m_fFinishTime;}     
+      int getFinishTime(void) {return m_finishTime;}     
       float getFrameRate(void) {return m_fFrameRate;} 
       const std::string &getPlayerName(void) {return m_PlayerName;}
       bool endOfFile(void) {return m_bEndOfFile;}
@@ -108,13 +108,13 @@ class BikeState;
       unsigned int m_nStateSize;
       bool m_bFinished;
       bool m_bEndOfFile;
-      float m_fFinishTime;
+      int m_finishTime;
       char *m_pcInputEventsData;
       unsigned int m_nInputEventsDataSize;
  
       /* Helpers */
       void _FreeReplay(void);
-      bool nextState(float p_frames); /* go to the next state */
+      bool nextState(int p_frames); /* go to the next state */
       bool nextNormalState(); /* go to the next state */
       
       /* Static data */

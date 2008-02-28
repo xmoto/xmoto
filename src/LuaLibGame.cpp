@@ -326,7 +326,7 @@ int LuaLibGame::L_Game_GetTime(lua_State *pL) {
   /* no event for this */
 
   /* Get current game time */
-  lua_pushnumber(pL,m_exec_world->getTime());
+  lua_pushnumber(pL,m_exec_world->getTime() / 100.0);
   return 1;
 }
   
@@ -519,7 +519,7 @@ int LuaLibGame::L_Game_SetDynamicEntityRotation(lua_State *pL) {
 								 luaL_checkstring(pL,1),
 								 X_luaL_check_number(pL,2),
 								 X_luaL_check_number(pL,3),
-								 X_luaL_check_number(pL,4),
+								 (int)(X_luaL_check_number(pL,4)),
 								 (int)X_luaL_check_number(pL,5),
 								 (int)X_luaL_check_number(pL,6))); 
   return 0;
@@ -529,7 +529,7 @@ int LuaLibGame::L_Game_SetDynamicEntitySelfRotation(lua_State *pL) {
   /* event for this */
   m_exec_world->createGameEvent(new MGE_SetDynamicEntitySelfRotation(m_exec_world->getTime(),
 								     luaL_checkstring(pL,1),
-								     X_luaL_check_number(pL,2),
+								     (int)(X_luaL_check_number(pL,2)),
 								     (int)X_luaL_check_number(pL,3),
 								     (int)X_luaL_check_number(pL,4))); 
   return 0;
@@ -541,7 +541,7 @@ int LuaLibGame::L_Game_SetDynamicEntityTranslation(lua_State *pL) {
 								    luaL_checkstring(pL,1),
 								    X_luaL_check_number(pL,2),
 								    X_luaL_check_number(pL,3),
-								    X_luaL_check_number(pL,4),
+								    (int)(X_luaL_check_number(pL,4)),
 								    (int)X_luaL_check_number(pL,5),
 								    (int)X_luaL_check_number(pL,6)));
   return 0;
@@ -560,7 +560,7 @@ int LuaLibGame::L_Game_SetDynamicBlockRotation(lua_State *pL) {
 								luaL_checkstring(pL,1),
 								X_luaL_check_number(pL,2),
 								X_luaL_check_number(pL,3),
-								X_luaL_check_number(pL,4),
+								(int)(X_luaL_check_number(pL,4)),
 								(int)X_luaL_check_number(pL,5),
 								(int)X_luaL_check_number(pL,6)));
   return 0;
@@ -570,7 +570,7 @@ int LuaLibGame::L_Game_SetDynamicBlockSelfRotation(lua_State *pL) {
   /* event for this */
   m_exec_world->createGameEvent(new MGE_SetDynamicBlockSelfRotation(m_exec_world->getTime(),
 								    luaL_checkstring(pL,1),
-								    X_luaL_check_number(pL,2),
+								    (int)(X_luaL_check_number(pL,2)),
 								    (int)X_luaL_check_number(pL,3),
 								    (int)X_luaL_check_number(pL,4))); 
   return 0;
@@ -582,7 +582,7 @@ int LuaLibGame::L_Game_SetDynamicBlockTranslation(lua_State *pL) {
 								   luaL_checkstring(pL,1),
 								   X_luaL_check_number(pL,2),
 								   X_luaL_check_number(pL,3),
-								   X_luaL_check_number(pL,4),
+								   (int)(X_luaL_check_number(pL,4)),
 								   (int)X_luaL_check_number(pL,5),
 								   (int)X_luaL_check_number(pL,6)));
   return 0;
@@ -636,7 +636,7 @@ int LuaLibGame::L_Game_WinPlayer(lua_State *pL) {
 int LuaLibGame::L_Game_PenaltyTime(lua_State *pL) {
   /* event for this */
   m_exec_world->createGameEvent(new MGE_PenalityTime(m_exec_world->getTime(),
-						    X_luaL_check_number(pL,1)));
+						     (int)(X_luaL_check_number(pL,1)*100)));
   return 0;
 }
 

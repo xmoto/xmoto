@@ -118,6 +118,7 @@ class StateMainMenu : public StateMenu {
   bool m_require_updateFavoriteLevelsList;
   bool m_require_updateReplaysList;
   bool m_require_updateLevelsList;
+  bool m_require_updateStats;
 };
 
 #endif

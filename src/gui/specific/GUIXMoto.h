@@ -38,11 +38,11 @@ class UILevelList : public UIList {
   std::string getSelectedLevel();
   void addLevel(const std::string& i_id_level,
 		const std::string& i_name,
-		float i_playerHighscore, // negativ if no one
-		float i_roomHighscore,   // negativ if no one
+		int i_playerHighscore, // negativ if no one
+		int i_roomHighscore,   // negativ if no one
 		const std::string& i_prefix = "");
   virtual void clear();
-  void updateLevel(const std::string& i_id_level, float i_playerHighscore);
+  void updateLevel(const std::string& i_id_level, int i_playerHighscore);
 
   void hideBestTime();
   void hideRoomBestTime();

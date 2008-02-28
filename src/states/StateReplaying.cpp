@@ -219,7 +219,7 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
     if(m_stopToUpdate == false) {
       if(m_universe != NULL) {
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	  m_universe->getScenes()[i]->fastforward(1);
+	  m_universe->getScenes()[i]->fastforward(100);
 	}
       }
     }
@@ -230,7 +230,7 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
       if(m_universe->getScenes().size() > 0) {
 	if(m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false) {
 	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	    m_universe->getScenes()[i]->fastrewind(1);
+	    m_universe->getScenes()[i]->fastrewind(100);
 	  }
 	  m_stopToUpdate = false;
 	} else {

@@ -35,7 +35,7 @@ if you want to be able to play levels besides your own...
 #define PHYS_WORLD_GRAV               -9.81f    /* Grav. acceleration */
 #define PHYS_SPEED                    0.6f      /* simulation speed factor */
 #define PHYS_QSTEP_ITERS              10
-#define PHYS_STEP_SIZE                0.01f
+#define PHYS_STEP_SIZE                1
 
 /* Bike geometrical settings */
 #define PHYS_WHEEL_RADIUS             0.35f

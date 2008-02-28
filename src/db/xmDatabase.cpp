@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "XMSession.h"
 
-#define XMDB_VERSION 18
+#define XMDB_VERSION 19
 
 bool xmDatabase::Trace = false;
 
@@ -450,6 +450,17 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       updateXmDbVersion(18);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 17: " + e.getMsg());
+    }
+
+  case 18: // from float to int storage for time
+    try {
+      m_requiredReplaysUpdateAfterInit = true;
+      simpleSql("DELETE from webhighscores;");
+      simpleSql("UPDATE profile_completedLevels SET finishTime=finishTime*100;");
+      simpleSql("UPDATE stats_profiles_levels   SET playedTime=playedTime*100;");
+      updateXmDbVersion(19);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 18: " + e.getMsg());
     }
 
     // next

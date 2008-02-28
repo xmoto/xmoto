@@ -103,18 +103,18 @@ bool StateScene::update()
     // don't update if that's not required
     // don't do this infinitely, maximum miss 10 frames, then give up
 		// in videoRecording mode, don't try to do more to allow to record at a good framerate
-    while ((m_fLastPhysTime + PHYS_STEP_SIZE <= GameApp::getXMTime()) && nPhysSteps < 10 && (XMSession::instance()->enableVideoRecording() == false || nPhysSteps == 0)) {
+    while (( m_fLastPhysTime + (PHYS_STEP_SIZE)/100.0 <= GameApp::getXMTime()) && nPhysSteps < 10 && (XMSession::instance()->enableVideoRecording() == false || nPhysSteps == 0)) {
       if(m_universe != NULL) {
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	  m_universe->getScenes()[i]->updateLevel(PHYS_STEP_SIZE, m_universe->getCurrentReplay());
 	}
       }
-      m_fLastPhysTime += PHYS_STEP_SIZE;
+      m_fLastPhysTime += PHYS_STEP_SIZE/100.0;
       nPhysSteps++;
     }
 
     // if the delay is too long, reinitialize
-    if(m_fLastPhysTime + PHYS_STEP_SIZE < GameApp::getXMTime()) {
+    if(m_fLastPhysTime + PHYS_STEP_SIZE/100.0 < GameApp::getXMTime()) {
       m_fLastPhysTime = GameApp::getXMTime();
     }
 
@@ -177,11 +177,11 @@ void StateScene::onRenderFlush() {
     if(StateManager::instance()->getVideoRecorder() != NULL) {
       if(m_universe->getScenes().size() > 0) {
 	if( (XMSession::instance()->videoRecordingStartTime() < 0 ||
-	     XMSession::instance()->videoRecordingStartTime() <= m_universe->getScenes()[0]->getTime() * 100
+	     XMSession::instance()->videoRecordingStartTime() <= m_universe->getScenes()[0]->getTime()
 	     )
 	    &&
 	    (XMSession::instance()->videoRecordingEndTime() < 0 ||
-	     XMSession::instance()->videoRecordingEndTime() >= m_universe->getScenes()[0]->getTime() * 100
+	     XMSession::instance()->videoRecordingEndTime() >= m_universe->getScenes()[0]->getTime()
 	     )
 	    ) {
 	  StateManager::instance()->getVideoRecorder()->read(m_universe->getScenes()[0]->getTime());
@@ -258,7 +258,7 @@ void StateScene::setScoresTimes() {
 						  nrow);
   v_res = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
   if(v_res != NULL) {
-    T1 = GameApp::formatTime(atof(v_res));
+    T1 = GameApp::formatTime(atoi(v_res));
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
     
@@ -270,7 +270,7 @@ void StateScene::setScoresTimes() {
 						  nrow);
   v_res = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
   if(v_res != NULL) {
-    T2 = GameApp::formatTime(atof(v_res));
+    T2 = GameApp::formatTime(atoi(v_res));
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
     
@@ -289,19 +289,6 @@ void StateScene::setScoresTimes() {
 
 void StateScene::restartLevel(bool i_reloadLevel) {
   std::string v_level;
-
-  /* Update stats */   
-  if(m_universe != NULL) {
-    if(m_universe->getScenes().size() == 1) {
-      if(m_universe->getScenes()[0]->Players().size() == 1) {
-	if(m_universe->getScenes()[0]->Players()[0]->isDead() == false) {
-	  xmDatabase::instance("main")->stats_levelRestarted(XMSession::instance()->profile(),
-							     m_universe->getScenes()[0]->getLevelSrc()->Id(),
-							     m_universe->getScenes()[0]->getTime());
-	}
-      }
-    }
-  }
 
   // take the level id of the first world
   if(m_universe != NULL) {
@@ -328,6 +315,7 @@ void StateScene::restartLevel(bool i_reloadLevel) {
 void StateScene::nextLevel(bool i_positifOrder) {
   GameApp*  pGame  = GameApp::instance();
   std::string v_currentLevel;
+  std::string v_nextLevel;
 
   // take the level id of the first world
   if(m_universe != NULL) {
@@ -336,8 +324,6 @@ void StateScene::nextLevel(bool i_positifOrder) {
     }
   }
 
-  std::string v_nextLevel;
-
   if(i_positifOrder) {
     v_nextLevel = pGame->determineNextLevel(v_currentLevel);
   } else {
@@ -345,32 +331,12 @@ void StateScene::nextLevel(bool i_positifOrder) {
   }
 
   if(v_nextLevel != "") {
-    if(m_universe != NULL) {
-      if(m_universe->getScenes().size() == 1) {
-	if(m_universe->getScenes()[0]->Players().size() == 1) {
-	  xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->profile(),
-							   v_currentLevel,
-							   m_universe->getScenes()[0]->getTime());
-	}
-      }
-    }
-
     closePlaying();
     StateManager::instance()->replaceState(new StatePreplaying(v_nextLevel, v_currentLevel == v_nextLevel));
   }
 }
 
 void StateScene::abortPlaying() {
-  if(m_universe != NULL) {
-    if(m_universe->getScenes().size() == 1) {
-      if(m_universe->getScenes()[0]->Players().size() == 1) {
-	xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->profile(),
-							 m_universe->getScenes()[0]->getLevelSrc()->Id(),
-							 m_universe->getScenes()[0]->getTime());
-      }
-    }
-  }
-  
   closePlaying();
 }
 

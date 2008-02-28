@@ -95,7 +95,7 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 	      if(tag != NULL) {
 		v_levelId = tag;
 
-		v_playedTime = "0.0";
+		v_playedTime = "0";
 		v_played     = "0";
 		v_died       = "0";
 		v_restarted  = "0";
@@ -127,7 +127,7 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 			  v_died       + ", " +
 			  v_completed  + ", " +
 			  v_restarted  + ", " +
-			  v_playedTime + ");");
+			  v_playedTime + "*100);");
 	      }
 	    }
 	  }
@@ -176,9 +176,10 @@ bool xmDatabase::stats_checkKeyExists_stats_profiles_levels(const std::string& i
 
 void xmDatabase::stats_levelCompleted(const std::string &PlayerName,
 				      const std::string &LevelID,
-				      float fPlayTime) {
+				      int i_playTime) {
+  //printf("stats: level completed\n");
   std::ostringstream v_playTime;
-  v_playTime << std::fixed << fPlayTime;
+  v_playTime << i_playTime;
 
   if(stats_checkKeyExists_stats_profiles_levels(PlayerName, LevelID)) {
     simpleSql("UPDATE stats_profiles_levels SET "
@@ -199,9 +200,10 @@ void xmDatabase::stats_levelCompleted(const std::string &PlayerName,
 
 void xmDatabase::stats_died(const std::string &PlayerName,
 			    const std::string &LevelID,
-			    float fPlayTime) {
+			    int i_playTime) {
+  //printf("stats: level dead\n");
   std::ostringstream v_playTime;
-  v_playTime << std::fixed << fPlayTime;
+  v_playTime << i_playTime;
 
   if(stats_checkKeyExists_stats_profiles_levels(PlayerName, LevelID)) {
     simpleSql("UPDATE stats_profiles_levels SET "
@@ -222,9 +224,10 @@ void xmDatabase::stats_died(const std::string &PlayerName,
 
 void xmDatabase::stats_abortedLevel(const std::string &PlayerName,
 				    const std::string &LevelID,
-				    float fPlayTime) {
+				    int i_playTime) {
+  //printf("stats: level aborted\n");
   std::ostringstream v_playTime;
-  v_playTime << std::fixed << fPlayTime;
+  v_playTime << i_playTime;
   
   if(stats_checkKeyExists_stats_profiles_levels(PlayerName, LevelID)) {
     simpleSql("UPDATE stats_profiles_levels SET "
@@ -244,9 +247,10 @@ void xmDatabase::stats_abortedLevel(const std::string &PlayerName,
 
 void xmDatabase::stats_levelRestarted(const std::string &PlayerName,
 				      const std::string &LevelID,
-				      float fPlayTime) {
+				      int i_playTime) {
+  //printf("stats: level restarted\n");
   std::ostringstream v_playTime;
-  v_playTime << std::fixed << fPlayTime;
+  v_playTime << i_playTime;
 
   if(stats_checkKeyExists_stats_profiles_levels(PlayerName, LevelID)) {
     simpleSql("UPDATE stats_profiles_levels SET "

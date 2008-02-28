@@ -38,7 +38,7 @@ BikeState::BikeState() {
   reInitializeSpeed();
   reInitializeAnchors();
 
-  GameTime = 0.0;
+  GameTime = 0;
 }
 
 BikeState& BikeState::operator=(const BikeState& i_copy) {
@@ -229,9 +229,9 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
 
   m_playSound = true;
   m_dead      = false;
-  m_deadTime  = 0.0;
+  m_deadTime  = 0;
   m_finished  = false;
-  m_finishTime = 0.0;
+  m_finishTime = 0;
   m_bikerTheme = i_bikerTheme;
   m_bWheelSpin = false;
   m_bikerHooks = NULL;
@@ -252,11 +252,11 @@ const TColor& Biker::getUglyColorFilter() const {
   return m_uglyColorFilter;
 }
 
-float Biker::finishTime() const {
+int Biker::finishTime() const {
   return m_finishTime;
 }
 
-float Biker::deadTime() const {
+int Biker::deadTime() const {
   return m_deadTime;
 }
 
@@ -265,7 +265,7 @@ float Biker::getBikeEngineRPM() {
   return m_bikeState.fBikeEngineRPM;
 }
 
-void Biker::updateToTime(float i_time, float i_timeStep,
+void Biker::updateToTime(int i_time, int i_timeStep,
 			     CollisionSystem *v_collisionSystem, Vector2f i_gravity,
 			     MotoGame *i_motogame) {
   if(isFinished() || isDead()) return;
@@ -382,12 +382,12 @@ void Biker::setPlaySound(bool i_value) {
   m_playSound = i_value;
 }
 
-void Biker::setFinished(bool i_value, float i_finishTime) {
+void Biker::setFinished(bool i_value, int i_finishTime) {
   m_finished = i_value;
   m_finishTime = i_finishTime;
 }
 
-void Biker::setDead(bool i_value, float i_deadTime) {
+void Biker::setDead(bool i_value, int i_deadTime) {
   m_dead = i_value;
   m_deadTime = i_deadTime;
 }
@@ -457,7 +457,7 @@ void BikeState::interpolateGameStateLinear(std::vector<BikeState*> &i_ghostBikeS
     p->FrontAnchor2P = pA->FrontAnchor2P + (pB->FrontAnchor2P - pA->FrontAnchor2P)*t;
   }
   
-  p->GameTime = pA->GameTime + (pB->GameTime - pA->GameTime)*t;
+  p->GameTime = pA->GameTime + (int)(((float)(pB->GameTime - pA->GameTime))*t);
 }
 
 void BikeState::interpolateGameStateCubic(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t) {
@@ -509,7 +509,7 @@ void BikeState::interpolateGameStateCubic(std::vector<BikeState*> &i_ghostBikeSt
     p->FrontAnchor2P = interpolation_cubic(pA->FrontAnchor2P, pB->FrontAnchor2P, pC->FrontAnchor2P, pD->FrontAnchor2P, t);
   }
 
-  p->GameTime = pB->GameTime + (pC->GameTime - pB->GameTime)*t;
+  p->GameTime = pB->GameTime + (int)(((float)(pC->GameTime - pB->GameTime))*t);
 }
 
 void BikeState::interpolateGameState(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p, float t) {
@@ -625,7 +625,7 @@ void BikeState::interpolateGameState(std::vector<BikeState*> &i_ghostBikeStates,
     pBikeS->RRearWheelP.y = pBikeS->Anchors()->Rp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->Rp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;     
 
     // time
-    pBikeS->GameTime = pReplayState->fGameTime;
+    pBikeS->GameTime = GameApp::floatToTime(pReplayState->fGameTime);
   }
 
 void Biker::addBodyForce(const Vector2f& i_force) {

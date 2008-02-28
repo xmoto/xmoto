@@ -35,11 +35,10 @@ void xmDatabase::replays_add(const std::string& i_id_level,
 			     const std::string& i_name,
 			     const std::string& i_id_profile,
 			     bool               i_isFinished,
-			     float              i_finishTime) {
+			     int                i_finishTime) {
   std::ostringstream v_finishTime;
 
-  /* to be sure it's rounded, but over */
-  v_finishTime << std::fixed << (floor(i_finishTime * 1000.0))/1000.0;
+  v_finishTime << i_finishTime;
 
   simpleSql("INSERT INTO replays(id_level, name, id_profile, isFinished, finishTime) " 
 	    "VALUES (\"" +

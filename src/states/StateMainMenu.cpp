@@ -90,6 +90,7 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
   m_require_updateFavoriteLevelsList = false;
   m_require_updateReplaysList        = false;
   m_require_updateLevelsList         = false;
+  m_require_updateStats              = false;
 }
 
 StateMainMenu::~StateMainMenu()
@@ -128,6 +129,8 @@ void StateMainMenu::enter()
 
 void StateMainMenu::enterAfterPop()
 {
+  bool v_levelsListsUpdated = false;
+
   StateMenu::enterAfterPop();
 
   if(m_require_updateFavoriteLevelsList) {
@@ -145,9 +148,22 @@ void StateMainMenu::enterAfterPop()
 					 XMSession::instance()->idRoom(),
 					 XMSession::instance()->debug(),
 					 xmDatabase::instance("main"));
-    updateLevelsPacksList();
-    updateLevelsLists();
+    if(v_levelsListsUpdated == false) {
+      updateLevelsPacksList();
+      updateLevelsLists();
+      v_levelsListsUpdated = true;
+    }
     m_require_updateLevelsList = false;
+  }
+
+  if(m_require_updateStats) {
+    // update lists and stats
+    if(v_levelsListsUpdated == false) {
+      updateLevelsPacksList();
+      updateLevelsLists();
+      v_levelsListsUpdated = true;
+    }
+    updateStats();
   }
 
   GameApp::instance()->playMusic("menu1");
@@ -647,7 +663,7 @@ void StateMainMenu::updateStats() {
   
   int   v_nbStarts        = 0;
   std::string v_since;
-  float v_totalPlayedTime = 0.0;
+  int   v_totalPlayedTime = 0;
   int   v_nbPlayed        = 0;
   int   v_nbDied          = 0;
   int   v_nbCompleted     = 0;
@@ -679,7 +695,7 @@ void StateMainMenu::updateStats() {
   
   v_nbStarts        = atoi(pDb->getResult(v_result, 8, 0, 0));
   v_since           =      pDb->getResult(v_result, 8, 0, 1);
-  v_totalPlayedTime = atof(pDb->getResult(v_result, 8, 0, 2));
+  v_totalPlayedTime = atoi(pDb->getResult(v_result, 8, 0, 2));
   v_nbPlayed        = atoi(pDb->getResult(v_result, 8, 0, 3));
   v_nbDied          = atoi(pDb->getResult(v_result, 8, 0, 4));
   v_nbCompleted     = atoi(pDb->getResult(v_result, 8, 0, 5));
@@ -691,9 +707,9 @@ void StateMainMenu::updateStats() {
   /* Per-player info */
   char cBuf[512];
   char cTime[512];
-  int nHours = ((int)v_totalPlayedTime) / (60 * 60);
-  int nMinutes = (((int)v_totalPlayedTime) / (60)) - nHours*60;
-  int nSeconds = (((int)v_totalPlayedTime)) - nMinutes*60 - nHours*3600;
+  int nHours = v_totalPlayedTime / 100 / (60 * 60);
+  int nMinutes = v_totalPlayedTime / 100 / 60 - nHours*60;
+  int nSeconds = v_totalPlayedTime /100 - nMinutes*60 - nHours*3600;
   if(nHours > 0)
     snprintf(cTime, 512, (std::string(GAMETEXT_XHOURS) + ", " + std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_XSECONDS)).c_str(),nHours,nMinutes,nSeconds);
   else if(nMinutes > 0)
@@ -736,7 +752,7 @@ void StateMainMenu::updateStats() {
     if(cy + 45 > nHeight) break; /* out of window */
     
     v_level_name      =      pDb->getResult(v_result, 6, i, 0);
-    v_totalPlayedTime = atof(pDb->getResult(v_result, 6, i, 5));
+    v_totalPlayedTime = atoi(pDb->getResult(v_result, 6, i, 5));
     v_nbDied          = atoi(pDb->getResult(v_result, 6, i, 2));
     v_nbPlayed        = atoi(pDb->getResult(v_result, 6, i, 1));
     v_nbCompleted     = atoi(pDb->getResult(v_result, 6, i, 3));
@@ -1581,7 +1597,7 @@ UILevelList* StateMainMenu::buildQuickStartList() {
 void StateMainMenu::createLevelListsSql(UILevelList *io_levelsList, const std::string& i_sql) {
   char **v_result;
   unsigned int nrow;
-  float v_playerHighscore, v_roomHighscore;
+  int v_playerHighscore, v_roomHighscore;
 
   /* get selected item */
   std::string v_selected_levelName = "";
@@ -1598,15 +1614,15 @@ void StateMainMenu::createLevelListsSql(UILevelList *io_levelsList, const std::s
 				      nrow);
   for(unsigned int i=0; i<nrow; i++) {
     if(xmDatabase::instance("main")->getResult(v_result, 4, i, 2) == NULL) {
-      v_playerHighscore = -1.0;
+      v_playerHighscore = -1;
     } else {
-      v_playerHighscore = atof(xmDatabase::instance("main")->getResult(v_result, 4, i, 2));
+      v_playerHighscore = atoi(xmDatabase::instance("main")->getResult(v_result, 4, i, 2));
     }
     
     if(xmDatabase::instance("main")->getResult(v_result, 4, i, 3) == NULL) {
-      v_roomHighscore = -1.0;
+      v_roomHighscore = -1;
     } else {
-      v_roomHighscore = atof(xmDatabase::instance("main")->getResult(v_result, 4, i, 3));
+      v_roomHighscore = atoi(xmDatabase::instance("main")->getResult(v_result, 4, i, 3));
     }
     
     io_levelsList->addLevel(xmDatabase::instance("main")->getResult(v_result, 4, i, 0),
@@ -1668,6 +1684,18 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
        updateReplaysList();
      } else {
        m_require_updateReplaysList = true;
+     }
+     return;
+    }
+
+   if(i_message == "STATS_UPDATED") {
+     if(StateManager::instance()->isTopOfTheStates(this)) {
+       updateLevelsPacksList();
+       updateLevelsLists();
+       updateReplaysList();
+       updateStats();
+     } else {
+       m_require_updateStats = true;
      }
      return;
     }
@@ -2176,7 +2204,7 @@ void StateMainMenu::createRoomsList(UIList *pList) {
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
 
-  v_result = xmDatabase::instance("main")->readDB("SELECT id_room, name FROM webrooms ORDER BY name;", nrow);
+  v_result = xmDatabase::instance("main")->readDB("SELECT id_room, name FROM webrooms ORDER BY UPPER(name);", nrow);
   for(unsigned int i=0; i<nrow; i++) {
     v_roomId   = xmDatabase::instance("main")->getResult(v_result, 2, i, 0);
     v_roomName = xmDatabase::instance("main")->getResult(v_result, 2, i, 1);
@@ -2814,7 +2842,7 @@ void StateMainMenu::updateReplaysRights() {
 
       rplInfos = Replay::getReplayInfos(v_replay);
       if(rplInfos != NULL) {
-	if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == XMSession::instance()->profile()) {
+	if(rplInfos->finishTime > 0 && rplInfos->Player == XMSession::instance()->profile()) {
 	  char **v_result;
 	  unsigned int nrow;
 	  float v_finishTime;
@@ -2829,7 +2857,7 @@ void StateMainMenu::updateReplaysRights() {
 	  } else {
 	    v_finishTime = atof(xmDatabase::instance("main")->getResult(v_result, 1, 0, 0));
 	    xmDatabase::instance("main")->read_DB_free(v_result);
-	    v_button->enableWindow(rplInfos->fFinishTime < v_finishTime);
+	    v_button->enableWindow(rplInfos->finishTime < v_finishTime);
 	  }  	      
 	}
       }

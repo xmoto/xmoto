@@ -52,11 +52,11 @@ class StateScene : public GameState {
  bool   m_autoZoom;      /* true : the key is pressed so that it zooms out to see the level */
 
  void setScoresTimes();
- void restartLevel(bool i_reloadLevel = false);
- void nextLevel(bool i_positifOrder = true);
+ virtual void restartLevel(bool i_reloadLevel = false);
+ virtual void nextLevel(bool i_positifOrder = true);
 
  void closePlaying();
- void abortPlaying();
+ virtual void abortPlaying();
 
  bool isLockedScene() const;
  void lockScene(bool i_value);

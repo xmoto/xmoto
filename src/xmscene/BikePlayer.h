@@ -38,7 +38,7 @@ class PlayerBiker : public Biker {
   PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_filterColor, const TColor& i_filterUglyColor);
   ~PlayerBiker();
 
-  void updateToTime(float i_time, float i_timeStep,
+  void updateToTime(int i_time, int i_timeStep,
 		    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 		    MotoGame *i_motogame);
   void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
@@ -67,7 +67,7 @@ class PlayerBiker : public Biker {
   float m_fLastAttitudeDir;
 
   int m_nStillFrames;
-  double m_fLastSqueekTime;
+  int m_lastSqueekTime;
   bool m_bSqueeking;
   float m_fHowMuchSqueek;
 
@@ -137,7 +137,7 @@ class PlayerBiker : public Biker {
 
   void initPhysics(Vector2f i_gravity);
   void uninitPhysics();
-  void updatePhysics(float i_time, float fTimeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity);
+  void updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity);
   void clearStates();
   void updateGameState();
   void prepareBikePhysics(Vector2f StartPos);

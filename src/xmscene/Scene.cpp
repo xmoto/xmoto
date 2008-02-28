@@ -45,7 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   MotoGame::MotoGame() {
     m_bDeathAnimEnabled=true;
-    m_lastCallToEveryHundreath = 0.0;
+    m_lastCallToEveryHundreath = 0;
 
     m_showGhostTimeDiff = true;
 
@@ -55,7 +55,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_is_paused = false;
     m_playEvents = true;
 
-    m_fLastStateSerializationTime = -100.0f; /* loong time ago :) */
+    m_lastStateSerializationTime = -100; /* loong time ago :) */
 
     m_pLevelSrc = NULL;
 
@@ -137,7 +137,7 @@ void MotoGame::cleanPlayers() {
   /*===========================================================================
     Add game message
     ===========================================================================*/
-  void MotoGame::gameMessage(std::string Text, bool bOnce, float fDuration) {
+  void MotoGame::gameMessage(std::string Text, bool bOnce, int duration) {
     /* "unique"? */
     GameMessage *pMsg = NULL;
     
@@ -154,7 +154,7 @@ void MotoGame::cleanPlayers() {
     if(pMsg == NULL) {    
       if(bOnce) { /* don't allow \n split on bOnce messages (i'm too lazy) */
 	pMsg = new GameMessage;
-	pMsg->fRemoveTime = getTime() + fDuration;
+	pMsg->removeTime = getTime() + duration;
 	pMsg->bNew = true;
 	pMsg->nAlpha = 255;
 	pMsg->bOnce = bOnce;
@@ -167,7 +167,7 @@ void MotoGame::cleanPlayers() {
 
 	while(n >= 0 && (unsigned int)n < v_txtRest.length()) {
 	  pMsg = new GameMessage;
-	  pMsg->fRemoveTime = getTime() + fDuration;
+	  pMsg->removeTime = getTime() + duration;
 	  pMsg->bNew = true;
 	  pMsg->nAlpha = 255;
 	  pMsg->bOnce = bOnce;
@@ -178,7 +178,7 @@ void MotoGame::cleanPlayers() {
 	}
 
 	pMsg = new GameMessage;
-	pMsg->fRemoveTime = getTime() + fDuration;
+	pMsg->removeTime = getTime() + duration;
 	pMsg->bNew = true;
 	pMsg->nAlpha = 255;
 	pMsg->bOnce = bOnce;
@@ -188,7 +188,7 @@ void MotoGame::cleanPlayers() {
     } else {
       /* redefine the text only to replay a bonce message */
       pMsg->Text = Text;
-      pMsg->fRemoveTime = getTime() + fDuration;
+      pMsg->removeTime = getTime() + duration;
       pMsg->nAlpha = 255;
     }
 
@@ -197,13 +197,13 @@ void MotoGame::cleanPlayers() {
 
   void MotoGame::clearGameMessages(void) {
     for(unsigned int i=0 ;i<m_GameMessages.size() ;i++)
-      m_GameMessages[i]->fRemoveTime=0.0f;
+      m_GameMessages[i]->removeTime=0;
   }
 
   /*===========================================================================
     Update game
     ===========================================================================*/
-  void MotoGame::updateLevel(float fTimeStep, Replay *i_recordedReplay) {
+  void MotoGame::updateLevel(int timeStep, Replay *i_recordedReplay) {
     if(m_is_paused) return;
 
     getLevelSrc()->updateToTime(*this);
@@ -212,10 +212,10 @@ void MotoGame::cleanPlayers() {
     
     /* Increase time */
     if(m_speed_factor != 1.00f) {
-      m_fTime += fTimeStep * m_speed_factor;
-      if(m_fTime < 0.0) m_fTime = 0.0;
+      m_time += (int)(((float)timeStep) * m_speed_factor);
+      if(m_time < 0) m_time = 0;
     } else {
-      m_fTime += fTimeStep;
+      m_time += timeStep;
     }     
 
     /* Update misc stuff (only when not playing a replay) */
@@ -227,23 +227,23 @@ void MotoGame::cleanPlayers() {
     /* Invoke Tick() script function */
     /* and play script dynamic objects */
     int v_nbCents = 0;
-    while(getTime() - m_lastCallToEveryHundreath > 0.01) {
+    while(getTime() - m_lastCallToEveryHundreath > 1) {
       if(m_playEvents) {
 	if(m_luaGame->scriptCallBool("Tick", true) == false) {
 	  throw Exception("level script Tick() returned false");
 	}
       }
       v_nbCents++;
-      m_lastCallToEveryHundreath += 0.01;
+      m_lastCallToEveryHundreath += 1;
     }
     nextStateScriptDynamicObjects(v_nbCents);
 
     for(unsigned int i=0; i<m_ghosts.size(); i++) {
-      m_ghosts[i]->updateToTime(getTime(), fTimeStep, &m_Collision, m_PhysGravity, this);
+      m_ghosts[i]->updateToTime(getTime(), timeStep, &m_Collision, m_PhysGravity, this);
     }
 
     for(unsigned int i=0; i<m_players.size(); i++) {
-      m_players[i]->updateToTime(m_fTime, fTimeStep, &m_Collision, m_PhysGravity, this);
+      m_players[i]->updateToTime(m_time, timeStep, &m_Collision, m_PhysGravity, this);
       
       if(m_playEvents) {
 	/* New wheel-spin particles? */
@@ -252,7 +252,7 @@ void MotoGame::cleanPlayers() {
 	    ParticlesSource *v_debris;
 	    v_debris = (ParticlesSource*) getLevelSrc()->getEntityById("BikeDebris");
 	    v_debris->setDynamicPosition(m_players[i]->getWheelSpinPoint());	
-	    v_debris->addParticle(m_players[i]->getWheelSpinDir(), getTime() + 3.0);
+	    v_debris->addParticle(m_players[i]->getWheelSpinDir(), getTime() + 300);
 	  }
 	}
       }
@@ -263,8 +263,8 @@ void MotoGame::cleanPlayers() {
     /* save the replay */
     if(i_recordedReplay != NULL) {
       /* We'd like to serialize the game state 25 times per second for the replay */
-      if(getTime() - m_fLastStateSerializationTime >= 1.0f/i_recordedReplay->getFrameRate()) {
-        m_fLastStateSerializationTime = getTime();
+      if(getTime() - m_lastStateSerializationTime >= 100.0f/i_recordedReplay->getFrameRate()) {
+        m_lastStateSerializationTime = getTime();
         
         /* Get it */
 	/* only store the state if 1 player plays */
@@ -306,7 +306,7 @@ void MotoGame::cleanPlayers() {
     while(1) {
       if(i < 0 || (unsigned int)i >= m_GameMessages.size())
 	break;      
-      if(getTime() > m_GameMessages[i]->fRemoveTime) {
+      if(getTime() > m_GameMessages[i]->removeTime) {
         m_GameMessages[i]->nAlpha -= 2;
         
         if(m_GameMessages[i]->nAlpha <= 0) {
@@ -355,7 +355,7 @@ void MotoGame::cleanPlayers() {
     m_PhysGravity.x = 0;
     m_PhysGravity.y = PHYS_WORLD_GRAV;
 
-    m_fTime = 0.0f;
+    m_time = 0;
     m_speed_factor = 1.00f;
     m_is_paused = false;
 
@@ -363,7 +363,7 @@ void MotoGame::cleanPlayers() {
     
     m_Arrow.nArrowPointerMode = 0;
  
-    m_lastCallToEveryHundreath = 0.0;
+    m_lastCallToEveryHundreath = 0;
 
     /* Load and parse level script */
     bool bTryParsingEncapsulatedLevelScript = true;
@@ -438,7 +438,7 @@ void MotoGame::cleanPlayers() {
     getLevelSrc()->spawnEntity(v_debris);
 
     /* execute events */
-    m_fLastStateSerializationTime = -100.0f;
+    m_lastStateSerializationTime = -100;
     if(m_playEvents) {
       executeEvents(recordingReplay);
     }
@@ -962,7 +962,7 @@ void MotoGame::cleanPlayers() {
       }
 
       char msg[256];
-      sprintf(msg, "%+.2f", v_diffToGhost);
+      sprintf(msg, "%+.2f", v_diffToGhost/100.0);
       this->gameMessage(msg,true);
     }
   }
@@ -1059,7 +1059,7 @@ void MotoGame::cleanPlayers() {
       v_stars->loadToPlay();
       v_stars->setZ(1.0);
       for(int i=0; i<3; i++) {
-	v_stars->addParticle(Vector2f(0,0), getTime() + 5.0);
+	v_stars->addParticle(Vector2f(0,0), getTime() + 500);
       }
       getLevelSrc()->spawnEntity(v_stars);
 
@@ -1096,9 +1096,9 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  void MotoGame::addPenalityTime(float fTime) {
-    if(fTime > 0.0) {
-      m_fTime += fTime;
+  void MotoGame::addPenalityTime(int i_time) {
+    if(i_time > 0) {
+      m_time += i_time;
     }
   }
 
@@ -1182,15 +1182,15 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  void MotoGame::fastforward(float fSeconds) {
-    m_fTime += fSeconds;
+  void MotoGame::fastforward(int i_time) {
+    m_time += i_time;
   }
 
-  void MotoGame::fastrewind(float fSeconds) {
+  void MotoGame::fastrewind(int i_time) {
     if(getLevelSrc() != NULL) {
       if(getLevelSrc()->isScripted() == false) {
-	m_fTime -= fSeconds;
-	if(m_fTime < 0.0) m_fTime = 0.0;
+	m_time -= i_time;
+	if(m_time < 0) m_time = 0;
       }
     }
   }

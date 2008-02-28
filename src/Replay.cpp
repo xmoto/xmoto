@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "helpers/SwapEndian.h"
 #include "GameEvents.h"
+#include "Game.h"
 #include "xmscene/Bike.h"
 #include "db/xmDatabase.h"
 
@@ -44,7 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Replay::Replay() {
     m_bFinished = false;
     m_bEndOfFile = false;
-    m_fFinishTime = 0.0f;
+    m_finishTime = 0;
     m_pcInputEventsData = NULL;
     m_nInputEventsDataSize = 0;
   }
@@ -77,8 +78,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
   
-  void Replay::finishReplay(bool bFinished,float fFinishTime) {
-    m_fFinishTime = fFinishTime;
+  void Replay::finishReplay(bool bFinished, int finishTime) {
+    m_finishTime = finishTime;
     m_bFinished = bFinished;
     saveReplay();
   }
@@ -110,7 +111,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     FS::writeFloat_LE(pfh,m_fFrameRate);
     FS::writeInt_LE(pfh,m_nStateSize);
     FS::writeBool(pfh,m_bFinished);
-    FS::writeFloat_LE(pfh,m_fFinishTime);
+    FS::writeFloat_LE(pfh, GameApp::timeToFloat(m_finishTime));
     
     /* Events */
     const char *pcUncompressedEvents = convertOutputToInput();
@@ -236,10 +237,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       
       /* Read finish time if any */
       m_bFinished = FS::readBool(pfh);
-      m_fFinishTime = FS::readFloat_LE(pfh);
+      m_finishTime = GameApp::floatToTime(FS::readFloat_LE(pfh));
       if(bDisplayInformation) {
 	if(m_bFinished) {
-	  printf("%-30s: %.2f (%f)\n", "Finish time", m_fFinishTime, m_fFinishTime);
+	  printf("%-30s: %.2f (%f)\n", "Finish time", m_finishTime / 100.0, m_finishTime / 100.0);
 	} else {
 	  printf("%-30s: %s\n", "Finish time", "unfinished");
 	}
@@ -418,7 +419,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return nextState(1);
   }
 
-bool Replay::nextState(float p_frames) {
+bool Replay::nextState(int p_frames) {
   m_bEndOfFile = false;
 
   m_nCurState += p_frames;
@@ -545,7 +546,7 @@ bool Replay::nextState(float p_frames) {
       /*float fFrameRate    = */ FS::readFloat_LE(pfh);
       /*int nStateSize      = */ FS::readInt_LE(pfh);
       bool bFinished      = FS::readBool(pfh);
-      float fFinishTime   = FS::readFloat_LE(pfh);
+      int finishTime   = GameApp::floatToTime(FS::readFloat_LE(pfh));
                 
       ReplayInfo *pRpl     = new ReplayInfo;
 
@@ -556,24 +557,24 @@ bool Replay::nextState(float p_frames) {
       pRpl->IsFinished = bFinished;
 
       if(bFinished) {
-	pRpl->fFinishTime = fFinishTime;
+	pRpl->finishTime = finishTime;
       } else {
-	pRpl->fFinishTime = -1;                
+	pRpl->finishTime = -1;                
       }
           
       FS::closeFile(pfh);
       return pRpl;
   }
 
-  void Replay::fastforward(float fSeconds) {
+  void Replay::fastforward(int i_time) {
     /* How many states should we move forward? */
-    float nNumStates = (fSeconds * m_fFrameRate);
+    int nNumStates = (int)(i_time * 100.0 * m_fFrameRate);
     nextState(nNumStates);
   }
 
-  void Replay::fastrewind(float fSeconds) {
+  void Replay::fastrewind(int i_time) {
     /* How many states should we move forward? */
-    float nNumStates = (fSeconds * m_fFrameRate);
+    int nNumStates = (int)(i_time * 100.0 * m_fFrameRate);
     nextState(-nNumStates);
   } 
 
@@ -581,8 +582,8 @@ void Replay::cleanReplays(xmDatabase *i_db) {
 }
 
 int  Replay::cleanReplaysNb(xmDatabase *i_db) {
-  char **v_result;
-  unsigned int nrow;
+  //char **v_result;
+  //unsigned int nrow;
   int n;
 
   /* SELECT replay of from replay_% and %-%-% %_% which are not best replays for the (id_level, id_room, id_profile) if id_profile is in profiles or (id_level, id_room) else */

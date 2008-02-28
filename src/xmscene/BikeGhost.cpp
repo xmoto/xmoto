@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Game.h"
 #include "../GameEvents.h"
 
-#define INTERPOLATION_MAXIMUM_TIME  0.3
+#define INTERPOLATION_MAXIMUM_TIME  300
 #define INTERPOLATION_MAXIMUM_SPACE 5.0
 
 Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
@@ -64,7 +64,7 @@ Ghost::~Ghost() {
   }
 }
 
-void Ghost::execReplayEvents(float i_time, MotoGame *i_motogame) {
+void Ghost::execReplayEvents(int i_time, MotoGame *i_motogame) {
   std::vector<RecordedGameEvent *> *v_replayEvents;
   v_replayEvents = m_replay->getEvents();
   
@@ -165,7 +165,7 @@ void Ghost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
                  - m_lastToTakeEntities[i_lastToTakeEntities.size()-1];
 }
 
-void Ghost::updateToTime(float i_time, float i_timeStep,
+void Ghost::updateToTime(int i_time, int i_timeStep,
 			 CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			 MotoGame *i_motogame) {
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
@@ -235,12 +235,12 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
 	v_distance < INTERPOLATION_MAXIMUM_SPACE;
 
       if(m_doInterpolation && v_can_interpolate) {
-	if(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime > 0.0) {
+	if(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime > 0) {
 	  /* INTERPOLATED FRAME */
 	  float v_interpolation_value;
 
 	  v_interpolation_value = (i_time - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime) 
-	    /(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime);
+	    /((float)(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime));
 
 	  BikeState::interpolateGameState(m_ghostBikeStates, &m_bikeState, v_interpolation_value);
 	}
@@ -253,7 +253,7 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
   }
 }
 
-float Ghost::getFinishTime() {
+int Ghost::getFinishTime() {
   return m_replay->getFinishTime();
 }
 
