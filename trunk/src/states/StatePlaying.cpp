@@ -41,6 +41,10 @@ StatePlaying::StatePlaying(Universe* i_universe):
 {
   m_name = "StatePlaying";
   m_gameIsFinished = false;
+  m_displayStats   = false;
+
+  /* prepare stats */
+  makeStatsStr();
 }
 
 StatePlaying::~StatePlaying()
@@ -127,6 +131,7 @@ void StatePlaying::enterAfterPop()
   // recheck keys
   InputHandler::instance()->dealWithActivedKeys(m_universe);
   m_fLastPhysTime = GameApp::getXMTime();
+  m_displayStats = false;
 }
 
 bool StatePlaying::update()
@@ -180,6 +185,7 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
   if(nKey == SDLK_ESCAPE){
     if(isLockedScene() == false) {
       /* Escape pauses */
+      m_displayStats = true;
       StateManager::instance()->pushState(new StatePause(m_universe, this));
     }
   }
@@ -530,4 +536,14 @@ void StatePlaying::restartLevel(bool i_reloadLevel) {
   }
 
   StateScene::restartLevel(i_reloadLevel);
+}
+
+bool StatePlaying::render() {
+  StateScene::render();
+
+  if(m_displayStats) {
+    displayStats();
+  }
+
+  return true;
 }

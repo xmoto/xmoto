@@ -60,9 +60,6 @@ class StatePreplaying : public StateScene {
 
   /* animation */
   CameraAnimation* m_cameraAnim;
-
-  /* stats to display */
-  FontGlyph* m_statsFg;
 };
 
 #endif
