@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Renderer.h"
 #include "Universe.h"
 #include "VideoRecorder.h"
+#include "GameText.h"
 
 #define INPLAY_ANIMATION_TIME 1.0
 #define INPLAY_ANIMATION_SPEED 10
@@ -457,4 +458,69 @@ void StateScene::executeOneCommand(std::string cmd)
     }
   }
 
+}
+
+void StateScene::displayStats() {
+  FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
+  FontGlyph* v_fg   = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(m_statsStr);
+  Vector2f A = Vector2f(GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth(),
+			GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight());
+  Vector2f B= Vector2f(GameApp::instance()->getDrawLib()->getDispWidth(),
+		       GameApp::instance()->getDrawLib()->getDispHeight());
+  int vborder = 10;
+
+  GameApp::instance()->getDrawLib()->drawBox(A - Vector2f(vborder*2, vborder*2),
+					     B,
+					     1.0f, 0xFFCCCC77, 0xFFFFFFFF);
+
+  v_fm->printString(v_fg,
+		    GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth()   - vborder,
+		    GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight() - vborder,
+		    MAKE_COLOR(220,255,255,255), true);
+}
+
+void StateScene::makeStatsStr() {
+  m_statsStr = "";
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      
+      // stats to display
+      char **v_result;
+      unsigned int nrow;
+      xmDatabase* v_pDb = xmDatabase::instance("main");
+      int v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestart, v_playedTime;
+      std::string v_idLevel = m_universe->getScenes()[0]->getLevelSrc()->Id();
+      
+      v_result = v_pDb->readDB("SELECT nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime "
+			       "FROM stats_profiles_levels "
+			       "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
+			       "AND id_level=\""     + xmDatabase::protectString(v_idLevel) + "\";",
+			       nrow);
+      if(nrow != 1) {
+	/* not statistics */
+	v_nbPlayed    = 0;
+	v_nbDied      = 0;
+	v_nbCompleted = 0;
+	v_nbRestart   = 0;
+	v_playedTime  = 0;
+      } else {
+	v_nbPlayed    = atoi(v_pDb->getResult(v_result, 5, 0, 0));
+	v_nbDied      = atoi(v_pDb->getResult(v_result, 5, 0, 1));
+	v_nbCompleted = atoi(v_pDb->getResult(v_result, 5, 0, 2));
+	v_nbRestart   = atoi(v_pDb->getResult(v_result, 5, 0, 3));
+	v_playedTime  = atoi(v_pDb->getResult(v_result, 5, 0, 4));
+      }
+      char c_tmp[256];
+      snprintf(c_tmp, 256, std::string(GAMETEXT_XMOTOLEVELSTATS_PLAYS(v_nbPlayed)       + std::string("\n") +
+				       GAMETEXT_XMOTOLEVELSTATS_FINISHED(v_nbCompleted) + std::string("\n") +
+				       GAMETEXT_XMOTOLEVELSTATS_DEATHS(v_nbDied)        + std::string("\n") +
+				       GAMETEXT_XMOTOLEVELSTATS_RESTART(v_nbRestart)    + std::string("\n") +
+				       GAMETEXT_XMOTOGLOBALSTATS_TIMEPLAYED
+				       ).c_str(),
+	       v_nbPlayed, v_nbCompleted, v_nbDied, v_nbRestart,
+	   GameApp::formatTime(v_playedTime).c_str());
+      m_statsStr = c_tmp;
+      v_pDb->read_DB_free(v_result);
+    }
+  }
 }

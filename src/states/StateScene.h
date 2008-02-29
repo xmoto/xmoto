@@ -46,6 +46,7 @@ class StateScene : public GameState {
 
  protected:
  virtual void executeOneCommand(std::string cmd);
+ void makeStatsStr();
 
  double m_fLastPhysTime; /* When the last frama was initiated */
  bool   m_isLockedScene;
@@ -64,6 +65,8 @@ class StateScene : public GameState {
  bool autoZoom() const;
  void runAutoZoom();
 
+ void displayStats();
+
  /* animation */
  CameraAnimation* m_cameraAnim;
 
@@ -72,6 +75,9 @@ class StateScene : public GameState {
  int m_benchmarkNbFrame;
  float m_benchmarkStartTime;
 
+ /* stats to display */
+ std::string m_statsStr;
+ 
 };
 
 #endif

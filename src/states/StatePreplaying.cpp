@@ -207,44 +207,8 @@ void StatePreplaying::enter()
     }
   }
 
-  // stats to display
-  char **v_result;
-  unsigned int nrow;
-  xmDatabase* v_pDb = xmDatabase::instance("main");
-  int v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestart, v_playedTime;
-
-  v_result = v_pDb->readDB("SELECT nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime "
-			   "FROM stats_profiles_levels "
-			   "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
-			   "AND id_level=\""     + xmDatabase::protectString(m_idlevel)                        + "\";",
-			   nrow);
-  if(nrow != 1) {
-    /* not statistics */
-    v_nbPlayed    = 0;
-    v_nbDied      = 0;
-    v_nbCompleted = 0;
-    v_nbRestart   = 0;
-    v_playedTime  = 0;
-  } else {
-    v_nbPlayed    = atoi(v_pDb->getResult(v_result, 5, 0, 0));
-    v_nbDied      = atoi(v_pDb->getResult(v_result, 5, 0, 1));
-    v_nbCompleted = atoi(v_pDb->getResult(v_result, 5, 0, 2));
-    v_nbRestart   = atoi(v_pDb->getResult(v_result, 5, 0, 3));
-    v_playedTime  = atoi(v_pDb->getResult(v_result, 5, 0, 4));
-  }
-  char c_tmp[256];
-  snprintf(c_tmp, 256, std::string(GAMETEXT_XMOTOLEVELSTATS_PLAYS(v_nbPlayed)       + std::string("\n") +
-				   GAMETEXT_XMOTOLEVELSTATS_FINISHED(v_nbCompleted) + std::string("\n") +
-				   GAMETEXT_XMOTOLEVELSTATS_DEATHS(v_nbDied)        + std::string("\n") +
-				   GAMETEXT_XMOTOLEVELSTATS_RESTART(v_nbRestart)    + std::string("\n") +
-				   GAMETEXT_XMOTOGLOBALSTATS_TIMEPLAYED
-				   ).c_str(),
-	   v_nbPlayed, v_nbCompleted, v_nbDied, v_nbRestart,
-	   GameApp::formatTime(v_playedTime).c_str());
-  
-  m_statsFg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(c_tmp);
-  v_pDb->read_DB_free(v_result);
-
+  /* prepare stats */
+  makeStatsStr();
 }
 
 bool StatePreplaying::shouldBeAnimated() const {
@@ -317,13 +281,8 @@ bool StatePreplaying::render()
     StateScene::render();
   }
 
-  /* display stats */
-  FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
-  v_fm->printString(m_statsFg,
-		    GameApp::instance()->getDrawLib()->getDispWidth()  - m_statsFg->realWidth()  -5,
-		    GameApp::instance()->getDrawLib()->getDispHeight() - m_statsFg->realHeight() -5,
-		    MAKE_COLOR(230,255,255,210), true);
-
+  displayStats();
+  
   return true;
 }
 
