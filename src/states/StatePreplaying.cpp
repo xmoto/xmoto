@@ -237,7 +237,7 @@ void StatePreplaying::enter()
 				   GAMETEXT_XMOTOLEVELSTATS_FINISHED(v_nbCompleted) + std::string("\n") +
 				   GAMETEXT_XMOTOLEVELSTATS_DEATHS(v_nbDied)        + std::string("\n") +
 				   GAMETEXT_XMOTOLEVELSTATS_RESTART(v_nbRestart)    + std::string("\n") +
-				   GAMETEXT_XMOTOGLOBALSTATS_TIMEPLAYED             + std::string("\n")
+				   GAMETEXT_XMOTOGLOBALSTATS_TIMEPLAYED
 				   ).c_str(),
 	   v_nbPlayed, v_nbCompleted, v_nbDied, v_nbRestart,
 	   GameApp::formatTime(v_playedTime).c_str());
