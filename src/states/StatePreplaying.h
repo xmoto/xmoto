@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateScene.h"
 
 class CameraAnimation;
+class FontGlyph;
 
 class StatePreplaying : public StateScene {
   public:
@@ -59,6 +60,9 @@ class StatePreplaying : public StateScene {
 
   /* animation */
   CameraAnimation* m_cameraAnim;
+
+  /* stats to display */
+  FontGlyph* m_statsFg;
 };
 
 #endif
