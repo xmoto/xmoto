@@ -718,6 +718,10 @@ void GameApp::requestEnd() {
   m_bQuit = true;
 }
 
+bool GameApp::isRequestingEnd() {
+  return m_bQuit;
+}
+
 void GameApp::playMusic(const std::string& i_music) {
   if( (XMSession::instance()->enableAudio() && XMSession::instance()->enableMenuMusic()) || i_music == "") {
     if(i_music != m_playingMusic) {

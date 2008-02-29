@@ -103,6 +103,23 @@ void StatePlaying::leave()
       m_universe->getScenes()[i]->setInfos("");
     }
   }
+
+  if(GameApp::instance()->isRequestingEnd()) {
+    // when end if forced, update stats as aborted
+    if(m_universe != NULL) {
+      if(m_universe->getScenes().size() == 1) {
+	if(m_universe->getScenes()[0]->Players().size() == 1) {
+	  if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
+	     m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
+	    
+	    xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->profile(),
+							     m_universe->getScenes()[0]->getLevelSrc()->Id(),
+							     m_universe->getScenes()[0]->getTime());
+	  }
+	}
+      }
+    }
+  }
 }
 
 void StatePlaying::enterAfterPop()
