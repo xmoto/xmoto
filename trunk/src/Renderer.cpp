@@ -2934,6 +2934,10 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
 				     i_filterUglyColor.Alpha()), pBike->Head2P,pBikeParms->fHeadSize);
       }
     }   
+
+    if(XMSession::instance()->debug()) {
+      _RenderCircle(10, MAKE_COLOR(255, 0, 0, 255), pBike->CenterP, 0.2);
+    }
   }
 
   void GameRenderer::_DrawRotatedMarker(Vector2f Pos,dReal *pfRot) {
