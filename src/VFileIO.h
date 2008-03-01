@@ -95,7 +95,8 @@ class FS {
   static FileHandle *openOFile(std::string Path);
   static FileHandle *openIFile(std::string Path, bool i_includeCurrentDir = false);
   static void closeFile(FileHandle *pfh);
-  
+  static bool areSamePath(const std::string& i_path1, const std::string& i_path2);
+
   static bool readBuf(FileHandle *pfh,char *pcBuf, unsigned int nBufSize);
   static bool writeBuf(FileHandle *pfh,char *pcBuf, unsigned int nBufSize);     
   static bool setOffset(FileHandle *pfh,int nOffset);

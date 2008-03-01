@@ -1326,4 +1326,10 @@ std::string FS::FullPath(const std::string& i_relative_path) {
   return i_relative_path;
 }
 
-
+bool FS::areSamePath(const std::string& i_path1, const std::string& i_path2) {
+#ifdef WIN32
+  return txtToLower(i_path1) == txtToLower(i_path2);
+#else
+  return i_path1 == i_path2;
+#endif
+}
