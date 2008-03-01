@@ -180,7 +180,7 @@ public:
   void playerEntersZone(int i_player, Zone *pZone);
   void playerLeavesZone(int i_player, Zone *pZone);
   void playerTouchesEntity(int i_player, std::string p_entityID, bool p_bTouchedWithHead);
-  void addForceToPlayer(int i_player, const Vector2f& i_force);
+  void addForceToPlayer(int i_player, const Vector2f& i_force, int i_startTime, int i_endTime);
   void entityDestroyed(const std::string& i_entityId);
   void addDynamicObject(SDynamicObject* p_obj);
   void removeSDynamicOfObject(std::string pObject);

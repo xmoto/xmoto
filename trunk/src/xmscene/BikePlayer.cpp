@@ -31,7 +31,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* This is the magic depth factor :)  - tweak to obtain max. stability */
 #define DEPTH_FACTOR    2
 
-
 ReplayBiker::ReplayBiker(std::string i_replayFile, Theme *i_theme, BikerTheme* i_bikerTheme)
 :Ghost(i_replayFile, true, i_theme, i_bikerTheme,
        TColor(255, 255, 255, 0),
@@ -69,8 +68,6 @@ PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_g
   m_clearDynamicTouched = false;
   m_lastSqueekTime = 0;
 
-  m_forceToAdd = Vector2f(0.0, 0.0);
-
   clearStates();
   initPhysics(i_gravity);
   initToPosition(i_position, i_direction, i_gravity);
@@ -78,6 +75,9 @@ PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_g
 }
 
 PlayerBiker::~PlayerBiker() {
+  for(unsigned int i=0; i<m_externalForces.size(); i++) {
+    delete m_externalForces[i];
+  }
   uninitPhysics();
 }
 
@@ -199,17 +199,16 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
     if(!dBodyIsEnabled(m_FrameBodyID)) dBodyEnable(m_FrameBodyID);
   }
 
+  /* add external force */
+  Vector2f v_forceToAdd = determineForceToAdd(i_time);
+  if(v_forceToAdd != Vector2f(0.0, 0.0)) {
+    resetAutoDisabler();
+    dBodyEnable(m_FrameBodyID);
+    dBodyAddForce(m_FrameBodyID, v_forceToAdd.x, v_forceToAdd.y, 0.0);
+  }
+
   //printf("%d",bSleep);
-
   if(!bSleep) {
-
-    /* add external force */
-    if(m_forceToAdd != Vector2f(0.0, 0.0)) {
-      dBodyEnable(m_FrameBodyID);
-      dBodyAddForce(m_FrameBodyID, m_forceToAdd.x, m_forceToAdd.y, 0.0);
-      m_forceToAdd = Vector2f(0.0, 0.0);
-    }
-
     /* Update front suspension */
     Vector2f Fq = m_bikeState.RFrontWheelP - m_bikeState.FrontWheelP;
     Vector2f Fqv = Fq - m_bikeState.PrevFq;
@@ -834,8 +833,6 @@ void PlayerBiker::clearStates() {
   if(isDead() == false && isFinished() == false) {
     /* BIKE_C */
     memset(&m_BikeC,0,sizeof(m_BikeC));
-
-    m_forceToAdd = Vector2f(0.0, 0.0);
   }
 }
 
@@ -1265,9 +1262,8 @@ void PlayerBiker::setBodyDetach(bool state) {
   }
 }
 
-void PlayerBiker::addBodyForce(const Vector2f& i_force) {
-  m_forceToAdd += i_force;
-  resetAutoDisabler();
+void PlayerBiker::addBodyForce(int i_time, const Vector2f& i_force, int i_startTime, int i_endTime) {
+  m_externalForces.push_back(new ExternalForce(i_startTime, i_endTime, i_force));
 }
 
 void PlayerBiker::resetAutoDisabler() {
@@ -1284,4 +1280,48 @@ float PlayerBiker::howMuchSqueek() {
 
 bool PlayerBiker::getRenderBikeFront() {
   return m_bodyDetach == false;
+}
+
+Vector2f PlayerBiker::determineForceToAdd(int i_time) {
+  unsigned int i;
+  Vector2f v_res = Vector2f(0.0, 0.0);
+
+  // compute force
+  for(unsigned int i=0; i<m_externalForces.size(); i++) {
+    if(m_externalForces[i]->startTime() <= i_time && (m_externalForces[i]->endTime() >= i_time || m_externalForces[i]->endTime() == 0)) {
+      v_res += m_externalForces[i]->force();
+    }
+  }
+
+  // clean forces
+  i = 0;
+  while(i < m_externalForces.size()) {
+    // if duration if <= 0, keep for ever
+    if(m_externalForces[i]->endTime() < i_time && m_externalForces[i]->endTime() != 0) {
+      delete m_externalForces[i];
+      m_externalForces.erase(m_externalForces.begin() + i);
+    }
+    i++;
+  }
+
+  return v_res;
+}
+
+
+ExternalForce::ExternalForce(int i_startTime, int i_endTime, Vector2f i_force) {
+  m_startTime = i_startTime;
+  m_endTime   = i_endTime;
+  m_force     = i_force;
+}
+
+int ExternalForce::startTime() {
+  return m_startTime;
+}
+
+int ExternalForce::endTime() {
+  return m_endTime;
+}
+
+Vector2f ExternalForce::force() {
+  return m_force;
 }

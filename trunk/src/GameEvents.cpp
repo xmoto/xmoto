@@ -1854,14 +1854,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   : MotoGameEvent(p_eventTime) {
     m_force = Vector2f(0.0, 0.0);
     m_player = 0;
+    m_startTime = m_endTime = 0;
   }
 
   MGE_AddForceToPlayer::MGE_AddForceToPlayer(int p_eventTime,
 					     const Vector2f& i_force,
+					     int i_startTime, int i_endTime,
 					     int i_player
 					     ) 
     : MotoGameEvent(p_eventTime) {
       m_force = i_force;
+      m_startTime = i_startTime;
+      m_endTime   = i_endTime;
       m_player = i_player;
     }
 
@@ -1869,19 +1873,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   } 
   
   void MGE_AddForceToPlayer::doAction(MotoGame *p_pMotoGame) {
-    p_pMotoGame->addForceToPlayer(m_player, m_force);
+    p_pMotoGame->addForceToPlayer(m_player, m_force, m_startTime, m_endTime);
   }
 
   void MGE_AddForceToPlayer::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
     Buffer << m_force.x;
     Buffer << m_force.y;
+    Buffer << m_startTime;
+    Buffer << m_endTime;
     Buffer << m_player;
   }
   
   void MGE_AddForceToPlayer::unserialize(DBuffer &Buffer) {
     Buffer >> m_force.x;
     Buffer >> m_force.y;
+    Buffer >> m_startTime;
+    Buffer >> m_endTime;
     Buffer >> m_player;
   }
 

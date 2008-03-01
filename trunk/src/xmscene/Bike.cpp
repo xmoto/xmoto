@@ -628,6 +628,5 @@ void BikeState::interpolateGameState(std::vector<BikeState*> &i_ghostBikeStates,
     pBikeS->GameTime = GameApp::floatToTime(pReplayState->fGameTime);
   }
 
-void Biker::addBodyForce(const Vector2f& i_force) {
-  
+void Biker::addBodyForce(int i_time, const Vector2f& i_force, int i_startTime, int i_endTime) {
 }

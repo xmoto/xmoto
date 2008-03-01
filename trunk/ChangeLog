@@ -1,7 +1,10 @@
 X-Moto 0.4.2 2007-
 -----------------------
+ * Game.AddPenaltyTime() script function
+ * Game.AddForceToPlayer() script function
  * --cleanNoWWWLevels to clean levels which are no longer available on the website (move them into ~/.xmoto/Trash)
-
+ * some other minor modifications
+	
 X-Moto 0.4.1 2007-02-13
 -----------------------
  * remove svnversion dependency for compilation

@@ -26,6 +26,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SomersaultCounter.h"
 #include "BikeController.h"
 
+class ExternalForce {
+public:
+  ExternalForce(int i_startTime, int i_endTime, Vector2f i_force);
+  int startTime();
+  int endTime();
+  Vector2f force();
+
+private:
+  int m_startTime;
+  int m_endTime;
+  Vector2f m_force;
+};
+
+
 class ReplayBiker : public Ghost {
  public:
   ReplayBiker(std::string i_replayFile, Theme *i_theme, BikerTheme* i_bikerTheme);
@@ -48,7 +62,7 @@ class PlayerBiker : public Biker {
   std::string getDescription() const;
   void setBodyDetach(bool state);
 
-  virtual void addBodyForce(const Vector2f& i_force);
+  virtual void addBodyForce(int i_time, const Vector2f& i_force, int i_startTime, int i_endTime);
 
   float getBikeEngineSpeed();
   float getBikeLinearVel();
@@ -70,6 +84,9 @@ class PlayerBiker : public Biker {
   int m_lastSqueekTime;
   bool m_bSqueeking;
   float m_fHowMuchSqueek;
+
+  std::vector<ExternalForce*> m_externalForces;
+  Vector2f determineForceToAdd(int i_time);
 
   /* */
   Vector2f m_PrevRearWheelP;          /* Prev. rear wheel position */
@@ -130,8 +147,6 @@ class PlayerBiker : public Biker {
   dWorldID m_WorldID;                 /* World ID */
 
   bool m_clearDynamicTouched;
-
-  Vector2f m_forceToAdd;
 
   /* ***** */
 
