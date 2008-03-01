@@ -1263,7 +1263,8 @@ void PlayerBiker::setBodyDetach(bool state) {
 }
 
 void PlayerBiker::addBodyForce(int i_time, const Vector2f& i_force, int i_startTime, int i_endTime) {
-  m_externalForces.push_back(new ExternalForce(i_startTime, i_endTime, i_force));
+  // endtime is 0 => infinite, else, the time is relativ to i_time
+  m_externalForces.push_back(new ExternalForce(i_time + i_startTime, i_endTime == 0 ? 0 : i_time + i_endTime, i_force));
 }
 
 void PlayerBiker::resetAutoDisabler() {
