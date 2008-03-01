@@ -187,7 +187,7 @@ class Biker {
   const TColor& getColorFilter() const;
   const TColor& getUglyColorFilter() const;
 
-  virtual void addBodyForce(const Vector2f& i_force);
+  virtual void addBodyForce(int i_time, const Vector2f& i_force, int i_startTime, int i_endTime);
 
   void setInterpolation(bool bValue);
 

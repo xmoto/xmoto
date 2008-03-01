@@ -459,7 +459,7 @@ class MGE_SetPlayerPosition : public MotoGameEvent {
 class MGE_AddForceToPlayer : public MotoGameEvent {
  public:
   MGE_AddForceToPlayer(int p_eventTime);
-  MGE_AddForceToPlayer(int p_eventTime, const Vector2f& i_force, int i_player);
+  MGE_AddForceToPlayer(int p_eventTime, const Vector2f& i_force, int i_startTime, int i_endTime, int i_player);
   ~MGE_AddForceToPlayer();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -472,6 +472,7 @@ class MGE_AddForceToPlayer : public MotoGameEvent {
 
  private:
   Vector2f m_force;
+  int      m_startTime, m_endTime;
   int      m_player;
 };
 

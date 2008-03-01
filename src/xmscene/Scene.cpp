@@ -1027,9 +1027,9 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  void MotoGame::addForceToPlayer(int i_player, const Vector2f& i_force) {
-    m_players[i_player]->addBodyForce(i_force);
-  }
+  void MotoGame::addForceToPlayer(int i_player, const Vector2f& i_force, int i_startTime, int i_endTime) {
+    m_players[i_player]->addBodyForce(m_time, i_force, i_startTime, i_endTime);
+ }
 
   void MotoGame::playerEntersZone(int i_player, Zone *pZone) {
     if(m_playEvents) {

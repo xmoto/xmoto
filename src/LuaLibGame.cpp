@@ -747,6 +747,8 @@ int LuaLibGame::L_Game_AddForceToPlayer(lua_State *pL) {
   m_exec_world->createGameEvent(new MGE_AddForceToPlayer(m_exec_world->getTime(),
 							 Vector2f(X_luaL_check_number(pL,1),
 								  X_luaL_check_number(pL,2)),
-							 (int)X_luaL_check_number(pL,3)));
+							 (int)X_luaL_check_number(pL,3),
+							 (int)X_luaL_check_number(pL,4),
+							 (int)X_luaL_check_number(pL,5)));
   return 0;
 }  
