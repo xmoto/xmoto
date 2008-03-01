@@ -259,7 +259,7 @@
 		<vertex x="-1.506775" y="-1.994472"/>
 		<vertex x="-1.506775" y="0.705527"/>
 		<vertex x="-2.306775" y="2.005528"/>
-		<vertex x="-2.306775" y="3.305528" edge="Redbricks"/>
+		<vertex x="-2.306775" y="3.305528" edge="RedBricks"/>
 		<vertex x="-1.606776" y="3.305528"/>
 		<vertex x="-1.606776" y="4.305530" edge="RedBricks"/>
 		<vertex x="-1.006775" y="4.305530"/>
