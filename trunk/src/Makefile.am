@@ -57,6 +57,8 @@ helpers_SOURCES = helpers/VMath.h             \
                   helpers/HighPrecisionTimer.h \
 		  helpers/utf8.h   \
 		  helpers/utf8.cpp \
+		  helpers/Text.h   \
+		  helpers/Text.cpp \
                   helpers/Environment.h \
                   helpers/Environment.cpp \
 		  helpers/Log.h \

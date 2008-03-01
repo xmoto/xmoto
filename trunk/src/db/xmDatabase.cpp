@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWW.h"
 #include "helpers/Log.h"
 #include "XMSession.h"
+#include "VFileIO.h"
 
 #define XMDB_VERSION 19
 
@@ -76,8 +77,10 @@ void xmDatabase::init(const std::string& i_dbFile,
   }
 
   /* check if gameDir and userDir are the same - otherwise, the computer probably changed */
-  if(i_gameDir != getXmDbGameDir() || i_userDir != getXmDbUserDir()
-     || i_binPackCheckSum != getXmDbBinPackCheckSum()) {
+  if(FS::areSamePath(i_gameDir, getXmDbGameDir()) == false ||
+     FS::areSamePath(i_userDir, getXmDbUserDir()) == false ||
+     i_binPackCheckSum != getXmDbBinPackCheckSum()
+     ) {
     m_requiredLevelsUpdateAfterInit  = true;
     m_requiredReplaysUpdateAfterInit = true;
     m_requiredThemesUpdateAfterInit  = true;
