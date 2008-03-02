@@ -1196,7 +1196,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer << m_entityID;
     Buffer << m_fInitAngle;
     Buffer << m_fRadius;
-    Buffer << GameApp::timeToFloat(m_period);
+    Buffer << GameApp::timeToFloat(m_period*100);
     Buffer << m_startTime;
     Buffer << m_endTime;
   }
@@ -1211,7 +1211,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer >> m_startTime;
     Buffer >> m_endTime;
 
-    m_period = GameApp::floatToTime(v_fperiod);
+    m_period = GameApp::floatToTime(v_fperiod)/100;
   }
 
   GameEventType MGE_SetDynamicEntityRotation::SgetType() {
@@ -1268,7 +1268,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer << m_entityID;
     Buffer << m_x;
     Buffer << m_y;
-    Buffer << GameApp::timeToFloat(m_period);
+    Buffer << GameApp::timeToFloat(m_period*100);
     Buffer << m_startTime;
     Buffer << m_endTime;
   }
@@ -1283,7 +1283,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer >> m_startTime;
     Buffer >> m_endTime;
 
-    m_period = GameApp::floatToTime(v_fperiod);
+    m_period = GameApp::floatToTime(v_fperiod)/100;
   }
 
   GameEventType MGE_SetDynamicEntityTranslation::SgetType() {
@@ -1379,7 +1379,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer << m_blockID;
     Buffer << m_fInitAngle;
     Buffer << m_fRadius;
-    Buffer << GameApp::timeToFloat(m_period);
+    Buffer << GameApp::timeToFloat(m_period*100);
     Buffer << m_startTime;
     Buffer << m_endTime;
   }
@@ -1394,7 +1394,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer >> m_startTime;
     Buffer >> m_endTime;
 
-    m_period = GameApp::floatToTime(v_fperiod);
+    m_period = GameApp::floatToTime(v_fperiod)/100;
   }
 
   GameEventType MGE_SetDynamicBlockRotation::SgetType() {
@@ -1451,7 +1451,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer << m_blockID;
     Buffer << m_x;
     Buffer << m_y;
-    Buffer << GameApp::timeToFloat(m_period);
+    Buffer << GameApp::timeToFloat(m_period*100);
     Buffer << m_startTime;
     Buffer << m_endTime;
   }
@@ -1466,7 +1466,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer >> m_startTime;
     Buffer >> m_endTime;
 
-    m_period = GameApp::floatToTime(v_fperiod);
+    m_period = GameApp::floatToTime(v_fperiod)/100;
   }
 
   GameEventType MGE_SetDynamicBlockTranslation::SgetType() {
@@ -1478,6 +1478,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   std::string MGE_SetDynamicBlockTranslation::toString() {
+    printf("%.2f %.2f %i %i %i\n", m_x, m_y, m_period, m_startTime, m_endTime);
     return "Dynamic translation is set for block " + m_blockID;
   }
 
@@ -1683,7 +1684,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void MGE_SetDynamicBlockSelfRotation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
     Buffer << m_blockID;
-    Buffer << GameApp::timeToFloat(m_period);
+    Buffer << GameApp::timeToFloat(m_period*100);
     Buffer << m_startTime;
     Buffer << m_endTime;
   }
@@ -1696,7 +1697,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer >> m_startTime;
     Buffer >> m_endTime;
 
-    m_period = GameApp::floatToTime(v_fperiod);
+    m_period = GameApp::floatToTime(v_fperiod/100);
   }
   
   GameEventType MGE_SetDynamicBlockSelfRotation::SgetType() {
@@ -1745,7 +1746,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void MGE_SetDynamicEntitySelfRotation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
     Buffer << m_entityID;
-    Buffer << GameApp::timeToFloat(m_period);
+    Buffer << GameApp::timeToFloat(m_period*100);
     Buffer << m_startTime;
     Buffer << m_endTime;
   }
@@ -1758,7 +1759,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer >> m_startTime;
     Buffer >> m_endTime;
 
-    m_period = GameApp::floatToTime(v_fperiod);
+    m_period = GameApp::floatToTime(v_fperiod/100);
   }
   
   GameEventType MGE_SetDynamicEntitySelfRotation::SgetType() {
