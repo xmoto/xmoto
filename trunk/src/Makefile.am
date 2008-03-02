@@ -138,6 +138,12 @@ states_SOURCES = states/StateManager.h       	  \
                  states/StatePlaying.cpp         \
                  states/StatePreplaying.h        \
                  states/StatePreplaying.cpp      \
+                 states/StatePreplayingGame.h    \
+                 states/StatePreplayingGame.cpp  \
+                 states/StatePreplayingReplay.h  \
+                 states/StatePreplayingReplay.cpp  \
+                 states/StatePreplayingCredits.h   \
+                 states/StatePreplayingCredits.cpp \
                  states/StateReplaying.h         \
                  states/StateReplaying.cpp       \
 		 states/AttractMode.cpp          \

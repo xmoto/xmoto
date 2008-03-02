@@ -22,8 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
-#include "StatePreplaying.h"
-#include "StateCreditsMode.h"
+#include "StatePreplayingGame.h"
+#include "StatePreplayingCredits.h"
 
 StateHelp::StateHelp(bool drawStateBehind,
 		     bool updateStatesBehind):
@@ -53,7 +53,7 @@ void StateHelp::checkEvents() {
 
     try {
       GameApp::instance()->setCurrentPlayingList(NULL);
-      StateManager::instance()->pushState(new StatePreplaying("tut1", false));
+      StateManager::instance()->pushState(new StatePreplayingGame("tut1", false));
     } catch(Exception &e) {
     }
   }
@@ -64,7 +64,7 @@ void StateHelp::checkEvents() {
     pCreditsButton->setClicked(false);
 
     try {
-      StateManager::instance()->pushState(new StateCreditsMode("credits.rpl"));      
+      StateManager::instance()->pushState(new StatePreplayingCredits("credits.rpl"));      
     } catch(Exception &e) {
     }
   }

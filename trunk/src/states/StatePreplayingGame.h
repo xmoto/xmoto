@@ -18,31 +18,23 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEREPLAYING_H__
-#define __STATEREPLAYING_H__
+#ifndef __STATEPREPLAYINGGAME_H__
+#define __STATEPREPLAYINGGAME_H__
 
-#include "StateScene.h"
+#include "StatePreplaying.h"
 
-class ReplayBiker;
-
-class StateReplaying : public StateScene {
+class StatePreplayingGame : public StatePreplaying {
   public:
-  StateReplaying(Universe* i_universe, const std::string& i_replay, ReplayBiker* i_replayBiker);
-  virtual ~StateReplaying();
-  
-  virtual void enter();
-  virtual void leave();
-  
-  virtual bool update();
-  /* input */
-  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  StatePreplayingGame(const std::string i_idlevel, bool i_sameLevel);
+  virtual ~StatePreplayingGame();
 
- protected:
-  std::string m_replay;
-  ReplayBiker* m_replayBiker; /* replay watched */
+  protected:
+  virtual void initUniverse();
+  virtual void preloadLevels();
+  virtual void initPlayers();
+  virtual void runPlaying();
 
   private:
-  bool m_stopToUpdate;
 };
 
 #endif

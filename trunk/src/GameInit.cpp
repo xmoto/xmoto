@@ -47,7 +47,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateManager.h"
 #include "states/StateEditProfile.h"
 #include "states/StateReplaying.h"
-#include "states/StatePreplaying.h"
+#include "states/StatePreplayingReplay.h"
+#include "states/StatePreplayingGame.h"
 #include "states/StateMainMenu.h"
 #include "states/StateMessageBox.h"
 
@@ -365,12 +366,12 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   }
   if((m_PlaySpecificLevelId != "")) {
     /* ======= PLAY SPECIFIC LEVEL ======= */
-    StateManager::instance()->pushState(new StatePreplaying(m_PlaySpecificLevelId, false));
+    StateManager::instance()->pushState(new StatePreplayingGame(m_PlaySpecificLevelId, false));
     Logger::Log("Playing as '%s'...", XMSession::instance()->profile().c_str());
   }
   else if(m_PlaySpecificReplay != "") {
     /* ======= PLAY SPECIFIC REPLAY ======= */
-    StateManager::instance()->pushState(new StateReplaying(m_PlaySpecificReplay));
+    StateManager::instance()->pushState(new StatePreplayingReplay(m_PlaySpecificReplay, false));
     }
   else {
     /* display what must be displayed */

@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateReplaying.h"
+#include "StatePreplayingReplay.h"
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
 #include "xmscene/BikePlayer.h"
@@ -33,25 +34,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SysMessage.h"
 #include "VideoRecorder.h"
 
-StateReplaying::StateReplaying(const std::string& i_replay) :
+StateReplaying::StateReplaying(Universe* i_universe, const std::string& i_replay, ReplayBiker* i_replayBiker) :
   StateScene()
 {
+  m_name         = "StateReplaying";
+  m_universe     = i_universe;
   m_replay       = i_replay;
+  m_replayBiker  = i_replayBiker;
   m_stopToUpdate = false;
   m_updateFps = 100;
   m_renderFps = 50;
-  m_name      = "StateReplaying";
 }
 
 StateReplaying::~StateReplaying()
 {
+  // don't clean the replay biker while the scene clean its players
+  // delete m_replayBiker;
 }
 
 void StateReplaying::enter()
 {
   StateScene::enter();
-
-  GameApp*  pGame  = GameApp::instance();
 
   m_stopToUpdate = false;
   GameRenderer::instance()->setShowEngineCounter(false);
@@ -64,79 +67,7 @@ void StateReplaying::enter()
     GameRenderer::instance()->setShowTimePanel(false);
   }
 
-  m_replayBiker = NULL;
-
-  m_universe =  new Universe();
-
   try {
-    m_universe->initPlay(1, false);
-
-    try {
-      if(m_universe->getScenes().size() > 0) {
-	m_replayBiker = m_universe->getScenes()[0]->addReplayFromFile(m_replay,
-								      Theme::instance(),
-								      Theme::instance()->getPlayerTheme(),
-								      XMSession::instance()->enableEngineSound());
-	m_universe->getScenes()[0]->getCamera()->setPlayerToFollow(m_replayBiker);
-	m_universe->getScenes()[0]->getCamera()->setScroll(false, m_universe->getScenes()[0]->getGravity());
-      }
-    } catch(Exception &e) {
-      delete m_universe;
-      m_universe = NULL;
-      StateManager::instance()->replaceState(new StateMessageBox(NULL, "Unable to read the replay: " + e.getMsg(), UI_MSGBOX_OK));
-      return;
-    }
-
-    /* Fine, open the level */
-    try {
-      if(m_replayBiker != NULL) {
-	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	  m_universe->getScenes()[i]->loadLevel(xmDatabase::instance("main"), m_replayBiker->levelId());
-	}
-      }
-    } catch(Exception &e) {
-      delete m_universe;
-      m_universe = NULL;
-      StateManager::instance()->replaceState(new StateMessageBox(this, e.getMsg(), UI_MSGBOX_OK));
-      return;
-    }
-    
-    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-      if(m_universe->getScenes()[i]->getLevelSrc()->isXMotoTooOld()) {
-	Logger::Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",
-		    m_replayBiker->levelId().c_str(),
-		    m_replay.c_str()
-		    );
-	
-	char cBuf[256];
-	sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
-		m_universe->getScenes()[i]->getLevelSrc()->getRequiredVersion().c_str());
-	abortPlaying();
-	StateManager::instance()->replaceState(new StateMessageBox(this, cBuf, UI_MSGBOX_OK));
-	return;
-      }
-    }
-    
-    /* Init level */    
-    InputHandler::instance()->reset();
-
-    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-      m_universe->getScenes()[i]->prePlayLevel(NULL, false);
-    }
-
-    /* add the ghosts */
-    if(XMSession::instance()->enableGhosts()) {
-      try {
-	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	  pGame->addGhosts(m_universe->getScenes()[i], Theme::instance());
-	}
-      } catch(Exception &e) {
-	/* anyway */
-      }
-    }
-    
-    /* *** */
-    
     if(XMSession::instance()->hidePlayingInformation() == false) {
       // display replay informations
       char c_tmp[1024];
@@ -147,13 +78,6 @@ void StateReplaying::enter()
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name() + " " + std::string(c_tmp));
       }
-    }
-
-    GameRenderer::instance()->prepareForNewLevel(m_universe);
-
-    if(m_universe->getScenes().size() > 0) {
-      // play music of the first world
-      GameApp::instance()->playMusic(m_universe->getScenes()[0]->getLevelSrc()->Music());
     }
 
     if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
@@ -237,7 +161,8 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
 	} else {
 	  // rerun the replay
 	  closePlaying();
-	  StateManager::instance()->replaceState(new StateReplaying(m_replay));
+	  GameRenderer::instance()->unprepareForNewLevel();
+	  StateManager::instance()->replaceState(new StatePreplayingReplay(m_replay, true));
 	}
       }
     }

@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateDownloadGhost.h"
+#include "StatePreplayingReplay.h"
 #include "StateReplaying.h"
 #include "thread/DownloadGhostThread.h"
 #include "helpers/Log.h"
@@ -60,7 +61,7 @@ void StateDownloadGhost::callAfterThreadFinished(int threadResult)
     if(threadResult == 0 && m_launchReplaying == true){
       std::string msg = "Replay to play: " + m_replayName;
       Logger::Log(msg.c_str());
-      StateManager::instance()->replaceState(new StateReplaying(m_replayName));
+      StateManager::instance()->replaceState(new StatePreplayingReplay(m_replayName, false));
     }
     else{
       StateManager::instance()->sendAsynchronousMessage("GHOST_DOWNLOADED");

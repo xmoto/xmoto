@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   //#include "LevelsManager.h"
 #include "gui/specific/GUIXMoto.h"
 #include "XMSession.h"
-#include "states/StatePreplaying.h"
+#include "states/StatePreplayingGame.h"
 #include "states/StateLevelInfoViewer.h"
 #include "states/StateDownloadGhost.h"
 
@@ -107,7 +107,7 @@ void StateLevelPackViewer::checkEvents()
     std::string i_level = pList->getSelectedLevel();
     if(i_level != "") {
       GameApp::instance()->setCurrentPlayingList(pList);
-      StateManager::instance()->pushState(new StatePreplaying(i_level, false));
+      StateManager::instance()->pushState(new StatePreplayingGame(i_level, false));
     }
   }
 

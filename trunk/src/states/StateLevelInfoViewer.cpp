@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateLevelInfoViewer.h"
+#include "StatePreplayingReplay.h"
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
 #include "XMSession.h"
@@ -102,7 +103,7 @@ void StateLevelInfoViewer::checkEvents()
       if(pListEntry != NULL && !pListEntry->Text.empty()) {
 	/* Do it captain */
 	std::string playSpecificReplay = pListEntry->Text[0];
-	StateManager::instance()->pushState(new StateReplaying(playSpecificReplay));
+	StateManager::instance()->pushState(new StatePreplayingReplay(playSpecificReplay, false));
       }
     }
   }

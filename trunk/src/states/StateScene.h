@@ -39,6 +39,7 @@ class StateScene : public GameState {
  virtual void onRenderFlush();
 
  /* input */
+ virtual void keyUp(int nKey, SDLMod mod);
  virtual void keyDown(int nKey, SDLMod mod,int nChar);
 
  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);

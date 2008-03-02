@@ -25,8 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "Universe.h"
 
-StateCreditsMode::StateCreditsMode(const std::string& i_replay):
-  StateReplaying(i_replay)
+StateCreditsMode::StateCreditsMode(Universe* i_universe, const std::string& i_replay, ReplayBiker* i_replayBiker):
+StateReplaying(i_universe, i_replay, i_replayBiker)
 {
   m_credits = new Credits();
   m_name    = "StateCreditsMode";
