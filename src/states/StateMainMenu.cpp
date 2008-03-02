@@ -24,7 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "gui/specific/GUIXMoto.h"
 #include "XMSession.h"
-#include "StatePreplaying.h"
+#include "StatePreplayingGame.h"
+#include "StatePreplayingReplay.h"
 #include "StateLevelInfoViewer.h"
 #include "StateMessageBox.h"
 #include "StateHelp.h"
@@ -225,7 +226,7 @@ void StateMainMenu::checkEventsMainWindow() {
     } catch(Exception &e) {
       v_id_level = "tut1";
     }
-    StateManager::instance()->pushState(new StatePreplaying(v_id_level, false));
+    StateManager::instance()->pushState(new StatePreplayingGame(v_id_level, false));
   }
 
   // quit
@@ -393,7 +394,7 @@ void StateMainMenu::checkEventsLevelsFavoriteTab() {
 
     if(v_id_level != "") {
       GameApp::instance()->setCurrentPlayingList(v_list);
-      StateManager::instance()->pushState(new StatePreplaying(v_id_level, false));
+      StateManager::instance()->pushState(new StatePreplayingGame(v_id_level, false));
     }
   }
 
@@ -440,7 +441,7 @@ void StateMainMenu::checkEventsLevelsNewTab() {
 
     if(v_id_level != "") {
       GameApp::instance()->setCurrentPlayingList(v_list);
-      StateManager::instance()->pushState(new StatePreplaying(v_id_level, false));
+      StateManager::instance()->pushState(new StatePreplayingGame(v_id_level, false));
     }
   }
 
@@ -1987,7 +1988,7 @@ void StateMainMenu::checkEventsReplays() {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
-	StateManager::instance()->pushState(new StateReplaying(pListEntry->Text[0]));	  
+	StateManager::instance()->pushState(new StatePreplayingReplay(pListEntry->Text[0], false));
       }
     }
   }

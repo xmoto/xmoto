@@ -43,18 +43,24 @@ class StatePreplaying : public StateScene {
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
 
+ protected:
+  std::string m_idlevel;
+
+  virtual void initUniverse()  = 0;
+  virtual void preloadLevels() = 0;
+  virtual void initPlayers()   = 0;
+  virtual void runPlaying()    = 0;
+  virtual bool shouldBeAnimated() const; // return true wether the animation shoud be done
+  virtual bool needToDownloadGhost();
+
   private:
   void executeOneCommand(std::string cmd);
-  bool needToDownloadGhost();
 
   void secondInitPhase();
   bool m_secondInitPhaseDone;
   bool m_ghostDownloaded;
   bool m_ghostDownloading_failed;
 
-  std::string m_idlevel;
-
-  bool shouldBeAnimated() const; // return true wether the animation shoud be done
   bool m_playAnimation; // must the animation be played ; must be rearmed each time you play a new level
   bool m_sameLevel;
 

@@ -24,10 +24,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateReplaying.h"
 
 class Credits;
+class ReplayBiker;
 
 class StateCreditsMode : public StateReplaying {
   public:
-  StateCreditsMode(const std::string& i_replay);
+  StateCreditsMode(Universe* i_universe, const std::string& i_replay, ReplayBiker* i_replayBiker);
   virtual ~StateCreditsMode();
   
   virtual void enter();

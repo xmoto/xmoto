@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Entity.h"
 #include "StateMessageBox.h"
 #include "drawlib/DrawLib.h"
-#include "StatePreplaying.h"
+#include "StatePreplayingGame.h"
 #include "helpers/Log.h"
 #include "helpers/Text.h"
 #include "CameraAnimation.h"
@@ -193,6 +193,18 @@ void StateScene::onRenderFlush() {
   }
 }
 
+void StateScene::keyUp(int nKey, SDLMod mod) {
+  switch(nKey) {
+  case SDLK_TAB:
+    if(m_cameraAnim != NULL) {
+      if(autoZoom() && m_cameraAnim->allowNextStep()) {
+	m_cameraAnim->goNextStep();
+      }
+    }
+    break;
+  }
+}
+
 void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
 {
   GameApp*  pGame = GameApp::instance();
@@ -223,8 +235,11 @@ void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
   }
   else if(nKey == SDLK_PAGEDOWN){
     nextLevel(false);
-  }
-  else{
+  } else  if(nKey == SDLK_TAB){
+    if(autoZoom() == false) {
+      setAutoZoom(true);
+    }
+  } else{
     GameState::keyDown(nKey, mod, nChar);
   }
 }
@@ -311,7 +326,7 @@ void StateScene::restartLevel(bool i_reloadLevel) {
     }
   }
 
-  StateManager::instance()->replaceState(new StatePreplaying(v_level, true));
+  StateManager::instance()->replaceState(new StatePreplayingGame(v_level, true));
 }
 
 void StateScene::nextLevel(bool i_positifOrder) {
@@ -334,7 +349,7 @@ void StateScene::nextLevel(bool i_positifOrder) {
 
   if(v_nextLevel != "") {
     closePlaying();
-    StateManager::instance()->replaceState(new StatePreplaying(v_nextLevel, v_currentLevel == v_nextLevel));
+    StateManager::instance()->replaceState(new StatePreplayingGame(v_nextLevel, v_currentLevel == v_nextLevel));
   }
 }
 

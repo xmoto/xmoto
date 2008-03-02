@@ -192,11 +192,6 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
   else if(nKey == SDLK_RETURN && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0){
     restartLevel();
   }
-  else if(nKey == SDLK_TAB){
-    if(autoZoom() == false) {
-      setAutoZoom(true);
-    }
-  }
 
 #if defined(ENABLE_ZOOMING)
   else if(nKey == SDLK_KP7){
@@ -349,22 +344,9 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
   StateScene::keyDown(nKey, mod, nChar);
 }
 
-void StatePlaying::keyUp(int nKey, SDLMod mod)
-{
-  switch(nKey) {
-
-  case SDLK_TAB:
-    if(m_cameraAnim != NULL) {
-      if(autoZoom() && m_cameraAnim->allowNextStep()) {
-	m_cameraAnim->goNextStep();
-      }
-    }
-    break;
-    
-  default:
-    InputHandler::instance()->handleInput(m_universe, INPUT_KEY_UP, nKey, mod);
-    StateScene::keyUp(nKey, mod);
-  }
+void StatePlaying::keyUp(int nKey, SDLMod mod) {
+  InputHandler::instance()->handleInput(m_universe, INPUT_KEY_UP, nKey, mod);
+  StateScene::keyUp(nKey, mod);
 }
 
 void StatePlaying::mouseDown(int nButton)
