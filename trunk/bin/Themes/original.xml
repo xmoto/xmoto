@@ -526,6 +526,7 @@
 <music name="batcave" file="batcave.ogg" />
 <music name="blockolando" file="legolodio.ogg" />
 <music name="madeirastew" file="MadeiraStew.ogg" />
+<music name="SpeedItUp" file="speeditup.ogg" />
 
 <sound name="Headcrash"        file="Headcrash.ogg" />
 <sound name="NewHighscore"     file="NewHighscore.ogg" />
