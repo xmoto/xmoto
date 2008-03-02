@@ -266,7 +266,7 @@ void StatePreplaying::secondInitPhase()
 
   try {
     /* add the ghosts */
-    if(XMSession::instance()->enableGhosts()) {
+    if(XMSession::instance()->enableGhosts() && allowGhosts()) {
       try {
 	if(m_universe != NULL) {
 	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
@@ -332,6 +332,10 @@ bool StatePreplaying::needToDownloadGhost()
     return false;
   }
 
+  if(allowGhosts() == false) {
+    return false;
+  }
+
   char **v_result;
   unsigned int nrow;
   std::string res;
@@ -353,4 +357,8 @@ bool StatePreplaying::needToDownloadGhost()
 
   /* search if the replay is already downloaded */
   return (xmDatabase::instance("main")->replays_exists(v_replayName) == false);
+}
+
+bool StatePreplaying::allowGhosts() {
+  return true;
 }

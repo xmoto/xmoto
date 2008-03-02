@@ -52,6 +52,7 @@ class StatePreplaying : public StateScene {
   virtual void runPlaying()    = 0;
   virtual bool shouldBeAnimated() const; // return true wether the animation shoud be done
   virtual bool needToDownloadGhost();
+  virtual bool allowGhosts();
 
   private:
   void executeOneCommand(std::string cmd);

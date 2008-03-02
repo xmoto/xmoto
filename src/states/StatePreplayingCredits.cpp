@@ -37,7 +37,6 @@ bool StatePreplayingCredits::shouldBeAnimated() const {
   return false;
 }
 
-bool StatePreplayingCredits::needToDownloadGhost() {
+bool StatePreplayingCredits::allowGhosts() {
   return false;
 }
-

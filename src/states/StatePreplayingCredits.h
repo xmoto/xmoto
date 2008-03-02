@@ -31,7 +31,7 @@ class StatePreplayingCredits : public StatePreplayingReplay {
   protected:
   virtual void runPlaying();
   virtual bool shouldBeAnimated() const;
-  virtual bool needToDownloadGhost();
+  virtual bool allowGhosts();
 
   private:
 };
