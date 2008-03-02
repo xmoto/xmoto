@@ -198,6 +198,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     /* Do it */
     fp = fopen(BinFile.c_str(),"wb");
+    
+    if(fp == NULL) {
+      throw Exception("Cannot open " + BinFile);
+      return;
+    }
     fwrite("XBI3",4,1,fp);
     
     /* control sum */
