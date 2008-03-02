@@ -627,7 +627,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
                           "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
-                          "WHERE b.finishTime < 25 AND c.id_level IS NULL "
+                          "WHERE b.finishTime < 2500 AND c.id_level IS NULL "
 			  "AND (d.crappy IS NULL OR d.crappy=0) ");           
   v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
   v_pack->setDescription(VPACKAGENAME_DESC_SHORT_LEVELS);
@@ -639,7 +639,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
                           "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
-                          "WHERE b.finishTime >= 25 AND b.finishTime < 60 AND c.id_level IS NULL "
+                          "WHERE b.finishTime >= 2500 AND b.finishTime < 6000 AND c.id_level IS NULL "
 			  "AND (d.crappy IS NULL OR d.crappy=0) ");
   v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
   v_pack->setDescription(VPACKAGENAME_DESC_MEDIUM_LEVELS);
@@ -651,7 +651,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
                           "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
-                          "WHERE b.finishTime >= 60 AND b.finishTime < 120 AND c.id_level IS NULL "
+                          "WHERE b.finishTime >= 6000 AND b.finishTime < 12000 AND c.id_level IS NULL "
 			  "AND (d.crappy IS NULL OR d.crappy=0) ");
   v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
   v_pack->setDescription(VPACKAGENAME_DESC_LONG_LEVELS);
@@ -663,7 +663,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
                           "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
-                          "WHERE b.finishTime >= 120 AND c.id_level IS NULL "
+                          "WHERE b.finishTime >= 12000 AND c.id_level IS NULL "
 			  "AND (d.crappy IS NULL OR d.crappy=0) ");
   v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
   v_pack->setDescription(VPACKAGENAME_DESC_VERY_LONG_LEVELS);
