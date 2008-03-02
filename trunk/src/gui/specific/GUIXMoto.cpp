@@ -19,11 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "GUIXMoto.h"
-#include "../../GameText.h"
-#include "../../VFileIO.h"
-#include "../../Game.h"
-#include "../../LevelsManager.h"
+#include "GameText.h"
+#include "VFileIO.h"
+#include "LevelsManager.h"
 #include "drawlib/DrawLib.h"
+#include "helpers/Text.h"
 
 #define UIQUICKSTART_BORDER 25
 
@@ -93,13 +93,13 @@ void UILevelList::addLevel(const std::string& i_id_level,
     if(i_playerHighscore < 0) {
       pEntry->Text.push_back("--:--:--");
     } else {
-      pEntry->Text.push_back(GameApp::formatTime(i_playerHighscore));
+      pEntry->Text.push_back(formatTime(i_playerHighscore));
     }
 
     if(i_roomHighscore < 0) {
       pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
     } else {
-      pEntry->Text.push_back(GameApp::formatTime(i_roomHighscore));
+      pEntry->Text.push_back(formatTime(i_roomHighscore));
     }
   }
 }  
@@ -107,7 +107,7 @@ void UILevelList::addLevel(const std::string& i_id_level,
 void UILevelList::updateLevel(const std::string& i_id_level, int i_playerHighscore) {
   for(unsigned int i=0; i<getEntries().size(); i++) {
     if(*(reinterpret_cast<std::string *>(getEntries()[i]->pvUser)) == i_id_level) {
-      getEntries()[i]->Text[1] = GameApp::formatTime(i_playerHighscore);
+      getEntries()[i]->Text[1] = formatTime(i_playerHighscore);
     }
   }
 }

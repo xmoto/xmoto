@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikePlayer.h"
 #include "db/xmDatabase.h"
 #include "helpers/Log.h"
+#include "helpers/Text.h"
 #include "XMSession.h"
 #include "drawlib/DrawLib.h"
 #include "Image.h"
@@ -94,19 +95,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   int GameApp::getXMTimeInt(void){
     return SDL_GetTicks();
   }
-
-  std::string GameApp::formatTime(int i_time) {
-    char cBuf[256];
-    int nM, nS, nH;
-
-    nM = i_time/6000;
-    nS = (i_time - nM*6000)/100;
-    nH = i_time - nM*6000 - nS*100;
-
-    snprintf(cBuf, 256, "%02d:%02d:%02d", nM, nS, nH);
-    return cBuf;
-  }
-  
+ 
   /*===========================================================================
   Quits the application
   ===========================================================================*/
@@ -196,27 +185,7 @@ GameApp::GameApp() {
   m_hasKeyboardFocus = true;
   m_isIconified      = false;
 }
-    
-  std::string GameApp::splitText(const std::string &str, int p_breakLineLength) {
-    std::string v_res = "";
-    char c[2] = {' ', '\0'};    
-    int lineLength = 0;
-
-    for(unsigned int i=0; i<str.length(); i++) {
-      if((lineLength > p_breakLineLength && str[i] == ' ') ||
-        str[i] == '\n') {
-        c[0] = '\n';
-        v_res.append(c);
-        lineLength = 0;
-      } else {
-        c[0] = str[i];
-        v_res.append(c);
-        lineLength++;
-      }
-    }
-    return v_res;
-  }
-    
+   
   /*===========================================================================
   Screenshooting
   ===========================================================================*/
@@ -375,7 +344,7 @@ void GameApp::changeVisibility(bool i_visible) {
     v_pDb->read_DB_free(v_result);
     
     if(v_id_profile != "") {
-      return v_roomName + ": " + GameApp::formatTime(v_finishTime) + std::string(" (") + v_id_profile + std::string(")");
+      return v_roomName + ": " + formatTime(v_finishTime) + std::string(" (") + v_id_profile + std::string(")");
     }
      
     return v_roomName + ": " + GAMETEXT_WORLDRECORDNA;

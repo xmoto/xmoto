@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "GameText.h"
 #include "StateFinished.h"
-#include "Game.h"
 #include "XMSession.h"
 #include "drawlib/DrawLib.h"
 #include "Sound.h"
@@ -29,6 +28,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMenuContextReceiver.h"
 #include "Universe.h"
 #include "Replay.h"
+#include "helpers/Text.h"
+#include "Game.h"
 
 /* static members */
 UIRoot* StateFinished::m_sGUI = NULL;
@@ -368,7 +369,7 @@ void StateFinished::makeBestTimesWindow(UIBestTimes *pWindow,
   for(unsigned int i=0; i<nrow; i++) {
     v_finishTime  = atoi(i_db->getResult(v_result, 2, i, 0));
     v_profile     =      i_db->getResult(v_result, 2, i, 1);
-    pWindow->addRow1(GameApp::formatTime(v_finishTime), v_profile);
+    pWindow->addRow1(formatTime(v_finishTime), v_profile);
     if(v_profile == PlayerName &&
        v_finishTime == i_finishTime) n1 = i;
   }
@@ -381,7 +382,7 @@ void StateFinished::makeBestTimesWindow(UIBestTimes *pWindow,
 			  nrow);
     for(unsigned int i=0; i<nrow; i++) {
       v_finishTime  = atoi(i_db->getResult(v_result, 1, i, 0));
-      pWindow->addRow2(GameApp::formatTime(v_finishTime), PlayerName);
+      pWindow->addRow2(formatTime(v_finishTime), PlayerName);
       if(v_finishTime == i_finishTime)
 	n2 = i;
     }

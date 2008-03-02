@@ -19,10 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "BikeGhost.h"
-#include "../Replay.h"
-#include "../GameText.h"
-#include "../Game.h"
-#include "../GameEvents.h"
+#include "Replay.h"
+#include "GameText.h"
+#include "helpers/Text.h"
+#include "GameEvents.h"
+#include "Level.h"
 
 #define INTERPOLATION_MAXIMUM_TIME  300
 #define INTERPOLATION_MAXIMUM_SPACE 5.0
@@ -109,7 +110,7 @@ std::string Ghost::getDescription() const {
   return
     std::string(c_tmp)   +
     "\n(" + m_info + ")" +
-    "\n(" + GameApp::formatTime(m_replay->getFinishTime()) + ")";
+    "\n(" + formatTime(m_replay->getFinishTime()) + ")";
 }
 
 std::string Ghost::getQuickDescription() const {

@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateLevelPackViewer.h"
+#include "helpers/Text.h"
 #include "Game.h"
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
@@ -357,7 +358,7 @@ void StateLevelPackViewer::updateGUI()
 
   /* ministat pack */
   UIStatic* pSomeText = reinterpret_cast<UIStatic *>(m_GUI->getChild("FRAME:MINISTAT"));
-  pSomeText->setCaption(GameApp::formatTime(v_totalProfileTime) + " / " + GameApp::formatTime(v_totalHighscoreTime));
+  pSomeText->setCaption(formatTime(v_totalProfileTime) + " / " + formatTime(v_totalHighscoreTime));
 }
 
 void StateLevelPackViewer::updateInfoFrame() {

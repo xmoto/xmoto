@@ -92,7 +92,6 @@ public:
   static int floatToTime(float ftime);
 
   void quit(void);
-  static std::string formatTime(int i_time);
   static void getMousePos(int *pnX, int *pnY);
   bool haveMouseMoved(void);
       
@@ -128,7 +127,6 @@ public:
 
   bool getHighscoreInfos(const std::string& i_id_level, std::string* io_id_profile, std::string* io_url, bool* o_isAccessible);
 
-  static std::string splitText(const std::string &str, int p_breakLineLength);
   void addLevelToFavorite(const std::string& i_levelId);
 
   // list played

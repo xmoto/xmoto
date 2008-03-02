@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "helpers/VExcept.h"
 #include "helpers/Log.h"
+#include "helpers/Text.h"
 #include "VFileIO.h"
 #include "helpers/SwapEndian.h"
 #include "md5sum/md5file.h"

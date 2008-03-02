@@ -19,10 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StatePreplaying.h"
-#include "Game.h"
 #include "StatePlaying.h"
 #include "helpers/Log.h"
+#include "helpers/Text.h"
 #include "GameText.h"
+#include "Game.h"
 #include "xmscene/Camera.h"
 #include "XMSession.h"
 #include "xmscene/BikePlayer.h"
@@ -187,7 +188,7 @@ void StatePreplaying::enter()
     Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
     delete m_universe;
     m_universe = NULL;
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     return;
   }
 
@@ -311,7 +312,7 @@ void StatePreplaying::secondInitPhase()
   } catch(Exception &e) {
     Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
     closePlaying();
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     return;
   }
 

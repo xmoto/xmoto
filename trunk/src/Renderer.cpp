@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikeGhost.h"
 #include "xmscene/BikePlayer.h"
 #include "helpers/Log.h"
+#include "helpers/Text.h"
 #include "drawlib/DrawLib.h"
 #include "Game.h"
 #include <algorithm>
@@ -2359,16 +2360,16 @@ void GameRenderer::renderTimePanel(MotoGame* i_scene) {
 
   if(pBiker != NULL) {
     if(pBiker->isDead()) {
-      v_fg = v_fm->getGlyph(GameApp::instance()->formatTime(pBiker->deadTime()));
+      v_fg = v_fm->getGlyph(formatTime(pBiker->deadTime()));
     } else {
       if(pBiker->isFinished()) {
-	v_fg = v_fm->getGlyph(GameApp::instance()->formatTime(pBiker->finishTime()));
+	v_fg = v_fm->getGlyph(formatTime(pBiker->finishTime()));
       } else {
-	v_fg = v_fm->getGlyph(GameApp::instance()->formatTime(i_scene->getTime()));
+	v_fg = v_fm->getGlyph(formatTime(i_scene->getTime()));
       }
     }
   } else {
-    v_fg = v_fm->getGlyph(GameApp::instance()->formatTime(i_scene->getTime()));
+    v_fg = v_fm->getGlyph(formatTime(i_scene->getTime()));
   }
 
   switch(i_scene->getCurrentCamera()) {
