@@ -31,3 +31,35 @@ std::string txtToLower(const std::string& i_str) {
 
     return v_res;
 }
+
+std::string splitText(const std::string &str, int p_breakLineLength) {
+  std::string v_res = "";
+  char c[2] = {' ', '\0'};    
+  int lineLength = 0;
+  
+  for(unsigned int i=0; i<str.length(); i++) {
+    if((lineLength > p_breakLineLength && str[i] == ' ') ||
+       str[i] == '\n') {
+      c[0] = '\n';
+      v_res.append(c);
+      lineLength = 0;
+    } else {
+      c[0] = str[i];
+      v_res.append(c);
+      lineLength++;
+    }
+  }
+  return v_res;
+}
+
+std::string formatTime(int i_time) {
+  char cBuf[256];
+  int nM, nS, nH;
+
+  nM = i_time/6000;
+  nS = (i_time - nM*6000)/100;
+  nH = i_time - nM*6000 - nS*100;
+    
+  snprintf(cBuf, 256, "%02d:%02d:%02d", nM, nS, nH);
+  return cBuf;
+}

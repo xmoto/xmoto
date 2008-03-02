@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateScene.h"
-#include "Game.h"
 #include "PhysSettings.h"
 #include "xmscene/Camera.h"
 #include "XMSession.h"
@@ -28,11 +27,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "StatePreplaying.h"
 #include "helpers/Log.h"
+#include "helpers/Text.h"
 #include "CameraAnimation.h"
 #include "Renderer.h"
 #include "Universe.h"
 #include "VideoRecorder.h"
 #include "GameText.h"
+#include "Game.h"
 
 #define INPLAY_ANIMATION_TIME 1.0
 #define INPLAY_ANIMATION_SPEED 10
@@ -163,7 +164,7 @@ bool StateScene::render()
 
     ParticlesSource::setAllowParticleGeneration(GameRenderer::instance()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
   } catch(Exception &e) {
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK));
   }
 
   GameState::render();
@@ -259,7 +260,7 @@ void StateScene::setScoresTimes() {
 						  nrow);
   v_res = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
   if(v_res != NULL) {
-    T1 = GameApp::formatTime(atoi(v_res));
+    T1 = formatTime(atoi(v_res));
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
     
@@ -271,7 +272,7 @@ void StateScene::setScoresTimes() {
 						  nrow);
   v_res = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
   if(v_res != NULL) {
-    T2 = GameApp::formatTime(atoi(v_res));
+    T2 = formatTime(atoi(v_res));
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
     
@@ -518,7 +519,7 @@ void StateScene::makeStatsStr() {
 				       GAMETEXT_XMOTOGLOBALSTATS_TIMEPLAYED
 				       ).c_str(),
 	       v_nbPlayed, v_nbCompleted, v_nbDied, v_nbRestart,
-	   GameApp::formatTime(v_playedTime).c_str());
+	   formatTime(v_playedTime).c_str());
       m_statsStr = c_tmp;
       v_pDb->read_DB_free(v_result);
     }

@@ -43,6 +43,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "LevelsManager.h"
 #include "helpers/Log.h"
 #include "helpers/System.h"
+#include "helpers/Text.h"
 #include "StateEditWebConfig.h"
 #include "Sound.h"
 #include "thread/CheckWwwThread.h"
@@ -762,7 +763,7 @@ void StateMainMenu::updateStats() {
 						       GAMETEXT_XMOTOLEVELSTATS_DEATHS(v_nbDied)        + std::string(", ") +
 						       GAMETEXT_XMOTOLEVELSTATS_FINISHED(v_nbCompleted) + std::string(", ") +
 						       GAMETEXT_XMOTOLEVELSTATS_RESTART(v_nbRestarted))).c_str(),
-	     GameApp::formatTime(v_totalPlayedTime).c_str(), v_level_name.c_str(),
+	     formatTime(v_totalPlayedTime).c_str(), v_level_name.c_str(),
 	     v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestarted);
     
     pText = new UIStatic(v_window, 0, cy, cBuf, nWidth, 45);

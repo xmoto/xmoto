@@ -19,16 +19,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateReplaying.h"
-#include "Game.h"
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
 #include "xmscene/BikePlayer.h"
 #include "helpers/Log.h"
+#include "helpers/Text.h"
 #include "XMSession.h"
 #include "xmscene/Camera.h"
 #include "StateMessageBox.h"
 #include "Universe.h"
 #include "Trainer.h"
+#include "Game.h"
 #include "SysMessage.h"
 #include "VideoRecorder.h"
 
@@ -164,7 +165,7 @@ void StateReplaying::enter()
     setScoresTimes();    
   } catch(Exception &e) {
     abortPlaying();
-    StateManager::instance()->replaceState(new StateMessageBox(this, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    StateManager::instance()->replaceState(new StateMessageBox(this, splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     return;
   }
 }

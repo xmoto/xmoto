@@ -19,14 +19,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateLevelInfoViewer.h"
-#include "Game.h"
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
 #include "XMSession.h"
 #include "StateReplaying.h"
 #include "StateMessageBox.h"
 #include "Replay.h"
+#include "Game.h"
 #include "helpers/Log.h"
+#include "helpers/Text.h"
 
 /* static members */
 UIRoot*  StateLevelInfoViewer::m_sGUI = NULL;
@@ -391,9 +392,14 @@ void StateLevelInfoViewer::updateGUI() {
     pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + v_levelAuthor);
   if(pGeneralInfo_Date != NULL)
     pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + v_levelDateStr);
-  if(pGeneralInfo_Description != NULL)
-    pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": "  + v_levelDescription);
-            
+  if(pGeneralInfo_Description != NULL) {
+    if(v_levelDescription.size() <= 50) {
+      pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": "  + v_levelDescription);
+    } else { // split too large description
+      pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ":\n"  + splitText(v_levelDescription, 50));
+    }
+  }            
+
   updateLevelInfoViewerBestTimes();
   updateLevelInfoViewerReplays();
 }
@@ -423,7 +429,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
 	v_finishTime  = atoi(xmDatabase::instance("main")->getResult(v_result, 2, i, 0));
 	v_profile     =      xmDatabase::instance("main")->getResult(v_result, 2, i, 1);
 
-	UIListEntry *pEntry = pList->addEntry(GameApp::instance()->formatTime(v_finishTime));
+	UIListEntry *pEntry = pList->addEntry(formatTime(v_finishTime));
 	pEntry->Text.push_back(v_profile);
       }
       xmDatabase::instance("main")->read_DB_free(v_result);
@@ -435,7 +441,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
 			      nrow);
       for(unsigned int i=0; i<nrow; i++) {
 	v_finishTime  = atoi(xmDatabase::instance("main")->getResult(v_result, 1, i, 0));
-	UIListEntry *pEntry = pList->addEntry(GameApp::instance()->formatTime(v_finishTime));
+	UIListEntry *pEntry = pList->addEntry(formatTime(v_finishTime));
 	pEntry->Text.push_back(XMSession::instance()->profile());
       }
       xmDatabase::instance("main")->read_DB_free(v_result);
@@ -471,7 +477,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
 	char c_tmp[1024];
 	snprintf(c_tmp, 1024,
 		 GAMETEXT_BY_PLAYER, v_id_profile.c_str());
-	pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + GameApp::instance()->formatTime(v_finishTime) +
+	pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + formatTime(v_finishTime) +
 					      " " + std::string(c_tmp));
       } else {
 	pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + GAMETEXT_WORLDRECORDNA);
@@ -521,7 +527,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerReplays() {
       if(xmDatabase::instance("main")->getResult(v_result, 4, i, 2) == "0") {
 	pEntry->Text.push_back("("+ std::string(GAMETEXT_NOTFINISHED) + ")");
       } else {
-	pEntry->Text.push_back(GameApp::instance()->formatTime(atoi(xmDatabase::instance("main")->getResult(v_result, 4, i, 3))));
+	pEntry->Text.push_back(formatTime(atoi(xmDatabase::instance("main")->getResult(v_result, 4, i, 3))));
       }
     }
     xmDatabase::instance("main")->read_DB_free(v_result);
