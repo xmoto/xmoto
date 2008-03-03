@@ -145,6 +145,10 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
     closePlaying();
     break;          
 
+  case SDLK_RETURN:    
+    restartLevel();
+    break;
+
   case SDLK_RIGHT:
     /* Right arrow key: fast forward */
     if(m_stopToUpdate == false) {
@@ -166,9 +170,7 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
 	  m_stopToUpdate = false;
 	} else {
 	  // rerun the replay
-	  closePlaying();
-	  GameRenderer::instance()->unprepareForNewLevel();
-	  StateManager::instance()->replaceState(new StatePreplayingReplay(m_replay, true));
+	  restartLevel();
 	}
       }
     }
@@ -237,3 +239,8 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
   }
 }
 
+void StateReplaying::restartLevel(bool i_reloadLevel) {
+  closePlaying();
+  GameRenderer::instance()->unprepareForNewLevel();
+  StateManager::instance()->replaceState(new StatePreplayingReplay(m_replay, true));
+}

@@ -61,3 +61,11 @@ void StateDeadJust::keyDown(int nKey, SDLMod mod,int nChar)
     StateScene::keyDown(nKey, mod, nChar);
   }
 }
+
+void StateDeadJust::restartLevel(bool i_reloadLevel) {
+  restartLevelToPlay(i_reloadLevel);
+}
+
+void StateDeadJust::nextLevel(bool i_positifOrder) {
+  nextLevelToPlay(i_positifOrder);
+}

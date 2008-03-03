@@ -32,6 +32,9 @@ class StateDeadJust : public StateScene {
   
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
+
+  virtual void restartLevel(bool i_reloadLevel = false);
+  virtual void nextLevel(bool i_positifOrder = true);
 };
 
 #endif
