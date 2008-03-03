@@ -209,7 +209,9 @@ void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
 {
   GameApp*  pGame = GameApp::instance();
 
-  if(nKey == SDLK_F2){
+  if(nKey == SDLK_RETURN && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0){
+    restartLevel();
+  } else if(nKey == SDLK_F2){
     if(m_universe != NULL) {
       m_universe->switchFollowCamera();
     }
@@ -233,6 +235,76 @@ void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
   else if(nKey == SDLK_PAGEUP){
     nextLevel();
   }
+
+
+#if defined(ENABLE_ZOOMING)
+  else if(nKey == SDLK_KP7){
+    /* Zoom in */
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->zoom(0.002);
+	}
+      }
+    }
+  }
+  else if(nKey == SDLK_KP9){
+    /* Zoom out */
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->zoom(-0.002);
+	}
+      }
+    }
+  }
+  else if(nKey == SDLK_HOME){
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->initCamera();
+	}
+      }
+    }
+  }
+  else if(nKey == SDLK_KP6){
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->moveCamera(1.0, 0.0);
+	}
+      }
+    }
+  }
+  else if(nKey == SDLK_KP4){
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->moveCamera(-1.0, 0.0);
+	}
+      }
+    }
+  }
+  else if(nKey == SDLK_KP8){
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->moveCamera(0.0, 1.0);
+	}
+      }
+    }
+  }
+  else if(nKey == SDLK_KP2){
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->moveCamera(0.0, -1.0);
+	}
+      }
+    }
+  }
+#endif
+
   else if(nKey == SDLK_PAGEDOWN){
     nextLevel(false);
   } else  if(nKey == SDLK_TAB){
@@ -301,55 +373,6 @@ void StateScene::setScoresTimes() {
     GameRenderer::instance()->setWorldRecordTime(GameApp::instance()->getWorldRecord(v_id_level));
   } else {
     GameRenderer::instance()->setWorldRecordTime("");
-  }
-}
-
-void StateScene::restartLevel(bool i_reloadLevel) {
-  std::string v_level;
-
-  // take the level id of the first world
-  if(m_universe != NULL) {
-    if(m_universe->getScenes().size() > 0) {
-      v_level = m_universe->getScenes()[0]->getLevelSrc()->Id();
-    }
-  }
-
-  closePlaying();
-
-  GameRenderer::instance()->unprepareForNewLevel();
-  
-  if(i_reloadLevel) {
-    try {
-      Level::removeFromCache(xmDatabase::instance("main"), v_level);
-    } catch(Exception &e) {
-      // hum, not nice
-    }
-  }
-
-  StateManager::instance()->replaceState(new StatePreplayingGame(v_level, true));
-}
-
-void StateScene::nextLevel(bool i_positifOrder) {
-  GameApp*  pGame  = GameApp::instance();
-  std::string v_currentLevel;
-  std::string v_nextLevel;
-
-  // take the level id of the first world
-  if(m_universe != NULL) {
-    if(m_universe->getScenes().size() > 0) {
-      v_currentLevel = m_universe->getScenes()[0]->getLevelSrc()->Id();
-    }
-  }
-
-  if(i_positifOrder) {
-    v_nextLevel = pGame->determineNextLevel(v_currentLevel);
-  } else {
-    v_nextLevel = pGame->determinePreviousLevel(v_currentLevel);
-  }
-
-  if(v_nextLevel != "") {
-    closePlaying();
-    StateManager::instance()->replaceState(new StatePreplayingGame(v_nextLevel, v_currentLevel == v_nextLevel));
   }
 }
 
@@ -538,5 +561,63 @@ void StateScene::makeStatsStr() {
       m_statsStr = c_tmp;
       v_pDb->read_DB_free(v_result);
     }
+  }
+}
+
+void StateScene::restartLevel(bool i_reloadLevel) {
+  /* do nothing, it's depends of the scene ; often empty for animation steps */
+}
+
+void StateScene::nextLevel(bool i_positifOrder) {
+  /* do nothing, it's depends of the scene ; often empty for animation steps */
+}
+
+void StateScene::restartLevelToPlay(bool i_reloadLevel) {
+  std::string v_level;
+  
+  // take the level id of the first world
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      v_level = m_universe->getScenes()[0]->getLevelSrc()->Id();
+    }
+  }
+
+  closePlaying();
+
+  GameRenderer::instance()->unprepareForNewLevel();
+  
+  if(i_reloadLevel) {
+    try {
+      Level::removeFromCache(xmDatabase::instance("main"), v_level);
+    } catch(Exception &e) {
+      // hum, not nice
+    }
+  }
+
+  StateManager::instance()->replaceState(new StatePreplayingGame(v_level, true));
+
+}
+
+void StateScene::nextLevelToPlay(bool i_positifOrder) {
+  GameApp*  pGame  = GameApp::instance();
+  std::string v_nextLevel;
+  std::string v_currentLevel;
+  
+  // take the level id of the first world
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      v_currentLevel = m_universe->getScenes()[0]->getLevelSrc()->Id();
+    }
+  }
+
+  if(i_positifOrder) {
+    v_nextLevel = pGame->determineNextLevel(v_currentLevel);
+  } else {
+    v_nextLevel = pGame->determinePreviousLevel(v_currentLevel);
+  }
+
+  if(v_nextLevel != "") {
+    closePlaying();
+    StateManager::instance()->replaceState(new StatePreplayingGame(v_nextLevel, v_currentLevel == v_nextLevel));
   }
 }

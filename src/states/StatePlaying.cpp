@@ -189,76 +189,8 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
       StateManager::instance()->pushState(new StatePause(m_universe, this));
     }
   }
-  else if(nKey == SDLK_RETURN && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0){
-    restartLevel();
-  }
 
 #if defined(ENABLE_ZOOMING)
-  else if(nKey == SDLK_KP7){
-    /* Zoom in */
-    if(m_universe != NULL) {
-      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	  m_universe->getScenes()[j]->Cameras()[i]->zoom(0.002);
-	}
-      }
-    }
-  }
-  else if(nKey == SDLK_KP9){
-    /* Zoom out */
-    if(m_universe != NULL) {
-      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	  m_universe->getScenes()[j]->Cameras()[i]->zoom(-0.002);
-	}
-      }
-    }
-  }
-  else if(nKey == SDLK_HOME){
-    if(m_universe != NULL) {
-      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	  m_universe->getScenes()[j]->Cameras()[i]->initCamera();
-	}
-      }
-    }
-  }
-  else if(nKey == SDLK_KP6){
-    if(m_universe != NULL) {
-      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	  m_universe->getScenes()[j]->Cameras()[i]->moveCamera(1.0, 0.0);
-	}
-      }
-    }
-  }
-  else if(nKey == SDLK_KP4){
-    if(m_universe != NULL) {
-      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	  m_universe->getScenes()[j]->Cameras()[i]->moveCamera(-1.0, 0.0);
-	}
-      }
-    }
-  }
-  else if(nKey == SDLK_KP8){
-    if(m_universe != NULL) {
-      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	  m_universe->getScenes()[j]->Cameras()[i]->moveCamera(0.0, 1.0);
-	}
-      }
-    }
-  }
-  else if(nKey == SDLK_KP2){
-    if(m_universe != NULL) {
-      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	  m_universe->getScenes()[j]->Cameras()[i]->moveCamera(0.0, -1.0);
-	}
-      }
-    }
-  }
   else if(nKey == SDLK_KP0 && (mod & KMOD_LCTRL) == KMOD_LCTRL){
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
@@ -498,7 +430,7 @@ void StatePlaying::nextLevel(bool i_positifOrder) {
     }
   }
 
-  StateScene::nextLevel(i_positifOrder);
+  nextLevelToPlay(i_positifOrder);
 }
 
 void StatePlaying::restartLevel(bool i_reloadLevel) {
@@ -517,7 +449,7 @@ void StatePlaying::restartLevel(bool i_reloadLevel) {
     }
   }
 
-  StateScene::restartLevel(i_reloadLevel);
+  restartLevelToPlay(i_reloadLevel);
 }
 
 bool StatePlaying::render() {

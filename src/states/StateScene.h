@@ -45,6 +45,9 @@ class StateScene : public GameState {
  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
  virtual void send(const std::string& i_id, const std::string& i_message);
 
+ virtual void restartLevel(bool i_reloadLevel = false);
+ virtual void nextLevel(bool i_positifOrder = true);
+
  protected:
  virtual void executeOneCommand(std::string cmd);
  void makeStatsStr();
@@ -54,8 +57,9 @@ class StateScene : public GameState {
  bool   m_autoZoom;      /* true : the key is pressed so that it zooms out to see the level */
 
  void setScoresTimes();
- virtual void restartLevel(bool i_reloadLevel = false);
- virtual void nextLevel(bool i_positifOrder = true);
+
+ void restartLevelToPlay(bool i_reloadLevel = false);
+ void nextLevelToPlay(bool i_positifOrder = true);
 
  void closePlaying();
  virtual void abortPlaying();

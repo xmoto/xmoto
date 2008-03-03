@@ -37,7 +37,8 @@ class StateReplaying : public StateScene {
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
 
- protected:
+  virtual void restartLevel(bool i_reloadLevel = false);
+
   std::string m_replay;
   ReplayBiker* m_replayBiker; /* replay watched */
 
