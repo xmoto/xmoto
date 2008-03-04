@@ -41,6 +41,7 @@ public:
   Vector2f getPreviousRestorePosition( std::string levelId );
   Vector2f getNextRestorePosition( std::string levelId );
   void storePosition( std::string levelId, Vector2f pos );
+  bool trainerHasBeenUsed();
 
 private:
   void changeLevel( std::string toLevelId );
@@ -49,6 +50,7 @@ private:
   std::string m_forLevelId;  // restore positions are invalidated on level change
   std::vector<Vector2f> m_storePos;
   int m_storePosReadIndex;
+  bool m_trainerHasBeenUsed;
 
 };
 

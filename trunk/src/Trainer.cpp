@@ -25,11 +25,17 @@ Trainer::Trainer()
 {
   m_forLevelId = "";
   m_storePosReadIndex = -1;
+  m_trainerHasBeenUsed=false;
 }
 
 
 Trainer::~Trainer()
 {
+}
+
+
+bool Trainer::trainerHasBeenUsed(){
+    return m_trainerHasBeenUsed;
 }
 
 
@@ -55,6 +61,7 @@ int Trainer::getMaxRestoreIndex()
 
 Vector2f Trainer::getCurrentRestorePosition( std::string levelId )
 {
+  m_trainerHasBeenUsed=true;
   if( levelId != m_forLevelId )
     changeLevel( levelId );
   if( m_storePosReadIndex < 0 || m_storePosReadIndex >= (int)m_storePos.size() )
@@ -65,6 +72,7 @@ Vector2f Trainer::getCurrentRestorePosition( std::string levelId )
 
 Vector2f Trainer::getPreviousRestorePosition( std::string levelId )
 {
+  m_trainerHasBeenUsed=true;
   if( levelId != m_forLevelId )
     changeLevel( levelId );
   if( m_storePosReadIndex >= 1 )
@@ -75,6 +83,7 @@ Vector2f Trainer::getPreviousRestorePosition( std::string levelId )
 
 Vector2f Trainer::getNextRestorePosition( std::string levelId )
 {
+  m_trainerHasBeenUsed=true;
   if( levelId != m_forLevelId )
     changeLevel( levelId );
   if( m_storePosReadIndex >= 0 && m_storePosReadIndex < (int)m_storePos.size()-1 )
@@ -85,14 +94,16 @@ Vector2f Trainer::getNextRestorePosition( std::string levelId )
 
 void Trainer::storePosition( std::string levelId, Vector2f pos )
 {
-  if( levelId != m_forLevelId )
+  if( levelId != m_forLevelId ){
     changeLevel( levelId );
+  }
   m_storePos.push_back( pos );
   m_storePosReadIndex = m_storePos.size()-1;
 }
 
 void Trainer::changeLevel( std::string toLevelId )
 {
+  m_trainerHasBeenUsed=false;
   m_forLevelId = toLevelId;
   m_storePos.clear();
   m_storePosReadIndex = -1;
