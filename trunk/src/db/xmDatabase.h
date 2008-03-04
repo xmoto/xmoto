@@ -141,6 +141,7 @@ public:
   std::string webrooms_getName(const std::string& i_id_room);
   int webrooms_getHighscoreTime(const std::string& i_id_room,
 				const std::string& i_id_level); /* or a negativ value if not */
+  void webLoadDataFirstTime();
 
   /* data fixes */
   void fixStatsProfilesLevelsNbCompleted();

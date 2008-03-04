@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmDatabase.h"
 #include "VXml.h"
 #include "helpers/VExcept.h"
+#include "helpers/Log.h"
+#include "WWW.h"
 
 bool xmDatabase::webrooms_checkKeyExists_id_room(const std::string& i_id_room) {
   return checkKey("SELECT count(1) FROM webrooms "
@@ -404,4 +406,47 @@ void xmDatabase::webthemes_addTheme(const std::string& i_id_theme, const std::st
 	    "VALUES(\"" + protectString(i_id_theme) + "\", " +
 	    "\""        + protectString(i_url)      + "\", " +
 	    "\""        + protectString(i_checkSum) + "\");");
+}
+
+void xmDatabase::webLoadDataFirstTime() {
+  char **v_result;
+  unsigned int nrow;
+  std::string v_res;
+  bool v_update = false;
+
+  /* updating weblevels table with defaults */
+  try {
+    /* if the is any row already in the table, no update is done */
+    v_result = readDB("SELECT count(1) FROM weblevels;", nrow);
+    if(nrow == 1) {
+      v_update = atoi(getResult(v_result, 1, 0, 0)) == 0;
+    }
+    read_DB_free(v_result);
+
+    if(v_update) {
+      Logger::Log("Loading weblevels with delivered weblevels.xml");
+      weblevels_updateDB("default/weblevels.xml", true);  
+    }
+  } catch(Exception &e) {
+    /* ok, no pb */
+    Logger::Log("** Warning ** : Loading delivered weblevels.xml failed");
+  }
+
+  /* updating webhighscores table with defaults */
+  try {
+    /* if the is any row already in the table, no update is done */
+    v_result = readDB("SELECT count(1) FROM webhighscores;", nrow);
+    if(nrow == 1) {
+      v_update = atoi(getResult(v_result, 1, 0, 0)) == 0;
+    }
+    read_DB_free(v_result);
+
+    if(v_update) {
+      Logger::Log("Loading webhighscores with delivered webhighscores.xml");
+      webhighscores_updateDB("default/webhighscores.xml", DEFAULT_WEBHIGHSCORES_URL);
+    }
+  } catch(Exception &e) {
+    /* ok, no pb */
+    Logger::Log("** Warning ** : Loading delivered webhighscores.xml failed");
+  }
 }

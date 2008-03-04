@@ -87,6 +87,9 @@ void xmDatabase::init(const std::string& i_dbFile,
     setXmDbGameDir(i_gameDir);
     setXmDbUserDir(i_userDir);
     setXmDbBinPackCheckSum(i_binPackCheckSum);
+
+    /* -- first initialisation or xmoto.bin/userdir update -- */
+    webLoadDataFirstTime();
   }
 }
 

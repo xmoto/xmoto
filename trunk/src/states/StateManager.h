@@ -46,6 +46,7 @@ public:
   // return true if update/render was done
   virtual bool update() {return false;}
   virtual bool render();
+  virtual bool renderOverShadow(); // function to render over the shadow
   virtual bool updateWhenUnvisible() {return false;}
   virtual void onRenderFlush() {}
 

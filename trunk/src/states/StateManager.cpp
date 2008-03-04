@@ -597,6 +597,11 @@ bool GameState::render() {
 		     0, MAKE_COLOR(0,0,0, v_nShade));
   }
 
+  return renderOverShadow();
+}
+
+bool GameState::renderOverShadow() {
+  // do nothing by default
   return true;
 }
 
