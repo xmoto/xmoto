@@ -67,7 +67,7 @@ void CheckWwwThread::updateWebLevels()
 
   /* Try download levels list */
   setSafeKill(true);
-  m_pWebLevels->update(m_pDb, XMSession::instance()->useCrappyPack());
+  m_pWebLevels->update(m_pDb);
   setSafeKill(false);
 
   if(m_pWebLevels->nbLevelsToGet(m_pDb) != 0){

@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "VFileIO.h"
 
-#define XMDB_VERSION 19
+#define XMDB_VERSION 20
 
 bool xmDatabase::Trace = false;
 
@@ -469,6 +469,15 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       throw Exception("Unable to update xmDb from 18: " + e.getMsg());
     }
 
+  case 19:
+    try {
+      simpleSql("ALTER TABLE weblevels ADD COLUMN children_compliant DEFAULT 1;");
+      simpleSql("CREATE INDEX weblevels_children_compliant_idx1 ON weblevels(children_compliant);");
+      updateXmDbVersion(20);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 19: " + e.getMsg());
+    }
+
     // next
   }
 }
@@ -574,6 +583,16 @@ void xmDatabase::createUserFunctions() {
 			     user_xm_lvlUpdatedToTxt, NULL, NULL) != SQLITE_OK) {
     throw Exception("xmDatabase::createUserFunctions() failed !");
   }
+
+  if(sqlite3_create_function(m_db, "xm_userCrappy", 1, SQLITE_ANY, NULL,
+			     user_xm_userCrappy, NULL, NULL) != SQLITE_OK) {
+    throw Exception("xmDatabase::createUserFunctions() failed !");
+  }
+
+  if(sqlite3_create_function(m_db, "xm_userChildrenCompliant", 1, SQLITE_ANY, NULL,
+			     user_xm_userChildrenCompliant, NULL, NULL) != SQLITE_OK) {
+    throw Exception("xmDatabase::createUserFunctions() failed !");
+  }
 }
 
 void xmDatabase::user_xm_floord(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {
@@ -596,4 +615,26 @@ void xmDatabase::user_xm_lvlUpdatedToTxt(sqlite3_context* i_context, int i_nArgs
 
   v_value = sqlite3_value_int(i_values[0]);
   sqlite3_result_text(i_context, v_value == 0 ? GAMETEXT_NEW : GAMETEXT_UPDATED, -1, SQLITE_TRANSIENT);
+}
+
+void xmDatabase::user_xm_userCrappy(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {
+  int v_value;
+
+  if(i_nArgs != 1) {
+    throw Exception("user_xm_userCrappy failed !");
+  }
+
+  v_value = sqlite3_value_int(i_values[0]);
+  sqlite3_result_int(i_context, XMSession::instance()->useCrappyPack() ? v_value : 0);
+}
+
+void xmDatabase::user_xm_userChildrenCompliant(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {
+  int v_value;
+
+  if(i_nArgs != 1) {
+    throw Exception("user_xm_userChildrenCompliant failed !");
+  }
+
+  v_value = sqlite3_value_int(i_values[0]);
+  sqlite3_result_int(i_context, XMSession::instance()->useChildrenCompliant() ? v_value : 1);
 }

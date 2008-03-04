@@ -194,14 +194,14 @@ int xmDatabase::webrooms_getHighscoreTime(const std::string& i_id_room,
   return atoi(v_res.c_str());
 }
 
-void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile, bool i_useCrappyPack) {
+void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
   XMLDocument v_webLXml;
   TiXmlDocument *v_webLXmlData;
   TiXmlElement *v_webLXmlDataElement;
   const char *pc;
   std::string v_levelId, v_levelName, v_url, v_MD5sum_web;
   std::string v_difficulty, v_quality, v_creationDate;
-  std::string v_crappy;
+  std::string v_crappy, v_children_compliant;
 
   try {
     simpleSql("BEGIN TRANSACTION;");
@@ -267,28 +267,32 @@ void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile, bool i_u
 	continue;
       v_creationDate = pc;
 
-      if(i_useCrappyPack) {
-	pc = pVarElem->Attribute("crappy");
-	if(pc == NULL) {
-	  v_crappy = "0";
-	} else {
-	  v_crappy = std::string(pc) == "true" ? "1" : "0";
-	}
-      } else {
+      pc = pVarElem->Attribute("crappy");
+      if(pc == NULL) {
 	v_crappy = "0";
+      } else {
+	v_crappy = std::string(pc) == "true" ? "1" : "0";
+      }
+
+      pc = pVarElem->Attribute("children_compliant");
+      if(pc == NULL) {
+	v_children_compliant = "1";
+      } else {
+	v_children_compliant = std::string(pc) == "true" ? "1" : "0";
       }
 
       // add the level
       simpleSql("INSERT INTO weblevels(id_level, name, fileUrl, "
-		"checkSum, difficulty, quality, creationDate, crappy) VALUES (\"" +
+		"checkSum, difficulty, quality, creationDate, crappy, children_compliant) VALUES (\"" +
 		protectString(v_levelId)    + "\", \"" +
 		protectString(v_levelName)  + "\", \"" +
 		protectString(v_url)        + "\", \"" +
 		protectString(v_MD5sum_web) + "\", "   +
-		v_difficulty   + ", " +
+		v_difficulty   + ", "   +
 		v_quality      + ", \"" +
 		v_creationDate + "\", " +
-		v_crappy       + ");");
+		v_crappy       + ", "   +
+		v_children_compliant + ");");
 
       pVarElem = pVarElem->NextSiblingElement("level");
     }
@@ -425,7 +429,7 @@ void xmDatabase::webLoadDataFirstTime() {
 
     if(v_update) {
       Logger::Log("Loading weblevels with delivered weblevels.xml");
-      weblevels_updateDB("default/weblevels.xml", true);  
+      weblevels_updateDB("default/weblevels.xml");
     }
   } catch(Exception &e) {
     /* ok, no pb */

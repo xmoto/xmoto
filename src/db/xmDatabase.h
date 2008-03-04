@@ -135,7 +135,7 @@ public:
   /* web */
   std::string webhighscores_updateDB(const std::string& i_webhighscoresFile,
 				     const std::string& i_websource);
-  void weblevels_updateDB(const std::string& i_weblevelsFile, bool i_useCrappyPack);
+  void weblevels_updateDB(const std::string& i_weblevelsFile);
   void webrooms_updateDB(const std::string& i_webroomsFile);
   void webthemes_updateDB(const std::string& i_webThemesFile);
   std::string webrooms_getName(const std::string& i_id_room);
@@ -157,6 +157,8 @@ public:
   void createUserFunctions();
   static void user_xm_floord(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
   static void user_xm_lvlUpdatedToTxt(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
+  static void user_xm_userCrappy(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
+  static void user_xm_userChildrenCompliant(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
 
   /* function used to synchronise with the last xmoto version */
   int  getXmDbVersion();
