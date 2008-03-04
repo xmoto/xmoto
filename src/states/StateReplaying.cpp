@@ -145,10 +145,6 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
     closePlaying();
     break;          
 
-  case SDLK_RETURN:    
-    restartLevel();
-    break;
-
   case SDLK_RIGHT:
     /* Right arrow key: fast forward */
     if(m_stopToUpdate == false) {
