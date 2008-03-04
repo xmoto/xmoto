@@ -452,9 +452,7 @@ void StatePlaying::restartLevel(bool i_reloadLevel) {
   restartLevelToPlay(i_reloadLevel);
 }
 
-bool StatePlaying::render() {
-  StateScene::render();
-
+bool StatePlaying::renderOverShadow() {
   if(m_displayStats) {
     displayStats();
   }

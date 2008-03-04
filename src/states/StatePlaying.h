@@ -44,7 +44,7 @@ class StatePlaying : public StateScene {
   virtual void keyUp(int nKey,   SDLMod mod);
   virtual void mouseDown(int nButton);
   virtual void mouseUp(int nButton);
-  virtual bool render();
+  virtual bool renderOverShadow();
   
   virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
