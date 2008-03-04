@@ -98,6 +98,9 @@ void StatePlaying::enter()
 
   // read keys for more reactivity
   InputHandler::instance()->dealWithActivedKeys(m_universe);
+
+  // reset trainer mode use
+  Trainer::instance()->resetTrainerUse();
 }
 
 void StatePlaying::leave()
@@ -321,7 +324,7 @@ void StatePlaying::onOneFinish() {
 	  v_finish_time  = m_universe->getScenes()[0]->Players()[0]->finishTime();
 	}
         // Updating the stats if the Trainer has not been used
-        if( Trainer::instance()->trainerHasBeenUsed()==false){
+        if(Trainer::instance()->trainerHasBeenUsed() == false){ // then, even time played is not saved
             xmDatabase::instance("main")->profiles_addFinishTime(XMSession::instance()->profile(),
                                          m_universe->getScenes()[0]->getLevelSrc()->Id(),
                                          TimeStamp,

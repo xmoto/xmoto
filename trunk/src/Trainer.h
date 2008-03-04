@@ -41,6 +41,8 @@ public:
   Vector2f getPreviousRestorePosition( std::string levelId );
   Vector2f getNextRestorePosition( std::string levelId );
   void storePosition( std::string levelId, Vector2f pos );
+
+  void resetTrainerUse();
   bool trainerHasBeenUsed();
 
 private:

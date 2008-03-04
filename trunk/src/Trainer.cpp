@@ -103,8 +103,11 @@ void Trainer::storePosition( std::string levelId, Vector2f pos )
 
 void Trainer::changeLevel( std::string toLevelId )
 {
-  m_trainerHasBeenUsed=false;
   m_forLevelId = toLevelId;
   m_storePos.clear();
   m_storePosReadIndex = -1;
+}
+
+void Trainer::resetTrainerUse() {
+  m_trainerHasBeenUsed = false;
 }
