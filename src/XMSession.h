@@ -224,6 +224,7 @@ public:
   bool useCrappyPack() const;
   void setUseCrappyPack(bool i_value);
   bool useChildrenCompliant() const;
+  void setChildrenCompliant(bool i_value);
   bool enableVideoRecording() const;
   std::string videoRecordName() const;
   int videoRecordingDivision() const;

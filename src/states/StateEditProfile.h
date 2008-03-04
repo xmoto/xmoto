@@ -49,6 +49,8 @@ protected:
 private:
   static void createProfileList();
 
+  void updateOptions();
+
   /* GUI */
   static UIRoot* m_sGUI;
   static void createGUIIfNeeded();

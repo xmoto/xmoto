@@ -320,11 +320,14 @@ void StatePlaying::onOneFinish() {
 	if(m_universe->getScenes()[0]->Players()[0]->isFinished()) {
 	  v_finish_time  = m_universe->getScenes()[0]->Players()[0]->finishTime();
 	}
-	xmDatabase::instance("main")->profiles_addFinishTime(XMSession::instance()->profile(),
-							     m_universe->getScenes()[0]->getLevelSrc()->Id(),
-							     TimeStamp,
-							     v_finish_time);
-	StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
+        // Updating the stats if the Trainer has not been used
+        if( Trainer::instance()->trainerHasBeenUsed()==false){
+            xmDatabase::instance("main")->profiles_addFinishTime(XMSession::instance()->profile(),
+                                         m_universe->getScenes()[0]->getLevelSrc()->Id(),
+                                         TimeStamp,
+                                         v_finish_time);
+        }
+        StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
       }
     }
   }	  

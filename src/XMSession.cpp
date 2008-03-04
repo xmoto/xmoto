@@ -884,6 +884,10 @@ bool XMSession::useChildrenCompliant() const {
   return m_useChildrenCompliant;
 }
 
+void XMSession::setChildrenCompliant(bool i_value) {
+  m_useChildrenCompliant = i_value;
+}
+
 ProxySettings* XMSession::proxySettings() {
   return &m_proxySettings;
 }

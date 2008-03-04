@@ -52,11 +52,20 @@ void StateEditProfile::enter()
   createGUIIfNeeded();
   m_GUI = m_sGUI;
 
+  updateOptions();
+
   StateMenu::enter();
 }
 
+void StateEditProfile::updateOptions() {
+  UIButton* v_button;
+
+  v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("EDITPROFILE_FRAME:CHILDRENCOMPLIANT"));
+  v_button->setChecked(XMSession::instance()->useChildrenCompliant());
+}
+
 void StateEditProfile::checkEvents() {
-  UIButton *v_button;
+  UIButton *v_button, *v_ccButton;
 
   // use profile
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITPROFILE_FRAME:USEPROFILE_BUTTON"));
@@ -72,6 +81,11 @@ void StateEditProfile::checkEvents() {
       UIListEntry *pEntry = pList->getEntries()[nIdx];
 
       XMSession::instance()->setProfile(pEntry->Text[0]);
+
+      // set children compliant
+      v_ccButton = reinterpret_cast<UIButton*>(m_GUI->getChild("EDITPROFILE_FRAME:CHILDRENCOMPLIANT"));
+      XMSession::instance()->setChildrenCompliant(v_ccButton->getChecked());
+
       xmDatabase::instance("main")->stats_xmotoStarted(pEntry->Text[0]);
 
       // tell the menu to update the displayed profile
@@ -153,11 +167,19 @@ void StateEditProfile::createGUIIfNeeded() {
   UIStatic *pProfileEditorTitle = new UIStatic(v_frame, 0, 0, GAMETEXT_PLAYERPROFILES, v_frame->getPosition().nWidth, 50);
   pProfileEditorTitle->setFont(drawLib->getFontMedium());
 
-  UIList *pProfileList = new UIList(v_frame, 20, 50, "", v_frame->getPosition().nWidth - 20*2 -20 - 207, v_frame->getPosition().nHeight - 50 - 20);
+  UIList *pProfileList = new UIList(v_frame, 20, 50, "", v_frame->getPosition().nWidth - 20*2 -20 - 207, v_frame->getPosition().nHeight - 50 -30 - 20);
   pProfileList->setFont(drawLib->getFontSmall());
   pProfileList->addColumn(GAMETEXT_PLAYERPROFILE, 128);
   pProfileList->setID("PROFILE_LIST");
   pProfileList->setContextHelp(CONTEXTHELP_SELECT_PLAYER_PROFILE);
+
+  v_button = new UIButton(v_frame, 20, v_frame->getPosition().nHeight -40, GAMETEXT_CHILDREN_COMPLIANT,
+			  v_frame->getPosition().nWidth - 20*2 -20 - 207, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("CHILDRENCOMPLIANT");
+  v_button->setFont(drawLib->getFontSmall());
+  v_button->setGroup(20023);
+  v_button->setContextHelp(CONTEXTHELP_CHILDREN_COMPLIANT);
 
   v_button = new UIButton(v_frame, v_frame->getPosition().nWidth - 20 - 207, 50 + 0*57, GAMETEXT_USEPROFILE, 207, 57);
   v_button->setID("USEPROFILE_BUTTON");
@@ -171,7 +193,7 @@ void StateEditProfile::createGUIIfNeeded() {
   v_button->setContextHelp(CONTEXTHELP_CREATE_PLAYER_PROFILE);
   v_button->setFont(drawLib->getFontSmall());
 
-  v_button = new UIButton(v_frame, v_frame->getPosition().nWidth - 20 - 207, v_frame->getPosition().nHeight - 20 - 57,
+  v_button = new UIButton(v_frame, v_frame->getPosition().nWidth - 20 - 207, v_frame->getPosition().nHeight - 40 - 57,
 			  GAMETEXT_DELETEPROFILE, 207, 57);
   v_button->setID("DELETEPROFILE_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_DELETE_PROFILE);

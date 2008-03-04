@@ -67,6 +67,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CHANGEDIR            _("Change direction")
 #define GAMETEXT_CHANGEKEY            _("Change Key...")
 #define GAMETEXT_CHECKINGFORLEVELS    _("Checking for new or updated levels...")
+#define GAMETEXT_CHILDREN_COMPLIANT   _("I'm a children")
 #define GAMETEXT_CHOOSELEVEL          _("Choose Level")
 #define GAMETEXT_CLEAN                _("Clean")
 #define GAMETEXT_CLEAN_CONFIRM(A) ngettext("Are you sure you want to delete %i replay", "Are you sure you want to delete %i replay", A)
@@ -558,6 +559,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_LANGUAGE_NAME _("Name of the language")
 #define CONTEXTHELP_LANGUAGE_CODE _("Code of the language")
 #define CONTEXTHELP_REPLAYS_CLEAN _("Delete replays that X-Moto estimates to be not interesting to keep")
+#define CONTEXTHELP_CHILDREN_COMPLIANT _("Remove levels not suitable for children")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")
