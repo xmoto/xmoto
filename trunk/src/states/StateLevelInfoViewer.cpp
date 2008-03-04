@@ -525,10 +525,10 @@ void StateLevelInfoViewer::updateLevelInfoViewerReplays() {
       UIListEntry *pEntry = pList->addEntry(xmDatabase::instance("main")->getResult(v_result, 4, i, 0));
       pEntry->Text.push_back(xmDatabase::instance("main")->getResult(v_result, 4, i, 1));
 	
-      if(xmDatabase::instance("main")->getResult(v_result, 4, i, 2) == "0") {
-	pEntry->Text.push_back("("+ std::string(GAMETEXT_NOTFINISHED) + ")");
-      } else {
+      if(atoi(xmDatabase::instance("main")->getResult(v_result, 4, i, 2)) > 0) {
 	pEntry->Text.push_back(formatTime(atoi(xmDatabase::instance("main")->getResult(v_result, 4, i, 3))));
+      } else {
+	pEntry->Text.push_back("("+ std::string(GAMETEXT_NOTFINISHED) + ")");
       }
     }
     xmDatabase::instance("main")->read_DB_free(v_result);
