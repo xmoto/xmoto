@@ -223,6 +223,7 @@ public:
   void setMirrorMode(bool i_value);
   bool useCrappyPack() const;
   void setUseCrappyPack(bool i_value);
+  bool useChildrenCompliant() const;
   bool enableVideoRecording() const;
   std::string videoRecordName() const;
   int videoRecordingDivision() const;
@@ -305,6 +306,7 @@ public:
   std::string m_webLevelsUrl;
   bool m_mirrorMode;
   bool m_useCrappyPack;
+  bool m_useChildrenCompliant;
   bool m_enableVideoRecording;
   std::string m_videoRecordName;
   int m_videoRecordingDivision;

@@ -183,7 +183,7 @@ class WebLevels {
   ~WebLevels();
 
   /* check for new levels to download */
-  void update(xmDatabase* i_db, bool i_useCrappyPack); /* throws exceptions */
+  void update(xmDatabase* i_db); /* throws exceptions */
 
   /* download new levels */
   void upgrade(xmDatabase* i_db); /* throws exceptions */

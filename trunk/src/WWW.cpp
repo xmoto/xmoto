@@ -528,9 +528,9 @@ std::string WebLevels::getDestinationFile(std::string p_url) {
   return getDestinationDir() + "/" + FS::getFileBaseName(p_url) + ".lvl";
 }
 
-void WebLevels::update(xmDatabase *i_db, bool i_useCrappyPack) {
+void WebLevels::update(xmDatabase *i_db) {
   downloadXml();
-  i_db->weblevels_updateDB(getXmlFileName(), i_useCrappyPack);
+  i_db->weblevels_updateDB(getXmlFileName());
 }
 
 int FSWeb::f_curl_progress_callback_upload(void *clientp,

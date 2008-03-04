@@ -99,6 +99,7 @@ void XMSession::setToDefault() {
   m_webLevelsUrl                  = DEFAULT_WEBLEVELS_URL;
   m_mirrorMode                    = false;
   m_useCrappyPack                 = true;
+  m_useChildrenCompliant          = false;
   m_enableVideoRecording          = false;
   m_videoRecordingDivision        = VR_DEFAULT_DIVISION;
   m_videoRecordingFramerate       = VR_DEFAULT_FRAMERATE;
@@ -283,6 +284,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_notifyAtInit                = m_Config->getBool("NotifyAtInit");
   m_webLevelsUrl                = m_Config->getString("WebLevelsURL");
   m_useCrappyPack               = m_Config->getBool("UseCrappyPack");
+  m_useChildrenCompliant        = m_Config->getBool("UseChildrenCompliant");
 }
 
 void XMSession::save(UserConfig* v_config) {
@@ -342,6 +344,7 @@ void XMSession::save(UserConfig* v_config) {
   v_config->setBool("NotifyAtInit",                 m_notifyAtInit);
   v_config->setString("WebLevelsURL",               m_webLevelsUrl);
   v_config->setBool("UseCrappyPack",                m_useCrappyPack);
+  v_config->setBool("UseChildrenCompliant",         m_useChildrenCompliant);
 }
 
 bool XMSession::isVerbose() const {
@@ -877,6 +880,10 @@ void XMSession::setUseCrappyPack(bool i_value) {
   m_useCrappyPack = i_value;
 }
 
+bool XMSession::useChildrenCompliant() const {
+  return m_useChildrenCompliant;
+}
+
 ProxySettings* XMSession::proxySettings() {
   return &m_proxySettings;
 }
@@ -1083,6 +1090,7 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
   v_config->createVar( "ShowInGameWorldRecord",    "false" );
   v_config->createVar( "WebConfAtInit",            "true" );
   v_config->createVar( "UseCrappyPack",            "true" );
+  v_config->createVar( "UseChildrenCompliant",     "false" );
     
   /* Webstuff */
   v_config->createVar( "WebHighscoresURL",       DEFAULT_WEBHIGHSCORES_URL );

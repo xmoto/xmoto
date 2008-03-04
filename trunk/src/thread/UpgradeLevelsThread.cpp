@@ -110,7 +110,7 @@ int UpgradeLevelsThread::realThreadFunction()
     clearCancelAsSoonAsPossible();
 
     setSafeKill(true);
-    m_pWebLevels->update(m_pDb, XMSession::instance()->useCrappyPack());
+    m_pWebLevels->update(m_pDb);
     setSafeKill(false);
 
     int nULevels=0;

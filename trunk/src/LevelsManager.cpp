@@ -221,7 +221,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field FROM levels AS a "
 			  "LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE (b.crappy IS NULL OR b.crappy=0) AND c.id_level IS NULL");
+			  "WHERE (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
+			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
+			  "AND c.id_level IS NULL");
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
   v_pack->setDescription(VPACKAGENAME_DESC_ALL_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -258,7 +260,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field FROM levels AS a "
 			  "LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level "
                           "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE a.isScripted=1 AND (b.crappy IS NULL OR b.crappy=0) AND c.id_level IS NULL");
+			  "WHERE a.isScripted=1 AND (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
+			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
+			  "AND c.id_level IS NULL");
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
   v_pack->setDescription(VPACKAGENAME_DESC_SCRIPTED);
   m_levelsPacks.push_back(v_pack);
@@ -269,7 +273,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "FROM levels AS a "
 			  "LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level "
                           "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE a.music<>\"\" AND (b.crappy IS NULL OR b.crappy=0) AND c.id_level IS NULL");
+			  "WHERE a.music<>\"\" AND (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
+			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
+			  "AND c.id_level IS NULL");
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
   v_pack->setDescription(VPACKAGENAME_DESC_MUSICAL);
   m_levelsPacks.push_back(v_pack);
@@ -284,7 +290,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.nbCompleted = 0 OR b.id_profile IS NULL "
 			  "AND d.id_level IS NULL "
-			  "AND (c.crappy IS NULL OR c.crappy=0)");
+			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
+			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1)");
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
   v_pack->setDescription(VPACKAGENAME_DESC_INCOMPLETED_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -305,7 +312,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "FROM levels AS a LEFT OUTER JOIN weblevels AS b "
 			  "ON a.id_level=b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE b.crappy=1 AND c.id_level IS NULL");
+			  "WHERE xm_userCrappy(b.crappy)=1 "
+			  "AND xm_userChildrenCompliant(b.children_compliant)=1 "
+			  "AND c.id_level IS NULL");
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
   v_pack->setDescription(VPACKAGENAME_DESC_CRAPPY_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -321,7 +330,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.id_level IS NULL "
 			  "AND d.id_level IS NULL "
-			  "AND (c.crappy IS NULL OR c.crappy=0)");
+			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
+			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1)");
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
   v_pack->setDescription(VPACKAGENAME_DESC_LEVELS_WITH_NO_HIGHSCORE);
   m_levelsPacks.push_back(v_pack);
@@ -335,7 +345,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.id_room=" + i_id_room + " "
 			  "AND b.id_profile<>\"" + xmDatabase::protectString(i_playerName) + "\" "
-			  "AND (c.crappy IS NULL OR c.crappy=0) AND d.id_level IS NULL");
+			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
+			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
+			  "AND d.id_level IS NULL");
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
   v_pack->setDescription(VPACKAGENAME_DESC_YOU_HAVE_NOT_THE_HIGHSCORE);
   m_levelsPacks.push_back(v_pack);
@@ -348,7 +360,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.id_room=" + i_id_room + " "
-			  "AND (c.crappy IS NULL OR c.crappy=0) AND d.id_level IS NULL "
+			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
+			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
+			  "AND d.id_level IS NULL "
 			  "ORDER by b.date DESC LIMIT 100", false);
   v_pack->setDescription(VPACKAGENAME_DESC_LAST_HIGHSCORES);
   m_levelsPacks.push_back(v_pack);
@@ -360,7 +374,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "FROM levels AS a INNER JOIN "
 			  "weblevels AS b ON a.id_level = b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE (b.crappy IS NULL OR b.crappy=0) AND c.id_level IS NULL "
+			  "WHERE (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
+			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
+			  "AND c.id_level IS NULL "
 			  "ORDER by b.creationDate DESC LIMIT 100", false);
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
   v_pack->setDescription(VPACKAGENAME_DESC_LAST_LEVELS);
@@ -374,7 +390,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.id_room=" + i_id_room + " "
-			  "AND (c.crappy IS NULL OR c.crappy=0) AND d.id_level IS NULL "
+			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0)"
+			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
+			  " AND d.id_level IS NULL "
 			  "ORDER by b.date ASC LIMIT 100");
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
   v_pack->setDescription(VPACKAGENAME_DESC_OLDEST_HIGHSCORES);
@@ -389,7 +407,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE a.id_profile = \"" + xmDatabase::protectString(i_playerName) + "\" "
 			  "AND d.id_level IS NULL "
-			  "AND (c.crappy IS NULL OR c.crappy=0)"
+			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
+			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1)"
 			  );
   v_pack->setGroup(GAMETEXT_PACK_MEDALS);
   v_pack->setDescription(VPACKAGENAME_DESC_MEDAL_PLATINIUM);
@@ -407,7 +426,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "ON (c.id_level = a.id_level AND c.id_room=" + i_id_room + ") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = e.id_level AND e.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE (d.crappy IS NULL OR d.crappy=0) AND e.id_level IS NULL "
+			  "WHERE (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
+			  "AND (d.children_compliant IS NULL OR xm_userChildrenCompliant(d.children_compliant)=1) "
+			  "AND e.id_level IS NULL "
 			  "GROUP BY a.id_level " /* get the best highscores */
 			  ") "
 			  "WHERE (webFinishTime IS NULL OR webFinishTime >= userFinishTime*0.95) "
@@ -433,7 +454,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "ON (c.id_level = a.id_level AND c.id_room=" + i_id_room + ") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = e.id_level AND e.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE (d.crappy IS NULL OR d.crappy=0) AND e.id_level IS NULL "
+			  "WHERE (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
+			  "AND (d.children_compliant IS NULL OR xm_userChildrenCompliant(d.children_compliant)=1) "
+			  "AND e.id_level IS NULL "
 			  "GROUP BY a.id_level " /* get the best highscores */
 			  ") "
 			  "WHERE (webFinishTime IS NOT NULL "
@@ -461,7 +484,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "ON (c.id_level = a.id_level AND c.id_room=" + i_id_room + ") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = e.id_level AND e.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE (d.crappy IS NULL OR d.crappy=0) AND e.id_level IS NULL "
+			  "WHERE (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
+			  "AND (d.children_compliant IS NULL OR xm_userChildrenCompliant(d.children_compliant)=1) "
+			  "AND e.id_level IS NULL "
 			  "GROUP BY a.id_level " /* get the best highscores */
 			  ") "
 			  "WHERE (webFinishTime IS NOT NULL "
@@ -489,7 +514,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "ON (c.id_level = a.id_level AND c.id_room=" + i_id_room + ") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = e.id_level AND e.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE (d.crappy IS NULL OR d.crappy=0) AND e.id_level IS NULL "
+			  "WHERE (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
+			  "AND (d.children_compliant IS NULL OR xm_userChildrenCompliant(d.children_compliant)=1) "
+			  "AND e.id_level IS NULL "
 			  "GROUP BY a.id_level "
 			  ") "
 			  "WHERE (webFinishTime IS NOT NULL "
@@ -515,7 +542,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.last_play_date IS NOT NULL "
-			  "AND (c.crappy IS NULL OR c.crappy=0) "
+			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
+			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
 			  "AND d.id_level IS NULL "
 			  "ORDER BY b.last_play_date DESC "
 			  "LIMIT 100", false);
@@ -533,7 +561,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.id_profile IS NULL "
 			  "AND d.id_level IS NULL "
-			  "AND (c.crappy IS NULL OR c.crappy=0)");
+			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0)"
+			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1)");
   v_pack->setGroup(GAMETEXT_PACK_STATS);
   v_pack->setDescription(VPACKAGENAME_DESC_NEVER_PLAYED);
   m_levelsPacks.push_back(v_pack);
@@ -546,7 +575,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE (c.crappy IS NULL OR c.crappy=0) AND d.id_level IS NULL "
+			  "WHERE (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
+			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
+			  "AND d.id_level IS NULL "
 			  "ORDER BY b.nbPlayed DESC LIMIT 100", false);
   v_pack->setGroup(GAMETEXT_PACK_STATS);
   v_pack->setDescription(VPACKAGENAME_DESC_MOST_PLAYED);
@@ -561,7 +592,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.nbPlayed > 0 "
-			  "AND (c.crappy IS NULL OR c.crappy=0) AND d.id_level IS NULL "
+			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
+			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
+			  "AND d.id_level IS NULL "
 			  "ORDER BY b.nbPlayed ASC LIMIT 100");
   v_pack->setGroup(GAMETEXT_PACK_STATS);
   v_pack->setDescription(VPACKAGENAME_DESC_LESS_PLAYED);
@@ -573,7 +606,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "FROM levels AS a INNER JOIN weblevels AS b ON a.id_level=b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.quality >= 4.5 "
-			  "AND (b.crappy IS NULL OR b.crappy=0) "
+			  "AND (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
+			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
 			  "AND c.id_level IS NULL "
 			  "ORDER BY b.quality DESC LIMIT 100", false);
   v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
@@ -587,7 +621,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			    "FROM levels AS a INNER JOIN weblevels AS b ON a.id_level=b.id_level "
 			    "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			    "WHERE b.quality <= 1.5 "
-			    "AND (b.crappy IS NULL OR b.crappy=0) "
+			    "AND (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
+			    "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
 			    "AND c.id_level IS NULL "
 			    "ORDER BY b.quality ASC LIMIT 100");
     v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
@@ -601,7 +636,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "FROM levels AS a INNER JOIN weblevels AS b ON a.id_level=b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.difficulty <= 1.5 "
-			  "AND (b.crappy IS NULL OR b.crappy=0) "
+			  "AND (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
+			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
 			  "AND c.id_level IS NULL "
 			  "ORDER BY b.difficulty ASC LIMIT 100");
   v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
@@ -614,7 +650,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "FROM levels AS a INNER JOIN weblevels AS b ON a.id_level=b.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.difficulty >= 4.5 "
-			  "AND (b.crappy IS NULL OR b.crappy=0) "
+			  "AND (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
+			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
 			  "AND c.id_level IS NULL "
 			  "ORDER BY b.difficulty DESC LIMIT 100", false);
   v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
@@ -628,7 +665,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
                           "WHERE b.finishTime < 2500 AND c.id_level IS NULL "
-			  "AND (d.crappy IS NULL OR d.crappy=0) ");           
+			  "AND (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
+			  "AND (d.children_compliant IS NULL OR xm_userChildrenCompliant(d.children_compliant)=1)");
   v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
   v_pack->setDescription(VPACKAGENAME_DESC_SHORT_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -640,7 +678,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
                           "WHERE b.finishTime >= 2500 AND b.finishTime < 6000 AND c.id_level IS NULL "
-			  "AND (d.crappy IS NULL OR d.crappy=0) ");
+			  "AND (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
+			  "AND (d.children_compliant IS NULL OR xm_userChildrenCompliant(d.children_compliant)=1)");
   v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
   v_pack->setDescription(VPACKAGENAME_DESC_MEDIUM_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -652,7 +691,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
                           "WHERE b.finishTime >= 6000 AND b.finishTime < 12000 AND c.id_level IS NULL "
-			  "AND (d.crappy IS NULL OR d.crappy=0) ");
+			  "AND (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
+			  "AND (d.children_compliant IS NULL OR xm_userChildrenCompliant(d.children_compliant)=1)");
   v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
   v_pack->setDescription(VPACKAGENAME_DESC_LONG_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -664,7 +704,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
                           "WHERE b.finishTime >= 12000 AND c.id_level IS NULL "
-			  "AND (d.crappy IS NULL OR d.crappy=0) ");
+			  "AND (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
+			  "AND (d.children_compliant IS NULL OR xm_userChildrenCompliant(d.children_compliant)=1)");
   v_pack->setGroup(GAMETEXT_PACK_BY_LENGTH);
   v_pack->setDescription(VPACKAGENAME_DESC_VERY_LONG_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -683,7 +724,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			    "WHERE a.packName=\"" +
 			    xmDatabase::protectString(i_db->getResult(v_result, 1, i, 0)) +
 			    "\" "
-			    "AND (b.crappy IS NULL OR b.crappy=0) AND c.id_level IS NULL");
+			    "AND (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
+			    "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
+			    "AND c.id_level IS NULL");
     v_pack->setGroup(GAMETEXT_PACK_STANDARD);
 
     snprintf(v_levelPackStr, 256, VPACKAGENAME_DESC_STANDARD, i_db->getResult(v_result, 1, i, 0));
@@ -696,7 +739,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   v_result = i_db->readDB("SELECT a.id_profile "
 			  "FROM webhighscores AS a "
 			  "LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level "
-			  "WHERE (b.crappy IS NULL OR b.crappy=0)"
+			  "WHERE (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
+			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
 			  "GROUP BY a.id_profile "
 			  "ORDER BY COUNT(1) DESC LIMIT 10;",
 			  nrow);
@@ -717,7 +761,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			    "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			    "WHERE b.id_room=" + i_id_room + " "
 			    "AND b.id_profile=\"" + xmDatabase::protectString(v_id_profile) + "\" "
-			    "AND (c.crappy IS NULL OR c.crappy=0) AND d.id_level IS NULL");
+			    "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
+			    "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
+			    "AND d.id_level IS NULL");
     v_pack->setGroup(GAMETEXT_PACK_BEST_DRIVERS);
     snprintf(v_levelPackStr, 256, VPACKAGENAME_DESC_BEST_DRIVERS, v_id_profile.c_str());
     v_pack->setDescription(v_levelPackStr);
@@ -1128,7 +1174,8 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN, uns
 			  "AND   b.quality    >= " + v_qualityMINStr.str()    + " "
 			  "AND   b.difficulty <= " + v_difficultyMAXStr.str() + " "
 			  "AND   b.difficulty >= " + v_difficultyMINStr.str() + " "
-			  "AND   b.crappy      = 0 "
+			  "AND   xm_userCrappy(b.crappy)=0 "
+			  "AND   xm_userChildrenCompliant(b.children_compliant)=1 "
 			  "AND   c.id_level IS NULL "
 			  "ORDER BY RANDOM();",
 			  nrow);
@@ -1149,21 +1196,23 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN, uns
       "AND   b.quality    >= " + v_qualityMINStr.str()    + " "
       "AND   b.difficulty <= " + v_difficultyMAXStr.str() + " "
       "AND   b.difficulty >= " + v_difficultyMINStr.str() + " "
-      "AND   b.crappy      = 0 "
+      "AND   xm_userCrappy(b.crappy)=0 "
+      "AND   xm_userChildrenCompliant(b.children_compliant)=1 "
       "AND   e.id_level IS NULL "
       "GROUP BY a.id_level ORDER BY RANDOM();";
   } else {
     /* all levels randomly */
     return
-    "SELECT a.id_level, MIN(a.name), MIN(b.finishTime), MIN(c.finishTime) "
-    "FROM levels AS a "
-    "LEFT OUTER JOIN webhighscores AS b ON (a.id_level = b.id_level AND b.id_room=" + i_id_room + ") "
-    "LEFT OUTER JOIN profile_completedLevels AS c "
-    "ON (a.id_level=c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_profile) + "\") "
-    "LEFT OUTER JOIN weblevels AS d ON (a.id_level=d.id_level) "
-    "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = e.id_level AND e.id_profile=\"" + xmDatabase::protectString(i_profile) + "\") "
-    "WHERE d.crappy = 0 "
-    "AND   e.id_level IS NULL "
-    "GROUP BY a.id_level ORDER BY RANDOM();";
+      "SELECT a.id_level, MIN(a.name), MIN(b.finishTime), MIN(c.finishTime) "
+      "FROM levels AS a "
+      "LEFT OUTER JOIN webhighscores AS b ON (a.id_level = b.id_level AND b.id_room=" + i_id_room + ") "
+      "LEFT OUTER JOIN profile_completedLevels AS c "
+      "ON (a.id_level=c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_profile) + "\") "
+      "LEFT OUTER JOIN weblevels AS d ON (a.id_level=d.id_level) "
+      "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = e.id_level AND e.id_profile=\"" + xmDatabase::protectString(i_profile) + "\") "
+      "WHERE xm_userCrappy(d.crappy)=0 "
+      "AND xm_userChildrenCompliant(d.children_compliant)=1 "
+      "AND   e.id_level IS NULL "
+      "GROUP BY a.id_level ORDER BY RANDOM();";
   }
 }
