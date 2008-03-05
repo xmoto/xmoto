@@ -66,6 +66,7 @@ XMArguments::XMArguments() {
   m_opt_videoRecordingStartTime = -1;
   m_opt_videoRecordingEndTime   = -1;
   m_opt_hidePlayingInformation  = false;
+  m_opt_forceChildrenCompliant  = false;
 }
 
 void XMArguments::parse(int i_argc, char **i_argv) {
@@ -164,6 +165,8 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       m_opt_debug = true;
     } else if(v_opt == "--sqlTrace") {
       m_opt_sqlTrace = true;
+    } else if(v_opt == "--children") {
+      m_opt_forceChildrenCompliant = true;
     } else if(v_opt == "-p" || v_opt == "--profile") {
       m_opt_profile = true;
       if(i+1 >= i_argc) {
@@ -413,6 +416,10 @@ bool XMArguments::isOptProfile() const {
   return m_opt_profile;
 }
 
+bool XMArguments::isOptForceChildrenCompliant() const {
+	return m_opt_forceChildrenCompliant;
+}
+
 std::string XMArguments::getOpt_profile_value() const {
   return m_profile_value;
 }
@@ -536,6 +543,7 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t-r, --replay NAME\n\t\tPlayback replay with the given name.\n");    
   printf("\t-ri, --replayInfos REPLAY NAME\n\t\tDisplay information about a replay.\n");    
   printf("\t-p, --profile NAME\n\t\tUse the profile NAME as the player profile.\n");
+  printf("\t--children\n\t\tForce children mode.\n");
   printf("\t--configpath PATH\n\t\tUse the path PATH as the xmoto configuration path.\n");
   printf("\t-ll, --listlevels\n\t\tOutputs a list of all installed levels.\n");
   printf("\t-lr, --listreplays\n\t\tOutputs a list of all replays.\n");

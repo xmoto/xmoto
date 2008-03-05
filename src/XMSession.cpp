@@ -100,6 +100,7 @@ void XMSession::setToDefault() {
   m_mirrorMode                    = false;
   m_useCrappyPack                 = true;
   m_useChildrenCompliant          = false;
+	m_forceChildrenCompliant        = false;
   m_enableVideoRecording          = false;
   m_videoRecordingDivision        = VR_DEFAULT_DIVISION;
   m_videoRecordingFramerate       = VR_DEFAULT_FRAMERATE;
@@ -211,6 +212,9 @@ void XMSession::load(const XMArguments* i_xmargs) {
     m_hidePlayingInformation = true;
   }
 
+	if(i_xmargs->isOptForceChildrenCompliant()) {
+		m_forceChildrenCompliant = true;
+	}
 }
 
 void XMSession::load(UserConfig* m_Config) {
@@ -881,11 +885,19 @@ void XMSession::setUseCrappyPack(bool i_value) {
 }
 
 bool XMSession::useChildrenCompliant() const {
+	if(m_forceChildrenCompliant) {
+		return true;
+	}
+
   return m_useChildrenCompliant;
 }
 
 void XMSession::setChildrenCompliant(bool i_value) {
   m_useChildrenCompliant = i_value;
+}
+
+bool XMSession::forceChildrenCompliant() const {
+	return m_forceChildrenCompliant;
 }
 
 ProxySettings* XMSession::proxySettings() {
