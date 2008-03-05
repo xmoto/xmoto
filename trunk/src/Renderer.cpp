@@ -1614,7 +1614,7 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 	    glTranslatef(-dynRotCenter.x, -dynRotCenter.y, 0);
 	  }
 
-	  GameApp::instance()->getDrawLib()->setTexture(m_DynamicGeoms[geom]->pTexture, BLEND_MODE_NONE);
+	  GameApp::instance()->getDrawLib()->setTexture(m_DynamicGeoms[geom]->pTexture, BLEND_MODE_A);
 	  GameApp::instance()->getDrawLib()->setColorRGB(255, 255, 255);
 
 	  /* VBO optimized? */
@@ -1649,7 +1649,7 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 	} else if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
 
 	  if(m_DynamicGeoms[geom]->Polys.size() > 0) {
-	    GameApp::instance()->getDrawLib()->setTexture(m_DynamicGeoms[geom]->pTexture,BLEND_MODE_NONE);
+	    GameApp::instance()->getDrawLib()->setTexture(m_DynamicGeoms[geom]->pTexture,BLEND_MODE_A);
 	    GameApp::instance()->getDrawLib()->setColorRGB(255,255,255);
 
 	    for(unsigned int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
@@ -1761,7 +1761,7 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
     } else if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
 
       for(unsigned int j=0;j<m_StaticGeoms[geom]->Polys.size();j++) {
-	GameApp::instance()->getDrawLib()->setTexture(m_StaticGeoms[geom]->pTexture,BLEND_MODE_NONE);
+	GameApp::instance()->getDrawLib()->setTexture(m_StaticGeoms[geom]->pTexture,BLEND_MODE_A);
 	GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	GameApp::instance()->getDrawLib()->setColorRGB(255,255,255);
 	for(unsigned int k=0;k<m_StaticGeoms[geom]->Polys[j]->nNumVertices;k++) {
