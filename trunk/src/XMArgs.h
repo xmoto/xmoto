@@ -86,6 +86,7 @@ class XMArguments {
   bool isOptVideoRecordingEndTime() const;
   int getOptVideoRecordingEndTime_value() const;
   bool isOptHidePlayingInformation() const;
+	bool isOptForceChildrenCompliant() const;
 
   private:
   /* pack options */
@@ -144,6 +145,7 @@ class XMArguments {
   /* profile */
   bool m_opt_profile;
   std::string m_profile_value;
+  bool m_opt_forceChildrenCompliant;
 
   /* game */
   bool m_opt_timedemo;

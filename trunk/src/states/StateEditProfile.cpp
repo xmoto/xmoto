@@ -62,6 +62,11 @@ void StateEditProfile::updateOptions() {
 
   v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("EDITPROFILE_FRAME:CHILDRENCOMPLIANT"));
   v_button->setChecked(XMSession::instance()->useChildrenCompliant());
+
+	if(XMSession::instance()->forceChildrenCompliant()) {
+		v_button->setChecked(true);
+		v_button->enableWindow(false);
+	}
 }
 
 void StateEditProfile::checkEvents() {

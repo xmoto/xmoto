@@ -80,6 +80,7 @@ function makeNSI {
   echo "	CreateDirectory \"\$SMPROGRAMS\X-Moto\""
   echo "        CreateShortCut \"\$SMPROGRAMS\X-Moto\X-Moto.lnk\" \"\$INSTDIR\xmoto.exe\" \"\" \"\$INSTDIR\xmoto.exe\" 0"
   echo "        CreateShortCut \"\$SMPROGRAMS\X-Moto\X-Moto (Windowed).lnk\" \"\$INSTDIR\xmoto.exe\" \"-win\" \"\$INSTDIR\xmoto.exe\" 0"
+  echo "        CreateShortCut \"\$SMPROGRAMS\X-Moto\X-Moto for children.lnk\" \"\$INSTDIR\xmoto.exe\" \"--children\" \"\$INSTDIR\xmoto.exe\" 0"
   echo "        CreateDirectory \"\$PROFILE\\.xmoto\""
   echo "        CreateShortCut \"\$SMPROGRAMS\X-Moto\X-Moto User Data.lnk\" \"\$PROFILE\\.xmoto\""
   echo "	CreateShortCut \"\$SMPROGRAMS\X-Moto\X-Moto Uninstall.lnk\" \"\$INSTDIR\uninstall.exe\" \"\" \"\$INSTDIR\uninstall.exe\" 0"
