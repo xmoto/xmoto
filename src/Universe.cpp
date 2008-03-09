@@ -222,8 +222,13 @@ void Universe::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
 		|| v_best_personal_time < 0);
 
   /* search a better webhighscore */
-  v_best_room_time = pDb->webrooms_getHighscoreTime(XMSession::instance()->idRoom(), m_scenes[0]->getLevelSrc()->Id());
-  o_room = (v_current_time < v_best_room_time || v_best_room_time < 0);
+  o_room = false;
+  for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+    v_best_room_time = pDb->webrooms_getHighscoreTime(XMSession::instance()->idRoom(i), m_scenes[0]->getLevelSrc()->Id());    
+    if(v_current_time < v_best_room_time || v_best_room_time < 0) {
+      o_room = true;
+    }
+  }
 }
 
 bool Universe::isAReplayToSave() const {

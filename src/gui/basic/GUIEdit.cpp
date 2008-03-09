@@ -105,6 +105,7 @@ void UIEdit::paint(void) {
         getRoot()->activateUp();
         return true;
       case SDLK_DOWN:
+      case SDLK_TAB:
         getRoot()->activateDown();
         return true;
       case SDLK_LEFT:
@@ -143,8 +144,8 @@ void UIEdit::paint(void) {
             m_nCursorPos--;
           }
         }
-        return true;      
-      default:
+        return true;
+    default:
         if(nChar) {
           char c[2];
           c[0] = nChar;

@@ -42,19 +42,19 @@ CheckWwwThread::~CheckWwwThread()
   delete m_pWebLevels;
 }
 
-void CheckWwwThread::updateWebHighscores()
+void CheckWwwThread::updateWebHighscores(unsigned int i_number)
 {
   Logger::Log("WWW: Checking for new highscores...");
 
   setSafeKill(true);
-  m_pWebRoom->update();
+  m_pWebRoom->update(i_number);
   setSafeKill(false);
 }
 
-void CheckWwwThread::upgradeWebHighscores()
+void CheckWwwThread::upgradeWebHighscores(unsigned int i_number)
 {
   try {
-    m_pWebRoom->upgrade(m_pDb);
+    m_pWebRoom->upgrade(i_number, m_pDb);
     StateManager::instance()->sendAsynchronousMessage("HIGHSCORES_UPDATED");
   } catch (Exception& e) {
     Logger::Log("** Warning ** : Failed to analyse web-highscores file");   
@@ -83,33 +83,42 @@ bool CheckWwwThread::isNeeded() {
 
 int CheckWwwThread::realThreadFunction()
 {
+  std::string webRoomUrl;
+  std::string webRoomName;
+  std::string webLevelsUrl;
+  ProxySettings* pProxySettings;
+
   if(XMSession::instance()->www() == true){
-    ProxySettings* pProxySettings = XMSession::instance()->proxySettings();
-    std::string    webRoomUrl     = GameApp::instance()->getWebRoomURL(m_pDb);
-    std::string    webRoomName    = GameApp::instance()->getWebRoomName(m_pDb);
-    std::string    webLevelsUrl   = XMSession::instance()->webLevelsUrl();
+    pProxySettings = XMSession::instance()->proxySettings();
 
-    m_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);
-    m_pWebLevels->setWebsiteInfos(webLevelsUrl, pProxySettings);
+    /* check highscores */
+    try {
+      setThreadCurrentOperation(GAMETEXT_DLHIGHSCORES);
+      setThreadProgress(0);
 
-    if(m_forceUpdate == true
-       || XMSession::instance()->checkNewHighscoresAtStartup() == true){
-      try {
-	setThreadCurrentOperation(GAMETEXT_DLHIGHSCORES);
-	setThreadProgress(0);
+      for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+	if(m_forceUpdate == true
+	   || XMSession::instance()->checkNewHighscoresAtStartup() == true){
+	  webRoomUrl   = GameApp::instance()->getWebRoomURL(i, m_pDb);
+	  webRoomName  = GameApp::instance()->getWebRoomName(i, m_pDb);
+	  m_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);
 
-	updateWebHighscores();
-	upgradeWebHighscores();
-
-      } catch (Exception& e) {
-	Logger::Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());
-	m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
-	return 1;
+	  setThreadCurrentOperation(GAMETEXT_DLHIGHSCORES + std::string(" (") + webRoomName + ")");
+	  updateWebHighscores(i);
+	  upgradeWebHighscores(i);
+	  setThreadProgress((100 * (i+1)) / XMSession::instance()->nbRoomsEnabled());
+	}
       }
+    } catch (Exception& e) {
+      Logger::Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());
+      m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+      return 1;
     }
-
     setThreadProgress(100);
 
+    /* check levels */
+    webLevelsUrl = XMSession::instance()->webLevelsUrl();
+    m_pWebLevels->setWebsiteInfos(webLevelsUrl, pProxySettings);
     if(m_forceUpdate == true
        || XMSession::instance()->checkNewLevelsAtStartup() == true){
       try {

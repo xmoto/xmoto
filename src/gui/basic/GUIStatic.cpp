@@ -89,5 +89,10 @@ void UIStatic::setAllowContextHelp(bool i_value) {
       perY = -0.5;
     }    
 
+    if(isDisabled())
+      setTextSolidColor(MAKE_COLOR(170,170,170,128));
+    else
+      setTextSolidColor(MAKE_COLOR(255,255,255,255));
+
     putText(v_x, v_y, getCaption(), perX, perY);
   }

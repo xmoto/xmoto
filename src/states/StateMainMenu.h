@@ -68,6 +68,9 @@ class StateMainMenu : public StateMenu {
   static UIWindow* makeWindowOptions_ghosts(UIWindow* i_parent);
   static UIWindow* makeWindowOptions_language(UIWindow* i_parent);
 
+  /* multirooms */
+  static UIWindow* makeRoomTab(UIWindow* i_parent, unsigned int i_number);
+
   void updateProfile();
 
   void updateLevelsPacksList();

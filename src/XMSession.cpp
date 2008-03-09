@@ -53,7 +53,8 @@ void XMSession::setToDefault() {
   m_testTheme 	     	          = false;
   m_ghostStrategy_MYBEST          = true;
   m_ghostStrategy_THEBEST         = false;
-  m_ghostStrategy_BESTOFROOM      = false;
+  m_ghostStrategy_BESTOFREFROOM   = false;
+  m_ghostStrategy_BESTOFOTHERROOMS = false;
   m_autosaveHighscoreReplays      = true;
   m_enableGhosts                  = true;
   m_enableEngineSound             = true;
@@ -81,7 +82,10 @@ void XMSession::setToDefault() {
   m_checkNewLevelsAtStartup       = true;
   m_checkNewHighscoresAtStartup   = true;
   m_showHighscoreInGame           = true;
-  m_idRoom                        = DEFAULT_WEBROOM_ID;
+  for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
+    m_idRoom[i]                   = DEFAULT_WEBROOM_ID;
+  }
+  m_nbRoomsEnabled = 1;
   m_showGhostTimeDifference       = true;
   m_ghostMotionBlur               = true;
   m_showGhostsInfos               = false;
@@ -227,7 +231,8 @@ void XMSession::load(UserConfig* m_Config) {
   m_profile          	     = m_Config->getString("DefaultProfile");
   m_ghostStrategy_MYBEST     = m_Config->getBool("GhostStrategy_MYBEST");
   m_ghostStrategy_THEBEST    = m_Config->getBool("GhostStrategy_THEBEST");
-  m_ghostStrategy_BESTOFROOM = m_Config->getBool("GhostStrategy_BESTOFROOM");
+  m_ghostStrategy_BESTOFREFROOM    = m_Config->getBool("GhostStrategy_BESTOFREFROOM");
+  m_ghostStrategy_BESTOFOTHERROOMS = m_Config->getBool("GhostStrategy_BESTOFOTHERROOMS");
   m_autosaveHighscoreReplays = m_Config->getBool("AutosaveHighscoreReplays");
   m_enableGhosts             = m_Config->getBool("EnableGhost");
   m_enableEngineSound        = m_Config->getBool("EngineSoundEnable");
@@ -264,10 +269,21 @@ void XMSession::load(UserConfig* m_Config) {
   m_checkNewLevelsAtStartup     = m_Config->getBool("CheckNewLevelsAtStartup");
   m_checkNewHighscoresAtStartup = m_Config->getBool("CheckHighscoresAtStartup");
   m_showHighscoreInGame         = m_Config->getBool("ShowInGameWorldRecord");
-  m_uploadLogin                 = m_Config->getString("WebHighscoreUploadLogin");
-  m_uploadPassword              = m_Config->getString("WebHighscoreUploadPassword");
   m_uploadHighscoreUrl          = m_Config->getString("WebHighscoreUploadURL");
-  m_idRoom                      = m_Config->getString("WebHighscoresIdRoom");
+  m_nbRoomsEnabled              = m_Config->getInteger("WebHighscoresNbRooms");
+  for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
+    if(i==0) {
+      m_idRoom[i]               = m_Config->getString("WebHighscoresIdRoom");
+      m_uploadLogin[i]          = m_Config->getString("WebHighscoreUploadLogin");
+      m_uploadPassword[i]       = m_Config->getString("WebHighscoreUploadPassword");
+    } else {
+      std::ostringstream v_strRoom;
+      v_strRoom << i;
+      m_idRoom[i]               = m_Config->getString("WebHighscoresIdRoom"        + v_strRoom.str());
+      m_uploadLogin[i]          = m_Config->getString("WebHighscoreUploadLogin"    + v_strRoom.str());
+      m_uploadPassword[i]       = m_Config->getString("WebHighscoreUploadPassword" + v_strRoom.str());
+    }
+  }
   m_showGhostTimeDifference     = m_Config->getBool("ShowGhostTimeDiff");
   m_ghostMotionBlur             = m_Config->getBool("GhostMotionBlur");
   m_showGhostsInfos             = m_Config->getBool("DisplayGhostInfo");
@@ -304,13 +320,31 @@ void XMSession::save(UserConfig* v_config) {
   v_config->setBool("CheckNewLevelsAtStartup",      m_checkNewLevelsAtStartup);
   v_config->setBool("CheckHighscoresAtStartup",     m_checkNewHighscoresAtStartup);
   v_config->setBool("ShowInGameWorldRecord",        m_showHighscoreInGame);
-  v_config->setString("WebHighscoreUploadLogin",    m_uploadLogin);
-  v_config->setString("WebHighscoreUploadPassword", m_uploadPassword);
-  v_config->setString("WebHighscoresIdRoom",        m_idRoom);
+
+  v_config->setInteger("WebHighscoresNbRooms",      m_nbRoomsEnabled);
+  if(m_nbRoomsEnabled < 1) { m_nbRoomsEnabled = 1; }
+  if(m_nbRoomsEnabled > ROOMS_NB_MAX) { m_nbRoomsEnabled = ROOMS_NB_MAX; }
+  for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
+    if(i==0) {
+      v_config->setString("WebHighscoresIdRoom",        m_idRoom[i]);
+      v_config->setString("WebHighscoreUploadLogin",    m_uploadLogin[i]);
+      v_config->setString("WebHighscoreUploadPassword", m_uploadPassword[i]);
+
+    } else {
+      std::ostringstream v_strRoom;
+      v_strRoom << i;
+      v_config->setString("WebHighscoresIdRoom"        + v_strRoom.str(), m_idRoom[i]);
+      v_config->setString("WebHighscoreUploadLogin"    + v_strRoom.str(), m_uploadLogin[i]);
+      v_config->setString("WebHighscoreUploadPassword" + v_strRoom.str(), m_uploadPassword[i]);
+
+    }
+  }
+
   v_config->setBool("EnableGhost",           	    m_enableGhosts);
   v_config->setBool("GhostStrategy_MYBEST",  	    m_ghostStrategy_MYBEST);
   v_config->setBool("GhostStrategy_THEBEST", 	    m_ghostStrategy_THEBEST);
-  v_config->setBool("GhostStrategy_BESTOFROOM",     m_ghostStrategy_BESTOFROOM);
+  v_config->setBool("GhostStrategy_BESTOFREFROOM",  m_ghostStrategy_BESTOFREFROOM);
+  v_config->setBool("GhostStrategy_BESTOFOTHERROOMS", m_ghostStrategy_BESTOFOTHERROOMS);
   v_config->setBool("ShowGhostTimeDiff",            m_showGhostTimeDifference);
   v_config->setBool("GhostMotionBlur",              m_ghostMotionBlur);
   v_config->setBool("DisplayGhostInfo",             m_showGhostsInfos);
@@ -483,12 +517,20 @@ void XMSession::setGhostStrategy_THEBEST(bool i_value) {
   m_ghostStrategy_THEBEST = i_value;
 }
 
-bool XMSession::ghostStrategy_BESTOFROOM() const {
-  return m_ghostStrategy_BESTOFROOM;
+bool XMSession::ghostStrategy_BESTOFREFROOM() const {
+  return m_ghostStrategy_BESTOFREFROOM;
 }
 
-void XMSession::setGhostStrategy_BESTOFROOM(bool i_value) {
-  m_ghostStrategy_BESTOFROOM = i_value;
+void XMSession::setGhostStrategy_BESTOFREFROOM(bool i_value) {
+  m_ghostStrategy_BESTOFREFROOM = i_value;
+}
+
+bool XMSession::ghostStrategy_BESTOFOTHERROOMS() const {
+  return m_ghostStrategy_BESTOFOTHERROOMS;
+}
+
+void XMSession::setGhostStrategy_BESTOFOTHERROOMS(bool i_value) {
+  m_ghostStrategy_BESTOFOTHERROOMS = i_value;
 }
 
 bool XMSession::autosaveHighscoreReplays() const {
@@ -744,28 +786,36 @@ bool XMSession::showHighscoreInGame() const {
   return m_showHighscoreInGame;
 }
 
-void XMSession::setUploadLogin(const std::string& i_value) {
-  m_uploadLogin = i_value;
+unsigned int XMSession::nbRoomsEnabled() const {
+  return m_nbRoomsEnabled;
 }
 
-std::string XMSession::uploadLogin() const {
-  return m_uploadLogin;
+void XMSession::setNbRoomsEnabled(unsigned int i_value) {
+  m_nbRoomsEnabled = i_value;
 }
 
-void XMSession::setUploadPassword(const std::string& i_value) {
-  m_uploadPassword = i_value;
+void XMSession::setUploadLogin(unsigned int i_number, const std::string& i_value) {
+  m_uploadLogin[i_number] = i_value;
 }
 
-std::string XMSession::uploadPassword() const {
-  return m_uploadPassword;
+std::string XMSession::uploadLogin(unsigned int i_number) const {
+  return m_uploadLogin[i_number];
 }
 
-void XMSession::setIdRoom(const std::string& i_value) {
-  m_idRoom = i_value;
+void XMSession::setUploadPassword(unsigned int i_number, const std::string& i_value) {
+  m_uploadPassword[i_number] = i_value;
 }
 
-std::string XMSession::idRoom() const {
-  return m_idRoom;
+std::string XMSession::uploadPassword(unsigned int i_number) const {
+  return m_uploadPassword[i_number];
+}
+
+void XMSession::setIdRoom(unsigned int i_number, const std::string& i_value) {
+  m_idRoom[i_number] = i_value;
+}
+
+std::string XMSession::idRoom(unsigned int i_number) const {
+  return m_idRoom[i_number];
 }
 
 void XMSession::setShowGhostTimeDifference(bool i_value) {
@@ -1113,7 +1163,24 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
   v_config->createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL);
   v_config->createVar( "WebThemesURL",           DEFAULT_WEBTHEMES_URL);
   v_config->createVar( "WebThemesURLBase",       DEFAULT_WEBTHEMES_SPRITESURLBASE);
-  v_config->createVar( "WebHighscoresIdRoom",     DEFAULT_WEBROOM_ID);
+
+  v_config->createVar( "WebHighscoresNbRooms", "1");
+  for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
+    if(i==0) {
+      v_config->createVar( "WebHighscoresIdRoom"       , DEFAULT_WEBROOM_ID);
+      v_config->createVar( "WebHighscoreUploadLogin"   , "");
+      v_config->createVar( "WebHighscoreUploadPassword", ""); 
+
+    } else {
+      std::ostringstream v_strRoom;
+      v_strRoom << i;
+      v_config->createVar( "WebHighscoresIdRoom"        + v_strRoom.str(), DEFAULT_WEBROOM_ID);
+      v_config->createVar( "WebHighscoreUploadLogin"    + v_strRoom.str(), "");
+      v_config->createVar( "WebHighscoreUploadPassword" + v_strRoom.str(), ""); 
+
+    }
+  }
+
 
   /* Proxy */
   v_config->createVar( "ProxyType",              "" ); /* (blank), HTTP, SOCKS4, or SOCKS5 */
@@ -1124,13 +1191,12 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
 
   /* auto upload */
   v_config->createVar( "WebHighscoreUploadURL", DEFAULT_UPLOADREPLAY_URL);
-  v_config->createVar( "WebHighscoreUploadLogin"    , "");
-  v_config->createVar( "WebHighscoreUploadPassword" , ""); 
 
   v_config->createVar( "EnableGhost"        , "true");
   v_config->createVar( "GhostStrategy_MYBEST", "true");
   v_config->createVar( "GhostStrategy_THEBEST", "false");
-  v_config->createVar( "GhostStrategy_BESTOFROOM", "false");
+  v_config->createVar( "GhostStrategy_BESTOFREFROOM",    "false");
+  v_config->createVar( "GhostStrategy_BESTOFOTHERROOMS", "false");
   v_config->createVar( "ShowGhostTimeDiff"  , "true");
   v_config->createVar( "DisplayGhostInfo"   , "false");
   v_config->createVar( "HideGhosts"   , "false");

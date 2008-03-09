@@ -311,7 +311,7 @@ void StateLevelPackViewer::updateGUI()
   }
 
   v_result = pDb->readDB(m_pActiveLevelPack->getLevelsWithHighscoresQuery(XMSession::instance()->profile(),
-									  XMSession::instance()->idRoom()),
+									  XMSession::instance()->idRoom(0)),
 				      nrow);
   for(unsigned int i=0; i<nrow; i++) {
     if(pDb->getResult(v_result, 4, i, 2) == NULL) {
@@ -378,7 +378,7 @@ void StateLevelPackViewer::updateInfoFrame() {
   }
 
   if(v_id_level != "") {
-    if(GameApp::instance()->getHighscoreInfos(v_id_level, &v_id_profile, &v_url, &v_isAccessible)) {
+    if(GameApp::instance()->getHighscoreInfos(0, v_id_level, &v_id_profile, &v_url, &v_isAccessible)) {
       v_someText->setCaption(std::string(GAMETEXT_BESTPLAYER) + " : " + v_id_profile);
       v_button->enableWindow(v_isAccessible);
       v_window->showWindow(true);

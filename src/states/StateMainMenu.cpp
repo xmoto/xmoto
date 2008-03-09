@@ -147,7 +147,7 @@ void StateMainMenu::enterAfterPop()
 
   if(m_require_updateLevelsList) {
     LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
-					 XMSession::instance()->idRoom(),
+					 XMSession::instance()->idRoom(0),
 					 XMSession::instance()->debug(),
 					 xmDatabase::instance("main"));
     if(v_levelsListsUpdated == false) {
@@ -625,7 +625,7 @@ void StateMainMenu::updateProfile() {
   std::string v_caption;
 
   if(XMSession::instance()->profile() != "") {
-    v_caption = std::string(GAMETEXT_PLAYER) + ": " + XMSession::instance()->profile() + "@" + GameApp::instance()->getWebRoomName();
+    v_caption = std::string(GAMETEXT_PLAYER) + ": " + XMSession::instance()->profile() + "@" + GameApp::instance()->getWebRoomName(0);
   }
 
   v_playerTag->setCaption(v_caption);
@@ -1148,32 +1148,29 @@ UIWindow* StateMainMenu::makeWindowOptions_controls(UIWindow* i_parent) {
 }
 
 UIWindow* StateMainMenu::makeWindowOptions_rooms(UIWindow* i_parent) {
-  UIWindow*  v_window;
-  UIButton*  v_button;
-  UIList*    v_list;
-  UIStatic*  v_someText;
-  UIEdit*    v_edit;
-  DrawLib* drawlib = GameApp::instance()->getDrawLib();
+  UIWindow *v_window, *v_wwwwindow;
+  UIButton* v_button;
+  DrawLib*  drawlib = GameApp::instance()->getDrawLib();
 
-  v_window = new UIWindow(i_parent, 0, 26, GAMETEXT_WWWTAB, i_parent->getPosition().nWidth, i_parent->getPosition().nHeight);
-  v_window->setID("WWW_TAB");
-  v_window->showWindow(false);
+  v_wwwwindow = new UIWindow(i_parent, 0, 26, GAMETEXT_WWWTAB, i_parent->getPosition().nWidth, i_parent->getPosition().nHeight);
+  v_wwwwindow->setID("WWW_TAB");
+  v_wwwwindow->showWindow(false);
 
-  v_button = new UIButton(v_window, v_window->getPosition().nWidth-225, v_window->getPosition().nHeight-80,
+  v_button = new UIButton(v_wwwwindow, v_wwwwindow->getPosition().nWidth-225, v_wwwwindow->getPosition().nHeight-80,
 			  GAMETEXT_PROXYCONFIG, 207, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
   v_button->setID("PROXYCONFIG");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_PROXYCONFIG);
 
-  v_button = new UIButton(v_window, v_window->getPosition().nWidth-225-200, v_window->getPosition().nHeight-80,
+  v_button = new UIButton(v_wwwwindow, v_wwwwindow->getPosition().nWidth-225-200, v_wwwwindow->getPosition().nHeight-80,
 			  GAMETEXT_UPDATEHIGHSCORES, 207, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
   v_button->setID("UPDATEHIGHSCORES");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_UPDATEHIGHSCORES);
 
-  UITabView *v_roomsTabs = new UITabView(v_window, 0, 0, "", v_window->getPosition().nWidth, v_window->getPosition().nHeight-76);
+  UITabView *v_roomsTabs = new UITabView(v_wwwwindow, 0, 0, "", v_wwwwindow->getPosition().nWidth, v_wwwwindow->getPosition().nHeight-76);
   v_roomsTabs->setID("TABS");
   v_roomsTabs->setFont(drawlib->getFontSmall());
   v_roomsTabs->setTabContextHelp(0, CONTEXTHELP_WWW_MAIN_TAB);
@@ -1218,43 +1215,80 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_button->setGroup(50123);
   v_button->setContextHelp(CONTEXTHELP_USECRAPPYINFORMATION);
 
-  v_window = new UIWindow(v_roomsTabs, 20, 40, GAMETEXT_WWWROOMSTAB, v_roomsTabs->getPosition().nWidth-40,
-			  v_roomsTabs->getPosition().nHeight);
-  v_window->setID("ROOMS_TAB");
+  for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
+    v_window = makeRoomTab(v_roomsTabs, i);
+  }
+
+  return v_wwwwindow;
+}
+
+UIWindow* StateMainMenu::makeRoomTab(UIWindow* i_parent, unsigned int i_number) {
+  UIWindow* v_window;
+  UIList*   v_list;
+  UIStatic* v_someText;
+  UIEdit*   v_edit;
+  UIButton*  v_button;
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
+
+  std::string v_roomTitle;
+  std::ostringstream v_strRoom;
+  v_strRoom << i_number;
+
+  if(i_number == 0) {
+    v_roomTitle = GAMETEXT_WWWROOMSTAB_REFERENCE;
+  } else {
+    char v_ctmp[64];
+    snprintf(v_ctmp, 64, GAMETEXT_WWWROOMSTAB_OTHER, i_number + 1);
+    v_roomTitle = v_ctmp;
+  }
+
+  v_window = new UIWindow(i_parent, 4, 25, v_roomTitle,
+			  i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
+  v_window->setID("ROOMS_TAB_" + v_strRoom.str());
   v_window->showWindow(false);
 
-  v_list = new UIList(v_window, 5, 10, "", v_window->getPosition().nWidth-200, v_window->getPosition().nHeight-30 - 85);
+  if(i_number != 0) {
+    v_button = new UIButton(v_window, 0, 0, "", 40, 28);
+    v_button->setType(UI_BUTTON_TYPE_CHECK);
+    v_button->setID("ROOM_ENABLED");
+    v_button->setFont(drawlib->getFontSmall());
+    v_button->setContextHelp(CONTEXTHELP_ROOM_ENABLE);
+  }
+
+  v_list = new UIList(v_window, 21, 33, "", v_window->getPosition().nWidth-200, v_window->getPosition().nHeight-30-20 - 85);
   v_list->setID("ROOMS_LIST");
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_ROOM, v_list->getPosition().nWidth);
   v_list->setContextHelp(CONTEXTHELP_WWW_ROOMS_LIST);
 
-  v_someText = new UIStatic(v_window, v_window->getPosition().nWidth-180, 5, std::string(GAMETEXT_LOGIN) + ":", 130, 30);
+  v_someText = new UIStatic(v_window, v_window->getPosition().nWidth-165, 20, std::string(GAMETEXT_LOGIN) + ":", 130, 30);
+  v_someText->setID("ROOM_LOGIN_STATIC");
   v_someText->setHAlign(UI_ALIGN_LEFT);
   v_someText->setFont(drawlib->getFontSmall()); 
 
-  v_edit = new UIEdit(v_window, v_window->getPosition().nWidth-180, 30, "", 150, 25);
+  v_edit = new UIEdit(v_window, v_window->getPosition().nWidth-165, 50, "", 150, 25);
   v_edit->setFont(drawlib->getFontSmall());
   v_edit->setID("ROOM_LOGIN");
   v_edit->setContextHelp(CONTEXTHELP_ROOM_LOGIN);
 
-  v_someText = new UIStatic(v_window, v_window->getPosition().nWidth-180, 65, std::string(GAMETEXT_PASSWORD) + ":", 130, 30);
+  v_someText = new UIStatic(v_window, v_window->getPosition().nWidth-165, 90, std::string(GAMETEXT_PASSWORD) + ":", 130, 30);
+  v_someText->setID("ROOM_PASSWORD_STATIC");
   v_someText->setHAlign(UI_ALIGN_LEFT);
   v_someText->setFont(drawlib->getFontSmall()); 
 
-  v_edit = new UIEdit(v_window, v_window->getPosition().nWidth-180, 90, "", 150, 25);
+  v_edit = new UIEdit(v_window, v_window->getPosition().nWidth-165, 115, "", 150, 25);
   v_edit->hideText(true);
   v_edit->setFont(drawlib->getFontSmall());
   v_edit->setID("ROOM_PASSWORD");
   v_edit->setContextHelp(CONTEXTHELP_ROOM_PASSWORD);
 
-  v_button = new UIButton(v_window, v_window->getPosition().nWidth/2 - 212, v_window->getPosition().nHeight - 100, GAMETEXT_UPDATEROOMSSLIST, 215, 57);
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth/2 - 212, v_window->getPosition().nHeight - 90, GAMETEXT_UPDATEROOMSSLIST, 215, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
   v_button->setID("UPDATE_ROOMS_LIST");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_UPDATEROOMSLIST);
 
-  v_button = new UIButton(v_window, v_window->getPosition().nWidth/2 + 5, v_window->getPosition().nHeight - 100, GAMETEXT_UPLOAD_ALL_HIGHSCORES, 215, 57);
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth/2 + 5, v_window->getPosition().nHeight - 90, GAMETEXT_UPLOAD_ALL_HIGHSCORES, 215, 57);
   v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_LARGE);
   v_button->setID("UPLOADHIGHSCOREALL_BUTTON");
@@ -1278,43 +1312,49 @@ UIWindow* StateMainMenu::makeWindowOptions_ghosts(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_GHOST_MODE);
 
-  v_button = new UIButton(v_window, 5+20, 35, GAMETEXT_GHOST_STRATEGY_MYBEST, v_window->getPosition().nWidth-40,28);
+  v_button = new UIButton(v_window, 5+20, 34, GAMETEXT_GHOST_STRATEGY_MYBEST, v_window->getPosition().nWidth-40,28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("GHOST_STRATEGY_MYBEST");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_MYBEST);
 
-  v_button = new UIButton(v_window, 5+20, 65, GAMETEXT_GHOST_STRATEGY_THEBEST, v_window->getPosition().nWidth-40,28);
+  v_button = new UIButton(v_window, 5+20, 63, GAMETEXT_GHOST_STRATEGY_THEBEST, v_window->getPosition().nWidth-40,28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("GHOST_STRATEGY_THEBEST");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_THEBEST);
 
-  v_button = new UIButton(v_window, 5+20, 95, GAMETEXT_GHOST_STRATEGY_BESTOFROOM, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5+20, 92, GAMETEXT_GHOST_STRATEGY_BESTOFREFROOM, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("GHOST_STRATEGY_BESTOFROOM");
+  v_button->setID("GHOST_STRATEGY_BESTOFREFROOM");
   v_button->setFont(drawlib->getFontSmall());
-  v_button->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_BESTOFROOM);
+  v_button->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_BESTOFREFROOM);
 
-  v_button = new UIButton(v_window, 5, 125, GAMETEXT_DISPLAYGHOSTTIMEDIFF, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5+20, 121, GAMETEXT_GHOST_STRATEGY_BESTOFOTHERROOMS, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("GHOST_STRATEGY_BESTOFOTHERROOMS");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_BESTOFOTHERROOMS);
+
+  v_button = new UIButton(v_window, 5, 150, GAMETEXT_DISPLAYGHOSTTIMEDIFF, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("DISPLAY_GHOST_TIMEDIFFERENCE");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_TIMEDIFF);
 
-  v_button = new UIButton(v_window, 5, 185, GAMETEXT_DISPLAYGHOSTINFO, v_window->getPosition().nWidth-40, 28);
-  v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("DISPLAY_GHOSTS_INFOS");
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_INFO);
-
-  v_button = new UIButton(v_window, 5, 155, GAMETEXT_HIDEGHOSTS, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 179, GAMETEXT_HIDEGHOSTS, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("HIDEGHOSTS");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_HIDEGHOSTS);
 
-  v_button = new UIButton(v_window, 5, 215, GAMETEXT_MOTIONBLURGHOST, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 208, GAMETEXT_DISPLAYGHOSTINFO, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("DISPLAY_GHOSTS_INFOS");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_INFO);
+
+  v_button = new UIButton(v_window, 5, 237, GAMETEXT_MOTIONBLURGHOST, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("MOTION_BLUR_GHOST");
   v_button->setFont(drawlib->getFontSmall());
@@ -1591,7 +1631,7 @@ UILevelList* StateMainMenu::buildQuickStartList() {
 							    v_quickStart->getDifficultyMIN(),
 							    v_quickStart->getQualityMAX(),
 							    v_quickStart->getDifficultyMAX(),
-							    XMSession::instance()->profile(), XMSession::instance()->idRoom(),
+							    XMSession::instance()->profile(), XMSession::instance()->idRoom(0),
 							    xmDatabase::instance("main")));
   return v_list;
 }
@@ -1705,7 +1745,7 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
    if(i_message == "LEVELS_UPDATED" || i_message == "HIGHSCORES_UPDATED" || i_message == "BLACKLISTEDLEVELS_UPDATED") {
      if(StateManager::instance()->isTopOfTheStates(this)) {
        LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
-					    XMSession::instance()->idRoom(),
+					    XMSession::instance()->idRoom(0),
 					    XMSession::instance()->debug(),
 					    xmDatabase::instance("main"));
        updateLevelsPacksList();
@@ -1792,7 +1832,7 @@ void StateMainMenu::executeOneCommand(std::string cmd)
 
     // update packs
     LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
-					 XMSession::instance()->idRoom(),
+					 XMSession::instance()->idRoom(0),
 					 XMSession::instance()->debug(),
 					 xmDatabase::instance("main"));
 
@@ -1863,7 +1903,7 @@ void StateMainMenu::updateLevelsLists() {
 void StateMainMenu::createLevelLists(UILevelList *i_list, const std::string& i_packageName) {
   LevelsPack *v_levelsPack = &(LevelsManager::instance()->LevelsPackByName(i_packageName));
   createLevelListsSql(i_list, v_levelsPack->getLevelsWithHighscoresQuery(XMSession::instance()->profile(),
-									 XMSession::instance()->idRoom()));
+									 XMSession::instance()->idRoom(0)));
 }
 
 void StateMainMenu::updateFavoriteLevelsList() {
@@ -2229,19 +2269,31 @@ void StateMainMenu::createRoomsList(UIList *pList) {
 
 void StateMainMenu::updateRoomsList() {
   UIList* v_list;
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOMS_LIST"));
+  unsigned int j;
+  bool v_found;
 
-  createRoomsList(v_list);
+  for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
+      std::ostringstream v_strRoom;
+      v_strRoom << i;
 
-  std::string v_id_room = XMSession::instance()->idRoom();
-  if(v_id_room == "") {v_id_room = DEFAULT_WEBROOM_ID;}
-  for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
-    if((*(std::string*)v_list->getEntries()[i]->pvUser) == v_id_room) {
-      v_list->setRealSelected(i);
-      break;
-    }
+      v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							  + ":ROOMS_LIST"));
+      createRoomsList(v_list);
+
+      std::string v_id_room = XMSession::instance()->idRoom(i);
+      if(v_id_room == "") { v_id_room = DEFAULT_WEBROOM_ID; }
+      j = 0;
+      v_found = false;
+      while(j<v_list->getEntries().size() && v_found == false) {
+	if((*(std::string*)v_list->getEntries()[j]->pvUser) == v_id_room) {
+	  v_list->setRealSelected(j);
+	  v_found = true;
+	}
+	j++;
+      }
   }
 }
+
 
 void StateMainMenu::updateOptions() {
   UIButton* v_button;
@@ -2325,10 +2377,25 @@ void StateMainMenu::updateOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:USECRAPPYINFORMATION"));
   v_button->setChecked(XMSession::instance()->useCrappyPack());
 
-  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_LOGIN"));
-  v_edit->setCaption(XMSession::instance()->uploadLogin());
-  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_PASSWORD"));
-  v_edit->setCaption(XMSession::instance()->uploadPassword());
+  for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
+      bool v_enabled = true;
+      std::ostringstream v_strRoom;
+      v_strRoom << i;
+
+      if(i != 0) {
+	v_enabled = XMSession::instance()->nbRoomsEnabled() > i;
+	v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+								+ ":ROOM_ENABLED"));
+	v_button->setChecked(v_enabled);
+      }
+
+      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							  + ":ROOM_LOGIN"));
+      v_edit->setCaption(XMSession::instance()->uploadLogin(i));
+      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							  + ":ROOM_PASSWORD"));
+      v_edit->setCaption(XMSession::instance()->uploadPassword(i));
+   }
 
   // ghosts
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:ENABLE_GHOSTS"));
@@ -2337,9 +2404,10 @@ void StateMainMenu::updateOptions() {
   v_button->setChecked(XMSession::instance()->ghostStrategy_MYBEST());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_THEBEST"));
   v_button->setChecked(XMSession::instance()->ghostStrategy_THEBEST());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFROOM"));
-  v_button->setChecked(XMSession::instance()->ghostStrategy_BESTOFROOM());
-
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFREFROOM"));
+  v_button->setChecked(XMSession::instance()->ghostStrategy_BESTOFREFROOM());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFOTHERROOMS"));
+  v_button->setChecked(XMSession::instance()->ghostStrategy_BESTOFOTHERROOMS());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOST_TIMEDIFFERENCE"));
   v_button->setChecked(XMSession::instance()->showGhostTimeDifference());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_INFOS"));
@@ -2616,38 +2684,72 @@ void StateMainMenu::checkEventsOptions() {
     XMSession::instance()->setUseCrappyPack(v_button->getChecked());
   }
 
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOMS_LIST"));
-  if(v_list->isClicked()) {
-    v_list->setClicked(false);
-    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
-      v_list->getEntries()[v_list->getSelected()];
-      XMSession::instance()->setIdRoom(*((std::string*)v_list->getEntries()[v_list->getSelected()]->pvUser));
-      updateProfile();
-    }
+  for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+      std::ostringstream v_strRoom;
+      v_strRoom << i;
+
+      v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							  + ":ROOMS_LIST"));
+      if(v_list->isChanged()) {
+	v_list->setChanged(false);
+	if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+	  v_list->getEntries()[v_list->getSelected()];
+	  XMSession::instance()->setIdRoom(i, *((std::string*)v_list->getEntries()[v_list->getSelected()]->pvUser));
+	  updateProfile();
+	}
+      }
+
+
+      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							  + ":ROOM_LOGIN"));
+      if(v_edit->hasChanged()) {
+	v_edit->setHasChanged(false);
+	XMSession::instance()->setUploadLogin(i, v_edit->getCaption());
+      }
+
+      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							  + ":ROOM_PASSWORD"));
+      if(v_edit->hasChanged()) {
+	v_edit->setHasChanged(false);
+	XMSession::instance()->setUploadPassword(i, v_edit->getCaption());
+      }
+
+      v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							      + ":UPDATE_ROOMS_LIST"));
+      if(v_button->isClicked()) {
+	v_button->setClicked(false);
+	StateManager::instance()->pushState(new StateUpdateRoomsList());
+      }
+
+      v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							      + ":UPLOADHIGHSCOREALL_BUTTON"));
+      if(v_button->isClicked()) {
+	v_button->setClicked(false);
+	StateManager::instance()->pushState(new StateUploadAllHighscores(i));
+      }
   }
 
-  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_LOGIN"));
-  if(v_edit->hasChanged()) {
-    v_edit->setHasChanged(false);
-    XMSession::instance()->setUploadLogin(v_edit->getCaption());
-  }
+  for(unsigned int i=1; i<ROOMS_NB_MAX; i++) { // not for 0
+      std::ostringstream v_strRoom;
+      v_strRoom << i;
 
-  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_PASSWORD"));
-  if(v_edit->hasChanged()) {
-    v_edit->setHasChanged(false);
-    XMSession::instance()->setUploadPassword(v_edit->getCaption());
-  }
-
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPDATE_ROOMS_LIST"));
-  if(v_button->isClicked()) {
-    v_button->setClicked(false);
-    StateManager::instance()->pushState(new StateUpdateRoomsList());
-  }
-
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPLOADHIGHSCOREALL_BUTTON"));
-  if(v_button->isClicked()) {
-    v_button->setClicked(false);
-    StateManager::instance()->pushState(new StateUploadAllHighscores());
+      v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							      + ":ROOM_ENABLED"));
+      if(v_button->isClicked()) {
+	v_button->setClicked(false);
+	
+	if(v_button->getChecked()) {
+	  if(XMSession::instance()->nbRoomsEnabled() < i+1) {
+	    XMSession::instance()->setNbRoomsEnabled(i+1);
+	    updateWWWOptions();
+	  }
+	} else {
+	  if(XMSession::instance()->nbRoomsEnabled() >= i+1) {
+	    XMSession::instance()->setNbRoomsEnabled(i);
+	    updateWWWOptions();
+	  }
+	}
+      }
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:ENABLE_GHOSTS"));
@@ -2669,10 +2771,16 @@ void StateMainMenu::checkEventsOptions() {
     XMSession::instance()->setGhostStrategy_THEBEST(v_button->getChecked());
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFROOM"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFREFROOM"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    XMSession::instance()->setGhostStrategy_BESTOFROOM(v_button->getChecked());
+    XMSession::instance()->setGhostStrategy_BESTOFREFROOM(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFOTHERROOMS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setGhostStrategy_BESTOFOTHERROOMS(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOST_TIMEDIFFERENCE"));
@@ -2741,6 +2849,11 @@ void StateMainMenu::updateAudioOptions() {
 
 void StateMainMenu::updateWWWOptions() {
   UIButton* v_button;
+  UIList*   v_list;
+  UIStatic* v_someText;
+  UIEdit* v_edit;
+  UIWindow *v_window;
+  bool v_enabled;
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLEWEB"));
   v_button->setChecked(XMSession::instance()->www());
@@ -2757,11 +2870,55 @@ void StateMainMenu::updateWWWOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:UPDATEHIGHSCORES"));
   v_button->enableWindow(XMSession::instance()->www());
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPDATE_ROOMS_LIST"));
-  v_button->enableWindow(XMSession::instance()->www());
+  for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
+      std::ostringstream v_strRoom;
+      v_strRoom << i;
+      v_enabled = XMSession::instance()->nbRoomsEnabled() > i;
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:UPLOADHIGHSCOREALL_BUTTON"));
-  v_button->enableWindow(XMSession::instance()->www());
+      if(i != 0) {
+	v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+								+ ":ROOM_ENABLED"));
+	v_window = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()));
+
+	if(XMSession::instance()->nbRoomsEnabled() >= i) {
+	  v_window->enableWindow(true);
+	  v_button->enableWindow(true);
+	  v_button->setChecked(XMSession::instance()->nbRoomsEnabled() > i);
+	} else {
+	  v_window->enableWindow(false);
+	  v_button->enableWindow(false);
+	  v_button->setChecked(false);
+	}
+      }
+
+      v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							      + ":UPDATE_ROOMS_LIST"));
+      v_button->enableWindow(XMSession::instance()->www() && v_enabled);
+
+      v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							      + ":UPLOADHIGHSCOREALL_BUTTON"));
+      v_button->enableWindow(XMSession::instance()->www() && v_enabled);
+
+      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							  + ":ROOM_LOGIN"));
+      v_edit->enableWindow(v_enabled);
+
+      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							  + ":ROOM_PASSWORD"));
+      v_edit->enableWindow(v_enabled);
+
+      v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+							  + ":ROOMS_LIST"));
+      v_list->enableWindow(v_enabled);
+
+      v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+								+ ":ROOM_LOGIN_STATIC"));
+      v_someText->enableWindow(v_enabled);
+
+      v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
+								+ ":ROOM_PASSWORD_STATIC"));
+      v_someText->enableWindow(v_enabled);
+  }
 }
 
 void StateMainMenu::updateGhostsOptions() {
@@ -2771,7 +2928,9 @@ void StateMainMenu::updateGhostsOptions() {
   v_button->enableWindow(XMSession::instance()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_THEBEST"));
   v_button->enableWindow(XMSession::instance()->enableGhosts());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFROOM"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFREFROOM"));
+  v_button->enableWindow(XMSession::instance()->enableGhosts());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFOTHERROOMS"));
   v_button->enableWindow(XMSession::instance()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOST_TIMEDIFFERENCE"));
   v_button->enableWindow(XMSession::instance()->enableGhosts());
@@ -2820,7 +2979,7 @@ void StateMainMenu::updateInfoFrame() {
   bool        v_isAccessible;
 
   if(v_id_level != "") {
-    if(GameApp::instance()->getHighscoreInfos(v_id_level, &v_id_profile, &v_url, &v_isAccessible)) {
+    if(GameApp::instance()->getHighscoreInfos(0, v_id_level, &v_id_profile, &v_url, &v_isAccessible)) {
       v_someText->setCaption(std::string(GAMETEXT_BESTPLAYER) + " : " + v_id_profile);
       v_button->enableWindow(v_isAccessible);
       v_window->showWindow(true);
@@ -2848,19 +3007,26 @@ void StateMainMenu::updateReplaysRights() {
 	  char **v_result;
 	  unsigned int nrow;
 	  float v_finishTime;
-		
-	  v_result = xmDatabase::instance("main")->readDB("SELECT finishTime FROM webhighscores WHERE id_level=\"" + 
-					      xmDatabase::protectString(rplInfos->Level) + "\" AND id_room=" +
-					      XMSession::instance()->idRoom() + ";",
-					      nrow);
-	  if(nrow == 0) {
-	    v_button->enableWindow(true);
+	  bool v_enabled = false;
+
+	  for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+	    v_result = xmDatabase::instance("main")->readDB("SELECT finishTime FROM webhighscores WHERE id_level=\"" + 
+							    xmDatabase::protectString(rplInfos->Level) + "\" AND id_room=" +
+							    XMSession::instance()->idRoom(i) + ";",
+							    nrow);
+	    if(nrow == 0) {
+	      v_enabled = true;
+	    } else {
+	      v_finishTime = atof(xmDatabase::instance("main")->getResult(v_result, 1, 0, 0));
+
+	      if(rplInfos->finishTime < v_finishTime) {
+		v_enabled = true;
+	      }
+	    }  	      
 	    xmDatabase::instance("main")->read_DB_free(v_result);
-	  } else {
-	    v_finishTime = atof(xmDatabase::instance("main")->getResult(v_result, 1, 0, 0));
-	    xmDatabase::instance("main")->read_DB_free(v_result);
-	    v_button->enableWindow(rplInfos->finishTime < v_finishTime);
-	  }  	      
+	  }
+
+	  v_button->enableWindow(v_enabled);
 	}
       }
     }

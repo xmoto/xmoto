@@ -203,7 +203,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_GHOST_LOCAL          _("Local best")
 #define GAMETEXT_GHOST_BEST           _("Your best")
 #define GAMETEXT_GHOST_STRATEGIES_TYPE  _("Type")
-#define GAMETEXT_GHOST_STRATEGY_BESTOFROOM _("The highscore of the room")
+#define GAMETEXT_GHOST_STRATEGY_BESTOFREFROOM    _("The highscore of the reference room")
+#define GAMETEXT_GHOST_STRATEGY_BESTOFOTHERROOMS _("The highscore of the other rooms")
 #define GAMETEXT_GHOST_STRATEGY_MYBEST  _("The best of my replays (on this computer)")
 #define GAMETEXT_GHOST_STRATEGY_THEBEST _("The best of the replays (on this computer)")
 #define GAMETEXT_GHOSTOF              _("Ghost of %s")
@@ -400,7 +401,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_WORLDRECORDNA        "--:--:--"
 #define GAMETEXT_WWWMAINTAB           _("Main")
 #define GAMETEXT_WWWTAB               _("WWW")
-#define GAMETEXT_WWWROOMSTAB          _("Rooms")
+#define GAMETEXT_WWWROOMSTAB_REFERENCE _("Reference room")
+#define GAMETEXT_WWWROOMSTAB_OTHER     _("Room %i")
 
 #define GAMETEXT_XHOURS               _("%d hours") 
 #define GAMETEXT_XMINUTES             _("%d minutes")
@@ -552,7 +554,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_MULTISTOPWHENONEFINISHES _("Stop the game once a player ends the level or continue while a player is running")
 #define CONTEXTHELP_GHOST_STRATEGY_MYBEST _("The best of my replays (on this computer)")
 #define CONTEXTHELP_GHOST_STRATEGY_THEBEST _("The best of the replays (on this computer)")
-#define CONTEXTHELP_GHOST_STRATEGY_BESTOFROOM _("The highscore of the room")
+#define CONTEXTHELP_GHOST_STRATEGY_BESTOFREFROOM _("The highscore of the reference room")
+#define CONTEXTHELP_GHOST_STRATEGY_BESTOFOTHERROOMS _("The highscore of the other rooms")
 #define CONTEXTHELP_HIDEGHOSTS _("Don't show the ghosts while playing")
 #define CONTEXTHELP_NOMULTISCENES _("The scene is shared by all the players")
 #define CONTEXTHELP_LANGUAGE_OPTIONS _("Change the X-Moto language")
@@ -560,6 +563,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_LANGUAGE_CODE _("Code of the language")
 #define CONTEXTHELP_REPLAYS_CLEAN _("Delete replays that X-Moto estimates to be not interesting to keep")
 #define CONTEXTHELP_CHILDREN_COMPLIANT _("Remove levels not suitable for children")
+#define CONTEXTHELP_ROOM_ENABLE _("Enable this room")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

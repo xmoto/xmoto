@@ -27,9 +27,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWW.h"
 #include "VFileIO.h"
 
-UploadAllHighscoresThread::UploadAllHighscoresThread()
+UploadAllHighscoresThread::UploadAllHighscoresThread(unsigned int i_number)
   : XMThread()
 {
+  m_number     = i_number;
   m_percentage = 0;
   m_nbFiles    = 0;
 }
@@ -43,7 +44,7 @@ int UploadAllHighscoresThread::realThreadFunction()
   setThreadProgress(0);
 
   /* 1 is the main room ; don't allow full upload on it */
-  if(XMSession::instance()->idRoom() == "1") {
+  if(XMSession::instance()->idRoom(m_number) == "1") {
     return 0;
   }
 
@@ -52,12 +53,12 @@ int UploadAllHighscoresThread::realThreadFunction()
     setThreadCurrentOperation(GAMETEXT_DLHIGHSCORES);
     WebRoom *v_pWebRoom = new WebRoom(this);
     ProxySettings* pProxySettings = XMSession::instance()->proxySettings();
-    std::string    webRoomUrl     = GameApp::instance()->getWebRoomURL(m_pDb);
-    std::string    webRoomName    = GameApp::instance()->getWebRoomName(m_pDb);
+    std::string    webRoomUrl     = GameApp::instance()->getWebRoomURL(m_number, m_pDb);
+    std::string    webRoomName    = GameApp::instance()->getWebRoomName(m_number, m_pDb);
 
     v_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);
-    v_pWebRoom->update();
-    v_pWebRoom->upgrade(m_pDb);
+    v_pWebRoom->update(m_number);
+    v_pWebRoom->upgrade(m_number, m_pDb);
     delete v_pWebRoom;
   } catch (Exception& e) {
     Logger::Log("** Warning ** : Failed to analyse web-highscores file");   
@@ -74,7 +75,7 @@ int UploadAllHighscoresThread::realThreadFunction()
 
     std::string query = "SELECT r.id_level, r.name, lvl.name FROM replays r "
       "LEFT OUTER JOIN webhighscores h "
-      "ON (r.id_level = h.id_level AND h.id_room=" + XMSession::instance()->idRoom() + ") "
+      "ON (r.id_level = h.id_level AND h.id_room=" + XMSession::instance()->idRoom(m_number) + ") "
       "INNER JOIN weblevels l ON r.id_level = l.id_level "
       "INNER JOIN levels lvl ON r.id_level = lvl.id_level "
       "WHERE r.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
@@ -102,9 +103,9 @@ int UploadAllHighscoresThread::realThreadFunction()
 	    bool v_msg_status_ok;
 	    v_replayPath = FS::getUserDir() + "/Replays/" + v_replay + ".rpl";
 	    FSWeb::uploadReplay(v_replayPath,
-				XMSession::instance()->idRoom(),
-				XMSession::instance()->uploadLogin(),
-				XMSession::instance()->uploadPassword(),
+				XMSession::instance()->idRoom(m_number),
+				XMSession::instance()->uploadLogin(m_number),
+				XMSession::instance()->uploadPassword(m_number),
 				XMSession::instance()->uploadHighscoreUrl(),
 				this, XMSession::instance()->proxySettings(), v_msg_status_ok, m_msg);
 	    if(v_msg_status_ok == false) {

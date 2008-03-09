@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define THEME_DEFAULT_THEMENAME "Classic"
 #define DEFAULT_WEBROOM_ID      "1"
 #define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
+#define ROOMS_NB_MAX 4
 
 /*
   XMSession   : current session options
@@ -129,8 +130,10 @@ public:
   void setGhostStrategy_MYBEST(bool i_value);
   bool ghostStrategy_THEBEST() const;
   void setGhostStrategy_THEBEST(bool i_value);
-  bool ghostStrategy_BESTOFROOM() const;
-  void setGhostStrategy_BESTOFROOM(bool i_value);
+  bool ghostStrategy_BESTOFREFROOM() const;
+  void setGhostStrategy_BESTOFREFROOM(bool i_value);
+  bool ghostStrategy_BESTOFOTHERROOMS() const;
+  void setGhostStrategy_BESTOFOTHERROOMS(bool i_value);
   bool autosaveHighscoreReplays() const;
   void setAutosaveHighscoreReplays(bool i_value);
   void setEnableGhosts(bool i_value);
@@ -187,12 +190,14 @@ public:
   bool checkNewHighscoresAtStartup() const;
   void setShowHighscoreInGame(bool i_value);
   bool showHighscoreInGame() const;
-  void setUploadLogin(const std::string& i_value);
-  std::string uploadLogin() const;
-  void setUploadPassword(const std::string& i_value);
-  std::string uploadPassword() const;
-  void setIdRoom(const std::string& i_value);
-  std::string idRoom() const;
+  void setUploadLogin(unsigned int i_number, const std::string& i_value);
+  std::string uploadLogin(unsigned int i_number) const;
+  void setUploadPassword(unsigned int i_number, const std::string& i_value);
+  std::string uploadPassword(unsigned int i_number) const;
+  void setIdRoom(unsigned int i_number, const std::string& i_value);
+  std::string idRoom(unsigned int i_number) const;
+  void setNbRoomsEnabled(unsigned int i_value);
+  unsigned int nbRoomsEnabled() const;
   void setShowGhostTimeDifference(bool i_value);
   bool showGhostTimeDifference() const;
   void setGhostMotionBlur(bool i_value);
@@ -257,7 +262,8 @@ public:
   bool m_autosaveHighscoreReplays;
   bool m_ghostStrategy_MYBEST;
   bool m_ghostStrategy_THEBEST;
-  bool m_ghostStrategy_BESTOFROOM;
+  bool m_ghostStrategy_BESTOFREFROOM;
+  bool m_ghostStrategy_BESTOFOTHERROOMS;
   bool m_enableGhosts;
   bool m_enableEngineSound;
   bool m_showEngineCounter;
@@ -285,10 +291,11 @@ public:
   bool m_checkNewLevelsAtStartup;
   bool m_checkNewHighscoresAtStartup;
   bool m_showHighscoreInGame;
-  std::string m_uploadLogin;
-  std::string m_uploadPassword;
+  std::string m_uploadLogin[ROOMS_NB_MAX];
+  std::string m_uploadPassword[ROOMS_NB_MAX];
   std::string m_uploadHighscoreUrl;
-  std::string m_idRoom;
+  std::string m_idRoom[ROOMS_NB_MAX];
+  unsigned int m_nbRoomsEnabled;
   bool m_showGhostTimeDifference;
   bool m_ghostMotionBlur;
   bool m_showGhostsInfos;

@@ -48,62 +48,57 @@ int DownloadGhostThread::realThreadFunction()
   std::string v_levelAuthor;
   std::string v_fileUrl;
   std::string v_replayName;
+  bool v_failed = false;
 
-  v_result = m_pDb->readDB("SELECT fileUrl "
-			   "FROM webhighscores WHERE id_level=\"" + 
-			   xmDatabase::protectString(m_levelId) + "\" "
-			   "AND id_room=" + XMSession::instance()->idRoom() + ";",
-			   nrow);
-  if(nrow == 0) {
-    Logger::Log("nrow == 0");
-    m_pDb->read_DB_free(v_result);
-    return 0;
-  }
-
-  v_fileUrl     = m_pDb->getResult(v_result, 1, 0, 0);
-  v_replayName  = FS::getFileBaseName(v_fileUrl);
-  m_pDb->read_DB_free(v_result);
-
-  if(m_pDb->replays_exists(v_replayName)) {
-    Logger::Log("replay exists");
-    ((StateDownloadGhost*)m_pCallingState)->setReplay(v_replayName);
-    return 0;
-  }
-
-  if(XMSession::instance()->www() == false) {
-    Logger::Log("www == false");
-    return 0;
-  }
-
-  try {
-    setThreadCurrentOperation(GAMETEXT_DLGHOST);
-    setThreadProgress(0);
-
-    ProxySettings* pProxySettings = XMSession::instance()->proxySettings();
-    std::string    webRoomUrl     = GameApp::instance()->getWebRoomURL(m_pDb);
-    std::string    webRoomName    = GameApp::instance()->getWebRoomName(m_pDb);
-
-    m_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);
-
-    m_pWebRoom->downloadReplay(v_fileUrl);
-    GameApp::instance()->addReplay(v_replayName);
-      
-    setThreadProgress(100);
-
-    /* not very nice : make a new search to be sure the replay is here */
-    /* because it could have been downloaded but unplayable : for macosx for example */
-    if(m_pDb->replays_exists(v_replayName) == false) {
-      m_msg = GAMETEXT_FAILEDTOLOADREPLAY;
-      return 1;
+  for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+    if(v_failed == false) {
+      if( (XMSession::instance()->ghostStrategy_BESTOFREFROOM()    && i==0) ||
+	  (XMSession::instance()->ghostStrategy_BESTOFOTHERROOMS() && i!=0) ){
+	v_result = m_pDb->readDB("SELECT fileUrl "
+				 "FROM webhighscores WHERE id_level=\"" + 
+				 xmDatabase::protectString(m_levelId) + "\" "
+				 "AND id_room=" + XMSession::instance()->idRoom(i) + ";",
+				 nrow);
+	if(nrow != 0) {
+	  v_fileUrl     = m_pDb->getResult(v_result, 1, 0, 0);
+	  v_replayName  = FS::getFileBaseName(v_fileUrl);
+	  
+	  if(m_pDb->replays_exists(v_replayName) == false) {
+	    if(XMSession::instance()->www()) {
+	      try {	      
+		ProxySettings* pProxySettings = XMSession::instance()->proxySettings();
+		std::string    webRoomUrl     = GameApp::instance()->getWebRoomURL(i, m_pDb);
+		std::string    webRoomName    = GameApp::instance()->getWebRoomName(i, m_pDb);
+		
+		setThreadCurrentOperation(GAMETEXT_DLGHOST + std::string(" (") + webRoomName + ")");
+		setThreadProgress(0);
+		
+		m_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);
+		m_pWebRoom->downloadReplay(v_fileUrl);
+		GameApp::instance()->addReplay(v_replayName);
+		
+		setThreadProgress(100);
+		
+		/* not very nice : make a new search to be sure the replay is here */
+		/* because it could have been downloaded but unplayable */
+		if(m_pDb->replays_exists(v_replayName) == false) {
+		  m_msg = GAMETEXT_FAILEDTOLOADREPLAY;
+		  v_failed = true;
+		}
+	      } catch(Exception& e) {
+		m_msg = GAMETEXT_FAILEDDLREPLAY + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+		v_failed = true;
+	      }
+	    }
+	  }
+	}
+	m_pDb->read_DB_free(v_result);
+      }
+      ((StateDownloadGhost*)m_pCallingState)->setReplay(v_replayName);
     }
-  } catch(Exception& e) {
-    m_msg = GAMETEXT_FAILEDDLREPLAY + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
-    return 1;
   }
 
-  ((StateDownloadGhost*)m_pCallingState)->setReplay(v_replayName);
-
-  return 0;
+  return v_failed ? 1 : 0;
 }
 
 void DownloadGhostThread::setTaskProgress(float p_percent)

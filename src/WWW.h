@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class ThemeChoice;
 
 #define DEFAULT_WEBHIGHSCORES_URL         "http://xmoto.tuxfamily.org/highscores.xml"
-#define DEFAULT_WEBHIGHSCORES_FILENAME    "webhighscores.xml"
+#define DEFAULT_WEBHIGHSCORES_FILENAME_PREFIX    "webhighscores"
 #define DEFAULT_TRANSFERT_TIMEOUT         240
 #define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 15
 #define DEFAULT_WEBLEVELS_URL             "http://xmoto.tuxfamily.org/levels.xml"
@@ -158,8 +158,8 @@ class WebRoom {
   WebRoom(WWWAppInterface* p_WebRoomApp);
   ~WebRoom();
 
-  void update(); /* throws exceptions */
-  void upgrade(xmDatabase* i_db); /* throws exceptions */
+  void update(unsigned int i_number); /* throws exceptions */
+  void upgrade(unsigned int i_number, xmDatabase* i_db); /* throws exceptions */
 
   /* return NULL if no data found */
   void setWebsiteInfos(const std::string& i_id_room,
@@ -171,7 +171,7 @@ class WebRoom {
 
  private:
   WWWAppInterface* m_WebRoomApp;
-  std::string m_userFilename;
+  std::string m_userFilename_prefix;
   std::string m_webhighscores_url;
   std::string m_roomId;
   const ProxySettings* m_proxy_settings;
