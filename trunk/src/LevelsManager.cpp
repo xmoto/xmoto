@@ -741,6 +741,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level "
 			  "WHERE (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
 			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
+			  "AND a.id_room=" + i_id_room + " "
 			  "GROUP BY a.id_profile "
 			  "ORDER BY COUNT(1) DESC LIMIT 10;",
 			  nrow);
