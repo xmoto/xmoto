@@ -27,13 +27,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 
 DownloadGhostThread::DownloadGhostThread(GameState* pCallingState,
-					 std::string levelId)
+					 std::string levelId,
+					 bool i_onlyMainRoomGhost)
   : XMThread()
 {
   m_pWebRoom      = new WebRoom(this);
   m_pCallingState = pCallingState;
   m_msg     = "";
   m_levelId = levelId;
+  m_onlyMainRoomGhost = i_onlyMainRoomGhost;
 }
 
 DownloadGhostThread::~DownloadGhostThread()
@@ -52,8 +54,16 @@ int DownloadGhostThread::realThreadFunction()
 
   for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
     if(v_failed == false) {
-      if( (XMSession::instance()->ghostStrategy_BESTOFREFROOM()    && i==0) ||
-	  (XMSession::instance()->ghostStrategy_BESTOFOTHERROOMS() && i!=0) ){
+      if(
+	 (m_onlyMainRoomGhost && i == 0)
+	 ||
+	 (m_onlyMainRoomGhost == false &&
+	  (
+	   (XMSession::instance()->ghostStrategy_BESTOFREFROOM()    && i==0) ||
+	   (XMSession::instance()->ghostStrategy_BESTOFOTHERROOMS() && i!=0)
+	   )
+	  )
+	 ) {
 	v_result = m_pDb->readDB("SELECT fileUrl "
 				 "FROM webhighscores WHERE id_level=\"" + 
 				 xmDatabase::protectString(m_levelId) + "\" "
@@ -94,7 +104,9 @@ int DownloadGhostThread::realThreadFunction()
 	}
 	m_pDb->read_DB_free(v_result);
       }
-      ((StateDownloadGhost*)m_pCallingState)->setReplay(v_replayName);
+      if(m_onlyMainRoomGhost) { /* only for the main room */
+	((StateDownloadGhost*)m_pCallingState)->setReplay(v_replayName);
+      }
     }
   }
 
