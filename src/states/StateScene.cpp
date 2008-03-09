@@ -88,7 +88,6 @@ void StateScene::enter()
   m_benchmarkStartTime = GameApp::getXMTime();
 
   m_fLastPhysTime = GameApp::getXMTime();
-
 }
 
 bool StateScene::update()
