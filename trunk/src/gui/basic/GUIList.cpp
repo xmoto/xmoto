@@ -352,7 +352,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         
     /* Draw column headers */
     int nHX = 6, nHY = 6;
-    setTextSolidColor(MAKE_COLOR(188,186,67,255));
+
+    if(isDisabled())
+      setTextSolidColor(MAKE_COLOR(170,170,170,128));
+    else
+      setTextSolidColor(MAKE_COLOR(188,186,67,255));
+
     for(unsigned int i=0; i<m_Columns.size(); i++) {
       if(!(m_nColumnHideFlags & (1<<i))) {
         putText(nHX,nHY,m_Columns[i]);
@@ -565,6 +570,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	     && m_nVisibleSelected < (int)(m_Entries.size()-m_filteredItems)
 	     && m_pEnterButton != NULL) {
             m_pEnterButton->setClicked(true);
+	    m_bChanged = true;
 	    try {
 	      Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
 	    } catch(Exception &e) {
@@ -753,6 +759,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	   && m_nVisibleSelected < (int)(m_Entries.size()-m_filteredItems)
 	   && m_pEnterButton != NULL) {
           m_pEnterButton->setClicked(true);       
+	  m_bChanged = true;
           
 	  try {
 	    Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());

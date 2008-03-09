@@ -370,7 +370,11 @@ void StateScene::setScoresTimes() {
   }
 
   if(XMSession::instance()->showHighscoreInGame() && XMSession::instance()->hidePlayingInformation() == false) {
-    GameRenderer::instance()->setWorldRecordTime(GameApp::instance()->getWorldRecord(v_id_level));
+    std::string v_strWorldRecord;
+    for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+      v_strWorldRecord += GameApp::instance()->getWorldRecord(i, v_id_level) + "\n";
+    }
+    GameRenderer::instance()->setWorldRecordTime(v_strWorldRecord);
   } else {
     GameRenderer::instance()->setWorldRecordTime("");
   }

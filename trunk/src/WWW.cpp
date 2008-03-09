@@ -44,9 +44,9 @@ void WebRoom::downloadReplay(const std::string& i_url) {
 
 WebRoom::WebRoom(WWWAppInterface* p_WebRoomApp)
 {
-  m_userFilename      = FS::getUserDir()
+  m_userFilename_prefix = FS::getUserDir()
     + "/" 
-    + DEFAULT_WEBHIGHSCORES_FILENAME;
+    + DEFAULT_WEBHIGHSCORES_FILENAME_PREFIX;
   m_webhighscores_url = DEFAULT_WEBHIGHSCORES_URL;
   m_WebRoomApp        = p_WebRoomApp;
   m_proxy_settings    = NULL;
@@ -70,25 +70,30 @@ void WebRoom::setWebsiteInfos(const std::string& i_id_room,
   m_proxy_settings    = pProxySettings;
 }
 
-void WebRoom::update()
+void WebRoom::update(unsigned int i_number)
 {
   /* download xml file */
   f_curl_download_data v_data;
+  std::ostringstream v_strRoom;
+  v_strRoom << i_number;
 
   v_data.v_WebApp               = m_WebRoomApp;
   v_data.v_nb_files_performed   = 0;
   v_data.v_nb_files_to_download = 1;
 
-  FSWeb::downloadFileBz2UsingMd5(m_userFilename,
+  FSWeb::downloadFileBz2UsingMd5(m_userFilename_prefix + v_strRoom.str() + ".xml",
 				 m_webhighscores_url,
 				 FSWeb::f_curl_progress_callback_download,
 				 &v_data,
 				 m_proxy_settings);
 }
 
-void WebRoom::upgrade(xmDatabase *i_db)
+void WebRoom::upgrade(unsigned int i_number, xmDatabase *i_db)
 {
-  i_db->webhighscores_updateDB(m_userFilename, m_webhighscores_url);
+  std::ostringstream v_strRoom;
+  v_strRoom << i_number;
+
+  i_db->webhighscores_updateDB(m_userFilename_prefix + v_strRoom.str() + ".xml", m_webhighscores_url);
 }
 
 size_t FSWeb::writeData(void *ptr, size_t size, size_t nmemb, FILE *stream)

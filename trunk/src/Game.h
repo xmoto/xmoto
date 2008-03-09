@@ -111,7 +111,7 @@ public:
   bool isThereANextLevel(const std::string& i_id_level);
   bool isThereAPreviousLevel(const std::string& i_id_level); 
 
-  std::string getWorldRecord(const std::string &LevelID);
+  std::string getWorldRecord(unsigned int i_number, const std::string &LevelID);
 
   void addGhosts(MotoGame* i_motogame, Theme* i_theme);
 
@@ -125,7 +125,8 @@ public:
   TColor getColorFromPlayerNumber(int i_player);
   TColor getUglyColorFromPlayerNumber(int i_player);
 
-  bool getHighscoreInfos(const std::string& i_id_level, std::string* io_id_profile, std::string* io_url, bool* o_isAccessible);
+  bool getHighscoreInfos(unsigned int i_number,
+			 const std::string& i_id_level, std::string* io_id_profile, std::string* io_url, bool* o_isAccessible);
 
   void addLevelToFavorite(const std::string& i_levelId);
 
@@ -134,8 +135,8 @@ public:
 
   void updateWebHighscores();
 
-  std::string getWebRoomURL(xmDatabase* pDb = NULL);
-  std::string getWebRoomName(xmDatabase* pDb = NULL);
+  std::string getWebRoomURL(unsigned int i_number, xmDatabase* pDb = NULL);
+  std::string getWebRoomName(unsigned int i_number, xmDatabase* pDb = NULL);
     
   std::string determineNextLevel(const std::string& i_id_level);
   std::string determinePreviousLevel(const std::string& i_id_level);
@@ -249,7 +250,7 @@ private:
 
   std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, int &p_time);
   std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, int &p_time);
-  std::string _getGhostReplayPath_bestOfTheRoom(std::string p_levelId, int &p_time);
+  std::string _getGhostReplayPath_bestOfTheRoom(unsigned int i_number, std::string p_levelId, int &p_time);
 
   /* */
   void _InitWin(bool bInitGraphics);

@@ -25,7 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateUploadAllHighscores : public StateUpdate {
 public:
-  StateUploadAllHighscores(bool drawStateBehind    = true,
+  StateUploadAllHighscores(unsigned int i_number,
+			   bool drawStateBehind    = true,
 			   bool updateStatesBehind = false);
   virtual ~StateUploadAllHighscores();
 

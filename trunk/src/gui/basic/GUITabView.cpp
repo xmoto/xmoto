@@ -54,27 +54,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     setTextSolidColor(MAKE_COLOR(188,186,67,255));
     for(unsigned int i=0;i<getChildren().size();i++) {
-
-      putTextS(nCX, nCY, getChildren()[i]->getCaption(), v_width, v_height);
-      if(isUglyMode()) {
-	putRect(nCX-8, 0, v_width+16, 2, MAKE_COLOR(188,186,67,255));
-	putRect(nCX-8, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
-	putRect(nCX+v_width+8-2, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
-      } else {
-	putElem(nCX-8,0,-1,-1,UI_ELEM_FRAME_TL,false);        
-	putElem(nCX,0,v_width,8,UI_ELEM_FRAME_TM,false);
-	putElem(nCX+v_width,0,-1,-1,UI_ELEM_FRAME_TR,false);                
-	putElem(nCX-8,8,-1,nHeaderHeight-8,UI_ELEM_FRAME_ML,false);
-	putElem(nCX+v_width,8,-1,nHeaderHeight-8,UI_ELEM_FRAME_MR,false);
+      if(getChildren()[i]->isDisabled() == false) {
+	putTextS(nCX, nCY, getChildren()[i]->getCaption(), v_width, v_height);
+	if(isUglyMode()) {
+	  putRect(nCX-8, 0, v_width+16, 2, MAKE_COLOR(188,186,67,255));
+	  putRect(nCX-8, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
+	  putRect(nCX+v_width+8-2, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
+	} else {
+	  putElem(nCX-8,0,-1,-1,UI_ELEM_FRAME_TL,false);        
+	  putElem(nCX,0,v_width,8,UI_ELEM_FRAME_TM,false);
+	  putElem(nCX+v_width,0,-1,-1,UI_ELEM_FRAME_TR,false);                
+	  putElem(nCX-8,8,-1,nHeaderHeight-8,UI_ELEM_FRAME_ML,false);
+	  putElem(nCX+v_width,8,-1,nHeaderHeight-8,UI_ELEM_FRAME_MR,false);
+	}
+	
+	if(i == m_nSelected) {
+	  putElem(2, nHeaderHeight, nCX-8, 8, UI_ELEM_FRAME_TM, false);
+	  putElem(nCX+v_width+6, nHeaderHeight, getPosition().nWidth-nCX-v_width-6-2, 8,
+		  UI_ELEM_FRAME_TM, false);
+	}
+	
+	nCX += v_width + 18;
       }
-
-      if(i == m_nSelected) {
-	putElem(2, nHeaderHeight, nCX-8, 8, UI_ELEM_FRAME_TM, false);
-	putElem(nCX+v_width+6, nHeaderHeight, getPosition().nWidth-nCX-v_width-6-2, 8,
-		UI_ELEM_FRAME_TM, false);
-      }
-
-      nCX += v_width + 18;
     }
     m_bChanged = false;
   }
@@ -82,32 +83,36 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void UITabView::selectChildren(unsigned int i) {
     /* Hide everything except this */
     for(unsigned int j=0;j<getChildren().size();j++) { 
-      if(j == i) {
-	getChildren()[j]->showWindow(true);
-	if(m_nSelected != j) {
-	  m_bChanged = true;
+      if(getChildren()[i]->isDisabled() == false) {
+	if(j == i) {
+	  getChildren()[j]->showWindow(true);
+	  if(m_nSelected != j) {
+	    m_bChanged = true;
+	  }
+	  m_nSelected = j;
 	}
-        m_nSelected = j;
-      }
-      else {
-	getChildren()[j]->showWindow(false);
-      }          
+	else {
+	  getChildren()[j]->showWindow(false);
+	}
+      }    
     }
   }
 
   void UITabView::selectChildrenById(const std::string& i_id) {
     /* Hide everything except this */
-    for(unsigned int j=0;j<getChildren().size();j++) { 
-      if(getChildren()[j]->getID() == i_id) {
-	getChildren()[j]->showWindow(true);
-	if(m_nSelected != j) {
-	  m_bChanged = true;
+    for(unsigned int j=0;j<getChildren().size();j++) {
+      if(getChildren()[j]->isDisabled() == false) {
+	if(getChildren()[j]->getID() == i_id) {
+	  getChildren()[j]->showWindow(true);
+	  if(m_nSelected != j) {
+	    m_bChanged = true;
+	  }
+	  m_nSelected = j;
 	}
-        m_nSelected = j;
-      }
-      else {
-	getChildren()[j]->showWindow(false);
-      }          
+	else {
+	  getChildren()[j]->showWindow(false);
+	}
+      }    
     }
   }
 
@@ -121,15 +126,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     int nCX = 8;
 
     for(unsigned int i=0;i<getChildren().size();i++) {
-      FontManager* v_fm = m_drawLib->getFontSmall();
-      FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
-      int v_width = v_fg->realWidth();
-
-      if(x >= nCX-8 && y >= -4 && x < nCX+8+v_width && y < nHeaderHeight) {
-	selectChildren(i);
-        break;
+      if(getChildren()[i]->isDisabled() == false) {
+	FontManager* v_fm = m_drawLib->getFontSmall();
+	FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
+	int v_width = v_fg->realWidth();
+	
+	if(x >= nCX-8 && y >= -4 && x < nCX+8+v_width && y < nHeaderHeight) {
+	  selectChildren(i);
+	  break;
+	}
+	nCX += v_width + 18;
       }
-      nCX += v_width + 18;
     }
   }
   
@@ -146,17 +153,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     int nCX = 8;
 
     for(unsigned int i=0;i<getChildren().size();i++) {
-      FontManager* v_fm = m_drawLib->getFontSmall();
-      FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
-      int v_width = v_fg->realWidth();
-
-      if(x >= nCX-8 && y >= -4 && x < nCX+16+v_width && y < nHeaderHeight) {
-        /* This one! */
-        if(i < m_TabContextHelp.size())
-          return m_TabContextHelp[i];
-        return "";
+      if(getChildren()[i]->isDisabled() == false) {
+	FontManager* v_fm = m_drawLib->getFontSmall();
+	FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
+	int v_width = v_fg->realWidth();
+	
+	if(x >= nCX-8 && y >= -4 && x < nCX+16+v_width && y < nHeaderHeight) {
+	  /* This one! */
+	  if(i < m_TabContextHelp.size())
+	    return m_TabContextHelp[i];
+	  return "";
+	}
+	nCX += v_width + 18;
       }
-      nCX += v_width + 18;
     }
     
     return "";

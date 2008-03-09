@@ -328,7 +328,10 @@ void StatePreplaying::executeOneCommand(std::string cmd)
 
 bool StatePreplaying::needToDownloadGhost()
 {
-  if(XMSession::instance()->www() == false || XMSession::instance()->ghostStrategy_BESTOFROOM() == false){
+  if(XMSession::instance()->www() == false || 
+     (XMSession::instance()->ghostStrategy_BESTOFREFROOM()    == false &&
+      XMSession::instance()->ghostStrategy_BESTOFOTHERROOMS() == false)
+     ) {
     return false;
   }
 
@@ -342,21 +345,25 @@ bool StatePreplaying::needToDownloadGhost()
   std::string v_replayName;
   std::string v_fileUrl;
 
-  v_result = xmDatabase::instance("main")->readDB("SELECT fileUrl FROM webhighscores "
-			   "WHERE id_room=" + XMSession::instance()->idRoom() + " "
-			   "AND id_level=\"" + xmDatabase::protectString(m_idlevel) + "\";",
-			   nrow);    
-  if(nrow == 0) {
+  bool v_need_one = false;
+  for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+    v_result = xmDatabase::instance("main")->readDB("SELECT fileUrl FROM webhighscores "
+						    "WHERE id_room=" + XMSession::instance()->idRoom(i) + " "
+						    "AND id_level=\"" + xmDatabase::protectString(m_idlevel) + "\";",
+						    nrow);
+    if(nrow != 0) {
+      v_fileUrl    = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
+      v_replayName = FS::getFileBaseName(v_fileUrl);
+    }
     xmDatabase::instance("main")->read_DB_free(v_result);
-    return false;
+
+    /* search if the replay is already downloaded */
+    if(xmDatabase::instance("main")->replays_exists(v_replayName) == false) {
+      v_need_one = true;
+    }
   }
 
-  v_fileUrl = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
-  v_replayName = FS::getFileBaseName(v_fileUrl);
-  xmDatabase::instance("main")->read_DB_free(v_result);
-
-  /* search if the replay is already downloaded */
-  return (xmDatabase::instance("main")->replays_exists(v_replayName) == false);
+  return v_need_one;
 }
 
 bool StatePreplaying::allowGhosts() {

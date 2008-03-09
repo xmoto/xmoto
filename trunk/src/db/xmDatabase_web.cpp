@@ -56,7 +56,6 @@ std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscore
 
   try {
     simpleSql("BEGIN TRANSACTION;");
-    simpleSql("DELETE FROM webhighscores;");
 
     v_webHSXml.readFromFile(i_webhighscoresFile);
     v_webHSXmlData = v_webHSXml.getLowLevelAccess();
@@ -88,6 +87,7 @@ std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscore
       webrooms_addRoom(v_roomId, v_roomName, i_websource);
     }
 
+    simpleSql("DELETE FROM webhighscores WHERE id_room=" + v_roomId + ";");
     for(TiXmlElement *pVarElem = v_webHSXmlDataElement->FirstChildElement("worldrecord");
 	pVarElem!=NULL;
 	pVarElem = pVarElem->NextSiblingElement("worldrecord")

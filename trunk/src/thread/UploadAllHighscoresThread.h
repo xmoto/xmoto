@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class UploadAllHighscoresThread : public XMThread, public WWWAppInterface {
   public:
-  UploadAllHighscoresThread();
+  UploadAllHighscoresThread(unsigned int i_number);
   virtual ~UploadAllHighscoresThread();
   std::string getMsg() const;
 
@@ -35,6 +35,7 @@ class UploadAllHighscoresThread : public XMThread, public WWWAppInterface {
   virtual int realThreadFunction();
 
 private:
+  unsigned int m_number;
   std::string m_msg;
   int m_percentage;
   int m_nbFiles;
