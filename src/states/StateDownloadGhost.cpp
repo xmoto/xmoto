@@ -31,7 +31,7 @@ StateDownloadGhost::StateDownloadGhost(std::string levelId,
 				       bool updateStatesBehind)
   : StateUpdate(drawStateBehind, updateStatesBehind)
 {
-  m_pThread         = new DownloadGhostThread(this, levelId);
+  m_pThread         = new DownloadGhostThread(this, levelId, launchReplaying);
   m_name            = "StateDownloadGhost";
   m_replayName      = "";
   m_launchReplaying = launchReplaying;

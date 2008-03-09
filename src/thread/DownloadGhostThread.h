@@ -30,7 +30,8 @@ class WebRoom;
 class DownloadGhostThread : public XMThread, public WWWAppInterface {
 public:
   DownloadGhostThread(GameState* pCallingState,
-		      std::string levelId);
+		      std::string levelId,
+		      bool i_onlyMainRoomGhost);
   virtual ~DownloadGhostThread();
 
   void setTaskProgress(float p_percent);
@@ -44,6 +45,7 @@ private:
   GameState*  m_pCallingState;
   std::string m_msg;
   std::string m_levelId;
+  bool m_onlyMainRoomGhost;
 };
 
 #endif
