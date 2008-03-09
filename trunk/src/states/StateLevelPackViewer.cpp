@@ -126,6 +126,8 @@ void StateLevelPackViewer::checkEvents()
     pLevelRandomizeButton->setClicked(false);
       
     pList->randomize();
+    updateInfoFrame();
+    updateRights();
   }
 
   /* any list clicked ? */
