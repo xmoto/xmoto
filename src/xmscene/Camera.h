@@ -24,9 +24,19 @@
 #include "../VCommon.h"
 #include "Bike.h"
 
-#define ZOOM_DEFAULT 0.195f
-#define CAMERA_OFFSETX_DEFAULT 0.0
+#define ZOOM_DEFAULT 0.24
+#define CAMERA_OFFSETX_DEFAULT 0.5
 #define CAMERA_OFFSETY_DEFAULT 0.0
+
+// declared for Active Camera Zooming
+#define SPEED_UNTIL_ZOOM_BEGIN 0.34
+#define SPEED_UNTIL_ZOOM_END   0.25
+#define CAM_ZOOM_NEAR    0.24
+#define CAM_ZOOM_FAR     0.15
+#define ZOOM_OUT_SPEED  -0.0006
+#define ZOOM_IN_SPEED    0.0012
+#define TRESHOLD_IN      1.0 * 1000
+#define TRESHOLD_OUT     1.0 * 1000
 
 class RenderSurface {
 public:
@@ -71,6 +81,7 @@ public:
   void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
 				  float &p_fDesiredVerticalScrollShift,
 				  const Vector2f& gravity);
+  void guessDesiredCameraZoom();
   float guessDesiredAngleRotation();
   void setPlayerToFollow(Biker* i_playerToFollow);
   Biker* getPlayerToFollow();
@@ -103,6 +114,12 @@ private:
   float m_desiredRotationAngle;
 
   float m_fScale;
+  // for not zooming in and out all the time
+  unsigned int m_timeTresholdIn;
+  unsigned int m_timeTresholdOut;
+  typedef enum {none, zoomIn, zoomOut} activeZoom;
+  activeZoom m_currentActiveZoom;
+  
   float m_cameraOffsetX;
   float m_cameraOffsetY;
   Biker* m_playerToFollow;
@@ -110,12 +127,15 @@ private:
   Vector2f m_Scroll;
   float m_fCurrentHorizontalScrollShift;
   float m_fCurrentVerticalScrollShift;
-  DriveDir m_previous_driver_dir; /* to move camera faster if the dir changed */
+  /* to move camera faster if the dir changed */
+  DriveDir m_previous_driver_dir;
   bool  m_recenter_camera_fast;
 
   RenderSurface m_renderSurf;
 
   float m_lastSpeedTime;
+
+  void resetActiveZoom();
 };
 
 #endif
