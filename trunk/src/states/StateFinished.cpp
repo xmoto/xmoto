@@ -60,6 +60,7 @@ void StateFinished::enter()
   bool v_is_a_personnal_highscore = false;
   GameApp*  pGame = GameApp::instance();
   std::string v_id_level;
+  std::string v_roomsTimes;
 
   if(m_universe != NULL) {
     if(m_universe->getScenes().size() > 0) {
@@ -93,6 +94,14 @@ void StateFinished::enter()
 
   UIStatic* v_pNewHighscoreSaved_str = reinterpret_cast<UIStatic *>(m_GUI->getChild("HIGHSCORESAVEDSTR_STATIC"));
   v_pNewHighscoreSaved_str->setCaption("");
+
+  UIStatic* v_pRoomsTimes_str = reinterpret_cast<UIStatic *>(m_GUI->getChild("ROOMSTIMES_STATIC"));
+  /* rooms times */
+  v_roomsTimes = "";
+  for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+    v_roomsTimes = v_roomsTimes + GameApp::instance()->getWorldRecord(i, v_id_level) + "\n";
+  }
+  v_pRoomsTimes_str->setCaption(v_roomsTimes);
 
   if(m_universe != NULL) {
     m_universe->isTheCurrentPlayAHighscore(v_is_a_personnal_highscore, v_is_a_room_highscore);
@@ -288,6 +297,7 @@ void StateFinished::createGUIIfNeeded() {
   UIStatic*    v_pFinishText;
   UIStatic*    v_pNewHighscore_str;
   UIStatic*    v_pNewHighscoreSaved_str;
+  UIStatic*    v_pRoomsTimes_str;
 
   m_sGUI = new UIRoot();
   m_sGUI->setFont(drawLib->getFontSmall()); 
@@ -339,16 +349,21 @@ void StateFinished::createGUIIfNeeded() {
   v_button->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
   v_button->setFont(drawLib->getFontSmall());
 
-  v_pNewHighscore_str = new UIStatic(m_sGUI, 0, m_sGUI->getPosition().nHeight - 20 - 20, "Where are you ?", m_sGUI->getPosition().nWidth, 20);
+  v_pNewHighscore_str = new UIStatic(m_sGUI, 0, m_sGUI->getPosition().nHeight - 20 - 20, "", m_sGUI->getPosition().nWidth, 20);
   v_pNewHighscore_str->setID("HIGHSCORESTR_STATIC");
   v_pNewHighscore_str->setFont(drawLib->getFontSmall());
   v_pNewHighscore_str->setHAlign(UI_ALIGN_CENTER);
 
-  v_pNewHighscoreSaved_str = new UIStatic(m_sGUI, 0, m_sGUI->getPosition().nHeight - 20, "And you ?", m_sGUI->getPosition().nWidth, 20);
+  v_pNewHighscoreSaved_str = new UIStatic(m_sGUI, 0, m_sGUI->getPosition().nHeight - 20, "", m_sGUI->getPosition().nWidth, 20);
   v_pNewHighscoreSaved_str->setID("HIGHSCORESAVEDSTR_STATIC");
   v_pNewHighscoreSaved_str->setFont(drawLib->getFontSmall());
   v_pNewHighscoreSaved_str->setHAlign(UI_ALIGN_CENTER);
 
+  v_pRoomsTimes_str = new UIStatic(m_sGUI, m_sGUI->getPosition().nWidth-300, 10, "", 290, 150);
+  v_pRoomsTimes_str->setID("ROOMSTIMES_STATIC");
+  v_pRoomsTimes_str->setFont(drawLib->getFontSmall());
+  v_pRoomsTimes_str->setHAlign(UI_ALIGN_RIGHT);
+  v_pRoomsTimes_str->setVAlign(UI_ALIGN_TOP);
 }
 
 void StateFinished::makeBestTimesWindow(UIBestTimes *pWindow,

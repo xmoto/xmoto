@@ -53,6 +53,7 @@ class StateFinished : public StateMenu {
  protected:
   virtual void checkEvents();
   Universe* m_universe;
+  std::string m_roomsTimes;
 
   private:
   void makeBestTimesWindow(UIBestTimes* pWindow,
