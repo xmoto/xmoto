@@ -20,6 +20,7 @@
 
 #include "Camera.h"
 #include "Game.h"
+#include "Bike.h"
 
 Camera::Camera(Vector2i upperleft, Vector2i downright){
   m_fScale         = ZOOM_DEFAULT;
@@ -33,6 +34,7 @@ Camera::Camera(Vector2i upperleft, Vector2i downright){
   m_previous_driver_dir  = DD_LEFT;
   m_fCurrentHorizontalScrollShift = 0.0f;
   m_fCurrentVerticalScrollShift = 0.0f;
+  resetActiveZoom();
 }
 
 void Camera::prepareForNewLevel() {
@@ -44,6 +46,14 @@ void Camera::prepareForNewLevel() {
   m_desiredRotationAngle = 0.0;
   m_lastSpeedTime = 0.0;
   setScroll(false, Vector2f(0, -9.81));
+  resetActiveZoom();
+}
+
+void Camera::resetActiveZoom()
+{
+  m_timeTresholdIn  = 0;
+  m_timeTresholdOut = 0;
+  m_currentActiveZoom = none;
 }
 
 void Camera::zoom(float p_f) {
@@ -89,7 +99,7 @@ void Camera::guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
 					float &p_fDesiredVerticalScrollShift,
 					const Vector2f& gravity) {
 
-  float normal_hoffset = 4.0;
+  float normal_hoffset = 1.7;
   float normal_voffset = 2.0;             
   p_fDesiredHorizontalScrollShift = 0.0;
   p_fDesiredVerticalScrollShift   = 0.0;
@@ -123,6 +133,50 @@ void Camera::guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
   }
 }
 
+void Camera::guessDesiredCameraZoom() {
+  float bike_speed = getPlayerToFollow()->getBikeLinearVel();
+
+  if(getPlayerToFollow() != NULL) {
+    // ZOOM out
+    if(bike_speed > SPEED_UNTIL_ZOOM_BEGIN) { 
+      m_timeTresholdOut += 0.01 * 1000;
+      m_timeTresholdIn = 0;
+      if(m_timeTresholdOut > TRESHOLD_OUT) {
+	m_currentActiveZoom = zoomOut;
+      }
+    }
+    // ZOOM in
+    else if (bike_speed < SPEED_UNTIL_ZOOM_END) {
+      m_timeTresholdIn += 0.01 * 1000;
+      //reduces flickering
+      m_timeTresholdOut = 0;
+      if(m_timeTresholdIn > TRESHOLD_IN) {
+	m_currentActiveZoom = zoomIn;
+      }
+    }
+    else {
+      resetActiveZoom();
+    }
+
+    switch (m_currentActiveZoom) {
+    case none:
+      break;
+    case zoomIn: 
+      if(m_fScale <= CAM_ZOOM_NEAR) 
+	zoom(ZOOM_IN_SPEED);
+      else if(m_fScale >= CAM_ZOOM_NEAR)
+	resetActiveZoom();
+      break;
+    case zoomOut:
+      if(m_fScale >= CAM_ZOOM_FAR) 
+	zoom(ZOOM_OUT_SPEED); 
+      else if(m_fScale <= CAM_ZOOM_FAR)
+	resetActiveZoom();
+      break;
+    }    
+  }
+}
+
 void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   float v_move_camera_max;
   float v_fDesiredHorizontalScrollShift = 0.0;
@@ -146,7 +200,7 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   m_previous_driver_dir = m_playerToFollow->getState()->Dir;
 
   if(m_recenter_camera_fast) {
-    v_move_camera_max = 0.1;
+    v_move_camera_max = 0.05;
   } else {
     v_move_camera_max = 0.01;
   }
@@ -158,6 +212,9 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   guessDesiredCameraPosition(v_fDesiredHorizontalScrollShift,
 			     v_fDesiredVerticalScrollShift,
 			     gravity);
+
+  /* Switch Automatic Camera in Dpendency to altered Zoom Value */
+  guessDesiredCameraZoom(); //TODO
     
   if(fabs(v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift)
      < v_move_camera_max) {
