@@ -24,20 +24,6 @@
 #include "../VCommon.h"
 #include "Bike.h"
 
-#define ZOOM_DEFAULT 0.24
-#define CAMERA_OFFSETX_DEFAULT 0.5
-#define CAMERA_OFFSETY_DEFAULT 0.0
-
-// declared for Active Camera Zooming
-#define SPEED_UNTIL_ZOOM_BEGIN 0.34
-#define SPEED_UNTIL_ZOOM_END   0.25
-#define CAM_ZOOM_NEAR    0.24
-#define CAM_ZOOM_FAR     0.15
-#define ZOOM_OUT_SPEED  -0.0006
-#define ZOOM_IN_SPEED    0.0012
-#define TRESHOLD_IN      1.0 * 1000
-#define TRESHOLD_OUT     1.0 * 1000
-
 class RenderSurface {
 public:
   void update(Vector2i upperleft, Vector2i downright){

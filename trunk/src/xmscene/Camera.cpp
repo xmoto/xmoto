@@ -22,6 +22,20 @@
 #include "Game.h"
 #include "Bike.h"
 
+#define ZOOM_DEFAULT 0.24
+#define CAMERA_OFFSETX_DEFAULT 0.6
+#define CAMERA_OFFSETY_DEFAULT 0.0
+
+// declared for Active Camera Zooming
+#define SPEED_UNTIL_ZOOM_BEGIN 0.24
+#define SPEED_UNTIL_ZOOM_END   0.15
+#define CAM_ZOOM_NEAR    0.24
+#define CAM_ZOOM_FAR     0.18
+#define ZOOM_OUT_SPEED  -0.0004
+#define ZOOM_IN_SPEED    0.0004
+#define TRESHOLD_IN      1.0 * 1000
+#define TRESHOLD_OUT     1.0 * 1000
+
 Camera::Camera(Vector2i upperleft, Vector2i downright){
   m_fScale         = ZOOM_DEFAULT;
   m_cameraOffsetX  = CAMERA_OFFSETX_DEFAULT;
@@ -139,7 +153,7 @@ void Camera::guessDesiredCameraZoom() {
   if(getPlayerToFollow() != NULL) {
     // ZOOM out
     if(bike_speed > SPEED_UNTIL_ZOOM_BEGIN) { 
-      m_timeTresholdOut += 0.01 * 1000;
+      m_timeTresholdOut += (int)(0.01 * 1000.0);
       m_timeTresholdIn = 0;
       if(m_timeTresholdOut > TRESHOLD_OUT) {
 	m_currentActiveZoom = zoomOut;
@@ -147,7 +161,7 @@ void Camera::guessDesiredCameraZoom() {
     }
     // ZOOM in
     else if (bike_speed < SPEED_UNTIL_ZOOM_END) {
-      m_timeTresholdIn += 0.01 * 1000;
+      m_timeTresholdIn += (int)(0.01 * 1000.0);
       //reduces flickering
       m_timeTresholdOut = 0;
       if(m_timeTresholdIn > TRESHOLD_IN) {
