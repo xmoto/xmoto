@@ -601,7 +601,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
 	(XMSession::instance()->ghostStrategy_BESTOFOTHERROOMS() && i!=0) ){
       v_replay_BESTOFROOM[i] = _getGhostReplayPath_bestOfTheRoom(i, i_motogame->getLevelSrc()->Id(), v_finishTime);
       
-      /* add MYBEST if MYBEST if better the  BESTOF ROOM */
+      /* add MYBEST if MYBEST if better the BESTOF the other ROOM */
       if(v_player_finishTime > 0 && (v_finishTime < 0 || v_player_finishTime < v_finishTime)) {
 	v_replay_BESTOFROOM[i] = v_replay_MYBEST_tmp;
       }
@@ -614,6 +614,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
       }
 
       if(v_replay_BESTOFROOM[i] != "" && v_exists == false) {
+	Logger::Log("add ghost %s\n", v_replay_BESTOFROOM[i].c_str());
 	i_motogame->addGhostFromFile(v_replay_BESTOFROOM[i],
 				     xmDatabase::instance("main")->webrooms_getName(XMSession::instance()->idRoom(i)),
 				     Theme::instance(), Theme::instance()->getGhostTheme(),

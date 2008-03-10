@@ -77,7 +77,9 @@ int UploadHighscoreThread::realThreadFunction()
 			    XMSession::instance()->uploadPassword(i),
 			    XMSession::instance()->uploadHighscoreUrl(),
 			    this, XMSession::instance()->proxySettings(), v_msg_status_ok, v_tmpMsg);
-	if(v_msg_status_ok == false) {
+	if(v_msg_status_ok) {
+	  m_msg = m_msg + webRoomName + ":\n" + v_tmpMsg + "\n \n";
+	} else {
 	  m_msg = m_msg + webRoomName + ":\n" + std::string(GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE) + "\n" + v_tmpMsg + "\n \n";
 	  v_failed = true;
 	}
