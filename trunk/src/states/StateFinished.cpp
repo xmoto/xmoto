@@ -306,14 +306,17 @@ void StateFinished::createGUIIfNeeded() {
 		      drawLib->getDispHeight());
   
 
-  v_frame = new UIFrame(m_sGUI, 300, 30, "", 400, 540);
+  v_frame = new UIFrame(m_sGUI, 
+			drawLib->getDispWidth()/2  - 400/2,
+			drawLib->getDispHeight()/2 - 540/2,
+			"", 400, 540);
   v_frame->setID("FINISHED_FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_MENU);
 
   v_pFinishText = new UIStatic(v_frame, 0, 100, GAMETEXT_FINISH, v_frame->getPosition().nWidth, 36);
   v_pFinishText->setFont(drawLib->getFontMedium());
 
-  v_pBestTimes = new UIBestTimes(m_sGUI, 10, 50, "", 290, m_sGUI->getPosition().nHeight - 50*2);
+  v_pBestTimes = new UIBestTimes(m_sGUI, 10, 50, "", 250, m_sGUI->getPosition().nHeight - 50*2);
   v_pBestTimes->setID("BESTTIMES");
   v_pBestTimes->setFont(drawLib->getFontMedium());
   v_pBestTimes->setHFont(drawLib->getFontMedium());
