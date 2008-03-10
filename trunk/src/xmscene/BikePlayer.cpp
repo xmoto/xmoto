@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Zone.h"
 #include "Game.h"
 #include "Replay.h"
+#include "Sound.h"
 
 /* This is the magic depth factor :)  - tweak to obtain max. stability */
 #define DEPTH_FACTOR    2
@@ -110,10 +111,12 @@ void PlayerBiker::updateToTime(int i_time, int i_timeStep,
 
   /* Squeeking? */
   if(isSqueeking()) {
-    if(i_time - m_lastSqueekTime > 1) {
-      /* (this is crappy, not enabled) */
-      //Sound::playSampleByName("Sounds/Squeek.ogg",m_MotoGame.howMuchSqueek());
-      m_lastSqueekTime = i_time;
+    if(i_time - m_lastSqueekTime > 100) {
+      if(m_fHowMuchSqueek > .99) {
+	//printf("=>%.2f\n", m_fHowMuchSqueek);
+	Sound::playSampleByName("Textures/Sounds/Squeek.ogg", m_fHowMuchSqueek);
+	m_lastSqueekTime = i_time;
+      }
     }
   }
 
@@ -167,7 +170,7 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
   m_bWheelSpin = false;
 
   /* Update gravity vector */
-  dWorldSetGravity(m_WorldID, i_gravity.x, i_gravity.y,0);
+  dWorldSetGravity(m_WorldID, i_gravity.x, i_gravity.y, 0);
 
   /* Should we disable stuff? Ok ODE has an autodisable feature, but i'd rather
      roll my own here. */

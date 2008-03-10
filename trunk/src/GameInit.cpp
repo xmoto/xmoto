@@ -333,6 +333,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     for(unsigned int i=0; i<Theme::instance()->getSoundsList().size(); i++) {
       Sound::loadSample(Theme::instance()->getSoundsList()[i]->FilePath());
     }
+    Sound::loadSample("Textures/Sounds/Squeek.ogg");
   } catch(Exception &e) {
     Logger::Log("*** Warning *** : %s\n", e.getMsg().c_str());
     /* hum, not cool */
