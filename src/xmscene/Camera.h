@@ -50,34 +50,36 @@ private:
 class Camera {
 public:
   Camera(Vector2i upperleft, Vector2i downright);
-  void zoom(float p_f);
-  void setZoom(float p_f);
-  void initZoom();
+  void  setAbsoluteZoom(float i_absZoom);
+  void  setRelativeZoom(float i_relZoom);
+  void  desactiveActionZoom();
+  void  initActiveZoom();
+  void  initZoom();
   float getCurrentZoom();
-  void moveCamera(float px, float py);
-  void setCameraPosition(float px, float py);
+  void  moveCamera(float px, float py);
+  void  setCameraPosition(float px, float py);
   float getCameraPositionX();
   float getCameraPositionY();
-  void initCamera();
-  void initCameraPosition();
+  void  initCamera();
+  void  initCameraPosition();
 
-  void prepareForNewLevel();
+  void  prepareForNewLevel();
 
-  void setScroll(bool isSmooth, const Vector2f& gravity);
-  void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
-				  float &p_fDesiredVerticalScrollShift,
-				  const Vector2f& gravity);
-  void guessDesiredCameraZoom();
+  void  setScroll(bool isSmooth, const Vector2f& gravity);
+  void  guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
+				   float &p_fDesiredVerticalScrollShift,
+				   const Vector2f& gravity);
+  void  guessDesiredCameraZoom();
   float guessDesiredAngleRotation();
-  void setPlayerToFollow(Biker* i_playerToFollow);
+  void  setPlayerToFollow(Biker* i_playerToFollow);
   Biker* getPlayerToFollow();
 
-  void setCamera2d();
-  void setCamera3d();
-  void render();
-  void setRenderSurface(Vector2i upperleft, Vector2i downright);
+  void  setCamera2d();
+  void  setCamera3d();
+  void  render();
+  void  setRenderSurface(Vector2i upperleft, Vector2i downright);
 
-  int getDispWidth(){
+  int   getDispWidth(){
     return m_renderSurf.size().x;
   }
   int getDispHeight(){
@@ -95,7 +97,7 @@ public:
   void adaptRotationAngleToGravity(Vector2f& gravity);
 
 private:
-  bool m_mirrored;
+  bool  m_mirrored;
   float m_rotationAngle;
   float m_desiredRotationAngle;
 
@@ -105,6 +107,8 @@ private:
   unsigned int m_timeTresholdOut;
   typedef enum {none, zoomIn, zoomOut} activeZoom;
   activeZoom m_currentActiveZoom;
+  bool  m_useActiveZoom;
+  float m_initialZoom;
   
   float m_cameraOffsetX;
   float m_cameraOffsetY;

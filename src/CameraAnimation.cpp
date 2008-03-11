@@ -70,7 +70,7 @@ void CameraAnimation::init() {
 }
 
 void CameraAnimation::uninit() {
-  m_camera->setZoom(m_I_cameraZoom);
+  m_camera->setAbsoluteZoom(m_I_cameraZoom);
   m_camera->setCameraPosition(m_I_cameraPosition.x, m_I_cameraPosition.y);
   GameRenderer::instance()->setSizeMultOfEntitiesToTake(m_I_entitiesToTakeZoom);
   GameRenderer::instance()->setSizeMultOfEntitiesWhichMakeWin(m_I_entitiesWhichMakeWin);
@@ -234,7 +234,7 @@ bool AutoZoomCameraAnimation::step() {
     zy = coeff * (m_fAnimPlayStartCamera.y - m_fAnimPlayFinalCamera1.y);
     zz = coeff * (m_fAnimPlayStartZoom - m_fAnimPlayFinalZoom);
     
-    m_camera->setZoom(m_fAnimPlayStartZoom - zz);
+    m_camera->setAbsoluteZoom(m_fAnimPlayStartZoom - zz);
     m_camera->setCameraPosition(m_fAnimPlayStartCamera.x - zx,m_fAnimPlayStartCamera.y - zy);
     
     return true;
@@ -262,7 +262,7 @@ bool AutoZoomCameraAnimation::step() {
     zy = coeff * (m_fAnimPlayStartCamera.y - m_fAnimPlayFinalCamera1.y);
     zz = coeff * (m_fAnimPlayStartZoom   - m_fAnimPlayFinalZoom);
     
-    m_camera->setZoom(m_fAnimPlayStartZoom - zz);
+    m_camera->setAbsoluteZoom(m_fAnimPlayStartZoom - zz);
     m_camera->setCameraPosition(m_fAnimPlayStartCamera.x - zx, m_fAnimPlayStartCamera.y - zy);
 
     if(m_entitiesWhichMakeWinZoom > initialEntitiesWhichMakeWinZoom()) {
@@ -360,7 +360,7 @@ bool ZoomingCameraAnimation::step() {
     
     zz = logf(PRESTART_ANIMATION_CURVE * ((PRESTART_ANIMATION_TIME + m_static_time - GameApp::getXMTime() + startTime()) / (PRESTART_ANIMATION_TIME)) + 1.0) / LOGF_PRE_ANIM_TIME_ADDED_ONE * (initialZoom() - m_zoomU);
     
-    m_camera->setZoom(initialZoom() - zz);
+    m_camera->setAbsoluteZoom(initialZoom() - zz);
     
     zx = (PRESTART_ANIMATION_TIME + m_static_time - GameApp::getXMTime() + startTime())
       / (PRESTART_ANIMATION_TIME) 
@@ -373,7 +373,7 @@ bool ZoomingCameraAnimation::step() {
   } else {
     float zx,zy;
     
-    m_camera->setZoom(m_zoomU);
+    m_camera->setAbsoluteZoom(m_zoomU);
     
     zx  = (m_static_time - GameApp::getXMTime() + startTime()) / (m_static_time) 
       * (m_fPreCameraStart.x - m_fPreCameraFinal.x);
