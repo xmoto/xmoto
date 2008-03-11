@@ -1066,6 +1066,13 @@ int GameRenderer::nbParticlesRendered() const {
 		    pCamera->getPlayerToFollow()->getRenderBikeFront(),
 		    pCamera->getPlayerToFollow()->getColorFilter(),
 		    pCamera->getPlayerToFollow()->getUglyColorFilter());
+
+	if(XMSession::instance()->debug()) {
+	  // render collision points
+	  for(unsigned int j=0; j<pCamera->getPlayerToFollow()->CollisionPoints().size(); j++) {
+	    _RenderCircle(16, MAKE_COLOR(255,255,0,255),pCamera->getPlayerToFollow()->CollisionPoints()[j], 0.02);
+	  }
+	}
       } catch(Exception &e) {
 	i_scene->gameMessage("Unable to render the biker", true);
       }
@@ -2936,6 +2943,7 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
       }
     }   
 
+		// draw the center
     if(XMSession::instance()->debug()) {
       _RenderCircle(10, MAKE_COLOR(255, 0, 0, 255), pBike->CenterP, 0.2);
     }

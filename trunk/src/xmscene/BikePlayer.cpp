@@ -169,6 +169,9 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
   /* No wheel spin per default */
   m_bWheelSpin = false;
 
+	// remove old collision points
+	cleanCollisionPoints();
+
   /* Update gravity vector */
   dWorldSetGravity(m_WorldID, i_gravity.x, i_gravity.y, 0);
 
@@ -387,9 +390,9 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
     Vector2f WSP;
     for(int i=0;i<nNumContacts;i++) {
       dJointAttach(dJointCreateContact(m_WorldID,m_ContactGroup,&Contacts[i]),m_FrontWheelBodyID,0);
-
       WSP.x = Contacts[i].geom.pos[0];
       WSP.y = Contacts[i].geom.pos[1];
+			m_collisionPoints.push_back(Vector2f(Contacts[i].geom.pos[0], Contacts[i].geom.pos[1]));
     }
 
     //if(nNumContacts > 0 && nSlipFrameInterlace&1  && sqrt(pfFrame[0]*pfFrame[0] + pfFrame[1]*pfFrame[1])>1.2f) {
@@ -452,6 +455,7 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
       dJointAttach(dJointCreateContact(m_WorldID,m_ContactGroup,&Contacts[i]),m_RearWheelBodyID,0);
       WSP.x = Contacts[i].geom.pos[0];
       WSP.y = Contacts[i].geom.pos[1];
+			m_collisionPoints.push_back(Vector2f(Contacts[i].geom.pos[0], Contacts[i].geom.pos[1]));
     }
 
     /* Calculate wheel linear velocity at slip-point */
@@ -489,131 +493,78 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
 
   /* body */
   if(m_bodyDetach) {
-    /*
-    // m_PlayerTorsoBody
+
+		float v_memberRay = 0.1;
+
+    // ShoulderP
     if(m_bikeState.Dir == DD_RIGHT) {
-    nNumContacts = m_Collision.collideLine(m_bikeState.ShoulderP.x, m_bikeState.ShoulderP.y,
-    m_bikeState.LowerBodyP.x, m_bikeState.LowerBodyP.y,
-    Contacts, 100);
+			nNumContacts = intersectWheelLevel(m_bikeState.ShoulderP, v_memberRay, Contacts, v_collisionSystem);
     } else {
-    nNumContacts = m_Collision.collideLine(m_bikeState.Shoulder2P.x,  m_bikeState.Shoulder2P.y,
-    m_bikeState.LowerBody2P.x, m_bikeState.LowerBody2P.y,
-    Contacts, 100);
-    }
-    if(nNumContacts > 0) {
-    //usleep(100000);
+			nNumContacts = intersectWheelLevel(m_bikeState.Shoulder2P, v_memberRay, Contacts, v_collisionSystem);
     }
     for(int i=0;i<nNumContacts;i++) {
-    dJointAttach(dJointCreateContact(m_WorldID,
-    m_ContactGroup,
-    &Contacts[i]),
-    m_bikeState.Dir == DD_RIGHT ?
-    m_PlayerTorsoBodyID : m_PlayerTorsoBodyID2, 0);
-    }
-    */
-    /*
-    // m_PlayerLArmBodyID
-    if(m_bikeState.Dir == DD_RIGHT) {
-    nNumContacts = m_Collision.collideLine(m_bikeState.ElbowP.x, m_bikeState.ElbowP.y,
-    m_bikeState.HandP.x, m_bikeState.HandP.y,
-    Contacts, 100);
-    } else {
-    nNumContacts = m_Collision.collideLine(m_bikeState.Elbow2P.x,  m_bikeState.Elbow2P.y,
-    m_bikeState.Hand2P.x, m_bikeState.Hand2P.y,
-    Contacts, 100);
-    }
-    for(int i=0;i<nNumContacts;i++) {
-    dJointAttach(dJointCreateContact(m_WorldID,
-    m_ContactGroup,
-    &Contacts[i]),
-    m_bikeState.Dir == DD_RIGHT ?
-    m_PlayerLArmBodyID : m_PlayerLArmBodyID2, 0);
+			dJointAttach(dJointCreateContact(m_WorldID, m_ContactGroup, &Contacts[i]), m_bikeState.Dir == DD_RIGHT ? m_PlayerTorsoBodyID : m_PlayerTorsoBodyID2, 0);
+			dJointAttach(dJointCreateContact(m_WorldID, m_ContactGroup, &Contacts[i]), m_bikeState.Dir == DD_RIGHT ? m_PlayerUArmBodyID  : m_PlayerUArmBodyID2, 0);
+      m_collisionPoints.push_back(Vector2f(Contacts[i].geom.pos[0], Contacts[i].geom.pos[1]));
     }
 
-    // m_PlayerUArmBodyID
+		// LowerBodyP
     if(m_bikeState.Dir == DD_RIGHT) {
-    nNumContacts = m_Collision.collideLine(m_bikeState.ElbowP.x, m_bikeState.ElbowP.y,
-    m_bikeState.ShoulderP.x, m_bikeState.ShoulderP.y,
-    Contacts, 100);
+			nNumContacts = intersectWheelLevel(m_bikeState.LowerBodyP, v_memberRay, Contacts, v_collisionSystem);
     } else {
-    nNumContacts = m_Collision.collideLine(m_bikeState.Elbow2P.x,  m_bikeState.Elbow2P.y,
-    m_bikeState.Shoulder2P.x, m_bikeState.Shoulder2P.y,
-    Contacts, 100);
+			nNumContacts = intersectWheelLevel(m_bikeState.LowerBody2P, v_memberRay, Contacts, v_collisionSystem);
     }
     for(int i=0;i<nNumContacts;i++) {
-    dJointAttach(dJointCreateContact(m_WorldID,
-    m_ContactGroup,
-    &Contacts[i]),
-    m_bikeState.Dir == DD_RIGHT ?
-    m_PlayerUArmBodyID : m_PlayerUArmBodyID2, 0);
+			dJointAttach(dJointCreateContact(m_WorldID, m_ContactGroup, &Contacts[i]), m_bikeState.Dir == DD_RIGHT ? m_PlayerTorsoBodyID : m_PlayerTorsoBodyID2, 0);
+			dJointAttach(dJointCreateContact(m_WorldID, m_ContactGroup, &Contacts[i]), m_bikeState.Dir == DD_RIGHT ? m_PlayerULegBodyID  : m_PlayerULegBodyID2, 0);
+      m_collisionPoints.push_back(Vector2f(Contacts[i].geom.pos[0], Contacts[i].geom.pos[1]));
     }
 
-    // m_PlayerULegBodyID
+		// ElbowP
     if(m_bikeState.Dir == DD_RIGHT) {
-    nNumContacts = m_Collision.collideLine(m_bikeState.LowerBodyP.x, m_bikeState.LowerBodyP.y,
-    m_bikeState.KneeP.x, m_bikeState.KneeP.y,
-    Contacts, 100);
+			nNumContacts = intersectWheelLevel(m_bikeState.ElbowP, v_memberRay, Contacts, v_collisionSystem);
     } else {
-    nNumContacts = m_Collision.collideLine(m_bikeState.LowerBody2P.x,  m_bikeState.LowerBody2P.y,
-    m_bikeState.Knee2P.x, m_bikeState.Knee2P.y,
-    Contacts, 100);
+			nNumContacts = intersectWheelLevel(m_bikeState.Elbow2P, v_memberRay, Contacts, v_collisionSystem);
     }
     for(int i=0;i<nNumContacts;i++) {
-    dJointAttach(dJointCreateContact(m_WorldID,
-    m_ContactGroup,
-    &Contacts[i]),
-    m_bikeState.Dir == DD_RIGHT ?
-    m_PlayerULegBodyID : m_PlayerULegBodyID2, 0);
+			dJointAttach(dJointCreateContact(m_WorldID, m_ContactGroup, &Contacts[i]), m_bikeState.Dir == DD_RIGHT ? m_PlayerUArmBodyID : m_PlayerUArmBodyID2, 0);
+			dJointAttach(dJointCreateContact(m_WorldID, m_ContactGroup, &Contacts[i]), m_bikeState.Dir == DD_RIGHT ? m_PlayerLArmBodyID  : m_PlayerLArmBodyID2, 0);
+      m_collisionPoints.push_back(Vector2f(Contacts[i].geom.pos[0], Contacts[i].geom.pos[1]));
     }
 
-    // m_PlayerLLegBodyID
+		// HandP
     if(m_bikeState.Dir == DD_RIGHT) {
-    nNumContacts = m_Collision.collideLine(m_bikeState.KneeP.x, m_bikeState.KneeP.y,
-    m_bikeState.FootP.x, m_bikeState.FootP.y,
-    Contacts, 100);
+			nNumContacts = intersectWheelLevel(m_bikeState.HandP, v_memberRay, Contacts, v_collisionSystem);
     } else {
-    nNumContacts = m_Collision.collideLine(m_bikeState.Knee2P.x,  m_bikeState.Knee2P.y,
-    m_bikeState.Foot2P.x, m_bikeState.Foot2P.y,
-    Contacts, 100);
+			nNumContacts = intersectWheelLevel(m_bikeState.Hand2P, v_memberRay, Contacts, v_collisionSystem);
     }
     for(int i=0;i<nNumContacts;i++) {
-    dJointAttach(dJointCreateContact(m_WorldID,
-    m_ContactGroup,
-    &Contacts[i]),
-    m_bikeState.Dir == DD_RIGHT ?
-    m_PlayerLLegBodyID : m_PlayerLLegBodyID2, 0);
-    }
-    */
-
-    /*
-    // hand
-    if(m_bikeState.Dir == DD_RIGHT) {
-    nNumContacts = m_Collision.collideCircle(m_bikeState.HandP.x, m_bikeState.HandP.y, 0.1, Contacts, 100);
-    } else {
-    nNumContacts = m_Collision.collideCircle(m_bikeState.Hand2P.x, m_bikeState.Hand2P.y, 0.1, Contacts, 100);
-    }
-    for(int i=0;i<nNumContacts;i++) {
-    dJointAttach(dJointCreateContact(m_WorldID,
-    m_ContactGroup,
-    &Contacts[i]),
-    m_bikeState.Dir == DD_RIGHT ?
-    m_PlayerHandAnchorBodyID : m_PlayerHandAnchorBodyID2, 0);
+			dJointAttach(dJointCreateContact(m_WorldID, m_ContactGroup, &Contacts[i]), m_bikeState.Dir == DD_RIGHT ? m_PlayerLArmBodyID : m_PlayerLArmBodyID2, 0);
+      m_collisionPoints.push_back(Vector2f(Contacts[i].geom.pos[0], Contacts[i].geom.pos[1]));
     }
 
-    // foot
+		// KneeP
     if(m_bikeState.Dir == DD_RIGHT) {
-    nNumContacts = m_Collision.collideCircle(m_bikeState.FootP.x, m_bikeState.FootP.y, 0.1, Contacts, 100);
+      nNumContacts = intersectWheelLevel(m_bikeState.KneeP, v_memberRay, Contacts, v_collisionSystem);
     } else {
-    nNumContacts = m_Collision.collideCircle(m_bikeState.Foot2P.x, m_bikeState.Foot2P.y, 0.1, Contacts, 100);
+      nNumContacts = intersectWheelLevel(m_bikeState.Knee2P, v_memberRay, Contacts, v_collisionSystem);
     }
     for(int i=0;i<nNumContacts;i++) {
-    dJointAttach(dJointCreateContact(m_WorldID,
-    m_ContactGroup,
-    &Contacts[i]),
-    m_bikeState.Dir == DD_RIGHT ?
-    m_PlayerFootAnchorBodyID : m_PlayerFootAnchorBodyID2 , 0);
+      dJointAttach(dJointCreateContact(m_WorldID, m_ContactGroup, &Contacts[i]), m_bikeState.Dir == DD_RIGHT ? m_PlayerULegBodyID : m_PlayerULegBodyID2, 0);
+      dJointAttach(dJointCreateContact(m_WorldID, m_ContactGroup, &Contacts[i]), m_bikeState.Dir == DD_RIGHT ? m_PlayerLLegBodyID : m_PlayerLLegBodyID2, 0);
+      m_collisionPoints.push_back(Vector2f(Contacts[i].geom.pos[0], Contacts[i].geom.pos[1]));
     }
-    */
+
+		// FootP
+    if(m_bikeState.Dir == DD_RIGHT) {
+      nNumContacts = intersectWheelLevel(m_bikeState.FootP, v_memberRay, Contacts, v_collisionSystem);
+    } else {
+      nNumContacts = intersectWheelLevel(m_bikeState.Foot2P, v_memberRay, Contacts, v_collisionSystem);
+    }
+    for(int i=0;i<nNumContacts;i++) {
+      dJointAttach(dJointCreateContact(m_WorldID, m_ContactGroup, &Contacts[i]), m_bikeState.Dir == DD_RIGHT ? m_PlayerLLegBodyID : m_PlayerLLegBodyID2, 0);
+      m_collisionPoints.push_back(Vector2f(Contacts[i].geom.pos[0], Contacts[i].geom.pos[1]));
+    }
 
   }
 
@@ -1244,14 +1195,18 @@ void PlayerBiker::setBodyDetach(bool state) {
 
   if(m_bodyDetach) {
     dJointSetHingeParam(m_KneeHingeID,  dParamLoStop, 0.0);
-    dJointSetHingeParam(m_KneeHingeID,  dParamHiStop, 3.14159/8.0);
-    dJointSetHingeParam(m_KneeHingeID2, dParamLoStop, 3.14159/8.0 * -1.0);
+    dJointSetHingeParam(m_KneeHingeID,  dParamHiStop, 3.14159/2.0);
+    //dJointSetHingeParam(m_KneeHingeID,  dParamHiStop, 3.14159/8.0);
+		dJointSetHingeParam(m_KneeHingeID2, dParamLoStop, 3.14159/2.0 * -1.0);
+    //dJointSetHingeParam(m_KneeHingeID2, dParamLoStop, 3.14159/8.0 * -1.0);
     dJointSetHingeParam(m_KneeHingeID2, dParamHiStop, 0.0         * -1.0);
 
-    dJointSetHingeParam(m_LowerBodyHingeID,  dParamLoStop,  -1.2);
+    dJointSetHingeParam(m_LowerBodyHingeID,  dParamLoStop,  -1.6);
+    //dJointSetHingeParam(m_LowerBodyHingeID,  dParamLoStop,  -1.2);
     dJointSetHingeParam(m_LowerBodyHingeID,  dParamHiStop,  0.0);
     dJointSetHingeParam(m_LowerBodyHingeID2, dParamLoStop, 0.0  * -1.0);
-    dJointSetHingeParam(m_LowerBodyHingeID2, dParamHiStop, -1.2 * -1.0);
+		dJointSetHingeParam(m_LowerBodyHingeID2, dParamHiStop, -1.6 * -1.0);
+    //dJointSetHingeParam(m_LowerBodyHingeID2, dParamHiStop, -1.2 * -1.0);
 
     dJointSetHingeParam(m_ShoulderHingeID,  dParamLoStop, -2.0);
     dJointSetHingeParam(m_ShoulderHingeID,  dParamHiStop,  0.0);
