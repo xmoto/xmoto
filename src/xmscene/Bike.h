@@ -191,6 +191,8 @@ class Biker {
 
   void setInterpolation(bool bValue);
 
+	std::vector<Vector2f> &CollisionPoints();
+
  protected:
   BikerTheme* m_bikerTheme;
   bool m_playSound;
@@ -212,6 +214,10 @@ class Biker {
   TColor m_colorFilter;
   TColor m_uglyColorFilter;
   bool m_doInterpolation;
+
+	/* collision points */
+	void cleanCollisionPoints();
+	std::vector<Vector2f> m_collisionPoints;
 };
 
 class OnBikerHooks {

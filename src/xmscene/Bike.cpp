@@ -241,6 +241,7 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
 }
 
 Biker::~Biker() { 
+	cleanCollisionPoints();
   delete m_EngineSound;
 }
 
@@ -629,4 +630,12 @@ void BikeState::interpolateGameState(std::vector<BikeState*> &i_ghostBikeStates,
   }
 
 void Biker::addBodyForce(int i_time, const Vector2f& i_force, int i_startTime, int i_endTime) {
+}
+
+void Biker::cleanCollisionPoints() {
+	m_collisionPoints.clear();
+}
+
+std::vector<Vector2f> &Biker::CollisionPoints() {
+	return m_collisionPoints;
 }
