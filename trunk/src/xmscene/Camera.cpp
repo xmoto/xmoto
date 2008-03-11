@@ -43,12 +43,8 @@ Camera::Camera(Vector2i upperleft, Vector2i downright){
   m_playerToFollow = NULL;
   setRenderSurface(upperleft, downright);
   m_mirrored = false;
-  m_rotationAngle = 0.0;
-  m_lastSpeedTime = 0.0;
-  m_previous_driver_dir  = DD_LEFT;
-  m_fCurrentHorizontalScrollShift = 0.0f;
-  m_fCurrentVerticalScrollShift = 0.0f;
-  resetActiveZoom();
+
+  prepareForNewLevel();
 }
 
 void Camera::prepareForNewLevel() {
@@ -61,6 +57,7 @@ void Camera::prepareForNewLevel() {
   m_lastSpeedTime = 0.0;
   setScroll(false, Vector2f(0, -9.81));
   resetActiveZoom();
+  initActiveZoom();
 }
 
 void Camera::resetActiveZoom()
@@ -70,11 +67,26 @@ void Camera::resetActiveZoom()
   m_currentActiveZoom = none;
 }
 
-void Camera::zoom(float p_f) {
-  m_fScale += p_f;
+void Camera::setRelativeZoom(float i_relZoom) {
+  m_fScale += i_relZoom;
   if(m_fScale < 0) {
     m_fScale = 0;
   }
+}
+
+void Camera::desactiveActionZoom()
+{
+  if(m_useActiveZoom == true) {
+    m_useActiveZoom = false;
+    m_fScale        = m_initialZoom;
+  }
+}
+
+void Camera::initActiveZoom()
+{
+  m_useActiveZoom = true;
+  // for the moment, put it to default value.
+  m_initialZoom   = ZOOM_DEFAULT;
 }
 
 void Camera::initZoom() {
@@ -177,13 +189,13 @@ void Camera::guessDesiredCameraZoom() {
       break;
     case zoomIn: 
       if(m_fScale <= CAM_ZOOM_NEAR) 
-	zoom(ZOOM_IN_SPEED);
+	setRelativeZoom(ZOOM_IN_SPEED);
       else if(m_fScale >= CAM_ZOOM_NEAR)
 	resetActiveZoom();
       break;
     case zoomOut:
       if(m_fScale >= CAM_ZOOM_FAR) 
-	zoom(ZOOM_OUT_SPEED); 
+	setRelativeZoom(ZOOM_OUT_SPEED); 
       else if(m_fScale <= CAM_ZOOM_FAR)
 	resetActiveZoom();
       break;
@@ -227,8 +239,10 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
 			     v_fDesiredVerticalScrollShift,
 			     gravity);
 
-  /* Switch Automatic Camera in Dpendency to altered Zoom Value */
-  guessDesiredCameraZoom(); //TODO
+  // Switch Automatic Camera in Dependency to altered Zoom Value
+  if(m_useActiveZoom == true) {
+    guessDesiredCameraZoom();
+  }
     
   if(fabs(v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift)
      < v_move_camera_max) {
@@ -270,8 +284,8 @@ float Camera::getCurrentZoom() {
   return m_fScale;
 }
 
-void Camera::setZoom(float p_f) {
-  m_fScale = p_f;
+void Camera::setAbsoluteZoom(float i_absZoom) {
+  m_fScale = i_absZoom;
 }
 
 void Camera::setPlayerToFollow(Biker* i_playerToFollow) {

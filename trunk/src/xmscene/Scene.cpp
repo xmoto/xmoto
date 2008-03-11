@@ -1001,7 +1001,8 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::CameraZoom(float pZoom) {
-    getCamera()->zoom(pZoom);
+    getCamera()->desactiveActionZoom();
+    getCamera()->setRelativeZoom(pZoom);
   }
    
   void MotoGame::CameraMove(float p_x, float p_y) {

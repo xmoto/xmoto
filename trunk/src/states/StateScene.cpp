@@ -242,7 +242,8 @@ void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
 	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	  m_universe->getScenes()[j]->Cameras()[i]->zoom(0.002);
+	  m_universe->getScenes()[j]->Cameras()[i]->desactiveActionZoom();
+	  m_universe->getScenes()[j]->Cameras()[i]->setRelativeZoom(0.002);
 	}
       }
     }
@@ -252,7 +253,8 @@ void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
 	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	  m_universe->getScenes()[j]->Cameras()[i]->zoom(-0.002);
+	  m_universe->getScenes()[j]->Cameras()[i]->desactiveActionZoom();
+	  m_universe->getScenes()[j]->Cameras()[i]->setRelativeZoom(-0.002);
 	}
       }
     }
