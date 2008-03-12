@@ -319,6 +319,7 @@ void Camera::setCamera3d(){
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
 #endif
 }
 
