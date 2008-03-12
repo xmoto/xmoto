@@ -110,6 +110,7 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
   initCameras(i_universe);
 
   m_screenBBox.reset();
+  m_layersBBox.reset();
 
   m_fNextGhostInfoUpdate = 0.0f;
   m_nGhostInfoTrans      = 255;
@@ -950,22 +951,21 @@ int GameRenderer::nbParticlesRendered() const {
 
     m_nParticlesRendered = 0;
     
+    m_rotationAngleForTheFrame = pCamera->guessDesiredAngleRotation();
+
     pCamera->setCamera2d();
 
     /* calculate screen AABB to show only visible entities and dyn blocks */
-    m_screenBBox.reset();
 
-    float xScale = pCamera->getCurrentZoom() * ((float)pCamera->getDispHeight()) / pCamera->getDispWidth();
-    float yScale = pCamera->getCurrentZoom();
-    // depends on zoom
-    float xCamOffset=1.0/xScale;
-    float yCamOffset=1.0/yScale;
+    // calculate scale values with default zoom first
+    float currentZoom = pCamera->getCurrentZoom();
+    pCamera->initZoom();
+    calculateCameraScaleAndScreenAABB(pCamera, m_layersBBox);
+    m_xScaleDefault = m_xScale;
+    m_yScaleDefault = m_yScale;
 
-    Vector2f v1(pCamera->getCameraPositionX()-xCamOffset, pCamera->getCameraPositionY()-yCamOffset);
-    Vector2f v2(pCamera->getCameraPositionX()+xCamOffset, pCamera->getCameraPositionY()+yCamOffset);
-
-    m_screenBBox.addPointToAABB2f(v1);
-    m_screenBBox.addPointToAABB2f(v2);
+    pCamera->setAbsoluteZoom(currentZoom);
+    calculateCameraScaleAndScreenAABB(pCamera, m_screenBBox);
 
     /* SKY! */
     if(XMSession::instance()->ugly() == false) {
@@ -978,21 +978,13 @@ int GameRenderer::nbParticlesRendered() const {
 		 i_scene->getLevelSrc()->Sky()->Drifted());
     }    
 
-    pCamera->setCamera3d();
-
-    /* Perform scaling/translation */    
-    GameApp::instance()->getDrawLib()->setScale(xScale, yScale);
-    if(pCamera->isMirrored() == true){
-      GameApp::instance()->getDrawLib()->setMirrorY();
-    }
-    float rotationAngle = pCamera->guessDesiredAngleRotation();
-    GameApp::instance()->getDrawLib()->setRotateZ(rotationAngle);
-    GameApp::instance()->getDrawLib()->setTranslate(-pCamera->getCameraPositionX(), -pCamera->getCameraPositionY());
-
     if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* background level blocks */
-      _RenderLayers(i_scene, false);
+      _RenderLayer(i_scene, false);
     }
+
+    // the layers may have change the scale transformation
+    setCameraTransformations(pCamera, m_xScale, m_yScale);
 
     if(XMSession::instance()->gameGraphics() != GFX_LOW && XMSession::instance()->ugly() == false) {
       /* Background blocks */
@@ -1100,6 +1092,9 @@ int GameRenderer::nbParticlesRendered() const {
     if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
       _RenderLayers(i_scene, true);
     }
+
+    // put it back
+    setCameraTransformations(pCamera, m_xScale, m_yScale);
 
     if(XMSession::instance()->debug()) {
       /* Draw some collision handling debug info */
@@ -2002,14 +1997,27 @@ void GameRenderer::_RenderLayer(MotoGame* i_scene, int layer) {
 
     Vector2f layerOffset = i_scene->getLevelSrc()->getLayerOffset(layer);
 
+    AABB bbox;
+    // layers with almost the same x,y offsets than the main layers
+    // are drawn with it. the others are drawn using default zoom
+    if(layerOffset.x > 0.90 && layerOffset.x < 1.10
+       && layerOffset.y > 0.90 && layerOffset.y < 1.10) {
+      setCameraTransformations(i_scene->getCamera(), m_xScale, m_yScale);
+      bbox = m_screenBBox;
+    } else {
+      setCameraTransformations(i_scene->getCamera(),
+			       m_xScaleDefault, m_yScaleDefault);
+      bbox = m_layersBBox;
+    }
+
     /* get bounding box in the layer depending on its offset */
-    Vector2f size = m_screenBBox.getBMax() - m_screenBBox.getBMin();
+    Vector2f size = bbox.getBMax() - bbox.getBMin();
 
     Vector2f levelLeftTop = Vector2f(i_scene->getLevelSrc()->LeftLimit(),
 				     i_scene->getLevelSrc()->TopLimit());
 
-    Vector2f levelViewLeftTop = Vector2f(m_screenBBox.getBMin().x,
-					 m_screenBBox.getBMin().y+size.y);
+    Vector2f levelViewLeftTop = Vector2f(bbox.getBMin().x,
+					 bbox.getBMin().y+size.y);
 
     Vector2f originalTranslateVector = levelViewLeftTop - levelLeftTop;
     Vector2f translationInLayer = originalTranslateVector * layerOffset;
@@ -2987,3 +2995,33 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
     GameApp::instance()->getDrawLib()->endDraw();
   }
 
+void GameRenderer::setCameraTransformations(Camera* pCamera, float xScale, float yScale)
+{
+  /* Perform scaling/translation */    
+  pCamera->setCamera3d();
+  GameApp::instance()->getDrawLib()->setScale(xScale, yScale);
+  if(pCamera->isMirrored() == true){
+    GameApp::instance()->getDrawLib()->setMirrorY();
+  }
+
+  GameApp::instance()->getDrawLib()->setRotateZ(m_rotationAngleForTheFrame);
+  GameApp::instance()->getDrawLib()->setTranslate(-pCamera->getCameraPositionX(), -pCamera->getCameraPositionY());
+}
+
+void GameRenderer::calculateCameraScaleAndScreenAABB(Camera* pCamera, AABB& bbox)
+{
+  bbox.reset();
+
+  m_xScale = pCamera->getCurrentZoom() * ((float)pCamera->getDispHeight()) / pCamera->getDispWidth();
+  m_yScale = pCamera->getCurrentZoom();
+
+  // depends on zoom
+  float xCamOffset = 1.0 / m_xScale;
+  float yCamOffset = 1.0 / m_yScale;
+
+  Vector2f v1(pCamera->getCameraPositionX()-xCamOffset, pCamera->getCameraPositionY()-yCamOffset);
+  Vector2f v2(pCamera->getCameraPositionX()+xCamOffset, pCamera->getCameraPositionY()+yCamOffset);
+
+  bbox.addPointToAABB2f(v1);
+  bbox.addPointToAABB2f(v2);
+}

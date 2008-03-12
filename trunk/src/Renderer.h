@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class ParticlesSource;
 class Universe;
 class BlockVertex;
+class Camera;
 
   /*===========================================================================
   Graphical debug info
@@ -185,6 +186,7 @@ private:
   SFXOverlay m_Overlay;
 
   AABB m_screenBBox;
+  AABB m_layersBBox;
 
   float m_sizeMultOfEntitiesToTake;
   float m_sizeMultOfEntitiesWhichMakeWin;
@@ -193,8 +195,18 @@ private:
   EdgeEffectSprite* m_currentEdgeSprite;
 
 
+  float m_xScale;
+  float m_yScale;
+  float m_xScaleDefault;
+  float m_yScaleDefault;
+  float m_rotationAngleForTheFrame;
+
   /* Subroutines */
 	
+  void setCameraTransformations(Camera* pCamera, float xScale, float yScale);
+  // set m_[x,y]Scale
+  void calculateCameraScaleAndScreenAABB(Camera* pCamera, AABB& bbox);
+
   void renderEngineCounterNeedle(int nWidth, int nHeight, Vector2f center, float value);
 	
 	
