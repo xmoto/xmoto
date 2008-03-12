@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "DBuffer.h"
 #include "Game.h"
 #include "xmscene/Level.h"
+#include "xmscene/Camera.h"
 #include "ScriptDynamicObjects.h"
 
   MotoGameEvent::MotoGameEvent(int p_eventTime) {
@@ -146,7 +147,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       v_event = new MGE_CameraRotate(v_eventTime);
     } else if(MGE_CameraAdaptToGravity::SgetType() == v_eventType) {
       v_event = new MGE_CameraAdaptToGravity(v_eventTime);
-    } else {
+    } else if(MGE_SetCameraRotationSpeed::SgetType() == v_eventType) {
+      v_event = new MGE_SetCameraRotationSpeed(v_eventTime);
+} else {
       std::ostringstream error_type;
       error_type << (int) v_eventType;
       throw Exception("Can't unserialize ! (event of type " + error_type.str() + ")");
@@ -1904,4 +1907,45 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   std::string MGE_AddForceToPlayer::toString() {
     return "Add force to the player " + m_player;
+  }
+
+  //////////////////////////////
+  MGE_SetCameraRotationSpeed::MGE_SetCameraRotationSpeed(int p_eventTime) 
+  : MotoGameEvent(p_eventTime) {
+    m_speed = 0.0;
+  }
+
+  MGE_SetCameraRotationSpeed::MGE_SetCameraRotationSpeed(int p_eventTime, float p_speed)
+  : MotoGameEvent(p_eventTime) {
+    m_speed = p_speed;
+  }
+
+  MGE_SetCameraRotationSpeed::~MGE_SetCameraRotationSpeed() {
+  } 
+  
+  void MGE_SetCameraRotationSpeed::doAction(MotoGame *p_pMotoGame) {
+    for(unsigned int i=0; i<p_pMotoGame->getNumberCameras(); i++) {
+      p_pMotoGame->Cameras()[i]->setRotationSpeed(m_speed);
+    }
+  }
+
+  void MGE_SetCameraRotationSpeed::serialize(DBuffer &Buffer) {
+    MotoGameEvent::serialize(Buffer);
+    Buffer << m_speed;
+  }
+  
+  void MGE_SetCameraRotationSpeed::unserialize(DBuffer &Buffer) {
+    Buffer >> m_speed;
+  }
+
+  GameEventType MGE_SetCameraRotationSpeed::SgetType() {
+    return GAME_EVENT_SETCAMERAROTATIONSPEED;
+  }
+
+  GameEventType MGE_SetCameraRotationSpeed::getType() {
+    return SgetType();
+  }
+
+  std::string MGE_SetCameraRotationSpeed::toString() {
+    return "Camera Rotate set to desired Speed";
   }

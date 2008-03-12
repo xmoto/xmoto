@@ -35,6 +35,7 @@
 #define ZOOM_IN_SPEED    0.0004
 #define TRESHOLD_IN      1.0 * 1000
 #define TRESHOLD_OUT     1.0 * 1000
+#define DEFAULT_ROTATIONANGLE_SPEED 1.0
 
 Camera::Camera(Vector2i upperleft, Vector2i downright){
   m_fScale         = ZOOM_DEFAULT;
@@ -53,6 +54,7 @@ void Camera::prepareForNewLevel() {
   m_previous_driver_dir  = DD_LEFT;    
   m_recenter_camera_fast = true;
   m_rotationAngle = 0.0;
+  m_rotationSpeed = DEFAULT_ROTATIONANGLE_SPEED;
   m_desiredRotationAngle = 0.0;
   m_lastSpeedTime = 0.0;
   setScroll(false, Vector2f(0, -9.81));
@@ -340,6 +342,10 @@ void Camera::setRotationAngle(float i_value) {
   m_rotationAngle = (i_value * 180.0) / M_PI;
 }
 
+void Camera::setRotationSpeed(float i_value) {                                                        
+  m_rotationSpeed = (i_value * 180.0) / M_PI;
+}    
+
 void Camera::setDesiredRotationAngle(float i_value) {
   m_desiredRotationAngle = (i_value * 180.0) / M_PI;
 }
@@ -379,11 +385,8 @@ void Camera::adaptRotationAngleToGravity(Vector2f& gravity) {
   //printf("Desired Angle = %.2f\n", m_desiredRotationAngle < 0.0 ? m_desiredRotationAngle+360.0 : m_desiredRotationAngle);
 }
 
-
-#define ROTATIONANGLE_SPEED 1.0
 float Camera::guessDesiredAngleRotation() {
-
-  if(fabs(m_desiredRotationAngle - m_rotationAngle) <= ROTATIONANGLE_SPEED * 3.0) {
+  if(fabs(m_desiredRotationAngle - m_rotationAngle) <= m_rotationSpeed * 3.0) {
     m_rotationAngle = m_desiredRotationAngle;
     return m_rotationAngle;
   }
@@ -403,14 +406,17 @@ float Camera::guessDesiredAngleRotation() {
   } else {
     v_diff = m_rotationAngle - m_desiredRotationAngle + 360.0;
   }
-
+  
   /* rotate in the fastest way */
-  if(v_diff <= 180) {
-    m_rotationAngle = (float)((((int)(m_rotationAngle - ROTATIONANGLE_SPEED)) + 360) % 360);
+  if(v_diff <= 180.0) {
+    m_rotationAngle = m_rotationAngle - m_rotationSpeed + 360.0;
+    int n = ((int)m_rotationAngle) /360;
+    m_rotationAngle -= (((float)n)*360.0);
   } else {
-    m_rotationAngle = (float)((((int)(m_rotationAngle + ROTATIONANGLE_SPEED)) + 360) % 360);
+    m_rotationAngle = m_rotationAngle + m_rotationSpeed + 360.0;
+    int n = ((int)m_rotationAngle)/360;
+    m_rotationAngle -= (((float)n)*360.0);
   }
-
   return m_rotationAngle;
 }
 

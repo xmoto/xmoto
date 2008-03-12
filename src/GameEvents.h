@@ -67,7 +67,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     GAME_EVENT_SETDYNAMICENTITYSELFROTATION = 32,
     GAME_EVENT_CAMERAROTATE                 = 33,
     GAME_EVENT_CAMERAADAPTTOGRAVITY         = 34,
-    GAME_EVENT_ADDFORCETOPLAYER             = 35
+    GAME_EVENT_ADDFORCETOPLAYER             = 35,
+    GAME_EVENT_SETCAMERAROTATIONSPEED       = 36
   };
 
 class MotoGameEvent;
@@ -823,4 +824,22 @@ class MGE_CameraAdaptToGravity : public MotoGameEvent {
  private:
 };
 
+class MGE_SetCameraRotationSpeed : public MotoGameEvent {                                         
+ public:                                                                                        
+   MGE_SetCameraRotationSpeed(int p_eventTime);                                                    
+   MGE_SetCameraRotationSpeed(int p_eventTime, float p_speed);
+   ~MGE_SetCameraRotationSpeed();                                                                  
+                                                                                                     
+   void doAction(MotoGame *p_pMotoGame);                                                         
+   void serialize(DBuffer &Buffer);                                                              
+   void unserialize(DBuffer &Buffer);                                                            
+   static GameEventType SgetType();                                                              
+   GameEventType getType();                                                                      
+	                                                                                                       
+   std::string toString();                                                                       
+		                                                                                                 
+   private:     
+   float m_speed;                                                                                  
+};
+                
 #endif /* __MOTOGAMEEVENT_H__ */

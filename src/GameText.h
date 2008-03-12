@@ -88,7 +88,8 @@ Central place to keep many in-game text strings
     ":Christoph Sommer;"                                                                     \
     ":Frederic Huard;"                                                                       \
     ":Brice Goglin;"                                                                         \
-    ":Kristian Jagd;"                                                                         \
+    ":Kristian Jagd;"                                                                        \
+    ":Jens Erler;"                                                                           \
     ":;"                                                                                     \
     + std::string(_("Graphics")) +                                                           \
     ":Rasmus Neckelmann;"                                                                    \
