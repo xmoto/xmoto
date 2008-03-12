@@ -1,4 +1,4 @@
-X-Moto 0.4.2 2007-
+X-Moto 0.4.2 2008-03-
 -----------------------
  * several rooms possible in configuration
  * option to remove levels not suitable for children
@@ -9,7 +9,7 @@ X-Moto 0.4.2 2007-
  * --cleanNoWWWLevels to clean levels which are no longer available on the website (move them into ~/.xmoto/Trash)
  * some other minor modifications
 	
-X-Moto 0.4.1 2007-02-13
+X-Moto 0.4.1 2008-02-13
 -----------------------
  * remove svnversion dependency for compilation
  * fix .desktop file
@@ -17,7 +17,7 @@ X-Moto 0.4.1 2007-02-13
  * some new options to make videos
  * ctrl+s : enable/disable sound
 
-X-Moto 0.4.0 2007-01-27
+X-Moto 0.4.0 2008-01-27
 -----------------------
  * lot of code rewritten/cleaned
  * multi-threading (mainling for www connexions ; require that g++ uses posix thread model (g++ -v to check))
