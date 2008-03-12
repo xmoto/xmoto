@@ -204,6 +204,8 @@ void MotoGame::cleanPlayers() {
     Update game
     ===========================================================================*/
   void MotoGame::updateLevel(int timeStep, Replay *i_recordedReplay) {
+    float v_diff;
+
     if(m_is_paused) return;
 
     getLevelSrc()->updateToTime(*this);
@@ -212,7 +214,14 @@ void MotoGame::cleanPlayers() {
     
     /* Increase time */
     if(m_speed_factor != 1.00f) {
-      m_time += (int)(((float)timeStep) * m_speed_factor);
+
+      // save the diff when timeStep is not an integer to make nice rewind/forward
+      v_diff = ((float)timeStep) * m_speed_factor;
+      m_floattantTimeStepDiff += v_diff - ((int) v_diff);
+      m_time += (int)(v_diff);
+      m_time += ((int)m_floattantTimeStepDiff);
+      m_floattantTimeStepDiff -= ((int)m_floattantTimeStepDiff);
+
       if(m_time < 0) m_time = 0;
     } else {
       m_time += timeStep;
@@ -241,7 +250,7 @@ void MotoGame::cleanPlayers() {
     for(unsigned int i=0; i<m_ghosts.size(); i++) {
       m_ghosts[i]->updateToTime(getTime(), timeStep, &m_Collision, m_PhysGravity, this);
     }
-
+    
     for(unsigned int i=0; i<m_players.size(); i++) {
       m_players[i]->updateToTime(m_time, timeStep, &m_Collision, m_PhysGravity, this);
       
@@ -356,6 +365,7 @@ void MotoGame::cleanPlayers() {
     m_PhysGravity.y = PHYS_WORLD_GRAV;
 
     m_time = 0;
+    m_floattantTimeStepDiff = 0.0;
     m_speed_factor = 1.00f;
     m_is_paused = false;
 
