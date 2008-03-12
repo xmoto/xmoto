@@ -93,12 +93,14 @@ public:
 
   float rotationAngle();
   void setRotationAngle(float i_value);
+  void setRotationSpeed(float i_value);
   void setDesiredRotationAngle(float i_value);
   void adaptRotationAngleToGravity(Vector2f& gravity);
 
 private:
   bool  m_mirrored;
   float m_rotationAngle;
+  float m_rotationSpeed;
   float m_desiredRotationAngle;
 
   float m_fScale;

@@ -136,6 +136,7 @@ private:
   static int L_Game_NumberOfPlayers(lua_State *pL);
   static int L_Game_CameraRotate(lua_State *pL);
   static int L_Game_CameraAdaptToGravity(lua_State *pL);
+  static int L_Game_SetCameraRotationSpeed(lua_State *pL);
 };
 
 

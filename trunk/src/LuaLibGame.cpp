@@ -76,6 +76,7 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"NumberOfPlayers",              LuaLibGame::L_Game_NumberOfPlayers},
   {"CameraRotate",                 LuaLibGame::L_Game_CameraRotate},
   {"CameraAdaptToGravity",         LuaLibGame::L_Game_CameraAdaptToGravity},
+  {"SetCameraRotationSpeed",       LuaLibGame::L_Game_SetCameraRotationSpeed},
   {NULL, NULL}
 };
 MotoGame*     LuaLibGame::m_exec_world              = NULL;
@@ -752,3 +753,8 @@ int LuaLibGame::L_Game_AddForceToPlayer(lua_State *pL) {
 							 (int)X_luaL_check_number(pL,5)));
   return 0;
 }  
+
+int LuaLibGame::L_Game_SetCameraRotationSpeed(lua_State *pL) {
+  m_exec_world->createGameEvent(new MGE_SetCameraRotationSpeed(m_exec_world->getTime(),X_luaL_check_number(pL,1)));
+  return 0;
+}
