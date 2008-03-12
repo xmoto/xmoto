@@ -245,6 +245,7 @@ private:
   /* Data */
   std::queue<MotoGameEvent*> m_GameEventQueue;
   int m_time;
+  float m_floattantTimeStepDiff; // to play slowly replay
   int m_lastStateSerializationTime; 
   float m_speed_factor; /* nb hundreadths to increment each time ; is a float so that manage slow */
   bool  m_is_paused;
