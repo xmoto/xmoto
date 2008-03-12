@@ -980,7 +980,7 @@ int GameRenderer::nbParticlesRendered() const {
 
     if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* background level blocks */
-      _RenderLayer(i_scene, false);
+      _RenderLayers(i_scene, false);
     }
 
     // the layers may have change the scale transformation
