@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-03-09 12:45+0100\n"
-"PO-Revision-Date: 2008-01-23 22:38+0100\n"
+"PO-Revision-Date: 2008-03-11 23:13+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -159,29 +159,27 @@ msgstr "Zisťujem nové alebo aktualizované levely..."
 
 #: src/GameText.h:70
 msgid "I'm a children"
-msgstr ""
+msgstr "Som dieťa"
 
 #: src/GameText.h:71
 msgid "Choose Level"
 msgstr "Vybrať level"
 
 #: src/GameText.h:72
-#, fuzzy
 msgid "Clean"
-msgstr "Katalánština"
+msgstr "Vyčistiť"
 
 #: src/GameText.h:73
-#, fuzzy, c-format
+#, c-format
 msgid "Are you sure you want to delete %i replay"
 msgid_plural "Are you sure you want to delete %i replay"
-msgstr[0] "Skutočne si prajete vymazať záznam?"
-msgstr[1] "Skutočne si prajete vymazať záznam?"
-msgstr[2] "Skutočne si prajete vymazať záznam?"
+msgstr[0] "Skutočne si prajete vymazať %i záznam?"
+msgstr[1] "Skutočne si prajete vymazať %i záznamy?"
+msgstr[2] "Skutočne si prajete vymazať %i záznamov?"
 
 #: src/GameText.h:74
-#, fuzzy
 msgid "There is no replay to clean"
-msgstr "Téma bola práve aktualizovaná"
+msgstr "Neexistujú záznamy, ktoré by bolo možné vymazať"
 
 #: src/GameText.h:75
 msgid "Close"
@@ -600,14 +598,12 @@ msgid "Type"
 msgstr "Typ"
 
 #: src/GameText.h:206 src/GameText.h:557
-#, fuzzy
 msgid "The highscore of the reference room"
-msgstr "Rekord miestnosti"
+msgstr "Rekord referenčnej miestnosti"
 
 #: src/GameText.h:207 src/GameText.h:558
-#, fuzzy
 msgid "The highscore of the other rooms"
-msgstr "Rekord miestnosti"
+msgstr "Rekord iných miestností"
 
 #: src/GameText.h:208 src/GameText.h:555
 msgid "The best of my replays (on this computer)"
@@ -1295,9 +1291,8 @@ msgid "Updating level lists..."
 msgstr "Aktualizovať zoznam levelov..."
 
 #: src/GameText.h:385
-#, fuzzy
 msgid "Upload"
-msgstr "Aktualizované"
+msgstr "Upload"
 
 #: src/GameText.h:386
 msgid "Upload all highscores"
@@ -1372,12 +1367,12 @@ msgstr "WWW"
 
 #: src/GameText.h:404
 msgid "Reference room"
-msgstr ""
+msgstr "Referenčná miestnosť"
 
 #: src/GameText.h:405
-#, fuzzy, c-format
+#, c-format
 msgid "Room %i"
-msgstr "Miestnosť"
+msgstr "Miestnosť %i"
 
 #: src/GameText.h:407
 #, c-format
@@ -1390,62 +1385,62 @@ msgid "%d minutes"
 msgstr "%d minút"
 
 #: src/GameText.h:410
-#, fuzzy, c-format
+#, c-format
 msgid "Stats since: %s"
-msgstr "Štatistiky"
+msgstr "Štatistiky od: %s"
 
 #: src/GameText.h:411
 #, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "X-Moto bolo spustené %d-krát"
+msgstr[1] "X-Moto bolo spustené %d-krát"
+msgstr[2] "X-Moto bolo spustené %d-krát"
 
 #: src/GameText.h:412
 #, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%d rozličný level"
+msgstr[1] "%d rozličné levely"
+msgstr[2] "%d rozličných levelov"
 
 #: src/GameText.h:413
 #, c-format
 msgid "Time played: %s"
-msgstr ""
+msgstr "Odohratý čas: %s"
 
 #: src/GameText.h:414
-#, fuzzy, c-format
+#, c-format
 msgid "%d play"
 msgid_plural "%d plays"
-msgstr[0] "%i hráč"
-msgstr[1] "%i hráči"
-msgstr[2] "%i hráčov"
+msgstr[0] "%i hra"
+msgstr[1] "%i hry"
+msgstr[2] "%i hier"
 
 #: src/GameText.h:415
 #, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%d úmrtie"
+msgstr[1] "%d úmrtia"
+msgstr[2] "%d úmrtí"
 
 #: src/GameText.h:416
-#, fuzzy, c-format
+#, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
-msgstr[0] "Nedokončené"
-msgstr[1] "Nedokončené"
-msgstr[2] "Nedokončené"
+msgstr[0] "%d dokončená"
+msgstr[1] "%d dokončené"
+msgstr[2] "%d dokončených"
 
 #: src/GameText.h:417
 #, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%d reštart"
+msgstr[1] "%d reštarty"
+msgstr[2] "%d reštartov"
 
 #: src/GameText.h:419
 #, c-format
@@ -2006,16 +2001,15 @@ msgstr "Kód jazyka"
 
 #: src/GameText.h:564
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
-msgstr ""
+msgstr "Vymazať záznamy, o ktorých si X-Moto myslí, že nie sú zaujímavé"
 
 #: src/GameText.h:565
 msgid "Remove levels not suitable for children"
-msgstr ""
+msgstr "Odstrániť levely, ktoré nie sú vhodné pre deti"
 
 #: src/GameText.h:566
-#, fuzzy
 msgid "Enable this room"
-msgstr "Povoliť audio"
+msgstr "Povoliť túto miestnosť"
 
 #: src/GameText.h:568
 msgid "Levels with no highscore"
@@ -2325,14 +2319,12 @@ msgid "Fps disabled"
 msgstr "Fps vypnuté"
 
 #: src/GameText.h:647
-#, fuzzy
 msgid "Audio enabled"
-msgstr "Fps zapnuté"
+msgstr "Audio zapnuté"
 
 #: src/GameText.h:648
-#, fuzzy
 msgid "Audio disabled"
-msgstr "Fps vypnuté"
+msgstr "Audio vypnuté"
 
 #: src/GameText.h:650
 msgid "No training positions stored"

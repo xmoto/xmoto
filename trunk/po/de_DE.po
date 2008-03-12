@@ -156,7 +156,7 @@ msgstr "Suche nach neuen oder aktualisierten Levels"
 
 #: src/GameText.h:70
 msgid "I'm a children"
-msgstr ""
+msgstr "Ich bin ein Kind"
 
 #: src/GameText.h:71
 msgid "Choose Level"
@@ -594,14 +594,12 @@ msgid "Type"
 msgstr "Typ"
 
 #: src/GameText.h:206 src/GameText.h:557
-#, fuzzy
 msgid "The highscore of the reference room"
-msgstr "Die Rekorde des Raumes"
+msgstr "Die Rekorde des Vorzeige-Raumes"
 
 #: src/GameText.h:207 src/GameText.h:558
-#, fuzzy
 msgid "The highscore of the other rooms"
-msgstr "Die Rekorde des Raumes"
+msgstr "Die Rekorde der anderen Räume"
 
 #: src/GameText.h:208 src/GameText.h:555
 msgid "The best of my replays (on this computer)"
@@ -1366,12 +1364,12 @@ msgstr "WWW"
 
 #: src/GameText.h:404
 msgid "Reference room"
-msgstr ""
+msgstr "Vorzeige-Raum"
 
 #: src/GameText.h:405
-#, fuzzy, c-format
+#, c-format
 msgid "Room %i"
-msgstr "Raum"
+msgstr "Raum %i"
 
 #: src/GameText.h:407
 #, c-format
@@ -2009,12 +2007,11 @@ msgstr "Von X-Moto als unwichtig eingestufte Replays löschen"
 
 #: src/GameText.h:565
 msgid "Remove levels not suitable for children"
-msgstr ""
+msgstr "Porno-Filter für Levels"
 
 #: src/GameText.h:566
-#, fuzzy
 msgid "Enable this room"
-msgstr "Audio aktivieren"
+msgstr "Den Raum aktivieren"
 
 #: src/GameText.h:568
 msgid "Levels with no highscore"

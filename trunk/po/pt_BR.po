@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-03-09 12:45+0100\n"
-"PO-Revision-Date: 2007-10-14 18:11-0300\n"
+"PO-Revision-Date: 2008-03-11 20:09-0300\n"
 "Last-Translator: Lucas Hermann Negri <kkndrox@gmail.com>\n"
 "Language-Team: Portuguese/Brazil\n"
 "MIME-Version: 1.0\n"
@@ -93,7 +93,7 @@ msgstr "Autor"
 
 #: src/GameText.h:54
 msgid "Automatic"
-msgstr ""
+msgstr "Automático"
 
 #: src/GameText.h:55
 msgid "Automatic saving of replays"
@@ -158,28 +158,26 @@ msgstr "Verificando por níveis atualizados ou novos"
 
 #: src/GameText.h:70
 msgid "I'm a children"
-msgstr ""
+msgstr "Sou uma criança"
 
 #: src/GameText.h:71
 msgid "Choose Level"
 msgstr "Escolha o Nível"
 
 #: src/GameText.h:72
-#, fuzzy
 msgid "Clean"
-msgstr "Catalão"
+msgstr "Limpo"
 
 #: src/GameText.h:73
-#, fuzzy, c-format
+#, c-format
 msgid "Are you sure you want to delete %i replay"
 msgid_plural "Are you sure you want to delete %i replay"
-msgstr[0] "Você realmente quer apagar o replay?"
-msgstr[1] "Você realmente quer apagar o replay?"
+msgstr[0] "Você realmente quer apagar o replay %i?"
+msgstr[1] "Você realmente quer apagar o replay %i?"
 
 #: src/GameText.h:74
-#, fuzzy
 msgid "There is no replay to clean"
-msgstr "O tema agora está atualizado!"
+msgstr "Não há nenhum replay para limpar"
 
 #: src/GameText.h:75
 msgid "Close"
@@ -598,14 +596,12 @@ msgid "Type"
 msgstr "Tipo"
 
 #: src/GameText.h:206 src/GameText.h:557
-#, fuzzy
 msgid "The highscore of the reference room"
-msgstr "O recorde desta sala"
+msgstr "O recorde da sala de referência"
 
 #: src/GameText.h:207 src/GameText.h:558
-#, fuzzy
 msgid "The highscore of the other rooms"
-msgstr "O recorde desta sala"
+msgstr "O recorde das outras salas"
 
 #: src/GameText.h:208 src/GameText.h:555
 msgid "The best of my replays (on this computer)"
@@ -770,15 +766,15 @@ msgstr "Teclado"
 
 #: src/GameText.h:251
 msgid "Language"
-msgstr ""
+msgstr "Língua"
 
 #: src/GameText.h:252
 msgid "Language name"
-msgstr ""
+msgstr "Nome da língua"
 
 #: src/GameText.h:253
 msgid "Language code"
-msgstr ""
+msgstr "Código da língua"
 
 #: src/GameText.h:254
 msgid "Level"
@@ -899,7 +895,6 @@ msgid "Multi"
 msgstr "Multijogador"
 
 #: src/GameText.h:283
-#, fuzzy
 msgid "Semi-cooperative mode"
 msgstr "Modo semi-colaborativo"
 
@@ -1256,7 +1251,6 @@ msgid "Unpacked levels"
 msgstr "Níveis desempacotados"
 
 #: src/GameText.h:378
-#, fuzzy
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
@@ -1291,22 +1285,19 @@ msgid "Updating level lists..."
 msgstr "Atualizando lista de níveis..."
 
 #: src/GameText.h:385
-#, fuzzy
 msgid "Upload"
-msgstr "Atualizado"
+msgstr "Enviar"
 
 #: src/GameText.h:386
 msgid "Upload all highscores"
 msgstr "Enviar todos recordes"
 
 #: src/GameText.h:387
-#, fuzzy
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr ""
-"Um erro inesperado aconteceu\n"
-"A web deve estar com algum problema"
+"Um erro inesperado aconteceu. Podem existir alguns problemas como web site."
 
 #: src/GameText.h:388
 msgid "Oh no !"
@@ -1371,12 +1362,12 @@ msgstr "WWW"
 
 #: src/GameText.h:404
 msgid "Reference room"
-msgstr ""
+msgstr "Sala de referência"
 
 #: src/GameText.h:405
-#, fuzzy, c-format
+#, c-format
 msgid "Room %i"
-msgstr "Sala"
+msgstr "Sala %i"
 
 #: src/GameText.h:407
 #, c-format
@@ -1389,9 +1380,9 @@ msgid "%d minutes"
 msgstr "%d minutos"
 
 #: src/GameText.h:410
-#, fuzzy, c-format
+#, c-format
 msgid "Stats since: %s"
-msgstr "Estatísticas"
+msgstr "Estatísticas desde: %s"
 
 #: src/GameText.h:411
 #, c-format
@@ -1410,14 +1401,14 @@ msgstr[1] ""
 #: src/GameText.h:413
 #, c-format
 msgid "Time played: %s"
-msgstr ""
+msgstr "Tempo de jogo: %s"
 
 #: src/GameText.h:414
-#, fuzzy, c-format
+#, c-format
 msgid "%d play"
 msgid_plural "%d plays"
-msgstr[0] "%i jogador"
-msgstr[1] "%i jogadores"
+msgstr[0] "%d jogo"
+msgstr[1] "%d jogos"
 
 #: src/GameText.h:415
 #, c-format
@@ -1427,11 +1418,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/GameText.h:416
-#, fuzzy, c-format
+#, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
-msgstr[0] "Não concluído."
-msgstr[1] "Não concluído."
+msgstr[0] "%d concluído"
+msgstr[1] "%d concluído"
 
 #: src/GameText.h:417
 #, c-format
@@ -2000,31 +1991,28 @@ msgid "The scene is shared by all the players"
 msgstr "Esta cena é compartilhada entre todos os jogadores"
 
 #: src/GameText.h:561
-#, fuzzy
 msgid "Change the X-Moto language"
-msgstr "Escolha o tema de gráficos do X-Moto"
+msgstr "Escolha a língua do X-Moto"
 
 #: src/GameText.h:562
-#, fuzzy
 msgid "Name of the language"
-msgstr "Nome do replay"
+msgstr "Nome da língua"
 
 #: src/GameText.h:563
 msgid "Code of the language"
-msgstr ""
+msgstr "Código da língua"
 
 #: src/GameText.h:564
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
-msgstr ""
+msgstr "Deletar os replays que o X-Moto estimar que não são importantes"
 
 #: src/GameText.h:565
 msgid "Remove levels not suitable for children"
-msgstr ""
+msgstr "Remover os níveis que não são adequados para uma criança"
 
 #: src/GameText.h:566
-#, fuzzy
 msgid "Enable this room"
-msgstr "Habilitar Audio"
+msgstr "Habilitar esta sala"
 
 #: src/GameText.h:568
 msgid "Levels with no highscore"
@@ -2328,28 +2316,26 @@ msgid "Fps disabled"
 msgstr "Fps desabilitado"
 
 #: src/GameText.h:647
-#, fuzzy
 msgid "Audio enabled"
-msgstr "Fps habilitado"
+msgstr "Som habilitado"
 
 #: src/GameText.h:648
-#, fuzzy
 msgid "Audio disabled"
-msgstr "Fps desabilitado"
+msgstr "Som desabilitado"
 
 #: src/GameText.h:650
 msgid "No training positions stored"
-msgstr ""
+msgstr "Nenhuma posição de treino armazenada"
 
 #: src/GameText.h:651
 #, c-format
 msgid "Training position %i/%i restored"
-msgstr ""
+msgstr "Posição de treino %i/%i restaurada"
 
 #: src/GameText.h:652
 #, c-format
 msgid "Stored as training position %i"
-msgstr ""
+msgstr "Armazenada como posição de treino %i"
 
 #: src/GameText.h:655
 msgid "FontGroup:GENERAL"
