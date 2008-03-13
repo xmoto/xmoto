@@ -79,7 +79,7 @@ class BikeState;
       int CurrentFrame() const;
 
       void fastforward(int i_time);
-      void fastrewind(int i_time);
+      void fastrewind(int i_time, int i_minimumNbFrame = 0); // i_minimumNbFrame, because sometimes, rewind do nothing if i_time it too small
 
       /* Data interface */
       bool didFinish(void) {return m_bFinished;}

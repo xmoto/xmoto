@@ -571,14 +571,14 @@ bool Replay::nextState(int p_frames) {
 
   void Replay::fastforward(int i_time) {
     /* How many states should we move forward? */
-    int nNumStates = (int)(i_time * 100.0 * m_fFrameRate);
+    int nNumStates = (int)((i_time * m_fFrameRate) / 100);
     nextState(nNumStates);
   }
 
-  void Replay::fastrewind(int i_time) {
+  void Replay::fastrewind(int i_time, int i_minimumNbFrame) {
     /* How many states should we move forward? */
-    int nNumStates = (int)(i_time * 100.0 * m_fFrameRate);
-    nextState(-nNumStates);
+    int nNumStates = (int)( (i_time * m_fFrameRate) / 100);
+    nextState(nNumStates < i_minimumNbFrame ? -i_minimumNbFrame : -nNumStates);
   } 
 
 void Replay::cleanReplays(xmDatabase *i_db) {

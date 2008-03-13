@@ -174,7 +174,8 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
   /* back in the past */
   // m_ghostBikeStates.size()/2-1 : it's the more recent frame in the past
   if(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime > i_time) {
-    m_replay->fastrewind(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime - i_time);
+    m_replay->fastrewind(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime - i_time, 1);
+
     for(unsigned int i=0; i<m_ghostBikeStates.size(); i++) {
       m_replay->peekState(m_ghostBikeStates[i]);
     }
