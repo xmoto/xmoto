@@ -409,8 +409,11 @@ void StateManager::calculateWhichStateIsRendered()
 
 void StateManager::calculateFps()
 {
-  int maxUpdateFps = 0;
-  int maxRenderFps = 0;
+  // we can't put zero. because there's divisions by that number, and
+  // when there's no states, there are used for frame duration
+  // calculation
+  int maxUpdateFps = 1;
+  int maxRenderFps = 1;
 
   int topStateRenderFps = 0;
 
