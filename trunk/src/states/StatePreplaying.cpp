@@ -328,7 +328,8 @@ void StatePreplaying::executeOneCommand(std::string cmd)
 
 bool StatePreplaying::needToDownloadGhost()
 {
-  if(XMSession::instance()->www() == false || 
+  if(XMSession::instance()->www() == false           ||
+     XMSession::instance()->enableGhosts() == false ||
      (XMSession::instance()->ghostStrategy_BESTOFREFROOM()    == false &&
       XMSession::instance()->ghostStrategy_BESTOFOTHERROOMS() == false)
      ) {
