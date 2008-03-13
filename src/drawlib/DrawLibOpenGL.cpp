@@ -777,6 +777,31 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
   std::string v_char;
   unsigned int v_lineHeight;
 
+  char r1, r2, r3, r4;
+  char g1, g2, g3, g4;
+  char b1, b2, b3, b4;
+  char a1, a2, a3, a4;
+
+  r1 = GET_RED(c1);
+  r2 = GET_RED(c2);
+  r3 = GET_RED(c3);
+  r4 = GET_RED(c4);
+
+  g1 = GET_GREEN(c1);
+  g2 = GET_GREEN(c2);
+  g3 = GET_GREEN(c3);
+  g4 = GET_GREEN(c4);
+
+  b1 = GET_BLUE(c1);
+  b2 = GET_BLUE(c2);
+  b3 = GET_BLUE(c3);
+  b4 = GET_BLUE(c4);
+
+  a1 = GET_ALPHA(c1);
+  a2 = GET_ALPHA(c2);
+  a3 = GET_ALPHA(c3);
+  a4 = GET_ALPHA(c4);
+
   if(v_glyph->Value() == "")
     return;
 
@@ -799,22 +824,28 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
       } else {
 	v_glyphLetter = m_glyphsLetters[v_char.c_str()];
 	if(v_glyphLetter != NULL) {
-	  if(v_glyphLetter->realHeight() > v_lineHeight) v_lineHeight = v_glyphLetter->realHeight();
+	  if(v_glyphLetter->realHeight() > v_lineHeight)
+	    v_lineHeight = v_glyphLetter->realHeight();
 
 	  glBindTexture(GL_TEXTURE_2D, v_glyphLetter->GLID());
-	  glBegin(GL_TRIANGLE_STRIP);
-	  glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
+	  glBegin(GL_QUADS);
+
+	  glColor4ub(r1, g1, b1, a1);
 	  glTexCoord2f(0.0, 1.0);
 	  glVertex2i(v_x, v_y);
-	  glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
+
+	  glColor4ub(r2, g2, b2, a2);
 	  glTexCoord2f(1.0, 1.0);
 	  glVertex2i(v_x + v_glyphLetter->drawWidth(), v_y);
-	  glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
-	  glTexCoord2f(0.0, 0.0);
-	  glVertex2i(v_x, v_y + v_glyphLetter->drawHeight());
-	  glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
+
+	  glColor4ub(r4, g4, b4, a4);
 	  glTexCoord2f(1.0, 0.0);
 	  glVertex2i(v_x + v_glyphLetter->drawWidth(), v_y + v_glyphLetter->drawHeight());
+
+	  glColor4ub(r3, g3, b3, a3);
+	  glTexCoord2f(0.0, 0.0);
+	  glVertex2i(v_x, v_y + v_glyphLetter->drawHeight());
+
 	  v_x += v_glyphLetter->realWidth() + UTF8_INTERCHAR_SPACE;
 	  glEnd();
 	}
