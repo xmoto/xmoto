@@ -68,7 +68,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     GAME_EVENT_CAMERAROTATE                 = 33,
     GAME_EVENT_CAMERAADAPTTOGRAVITY         = 34,
     GAME_EVENT_ADDFORCETOPLAYER             = 35,
-    GAME_EVENT_SETCAMERAROTATIONSPEED       = 36
+    GAME_EVENT_SETCAMERAROTATIONSPEED       = 36,
+    GAME_EVENT_PLAYAUDIO                    = 37,
   };
 
 class MotoGameEvent;
@@ -842,4 +843,24 @@ class MGE_SetCameraRotationSpeed : public MotoGameEvent {
    float m_speed;                                                                                  
 };
                 
+
+class MGE_PlayAudio : public MotoGameEvent {
+ public:
+  MGE_PlayAudio(int p_eventTime);
+  MGE_PlayAudio(int p_eventTime, std::string p_soundName);
+  ~MGE_PlayAudio();
+  
+  void doAction(MotoGame *p_pMotoGame);                                                    
+  void serialize(DBuffer &Buffer);                                                         
+  void unserialize(DBuffer &Buffer);                                                       
+  static GameEventType SgetType();                                                         
+  GameEventType getType();                                                                 
+	                                                                                                  
+  std::string toString();        
+  
+  private:
+  
+  std::string m_soundName;
+  
+};
 #endif /* __MOTOGAMEEVENT_H__ */
