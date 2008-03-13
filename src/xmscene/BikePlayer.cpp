@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "Replay.h"
 #include "Sound.h"
+#include "helpers/Log.h"
 
 /* This is the magic depth factor :)  - tweak to obtain max. stability */
 #define DEPTH_FACTOR    2
@@ -221,7 +222,7 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
     Vector2f FSpring = Fq * PHYS_SUSP_SPRING;
     Vector2f FDamp = Fqv * PHYS_SUSP_DAMP;
     Vector2f FTotal = FSpring + FDamp;
-    if(m_bodyDetach == false || m_bikeState.Dir == DD_LEFT) {
+    if(m_wheelDetach == false || m_bikeState.Dir == DD_LEFT) {
       dBodyAddForce(m_FrontWheelBodyID,FTotal.x,FTotal.y,0);
       dBodyAddForceAtPos(m_FrameBodyID,-FTotal.x,-FTotal.y,0,m_bikeState.RFrontWheelP.x,m_bikeState.RFrontWheelP.y,0);
     }
@@ -233,7 +234,7 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
     Vector2f RSpring = Rq * PHYS_SUSP_SPRING;
     Vector2f RDamp = Rqv * PHYS_SUSP_DAMP;
     Vector2f RTotal = RSpring + RDamp;
-    if(m_bodyDetach == false || m_bikeState.Dir == DD_RIGHT) {
+    if(m_wheelDetach == false || m_bikeState.Dir == DD_RIGHT) {
       dBodyAddForce(m_RearWheelBodyID,RTotal.x,RTotal.y,0);
       dBodyAddForceAtPos(m_FrameBodyID,-RTotal.x,-RTotal.y,0,m_bikeState.RRearWheelP.x,m_bikeState.RRearWheelP.y,0);
     }
@@ -499,9 +500,9 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
 
     // ShoulderP
     if(m_bikeState.Dir == DD_RIGHT) {
-      nNumContacts = intersectWheelLevel(m_bikeState.ShoulderP, v_memberRay, Contacts, v_collisionSystem);
+      nNumContacts = intersectBodyLevel(m_bikeState.ShoulderP, v_memberRay, Contacts, v_collisionSystem);
     } else {
-      nNumContacts = intersectWheelLevel(m_bikeState.Shoulder2P, v_memberRay, Contacts, v_collisionSystem);
+      nNumContacts = intersectBodyLevel(m_bikeState.Shoulder2P, v_memberRay, Contacts, v_collisionSystem);
     }
     for(int i=0;i<nNumContacts;i++) {
       Contacts[i].surface.mu = v_detachGrip;
@@ -512,9 +513,9 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
 
     // LowerBodyP
     if(m_bikeState.Dir == DD_RIGHT) {
-      nNumContacts = intersectWheelLevel(m_bikeState.LowerBodyP, v_memberRay, Contacts, v_collisionSystem);
+      nNumContacts = intersectBodyLevel(m_bikeState.LowerBodyP, v_memberRay, Contacts, v_collisionSystem);
     } else {
-      nNumContacts = intersectWheelLevel(m_bikeState.LowerBody2P, v_memberRay, Contacts, v_collisionSystem);
+      nNumContacts = intersectBodyLevel(m_bikeState.LowerBody2P, v_memberRay, Contacts, v_collisionSystem);
     }
     for(int i=0;i<nNumContacts;i++) {
       Contacts[i].surface.mu = v_detachGrip;
@@ -525,9 +526,9 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
 
     // ElbowP
     if(m_bikeState.Dir == DD_RIGHT) {
-			nNumContacts = intersectWheelLevel(m_bikeState.ElbowP, v_memberRay, Contacts, v_collisionSystem);
+			nNumContacts = intersectBodyLevel(m_bikeState.ElbowP, v_memberRay, Contacts, v_collisionSystem);
     } else {
-			nNumContacts = intersectWheelLevel(m_bikeState.Elbow2P, v_memberRay, Contacts, v_collisionSystem);
+			nNumContacts = intersectBodyLevel(m_bikeState.Elbow2P, v_memberRay, Contacts, v_collisionSystem);
     }
     for(int i=0;i<nNumContacts;i++) {
       Contacts[i].surface.mu = v_detachGrip;
@@ -538,9 +539,9 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
 
     // HandP
     if(m_bikeState.Dir == DD_RIGHT) {
-      nNumContacts = intersectWheelLevel(m_bikeState.HandP, v_memberRay, Contacts, v_collisionSystem);
+      nNumContacts = intersectBodyLevel(m_bikeState.HandP, v_memberRay, Contacts, v_collisionSystem);
     } else {
-      nNumContacts = intersectWheelLevel(m_bikeState.Hand2P, v_memberRay, Contacts, v_collisionSystem);
+      nNumContacts = intersectBodyLevel(m_bikeState.Hand2P, v_memberRay, Contacts, v_collisionSystem);
     }
     for(int i=0;i<nNumContacts;i++) {
       Contacts[i].surface.mu = v_detachGrip;
@@ -550,9 +551,9 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
     
     // KneeP
     if(m_bikeState.Dir == DD_RIGHT) {
-      nNumContacts = intersectWheelLevel(m_bikeState.KneeP, v_memberRay, Contacts, v_collisionSystem);
+      nNumContacts = intersectBodyLevel(m_bikeState.KneeP, v_memberRay, Contacts, v_collisionSystem);
     } else {
-      nNumContacts = intersectWheelLevel(m_bikeState.Knee2P, v_memberRay, Contacts, v_collisionSystem);
+      nNumContacts = intersectBodyLevel(m_bikeState.Knee2P, v_memberRay, Contacts, v_collisionSystem);
     }
     for(int i=0;i<nNumContacts;i++) {
       Contacts[i].surface.mu = v_detachGrip;
@@ -563,9 +564,9 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
     
     // FootP
     if(m_bikeState.Dir == DD_RIGHT) {
-      nNumContacts = intersectWheelLevel(m_bikeState.FootP, v_memberRay, Contacts, v_collisionSystem);
+      nNumContacts = intersectBodyLevel(m_bikeState.FootP, v_memberRay, Contacts, v_collisionSystem);
     } else {
-      nNumContacts = intersectWheelLevel(m_bikeState.Foot2P, v_memberRay, Contacts, v_collisionSystem);
+      nNumContacts = intersectBodyLevel(m_bikeState.Foot2P, v_memberRay, Contacts, v_collisionSystem);
     }
     for(int i=0;i<nNumContacts;i++) {
       Contacts[i].surface.mu = v_detachGrip;
@@ -676,13 +677,28 @@ bool PlayerBiker::intersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp
   return false;
 }
 
-int PlayerBiker::intersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts, CollisionSystem *v_collisionSystem) {
+int PlayerBiker::intersectBodyLevel(Vector2f Cp,float Cr,dContact *pContacts, CollisionSystem *v_collisionSystem) {
   int nNumContacts = v_collisionSystem->collideCircle(Cp.x,Cp.y,Cr,pContacts,100);
   if(nNumContacts == 0) {
       /* Nothing... but what if we are moving so fast that the circle has moved
          all the way through some geometry? Check it's path. */
       //nNumContacts = m_Collision.collideLine(
   }
+  return nNumContacts;
+
+}
+
+int PlayerBiker::intersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts, CollisionSystem *v_collisionSystem) {
+  int nNumContacts = v_collisionSystem->collideCircle(Cp.x,Cp.y,Cr,pContacts,100);
+  if(nNumContacts == 0) {
+      /* Nothing... but what if we are moving so fast that the circle has moved
+         all the way through some geometry? Check it's path. */
+      //nNumContacts = m_Collision.collideLine(
+  } else {
+		if(m_bodyDetach) {
+			m_wheelDetach = true;
+		}
+	}
   return nNumContacts;
 }
 
@@ -1243,7 +1259,7 @@ float PlayerBiker::howMuchSqueek() {
 }
 
 bool PlayerBiker::getRenderBikeFront() {
-  return m_bodyDetach == false;
+  return m_wheelDetach == false;
 }
 
 Vector2f PlayerBiker::determineForceToAdd(int i_time) {

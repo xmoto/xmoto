@@ -168,17 +168,20 @@ int intersectLineCircle2f(const Vector2f &Cp,float Cr,const Vector2f &A0,
   if(A1.almostEqual(A0))
     return 0;
 
-  float rl = rd.normalize();
+	/*
+		IMPORTANT: keep double for precision !!! otherwise it sucks on some levels
+	*/
+  double rl = rd.normalize();
   Vector2f v = A0 - Cp;
-  float b = -v.dot(rd);
-  float det = (b * b) - v.dot(v) + Cr*Cr;
+  double b = -v.dot(rd);
+  double det = (b * b) - v.dot(v) + Cr*Cr;
   if(det<0 && det>-0.0001f)
     det=0;
 
   if(det >= 0) {
     det = sqrt(det);
-    float i1 = b - det;
-    float i2 = b + det;
+    double i1 = b - det;
+    double i2 = b + det;
       
     if(i1>-0.0001f && i1<rl+0.0001f && i2>-0.0001f && i2<rl+0.0001f) {
       Res1 = A0 + rd*i1;

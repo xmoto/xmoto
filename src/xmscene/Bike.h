@@ -204,6 +204,7 @@ class Biker {
   int m_deadTime;
   OnBikerHooks* m_bikerHooks;
   bool m_bodyDetach;
+	bool m_wheelDetach;
   std::vector<Entity *> m_entitiesTouching;
   std::vector<Zone *>   m_zonesTouching;
 

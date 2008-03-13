@@ -160,6 +160,7 @@ class PlayerBiker : public Biker {
 
   bool intersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp, CollisionSystem *v_collisionSystem);
   int  intersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts, CollisionSystem *v_collisionSystem);
+  int  intersectBodyLevel(Vector2f Cp,float Cr,dContact *pContacts, CollisionSystem *v_collisionSystem);
   int  intersectWheelLine(Vector2f Cp,float Cr,int nNumContacts,dContact *pContacts,Vector2f A0,Vector2f A1);
   bool intersectHeadLine(Vector2f Cp,float Cr,Vector2f A0,Vector2f A1);
 };
