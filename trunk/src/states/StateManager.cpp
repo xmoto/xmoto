@@ -409,9 +409,8 @@ void StateManager::calculateWhichStateIsRendered()
 
 void StateManager::calculateFps()
 {
-  // while every states are not done, we can't initialize with zero
-  int maxUpdateFps = 50;
-  int maxRenderFps = 50;
+  int maxUpdateFps = 0;
+  int maxRenderFps = 0;
 
   int topStateRenderFps = 0;
 
