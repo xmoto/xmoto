@@ -569,7 +569,7 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t--cleanNoWWWLevels\n\t\tCheck web levels list and remove levels which are not available on the web.\n");
   printf("\t--videoRecording\n\t\tEnable video recording.\n");
   printf("\t--videoRecordingSizeDivision DIVISION\n\t\tChange video size (1=full, 2=50%%, 4=25%%).\n");
-  printf("\t--videoRecordingSizeFramerate FRAMERATE\n\t\tChange video framerate.\n");
+  printf("\t--videoRecordingFramerate FRAMERATE\n\t\tChange video framerate.\n");
   printf("\t--videoRecordingStartTime NBCENTSOFSECONDS\n\t\tStart recording video after this game time.\n");
   printf("\t--videoRecordingEndTime NBCENTSOFSECONDS\n\t\tStop recording video after this game time.\n");
   printf("\t--hidePlayingInformation\n\t\tDon't show some information while playing/replaying ; usefull to make nicer video.\n");
