@@ -41,8 +41,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "LuaLibGame.h"
 #include "ScriptDynamicObjects.h"
 
-#define REPLAY_SPEED_INCREMENT 0.25
-
   MotoGame::MotoGame() {
     m_bDeathAnimEnabled=true;
     m_lastCallToEveryHundreath = 0;
@@ -1176,9 +1174,9 @@ void MotoGame::cleanPlayers() {
     return m_speed_factor;
   }
 
-  void MotoGame::slower() {
+  void MotoGame::slower(float i_increment) {
     if(m_is_paused == false) {
-      m_speed_factor -= REPLAY_SPEED_INCREMENT;
+      m_speed_factor -= i_increment;
     }
     if(getLevelSrc() != NULL) {
       if(getLevelSrc()->isScripted()) {
@@ -1187,9 +1185,9 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  void MotoGame::faster() {
+  void MotoGame::faster(float i_increment) {
     if(m_is_paused == false) {
-      m_speed_factor += REPLAY_SPEED_INCREMENT;
+      m_speed_factor += i_increment;
     }
   }
 
