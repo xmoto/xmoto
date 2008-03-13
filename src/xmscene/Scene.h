@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Bike.h"
 
 #define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 500
+#define REPLAY_SPEED_INCREMENT 0.25
 
 class Level;
 class BikeState;
@@ -215,8 +216,8 @@ public:
   void fastforward(int i_time);
   void fastrewind(int i_time);
   void pause();
-  void faster();
-  void slower();
+  void faster(float i_increment = REPLAY_SPEED_INCREMENT);
+  void slower(float i_increment = REPLAY_SPEED_INCREMENT);
   float getSpeed() const;
   void setSpeed(float f);
   bool isPaused();
