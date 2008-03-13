@@ -238,6 +238,8 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
   m_colorFilter = i_colorFilter;
   m_uglyColorFilter = i_uglyColorFilter;
   m_doInterpolation = true;
+	m_bodyDetach    = false;
+	m_wheelDetach   =  false;
 }
 
 Biker::~Biker() { 
