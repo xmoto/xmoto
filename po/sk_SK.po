@@ -158,7 +158,7 @@ msgid "Checking for new or updated levels..."
 msgstr "Zisťujem nové alebo aktualizované levely..."
 
 #: src/GameText.h:70
-msgid "I'm a children"
+msgid "I'm a child"
 msgstr "Som dieťa"
 
 #: src/GameText.h:71

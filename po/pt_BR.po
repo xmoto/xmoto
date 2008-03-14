@@ -157,7 +157,7 @@ msgid "Checking for new or updated levels..."
 msgstr "Verificando por níveis atualizados ou novos"
 
 #: src/GameText.h:70
-msgid "I'm a children"
+msgid "I'm a child"
 msgstr "Sou uma criança"
 
 #: src/GameText.h:71
