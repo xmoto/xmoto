@@ -150,7 +150,7 @@ msgid "Checking for new or updated levels..."
 msgstr "Checker for nye eller opdaterede baner "
 
 #: src/GameText.h:70
-msgid "I'm a children"
+msgid "I'm a child"
 msgstr ""
 
 #: src/GameText.h:71

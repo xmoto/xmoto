@@ -67,7 +67,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CHANGEDIR            _("Change direction")
 #define GAMETEXT_CHANGEKEY            _("Change Key...")
 #define GAMETEXT_CHECKINGFORLEVELS    _("Checking for new or updated levels...")
-#define GAMETEXT_CHILDREN_COMPLIANT   _("I'm a children")
+#define GAMETEXT_CHILDREN_COMPLIANT   _("I'm a child")
 #define GAMETEXT_CHOOSELEVEL          _("Choose Level")
 #define GAMETEXT_CLEAN                _("Clean")
 #define GAMETEXT_CLEAN_CONFIRM(A) ngettext("Are you sure you want to delete %i replay", "Are you sure you want to delete %i replay", A)
