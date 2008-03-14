@@ -762,4 +762,5 @@ int LuaLibGame::L_Game_SetCameraRotationSpeed(lua_State *pL) {
 
 int LuaLibGame::L_Game_PlayAudio(lua_State *pL) {
   m_exec_world->createGameEvent(new MGE_PlayAudio(m_exec_world->getTime(),luaL_checkstring(pL,1)));
+  return 0;
 }
