@@ -3,7 +3,7 @@ X-Moto 0.4.2 2008-03-
  * several rooms possible in configuration
  * option to remove levels not suitable for children
  * man page is no more gunzipped
- * AddPenaltyTime(), PlayAudio(), AddForceToPlayer(), SetCameraRotationSpeed script functions (patches by gaivota)
+ * AddPenaltyTime(), PlaySound(), PlayMusic(), StopMusic(), AddForceToPlayer(), SetCameraRotationSpeed() script functions (patches by gaivota)
  * ctrl + down/up in replays to adjust speed
  * --cleanNoWWWLevels to clean levels which are no longer available on the website (move them into ~/.xmoto/Trash)
  * some other minor modifications

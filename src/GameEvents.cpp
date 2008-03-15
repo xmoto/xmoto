@@ -151,9 +151,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       v_event = new MGE_CameraAdaptToGravity(v_eventTime);
     } else if(MGE_SetCameraRotationSpeed::SgetType() == v_eventType) {
       v_event = new MGE_SetCameraRotationSpeed(v_eventTime);
-    } else if(MGE_PlayAudio::SgetType() == v_eventType) {
-      v_event = new MGE_PlayAudio(v_eventTime);
-    
+    } else if(MGE_PlaySound::SgetType() == v_eventType) {
+      v_event = new MGE_PlaySound(v_eventTime);
+    } else if(MGE_PlayMusic::SgetType() == v_eventType) {
+      v_event = new MGE_PlayMusic(v_eventTime);
+
 } else {
       std::ostringstream error_type;
       error_type << (int) v_eventType;
@@ -1956,44 +1958,123 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
   ///////////////////////////////////////
-  MGE_PlayAudio::MGE_PlayAudio(int p_eventTime)
+  MGE_PlaySound::MGE_PlaySound(int p_eventTime)
   : MotoGameEvent(p_eventTime) {
     m_soundName = "";
   }
   
-  MGE_PlayAudio::MGE_PlayAudio(int p_eventTime, std::string p_name)
+  MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name)
   : MotoGameEvent(p_eventTime) {
     m_soundName = p_name;
   }
     
-  MGE_PlayAudio::~MGE_PlayAudio() {
+  MGE_PlaySound::~MGE_PlaySound() {
   }
   
-  void MGE_PlayAudio::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PlaySound::doAction(MotoGame *p_pMotoGame) {
     try {
       Sound::playSampleByName(Theme::instance()->getSound(m_soundName)->FilePath());
     } catch(Exception &e) {
-      Logger::Log("** Warning **: PlayAudio(\"%s\") failed: %s", m_soundName.c_str(), e.getMsg().c_str());
+      Logger::Log("** Warning **: PlaySound(\"%s\") failed: %s", m_soundName.c_str(), e.getMsg().c_str());
     }
   }
   
-  void MGE_PlayAudio::serialize(DBuffer &Buffer) {
+  void MGE_PlaySound::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
     Buffer << m_soundName;
   }
   
-  void MGE_PlayAudio::unserialize(DBuffer &Buffer) {
+  void MGE_PlaySound::unserialize(DBuffer &Buffer) {
     Buffer >> m_soundName;
   }
   
-  GameEventType MGE_PlayAudio::SgetType() {
-    return GAME_EVENT_PLAYAUDIO;
+  GameEventType MGE_PlaySound::SgetType() {
+    return GAME_EVENT_PLAYSOUND;
   }
   
-  GameEventType MGE_PlayAudio::getType() {
+  GameEventType MGE_PlaySound::getType() {
     return SgetType();
   }
   
-  std::string MGE_PlayAudio::toString() {
+  std::string MGE_PlaySound::toString() {
     return "Audio played";
   }
+
+  
+  ///////////////////////////////////////
+  MGE_PlayMusic::MGE_PlayMusic(int p_eventTime)
+  : MotoGameEvent(p_eventTime) {
+    m_musicName = "";
+  }
+  
+  MGE_PlayMusic::MGE_PlayMusic(int p_eventTime, std::string p_name)
+  : MotoGameEvent(p_eventTime) {
+    m_musicName = p_name;
+  }
+    
+  MGE_PlayMusic::~MGE_PlayMusic() {
+  }
+  
+  void MGE_PlayMusic::doAction(MotoGame *p_pMotoGame) {
+    try {
+      Sound::playMusic(Theme::instance()->getMusic(m_musicName)->FilePath());
+    } catch(Exception &e) {
+      Logger::Log("** Warning **: PlayMusic(\"%s\") failed: %s", m_musicName.c_str(), e.getMsg().c_str());
+    }
+  }
+  
+  void MGE_PlayMusic::serialize(DBuffer &Buffer) {
+    MotoGameEvent::serialize(Buffer);
+    Buffer << m_musicName;
+  }
+  
+  void MGE_PlayMusic::unserialize(DBuffer &Buffer) {
+    Buffer >> m_musicName;
+  }
+  
+  GameEventType MGE_PlayMusic::SgetType() {
+    return GAME_EVENT_PLAYMUSIC;
+  }
+  
+  GameEventType MGE_PlayMusic::getType() {
+    return SgetType();
+  }
+  
+  std::string MGE_PlayMusic::toString() {
+    return "Music played";
+  }
+
+  ///////////////////////////////////////
+  MGE_StopMusic::MGE_StopMusic(int p_eventTime)
+  : MotoGameEvent(p_eventTime) {
+  }
+    
+  MGE_StopMusic::~MGE_StopMusic() {
+  }
+  
+  void MGE_StopMusic::doAction(MotoGame *p_pMotoGame) {
+    try {
+      Sound::stopMusic();
+    } catch(Exception &e) {
+      Logger::Log("** Warning **: StopMusic failed: %s", e.getMsg().c_str());
+    }
+  }
+  
+  void MGE_StopMusic::serialize(DBuffer &Buffer) {
+    MotoGameEvent::serialize(Buffer);
+  }
+  
+  void MGE_StopMusic::unserialize(DBuffer &Buffer) {
+  }
+  
+  GameEventType MGE_StopMusic::SgetType() {
+    return GAME_EVENT_STOPMUSIC;
+  }
+  
+  GameEventType MGE_StopMusic::getType() {
+    return SgetType();
+  }
+  
+  std::string MGE_StopMusic::toString() {
+    return "Music stopped";
+  };

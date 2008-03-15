@@ -77,7 +77,9 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"CameraRotate",                 LuaLibGame::L_Game_CameraRotate},
   {"CameraAdaptToGravity",         LuaLibGame::L_Game_CameraAdaptToGravity},
   {"SetCameraRotationSpeed",       LuaLibGame::L_Game_SetCameraRotationSpeed},
-  {"PlayAudio",                    LuaLibGame::L_Game_PlayAudio},
+  {"PlaySound",                    LuaLibGame::L_Game_PlaySound},
+  {"PlayMusic",                    LuaLibGame::L_Game_PlayMusic},
+  {"StopMusic",                    LuaLibGame::L_Game_StopMusic},
   {NULL, NULL}
 };
 MotoGame*     LuaLibGame::m_exec_world              = NULL;
@@ -760,7 +762,17 @@ int LuaLibGame::L_Game_SetCameraRotationSpeed(lua_State *pL) {
   return 0;
 }
 
-int LuaLibGame::L_Game_PlayAudio(lua_State *pL) {
-  m_exec_world->createGameEvent(new MGE_PlayAudio(m_exec_world->getTime(),luaL_checkstring(pL,1)));
+int LuaLibGame::L_Game_PlaySound(lua_State *pL) {
+  m_exec_world->createGameEvent(new MGE_PlaySound(m_exec_world->getTime(),luaL_checkstring(pL,1)));
+  return 0;
+}
+
+int LuaLibGame::L_Game_PlayMusic(lua_State *pL) {
+  m_exec_world->createGameEvent(new MGE_PlayMusic(m_exec_world->getTime(),luaL_checkstring(pL,1)));
+  return 0;
+}
+
+int LuaLibGame::L_Game_StopMusic(lua_State *pL) {
+  m_exec_world->createGameEvent(new MGE_StopMusic(m_exec_world->getTime()));
   return 0;
 }
