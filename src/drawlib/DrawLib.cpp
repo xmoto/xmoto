@@ -121,14 +121,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Primitive: box
   ===========================================================================*/
   void DrawLib::drawBox(const Vector2f &A,const Vector2f &B,float fBorder,Color Back,Color Front) {
+    // remove current texture if any
+    setTexture(NULL, BLEND_MODE_NONE);
+
     /* Alpha? */
     bool bAlpha = false;
-    if(GET_ALPHA(Back)!=255 || GET_ALPHA(Front)!=255) bAlpha=true;
+    if(GET_ALPHA(Back)!=255 || GET_ALPHA(Front)!=255)
+      bAlpha=true;
   
     if(bAlpha) {
       setBlendMode(BLEND_MODE_A);
     }
-  
+
     /* Draw rectangle background */
     if(GET_ALPHA(Back)>0) {
       startDraw(DRAW_MODE_POLYGON);
