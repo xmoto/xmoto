@@ -2023,10 +2023,6 @@ MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name, float p_volume
   }
   
   void MGE_PlayMusic::doAction(MotoGame *p_pMotoGame) {
-    if(XMSession::instance()->enableAudio() == false || XMSession::instance()->enableMenuMusic() == false) {
-      return;
-    }
-
     try {
       GameApp::instance()->playMusic(m_musicName);
     } catch(Exception &e) {
