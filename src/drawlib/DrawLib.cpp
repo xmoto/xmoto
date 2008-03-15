@@ -340,7 +340,7 @@ void DrawLib::drawImageTextureSet(const Vector2f &a,const Vector2f &b, const Vec
     } else {
       /* because rotation can make approximation error and 1 pixel of one side of the
 	 picture could be map on the other side, */
-      v_absorb = 0.01; 
+      v_absorb = 0.001; 
     }
 
     if(i_coordsReversed) {
