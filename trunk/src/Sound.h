@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 #include "VFileIO.h"
+#define DEFAULT_SAMPLE_VOLUME 1.0f
 
 class XMSession;
 
@@ -75,9 +76,9 @@ class XMSession;
       
       //static void playStream(std::string File);
       static SoundSample *loadSample(const std::string &File);
-      static void playSample(SoundSample *pSample,float fVolume=1.0f);
+      static void playSample(SoundSample *pSample,float fVolume=DEFAULT_SAMPLE_VOLUME);
       static SoundSample *findSample(const std::string &File);
-      static void playSampleByName(const std::string &Name,float fVolume=1.0f);
+      static void playSampleByName(const std::string &Name,float fVolume=DEFAULT_SAMPLE_VOLUME);
       
       /* Data interface */
       static int getSampleRate(void) {return m_nSampleRate;}

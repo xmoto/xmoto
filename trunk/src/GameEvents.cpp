@@ -1963,17 +1963,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_soundName = "";
   }
   
-  MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name)
+MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name, float p_volume)
   : MotoGameEvent(p_eventTime) {
     m_soundName = p_name;
+    m_volume    = p_volume;
   }
     
   MGE_PlaySound::~MGE_PlaySound() {
   }
   
   void MGE_PlaySound::doAction(MotoGame *p_pMotoGame) {
+    if(XMSession::instance()->enableAudio() == false) {
+      return;
+    }
+ 
     try {
-      Sound::playSampleByName(Theme::instance()->getSound(m_soundName)->FilePath());
+      Sound::playSampleByName(Theme::instance()->getSound(m_soundName)->FilePath(), m_volume);
     } catch(Exception &e) {
       Logger::Log("** Warning **: PlaySound(\"%s\") failed: %s", m_soundName.c_str(), e.getMsg().c_str());
     }
@@ -1982,10 +1987,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void MGE_PlaySound::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
     Buffer << m_soundName;
+    Buffer << m_volume;
   }
   
   void MGE_PlaySound::unserialize(DBuffer &Buffer) {
     Buffer >> m_soundName;
+    Buffer >> m_volume;
   }
   
   GameEventType MGE_PlaySound::SgetType() {
@@ -2016,8 +2023,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
   void MGE_PlayMusic::doAction(MotoGame *p_pMotoGame) {
+    if(XMSession::instance()->enableAudio() == false || XMSession::instance()->enableMenuMusic() == false) {
+      return;
+    }
+
     try {
-      Sound::playMusic(Theme::instance()->getMusic(m_musicName)->FilePath());
+      GameApp::instance()->playMusic(m_musicName);
     } catch(Exception &e) {
       Logger::Log("** Warning **: PlayMusic(\"%s\") failed: %s", m_musicName.c_str(), e.getMsg().c_str());
     }
@@ -2054,7 +2065,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
   void MGE_StopMusic::doAction(MotoGame *p_pMotoGame) {
     try {
-      Sound::stopMusic();
+      GameApp::instance()->playMusic("");
     } catch(Exception &e) {
       Logger::Log("** Warning **: StopMusic failed: %s", e.getMsg().c_str());
     }

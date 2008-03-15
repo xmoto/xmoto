@@ -763,7 +763,12 @@ int LuaLibGame::L_Game_SetCameraRotationSpeed(lua_State *pL) {
 }
 
 int LuaLibGame::L_Game_PlaySound(lua_State *pL) {
-  m_exec_world->createGameEvent(new MGE_PlaySound(m_exec_world->getTime(),luaL_checkstring(pL,1)));
+  if(lua_gettop(pL) == 1) { // if there are 2 arguments, consider the 2nd one
+    m_exec_world->createGameEvent(new MGE_PlaySound(m_exec_world->getTime(),luaL_checkstring(pL,1)));
+  } else {
+    m_exec_world->createGameEvent(new MGE_PlaySound(m_exec_world->getTime(),luaL_checkstring(pL,1), X_luaL_check_number(pL,2)));
+  }
+
   return 0;
 }
 
