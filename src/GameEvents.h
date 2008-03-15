@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BasicSceneStructs.h"
 #include "xmscene/Zone.h"
 #include "xmscene/Entity.h"
+#include "Sound.h"
 
   /*===========================================================================
     Game event types
@@ -849,7 +850,7 @@ class MGE_SetCameraRotationSpeed : public MotoGameEvent {
 class MGE_PlaySound : public MotoGameEvent {
  public:
   MGE_PlaySound(int p_eventTime);
-  MGE_PlaySound(int p_eventTime, std::string p_soundName);
+  MGE_PlaySound(int p_eventTime, std::string p_soundName, float p_volume = DEFAULT_SAMPLE_VOLUME);
   ~MGE_PlaySound();
   
   void doAction(MotoGame *p_pMotoGame);                                                    
@@ -863,6 +864,7 @@ class MGE_PlaySound : public MotoGameEvent {
   private:
   
   std::string m_soundName;
+  float m_volume;
   
 };
 
