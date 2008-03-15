@@ -137,7 +137,9 @@ private:
   static int L_Game_CameraRotate(lua_State *pL);
   static int L_Game_CameraAdaptToGravity(lua_State *pL);
   static int L_Game_SetCameraRotationSpeed(lua_State *pL);
-  static int L_Game_PlayAudio(lua_State *pL);
+  static int L_Game_PlaySound(lua_State *pL);
+  static int L_Game_PlayMusic(lua_State *pL);
+  static int L_Game_StopMusic(lua_State *pL);
 };
 
 

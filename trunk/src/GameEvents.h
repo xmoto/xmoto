@@ -69,7 +69,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     GAME_EVENT_CAMERAADAPTTOGRAVITY         = 34,
     GAME_EVENT_ADDFORCETOPLAYER             = 35,
     GAME_EVENT_SETCAMERAROTATIONSPEED       = 36,
-    GAME_EVENT_PLAYAUDIO                    = 37,
+    GAME_EVENT_PLAYSOUND                    = 37,
+    GAME_EVENT_PLAYMUSIC                    = 38,
+    GAME_EVENT_STOPMUSIC                    = 39
   };
 
 class MotoGameEvent;
@@ -844,11 +846,11 @@ class MGE_SetCameraRotationSpeed : public MotoGameEvent {
 };
                 
 
-class MGE_PlayAudio : public MotoGameEvent {
+class MGE_PlaySound : public MotoGameEvent {
  public:
-  MGE_PlayAudio(int p_eventTime);
-  MGE_PlayAudio(int p_eventTime, std::string p_soundName);
-  ~MGE_PlayAudio();
+  MGE_PlaySound(int p_eventTime);
+  MGE_PlaySound(int p_eventTime, std::string p_soundName);
+  ~MGE_PlaySound();
   
   void doAction(MotoGame *p_pMotoGame);                                                    
   void serialize(DBuffer &Buffer);                                                         
@@ -863,4 +865,39 @@ class MGE_PlayAudio : public MotoGameEvent {
   std::string m_soundName;
   
 };
+
+class MGE_PlayMusic : public MotoGameEvent {                                                                    
+ public:                                                                                                        
+   MGE_PlayMusic(int p_eventTime);                                                                               
+   MGE_PlayMusic(int p_eventTime, std::string p_musicName);                                                      
+   ~MGE_PlayMusic();                                                                                             
+                                                                                                                       
+   void doAction(MotoGame *p_pMotoGame);                                                                         
+   void serialize(DBuffer &Buffer);                                                                              
+   void unserialize(DBuffer &Buffer);                                                                            
+   static GameEventType SgetType();                                                                              
+   GameEventType getType();                                                                                      
+		                                                                                                                 
+   std::string toString();                                                                                       
+		                                                                                                                   
+   private:                                                                                                      
+		                                                                                                                     
+   std::string m_musicName;                                                                                      
+		                                                                                                                       
+};
+
+class MGE_StopMusic : public MotoGameEvent {                                                                    
+ public:                                                                                                        
+   MGE_StopMusic(int p_eventTime);                                                                                                                               
+   ~MGE_StopMusic();                                                                                             
+                                                                                                                       
+   void doAction(MotoGame *p_pMotoGame);                                                                         
+   void serialize(DBuffer &Buffer);                                                                              
+   void unserialize(DBuffer &Buffer);                                                                            
+   static GameEventType SgetType();                                                                              
+   GameEventType getType();                                                                                      
+		                                                                                                                 
+   std::string toString();                                                                                       
+		                                                                                                                       
+};                                
 #endif /* __MOTOGAMEEVENT_H__ */
