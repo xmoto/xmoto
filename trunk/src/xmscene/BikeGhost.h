@@ -47,6 +47,8 @@ class Ghost : public Biker {
   float getBikeEngineSpeed();
   float getBikeLinearVel();
 
+   virtual void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
+
  protected:
   Replay* m_replay;
 
@@ -55,6 +57,8 @@ class Ghost : public Biker {
   float m_diffToPlayer; /* time diff between the ghost and the player */
   std::string m_info;
   bool m_isActiv;
+  double m_linearVelocity;
+ bool m_teleportationOccured; // true if the teleportation occured since the last update
 
  /* because we have not the real one, but the one before and the one after */
  std::vector<BikeState*> m_ghostBikeStates;

@@ -884,13 +884,6 @@ void MotoGame::cleanPlayers() {
       case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
       case GAME_EVENT_PLAYERS_TOUCHE_ENTITY:
       /* touching an entity creates events, so, don't call it */
-      case GAME_EVENT_SETPLAYERPOSITION:
-      case GAME_EVENT_SETPLAYERSPOSITION:
-      /* don't set player position while it's already made by the game */
-      /* however, this state is recorded : you can imagine than an effect
-   or something is done when this append to alert the player he took
-   a teleporter
-      */
       break;
       default:
       pEvent->doAction(this);
