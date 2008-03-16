@@ -44,6 +44,7 @@ Camera::Camera(Vector2i upperleft, Vector2i downright){
   m_playerToFollow = NULL;
   setRenderSurface(upperleft, downright);
   m_mirrored = false;
+  m_allowActiveZoom = true;
 
   prepareForNewLevel();
 }
@@ -250,7 +251,7 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
 			     gravity);
 
   // Switch Automatic Camera in Dependency to altered Zoom Value
-  if(m_useActiveZoom == true) {
+  if(m_useActiveZoom == true && m_allowActiveZoom) {
     guessDesiredCameraZoom();
   }
     
@@ -435,4 +436,8 @@ Vector2i Camera::getDispBottomLeft() {
 
 Vector2i Camera::getDispTopLeft() {
   return m_renderSurf.upperleft();
+}
+
+void Camera::allowActiveZoom(bool i_value) {
+  m_allowActiveZoom = i_value;
 }

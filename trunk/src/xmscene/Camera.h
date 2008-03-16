@@ -97,6 +97,8 @@ public:
   void setDesiredRotationAngle(float i_value);
   void adaptRotationAngleToGravity(Vector2f& gravity);
 
+  void allowActiveZoom(bool i_value);
+
 private:
   bool  m_mirrored;
   float m_rotationAngle;
@@ -109,8 +111,9 @@ private:
   unsigned int m_timeTresholdOut;
   typedef enum {none, zoomIn, zoomOut} activeZoom;
   activeZoom m_currentActiveZoom;
-  bool  m_useActiveZoom;
+  bool  m_useActiveZoom; // enable/disable activ zoom for this camera ; some actions disable it (like user zooming, script zooming)
   float m_initialZoom;
+  bool m_allowActiveZoom; // globally enable active zoom feature for this camera
   
   float m_cameraOffsetX;
   float m_cameraOffsetY;
