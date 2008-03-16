@@ -57,6 +57,8 @@ Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
 
   m_info = "";
   m_isActiv = i_isActiv;
+  m_linearVelocity = 0.0;
+  m_teleportationOccured = false;
 }
 
 Ghost::~Ghost() {
@@ -166,6 +168,12 @@ void Ghost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
                  - m_lastToTakeEntities[i_lastToTakeEntities.size()-1];
 }
 
+void Ghost::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity) {
+  m_teleportationOccured = true;
+  m_linearVelocity = 0.0;
+  printf("init to position\n");
+}
+
 void Ghost::updateToTime(int i_time, int i_timeStep,
 			 CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			 MotoGame *i_motogame) {
@@ -188,6 +196,7 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
   if(m_replay->endOfFile() && m_ghostBikeStates[m_ghostBikeStates.size()-1]->GameTime <= i_time) { // end of file, and interpolation is finished (before last future frame is in the feature)
     m_bikeState.fBikeEngineRPM = 0.0;
     m_bikeState = *(m_ghostBikeStates[m_ghostBikeStates.size()-1]); // put the last frame
+    m_linearVelocity = 0.0;
 
     if(m_replay->didFinish()) {
       m_finished   = true;
@@ -197,6 +206,11 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
     }
   } else {
     BikeState* v_state;
+    // to compute the velocity
+    Vector2f v_beforePos;
+    Vector2f v_afterPos;
+    float v_beforeTime;
+    float v_afterTime;
 
     // m_ghostBikeStates.size()/2 : first state in the feature
     if(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime < i_time) {
@@ -220,8 +234,18 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
 
       } while(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime < i_time &&
 	      m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime > m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime);
-      
+
+
       m_bikeState = *(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]);
+
+      v_beforePos  = m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->CenterP;
+      v_beforeTime = m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime;
+      v_afterPos   = m_ghostBikeStates[m_ghostBikeStates.size()/2]->CenterP;
+      v_afterTime  = m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime;
+      
+      // warning, absolutly no idea why * 10.0, but it is needed to work...
+      m_linearVelocity = (Vector2f(v_afterPos - v_beforePos)).length() * 10.0 / (v_afterTime - v_beforeTime);
+
     } else { /* interpolation */
       /* do interpolation if it doesn't seems to be a teleportation or something like that */
       /* in fact, this is not nice ; the best way would be to test if there is a teleport event between the two frames */
@@ -235,6 +259,9 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
 	m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime < INTERPOLATION_MAXIMUM_TIME &&
 	// interpolate only if the state are near in the space
 	v_distance < INTERPOLATION_MAXIMUM_SPACE;
+      if(m_teleportationOccured) {
+	v_can_interpolate = false; // in this case, we sure that interpolation occured; (but in case of a ghost, we don't read the events)
+      }
 
       if(m_doInterpolation && v_can_interpolate) {
 	if(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime > 0) {
@@ -249,8 +276,9 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
       }
     }
   }
-  
+
   if(m_isActiv) {
+    m_teleportationOccured = false;
     execReplayEvents(i_time, i_motogame);
   }
 }
@@ -268,7 +296,7 @@ bool Ghost::getRenderBikeFront() {
 }
 
 float Ghost::getBikeLinearVel() {
-  return 0.0; /* unable to know it */
+  return m_linearVelocity;
 }
 
 float Ghost::getBikeEngineSpeed() {
