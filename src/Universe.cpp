@@ -100,6 +100,7 @@ void Universe::initPlay(int i_nbPlayer, bool i_multiScenes) {
 void Universe::initCameras(int nbPlayer) {
   int width  = GameApp::instance()->getDrawLib()->getDispWidth();
   int height = GameApp::instance()->getDrawLib()->getDispHeight();
+  bool v_useActiveZoom = XMSession::instance()->enableActiveZoom();
   
   if(m_scenes.size() <= 0) {
     return;
@@ -109,41 +110,41 @@ void Universe::initCameras(int nbPlayer) {
   default:
   case 1:
     m_scenes[0]->addCamera(Vector2i(0,0),
-			   Vector2i(width, height));
+			   Vector2i(width, height), v_useActiveZoom);
     break;
   case 2:
     m_scenes[0]->addCamera(Vector2i(0,height/2),
-			   Vector2i(width, height));
+			   Vector2i(width, height), v_useActiveZoom);
     if(m_scenes.size() == 1) {
       m_scenes[0]->addCamera(Vector2i(0,0),
-			     Vector2i(width, height/2));
+			     Vector2i(width, height/2), v_useActiveZoom);
     } else {
       m_scenes[1]->addCamera(Vector2i(0,0),
-			     Vector2i(width, height/2));
+			     Vector2i(width, height/2), v_useActiveZoom);
     }
     break;
   case 3:
   case 4:
     if(m_scenes.size() == 1) {
       m_scenes[0]->addCamera(Vector2i(0,height/2),
-			     Vector2i(width/2, height));
+			     Vector2i(width/2, height), v_useActiveZoom);
       m_scenes[0]->addCamera(Vector2i(width/2,height/2),
-			     Vector2i(width, height));
+			     Vector2i(width, height), v_useActiveZoom);
       m_scenes[0]->addCamera(Vector2i(0,0),
-			     Vector2i(width/2, height/2));
+			     Vector2i(width/2, height/2), v_useActiveZoom);
       m_scenes[0]->addCamera(Vector2i(width/2,0),
-			     Vector2i(width, height/2));
+			     Vector2i(width, height/2), v_useActiveZoom);
     } else {
       m_scenes[0]->addCamera(Vector2i(0,height/2),
-			     Vector2i(width/2, height));
+			     Vector2i(width/2, height), v_useActiveZoom);
       m_scenes[1]->addCamera(Vector2i(width/2,height/2),
-			     Vector2i(width, height));
+			     Vector2i(width, height), v_useActiveZoom);
       m_scenes[2]->addCamera(Vector2i(0,0),
-			     Vector2i(width/2, height/2));
+			     Vector2i(width/2, height/2), v_useActiveZoom);
 
       if(nbPlayer == 4) {
 	m_scenes[3]->addCamera(Vector2i(width/2,0),
-			       Vector2i(width, height/2));
+			       Vector2i(width, height/2), v_useActiveZoom);
       }
     }
     break;
@@ -152,7 +153,7 @@ void Universe::initCameras(int nbPlayer) {
   // the autozoom camera is a special one in multi player
   if(nbPlayer > 1){
     m_scenes[0]->addCamera(Vector2i(0,0),
-			   Vector2i(width, height));
+			   Vector2i(width, height), v_useActiveZoom);
   }
   // current cam is autozoom one
   for(unsigned int i=0; i<m_scenes.size(); i++) {

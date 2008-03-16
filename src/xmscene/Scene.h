@@ -235,7 +235,7 @@ public:
   unsigned int  getNumberCameras();
   void setCurrentCamera(unsigned int currentCamera);
   unsigned int  getCurrentCamera();
-  void addCamera(Vector2i upperleft, Vector2i downright);
+  void addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom = true);
   void resetFollow();
   void removeCameras();
   void setAutoZoomCamera();

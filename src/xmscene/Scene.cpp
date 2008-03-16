@@ -1226,8 +1226,10 @@ void MotoGame::cleanPlayers() {
   unsigned int MotoGame::getCurrentCamera(){
     return m_currentCamera;
   }
-  void MotoGame::addCamera(Vector2i upperleft, Vector2i downright){
-    m_cameras.push_back(new Camera(upperleft, downright));
+  void MotoGame::addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom){
+    Camera* i_cam = new Camera(upperleft, downright);
+    i_cam->allowActiveZoom(i_useActiveZoom);
+    m_cameras.push_back(i_cam);
     m_cameras.back()->initCamera();
   }
   void MotoGame::resetFollow(){

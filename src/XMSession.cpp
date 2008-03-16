@@ -111,6 +111,8 @@ void XMSession::setToDefault() {
   m_videoRecordingStartTime       = -1;
   m_videoRecordingEndTime         = -1;
   m_hidePlayingInformation        = false;
+  m_enableInitZoom                = true;
+  m_enableActiveZoom              = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -241,6 +243,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_multiStopWhenOneFinishes = m_Config->getBool("MultiStopWhenOneFinishes");
   m_enableMenuMusic          = m_Config->getBool("MenuMusic");
   m_enableInitZoom           = m_Config->getBool("InitZoom");
+  m_enableActiveZoom         = m_Config->getBool("CameraActiveZoom");
   m_enableDeadAnimation      = m_Config->getBool("DeathAnim");
 
   std::string v_menuGraphics = m_Config->getString("MenuGraphics");
@@ -352,6 +355,7 @@ void XMSession::save(UserConfig* v_config) {
   v_config->setBool("ShowMiniMap",                  m_showMinimap);
   v_config->setBool("ShowEngineCounter",            m_showEngineCounter);
   v_config->setBool("InitZoom",                     m_enableInitZoom);
+  v_config->setBool("CameraActiveZoom",             m_enableActiveZoom);
   v_config->setBool("DeathAnim",                    m_enableDeadAnimation);
   v_config->setBool("AutosaveHighscoreReplays",     m_autosaveHighscoreReplays);
   v_config->setInteger("DisplayWidth",              m_resolutionWidth);
@@ -623,6 +627,14 @@ void XMSession::setEnableInitZoom(bool i_value) {
 
 bool XMSession::enableInitZoom() const {
   return m_enableInitZoom;
+}
+
+void XMSession::setEnableActiveZoom(bool i_value) {
+  m_enableActiveZoom = i_value;
+}
+
+bool XMSession::enableActiveZoom() const {
+  return m_enableActiveZoom;
 }
 
 void XMSession::setEnableDeadAnimation(bool i_value) {
@@ -1148,6 +1160,7 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
   v_config->createVar( "ContextHelp",            "true" );
   v_config->createVar( "MenuMusic",              "true" );    
   v_config->createVar( "InitZoom",               "true" );
+  v_config->createVar( "CameraActiveZoom",       "true" );
   v_config->createVar( "DeathAnim",              "true" );
 
   v_config->createVar( "WebHighscores",            "false" );

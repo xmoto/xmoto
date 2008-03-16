@@ -150,6 +150,8 @@ public:
   bool enableMenuMusic() const;
   void setEnableInitZoom(bool i_value);
   bool enableInitZoom() const;
+  void setEnableActiveZoom(bool i_value);
+  bool enableActiveZoom() const;
   void setEnableDeadAnimation(bool i_value);
   bool enableDeadAnimation() const;
   void setMenuGraphics(GraphicsLevel i_value);
@@ -271,6 +273,7 @@ public:
   bool m_multiStopWhenOneFinishes; /* in multiplayer, stop the game when one finishes the level */
   bool m_enableMenuMusic;
   bool m_enableInitZoom; /* true: Perform initial level scroll/zoom */
+  bool m_enableActiveZoom;
   bool m_enableDeadAnimation;
   GraphicsLevel m_menuGraphics;
   GraphicsLevel m_gameGraphics;
