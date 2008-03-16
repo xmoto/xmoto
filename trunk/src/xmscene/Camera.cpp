@@ -23,6 +23,7 @@
 #include "Bike.h"
 
 #define ZOOM_DEFAULT 0.24
+#define ZOOM_DEFAULT_NO_AUTOZOOM 0.195
 #define CAMERA_OFFSETX_DEFAULT 0.6
 #define CAMERA_OFFSETY_DEFAULT 0.0
 
@@ -88,12 +89,16 @@ void Camera::desactiveActionZoom()
 void Camera::initActiveZoom()
 {
   m_useActiveZoom = true;
-  // for the moment, put it to default value.
-  m_initialZoom   = ZOOM_DEFAULT;
+  // for the moment, put it to default value when there wasn't
+  // autozoom camera.
+  m_initialZoom   = ZOOM_DEFAULT_NO_AUTOZOOM;
 }
 
 void Camera::initZoom() {
-  m_fScale = ZOOM_DEFAULT;
+  if(m_allowActiveZoom == true && m_useActiveZoom == true)
+    m_fScale = ZOOM_DEFAULT;
+  else
+    m_fScale = ZOOM_DEFAULT_NO_AUTOZOOM;
 }
 
 void Camera::setCameraPosition(float px, float py) {
@@ -440,4 +445,6 @@ Vector2i Camera::getDispTopLeft() {
 
 void Camera::allowActiveZoom(bool i_value) {
   m_allowActiveZoom = i_value;
+
+  initZoom();
 }
