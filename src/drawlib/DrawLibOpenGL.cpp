@@ -58,6 +58,7 @@ private:
 
   unsigned int m_scrapsAllocated[MAX_SCRAPS][BLOCK_WIDTH];
   SDL_Surface* m_scrapsTexels[MAX_SCRAPS];
+  bool         m_scrapsUsed[MAX_SCRAPS];
   unsigned int m_scrapsTextures[MAX_SCRAPS];
 
   bool m_dirty;
@@ -589,6 +590,7 @@ ScrapTextures::ScrapTextures()
   memset(m_scrapsAllocated, 0, sizeof(unsigned int) * BLOCK_WIDTH * MAX_SCRAPS);
   for(unsigned int i=0; i<MAX_SCRAPS; i++){
     m_scrapsTexels[i] = createSDLSurface(BLOCK_WIDTH, BLOCK_HEIGHT);
+    m_scrapsUsed[i]   = false;
   }
   glGenTextures(MAX_SCRAPS, (GLuint*)&m_scrapsTextures);
 }
@@ -640,6 +642,8 @@ int ScrapTextures::allocateAndLoadTexture(unsigned int width,
   }
 
   if(useScrap == true){
+    m_scrapsUsed[scrap] = true;
+
     for(unsigned int i=0; i<width; i++)
       m_scrapsAllocated[scrap][x+i] = firstAvailable+height;
 
@@ -674,6 +678,9 @@ void ScrapTextures::update()
 {
   if(isDirty() == true){
     for(unsigned int i=0; i<MAX_SCRAPS; i++){
+      if(m_scrapsUsed[i] == false)
+	continue;
+
       glBindTexture(GL_TEXTURE_2D, m_scrapsTextures[i]);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
