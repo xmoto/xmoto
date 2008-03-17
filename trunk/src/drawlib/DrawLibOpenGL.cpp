@@ -28,11 +28,40 @@
 #include "Image.h"
 #include "VFileIO.h"
 #include "VTexture.h"
+#include "helpers/Singleton.h"
 
 #define UTF8_INTERLINE_SPACE 2
 #define UTF8_INTERCHAR_SPACE 0
 
 #ifdef ENABLE_OPENGL
+
+class ScrapTextures : public Singleton<ScrapTextures> {
+  friend class Singleton<ScrapTextures>;
+  // from quake 2, Scrap_AllocBlock in gl_image.c
+public:
+  ScrapTextures();
+  ~ScrapTextures();
+
+  int allocateAndLoadTexture(unsigned int width, unsigned int height,
+			     float* ux, float* uy, float* vx, float* vy,
+			     SDL_Surface* data);
+
+  bool isDirty();
+  void update();
+
+  void drawDebug();
+
+private:
+  #define MAX_SCRAPS   4
+  #define BLOCK_WIDTH  256
+  #define BLOCK_HEIGHT 256
+
+  unsigned int m_scrapsAllocated[MAX_SCRAPS][BLOCK_WIDTH];
+  SDL_Surface* m_scrapsTexels[MAX_SCRAPS];
+  unsigned int m_scrapsTextures[MAX_SCRAPS];
+
+  bool m_dirty;
+};
 
 class GLFontGlyphLetter;
 
@@ -69,8 +98,11 @@ public:
   virtual ~GLFontGlyphLetter();
   GLuint GLID() const;  
 
+  Vector2f m_u, m_v;
+
 private:
-  GLuint m_GLID;  
+  GLuint m_GLID;
+  bool m_useScrap;
 };
 
 
@@ -526,6 +558,138 @@ void DrawLibOpenGL::flushGraphics(){
   SDL_GL_SwapBuffers();
 }
 
+// little helper to avoid code duplication
+SDL_Surface* createSDLSurface(unsigned int width,
+			      unsigned int height)
+{
+  SDL_Surface* surf = SDL_CreateRGBSurface(SDL_SWSURFACE,
+					   width, height, 32,
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN /* OpenGL RGBA masks */
+					   0x000000FF, 
+					   0x0000FF00, 
+					   0x00FF0000, 
+					   0xFF000000
+#else
+					   0xFF000000,
+					   0x00FF0000, 
+					   0x0000FF00, 
+					   0x000000FF
+#endif
+					   );
+  if(surf == NULL) {
+    SDL_FreeSurface(surf);
+    throw Exception("SDL_CreateRGBSurface failed");
+  }
+
+  return surf;
+}
+
+ScrapTextures::ScrapTextures()
+{
+  memset(m_scrapsAllocated, 0, sizeof(unsigned int) * BLOCK_WIDTH * MAX_SCRAPS);
+  for(unsigned int i=0; i<MAX_SCRAPS; i++){
+    m_scrapsTexels[i] = createSDLSurface(BLOCK_WIDTH, BLOCK_HEIGHT);
+  }
+  glGenTextures(MAX_SCRAPS, (GLuint*)&m_scrapsTextures);
+}
+
+ScrapTextures::~ScrapTextures()
+{
+  for(unsigned int i=0; i<MAX_SCRAPS; i++){
+    SDL_FreeSurface(m_scrapsTexels[i]);
+  }
+  glDeleteTextures(MAX_SCRAPS, (GLuint*)&m_scrapsTextures);
+}
+
+int ScrapTextures::allocateAndLoadTexture(unsigned int width,
+					  unsigned int height,
+					  float* ux, float* uy,
+					  float* vx, float* vy,
+					  SDL_Surface* data)
+{
+  unsigned int x, y, firstAvailable, scrap;
+  bool useScrap = false;
+
+  scrap = 0;
+  while(scrap < MAX_SCRAPS && useScrap == false) {
+    for(unsigned int i=0; i<BLOCK_WIDTH-width && useScrap == false; i++){
+      firstAvailable= 0;
+
+      unsigned int j;
+      for(j=0; j<width; j++){
+	if(m_scrapsAllocated[scrap][i+j] >= BLOCK_HEIGHT){
+	  break;
+	}
+	if(m_scrapsAllocated[scrap][i+j] > firstAvailable)
+	  firstAvailable = m_scrapsAllocated[scrap][i+j];
+      }
+
+      if(j == width){
+	// enough free space
+	x = i;
+	y = firstAvailable;
+	useScrap = true;
+      }
+    }
+
+    if(useScrap == true
+       && firstAvailable + height <= BLOCK_HEIGHT)
+      break;
+
+    scrap++;
+  }
+
+  if(useScrap == true){
+    for(unsigned int i=0; i<width; i++)
+      m_scrapsAllocated[scrap][x+i] = firstAvailable+height;
+
+    *ux = (x+0.01)/(float)BLOCK_WIDTH;
+    *vx = (x+width-0.01)/(float)BLOCK_HEIGHT;
+    *uy = (y+0.01)/(float)BLOCK_WIDTH;
+    *vy = (y+height-0.01)/(float)BLOCK_HEIGHT;
+
+    m_dirty = true;
+    SDL_Rect v_area_dest;
+
+    v_area_dest.x = x;
+    v_area_dest.y = y;
+
+    SDL_BlitSurface(data, NULL, m_scrapsTexels[scrap], &v_area_dest);
+
+    return m_scrapsTextures[scrap];
+  } else {
+    // there's four scraps, approximatly less than 100 characters, this
+    // should not happen
+    Logger::Log("Scrap is full.");
+    throw Exception("Scrap is full !");
+  }
+}
+
+bool ScrapTextures::isDirty()
+{
+  return m_dirty;
+}
+
+void ScrapTextures::update()
+{
+  if(isDirty() == true){
+    for(unsigned int i=0; i<MAX_SCRAPS; i++){
+      glBindTexture(GL_TEXTURE_2D, m_scrapsTextures[i]);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexImage2D(GL_TEXTURE_2D,
+		   0,
+		   GL_RGBA,
+		   BLOCK_WIDTH, BLOCK_HEIGHT,
+		   0,
+		   GL_RGBA,
+		   GL_UNSIGNED_BYTE,
+		   m_scrapsTexels[i]->pixels);
+    }
+    m_dirty = false;
+  }
+}
+
 FontManager* DrawLibOpenGL::getFontManager(const std::string &i_fontFile, unsigned int i_fontSize) {
   return new GLFontManager(this, i_fontFile, i_fontSize);
 }
@@ -534,13 +698,13 @@ GLFontGlyphLetter::GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf
   : GLFontGlyph(i_value) {
   SDL_Surface* v_surf;
   SDL_Surface* v_image;
-  SDL_Rect v_area;
   SDL_Color v_color = {0xFF, 0xFF, 0xFF, 0x00};
 
   v_surf = TTF_RenderUTF8_Blended(i_ttf, i_value.c_str(), v_color);
   if (v_surf == NULL) {
     throw Exception("GLFontGlyphLetter: " + std::string(TTF_GetError()));
   }
+  SDL_SetAlpha(v_surf, 0, 0);
 
   int v_realWidth, v_realHeight;
   TTF_SizeUTF8(i_ttf, i_value.c_str(), &v_realWidth, &v_realHeight);
@@ -551,49 +715,49 @@ GLFontGlyphLetter::GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf
   m_drawHeight = powerOf2(m_realHeight);
   m_firstLineDrawHeight = m_drawHeight;
 
-  v_image = SDL_CreateRGBSurface(SDL_SWSURFACE,
-				 m_drawWidth, m_drawHeight,
-				 32,
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN /* OpenGL RGBA masks */
-				 0x000000FF, 
-				 0x0000FF00, 
-				 0x00FF0000, 
-				 0xFF000000
-#else
-				 0xFF000000,
-				 0x00FF0000, 
-				 0x0000FF00, 
-				 0x000000FF
-#endif
-				 );
-  if(v_image == NULL) {
+  if(m_drawWidth < 64 && m_drawHeight < 64) {
+    try{
+      m_GLID = ScrapTextures::instance()->allocateAndLoadTexture(m_drawWidth, m_drawHeight,
+								 &m_u.x, &m_u.y,
+								 &m_v.x, &m_v.y,
+								 v_surf);
+      SDL_FreeSurface(v_surf);
+
+      m_useScrap = true;
+    }
+    catch(Exception){
+      goto dont_use_crap;
+    }
+  } else {
+  dont_use_crap:
+    m_useScrap = false;
+
+    v_image = createSDLSurface(m_drawWidth, m_drawHeight);
+
+    /* Copy the surface into the GL texture image */
+    SDL_BlitSurface(v_surf, NULL, v_image, NULL);
     SDL_FreeSurface(v_surf);
-    throw Exception("SDL_CreateRGBSurface failed");
+
+    /* Create the OpenGL texture */
+    glGenTextures(1, &m_GLID);
+    glBindTexture(GL_TEXTURE_2D, m_GLID);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D,
+		 0,
+		 GL_RGBA,
+		 m_drawWidth, m_drawHeight,
+		 0,
+		 GL_RGBA,
+		 GL_UNSIGNED_BYTE,
+		 v_image->pixels);
+    SDL_FreeSurface(v_image);
+
+    m_u.x = 0.0;
+    m_u.y = 0.0;
+    m_v.x = 1.0;
+    m_v.y = 1.0;
   }
-
-  /* Copy the surface into the GL texture image */
-  SDL_SetAlpha(v_surf, 0, 0);
-  v_area.x = 0;
-  v_area.y = 0;
-  v_area.w = m_drawWidth;
-  v_area.h = m_drawHeight;
-  SDL_BlitSurface(v_surf, &v_area, v_image, &v_area);
-  SDL_FreeSurface(v_surf);
-
-  /* Create the OpenGL texture */
-  glGenTextures(1, &m_GLID);
-  glBindTexture(GL_TEXTURE_2D, m_GLID);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D,
-	       0,
-	       GL_RGBA,
-	       m_drawWidth, m_drawHeight,
-	       0,
-	       GL_RGBA,
-	       GL_UNSIGNED_BYTE,
-	       v_image->pixels);
-  SDL_FreeSurface(v_image);
 }
   
 GLFontGlyphLetter::~GLFontGlyphLetter() {
@@ -769,7 +933,6 @@ void GLFontManager::printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
 
 void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
 				       Color c1, Color c2, Color c3, Color c4) {
-
   GLFontGlyph* v_glyph = (GLFontGlyph*) i_glyph;
   GLFontGlyphLetter* v_glyphLetter;
   int v_x, v_y;
@@ -802,6 +965,8 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
   a3 = GET_ALPHA(c3);
   a4 = GET_ALPHA(c4);
 
+  ScrapTextures::instance()->update();
+
   if(v_glyph->Value() == "")
     return;
 
@@ -831,19 +996,19 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
 	  glBegin(GL_QUADS);
 
 	  glColor4ub(r1, g1, b1, a1);
-	  glTexCoord2f(0.0, 1.0);
+	  glTexCoord2f(v_glyphLetter->m_u.x, v_glyphLetter->m_v.y);
 	  glVertex2i(v_x, v_y);
 
 	  glColor4ub(r2, g2, b2, a2);
-	  glTexCoord2f(1.0, 1.0);
+	  glTexCoord2f(v_glyphLetter->m_v.x, v_glyphLetter->m_v.y);
 	  glVertex2i(v_x + v_glyphLetter->drawWidth(), v_y);
 
 	  glColor4ub(r4, g4, b4, a4);
-	  glTexCoord2f(1.0, 0.0);
+	  glTexCoord2f(v_glyphLetter->m_v.x, v_glyphLetter->m_u.y);
 	  glVertex2i(v_x + v_glyphLetter->drawWidth(), v_y + v_glyphLetter->drawHeight());
 
 	  glColor4ub(r3, g3, b3, a3);
-	  glTexCoord2f(0.0, 0.0);
+	  glTexCoord2f(v_glyphLetter->m_u.x, v_glyphLetter->m_u.y);
 	  glVertex2i(v_x, v_y + v_glyphLetter->drawHeight());
 
 	  v_x += v_glyphLetter->realWidth() + UTF8_INTERCHAR_SPACE;
