@@ -944,8 +944,11 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
   GLFontGlyphLetter* v_glyphLetter;
   int v_x, v_y;
   unsigned int n = 0;
-  std::string v_char;
+  std::string v_value, v_char;
   unsigned int v_lineHeight;
+
+  int oldTextureId = -1;
+  int newTextureId;
 
   char r1, r2, r3, r4;
   char g1, g2, g3, g4;
@@ -974,7 +977,8 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
 
   ScrapTextures::instance()->update();
 
-  if(v_glyph->Value() == "")
+  v_value = v_glyph->Value();
+  if(v_value == "")
     return;
 
   v_y = -i_y + m_drawLib->getDispHeight() - v_glyph->firstLineDrawHeight();/* la taille de la 1ere ligne */
@@ -987,8 +991,9 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    while(n < v_glyph->Value().size()) {
-      v_char = utf8::getNextChar(v_glyph->Value(), n);
+    unsigned int size = v_value.size();
+    while(n < size) {
+      v_char = utf8::getNextChar(v_value, n);
       if(v_char == "\n") {
 	v_x  = i_x;
 	v_y -= v_lineHeight + UTF8_INTERLINE_SPACE;
@@ -999,8 +1004,13 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
 	  if(v_glyphLetter->realHeight() > v_lineHeight)
 	    v_lineHeight = v_glyphLetter->realHeight();
 
-	  glBindTexture(GL_TEXTURE_2D, v_glyphLetter->GLID());
-	  glBegin(GL_QUADS);
+	  newTextureId = v_glyphLetter->GLID();
+	  if(newTextureId != oldTextureId){
+	    glEnd();
+	    glBindTexture(GL_TEXTURE_2D, newTextureId);
+	    glBegin(GL_QUADS);
+	    oldTextureId = newTextureId;
+	  }
 
 	  glColor4ub(r1, g1, b1, a1);
 	  glTexCoord2f(v_glyphLetter->m_u.x, v_glyphLetter->m_v.y);
@@ -1019,13 +1029,13 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
 	  glVertex2i(v_x, v_y + v_glyphLetter->drawHeight());
 
 	  v_x += v_glyphLetter->realWidth() + UTF8_INTERCHAR_SPACE;
-	  glEnd();
 	}
       }
     }
+
+    glEnd();
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
-    /* */
 
   } catch(Exception &e) {
     /* ok, forget this one */
