@@ -1222,21 +1222,29 @@ void PlayerBiker::setBodyDetach(bool state) {
     dJointSetHingeParam(m_KneeHingeID,  dParamHiStop, 3.14159/2.0);
     dJointSetHingeParam(m_KneeHingeID2, dParamLoStop, 3.14159/2.0 * -1.0);
     dJointSetHingeParam(m_KneeHingeID2, dParamHiStop, 0.0         * -1.0);
+    dJointSetHingeParam(m_KneeHingeID  ,dParamStopCFM, 0.2);
+    dJointSetHingeParam(m_KneeHingeID2 ,dParamStopCFM, 0.2);
 
-    dJointSetHingeParam(m_LowerBodyHingeID,  dParamLoStop,  -1.6);
-    dJointSetHingeParam(m_LowerBodyHingeID,  dParamHiStop,  1.0);
-    dJointSetHingeParam(m_LowerBodyHingeID2, dParamLoStop, 1.0  * -1.0);
-    dJointSetHingeParam(m_LowerBodyHingeID2, dParamHiStop, -1.6 * -1.0);
+    dJointSetHingeParam(m_LowerBodyHingeID,  dParamLoStop,  -1.4);
+    dJointSetHingeParam(m_LowerBodyHingeID,  dParamHiStop,  -1.2);
+    dJointSetHingeParam(m_LowerBodyHingeID2, dParamLoStop,  -1.2 * -1.0);
+    dJointSetHingeParam(m_LowerBodyHingeID2, dParamHiStop,  -1.4 * -1.0);
+    dJointSetHingeParam(m_LowerBodyHingeID  ,dParamStopCFM, 0.2);
+    dJointSetHingeParam(m_LowerBodyHingeID2 ,dParamStopCFM, 0.2);
 
-    dJointSetHingeParam(m_ShoulderHingeID,  dParamLoStop, -1.5);
-    dJointSetHingeParam(m_ShoulderHingeID,  dParamHiStop,  0.0);
-    dJointSetHingeParam(m_ShoulderHingeID2, dParamLoStop,  0.0  * -1.0);
-    dJointSetHingeParam(m_ShoulderHingeID2, dParamHiStop, -1.5  * -1.0);
+    dJointSetHingeParam(m_ShoulderHingeID,  dParamLoStop, -1.9);
+    dJointSetHingeParam(m_ShoulderHingeID,  dParamHiStop,  0.8);
+    dJointSetHingeParam(m_ShoulderHingeID2, dParamLoStop,  0.8  * -1.0);
+    dJointSetHingeParam(m_ShoulderHingeID2, dParamHiStop, -1.9  * -1.0);
+    dJointSetHingeParam(m_ShoulderHingeID  ,dParamStopCFM, 0.2);
+    dJointSetHingeParam(m_ShoulderHingeID2 ,dParamStopCFM, 0.2);
 
     dJointSetHingeParam(m_ElbowHingeID,  dParamLoStop, -1.5);
     dJointSetHingeParam(m_ElbowHingeID,  dParamHiStop, 1.0);
     dJointSetHingeParam(m_ElbowHingeID2, dParamLoStop, 1.0   * -1.0);
     dJointSetHingeParam(m_ElbowHingeID2, dParamHiStop, -1.5  * -1.0);
+    dJointSetHingeParam(m_ElbowHingeID  ,dParamStopCFM, 0.2);
+    dJointSetHingeParam(m_ElbowHingeID2 ,dParamStopCFM, 0.2);
 
   }
 }
