@@ -73,6 +73,15 @@ std::string utf8::getNextChar(const std::string& src, unsigned int& io_pos) {
   return v_res;
 }
 
+void utf8::getNextChar(const std::string &src, unsigned int& io_pos, std::string& o_char)
+{
+ const int size = byte_size_from_utf8_first(src[io_pos]);
+  if(io_pos + size > src.size())
+    throw Exception("Invalid utf-8 char");
+  o_char = src.substr(io_pos, size);
+  io_pos += size;
+}
+
 std::string utf8::txt2vertical(const std::string& i_str) {
   std::string v_res;
 

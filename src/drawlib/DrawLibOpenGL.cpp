@@ -993,7 +993,7 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
 
     unsigned int size = v_value.size();
     while(n < size) {
-      v_char = utf8::getNextChar(v_value, n);
+      utf8::getNextChar(v_value, n, v_char);
       if(v_char == "\n") {
 	v_x  = i_x;
 	v_y -= v_lineHeight + UTF8_INTERLINE_SPACE;

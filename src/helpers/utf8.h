@@ -30,6 +30,7 @@ class utf8 {
   static std::vector<std::string> split_utf8_string(const std::string &src);
   static std::string txt2vertical(const std::string& i_str);
   static std::string getNextChar(const std::string &src, unsigned int& io_pos);
+  static void getNextChar(const std::string &src, unsigned int& io_pos, std::string& o_char);
 };
 
 #endif
