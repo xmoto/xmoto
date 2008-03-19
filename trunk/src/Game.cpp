@@ -610,6 +610,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
       /* add MYBEST if MYBEST if better the BESTOF the other ROOM */
       if(v_player_finishTime > 0 && (v_finishTime < 0 || v_player_finishTime < v_finishTime)) {
 	v_replay_BESTOFROOM[i] = v_replay_MYBEST_tmp;
+	if(XMSession::instance()->debug()) Logger::Log("my best time is %i ; room one is %i", v_player_finishTime, v_finishTime);
 	if(XMSession::instance()->debug()) Logger::Log("my best is better than the one of the room => choose it");
       }
       
