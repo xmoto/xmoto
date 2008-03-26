@@ -236,6 +236,8 @@ void xmDatabase::levels_cleanNoWWWLevels() {
 	Logger::Log("Removing the level failed !");
       }
 
+    } else {
+      Logger::Log("NOT Removing level %s (%s) : the level is not is the user space", v_name.c_str(), v_filepath.c_str());
     }
   }
   read_DB_free(v_result);
