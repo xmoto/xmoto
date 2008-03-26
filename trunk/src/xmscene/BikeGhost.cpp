@@ -171,7 +171,6 @@ void Ghost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
 void Ghost::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity) {
   m_teleportationOccured = true;
   m_linearVelocity = 0.0;
-  printf("init to position\n");
 }
 
 void Ghost::updateToTime(int i_time, int i_timeStep,

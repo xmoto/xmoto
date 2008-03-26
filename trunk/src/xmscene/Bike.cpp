@@ -610,22 +610,32 @@ void BikeState::interpolateGameState(std::vector<BikeState*> &i_ghostBikeStates,
     if(bUpdateRider) {        
       /* Calculate head position */
       V = (pBikeS->ShoulderP - pBikeS->LowerBodyP);
-      V.normalize();
-      pBikeS->HeadP = pBikeS->ShoulderP + V*pBikeS->Parameters()->fNeckLength;
+
+      try {
+	V.normalize();
+	pBikeS->HeadP = pBikeS->ShoulderP + V*pBikeS->Parameters()->fNeckLength;
+      } catch(Exception &e) {
+	pBikeS->HeadP = pBikeS->ShoulderP;
+      }
     }
     
     if(bUpdateAltRider) {
       /* Calculate head position (Alt.) */
       V = (pBikeS->Shoulder2P - pBikeS->LowerBody2P);
-      V.normalize();
-      pBikeS->Head2P = pBikeS->Shoulder2P + V*pBikeS->Parameters()->fNeckLength;
+
+      try {
+	V.normalize();
+	pBikeS->Head2P = pBikeS->Shoulder2P + V*pBikeS->Parameters()->fNeckLength;
+      } catch(Exception &e) {
+	pBikeS->Head2P = pBikeS->Shoulder2P;
+      }
     }
     
     /* Internally we'd like to know the abs. relaxed position of the wheels */
     pBikeS->RFrontWheelP.x = pBikeS->Anchors()->Fp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->Fp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
     pBikeS->RFrontWheelP.y = pBikeS->Anchors()->Fp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->Fp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
     pBikeS->RRearWheelP.x = pBikeS->Anchors()->Rp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->Rp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->RRearWheelP.y = pBikeS->Anchors()->Rp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->Rp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;     
+    pBikeS->RRearWheelP.y = pBikeS->Anchors()->Rp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->Rp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
 
     // time
     pBikeS->GameTime = GameApp::floatToTime(pReplayState->fGameTime);
