@@ -155,8 +155,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       v_event = new MGE_PlaySound(v_eventTime);
     } else if(MGE_PlayMusic::SgetType() == v_eventType) {
       v_event = new MGE_PlayMusic(v_eventTime);
+    } else if(MGE_StopMusic::SgetType() == v_eventType) {
+      v_event = new MGE_StopMusic(v_eventTime);
 
-} else {
+    } else {
       std::ostringstream error_type;
       error_type << (int) v_eventType;
       throw Exception("Can't unserialize ! (event of type " + error_type.str() + ")");
