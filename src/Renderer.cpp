@@ -909,7 +909,7 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
 	_RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(), i_ghost->getBikeTheme(), true,
 		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
       } catch(Exception &e) {
-	i_scene->gameMessage("Unable to render the ghost", true);
+	i_scene->gameMessage("Unable to render the ghost", true, 50);
       }
 
       if(XMSession::instance()->ghostMotionBlur()
@@ -1044,7 +1044,7 @@ int GameRenderer::nbParticlesRendered() const {
 		      v_player->getColorFilter(),
 		      v_player->getUglyColorFilter());
 	} catch(Exception &e) {
-	  i_scene->gameMessage("Unable to render the biker", true);
+	  i_scene->gameMessage("Unable to render the biker", true, 50);
 	}
       } else {
 	v_found = true;
@@ -1066,7 +1066,7 @@ int GameRenderer::nbParticlesRendered() const {
 	  }
 	}
       } catch(Exception &e) {
-	i_scene->gameMessage("Unable to render the biker", true);
+	i_scene->gameMessage("Unable to render the biker", true, 50);
       }
     }
 
@@ -2617,7 +2617,11 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
     if(pTexture == NULL) return;
 
     Sv = i_from - i_to;
-    Sv.normalize();
+      //try {
+      Sv.normalize();
+      //} catch(Exception &e) {
+      //Sv = Vector2f(0.0, 0.0);
+      //}
 
     if(i_direction == DD_RIGHT) {
       p0 = i_from + Vector2f(-Sv.y, Sv.x) * i_c11 + Sv * i_c12;
@@ -2764,7 +2768,11 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
       /* Draw swing arm */
       if(pBike->Dir == DD_RIGHT) {       
         Sv = pBike->SwingAnchorP - Rc;
-        Sv.normalize();
+	//try {
+	  Sv.normalize();
+	  //} catch(Exception &e) {
+	  //Sv = Vector2f(0.0, 0.0);
+	  //}
         p0 = pBike->RearWheelP + Vector2f(-Sv.y,Sv.x)*0.07f - Sv*0.08f;
         p1 = pBike->SwingAnchorP + Vector2f(-Sv.y,Sv.x)*0.07f;
         p2 = pBike->SwingAnchorP - Vector2f(-Sv.y,Sv.x)*0.07f;
@@ -2772,7 +2780,11 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
       }
       else {
         Sv = pBike->SwingAnchor2P - Fc;
-        Sv.normalize();
+	//try {
+	  Sv.normalize();
+	  //} catch(Exception &e) {
+	  //Sv = Vector2f(0.0, 0.0);
+	  //}
         p0 = pBike->FrontWheelP + Vector2f(-Sv.y,Sv.x)*0.07f - Sv*0.08f;
         p1 = pBike->SwingAnchor2P + Vector2f(-Sv.y,Sv.x)*0.07f;
         p2 = pBike->SwingAnchor2P - Vector2f(-Sv.y,Sv.x)*0.07f;
@@ -2790,7 +2802,11 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
       /* Draw front suspension */
       if(pBike->Dir == DD_RIGHT) {
         Sv = pBike->FrontAnchorP - Fc;
-        Sv.normalize();         
+	//try {
+	  Sv.normalize();
+	  //} catch(Exception &e) {
+	  //Sv = Vector2f(0.0, 0.0);
+	  //}
         p0 = pBike->FrontWheelP + Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.05f;
         p1 = pBike->FrontAnchorP + Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.35f;
         p2 = pBike->FrontAnchorP - Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.35f;
@@ -2798,7 +2814,11 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
       }
       else {
         Sv = pBike->FrontAnchor2P - Rc;
-        Sv.normalize();         
+	//try {
+	  Sv.normalize();
+	  //} catch(Exception &e) {
+	  //Sv = Vector2f(0.0, 0.0);
+	  //}
         p0 = pBike->RearWheelP + Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.05f;
         p1 = pBike->FrontAnchor2P + Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.35f;
         p2 = pBike->FrontAnchor2P - Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.35f;
