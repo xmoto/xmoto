@@ -115,6 +115,8 @@ public:
   bool sqlTrace() const;
   std::string profile() const;
   void setProfile(const std::string& i_profile);
+  std::string wwwPassword() const;
+  void setWwwPassword(const std::string& i_password);
   bool gDebug() const;
   std::string gDebugFile() const;
   bool timedemo() const;
@@ -192,10 +194,6 @@ public:
   bool checkNewHighscoresAtStartup() const;
   void setShowHighscoreInGame(bool i_value);
   bool showHighscoreInGame() const;
-  void setUploadLogin(unsigned int i_number, const std::string& i_value);
-  std::string uploadLogin(unsigned int i_number) const;
-  void setUploadPassword(unsigned int i_number, const std::string& i_value);
-  std::string uploadPassword(unsigned int i_number) const;
   void setIdRoom(unsigned int i_number, const std::string& i_value);
   std::string idRoom(unsigned int i_number) const;
   void setNbRoomsEnabled(unsigned int i_value);
@@ -254,6 +252,7 @@ public:
   bool m_debug;
   bool m_sqlTrace;
   std::string m_profile;
+  std::string m_www_password;
   bool m_gdebug;
   std::string m_gdebug_file;
   bool m_timedemo;
@@ -294,8 +293,6 @@ public:
   bool m_checkNewLevelsAtStartup;
   bool m_checkNewHighscoresAtStartup;
   bool m_showHighscoreInGame;
-  std::string m_uploadLogin[ROOMS_NB_MAX];
-  std::string m_uploadPassword[ROOMS_NB_MAX];
   std::string m_uploadHighscoreUrl;
   std::string m_idRoom[ROOMS_NB_MAX];
   unsigned int m_nbRoomsEnabled;

@@ -42,6 +42,7 @@ void XMSession::setToDefault() {
   m_glExts           	          = true;
   m_drawlib          	          = "OPENGL";
   m_www              	          = true;
+  m_www_password                  = "";
   m_benchmark 	     	          = false;
   m_debug     	     	          = false;
   m_sqlTrace  	     	          = false;
@@ -230,6 +231,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_windowed         	     = m_Config->getBool("DisplayWindowed");
   m_drawlib          	     = m_Config->getString("DrawLib");
   m_www              	     = m_Config->getBool("WebHighscores");
+  m_www_password       	     = m_Config->getString("WWWPassword");
   m_profile          	     = m_Config->getString("DefaultProfile");
   m_ghostStrategy_MYBEST     = m_Config->getBool("GhostStrategy_MYBEST");
   m_ghostStrategy_THEBEST    = m_Config->getBool("GhostStrategy_THEBEST");
@@ -277,14 +279,10 @@ void XMSession::load(UserConfig* m_Config) {
   for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
     if(i==0) {
       m_idRoom[i]               = m_Config->getString("WebHighscoresIdRoom");
-      m_uploadLogin[i]          = m_Config->getString("WebHighscoreUploadLogin");
-      m_uploadPassword[i]       = m_Config->getString("WebHighscoreUploadPassword");
     } else {
       std::ostringstream v_strRoom;
       v_strRoom << i;
       m_idRoom[i]               = m_Config->getString("WebHighscoresIdRoom"        + v_strRoom.str());
-      m_uploadLogin[i]          = m_Config->getString("WebHighscoreUploadLogin"    + v_strRoom.str());
-      m_uploadPassword[i]       = m_Config->getString("WebHighscoreUploadPassword" + v_strRoom.str());
     }
   }
   m_showGhostTimeDifference     = m_Config->getBool("ShowGhostTimeDiff");
@@ -320,6 +318,7 @@ void XMSession::save(UserConfig* v_config) {
   v_config->setBool("ContextHelp",                  m_enableContextHelp);
   v_config->setString("Theme",                      m_theme);
   v_config->setBool("WebHighscores",                m_www);
+  v_config->setString("WWWPassword",                m_www_password);
   v_config->setBool("CheckNewLevelsAtStartup",      m_checkNewLevelsAtStartup);
   v_config->setBool("CheckHighscoresAtStartup",     m_checkNewHighscoresAtStartup);
   v_config->setBool("ShowInGameWorldRecord",        m_showHighscoreInGame);
@@ -330,16 +329,10 @@ void XMSession::save(UserConfig* v_config) {
   for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
     if(i==0) {
       v_config->setString("WebHighscoresIdRoom",        m_idRoom[i]);
-      v_config->setString("WebHighscoreUploadLogin",    m_uploadLogin[i]);
-      v_config->setString("WebHighscoreUploadPassword", m_uploadPassword[i]);
-
     } else {
       std::ostringstream v_strRoom;
       v_strRoom << i;
       v_config->setString("WebHighscoresIdRoom"        + v_strRoom.str(), m_idRoom[i]);
-      v_config->setString("WebHighscoreUploadLogin"    + v_strRoom.str(), m_uploadLogin[i]);
-      v_config->setString("WebHighscoreUploadPassword" + v_strRoom.str(), m_uploadPassword[i]);
-
     }
   }
 
@@ -459,6 +452,14 @@ std::string XMSession::profile() const {
 
 void XMSession::setProfile(const std::string& i_profile) {
   m_profile = i_profile;
+}
+
+std::string XMSession::wwwPassword() const {
+  return m_www_password;
+}
+
+void XMSession::setWwwPassword(const std::string& i_password) {
+  m_www_password = i_password;
 }
 
 bool XMSession::gDebug() const {
@@ -806,22 +807,6 @@ void XMSession::setNbRoomsEnabled(unsigned int i_value) {
   m_nbRoomsEnabled = i_value;
 }
 
-void XMSession::setUploadLogin(unsigned int i_number, const std::string& i_value) {
-  m_uploadLogin[i_number] = i_value;
-}
-
-std::string XMSession::uploadLogin(unsigned int i_number) const {
-  return m_uploadLogin[i_number];
-}
-
-void XMSession::setUploadPassword(unsigned int i_number, const std::string& i_value) {
-  m_uploadPassword[i_number] = i_value;
-}
-
-std::string XMSession::uploadPassword(unsigned int i_number) const {
-  return m_uploadPassword[i_number];
-}
-
 void XMSession::setIdRoom(unsigned int i_number, const std::string& i_value) {
   m_idRoom[i_number] = i_value;
 }
@@ -1164,6 +1149,7 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
   v_config->createVar( "DeathAnim",              "true" );
 
   v_config->createVar( "WebHighscores",            "false" );
+  v_config->createVar( "WWWPassword",              "" );
   v_config->createVar( "CheckHighscoresAtStartup", "true" );
   v_config->createVar( "CheckNewLevelsAtStartup",  "true" );
   v_config->createVar( "ShowInGameWorldRecord",    "false" );
@@ -1181,16 +1167,10 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
   for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
     if(i==0) {
       v_config->createVar( "WebHighscoresIdRoom"       , DEFAULT_WEBROOM_ID);
-      v_config->createVar( "WebHighscoreUploadLogin"   , "");
-      v_config->createVar( "WebHighscoreUploadPassword", ""); 
-
     } else {
       std::ostringstream v_strRoom;
       v_strRoom << i;
       v_config->createVar( "WebHighscoresIdRoom"        + v_strRoom.str(), DEFAULT_WEBROOM_ID);
-      v_config->createVar( "WebHighscoreUploadLogin"    + v_strRoom.str(), "");
-      v_config->createVar( "WebHighscoreUploadPassword" + v_strRoom.str(), ""); 
-
     }
   }
 

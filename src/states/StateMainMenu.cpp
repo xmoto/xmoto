@@ -621,14 +621,23 @@ void StateMainMenu::createGUIIfNeeded() {
 }
 
 void StateMainMenu::updateProfile() {
-  UIStatic* v_playerTag = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:PLAYERTAG"));
+  UIStatic* v_strTxt;
+
+  // profile title
+  v_strTxt = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:PLAYERTAG"));
   std::string v_caption;
 
   if(XMSession::instance()->profile() != "") {
     v_caption = std::string(GAMETEXT_PLAYER) + ": " + XMSession::instance()->profile() + "@" + GameApp::instance()->getWebRoomName(0);
   }
 
-  v_playerTag->setCaption(v_caption);
+  v_strTxt->setCaption(v_caption);
+
+  // www password option
+  v_strTxt = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:WWW_PASSWORD_STATIC"));
+  char buf[256];
+  snprintf(buf, 256, GAMETEXT_ACCOUNT_PASSWORD, XMSession::instance()->profile().c_str());
+  v_strTxt->setCaption(buf);
 }
 
 UIWindow* StateMainMenu::makeWindowStats(UIWindow* i_parent) {
@@ -1149,6 +1158,8 @@ UIWindow* StateMainMenu::makeWindowOptions_controls(UIWindow* i_parent) {
 
 UIWindow* StateMainMenu::makeWindowOptions_rooms(UIWindow* i_parent) {
   UIWindow *v_window, *v_wwwwindow;
+  UIStatic* v_someText;
+  UIEdit*   v_edit;
   UIButton* v_button;
   DrawLib*  drawlib = GameApp::instance()->getDrawLib();
 
@@ -1176,39 +1187,53 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_roomsTabs->setTabContextHelp(0, CONTEXTHELP_WWW_MAIN_TAB);
   v_roomsTabs->setTabContextHelp(1, CONTEXTHELP_WWW_ROOMS_TAB);
 
-  v_window = new UIWindow(v_roomsTabs, 20, 40, GAMETEXT_WWWMAINTAB, v_roomsTabs->getPosition().nWidth-40,
+  v_window = new UIWindow(v_roomsTabs, 20, 30, GAMETEXT_WWWMAINTAB, v_roomsTabs->getPosition().nWidth-30,
 			  v_roomsTabs->getPosition().nHeight);
   v_window->setID("MAIN_TAB");
 
-  v_button = new UIButton(v_window, 5, 5, GAMETEXT_ENABLEWEBHIGHSCORES, (v_window->getPosition().nWidth-40), 28);
+  v_button = new UIButton(v_window, 5, 0, GAMETEXT_ENABLEWEBHIGHSCORES, (v_window->getPosition().nWidth-40), 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("ENABLEWEB");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50123);
   v_button->setContextHelp(CONTEXTHELP_DOWNLOAD_BEST_TIMES);
 
-  v_button = new UIButton(v_window, 5, 43, GAMETEXT_ENABLECHECKNEWLEVELSATSTARTUP,v_window->getPosition().nWidth-40, 28);
+  // password
+  char buf[256];
+  snprintf(buf, 256, GAMETEXT_ACCOUNT_PASSWORD, XMSession::instance()->profile().c_str());
+  v_someText = new UIStatic(v_window, 35, 25, buf, 300, 30);
+  v_someText->setID("WWW_PASSWORD_STATIC");
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText->setFont(drawlib->getFontSmall()); 
+
+  v_edit = new UIEdit(v_window, 35, 50, "", 150, 25);
+  v_edit->setFont(drawlib->getFontSmall());
+  v_edit->setID("WWW_PASSWORD");
+  v_edit->hideText(true);
+  v_edit->setContextHelp(CONTEXTHELP_WWW_PASSWORD);
+
+  v_button = new UIButton(v_window, 5, 80, GAMETEXT_ENABLECHECKNEWLEVELSATSTARTUP,v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("ENABLECHECKNEWLEVELSATSTARTUP");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50123);
   v_button->setContextHelp(CONTEXTHELP_ENABLE_CHECK_NEW_LEVELS_AT_STARTUP);
   
-  v_button = new UIButton(v_window, 5, 81, GAMETEXT_ENABLECHECKHIGHSCORESATSTARTUP, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 110, GAMETEXT_ENABLECHECKHIGHSCORESATSTARTUP, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("ENABLECHECKHIGHSCORESATSTARTUP");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50123);
   v_button->setContextHelp(CONTEXTHELP_ENABLE_CHECK_HIGHSCORES_AT_STARTUP);
 
-  v_button = new UIButton(v_window, 5, 119, GAMETEXT_ENABLEINGAMEWORLDRECORD, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 140, GAMETEXT_ENABLEINGAMEWORLDRECORD, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("INGAMEWORLDRECORD");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50123);
   v_button->setContextHelp(CONTEXTHELP_INGAME_WORLD_RECORD);
 
-  v_button = new UIButton(v_window, 5, 157, GAMETEXT_USECRAPPYINFORMATION, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 170, GAMETEXT_USECRAPPYINFORMATION, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("USECRAPPYINFORMATION");
   v_button->setFont(drawlib->getFontSmall());
@@ -1225,8 +1250,6 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(UIWindow* i_parent) {
 UIWindow* StateMainMenu::makeRoomTab(UIWindow* i_parent, unsigned int i_number) {
   UIWindow* v_window;
   UIList*   v_list;
-  UIStatic* v_someText;
-  UIEdit*   v_edit;
   UIButton*  v_button;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
@@ -1260,27 +1283,6 @@ UIWindow* StateMainMenu::makeRoomTab(UIWindow* i_parent, unsigned int i_number) 
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_ROOM, v_list->getPosition().nWidth);
   v_list->setContextHelp(CONTEXTHELP_WWW_ROOMS_LIST);
-
-  v_someText = new UIStatic(v_window, v_window->getPosition().nWidth-165, 20, std::string(GAMETEXT_LOGIN) + ":", 130, 30);
-  v_someText->setID("ROOM_LOGIN_STATIC");
-  v_someText->setHAlign(UI_ALIGN_LEFT);
-  v_someText->setFont(drawlib->getFontSmall()); 
-
-  v_edit = new UIEdit(v_window, v_window->getPosition().nWidth-165, 50, "", 150, 25);
-  v_edit->setFont(drawlib->getFontSmall());
-  v_edit->setID("ROOM_LOGIN");
-  v_edit->setContextHelp(CONTEXTHELP_ROOM_LOGIN);
-
-  v_someText = new UIStatic(v_window, v_window->getPosition().nWidth-165, 90, std::string(GAMETEXT_PASSWORD) + ":", 130, 30);
-  v_someText->setID("ROOM_PASSWORD_STATIC");
-  v_someText->setHAlign(UI_ALIGN_LEFT);
-  v_someText->setFont(drawlib->getFontSmall()); 
-
-  v_edit = new UIEdit(v_window, v_window->getPosition().nWidth-165, 115, "", 150, 25);
-  v_edit->hideText(true);
-  v_edit->setFont(drawlib->getFontSmall());
-  v_edit->setID("ROOM_PASSWORD");
-  v_edit->setContextHelp(CONTEXTHELP_ROOM_PASSWORD);
 
   v_button = new UIButton(v_window, v_window->getPosition().nWidth/2 - 212, v_window->getPosition().nHeight - 90, GAMETEXT_UPDATEROOMSSLIST, 215, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
@@ -2377,6 +2379,9 @@ void StateMainMenu::updateOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:USECRAPPYINFORMATION"));
   v_button->setChecked(XMSession::instance()->useCrappyPack());
 
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:WWW_PASSWORD"));
+  v_edit->setCaption(XMSession::instance()->wwwPassword());
+
   for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
       bool v_enabled = true;
       std::ostringstream v_strRoom;
@@ -2388,13 +2393,6 @@ void StateMainMenu::updateOptions() {
 								+ ":ROOM_ENABLED"));
 	v_button->setChecked(v_enabled);
       }
-
-      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
-							  + ":ROOM_LOGIN"));
-      v_edit->setCaption(XMSession::instance()->uploadLogin(i));
-      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
-							  + ":ROOM_PASSWORD"));
-      v_edit->setCaption(XMSession::instance()->uploadPassword(i));
    }
 
   // ghosts
@@ -2684,6 +2682,12 @@ void StateMainMenu::checkEventsOptions() {
     XMSession::instance()->setUseCrappyPack(v_button->getChecked());
   }
 
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:WWW_PASSWORD"));
+  if(v_edit->hasChanged()) {
+    v_edit->setHasChanged(false);
+    XMSession::instance()->setWwwPassword(v_edit->getCaption());
+  }
+
   for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
       std::ostringstream v_strRoom;
       v_strRoom << i;
@@ -2697,21 +2701,6 @@ void StateMainMenu::checkEventsOptions() {
 	  XMSession::instance()->setIdRoom(i, *((std::string*)v_list->getEntries()[v_list->getSelected()]->pvUser));
 	  updateProfile();
 	}
-      }
-
-
-      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
-							  + ":ROOM_LOGIN"));
-      if(v_edit->hasChanged()) {
-	v_edit->setHasChanged(false);
-	XMSession::instance()->setUploadLogin(i, v_edit->getCaption());
-      }
-
-      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
-							  + ":ROOM_PASSWORD"));
-      if(v_edit->hasChanged()) {
-	v_edit->setHasChanged(false);
-	XMSession::instance()->setUploadPassword(i, v_edit->getCaption());
       }
 
       v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
@@ -2851,7 +2840,7 @@ void StateMainMenu::updateWWWOptions() {
   UIButton* v_button;
   UIList*   v_list;
   UIStatic* v_someText;
-  UIEdit* v_edit;
+  UIEdit*   v_edit;
   UIWindow *v_window;
   bool v_enabled;
 
@@ -2869,6 +2858,11 @@ void StateMainMenu::updateWWWOptions() {
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:UPDATEHIGHSCORES"));
   v_button->enableWindow(XMSession::instance()->www());
+
+  v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:WWW_PASSWORD_STATIC"));
+  v_someText->enableWindow(XMSession::instance()->www());
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:WWW_PASSWORD"));
+  v_edit->enableWindow(XMSession::instance()->www());
 
   for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
       std::ostringstream v_strRoom;
@@ -2899,25 +2893,10 @@ void StateMainMenu::updateWWWOptions() {
 							      + ":UPLOADHIGHSCOREALL_BUTTON"));
       v_button->enableWindow(XMSession::instance()->www() && v_enabled);
 
-      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
-							  + ":ROOM_LOGIN"));
-      v_edit->enableWindow(v_enabled);
-
-      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
-							  + ":ROOM_PASSWORD"));
-      v_edit->enableWindow(v_enabled);
-
       v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
 							  + ":ROOMS_LIST"));
       v_list->enableWindow(v_enabled);
 
-      v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
-								+ ":ROOM_LOGIN_STATIC"));
-      v_someText->enableWindow(v_enabled);
-
-      v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
-								+ ":ROOM_PASSWORD_STATIC"));
-      v_someText->enableWindow(v_enabled);
   }
 }
 

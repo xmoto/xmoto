@@ -104,8 +104,8 @@ int UploadAllHighscoresThread::realThreadFunction()
 	    v_replayPath = FS::getUserDir() + "/Replays/" + v_replay + ".rpl";
 	    FSWeb::uploadReplay(v_replayPath,
 				XMSession::instance()->idRoom(m_number),
-				XMSession::instance()->uploadLogin(m_number),
-				XMSession::instance()->uploadPassword(m_number),
+				XMSession::instance()->profile(),
+				XMSession::instance()->wwwPassword(),
 				XMSession::instance()->uploadHighscoreUrl(),
 				this, XMSession::instance()->proxySettings(), v_msg_status_ok, m_msg);
 	    if(v_msg_status_ok == false) {
