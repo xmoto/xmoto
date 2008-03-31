@@ -40,7 +40,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_44KHZ                _("44 kHz")
 #define GAMETEXT_8BIT                 _("8-bit")
 #define GAMETEXT_ABORT                _("Quit level")
-#define GAMETEXT_ADDTOFAVORITE       _("Add to favorite")
+#define GAMETEXT_ACCOUNT_PASSWORD     _("Web account password for profile '%s':")
+#define GAMETEXT_ADDTOFAVORITE        _("Add to favorite")
 #define GAMETEXT_ADDTOBLACKLIST       _("Add to blacklist")
 #define GAMETEXT_ACTION               _("Action")
 #define GAMETEXT_ALL                  _("All (on this computer)")
@@ -565,6 +566,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_REPLAYS_CLEAN _("Delete replays that X-Moto estimates to be not interesting to keep")
 #define CONTEXTHELP_CHILDREN_COMPLIANT _("Remove levels not suitable for children")
 #define CONTEXTHELP_ROOM_ENABLE _("Enable this room")
+#define CONTEXTHELP_WWW_PASSWORD _("Password associated to your profile for web access.")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

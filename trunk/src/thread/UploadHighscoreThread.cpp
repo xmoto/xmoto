@@ -73,8 +73,8 @@ int UploadHighscoreThread::realThreadFunction()
 	
 	FSWeb::uploadReplay(m_highscorePath,
 			    XMSession::instance()->idRoom(i),
-			    XMSession::instance()->uploadLogin(i),
-			    XMSession::instance()->uploadPassword(i),
+			    XMSession::instance()->profile(),
+			    XMSession::instance()->wwwPassword(),
 			    XMSession::instance()->uploadHighscoreUrl(),
 			    this, XMSession::instance()->proxySettings(), v_msg_status_ok, v_tmpMsg);
 	if(v_msg_status_ok) {
