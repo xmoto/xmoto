@@ -1017,84 +1017,88 @@ UIRoot::UIRoot()
     return -1;
   }
 
-  void UIRoot::_ActivateByVector(int dx, int dy) {
-    /* Update the activation map */
-    UIRootActCandidate Map[128];
-    unsigned int nNum = _UpdateActivationMap(this, Map, 0, 128);
+void UIRoot::_ActivateByVector(int dx, int dy) {
+  /* Update the activation map */
+  UIRootActCandidate Map[128];
+  unsigned int nNum = _UpdateActivationMap(this, Map, 0, 128);
     
-    if(nNum > 0) {
-      /* Find the currently active window */
-      int nActive = _GetActiveIdx(Map, nNum);
+  if(nNum > 0) {
+    /* Find the currently active window */
+    int nActive = _GetActiveIdx(Map, nNum);
 
-      /* No active? */
-      if(nActive < 0) {
-        /* Simply activate the first */        
-        deactivate(this);
-        if(dx<0 || dy<0)
-          Map[0].pWindow->setActive(true);
-        else if(dx>0 || dy>0)
-          Map[nNum-1].pWindow->setActive(true);
-        return;
+    /* No active? */
+    if(nActive < 0) {
+      /* Simply activate the first */        
+      deactivate(this);
+      if(dx<0 || dy<0)
+	Map[0].pWindow->setActive(true);
+      else if(dx>0 || dy>0)
+	Map[nNum-1].pWindow->setActive(true);
+      return;
+    }
+    else {
+      /* Okay, determine where to go from here */
+      /* Calculate a "best estimate" rating for each candidate, and select the best */
+      int nBest          = -1;
+      int nCurrentRating = -1;
+      unsigned int uActive = nActive;
+      for(unsigned int i=0; i<nNum; i++) {
+	if(i != uActive) {
+	  /* Calculate rating */
+	  int vx = Map[i].x - Map[uActive].x;
+	  int vy = Map[i].y - Map[uActive].y;
+	  int nRating = 0;
+	  float xx1 = vx, yy1 = vy;
+	  float fDist = sqrt(xx1*xx1 + yy1*yy1);
+	  if(fDist == 0.0f) continue;
+	  xx1 /= fDist; yy1 /= fDist;
+	  float xx2 = dx, yy2 = dy;
+           
+	  float fAngle = (acos(xx1*xx2 + yy1*yy2) / 3.14159f) * 180.0f;
+	  if((vx<0 && dx<0) || (vx>0 && dx>0) || (vy<0 && dy<0) || (vy>0 && dy>0)) {
+	    if(fAngle < 45.0f) {
+	      nRating = 1500 - (int)(fAngle + fDist*2) + 1000;
+	    }
+	    else {
+	      nRating = 1500 - (int)(fAngle + fDist*2) + 500;
+	    }
+	  } 
+	  else {
+	    // No rating in there, the button is not oriented
+	    // with a single good direction
+	    nRating=0;
+	  }
+            
+	  /* Good? */
+	  if(nRating > 0 && nRating > nCurrentRating) {
+	    nCurrentRating = nRating;
+	    nBest = i;
+	    //printf("best is %i (rating=%i)\n", nBest, nRating);
+	  }
+	}
+      }
+        
+      /* Did we get something? */
+      if(nBest>=0) {
+	deactivate(this);
+	Map[nBest].pWindow->setActive(true);          
+          
+	m_CurrentContextHelp = Map[nBest].pWindow->getContextHelp();
       }
       else {
-        /* Okay, determine where to go from here */
-        /* Calculate a "best estimate" rating for each candidate, and select the best */
-        int nBest          = -1;
-	int nCurrentRating = -1;
-	unsigned int uActive = nActive;
-        for(unsigned int i=0; i<nNum; i++) {
-          if(i != uActive) {
-            /* Calculate rating */
-            int vx = Map[i].x - Map[uActive].x;
-            int vy = Map[i].y - Map[uActive].y;
-            int nRating = 0;
-            float xx1 = vx, yy1 = vy;
-            float fDist = sqrt(xx1*xx1 + yy1*yy1);
-            if(fDist == 0.0f) continue;
-            xx1 /= fDist; yy1 /= fDist;
-            float xx2 = dx, yy2 = dy;
-           
-            float fAngle = (acos(xx1*xx2 + yy1*yy2) / 3.14159f) * 180.0f;
-            if((vx<0 && dx<0) || (vx>0 && dx>0) || (vy<0 && dy<0) || (vy>0 && dy>0)) {
-              if(fAngle < 45.0f) {
-                nRating = 1500 - (int)(fAngle + fDist*2) + 1000;
-	      } else {
-		nRating = 1500 - (int)(fAngle + fDist*2) + 500;
-	      }
-            } else {
-	      nRating = 1500 - (int)(fAngle + fDist*3) + 100;
-	    }
-            
-            /* Good? */
-            if(nRating > 0 && nRating > nCurrentRating) {
-	      nCurrentRating = nRating;
-              nBest = i;
-	      //printf("best is %i (rating=%i)\n", nBest, nRating);
-            }
-          }
-        }
-        
-        /* Did we get something? */
-        if(nBest>=0) {
-          deactivate(this);
-          Map[nBest].pWindow->setActive(true);          
-          
-          m_CurrentContextHelp = Map[nBest].pWindow->getContextHelp();
-        }
-        else {
-          deactivate(this);
-          if(dx<0 || dy<0) {
-            Map[0].pWindow->setActive(true);
-            m_CurrentContextHelp = Map[0].pWindow->getContextHelp();
-          }
-          else if(dx>0 || dy>0) {
-            Map[nNum-1].pWindow->setActive(true);
-            m_CurrentContextHelp = Map[nNum-1].pWindow->getContextHelp();
-          }
-        }
+	deactivate(this);
+	if(dx<0 || dy<0) {
+	  Map[0].pWindow->setActive(true);
+	  m_CurrentContextHelp = Map[0].pWindow->getContextHelp();
+	}
+	else if(dx>0 || dy>0) {
+	  Map[nNum-1].pWindow->setActive(true);
+	  m_CurrentContextHelp = Map[nNum-1].pWindow->getContextHelp();
+	}
       }
     }
   }
+}
 
   void UIRoot::activateUp(void) {
     _ActivateByVector(0,-1);
