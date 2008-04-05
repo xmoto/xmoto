@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "VFileIO.h"
 
-#define XMDB_VERSION 20
+#define XMDB_VERSION 22
 
 bool xmDatabase::Trace = false;
 
@@ -477,6 +477,23 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 19: " + e.getMsg());
     }
+
+  case 20:
+    try {
+      simpleSql("CREATE TABLE profiles_configs(id_profile, key, value, PRIMARY KEY(id_profile, key));");
+      updateXmDbVersion(21);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 20: " + e.getMsg());
+    }
+
+  case 21:
+    try {
+      updateDB_config();
+      updateXmDbVersion(22);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 21: " + e.getMsg());
+    }
+
 
     // next
   }

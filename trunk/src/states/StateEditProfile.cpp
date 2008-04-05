@@ -85,10 +85,13 @@ void StateEditProfile::checkEvents() {
     if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
       UIListEntry *pEntry = pList->getEntries()[nIdx];
 
-      XMSession::instance()->setProfile(pEntry->Text[0]);
+      /* save previous profile before loading the previous one */
+      XMSession::instance()->saveProfile(xmDatabase::instance("main"));
 
+      XMSession::instance()->setProfile(pEntry->Text[0]);
       // set children compliant
       v_ccButton = reinterpret_cast<UIButton*>(m_GUI->getChild("EDITPROFILE_FRAME:CHILDRENCOMPLIANT"));
+      XMSession::instance()->loadProfile(pEntry->Text[0], xmDatabase::instance("main"));
       XMSession::instance()->setChildrenCompliant(v_ccButton->getChecked());
 
       xmDatabase::instance("main")->stats_xmotoStarted(pEntry->Text[0]);

@@ -143,6 +143,16 @@ public:
 				const std::string& i_id_level); /* or a negativ value if not */
   void webLoadDataFirstTime();
 
+  /* configuration */
+  std::string config_getString(const std::string& i_id_profile, const std::string& i_key,  const std::string& i_default);
+  bool        config_getBool(const std::string& i_id_profile, const std::string& i_key,    bool i_default);
+  int         config_getInteger(const std::string& i_id_profile, const std::string& i_key, int i_default);
+  float       config_getFloat(const std::string& i_id_profile, const std::string& i_key,   float i_default);
+  void        config_setString(const std::string& i_id_profile, const std::string& i_key,  const std::string& i_value);
+  void        config_setBool(const std::string& i_id_profile, const std::string& i_key,    bool i_value);
+  void        config_setInteger(const std::string& i_id_profile, const std::string& i_key, int i_value);
+  void        config_setFloat(const std::string& i_id_profile, const std::string& i_key,   float i_value);
+
   /* data fixes */
   void fixStatsProfilesLevelsNbCompleted();
 
@@ -172,6 +182,11 @@ public:
   void setXmDbGameDir(const std::string& i_gameDir);
   void setXmDbUserDir(const std::string& i_userDir);
   void setXmDbBinPackCheckSum(const std::string& i_binPackChecksum);
+
+  /* config factorize sql*/
+  std::string config_getValue(const std::string& i_id_profile, const std::string& i_key, unsigned int& o_nrow);
+  void config_setValue(const std::string& i_id_profile, const std::string& i_key, const std::string& i_value);
+  void updateDB_config(); /* conversion of the old file values */
 
   /* trace */
   static void sqlTrace(void*, const char* sql);

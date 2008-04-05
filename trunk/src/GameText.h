@@ -566,7 +566,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_REPLAYS_CLEAN _("Delete replays that X-Moto estimates to be not interesting to keep")
 #define CONTEXTHELP_CHILDREN_COMPLIANT _("Remove levels not suitable for children")
 #define CONTEXTHELP_ROOM_ENABLE _("Enable this room")
-#define CONTEXTHELP_WWW_PASSWORD _("Password associated to your profile for web access.")
+#define CONTEXTHELP_WWW_PASSWORD _("Password associated to your profile for web access")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

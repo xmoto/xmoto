@@ -222,7 +222,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Init/uninit
   ===========================================================================*/  
-  void InputHandler::init(UserConfig *pConfig) {
+void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile) {
     /* Initialize joysticks (if any) */
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
     
@@ -236,7 +236,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     m_pActiveJoystick1 = NULL;
-    loadConfig(pConfig);
+    loadConfig(pConfig, pDb, i_id_profile);
   }
 
   void InputHandler::uninit(void) {
@@ -370,7 +370,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Read configuration
   ===========================================================================*/  
-  void InputHandler::loadConfig(UserConfig *pConfig) {
+void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile) {
     /* Set defaults */
     setDefaultConfig();
   
@@ -385,11 +385,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(ControllerMode1 == "Keyboard") {
       /* We're using the keyboard */
       m_ControllerModeID[0] = CONTROLLER_MODE_KEYBOARD;
-      m_nDriveKey[0] = stringToKey(pConfig->getString("KeyDrive1"));
-      m_nBrakeKey[0] = stringToKey(pConfig->getString("KeyBrake1"));
-      m_nPullBackKey[0] = stringToKey(pConfig->getString("KeyFlipLeft1"));
-      m_nPushForwardKey[0] = stringToKey(pConfig->getString("KeyFlipRight1"));
-      m_nChangeDirKey[0] = stringToKey(pConfig->getString("KeyChangeDir1"));
+      m_nDriveKey[0] = stringToKey(pDb->config_getString(i_id_profile, "KeyDrive1", "Up"));
+      m_nBrakeKey[0] = stringToKey(pDb->config_getString(i_id_profile, "KeyBrake1", "Down"));
+      m_nPullBackKey[0] = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipLeft1", "Left"));
+      m_nPushForwardKey[0] = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipRight1", "Right"));
+      m_nChangeDirKey[0] = stringToKey(pDb->config_getString(i_id_profile, "KeyChangeDir1", "Space"));
     } else {
       /* We're using joystick 1 */
       m_ControllerModeID[0] = CONTROLLER_MODE_JOYSTICK1;      
@@ -427,23 +427,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_ControllerModeID[2] = CONTROLLER_MODE_KEYBOARD;
     m_ControllerModeID[3] = CONTROLLER_MODE_KEYBOARD;
 
-    m_nDriveKey[1]    	 = stringToKey(pConfig->getString("KeyDrive2"));
-    m_nBrakeKey[1]    	 = stringToKey(pConfig->getString("KeyBrake2"));
-    m_nPullBackKey[1] 	 = stringToKey(pConfig->getString("KeyFlipLeft2"));
-    m_nPushForwardKey[1] = stringToKey(pConfig->getString("KeyFlipRight2"));
-    m_nChangeDirKey[1]   = stringToKey(pConfig->getString("KeyChangeDir2"));
+    m_nDriveKey[1]    	 = stringToKey(pDb->config_getString(i_id_profile, "KeyDrive2"    , "A"));
+    m_nBrakeKey[1]    	 = stringToKey(pDb->config_getString(i_id_profile, "KeyBrake2"    , "Q"));
+    m_nPullBackKey[1] 	 = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipLeft2" , "Z"));
+    m_nPushForwardKey[1] = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipRight2", "E"));
+    m_nChangeDirKey[1]   = stringToKey(pDb->config_getString(i_id_profile, "KeyChangeDir2", "W"));
 
-    m_nDriveKey[2]    	 = stringToKey(pConfig->getString("KeyDrive3"));
-    m_nBrakeKey[2]    	 = stringToKey(pConfig->getString("KeyBrake3"));
-    m_nPullBackKey[2] 	 = stringToKey(pConfig->getString("KeyFlipLeft3"));
-    m_nPushForwardKey[2] = stringToKey(pConfig->getString("KeyFlipRight3"));
-    m_nChangeDirKey[2]   = stringToKey(pConfig->getString("KeyChangeDir3"));
+    m_nDriveKey[2]    	 = stringToKey(pDb->config_getString(i_id_profile, "KeyDrive3"    , "R"));
+    m_nBrakeKey[2]    	 = stringToKey(pDb->config_getString(i_id_profile, "KeyBrake3"    , "F"));
+    m_nPullBackKey[2] 	 = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipLeft3" , "T"));
+    m_nPushForwardKey[2] = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipRight3", "Y"));
+    m_nChangeDirKey[2]   = stringToKey(pDb->config_getString(i_id_profile, "KeyChangeDir3", "V"));
 
-    m_nDriveKey[3]    	 = stringToKey(pConfig->getString("KeyDrive4"));
-    m_nBrakeKey[3]    	 = stringToKey(pConfig->getString("KeyBrake4"));
-    m_nPullBackKey[3] 	 = stringToKey(pConfig->getString("KeyFlipLeft4"));
-    m_nPushForwardKey[3] = stringToKey(pConfig->getString("KeyFlipRight4"));
-    m_nChangeDirKey[3]   = stringToKey(pConfig->getString("KeyChangeDir4"));
+    m_nDriveKey[3]    	 = stringToKey(pDb->config_getString(i_id_profile, "KeyDrive4"    , "U"));
+    m_nBrakeKey[3]    	 = stringToKey(pDb->config_getString(i_id_profile, "KeyBrake4"    , "J"));
+    m_nPullBackKey[3] 	 = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipLeft4" , "I"));
+    m_nPushForwardKey[3] = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipRight4", "O"));
+    m_nChangeDirKey[3]   = stringToKey(pDb->config_getString(i_id_profile, "KeyChangeDir4", "K"));
     
     /* All good? */
     bool isUserKeyOk = true;
@@ -664,7 +664,7 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type,int nKe
     return "?";
   }
 
-void InputHandler::saveConfig(UserConfig *pConfig) {
+void InputHandler::saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile) {
   std::string n;
 
   for(unsigned int i=0; i<4; i++) {
@@ -683,11 +683,12 @@ void InputHandler::saveConfig(UserConfig *pConfig) {
       break;
     }
 
-    pConfig->setString("KeyDrive"     + n, keyToString(m_nDriveKey[i]));
-    pConfig->setString("KeyBrake"     + n, keyToString(m_nBrakeKey[i]));
-    pConfig->setString("KeyFlipLeft"  + n, keyToString(m_nPullBackKey[i]));
-    pConfig->setString("KeyFlipRight" + n, keyToString(m_nPushForwardKey[i]));
-    pConfig->setString("KeyChangeDir" + n, keyToString(m_nChangeDirKey[i]));
+
+    pDb->config_setString(i_id_profile, "KeyDrive"     + n, keyToString(m_nDriveKey[i])      );
+    pDb->config_setString(i_id_profile, "KeyBrake"     + n, keyToString(m_nBrakeKey[i])      );
+    pDb->config_setString(i_id_profile, "KeyFlipLeft"  + n, keyToString(m_nPullBackKey[i])   );
+    pDb->config_setString(i_id_profile, "KeyFlipRight" + n, keyToString(m_nPushForwardKey[i]));
+    pDb->config_setString(i_id_profile, "KeyChangeDir" + n, keyToString(m_nChangeDirKey[i])  );
   }
 }
 

@@ -71,7 +71,7 @@ class StateMainMenu : public StateMenu {
   /* multirooms */
   static UIWindow* makeRoomTab(UIWindow* i_parent, unsigned int i_number);
 
-  void updateProfile();
+  void updateProfileStrings();
 
   void updateLevelsPacksList();
   void updateLevelsLists();

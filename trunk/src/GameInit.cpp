@@ -142,10 +142,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
   Logger::setVerbose(XMSession::instance()->isVerbose()); /* apply verbose mode */
 
-#ifdef USE_GETTEXT
-    std::string v_locale = Locales::init(XMSession::instance()->language());
-#endif
-
   Logger::Log("compiled at "__DATE__" "__TIME__);
   if(SwapEndian::bigendien) {
     Logger::Log("Systeme is bigendien");
@@ -155,16 +151,13 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   Logger::Log("User directory: %s", FS::getUserDir().c_str());
   Logger::Log("Data directory: %s", FS::getDataDir().c_str());
 
-#ifdef USE_GETTEXT
-  Logger::Log("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
-#endif
-
   if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos()) {
     v_useGraphics = false;
   }
 
   _InitWin(v_useGraphics);
 
+  /* Init the window */
   if(v_useGraphics) {
     /* init drawLib */
     drawLib = DrawLib::DrawLibFromName(XMSession::instance()->drawlib());
@@ -178,7 +171,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     drawLib->setNoGraphics(v_useGraphics == false);
     drawLib->setDontUseGLExtensions(XMSession::instance()->glExts() == false);
 
-    /* Init! */
     drawLib->init(XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp(), XMSession::instance()->windowed());
     /* drawlib can change the final resolution if it fails, then, reinit session one's */
     XMSession::instance()->setResolutionWidth(drawLib->getDispWidth());
@@ -194,6 +186,23 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     }
   }
 
+  /* database -- require drawlib initialized */
+  /* thus, resolution/bpp/windowed parameters cannot be stored in the db (or some minor modifications are required) */
+  xmDatabase* pDb = xmDatabase::instance("main");
+  pDb->init(DATABASE_FILE,
+	    XMSession::instance()->profile() == "" ? std::string("") : XMSession::instance()->profile(),
+	    FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
+	    v_useGraphics ? this : NULL);
+  if(XMSession::instance()->sqlTrace()) {
+    pDb->setTrace(XMSession::instance()->sqlTrace());
+  }
+  XMSession::instance()->loadProfile(XMSession::instance()->profile(), pDb);
+
+#ifdef USE_GETTEXT
+  std::string v_locale = Locales::init(XMSession::instance()->language());
+  Logger::Log("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
+#endif
+
   /* Init sound system */
   if(v_useGraphics) {
     Sound::init(XMSession::instance());
@@ -208,16 +217,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(v_useGraphics) {
     if(XMSession::instance()->gDebug())
       GameRenderer::instance()->loadDebugInfo(XMSession::instance()->gDebugFile());
-  }
-
-  /* database */
-  xmDatabase* pDb = xmDatabase::instance("main");
-  pDb->init(DATABASE_FILE,
-	    XMSession::instance()->profile() == "" ? std::string("") : XMSession::instance()->profile(),
-	    FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
-	    v_useGraphics ? this : NULL);
-  if(XMSession::instance()->sqlTrace()) {
-    pDb->setTrace(XMSession::instance()->sqlTrace());
   }
 
   /* load theme */
@@ -349,7 +348,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   GameRenderer::instance()->init(drawLib);
   
   /* build handler */
-  InputHandler::instance()->init(&m_Config);
+  InputHandler::instance()->init(&m_Config, pDb, XMSession::instance()->profile());
   Replay::enableCompression(XMSession::instance()->compressReplays());
   
   /* load packs */
@@ -530,8 +529,8 @@ void GameApp::run_unload() {
   SysMessage::destroy();  
 
   if(drawLib != NULL) { /* save config only if drawLib was initialized */
-    XMSession::instance()->save(&m_Config);
-    InputHandler::instance()->saveConfig(&m_Config);
+    XMSession::instance()->save(&m_Config, xmDatabase::instance("main"));
+    InputHandler::instance()->saveConfig(&m_Config, xmDatabase::instance("main"), XMSession::instance()->profile());
     m_Config.saveFile();
   }
 

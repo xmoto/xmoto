@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "UserConfig.h"
 #include "Renderer.h"
 
+class xmDatabase;
+
   /*===========================================================================
   Controller modes
   ===========================================================================*/
@@ -102,12 +104,12 @@ public:
   void dealWithActivedKeys(Universe* i_universe); // apply already pressed keys
   void setMirrored(bool i_value);
 
-  void loadConfig(UserConfig *pConfig);
+  void loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
   void handleInput(Universe* i_universe, InputEventType Type,int nKey,SDLMod mod);      
   std::string waitForKey(void);
   void updateUniverseInput(Universe* i_universe);
-  void init(UserConfig *pConfig);
-  void uninit(void);
+  void init(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
+  void uninit();
       
   void resetScriptKeyHooks(void) {m_nNumScriptKeyHooks = 0;}
   void addScriptKeyHook(MotoGame *pGame,const std::string &KeyName,const std::string &FuncName);
@@ -118,7 +120,7 @@ public:
   static int stringToKey(const std::string &s);
 
   void setDefaultConfig();
-  void saveConfig(UserConfig *pConfig);
+  void saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
   void setDRIVE(int i_player, int i_value);
   int getDRIVE(int i_player) const;
   void setBRAKE(int i_player, int i_value);
