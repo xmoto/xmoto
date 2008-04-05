@@ -886,7 +886,21 @@ UIWindow* StateMainMenu::makeWindowOptions_general(UIWindow* i_parent) {
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_ENGINE_COUNTER);
 
-  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth-40)/2, 33-28-10, GAMETEXT_INITZOOM,
+  v_button = new UIButton(v_window, 5, 93-28-10, GAMETEXT_ENABLECONTEXTHELP, (v_window->getPosition().nWidth-40)/2, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("ENABLECONTEXTHELP");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(50023);
+  v_button->setContextHelp(CONTEXTHELP_SHOWCONTEXTHELP);
+ 
+  v_button = new UIButton(v_window, 5, 123-28-10, GAMETEXT_AUTOSAVEREPLAYS, (v_window->getPosition().nWidth-40)/*/2*/, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("AUTOSAVEREPLAYS");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(50023);
+  v_button->setContextHelp(CONTEXTHELP_AUTOSAVEREPLAYS);
+
+  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 33-28-10, GAMETEXT_INITZOOM,
 			  (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("INITZOOM");
@@ -894,7 +908,7 @@ UIWindow* StateMainMenu::makeWindowOptions_general(UIWindow* i_parent) {
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_INITZOOM);
 
-  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth-40)/2, 63-28-10, GAMETEXT_DEATHANIM,
+  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 63-28-10, GAMETEXT_DEATHANIM,
 			  (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("DEATHANIM");
@@ -902,19 +916,15 @@ UIWindow* StateMainMenu::makeWindowOptions_general(UIWindow* i_parent) {
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_DEATHANIM);
 
-  v_button = new UIButton(v_window, 5, 93-28-10, GAMETEXT_ENABLECONTEXTHELP, v_window->getPosition().nWidth-40, 28);
+  /* Button to enable/disable active zoom */
+  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 93-28-10, GAMETEXT_CAMERAACTIVEZOOM,
+			  (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("ENABLECONTEXTHELP");
+  v_button->setID("CAMERAACTIVEZOOM");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
-  v_button->setContextHelp(CONTEXTHELP_SHOWCONTEXTHELP);
- 
-  v_button = new UIButton(v_window, 5, 123-28-10, GAMETEXT_AUTOSAVEREPLAYS, v_window->getPosition().nWidth-40, 28);
-  v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("AUTOSAVEREPLAYS");
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setGroup(50023);
-  v_button->setContextHelp(CONTEXTHELP_AUTOSAVEREPLAYS);
+  v_button->setContextHelp(CONTEXTHELP_CAMERAACTIVEZOOM);
+
    
   v_list = new UIList(v_window, 5, 120, "", 
 		      v_window->getPosition().nWidth-10, v_window->getPosition().nHeight-125-90);
@@ -2317,6 +2327,8 @@ void StateMainMenu::updateOptions() {
   v_button->setChecked(XMSession::instance()->enableInitZoom());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:DEATHANIM"));
   v_button->setChecked(XMSession::instance()->enableDeadAnimation());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:CAMERAACTIVEZOOM"));
+  v_button->setChecked(XMSession::instance()->enableActiveZoom());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:ENABLECONTEXTHELP"));
   v_button->setChecked(XMSession::instance()->enableContextHelp());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:AUTOSAVEREPLAYS"));
@@ -2457,6 +2469,12 @@ void StateMainMenu::checkEventsOptions() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setEnableDeadAnimation(v_button->getChecked()); 
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:CAMERAACTIVEZOOM"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setEnableActiveZoom(v_button->getChecked()); 
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:ENABLECONTEXTHELP"));
