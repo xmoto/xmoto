@@ -112,7 +112,7 @@ void StateMainMenu::enter()
 
   StateMenu::enter();
 
-  updateProfile();
+  updateProfileStrings();
   updateOptions();
   updateNewLevels(); // check new levels
   updateInfoFrame();
@@ -620,7 +620,7 @@ void StateMainMenu::createGUIIfNeeded() {
   makeWindowStats(v_menu);
 }
 
-void StateMainMenu::updateProfile() {
+void StateMainMenu::updateProfileStrings() {
   UIStatic* v_strTxt;
 
   // profile title
@@ -633,7 +633,7 @@ void StateMainMenu::updateProfile() {
 
   v_strTxt->setCaption(v_caption);
 
-  // www password option
+  // www password static string
   v_strTxt = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:WWW_PASSWORD_STATIC"));
   char buf[256];
   snprintf(buf, 256, GAMETEXT_ACCOUNT_PASSWORD, XMSession::instance()->profile().c_str());
@@ -1830,7 +1830,8 @@ void StateMainMenu::executeOneCommand(std::string cmd)
   UIListEntry *pEntry = NULL;
 
   if(cmd == "UPDATEPROFILE") {
-    updateProfile();
+    updateProfileStrings();
+    updateOptions();
 
     // update packs
     LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
@@ -1867,7 +1868,7 @@ void StateMainMenu::executeOneCommand(std::string cmd)
   }
 
   else if(cmd == "UPDATE_THEMES_LISTS") {
-    updateThemesList();      
+    updateThemesList();
   }
 
   else if(cmd == "UPDATE_ROOMS_LISTS") {
@@ -2699,7 +2700,7 @@ void StateMainMenu::checkEventsOptions() {
 	if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
 	  v_list->getEntries()[v_list->getSelected()];
 	  XMSession::instance()->setIdRoom(i, *((std::string*)v_list->getEntries()[v_list->getSelected()]->pvUser));
-	  updateProfile();
+	  updateProfileStrings();
 	}
       }
 

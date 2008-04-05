@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   XMSession   : current session options
   UserConfig  : config file options
   XMArguments : command line options
+  DB::profiles_configs : config specific to the profile
 
   first, XMSession constructor init session values,
   then, UserConfig are loaded, and finally, XMArguments overwrite session's values if they are defined
@@ -40,6 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class XMArguments;
 class UserConfig;
+class xmDatabase;
 
 enum GraphicsLevel {
   GFX_LOW,
@@ -91,7 +93,9 @@ private:
 public:
   void load(const XMArguments* i_xmargs);
   void load(UserConfig* m_Config);
-  void save(UserConfig* m_Config);
+  void loadProfile(const std::string& i_id_profile, xmDatabase* pDb); /* give the database as argument ; to be use that any developper call it before db is initialized */
+  void save(UserConfig* m_Config, xmDatabase* pDb);
+  void saveProfile(xmDatabase* pDb);
   void setToDefault();
   bool isVerbose() const;
   static void createDefaultConfig(UserConfig* v_config);

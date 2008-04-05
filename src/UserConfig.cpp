@@ -70,7 +70,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    
 	    for(unsigned int i=0;i<m_Vars.size();i++) {
 	      char cBuf[256];
-	      sprintf(cBuf,"\t<var name=\"%s\" value=\"%s\"/>",XML::str2xmlstr(m_Vars[i]->Name).c_str(),XML::str2xmlstr(m_Vars[i]->Value).c_str());
+	      sprintf(cBuf,"\t<var name=%-25s value=%s />",
+		      ("\"" + XML::str2xmlstr(m_Vars[i]->Name)  + "\"").c_str(),
+		      ("\"" + XML::str2xmlstr(m_Vars[i]->Value) + "\"").c_str());
 	      FS::writeLine(pfh,cBuf);
 	    }
 	  

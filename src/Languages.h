@@ -35,7 +35,7 @@ char* LANGUAGES[NB_LANGUAGES][2] = {
   {"Suomi",      "fi_FI"},
   {"Français",   "fr_FR"},
   {"Italiano",   "it_IT"},
-  {"LatvieÅ¡u",  "lv_LV"},
+  {"Latviešu",   "lv_LV"},
   {"Norsk",      "nb_NO"},
   {"Norsk",      "nn_NO"},
   {"Norsk",      "no_NO"},
