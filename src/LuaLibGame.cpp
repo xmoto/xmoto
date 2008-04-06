@@ -285,10 +285,10 @@ std::string LuaLibGame::getErrorMsg() {
   ===========================================================================*/
 int LuaLibGame::L_Game_Log(lua_State *pL) {
   /* no event for this */
-  
+
   std::string Out;
 
-  for(int i=0; i<lua_gettop(pL); i++)
+  for(int i=0; i<args_numberOfArguments(pL); i++)
     Out.append(luaL_checkstring(pL, i+1));
 
   Logger::Log((char *)Out.c_str());
@@ -297,6 +297,8 @@ int LuaLibGame::L_Game_Log(lua_State *pL) {
 }
   
 int LuaLibGame::L_Game_ClearMessages(lua_State *pL) {
+  args_CheckNumberOfArguments(pL, 0);
+
   /* event for this */
   m_exec_world->createGameEvent(new MGE_ClearMessages(m_exec_world->getTime()));
   return 0;
@@ -327,6 +329,8 @@ int LuaLibGame::L_Game_HideArrow(lua_State *pL) {
 }
   
 int LuaLibGame::L_Game_GetTime(lua_State *pL) {
+  args_CheckNumberOfArguments(pL, 0);
+
   /* no event for this */
 
   /* Get current game time */
@@ -780,4 +784,22 @@ int LuaLibGame::L_Game_PlayMusic(lua_State *pL) {
 int LuaLibGame::L_Game_StopMusic(lua_State *pL) {
   m_exec_world->createGameEvent(new MGE_StopMusic(m_exec_world->getTime()));
   return 0;
+}
+
+int LuaLibGame::args_numberOfArguments(lua_State *pL) {
+  return lua_gettop(pL);
+}
+
+void LuaLibGame::args_CheckNumberOfArguments(lua_State *pL, int i_from, int i_to) {
+  int n = args_numberOfArguments(pL);
+
+  if(i_to == -1) {
+    if(n != i_from) {
+      throw Exception("Invalid number of arguments");
+    }
+  } else {
+    if(n < i_from || n > i_to) {
+      throw Exception("Invalid number of arguments");
+    }
+  }
 }

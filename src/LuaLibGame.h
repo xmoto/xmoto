@@ -80,7 +80,7 @@ private:
 
   static InputHandler* m_exec_activeInputHandler;
   static MotoGame*     m_exec_world;
-  static luaL_reg            m_gameFuncs[];
+  static luaL_reg      m_gameFuncs[];
 
   /*
     static lua lib calls are share between the lulibgame instances
@@ -140,6 +140,13 @@ private:
   static int L_Game_PlaySound(lua_State *pL);
   static int L_Game_PlayMusic(lua_State *pL);
   static int L_Game_StopMusic(lua_State *pL);
+
+  /* get the number of arguments */
+  static int args_numberOfArguments(lua_State *pL);
+
+  /* arguments checks ; throw exception on failure */
+  static void args_CheckNumberOfArguments(lua_State *pL, int i_from, int i_to = -1);
+
 };
 
 
