@@ -1173,25 +1173,11 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(UIWindow* i_parent) {
   UIButton* v_button;
   DrawLib*  drawlib = GameApp::instance()->getDrawLib();
 
-  v_wwwwindow = new UIWindow(i_parent, 0, 26, GAMETEXT_WWWTAB, i_parent->getPosition().nWidth, i_parent->getPosition().nHeight);
+  v_wwwwindow = new UIWindow(i_parent, 0, 26, GAMETEXT_WWWTAB, i_parent->getPosition().nWidth, i_parent->getPosition().nHeight-20);
   v_wwwwindow->setID("WWW_TAB");
   v_wwwwindow->showWindow(false);
 
-  v_button = new UIButton(v_wwwwindow, v_wwwwindow->getPosition().nWidth-225, v_wwwwindow->getPosition().nHeight-80,
-			  GAMETEXT_PROXYCONFIG, 207, 57);
-  v_button->setType(UI_BUTTON_TYPE_LARGE);
-  v_button->setID("PROXYCONFIG");
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setContextHelp(CONTEXTHELP_PROXYCONFIG);
-
-  v_button = new UIButton(v_wwwwindow, v_wwwwindow->getPosition().nWidth-225-200, v_wwwwindow->getPosition().nHeight-80,
-			  GAMETEXT_UPDATEHIGHSCORES, 207, 57);
-  v_button->setType(UI_BUTTON_TYPE_LARGE);
-  v_button->setID("UPDATEHIGHSCORES");
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setContextHelp(CONTEXTHELP_UPDATEHIGHSCORES);
-
-  UITabView *v_roomsTabs = new UITabView(v_wwwwindow, 0, 0, "", v_wwwwindow->getPosition().nWidth, v_wwwwindow->getPosition().nHeight-76);
+  UITabView *v_roomsTabs = new UITabView(v_wwwwindow, 0, 0, "", v_wwwwindow->getPosition().nWidth, v_wwwwindow->getPosition().nHeight);
   v_roomsTabs->setID("TABS");
   v_roomsTabs->setFont(drawlib->getFontSmall());
   v_roomsTabs->setTabContextHelp(0, CONTEXTHELP_WWW_MAIN_TAB);
@@ -1250,6 +1236,21 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_button->setGroup(50123);
   v_button->setContextHelp(CONTEXTHELP_USECRAPPYINFORMATION);
 
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth-225, v_window->getPosition().nHeight -57 - 20 -20,
+			  GAMETEXT_PROXYCONFIG, 207, 57);
+  v_button->setType(UI_BUTTON_TYPE_LARGE);
+  v_button->setID("PROXYCONFIG");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_PROXYCONFIG);
+
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth-225-200, v_window->getPosition().nHeight -57 - 20 -20,
+			  GAMETEXT_UPDATEHIGHSCORES, 207, 57);
+  v_button->setType(UI_BUTTON_TYPE_LARGE);
+  v_button->setID("UPDATEHIGHSCORES");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_UPDATEHIGHSCORES);
+
+
   for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
     v_window = makeRoomTab(v_roomsTabs, i);
   }
@@ -1276,7 +1277,7 @@ UIWindow* StateMainMenu::makeRoomTab(UIWindow* i_parent, unsigned int i_number) 
   }
 
   v_window = new UIWindow(i_parent, 4, 25, v_roomTitle,
-			  i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
+			  i_parent->getPosition().nWidth-20, i_parent->getPosition().nHeight - 15);
   v_window->setID("ROOMS_TAB_" + v_strRoom.str());
   v_window->showWindow(false);
 
@@ -1288,19 +1289,19 @@ UIWindow* StateMainMenu::makeRoomTab(UIWindow* i_parent, unsigned int i_number) 
     v_button->setContextHelp(CONTEXTHELP_ROOM_ENABLE);
   }
 
-  v_list = new UIList(v_window, 21, 33, "", v_window->getPosition().nWidth-200, v_window->getPosition().nHeight-30-20 - 85);
+  v_list = new UIList(v_window, 20, 25, "", v_window->getPosition().nWidth-215 - 20 - 20, v_window->getPosition().nHeight - 20 - 50);
   v_list->setID("ROOMS_LIST");
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_ROOM, v_list->getPosition().nWidth);
   v_list->setContextHelp(CONTEXTHELP_WWW_ROOMS_LIST);
 
-  v_button = new UIButton(v_window, v_window->getPosition().nWidth/2 - 212, v_window->getPosition().nHeight - 90, GAMETEXT_UPDATEROOMSSLIST, 215, 57);
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth - 215, 25 + 57*0, GAMETEXT_UPDATEROOMSSLIST, 215, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
   v_button->setID("UPDATE_ROOMS_LIST");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_UPDATEROOMSLIST);
 
-  v_button = new UIButton(v_window, v_window->getPosition().nWidth/2 + 5, v_window->getPosition().nHeight - 90, GAMETEXT_UPLOAD_ALL_HIGHSCORES, 215, 57);
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth - 215, 25 + 57*1, GAMETEXT_UPLOAD_ALL_HIGHSCORES, 215, 57);
   v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_LARGE);
   v_button->setID("UPLOADHIGHSCOREALL_BUTTON");
@@ -2658,13 +2659,13 @@ void StateMainMenu::checkEventsOptions() {
   }
 
   // www
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:PROXYCONFIG"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:PROXYCONFIG"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     StateManager::instance()->pushState(new StateEditWebConfig());
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:UPDATEHIGHSCORES"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:UPDATEHIGHSCORES"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     StateManager::instance()->pushState(new StateCheckWww(true));
@@ -2872,10 +2873,10 @@ void StateMainMenu::updateWWWOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP"));
   v_button->enableWindow(XMSession::instance()->www());
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:PROXYCONFIG"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:PROXYCONFIG"));
   v_button->enableWindow(XMSession::instance()->www());
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:UPDATEHIGHSCORES"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:UPDATEHIGHSCORES"));
   v_button->enableWindow(XMSession::instance()->www());
 
   v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:WWW_PASSWORD_STATIC"));

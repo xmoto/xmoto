@@ -42,8 +42,8 @@ class CheckWwwThread : public XMThread, public WWWAppInterface {
   static bool isNeeded(); // return false if it's not necessary to run it
 
 private:
-  void updateWebHighscores(unsigned int i_number);
-  void upgradeWebHighscores(unsigned int i_number);
+  void updateWebHighscores(const std::string& i_id_room);
+  void upgradeWebHighscores(const std::string& i_id_room);
   void updateWebLevels();
 
   std::string m_msg;

@@ -41,10 +41,14 @@ UploadAllHighscoresThread::~UploadAllHighscoresThread()
 
 int UploadAllHighscoresThread::realThreadFunction()
 {
+  std::string webRoomId;
+
   setThreadProgress(0);
 
+  webRoomId = XMSession::instance()->idRoom(m_number);
+
   /* 1 is the main room ; don't allow full upload on it */
-  if(XMSession::instance()->idRoom(m_number) == "1") {
+  if(webRoomId == "1") {
     return 0;
   }
 
@@ -57,8 +61,8 @@ int UploadAllHighscoresThread::realThreadFunction()
     std::string    webRoomName    = GameApp::instance()->getWebRoomName(m_number, m_pDb);
 
     v_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);
-    v_pWebRoom->update(m_number);
-    v_pWebRoom->upgrade(m_number, m_pDb);
+    v_pWebRoom->update(webRoomId);
+    v_pWebRoom->upgrade(webRoomId, m_pDb);
     delete v_pWebRoom;
   } catch (Exception& e) {
     Logger::Log("** Warning ** : Failed to analyse web-highscores file");   
