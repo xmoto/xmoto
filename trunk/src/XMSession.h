@@ -21,13 +21,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XMCONF_H__
 #define __XMCONF_H__
 
+enum GraphicsLevel {
+  GFX_LOW,
+  GFX_MEDIUM,
+  GFX_HIGH
+};
+#include "XMSession_default.h"
+
 #include <string>
 #include "helpers/Singleton.h"
-
-#define THEME_DEFAULT_THEMENAME "Classic"
-#define DEFAULT_WEBROOM_ID      "1"
-#define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
-#define ROOMS_NB_MAX 4
 
 /*
   XMSession   : current session options
@@ -42,12 +44,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class XMArguments;
 class UserConfig;
 class xmDatabase;
-
-enum GraphicsLevel {
-  GFX_LOW,
-  GFX_MEDIUM,
-  GFX_HIGH
-};
 
 class ProxySettings {
  public:
@@ -176,8 +172,6 @@ public:
   int multiNbPlayers() const;
   void setMultiScenes(bool i_value);
   bool multiScenes() const;
-  void setMultiEnableStopWheNoneFinishes(bool i_value);
-  bool multiEnableStopWheNoneFinishes() const;
   void setEnableContextHelp(bool i_value);
   bool enableContextHelp() const;
   void setTheme(const std::string& i_value);
@@ -286,7 +280,6 @@ public:
   int m_quickStartDifficultyMAX;
   int m_multiNbPlayers;
   bool m_multiScenes;
-  bool m_multiEnableStopWheNoneFinishes;
   bool m_enableContextHelp;
   std::string m_theme;
   bool m_enableAudio;

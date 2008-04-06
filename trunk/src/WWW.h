@@ -158,8 +158,8 @@ class WebRoom {
   WebRoom(WWWAppInterface* p_WebRoomApp);
   ~WebRoom();
 
-  void update(unsigned int i_number); /* throws exceptions */
-  void upgrade(unsigned int i_number, xmDatabase* i_db); /* throws exceptions */
+  void update(const std::string& i_id_room); /* throws exceptions */
+  void upgrade(const std::string& i_id_room, xmDatabase* i_db); /* throws exceptions */
 
   /* return NULL if no data found */
   void setWebsiteInfos(const std::string& i_id_room,

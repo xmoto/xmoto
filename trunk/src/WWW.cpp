@@ -70,30 +70,26 @@ void WebRoom::setWebsiteInfos(const std::string& i_id_room,
   m_proxy_settings    = pProxySettings;
 }
 
-void WebRoom::update(unsigned int i_number)
+/* use the id of the room so that if several people share the same room, it doesn't need to recheck if md5 is ok */
+void WebRoom::update(const std::string& i_id_room)
 {
   /* download xml file */
   f_curl_download_data v_data;
-  std::ostringstream v_strRoom;
-  v_strRoom << i_number;
 
   v_data.v_WebApp               = m_WebRoomApp;
   v_data.v_nb_files_performed   = 0;
   v_data.v_nb_files_to_download = 1;
 
-  FSWeb::downloadFileBz2UsingMd5(m_userFilename_prefix + v_strRoom.str() + ".xml",
+  FSWeb::downloadFileBz2UsingMd5(m_userFilename_prefix + i_id_room + ".xml",
 				 m_webhighscores_url,
 				 FSWeb::f_curl_progress_callback_download,
 				 &v_data,
 				 m_proxy_settings);
 }
 
-void WebRoom::upgrade(unsigned int i_number, xmDatabase *i_db)
+void WebRoom::upgrade(const std::string& i_id_room, xmDatabase *i_db)
 {
-  std::ostringstream v_strRoom;
-  v_strRoom << i_number;
-
-  i_db->webhighscores_updateDB(m_userFilename_prefix + v_strRoom.str() + ".xml", m_webhighscores_url);
+  i_db->webhighscores_updateDB(m_userFilename_prefix + i_id_room + ".xml", m_webhighscores_url);
 }
 
 size_t FSWeb::writeData(void *ptr, size_t size, size_t nmemb, FILE *stream)

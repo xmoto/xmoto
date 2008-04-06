@@ -508,7 +508,7 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(unsigned int i_number, st
       Theme::instance()->load(xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme()));
     } catch(Exception &e) {
       /* unable to load the theme, load the default one */
-      Theme::instance()->load(xmDatabase::instance("main")->themes_getFileName(THEME_DEFAULT_THEMENAME));
+      Theme::instance()->load(xmDatabase::instance("main")->themes_getFileName(DEFAULT_THEMENAME));
     }
   }
 
