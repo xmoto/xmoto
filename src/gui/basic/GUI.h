@@ -780,7 +780,7 @@ enum UIRootKeyEvent {
   
 struct UIRootActCandidate {
   UIWindow *pWindow;
-  int x,y;
+  int x,y,nWidth,nHeight;
 };
   
 class UIRoot : public UIWindow {
