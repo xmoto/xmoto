@@ -994,8 +994,10 @@ UIRoot::UIRoot()
   
     /* Find all windows which accepts activations, and list them in a nice structure */
     if(!pWindow->isDisabled() && pWindow->offerActivation()) {
-      pMap[nNum].x = pWindow->getAbsPosX() + pWindow->getPosition().nWidth / 2;
-      pMap[nNum].y = pWindow->getAbsPosY() + pWindow->getPosition().nHeight / 2;
+      pMap[nNum].x = pWindow->getAbsPosX(); 
+      pMap[nNum].nWidth= pWindow->getPosition().nWidth;
+      pMap[nNum].y = pWindow->getAbsPosY();
+      pMap[nNum].nHeight = pWindow->getPosition().nHeight;
       pMap[nNum].pWindow = pWindow;
       nNum++;
     }
@@ -1042,25 +1044,94 @@ void UIRoot::_ActivateByVector(int dx, int dy) {
       int nBest          = -1;
       int nCurrentRating = -1;
       unsigned int uActive = nActive;
+	  int ax = Map[uActive].x + Map[uActive].nWidth / 2;
+      int ay = Map[uActive].y + Map[uActive].nHeight / 2;
+
       for(unsigned int i=0; i<nNum; i++) {
 	if(i != uActive) {
+        /* QUICFIX to avoid quickstart button */
+        if(Map[i].x==784 && Map[i].y==558){
+            continue;
+        }
 	  /* Calculate rating */
-	  int vx = Map[i].x - Map[uActive].x;
-	  int vy = Map[i].y - Map[uActive].y;
-	  int nRating = 0;
+      int vx = Map[i].x - ax;
+	  int vy = Map[i].y - ay;
+	  int vx2 = Map[i].x + Map[i].nWidth  - ax;
+	  int vy2 = Map[i].y + Map[i].nHeight - ay;
+
+      /* Avoid crazy candidates */
+      int mx= (vx+vx2)/2;
+      int my= (vy+vy2)/2;
+      if( (dx>0 && mx<=0) || (dx<0 && mx>=0) || (dy>0 && my<=0) || (dy<0 && my>=0) ){
+          continue;
+      }
+      
+      vx = Map[i].x - ax;
+	  vy = Map[i].y - ay;
+	  vx2 = Map[i].x + Map[i].nWidth  - ax;
+	  vy2 = Map[i].y + Map[i].nHeight - ay;
+
+      int nRating = 0;
 	  float xx1 = vx, yy1 = vy;
-	  float fDist = sqrt(xx1*xx1 + yy1*yy1);
-	  if(fDist == 0.0f) continue;
-	  xx1 /= fDist; yy1 /= fDist;
-	  float xx2 = dx, yy2 = dy;
+      /* Here we compute the distance between the active button
+       * and the button #i 
+       * It is complicated because we calculate a distance between
+       * a vertice and a rectangle
+       */
+      float fDist = 0.0f;
+      /* Distance with corners */
+      if(vx>0 && vy>0){
+        fDist = sqrt( vx*vx + vy*vy );      
+      }
+      else if(vx>0 && vy2<0){
+        fDist = sqrt( vx*vx + vy2*vy2 );
+        yy1 = vy2;
+      }
+      else if(vx2<0 && vy>0){
+          fDist = sqrt( vx2*vx2 + vy*vy );
+          xx1 = vx2;
+      }
+      else if(vx2<0 && vy2<0) {
+          fDist = sqrt( vx2*vx2 + vy2*vy2 );
+          xx1 = vx2;
+          yy1= vy2;
+      }
+      /* Distance with edges */
+      else if(vx<=0 && vx2>=0 && vy >= 0){
+        fDist=vy;
+        xx1 = 0;
+        yy1 = vy;
+      }
+      else if(vx<=0 && vx2>=0 && vy2 <= 0){
+        fDist= -vy2;
+        xx1 = 0;
+        yy1 = vy2;
+      }
+      else if(vy<=0 && vy2>=0 && vx >= 0){
+          fDist=vx;
+          xx1 = vx;
+          yy1 = 0;
+      }
+      else if(vy<=0 && vy2>=0 && vx2 <= 0){
+        fDist = -vx2;
+        xx1 = vx2;
+        yy1 = 0;
+      }
+   
+	  if(fDist == 0.0f){
+          continue;
+      }
+      
+      xx1 /= fDist; yy1 /= fDist;
+      float xx2 = dx, yy2 = dy;
+      float fAngle = (acos(xx1*xx2 + yy1*yy2) / 3.14159f) * 180.0f;
            
-	  float fAngle = (acos(xx1*xx2 + yy1*yy2) / 3.14159f) * 180.0f;
-	  if((vx<0 && dx<0) || (vx>0 && dx>0) || (vy<0 && dy<0) || (vy>0 && dy>0)) {
-	    if(fAngle < 45.0f) {
-	      nRating = 1500 - (int)(fAngle + fDist*2) + 1000;
+	  if((vx<=0 && dx<0) || (vx>=0 && dx>0) || (vy<=0 && dy<0) || (vy>=0 && dy>0)) {
+	    if(fAngle < 40.0f) {
+	      nRating = 1500 - (int)(3*fAngle + fDist*2) + 1000;
 	    }
 	    else {
-	      nRating = 1500 - (int)(fAngle + fDist*2) + 500;
+	      nRating = 1500 - (int)(3*fAngle + fDist*2) + 500;
 	    }
 	  } 
 	  else {
@@ -1073,7 +1144,6 @@ void UIRoot::_ActivateByVector(int dx, int dy) {
 	  if(nRating > 0 && nRating > nCurrentRating) {
 	    nCurrentRating = nRating;
 	    nBest = i;
-	    //printf("best is %i (rating=%i)\n", nBest, nRating);
 	  }
 	}
       }
