@@ -144,6 +144,9 @@ public:
   void webLoadDataFirstTime();
 
   /* configuration */
+	/* if you save several values, use begin and end to make it faster */
+	void config_setValue_begin();
+	void config_setValue_end();
   std::string config_getString(const std::string& i_id_profile, const std::string& i_key,  const std::string& i_default);
   bool        config_getBool(const std::string& i_id_profile, const std::string& i_key,    bool i_default);
   int         config_getInteger(const std::string& i_id_profile, const std::string& i_key, int i_default);
@@ -186,6 +189,7 @@ public:
   /* config factorize sql*/
   std::string config_getValue(const std::string& i_id_profile, const std::string& i_key, unsigned int& o_nrow);
   void config_setValue(const std::string& i_id_profile, const std::string& i_key, const std::string& i_value);
+
   void updateDB_config(); /* conversion of the old file values */
 
   /* trace */

@@ -58,6 +58,14 @@ void xmDatabase::config_setValue(const std::string& i_id_profile, const std::str
   }
 }
 
+void xmDatabase::config_setValue_begin() {
+	simpleSql("BEGIN TRANSACTION;");
+}
+
+void xmDatabase::config_setValue_end() {
+	simpleSql("COMMIT;");
+}
+
 std::string xmDatabase::config_getString(const std::string& i_id_profile, const std::string& i_key, const std::string& i_default) {
   std::string v_res;
   unsigned int nrow;
@@ -214,9 +222,9 @@ void xmDatabase::updateDB_config() {
 	     Name == "ProxyPort"                      ||
 	     Name == "WebHighscoresNbRooms"           ||
 	     Name == "WebHighscoresIdRoom"            ||
+	     Name == "WebHighscoresIdRoom1"           ||
 	     Name == "WebHighscoresIdRoom2"           ||
-	     Name == "WebHighscoresIdRoom3"           ||
-	     Name == "WebHighscoresIdRoom4"
+	     Name == "WebHighscoresIdRoom3"
 	     ) {
 	    v_result = readDB("SELECT id_profile FROM stats_profiles;", nrow);
 	    for(unsigned int i=0; i<nrow; i++) {
@@ -288,9 +296,9 @@ void xmDatabase::updateDB_config() {
 			Name == "MenuGraphics"         ||
 			Name == "GameGraphics"         ||
 			Name == "WebHighscoresIdRoom"  ||
+			Name == "WebHighscoresIdRoom1" ||
 			Name == "WebHighscoresIdRoom2" ||
-			Name == "WebHighscoresIdRoom3" ||
-			Name == "WebHighscoresIdRoom4"
+			Name == "WebHighscoresIdRoom3"
 			) {
 		config_setString(v_id_profile, Name, Value);
 
