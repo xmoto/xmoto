@@ -87,6 +87,7 @@ void StateEditProfile::checkEvents() {
 
       /* save previous profile before loading the previous one */
       XMSession::instance()->saveProfile(xmDatabase::instance("main"));
+			InputHandler::instance()->saveConfig(GameApp::instance()->getUserConfig(), xmDatabase::instance("main"), XMSession::instance()->profile());
 
       XMSession::instance()->setProfile(pEntry->Text[0]);
       // set children compliant

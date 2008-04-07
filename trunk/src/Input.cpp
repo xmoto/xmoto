@@ -667,6 +667,8 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type,int nKe
 void InputHandler::saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile) {
   std::string n;
 
+	pDb->config_setValue_begin();
+
   for(unsigned int i=0; i<4; i++) {
     switch(i) {
     case 0:
@@ -690,6 +692,8 @@ void InputHandler::saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     pDb->config_setString(i_id_profile, "KeyFlipRight" + n, keyToString(m_nPushForwardKey[i]));
     pDb->config_setString(i_id_profile, "KeyChangeDir" + n, keyToString(m_nChangeDirKey[i])  );
   }
+
+	pDb->config_setValue_end();
 }
 
 void InputHandler::setDRIVE(int i_player, int i_value) {
