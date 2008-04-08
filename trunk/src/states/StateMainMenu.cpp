@@ -573,6 +573,7 @@ void StateMainMenu::createGUIIfNeeded() {
 					);
   v_quickStart->setFont(drawlib->getFontSmall());
   v_quickStart->setID("QUICKSTART");
+  v_quickStart->setCanGetFocus(false);
 
   /* profile button */
   v_someText = new UIStatic(v_menu, 200, m_sGUI->getPosition().nHeight*2/15, "", m_sGUI->getPosition().nWidth-200-120,50);
@@ -599,6 +600,7 @@ void StateMainMenu::createGUIIfNeeded() {
 				    GAMETEXT_NEWLEVELS_AVAIBLE, 200, 200);
   v_buttonDrawn->setFont(drawlib->getFontSmall());      
   v_buttonDrawn->setID("NEWLEVELAVAILBLE");
+  v_buttonDrawn->setCanGetFocus(false);
 
   // info frame
   UIWindow* v_infoFrame = new UIWindow(v_menu, 0, m_sGUI->getPosition().nHeight/2 + (5*57)/2, "", 220, 100);
@@ -840,6 +842,7 @@ UIWindow* StateMainMenu::makeWindowReplays(UIWindow* i_parent) {
   v_button->setID("REPLAYS_CLEAN_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_REPLAYS_CLEAN);
   v_button->showWindow(false);
+  v_button->setCanGetFocus(false);
 
   /* filter */
   v_button = new UIButton(v_window, v_window->getPosition().nWidth-105, v_window->getPosition().nHeight-68,
@@ -854,10 +857,10 @@ UIWindow* StateMainMenu::makeWindowReplays(UIWindow* i_parent) {
   v_list = new UIList(v_window, 20, 65, "", v_window->getPosition().nWidth-40, v_window->getPosition().nHeight-115-25);
   v_list->setID("REPLAYS_LIST");
   v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_REPLAY, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_REPLAYCOL);
-  v_list->addColumn(GAMETEXT_LEVEL,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_REPLAYLEVELCOL);
+  v_list->addColumn(GAMETEXT_REPLAY, v_list->getPosition().nWidth - 100, CONTEXTHELP_REPLAYCOL);
+  v_list->addColumn(GAMETEXT_LEVEL,  v_list->getPosition().nWidth - 28,  CONTEXTHELP_REPLAYLEVELCOL);
   v_list->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
-  v_list->setEnterButton(v_showButton);
+  //v_list->setEnterButton(v_showButton);
 
   return v_window;
 }
@@ -1638,6 +1641,7 @@ UILevelList* StateMainMenu::buildQuickStartList() {
   v_list = new UILevelList(m_GUI, 0, 0, "", 0, 0);     
   v_list->setID("QUICKSTART_LIST");
   v_list->showWindow(false);
+  v_list->setCanGetFocus(false);
   
   createLevelListsSql(v_list,
 		      LevelsManager::getQuickStartPackQuery(v_quickStart->getQualityMIN(),

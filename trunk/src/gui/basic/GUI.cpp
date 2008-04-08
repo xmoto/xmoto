@@ -989,11 +989,12 @@ UIRoot::UIRoot()
   ===========================================================================*/
   unsigned int UIRoot::_UpdateActivationMap(UIWindow *pWindow, UIRootActCandidate *pMap,
 					    unsigned int nNum, unsigned int nMax) {
-    if(nNum >= nMax)
+    if(nNum >= nMax){
       return nNum;
+    }
   
     /* Find all windows which accepts activations, and list them in a nice structure */
-    if(!pWindow->isDisabled() && pWindow->offerActivation()) {
+    if(!pWindow->isDisabled() && pWindow->offerActivation() && pWindow->canGetFocus()) {
       pMap[nNum].x = pWindow->getAbsPosX(); 
       pMap[nNum].nWidth= pWindow->getPosition().nWidth;
       pMap[nNum].y = pWindow->getAbsPosY();
@@ -1004,8 +1005,9 @@ UIRoot::UIRoot()
     
     /* Recurse */
     for(unsigned int i=0;i<pWindow->getChildren().size();i++) {
-      if(!pWindow->isHidden() && !pWindow->isDisabled())
+      if(!pWindow->isHidden() && !pWindow->isDisabled()){
         nNum = _UpdateActivationMap(pWindow->getChildren()[i],pMap,nNum,nMax);
+      }
     }
     
     /* Return number of candidates */
@@ -1013,9 +1015,11 @@ UIRoot::UIRoot()
   }
 
   int UIRoot::_GetActiveIdx(UIRootActCandidate *pMap, unsigned int nNum) {
-    for(unsigned int i=0; i<nNum; i++)
-      if(pMap[i].pWindow->isActive())
+    for(unsigned int i=0; i<nNum; i++){
+      if(pMap[i].pWindow->isActive()){
         return i;
+      }
+    }
     return -1;
   }
 
@@ -1042,17 +1046,16 @@ void UIRoot::_ActivateByVector(int dx, int dy) {
       /* Okay, determine where to go from here */
       /* Calculate a "best estimate" rating for each candidate, and select the best */
       int nBest          = -1;
-      int nCurrentRating = -1;
+	  int hBest    = -1;
+      int vBest    = -1;
+	  int hCurrent = -1;
+      int vCurrent = -1;
       unsigned int uActive = nActive;
 	  int ax = Map[uActive].x + Map[uActive].nWidth / 2;
       int ay = Map[uActive].y + Map[uActive].nHeight / 2;
 
       for(unsigned int i=0; i<nNum; i++) {
 	if(i != uActive) {
-        /* QUICFIX to avoid quickstart button */
-        if(Map[i].x==784 && Map[i].y==558){
-            continue;
-        }
 	  /* Calculate rating */
       int vx = Map[i].x - ax;
 	  int vy = Map[i].y - ay;
@@ -1071,79 +1074,60 @@ void UIRoot::_ActivateByVector(int dx, int dy) {
 	  vx2 = Map[i].x + Map[i].nWidth  - ax;
 	  vy2 = Map[i].y + Map[i].nHeight - ay;
 
-      int nRating = 0;
-	  float xx1 = vx, yy1 = vy;
-      /* Here we compute the distance between the active button
-       * and the button #i 
-       * It is complicated because we calculate a distance between
-       * a vertice and a rectangle
-       */
-      float fDist = 0.0f;
+      
+      
+      int xx1 = vx, yy1 = vy;
       /* Distance with corners */
-      if(vx>0 && vy>0){
-        fDist = sqrt( vx*vx + vy*vy );      
-      }
-      else if(vx>0 && vy2<0){
-        fDist = sqrt( vx*vx + vy2*vy2 );
+      if(vx>0 && vy2<0){
         yy1 = vy2;
       }
       else if(vx2<0 && vy>0){
-          fDist = sqrt( vx2*vx2 + vy*vy );
           xx1 = vx2;
       }
       else if(vx2<0 && vy2<0) {
-          fDist = sqrt( vx2*vx2 + vy2*vy2 );
           xx1 = vx2;
           yy1= vy2;
       }
       /* Distance with edges */
       else if(vx<=0 && vx2>=0 && vy >= 0){
-        fDist=vy;
         xx1 = 0;
         yy1 = vy;
       }
       else if(vx<=0 && vx2>=0 && vy2 <= 0){
-        fDist= -vy2;
         xx1 = 0;
         yy1 = vy2;
       }
       else if(vy<=0 && vy2>=0 && vx >= 0){
-          fDist=vx;
-          xx1 = vx;
-          yy1 = 0;
+        xx1 = vx;
+        yy1 = 0;
       }
       else if(vy<=0 && vy2>=0 && vx2 <= 0){
-        fDist = -vx2;
         xx1 = vx2;
         yy1 = 0;
       }
-   
-	  if(fDist == 0.0f){
-          continue;
+
+      if(dx != 0 && dy == 0){
+          if(xx1 != 0){
+            hCurrent = abs(xx1);
+            vCurrent = abs(yy1);
+          }
       }
-      
-      xx1 /= fDist; yy1 /= fDist;
-      float xx2 = dx, yy2 = dy;
-      float fAngle = (acos(xx1*xx2 + yy1*yy2) / 3.14159f) * 180.0f;
-           
-	  if((vx<=0 && dx<0) || (vx>=0 && dx>0) || (vy<=0 && dy<0) || (vy>=0 && dy>0)) {
-	    if(fAngle < 40.0f) {
-	      nRating = 1500 - (int)(3*fAngle + fDist*2) + 1000;
-	    }
-	    else {
-	      nRating = 1500 - (int)(3*fAngle + fDist*2) + 500;
-	    }
-	  } 
-	  else {
-	    // No rating in there, the button is not oriented
-	    // with a single good direction
-	    nRating=0;
-	  }
+
+      if(dx == 0 && dy != 0){
+          if(yy1 != 0){
+            hCurrent = abs(yy1);
+            vCurrent = abs(xx1);
+          }
+      }
+
             
 	  /* Good? */
-	  if(nRating > 0 && nRating > nCurrentRating) {
-	    nCurrentRating = nRating;
-	    nBest = i;
+	  if( (vCurrent<=vBest && vBest>=0) || vBest < 0 ) {
+	    if( (vCurrent < vBest) || (hCurrent < hBest) || vBest <0 ) {
+            vBest = vCurrent;
+            hBest = hCurrent;
+            nBest = i;
+        }
 	  }
 	}
       }

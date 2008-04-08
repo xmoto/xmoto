@@ -144,10 +144,14 @@ protected:
     m_bActiveMsgBox = false;
     setPrimaryChild(NULL);
     setOpacity(100);
+    m_canGetFocus = true;
   }
       
 public:
-  UIWindow() {m_curFont = NULL;}
+  UIWindow() {
+      m_curFont = NULL;
+      m_canGetFocus = true;
+  }
   UIWindow(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0) {
     initW(pParent,x,y,Caption,nWidth,nHeight);
   }
@@ -224,6 +228,8 @@ public:
   bool isBranchHidden(void);
   bool isDisabled(void); // recursive to parents
   bool isVisible(); // recursive to parents
+  bool canGetFocus(void) {return m_canGetFocus;}
+  void setCanGetFocus(bool b) {m_canGetFocus = b;}
   void showWindow(bool b);      
   void enableWindow(bool b) {m_bDisable=!b;}
   bool isActive(void);
@@ -267,6 +273,7 @@ private:
   bool m_bActive;                           /* Only one window should be active at a time */
   int m_nGroup;                             /* In window group */    
   bool m_bActiveMsgBox;                     /* Message box active */
+  bool m_canGetFocus;                       /* UI element can be focused with keyboard */
 };  
 
 /*===========================================================================
