@@ -71,7 +71,7 @@ helpers_SOURCES = helpers/VMath.h             \
 
 common_SOURCES = Image.cpp \
   VBezier.cpp PolyDraw.h PolyDraw.cpp \
-  XMArgs.h XMArgs.cpp XMSession_default.h XMSession.h XMSession.cpp \
+  XMArgs.h XMArgs.cpp XMSession.h XMSession.cpp \
   XMBuild.h XMBuild.cpp XMBuild_info.h \
   VFileIO.cpp VTexture.cpp \
   VXml.cpp \
