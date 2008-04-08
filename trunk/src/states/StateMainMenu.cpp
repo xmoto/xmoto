@@ -866,44 +866,58 @@ UIWindow* StateMainMenu::makeWindowReplays(UIWindow* i_parent) {
 }
 
 UIWindow* StateMainMenu::makeWindowOptions_general(UIWindow* i_parent) {
-  UIWindow*  v_window;
+  UIWindow *v_window, *v_mainWindow;
   UIButton*  v_button;
   UIList*    v_list;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
-  v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_GENERAL,
-			  i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
-  v_window->setID("GENERAL_TAB");
-  
-  v_button = new UIButton(v_window, 5, 33-28-10, GAMETEXT_SHOWMINIMAP, (v_window->getPosition().nWidth-40)/2, 28);
+  v_mainWindow = new UIWindow(i_parent, 0, 26, GAMETEXT_GENERAL,
+			  i_parent->getPosition().nWidth, i_parent->getPosition().nHeight -26);
+  v_mainWindow->setID("GENERAL_TAB");
+
+  UITabView *v_generalTabs = new UITabView(v_mainWindow, 0, 0, "", v_mainWindow->getPosition().nWidth, v_mainWindow->getPosition().nHeight);
+  v_generalTabs->setID("TABS");
+  v_generalTabs->setFont(drawlib->getFontSmall());
+  v_generalTabs->setTabContextHelp(0, CONTEXTHELP_GENERAL_MAIN_OPTIONS);
+  v_generalTabs->setTabContextHelp(1, CONTEXTHELP_THEME_OPTIONS);
+  v_generalTabs->setTabContextHelp(2, CONTEXTHELP_VIDEO_OPTIONS);
+  v_generalTabs->setTabContextHelp(3, CONTEXTHELP_AUDIO_OPTIONS);
+  v_generalTabs->setTabContextHelp(4, CONTEXTHELP_CONTROL_OPTIONS);
+
+
+  /* main */
+  v_window = new UIWindow(v_generalTabs, 20, 30, GAMETEXT_MAIN, v_generalTabs->getPosition().nWidth-30, v_generalTabs->getPosition().nHeight);
+  v_window->setID("MAIN_TAB");
+
+  v_button = new UIButton(v_window, 5, 33-10, GAMETEXT_SHOWMINIMAP, (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("SHOWMINIMAP");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_MINI_MAP);
   
-  v_button = new UIButton(v_window, 5, 63-28-10, GAMETEXT_SHOWENGINECOUNTER, (v_window->getPosition().nWidth-40)/2, 28);
+  v_button = new UIButton(v_window, 5, 63-10, GAMETEXT_SHOWENGINECOUNTER, (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("SHOWENGINECOUNTER");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_ENGINE_COUNTER);
 
-  v_button = new UIButton(v_window, 5, 93-28-10, GAMETEXT_ENABLECONTEXTHELP, (v_window->getPosition().nWidth-40)/2, 28);
+  v_button = new UIButton(v_window, 5, 93-10, GAMETEXT_ENABLECONTEXTHELP, (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("ENABLECONTEXTHELP");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_SHOWCONTEXTHELP);
  
-  v_button = new UIButton(v_window, 5, 123-28-10, GAMETEXT_AUTOSAVEREPLAYS, (v_window->getPosition().nWidth-40)/*/2*/, 28);
+  v_button = new UIButton(v_window, 5, 123-10, GAMETEXT_AUTOSAVEREPLAYS, (v_window->getPosition().nWidth-40)/*/2*/, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("AUTOSAVEREPLAYS");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_AUTOSAVEREPLAYS);
 
-  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 33-28-10, GAMETEXT_INITZOOM,
+  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 33-10, GAMETEXT_INITZOOM,
 			  (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("INITZOOM");
@@ -911,7 +925,7 @@ UIWindow* StateMainMenu::makeWindowOptions_general(UIWindow* i_parent) {
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_INITZOOM);
 
-  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 63-28-10, GAMETEXT_DEATHANIM,
+  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 63-10, GAMETEXT_DEATHANIM,
 			  (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("DEATHANIM");
@@ -920,7 +934,7 @@ UIWindow* StateMainMenu::makeWindowOptions_general(UIWindow* i_parent) {
   v_button->setContextHelp(CONTEXTHELP_DEATHANIM);
 
   /* Button to enable/disable active zoom */
-  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 93-28-10, GAMETEXT_CAMERAACTIVEZOOM,
+  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 93-10, GAMETEXT_CAMERAACTIVEZOOM,
 			  (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("CAMERAACTIVEZOOM");
@@ -928,10 +942,14 @@ UIWindow* StateMainMenu::makeWindowOptions_general(UIWindow* i_parent) {
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_CAMERAACTIVEZOOM);
 
-   
-  v_list = new UIList(v_window, 5, 120, "", 
-		      v_window->getPosition().nWidth-10, v_window->getPosition().nHeight-125-90);
-  v_list->setID("THEMES_LIST");
+  /* theme */
+  v_window = new UIWindow(v_generalTabs, 20, 30, GAMETEXT_THEME, v_generalTabs->getPosition().nWidth-30, v_generalTabs->getPosition().nHeight);
+  v_window->setID("THEME_TAB");
+  v_window->showWindow(false);
+
+  v_list = new UIList(v_window, 5, 20, "", 
+		      v_window->getPosition().nWidth-20, v_window->getPosition().nHeight-95-20);
+  v_list->setID("LIST");
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_THEMES, (v_list->getPosition().nWidth*3) / 5);
   v_list->addColumn("", (v_list->getPosition().nWidth*2) / 5);
@@ -940,18 +958,22 @@ UIWindow* StateMainMenu::makeWindowOptions_general(UIWindow* i_parent) {
   v_button = new UIButton(v_window, v_window->getPosition().nWidth -200 -200, v_window->getPosition().nHeight - 95,
 			  GAMETEXT_UPDATETHEMESLIST, 207, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
-  v_button->setID("UPDATE_THEMES_LIST");
+  v_button->setID("UPDATE_LIST");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_UPDATETHEMESLIST);
 
   v_button = new UIButton(v_window, v_window->getPosition().nWidth -200, v_window->getPosition().nHeight - 95,
 			  GAMETEXT_GETSELECTEDTHEME, 207, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
-  v_button->setID("GET_SELECTED_THEME");
+  v_button->setID("GET_SELECTED");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_GETSELECTEDTHEME);
 
-  return v_window;
+  v_window = makeWindowOptions_video(v_generalTabs);
+  v_window = makeWindowOptions_audio(v_generalTabs);
+  v_window = makeWindowOptions_controls(v_generalTabs);
+
+  return v_mainWindow;
 }
 
 UIWindow* StateMainMenu::makeWindowOptions_video(UIWindow* i_parent) {
@@ -1176,17 +1198,17 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(UIWindow* i_parent) {
   UIButton* v_button;
   DrawLib*  drawlib = GameApp::instance()->getDrawLib();
 
-  v_wwwwindow = new UIWindow(i_parent, 0, 26, GAMETEXT_WWWTAB, i_parent->getPosition().nWidth, i_parent->getPosition().nHeight-20);
+  v_wwwwindow = new UIWindow(i_parent, 0, 26, GAMETEXT_WWWTAB, i_parent->getPosition().nWidth, i_parent->getPosition().nHeight-26);
   v_wwwwindow->setID("WWW_TAB");
   v_wwwwindow->showWindow(false);
 
   UITabView *v_roomsTabs = new UITabView(v_wwwwindow, 0, 0, "", v_wwwwindow->getPosition().nWidth, v_wwwwindow->getPosition().nHeight);
   v_roomsTabs->setID("TABS");
   v_roomsTabs->setFont(drawlib->getFontSmall());
-  v_roomsTabs->setTabContextHelp(0, CONTEXTHELP_WWW_MAIN_TAB);
-  v_roomsTabs->setTabContextHelp(1, CONTEXTHELP_WWW_ROOMS_TAB);
+  v_roomsTabs->setTabContextHelp(0, CONTEXTHELP_WWW_MAIN_OPTIONS);
+  v_roomsTabs->setTabContextHelp(1, CONTEXTHELP_WWW_ROOMS_OPTIONS);
 
-  v_window = new UIWindow(v_roomsTabs, 20, 30, GAMETEXT_WWWMAINTAB, v_roomsTabs->getPosition().nWidth-30,
+  v_window = new UIWindow(v_roomsTabs, 20, 30, GAMETEXT_MAIN, v_roomsTabs->getPosition().nWidth-30,
 			  v_roomsTabs->getPosition().nHeight);
   v_window->setID("MAIN_TAB");
 
@@ -1410,6 +1432,41 @@ UIWindow* StateMainMenu::makeWindowOptions_language(UIWindow* i_parent) {
   return v_window;
 }
 
+UIWindow* StateMainMenu::makeWindowOptions_db(UIWindow* i_parent) {
+  UIWindow*  v_window;
+  UIStatic*  v_someText;
+  UIButton*  v_button;
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
+
+  v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_DB, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
+  v_window->setID("DB_TAB");
+  v_window->showWindow(false);
+
+  /* explanation */
+  v_someText = new UIStatic(v_window, 20, 10, splitText(GAMETEXT_DBSYNCHRONIZE_EXPLANATION, 50),
+			    v_window->getPosition().nWidth-20, v_window->getPosition().nHeight/2);
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText->setVAlign(UI_ALIGN_TOP);
+  v_someText->setFont(drawlib->getFontSmall()); 
+
+  /* synchronisation */
+  v_button = new UIButton(v_window, (v_window->getPosition().nWidth-175)/2, (v_window->getPosition().nHeight-57)/2,
+			  GAMETEXT_DBSYNCHRONIZE, 175, 57);
+  v_button->setID("SYNCHRONIZE_BUTTON");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_SMALL);      
+  v_button->setContextHelp(CONTEXTHELP_DBSYNCHRONIZE);
+
+  /* synchronize each time xmoto is closed ? */
+  v_button = new UIButton(v_window, 20, (v_window->getPosition().nHeight/2) + 57,
+			  GAMETEXT_DBSYNCHONIZE_ONQUIT, v_window->getPosition().nWidth-20, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setID("SYNCHONIZE_ONQUIT_CKB");
+  v_button->setContextHelp(CONTEXTHELP_DBSYNCHONIZE_ONQUIT); 
+
+  return v_window;
+}
 
 
 UIWindow* StateMainMenu::makeWindowOptions(UIWindow* i_parent) {
@@ -1432,17 +1489,15 @@ UIWindow* StateMainMenu::makeWindowOptions(UIWindow* i_parent) {
   v_tabview->setID("TABS");
   v_tabview->setFont(drawlib->getFontSmall());
   v_tabview->setTabContextHelp(0, CONTEXTHELP_GENERAL_OPTIONS);
-  v_tabview->setTabContextHelp(1, CONTEXTHELP_VIDEO_OPTIONS);
-  v_tabview->setTabContextHelp(2, CONTEXTHELP_AUDIO_OPTIONS);
-  v_tabview->setTabContextHelp(3, CONTEXTHELP_CONTROL_OPTIONS);
+  v_tabview->setTabContextHelp(1, CONTEXTHELP_WWW_OPTIONS);
+  v_tabview->setTabContextHelp(2, CONTEXTHELP_GHOSTS_OPTIONS);
+  v_tabview->setTabContextHelp(3, CONTEXTHELP_DB_OPTIONS);
   v_tabview->setTabContextHelp(4, CONTEXTHELP_LANGUAGE_OPTIONS);
 
   v_frame = makeWindowOptions_general(v_tabview);
-  v_frame = makeWindowOptions_video(v_tabview);
-  v_frame = makeWindowOptions_audio(v_tabview);
-  v_frame = makeWindowOptions_controls(v_tabview);
   v_frame = makeWindowOptions_rooms(v_tabview);
   v_frame = makeWindowOptions_ghosts(v_tabview);
+  v_frame = makeWindowOptions_db(v_tabview);
   v_frame = makeWindowOptions_language(v_tabview);
 
   v_button = new UIButton(v_window, 20, v_window->getPosition().nHeight-68, GAMETEXT_DEFAULTS, 115, 57);
@@ -1776,7 +1831,7 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
   }
 
   if(i_id == "REQUESTKEY") {
-    v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:CONTROLS_TAB:KEY_ACTION_LIST"));
+    v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:KEY_ACTION_LIST"));
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {    
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
 
@@ -1892,6 +1947,7 @@ void StateMainMenu::executeOneCommand(std::string cmd)
 
   else if(cmd == "CHANGE_WWW_ACCESS") {
     updateWWWOptions();
+    updateDbOptions();
   }
 
   else if(cmd == "ENABLEAUDIO_CHANGED") {
@@ -2173,7 +2229,7 @@ void StateMainMenu::createThemesList(UIList *pList) {
 }
 
 void StateMainMenu::updateThemesList() {
-  UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:THEMES_LIST"));
+  UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:THEME_TAB:LIST"));
   createThemesList(v_list);
 
   std::string v_themeName = XMSession::instance()->theme();
@@ -2188,7 +2244,7 @@ void StateMainMenu::updateThemesList() {
 }
 
 void StateMainMenu::updateResolutionsList() {
-  UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
+  UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
   char cBuf[256];
   snprintf(cBuf, 256, "%d X %d", XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight());
   int nMode = 0;
@@ -2206,7 +2262,7 @@ void StateMainMenu::updateResolutionsList() {
 }
 
 void StateMainMenu::updateControlsList() {
-  UIList *pList = (UIList *)m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:CONTROLS_TAB:KEY_ACTION_LIST");
+  UIList *pList = (UIList *)m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:KEY_ACTION_LIST");
   pList->clear();
     
   UIListEntry *p;
@@ -2324,63 +2380,63 @@ void StateMainMenu::updateOptions() {
   v_button->setChecked(XMSession::instance()->multiScenes() == false);
 
   // options/general
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:SHOWMINIMAP"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:SHOWMINIMAP"));
   v_button->setChecked(XMSession::instance()->showMinimap());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:SHOWENGINECOUNTER"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:SHOWENGINECOUNTER"));
   v_button->setChecked(XMSession::instance()->showEngineCounter());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:INITZOOM"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:INITZOOM"));
   v_button->setChecked(XMSession::instance()->enableInitZoom());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:DEATHANIM"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:DEATHANIM"));
   v_button->setChecked(XMSession::instance()->enableDeadAnimation());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:CAMERAACTIVEZOOM"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:CAMERAACTIVEZOOM"));
   v_button->setChecked(XMSession::instance()->enableActiveZoom());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:ENABLECONTEXTHELP"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:ENABLECONTEXTHELP"));
   v_button->setChecked(XMSession::instance()->enableContextHelp());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:AUTOSAVEREPLAYS"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:AUTOSAVEREPLAYS"));
   v_button->setChecked(XMSession::instance()->autosaveHighscoreReplays());
 
   // video
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:16BPP"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:16BPP"));
   v_button->setChecked(XMSession::instance()->bpp() == 16);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:32BPP"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:32BPP"));
   v_button->setChecked(XMSession::instance()->bpp() == 32); 
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:WINDOWED"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:WINDOWED"));
   v_button->setChecked(XMSession::instance()->windowed());
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENULOW"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:MENULOW"));
   v_button->setChecked(XMSession::instance()->menuGraphics() == GFX_LOW);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENUMEDIUM"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:MENUMEDIUM"));
   v_button->setChecked(XMSession::instance()->menuGraphics() == GFX_MEDIUM);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENUHIGH"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:MENUHIGH"));
   v_button->setChecked(XMSession::instance()->menuGraphics() == GFX_HIGH);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMELOW"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:GAMELOW"));
   v_button->setChecked(XMSession::instance()->gameGraphics() == GFX_LOW);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMEMEDIUM"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:GAMEMEDIUM"));
   v_button->setChecked(XMSession::instance()->gameGraphics() == GFX_MEDIUM);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMEHIGH"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:GAMEHIGH"));
   v_button->setChecked(XMSession::instance()->gameGraphics() == GFX_HIGH);
 
   // audio
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_AUDIO"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_AUDIO"));
   v_button->setChecked(XMSession::instance()->enableAudio());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE11KHZ"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:RATE11KHZ"));
   v_button->setChecked(XMSession::instance()->audioSampleRate() == 11025);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE22KHZ"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:RATE22KHZ"));
   v_button->setChecked(XMSession::instance()->audioSampleRate() == 22050);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE44KHZ"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:RATE44KHZ"));
   v_button->setChecked(XMSession::instance()->audioSampleRate() == 44100);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:8BITS"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:8BITS"));
   v_button->setChecked(XMSession::instance()->audioSampleBits() == 8);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:16BITS"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:16BITS"));
   v_button->setChecked(XMSession::instance()->audioSampleBits() == 16);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:MONO"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:MONO"));
   v_button->setChecked(XMSession::instance()->audioChannels() == 1);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:STEREO"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:STEREO"));
   v_button->setChecked(XMSession::instance()->audioChannels() == 2);
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND"));
   v_button->setChecked(XMSession::instance()->enableEngineSound());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
   v_button->setChecked(XMSession::instance()->enableMenuMusic());
 
   // controls
@@ -2433,9 +2489,14 @@ void StateMainMenu::updateOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:MOTION_BLUR_GHOST"));
   v_button->setChecked(XMSession::instance()->ghostMotionBlur());
 
+  // db
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHONIZE_ONQUIT_CKB"));
+  v_button->setChecked(XMSession::instance()->dbsynchronizeOnQuit());
+
   // update rights on the options
   updateAudioOptions();
   updateWWWOptions();
+  updateDbOptions();
   updateGhostsOptions();
 
   // update lists in options
@@ -2452,49 +2513,49 @@ void StateMainMenu::checkEventsOptions() {
   std::string  v_id_level;
 
   // general tab
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:SHOWMINIMAP"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:SHOWMINIMAP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setShowMinimap(v_button->getChecked()); 
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:SHOWENGINECOUNTER"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:SHOWENGINECOUNTER"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setShowEngineCounter(v_button->getChecked()); 
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:INITZOOM"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:INITZOOM"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setEnableInitZoom(v_button->getChecked()); 
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:DEATHANIM"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:DEATHANIM"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setEnableDeadAnimation(v_button->getChecked()); 
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:CAMERAACTIVEZOOM"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:CAMERAACTIVEZOOM"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setEnableActiveZoom(v_button->getChecked()); 
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:ENABLECONTEXTHELP"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:ENABLECONTEXTHELP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setEnableContextHelp(v_button->getChecked()); 
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:AUTOSAVEREPLAYS"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:MAIN_TAB:AUTOSAVEREPLAYS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setAutosaveHighscoreReplays(v_button->getChecked()); 
   }
 
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:THEMES_LIST"));
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:THEME_TAB:LIST"));
   if(v_list->isClicked()) {
     v_list->setClicked(false);
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
@@ -2506,13 +2567,13 @@ void StateMainMenu::checkEventsOptions() {
     }
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:UPDATE_THEMES_LIST"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:THEME_TAB:UPDATE_LIST"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     StateManager::instance()->pushState(new StateUpdateThemesList());
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:GET_SELECTED_THEME"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:THEME_TAB:GET_SELECTED"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
@@ -2523,18 +2584,18 @@ void StateMainMenu::checkEventsOptions() {
   }
 
   // video tab
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:16BPP"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:16BPP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setBpp(16); 
   }
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:32BPP"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:32BPP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setBpp(32); 
   }
 
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
   if(v_list->isClicked()) {
     v_list->setClicked(false);
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
@@ -2547,46 +2608,46 @@ void StateMainMenu::checkEventsOptions() {
     }
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:WINDOWED"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:WINDOWED"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setWindowed(v_button->getChecked());
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENULOW"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:MENULOW"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setMenuGraphics(GFX_LOW);
   }
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENUMEDIUM"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:MENUMEDIUM"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setMenuGraphics(GFX_MEDIUM);
   }
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENUHIGH"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:MENUHIGH"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setMenuGraphics(GFX_HIGH);
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMELOW"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:GAMELOW"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setGameGraphics(GFX_LOW);
   }
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMEMEDIUM"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:GAMEMEDIUM"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setGameGraphics(GFX_MEDIUM);
   }
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMEHIGH"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:VIDEO_TAB:GAMEHIGH"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setGameGraphics(GFX_HIGH);
   }
 
   // sound
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_AUDIO"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_AUDIO"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
@@ -2596,51 +2657,51 @@ void StateMainMenu::checkEventsOptions() {
     updateAudioOptions();
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE11KHZ"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:RATE11KHZ"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setAudioSampleRate(11025);
   }
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE22KHZ"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:RATE22KHZ"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setAudioSampleRate(22050);
   }
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE44KHZ"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:RATE44KHZ"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setAudioSampleRate(44100);
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:8BITS"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:8BITS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setAudioSampleBits(8);
   }
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:16BITS"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:16BITS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setAudioSampleBits(16);
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:MONO"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:MONO"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setAudioChannels(1);
   }
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:STEREO"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:STEREO"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setAudioChannels(2);
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setEnableEngineSound(v_button->getChecked());
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
@@ -2649,7 +2710,7 @@ void StateMainMenu::checkEventsOptions() {
   }
 
   // controls
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:CONTROLS_TAB:KEY_ACTION_LIST"));
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:KEY_ACTION_LIST"));
   if(v_list->isItemActivated()) {
     v_list->setItemActivated(false);
 
@@ -2680,6 +2741,7 @@ void StateMainMenu::checkEventsOptions() {
     v_button->setClicked(false);
     XMSession::instance()->setWWW(v_button->getChecked());
     updateWWWOptions();
+    updateDbOptions();
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP"));
@@ -2820,6 +2882,20 @@ void StateMainMenu::checkEventsOptions() {
     XMSession::instance()->setGhostMotionBlur(v_button->getChecked());
   }
 
+  // db
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHRONIZE_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    StateManager::instance()->pushState(new StateMessageBox(this, "Hehe, you seem to be interested by this feature.\nDon't hesitate to develop it or wait i finish to do it ! ", UI_MSGBOX_OK));
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHONIZE_ONQUIT_CKB"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setDbsynchronizeOnQuit(v_button->getChecked());
+  }
+
   // language
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:LANGUAGE_TAB:LANGUAGE_LIST"));
   if(v_list->isClicked()) {
@@ -2838,26 +2914,36 @@ void StateMainMenu::checkEventsOptions() {
 void StateMainMenu::updateAudioOptions() {
   UIButton* v_button;
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_AUDIO"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_AUDIO"));
   v_button->setChecked(XMSession::instance()->enableAudio());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE11KHZ"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:RATE11KHZ"));
   v_button->enableWindow(XMSession::instance()->enableAudio());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE22KHZ"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:RATE22KHZ"));
   v_button->enableWindow(XMSession::instance()->enableAudio());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE44KHZ"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:RATE44KHZ"));
   v_button->enableWindow(XMSession::instance()->enableAudio());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:8BITS"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:8BITS"));
   v_button->enableWindow(XMSession::instance()->enableAudio());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:16BITS"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:16BITS"));
   v_button->enableWindow(XMSession::instance()->enableAudio());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:MONO"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:MONO"));
   v_button->enableWindow(XMSession::instance()->enableAudio());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:STEREO"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:STEREO"));
   v_button->enableWindow(XMSession::instance()->enableAudio());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND"));
   v_button->enableWindow(XMSession::instance()->enableAudio());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
   v_button->enableWindow(XMSession::instance()->enableAudio());
+}
+
+void StateMainMenu::updateDbOptions() {
+  UIButton* v_button;
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHRONIZE_BUTTON"));
+  v_button->enableWindow(XMSession::instance()->www());
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHONIZE_ONQUIT_CKB"));
+  v_button->enableWindow(XMSession::instance()->www());
 }
 
 void StateMainMenu::updateWWWOptions() {

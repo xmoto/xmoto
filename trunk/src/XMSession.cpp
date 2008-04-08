@@ -115,6 +115,7 @@ void XMSession::setToDefault() {
   m_hidePlayingInformation        = DEFAULT_HIDEPLAYINGINFORMATION;
   m_enableInitZoom                = DEFAULT_ENABLEINITZOOM;
   m_enableActiveZoom              = DEFAULT_ENABLEACTIVEZOOM;
+  m_dbsynchronizeOnQuit           = DEFAULT_DBSYNCHRONIZEONQUIT;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -286,6 +287,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_ghostMotionBlur                = pDb->config_getBool   (i_id_profile, "GhostMotionBlur"               , DEFAULT_GHOSTMOTIONBLUR);
   m_hideGhosts                     = pDb->config_getBool   (i_id_profile, "HideGhosts"                    , DEFAULT_HIDEGHOSTS     );
   m_multiStopWhenOneFinishes 	   = pDb->config_getBool   (i_id_profile, "MultiStopWhenOneFinishes", DEFAULT_MULTISTOPWHENONEFINISHES);
+  m_dbsynchronizeOnQuit            = pDb->config_getBool   (i_id_profile, "DbSynchronizeOnQuit"           , DEFAULT_DBSYNCHRONIZEONQUIT);
 
   m_nbRoomsEnabled                 = pDb->config_getInteger(i_id_profile, "WebHighscoresNbRooms"          , DEFAULT_NBROOMSENABLED);
   if(m_nbRoomsEnabled < 1) { m_nbRoomsEnabled = 1; }
@@ -380,6 +382,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "HideGhosts"                    , m_hideGhosts);
 	pDb->config_setBool   (m_profile, "GhostMotionBlur"               , m_ghostMotionBlur);
 	pDb->config_setBool   (m_profile, "MultiStopWhenOneFinishes"      , m_multiStopWhenOneFinishes);
+	pDb->config_setBool   (m_profile, "DbSynchronizeOnQuit"           , m_dbsynchronizeOnQuit);
 	pDb->config_setString (m_profile, "MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium":"High");
 	pDb->config_setString (m_profile, "GameGraphics", m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium":"High");
 	pDb->config_setString (m_profile, "ProxyType",     proxySettings()->getTypeStr());
@@ -857,6 +860,14 @@ void XMSession::setHideGhosts(bool i_value) {
 
 bool XMSession::hideGhosts() const {
   return m_hideGhosts;
+}
+
+void XMSession::setDbsynchronizeOnQuit(bool i_value) {
+  m_dbsynchronizeOnQuit = i_value;
+}
+
+bool XMSession::dbsynchronizeOnQuit() const {
+  return m_dbsynchronizeOnQuit;
 }
 
 float XMSession::replayFrameRate() const {

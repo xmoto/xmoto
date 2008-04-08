@@ -108,5 +108,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_PROXY_SERVER                ""
 #define DEFAULT_PROXY_AUTHUSER              ""
 #define DEFAULT_PROXY_AUTHPWD               ""
+#define DEFAULT_DBSYNCHRONIZEONQUIT         false
 
 #endif

@@ -236,6 +236,8 @@ public:
   int videoRecordingStartTime();
   int videoRecordingEndTime();
   bool hidePlayingInformation();
+  void setDbsynchronizeOnQuit(bool i_value);
+  bool dbsynchronizeOnQuit() const;
 
   private:
   bool m_verbose;
@@ -321,6 +323,7 @@ public:
   int m_videoRecordingStartTime;
   int m_videoRecordingEndTime;
   bool m_hidePlayingInformation;
+  bool m_dbsynchronizeOnQuit;
 };
 
 #endif
