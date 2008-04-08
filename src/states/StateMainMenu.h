@@ -66,6 +66,7 @@ class StateMainMenu : public StateMenu {
   static UIWindow* makeWindowOptions_controls(UIWindow* i_parent);
   static UIWindow* makeWindowOptions_rooms(UIWindow* i_parent);
   static UIWindow* makeWindowOptions_ghosts(UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_db(UIWindow* i_parent);
   static UIWindow* makeWindowOptions_language(UIWindow* i_parent);
 
   /* multirooms */
@@ -91,6 +92,7 @@ class StateMainMenu : public StateMenu {
   void updateOptions();
   void updateAudioOptions();
   void updateWWWOptions();
+  void updateDbOptions();
   void updateGhostsOptions();
 
   /* Main menu background / title */
