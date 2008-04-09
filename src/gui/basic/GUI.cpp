@@ -821,6 +821,12 @@ UIRoot::UIRoot()
         case SDLK_RIGHT:
           activateRight();
           return true;
+        case SDLK_TAB:
+          activateNext();
+          return true;
+        case SDLK_BACKSPACE:
+          activatePrevious();
+          return true;
       }
       return false;
     }
@@ -1154,6 +1160,43 @@ void UIRoot::_ActivateByVector(int dx, int dy) {
   }
 }
 
+void UIRoot::_ActivateByStep(int step) {
+  /* Update the activation map */
+  UIRootActCandidate Map[128];
+  unsigned int nNum = _UpdateActivationMap(this, Map, 0, 128);
+
+  if(nNum > 0) {
+    /* Find the currently active window */
+    int nActive = _GetActiveIdx(Map, nNum);
+
+    /* No active? */
+    if(nActive < 0) {
+      /* Simply activate the first */        
+      deactivate(this);
+      if(step > 0){
+        Map[0].pWindow->setActive(true);
+      }
+      else if(step < 0) {
+        Map[nNum-1].pWindow->setActive(true);
+      }
+      return;
+    }
+    else {
+        int nBest = nActive + step;
+        if(nBest < 0 ){
+            nBest += nNum;
+        }
+        if(nBest >= nNum){
+            nBest -= nNum;
+        }
+        deactivate(this);
+        Map[nBest].pWindow->setActive(true);          
+        m_CurrentContextHelp = Map[nBest].pWindow->getContextHelp();
+        return;
+    }
+  }
+}
+
   void UIRoot::activateUp(void) {
     _ActivateByVector(0,-1);
   }
@@ -1168,6 +1211,14 @@ void UIRoot::_ActivateByVector(int dx, int dy) {
   
   void UIRoot::activateRight(void) {
     _ActivateByVector(1,0);
+  }
+
+  void UIRoot::activateNext(void) {
+    _ActivateByStep(1);
+  }
+
+  void UIRoot::activatePrevious(void) {
+    _ActivateByStep(-1);
   }
 
 void UIRoot::dispatchMouseHover() {
