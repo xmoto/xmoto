@@ -50,12 +50,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Render tabs */
     int nCX = 8;
     int nCY = 6;
-    int v_width, v_height;
+		int v_width, v_height;
+
+    FontManager* v_fm = m_drawLib->getFontSmall();
 
     setTextSolidColor(MAKE_COLOR(188,186,67,255));
     for(unsigned int i=0;i<getChildren().size();i++) {
+      FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
+      v_width = v_fg->realWidth();
+      v_height = v_fg->realHeight();
+      
       if(getChildren()[i]->isDisabled() == false) {
-	putTextS(nCX, nCY, getChildren()[i]->getCaption(), v_width, v_height);
 	if(isUglyMode()) {
 	  putRect(nCX-8, 0, v_width+16, 2, MAKE_COLOR(188,186,67,255));
 	  putRect(nCX-8, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
@@ -73,6 +78,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  putElem(nCX+v_width+6, nHeaderHeight, getPosition().nWidth-nCX-v_width-6-2, 8,
 		  UI_ELEM_FRAME_TM, false);
 	}
+	
+	if(i != m_nSelected && isUglyMode() == false) {
+	  putRect(nCX-6, 2, v_width+16-4, nHeaderHeight-2, MAKE_COLOR(30,20,20,255));
+	}
+	putTextS(nCX, nCY, getChildren()[i]->getCaption(), v_width, v_height);
+	
 	
 	nCX += v_width + 18;
       }
