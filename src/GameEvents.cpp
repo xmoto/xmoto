@@ -149,6 +149,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       v_event = new MGE_CameraRotate(v_eventTime);
     } else if(MGE_CameraAdaptToGravity::SgetType() == v_eventType) {
       v_event = new MGE_CameraAdaptToGravity(v_eventTime);
+    } else if(MGE_AddForceToPlayer::SgetType() == v_eventType) {
+      v_event = new MGE_AddForceToPlayer(v_eventTime);
     } else if(MGE_SetCameraRotationSpeed::SgetType() == v_eventType) {
       v_event = new MGE_SetCameraRotationSpeed(v_eventTime);
     } else if(MGE_PlaySound::SgetType() == v_eventType) {
