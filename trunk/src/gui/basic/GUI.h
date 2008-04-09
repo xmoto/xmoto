@@ -816,6 +816,8 @@ public:
   void activateDown(void);
   void activateLeft(void);
   void activateRight(void);
+  void activateNext(void);
+  void activatePrevious(void);
             
   void setApp(GameApp *pApp) {}
   virtual GameApp *getApp(void) {return m_pApp;}
@@ -834,6 +836,7 @@ private:
   void _ClipRect(UIRect *pRect,UIRect *pClipWith);
   unsigned int _UpdateActivationMap(UIWindow *pWindow, UIRootActCandidate *pMap, unsigned int nNum, unsigned int nMax);
   void _ActivateByVector(int dx,int dy);
+  void _ActivateByStep(int step);
   int _GetActiveIdx(UIRootActCandidate *pMap, unsigned int nNum);
 };
 

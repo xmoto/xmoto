@@ -105,8 +105,10 @@ void UIEdit::paint(void) {
         getRoot()->activateUp();
         return true;
       case SDLK_DOWN:
-      case SDLK_TAB:
         getRoot()->activateDown();
+        return true;
+      case SDLK_TAB:
+        getRoot()->activateNext();
         return true;
       case SDLK_LEFT:
         if(m_nCursorPos > 0)
