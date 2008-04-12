@@ -38,7 +38,6 @@ char* LANGUAGES[NB_LANGUAGES][2] = {
   {"Latviešu",   "lv_LV"},
   {"Norsk",      "nb_NO"},
   {"Norsk",      "nn_NO"},
-  {"Norsk",      "no_NO"},
   {"Polski",     "pl_PL"},
   {"Brasileiro", "pt_BR"},
   {"Portugues",  "pt_PT"},
