@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __LANGUAGES_H__
 #define __LANGUAGES_H__
 
-#define NB_LANGUAGES  19
+#define NB_LANGUAGES  18
 #define LANGUAGE_NAME  0
 #define LANGUAGE_CODE  1
 
