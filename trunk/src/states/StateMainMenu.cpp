@@ -857,8 +857,8 @@ UIWindow* StateMainMenu::makeWindowReplays(UIWindow* i_parent) {
   v_list = new UIList(v_window, 20, 65, "", v_window->getPosition().nWidth-40, v_window->getPosition().nHeight-115-25);
   v_list->setID("REPLAYS_LIST");
   v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_REPLAY, v_list->getPosition().nWidth - 100, CONTEXTHELP_REPLAYCOL);
-  v_list->addColumn(GAMETEXT_LEVEL,  v_list->getPosition().nWidth - 28,  CONTEXTHELP_REPLAYLEVELCOL);
+  v_list->addColumn(GAMETEXT_REPLAY, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_REPLAYCOL);
+  v_list->addColumn(GAMETEXT_LEVEL,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_REPLAYLEVELCOL);
   v_list->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
   //v_list->setEnterButton(v_showButton);
 
