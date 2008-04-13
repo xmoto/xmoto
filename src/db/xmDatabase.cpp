@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "VFileIO.h"
 
-#define XMDB_VERSION 22
+#define XMDB_VERSION 25
 
 bool xmDatabase::Trace = false;
 
@@ -120,103 +120,76 @@ void xmDatabase::sqlTrace(void* arg1, const char* sql) {
   }
 }
 
-std::string xmDatabase::getXmDbGameDir() {
+/* return false if the parameter doesn't exist */
+bool xmDatabase::getXmParameterKey(const std::string& i_key, std::string& o_value) {
   char **v_result;
   unsigned int nrow;
-  std::string v_dir;
 
-  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"gameDir\";", nrow);
+  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"" + protectString(i_key) + "\";", nrow);
   if(nrow != 1) {
     read_DB_free(v_result);
-    return "";
+    return false;
   }
 
-  v_dir = getResult(v_result, 1, 0, 0);
+  o_value = getResult(v_result, 1, 0, 0);
   read_DB_free(v_result);
 
-  return v_dir;
+  return true;
+}
+
+std::string xmDatabase::getXmDbGameDir() {
+  std::string v_dir;
+
+  if(getXmParameterKey("gameDir", v_dir)) {
+    return v_dir;
+  }
+  return "";
 }
 
 std::string xmDatabase::getXmDbUserDir() {
-  char **v_result;
-  unsigned int nrow;
   std::string v_dir;
 
-  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"userDir\";", nrow);
-  if(nrow != 1) {
-    read_DB_free(v_result);
-    return "";
+  if(getXmParameterKey("userDir", v_dir)) {
+    return v_dir;
   }
+  return "";
+}
 
-  v_dir = getResult(v_result, 1, 0, 0);
+void xmDatabase::setXmParameterKey(const std::string& i_key, const std::string& i_value) {
+  char **v_result;
+  unsigned int nrow;
+  
+  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"" + protectString(i_key) + "\";", nrow);
   read_DB_free(v_result);
 
-  return v_dir;
+  if(nrow == 0) {
+    simpleSql("INSERT INTO xm_parameters(param, value) VALUES(\"" + protectString(i_key) + "\", \""
+	      + protectString(i_value) + "\");");
+  } else {
+    simpleSql("UPDATE xm_parameters SET value=\""
+	      + protectString(i_value) + "\" WHERE param=\"" + protectString(i_key) + "\"");
+  }
 }
 
 void xmDatabase::setXmDbGameDir(const std::string& i_gameDir) {
-  char **v_result;
-  unsigned int nrow;
-
-  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"gameDir\";", nrow);
-  read_DB_free(v_result);
-
-  if(nrow == 0) {
-    simpleSql("INSERT INTO xm_parameters(param, value) VALUES(\"gameDir\", \""
-	      + protectString(i_gameDir) + "\");");
-  } else {
-    simpleSql("UPDATE xm_parameters SET value=\""
-	      + protectString(i_gameDir) + "\" WHERE param=\"gameDir\"");
-  }
+  setXmParameterKey("gameDir", i_gameDir);
 }
 
 void xmDatabase::setXmDbUserDir(const std::string& i_userDir) {
-  char **v_result;
-  unsigned int nrow;
-
-  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"userDir\";", nrow);
-  read_DB_free(v_result);
-
-  if(nrow == 0) {
-    simpleSql("INSERT INTO xm_parameters(param, value) VALUES(\"userDir\", \""
-	      + protectString(i_userDir) + "\");");
-  } else {
-    simpleSql("UPDATE xm_parameters SET value=\""
-	      + protectString(i_userDir) + "\" WHERE param=\"userDir\"");
-  }
+  setXmParameterKey("userDir", i_userDir);
 }
 
 std::string xmDatabase::getXmDbBinPackCheckSum() {
-  char **v_result;
-  unsigned int nrow;
-  std::string v_dir;
+  std::string v_sum;
 
-  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"binPackCkSum\";", nrow);
-  if(nrow != 1) {
-    read_DB_free(v_result);
-    return "";
+  if(getXmParameterKey("binPackCkSum", v_sum)) {
+    return v_sum;
   }
-
-  v_dir = getResult(v_result, 1, 0, 0);
-  read_DB_free(v_result);
-
-  return v_dir;
+  return "";
 }
 
 void xmDatabase::setXmDbBinPackCheckSum(const std::string& i_binPackChecksum) {
-  char **v_result;
-  unsigned int nrow;
-
-  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"binPackCkSum\";", nrow);
-  read_DB_free(v_result);
-
-  if(nrow == 0) {
-    simpleSql("INSERT INTO xm_parameters(param, value) VALUES(\"binPackCkSum\", \""
-	      + protectString(i_binPackChecksum) + "\");");
-  } else {
-    simpleSql("UPDATE xm_parameters SET value=\""
-	      + protectString(i_binPackChecksum) + "\" WHERE param=\"binPackCkSum\"");
-  }
+  setXmParameterKey("binPackCkSum", i_binPackChecksum);
 }
 
 int xmDatabase::getXmDbVersion() {
@@ -263,10 +236,56 @@ void xmDatabase::updateXmDbVersion(int i_newVersion) {
 	    " WHERE param=\"xmdb_version\";");
 }
 
+std::string xmDatabase::getXmDbSiteKey() {
+  std::string v_sitekey;
+
+  if(getXmParameterKey("siteKey", v_sitekey)) {
+    return v_sitekey;
+  }
+
+  // site key is empty, generate it
+  return setXmDbSiteKey();
+}
+
+std::string xmDatabase::setXmDbSiteKey() {
+  std::string v_sitekey = generateSiteKey();
+  setXmParameterKey("siteKey", v_sitekey);
+  return v_sitekey;
+}
+
+std::string xmDatabase::generateSiteKey() {
+  std::string v_sitekey = "";
+  struct tm *pTime;
+  time_t T;
+  char cBuf[256] = "";
+  int n;
+  std::ostringstream v_rd;
+
+  time(&T);
+  pTime = localtime(&T);
+  if(pTime != NULL) {
+    snprintf(cBuf, 256, "%d%02d%02d%02d%02d%02d",
+	     pTime->tm_year+1900, pTime->tm_mon+1, pTime->tm_mday, pTime->tm_hour, pTime->tm_min, pTime->tm_sec);                    
+    v_sitekey += cBuf;
+  }
+  // add random key
+  n = (int) (10000000.0 * (rand() / (RAND_MAX + 1.0)));
+  v_rd << n;
+  v_sitekey += v_rd.str();
+
+  //printf("siteKey: %s\n", v_sitekey.c_str());
+  return v_sitekey;
+}
+
 void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
 				      const std::string& i_profile,
 				      XmDatabaseUpdateInterface *i_interface) {
   std::string v_errMsg;
+  std::string v_sitekey;
+
+  if(i_fromVersion != 0) { /* cannot create site key if xm_parameters doesn't exist */
+    v_sitekey = getXmDbSiteKey();
+  }
 
   /* no break in this swicth ! */
   switch(i_fromVersion) {
@@ -275,6 +294,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     try {
       simpleSql("CREATE TABLE xm_parameters(param PRIMARY KEY, value);"
 		"INSERT INTO xm_parameters(param, value) VALUES(\"xmdb_version\", 1);");
+      v_sitekey = getXmDbSiteKey();
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 0: " + e.getMsg());
     }
@@ -488,12 +508,60 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
 
   case 21:
     try {
-      updateDB_config();
+      updateDB_config("" /* site key still does exist */);
       updateXmDbVersion(22);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 21: " + e.getMsg());
     }
 
+  case 22:
+    try {
+      // add column sitekey as primary key - sqlite doesn't support that without recreating the table
+      simpleSql("ALTER  TABLE stats_profiles RENAME TO stats_profiles_old;");
+      simpleSql("CREATE TABLE stats_profiles(sitekey, id_profile, nbStarts, since, PRIMARY KEY(sitekey, id_profile));");
+      simpleSql("INSERT INTO  stats_profiles SELECT \"" + protectString(v_sitekey) + "\", id_profile, nbStarts, since FROM stats_profiles_old;");
+      simpleSql("DROP   TABLE stats_profiles_old;");
+
+      updateXmDbVersion(23);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 22: " + e.getMsg());
+    }
+
+  case 23:
+    try {
+      // add column sitekey as primary key - sqlite doesn't support that without recreating the table
+      simpleSql("ALTER  TABLE stats_profiles_levels RENAME TO stats_profiles_levels_old;");
+      simpleSql("CREATE TABLE stats_profiles_levels(sitekey, id_profile, id_level, nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime, last_play_date DEFAULT NULL, synchronized, PRIMARY KEY(sitekey, id_profile, id_level));");
+      simpleSql("INSERT INTO  stats_profiles_levels SELECT \"" + protectString(v_sitekey) + "\", id_profile, id_level, nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime, last_play_date, 0 FROM stats_profiles_levels_old;");
+      simpleSql("DROP   TABLE stats_profiles_levels_old;");
+      /* recreate the index */
+      simpleSql("CREATE INDEX stats_profiles_levels_last_play_date_idx1 ON stats_profiles_levels(last_play_date);");
+      // index not redondante with the key while it is choiced when sitekey is not set ; make xmoto really faster
+      simpleSql("CREATE INDEX stats_profiles_levels_id_profile_id_level_idx1 ON stats_profiles_levels(id_profile, id_level);");
+
+      updateXmDbVersion(24);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 23: " + e.getMsg());
+    }
+
+  case 24:
+    try {
+      simpleSql("ALTER TABLE profile_completedLevels ADD COLUMN sitekey;");
+      simpleSql("ALTER TABLE profile_completedLevels ADD COLUMN synchronized;");
+      simpleSql("UPDATE profile_completedLevels SET sitekey = \"" + protectString(v_sitekey) + "\";");
+      simpleSql("UPDATE profile_completedLevels SET synchronized = 0;");
+      simpleSql("DROP INDEX profile_completedLevels_idx1;");
+      /* recreate the index */
+      simpleSql("CREATE INDEX profile_completedLevels_idx1 "
+		"ON profile_completedLevels(sitekey, id_profile, id_level);");
+      // index not redondante with the idx1 while it is choiced when sitekey is not set ; make xmoto really faster
+      simpleSql("CREATE INDEX profile_completedLevels_idx2 "
+		"ON profile_completedLevels(id_profile, id_level);");
+
+      updateXmDbVersion(25);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 24: " + e.getMsg());
+    }
 
     // next
   }
@@ -563,7 +631,10 @@ char** xmDatabase::readDB(const std::string& i_sql, unsigned int &i_nrow) {
      != SQLITE_OK) {
     v_errMsg = errMsg;
     sqlite3_free(errMsg);
+    Logger::Log("xmDb failed while running");
+    Logger::Log("%s", i_sql.c_str());
     throw Exception("xmDb: " + v_errMsg);
+
   }
   i_nrow = (unsigned int) v_nrow;
 

@@ -47,6 +47,7 @@ int LevelsPack::getNumberOfLevels(xmDatabase *i_db) {
 
   v_result = i_db->readDB("SELECT count(id_level) FROM (" + m_sql_levels + ");",
 			  nrow);
+
   if(i_db->getResult(v_result, 1, 0, 0) == NULL) {
     i_db->read_DB_free(v_result);
     return 0;
@@ -70,7 +71,7 @@ std::string LevelsPack::getLevelsWithHighscoresQuery(const std::string& i_profil
     "ON (a.id_level = b.id_level AND b.id_room=" + i_id_room + ") "
     "LEFT OUTER JOIN profile_completedLevels AS c "
     "ON (a.id_level=c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_profile) + "\") "
-    "GROUP BY a.id_level ORDER BY min(a.sort_field) " + std::string(m_ascSort ? "ASC":"DESC") + ";";
+    "GROUP BY a.id_level ORDER BY MIN(a.sort_field) " + std::string(m_ascSort ? "ASC":"DESC") + ";";
 }
 
 int LevelsPack::getNumberOfFinishedLevels(xmDatabase *i_db, const std::string& i_profile) {
@@ -78,12 +79,13 @@ int LevelsPack::getNumberOfFinishedLevels(xmDatabase *i_db, const std::string& i
   unsigned int nrow;
   int n;
 
-  v_result = i_db->readDB("SELECT count(a.id_level) FROM (" +
+  v_result = i_db->readDB("SELECT count(1) FROM (SELECT a.id_level FROM (" +
 			  m_sql_levels +
-			  ") AS a INNER JOIN stats_profiles_levels AS b "
-			  "ON a.id_level=b.id_level WHERE b.id_profile=\"" +
-			  xmDatabase::protectString(i_profile) + "\" AND b.nbCompleted > 0;",
+			  ") AS a INNER JOIN stats_profiles_levels AS b ON a.id_level=b.id_level "
+			  "WHERE b.id_profile=\"" + xmDatabase::protectString(i_profile) + "\" AND b.nbCompleted > 0 "
+			  "GROUP BY a.id_level);",
 			  nrow);
+
   if(i_db->getResult(v_result, 1, 0, 0) == NULL) {
     i_db->read_DB_free(v_result);
     return 0;
@@ -282,7 +284,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 
   /* levels i've not finished */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_INCOMPLETED_LEVELS),
-			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
+			  "SELECT MIN(a.id_level) AS id_level, MIN(a.name) AS name, MIN(UPPER(a.name)) AS sort_field "
 			  "FROM levels AS a LEFT OUTER JOIN stats_profiles_levels AS b "
 			  "ON (a.id_level=b.id_level AND "
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
@@ -291,7 +293,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "WHERE b.nbCompleted = 0 OR b.id_profile IS NULL "
 			  "AND d.id_level IS NULL "
 			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
-			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1)");
+			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
+			  "GROUP BY b.id_profile");
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
   v_pack->setDescription(VPACKAGENAME_DESC_INCOMPLETED_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -535,7 +538,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   /* stats */
   /* last played levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_LAST_PLAYED),
-			  "SELECT a.id_level AS id_level, a.name AS name, b.last_play_date AS sort_field "
+			  "SELECT MIN(a.id_level) AS id_level, MIN(a.name) AS name, MAX(b.last_play_date) AS sort_field "
 			  "FROM levels AS a INNER JOIN stats_profiles_levels AS b "
 			  "ON (a.id_level=b.id_level AND "
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
@@ -545,7 +548,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
 			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
 			  "AND d.id_level IS NULL "
-			  "ORDER BY b.last_play_date DESC "
+			  "GROUP BY b.id_profile "
+			  "ORDER BY MAX(b.last_play_date) DESC "
 			  "LIMIT 100", false);
   v_pack->setGroup(GAMETEXT_PACK_STATS);
   v_pack->setDescription(VPACKAGENAME_DESC_LAST_PLAYED);
@@ -578,7 +582,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "WHERE (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
 			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
 			  "AND d.id_level IS NULL "
-			  "ORDER BY b.nbPlayed DESC LIMIT 100", false);
+			  "GROUP BY b.id_profile "
+			  "ORDER BY MAX(b.nbPlayed) DESC LIMIT 100", false);
   v_pack->setGroup(GAMETEXT_PACK_STATS);
   v_pack->setDescription(VPACKAGENAME_DESC_MOST_PLAYED);
   m_levelsPacks.push_back(v_pack);
@@ -595,7 +600,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
 			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
 			  "AND d.id_level IS NULL "
-			  "ORDER BY b.nbPlayed ASC LIMIT 100");
+			  "GROUP BY b.id_profile "
+			  "ORDER BY MIN(b.nbPlayed) ASC LIMIT 100");
   v_pack->setGroup(GAMETEXT_PACK_STATS);
   v_pack->setDescription(VPACKAGENAME_DESC_LESS_PLAYED);
   m_levelsPacks.push_back(v_pack);
@@ -771,7 +777,6 @@ void LevelsManager::makePacks(const std::string& i_playerName,
     m_levelsPacks.push_back(v_pack);
   }
   i_db->read_DB_free(v_result);  
- 
 }
 
 const std::vector<LevelsPack *>& LevelsManager::LevelsPacks() {
@@ -1129,9 +1134,10 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN, uns
 
   /* if xmoto run only 1 time, run the tutorial pack */
   bool v_tutorials = false;
-  v_result = i_db->readDB("SELECT nbStarts "
+  v_result = i_db->readDB("SELECT SUM(nbStarts) "
 			  "FROM stats_profiles "
-			  "WHERE id_profile=\"" + xmDatabase::protectString(i_profile) + "\";",
+			  "WHERE id_profile=\"" + xmDatabase::protectString(i_profile) + "\" "
+			  "GROUP BY id_profile;",
 			  nrow);
   if(nrow == 0) {
     v_tutorials = true;

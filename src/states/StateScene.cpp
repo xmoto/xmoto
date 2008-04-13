@@ -540,10 +540,10 @@ void StateScene::makeStatsStr() {
       int v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestart, v_playedTime;
       std::string v_idLevel = m_universe->getScenes()[0]->getLevelSrc()->Id();
       
-      v_result = v_pDb->readDB("SELECT nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime "
+      v_result = v_pDb->readDB("SELECT SUM(nbPlayed), SUM(nbDied), SUM(nbCompleted), SUM(nbRestarted), SUM(playedTime) "
 			       "FROM stats_profiles_levels "
 			       "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
-			       "AND id_level=\""     + xmDatabase::protectString(v_idLevel) + "\";",
+			       "AND id_level=\""     + xmDatabase::protectString(v_idLevel) + "\" GROUP BY id_profile;",
 			       nrow);
       if(nrow != 1) {
 	/* not statistics */

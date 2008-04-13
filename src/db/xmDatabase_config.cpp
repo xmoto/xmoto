@@ -130,7 +130,7 @@ void xmDatabase::config_setFloat(const std::string& i_id_profile, const std::str
   config_setValue(i_id_profile, i_key, cBuf);
 }
 
-void xmDatabase::updateDB_config() {
+void xmDatabase::updateDB_config(const std::string& i_sitekey) {
   /* load removed values into all the profiles */
 
   XMLDocument ConfigDoc;
@@ -226,7 +226,12 @@ void xmDatabase::updateDB_config() {
 	     Name == "WebHighscoresIdRoom2"           ||
 	     Name == "WebHighscoresIdRoom3"
 	     ) {
-	    v_result = readDB("SELECT id_profile FROM stats_profiles;", nrow);
+
+	    if(i_sitekey == "") {
+	      v_result = readDB("SELECT id_profile FROM stats_profiles;", nrow);
+	    } else {
+	      v_result = readDB("SELECT id_profile FROM stats_profiles WHERE sitekey=\"" + xmDatabase::protectString(i_sitekey) +"\";", nrow);
+	    }
 	    for(unsigned int i=0; i<nrow; i++) {
 	      v_id_profile = getResult(v_result, 1, i, 0);
 

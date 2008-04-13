@@ -78,7 +78,9 @@ void CheckWwwThread::updateWebLevels()
 }
 
 bool CheckWwwThread::isNeeded() {
-  return XMSession::instance()->checkNewHighscoresAtStartup() || XMSession::instance()->checkNewLevelsAtStartup();
+  return 
+    XMSession::instance()->www() &&
+    (XMSession::instance()->checkNewHighscoresAtStartup() || XMSession::instance()->checkNewLevelsAtStartup());
 }
 
 int CheckWwwThread::realThreadFunction()

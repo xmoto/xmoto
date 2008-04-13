@@ -57,21 +57,25 @@ public:
   static void setTrace(bool i_value);
 
   /* stats */
-  void stats_createProfile(const std::string& i_profile);
+  void stats_createProfile(const std::string& i_sitekey, const std::string& i_profile);
   void stats_destroyProfile(const std::string& i_profile);
-  void stats_levelCompleted(const std::string &PlayerName,
+  void stats_levelCompleted(const std::string& i_sitekey,
+			    const std::string &PlayerName,
 			    const std::string &LevelID,
 			    int i_playTime);
-  void stats_died(const std::string &PlayerName,
+  void stats_died(const std::string& i_sitekey,
+		  const std::string &PlayerName,
 		  const std::string &LevelID,
 		  int i_playTime);
-  void stats_abortedLevel(const std::string &PlayerName,
+  void stats_abortedLevel(const std::string& i_sitekey,
+			  const std::string &PlayerName,
 			  const std::string &LevelID,
 			  int i_playTime);
-  void stats_levelRestarted(const std::string &PlayerName,
+  void stats_levelRestarted(const std::string& i_sitekey,
+			    const std::string &PlayerName,
 			    const std::string &LevelID,
 			    int i_playTime);
-  void stats_xmotoStarted(const std::string &PlayerName);
+  void stats_xmotoStarted(const std::string& i_sitekey, const std::string &PlayerName);
 
   /* levels */
   void levels_updateDB(const std::vector<Level *>& i_levels,
@@ -129,7 +133,10 @@ public:
   std::string themes_getFileName(const std::string& i_id_theme);
 
   /* profiles */
-  void profiles_addFinishTime(const std::string& i_profile, const std::string& i_id_level,
+  void profiles_addFinishTime(const std::string& i_sitekey, const std::string& i_profile, const std::string& i_id_level,
+			      const std::string& i_timeStamp, int i_finishTime);
+  /* for old migration, when sitekey didn't exist */
+  void profiles_addFinishTime_nositekey(const std::string& i_profile, const std::string& i_id_level,
 			      const std::string& i_timeStamp, int i_finishTime);
 
   /* web */
@@ -155,6 +162,9 @@ public:
   void        config_setBool(const std::string& i_id_profile, const std::string& i_key,    bool i_value);
   void        config_setInteger(const std::string& i_id_profile, const std::string& i_key, int i_value);
   void        config_setFloat(const std::string& i_id_profile, const std::string& i_key,   float i_value);
+
+  // sync
+  std::string getXmDbSiteKey();
 
   /* data fixes */
   void fixStatsProfilesLevelsNbCompleted();
@@ -185,12 +195,19 @@ public:
   void setXmDbGameDir(const std::string& i_gameDir);
   void setXmDbUserDir(const std::string& i_userDir);
   void setXmDbBinPackCheckSum(const std::string& i_binPackChecksum);
+  std::string setXmDbSiteKey();
+  
+  /* multiple sites */
+  static std::string generateSiteKey();
 
   /* config factorize sql*/
+  bool getXmParameterKey(const std::string& i_key, std::string& o_value); // get a parameter value as string
+  void setXmParameterKey(const std::string& i_key, const std::string& i_value); // set a parameter value as string
   std::string config_getValue(const std::string& i_id_profile, const std::string& i_key, unsigned int& o_nrow);
   void config_setValue(const std::string& i_id_profile, const std::string& i_key, const std::string& i_value);
 
-  void updateDB_config(); /* conversion of the old file values */
+  /* if i_sitekey is empty, don't care of it -- require for old db without sitekey */
+  void updateDB_config(const std::string& i_sitekey); /* conversion of the old file values */
 
   /* trace */
   static void sqlTrace(void*, const char* sql);
@@ -203,8 +220,9 @@ public:
   void updateDB_stats(XmDatabaseUpdateInterface *i_interface = NULL);    /* statistics */
   void updateDB_favorite(const std::string& i_profile,
 			 XmDatabaseUpdateInterface *i_interface = NULL); /* favorite */
-  bool stats_checkKeyExists_stats_profiles(const std::string& i_profile);
-  bool stats_checkKeyExists_stats_profiles_levels(const std::string& i_profile,
+  bool stats_checkKeyExists_stats_profiles(const std::string& i_sitekey, const std::string& i_profile);
+  bool stats_checkKeyExists_stats_profiles_levels(const std::string& i_sitekey,
+						  const std::string& i_profile,
 						  const std::string& i_level);
   void updateDB_profiles(XmDatabaseUpdateInterface *i_interface = NULL); /* profiles */
 

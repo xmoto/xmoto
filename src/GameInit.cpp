@@ -142,6 +142,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
   Logger::setVerbose(XMSession::instance()->isVerbose()); /* apply verbose mode */
 
+  Logger::Log(std::string("X-Moto " + XMBuild::getVersionString(true)).c_str());
   Logger::Log("compiled at "__DATE__" "__TIME__);
   if(SwapEndian::bigendien) {
     Logger::Log("Systeme is bigendien");
@@ -197,6 +198,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     pDb->setTrace(XMSession::instance()->sqlTrace());
   }
   XMSession::instance()->loadProfile(XMSession::instance()->profile(), pDb);
+  Logger::Log("SiteKey: %s", XMSession::instance()->sitekey().c_str());
 
 #ifdef USE_GETTEXT
   std::string v_locale = Locales::init(XMSession::instance()->language());
@@ -339,7 +341,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   }
     
   Logger::Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
-    
+
   /* Find all files in the textures dir and load them */     
   UITexture::setApp(this);
   UIWindow::setDrawLib(getDrawLib());
@@ -381,13 +383,15 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     /* Do we have a player profile? */
     if(XMSession::instance()->profile() == "") {
       StateManager::instance()->pushState(new StateEditProfile(pMainMenu));
+
+      /* in case there is no profile, we show a message box */
+      /* Should we show a notification box? (with important one-time info) */
+      /* thus, is it really required to save this value as profile value ?!? */
+      if(XMSession::instance()->notifyAtInit()) {
+	StateManager::instance()->pushState(new StateMessageBox(NULL, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));
+	XMSession::instance()->setNotifyAtInit(false);
+      }
     } 
-    
-    /* Should we show a notification box? (with important one-time info) */
-    if(XMSession::instance()->notifyAtInit()) {
-      StateManager::instance()->pushState(new StateMessageBox(NULL, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));
-      XMSession::instance()->setNotifyAtInit(false);
-    }
   }
   
   if (XMSession::instance()->ugly()){
@@ -395,12 +399,12 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   }
   drawFrame();
   drawLib->flushGraphics();
-  
+
   /* Update stats */
   if(XMSession::instance()->profile() != "") {
-    pDb->stats_xmotoStarted(XMSession::instance()->profile());
+    pDb->stats_xmotoStarted(XMSession::instance()->sitekey(), XMSession::instance()->profile());
   }
-  
+
   Logger::Log("UserInit ended at %.3f", GameApp::getXMTime());
 }
 
