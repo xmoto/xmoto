@@ -73,10 +73,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     time(&T);
     pTime = localtime(&T);
     if(pTime != NULL) {
-      sprintf(cBuf,"%d-%02d-%02d %02d:%02d:%02d",
-              pTime->tm_year+1900, pTime->tm_mon+1, pTime->tm_mday,
-	      pTime->tm_hour, pTime->tm_min, pTime->tm_sec);                    
-    }    
+      snprintf(cBuf,256, "%d-%02d-%02d %02d:%02d:%02d",
+	       pTime->tm_year+1900, pTime->tm_mon+1, pTime->tm_mday,
+	       pTime->tm_hour, pTime->tm_min, pTime->tm_sec);                    
+    }
     return cBuf;
   }
 

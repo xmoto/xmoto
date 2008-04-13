@@ -270,9 +270,13 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   }
 
   if(res != CURLE_OK) {
+    char v_err[256];
+
     remove(v_local_file_tmp.c_str());
-    throw Exception("error : unable to download file "
-        + p_web_file);  
+
+    snprintf(v_err, 256, "error : unable to download file %s (curl[%i]: %s)",
+	     p_web_file.c_str(), res, curl_easy_strerror(res));
+    throw Exception(v_err);
   }
 
   /* replace file */
@@ -406,10 +410,17 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
 
   /* CURLE_ABORTED_BY_CALLBACK is not considered as an error */
   if(v_res != CURLE_ABORTED_BY_CALLBACK) {
+
     if(v_res != CURLE_OK) {
+      char v_err[256];
+      
       curl_easy_cleanup(v_curl);
       remove(v_local_file.c_str());
-      throw Exception("error : unable to perform curl");  
+      
+      snprintf(v_err, 256, "error : unable to perform curl (curl[%i]: %s)",
+	       v_res, curl_easy_strerror(v_res));
+      
+      throw Exception(v_err);
     }
   }
   curl_easy_cleanup(v_curl);

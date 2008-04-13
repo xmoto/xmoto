@@ -248,6 +248,7 @@ void XMSession::load(UserConfig* m_Config) {
 }
 
 void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
+  m_sitekey                        = pDb->getXmDbSiteKey();
   m_www          	    	   = pDb->config_getBool   (i_id_profile, "WebHighscores"    	       	  , DEFAULT_WWW            );
   m_www_password 	    	   = pDb->config_getString (i_id_profile, "WWWPassword"      	       	  , DEFAULT_WWW_PASSWORD   );
   m_theme        	    	   = pDb->config_getString (i_id_profile, "Theme"            	       	  , DEFAULT_THEMENAME      );
@@ -342,6 +343,10 @@ void XMSession::save(UserConfig* v_config, xmDatabase* pDb) {
 }
 
 void XMSession::saveProfile(xmDatabase* pDb) {
+  if(m_profile == "") { /* don't save */
+    return;
+  }
+
 	pDb->config_setValue_begin();
 
 	pDb->config_setBool   (m_profile, "WebHighscores"    	      	    , m_www                    );
@@ -475,6 +480,10 @@ std::string XMSession::profile() const {
 
 void XMSession::setProfile(const std::string& i_profile) {
   m_profile = i_profile;
+}
+
+std::string XMSession::sitekey() const {
+  return m_sitekey;
 }
 
 std::string XMSession::wwwPassword() const {

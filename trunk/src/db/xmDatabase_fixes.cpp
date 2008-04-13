@@ -20,6 +20,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "xmDatabase.h"
 
+/*
+  IMPORTANT NOTE: this fix is used ONLY when sitekey didn't exits !! 
+  you must change the query to take case of it if you want to reuse it
+*/
 void xmDatabase::fixStatsProfilesLevelsNbCompleted() {
   char **v_result;
   unsigned int nrow;

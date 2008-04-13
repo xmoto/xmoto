@@ -95,7 +95,7 @@ void StateEditProfile::checkEvents() {
       XMSession::instance()->loadProfile(pEntry->Text[0], xmDatabase::instance("main"));
       XMSession::instance()->setChildrenCompliant(v_ccButton->getChecked());
 
-      xmDatabase::instance("main")->stats_xmotoStarted(pEntry->Text[0]);
+      xmDatabase::instance("main")->stats_xmotoStarted(XMSession::instance()->sitekey(), pEntry->Text[0]);
 
       // tell the menu to update the displayed profile
       if(m_receiver != NULL){
@@ -226,8 +226,11 @@ void StateEditProfile::createProfileList() {
     pList->clear();
     
     /* Add all player profiles to it */
-    v_result = xmDatabase::instance("main")->readDB("SELECT id_profile FROM stats_profiles ORDER BY id_profile;",
-					nrow);
+    v_result = xmDatabase::instance("main")->readDB("SELECT id_profile FROM stats_profiles "
+						    "WHERE sitekey=\"" +
+						    xmDatabase::protectString(XMSession::instance()->sitekey()) + "\" "
+						    "ORDER BY id_profile;",
+						    nrow);
     for(unsigned int i=0; i<nrow; i++) {
       v_profile = xmDatabase::instance("main")->getResult(v_result, 1, i, 0);
       pList->addEntry(v_profile);
@@ -258,7 +261,7 @@ void StateEditProfile::send(const std::string& i_id, UIMsgBoxButton i_button, co
     case UI_MSGBOX_OK:{
       std::string PlayerName = i_input;
       try {
-	xmDatabase::instance("main")->stats_createProfile(PlayerName);
+	xmDatabase::instance("main")->stats_createProfile(XMSession::instance()->sitekey(), PlayerName);
       } catch(Exception &e) {
 	Logger::Log("Unable to create the profile");
       }

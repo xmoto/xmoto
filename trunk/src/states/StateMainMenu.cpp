@@ -119,6 +119,7 @@ void StateMainMenu::enter()
 
   // show it before updating lists (which can take some time)
   StateManager::instance()->render(); 
+
   updateLevelsPacksList();
   updateLevelsLists();
   updateReplaysList();
@@ -692,14 +693,14 @@ void StateMainMenu::updateStats() {
   v_window = new UIWindow(i_parent, x, y, "", nWidth, nHeight);
   v_window->setID("REPORT");
  
-  v_result = pDb->readDB("SELECT a.nbStarts, a.since, SUM(b.playedTime), "
-				      "SUM(b.nbPlayed), SUM(b.nbDied), SUM(b.nbCompleted), "
-				      "SUM(b.nbRestarted), count(b.id_level) "
-				      "FROM stats_profiles AS a INNER JOIN stats_profiles_levels AS b "
-				      "ON a.id_profile=b.id_profile "
-				      "WHERE a.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
-				      "GROUP BY a.id_profile;",
-				      nrow);
+  v_result = pDb->readDB("SELECT SUM(a.nbStarts), MIN(a.since), SUM(b.playedTime), "
+			 "SUM(b.nbPlayed), SUM(b.nbDied), SUM(b.nbCompleted), "
+			 "SUM(b.nbRestarted), count(b.id_level) "
+			 "FROM stats_profiles AS a INNER JOIN stats_profiles_levels AS b "
+			 "ON (a.sitekey=b.sitekey AND a.id_profile=b.id_profile) "
+			 "WHERE a.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
+			 "GROUP BY a.id_profile;",
+			 nrow);
   
   if(nrow == 0) {
     pDb->read_DB_free(v_result);
@@ -753,12 +754,13 @@ void StateMainMenu::updateStats() {
   pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
   pText->setFont(GameApp::instance()->getDrawLib()->getFontSmall());      
   
-  v_result = pDb->readDB("SELECT a.name, b.nbPlayed, b.nbDied, "
-				      "b.nbCompleted, b.nbRestarted, b.playedTime "
-				      "FROM levels AS a INNER JOIN stats_profiles_levels AS b ON a.id_level=b.id_level "
-				      "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
-				      "ORDER BY nbPlayed DESC LIMIT 10;",
-				      nrow);
+  v_result = pDb->readDB("SELECT MIN(a.name), SUM(b.nbPlayed), SUM(b.nbDied), "
+			 "SUM(b.nbCompleted), SUM(b.nbRestarted), SUM(b.playedTime) "
+			 "FROM levels AS a INNER JOIN stats_profiles_levels AS b ON a.id_level=b.id_level "
+			 "WHERE b.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
+			 "GROUP BY b.id_level "
+			 "ORDER BY b.nbPlayed DESC LIMIT 10;",
+			 nrow);
   
   int cy = 110;
   for(unsigned int i=0; i<nrow; i++) {
@@ -2013,7 +2015,6 @@ void StateMainMenu::updateLevelsPacksList() {
 								       XMSession::instance()->profile()),
 		     v_lm->LevelsPacks()[i]->getNumberOfLevels(xmDatabase::instance("main"))
 		     );
-      
     }
   }
   

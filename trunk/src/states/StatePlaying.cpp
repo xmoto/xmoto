@@ -119,7 +119,8 @@ void StatePlaying::leave()
 	  if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
 	     m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
 	    
-	    xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->profile(),
+	    xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->sitekey(),
+							     XMSession::instance()->profile(),
 							     m_universe->getScenes()[0]->getLevelSrc()->Id(),
 							     m_universe->getScenes()[0]->getTime());
 	  }
@@ -325,7 +326,8 @@ void StatePlaying::onOneFinish() {
 	}
         // Updating the stats if the Trainer has not been used
         if(Trainer::instance()->trainerHasBeenUsed() == false){ // then, even time played is not saved
-            xmDatabase::instance("main")->profiles_addFinishTime(XMSession::instance()->profile(),
+            xmDatabase::instance("main")->profiles_addFinishTime(XMSession::instance()->sitekey(),
+								 XMSession::instance()->profile(),
                                          m_universe->getScenes()[0]->getLevelSrc()->Id(),
                                          TimeStamp,
                                          v_finish_time);
@@ -340,7 +342,8 @@ void StatePlaying::onOneFinish() {
   if(m_universe != NULL) {
     if(m_universe->getScenes().size() == 1) {
       if(m_universe->getScenes()[0]->Players().size() == 1) {
-	xmDatabase::instance("main")->stats_levelCompleted(XMSession::instance()->profile(),
+	xmDatabase::instance("main")->stats_levelCompleted(XMSession::instance()->sitekey(),
+							   XMSession::instance()->profile(),
 							   m_universe->getScenes()[0]->getLevelSrc()->Id(),
 							   m_universe->getScenes()[0]->Players()[0]->finishTime());
 	StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
@@ -362,7 +365,8 @@ void StatePlaying::onAllDead() {
   if(m_universe != NULL) {
     if(m_universe->getScenes().size() == 1) {
       if(m_universe->getScenes()[0]->Players().size() == 1) {
-	xmDatabase::instance("main")->stats_died(XMSession::instance()->profile(),
+	xmDatabase::instance("main")->stats_died(XMSession::instance()->sitekey(),
+						 XMSession::instance()->profile(),
 						 m_universe->getScenes()[0]->getLevelSrc()->Id(),
 						 m_universe->getScenes()[0]->getTime());
 	StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
@@ -389,7 +393,8 @@ void StatePlaying::abortPlaying() {
       if(m_universe->getScenes()[0]->Players().size() == 1) {
 	if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
 	   m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
-	  xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->profile(),
+	  xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->sitekey(),
+							   XMSession::instance()->profile(),
 							   m_universe->getScenes()[0]->getLevelSrc()->Id(),
 							   m_universe->getScenes()[0]->getTime());
 	  StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
@@ -426,7 +431,8 @@ void StatePlaying::nextLevel(bool i_positifOrder) {
 	if(m_universe->getScenes()[0]->Players().size() == 1) {
 	  if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
 	     m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
-	    xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->profile(),
+	    xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->sitekey(),
+							     XMSession::instance()->profile(),
 							     v_currentLevel,
 							     m_universe->getScenes()[0]->getTime());
 	    StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
@@ -446,7 +452,8 @@ void StatePlaying::restartLevel(bool i_reloadLevel) {
       if(m_universe->getScenes()[0]->Players().size() == 1) {
 	if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
 	   m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
-	  xmDatabase::instance("main")->stats_levelRestarted(XMSession::instance()->profile(),
+	  xmDatabase::instance("main")->stats_levelRestarted(XMSession::instance()->sitekey(),
+							     XMSession::instance()->profile(),
 							     m_universe->getScenes()[0]->getLevelSrc()->Id(),
 							     m_universe->getScenes()[0]->getTime());
 	  StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");

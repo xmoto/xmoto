@@ -88,7 +88,7 @@ void xmDatabase::updateDB_profiles(XmDatabaseUpdateInterface *i_interface) {
 	  v_time     = GameApp::floatToTime(FS::readFloat_LE(pfh));
 
 	  /* insert row */
-	  profiles_addFinishTime(v_playerName, v_id_level, v_timeStamp, v_time);
+	  profiles_addFinishTime_nositekey(v_playerName, v_id_level, v_timeStamp, v_time);
 
 	  v_id_level = FS::readString(pfh);
 	}
@@ -103,8 +103,46 @@ void xmDatabase::updateDB_profiles(XmDatabaseUpdateInterface *i_interface) {
   FS::closeFile(pfh);
 }
 
-void xmDatabase::profiles_addFinishTime(const std::string& i_profile, const std::string& i_id_level,
+void xmDatabase::profiles_addFinishTime(const std::string& i_sitekey, const std::string& i_profile, const std::string& i_id_level,
 					const std::string& i_timeStamp, int i_finishTime) {
+  std::ostringstream v_time_str;
+  v_time_str << i_finishTime;
+  std::string v_timeToKeep;
+  char **v_result;
+  unsigned int nrow;
+
+  simpleSql(std::string("INSERT INTO profile_completedLevels("
+			"sitekey, id_profile, id_level, timeStamp, finishTime, synchronized) "
+			"VALUES(") + 
+	    "\"" + protectString(i_sitekey) + "\", "
+	    "\"" + protectString(i_profile) + "\", "
+	    "\"" + protectString(i_id_level)   + "\", "
+	    "\"" + i_timeStamp       	       + "\", " +
+	    v_time_str.str()        	       + ", 0);");
+  
+  /* keep only the top 10 */
+  v_result = readDB("SELECT finishTime FROM profile_completedLevels "
+		    "WHERE id_level=\""   + protectString(i_id_level)   + "\" "
+		    "AND   sitekey=\""    + protectString(i_sitekey) + "\" "
+		    "AND   id_profile=\"" + protectString(i_profile) + "\" "
+		    "ORDER BY finishTime ASC LIMIT 10;",
+		    nrow);
+  if(nrow < 10) {
+    read_DB_free(v_result);
+    return;
+  }
+  v_timeToKeep = getResult(v_result, 1, 9, 0);
+  read_DB_free(v_result);
+
+  simpleSql("DELETE FROM profile_completedLevels "
+	    "WHERE id_level=\""   + protectString(i_id_level) + "\" "
+	    "AND   sitekey=\""    + protectString(i_sitekey)  + "\" "
+	    "AND   id_profile=\"" + protectString(i_profile)  + "\" "
+	    "AND finishTime > "   + v_timeToKeep + ";");
+}
+
+void xmDatabase::profiles_addFinishTime_nositekey(const std::string& i_profile, const std::string& i_id_level,
+						  const std::string& i_timeStamp, int i_finishTime) {
   std::ostringstream v_time_str;
   v_time_str << i_finishTime;
   std::string v_timeToKeep;
@@ -114,8 +152,8 @@ void xmDatabase::profiles_addFinishTime(const std::string& i_profile, const std:
   simpleSql(std::string("INSERT INTO profile_completedLevels("
 			"id_profile, id_level, timeStamp, finishTime) "
 			"VALUES(") + 
-	    "\"" + protectString(i_profile) + "\", " +
-	    "\"" + protectString(i_id_level)   + "\", " +
+	    "\"" + protectString(i_profile) + "\", "
+	    "\"" + protectString(i_id_level)   + "\", "
 	    "\"" + i_timeStamp       	       + "\", " +
 	    v_time_str.str()        	       + ");");
   

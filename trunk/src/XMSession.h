@@ -115,6 +115,7 @@ public:
   bool sqlTrace() const;
   std::string profile() const;
   void setProfile(const std::string& i_profile);
+  std::string sitekey() const;
   std::string wwwPassword() const;
   void setWwwPassword(const std::string& i_password);
   bool gDebug() const;
@@ -252,6 +253,7 @@ public:
   bool m_debug;
   bool m_sqlTrace;
   std::string m_profile;
+  std::string m_sitekey;
   std::string m_www_password;
   bool m_gdebug;
   std::string m_gdebug_file;
