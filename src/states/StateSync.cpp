@@ -18,15 +18,25 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __FILECOMPRESSION_H__
-#define __FILECOMPRESSION_H__
+#include "StateSync.h"
+#include "thread/SyncThread.h"
 
-#include <string>
+StateSync::StateSync(bool drawStateBehind, bool updateStatesBehind) 
+: StateUpdate(drawStateBehind, updateStatesBehind)
+{
+  m_name = "StateSync";
+  m_messageOnSuccess = true;
+  m_messageOnFailure = true;
+  m_msg = "Hehe, you seem to be interested by this feature.\nDon't hesitate to develop it or wait i finish to do it ! ";
+  m_pThread = new SyncThread();
+}
 
-  class FileCompression {
-    public:
-    static void bunzip2(std::string p_fileIN, std::string p_fileOUT);
-    static void bzip2(std::string p_fileIN, std::string p_fileOUT);
-  };
+StateSync::~StateSync() {
+  delete m_pThread;
+}
 
-#endif /* __FILECOMPRESSION_H__ */
+void StateSync::keyDown(int nKey, SDLMod mod,int nChar) {
+}
+
+void StateSync::checkEvents() {
+}

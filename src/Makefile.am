@@ -168,6 +168,8 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateMultiUpdate.h       \
 		 states/StateCheckWww.cpp        \
 		 states/StateCheckWww.h          \
+		 states/StateSync.cpp            \
+		 states/StateSync.h              \
 		 states/StateUpgradeLevels.cpp   \
 		 states/StateUpgradeLevels.h     \
 		 states/StateDownloadGhost.cpp   \
@@ -202,6 +204,8 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/XMThreads.h                \
 		 thread/CheckWwwThread.cpp         \
 		 thread/CheckWwwThread.h           \
+		 thread/SyncThread.cpp             \
+		 thread/SyncThread.h               \
 		 thread/UpgradeLevelsThread.cpp    \
 		 thread/UpgradeLevelsThread.h      \
 		 thread/DownloadGhostThread.cpp    \

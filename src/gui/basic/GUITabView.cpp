@@ -80,7 +80,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	}
 	
 	if(i != m_nSelected && isUglyMode() == false) {
-	  putRect(nCX-6, 2, v_width+16-4, nHeaderHeight-2, MAKE_COLOR(30,20,20,255));
+	  putRect(nCX-6, 2, v_width+16-4, nHeaderHeight-2, MAKE_COLOR(40,30,30,255));
 	}
 	putTextS(nCX, nCY, getChildren()[i]->getCaption(), v_width, v_height);
 	
