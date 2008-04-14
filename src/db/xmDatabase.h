@@ -165,6 +165,7 @@ public:
 
   // sync
   std::string getXmDbSiteKey();
+  void sync_buildServerFile(const std::string& i_outFile, const std::string& i_sitekey, const std::string& i_profile);
 
   /* data fixes */
   void fixStatsProfilesLevelsNbCompleted();

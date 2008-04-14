@@ -2888,6 +2888,9 @@ void StateMainMenu::checkEventsOptions() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
+    xmDatabase::instance("main")->sync_buildServerFile(FS::getUserDir() + "/sync_up.xml",
+						       XMSession::instance()->sitekey(), XMSession::instance()->profile());
+
     StateManager::instance()->pushState(new StateMessageBox(this, "Hehe, you seem to be interested by this feature.\nDon't hesitate to develop it or wait i finish to do it ! ", UI_MSGBOX_OK));
   }
 

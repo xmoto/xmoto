@@ -69,9 +69,9 @@ void Logger::LogRaw(const std::string &s) {
   
 void Logger::Log(const char *pcFmt, ...) {
   va_list List;
-  char cBuf[1024];
+  char cBuf[4096];
   va_start(List, pcFmt);
-  vsnprintf(cBuf, 1024, pcFmt, List);
+  vsnprintf(cBuf, 4096, pcFmt, List);
   va_end(List);
   
   LogRaw(cBuf);    
