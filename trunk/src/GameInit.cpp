@@ -509,7 +509,9 @@ void GameApp::run_loop() {
 }
 
 void GameApp::run_unload() {
-  Logger::Log("UserUnload started at %.3f", GameApp::getXMTime());
+  if(Logger::isInitialized()) {
+    Logger::Log("UserUnload started at %.3f", GameApp::getXMTime());
+  }
 
   if(m_pWebHighscores != NULL) {
     delete m_pWebHighscores;
@@ -534,13 +536,18 @@ void GameApp::run_unload() {
   GameRenderer::destroy();
   SysMessage::destroy();  
 
-  Logger::Log("UserUnload saveConfig at %.3f", GameApp::getXMTime());
+  if(Logger::isInitialized()) {
+    Logger::Log("UserUnload saveConfig at %.3f", GameApp::getXMTime());
+  }
   if(drawLib != NULL) { /* save config only if drawLib was initialized */
     XMSession::instance()->save(&m_Config, xmDatabase::instance("main"));
     InputHandler::instance()->saveConfig(&m_Config, xmDatabase::instance("main"), XMSession::instance()->profile());
     m_Config.saveFile();
   }
-  Logger::Log("UserUnload saveConfig ended at %.3f", GameApp::getXMTime());
+
+  if(Logger::isInitialized()) {
+    Logger::Log("UserUnload saveConfig ended at %.3f", GameApp::getXMTime());
+  }
 
   if(drawLib != NULL) {
     drawLib->unInit();
@@ -551,7 +558,9 @@ void GameApp::run_unload() {
   Theme::destroy();
   XMSession::destroy();
 
-  Logger::Log("UserUnload ended at %.3f", GameApp::getXMTime());
+  if(Logger::isInitialized()) {
+    Logger::Log("UserUnload ended at %.3f", GameApp::getXMTime());
+  }
 
   /* Shutdown SDL */
   SDL_Quit();
