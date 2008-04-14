@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateUploadAllHighscores.h"
 #include "StateUpdateTheme.h"
 #include "StateCheckWww.h"
+#include "StateSync.h"
 #include "StateUpgradeLevels.h"
 #include "StateDownloadGhost.h"
 #include "LevelsManager.h"
@@ -2887,11 +2888,7 @@ void StateMainMenu::checkEventsOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHRONIZE_BUTTON"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-
-    xmDatabase::instance("main")->sync_buildServerFile(FS::getUserDir() + "/sync_up.xml",
-						       XMSession::instance()->sitekey(), XMSession::instance()->profile());
-
-    StateManager::instance()->pushState(new StateMessageBox(this, "Hehe, you seem to be interested by this feature.\nDon't hesitate to develop it or wait i finish to do it ! ", UI_MSGBOX_OK));
+    StateManager::instance()->pushState(new StateSync());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHONIZE_ONQUIT_CKB"));

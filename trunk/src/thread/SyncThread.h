@@ -18,15 +18,19 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __FILECOMPRESSION_H__
-#define __FILECOMPRESSION_H__
+#ifndef __SYNCTHREAD_H__
+#define __SYNCTHREAD_H__
 
-#include <string>
+#include "XMThread.h"
 
-  class FileCompression {
-    public:
-    static void bunzip2(std::string p_fileIN, std::string p_fileOUT);
-    static void bzip2(std::string p_fileIN, std::string p_fileOUT);
-  };
+class SyncThread : public XMThread {
+  public:
+  SyncThread();
+  virtual ~SyncThread();
 
-#endif /* __FILECOMPRESSION_H__ */
+  virtual int realThreadFunction();
+
+private:
+};
+
+#endif

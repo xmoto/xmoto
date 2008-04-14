@@ -43,18 +43,18 @@ void FileCompression::bunzip2(std::string p_fileIN, std::string p_fileOUT) {
   }
   b_in = BZ2_bzReadOpen (&bzerror_in, f_in, 0, 0, NULL, 0);
   if(bzerror_in != BZ_OK) {
-    BZ2_bzReadClose (&bzerror_in, b_in);
+    fclose(f_in);
     throw Exception("Unable to read file " + p_fileIN);
   }
-
+  
   //open out file
   f_out = fopen(p_fileOUT.c_str(), "wb");
   if (!f_out) {
+    BZ2_bzReadClose (&bzerror_in, b_in);
     fclose(f_in);
-    fclose(f_out);
     throw Exception("Unable to write file " + p_fileOUT);
   }
-
+  
   // read file
   bzerror_in = BZ_OK;
   while(bzerror_in == BZ_OK) {
@@ -63,25 +63,81 @@ void FileCompression::bunzip2(std::string p_fileIN, std::string p_fileOUT) {
       // write file
       nbWrote = fwrite(buf, 1, nBuf, f_out);
       if(nbWrote != nBuf) {
-  BZ2_bzReadClose (&bzerror_in, b_in);
-  fclose(f_in);
-  fclose(f_out);
-  throw Exception("Unable to write file " + p_fileOUT);
+	BZ2_bzReadClose (&bzerror_in, b_in);
+	fclose(f_in);
+	fclose(f_out);
+	throw Exception("Unable to write file " + p_fileOUT);
       }
     }
   }
-
+  
   // close in file
   if(bzerror_in != BZ_STREAM_END) {
     BZ2_bzReadClose (&bzerror_in, b_in);
     fclose(f_in);
     fclose(f_out);
     throw Exception("Unable to read file " + p_fileIN);
-  } else {
-    BZ2_bzReadClose (&bzerror_in, b_in);
-    fclose(f_in);
+  }
+   
+  BZ2_bzReadClose (&bzerror_in, b_in);
+  fclose(f_in);
+  
+  // close write file
+  fclose(f_out);
+}
+
+void FileCompression::bzip2(std::string p_fileIN, std::string p_fileOUT) {
+  FILE   *f_in, *f_out;
+  BZFILE *b_out;
+  int     nBuf;
+  char    buf[BUFSIZE];
+  int     bzerror_out;
+
+  // open in file
+  f_in = fopen (p_fileIN.c_str(), "rb");
+  if (!f_in) {
+    throw Exception("Unable to read file " + p_fileIN);
   }
 
-  // close write file
+  //open out file
+  f_out = fopen(p_fileOUT.c_str(), "wb");
+  if (!f_out) {
+    fclose(f_in);
+    throw Exception("Unable to write file " + p_fileOUT);
+  }
+
+  b_out = BZ2_bzWriteOpen (&bzerror_out, f_out, 9, 0, 0);
+  if(bzerror_out != BZ_OK) {
+    fclose(f_in);
+    fclose(f_out);
+    throw Exception("Unable to write file " + p_fileOUT);
+  }
+
+  // read file
+  do {
+    nBuf = fread(buf, 1, BUFSIZE, f_in);
+    if(nBuf != 0) {
+      BZ2_bzWrite(&bzerror_out, b_out, buf, nBuf);
+      if(bzerror_out != BZ_OK) {
+	BZ2_bzWriteClose (&bzerror_out, b_out, 0, NULL, NULL);
+	fclose(f_in);
+	fclose(f_out);
+	throw Exception("Unable to write file " + p_fileOUT);
+      }
+    }
+  } while(nBuf != 0);
+  if(feof(f_in) == 0) {
+    BZ2_bzWriteClose (&bzerror_out, b_out, 0, NULL, NULL);
+    fclose(f_in);
+    fclose(f_out);
+    throw Exception("Unable to write file " + p_fileOUT);
+  }
+
+  BZ2_bzWriteClose (&bzerror_out, b_out, 0, NULL, NULL);
+  if(bzerror_out != BZ_OK) {
+    throw Exception("Unable to write file " + p_fileOUT);
+  }
+
+  fclose(f_in);
   fclose(f_out);
 }

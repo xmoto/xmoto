@@ -18,15 +18,21 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __FILECOMPRESSION_H__
-#define __FILECOMPRESSION_H__
+#ifndef __STATESYNC_H__
+#define __STATESYNC_H__
 
-#include <string>
+#include "StateUpdate.h"
 
-  class FileCompression {
-    public:
-    static void bunzip2(std::string p_fileIN, std::string p_fileOUT);
-    static void bzip2(std::string p_fileIN, std::string p_fileOUT);
-  };
+class StateSync : public StateUpdate {
+public:
+  StateSync(bool drawStateBehind    = true,
+	    bool updateStatesBehind = false);
+  virtual ~StateSync();
 
-#endif /* __FILECOMPRESSION_H__ */
+  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+
+protected:
+  virtual void checkEvents();
+};
+
+#endif

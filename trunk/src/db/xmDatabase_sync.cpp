@@ -46,7 +46,7 @@ void xmDatabase::sync_buildServerFile(const std::string& i_outFile, const std::s
       throw Exception("Unable to retrieve informations");
     }
     snprintf(v_line, 2048,
-	     "<xmoto_sync sitekey=\"%s\" profile=\"%s\" nbStarts=\"%i\" since=\"%s\">",
+	     "<xmoto_sync fileformat=\"1\" sitekey=\"%s\" profile=\"%s\" nbStarts=\"%i\" since=\"%s\">",
 	     XML::str2xmlstr(i_sitekey).c_str(), XML::str2xmlstr(i_profile).c_str(),
 	     atoi(getResult(v_result, 2, 0, 0)), getResult(v_result, 2, 0, 1));
     FS::writeLine(pfh, v_line);
