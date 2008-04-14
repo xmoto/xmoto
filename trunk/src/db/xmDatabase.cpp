@@ -22,11 +22,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "GameText.h"
 #include "WWW.h"
+#include "Game.h"
 #include "helpers/Log.h"
 #include "XMSession.h"
 #include "VFileIO.h"
 
-#define XMDB_VERSION 25
+#define XMDB_VERSION         25
+#define DB_MAX_SQL_RUNTIME 0.25
 
 bool xmDatabase::Trace = false;
 
@@ -622,9 +624,11 @@ char** xmDatabase::readDB(const std::string& i_sql, unsigned int &i_nrow) {
   char *errMsg;
   std::string v_errMsg;
   int v_nrow;
+	double v_startTime, v_endTime;
 
   //printf("%s\n", i_sql.c_str());
 
+	v_startTime = GameApp::getXMTime();
   if(sqlite3_get_table(m_db,
 		       i_sql.c_str(),
 		       &v_result, &v_nrow, &ncolumn, &errMsg)
@@ -636,6 +640,12 @@ char** xmDatabase::readDB(const std::string& i_sql, unsigned int &i_nrow) {
     throw Exception("xmDb: " + v_errMsg);
 
   }
+	v_endTime = GameApp::getXMTime();
+
+	if(v_endTime - v_startTime > DB_MAX_SQL_RUNTIME) {
+		Logger::Log("** Warning ** : long query time detected (%.3f'') for query '%s'", v_endTime - v_startTime, i_sql.c_str());
+	}
+
   i_nrow = (unsigned int) v_nrow;
 
   return v_result;

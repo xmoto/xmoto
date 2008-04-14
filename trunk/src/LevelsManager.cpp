@@ -284,7 +284,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 
   /* levels i've not finished */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_INCOMPLETED_LEVELS),
-			  "SELECT MIN(a.id_level) AS id_level, MIN(a.name) AS name, MIN(UPPER(a.name)) AS sort_field "
+			  "SELECT a.id_level AS id_level, MIN(a.name) AS name, MIN(UPPER(a.name)) AS sort_field "
 			  "FROM levels AS a LEFT OUTER JOIN stats_profiles_levels AS b "
 			  "ON (a.id_level=b.id_level AND "
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
@@ -294,7 +294,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "AND d.id_level IS NULL "
 			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
 			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
-			  "GROUP BY b.id_profile");
+			  "GROUP BY a.id_level, b.id_profile");
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
   v_pack->setDescription(VPACKAGENAME_DESC_INCOMPLETED_LEVELS);
   m_levelsPacks.push_back(v_pack);
@@ -538,7 +538,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   /* stats */
   /* last played levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_LAST_PLAYED),
-			  "SELECT MIN(a.id_level) AS id_level, MIN(a.name) AS name, MAX(b.last_play_date) AS sort_field "
+			  "SELECT a.id_level AS id_level, MIN(a.name) AS name, MAX(b.last_play_date) AS sort_field "
 			  "FROM levels AS a INNER JOIN stats_profiles_levels AS b "
 			  "ON (a.id_level=b.id_level AND "
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
@@ -548,7 +548,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
 			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
 			  "AND d.id_level IS NULL "
-			  "GROUP BY b.id_profile "
+			  "GROUP BY a.id_level, b.id_profile "
 			  "ORDER BY MAX(b.last_play_date) DESC "
 			  "LIMIT 100", false);
   v_pack->setGroup(GAMETEXT_PACK_STATS);
@@ -573,7 +573,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   
   /* most played levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_MOST_PLAYED),
-			  "SELECT a.id_level AS id_level, a.name AS name, b.nbPlayed AS sort_field "
+			  "SELECT a.id_level AS id_level, MIN(a.name) AS name, SUM(b.nbPlayed) AS sort_field "
 			  "FROM levels AS a INNER JOIN stats_profiles_levels AS b "
 			  "ON (a.id_level=b.id_level AND "
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
@@ -582,7 +582,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "WHERE (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
 			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
 			  "AND d.id_level IS NULL "
-			  "GROUP BY b.id_profile "
+			  "GROUP BY a.id_level, b.id_profile "
 			  "ORDER BY MAX(b.nbPlayed) DESC LIMIT 100", false);
   v_pack->setGroup(GAMETEXT_PACK_STATS);
   v_pack->setDescription(VPACKAGENAME_DESC_MOST_PLAYED);
@@ -590,7 +590,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 
   /* less played levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_LESS_PLAYED),
-			  "SELECT a.id_level AS id_level, a.name AS name, b.nbPlayed AS sort_field "
+			  "SELECT a.id_level AS id_level, MIN(a.name) AS name, SUM(b.nbPlayed) AS sort_field "
 			  "FROM levels AS a INNER JOIN stats_profiles_levels AS b "
 			  "ON (a.id_level=b.id_level AND "
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
@@ -600,7 +600,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
 			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
 			  "AND d.id_level IS NULL "
-			  "GROUP BY b.id_profile "
+			  "GROUP BY a.id_level, b.id_profile "
 			  "ORDER BY MIN(b.nbPlayed) ASC LIMIT 100");
   v_pack->setGroup(GAMETEXT_PACK_STATS);
   v_pack->setDescription(VPACKAGENAME_DESC_LESS_PLAYED);

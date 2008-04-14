@@ -226,5 +226,12 @@ class WebThemes {
   
 };
 
+class XMSync {
+ public:
+  static void syncUp(xmDatabase* i_pDb, const ProxySettings* pProxySettings,
+		     const std::string& i_sitekey, const std::string& i_profile);
+  static void syncDown();
+};
+
 #endif /* WEBSTUFFS */
 

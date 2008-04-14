@@ -929,3 +929,11 @@ void WebThemes::updateThemeList(xmDatabase* i_pDb, WWWAppInterface* i_WebLevelAp
 				 FSWeb::f_curl_progress_callback_download, &v_data, XMSession::instance()->proxySettings());
   i_pDb->webthemes_updateDB(v_destinationFile);
 }
+
+void XMSync::syncUp(xmDatabase* i_pDb, const ProxySettings* pProxySettings,
+		    const std::string& i_sitekey, const std::string& i_profile) {
+  // sync_buildServerFile(const std::string& i_outFile, const std::string& i_sitekey, const std::string& i_profile)
+}
+
+void XMSync::syncDown() {
+}
