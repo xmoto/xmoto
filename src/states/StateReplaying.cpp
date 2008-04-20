@@ -221,7 +221,7 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
     }
     break;
 
-#if defined(ENABLE_ZOOMING)
+#if defined(ENABLE_DEV)
   case SDLK_KP0:			        	//TRAINER
     /* store current bike position (for trainer) */
     if(m_universe != NULL) {

@@ -67,6 +67,7 @@ XMArguments::XMArguments() {
   m_opt_videoRecordingEndTime   = -1;
   m_opt_hidePlayingInformation  = false;
   m_opt_forceChildrenCompliant  = false;
+  m_opt_default_theme           = false;
 }
 
 void XMArguments::parse(int i_argc, char **i_argv) {
@@ -253,6 +254,12 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       i++;
     } else if(v_opt == "--hidePlayingInformation") {
       m_opt_hidePlayingInformation = true;
+    } else if(v_opt == "--defaultTheme") {
+      m_opt_default_theme = true;
+      if(i+1 >= i_argc) {
+	throw SyntaxError("missing default theme name");
+      }
+      m_opt_default_theme_value = i_argv[i+1];
       i++;
     } else {
       /* check if the parameter is a file */
@@ -484,6 +491,14 @@ bool XMArguments::isOptNoSound() const {
   return m_opt_nosound;
 }
 
+bool XMArguments::isOptDefaultTheme() const {
+  return m_opt_default_theme;
+}
+
+std::string XMArguments::getOpt_defaultTheme_theme() const {
+  return m_opt_default_theme_value;
+}
+
 std::string XMArguments::getOpt_configPath_path() const {
   return m_configpath_path;
 }
@@ -574,6 +589,7 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t--videoRecordingEndTime NBCENTSOFSECONDS\n\t\tStop recording video after this game time.\n");
   printf("\t--hidePlayingInformation\n\t\tDon't show some information while playing/replaying ; usefull to make nicer video.\n");
   printf("\t--drawlib DRAWLIB\n\t\tChoose the render to use (default one is OPENGL if available).\n");
+  printf("\t--defaultTheme THEME\n\t\tDefault theme for new profiles created.\n");
   printf("\t-h, -?, -help, --help\n\t\tDisplay this message.\n");
   printf("\t--pack [BIN] [DIR]\n\t\tBuild the BIN package from directory DIR.\n");
   printf("\t--unpack [BIN] [DIR] [no_list]\n\t\tUnpack the BIN package into the dir DIR.\n");

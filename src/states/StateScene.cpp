@@ -236,7 +236,7 @@ void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
   }
 
 
-#if defined(ENABLE_ZOOMING)
+#if defined(ENABLE_DEV)
   else if(nKey == SDLK_KP7){
     /* Zoom in */
     if(m_universe != NULL) {
