@@ -30,8 +30,8 @@ XMSession::XMSession() {
   setToDefault();
 
   /* don't set them by default */
-  m_webConfAtInit = DEFAULT_WEBCONFATINIT;
-  m_profile       = DEFAULT_PROFILE;
+  m_webConfAtInit   = DEFAULT_WEBCONFATINIT;
+  m_profile         = DEFAULT_PROFILE;
 }
 
 void XMSession::setToDefault() {
@@ -75,7 +75,7 @@ void XMSession::setToDefault() {
   m_multiNbPlayers                = DEFAULT_MULTINBPLAYERS;
   m_multiScenes                   = DEFAULT_MULTISCENES;
   m_enableContextHelp             = DEFAULT_ENABLECONTEXTHELP;
-  m_theme                         = DEFAULT_THEMENAME;
+  m_theme                         = XMDefault::DefaultTheme;
   m_enableAudio                   = DEFAULT_ENABLEAUDIO;
   m_audioSampleRate               = DEFAULT_AUDIOSAMPLERATE;
   m_audioSampleBits               = DEFAULT_AUDIOSAMPLEBITS;
@@ -249,57 +249,57 @@ void XMSession::load(UserConfig* m_Config) {
 
 void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_sitekey                        = pDb->getXmDbSiteKey();
-  m_www          	    	   = pDb->config_getBool   (i_id_profile, "WebHighscores"    	       	  , DEFAULT_WWW            );
-  m_www_password 	    	   = pDb->config_getString (i_id_profile, "WWWPassword"      	       	  , DEFAULT_WWW_PASSWORD   );
-  m_theme        	    	   = pDb->config_getString (i_id_profile, "Theme"            	       	  , DEFAULT_THEMENAME      );
-  m_language     	    	   = pDb->config_getString (i_id_profile, "Language"         	       	  , DEFAULT_LANGUAGE       );
-  m_quickStartQualityMIN    	   = pDb->config_getInteger(i_id_profile, "QSQualityMIN"          , DEFAULT_QUICKSTARTQUALITYMIN   );
-  m_quickStartQualityMAX    	   = pDb->config_getInteger(i_id_profile, "QSQualityMAX"     	  , DEFAULT_QUICKSTARTQUALITYMAX   );
-  m_quickStartDifficultyMIN 	   = pDb->config_getInteger(i_id_profile, "QSDifficultyMIN"  	  , DEFAULT_QUICKSTARTDIFFICULTYMIN);
-  m_quickStartDifficultyMAX 	   = pDb->config_getInteger(i_id_profile, "QSDifficultyMAX"  	  , DEFAULT_QUICKSTARTDIFFICULTYMAX);
-  m_enableAudio     	    	   = pDb->config_getBool   (i_id_profile, "AudioEnable"      	       	  , DEFAULT_ENABLEAUDIO    );
-  m_audioSampleRate    	    	   = pDb->config_getInteger(i_id_profile, "AudioSampleRate"  	       	  , DEFAULT_AUDIOSAMPLERATE);
-  m_audioSampleBits    	    	   = pDb->config_getInteger(i_id_profile, "AudioSampleBits"  	       	  , DEFAULT_AUDIOSAMPLEBITS);
+  m_www          	    	   = pDb->config_getBool   (i_id_profile, "WebHighscores"    	       	  , m_www         );
+  m_www_password 	    	   = pDb->config_getString (i_id_profile, "WWWPassword"      	       	  , m_www_password);
+  m_theme        	    	   = pDb->config_getString (i_id_profile, "Theme"            	       	  , m_theme);
+  m_language     	    	   = pDb->config_getString (i_id_profile, "Language"         	       	  , m_language    );
+  m_quickStartQualityMIN    	   = pDb->config_getInteger(i_id_profile, "QSQualityMIN"                  , m_quickStartQualityMIN);
+  m_quickStartQualityMAX    	   = pDb->config_getInteger(i_id_profile, "QSQualityMAX"     	          , m_quickStartQualityMAX);
+  m_quickStartDifficultyMIN 	   = pDb->config_getInteger(i_id_profile, "QSDifficultyMIN"  	          , m_quickStartDifficultyMIN);
+  m_quickStartDifficultyMAX 	   = pDb->config_getInteger(i_id_profile, "QSDifficultyMAX"  	          , m_quickStartDifficultyMAX);
+  m_enableAudio     	    	   = pDb->config_getBool   (i_id_profile, "AudioEnable"      	       	  , m_enableAudio    );
+  m_audioSampleRate    	    	   = pDb->config_getInteger(i_id_profile, "AudioSampleRate"  	       	  , m_audioSampleRate);
+  m_audioSampleBits    	    	   = pDb->config_getInteger(i_id_profile, "AudioSampleBits"  	       	  , m_audioSampleBits);
   m_audioChannels     	    	   = pDb->config_getString (i_id_profile, "AudioChannels"  ,
 							    DEFAULT_AUDIOCHANNELS == 1 ? "Mono" : "Stereo") == "Mono" ? 1 : 2;
-  m_enableAudioEngine  	    	   = pDb->config_getBool   (i_id_profile, "EngineSoundEnable"	       	  , DEFAULT_ENABLEAUDIOENGINE);
-  m_autosaveHighscoreReplays       = pDb->config_getBool   (i_id_profile, "AutosaveHighscoreReplays", DEFAULT_AUTOSAVEHIGHSCORESREPLAYS);
-  m_notifyAtInit                   = pDb->config_getBool   (i_id_profile, "NotifyAtInit"                  , DEFAULT_NOTIFYATINIT   );
-  m_showMinimap                    = pDb->config_getBool   (i_id_profile, "ShowMiniMap"                   , DEFAULT_SHOWMINIMAP    );
-  m_showEngineCounter              = pDb->config_getBool   (i_id_profile, "ShowEngineCounter"             , DEFAULT_SHOWENGINECOUNTER);
-  m_enableContextHelp        	   = pDb->config_getBool   (i_id_profile, "ContextHelp"                   , DEFAULT_ENABLECONTEXTHELP);
-  m_enableMenuMusic                = pDb->config_getBool   (i_id_profile, "MenuMusic"                     , DEFAULT_ENABLEMENUMUSIC);
-  m_enableInitZoom           	   = pDb->config_getBool   (i_id_profile, "InitZoom"                      , DEFAULT_ENABLEINITZOOM );
-  m_enableActiveZoom         	   = pDb->config_getBool   (i_id_profile, "CameraActiveZoom"              , DEFAULT_ENABLEACTIVEZOOM);
-  m_enableDeadAnimation      	   = pDb->config_getBool   (i_id_profile, "DeathAnim"                     , DEFAULT_ENABLEDEADANIMATION);
-  m_checkNewLevelsAtStartup        = pDb->config_getBool   (i_id_profile, "CheckNewLevelsAtStartup"   , DEFAULT_CHECKNEWLEVELSATSTARTUP);
-  m_checkNewHighscoresAtStartup    = pDb->config_getBool   (i_id_profile, "CheckHighscoresAtStartup"  , DEFAULT_CHECKNEWHIGHSCORESATSTARTUP);
-  m_showHighscoreInGame            = pDb->config_getBool   (i_id_profile, "ShowInGameWorldRecord"         , DEFAULT_SHOWHIGHSCOREINGAME);
-  m_webConfAtInit                  = pDb->config_getBool   (i_id_profile, "WebConfAtInit"                 , DEFAULT_WEBCONFATINIT  );
-  m_useCrappyPack                  = pDb->config_getBool   (i_id_profile, "UseCrappyPack"                 , DEFAULT_USECRAPPYPACK  );
-  m_useChildrenCompliant           = pDb->config_getBool   (i_id_profile, "UseChildrenCompliant"      , DEFAULT_USECHILDRENCOMPLIANT);
-  m_enableGhosts                   = pDb->config_getBool   (i_id_profile, "EnableGhost"                   , DEFAULT_ENABLEGHOSTS   );
-  m_ghostStrategy_MYBEST           = pDb->config_getBool   (i_id_profile, "GhostStrategy_MYBEST"          , DEFAULT_GHOST_MYBEST   );
-  m_ghostStrategy_THEBEST          = pDb->config_getBool   (i_id_profile, "GhostStrategy_THEBEST"         , DEFAULT_GHOST_THEBEST  );
-  m_ghostStrategy_BESTOFREFROOM    = pDb->config_getBool   (i_id_profile, "GhostStrategy_BESTOFREFROOM"   , DEFAULT_GHOSTBESTREFROOM);
-  m_ghostStrategy_BESTOFOTHERROOMS = pDb->config_getBool   (i_id_profile, "GhostStrategy_BESTOFOTHERROOMS", DEFAULT_GHOSTBESTOTHERROOMS);
-  m_showGhostTimeDifference        = pDb->config_getBool   (i_id_profile, "ShowGhostTimeDiff"         , DEFAULT_SHOWGHOSTTIMEDIFFERENCE);
-  m_showGhostsInfos                = pDb->config_getBool   (i_id_profile, "DisplayGhostInfo"              , DEFAULT_SHOWGHOSTSINFOS);
-  m_ghostMotionBlur                = pDb->config_getBool   (i_id_profile, "GhostMotionBlur"               , DEFAULT_GHOSTMOTIONBLUR);
-  m_hideGhosts                     = pDb->config_getBool   (i_id_profile, "HideGhosts"                    , DEFAULT_HIDEGHOSTS     );
-  m_multiStopWhenOneFinishes 	   = pDb->config_getBool   (i_id_profile, "MultiStopWhenOneFinishes", DEFAULT_MULTISTOPWHENONEFINISHES);
-  m_dbsynchronizeOnQuit            = pDb->config_getBool   (i_id_profile, "DbSynchronizeOnQuit"           , DEFAULT_DBSYNCHRONIZEONQUIT);
+  m_enableAudioEngine  	    	   = pDb->config_getBool   (i_id_profile, "EngineSoundEnable"	       	  , m_enableAudioEngine);
+  m_autosaveHighscoreReplays       = pDb->config_getBool   (i_id_profile, "AutosaveHighscoreReplays"      , m_autosaveHighscoreReplays);
+  m_notifyAtInit                   = pDb->config_getBool   (i_id_profile, "NotifyAtInit"                  , m_notifyAtInit     );
+  m_showMinimap                    = pDb->config_getBool   (i_id_profile, "ShowMiniMap"                   , m_showMinimap      );
+  m_showEngineCounter              = pDb->config_getBool   (i_id_profile, "ShowEngineCounter"             , m_showEngineCounter);
+  m_enableContextHelp        	   = pDb->config_getBool   (i_id_profile, "ContextHelp"                   , m_enableContextHelp);
+  m_enableMenuMusic                = pDb->config_getBool   (i_id_profile, "MenuMusic"                     , m_enableMenuMusic  );
+  m_enableInitZoom           	   = pDb->config_getBool   (i_id_profile, "InitZoom"                      , m_enableInitZoom   );
+  m_enableActiveZoom         	   = pDb->config_getBool   (i_id_profile, "CameraActiveZoom"              , m_enableActiveZoom );
+  m_enableDeadAnimation      	   = pDb->config_getBool   (i_id_profile, "DeathAnim"                     , m_enableDeadAnimation);
+  m_checkNewLevelsAtStartup        = pDb->config_getBool   (i_id_profile, "CheckNewLevelsAtStartup"       , m_checkNewLevelsAtStartup);
+  m_checkNewHighscoresAtStartup    = pDb->config_getBool   (i_id_profile, "CheckHighscoresAtStartup"  , m_checkNewHighscoresAtStartup);
+  m_showHighscoreInGame            = pDb->config_getBool   (i_id_profile, "ShowInGameWorldRecord"         , m_showHighscoreInGame);
+  m_webConfAtInit                  = pDb->config_getBool   (i_id_profile, "WebConfAtInit"                 , m_webConfAtInit);
+  m_useCrappyPack                  = pDb->config_getBool   (i_id_profile, "UseCrappyPack"                 , m_useCrappyPack);
+  m_useChildrenCompliant           = pDb->config_getBool   (i_id_profile, "UseChildrenCompliant"          , m_useChildrenCompliant);
+  m_enableGhosts                   = pDb->config_getBool   (i_id_profile, "EnableGhost"                   , m_enableGhosts);
+  m_ghostStrategy_MYBEST           = pDb->config_getBool   (i_id_profile, "GhostStrategy_MYBEST"          , m_ghostStrategy_MYBEST);
+  m_ghostStrategy_THEBEST          = pDb->config_getBool   (i_id_profile, "GhostStrategy_THEBEST"         , m_ghostStrategy_THEBEST);
+  m_ghostStrategy_BESTOFREFROOM    = pDb->config_getBool   (i_id_profile, "GhostStrategy_BESTOFREFROOM"   , m_ghostStrategy_BESTOFREFROOM);
+  m_ghostStrategy_BESTOFOTHERROOMS = pDb->config_getBool   (i_id_profile, "GhostStrategy_BESTOFOTHERROOMS", m_ghostStrategy_BESTOFOTHERROOMS);
+  m_showGhostTimeDifference        = pDb->config_getBool   (i_id_profile, "ShowGhostTimeDiff"             , m_showGhostTimeDifference);
+  m_showGhostsInfos                = pDb->config_getBool   (i_id_profile, "DisplayGhostInfo"              , m_showGhostsInfos);
+  m_ghostMotionBlur                = pDb->config_getBool   (i_id_profile, "GhostMotionBlur"               , m_ghostMotionBlur);
+  m_hideGhosts                     = pDb->config_getBool   (i_id_profile, "HideGhosts"                    , m_hideGhosts     );
+  m_multiStopWhenOneFinishes 	   = pDb->config_getBool   (i_id_profile, "MultiStopWhenOneFinishes"      , m_multiStopWhenOneFinishes);
+  m_dbsynchronizeOnQuit            = pDb->config_getBool   (i_id_profile, "DbSynchronizeOnQuit"           , m_dbsynchronizeOnQuit);
 
-  m_nbRoomsEnabled                 = pDb->config_getInteger(i_id_profile, "WebHighscoresNbRooms"          , DEFAULT_NBROOMSENABLED);
+  m_nbRoomsEnabled                 = pDb->config_getInteger(i_id_profile, "WebHighscoresNbRooms"          , m_nbRoomsEnabled);
   if(m_nbRoomsEnabled < 1) { m_nbRoomsEnabled = 1; }
   if(m_nbRoomsEnabled > ROOMS_NB_MAX) { m_nbRoomsEnabled = ROOMS_NB_MAX; }
   for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
     if(i == 0) {
-      m_idRoom[i] = pDb->config_getString(i_id_profile, "WebHighscoresIdRoom", DEFAULT_WEBROOM_ID);
+      m_idRoom[i] = pDb->config_getString(i_id_profile, "WebHighscoresIdRoom", m_idRoom[i]);
     } else {
       std::ostringstream v_strRoom;
       v_strRoom << i;
-      m_idRoom[i] = pDb->config_getString(i_id_profile, "WebHighscoresIdRoom" + v_strRoom.str(), DEFAULT_WEBROOM_ID);
+      m_idRoom[i] = pDb->config_getString(i_id_profile, "WebHighscoresIdRoom" + v_strRoom.str(), m_idRoom[i]);
     }
   }
 

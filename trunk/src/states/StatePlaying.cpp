@@ -194,7 +194,7 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
     }
   }
 
-#if defined(ENABLE_ZOOMING)
+#if defined(ENABLE_DEV)
   else if(nKey == SDLK_KP0 && (mod & KMOD_LCTRL) == KMOD_LCTRL){
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {

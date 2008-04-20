@@ -137,13 +137,22 @@ AC_ARG_WITH([gamedatadir],
 AC_SUBST([GAMEDATADIR])
 
 dnl Put ALLOW_ZOOMING in makefiles
-AC_ARG_WITH([enable-zoom],
-  [AS_HELP_STRING([--with-enable-zoom=0|1],
-    [Enable zoom])],
-  [ALLOW_ZOOMING="$withval"],
-  [ALLOW_ZOOMING="0"]
+AC_ARG_WITH([enable-dev],
+  [AS_HELP_STRING([--with-enable-dev=0|1],
+    [Enable dev])],
+  [ALLOW_DEV="$withval"],
+  [ALLOW_DEV="0"]
 )
-AC_SUBST([ALLOW_ZOOMING])
+AC_SUBST([ALLOW_DEV])
+
+dnl Put DEFAULT_THEME in makefiles
+AC_ARG_WITH([default-theme],
+  [AS_HELP_STRING([--with-default-theme=],
+    [Default theme])],
+  [CONFIGURE_DEFAULT_THEME="$withval"],
+  [CONFIGURE_DEFAULT_THEME="Classic"]
+)
+AC_SUBST([CONFIGURE_DEFAULT_THEME])
 
 dnl asian font
 if test "$target_os" = "mingw32" # windows...
@@ -174,16 +183,25 @@ displayRequirement() {
   REQ="$4"
 
   if test "$VAR" = "$GOOD_RES"; then
-    printf "| %15s | %10s | %51s |\n" "$STUFF" "enabled" "(""$REQ"")"
+    printf "| %15s | %10s | %63s |\n" "$STUFF" "enabled" "(""$REQ"")"
   else
-    printf "| %15s | %10s | %51s |\n" "$STUFF" "disabled" "(""$REQ"" missing)"
+    printf "| %15s | %10s | %63s |\n" "$STUFF" "disabled" "(""$REQ"" missing)"
   fi
 }
+
+displayValue() {
+  STUFF="$1"
+  VAR="$2"
+  COMMENT="$3"
+
+  printf "| %15s | %10s | %63s |\n" "$STUFF" "$VAR" "(""$COMMENT"")"
+}
+
 
 displayVersion() {
   LIB="$1"
   VERSION="$2"
-  printf "| %15s | %10s | %51s |\n" "$LIB" "enabled" "$VERSION"
+  printf "| %15s | %10s | %63s |\n" "$LIB" "$VERSION" ""
 }
 
 use_gettext=no
@@ -197,18 +215,20 @@ then
 fi
 
 echo
-echo   "+-----------------+------------+-----------------------------------------------------+"
+echo   "+-----------------+------------+-----------------------------------------------------------------+"
 displayRequirement "Locales" "$use_gettext" "yes" "gettext"
-echo   "+-----------------+------------+-----------------------------------------------------+"
-displayRequirement "asian ttf file" "$ASIAN_TTF_FILE" "$ASIAN_TTF_FILE" "$ASIAN_TTF_FILE"
-echo   "+-----------------+------------+-----------------------------------------------------+"
+echo   "+-----------------+------------+-----------------------------------------------------------------+"
+displayRequirement "Asian ttf file" "$ASIAN_TTF_FILE" "$ASIAN_TTF_FILE" "$ASIAN_TTF_FILE"
+echo   "+-----------------+------------+-----------------------------------------------------------------+"
 displayVersion "Lua" "$USE_LUA_VERSION"
-echo   "+-----------------+------------+-----------------------------------------------------+"
-displayRequirement "Zoom" "$with_enable_zoom" "1" "--with-enable-zoom=1 (for non official packages)"
-echo   "+-----------------+------------+-----------------------------------------------------+"
+echo   "+-----------------+------------+-----------------------------------------------------------------+"
+displayRequirement "Dev" "$with_enable_dev" "1" "--with-enable-dev=1 (for non official packages)"
+echo   "+-----------------+------------+-----------------------------------------------------------------+"
+displayValue "Default theme" "$CONFIGURE_DEFAULT_THEME" "--with-default-theme=""$CONFIGURE_DEFAULT_THEME"
+echo   "+-----------------+------------+-----------------------------------------------------------------+"
 displayRequirement "OpenGl" "$USE_OPENGL" "1" "--with-renderer-openGl=1"
-echo   "+-----------------+------------+-----------------------------------------------------+"
-displayRequirement "sdlGfx" "$USE_SDLGFX" "1" "--with-renderer-sdlGfx=1 (unsafe)"
-echo   "+-----------------+------------+-----------------------------------------------------+"
+echo   "+-----------------+------------+-----------------------------------------------------------------+"
+displayRequirement "SdlGfx" "$USE_SDLGFX" "1" "--with-renderer-sdlGfx=1 (unsafe)"
+echo   "+-----------------+------------+-----------------------------------------------------------------+"
 
 echo "target os: ""$target_os"

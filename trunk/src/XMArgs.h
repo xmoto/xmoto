@@ -75,6 +75,8 @@ class XMArguments {
   bool isOptConfigPath() const;
   std::string getOpt_configPath_path() const;
   bool isOptNoSound() const;
+  bool isOptDefaultTheme() const;
+  std::string getOpt_defaultTheme_theme() const;
   bool isOptVideoRecording() const;
   std::string getOptVideoRecording_name() const;
   bool isOptVideoRecordingDivision() const;
@@ -166,6 +168,10 @@ class XMArguments {
   bool m_opt_videoRecordingEndTime; /* value in cent of seconds, a negativ value for always */
   int m_opt_videoRecordingEndTime_value;
   bool m_opt_hidePlayingInformation;
+
+  /* default config replacement for new profiles */
+  bool m_opt_default_theme;
+  std::string m_opt_default_theme_value;
 
   /* at command line, you can pass [0-9]* for level of id _iLXX_ */
   static std::string levelArg2levelId(std::string i_arg);

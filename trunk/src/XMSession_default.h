@@ -21,7 +21,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XMCONF_DEFAULT_H__
 #define __XMCONF_DEFAULT_H__
 
+#include <string>
+
 /* here you can change the default option values for profiles */
+/*
+  for some customizable values, you use a variable, not a define
+*/
 
 // max number of rooms ; set at compilation
 #define ROOMS_NB_MAX   	    	            4
@@ -31,7 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define DEFAULT_CONTROLLERMODE              "Keyboard"
 #define DEFAULT_LANGUAGE                    ""
-#define DEFAULT_THEMENAME      	    	    "Classic"
+#define DEFAULT_THEME      	    	    CONFIGURE_DEFAULT_THEME
 #define DEFAULT_WEBROOM_ID     	    	    "1"
 #define DEFAULT_WEBCONFATINIT  	    	    true
 #define DEFAULT_PROFILE        	    	    ""
@@ -109,5 +114,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_PROXY_AUTHUSER              ""
 #define DEFAULT_PROXY_AUTHPWD               ""
 #define DEFAULT_DBSYNCHRONIZEONQUIT         false
+
+class XMDefault {
+  public:
+  static std::string DefaultTheme;
+};
 
 #endif

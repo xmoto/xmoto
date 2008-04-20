@@ -44,11 +44,11 @@ Build configuration
   #define ENABLE_SDLGFX
 #endif
 
-#ifndef ALLOW_ZOOMING
-#define ALLOW_ZOOMING 0
+#ifndef ALLOW_DEV
+#define ALLOW_DEV 0
 #endif
-#if ALLOW_ZOOMING == 1
-  #define ENABLE_ZOOMING
+#if ALLOW_DEV == 1
+  #define ENABLE_DEV
 #endif
 
 #if HAVE_GETTEXT == 1

@@ -108,6 +108,12 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     return;
   }
 
+  /* overwrite default by command line */
+  if(v_xmArgs.isOptDefaultTheme()) {
+    XMDefault::DefaultTheme = v_xmArgs.getOpt_defaultTheme_theme();
+  }
+  /**/
+
   /* init sub-systems */
   SwapEndian::Swap_Init();
   srand(time(NULL));
