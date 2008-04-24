@@ -26,6 +26,7 @@ class Line;
 
 #include "helpers/VMath.h"
 #include "helpers/Color.h"
+#include "ChipmunkHelper.h"
 
 class FileHandle;
 class XMLDocument;
@@ -94,6 +95,8 @@ class BlockVertex {
   inline std::string& EdgeEffect() {
     return m_edgeEffect;
   }
+
+  void setPosition(const Vector2f& i_position);
 
   void setTexturePosition(const Vector2f& i_texturePosition);
   void setColor(const TColor& i_color);
@@ -201,6 +204,10 @@ class Block {
 				    Vector2f  i_oldC2, Vector2f i_oldB2,
 				    bool i_useOld, bool i_AisLast,
 				    bool& o_swapDone, bool i_inside);
+
+  cpBody *mBody;
+  cpFloat cx,cy;
+  cpFloat dx,dy;
 
 private:
   std::string m_id;

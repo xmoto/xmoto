@@ -91,6 +91,8 @@ class Level {
   std::string Checksum() const;
   bool isScripted() const;
 
+  void updateChipmunk();
+
   Block*  getBlockById(const std::string& i_id);
   Entity* getEntityById(const std::string& i_id);
   Entity* getStartEntity();

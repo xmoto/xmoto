@@ -189,11 +189,21 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
   m_dynamicRotation       = m_initialRotation;
   m_dynamicRotationCenter = Vector2f(0.0, 0.0);
   m_dynamicPositionCenter = Vector2f(0.0, 0.0);
+  float tx = 0;
+  float ty = 0;
 
   /* Do the "convexifying" the BSP-way. It might be overkill, but we'll
      probably appreciate it when the input data is very complex. It'll also 
      let us handle crossing edges, and other kinds of weird input. */
   BSP v_BSPTree;
+  cpBody *myBody = NULL;
+  cpVect *myVerts = NULL;
+
+  if (isDynamic()) {
+	unsigned int size = 2*sizeof(cpVect)*Vertices().size();
+	myVerts = (cpVect*)malloc(size);
+	ChipmunkHelper::Instance();
+  }
 
   /* Define edges */
   for(unsigned int i=0; i<Vertices().size(); i++) {
@@ -209,6 +219,24 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
 				    DynamicPosition().x + Vertices()[inext]->Position().x,
 				    DynamicPosition().y + Vertices()[inext]->Position().y,
 				    Grip());
+
+      //squeeze chipmunk stuff here for now
+      //
+//      ChipmunkHelper::Instance()->getStaticBody()->p.x = DynamicPosition().x*10.0f;
+//      ChipmunkHelper::Instance()->getStaticBody()->p.y = DynamicPosition().y*10.0f;
+      cpVect a = cpv( (DynamicPosition().x + Vertices()[i]->Position().x) * 10.0f, (DynamicPosition().y + Vertices()[i]->Position().y) * 10.0f);
+      cpVect b = cpv( (DynamicPosition().x + Vertices()[inext]->Position().x) * 10.0f, (DynamicPosition().y + Vertices()[inext]->Position().y) * 10.0f);
+
+//      cpVect a = cpv( Vertices()[i]->Position().x *10.0f, Vertices()[i]->Position().y *10.0f);
+//      cpVect b = cpv( Vertices()[inext]->Position().x *10.0f, Vertices()[inext]->Position().y *10.0f);
+
+      cpShape *seg = cpSegmentShapeNew(ChipmunkHelper::Instance()->getStaticBody(), a, b, 0.0f);
+      seg->group = 1;
+      seg->u = 0.5;
+      seg->e = 0.1;
+      cpSpaceAddStaticShape(ChipmunkHelper::Instance()->getSpace(), seg);
+
+      v_BSPTree.addLineDefinition(Vertices()[i]->Position(), Vertices()[inext]->Position());
     }      
     /* add dynamic lines */
     if(isLayer() == false && isDynamic()) {
@@ -217,10 +245,39 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
       v_line->x1 = v_line->y1 = v_line->x2 = v_line->y2 = 0.0f;
       v_line->fGrip = m_grip;
       m_collisionLines.push_back(v_line);
+
+      //cpVect ma = cpv(DynamicPosition().x + Vertices()[i]->Position().x, DynamicPosition().y + Vertices()[i]->Position().y);
+
+      tx += Vertices()[i]->Position().x;      
+      ty += Vertices()[i]->Position().y;      
+
+
     }
 
-    /* Add line to BSP generator */
+  }
+
+  float mdx,mdy;
+  if(isDynamic() == true) {
+  // calculate midpoint
+  mdx = (tx * 1.0f) / Vertices().size();
+  mdy = (ty * 1.0f) / Vertices().size();
+
+  //
+//  printf("mx:%f:%f\n",mdx,mdy);
+  for(unsigned int i=0; i<Vertices().size(); i++) {
+      Vertices()[i]->setPosition(Vector2f(Vertices()[i]->Position().x - mdx, Vertices()[i]->Position().y - mdy));
+  }
+
+  for(unsigned int i=0; i<Vertices().size(); i++) {
+    unsigned int inext = i+1;
+    if(inext == Vertices().size()) inext=0;
+
+    /* Add line to BSP generator */ 
     v_BSPTree.addLineDefinition(Vertices()[i]->Position(), Vertices()[inext]->Position());
+  }
+
+  m_dynamicPosition.x += mdx;
+  m_dynamicPosition.y += mdy;
   }
 
   /* define dynamic block in the collision system */
@@ -235,6 +292,41 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
 
   if(isLayer() == true && m_layer != -1) {
     io_collisionSystem.addBlockInLayer(this, m_layer);
+  }
+
+  if(isDynamic() == true) {
+	cx = (tx * 10.0f) / Vertices().size();
+	cy = (ty * 10.0f) / Vertices().size();
+
+	dx = DynamicPosition().x;
+	dy = DynamicPosition().y;
+
+/* tuhoojabotti drop - fix later*/
+	// reorient objects around center
+	for(unsigned int i=0; i<Vertices().size(); i++) {
+      		cpVect ma = cpv(Vertices()[i]->Position().x * 10.0f, Vertices()[i]->Position().y * 10.0f);
+		myVerts[i] =  ma;
+//		printf(":%f:%f\n",myVerts[i].x, myVerts[i].y);
+		
+//		myVerts[i].x = myVerts[i].x - cx;
+//		myVerts[i].y = myVerts[i].y - cy;
+	}
+
+	cpVect v = cpvzero; //(-cx, -cy);
+	cpFloat mass = 2.0f;  // compute from area? specify override
+	cpFloat bMoment = cpMomentForPoly(mass,Vertices().size(), myVerts, v); 
+	myBody = cpBodyNew(mass, bMoment);
+//	myBody->p = cpv(cx + DynamicPosition().x * 10.0f, cy + DynamicPosition().y * 10.0f);
+	myBody->p = cpv((DynamicPosition().x * 10.0f), (DynamicPosition().y * 10.0f));
+//	myBody->p = cpv(cx,cy);
+	cpSpaceAddBody(ChipmunkHelper::Instance()->getSpace(), myBody);
+	mBody = myBody;
+
+	cpShape *shape;
+	shape = cpPolyShapeNew(myBody, Vertices().size(), myVerts, v);
+	shape->u = 1.0;
+	shape->e = 0.0;
+	cpSpaceAddShape(ChipmunkHelper::Instance()->getSpace(), shape);
   }
 
   /* Compute */
@@ -378,6 +470,11 @@ BlockVertex::~BlockVertex() {
 Vector2f BlockVertex::Position() const {
   return m_position;
 }
+
+void BlockVertex::setPosition(const Vector2f& i_position) {
+  m_position = i_position;
+}
+
 
 void BlockVertex::setTexturePosition(const Vector2f& i_texturePosition) {
   m_texturePosition = i_texturePosition;
