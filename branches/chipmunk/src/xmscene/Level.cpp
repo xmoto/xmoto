@@ -147,22 +147,21 @@ void Level::updateChipmunk() {
   cpFloat steps = 3;
   cpFloat dt = (1.0f/100.0f) ;
   cpSpaceStep(ChipmunkHelper::Instance()->getSpace(), dt);
-//  printf("a:%f:%f:%f\n", ChipmunkHelper::Instance()->getStaticBody()->p.x, ChipmunkHelper::Instance()->getStaticBody()->f.x, ChipmunkHelper::Instance()->getStaticBody()->rot);
 
-//printf("\n" );
+  // loop through all blocks, looking for chipmunky ones
+  //
   for(unsigned int i=0; i<m_blocks.size(); i++) {
     if(m_blocks[i]->isDynamic() == true) {
       Block* b = m_blocks[i];
-//      printf("Bx:%f", m_blocks[i]->DynamicPosition().x);
+
+      // move block according to chipmunk
       m_blocks[i]->setDynamicPosition(Vector2f(((b->mBody->p.x ) / 10.0f) , (b->mBody->p.y ) / 10.0f));
- //     printf(":%f\n", m_blocks[i]->DynamicPosition().x);
-//      m_blocks[i]->setDynamicPosition(Vector2f(b->mBody->p.x, b->mBody->p.y));
       m_blocks[i]->setDynamicRotation(b->mBody->a);
 
+      // inform collision system that there has been a change
       m_pCollisionSystem->moveDynBlock(m_blocks[i]);
 
       cpBodyResetForces(m_blocks[i]->mBody);
-
     }
   }
 }

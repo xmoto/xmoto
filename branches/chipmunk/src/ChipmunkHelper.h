@@ -21,9 +21,10 @@ private:
 	void initPhysics();
 	cpSpace *m_space;
 	cpBody *m_body;
-        cpBody *m_ab;
+
+        cpBody *m_ab;	// wheel anchors
         cpBody *m_af;
-	cpBody *m_wb;
+	cpBody *m_wb;	// wheel bodies
 	cpBody *m_wf;
 	
 };

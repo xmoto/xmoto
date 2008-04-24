@@ -220,15 +220,10 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
 				    DynamicPosition().y + Vertices()[inext]->Position().y,
 				    Grip());
 
-      //squeeze chipmunk stuff here for now
+      // Create/duplicate terrain for chipmunks objects to use
       //
-//      ChipmunkHelper::Instance()->getStaticBody()->p.x = DynamicPosition().x*10.0f;
-//      ChipmunkHelper::Instance()->getStaticBody()->p.y = DynamicPosition().y*10.0f;
       cpVect a = cpv( (DynamicPosition().x + Vertices()[i]->Position().x) * 10.0f, (DynamicPosition().y + Vertices()[i]->Position().y) * 10.0f);
       cpVect b = cpv( (DynamicPosition().x + Vertices()[inext]->Position().x) * 10.0f, (DynamicPosition().y + Vertices()[inext]->Position().y) * 10.0f);
-
-//      cpVect a = cpv( Vertices()[i]->Position().x *10.0f, Vertices()[i]->Position().y *10.0f);
-//      cpVect b = cpv( Vertices()[inext]->Position().x *10.0f, Vertices()[inext]->Position().y *10.0f);
 
       cpShape *seg = cpSegmentShapeNew(ChipmunkHelper::Instance()->getStaticBody(), a, b, 0.0f);
       seg->group = 1;
@@ -246,8 +241,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
       v_line->fGrip = m_grip;
       m_collisionLines.push_back(v_line);
 
-      //cpVect ma = cpv(DynamicPosition().x + Vertices()[i]->Position().x, DynamicPosition().y + Vertices()[i]->Position().y);
-
+      // collect vertice count to find middle
       tx += Vertices()[i]->Position().x;      
       ty += Vertices()[i]->Position().y;      
 
@@ -258,26 +252,27 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
 
   float mdx,mdy;
   if(isDynamic() == true) {
-  // calculate midpoint
-  mdx = (tx * 1.0f) / Vertices().size();
-  mdy = (ty * 1.0f) / Vertices().size();
+    // calculate midpoint
+    mdx = (tx * 1.0f) / Vertices().size();
+    mdy = (ty * 1.0f) / Vertices().size();
 
-  //
-//  printf("mx:%f:%f\n",mdx,mdy);
-  for(unsigned int i=0; i<Vertices().size(); i++) {
+    // for dynamic(physics) objects we reorient around a center of gravity
+    // determined by the vertices
+    for(unsigned int i=0; i<Vertices().size(); i++) {
       Vertices()[i]->setPosition(Vector2f(Vertices()[i]->Position().x - mdx, Vertices()[i]->Position().y - mdy));
-  }
+    }
 
-  for(unsigned int i=0; i<Vertices().size(); i++) {
-    unsigned int inext = i+1;
-    if(inext == Vertices().size()) inext=0;
+    for(unsigned int i=0; i<Vertices().size(); i++) {
+      unsigned int inext = i+1;
+      if(inext == Vertices().size()) inext=0;
 
-    /* Add line to BSP generator */ 
-    v_BSPTree.addLineDefinition(Vertices()[i]->Position(), Vertices()[inext]->Position());
-  }
+      /* Add line to BSP generator */ 
+      v_BSPTree.addLineDefinition(Vertices()[i]->Position(), Vertices()[inext]->Position());
+    }
 
-  m_dynamicPosition.x += mdx;
-  m_dynamicPosition.y += mdy;
+    // modify the object coords with the midpoint
+    m_dynamicPosition.x += mdx;
+    m_dynamicPosition.y += mdy;
   }
 
   /* define dynamic block in the collision system */
@@ -295,38 +290,33 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
   }
 
   if(isDynamic() == true) {
-	cx = (tx * 10.0f) / Vertices().size();
-	cy = (ty * 10.0f) / Vertices().size();
+    cx = (tx * 10.0f) / Vertices().size();
+    cy = (ty * 10.0f) / Vertices().size();
 
-	dx = DynamicPosition().x;
-	dy = DynamicPosition().y;
+    dx = DynamicPosition().x;
+    dy = DynamicPosition().y;
 
-/* tuhoojabotti drop - fix later*/
-	// reorient objects around center
-	for(unsigned int i=0; i<Vertices().size(); i++) {
-      		cpVect ma = cpv(Vertices()[i]->Position().x * 10.0f, Vertices()[i]->Position().y * 10.0f);
-		myVerts[i] =  ma;
-//		printf(":%f:%f\n",myVerts[i].x, myVerts[i].y);
-		
-//		myVerts[i].x = myVerts[i].x - cx;
-//		myVerts[i].y = myVerts[i].y - cy;
-	}
+    // create vertices for chipmunk constructors
+    for(unsigned int i=0; i<Vertices().size(); i++) {
+      cpVect ma = cpv(Vertices()[i]->Position().x * 10.0f, Vertices()[i]->Position().y * 10.0f);
+      myVerts[i] =  ma;
+    }
 
-	cpVect v = cpvzero; //(-cx, -cy);
-	cpFloat mass = 2.0f;  // compute from area? specify override
-	cpFloat bMoment = cpMomentForPoly(mass,Vertices().size(), myVerts, v); 
-	myBody = cpBodyNew(mass, bMoment);
-//	myBody->p = cpv(cx + DynamicPosition().x * 10.0f, cy + DynamicPosition().y * 10.0f);
-	myBody->p = cpv((DynamicPosition().x * 10.0f), (DynamicPosition().y * 10.0f));
-//	myBody->p = cpv(cx,cy);
-	cpSpaceAddBody(ChipmunkHelper::Instance()->getSpace(), myBody);
-	mBody = myBody;
-
-	cpShape *shape;
-	shape = cpPolyShapeNew(myBody, Vertices().size(), myVerts, v);
-	shape->u = 1.0;
-	shape->e = 0.0;
-	cpSpaceAddShape(ChipmunkHelper::Instance()->getSpace(), shape);
+    cpFloat mass = 2.0f;  // compute from area? specify override
+    cpFloat bMoment = cpMomentForPoly(mass,Vertices().size(), myVerts, cpvzero); 
+    
+    // create body 
+    myBody = cpBodyNew(mass, bMoment);
+    myBody->p = cpv((DynamicPosition().x * 10.0f), (DynamicPosition().y * 10.0f));
+    cpSpaceAddBody(ChipmunkHelper::Instance()->getSpace(), myBody);
+    mBody = myBody;
+    
+    // collision shape
+    cpShape *shape;
+    shape = cpPolyShapeNew(myBody, Vertices().size(), myVerts, cpvzero);
+    shape->u = 1.0;
+    shape->e = 0.0;
+    cpSpaceAddShape(ChipmunkHelper::Instance()->getSpace(), shape);
   }
 
   /* Compute */

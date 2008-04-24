@@ -140,9 +140,6 @@ void StatePlaying::enterAfterPop()
 
 bool StatePlaying::update()
 {
-  // chipmunk
-  m_universe->getScenes()[0]->getLevelSrc()->updateChipmunk();
-
   if(StateScene::update() == false)
     return false;
 

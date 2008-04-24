@@ -29,7 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Replay.h"
 #include "Sound.h"
 #include "helpers/Log.h"
-//#include "chipmunk.h"
 #include "ChipmunkHelper.h"
 
 /* This is the magic depth factor :)  - tweak to obtain max. stability */
@@ -146,8 +145,7 @@ void PlayerBiker::updateToTime(int i_time, int i_timeStep,
 
 
 void PlayerBiker::initPhysics(Vector2f i_gravity) {
-  cpBody *staticBody;
-  cpBody *chassis, *wheel1, *wheel2;
+  cpBody *b;
 
   m_bFirstPhysicsUpdate = true;
 
@@ -163,21 +161,11 @@ void PlayerBiker::initPhysics(Vector2f i_gravity) {
   dWorldSetQuickStepNumIterations(m_WorldID,PHYS_QSTEP_ITERS);
 
   /* Setup Chipmunk */
-  cpBody *b = ChipmunkHelper::Instance()->getFrontWheel();
+  b = ChipmunkHelper::Instance()->getFrontWheel();
   b->p = cpv(m_bikeState.FrontWheelP.x * 10.0f, m_bikeState.FrontWheelP.y * 10.0f);
+  b = ChipmunkHelper::Instance()->getBackWheel();
   b->p = cpv(m_bikeState.RearWheelP.x * 10.0f, m_bikeState.RearWheelP.y * 10.0f);
 
-//  cpInitChipmunk();
-
-//  cpSpace *space = cpSpaceNew();
-//  ChipmunkHelper::Instance()->setSpace(space);
-
-//  space->gravity = cpv(0.0f, -900.0f);
-
-//  staticBody = cpBodyNew(INFINITY,INFINITY);
-//  ChipmunkHelper::Instance()->setStaticBody(staticBody);
-
-  /* Set default bike parameters */
   m_bikeState.Parameters()->setDefaults();
 }
 
@@ -188,49 +176,37 @@ void PlayerBiker::uninitPhysics(void) {
 }
 
 void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
-  cpFloat dx, dy;
   cpVect v;
-  cpBody *b = ChipmunkHelper::Instance()->getFrontWheel();
+  cpBody *b;
+  cpFloat dx, dy;
+  cpFloat damp = 5.0;   //dampening factor
+
+  // inform chipmunk of ODE pos of front wheel
+  b = ChipmunkHelper::Instance()->getFrontWheel();
+
   b->w = dBodyGetAngularVel(m_FrontWheelBodyID)[2];
-  
   dx = m_bikeState.FrontWheelP.x * 10.0f - b->p.x;
   dy = m_bikeState.FrontWheelP.y * 10.0f - b->p.y;
-//  printf ("dx:%f:%f\n", dx, dy);
-  cpFloat damp = 5.0;
-  cpFloat in = 1.0f/600.0f;
-  if (dx*dx + dy*dy > 0) {
-	b->p.x += dx/damp;
-	b->p.y += dy/damp;
-//	b->p = cpv(m_bikeState.RFrontWheelP.x * 10.0f, m_bikeState.RFrontWheelP.y * 10.0f);
-//	cpBodyApplyImpulse(b, cpv(-dx/damp,-dy/damp), cpvzero);
-//	cpBodyUpdatePosition(b,in);
-  } else {
-	printf("====\n");
-	b->p = cpv(m_bikeState.RFrontWheelP.x * 10.0f, m_bikeState.RFrontWheelP.y * 10.0f);
-  }
 
+  b->p.x += dx/damp;
+  b->p.y += dy/damp;
+
+  // inform chipmunk of ODE pos of back wheel
   b = ChipmunkHelper::Instance()->getBackWheel();
+
   b->w = dBodyGetAngularVel(m_RearWheelBodyID)[2];
   dx = m_bikeState.RearWheelP.x * 10.0f - b->p.x;
   dy = m_bikeState.RearWheelP.y * 10.0f - b->p.y;
-  if (dx*dx + dy*dy > 0) {
-	b->p.x += dx/damp;
-	b->p.y += dy/damp;
-//	b->p = cpv(m_bikeState.RRearWheelP.x * 10.0f, m_bikeState.RRearWheelP.y * 10.0f);
-//	cpBodyApplyImpulse(b, cpv(-dx/damp,-dy/damp), cpvzero);
-//	cpBodyUpdatePosition(b,in);
-  } else {
-	b->p = cpv(m_bikeState.RearWheelP.x * 10.0f, m_bikeState.RearWheelP.y * 10.0f);
-  }
 
+  b->p.x += dx/damp;
+  b->p.y += dy/damp;
 
-//  b->w = dBodyGetAngularVel(m_RearWheelBodyID)[2];
 
   /* No wheel spin per default */
   m_bWheelSpin = false;
 
-	// remove old collision points
-	cleanCollisionPoints();
+  // remove old collision points
+  cleanCollisionPoints();
 
   /* Update gravity vector */
   dWorldSetGravity(m_WorldID, i_gravity.x, i_gravity.y, 0);
