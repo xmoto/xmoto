@@ -245,9 +245,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
       tx += Vertices()[i]->Position().x;      
       ty += Vertices()[i]->Position().y;      
 
-
     }
-
   }
 
   float mdx,mdy;
@@ -289,38 +287,6 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
     io_collisionSystem.addBlockInLayer(this, m_layer);
   }
 
-  if(isDynamic() == true) {
-    cx = (tx * 10.0f) / Vertices().size();
-    cy = (ty * 10.0f) / Vertices().size();
-
-    dx = DynamicPosition().x;
-    dy = DynamicPosition().y;
-
-    // create vertices for chipmunk constructors
-    for(unsigned int i=0; i<Vertices().size(); i++) {
-      cpVect ma = cpv(Vertices()[i]->Position().x * 10.0f, Vertices()[i]->Position().y * 10.0f);
-      myVerts[i] =  ma;
-    }
-
-    cpFloat mass = 2.0f;  // compute from area? specify override
-    cpFloat bMoment = cpMomentForPoly(mass,Vertices().size(), myVerts, cpvzero); 
-    
-    // create body 
-    myBody = cpBodyNew(mass, bMoment);
-    myBody->p = cpv((DynamicPosition().x * 10.0f), (DynamicPosition().y * 10.0f));
-    cpSpaceAddBody(ChipmunkHelper::Instance()->getSpace(), myBody);
-    mBody = myBody;
-    
-    // collision shape
-    cpShape *shape;
-    shape = cpPolyShapeNew(myBody, Vertices().size(), myVerts, cpvzero);
-    shape->u = 1.0;
-    shape->e = 0.0;
-    cpSpaceAddShape(ChipmunkHelper::Instance()->getSpace(), shape);
-
-    // free the temporary vertices array
-    free(myVerts);
-  }
 
   /* Compute */
   std::vector<BSPPoly *> &v_BSPPolys = v_BSPTree.compute();      
@@ -329,7 +295,53 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
   for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
     addPoly(v_BSPPolys[i], io_collisionSystem);
   }
-  
+
+
+  if(isDynamic() == true) {
+
+    // create body vertices for chipmunk constructors
+    for(unsigned int i=0; i<Vertices().size(); i++) {
+      cpVect ma = cpv(Vertices()[i]->Position().x * 10.0f, Vertices()[i]->Position().y * 10.0f);
+      myVerts[i] =  ma;
+    }
+
+    // Create body to attach shapes to
+    //
+    cpFloat mass = 2.0f;  // compute from area? specify override
+    cpFloat bMoment = cpMomentForPoly(mass,Vertices().size(), myVerts, cpvzero); 
+
+    free(myVerts);
+    
+    // create body 
+    myBody = cpBodyNew(mass, bMoment);
+    myBody->p = cpv((DynamicPosition().x * 10.0f), (DynamicPosition().y * 10.0f));
+    cpSpaceAddBody(ChipmunkHelper::Instance()->getSpace(), myBody);
+    mBody = myBody;
+    
+    // go through calculated BSP polys, adding one or more shape to the
+    // body
+    for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
+      unsigned int size = 2*sizeof(cpVect)*v_BSPPolys[i]->Vertices().size();
+      myVerts = (cpVect*)malloc(size);
+
+      // translate for chipmunk
+      for(unsigned int j=0; j<v_BSPPolys[i]->Vertices().size(); j++) {
+        cpVect ma = cpv(v_BSPPolys[i]->Vertices()[j].x * 10.0f,v_BSPPolys[i]->Vertices()[j].y * 10.0f);
+        myVerts[j] =  ma;
+      }
+
+      // collision shape
+      cpShape *shape;
+      shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
+      shape->u = 1.0;
+      shape->e = 0.0;
+      cpSpaceAddShape(ChipmunkHelper::Instance()->getSpace(), shape);
+
+      // free the temporary vertices array
+      free(myVerts);
+    }
+  }
+
   updateCollisionLines();
 
   if(v_BSPTree.getNumErrors() > 0) {

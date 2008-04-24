@@ -206,8 +206,6 @@ class Block {
 				    bool& o_swapDone, bool i_inside);
 
   cpBody *mBody;
-  cpFloat cx,cy;
-  cpFloat dx,dy;
 
 private:
   std::string m_id;
