@@ -317,6 +317,9 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
     shape->u = 1.0;
     shape->e = 0.0;
     cpSpaceAddShape(ChipmunkHelper::Instance()->getSpace(), shape);
+
+    // free the temporary vertices array
+    free(myVerts);
   }
 
   /* Compute */
