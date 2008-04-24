@@ -38,7 +38,7 @@ cpfmin(cpFloat a, cpFloat b)
 }
 
 #ifndef INFINITY
-	#ifdef _WIN32
+	#ifdef _WIN32_MSVC
 		union MSVC_EVIL_FLOAT_HACK
 		{
 			unsigned __int8 Bytes[4];
