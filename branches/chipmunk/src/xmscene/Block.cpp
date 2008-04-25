@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "VXml.h"
 #include "BSP.h"
+#include "chipmunk/chipmunk.h"
 
 #define XM_DEFAULT_BLOCK_TEXTURE "default"
 #define XM_DEFAULT_PHYS_BLOCK_GRIP 20

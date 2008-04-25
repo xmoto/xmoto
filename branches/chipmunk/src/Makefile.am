@@ -71,10 +71,7 @@ chipmunk_SOURCES= chipmunk/chipmunk.c \
                   chipmunk/cpSpaceHash.h \
                   chipmunk/cpVect.c \
                   chipmunk/cpVect.h \
-                  chipmunk/prime.h \
-                  ChipmunkHelper.cpp \
-                  ChipmunkHelper.h 
-
+                  chipmunk/prime.h
 
 helpers_SOURCES = helpers/VMath.h             \
                   helpers/VMath.cpp           \
@@ -338,7 +335,10 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   xmscene/BikePlayer.h  \
   xmscene/BikePlayer.cpp \
   xmscene/Camera.h \
-  xmscene/Camera.cpp
+  xmscene/Camera.cpp \
+  xmscene/ChipmunkHelper.cpp \
+  xmscene/ChipmunkHelper.h 
+
 
 if WIN32
 xmoto_SOURCES += xmoto_icone.ico

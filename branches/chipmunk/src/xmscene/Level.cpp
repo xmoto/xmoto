@@ -37,6 +37,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SkyApparence.h"
 #include "Collision.h"
 #include "Scene.h"
+#include "chipmunk/chipmunk.h"
+#include "ChipmunkHelper.h"
 
 #define CACHE_LEVEL_FORMAT_VERSION 19
 
@@ -144,7 +146,6 @@ bool Level::isScripted() const {
 }
 
 void Level::updateChipmunk() {
-  cpFloat steps = 3;
   cpFloat dt = (1.0f/100.0f) ;
   cpSpaceStep(ChipmunkHelper::Instance()->getSpace(), dt);
 

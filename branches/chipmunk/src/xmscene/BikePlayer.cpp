@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Sound.h"
 #include "helpers/Log.h"
 #include "ChipmunkHelper.h"
+#include "chipmunk/chipmunk.h"
 
 /* This is the magic depth factor :)  - tweak to obtain max. stability */
 #define DEPTH_FACTOR    2
@@ -176,7 +177,6 @@ void PlayerBiker::uninitPhysics(void) {
 }
 
 void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
-  cpVect v;
   cpBody *b;
   cpFloat dx, dy;
   cpFloat damp = 5.0;   //dampening factor
