@@ -151,7 +151,7 @@ void Level::updateChipmunk() {
   // loop through all blocks, looking for chipmunky ones
   //
   for(unsigned int i=0; i<m_blocks.size(); i++) {
-    if(m_blocks[i]->isDynamic() == true) {
+    if(m_blocks[i]->isChipmunk() == true) {
       Block* b = m_blocks[i];
 
       // move block according to chipmunk
