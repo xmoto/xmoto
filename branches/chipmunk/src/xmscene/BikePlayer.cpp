@@ -373,9 +373,7 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
 	    dBodyEnable(m_FrontWheelBodyID);
 	    dBodyEnable(m_RearWheelBodyID);
 	    dBodyEnable(m_FrameBodyID);
-	    
 	    dBodyAddTorque(m_RearWheelBodyID,0,0,-m_bikeState.Parameters()->MaxEngine()*PHYS_ENGINE_DAMP*m_BikeC.Drive());
-	    dBodyAddTorque(m_FrontWheelBodyID,0,0,-m_bikeState.Parameters()->MaxEngine()*PHYS_ENGINE_DAMP*m_BikeC.Drive());
 	    
 	    //printf("Drive!\n");
 	  }
@@ -385,7 +383,6 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
 	    dBodyEnable(m_FrontWheelBodyID);
 	    dBodyEnable(m_RearWheelBodyID);
 	    dBodyEnable(m_FrameBodyID);
-	    dBodyAddTorque(m_RearWheelBodyID,0,0,m_bikeState.Parameters()->MaxEngine()*PHYS_ENGINE_DAMP*m_BikeC.Drive());
 	    dBodyAddTorque(m_FrontWheelBodyID,0,0,m_bikeState.Parameters()->MaxEngine()*PHYS_ENGINE_DAMP*m_BikeC.Drive());
 	  }
 	}
