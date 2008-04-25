@@ -205,7 +205,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(nVersion != 0 && nVersion != 1) {
       FS::closeFile(pfh);
       Logger::Log("** Warning ** : Unsupported replay file version (%d): %s",nVersion,(std::string("Replays/") + FileName).c_str());
-      throw Exception("Unable to open the replay");
+      throw Exception("Unable to open the replay (unsupported version)");
     } else {
       /* Little/big endian safety check */
       if(FS::readInt_LE(pfh) != 0x12345678) {
