@@ -201,7 +201,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
   cpBody *myBody = NULL;
   cpVect *myVerts = NULL;
 
-  if (isPhysics()) {
+  if (isDynamic()) {
     unsigned int size = 2*sizeof(cpVect)*Vertices().size();
     myVerts = (cpVect*)malloc(size);
     ChipmunkHelper::Instance();
@@ -248,7 +248,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
     }
 
 
-    if(isPhysics()) {
+    if(isDynamic()) {
       // collect vertice count to find middle
       tx += Vertices()[i]->Position().x;      
       ty += Vertices()[i]->Position().y;      
@@ -257,7 +257,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
     }
   }
 
-  if(isPhysics()) {
+  if(isDynamic()) {
     // calculate midpoint
     float mdx = (tx * 1.0f) / Vertices().size();
     float mdy = (ty * 1.0f) / Vertices().size();
@@ -304,7 +304,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
     addPoly(v_BSPPolys[i], io_collisionSystem);
   }
 
-  if(isPhysics()) {
+  if(isDynamic()) {
     // create body vertices for chipmunk constructors
     for(unsigned int i=0; i<Vertices().size(); i++) {
       cpVect ma = cpv(Vertices()[i]->Position().x * 10.0f, Vertices()[i]->Position().y * 10.0f);
@@ -319,9 +319,16 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
     free(myVerts);
     
     // create body 
-    myBody = cpBodyNew(mass, bMoment);
-    myBody->p = cpv((DynamicPosition().x * 10.0f), (DynamicPosition().y * 10.0f));
-    cpSpaceAddBody(ChipmunkHelper::Instance()->getSpace(), myBody);
+    if (isPhysics()) {
+      myBody = cpBodyNew(mass, bMoment);
+      myBody->p = cpv((DynamicPosition().x * 10.0f), (DynamicPosition().y * 10.0f));
+      cpSpaceAddBody(ChipmunkHelper::Instance()->getSpace(), myBody);
+    } else {
+      myBody = cpBodyNew(INFINITY, INFINITY);
+      myBody->p = cpv((DynamicPosition().x * 10.0f), (DynamicPosition().y * 10.0f));
+//      cpSpaceAddBody(ChipmunkHelper::Instance()->getSpace(), myBody);
+    }
+
     mBody = myBody;
     
     // go through calculated BSP polys, adding one or more shape to the

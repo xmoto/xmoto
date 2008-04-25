@@ -146,6 +146,8 @@ bool Level::isScripted() const {
 }
 
 void Level::updatePhysics(int timeStep) {
+  Block* b;
+
   cpSpaceStep(ChipmunkHelper::Instance()->getSpace(), ((double)timeStep)/100.0);
 
   // loop through all blocks, looking for chipmunky ones
@@ -162,6 +164,13 @@ void Level::updatePhysics(int timeStep) {
       m_pCollisionSystem->moveDynBlock(m_blocks[i]);
 
       cpBodyResetForces(m_blocks[i]->mBody);
+    } else if (m_blocks[i]->isDynamic() == true) {
+      // This is a dynamic block - tell chipmunk about it
+      b = m_blocks[i];
+      b->mBody->p.x = b->DynamicPosition().x * 10.0f;
+      b->mBody->p.y = b->DynamicPosition().y * 10.0f;
+      cpBodySetAngle(b->mBody, b->DynamicRotation());
+
     }
   }
 }
