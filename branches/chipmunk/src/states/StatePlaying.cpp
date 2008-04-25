@@ -143,7 +143,6 @@ bool StatePlaying::update()
   if(StateScene::update() == false)
     return false;
 
-
   if(isLockedScene() == false) {
     bool v_all_dead       = true;
     bool v_one_still_play = false;
