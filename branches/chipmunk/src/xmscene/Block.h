@@ -130,7 +130,7 @@ class Block {
   Vector2f DynamicPositionCenter() const;
   bool isBackground() const;
   bool isDynamic() const;
-  bool isChipmunk() const;
+  bool isPhysics() const;
   bool isLayer() const;
   float Grip() const;
   float TextureScale() const;
@@ -148,7 +148,7 @@ class Block {
   void setInitialPosition(const Vector2f& i_initialPosition);
   void setBackground(bool i_background);
   void setDynamic(bool i_dynamic);
-  void setChipmunk(bool i_dynamic);
+  void setPhysics(bool i_physics);
   void setIsLayer(bool i_isLayer);
   void setGrip(float i_grip);
   void setCenter(const Vector2f& i_center);
@@ -223,7 +223,7 @@ private:
 
   bool  m_background;
   bool  m_dynamic;
-  bool  m_chipmunk;
+  bool  m_physics;
   bool  m_isLayer;
   // the background layer of the block.
   // in case of a non m_backgroundLevel, if m_layer is != -1, then it's

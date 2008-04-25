@@ -91,7 +91,7 @@ class Level {
   std::string Checksum() const;
   bool isScripted() const;
 
-  void updateChipmunk();
+  void updatePhysics();
 
   Block*  getBlockById(const std::string& i_id);
   Entity* getEntityById(const std::string& i_id);

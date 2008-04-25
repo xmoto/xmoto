@@ -76,7 +76,7 @@ Block::Block(std::string i_id) {
   m_textureScale     = 1.0;
   m_background       = false;
   m_dynamic          = false;
-  m_chipmunk         = false;
+  m_physics          = false;
   m_isLayer          = false;
   m_grip             = XM_DEFAULT_PHYS_BLOCK_GRIP;
   m_dynamicPosition  = m_initialPosition;
@@ -201,7 +201,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
   cpBody *myBody = NULL;
   cpVect *myVerts = NULL;
 
-  if (isChipmunk()) {
+  if (isPhysics()) {
     unsigned int size = 2*sizeof(cpVect)*Vertices().size();
     myVerts = (cpVect*)malloc(size);
     ChipmunkHelper::Instance();
@@ -248,7 +248,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
     }
 
 
-    if(isChipmunk()) {
+    if(isPhysics()) {
       // collect vertice count to find middle
       tx += Vertices()[i]->Position().x;      
       ty += Vertices()[i]->Position().y;      
@@ -257,7 +257,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
     }
   }
 
-  if(isChipmunk()) {
+  if(isPhysics()) {
     // calculate midpoint
     float mdx = (tx * 1.0f) / Vertices().size();
     float mdy = (ty * 1.0f) / Vertices().size();
@@ -304,7 +304,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
     addPoly(v_BSPPolys[i], io_collisionSystem);
   }
 
-  if(isChipmunk()) {
+  if(isPhysics()) {
     // create body vertices for chipmunk constructors
     for(unsigned int i=0; i<Vertices().size(); i++) {
       cpVect ma = cpv(Vertices()[i]->Position().x * 10.0f, Vertices()[i]->Position().y * 10.0f);
@@ -392,8 +392,8 @@ bool Block::isDynamic() const {
   return m_dynamic;
 }
 
-bool Block::isChipmunk() const {
-  return m_chipmunk;
+bool Block::isPhysics() const {
+  return m_physics;
 }
 
 bool Block::isLayer() const {
@@ -441,10 +441,10 @@ void Block::setDynamic(bool i_dynamic) {
   m_dynamic = i_dynamic;
 }
 
-void Block::setChipmunk(bool i_chipmunk) {
-  m_chipmunk = i_chipmunk;
+void Block::setPhysics(bool i_physics) {
+  m_physics = i_physics;
 
-  if(m_chipmunk) {
+  if(m_physics) {
     // we're.. kinda.. dynamic?
     //
     setDynamic(true);
@@ -596,7 +596,8 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
 
     pBlock->setBackground(XML::getOption(pPositionElem,"background","false") == "true");
     pBlock->setDynamic(XML::getOption(pPositionElem,"dynamic","false") == "true");
-    pBlock->setChipmunk(XML::getOption(pPositionElem,"physics","false") == "true");
+    /* setDynamic must be done before setPhysics - physics implies dynamic */
+    pBlock->setPhysics(XML::getOption(pPositionElem,"physics","false") == "true");
     pBlock->setIsLayer(XML::getOption(pPositionElem,"islayer","false") == "true");
     pBlock->setLayer(atoi(XML::getOption(pPositionElem,"layerid","-1").c_str()));
  }
@@ -680,7 +681,7 @@ void Block::saveBinary(FileHandle *i_pfh) {
       FS::writeString(i_pfh,   Id());
       FS::writeBool(i_pfh,     isBackground());
       FS::writeBool(i_pfh,     isDynamic());
-      FS::writeBool(i_pfh,     isChipmunk());
+      FS::writeBool(i_pfh,     isPhysics());
       FS::writeBool(i_pfh,     isLayer());
       FS::writeInt_LE(i_pfh,   getLayer());
       FS::writeString(i_pfh,   Texture());
@@ -704,7 +705,7 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
 
   pBlock->setBackground(FS::readBool(i_pfh));
   pBlock->setDynamic(FS::readBool(i_pfh));
-  pBlock->setChipmunk(FS::readBool(i_pfh));
+  pBlock->setPhysics(FS::readBool(i_pfh));
   pBlock->setIsLayer(FS::readBool(i_pfh));
   pBlock->setLayer(FS::readInt_LE(i_pfh));
   pBlock->setTexture(FS::readString(i_pfh));

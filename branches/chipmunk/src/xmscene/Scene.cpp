@@ -227,7 +227,7 @@ void MotoGame::cleanPlayers() {
 
     /* Update misc stuff (only when not playing a replay) */
     if(m_playEvents) {
-      getLevelSrc()->updateChipmunk();
+      getLevelSrc()->updatePhysics();
       _UpdateZones();
       _UpdateEntities();
     }
