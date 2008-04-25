@@ -595,7 +595,7 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
 
     pBlock->setBackground(XML::getOption(pPositionElem,"background","false") == "true");
     pBlock->setDynamic(XML::getOption(pPositionElem,"dynamic","false") == "true");
-    pBlock->setChipmunk(XML::getOption(pPositionElem,"chipmunk","false") == "true");
+    pBlock->setChipmunk(XML::getOption(pPositionElem,"physics","false") == "true");
     pBlock->setIsLayer(XML::getOption(pPositionElem,"islayer","false") == "true");
     pBlock->setLayer(atoi(XML::getOption(pPositionElem,"layerid","-1").c_str()));
  }
