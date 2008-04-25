@@ -145,9 +145,8 @@ bool Level::isScripted() const {
   return m_isScripted;
 }
 
-void Level::updatePhysics() {
-  cpFloat dt = (1.0f/100.0f) ;
-  cpSpaceStep(ChipmunkHelper::Instance()->getSpace(), dt);
+void Level::updatePhysics(int timeStep) {
+  cpSpaceStep(ChipmunkHelper::Instance()->getSpace(), ((double)timeStep)/100.0);
 
   // loop through all blocks, looking for chipmunky ones
   //
