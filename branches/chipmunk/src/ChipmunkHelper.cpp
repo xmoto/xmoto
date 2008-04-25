@@ -39,7 +39,7 @@ void ChipmunkHelper::initPhysics()
   cpResetShapeIdCounter();
 
   // do need to resolve gravity between ODE and Chipmunk
-  space->gravity = cpv(0.0f, -300.0f);
+  space->gravity = cpv(0.0f, -150.0f);
   space->iterations=10;
 
   // Could be optimised per level.. leave for now
