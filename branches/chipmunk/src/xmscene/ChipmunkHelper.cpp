@@ -59,7 +59,7 @@ void ChipmunkHelper::initPhysics()
   cpResetShapeIdCounter();
 
   // do need to resolve gravity between ODE and Chipmunk
-  space->gravity = cpv(0.0f, -150.0f);
+  space->gravity = cpv(0.0f, CHIP_GRAVITY);
   space->iterations=10;
 
   // Could be optimised per level.. leave for now
@@ -71,8 +71,8 @@ void ChipmunkHelper::initPhysics()
   setStaticBody(staticBody);
 
   // Wheel mass.. as above ODE/Chipmunk
-  cpFloat mass=7;
-  cpFloat wheel_moment = cpMomentForCircle(mass, 0.35 * CHIP_SCALE_RATIO, 0.0f, cpvzero);
+  cpFloat mass=CHIP_WHEEL_MASS;
+  cpFloat wheel_moment = cpMomentForCircle(mass, PHYS_WHEEL_RADIUS * CHIP_SCALE_RATIO, 0.0f, cpvzero);
 
   // Create two anchors for the wheels
   m_ab = cpBodyNew(INFINITY, INFINITY);
@@ -96,13 +96,13 @@ void ChipmunkHelper::initPhysics()
   // creating collision shapes for the wheels
   //   change to collision group 1 
   //   -- we don't want (or need) them to collide with the terrain
-  shape = cpCircleShapeNew(m_wf, 0.35 * CHIP_SCALE_RATIO, cpvzero);
-  shape->u = 0.1;
+  shape = cpCircleShapeNew(m_wf, PHYS_WHEEL_RADIUS * CHIP_SCALE_RATIO, cpvzero);
+  shape->u = 1;
   shape->group = 1;
   cpSpaceAddShape(space,shape);
 
-  shape = cpCircleShapeNew(m_wb, 0.35 * CHIP_SCALE_RATIO, cpvzero);
-  shape->u = 0.1;
+  shape = cpCircleShapeNew(m_wb, PHYS_WHEEL_RADIUS * CHIP_SCALE_RATIO, cpvzero);
+  shape->u = 1;
   shape->group = 1;
   cpSpaceAddShape(space,shape);
 
