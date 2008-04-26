@@ -29,8 +29,8 @@ if you want to be able to play levels besides your own...
 #define ENGINE_MIN_RPM      700.0f
 #define ENGINE_MAX_RPM      8000.0f
 
-/* Chipmunk Ratio */
-#define CHIP_RATIO                    10.0f
+/* ODE to Chipmunk Scaling Ratio */
+#define CHIP_SCALE_RATIO              10.0f
 
 /* World settings */
 #define PHYS_WORLD_ERP                0.3f      /* global error reduction (0.3) */

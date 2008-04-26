@@ -72,7 +72,7 @@ void ChipmunkHelper::initPhysics()
 
   // Wheel mass.. as above ODE/Chipmunk
   cpFloat mass=7;
-  cpFloat wheel_moment = cpMomentForCircle(mass, 0.35 * CHIP_RATIO, 0.0f, cpvzero);
+  cpFloat wheel_moment = cpMomentForCircle(mass, 0.35 * CHIP_SCALE_RATIO, 0.0f, cpvzero);
 
   // Create two anchors for the wheels
   m_ab = cpBodyNew(INFINITY, INFINITY);
@@ -96,12 +96,12 @@ void ChipmunkHelper::initPhysics()
   // creating collision shapes for the wheels
   //   change to collision group 1 
   //   -- we don't want (or need) them to collide with the terrain
-  shape = cpCircleShapeNew(m_wf, 0.35 * CHIP_RATIO, cpvzero);
+  shape = cpCircleShapeNew(m_wf, 0.35 * CHIP_SCALE_RATIO, cpvzero);
   shape->u = 0.1;
   shape->group = 1;
   cpSpaceAddShape(space,shape);
 
-  shape = cpCircleShapeNew(m_wb, 0.35 * CHIP_RATIO, cpvzero);
+  shape = cpCircleShapeNew(m_wb, 0.35 * CHIP_SCALE_RATIO, cpvzero);
   shape->u = 0.1;
   shape->group = 1;
   cpSpaceAddShape(space,shape);
