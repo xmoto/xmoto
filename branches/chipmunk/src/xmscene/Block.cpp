@@ -668,14 +668,13 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
 
     pBlock->setBackground(XML::getOption(pPositionElem,"background","false") == "true");
     pBlock->setDynamic(XML::getOption(pPositionElem,"dynamic","false") == "true");
+    /* setDynamic must be done before setPhysics - physics implies dynamic */
+    pBlock->setPhysics(XML::getOption(pPositionElem,"physics","false") == "true");
     pBlock->setIsLayer(XML::getOption(pPositionElem,"islayer","false") == "true");
     pBlock->setLayer(atoi(XML::getOption(pPositionElem,"layerid","-1").c_str()));
  }
 
-  /* setDynamic must be done before setPhysics - physics implies dynamic */
   if(pPhysicsElem != NULL) {
-    pBlock->setPhysics(true);
-
     char str[5];
     snprintf(str, 5, "%f", XM_DEFAULT_PHYS_BLOCK_GRIP);
     pBlock->setGrip(atof(XML::getOption(pPhysicsElem, "grip", str).c_str()));
