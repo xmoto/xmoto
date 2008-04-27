@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_DEFAULT_BLOCK_TEXTURE "default"
 
 #define XM_DEFAULT_PHYS_BLOCK_GRIP DEFAULT_PHYS_WHEEL_GRIP
-#define XM_DEFAULT_PHYS_BLOCK_MASS 50.0
+#define XM_DEFAULT_PHYS_BLOCK_MASS 30.0
 
 /* Vertex */
 ConvexBlockVertex::ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition) {
