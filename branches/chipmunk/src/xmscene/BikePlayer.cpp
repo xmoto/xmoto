@@ -163,9 +163,9 @@ void PlayerBiker::initPhysics(Vector2f i_gravity) {
 
   /* Setup Chipmunk */
   b = ChipmunkHelper::Instance()->getFrontWheel();
-  b->p = cpv(m_bikeState.FrontWheelP.x * 10.0f, m_bikeState.FrontWheelP.y * 10.0f);
+  b->p = cpv(m_bikeState.FrontWheelP.x * CHIP_SCALE_RATIO, m_bikeState.FrontWheelP.y * CHIP_SCALE_RATIO);
   b = ChipmunkHelper::Instance()->getBackWheel();
-  b->p = cpv(m_bikeState.RearWheelP.x * 10.0f, m_bikeState.RearWheelP.y * 10.0f);
+  b->p = cpv(m_bikeState.RearWheelP.x * CHIP_SCALE_RATIO, m_bikeState.RearWheelP.y * CHIP_SCALE_RATIO);
 
   m_bikeState.Parameters()->setDefaults();
 }
@@ -185,8 +185,8 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
   b = ChipmunkHelper::Instance()->getFrontWheel();
 
   b->w = dBodyGetAngularVel(m_FrontWheelBodyID)[2];
-  dx = m_bikeState.FrontWheelP.x * 10.0f - b->p.x;
-  dy = m_bikeState.FrontWheelP.y * 10.0f - b->p.y;
+  dx = m_bikeState.FrontWheelP.x * CHIP_SCALE_RATIO - b->p.x;
+  dy = m_bikeState.FrontWheelP.y * CHIP_SCALE_RATIO - b->p.y;
 
   b->p.x += dx/damp;
   b->p.y += dy/damp;
@@ -195,8 +195,8 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
   b = ChipmunkHelper::Instance()->getBackWheel();
 
   b->w = dBodyGetAngularVel(m_RearWheelBodyID)[2];
-  dx = m_bikeState.RearWheelP.x * 10.0f - b->p.x;
-  dy = m_bikeState.RearWheelP.y * 10.0f - b->p.y;
+  dx = m_bikeState.RearWheelP.x * CHIP_SCALE_RATIO - b->p.x;
+  dy = m_bikeState.RearWheelP.y * CHIP_SCALE_RATIO - b->p.y;
 
   b->p.x += dx/damp;
   b->p.y += dy/damp;

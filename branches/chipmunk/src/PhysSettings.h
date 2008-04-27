@@ -31,8 +31,8 @@ if you want to be able to play levels besides your own...
 
 /* ODE to Chipmunk Scaling Ratio */
 #define CHIP_SCALE_RATIO              10.0f
-#define CHIP_WHEEL_MASS               2.0f
-#define CHIP_GRAVITY                  -35.3f
+#define CHIP_WHEEL_MASS               20.0f
+#define CHIP_GRAVITY                  (-3.53f * CHIP_SCALE_RATIO)
 
 /* World settings */
 #define PHYS_WORLD_ERP                0.3f      /* global error reduction (0.3) */
