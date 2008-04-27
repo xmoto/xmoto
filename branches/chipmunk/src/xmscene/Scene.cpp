@@ -268,8 +268,11 @@ void MotoGame::cleanPlayers() {
 	}
       }
     }
-    /* players moves, update their positions */
-    m_chipmunkWorld->updateWheelsPosition(m_players);
+
+    if(m_chipmunkWorld != NULL) {
+      /* players moves, update their positions */
+      m_chipmunkWorld->updateWheelsPosition(m_players);
+    }
 
     executeEvents(i_recordedReplay);
 
@@ -438,6 +441,7 @@ void MotoGame::cleanPlayers() {
 
     // load chimunk
     if(m_pLevelSrc->isPhysics()) {
+      Logger::Log("Running a physics level");
       m_chipmunkWorld = new ChipmunkWorld();
     }
 
@@ -1154,7 +1158,11 @@ void MotoGame::cleanPlayers() {
     v_playerBiker->setOnBikerHooks(new MotoGameOnBikerHooks(this, m_players.size()));
     v_playerBiker->setPlaySound(i_enableEngineSound);
     m_players.push_back(v_playerBiker);
-    m_chipmunkWorld->addPlayer(v_playerBiker);
+
+    if(m_chipmunkWorld != NULL) {
+      m_chipmunkWorld->addPlayer(v_playerBiker);
+    }
+
     return v_playerBiker;
   }
 
