@@ -274,7 +274,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
       m_collisionLines.push_back(v_line);
     }
 
-    if(isPhysics()) {
+    if(isDynamic()) {
       // collect vertice count to find middle
       tx += Vertices()[i]->Position().x;      
       ty += Vertices()[i]->Position().y;      
@@ -283,7 +283,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
     }
   }
 
-  if(isPhysics()) {
+  if(isDynamic()) {
     // calculate midpoint
     float mdx = (tx * 1.0f) / Vertices().size();
     float mdy = (ty * 1.0f) / Vertices().size();
