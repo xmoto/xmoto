@@ -163,7 +163,7 @@ class Block {
   /* angle position ; consider of the block center */
   void setDynamicRotation(float i_dynamicRotation);
 
-  int loadToPlay(CollisionSystem& io_collisionSystem);
+  int loadToPlay(CollisionSystem* io_collisionSystem);
   void unloadToPlay();
 
   void saveXml(FileHandle *i_pfh);
@@ -190,6 +190,7 @@ class Block {
   std::vector<int>& getEdgeGeoms();
   bool edgeGeomExists(std::string texture);
 
+  void updatePhysics(int timeStep, CollisionSystem* io_collisionSystem);
 
   // calculate edge position
   void calculateEdgePosition_angle(Vector2f  i_vA, Vector2f i_vB,
@@ -243,7 +244,7 @@ private:
   Vector2f m_dynamicPosition; /* Block position */
   std::vector<Line *> m_collisionLines; /* Line to collide against */
 
-  void addPoly(BSPPoly* i_poly, CollisionSystem& io_collisionSystem);
+  void addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem);
   void updateCollisionLines();
 
   EdgeDrawMethod m_edgeDrawMethod;

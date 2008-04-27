@@ -185,7 +185,28 @@ void Block::setDynamicRotation(float i_dynamicRotation) {
   updateCollisionLines();
 }
 
-int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
+void Block::updatePhysics(int timeStep, CollisionSystem* io_collisionSystem) {
+  if(isPhysics()) {
+
+    // move block according to chipmunk
+    setDynamicPosition(Vector2f(((mBody->p.x ) / 10.0f) , (mBody->p.y ) / 10.0f));
+    setDynamicRotation(mBody->a);
+    
+    // inform collision system that there has been a change
+    io_collisionSystem->moveDynBlock(this);
+    
+    cpBodyResetForces(mBody);
+
+  } else if (isDynamic()) { /* dynamic but not physics */
+    // This is a dynamic block - tell chipmunk about it
+    mBody->p.x = DynamicPosition().x * 10.0f;
+    mBody->p.y = DynamicPosition().y * 10.0f;
+    cpBodySetAngle(mBody, DynamicRotation());
+  }
+
+}
+
+int Block::loadToPlay(CollisionSystem* io_collisionSystem) {
 
   m_dynamicPosition       = m_initialPosition;
   m_dynamicRotation       = m_initialRotation;
@@ -217,12 +238,12 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
     /* add static lines */
     if(isBackground() == false && isDynamic() == false && m_layer == -1) {
       /* Add line to collision handler */
-      io_collisionSystem.defineLine(DynamicPosition().x + Vertices()[i]->Position().x,
-				    DynamicPosition().y + Vertices()[i]->Position().y,
-				    DynamicPosition().x + Vertices()[inext]->Position().x,
-				    DynamicPosition().y + Vertices()[inext]->Position().y,
-				    Grip());
-
+      io_collisionSystem->defineLine(DynamicPosition().x + Vertices()[i]->Position().x,
+				     DynamicPosition().y + Vertices()[i]->Position().y,
+				     DynamicPosition().x + Vertices()[inext]->Position().x,
+				     DynamicPosition().y + Vertices()[inext]->Position().y,
+				     Grip());
+      
 
 //     if(isChipmunk()) {
       // Create/duplicate terrain for chipmunks objects to use
@@ -287,15 +308,15 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
   /* define dynamic block in the collision system */
   if(isLayer() == false && isDynamic()) {
     updateCollisionLines();
-    io_collisionSystem.addDynBlock(this);
+    io_collisionSystem->addDynBlock(this);
   }
 
   if(isDynamic() == false && m_layer == -1){
-    io_collisionSystem.addStaticBlock(this, isLayer());
+    io_collisionSystem->addStaticBlock(this, isLayer());
   }
 
   if(isLayer() == true && m_layer != -1) {
-    io_collisionSystem.addBlockInLayer(this, m_layer);
+    io_collisionSystem->addBlockInLayer(this, m_layer);
   }
 
   /* Compute */
@@ -384,7 +405,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
   return v_BSPTree.getNumErrors();  
 }
 
-void Block::addPoly(BSPPoly* i_poly, CollisionSystem& io_collisionSystem) {
+void Block::addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem) {
   ConvexBlock *v_block = new ConvexBlock(this);
   
   for(unsigned int i=0; i<i_poly->Vertices().size(); i++) {

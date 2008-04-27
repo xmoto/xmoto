@@ -145,33 +145,12 @@ bool Level::isScripted() const {
   return m_isScripted;
 }
 
-void Level::updatePhysics(int timeStep) {
-  Block* b;
-
+void Level::updatePhysics(int timeStep, CollisionSystem* p_CollisionSystem) {
   cpSpaceStep(ChipmunkHelper::Instance()->getSpace(), ((double)timeStep)/100.0);
 
   // loop through all blocks, looking for chipmunky ones
-  //
   for(unsigned int i=0; i<m_blocks.size(); i++) {
-    if(m_blocks[i]->isPhysics() == true) {
-      Block* b = m_blocks[i];
-
-      // move block according to chipmunk
-      m_blocks[i]->setDynamicPosition(Vector2f(((b->mBody->p.x ) / 10.0f) , (b->mBody->p.y ) / 10.0f));
-      m_blocks[i]->setDynamicRotation(b->mBody->a);
-
-      // inform collision system that there has been a change
-      m_pCollisionSystem->moveDynBlock(m_blocks[i]);
-
-      cpBodyResetForces(m_blocks[i]->mBody);
-    } else if (m_blocks[i]->isDynamic() == true) {
-      // This is a dynamic block - tell chipmunk about it
-      b = m_blocks[i];
-      b->mBody->p.x = b->DynamicPosition().x * 10.0f;
-      b->mBody->p.y = b->DynamicPosition().y * 10.0f;
-      cpBodySetAngle(b->mBody, b->DynamicRotation());
-
-    }
+    m_blocks[i]->updatePhysics(timeStep, p_CollisionSystem);
   }
 }
 
@@ -1249,7 +1228,7 @@ int Level::loadToPlay() {
   /* preparing blocks */
   for(unsigned int i=0; i<m_blocks.size(); i++) {
     try {
-      v_nbErrors += m_blocks[i]->loadToPlay(*m_pCollisionSystem);
+      v_nbErrors += m_blocks[i]->loadToPlay(m_pCollisionSystem);
     } catch(Exception &e) {
       throw Exception("Fail to load block '" + m_blocks[i]->Id() + "' :\n" + e.getMsg());
     }

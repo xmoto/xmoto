@@ -227,7 +227,7 @@ void MotoGame::cleanPlayers() {
 
     /* Update misc stuff (only when not playing a replay) */
     if(m_playEvents) {
-      getLevelSrc()->updatePhysics(timeStep);
+      getLevelSrc()->updatePhysics(timeStep, &m_Collision);
       _UpdateZones();
       _UpdateEntities();
     }
@@ -281,6 +281,7 @@ void MotoGame::cleanPlayers() {
 	    SerializedBikeState BikeState;
 	    getSerializedBikeState(Players()[0]->getState(), getTime(), &BikeState);
 	    i_recordedReplay->storeState(BikeState);
+	    i_recordedReplay->storeBlocks(m_pLevelSrc->Blocks());
 	  }
 	}
       }
