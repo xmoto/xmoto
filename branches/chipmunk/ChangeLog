@@ -1,5 +1,6 @@
 X-Moto 0.4.3 2008-
 -----------------------
+ * chipmunk integration. Blocks reacts to physics (require special levels).
  * save config separatly for each profile
  * --defaultTheme option to change the default theme for new profiles (and --with-default-theme= at compilation time) ; so that packager can change it.
 	
