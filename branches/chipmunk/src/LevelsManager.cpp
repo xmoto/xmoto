@@ -282,6 +282,19 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   v_pack->setDescription(VPACKAGENAME_DESC_MUSICAL);
   m_levelsPacks.push_back(v_pack);
 
+  /* physics */
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_PHYSICS),
+			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
+			  "FROM levels AS a "
+			  "LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level "
+                          "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
+			  "WHERE a.isPhysics=1 AND (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
+			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
+			  "AND c.id_level IS NULL");
+  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  v_pack->setDescription(VPACKAGENAME_DESC_PHYSICS);
+  m_levelsPacks.push_back(v_pack);
+
   /* levels i've not finished */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_INCOMPLETED_LEVELS),
 			  "SELECT a.id_level AS id_level, MIN(a.name) AS name, MIN(UPPER(a.name)) AS sort_field "
@@ -817,6 +830,7 @@ void LevelsManager::reloadExternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterf
 		       v_level->PackNum(),
 		       v_level->Music(),
 		       v_level->isScripted(),
+		       v_level->isPhysics(),
 		       true);
     } catch(Exception &e) {
     }
@@ -849,6 +863,7 @@ void LevelsManager::addExternalLevel(std::string i_levelFile, xmDatabase *i_db) 
 		     v_level->PackNum(),
 		     v_level->Music(),
 		     v_level->isScripted(),
+		     v_level->isPhysics(),
 		     true);
   } catch(Exception &e) {
     Logger::Log("** Warning ** : Unable to add external level (%s)", e.getMsg().c_str());
@@ -897,6 +912,7 @@ void LevelsManager::reloadInternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterf
 		       v_level->PackNum(),
 		       v_level->Music(),
 		       v_level->isScripted(),
+		       v_level->isPhysics(),
 		       false);
     } catch(Exception &e) {
       Logger::Log("** Warning (just mean that the level has been updated if the level is in xmoto.bin) ** : %s (%s - %s)",
@@ -1020,6 +1036,7 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
 		       v_level->PackNum(),
 		       v_level->Music(),
 		       v_level->isScripted(),
+		       v_level->isPhysics(),
 		       false);
       i_db->levels_addToNew(v_level->Id(), false);
     } catch(Exception &e) {
@@ -1052,6 +1069,7 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
 			  v_level->PackNum(),
 			  v_level->Music(),
 			  v_level->isScripted(),
+			  v_level->isPhysics(),
 			  false);
       i_db->levels_addToNew(v_level->Id(), true);
 

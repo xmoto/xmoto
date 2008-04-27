@@ -57,7 +57,8 @@ class Level {
 		    const std::string& i_author,
 		    const std::string& i_date,
 		    const std::string& i_music,
-		    bool i_isScripted);
+		    bool i_isScripted,
+		    bool i_isPhysics);
   void rebuildCache();
 
   void loadXML();
@@ -90,6 +91,7 @@ class Level {
   void setFileName(const std::string& i_filename);
   std::string Checksum() const;
   bool isScripted() const;
+  bool isPhysics() const;
 
   void updatePhysics(int timeStep, CollisionSystem* p_CollisionSystem);
 
@@ -186,6 +188,7 @@ class Level {
   std::string m_borderTexture;
   SkyApparence* m_sky;
   bool m_isScripted;
+  bool m_isPhysics;
 
   int m_numberLayer;
   /* vector is the offset, and if bool == true, then it's a front layer*/

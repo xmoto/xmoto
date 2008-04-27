@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "chipmunk/chipmunk.h"
 #include "ChipmunkHelper.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 20
+#define CACHE_LEVEL_FORMAT_VERSION 21
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -53,6 +53,7 @@ Level::Level() {
   m_borderTexture = "";
   m_numberLayer   = 0;
   m_isScripted    = false;
+  m_isPhysics     = false;
   m_sky = new SkyApparence();
 }
 
@@ -143,6 +144,10 @@ std::string Level::Checksum() const {
 
 bool Level::isScripted() const {
   return m_isScripted;
+}
+
+bool Level::isPhysics() const {
+  return m_isPhysics;
 }
 
 void Level::updatePhysics(int timeStep, CollisionSystem* p_CollisionSystem) {
@@ -511,6 +516,7 @@ void Level::loadXML(void) {
   m_numberLayer = 0;
   
   m_isScripted = false;
+  m_isPhysics  = false;
 
   m_sky->reInit();
 
@@ -727,7 +733,11 @@ void Level::loadXML(void) {
     /* Get blocks */
     for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
         pElem=pElem->NextSiblingElement("block")) {
-      m_blocks.push_back(Block::readFromXml(m_xmlSource, pElem));
+      Block* v_block = Block::readFromXml(m_xmlSource, pElem);
+      if(v_block->isPhysics()) {
+	m_isPhysics = true;
+      }
+      m_blocks.push_back(v_block);
     }  
   }
 
@@ -915,6 +925,7 @@ void Level::importBinaryHeader(FileHandle *pfh) {
   m_date   	= FS::readString(pfh);
   m_music       = FS::readString(pfh);
   m_isScripted  = FS::readBool(pfh);
+  m_isPhysics   = FS::readBool(pfh);
 }
 
 void Level::importHeader(const std::string& i_id,
@@ -926,7 +937,8 @@ void Level::importHeader(const std::string& i_id,
 			 const std::string& i_author,
 			 const std::string& i_date,
 			 const std::string& i_music,
-			 bool i_isScripted
+			 bool i_isScripted,
+			 bool i_isPhysics
 			 ) {
   unloadLevelBody();
 
@@ -944,6 +956,7 @@ void Level::importHeader(const std::string& i_id,
   m_date   	= i_date;
   m_music       = i_music;
   m_isScripted  = i_isScripted;
+  m_isPhysics   = i_isPhysics;
 }
 
   /*===========================================================================
@@ -991,6 +1004,7 @@ void Level::exportBinaryHeader(FileHandle *pfh) {
   FS::writeString(pfh	    , m_date);
   FS::writeString(pfh	    , m_music);
   FS::writeBool(  pfh	    , m_isScripted);
+  FS::writeBool(  pfh	    , m_isPhysics);
 }
 
 bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
@@ -1029,6 +1043,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         m_date = FS::readString(pfh);
         m_music = FS::readString(pfh);
 	m_isScripted = FS::readBool(pfh);
+	m_isPhysics  = FS::readBool(pfh);
 
 	/* sky */
         m_sky->setTexture(FS::readString(pfh));
