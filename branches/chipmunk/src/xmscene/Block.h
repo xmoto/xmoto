@@ -26,13 +26,14 @@ class Line;
 
 #include "helpers/VMath.h"
 #include "helpers/Color.h"
-#include "ChipmunkHelper.h"
 
 class FileHandle;
 class XMLDocument;
 class TiXmlElement;
 class BSPPoly;
 class Block;
+class cpBody;
+class ChipmunkWorld;
 
 #define DEFAULT_EDGE_ANGLE 270.0f
 

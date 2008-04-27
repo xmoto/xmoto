@@ -40,6 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Replay.h"
 #include "LuaLibGame.h"
 #include "ScriptDynamicObjects.h"
+#include "ChipmunkWorld.h"
 
   MotoGame::MotoGame() {
     m_bDeathAnimEnabled=true;

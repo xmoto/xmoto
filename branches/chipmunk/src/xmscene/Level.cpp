@@ -38,7 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Collision.h"
 #include "Scene.h"
 #include "chipmunk/chipmunk.h"
-#include "ChipmunkHelper.h"
+#include "ChipmunkWorld.h"
 
 #define CACHE_LEVEL_FORMAT_VERSION 21
 

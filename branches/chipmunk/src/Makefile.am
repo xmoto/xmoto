@@ -336,8 +336,8 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   xmscene/BikePlayer.cpp \
   xmscene/Camera.h \
   xmscene/Camera.cpp \
-  xmscene/ChipmunkHelper.cpp \
-  xmscene/ChipmunkHelper.h 
+  xmscene/ChipmunkWorld.cpp \
+  xmscene/ChipmunkWorld.h 
 
 
 if WIN32
