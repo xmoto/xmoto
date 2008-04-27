@@ -60,6 +60,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_luaGame = NULL;
 
     m_currentCamera = 0;
+
+    m_chipmunkWorld = NULL;
   }
   
   MotoGame::~MotoGame() {
@@ -227,7 +229,7 @@ void MotoGame::cleanPlayers() {
 
     /* Update misc stuff (only when not playing a replay) */
     if(m_playEvents) {
-      getLevelSrc()->updatePhysics(timeStep, &m_Collision);
+      getLevelSrc()->updatePhysics(timeStep, &m_Collision, m_chipmunkWorld);
       _UpdateZones();
       _UpdateEntities();
     }
@@ -251,8 +253,8 @@ void MotoGame::cleanPlayers() {
     }
     
     for(unsigned int i=0; i<m_players.size(); i++) {
-      m_players[i]->updateToTime(m_time, timeStep, &m_Collision, m_PhysGravity, this);
-      
+      m_players[i]->updateToTime(m_time, timeStep, &m_Collision, m_PhysGravity, this);      
+
       if(m_playEvents) {
 	/* New wheel-spin particles? */
 	if(m_players[i]->isWheelSpinning()) {
@@ -265,6 +267,8 @@ void MotoGame::cleanPlayers() {
 	}
       }
     }
+    /* players moves, update their positions */
+    m_chipmunkWorld->updateWheelsPosition(m_players);
 
     executeEvents(i_recordedReplay);
 
@@ -431,6 +435,11 @@ void MotoGame::cleanPlayers() {
       throw Exception("failed to get level script");
     }
 
+    // load chimunk
+    if(m_pLevelSrc->isPhysics()) {
+      m_chipmunkWorld = new ChipmunkWorld();
+    }
+
     /* Generate extended level data to be used by the game */
     try {
       _GenerateLevel();
@@ -538,6 +547,11 @@ void MotoGame::cleanPlayers() {
     cleanGhosts();
 
     removeCameras();
+
+    if(m_chipmunkWorld != NULL) {
+      delete m_chipmunkWorld;
+      m_chipmunkWorld = NULL;
+    }
   }
 
   /*===========================================================================
@@ -583,7 +597,7 @@ void MotoGame::cleanPlayers() {
     /* For each input block */
     int nTotalBSPErrors = 0;
     
-    nTotalBSPErrors = m_pLevelSrc->loadToPlay();
+    nTotalBSPErrors = m_pLevelSrc->loadToPlay(m_chipmunkWorld);
 
     if(nTotalBSPErrors > 0) {
       Logger::Log(" %d BSP error%s in total",nTotalBSPErrors,nTotalBSPErrors==1?"":"s");
@@ -1139,6 +1153,7 @@ void MotoGame::cleanPlayers() {
     v_playerBiker->setOnBikerHooks(new MotoGameOnBikerHooks(this, m_players.size()));
     v_playerBiker->setPlaySound(i_enableEngineSound);
     m_players.push_back(v_playerBiker);
+    m_chipmunkWorld->addPlayer(v_playerBiker);
     return v_playerBiker;
   }
 
@@ -1153,7 +1168,9 @@ void MotoGame::cleanPlayers() {
     }
 
     // change gravity for chipmunk
-    ChipmunkHelper::Instance()->setGravity(x, y);
+    if(m_chipmunkWorld != NULL) {
+      m_chipmunkWorld->setGravity(x, y);
+    }
 
     //m_renderer->adaptRotationAngleToGravity();
   }

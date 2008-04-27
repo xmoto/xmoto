@@ -34,6 +34,7 @@ class SkyApparence;
 class Zone;
 class CollisionSystem;
 class XMLDocument;
+class ChipmunkWorld;
 
 /*===========================================================================
   Level source object - holds all stored information about a level
@@ -66,7 +67,7 @@ class Level {
 
   /* load level so that it is possible to play */
   /* to replay a level, unload then, reload it */
-  int loadToPlay(); /* return the number of errors found */
+  int loadToPlay(ChipmunkWorld* i_chipmunkWorld); /* return the number of errors found */
   void unloadToPlay();
 
   std::string Id()          const;
@@ -93,7 +94,7 @@ class Level {
   bool isScripted() const;
   bool isPhysics() const;
 
-  void updatePhysics(int timeStep, CollisionSystem* p_CollisionSystem);
+  void updatePhysics(int timeStep, CollisionSystem* p_CollisionSystem, ChipmunkWorld* i_chipmunkWorld);
 
   Block*  getBlockById(const std::string& i_id);
   Entity* getEntityById(const std::string& i_id);

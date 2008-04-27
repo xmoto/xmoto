@@ -18,40 +18,43 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __CHIPMUNKHELPER_H__
-#define __CHIPMUNKHELPER_H__
+#ifndef __CHIPMUNKWORLD_H__
+#define __CHIPMUNKWORLD_H__
+
+#include <vector>
 
 class cpSpace;
 class cpBody;
+class Biker;
 
-class ChipmunkHelper
+class ChipmunkWorld
 {
 public:
-	static ChipmunkHelper *Instance();
-	void reInstance();
-	~ChipmunkHelper() {};
+	ChipmunkWorld();
+	~ChipmunkWorld();
 	cpSpace *getSpace();
 	void setSpace(cpSpace* s);
 
-	cpBody *getStaticBody();
-	cpBody *getFrontWheel();
-	cpBody *getBackWheel();
-	void setStaticBody(cpBody *body);
-	void setFrontWheel(cpBody *body);
-	void setBackWheel(cpBody *body);
+	cpBody *getBody();
+	cpBody *getFrontWheel(unsigned int i_player);
+	cpBody *getBackWheel(unsigned int i_player);
+	void setBody(cpBody *body);
+	void setFrontWheel(cpBody *body, unsigned int i_player);
+	void setBackWheel(cpBody *body, unsigned int i_player);
 	void setGravity(float i_x, float i_y);
 
+	void addPlayer(Biker* i_biker);
+	void updateWheelsPosition(const std::vector<Biker*>& i_players);
+
 private:
-	static ChipmunkHelper *mp_instance;
 	void initPhysics();
 	cpSpace *m_space;
 	cpBody *m_body;
 
-        cpBody *m_ab;	// wheel anchors
-        cpBody *m_af;
-	cpBody *m_wb;	// wheel bodies
-	cpBody *m_wf;
-	
+	std::vector<cpBody*> m_ab; // wheel anchors
+        std::vector<cpBody*> m_af;
+	std::vector<cpBody*> m_wb; // wheel bodies
+	std::vector<cpBody*> m_wf;
 };
 
 #endif

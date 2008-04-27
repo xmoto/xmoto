@@ -92,6 +92,7 @@ Block::Block(std::string i_id) {
   m_layer            = -1;
   m_edgeDrawMethod   = angle;
   m_edgeAngle        = DEFAULT_EDGE_ANGLE;
+  mBody              = NULL;
 }
 
 Block::~Block() {
@@ -209,7 +210,7 @@ void Block::updatePhysics(int timeStep, CollisionSystem* io_collisionSystem) {
 
 }
 
-int Block::loadToPlay(CollisionSystem* io_collisionSystem) {
+int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld) {
 
   m_dynamicPosition       = m_initialPosition;
   m_dynamicRotation       = m_initialRotation;
@@ -224,12 +225,12 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem) {
   BSP v_BSPTree;
   cpBody *myBody = NULL;
   cpVect *myVerts = NULL;
-
-  if (isDynamic()) {
-    unsigned int size = 2*sizeof(cpVect)*Vertices().size();
-    myVerts = (cpVect*)malloc(size);
-    ChipmunkHelper::Instance();
-
+  
+  if(i_chipmunkWorld != NULL) {
+    if (isDynamic()) {
+      unsigned int size = 2*sizeof(cpVect)*Vertices().size();
+      myVerts = (cpVect*)malloc(size);
+    }
   }
 
   /* Define edges */
@@ -248,22 +249,21 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem) {
 				     Grip());
       
 
-//     if(isChipmunk()) {
-      // Create/duplicate terrain for chipmunks objects to use
-      //
-      cpVect a = cpv( (DynamicPosition().x + Vertices()[i]->Position().x) * CHIP_SCALE_RATIO,
-                      (DynamicPosition().y + Vertices()[i]->Position().y) * CHIP_SCALE_RATIO);
-      cpVect b = cpv( (DynamicPosition().x + Vertices()[inext]->Position().x) * CHIP_SCALE_RATIO,
-                      (DynamicPosition().y + Vertices()[inext]->Position().y) * CHIP_SCALE_RATIO);
+      if(i_chipmunkWorld != NULL) {
+	// Create/duplicate terrain for chipmunks objects to use
+	cpVect a = cpv( (DynamicPosition().x + Vertices()[i]->Position().x) * CHIP_SCALE_RATIO,
+			(DynamicPosition().y + Vertices()[i]->Position().y) * CHIP_SCALE_RATIO);
+	cpVect b = cpv( (DynamicPosition().x + Vertices()[inext]->Position().x) * CHIP_SCALE_RATIO,
+			(DynamicPosition().y + Vertices()[inext]->Position().y) * CHIP_SCALE_RATIO);
 
-      cpShape *seg = cpSegmentShapeNew(ChipmunkHelper::Instance()->getStaticBody(), a, b, 0.0f);
-      seg->group = 1;
-      seg->u = 0.5;
-      seg->e = 0.1;
-      cpSpaceAddStaticShape(ChipmunkHelper::Instance()->getSpace(), seg);
+	cpShape *seg = cpSegmentShapeNew(i_chipmunkWorld->getBody(), a, b, 0.0f);
+	seg->group = 1;
+	seg->u = 0.5; // magic value
+	seg->e = 0.1; // magic value
+	cpSpaceAddStaticShape(i_chipmunkWorld->getSpace(), seg);
+      }
+    }
 
-//     }
-    }      
     /* add dynamic lines */
     if(isLayer() == false && isDynamic()) {
       /* Define collision lines */
@@ -273,8 +273,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem) {
       m_collisionLines.push_back(v_line);
     }
 
-
-    if(isDynamic()) {
+    if(isPhysics()) {
       // collect vertice count to find middle
       tx += Vertices()[i]->Position().x;      
       ty += Vertices()[i]->Position().y;      
@@ -283,7 +282,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem) {
     }
   }
 
-  if(isDynamic()) {
+  if(isPhysics()) {
     // calculate midpoint
     float mdx = (tx * 1.0f) / Vertices().size();
     float mdy = (ty * 1.0f) / Vertices().size();
@@ -330,71 +329,68 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem) {
     addPoly(v_BSPPolys[i], io_collisionSystem);
   }
 
-  if(isDynamic()) {
-    // create body vertices for chipmunk constructors
-    for(unsigned int i=0; i<Vertices().size(); i++) {
-      cpVect ma = cpv(Vertices()[i]->Position().x * CHIP_SCALE_RATIO,
-                      Vertices()[i]->Position().y * CHIP_SCALE_RATIO);
-      myVerts[i] =  ma;
-    }
-
-    // Create body to attach shapes to
-    //
-    cpFloat bMoment = cpMomentForPoly(m_mass,Vertices().size(), myVerts, cpvzero); 
-
-    free(myVerts);
-    
-    // create body 
-    if (isPhysics()) {
-      myBody = cpBodyNew(m_mass, bMoment);
-      myBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
-                      (DynamicPosition().y * CHIP_SCALE_RATIO));
-      cpSpaceAddBody(ChipmunkHelper::Instance()->getSpace(), myBody);
-      mBody = myBody;
-    } else {
-      // We do not add a regular (non-chipmunk) dynamic object to any space
-      //  because we don't want it to be affected by gravity
-      // We will add the shape(s) for the object to the space, because
-      //  we do want collisions, however.
-      //
-      //  Below we do the 'anchor trick' we used for the wheels
-      cpBody *tBody = cpBodyNew(INFINITY, INFINITY);
-      
-      myBody = cpBodyNew(m_mass, bMoment);
-      cpSpaceAddBody(ChipmunkHelper::Instance()->getSpace(), myBody);
-
-      cpSpaceAddJoint(ChipmunkHelper::Instance()->getSpace(), cpPinJointNew(tBody, myBody, cpvzero, cpvzero));
-
-      tBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
-                      (DynamicPosition().y * CHIP_SCALE_RATIO));
-
-      
-      mBody = tBody;
-    }
-
-    
-    // go through calculated BSP polys, adding one or more shape to the
-    // body
-    for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
-      unsigned int size = 2*sizeof(cpVect)*v_BSPPolys[i]->Vertices().size();
-      myVerts = (cpVect*)malloc(size);
-
-      // translate for chipmunk
-      for(unsigned int j=0; j<v_BSPPolys[i]->Vertices().size(); j++) {
-        cpVect ma = cpv(v_BSPPolys[i]->Vertices()[j].x * CHIP_SCALE_RATIO,
-                        v_BSPPolys[i]->Vertices()[j].y * CHIP_SCALE_RATIO);
-        myVerts[j] =  ma;
+  if(i_chipmunkWorld != NULL) {
+    if(isDynamic()) {
+      // create body vertices for chipmunk constructors
+      for(unsigned int i=0; i<Vertices().size(); i++) {
+	cpVect ma = cpv(Vertices()[i]->Position().x * CHIP_SCALE_RATIO,
+			Vertices()[i]->Position().y * CHIP_SCALE_RATIO);
+	myVerts[i] =  ma;
       }
 
-      // collision shape
-      cpShape *shape;
-      shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
-      shape->u = 1.0;
-      shape->e = 0.0;
-      cpSpaceAddShape(ChipmunkHelper::Instance()->getSpace(), shape);
-
-      // free the temporary vertices array
+      // Create body to attach shapes to
+      cpFloat bMoment = cpMomentForPoly(m_mass,Vertices().size(), myVerts, cpvzero); 
       free(myVerts);
+    
+      // create body 
+      if (isPhysics()) {
+	myBody = cpBodyNew(m_mass, bMoment);
+	myBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
+			(DynamicPosition().y * CHIP_SCALE_RATIO));
+	cpSpaceAddBody(i_chipmunkWorld->getSpace(), myBody);
+	mBody = myBody;
+      } else {
+	// We do not add a regular (non-chipmunk) dynamic object to any space
+	//  because we don't want it to be affected by gravity
+	// We will add the shape(s) for the object to the space, because
+	//  we do want collisions, however.
+	//
+	//  Below we do the 'anchor trick' we used for the wheels
+	cpBody *tBody = cpBodyNew(INFINITY, INFINITY);
+	
+	myBody = cpBodyNew(m_mass, bMoment);
+	cpSpaceAddBody(i_chipmunkWorld->getSpace(), myBody);
+	
+	cpSpaceAddJoint(i_chipmunkWorld->getSpace(), cpPinJointNew(tBody, myBody, cpvzero, cpvzero));
+	
+	tBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
+		       (DynamicPosition().y * CHIP_SCALE_RATIO));
+	
+	mBody = tBody;
+      }
+    
+      // go through calculated BSP polys, adding one or more shape to the
+      for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
+	unsigned int size = 2*sizeof(cpVect)*v_BSPPolys[i]->Vertices().size();
+	myVerts = (cpVect*)malloc(size);
+
+	// translate for chipmunk
+	for(unsigned int j=0; j<v_BSPPolys[i]->Vertices().size(); j++) {
+	  cpVect ma = cpv(v_BSPPolys[i]->Vertices()[j].x * CHIP_SCALE_RATIO,
+			  v_BSPPolys[i]->Vertices()[j].y * CHIP_SCALE_RATIO);
+	  myVerts[j] =  ma;
+	}
+
+	// collision shape
+	cpShape *shape;
+	shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
+	shape->u = 1.0; // magic number
+	shape->e = 0.0; // magic number
+	cpSpaceAddShape(i_chipmunkWorld->getSpace(), shape);
+	
+	// free the temporary vertices array
+	free(myVerts);
+      }
     }
   }
 
@@ -643,6 +639,17 @@ void Block::saveXml(FileHandle *i_pfh) {
   }
   FS::writeLineF(i_pfh,"\t</block>");
 }
+
+bool Block::isPhysics_readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
+  TiXmlElement* pPositionElem   = XML::findElement(*i_xmlSource, pElem, std::string("position"));
+
+  if(pPositionElem == NULL) {
+    return false;
+  }
+
+  return XML::getOption(pPositionElem,"physics","false") == "true";
+}
+
 
 Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
   

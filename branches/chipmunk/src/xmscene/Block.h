@@ -165,11 +165,12 @@ class Block {
   /* angle position ; consider of the block center */
   void setDynamicRotation(float i_dynamicRotation);
 
-  int loadToPlay(CollisionSystem* io_collisionSystem);
+  int loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld);
   void unloadToPlay();
 
   void saveXml(FileHandle *i_pfh);
   void saveBinary(FileHandle *i_pfh);
+  static bool isPhysics_readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem);
   static Block* readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem);
   static Block* readFromBinary(FileHandle *i_pfh);
   AABB& getAABB();
@@ -210,8 +211,6 @@ class Block {
 				    bool i_useOld, bool i_AisLast,
 				    bool& o_swapDone, bool i_inside);
 
-  cpBody *mBody;
-
 private:
   std::string m_id;
   std::string m_texture;
@@ -233,7 +232,11 @@ private:
   // a static block from the second static blocks layer
   int   m_layer;
   float m_grip;                         /* GRIP of the block */
+
+  /* chipmunk physics */
   float m_mass; /* mass of the block */
+  cpBody *mBody;
+
   AABB  m_BBox;
   bool  m_isBBoxDirty;
 

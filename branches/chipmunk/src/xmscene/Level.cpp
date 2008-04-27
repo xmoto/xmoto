@@ -150,8 +150,12 @@ bool Level::isPhysics() const {
   return m_isPhysics;
 }
 
-void Level::updatePhysics(int timeStep, CollisionSystem* p_CollisionSystem) {
-  cpSpaceStep(ChipmunkHelper::Instance()->getSpace(), ((double)timeStep)/100.0);
+void Level::updatePhysics(int timeStep, CollisionSystem* p_CollisionSystem, ChipmunkWorld* i_chipmunkWorld) {
+  if(i_chipmunkWorld == NULL) {
+    return;
+  }
+
+  cpSpaceStep(i_chipmunkWorld->getSpace(), ((double)timeStep)/100.0);
 
   // loop through all blocks, looking for chipmunky ones
   for(unsigned int i=0; i<m_blocks.size(); i++) {
@@ -730,6 +734,14 @@ void Level::loadXML(void) {
       m_zones.push_back(Zone::readFromXml(pElem));
     }
     
+    /* determine whether the levels is physics or not */
+    //for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
+    //    pElem=pElem->NextSiblingElement("block")) {
+    //  if(Block::isPhysics_readFromXml(m_xmlSource, pElem)) {
+    //	m_isPhysics = true;
+    //  }
+    //}
+
     /* Get blocks */
     for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
         pElem=pElem->NextSiblingElement("block")) {
@@ -738,7 +750,7 @@ void Level::loadXML(void) {
 	m_isPhysics = true;
       }
       m_blocks.push_back(v_block);
-    }  
+    }
   }
 
   /* if blocks with layerid but level with no layer, throw an exception */
@@ -1233,17 +1245,13 @@ int Level::compareVersionNumbers(const std::string &v1,const std::string &v2) {
   return 0;    
 }
 
-int Level::loadToPlay() {
+int Level::loadToPlay(ChipmunkWorld* i_chipmunkWorld) {
   int v_nbErrors = 0;
-
-  //reset Chipmunk
-  //
-  ChipmunkHelper::Instance()->reInstance();
 
   /* preparing blocks */
   for(unsigned int i=0; i<m_blocks.size(); i++) {
     try {
-      v_nbErrors += m_blocks[i]->loadToPlay(m_pCollisionSystem);
+      v_nbErrors += m_blocks[i]->loadToPlay(m_pCollisionSystem, i_chipmunkWorld);
     } catch(Exception &e) {
       throw Exception("Fail to load block '" + m_blocks[i]->Id() + "' :\n" + e.getMsg());
     }

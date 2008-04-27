@@ -29,8 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Replay.h"
 #include "Sound.h"
 #include "helpers/Log.h"
-#include "ChipmunkHelper.h"
-#include "chipmunk/chipmunk.h"
 
 /* This is the magic depth factor :)  - tweak to obtain max. stability */
 #define DEPTH_FACTOR    2
@@ -144,10 +142,7 @@ void PlayerBiker::updateToTime(int i_time, int i_timeStep,
   }
 }
 
-
 void PlayerBiker::initPhysics(Vector2f i_gravity) {
-  cpBody *b;
-
   m_bFirstPhysicsUpdate = true;
 
   /* Setup ODE */
@@ -161,12 +156,6 @@ void PlayerBiker::initPhysics(Vector2f i_gravity) {
 
   dWorldSetQuickStepNumIterations(m_WorldID,PHYS_QSTEP_ITERS);
 
-  /* Setup Chipmunk */
-  b = ChipmunkHelper::Instance()->getFrontWheel();
-  b->p = cpv(m_bikeState.FrontWheelP.x * CHIP_SCALE_RATIO, m_bikeState.FrontWheelP.y * CHIP_SCALE_RATIO);
-  b = ChipmunkHelper::Instance()->getBackWheel();
-  b->p = cpv(m_bikeState.RearWheelP.x * CHIP_SCALE_RATIO, m_bikeState.RearWheelP.y * CHIP_SCALE_RATIO);
-
   m_bikeState.Parameters()->setDefaults();
 }
 
@@ -177,31 +166,6 @@ void PlayerBiker::uninitPhysics(void) {
 }
 
 void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
-  cpBody *b;
-  cpFloat dx, dy;
-  cpFloat damp = 5.0;   //dampening factor
-
-  // inform chipmunk of ODE pos of front wheel
-  b = ChipmunkHelper::Instance()->getFrontWheel();
-
-  b->w = dBodyGetAngularVel(m_FrontWheelBodyID)[2];
-  dx = m_bikeState.FrontWheelP.x * CHIP_SCALE_RATIO - b->p.x;
-  dy = m_bikeState.FrontWheelP.y * CHIP_SCALE_RATIO - b->p.y;
-
-  b->p.x += dx/damp;
-  b->p.y += dy/damp;
-
-  // inform chipmunk of ODE pos of back wheel
-  b = ChipmunkHelper::Instance()->getBackWheel();
-
-  b->w = dBodyGetAngularVel(m_RearWheelBodyID)[2];
-  dx = m_bikeState.RearWheelP.x * CHIP_SCALE_RATIO - b->p.x;
-  dy = m_bikeState.RearWheelP.y * CHIP_SCALE_RATIO - b->p.y;
-
-  b->p.x += dx/damp;
-  b->p.y += dy/damp;
-
-
   /* No wheel spin per default */
   m_bWheelSpin = false;
 
@@ -1302,6 +1266,14 @@ float PlayerBiker::howMuchSqueek() {
 
 bool PlayerBiker::getRenderBikeFront() {
   return m_wheelDetach == false;
+}
+
+float PlayerBiker::getRearWheelVelocity() {
+  return dBodyGetAngularVel(m_RearWheelBodyID)[2];
+}
+
+float PlayerBiker::getFrontWheelVelocity() {
+  return dBodyGetAngularVel(m_FrontWheelBodyID)[2];
 }
 
 Vector2f PlayerBiker::determineForceToAdd(int i_time) {
