@@ -47,6 +47,10 @@ ChipmunkHelper *ChipmunkHelper::Instance()
 	return mp_instance;
 }
 
+void ChipmunkHelper::setGravity(float i_x, float i_y) {
+  m_space->gravity = cpv(i_x * CHIP_GRAVITY_RATIO, i_y * CHIP_GRAVITY_RATIO);
+}
+
 void ChipmunkHelper::initPhysics()
 {
   cpBody *staticBody;

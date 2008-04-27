@@ -39,6 +39,7 @@ public:
 	void setStaticBody(cpBody *body);
 	void setFrontWheel(cpBody *body);
 	void setBackWheel(cpBody *body);
+	void setGravity(float i_x, float i_y);
 
 private:
 	static ChipmunkHelper *mp_instance;

@@ -29,7 +29,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "chipmunk/chipmunk.h"
 
 #define XM_DEFAULT_BLOCK_TEXTURE "default"
-#define XM_DEFAULT_PHYS_BLOCK_GRIP 20
+
+#define XM_DEFAULT_PHYS_BLOCK_GRIP DEFAULT_PHYS_WHEEL_GRIP
+#define XM_DEFAULT_PHYS_BLOCK_MASS 50.0
 
 /* Vertex */
 ConvexBlockVertex::ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition) {
@@ -79,6 +81,7 @@ Block::Block(std::string i_id) {
   m_physics          = false;
   m_isLayer          = false;
   m_grip             = XM_DEFAULT_PHYS_BLOCK_GRIP;
+  m_mass             = XM_DEFAULT_PHYS_BLOCK_MASS;
   m_dynamicPosition  = m_initialPosition;
   m_dynamicRotation  = m_initialRotation;
   m_dynamicRotationCenter = Vector2f(0.0, 0.0);
@@ -337,14 +340,13 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem) {
 
     // Create body to attach shapes to
     //
-    cpFloat mass = 2.0f;  // compute from area? specify override
-    cpFloat bMoment = cpMomentForPoly(mass,Vertices().size(), myVerts, cpvzero); 
+    cpFloat bMoment = cpMomentForPoly(m_mass,Vertices().size(), myVerts, cpvzero); 
 
     free(myVerts);
     
     // create body 
     if (isPhysics()) {
-      myBody = cpBodyNew(mass, bMoment);
+      myBody = cpBodyNew(m_mass, bMoment);
       myBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
                       (DynamicPosition().y * CHIP_SCALE_RATIO));
       cpSpaceAddBody(ChipmunkHelper::Instance()->getSpace(), myBody);
@@ -358,7 +360,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem) {
       //  Below we do the 'anchor trick' we used for the wheels
       cpBody *tBody = cpBodyNew(INFINITY, INFINITY);
       
-      myBody = cpBodyNew(mass, bMoment);
+      myBody = cpBodyNew(m_mass, bMoment);
       cpSpaceAddBody(ChipmunkHelper::Instance()->getSpace(), myBody);
 
       cpSpaceAddJoint(ChipmunkHelper::Instance()->getSpace(), cpPinJointNew(tBody, myBody, cpvzero, cpvzero));
@@ -461,6 +463,10 @@ float Block::Grip() const {
   return m_grip;
 }
 
+float Block::Mass() const {
+  return m_mass;
+}
+
 std::string Block::Texture() const {
   return m_texture;
 }
@@ -505,6 +511,10 @@ void Block::setIsLayer(bool i_isLayer) {
 
 void Block::setGrip(float i_grip) {
   m_grip = i_grip;
+}
+
+void Block::setMass(float i_mass) {
+  m_mass = i_mass;
 }
 
 AABB& Block::getAABB()
@@ -592,8 +602,22 @@ void Block::saveXml(FileHandle *i_pfh) {
 
   FS::writeLineF(i_pfh, (char*) v_position.c_str());
   
-  if(Grip() != DEFAULT_PHYS_WHEEL_GRIP) {
-    FS::writeLineF(i_pfh,"\t\t<physics grip=\"%f\"/>", Grip());
+  if(Grip() != XM_DEFAULT_PHYS_BLOCK_GRIP || Mass() != XM_DEFAULT_PHYS_BLOCK_MASS) {
+    char v_tmp[16];
+    std::string v_line = "\t\t<physics";
+
+    if(Grip() != XM_DEFAULT_PHYS_BLOCK_GRIP) {
+      snprintf(v_tmp, 16, "%f", Grip());
+      v_line += " grip=\"" + std::string(v_tmp) + "\"";
+    }
+    if(Mass() != XM_DEFAULT_PHYS_BLOCK_GRIP) {
+      snprintf(v_tmp, 16, "%f", Mass());
+      v_line += " mass=\"" + std::string(v_tmp) + "\"";
+    }
+
+    v_line += " />";
+
+    FS::writeLineF(i_pfh, (char*) v_line.c_str());
   }
 
   if(getEdgeDrawMethod() != angle && edgeAngle() != DEFAULT_EDGE_ANGLE){
@@ -644,18 +668,23 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
 
     pBlock->setBackground(XML::getOption(pPositionElem,"background","false") == "true");
     pBlock->setDynamic(XML::getOption(pPositionElem,"dynamic","false") == "true");
-    /* setDynamic must be done before setPhysics - physics implies dynamic */
-    pBlock->setPhysics(XML::getOption(pPositionElem,"physics","false") == "true");
     pBlock->setIsLayer(XML::getOption(pPositionElem,"islayer","false") == "true");
     pBlock->setLayer(atoi(XML::getOption(pPositionElem,"layerid","-1").c_str()));
  }
 
+  /* setDynamic must be done before setPhysics - physics implies dynamic */
   if(pPhysicsElem != NULL) {
+    pBlock->setPhysics(true);
+
     char str[5];
-    snprintf(str, 5, "%f", DEFAULT_PHYS_WHEEL_GRIP);
+    snprintf(str, 5, "%f", XM_DEFAULT_PHYS_BLOCK_GRIP);
     pBlock->setGrip(atof(XML::getOption(pPhysicsElem, "grip", str).c_str()));
+
+    snprintf(str, 5, "%f", XM_DEFAULT_PHYS_BLOCK_MASS);
+    pBlock->setMass(atof(XML::getOption(pPhysicsElem, "mass", str).c_str()));
   } else {
-    pBlock->setGrip(DEFAULT_PHYS_WHEEL_GRIP);
+    pBlock->setGrip(XM_DEFAULT_PHYS_BLOCK_GRIP);
+    pBlock->setMass(XM_DEFAULT_PHYS_BLOCK_MASS);
   }
 
   if(pEdgeElem != NULL) {
@@ -736,6 +765,7 @@ void Block::saveBinary(FileHandle *i_pfh) {
       FS::writeFloat_LE(i_pfh, InitialPosition().x);
       FS::writeFloat_LE(i_pfh, InitialPosition().y);
       FS::writeFloat_LE(i_pfh, Grip());
+      FS::writeFloat_LE(i_pfh, Mass());
       FS::writeInt_LE(i_pfh,   getEdgeDrawMethod());
       FS::writeFloat_LE(i_pfh, edgeAngle());
 
@@ -763,6 +793,7 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   v_Position.y = FS::readFloat_LE(i_pfh);
   pBlock->setInitialPosition(v_Position);
   pBlock->setGrip(FS::readFloat_LE(i_pfh));
+  pBlock->setMass(FS::readFloat_LE(i_pfh));
   pBlock->setEdgeDrawMethod((EdgeDrawMethod)FS::readInt_LE(i_pfh));
   pBlock->setEdgeAngle(FS::readFloat_LE(i_pfh));
   

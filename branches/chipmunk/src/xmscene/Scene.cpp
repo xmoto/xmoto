@@ -1152,6 +1152,9 @@ void MotoGame::cleanPlayers() {
       }
     }
 
+    // change gravity for chipmunk
+    ChipmunkHelper::Instance()->setGravity(x, y);
+
     //m_renderer->adaptRotationAngleToGravity();
   }
 

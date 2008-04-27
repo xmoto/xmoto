@@ -133,6 +133,7 @@ class Block {
   bool isPhysics() const;
   bool isLayer() const;
   float Grip() const;
+  float Mass() const;
   float TextureScale() const;
   std::vector<BlockVertex*>& Vertices();
   /* called many many many times, so we inline it */
@@ -151,6 +152,7 @@ class Block {
   void setPhysics(bool i_physics);
   void setIsLayer(bool i_isLayer);
   void setGrip(float i_grip);
+  void setMass(float i_mass);
   void setCenter(const Vector2f& i_center);
   void setEdgeDrawMethod(EdgeDrawMethod method);
   // in degres, not radian
@@ -231,6 +233,7 @@ private:
   // a static block from the second static blocks layer
   int   m_layer;
   float m_grip;                         /* GRIP of the block */
+  float m_mass; /* mass of the block */
   AABB  m_BBox;
   bool  m_isBBoxDirty;
 

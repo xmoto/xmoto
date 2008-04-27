@@ -14,8 +14,25 @@ function OnLoad()
 	Game.CameraZoom(-0.15);
 	Game.SetBlockCenter("wheel",0,0)
 	Game.SetDynamicBlockSelfRotation("wheel",1000,0,0)
+        Game.SetKeyHook("G", "GravityChange")
+        Game.Message("Press G to change the gravity")
 	return true
 end
+
+function GravityChange()
+  x, y = Game.GetGravity()
+
+  if(x == 0)
+  then
+    x = 9.81
+  else
+   x = 0
+  end
+
+  Game.SetGravity(x, y * -1)
+end
+
+
 	</script>
 	<block id="path2545">
 		<position y="37.453020" x="56.983935" dynamic="true"/>
@@ -2299,7 +2316,7 @@ end
 		<vertex x="-44.126181" y="-4.030773"/>
 	</block>
 	<entity id="path2838" typeid="PlayerStart">
-		<position y="4.48720085" x="6.9378495"/>
+		<position y="2.48720085" x="6.9378495"/>
 		<size r="0.4"/>
 	</entity>
 	<block id="rect2435">
