@@ -651,3 +651,11 @@ void Biker::cleanCollisionPoints() {
 std::vector<Vector2f> &Biker::CollisionPoints() {
 	return m_collisionPoints;
 }
+
+float Biker::getRearWheelVelocity() {
+  return 0.0;
+}
+
+float Biker::getFrontWheelVelocity() {
+  return 0.0;
+}

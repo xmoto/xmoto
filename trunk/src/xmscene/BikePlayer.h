@@ -50,7 +50,7 @@ class ReplayBiker : public Ghost {
 class PlayerBiker : public Biker {
  public:
   PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_filterColor, const TColor& i_filterUglyColor);
-  ~PlayerBiker();
+  virtual ~PlayerBiker();
 
   void updateToTime(int i_time, int i_timeStep,
 		    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
@@ -70,6 +70,9 @@ class PlayerBiker : public Biker {
   void resetAutoDisabler();
   bool isSqueeking();
   float howMuchSqueek();
+
+  virtual float getRearWheelVelocity();
+  virtual float getFrontWheelVelocity();
 
  private:
   SomersaultCounter m_somersaultCounter;

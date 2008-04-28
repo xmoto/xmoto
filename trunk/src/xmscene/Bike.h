@@ -104,7 +104,7 @@ class BikeState {
     
     /* Bonusinfo */    
   BikeState();
-  ~BikeState();
+  virtual ~BikeState();
   
   BikeState& operator=(const BikeState& i_copy);
 
@@ -165,6 +165,8 @@ class Biker {
   virtual bool  isWheelSpinning();
   virtual Vector2f getWheelSpinPoint();
   virtual Vector2f getWheelSpinDir();
+  virtual float getRearWheelVelocity();
+  virtual float getFrontWheelVelocity();
   virtual void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
   virtual void resetAutoDisabler(); /* a player can have a disabler when nothing append */
 
@@ -191,7 +193,7 @@ class Biker {
 
   void setInterpolation(bool bValue);
 
-	std::vector<Vector2f> &CollisionPoints();
+  std::vector<Vector2f> &CollisionPoints();
 
  protected:
   BikerTheme* m_bikerTheme;
@@ -216,9 +218,9 @@ class Biker {
   TColor m_uglyColorFilter;
   bool m_doInterpolation;
 
-	/* collision points */
-	void cleanCollisionPoints();
-	std::vector<Vector2f> m_collisionPoints;
+  /* collision points */
+  void cleanCollisionPoints();
+  std::vector<Vector2f> m_collisionPoints;
 };
 
 class OnBikerHooks {

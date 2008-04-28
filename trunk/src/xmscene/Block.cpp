@@ -26,9 +26,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "VXml.h"
 #include "BSP.h"
+#include "chipmunk/chipmunk.h"
+#include "ChipmunkWorld.h"
 
 #define XM_DEFAULT_BLOCK_TEXTURE "default"
-#define XM_DEFAULT_PHYS_BLOCK_GRIP 20
+
+#define XM_DEFAULT_PHYS_BLOCK_GRIP DEFAULT_PHYS_WHEEL_GRIP
+#define XM_DEFAULT_PHYS_BLOCK_MASS 30.0
+#define XM_DEFAULT_PHYS_BLOCK_FRICTION 0.5
+#define XM_DEFAULT_PHYS_BLOCK_ELASTICITY 0.0
 
 /* Vertex */
 ConvexBlockVertex::ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition) {
@@ -75,8 +81,12 @@ Block::Block(std::string i_id) {
   m_textureScale     = 1.0;
   m_background       = false;
   m_dynamic          = false;
+  m_physics          = false;
   m_isLayer          = false;
   m_grip             = XM_DEFAULT_PHYS_BLOCK_GRIP;
+  m_mass             = XM_DEFAULT_PHYS_BLOCK_MASS;
+  m_friction         = XM_DEFAULT_PHYS_BLOCK_FRICTION;
+  m_elasticity       = XM_DEFAULT_PHYS_BLOCK_ELASTICITY;
   m_dynamicPosition  = m_initialPosition;
   m_dynamicRotation  = m_initialRotation;
   m_dynamicRotationCenter = Vector2f(0.0, 0.0);
@@ -87,6 +97,7 @@ Block::Block(std::string i_id) {
   m_layer            = -1;
   m_edgeDrawMethod   = angle;
   m_edgeAngle        = DEFAULT_EDGE_ANGLE;
+  mBody              = NULL;
 }
 
 Block::~Block() {
@@ -183,17 +194,43 @@ void Block::setDynamicRotation(float i_dynamicRotation) {
   updateCollisionLines();
 }
 
-int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
+void Block::updatePhysics(int timeStep, CollisionSystem* io_collisionSystem) {
+  if(isPhysics()) {
+
+    // move block according to chipmunk
+    setDynamicPosition(Vector2f(((mBody->p.x ) / 10.0f) , (mBody->p.y ) / 10.0f));
+    setDynamicRotation(mBody->a);
+    
+    // inform collision system that there has been a change
+    io_collisionSystem->moveDynBlock(this);
+    
+    cpBodyResetForces(mBody);
+
+  }
+}
+
+int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld) {
 
   m_dynamicPosition       = m_initialPosition;
   m_dynamicRotation       = m_initialRotation;
   m_dynamicRotationCenter = Vector2f(0.0, 0.0);
   m_dynamicPositionCenter = Vector2f(0.0, 0.0);
+  float tx = 0;
+  float ty = 0;
 
   /* Do the "convexifying" the BSP-way. It might be overkill, but we'll
      probably appreciate it when the input data is very complex. It'll also 
      let us handle crossing edges, and other kinds of weird input. */
   BSP v_BSPTree;
+  cpBody *myBody = NULL;
+  cpVect *myVerts = NULL;
+  
+  if(i_chipmunkWorld != NULL) {
+    if (isPhysics()) {
+      unsigned int size = 2*sizeof(cpVect)*Vertices().size();
+      myVerts = (cpVect*)malloc(size);
+    }
+  }
 
   /* Define edges */
   for(unsigned int i=0; i<Vertices().size(); i++) {
@@ -204,12 +241,28 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
     /* add static lines */
     if(isBackground() == false && isDynamic() == false && m_layer == -1) {
       /* Add line to collision handler */
-      io_collisionSystem.defineLine(DynamicPosition().x + Vertices()[i]->Position().x,
-				    DynamicPosition().y + Vertices()[i]->Position().y,
-				    DynamicPosition().x + Vertices()[inext]->Position().x,
-				    DynamicPosition().y + Vertices()[inext]->Position().y,
-				    Grip());
-    }      
+      io_collisionSystem->defineLine(DynamicPosition().x + Vertices()[i]->Position().x,
+				     DynamicPosition().y + Vertices()[i]->Position().y,
+				     DynamicPosition().x + Vertices()[inext]->Position().x,
+				     DynamicPosition().y + Vertices()[inext]->Position().y,
+				     Grip());
+      
+
+      if(i_chipmunkWorld != NULL) {
+	// Create/duplicate terrain for chipmunks objects to use
+	cpVect a = cpv( (DynamicPosition().x + Vertices()[i]->Position().x) * CHIP_SCALE_RATIO,
+			(DynamicPosition().y + Vertices()[i]->Position().y) * CHIP_SCALE_RATIO);
+	cpVect b = cpv( (DynamicPosition().x + Vertices()[inext]->Position().x) * CHIP_SCALE_RATIO,
+			(DynamicPosition().y + Vertices()[inext]->Position().y) * CHIP_SCALE_RATIO);
+
+	cpShape *seg = cpSegmentShapeNew(i_chipmunkWorld->getBody(), a, b, 0.0f);
+	seg->group = 1;
+	seg->u = m_friction;
+	seg->e = m_elasticity;
+	cpSpaceAddStaticShape(i_chipmunkWorld->getSpace(), seg);
+      }
+    }
+
     /* add dynamic lines */
     if(isLayer() == false && isDynamic()) {
       /* Define collision lines */
@@ -219,22 +272,52 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
       m_collisionLines.push_back(v_line);
     }
 
-    /* Add line to BSP generator */
-    v_BSPTree.addLineDefinition(Vertices()[i]->Position(), Vertices()[inext]->Position());
+    if(isPhysics()) {
+      // collect vertice count to find middle
+      tx += Vertices()[i]->Position().x;      
+      ty += Vertices()[i]->Position().y;      
+    } else {
+      v_BSPTree.addLineDefinition(Vertices()[i]->Position(), Vertices()[inext]->Position());
+    }
+  }
+
+  if(isPhysics()) {
+    // calculate midpoint
+    float mdx = tx / Vertices().size();
+    float mdy = ty / Vertices().size();
+
+    // for physics objects we reorient around a center of gravity
+    // determined by the vertices
+    for(unsigned int i=0; i<Vertices().size(); i++) {
+      Vertices()[i]->setPosition(Vector2f(Vertices()[i]->Position().x - mdx, Vertices()[i]->Position().y - mdy));
+    }
+
+    // then BSP-ify them
+    for(unsigned int i=0; i<Vertices().size(); i++) {
+      unsigned int inext = i+1;
+      if(inext == Vertices().size()) inext=0;
+
+      /* Add line to BSP generator */ 
+      v_BSPTree.addLineDefinition(Vertices()[i]->Position(), Vertices()[inext]->Position());
+    }
+
+    // modify the object coords with the midpoint
+    m_dynamicPosition.x += mdx;
+    m_dynamicPosition.y += mdy;
   }
 
   /* define dynamic block in the collision system */
   if(isLayer() == false && isDynamic()) {
     updateCollisionLines();
-    io_collisionSystem.addDynBlock(this);
+    io_collisionSystem->addDynBlock(this);
   }
 
   if(isDynamic() == false && m_layer == -1){
-    io_collisionSystem.addStaticBlock(this, isLayer());
+    io_collisionSystem->addStaticBlock(this, isLayer());
   }
 
   if(isLayer() == true && m_layer != -1) {
-    io_collisionSystem.addBlockInLayer(this, m_layer);
+    io_collisionSystem->addBlockInLayer(this, m_layer);
   }
 
   /* Compute */
@@ -244,7 +327,53 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
   for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
     addPoly(v_BSPPolys[i], io_collisionSystem);
   }
-  
+
+  if(i_chipmunkWorld != NULL) {
+    if(isPhysics()) {
+      // create body vertices for chipmunk constructors
+      for(unsigned int i=0; i<Vertices().size(); i++) {
+	cpVect ma = cpv(Vertices()[i]->Position().x * CHIP_SCALE_RATIO,
+			Vertices()[i]->Position().y * CHIP_SCALE_RATIO);
+	myVerts[i] =  ma;
+      }
+
+      // Create body to attach shapes to
+      cpFloat bMoment = cpMomentForPoly(m_mass,Vertices().size(), myVerts, cpvzero); 
+      free(myVerts);
+    
+      // create body 
+      myBody = cpBodyNew(m_mass, bMoment);
+      myBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
+                      (DynamicPosition().y * CHIP_SCALE_RATIO));
+      cpSpaceAddBody(i_chipmunkWorld->getSpace(), myBody);
+      mBody = myBody;
+    
+      // go through calculated BSP polys, adding one or more shape to the
+      for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
+	unsigned int size = 2*sizeof(cpVect)*v_BSPPolys[i]->Vertices().size();
+	myVerts = (cpVect*)malloc(size);
+
+	// translate for chipmunk
+	for(unsigned int j=0; j<v_BSPPolys[i]->Vertices().size(); j++) {
+	  cpVect ma = cpv(v_BSPPolys[i]->Vertices()[j].x * CHIP_SCALE_RATIO,
+			  v_BSPPolys[i]->Vertices()[j].y * CHIP_SCALE_RATIO);
+	  myVerts[j] =  ma;
+	}
+
+	// collision shape
+	cpShape *shape;
+	shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
+	shape->u = m_friction;
+	shape->e = m_elasticity;
+
+	cpSpaceAddShape(i_chipmunkWorld->getSpace(), shape);
+	
+	// free the temporary vertices array
+	free(myVerts);
+      }
+    }
+  }
+
   updateCollisionLines();
 
   if(v_BSPTree.getNumErrors() > 0) {
@@ -254,7 +383,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
   return v_BSPTree.getNumErrors();  
 }
 
-void Block::addPoly(BSPPoly* i_poly, CollisionSystem& io_collisionSystem) {
+void Block::addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem) {
   ConvexBlock *v_block = new ConvexBlock(this);
   
   for(unsigned int i=0; i<i_poly->Vertices().size(); i++) {
@@ -289,6 +418,10 @@ bool Block::isDynamic() const {
   return m_dynamic;
 }
 
+bool Block::isPhysics() const {
+  return m_physics;
+}
+
 bool Block::isLayer() const {
   return m_isLayer;
 }
@@ -304,6 +437,18 @@ Vector2f Block::InitialPosition() const {
 
 float Block::Grip() const {
   return m_grip;
+}
+
+float Block::Mass() const {
+  return m_mass;
+}
+
+float Block::Friction() const {
+  return m_friction;
+}
+
+float Block::Elasticity() const {
+  return m_elasticity;
 }
 
 std::string Block::Texture() const {
@@ -334,12 +479,34 @@ void Block::setDynamic(bool i_dynamic) {
   m_dynamic = i_dynamic;
 }
 
+void Block::setPhysics(bool i_physics) {
+  m_physics = i_physics;
+
+  if(m_physics) {
+    // we're.. kinda.. dynamic?
+    //
+    setDynamic(true);
+  }
+}
+
 void Block::setIsLayer(bool i_isLayer) {
   m_isLayer = i_isLayer;
 }
 
 void Block::setGrip(float i_grip) {
   m_grip = i_grip;
+}
+
+void Block::setMass(float i_mass) {
+  m_mass = i_mass;
+}
+
+void Block::setFriction(float i_friction) {
+  m_friction = i_friction;
+}
+
+void Block::setElasticity(float i_elasticity) {
+  m_elasticity = i_elasticity;
 }
 
 AABB& Block::getAABB()
@@ -378,6 +545,11 @@ BlockVertex::~BlockVertex() {
 Vector2f BlockVertex::Position() const {
   return m_position;
 }
+
+void BlockVertex::setPosition(const Vector2f& i_position) {
+  m_position = i_position;
+}
+
 
 void BlockVertex::setTexturePosition(const Vector2f& i_texturePosition) {
   m_texturePosition = i_texturePosition;
@@ -422,8 +594,33 @@ void Block::saveXml(FileHandle *i_pfh) {
 
   FS::writeLineF(i_pfh, (char*) v_position.c_str());
   
-  if(Grip() != DEFAULT_PHYS_WHEEL_GRIP) {
-    FS::writeLineF(i_pfh,"\t\t<physics grip=\"%f\"/>", Grip());
+  if(Grip()       != XM_DEFAULT_PHYS_BLOCK_GRIP       ||
+     Mass()       != XM_DEFAULT_PHYS_BLOCK_MASS       ||
+     Friction()   != XM_DEFAULT_PHYS_BLOCK_FRICTION   ||
+     Elasticity() != XM_DEFAULT_PHYS_BLOCK_ELASTICITY) {
+    char v_tmp[32];
+    std::string v_line = "\t\t<physics";
+
+    if(Grip() != XM_DEFAULT_PHYS_BLOCK_GRIP) {
+      snprintf(v_tmp, 32, "%f", Grip());
+      v_line += " grip=\"" + std::string(v_tmp) + "\"";
+    }
+    if(Mass() != XM_DEFAULT_PHYS_BLOCK_MASS) {
+      snprintf(v_tmp, 32, "%f", Mass());
+      v_line += " mass=\"" + std::string(v_tmp) + "\"";
+    }
+    if(Friction() != XM_DEFAULT_PHYS_BLOCK_FRICTION) {
+      snprintf(v_tmp, 32, "%f", Friction());
+      v_line += " friction=\"" + std::string(v_tmp) + "\"";
+    }
+    if(Elasticity() != XM_DEFAULT_PHYS_BLOCK_ELASTICITY) {
+      snprintf(v_tmp, 32, "%f", Elasticity());
+      v_line += " elasticity=\"" + std::string(v_tmp) + "\"";
+    }
+
+    v_line += " />";
+
+    FS::writeLineF(i_pfh, (char*) v_line.c_str());
   }
 
   if(getEdgeDrawMethod() != angle && edgeAngle() != DEFAULT_EDGE_ANGLE){
@@ -450,6 +647,17 @@ void Block::saveXml(FileHandle *i_pfh) {
   FS::writeLineF(i_pfh,"\t</block>");
 }
 
+bool Block::isPhysics_readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
+  TiXmlElement* pPositionElem   = XML::findElement(*i_xmlSource, pElem, std::string("position"));
+
+  if(pPositionElem == NULL) {
+    return false;
+  }
+
+  return XML::getOption(pPositionElem,"physics","false") == "true";
+}
+
+
 Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
   
   Block *pBlock = new Block(XML::getOption(pElem, "id"));
@@ -474,16 +682,30 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
 
     pBlock->setBackground(XML::getOption(pPositionElem,"background","false") == "true");
     pBlock->setDynamic(XML::getOption(pPositionElem,"dynamic","false") == "true");
+    /* setDynamic must be done before setPhysics - physics implies dynamic */
+    pBlock->setPhysics(XML::getOption(pPositionElem,"physics","false") == "true");
     pBlock->setIsLayer(XML::getOption(pPositionElem,"islayer","false") == "true");
     pBlock->setLayer(atoi(XML::getOption(pPositionElem,"layerid","-1").c_str()));
  }
 
   if(pPhysicsElem != NULL) {
-    char str[5];
-    snprintf(str, 5, "%f", DEFAULT_PHYS_WHEEL_GRIP);
+    char str[16];
+    snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_GRIP);
     pBlock->setGrip(atof(XML::getOption(pPhysicsElem, "grip", str).c_str()));
+
+    snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_MASS);
+    pBlock->setMass(atof(XML::getOption(pPhysicsElem, "mass", str).c_str()));
+
+    snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_FRICTION);
+    pBlock->setFriction(atof(XML::getOption(pPhysicsElem, "friction", str).c_str()));
+
+    snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_ELASTICITY);
+    pBlock->setElasticity(atof(XML::getOption(pPhysicsElem, "elasticity", str).c_str()));
   } else {
-    pBlock->setGrip(DEFAULT_PHYS_WHEEL_GRIP);
+    pBlock->setGrip(XM_DEFAULT_PHYS_BLOCK_GRIP);
+    pBlock->setMass(XM_DEFAULT_PHYS_BLOCK_MASS);
+    pBlock->setFriction(XM_DEFAULT_PHYS_BLOCK_FRICTION);
+    pBlock->setElasticity(XM_DEFAULT_PHYS_BLOCK_ELASTICITY);
   }
 
   if(pEdgeElem != NULL) {
@@ -557,12 +779,16 @@ void Block::saveBinary(FileHandle *i_pfh) {
       FS::writeString(i_pfh,   Id());
       FS::writeBool(i_pfh,     isBackground());
       FS::writeBool(i_pfh,     isDynamic());
+      FS::writeBool(i_pfh,     isPhysics());
       FS::writeBool(i_pfh,     isLayer());
       FS::writeInt_LE(i_pfh,   getLayer());
       FS::writeString(i_pfh,   Texture());
       FS::writeFloat_LE(i_pfh, InitialPosition().x);
       FS::writeFloat_LE(i_pfh, InitialPosition().y);
       FS::writeFloat_LE(i_pfh, Grip());
+      FS::writeFloat_LE(i_pfh, Mass());
+      FS::writeFloat_LE(i_pfh, Friction());
+      FS::writeFloat_LE(i_pfh, Elasticity());
       FS::writeInt_LE(i_pfh,   getEdgeDrawMethod());
       FS::writeFloat_LE(i_pfh, edgeAngle());
 
@@ -580,6 +806,7 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
 
   pBlock->setBackground(FS::readBool(i_pfh));
   pBlock->setDynamic(FS::readBool(i_pfh));
+  pBlock->setPhysics(FS::readBool(i_pfh));
   pBlock->setIsLayer(FS::readBool(i_pfh));
   pBlock->setLayer(FS::readInt_LE(i_pfh));
   pBlock->setTexture(FS::readString(i_pfh));
@@ -589,6 +816,9 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   v_Position.y = FS::readFloat_LE(i_pfh);
   pBlock->setInitialPosition(v_Position);
   pBlock->setGrip(FS::readFloat_LE(i_pfh));
+  pBlock->setMass(FS::readFloat_LE(i_pfh));
+  pBlock->setFriction(FS::readFloat_LE(i_pfh));
+  pBlock->setElasticity(FS::readFloat_LE(i_pfh));
   pBlock->setEdgeDrawMethod((EdgeDrawMethod)FS::readInt_LE(i_pfh));
   pBlock->setEdgeAngle(FS::readFloat_LE(i_pfh));
   

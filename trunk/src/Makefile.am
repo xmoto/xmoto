@@ -45,6 +45,34 @@ drawlib_SOURCES += drawlib/DrawLibSDLgfx.h   \
                    drawlib/DrawLibSDLgfx.cpp
 endif
 
+chipmunk_SOURCES= chipmunk/chipmunk.c \
+                  chipmunk/chipmunk.h \
+                  chipmunk/cpArbiter.c \
+                  chipmunk/cpArbiter.h \
+                  chipmunk/cpArray.c \
+                  chipmunk/cpArray.h \
+                  chipmunk/cpBB.c \
+                  chipmunk/cpBB.h \
+                  chipmunk/cpBody.c \
+                  chipmunk/cpBody.h \
+                  chipmunk/cpCollision.c \
+                  chipmunk/cpCollision.h \
+                  chipmunk/cpHashSet.c \
+                  chipmunk/cpHashSet.h \
+                  chipmunk/cpJoint.c \
+                  chipmunk/cpJoint.h \
+                  chipmunk/cpPolyShape.c \
+                  chipmunk/cpPolyShape.h \
+                  chipmunk/cpShape.c \
+                  chipmunk/cpShape.h \
+                  chipmunk/cpSpace.c \
+                  chipmunk/cpSpace.h \
+                  chipmunk/cpSpaceHash.c \
+                  chipmunk/cpSpaceHash.h \
+                  chipmunk/cpVect.c \
+                  chipmunk/cpVect.h \
+                  chipmunk/prime.h
+
 helpers_SOURCES = helpers/VMath.h             \
                   helpers/VMath.cpp           \
                   helpers/VExcept.h           \
@@ -78,6 +106,7 @@ common_SOURCES = Image.cpp \
   $(helpers_SOURCES) \
   $(image_SOURCES) $(tinyxml_SOURCES) \
   $(md5_SOURCES) \
+  $(chipmunk_SOURCES) \
   Image.h \
   VBezier.h VCommon.h \
   VFileIO.h VTexture.h VXml.h \
@@ -306,7 +335,10 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   xmscene/BikePlayer.h  \
   xmscene/BikePlayer.cpp \
   xmscene/Camera.h \
-  xmscene/Camera.cpp
+  xmscene/Camera.cpp \
+  xmscene/ChipmunkWorld.cpp \
+  xmscene/ChipmunkWorld.h 
+
 
 if WIN32
 xmoto_SOURCES += xmoto_icone.ico

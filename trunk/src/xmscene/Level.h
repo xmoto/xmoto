@@ -34,6 +34,7 @@ class SkyApparence;
 class Zone;
 class CollisionSystem;
 class XMLDocument;
+class ChipmunkWorld;
 
 /*===========================================================================
   Level source object - holds all stored information about a level
@@ -57,7 +58,8 @@ class Level {
 		    const std::string& i_author,
 		    const std::string& i_date,
 		    const std::string& i_music,
-		    bool i_isScripted);
+		    bool i_isScripted,
+		    bool i_isPhysics);
   void rebuildCache();
 
   void loadXML();
@@ -65,7 +67,7 @@ class Level {
 
   /* load level so that it is possible to play */
   /* to replay a level, unload then, reload it */
-  int loadToPlay(); /* return the number of errors found */
+  int loadToPlay(ChipmunkWorld* i_chipmunkWorld); /* return the number of errors found */
   void unloadToPlay();
 
   std::string Id()          const;
@@ -90,6 +92,9 @@ class Level {
   void setFileName(const std::string& i_filename);
   std::string Checksum() const;
   bool isScripted() const;
+  bool isPhysics() const;
+
+  void updatePhysics(int timeStep, CollisionSystem* p_CollisionSystem, ChipmunkWorld* i_chipmunkWorld);
 
   Block*  getBlockById(const std::string& i_id);
   Entity* getEntityById(const std::string& i_id);
@@ -184,6 +189,7 @@ class Level {
   std::string m_borderTexture;
   SkyApparence* m_sky;
   bool m_isScripted;
+  bool m_isPhysics;
 
   int m_numberLayer;
   /* vector is the offset, and if bool == true, then it's a front layer*/

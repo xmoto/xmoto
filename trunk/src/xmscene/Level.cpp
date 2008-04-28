@@ -37,8 +37,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SkyApparence.h"
 #include "Collision.h"
 #include "Scene.h"
+#include "chipmunk/chipmunk.h"
+#include "ChipmunkWorld.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 19
+#define CACHE_LEVEL_FORMAT_VERSION 22
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -51,6 +53,7 @@ Level::Level() {
   m_borderTexture = "";
   m_numberLayer   = 0;
   m_isScripted    = false;
+  m_isPhysics     = false;
   m_sky = new SkyApparence();
 }
 
@@ -141,6 +144,23 @@ std::string Level::Checksum() const {
 
 bool Level::isScripted() const {
   return m_isScripted;
+}
+
+bool Level::isPhysics() const {
+  return m_isPhysics;
+}
+
+void Level::updatePhysics(int timeStep, CollisionSystem* p_CollisionSystem, ChipmunkWorld* i_chipmunkWorld) {
+  if(i_chipmunkWorld == NULL) {
+    return;
+  }
+
+  cpSpaceStep(i_chipmunkWorld->getSpace(), ((double)timeStep)/100.0);
+
+  // loop through all blocks, looking for chipmunky ones
+  for(unsigned int i=0; i<m_blocks.size(); i++) {
+    m_blocks[i]->updatePhysics(timeStep, p_CollisionSystem);
+  }
 }
 
 Block* Level::getBlockById(const std::string& i_id) {
@@ -500,6 +520,7 @@ void Level::loadXML(void) {
   m_numberLayer = 0;
   
   m_isScripted = false;
+  m_isPhysics  = false;
 
   m_sky->reInit();
 
@@ -713,11 +734,23 @@ void Level::loadXML(void) {
       m_zones.push_back(Zone::readFromXml(pElem));
     }
     
+    /* determine whether the levels is physics or not */
+    //for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
+    //    pElem=pElem->NextSiblingElement("block")) {
+    //  if(Block::isPhysics_readFromXml(m_xmlSource, pElem)) {
+    //	m_isPhysics = true;
+    //  }
+    //}
+
     /* Get blocks */
     for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
         pElem=pElem->NextSiblingElement("block")) {
-      m_blocks.push_back(Block::readFromXml(m_xmlSource, pElem));
-    }  
+      Block* v_block = Block::readFromXml(m_xmlSource, pElem);
+      if(v_block->isPhysics()) {
+	m_isPhysics = true;
+      }
+      m_blocks.push_back(v_block);
+    }
   }
 
   /* if blocks with layerid but level with no layer, throw an exception */
@@ -904,6 +937,7 @@ void Level::importBinaryHeader(FileHandle *pfh) {
   m_date   	= FS::readString(pfh);
   m_music       = FS::readString(pfh);
   m_isScripted  = FS::readBool(pfh);
+  m_isPhysics   = FS::readBool(pfh);
 }
 
 void Level::importHeader(const std::string& i_id,
@@ -915,7 +949,8 @@ void Level::importHeader(const std::string& i_id,
 			 const std::string& i_author,
 			 const std::string& i_date,
 			 const std::string& i_music,
-			 bool i_isScripted
+			 bool i_isScripted,
+			 bool i_isPhysics
 			 ) {
   unloadLevelBody();
 
@@ -933,6 +968,7 @@ void Level::importHeader(const std::string& i_id,
   m_date   	= i_date;
   m_music       = i_music;
   m_isScripted  = i_isScripted;
+  m_isPhysics   = i_isPhysics;
 }
 
   /*===========================================================================
@@ -980,6 +1016,7 @@ void Level::exportBinaryHeader(FileHandle *pfh) {
   FS::writeString(pfh	    , m_date);
   FS::writeString(pfh	    , m_music);
   FS::writeBool(  pfh	    , m_isScripted);
+  FS::writeBool(  pfh	    , m_isPhysics);
 }
 
 bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
@@ -1018,6 +1055,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         m_date = FS::readString(pfh);
         m_music = FS::readString(pfh);
 	m_isScripted = FS::readBool(pfh);
+	m_isPhysics  = FS::readBool(pfh);
 
 	/* sky */
         m_sky->setTexture(FS::readString(pfh));
@@ -1207,13 +1245,13 @@ int Level::compareVersionNumbers(const std::string &v1,const std::string &v2) {
   return 0;    
 }
 
-int Level::loadToPlay() {
+int Level::loadToPlay(ChipmunkWorld* i_chipmunkWorld) {
   int v_nbErrors = 0;
 
   /* preparing blocks */
   for(unsigned int i=0; i<m_blocks.size(); i++) {
     try {
-      v_nbErrors += m_blocks[i]->loadToPlay(*m_pCollisionSystem);
+      v_nbErrors += m_blocks[i]->loadToPlay(m_pCollisionSystem, i_chipmunkWorld);
     } catch(Exception &e) {
       throw Exception("Fail to load block '" + m_blocks[i]->Id() + "' :\n" + e.getMsg());
     }
