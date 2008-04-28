@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_DEFAULT_PHYS_BLOCK_GRIP DEFAULT_PHYS_WHEEL_GRIP
 #define XM_DEFAULT_PHYS_BLOCK_MASS 30.0
 #define XM_DEFAULT_PHYS_BLOCK_FRICTION 0.5
-#define XM_DEFAULT_PHYS_BLOCK_ELASTICITY 0.1
+#define XM_DEFAULT_PHYS_BLOCK_ELASTICITY 0.0
 
 /* Vertex */
 ConvexBlockVertex::ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition) {
@@ -226,7 +226,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   cpVect *myVerts = NULL;
   
   if(i_chipmunkWorld != NULL) {
-    if (isDynamic()) {
+    if (isPhysics()) {
       unsigned int size = 2*sizeof(cpVect)*Vertices().size();
       myVerts = (cpVect*)malloc(size);
     }
@@ -594,7 +594,8 @@ void Block::saveXml(FileHandle *i_pfh) {
 
   FS::writeLineF(i_pfh, (char*) v_position.c_str());
   
-  if(Grip() != XM_DEFAULT_PHYS_BLOCK_GRIP || Mass() != XM_DEFAULT_PHYS_BLOCK_MASS) {
+  if(Grip() != XM_DEFAULT_PHYS_BLOCK_GRIP || Mass() != XM_DEFAULT_PHYS_BLOCK_MASS ||
+     Friction() != XM_DEFAULT_PHYS_BLOCK_FRICTION || Elasticity() != XM_DEFAULT_PHYS_BLOCK_ELASTICITY) {
     char v_tmp[16];
     std::string v_line = "\t\t<physics";
 
