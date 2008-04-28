@@ -32,6 +32,8 @@ class XMLDocument;
 class TiXmlElement;
 class BSPPoly;
 class Block;
+class cpBody;
+class ChipmunkWorld;
 
 #define DEFAULT_EDGE_ANGLE 270.0f
 
@@ -95,6 +97,8 @@ class BlockVertex {
     return m_edgeEffect;
   }
 
+  void setPosition(const Vector2f& i_position);
+
   void setTexturePosition(const Vector2f& i_texturePosition);
   void setColor(const TColor& i_color);
 
@@ -127,8 +131,12 @@ class Block {
   Vector2f DynamicPositionCenter() const;
   bool isBackground() const;
   bool isDynamic() const;
+  bool isPhysics() const;
   bool isLayer() const;
   float Grip() const;
+  float Mass() const;
+  float Friction() const;
+  float Elasticity() const;
   float TextureScale() const;
   std::vector<BlockVertex*>& Vertices();
   /* called many many many times, so we inline it */
@@ -144,8 +152,12 @@ class Block {
   void setInitialPosition(const Vector2f& i_initialPosition);
   void setBackground(bool i_background);
   void setDynamic(bool i_dynamic);
+  void setPhysics(bool i_physics);
   void setIsLayer(bool i_isLayer);
   void setGrip(float i_grip);
+  void setMass(float i_mass);
+  void setFriction(float i_friction);
+  void setElasticity(float i_elasticity);
   void setCenter(const Vector2f& i_center);
   void setEdgeDrawMethod(EdgeDrawMethod method);
   // in degres, not radian
@@ -158,11 +170,12 @@ class Block {
   /* angle position ; consider of the block center */
   void setDynamicRotation(float i_dynamicRotation);
 
-  int loadToPlay(CollisionSystem& io_collisionSystem);
+  int loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld);
   void unloadToPlay();
 
   void saveXml(FileHandle *i_pfh);
   void saveBinary(FileHandle *i_pfh);
+  static bool isPhysics_readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem);
   static Block* readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem);
   static Block* readFromBinary(FileHandle *i_pfh);
   AABB& getAABB();
@@ -185,6 +198,7 @@ class Block {
   std::vector<int>& getEdgeGeoms();
   bool edgeGeomExists(std::string texture);
 
+  void updatePhysics(int timeStep, CollisionSystem* io_collisionSystem);
 
   // calculate edge position
   void calculateEdgePosition_angle(Vector2f  i_vA, Vector2f i_vB,
@@ -216,12 +230,20 @@ private:
 
   bool  m_background;
   bool  m_dynamic;
+  bool  m_physics;
   bool  m_isLayer;
   // the background layer of the block.
   // in case of a non m_backgroundLevel, if m_layer is != -1, then it's
   // a static block from the second static blocks layer
   int   m_layer;
   float m_grip;                         /* GRIP of the block */
+
+  /* chipmunk physics */
+  float m_mass;       /* mass of the block */
+  float m_friction;   /* friction of the block */
+  float m_elasticity; /* elasticity of the block */
+  cpBody *mBody;
+
   AABB  m_BBox;
   bool  m_isBBoxDirty;
 
@@ -235,7 +257,7 @@ private:
   Vector2f m_dynamicPosition; /* Block position */
   std::vector<Line *> m_collisionLines; /* Line to collide against */
 
-  void addPoly(BSPPoly* i_poly, CollisionSystem& io_collisionSystem);
+  void addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem);
   void updateCollisionLines();
 
   EdgeDrawMethod m_edgeDrawMethod;

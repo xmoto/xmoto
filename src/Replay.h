@@ -60,6 +60,7 @@ class BikeState;
       
       /* Methods */
       void storeState(const SerializedBikeState& state);
+      void storeBlocks(const std::vector<Block *>& i_blocks);
       /* go and get the next state */
       void loadState(BikeState* state);  
       void peekState(BikeState* state); /* get current state */

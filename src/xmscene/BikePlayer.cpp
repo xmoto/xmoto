@@ -156,7 +156,6 @@ void PlayerBiker::initPhysics(Vector2f i_gravity) {
 
   dWorldSetQuickStepNumIterations(m_WorldID,PHYS_QSTEP_ITERS);
 
-  /* Set default bike parameters */
   m_bikeState.Parameters()->setDefaults();
 }
 
@@ -170,8 +169,8 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
   /* No wheel spin per default */
   m_bWheelSpin = false;
 
-	// remove old collision points
-	cleanCollisionPoints();
+  // remove old collision points
+  cleanCollisionPoints();
 
   /* Update gravity vector */
   dWorldSetGravity(m_WorldID, i_gravity.x, i_gravity.y, 0);
@@ -338,7 +337,6 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
 	    dBodyEnable(m_FrontWheelBodyID);
 	    dBodyEnable(m_RearWheelBodyID);
 	    dBodyEnable(m_FrameBodyID);
-	    
 	    dBodyAddTorque(m_RearWheelBodyID,0,0,-m_bikeState.Parameters()->MaxEngine()*PHYS_ENGINE_DAMP*m_BikeC.Drive());
 	    
 	    //printf("Drive!\n");
@@ -1268,6 +1266,14 @@ float PlayerBiker::howMuchSqueek() {
 
 bool PlayerBiker::getRenderBikeFront() {
   return m_wheelDetach == false;
+}
+
+float PlayerBiker::getRearWheelVelocity() {
+  return dBodyGetAngularVel(m_RearWheelBodyID)[2];
+}
+
+float PlayerBiker::getFrontWheelVelocity() {
+  return dBodyGetAngularVel(m_FrontWheelBodyID)[2];
 }
 
 Vector2f PlayerBiker::determineForceToAdd(int i_time) {

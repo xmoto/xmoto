@@ -38,6 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameEvents.h"
 #include "Game.h"
 #include "xmscene/Bike.h"
+#include "xmscene/Block.h"
 #include "db/xmDatabase.h"
 
   bool Replay::m_bEnableCompression = true;
@@ -382,7 +383,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     return m_LevelID;
   }
-      
+
+  void Replay::storeBlocks(const std::vector<Block *>& i_blocks) {
+     for(unsigned int i=0; i<i_blocks.size(); i++) {
+       if(i_blocks[i]->isPhysics() == true) {
+	 /* store this block in the .rpl if the position changed */
+	 // 
+	 // i_blocks[i]->Id();
+	 // i_blocks[i]->DynamicPosition();
+	 // i_blocks[i]->DynamicRotation();
+       }
+     }
+  }
+
   void Replay::storeState(const SerializedBikeState& state) {
     char *addr;
 

@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "VFileIO.h"
 
-#define XMDB_VERSION         25
+#define XMDB_VERSION         26
 #define DB_MAX_SQL_RUNTIME 0.25
 
 bool xmDatabase::Trace = false;
@@ -564,6 +564,17 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 24: " + e.getMsg());
     }
+
+  case 25:
+    try {
+      simpleSql("ALTER TABLE levels ADD COLUMN isPhysics DEFAULT 0;");
+      simpleSql("CREATE INDEX levels_isPhysics_idx1 ON levels(isPhysics);");
+      updateXmDbVersion(26);
+      m_requiredLevelsUpdateAfterInit = true;
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 25: " + e.getMsg());
+    }
+
 
     // next
   }

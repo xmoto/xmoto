@@ -84,6 +84,7 @@ Central place to keep many in-game text strings
     ":Rasmus Neckelmann;"                                                                    \
     ":Nicolas Adenis-Lamarre;"                                                               \
     ":Emmanuel Gorse;"                                                                       \
+    ":Richard Franks;"                                                                       \
     ":Kees Jongenburger;"                                                                    \
     ":;"                                                                                     \
     + std::string(_("Additional Programming")) +                                             \
@@ -595,6 +596,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_CRAPPIEST_LEVELS            _("Crappiest levels")
 #define VPACKAGENAME_SCRIPTED                   _("Scripted levels")
 #define VPACKAGENAME_MUSICAL                    _("Musical levels")
+#define VPACKAGENAME_PHYSICS                    _("Physics levels")
 #define VPACKAGENAME_BEST_DRIVER                _("By best driver")
 #define VPACKAGENAME_LAST_PLAYED                _("Last played levels")
 #define VPACKAGENAME_NEVER_PLAYED               _("Never played levels")
@@ -628,6 +630,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_DESC_CRAPPIEST_LEVELS       _("Crappiest X-Moto levels according to the web votes")
 #define VPACKAGENAME_DESC_SCRIPTED                   _("X-Moto levels which are dynamic")
 #define VPACKAGENAME_DESC_MUSICAL                    _("X-Moto levels with a background music")
+#define VPACKAGENAME_DESC_PHYSICS                    _("X-Moto levels using strongly physics")
 #define VPACKAGENAME_DESC_LAST_PLAYED                _("Last levels you have played")
 #define VPACKAGENAME_DESC_NEVER_PLAYED               _("X-Moto levels you never played")
 #define VPACKAGENAME_DESC_MOST_PLAYED                _("X-Moto levels you have played the most")

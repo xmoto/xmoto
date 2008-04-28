@@ -53,7 +53,7 @@ class SDynamicObject;
 class Theme;
 class BikerTheme;
 class Biker;
-
+class ChipmunkWorld;
 
 /*===========================================================================
   Serialized bike state
@@ -271,7 +271,8 @@ private:
   std::vector<Ghost*> m_ghosts;
   std::vector<float> m_myLastStrawberries;
 
-  GameRenderer *m_renderer;
+  GameRenderer* m_renderer;
+  ChipmunkWorld* m_chipmunkWorld;
 
   std::vector<SDynamicObject*> m_SDynamicObjects;
 
