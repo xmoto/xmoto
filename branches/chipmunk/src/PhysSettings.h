@@ -33,6 +33,9 @@ if you want to be able to play levels besides your own...
 #define CHIP_SCALE_RATIO              10.0
 #define CHIP_GRAVITY_RATIO            3.6
 #define CHIP_WHEEL_MASS               20.0f
+#define CHIP_WHEEL_FRICTION           1.0f
+#define CHIP_WHEEL_ELASTICITY         0.5f
+#define CHIP_WHEEL_DAMPENING          5.0f
 #define CHIP_GRAVITY                  (-9.81 * CHIP_GRAVITY_RATIO)
 
 /* World settings */

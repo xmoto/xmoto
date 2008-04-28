@@ -22,10 +22,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "chipmunk/chipmunk.h"
 #include "PhysSettings.h"
 #include "Bike.h"
-#include <stdio.h>
 
 ChipmunkWorld::ChipmunkWorld() {
-    initPhysics();
+  initPhysics();
 }
 
 ChipmunkWorld::~ChipmunkWorld() {
@@ -49,57 +48,60 @@ void ChipmunkWorld::initPhysics()
 
   // do need to resolve gravity between ODE and Chipmunk
   space->gravity = cpv(0.0f, CHIP_GRAVITY);
-  space->iterations=10; // magic number
-
-  // Could be optimised per level.. leave for now
-  cpSpaceResizeActiveHash(space, 50.0, 999); // magic number
-  cpSpaceResizeStaticHash(space, 50.0, 999); // magic number
 
   // static body to 'hang' the ground segments on -- never moves
   staticBody = cpBodyNew(INFINITY,INFINITY);
   setBody(staticBody);
 }
 
+void ChipmunkWorld::resizeHashes(unsigned int i_dim, unsigned int i_size)
+{
+  if (m_space != NULL) {
+    cpSpaceResizeActiveHash(m_space, i_dim, i_size);
+    cpSpaceResizeStaticHash(m_space, i_dim, i_size);
+  }
+}
+
 cpSpace *ChipmunkWorld::getSpace()
 {
-	return m_space;
+  return m_space;
 }
 
 
 void ChipmunkWorld::setSpace(cpSpace* s)
 {
-	m_space = s;
+  m_space = s;
 }
 
 cpBody *ChipmunkWorld::getBody()
 {
-	return m_body;
+  return m_body;
 }
 
 void ChipmunkWorld::setBody(cpBody *body)
 {
-	m_body = body;
+  m_body = body;
 }
 
 
 cpBody *ChipmunkWorld::getFrontWheel(unsigned int i_player)
 {
-	return m_af[i_player];
+  return m_af[i_player];
 }
 
 void ChipmunkWorld::setFrontWheel(cpBody *body, unsigned int i_player)
 {
-	m_af[i_player] = body;
+  m_af[i_player] = body;
 }
 
 cpBody *ChipmunkWorld::getBackWheel(unsigned int i_player)
 {
-	return m_ab[i_player];
+  return m_ab[i_player];
 }
 
 void ChipmunkWorld::setBackWheel(cpBody *body, unsigned int i_player)
 {
-	m_ab[i_player] = body;
+  m_ab[i_player] = body;
 }
 
 void ChipmunkWorld::addPlayer(Biker* i_biker) {
@@ -133,12 +135,14 @@ void ChipmunkWorld::addPlayer(Biker* i_biker) {
   //   change to collision group 1 
   //   -- we don't want (or need) them to collide with the terrain
   shape = cpCircleShapeNew(v_wf, PHYS_WHEEL_RADIUS * CHIP_SCALE_RATIO, cpvzero);
-  shape->u = 1;
+  shape->u = CHIP_WHEEL_FRICTION;
+  shape->e = CHIP_WHEEL_ELASTICITY;
   shape->group = 1;
   cpSpaceAddShape(m_space, shape);
   
   shape = cpCircleShapeNew(v_wb, PHYS_WHEEL_RADIUS * CHIP_SCALE_RATIO, cpvzero);
-  shape->u = 1;
+  shape->u = CHIP_WHEEL_FRICTION;
+  shape->e = CHIP_WHEEL_ELASTICITY;
   shape->group = 1;
   cpSpaceAddShape(m_space, shape);
   
@@ -153,29 +157,28 @@ void ChipmunkWorld::addPlayer(Biker* i_biker) {
 }
 
 void ChipmunkWorld::updateWheelsPosition(const std::vector<Biker*>& i_players) {
-    cpBody *b;
-    cpFloat dx, dy;
-    cpFloat damp = 5.0;   //dampening factor // magic number
+  cpBody *b;
+  cpFloat dx, dy;
     
-    for(unsigned int i=0; i<i_players.size(); i++) {
-      // inform chipmunk of ODE pos of front wheel
-      b = getFrontWheel(i);
+  for(unsigned int i=0; i<i_players.size(); i++) {
+    // inform chipmunk of ODE pos of front wheel
+    b = getFrontWheel(i);
+    
+    b->w = i_players[i]->getFrontWheelVelocity();
+    dx = i_players[i]->getState()->FrontWheelP.x * CHIP_SCALE_RATIO - b->p.x;
+    dy = i_players[i]->getState()->FrontWheelP.y * CHIP_SCALE_RATIO - b->p.y;
+    
+    b->p.x += dx/CHIP_WHEEL_DAMPENING;
+    b->p.y += dy/CHIP_WHEEL_DAMPENING;
       
-      b->w = i_players[i]->getFrontWheelVelocity();
-      dx = i_players[i]->getState()->FrontWheelP.x * CHIP_SCALE_RATIO - b->p.x;
-      dy = i_players[i]->getState()->FrontWheelP.y * CHIP_SCALE_RATIO - b->p.y;
-      
-      b->p.x += dx/damp;
-      b->p.y += dy/damp;
-      
-      // inform chipmunk of ODE pos of back wheel
-      b = getBackWheel(i);
-      
-      b->w = i_players[i]->getRearWheelVelocity();
-      dx = i_players[i]->getState()->RearWheelP.x * CHIP_SCALE_RATIO - b->p.x;
-      dy = i_players[i]->getState()->RearWheelP.y * CHIP_SCALE_RATIO - b->p.y;
-      
-      b->p.x += dx/damp;
-      b->p.y += dy/damp;
-    }
+    // inform chipmunk of ODE pos of back wheel
+    b = getBackWheel(i);
+    
+    b->w = i_players[i]->getRearWheelVelocity();
+    dx = i_players[i]->getState()->RearWheelP.x * CHIP_SCALE_RATIO - b->p.x;
+    dy = i_players[i]->getState()->RearWheelP.y * CHIP_SCALE_RATIO - b->p.y;
+    
+    b->p.x += dx/CHIP_WHEEL_DAMPENING;
+    b->p.y += dy/CHIP_WHEEL_DAMPENING;
+  }
 }

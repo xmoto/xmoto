@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "chipmunk/chipmunk.h"
 #include "ChipmunkWorld.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 21
+#define CACHE_LEVEL_FORMAT_VERSION 22
 
 Level::Level() {
   m_xmotoTooOld = false;

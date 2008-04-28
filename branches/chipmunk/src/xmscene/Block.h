@@ -135,6 +135,8 @@ class Block {
   bool isLayer() const;
   float Grip() const;
   float Mass() const;
+  float Friction() const;
+  float Elasticity() const;
   float TextureScale() const;
   std::vector<BlockVertex*>& Vertices();
   /* called many many many times, so we inline it */
@@ -154,6 +156,8 @@ class Block {
   void setIsLayer(bool i_isLayer);
   void setGrip(float i_grip);
   void setMass(float i_mass);
+  void setFriction(float i_friction);
+  void setElasticity(float i_elasticity);
   void setCenter(const Vector2f& i_center);
   void setEdgeDrawMethod(EdgeDrawMethod method);
   // in degres, not radian
@@ -235,7 +239,9 @@ private:
   float m_grip;                         /* GRIP of the block */
 
   /* chipmunk physics */
-  float m_mass; /* mass of the block */
+  float m_mass;       /* mass of the block */
+  float m_friction;   /* friction of the block */
+  float m_elasticity; /* elasticity of the block */
   cpBody *mBody;
 
   AABB  m_BBox;

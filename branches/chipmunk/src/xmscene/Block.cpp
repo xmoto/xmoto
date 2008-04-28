@@ -33,6 +33,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define XM_DEFAULT_PHYS_BLOCK_GRIP DEFAULT_PHYS_WHEEL_GRIP
 #define XM_DEFAULT_PHYS_BLOCK_MASS 30.0
+#define XM_DEFAULT_PHYS_BLOCK_FRICTION 0.5
+#define XM_DEFAULT_PHYS_BLOCK_ELASTICITY 0.1
 
 /* Vertex */
 ConvexBlockVertex::ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition) {
@@ -83,6 +85,8 @@ Block::Block(std::string i_id) {
   m_isLayer          = false;
   m_grip             = XM_DEFAULT_PHYS_BLOCK_GRIP;
   m_mass             = XM_DEFAULT_PHYS_BLOCK_MASS;
+  m_friction         = XM_DEFAULT_PHYS_BLOCK_FRICTION;
+  m_elasticity       = XM_DEFAULT_PHYS_BLOCK_ELASTICITY;
   m_dynamicPosition  = m_initialPosition;
   m_dynamicRotation  = m_initialRotation;
   m_dynamicRotationCenter = Vector2f(0.0, 0.0);
@@ -259,8 +263,8 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 
 	cpShape *seg = cpSegmentShapeNew(i_chipmunkWorld->getBody(), a, b, 0.0f);
 	seg->group = 1;
-	seg->u = 0.5; // magic value
-	seg->e = 0.1; // magic value
+	seg->u = m_friction;
+	seg->e = m_elasticity;
 	cpSpaceAddStaticShape(i_chipmunkWorld->getSpace(), seg);
       }
     }
@@ -285,8 +289,8 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 
   if(isDynamic()) {
     // calculate midpoint
-    float mdx = (tx * 1.0f) / Vertices().size();
-    float mdy = (ty * 1.0f) / Vertices().size();
+    float mdx = tx / Vertices().size();
+    float mdy = ty / Vertices().size();
 
     // for dynamic(physics) objects we reorient around a center of gravity
     // determined by the vertices
@@ -385,8 +389,9 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 	// collision shape
 	cpShape *shape;
 	shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
-	shape->u = 1.0; // magic number
-	shape->e = 0.0; // magic number
+	shape->u = m_friction;
+	shape->e = m_elasticity;
+
 	cpSpaceAddShape(i_chipmunkWorld->getSpace(), shape);
 	
 	// free the temporary vertices array
@@ -464,6 +469,14 @@ float Block::Mass() const {
   return m_mass;
 }
 
+float Block::Friction() const {
+  return m_friction;
+}
+
+float Block::Elasticity() const {
+  return m_elasticity;
+}
+
 std::string Block::Texture() const {
   return m_texture;
 }
@@ -512,6 +525,14 @@ void Block::setGrip(float i_grip) {
 
 void Block::setMass(float i_mass) {
   m_mass = i_mass;
+}
+
+void Block::setFriction(float i_friction) {
+  m_friction = i_friction;
+}
+
+void Block::setElasticity(float i_elasticity) {
+  m_elasticity = i_elasticity;
 }
 
 AABB& Block::getAABB()
@@ -611,6 +632,14 @@ void Block::saveXml(FileHandle *i_pfh) {
       snprintf(v_tmp, 16, "%f", Mass());
       v_line += " mass=\"" + std::string(v_tmp) + "\"";
     }
+    if(Friction() != XM_DEFAULT_PHYS_BLOCK_FRICTION) {
+      snprintf(v_tmp, 16, "%f", Friction());
+      v_line += " friction=\"" + std::string(v_tmp) + "\"";
+    }
+    if(Elasticity() != XM_DEFAULT_PHYS_BLOCK_ELASTICITY) {
+      snprintf(v_tmp, 16, "%f", Elasticity());
+      v_line += " elasticity=\"" + std::string(v_tmp) + "\"";
+    }
 
     v_line += " />";
 
@@ -689,9 +718,17 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
 
     snprintf(str, 5, "%f", XM_DEFAULT_PHYS_BLOCK_MASS);
     pBlock->setMass(atof(XML::getOption(pPhysicsElem, "mass", str).c_str()));
+
+    snprintf(str, 5, "%f", XM_DEFAULT_PHYS_BLOCK_FRICTION);
+    pBlock->setFriction(atof(XML::getOption(pPhysicsElem, "friction", str).c_str()));
+
+    snprintf(str, 5, "%f", XM_DEFAULT_PHYS_BLOCK_ELASTICITY);
+    pBlock->setElasticity(atof(XML::getOption(pPhysicsElem, "elasticity", str).c_str()));
   } else {
     pBlock->setGrip(XM_DEFAULT_PHYS_BLOCK_GRIP);
     pBlock->setMass(XM_DEFAULT_PHYS_BLOCK_MASS);
+    pBlock->setFriction(XM_DEFAULT_PHYS_BLOCK_FRICTION);
+    pBlock->setElasticity(XM_DEFAULT_PHYS_BLOCK_ELASTICITY);
   }
 
   if(pEdgeElem != NULL) {
@@ -773,6 +810,8 @@ void Block::saveBinary(FileHandle *i_pfh) {
       FS::writeFloat_LE(i_pfh, InitialPosition().y);
       FS::writeFloat_LE(i_pfh, Grip());
       FS::writeFloat_LE(i_pfh, Mass());
+      FS::writeFloat_LE(i_pfh, Friction());
+      FS::writeFloat_LE(i_pfh, Elasticity());
       FS::writeInt_LE(i_pfh,   getEdgeDrawMethod());
       FS::writeFloat_LE(i_pfh, edgeAngle());
 
@@ -801,6 +840,8 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   pBlock->setInitialPosition(v_Position);
   pBlock->setGrip(FS::readFloat_LE(i_pfh));
   pBlock->setMass(FS::readFloat_LE(i_pfh));
+  pBlock->setFriction(FS::readFloat_LE(i_pfh));
+  pBlock->setElasticity(FS::readFloat_LE(i_pfh));
   pBlock->setEdgeDrawMethod((EdgeDrawMethod)FS::readInt_LE(i_pfh));
   pBlock->setEdgeAngle(FS::readFloat_LE(i_pfh));
   
