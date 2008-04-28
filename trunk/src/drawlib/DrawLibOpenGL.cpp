@@ -990,6 +990,8 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // the first glBegin/glEnd will draw nothing
+    glBegin(GL_QUADS);
 
     unsigned int size = v_value.size();
     while(n < size) {
