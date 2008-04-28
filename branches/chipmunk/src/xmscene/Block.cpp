@@ -594,25 +594,27 @@ void Block::saveXml(FileHandle *i_pfh) {
 
   FS::writeLineF(i_pfh, (char*) v_position.c_str());
   
-  if(Grip() != XM_DEFAULT_PHYS_BLOCK_GRIP || Mass() != XM_DEFAULT_PHYS_BLOCK_MASS ||
-     Friction() != XM_DEFAULT_PHYS_BLOCK_FRICTION || Elasticity() != XM_DEFAULT_PHYS_BLOCK_ELASTICITY) {
-    char v_tmp[16];
+  if(Grip()       != XM_DEFAULT_PHYS_BLOCK_GRIP       ||
+     Mass()       != XM_DEFAULT_PHYS_BLOCK_MASS       ||
+     Friction()   != XM_DEFAULT_PHYS_BLOCK_FRICTION   ||
+     Elasticity() != XM_DEFAULT_PHYS_BLOCK_ELASTICITY) {
+    char v_tmp[32];
     std::string v_line = "\t\t<physics";
 
     if(Grip() != XM_DEFAULT_PHYS_BLOCK_GRIP) {
-      snprintf(v_tmp, 16, "%f", Grip());
+      snprintf(v_tmp, 32, "%f", Grip());
       v_line += " grip=\"" + std::string(v_tmp) + "\"";
     }
-    if(Mass() != XM_DEFAULT_PHYS_BLOCK_GRIP) {
-      snprintf(v_tmp, 16, "%f", Mass());
+    if(Mass() != XM_DEFAULT_PHYS_BLOCK_MASS) {
+      snprintf(v_tmp, 32, "%f", Mass());
       v_line += " mass=\"" + std::string(v_tmp) + "\"";
     }
     if(Friction() != XM_DEFAULT_PHYS_BLOCK_FRICTION) {
-      snprintf(v_tmp, 16, "%f", Friction());
+      snprintf(v_tmp, 32, "%f", Friction());
       v_line += " friction=\"" + std::string(v_tmp) + "\"";
     }
     if(Elasticity() != XM_DEFAULT_PHYS_BLOCK_ELASTICITY) {
-      snprintf(v_tmp, 16, "%f", Elasticity());
+      snprintf(v_tmp, 32, "%f", Elasticity());
       v_line += " elasticity=\"" + std::string(v_tmp) + "\"";
     }
 
@@ -687,17 +689,17 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
  }
 
   if(pPhysicsElem != NULL) {
-    char str[5];
-    snprintf(str, 5, "%f", XM_DEFAULT_PHYS_BLOCK_GRIP);
+    char str[16];
+    snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_GRIP);
     pBlock->setGrip(atof(XML::getOption(pPhysicsElem, "grip", str).c_str()));
 
-    snprintf(str, 5, "%f", XM_DEFAULT_PHYS_BLOCK_MASS);
+    snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_MASS);
     pBlock->setMass(atof(XML::getOption(pPhysicsElem, "mass", str).c_str()));
 
-    snprintf(str, 5, "%f", XM_DEFAULT_PHYS_BLOCK_FRICTION);
+    snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_FRICTION);
     pBlock->setFriction(atof(XML::getOption(pPhysicsElem, "friction", str).c_str()));
 
-    snprintf(str, 5, "%f", XM_DEFAULT_PHYS_BLOCK_ELASTICITY);
+    snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_ELASTICITY);
     pBlock->setElasticity(atof(XML::getOption(pPhysicsElem, "elasticity", str).c_str()));
   } else {
     pBlock->setGrip(XM_DEFAULT_PHYS_BLOCK_GRIP);
