@@ -68,6 +68,7 @@ XMArguments::XMArguments() {
   m_opt_hidePlayingInformation  = false;
   m_opt_forceChildrenCompliant  = false;
   m_opt_default_theme           = false;
+  m_opt_noDBDirsCheck = false;
 }
 
 void XMArguments::parse(int i_argc, char **i_argv) {
@@ -254,6 +255,8 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       i++;
     } else if(v_opt == "--hidePlayingInformation") {
       m_opt_hidePlayingInformation = true;
+    } else if(v_opt == "--noDBDirsCheck") {
+      m_opt_noDBDirsCheck = true;
     } else if(v_opt == "--defaultTheme") {
       m_opt_default_theme = true;
       if(i+1 >= i_argc) {
@@ -547,6 +550,10 @@ bool XMArguments::isOptHidePlayingInformation() const {
   return m_opt_hidePlayingInformation;
 }
 
+bool XMArguments::isOptNoDBDirsCheck() const {
+  return m_opt_noDBDirsCheck;
+}
+
 void XMArguments::help(const std::string& i_cmd) {
   printf("X-Moto %s\n", XMBuild::getVersionString().c_str());
   printf("usage:  %s [options]\n"
@@ -590,6 +597,7 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t--hidePlayingInformation\n\t\tDon't show some information while playing/replaying ; usefull to make nicer video.\n");
   printf("\t--drawlib DRAWLIB\n\t\tChoose the render to use (default one is OPENGL if available).\n");
   printf("\t--defaultTheme THEME\n\t\tDefault theme for new profiles created.\n");
+  printf("\t--noDBDirsCheck\n\t\tDon't check that system and user dirs changed at startup.\n");
   printf("\t-h, -?, -help, --help\n\t\tDisplay this message.\n");
   printf("\t--pack [BIN] [DIR]\n\t\tBuild the BIN package from directory DIR.\n");
   printf("\t--unpack [BIN] [DIR] [no_list]\n\t\tUnpack the BIN package into the dir DIR.\n");

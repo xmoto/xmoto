@@ -41,6 +41,7 @@ void xmDatabase::init(const std::string& i_dbFile,
 		      const std::string& i_gameDir,
 		      const std::string& i_userDir,
 		      const std::string& i_binPackCheckSum,
+		      bool i_dbDirsCheck,
 		      XmDatabaseUpdateInterface *i_interface) {
   int v_version;
 
@@ -78,11 +79,12 @@ void xmDatabase::init(const std::string& i_dbFile,
     upgradeXmDbToVersion(v_version, i_profile, i_interface); 
   }
 
-  /* check if gameDir and userDir are the same - otherwise, the computer probably changed */
-  if(FS::areSamePath(i_gameDir, getXmDbGameDir()) == false ||
-     FS::areSamePath(i_userDir, getXmDbUserDir()) == false ||
-     i_binPackCheckSum != getXmDbBinPackCheckSum()
-     ) {
+  /* check if gameDir and userDir are the same - otherwise, the computer probably changed */  
+  std::string v_oldGameDir = getXmDbGameDir();
+  std::string v_oldUserDir = getXmDbUserDir();
+  bool v_areDirectoryOK = FS::areSamePath(i_gameDir, v_oldGameDir) && FS::areSamePath(i_userDir, v_oldUserDir);
+
+  if((v_areDirectoryOK == false && i_dbDirsCheck) || i_binPackCheckSum != getXmDbBinPackCheckSum()) {
     m_requiredLevelsUpdateAfterInit  = true;
     m_requiredReplaysUpdateAfterInit = true;
     m_requiredThemesUpdateAfterInit  = true;
@@ -92,8 +94,58 @@ void xmDatabase::init(const std::string& i_dbFile,
 
     /* -- first initialisation or xmoto.bin/userdir update -- */
     webLoadDataFirstTime();
+  } else {
+    // directory are not ok, but check directory is disabled => update the directories anyway
+    if(v_areDirectoryOK == false) {
+      setXmDbGameDir(i_gameDir);
+      setXmDbUserDir(i_userDir);
+
+      try {
+	updateXMDirectories(v_oldGameDir, i_gameDir, v_oldUserDir, i_userDir);
+      } catch(Exception &e) {
+	/* forcing update */
+	m_requiredLevelsUpdateAfterInit  = true;
+	m_requiredReplaysUpdateAfterInit = true;
+	m_requiredThemesUpdateAfterInit  = true;
+
+	/* -- first initialisation or xmoto.bin/userdir update -- */
+	webLoadDataFirstTime();
+      }
+    }
   }
 }
+
+void xmDatabase::updateXMDirectories(const std::string& i_oldGameDir, const std::string& i_newGameDir,
+				     const std::string& i_oldUserDir, const std::string& i_newUserDir) {
+  Logger::Log("Updating XM directories from %s to %s", i_oldGameDir.c_str(), i_newGameDir.c_str());
+  Logger::Log("Updating XM directories from %s to %s", i_oldUserDir.c_str(), i_newUserDir.c_str());
+
+  try {
+    simpleSql("BEGIN TRANSACTION;");
+
+    simpleSql("UPDATE levels SET filepath ="
+	      " xm_replaceStart(filepath, \"" + protectString(i_oldGameDir) + "\", \"" + protectString(i_newGameDir) + "\")"
+	      " WHERE filepath LIKE \""  + protectString(i_oldGameDir) + "%\";");
+
+    simpleSql("UPDATE themes SET filepath ="
+	      " xm_replaceStart(filepath, \"" + protectString(i_oldGameDir) + "\", \"" + protectString(i_newGameDir) + "\")"
+	      " WHERE filepath LIKE \""  + protectString(i_oldGameDir) + "%\";");
+
+    simpleSql("UPDATE levels SET filepath ="
+	      " xm_replaceStart(filepath, \"" + protectString(i_oldUserDir) + "\", \"" + protectString(i_newUserDir) + "\")"
+	      " WHERE filepath LIKE \""  + protectString(i_oldUserDir) + "%\";");
+
+    simpleSql("UPDATE themes SET filepath ="
+	      " xm_replaceStart(filepath, \"" + protectString(i_oldUserDir) + "\", \"" + protectString(i_newUserDir) + "\")"
+	      " WHERE filepath LIKE \""  + protectString(i_oldUserDir) + "%\";");
+
+    simpleSql("COMMIT;");
+  } catch(Exception &e) {
+    simpleSql("ROLLBACK;");
+    throw e;
+  }
+}
+
 
 void xmDatabase::init(const std::string& i_dbFile)
 {
@@ -702,6 +754,11 @@ void xmDatabase::createUserFunctions() {
 			     user_xm_userChildrenCompliant, NULL, NULL) != SQLITE_OK) {
     throw Exception("xmDatabase::createUserFunctions() failed !");
   }
+
+  if(sqlite3_create_function(m_db, "xm_replaceStart", 3, SQLITE_ANY, NULL,
+			     user_xm_replaceStart, NULL, NULL) != SQLITE_OK) {
+    throw Exception("xmDatabase::createUserFunctions() failed !");
+  }
 }
 
 void xmDatabase::user_xm_floord(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {
@@ -746,4 +803,29 @@ void xmDatabase::user_xm_userChildrenCompliant(sqlite3_context* i_context, int i
 
   v_value = sqlite3_value_int(i_values[0]);
   sqlite3_result_int(i_context, XMSession::instance()->useChildrenCompliant() ? v_value : 1);
+}
+
+void xmDatabase::user_xm_replaceStart(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {
+  std::string v_value, v_old, v_new, v_result, v_begin, v_end;
+
+  if(i_nArgs != 3) {
+    throw Exception("user_xm_replaceStart failed !");
+  }
+
+  v_value = (char*) sqlite3_value_text(i_values[0]);
+  v_old   = (char*) sqlite3_value_text(i_values[1]);
+  v_new   = (char*) sqlite3_value_text(i_values[2]);
+
+  v_begin = v_value.substr(0, v_old.length());
+
+  if(v_begin != v_old) {
+    /* change nothing */
+    sqlite3_result_text(i_context, v_value.c_str(), -1, SQLITE_TRANSIENT);
+    return;
+  }
+
+  v_end = v_value.substr(v_old.length(), v_value.length() - v_old.length());
+  v_result = v_new + v_end;
+
+  sqlite3_result_text(i_context, v_result.c_str(), -1, SQLITE_TRANSIENT);
 }
