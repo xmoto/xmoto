@@ -2,13 +2,14 @@
 #
 # Maximum <max@mymail.fi>, 2007.
 # Tuomo Koistinen <tuomo@tuomo.fi>, 2007.
+# Ville Lahdenvuo <tuhoojabotti@gmail.com>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-04-28 20:26+0200\n"
 "PO-Revision-Date: 2007-10-17 14:34+0200\n"
-"Last-Translator: Maximum <max@mymail.fi>\n"
+"Last-Translator: Ville Lahdenvuo <tuhoojabotti@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,7 +19,7 @@ msgstr ""
 
 #: src/GameText.h:33
 msgid "en_EN"
-msgstr "en_EN"
+msgstr "fi_FI"
 
 #: src/GameText.h:35
 msgid "11 kHz"
@@ -55,7 +56,7 @@ msgstr "Poistu kentästä"
 #: src/GameText.h:43
 #, c-format
 msgid "Web account password for profile '%s':"
-msgstr ""
+msgstr "Web-tilin salasana profiilille '%s'"
 
 #: src/GameText.h:44
 msgid "Add to favorite"
@@ -97,7 +98,7 @@ msgstr "Tekijä"
 
 #: src/GameText.h:55
 msgid "Automatic"
-msgstr ""
+msgstr "Automaattinen"
 
 #: src/GameText.h:56
 msgid "Automatic saving of replays"
@@ -109,11 +110,11 @@ msgstr "Automaattinen zoom"
 
 #: src/GameText.h:58
 msgid "Database"
-msgstr ""
+msgstr "Tietokanta"
 
 #: src/GameText.h:59
 msgid "Camera Active Zoom"
-msgstr ""
+msgstr "Aktiivinen Zoom"
 
 #: src/GameText.h:60
 msgid "Best Times"
@@ -170,28 +171,26 @@ msgstr "Etsitään uusia tai päivitettyjä kenttiä..."
 
 #: src/GameText.h:73
 msgid "I'm a child"
-msgstr ""
+msgstr "Olen lapsi"
 
 #: src/GameText.h:74
 msgid "Choose Level"
 msgstr "Valitse kenttä"
 
 #: src/GameText.h:75
-#, fuzzy
 msgid "Clean"
-msgstr "katalaani"
+msgstr "Poista"
 
 #: src/GameText.h:76
-#, fuzzy, c-format
+#, c-format
 msgid "Are you sure you want to delete %i replay"
 msgid_plural "Are you sure you want to delete %i replay"
-msgstr[0] "Tahdotko varmasti poistaa toistovideon?"
-msgstr[1] "Tahdotko varmasti poistaa toistovideon?"
+msgstr[0] "Tahdotko varmasti poistaa toistovideon %i ?"
+msgstr[1] "Tahdotko varmasti poistaa toistovideon %i ?"
 
 #: src/GameText.h:77
-#, fuzzy
 msgid "There is no replay to clean"
-msgstr "Teema on nyt päivitetty"
+msgstr "Ei toistovideota mitä poistaa"
 
 #: src/GameText.h:78
 msgid "Close"
@@ -263,7 +262,7 @@ msgstr "italia"
 
 #: src/GameText.h:120
 msgid "Swedish"
-msgstr "Ruotsin kieli"
+msgstr "ruotsi"
 
 #: src/GameText.h:121
 msgid "Czech"
@@ -287,7 +286,7 @@ msgstr "latvia"
 
 #: src/GameText.h:125
 msgid "Danish"
-msgstr "Tanska"
+msgstr "tanska"
 
 #: src/GameText.h:127
 msgid "Main testers"
@@ -360,14 +359,17 @@ msgid ""
 "server. It is usefull to save your data or if you play X-Moto from different "
 "places."
 msgstr ""
+"X-Mto käyttää tietokantaa tietokoneellasi johon se tallentaa kaikki parhaat suorituksesi"
+"Voit lähettää nämä tiedot käyttämällä internet käyttäjääsi X-Moton servereille."
+"Se on käytännöllinen tietojen tallennukseen jos pelaat muissa paikoissa."
 
 #: src/GameText.h:150
 msgid "Synchronise"
-msgstr ""
+msgstr "Synkronisoi"
 
 #: src/GameText.h:151
 msgid "Synchronize when X-Moto ends"
-msgstr ""
+msgstr "Synkronisoi kun lopetat X-Moton"
 
 #: src/GameText.h:152
 msgid "Upgrading database"
@@ -495,11 +497,11 @@ msgstr "Asiayhteysapu"
 
 #: src/GameText.h:182
 msgid "Enable Engine Sound"
-msgstr "Moottorin ääni"
+msgstr "Salli moottorin ääni"
 
 #: src/GameText.h:183
 msgid "Enable Ghost"
-msgstr "Haamu"
+msgstr "Salli Haamu"
 
 #: src/GameText.h:184
 msgid "Show World Record in-game"
@@ -507,11 +509,11 @@ msgstr "Näytä maailmanennätykset pelissä"
 
 #: src/GameText.h:185
 msgid "Enable Music"
-msgstr "Musiikki"
+msgstr "Salli Musiikki"
 
 #: src/GameText.h:186
 msgid "Enable WWW Access"
-msgstr "WWW-pääsy"
+msgstr "Salli WWW-pääsy"
 
 #: src/GameText.h:187
 msgid "Enter player name"
@@ -607,7 +609,7 @@ msgstr "Yleiset"
 
 #: src/GameText.h:209
 msgid "General Info"
-msgstr "General Info"
+msgstr "Yleinen Tieto"
 
 #: src/GameText.h:210
 msgid "Get this theme"
@@ -626,14 +628,12 @@ msgid "Type"
 msgstr "Tyyppi"
 
 #: src/GameText.h:214 src/GameText.h:568
-#, fuzzy
 msgid "The highscore of the reference room"
-msgstr "Huoneen huipputulos"
+msgstr "Vertailu huoneen huipputulos"
 
 #: src/GameText.h:215 src/GameText.h:569
-#, fuzzy
 msgid "The highscore of the other rooms"
-msgstr "Huoneen huipputulos"
+msgstr "Toisten huoneiden huipputulos"
 
 #: src/GameText.h:216 src/GameText.h:566
 msgid "The best of my replays (on this computer)"
@@ -714,7 +714,7 @@ msgstr "Salli/estä ruma tila"
 
 #: src/GameText.h:238
 msgid "Reload levels, themes and replays from directories"
-msgstr "Uudelleenlataa kentät, teemay ja toistovideot eri kansioista."
+msgstr "Uudelleenlataa kentät, teemat ja toistovideot tietokannasta."
 
 #: src/GameText.h:239
 msgid "Take a screenshot"
@@ -796,15 +796,15 @@ msgstr "Näppäimistö"
 
 #: src/GameText.h:259
 msgid "Language"
-msgstr ""
+msgstr "Kieli"
 
 #: src/GameText.h:260
 msgid "Language name"
-msgstr ""
+msgstr "Kielen nimi"
 
 #: src/GameText.h:261
 msgid "Language code"
-msgstr ""
+msgstr "Kielen koodi"
 
 #: src/GameText.h:262
 msgid "Level"
@@ -936,7 +936,6 @@ msgid "Multi"
 msgstr "Moninpeli"
 
 #: src/GameText.h:293
-#, fuzzy
 msgid "Semi-cooperative mode"
 msgstr "Semi-yhteistyöllinen tila"
 
@@ -1011,7 +1010,6 @@ msgid "Not finished"
 msgstr "Ei suoritettu"
 
 #: src/GameText.h:311
-#, fuzzy
 msgid ""
 "Important note!\n"
 "\n"
@@ -1029,9 +1027,9 @@ msgstr ""
 "Tämä on kehitysversio X-Motosta!\n"
 "Kaikenlainen palaute on tärkeää,\n"
 "jotta peliä voidaan parantaa.\n"
-"Sähköpostita vikailmoitukset, ideat, kommentit, ominaisuusehdotukset, risut "
+"Sähköpostita vikailmoitukset, ideat, kommentit, ominaisuusehdotukset, risut ja ruusut"
 "jne.\n"
-"osoitteeseen nicolas at adenis-lamarre dot fr\n"
+"osoitteeseen xmoto@tuxfamily.org\n"
 "\n"
 "Käy myös osoitteessa http://xmoto.tuxfamily.org varmistaaksesi, että\n"
 "sinulla on uusin versio."
@@ -1062,7 +1060,7 @@ msgstr "Jotkut asetukset eivät tule käyttöön ennen seuraavaa käynnistystä!
 
 #: src/GameText.h:327
 msgid "By author"
-msgstr "By author"
+msgstr "Tekijältä"
 
 #: src/GameText.h:328
 msgid "Medals"
@@ -1254,7 +1252,7 @@ msgstr "Stereo"
 
 #: src/GameText.h:379
 msgid "Available"
-msgstr "Asennettu"
+msgstr "Käytettävissä"
 
 #: src/GameText.h:380
 msgid "To download"
@@ -1289,7 +1287,6 @@ msgid "Unpacked levels"
 msgstr "Paketoimattomat kentät"
 
 #: src/GameText.h:388
-#, fuzzy
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
@@ -1324,20 +1321,18 @@ msgid "Updating level lists..."
 msgstr "Päivitetään kenttälistaa..."
 
 #: src/GameText.h:395
-#, fuzzy
 msgid "Upload"
-msgstr "Päivitetty"
+msgstr "Lähetä"
 
 #: src/GameText.h:396
 msgid "Upload all highscores"
 msgstr "Lähetä kaikki huipputulokset"
 
 #: src/GameText.h:397
-#, fuzzy
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
-msgstr "Odottamaton virhe ilmennyt. Web- sivulla saattaa olla ongelmia."
+msgstr "Odottamaton virhe ilmennyt. Web-sivulla saattaa olla ongelmia."
 
 #: src/GameText.h:398
 msgid "Oh no !"
@@ -1373,7 +1368,7 @@ msgstr "Käytetään SOCKS5-välityspalvelinta"
 
 #: src/GameText.h:406
 msgid "Video"
-msgstr "Kuva"
+msgstr "Video"
 
 #: src/GameText.h:407
 msgid "View"
@@ -1398,12 +1393,12 @@ msgstr "WWW"
 
 #: src/GameText.h:413
 msgid "Reference room"
-msgstr ""
+msgstr "Vertailu huone"
 
 #: src/GameText.h:414
-#, fuzzy, c-format
+#, c-format
 msgid "Room %i"
-msgstr "Huone"
+msgstr "Huone %i"
 
 #: src/GameText.h:416
 #, c-format
@@ -1416,56 +1411,56 @@ msgid "%d minutes"
 msgstr "%d minuuttia"
 
 #: src/GameText.h:419
-#, fuzzy, c-format
+#, c-format
 msgid "Stats since: %s"
-msgstr "Tilastot"
+msgstr "Tilastot alkaen: %s"
 
 #: src/GameText.h:420
 #, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "X-Moto aloitettu %d kerran"
+msgstr[1] "X-Moto aloitettu %d kertaa"
 
 #: src/GameText.h:421
 #, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d eri kenttä"
+msgstr[1] "%d eri kentät"
 
 #: src/GameText.h:422
 #, c-format
 msgid "Time played: %s"
-msgstr ""
+msgstr "Pelattu aika: %s"
 
 #: src/GameText.h:423
-#, fuzzy, c-format
+#, c-format
 msgid "%d play"
 msgid_plural "%d plays"
-msgstr[0] "%i pelaaja"
-msgstr[1] "%i pelaajat"
+msgstr[0] "%d pelaus kertaa"
+msgstr[1] "%d pelaus kertaa"
 
 #: src/GameText.h:424
 #, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d kuolema"
+msgstr[1] "%d kuolemia"
 
 #: src/GameText.h:425
-#, fuzzy, c-format
+#, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
-msgstr[0] "Ei suoritettu"
-msgstr[1] "Ei suoritettu"
+msgstr[0] "%d suoritettu"
+msgstr[1] "%d suoritettu"
 
 #: src/GameText.h:426
 #, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d uudelleen aloitusta"
+msgstr[1] "%d uudelleen aloitusta"
 
 #: src/GameText.h:428
 #, c-format
@@ -1790,8 +1785,7 @@ msgstr "Valitse tämä jos yhdistät Internetiin HTTP-valtuutuspalvelimen kautta
 
 #: src/GameText.h:509
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
-msgstr ""
-"Valitse tämä jos yhdistät Internetiin SOCKS4-valtuutuspalvelimen kautta"
+msgstr "Valitse tämä jos yhdistät Internetiin SOCKS4-valtuutuspalvelimen kautta"
 
 #: src/GameText.h:510
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
@@ -1884,11 +1878,11 @@ msgstr "Lähetä parhaat aikasi huoneeseesi (hyödyllistä, kun se on juuri luot
 
 #: src/GameText.h:536
 msgid "Configure the main www options"
-msgstr "Säädä www-asetuksia"
+msgstr "Säädä pää www-asetuksia"
 
 #: src/GameText.h:537
 msgid "Configure the www options"
-msgstr ""
+msgstr "Säädä www-asetuksia"
 
 #: src/GameText.h:538
 msgid ""
@@ -1928,7 +1922,7 @@ msgstr "Näytä koko kenttä automaattisesti ennen pelin alkua"
 
 #: src/GameText.h:546
 msgid "Run a dynamic zoom while playing"
-msgstr ""
+msgstr "Käytä Dynaamista zoomia pelatessasi"
 
 #: src/GameText.h:547
 msgid "View the X-Moto credits"
@@ -2019,59 +2013,56 @@ msgid "The scene is shared by all the players"
 msgstr "Näkymä on jaettu kaikilla pelaajilla"
 
 #: src/GameText.h:572
-#, fuzzy
 msgid "Change the X-Moto language"
-msgstr "Valitse X-Moton grafiikkateema"
+msgstr "Valitse X-Moton kieli"
 
 #: src/GameText.h:573
-#, fuzzy
 msgid "Name of the language"
-msgstr "Toistovideon nimi"
+msgstr "Kielen nimi"
 
 #: src/GameText.h:574
 msgid "Code of the language"
-msgstr ""
+msgstr "Kielen koodi"
 
 #: src/GameText.h:575
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
-msgstr ""
+msgstr "Poista toistovideot, joita X-Moto ei halua säilyttää"
 
 #: src/GameText.h:576
 msgid "Remove levels not suitable for children"
-msgstr ""
+msgstr "Poista kentät, jotka eivät ole sopivia lapsille"
 
 #: src/GameText.h:577
-#, fuzzy
 msgid "Enable this room"
-msgstr "Äänet"
+msgstr "Salli tämä huone"
 
 #: src/GameText.h:578
 msgid "Password associated to your profile for web access"
-msgstr ""
+msgstr "Salasana vaaditaan profiilillesi"
 
 #: src/GameText.h:579
 msgid "Main options"
-msgstr ""
+msgstr "Pää asetukset"
 
 #: src/GameText.h:580
 msgid "Configure the X-Moto theme"
-msgstr ""
+msgstr "Säädä X-Moton teemaa"
 
 #: src/GameText.h:581
 msgid "Configure ghosts displayed while playing the game"
-msgstr ""
+msgstr "Säädä pelaamisen aikana näytettyjä haamuja"
 
 #: src/GameText.h:582
 msgid "Configure options linked to your X-Moto dabatase"
-msgstr ""
+msgstr "Säädä tietokantaan liittyviä asetuksia"
 
 #: src/GameText.h:583
 msgid "Synchronise your database on the web"
-msgstr ""
+msgstr "Synkronisoi tietokantasi webissä"
 
 #: src/GameText.h:584
 msgid "Synchronise your database when your quit X-Moto"
-msgstr ""
+msgstr "Synkronisoi tietokantasi kun lopetat X-Moton"
 
 #: src/GameText.h:586
 msgid "Levels with no highscore"
@@ -2123,7 +2114,7 @@ msgstr "Muskaaliset kentät"
 
 #: src/GameText.h:599
 msgid "Physics levels"
-msgstr ""
+msgstr "Kentät, joissa on liikkuvia objekteja"
 
 #: src/GameText.h:601
 msgid "Last played levels"
@@ -2247,7 +2238,7 @@ msgstr "Taustamusiikilliset X-Moto-kentät"
 
 #: src/GameText.h:633
 msgid "X-Moto levels using strongly physics"
-msgstr ""
+msgstr "X-Moto kentät, jotka käyttävät paljon liikkyvia objekteja"
 
 #: src/GameText.h:634
 msgid "Last levels you have played"
@@ -2382,28 +2373,26 @@ msgid "Fps disabled"
 msgstr "Fps pois päältä"
 
 #: src/GameText.h:667
-#, fuzzy
 msgid "Audio enabled"
-msgstr "Fps mahdollinen"
+msgstr "Ääni mahdollinen"
 
 #: src/GameText.h:668
-#, fuzzy
 msgid "Audio disabled"
-msgstr "Fps pois päältä"
+msgstr "Ääni pois päältä"
 
 #: src/GameText.h:670
 msgid "No training positions stored"
-msgstr ""
+msgstr "Ei harjoitus sijainteja varattu"
 
 #: src/GameText.h:671
 #, c-format
 msgid "Training position %i/%i restored"
-msgstr ""
+msgstr "Harjoitus sijainti %i/%i varattu"
 
 #: src/GameText.h:672
 #, c-format
 msgid "Stored as training position %i"
-msgstr ""
+msgstr "%i Varattu harjoitus sijaintina "
 
 #: src/GameText.h:675
 msgid "FontGroup:GENERAL"
@@ -2745,7 +2734,7 @@ msgstr ""
 #~ msgstr "ympärilläsi, jotta tiedät, minne olet menossa."
 
 #~ msgid "The primary objective of the game is for you"
-#~ msgstr "Pelin päämäärä on"
+#~ msgstr "Pelin päämääränä on"
 
 #~ msgid "The icon to the right of your time,"
 #~ msgstr "Ikoni tämänhetkisen aikasi oikealla puolella"
