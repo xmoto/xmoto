@@ -88,7 +88,8 @@ class XMArguments {
   bool isOptVideoRecordingEndTime() const;
   int getOptVideoRecordingEndTime_value() const;
   bool isOptHidePlayingInformation() const;
-	bool isOptForceChildrenCompliant() const;
+  bool isOptForceChildrenCompliant() const;
+  bool isOptNoDBDirsCheck() const;
 
   private:
   /* pack options */
@@ -169,6 +170,9 @@ class XMArguments {
   int m_opt_videoRecordingEndTime_value;
   bool m_opt_hidePlayingInformation;
 
+  /* specific */
+  bool m_opt_noDBDirsCheck;
+  
   /* default config replacement for new profiles */
   bool m_opt_default_theme;
   std::string m_opt_default_theme_value;

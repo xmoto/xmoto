@@ -42,6 +42,7 @@ public:
 	    const std::string& i_gameDir,
 	    const std::string& i_userDir,
 	    const std::string& i_binPackCheckSum,
+	    bool i_dbDirsCheck,
 	    XmDatabaseUpdateInterface *i_interface = NULL);
   void init(const std::string& i_dbFileUTF8);
 
@@ -183,6 +184,7 @@ public:
   static void user_xm_lvlUpdatedToTxt(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
   static void user_xm_userCrappy(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
   static void user_xm_userChildrenCompliant(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
+  static void user_xm_replaceStart(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
 
   /* function used to synchronise with the last xmoto version */
   int  getXmDbVersion();
@@ -196,6 +198,11 @@ public:
   void setXmDbGameDir(const std::string& i_gameDir);
   void setXmDbUserDir(const std::string& i_userDir);
   void setXmDbBinPackCheckSum(const std::string& i_binPackChecksum);
+
+  /* update db directories without reanalysing all the files on the disk */
+  void updateXMDirectories(const std::string& i_oldGameDir, const std::string& i_newGameDir,
+			   const std::string& i_oldUserDir, const std::string& i_newUserDir);
+
   std::string setXmDbSiteKey();
   
   /* multiple sites */

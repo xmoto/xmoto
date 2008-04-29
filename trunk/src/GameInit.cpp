@@ -199,6 +199,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   pDb->init(DATABASE_FILE,
 	    XMSession::instance()->profile() == "" ? std::string("") : XMSession::instance()->profile(),
 	    FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
+	    v_xmArgs.isOptNoDBDirsCheck() == false,
 	    v_useGraphics ? this : NULL);
   if(XMSession::instance()->sqlTrace()) {
     pDb->setTrace(XMSession::instance()->sqlTrace());
