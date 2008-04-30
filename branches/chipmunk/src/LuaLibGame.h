@@ -95,6 +95,7 @@ private:
   static int L_Game_MoveBlock(lua_State *pL);
   static int L_Game_GetBlockPos(lua_State *pL);
   static int L_Game_SetBlockPos(lua_State *pL);
+  static int L_Game_SetPhysicsBlockPos(lua_State *pL);
   static int L_Game_PlaceInGameArrow(lua_State *pL);
   static int L_Game_PlaceScreenArrow(lua_State *pL);
   static int L_Game_HideArrow(lua_State *pL);
@@ -117,6 +118,7 @@ private:
   static int L_Game_SetDynamicEntityNone(lua_State *pL);
   static int L_Game_SetDynamicBlockRotation(lua_State *pL);
   static int L_Game_SetDynamicBlockSelfRotation(lua_State *pL);
+  static int L_Game_SetPhysicsBlockSelfRotation(lua_State *pL);
   static int L_Game_SetDynamicBlockTranslation(lua_State *pL);
   static int L_Game_SetDynamicBlockNone(lua_State *pL);
   static int L_Game_CameraZoom(lua_State *pL);

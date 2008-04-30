@@ -170,6 +170,8 @@ class Block {
   /* angle position ; consider of the block center */
   void setDynamicRotation(float i_dynamicRotation);
 
+  void setPhysicsPosition(float ix, float iy);
+
   int loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld);
   void unloadToPlay();
 
