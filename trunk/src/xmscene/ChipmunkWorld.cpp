@@ -154,6 +154,8 @@ void ChipmunkWorld::addPlayer(Biker* i_biker) {
   /* init position */
   v_af->p = cpv(i_biker->getState()->FrontWheelP.x * CHIP_SCALE_RATIO, i_biker->getState()->FrontWheelP.y * CHIP_SCALE_RATIO);
   v_ab->p = cpv(i_biker->getState()->RearWheelP.x * CHIP_SCALE_RATIO, i_biker->getState()->RearWheelP.y * CHIP_SCALE_RATIO);
+  v_wf->p = v_af->p;
+  v_wb->p = v_ab->p;
 }
 
 void ChipmunkWorld::updateWheelsPosition(const std::vector<Biker*>& i_players) {
