@@ -198,7 +198,7 @@ void Block::updatePhysics(int timeStep, CollisionSystem* io_collisionSystem) {
   if(isPhysics()) {
 
     // move block according to chipmunk
-    setDynamicPosition(Vector2f(((mBody->p.x ) / 10.0f) , (mBody->p.y ) / 10.0f));
+    setDynamicPosition(Vector2f(((mBody->p.x ) / CHIP_SCALE_RATIO) , (mBody->p.y ) / CHIP_SCALE_RATIO));
     setDynamicRotation(mBody->a);
     
     // inform collision system that there has been a change
