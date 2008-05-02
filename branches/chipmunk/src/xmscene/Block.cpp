@@ -83,6 +83,7 @@ Block::Block(std::string i_id) {
   m_dynamic          = false;
   m_physics          = false;
   m_isLayer          = false;
+  m_circle           = false;
   m_grip             = XM_DEFAULT_PHYS_BLOCK_GRIP;
   m_mass             = XM_DEFAULT_PHYS_BLOCK_MASS;
   m_friction         = XM_DEFAULT_PHYS_BLOCK_FRICTION;
@@ -222,6 +223,9 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   m_dynamicPositionCenter = Vector2f(0.0, 0.0);
   float tx = 0;
   float ty = 0;
+  float mdx = 0;
+  float mdy = 0;
+
 
   /* Do the "convexifying" the BSP-way. It might be overkill, but we'll
      probably appreciate it when the input data is very complex. It'll also 
@@ -229,6 +233,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   BSP v_BSPTree;
   cpBody *myBody = NULL;
   cpVect *myVerts = NULL;
+  cpShape *shape = NULL;
   
   if(i_chipmunkWorld != NULL) {
     if (isPhysics()) {
@@ -288,8 +293,8 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 
   if(isPhysics()) {
     // calculate midpoint
-    float mdx = tx / Vertices().size();
-    float mdy = ty / Vertices().size();
+    mdx = tx / Vertices().size();
+    mdy = ty / Vertices().size();
 
     // for physics objects we reorient around a center of gravity
     // determined by the vertices
@@ -335,46 +340,67 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 
   if(i_chipmunkWorld != NULL) {
     if(isPhysics()) {
-      // create body vertices for chipmunk constructors
-      for(unsigned int i=0; i<Vertices().size(); i++) {
-	cpVect ma = cpv(Vertices()[i]->Position().x * CHIP_SCALE_RATIO,
-			Vertices()[i]->Position().y * CHIP_SCALE_RATIO);
-	myVerts[i] =  ma;
-      }
+      if(isCircle()) {
+        // parameter should be passed
+        // but for this dirty hack test we're just going to wing it
 
-      // Create body to attach shapes to
-      cpFloat bMoment = cpMomentForPoly(m_mass,Vertices().size(), myVerts, cpvzero); 
-      free(myVerts);
+        float cdx = Vertices()[0]->Position().x;
+        float cdy = Vertices()[0]->Position().y;
+        float radius = sqrt(cdx*cdx + cdy*cdy);
+
+        cpFloat circle_moment = cpMomentForCircle(m_mass, radius, 0.0f, cpvzero);
+        myBody = cpBodyNew(m_mass, circle_moment);
+        myBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
+                        (DynamicPosition().y * CHIP_SCALE_RATIO));
+        cpSpaceAddBody(i_chipmunkWorld->getSpace(), myBody);
+        mBody = myBody;
+
+ 	shape = cpCircleShapeNew(mBody, radius * CHIP_SCALE_RATIO, cpvzero);
+        shape->u = m_friction;
+        shape->e = m_elasticity;
+
+        cpSpaceAddShape(i_chipmunkWorld->getSpace(), shape);
+      } else {
+        // create body vertices for chipmunk constructors
+        for(unsigned int i=0; i<Vertices().size(); i++) {
+          cpVect ma = cpv(Vertices()[i]->Position().x * CHIP_SCALE_RATIO,
+          Vertices()[i]->Position().y * CHIP_SCALE_RATIO);
+          myVerts[i] =  ma;
+        }
+
+        // Create body to attach shapes to
+        cpFloat bMoment = cpMomentForPoly(m_mass,Vertices().size(), myVerts, cpvzero); 
+        free(myVerts);
     
-      // create body 
-      myBody = cpBodyNew(m_mass, bMoment);
-      myBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
-                      (DynamicPosition().y * CHIP_SCALE_RATIO));
-      cpSpaceAddBody(i_chipmunkWorld->getSpace(), myBody);
-      mBody = myBody;
+        // create body 
+        myBody = cpBodyNew(m_mass, bMoment);
+        myBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
+                        (DynamicPosition().y * CHIP_SCALE_RATIO));
+        cpSpaceAddBody(i_chipmunkWorld->getSpace(), myBody);
+        mBody = myBody;
     
-      // go through calculated BSP polys, adding one or more shape to the
-      for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
-	unsigned int size = 2*sizeof(cpVect)*v_BSPPolys[i]->Vertices().size();
-	myVerts = (cpVect*)malloc(size);
+        // go through calculated BSP polys, adding one or more shape to the
+        for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
+          unsigned int size = 2*sizeof(cpVect)*v_BSPPolys[i]->Vertices().size();
+          myVerts = (cpVect*)malloc(size);
 
-	// translate for chipmunk
-	for(unsigned int j=0; j<v_BSPPolys[i]->Vertices().size(); j++) {
-	  cpVect ma = cpv(v_BSPPolys[i]->Vertices()[j].x * CHIP_SCALE_RATIO,
-			  v_BSPPolys[i]->Vertices()[j].y * CHIP_SCALE_RATIO);
-	  myVerts[j] =  ma;
-	}
+          // translate for chipmunk
+          for(unsigned int j=0; j<v_BSPPolys[i]->Vertices().size(); j++) {
+            cpVect ma = cpv(v_BSPPolys[i]->Vertices()[j].x * CHIP_SCALE_RATIO,
+            v_BSPPolys[i]->Vertices()[j].y * CHIP_SCALE_RATIO);
+            myVerts[j] =  ma;
+          }
 
-	// collision shape
-	cpShape *shape;
-	shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
-	shape->u = m_friction;
-	shape->e = m_elasticity;
+          // collision shape
+          shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
+          shape->u = m_friction;
+          shape->e = m_elasticity;
 
-	cpSpaceAddShape(i_chipmunkWorld->getSpace(), shape);
-	
-	// free the temporary vertices array
-	free(myVerts);
+          cpSpaceAddShape(i_chipmunkWorld->getSpace(), shape);
+
+          // free the temporary vertices array
+          free(myVerts);
+        }
       }
     }
   }
@@ -425,6 +451,10 @@ bool Block::isDynamic() const {
 
 bool Block::isPhysics() const {
   return m_physics;
+}
+
+bool Block::isCircle() const {
+  return m_circle;
 }
 
 bool Block::isLayer() const {
@@ -492,6 +522,10 @@ void Block::setPhysics(bool i_physics) {
     //
     setDynamic(true);
   }
+}
+
+void Block::setCircle(bool i_circle) {
+  m_circle = i_circle;
 }
 
 void Block::setIsLayer(bool i_isLayer) {
@@ -785,6 +819,7 @@ void Block::saveBinary(FileHandle *i_pfh) {
       FS::writeBool(i_pfh,     isBackground());
       FS::writeBool(i_pfh,     isDynamic());
       FS::writeBool(i_pfh,     isPhysics());
+      FS::writeBool(i_pfh,     isCircle());
       FS::writeBool(i_pfh,     isLayer());
       FS::writeInt_LE(i_pfh,   getLayer());
       FS::writeString(i_pfh,   Texture());
@@ -812,6 +847,7 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   pBlock->setBackground(FS::readBool(i_pfh));
   pBlock->setDynamic(FS::readBool(i_pfh));
   pBlock->setPhysics(FS::readBool(i_pfh));
+  pBlock->setCircle(FS::readBool(i_pfh));
   pBlock->setIsLayer(FS::readBool(i_pfh));
   pBlock->setLayer(FS::readInt_LE(i_pfh));
   pBlock->setTexture(FS::readString(i_pfh));

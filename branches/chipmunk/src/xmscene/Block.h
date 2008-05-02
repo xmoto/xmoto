@@ -132,6 +132,7 @@ class Block {
   bool isBackground() const;
   bool isDynamic() const;
   bool isPhysics() const;
+  bool isCircle() const;
   bool isLayer() const;
   float Grip() const;
   float Mass() const;
@@ -153,6 +154,7 @@ class Block {
   void setBackground(bool i_background);
   void setDynamic(bool i_dynamic);
   void setPhysics(bool i_physics);
+  void setCircle(bool i_circle);
   void setIsLayer(bool i_isLayer);
   void setGrip(float i_grip);
   void setMass(float i_mass);
@@ -233,6 +235,7 @@ private:
   bool  m_background;
   bool  m_dynamic;
   bool  m_physics;
+  bool  m_circle;
   bool  m_isLayer;
   // the background layer of the block.
   // in case of a non m_backgroundLevel, if m_layer is != -1, then it's
