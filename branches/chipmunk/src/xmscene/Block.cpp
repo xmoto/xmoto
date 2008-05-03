@@ -266,7 +266,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 			(DynamicPosition().y + Vertices()[inext]->Position().y) * CHIP_SCALE_RATIO);
 
 	cpShape *seg = cpSegmentShapeNew(i_chipmunkWorld->getBody(), a, b, 0.0f);
-	seg->group = 1;
+	seg->group = 0;
 	seg->u = m_friction;
 	seg->e = m_elasticity;
 	cpSpaceAddStaticShape(i_chipmunkWorld->getSpace(), seg);
@@ -395,6 +395,9 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
           shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
           shape->u = m_friction;
           shape->e = m_elasticity;
+          if (isBackground()) {
+            shape->group = 1;
+          }
 
           cpSpaceAddShape(i_chipmunkWorld->getSpace(), shape);
 
