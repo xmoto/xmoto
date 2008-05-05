@@ -95,38 +95,43 @@ bool StateScene::update()
   if(doUpdate() == false){
     return false;
   }
+
+  try {
   
-  InputHandler::instance()->updateUniverseInput(m_universe); // update input for the universe
+    InputHandler::instance()->updateUniverseInput(m_universe); // update input for the universe
 
-  int nPhysSteps = 0;
-
-  if(isLockedScene() == false) {  
-    // don't update if that's not required
-    // don't do this infinitely, maximum miss 10 frames, then give up
-		// in videoRecording mode, don't try to do more to allow to record at a good framerate
-    while (( m_fLastPhysTime + (PHYS_STEP_SIZE)/100.0 <= GameApp::getXMTime()) && nPhysSteps < 10 && (XMSession::instance()->enableVideoRecording() == false || nPhysSteps == 0)) {
+    int nPhysSteps = 0;
+    
+    if(isLockedScene() == false) {  
+      // don't update if that's not required
+      // don't do this infinitely, maximum miss 10 frames, then give up
+      // in videoRecording mode, don't try to do more to allow to record at a good framerate
+      while (( m_fLastPhysTime + (PHYS_STEP_SIZE)/100.0 <= GameApp::getXMTime()) && nPhysSteps < 10 && (XMSession::instance()->enableVideoRecording() == false || nPhysSteps == 0)) {
+	if(m_universe != NULL) {
+	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	    m_universe->getScenes()[i]->updateLevel(PHYS_STEP_SIZE, m_universe->getCurrentReplay());
+	  }
+	}
+	m_fLastPhysTime += PHYS_STEP_SIZE/100.0;
+	nPhysSteps++;
+      }
+      
+      // if the delay is too long, reinitialize
+      if(m_fLastPhysTime + PHYS_STEP_SIZE/100.0 < GameApp::getXMTime()) {
+	m_fLastPhysTime = GameApp::getXMTime();
+      }
+      
+      // update camera scrolling
       if(m_universe != NULL) {
-	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	  m_universe->getScenes()[i]->updateLevel(PHYS_STEP_SIZE, m_universe->getCurrentReplay());
-	}
-      }
-      m_fLastPhysTime += PHYS_STEP_SIZE/100.0;
-      nPhysSteps++;
-    }
-
-    // if the delay is too long, reinitialize
-    if(m_fLastPhysTime + PHYS_STEP_SIZE/100.0 < GameApp::getXMTime()) {
-      m_fLastPhysTime = GameApp::getXMTime();
-    }
-
-    // update camera scrolling
-    if(m_universe != NULL) {
-      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	  m_universe->getScenes()[j]->Cameras()[i]->setScroll(true, m_universe->getScenes()[j]->getGravity());
+	for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	  for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	    m_universe->getScenes()[j]->Cameras()[i]->setScroll(true, m_universe->getScenes()[j]->getGravity());
+	  }
 	}
       }
     }
+  } catch(Exception &e) {
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK));  
   }
 
   runAutoZoom();
