@@ -7,4 +7,7 @@ EXTRA_DIST = m4/ChangeLog  $(man_MANS) bootstrap configure_mingw_from_linux.sh m
 uninstall-hook:
 	rm -r $(datadir)/@PACKAGE@
 
+documentation:
+	doxygen ./Doxyfile
+
 ACLOCAL_AMFLAGS = -I m4
