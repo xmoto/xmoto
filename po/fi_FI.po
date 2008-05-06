@@ -1,5 +1,5 @@
 # translation of X-Moto to Finnish
-#
+# 
 # Maximum <max@mymail.fi>, 2007.
 # Tuomo Koistinen <tuomo@tuomo.fi>, 2007.
 # Ville Lahdenvuo <tuhoojabotti@gmail.com>, 2008.
@@ -359,9 +359,10 @@ msgid ""
 "server. It is usefull to save your data or if you play X-Moto from different "
 "places."
 msgstr ""
-"X-Mto käyttää tietokantaa tietokoneellasi johon se tallentaa kaikki parhaat suorituksesi"
-"Voit lähettää nämä tiedot käyttämällä internet käyttäjääsi X-Moton servereille."
-"Se on käytännöllinen tietojen tallennukseen jos pelaat muissa paikoissa."
+"X-Mto käyttää tietokantaa tietokoneellasi johon se tallentaa kaikki parhaat "
+"suorituksesiVoit lähettää nämä tiedot käyttämällä internet käyttäjääsi X-"
+"Moton servereille.Se on käytännöllinen tietojen tallennukseen jos pelaat "
+"muissa paikoissa."
 
 #: src/GameText.h:150
 msgid "Synchronise"
@@ -1027,8 +1028,8 @@ msgstr ""
 "Tämä on kehitysversio X-Motosta!\n"
 "Kaikenlainen palaute on tärkeää,\n"
 "jotta peliä voidaan parantaa.\n"
-"Sähköpostita vikailmoitukset, ideat, kommentit, ominaisuusehdotukset, risut ja ruusut"
-"jne.\n"
+"Sähköpostita vikailmoitukset, ideat, kommentit, ominaisuusehdotukset, risut "
+"ja ruusutjne.\n"
 "osoitteeseen xmoto@tuxfamily.org\n"
 "\n"
 "Käy myös osoitteessa http://xmoto.tuxfamily.org varmistaaksesi, että\n"
@@ -1785,7 +1786,8 @@ msgstr "Valitse tämä jos yhdistät Internetiin HTTP-valtuutuspalvelimen kautta
 
 #: src/GameText.h:509
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
-msgstr "Valitse tämä jos yhdistät Internetiin SOCKS4-valtuutuspalvelimen kautta"
+msgstr ""
+"Valitse tämä jos yhdistät Internetiin SOCKS4-valtuutuspalvelimen kautta"
 
 #: src/GameText.h:510
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
