@@ -36,6 +36,9 @@ class SyncThread : public XMThread, public WWWAppInterface {
 
   private:
   std::string m_msg;
+
+  int realThreadFunctionUp();
+  int realThreadFunctionDown();
 };
 
 #endif
