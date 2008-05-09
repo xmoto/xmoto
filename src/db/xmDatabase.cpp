@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "VFileIO.h"
 
-#define XMDB_VERSION         26
+#define XMDB_VERSION         27
 #define DB_MAX_SQL_RUNTIME 0.25
 
 bool xmDatabase::Trace = false;
@@ -627,7 +627,29 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       throw Exception("Unable to update xmDb from 25: " + e.getMsg());
     }
 
+  case 26:
+    try {
+      /**
+	 dbSync field is the revision in which you upload the line.
+	 -> tagging lines where upd=0 and dbsync is null to the last dbsync
+	 -> sending via xml all the lines where synchronized=0
 
+	 if server answer ko : do nothing
+	 if server answer ok : update synchronized to 1
+	 if xmoto crashes, when you restart, xmoto doesn't know the answer of the server :
+	 - if the answer was ok, lines with synchronized=0 are resend, but will not be used on the server side on the next update
+	 - if the answer was ko, lines with synchronized=0 are resend, and will be used on the server side.
+
+       */
+      simpleSql("ALTER TABLE profile_completedLevels ADD COLUMN dbSync DEFAULT NULL;");
+      simpleSql("CREATE INDEX profile_completedLevels_dbSync_idx1 ON profile_completedLevels(dbSync);");
+      simpleSql("ALTER TABLE stats_profiles_levels ADD COLUMN dbSync DEFAULT NULL;");
+      simpleSql("CREATE INDEX stats_profiles_levels_dbSync_idx1 ON stats_profiles_levels(dbSync);");
+      simpleSql("INSERT INTO xm_parameters(param, value) VALUES(\"dbSync\", 0);");
+      updateXmDbVersion(27);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 26: " + e.getMsg());
+    }
     // next
   }
 }
@@ -658,15 +680,13 @@ void xmDatabase::simpleSql(const std::string& i_sql) {
   char *errMsg;
   std::string v_errMsg;
 
-  //Logger::Log(i_sql.c_str());
-  //printf("%s\n", i_sql.c_str());
-
   if(sqlite3_exec(m_db,
 		  i_sql.c_str(),
 		  NULL,
 		  NULL, &errMsg) != SQLITE_OK) {
     v_errMsg = errMsg;
     sqlite3_free(errMsg);
+    Logger::Log(i_sql.c_str());
     throw Exception(v_errMsg);
   }
 }

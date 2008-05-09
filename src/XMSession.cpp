@@ -103,6 +103,7 @@ void XMSession::setToDefault() {
   m_screenshotFormat              = DEFAULT_SCREENSHOTFORMAT;
   m_notifyAtInit                  = DEFAULT_NOTIFYATINIT;
   m_webLevelsUrl                  = DEFAULT_WEBLEVELS_URL;
+  m_uploadDbSyncUrl               = DEFAULT_UPLOADDBSYNC_URL;
   m_mirrorMode                    = DEFAULT_MIRRORMODE;
   m_useCrappyPack                 = DEFAULT_USECRAPPYPACK;
   m_useChildrenCompliant          = DEFAULT_USECHILDRENCOMPLIANT;
@@ -244,6 +245,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_webThemesURL       = m_Config->getString("WebThemesURL");
   m_webThemesURLBase   = m_Config->getString("WebThemesURLBase");
   m_webLevelsUrl       = m_Config->getString("WebLevelsURL");
+  m_uploadDbSyncUrl       = m_Config->getString("WebDbSyncUploadURL");
 
 }
 
@@ -334,6 +336,7 @@ void XMSession::save(UserConfig* v_config, xmDatabase* pDb) {
   v_config->setString ("WebThemesURLBase",      m_webThemesURLBase);
   v_config->setString ("WebHighscoreUploadURL", m_uploadHighscoreUrl);
   v_config->setString ("WebLevelsURL",          m_webLevelsUrl);
+  v_config->setString ("WebDbSyncUploadURL",    m_uploadDbSyncUrl);
 
   v_config->setFloat  ("ReplayFrameRate",       m_replayFrameRate);
   v_config->setBool   ("StoreReplays",          m_storeReplays);
@@ -947,6 +950,10 @@ std::string XMSession::webLevelsUrl() const {
   return m_webLevelsUrl;
 }
 
+std::string XMSession::uploadDbSyncUrl() const {
+  return m_uploadDbSyncUrl;
+}
+
 bool XMSession::mirrorMode() const {
   return m_mirrorMode;
 }
@@ -1115,6 +1122,7 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
 
   /* server url, keep them easy to modify */
   v_config->createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL           );
+  v_config->createVar( "WebDbSyncUploadURL",     DEFAULT_UPLOADDBSYNC_URL           );
   v_config->createVar( "WebThemesURL",           DEFAULT_WEBTHEMES_URL           );
   v_config->createVar( "WebThemesURLBase",       DEFAULT_WEBTHEMES_SPRITESURLBASE);
   v_config->createVar( "WebHighscoreUploadURL",  DEFAULT_UPLOADREPLAY_URL        );

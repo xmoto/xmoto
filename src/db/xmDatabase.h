@@ -168,6 +168,12 @@ public:
   std::string getXmDbSiteKey();
   void sync_buildServerFile(const std::string& i_outFile, const std::string& i_sitekey, const std::string& i_profile);
 
+  /**
+     @brief Mark all lines that should be synchronized as synchronized
+   */
+  void setSynchronized();
+
+
   /* data fixes */
   void fixStatsProfilesLevelsNbCompleted();
 

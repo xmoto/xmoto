@@ -223,6 +223,7 @@ public:
   void setNotifyAtInit(bool i_value);
   bool notifyAtInit() const;
   std::string webLevelsUrl() const;
+  std::string uploadDbSyncUrl() const;
   bool mirrorMode() const;
   void setMirrorMode(bool i_value);
   bool useCrappyPack() const;
@@ -314,6 +315,7 @@ public:
   std::string m_language;
   bool m_notifyAtInit;
   std::string m_webLevelsUrl;
+  std::string m_uploadDbSyncUrl;
   bool m_mirrorMode;
   bool m_useCrappyPack;
   bool m_useChildrenCompliant;

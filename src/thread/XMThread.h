@@ -30,6 +30,9 @@ struct SDL_cond;
 class GameApp;
 class xmDatabase;
 
+/**
+ * thread mother class for X-Moto. This encapsulates the SDL threads functions and add more stuff for XM.
+ */
 class XMThread {
 public:
   XMThread();
@@ -56,7 +59,9 @@ public:
   static  int run(void* pThreadInstance);
   virtual int realThreadFunction() = 0;
 
-  // as to kill the thread as soon it is in a safe state
+  /**
+   * @brief ask to kill the thread as soon as it is in a safe state
+   */
   void safeKill();
 
 protected:

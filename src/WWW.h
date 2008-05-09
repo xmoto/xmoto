@@ -44,13 +44,13 @@ class ThemeChoice;
 #define DEFAULT_TRANSFERT_TIMEOUT         240
 #define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 15
 #define DEFAULT_WEBLEVELS_URL             "http://xmoto.tuxfamily.org/levels.xml"
+#define DEFAULT_UPLOADDBSYNC_URL          "http://xmoto.tuxfamily.org/tools/UploadDbSync.php"
 #define DEFAULT_WEBLEVELS_FILENAME        "weblevels.xml"
 #define DEFAULT_WEBLEVELS_DIR             "downloaded"
 #define DEFAULT_WEBTHEMES_URL             "http://xmoto.tuxfamily.org/themes.xml"
 #define DEFAULT_WEBTHEMES_FILENAME        "webthemes.xml"
 #define DEFAULT_WEBTHEMES_SPRITESURLBASE  "http://xmoto.tuxfamily.org/sprites"
 #define DEFAULT_UPLOADREPLAY_URL          "http://xmoto.tuxfamily.org/tools/UploadReplay.php"
-#define DEFAULT_REPLAYUPLOAD_MSGFILE      "UploadReplayMsg.xml"
 #define DEFAULT_WEBROOMS_URL              "http://xmoto.tuxfamily.org/rooms.xml"
 #define DEFAULT_WEBROOMS_FILENAME         "webrooms.xml"
 #define DEFAULT_WEBROOM_NAME              "WR"
@@ -134,6 +134,15 @@ class FSWeb {
 			   bool &p_msg_status,
 			   std::string &p_msg);
 
+  static void uploadDbSync(std::string p_dbSyncFilename,
+			   std::string p_login,
+			   std::string p_password,
+			   std::string p_url_to_transfert,
+			   WWWAppInterface *p_WebApp,
+			   const ProxySettings *p_proxy_settings,
+			   bool &p_msg_status,
+			   std::string& p_msg);
+
   static int f_curl_progress_callback_upload(void *clientp,
 					     double dltotal,
 					     double dlnow,
@@ -148,9 +157,10 @@ class FSWeb {
 
  private:
   static size_t writeData(void *ptr, size_t size, size_t nmemb, FILE *stream);
-  static void   uploadReplayAnalyseMsg(std::string p_filename,
-				       bool &p_msg_status_ok,
-				       std::string &p_msg);
+  static void   uploadAnalyseMsg(std::string p_key,
+				 std::string p_filename,
+				 bool &p_msg_status_ok,
+				 std::string &p_msg);
 };
 
 class WebRoom {
