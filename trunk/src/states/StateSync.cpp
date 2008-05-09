@@ -25,9 +25,8 @@ StateSync::StateSync(bool drawStateBehind, bool updateStatesBehind)
 : StateUpdate(drawStateBehind, updateStatesBehind)
 {
   m_name = "StateSync";
-  m_messageOnSuccess = true;
+  m_messageOnSuccess = false;
   m_messageOnFailure = true;
-  m_msg = "Hehe, you seem to be interested by this feature.\nDon't hesitate to develop it or wait i finish to do it ! ";
   m_pThread = new SyncThread();
 }
 
@@ -39,4 +38,9 @@ void StateSync::keyDown(int nKey, SDLMod mod,int nChar) {
 }
 
 void StateSync::checkEvents() {
+}
+
+void StateSync::callAfterThreadFinished(int threadResult)
+{
+  m_msg = ((SyncThread*) m_pThread)->getMsg();
 }

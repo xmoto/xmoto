@@ -116,7 +116,7 @@ VERBATIM_HEADERS       = YES
 #---------------------------------------------------------------------------
 # configuration options related to the alphabetical class index
 #---------------------------------------------------------------------------
-ALPHABETICAL_INDEX     = NO
+ALPHABETICAL_INDEX     = YES
 COLS_IN_ALPHA_INDEX    = 5
 IGNORE_PREFIX          = 
 #---------------------------------------------------------------------------
@@ -218,7 +218,7 @@ MSCGEN_PATH            =
 HIDE_UNDOC_RELATIONS   = YES
 HAVE_DOT               = YES
 CLASS_GRAPH            = YES
-COLLABORATION_GRAPH    = NO
+COLLABORATION_GRAPH    = YES
 GROUP_GRAPHS           = YES
 UML_LOOK               = NO
 TEMPLATE_RELATIONS     = NO
@@ -232,7 +232,7 @@ DOT_IMAGE_FORMAT       = png
 DOT_PATH               = 
 DOTFILE_DIRS           = 
 DOT_GRAPH_MAX_NODES    = 30
-MAX_DOT_GRAPH_DEPTH    = 4
+MAX_DOT_GRAPH_DEPTH    = 3
 DOT_TRANSPARENT        = YES
 DOT_MULTI_TARGETS      = NO
 GENERATE_LEGEND        = YES

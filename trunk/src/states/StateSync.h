@@ -32,6 +32,7 @@ public:
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
 
 protected:
+  virtual void callAfterThreadFinished(int threadResult);
   virtual void checkEvents();
 };
 

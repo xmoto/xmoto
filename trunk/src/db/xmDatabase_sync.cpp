@@ -28,8 +28,21 @@ void xmDatabase::sync_buildServerFile(const std::string& i_outFile, const std::s
     unsigned int nrow;
     std::string v_res;
     char v_line[2048];
+    std::string v_lastDbSyncStr;
 
     FileHandle *pfh = FS::openOFile(i_outFile);
+
+    /*
+      update dbSync:
+      preparing all waiting lines with the new dbSync (incremented of 1)
+    */
+    simpleSql("UPDATE xm_parameters SET value=value+1 WHERE param=\"dbSync\";");
+    if(xmDatabase::getXmParameterKey("dbSync", v_lastDbSyncStr) == false) {
+      throw Exception("Missing dbSync parameter in the database");
+    }
+    simpleSql("UPDATE profile_completedLevels SET dbSync=\"" + v_lastDbSyncStr + "\" WHERE synchronized=0 AND dbSync IS NULL;");    
+    simpleSql("UPDATE stats_profiles_levels   SET dbSync=\"" + v_lastDbSyncStr + "\" WHERE synchronized=0 AND dbSync IS NULL;");    
+    /* ***** */
 
     if(pfh == NULL) {
       throw Exception("Unable to open " + i_outFile);
@@ -45,6 +58,7 @@ void xmDatabase::sync_buildServerFile(const std::string& i_outFile, const std::s
       read_DB_free(v_result);
       throw Exception("Unable to retrieve informations");
     }
+
     snprintf(v_line, 2048,
 	     "<xmoto_sync fileformat=\"1\" sitekey=\"%s\" profile=\"%s\" nbStarts=\"%i\" since=\"%s\">",
 	     XML::str2xmlstr(i_sitekey).c_str(), XML::str2xmlstr(i_profile).c_str(),
@@ -54,30 +68,32 @@ void xmDatabase::sync_buildServerFile(const std::string& i_outFile, const std::s
  
     /* stats_levels */
     FS::writeLine(pfh, "<stats_levels>");
-    v_result = readDB("SELECT id_level, nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime, last_play_date "
+    v_result = readDB("SELECT dbSync, id_level, nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime, last_play_date "
 		      "FROM stats_profiles_levels "
 		      "WHERE sitekey=\"" + protectString(i_sitekey) + "\" AND id_profile=\"" + protectString(i_profile) + "\" "
 		      "AND synchronized=0;", nrow);
     for(unsigned int i=0; i<nrow; i++) {
-      snprintf(v_line, 2048, "<stats_level id_level=\"%s\" nbPlayed=\"%i\" nbDied=\"%i\" nbCompleted=\"%i\" nbRestarted=\"%i\" playedTime=\"%i\" last_play_date=\"%s\" />",
-	       XML::str2xmlstr(getResult(v_result, 7, i, 0)).c_str(),
-	       atoi(getResult(v_result, 7, i, 1)), atoi(getResult(v_result, 7, i, 2)),
-	       atoi(getResult(v_result, 7, i, 3)), atoi(getResult(v_result, 7, i, 4)),
-	       atoi(getResult(v_result, 7, i, 5)), getResult(v_result, 7, i, 6) == NULL ? "" : getResult(v_result, 7, i, 6));
+      snprintf(v_line, 2048, "<stats_level dbSync=\"%i\" id_level=\"%s\" nbPlayed=\"%i\" nbDied=\"%i\" nbCompleted=\"%i\" nbRestarted=\"%i\" playedTime=\"%i\" last_play_date=\"%s\" />",
+	       atoi(getResult(v_result, 8, i, 0)),
+	       XML::str2xmlstr(getResult(v_result, 8, i, 1)).c_str(),
+	       atoi(getResult(v_result, 8, i, 2)), atoi(getResult(v_result, 8, i, 3)),
+	       atoi(getResult(v_result, 8, i, 4)), atoi(getResult(v_result, 8, i, 5)),
+	       atoi(getResult(v_result, 8, i, 6)), getResult(v_result, 8, i, 7) == NULL ? "" : getResult(v_result, 8, i, 7));
       FS::writeLine(pfh, v_line);
     }
     FS::writeLine(pfh, "</stats_levels>");
 
     /* stats_completedLevels */
     FS::writeLine(pfh, "<stats_completedLevels>");
-    v_result = readDB("SELECT id_level, timeStamp, finishTime "
+    v_result = readDB("SELECT dbSync, id_level, timeStamp, finishTime "
 		      "FROM profile_completedLevels "
 		      "WHERE sitekey=\"" + protectString(i_sitekey) + "\" AND id_profile=\"" + protectString(i_profile) + "\" "
 		      "AND synchronized=0;", nrow);
     for(unsigned int i=0; i<nrow; i++) {
-      snprintf(v_line, 2048, "<stats_completedLevel id_level=\"%s\" timeStamp=\"%s\" finishTime=\"%i\" />",
-	       XML::str2xmlstr(getResult(v_result, 3, i, 0)).c_str(),
-	       getResult(v_result, 3, i, 1), atoi(getResult(v_result, 3, i, 2)));
+      snprintf(v_line, 2048, "<stats_completedLevel dbSync=\"%i\" id_level=\"%s\" timeStamp=\"%s\" finishTime=\"%i\" />",
+	       atoi(getResult(v_result, 4, i, 0)),
+	       XML::str2xmlstr(getResult(v_result, 4, i, 1)).c_str(),
+	       getResult(v_result, 4, i, 2), atoi(getResult(v_result, 4, i, 3)));
       FS::writeLine(pfh, v_line);
     }
     FS::writeLine(pfh, "</stats_completedLevels>");
@@ -86,3 +102,8 @@ void xmDatabase::sync_buildServerFile(const std::string& i_outFile, const std::s
 
     FS::closeFile(pfh);
   }
+
+void xmDatabase::setSynchronized() {
+  simpleSql("UPDATE profile_completedLevels SET synchronized=1 WHERE synchronized=0;");    
+  simpleSql("UPDATE stats_profiles_levels   SET synchronized=1 WHERE synchronized=0;");    
+}

@@ -1182,7 +1182,7 @@ void UIRoot::_ActivateByStep(int step) {
       return;
     }
     else {
-        int nBest = nActive + step;
+        unsigned int nBest = nActive + step;
         if(nBest < 0 ){
             nBest += nNum;
         }
