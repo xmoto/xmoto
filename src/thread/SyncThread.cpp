@@ -31,9 +31,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define SYNC_UP_TMPFILE    FS::getUserDir() + "/sync_up.xml"
 #define SYNC_UP_TMPFILEBZ2 SYNC_UP_TMPFILE".bz2"
 
-#define GAMETEXT_SYNC_UP           "Synchronisation up"
-#define GAMETEXT_SYNC_DONE         "Synchronisation done successfully"
-
 SyncThread::SyncThread() 
 : XMThread() {
 }
@@ -42,6 +39,22 @@ SyncThread::~SyncThread() {
 }
 
 int SyncThread::realThreadFunction() {
+  int v_res;
+
+  if( (v_res = realThreadFunctionUp()) != 0) {
+    return v_res;
+  }
+
+  return realThreadFunctionDown();
+}
+
+int SyncThread::realThreadFunctionDown() {
+  m_msg = "down part not implemented";
+
+  return 1;
+}
+
+int SyncThread::realThreadFunctionUp() {
   bool v_msg_status_ok;
 
   setThreadProgress(0);
