@@ -100,6 +100,9 @@ int SyncThread::realThreadFunctionUp() {
 
   setThreadProgress(95);
 
+  m_msg = "test";
+  return 1;
+
   /* mark lines as synchronized */
   try {
     m_pDb->setSynchronized();
