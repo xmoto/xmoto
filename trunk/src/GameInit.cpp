@@ -205,6 +205,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     pDb->setTrace(XMSession::instance()->sqlTrace());
   }
   XMSession::instance()->loadProfile(XMSession::instance()->profile(), pDb);
+  XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
   Logger::Log("SiteKey: %s", XMSession::instance()->sitekey().c_str());
 
 #ifdef USE_GETTEXT
