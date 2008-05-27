@@ -251,6 +251,7 @@ class AnimationSprite : public Sprite {
   void cleanFrames();
   std::vector<AnimationSpriteFrame*> m_frames;
   float m_fFrameTime;
+  bool  m_animation;
 };
 
 class EffectSprite : public SimpleFrameSprite {
@@ -312,27 +313,6 @@ class UISprite : public SimpleFrameSprite {
   std::string getFileDir();
 
  private:
-};
-
-class DecorationSprite : public SimpleFrameSprite {
- public:
-  DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float p_width, float p_height, float p_centerX, float p_centerY, SpriteBlendMode p_blendmode);
-  virtual ~DecorationSprite();
-
-  float getWidth();
-  float getHeight();
-  float getCenterX();
-  float getCenterY();
-
- protected:
-  std::string getFileDir();
-
- private:
-  float m_width;
-  float m_height;
-  float m_centerX;
-  float m_centerY;
-
 };
 
 struct ThemeFile {

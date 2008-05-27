@@ -1239,17 +1239,11 @@ int GameRenderer::nbParticlesRendered() const {
 
     if(XMSession::instance()->ugly() == false) {
       pType = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, i_scene->getLevelSrc()->SpriteForFlower());
-      if(pType == NULL) {
-	pType = Theme::instance()->getSprite(SPRITE_TYPE_DECORATION, i_scene->getLevelSrc()->SpriteForFlower());
-      }
     }
     
     if(nStrawberriesLeft > 0) {
       if(XMSession::instance()->ugly() == false) {
 	pType = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, i_scene->getLevelSrc()->SpriteForStrawberry());
-      if(pType == NULL) {
-	pType = Theme::instance()->getSprite(SPRITE_TYPE_DECORATION, i_scene->getLevelSrc()->SpriteForStrawberry());
-      }
       }
       nQuantity = nStrawberriesLeft;
     }
@@ -1404,67 +1398,49 @@ void GameRenderer::_RenderSprites(MotoGame* i_scene, bool bForeground,bool bBack
   Render a sprite
   ===========================================================================*/
 void GameRenderer::_RenderSprite(MotoGame* i_scene, Entity *pSprite, float i_sizeMult) {  
-    Sprite* v_spriteType;
-    AnimationSprite* v_animationSpriteType;
-    DecorationSprite* v_decorationSpriteType;
+    AnimationSprite* v_sprite;
     float v_centerX = 0.0f;
     float v_centerY = 0.0f;
     float v_width   = 0.0f;
     float v_height  = 0.0f;
-    std::string v_sprite_type;
+    std::string v_spriteName;
+    bool v_getSprite = true;
 
     if(XMSession::instance()->ugly() == false) {
       switch(pSprite->Speciality()) {
       case ET_KILL:
-	v_sprite_type = i_scene->getLevelSrc()->SpriteForWecker();
+	v_spriteName = i_scene->getLevelSrc()->SpriteForWecker();
         break;
       case ET_MAKEWIN:
-	v_sprite_type = i_scene->getLevelSrc()->SpriteForFlower();
+	v_spriteName = i_scene->getLevelSrc()->SpriteForFlower();
         break;
       case ET_ISTOTAKE:
-	v_sprite_type = i_scene->getLevelSrc()->SpriteForStrawberry();
+	v_spriteName = i_scene->getLevelSrc()->SpriteForStrawberry();
         break;
       default:
-	v_sprite_type = pSprite->SpriteName();
+	v_spriteName = pSprite->SpriteName();
+	v_getSprite  = false;
       }
 
-      /* search the sprite as an animation */
-      v_animationSpriteType = (AnimationSprite*) Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, v_sprite_type);
-      /* if the sprite is not an animation, it's perhaps a decoration */
-      if(v_animationSpriteType != NULL) {
-        v_spriteType = v_animationSpriteType;
-        v_centerX = v_animationSpriteType->getCenterX();
-        v_centerY = v_animationSpriteType->getCenterY();
-
-        if(pSprite->Width() > 0.0) {
-          v_width  = pSprite->Width();
-          v_height = pSprite->Height();
-          v_centerX += (pSprite->Width() -v_animationSpriteType->getWidth())  / 2.0;
-          v_centerY += (pSprite->Height()-v_animationSpriteType->getHeight()) / 2.0;   
-        } else {
-          v_width  = v_animationSpriteType->getWidth();
-          v_height = v_animationSpriteType->getHeight();
-        }
+      if(v_getSprite == true){
+	v_sprite = (AnimationSprite*)Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, v_spriteName);
       } else {
-        v_decorationSpriteType = (DecorationSprite*) Theme::instance()->getSprite(SPRITE_TYPE_DECORATION, v_sprite_type);
-        v_spriteType = v_decorationSpriteType;
+	v_sprite = (AnimationSprite*)pSprite->getSprite();
+      }
 
-        if(v_decorationSpriteType != NULL) {
-          v_centerX = v_decorationSpriteType->getCenterX();
-          v_centerY = v_decorationSpriteType->getCenterY();
+      if(v_sprite != NULL) {
+	v_centerX = v_sprite->getCenterX();
+	v_centerY = v_sprite->getCenterY();
 
-          if(pSprite->Width()  > 0.0) {
-            v_width  = pSprite->Width();
-            v_height = pSprite->Height();
-            /* adjust */
-            v_centerX += (pSprite->Width() -v_decorationSpriteType->getWidth())  / 2.0;
-            v_centerY += (pSprite->Height()-v_decorationSpriteType->getHeight()) / 2.0;
-          } else {
-            /* use the theme values */
-            v_width  = v_decorationSpriteType->getWidth();
-            v_height = v_decorationSpriteType->getHeight();
-          }
-        }
+	if(pSprite->Width() > 0.0) {
+	  v_width  = pSprite->Width();
+	  v_height = pSprite->Height();
+	  v_centerX += (pSprite->Width() -v_sprite->getWidth())  / 2.0;
+	  v_centerY += (pSprite->Height()-v_sprite->getHeight()) / 2.0;   
+	} else {
+	  v_width  = v_sprite->getWidth();
+	  v_height = v_sprite->getHeight();
+	}
       }
 
       if(i_sizeMult != 1.0) {
@@ -1474,7 +1450,7 @@ void GameRenderer::_RenderSprite(MotoGame* i_scene, Entity *pSprite, float i_siz
 	v_height *= i_sizeMult;
       }	
 
-      if(v_spriteType != NULL) {
+      if(v_sprite != NULL) {
         /* Draw it */
         Vector2f p[4];
         
@@ -1533,15 +1509,15 @@ void GameRenderer::_RenderSprite(MotoGame* i_scene, Entity *pSprite, float i_siz
 	p[2] += pSprite->DynamicPosition();
 	p[3] += pSprite->DynamicPosition();
 
-        if(v_spriteType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
-          _RenderAdditiveBlendedSection(v_spriteType->getTexture(),p[0],p[1],p[2],p[3]);      
+        if(v_sprite->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
+          _RenderAdditiveBlendedSection(v_sprite->getTexture(),p[0],p[1],p[2],p[3]);
         }
         else {
 #ifdef ENABLE_OPENGL
           glEnable(GL_ALPHA_TEST);
-          glAlphaFunc(GL_GEQUAL,0.5f);      
+          glAlphaFunc(GL_GEQUAL,0.5f);
 #endif
-          _RenderAlphaBlendedSection(v_spriteType->getTexture(),p[0],p[1],p[2],p[3]);      
+          _RenderAlphaBlendedSection(v_sprite->getTexture(),p[0],p[1],p[2],p[3]);
 #ifdef ENABLE_OPENGL
           glDisable(GL_ALPHA_TEST);
 #endif
@@ -1549,7 +1525,9 @@ void GameRenderer::_RenderSprite(MotoGame* i_scene, Entity *pSprite, float i_siz
       }    
     }
     /* If this is debug-mode, also draw entity's area of effect */
-    if(XMSession::instance()->debug() || XMSession::instance()->testTheme() || XMSession::instance()->ugly()) {
+    if(XMSession::instance()->debug()
+       || XMSession::instance()->testTheme()
+       || XMSession::instance()->ugly()) {
       Vector2f C = pSprite->DynamicPosition();
       Color v_color;
       
@@ -2461,10 +2439,8 @@ void GameRenderer::renderReplayHelpMessage(MotoGame* i_scene) {
 void GameRenderer::_RenderParticle(MotoGame* i_scene, ParticlesSource *i_source) {
 
     if(i_source->SpriteName() == "Star") {
-
       AnimationSprite *pStarAnimation;
-      pStarAnimation = (AnimationSprite*) Theme::instance()
-      ->getSprite(SPRITE_TYPE_ANIMATION, i_scene->getLevelSrc()->SpriteForStar());
+      pStarAnimation = (AnimationSprite*) Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, i_scene->getLevelSrc()->SpriteForStar());
 
       if(pStarAnimation != NULL) {
 
@@ -2477,28 +2453,10 @@ void GameRenderer::_RenderParticle(MotoGame* i_scene, ParticlesSource *i_source)
 			      i_source->Particles()[j]->Color());
 	}
 	GameApp::instance()->getDrawLib()->removePropertiesAfterEnd();
-      } else {
-	DecorationSprite *pStarDecoration;
+      } 
 
-	/* search as a simple decoration, not nice, crappy crappy */
-	pStarDecoration = (DecorationSprite*) Theme::instance()
-	->getSprite(SPRITE_TYPE_DECORATION, i_scene->getLevelSrc()->SpriteForStar());
-	if(pStarDecoration != NULL) {
-	
-	  GameApp::instance()->getDrawLib()->setTexture(pStarDecoration->getTexture(),BLEND_MODE_A);
-	  for(unsigned j = 0; j < i_source->Particles().size(); j++) {
-	    _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
-				pStarDecoration->getTexture(),
-				pStarDecoration->getWidth(),
-				i_source->Particles()[j]->Angle(),
-				i_source->Particles()[j]->Color());
-	  }
-	  GameApp::instance()->getDrawLib()->removePropertiesAfterEnd();
-	}
-      }
     } else if(i_source->SpriteName() == "Fire") {
-      EffectSprite* pFireType = (EffectSprite*) Theme::instance()
-      ->getSprite(SPRITE_TYPE_EFFECT, "Fire1");
+      EffectSprite* pFireType = (EffectSprite*) Theme::instance()->getSprite(SPRITE_TYPE_EFFECT, "Fire1");
 
       if(pFireType != NULL) {
 	GameApp::instance()->getDrawLib()->setTexture(pFireType->getTexture(),BLEND_MODE_A);
@@ -2512,10 +2470,8 @@ void GameRenderer::_RenderParticle(MotoGame* i_scene, ParticlesSource *i_source)
 	GameApp::instance()->getDrawLib()->removePropertiesAfterEnd();
       }
     } else if(i_source->SpriteName() == "Smoke") {
-      EffectSprite* pSmoke1Type = (EffectSprite*) Theme::instance()
-      ->getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
-      EffectSprite* pSmoke2Type = (EffectSprite*) Theme::instance()
-      ->getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
+      EffectSprite* pSmoke1Type = (EffectSprite*) Theme::instance()->getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
+      EffectSprite* pSmoke2Type = (EffectSprite*) Theme::instance()->getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
 
       if(pSmoke1Type != NULL && pSmoke2Type != NULL) {
 	if(i_source->Particles().size() > 0) {
@@ -2543,8 +2499,7 @@ void GameRenderer::_RenderParticle(MotoGame* i_scene, ParticlesSource *i_source)
 	GameApp::instance()->getDrawLib()->removePropertiesAfterEnd();
       }
     } else if(i_source->SpriteName() == "Debris1") {
-      EffectSprite* pDebrisType = (EffectSprite*) Theme::instance()
-      ->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
+      EffectSprite* pDebrisType = (EffectSprite*) Theme::instance()->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
 
       if(pDebrisType != NULL) {
 	GameApp::instance()->getDrawLib()->setTexture(pDebrisType->getTexture(),BLEND_MODE_A);

@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VXml.h"
 #include "PhysSettings.h"
 #include "VFileIO.h"
+#include "Theme.h"
 
 // don't excceed this number of particles to not reduce significantly the fps
 #define PARTICLESSOURCE_TOTAL_MAX_PARTICLES 5000
@@ -36,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 Entity::Entity(const std::string& i_id) {
   m_id          = i_id;
   m_spriteName  = ENTITY_DEFAULT_SPRITE_NAME;
+  m_sprite      = NULL;
   m_size        = ENTITY_DEFAULT_SIZE;
   m_width       = -1.0;
   m_height      = -1.0;
@@ -87,10 +89,14 @@ const TColor& Entity::Color() const {
 }
 
 EntitySpeciality Entity::Speciality() const {
-  if(IsToTake())    return ET_ISTOTAKE;
-  if(DoesKill())    return ET_KILL;
-  if(DoesMakeWin()) return ET_MAKEWIN;
-  if(SpriteName() == "PlayerStart") return ET_ISSTART;
+  if(IsToTake())
+    return ET_ISTOTAKE;
+  if(DoesKill())
+    return ET_KILL;
+  if(DoesMakeWin())
+    return ET_MAKEWIN;
+  if(SpriteName() == "PlayerStart")
+    return ET_ISSTART;
 
   return ET_NONE;
 }
@@ -128,12 +134,22 @@ std::string Entity::SpriteName() const {
   return m_spriteName;
 }
 
+Sprite* Entity::getSprite() const
+{
+  return m_sprite;
+}
+
 bool Entity::isAlive() const {
   return m_isAlive;
 }
 
 void Entity::setSpriteName(const std::string& i_spriteName) {
   m_spriteName = i_spriteName;
+}
+
+void Entity::setSprite(Sprite* i_sprite)
+{
+  m_sprite = i_sprite;
 }
 
 Vector2f Entity::DynamicPosition() const {
@@ -458,6 +474,67 @@ std::string Entity::SpecialityToStr(EntitySpeciality i_speciality) {
   }
 }
 
+Sprite* Entity::loadSprite()
+{
+  return Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteName());
+}
+
+Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
+			     EntitySpeciality speciality,
+			     const Vector2f& position, float angle,
+			     bool reversed, float size,
+			     float width, float height, float z,
+			     const std::string& spriteName, const std::string& typeName)
+{
+  /* Create the entity */
+  Entity *v_entity = NULL;
+
+  if(speciality == ET_PARTICLES_SOURCE) {
+    if       (typeName == "Smoke") {
+      v_entity = new ParticlesSourceSmoke(id);
+    } else if(typeName == "Fire")   {
+      v_entity = new ParticlesSourceFire(id);
+    } else if(typeName == "Star")   {
+      v_entity = new ParticlesSourceStar(id);
+    } else if(typeName == "Debris") {
+      v_entity = new ParticlesSourceDebris(id);
+    } else {
+      throw Exception("Entity " + id + " has an invalid type name");
+    }
+  } else {
+    v_entity = new Entity(id);
+  }
+
+  switch(speciality) {
+  case ET_NONE:
+    v_entity->setSpriteName(spriteName);
+    break;
+  case ET_PARTICLES_SOURCE:
+      v_entity->setSpriteName(typeName);
+    break;
+  default:
+    v_entity->setSpriteName(typeId);
+  }
+  v_entity->setSpeciality(speciality);
+  v_entity->setInitialPosition(position);
+  v_entity->setSize(size);
+  if(width > 0.0) {
+    v_entity->setWidth(width);
+  }
+  if(height > 0.0) {
+    v_entity->setHeight(height);
+  }
+  if(angle > 0.0) {
+    v_entity->setDrawAngle(angle);
+  }
+  v_entity->setDrawReversed(reversed);
+  v_entity->setZ(z);
+
+  v_entity->setSprite(v_entity->loadSprite());
+
+  return v_entity;
+}
+
 Entity* Entity::readFromXml(TiXmlElement *pElem) {
   std::string v_id;
   std::string v_typeId;
@@ -505,51 +582,9 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
     }
   }
 
-  /* Create the entity */
-  Entity *v_entity;
-
-  if(v_speciality == ET_PARTICLES_SOURCE) {
-    if       (v_typeName == "Smoke") {
-      v_entity = new ParticlesSourceSmoke(v_id);
-    } else if(v_typeName == "Fire")   {
-      v_entity = new ParticlesSourceFire(v_id);
-    } else if(v_typeName == "Star")   {
-      v_entity = new ParticlesSourceStar(v_id);
-    } else if(v_typeName == "Debris") {
-      v_entity = new ParticlesSourceDebris(v_id);
-    } else {
-      throw Exception("Entity " + v_id + " has an invalid type name");
-    }
-  } else {
-    v_entity = new Entity(v_id);
-  }
-
-  switch(v_speciality) {
-  case ET_NONE:
-    v_entity->setSpriteName(v_spriteName);
-    break;
-  case ET_PARTICLES_SOURCE:
-      v_entity->setSpriteName(v_typeName);
-    break;
-  default:
-    v_entity->setSpriteName(v_typeId);
-  }
-  v_entity->setSpeciality(v_speciality);
-  v_entity->setInitialPosition(v_position);
-  v_entity->setSize(v_size);
-  if(v_width > 0.0) {
-    v_entity->setWidth(v_width);
-  }
-  if(v_height > 0.0) {
-    v_entity->setHeight(v_height);
-  }
-  if(v_angle > 0.0) {
-    v_entity->setDrawAngle(v_angle);
-  }
-  v_entity->setDrawReversed(v_reversed);
-  v_entity->setZ(v_z);
-
-  return v_entity;
+  return  createEntity(v_id, v_typeId, v_speciality, v_position, v_angle,
+		       v_reversed, v_size, v_width, v_height, v_z,
+		       v_spriteName, v_typeName);
 }
 
 void Entity::saveBinary(FileHandle *i_pfh) {
@@ -629,52 +664,9 @@ Entity* Entity::readFromBinary(FileHandle *i_pfh) {
     }
   }
 
-  /* Create the entity */
-  Entity *v_entity;
-
-  if(v_speciality == ET_PARTICLES_SOURCE) {
-    if       (v_typeName == "Smoke") {
-      v_entity = new ParticlesSourceSmoke(v_id);
-    } else if(v_typeName == "Fire")   {
-      v_entity = new ParticlesSourceFire(v_id);
-    } else if(v_typeName == "Star")   {
-      v_entity = new ParticlesSourceStar(v_id);
-    } else if(v_typeName == "Debris") {
-      v_entity = new ParticlesSourceDebris(v_id);
-    } else {
-      throw Exception("Entity " + v_id + " has an invalid type name");
-    }
-  } else {
-    v_entity = new Entity(v_id);
-  }
-
-  switch(v_speciality) {
-  case ET_NONE:
-    v_entity->setSpriteName(v_spriteName);
-    break;
-  case ET_PARTICLES_SOURCE:
-      v_entity->setSpriteName(v_typeName);
-    break;
-  default:
-    v_entity->setSpriteName(v_typeId);
-  }
-
-  v_entity->setSpeciality(v_speciality);
-  v_entity->setInitialPosition(v_position);
-  v_entity->setSize(v_size);
-  if(v_width > 0.0) {
-    v_entity->setWidth(v_width);
-  }
-  if(v_height > 0.0) {
-    v_entity->setHeight(v_height);
-  }
-  if(v_angle > 0.0) {
-    v_entity->setDrawAngle(v_angle);
-  }
-  v_entity->setDrawReversed(v_reversed);
-  v_entity->setZ(v_z);
-
-  return v_entity;
+  return  createEntity(v_id, v_typeId, v_speciality, v_position, v_angle,
+		       v_reversed, v_size, v_width, v_height, v_z,
+		       v_spriteName, v_typeName);
 }
 
 void ParticlesSource::deleteParticles() {

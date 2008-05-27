@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class EntityParticle;
 class TiXmlElement;
 class FileHandle;
+class Sprite;
 
 /**
   An entity is an object that the biker can found on his way
@@ -52,6 +53,7 @@ class Entity {
   bool  DrawReversed() const;
   const TColor& Color() const;
   std::string SpriteName() const; /* PlayerStart, Flower, EndOfLevel, Bird, ... */
+  Sprite* getSprite() const;
   bool  isAlive() const;
 
   virtual void loadToPlay();
@@ -66,6 +68,7 @@ class Entity {
   void setDrawReversed(bool i_drawReversed);
   void setZ(float i_z);
   void setSpriteName(const std::string& i_spriteName);
+  void setSprite(Sprite* i_sprite);
   void setColor(const TColor& i_color);
   void setAlive(bool alive);
 
@@ -86,6 +89,7 @@ class Entity {
  private:
   std::string m_id;              /** Its own identifer */
   std::string m_spriteName;      /** Name of the sprite to be drawn */
+  Sprite*     m_sprite;
   Vector2f    m_initialPosition; /** Position at the start of the level */
   Vector2f    m_dynamicPosition; /** Current position */
   float       m_size;            /** Size (radius) */
@@ -102,6 +106,15 @@ class Entity {
 
   AABB        m_BBox;
   bool        m_isBBoxDirty;
+
+  static Entity* createEntity(const std::string& id, const std::string& typeId,
+			      EntitySpeciality speciality,
+			      const Vector2f& position, float angle,
+			      bool reversed, float size,
+			      float width, float height, float z,
+			      const std::string& spriteName, const std::string& typeName);
+  Sprite* loadSprite();
+  
 };
 
 class ParticlesSource : public Entity {
