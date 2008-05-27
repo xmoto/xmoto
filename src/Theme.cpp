@@ -417,57 +417,95 @@ void Theme::newBikerPartSpriteFromXML(TiXmlElement *pVarElem) {
   }
 }
 
-void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem) {
+void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem)
+{
+  // create decoration sprites as an animation sprite with one frame
   std::string v_name;
   std::string v_fileName;
+  std::string v_fileBase;
+  std::string v_fileExtension;
+  std::string v_blendmode;
+  const char *pc;
+  std::string v_sum = "";
+  AnimationSprite *v_anim;
   float v_width;
   float v_height;
   float v_centerX;
   float v_centerY;
-  std::string v_blendmode = "default";
-  const char *pc;
-  std::string v_sum;
+  float v_delay;
 
   float global_centerX = 0.5;
   float global_centerY = 0.5;
   float global_width   = 1.0;
   float global_height  = 1.0;
+  float global_delay   = 0.1;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {Logger::Log("** Sprite with no name"); return;}
+  if(pc == NULL) {
+    Logger::Log("** Sprite with no name");
+    return;
+  }
   v_name = pc;
-
+  
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {Logger::Log("** Sprite with no name"); return;}
+  if(pc == NULL) {
+    Logger::Log("** Sprite with no name");
+    return;
+  }
   v_fileName = pc;
 
+  // split fileName in fileBase and fileExtension to mimic an animation sprite
+  unsigned int dotPos = v_fileName.find_last_of('.');
+  v_fileBase = v_fileName.substr(0, dotPos);
+  v_fileExtension = v_fileName.substr(dotPos+1);
+
   pc = pVarElem->Attribute("width");
-  if(pc != NULL) {v_width = atof(pc);} else {v_width = global_width;}
+  if(pc != NULL)
+    v_width = atof(pc);
+  else
+    v_width = global_width;
 
   pc = pVarElem->Attribute("height");
-  if(pc != NULL) {v_height = atof(pc);} else {v_height = global_height;}
+  if(pc != NULL)
+    v_height = atof(pc);
+  else
+    v_height = global_height;
 
   pc = pVarElem->Attribute("centerX");
-  if(pc != NULL) {v_centerX = atof(pc);} else {v_centerX = global_centerX;}
+  if(pc != NULL)
+    v_centerX = atof(pc);
+  else
+    v_centerX = global_centerX;
 
   pc = pVarElem->Attribute("centerY");
-  if(pc != NULL) {v_centerY = atof(pc);} else {v_centerY = global_centerY;}
-  
+  if(pc != NULL)
+    v_centerY = atof(pc);
+  else
+    v_centerY = global_centerY;
+
   pc = pVarElem->Attribute("blendmode");
-  if(pc != NULL) v_blendmode = pc;
+  if(pc != NULL)
+    v_blendmode = pc;
+  else
+    v_blendmode = "default";
 
   pc = pVarElem->Attribute("sum");
-  if(pc != NULL) { v_sum = pc; };
+  if(pc != NULL)
+    v_sum = pc;
 
-  if(isAFileOutOfDate(THEME_DECORATION_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
-    m_sprites.push_back(new DecorationSprite(this, v_name, v_fileName,
-					     v_width,
-					     v_height,
-					     v_centerX,
-					     v_centerY,
-					     strToBlendMode(v_blendmode)
-					     ));
-    ThemeFile v_file = {THEME_DECORATION_SPRITE_FILE_DIR + std::string("/") + v_fileName, v_sum};
+  v_delay = global_delay;
+
+  v_anim = new AnimationSprite(this, v_name, v_fileBase, v_fileExtension);
+  v_anim->setBlendMode(strToBlendMode(v_blendmode));
+
+  m_sprites.push_back(v_anim);
+
+  if(isAFileOutOfDate(THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
+		      v_fileBase + std::string(".") + v_fileExtension) == false) {
+    v_anim->addFrame(v_centerX, v_centerY, v_width, v_height, v_delay);
+
+    ThemeFile v_file = {THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
+			v_fileBase + std::string(".") + v_fileExtension, v_sum};
     m_requiredFiles.push_back(v_file);
   }
 }
@@ -678,6 +716,7 @@ AnimationSprite::AnimationSprite(Theme* p_associated_theme, std::string p_name, 
   m_fileExtension = p_fileExtention;
   m_fFrameTime    = 0.0;
   m_type          = SPRITE_TYPE_ANIMATION;
+  m_animation     = false;
 }
 
 AnimationSprite::~AnimationSprite() {
@@ -689,15 +728,22 @@ std::string AnimationSprite::getFileDir() {
 }
 
 Texture* AnimationSprite::getCurrentTexture() {
-  if(m_frames.size() == 0) {return NULL;}
+  if(m_frames.size() == 0) {
+    return NULL;
+  }
+  
   return m_frames[getCurrentFrame()]->getTexture();
 }
 
 std::string AnimationSprite::getCurrentTextureFileName() {
-  char v_num[3];
-  snprintf(v_num, 3, "%02i", getCurrentFrame() % 100); // max 100 frames by animation
+  if(m_animation == false){
+    return getFileDir() + "/" + m_fileBase + std::string(".") + m_fileExtension;
+  }else{
+    char v_num[3];
+    snprintf(v_num, 3, "%02i", getCurrentFrame() % 100); // max 100 frames by animation
 
-  return getFileDir() + "/" + m_fileBase + std::string(v_num) + std::string(".") + m_fileExtension;
+    return getFileDir() + "/" + m_fileBase + std::string(v_num) + std::string(".") + m_fileExtension;
+  }
 }
 
 void AnimationSprite::setCurrentTexture(Texture *p_texture) {
@@ -705,16 +751,21 @@ void AnimationSprite::setCurrentTexture(Texture *p_texture) {
 }
 
 int AnimationSprite::getCurrentFrame() {
-  /* Next frame? */
-  float v_realTime = GameApp::getXMTime();
+  if(m_animation == false){
+    return 0;
+  }else{
+    /* Next frame? */
+    float v_realTime = GameApp::getXMTime();
 
-  while(v_realTime > m_fFrameTime + m_frames[m_current_frame]->getDelay()) {
-    m_fFrameTime = v_realTime;
-    m_current_frame++;
-    if(m_current_frame == m_frames.size()) m_current_frame = 0;      
+    while(v_realTime > m_fFrameTime + m_frames[m_current_frame]->getDelay()) {
+      m_fFrameTime = v_realTime;
+      m_current_frame++;
+      if(m_current_frame == m_frames.size())
+	m_current_frame = 0;      
+    }
+
+    return m_current_frame;
   }
-
-  return m_current_frame;
 }
 
 float AnimationSprite::getCenterX() {
@@ -735,6 +786,8 @@ float AnimationSprite::getHeight() {
 
 void AnimationSprite::addFrame(float p_centerX, float p_centerY, float p_width, float p_height, float p_delay) {
   m_frames.push_back(new AnimationSpriteFrame(this, p_centerX, p_centerY, p_width, p_height, p_delay));
+  if(m_frames.size() > 1)
+    m_animation = true;
 }
 
 void AnimationSprite::cleanFrames() {
@@ -800,39 +853,6 @@ BikerPartSprite::~BikerPartSprite() {
 
 std::string BikerPartSprite::getFileDir() {
   return THEME_BIKERPART_SPRITE_FILE_DIR;
-}
-
-DecorationSprite::DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName, float p_width, float p_height, float p_centerX, float p_centerY, SpriteBlendMode BlendMode) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-  m_width   = p_width;
-  m_height  = p_height;
-  m_centerX = p_centerX;
-  m_centerY = p_centerY;
-  m_type    = SPRITE_TYPE_DECORATION;
-  
-  setBlendMode(BlendMode);
-}
-
-DecorationSprite::~DecorationSprite() {
-}
-
-std::string DecorationSprite::getFileDir() {
-  return THEME_DECORATION_SPRITE_FILE_DIR;
-}
-
-float DecorationSprite::getWidth() {
-  return m_width;
-}
-
-float DecorationSprite::getHeight() {
-  return m_height;
-}
-
-float DecorationSprite::getCenterX() {
-  return m_centerX;
-}
-
-float DecorationSprite::getCenterY() {
-  return m_centerY;
 }
 
 EffectSprite::EffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
