@@ -21,20 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Math library. 
  */
-#include <stdlib.h>
 #include "VMath.h"
-
-/*===========================================================================
-  Random numbers
-  ===========================================================================*/
-float randomNum(float fMin,float fMax) {
-  return fMin + (fMax-fMin) * ((float)rand() / (float)RAND_MAX);
-}
-
-int randomIntNum(int nMin, int nMax) {
-  return nMin + (int) (((float)nMax) * rand()/(RAND_MAX+1.0));
-}
-
 
 /*===========================================================================
   AABB
@@ -125,11 +112,14 @@ bool AABB::AABBTouchAABB2f(const Vector2f &BMin1,const Vector2f &BMax1) {
 
 
 
+
+
 /*===========================================================================
   Vector2f intersections and stuff
   ===========================================================================*/
-int intersectLineCircle2f(const Vector2f &Cp,float Cr,const Vector2f &A0,
-                          const Vector2f &A1,Vector2f &Res1,Vector2f &Res2) {
+int intersectLineCircle2f(const Vector2f &Cp, float Cr,
+			  const Vector2f &A0, const Vector2f &A1,
+			  Vector2f &Res1, Vector2f &Res2) {
   /* first, aabb check */
   Vector2f line_0 = A1;
   Vector2f line_1 = A0;
@@ -283,12 +273,6 @@ int intersectLineLine2f(const Vector2f &A0, const Vector2f &A1,
 }  
   
   
-bool circleTouchCircle2f(const Vector2f &Cp1,float Cr1,const Vector2f &Cp2,float Cr2) {
-  /* Trivial test :) */
-  float d = (Cp2 - Cp1).length();
-  return (d < Cr1+Cr2);
-}
-
 void intersectLineLine2fCramer(Vector2f& A1, Vector2f& A2, Vector2f& B1, Vector2f& B2, Vector2f& contactPoint)
 {
   // equations of lines (A1, A2) and (B1, B2)

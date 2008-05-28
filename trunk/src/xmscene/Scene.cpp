@@ -41,6 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "LuaLibGame.h"
 #include "ScriptDynamicObjects.h"
 #include "ChipmunkWorld.h"
+#include "helpers/Random.h"
 
   MotoGame::MotoGame() {
     m_bDeathAnimEnabled=true;
@@ -259,7 +260,7 @@ void MotoGame::cleanPlayers() {
       if(m_playEvents) {
 	/* New wheel-spin particles? */
 	if(m_players[i]->isWheelSpinning()) {
-	  if(randomNum(0,1) < 0.7f) {
+	  if(NotSoRandom::randomNum(0,1) < 0.7f) {
 	    ParticlesSource *v_debris;
 	    v_debris = (ParticlesSource*) getLevelSrc()->getEntityById("BikeDebris");
 	    v_debris->setDynamicPosition(m_players[i]->getWheelSpinPoint());	

@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeParameters.h"
 #include "BikeAnchors.h"
 #include "Sound.h"
+#include "helpers/Log.h"
 
 #define PHYSICAL_ENGINE_REDUCTION 0.05
 
@@ -197,10 +198,6 @@ BikeAnchors* BikeState::Anchors() {
 
 BikeParameters* BikeState::Parameters() {
   return m_bikeParameters;
-}
-
-BikeState* Biker::getState() {
-  return &m_bikeState;
 }
 
 Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,

@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "Theme.h"
 #include "helpers/Log.h"
+#include "helpers/Random.h"
 
 // don't excceed this number of particles to not reduce significantly the fps
 #define PARTICLESSOURCE_TOTAL_MAX_PARTICLES 5000
@@ -67,10 +68,6 @@ void Entity::unloadToPlay() {
 
 std::string Entity::Id() const {
   return m_id;
-}
-
-float Entity::Size() const {
-  return m_size;
 }
 
 bool Entity::IsToTake() const {
@@ -131,10 +128,6 @@ void Entity::setInitialPosition(const Vector2f& i_initialPosition) {
   m_isBBoxDirty = true;
 }
 
-std::string Entity::SpriteName() const {
-  return m_spriteName;
-}
-
 Sprite* Entity::getSprite() const
 {
   return m_sprite;
@@ -151,10 +144,6 @@ void Entity::setSpriteName(const std::string& i_spriteName) {
 void Entity::setSprite(Sprite* i_sprite)
 {
   m_sprite = i_sprite;
-}
-
-Vector2f Entity::DynamicPosition() const {
-  return m_dynamicPosition;  
 }
 
 void Entity::setSize(float i_size) {
@@ -306,12 +295,13 @@ ParticlesSourceDebris::~ParticlesSourceDebris() {
 
 bool ParticlesSourceSmoke::updateToTime(int i_time, Vector2f i_gravity) {
   if(ParticlesSource::updateToTime(i_time, i_gravity)) {
+
     /* Generate smoke */
-    if(randomNum(0,5) < 1) {
-      if(randomNum(0,1) < 0.5) {
-	addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_time + 1000, "Smoke1");
+    if(NotSoRandom::randomNum(0,5) < 1) {
+      if(NotSoRandom::randomNum(0,1) < 0.5) {
+	addParticle(Vector2f(NotSoRandom::randomNum(-0.6,0.6), NotSoRandom::randomNum(0.2,0.6)), i_time + 1000, std::string("Smoke1"));
       } else {
-	addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_time + 1000, "Smoke2");
+	addParticle(Vector2f(NotSoRandom::randomNum(-0.6,0.6), NotSoRandom::randomNum(0.2,0.6)), i_time + 1000, std::string("Smoke2"));
       }
     }
     return true;
@@ -328,7 +318,7 @@ bool SmokeParticle::updateToTime(int i_time, Vector2f i_gravity) {
   setSize(Size() + v_timeStep * 1.0f); /* grow */
   m_acceleration = Vector2f(0.2, 0.5);  /* accelerate upwards */
 
-  int v_c = Color().Red() + (int)(randomNum(40,50) * v_timeStep);
+  int v_c = Color().Red() + (int)(NotSoRandom::randomNum(40,50) * v_timeStep);
   v_color.setRed(v_c > 255 ? 255 : v_c);
   v_color.setBlue(v_c > 255 ? 255 : v_c);
   v_color.setGreen(v_c > 255 ? 255 : v_c);
@@ -350,10 +340,10 @@ bool FireParticle::updateToTime(int i_time, Vector2f i_gravity) {
   float v_timeStep = 0.040;
   TColor v_color(Color());
 
-  int v_g = Color().Green() - (int)(randomNum(190,210) * v_timeStep);
+  int v_g = Color().Green() - (int)(NotSoRandom::randomNum(190,210) * v_timeStep);
   v_color.setGreen(v_g < 0 ? 0 : v_g);
 
-  int v_b = Color().Blue()  - (int)(randomNum(400,400) * v_timeStep);
+  int v_b = Color().Blue()  - (int)(NotSoRandom::randomNum(400,400) * v_timeStep);
   v_color.setBlue(v_b < 0 ? 0 : v_b);
 
   int v_a = Color().Alpha() - (int)(250.0f * v_timeStep);
@@ -364,7 +354,7 @@ bool FireParticle::updateToTime(int i_time, Vector2f i_gravity) {
     m_killTime = i_time;
   }
       
-  m_velocity.x = sin((i_time + m_fireSeed) * randomNum(5,15)) * 0.004f
+  m_velocity.x = sin((i_time + m_fireSeed) * NotSoRandom::randomNum(5,15)) * 0.004f
     +
     sin((i_time - m_fireSeed) * 0.1) * 0.3;
   m_acceleration.y = 3.0;
@@ -376,7 +366,7 @@ bool ParticlesSourceFire::updateToTime(int i_time, Vector2f i_gravity) {
   if(ParticlesSource::updateToTime(i_time, i_gravity)) {
     /* Generate fire */
     /* maximum 5s for a fire particule, but it can be destroyed before */
-    ParticlesSource::addParticle(Vector2f(randomNum(-1,1),randomNum(0.1,0.3)), i_time + 500);
+    ParticlesSource::addParticle(Vector2f(NotSoRandom::randomNum(-1,1),NotSoRandom::randomNum(0.1,0.3)), i_time + 500);
     return true;
   }
   return false;
@@ -726,8 +716,8 @@ void ParticlesSourceStar::addParticle(Vector2f i_velocity, int i_killTime, std::
 }
 
 StarParticle::StarParticle(const Vector2f& i_position, int i_killTime, std::string i_spriteName)
-  : EntityParticle(i_position, Vector2f(randomNum(-2,2),randomNum(0,2)), i_killTime) {
-  m_angVel       = randomNum(-60,60);
+  : EntityParticle(i_position, Vector2f(NotSoRandom::randomNum(-2,2),NotSoRandom::randomNum(0,2)), i_killTime) {
+  m_angVel       = NotSoRandom::randomNum(-60,60);
   m_acceleration = Vector2f(0,-4);
   setSpriteName(i_spriteName);
 }
@@ -736,14 +726,14 @@ StarParticle::~StarParticle() {
 }
 
 DebrisParticle::DebrisParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
-  : EntityParticle(i_position, Vector2f(randomNum(-2,2),randomNum(0,2)), i_killTime) {
-  m_angVel       = randomNum(-60,60);
+  : EntityParticle(i_position, Vector2f(NotSoRandom::randomNum(-2,2),NotSoRandom::randomNum(0,2)), i_killTime) {
+  m_angVel       = NotSoRandom::randomNum(-60,60);
   m_acceleration = Vector2f(0,-4);
-  int cc     	 = (int) randomNum(0, 250);
+  int cc     	 = (int) NotSoRandom::randomNum(0, 250);
   setColor(TColor(cc, cc, cc, 255));
-  m_velocity 	*= randomNum(1.5, 0.5);
-  m_velocity 	+= Vector2f(randomNum(-0.2,0.2), randomNum(-0.2,0.2));
-  setSize(randomNum(0.02f,0.04f));
+  m_velocity 	*= NotSoRandom::randomNum(1.5, 0.5);
+  m_velocity 	+= Vector2f(NotSoRandom::randomNum(-0.2,0.2), NotSoRandom::randomNum(-0.2,0.2));
+  setSize(NotSoRandom::randomNum(0.02f,0.04f));
   setSpriteName(i_spriteName);
 }
 
@@ -771,7 +761,7 @@ bool DebrisParticle::updateToTime(int i_time, Vector2f i_gravity) {
 
 FireParticle::FireParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
   : EntityParticle(i_position, i_velocity, i_killTime) {
-  m_fireSeed = randomNum(0,100);
+  m_fireSeed = NotSoRandom::randomNum(0,100);
   setSize(0.17);
   setColor(TColor(255,255,0,255));
   setSpriteName(i_spriteName);
@@ -782,10 +772,10 @@ FireParticle::~FireParticle() {
 
 SmokeParticle::SmokeParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName) 
   : EntityParticle(i_position, i_velocity, i_killTime) {
-  int cc   = (int) randomNum(0, 50);
+  int cc   = (int) NotSoRandom::randomNum(0, 50);
   setColor(TColor(cc, cc, cc, 255));
-  setSize(randomNum(0, 0.2));
-  m_angVel = randomNum(-60, 60);
+  setSize(NotSoRandom::randomNum(0, 0.2));
+  m_angVel = NotSoRandom::randomNum(-60, 60);
   setSpriteName(i_spriteName);
 }
 

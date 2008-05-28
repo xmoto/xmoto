@@ -142,7 +142,10 @@ class Biker {
 	const TColor& i_colorFilter,
 	const TColor& i_uglyColorFilter);
   virtual ~Biker();
-  virtual BikeState* getState();
+  inline BikeState* getState()
+  {
+    return &m_bikeState;
+  }
   virtual bool getRenderBikeFront() = 0; /* display the bikefront ? (for detach) */
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
   virtual float getBikeLinearVel() = 0; /* bike linear velocity */

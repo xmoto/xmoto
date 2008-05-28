@@ -123,7 +123,6 @@ class Level {
   void revertEntityDestroyed(const std::string& i_entityId);
 
   static int compareLevel(const Level& i_lvl1, const Level& i_lvl2);    
-  static int compareLevelRandom(const Level& i_lvl1, const Level& i_lvl2);    
   static int compareLevelSamePack(const Level& i_lvl1, const Level& i_lvl2);    
   static int compareVersionNumbers(const std::string &i_v1, const std::string &i_v2);
 

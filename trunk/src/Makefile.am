@@ -95,7 +95,9 @@ helpers_SOURCES = helpers/VMath.h             \
 		  helpers/System.cpp \
                   iqsort.h \
 		  helpers/Singleton.h \
-		  helpers/MultiSingleton.h
+		  helpers/MultiSingleton.h \
+		  helpers/Random.h \
+		  helpers/Random.cpp
 
 common_SOURCES = Image.cpp \
   VBezier.cpp PolyDraw.h PolyDraw.cpp \
