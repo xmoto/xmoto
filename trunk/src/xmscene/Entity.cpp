@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "PhysSettings.h"
 #include "VFileIO.h"
 #include "Theme.h"
+#include "helpers/Log.h"
 
 // don't excceed this number of particles to not reduce significantly the fps
 #define PARTICLESSOURCE_TOTAL_MAX_PARTICLES 5000
@@ -272,8 +273,7 @@ bool ParticlesSource::updateToTime(int i_time, Vector2f i_gravity) {
 }
 
 ParticlesSourceSmoke::ParticlesSourceSmoke(const std::string& i_id)
-  : ParticlesSource(i_id, PARTICLES_SOURCE_SMOKE_TIME_INCREMENT) {
-
+  : ParticlesSourceMultiple(i_id, PARTICLES_SOURCE_SMOKE_TIME_INCREMENT, 2) {
 }
 
 ParticlesSourceSmoke::~ParticlesSourceSmoke() {
@@ -281,7 +281,6 @@ ParticlesSourceSmoke::~ParticlesSourceSmoke() {
 
 ParticlesSourceFire::ParticlesSourceFire(const std::string& i_id)
   : ParticlesSource(i_id, PARTICLES_SOURCE_FIRE_TIME_INCREMENT) {
-  setSpriteName("Fire");
 }
 
 ParticlesSourceFire::~ParticlesSourceFire() {
@@ -297,6 +296,8 @@ ParticlesSourceStar::~ParticlesSourceStar() {
 
 ParticlesSourceDebris::ParticlesSourceDebris(const std::string& i_id)
   : ParticlesSource(i_id, PARTICLES_SOURCE_DEBRIS_TIME_INCREMENT) {
+  // debris are created outside of an entity, so we have to put the
+  // sprite name by hand...
   setSpriteName("Debris1");
 }
 
@@ -474,9 +475,20 @@ std::string Entity::SpecialityToStr(EntitySpeciality i_speciality) {
   }
 }
 
-Sprite* Entity::loadSprite()
+Sprite* Entity::loadSprite(const std::string& i_spriteName)
 {
-  return Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteName());
+  std::string spriteName;
+  if(i_spriteName == "")
+    spriteName = SpriteName();
+  else
+    spriteName = i_spriteName;
+
+  Sprite* sprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, spriteName);
+  if(sprite == NULL){
+    sprite = Theme::instance()->getSprite(SPRITE_TYPE_EFFECT, spriteName);
+  }
+
+  return sprite;
 }
 
 Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
@@ -486,7 +498,6 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
 			     float width, float height, float z,
 			     const std::string& spriteName, const std::string& typeName)
 {
-  /* Create the entity */
   Entity *v_entity = NULL;
 
   if(speciality == ET_PARTICLES_SOURCE) {
@@ -505,15 +516,30 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
     v_entity = new Entity(id);
   }
 
+
   switch(speciality) {
   case ET_NONE:
     v_entity->setSpriteName(spriteName);
+    v_entity->setSprite(v_entity->loadSprite());
     break;
   case ET_PARTICLES_SOURCE:
-      v_entity->setSpriteName(typeName);
+    v_entity->setSpriteName(typeName);
+
+    // hard coded particles effects
+    if       (typeName == "Smoke") {
+      // smoke has two sprites
+      ((ParticlesSourceSmoke*)v_entity)->setSprite(v_entity->loadSprite(std::string("Smoke1")), 0);
+      ((ParticlesSourceSmoke*)v_entity)->setSprite(v_entity->loadSprite(std::string("Smoke2")), 1);
+    } else if(typeName == "Fire")   {
+      v_entity->setSprite(v_entity->loadSprite(std::string("Fire1")));
+    } else if(typeName == "Debris") {
+      v_entity->setSprite(v_entity->loadSprite(std::string("Debris1")));
+      v_entity->setSpriteName("Debris1");
+    }
     break;
   default:
     v_entity->setSpriteName(typeId);
+    v_entity->setSprite(v_entity->loadSprite());
   }
   v_entity->setSpeciality(speciality);
   v_entity->setInitialPosition(position);
@@ -530,7 +556,6 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
   v_entity->setDrawReversed(reversed);
   v_entity->setZ(z);
 
-  v_entity->setSprite(v_entity->loadSprite());
 
   return v_entity;
 }
@@ -791,4 +816,27 @@ void ParticlesSourceDebris::addParticle(Vector2f i_velocity, int i_killTime, std
 
 bool ParticlesSource::hasReachedMaxParticles() {
   return m_totalOfParticles >= PARTICLESSOURCE_TOTAL_MAX_PARTICLES || m_allowParticleGeneration == false;
+}
+
+
+
+ParticlesSourceMultiple::ParticlesSourceMultiple(const std::string& i_id, int i_particleTime_increment, unsigned int i_nbSprite)
+  : ParticlesSource(i_id, i_particleTime_increment)
+{
+  m_sprites.reserve(i_nbSprite);
+}
+
+ParticlesSourceMultiple::~ParticlesSourceMultiple()
+{
+  m_sprites.clear();
+}
+
+Sprite* ParticlesSourceMultiple::getSprite(unsigned int sprite) const
+{
+  return m_sprites[sprite];
+}
+
+void ParticlesSourceMultiple::setSprite(Sprite* i_sprite, unsigned int sprite)
+{
+  m_sprites[sprite] = i_sprite;
 }
