@@ -309,7 +309,12 @@ int intersectLineCircle2f(const Vector2f &Cp,float Cr,const Vector2f &A0,const V
                           Vector2f &Res1,Vector2f &Res2);
 int intersectLineLine2f(const Vector2f &A0,const Vector2f &A1,const Vector2f &B0,
                         const Vector2f &B1,Vector2f &Res);
-bool circleTouchCircle2f(const Vector2f &Cp1,float Cr1,const Vector2f &Cp2,float Cr2);
+inline bool circleTouchCircle2f(const Vector2f &Cp1,float Cr1,const Vector2f &Cp2,float Cr2)
+{
+  /* Trivial test :) */
+  float d = (Cp2 - Cp1).length();
+  return (d < Cr1+Cr2);
+}
   
 class AABB {
  public:
@@ -330,8 +335,15 @@ class AABB {
   Vector2f BMin, BMax;
 };
 
-float randomNum(float fMin,float fMax);
-int randomIntNum(int nMin, int nMax);
+// random with stdlib rand
+inline float randomNum(float fMin,float fMax)
+{
+  return fMin + (fMax-fMin) * ((float)rand() / (float)RAND_MAX);
+}
+inline int randomIntNum(int nMin, int nMax)
+{
+  return nMin + (int) (((float)nMax) * rand()/(RAND_MAX+1.0));
+}
 
 void intersectLineLine2fCramer(Vector2f& A1, Vector2f& A2, Vector2f& B1, Vector2f& B2, Vector2f& contactPoint);
 void calculatePointOnNormal(Vector2f& A1, Vector2f& B1, float length, bool inside, Vector2f& A2, Vector2f& B2);
@@ -341,4 +353,3 @@ float interpolation_cubic(float i_a, float i_b, float i_c, float i_d, float t);
 Vector2f interpolation_cubic(Vector2f i_a, Vector2f i_b, Vector2f i_c, Vector2f i_d, float t);
 
 #endif
-

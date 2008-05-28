@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Input.h"
 #include "db/xmDatabase.h"
 #include "helpers/Log.h"
+#include "helpers/Random.h"
 
 #include <curl/curl.h>
 #include "XMSession.h"
@@ -161,6 +162,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos()) {
     v_useGraphics = false;
   }
+
+  // init not so random numbers
+  NotSoRandom::init();
 
   _InitWin(v_useGraphics);
 

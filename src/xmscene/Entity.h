@@ -39,10 +39,17 @@ class Entity {
   Entity(const std::string& i_id);
   virtual ~Entity();
 
-  std::string Id()     const; /* PlayerStart0, Flower0, Strawberry0, ... */
-  float Size()         const;
+  /* PlayerStart0, Flower0, Strawberry0, ... */
+  std::string Id() const;
+  inline float Size() const
+  {
+    return m_size;
+  }
   Vector2f InitialPosition() const;
-  Vector2f DynamicPosition() const;
+  inline Vector2f DynamicPosition() const
+  {
+    return m_dynamicPosition;  
+  }
   bool DoesKill() const; /** have this entity the property to kill ? (like wecker) */
   bool DoesMakeWin() const; /** have this entity the property to make win ? (like flower) */
   bool IsToTake() const; /* return true is the entity must be taken by the player */
@@ -52,7 +59,10 @@ class Entity {
   float DrawAngle() const;
   bool  DrawReversed() const;
   const TColor& Color() const;
-  std::string SpriteName() const; /* PlayerStart, Flower, EndOfLevel, Bird, ... */
+  inline const std::string& SpriteName() const
+  {
+    return m_spriteName;
+  }
   Sprite* getSprite() const;
   bool  isAlive() const;
 
