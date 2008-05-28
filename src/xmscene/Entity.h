@@ -113,8 +113,7 @@ class Entity {
 			      bool reversed, float size,
 			      float width, float height, float z,
 			      const std::string& spriteName, const std::string& typeName);
-  Sprite* loadSprite();
-  
+  Sprite* loadSprite(const std::string& i_spriteName = "");
 };
 
 class ParticlesSource : public Entity {
@@ -146,16 +145,33 @@ class ParticlesSource : public Entity {
   void deleteParticles();
 };
 
-class ParticlesSourceSmoke : public ParticlesSource {
+
+class ParticlesSourceMultiple : public ParticlesSource {
+public:
+  ParticlesSourceMultiple(const std::string& i_id,
+			  int i_particleTime_increment,
+			  unsigned int i_nbSprite);
+  virtual ~ParticlesSourceMultiple();
+
+  Sprite* getSprite(unsigned int sprite=0) const;
+  void setSprite(Sprite* i_sprite, unsigned int sprite=0);
+
+protected:
+  std::vector<Sprite*> m_sprites;
+};
+
+
+
+class ParticlesSourceSmoke : public ParticlesSourceMultiple {
  public:
   ParticlesSourceSmoke(const std::string& i_id);
   virtual ~ParticlesSourceSmoke();
 
   bool updateToTime(int i_time, Vector2f i_gravity);
   void addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName);
-
- private:
 };
+
+
 
 class ParticlesSourceFire : public ParticlesSource {
  public:
