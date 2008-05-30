@@ -35,6 +35,7 @@ class Zone;
 class CollisionSystem;
 class XMLDocument;
 class ChipmunkWorld;
+class Sprite;
 
 /*===========================================================================
   Level source object - holds all stored information about a level
@@ -139,6 +140,11 @@ class Level {
   std::string SpriteForStar() const;
   std::string SoundForPickUpStrawberry() const;
 
+  Sprite* strawberrySprite();
+  Sprite* wreckerSprite();
+  Sprite* flowerSprite();
+  Sprite* starSprite();
+
   int getNumberLayer() {
     return m_numberLayer;
   }
@@ -201,11 +207,18 @@ class Level {
   std::string m_rSpriteForStar;
   std::string m_rSoundForPickUpStrawberry;
 
+  Sprite* m_strawberrySprite;
+  Sprite* m_wreckerSprite;
+  Sprite* m_flowerSprite;
+  Sprite* m_starSprite;
+
   void addLimits();
   void exportBinary(const std::string &i_fileName, const std::string& i_sum);
   bool importBinary(const std::string &i_fileName, const std::string& i_sum);
   bool importBinaryHeaderFromFile(const std::string &i_fileName, const std::string& i_sum);
   std::string getNameInCache() const;
+
+  void loadRemplacementSprites();
 
   void unloadLevelBody();
 };

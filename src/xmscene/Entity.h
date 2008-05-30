@@ -87,7 +87,7 @@ class Entity {
   static Entity* readFromXml(TiXmlElement *pElem);
   static Entity* readFromBinary(FileHandle *i_pfh);
 
-  static EntitySpeciality  SpecialityFromStr(std::string i_typeStr);
+  static EntitySpeciality  SpecialityFromStr(std::string& i_typeStr);
   static std::string       SpecialityToStr(EntitySpeciality i_type);
   virtual EntitySpeciality Speciality() const; /* replays only store one property per entity, this is this one */
   void setSpeciality(EntitySpeciality i_speciality);
@@ -126,6 +126,8 @@ class Entity {
   Sprite* loadSprite(const std::string& i_spriteName = "");
 };
 
+typedef enum particleSourceType {None, Smoke, Fire, Star, Debris} particleSourceType;
+
 class ParticlesSource : public Entity {
  public:
   ParticlesSource(const std::string& i_id, int i_particleTime_increment);
@@ -141,11 +143,21 @@ class ParticlesSource : public Entity {
 
   static void setAllowParticleGeneration(bool i_value);
 
+  inline particleSourceType getType(){
+    return m_type;
+  }
+
  protected:
   std::vector<EntityParticle *> m_particles;
+  std::vector<EntityParticle *> m_deadParticles;
+  particleSourceType m_type;
 
   static int m_totalOfParticles;
   static bool hasReachedMaxParticles();
+
+  // return NULL if no dead particle exists
+  EntityParticle* getExistingParticle();
+  void addDeadParticle(EntityParticle* pEntityParticle);
 
  private:
   int       m_lastParticleTime;
@@ -216,28 +228,37 @@ class ParticlesSourceDebris : public ParticlesSource {
  private:
 };
 
+
+
+
 /**
   An EntityParticle is an entity which as a movement and which dies
 */
 class EntityParticle : public Entity {
  public:
-  EntityParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime);
+  EntityParticle();
   virtual ~EntityParticle();
 
   virtual  bool updateToTime(int i_time, Vector2f i_gravity);
-  int    KillTime()  	   const;
-  float    Angle()    	   const;
+  int           KillTime() const;
+  float         Angle() const;
 
  protected:
-    Vector2f m_velocity, m_acceleration; /* Position, velocity, and acceleration */
-    float    m_ang, m_angVel, m_angAcc;  /* Angular version of the above */
-    int    m_killTime;
+  void init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime);
+  /* Position, velocity, and acceleration */
+  Vector2f m_velocity, m_acceleration;
+  /* Angular version of the above */
+  float    m_ang, m_angVel, m_angAcc;
+  int      m_killTime;
 };
+
 
 class SmokeParticle : public EntityParticle {
  public:
   SmokeParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
   virtual ~SmokeParticle();
+  void init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
+
   virtual bool updateToTime(int i_time, Vector2f i_gravity);
 
  private:
@@ -247,6 +268,7 @@ class FireParticle : public EntityParticle {
  public:
   FireParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
   virtual ~FireParticle();
+  void init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
 
   virtual bool updateToTime(int i_time, Vector2f i_gravity);
 
@@ -256,8 +278,9 @@ class FireParticle : public EntityParticle {
 
 class StarParticle : public EntityParticle {
  public:
-  StarParticle(const Vector2f& i_position, int i_killTime, std::string i_spriteName);
+  StarParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
   virtual ~StarParticle();
+  void init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
 
  private:
 };
@@ -266,6 +289,7 @@ class DebrisParticle : public EntityParticle {
  public:
   DebrisParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
   virtual ~DebrisParticle();
+  void init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
 
   virtual bool updateToTime(int i_time, Vector2f i_gravity);
 

@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Scene.h"
 #include "chipmunk/chipmunk.h"
 #include "ChipmunkWorld.h"
+#include "Theme.h"
 
 #define CACHE_LEVEL_FORMAT_VERSION 22
 
@@ -54,7 +55,18 @@ Level::Level() {
   m_numberLayer   = 0;
   m_isScripted    = false;
   m_isPhysics     = false;
-  m_sky = new SkyApparence();
+  m_sky           = new SkyApparence();
+
+  m_rSpriteForStrawberry      = "Strawberry";
+  m_rSpriteForWecker 	      = "Wrecker";
+  m_rSpriteForFlower 	      = "Flower";
+  m_rSpriteForStar            = "Star";
+  m_rSoundForPickUpStrawberry = "PickUpStrawberry";
+
+  m_strawberrySprite = NULL;
+  m_wreckerSprite    = NULL;
+  m_flowerSprite     = NULL;
+  m_starSprite       = NULL;
 }
 
 Level::~Level() {
@@ -646,34 +658,24 @@ void Level::loadXML(void) {
 	m_layerOffsets.push_back(offset);
 	m_isLayerFront.push_back(XML::getOption(pElem, "frontlayer", "false") == "true");
       }
-//      for(int i=0; i<m_numberLayer; i++){
-//	Logger::Log("Level::loadXML offsets layer %d: %f, %f isfront: %s",
-//		    i, m_layerOffsets[i].x, m_layerOffsets[i].y, m_isLayerFront[i]?"true":"false");
-//      }
     }
-
-    /* replacement theme */
-    m_rSpriteForStrawberry 	= "";
-    m_rSpriteForWecker 	   	= "";
-    m_rSpriteForFlower 	   	= "";
-    m_rSpriteForStar   	   	= "";
-    m_rSoundForPickUpStrawberry = "";
 
     TiXmlElement *pThemeReplaceElem = XML::findElement(*m_xmlSource, pLevelElem,std::string("theme_replacements"));
     if(pThemeReplaceElem != NULL) {
       /* Get replacements  for sprites */
-      for(TiXmlElement *pElem = pThemeReplaceElem->FirstChildElement("sprite_replacement"); pElem!=NULL;
+      for(TiXmlElement *pElem = pThemeReplaceElem->FirstChildElement("sprite_replacement");
+	  pElem!=NULL;
 	  pElem=pElem->NextSiblingElement("sprite_replacement")) {
 	std::string v_old_name = XML::getOption(pElem, "old_name");
 	std::string v_new_name = XML::getOption(pElem, "new_name");
 	/* for efficacity and before other are not required, only change main ones */
-	if        (v_old_name == "Strawberry") {
+	if        (v_old_name == "Strawberry" && v_new_name != "") {
 	  m_rSpriteForStrawberry = v_new_name;
-	} else	if(v_old_name == "Wrecker") {
+	} else	if(v_old_name == "Wrecker"    && v_new_name != "") {
 	  m_rSpriteForWecker     = v_new_name;
-	} else 	if(v_old_name == "Flower") {
+	} else 	if(v_old_name == "Flower"     && v_new_name != "") {
 	  m_rSpriteForFlower     = v_new_name;
-	} else 	if(v_old_name == "Star") {
+	} else 	if(v_old_name == "Star"       && v_new_name != "") {
 	  m_rSpriteForStar       = v_new_name;
 	}
       }
@@ -912,6 +914,7 @@ void Level::loadFullyFromFile() {
     loadXML();
     exportBinary(getNameInCache(), m_checkSum);
   }
+  loadRemplacementSprites();
 }
 
 void Level::importBinaryHeader(FileHandle *pfh) {
@@ -1094,6 +1097,15 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
 	m_rSpriteForWecker     	    = FS::readString(pfh);
 	m_rSpriteForStar       	    = FS::readString(pfh);
 	m_rSoundForPickUpStrawberry = FS::readString(pfh);
+
+	if(m_rSpriteForStrawberry == "")
+	  m_rSpriteForStrawberry = "Strawberry";
+	if(m_rSpriteForFlower == "")
+	  m_rSpriteForFlower = "Flower";
+	if(m_rSpriteForWecker == "")
+	  m_rSpriteForWecker = "Wrecker";
+	if(m_rSpriteForStar == "")
+	  m_rSpriteForStar = "Star";
 
 	/* layers */
 	m_numberLayer = FS::readInt_LE(pfh);
@@ -1394,36 +1406,49 @@ void Level::rebuildCache() {
 }
 
 std::string Level::SpriteForStrawberry() const {
-  if(m_rSpriteForStrawberry != "") {
-    return m_rSpriteForStrawberry;
-  }
-  return "Strawberry";
+  return m_rSpriteForStrawberry;
 }
 
 std::string Level::SpriteForWecker() const {
-  if(m_rSpriteForWecker != "") {
-    return m_rSpriteForWecker;
-  }
-  return "Wrecker";
+  return m_rSpriteForWecker;
 }
 
 std::string Level::SpriteForFlower() const {
-  if(m_rSpriteForFlower != "") {
-    return m_rSpriteForFlower;
-  }
-  return "Flower";
+  return m_rSpriteForFlower;
 }
 
 std::string Level::SpriteForStar() const {
-  if(m_rSpriteForStar != "") {
-    return m_rSpriteForStar;
-  }
-  return "Star";
+  return m_rSpriteForStar;
 }
 
 std::string Level::SoundForPickUpStrawberry() const {
-  if(m_rSoundForPickUpStrawberry != "") {
-    return m_rSoundForPickUpStrawberry;
-  }
-  return "PickUpStrawberry";
+  return m_rSoundForPickUpStrawberry;
+}
+
+Sprite* Level::strawberrySprite()
+{
+  return m_strawberrySprite;
+}
+
+Sprite* Level::wreckerSprite()
+{
+  return m_wreckerSprite;
+}
+
+Sprite* Level::flowerSprite()
+{
+  return m_flowerSprite;
+}
+
+Sprite* Level::starSprite()
+{
+  return m_starSprite;
+}
+
+void Level::loadRemplacementSprites()
+{
+  m_strawberrySprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForStrawberry());
+  m_wreckerSprite    = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForWecker());
+  m_flowerSprite     = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForFlower());
+  m_starSprite       = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForStar());
 }

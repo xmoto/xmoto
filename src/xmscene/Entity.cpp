@@ -206,211 +206,11 @@ AABB& Entity::getAABB()
   return m_BBox;
 }
 
-/* static members */
-int ParticlesSource::m_totalOfParticles = 0;
-bool ParticlesSource::m_allowParticleGeneration = true;
-
-void ParticlesSource::setAllowParticleGeneration(bool i_value) {
-  m_allowParticleGeneration = i_value;
-}
-
-ParticlesSource::ParticlesSource(const std::string& i_id, int i_particleTime_increment)
-  : Entity(i_id) {
-  m_lastParticleTime       = 0;
-  m_particleTime_increment = i_particleTime_increment;
-}
-
-ParticlesSource::~ParticlesSource() {
-  deleteParticles();
-}
-
-void ParticlesSource::loadToPlay() {
-  Entity::loadToPlay();
-  m_lastParticleTime = 0;
-} 
-
-void ParticlesSource::unloadToPlay() {
-  Entity::unloadToPlay();
-
-  deleteParticles();
-}
-
-bool ParticlesSource::updateToTime(int i_time, Vector2f i_gravity) {
-  unsigned int i;
-
-  if(i_time > m_lastParticleTime + m_particleTime_increment) {  
-    i = 0;
-    while(i < m_particles.size()) {
-      if(i_time > m_particles[i]->KillTime()) {
-	delete m_particles[i];
-	m_particles.erase(m_particles.begin() + i);
-	m_totalOfParticles--;
-      } else {
-	m_particles[i]->updateToTime(i_time, i_gravity);
-	i++;
-      }
-    }
-    m_lastParticleTime = i_time;
-    return true;
-  } else {
-    /* return in the past */
-    if(i_time < m_lastParticleTime - m_particleTime_increment) {
-      deleteParticles();   
-    }
-  }
-  return false;
-}
-
-ParticlesSourceSmoke::ParticlesSourceSmoke(const std::string& i_id)
-  : ParticlesSourceMultiple(i_id, PARTICLES_SOURCE_SMOKE_TIME_INCREMENT, 2) {
-}
-
-ParticlesSourceSmoke::~ParticlesSourceSmoke() {
-}
-
-ParticlesSourceFire::ParticlesSourceFire(const std::string& i_id)
-  : ParticlesSource(i_id, PARTICLES_SOURCE_FIRE_TIME_INCREMENT) {
-}
-
-ParticlesSourceFire::~ParticlesSourceFire() {
-}
-
-ParticlesSourceStar::ParticlesSourceStar(const std::string& i_id)
-  : ParticlesSource(i_id, PARTICLES_SOURCE_STAR_TIME_INCREMENT) {
-  setSpriteName("Star");
-}
-
-ParticlesSourceStar::~ParticlesSourceStar() {
-}
-
-ParticlesSourceDebris::ParticlesSourceDebris(const std::string& i_id)
-  : ParticlesSource(i_id, PARTICLES_SOURCE_DEBRIS_TIME_INCREMENT) {
-  // debris are created outside of an entity, so we have to put the
-  // sprite name by hand...
-  setSpriteName("Debris1");
-}
-
-ParticlesSourceDebris::~ParticlesSourceDebris() {
-}
-
-bool ParticlesSourceSmoke::updateToTime(int i_time, Vector2f i_gravity) {
-  if(ParticlesSource::updateToTime(i_time, i_gravity)) {
-
-    /* Generate smoke */
-    if(NotSoRandom::randomNum(0,5) < 1) {
-      if(NotSoRandom::randomNum(0,1) < 0.5) {
-	addParticle(Vector2f(NotSoRandom::randomNum(-0.6,0.6), NotSoRandom::randomNum(0.2,0.6)), i_time + 1000, std::string("Smoke1"));
-      } else {
-	addParticle(Vector2f(NotSoRandom::randomNum(-0.6,0.6), NotSoRandom::randomNum(0.2,0.6)), i_time + 1000, std::string("Smoke2"));
-      }
-    }
-    return true;
-  }
-  return false;
-}
-
-bool SmokeParticle::updateToTime(int i_time, Vector2f i_gravity) {
-  EntityParticle::updateToTime(i_time, i_gravity);
-
-  float v_timeStep = 0.025;
-  TColor v_color(Color());
-
-  setSize(Size() + v_timeStep * 1.0f); /* grow */
-  m_acceleration = Vector2f(0.2, 0.5);  /* accelerate upwards */
-
-  int v_c = Color().Red() + (int)(NotSoRandom::randomNum(40,50) * v_timeStep);
-  v_color.setRed(v_c > 255 ? 255 : v_c);
-  v_color.setBlue(v_c > 255 ? 255 : v_c);
-  v_color.setGreen(v_c > 255 ? 255 : v_c);
-
-  int v_a = Color().Alpha() - (int)(120.0f * v_timeStep);
-  if(v_a >= 0) {
-    v_color.setAlpha(v_a);
-    setColor(v_color);
-  } else {
-    m_killTime = i_time;
-  }
-
-  return false;
-}
-
-bool FireParticle::updateToTime(int i_time, Vector2f i_gravity) {
-  EntityParticle::updateToTime(i_time, i_gravity);
-
-  float v_timeStep = 0.040;
-  TColor v_color(Color());
-
-  int v_g = Color().Green() - (int)(NotSoRandom::randomNum(190,210) * v_timeStep);
-  v_color.setGreen(v_g < 0 ? 0 : v_g);
-
-  int v_b = Color().Blue()  - (int)(NotSoRandom::randomNum(400,400) * v_timeStep);
-  v_color.setBlue(v_b < 0 ? 0 : v_b);
-
-  int v_a = Color().Alpha() - (int)(250.0f * v_timeStep);
-  if(v_a >= 0) {
-    v_color.setAlpha(v_a);
-    setColor(v_color);
-  } else {
-    m_killTime = i_time;
-  }
-      
-  m_velocity.x = sin((i_time + m_fireSeed) * NotSoRandom::randomNum(5,15)) * 0.004f
-    +
-    sin((i_time - m_fireSeed) * 0.1) * 0.3;
-  m_acceleration.y = 3.0;
-
-  return false;
-}
-
-bool ParticlesSourceFire::updateToTime(int i_time, Vector2f i_gravity) {
-  if(ParticlesSource::updateToTime(i_time, i_gravity)) {
-    /* Generate fire */
-    /* maximum 5s for a fire particule, but it can be destroyed before */
-    ParticlesSource::addParticle(Vector2f(NotSoRandom::randomNum(-1,1),NotSoRandom::randomNum(0.1,0.3)), i_time + 500);
-    return true;
-  }
-  return false;
-}
-
-bool ParticlesSourceDebris::updateToTime(int i_time, Vector2f i_gravity) {
-  return ParticlesSource::updateToTime(i_time, i_gravity);
-}
-
-bool EntityParticle::updateToTime(int i_time, Vector2f i_gravity) {
-  float v_timeStep = 0.025;
-
-  m_velocity += m_acceleration * v_timeStep;
-  setDynamicPosition(DynamicPosition() + m_velocity * v_timeStep);
-  m_angVel   += m_angAcc       * v_timeStep;
-  m_ang      += m_angVel       * v_timeStep;
-
-  return true;
-}
-
-int EntityParticle::KillTime() const {
-  return m_killTime;
-}
-
 void Entity::setDynamicPosition(const Vector2f& i_dynamicPosition) {
   m_dynamicPosition = i_dynamicPosition;
   m_isBBoxDirty = true;
 }
 
-EntityParticle::EntityParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime)
-: Entity("") {
-  setDynamicPosition(i_position);
-  m_velocity 	 = i_velocity;
-  m_killTime 	 = i_killTime;
-  m_acceleration = Vector2f(0,0);
-  m_ang          = 0;
-  m_angAcc       = 0;
-  m_angVel       = 0;
-  setColor(TColor(255, 255, 255, 255));
-  setSize(0.5);
-}
-
-EntityParticle::~EntityParticle() {
-}
 
 void Entity::saveXml(FileHandle *i_pfh) {
   FS::writeLineF(i_pfh,"\t<entity id=\"%s\" typeid=\"%s\">", Id().c_str(), Entity::SpecialityToStr(Speciality()).c_str());
@@ -433,12 +233,17 @@ void Entity::saveXml(FileHandle *i_pfh) {
   FS::writeLineF(i_pfh,"\t</entity>");
 }
 
-EntitySpeciality Entity::SpecialityFromStr(std::string i_typeStr) {
-  if(i_typeStr == "PlayerStart")    return ET_ISSTART;
-  if(i_typeStr == "EndOfLevel")     return ET_MAKEWIN;
-  if(i_typeStr == "Wrecker")        return ET_KILL;
-  if(i_typeStr == "Strawberry")     return ET_ISTOTAKE;
-  if(i_typeStr == "ParticleSource") return ET_PARTICLES_SOURCE;
+EntitySpeciality Entity::SpecialityFromStr(std::string& i_typeStr) {
+  if(i_typeStr == "PlayerStart")
+    return ET_ISSTART;
+  if(i_typeStr == "EndOfLevel")
+    return ET_MAKEWIN;
+  if(i_typeStr == "Wrecker")
+    return ET_KILL;
+  if(i_typeStr == "Strawberry")
+    return ET_ISTOTAKE;
+  if(i_typeStr == "ParticleSource")
+    return ET_PARTICLES_SOURCE;
 
   return ET_NONE;
 }
@@ -684,12 +489,83 @@ Entity* Entity::readFromBinary(FileHandle *i_pfh) {
 		       v_spriteName, v_typeName);
 }
 
+
+
+
+
+
+
+
+int ParticlesSource::m_totalOfParticles = 0;
+bool ParticlesSource::m_allowParticleGeneration = true;
+
+void ParticlesSource::setAllowParticleGeneration(bool i_value) {
+  m_allowParticleGeneration = i_value;
+}
+
+ParticlesSource::ParticlesSource(const std::string& i_id, int i_particleTime_increment)
+  : Entity(i_id) {
+  m_lastParticleTime       = 0;
+  m_particleTime_increment = i_particleTime_increment;
+  m_type                   = None;
+}
+
+ParticlesSource::~ParticlesSource() {
+  deleteParticles();
+}
+
+void ParticlesSource::loadToPlay() {
+  Entity::loadToPlay();
+  m_lastParticleTime = 0;
+} 
+
+void ParticlesSource::unloadToPlay() {
+  Entity::unloadToPlay();
+
+  deleteParticles();
+}
+
+bool ParticlesSource::updateToTime(int i_time, Vector2f i_gravity) {
+  unsigned int i;
+
+  if(i_time > m_lastParticleTime + m_particleTime_increment) {  
+    i = 0;
+    while(i < m_particles.size()) {
+      if(i_time > m_particles[i]->KillTime()) {
+	addDeadParticle(m_particles[i]);
+	m_particles.erase(m_particles.begin() + i);
+	m_totalOfParticles--;
+      } else {
+	m_particles[i]->updateToTime(i_time, i_gravity);
+	i++;
+      }
+    }
+    m_lastParticleTime = i_time;
+    return true;
+  } else {
+    /* return in the past */
+    if(i_time < m_lastParticleTime - m_particleTime_increment) {
+      deleteParticles();   
+    }
+  }
+  return false;
+}
+
+bool ParticlesSource::hasReachedMaxParticles() {
+  return m_totalOfParticles >= PARTICLESSOURCE_TOTAL_MAX_PARTICLES || m_allowParticleGeneration == false;
+}
+
 void ParticlesSource::deleteParticles() {
   for(unsigned int i=0; i<m_particles.size(); i++) {
     delete m_particles[i];
   }
   m_totalOfParticles -= m_particles.size();
   m_particles.clear();
+
+  for(unsigned int i=0; i<m_deadParticles.size(); i++){
+    delete m_deadParticles[i];
+  }
+  m_deadParticles.clear();
 }
 
 std::vector<EntityParticle *>& ParticlesSource::Particles() {
@@ -700,114 +576,26 @@ EntitySpeciality ParticlesSource::Speciality() const {
   return ET_PARTICLES_SOURCE;
 }
 
-float EntityParticle::Angle() const {
-  return m_ang;
-}
-
 void ParticlesSource::addParticle(Vector2f i_velocity, int i_killTime) {
   addParticle(i_velocity, i_killTime, SpriteName());
 }
 
-void ParticlesSourceStar::addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName) {
-  if(hasReachedMaxParticles()) return;
+EntityParticle* ParticlesSource::getExistingParticle()
+{
+  if(m_deadParticles.size() > 0){
+    EntityParticle* pEntityParticle = m_deadParticles.back();
+    m_deadParticles.pop_back();
 
-  m_particles.push_back(new StarParticle(DynamicPosition(), i_killTime, SpriteName()));
-  m_totalOfParticles++;
-}
-
-StarParticle::StarParticle(const Vector2f& i_position, int i_killTime, std::string i_spriteName)
-  : EntityParticle(i_position, Vector2f(NotSoRandom::randomNum(-2,2),NotSoRandom::randomNum(0,2)), i_killTime) {
-  m_angVel       = NotSoRandom::randomNum(-60,60);
-  m_acceleration = Vector2f(0,-4);
-  setSpriteName(i_spriteName);
-}
-
-StarParticle::~StarParticle() {
-}
-
-DebrisParticle::DebrisParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
-  : EntityParticle(i_position, Vector2f(NotSoRandom::randomNum(-2,2),NotSoRandom::randomNum(0,2)), i_killTime) {
-  m_angVel       = NotSoRandom::randomNum(-60,60);
-  m_acceleration = Vector2f(0,-4);
-  int cc     	 = (int) NotSoRandom::randomNum(0, 250);
-  setColor(TColor(cc, cc, cc, 255));
-  m_velocity 	*= NotSoRandom::randomNum(1.5, 0.5);
-  m_velocity 	+= Vector2f(NotSoRandom::randomNum(-0.2,0.2), NotSoRandom::randomNum(-0.2,0.2));
-  setSize(NotSoRandom::randomNum(0.02f,0.04f));
-  setSpriteName(i_spriteName);
-}
-
-DebrisParticle::~DebrisParticle() {
-}
-
-bool DebrisParticle::updateToTime(int i_time, Vector2f i_gravity) {
-  EntityParticle::updateToTime(i_time, i_gravity);
-
-  float v_timeStep = 0.025;
-  TColor v_color(Color());
-
-  m_acceleration = i_gravity * (-5.5f / PHYS_WORLD_GRAV);
-
-  int v_a = v_color.Alpha() - (int)(120.0f * v_timeStep);
-  if(v_a >= 0) {
-    v_color.setAlpha(v_a);
-    setColor(v_color);
+    return pEntityParticle;
   } else {
-    m_killTime = i_time;
+    return NULL;
   }
-
-  return true;
 }
 
-FireParticle::FireParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
-  : EntityParticle(i_position, i_velocity, i_killTime) {
-  m_fireSeed = NotSoRandom::randomNum(0,100);
-  setSize(0.17);
-  setColor(TColor(255,255,0,255));
-  setSpriteName(i_spriteName);
+void ParticlesSource::addDeadParticle(EntityParticle* pEntityParticle)
+{
+  m_deadParticles.push_back(pEntityParticle);
 }
-
-FireParticle::~FireParticle() {
-}
-
-SmokeParticle::SmokeParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName) 
-  : EntityParticle(i_position, i_velocity, i_killTime) {
-  int cc   = (int) NotSoRandom::randomNum(0, 50);
-  setColor(TColor(cc, cc, cc, 255));
-  setSize(NotSoRandom::randomNum(0, 0.2));
-  m_angVel = NotSoRandom::randomNum(-60, 60);
-  setSpriteName(i_spriteName);
-}
-
-SmokeParticle::~SmokeParticle() {
-}
-
-
-void ParticlesSourceSmoke::addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName) {
-  if(hasReachedMaxParticles()) return;
-
-  m_particles.push_back(new SmokeParticle(DynamicPosition(), i_velocity, i_killTime, i_spriteName));
-  m_totalOfParticles++;
-}
-
-void ParticlesSourceFire::addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName) {
-  if(hasReachedMaxParticles()) return;
-
-  m_particles.push_back(new FireParticle(DynamicPosition(), i_velocity, i_killTime, i_spriteName));
-  m_totalOfParticles++;
-}
-
-void ParticlesSourceDebris::addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName) {
-  if(hasReachedMaxParticles()) return;
-
-  m_particles.push_back(new DebrisParticle(DynamicPosition(), i_velocity, i_killTime, i_spriteName));
-  m_totalOfParticles++;
-}
-
-bool ParticlesSource::hasReachedMaxParticles() {
-  return m_totalOfParticles >= PARTICLESSOURCE_TOTAL_MAX_PARTICLES || m_allowParticleGeneration == false;
-}
-
 
 
 ParticlesSourceMultiple::ParticlesSourceMultiple(const std::string& i_id, int i_particleTime_increment, unsigned int i_nbSprite)
@@ -830,3 +618,350 @@ void ParticlesSourceMultiple::setSprite(Sprite* i_sprite, unsigned int sprite)
 {
   m_sprites[sprite] = i_sprite;
 }
+
+
+
+
+ParticlesSourceSmoke::ParticlesSourceSmoke(const std::string& i_id)
+  : ParticlesSourceMultiple(i_id, PARTICLES_SOURCE_SMOKE_TIME_INCREMENT, 2) {
+  m_type = Smoke;
+}
+
+ParticlesSourceSmoke::~ParticlesSourceSmoke() {
+}
+
+void ParticlesSourceSmoke::addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName) {
+  if(hasReachedMaxParticles())
+    return;
+
+  EntityParticle* pEntityParticle = getExistingParticle();
+  if(pEntityParticle == NULL){
+    pEntityParticle = new SmokeParticle(DynamicPosition(), i_velocity,
+					i_killTime, i_spriteName);
+  } else {
+    ((SmokeParticle*)pEntityParticle)->init(DynamicPosition(), i_velocity,
+					    i_killTime, i_spriteName);
+  }
+
+  m_particles.push_back(pEntityParticle);
+  m_totalOfParticles++;
+}
+
+bool ParticlesSourceSmoke::updateToTime(int i_time, Vector2f i_gravity) {
+  if(ParticlesSource::updateToTime(i_time, i_gravity)) {
+
+    /* Generate smoke */
+    if(NotSoRandom::randomNum(0,5) < 1) {
+      if(NotSoRandom::randomNum(0,1) < 0.5) {
+	addParticle(Vector2f(NotSoRandom::randomNum(-0.6,0.6), NotSoRandom::randomNum(0.2,0.6)), i_time + 1000, std::string("Smoke1"));
+      } else {
+	addParticle(Vector2f(NotSoRandom::randomNum(-0.6,0.6), NotSoRandom::randomNum(0.2,0.6)), i_time + 1000, std::string("Smoke2"));
+      }
+    }
+    return true;
+  }
+  return false;
+}
+
+ParticlesSourceFire::ParticlesSourceFire(const std::string& i_id)
+  : ParticlesSource(i_id, PARTICLES_SOURCE_FIRE_TIME_INCREMENT) {
+  m_type = Fire;
+}
+
+ParticlesSourceFire::~ParticlesSourceFire() {
+}
+
+void ParticlesSourceFire::addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName) {
+  if(hasReachedMaxParticles())
+    return;
+
+  EntityParticle* pEntityParticle = getExistingParticle();
+  if(pEntityParticle == NULL){
+    pEntityParticle = new FireParticle(DynamicPosition(), i_velocity,
+				       i_killTime, i_spriteName);
+  } else {
+    ((FireParticle*)pEntityParticle)->init(DynamicPosition(), i_velocity,
+					   i_killTime, i_spriteName);
+  }
+
+  m_particles.push_back(pEntityParticle);
+  m_totalOfParticles++;
+}
+
+bool ParticlesSourceFire::updateToTime(int i_time, Vector2f i_gravity) {
+  if(ParticlesSource::updateToTime(i_time, i_gravity)) {
+    /* Generate fire */
+    /* maximum 5s for a fire particule, but it can be destroyed before */
+    ParticlesSource::addParticle(Vector2f(NotSoRandom::randomNum(-1,1),NotSoRandom::randomNum(0.1,0.3)), i_time + 500);
+    return true;
+  }
+  return false;
+}
+
+ParticlesSourceStar::ParticlesSourceStar(const std::string& i_id)
+  : ParticlesSource(i_id, PARTICLES_SOURCE_STAR_TIME_INCREMENT) {
+  setSpriteName("Star");
+  m_type = Star;
+}
+
+ParticlesSourceStar::~ParticlesSourceStar() {
+}
+
+void ParticlesSourceStar::addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName) {
+  if(hasReachedMaxParticles())
+    return;
+
+  EntityParticle* pEntityParticle = getExistingParticle();
+  if(pEntityParticle == NULL){
+    pEntityParticle = new StarParticle(DynamicPosition(), i_velocity,
+				       i_killTime, i_spriteName);
+  } else {
+    ((StarParticle*)pEntityParticle)->init(DynamicPosition(), i_velocity,
+					   i_killTime, i_spriteName);
+  }
+
+  m_particles.push_back(pEntityParticle);
+  m_totalOfParticles++;
+}
+
+ParticlesSourceDebris::ParticlesSourceDebris(const std::string& i_id)
+  : ParticlesSource(i_id, PARTICLES_SOURCE_DEBRIS_TIME_INCREMENT) {
+  // debris are created outside of an entity, so we have to put the
+  // sprite name by hand...
+  setSpriteName("Debris1");
+  m_type = Debris;
+}
+
+ParticlesSourceDebris::~ParticlesSourceDebris() {
+}
+
+void ParticlesSourceDebris::addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName) {
+  if(hasReachedMaxParticles())
+    return;
+
+  EntityParticle* pEntityParticle = getExistingParticle();
+  if(pEntityParticle == NULL){
+    pEntityParticle = new DebrisParticle(DynamicPosition(), i_velocity,
+					 i_killTime, i_spriteName);
+  } else {
+    ((DebrisParticle*)pEntityParticle)->init(DynamicPosition(), i_velocity,
+					     i_killTime, i_spriteName);
+  }
+
+  m_particles.push_back(pEntityParticle);
+  m_totalOfParticles++;
+}
+
+bool ParticlesSourceDebris::updateToTime(int i_time, Vector2f i_gravity) {
+  return ParticlesSource::updateToTime(i_time, i_gravity);
+}
+
+
+
+
+
+
+EntityParticle::EntityParticle()
+  : Entity("")
+{
+}
+
+EntityParticle::~EntityParticle() 
+{
+}
+
+void EntityParticle::init(const Vector2f& i_position,
+			  const Vector2f i_velocity,
+			  int i_killTime)
+{
+  setDynamicPosition(i_position);
+  m_velocity 	 = i_velocity;
+  m_killTime 	 = i_killTime;
+  m_acceleration = Vector2f(0,0);
+  m_ang          = 0;
+  m_angAcc       = 0;
+  m_angVel       = 0;
+  setColor(TColor(255, 255, 255, 255));
+  setSize(0.5);  
+}
+
+bool EntityParticle::updateToTime(int i_time, Vector2f i_gravity) {
+  float v_timeStep = 0.025;
+
+  m_velocity += m_acceleration * v_timeStep;
+  setDynamicPosition(DynamicPosition() + m_velocity * v_timeStep);
+  m_angVel   += m_angAcc       * v_timeStep;
+  m_ang      += m_angVel       * v_timeStep;
+
+  return true;
+}
+
+int EntityParticle::KillTime() const {
+  return m_killTime;
+}
+
+float EntityParticle::Angle() const {
+  return m_ang;
+}
+
+
+
+
+SmokeParticle::SmokeParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+  : EntityParticle()
+{
+  init(i_position, i_velocity, i_killTime, i_spriteName);
+}
+
+SmokeParticle::~SmokeParticle() {
+}
+
+void SmokeParticle::init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+{
+  EntityParticle::init(i_position, i_velocity, i_killTime);
+
+  int cc   = (int) NotSoRandom::randomNum(0, 50);
+  setColor(TColor(cc, cc, cc, 255));
+  setSize(NotSoRandom::randomNum(0, 0.2));
+  m_angVel = NotSoRandom::randomNum(-60, 60);
+  setSpriteName(i_spriteName);
+}
+
+bool SmokeParticle::updateToTime(int i_time, Vector2f i_gravity) {
+  EntityParticle::updateToTime(i_time, i_gravity);
+
+  float v_timeStep = 0.025;
+  TColor v_color(Color());
+
+  setSize(Size() + v_timeStep * 1.0f); /* grow */
+  m_acceleration = Vector2f(0.2, 0.5);  /* accelerate upwards */
+
+  int v_c = Color().Red() + (int)(NotSoRandom::randomNum(40,50) * v_timeStep);
+  v_color.setRed(v_c > 255 ? 255 : v_c);
+  v_color.setBlue(v_c > 255 ? 255 : v_c);
+  v_color.setGreen(v_c > 255 ? 255 : v_c);
+
+  int v_a = Color().Alpha() - (int)(120.0f * v_timeStep);
+  if(v_a >= 0) {
+    v_color.setAlpha(v_a);
+    setColor(v_color);
+  } else {
+    m_killTime = i_time;
+  }
+
+  return false;
+}
+
+
+FireParticle::FireParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+  : EntityParticle() 
+{
+  init(i_position, i_velocity, i_killTime, i_spriteName);
+}
+
+FireParticle::~FireParticle() {
+}
+
+void FireParticle::init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+{
+  EntityParticle::init(i_position, i_velocity, i_killTime);
+  
+  m_fireSeed = NotSoRandom::randomNum(0,100);
+  setSize(0.17);
+  setColor(TColor(255,255,0,255));
+  setSpriteName(i_spriteName);
+}
+
+bool FireParticle::updateToTime(int i_time, Vector2f i_gravity) {
+  EntityParticle::updateToTime(i_time, i_gravity);
+
+  float v_timeStep = 0.040;
+  TColor v_color(Color());
+
+  int v_g = Color().Green() - (int)(NotSoRandom::randomNum(190,210) * v_timeStep);
+  v_color.setGreen(v_g < 0 ? 0 : v_g);
+
+  int v_b = Color().Blue()  - (int)(NotSoRandom::randomNum(400,400) * v_timeStep);
+  v_color.setBlue(v_b < 0 ? 0 : v_b);
+
+  int v_a = Color().Alpha() - (int)(250.0f * v_timeStep);
+  if(v_a >= 0) {
+    v_color.setAlpha(v_a);
+    setColor(v_color);
+  } else {
+    m_killTime = i_time;
+  }
+      
+  m_velocity.x = sin((i_time + m_fireSeed) * NotSoRandom::randomNum(5,15)) * 0.004f
+    +
+    sin((i_time - m_fireSeed) * 0.1) * 0.3;
+  m_acceleration.y = 3.0;
+
+  return false;
+}
+
+
+StarParticle::StarParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+  : EntityParticle()
+{
+  init(i_position, i_velocity, i_killTime, i_spriteName);
+}
+
+StarParticle::~StarParticle() {
+}
+
+
+void StarParticle::init(const Vector2f& i_position,
+			const Vector2f i_velocity,
+			int i_killTime,
+			std::string i_spriteName)
+{
+  EntityParticle::init(i_position, i_velocity, i_killTime);
+  
+  m_angVel       = NotSoRandom::randomNum(-60,60);
+  m_acceleration = Vector2f(0,-4);
+  setSpriteName(i_spriteName);
+}
+
+DebrisParticle::DebrisParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+  : EntityParticle() 
+{
+  init(i_position, i_velocity, i_killTime, i_spriteName);
+}
+
+DebrisParticle::~DebrisParticle() {
+}
+
+void DebrisParticle::init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+{
+  EntityParticle::init(i_position, i_velocity, i_killTime);
+
+  m_angVel       = NotSoRandom::randomNum(-60,60);
+  m_acceleration = Vector2f(0,-4);
+  int cc     	 = (int) NotSoRandom::randomNum(0, 250);
+  setColor(TColor(cc, cc, cc, 255));
+  m_velocity 	*= NotSoRandom::randomNum(1.5, 0.5);
+  m_velocity 	+= Vector2f(NotSoRandom::randomNum(-0.2,0.2), NotSoRandom::randomNum(-0.2,0.2));
+  setSize(NotSoRandom::randomNum(0.02f,0.04f));
+  setSpriteName(i_spriteName); 
+}
+
+bool DebrisParticle::updateToTime(int i_time, Vector2f i_gravity) {
+  EntityParticle::updateToTime(i_time, i_gravity);
+
+  float v_timeStep = 0.025;
+  TColor v_color(Color());
+
+  m_acceleration = i_gravity * (-5.5f / PHYS_WORLD_GRAV);
+
+  int v_a = v_color.Alpha() - (int)(120.0f * v_timeStep);
+  if(v_a >= 0) {
+    v_color.setAlpha(v_a);
+    setColor(v_color);
+  } else {
+    m_killTime = i_time;
+  }
+
+  return true;
+}
+
