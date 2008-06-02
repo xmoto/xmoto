@@ -264,7 +264,7 @@ void MotoGame::cleanPlayers() {
 	    ParticlesSource *v_debris;
 	    v_debris = (ParticlesSource*) getLevelSrc()->getEntityById("BikeDebris");
 	    v_debris->setDynamicPosition(m_players[i]->getWheelSpinPoint());	
-	    v_debris->addParticle(m_players[i]->getWheelSpinDir(), getTime() + 300);
+	    v_debris->addParticle(Vector2f(randomNum(-2,2),randomNum(0,2)) /*m_players[i]->getWheelSpinDir()*/, getTime() + 300);
 	  }
 	}
       }
@@ -1084,7 +1084,8 @@ void MotoGame::cleanPlayers() {
       v_stars->loadToPlay();
       v_stars->setZ(1.0);
       for(int i=0; i<3; i++) {
-	v_stars->addParticle(Vector2f(0,0), getTime() + 500);
+	v_stars->addParticle(Vector2f(randomNum(-2,2), randomNum(0,2)),
+			     getTime() + 500);
       }
       getLevelSrc()->spawnEntity(v_stars);
 
