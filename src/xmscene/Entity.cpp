@@ -186,7 +186,7 @@ void Entity::setAlive(bool alive) {
 }
 
 
-bool Entity::updateToTime(int i_time, Vector2f i_gravity) {
+bool Entity::updateToTime(int i_time, Vector2f& i_gravity) {
   return false;
 }
 
@@ -525,7 +525,7 @@ void ParticlesSource::unloadToPlay() {
   deleteParticles();
 }
 
-bool ParticlesSource::updateToTime(int i_time, Vector2f i_gravity) {
+bool ParticlesSource::updateToTime(int i_time, Vector2f& i_gravity) {
   unsigned int i;
 
   if(i_time > m_lastParticleTime + m_particleTime_increment) {  
@@ -651,7 +651,7 @@ void ParticlesSourceSmoke::addParticle(int i_curTime) {
   m_totalOfParticles++;
 }
 
-bool ParticlesSourceSmoke::updateToTime(int i_time, Vector2f i_gravity) {
+bool ParticlesSourceSmoke::updateToTime(int i_time, Vector2f& i_gravity) {
   if(ParticlesSource::updateToTime(i_time, i_gravity) == true) {
     /* Generate smoke */
     if(NotSoRandom::randomNum(0, 5) < 1)
@@ -692,7 +692,7 @@ void ParticlesSourceFire::addParticle(int i_curTime) {
   m_totalOfParticles++;
 }
 
-bool ParticlesSourceFire::updateToTime(int i_time, Vector2f i_gravity) {
+bool ParticlesSourceFire::updateToTime(int i_time, Vector2f& i_gravity) {
   if(ParticlesSource::updateToTime(i_time, i_gravity) == true) {
     /* Generate fire */
     /* maximum 5s for a fire particule, but it can be destroyed before */
@@ -764,7 +764,7 @@ void ParticlesSourceDebris::addParticle(int i_curTime) {
   m_totalOfParticles++;
 }
 
-bool ParticlesSourceDebris::updateToTime(int i_time, Vector2f i_gravity) {
+bool ParticlesSourceDebris::updateToTime(int i_time, Vector2f& i_gravity) {
   return ParticlesSource::updateToTime(i_time, i_gravity);
 }
 
@@ -783,7 +783,7 @@ EntityParticle::~EntityParticle()
 }
 
 void EntityParticle::init(const Vector2f& i_position,
-			  const Vector2f i_velocity,
+			  const Vector2f& i_velocity,
 			  int i_killTime)
 {
   setDynamicPosition(i_position);
@@ -797,7 +797,7 @@ void EntityParticle::init(const Vector2f& i_position,
   setSize(0.5);  
 }
 
-bool EntityParticle::updateToTime(int i_time, Vector2f i_gravity) {
+bool EntityParticle::updateToTime(int i_time, Vector2f& i_gravity) {
   float v_timeStep = 0.025;
 
   m_velocity += m_acceleration * v_timeStep;
@@ -819,7 +819,7 @@ float EntityParticle::Angle() const {
 
 
 
-SmokeParticle::SmokeParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+SmokeParticle::SmokeParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName)
   : EntityParticle()
 {
   init(i_position, i_velocity, i_killTime, i_spriteName);
@@ -828,7 +828,7 @@ SmokeParticle::SmokeParticle(const Vector2f& i_position, const Vector2f i_veloci
 SmokeParticle::~SmokeParticle() {
 }
 
-void SmokeParticle::init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+void SmokeParticle::init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName)
 {
   EntityParticle::init(i_position, i_velocity, i_killTime);
 
@@ -839,7 +839,7 @@ void SmokeParticle::init(const Vector2f& i_position, const Vector2f i_velocity, 
   setSpriteName(i_spriteName);
 }
 
-bool SmokeParticle::updateToTime(int i_time, Vector2f i_gravity) {
+bool SmokeParticle::updateToTime(int i_time, Vector2f& i_gravity) {
   EntityParticle::updateToTime(i_time, i_gravity);
 
   float v_timeStep = 0.025;
@@ -865,7 +865,7 @@ bool SmokeParticle::updateToTime(int i_time, Vector2f i_gravity) {
 }
 
 
-FireParticle::FireParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+FireParticle::FireParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName)
   : EntityParticle() 
 {
   init(i_position, i_velocity, i_killTime, i_spriteName);
@@ -874,7 +874,7 @@ FireParticle::FireParticle(const Vector2f& i_position, const Vector2f i_velocity
 FireParticle::~FireParticle() {
 }
 
-void FireParticle::init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+void FireParticle::init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName)
 {
   EntityParticle::init(i_position, i_velocity, i_killTime);
   
@@ -884,7 +884,7 @@ void FireParticle::init(const Vector2f& i_position, const Vector2f i_velocity, i
   setSpriteName(i_spriteName);
 }
 
-bool FireParticle::updateToTime(int i_time, Vector2f i_gravity) {
+bool FireParticle::updateToTime(int i_time, Vector2f& i_gravity) {
   EntityParticle::updateToTime(i_time, i_gravity);
 
   float v_timeStep = 0.040;
@@ -913,7 +913,7 @@ bool FireParticle::updateToTime(int i_time, Vector2f i_gravity) {
 }
 
 
-StarParticle::StarParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+StarParticle::StarParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName)
   : EntityParticle()
 {
   init(i_position, i_velocity, i_killTime, i_spriteName);
@@ -924,7 +924,7 @@ StarParticle::~StarParticle() {
 
 
 void StarParticle::init(const Vector2f& i_position,
-			const Vector2f i_velocity,
+			const Vector2f& i_velocity,
 			int i_killTime,
 			std::string i_spriteName)
 {
@@ -935,7 +935,7 @@ void StarParticle::init(const Vector2f& i_position,
   setSpriteName(i_spriteName);
 }
 
-DebrisParticle::DebrisParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+DebrisParticle::DebrisParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName)
   : EntityParticle() 
 {
   init(i_position, i_velocity, i_killTime, i_spriteName);
@@ -944,7 +944,7 @@ DebrisParticle::DebrisParticle(const Vector2f& i_position, const Vector2f i_velo
 DebrisParticle::~DebrisParticle() {
 }
 
-void DebrisParticle::init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName)
+void DebrisParticle::init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName)
 {
   EntityParticle::init(i_position, i_velocity, i_killTime);
 
@@ -958,7 +958,7 @@ void DebrisParticle::init(const Vector2f& i_position, const Vector2f i_velocity,
   setSpriteName(i_spriteName); 
 }
 
-bool DebrisParticle::updateToTime(int i_time, Vector2f i_gravity) {
+bool DebrisParticle::updateToTime(int i_time, Vector2f& i_gravity) {
   EntityParticle::updateToTime(i_time, i_gravity);
 
   float v_timeStep = 0.025;

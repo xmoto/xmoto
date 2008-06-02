@@ -92,7 +92,7 @@ class Entity {
   virtual EntitySpeciality Speciality() const; /* replays only store one property per entity, this is this one */
   void setSpeciality(EntitySpeciality i_speciality);
 
-  virtual bool updateToTime(int i_time, Vector2f i_gravity);
+  virtual bool updateToTime(int i_time, Vector2f& i_gravity);
 
   AABB& getAABB();
 
@@ -135,7 +135,7 @@ class ParticlesSource : public Entity {
 
   virtual void loadToPlay();
   virtual void unloadToPlay();
-  virtual bool updateToTime(int i_time, Vector2f i_gravity);
+  virtual bool updateToTime(int i_time, Vector2f& i_gravity);
   std::vector<EntityParticle *> &Particles();
   virtual EntitySpeciality Speciality() const;
   virtual void addParticle(int i_curTime) = 0;
@@ -188,7 +188,7 @@ class ParticlesSourceSmoke : public ParticlesSourceMultiple {
   ParticlesSourceSmoke(const std::string& i_id);
   virtual ~ParticlesSourceSmoke();
 
-  bool updateToTime(int i_time, Vector2f i_gravity);
+  bool updateToTime(int i_time, Vector2f& i_gravity);
   void addParticle(int i_curTime);
 };
 
@@ -199,7 +199,7 @@ class ParticlesSourceFire : public ParticlesSource {
   ParticlesSourceFire(const std::string& i_id);
   virtual ~ParticlesSourceFire();
 
-  bool updateToTime(int i_time, Vector2f i_gravity);
+  bool updateToTime(int i_time, Vector2f& i_gravity);
   void addParticle(int i_curTime);
 };
 
@@ -216,7 +216,7 @@ class ParticlesSourceDebris : public ParticlesSource {
   ParticlesSourceDebris(const std::string& i_id);
   virtual ~ParticlesSourceDebris();
 
-  bool updateToTime(int i_time, Vector2f i_gravity);
+  bool updateToTime(int i_time, Vector2f& i_gravity);
   void addParticle(int i_curTime);
 };
 
@@ -231,12 +231,12 @@ class EntityParticle : public Entity {
   EntityParticle();
   virtual ~EntityParticle();
 
-  virtual  bool updateToTime(int i_time, Vector2f i_gravity);
+  virtual  bool updateToTime(int i_time, Vector2f& i_gravity);
   int           KillTime() const;
   float         Angle() const;
 
  protected:
-  void init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime);
+  void init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime);
   /* Position, velocity, and acceleration */
   Vector2f m_velocity, m_acceleration;
   /* Angular version of the above */
@@ -247,22 +247,22 @@ class EntityParticle : public Entity {
 
 class SmokeParticle : public EntityParticle {
  public:
-  SmokeParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
+  SmokeParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
   virtual ~SmokeParticle();
-  void init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
+  void init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
 
-  virtual bool updateToTime(int i_time, Vector2f i_gravity);
+  virtual bool updateToTime(int i_time, Vector2f& i_gravity);
 
  private:
 };
 
 class FireParticle : public EntityParticle {
  public:
-  FireParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
+  FireParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
   virtual ~FireParticle();
-  void init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
+  void init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
 
-  virtual bool updateToTime(int i_time, Vector2f i_gravity);
+  virtual bool updateToTime(int i_time, Vector2f& i_gravity);
 
  private:
   float m_fireSeed;
@@ -270,20 +270,20 @@ class FireParticle : public EntityParticle {
 
 class StarParticle : public EntityParticle {
  public:
-  StarParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
+  StarParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
   virtual ~StarParticle();
-  void init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
+  void init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
 
  private:
 };
 
 class DebrisParticle : public EntityParticle {
  public:
-  DebrisParticle(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
+  DebrisParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
   virtual ~DebrisParticle();
-  void init(const Vector2f& i_position, const Vector2f i_velocity, int i_killTime, std::string i_spriteName);
+  void init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
 
-  virtual bool updateToTime(int i_time, Vector2f i_gravity);
+  virtual bool updateToTime(int i_time, Vector2f& i_gravity);
 
  private:
 };
