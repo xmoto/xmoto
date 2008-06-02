@@ -315,13 +315,21 @@ void Level::revertEntityDestroyed(const std::string& i_entityId) {
 }
 
 void Level::updateToTime(MotoGame& i_scene) {
-  bool v_b;
+  int      v_time    = i_scene.getTime();
+  Vector2f v_gravity = i_scene.getGravity();
 
-  for(unsigned int i=0;i<Entities().size();i++) {
-    v_b = Entities()[i]->updateToTime(i_scene.getTime(), i_scene.getGravity());
+  std::vector<Entity*> v_entities = Entities();
+  unsigned int         size       = v_entities.size();
+
+  for(unsigned int i=0; i<size; i++) {
+    v_entities[i]->updateToTime(v_time, v_gravity);
   }
-  for(unsigned int i=0;i<EntitiesExterns().size();i++) {
-    v_b = EntitiesExterns()[i]->updateToTime(i_scene.getTime(), i_scene.getGravity());
+
+  v_entities = EntitiesExterns();
+  size       = v_entities.size();
+
+  for(unsigned int i=0; i<size; i++) {
+    v_entities[i]->updateToTime(v_time, v_gravity);
   }
 }
 
