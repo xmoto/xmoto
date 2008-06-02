@@ -576,10 +576,6 @@ EntitySpeciality ParticlesSource::Speciality() const {
   return ET_PARTICLES_SOURCE;
 }
 
-void ParticlesSource::addParticle(Vector2f i_velocity, int i_killTime) {
-  addParticle(i_velocity, i_killTime, SpriteName());
-}
-
 EntityParticle* ParticlesSource::getExistingParticle()
 {
   if(m_deadParticles.size() > 0){
@@ -630,17 +626,25 @@ ParticlesSourceSmoke::ParticlesSourceSmoke(const std::string& i_id)
 ParticlesSourceSmoke::~ParticlesSourceSmoke() {
 }
 
-void ParticlesSourceSmoke::addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName) {
-  if(hasReachedMaxParticles())
+void ParticlesSourceSmoke::addParticle(int i_curTime) {
+  if(hasReachedMaxParticles() == true)
     return;
+
+  Vector2f    v_velocity(NotSoRandom::randomNum(-0.6, 0.6),
+			 NotSoRandom::randomNum(0.2,  0.6));
+  int         v_killTime   = i_curTime + 1000;
+  std::string v_spriteName = "Smoke1";
+  if(NotSoRandom::randomNum(0,1) < 0.5){
+    v_spriteName = "Smoke2";
+  }
 
   EntityParticle* pEntityParticle = getExistingParticle();
   if(pEntityParticle == NULL){
-    pEntityParticle = new SmokeParticle(DynamicPosition(), i_velocity,
-					i_killTime, i_spriteName);
+    pEntityParticle = new SmokeParticle(DynamicPosition(), v_velocity,
+					v_killTime, v_spriteName);
   } else {
-    ((SmokeParticle*)pEntityParticle)->init(DynamicPosition(), i_velocity,
-					    i_killTime, i_spriteName);
+    ((SmokeParticle*)pEntityParticle)->init(DynamicPosition(), v_velocity,
+					    v_killTime, v_spriteName);
   }
 
   m_particles.push_back(pEntityParticle);
@@ -648,16 +652,11 @@ void ParticlesSourceSmoke::addParticle(Vector2f i_velocity, int i_killTime, std:
 }
 
 bool ParticlesSourceSmoke::updateToTime(int i_time, Vector2f i_gravity) {
-  if(ParticlesSource::updateToTime(i_time, i_gravity)) {
-
+  if(ParticlesSource::updateToTime(i_time, i_gravity) == true) {
     /* Generate smoke */
-    if(NotSoRandom::randomNum(0,5) < 1) {
-      if(NotSoRandom::randomNum(0,1) < 0.5) {
-	addParticle(Vector2f(NotSoRandom::randomNum(-0.6,0.6), NotSoRandom::randomNum(0.2,0.6)), i_time + 1000, std::string("Smoke1"));
-      } else {
-	addParticle(Vector2f(NotSoRandom::randomNum(-0.6,0.6), NotSoRandom::randomNum(0.2,0.6)), i_time + 1000, std::string("Smoke2"));
-      }
-    }
+    if(NotSoRandom::randomNum(0, 5) < 1)
+      addParticle(i_time);
+
     return true;
   }
   return false;
@@ -671,17 +670,22 @@ ParticlesSourceFire::ParticlesSourceFire(const std::string& i_id)
 ParticlesSourceFire::~ParticlesSourceFire() {
 }
 
-void ParticlesSourceFire::addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName) {
-  if(hasReachedMaxParticles())
+void ParticlesSourceFire::addParticle(int i_curTime) {
+  if(hasReachedMaxParticles() == true)
     return;
+
+  Vector2f    v_velocity(NotSoRandom::randomNum(-1,  1),
+			 NotSoRandom::randomNum(0.1, 0.3));
+  int         v_killTime   = i_curTime + 500;
+  std::string v_spriteName = SpriteName();
 
   EntityParticle* pEntityParticle = getExistingParticle();
   if(pEntityParticle == NULL){
-    pEntityParticle = new FireParticle(DynamicPosition(), i_velocity,
-				       i_killTime, i_spriteName);
+    pEntityParticle = new FireParticle(DynamicPosition(), v_velocity,
+				       v_killTime, v_spriteName);
   } else {
-    ((FireParticle*)pEntityParticle)->init(DynamicPosition(), i_velocity,
-					   i_killTime, i_spriteName);
+    ((FireParticle*)pEntityParticle)->init(DynamicPosition(), v_velocity,
+					   v_killTime, v_spriteName);
   }
 
   m_particles.push_back(pEntityParticle);
@@ -689,10 +693,10 @@ void ParticlesSourceFire::addParticle(Vector2f i_velocity, int i_killTime, std::
 }
 
 bool ParticlesSourceFire::updateToTime(int i_time, Vector2f i_gravity) {
-  if(ParticlesSource::updateToTime(i_time, i_gravity)) {
+  if(ParticlesSource::updateToTime(i_time, i_gravity) == true) {
     /* Generate fire */
     /* maximum 5s for a fire particule, but it can be destroyed before */
-    ParticlesSource::addParticle(Vector2f(NotSoRandom::randomNum(-1,1),NotSoRandom::randomNum(0.1,0.3)), i_time + 500);
+    addParticle(i_time);
     return true;
   }
   return false;
@@ -707,17 +711,21 @@ ParticlesSourceStar::ParticlesSourceStar(const std::string& i_id)
 ParticlesSourceStar::~ParticlesSourceStar() {
 }
 
-void ParticlesSourceStar::addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName) {
-  if(hasReachedMaxParticles())
+void ParticlesSourceStar::addParticle(int i_curTime) {
+  if(hasReachedMaxParticles() == true)
     return;
+
+  Vector2f    v_velocity(randomNum(-2, 2), randomNum(0, 2));
+  int         v_killTime   = i_curTime + 500;
+  std::string v_spriteName = SpriteName();
 
   EntityParticle* pEntityParticle = getExistingParticle();
   if(pEntityParticle == NULL){
-    pEntityParticle = new StarParticle(DynamicPosition(), i_velocity,
-				       i_killTime, i_spriteName);
+    pEntityParticle = new StarParticle(DynamicPosition(), v_velocity,
+				       v_killTime, v_spriteName);
   } else {
-    ((StarParticle*)pEntityParticle)->init(DynamicPosition(), i_velocity,
-					   i_killTime, i_spriteName);
+    ((StarParticle*)pEntityParticle)->init(DynamicPosition(), v_velocity,
+					   v_killTime, v_spriteName);
   }
 
   m_particles.push_back(pEntityParticle);
@@ -735,17 +743,21 @@ ParticlesSourceDebris::ParticlesSourceDebris(const std::string& i_id)
 ParticlesSourceDebris::~ParticlesSourceDebris() {
 }
 
-void ParticlesSourceDebris::addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName) {
+void ParticlesSourceDebris::addParticle(int i_curTime) {
   if(hasReachedMaxParticles())
     return;
 
+  Vector2f    v_velocity(randomNum(-2, 2), randomNum(0, 2));
+  int         v_killTime   = i_curTime + 300;
+  std::string v_spriteName = SpriteName();
+
   EntityParticle* pEntityParticle = getExistingParticle();
   if(pEntityParticle == NULL){
-    pEntityParticle = new DebrisParticle(DynamicPosition(), i_velocity,
-					 i_killTime, i_spriteName);
+    pEntityParticle = new DebrisParticle(DynamicPosition(), v_velocity,
+					 v_killTime, v_spriteName);
   } else {
-    ((DebrisParticle*)pEntityParticle)->init(DynamicPosition(), i_velocity,
-					     i_killTime, i_spriteName);
+    ((DebrisParticle*)pEntityParticle)->init(DynamicPosition(), v_velocity,
+					     v_killTime, v_spriteName);
   }
 
   m_particles.push_back(pEntityParticle);

@@ -136,10 +136,9 @@ class ParticlesSource : public Entity {
   virtual void loadToPlay();
   virtual void unloadToPlay();
   virtual bool updateToTime(int i_time, Vector2f i_gravity);
-  void addParticle(Vector2f i_velocity, int i_killTime);
-  virtual void addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName) = 0;
   std::vector<EntityParticle *> &Particles();
   virtual EntitySpeciality Speciality() const;
+  virtual void addParticle(int i_curTime) = 0;
 
   static void setAllowParticleGeneration(bool i_value);
 
@@ -148,8 +147,8 @@ class ParticlesSource : public Entity {
   }
 
  protected:
-  std::vector<EntityParticle *> m_particles;
-  std::vector<EntityParticle *> m_deadParticles;
+  std::vector<EntityParticle*> m_particles;
+  std::vector<EntityParticle*> m_deadParticles;
   particleSourceType m_type;
 
   static int m_totalOfParticles;
@@ -160,8 +159,8 @@ class ParticlesSource : public Entity {
   void addDeadParticle(EntityParticle* pEntityParticle);
 
  private:
-  int       m_lastParticleTime;
-  int       m_particleTime_increment;
+  int         m_lastParticleTime;
+  int         m_particleTime_increment;
   static bool m_allowParticleGeneration;
 
   void deleteParticles();
@@ -190,7 +189,7 @@ class ParticlesSourceSmoke : public ParticlesSourceMultiple {
   virtual ~ParticlesSourceSmoke();
 
   bool updateToTime(int i_time, Vector2f i_gravity);
-  void addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName);
+  void addParticle(int i_curTime);
 };
 
 
@@ -201,9 +200,7 @@ class ParticlesSourceFire : public ParticlesSource {
   virtual ~ParticlesSourceFire();
 
   bool updateToTime(int i_time, Vector2f i_gravity);
-  void addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName);
-
- private:
+  void addParticle(int i_curTime);
 };
 
 class ParticlesSourceStar : public ParticlesSource {
@@ -211,9 +208,7 @@ class ParticlesSourceStar : public ParticlesSource {
   ParticlesSourceStar(const std::string& i_id);
   virtual ~ParticlesSourceStar();
 
-  void addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName);
-
- private:
+  void addParticle(int i_curTime);
 };
 
 class ParticlesSourceDebris : public ParticlesSource {
@@ -222,10 +217,7 @@ class ParticlesSourceDebris : public ParticlesSource {
   virtual ~ParticlesSourceDebris();
 
   bool updateToTime(int i_time, Vector2f i_gravity);
-  void addParticle(Vector2f i_velocity, int i_killTime);
-  void addParticle(Vector2f i_velocity, int i_killTime, std::string i_spriteName);
-
- private:
+  void addParticle(int i_curTime);
 };
 
 
