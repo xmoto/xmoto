@@ -766,18 +766,20 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
       return;
     }
 
-    GameApp::instance()->getDrawLib()->drawBox(Vector2f(x,y),Vector2f(x+nWidth,y+nHeight),1,
+    DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
+
+    pDrawlib->drawBox(Vector2f(x,y),Vector2f(x+nWidth,y+nHeight),1,
 				       MAKE_COLOR(0,0,0,MINIMAPALPHA),
 				       MAKE_COLOR(255,255,255,MINIMAPALPHA));
     // the scissor zone is in the screen coordinates
     Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();
 
     unsigned int y_translate = bottomLeft.y/2;
-    if((unsigned int)bottomLeft.y != GameApp::instance()->getDrawLib()->getDispHeight()
+    if((unsigned int)bottomLeft.y != pDrawlib->getDispHeight()
        || i_scene->getNumberCameras() == 1){
       y_translate = 0;
     }
-    GameApp::instance()->getDrawLib()->setClipRect(bottomLeft.x + x+1,
+    pDrawlib->setClipRect(bottomLeft.x + x+1,
 			 y+1 - y_translate,
 			 nWidth-2,nHeight-2);
 
@@ -800,6 +802,8 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
     /* Render blocks */
     std::vector<Block*> Blocks;
 
+    pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
+
     for(int layer=-1; layer<=0; layer++){
       Blocks = i_scene->getCollisionHandler()->getStaticBlocksNearPosition(mapBBox, layer);
       for(unsigned int i=0; i<Blocks.size(); i++) {
@@ -810,14 +814,14 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
 	  for(unsigned int j=0; j<ConvexBlocks.size(); j++) {
 	    Vector2f Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition(); 	 
 
-	    GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_POLYGON); 	 
-	    GameApp::instance()->getDrawLib()->setColorRGB(128,128,128);
+	    pDrawlib->startDraw(DRAW_MODE_POLYGON); 	 
+	    pDrawlib->setColorRGB(128,128,128);
 	    /* TOFIX::what's THAT ??!? -->> put all the vertices in a vector and draw them in one opengl call ! */
 	    for(unsigned int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) { 	 
 	      Vector2f P = Center + ConvexBlocks[j]->Vertices()[k]->Position(); 	 
 	      MINIVERTEX(P.x,P.y);
 	    } 	 
-	    GameApp::instance()->getDrawLib()->endDraw();
+	    pDrawlib->endDraw();
 	  }
 	}
       }
@@ -832,8 +836,8 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
       if(Blocks[i]->isBackground() == false && Blocks[i]->getLayer() == -1) {
 	std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
 	for(unsigned int j=0; j<ConvexBlocks.size(); j++) {
-	  GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	  GameApp::instance()->getDrawLib()->setColorRGB(128,128,128);
+	  pDrawlib->startDraw(DRAW_MODE_POLYGON);
+	  pDrawlib->setColorRGB(128,128,128);
 	  /* Build rotation matrix for block */
 	  float fR[4];
 	  fR[0] = cosf(Blocks[i]->DynamicRotation()); fR[1] = -sinf(Blocks[i]->DynamicRotation());
@@ -849,7 +853,7 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
 	    MINIVERTEX(Tv.x,Tv.y);
 	  }
 	  
-	  GameApp::instance()->getDrawLib()->endDraw();
+	  pDrawlib->endDraw();
 	}
       }
     }
@@ -865,7 +869,7 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
     for(unsigned int i=0; i<i_scene->Players().size(); i++) {
       Vector2f bikePos(LEVEL_TO_SCREEN_X(i_scene->Players()[i]->getState()->CenterP.x),
 		       LEVEL_TO_SCREEN_Y(i_scene->Players()[i]->getState()->CenterP.y));
-      GameApp::instance()->getDrawLib()->drawCircle(bikePos, 3, 0, MAKE_COLOR(255,255,255,255), 0);
+      pDrawlib->drawCircle(bikePos, 3, 0, MAKE_COLOR(255,255,255,255), 0);
     }
     
     /* Render ghost position too? */
@@ -874,7 +878,7 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
 
       Vector2f ghostPos(LEVEL_TO_SCREEN_X(v_ghost->getState()->CenterP.x),
 			LEVEL_TO_SCREEN_Y(v_ghost->getState()->CenterP.y));
-      GameApp::instance()->getDrawLib()->drawCircle(ghostPos, 3, 0, MAKE_COLOR(96,96,150,255), 0);
+      pDrawlib->drawCircle(ghostPos, 3, 0, MAKE_COLOR(96,96,150,255), 0);
     }
 
     /* FIX::display only visible entities */
@@ -884,13 +888,13 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
       Vector2f entityPos(LEVEL_TO_SCREEN_X(Entities[i]->DynamicPosition().x),
 			 LEVEL_TO_SCREEN_Y(Entities[i]->DynamicPosition().y));
       if(Entities[i]->DoesMakeWin()) {
-        GameApp::instance()->getDrawLib()->drawCircle(entityPos, 3, 0, MAKE_COLOR(255,0,255,255), 0);
+        pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(255,0,255,255), 0);
       }
       else if(Entities[i]->IsToTake()) {
-        GameApp::instance()->getDrawLib()->drawCircle(entityPos, 3, 0, MAKE_COLOR(255,0,0,255), 0);
+        pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(255,0,0,255), 0);
       }
       else if(Entities[i]->DoesKill()) {
-        GameApp::instance()->getDrawLib()->drawCircle(entityPos, 3, 0, MAKE_COLOR(0,0,70,255), 0);
+        pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(0,0,70,255), 0);
       }
     }
     
@@ -898,7 +902,7 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
     glDisable(GL_SCISSOR_TEST);
 #endif
     //keesj:todo replace with setClipRect(NULL) in drawlib
-    GameApp::instance()->getDrawLib()->setClipRect(0,0,GameApp::instance()->getDrawLib()->getDispWidth(),GameApp::instance()->getDrawLib()->getDispHeight());
+    pDrawlib->setClipRect(0,0,pDrawlib->getDispWidth(),pDrawlib->getDispHeight());
   }
 
 void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
@@ -2461,7 +2465,6 @@ void GameRenderer::_RenderParticle(MotoGame* i_scene, ParticlesSource* i_source)
 			      i_source->Particles()[j]->Angle(),
 			      i_source->Particles()[j]->Color());
 	}
-	GameApp::instance()->getDrawLib()->removePropertiesAfterEnd();
       }
     }
     break;
@@ -2479,7 +2482,6 @@ void GameRenderer::_RenderParticle(MotoGame* i_scene, ParticlesSource* i_source)
 			      i_source->Particles()[j]->Angle(),
 			      i_source->Particles()[j]->Color());
 	}
-	GameApp::instance()->getDrawLib()->removePropertiesAfterEnd();
       }
     }
     break;
@@ -2507,7 +2509,6 @@ void GameRenderer::_RenderParticle(MotoGame* i_scene, ParticlesSource* i_source)
 				i_source->Particles()[j]->Color());
 	  }
 	}
-	GameApp::instance()->getDrawLib()->removePropertiesAfterEnd();
       }
     }
     break;
@@ -2531,7 +2532,6 @@ void GameRenderer::_RenderParticle(MotoGame* i_scene, ParticlesSource* i_source)
 				i_source->Particles()[j]->Color());
 	  }
 	}
-	GameApp::instance()->getDrawLib()->removePropertiesAfterEnd();
       }
     }
     break;

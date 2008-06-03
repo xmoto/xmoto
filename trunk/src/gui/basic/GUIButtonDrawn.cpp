@@ -60,8 +60,8 @@ void UIButtonDrawn::setBorder(int i_border) {
 
 void UIButtonDrawn::paint() {
   int x, y;
-  Color c1,c2,c3,c4;
-  c1=c2=c3=c4=MAKE_COLOR(255,255,255,(int)(255*getOpacity()/100));
+  Color c1, c2, c3, c4;
+  c1 = c2 = c3 = c4 = MAKE_COLOR(255,255,255,(int)(255*getOpacity()/100));
 
   float fX1 = 0.0;
   float fY1 = 0.0;
@@ -69,41 +69,45 @@ void UIButtonDrawn::paint() {
   float fY2 = 1.0;
   int cx = getAbsPosX() + m_border;
   int cy = getAbsPosY() + m_border;
-  int w = getPosition().nWidth  - m_border * 2;
-  int h = getPosition().nHeight - m_border * 2;
+  int w  = getPosition().nWidth  - m_border * 2;
+  int h  = getPosition().nHeight - m_border * 2;
 
-  if(isUglyMode()) {
-  } else {
+  if(isUglyMode() == false) {
     if(m_textureUnpressed != NULL && m_texturePressed != NULL) {
       switch(m_State) {
 	case UI_BUTTON_STATE_PRESSED:
 	if(m_bHover) {
-	  getApp()->getDrawLib()->setTexture(m_textureHover, BLEND_MODE_A);
+	  m_drawLib->setTexture(m_textureHover, BLEND_MODE_A);
 	} else {
-	  getApp()->getDrawLib()->setTexture(m_texturePressed, BLEND_MODE_A);
+	  m_drawLib->setTexture(m_texturePressed, BLEND_MODE_A);
 	}
         if(!isMouseLDown()) {
 	  m_State = UI_BUTTON_STATE_UNPRESSED;
 	}
 	break;
 	default:
-	getApp()->getDrawLib()->setTexture(m_textureUnpressed, BLEND_MODE_A);
+	m_drawLib->setTexture(m_textureUnpressed, BLEND_MODE_A);
       }
-      
-      getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-      getApp()->getDrawLib()->setColor(c1);
-      getApp()->getDrawLib()->glTexCoord(fX1,fY1);
-      getApp()->getDrawLib()->glVertexSP(cx,cy);
-      getApp()->getDrawLib()->setColor(c2);
-      getApp()->getDrawLib()->glTexCoord(fX2,fY1);        
-      getApp()->getDrawLib()->glVertexSP(cx+w,cy);
-      getApp()->getDrawLib()->setColor(c3);
-      getApp()->getDrawLib()->glTexCoord(fX2,fY2);
-      getApp()->getDrawLib()->glVertexSP(cx+w,cy+h);
-      getApp()->getDrawLib()->setColor(c4);
-      getApp()->getDrawLib()->glTexCoord(fX1,fY2);
-      getApp()->getDrawLib()->glVertexSP(cx,cy+h);
-      getApp()->getDrawLib()->endDraw();
+
+      m_drawLib->startDraw(DRAW_MODE_POLYGON);
+
+      m_drawLib->setColor(c1);
+      m_drawLib->glTexCoord(fX1,fY1);
+      m_drawLib->glVertexSP(cx, cy);
+
+      m_drawLib->setColor(c2);
+      m_drawLib->glTexCoord(fX2,fY1);        
+      m_drawLib->glVertexSP(cx+w, cy);
+
+      m_drawLib->setColor(c3);
+      m_drawLib->glTexCoord(fX2,fY2);
+      m_drawLib->glVertexSP(cx+w, cy+h);
+
+      m_drawLib->setColor(c4);
+      m_drawLib->glTexCoord(fX1,fY2);
+      m_drawLib->glVertexSP(cx, cy+h);
+
+      m_drawLib->endDraw();
     }
   }
   

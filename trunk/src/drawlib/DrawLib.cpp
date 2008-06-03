@@ -147,68 +147,83 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Draw rectangle border */
     if(fBorder>0.0f && GET_ALPHA(Front)>0) {
       startDraw(DRAW_MODE_POLYGON);
+
       setColor(Front);
-      if(bAlpha) { setBlendMode(BLEND_MODE_A); }
-      glVertexSP(A.x,A.y);
-      glVertexSP(A.x,B.y);
-      glVertexSP(A.x+fBorder,B.y);
-      glVertexSP(A.x+fBorder,A.y);
+      if(bAlpha)
+	setBlendMode(BLEND_MODE_A);
+      glVertexSP(A.x, A.y);
+      glVertexSP(A.x, B.y);
+      glVertexSP(A.x+fBorder, B.y);
+      glVertexSP(A.x+fBorder, A.y);
       endDraw();
       startDraw(DRAW_MODE_POLYGON);
-      if(bAlpha) { setBlendMode(BLEND_MODE_A); }
+
+      if(bAlpha)
+	setBlendMode(BLEND_MODE_A);
       setColor(Front);
-      glVertexSP(B.x-fBorder,A.y);
-      glVertexSP(B.x-fBorder,B.y);
-      glVertexSP(B.x,B.y);
-      glVertexSP(B.x,A.y);
+      glVertexSP(B.x-fBorder, A.y);
+      glVertexSP(B.x-fBorder, B.y);
+      glVertexSP(B.x, B.y);
+      glVertexSP(B.x, A.y);
       endDraw();
       startDraw(DRAW_MODE_POLYGON);
-      if(bAlpha) { setBlendMode(BLEND_MODE_A); }
+
+      if(bAlpha)
+	setBlendMode(BLEND_MODE_A);
       setColor(Front);
-      glVertexSP(A.x,A.y);
-      glVertexSP(A.x,A.y+fBorder);
-      glVertexSP(B.x,A.y+fBorder);
-      glVertexSP(B.x,A.y);
+      glVertexSP(A.x, A.y);
+      glVertexSP(A.x, A.y+fBorder);
+      glVertexSP(B.x, A.y+fBorder);
+      glVertexSP(B.x, A.y);
       endDraw();
       startDraw(DRAW_MODE_POLYGON);
-      if(bAlpha) { setBlendMode(BLEND_MODE_A); }
+
+      if(bAlpha)
+	setBlendMode(BLEND_MODE_A);
       setColor(Front);
-      setColor(Front);
-      glVertexSP(A.x,B.y-fBorder);
-      glVertexSP(A.x,B.y);
-      glVertexSP(B.x,B.y);
-      glVertexSP(B.x,B.y-fBorder);
+      glVertexSP(A.x, B.y-fBorder);
+      glVertexSP(A.x, B.y);
+      glVertexSP(B.x, B.y);
+      glVertexSP(B.x, B.y-fBorder);
       endDraw();
       
     }
     
-   if(bAlpha) { setBlendMode(BLEND_MODE_NONE); }
+   if(bAlpha)
+     setBlendMode(BLEND_MODE_NONE);
   }
   
     
   /*===========================================================================
   Primitive: circle
   ===========================================================================*/
-  void DrawLib::drawCircle(const Vector2f &Center,float fRadius,float fBorder,Color Back,Color Front) {
+  void DrawLib::drawCircle(const Vector2f &Center, float fRadius, float fBorder, Color Back, Color Front) {
+    setTexture(NULL, BLEND_MODE_NONE);
+
     /* Alpha? */
     bool bAlpha = false;
-    if(GET_ALPHA(Back)!=255 || GET_ALPHA(Front)!=255) bAlpha=true;
-    bAlpha = true;
+    if(GET_ALPHA(Back) != 255 || GET_ALPHA(Front) != 255)
+      bAlpha = true;
     
-    if(bAlpha) { setBlendMode(BLEND_MODE_A); }
+    if(bAlpha) {
+      setBlendMode(BLEND_MODE_A);
+    }
 
     /* How many steps? */    
-    int nSteps= (int) (2.0f*(fRadius / 3.0f));
-    if(nSteps<8) nSteps=8;
-    if(nSteps>64) nSteps=64;
+    int nSteps = (int) (2.0f*(fRadius / 3.0f));
+    if(nSteps < 8)
+      nSteps=8;
+    if(nSteps > 64)
+      nSteps=64;
     
     /* Draw circle background */
-    if(GET_ALPHA(Back)>0) {
+    if(GET_ALPHA(Back) > 0) {
       startDraw(DRAW_MODE_POLYGON);
-      if(bAlpha) { setBlendMode(BLEND_MODE_A); }
+      if(bAlpha)
+	setBlendMode(BLEND_MODE_A);
       setColor(Back);
       for(int i=0;i<nSteps;i++) {
-        float rads = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
+        float rads = (PI * 2.0f * (float)i) / (float)nSteps;            
         glVertexSP(Center.x + fRadius*sin(rads),Center.y + fRadius*cos(rads));
       }
       endDraw();
@@ -217,11 +232,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Draw circle border */
     if(fBorder>0.0f && GET_ALPHA(Front)>0) {
       for(int i=0;i<nSteps;i++) {
-        float rads1 = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
-        float rads2 = (3.14159f * 2.0f * (float)(i+1))/ (float)nSteps;      
+        float rads1 = (PI * 2.0f * (float)i) / (float)nSteps;            
+        float rads2 = (PI * 2.0f * (float)(i+1)) / (float)nSteps;      
   
         startDraw(DRAW_MODE_POLYGON);              
-        if(bAlpha) { setBlendMode(BLEND_MODE_A); }
+        if(bAlpha)
+	  setBlendMode(BLEND_MODE_A);
         setColor(Front);
         glVertexSP(Center.x + fRadius*sin(rads1),Center.y + fRadius*cos(rads1));
         glVertexSP(Center.x + fRadius*sin(rads2),Center.y + fRadius*cos(rads2));
@@ -232,7 +248,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }    
 
     /* Disable alpha again if we enabled it */
-   if(bAlpha) { setBlendMode(BLEND_MODE_NONE); }
+   if(bAlpha)
+     setBlendMode(BLEND_MODE_NONE);
   }
 
 void DrawLib::setDispWidth(unsigned int width) {

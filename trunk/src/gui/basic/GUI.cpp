@@ -218,19 +218,24 @@ bool UIWindow::isUglyMode() {
     /* Go through buttons... anything clicked? */
     for(unsigned int i=0;i<m_nNumButtons;i++) {
       if(m_pButtons[i]->isClicked()) {  
-        if(m_pButtons[i]->getCaption() == GAMETEXT_OK) return UI_MSGBOX_OK;
-        if(m_pButtons[i]->getCaption() == GAMETEXT_CANCEL) return UI_MSGBOX_CANCEL;
-        if(m_pButtons[i]->getCaption() == GAMETEXT_YES) return UI_MSGBOX_YES;
-        if(m_pButtons[i]->getCaption() == GAMETEXT_NO) return UI_MSGBOX_NO;
-        if(m_pButtons[i]->getCaption() == GAMETEXT_YES_FOR_ALL) return UI_MSGBOX_YES_FOR_ALL;
+        if(m_pButtons[i]->getCaption() == GAMETEXT_OK)
+	  return UI_MSGBOX_OK;
+        if(m_pButtons[i]->getCaption() == GAMETEXT_CANCEL)
+	  return UI_MSGBOX_CANCEL;
+        if(m_pButtons[i]->getCaption() == GAMETEXT_YES)
+	  return UI_MSGBOX_YES;
+        if(m_pButtons[i]->getCaption() == GAMETEXT_NO)
+	  return UI_MSGBOX_NO;
+        if(m_pButtons[i]->getCaption() == GAMETEXT_YES_FOR_ALL)
+	  return UI_MSGBOX_YES_FOR_ALL;
       }
     }
     return UI_MSGBOX_NOTHING;
   }
   
   bool UIMsgBox::setClicked(std::string Text) {
-    bool b=false;
-    for(unsigned int i=0;i<m_nNumButtons;i++) {
+    bool b = false;
+    for(unsigned int i=0; i<m_nNumButtons; i++) {
       if(m_pButtons[i]->getCaption() == Text) {
         m_pButtons[i]->setClicked(true);
         b = true;
@@ -290,13 +295,15 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
   void UIMsgBox::paint(void) {
     /* Should the OK button be disabled? (if any) */
     if(m_bTextInput && m_TextInput.empty()) {
-      for(unsigned int i=0;i<m_nNumButtons;i++) {
-        if(m_pButtons[i]->getCaption() == GAMETEXT_OK) m_pButtons[i]->enableWindow(false);
+      for(unsigned int i=0; i<m_nNumButtons; i++) {
+        if(m_pButtons[i]->getCaption() == GAMETEXT_OK)
+	  m_pButtons[i]->enableWindow(false);
       }
     }
     else {
-      for(unsigned int i=0;i<m_nNumButtons;i++) {
-        if(m_pButtons[i]->getCaption() == GAMETEXT_OK) m_pButtons[i]->enableWindow(true);
+      for(unsigned int i=0; i<m_nNumButtons; i++) {
+        if(m_pButtons[i]->getCaption() == GAMETEXT_OK)
+	  m_pButtons[i]->enableWindow(true);
       }
     }   
   
@@ -447,7 +454,8 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
   void UIWindow::putTextS(int x,int y, std::string Text,
 			  int& o_width, int &o_height,
 			  float i_xper, float i_yper) {
-    if(m_curFont == NULL) return;
+    if(m_curFont == NULL)
+      return;
 
     /* Draw text at location */
     Color c0 = MAKE_COLOR(GET_RED(getTextStyle().c0),
@@ -486,7 +494,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
    
   void UIWindow::putImage(int x,int y,int nWidth,int nHeight,Texture *pImage) {
     if(pImage != NULL) {
-      getApp()->getDrawLib()->drawImage(Vector2f(x+getAbsPosX(),y+getAbsPosY()),
+      m_drawLib->drawImage(Vector2f(x+getAbsPosX(),y+getAbsPosY()),
 					Vector2f(x+nWidth+getAbsPosX(),y+nHeight+getAbsPosY()),
 					pImage,MAKE_COLOR(255,255,255,(int)(255*getOpacity()/100)), true);
     }
@@ -505,137 +513,140 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
   }
   
   void UIWindow::putRect(int x,int y,int nWidth,int nHeight,Color c) {
-    getApp()->getDrawLib()->drawBox(Vector2f(x+getAbsPosX(),y+getAbsPosY()),
+    m_drawLib->drawBox(Vector2f(x+getAbsPosX(),y+getAbsPosY()),
                       Vector2f(x+nWidth+getAbsPosX(),y+nHeight+getAbsPosY()),
                       0,MAKE_COLOR(GET_RED(c),GET_GREEN(c),GET_BLUE(c),(int)(GET_ALPHA(c)*getOpacity()/100)),0);
   }
 
-  void UIWindow::putElem(int x,int y,int nWidth,int nHeight,UIElem Elem,bool bDisabled,bool bActive) {
-    Texture *vTexture = NULL;
+void UIWindow::putElem(int x,int y,int nWidth,int nHeight,UIElem Elem,bool bDisabled,bool bActive) {
+  m_drawLib->setTexture(NULL, BLEND_MODE_NONE);
+  Texture *vTexture = NULL;
     
-    struct _ElemTable {
-      UIElem E;
-      int nX, nY, nWidth, nHeight;
-    };
+  struct _ElemTable {
+    UIElem E;
+    int nX, nY, nWidth, nHeight;
+  };
     
-    static _ElemTable Table[] = {
-      {UI_ELEM_LARGE_BUTTON_UP,0,0,207,57},
-      {UI_ELEM_LARGE_BUTTON_DOWN,0,57,207,57},
-      {UI_ELEM_SMALL_BUTTON_UP,0,114,115,57},
-      {UI_ELEM_SMALL_BUTTON_DOWN,115,114,115,57},
-      {UI_ELEM_CHECKBUTTON_UNCHECKED_UP,222,0,34,34},
-      {UI_ELEM_CHECKBUTTON_UNCHECKED_DOWN,222,34,34,34},
-      {UI_ELEM_CHECKBUTTON_CHECKED_UP,222,68,34,34},
-      {UI_ELEM_CHECKBUTTON_CHECKED_DOWN,222,222,34,34},
-      {UI_ELEM_RADIOBUTTON_UNCHECKED_UP,34,222,34,34},
-      {UI_ELEM_RADIOBUTTON_UNCHECKED_DOWN,68,222,34,34},
-      {UI_ELEM_RADIOBUTTON_CHECKED_UP,102,222,34,34},
-      {UI_ELEM_RADIOBUTTON_CHECKED_DOWN,0,222,34,34},
-      {UI_ELEM_SCROLLBUTTON_DOWN_UP,1,180,20,20},
-      {UI_ELEM_SCROLLBUTTON_DOWN_DOWN,22,180,20,20},
-      {UI_ELEM_SCROLLBUTTON_UP_UP,43,180,20,20},
-      {UI_ELEM_SCROLLBUTTON_UP_DOWN,64,180,20,20},
-      {UI_ELEM_SCROLLBUTTON_RIGHT_UP,85,180,20,20},
-      {UI_ELEM_SCROLLBUTTON_RIGHT_DOWN,106,180,20,20},
-      {UI_ELEM_SCROLLBUTTON_LEFT_UP,127,180,20,20},
-      {UI_ELEM_SCROLLBUTTON_LEFT_DOWN,148,180,20,20},
-      {UI_ELEM_FRAME_TL,169,180,8,8},
-      {UI_ELEM_FRAME_TM,172,180,20,8},
-      {UI_ELEM_FRAME_TR,187,180,8,8},
-      {UI_ELEM_FRAME_ML,169,189,8,8},
-      {UI_ELEM_FRAME_MM,178,184,8,20},
-      {UI_ELEM_FRAME_MR,187,184,8,20},
-      {UI_ELEM_FRAME_BL,169,198,8,8},
-      {UI_ELEM_FRAME_BM,172,198,20,8},
-      {UI_ELEM_FRAME_BR,187,198,8,8},
-      {(UIElem)-1,-1,-1,-1,-1}
-    };
+  static _ElemTable Table[] = {
+    {UI_ELEM_LARGE_BUTTON_UP,0,0,207,57},
+    {UI_ELEM_LARGE_BUTTON_DOWN,0,57,207,57},
+    {UI_ELEM_SMALL_BUTTON_UP,0,114,115,57},
+    {UI_ELEM_SMALL_BUTTON_DOWN,115,114,115,57},
+    {UI_ELEM_CHECKBUTTON_UNCHECKED_UP,222,0,34,34},
+    {UI_ELEM_CHECKBUTTON_UNCHECKED_DOWN,222,34,34,34},
+    {UI_ELEM_CHECKBUTTON_CHECKED_UP,222,68,34,34},
+    {UI_ELEM_CHECKBUTTON_CHECKED_DOWN,222,222,34,34},
+    {UI_ELEM_RADIOBUTTON_UNCHECKED_UP,34,222,34,34},
+    {UI_ELEM_RADIOBUTTON_UNCHECKED_DOWN,68,222,34,34},
+    {UI_ELEM_RADIOBUTTON_CHECKED_UP,102,222,34,34},
+    {UI_ELEM_RADIOBUTTON_CHECKED_DOWN,0,222,34,34},
+    {UI_ELEM_SCROLLBUTTON_DOWN_UP,1,180,20,20},
+    {UI_ELEM_SCROLLBUTTON_DOWN_DOWN,22,180,20,20},
+    {UI_ELEM_SCROLLBUTTON_UP_UP,43,180,20,20},
+    {UI_ELEM_SCROLLBUTTON_UP_DOWN,64,180,20,20},
+    {UI_ELEM_SCROLLBUTTON_RIGHT_UP,85,180,20,20},
+    {UI_ELEM_SCROLLBUTTON_RIGHT_DOWN,106,180,20,20},
+    {UI_ELEM_SCROLLBUTTON_LEFT_UP,127,180,20,20},
+    {UI_ELEM_SCROLLBUTTON_LEFT_DOWN,148,180,20,20},
+    {UI_ELEM_FRAME_TL,169,180,8,8},
+    {UI_ELEM_FRAME_TM,172,180,20,8},
+    {UI_ELEM_FRAME_TR,187,180,8,8},
+    {UI_ELEM_FRAME_ML,169,189,8,8},
+    {UI_ELEM_FRAME_MM,178,184,8,20},
+    {UI_ELEM_FRAME_MR,187,184,8,20},
+    {UI_ELEM_FRAME_BL,169,198,8,8},
+    {UI_ELEM_FRAME_BM,172,198,20,8},
+    {UI_ELEM_FRAME_BR,187,198,8,8},
+    {(UIElem)-1,-1,-1,-1,-1}
+  };
         
-    int nElem = 0;
-    _ElemTable *p = NULL;
-    while(Table[nElem].E != -1) {
-      if(Table[nElem].E == Elem) {
-        p = &Table[nElem];
-        break;
-      }
-      nElem++;
+  int nElem = 0;
+  _ElemTable *p = NULL;
+  while(Table[nElem].E != -1) {
+    if(Table[nElem].E == Elem) {
+      p = &Table[nElem];
+      break;
     }
-    
-    if(p==NULL)
-      return;
-    
-    int w = nWidth;
-    int h = nHeight;
-
-    if(w < 0)
-      w = p->nWidth;
-    if(h < 0)
-      h = p->nHeight;
-    
-    float fX1 = ((float)p->nX) / 256.0f;
-    float fY1 = ((float)p->nY) / 256.0f;
-    float fX2 = ((float)p->nX+p->nWidth) / 256.0f;
-    float fY2 = ((float)p->nY+p->nHeight) / 256.0f;
-    
-    Color c1,c2,c3,c4;
-    c1=c2=c3=c4=MAKE_COLOR(255,255,255,(int)(255*getOpacity()/100));
-    
-    int cx = getAbsPosX() + x;
-    int cy = getAbsPosY() + y;
-    vTexture =NULL;
-    /* Nice. Now we know what to draw */    
-    if(bDisabled) {
-      vTexture = UITexture::getMiscDisabledTexture();
-    } else {
-      vTexture = UITexture::getMiscTexture();
-    }
-    getApp()->getDrawLib()->setTexture(vTexture,BLEND_MODE_A);
-    getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-
-    getApp()->getDrawLib()->setColor(c1);
-    getApp()->getDrawLib()->glTexCoord(fX1,fY1);
-    getApp()->getDrawLib()->glVertexSP(cx,cy);
-
-    getApp()->getDrawLib()->setColor(c2);
-    getApp()->getDrawLib()->glTexCoord(fX2,fY1);        
-    getApp()->getDrawLib()->glVertexSP(cx+w,cy);
-
-    getApp()->getDrawLib()->setColor(c3);
-    getApp()->getDrawLib()->glTexCoord(fX2,fY2);        
-    getApp()->getDrawLib()->glVertexSP(cx+w,cy+h);
-
-    getApp()->getDrawLib()->setColor(c4);
-    getApp()->getDrawLib()->glTexCoord(fX1,fY2);
-    getApp()->getDrawLib()->glVertexSP(cx,cy+h);
-
-    getApp()->getDrawLib()->endDraw();
-    
-    /* Active? If so we want a nice blinking overlay */
-    if(bActive && bDisabled == false) {
-      float s = 160 + 76*sin(getApp()->getXMTime()*10);
-      int n = (int)s;
-      if(n<0) n=0;
-      if(n>255) n=255; /* just to be sure, i'm lazy */    
-      c1=c2=c3=c4=MAKE_COLOR(255,255,255,(int)(n*getOpacity()/100));
-
-      vTexture = UITexture::getMiscActiveTexture();
-      getApp()->getDrawLib()->setTexture(vTexture,BLEND_MODE_A);
-      getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-      getApp()->getDrawLib()->setColor(c1);
-      getApp()->getDrawLib()->glTexCoord(fX1,fY1);
-      getApp()->getDrawLib()->glVertexSP(cx,cy);
-      getApp()->getDrawLib()->setColor(c2);
-      getApp()->getDrawLib()->glTexCoord(fX2,fY1);        
-      getApp()->getDrawLib()->glVertexSP(cx+w,cy);
-      getApp()->getDrawLib()->setColor(c3);
-      getApp()->getDrawLib()->glTexCoord(fX2,fY2);
-      getApp()->getDrawLib()->glVertexSP(cx+w,cy+h);
-      getApp()->getDrawLib()->setColor(c4);
-      getApp()->getDrawLib()->glTexCoord(fX1,fY2);
-      getApp()->getDrawLib()->glVertexSP(cx,cy+h);
-      getApp()->getDrawLib()->endDraw();
-    }
+    nElem++;
   }
+    
+  if(p==NULL)
+    return;
+    
+  int w = nWidth;
+  int h = nHeight;
+
+  if(w < 0)
+    w = p->nWidth;
+  if(h < 0)
+    h = p->nHeight;
+
+  float fX1 = ((float)p->nX) / 256.0f;
+  float fY1 = ((float)p->nY) / 256.0f;
+  float fX2 = ((float)p->nX+p->nWidth) / 256.0f;
+  float fY2 = ((float)p->nY+p->nHeight) / 256.0f;
+
+  Color c1,c2,c3,c4;
+  c1=c2=c3=c4=MAKE_COLOR(255,255,255,(int)(255*getOpacity()/100));
+
+  int cx = getAbsPosX() + x;
+  int cy = getAbsPosY() + y;
+  vTexture =NULL;
+  /* Nice. Now we know what to draw */    
+  if(bDisabled) {
+    vTexture = UITexture::getMiscDisabledTexture();
+  } else {
+    vTexture = UITexture::getMiscTexture();
+  }
+  m_drawLib->setTexture(vTexture, BLEND_MODE_A);
+  m_drawLib->startDraw(DRAW_MODE_POLYGON);
+
+  m_drawLib->setColor(c1);
+  m_drawLib->glTexCoord(fX1,fY1);
+  m_drawLib->glVertexSP(cx,cy);
+
+  m_drawLib->setColor(c2);
+  m_drawLib->glTexCoord(fX2,fY1);        
+  m_drawLib->glVertexSP(cx+w,cy);
+
+  m_drawLib->setColor(c3);
+  m_drawLib->glTexCoord(fX2,fY2);        
+  m_drawLib->glVertexSP(cx+w,cy+h);
+
+  m_drawLib->setColor(c4);
+  m_drawLib->glTexCoord(fX1,fY2);
+  m_drawLib->glVertexSP(cx,cy+h);
+
+  m_drawLib->endDraw();
+    
+  /* Active? If so we want a nice blinking overlay */
+  if(bActive && bDisabled == false) {
+    float s = 160 + 76*sin(getApp()->getXMTime()*10);
+    int n = (int)s;
+    if(n<0)
+      n=0;
+    if(n>255)
+      n=255; /* just to be sure, i'm lazy */    
+    c1=c2=c3=c4=MAKE_COLOR(255,255,255,(int)(n*getOpacity()/100));
+
+    vTexture = UITexture::getMiscActiveTexture();
+    m_drawLib->setTexture(vTexture,BLEND_MODE_A);
+    m_drawLib->startDraw(DRAW_MODE_POLYGON);
+    m_drawLib->setColor(c1);
+    m_drawLib->glTexCoord(fX1,fY1);
+    m_drawLib->glVertexSP(cx,cy);
+    m_drawLib->setColor(c2);
+    m_drawLib->glTexCoord(fX2,fY1);        
+    m_drawLib->glVertexSP(cx+w,cy);
+    m_drawLib->setColor(c3);
+    m_drawLib->glTexCoord(fX2,fY2);
+    m_drawLib->glVertexSP(cx+w,cy+h);
+    m_drawLib->setColor(c4);
+    m_drawLib->glTexCoord(fX1,fY2);
+    m_drawLib->glVertexSP(cx,cy+h);
+    m_drawLib->endDraw();
+  }
+}
   
   /*
 largebuttonup (0,0)  (207x57)
@@ -697,7 +708,8 @@ UIRoot::UIRoot()
   
   void UIRoot::_RootPaint(int x,int y,UIWindow *pWindow,UIRect *pRect) {
     /* Hidden? */
-    if(pWindow->isHidden()) return;
+    if(pWindow->isHidden())
+      return;
   
     /* Clip rect to this window */
     UIRect WindowRect;
@@ -721,7 +733,7 @@ UIRoot::UIRoot()
         printf("Draw Rect: %d %d %d %d\n",WindowRect.nX,WindowRect.nY,WindowRect.nWidth,WindowRect.nHeight);*/
         _RootPaint(x+pWindow->getPosition().nX,y+pWindow->getPosition().nY,pWindow->getChildren()[i],&WindowRect);      
       }
-      getApp()->getDrawLib()->setClipRect(NULL);
+      m_drawLib->setClipRect(NULL);
     }
   }
   
@@ -731,8 +743,8 @@ UIRoot::UIRoot()
     /* Clip to full screen */
     Screen.nX = 0;
     Screen.nY = 0;
-    Screen.nWidth = getApp()->getDrawLib()->getDispWidth();
-    Screen.nHeight = getApp()->getDrawLib()->getDispHeight();
+    Screen.nWidth = m_drawLib->getDispWidth();
+    Screen.nHeight = m_drawLib->getDispHeight();
       
     /* Draw root's children */
 #ifdef ENABLE_OPENGL
@@ -751,24 +763,24 @@ UIRoot::UIRoot()
       int nContextHelpHeight = 20;
       
       /* Shade out bottom of screen */
-      getApp()->getDrawLib()->setBlendMode(BLEND_MODE_A);
-      getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+      m_drawLib->setBlendMode(BLEND_MODE_A);
+      m_drawLib->startDraw(DRAW_MODE_POLYGON);
       //glColor4f(0,0,0,0);//fully transparent??
-      getApp()->getDrawLib()->setColorRGBA(0,0,0,0);
-      getApp()->getDrawLib()->glVertexSP(0,getApp()->getDrawLib()->getDispHeight()-nContextHelpHeight);
-      getApp()->getDrawLib()->glVertexSP(getApp()->getDrawLib()->getDispWidth(),getApp()->getDrawLib()->getDispHeight()-nContextHelpHeight);
+      m_drawLib->setColorRGBA(0,0,0,0);
+      m_drawLib->glVertexSP(0,m_drawLib->getDispHeight()-nContextHelpHeight);
+      m_drawLib->glVertexSP(m_drawLib->getDispWidth(),m_drawLib->getDispHeight()-nContextHelpHeight);
       //glColor4f(0,0,0,0.7);
-      getApp()->getDrawLib()->setColorRGBA(0,0,0,255 * 7 / 100);
-      getApp()->getDrawLib()->glVertexSP(getApp()->getDrawLib()->getDispWidth(),getApp()->getDrawLib()->getDispHeight());
-      getApp()->getDrawLib()->glVertexSP(0,getApp()->getDrawLib()->getDispHeight());
-      getApp()->getDrawLib()->endDraw();
+      m_drawLib->setColorRGBA(0,0,0,255 * 7 / 100);
+      m_drawLib->glVertexSP(m_drawLib->getDispWidth(),m_drawLib->getDispHeight());
+      m_drawLib->glVertexSP(0,m_drawLib->getDispHeight());
+      m_drawLib->endDraw();
         
       if(!m_CurrentContextHelp.empty()) {
         /* Print help string */
-	setFont(getApp()->getDrawLib()->getFontSmall());
+	setFont(m_drawLib->getFontSmall());
 	setTextSolidColor(MAKE_COLOR(255,255,0,255));
-	putText(getApp()->getDrawLib()->getDispWidth()  -5,
-		getApp()->getDrawLib()->getDispHeight() -1,
+	putText(m_drawLib->getDispWidth()  -5,
+		m_drawLib->getDispHeight() -1,
 		m_CurrentContextHelp, -1.0, -1.0);
       }
     }
@@ -1249,7 +1261,7 @@ void UIProgressBar::paint()
   // 2.paint progress in red
   putRect(0, 0, width * m_progress / 100, height, MAKE_COLOR(255,0,0,255));
   // 3.write curOp left centered
-  setFont(getApp()->getDrawLib()->getFontSmall());
+  setFont(m_drawLib->getFontSmall());
   setTextSolidColor(MAKE_COLOR(255,255,255,128));
   putText(0, 0, m_curOp, 0.0, 0.0);
 }
