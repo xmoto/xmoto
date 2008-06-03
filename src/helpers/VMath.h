@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Vectors
   ===========================================================================*/
 #define VECTOR_COMPARE_EPSILON    0.001f
-#define PI 3.14159265
+#define PI 3.14159265f
 #define rad2deg(x) ((x)*57.295779524)
 #define deg2rad(x) ((x)*0.017453292)
 

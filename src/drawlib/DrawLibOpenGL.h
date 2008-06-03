@@ -37,7 +37,7 @@ class DrawLibOpenGL : public DrawLib {
   
   //texture coordinate
   virtual void glTexCoord(float x, float y);
-  virtual void screenProjVertex(float *x, float *y);
+  virtual void screenProjVertex(float* x, float* y);
 
   virtual void setColor(Color color);
   /**
@@ -45,14 +45,14 @@ class DrawLibOpenGL : public DrawLib {
    * the value may be NULL to disable texture
    * every end draw will reset the texture to NULL
    **/
-  virtual void setTexture(Texture * texture, BlendMode blendMode);
+  virtual void setTexture(Texture* texture, BlendMode blendMode);
   virtual void setBlendMode(BlendMode blendMode);
 
   /**
    * enables clipping and sets the clipping borders
    **/
   virtual void setClipRect(int x, int y, unsigned int w, unsigned int h);
-  virtual void setClipRect(SDL_Rect * i_clip_rect);
+  virtual void setClipRect(SDL_Rect* i_clip_rect);
   virtual void setScale(float x, float y);
   virtual void setTranslate(float x, float y);
   virtual void setMirrorY();

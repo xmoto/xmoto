@@ -160,19 +160,19 @@ void DrawLibOpenGL::glVertexSP(float x,float y) {
 }
 
 void DrawLibOpenGL::glVertex(float x,float y) {
-  glVertex2f(x,y);
+  glVertex2f(x, y);
 }
 
 void DrawLibOpenGL::glTexCoord(float x,float y){
-  glTexCoord2f(x,y);
+  glTexCoord2f(x, y);
 } 
 
-void DrawLibOpenGL::screenProjVertex(float *x,float *y) {
+void DrawLibOpenGL::screenProjVertex(float *x, float *y) {
   *y = m_nActualHeight - (*y);
 }
 
-void DrawLibOpenGL::setClipRect(int x , int y , unsigned int w , unsigned int h){
-  glScissor(x,m_nDispHeight - (y+h),w,h);
+void DrawLibOpenGL::setClipRect(int x, int y, unsigned int w, unsigned int h){
+  glScissor(x, m_nDispHeight - (y+h), w, h);
     
   m_nLScissorX = x;
   m_nLScissorY = y;
@@ -181,23 +181,23 @@ void DrawLibOpenGL::setClipRect(int x , int y , unsigned int w , unsigned int h)
 }
 
 void DrawLibOpenGL::setClipRect(SDL_Rect * clip_rect){
-  if (clip_rect != NULL){
-    setClipRect(clip_rect->x,clip_rect->y,clip_rect->w,clip_rect->h);
+  if(clip_rect != NULL){
+    setClipRect(clip_rect->x, clip_rect->y, clip_rect->w, clip_rect->h);
   }
 }
 
-void DrawLibOpenGL::getClipRect(int *px,int *py,int *pnWidth,int *pnHeight) {
+void DrawLibOpenGL::getClipRect(int *px, int *py, int *pnWidth, int *pnHeight) {
   *px = m_nLScissorX;
   *py = m_nLScissorY;
-  *pnWidth = m_nLScissorW;
+  *pnWidth  = m_nLScissorW;
   *pnHeight = m_nLScissorH;
 }  
   
-void DrawLibOpenGL::setScale(float x,float y){
+void DrawLibOpenGL::setScale(float x, float y){
   glScalef(x,y,1);
 }
-void DrawLibOpenGL::setTranslate(float x,float y){
-  glTranslatef(x,y, 0);
+void DrawLibOpenGL::setTranslate(float x, float y){
+  glTranslatef(x, y, 0);
 }
 
 void DrawLibOpenGL::setMirrorY() {
@@ -214,80 +214,82 @@ void DrawLibOpenGL::setLineWidth(float width){
   glLineWidth(width);
 }
  
-void DrawLibOpenGL::init(unsigned int nDispWidth,unsigned int nDispHeight,unsigned int nDispBPP,bool bWindowed){
-
-    
+void DrawLibOpenGL::init(unsigned int nDispWidth, unsigned int nDispHeight, unsigned int nDispBPP, bool bWindowed){
   /* Set suggestions */
-  m_nDispWidth = nDispWidth;
+  m_nDispWidth  = nDispWidth;
   m_nDispHeight = nDispHeight;
-  m_nDispBPP = nDispBPP;
-  m_bWindowed = bWindowed;
+  m_nDispBPP    = nDispBPP;
+  m_bWindowed   = bWindowed;
 
   /* Get some video info */
-  const SDL_VideoInfo *pVidInfo=SDL_GetVideoInfo();
-  if(pVidInfo==NULL)
+  const SDL_VideoInfo* pVidInfo = SDL_GetVideoInfo();
+  if(pVidInfo == NULL)
     throw Exception("(1) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
   
   /* Determine target bit depth */
-  if(m_bWindowed) 
+  if(m_bWindowed ==  true) 
     /* In windowed mode we can't tinker with the bit-depth */
     m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;      
 
   /* Setup GL stuff */
   /* 2005-10-05 ... note that we no longer ask for explicit settings... it's
      better to do it per auto */
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1); 
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); 
   
   /* Create video flags */
   int nFlags = SDL_OPENGL;
-  if(!m_bWindowed) nFlags|=SDL_FULLSCREEN;
+  if(m_bWindowed == false)
+    nFlags |= SDL_FULLSCREEN;
   
   /* At last, try to "set the video mode" */
-  if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,m_nDispBPP,nFlags))==NULL) {
+  if((m_screen=SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, m_nDispBPP, nFlags)) == NULL) {
     Logger::Log("** Warning ** : Tried to set video mode %ix%i @ %i-bit, but SDL failed (%s)\n"
 		"                Now SDL will try determining a proper mode itself.", m_nDispWidth, m_nDispHeight, m_nDispBPP, SDL_GetError());
     m_nDispBPP = 0;
 
     /* Hmm, try letting it decide the BPP automatically */
-    if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags))==NULL) {       
+    if((m_screen = SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0, nFlags)) == NULL) {       
       /* Still no luck */
       Logger::Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
-      m_nDispWidth = 800; m_nDispHeight = 600; m_nDispBPP = 0;       
-      m_bWindowed = true;
-      if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL))==NULL) {       
+      m_nDispWidth  = 800;
+      m_nDispHeight = 600;
+      m_nDispBPP    = 0;       
+      m_bWindowed   = true;
+      m_screen = SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0, SDL_OPENGL);
+      if(m_screen == NULL) {       
 	throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
-      }       
+      }
     }
   }
-    
+
   /* Retrieve actual configuration */
-  pVidInfo=SDL_GetVideoInfo();
-  if(pVidInfo==NULL)
+  pVidInfo = SDL_GetVideoInfo();
+  if(pVidInfo == NULL)
     throw Exception("(2) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
                     
-  m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;
+  m_nDispBPP = pVidInfo->vfmt->BitsPerPixel;
 
   /* Did we get a z-buffer? */        
   int nDepthBits;
-  SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE,&nDepthBits);
+  SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE, &nDepthBits);
   if(nDepthBits == 0)
     throw Exception("no depth buffer");  
   
-  m_menuCamera = new Camera(Vector2i(0,0),
-			    Vector2i(m_nDispWidth,m_nDispHeight));
+  m_menuCamera = new Camera(Vector2i(0, 0),
+			    Vector2i(m_nDispWidth, m_nDispHeight));
   m_menuCamera->setCamera2d();
-    
+
   glClearDepth(1);
   glDepthFunc(GL_LEQUAL);
-     
+
   /* Output some general info */
-  Logger:: Log("GL: %s (%s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR));
-  if(glGetString(GL_RENDERER) == NULL || 
-     glGetString(GL_VENDOR) == NULL) {
+  Logger:: Log("GL: %s (%s)", glGetString(GL_RENDERER), glGetString(GL_VENDOR));
+  if(glGetString(GL_RENDERER) == NULL
+     || glGetString(GL_VENDOR) == NULL) {
     Logger::Log("** Warning ** : GL strings NULL!");
     throw Exception("GL strings are NULL!");
   }
-    
+
   /* Windows: check whether we are using the standard GDI OpenGL software driver... If
      so make sure the user is warned */
 #if defined(WIN32) 
@@ -300,35 +302,35 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,unsigned int nDispHeight,unsign
 #endif
     
   /* Init OpenGL extensions */
-  if(m_bDontUseGLExtensions) {
-    m_bVBOSupported = false;
-    m_bFBOSupported = false;
+  if(m_bDontUseGLExtensions == true) {
+    m_bVBOSupported     = false;
+    m_bFBOSupported     = false;
     m_bShadersSupported = false;
   }
   else {
     m_bVBOSupported = isExtensionSupported("GL_ARB_vertex_buffer_object");
     m_bFBOSupported = isExtensionSupported("GL_EXT_framebuffer_object");
       
-    m_bShadersSupported = isExtensionSupported("GL_ARB_fragment_shader") &&
-      isExtensionSupported("GL_ARB_vertex_shader") &&
-      isExtensionSupported("GL_ARB_shader_objects");
+    m_bShadersSupported = isExtensionSupported("GL_ARB_fragment_shader")
+      && isExtensionSupported("GL_ARB_vertex_shader")
+      && isExtensionSupported("GL_ARB_shader_objects");
   }
     
-  if(m_bVBOSupported) {
+  if(m_bVBOSupported == true) {
     glGenBuffersARB=(PFNGLGENBUFFERSARBPROC)SDL_GL_GetProcAddress("glGenBuffersARB");
     glBindBufferARB=(PFNGLBINDBUFFERARBPROC)SDL_GL_GetProcAddress("glBindBufferARB");
     glBufferDataARB=(PFNGLBUFFERDATAARBPROC)SDL_GL_GetProcAddress("glBufferDataARB");
     glDeleteBuffersARB=(PFNGLDELETEBUFFERSARBPROC)SDL_GL_GetProcAddress("glDeleteBuffersARB");      
 
-    glEnableClientState( GL_VERTEX_ARRAY );   
-    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
           
-    Logger::Log("GL: using ARB_vertex_buffer_object");    
+    Logger::Log("GL: using ARB_vertex_buffer_object");
   }
   else
-    Logger::Log("GL: not using ARB_vertex_buffer_object");    
+    Logger::Log("GL: not using ARB_vertex_buffer_object");
       
-  if(m_bFBOSupported) {
+  if(m_bFBOSupported == true) {
     glIsRenderbufferEXT = (PFNGLISRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsRenderbufferEXT");
     glBindRenderbufferEXT = (PFNGLBINDRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindRenderbufferEXT");
     glDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteRenderbuffersEXT");
@@ -352,7 +354,7 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,unsigned int nDispHeight,unsign
   else
     Logger::Log("GL: not using EXT_framebuffer_object");
       
-  if(m_bShadersSupported) {
+  if(m_bShadersSupported == true) {
     glBindAttribLocationARB = (PFNGLBINDATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glBindAttribLocationARB");
     glGetActiveAttribARB = (PFNGLGETACTIVEATTRIBARBPROC)SDL_GL_GetProcAddress("glGetActiveAttribARB");
     glGetAttribLocationARB = (PFNGLGETATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glGetAttribLocationARB");
@@ -402,15 +404,15 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,unsigned int nDispHeight,unsign
     Logger::Log("GL: not using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
     
   /* Set background color to black */
-  glClearColor(0.0f,0.0f,0.0f,0.0f);
+  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT);
   SDL_GL_SwapBuffers();  
 }
 
-void DrawLibOpenGL::unInit(){
+void DrawLibOpenGL::unInit()
+{
 }
-        
-  
+
 /*===========================================================================
   Check for OpenGL extension
   ===========================================================================*/
@@ -418,7 +420,7 @@ bool DrawLibOpenGL::isExtensionSupported(std::string Ext) {
   const unsigned char *pcExtensions = NULL;
   const unsigned char *pcStart;
   unsigned char *pcWhere,*pcTerminator;
-    
+
   pcExtensions = glGetString(GL_EXTENSIONS);
   if(pcExtensions == NULL) {
     Logger::Log("Failed to determine OpenGL extensions. Try stopping all other\n"
@@ -427,11 +429,12 @@ bool DrawLibOpenGL::isExtensionSupported(std::string Ext) {
 		);
     throw Exception("glGetString() : NULL");
   }
-    
+
   pcStart = pcExtensions;
   while(1) {
-    pcWhere = (unsigned char *)strstr((const char*)pcExtensions,Ext.c_str());
-    if(pcWhere == NULL) break;
+    pcWhere = (unsigned char *)strstr((const char*)pcExtensions, Ext.c_str());
+    if(pcWhere == NULL)
+      break;
     pcTerminator = pcWhere + Ext.length();
     if(pcWhere == pcStart || *(pcWhere-1) == ' ')
       if(*pcTerminator == ' ' || *pcTerminator == '\0')
@@ -440,11 +443,11 @@ bool DrawLibOpenGL::isExtensionSupported(std::string Ext) {
   }
   return false;
 }
-  
+
 /*===========================================================================
   Grab screen contents
   ===========================================================================*/
-Img *DrawLibOpenGL::grabScreen(int i_reduce) {
+Img* DrawLibOpenGL::grabScreen(int i_reduce) {
   unsigned int v_imgH = m_nDispHeight / i_reduce;
   unsigned int v_imgW = m_nDispWidth  / i_reduce;
 
@@ -486,10 +489,6 @@ void DrawLibOpenGL::startDraw(DrawMode mode){
   
 void DrawLibOpenGL::endDraw(){
   glEnd();
-  if (m_texture != NULL){
-    glDisable(GL_TEXTURE_2D);
-    m_texture = NULL;
-  }
   if (m_blendMode != BLEND_MODE_NONE){
     glDisable(GL_BLEND);
   }
@@ -510,22 +509,22 @@ void DrawLibOpenGL::removePropertiesAfterEnd() {
 }
 
 void DrawLibOpenGL::setColor(Color color){
-  glColor4ub(GET_RED(color),GET_GREEN(color),GET_BLUE(color),GET_ALPHA(color));
+  glColor4ub(GET_RED(color), GET_GREEN(color), GET_BLUE(color), GET_ALPHA(color));
 }
 
-void DrawLibOpenGL::setTexture(Texture *texture,BlendMode blendMode){
+void DrawLibOpenGL::setTexture(Texture *texture, BlendMode blendMode){
   setBlendMode(blendMode);
-  if (texture != NULL){
+  if(texture != NULL){
     /* bind texture only if different than the current one */
     if(m_texture == NULL || texture->Name != m_texture->Name){
-      glBindTexture(GL_TEXTURE_2D,texture->nID);
+      glBindTexture(GL_TEXTURE_2D, texture->nID);
     }
     glEnable(GL_TEXTURE_2D);
   } else {
     //so the texture is set to null
     //if the texture was not null we need
     //to disable the current texture
-    if (m_texture != NULL){
+    if(m_texture != NULL){
       glDisable(GL_TEXTURE_2D);
     }
   }
