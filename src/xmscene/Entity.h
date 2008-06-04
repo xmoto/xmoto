@@ -53,7 +53,10 @@ class Entity {
   bool DoesKill() const; /** have this entity the property to kill ? (like wecker) */
   bool DoesMakeWin() const; /** have this entity the property to make win ? (like flower) */
   bool IsToTake() const; /* return true is the entity must be taken by the player */
-  float Z() const;
+  inline float Z() const
+  {
+    return m_z;
+  }
   float Width() const;
   float Height() const;
   float DrawAngle() const;
@@ -89,14 +92,17 @@ class Entity {
 
   static EntitySpeciality  SpecialityFromStr(std::string& i_typeStr);
   static std::string       SpecialityToStr(EntitySpeciality i_type);
-  virtual EntitySpeciality Speciality() const; /* replays only store one property per entity, this is this one */
+  inline EntitySpeciality Speciality() const {
+    /* replays only store one property per entity, this is this one */
+    return m_speciality;
+  }
   void setSpeciality(EntitySpeciality i_speciality);
 
   virtual bool updateToTime(int i_time, Vector2f& i_gravity);
 
   AABB& getAABB();
 
- private:
+protected:
   std::string m_id;              /** Its own identifer */
   std::string m_spriteName;      /** Name of the sprite to be drawn */
   Sprite*     m_sprite;
@@ -116,6 +122,7 @@ class Entity {
 
   AABB        m_BBox;
   bool        m_isBBoxDirty;
+  EntitySpeciality m_speciality;
 
   static Entity* createEntity(const std::string& id, const std::string& typeId,
 			      EntitySpeciality speciality,
@@ -137,7 +144,6 @@ class ParticlesSource : public Entity {
   virtual void unloadToPlay();
   virtual bool updateToTime(int i_time, Vector2f& i_gravity);
   std::vector<EntityParticle *> &Particles();
-  virtual EntitySpeciality Speciality() const;
   virtual void addParticle(int i_curTime) = 0;
 
   static void setAllowParticleGeneration(bool i_value);
