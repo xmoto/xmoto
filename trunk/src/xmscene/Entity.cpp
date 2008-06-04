@@ -555,10 +555,6 @@ void ParticlesSource::deleteParticles() {
   m_deadParticles.clear();
 }
 
-std::vector<EntityParticle *>& ParticlesSource::Particles() {
-  return m_particles;
-}
-
 EntityParticle* ParticlesSource::getExistingParticle()
 {
   if(m_deadParticles.size() > 0){
@@ -832,13 +828,15 @@ bool SmokeParticle::updateToTime(int i_time, Vector2f& i_gravity) {
   float v_timeStep = 0.025;
   TColor v_color(Color());
 
-  setSize(Size() + v_timeStep * 1.0f); /* grow */
-  m_acceleration = Vector2f(0.2, 0.5);  /* accelerate upwards */
+  /* grow */
+  setSize(Size() + v_timeStep * 1.0f); 
+  /* accelerate upwards */
+  m_acceleration = Vector2f(0.2, 0.5);
 
-  int v_c = Color().Red() + (int)(NotSoRandom::randomNum(40,50) * v_timeStep);
-  v_color.setRed(v_c > 255 ? 255 : v_c);
-  v_color.setBlue(v_c > 255 ? 255 : v_c);
-  v_color.setGreen(v_c > 255 ? 255 : v_c);
+  int v_c = (Color().Red() + (int)(NotSoRandom::randomNum(40,50) * v_timeStep)) & 0xFF;
+  v_color.setRed(v_c);
+  v_color.setBlue(v_c);
+  v_color.setGreen(v_c);
 
   int v_a = Color().Alpha() - (int)(120.0f * v_timeStep);
   if(v_a >= 0) {

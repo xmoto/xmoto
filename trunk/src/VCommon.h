@@ -120,14 +120,6 @@ Macros
 	((Color)((color&0xff0000)>>16))
 #define GET_RED(color) \
 	((Color)((color&0xff000000)>>24))
-#define GETF_ALPHA(color) \
-	(((Color)(color&0xff))/255.0f)
-#define GETF_BLUE(color) \
-	(((Color)((color&0xff00)>>8))/255.0f)
-#define GETF_GREEN(color) \
-	(((Color)((color&0xff0000)>>16))/255.0f)
-#define GETF_RED(color) \
-	(((Color)((color&0xff000000)>>24))/255.0f)
 #define INVERT_COLOR(color) \
 	MAKE_COLOR(255-GET_RED(color),255-GET_GREEN(color),255-GET_BLUE(color),GET_ALPHA(color))
 
