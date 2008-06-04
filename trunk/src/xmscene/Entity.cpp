@@ -51,6 +51,7 @@ Entity::Entity(const std::string& i_id) {
   m_isToTake    = false;
   m_BBox.reset();
   m_isBBoxDirty = true;
+  m_speciality  = ET_NONE;
 }
 
 Entity::~Entity() {
@@ -86,25 +87,8 @@ const TColor& Entity::Color() const {
   return m_color;
 }
 
-EntitySpeciality Entity::Speciality() const {
-  if(IsToTake())
-    return ET_ISTOTAKE;
-  if(DoesKill())
-    return ET_KILL;
-  if(DoesMakeWin())
-    return ET_MAKEWIN;
-  if(SpriteName() == "PlayerStart")
-    return ET_ISSTART;
-
-  return ET_NONE;
-}
-
 Vector2f Entity::InitialPosition() const {
   return m_initialPosition;
-}
-
-float Entity::Z() const {
-  return m_z;
 }
 
 float Entity::Width() const {
@@ -152,9 +136,11 @@ void Entity::setSize(float i_size) {
 }
 
 void Entity::setSpeciality(EntitySpeciality i_speciality) {
-  m_doesMakeWin = i_speciality == ET_MAKEWIN;
-  m_doesKill    = i_speciality == ET_KILL;
-  m_isToTake    = i_speciality == ET_ISTOTAKE;
+  m_doesMakeWin = (i_speciality == ET_MAKEWIN);
+  m_doesKill    = (i_speciality == ET_KILL);
+  m_isToTake    = (i_speciality == ET_ISTOTAKE);
+
+  m_speciality = i_speciality;
 }
 
 void Entity::setWidth(float i_width) {
@@ -508,6 +494,7 @@ ParticlesSource::ParticlesSource(const std::string& i_id, int i_particleTime_inc
   m_lastParticleTime       = 0;
   m_particleTime_increment = i_particleTime_increment;
   m_type                   = None;
+  m_speciality             = ET_PARTICLES_SOURCE;
 }
 
 ParticlesSource::~ParticlesSource() {
@@ -570,10 +557,6 @@ void ParticlesSource::deleteParticles() {
 
 std::vector<EntityParticle *>& ParticlesSource::Particles() {
   return m_particles;
-}
-
-EntitySpeciality ParticlesSource::Speciality() const {
-  return ET_PARTICLES_SOURCE;
 }
 
 EntityParticle* ParticlesSource::getExistingParticle()
