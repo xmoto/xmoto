@@ -282,6 +282,9 @@ private:
   int m_lastCallToEveryHundreath;
   bool m_playEvents;
 
+  // some part of the game can be update only half on the time
+  bool m_halfUpdate;
+
   std::vector<Camera*> m_cameras;
   unsigned int m_currentCamera;
 
