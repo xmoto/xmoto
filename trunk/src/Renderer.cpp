@@ -1569,6 +1569,7 @@ void GameRenderer::_RenderSprite(MotoGame* i_scene, Entity *pEntity, float i_siz
         break;
       }
 
+      GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
       _RenderCircle(20, v_color, C, pEntity->Size() * i_sizeMult);
     }
   }
