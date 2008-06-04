@@ -739,13 +739,14 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string texture)
 					    * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR,
 					    sinf(value / 360.0  * (2.0 * 3.14159)
 						 + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR);
-	  
-    GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-    GameApp::instance()->getDrawLib()->glVertex(pdest);
-    GameApp::instance()->getDrawLib()->glVertex(pcenterl);
-    GameApp::instance()->getDrawLib()->glVertex(pbottom);
-    GameApp::instance()->getDrawLib()->glVertex(pcenterr);
-    GameApp::instance()->getDrawLib()->endDraw();
+
+    DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
+    pDrawlib->startDraw(DRAW_MODE_POLYGON);
+    pDrawlib->glVertex(pdest);
+    pDrawlib->glVertex(pcenterl);
+    pDrawlib->glVertex(pbottom);
+    pDrawlib->glVertex(pcenterr);
+    pDrawlib->endDraw();
   }
   
   /*===========================================================================
@@ -754,11 +755,14 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string texture)
   #define MINIMAPZOOM 5.0f
   #define MINIMAPALPHA 128
   #define MINIVERTEX(Px,Py) \
-    GameApp::instance()->getDrawLib()->glVertexSP(x + nWidth/2 + (float)(Px - i_scene->getCamera()->getCameraPositionX())*MINIMAPZOOM, \
-                          y + nHeight/2 - (float)(Py - i_scene->getCamera()->getCameraPositionY())*MINIMAPZOOM);    
+    pDrawlib->glVertexSP(x + nWidth/2  + (float)(Px - cameraPosX)*MINIMAPZOOM, \
+                         y + nHeight/2 - (float)(Py - cameraPosY)*MINIMAPZOOM);    
 
 void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int nHeight) {
-    Biker* pBiker = i_scene->getCamera()->getPlayerToFollow();
+    DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
+    Camera*  pCamera  = i_scene->getCamera();
+    Biker*   pBiker   = pCamera->getPlayerToFollow();
+
     // do not render it if it's the autozoom camera (in multi), or the player is dead (in multi), or no player is followed
     if(i_scene->isAutoZoomCamera() == true
        || ((pBiker == NULL || (pBiker != NULL && pBiker->isDead() == true))
@@ -766,13 +770,14 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
       return;
     }
 
-    DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
+    float cameraPosX = pCamera->getCameraPositionX();
+    float cameraPosY = pCamera->getCameraPositionY();
 
     pDrawlib->drawBox(Vector2f(x,y),Vector2f(x+nWidth,y+nHeight),1,
 				       MAKE_COLOR(0,0,0,MINIMAPALPHA),
 				       MAKE_COLOR(255,255,255,MINIMAPALPHA));
     // the scissor zone is in the screen coordinates
-    Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();
+    Vector2i bottomLeft = pCamera->getDispBottomLeft();
 
     unsigned int y_translate = bottomLeft.y/2;
     if((unsigned int)bottomLeft.y != pDrawlib->getDispHeight()
@@ -792,8 +797,8 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
       input:  position on the screen (in the minimap area)
       output: position in the level
     */
-#define MAP_TO_LEVEL_X(mapX) ((mapX) - x - nWidth/2)/MINIMAPZOOM  + i_scene->getCamera()->getCameraPositionX()
-#define MAP_TO_LEVEL_Y(mapY) ((mapY) - y - nHeight/2)/MINIMAPZOOM + i_scene->getCamera()->getCameraPositionY()
+#define MAP_TO_LEVEL_X(mapX) ((mapX) - x - nWidth/2)/MINIMAPZOOM  + pCamera->getCameraPositionX()
+#define MAP_TO_LEVEL_Y(mapY) ((mapY) - y - nHeight/2)/MINIMAPZOOM + pCamera->getCameraPositionY()
     AABB mapBBox;
     mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x), MAP_TO_LEVEL_Y(y));
     mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x+nWidth), MAP_TO_LEVEL_Y(y+nHeight));
@@ -863,8 +868,8 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
       input: position in the level
       output: position on the screen (draw in the minimap area)
     */
-#define LEVEL_TO_SCREEN_X(elemPosX) (x + nWidth/2  + (float)((elemPosX) - i_scene->getCamera()->getCameraPositionX()) * MINIMAPZOOM)
-#define LEVEL_TO_SCREEN_Y(elemPosY) (y + nHeight/2 - (float)((elemPosY) - i_scene->getCamera()->getCameraPositionY()) * MINIMAPZOOM)
+#define LEVEL_TO_SCREEN_X(elemPosX) (x + nWidth/2  + (float)((elemPosX) - pCamera->getCameraPositionX()) * MINIMAPZOOM)
+#define LEVEL_TO_SCREEN_Y(elemPosY) (y + nHeight/2 - (float)((elemPosY) - pCamera->getCameraPositionY()) * MINIMAPZOOM)
 
     for(unsigned int i=0; i<i_scene->Players().size(); i++) {
       Vector2f bikePos(LEVEL_TO_SCREEN_X(i_scene->Players()[i]->getState()->CenterP.x),
@@ -957,7 +962,8 @@ int GameRenderer::nbParticlesRendered() const {
   Main rendering function
   ===========================================================================*/
   void GameRenderer::render(MotoGame* i_scene) {
-    Camera*   pCamera = i_scene->getCamera();
+    Camera*  pCamera  = i_scene->getCamera();
+    DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
     m_nParticlesRendered = 0;
     
@@ -979,13 +985,14 @@ int GameRenderer::nbParticlesRendered() const {
 
     /* SKY! */
     if(XMSession::instance()->ugly() == false) {
+      const SkyApparence* pSky = i_scene->getLevelSrc()->Sky();
       _RenderSky(i_scene,
-		 i_scene->getLevelSrc()->Sky()->Zoom(),
-		 i_scene->getLevelSrc()->Sky()->Offset(),
-		 i_scene->getLevelSrc()->Sky()->TextureColor(),
-		 i_scene->getLevelSrc()->Sky()->DriftZoom(),
-		 i_scene->getLevelSrc()->Sky()->DriftTextureColor(),
-		 i_scene->getLevelSrc()->Sky()->Drifted());
+		 pSky->Zoom(),
+		 pSky->Offset(),
+		 pSky->TextureColor(),
+		 pSky->DriftZoom(),
+		 pSky->DriftTextureColor(),
+		 pSky->Drifted());
     }    
 
     if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
@@ -1062,12 +1069,13 @@ int GameRenderer::nbParticlesRendered() const {
     }
     if(v_found) {
       try {
-	_RenderBike(pCamera->getPlayerToFollow()->getState(),
-		    pCamera->getPlayerToFollow()->getState()->Parameters(),
-		    pCamera->getPlayerToFollow()->getBikeTheme(),
-		    pCamera->getPlayerToFollow()->getRenderBikeFront(),
-		    pCamera->getPlayerToFollow()->getColorFilter(),
-		    pCamera->getPlayerToFollow()->getUglyColorFilter());
+	Biker* pBiker = pCamera->getPlayerToFollow();
+	_RenderBike(pBiker->getState(),
+		    pBiker->getState()->Parameters(),
+		    pBiker->getBikeTheme(),
+		    pBiker->getRenderBikeFront(),
+		    pBiker->getColorFilter(),
+		    pBiker->getUglyColorFilter());
 
 	if(XMSession::instance()->debug()) {
 	  // render collision points
@@ -1110,41 +1118,41 @@ int GameRenderer::nbParticlesRendered() const {
       /* Draw some collision handling debug info */
       CollisionSystem *pc = i_scene->getCollisionHandler();
       for(unsigned int i=0;i<pc->m_CheckedLines.size();i++) {
-        GameApp::instance()->getDrawLib()->setLineWidth(3);
-	GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-	GameApp::instance()->getDrawLib()->setColorRGB(255,0,0);
-        GameApp::instance()->getDrawLib()->glVertex(pc->m_CheckedLines[i]->x1,pc->m_CheckedLines[i]->y1);
-        GameApp::instance()->getDrawLib()->glVertex(pc->m_CheckedLines[i]->x2,pc->m_CheckedLines[i]->y2);
-	GameApp::instance()->getDrawLib()->endDraw();
-        GameApp::instance()->getDrawLib()->setLineWidth(2);
+        pDrawlib->setLineWidth(3);
+	pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
+	pDrawlib->setColorRGB(255,0,0);
+        pDrawlib->glVertex(pc->m_CheckedLines[i]->x1,pc->m_CheckedLines[i]->y1);
+        pDrawlib->glVertex(pc->m_CheckedLines[i]->x2,pc->m_CheckedLines[i]->y2);
+	pDrawlib->endDraw();
+        pDrawlib->setLineWidth(2);
       }
       for(unsigned int i=0;i<pc->m_CheckedCells.size();i++) {
-	GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
-	GameApp::instance()->getDrawLib()->setColorRGB(255,0,0);
+	pDrawlib->startDraw(DRAW_MODE_LINE_LOOP);
+	pDrawlib->setColorRGB(255,0,0);
 
-        GameApp::instance()->getDrawLib()->glVertex(pc->m_CheckedCells[i].x1,pc->m_CheckedCells[i].y1);
-        GameApp::instance()->getDrawLib()->glVertex(pc->m_CheckedCells[i].x2,pc->m_CheckedCells[i].y1);
-        GameApp::instance()->getDrawLib()->glVertex(pc->m_CheckedCells[i].x2,pc->m_CheckedCells[i].y2);
-        GameApp::instance()->getDrawLib()->glVertex(pc->m_CheckedCells[i].x1,pc->m_CheckedCells[i].y2);
-	GameApp::instance()->getDrawLib()->endDraw();
+        pDrawlib->glVertex(pc->m_CheckedCells[i].x1,pc->m_CheckedCells[i].y1);
+        pDrawlib->glVertex(pc->m_CheckedCells[i].x2,pc->m_CheckedCells[i].y1);
+        pDrawlib->glVertex(pc->m_CheckedCells[i].x2,pc->m_CheckedCells[i].y2);
+        pDrawlib->glVertex(pc->m_CheckedCells[i].x1,pc->m_CheckedCells[i].y2);
+	pDrawlib->endDraw();
       }
       for(unsigned int i=0;i<pc->m_CheckedLinesW.size();i++) {
-        GameApp::instance()->getDrawLib()->setLineWidth(1);
-	GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-	GameApp::instance()->getDrawLib()->setColorRGB(0,255,0);
-        GameApp::instance()->getDrawLib()->glVertex(pc->m_CheckedLinesW[i]->x1,pc->m_CheckedLinesW[i]->y1);
-        GameApp::instance()->getDrawLib()->glVertex(pc->m_CheckedLinesW[i]->x2,pc->m_CheckedLinesW[i]->y2);
-	GameApp::instance()->getDrawLib()->endDraw();
-        GameApp::instance()->getDrawLib()->setLineWidth(1);
+        pDrawlib->setLineWidth(1);
+	pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
+	pDrawlib->setColorRGB(0,255,0);
+        pDrawlib->glVertex(pc->m_CheckedLinesW[i]->x1,pc->m_CheckedLinesW[i]->y1);
+        pDrawlib->glVertex(pc->m_CheckedLinesW[i]->x2,pc->m_CheckedLinesW[i]->y2);
+	pDrawlib->endDraw();
+        pDrawlib->setLineWidth(1);
       }
       for(unsigned int i=0;i<pc->m_CheckedCellsW.size();i++) {
-	GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
-	GameApp::instance()->getDrawLib()->setColorRGB(0,255,0);
-        GameApp::instance()->getDrawLib()->glVertex(pc->m_CheckedCellsW[i].x1,pc->m_CheckedCellsW[i].y1);
-        GameApp::instance()->getDrawLib()->glVertex(pc->m_CheckedCellsW[i].x2,pc->m_CheckedCellsW[i].y1);
-        GameApp::instance()->getDrawLib()->glVertex(pc->m_CheckedCellsW[i].x2,pc->m_CheckedCellsW[i].y2);
-        GameApp::instance()->getDrawLib()->glVertex(pc->m_CheckedCellsW[i].x1,pc->m_CheckedCellsW[i].y2);
-	GameApp::instance()->getDrawLib()->endDraw();
+	pDrawlib->startDraw(DRAW_MODE_LINE_LOOP);
+	pDrawlib->setColorRGB(0,255,0);
+        pDrawlib->glVertex(pc->m_CheckedCellsW[i].x1,pc->m_CheckedCellsW[i].y1);
+        pDrawlib->glVertex(pc->m_CheckedCellsW[i].x2,pc->m_CheckedCellsW[i].y1);
+        pDrawlib->glVertex(pc->m_CheckedCellsW[i].x2,pc->m_CheckedCellsW[i].y2);
+        pDrawlib->glVertex(pc->m_CheckedCellsW[i].x1,pc->m_CheckedCellsW[i].y2);
+	pDrawlib->endDraw();
       }
 
       std::vector<Entity*>& v = pc->getCheckedEntities();
@@ -1181,19 +1189,19 @@ int GameRenderer::nbParticlesRendered() const {
     /* minimap + counter */
     if(pCamera->getPlayerToFollow() != NULL) {
       if(showMinimap()) {
-	renderMiniMap(i_scene, 0, GameApp::instance()->getDrawLib()->getDispHeight()-100,
+	renderMiniMap(i_scene, 0, pDrawlib->getDispHeight()-100,
 		      150,100);
       }
       if(showEngineCounter()
 	 && XMSession::instance()->ugly() == false
 	 && i_scene->getNumberCameras() == 1) {
-	renderEngineCounter(GameApp::instance()->getDrawLib()->getDispWidth()-128,
-			    GameApp::instance()->getDrawLib()->getDispHeight()-128,128,128,
+	renderEngineCounter(pDrawlib->getDispWidth()-128,
+			    pDrawlib->getDispHeight()-128,128,128,
 			    pCamera->getPlayerToFollow()->getBikeEngineSpeed());
       }
     }
 
-    GameApp::instance()->getDrawLib()->getMenuCamera()->setCamera2d();
+    pDrawlib->getMenuCamera()->setCamera2d();
 
     if(m_showTimePanel) {
       renderTimePanel(i_scene);
@@ -1206,11 +1214,11 @@ int GameRenderer::nbParticlesRendered() const {
     /* And then the game messages */
     _RenderGameMessages(i_scene);            
 
-    FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontMedium();
+    FontManager* v_fm = pDrawlib->getFontMedium();
     FontGlyph* v_fg = v_fm->getGlyph(i_scene->getInfos());
     v_fm->printString(v_fg,
 		      5,
-		      GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight() - 2,
+		      pDrawlib->getDispHeight() - v_fg->realHeight() - 2,
 		      MAKE_COLOR(255,255,255,255), true);
   }
 
@@ -1293,24 +1301,27 @@ int GameRenderer::nbParticlesRendered() const {
   ===========================================================================*/
   void GameRenderer::_RenderGameMessages(MotoGame* i_scene) {
     float v_fZoom = 60.0f;
+    DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
     /* Arrow messages */
     ArrowPointer *pArrow = &(i_scene->getArrowPointer());
     if(pArrow->nArrowPointerMode != 0) {
       Vector2f C;
       if(pArrow->nArrowPointerMode == 1) {          
-        C=Vector2f(GameApp::instance()->getDrawLib()->getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x - i_scene->getCamera()->getCameraPositionX())*v_fZoom,
-                  GameApp::instance()->getDrawLib()->getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y - i_scene->getCamera()->getCameraPositionY())*v_fZoom);      
+        C=Vector2f(pDrawlib->getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x - i_scene->getCamera()->getCameraPositionX())*v_fZoom,
+                  pDrawlib->getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y - i_scene->getCamera()->getCameraPositionY())*v_fZoom);      
       }
       else if(pArrow->nArrowPointerMode == 2) {          
-        C.x=(GameApp::instance()->getDrawLib()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
-        C.y=(GameApp::instance()->getDrawLib()->getDispHeight() * pArrow->ArrowPointerPos.y) / 600.0f;
+        C.x=(pDrawlib->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
+        C.y=(pDrawlib->getDispHeight() * pArrow->ArrowPointerPos.y) / 600.0f;
       }
-      Vector2f p1,p2,p3,p4;
-      p1 = Vector2f(1,0); p1.rotateXY(pArrow->fArrowPointerAngle);
-      p2 = Vector2f(1,0); p2.rotateXY(90+pArrow->fArrowPointerAngle);
-      p3 = Vector2f(1,0); p3.rotateXY(180+pArrow->fArrowPointerAngle);
-      p4 = Vector2f(1,0); p4.rotateXY(270+pArrow->fArrowPointerAngle);
+
+      Vector2f p1(1,0), p2(1,0), p3(1,0), p4(1,0);
+      float arrowAngle = pArrow->fArrowPointerAngle;
+      p1.rotateXY(arrowAngle);
+      p2.rotateXY(90+arrowAngle);
+      p3.rotateXY(180+arrowAngle);
+      p4.rotateXY(270+arrowAngle);
 
       p1 = p1 * 50.0f;
       p2 = p2 * 50.0f;
@@ -1328,11 +1339,11 @@ int GameRenderer::nbParticlesRendered() const {
     if(i_scene != NULL) {
       for(unsigned int i=0;i<i_scene->getGameMessage().size();i++) {
         GameMessage *pMsg = i_scene->getGameMessage()[i];
-	FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontMedium();
+	FontManager* v_fm = pDrawlib->getFontMedium();
 	FontGlyph* v_fg = v_fm->getGlyph(pMsg->Text);
 	v_fm->printString(v_fg,
-			  (int)(GameApp::instance()->getDrawLib()->getDispWidth()/2 - v_fg->realWidth()/2),
-			  (int)(pMsg->Pos[1]*GameApp::instance()->getDrawLib()->getDispHeight()),
+			  (int)(pDrawlib->getDispWidth()/2 - v_fg->realWidth()/2),
+			  (int)(pMsg->Pos[1] * pDrawlib->getDispHeight()),
 			  MAKE_COLOR(255,255,255,pMsg->nAlpha), true);
       }
     }
@@ -1566,6 +1577,8 @@ void GameRenderer::_RenderSprite(MotoGame* i_scene, Entity *pEntity, float i_siz
   Blocks (dynamic)
   ===========================================================================*/
 void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
+    DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
+
     /* FIX::display only visible dyn blocks */
     std::vector<Block *> Blocks = i_scene->getCollisionHandler()->getDynBlocksNearPosition(m_screenBBox);
 
@@ -1591,7 +1604,7 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 	Vector2f dynPos       = block->DynamicPosition();
 	int geom = block->getGeom();
 
-	if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
+	if(pDrawlib->getBackend() == DrawLib::backend_OpenGl) {
 #ifdef ENABLE_OPENGL
 	  glEnableClientState(GL_VERTEX_ARRAY);
 	  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -1606,18 +1619,18 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 	    glTranslatef(-dynRotCenter.x, -dynRotCenter.y, 0);
 	  }
 
-	  GameApp::instance()->getDrawLib()->setTexture(m_DynamicGeoms[geom]->pTexture, BLEND_MODE_A);
-	  GameApp::instance()->getDrawLib()->setColorRGB(255, 255, 255);
+	  pDrawlib->setTexture(m_DynamicGeoms[geom]->pTexture, BLEND_MODE_A);
+	  pDrawlib->setColorRGB(255, 255, 255);
 
 	  /* VBO optimized? */
-	  if(GameApp::instance()->getDrawLib()->useVBOs()) {
+	  if(pDrawlib->useVBOs()) {
 	    for(unsigned int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
 	      GeomPoly *pPoly = m_DynamicGeoms[geom]->Polys[j];
 
-	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
+	      ((DrawLibOpenGL*)pDrawlib)->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
 	      glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
 
-	      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
+	      ((DrawLibOpenGL*)pDrawlib)->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
 	      glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
 
 	      glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
@@ -1638,14 +1651,14 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 	  glDisableClientState(GL_VERTEX_ARRAY);
 	  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #endif
-	} else if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
+	} else if(pDrawlib->getBackend() == DrawLib::backend_SdlGFX){
 
 	  if(m_DynamicGeoms[geom]->Polys.size() > 0) {
-	    GameApp::instance()->getDrawLib()->setTexture(m_DynamicGeoms[geom]->pTexture,BLEND_MODE_A);
-	    GameApp::instance()->getDrawLib()->setColorRGB(255,255,255);
+	    pDrawlib->setTexture(m_DynamicGeoms[geom]->pTexture,BLEND_MODE_A);
+	    pDrawlib->setColorRGB(255,255,255);
 
 	    for(unsigned int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
-	      GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	      pDrawlib->startDraw(DRAW_MODE_POLYGON);
 	      for(unsigned int k=0;k<m_DynamicGeoms[geom]->Polys[j]->nNumVertices;k++) {
 		Vector2f vertex = Vector2f(m_DynamicGeoms[geom]->Polys[j]->pVertices[k].x,
 					   m_DynamicGeoms[geom]->Polys[j]->pVertices[k].y);
@@ -1654,18 +1667,18 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 						(vertex.x-dynRotCenter.x)*fR[2] + (vertex.y-dynRotCenter.y)*fR[3]);
 		transVertex += dynPos + dynRotCenter;
 		
-		GameApp::instance()->getDrawLib()->glTexCoord(m_DynamicGeoms[geom]->Polys[j]->pTexCoords[k].x,
+		pDrawlib->glTexCoord(m_DynamicGeoms[geom]->Polys[j]->pTexCoords[k].x,
 						      m_DynamicGeoms[geom]->Polys[j]->pTexCoords[k].y);
-		GameApp::instance()->getDrawLib()->glVertex(transVertex.x, transVertex.y);
+		pDrawlib->glVertex(transVertex.x, transVertex.y);
 	      }
-	      GameApp::instance()->getDrawLib()->endDrawKeepProperties();
+	      pDrawlib->endDrawKeepProperties();
 	    }
-	    GameApp::instance()->getDrawLib()->removePropertiesAfterEnd();
+	    pDrawlib->removePropertiesAfterEnd();
 	  }
 
 	}
       }
-      if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
+      if(pDrawlib->getBackend() == DrawLib::backend_SdlGFX){
 	/* Render all special edges (if quality!=low) */
 	if(XMSession::instance()->gameGraphics() != GFX_LOW) {
 	  for(unsigned int i=0;i<Blocks.size();i++) {
@@ -1694,8 +1707,8 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 	Vector2f dynRotCenter = Blocks[i]->DynamicRotationCenter();
 	Vector2f dynPos       = Blocks[i]->DynamicPosition();
 
-	GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
-	GameApp::instance()->getDrawLib()->setColorRGB(255,255,255);
+	pDrawlib->startDraw(DRAW_MODE_LINE_LOOP);
+	pDrawlib->setColorRGB(255,255,255);
 
         for(unsigned int j=0;j<Blocks[i]->Vertices().size();j++) {
 	  Vector2f vertex = Blocks[i]->Vertices()[j]->Position();
@@ -1704,9 +1717,9 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 					  (vertex.x-dynRotCenter.x)*fR[2] + (vertex.y-dynRotCenter.y)*fR[3]);
 	  transVertex += dynPos + dynRotCenter;
 
-          GameApp::instance()->getDrawLib()->glVertex(transVertex.x, transVertex.y);
+          pDrawlib->glVertex(transVertex.x, transVertex.y);
         }
-	GameApp::instance()->getDrawLib()->endDraw();
+	pDrawlib->endDraw();
       }
     }
 
@@ -1714,24 +1727,25 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
 
   void GameRenderer::_RenderBlock(Block* block)
   {
+    DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
     int geom = block->getGeom();
-    GameApp::instance()->getDrawLib()->setTexture(m_StaticGeoms[geom]->pTexture, BLEND_MODE_A);
-    GameApp::instance()->getDrawLib()->setColorRGB(255, 255, 255);
+    pDrawlib->setTexture(m_StaticGeoms[geom]->pTexture, BLEND_MODE_A);
+    pDrawlib->setColorRGB(255, 255, 255);
 
-    if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
+    if(pDrawlib->getBackend() == DrawLib::backend_OpenGl) {
 #ifdef ENABLE_OPENGL
       glEnableClientState(GL_VERTEX_ARRAY);
       glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
       /* VBO optimized? */
-      if(GameApp::instance()->getDrawLib()->useVBOs()) {
+      if(pDrawlib->useVBOs()) {
 	for(unsigned int j=0;j<m_StaticGeoms[geom]->Polys.size();j++) {          
 	  GeomPoly *pPoly = m_StaticGeoms[geom]->Polys[j];
 
-	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
+	  ((DrawLibOpenGL*)pDrawlib)->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
 	  glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
 
-	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
+	  ((DrawLibOpenGL*)pDrawlib)->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
 	  glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
 
 	  glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
@@ -1750,41 +1764,42 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
       glDisableClientState(GL_VERTEX_ARRAY);
       glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #endif
-    } else if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
+    } else if(pDrawlib->getBackend() == DrawLib::backend_SdlGFX){
 
       for(unsigned int j=0;j<m_StaticGeoms[geom]->Polys.size();j++) {
-	GameApp::instance()->getDrawLib()->setTexture(m_StaticGeoms[geom]->pTexture,BLEND_MODE_A);
-	GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	GameApp::instance()->getDrawLib()->setColorRGB(255,255,255);
+	pDrawlib->setTexture(m_StaticGeoms[geom]->pTexture,BLEND_MODE_A);
+	pDrawlib->startDraw(DRAW_MODE_POLYGON);
+	pDrawlib->setColorRGB(255,255,255);
 	for(unsigned int k=0;k<m_StaticGeoms[geom]->Polys[j]->nNumVertices;k++) {
-	  GameApp::instance()->getDrawLib()->glTexCoord(m_StaticGeoms[geom]->Polys[j]->pTexCoords[k].x,
+	  pDrawlib->glTexCoord(m_StaticGeoms[geom]->Polys[j]->pTexCoords[k].x,
 						m_StaticGeoms[geom]->Polys[j]->pTexCoords[k].y);
-	  GameApp::instance()->getDrawLib()->glVertex(m_StaticGeoms[geom]->Polys[j]->pVertices[k].x,
+	  pDrawlib->glVertex(m_StaticGeoms[geom]->Polys[j]->pVertices[k].x,
 					      m_StaticGeoms[geom]->Polys[j]->pVertices[k].y);
 	}
-	GameApp::instance()->getDrawLib()->endDraw();
+	pDrawlib->endDraw();
       }
     }
   }
 
 void GameRenderer::_RenderBlockEdges(Block* pBlock)
 {
-  if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
+  DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
+  if(pDrawlib->getBackend() == DrawLib::backend_OpenGl) {
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     for(unsigned int i=0; i<pBlock->getEdgeGeoms().size(); i++){
       int geom = pBlock->getEdgeGeoms()[i];
-      GameApp::instance()->getDrawLib()->setTexture(m_edgeGeoms[geom]->pTexture, BLEND_MODE_A);
-      GameApp::instance()->getDrawLib()->setColorRGB(255, 255, 255);
+      pDrawlib->setTexture(m_edgeGeoms[geom]->pTexture, BLEND_MODE_A);
+      pDrawlib->setColorRGB(255, 255, 255);
 
       /* VBO optimized? */
-      if(GameApp::instance()->getDrawLib()->useVBOs()) {
+      if(pDrawlib->useVBOs()) {
 	for(unsigned int j=0;j<m_edgeGeoms[geom]->Polys.size();j++) {          
 	  GeomPoly *pPoly = m_edgeGeoms[geom]->Polys[j];
 
-	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
+	  ((DrawLibOpenGL*)pDrawlib)->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
 	  glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
 
-	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
+	  ((DrawLibOpenGL*)pDrawlib)->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
 	  glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
 
 	  glDrawArrays(GL_QUADS, 0, pPoly->nNumVertices);
@@ -1799,7 +1814,7 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
       }
     }
     //    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  } else if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
+  } else if(pDrawlib->getBackend() == DrawLib::backend_SdlGFX){
     // SDLGFX::TODO
   }
 }
