@@ -239,7 +239,7 @@ private:
   void _RenderGameStatus(MotoGame* i_scene);
   void _RenderParticles(MotoGame* i_scene, bool bFront=true);
   void _RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c);
-  void _RenderParticle(MotoGame* i_scene, ParticlesSource *i_source);
+  void _RenderParticle(MotoGame* i_scene, ParticlesSource *i_source, unsigned int sprite=0);
   void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
   void _RenderZone(Zone *i_zone);
 

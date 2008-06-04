@@ -634,8 +634,10 @@ void ParticlesSourceSmoke::addParticle(int i_curTime) {
 			 NotSoRandom::randomNum(0.2,  0.6));
   int         v_killTime   = i_curTime + 1000;
   std::string v_spriteName = "Smoke1";
+  unsigned int v_spriteIndex = 0;
   if(NotSoRandom::randomNum(0,1) < 0.5){
-    v_spriteName = "Smoke2";
+    v_spriteName  = "Smoke2";
+    v_spriteIndex = 1;
   }
 
   EntityParticle* pEntityParticle = getExistingParticle();
@@ -647,6 +649,7 @@ void ParticlesSourceSmoke::addParticle(int i_curTime) {
 					    v_killTime, v_spriteName);
   }
 
+  pEntityParticle->setSpriteIndex(v_spriteIndex);
   m_particles.push_back(pEntityParticle);
   m_totalOfParticles++;
 }
@@ -776,6 +779,7 @@ bool ParticlesSourceDebris::updateToTime(int i_time, Vector2f& i_gravity) {
 EntityParticle::EntityParticle()
   : Entity("")
 {
+  m_spriteIndex = 0;
 }
 
 EntityParticle::~EntityParticle() 

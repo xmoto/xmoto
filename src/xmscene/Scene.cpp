@@ -64,6 +64,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_currentCamera = 0;
 
     m_chipmunkWorld = NULL;
+
+    m_halfUpdate = true;
   }
   
   MotoGame::~MotoGame() {
@@ -208,9 +210,14 @@ void MotoGame::cleanPlayers() {
   void MotoGame::updateLevel(int timeStep, Replay *i_recordedReplay) {
     float v_diff;
 
-    if(m_is_paused) return;
+    if(m_is_paused)
+      return;
 
-    getLevelSrc()->updateToTime(*this);
+    if(m_halfUpdate == true) {
+      getLevelSrc()->updateToTime(*this);
+      m_halfUpdate = false;
+    } else
+      m_halfUpdate = true;
 
     updateGameMessages();
     
@@ -224,7 +231,8 @@ void MotoGame::cleanPlayers() {
       m_time += ((int)m_floattantTimeStepDiff);
       m_floattantTimeStepDiff -= ((int)m_floattantTimeStepDiff);
 
-      if(m_time < 0) m_time = 0;
+      if(m_time < 0)
+	m_time = 0;
     } else {
       m_time += timeStep;
     }     

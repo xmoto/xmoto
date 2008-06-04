@@ -235,13 +235,22 @@ class EntityParticle : public Entity {
   int           KillTime() const;
   float         Angle() const;
 
+  // for fast spriteName check
+  inline unsigned int  spriteIndex() {
+    return m_spriteIndex;
+  }
+  void setSpriteIndex(unsigned int spriteIndex){
+    m_spriteIndex = spriteIndex;
+  }
+
  protected:
   void init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime);
   /* Position, velocity, and acceleration */
-  Vector2f m_velocity, m_acceleration;
+  Vector2f      m_velocity, m_acceleration;
   /* Angular version of the above */
-  float    m_ang, m_angVel, m_angAcc;
-  int      m_killTime;
+  float         m_ang, m_angVel, m_angAcc;
+  int           m_killTime;
+  unsigned int  m_spriteIndex;
 };
 
 
