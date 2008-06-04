@@ -4,6 +4,7 @@ X-Moto 0.4.3 2008-
  * save config separatly for each profile
  * --noDBDirsCheck command line options added. It disables the files find when X-Moto detects that you changed your configuration directory (usefull if you use X-Moto on a USB key)
  * --defaultTheme option to change the default theme for new profiles (and --with-default-theme= at compilation time) ; so that packager can change it.
+ * optimisations for particles handling
 	
 X-Moto 0.4.2 2008-03-18
 -----------------------

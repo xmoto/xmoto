@@ -143,7 +143,9 @@ class ParticlesSource : public Entity {
   virtual void loadToPlay();
   virtual void unloadToPlay();
   virtual bool updateToTime(int i_time, Vector2f& i_gravity);
-  std::vector<EntityParticle *> &Particles();
+  inline std::vector<EntityParticle*>& Particles() {
+    return m_particles;
+  }
   virtual void addParticle(int i_curTime) = 0;
 
   static void setAllowParticleGeneration(bool i_value);
