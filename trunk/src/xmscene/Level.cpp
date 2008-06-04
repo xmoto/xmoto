@@ -987,7 +987,7 @@ void Level::importHeader(const std::string& i_id,
   ===========================================================================*/
 bool Level::importBinaryHeaderFromFile(const std::string &FileName, const std::string& pSum) {
   /* Import binary */
-  FileHandle *pfh = FS::openIFile(FileName);
+  FileHandle *pfh = FS::openIFile(FileName, true);
   if(pfh == NULL) {
     return false;
   }
@@ -1039,7 +1039,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
   m_xmotoTooOld = false;
   
   /* Import binary */
-  FileHandle *pfh = FS::openIFile(FileName);
+  FileHandle *pfh = FS::openIFile(FileName, true);
   if(pfh == NULL) {
     return false;
   }
