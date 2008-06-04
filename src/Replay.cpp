@@ -540,7 +540,7 @@ bool Replay::nextState(int p_frames) {
       /* Try opening it */
       FileHandle *pfh = FS::openIFile("Replays/" + p_ReplayName + ".rpl");
       if(pfh == NULL) {
-	pfh = FS::openIFile(p_ReplayName);
+	pfh = FS::openIFile(p_ReplayName, true);
 	if(pfh == NULL) {
 	  return NULL;
 	}
