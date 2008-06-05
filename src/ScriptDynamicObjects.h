@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 
 class MotoGame;
+class Entity;
 
 class SDynamicObject {
  public:
@@ -32,12 +33,16 @@ class SDynamicObject {
   
   /* return false if the dynamic is finished */
   bool nextState(MotoGame* v_motoGame, int i_nbCents);
-  virtual std::string getObjectId() = 0;
+  inline std::string& getObjectId() {
+    return m_objectId;
+  }
   
  protected:
   bool isTimeToMove();
   virtual void performMove(MotoGame* v_motoGame, int i_nbCents) = 0;  
   int Period() const;
+
+  std::string m_objectId;
 
  private:
   int m_time;
@@ -107,7 +112,8 @@ class SDynamicEntityMove : public SDynamicObject {
   virtual void performXY(float *vx, float *vy, float *vAngle) = 0;
 
  private:
-  std::string m_entity;
+  std::string m_entityName;
+  Entity*     m_entity;
 };
 
 class SDynamicEntityRotation : public SDynamicEntityMove, public SDynamicRotation {

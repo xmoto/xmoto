@@ -406,10 +406,6 @@ void Block::unloadToPlay() {
   m_collisionLines.clear();
 }
 
-std::string Block::Id() const {
-  return m_id;
-}
-
 bool Block::isBackground() const {
   return m_background;
 }
@@ -449,10 +445,6 @@ float Block::Friction() const {
 
 float Block::Elasticity() const {
   return m_elasticity;
-}
-
-std::string Block::Texture() const {
-  return m_texture;
 }
 
 float Block::TextureScale() const {

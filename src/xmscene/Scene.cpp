@@ -922,8 +922,7 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::SetEntityPos(std::string pEntityID, float pX, float pY) {
-    SetEntityPos(m_pLevelSrc->getEntityById(pEntityID),
-		 pX, pY);
+    SetEntityPos(m_pLevelSrc->getEntityById(pEntityID), pX, pY);
   }
 
   void MotoGame::SetEntityPos(Entity *pEntity, float pX, float pY) {
