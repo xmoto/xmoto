@@ -107,26 +107,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #endif
 #endif
 
-/*===========================================================================
-Macros
-===========================================================================*/
-#define MAKE_COLOR(red,green,blue,alpha) \
-	((Color)(alpha|(((Color)blue)<<8)|(((Color)green)<<16)|(((Color)red)<<24)))
-#define GET_ALPHA(color) \
-	((Color)(color&0xff))
-#define GET_BLUE(color) \
-	((Color)((color&0xff00)>>8))
-#define GET_GREEN(color) \
-	((Color)((color&0xff0000)>>16))
-#define GET_RED(color) \
-	((Color)((color&0xff000000)>>24))
-#define INVERT_COLOR(color) \
-	MAKE_COLOR(255-GET_RED(color),255-GET_GREEN(color),255-GET_BLUE(color),GET_ALPHA(color))
 
-/*===========================================================================
-  Types
-  ===========================================================================*/
-  typedef unsigned int Color;
 
 //used a comparator in sdt::map
 struct ltstr {

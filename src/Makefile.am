@@ -81,7 +81,6 @@ helpers_SOURCES = helpers/VMath.h             \
                   helpers/FileCompression.h   \
                   helpers/FileCompression.cpp \
                   helpers/Color.h             \
-                  helpers/Color.cpp           \
                   helpers/HighPrecisionTimer.h \
 		  helpers/utf8.h   \
 		  helpers/utf8.cpp \
