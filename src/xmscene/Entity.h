@@ -61,7 +61,9 @@ class Entity {
   float Height() const;
   float DrawAngle() const;
   bool  DrawReversed() const;
-  const TColor& Color() const;
+  inline const TColor& Color() const {
+    return m_color;
+  }
   inline const std::string& SpriteName() const
   {
     return m_spriteName;
@@ -71,10 +73,16 @@ class Entity {
 
   virtual void loadToPlay();
   virtual void unloadToPlay();
-  void setDynamicPosition(const Vector2f& i_dynamicPosition);
+  inline void setDynamicPosition(const Vector2f& i_dynamicPosition) {
+    m_dynamicPosition = i_dynamicPosition;
+    m_isBBoxDirty = true;
+  }
   void setInitialPosition(const Vector2f& i_initialPosition);
   void setId(const std::string& i_id);
-  void setSize(float i_size);
+  inline void setSize(float i_size) {
+    m_size = i_size;
+    m_isBBoxDirty = true;
+  }
   void setWidth(float i_width);
   void setHeight(float i_height);
   void setDrawAngle(float i_drawAngle);
@@ -82,7 +90,9 @@ class Entity {
   void setZ(float i_z);
   void setSpriteName(const std::string& i_spriteName);
   void setSprite(Sprite* i_sprite);
-  void setColor(const TColor& i_color);
+  inline void setColor(const TColor& i_color) {
+    m_color = i_color;
+  }
   void setAlive(bool alive);
 
   void saveXml(FileHandle *i_pfh);
@@ -240,14 +250,19 @@ class EntityParticle : public Entity {
   virtual ~EntityParticle();
 
   virtual  bool updateToTime(int i_time, Vector2f& i_gravity);
-  int           KillTime() const;
-  float         Angle() const;
+  inline   int  KillTime() const {
+    return m_killTime;
+  }
+
+  inline float Angle() const {
+    return m_ang;
+  }
 
   // for fast spriteName check
   inline unsigned int  spriteIndex() {
     return m_spriteIndex;
   }
-  void setSpriteIndex(unsigned int spriteIndex){
+  inline void setSpriteIndex(unsigned int spriteIndex){
     m_spriteIndex = spriteIndex;
   }
 

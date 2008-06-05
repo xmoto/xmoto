@@ -155,18 +155,6 @@ DrawLibOpenGL::DrawLibOpenGL() : DrawLib(){
 /*===========================================================================
   Transform an OpenGL vertex to pure 2D 
   ===========================================================================*/
-void DrawLibOpenGL::glVertexSP(float x,float y) {
-  glVertex2f(x, m_nActualHeight - y);
-}
-
-void DrawLibOpenGL::glVertex(float x,float y) {
-  glVertex2f(x, y);
-}
-
-void DrawLibOpenGL::glTexCoord(float x,float y){
-  glTexCoord2f(x, y);
-} 
-
 void DrawLibOpenGL::screenProjVertex(float *x, float *y) {
   *y = m_nActualHeight - (*y);
 }
@@ -508,10 +496,6 @@ void DrawLibOpenGL::removePropertiesAfterEnd() {
   }
 }
 
-void DrawLibOpenGL::setColor(Color color){
-  glColor4ub(GET_RED(color), GET_GREEN(color), GET_BLUE(color), GET_ALPHA(color));
-}
-
 void DrawLibOpenGL::setTexture(Texture *texture, BlendMode blendMode){
   setBlendMode(blendMode);
   if(texture != NULL){
@@ -529,8 +513,8 @@ void DrawLibOpenGL::setTexture(Texture *texture, BlendMode blendMode){
     }
   }
   m_texture = texture;
-} 
-  
+}
+
 void DrawLibOpenGL::setBlendMode(BlendMode blendMode){
   if(blendMode != BLEND_MODE_NONE){
     glEnable(GL_BLEND);

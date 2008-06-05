@@ -32,14 +32,23 @@ class DrawLibOpenGL : public DrawLib {
 		    bool bWindowed);
   virtual void unInit();
 
-  virtual void glVertexSP(float x, float y);
-  virtual void glVertex(float x, float y);
+  inline void glVertexSP(float x, float y) {
+    glVertex2f(x, m_nActualHeight - y);
+  }
+  inline void glVertex(float x, float y) {
+    glVertex2f(x, y);
+  }
   
   //texture coordinate
-  virtual void glTexCoord(float x, float y);
+  inline  void glTexCoord(float x, float y) {
+    glTexCoord2f(x, y);
+  }
   virtual void screenProjVertex(float* x, float* y);
 
-  virtual void setColor(Color color);
+  inline void setColor(Color color) {
+    glColor4ub(GET_RED(color), GET_GREEN(color), GET_BLUE(color), GET_ALPHA(color));
+  }
+
   /**
    * set the texture for drawing
    * the value may be NULL to disable texture
