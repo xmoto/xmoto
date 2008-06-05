@@ -167,27 +167,51 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
        so that all sprite type can be animated
     */
     pc = pVarElem->Attribute("fileBase");
-    v_isAnimation = pc != NULL;
+    v_isAnimation = (pc != NULL);
 
-    if(v_spriteType == "Entity" && v_isAnimation) {
+    if(v_spriteType == "BikerPart") {
+      newSpriteFromXML<BikerPartSprite>(pVarElem,
+					THEME_BIKERPART_SPRITE_FILE_DIR,
+					"BikerPart");
+    }
+    else if(v_spriteType == "Effect") {
+      newSpriteFromXML<EffectSprite>(pVarElem,
+				     THEME_EFFECT_SPRITE_FILE_DIR,
+				     "Effect");
+    }
+    else if(v_spriteType == "Font") {
+      newSpriteFromXML<FontSprite>(pVarElem,
+				   THEME_FONT_SPRITE_FILE_DIR,
+				   "Font");
+    }
+    else if(v_spriteType == "Misc") {
+      newSpriteFromXML<MiscSprite>(pVarElem,
+				   THEME_MISC_SPRITE_FILE_DIR,
+				   "Misc");
+    }
+    else if(v_spriteType == "Texture") {
+      newSpriteFromXML<TextureSprite>(pVarElem,
+				      THEME_TEXTURE_SPRITE_FILE_DIR,
+				      "Texture");
+    }
+    else if(v_spriteType == "UI") {
+      newSpriteFromXML<UISprite>(pVarElem,
+				 THEME_UI_SPRITE_FILE_DIR,
+				 "UI");
+    }
+
+    else if(v_spriteType == "Entity" && v_isAnimation == true) {
       newAnimationSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "BikerPart") {
-      newBikerPartSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "Entity" && v_isAnimation == false) {
+    }
+    else if(v_spriteType == "Entity" && v_isAnimation == false) {
       newDecorationSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "Effect") {
-      newEffectSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "Font") {
-      newFontSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "Misc") {
-      newMiscSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "Texture") {
-      newTextureSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "UI") {
-      newUISpriteFromXML(pVarElem);
-    } else if(v_spriteType == "EdgeEffect") {
+    }
+
+    else if(v_spriteType == "EdgeEffect") {
       newEdgeEffectSpriteFromXML(pVarElem);
-    } else {
+    }
+
+    else {
       Logger::Log("Warning: unknown type '%s' in theme file !", v_spriteType.c_str());
     }
   }
@@ -302,6 +326,47 @@ void Theme::cleanSounds() {
   m_sounds.clear(); 
 }
 
+
+template <typename SpriteType>
+void Theme::newSpriteFromXML(TiXmlElement *pVarElem,
+			     const char*   fileDir,
+			     const char*   spriteTypeName)
+{
+  std::string v_name;
+  std::string v_fileName;
+  const char *pc;
+  std::string v_sum;
+
+  pc = pVarElem->Attribute("name");
+  if(pc == NULL) {
+    Logger::Log("** %s with no name", spriteTypeName);
+    return;
+  }
+  v_name = pc;
+
+  pc = pVarElem->Attribute("file");
+  if(pc == NULL) {
+    Logger::Log("** %s with no file", spriteTypeName);
+    return;
+  }
+  v_fileName = pc;
+
+  pc = pVarElem->Attribute("sum");
+  if(pc != NULL)
+    v_sum = pc;
+
+  if(isAFileOutOfDate(fileDir + std::string("/") + v_fileName) == false) {
+    Sprite* pSprite = new SpriteType(this, v_name, v_fileName);
+    pSprite->setOrder(m_sprites.size());
+
+    m_sprites.push_back(pSprite);
+    
+    ThemeFile v_file = {fileDir + std::string("/") + v_fileName, v_sum};
+    m_requiredFiles.push_back(v_file);
+  }
+}
+
+
 void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_name;
   std::string v_fileBase;
@@ -343,6 +408,7 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
   if(pc != NULL) {global_delay = atof(pc);}
 
   v_anim = new AnimationSprite(this, v_name, v_fileBase, v_fileExtension);
+  v_anim->setOrder(m_sprites.size());
   m_sprites.push_back(v_anim);
 
   int n = 0;
@@ -390,30 +456,6 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
       }
       n++;
     }
-  }
-}
-
-void Theme::newBikerPartSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-  std::string v_sum;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {Logger::Log("** BikerPart with no name"); return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {Logger::Log("** BikerPart with no file"); return;}
-  v_fileName = pc;
-
-  pc = pVarElem->Attribute("sum");
-  if(pc != NULL) { v_sum = pc; };
-
-  if(isAFileOutOfDate(THEME_BIKERPART_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
-    m_sprites.push_back(new BikerPartSprite(this, v_name, v_fileName));
-    ThemeFile v_file = {THEME_BIKERPART_SPRITE_FILE_DIR + std::string("/") + v_fileName, v_sum};
-    m_requiredFiles.push_back(v_file);
   }
 }
 
@@ -497,6 +539,7 @@ void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem)
 
   v_anim = new AnimationSprite(this, v_name, v_fileBase, v_fileExtension);
   v_anim->setBlendMode(strToBlendMode(v_blendmode));
+  v_anim->setOrder(m_sprites.size());
 
   m_sprites.push_back(v_anim);
 
@@ -506,30 +549,6 @@ void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem)
 
     ThemeFile v_file = {THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
 			v_fileBase + std::string(".") + v_fileExtension, v_sum};
-    m_requiredFiles.push_back(v_file);
-  }
-}
-
-void Theme::newEffectSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-  std::string v_sum;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {Logger::Log("** Effect with no name"); return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {Logger::Log("** Effect with no file"); return;}
-  v_fileName = pc;
-
-  pc = pVarElem->Attribute("sum");
-  if(pc != NULL) { v_sum = pc; };
-
-  if(isAFileOutOfDate(THEME_EFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
-    m_sprites.push_back(new EffectSprite(this, v_name, v_fileName));
-    ThemeFile v_file = {THEME_EFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName, v_sum};
     m_requiredFiles.push_back(v_file);
   }
 }
@@ -562,109 +581,19 @@ void Theme::newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem) {
   if(pc != NULL) { v_sum = pc; };
 
   if(isAFileOutOfDate(THEME_EDGEEFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
-    m_sprites.push_back(new EdgeEffectSprite(this, v_name, v_fileName,
-					     atof(v_scale.c_str()),
-					     atof(v_depth.c_str())));
+    Sprite* pSprite = new EdgeEffectSprite(this, v_name, v_fileName,
+					   atof(v_scale.c_str()),
+					   atof(v_depth.c_str()));
+    pSprite->setOrder(m_sprites.size());
+
+    m_sprites.push_back(pSprite);
+
     ThemeFile v_file = {THEME_EDGEEFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName, v_sum};
     m_requiredFiles.push_back(v_file);
   }
 }
 
-void Theme::newFontSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-  std::string v_sum;
 
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {Logger::Log("** Font with no name"); return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {Logger::Log("Font with no file"); return;}
-  v_fileName = pc;
-
-  pc = pVarElem->Attribute("sum");
-  if(pc != NULL) { v_sum = pc; };
-
-  if(isAFileOutOfDate(THEME_FONT_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
-    m_sprites.push_back(new FontSprite(this, v_name, v_fileName));
-    ThemeFile v_file = {THEME_FONT_SPRITE_FILE_DIR + std::string("/") + v_fileName, v_sum};
-    m_requiredFiles.push_back(v_file);
-  }
-}
-
-void Theme::newMiscSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-  std::string v_sum;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {Logger::Log("** Misc with no name"); return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {Logger::Log("** Misc with no file"); return;}
-  v_fileName = pc;
-
-  pc = pVarElem->Attribute("sum");
-  if(pc != NULL) { v_sum = pc; };
-
-  if(isAFileOutOfDate(THEME_MISC_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
-    m_sprites.push_back(new MiscSprite(this, v_name, v_fileName));
-    ThemeFile v_file = {THEME_MISC_SPRITE_FILE_DIR + std::string("/") + v_fileName, v_sum};
-    m_requiredFiles.push_back(v_file);
-  }
-}
-
-void Theme::newUISpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-  std::string v_sum;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {Logger::Log("** UI with no name"); return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {Logger::Log("** UI with no file"); return;}
-  v_fileName = pc;
-
-  pc = pVarElem->Attribute("sum");
-  if(pc != NULL) { v_sum = pc; };
-
-  if(isAFileOutOfDate(THEME_UI_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
-    m_sprites.push_back(new UISprite(this, v_name, v_fileName));
-    ThemeFile v_file = {THEME_UI_SPRITE_FILE_DIR + std::string("/") + v_fileName, v_sum};
-    m_requiredFiles.push_back(v_file);
-  }
-}
-
-void Theme::newTextureSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-  std::string v_sum;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {Logger::Log("** Texture with no name"); return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {Logger::Log("** Texture with no file"); return;}
-  v_fileName = pc;
-
-  pc = pVarElem->Attribute("sum");
-  if(pc != NULL) { v_sum = pc; };
-
-  if(isAFileOutOfDate(THEME_TEXTURE_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
-    m_sprites.push_back(new TextureSprite(this, v_name, v_fileName));
-    ThemeFile v_file = {THEME_TEXTURE_SPRITE_FILE_DIR + std::string("/") + v_fileName, v_sum};
-    m_requiredFiles.push_back(v_file);
-  }
-}
 
 BikerTheme* Theme::getPlayerTheme() {
   return m_player;
@@ -696,6 +625,11 @@ Texture* Sprite::getTexture(bool bSmall, bool bClamp, FilterMode eFilterMode) {
   }
   
   return v_currentTexture;
+}
+
+void Sprite::setOrder(unsigned int order)
+{
+  m_order = order;
 }
 
 SpriteBlendMode Sprite::getBlendMode() {
