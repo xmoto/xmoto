@@ -325,11 +325,11 @@ void Level::updateToTime(MotoGame& i_scene) {
     v_entities[i]->updateToTime(v_time, v_gravity);
   }
 
-  v_entities = EntitiesExterns();
-  size       = v_entities.size();
+  std::vector<Entity*> v_externalEntities = EntitiesExterns();
+  size                                    = v_externalEntities.size();
 
   for(unsigned int i=0; i<size; i++) {
-    v_entities[i]->updateToTime(v_time, v_gravity);
+    v_externalEntities[i]->updateToTime(v_time, v_gravity);
   }
 }
 

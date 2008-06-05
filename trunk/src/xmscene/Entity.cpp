@@ -83,10 +83,6 @@ bool Entity::DoesKill() const {
   return m_doesKill;
 }
 
-const TColor& Entity::Color() const {
-  return m_color;
-}
-
 Vector2f Entity::InitialPosition() const {
   return m_initialPosition;
 }
@@ -130,11 +126,6 @@ void Entity::setSprite(Sprite* i_sprite)
   m_sprite = i_sprite;
 }
 
-void Entity::setSize(float i_size) {
-  m_size = i_size;
-  m_isBBoxDirty = true;
-}
-
 void Entity::setSpeciality(EntitySpeciality i_speciality) {
   m_doesMakeWin = (i_speciality == ET_MAKEWIN);
   m_doesKill    = (i_speciality == ET_KILL);
@@ -163,10 +154,6 @@ void Entity::setZ(float i_z) {
   m_z = i_z;
 }
 
-void Entity::setColor(const TColor& i_color) {
-  m_color = i_color;
-}
-
 void Entity::setAlive(bool alive) {
   m_isAlive = alive;
 }
@@ -190,11 +177,6 @@ AABB& Entity::getAABB()
   }
 
   return m_BBox;
-}
-
-void Entity::setDynamicPosition(const Vector2f& i_dynamicPosition) {
-  m_dynamicPosition = i_dynamicPosition;
-  m_isBBoxDirty = true;
 }
 
 
@@ -789,14 +771,6 @@ bool EntityParticle::updateToTime(int i_time, Vector2f& i_gravity) {
   m_ang      += m_angVel       * v_timeStep;
 
   return true;
-}
-
-int EntityParticle::KillTime() const {
-  return m_killTime;
-}
-
-float EntityParticle::Angle() const {
-  return m_ang;
 }
 
 
