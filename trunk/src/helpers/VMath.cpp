@@ -37,13 +37,6 @@ void AABB::reset()
   BMax.x = BMax.y = -99999999;
 }
 
-void AABB::addPointToAABB2f(const float x, const float y){
-  if(x < BMin.x) BMin.x = x;
-  if(y < BMin.y) BMin.y = y;
-  if(x > BMax.x) BMax.x = x;
-  if(y > BMax.y) BMax.y = y;    
-}
-
 void AABB::addPointToAABB2f(const Vector2f &Point) {
   if(Point.x < BMin.x) BMin.x = Point.x;
   if(Point.y < BMin.y) BMin.y = Point.y;

@@ -329,7 +329,12 @@ class AABB {
   bool pointTouchAABB2f(const Vector2f &P);
   bool AABBTouchAABB2f(const Vector2f &BMin1, const Vector2f &BMax1);
   void addPointToAABB2f(const Vector2f &Point);
-  void addPointToAABB2f(const float x, const float y);
+  inline void addPointToAABB2f(const float x, const float y) {
+    if(x < BMin.x) BMin.x = x;
+    if(y < BMin.y) BMin.y = y;
+    if(x > BMax.x) BMax.x = x;
+    if(y > BMax.y) BMax.y = y;    
+  }
 
  private:
   Vector2f BMin, BMax;

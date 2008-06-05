@@ -114,8 +114,12 @@ class Block {
   Block(std::string i_id);
   ~Block();
 
-  std::string Id() const;
-  std::string Texture() const;
+  inline std::string& Id() {
+    return m_id;
+  }
+  inline std::string& Texture() {
+    return m_texture;
+  }
   Vector2f InitialPosition() const;
   /* called many many many times, so we inline it, and make it return a ref */
   inline Vector2f& DynamicPosition() {

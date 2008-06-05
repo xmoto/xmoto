@@ -32,22 +32,14 @@ class DrawLibOpenGL : public DrawLib {
 		    bool bWindowed);
   virtual void unInit();
 
-  inline void glVertexSP(float x, float y) {
-    glVertex2f(x, m_nActualHeight - y);
-  }
-  inline void glVertex(float x, float y) {
-    glVertex2f(x, y);
-  }
+  virtual void glVertexSP(float x, float y);
+  virtual void glVertex(float x, float y);
   
   //texture coordinate
-  inline  void glTexCoord(float x, float y) {
-    glTexCoord2f(x, y);
-  }
+  virtual void glTexCoord(float x, float y);
   virtual void screenProjVertex(float* x, float* y);
 
-  inline void setColor(Color color) {
-    glColor4ub(GET_RED(color), GET_GREEN(color), GET_BLUE(color), GET_ALPHA(color));
-  }
+  virtual void setColor(Color color);
 
   /**
    * set the texture for drawing

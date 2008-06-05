@@ -40,21 +40,20 @@ class Entity {
   virtual ~Entity();
 
   /* PlayerStart0, Flower0, Strawberry0, ... */
-  std::string Id() const;
-  inline float Size() const
-  {
+  inline std::string& Id() {
+    return m_id;
+  }
+  inline float Size() const {
     return m_size;
   }
   Vector2f InitialPosition() const;
-  inline Vector2f DynamicPosition() const
-  {
+  inline Vector2f DynamicPosition() const {
     return m_dynamicPosition;  
   }
   bool DoesKill() const; /** have this entity the property to kill ? (like wecker) */
   bool DoesMakeWin() const; /** have this entity the property to make win ? (like flower) */
   bool IsToTake() const; /* return true is the entity must be taken by the player */
-  inline float Z() const
-  {
+  inline float Z() const {
     return m_z;
   }
   float Width() const;
@@ -64,8 +63,7 @@ class Entity {
   inline const TColor& Color() const {
     return m_color;
   }
-  inline const std::string& SpriteName() const
-  {
+  inline const std::string& SpriteName() const {
     return m_spriteName;
   }
   Sprite* getSprite() const;

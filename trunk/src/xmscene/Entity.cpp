@@ -67,10 +67,6 @@ void Entity::loadToPlay() {
 void Entity::unloadToPlay() {
 }
 
-std::string Entity::Id() const {
-  return m_id;
-}
-
 bool Entity::IsToTake() const {
   return m_isToTake;
 }
