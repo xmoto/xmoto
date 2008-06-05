@@ -46,6 +46,7 @@ struct hashcmp_str {
 };
 
 #include "helpers/VMath.h"
+#include "helpers/Color.h"
 
 class Img;
 class Camera;
