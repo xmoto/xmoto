@@ -64,7 +64,7 @@ class Zone;
     void removeElement(T* id);
     void moveElement(T* id);
     /* FIXME::return ref */
-    std::vector<T*> getElementsNearPosition(AABB& BBox);
+    std::vector<T*>& getElementsNearPosition(AABB& BBox);
 
 
     ElementHandler(){
@@ -99,6 +99,9 @@ class Zone;
 
     bool m_bDebugFlag;
     std::vector<T*> m_CheckedElements;
+
+    // the vector returned by getElementsNearPosition
+    std::vector<T*> m_returnedElements;
 
     /* helpers */
     ColElement* _getColElement(T* id){
@@ -193,7 +196,7 @@ class Zone;
     void addEntity(Entity* id);
     void removeEntity(Entity* id);
     void moveEntity(Entity* id);
-    std::vector<Entity*> getEntitiesNearPosition(AABB& BBox);
+    std::vector<Entity*>& getEntitiesNearPosition(AABB& BBox);
 
     /* TODO::zones
     void addZone(Zone* id);
@@ -205,14 +208,14 @@ class Zone;
     void addDynBlock(Block* id);
     void removeDynBlock(Block* id);
     void moveDynBlock(Block* id);
-    std::vector<Block*> getDynBlocksNearPosition(AABB& BBox);
+    std::vector<Block*>& getDynBlocksNearPosition(AABB& BBox);
 
     /* -1 for actual static block layer, other value (0) for the second static layer */
     void addStaticBlock(Block* id, bool inFrontLayer=false);
-    std::vector<Block*> getStaticBlocksNearPosition(AABB& BBox, int layer=-1);
+    std::vector<Block*>& getStaticBlocksNearPosition(AABB& BBox, int layer=-1);
 
     void addBlockInLayer(Block* id, int layer);
-    std::vector<Block*> getBlocksNearPositionInLayer(AABB& BBox, int layer);
+    std::vector<Block*>& getBlocksNearPositionInLayer(AABB& BBox, int layer);
 
   private:
     /* Data */

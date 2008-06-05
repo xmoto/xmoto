@@ -273,7 +273,7 @@ CollisionSystem::~CollisionSystem() {
     AABB BBox;
     BBox.addPointToAABB2f(fMinX, fMinY);
     BBox.addPointToAABB2f(fMaxX, fMaxY);
-    std::vector<Block*> blocks = getDynBlocksNearPosition(BBox);
+    std::vector<Block*>& blocks = getDynBlocksNearPosition(BBox);
 
     for(unsigned int i=0; i<blocks.size(); i++){
       Block* pBlock = blocks[i];
@@ -385,7 +385,7 @@ CollisionSystem::~CollisionSystem() {
     AABB BBox;
     BBox.addPointToAABB2f(fMinX, fMinY);
     BBox.addPointToAABB2f(fMaxX, fMaxY);
-    std::vector<Block*> blocks = getDynBlocksNearPosition(BBox);
+    std::vector<Block*>& blocks = getDynBlocksNearPosition(BBox);
 
     for(unsigned int i=0; i<blocks.size(); i++){
       Block* pBlock = blocks[i];
@@ -603,7 +603,7 @@ CollisionSystem::~CollisionSystem() {
     AABB BBox;
     BBox.addPointToAABB2f(fMinX, fMinY);
     BBox.addPointToAABB2f(fMaxX, fMaxY);
-    std::vector<Block*> blocks = getDynBlocksNearPosition(BBox);
+    std::vector<Block*>& blocks = getDynBlocksNearPosition(BBox);
 
     for(unsigned int i=0; i<blocks.size(); i++){
       Block* pBlock = blocks[i];
@@ -758,7 +758,7 @@ CollisionSystem::~CollisionSystem() {
     m_entitiesHandler.moveElement(id);
   }
 
-  std::vector<Entity*> CollisionSystem::getEntitiesNearPosition(AABB& BBox)
+  std::vector<Entity*>& CollisionSystem::getEntitiesNearPosition(AABB& BBox)
   {
     return m_entitiesHandler.getElementsNearPosition(BBox);
   }
@@ -801,7 +801,7 @@ CollisionSystem::~CollisionSystem() {
     m_dynBlocksHandler.moveElement(id);
   }
 
-  std::vector<Block*> CollisionSystem::getDynBlocksNearPosition(AABB& BBox)
+  std::vector<Block*>& CollisionSystem::getDynBlocksNearPosition(AABB& BBox)
   {
     return m_dynBlocksHandler.getElementsNearPosition(BBox);
   }
@@ -817,7 +817,7 @@ CollisionSystem::~CollisionSystem() {
     }
   }
 
-  std::vector<Block*> CollisionSystem::getStaticBlocksNearPosition(AABB& BBox, int layer)
+  std::vector<Block*>& CollisionSystem::getStaticBlocksNearPosition(AABB& BBox, int layer)
   {
     if(layer == -1){
       return m_staticBlocksHandler.getElementsNearPosition(BBox);
@@ -832,7 +832,7 @@ CollisionSystem::~CollisionSystem() {
     m_layerBlocksHandlers[layer]->addElement(id);
   }
 
-  std::vector<Block*> CollisionSystem::getBlocksNearPositionInLayer(AABB& BBox, int layer)
+  std::vector<Block*>& CollisionSystem::getBlocksNearPositionInLayer(AABB& BBox, int layer)
   {
     return m_layerBlocksHandlers[layer]->getElementsNearPosition(BBox);
   }
@@ -864,6 +864,8 @@ CollisionSystem::~CollisionSystem() {
     }
 
     EMPTY_AND_CLEAR_VECTOR(m_ColElements);
+    // reserve 256 entry to avoid mallocs during the game
+    m_returnedElements.reserve(256);
   }
 
   template <class T> void
@@ -916,10 +918,10 @@ CollisionSystem::~CollisionSystem() {
     _addColElementInCells(pColElem);
   }
 
-  template <class T> std::vector<T*>
+  template <class T> std::vector<T*>&
   ElementHandler<T>::getElementsNearPosition(AABB& BBox)
   {
-    std::vector<T*> elements;
+    m_returnedElements.clear();
     Vector2f BMin = BBox.getBMin();
     Vector2f BMax = BBox.getBMax();
 
@@ -929,10 +931,14 @@ CollisionSystem::~CollisionSystem() {
     int nMaxCX = (int)floor(((BMax.x - m_min.x + CD_EPSILON) * (float)m_gridWidth)  / (m_max.x - m_min.x));
     int nMaxCY = (int)floor(((BMax.y - m_min.y + CD_EPSILON) * (float)m_gridHeight) / (m_max.y - m_min.y));
 
-    if(nMinCX < 0) nMinCX = 0;
-    if(nMinCY < 0) nMinCY = 0;
-    if(nMaxCX >= m_gridWidth)  nMaxCX = m_gridWidth;
-    if(nMaxCY >= m_gridHeight) nMaxCY = m_gridHeight;        
+    if(nMinCX < 0)
+      nMinCX = 0;
+    if(nMinCY < 0)
+      nMinCY = 0;
+    if(nMaxCX >= m_gridWidth)
+      nMaxCX = m_gridWidth;
+    if(nMaxCY >= m_gridHeight)
+      nMaxCY = m_gridHeight;        
 
     if(m_bDebugFlag) {
       m_CheckedElements.clear();
@@ -956,7 +962,7 @@ CollisionSystem::~CollisionSystem() {
 	    
 	    gridCellColElements[k]->curCheck = m_curCheck;
 
-	    elements.push_back(gridCellColElements[k]->id);
+	    m_returnedElements.push_back(gridCellColElements[k]->id);
 	    
 	    if(m_bDebugFlag) {
 	      m_CheckedElements.push_back(gridCellColElements[k]->id);
@@ -967,7 +973,7 @@ CollisionSystem::~CollisionSystem() {
     }
 
     //printf("ElementHandler::getElementsNearPosition end\n");
-    return elements;
+    return m_returnedElements;
   }
 
   /*=====================================================
