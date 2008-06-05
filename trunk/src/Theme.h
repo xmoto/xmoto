@@ -136,6 +136,12 @@ class Sprite {
   inline std::string& getName() {
     return m_name;
   }
+
+  inline unsigned int getOrder() {
+    return m_order;
+  }
+  void setOrder(unsigned int order);
+
   SpriteBlendMode getBlendMode();
   void setBlendMode(SpriteBlendMode Mode);
   void load();
@@ -152,6 +158,8 @@ class Sprite {
   virtual void setCurrentTexture(Texture *p_texture) = 0;
   virtual std::string getFileDir();
   enum SpriteType m_type;
+  // to sort entities by sprite for rendering
+  unsigned int m_order;
 
   private:
   Theme* m_associated_theme;
@@ -321,6 +329,9 @@ struct ThemeFile {
   std::string filemd5;
 };
 
+
+
+
 class Theme : public Singleton<Theme> {
   friend class Singleton<Theme>;
 
@@ -366,15 +377,19 @@ public:
 
   void loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement);
 
+  // use template instead of duplicate code
+  template <typename SpriteType> void newSpriteFromXML(TiXmlElement *pVarElem,
+						       const char*   fileDir,
+						       const char*   spriteTypeName);
+
   void newAnimationSpriteFromXML(TiXmlElement *pVarElem);
-  void newBikerPartSpriteFromXML(TiXmlElement *pVarElem);
   void newDecorationSpriteFromXML(TiXmlElement *pVarElem);
-  void newEffectSpriteFromXML(TiXmlElement *pVarElem);
+
   void newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem);
-  void newFontSpriteFromXML(TiXmlElement *pVarElem);
-  void newMiscSpriteFromXML(TiXmlElement *pVarElem);
-  void newTextureSpriteFromXML(TiXmlElement *pVarElem);
-  void newUISpriteFromXML(TiXmlElement *pVarElem);
+
+
+
+
   
   SpriteBlendMode strToBlendMode(const std::string &s);
   std::string blendModeToStr(SpriteBlendMode Mode);
