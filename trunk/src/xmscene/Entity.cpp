@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Random.h"
 
 // don't excceed this number of particles to not reduce significantly the fps
-#define PARTICLESSOURCE_TOTAL_MAX_PARTICLES 5000
+#define PARTICLESSOURCE_TOTAL_MAX_PARTICLES 512
 #define ENTITY_DEFAULT_SPRITE_NAME ""
 #define ENTITY_DEFAULT_SIZE        1.0
 #define ENTITY_DEFAULT_Z           -1.0
