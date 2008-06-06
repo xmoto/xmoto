@@ -955,6 +955,11 @@ void MotoGame::cleanPlayers() {
     m_Collision.moveDynBlock(v_block);
   }
   
+  void MotoGame::MoveBlock(Block* pBlock, float pX, float pY) {
+    pBlock->setDynamicPosition(pBlock->DynamicPosition() + Vector2f(pX, pY));
+    m_Collision.moveDynBlock(pBlock);
+  }
+  
   void MotoGame::SetBlockPos(std::string pBlockID, float pX, float pY) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
     v_block->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
@@ -971,6 +976,11 @@ void MotoGame::cleanPlayers() {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
     v_block->setDynamicRotation(pAngle);
     m_Collision.moveDynBlock(v_block);
+  }     
+  
+  void MotoGame::SetBlockRotation(Block* pBlock, float pAngle) {
+    pBlock->setDynamicRotation(pAngle);
+    m_Collision.moveDynBlock(pBlock);
   }     
   
   void MotoGame::SetEntityDrawAngle(std::string pEntityID, float pAngle) {

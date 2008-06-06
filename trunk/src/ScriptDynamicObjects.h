@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class MotoGame;
 class Entity;
+class Block;
 
 class SDynamicObject {
  public:
@@ -159,7 +160,8 @@ class SDynamicBlockMove : public SDynamicObject {
   virtual void performXY(float *vx, float *vy, float *vAngle) = 0;
 
  private:
-  std::string m_block;
+  std::string m_blockName;
+  Block*      m_block;
 };
 
 class SDynamicBlockRotation : public SDynamicBlockMove, public SDynamicRotation {

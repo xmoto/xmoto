@@ -167,9 +167,11 @@ public:
   void PlaceScreenArrow(float pX, float pY, float pAngle);
   void HideArrow();
   void MoveBlock(std::string pBlockID, float pX, float pY);
+  void MoveBlock(Block* pBlock, float pX, float pY);
   void SetBlockPos(std::string pBlockID, float pX, float pY);
   void SetBlockCenter(std::string pBlockID, float pX, float pY);
   void SetBlockRotation(std::string pBlockID, float pAngle);
+  void SetBlockRotation(Block* pBlock, float pAngle);
   void SetEntityDrawAngle(std::string pEntityID, float pAngle);
 
   void CameraZoom(float pZoom);
