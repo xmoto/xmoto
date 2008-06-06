@@ -66,7 +66,9 @@ class Entity {
   inline const std::string& SpriteName() const {
     return m_spriteName;
   }
-  Sprite* getSprite() const;
+  inline Sprite* getSprite() const {
+    return m_sprite;
+  }
   bool  isAlive() const;
 
   virtual void loadToPlay();

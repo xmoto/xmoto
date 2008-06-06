@@ -104,11 +104,6 @@ void Entity::setInitialPosition(const Vector2f& i_initialPosition) {
   m_isBBoxDirty = true;
 }
 
-Sprite* Entity::getSprite() const
-{
-  return m_sprite;
-}
-
 bool Entity::isAlive() const {
   return m_isAlive;
 }
