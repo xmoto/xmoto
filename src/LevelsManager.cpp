@@ -356,11 +356,11 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   v_pack = new LevelsPack(std::string(VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE),
 			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
 			  "FROM levels AS a INNER JOIN "
-			  "webhighscores AS b ON a.id_level = b.id_level "
+			  "webhighscores AS b ON (a.id_level = b.id_level "
+			  "AND b.id_room=" + i_id_room + ") "
 			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE b.id_room=" + i_id_room + " "
-			  "AND b.id_profile<>\"" + xmDatabase::protectString(i_playerName) + "\" "
+			  "WHERE b.id_profile<>\"" + xmDatabase::protectString(i_playerName) + "\" "
 			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
 			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
 			  "AND d.id_level IS NULL");
@@ -372,11 +372,11 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   v_pack = new LevelsPack(std::string(VPACKAGENAME_LAST_HIGHSCORES),
 			  "SELECT a.id_level AS id_level, a.name AS name, b.date AS sort_field "
 			  "FROM levels AS a INNER JOIN "
-			  "webhighscores AS b ON a.id_level = b.id_level "
+			  "webhighscores AS b ON (a.id_level = b.id_level "
+			  "AND b.id_room=" + i_id_room + ") "
 			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE b.id_room=" + i_id_room + " "
-			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
+			  "WHERE (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
 			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
 			  "AND d.id_level IS NULL "
 			  "ORDER by b.date DESC LIMIT 100", false);
@@ -402,11 +402,11 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   v_pack = new LevelsPack(std::string(VPACKAGENAME_OLDEST_HIGHSCORES),
 			  "SELECT a.id_level AS id_level, a.name AS name, b.date AS sort_field "
 			  "FROM levels AS a INNER JOIN "
-			  "webhighscores AS b ON a.id_level = b.id_level "
+			  "webhighscores AS b ON (a.id_level = b.id_level "
+			  "AND b.id_room=" + i_id_room + ") "
 			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE b.id_room=" + i_id_room + " "
-			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0)"
+			  "WHERE (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0)"
 			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
 			  " AND d.id_level IS NULL "
 			  "ORDER by b.date ASC LIMIT 100");
@@ -418,7 +418,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   v_pack = new LevelsPack(std::string(VPACKAGENAME_MEDAL_PLATINIUM),
 			  "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS sort_field "
 			  "FROM webhighscores AS a INNER JOIN levels AS b "
-			  "ON a.id_level = b.id_level "
+			  "ON (a.id_level = b.id_level "
+			  "AND a.id_room=" + i_id_room + ") "
 			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE a.id_profile = \"" + xmDatabase::protectString(i_playerName) + "\" "
@@ -451,7 +452,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "EXCEPT " /* remove the webhighscores where the player's name is the same */
 			  "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS sort_field "
 			  "FROM webhighscores AS a INNER JOIN levels AS b "
-			  "ON a.id_level = b.id_level "
+			  "ON (a.id_level = b.id_level "
+			  "AND a.id_room=" + i_id_room + ") "
 			  "WHERE a.id_profile = \"" + xmDatabase::protectString(i_playerName) + "\""
 			  );
   v_pack->setGroup(GAMETEXT_PACK_MEDALS);
@@ -481,7 +483,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "EXCEPT " /* remove the webhighscores where the player's name is the same */
 			  "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS sort_field "
 			  "FROM webhighscores AS a INNER JOIN levels AS b "
-			  "ON a.id_level = b.id_level "
+			  "ON (a.id_level = b.id_level "
+			  "AND a.id_room=" + i_id_room + ") "
 			  "WHERE a.id_profile = \"" + xmDatabase::protectString(i_playerName) + "\""
 			  );
   v_pack->setGroup(GAMETEXT_PACK_MEDALS);
@@ -511,7 +514,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "EXCEPT " /* remove the webhighscores where the player's name is the same */
 			  "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS sort_field "
 			  "FROM webhighscores AS a INNER JOIN levels AS b "
-			  "ON a.id_level = b.id_level "
+			  "ON (a.id_level = b.id_level "
+			  "AND a.id_room=" + i_id_room + ") "
 			  "WHERE a.id_profile = \"" + xmDatabase::protectString(i_playerName) + "\""
 			  );
   v_pack->setGroup(GAMETEXT_PACK_MEDALS);
@@ -541,7 +545,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "EXCEPT " /* remove the webhighscores where the player's name is the same */
 			  "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS sort_field "
 			  "FROM webhighscores AS a INNER JOIN levels AS b "
-			  "ON a.id_level = b.id_level "
+			  "ON (a.id_level = b.id_level "
+			  "AND a.id_room=" + i_id_room + ") "
 			  "WHERE a.id_profile = \"" + xmDatabase::protectString(i_playerName) + "\""
 			  );
   v_pack->setGroup(GAMETEXT_PACK_MEDALS);
@@ -680,7 +685,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   /* short levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_SHORT_LEVELS),
                           "SELECT a.id_level AS id_level, a.name AS name, b.finishTime AS sort_field "
-                          "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
+                          "FROM levels AS a INNER JOIN webhighscores AS b ON (a.id_level=b.id_level "
+			  "AND b.id_room=" + i_id_room + ") "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
                           "WHERE b.finishTime < 2500 AND c.id_level IS NULL "
@@ -693,7 +699,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   /* Medium levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_MEDIUM_LEVELS),
                           "SELECT a.id_level AS id_level, a.name AS name, b.finishTime AS sort_field "
-                          "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
+                          "FROM levels AS a INNER JOIN webhighscores AS b ON (a.id_level=b.id_level "
+			  "AND b.id_room=" + i_id_room + ") "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
                           "WHERE b.finishTime >= 2500 AND b.finishTime < 6000 AND c.id_level IS NULL "
@@ -706,7 +713,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   /* Long levels*/
   v_pack = new LevelsPack(std::string(VPACKAGENAME_LONG_LEVELS),
                           "SELECT a.id_level AS id_level, a.name AS name, b.finishTime AS sort_field "
-                          "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
+                          "FROM levels AS a INNER JOIN webhighscores AS b ON (a.id_level=b.id_level "
+			  "AND b.id_room=" + i_id_room + ") "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
                           "WHERE b.finishTime >= 6000 AND b.finishTime < 12000 AND c.id_level IS NULL "
@@ -719,7 +727,8 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   /* Very long levels*/
   v_pack = new LevelsPack(std::string(VPACKAGENAME_VERY_LONG_LEVELS),
                           "SELECT a.id_level AS id_level, a.name AS name, b.finishTime AS sort_field "
-                          "FROM levels AS a INNER JOIN webhighscores AS b ON a.id_level=b.id_level "
+                          "FROM levels AS a INNER JOIN webhighscores AS b ON (a.id_level=b.id_level "
+			  "AND b.id_room=" + i_id_room + ") "
 			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
                           "WHERE b.finishTime >= 12000 AND c.id_level IS NULL "
@@ -776,11 +785,11 @@ void LevelsManager::makePacks(const std::string& i_playerName,
     v_pack = new LevelsPack(v_n.str() + v_id_profile,
 			    "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
 			    "FROM levels AS a INNER JOIN "
-			    "webhighscores AS b ON a.id_level = b.id_level "
+			    "webhighscores AS b ON (a.id_level = b.id_level "
+			    "AND b.id_room=" + i_id_room + ") "
 			    "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
 			    "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			    "WHERE b.id_room=" + i_id_room + " "
-			    "AND b.id_profile=\"" + xmDatabase::protectString(v_id_profile) + "\" "
+			    "WHERE b.id_profile=\"" + xmDatabase::protectString(v_id_profile) + "\" "
 			    "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
 			    "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
 			    "AND d.id_level IS NULL");
