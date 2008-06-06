@@ -202,7 +202,8 @@ void SDynamicEntityMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
       addvAngle = vAngle;
     }
 
-    if(addvx != 0.0 || addvy != 0) { /* a simple fast test because it's probably the main case */
+    /* a simple fast test because it's probably the main case */
+    if(addvx != 0.0 || addvy != 0) { 
       v_motoGame->SetEntityPos(m_entity,
 			       addvx + m_entity->DynamicPosition().x,
 			       addvy + m_entity->DynamicPosition().y);
@@ -240,15 +241,18 @@ void SDynamicEntityTranslation::performXY(float *vx, float *vy, float *vAngle) {
 /* block */
 
 SDynamicBlockMove::SDynamicBlockMove(std::string pBlock, int p_startTime, int p_endTime, int pPeriod) : SDynamicObject(p_startTime, p_endTime, pPeriod){
-  m_block = pBlock;
-  m_objectId = pBlock;
+  m_blockName = pBlock;
+  m_objectId  = pBlock;
+  m_block     = NULL;
 }
 
 SDynamicBlockMove::~SDynamicBlockMove() {
 }
 
 void SDynamicBlockMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
-  Block *p = v_motoGame->getLevelSrc()->getBlockById(m_block);
+  if(m_block == NULL)
+    m_block = v_motoGame->getLevelSrc()->getBlockById(m_blockName);
+  
   float vx, vy, vAngle;
   float addvx = 0.0, addvy = 0.0, addvAngle = 0.0;
 
@@ -260,15 +264,11 @@ void SDynamicBlockMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
       addvAngle = vAngle;
     }
 
-    if(addvx != 0.0 || addvy != 0) { /* a simple fast test because it's probably the main case */
-      v_motoGame->MoveBlock(p->Id(),
-			    addvx,
-			    addvy);
-    }
+    if(addvx != 0.0 || addvy != 0)
+      v_motoGame->MoveBlock(m_block, addvx, addvy);
 
-    if(vAngle != 0.0) { /* a simple fast test because it's probably the main case */
-      v_motoGame->SetBlockRotation(p->Id(), addvAngle + p->DynamicRotation());
-    }
+    if(vAngle != 0.0)
+      v_motoGame->SetBlockRotation(m_block, addvAngle + m_block->DynamicRotation());
   }
 }
 
