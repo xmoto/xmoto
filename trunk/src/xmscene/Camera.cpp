@@ -240,6 +240,7 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   }
     
   /* Determine scroll */
+#if 0
   if(m_playerToFollow->isDead()) {
     if(m_playerToFollow->getState()->Dir == DD_RIGHT) {
       m_Scroll = -m_playerToFollow->getState()->KneeP;
@@ -249,6 +250,9 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   } else {
     m_Scroll = -m_playerToFollow->getState()->CenterP;
   }
+#else
+  m_Scroll = -m_playerToFollow->getState()->CenterP;
+#endif
 
   /* Driving direction? */
   guessDesiredCameraPosition(v_fDesiredHorizontalScrollShift,
