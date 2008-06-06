@@ -64,6 +64,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   };
 
+  /* to sort entities on their sprite */
+  struct AscendingEntitySort {
+    bool operator() (Entity* e1, Entity* e2) {
+      Sprite* pSprite1 = e1->getSprite();
+      Sprite* pSprite2 = e2->getSprite();
+      return (pSprite1 ? pSprite1->getOrder() : 0) < (pSprite2 ? pSprite2->getOrder() : 0);
+    }
+  };
+
+
 GameRenderer::GameRenderer() {
   m_previousEngineSpeed = -1.0;
   m_previousEngineLinVel = -1.0;
@@ -1368,8 +1378,15 @@ void GameRenderer::_RenderSprites(MotoGame* i_scene, bool bForeground,bool bBack
 
     /* DONE::display only visible entities */
     std::vector<Entity*> Entities = i_scene->getCollisionHandler()->getEntitiesNearPosition(screenBigger);
+    unsigned int size = Entities.size();
 
-    for(unsigned int i=0; i<Entities.size(); i++) {
+    if(size == 0)
+      return;
+
+    std::sort(Entities.begin(), Entities.end(),
+	      AscendingEntitySort());
+
+    for(unsigned int i=0; i<size; i++) {
       pEnt = Entities[i];
 
       try {
