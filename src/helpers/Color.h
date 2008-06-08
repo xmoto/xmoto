@@ -80,6 +80,12 @@ class TColor {
     m_color = SET_ALPHA(m_color, i_alpha);
   }
 
+  inline void setColor(Color c) {
+    m_color = c;
+  }
+  inline Color getColor() const {
+    return m_color;
+  };
   private:
   Color m_color;
 };
