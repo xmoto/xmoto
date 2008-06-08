@@ -656,6 +656,8 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string texture)
 #define ENGINECOUNTER_NEEDLE_WIDTH_FACTOR (1.0/24)
 #define ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR (1.0/30)
 
+    pLinVel *= 100.0;
+
     float pSpeed_eff;
     float pLinVel_eff;
 
@@ -704,11 +706,12 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string texture)
     Texture *pTexture;
     Vector2f p0, p1, p2, p3;
     Vector2f pcenter, pdest, pcenterl, pcenterr, pbottom;
+    DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
-    p0 = Vector2f(x,        GameApp::instance()->getDrawLib()->getDispHeight()-y-nHeight);
-    p1 = Vector2f(x+nWidth, GameApp::instance()->getDrawLib()->getDispHeight()-y-nHeight);
-    p2 = Vector2f(x+nWidth, GameApp::instance()->getDrawLib()->getDispHeight()-y);
-    p3 = Vector2f(x,        GameApp::instance()->getDrawLib()->getDispHeight()-y);
+    p0 = Vector2f(x,        pDrawlib->getDispHeight()-y-nHeight);
+    p1 = Vector2f(x+nWidth, pDrawlib->getDispHeight()-y-nHeight);
+    p2 = Vector2f(x+nWidth, pDrawlib->getDispHeight()-y);
+    p3 = Vector2f(x,        pDrawlib->getDispHeight()-y);
 
     pSprite = (MiscSprite*) Theme::instance()->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
     if(pSprite != NULL) {
@@ -716,9 +719,11 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string texture)
       if(pTexture != NULL) {
 	_RenderAlphaBlendedSection(pTexture, p0, p1, p2, p3);
 
-	GameApp::instance()->getDrawLib()->setColorRGB(255,50,50);
+	pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
+
+	pDrawlib->setColorRGB(255,50,50);
 	renderEngineCounterNeedle(nWidth, nHeight, p3, pSpeed_eff);
-	GameApp::instance()->getDrawLib()->setColorRGB(50,50,255);
+	pDrawlib->setColorRGB(50,50,255);
 	if (pLinVel_eff > -1) {
 	  renderEngineCounterNeedle(nWidth, nHeight, p3, pLinVel_eff);
 	}
@@ -1206,8 +1211,10 @@ int GameRenderer::nbParticlesRendered() const {
 	 && XMSession::instance()->ugly() == false
 	 && i_scene->getNumberCameras() == 1) {
 	renderEngineCounter(pDrawlib->getDispWidth()-128,
-			    pDrawlib->getDispHeight()-128,128,128,
-			    pCamera->getPlayerToFollow()->getBikeEngineSpeed());
+			    pDrawlib->getDispHeight()-128,
+			    128, 128,
+			    pCamera->getPlayerToFollow()->getBikeEngineSpeed(),
+			    pCamera->getPlayerToFollow()->getBikeLinearVel());
       }
     }
 
