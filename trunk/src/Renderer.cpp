@@ -1716,6 +1716,7 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
     }
 
     if(XMSession::instance()->ugly() || XMSession::instance()->uglyOver()) {
+      GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
       for(unsigned int i=0; i<Blocks.size(); i++) {
 	/* Are we rendering background blocks or what? */
 	if(Blocks[i]->isBackground() != bBackground)
@@ -1879,13 +1880,14 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
       }
 
       if(XMSession::instance()->ugly()) {
+	GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
 	for(unsigned int i=0;i<Blocks.size();i++) {
 	  if(Blocks[i]->isBackground() == false) {
 	    pDrawlib->startDraw(DRAW_MODE_LINE_LOOP);
 	    pDrawlib->setColorRGB(255,255,255);
 	    for(unsigned int j=0;j<Blocks[i]->Vertices().size();j++) {
 	      pDrawlib->glVertex(Blocks[i]->Vertices()[j]->Position().x + Blocks[i]->DynamicPosition().x,
-						  Blocks[i]->Vertices()[j]->Position().y + Blocks[i]->DynamicPosition().y);
+				 Blocks[i]->Vertices()[j]->Position().y + Blocks[i]->DynamicPosition().y);
 	    }
 	    pDrawlib->endDraw();
 	  }
@@ -1893,6 +1895,7 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
       }
 
       if(XMSession::instance()->uglyOver()) {
+	GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
 	for(unsigned int i=0; i<Blocks.size(); i++) {
 	  for(unsigned int j=0; j<Blocks[i]->ConvexBlocks().size(); j++) {
 
@@ -1918,6 +1921,8 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
   void GameRenderer::_RenderZone(Zone *i_zone) {
     ZonePrim *v_prim;
     ZonePrimBox *v_primbox;
+
+    GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
 
     for(unsigned int i=0; i<i_zone->Prims().size(); i++) {
       v_prim = i_zone->Prims()[i];
@@ -2705,8 +2710,9 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
   ===========================================================================*/
   void GameRenderer::_RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme, bool i_renderBikeFront,
 				 const TColor&  i_filterColor, const TColor&  i_filterUglyColor) {
-    Sprite *pSprite;
-    Texture *pTexture;
+    Sprite*  pSprite;
+    Texture* pTexture;
+    DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
     /* Render bike */
     Vector2f p0,p1,p2,p3,o0,o1,o2,o3;
@@ -2752,16 +2758,17 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
     }
 
     if(XMSession::instance()->ugly() || XMSession::instance()->testTheme()) {
-      GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-      GameApp::instance()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
-      GameApp::instance()->getDrawLib()->glVertex(p0+C);    
-      GameApp::instance()->getDrawLib()->glVertex(p2+C);
-      GameApp::instance()->getDrawLib()->endDraw();
-      GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-      GameApp::instance()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
-      GameApp::instance()->getDrawLib()->glVertex(p1+C);
-      GameApp::instance()->getDrawLib()->glVertex(p3+C);
-      GameApp::instance()->getDrawLib()->endDraw();
+      pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
+      pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
+      pDrawlib->setColor(p_theme->getUglyWheelColor());
+      pDrawlib->glVertex(p0+C);    
+      pDrawlib->glVertex(p2+C);
+      pDrawlib->endDraw();
+      pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
+      pDrawlib->setColor(p_theme->getUglyWheelColor());
+      pDrawlib->glVertex(p1+C);
+      pDrawlib->glVertex(p3+C);
+      pDrawlib->endDraw();
       _RenderCircle(16,p_theme->getUglyWheelColor(),C,pBikeParms->WR);
     }
 
@@ -2803,16 +2810,17 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
     }
 
     if(XMSession::instance()->ugly() || XMSession::instance()->testTheme()) {
-      GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-      GameApp::instance()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
-      GameApp::instance()->getDrawLib()->glVertex(p0+C);    
-      GameApp::instance()->getDrawLib()->glVertex(p2+C);
-      GameApp::instance()->getDrawLib()->endDraw();
-      GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-      GameApp::instance()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
-      GameApp::instance()->getDrawLib()->glVertex(p1+C);
-      GameApp::instance()->getDrawLib()->glVertex(p3+C);
-      GameApp::instance()->getDrawLib()->endDraw();
+      pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
+      pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
+      pDrawlib->setColor(p_theme->getUglyWheelColor());
+      pDrawlib->glVertex(p0+C);    
+      pDrawlib->glVertex(p2+C);
+      pDrawlib->endDraw();
+      pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
+      pDrawlib->setColor(p_theme->getUglyWheelColor());
+      pDrawlib->glVertex(p1+C);
+      pDrawlib->glVertex(p3+C);
+      pDrawlib->endDraw();
       _RenderCircle(16,p_theme->getUglyWheelColor(),C,pBikeParms->WR);
     }
 
@@ -2983,48 +2991,41 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
     if(pBike->Dir == DD_RIGHT) {
       if(XMSession::instance()->ugly() || XMSession::instance()->testTheme()) {
         /* Draw it ugly */
-	GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-	GameApp::instance()->getDrawLib()->setColor(MAKE_COLOR(i_filterUglyColor.Red(),
-						       i_filterUglyColor.Green(),
-						       i_filterUglyColor.Blue(),
-						       i_filterUglyColor.Alpha()));
-        GameApp::instance()->getDrawLib()->glVertex(pBike->FootP);
-        GameApp::instance()->getDrawLib()->glVertex(pBike->KneeP);
-        GameApp::instance()->getDrawLib()->glVertex(pBike->LowerBodyP);
-        GameApp::instance()->getDrawLib()->glVertex(pBike->ShoulderP);
-        GameApp::instance()->getDrawLib()->glVertex(pBike->ElbowP);
-        GameApp::instance()->getDrawLib()->glVertex(pBike->HandP);
-	GameApp::instance()->getDrawLib()->endDraw();
-        _RenderCircle(10, MAKE_COLOR(i_filterUglyColor.Red(),
-				     i_filterUglyColor.Green(),
-				     i_filterUglyColor.Blue(),
-				     i_filterUglyColor.Alpha()),pBike->HeadP,pBikeParms->fHeadSize);
+	pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
+	pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
+	pDrawlib->setColor(i_filterUglyColor.getColor());
+        pDrawlib->glVertex(pBike->FootP);
+        pDrawlib->glVertex(pBike->KneeP);
+        pDrawlib->glVertex(pBike->LowerBodyP);
+        pDrawlib->glVertex(pBike->ShoulderP);
+        pDrawlib->glVertex(pBike->ElbowP);
+        pDrawlib->glVertex(pBike->HandP);
+	pDrawlib->endDraw();
+        _RenderCircle(10, i_filterUglyColor.getColor(),
+		      pBike->HeadP, pBikeParms->fHeadSize);
       }
     }
     else if(pBike->Dir == DD_LEFT) {
       if(XMSession::instance()->ugly() || XMSession::instance()->testTheme()) {
         /* Draw it ugly */
-	GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-	GameApp::instance()->getDrawLib()->setColor(MAKE_COLOR(i_filterUglyColor.Red(),
-						       i_filterUglyColor.Green(),
-						       i_filterUglyColor.Blue(),
-						       i_filterUglyColor.Alpha()));
-        GameApp::instance()->getDrawLib()->glVertex(pBike->Foot2P);
-        GameApp::instance()->getDrawLib()->glVertex(pBike->Knee2P);
-        GameApp::instance()->getDrawLib()->glVertex(pBike->LowerBody2P);
-        GameApp::instance()->getDrawLib()->glVertex(pBike->Shoulder2P);
-        GameApp::instance()->getDrawLib()->glVertex(pBike->Elbow2P);
-        GameApp::instance()->getDrawLib()->glVertex(pBike->Hand2P);
-        GameApp::instance()->getDrawLib()->endDraw();
-        _RenderCircle(10, MAKE_COLOR(i_filterUglyColor.Red(),
-				     i_filterUglyColor.Green(),
-				     i_filterUglyColor.Blue(),
-				     i_filterUglyColor.Alpha()), pBike->Head2P,pBikeParms->fHeadSize);
+	pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
+	pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
+	pDrawlib->setColor(i_filterUglyColor.getColor());
+        pDrawlib->glVertex(pBike->Foot2P);
+        pDrawlib->glVertex(pBike->Knee2P);
+        pDrawlib->glVertex(pBike->LowerBody2P);
+        pDrawlib->glVertex(pBike->Shoulder2P);
+        pDrawlib->glVertex(pBike->Elbow2P);
+        pDrawlib->glVertex(pBike->Hand2P);
+        pDrawlib->endDraw();
+        _RenderCircle(10, i_filterUglyColor.getColor(),
+		      pBike->Head2P,pBikeParms->fHeadSize);
       }
     }   
 
 		// draw the center
     if(XMSession::instance()->debug()) {
+      pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
       _RenderCircle(10, MAKE_COLOR(255, 0, 0, 255), pBike->CenterP, 0.2);
     }
   }
