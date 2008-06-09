@@ -187,77 +187,112 @@ void StateLevelPackViewer::createGUIIfNeeded()
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
+  unsigned int width  = drawLib->getDispWidth();
+  unsigned int height = drawLib->getDispHeight();
+
   m_sGUI = new UIRoot();
   m_sGUI->setFont(drawLib->getFontSmall()); 
-  m_sGUI->setPosition(0, 0,
-		      drawLib->getDispWidth(),
-		      drawLib->getDispHeight());
+  m_sGUI->setPosition(0, 0, width, height);
 
   /* Initialize level pack viewer */
+  unsigned int v_offsetX = width  / 16;
+  unsigned int v_offsetY = height / 16;
+  unsigned int frameWidth  = width  - v_offsetX*2;
+  unsigned int frameHeight = height - v_offsetY*2;
+
+  /*
   int x = drawLib->getDispWidth()/2-350;
   int y = drawLib->getDispHeight()/2-250;
-  std::string caption = "";
   int nWidth = 700;
   int nHeight = 500;
+  */
 
+  std::string caption = "";
   UIFrame  *v_frame;
-  v_frame = new UIFrame(m_sGUI, x, y, caption, nWidth, nHeight); 
+  v_frame = new UIFrame(m_sGUI,
+			v_offsetX, v_offsetY,
+			caption,
+			frameWidth, frameHeight); 
   v_frame->setID("FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_TRANS);
 
-  UIStatic *pLevelPackViewerTitle = new UIStatic(v_frame,0,0,"(level pack name goes here)",700,40);
+  unsigned int levelListWidth = v_frame->getPosition().nWidth - 300;
+  unsigned int leftMargin = 20;
+
+  UIStatic *pLevelPackViewerTitle = new UIStatic(v_frame,
+						 0, 0,
+						 "(level pack name goes here)",
+						 v_frame->getPosition().nWidth, 40);
   pLevelPackViewerTitle->setID("VIEWER_TITLE");
   pLevelPackViewerTitle->setFont(drawLib->getFontMedium());
 
-  UIButton *pLevelPackPlay = new UIButton(v_frame,450,50,GAMETEXT_STARTLEVEL,207,57);
+  UIButton *pLevelPackPlay = new UIButton(v_frame,
+					  v_frame->getPosition().nWidth - 250, 50,
+					  GAMETEXT_STARTLEVEL,
+					  207, 57);
   pLevelPackPlay->setFont(drawLib->getFontSmall());
   pLevelPackPlay->setID("PLAY_BUTTON");
   pLevelPackPlay->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
 
-  UIStatic* pSomeText = new UIStatic(v_frame, 20, 70, std::string(GAMETEXT_FILTER) + ":", 90, 25);
+  UIStatic* pSomeText = new UIStatic(v_frame,
+				     (levelListWidth / 4) - 90, 70,
+				     std::string(GAMETEXT_FILTER) + ":",
+				     90, 25);
   pSomeText->setFont(drawLib->getFontSmall());
   pSomeText->setHAlign(UI_ALIGN_RIGHT);
 
-  UIEdit *pLevelFilterEdit = new UIEdit(v_frame, 120, 70, "", 200, 25);
+  UIEdit *pLevelFilterEdit = new UIEdit(v_frame,
+					leftMargin + levelListWidth / 4, 70,
+					"",
+					levelListWidth / 2, 25);
   pLevelFilterEdit->setFont(drawLib->getFontSmall());
   pLevelFilterEdit->setID("LEVEL_FILTER");
   pLevelFilterEdit->setContextHelp(CONTEXTHELP_LEVEL_FILTER);
 
-  UILevelList *pLevelPackLevelList = new UILevelList(v_frame,20,100,"",400, 370);
+  UILevelList *pLevelPackLevelList = new UILevelList(v_frame,
+						     leftMargin, 100,
+						     "",
+						     levelListWidth, v_frame->getPosition().nHeight - 130);
   pLevelPackLevelList->setFont(drawLib->getFontSmall());
   pLevelPackLevelList->setContextHelp(CONTEXTHELP_SELECT_LEVEL_IN_LEVEL_PACK);
   pLevelPackLevelList->setID("LEVEL_LIST");
   pLevelPackLevelList->setEnterButton( pLevelPackPlay );
 
-  pSomeText = new UIStatic(v_frame, 20, 100 + 370 - 10, "", 400, 50);
+  pSomeText = new UIStatic(v_frame, leftMargin + levelListWidth/2 - 200  , v_frame->getPosition().nHeight - 40, "", 400, 50);
   pSomeText->setFont(drawLib->getFontSmall());
   pSomeText->setHAlign(UI_ALIGN_CENTER);
   pSomeText->setID("MINISTAT");
   pSomeText->setAllowContextHelp(true);
   pSomeText->setContextHelp(CONTEXTHELP_MINISTATTIMEFORPACKLEVEL);
 
-  UIButton *pLevelPackInfo = new UIButton(v_frame,450,107,GAMETEXT_LEVELINFO,207,57);
+  UIButton *pLevelPackInfo = new UIButton(v_frame,v_frame->getPosition().nWidth - 250,107,GAMETEXT_LEVELINFO,207,57);
   pLevelPackInfo->setFont(drawLib->getFontSmall());
   pLevelPackInfo->setID("INFO_BUTTON");
   pLevelPackInfo->setContextHelp(CONTEXTHELP_LEVEL_INFO);
 
-  UIButton *pLevelPackAddToFavorite = new UIButton(v_frame,450,164,GAMETEXT_ADDTOFAVORITE,207,57);
+  UIButton *pLevelPackAddToFavorite = new UIButton(v_frame,v_frame->getPosition().nWidth - 250,164,GAMETEXT_ADDTOFAVORITE,207,57);
   pLevelPackAddToFavorite->setFont(drawLib->getFontSmall());
   pLevelPackAddToFavorite->setID("ADDTOFAVORITE_BUTTON");
   pLevelPackAddToFavorite->setContextHelp(CONTEXTHELP_ADDTOFAVORITE);
 
-  UIButton *pLevelPackRandomize = new UIButton(v_frame,450,221,GAMETEXT_RANDOMIZE,207,57);
+  UIButton *pLevelPackRandomize = new UIButton(v_frame,v_frame->getPosition().nWidth - 250,221,GAMETEXT_RANDOMIZE,207,57);
   pLevelPackRandomize->setFont(drawLib->getFontSmall());
   pLevelPackRandomize->setID("RANDOMIZE_BUTTON");
   pLevelPackRandomize->setContextHelp(CONTEXTHELP_RANDOMIZE);
 
-  UIButton *pLevelPackCancel = new UIButton(v_frame,450,278,GAMETEXT_CLOSE,207,57);
+  UIButton *pLevelPackCancel = new UIButton(v_frame,
+					    v_frame->getPosition().nWidth - 250, 278,
+					    GAMETEXT_CLOSE,
+					    207, 57);
   pLevelPackCancel->setFont(drawLib->getFontSmall());
   pLevelPackCancel->setID("CANCEL_BUTTON");
   pLevelPackCancel->setContextHelp(CONTEXTHELP_CLOSE_LEVEL_PACK);
 
   /* level info frame */
-  UIWindow* v_infoFrame = new UIWindow(v_frame, 420 + (v_frame->getPosition().nWidth - 400 -220 -20)/2, v_frame->getPosition().nHeight-100, "", 220, 100);
+  UIWindow* v_infoFrame = new UIWindow(v_frame,
+				       v_frame->getPosition().nWidth - 220, v_frame->getPosition().nHeight - 100,
+				       "",
+				       220, 100);
   v_infoFrame->showWindow(false);
   v_infoFrame->setID("INFO_FRAME");
   pSomeText = new UIStatic(v_infoFrame, 0, 5, "", 220, 50);
