@@ -309,13 +309,23 @@ int intersectLineCircle2f(const Vector2f &Cp,float Cr,const Vector2f &A0,const V
                           Vector2f &Res1,Vector2f &Res2);
 int intersectLineLine2f(const Vector2f &A0,const Vector2f &A1,const Vector2f &B0,
                         const Vector2f &B1,Vector2f &Res);
-inline bool circleTouchCircle2f(const Vector2f &Cp1,float Cr1,const Vector2f &Cp2,float Cr2)
+inline bool circleTouchCircle2f(const Vector2f &Cp1, float Cr1,
+				const Vector2f &Cp2, float Cr2)
 {
-  /* Trivial test :) */
-  float d = (Cp2 - Cp1).length();
-  return (d < Cr1+Cr2);
+  float xSquared = Cp2.x - Cp1.x;
+  xSquared *= xSquared;
+
+  float ySquared = Cp2.y - Cp1.y;
+  ySquared *= ySquared;
+
+  float sumRadiiSquared = Cr1 + Cr2;
+  sumRadiiSquared *= sumRadiiSquared;
+
+  return xSquared + ySquared <= sumRadiiSquared;
 }
-  
+
+
+
 class AABB {
  public:
   AABB();
@@ -324,11 +334,12 @@ class AABB {
   Vector2f& getBMin() {return BMin;}
   Vector2f& getBMax() {return BMax;}
 
-  bool lineTouchAABB2f(const Vector2f &P0, const Vector2f &P1);
-  bool circleTouchAABB2f(const Vector2f &Cp, const float Cr);
-  bool pointTouchAABB2f(const Vector2f &P);
-  bool AABBTouchAABB2f(const Vector2f &BMin1, const Vector2f &BMax1);
-  void addPointToAABB2f(const Vector2f &Point);
+  bool lineTouchAABB2f(const Vector2f& P0, const Vector2f& P1);
+  bool circleTouchAABB2f(const Vector2f& Cp, const float Cr);
+  bool pointTouchAABB2f(const Vector2f& P);
+  bool AABBTouchAABB2f(const Vector2f& BMin1, const Vector2f& BMax1);
+
+  void addPointToAABB2f(const Vector2f& Point);
   inline void addPointToAABB2f(const float x, const float y) {
     if(x < BMin.x) BMin.x = x;
     if(y < BMin.y) BMin.y = y;
@@ -336,9 +347,56 @@ class AABB {
     if(y > BMax.y) BMax.y = y;    
   }
 
+  // to avoid recalculate it from all the points
+  inline void translateAABB(const float x, const float y) {
+    BMin.x += x;
+    BMax.x += x;
+    BMin.y += y;
+    BMax.y += y;
+  }
+
  private:
   Vector2f BMin, BMax;
 };
+
+
+class BoundingCircle {
+public:
+  BoundingCircle();
+  void reset();
+
+  inline const Vector2f& getCenter() const {
+    return m_center;
+  }
+  inline float getRadius() const {
+    return m_radius;
+  }
+
+  void init(Vector2f& center, float radius);
+
+  bool lineTouch(const Vector2f &P0, const Vector2f &P1);
+  bool circleTouch(const Vector2f &Cp, const float Cr);
+  bool pointTouch(const Vector2f &point);
+
+  void translate(const float x, const float y);
+
+  void addPointToCircle(const float x, const float y);
+  void calculateBoundingCircle();
+
+  // get a bounding box for the circle
+  AABB& getAABB();
+
+private:
+  Vector2f m_center;
+  float    m_radius;
+
+  float m_xmin, m_xmax, m_ymin, m_ymax;
+
+  AABB  m_aabb;
+
+  void calculateBoundingBox();
+};
+
 
 // random with stdlib rand
 inline float randomNum(float fMin,float fMax)

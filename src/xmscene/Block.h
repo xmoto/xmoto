@@ -90,7 +90,9 @@ class BlockVertex {
   BlockVertex(const Vector2f& i_position, const std::string& i_edgeEffect = "");
   ~BlockVertex();
 
-  Vector2f Position() const;
+  inline Vector2f& Position() {
+    return m_position;
+  }
   /* edge from this vertex to the following */
   /* called many many many times, so we inline it, and make it return a ref */
   inline std::string& EdgeEffect() {
@@ -173,6 +175,8 @@ class Block {
   void setDynamicPositionAccordingToCenter(const Vector2f& i_dynamicPosition);
   /* angle position ; consider of the block center */
   void setDynamicRotation(float i_dynamicRotation);
+
+  void translate(float x, float y);
 
   int loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld);
   void unloadToPlay();
@@ -259,10 +263,11 @@ private:
   Vector2f m_dynamicRotationCenter;
   Vector2f m_dynamicPositionCenter;
   Vector2f m_dynamicPosition; /* Block position */
-  std::vector<Line *> m_collisionLines; /* Line to collide against */
+  std::vector<Line*> m_collisionLines; /* Line to collide against */
 
   void addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem);
   void updateCollisionLines();
+  void translateCollisionLines(float x, float y);
 
   EdgeDrawMethod m_edgeDrawMethod;
   float m_edgeAngle;

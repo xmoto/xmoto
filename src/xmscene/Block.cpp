@@ -143,6 +143,11 @@ void Block::updateCollisionLines() {
      || manageCollisions == false)
     return;
 
+  m_isBBoxDirty = true;
+
+  //if(isBackground() == true)
+  //return;
+
   /* Build rotation matrix for block */
   float fR[4]; 
   fR[0] =  cosf(DynamicRotation());
@@ -150,8 +155,6 @@ void Block::updateCollisionLines() {
   fR[2] =  sinf(DynamicRotation()); 
   fR[3] =  cosf(DynamicRotation());
   unsigned int z = 0;
-
-  m_isBBoxDirty = true;
 
   for(unsigned int j=0; j<Vertices().size(); j++) {            
     unsigned int jnext = j==Vertices().size()-1? 0 : j+1;
@@ -179,6 +182,26 @@ void Block::updateCollisionLines() {
   }
 }
 
+void Block::translateCollisionLines(float x, float y)
+{
+  bool manageCollisions = (m_collisionLines.size() != 0);
+
+  if(isDynamic() == false
+     || manageCollisions == false
+     || isBackground() == true)
+    return;
+
+  std::vector<Line*>::iterator it = m_collisionLines.begin();
+  while(it != m_collisionLines.end()) {
+    (*it)->x1 += x;
+    (*it)->x2 += x;
+    (*it)->y1 += y;
+    (*it)->y2 += y;
+
+    it++;
+  }
+}
+
 void Block::setDynamicPosition(const Vector2f& i_dynamicPosition) {
   m_dynamicPosition = i_dynamicPosition;
   updateCollisionLines();
@@ -192,6 +215,15 @@ void Block::setDynamicPositionAccordingToCenter(const Vector2f& i_dynamicPositio
 void Block::setDynamicRotation(float i_dynamicRotation) {
   m_dynamicRotation = i_dynamicRotation;
   updateCollisionLines();
+}
+
+void Block::translate(float x, float y)
+{
+  m_dynamicPosition.x += x;
+  m_dynamicPosition.y += y;
+  // dont recalculate the AABB
+  m_BBox.translateAABB(x, y);
+  translateCollisionLines(x, y);
 }
 
 void Block::updatePhysics(int timeStep, CollisionSystem* io_collisionSystem) {
@@ -532,10 +564,6 @@ BlockVertex::BlockVertex(const Vector2f& i_position, const std::string& i_edgeEf
 }
 
 BlockVertex::~BlockVertex() {
-}
-
-Vector2f BlockVertex::Position() const {
-  return m_position;
 }
 
 void BlockVertex::setPosition(const Vector2f& i_position) {

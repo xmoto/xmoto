@@ -77,6 +77,7 @@ class Entity {
     m_dynamicPosition = i_dynamicPosition;
     m_isBBoxDirty = true;
   }
+  void translate(float x, float y);
   void setInitialPosition(const Vector2f& i_initialPosition);
   void setId(const std::string& i_id);
   inline void setSize(float i_size) {
@@ -130,7 +131,7 @@ protected:
   bool        m_isAlive;
   TColor      m_color;
 
-  AABB        m_BBox;
+  BoundingCircle m_BCircle;
   bool        m_isBBoxDirty;
   EntitySpeciality m_speciality;
 

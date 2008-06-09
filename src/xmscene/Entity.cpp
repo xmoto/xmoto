@@ -49,7 +49,7 @@ Entity::Entity(const std::string& i_id) {
   m_doesKill    = false;
   m_doesMakeWin = false;
   m_isToTake    = false;
-  m_BBox.reset();
+  m_BCircle.reset();
   m_isBBoxDirty = true;
   m_speciality  = ET_NONE;
 }
@@ -97,6 +97,12 @@ float Entity::DrawAngle() const {
 
 bool Entity::DrawReversed() const {
   return m_drawReversed;
+}
+
+void Entity::translate(float x, float y)
+{
+  setDynamicPosition(m_dynamicPosition + Vector2f(x, y));
+  m_BCircle.translate(x, y);
 }
 
 void Entity::setInitialPosition(const Vector2f& i_initialPosition) {
@@ -157,17 +163,12 @@ bool Entity::updateToTime(int i_time, Vector2f& i_gravity) {
 AABB& Entity::getAABB()
 {
   if(m_isBBoxDirty == true){
-    m_BBox.reset();
-    float size = Size();
-    m_BBox.addPointToAABB2f(m_dynamicPosition.x-size,
-			    m_dynamicPosition.y-size);
-    m_BBox.addPointToAABB2f(m_dynamicPosition.x+size,
-			    m_dynamicPosition.y+size);
-
+    m_BCircle.reset();
+    m_BCircle.init(m_dynamicPosition, m_size);
     m_isBBoxDirty = false;
   }
 
-  return m_BBox;
+  return m_BCircle.getAABB();
 }
 
 

@@ -163,6 +163,8 @@ public:
   /* action for events */
   void SetEntityPos(std::string pEntityID, float pX, float pY);
   void SetEntityPos(Entity* pEntity,  float pX, float pY);
+  void translateEntity(std::string pEntityID, float x, float y);
+  void translateEntity(Entity* pEntity, float x, float y);
   void PlaceInGameArrow(float pX, float pY, float pAngle);
   void PlaceScreenArrow(float pX, float pY, float pAngle);
   void HideArrow();
