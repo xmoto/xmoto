@@ -72,6 +72,9 @@ bool StateCreditsMode::render()
 
 void StateCreditsMode::keyDown(int nKey, SDLMod mod,int nChar)
 {
+  // to have replay keys while credits, uncomment this
+  // StateReplaying::keyDown(nKey, mod,nChar);
+  // return;
   m_requestForEnd = true;
   closePlaying();
 }
