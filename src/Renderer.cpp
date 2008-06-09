@@ -808,6 +808,10 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
     glLoadIdentity();
 #endif
 
+    if(pCamera->isMirrored() == true){
+      pDrawlib->setMirrorY();
+    }
+
     /* get minimap AABB in level space
       input:  position on the screen (in the minimap area)
       output: position in the level
@@ -817,6 +821,11 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
     AABB mapBBox;
     mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x), MAP_TO_LEVEL_Y(y));
     mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x+nWidth), MAP_TO_LEVEL_Y(y+nHeight));
+
+    if(pCamera->isMirrored() == true){
+      // nice value coming out from my hat
+      cameraPosX += 30.0;
+    }
 
     /* TOFIX::Draw the static blocks only once in a texture, and reuse it after */
     /* Render blocks */
