@@ -144,7 +144,7 @@ void Credits::render(int i_time) {
       drawLib->drawBox(Vector2f(0,0),Vector2f(drawLib->getDispWidth(),drawLib->getDispHeight()),0,MAKE_COLOR(0,0,0,nC),0);      
       
     /* Render text */
-    int nScroll = (int)(20 + drawLib->getDispHeight() - i_time/100.0 * 20);
+    int nScroll = (int)(drawLib->getDispHeight() - i_time/100.0 * 15);
     int nY = 0;
       
     for(unsigned int i=0;i<m_Entries.size();i++) {
