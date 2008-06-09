@@ -204,9 +204,7 @@ void SDynamicEntityMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
 
     /* a simple fast test because it's probably the main case */
     if(addvx != 0.0 || addvy != 0) { 
-      v_motoGame->SetEntityPos(m_entity,
-			       addvx + m_entity->DynamicPosition().x,
-			       addvy + m_entity->DynamicPosition().y);
+      v_motoGame->translateEntity(m_entity, addvx, addvy);
     }
 
     /* a simple fast test because it's probably the main case */

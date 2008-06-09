@@ -933,6 +933,19 @@ void MotoGame::cleanPlayers() {
     }
   }
 
+void MotoGame::translateEntity(std::string pEntityID, float x, float y)
+{
+  translateEntity(m_pLevelSrc->getEntityById(pEntityID), x, y);
+}
+
+void MotoGame::translateEntity(Entity* pEntity, float x, float y)
+{
+  pEntity->translate(x, y);
+  if(pEntity->isAlive() == true){
+    m_Collision.moveEntity(pEntity);
+  }
+}
+
   void MotoGame::PlaceInGameArrow(float pX, float pY, float pAngle) {
     getArrowPointer().nArrowPointerMode = 1;
     getArrowPointer().ArrowPointerPos = Vector2f(pX, pY);

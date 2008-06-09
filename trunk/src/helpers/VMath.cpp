@@ -23,6 +23,105 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "VMath.h"
 
+#define BIG_VALUE 99999999.0f
+
+#define MIN(x, y) (x) < (y) ? (x) : (y)
+#define MAX(x, y) (x) > (y) ? (x) : (y)
+#define ABS(x) (x) > 0.0 ? (x) : -(x)
+
+/*===========================================================================
+  Bounding Circle
+  ===========================================================================*/
+
+BoundingCircle::BoundingCircle()
+{
+  reset();
+  m_aabb.reset();
+}
+
+void BoundingCircle::reset()
+{
+  m_center.x = 0.0;
+  m_center.y = 0.0;
+  m_radius   = 0.0;
+
+  m_xmin = m_ymin = BIG_VALUE;
+  m_xmax = m_ymax = -BIG_VALUE;
+}
+
+void BoundingCircle::init(Vector2f& center, float radius)
+{
+  m_center = center;
+  m_radius = radius;
+  calculateBoundingBox();
+}
+
+bool BoundingCircle::lineTouch(const Vector2f &P0, const Vector2f &P1)
+{
+  Vector2f res1, res2;
+  return (intersectLineCircle2f(m_center, m_radius,
+			       P0, P1,
+			       res1, res2)
+	  != 0);
+}
+
+bool BoundingCircle::circleTouch(const Vector2f &Cp, const float Cr)
+{
+  return circleTouchCircle2f(m_center, m_radius, Cp, Cr);
+}
+
+bool BoundingCircle::pointTouch(const Vector2f &point)
+{
+  float diffX = point.x - m_center.x;
+  float diffY = point.y - m_center.y;
+  return (ABS(diffX) < m_radius) && (ABS(diffY) < m_radius);
+}
+
+void BoundingCircle::translate(const float x, const float y)
+{
+  m_center.x += x;
+  m_center.y += y;
+  m_aabb.translateAABB(x, y);
+}
+
+void BoundingCircle::addPointToCircle(const float x, const float y)
+{
+  if(x < m_xmin)
+    m_xmin = x;
+  if(x > m_xmax)
+    m_xmax = x;
+  if(y < m_ymin)
+    m_ymin = y;
+  if(y > m_ymax)
+    m_ymax = y;
+}
+
+void BoundingCircle::calculateBoundingCircle()
+{
+  Vector2f center;
+  center.x = (m_xmin + m_xmax) / 2.0;
+  center.y = (m_ymin + m_ymax) / 2.0;
+
+  float tx = (m_xmax - m_xmin) / 2.0;
+  float ty = (m_ymax - m_ymin) / 2.0;
+
+  float radius = tx + ty - MIN(tx, ty) / 2.0;
+
+  init(center, radius);
+}
+
+AABB& BoundingCircle::getAABB()
+{
+  return m_aabb;
+}
+
+void BoundingCircle::calculateBoundingBox()
+{
+  m_aabb.reset();
+  m_aabb.addPointToAABB2f(m_center.x + m_radius, m_center.y + m_radius);
+  m_aabb.addPointToAABB2f(m_center.x - m_radius, m_center.y - m_radius);
+}
+
 /*===========================================================================
   AABB
   ===========================================================================*/
@@ -33,8 +132,8 @@ AABB::AABB()
 
 void AABB::reset()
 {
-  BMin.x = BMin.y = 99999999;
-  BMax.x = BMax.y = -99999999;
+  BMin.x = BMin.y = BIG_VALUE;
+  BMax.x = BMax.y = -BIG_VALUE;
 }
 
 void AABB::addPointToAABB2f(const Vector2f &Point) {
