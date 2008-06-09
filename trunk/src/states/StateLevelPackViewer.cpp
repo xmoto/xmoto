@@ -195,17 +195,10 @@ void StateLevelPackViewer::createGUIIfNeeded()
   m_sGUI->setPosition(0, 0, width, height);
 
   /* Initialize level pack viewer */
-  unsigned int v_offsetX = width  / 16;
-  unsigned int v_offsetY = height / 16;
+  unsigned int v_offsetX = width  / 32;
+  unsigned int v_offsetY = height / 32;
   unsigned int frameWidth  = width  - v_offsetX*2;
   unsigned int frameHeight = height - v_offsetY*2;
-
-  /*
-  int x = drawLib->getDispWidth()/2-350;
-  int y = drawLib->getDispHeight()/2-250;
-  int nWidth = 700;
-  int nHeight = 500;
-  */
 
   std::string caption = "";
   UIFrame  *v_frame;
