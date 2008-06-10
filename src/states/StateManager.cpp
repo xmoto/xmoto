@@ -258,8 +258,6 @@ void StateManager::render()
       if(m_statesStack.back()->showCursor()) {
 	drawCursor();
       }
-    } else {
-      drawCursor(); // to remove after state managing
     }
 
     drawLib->flushGraphics();
@@ -535,6 +533,12 @@ void StateManager::sendAsynchronousMessage(std::string cmd)
   }
 }
 
+
+
+
+
+
+
 GameState::GameState(bool drawStateBehind,
 		     bool updateStatesBehind,
 		     bool i_doShade,
@@ -578,6 +582,14 @@ bool GameState::doUpdate()
 
 void GameState::enter() {
   m_nShadeTime = GameApp::getXMTime();
+  if(XMSession::instance()->ugly() == true)
+    GameApp::instance()->displayCursor(showCursor());
+}
+
+void GameState::enterAfterPop()
+{
+  if(XMSession::instance()->ugly() == true)
+    GameApp::instance()->displayCursor(showCursor());
 }
 
 bool GameState::render() {
@@ -664,6 +676,10 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
     } else {
       SysMessage::instance()->displayText(SYS_MSG_UGLY_MODE_DISABLED);
     }
+
+    if(XMSession::instance()->ugly() == true)
+      GameApp::instance()->displayCursor(showCursor());
+
     return;        
   }
 

@@ -59,6 +59,7 @@ void StateMenu::leave()
 
 void StateMenu::enterAfterPop()
 {
+  GameState::enterAfterPop();
   m_GUI->enableWindow(true);
 }
 

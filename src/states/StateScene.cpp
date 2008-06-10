@@ -90,6 +90,11 @@ void StateScene::enter()
   m_fLastPhysTime = GameApp::getXMTime();
 }
 
+void StateScene::enterAfterPop()
+{
+  GameState::enterAfterPop();
+}
+
 bool StateScene::update()
 {
   if(doUpdate() == false){

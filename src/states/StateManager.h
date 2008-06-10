@@ -40,7 +40,7 @@ public:
   virtual void leave() {}
   /* called when a new state is pushed or poped on top of the
      current one */
-  virtual void enterAfterPop() {}
+  virtual void enterAfterPop();
   virtual void leaveAfterPush() {}
 
   // return true if update/render was done

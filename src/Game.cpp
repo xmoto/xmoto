@@ -488,12 +488,18 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(unsigned int i_number, st
 
   void GameApp::switchUglyMode(bool bUgly) {
     XMSession::instance()->setUgly(bUgly);
-    if(bUgly == false) {
-      SDL_ShowCursor(SDL_DISABLE);        
-    } else {
-      SDL_ShowCursor(SDL_ENABLE);
-    }
+    
+    displayCursor(bUgly);
   }
+
+void GameApp::displayCursor(bool display)
+{
+  if(display == false) {
+    SDL_ShowCursor(SDL_DISABLE);        
+  } else {
+    SDL_ShowCursor(SDL_ENABLE);
+  }
+}
 
   void GameApp::switchTestThemeMode(bool mode) {
     XMSession::instance()->setTestTheme(mode);

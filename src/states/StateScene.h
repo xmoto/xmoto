@@ -33,6 +33,7 @@ class StateScene : public GameState {
  virtual ~StateScene();
  
  virtual void enter();
+ virtual void enterAfterPop();
  
  virtual bool update();
  virtual bool render();
