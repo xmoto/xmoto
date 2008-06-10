@@ -151,6 +151,8 @@ public:
   void switchTestThemeMode(bool mode);
   void switchUglyOverMode(bool mode);
 
+  void displayCursor(bool display);
+
   void addReplay(const std::string& i_file, xmDatabase* threadDb = NULL);
 
 protected:
