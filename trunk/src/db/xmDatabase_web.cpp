@@ -331,7 +331,7 @@ void xmDatabase::webrooms_updateDB(const std::string& i_webroomsFile) {
     while(pVarElem != NULL) {
       
       pc = pVarElem->Attribute("name");
-      if(pc == NULL) continue;
+      if(pc == NULL) continue; // hehe it feels the unlimited loop, too tired to fix that tonight
       v_RoomName = pc;
   
       pc = pVarElem->Attribute("highscores_url");

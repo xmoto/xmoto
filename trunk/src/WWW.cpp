@@ -25,7 +25,6 @@
 #include "md5sum/md5file.h"
 
 #define DEFAULT_REPLAYUPLOAD_MSGFILE "UploadReplayMsg.xml"
-#define DEFAULT_DBSYNCUPLOAD_MSGFILE "UploadDbSyncMsg.xml"
 
 void WebRoom::downloadReplay(const std::string& i_url) {
   std::string i_rplFilename = FS::getReplaysDir()
@@ -293,15 +292,15 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   }
 }
 
-void FSWeb::uploadReplay(std::string p_replayFilename,
-       std::string p_id_room,
-       std::string p_login,
-       std::string p_password,
-       std::string p_url_to_transfert,
-       WWWAppInterface *p_WebApp,
-       const ProxySettings *p_proxy_settings,
-       bool &p_msg_status,
-       std::string &p_msg) {
+void FSWeb::uploadReplay(const std::string& p_replayFilename,
+			 const std::string& p_id_room,
+			 const std::string& p_login,
+			 const std::string& p_password,
+			 const std::string& p_url_to_transfert,
+			 WWWAppInterface *p_WebApp,
+			 const ProxySettings *p_proxy_settings,
+			 bool &p_msg_status,
+			 std::string &p_msg) {
   CURL *v_curl;
   CURLcode v_res;
   std::string v_proxy_server;
@@ -439,8 +438,8 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   remove(v_local_file.c_str());
 }
 
-void FSWeb::uploadAnalyseMsg(std::string p_key,
-			     std::string p_filename,
+void FSWeb::uploadAnalyseMsg(const std::string& p_key,
+			     const std::string& p_filename,
 			     bool &p_msg_status_ok,
 			     std::string &p_msg) {
   XMLDocument v_Xml;
@@ -494,14 +493,17 @@ void FSWeb::uploadAnalyseMsg(std::string p_key,
 }
 
 /* could be factorized with uploadReplay */
-void FSWeb::uploadDbSync(std::string p_dbSyncFilename,
-			 std::string p_login,
-			 std::string p_password,
-			 std::string p_url_to_transfert,
+void FSWeb::uploadDbSync(const std::string& p_dbSyncFilename,
+			 const std::string& p_login,
+			 const std::string& p_password,
+			 const std::string& p_siteKey,
+			 int p_dbSyncServer,
+			 const std::string& p_url_to_transfert,
 			 WWWAppInterface *p_WebApp,
 			 const ProxySettings *p_proxy_settings,
 			 bool &p_msg_status,
-			 std::string& p_msg) {
+			 std::string& p_msg, 
+			 const std::string& p_answerFile) {
   CURL *v_curl;
   CURLcode v_res;
   std::string v_proxy_server;
@@ -512,22 +514,21 @@ void FSWeb::uploadDbSync(std::string p_dbSyncFilename,
   std::string v_accept_language;
 
   FILE *v_destinationFile;
-  std::string v_local_file;
-  v_local_file = FS::getUserDir() + "/" + DEFAULT_DBSYNCUPLOAD_MSGFILE;
 
   struct curl_httppost *v_post, *v_last;
+  std::ostringstream v_dbSyncServerStr;
 
   Logger::Log(std::string("Uploading dbsync " + p_dbSyncFilename + " to " + p_url_to_transfert).c_str());
 
   /* open the file */
-  if( (v_destinationFile = fopen(v_local_file.c_str(), "wb")) == false) {
-    throw Exception("error : unable to open output file " DEFAULT_DBSYNCUPLOAD_MSGFILE);
+  if( (v_destinationFile = fopen(p_answerFile.c_str(), "wb")) == false) {
+    throw Exception("error : unable to open output file " + p_answerFile);
   }
       
   v_curl = curl_easy_init();
   if(v_curl == NULL) {
     fclose(v_destinationFile);
-    remove(v_local_file.c_str());
+    remove(p_answerFile.c_str());
     throw Exception("error : unable to init curl"); 
   }
 
@@ -535,12 +536,20 @@ void FSWeb::uploadDbSync(std::string p_dbSyncFilename,
 
   v_post = NULL;
   v_last = NULL;
-  
+
+  v_dbSyncServerStr << p_dbSyncServer;
+
   curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "login",
 	       CURLFORM_PTRCONTENTS, p_login.c_str(), CURLFORM_END);
 
   curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "password",
 	       CURLFORM_PTRCONTENTS, p_password.c_str(), CURLFORM_END);
+
+  curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "downSiteKey",
+	       CURLFORM_PTRCONTENTS, p_siteKey.c_str(), CURLFORM_END);
+
+  curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "downDbSync",
+	       CURLFORM_PTRCONTENTS, v_dbSyncServerStr.str().c_str(), CURLFORM_END);
 
   curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "dbSync",
 	       CURLFORM_FILE, p_dbSyncFilename.c_str(), CURLFORM_END);
@@ -615,7 +624,7 @@ void FSWeb::uploadDbSync(std::string p_dbSyncFilename,
       char v_err[256];
       
       curl_easy_cleanup(v_curl);
-      remove(v_local_file.c_str());
+      remove(p_answerFile.c_str());
       
       snprintf(v_err, 256, "error : unable to perform curl (curl[%i]: %s)",
 	       v_res, curl_easy_strerror(v_res));
@@ -630,10 +639,11 @@ void FSWeb::uploadDbSync(std::string p_dbSyncFilename,
     p_msg_status = 0;
     p_msg = "DbSync aborted";
   } else {
-    uploadAnalyseMsg("xmoto_uploadDbSyncResult", v_local_file, p_msg_status, p_msg);
+    uploadAnalyseMsg("xmoto_uploadDbSyncResult", p_answerFile, p_msg_status, p_msg);
   }
 
-  remove(v_local_file.c_str());
+  // don't remove the answer file
+  // remove(v_local_file.c_str());
 }
 
 WebLevels::WebLevels(WWWAppInterface *p_WebLevelApp) {

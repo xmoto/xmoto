@@ -324,6 +324,22 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
 
 }
 
+int XMSession::dbSync(xmDatabase* pDb, const std::string& i_id_profile) {
+  return pDb->config_getInteger(i_id_profile, "dbSync", 0);
+}
+
+void XMSession::setDbSync(xmDatabase* pDb, const std::string& i_id_profile, int i_dbSync) {
+  pDb->config_setInteger(i_id_profile, "dbSync", i_dbSync);
+}
+
+int XMSession::dbSyncServer(xmDatabase* pDb, const std::string& i_id_profile) {
+  return pDb->config_getInteger(i_id_profile, "dbSyncServer", 0);
+}
+
+void XMSession::setDbSyncServer(xmDatabase* pDb, const std::string& i_id_profile, int i_dbSyncServer) {
+  pDb->config_setInteger(i_id_profile, "dbSyncServer", i_dbSyncServer);
+}
+
 void XMSession::save(UserConfig* v_config, xmDatabase* pDb) {
   v_config->setString("DefaultProfile",         m_profile);
 

@@ -167,6 +167,7 @@ public:
   // sync
   std::string getXmDbSiteKey();
   void sync_buildServerFile(const std::string& i_outFile, const std::string& i_sitekey, const std::string& i_profile);
+  void sync_updateDB(const std::string& i_profile, const std::string& i_sitekey, const std::string& i_file, int i_newDbSyncServer);
 
   /**
      @brief Mark all lines that should be synchronized as synchronized

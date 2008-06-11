@@ -124,24 +124,27 @@ class FSWeb {
 				      void *p_data,
 				      const ProxySettings *p_proxy_settings);
 
-  static void uploadReplay(std::string p_replayFilename,
-			   std::string p_id_room,
-			   std::string p_login,
-			   std::string p_password,
-			   std::string p_url_to_transfert,
+  static void uploadReplay(const std::string& p_replayFilename,
+			   const std::string& p_id_room,
+			   const std::string& p_login,
+			   const std::string& p_password,
+			   const std::string& p_url_to_transfert,
 			   WWWAppInterface *p_WebApp,
 			   const ProxySettings *p_proxy_settings,
 			   bool &p_msg_status,
 			   std::string &p_msg);
 
-  static void uploadDbSync(std::string p_dbSyncFilename,
-			   std::string p_login,
-			   std::string p_password,
-			   std::string p_url_to_transfert,
+  static void uploadDbSync(const std::string& p_dbSyncFilename,
+			   const std::string& p_login,
+			   const std::string& p_password,
+			   const std::string& p_siteKey,
+			   int p_dbSyncServer,
+			   const std::string& p_url_to_transfert,
 			   WWWAppInterface *p_WebApp,
 			   const ProxySettings *p_proxy_settings,
 			   bool &p_msg_status,
-			   std::string& p_msg);
+			   std::string& p_msg,
+			   const std::string& p_answerFile);
 
   static int f_curl_progress_callback_upload(void *clientp,
 					     double dltotal,
@@ -157,8 +160,8 @@ class FSWeb {
 
  private:
   static size_t writeData(void *ptr, size_t size, size_t nmemb, FILE *stream);
-  static void   uploadAnalyseMsg(std::string p_key,
-				 std::string p_filename,
+  static void   uploadAnalyseMsg(const std::string& p_key,
+				 const std::string& p_filename,
 				 bool &p_msg_status_ok,
 				 std::string &p_msg);
 };

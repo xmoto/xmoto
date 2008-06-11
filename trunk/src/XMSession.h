@@ -241,6 +241,24 @@ public:
   void setDbsynchronizeOnQuit(bool i_value);
   bool dbsynchronizeOnQuit() const;
 
+  // there are two dbSync values, one for the profile side, one on the serveur side
+  // note that because these values must always be synchronised with db, there are always read and write from and to the db
+  /**
+     dbSync field is the revision in which you upload the line.
+     -> tagging lines where upd=0 and dbsync is null to the last dbsync
+     -> sending via xml all the lines where synchronized=0
+     
+     if server answer ko : do nothing
+     if server answer ok : update synchronized to 1
+     if xmoto crashes, when you restart, xmoto doesn't know the answer of the server :
+     - if the answer was ok, lines with synchronized=0 are resend, but will not be used on the server side on the next update
+     - if the answer was ko, lines with synchronized=0 are resend, and will be used on the server side.
+  */
+  int dbSync(xmDatabase* pDb, const std::string& i_id_profile);
+  void setDbSync(xmDatabase* pDb, const std::string& i_id_profile, int i_dbSync);
+  int dbSyncServer(xmDatabase* pDb, const std::string& i_id_profile);
+  void setDbSyncServer(xmDatabase* pDb, const std::string& i_id_profile, int i_dbSyncServer);
+
   private:
   bool m_verbose;
   int  m_resolutionWidth;
