@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWW.h"
 #include "GameText.h"
 
+#define DEFAULT_DBSYNCUPLOAD_MSGFILE "sync_down.xml"
 #define SYNC_UP_TMPFILE    FS::getUserDir() + "/sync_up.xml"
 #define SYNC_UP_TMPFILEBZ2 SYNC_UP_TMPFILE".bz2"
 
@@ -39,27 +40,18 @@ SyncThread::~SyncThread() {
 }
 
 int SyncThread::realThreadFunction() {
-  int v_res;
-
-  if( (v_res = realThreadFunctionUp()) != 0) {
-    return v_res;
-  }
-
-  return realThreadFunctionDown();
-}
-
-int SyncThread::realThreadFunctionDown() {
-  m_msg = "down part not implemented";
-
-  return 1;
-}
-
-int SyncThread::realThreadFunctionUp() {
   bool v_msg_status_ok;
+  std::string v_syncDownFile;
+
+  // to remove when finished
+  m_msg = "Functionnality to be finished and tested";
+  return 1;
 
   setThreadProgress(0);
 
   setThreadCurrentOperation(GAMETEXT_SYNC_UP);
+
+  v_syncDownFile = FS::getUserDir() + "/" + DEFAULT_DBSYNCUPLOAD_MSGFILE;
 
   /* create the .xml sync file */
   try {
@@ -81,9 +73,12 @@ int SyncThread::realThreadFunctionUp() {
     FSWeb::uploadDbSync(SYNC_UP_TMPFILEBZ2,
 			XMSession::instance()->profile(),
 			XMSession::instance()->wwwPassword(),
+			XMSession::instance()->sitekey(),
+			XMSession::instance()->dbSyncServer(m_pDb, XMSession::instance()->profile()),
 			XMSession::instance()->uploadDbSyncUrl(),
 			this,
-			XMSession::instance()->proxySettings(), v_msg_status_ok, m_msg);
+			XMSession::instance()->proxySettings(), v_msg_status_ok, m_msg,
+			v_syncDownFile);
     if(v_msg_status_ok == false) {
       remove(std::string(SYNC_UP_TMPFILEBZ2).c_str());
       return 1;
@@ -98,18 +93,29 @@ int SyncThread::realThreadFunctionUp() {
   /* finally, remove, once synchronized */
   remove(std::string(SYNC_UP_TMPFILEBZ2).c_str());
 
-  setThreadProgress(95);
-
-  m_msg = "test";
-  return 1;
+  setThreadProgress(50);
 
   /* mark lines as synchronized */
   try {
     m_pDb->setSynchronized();
   } catch(Exception &e) {
     m_msg = e.getMsg();
+    remove(v_syncDownFile.c_str());
     return 1;
   }
+
+  // sync down
+  try {
+    m_pDb->sync_updateDB(XMSession::instance()->profile(), XMSession::instance()->sitekey(),
+			 v_syncDownFile, XMSession::instance()->dbSyncServer(m_pDb, XMSession::instance()->profile()));
+  } catch(Exception &e) {
+    m_msg = e.getMsg();
+    remove(v_syncDownFile.c_str());
+    return 1;
+  }
+
+  // remove answer file
+  remove(v_syncDownFile.c_str());
 
   setThreadCurrentOperation(GAMETEXT_SYNC_DONE);
 

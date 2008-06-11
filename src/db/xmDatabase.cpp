@@ -629,23 +629,10 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
 
   case 26:
     try {
-      /**
-	 dbSync field is the revision in which you upload the line.
-	 -> tagging lines where upd=0 and dbsync is null to the last dbsync
-	 -> sending via xml all the lines where synchronized=0
-
-	 if server answer ko : do nothing
-	 if server answer ok : update synchronized to 1
-	 if xmoto crashes, when you restart, xmoto doesn't know the answer of the server :
-	 - if the answer was ok, lines with synchronized=0 are resend, but will not be used on the server side on the next update
-	 - if the answer was ko, lines with synchronized=0 are resend, and will be used on the server side.
-
-       */
       simpleSql("ALTER TABLE profile_completedLevels ADD COLUMN dbSync DEFAULT NULL;");
       simpleSql("CREATE INDEX profile_completedLevels_dbSync_idx1 ON profile_completedLevels(dbSync);");
       simpleSql("ALTER TABLE stats_profiles_levels ADD COLUMN dbSync DEFAULT NULL;");
       simpleSql("CREATE INDEX stats_profiles_levels_dbSync_idx1 ON stats_profiles_levels(dbSync);");
-      simpleSql("INSERT INTO xm_parameters(param, value) VALUES(\"dbSync\", 0);");
       updateXmDbVersion(27);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 26: " + e.getMsg());
