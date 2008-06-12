@@ -697,8 +697,22 @@ void StateMainMenu::updateStats() {
   v_window = new UIWindow(i_parent, x, y, "", nWidth, nHeight);
   v_window->setID("REPORT");
  
-  v_result = pDb->readDB("SELECT SUM(a.nbStarts), MIN(a.since), SUM(b.playedTime), "
-			 "SUM(b.nbPlayed), SUM(b.nbDied), SUM(b.nbCompleted), "
+  v_result = pDb->readDB("SELECT SUM(nbStarts), MIN(since) "
+			 "FROM stats_profiles "
+			 "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
+			 "GROUP BY id_profile;",
+			 nrow);
+  
+  if(nrow == 0) {
+    pDb->read_DB_free(v_result);
+    return;
+  }
+  
+  v_nbStarts        = atoi(pDb->getResult(v_result, 2, 0, 0));
+  v_since           =      pDb->getResult(v_result, 2, 0, 1);  
+  pDb->read_DB_free(v_result);
+
+  v_result = pDb->readDB("SELECT SUM(b.playedTime), SUM(b.nbPlayed), SUM(b.nbDied), SUM(b.nbCompleted), "
 			 "SUM(b.nbRestarted), count(b.id_level) "
 			 "FROM stats_profiles AS a INNER JOIN stats_profiles_levels AS b "
 			 "ON (a.id_profile=b.id_profile) "
@@ -711,16 +725,15 @@ void StateMainMenu::updateStats() {
     return;
   }
   
-  v_nbStarts        = atoi(pDb->getResult(v_result, 8, 0, 0));
-  v_since           =      pDb->getResult(v_result, 8, 0, 1);
-  v_totalPlayedTime = atoi(pDb->getResult(v_result, 8, 0, 2));
-  v_nbPlayed        = atoi(pDb->getResult(v_result, 8, 0, 3));
-  v_nbDied          = atoi(pDb->getResult(v_result, 8, 0, 4));
-  v_nbCompleted     = atoi(pDb->getResult(v_result, 8, 0, 5));
-  v_nbRestarted     = atoi(pDb->getResult(v_result, 8, 0, 6));
-  v_nbDiffLevels    = atoi(pDb->getResult(v_result, 8, 0, 7));
+  v_totalPlayedTime = atoi(pDb->getResult(v_result, 6, 0, 0));
+  v_nbPlayed        = atoi(pDb->getResult(v_result, 6, 0, 1));
+  v_nbDied          = atoi(pDb->getResult(v_result, 6, 0, 2));
+  v_nbCompleted     = atoi(pDb->getResult(v_result, 6, 0, 3));
+  v_nbRestarted     = atoi(pDb->getResult(v_result, 6, 0, 4));
+  v_nbDiffLevels    = atoi(pDb->getResult(v_result, 6, 0, 5));
   
   pDb->read_DB_free(v_result);
+
   
   /* Per-player info */
   char cBuf[512];
