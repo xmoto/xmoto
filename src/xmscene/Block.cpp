@@ -210,6 +210,11 @@ void Block::setDynamicPosition(const Vector2f& i_dynamicPosition) {
   translateCollisionLines(diff.x, diff.y);
 }
 
+void Block::setPhysicsPosition(float ix, float iy) {
+  mBody->p.x = ix * CHIP_SCALE_RATIO;
+  mBody->p.y = iy * CHIP_SCALE_RATIO;
+}
+
 void Block::setDynamicPositionAccordingToCenter(const Vector2f& i_dynamicPosition) {
   Vector2f newPos = i_dynamicPosition - m_dynamicPositionCenter;
   Vector2f diff = newPos - m_dynamicPosition;
@@ -276,6 +281,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   float tx = 0;
   float ty = 0;
 
+
   /* Do the "convexifying" the BSP-way. It might be overkill, but we'll
      probably appreciate it when the input data is very complex. It'll also 
      let us handle crossing edges, and other kinds of weird input. */
@@ -314,7 +320,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 			(DynamicPosition().y + Vertices()[inext]->Position().y) * CHIP_SCALE_RATIO);
 
 	cpShape *seg = cpSegmentShapeNew(i_chipmunkWorld->getBody(), a, b, 0.0f);
-	seg->group = 1;
+	seg->group = 0;
 	seg->u = m_friction;
 	seg->e = m_elasticity;
 	cpSpaceAddStaticShape(i_chipmunkWorld->getSpace(), seg);
@@ -402,7 +408,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
       // create body 
       myBody = cpBodyNew(m_mass, bMoment);
       myBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
-                      (DynamicPosition().y * CHIP_SCALE_RATIO));
+		      (DynamicPosition().y * CHIP_SCALE_RATIO));
       cpSpaceAddBody(i_chipmunkWorld->getSpace(), myBody);
       mBody = myBody;
     
@@ -423,9 +429,12 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 	shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
 	shape->u = m_friction;
 	shape->e = m_elasticity;
+	if (isBackground()) {
+	  shape->group = 1;
+	}
 
 	cpSpaceAddShape(i_chipmunkWorld->getSpace(), shape);
-	
+
 	// free the temporary vertices array
 	free(myVerts);
       }

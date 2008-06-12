@@ -190,6 +190,7 @@ class Block {
   bool setDynamicRotation(float i_dynamicRotation);
 
   void translate(float x, float y);
+  void setPhysicsPosition(float ix, float iy);
 
   int loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld);
   void unloadToPlay();
