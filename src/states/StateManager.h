@@ -183,6 +183,7 @@ public:
   void sendAsynchronousMessage(std::string cmd);
 
   bool isTopOfTheStates(GameState* i_state);
+  int numberOfStates();
 
   int getMaxFps(){
     return m_maxFps;

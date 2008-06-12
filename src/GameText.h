@@ -148,7 +148,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DATE                 _("Date")
 #define GAMETEXT_DBSYNCHRONIZE_EXPLANATION _("X-Moto uses a database on your computer to save all your scores and statistics. You can send these data using your web account on the X-Moto server. It is usefull to save your data or if you play X-Moto from different places.")
 #define GAMETEXT_DBSYNCHRONIZE _("Synchronise")
-#define GAMETEXT_DBSYNCHONIZE_ONQUIT _("Synchronize when X-Moto ends")
+#define GAMETEXT_DBSYNCHRONIZE_ONQUIT _("Synchronize when X-Moto ends")
 #define GAMETEXT_DB_UPGRADING               _("Upgrading database")
 #define GAMETEXT_DB_UPGRADING_STATS_PROFILE _("Upgrading database stats for the profile")
 #define GAMETEXT_DB_UPGRADING_PROFILE _("Upgrading database profile")
@@ -583,7 +583,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_GHOSTS_OPTIONS       _("Configure ghosts displayed while playing the game")
 #define CONTEXTHELP_DB_OPTIONS           _("Configure options linked to your X-Moto dabatase")
 #define CONTEXTHELP_DBSYNCHRONIZE _("Synchronise your database on the web")
-#define CONTEXTHELP_DBSYNCHONIZE_ONQUIT _("Synchronise your database when your quit X-Moto")
+#define CONTEXTHELP_DBSYNCHRONIZE_ONQUIT _("Synchronise your database when your quit X-Moto")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

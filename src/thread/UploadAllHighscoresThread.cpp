@@ -83,9 +83,9 @@ int UploadAllHighscoresThread::realThreadFunction()
       "INNER JOIN weblevels l ON r.id_level = l.id_level "
       "INNER JOIN levels lvl ON r.id_level = lvl.id_level "
       "WHERE r.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
-      "AND r.isFinished "
+      "AND r.isFinished=1 "
       "AND ( (h.id_room IS NULL) OR xm_floord(h.finishTime*100.0) > xm_floord(r.finishTime*100.0)) "
-      "ORDER BY r.id_level, r.finishTime;";
+      "ORDER BY r.id_level, r.finishTime+0;";
     v_result = m_pDb->readDB(query, nrow);
     m_nbFiles = nrow;
 

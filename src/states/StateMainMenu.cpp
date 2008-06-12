@@ -173,6 +173,9 @@ void StateMainMenu::enterAfterPop()
   GameApp::instance()->playMusic("menu1");
 }
 
+void StateMainMenu::leave() {
+}
+
 void StateMainMenu::checkEvents() {  
   // main window
   checkEventsMainWindow();
@@ -698,7 +701,7 @@ void StateMainMenu::updateStats() {
 			 "SUM(b.nbPlayed), SUM(b.nbDied), SUM(b.nbCompleted), "
 			 "SUM(b.nbRestarted), count(b.id_level) "
 			 "FROM stats_profiles AS a INNER JOIN stats_profiles_levels AS b "
-			 "ON (a.sitekey=b.sitekey AND a.id_profile=b.id_profile) "
+			 "ON (a.id_profile=b.id_profile) "
 			 "WHERE a.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
 			 "GROUP BY a.id_profile;",
 			 nrow);
@@ -1461,12 +1464,12 @@ UIWindow* StateMainMenu::makeWindowOptions_db(UIWindow* i_parent) {
   v_button->setContextHelp(CONTEXTHELP_DBSYNCHRONIZE);
 
   /* synchronize each time xmoto is closed ? */
-  v_button = new UIButton(v_window, 20, (v_window->getPosition().nHeight/2) + 57,
-			  GAMETEXT_DBSYNCHONIZE_ONQUIT, v_window->getPosition().nWidth-20, 28);
-  v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setID("SYNCHONIZE_ONQUIT_CKB");
-  v_button->setContextHelp(CONTEXTHELP_DBSYNCHONIZE_ONQUIT); 
+  //v_button = new UIButton(v_window, 20, (v_window->getPosition().nHeight/2) + 57,
+  //			  GAMETEXT_DBSYNCHRONIZE_ONQUIT, v_window->getPosition().nWidth-20, 28);
+  //v_button->setType(UI_BUTTON_TYPE_CHECK);
+  //v_button->setFont(drawlib->getFontSmall());
+  //v_button->setID("SYNCHRONIZE_ONQUIT_CKB");
+  //v_button->setContextHelp(CONTEXTHELP_DBSYNCHRONIZE_ONQUIT); 
 
   return v_window;
 }
@@ -2492,8 +2495,8 @@ void StateMainMenu::updateOptions() {
   v_button->setChecked(XMSession::instance()->ghostMotionBlur());
 
   // db
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHONIZE_ONQUIT_CKB"));
-  v_button->setChecked(XMSession::instance()->dbsynchronizeOnQuit());
+  //v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHRONIZE_ONQUIT_CKB"));
+  //v_button->setChecked(XMSession::instance()->dbsynchronizeOnQuit());
 
   // update rights on the options
   updateAudioOptions();
@@ -2891,11 +2894,11 @@ void StateMainMenu::checkEventsOptions() {
     StateManager::instance()->pushState(new StateSync());
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHONIZE_ONQUIT_CKB"));
-  if(v_button->isClicked()) {
-    v_button->setClicked(false);
-    XMSession::instance()->setDbsynchronizeOnQuit(v_button->getChecked());
-  }
+  //v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHRONIZE_ONQUIT_CKB"));
+  //if(v_button->isClicked()) {
+  //  v_button->setClicked(false);
+  //  XMSession::instance()->setDbsynchronizeOnQuit(v_button->getChecked());
+  //}
 
   // language
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:LANGUAGE_TAB:LANGUAGE_LIST"));
@@ -2943,8 +2946,8 @@ void StateMainMenu::updateDbOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHRONIZE_BUTTON"));
   v_button->enableWindow(XMSession::instance()->www());
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHONIZE_ONQUIT_CKB"));
-  v_button->enableWindow(XMSession::instance()->www());
+  //v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:DB_TAB:SYNCHRONIZE_ONQUIT_CKB"));
+  //v_button->enableWindow(XMSession::instance()->www());
 }
 
 void StateMainMenu::updateWWWOptions() {
