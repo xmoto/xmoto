@@ -418,7 +418,7 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(unsigned int i_number, st
 			    "ON a.id_profile = b.id_profile "
 			    "WHERE a.id_level=\""   + xmDatabase::protectString(p_levelId) + "\" "
 			    "AND   a.isFinished=1 "
-			    "ORDER BY a.finishTime LIMIT 1;",
+			    "ORDER BY a.finishTime+0 LIMIT 1;",
 			    nrow);    
     if(nrow == 0) {
       v_pDb->read_DB_free(v_result);

@@ -493,7 +493,7 @@ void GameApp::manageEvent(SDL_Event* Event) {
 void GameApp::run_loop() {
   SDL_Event Event;
 
-  while(!m_bQuit) {
+  while(m_bQuit == false) {
     /* Handle SDL events */            
     SDL_PumpEvents();
 

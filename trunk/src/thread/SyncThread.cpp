@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "WWW.h"
 #include "GameText.h"
+#include "states/StateManager.h"
 
 #define DEFAULT_DBSYNCUPLOAD_MSGFILE "sync_down.xml"
 #define SYNC_UP_TMPFILE    FS::getUserDir() + "/sync_up.xml"
@@ -42,10 +43,6 @@ SyncThread::~SyncThread() {
 int SyncThread::realThreadFunction() {
   bool v_msg_status_ok;
   std::string v_syncDownFile;
-
-  // to remove when finished
-  m_msg = "Functionnality to be finished and tested";
-  return 1;
 
   setThreadProgress(0);
 
@@ -118,8 +115,8 @@ int SyncThread::realThreadFunction() {
   remove(v_syncDownFile.c_str());
 
   setThreadCurrentOperation(GAMETEXT_SYNC_DONE);
-
   setThreadProgress(100);
+  StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
   
   return 0;
 }

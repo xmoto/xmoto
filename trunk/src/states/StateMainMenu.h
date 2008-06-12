@@ -34,6 +34,7 @@ class StateMainMenu : public StateMenu {
   virtual ~StateMainMenu();
   
   virtual void enter();
+  virtual void leave();
   /* called when a new state is pushed or poped on top of the
      current one*/
   virtual void enterAfterPop();

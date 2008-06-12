@@ -1,5 +1,6 @@
 X-Moto 0.4.3 2008-
 -----------------------
+ * synchronisation of the database with the webserver to share it among the places you play X-Moto
  * chipmunk integration. Blocks reacts to physics (require special levels).
  * save config separatly for each profile
  * --noDBDirsCheck command line options added. It disables the files find when X-Moto detects that you changed your configuration directory (usefull if you use X-Moto on a USB key)

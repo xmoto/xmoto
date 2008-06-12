@@ -488,6 +488,10 @@ bool StateManager::isTopOfTheStates(GameState* i_state) {
   return m_statesStack[m_statesStack.size()-1] == i_state;
 }
 
+int StateManager::numberOfStates() {
+  return m_statesStack.size();
+}
+
 int StateManager::getCurrentUpdateFPS() {
   return m_currentUpdateFps;
 }
