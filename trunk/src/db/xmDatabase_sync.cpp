@@ -255,7 +255,7 @@ void xmDatabase::sync_updateDB(const std::string& i_profile, const std::string& 
       if(checkKey("SELECT COUNT(1) FROM stats_profiles_levels WHERE sitekey=\"" + protectString(v_siteKey) + "\""
 		  " AND id_profile=\"" + protectString(i_profile) + "\" AND id_level=\"" + protectString(v_id_level) + "\";")) {
 	// update
-	simpleSql("UPDATE stats_profiles_levels"
+	simpleSql("UPDATE stats_profiles_levels "
 		  "SET nbPlayed=\"" + protectString(v_nbPlayed) + "\", nbDied=\"" + protectString(v_nbDied) +
 		  "\", nbCompleted=\"" + protectString(v_nbCompleted) + "\", nbRestarted=\"" + protectString(v_nbRestarted) +
 		  "\", playedTime=\"" + protectString(v_playedTime) + "\", last_play_date=\"" + protectString(v_lastPlayDate) + "\""
