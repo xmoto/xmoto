@@ -978,6 +978,17 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     m_Collision.moveDynBlock(v_block);
   }
   
+  void MotoGame::SetPhysicsBlockPos(std::string pBlockID, float pX, float pY) {
+    Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
+    v_block->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
+    if (v_block->isPhysics()) {
+      v_block->setPhysicsPosition(pX, pY);
+    } else {
+      // report error?
+    }
+    m_Collision.moveDynBlock(v_block);
+  }
+  
   void MotoGame::SetBlockCenter(std::string pBlockID, float pX, float pY) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
     v_block->setCenter(Vector2f(pX, pY));
