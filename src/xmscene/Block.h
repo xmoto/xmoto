@@ -34,6 +34,7 @@ class BSPPoly;
 class Block;
 class cpBody;
 class ChipmunkWorld;
+template<class T> struct ColElement;
 
 #define DEFAULT_EDGE_ANGLE 270.0f
 
@@ -127,7 +128,9 @@ class Block {
   inline Vector2f& DynamicPosition() {
     return m_dynamicPosition;
   }
-  float DynamicRotation() const;
+  inline float DynamicRotation() const {
+    return m_dynamicRotation;
+  }
 
   /* called many many many times, so we inline it, and make it return a ref */
   inline Vector2f& DynamicRotationCenter() {
@@ -135,8 +138,12 @@ class Block {
   }
 
   Vector2f DynamicPositionCenter() const;
-  bool isBackground() const;
-  bool isDynamic() const;
+  bool isBackground() const {
+    return m_background;
+  }
+  bool isDynamic() const {
+    return m_dynamic;
+  }
   bool isPhysics() const;
   bool isLayer() const;
   float Grip() const;
@@ -153,6 +160,10 @@ class Block {
   EdgeDrawMethod getEdgeDrawMethod();
   float edgeAngle();
 
+  inline ColElement<Block>* getColElement() {
+    return m_collisionElement;
+  }
+  
   void setTexture(const std::string& i_texture);
   void setTextureScale(float i_textureScale);
   void setInitialPosition(const Vector2f& i_initialPosition);
@@ -173,8 +184,10 @@ class Block {
   void setDynamicPosition(const Vector2f& i_dynamicPosition);
   /* postion where to display - the center */
   void setDynamicPositionAccordingToCenter(const Vector2f& i_dynamicPosition);
-  /* angle position ; consider of the block center */
-  void setDynamicRotation(float i_dynamicRotation);
+  /* angle position ; consider of the block center
+     returns true if bounding circle has changed.
+   */
+  bool setDynamicRotation(float i_dynamicRotation);
 
   void translate(float x, float y);
 
@@ -187,7 +200,12 @@ class Block {
   static Block* readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem);
   static Block* readFromBinary(FileHandle *i_pfh);
   AABB& getAABB();
-  std::vector<Line *>& getCollisionLines() {return m_collisionLines;}
+  BoundingCircle& getBCircle() {
+    return m_BCircle;
+  }
+  std::vector<Line *>& getCollisionLines() {
+    return m_collisionLines;
+  }
 
   int getGeom() {
     return m_geom;
@@ -252,8 +270,13 @@ private:
   float m_elasticity; /* elasticity of the block */
   cpBody *mBody;
 
+  // AABB for static blocks
   AABB  m_BBox;
+  // BoundingCircle for dynamic blocks
+  BoundingCircle m_BCircle;
   bool  m_isBBoxDirty;
+
+  ColElement<Block>* m_collisionElement;
 
   // the geom used to render the block
   int   m_geom;
@@ -266,7 +289,8 @@ private:
   std::vector<Line*> m_collisionLines; /* Line to collide against */
 
   void addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem);
-  void updateCollisionLines();
+  // dynamic background blocks only need to compute the collision lines once.
+  void updateCollisionLines(bool setDirty = false, bool forceUpdate = false);
   void translateCollisionLines(float x, float y);
 
   EdgeDrawMethod m_edgeDrawMethod;

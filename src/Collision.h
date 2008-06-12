@@ -40,30 +40,31 @@ class Zone;
     float fGrip;
   };
 
+  template<class T> struct ColElement {
+    T* id;
+    /* in order to remove efficiently an element from the grid,
+       we need to know in which cells it is */
+    /* if gridCells.size() == 0, then it means that the element is not in
+       the level boundaries (moved out by a script for example) */
+    std::vector<int> gridCells;
+    /* as an element can be in more than one cell,
+       we need to tell if an element has already be visited
+    */
+    int curCheck;
+  };
+
   template<class T> class ElementHandler {
   public:
-    typedef struct {
-      T* id;
-      /* in order to remove efficiently an element from the grid,
-	 we need to know in which cells it is */
-      /* if gridCells.size() == 0, then it means that the element is not in
-	 the level boundaries (moved out by a script for example) */
-      std::vector<int> gridCells;
-      /* as an element can be in more than one cell,
-	 we need to tell if an element has already be visited
-       */
-      int curCheck;
-    } ColElement;
 
     typedef struct {
-      std::vector<ColElement*> ColElements;
+      std::vector<struct ColElement<T>*> ColElements;
     } GridCell;
 
     /* The element must have a method getAABB() */
-    void addElement(T* id);
+    struct ColElement<T>* addElement(T* id);
     void removeElement(T* id);
     void moveElement(T* id);
-    /* FIXME::return ref */
+    void moveElement(struct ColElement<T>* pColElem);
     std::vector<T*>& getElementsNearPosition(AABB& BBox);
 
 
@@ -86,7 +87,7 @@ class Zone;
     }
 
   private:
-    std::vector<ColElement*> m_ColElements;
+    std::vector<struct ColElement<T>*> m_ColElements;
     /* level dimensions */
     Vector2f m_min, m_max;
     /* grid dimensions */
@@ -104,31 +105,14 @@ class Zone;
     std::vector<T*> m_returnedElements;
 
     /* helpers */
-    ColElement* _getColElement(T* id){
-      for(unsigned int i=0; i<m_ColElements.size(); i++){
-	if(m_ColElements[i]->id == id){
-	  return m_ColElements[i];
-	}
-      }
+    struct ColElement<T>* _getColElement(T* id);
+    void _addColElementInCells(struct ColElement<T>* pColElem);
+    struct ColElement<T>* _getAndRemoveColElement(T* id);
+    void _removeColElementFromCells(struct ColElement<T>* pColElem);
 
-      throw Exception("Collision element not found");
-    }
-
-    void _addColElementInCells(ColElement* pColElem);
-
-    ColElement* _getAndRemoveColElement(T* id){
-      for(unsigned int i=0; i<m_ColElements.size(); i++){
-	if(m_ColElements[i]->id == id){
-	  ColElement* pColElem = m_ColElements[i];
-	  m_ColElements.erase(m_ColElements.begin()+i);
-
-	  return pColElem;
-	}
-      }
-      throw Exception("Collision element not found");
-    }
-
-    void _removeColElementFromCells(ColElement* pColElem);
+    // precalculated values
+    float m_widthDivisor;
+    float m_heightDivisor;
   };
 
   /* Grid cell */
@@ -205,7 +189,7 @@ class Zone;
     std::vector<Zone*> getZonesNearPosition(AABB& BBox);
     */
 
-    void addDynBlock(Block* id);
+    struct ColElement<Block>* addDynBlock(Block* id);
     void removeDynBlock(Block* id);
     void moveDynBlock(Block* id);
     std::vector<Block*>& getDynBlocksNearPosition(AABB& BBox);

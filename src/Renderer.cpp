@@ -1102,6 +1102,7 @@ int GameRenderer::nbParticlesRendered() const {
 		    pBiker->getUglyColorFilter());
 
 	if(XMSession::instance()->debug()) {
+	  GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
 	  // render collision points
 	  for(unsigned int j=0; j<pCamera->getPlayerToFollow()->CollisionPoints().size(); j++) {
 	    _RenderCircle(16, MAKE_COLOR(255,255,0,255),pCamera->getPlayerToFollow()->CollisionPoints()[j], 0.02);
@@ -1139,6 +1140,8 @@ int GameRenderer::nbParticlesRendered() const {
     setCameraTransformations(pCamera, m_xScale, m_yScale);
 
     if(XMSession::instance()->debug()) {
+      GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
+
       /* Draw some collision handling debug info */
       CollisionSystem *pc = i_scene->getCollisionHandler();
       for(unsigned int i=0;i<pc->m_CheckedLines.size();i++) {
@@ -1758,6 +1761,29 @@ void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
       }
     }
 
+    if(XMSession::instance()->debug() == true) {
+      GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
+      for(unsigned int i=0; i<Blocks.size(); i++) {
+	if(Blocks[i]->isBackground() != bBackground)
+	  continue;
+      
+	pDrawlib->startDraw(DRAW_MODE_LINE_LOOP);
+	pDrawlib->setColorRGB(0, 0, 255);
+
+	AABB aabb = Blocks[i]->getAABB();
+
+	pDrawlib->glVertex(aabb.getBMin().x, aabb.getBMin().y);
+	pDrawlib->glVertex(aabb.getBMin().x, aabb.getBMax().y);
+	pDrawlib->glVertex(aabb.getBMax().x, aabb.getBMax().y);
+	pDrawlib->glVertex(aabb.getBMax().x, aabb.getBMin().y);
+
+	pDrawlib->endDraw();
+
+	_RenderCircle(16, MAKE_COLOR(0, 0, 255, 255),
+		      Blocks[i]->getBCircle().getCenter(),
+		      Blocks[i]->getBCircle().getRadius());
+      }
+    }
   }
 
   void GameRenderer::_RenderBlock(Block* block)
@@ -2109,6 +2135,7 @@ void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) {
   ===========================================================================*/
   void GameRenderer::_RenderDebugInfo(void) {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
+    pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
 
     for(unsigned int i=0;i<m_DebugInfo.size();i++) {
       if(m_DebugInfo[i]->Type == "@WHITEPOLYGONS") {

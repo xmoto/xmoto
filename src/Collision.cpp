@@ -786,9 +786,9 @@ CollisionSystem::~CollisionSystem() {
   */
 
   /* dynamic blocks */
-  void CollisionSystem::addDynBlock(Block* id)
+  ColElement<Block>* CollisionSystem::addDynBlock(Block* id)
   {
-    m_dynBlocksHandler.addElement(id);
+    return m_dynBlocksHandler.addElement(id);
   }
 
   void CollisionSystem::removeDynBlock(Block* id)
@@ -798,7 +798,7 @@ CollisionSystem::~CollisionSystem() {
 
   void CollisionSystem::moveDynBlock(Block* id)
   {
-    m_dynBlocksHandler.moveElement(id);
+    m_dynBlocksHandler.moveElement(id->getColElement());
   }
 
   std::vector<Block*>& CollisionSystem::getDynBlocksNearPosition(AABB& BBox)
@@ -888,23 +888,26 @@ CollisionSystem::~CollisionSystem() {
     m_gridWidth  = gridWidth;
     m_gridHeight = gridHeight;
 
+    m_widthDivisor  = (float)(m_gridWidth)  / (m_max.x - m_min.x);
+    m_heightDivisor = (float)(m_gridHeight) / (m_max.y - m_min.y);
+
     m_pGrid = new GridCell[m_gridWidth * m_gridHeight];    
   }
 
-  template <class T> void
-  ElementHandler<T>::addElement(T* id)
+  template <class T> struct ColElement<T>* ElementHandler<T>::addElement(T* id)
   {
-    ColElement* pNewElem = new ColElement;
+    struct ColElement<T>* pNewElem = new struct ColElement<T>;
     pNewElem->id = id;
     m_ColElements.push_back(pNewElem);
 
     _addColElementInCells(pNewElem);
+    return pNewElem;      
   }
 
   template <class T> void
   ElementHandler<T>::removeElement(T* id)
   {
-    ColElement* pColElem = _getAndRemoveColElement(id);
+    struct ColElement<T>* pColElem = _getAndRemoveColElement(id);
     _removeColElementFromCells(pColElem);
 
     delete pColElem;
@@ -913,10 +916,26 @@ CollisionSystem::~CollisionSystem() {
   template <class T> void
   ElementHandler<T>::moveElement(T* id)
   {
-    ColElement* pColElem = _getColElement(id);
+    struct ColElement<T>* pColElem = _getColElement(id);
     _removeColElementFromCells(pColElem);
     _addColElementInCells(pColElem);
   }
+
+  template <class T> void
+  ElementHandler<T>::moveElement(struct ColElement<T>* pColElem)
+  {
+    _removeColElementFromCells(pColElem);
+    _addColElementInCells(pColElem);
+  }
+
+
+
+  inline int my_floor(float x) {
+    int ix = (int)x;
+    return (ix >= 0) ? ix : ix-1;
+  }
+
+
 
   template <class T> std::vector<T*>&
   ElementHandler<T>::getElementsNearPosition(AABB& BBox)
@@ -926,10 +945,10 @@ CollisionSystem::~CollisionSystem() {
     Vector2f BMax = BBox.getBMax();
 
     /* grid coordonates */
-    int nMinCX = (int)floor(((BMin.x - m_min.x - CD_EPSILON) * (float)m_gridWidth)  / (m_max.x - m_min.x));
-    int nMinCY = (int)floor(((BMin.y - m_min.y - CD_EPSILON) * (float)m_gridHeight) / (m_max.y - m_min.y));
-    int nMaxCX = (int)floor(((BMax.x - m_min.x + CD_EPSILON) * (float)m_gridWidth)  / (m_max.x - m_min.x));
-    int nMaxCY = (int)floor(((BMax.y - m_min.y + CD_EPSILON) * (float)m_gridHeight) / (m_max.y - m_min.y));
+    int nMinCX = my_floor(((BMin.x - m_min.x - CD_EPSILON) * m_widthDivisor));
+    int nMinCY = my_floor(((BMin.y - m_min.y - CD_EPSILON) * m_heightDivisor));
+    int nMaxCX = my_floor(((BMax.x - m_min.x + CD_EPSILON) * m_widthDivisor));
+    int nMaxCY = my_floor(((BMax.y - m_min.y + CD_EPSILON) * m_heightDivisor));
 
     if(nMinCX < 0)
       nMinCX = 0;
@@ -956,7 +975,7 @@ CollisionSystem::~CollisionSystem() {
 	  continue;
 
 	int cell = i+j*m_gridWidth;
-	std::vector<ColElement*>& gridCellColElements = m_pGrid[cell].ColElements;
+	std::vector<struct ColElement<T>*>& gridCellColElements = m_pGrid[cell].ColElements;
 	for(unsigned int k=0; k<gridCellColElements.size(); k++){
 	  if(gridCellColElements[k]->curCheck != m_curCheck){
 	    
@@ -979,8 +998,21 @@ CollisionSystem::~CollisionSystem() {
   /*=====================================================
     Generic element handling helper functions
   =====================================================*/
+
+  template <class T> struct ColElement<T>*
+  ElementHandler<T>::_getColElement(T* id)
+  {
+    for(unsigned int i=0; i<m_ColElements.size(); i++){
+      if(m_ColElements[i]->id == id){
+	return m_ColElements[i];
+      }
+    }
+
+    throw Exception("Collision element not found");
+  }
+
   template <class T> void
-  ElementHandler<T>::_addColElementInCells(ColElement* pColElem)
+  ElementHandler<T>::_addColElementInCells(struct ColElement<T>* pColElem)
   {
     /* current check */
     pColElem->curCheck = 0;
@@ -991,15 +1023,19 @@ CollisionSystem::~CollisionSystem() {
     Vector2f BMax = BBox.getBMax();
 
     /* grid coordonates */
-    int nMinCX = (int)floor(((BMin.x - m_min.x - CD_EPSILON) * (float)m_gridWidth)  / (m_max.x - m_min.x));
-    int nMinCY = (int)floor(((BMin.y - m_min.y - CD_EPSILON) * (float)m_gridHeight) / (m_max.y - m_min.y));
-    int nMaxCX = (int)floor(((BMax.x - m_min.x + CD_EPSILON) * (float)m_gridWidth)  / (m_max.x - m_min.x));
-    int nMaxCY = (int)floor(((BMax.y - m_min.y + CD_EPSILON) * (float)m_gridHeight) / (m_max.y - m_min.y));
+    int nMinCX = my_floor(((BMin.x - m_min.x - CD_EPSILON) * m_widthDivisor));
+    int nMinCY = my_floor(((BMin.y - m_min.y - CD_EPSILON) * m_heightDivisor));
+    int nMaxCX = my_floor(((BMax.x - m_min.x + CD_EPSILON) * m_widthDivisor));
+    int nMaxCY = my_floor(((BMax.y - m_min.y + CD_EPSILON) * m_heightDivisor));
 
-    if(nMinCX < 0) nMinCX = 0;
-    if(nMinCY < 0) nMinCY = 0;
-    if(nMaxCX >= m_gridWidth)  nMaxCX = m_gridWidth;
-    if(nMaxCY >= m_gridHeight) nMaxCY = m_gridHeight;        
+    if(nMinCX < 0)
+      nMinCX = 0;
+    if(nMinCY < 0)
+      nMinCY = 0;
+    if(nMaxCX >= m_gridWidth)
+      nMaxCX = m_gridWidth;
+    if(nMaxCY >= m_gridHeight)
+      nMaxCY = m_gridHeight;        
 
     /* For each cells touched by the element, add it to the grid */
     for(int i=nMinCX; i<=nMaxCX; i++){
@@ -1016,8 +1052,22 @@ CollisionSystem::~CollisionSystem() {
     }
   }
 
+  template <class T> struct ColElement<T>*
+  ElementHandler<T>::_getAndRemoveColElement(T* id)
+  {
+    for(unsigned int i=0; i<m_ColElements.size(); i++){
+      if(m_ColElements[i]->id == id){
+	struct ColElement<T>* pColElem = m_ColElements[i];
+	m_ColElements.erase(m_ColElements.begin()+i);
+
+	return pColElem;
+      }
+    }
+    throw Exception("Collision element not found");
+  }
+
   template <class T> void
-  ElementHandler<T>::_removeColElementFromCells(ColElement* pColElem)
+  ElementHandler<T>::_removeColElementFromCells(struct ColElement<T>* pColElem)
   {
     /* for each grid cell with the ColElem in it */
     for(unsigned int i=0; i<pColElem->gridCells.size(); i++){
@@ -1045,11 +1095,13 @@ CollisionSystem::~CollisionSystem() {
     is gcc 4.0.3 error:
     "Collision.cpp:898: erreur: expected constructor, destructor, or type conversion before «*» token"
 
-    If somebody knows how to fix, feel free to send a patch. 
+    If somebody knows how to fix, feel free to send a patch.
+
+    update: the same applies to addElement
     ================================================*/
 
   /*
-  template <class T> ElementHandler<T>::ColElement*
+  ElementHandler<T>::ColElement*
   ElementHandler<T>::_getAndRemoveColElement(T* id)
   {
     for(unsigned int i=0; i<m_ColElements.size(); i++){
