@@ -302,6 +302,7 @@ void StateEditWebConfig::send(const std::string& i_id, UIMsgBoxButton i_button, 
   case UI_MSGBOX_NO:
     /* No internet connection thank you */
     XMSession::instance()->setWWW(false);
+    StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
     m_requestForEnd = true;
     break;
   default:
