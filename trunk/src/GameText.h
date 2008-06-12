@@ -375,6 +375,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_STATISTICS           _("Statistics")
 #define GAMETEXT_STATS                _("STATS")
 #define GAMETEXT_STEREO               _("Stereo")
+#define GAMETEXT_SYNC_DOWN           _("Synchronisation down")
 #define GAMETEXT_SYNC_UP           _("Synchronisation up")
 #define GAMETEXT_SYNC_DONE         _("Synchronisation done successfully")
 #define GAMETEXT_THEMES               _("Theme")

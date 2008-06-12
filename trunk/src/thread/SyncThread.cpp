@@ -101,6 +101,8 @@ int SyncThread::realThreadFunction() {
     return 1;
   }
 
+  setThreadCurrentOperation(GAMETEXT_SYNC_DOWN);
+
   // sync down
   try {
     m_pDb->sync_updateDB(XMSession::instance()->profile(), XMSession::instance()->sitekey(),
