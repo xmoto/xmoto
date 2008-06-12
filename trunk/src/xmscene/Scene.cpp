@@ -964,12 +964,11 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
 
   void MotoGame::MoveBlock(std::string pBlockID, float pX, float pY) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block->setDynamicPosition(v_block->DynamicPosition() + Vector2f(pX, pY));
-    m_Collision.moveDynBlock(v_block);
+    MoveBlock(v_block, pX, pY);
   }
   
   void MotoGame::MoveBlock(Block* pBlock, float pX, float pY) {
-    pBlock->setDynamicPosition(pBlock->DynamicPosition() + Vector2f(pX, pY));
+    pBlock->translate(pX, pY);
     m_Collision.moveDynBlock(pBlock);
   }
   
@@ -987,13 +986,12 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
   
   void MotoGame::SetBlockRotation(std::string pBlockID, float pAngle) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block->setDynamicRotation(pAngle);
-    m_Collision.moveDynBlock(v_block);
+    SetBlockRotation(v_block, pAngle);
   }     
   
   void MotoGame::SetBlockRotation(Block* pBlock, float pAngle) {
-    pBlock->setDynamicRotation(pAngle);
-    m_Collision.moveDynBlock(pBlock);
+    if(pBlock->setDynamicRotation(pAngle) == true)
+      m_Collision.moveDynBlock(pBlock);
   }     
   
   void MotoGame::SetEntityDrawAngle(std::string pEntityID, float pAngle) {

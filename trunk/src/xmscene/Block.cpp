@@ -98,6 +98,7 @@ Block::Block(std::string i_id) {
   m_edgeDrawMethod   = angle;
   m_edgeAngle        = DEFAULT_EDGE_ANGLE;
   mBody              = NULL;
+  m_collisionElement = NULL;
 }
 
 Block::~Block() {
@@ -132,21 +133,19 @@ Vector2f Block::DynamicPositionCenter() const {
   return m_dynamicPositionCenter;
 }
 
-float Block::DynamicRotation() const {
-  return m_dynamicRotation;
-}
-
-void Block::updateCollisionLines() {
+void Block::updateCollisionLines(bool setDirty, bool forceUpdate) {
   bool manageCollisions = (m_collisionLines.size() != 0);
   /* Ignore background blocks */
   if(isDynamic() == false
      || manageCollisions == false)
     return;
 
-  m_isBBoxDirty = true;
+  if(forceUpdate == false && isBackground() == true)
+    return;
 
-  //if(isBackground() == true)
-  //return;
+  if(setDirty == true){
+    m_isBBoxDirty = true;
+  }
 
   /* Build rotation matrix for block */
   float fR[4]; 
@@ -156,10 +155,11 @@ void Block::updateCollisionLines() {
   fR[3] =  cosf(DynamicRotation());
   unsigned int z = 0;
 
-  for(unsigned int j=0; j<Vertices().size(); j++) {            
+  for(unsigned int j=0; j<Vertices().size(); j++) {
+    // FIXME::aren't each vertice transform twice ??
     unsigned int jnext = j==Vertices().size()-1? 0 : j+1;
-    BlockVertex *pVertex1 = Vertices()[j];          
-    BlockVertex *pVertex2 = Vertices()[jnext];          
+    BlockVertex *pVertex1 = Vertices()[j];
+    BlockVertex *pVertex2 = Vertices()[jnext];
 
 
     /* Transform vertices */
@@ -203,41 +203,67 @@ void Block::translateCollisionLines(float x, float y)
 }
 
 void Block::setDynamicPosition(const Vector2f& i_dynamicPosition) {
+  Vector2f diff = i_dynamicPosition - m_dynamicPosition;
   m_dynamicPosition = i_dynamicPosition;
-  updateCollisionLines();
+
+  m_BCircle.translate(diff.x, diff.y);
+  translateCollisionLines(diff.x, diff.y);
 }
 
 void Block::setDynamicPositionAccordingToCenter(const Vector2f& i_dynamicPosition) {
-  m_dynamicPosition = i_dynamicPosition - m_dynamicPositionCenter;
-  updateCollisionLines();
+  Vector2f newPos = i_dynamicPosition - m_dynamicPositionCenter;
+  Vector2f diff = newPos - m_dynamicPosition;
+  m_dynamicPosition = newPos;
+
+  m_BCircle.translate(diff.x, diff.y);
+  translateCollisionLines(diff.x, diff.y);
 }
 
-void Block::setDynamicRotation(float i_dynamicRotation) {
+bool Block::setDynamicRotation(float i_dynamicRotation) {
   m_dynamicRotation = i_dynamicRotation;
-  updateCollisionLines();
+
+  // if the center of rotation is the center of the bounding circle,
+  // we don't have to set the bounding box to dirty
+  if(DynamicRotationCenter() + DynamicPosition() == m_BCircle.getCenter()) {
+    updateCollisionLines(false, false);
+    return false;
+  } else {
+    updateCollisionLines(true, true);
+    return true;
+  }
 }
 
 void Block::translate(float x, float y)
 {
   m_dynamicPosition.x += x;
   m_dynamicPosition.y += y;
-  // dont recalculate the AABB
-  m_BBox.translateAABB(x, y);
+  // dont recalculate the BoundingCircle
+  m_BCircle.translate(x, y);
   translateCollisionLines(x, y);
 }
 
 void Block::updatePhysics(int timeStep, CollisionSystem* io_collisionSystem) {
   if(isPhysics()) {
+    // move block according to chipmunk, only if they have moved
+    bool moved = false;
 
-    // move block according to chipmunk
-    setDynamicPosition(Vector2f(((mBody->p.x ) / CHIP_SCALE_RATIO) , (mBody->p.y ) / CHIP_SCALE_RATIO));
-    setDynamicRotation(mBody->a);
-    
-    // inform collision system that there has been a change
-    io_collisionSystem->moveDynBlock(this);
+    Vector2f newPos = Vector2f(((mBody->p.x ) / CHIP_SCALE_RATIO) , (mBody->p.y ) / CHIP_SCALE_RATIO);
+    if(DynamicPosition() != newPos) {
+      setDynamicPosition(newPos);
+      moved = true;
+    }
+
+    if(DynamicRotation() != mBody->a) {
+      setDynamicRotation(mBody->a);
+      moved = true;
+    }
+
+    if(moved == true){
+      // inform collision system that there has been a change
+      io_collisionSystem->moveDynBlock(this);
+    }
     
     cpBodyResetForces(mBody);
-
   }
 }
 
@@ -340,8 +366,8 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 
   /* define dynamic block in the collision system */
   if(isLayer() == false && isDynamic()) {
-    updateCollisionLines();
-    io_collisionSystem->addDynBlock(this);
+    updateCollisionLines(true, true);
+    m_collisionElement = io_collisionSystem->addDynBlock(this);
   }
 
   if(isDynamic() == false && m_layer == -1){
@@ -406,7 +432,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
     }
   }
 
-  updateCollisionLines();
+  updateCollisionLines(true);
 
   if(v_BSPTree.getNumErrors() > 0) {
     Logger::Log("Error due to the block %s", Id().c_str());
@@ -436,14 +462,6 @@ void Block::unloadToPlay() {
     delete m_collisionLines[i];
   }
   m_collisionLines.clear();
-}
-
-bool Block::isBackground() const {
-  return m_background;
-}
-
-bool Block::isDynamic() const {
-  return m_dynamic;
 }
 
 bool Block::isPhysics() const {
@@ -535,27 +553,36 @@ void Block::setElasticity(float i_elasticity) {
 
 AABB& Block::getAABB()
 {
-  if(m_isBBoxDirty == true){
-    m_BBox.reset();
-
-    if(isDynamic() == true){
+  if(isDynamic() == true) {
+    // will be dirty only once too.
+    // after, the bounding circle is translated and rotated.
+    if(m_isBBoxDirty == true){
+      m_BCircle.reset();
+      //updateCollisionLines(true);
       for(unsigned int i=0; i<m_collisionLines.size(); i++){
 	Line* pLine = m_collisionLines[i];
 	// add only the first point because the second
 	// point of the line n is the same as the first
 	// point of the line n+1
-	m_BBox.addPointToAABB2f(pLine->x1, pLine->y1);
+	m_BCircle.addPointToCircle(pLine->x1, pLine->y1);
       }
-    } else{
+      m_BCircle.calculateBoundingCircle();
+      m_isBBoxDirty = false;
+    }
+    return m_BCircle.getAABB();
+  } else {
+    // will be dirty only once for a static block
+    if(m_isBBoxDirty == true){
+      m_BBox.reset();
+
       for(unsigned int i=0; i<Vertices().size(); i++) {
 	m_BBox.addPointToAABB2f(DynamicPosition() + Vertices()[i]->Position());
       }
+
+      m_isBBoxDirty = false;
     }
-
-    m_isBBoxDirty = false;
+    return m_BBox;
   }
-
-  return m_BBox;
 }
 
 BlockVertex::BlockVertex(const Vector2f& i_position, const std::string& i_edgeEffect) {

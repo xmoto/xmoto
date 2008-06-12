@@ -384,7 +384,9 @@ public:
   void calculateBoundingCircle();
 
   // get a bounding box for the circle
-  AABB& getAABB();
+  AABB& getAABB() {
+    return m_aabb;
+  }
 
 private:
   Vector2f m_center;

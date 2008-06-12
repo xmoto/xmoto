@@ -22,12 +22,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Math library. 
  */
 #include "VMath.h"
+#include "helpers/Log.h"
 
 #define BIG_VALUE 99999999.0f
 
-#define MIN(x, y) (x) < (y) ? (x) : (y)
-#define MAX(x, y) (x) > (y) ? (x) : (y)
-#define ABS(x) (x) > 0.0 ? (x) : -(x)
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
+#define ABS(x) ((x) > 0.0 ? (x) : -(x))
 
 /*===========================================================================
   Bounding Circle
@@ -108,11 +109,6 @@ void BoundingCircle::calculateBoundingCircle()
   float radius = tx + ty - MIN(tx, ty) / 2.0;
 
   init(center, radius);
-}
-
-AABB& BoundingCircle::getAABB()
-{
-  return m_aabb;
 }
 
 void BoundingCircle::calculateBoundingBox()
