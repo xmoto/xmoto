@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "chipmunk/chipmunk.h"
 #include "ChipmunkWorld.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 23
+#define CACHE_LEVEL_FORMAT_VERSION 22
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -746,17 +746,6 @@ void Level::loadXML(void) {
     for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
         pElem=pElem->NextSiblingElement("block")) {
       Block* v_block = Block::readFromXml(m_xmlSource, pElem);
-      if(v_block->isPhysics()) {
-	m_isPhysics = true;
-      }
-      m_blocks.push_back(v_block);
-    }
-
-    /* Get circles */
-    for(TiXmlElement *pElem = pLevelElem->FirstChildElement("circle"); pElem!=NULL;
-        pElem=pElem->NextSiblingElement("circle")) {
-      Block* v_block = Block::readFromXml(m_xmlSource, pElem);
-      v_block->setCircle(true);
       if(v_block->isPhysics()) {
 	m_isPhysics = true;
       }
