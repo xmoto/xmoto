@@ -702,39 +702,43 @@ void StateMainMenu::updateStats() {
 			 "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
 			 "GROUP BY id_profile;",
 			 nrow);
-  
   if(nrow == 0) {
     pDb->read_DB_free(v_result);
     return;
   }
-  
   v_nbStarts        = atoi(pDb->getResult(v_result, 2, 0, 0));
   v_since           =      pDb->getResult(v_result, 2, 0, 1);  
   pDb->read_DB_free(v_result);
 
   v_result = pDb->readDB("SELECT SUM(b.playedTime), SUM(b.nbPlayed), SUM(b.nbDied), SUM(b.nbCompleted), "
-			 "SUM(b.nbRestarted), count(b.id_level) "
+			 "SUM(b.nbRestarted) "
 			 "FROM stats_profiles AS a INNER JOIN stats_profiles_levels AS b "
-			 "ON (a.id_profile=b.id_profile) "
+			 "ON (a.id_profile=b.id_profile AND a.sitekey=b.sitekey) "
 			 "WHERE a.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
 			 "GROUP BY a.id_profile;",
-			 nrow);
-  
+			 nrow);  
   if(nrow == 0) {
     pDb->read_DB_free(v_result);
     return;
   }
-  
-  v_totalPlayedTime = atoi(pDb->getResult(v_result, 6, 0, 0));
-  v_nbPlayed        = atoi(pDb->getResult(v_result, 6, 0, 1));
-  v_nbDied          = atoi(pDb->getResult(v_result, 6, 0, 2));
-  v_nbCompleted     = atoi(pDb->getResult(v_result, 6, 0, 3));
-  v_nbRestarted     = atoi(pDb->getResult(v_result, 6, 0, 4));
-  v_nbDiffLevels    = atoi(pDb->getResult(v_result, 6, 0, 5));
-  
+  v_totalPlayedTime = atoi(pDb->getResult(v_result, 5, 0, 0));
+  v_nbPlayed        = atoi(pDb->getResult(v_result, 5, 0, 1));
+  v_nbDied          = atoi(pDb->getResult(v_result, 5, 0, 2));
+  v_nbCompleted     = atoi(pDb->getResult(v_result, 5, 0, 3));
+  v_nbRestarted     = atoi(pDb->getResult(v_result, 5, 0, 4));
   pDb->read_DB_free(v_result);
 
-  
+  v_result = pDb->readDB("SELECT COUNT(DISTINCT(id_level)) "
+			 "FROM stats_profiles_levels "
+			 "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\";",
+			 nrow);
+  if(nrow == 0) {
+    pDb->read_DB_free(v_result);
+    return;
+  }  
+  v_nbDiffLevels = atoi(pDb->getResult(v_result, 1, 0, 0));
+  pDb->read_DB_free(v_result);
+
   /* Per-player info */
   char cBuf[512];
   char cTime[512];

@@ -117,7 +117,7 @@ void xmDatabase::sync_updateDB(const std::string& i_profile, const std::string& 
   TiXmlElement *pVarElem;
 
   std::string v_siteKey, v_id_level, v_timeStamp, v_finishTime;
-  std::string v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestarted, v_playedTime, v_lastPlayDate;
+  std::string v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestarted, v_playedTime, v_lastPlayDate, v_since, v_nbStarts;
 
   int v_newDbSyncServer;
 
@@ -150,6 +150,54 @@ void xmDatabase::sync_updateDB(const std::string& i_profile, const std::string& 
     // get the last dbsyncserver
     v_newDbSyncServer = atoi(pc);
 
+    /* sites */
+    v_syncLXmlDataElement3 = v_syncLXmlDataElement2->FirstChildElement("sites");
+  
+    if(v_syncLXmlDataElement3 == NULL) {
+      throw Exception("error : unable to analyze sync file");
+    }
+
+    pVarElem = v_syncLXmlDataElement3->FirstChildElement("site");
+    while(pVarElem != NULL) {
+
+      pc = pVarElem->Attribute("sitekey");
+      if(pc == NULL) {
+	throw Exception("Invalid xml");
+      }
+      v_siteKey = pc;
+
+      pc = pVarElem->Attribute("nbStarts");
+      if(pc == NULL) {
+	throw Exception("Invalid xml");
+      }
+      v_nbStarts = pc;
+
+      pc = pVarElem->Attribute("since");
+      if(pc == NULL) {
+	throw Exception("Invalid xml");
+      }
+      v_since = pc;
+
+      // add or update the level stats
+      if(checkKey("SELECT COUNT(1) FROM stats_profiles WHERE sitekey=\"" + protectString(v_siteKey) + "\""
+		  " AND id_profile=\"" + protectString(i_profile) + "\";")) {
+	// update
+	simpleSql("UPDATE stats_profiles "
+		  "SET nbStarts=\"" + protectString(v_nbStarts) +
+		  "\", since=\"" + protectString(v_since) +
+		  "\" WHERE sitekey=\"" + protectString(v_siteKey) + "\""
+		  " AND id_profile=\"" + protectString(i_profile) + "\";");
+
+      } else {
+	// insert
+	simpleSql("INSERT INTO stats_profiles (sitekey, id_profile, nbStarts, since)"
+		  " VALUES (\"" + protectString(v_siteKey) + "\", \"" + protectString(i_profile) + "\", \"" + protectString(v_nbStarts) + "\", \"" + protectString(v_since) + "\");");
+      }
+
+      pVarElem = pVarElem->NextSiblingElement("site");
+    }
+
+    // stats_completedLevels
     v_syncLXmlDataElement3 = v_syncLXmlDataElement2->FirstChildElement("stats_completedLevels");
   
     if(v_syncLXmlDataElement3 == NULL) {
