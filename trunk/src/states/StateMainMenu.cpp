@@ -780,7 +780,7 @@ void StateMainMenu::updateStats() {
 			 "FROM levels AS a INNER JOIN stats_profiles_levels AS b ON a.id_level=b.id_level "
 			 "WHERE b.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
 			 "GROUP BY b.id_level "
-			 "ORDER BY b.nbPlayed+0 DESC LIMIT 10;",
+			 "ORDER BY SUM(b.playedTime) DESC LIMIT 10;",
 			 nrow);
   
   int cy = 110;
