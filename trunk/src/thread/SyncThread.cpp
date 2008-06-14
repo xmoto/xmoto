@@ -88,7 +88,9 @@ int SyncThread::realThreadFunction() {
   }
 
   /* finally, remove, once synchronized */
-  remove(std::string(SYNC_UP_TMPFILEBZ2).c_str());
+  if(XMSession::instance()->debug() == false) {
+    remove(std::string(SYNC_UP_TMPFILEBZ2).c_str());
+  }
 
   setThreadProgress(50);
 
@@ -114,7 +116,9 @@ int SyncThread::realThreadFunction() {
   }
 
   // remove answer file
-  remove(v_syncDownFile.c_str());
+  if(XMSession::instance()->debug() == false) {
+    remove(v_syncDownFile.c_str());
+  }
 
   setThreadCurrentOperation(GAMETEXT_SYNC_DONE);
   setThreadProgress(100);
