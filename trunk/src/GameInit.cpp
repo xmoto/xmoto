@@ -393,7 +393,8 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     StateManager::instance()->pushState(pMainMenu);
     
     /* Do we have a player profile? */
-    if(XMSession::instance()->profile() == "") {
+    if(XMSession::instance()->profile() == "" ||
+       pDb->stats_checkKeyExists_stats_profiles(XMSession::instance()->sitekey(), XMSession::instance()->profile()) == false) {
       StateManager::instance()->pushState(new StateEditProfile(pMainMenu));
 
       /* in case there is no profile, we show a message box */

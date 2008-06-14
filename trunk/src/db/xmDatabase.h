@@ -60,6 +60,7 @@ public:
   /* stats */
   void stats_createProfile(const std::string& i_sitekey, const std::string& i_profile);
   void stats_destroyProfile(const std::string& i_profile);
+  bool stats_checkKeyExists_stats_profiles(const std::string& i_sitekey, const std::string& i_profile);
   void stats_levelCompleted(const std::string& i_sitekey,
 			    const std::string &PlayerName,
 			    const std::string &LevelID,
@@ -235,7 +236,6 @@ public:
   void updateDB_stats(XmDatabaseUpdateInterface *i_interface = NULL);    /* statistics */
   void updateDB_favorite(const std::string& i_profile,
 			 XmDatabaseUpdateInterface *i_interface = NULL); /* favorite */
-  bool stats_checkKeyExists_stats_profiles(const std::string& i_sitekey, const std::string& i_profile);
   bool stats_checkKeyExists_stats_profiles_levels(const std::string& i_sitekey,
 						  const std::string& i_profile,
 						  const std::string& i_level);
