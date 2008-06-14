@@ -516,7 +516,10 @@ void FSWeb::uploadDbSync(const std::string& p_dbSyncFilename,
   FILE *v_destinationFile;
 
   struct curl_httppost *v_post, *v_last;
-  std::ostringstream v_dbSyncServerStr;
+
+  // std::ostringstream v_dbSyncServerStr;
+  // curl seems not to like .str().c_str()
+  char v_syncStr[256];
 
   Logger::Log(std::string("Uploading dbsync " + p_dbSyncFilename + " to " + p_url_to_transfert).c_str());
 
@@ -537,7 +540,7 @@ void FSWeb::uploadDbSync(const std::string& p_dbSyncFilename,
   v_post = NULL;
   v_last = NULL;
 
-  v_dbSyncServerStr << p_dbSyncServer;
+  snprintf(v_syncStr, 256, "%i", p_dbSyncServer);
 
   curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "login",
 	       CURLFORM_PTRCONTENTS, p_login.c_str(), CURLFORM_END);
@@ -549,7 +552,7 @@ void FSWeb::uploadDbSync(const std::string& p_dbSyncFilename,
 	       CURLFORM_PTRCONTENTS, p_siteKey.c_str(), CURLFORM_END);
 
   curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "downDbSync",
-	       CURLFORM_PTRCONTENTS, v_dbSyncServerStr.str().c_str(), CURLFORM_END);
+	       CURLFORM_PTRCONTENTS, v_syncStr, CURLFORM_END);
 
   curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "dbSync",
 	       CURLFORM_FILE, p_dbSyncFilename.c_str(), CURLFORM_END);
