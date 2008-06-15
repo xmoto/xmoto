@@ -1466,7 +1466,7 @@ UIWindow* StateMainMenu::makeWindowOptions_db(UIWindow* i_parent) {
   v_window->showWindow(false);
 
   /* explanation */
-  v_someText = new UIStatic(v_window, 0, 10, splitText(GAMETEXT_DBSYNCHRONIZE_EXPLANATION, 60),
+  v_someText = new UIStatic(v_window, 0, 10, splitText(GAMETEXT_DBSYNCHRONIZE_EXPLANATION, 59),
 			    v_window->getPosition().nWidth, v_window->getPosition().nHeight/2);
   v_someText->setHAlign(UI_ALIGN_CENTER);
   v_someText->setVAlign(UI_ALIGN_TOP);
@@ -1481,7 +1481,7 @@ UIWindow* StateMainMenu::makeWindowOptions_db(UIWindow* i_parent) {
   v_button->setContextHelp(CONTEXTHELP_DBSYNCHRONIZE);
 
   /* warning */
-  v_someText = new UIStatic(v_window, 0,  (v_window->getPosition().nWidth-170)/2 + 57/2+5 , splitText(GAMETEXT_DBSYNCHRONIZE_WARNING, 60),
+  v_someText = new UIStatic(v_window, 0,  (v_window->getPosition().nWidth-170)/2 + 57/2+5 , splitText(GAMETEXT_DBSYNCHRONIZE_WARNING, 59),
 			    v_window->getPosition().nWidth, v_window->getPosition().nHeight/2);
   v_someText->setHAlign(UI_ALIGN_CENTER);
   v_someText->setVAlign(UI_ALIGN_TOP);

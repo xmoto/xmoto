@@ -365,9 +365,9 @@ msgid ""
 "will be duplicated/not synchronized. If you did that, you should remove the "
 "copies you did."
 msgstr ""
-"Si vous avez copié les fichiers de données (.xmoto) sur d'autres "
-"ordinateurs, vous ne devriez pas utiliser cette fonctionnalité pour ne pas "
-"corrompre certaines statistiques. Si vous l'avez déjà fait, vous devriez "
+"Si vous avez copié manuellement les fichiers de données (.xmoto) sur "
+"d'autres ordinateurs, vous ne devriez pas utiliser cette fonctionnalité pour "
+"ne pas corrompre vos statistiques. Si vous l'avez déjà fait, vous devriez "
 "supprimer les copies faites."
 
 #: src/GameText.h:151
