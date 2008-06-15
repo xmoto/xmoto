@@ -356,7 +356,7 @@ msgstr ""
 "X-Moto utilise une base de données sur votre ordinateur pour sauver tous vos "
 "temps et vos statistiques. Vous pouvez envoyer ces données en utilisant "
 "votre compte web sur le serveur X-Moto. C'est intéressant pour sauvegarder "
-"vos données ou si vous jouez à X-Moto depluis plusieurs endroits."
+"vos données ou si vous jouez à X-Moto depuis plusieurs endroits."
 
 #: src/GameText.h:150
 msgid ""
