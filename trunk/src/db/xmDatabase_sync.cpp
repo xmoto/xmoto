@@ -40,8 +40,8 @@ void xmDatabase::sync_buildServerFile(const std::string& i_outFile, const std::s
     XMSession::instance()->setDbSync(this, i_profile, XMSession::instance()->dbSync(this, i_profile) +1);
     v_lastDbSync << XMSession::instance()->dbSync(this, i_profile);
 
-    simpleSql("UPDATE profile_completedLevels SET dbSync=\"" + v_lastDbSync.str() + "\" WHERE synchronized=0;");    
-    simpleSql("UPDATE stats_profiles_levels   SET dbSync=\"" + v_lastDbSync.str() + "\" WHERE synchronized=0;");    
+    simpleSql("UPDATE profile_completedLevels SET dbSync=\"" + v_lastDbSync.str() + "\" WHERE synchronized=0;");
+    simpleSql("UPDATE stats_profiles_levels   SET dbSync=\"" + v_lastDbSync.str() + "\" WHERE synchronized=0;");
     /* ***** */
 
     if(pfh == NULL) {

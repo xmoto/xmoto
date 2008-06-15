@@ -42,6 +42,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         
         m_pCustomBackgroundTexture = NULL;
 	m_allowContextHelp = false;
+
+	m_normalColor = MAKE_COLOR(255,255,255,255);
   }
 
 void UIStatic::setAllowContextHelp(bool i_value) {
@@ -92,7 +94,12 @@ void UIStatic::setAllowContextHelp(bool i_value) {
     if(isDisabled())
       setTextSolidColor(MAKE_COLOR(170,170,170,128));
     else
-      setTextSolidColor(MAKE_COLOR(255,255,255,255));
+      setTextSolidColor(m_normalColor);
 
     putText(v_x, v_y, getCaption(), perX, perY);
   }
+
+
+void UIStatic::setNormalColor(Color c) {
+  m_normalColor = c;
+}
