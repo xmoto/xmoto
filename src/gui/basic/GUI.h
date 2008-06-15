@@ -470,6 +470,7 @@ public:
   void setBackgroundShade(bool b) {m_bBackgroundShade=b;}
   void setBackground(Texture *p) {m_pCustomBackgroundTexture = p;}
   void setAllowContextHelp(bool i_value);
+  void setNormalColor(Color c);
 
 private:
   /* Data */
@@ -480,6 +481,7 @@ private:
   Texture *m_pCustomBackgroundTexture;
 
   bool m_allowContextHelp;
+  Color m_normalColor;
 };
 
 class UIProgressBar : public UIWindow {

@@ -1466,19 +1466,27 @@ UIWindow* StateMainMenu::makeWindowOptions_db(UIWindow* i_parent) {
   v_window->showWindow(false);
 
   /* explanation */
-  v_someText = new UIStatic(v_window, 20, 10, splitText(GAMETEXT_DBSYNCHRONIZE_EXPLANATION, 50),
-			    v_window->getPosition().nWidth-20, v_window->getPosition().nHeight/2);
-  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText = new UIStatic(v_window, 0, 10, splitText(GAMETEXT_DBSYNCHRONIZE_EXPLANATION, 60),
+			    v_window->getPosition().nWidth, v_window->getPosition().nHeight/2);
+  v_someText->setHAlign(UI_ALIGN_CENTER);
   v_someText->setVAlign(UI_ALIGN_TOP);
   v_someText->setFont(drawlib->getFontSmall()); 
 
   /* synchronisation */
   v_button = new UIButton(v_window, (v_window->getPosition().nWidth-175)/2, (v_window->getPosition().nHeight-57)/2,
-			  GAMETEXT_DBSYNCHRONIZE, 175, 57);
+			  GAMETEXT_DBSYNCHRONIZE, 170, 57);
   v_button->setID("SYNCHRONIZE_BUTTON");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_SMALL);      
   v_button->setContextHelp(CONTEXTHELP_DBSYNCHRONIZE);
+
+  /* warning */
+  v_someText = new UIStatic(v_window, 0,  (v_window->getPosition().nWidth-170)/2 + 57/2+5 , splitText(GAMETEXT_DBSYNCHRONIZE_WARNING, 60),
+			    v_window->getPosition().nWidth, v_window->getPosition().nHeight/2);
+  v_someText->setHAlign(UI_ALIGN_CENTER);
+  v_someText->setVAlign(UI_ALIGN_TOP);
+  v_someText->setFont(drawlib->getFontSmall()); 
+  v_someText->setNormalColor(MAKE_COLOR(255,0,0,255));
 
   /* synchronize each time xmoto is closed ? */
   //v_button = new UIButton(v_window, 20, (v_window->getPosition().nHeight/2) + 57,

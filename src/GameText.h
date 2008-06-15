@@ -147,6 +147,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_PLAYER               _("Player")
 #define GAMETEXT_DATE                 _("Date")
 #define GAMETEXT_DBSYNCHRONIZE_EXPLANATION _("X-Moto uses a database on your computer to save all your scores and statistics. You can send these data using your web account on the X-Moto server. It is usefull to save your data or if you play X-Moto from different places.")
+#define GAMETEXT_DBSYNCHRONIZE_WARNING _("If you manually copied the X-Moto user files (.xmoto) on some other computers, you should not use this functionnality otherwise your statistics will be duplicated/not synchronized. If you did that, you should remove the copies you did.")
 #define GAMETEXT_DBSYNCHRONIZE _("Synchronise")
 #define GAMETEXT_DBSYNCHRONIZE_ONQUIT _("Synchronize when X-Moto ends")
 #define GAMETEXT_DB_UPGRADING               _("Upgrading database")
