@@ -1245,7 +1245,7 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(UIWindow* i_parent) {
   // password
   char buf[256];
   snprintf(buf, 256, GAMETEXT_ACCOUNT_PASSWORD, XMSession::instance()->profile().c_str());
-  v_someText = new UIStatic(v_window, 35, 25, buf, 300, 30);
+  v_someText = new UIStatic(v_window, 35, 25, buf, v_window->getPosition().nWidth-35, 30);
   v_someText->setID("WWW_PASSWORD_STATIC");
   v_someText->setHAlign(UI_ALIGN_LEFT);
   v_someText->setFont(drawlib->getFontSmall()); 
