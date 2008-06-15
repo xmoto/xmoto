@@ -1,13 +1,13 @@
 # translation of de.po to Deutsch
 # Jens Erler <mothbox@gmx.net>, 2007,2008.
-#
-#
+# 
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-06-15 12:45+0200\n"
-"PO-Revision-Date: 2008-05-06 11:09+0100\n"
+"PO-Revision-Date: 2008-06-15 18:34+0100\n"
 "Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -369,6 +369,10 @@ msgid ""
 "will be duplicated/not synchronized. If you did that, you should remove the "
 "copies you did."
 msgstr ""
+"Wurden die X-Moto Benutzerdaten (.xmoto) manuell auf andere Computer "
+"kopiert, sollte diese Funtion nicht benutzt werden. Andernfalls würden die "
+"Statistiken durcheinandergebracht oder nicht synchronisiert. Vorhandene "
+"Kopien der Benutzerdaten sollten daher entfernt werden."
 
 #: src/GameText.h:151
 msgid "Synchronise"
@@ -1262,15 +1266,15 @@ msgstr "Stereo"
 
 #: src/GameText.h:379
 msgid "Synchronisation down"
-msgstr ""
+msgstr "Synchronisierung inaktiv"
 
 #: src/GameText.h:380
 msgid "Synchronisation up"
-msgstr ""
+msgstr "Synchronisierung aktiv"
 
 #: src/GameText.h:381
 msgid "Synchronisation done successfully"
-msgstr ""
+msgstr "Synchronisierung erfolgreich"
 
 #: src/GameText.h:383
 msgid "Available"
