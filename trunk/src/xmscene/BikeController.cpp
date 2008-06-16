@@ -58,11 +58,7 @@ void BikeController::setThrottle(float i_throttle)
     m_drive = m_throttle;
   }
   else if(m_throttle == 0.0f){
-    if(m_break != 0.0f){
-      m_drive = -m_break;
-    } else {
-      m_drive = 0.0f;
-    }
+    m_drive = -m_break;
   }
 }
 
@@ -77,11 +73,7 @@ void BikeController::setBreak(float i_break)
     m_drive = -m_break;
   }
   else if(m_break == 0.0f){
-    if(m_throttle != 0.0f){
-      m_drive = m_throttle;
-    } else {
-      m_drive = 0.0f;
-    }
+    m_drive = m_throttle;
   }
 }
 
