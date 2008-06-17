@@ -36,7 +36,6 @@ class ZonePrim {
   virtual ~ZonePrim();
 
  virtual bool doesCircleTouch(const Vector2f& i_cp, float i_cr) = 0;
- virtual void saveXml(FileHandle *i_pfh)     = 0;
  virtual void saveBinary(FileHandle *i_pfh)  = 0;
  virtual ZonePrimType Type() const = 0;
  static ZonePrim* readFromBinary(FileHandle *i_pfh);
@@ -49,7 +48,6 @@ class ZonePrimBox : public ZonePrim {
   ~ZonePrimBox();
 
   virtual bool doesCircleTouch(const Vector2f& i_cp, float i_cr);
-  virtual void saveXml(FileHandle *i_pfh);
   virtual void saveBinary(FileHandle *i_pfh);
   virtual ZonePrimType Type() const;
   static ZonePrim* readFromXml(TiXmlElement *pElem);
@@ -75,7 +73,6 @@ class Zone {
   std::vector<ZonePrim *> &Prims();
 
   bool doesCircleTouch(const Vector2f& i_cp, float i_cr);
-  void saveXml(FileHandle *i_pfh);
   void saveBinary(FileHandle *i_pfh);
   static Zone* readFromXml(TiXmlElement *pElem);
   static Zone* readFromBinary(FileHandle *i_pfh);

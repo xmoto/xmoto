@@ -64,7 +64,6 @@ class Level {
   void rebuildCache();
 
   void loadXML();
-  void saveXML();
 
   /* load level so that it is possible to play */
   /* to replay a level, unload then, reload it */

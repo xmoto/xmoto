@@ -172,27 +172,6 @@ AABB& Entity::getAABB()
 }
 
 
-void Entity::saveXml(FileHandle *i_pfh) {
-  FS::writeLineF(i_pfh,"\t<entity id=\"%s\" typeid=\"%s\">", Id().c_str(), Entity::SpecialityToStr(Speciality()).c_str());
-  FS::writeLineF(i_pfh,"\t\t<size r=\"%f\"/>",Size());
-  FS::writeLineF(i_pfh,"\t\t<position x=\"%f\" y=\"%f\"/>", InitialPosition().x, InitialPosition().y);      
-
-  FS::writeLineF(i_pfh,"\t\t<param name=\"%s\" value=\"%.2f\"/>",
-                       "z", Z());
-
-  if(Speciality() == ET_NONE) {
-    FS::writeLineF(i_pfh,"\t\t<param name=\"%s\" value=\"%.2f\"/>",
-			 "name", SpriteName().c_str());
-  }
-
-  if(Speciality() == ET_PARTICLES_SOURCE) {
-    FS::writeLineF(i_pfh,"\t\t<param name=\"%s\" value=\"%.2f\"/>",
-			 "type", SpriteName().c_str());
-  }
-
-  FS::writeLineF(i_pfh,"\t</entity>");
-}
-
 EntitySpeciality Entity::SpecialityFromStr(std::string& i_typeStr) {
   if(i_typeStr == "PlayerStart")
     return ET_ISSTART;
