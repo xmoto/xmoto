@@ -351,7 +351,10 @@ query(cpSpaceHash *hash, cpSpaceHashBin *bin, void *obj, cpSpaceHashQueryFunc fu
 		   || !other
 		   ) continue;
 		
-		func(obj, other, data);
+		//func(obj, other, data);
+		// the_only_dude: we really really need to inline this one !!!
+		// on levels with plenty of objects, use more than 33% of cpu.
+		queryFunc(obj, other, data);
 
 		// Stamp that the handle was checked already against this object.
 		hand->stamp = hash->stamp;
