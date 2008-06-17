@@ -98,17 +98,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <ode/ode.h>
 #endif
 
-#if !defined(NOMMGR)
-  /* Track memory? */
-  #if defined(TRACK_MEMORY)
-    #include "mmgr.h"
-  #else 
-    #include "nommgr.h"
-  #endif
-#endif
-
-
-
 //used a comparator in sdt::map
 struct ltstr {
   bool operator()(const char* s1, const char* s2) const {
