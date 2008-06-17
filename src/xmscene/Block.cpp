@@ -99,6 +99,8 @@ Block::Block(std::string i_id) {
   m_edgeAngle        = DEFAULT_EDGE_ANGLE;
   mBody              = NULL;
   m_collisionElement = NULL;
+  m_collisionMethod  = None;
+  m_collisionRadius  = 0.0f;
 }
 
 Block::~Block() {
@@ -238,6 +240,16 @@ bool Block::setDynamicRotation(float i_dynamicRotation) {
   }
 }
 
+void Block::setCollisionMethod(CollisionMethod method)
+{
+  m_collisionMethod = method;
+}
+
+void Block::setCollisionRadius(float radius)
+{
+  m_collisionRadius = radius;
+}
+
 void Block::translate(float x, float y)
 {
   m_dynamicPosition.x += x;
@@ -286,8 +298,9 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
      probably appreciate it when the input data is very complex. It'll also 
      let us handle crossing edges, and other kinds of weird input. */
   BSP v_BSPTree;
-  cpBody *myBody = NULL;
-  cpVect *myVerts = NULL;
+  cpBody*  myBody  = NULL;
+  cpVect*  myVerts = NULL;
+  cpShape* shape   = NULL;
   
   if(i_chipmunkWorld != NULL) {
     if (isPhysics()) {
@@ -394,49 +407,65 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 
   if(i_chipmunkWorld != NULL) {
     if(isPhysics()) {
-      // create body vertices for chipmunk constructors
-      for(unsigned int i=0; i<Vertices().size(); i++) {
-	cpVect ma = cpv(Vertices()[i]->Position().x * CHIP_SCALE_RATIO,
-			Vertices()[i]->Position().y * CHIP_SCALE_RATIO);
-	myVerts[i] =  ma;
-      }
+      if(getCollisionMethod() == Circle && getCollisionRadius() != 0.0f) {
+	float radius = getCollisionRadius();
 
-      // Create body to attach shapes to
-      cpFloat bMoment = cpMomentForPoly(m_mass,Vertices().size(), myVerts, cpvzero); 
-      free(myVerts);
-    
-      // create body 
-      myBody = cpBodyNew(m_mass, bMoment);
-      myBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
-		      (DynamicPosition().y * CHIP_SCALE_RATIO));
-      cpSpaceAddBody(i_chipmunkWorld->getSpace(), myBody);
-      mBody = myBody;
-    
-      // go through calculated BSP polys, adding one or more shape to the
-      for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
-	unsigned int size = 2*sizeof(cpVect)*v_BSPPolys[i]->Vertices().size();
-	myVerts = (cpVect*)malloc(size);
+	cpFloat circle_moment = cpMomentForCircle(m_mass, radius, 0.0f, cpvzero);
+	myBody = cpBodyNew(m_mass, circle_moment);
+	myBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
+			(DynamicPosition().y * CHIP_SCALE_RATIO));
+	cpSpaceAddBody(i_chipmunkWorld->getSpace(), myBody);
+	mBody = myBody;
 
-	// translate for chipmunk
-	for(unsigned int j=0; j<v_BSPPolys[i]->Vertices().size(); j++) {
-	  cpVect ma = cpv(v_BSPPolys[i]->Vertices()[j].x * CHIP_SCALE_RATIO,
-			  v_BSPPolys[i]->Vertices()[j].y * CHIP_SCALE_RATIO);
-	  myVerts[j] =  ma;
-	}
-
-	// collision shape
-	cpShape *shape;
-	shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
+	shape = cpCircleShapeNew(mBody, radius * CHIP_SCALE_RATIO, cpvzero);
 	shape->u = m_friction;
 	shape->e = m_elasticity;
-	if (isBackground()) {
-	  shape->group = 1;
-	}
 
 	cpSpaceAddShape(i_chipmunkWorld->getSpace(), shape);
+      } else {
+	// create body vertices for chipmunk constructors
+	for(unsigned int i=0; i<Vertices().size(); i++) {
+	  cpVect ma = cpv(Vertices()[i]->Position().x * CHIP_SCALE_RATIO,
+			  Vertices()[i]->Position().y * CHIP_SCALE_RATIO);
+	  myVerts[i] =  ma;
+	}
 
-	// free the temporary vertices array
+	// Create body to attach shapes to
+	cpFloat bMoment = cpMomentForPoly(m_mass,Vertices().size(), myVerts, cpvzero); 
 	free(myVerts);
+
+	// create body 
+	myBody = cpBodyNew(m_mass, bMoment);
+	myBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
+			(DynamicPosition().y * CHIP_SCALE_RATIO));
+	cpSpaceAddBody(i_chipmunkWorld->getSpace(), myBody);
+	mBody = myBody;
+
+	// go through calculated BSP polys, adding one or more shape to the
+	for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
+	  unsigned int size = 2*sizeof(cpVect)*v_BSPPolys[i]->Vertices().size();
+	  myVerts = (cpVect*)malloc(size);
+
+	  // translate for chipmunk
+	  for(unsigned int j=0; j<v_BSPPolys[i]->Vertices().size(); j++) {
+	    cpVect ma = cpv(v_BSPPolys[i]->Vertices()[j].x * CHIP_SCALE_RATIO,
+			    v_BSPPolys[i]->Vertices()[j].y * CHIP_SCALE_RATIO);
+	    myVerts[j] =  ma;
+	  }
+
+	  // collision shape
+	  shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
+	  shape->u = m_friction;
+	  shape->e = m_elasticity;
+	  if (isBackground()) {
+	    shape->group = 1;
+	  }
+
+	  cpSpaceAddShape(i_chipmunkWorld->getSpace(), shape);
+
+	  // free the temporary vertices array
+	  free(myVerts);
+	}
       }
     }
   }
@@ -615,94 +644,6 @@ void BlockVertex::setColor(const TColor &i_color) {
   m_color = i_color;
 }
 
-void Block::saveXml(FileHandle *i_pfh) {
-  FS::writeLineF(i_pfh,"\t<block id=\"%s\">", Id().c_str());
-    
-  std::string v_position;
-  std::ostringstream v_x, v_y;
-  v_x << InitialPosition().x;
-  v_y << InitialPosition().y;
-  
-  v_position = "\t\t<position x=\"" + v_x.str() + "\" y=\"" + v_y.str() + "\"";
-  
-  if(isBackground()) {
-    v_position = v_position + " background=\"true\"";
-  }
-  
-  if(isDynamic()) {
-    v_position = v_position + " dynamic=\"true\"";
-  }
-
-  if(isLayer()) {
-    v_position = v_position + " islayer=\"true\"";
-
-    //    if(m_layer == -1){
-    //      throw exception, a backgroundlevel block must have a layer id
-    //    }
-  }
-  if(m_layer != -1){
-    std::ostringstream layer;
-    layer << m_layer;
-    v_position = v_position + " layerid=\"" + layer.str() + "\"";
-  }
-
-  v_position = v_position + " />";
-
-  FS::writeLineF(i_pfh, (char*) v_position.c_str());
-  
-  if(Grip()       != XM_DEFAULT_PHYS_BLOCK_GRIP       ||
-     Mass()       != XM_DEFAULT_PHYS_BLOCK_MASS       ||
-     Friction()   != XM_DEFAULT_PHYS_BLOCK_FRICTION   ||
-     Elasticity() != XM_DEFAULT_PHYS_BLOCK_ELASTICITY) {
-    char v_tmp[32];
-    std::string v_line = "\t\t<physics";
-
-    if(Grip() != XM_DEFAULT_PHYS_BLOCK_GRIP) {
-      snprintf(v_tmp, 32, "%f", Grip());
-      v_line += " grip=\"" + std::string(v_tmp) + "\"";
-    }
-    if(Mass() != XM_DEFAULT_PHYS_BLOCK_MASS) {
-      snprintf(v_tmp, 32, "%f", Mass());
-      v_line += " mass=\"" + std::string(v_tmp) + "\"";
-    }
-    if(Friction() != XM_DEFAULT_PHYS_BLOCK_FRICTION) {
-      snprintf(v_tmp, 32, "%f", Friction());
-      v_line += " friction=\"" + std::string(v_tmp) + "\"";
-    }
-    if(Elasticity() != XM_DEFAULT_PHYS_BLOCK_ELASTICITY) {
-      snprintf(v_tmp, 32, "%f", Elasticity());
-      v_line += " elasticity=\"" + std::string(v_tmp) + "\"";
-    }
-
-    v_line += " />";
-
-    FS::writeLineF(i_pfh, (char*) v_line.c_str());
-  }
-
-  if(getEdgeDrawMethod() != angle && edgeAngle() != DEFAULT_EDGE_ANGLE){
-    std::string v_edgeDraw = edgeToString(getEdgeDrawMethod());
-    std::ostringstream v_angle;
-    v_angle << edgeAngle();
-    std::string v_edge = "\t\t<edges drawmethod=\"" + v_edgeDraw
-      + "\" angle=\"" + v_angle.str() + "\" />";
-    FS::writeLineF(i_pfh, (char*)v_edge.c_str());
-  }
-
-  FS::writeLineF(i_pfh,"\t\t<usetexture id=\"%s\"/>", Texture().c_str());
-  for(unsigned int j=0;j<Vertices().size();j++) {
-    if(Vertices()[j]->EdgeEffect() != "")
-      FS::writeLineF(i_pfh,"\t\t<vertex x=\"%f\" y=\"%f\" edge=\"%s\"/>",
-                           Vertices()[j]->Position().x,
-                           Vertices()[j]->Position().y,
-                           Vertices()[j]->EdgeEffect().c_str());
-    else
-      FS::writeLineF(i_pfh,"\t\t<vertex x=\"%f\" y=\"%f\"/>",
-                           Vertices()[j]->Position().x,
-                           Vertices()[j]->Position().y);
-  }
-  FS::writeLineF(i_pfh,"\t</block>");
-}
-
 bool Block::isPhysics_readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
   TiXmlElement* pPositionElem   = XML::findElement(*i_xmlSource, pElem, std::string("position"));
 
@@ -723,6 +664,7 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
   TiXmlElement* pPositionElem   = XML::findElement(*i_xmlSource, pElem, std::string("position"));
   TiXmlElement* pPhysicsElem    = XML::findElement(*i_xmlSource, pElem, std::string("physics"));
   TiXmlElement* pEdgeElem       = XML::findElement(*i_xmlSource, pElem, std::string("edges"));
+  TiXmlElement* pColElem        = XML::findElement(*i_xmlSource, pElem, std::string("collision"));
 
 
   if(pUseTextureElem != NULL) {
@@ -773,6 +715,12 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
   } else {
     pBlock->setEdgeDrawMethod(angle);
     pBlock->setEdgeAngle(DEFAULT_EDGE_ANGLE);
+  }
+
+  if(pColElem != NULL) {
+    std::string methodStr = XML::getOption(pColElem, "type", "None");
+    pBlock->setCollisionMethod(pBlock->stringToColMethod(methodStr));
+    pBlock->setCollisionRadius(atof(XML::getOption(pColElem, "radius", "0.0").c_str()));    
   }
 
   float lastX = 0.0;
@@ -847,6 +795,8 @@ void Block::saveBinary(FileHandle *i_pfh) {
       FS::writeFloat_LE(i_pfh, Elasticity());
       FS::writeInt_LE(i_pfh,   getEdgeDrawMethod());
       FS::writeFloat_LE(i_pfh, edgeAngle());
+      FS::writeInt_LE(i_pfh,   getCollisionMethod());
+      FS::writeFloat_LE(i_pfh, getCollisionRadius());
 
       FS::writeShort_LE(i_pfh, Vertices().size());
         
@@ -877,6 +827,8 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   pBlock->setElasticity(FS::readFloat_LE(i_pfh));
   pBlock->setEdgeDrawMethod((EdgeDrawMethod)FS::readInt_LE(i_pfh));
   pBlock->setEdgeAngle(FS::readFloat_LE(i_pfh));
+  pBlock->setCollisionMethod((CollisionMethod)FS::readInt_LE(i_pfh));
+  pBlock->setCollisionRadius(FS::readFloat_LE(i_pfh));
   
   int nNumVertices = FS::readShort_LE(i_pfh);
   pBlock->Vertices().reserve(nNumVertices);
@@ -1053,6 +1005,16 @@ float Block::edgeAngle()
   return m_edgeAngle;
 }
 
+Block::CollisionMethod Block::getCollisionMethod()
+{
+  return m_collisionMethod;
+}
+
+float Block::getCollisionRadius()
+{
+  return m_collisionRadius;
+}
+
 void Block::setEdgeDrawMethod(EdgeDrawMethod method)
 {
   m_edgeDrawMethod = method;
@@ -1063,21 +1025,6 @@ void Block::setEdgeAngle(float angle)
   m_edgeAngle = angle;
 }
 
-std::string Block::edgeToString(Block::EdgeDrawMethod method)
-{
-  switch(method){
-  case inside:
-    return std::string("inside");
-    break;
-  case outside:
-    return std::string("outside");
-    break;
-  default:
-    return std::string("angle");
-    break;
-  }
-}
-
 Block::EdgeDrawMethod Block::stringToEdge(std::string method)
 {
   if(method == "inside")
@@ -1086,4 +1033,12 @@ Block::EdgeDrawMethod Block::stringToEdge(std::string method)
     return outside;
   else
     return angle;
+}
+
+Block::CollisionMethod Block::stringToColMethod(std::string method)
+{
+  if(method == "Circle")
+    return Circle;
+  else
+    return None;
 }

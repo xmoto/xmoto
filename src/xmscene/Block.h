@@ -124,20 +124,17 @@ class Block {
     return m_texture;
   }
   Vector2f InitialPosition() const;
-  /* called many many many times, so we inline it, and make it return a ref */
   inline Vector2f& DynamicPosition() {
     return m_dynamicPosition;
   }
   inline float DynamicRotation() const {
     return m_dynamicRotation;
   }
-
-  /* called many many many times, so we inline it, and make it return a ref */
   inline Vector2f& DynamicRotationCenter() {
     return m_dynamicRotationCenter;
   }
-
   Vector2f DynamicPositionCenter() const;
+
   bool isBackground() const {
     return m_background;
   }
@@ -152,13 +149,16 @@ class Block {
   float Elasticity() const;
   float TextureScale() const;
   std::vector<BlockVertex*>& Vertices();
-  /* called many many many times, so we inline it */
   inline std::vector<ConvexBlock*>& ConvexBlocks() {
     return m_convexBlocks;
   }
   typedef enum{angle, inside, outside} EdgeDrawMethod;
   EdgeDrawMethod getEdgeDrawMethod();
   float edgeAngle();
+
+  typedef enum{None, Circle} CollisionMethod;
+  CollisionMethod getCollisionMethod();
+  float getCollisionRadius();
 
   inline ColElement<Block>* getColElement() {
     return m_collisionElement;
@@ -189,13 +189,15 @@ class Block {
    */
   bool setDynamicRotation(float i_dynamicRotation);
 
+  void setCollisionMethod(CollisionMethod method);
+  void setCollisionRadius(float radius);
+
   void translate(float x, float y);
   void setPhysicsPosition(float ix, float iy);
 
   int loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld);
   void unloadToPlay();
 
-  void saveXml(FileHandle *i_pfh);
   void saveBinary(FileHandle *i_pfh);
   static bool isPhysics_readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem);
   static Block* readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem);
@@ -278,6 +280,8 @@ private:
   bool  m_isBBoxDirty;
 
   ColElement<Block>* m_collisionElement;
+  CollisionMethod    m_collisionMethod;
+  float              m_collisionRadius;
 
   // the geom used to render the block
   int   m_geom;
@@ -297,8 +301,8 @@ private:
   EdgeDrawMethod m_edgeDrawMethod;
   float m_edgeAngle;
 
-  std::string edgeToString(EdgeDrawMethod method);
-  EdgeDrawMethod stringToEdge(std::string method);
+  EdgeDrawMethod  stringToEdge(std::string method);
+  CollisionMethod stringToColMethod(std::string method);
 };
 
 #endif /* __BLOCK_H__ */

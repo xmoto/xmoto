@@ -96,7 +96,6 @@ class Entity {
   }
   void setAlive(bool alive);
 
-  void saveXml(FileHandle *i_pfh);
   void saveBinary(FileHandle *i_pfh);
   static Entity* readFromXml(TiXmlElement *pElem);
   static Entity* readFromBinary(FileHandle *i_pfh);

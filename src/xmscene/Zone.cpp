@@ -106,20 +106,6 @@ bool Zone::doesCircleTouch(const Vector2f& i_cp, float i_cr) {
   return false;
 }
 
-void Zone::saveXml(FileHandle *i_pfh) {
-  FS::writeLineF(i_pfh,"\t<zone id=\"%s\">",Id().c_str());
-  for(unsigned int i=0;i<Prims().size();i++) {
-    Prims()[i]->saveXml(i_pfh);
-  }
-  FS::writeLineF(i_pfh,"\t</zone>");
-}
-
-
-void ZonePrimBox::saveXml(FileHandle *i_pfh) {
-  FS::writeLineF(i_pfh,"\t\t<box left=\"%f\" right=\"%f\" top=\"%f\" bottom=\"%f\"/>",
-                       m_left, m_right, m_top, m_bottom);
-}
-
 Zone* Zone::readFromXml(TiXmlElement *pElem) {
   Zone *v_zone = new Zone(XML::getOption(pElem,"id"));
   
