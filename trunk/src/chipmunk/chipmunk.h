@@ -52,7 +52,7 @@ cpfmin(cpFloat a, cpFloat b)
 #endif
 
 #define CP_HASH_COEF (3344921057ul)
-#define CP_HASH_PAIR(A, B) ((unsigned int)(A)*CP_HASH_COEF ^ (unsigned int)(B)*CP_HASH_COEF)
+#define CP_HASH_PAIR(A, B) (((unsigned long int)(A))*CP_HASH_COEF ^ ((unsigned long int)(B))*CP_HASH_COEF)
 
 #include "chipmunk/cpVect.h"
 #include "chipmunk/cpBB.h"
