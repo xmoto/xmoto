@@ -33,6 +33,7 @@ class TiXmlElement;
 class BSPPoly;
 class Block;
 class cpBody;
+class cpShape;
 class ChipmunkWorld;
 template<class T> struct ColElement;
 
@@ -163,7 +164,13 @@ class Block {
   inline ColElement<Block>* getColElement() {
     return m_collisionElement;
   }
-  
+  cpBody* getPhysicBody() {
+    return mBody;
+  }
+  cpShape* getPhysicShape() {
+    return m_shape;
+  }
+
   void setTexture(const std::string& i_texture);
   void setTextureScale(float i_textureScale);
   void setInitialPosition(const Vector2f& i_initialPosition);
@@ -271,7 +278,8 @@ private:
   float m_mass;       /* mass of the block */
   float m_friction;   /* friction of the block */
   float m_elasticity; /* elasticity of the block */
-  cpBody *mBody;
+  cpBody* mBody;
+  cpShape* m_shape;
 
   // AABB for static blocks
   AABB  m_BBox;

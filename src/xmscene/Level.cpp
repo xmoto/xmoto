@@ -41,7 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ChipmunkWorld.h"
 #include "Theme.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 23
+#define CACHE_LEVEL_FORMAT_VERSION 24
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -282,6 +282,11 @@ void Level::killEntity(const std::string& i_entityId) {
     }
   }
   throw Exception("Entity '" + i_entityId + "' can't be killed");
+}
+
+std::vector<Joint*>& Level::Joints()
+{
+  return m_joints;
 }
 
 std::vector<Entity *>& Level::Entities() {
@@ -568,19 +573,6 @@ void Level::loadXML(void) {
       m_rightLimit = atof( XML::getOption(pLimitsElem,"right","50").c_str() );
     }
 
-    /* Get entities */
-    for(TiXmlElement *pElem = pLevelElem->FirstChildElement("entity"); pElem!=NULL; 
-        pElem=pElem->NextSiblingElement("entity")) {
-      m_entities.push_back(Entity::readFromXml(pElem));
-    }    
-
-    try {
-      m_playerStart = getStartEntity()->InitialPosition();
-    } catch(Exception &e) {
-      Logger::Log("Warning : no player start entity for level %s", Id().c_str());
-      m_playerStart = Vector2f(0.0, 0.0);
-    }    
-
     /* Get zones */
     for(TiXmlElement *pElem = pLevelElem->FirstChildElement("zone"); pElem!=NULL;
         pElem=pElem->NextSiblingElement("zone")) {
@@ -603,6 +595,25 @@ void Level::loadXML(void) {
 	m_isPhysics = true;
       }
       m_blocks.push_back(v_block);
+    }
+
+    /* Get entities */
+    for(TiXmlElement *pElem = pLevelElem->FirstChildElement("entity"); pElem!=NULL; 
+        pElem=pElem->NextSiblingElement("entity")) {
+      Entity* v_entity = Entity::readFromXml(pElem);
+      if(v_entity->Speciality() == ET_JOINT) {
+	Joint* v_joint = (Joint*)v_entity;
+	v_joint->readFromXml(pElem);
+	m_joints.push_back(v_joint);
+      } else
+	m_entities.push_back(v_entity);
+    }    
+
+    try {
+      m_playerStart = getStartEntity()->InitialPosition();
+    } catch(Exception &e) {
+      Logger::Log("Warning : no player start entity for level %s", Id().c_str());
+      m_playerStart = Vector2f(0.0, 0.0);
     }
   }
 
@@ -743,7 +754,13 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
     FS::writeInt_LE(pfh,m_entities.size());
     for(unsigned int i=0;i<m_entities.size();i++) {
       m_entities[i]->saveBinary(pfh);
-    }  
+    }
+
+    // write joints
+    FS::writeInt_LE(pfh, m_joints.size());
+    for(unsigned int i=0; i<m_joints.size(); i++) {
+      m_joints[i]->saveBinary(pfh);
+    }
       
     /* Write zones */
     FS::writeInt_LE(pfh,m_zones.size());
@@ -993,7 +1010,8 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         int nNumEntities = FS::readInt_LE(pfh);
         m_entities.reserve(nNumEntities);
         for(int i=0;i<nNumEntities;i++) {
-          m_entities.push_back(Entity::readFromBinary(pfh));
+	  Entity* v_entity = Entity::readFromBinary(pfh);
+	  m_entities.push_back(v_entity);
         }
 
 	try {
@@ -1002,6 +1020,15 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
 	  Logger::Log("Warning : no player start entity for level %s", Id().c_str());
 	  m_playerStart = Vector2f(0.0, 0.0);
 	}
+
+        int nNumJoints = FS::readInt_LE(pfh);
+        m_joints.reserve(nNumJoints);
+        for(int i=0; i<nNumJoints; i++) {
+	  Entity* v_entity = Entity::readFromBinary(pfh);
+	  Joint* v_joint = (Joint*)v_entity;
+	  v_joint->readFromBinary(pfh);
+	  m_joints.push_back(v_joint);
+        }
 
         /* Read zones */
         int nNumZones = FS::readInt_LE(pfh);
@@ -1127,6 +1154,11 @@ int Level::loadToPlay(ChipmunkWorld* i_chipmunkWorld) {
       m_nbEntitiesToTake++;
     }
   }
+
+  // create joints
+  for(unsigned int i=0; i<m_joints.size(); i++) {
+    m_joints[i]->loadToPlay(this, i_chipmunkWorld);
+  }
   
   return v_nbErrors;
 }
@@ -1154,6 +1186,10 @@ void Level::unloadToPlay() {
   m_entitiesExterns.clear();
 
   m_nbEntitiesToTake = 0;
+
+  for(unsigned int i=0; i<m_joints.size(); i++) {
+    m_joints[i]->unloadToPlay();
+  }
 }
 
 void Level::addLimits() {

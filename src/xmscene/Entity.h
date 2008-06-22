@@ -30,6 +30,9 @@ class EntityParticle;
 class TiXmlElement;
 class FileHandle;
 class Sprite;
+class Block;
+class ChipmunkWorld;
+class Level;
 
 /**
   An entity is an object that the biker can found on his way
@@ -142,6 +145,76 @@ protected:
 			      const std::string& spriteName, const std::string& typeName);
   Sprite* loadSprite(const std::string& i_spriteName = "");
 };
+
+
+
+typedef enum jointType {JointNone, Pivot} jointType;
+
+class Joint : public Entity {
+public:
+  Joint(const std::string& i_id)
+    : Entity(i_id) {
+    m_speciality = ET_JOINT;
+    m_type       = JointNone;
+  }
+  virtual ~Joint() {}
+
+  inline void setJointType(jointType type) {
+    m_type = type;
+  }
+  inline void setStartBlockId(std::string& start) {
+    m_startId = start;
+  }
+  inline void setEndBlockId(std::string& end) {
+    m_endId   = end;
+  }
+  inline void setStartBlock(Block* start) {
+    m_startBlock = start;
+  }
+  inline void setEndBlock(Block* end) {
+    m_endBlock   = end;
+  }
+
+  inline jointType getJointType() {
+    return m_type;
+  }
+  inline std::string& getStartBlockId() {
+    return m_startId;
+  }
+  inline std::string& getEndBlockId() {
+    return m_endId;
+  }
+  inline Block* getStartBlock() {
+    return m_startBlock;
+  }
+  inline Block* getEndBlock() {
+    return m_endBlock;
+  }
+
+  void saveBinary(FileHandle *i_pfh);
+  void readFromBinary(FileHandle *i_pfh);
+  void readFromXml(TiXmlElement *pElem);
+
+  void loadToPlay(Level* i_level, ChipmunkWorld* i_chipmunkWorld);
+  void unloadToPlay();
+
+  static jointType   jointTypeFromStr(std::string& i_typeStr);
+  static std::string jointTypeToStr(jointType i_type);
+
+private:
+  jointType m_type;
+  std::string m_startId;
+  std::string m_endId;
+
+  Block* m_startBlock;
+  Block* m_endBlock;
+
+  static unsigned int getCurrentCollisionGroup();
+  static void setNextCollisionGroup();
+  static unsigned int m_currentCollisionGroup;
+};
+
+
 
 typedef enum particleSourceType {None, Smoke, Fire, Star, Debris} particleSourceType;
 

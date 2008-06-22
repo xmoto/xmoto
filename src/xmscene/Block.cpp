@@ -98,6 +98,7 @@ Block::Block(std::string i_id) {
   m_edgeDrawMethod   = angle;
   m_edgeAngle        = DEFAULT_EDGE_ANGLE;
   mBody              = NULL;
+  m_shape            = NULL;
   m_collisionElement = NULL;
   m_collisionMethod  = None;
   m_collisionRadius  = 0.0f;
@@ -300,7 +301,6 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   BSP v_BSPTree;
   cpBody*  myBody  = NULL;
   cpVect*  myVerts = NULL;
-  cpShape* shape   = NULL;
   
   if(i_chipmunkWorld != NULL) {
     if (isPhysics()) {
@@ -417,11 +417,14 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 	cpSpaceAddBody(i_chipmunkWorld->getSpace(), myBody);
 	mBody = myBody;
 
-	shape = cpCircleShapeNew(mBody, radius * CHIP_SCALE_RATIO, cpvzero);
-	shape->u = m_friction;
-	shape->e = m_elasticity;
+	m_shape = cpCircleShapeNew(mBody, radius * CHIP_SCALE_RATIO, cpvzero);
+	m_shape->u = m_friction;
+	m_shape->e = m_elasticity;
+	if(isBackground() == true) {
+	  m_shape->group = 1;
+	}
 
-	cpSpaceAddShape(i_chipmunkWorld->getSpace(), shape);
+	cpSpaceAddShape(i_chipmunkWorld->getSpace(), m_shape);
       } else {
 	// create body vertices for chipmunk constructors
 	for(unsigned int i=0; i<Vertices().size(); i++) {
@@ -454,14 +457,14 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 	  }
 
 	  // collision shape
-	  shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
-	  shape->u = m_friction;
-	  shape->e = m_elasticity;
+	  m_shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
+	  m_shape->u = m_friction;
+	  m_shape->e = m_elasticity;
 	  if (isBackground()) {
-	    shape->group = 1;
+	    m_shape->group = 1;
 	  }
 
-	  cpSpaceAddShape(i_chipmunkWorld->getSpace(), shape);
+	  cpSpaceAddShape(i_chipmunkWorld->getSpace(), m_shape);
 
 	  // free the temporary vertices array
 	  free(myVerts);
