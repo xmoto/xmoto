@@ -1207,6 +1207,13 @@ int GameRenderer::nbParticlesRendered() const {
 	_RenderCircle(20, v_color, C, pSprite->Size()+0.2f);
       }
 
+      // render joints
+      std::vector<Joint*>& joints = i_scene->getLevelSrc()->Joints();
+      for(unsigned int i=0; i<joints.size(); i++) {
+	_RenderCircle(16, MAKE_COLOR(151, 0, 255, 255),
+		      joints[i]->DynamicPosition(), 0.2f);
+      }
+
       /* Render debug info */
       _RenderDebugInfo();
     }

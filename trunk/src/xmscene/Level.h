@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class Block;
 class Entity;
+class Joint;
 class MotoGame;
 class xmDatabase;
 class FileHandle;
@@ -111,12 +112,13 @@ class Level {
   std::string scriptFileName() const;
   std::string scriptSource() const;
   void setScriptFileName(const std::string& i_scriptFileName);
-  std::vector<Block *> &Blocks();
-  std::vector<Entity *> &Entities();
+  std::vector<Block*>& Blocks();
+  std::vector<Entity*>& Entities();
+  std::vector<Joint*>& Joints();
   /* entities which are not part of original level, but which are generated while playing */
-  std::vector<Entity *> &EntitiesExterns();
-  std::vector<Zone *> &Zones();
-  std::vector<Zone *> &TouchingZones(); /* zones that the biker is touching */
+  std::vector<Entity*>& EntitiesExterns();
+  std::vector<Zone*>& Zones();
+  std::vector<Zone*>& TouchingZones(); /* zones that the biker is touching */
 
   void killEntity(const std::string& i_entityId);
   unsigned int countToTakeEntities();
@@ -185,6 +187,7 @@ class Level {
   std::vector<Entity *> m_entities; /* Level entities */
   std::vector<Entity *> m_entitiesDestroyed;
   std::vector<Entity *> m_entitiesExterns;
+  std::vector<Joint* >  m_joints;
   Entity               *m_startEntity; /* entity where the player start */
   bool m_isBodyLoaded;
   CollisionSystem* m_pCollisionSystem;

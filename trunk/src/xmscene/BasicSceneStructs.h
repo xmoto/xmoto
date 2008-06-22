@@ -30,7 +30,8 @@ enum EntitySpeciality {
   ET_MAKEWIN  	      = 3,
   ET_KILL     	      = 4,
   ET_ISTOTAKE 	      = 5,
-  ET_PARTICLES_SOURCE = 6
+  ET_PARTICLES_SOURCE = 6,
+  ET_JOINT            = 7
 };
 
 /*===========================================================================

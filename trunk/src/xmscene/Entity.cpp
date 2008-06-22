@@ -25,6 +25,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Theme.h"
 #include "helpers/Log.h"
 #include "helpers/Random.h"
+#include "Level.h"
+#include "chipmunk/chipmunk.h"
+#include "Block.h"
+#include "ChipmunkWorld.h"
 
 // don't excceed this number of particles to not reduce significantly the fps
 #define PARTICLESSOURCE_TOTAL_MAX_PARTICLES 512
@@ -183,6 +187,8 @@ EntitySpeciality Entity::SpecialityFromStr(std::string& i_typeStr) {
     return ET_ISTOTAKE;
   if(i_typeStr == "ParticleSource")
     return ET_PARTICLES_SOURCE;
+  if(i_typeStr == "Joint")
+    return ET_JOINT;
 
   return ET_NONE;
 }
@@ -203,6 +209,9 @@ std::string Entity::SpecialityToStr(EntitySpeciality i_speciality) {
       break;
     case ET_PARTICLES_SOURCE :
       return "ParticleSource";
+      break;
+    case ET_JOINT :
+      return "Joint";
       break;
   default:
       return "Sprite";
@@ -234,20 +243,27 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
 {
   Entity *v_entity = NULL;
 
-  if(speciality == ET_PARTICLES_SOURCE) {
-    if       (typeName == "Smoke") {
-      v_entity = new ParticlesSourceSmoke(id);
-    } else if(typeName == "Fire")   {
-      v_entity = new ParticlesSourceFire(id);
-    } else if(typeName == "Star")   {
-      v_entity = new ParticlesSourceStar(id);
-    } else if(typeName == "Debris") {
-      v_entity = new ParticlesSourceDebris(id);
-    } else {
-      throw Exception("Entity " + id + " has an invalid type name");
+  switch(speciality) {
+  case ET_PARTICLES_SOURCE: {
+      if       (typeName == "Smoke") {
+	v_entity = new ParticlesSourceSmoke(id);
+      } else if(typeName == "Fire")   {
+	v_entity = new ParticlesSourceFire(id);
+      } else if(typeName == "Star")   {
+	v_entity = new ParticlesSourceStar(id);
+      } else if(typeName == "Debris") {
+	v_entity = new ParticlesSourceDebris(id);
+      } else {
+	throw Exception("Entity " + id + " has an invalid type name");
+      }
     }
-  } else {
+    break;
+  case ET_JOINT:
+    v_entity = new Joint(id);
+    break;
+  default:
     v_entity = new Entity(id);
+    break;
   }
 
 
@@ -270,6 +286,8 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
       v_entity->setSprite(v_entity->loadSprite(std::string("Debris1")));
       v_entity->setSpriteName("Debris1");
     }
+    break;
+  case ET_JOINT:
     break;
   default:
     v_entity->setSpriteName(typeId);
@@ -341,9 +359,9 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
     }
   }
 
-  return  createEntity(v_id, v_typeId, v_speciality, v_position, v_angle,
-		       v_reversed, v_size, v_width, v_height, v_z,
-		       v_spriteName, v_typeName);
+  return createEntity(v_id, v_typeId, v_speciality, v_position, v_angle,
+		      v_reversed, v_size, v_width, v_height, v_z,
+		      v_spriteName, v_typeName);
 }
 
 void Entity::saveBinary(FileHandle *i_pfh) {
@@ -375,8 +393,7 @@ void Entity::saveBinary(FileHandle *i_pfh) {
     FS::writeString(i_pfh, "name");
     FS::writeString(i_pfh, SpriteName());
   }
-
-  if(Speciality() == ET_PARTICLES_SOURCE) {
+  else if(Speciality() == ET_PARTICLES_SOURCE) {
     FS::writeString(i_pfh, "type");
     FS::writeString(i_pfh, SpriteName());
   }
@@ -431,8 +448,143 @@ Entity* Entity::readFromBinary(FileHandle *i_pfh) {
 
 
 
+void Joint::saveBinary(FileHandle *i_pfh)
+{
+  Entity::saveBinary(i_pfh);
+  
+  FS::writeByte(i_pfh, 0x03);
+
+  FS::writeString(i_pfh, "type");
+  FS::writeString(i_pfh, jointTypeToStr(getJointType()));
+  FS::writeString(i_pfh, "start");
+  FS::writeString(i_pfh, getStartBlockId());
+  FS::writeString(i_pfh, "end");
+  FS::writeString(i_pfh, getEndBlockId());
+}
+
+void Joint::readFromBinary(FileHandle *i_pfh)
+{
+  std::string v_paramName;
+  std::string v_paramValue;
+  int nNumParams = FS::readByte(i_pfh);
+  for(int j=0;j<nNumParams;j++) {
+    v_paramName  = FS::readString(i_pfh);
+    v_paramValue = FS::readString(i_pfh);
+
+    if(v_paramName == "type") {
+      setJointType(jointTypeFromStr(v_paramValue));
+    } else if(v_paramName == "start") {
+      setStartBlockId(v_paramValue);
+    } else if(v_paramName == "end") {
+      setEndBlockId(v_paramValue);
+    }
+  }
+}
+
+void Joint::readFromXml(TiXmlElement *pElem)
+{
+  TiXmlElement *pJointElem = pElem->FirstChildElement("joint");
+  if(pJointElem != NULL) {
+    std::string v_type  = XML::getOption(pJointElem, "type", "");
+    std::string v_start = XML::getOption(pJointElem, "connection-start", "");
+    std::string v_end   = XML::getOption(pJointElem, "connection-end", "");
+    if(v_type != "" && v_start != "" && v_end != ""){
+      setJointType(Joint::jointTypeFromStr(v_type));
+      setStartBlockId(v_start);
+      setEndBlockId(v_end);
+    }
+  }
+}
+
+jointType Joint::jointTypeFromStr(std::string& i_typeStr)
+{
+  if(i_typeStr == "pivot")
+    return Pivot;
+  else
+    return JointNone;
+}
+std::string Joint::jointTypeToStr(jointType i_type)
+{
+  switch(i_type) {
+  case Pivot:
+    return "pivot";
+    break;
+  case JointNone:
+  default:
+    return "";
+    break;
+  }
+}
 
 
+void Joint::loadToPlay(Level* i_level, ChipmunkWorld* i_chipmunkWorld)
+{
+  Entity::loadToPlay();
+
+  setStartBlock(i_level->getBlockById(getStartBlockId()));
+  setEndBlock(i_level->getBlockById(getEndBlockId()));
+
+  cpBody* body1;
+  cpBody* body2;
+  body1 = getStartBlock()->getPhysicBody();
+  body2 = getEndBlock()->getPhysicBody();
+
+  if(body1 == NULL || body2 == NULL)
+    return;
+
+  // we don't want them to collide. if a block is already attached to
+  // a joint, reuse its collision group
+  int group1 = getStartBlock()->getPhysicShape()->group;
+  int group2 = getEndBlock()->getPhysicShape()->group;
+  int group;
+  // we don't handle the case where the two blocks are already
+  // attached to other joints and already have a group.
+  // TODO::handle that.
+
+  // what about joints mixing both background and normal blocks ?
+  if(group1 != 0 && group1 != 1) {
+    group = group1;
+  } else if(group2 != 0 && group2 != 1) {
+    group = group2;
+  } else {
+    group = getCurrentCollisionGroup();
+    setNextCollisionGroup();
+  }
+
+  getStartBlock()->getPhysicShape()->group = group;
+  getEndBlock()->getPhysicShape()->group   = group;
+
+  cpVect v;
+  v.x = DynamicPosition().x * CHIP_SCALE_RATIO;
+  v.y = DynamicPosition().y * CHIP_SCALE_RATIO;
+
+  cpSpaceAddJoint(i_chipmunkWorld->getSpace(),
+		  cpPivotJointNew(body1, body2, v));
+}
+
+void Joint::unloadToPlay()
+{
+  // is cpSpaceRemoveJoint needed ?
+}
+
+
+unsigned int Joint::getCurrentCollisionGroup()
+{
+  return m_currentCollisionGroup;
+}
+
+void Joint::setNextCollisionGroup()
+{
+  m_currentCollisionGroup += 1;
+
+  // 0 for normal physic blocks
+  // 1 for background physic blocks
+  // 2-31 for jointed blocks
+  if(m_currentCollisionGroup > 31)
+    m_currentCollisionGroup = 2;
+}
+
+unsigned int Joint::m_currentCollisionGroup = 2;
 
 
 int ParticlesSource::m_totalOfParticles = 0;
