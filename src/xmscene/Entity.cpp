@@ -500,6 +500,8 @@ jointType Joint::jointTypeFromStr(std::string& i_typeStr)
 {
   if(i_typeStr == "pivot")
     return Pivot;
+  else if(i_typeStr == "pin")
+    return Pin;
   else
     return JointNone;
 }
@@ -508,6 +510,9 @@ std::string Joint::jointTypeToStr(jointType i_type)
   switch(i_type) {
   case Pivot:
     return "pivot";
+    break;
+  case Pin:
+    return "pin";
     break;
   case JointNone:
   default:
@@ -551,15 +556,29 @@ void Joint::loadToPlay(Level* i_level, ChipmunkWorld* i_chipmunkWorld)
     setNextCollisionGroup();
   }
 
-  getStartBlock()->getPhysicShape()->group = group;
-  getEndBlock()->getPhysicShape()->group   = group;
+  // update only if not background block
+  if(group1 != 1)
+    getStartBlock()->getPhysicShape()->group = group;
+  if(group2 != 1)
+    getEndBlock()->getPhysicShape()->group   = group;
 
-  cpVect v;
-  v.x = DynamicPosition().x * CHIP_SCALE_RATIO;
-  v.y = DynamicPosition().y * CHIP_SCALE_RATIO;
+  switch(getJointType()) {
+  case Pivot:
+    cpVect v;
+    v.x = DynamicPosition().x * CHIP_SCALE_RATIO;
+    v.y = DynamicPosition().y * CHIP_SCALE_RATIO;
 
-  cpSpaceAddJoint(i_chipmunkWorld->getSpace(),
-		  cpPivotJointNew(body1, body2, v));
+    cpSpaceAddJoint(i_chipmunkWorld->getSpace(),
+		    cpPivotJointNew(body1, body2, v));
+    break;
+  case Pin:
+    cpSpaceAddJoint(i_chipmunkWorld->getSpace(),
+		    cpPinJointNew(body1, body2, cpvzero, cpvzero));
+    break;
+  case JointNone:
+  default:
+    break;
+  }
 }
 
 void Joint::unloadToPlay()

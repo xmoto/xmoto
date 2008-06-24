@@ -148,7 +148,7 @@ protected:
 
 
 
-typedef enum jointType {JointNone, Pivot} jointType;
+typedef enum jointType {JointNone, Pivot, Pin} jointType;
 
 class Joint : public Entity {
 public:
