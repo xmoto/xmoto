@@ -695,7 +695,14 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
     pBlock->setGrip(atof(XML::getOption(pPhysicsElem, "grip", str).c_str()));
 
     snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_MASS);
-    pBlock->setMass(atof(XML::getOption(pPhysicsElem, "mass", str).c_str()));
+    std::string mass = XML::getOption(pPhysicsElem, "mass", str);
+    if(mass == "INFINITY"){
+      // Chipmunk's INFINITY is too big (make blocks disapear), so put a big value instead
+      float bigValue = 5000000000000000.0;
+      pBlock->setMass(bigValue);
+    }
+    else
+      pBlock->setMass(atof(mass.c_str()));
 
     snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_FRICTION);
     pBlock->setFriction(atof(XML::getOption(pPhysicsElem, "friction", str).c_str()));

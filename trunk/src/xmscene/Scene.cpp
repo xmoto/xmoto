@@ -518,9 +518,7 @@ void MotoGame::cleanPlayers() {
   void MotoGame::playLevel() {
   /* Invoke the OnLoad() script function */
     if(m_playEvents) {
-      Logger::Log("avant appel on load");
       bool bOnLoadSuccess = m_luaGame->scriptCallBool("OnLoad", true);
-      Logger::Log("apres appel on load");
       /* if no OnLoad(), assume success */
       /* Success? */
       if(!bOnLoadSuccess) {
