@@ -282,6 +282,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_LOGIN                _("Login")
 #define GAMETEXT_LOW                  _("Low")
 #define GAMETEXT_MAIN                 _("Main")
+#define GAMETEXT_MOUSE                _("Mouse")
 #define GAMETEXT_THEME                _("Theme")
 #define GAMETEXT_MEDIUM               _("Medium")
 #define GAMETEXT_MENUGFX              _("Menu Graphics")

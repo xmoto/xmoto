@@ -61,13 +61,26 @@ void StateRequestKey::keyDown(int nKey, SDLMod mod,int nChar)
     m_requestForEnd = true;
     break;
   default:
-    v_msg = InputHandler::keyToString(nKey);
+    v_msg = XMKey((SDLKey)nKey, mod).toString();
 
     if(m_receiver != NULL) {
       if(v_msg != "") {
 	m_requestForEnd = true;
 	m_receiver->send("REQUESTKEY", v_msg);
       }
+    }
+  }
+}
+
+void StateRequestKey::mouseDown(int nButton) {
+  std::string v_msg;
+
+  v_msg = XMKey(nButton).toString();
+
+  if(m_receiver != NULL) {
+    if(v_msg != "") {
+      m_requestForEnd = true;
+      m_receiver->send("REQUESTKEY", v_msg);
     }
   }
 }

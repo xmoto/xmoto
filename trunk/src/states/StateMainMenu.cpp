@@ -168,6 +168,7 @@ void StateMainMenu::enterAfterPop()
       v_levelsListsUpdated = true;
     }
     updateStats();
+    m_require_updateStats = false;
   }
 
   GameApp::instance()->playMusic("menu1");
@@ -1204,6 +1205,7 @@ UIWindow* StateMainMenu::makeWindowOptions_controls(UIWindow* i_parent) {
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_ACTION, v_list->getPosition().nWidth/2);
   v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth/2);
+  v_list->addColumn("", 0); // internal key name
   v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
 
 //  v_button = new UIButton(v_window, 0, 180, GAMETEXT_CONFIGUREJOYSTICK, 207, 57);
@@ -1868,13 +1870,15 @@ void StateMainMenu::send(const std::string& i_id, const std::string& i_message) 
 
       // is key used
       for(unsigned int i=0;i<v_list->getEntries().size();i++) {
-	if(v_list->getEntries()[i]->Text[1] == i_message) {
+	if(v_list->getEntries()[i]->Text[2] == i_message) {
 	  // switch keys
-	  v_list->getEntries()[i]->Text[1]  = pEntry->Text[1];
-	  setInputKey(v_list->getEntries()[i]->Text[0], v_list->getEntries()[i]->Text[1]);
+	  v_list->getEntries()[i]->Text[1] = pEntry->Text[1];
+	  v_list->getEntries()[i]->Text[2] = pEntry->Text[2];
+	  setInputKey(v_list->getEntries()[i]->Text[0], v_list->getEntries()[i]->Text[2]);
 	}
       }
-      pEntry->Text[1] = i_message;
+      pEntry->Text[1] = XMKey(i_message).toFancyString();
+      pEntry->Text[2] = i_message;
       setInputKey(pEntry->Text[0], i_message);
     }
     return;
@@ -1905,23 +1909,23 @@ void StateMainMenu::setInputKey(const std::string& i_strKey, const std::string& 
     }
 
     if(i_strKey == GAMETEXT_DRIVE + n) {
-      InputHandler::instance()->setDRIVE(i, InputHandler::stringToKey(i_key));
+      InputHandler::instance()->setDRIVE(i, XMKey(i_key));
     }
     
     if(i_strKey == GAMETEXT_BRAKE + n) {
-      InputHandler::instance()->setBRAKE(i, InputHandler::stringToKey(i_key));
+      InputHandler::instance()->setBRAKE(i, XMKey(i_key));
     }
     
     if(i_strKey == GAMETEXT_FLIPLEFT + n) {
-      InputHandler::instance()->setFLIPLEFT(i, InputHandler::stringToKey(i_key));
+      InputHandler::instance()->setFLIPLEFT(i, XMKey(i_key));
     }
     
     if(i_strKey == GAMETEXT_FLIPRIGHT + n) {
-      InputHandler::instance()->setFLIPRIGHT(i, InputHandler::stringToKey(i_key));
+      InputHandler::instance()->setFLIPRIGHT(i, XMKey(i_key));
     }
     
     if(i_strKey == GAMETEXT_CHANGEDIR + n) {
-      InputHandler::instance()->setCHANGEDIR(i, InputHandler::stringToKey(i_key));
+      InputHandler::instance()->setCHANGEDIR(i, XMKey(i_key));
     }
   }
 }
@@ -2297,29 +2301,86 @@ void StateMainMenu::updateControlsList() {
     
   UIListEntry *p;
 
-  p = pList->addEntry(GAMETEXT_DRIVE); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getDRIVE(0)));
-  p = pList->addEntry(GAMETEXT_BRAKE); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getBRAKE(0)));
-  p = pList->addEntry(GAMETEXT_FLIPLEFT); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getFLIPLEFT(0)));
-  p = pList->addEntry(GAMETEXT_FLIPRIGHT); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getFLIPRIGHT(0)));
-  p = pList->addEntry(GAMETEXT_CHANGEDIR); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getCHANGEDIR(0)));
+  p = pList->addEntry(GAMETEXT_DRIVE);
+  p->Text.push_back(InputHandler::instance()->getDRIVE(0).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getDRIVE(0).toString());
 
-  p = pList->addEntry(GAMETEXT_DRIVE     + std::string(" 2")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getDRIVE(1)));
-  p = pList->addEntry(GAMETEXT_BRAKE     + std::string(" 2")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getBRAKE(1)));
-  p = pList->addEntry(GAMETEXT_FLIPLEFT  + std::string(" 2")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getFLIPLEFT(1)));
-  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 2")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getFLIPRIGHT(1)));
-  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 2")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getCHANGEDIR(1)));
+  p = pList->addEntry(GAMETEXT_BRAKE);
+  p->Text.push_back(InputHandler::instance()->getBRAKE(0).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getBRAKE(0).toString());
 
-  p = pList->addEntry(GAMETEXT_DRIVE     + std::string(" 3")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getDRIVE(2)));
-  p = pList->addEntry(GAMETEXT_BRAKE     + std::string(" 3")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getBRAKE(2)));
-  p = pList->addEntry(GAMETEXT_FLIPLEFT  + std::string(" 3")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getFLIPLEFT(2)));
-  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 3")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getFLIPRIGHT(2)));
-  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 3")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getCHANGEDIR(2)));
+  p = pList->addEntry(GAMETEXT_FLIPLEFT);
+  p->Text.push_back(InputHandler::instance()->getFLIPLEFT(0).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getFLIPLEFT(0).toString());
 
-  p = pList->addEntry(GAMETEXT_DRIVE     + std::string(" 4")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getDRIVE(3)));
-  p = pList->addEntry(GAMETEXT_BRAKE     + std::string(" 4")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getBRAKE(3)));
-  p = pList->addEntry(GAMETEXT_FLIPLEFT  + std::string(" 4")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getFLIPLEFT(3)));
-  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 4")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getFLIPRIGHT(3)));
-  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 4")); p->Text.push_back(InputHandler::keyToString(InputHandler::instance()->getCHANGEDIR(3)));
+  p = pList->addEntry(GAMETEXT_FLIPRIGHT);
+  p->Text.push_back(InputHandler::instance()->getFLIPRIGHT(0).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getFLIPRIGHT(0).toString());
+
+  p = pList->addEntry(GAMETEXT_CHANGEDIR);
+  p->Text.push_back(InputHandler::instance()->getCHANGEDIR(0).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getCHANGEDIR(0).toString());
+
+  p = pList->addEntry(GAMETEXT_DRIVE     + std::string(" 2"));
+  p->Text.push_back(InputHandler::instance()->getDRIVE(1).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getDRIVE(1).toString());
+
+  p = pList->addEntry(GAMETEXT_BRAKE     + std::string(" 2"));
+  p->Text.push_back(InputHandler::instance()->getBRAKE(1).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getBRAKE(1).toString());
+
+  p = pList->addEntry(GAMETEXT_FLIPLEFT  + std::string(" 2"));
+  p->Text.push_back(InputHandler::instance()->getFLIPLEFT(1).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getFLIPLEFT(1).toString());
+
+  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 2"));
+  p->Text.push_back(InputHandler::instance()->getFLIPRIGHT(1).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getFLIPRIGHT(1).toString());
+
+  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 2"));
+  p->Text.push_back(InputHandler::instance()->getCHANGEDIR(1).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getCHANGEDIR(1).toString());
+
+  p = pList->addEntry(GAMETEXT_DRIVE     + std::string(" 3"));
+  p->Text.push_back(InputHandler::instance()->getDRIVE(2).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getDRIVE(2).toString());
+
+  p = pList->addEntry(GAMETEXT_BRAKE     + std::string(" 3"));
+  p->Text.push_back(InputHandler::instance()->getBRAKE(2).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getBRAKE(2).toString());
+
+  p = pList->addEntry(GAMETEXT_FLIPLEFT  + std::string(" 3"));
+  p->Text.push_back(InputHandler::instance()->getFLIPLEFT(2).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getFLIPLEFT(2).toString());
+
+  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 3"));
+  p->Text.push_back(InputHandler::instance()->getFLIPRIGHT(2).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getFLIPRIGHT(2).toString());
+
+  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 3"));
+  p->Text.push_back(InputHandler::instance()->getCHANGEDIR(2).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getCHANGEDIR(2).toString());
+
+  p = pList->addEntry(GAMETEXT_DRIVE     + std::string(" 4"));
+  p->Text.push_back(InputHandler::instance()->getDRIVE(3).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getDRIVE(3).toString());
+
+  p = pList->addEntry(GAMETEXT_BRAKE     + std::string(" 4"));
+  p->Text.push_back(InputHandler::instance()->getBRAKE(3).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getBRAKE(3).toString());
+
+  p = pList->addEntry(GAMETEXT_FLIPLEFT  + std::string(" 4"));
+  p->Text.push_back(InputHandler::instance()->getFLIPLEFT(3).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getFLIPLEFT(3).toString());
+
+  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 4"));
+  p->Text.push_back(InputHandler::instance()->getFLIPRIGHT(3).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getFLIPRIGHT(3).toString());
+
+  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 4"));
+  p->Text.push_back(InputHandler::instance()->getCHANGEDIR(3).toFancyString());
+  p->Text.push_back(InputHandler::instance()->getCHANGEDIR(3).toString());
+
 }
 
 void StateMainMenu::createRoomsList(UIList *pList) {
