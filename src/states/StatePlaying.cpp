@@ -289,14 +289,14 @@ void StatePlaying::keyUp(int nKey, SDLMod mod) {
 
 void StatePlaying::mouseDown(int nButton)
 {
-  InputHandler::instance()->handleInput(m_universe, INPUT_KEY_DOWN, nButton, KMOD_NONE);
+  InputHandler::instance()->handleInput(m_universe, INPUT_MOUSE_DOWN, nButton, KMOD_NONE);
 
   StateScene::mouseDown(nButton);
 }
 
 void StatePlaying::mouseUp(int nButton)
 {
-  InputHandler::instance()->handleInput(m_universe, INPUT_KEY_UP, nButton, KMOD_NONE);
+  InputHandler::instance()->handleInput(m_universe, INPUT_MOUSE_UP, nButton, KMOD_NONE);
 
   StateScene::mouseUp(nButton);
 }

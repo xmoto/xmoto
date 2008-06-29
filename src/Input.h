@@ -28,6 +28,29 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class xmDatabase;
 
+enum XMKey_input {XMK_KEYBOARD, XMK_MOUSEBUTTON};
+
+/* define a key to do something (keyboard:a, mouse:left, ...) */
+class XMKey {
+ public:
+  XMKey();
+  XMKey(SDL_Event &i_event);
+  XMKey(const std::string& i_key, bool i_basicMode = false); /* basic mode is to give a simple letter, for scripts key */
+  XMKey(SDLKey nKey, SDLMod mod); // keyboard
+  XMKey(Uint8 nButton);           // mouse
+
+  bool operator==(const XMKey& i_other) const;
+  std::string toString();
+  std::string toFancyString();
+  bool isPressed(Uint8 *i_keystate, Uint8 i_mousestate);
+
+ private:
+  XMKey_input m_input;
+  SDLKey m_keyboard_sym;
+  SDLMod m_keyboard_mod;
+  Uint8  m_mouseButton_button;
+};
+
   /*===========================================================================
   Controller modes
   ===========================================================================*/
@@ -42,9 +65,9 @@ class xmDatabase;
   #define MAX_SCRIPT_KEY_HOOKS 16
   
   struct InputScriptKeyHook {
-    int nKey;                 /* Hooked key */
-    std::string FuncName;     /* Script function to invoke */    
-    MotoGame *pGame;          /* Pointer to game */
+    XMKey nKey;                 /* Hooked key */
+    std::string FuncName;       /* Script function to invoke */    
+    MotoGame *pGame;            /* Pointer to game */
   };
 
   /*===========================================================================
@@ -52,12 +75,9 @@ class xmDatabase;
   ===========================================================================*/
   enum InputEventType {
     INPUT_KEY_DOWN,
-    INPUT_KEY_UP    
-  };
-  
-  struct InputKeyMap {
-    const char *pcKey;        /* Name */
-    int nKey;                 /* SDL key sym */
+    INPUT_KEY_UP,
+    INPUT_MOUSE_DOWN,
+    INPUT_MOUSE_UP
   };
   
   /*===========================================================================
@@ -105,32 +125,29 @@ public:
   void setMirrored(bool i_value);
 
   void loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
-  void handleInput(Universe* i_universe, InputEventType Type,int nKey,SDLMod mod);      
+  void handleInput(Universe* i_universe, InputEventType Type, int nKey,SDLMod mod);      
   std::string waitForKey(void);
   void updateUniverseInput(Universe* i_universe);
   void init(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
   void uninit();
       
   void resetScriptKeyHooks(void) {m_nNumScriptKeyHooks = 0;}
-  void addScriptKeyHook(MotoGame *pGame,const std::string &KeyName,const std::string &FuncName);
+  void addScriptKeyHook(MotoGame *pGame,const std::string &basicKeyName,const std::string &FuncName);
 
-  std::string getKeyByAction(const std::string &Action);
-
-  static std::string keyToString(int nKey);
-  static int stringToKey(const std::string &s);
+  std::string getFancyKeyByAction(const std::string &Action);
 
   void setDefaultConfig();
   void saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
-  void setDRIVE(int i_player, int i_value);
-  int getDRIVE(int i_player) const;
-  void setBRAKE(int i_player, int i_value);
-  int getBRAKE(int i_player) const;
-  void setFLIPLEFT(int i_player, int i_value);
-  int getFLIPLEFT(int i_player) const;
-  void setFLIPRIGHT(int i_player, int i_value);
-  int getFLIPRIGHT(int i_player) const;
-  void setCHANGEDIR(int i_player, int i_value);
-  int getCHANGEDIR(int i_player) const;
+  void setDRIVE(int i_player, XMKey i_value);
+  XMKey getDRIVE(int i_player) const;
+  void setBRAKE(int i_player, XMKey i_value);
+  XMKey getBRAKE(int i_player) const;
+  void setFLIPLEFT(int i_player, XMKey i_value);
+  XMKey getFLIPLEFT(int i_player) const;
+  void setFLIPRIGHT(int i_player, XMKey i_value);
+  XMKey getFLIPRIGHT(int i_player) const;
+  void setCHANGEDIR(int i_player, XMKey i_value);
+  XMKey getCHANGEDIR(int i_player) const;
 
 private:
 
@@ -144,11 +161,11 @@ private:
   std::vector<SDL_Joystick *> m_Joysticks;
       
   /* For ControllerMode1 = CONTROLLER_MODE_KEYBOARD */
-  int m_nDriveKey[4];
-  int m_nBrakeKey[4];
-  int m_nPullBackKey[4];
-  int m_nPushForwardKey[4];
-  int m_nChangeDirKey[4];
+  XMKey m_nDriveKey[4];
+  XMKey m_nBrakeKey[4];
+  XMKey m_nPullBackKey[4];
+  XMKey m_nPushForwardKey[4];
+  XMKey m_nChangeDirKey[4];
   // to avoid key repetition
   bool m_changeDirKeyAlreadyPress[4];
 
@@ -172,10 +189,6 @@ private:
       
   /* Static data */
   static InputActionType m_ActionTypeTable[];
-  static InputKeyMap m_KeyMap[];
-      
-  /* Helpers */     
-  void _SetDefaultConfigToUnsetKeys();
 };
 
 

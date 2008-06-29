@@ -708,7 +708,13 @@ GLFontGlyphLetter::GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf
 
   v_surf = TTF_RenderUTF8_Blended(i_ttf, i_value.c_str(), v_color);
   if (v_surf == NULL) {
-    throw Exception("GLFontGlyphLetter: " + std::string(TTF_GetError()));
+    //throw Exception("GLFontGlyphLetter: " + std::string(TTF_GetError()));
+    //sometimes, it happends with some special char, give a 2nd chance
+
+    v_surf = TTF_RenderUTF8_Blended(i_ttf, " ", v_color);
+    if (v_surf == NULL) {
+      throw Exception("GLFontGlyphLetter: " + std::string(TTF_GetError()));
+    }
   }
   SDL_SetAlpha(v_surf, 0, 0);
 

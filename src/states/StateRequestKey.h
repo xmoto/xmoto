@@ -33,6 +33,7 @@ public:
 
   virtual void enter();
   virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void mouseDown(int nButton);
 
   static void clean();
 

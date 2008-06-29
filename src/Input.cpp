@@ -23,11 +23,149 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "Input.h"
 #include "Game.h"
+#include "GameText.h"
 #include "LuaLibGame.h"
 #include "helpers/Log.h"
 #include "xmscene/Camera.h"
 #include "xmscene/BikeController.h"
 #include "Universe.h"
+
+XMKey::XMKey() {
+    m_input = XMK_KEYBOARD;
+    m_keyboard_sym = SDLK_a;
+    m_keyboard_mod = KMOD_NONE;
+}
+
+XMKey::XMKey(Uint8 nButton) {
+  m_input              = XMK_MOUSEBUTTON;
+  m_mouseButton_button = nButton;
+}
+
+XMKey::XMKey(SDL_Event &i_event) {
+  switch(i_event.type) {
+
+  case SDL_KEYDOWN:
+    m_input = XMK_KEYBOARD;
+    m_keyboard_sym = i_event.key.keysym.sym;
+    m_keyboard_mod = i_event.key.keysym.mod;
+    break;
+
+  case SDL_MOUSEBUTTONDOWN:
+    m_input = XMK_MOUSEBUTTON;
+    m_mouseButton_button = i_event.button.button;
+    break;
+
+  default:
+    throw Exception("Unknow key");
+  }
+}
+
+XMKey::XMKey(SDLKey nKey,SDLMod mod) {
+  m_input = XMK_KEYBOARD;
+  m_keyboard_sym = nKey;
+  m_keyboard_mod = mod;
+}
+
+XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
+  int pos;
+  std::string v_current, v_rest;
+
+  if(i_basicMode) {
+    m_input = XMK_KEYBOARD;
+
+    if(i_key.length() != 1) {
+      throw Exception("Invalid key");
+    }
+    m_keyboard_sym = (SDLKey)((int)(i_key[0])); // give ascii key while sdl does the same
+    m_keyboard_mod = KMOD_NONE;
+    return;
+  }
+
+  v_rest = i_key;
+  pos = v_rest.find(":", 0);
+
+  if(pos == std::string::npos) {
+    throw Exception("Invalid key");
+  }
+  v_current = v_rest.substr(0, pos);
+  v_rest = v_rest.substr(pos+1, v_rest.length() -pos -1);
+
+  if(v_current == "K") { // keyboard
+    m_input = XMK_KEYBOARD;
+
+    pos = v_rest.find(":", 0);
+    if(pos == std::string::npos) {
+      throw Exception("Invalid key");
+    }
+    v_current = v_rest.substr(0, pos);
+    v_rest = v_rest.substr(pos+1, v_rest.length() -pos -1);
+
+    m_keyboard_sym = (SDLKey) atoi(v_current.c_str());
+    m_keyboard_mod = (SDLMod) atoi(v_rest.c_str());
+
+  } else if(v_current == "M") { // mouse button
+    m_input = XMK_MOUSEBUTTON;
+    m_mouseButton_button = (Uint8) atoi(v_rest.c_str());
+
+  } else {
+    throw Exception("Invalid key");
+  }
+}
+  
+bool XMKey::operator==(const XMKey& i_other) const {
+  if(m_input != i_other.m_input) {
+    return false;
+  }
+
+  if(m_input == XMK_KEYBOARD) {
+    return m_keyboard_sym == i_other.m_keyboard_sym && m_keyboard_mod == i_other.m_keyboard_mod;
+  }
+
+  if(m_input == XMK_MOUSEBUTTON) {
+    return m_mouseButton_button == i_other.m_mouseButton_button;
+  }
+
+  return false;
+}
+
+std::string XMKey::toString() {
+  std::ostringstream v_res;
+
+  switch(m_input) {
+  case XMK_KEYBOARD:
+    v_res << "K" << ":" << m_keyboard_sym << ":" << m_keyboard_mod;
+    break;
+  case XMK_MOUSEBUTTON:
+    v_res << "M" << ":" << ((int)m_mouseButton_button);
+    break;
+  }
+
+  return v_res.str();
+}
+
+std::string XMKey::toFancyString() {
+  std::ostringstream v_res;
+
+  if(m_input == XMK_KEYBOARD) {
+    v_res << "[" << GAMETEXT_KEYBOARD << "] " << SDL_GetKeyName(m_keyboard_sym);
+  } else if(m_input == XMK_MOUSEBUTTON) {
+    v_res << "[" << GAMETEXT_MOUSE << "] " << ((int)m_mouseButton_button);
+  }
+
+  return v_res.str();
+}
+
+bool XMKey::isPressed(Uint8 *i_keystate, Uint8 i_mousestate) {
+  if(m_input == XMK_KEYBOARD) {
+    return i_keystate[m_keyboard_sym] == 1;
+  }
+
+  if(m_input == XMK_MOUSEBUTTON) {
+    return (i_mousestate & SDL_BUTTON(m_mouseButton_button)) == SDL_BUTTON(m_mouseButton_button);
+  }
+
+  return false;
+}
 
   InputHandler::InputHandler() {
     reset();
@@ -42,7 +180,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   void InputHandler::dealWithActivedKeys(Universe* i_universe) {
-    Uint8 *v_keystate = SDL_GetKeyState(NULL);
+    Uint8 *v_keystate  = SDL_GetKeyState(NULL);
+    Uint8 v_mousestate = SDL_GetMouseState(NULL, NULL);
     unsigned int p, pW;
     Biker *v_biker;
 
@@ -53,14 +192,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	v_biker = i_universe->getScenes()[j]->Players()[i];
 	
 	if(m_ControllerModeID[p] == CONTROLLER_MODE_KEYBOARD) {
-	  if(v_keystate[m_nDriveKey[p]] == 1) {
+	  if(m_nDriveKey[p].isPressed(v_keystate, v_mousestate)) {
 	    /* Start driving */
 	    v_biker->getControler()->setThrottle(1.0f);
 	  } else {
 	    v_biker->getControler()->setThrottle(0.0f);
 	  }
 
-	  if(v_keystate[m_nBrakeKey[p]] == 1) {
+	  if(m_nBrakeKey[p].isPressed(v_keystate, v_mousestate)) {
 	    /* Brake */
 	    v_biker->getControler()->setBreak(1.0f);
 	  } else {
@@ -68,7 +207,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  }
 
 	  if(m_mirrored) {
-	    if(v_keystate[m_nPushForwardKey[p]] == 1) {
+	    if(m_nPushForwardKey[p].isPressed(v_keystate, v_mousestate)) {
 	       v_biker->getControler()->setPull(1.0f);
 	    } else {
 	      v_biker->getControler()->setPull(0.0f);
@@ -78,15 +217,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  }
 
 	  // pull
-	  if((v_keystate[m_nPullBackKey[p]]    == 1 && m_mirrored == false) ||
-	     (v_keystate[m_nPushForwardKey[p]] == 1 && m_mirrored)) {
+	  if((m_nPullBackKey[p].isPressed(v_keystate, v_mousestate) && m_mirrored == false) ||
+	     (m_nPushForwardKey[p].isPressed(v_keystate, v_mousestate) && m_mirrored)) {
 	    /* Pull back */
 	    v_biker->getControler()->setPull(1.0f);
 	  } else {
 
 	    // push // must be in pull else block to not set pull to 0
-	    if((v_keystate[m_nPushForwardKey[p]] == 1 && m_mirrored == false) ||
-	       (v_keystate[m_nPullBackKey[p]]    == 1 && m_mirrored)) {
+	    if((m_nPushForwardKey[p].isPressed(v_keystate, v_mousestate) && m_mirrored == false) ||
+	       (m_nPullBackKey[p].isPressed(v_keystate, v_mousestate)    && m_mirrored)) {
 	      /* Push forward */
 	      v_biker->getControler()->setPull(-1.0f);
 	    } else {
@@ -94,7 +233,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    }
 	  }
 
-	  if(v_keystate[m_nChangeDirKey[p]] == 1) {
+	  if(m_nChangeDirKey[p].isPressed(v_keystate, v_mousestate)) {
 	    /* Change dir */
 	    if(m_changeDirKeyAlreadyPress[p] == false){
 	      v_biker->getControler()->setChangeDir(true);
@@ -128,96 +267,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     NULL
   };
 */
-  /* Key code to string table */  
-  InputKeyMap InputHandler::m_KeyMap[] = {
-    {"Up",              SDLK_UP},
-    {"Down",            SDLK_DOWN},
-    {"Left",            SDLK_LEFT},
-    {"Right",           SDLK_RIGHT},
-    {"Space",           SDLK_SPACE},
-    {"A",               SDLK_a},
-    {"B",               SDLK_b},
-    {"C",               SDLK_c},
-    {"D",               SDLK_d},
-    {"E",               SDLK_e},
-    {"F",               SDLK_f},
-    {"G",               SDLK_g},
-    {"H",               SDLK_h},
-    {"I",               SDLK_i},
-    {"J",               SDLK_j},
-    {"K",               SDLK_k},
-    {"L",               SDLK_l},
-    {"M",               SDLK_m},
-    {"N",               SDLK_n},
-    {"O",               SDLK_o},
-    {"P",               SDLK_p},
-    {"Q",               SDLK_q},
-    {"R",               SDLK_r},
-    {"S",               SDLK_s},
-    {"T",               SDLK_t},
-    {"U",               SDLK_u},
-    {"V",               SDLK_v},
-    {"W",               SDLK_w},
-    {"X",               SDLK_x},
-    {"Y",               SDLK_y},
-    {"Z",               SDLK_z},
-    {"1",               SDLK_1},
-    {"2",               SDLK_2},
-    {"3",               SDLK_3},
-    {"4",               SDLK_4},
-    {"5",               SDLK_5},
-    {"6",               SDLK_6},
-    {"7",               SDLK_7},
-    {"8",               SDLK_8},
-    {"9",               SDLK_9},
-    {"0",               SDLK_0},
-    {"PageUp",          SDLK_PAGEUP},
-    {"PageDown",        SDLK_PAGEDOWN},
-    {"Home",            SDLK_HOME},
-    {"End",             SDLK_END},
-    {"Return",          SDLK_RETURN},
-    {"Left Click",      SDL_BUTTON_LEFT},
-    {"Right Click",     SDL_BUTTON_RIGHT},
-    {"Middle Click",    SDL_BUTTON_MIDDLE},
-    {"Wheel down",      SDL_BUTTON_WHEELDOWN},
-    {"Wheel up",        SDL_BUTTON_WHEELUP},
-    {"Pad 0", SDLK_KP0},
-    {"Pad 1", SDLK_KP1},
-    {"Pad 2", SDLK_KP2},
-    {"Pad 3", SDLK_KP3},
-    {"Pad 4", SDLK_KP4},
-    {"Pad 5", SDLK_KP5},
-    {"Pad 6", SDLK_KP6},
-    {"Pad 7", SDLK_KP7},
-    {"Pad 8", SDLK_KP8},
-    {"Pad 9", SDLK_KP9},
-
-    /* TODO: add more */
-    {NULL, 0}
-  };
-  
-  /*===========================================================================
-  Easy translation between keys and their codes
-  ===========================================================================*/  
-  std::string InputHandler::keyToString(int nKey) {
-    int i=0;
-    while(m_KeyMap[i].pcKey != NULL) {
-      if(m_KeyMap[i].nKey == nKey) return m_KeyMap[i].pcKey;
-      i++;
-    }
-    
-    return ""; /* unknown! */
-  }
-  
-  int InputHandler::stringToKey(const std::string &s) {
-    int i=0;
-    while(m_KeyMap[i].pcKey != NULL) {
-      if(s == m_KeyMap[i].pcKey) return m_KeyMap[i].nKey;
-      i++;
-    }
-    
-    return -1;
-  }
 
   /*===========================================================================
   Init/uninit
@@ -337,34 +386,24 @@ void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string&
   Read configuration
   ===========================================================================*/  
   std::string InputHandler::waitForKey(void) {
-    /* Start waiting for a key */
-    std::string Ret = "";
-    
-    bool bWait = true;
-    while(bWait) {
-      /* Crunch SDL events */
-      SDL_Event Event;
-      
-      SDL_PumpEvents();
-      while(SDL_PollEvent(&Event)) {
-        switch(Event.type) {
-          case SDL_QUIT:
-            return "<<QUIT>>";
-	case SDL_MOUSEBUTTONDOWN:
-	  Ret = keyToString(Event.button.button);
-	  if(Ret != "") bWait = false;
-	  break;
-	case SDL_KEYDOWN:
-            if(Event.key.keysym.sym == SDLK_ESCAPE) return "<<CANCEL>>";
-          
-            Ret = keyToString(Event.key.keysym.sym);
-            if(Ret != "") bWait = false;
-            break;
-        }
+    SDL_Event Event;
+
+    /* Start waiting for a key */      
+    SDL_PumpEvents();
+    while(SDL_PollEvent(&Event)) {
+      if(Event.type == SDL_QUIT ||
+	 (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_ESCAPE) ) {
+	return "<<QUIT>>";
+      }
+
+      try {
+	  return XMKey(Event).toString();
+      } catch(Exception &e) {
+	/* invalid key */
       }
     }
-    
-    return Ret;
+
+    return "";
   }
   
   /*===========================================================================
@@ -385,11 +424,18 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     if(ControllerMode1 == "Keyboard") {
       /* We're using the keyboard */
       m_ControllerModeID[0] = CONTROLLER_MODE_KEYBOARD;
-      m_nDriveKey[0] = stringToKey(pDb->config_getString(i_id_profile, "KeyDrive1", "Up"));
-      m_nBrakeKey[0] = stringToKey(pDb->config_getString(i_id_profile, "KeyBrake1", "Down"));
-      m_nPullBackKey[0] = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipLeft1", "Left"));
-      m_nPushForwardKey[0] = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipRight1", "Right"));
-      m_nChangeDirKey[0] = stringToKey(pDb->config_getString(i_id_profile, "KeyChangeDir1", "Space"));
+
+      try {
+	m_nDriveKey[0]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive1", ""));
+	m_nBrakeKey[0]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake1", ""));
+	m_nPullBackKey[0]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft1", ""));
+	m_nPushForwardKey[0]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight1", ""));
+	m_nChangeDirKey[0]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir1", ""));
+      } catch(Exception &e) {
+	Logger::Log("** Warning ** : Invalid keyboard configuration!");
+	setDefaultConfig();
+      }
+
     } else {
       /* We're using joystick 1 */
       m_ControllerModeID[0] = CONTROLLER_MODE_JOYSTICK1;      
@@ -427,46 +473,37 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     m_ControllerModeID[2] = CONTROLLER_MODE_KEYBOARD;
     m_ControllerModeID[3] = CONTROLLER_MODE_KEYBOARD;
 
-    m_nDriveKey[1]    	 = stringToKey(pDb->config_getString(i_id_profile, "KeyDrive2"    , "A"));
-    m_nBrakeKey[1]    	 = stringToKey(pDb->config_getString(i_id_profile, "KeyBrake2"    , "Q"));
-    m_nPullBackKey[1] 	 = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipLeft2" , "Z"));
-    m_nPushForwardKey[1] = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipRight2", "E"));
-    m_nChangeDirKey[1]   = stringToKey(pDb->config_getString(i_id_profile, "KeyChangeDir2", "W"));
-
-    m_nDriveKey[2]    	 = stringToKey(pDb->config_getString(i_id_profile, "KeyDrive3"    , "R"));
-    m_nBrakeKey[2]    	 = stringToKey(pDb->config_getString(i_id_profile, "KeyBrake3"    , "F"));
-    m_nPullBackKey[2] 	 = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipLeft3" , "T"));
-    m_nPushForwardKey[2] = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipRight3", "Y"));
-    m_nChangeDirKey[2]   = stringToKey(pDb->config_getString(i_id_profile, "KeyChangeDir3", "V"));
-
-    m_nDriveKey[3]    	 = stringToKey(pDb->config_getString(i_id_profile, "KeyDrive4"    , "U"));
-    m_nBrakeKey[3]    	 = stringToKey(pDb->config_getString(i_id_profile, "KeyBrake4"    , "J"));
-    m_nPullBackKey[3] 	 = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipLeft4" , "I"));
-    m_nPushForwardKey[3] = stringToKey(pDb->config_getString(i_id_profile, "KeyFlipRight4", "O"));
-    m_nChangeDirKey[3]   = stringToKey(pDb->config_getString(i_id_profile, "KeyChangeDir4", "K"));
-    
-    /* All good? */
-    bool isUserKeyOk = true;
-    for(unsigned int i=0; i<4; i++) {
-      if(m_nDriveKey[i]<0 || m_nBrakeKey[i]<0 || m_nPullBackKey[i]<0 ||
-	 m_nPushForwardKey[i]<0 || m_nChangeDirKey[i]<0) {
-	isUserKeyOk = false;
-      }
-    }
-
-    if(isUserKeyOk == false) {
+    try {
+      m_nDriveKey[1]       = XMKey(pDb->config_getString(i_id_profile, "KeyDrive2"    , ""));
+      m_nBrakeKey[1]       = XMKey(pDb->config_getString(i_id_profile, "KeyBrake2"    , ""));
+      m_nPullBackKey[1]    = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft2" , ""));
+      m_nPushForwardKey[1] = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight2", ""));
+      m_nChangeDirKey[1]   = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir2", ""));
+      
+      m_nDriveKey[2]       = XMKey(pDb->config_getString(i_id_profile, "KeyDrive3"    , ""));
+      m_nBrakeKey[2]       = XMKey(pDb->config_getString(i_id_profile, "KeyBrake3"    , ""));
+      m_nPullBackKey[2]    = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft3" , ""));
+      m_nPushForwardKey[2] = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight3", ""));
+      m_nChangeDirKey[2]   = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir3", ""));
+      
+      m_nDriveKey[3]       = XMKey(pDb->config_getString(i_id_profile, "KeyDrive4"    , ""));
+      m_nBrakeKey[3]       = XMKey(pDb->config_getString(i_id_profile, "KeyBrake4"    , ""));
+      m_nPullBackKey[3]    = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft4" , ""));
+      m_nPushForwardKey[3] = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight4", ""));
+      m_nChangeDirKey[3]   = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir4", ""));
+    } catch(Exception &e) {    
       Logger::Log("** Warning ** : Invalid keyboard configuration!");
-      _SetDefaultConfigToUnsetKeys();
-    }    
+      setDefaultConfig();
+    }   
   }
   
   /*===========================================================================
   Add script key hook
   ===========================================================================*/  
-  void InputHandler::addScriptKeyHook(MotoGame *pGame,const std::string &KeyName,const std::string &FuncName) {
+  void InputHandler::addScriptKeyHook(MotoGame *pGame,const std::string &basicKeyName,const std::string &FuncName) {
     if(m_nNumScriptKeyHooks < MAX_SCRIPT_KEY_HOOKS) {
       m_ScriptKeyHooks[m_nNumScriptKeyHooks].FuncName = FuncName;
-      m_ScriptKeyHooks[m_nNumScriptKeyHooks].nKey = stringToKey(KeyName);
+      m_ScriptKeyHooks[m_nNumScriptKeyHooks].nKey = XMKey(basicKeyName, true);
       m_ScriptKeyHooks[m_nNumScriptKeyHooks].pGame = pGame;
       m_nNumScriptKeyHooks++;
     }
@@ -475,14 +512,24 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
   /*===========================================================================
   Handle an input event
   ===========================================================================*/  
-void InputHandler::handleInput(Universe* i_universe, InputEventType Type,int nKey,SDLMod mod) {
+void InputHandler::handleInput(Universe* i_universe, InputEventType Type, int nKey,SDLMod mod) {
     unsigned int p, pW;
     Biker *v_biker;
+    XMKey v_key;
+
+    if(Type == INPUT_KEY_DOWN || Type == INPUT_KEY_UP) {
+      v_key = XMKey((SDLKey)nKey, mod);
+    } else if(Type == INPUT_MOUSE_DOWN || Type == INPUT_MOUSE_UP) {
+      v_key = XMKey((Uint8)nKey);
+    } else {
+      return;
+    }
 
     /* Update controller 1 */
     /* Keyboard controlled */
     switch(Type) {
     case INPUT_KEY_DOWN:
+    case INPUT_MOUSE_DOWN:
       p = 0; // player number p
       pW = 0; // number of players in the previous worlds
       for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
@@ -490,22 +537,22 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type,int nKe
 	  v_biker = i_universe->getScenes()[j]->Players()[i];
 
 	  if(m_ControllerModeID[p] == CONTROLLER_MODE_KEYBOARD) {
-	    if(m_nDriveKey[p] == nKey) {
+	    if(m_nDriveKey[p] == v_key) {
 	      /* Start driving */
 	      v_biker->getControler()->setThrottle(1.0f);
-	    } else if(m_nBrakeKey[p] == nKey) {
+	    } else if(m_nBrakeKey[p] == v_key) {
 	      /* Brake */
 	      v_biker->getControler()->setBreak(1.0f);
-	    } else if((m_nPullBackKey[p]    == nKey && m_mirrored == false) ||
-		      (m_nPushForwardKey[p] == nKey && m_mirrored)) {
+	    } else if((m_nPullBackKey[p]    == v_key && m_mirrored == false) ||
+		      (m_nPushForwardKey[p] == v_key && m_mirrored)) {
 	      /* Pull back */
 	      v_biker->getControler()->setPull(1.0f);
-	    } else if((m_nPushForwardKey[p] == nKey && m_mirrored == false) ||
-		      (m_nPullBackKey[p]    == nKey && m_mirrored)) {
+	    } else if((m_nPushForwardKey[p] == v_key && m_mirrored == false) ||
+		      (m_nPullBackKey[p]    == v_key && m_mirrored)) {
 	      /* Push forward */
 	      v_biker->getControler()->setPull(-1.0f);            
 	    }
-	    else if(m_nChangeDirKey[p] == nKey) {
+	    else if(m_nChangeDirKey[p] == v_key) {
 	      /* Change dir */
 	      if(m_changeDirKeyAlreadyPress[p] == false){
 		v_biker->getControler()->setChangeDir(true);
@@ -520,6 +567,7 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type,int nKe
 
       break;
     case INPUT_KEY_UP:
+    case INPUT_MOUSE_UP:
       p = 0; // player number p
       pW = 0; // number of players in the previous worlds
       for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
@@ -527,25 +575,25 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type,int nKe
 	  v_biker = i_universe->getScenes()[j]->Players()[i];
 
 	  if(m_ControllerModeID[p] == CONTROLLER_MODE_KEYBOARD) {
-	    if(m_nDriveKey[p] == nKey) {
+	    if(m_nDriveKey[p] == v_key) {
 	      /* Stop driving */
 	      v_biker->getControler()->setThrottle(0.0f);
 	    }
-	    else if(m_nBrakeKey[p] == nKey) {
+	    else if(m_nBrakeKey[p] == v_key) {
 	      /* Don't brake */
 	      v_biker->getControler()->setBreak(0.0f);
 	    }
-	    else if((m_nPullBackKey[p]    == nKey && m_mirrored == false) ||
-		    (m_nPushForwardKey[p] == nKey && m_mirrored)) {
+	    else if((m_nPullBackKey[p]    == v_key && m_mirrored == false) ||
+		    (m_nPushForwardKey[p] == v_key && m_mirrored)) {
 	      /* Pull back */
 	      v_biker->getControler()->setPull(0.0f);
 	    }
-	    else if((m_nPushForwardKey[p] == nKey && m_mirrored == false) ||
-		    (m_nPullBackKey[p]    == nKey && m_mirrored)) {
+	    else if((m_nPushForwardKey[p] == v_key && m_mirrored == false) ||
+		    (m_nPullBackKey[p]    == v_key && m_mirrored)) {
 	      /* Push forward */
 	      v_biker->getControler()->setPull(0.0f);            
 	    }
-	    else if(m_nChangeDirKey[p] == nKey) {
+	    else if(m_nChangeDirKey[p] == v_key) {
 	      m_changeDirKeyAlreadyPress[p] = false;
 	    }
 	  }
@@ -559,7 +607,7 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type,int nKe
     /* Have the script hooked this key? */
     if(Type == INPUT_KEY_DOWN) {
       for(int i=0; i<m_nNumScriptKeyHooks; i++) {
-	if(m_ScriptKeyHooks[i].nKey == nKey) {
+	if(m_ScriptKeyHooks[i].nKey == v_key) {
 	  /* Invoke script */
 	  m_ScriptKeyHooks[i].pGame->getLuaLibGame()->scriptCallVoid(m_ScriptKeyHooks[i].FuncName);
 	}
@@ -576,90 +624,60 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type,int nKe
     m_ControllerModeID[2] = CONTROLLER_MODE_KEYBOARD;
     m_ControllerModeID[3] = CONTROLLER_MODE_KEYBOARD;
     
-    m_nDriveKey[0]       = SDLK_UP;
-    m_nBrakeKey[0]       = SDLK_DOWN;
-    m_nPullBackKey[0]    = SDLK_LEFT;
-    m_nPushForwardKey[0] = SDLK_RIGHT;
-    m_nChangeDirKey[0]   = SDLK_SPACE;
+    m_nDriveKey[0]       = XMKey(SDLK_UP,    KMOD_NONE);
+    m_nBrakeKey[0]       = XMKey(SDLK_DOWN,  KMOD_NONE);
+    m_nPullBackKey[0]    = XMKey(SDLK_LEFT,  KMOD_NONE);
+    m_nPushForwardKey[0] = XMKey(SDLK_RIGHT, KMOD_NONE);
+    m_nChangeDirKey[0]   = XMKey(SDLK_SPACE, KMOD_NONE);
 
-    m_nDriveKey[1]       = SDLK_a;
-    m_nBrakeKey[1]       = SDLK_q;
-    m_nPullBackKey[1]    = SDLK_z;
-    m_nPushForwardKey[1] = SDLK_e;
-    m_nChangeDirKey[1]   = SDLK_w;
+    m_nDriveKey[1]       = XMKey(SDLK_a, KMOD_NONE);
+    m_nBrakeKey[1]       = XMKey(SDLK_q, KMOD_NONE);
+    m_nPullBackKey[1]    = XMKey(SDLK_z, KMOD_NONE);
+    m_nPushForwardKey[1] = XMKey(SDLK_e, KMOD_NONE);
+    m_nChangeDirKey[1]   = XMKey(SDLK_w, KMOD_NONE);
 
-    m_nDriveKey[2]       = SDLK_r;
-    m_nBrakeKey[2]       = SDLK_f;
-    m_nPullBackKey[2]    = SDLK_t;
-    m_nPushForwardKey[2] = SDLK_y;
-    m_nChangeDirKey[2]   = SDLK_v;
+    m_nDriveKey[2]       = XMKey(SDLK_r, KMOD_NONE);
+    m_nBrakeKey[2]       = XMKey(SDLK_f, KMOD_NONE);
+    m_nPullBackKey[2]    = XMKey(SDLK_t, KMOD_NONE);
+    m_nPushForwardKey[2] = XMKey(SDLK_y, KMOD_NONE);
+    m_nChangeDirKey[2]   = XMKey(SDLK_v, KMOD_NONE);
 
-    m_nDriveKey[3]       = SDLK_y;
-    m_nBrakeKey[3]       = SDLK_h;
-    m_nPullBackKey[3]    = SDLK_u;
-    m_nPushForwardKey[3] = SDLK_i;
-    m_nChangeDirKey[3]   = SDLK_n;
+    m_nDriveKey[3]       = XMKey(SDLK_y, KMOD_NONE);
+    m_nBrakeKey[3]       = XMKey(SDLK_h, KMOD_NONE);
+    m_nPullBackKey[3]    = XMKey(SDLK_u, KMOD_NONE);
+    m_nPushForwardKey[3] = XMKey(SDLK_i, KMOD_NONE);
+    m_nChangeDirKey[3]   = XMKey(SDLK_n, KMOD_NONE);
     
   }  
-
-  void InputHandler::_SetDefaultConfigToUnsetKeys() {
-    m_ControllerModeID[0] = CONTROLLER_MODE_KEYBOARD;
-    m_ControllerModeID[1] = CONTROLLER_MODE_KEYBOARD;
-    m_ControllerModeID[2] = CONTROLLER_MODE_KEYBOARD;
-    m_ControllerModeID[3] = CONTROLLER_MODE_KEYBOARD;
-    
-    if(m_nDriveKey[0]       < 0) { m_nDriveKey[0] 	    = SDLK_UP;       }
-    if(m_nBrakeKey[0]       < 0) { m_nBrakeKey[0] 	    = SDLK_DOWN;     }
-    if(m_nPullBackKey[0]    < 0) { m_nPullBackKey[0]    = SDLK_LEFT;     }
-    if(m_nPushForwardKey[0] < 0) { m_nPushForwardKey[0] = SDLK_RIGHT;    }
-    if(m_nChangeDirKey[0]   < 0) { m_nChangeDirKey[0]   = SDLK_SPACE;    }
- 
-    if(m_nDriveKey[1]       < 0) { m_nDriveKey[1] 	    = SDLK_a;       }
-    if(m_nBrakeKey[1]       < 0) { m_nBrakeKey[1] 	    = SDLK_q;     }
-    if(m_nPullBackKey[1]    < 0) { m_nPullBackKey[1]    = SDLK_z;     }
-    if(m_nPushForwardKey[1] < 0) { m_nPushForwardKey[1] = SDLK_e;    }
-    if(m_nChangeDirKey[1]   < 0) { m_nChangeDirKey[1]   = SDLK_w;    }
-
-    if(m_nDriveKey[2]       < 0) { m_nDriveKey[2] 	    = SDLK_r;       }
-    if(m_nBrakeKey[2]       < 0) { m_nBrakeKey[2] 	    = SDLK_f;     }
-    if(m_nPullBackKey[2]    < 0) { m_nPullBackKey[2]    = SDLK_t;     }
-    if(m_nPushForwardKey[2] < 0) { m_nPushForwardKey[2] = SDLK_y;    }
-    if(m_nChangeDirKey[2]   < 0) { m_nChangeDirKey[2]   = SDLK_v;    }
-
-    if(m_nDriveKey[3]       < 0) { m_nDriveKey[3] 	    = SDLK_y;       }
-    if(m_nBrakeKey[3]       < 0) { m_nBrakeKey[3] 	    = SDLK_h;     }
-    if(m_nPullBackKey[3]    < 0) { m_nPullBackKey[3]    = SDLK_h;     }
-    if(m_nPushForwardKey[3] < 0) { m_nPushForwardKey[3] = SDLK_i;    }
-    if(m_nChangeDirKey[3]   < 0) { m_nChangeDirKey[3]   = SDLK_n;    }
-  }
 
   /*===========================================================================
   Get key by action...
   ===========================================================================*/  
-  std::string InputHandler::getKeyByAction(const std::string &Action) {
-    if(Action == "Drive")    	return keyToString(m_nDriveKey[0]);
-    if(Action == "Brake")    	return keyToString(m_nBrakeKey[0]);
-    if(Action == "PullBack") 	return keyToString(m_nPullBackKey[0]);
-    if(Action == "PushForward") return keyToString(m_nPushForwardKey[0]);
-    if(Action == "ChangeDir")   return keyToString(m_nChangeDirKey[0]);
 
-    if(Action == "Drive 2")    	  return keyToString(m_nDriveKey[1]);
-    if(Action == "Brake 2")    	  return keyToString(m_nBrakeKey[1]);
-    if(Action == "PullBack 2") 	  return keyToString(m_nPullBackKey[1]);
-    if(Action == "PushForward 2") return keyToString(m_nPushForwardKey[1]);
-    if(Action == "ChangeDir 2")   return keyToString(m_nChangeDirKey[1]);
+  std::string InputHandler::getFancyKeyByAction(const std::string &Action) {
+    if(Action == "Drive")    	return m_nDriveKey[0].toFancyString();
+    if(Action == "Brake")    	return m_nBrakeKey[0].toFancyString();
+    if(Action == "PullBack") 	return m_nPullBackKey[0].toFancyString();
+    if(Action == "PushForward") return m_nPushForwardKey[0].toFancyString();
+    if(Action == "ChangeDir")   return m_nChangeDirKey[0].toFancyString();
 
-    if(Action == "Drive 3")    	  return keyToString(m_nDriveKey[2]);
-    if(Action == "Brake 3")    	  return keyToString(m_nBrakeKey[2]);
-    if(Action == "PullBack 3") 	  return keyToString(m_nPullBackKey[2]);
-    if(Action == "PushForward 3") return keyToString(m_nPushForwardKey[2]);
-    if(Action == "ChangeDir 3")   return keyToString(m_nChangeDirKey[2]);
+    if(Action == "Drive 2")    	  return m_nDriveKey[1].toFancyString();
+    if(Action == "Brake 2")    	  return m_nBrakeKey[1].toFancyString();
+    if(Action == "PullBack 2") 	  return m_nPullBackKey[1].toFancyString();
+    if(Action == "PushForward 2") return m_nPushForwardKey[1].toFancyString();
+    if(Action == "ChangeDir 2")   return m_nChangeDirKey[1].toFancyString();
 
-    if(Action == "Drive 4")    	  return keyToString(m_nDriveKey[3]);
-    if(Action == "Brake 4")    	  return keyToString(m_nBrakeKey[3]);
-    if(Action == "PullBack 4") 	  return keyToString(m_nPullBackKey[3]);
-    if(Action == "PushForward 4") return keyToString(m_nPushForwardKey[3]);
-    if(Action == "ChangeDir 4")   return keyToString(m_nChangeDirKey[3]);
+    if(Action == "Drive 3")    	  return m_nDriveKey[2].toFancyString();
+    if(Action == "Brake 3")    	  return m_nBrakeKey[2].toFancyString();
+    if(Action == "PullBack 3") 	  return m_nPullBackKey[2].toFancyString();
+    if(Action == "PushForward 3") return m_nPushForwardKey[2].toFancyString();
+    if(Action == "ChangeDir 3")   return m_nChangeDirKey[2].toFancyString();
+
+    if(Action == "Drive 4")    	  return m_nDriveKey[3].toFancyString();
+    if(Action == "Brake 4")    	  return m_nBrakeKey[3].toFancyString();
+    if(Action == "PullBack 4") 	  return m_nPullBackKey[3].toFancyString();
+    if(Action == "PushForward 4") return m_nPushForwardKey[3].toFancyString();
+    if(Action == "ChangeDir 4")   return m_nChangeDirKey[3].toFancyString();
 
     return "?";
   }
@@ -686,52 +704,52 @@ void InputHandler::saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     }
 
 
-    pDb->config_setString(i_id_profile, "KeyDrive"     + n, keyToString(m_nDriveKey[i])      );
-    pDb->config_setString(i_id_profile, "KeyBrake"     + n, keyToString(m_nBrakeKey[i])      );
-    pDb->config_setString(i_id_profile, "KeyFlipLeft"  + n, keyToString(m_nPullBackKey[i])   );
-    pDb->config_setString(i_id_profile, "KeyFlipRight" + n, keyToString(m_nPushForwardKey[i]));
-    pDb->config_setString(i_id_profile, "KeyChangeDir" + n, keyToString(m_nChangeDirKey[i])  );
+    pDb->config_setString(i_id_profile, "KeyDrive"     + n, m_nDriveKey[i].toString()      );
+    pDb->config_setString(i_id_profile, "KeyBrake"     + n, m_nBrakeKey[i].toString()      );
+    pDb->config_setString(i_id_profile, "KeyFlipLeft"  + n, m_nPullBackKey[i].toString()   );
+    pDb->config_setString(i_id_profile, "KeyFlipRight" + n, m_nPushForwardKey[i].toString());
+    pDb->config_setString(i_id_profile, "KeyChangeDir" + n, m_nChangeDirKey[i].toString()  );
   }
 
-	pDb->config_setValue_end();
+  pDb->config_setValue_end();
 }
 
-void InputHandler::setDRIVE(int i_player, int i_value) {
+void InputHandler::setDRIVE(int i_player, XMKey i_value) {
   m_nDriveKey[i_player] = i_value;
 }
 
-int InputHandler::getDRIVE(int i_player) const {
+XMKey InputHandler::getDRIVE(int i_player) const {
   return m_nDriveKey[i_player];
 }
 
-void InputHandler::setBRAKE(int i_player, int i_value) {
+void InputHandler::setBRAKE(int i_player, XMKey i_value) {
   m_nBrakeKey[i_player] = i_value;
 }
 
-int InputHandler::getBRAKE(int i_player) const {
+XMKey InputHandler::getBRAKE(int i_player) const {
   return m_nBrakeKey[i_player];
 }
 
-void InputHandler::setFLIPLEFT(int i_player, int i_value) {
+void InputHandler::setFLIPLEFT(int i_player, XMKey i_value) {
   m_nPullBackKey[i_player] = i_value;
 }
 
-int InputHandler::getFLIPLEFT(int i_player) const {
+XMKey InputHandler::getFLIPLEFT(int i_player) const {
   return m_nPullBackKey[i_player];
 }
 
-void InputHandler::setFLIPRIGHT(int i_player, int i_value) {
+void InputHandler::setFLIPRIGHT(int i_player, XMKey i_value) {
   m_nPushForwardKey[i_player] = i_value;
 }
 
-int InputHandler::getFLIPRIGHT(int i_player) const {
+XMKey InputHandler::getFLIPRIGHT(int i_player) const {
   return m_nPushForwardKey[i_player];
 }
 
-void InputHandler::setCHANGEDIR(int i_player, int i_value) {
+void InputHandler::setCHANGEDIR(int i_player, XMKey i_value) {
   m_nChangeDirKey[i_player] = i_value;
 }
 
-int InputHandler::getCHANGEDIR(int i_player) const {
+XMKey InputHandler::getCHANGEDIR(int i_player) const {
   return m_nChangeDirKey[i_player];
 }
