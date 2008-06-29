@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameEvents.h"
 #include "Input.h"
 #include "Locales.h"
-#include "helpers/Text.h"
 #include "helpers/Log.h"
 #include "xmscene/Level.h"
 #include "xmscene/Block.h"
@@ -502,7 +501,7 @@ int LuaLibGame::L_Game_SetKeyHook(lua_State *pL) {
   /* no event for this */
 
   if(m_exec_activeInputHandler != NULL) {
-    m_exec_activeInputHandler->addScriptKeyHook(m_exec_world, txtToLower(luaL_checkstring(pL,1)), luaL_checkstring(pL,2));
+    m_exec_activeInputHandler->addScriptKeyHook(m_exec_world, luaL_checkstring(pL,1), luaL_checkstring(pL,2));
   }
   return 0;
 }

@@ -76,7 +76,7 @@ XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
     if(i_key.length() != 1) {
       throw Exception("Invalid key");
     }
-    m_keyboard_sym = (SDLKey)((int)(i_key[0])); // give ascii key while sdl does the same
+    m_keyboard_sym = (SDLKey)((int)(tolower(i_key[0]))); // give ascii key while sdl does the same
     m_keyboard_mod = KMOD_NONE;
     return;
   }
