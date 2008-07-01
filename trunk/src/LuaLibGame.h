@@ -119,6 +119,7 @@ private:
   static int L_Game_SetDynamicBlockRotation(lua_State *pL);
   static int L_Game_SetDynamicBlockSelfRotation(lua_State *pL);
   static int L_Game_SetPhysicsBlockSelfRotation(lua_State *pL);
+  static int L_Game_SetPhysicsBlockTranslation(lua_State* pL);
   static int L_Game_SetDynamicBlockTranslation(lua_State *pL);
   static int L_Game_SetDynamicBlockNone(lua_State *pL);
   static int L_Game_CameraZoom(lua_State *pL);

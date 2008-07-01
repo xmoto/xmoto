@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Level.h"
 #include "xmscene/Entity.h"
 #include "xmscene/Block.h"
+#include "chipmunk/chipmunk.h"
 
 SDynamicObject::SDynamicObject(int p_startTime, int p_endTime, int pPeriod) {
   m_time = 0;
@@ -72,7 +73,40 @@ int SDynamicObject::Period() const {
   return m_period;
 }
 
-void SDynamicTranslation::performXY(float *vx, float *vy) {
+
+
+SDynamicTranslation::SDynamicTranslation(float pX, float pY, int pPeriod) 
+{
+  float Z;
+
+  m_X     = pX;
+  m_Y     = pY;
+
+  m_sensUp = true;
+  Z      = sqrt(m_X * m_X + m_Y * m_Y);
+
+  m_Speed  = 0.0;
+  if(pPeriod != 0) {
+    m_Speed  = (Z * 2) / ((float)(pPeriod));
+  }
+
+  m_moveX = 0.0;
+  m_moveY = 0.0;
+  if(Z != 0.0) {
+    m_moveX  = (m_Speed * m_X) / Z;
+    m_moveY  = (m_Speed * m_Y) / Z;
+  }
+
+  m_totalMoveX = 0.0;
+  m_totalMoveY = 0.0;
+}
+
+SDynamicTranslation::~SDynamicTranslation() 
+{
+}
+
+void SDynamicTranslation::performXY(float *vx, float *vy) 
+{
   *vx = m_sensUp ? m_moveX : -m_moveX;
   *vy = m_sensUp ? m_moveY : -m_moveY;
 
@@ -87,8 +121,10 @@ void SDynamicTranslation::performXY(float *vx, float *vy) {
   }
 }
 
-SDynamicRotation::SDynamicRotation(float pInitAngle, float pRadius, int
-pPeriod) {
+
+
+SDynamicRotation::SDynamicRotation(float pInitAngle, float pRadius, int pPeriod) 
+{
   m_Speed = 0.0;
   if(pPeriod != 0) {
     m_Speed = (2 * M_PI) / ((float)(pPeriod));
@@ -106,34 +142,6 @@ pPeriod) {
 SDynamicRotation::~SDynamicRotation() {
 }
 
-SDynamicTranslation::SDynamicTranslation(float pX, float pY, int pPeriod) {
-  float m_Z;
-
-  m_X     = pX;
-  m_Y     = pY;
-
-  m_sensUp = true;
-  m_Z      = sqrt(m_X * m_X + m_Y * m_Y);
-
-  m_Speed  = 0.0;
-  if(pPeriod != 0) {
-    m_Speed  = (m_Z * 2) / ((float)(pPeriod));
-  }
-
-  m_moveX = 0.0;
-  m_moveY = 0.0;
-  if(m_Z != 0.0) {
-    m_moveX  = (m_Speed * m_X) / m_Z;
-    m_moveY  = (m_Speed * m_Y) / m_Z;
-  }
-
-  m_totalMoveX = 0.0;
-  m_totalMoveY = 0.0;
-}
-
-SDynamicTranslation::~SDynamicTranslation() {
-}
-
 void SDynamicRotation::performXY(float *vx, float *vy) {
   if(m_Angle >= 2 * M_PI) {m_Angle -= 2 * M_PI;} /* because of float limit */
   float x,y;
@@ -147,6 +155,8 @@ void SDynamicRotation::performXY(float *vx, float *vy) {
   m_previousVy = y;
   m_Angle += m_Speed;
 }
+
+
 
 SDynamicSelfRotation::SDynamicSelfRotation(int i_period) {
   m_period = i_period;
@@ -171,6 +181,10 @@ void SDynamicSelfRotation::performXY(float *vAngle) {
     m_totalAngle = 0.0;
   }
 }
+
+
+
+
 
 /* entity */
 
@@ -238,7 +252,8 @@ void SDynamicEntityTranslation::performXY(float *vx, float *vy, float *vAngle) {
 
 /* block */
 
-SDynamicBlockMove::SDynamicBlockMove(std::string pBlock, int p_startTime, int p_endTime, int pPeriod) : SDynamicObject(p_startTime, p_endTime, pPeriod){
+SDynamicBlockMove::SDynamicBlockMove(std::string pBlock, int p_startTime, int p_endTime, int pPeriod)
+  : SDynamicObject(p_startTime, p_endTime, pPeriod){
   m_blockName = pBlock;
   m_objectId  = pBlock;
   m_block     = NULL;
@@ -316,4 +331,99 @@ SDynamicEntitySelfRotation::~SDynamicEntitySelfRotation() {
 void SDynamicEntitySelfRotation::performXY(float *vx, float *vy, float *vAngle) {
   *vx = *vy = 0.0;
   SDynamicSelfRotation::performXY(vAngle);
+}
+
+
+
+SPhysicBlockMove::SPhysicBlockMove(std::string blockName, int startTime, int endTime, int period)
+  : SDynamicObject(startTime, endTime, period)
+{
+  m_blockName = blockName;
+  m_objectId  = blockName;
+  m_block     = NULL;
+}
+
+void SPhysicBlockMove::performMove(MotoGame* pMotoGame, int i_nbCents)
+{
+  if(m_block == NULL)
+    m_block = pMotoGame->getLevelSrc()->getBlockById(m_blockName);
+  
+  if(i_nbCents > 0) {
+    for(int i=0; i<i_nbCents; i++) {
+      applyForce();
+    }
+  }
+}
+
+SPhysicBlockSelfRotation::SPhysicBlockSelfRotation(std::string blockName, int startTime, int endTime, int torque)
+  : SPhysicBlockMove(blockName, startTime, endTime, 1)
+{
+  m_torque = torque;
+}
+
+void SPhysicBlockSelfRotation::applyForce()
+{
+  // magical formula to change the asked period into a force
+  cpBody* body = m_block->getPhysicBody();
+  if(body == NULL)
+    return;
+
+  // in the moon buggy example, the author manually update
+  // the torque instead of using applyforce, let's do the same
+  body->t += m_torque;
+}
+
+SPhysicBlockTranslation::SPhysicBlockTranslation(std::string blockName,
+						 float x, float y,
+						 int period,
+						 int startTime, int endTime)
+  : SPhysicBlockMove(blockName, startTime, endTime, period)
+{
+  float Z;
+
+  m_X     = x;
+  m_Y     = y;
+
+  m_sensUp = true;
+  Z        = sqrt(m_X*m_X + m_Y*m_Y);
+
+  m_Speed  = 0.0;
+  if(period != 0) {
+    m_Speed  = (Z * 2) / ((float)(period));
+  }
+
+  m_moveX = 0.0;
+  m_moveY = 0.0;
+  if(Z != 0.0) {
+    m_moveX  = (m_Speed * m_X) / Z;
+    m_moveY  = (m_Speed * m_Y) / Z;
+  }
+
+  m_totalMoveX = 0.0;
+  m_totalMoveY = 0.0;
+}
+
+void SPhysicBlockTranslation::applyForce()
+{
+  cpBody* body = m_block->getPhysicBody();
+  if(body == NULL)
+    return;
+
+  float x = m_sensUp ? m_moveX : -m_moveX;
+  float y = m_sensUp ? m_moveY : -m_moveY;
+
+  m_totalMoveX += m_sensUp ? fabs(x) : -fabs(x);
+  m_totalMoveY += m_sensUp ? fabs(y) : -fabs(y);
+
+  if(
+     (m_totalMoveX < 0 || m_totalMoveX > fabs(m_X)) ||
+     (m_totalMoveY < 0 || m_totalMoveY > fabs(m_Y))
+     ) {
+    m_sensUp = !m_sensUp;
+  }
+
+  // apply a force so that the blocks moves of (x,y)
+  // TODO::this mult need tweaking
+  float mult = 25000.0f;
+  cpBodyApplyForce(body, cpv(x*mult, y*mult), cpvzero);
 }

@@ -74,7 +74,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     GAME_EVENT_PLAYMUSIC                    = 38,
     GAME_EVENT_STOPMUSIC                    = 39,
     GAME_EVENT_SETPHYSICSBLOCKPOS           = 40,
-    GAME_EVENT_SETPHYSICSBLOCKSELFROTATION  = 41
+    GAME_EVENT_SETPHYSICSBLOCKSELFROTATION  = 41,
+    GAME_EVENT_SETPHYSICSBLOCKTRANSLATION   = 42
   };
 
 class MotoGameEvent;
@@ -587,12 +588,12 @@ class MGE_SetDynamicBlockSelfRotation : public MotoGameEvent {
 
 class MGE_SetPhysicsBlockSelfRotation : public MotoGameEvent {
  public:
-  MGE_SetPhysicsBlockSelfRotation(int p_eventTime);
-  MGE_SetPhysicsBlockSelfRotation(int p_eventTime,
-                                  std::string p_blockID,
-                                  int   p_period,
-                                  int   p_startTime,
-                                  int   p_endTime);
+  MGE_SetPhysicsBlockSelfRotation(int eventTime);
+  MGE_SetPhysicsBlockSelfRotation(int eventTime,
+                                  std::string blockID,
+                                  int   torque,
+                                  int   startTime,
+                                  int   endTime);
   ~MGE_SetPhysicsBlockSelfRotation();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -606,7 +607,32 @@ class MGE_SetPhysicsBlockSelfRotation : public MotoGameEvent {
  private:
   std::string m_blockID;
   float m_angle;
-  int m_period;
+  int   m_torque;
+  int   m_startTime;
+  int   m_endTime;
+};
+
+
+class MGE_SetPhysicsBlockTranslation : public MotoGameEvent {
+ public:
+  MGE_SetPhysicsBlockTranslation(int eventTime);
+  MGE_SetPhysicsBlockTranslation(int eventTime, std::string blockID,
+				 float x, float y,
+				 int period, int startTime, int endTime);
+  ~MGE_SetPhysicsBlockTranslation();
+
+  void doAction(MotoGame *p_pMotoGame);
+  void serialize(DBuffer &Buffer);
+  void unserialize(DBuffer &Buffer);
+  static GameEventType SgetType();
+  GameEventType getType();
+
+  std::string toString();
+
+ private:
+  std::string m_blockID;
+  float m_x, m_y;
+  int   m_period;
   int   m_startTime;
   int   m_endTime;
 };
@@ -742,6 +768,7 @@ class MGE_SetDynamicBlockRotation : public MotoGameEvent {
   int   m_endTime;
 };
 
+// TODO::make it herit from MGE_SetDynamicBlockTranslation
 class MGE_SetDynamicBlockTranslation : public MotoGameEvent {
  public:
   MGE_SetDynamicBlockTranslation(int p_eventTime);
@@ -754,9 +781,9 @@ class MGE_SetDynamicBlockTranslation : public MotoGameEvent {
                                  int   p_endTime);
   ~MGE_SetDynamicBlockTranslation();
 
-  void doAction(MotoGame *p_pMotoGame);
-  void serialize(DBuffer &Buffer);
-  void unserialize(DBuffer &Buffer);
+  void doAction(MotoGame* pMotoGame);
+  void serialize(DBuffer& Buffer);
+  void unserialize(DBuffer& Buffer);
   static GameEventType SgetType();
   GameEventType getType();
 
