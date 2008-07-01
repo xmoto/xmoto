@@ -107,7 +107,6 @@ class SDynamicEntityMove : public SDynamicObject {
   virtual ~SDynamicEntityMove();
 
   void performMove(MotoGame* p_motoGame, int i_nbCents);
-  std::string getObjectId();
 
  protected:
   virtual void performXY(float *vx, float *vy, float *vAngle) = 0;
@@ -154,7 +153,6 @@ class SDynamicBlockMove : public SDynamicObject {
   virtual ~SDynamicBlockMove();
 
   void performMove(MotoGame* p_motoGame, int i_nbCents);
-  std::string getObjectId();
 
  protected:
   virtual void performXY(float *vx, float *vy, float *vAngle) = 0;
@@ -192,6 +190,54 @@ class SDynamicBlockTranslation : public SDynamicBlockMove, public SDynamicTransl
   void performXY(float *vx, float *vy, float *vAngle);
 
  private:
+};
+
+
+
+
+/* chipmunk blocks */
+
+class SPhysicBlockMove : public SDynamicObject {
+public:
+  SPhysicBlockMove(std::string blockName, int startTime, int endTime, int period);
+  virtual ~SPhysicBlockMove() {}
+  
+  void performMove(MotoGame* pMotoGame, int i_nbCents);
+
+protected:
+  virtual void applyForce() = 0;
+  Block* m_block;
+
+private:
+  std::string m_blockName;
+};
+
+class SPhysicBlockSelfRotation : public SPhysicBlockMove {
+public:
+  SPhysicBlockSelfRotation(std::string blockName, int startTime, int endTime, int torque);
+  virtual ~SPhysicBlockSelfRotation() {}
+
+  void applyForce();
+
+protected:
+  float m_torque;
+};
+
+class SPhysicBlockTranslation : public SPhysicBlockMove {
+public:
+  SPhysicBlockTranslation(std::string blockName, float x, float y, int period, int startTime, int endTime);
+  virtual ~SPhysicBlockTranslation() {}
+
+  void applyForce();
+protected:
+  float m_Speed;
+  float m_X, m_Y;
+
+  bool m_sensUp;
+  float m_moveX;
+  float m_moveY;
+  float m_totalMoveX;
+  float m_totalMoveY;
 };
 
 #endif /* __SCRIPTDYNAMICOBJECTS_H__ */

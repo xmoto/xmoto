@@ -147,6 +147,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       v_event = new MGE_SetDynamicBlockSelfRotation(v_eventTime);
     } else if(MGE_SetPhysicsBlockSelfRotation::SgetType() == v_eventType) {
       v_event = new MGE_SetPhysicsBlockSelfRotation(v_eventTime);
+    } else if(MGE_SetPhysicsBlockTranslation::SgetType() == v_eventType) {
+      v_event = new MGE_SetPhysicsBlockTranslation(v_eventTime);
     } else if(MGE_SetDynamicEntitySelfRotation::SgetType() == v_eventType) {
       v_event = new MGE_SetDynamicEntitySelfRotation(v_eventTime);
     } else if(MGE_CameraRotate::SgetType() == v_eventType) {
@@ -1781,65 +1783,154 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   //////////////////////////////
 
-  MGE_SetPhysicsBlockSelfRotation::MGE_SetPhysicsBlockSelfRotation(int p_eventTime)
-  : MotoGameEvent(p_eventTime) {
-    m_blockID   = "";
-    m_period    = 0;
-    m_startTime  = 0;
-    m_endTime    = 0;
-  }
 
-  MGE_SetPhysicsBlockSelfRotation::MGE_SetPhysicsBlockSelfRotation(int p_eventTime,
-                                                                   std::string p_blockID,
-                                                                   int p_period,
-                                                                   int   p_startTime,
-                                                                 int   p_endTime)
-  : MotoGameEvent(p_eventTime){
-    m_blockID   = p_blockID;
-    m_period   = p_period;
-    m_startTime = p_startTime;
-    m_endTime   = p_endTime;
-  }
 
-  MGE_SetPhysicsBlockSelfRotation::~MGE_SetPhysicsBlockSelfRotation() {
-  }
 
-  void MGE_SetPhysicsBlockSelfRotation::doAction(MotoGame *p_pMotoGame) {
-    p_pMotoGame->addDynamicObject(new SDynamicBlockSelfRotation(m_blockID,
-                                                                m_period,
-                                                                m_startTime, m_endTime));
-  }
 
-  void MGE_SetPhysicsBlockSelfRotation::serialize(DBuffer &Buffer) {
-    MotoGameEvent::serialize(Buffer);
-    Buffer << m_blockID;
-    Buffer << GameApp::timeToFloat(m_period*100);
-    Buffer << m_startTime;
-    Buffer << m_endTime;
-  }
+MGE_SetPhysicsBlockSelfRotation::MGE_SetPhysicsBlockSelfRotation(int eventTime)
+  : MotoGameEvent(eventTime)
+{
+  m_blockID   = "";
+  m_torque    = 0;
+  m_startTime = 0;
+  m_endTime   = 0;
+}
 
-  void MGE_SetPhysicsBlockSelfRotation::unserialize(DBuffer &Buffer) {
-    float v_fperiod;
+MGE_SetPhysicsBlockSelfRotation::MGE_SetPhysicsBlockSelfRotation(int eventTime,
+								 std::string blockID,
+								 int torque,
+								 int startTime,
+                                                                 int endTime)
+  : MotoGameEvent(eventTime)
+{
+  m_blockID   = blockID;
+  m_torque    = torque;
+  m_startTime = startTime;
+  m_endTime   = endTime;
+}
 
-    Buffer >> m_blockID;
-    Buffer >> v_fperiod;
-    Buffer >> m_startTime;
-    Buffer >> m_endTime;
+MGE_SetPhysicsBlockSelfRotation::~MGE_SetPhysicsBlockSelfRotation()
+{
+}
 
-    m_period = GameApp::floatToTime(v_fperiod/100);
-  }
+  void MGE_SetPhysicsBlockSelfRotation::doAction(MotoGame *p_pMotoGame)
+{
+  p_pMotoGame->addDynamicObject(new SPhysicBlockSelfRotation(m_blockID,
+							     m_startTime, m_endTime,
+							     m_torque));
+}
 
-  GameEventType MGE_SetPhysicsBlockSelfRotation::SgetType() {
-    return GAME_EVENT_SETPHYSICSBLOCKSELFROTATION;
-  }
+void MGE_SetPhysicsBlockSelfRotation::serialize(DBuffer &Buffer)
+{
+  MotoGameEvent::serialize(Buffer);
+  Buffer << m_blockID;
+  Buffer << m_torque;
+  Buffer << m_startTime;
+  Buffer << m_endTime;
+}
+
+void MGE_SetPhysicsBlockSelfRotation::unserialize(DBuffer &Buffer)
+{
+  Buffer >> m_blockID;
+  Buffer >> m_torque;
+  Buffer >> m_startTime;
+  Buffer >> m_endTime;
+}
+
+GameEventType MGE_SetPhysicsBlockSelfRotation::SgetType()
+{
+  return GAME_EVENT_SETPHYSICSBLOCKSELFROTATION;
+}
   
-  GameEventType MGE_SetPhysicsBlockSelfRotation::getType() {
-    return SgetType();
-  }
+GameEventType MGE_SetPhysicsBlockSelfRotation::getType()
+{
+  return SgetType();
+}
   
-  std::string MGE_SetPhysicsBlockSelfRotation::toString() {
-    return "Dynamic self rotation is set for block " + m_blockID;
-  }
+std::string MGE_SetPhysicsBlockSelfRotation::toString()
+{
+  return "Physic self rotation is set for block " + m_blockID;
+}
+
+
+
+
+MGE_SetPhysicsBlockTranslation::MGE_SetPhysicsBlockTranslation(int eventTime)
+  : MotoGameEvent(eventTime)
+{
+  m_blockID   = "";
+  m_x = m_y   = 0.0f;
+  m_period    = 0;
+  m_startTime = 0;
+  m_endTime   = 0;
+}
+
+MGE_SetPhysicsBlockTranslation::MGE_SetPhysicsBlockTranslation(int eventTime, std::string blockID,
+							       float x, float y,
+							       int period, int startTime, int endTime)
+  : MotoGameEvent(eventTime)
+{
+  m_blockID = blockID;
+  m_x = x;
+  m_y = y;
+  m_period    = period;
+  m_startTime = startTime;
+  m_endTime   = endTime;
+}
+
+MGE_SetPhysicsBlockTranslation::~MGE_SetPhysicsBlockTranslation()
+{
+}
+
+void MGE_SetPhysicsBlockTranslation::doAction(MotoGame* pMotoGame)
+{
+  pMotoGame->addDynamicObject(new SPhysicBlockTranslation(m_blockID,
+							  m_x, m_y,
+							  m_period,
+							  m_startTime, m_endTime));
+}
+
+void MGE_SetPhysicsBlockTranslation::serialize(DBuffer &Buffer)
+{
+  MotoGameEvent::serialize(Buffer);
+  Buffer << m_blockID;
+  Buffer << m_x;
+  Buffer << m_y;
+  Buffer << GameApp::timeToFloat(m_period*100);
+  Buffer << m_startTime;
+  Buffer << m_endTime;
+}
+
+void MGE_SetPhysicsBlockTranslation::unserialize(DBuffer &Buffer)
+{
+  float v_fperiod;
+
+  Buffer >> m_blockID;
+  Buffer >> m_x;
+  Buffer >> m_y;
+  Buffer >> v_fperiod;
+  Buffer >> m_startTime;
+  Buffer >> m_endTime;
+
+  m_period = GameApp::floatToTime(v_fperiod)/100;
+}
+
+GameEventType MGE_SetPhysicsBlockTranslation::SgetType()
+{
+  return GAME_EVENT_SETPHYSICSBLOCKTRANSLATION;
+}
+
+GameEventType MGE_SetPhysicsBlockTranslation::getType()
+{
+  return SgetType();
+}
+
+std::string MGE_SetPhysicsBlockTranslation::toString()
+{
+  return "Physic translation is set for block " + m_blockID;
+}
+
+
 
   //////////////////////////////
 

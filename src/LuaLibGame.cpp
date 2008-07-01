@@ -59,6 +59,7 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"SetDynamicBlockRotation",      LuaLibGame::L_Game_SetDynamicBlockRotation},
   {"SetDynamicBlockSelfRotation",  LuaLibGame::L_Game_SetDynamicBlockSelfRotation},
   {"SetPhysicsBlockSelfRotation",  LuaLibGame::L_Game_SetPhysicsBlockSelfRotation},
+  {"SetPhysicsBlockTranslation",   LuaLibGame::L_Game_SetPhysicsBlockTranslation},
   {"SetDynamicBlockTranslation",   LuaLibGame::L_Game_SetDynamicBlockTranslation},
   {"SetDynamicBlockNone",          LuaLibGame::L_Game_SetDynamicBlockNone},
   {"CameraZoom",        	   LuaLibGame::L_Game_CameraZoom},
@@ -603,6 +604,19 @@ int LuaLibGame::L_Game_SetPhysicsBlockSelfRotation(lua_State *pL) {
 								    (int)(X_luaL_check_number(pL,2)),
 								    (int)X_luaL_check_number(pL,3),
 								    (int)X_luaL_check_number(pL,4))); 
+  return 0;
+}
+
+int LuaLibGame::L_Game_SetPhysicsBlockTranslation(lua_State* pL)
+{
+  m_exec_world->createGameEvent(new MGE_SetPhysicsBlockTranslation(m_exec_world->getTime(),
+								   luaL_checkstring(pL, 1),
+								   X_luaL_check_number(pL, 2),
+								   X_luaL_check_number(pL, 3),
+								   (int)X_luaL_check_number(pL, 4),
+								   (int)X_luaL_check_number(pL, 5),
+								   (int)X_luaL_check_number(pL, 6)));
+
   return 0;
 }
 
