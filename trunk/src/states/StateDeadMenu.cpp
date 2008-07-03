@@ -163,7 +163,7 @@ void StateDeadMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
   }
 }
 
-void StateDeadMenu::keyDown(int nKey, SDLMod mod,int nChar)
+void StateDeadMenu::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   if(nKey == SDLK_ESCAPE){
     /* quit this state */
@@ -173,7 +173,7 @@ void StateDeadMenu::keyDown(int nKey, SDLMod mod,int nChar)
     m_requestForEnd = true;
   }
   else {
-    StateMenu::keyDown(nKey, mod, nChar);
+    StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
   }
 }
 

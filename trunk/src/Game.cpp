@@ -249,15 +249,15 @@ GameApp::GameApp() {
   /*===========================================================================
   Key down event
   ===========================================================================*/
-void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
-  StateManager::instance()->keyDown(nKey, mod, nChar);
+void GameApp::keyDown(int nKey, SDLMod mod, int nChar, const std::string& i_utf8Char) {
+  StateManager::instance()->keyDown(nKey, mod, nChar, i_utf8Char);
 }
 
 /*===========================================================================
   Key up event
   ===========================================================================*/
-  void GameApp::keyUp(int nKey, SDLMod mod) {
-    StateManager::instance()->keyUp(nKey, mod);
+  void GameApp::keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char) {
+    StateManager::instance()->keyUp(nKey, mod, i_utf8Char);
   }
 
 void GameApp::changeFocus(bool i_hasFocus) {

@@ -186,7 +186,7 @@ bool StatePlaying::update()
   return true;
 }
 
-void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
+void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   if(nKey == SDLK_ESCAPE){
     if(isLockedScene() == false) {
@@ -279,12 +279,12 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
     }
   }
 
-  StateScene::keyDown(nKey, mod, nChar);
+  StateScene::keyDown(nKey, mod, nChar, i_utf8Char);
 }
 
-void StatePlaying::keyUp(int nKey, SDLMod mod) {
+void StatePlaying::keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char) {
   InputHandler::instance()->handleInput(m_universe, INPUT_KEY_UP, nKey, mod);
-  StateScene::keyUp(nKey, mod);
+  StateScene::keyUp(nKey, mod, i_utf8Char);
 }
 
 void StatePlaying::mouseDown(int nButton)

@@ -34,7 +34,7 @@ class StateHelp : public StateMenu {
   virtual void leave();
 
   /* input */
-  virtual void keyDown(int nKey, SDLMod mod, int nChar);
+  virtual void keyDown(int nKey, SDLMod mod, int nChar, const std::string& i_utf8Char);
 
  protected:
   virtual void checkEvents();

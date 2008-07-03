@@ -163,9 +163,9 @@ void StateLevelPackViewer::send(const std::string& i_id, const std::string& i_me
   StateMenu::send(i_id, i_message);
 }
 
-void StateLevelPackViewer::keyDown(int nKey, SDLMod mod,int nChar)
+void StateLevelPackViewer::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
-  StateMenu::keyDown(nKey, mod, nChar);
+  StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
 
   if(nKey == SDLK_ESCAPE){
     m_requestForEnd = true;

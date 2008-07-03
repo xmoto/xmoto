@@ -29,7 +29,7 @@ public:
 	    bool updateStatesBehind = false);
   virtual ~StateSync();
 
-  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
 
 protected:
   virtual void callAfterThreadFinished(int threadResult);

@@ -41,7 +41,7 @@ class StateMainMenu : public StateMenu {
   
   virtual bool render();
   /* input */
-  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
   
   static void clean();
   static void refreshStaticCaptions();

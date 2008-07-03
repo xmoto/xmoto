@@ -171,8 +171,8 @@ public:
   virtual void mouseRDown(int x,int y) {}
   virtual void mouseRUp(int x,int y) {}
   virtual void mouseHover(int x,int y) {}
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar) {return false;}
-  virtual bool keyUp(int nKey, SDLMod mod) {return false;}
+  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {return false;}
+  virtual bool keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char) {return false;}
   virtual bool offerActivation(void) {return false;}
   virtual bool offerMouseEvent(void) {return true;}
   virtual std::string subContextHelp(int x,int y) {return "";}
@@ -291,7 +291,7 @@ public:
     
   /* Methods */
   virtual void paint(void);
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar);
+  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
       
   virtual bool offerActivation(void) {return true;}
   void hideText(bool bHideText) {m_hideText=bHideText;} 
@@ -401,7 +401,7 @@ public:
     
   /* Virtual methods */
   virtual void paint(void);      
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar);
+  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
   virtual bool offerActivation(void) {if(m_bTextInput) return true; return false;}
     
   /* Methods */
@@ -447,7 +447,7 @@ public:
   }      
 
   /* Virtual methods */
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar);
+  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
 };
 
 /*===========================================================================
@@ -535,7 +535,7 @@ public:
   virtual void mouseRUp(int x,int y);
   virtual void mouseHover(int x,int y);      
   virtual bool offerActivation(void);
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar);
+  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
       
   /* Data interface */
   UIButtonState getState(void) {return m_State;}
@@ -613,7 +613,7 @@ public:
   virtual void mouseWheelDown(int x,int y);
   virtual void mouseHover(int x,int y);      
   virtual bool offerActivation(void);
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar);
+  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
 
   virtual std::string subContextHelp(int x,int y);
       
@@ -806,8 +806,8 @@ public:
   virtual void mouseHover(int x,int y);
   virtual void mouseWheelUp(int x,int y);
   virtual void mouseWheelDown(int x,int y);
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar);      
-  virtual bool keyUp(int nKey, SDLMod mod);  
+  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);      
+  virtual bool keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char);  
       
   void deactivate(UIWindow *pWindow);
 
@@ -832,7 +832,7 @@ private:
   GameApp *m_pApp; /* Application */      
 
   /* Helpers */      
-  bool _RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey, SDLMod mod,int nChar);
+  bool _RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
   bool _RootMouseEvent(UIWindow *pWindow,UIRootMouseEvent Event,int x,int y);
   void _RootPaint(int x,int y,UIWindow *pWindow,UIRect *pRect);
   void _ClipRect(UIRect *pRect,UIRect *pClipWith);

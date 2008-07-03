@@ -255,7 +255,7 @@ bool StatePreplaying::render()
   return true;
 }
 
-void StatePreplaying::keyDown(int nKey, SDLMod mod,int nChar)
+void StatePreplaying::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   m_playAnimation = false;
 }

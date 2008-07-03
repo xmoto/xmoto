@@ -76,7 +76,7 @@ bool StateUpdateTheme::callBeforeLaunchingThread()
   return true;
 }
 
-void StateUpdateTheme::keyDown(int nKey, SDLMod mod,int nChar) {
+void StateUpdateTheme::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
   if(nKey == SDLK_ESCAPE) {
     m_pThread->askThreadToEnd();
   } else if(nKey == SDLK_k && (mod & KMOD_CTRL) != 0) {

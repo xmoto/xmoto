@@ -136,7 +136,7 @@ void StatePause::checkEvents() {
   }
 }
 
-void StatePause::keyDown(int nKey, SDLMod mod,int nChar)
+void StatePause::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   switch(nKey) {
 
@@ -154,7 +154,7 @@ void StatePause::keyDown(int nKey, SDLMod mod,int nChar)
     break;
 
   default:
-    StateMenu::keyDown(nKey, mod, nChar);
+    StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
     break;
   }
 }

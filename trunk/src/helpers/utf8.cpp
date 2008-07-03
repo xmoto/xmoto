@@ -65,8 +65,10 @@ std::vector<std::string> utf8::split_utf8_string(const std::string &src) {
 std::string utf8::getNextChar(const std::string& src, unsigned int& io_pos) {
   std::string v_res;
   const int size = byte_size_from_utf8_first(src[io_pos]);
-  if(io_pos + size > src.size())
+  if(io_pos + size > src.size()) {
+    //printf("%i + %i > %i (%s)\n", io_pos, size, src.size(), src.c_str());
     throw Exception("Invalid utf-8 char");
+  }
   v_res = src.substr(io_pos, size);
   io_pos += size;
 
@@ -76,10 +78,11 @@ std::string utf8::getNextChar(const std::string& src, unsigned int& io_pos) {
 void utf8::getNextChar(const std::string &src, unsigned int& io_pos, std::string& o_char)
 {
  const int size = byte_size_from_utf8_first(src[io_pos]);
-  if(io_pos + size > src.size())
-    throw Exception("Invalid utf-8 char");
-  o_char = src.substr(io_pos, size);
-  io_pos += size;
+ if(io_pos + size > src.size()) {
+   throw Exception("Invalid utf-8 char");
+ }
+ o_char = src.substr(io_pos, size);
+ io_pos += size;
 }
 
 std::string utf8::txt2vertical(const std::string& i_str) {

@@ -68,8 +68,8 @@ public:
 
   /* ** */
   void drawFrame(void);
-  void keyDown(int nKey, SDLMod mod,int nChar);
-  void keyUp(int nKey, SDLMod mod);
+  void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  void keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char);
   void mouseDown(int nButton);
   void mouseDoubleClick(int nButton);
   void mouseUp(int nButton);

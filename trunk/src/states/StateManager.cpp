@@ -344,18 +344,18 @@ void StateManager::drawCursor() {
   }
 }
 
-void StateManager::keyDown(int nKey, SDLMod mod,int nChar)
+void StateManager::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   if(m_statesStack.size() == 0)
     return;
-  (m_statesStack.back())->keyDown(nKey, mod, nChar);
+  (m_statesStack.back())->keyDown(nKey, mod, nChar, i_utf8Char);
 }
 
-void StateManager::keyUp(int nKey,   SDLMod mod)
+void StateManager::keyUp(int nKey,   SDLMod mod, const std::string& i_utf8Char)
 {
   if(m_statesStack.size() == 0)
     return;
-  (m_statesStack.back())->keyUp(nKey, mod);
+  (m_statesStack.back())->keyUp(nKey, mod, i_utf8Char);
 }
 
 void StateManager::mouseDown(int nButton)
@@ -654,7 +654,7 @@ void GameState::executeOneCommand(std::string cmd)
   // default one do nothing.
 }
 
-void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
+void GameState::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
   GameApp* gameApp = GameApp::instance();
 
   if(nKey == SDLK_F12) {
