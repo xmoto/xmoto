@@ -51,8 +51,8 @@ public:
   virtual void onRenderFlush() {}
 
   /* input */
-  virtual void keyDown(int nKey, SDLMod mod,int nChar);
-  virtual void keyUp(int nKey,   SDLMod mod) {}
+  virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual void keyUp(int nKey,   SDLMod mod, const std::string& i_utf8Char) {}
   virtual void mouseDown(int nButton) {}
   virtual void mouseDoubleClick(int nButton) {}
   virtual void mouseUp(int nButton) {}
@@ -164,8 +164,8 @@ public:
   void update();
   void render();
   /* input */
-  void keyDown(int nKey, SDLMod mod,int nChar);
-  void keyUp(int nKey,   SDLMod mod);
+  void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  void keyUp(int nKey,   SDLMod mod, const std::string& i_utf8Char);
   void mouseDown(int nButton);
   void mouseDoubleClick(int nButton);
   void mouseUp(int nButton);

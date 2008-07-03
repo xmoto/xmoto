@@ -34,7 +34,7 @@ StateSync::~StateSync() {
   delete m_pThread;
 }
 
-void StateSync::keyDown(int nKey, SDLMod mod,int nChar) {
+void StateSync::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
 }
 
 void StateSync::checkEvents() {

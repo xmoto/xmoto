@@ -202,7 +202,7 @@ void StateScene::onRenderFlush() {
   }
 }
 
-void StateScene::keyUp(int nKey, SDLMod mod) {
+void StateScene::keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char) {
   switch(nKey) {
   case SDLK_TAB:
     if(m_cameraAnim != NULL) {
@@ -214,7 +214,7 @@ void StateScene::keyUp(int nKey, SDLMod mod) {
   }
 }
 
-void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
+void StateScene::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   GameApp*  pGame = GameApp::instance();
 
@@ -328,7 +328,7 @@ void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
       setAutoZoom(true);
     }
   } else{
-    GameState::keyDown(nKey, mod, nChar);
+    GameState::keyDown(nKey, mod, nChar, i_utf8Char);
   }
 }
 

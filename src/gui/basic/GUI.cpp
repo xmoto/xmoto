@@ -206,7 +206,7 @@ bool UIWindow::isUglyMode() {
   /*===========================================================================
   Special message box for querying keypresses
   ===========================================================================*/    
-  bool UIQueryKeyBox::keyDown(int nKey, SDLMod mod,int nChar) {
+  bool UIQueryKeyBox::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
     //    MessageBox(NULL,"HELLO",NULL,MB_OK);
     return false;
   }
@@ -317,7 +317,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     }
   }
   
-  bool UIMsgBox::keyDown(int nKey, SDLMod mod,int nChar) {
+  bool UIMsgBox::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
     switch(nKey) {
       case SDLK_ESCAPE:
         if(!setClicked(GAMETEXT_CANCEL))
@@ -818,8 +818,8 @@ UIRoot::UIRoot()
     _RootMouseEvent(this,UI_ROOT_MOUSE_WHEEL_DOWN,x,y);
   } 
   
-  bool UIRoot::keyDown(int nKey, SDLMod mod,int nChar) {
-    if(!_RootKeyEvent(this,UI_ROOT_KEY_DOWN,nKey,mod, nChar)) {
+  bool UIRoot::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
+    if(!_RootKeyEvent(this,UI_ROOT_KEY_DOWN,nKey,mod, nChar, i_utf8Char)) {
       switch(nKey) {
         case SDLK_UP:
           activateUp();
@@ -845,17 +845,17 @@ UIRoot::UIRoot()
     return true;
   }
   
-  bool UIRoot::keyUp(int nKey, SDLMod mod) {
-    return _RootKeyEvent(this,UI_ROOT_KEY_UP,nKey,mod, 0);   
+  bool UIRoot::keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char) {
+    return _RootKeyEvent(this,UI_ROOT_KEY_UP,nKey,mod, 0, i_utf8Char);
   }
   
-  bool UIRoot::_RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey, SDLMod mod,int nChar) {
+  bool UIRoot::_RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
     /* Hidden or disabled? */
     if(pWindow->isHidden() || pWindow->isDisabled()) return false;
 
     /* First try if any children want it */
     for(unsigned int i=0;i<pWindow->getChildren().size();i++) {
-      if(_RootKeyEvent(pWindow->getChildren()[i],Event,nKey,mod,nChar))
+      if(_RootKeyEvent(pWindow->getChildren()[i],Event,nKey,mod,nChar, i_utf8Char))
         return true;
     }
 
@@ -864,8 +864,8 @@ UIRoot::UIRoot()
       bool b = false;
     
       switch(Event) {
-        case UI_ROOT_KEY_DOWN: b=pWindow->keyDown(nKey, mod,nChar); break;
-        case UI_ROOT_KEY_UP: b=pWindow->keyUp(nKey, mod); break;        
+      case UI_ROOT_KEY_DOWN: b=pWindow->keyDown(nKey, mod,nChar, i_utf8Char); break;
+      case UI_ROOT_KEY_UP: b=pWindow->keyUp(nKey, mod, i_utf8Char); break;        
       }
       
       return b;

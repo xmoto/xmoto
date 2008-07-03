@@ -258,7 +258,7 @@ void StateFinished::send(const std::string& i_id, UIMsgBoxButton i_button, const
   }
 }
 
-void StateFinished::keyDown(int nKey, SDLMod mod,int nChar)
+void StateFinished::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   switch(nKey) {
 
@@ -271,7 +271,7 @@ void StateFinished::keyDown(int nKey, SDLMod mod,int nChar)
     break;
 
   default:
-    StateMenu::keyDown(nKey, mod, nChar);
+    StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
     break;
 
   }

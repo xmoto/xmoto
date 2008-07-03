@@ -63,3 +63,40 @@ std::string formatTime(int i_time) {
   snprintf(cBuf, 256, "%02d:%02d:%02d", nM, nS, nH);
   return cBuf;
 }
+
+/*
+  Part of
+  GNOME Commander - A GNOME based file manager
+  Copyright (C) 2001-2006 Marcus Bjurman
+*/
+std::string unicode2utf8(unsigned int unicode) {
+  char v_res[5];
+  int bytes_needed = 0;
+  if (unicode<0x80) {
+    bytes_needed = 1;
+    v_res[0] = (unsigned char)(unicode&0xFF);
+  }
+  else
+    if (unicode<0x0800) {
+      bytes_needed = 2;
+      v_res[0] = (unsigned char)(unicode>>6 | 0xC0);
+      v_res[1] = (unsigned char)((unicode&0x3F)| 0x80);
+    }
+    else
+      if (unicode<0x10000) {
+        bytes_needed = 3;
+        v_res[0] = (unsigned char)((unicode>>12) | 0xE0);
+        v_res[1] = (unsigned char)(((unicode>>6) & 0x3F) | 0x80);
+        v_res[2] = (unsigned char)((unicode & 0x3F) | 0x80);
+      }
+      else {
+        bytes_needed = 4;
+        v_res[0] = (unsigned char)((unicode>>18) | 0xE0);
+        v_res[1] = (unsigned char)(((unicode>>12) & 0x3F) | 0x80);
+        v_res[2] = (unsigned char)(((unicode>>6) & 0x3F) | 0x80);
+        v_res[3] = (unsigned char)((unicode & 0x3F) | 0x80);
+      }
+  
+  v_res[bytes_needed] = '\0';
+  return v_res;
+}

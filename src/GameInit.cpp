@@ -40,6 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "Packager.h"
 #include "helpers/SwapEndian.h"
+#include "helpers/Text.h"
 #include "SysMessage.h"
 #include "gui/specific/GUIXMoto.h"
 #include "Credits.h"
@@ -427,17 +428,22 @@ void GameApp::manageEvent(SDL_Event* Event) {
   static int nLastMouseClickButton = -100;
   static float fLastMouseClickTime = 0.0f;
   int nX,nY;
-  
+  std::string utf8Char;  
+
   /* What event? */
   switch(Event->type) {
   case SDL_KEYDOWN: 
+    utf8Char = unicode2utf8(Event->key.keysym.unicode);
+
+    /* if somebody understand this... */
     if((Event->key.keysym.unicode&0xff80)==0) {
       ch = Event->key.keysym.unicode & 0x7F;
     }
-    keyDown(Event->key.keysym.sym, Event->key.keysym.mod, ch);            
+    keyDown(Event->key.keysym.sym, Event->key.keysym.mod, ch, utf8Char);
     break;
   case SDL_KEYUP: 
-    keyUp(Event->key.keysym.sym, Event->key.keysym.mod);            
+    utf8Char = unicode2utf8(Event->key.keysym.unicode);
+    keyUp(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char);            
     break;
   case SDL_QUIT:  
     /* Force quit */

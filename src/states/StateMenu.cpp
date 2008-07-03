@@ -85,12 +85,12 @@ bool StateMenu::render()
   return true;
 }
 
-void StateMenu::keyDown(int nKey, SDLMod mod,int nChar)
+void StateMenu::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
-  GameState::keyDown(nKey, mod, nChar);
+  GameState::keyDown(nKey, mod, nChar, i_utf8Char);
 
   if((mod & (KMOD_CTRL|KMOD_ALT|KMOD_META)) == 0) {
-    m_GUI->keyDown(nKey, mod, nChar);
+    m_GUI->keyDown(nKey, mod, nChar, i_utf8Char);
   }
   checkEvents();
 
@@ -99,9 +99,9 @@ void StateMenu::keyDown(int nKey, SDLMod mod,int nChar)
   }
 }
 
-void StateMenu::keyUp(int nKey, SDLMod mod)
+void StateMenu::keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char)
 {
-  m_GUI->keyUp(nKey, mod);
+  m_GUI->keyUp(nKey, mod, i_utf8Char);
   checkEvents();
 }
 

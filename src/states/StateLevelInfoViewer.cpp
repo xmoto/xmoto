@@ -167,9 +167,9 @@ void StateLevelInfoViewer::executeOneCommand(std::string cmd) {
   }
 }
 
-void StateLevelInfoViewer::keyDown(int nKey, SDLMod mod,int nChar)
+void StateLevelInfoViewer::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
-  StateMenu::keyDown(nKey, mod, nChar);
+  StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
 
   if(nKey == SDLK_ESCAPE){
     m_requestForEnd = true;

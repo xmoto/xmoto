@@ -751,7 +751,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Up/down keys select elements
   ===========================================================================*/
-  bool UIList::keyDown(int nKey, SDLMod mod,int nChar) {
+  bool UIList::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
     switch(nKey) {
       case SDLK_RETURN: 
         /* Uhh... send this to the default button, if any. And if anything is selected */

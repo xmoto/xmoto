@@ -236,7 +236,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Keyboard event handling
   ===========================================================================*/
-  bool UIButton::keyDown(int nKey, SDLMod mod,int nChar) {
+  bool UIButton::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
     switch(nKey) {
       case SDLK_UP:
         getRoot()->activateUp();

@@ -40,8 +40,8 @@ class StatePlaying : public StateScene {
   virtual void restartLevel(bool i_reloadLevel = false);
 
   /* input */
-  virtual void keyDown(int nKey, SDLMod mod,int nChar);
-  virtual void keyUp(int nKey,   SDLMod mod);
+  virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual void keyUp(int nKey,   SDLMod mod, const std::string& i_utf8Char);
   virtual void mouseDown(int nButton);
   virtual void mouseUp(int nButton);
   virtual bool renderOverShadow();

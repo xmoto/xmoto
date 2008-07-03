@@ -31,7 +31,7 @@ class StateDeadJust : public StateScene {
   virtual void enter();
   
   /* input */
-  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
 
   virtual void restartLevel(bool i_reloadLevel = false);
   virtual void nextLevel(bool i_positifOrder = true);
