@@ -23,7 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "GUI.h"
 #include "drawlib/DrawLib.h"
-#include "../../Game.h"
+#include "Game.h"
+#include "helpers/utf8.h"
 
   /*===========================================================================
   Painting
@@ -31,11 +32,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 void UIEdit::paint(void) {
   bool bDisabled = isDisabled();
   bool bActive = isActive();
-  std::string v_textToDisplay;    
+  std::string v_textToDisplay;
+  std::string v_textPart1;
 
   if(m_hideText) {
     v_textToDisplay = "";
-    for(unsigned int i=0; i<getCaption().length(); i++) {
+    for(unsigned int i=0; i<utf8::utf8_length(getCaption()); i++) {
       v_textToDisplay.append("*");
     }
   } else {
@@ -45,25 +47,21 @@ void UIEdit::paint(void) {
   /* Where should cursor be located? */
   int nCursorOffset = 0;
   int nCursorWidth = 0;
-  if(m_nCursorPos < 0) {
-    m_nCursorPos = 0;
-  }
 
-  if((unsigned int)m_nCursorPos > v_textToDisplay.length()){
-    m_nCursorPos = v_textToDisplay.length();
-  }
-  std::string s = v_textToDisplay.substr(0, m_nCursorPos);
+  std::string s = utf8::utf8_substring(v_textToDisplay, 0, m_nCursorPos);
 
-  if(!s.empty()) {
+  /* cursor offset */
+  if(s != "") {
     FontManager* fm = getFont();
     FontGlyph* fg   = fm->getGlyph(s);
     nCursorOffset   = fg->realWidth();
   }
 
-  if((unsigned int)m_nCursorPos == v_textToDisplay.length()) {
+  /* cursor */
+  if(m_nCursorPos == (int) utf8::utf8_length(v_textToDisplay)) {
     nCursorWidth = 6;
   } else {
-    s = v_textToDisplay.substr(m_nCursorPos,1);
+    std::string s = utf8::utf8_substring(v_textToDisplay, m_nCursorPos, 1);
     FontManager* fm = getFont();
     FontGlyph* fg = fm->getGlyph(s);
     nCursorWidth = fg->realWidth();
@@ -117,54 +115,52 @@ void UIEdit::paint(void) {
           getRoot()->activateLeft();
         return true;
       case SDLK_RIGHT:
-        if((unsigned int)m_nCursorPos < getCaption().length())
-          m_nCursorPos++;
+	if(m_nCursorPos < (int) utf8::utf8_length(getCaption())) {
+	  m_nCursorPos++;
+	}
         else
           getRoot()->activateRight();
         return true;
       case SDLK_RETURN:
         return true;
       case SDLK_END:
-        m_nCursorPos = getCaption().length();
+        m_nCursorPos = utf8::utf8_length(getCaption());
         return true;
       case SDLK_HOME:
         m_nCursorPos = 0;
         return true;
       case SDLK_DELETE: {
-          std::string s = getCaption();
-          if(!s.empty() && (unsigned int)m_nCursorPos < s.length()) {
-            s.erase(s.begin()+m_nCursorPos);
-            setCaption(s);
-          }
-        }
+	std::string s = getCaption();
+
+	if(m_nCursorPos < (int) utf8::utf8_length(s)) {
+	  setCaption(utf8::utf8_delete(s, m_nCursorPos+1));
+	}
+      }
         return true;
       case SDLK_BACKSPACE: {
-          std::string s = getCaption();
-          if(!s.empty() && m_nCursorPos>0) {
-            s.erase(s.begin()+m_nCursorPos-1);
-            setCaption(s);
-            m_nCursorPos--;
-          }
-        }
+	std::string s = getCaption();
+
+	if(m_nCursorPos > 0) {
+	  setCaption(utf8::utf8_delete(s, m_nCursorPos));
+	  m_nCursorPos--;
+	}
+
+      }
         return true;
     default:
-        if(nChar) {
-          char c[2];
-          c[0] = nChar;
-          c[1] = '\0';
-          std::string s = getCaption();
-          
-          if((unsigned int)m_nCursorPos == s.length()) {
-            s.append(c);
-          }
-          else {
-            s.insert(s.begin() + m_nCursorPos,c[0]);
-          }
-          m_nCursorPos++;
-          setCaption(s);
-          return true;
-        }
-        break;
+      if(utf8::utf8_length(i_utf8Char) == 1) { // alt/... and special keys must not be kept
+	std::string s = getCaption();
+ 
+	if((unsigned int)m_nCursorPos == s.length()) {
+	  s = utf8::utf8_concat(s, i_utf8Char);
+	} else {
+	  s = utf8::utf8_insert(s, i_utf8Char, m_nCursorPos);
+	}
+	m_nCursorPos++;
+	setCaption(s);
+	return true;
+      }
+      break;
     }
     
     return false;
