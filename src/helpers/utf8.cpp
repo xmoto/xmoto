@@ -98,3 +98,76 @@ std::string utf8::txt2vertical(const std::string& i_str) {
   }
   return v_res;
 }
+
+std::string utf8::utf8_concat(const std::string& i_a, const std::string& i_b) {
+  return i_a + i_b;
+}
+
+std::string utf8::utf8_insert(const std::string& i_a, const std::string& i_b, unsigned int i_numChar) {
+  unsigned int n = 0; // utf-8 size for i_numChar
+  std::string v_res = i_a;
+
+  for(unsigned int i=0; i<i_numChar; i++) {
+    getNextChar(i_a, n);
+  }
+  for(unsigned int i=0; i<i_b.size(); i++) {
+    v_res.insert(v_res.begin() + n + i, i_b[i]);
+  }
+
+  return v_res;
+}
+
+std::string utf8::utf8_delete(const std::string& i_a, unsigned int i_numChar) {
+  unsigned int n=0;
+  unsigned int nbC=0;
+  std::string v_res;
+  std::string v_current;
+  
+  while(i_a.length() > n) {
+    v_current = getNextChar(i_a, n);
+    nbC++;
+    if(nbC != i_numChar) {
+      v_res += v_current;
+    }
+  }
+
+  return v_res;
+}
+
+unsigned int utf8::utf8_length(const std::string& i_a) {
+  unsigned int n=0;
+  unsigned int v_res = 0;
+
+  while(i_a.length() > n) {
+    getNextChar(i_a, n);
+    v_res++;
+  }
+
+  return v_res;
+}
+
+std::string utf8::utf8_substring(const std::string& i_a, unsigned int i_numChar, unsigned int i_nbChars) {
+  std::string v_res;
+  unsigned int n_begin=0;
+  unsigned int n_end;
+
+  for(unsigned int i=0; i<i_numChar; i++) {
+    if(i_a.length() > n_begin) {
+      getNextChar(i_a, n_begin);
+    } else {
+      throw Exception("Invalid utf-8 char splitting");
+    }
+  }
+
+  n_end = n_begin;
+  for(unsigned int i=0; i<i_nbChars; i++) {
+    if(i_a.length() > n_end) {
+      getNextChar(i_a, n_end);
+    } else {
+      throw Exception("Invalid utf-8 char splitting");
+    }
+  }
+
+  return i_a.substr(n_begin, n_end-n_begin);
+}
+

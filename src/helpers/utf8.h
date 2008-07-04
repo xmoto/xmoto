@@ -31,6 +31,12 @@ class utf8 {
   static std::string txt2vertical(const std::string& i_str);
   static std::string getNextChar(const std::string &src, unsigned int& io_pos);
   static void getNextChar(const std::string &src, unsigned int& io_pos, std::string& o_char);
+
+  static std::string utf8_concat(const std::string& i_a, const std::string& i_b);
+  static std::string utf8_insert(const std::string& i_a, const std::string& i_b, unsigned int i_numChar);
+  static std::string utf8_delete(const std::string& i_a, unsigned int i_numChar);
+  static unsigned int utf8_length(const std::string& i_a);
+  static std::string utf8_substring(const std::string& i_a, unsigned int i_numChar, unsigned int i_nbChars);
 };
 
 #endif
