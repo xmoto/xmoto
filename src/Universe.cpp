@@ -278,36 +278,13 @@ void Universe::initReplay() {
 void Universe::saveReplay(const std::string &Name) {
   /* This is simply a job of copying the Replays/Latest.rpl file into 
      Replays/Name.rpl */
-  std::string RealName = Name;
-  
-  /* Strip illegal characters from name */
-  unsigned int i=0;
-  while(1) {
-    if(i >= RealName.length())
-      break;
-    
-    if((RealName[i] >= 'a' && RealName[i] <= 'z') ||
-       (RealName[i] >= 'A' && RealName[i] <= 'Z') ||
-       (RealName[i] >= '0' && RealName[i] <= '9') ||
-       RealName[i]=='!' || RealName[i]=='@' || RealName[i]=='#' || RealName[i]=='&' ||
-       RealName[i]=='(' || RealName[i]==')' || RealName[i]=='-' || RealName[i]=='_' ||
-       RealName[i]==' ' || RealName[i]=='.' || RealName[i]==',' || RealName[i]=='*') {
-      /* This is ok */
-      i++;
-    }
-    else {
-      /* Not ok */
-      RealName.erase(RealName.begin() + i);
-    }            
-  }
 
   /* Try saving */
   std::string v_outputfile;
   if(!FS::copyFile("Replays/Latest.rpl",
-		   std::string("Replays/") + RealName + std::string(".rpl"),
+		   std::string("Replays/") + Name + std::string(".rpl"),
 		   v_outputfile)) {
-    Logger::Log("** Warning ** : Failed to save replay: %s",Name.c_str());
-    //notifyMsg(GAMETEXT_FAILEDTOSAVEREPLAY);
+    throw Exception("Failed to save replay " + Name);
   } else {
     /* Update replay list to reflect changes */
      GameApp::instance()->addReplay(v_outputfile);

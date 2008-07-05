@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "Game.h"
 #include "helpers/Log.h"
+#include "helpers/utf8.h"
 
   DrawLib* UIWindow::m_drawLib = NULL;
 
@@ -331,21 +332,20 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
         break;
       default:
         if(m_bTextInput) {
+
           switch(nKey) {
             case SDLK_BACKSPACE:
-              if(!m_TextInput.empty()) {
-                m_TextInput.erase(m_TextInput.end()-1);
-              }
+	      if(m_TextInput != "") {
+		m_TextInput = utf8::utf8_delete(m_TextInput, utf8::utf8_length(m_TextInput));
+	      }
               return true;
             default:
-              if(nChar) {
-                char c[2];
-                c[0] = nChar;
-                c[1] = '\0';
-                m_TextInput.append(c);
-              }
+	      if(utf8::utf8_length(i_utf8Char) == 1) { // alt/... and special keys must not be kept
+		m_TextInput = utf8::utf8_concat(m_TextInput, i_utf8Char);
+	      }
               return true;
           }
+
         }
         break;
     }

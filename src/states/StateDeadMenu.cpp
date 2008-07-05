@@ -157,8 +157,19 @@ void StateDeadMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
   } else if(i_id == "SAVEREPLAY") {
     if(i_button == UI_MSGBOX_OK) {
       if(m_universe != NULL) {
-	m_universe->saveReplay(i_input);
+	m_replayName = i_input;
+	m_commands.push("SAVEREPLAY");
       }
+    }
+  }
+}
+
+void StateDeadMenu::executeOneCommand(std::string cmd) {
+  if(cmd == "SAVEREPLAY") {
+    try {
+      m_universe->saveReplay(m_replayName);
+    } catch(Exception &e) {
+      StateManager::instance()->pushState(new StateMessageBox(NULL, e.getMsg(), UI_MSGBOX_OK));
     }
   }
 }
