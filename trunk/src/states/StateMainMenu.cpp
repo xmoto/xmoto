@@ -698,7 +698,7 @@ void StateMainMenu::updateStats() {
   v_window = new UIWindow(i_parent, x, y, "", nWidth, nHeight);
   v_window->setID("REPORT");
  
-  v_result = pDb->readDB("SELECT SUM(nbStarts), MIN(since) "
+  v_result = pDb->readDB("SELECT IFNULL(SUM(nbStarts),0), IFNULL(MIN(since),0) "
 			 "FROM stats_profiles "
 			 "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
 			 "GROUP BY id_profile;",
@@ -711,8 +711,9 @@ void StateMainMenu::updateStats() {
   v_since           =      pDb->getResult(v_result, 2, 0, 1);  
   pDb->read_DB_free(v_result);
 
-  v_result = pDb->readDB("SELECT SUM(b.playedTime), SUM(b.nbPlayed), SUM(b.nbDied), SUM(b.nbCompleted), "
-			 "SUM(b.nbRestarted) "
+  v_result = pDb->readDB("SELECT IFNULL(SUM(b.playedTime),0), IFNULL(SUM(b.nbPlayed),0), "
+			 "IFNULL(SUM(b.nbDied),0), IFNULL(SUM(b.nbCompleted),0), "
+			 "IFNULL(SUM(b.nbRestarted),0) "
 			 "FROM stats_profiles AS a INNER JOIN stats_profiles_levels AS b "
 			 "ON (a.id_profile=b.id_profile AND a.sitekey=b.sitekey) "
 			 "WHERE a.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
@@ -776,8 +777,8 @@ void StateMainMenu::updateStats() {
   pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
   pText->setFont(GameApp::instance()->getDrawLib()->getFontSmall());      
   
-  v_result = pDb->readDB("SELECT MIN(a.name), SUM(b.nbPlayed), SUM(b.nbDied), "
-			 "SUM(b.nbCompleted), SUM(b.nbRestarted), SUM(b.playedTime) "
+  v_result = pDb->readDB("SELECT MIN(a.name), IFNULL(SUM(b.nbPlayed),0), IFNULL(SUM(b.nbDied),0), "
+			 "IFNULL(SUM(b.nbCompleted),0), IFNULL(SUM(b.nbRestarted),0), IFNULL(SUM(b.playedTime),0) "
 			 "FROM levels AS a INNER JOIN stats_profiles_levels AS b ON a.id_level=b.id_level "
 			 "WHERE b.id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
 			 "GROUP BY b.id_level "
