@@ -49,6 +49,7 @@ class StateFinished : public StateMenu {
   virtual void send(const std::string& i_id,
 		    UIMsgBoxButton i_button,
 		    const std::string& i_input);
+  virtual void executeOneCommand(std::string cmd);
   
  protected:
   virtual void checkEvents();
@@ -64,6 +65,8 @@ class StateFinished : public StateMenu {
   /* GUI */
   static UIRoot* m_sGUI;
   static void createGUIIfNeeded();
+
+  std::string m_replayName; // to save temporarly the replay name
 };
 
 #endif

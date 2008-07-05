@@ -125,7 +125,13 @@ void StateFinished::enter()
 	  std::string v_replayName;
 	  char v_str[256];
 	  v_replayName = Replay::giveAutomaticName();
-	  m_universe->saveReplay(v_replayName);
+
+	  try {
+	    m_universe->saveReplay(v_replayName);
+	  } catch(Exception &e) {
+	    StateManager::instance()->pushState(new StateMessageBox(this, e.getMsg(), UI_MSGBOX_OK));
+	  }
+
 	  snprintf(v_str, 256, GAMETEXT_SAVE_AS, v_replayName.c_str());
 	  v_pNewHighscoreSaved_str->setCaption(v_str);
 	}
@@ -252,8 +258,19 @@ void StateFinished::send(const std::string& i_id, UIMsgBoxButton i_button, const
   } else if(i_id == "SAVEREPLAY") {
     if(i_button == UI_MSGBOX_OK) {
       if(m_universe != NULL) {
-	m_universe->saveReplay(i_input);
+	m_replayName = i_input;
+	m_commands.push("SAVEREPLAY");
       }
+    }
+  }
+}
+
+void StateFinished::executeOneCommand(std::string cmd) {
+  if(cmd == "SAVEREPLAY") {
+    try {
+      m_universe->saveReplay(m_replayName);
+    } catch(Exception &e) {
+      StateManager::instance()->pushState(new StateMessageBox(NULL, e.getMsg(), UI_MSGBOX_OK));
     }
   }
 }
