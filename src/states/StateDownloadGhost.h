@@ -33,7 +33,7 @@ public:
 
   void setReplay(std::string replayName);
 
-  void keyDown(int nKey, SDLMod mod,int nChar);
+  void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
 
 protected:
   void callAfterThreadFinished(int threadResult);

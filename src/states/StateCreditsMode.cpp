@@ -70,7 +70,7 @@ bool StateCreditsMode::render()
   return true;
 }
 
-void StateCreditsMode::keyDown(int nKey, SDLMod mod,int nChar)
+void StateCreditsMode::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   // to have replay keys while credits, uncomment this
   // StateReplaying::keyDown(nKey, mod,nChar);
@@ -79,7 +79,7 @@ void StateCreditsMode::keyDown(int nKey, SDLMod mod,int nChar)
   closePlaying();
 }
 
-void StateCreditsMode::keyUp(int nKey,   SDLMod mod)
+void StateCreditsMode::keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char)
 {
 }
 

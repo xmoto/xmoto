@@ -39,8 +39,8 @@ public:
   virtual bool update();
 
   /* input */
-  virtual void keyDown(int nKey, SDLMod mod,int nChar);
-  virtual void keyUp(int nKey,   SDLMod mod);
+  virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual void keyUp(int nKey,   SDLMod mod, const std::string& i_utf8Char);
 
   static void clean();
 
