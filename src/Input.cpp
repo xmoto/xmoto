@@ -118,7 +118,9 @@ bool XMKey::operator==(const XMKey& i_other) const {
   }
 
   if(m_input == XMK_KEYBOARD) {
-    return m_keyboard_sym == i_other.m_keyboard_sym && m_keyboard_mod == i_other.m_keyboard_mod;
+    return m_keyboard_sym == i_other.m_keyboard_sym && 
+      ((m_keyboard_mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_META)) == 
+       (i_other.m_keyboard_mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_META)));
   }
 
   if(m_input == XMK_MOUSEBUTTON) {
