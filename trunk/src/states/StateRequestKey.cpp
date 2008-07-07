@@ -52,7 +52,7 @@ void StateRequestKey::enter()
   StateMenu::enter();
 }
 
-void StateRequestKey::keyDown(int nKey, SDLMod mod,int nChar)
+void StateRequestKey::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   std::string v_msg;
 

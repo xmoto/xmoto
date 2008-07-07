@@ -32,7 +32,7 @@ public:
   virtual ~StateRequestKey();
 
   virtual void enter();
-  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
   virtual void mouseDown(int nButton);
 
   static void clean();
