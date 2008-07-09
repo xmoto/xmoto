@@ -126,7 +126,6 @@ public:
 
   void loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
   void handleInput(Universe* i_universe, InputEventType Type, int nKey,SDLMod mod);      
-  std::string waitForKey(void);
   void updateUniverseInput(Universe* i_universe);
   void init(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
   void uninit();

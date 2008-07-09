@@ -47,7 +47,7 @@ XMKey::XMKey(SDL_Event &i_event) {
   case SDL_KEYDOWN:
     m_input = XMK_KEYBOARD;
     m_keyboard_sym = i_event.key.keysym.sym;
-    m_keyboard_mod = i_event.key.keysym.mod;
+    m_keyboard_mod = (SDLMod) (i_event.key.keysym.mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_META)); // only allow these modifiers
     break;
 
   case SDL_MOUSEBUTTONDOWN:
@@ -63,7 +63,7 @@ XMKey::XMKey(SDL_Event &i_event) {
 XMKey::XMKey(SDLKey nKey,SDLMod mod) {
   m_input = XMK_KEYBOARD;
   m_keyboard_sym = nKey;
-  m_keyboard_mod = mod;
+  m_keyboard_mod = (SDLMod) (mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_META)); // only allow these modifiers
 }
 
 XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
@@ -101,7 +101,7 @@ XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
     v_rest = v_rest.substr(pos+1, v_rest.length() -pos -1);
 
     m_keyboard_sym = (SDLKey) atoi(v_current.c_str());
-    m_keyboard_mod = (SDLMod) atoi(v_rest.c_str());
+    m_keyboard_mod = (SDLMod) ( ((SDLMod) atoi(v_rest.c_str())) & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_META) ); // only allow these modifiers
 
   } else if(v_current == "M") { // mouse button
     m_input = XMK_MOUSEBUTTON;
@@ -120,7 +120,7 @@ bool XMKey::operator==(const XMKey& i_other) const {
   if(m_input == XMK_KEYBOARD) {
     return m_keyboard_sym == i_other.m_keyboard_sym && 
       ((m_keyboard_mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_META)) == 
-       (i_other.m_keyboard_mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_META)));
+       (i_other.m_keyboard_mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_META))); // only allow these modifiers
   }
 
   if(m_input == XMK_MOUSEBUTTON) {
@@ -383,31 +383,7 @@ void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string&
       v_biker->getControler()->setPull(-joyRawToFloat(nRawSec, m_nJoyAxisSecMin1, m_nJoyAxisSecLL1, m_nJoyAxisSecUL1, m_nJoyAxisSecMax1));
     }
   }
-  
-  /*===========================================================================
-  Read configuration
-  ===========================================================================*/  
-  std::string InputHandler::waitForKey(void) {
-    SDL_Event Event;
 
-    /* Start waiting for a key */      
-    SDL_PumpEvents();
-    while(SDL_PollEvent(&Event)) {
-      if(Event.type == SDL_QUIT ||
-	 (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_ESCAPE) ) {
-	return "<<QUIT>>";
-      }
-
-      try {
-	  return XMKey(Event).toString();
-      } catch(Exception &e) {
-	/* invalid key */
-      }
-    }
-
-    return "";
-  }
-  
   /*===========================================================================
   Read configuration
   ===========================================================================*/  
