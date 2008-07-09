@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ca_ES\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-06-29 19:14+0200\n"
-"PO-Revision-Date: 2008-07-06 15:45+0200\n"
+"POT-Creation-Date: 2008-07-09 20:38+0200\n"
+"PO-Revision-Date: 2008-07-07 22:39+0200\n"
 "Last-Translator: Joan Creus <joan.creus at gmail dot com>\n"
 "Language-Team: Català <ca@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgstr "Surt del nivell"
 #: src/GameText.h:43
 #, c-format
 msgid "Web account password for profile '%s':"
-msgstr ""
+msgstr "Contrasenya del compte web per al perfil '%s':"
 
 #: src/GameText.h:44
 msgid "Add to favorite"
@@ -107,11 +107,11 @@ msgstr "Auto zoom"
 
 #: src/GameText.h:58
 msgid "Database"
-msgstr ""
+msgstr "Base de dades"
 
 #: src/GameText.h:59
 msgid "Camera Active Zoom"
-msgstr ""
+msgstr "Zoom Actiu de la Càmera"
 
 #: src/GameText.h:60
 msgid "Best Times"
@@ -353,25 +353,33 @@ msgstr "Data"
 msgid ""
 "X-Moto uses a database on your computer to save all your scores and "
 "statistics. You can send these data using your web account on the X-Moto "
-"server. It is usefull to save your data or if you play X-Moto from different "
+"server. It is useful to save your data or if you play X-Moto from different "
 "places."
 msgstr ""
+"L'X-Moto fa servir una base de dades al teu ordinador per gravar tota la "
+"teva puntuació i estadístiques. Pots enviar aquestes dades amb el teu compte "
+"web del servidor d'X-Moto. És útil per guardar les teves dades o si jugues a "
+"X-Moto des de llocs diferents."
 
 #: src/GameText.h:150
 msgid ""
 "If you manually copied the X-Moto user files (.xmoto) on some other "
-"computers, you should not use this functionnality otherwise your statistics "
+"computers, you should not use this functionality otherwise your statistics "
 "will be duplicated/not synchronized. If you did that, you should remove the "
 "copies you did."
 msgstr ""
+"Si has copiat els fitxers d'usuari d'X-Moto (.xmoto) manualment en algun "
+"altre ordinador, val més que no facis servir aquesta funció; si no, les "
+"teves estadístiques es duplicaran/no se sincronitzaran. Si has fet això, "
+"hauries de treure les còpies que has fet."
 
 #: src/GameText.h:151
 msgid "Synchronise"
-msgstr ""
+msgstr "Sincronitzar"
 
 #: src/GameText.h:152
 msgid "Synchronize when X-Moto ends"
-msgstr ""
+msgstr "Sincronitzar quan acabi X-Moto"
 
 #: src/GameText.h:153
 msgid "Upgrading database"
@@ -902,7 +910,7 @@ msgstr "Principal"
 
 #: src/GameText.h:285
 msgid "Mouse"
-msgstr ""
+msgstr "Ratolí"
 
 #: src/GameText.h:286 src/GameText.h:383
 msgid "Theme"
@@ -1256,15 +1264,15 @@ msgstr "Stéreo"
 
 #: src/GameText.h:380
 msgid "Synchronisation down"
-msgstr ""
+msgstr "Sincronitzar cap avall"
 
 #: src/GameText.h:381
 msgid "Synchronisation up"
-msgstr ""
+msgstr "Sincronitzar cap amunt"
 
 #: src/GameText.h:382
 msgid "Synchronisation done successfully"
-msgstr ""
+msgstr "Sincronització acabada amb èxit"
 
 #: src/GameText.h:384
 msgid "Available"
@@ -1648,7 +1656,7 @@ msgstr "Activa els gràfics high-color"
 
 #: src/GameText.h:476
 msgid "Enable true-color graphics"
-msgstr "Activa el gràfics true-color"
+msgstr "Activa els gràfics true-color"
 
 #: src/GameText.h:477
 msgid "Select graphics resolution"
@@ -1908,7 +1916,7 @@ msgstr "Configura les opcions principals del www"
 
 #: src/GameText.h:542
 msgid "Configure the www options"
-msgstr ""
+msgstr "Configurar les opcions www"
 
 #: src/GameText.h:543
 msgid ""
@@ -1950,7 +1958,7 @@ msgstr "Enfoca tot el nivell automàticament abans d'iniciar la partida"
 
 #: src/GameText.h:551
 msgid "Run a dynamic zoom while playing"
-msgstr ""
+msgstr "Executar un zoom dinàmic mentre jugues"
 
 #: src/GameText.h:552
 msgid "View the X-Moto credits"
@@ -2067,31 +2075,31 @@ msgstr "Activar aquesta sala"
 
 #: src/GameText.h:583
 msgid "Password associated to your profile for web access"
-msgstr ""
+msgstr "Contrasenya associada al teu perfil per accés web"
 
 #: src/GameText.h:584
 msgid "Main options"
-msgstr ""
+msgstr "Opcions principals"
 
 #: src/GameText.h:585
 msgid "Configure the X-Moto theme"
-msgstr ""
+msgstr "Configurar el tema d'X-Moto"
 
 #: src/GameText.h:586
 msgid "Configure ghosts displayed while playing the game"
-msgstr ""
+msgstr "Configurar els fantasmes que es mostren mentre es juga"
 
 #: src/GameText.h:587
-msgid "Configure options linked to your X-Moto dabatase"
-msgstr ""
+msgid "Configure options linked to your X-Moto database"
+msgstr "Configurar les opcions associades a la teva base de dades X-Moto"
 
 #: src/GameText.h:588
 msgid "Synchronise your database on the web"
-msgstr ""
+msgstr "Sincronitzar la teva base de dades al web"
 
 #: src/GameText.h:589
 msgid "Synchronise your database when your quit X-Moto"
-msgstr ""
+msgstr "Sincronitzar la teva base de dades quan surtis de l'X-Moto"
 
 #: src/GameText.h:591
 msgid "Levels with no highscore"
@@ -2143,7 +2151,7 @@ msgstr "Nivells amb música"
 
 #: src/GameText.h:604
 msgid "Physics levels"
-msgstr ""
+msgstr "Nivells amb física"
 
 #: src/GameText.h:606
 msgid "Last played levels"
@@ -2267,7 +2275,7 @@ msgstr "Nivells de l'X-Moto amb música de fons"
 
 #: src/GameText.h:638
 msgid "X-Moto levels using strongly physics"
-msgstr ""
+msgstr "Nivells de l'X-Moto que fan servir molt la física"
 
 #: src/GameText.h:639
 msgid "Last levels you have played"
