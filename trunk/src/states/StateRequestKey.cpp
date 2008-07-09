@@ -60,6 +60,18 @@ void StateRequestKey::keyDown(int nKey, SDLMod mod,int nChar, const std::string&
   case SDLK_ESCAPE:
     m_requestForEnd = true;
     break;
+
+    /* don't allow simple modifier key */
+  case SDLK_RSHIFT:
+  case SDLK_LSHIFT:
+  case SDLK_RCTRL:
+  case SDLK_LCTRL:
+  case SDLK_RALT:
+  case SDLK_LALT:
+  case SDLK_RMETA:
+  case SDLK_LMETA:
+    break;
+
   default:
     v_msg = XMKey((SDLKey)nKey, mod).toString();
 
