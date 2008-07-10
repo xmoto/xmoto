@@ -169,17 +169,17 @@ void xmDatabase::stats_destroyProfile(const std::string& i_profile) {
 
 bool xmDatabase::stats_checkKeyExists_stats_profiles(const std::string& i_sitekey, const std::string& i_profile) {
   return checkKey("SELECT count(1) FROM stats_profiles "
-		  "WHERE sitekey=\""    + i_sitekey + "\" "
-		  "AND   id_profile=\"" + i_profile + "\";");
+		  "WHERE sitekey=\""    + protectString(i_sitekey) + "\" "
+		  "AND   id_profile=\"" + protectString(i_profile) + "\";");
 }
 
 bool xmDatabase::stats_checkKeyExists_stats_profiles_levels(const std::string& i_sitekey,
 							    const std::string& i_profile,
 							    const std::string& i_level) {
   return checkKey("SELECT count(1) FROM stats_profiles_levels "
-		  "WHERE sitekey=\""      + i_sitekey + "\" "
-		  "AND   id_profile=\""   + i_profile + "\" "
-		  "AND   id_level=\""     + i_level   + "\";");
+		  "WHERE sitekey=\""      + protectString(i_sitekey) + "\" "
+		  "AND   id_profile=\""   + protectString(i_profile) + "\" "
+		  "AND   id_level=\""     + protectString(i_level)   + "\";");
 }
 
 void xmDatabase::stats_levelCompleted(const std::string& i_sitekey,
@@ -197,9 +197,9 @@ void xmDatabase::stats_levelCompleted(const std::string& i_sitekey,
 	      "playedTime=playedTime+" + v_playTime.str() + ","   +
 	      "last_play_date=datetime('now', 'localtime'), "
 	      "synchronized = 0 "
-	      "WHERE sitekey=\""    + i_sitekey        + "\" "
-	      "AND id_profile=\""   + PlayerName       + "\" "
-	      "AND id_level=\""     + LevelID          + "\";");
+	      "WHERE sitekey=\""    + protectString(i_sitekey)        + "\" "
+	      "AND id_profile=\""   + protectString(PlayerName)       + "\" "
+	      "AND id_level=\""     + protectString(LevelID)          + "\";");
   } else {
     simpleSql("INSERT INTO stats_profiles_levels("
 	      "sitekey, id_profile, id_level,"
@@ -224,9 +224,9 @@ void xmDatabase::stats_died(const std::string& i_sitekey,
 	      "playedTime=playedTime+" + v_playTime.str() + ","   +
 	      "last_play_date=datetime('now', 'localtime'), "
 	      "synchronized = 0 "
-	      "WHERE sitekey=\""    + i_sitekey        + "\" "
-	      "AND id_profile=\""   + PlayerName       + "\" "
-	      "AND id_level=\""        + LevelID          + "\";");
+	      "WHERE sitekey=\""    + protectString(i_sitekey)        + "\" "
+	      "AND id_profile=\""   + protectString(PlayerName)       + "\" "
+	      "AND id_level=\""        + protectString(LevelID)          + "\";");
   } else {
     simpleSql("INSERT INTO stats_profiles_levels("
 	      "sitekey, id_profile, id_level,"
@@ -251,9 +251,9 @@ void xmDatabase::stats_abortedLevel(const std::string& i_sitekey,
 	      "playedTime=playedTime+" + v_playTime.str() + ","   +
 	      "last_play_date=datetime('now', 'localtime'), "
 	      "synchronized = 0 "
-	      "WHERE sitekey=\""    + i_sitekey        + "\" "
-	      "AND id_profile=\""   + PlayerName       + "\" "
-	      "AND id_level=\""        + LevelID          + "\";");
+	      "WHERE sitekey=\""    + protectString(i_sitekey)        + "\" "
+	      "AND id_profile=\""   + protectString(PlayerName)       + "\" "
+	      "AND id_level=\""        + protectString(LevelID)          + "\";");
   } else {
     simpleSql("INSERT INTO stats_profiles_levels("
 	      "sitekey, id_profile, id_level,"
@@ -279,9 +279,9 @@ void xmDatabase::stats_levelRestarted(const std::string& i_sitekey,
 	      "playedTime=playedTime+" + v_playTime.str() + ","   +
 	      "last_play_date=datetime('now', 'localtime'), "
 	      "synchronized = 0 "
-	      "WHERE sitekey=\""    + i_sitekey        + "\" "
-	      "AND id_profile=\""   + PlayerName       + "\" "
-	      "AND id_level=\""        + LevelID          + "\";");
+	      "WHERE sitekey=\""    + protectString(i_sitekey)        + "\" "
+	      "AND id_profile=\""   + protectString(PlayerName)       + "\" "
+	      "AND id_level=\""        + protectString(LevelID)          + "\";");
   } else {
     simpleSql("INSERT INTO stats_profiles_levels("
 	      "sitekey, id_profile, id_level,"
@@ -295,5 +295,5 @@ void xmDatabase::stats_levelRestarted(const std::string& i_sitekey,
 void xmDatabase::stats_xmotoStarted(const std::string& i_sitekey, const std::string &PlayerName) {
   simpleSql("UPDATE stats_profiles SET "
 	    "nbStarts=nbStarts+1 "
-	    "WHERE sitekey=\"" + i_sitekey + "\" AND id_profile=\"" + PlayerName + "\";");
+	    "WHERE sitekey=\"" + i_sitekey + "\" AND id_profile=\"" + protectString(PlayerName) + "\";");
 }
