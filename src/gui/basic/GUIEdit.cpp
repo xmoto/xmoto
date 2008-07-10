@@ -179,4 +179,8 @@ void UIEdit::paint(void) {
 			 m_hasChanged = true;
 		}
 		UIWindow::setCaption(Caption);
+
+		if(m_nCursorPos > utf8::utf8_length(Caption)) {
+		  m_nCursorPos = utf8::utf8_length(Caption);
+		}
 	}
