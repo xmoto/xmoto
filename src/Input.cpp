@@ -234,6 +234,9 @@ std::string XMKey::toString() {
     v_res << "M" << ":" << ((int)m_mouseButton_button);
     break;
  case XMK_JOYSTICKAXIS:
+   if(abs(m_joyAxisValue) < INPUT_JOYSTICK_MINIMUM_DETECTION) {
+     return "";
+   }
    // put the joyid at the end while it can contain any char
    v_res << "A" << ":" << ((int)m_joyAxis) << ":" << ((int)m_joyAxisValue) << ":" << *m_joyId;
    break;
