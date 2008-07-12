@@ -67,7 +67,7 @@ void StateMessageBox::checkEvents() {
   m_requestForEnd = true;
 }
 
-void StateMessageBox::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateMessageBox::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   switch(nKey) {
   default:

@@ -520,7 +520,7 @@ bool StateMainMenu::render()
   return StateMenu::render();
 }
 
-void StateMainMenu::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateMainMenu::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   switch(nKey) {
 
@@ -925,7 +925,7 @@ UIWindow* StateMainMenu::makeWindowReplays(UIWindow* i_parent) {
   v_list->addColumn(GAMETEXT_REPLAY, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_REPLAYCOL);
   v_list->addColumn(GAMETEXT_LEVEL,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_REPLAYLEVELCOL);
   v_list->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
-  //v_list->setEnterButton(v_showButton);
+  v_list->setEnterButton(v_showButton);
 
   return v_window;
 }

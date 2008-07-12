@@ -30,6 +30,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikeController.h"
 #include "Universe.h"
 
+#define INPUT_JOYSTICK_MINIMUM_DETECTION 100
+#define INPUT_JOYSTICK_MAXIMUM_VALUE     32760
+
+
 XMKey::XMKey() {
     m_input = XMK_KEYBOARD;
     m_keyboard_sym = SDLK_a;
@@ -55,6 +59,19 @@ XMKey::XMKey(SDL_Event &i_event) {
     m_mouseButton_button = i_event.button.button;
     break;
 
+  case SDL_JOYAXISMOTION:
+    m_input        = XMK_JOYSTICKAXIS;
+    m_joyId        = InputHandler::instance()->getJoyId(i_event.jaxis.which);
+    m_joyAxis      = i_event.jaxis.axis;
+    m_joyAxisValue = i_event.jaxis.value;
+    break;
+
+  case SDL_JOYBUTTONDOWN:
+    m_input     = XMK_JOYSTICKBUTTON;
+    m_joyId     = InputHandler::instance()->getJoyId(i_event.jbutton.which);
+    m_joyButton = i_event.jbutton.button;
+    break;
+
   default:
     throw Exception("Unknow key");
   }
@@ -64,6 +81,19 @@ XMKey::XMKey(SDLKey nKey,SDLMod mod) {
   m_input = XMK_KEYBOARD;
   m_keyboard_sym = nKey;
   m_keyboard_mod = (SDLMod) (mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_META)); // only allow these modifiers
+}
+
+XMKey::XMKey(std::string* i_joyId, Uint8 i_joyButton) {
+  m_input     = XMK_JOYSTICKBUTTON;
+  m_joyId     = i_joyId;
+  m_joyButton = i_joyButton;
+}
+
+XMKey::XMKey(std::string* i_joyId, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
+  m_input        = XMK_JOYSTICKAXIS;
+  m_joyId        = i_joyId;
+  m_joyAxis      = i_joyAxis;
+  m_joyAxisValue = i_joyAxisValue;
 }
 
 XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
@@ -107,9 +137,54 @@ XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
     m_input = XMK_MOUSEBUTTON;
     m_mouseButton_button = (Uint8) atoi(v_rest.c_str());
 
+  } else if(v_current == "A") { // joystick axis
+    m_input     = XMK_JOYSTICKAXIS;
+
+    // get the axis
+    pos = v_rest.find(":", 0);
+    if(pos == std::string::npos) {
+      throw Exception("Invalid key");
+    }
+    v_current = v_rest.substr(0, pos);
+    v_rest = v_rest.substr(pos+1, v_rest.length() -pos -1);
+    m_joyAxis = (Uint8) atoi(v_current.c_str());
+
+    // get the axis value
+    pos = v_rest.find(":", 0);
+    if(pos == std::string::npos) {
+      throw Exception("Invalid key");
+    }
+    v_current = v_rest.substr(0, pos);
+    v_rest = v_rest.substr(pos+1, v_rest.length() -pos -1);
+    m_joyAxisValue = (Sint16) atoi(v_current.c_str());
+
+    // get the joyid
+    m_joyId        = InputHandler::instance()->getJoyIdByStrId(v_rest);
+  } else if(v_current == "J") { // joystick button
+    m_input     = XMK_JOYSTICKBUTTON;
+
+    pos = v_rest.find(":", 0);
+    if(pos == std::string::npos) {
+      throw Exception("Invalid key");
+    }
+    v_current = v_rest.substr(0, pos);
+    v_rest = v_rest.substr(pos+1, v_rest.length() -pos -1);
+
+    m_joyId     = InputHandler::instance()->getJoyIdByStrId(v_rest);
+    m_joyButton = (Uint8) atoi(v_current.c_str());
   } else {
     throw Exception("Invalid key");
   }
+}
+
+bool XMKey::isAnalogic() const {
+  return m_input == XMK_JOYSTICKAXIS;
+}
+
+float XMKey::getAnalogicValue() const {
+  return InputHandler::joyRawToFloat(m_joyAxisValue,
+				     -(INPUT_JOYSTICK_MAXIMUM_VALUE), -(INPUT_JOYSTICK_MINIMUM_DETECTION),
+				     INPUT_JOYSTICK_MINIMUM_DETECTION, INPUT_JOYSTICK_MAXIMUM_VALUE);
 }
   
 bool XMKey::operator==(const XMKey& i_other) const {
@@ -127,6 +202,24 @@ bool XMKey::operator==(const XMKey& i_other) const {
     return m_mouseButton_button == i_other.m_mouseButton_button;
   }
 
+  if(m_input == XMK_JOYSTICKAXIS) {
+    // for m_joyId, pointer instead of strings can be compared safely while strings are required only when reading config
+    return m_joyId == i_other.m_joyId && m_joyAxis == i_other.m_joyAxis &&
+      ! (
+	 // axes are not on the same side if the value are on the opposite sides
+	 (m_joyAxisValue         > INPUT_JOYSTICK_MINIMUM_DETECTION &&
+	  i_other.m_joyAxisValue < INPUT_JOYSTICK_MINIMUM_DETECTION)
+	 ||
+	 (m_joyAxisValue         < INPUT_JOYSTICK_MINIMUM_DETECTION &&
+	  i_other.m_joyAxisValue > INPUT_JOYSTICK_MINIMUM_DETECTION)
+	 );
+  }
+
+  if(m_input == XMK_JOYSTICKBUTTON) {
+    // for m_joyId, pointer instead of strings can be compared safely while strings are required only when reading config
+    return m_joyId == i_other.m_joyId && m_joyButton == i_other.m_joyButton;
+  }
+
   return false;
 }
 
@@ -140,6 +233,15 @@ std::string XMKey::toString() {
   case XMK_MOUSEBUTTON:
     v_res << "M" << ":" << ((int)m_mouseButton_button);
     break;
+ case XMK_JOYSTICKAXIS:
+   // put the joyid at the end while it can contain any char
+   v_res << "A" << ":" << ((int)m_joyAxis) << ":" << ((int)m_joyAxisValue) << ":" << *m_joyId;
+   break;
+
+ case XMK_JOYSTICKBUTTON:
+   // put the joyid at the end while it can contain any char
+   v_res << "J" << ":" << ((int)m_joyButton) << ":" << *m_joyId;
+   break;
   }
 
   return v_res.str();
@@ -152,6 +254,10 @@ std::string XMKey::toFancyString() {
     v_res << "[" << GAMETEXT_KEYBOARD << "] " << SDL_GetKeyName(m_keyboard_sym);
   } else if(m_input == XMK_MOUSEBUTTON) {
     v_res << "[" << GAMETEXT_MOUSE << "] " << ((int)m_mouseButton_button);
+  } else if(m_input == XMK_JOYSTICKAXIS) {
+    v_res << "[" << GAMETEXT_JOYSTICK << "]";
+  } else if(m_input == XMK_JOYSTICKBUTTON) {
+    v_res << "[" << GAMETEXT_JOYSTICK << "]" << ((int)m_joyButton)+1; // +1 because it starts at 0
   }
 
   return v_res.str();
@@ -164,6 +270,18 @@ bool XMKey::isPressed(Uint8 *i_keystate, Uint8 i_mousestate) {
 
   if(m_input == XMK_MOUSEBUTTON) {
     return (i_mousestate & SDL_BUTTON(m_mouseButton_button)) == SDL_BUTTON(m_mouseButton_button);
+  }
+
+  if(m_input == XMK_JOYSTICKAXIS) {
+    Sint16 v_axisValue = SDL_JoystickGetAxis(InputHandler::instance()->getJoyById(m_joyId), m_joyAxis);
+    return (
+	    (v_axisValue > INPUT_JOYSTICK_MINIMUM_DETECTION && m_joyAxisValue > INPUT_JOYSTICK_MINIMUM_DETECTION) ||
+	    (v_axisValue < -(INPUT_JOYSTICK_MINIMUM_DETECTION) && m_joyAxisValue < -(INPUT_JOYSTICK_MINIMUM_DETECTION))
+	    );
+  }
+
+  if(m_input == XMK_JOYSTICKBUTTON) {
+    return SDL_JoystickGetButton(InputHandler::instance()->getJoyById(m_joyId), m_joyButton) == 1;
   }
 
   return false;
@@ -193,61 +311,59 @@ bool XMKey::isPressed(Uint8 *i_keystate, Uint8 i_mousestate) {
       for(unsigned int i=0; i<i_universe->getScenes()[j]->Players().size(); i++) {
 	v_biker = i_universe->getScenes()[j]->Players()[i];
 	
-	if(m_ControllerModeID[p] == CONTROLLER_MODE_KEYBOARD) {
-	  if(m_nDriveKey[p].isPressed(v_keystate, v_mousestate)) {
-	    /* Start driving */
-	    v_biker->getControler()->setThrottle(1.0f);
-	  } else {
-	    v_biker->getControler()->setThrottle(0.0f);
-	  }
-
-	  if(m_nBrakeKey[p].isPressed(v_keystate, v_mousestate)) {
-	    /* Brake */
-	    v_biker->getControler()->setBreak(1.0f);
-	  } else {
-	    v_biker->getControler()->setBreak(0.0f);
-	  }
-
-	  if(m_mirrored) {
-	    if(m_nPushForwardKey[p].isPressed(v_keystate, v_mousestate)) {
-	       v_biker->getControler()->setPull(1.0f);
-	    } else {
-	      v_biker->getControler()->setPull(0.0f);
-	    }
-	  } else {
-
-	  }
-
-	  // pull
-	  if((m_nPullBackKey[p].isPressed(v_keystate, v_mousestate) && m_mirrored == false) ||
-	     (m_nPushForwardKey[p].isPressed(v_keystate, v_mousestate) && m_mirrored)) {
-	    /* Pull back */
+	if(m_nDriveKey[p].isPressed(v_keystate, v_mousestate)) {
+	  /* Start driving */
+	  v_biker->getControler()->setThrottle(1.0f);
+	} else {
+	  v_biker->getControler()->setThrottle(0.0f);
+	}
+	
+	if(m_nBrakeKey[p].isPressed(v_keystate, v_mousestate)) {
+	  /* Brake */
+	  v_biker->getControler()->setBreak(1.0f);
+	} else {
+	  v_biker->getControler()->setBreak(0.0f);
+	}
+	
+	if(m_mirrored) {
+	  if(m_nPushForwardKey[p].isPressed(v_keystate, v_mousestate)) {
 	    v_biker->getControler()->setPull(1.0f);
 	  } else {
-
-	    // push // must be in pull else block to not set pull to 0
-	    if((m_nPushForwardKey[p].isPressed(v_keystate, v_mousestate) && m_mirrored == false) ||
-	       (m_nPullBackKey[p].isPressed(v_keystate, v_mousestate)    && m_mirrored)) {
-	      /* Push forward */
-	      v_biker->getControler()->setPull(-1.0f);
-	    } else {
-	      v_biker->getControler()->setPull(0.0f);
-	    }
+	    v_biker->getControler()->setPull(0.0f);
 	  }
-
-	  if(m_nChangeDirKey[p].isPressed(v_keystate, v_mousestate)) {
-	    /* Change dir */
-	    if(m_changeDirKeyAlreadyPress[p] == false){
-	      v_biker->getControler()->setChangeDir(true);
-	      m_changeDirKeyAlreadyPress[p] = true;
-	    }
+	} else {
+	  
+	}
+	
+	// pull
+	if((m_nPullBackKey[p].isPressed(v_keystate, v_mousestate) && m_mirrored == false) ||
+	   (m_nPushForwardKey[p].isPressed(v_keystate, v_mousestate) && m_mirrored)) {
+	  /* Pull back */
+	  v_biker->getControler()->setPull(1.0f);
+	} else {
+	  
+	  // push // must be in pull else block to not set pull to 0
+	  if((m_nPushForwardKey[p].isPressed(v_keystate, v_mousestate) && m_mirrored == false) ||
+	     (m_nPullBackKey[p].isPressed(v_keystate, v_mousestate)    && m_mirrored)) {
+	    /* Push forward */
+	    v_biker->getControler()->setPull(-1.0f);
 	  } else {
-	    m_changeDirKeyAlreadyPress[p] = false;
+	    v_biker->getControler()->setPull(0.0f);
 	  }
 	}
-	  p++;
+	
+	if(m_nChangeDirKey[p].isPressed(v_keystate, v_mousestate)) {
+	  /* Change dir */
+	  if(m_changeDirKeyAlreadyPress[p] == false){
+	    v_biker->getControler()->setChangeDir(true);
+	    m_changeDirKeyAlreadyPress[p] = true;
+	  }
+	} else {
+	  m_changeDirKeyAlreadyPress[p] = false;
+	}
+	p++;
       }
-	pW+= i_universe->getScenes()[j]->Players().size();
+      pW+= i_universe->getScenes()[j]->Players().size();
     }
   }
 
@@ -256,37 +372,51 @@ bool XMKey::isPressed(Uint8 *i_keystate, Uint8 i_mousestate) {
   }
 
   /*===========================================================================
-  Globals
-  ===========================================================================*/  
-  /* Action ID to string table */
-	/*
-  InputActionType InputHandler::m_ActionTypeTable[] = {
-    "Drive",           ACTION_DRIVE,
-    "Brake",           ACTION_BRAKE,             
-    "Pull",            ACTION_PULL,          
-    "Push",            ACTION_PUSH,       
-    "ChangeDirection", ACTION_CHANGEDIR,     
-    NULL
-  };
-*/
-
-  /*===========================================================================
   Init/uninit
   ===========================================================================*/  
 void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile) {
+  SDL_Joystick* v_joystick;
+
     /* Initialize joysticks (if any) */
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+    SDL_JoystickEventState(SDL_ENABLE);
     
     /* Enable unicode translation and key repeats */
     SDL_EnableUNICODE(1);         
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
 
     /* Open all joysticks */
-    for(int i=0; i<SDL_NumJoysticks(); i++) {
-      m_Joysticks.push_back(SDL_JoystickOpen(i));
-    }
+    std::string v_joyName, v_joyId;
+    int n;
+    bool v_continueToOpen = true;
 
-    m_pActiveJoystick1 = NULL;
+    for(int i=0; i<SDL_NumJoysticks(); i++) {
+      if(v_continueToOpen) {
+	if( (v_joystick = SDL_JoystickOpen(i)) != NULL) {
+	  std::ostringstream v_id;
+	  n = 0;
+	  v_joyName = SDL_JoystickName(i);
+	  
+	  // check if there is an other joystick with the same name
+	  for(unsigned int j=0; j<m_Joysticks.size(); j++) {
+	    if(m_JoysticksNames[j] == v_joyName) {
+	      n++;
+	    }
+	  }
+	  
+	  v_id << n;
+	  v_joyId = v_joyName + v_id.str();
+	  m_Joysticks.push_back(v_joystick);
+	  m_JoysticksNames.push_back(v_joyName);
+	  m_JoysticksIds.push_back(v_joyId);
+
+	  Logger::Log("Joystick found [%s], id is %s", v_joyName.c_str(), v_joyId.c_str());
+	} else {
+	  v_continueToOpen = false; // don't continue to open joystick to keep m_joysticks[joystick.num] working
+	  Logger::Log("** Warning ** : fail to open joystick [%s], abort to open other joysticks", v_joyName.c_str());
+	}
+      }
+    }
     loadConfig(pConfig, pDb, i_id_profile);
   }
 
@@ -300,7 +430,6 @@ void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string&
     SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
   }
 
-  namespace {
     /**
      * converts a raw joystick axis value to a float, according to specified minimum and maximum values, as well as the deadzone.
      * 
@@ -317,7 +446,7 @@ void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string&
      *         neg  dead-zone  pos
      *         
      */
-    float joyRawToFloat(float raw, float neg, float deadzone_neg, float deadzone_pos, float pos) {
+  float InputHandler::joyRawToFloat(float raw, float neg, float deadzone_neg, float deadzone_pos, float pos) {
 
       if (neg > pos) {
 	std::swap(neg, pos);
@@ -331,58 +460,6 @@ void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string&
 
       return 0.0f;
     }
-  }
-
-  /*===========================================================================
-  Input device update
-  ===========================================================================*/  
-  void InputHandler::updateUniverseInput(Universe* i_universe) {
-    Biker* v_biker;
-
-    if(i_universe == NULL) {
-      return;
-    }
-
-    if(i_universe->getScenes().size() <= 0) {
-      return;
-    }
-    
-    if(i_universe->getScenes()[0]->Players().size() <= 0) {
-      return;
-    }
-
-    v_biker = i_universe->getScenes()[0]->Players()[0]; // only for the first player for the moment
-
-    /* Joystick? */
-    /* joystick only for player 1 */
-     if(m_ControllerModeID[0] == CONTROLLER_MODE_JOYSTICK1 && m_pActiveJoystick1 != NULL) {
-      SDL_JoystickUpdate();     
-
-      v_biker->getControler()->stopContols();
-      
-      /* Update buttons */
-      for(int i=0; i<SDL_JoystickNumButtons(m_pActiveJoystick1); i++) {
-        if(SDL_JoystickGetButton(m_pActiveJoystick1,i)) {
-          if(!m_JoyButtonsPrev[i]) {
-            /* Click! */
-            if(m_nJoyButtonChangeDir1 == i) {
-              v_biker->getControler()->setChangeDir(true);
-            }
-          }
-
-          m_JoyButtonsPrev[i] = true;
-        }        
-        else
-          m_JoyButtonsPrev[i] = false;
-      }
-      
-      /** Update axis */           
-      int nRawPrim = SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisPrim1);
-      v_biker->getControler()->setDrive(-joyRawToFloat(nRawPrim, m_nJoyAxisPrimMin1, m_nJoyAxisPrimLL1, m_nJoyAxisPrimUL1, m_nJoyAxisPrimMax1));
-      int nRawSec = SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisSec1);
-      v_biker->getControler()->setPull(-joyRawToFloat(nRawSec, m_nJoyAxisSecMin1, m_nJoyAxisSecLL1, m_nJoyAxisSecUL1, m_nJoyAxisSecMax1));
-    }
-  }
 
   /*===========================================================================
   Read configuration
@@ -391,89 +468,33 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     /* Set defaults */
     setDefaultConfig();
   
-    /* Get controller mode? (Keyboard or joystick) */
-    std::string ControllerMode1 = pConfig->getString("ControllerMode1");    
-    if(ControllerMode1 != "Keyboard" && ControllerMode1 != "Joystick1") {
-      ControllerMode1 = "Keyboard"; /* go default then */
-      Logger::Log("** Warning ** : 'ControllerMode1' must be either 'Keyboard' or 'Joystick1'!");
-    }
-
     /* Get settings for mode */
-    if(ControllerMode1 == "Keyboard") {
-      /* We're using the keyboard */
-      m_ControllerModeID[0] = CONTROLLER_MODE_KEYBOARD;
-
-      try {
-	m_nDriveKey[0]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive1", ""));
-	m_nBrakeKey[0]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake1", ""));
-	m_nPullBackKey[0]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft1", ""));
-	m_nPushForwardKey[0]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight1", ""));
-	m_nChangeDirKey[0]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir1", ""));
-      } catch(Exception &e) {
-	Logger::Log("** Warning ** : Invalid keyboard configuration!");
-	setDefaultConfig();
-      }
-
-    } else {
-      /* We're using joystick 1 */
-      m_ControllerModeID[0] = CONTROLLER_MODE_JOYSTICK1;      
-      
-      int nIdx = pConfig->getInteger("JoyIdx1");
-
-      if(nIdx >= 0) {
-	m_pActiveJoystick1 = m_Joysticks[nIdx];
-	
-	/* Okay, fetch the rest of the config */          
-	m_nJoyAxisPrim1 = pConfig->getInteger("JoyAxisPrim1");
-	m_nJoyAxisPrimMax1 = pConfig->getInteger("JoyAxisPrimMax1");
-	m_nJoyAxisPrimMin1 = pConfig->getInteger("JoyAxisPrimMin1");
-	m_nJoyAxisPrimUL1 = pConfig->getInteger("JoyAxisPrimUL1");
-	m_nJoyAxisPrimLL1 = pConfig->getInteger("JoyAxisPrimLL1");
-	
-	m_nJoyAxisSec1 = pConfig->getInteger("JoyAxisSec1");
-	m_nJoyAxisSecMax1 = pConfig->getInteger("JoyAxisSecMax1");
-	m_nJoyAxisSecMin1 = pConfig->getInteger("JoyAxisSecMin1");
-	m_nJoyAxisSecUL1 = pConfig->getInteger("JoyAxisSecUL1");
-	m_nJoyAxisSecLL1 = pConfig->getInteger("JoyAxisSecLL1");
-	
-	m_nJoyButtonChangeDir1 = pConfig->getInteger("JoyButtonChangeDir1");
-	
-	/* Init all joystick buttons */
-	m_JoyButtonsPrev.clear();
-	for(int i=0; i<SDL_JoystickNumButtons(m_pActiveJoystick1); i++) {
-	  m_JoyButtonsPrev.push_back(false);
-	}
-
-      }
-    }
-
-    m_ControllerModeID[1] = CONTROLLER_MODE_KEYBOARD;
-    m_ControllerModeID[2] = CONTROLLER_MODE_KEYBOARD;
-    m_ControllerModeID[3] = CONTROLLER_MODE_KEYBOARD;
-
     try {
-      m_nDriveKey[1]       = XMKey(pDb->config_getString(i_id_profile, "KeyDrive2"    , ""));
-      m_nBrakeKey[1]       = XMKey(pDb->config_getString(i_id_profile, "KeyBrake2"    , ""));
-      m_nPullBackKey[1]    = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft2" , ""));
-      m_nPushForwardKey[1] = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight2", ""));
-      m_nChangeDirKey[1]   = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir2", ""));
-      
-      m_nDriveKey[2]       = XMKey(pDb->config_getString(i_id_profile, "KeyDrive3"    , ""));
-      m_nBrakeKey[2]       = XMKey(pDb->config_getString(i_id_profile, "KeyBrake3"    , ""));
-      m_nPullBackKey[2]    = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft3" , ""));
-      m_nPushForwardKey[2] = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight3", ""));
-      m_nChangeDirKey[2]   = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir3", ""));
-      
-      m_nDriveKey[3]       = XMKey(pDb->config_getString(i_id_profile, "KeyDrive4"    , ""));
-      m_nBrakeKey[3]       = XMKey(pDb->config_getString(i_id_profile, "KeyBrake4"    , ""));
-      m_nPullBackKey[3]    = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft4" , ""));
-      m_nPushForwardKey[3] = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight4", ""));
-      m_nChangeDirKey[3]   = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir4", ""));
-    } catch(Exception &e) {    
-      Logger::Log("** Warning ** : Invalid keyboard configuration!");
+      m_nDriveKey[0]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive1", ""));
+      m_nBrakeKey[0]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake1", ""));
+      m_nPullBackKey[0]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft1", ""));
+      m_nPushForwardKey[0]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight1", ""));
+      m_nChangeDirKey[0]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir1", ""));
+      m_nDriveKey[1]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive2"    , ""));
+      m_nBrakeKey[1]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake2"    , ""));
+      m_nPullBackKey[1]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft2" , ""));
+      m_nPushForwardKey[1]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight2", ""));
+      m_nChangeDirKey[1]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir2", ""));
+      m_nDriveKey[2]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive3"    , ""));
+      m_nBrakeKey[2]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake3"    , ""));
+      m_nPullBackKey[2]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft3" , ""));
+      m_nPushForwardKey[2]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight3", ""));
+      m_nChangeDirKey[2]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir3", ""));
+      m_nDriveKey[3]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive4"    , ""));
+      m_nBrakeKey[3]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake4"    , ""));
+      m_nPullBackKey[3]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft4" , ""));
+      m_nPushForwardKey[3]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight4", ""));
+      m_nChangeDirKey[3]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir4", ""));
+    } catch(Exception &e) {
+      Logger::Log("** Warning ** : Invalid keys configuration!");
       setDefaultConfig();
-    }   
-  }
+    }
+}
   
   /*===========================================================================
   Add script key hook
@@ -487,55 +508,79 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     }
   }  
 
+std::string* InputHandler::getJoyId(Uint8 i_joynum) {
+  return &(m_JoysticksIds[i_joynum]);
+}
+
+std::string* InputHandler::getJoyIdByStrId(const std::string& i_name) {
+  for(unsigned int i=0; i<m_JoysticksIds.size(); i++) {
+    if(m_JoysticksIds[i] == i_name) {
+      return &(m_JoysticksIds[i]);
+    }
+  }
+  throw Exception("Invalid joystick name");
+}
+
+SDL_Joystick* InputHandler::getJoyById(std::string* i_id) {
+  for(unsigned int i=0; i<m_JoysticksIds.size(); i++) {
+    if( &(m_JoysticksIds[i]) == i_id) {
+      return m_Joysticks[i];
+    }
+  }
+  throw Exception("Invalid joystick id");
+}
+
+InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
+  return abs(m_joyAxisValue) < INPUT_JOYSTICK_MINIMUM_DETECTION ? INPUT_UP : INPUT_DOWN;
+}
+
   /*===========================================================================
   Handle an input event
   ===========================================================================*/  
-void InputHandler::handleInput(Universe* i_universe, InputEventType Type, int nKey,SDLMod mod) {
+void InputHandler::handleInput(Universe* i_universe, InputEventType Type, const XMKey& i_xmkey) {
     unsigned int p, pW;
     Biker *v_biker;
-    XMKey v_key;
 
-    if(Type == INPUT_KEY_DOWN || Type == INPUT_KEY_UP) {
-      v_key = XMKey((SDLKey)nKey, mod);
-    } else if(Type == INPUT_MOUSE_DOWN || Type == INPUT_MOUSE_UP) {
-      v_key = XMKey((Uint8)nKey);
-    } else {
-      return;
-    }
-
-    /* Update controller 1 */
-    /* Keyboard controlled */
     switch(Type) {
-    case INPUT_KEY_DOWN:
-    case INPUT_MOUSE_DOWN:
+    case INPUT_DOWN:
       p = 0; // player number p
       pW = 0; // number of players in the previous worlds
       for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
 	for(unsigned int i=0; i<i_universe->getScenes()[j]->Players().size(); i++) {
 	  v_biker = i_universe->getScenes()[j]->Players()[i];
 
-	  if(m_ControllerModeID[p] == CONTROLLER_MODE_KEYBOARD) {
-	    if(m_nDriveKey[p] == v_key) {
-	      /* Start driving */
+	  if(m_nDriveKey[p] == i_xmkey) {
+	    /* Start driving */
+	    if(i_xmkey.isAnalogic()) {
+	      v_biker->getControler()->setThrottle(fabs(i_xmkey.getAnalogicValue()));
+	    } else {
 	      v_biker->getControler()->setThrottle(1.0f);
-	    } else if(m_nBrakeKey[p] == v_key) {
-	      /* Brake */
-	      v_biker->getControler()->setBreak(1.0f);
-	    } else if((m_nPullBackKey[p]    == v_key && m_mirrored == false) ||
-		      (m_nPushForwardKey[p] == v_key && m_mirrored)) {
-	      /* Pull back */
-	      v_biker->getControler()->setPull(1.0f);
-	    } else if((m_nPushForwardKey[p] == v_key && m_mirrored == false) ||
-		      (m_nPullBackKey[p]    == v_key && m_mirrored)) {
-	      /* Push forward */
-	      v_biker->getControler()->setPull(-1.0f);            
 	    }
-	    else if(m_nChangeDirKey[p] == v_key) {
-	      /* Change dir */
-	      if(m_changeDirKeyAlreadyPress[p] == false){
-		v_biker->getControler()->setChangeDir(true);
-		m_changeDirKeyAlreadyPress[p] = true;
-	      }
+	  } else if(m_nBrakeKey[p] == i_xmkey) {
+	    /* Brake */
+	    v_biker->getControler()->setBreak(1.0f);
+	  } else if((m_nPullBackKey[p]    == i_xmkey && m_mirrored == false) ||
+		    (m_nPushForwardKey[p] == i_xmkey && m_mirrored)) {
+	    /* Pull back */
+	    if(i_xmkey.isAnalogic()) {
+	      v_biker->getControler()->setPull(fabs(i_xmkey.getAnalogicValue()));
+	    } else {
+	      v_biker->getControler()->setPull(1.0f);
+	    }
+	  } else if((m_nPushForwardKey[p] == i_xmkey && m_mirrored == false) ||
+		    (m_nPullBackKey[p]    == i_xmkey && m_mirrored)) {
+	    /* Push forward */
+	    if(i_xmkey.isAnalogic()) {
+	      v_biker->getControler()->setPull(-fabs(i_xmkey.getAnalogicValue()));
+	    } else {
+	      v_biker->getControler()->setPull(-1.0f);
+	    }
+	  }
+	  else if(m_nChangeDirKey[p] == i_xmkey) {
+	    /* Change dir */
+	    if(m_changeDirKeyAlreadyPress[p] == false){
+	      v_biker->getControler()->setChangeDir(true);
+	      m_changeDirKeyAlreadyPress[p] = true;
 	    }
 	  }
 	  p++;
@@ -544,36 +589,33 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type, int nK
       }
 
       break;
-    case INPUT_KEY_UP:
-    case INPUT_MOUSE_UP:
+    case INPUT_UP:
       p = 0; // player number p
       pW = 0; // number of players in the previous worlds
       for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
 	for(unsigned int i=0; i<i_universe->getScenes()[j]->Players().size(); i++) {
 	  v_biker = i_universe->getScenes()[j]->Players()[i];
 
-	  if(m_ControllerModeID[p] == CONTROLLER_MODE_KEYBOARD) {
-	    if(m_nDriveKey[p] == v_key) {
-	      /* Stop driving */
-	      v_biker->getControler()->setThrottle(0.0f);
-	    }
-	    else if(m_nBrakeKey[p] == v_key) {
-	      /* Don't brake */
-	      v_biker->getControler()->setBreak(0.0f);
-	    }
-	    else if((m_nPullBackKey[p]    == v_key && m_mirrored == false) ||
-		    (m_nPushForwardKey[p] == v_key && m_mirrored)) {
-	      /* Pull back */
-	      v_biker->getControler()->setPull(0.0f);
-	    }
-	    else if((m_nPushForwardKey[p] == v_key && m_mirrored == false) ||
-		    (m_nPullBackKey[p]    == v_key && m_mirrored)) {
-	      /* Push forward */
-	      v_biker->getControler()->setPull(0.0f);            
-	    }
-	    else if(m_nChangeDirKey[p] == v_key) {
-	      m_changeDirKeyAlreadyPress[p] = false;
-	    }
+	  if(m_nDriveKey[p] == i_xmkey) {
+	    /* Stop driving */
+	    v_biker->getControler()->setThrottle(0.0f);
+	  }
+	  else if(m_nBrakeKey[p] == i_xmkey) {
+	    /* Don't brake */
+	    v_biker->getControler()->setBreak(0.0f);
+	  }
+	  else if((m_nPullBackKey[p]    == i_xmkey && m_mirrored == false) ||
+		  (m_nPushForwardKey[p] == i_xmkey && m_mirrored)) {
+	    /* Pull back */
+	    v_biker->getControler()->setPull(0.0f);
+	  }
+	  else if((m_nPushForwardKey[p] == i_xmkey && m_mirrored == false) ||
+		  (m_nPullBackKey[p]    == i_xmkey && m_mirrored)) {
+	    /* Push forward */
+	    v_biker->getControler()->setPull(0.0f);
+	  }
+	  else if(m_nChangeDirKey[p] == i_xmkey) {
+	    m_changeDirKeyAlreadyPress[p] = false;
 	  }
 	  p++;
 	}
@@ -583,9 +625,9 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type, int nK
     }
 
     /* Have the script hooked this key? */
-    if(Type == INPUT_KEY_DOWN) {
+    if(Type == INPUT_DOWN) {
       for(int i=0; i<m_nNumScriptKeyHooks; i++) {
-	if(m_ScriptKeyHooks[i].nKey == v_key) {
+	if(m_ScriptKeyHooks[i].nKey == i_xmkey) {
 	  /* Invoke script */
 	  m_ScriptKeyHooks[i].pGame->getLuaLibGame()->scriptCallVoid(m_ScriptKeyHooks[i].FuncName);
 	}
@@ -596,12 +638,7 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type, int nK
   /*===========================================================================
   Set totally default configuration - useful for when something goes wrong
   ===========================================================================*/  
-  void InputHandler::setDefaultConfig() {
-    m_ControllerModeID[0] = CONTROLLER_MODE_KEYBOARD;
-    m_ControllerModeID[1] = CONTROLLER_MODE_KEYBOARD;
-    m_ControllerModeID[2] = CONTROLLER_MODE_KEYBOARD;
-    m_ControllerModeID[3] = CONTROLLER_MODE_KEYBOARD;
-    
+  void InputHandler::setDefaultConfig() {    
     m_nDriveKey[0]       = XMKey(SDLK_UP,    KMOD_NONE);
     m_nBrakeKey[0]       = XMKey(SDLK_DOWN,  KMOD_NONE);
     m_nPullBackKey[0]    = XMKey(SDLK_LEFT,  KMOD_NONE);

@@ -29,10 +29,9 @@ class BikeController {
   float Pull() const;
   bool ChangeDir() const;
 
-  // joystick
+  // direct drive access (for analogic access)
   void setDrive(float i_drive);
 
-  // keyboard
   void setBreak(float i_break);
   void setThrottle(float i_throttle);
 

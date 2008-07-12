@@ -40,8 +40,8 @@ public:
  virtual void onRenderFlush();
 
  /* input */
- virtual void keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char);
- virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+ virtual void keyUp(SDLKey nKey, SDLMod mod, const std::string& i_utf8Char);
+ virtual void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
 
  virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 

@@ -114,11 +114,11 @@ bool StateMultiUpdate::update()
   return true;
 }
 
-void StateMultiUpdate::keyDown(int nKey, SDLMod mod, int nChar, const std::string& i_utf8Char)
+void StateMultiUpdate::keyDown(SDLKey nKey, SDLMod mod, int nChar, const std::string& i_utf8Char)
 {
 }
 
-void StateMultiUpdate::keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char)
+void StateMultiUpdate::keyUp(SDLKey nKey, SDLMod mod, const std::string& i_utf8Char)
 {
 }
 

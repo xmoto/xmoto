@@ -876,6 +876,73 @@ UIRoot::UIRoot()
     return true;
   }
   
+bool UIRoot::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
+  if(!_RootJoystickAxisMotionEvent(this, i_joyNum, i_joyAxis, i_joyAxisValue)) {
+    if(i_joyAxis % 2 == 0) { // horizontal
+      if(i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+	activateLeft();
+	return true;
+      } else if(i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
+	activateRight();
+	return true;
+      }
+    } else { // vertical
+      if(i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+	activateUp();
+	return true;
+      } else if(i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
+	activateDown();
+	return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool UIRoot::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
+  return _RootJoystickButtonDownEvent(this, i_joyNum, i_joyButton);
+}
+
+bool UIRoot::_RootJoystickAxisMotionEvent(UIWindow *pWindow, Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
+  /* Hidden or disabled? */
+  if(pWindow->isHidden() || pWindow->isDisabled()) return false;
+
+  /* First try if any children want it */
+  for(unsigned int i=0;i<pWindow->getChildren().size();i++) {
+    if(_RootJoystickAxisMotionEvent(pWindow->getChildren()[i], i_joyNum, i_joyAxis, i_joyAxisValue))
+      return true;
+  }
+
+  /* Try this */
+  if(pWindow != this && pWindow->isActive()) {
+    return pWindow->joystickAxisMotion(i_joyNum, i_joyAxis, i_joyAxisValue);
+  }   
+  else return false;
+    
+  /* Ok */
+  return true;
+}
+
+bool UIRoot::_RootJoystickButtonDownEvent(UIWindow *pWindow, Uint8 i_joyNum, Uint8 i_joyButton) {
+  /* Hidden or disabled? */
+  if(pWindow->isHidden() || pWindow->isDisabled()) return false;
+
+  /* First try if any children want it */
+  for(unsigned int i=0;i<pWindow->getChildren().size();i++) {
+    if(_RootJoystickButtonDownEvent(pWindow->getChildren()[i], i_joyNum, i_joyButton))
+      return true;
+  }
+
+  /* Try this */
+  if(pWindow != this && pWindow->isActive()) {
+    return pWindow->joystickButtonDown(i_joyNum, i_joyButton);
+  }   
+  else return false;
+    
+  /* Ok */
+  return true;
+}
+
   bool UIRoot::_RootMouseEvent(UIWindow *pWindow,UIRootMouseEvent Event,int x,int y) {
     /* Hidden or disabled? */
     if(pWindow->isHidden() || pWindow->isDisabled()) return false;

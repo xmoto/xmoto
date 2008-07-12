@@ -132,7 +132,7 @@ void StatePause::checkEvents() {
   }
 }
 
-void StatePause::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StatePause::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   switch(nKey) {
 

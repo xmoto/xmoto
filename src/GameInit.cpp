@@ -439,11 +439,11 @@ void GameApp::manageEvent(SDL_Event* Event) {
     if((Event->key.keysym.unicode&0xff80)==0) {
       ch = Event->key.keysym.unicode & 0x7F;
     }
-    keyDown(Event->key.keysym.sym, Event->key.keysym.mod, ch, utf8Char);
+    StateManager::instance()->keyDown(Event->key.keysym.sym, Event->key.keysym.mod, ch, utf8Char);
     break;
   case SDL_KEYUP: 
     utf8Char = unicode2utf8(Event->key.keysym.unicode);
-    keyUp(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char);            
+    StateManager::instance()->keyUp(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char);
     break;
   case SDL_QUIT:  
     /* Force quit */
@@ -451,7 +451,7 @@ void GameApp::manageEvent(SDL_Event* Event) {
     break;
   case SDL_MOUSEBUTTONDOWN:
     /* Pass ordinary click */
-    mouseDown(Event->button.button);
+    StateManager::instance()->mouseDown(Event->button.button);
     
     /* Is this a double click? */
     getMousePos(&nX,&nY);
@@ -461,7 +461,7 @@ void GameApp::manageEvent(SDL_Event* Event) {
        (getXMTime() - fLastMouseClickTime) < 0.250f) {                
       
       /* Pass double click */
-      mouseDoubleClick(Event->button.button);                
+      StateManager::instance()->mouseDoubleClick(Event->button.button);
     }
     fLastMouseClickTime = getXMTime();
     nLastMouseClickX = nX;
@@ -470,30 +470,41 @@ void GameApp::manageEvent(SDL_Event* Event) {
     
     break;
   case SDL_MOUSEBUTTONUP:
-    mouseUp(Event->button.button);
+    StateManager::instance()->mouseUp(Event->button.button);
     break;
-    
+
+  case SDL_JOYAXISMOTION:
+    StateManager::instance()->joystickAxisMotion(Event->jaxis.which, Event->jaxis.axis, Event->jaxis.value);
+    break;
+
+  case SDL_JOYBUTTONDOWN:
+    StateManager::instance()->joystickButtonDown(Event->jbutton.which, Event->jbutton.button);
+    break;
+
+  case SDL_JOYBUTTONUP:
+    StateManager::instance()->joystickButtonUp(Event->jbutton.which, Event->jbutton.button);
+    break;
+
   case SDL_ACTIVEEVENT:
     
     if((Event->active.state & SDL_APPMOUSEFOCUS) != 0) { // mouse focus
       if(m_hasKeyboardFocus == false) {
-	changeFocus(Event->active.gain == 1);
+	StateManager::instance()->changeFocus(Event->active.gain == 1);
       }
       m_hasMouseFocus = (Event->active.gain == 1);
     }
     
     if((Event->active.state & SDL_APPINPUTFOCUS) != 0) { // keyboard focus
       if(m_hasMouseFocus == false) {
-	changeFocus(Event->active.gain == 1);
+	StateManager::instance()->changeFocus(Event->active.gain == 1);
       }
       m_hasKeyboardFocus = (Event->active.gain == 1);
     }
     
     if((Event->active.state & SDL_APPACTIVE) != 0) {
-      changeVisibility(Event->active.gain == 1);
+      StateManager::instance()->changeVisibility(Event->active.gain == 1);
       m_isIconified = (Event->active.gain == 0);
     }
-    
   }
 }
 

@@ -279,7 +279,7 @@ void StateFinished::executeOneCommand(std::string cmd, std::string args)
   }
 }
 
-void StateFinished::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateFinished::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   switch(nKey) {
 

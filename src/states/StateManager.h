@@ -46,11 +46,15 @@ public:
   void update();
   void render();
   // input
-  void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
-  void keyUp(int nKey,   SDLMod mod, const std::string& i_utf8Char);
+  void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  void keyUp(SDLKey nKey,   SDLMod mod, const std::string& i_utf8Char);
   void mouseDown(int nButton);
   void mouseDoubleClick(int nButton);
   void mouseUp(int nButton);
+  void joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
+  void joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
+  void joystickButtonUp(Uint8 i_joyNum, Uint8 i_joyButton);
+
   void changeFocus(bool i_hasFocus);
   void changeVisibility(bool i_visible);
 

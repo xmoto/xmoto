@@ -136,7 +136,7 @@ bool StateReplaying::update()
   return true;
 }
 
-void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateReplaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   switch(nKey) {
     

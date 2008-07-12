@@ -118,7 +118,7 @@ void StateUpgradeLevels::callAfterThreadFinished(int threadResult)
   m_msg = ((UpgradeLevelsThread*)m_pThread)->getMsg();
 }
 
-void StateUpgradeLevels::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
+void StateUpgradeLevels::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
   if(nKey == SDLK_ESCAPE) {
     m_pThread->askThreadToEnd();
   } else if(nKey == SDLK_k && (mod & KMOD_CTRL) != 0) {

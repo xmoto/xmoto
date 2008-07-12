@@ -41,7 +41,7 @@ class StateFinished : public StateMenu {
   virtual void leave();
   
   /* input */
-  virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
   
   static void clean();
 

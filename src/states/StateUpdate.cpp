@@ -137,11 +137,11 @@ bool StateUpdate::update()
   return true;  
 }
 
-void StateUpdate::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateUpdate::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
 }
 
-void StateUpdate::keyUp(int nKey,   SDLMod mod, const std::string& i_utf8Char)
+void StateUpdate::keyUp(SDLKey nKey,   SDLMod mod, const std::string& i_utf8Char)
 {
 }
 

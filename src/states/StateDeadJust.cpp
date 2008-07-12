@@ -48,7 +48,7 @@ void StateDeadJust::enter()
   }
 }
 
-void StateDeadJust::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateDeadJust::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   if(nKey == SDLK_ESCAPE) {
     StateManager::instance()->pushState(new StateDeadMenu(m_universe, false, this));

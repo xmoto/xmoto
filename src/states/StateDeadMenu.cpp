@@ -180,7 +180,7 @@ void StateDeadMenu::executeOneCommand(std::string cmd, std::string args)
   }
 }
 
-void StateDeadMenu::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateDeadMenu::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   if(nKey == SDLK_ESCAPE){
     /* quit this state */

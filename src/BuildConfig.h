@@ -55,8 +55,5 @@ Build configuration
   #define USE_GETTEXT
 #endif
 
-/* HIDE_JOYSTICK_SUPPORT - Disable joystick config UI */
-#define HIDE_JOYSTICK_SUPPORT
-
 #endif
 

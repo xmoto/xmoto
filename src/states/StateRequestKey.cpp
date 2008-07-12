@@ -52,7 +52,7 @@ void StateRequestKey::enter()
   StateMenu::enter();
 }
 
-void StateRequestKey::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateRequestKey::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   std::string v_msg;
 
@@ -88,6 +88,32 @@ void StateRequestKey::mouseDown(int nButton) {
   std::string v_msg;
 
   v_msg = XMKey(nButton).toString();
+
+  if(v_msg != "") {
+    m_requestForEnd = true;
+    std::string args = "";
+    CmdArgumentParser::instance()->addString(v_msg, args);
+    StateManager::instance()->sendAsynchronousMessage("REQUESTKEY", args);
+  }
+}
+
+void StateRequestKey::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
+  std::string v_msg;
+
+  v_msg = XMKey(InputHandler::instance()->getJoyId(i_joyNum), i_joyAxis, i_joyAxisValue).toString();
+
+  if(v_msg != "") {
+    m_requestForEnd = true;
+    std::string args = "";
+    CmdArgumentParser::instance()->addString(v_msg, args);
+    StateManager::instance()->sendAsynchronousMessage("REQUESTKEY", args);
+  }
+}
+
+void StateRequestKey::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
+  std::string v_msg;
+
+  v_msg = XMKey(InputHandler::instance()->getJoyId(i_joyNum), i_joyButton).toString();
 
   if(v_msg != "") {
     m_requestForEnd = true;

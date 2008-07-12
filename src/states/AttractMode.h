@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define EVERY_KEY -1
 #define NO_KEY -2
 
+#include "VCommon.h"
+
 class AttractMode {
 public:
   AttractMode();
@@ -34,7 +36,7 @@ public:
 
   bool inAttractMode();
 
-  void attractModeKeyDown(int nKey);
+  void attractModeKeyDown(SDLKey nKey);
 
 protected:
   bool m_inAttractMode;

@@ -41,8 +41,8 @@ public:
   virtual bool updateWhenUnvisible() {return true;}
 
   /* input */
-  virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
-  virtual void keyUp(int nKey,   SDLMod mod, const std::string& i_utf8Char);
+  virtual void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual void keyUp(SDLKey nKey,   SDLMod mod, const std::string& i_utf8Char);
 
   static void clean();
 

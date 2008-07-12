@@ -68,13 +68,6 @@ public:
 
   /* ** */
   void drawFrame(void);
-  void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
-  void keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char);
-  void mouseDown(int nButton);
-  void mouseDoubleClick(int nButton);
-  void mouseUp(int nButton);
-  void changeFocus(bool i_hasFocus);
-  void changeVisibility(bool i_visible);
 
   void reloadTheme();
 

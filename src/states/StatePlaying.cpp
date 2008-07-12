@@ -191,7 +191,7 @@ bool StatePlaying::update()
   return true;
 }
 
-void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StatePlaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   if(nKey == SDLK_ESCAPE){
     if(isLockedScene() == false) {
@@ -280,30 +280,51 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_
     // to avoid people changing direction during the autozoom
     if(m_autoZoom == false){
       /* Notify the controller */
-      InputHandler::instance()->handleInput(m_universe, INPUT_KEY_DOWN, nKey, mod);
+      InputHandler::instance()->handleInput(m_universe, INPUT_DOWN, XMKey(nKey, mod));
     }
   }
 
   StateScene::keyDown(nKey, mod, nChar, i_utf8Char);
 }
 
-void StatePlaying::keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char) {
-  InputHandler::instance()->handleInput(m_universe, INPUT_KEY_UP, nKey, mod);
+void StatePlaying::keyUp(SDLKey nKey, SDLMod mod, const std::string& i_utf8Char) {
+  InputHandler::instance()->handleInput(m_universe, INPUT_UP, XMKey(nKey, mod));
   StateScene::keyUp(nKey, mod, i_utf8Char);
 }
 
 void StatePlaying::mouseDown(int nButton)
 {
-  InputHandler::instance()->handleInput(m_universe, INPUT_MOUSE_DOWN, nButton, KMOD_NONE);
-
+  // to avoid people changing direction during the autozoom
+  if(m_autoZoom == false){
+    InputHandler::instance()->handleInput(m_universe, INPUT_DOWN, XMKey(nButton));
+  }
   StateScene::mouseDown(nButton);
 }
 
 void StatePlaying::mouseUp(int nButton)
 {
-  InputHandler::instance()->handleInput(m_universe, INPUT_MOUSE_UP, nButton, KMOD_NONE);
+  InputHandler::instance()->handleInput(m_universe, INPUT_UP, XMKey(nButton));
 
   StateScene::mouseUp(nButton);
+}
+
+void StatePlaying::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
+  // to avoid people changing direction during the autozoom
+  if(m_autoZoom == false){
+    InputHandler::instance()->handleInput(m_universe, InputHandler::instance()->joystickAxisSens(i_joyAxisValue),
+					  XMKey(InputHandler::instance()->getJoyId(i_joyNum), i_joyAxis, i_joyAxisValue));
+  }
+}
+
+void StatePlaying::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
+  // to avoid people changing direction during the autozoom
+  if(m_autoZoom == false){
+    InputHandler::instance()->handleInput(m_universe, INPUT_DOWN, XMKey(InputHandler::instance()->getJoyId(i_joyNum), i_joyButton));
+  }
+}
+
+void StatePlaying::joystickButtonUp(Uint8 i_joyNum, Uint8 i_joyButton) {
+  InputHandler::instance()->handleInput(m_universe, INPUT_UP, XMKey(InputHandler::instance()->getJoyId(i_joyNum), i_joyButton));
 }
 
 void StatePlaying::onOneFinish() {

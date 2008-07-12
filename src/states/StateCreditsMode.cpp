@@ -70,11 +70,44 @@ bool StateCreditsMode::render()
   return true;
 }
 
-void StateCreditsMode::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  // to have replay keys while credits, uncomment this
-  // StateReplaying::keyDown(nKey, mod,nChar);
-  // return;
+void StateCreditsMode::abort() {
   m_requestForEnd = true;
   closePlaying();
+}
+
+void StateCreditsMode::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+{
+  abort();
+}
+
+void StateCreditsMode::keyUp(SDLKey nKey, SDLMod mod, const std::string& i_utf8Char)
+{
+  /* declare to be sure it does nothing */
+}
+
+void StateCreditsMode::mouseDown(int nButton)
+{
+  abort();
+}
+
+void StateCreditsMode::mouseDoubleClick(int nButton)
+{
+  abort();
+}
+
+void StateCreditsMode::mouseUp(int nButton)
+{
+  /* declare to be sure it does nothing */
+}
+
+void StateCreditsMode::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
+  abort();
+}
+
+void StateCreditsMode::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
+  abort();
+}
+
+void StateCreditsMode::joystickButtonUp(Uint8 i_joyNum, Uint8 i_joyButton) {
+  /* declare to be sure it does nothing */
 }

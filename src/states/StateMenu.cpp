@@ -83,7 +83,7 @@ bool StateMenu::render()
   return true;
 }
 
-void StateMenu::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateMenu::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   GameState::keyDown(nKey, mod, nChar, i_utf8Char);
 
@@ -97,7 +97,7 @@ void StateMenu::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf
   }
 }
 
-void StateMenu::keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char)
+void StateMenu::keyUp(SDLKey nKey, SDLMod mod, const std::string& i_utf8Char)
 {
   m_GUI->keyUp(nKey, mod, i_utf8Char);
   checkEvents();
@@ -147,4 +147,16 @@ void StateMenu::mouseUp(int nButton)
     m_GUI->mouseRUp(nX,nY);
     checkEvents();
   }
+}
+
+void StateMenu::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
+  m_GUI->joystickAxisMotion(i_joyNum, i_joyAxis, i_joyAxisValue);
+}
+
+void StateMenu::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
+  m_GUI->joystickButtonDown(i_joyNum, i_joyButton);
+  checkEvents();
+}
+
+void StateMenu::joystickButtonUp(Uint8 i_joyNum, Uint8 i_joyButton) {
 }

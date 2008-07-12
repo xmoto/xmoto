@@ -134,7 +134,7 @@ void StateEditProfile::checkEvents() {
   }
 }
 
-void StateEditProfile::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateEditProfile::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   switch(nKey) {
 
