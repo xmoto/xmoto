@@ -37,13 +37,8 @@ public:
   void callAfterThreadFinished(int threadResult);
   void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
 
-  void setCurrentUpdatedLevel(std::string levelName);
-
 protected:
   virtual void checkEvents() {}
-
-private:
-  std::string m_curUpdLevelName;
 };
 
 #endif

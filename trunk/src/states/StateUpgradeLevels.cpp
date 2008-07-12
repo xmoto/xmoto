@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "db/xmDatabase.h"
 #include "XMSession.h"
-
 #include "helpers/Log.h"
+#include "helpers/CmdArgumentParser.h"
 
 StateUpgradeLevels::StateUpgradeLevels(bool drawStateBehind,
 				       bool updateStatesBehind)
@@ -33,7 +33,6 @@ StateUpgradeLevels::StateUpgradeLevels(bool drawStateBehind,
 {
   m_pThread = new UpgradeLevelsThread(this, XMSession::instance()->theme());
   m_name    = "StateUpgradeLevels";
-  m_curUpdLevelName = "";
 
   StateManager::instance()->registerAsObserver("NEWLEVELAVAILABLE", this);
   StateManager::instance()->registerAsObserver("ASKINGLEVELUPDATE", this);
@@ -101,8 +100,10 @@ void StateUpgradeLevels::executeOneCommand(std::string cmd, std::string args)
     StateManager::instance()->pushState(v_state);
   }
   else if(cmd == "ASKINGLEVELUPDATE"){
+    std::string curUpdLevelName = CmdArgumentParser::instance()->getString(args);
+
     char cBuf[256];
-    snprintf(cBuf, 256, GAMETEXT_WANTTOUPDATELEVEL, m_curUpdLevelName.c_str());
+    snprintf(cBuf, 256, GAMETEXT_WANTTOUPDATELEVEL, curUpdLevelName.c_str());
 
     StateMessageBox* v_state = new StateMessageBox(this, cBuf,
 						   (UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
@@ -128,7 +129,3 @@ void StateUpgradeLevels::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::s
   }
 }
 
-void StateUpgradeLevels::setCurrentUpdatedLevel(std::string levelName)
-{
-  m_curUpdLevelName = levelName;
-}

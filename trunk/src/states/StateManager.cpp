@@ -618,9 +618,6 @@ StateManager::registerAsEmitter(std::string message)
 void
 StateManager::sendSynchronousMessage(std::string message, std::string args)
 {
-  if(XMSession::instance()->debug() == true)
-    Logger::Log("sendSynchronousMessage [%s [%s]]", message.c_str(), args.c_str());
-
   std::map<std::string, std::vector<GameState*> >::iterator itFind;
 
   itFind = m_registeredStates.find(message);
@@ -651,9 +648,6 @@ StateManager::sendSynchronousMessage(std::string message, std::string args)
 void
 StateManager::sendAsynchronousMessage(std::string message, std::string args)
 {
-  if(XMSession::instance()->debug() == true)
-    Logger::Log("sendAsynchronousMessage [%s [%s]]", message.c_str(), args.c_str());
-
   std::map<std::string, std::vector<GameState*> >::iterator itFind;
 
   itFind = m_registeredStates.find(message);
