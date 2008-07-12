@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "states/StateManager.h"
 #include "states/StateUpgradeLevels.h"
+#include "helpers/CmdArgumentParser.h"
 
 UpgradeLevelsThread::UpgradeLevelsThread(GameState* pCallingState, const std::string& i_id_theme)
   : XMThread()
@@ -71,10 +72,11 @@ bool UpgradeLevelsThread::shouldLevelBeUpdated(const std::string &LevelID)
   v_levelFileName = m_pDb->getResult(v_result, 2, 0, 1);
   m_pDb->read_DB_free(v_result);
 
-  ((StateUpgradeLevels*)m_pCallingState)->setCurrentUpdatedLevel(v_levelName);
+  std::string args = "";
+  CmdArgumentParser::instance()->addString(v_levelName, args);
 
   // message box
-  StateManager::instance()->sendAsynchronousMessage("ASKINGLEVELUPDATE");
+  StateManager::instance()->sendAsynchronousMessage("ASKINGLEVELUPDATE", args);
   sleepThread();
 
   if(m_wakeUpInfos == "NO"){
