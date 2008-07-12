@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateManager.h"
-#include "helpers/Log.h"
+#include "GameState.h"
 #include "StatePause.h"
 #include "StateFinished.h"
 #include "StateDeadMenu.h"
@@ -31,17 +31,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateEditWebConfig.h"
 #include "StateLevelPackViewer.h"
 #include "StateRequestKey.h"
-#include "Game.h"
+
 #include "XMSession.h"
-#include "Sound.h"
 #include "drawlib/DrawLib.h"
+#include "Game.h"
+#include "helpers/Log.h"
 #include "SysMessage.h"
-#include "GameText.h"
 #include "xmscene/Camera.h"
 #include "VideoRecorder.h"
-
-#define MENU_SHADING_TIME 0.3
-#define MENU_SHADING_VALUE 150
 
 StateManager::StateManager()
 {
@@ -81,9 +78,13 @@ StateManager::~StateManager()
     delete popState();
   }
 
+  deleteToDeleteState();
+
   if(m_videoRecorder != NULL) {
     delete m_videoRecorder;
   }
+
+  m_registeredStates.clear();
 }
 
 void StateManager::pushState(GameState* pNewState)
@@ -120,12 +121,14 @@ void StateManager::flush() {
     delete popState();
   }
 
+  deleteToDeleteState();
+
   if(m_statesStack.size() == 0) {
     GameApp::instance()->requestEnd();
   }
 }
 
-GameState* StateManager::replaceState(GameState* pNewState)
+void StateManager::replaceState(GameState* pNewState)
 {
   GameState* pPreviousState = NULL;
 
@@ -141,7 +144,7 @@ GameState* StateManager::replaceState(GameState* pNewState)
   calculateWhichStateIsRendered();
   calculateFps();
 
-  return pPreviousState;
+  m_toDeleteStates.push_back(pPreviousState);
 }
 
 bool StateManager::needUpdateOrRender() {
@@ -178,7 +181,7 @@ void StateManager::update()
 
   while(stateIterator != tmp.end()){
     (*stateIterator)->executeCommands();
-    stateIterator++;
+    ++stateIterator;
   }
 
   // flush states
@@ -194,7 +197,7 @@ void StateManager::update()
     if((*RstateIterator)->updateStatesBehind() == false)
       break;
     
-    RstateIterator++;
+    ++RstateIterator;
   }
 
   if(oneUpdate == true){
@@ -237,7 +240,7 @@ void StateManager::render()
 	(*stateIterator)->render();
       }
 
-      stateIterator++;
+      ++stateIterator;
     }
 
     // FPS
@@ -269,7 +272,7 @@ void StateManager::render()
 	(*stateIterator)->onRenderFlush();
       }
       
-      stateIterator++;
+      ++stateIterator;
     }
   }
 }
@@ -322,7 +325,7 @@ void StateManager::drawStack() {
     v_fm->printString(v_fg, (w-v_fg->realWidth())/2 + xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, true);
 
     i++;
-    stateIterator++;
+    ++stateIterator;
   }
 }
 
@@ -401,7 +404,7 @@ void StateManager::calculateWhichStateIsRendered()
       hideState = true;
     }
     
-    stateIterator++;
+    ++stateIterator;
   }
 }
 
@@ -432,7 +435,7 @@ void StateManager::calculateFps()
       maxRenderFps = renderFps;
     }
 
-    stateIterator++;
+    ++stateIterator;
   }
 
   m_maxUpdateFps = maxUpdateFps;
@@ -449,7 +452,7 @@ void StateManager::calculateFps()
   while(stateIterator != m_statesStack.end()){
     (*stateIterator)->setCurrentRenderFps(topStateRenderFps);
     (*stateIterator)->setMaxFps(m_maxFps);
-    stateIterator++;
+    ++stateIterator;
   }
 
   m_curRenderFps = topStateRenderFps;
@@ -515,233 +518,157 @@ bool StateManager::doRender()
   return false;
 }
 
-void StateManager::sendSynchronousMessage(std::string cmd)
+void
+StateManager::registerAsObserver(std::string message,
+				 GameState* self)
 {
-  std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
+  std::map<std::string, std::vector<GameState*> >::iterator itFind;
 
-  while(stateIterator != m_statesStack.end()){
-    (*stateIterator)->executeOneCommand(cmd);
+  itFind = m_registeredStates.find(message);
+  if(itFind != m_registeredStates.end()){
+    if(self != NULL) {
 
-    stateIterator++;
+      // check if the state is already registered
+      if(XMSession::instance()->debug() == true) {
+	std::vector<GameState*>& states = (*itFind).second;
+	std::vector<GameState*>::iterator it = states.begin();
+	std::string name = self->getName();
+
+	while(it != states.end()){
+	  if((*it)->getName() == name){
+	    Logger::Log("** Warning ** : state [%s] already registered as observer for this message [%s].",
+			name.c_str(), message.c_str());
+	    break;
+	  }
+	  ++it;
+	}
+      }
+
+      (*itFind).second.push_back(self);
+    }
+  } else {
+    m_registeredStates[message] = std::vector<GameState*>();
+    if(self != NULL) {
+      itFind = m_registeredStates.find(message);
+      (*itFind).second.push_back(self);
+    }
   }
 }
 
-void StateManager::sendAsynchronousMessage(std::string cmd)
+void
+StateManager::unregisterAsObserver(std::string message, GameState* self)
 {
-  std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
+  std::map<std::string, std::vector<GameState*> >::iterator itFind;
 
-  while(stateIterator != m_statesStack.end()){
-    (*stateIterator)->send("STATE_MANAGER", cmd);
+  itFind = m_registeredStates.find(message);
+  if(itFind != m_registeredStates.end()){
+    std::vector<GameState*>& states = (*itFind).second;
+    std::vector<GameState*>::iterator stateIterator = states.begin();
 
-    stateIterator++;
+    while(stateIterator != states.end()){
+      if(self == (*stateIterator)) {
+	states.erase(stateIterator);
+
+// add and remove all the time ? maybe better to only remove them at
+// the end of the program, as the number of messages is fixed
+#if 0	
+	// if there's no more registered state for this message,
+	// remove the entry
+	if(states.size() == 0){
+	  m_registeredStates.erase(itFind);
+	}
+#endif	
+	return;
+      }
+
+      ++stateIterator;
+    }
+  } else {
+    Logger::Log("*** Warning *** : unregisterAsObserver message [%s] state [%], but not registered.",
+		message.c_str(),
+		self->getName().c_str());
   }
 }
 
-
-
-
-
-
-
-GameState::GameState(bool drawStateBehind,
-		     bool updateStatesBehind,
-		     bool i_doShade,
-		     bool i_doShadeAnim)
+void
+StateManager::registerAsEmitter(std::string message)
 {
-  m_isHide             = false;
-  m_drawStateBehind    = drawStateBehind;
-  m_updateStatesBehind = updateStatesBehind;
-  m_requestForEnd      = false;
-
-  // default rendering and update fps
-  m_updateFps          = 50;
-  m_renderFps          = 50;
-  m_curRenderFps       = m_renderFps;
-
-  m_maxFps             = 0;
-
-  m_updatePeriod       = 0;
-  m_updateCounter      = 0;
-
-  // shade
-  m_doShade     = i_doShade;
-  m_doShadeAnim = i_doShadeAnim;
-
-  m_showCursor = true;
+  // TODO::show debug informations
+  return registerAsObserver(message, NULL);
 }
 
-GameState::~GameState() {
-}
-
-bool GameState::doUpdate()
+void
+StateManager::sendSynchronousMessage(std::string message, std::string args)
 {
-  m_updateCounter += 1.0;
+  if(XMSession::instance()->debug() == true)
+    Logger::Log("sendSynchronousMessage [%s [%s]]", message.c_str(), args.c_str());
 
-  if(m_updateCounter >= m_updatePeriod){
-    m_updateCounter -= m_updatePeriod;
-    return true;
-  }
-  return false;
-}
+  std::map<std::string, std::vector<GameState*> >::iterator itFind;
 
-void GameState::enter() {
-  m_nShadeTime = GameApp::getXMTime();
-  if(XMSession::instance()->ugly() == true)
-    GameApp::instance()->displayCursor(showCursor());
-}
+  itFind = m_registeredStates.find(message);
+  if(itFind != m_registeredStates.end()){
+    std::vector<GameState*>& states = (*itFind).second;
+    std::vector<GameState*>::iterator stateIterator = states.begin();
 
-void GameState::enterAfterPop()
-{
-  if(XMSession::instance()->ugly() == true)
-    GameApp::instance()->displayCursor(showCursor());
-}
-
-bool GameState::render() {
-  // shade
-  if(XMSession::instance()->ugly() == false && m_doShade) {
-    float v_currentTime = GameApp::getXMTime();
-    int   v_nShade;
-    
-    if(v_currentTime - m_nShadeTime < MENU_SHADING_TIME && m_doShadeAnim) {
-      v_nShade = (int ) ((v_currentTime - m_nShadeTime) * (MENU_SHADING_VALUE / MENU_SHADING_TIME));
-    } else {
-      v_nShade = MENU_SHADING_VALUE;
+    if(states.size() == 0){
+      Logger::Log("*** Warning *** : sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
+		  message.c_str(), args.c_str());
     }
 
-    DrawLib* drawLib = GameApp::instance()->getDrawLib();
-    drawLib->drawBox(Vector2f(0,0),
-		     Vector2f(drawLib->getDispWidth(),
-			      drawLib->getDispHeight()),
-		     0, MAKE_COLOR(0,0,0, v_nShade));
+    while(stateIterator != states.end()){
+      (*stateIterator)->executeOneCommand(message, args);
+
+      if(XMSession::instance()->debug() == true)
+	Logger::Log("sendSynchronousMessage [%s [%s]] to [%s]",
+		    message.c_str(), args.c_str(), (*stateIterator)->getName().c_str());
+
+      ++stateIterator;
+    }
+  } else {
+    Logger::Log("*** Warning *** : sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
+		message.c_str(), args.c_str());
   }
-
-  return renderOverShadow();
 }
 
-bool GameState::renderOverShadow() {
-  // do nothing by default
-  return true;
-}
-
-std::string GameState::getId() const {
-  return m_id;
-}
-
-void GameState::setId(const std::string& i_id) {
-  m_id = i_id;
-}
-
-void GameState::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
-  /* by default, do nothing */
-  Logger::Log("** Warning ** : StateMessageBoxReceiver::send() received, but nothing done !");
-}
-
-void GameState::send(const std::string& i_id, const std::string& i_message)
+void
+StateManager::sendAsynchronousMessage(std::string message, std::string args)
 {
+  if(XMSession::instance()->debug() == true)
+    Logger::Log("sendAsynchronousMessage [%s [%s]]", message.c_str(), args.c_str());
+
+  std::map<std::string, std::vector<GameState*> >::iterator itFind;
+
+  itFind = m_registeredStates.find(message);
+  if(itFind != m_registeredStates.end()){
+    std::vector<GameState*>& states = (*itFind).second;
+    std::vector<GameState*>::iterator stateIterator = states.begin();
+
+    if(states.size() == 0){
+      Logger::Log("*** Warning *** : sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
+		  message.c_str(), args.c_str());
+    }
+
+    while(stateIterator != states.end()){
+      (*stateIterator)->send(message, args);
+
+      if(XMSession::instance()->debug() == true)
+	Logger::Log("sendAsynchronousMessage [%s [%s]] to [%s]",
+		    message.c_str(), args.c_str(),
+		    (*stateIterator)->getName().c_str());
+
+      ++stateIterator;
+    }
+  } else {
+    Logger::Log("*** Warning *** : sendSynchronousMessage message [% [%s]s] sent and there's no state to receive it.",
+		message.c_str(),
+		args.c_str());
+  }
 }
 
-void GameState::executeCommands()
+void StateManager::deleteToDeleteState()
 {
-  while(m_commands.empty() == false){
-    executeOneCommand(m_commands.front());
-    m_commands.pop();
+  while(m_toDeleteStates.size() != 0){
+    delete m_toDeleteStates.back();
+    m_toDeleteStates.pop_back();
   }
-
-}
-
-void GameState::executeOneCommand(std::string cmd)
-{
-  // default one do nothing.
-}
-
-void GameState::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
-  GameApp* gameApp = GameApp::instance();
-
-  if(nKey == SDLK_F12) {
-    gameApp->gameScreenshot();
-    return;        
-  }
-
-  if(nKey == SDLK_F8) {
-    gameApp->enableWWW(XMSession::instance()->www() == false);
-    StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
-    return;        
-  }
-
-  if(nKey == SDLK_F7) {
-    gameApp->enableFps(XMSession::instance()->fps() == false);
-    return;        
-  }
-
-  if(nKey == SDLK_F9) {
-    gameApp->switchUglyMode(XMSession::instance()->ugly() == false);
-    if(XMSession::instance()->ugly()) {
-      SysMessage::instance()->displayText(SYS_MSG_UGLY_MODE_ENABLED);
-    } else {
-      SysMessage::instance()->displayText(SYS_MSG_UGLY_MODE_DISABLED);
-    }
-
-    if(XMSession::instance()->ugly() == true)
-      GameApp::instance()->displayCursor(showCursor());
-
-    return;        
-  }
-
-  if(nKey == SDLK_RETURN && (mod & KMOD_ALT) != 0) {
-    gameApp->getDrawLib()->toogleFullscreen();
-    XMSession::instance()->setWindowed(XMSession::instance()->windowed() == false);
-    return;
-  }
-
-  if(nKey == SDLK_F10) {
-    gameApp->switchTestThemeMode(XMSession::instance()->testTheme() == false);
-    if(XMSession::instance()->testTheme()) {
-      SysMessage::instance()->displayText(SYS_MSG_THEME_MODE_ENABLED);
-    } else {
-      SysMessage::instance()->displayText(SYS_MSG_THEME_MODE_DISABLED);
-    }
-    return;        
-  }
-
-  if(nKey == SDLK_F11) {
-    gameApp->switchUglyOverMode(XMSession::instance()->uglyOver() == false);
-    if(XMSession::instance()->uglyOver()) {
-      SysMessage::instance()->displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
-    } else {
-      SysMessage::instance()->displayText(SYS_MSG_UGLY_OVER_MODE_DISABLED);
-    }
-    return;        
-  }
-
-  /* activate/desactivate interpolation */
-  if(nKey == SDLK_i && (mod & KMOD_CTRL) != 0) {
-    XMSession::instance()->setEnableReplayInterpolation(!XMSession::instance()->enableReplayInterpolation());
-    if(XMSession::instance()->enableReplayInterpolation()) {
-      SysMessage::instance()->displayText(SYS_MSG_INTERPOLATION_ENABLED);
-    } else {
-      SysMessage::instance()->displayText(SYS_MSG_INTERPOLATION_DISABLED);
-    }
-    StateManager::instance()->sendAsynchronousMessage("INTERPOLATION_CHANGED");
-
-    return;
-  }
-
-  if(nKey == SDLK_m && (mod & KMOD_CTRL) != 0) {
-    XMSession::instance()->setMirrorMode(XMSession::instance()->mirrorMode() == false);
-    InputHandler::instance()->setMirrored(XMSession::instance()->mirrorMode());
-    StateManager::instance()->sendAsynchronousMessage("MIRRORMODE_CHANGED");
-  }
-
-  if(nKey == SDLK_s && (mod & KMOD_CTRL) != 0) {
-    GameApp::instance()->playMusic(""); // tell the game the last music played is "" otherwise, it doesn't know when music is disable then enable back
-    XMSession::instance()->setEnableAudio(! XMSession::instance()->enableAudio());
-    Sound::setActiv(XMSession::instance()->enableAudio());
-    if(XMSession::instance()->enableAudio()) {
-      SysMessage::instance()->displayText(SYS_MSG_AUDIO_ENABLED);
-    } else {
-      SysMessage::instance()->displayText(SYS_MSG_AUDIO_DISABLED);
-    }
-    StateManager::instance()->sendAsynchronousMessage("ENABLEAUDIO_CHANGED");
-  }
-
 }

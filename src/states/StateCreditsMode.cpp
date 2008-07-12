@@ -78,19 +78,3 @@ void StateCreditsMode::keyDown(int nKey, SDLMod mod,int nChar, const std::string
   m_requestForEnd = true;
   closePlaying();
 }
-
-void StateCreditsMode::keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char)
-{
-}
-
-void StateCreditsMode::mouseDown(int nButton)
-{
-}
-
-void StateCreditsMode::mouseDoubleClick(int nButton)
-{
-}
-
-void StateCreditsMode::mouseUp(int nButton)
-{
-}

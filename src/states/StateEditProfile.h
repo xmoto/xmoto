@@ -25,12 +25,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMenu.h"
 
 class UIRoot;
-class StateMenuContextReceiver;
 
 class StateEditProfile : public StateMenu {
 public:
-  StateEditProfile(StateMenuContextReceiver* i_receiver = NULL,
-		   bool drawStateBehind    = true,
+  StateEditProfile(bool drawStateBehind    = true,
 		   bool updateStatesBehind = false
 		   );
   virtual ~StateEditProfile();
@@ -41,7 +39,7 @@ public:
   virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
 
   static void clean();
-  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
 protected:
   virtual void checkEvents();
@@ -54,7 +52,6 @@ private:
   /* GUI */
   static UIRoot* m_sGUI;
   static void createGUIIfNeeded();
-  StateMenuContextReceiver* m_receiver;  
 };
 
 #endif

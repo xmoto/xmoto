@@ -28,6 +28,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 UpdateDbThread::UpdateDbThread()
   : XMThread()
 {
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("UPDATE_LEVELS_LISTS");
+    StateManager::instance()->registerAsEmitter("UPDATE_REPLAYS_LISTS");
+    StateManager::instance()->registerAsEmitter("UPDATE_THEMES_LISTS");
+  }
 }
 
 UpdateDbThread::~UpdateDbThread()

@@ -34,7 +34,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define SYNC_UP_TMPFILEBZ2 SYNC_UP_TMPFILE".bz2"
 
 SyncThread::SyncThread() 
-: XMThread() {
+: XMThread()
+{
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("STATS_UPDATED");
+  }
+
 }
 
 SyncThread::~SyncThread() {

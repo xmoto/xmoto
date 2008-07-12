@@ -32,7 +32,6 @@ class Universe;
 class StateFinished : public StateMenu {
   public:
   StateFinished(Universe* i_universe,
-		StateMenuContextReceiver* i_receiver = NULL,
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false
 		);
@@ -46,10 +45,10 @@ class StateFinished : public StateMenu {
   
   static void clean();
 
-  virtual void send(const std::string& i_id,
-		    UIMsgBoxButton i_button,
-		    const std::string& i_input);
-  virtual void executeOneCommand(std::string cmd);
+  virtual void sendFromMessageBox(const std::string& i_id,
+				  UIMsgBoxButton i_button,
+				  const std::string& i_input);
+  virtual void executeOneCommand(std::string cmd, std::string args);
   
  protected:
   virtual void checkEvents();

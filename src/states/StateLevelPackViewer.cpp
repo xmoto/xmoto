@@ -23,12 +23,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
-  //#include "LevelsManager.h"
 #include "gui/specific/GUIXMoto.h"
 #include "XMSession.h"
 #include "states/StatePreplayingGame.h"
 #include "states/StateLevelInfoViewer.h"
 #include "states/StateDownloadGhost.h"
+#include "helpers/Log.h"
 
 /* static members */
 UIRoot*  StateLevelPackViewer::m_sGUI = NULL;
@@ -42,11 +42,18 @@ StateLevelPackViewer::StateLevelPackViewer(LevelsPack* pActiveLevelPack,
   m_name             = "StateLevelPackViewer";
   m_pActiveLevelPack = pActiveLevelPack;
   m_require_updateLevelsList = false;
+
+  StateManager::instance()->registerAsObserver("LEVELS_UPDATED", this);
+  StateManager::instance()->registerAsObserver("HIGHSCORES_UPDATED", this);
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("FAVORITES_UPDATED");
+  }  
 }
 
 StateLevelPackViewer::~StateLevelPackViewer()
 {
-
+  StateManager::instance()->unregisterAsObserver("LEVELS_UPDATED", this);
+  StateManager::instance()->unregisterAsObserver("HIGHSCORES_UPDATED", this);
 }
 
 void StateLevelPackViewer::enter()
@@ -152,15 +159,18 @@ void StateLevelPackViewer::checkEvents()
   }
 }
 
-void StateLevelPackViewer::send(const std::string& i_id, const std::string& i_message) {
-  if(i_id == "STATE_MANAGER") {
-    if(i_message == "LEVELS_UPDATED" || i_message == "HIGHSCORES_UPDATED") {
-      m_require_updateLevelsList = true;
-      return;
-    }
+void StateLevelPackViewer::executeOneCommand(std::string cmd, std::string args)
+{
+  if(XMSession::instance()->debug() == true) {
+    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+		cmd.c_str(), args.c_str(), getName().c_str());
   }
 
-  StateMenu::send(i_id, i_message);
+  if(cmd == "LEVELS_UPDATED" || cmd == "HIGHSCORES_UPDATED") {
+    m_require_updateLevelsList = true;
+  } else {
+    GameState::executeOneCommand(cmd, args);
+  }
 }
 
 void StateLevelPackViewer::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)

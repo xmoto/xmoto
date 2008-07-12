@@ -43,16 +43,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define NB_PARTICLES_TO_RENDER_LIMITATION 512
 
 StateScene::StateScene(bool i_doShade, bool i_doShadeAnim)
-: GameState(false, false, i_doShade, i_doShadeAnim) {
-    m_fLastPhysTime = -1.0;
-    // while playing, we want 100 fps for the physic
-    m_updateFps     = 100;
-    m_showCursor = false;
-    m_cameraAnim = NULL;
-    m_universe   = NULL;
+: GameState(false, false, i_doShade, i_doShadeAnim)
+{
+  m_fLastPhysTime = -1.0;
+  // while playing, we want 100 fps for the physic
+  m_updateFps     = 100;
+  m_showCursor = false;
+  m_cameraAnim = NULL;
+  m_universe   = NULL;
 
-    m_benchmarkNbFrame   = 0;
-    m_benchmarkStartTime = GameApp::getXMTime();
+  m_benchmarkNbFrame   = 0;
+  m_benchmarkStartTime = GameApp::getXMTime();
+
+  initMessageRegistering();
 }
 
 StateScene::StateScene(Universe* i_universe, bool i_doShade, bool i_doShadeAnim)
@@ -66,13 +69,41 @@ StateScene::StateScene(Universe* i_universe, bool i_doShade, bool i_doShadeAnim)
   m_universe   = i_universe;
 
   m_benchmarkNbFrame   = 0;
-  m_benchmarkStartTime = GameApp::getXMTime();  
+  m_benchmarkStartTime = GameApp::getXMTime();
+
+  initMessageRegistering();
 }
 
 StateScene::~StateScene()
 {
+  StateManager::instance()->unregisterAsObserver("ERROR", this);
+  StateManager::instance()->unregisterAsObserver("FINISH", this);
+  StateManager::instance()->unregisterAsObserver("RESTART", this);
+  StateManager::instance()->unregisterAsObserver("NEXTLEVEL", this);
+  StateManager::instance()->unregisterAsObserver("PREVIOUSLEVEL", this);
+  StateManager::instance()->unregisterAsObserver("ABORT", this);
+  StateManager::instance()->unregisterAsObserver("INTERPOLATION_CHANGED", this);
+  StateManager::instance()->unregisterAsObserver("MIRRORMODE_CHANGED", this);
+
   if(m_cameraAnim != NULL) {
     delete m_cameraAnim;
+  }
+}
+
+void StateScene::initMessageRegistering()
+{
+  StateManager::instance()->registerAsObserver("ERROR", this);
+  StateManager::instance()->registerAsObserver("FINISH", this);
+  StateManager::instance()->registerAsObserver("RESTART", this);
+  StateManager::instance()->registerAsObserver("NEXTLEVEL", this);
+  StateManager::instance()->registerAsObserver("PREVIOUSLEVEL", this);
+  StateManager::instance()->registerAsObserver("ABORT", this);
+  StateManager::instance()->registerAsObserver("INTERPOLATION_CHANGED", this);
+  StateManager::instance()->registerAsObserver("MIRRORMODE_CHANGED", this);
+
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("FAVORITES_UPDATED");
+    StateManager::instance()->registerAsEmitter("BLACKLISTEDLEVELS_UPDATED");
   }
 }
 
@@ -332,14 +363,10 @@ void StateScene::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_ut
   }
 }
 
-void StateScene::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+void StateScene::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "ERROR") {
-    m_commands.push("ERROR");
+    addCommand("ERROR");
   }
-}
-
-void StateScene::send(const std::string& i_id, const std::string& i_message) {
-  m_commands.push(i_message);
 }
 
 void StateScene::setScoresTimes() {
@@ -460,44 +487,41 @@ void StateScene::runAutoZoom() {
   }
 }
 
-void StateScene::executeOneCommand(std::string cmd)
+void StateScene::executeOneCommand(std::string cmd, std::string args)
 {
-  Logger::Log("StateScene::executeOneCommand::%s", cmd.c_str());
+  if(XMSession::instance()->debug() == true) {
+    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+		cmd.c_str(), args.c_str(), getName().c_str());
+  }
 
   if(cmd == "ERROR") {
     closePlaying();
     m_requestForEnd = true;
-    return;
   }
 
-  if(cmd == "FINISH") {
+  else if(cmd == "FINISH") {
     closePlaying();
     m_requestForEnd = true;
-    return;
   }
 
-  if(cmd == "RESTART") {
+  else if(cmd == "RESTART") {
     restartLevel();
-    return;
   }
 
-  if(cmd == "NEXTLEVEL") {
+  else if(cmd == "NEXTLEVEL") {
     nextLevel();
-    return;
   }
 
-  if(cmd == "PREVIOUSLEVEL") {
+  else if(cmd == "PREVIOUSLEVEL") {
     nextLevel(false);
-    return;
   }
 
-  if(cmd == "ABORT") {
+  else if(cmd == "ABORT") {
     abortPlaying();
     m_requestForEnd = true;
-    return;
   }
 
-  if(cmd == "INTERPOLATION_CHANGED") {
+  else if(cmd == "INTERPOLATION_CHANGED") {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
 	for(unsigned int i=0; i<m_universe->getScenes()[j]->Players().size(); i++) {
@@ -507,7 +531,7 @@ void StateScene::executeOneCommand(std::string cmd)
     }
   }
 
-  if(cmd == "MIRRORMODE_CHANGED") {
+  else if(cmd == "MIRRORMODE_CHANGED") {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
 	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
@@ -515,8 +539,9 @@ void StateScene::executeOneCommand(std::string cmd)
 	}
       }
     }
+  } else {
+    GameState::executeOneCommand(cmd, args);
   }
-
 }
 
 void StateScene::displayStats() {

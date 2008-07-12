@@ -52,7 +52,7 @@ void StateMessageBox::makeActiveButton(UIMsgBoxButton i_button) {
 void StateMessageBox::leave()
 {
   if(m_receiver != NULL) {
-    m_receiver->send(getId(), m_clickedButton, m_msgbox->getTextInput());
+    m_receiver->sendFromMessageBox(getId(), m_clickedButton, m_msgbox->getTextInput());
   }
 }
 

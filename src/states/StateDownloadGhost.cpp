@@ -37,6 +37,12 @@ StateDownloadGhost::StateDownloadGhost(std::string levelId,
   m_launchReplaying = launchReplaying;
   // we don't want a message box on failure.
   m_messageOnFailure = launchReplaying;
+
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("CHANGE_WWW_ACCESS");
+    StateManager::instance()->registerAsEmitter("GHOST_DOWNLOADING_FAILED");
+    StateManager::instance()->registerAsEmitter("GHOST_DOWNLOADED");
+  }
 }
 
 StateDownloadGhost::~StateDownloadGhost()

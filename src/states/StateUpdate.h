@@ -71,7 +71,7 @@ protected:
   virtual bool callBeforeLaunchingThread();
 
   // for the message box when a thread badly finished
-  void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
   virtual void onThreadFinishes(bool i_res);
 

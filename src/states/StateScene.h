@@ -21,13 +21,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATESCENE_H__
 #define __STATESCENE_H__
 
-#include "StateManager.h"
+#include "GameState.h"
 
 class CameraAnimation;
 class Universe;
 
 class StateScene : public GameState {
- public:
+public:
  StateScene(bool i_doShade = false, bool i_doShadeAnim = false);
  StateScene(Universe* i_universe, bool i_doShade = false, bool i_doShadeAnim = false); // for state which doesn't create the universe
  virtual ~StateScene();
@@ -43,14 +43,13 @@ class StateScene : public GameState {
  virtual void keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char);
  virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
 
- virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
- virtual void send(const std::string& i_id, const std::string& i_message);
+ virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
  virtual void restartLevel(bool i_reloadLevel = false);
  virtual void nextLevel(bool i_positifOrder = true);
 
- protected:
- virtual void executeOneCommand(std::string cmd);
+protected:
+ virtual void executeOneCommand(std::string cmd, std::string args);
  void makeStatsStr();
 
  double m_fLastPhysTime; /* When the last frama was initiated */
@@ -83,7 +82,9 @@ class StateScene : public GameState {
 
  /* stats to display */
  std::string m_statsStr;
- 
+
+private:
+  void initMessageRegistering();
 };
 
 #endif

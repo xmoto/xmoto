@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "db/xmDatabase.h"
 #include "XMSession.h"
 
+#include "helpers/Log.h"
+
 StateUpgradeLevels::StateUpgradeLevels(bool drawStateBehind,
 				       bool updateStatesBehind)
   : StateUpdate(drawStateBehind, updateStatesBehind)
@@ -32,14 +34,20 @@ StateUpgradeLevels::StateUpgradeLevels(bool drawStateBehind,
   m_pThread = new UpgradeLevelsThread(this, XMSession::instance()->theme());
   m_name    = "StateUpgradeLevels";
   m_curUpdLevelName = "";
+
+  StateManager::instance()->registerAsObserver("NEWLEVELAVAILABLE", this);
+  StateManager::instance()->registerAsObserver("ASKINGLEVELUPDATE", this);
 }
 
 StateUpgradeLevels::~StateUpgradeLevels()
 {
+  StateManager::instance()->unregisterAsObserver("NEWLEVELAVAILABLE", this);
+  StateManager::instance()->unregisterAsObserver("ASKINGLEVELUPDATE", this);
+
   delete m_pThread;
 }
 
-void StateUpgradeLevels::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
+void StateUpgradeLevels::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
 {
   if(i_id == "DOWNLOAD_LEVELS"){
     switch(i_button){
@@ -70,12 +78,17 @@ void StateUpgradeLevels::send(const std::string& i_id, UIMsgBoxButton i_button, 
     }
   }
   else {
-    StateUpdate::send(i_id, i_button, i_input);
+    StateUpdate::sendFromMessageBox(i_id, i_button, i_input);
   }
 }
 
-void StateUpgradeLevels::executeOneCommand(std::string cmd)
+void StateUpgradeLevels::executeOneCommand(std::string cmd, std::string args)
 {
+  if(XMSession::instance()->debug() == true) {
+    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+		cmd.c_str(), args.c_str(), getName().c_str());
+  }
+
   if(cmd == "NEWLEVELAVAILABLE"){
     int nULevels = xmDatabase::instance("main")->levels_nbLevelsToDownload();
     char cBuf[256];
@@ -95,6 +108,8 @@ void StateUpgradeLevels::executeOneCommand(std::string cmd)
 						   (UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
     v_state->setId("ASKING_LEVEL_UPDATE");
     StateManager::instance()->pushState(v_state);
+  } else {
+    GameState::executeOneCommand(cmd, args);
   }
 }
 

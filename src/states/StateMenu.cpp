@@ -28,7 +28,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 StateMenu::StateMenu(bool drawStateBehind,
 		     bool updateStatesBehind,
-		     StateMenuContextReceiver* i_receiver,
 		     bool i_doShade,
 		     bool i_doShadeAnim):
   GameState(drawStateBehind,
@@ -37,7 +36,6 @@ StateMenu::StateMenu(bool drawStateBehind,
 {
   m_GUI        = NULL;
   m_showCursor = true;
-  m_receiver   = i_receiver;
 
   m_renderFps = 30; // is enouh for menus
   m_updateFps = 30;
@@ -149,14 +147,4 @@ void StateMenu::mouseUp(int nButton)
     m_GUI->mouseRUp(nX,nY);
     checkEvents();
   }
-}
-
-void StateMenu::send(const std::string& i_id, const std::string& i_message) 
-{
-  m_commands.push(i_message);
-}
-
-void StateMenu::executeOneCommand(std::string cmd)
-{
-  // default do nothing
 }

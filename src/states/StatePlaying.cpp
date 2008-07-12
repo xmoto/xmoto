@@ -45,6 +45,11 @@ StatePlaying::StatePlaying(Universe* i_universe):
 
   /* prepare stats */
   makeStatsStr();
+
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("STATS_UPDATED");
+    StateManager::instance()->registerAsEmitter("LEVELS_UPDATED");
+  }
 }
 
 StatePlaying::~StatePlaying()
@@ -299,12 +304,6 @@ void StatePlaying::mouseUp(int nButton)
   InputHandler::instance()->handleInput(m_universe, INPUT_MOUSE_UP, nButton, KMOD_NONE);
 
   StateScene::mouseUp(nButton);
-}
-
-void StatePlaying::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
-  if(i_id == "ERROR") {
-    m_commands.push("ERROR");
-  }
 }
 
 void StatePlaying::onOneFinish() {

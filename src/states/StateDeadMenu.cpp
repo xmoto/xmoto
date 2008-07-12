@@ -23,26 +23,30 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
 #include "StateMessageBox.h"
-#include "StateMenuContextReceiver.h"
 #include "Universe.h"
 #include "Replay.h"
+#include "helpers/Log.h"
 
 /* static members */
 UIRoot*  StateDeadMenu::m_sGUI = NULL;
 
 StateDeadMenu::StateDeadMenu(Universe* i_universe,
 			     bool i_doShadeAnim,
-			     StateMenuContextReceiver* i_receiver,
 			     bool drawStateBehind,
 			     bool updateStatesBehind):
   StateMenu(drawStateBehind,
 	    updateStatesBehind,
-	    i_receiver,
 	    true,
 	    i_doShadeAnim)
 {
   m_name    = "StateDeadMenu";
   m_universe = i_universe;
+
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("RESTART");
+    StateManager::instance()->registerAsEmitter("NEXTLEVEL");
+    StateManager::instance()->registerAsEmitter("ABORT");
+  }
 }
 
 StateDeadMenu::~StateDeadMenu()
@@ -95,9 +99,7 @@ void StateDeadMenu::checkEvents() {
     pTryAgainButton->setClicked(false);
 
     m_requestForEnd = true;
-    if(m_receiver != NULL) {
-      m_receiver->send(getId(), "RESTART");
-    }
+    StateManager::instance()->sendAsynchronousMessage("RESTART");
   }
 
   UIButton *pSavereplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:SAVEREPLAY_BUTTON"));
@@ -115,9 +117,7 @@ void StateDeadMenu::checkEvents() {
     pPlaynextButton->setClicked(false);
 
     m_requestForEnd = true;
-    if(m_receiver != NULL) {
-      m_receiver->send(getId(), "NEXTLEVEL");
-    }
+    StateManager::instance()->sendAsynchronousMessage("NEXTLEVEL");
   }
 
   UIButton *pAbortButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:ABORT_BUTTON"));
@@ -125,9 +125,7 @@ void StateDeadMenu::checkEvents() {
     pAbortButton->setClicked(false);
 
     m_requestForEnd = true;
-    if(m_receiver != NULL) {
-      m_receiver->send(getId(), "ABORT");
-    }
+    StateManager::instance()->sendAsynchronousMessage("ABORT");
   }
 
   UIButton *pQuitButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:QUIT_BUTTON"));
@@ -141,7 +139,7 @@ void StateDeadMenu::checkEvents() {
 
 }
 
-void StateDeadMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+void StateDeadMenu::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "QUIT") {
     switch(i_button) {
     case UI_MSGBOX_YES:
@@ -158,19 +156,27 @@ void StateDeadMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
     if(i_button == UI_MSGBOX_OK) {
       if(m_universe != NULL) {
 	m_replayName = i_input;
-	m_commands.push("SAVEREPLAY");
+	addCommand("SAVEREPLAY");
       }
     }
   }
 }
 
-void StateDeadMenu::executeOneCommand(std::string cmd) {
+void StateDeadMenu::executeOneCommand(std::string cmd, std::string args)
+{
+  if(XMSession::instance()->debug() == true) {
+    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+		cmd.c_str(), args.c_str(), getName().c_str());
+  }
+
   if(cmd == "SAVEREPLAY") {
     try {
       m_universe->saveReplay(m_replayName);
     } catch(Exception &e) {
       StateManager::instance()->pushState(new StateMessageBox(NULL, e.getMsg(), UI_MSGBOX_OK));
     }
+  } else {
+    GameState::executeOneCommand(cmd, args);
   }
 }
 
@@ -178,9 +184,7 @@ void StateDeadMenu::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i
 {
   if(nKey == SDLK_ESCAPE){
     /* quit this state */
-    if(m_receiver != NULL) {
-      m_receiver->send(getId(), "ABORT");
-    }
+    StateManager::instance()->sendAsynchronousMessage("ABORT");
     m_requestForEnd = true;
   }
   else {

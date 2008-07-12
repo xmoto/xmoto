@@ -51,6 +51,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "thread/CheckWwwThread.h"
 #include "Replay.h"
 #include "Languages.h"
+#include "helpers/CmdArgumentParser.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -94,6 +95,28 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
   m_require_updateReplaysList        = false;
   m_require_updateLevelsList         = false;
   m_require_updateStats              = false;
+
+  StateManager::instance()->registerAsObserver("REPLAYS_DELETE", this);
+  StateManager::instance()->registerAsObserver("UPDATEPROFILE", this);
+  StateManager::instance()->registerAsObserver("REPLAYS_DELETE", this);
+  StateManager::instance()->registerAsObserver("UPDATE_THEMES_LISTS", this);
+  StateManager::instance()->registerAsObserver("UPDATE_ROOMS_LISTS", this);
+  StateManager::instance()->registerAsObserver("CHANGE_WWW_ACCESS", this);
+  StateManager::instance()->registerAsObserver("ENABLEAUDIO_CHANGED", this);
+  StateManager::instance()->registerAsObserver("NEW_LEVELS_TO_DOWNLOAD", this);
+  StateManager::instance()->registerAsObserver("NO_NEW_LEVELS_TO_DOWNLOAD", this);
+  StateManager::instance()->registerAsObserver("FAVORITES_UPDATED", this);
+  StateManager::instance()->registerAsObserver("REPLAYS_UPDATED", this);
+  StateManager::instance()->registerAsObserver("STATS_UPDATED", this);
+  StateManager::instance()->registerAsObserver("LEVELS_UPDATED", this);
+  StateManager::instance()->registerAsObserver("HIGHSCORES_UPDATED", this);
+  StateManager::instance()->registerAsObserver("BLACKLISTEDLEVELS_UPDATED", this);
+  StateManager::instance()->registerAsObserver("REQUESTKEY", this);
+
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
+    StateManager::instance()->registerAsEmitter("FAVORITES_UPDATED");
+  }
 }
 
 StateMainMenu::~StateMainMenu()
@@ -101,6 +124,23 @@ StateMainMenu::~StateMainMenu()
   if(m_quickStartList != NULL) {
     delete m_quickStartList;
   }
+
+  StateManager::instance()->unregisterAsObserver("REPLAYS_DELETE", this);
+  StateManager::instance()->unregisterAsObserver("UPDATEPROFILE", this);
+  StateManager::instance()->unregisterAsObserver("REPLAYS_DELETE", this);
+  StateManager::instance()->unregisterAsObserver("UPDATE_THEMES_LISTS", this);
+  StateManager::instance()->unregisterAsObserver("UPDATE_ROOMS_LISTS", this);
+  StateManager::instance()->unregisterAsObserver("CHANGE_WWW_ACCESS", this);
+  StateManager::instance()->unregisterAsObserver("ENABLEAUDIO_CHANGED", this);
+  StateManager::instance()->unregisterAsObserver("NEW_LEVELS_TO_DOWNLOAD", this);
+  StateManager::instance()->unregisterAsObserver("NO_NEW_LEVELS_TO_DOWNLOAD", this);
+  StateManager::instance()->unregisterAsObserver("FAVORITES_UPDATED", this);
+  StateManager::instance()->unregisterAsObserver("REPLAYS_UPDATED", this);
+  StateManager::instance()->unregisterAsObserver("STATS_UPDATED", this);
+  StateManager::instance()->unregisterAsObserver("LEVELS_UPDATED", this);
+  StateManager::instance()->unregisterAsObserver("HIGHSCORES_UPDATED", this);
+  StateManager::instance()->unregisterAsObserver("BLACKLISTEDLEVELS_UPDATED", this);
+  StateManager::instance()->unregisterAsObserver("REQUESTKEY", this);
 }
 
 
@@ -1799,7 +1839,7 @@ void StateMainMenu::createLevelListsSql(UILevelList *io_levelsList, const std::s
   }
 }
 
-void StateMainMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+void StateMainMenu::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "QUIT") {
     if(i_button == UI_MSGBOX_YES) {
       m_requestForEnd = true;
@@ -1809,83 +1849,9 @@ void StateMainMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
 
   if(i_id == "REPLAYS_DELETE") {
     if(i_button == UI_MSGBOX_YES) {
-      m_commands.push("REPLAYS_DELETE");
+      addCommand("REPLAYS_DELETE");
     }
   }
-}
-
-void StateMainMenu::send(const std::string& i_id, const std::string& i_message) {
-  UIList* v_list;
-
-  if(i_id == "STATE_MANAGER") {
-    if(i_message == "FAVORITES_UPDATED") {
-      if(StateManager::instance()->isTopOfTheStates(this)) {
-	updateFavoriteLevelsList();
-      } else {
-	m_require_updateFavoriteLevelsList = true;
-      }
-      return;
-    }
-    
-   if(i_message == "REPLAYS_UPDATED") {
-     if(StateManager::instance()->isTopOfTheStates(this)) {
-       updateReplaysList();
-     } else {
-       m_require_updateReplaysList = true;
-     }
-     return;
-    }
-
-   if(i_message == "STATS_UPDATED") {
-     if(StateManager::instance()->isTopOfTheStates(this)) {
-       updateLevelsPacksList();
-       updateLevelsLists();
-       updateReplaysList();
-       updateStats();
-     } else {
-       m_require_updateStats = true;
-     }
-     return;
-    }
-
-   if(i_message == "LEVELS_UPDATED" || i_message == "HIGHSCORES_UPDATED" || i_message == "BLACKLISTEDLEVELS_UPDATED") {
-     if(StateManager::instance()->isTopOfTheStates(this)) {
-       LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
-					    XMSession::instance()->idRoom(0),
-					    XMSession::instance()->debug(),
-					    xmDatabase::instance("main"));
-       updateLevelsPacksList();
-       updateLevelsLists();
-     } else {
-       m_require_updateLevelsList = true;
-     }
-     return;
-   }
-
-  }
-
-  if(i_id == "REQUESTKEY") {
-    v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:KEY_ACTION_LIST"));
-    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {    
-      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
-
-      // is key used
-      for(unsigned int i=0;i<v_list->getEntries().size();i++) {
-	if(v_list->getEntries()[i]->Text[2] == i_message) {
-	  // switch keys
-	  v_list->getEntries()[i]->Text[1] = pEntry->Text[1];
-	  v_list->getEntries()[i]->Text[2] = pEntry->Text[2];
-	  setInputKey(v_list->getEntries()[i]->Text[0], v_list->getEntries()[i]->Text[2]);
-	}
-      }
-      pEntry->Text[1] = XMKey(i_message).toFancyString();
-      pEntry->Text[2] = i_message;
-      setInputKey(pEntry->Text[0], i_message);
-    }
-    return;
-  }
-
-  StateMenu::send(i_id, i_message);
 }
 
 void StateMainMenu::setInputKey(const std::string& i_strKey, const std::string& i_key) {
@@ -1931,11 +1897,38 @@ void StateMainMenu::setInputKey(const std::string& i_strKey, const std::string& 
   }
 }
 
-void StateMainMenu::executeOneCommand(std::string cmd)
+void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
 {
   UIListEntry *pEntry = NULL;
 
-  if(cmd == "UPDATEPROFILE") {
+  if(XMSession::instance()->debug() == true) {
+    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+		cmd.c_str(), args.c_str(), getName().c_str());
+  }
+
+  if(cmd == "REQUESTKEY") {
+    UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:KEY_ACTION_LIST"));
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {    
+      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
+
+      std::string key = CmdArgumentParser::instance()->getString(args);
+
+      // is key used
+      for(unsigned int i=0;i<v_list->getEntries().size();i++) {
+	if(v_list->getEntries()[i]->Text[2] == key) {
+	  // switch keys
+	  v_list->getEntries()[i]->Text[1] = pEntry->Text[1];
+	  v_list->getEntries()[i]->Text[2] = pEntry->Text[2];
+	  setInputKey(v_list->getEntries()[i]->Text[0], v_list->getEntries()[i]->Text[2]);
+	}
+      }
+      pEntry->Text[1] = XMKey(key).toFancyString();
+      pEntry->Text[2] = key;
+      setInputKey(pEntry->Text[0], key);
+    }
+  }
+
+  else if(cmd == "UPDATEPROFILE") {
     updateProfileStrings();
     updateOptions();
 
@@ -1950,10 +1943,9 @@ void StateMainMenu::executeOneCommand(std::string cmd)
     updateLevelsLists();
     updateReplaysList();
     updateStats();
-    return;
   }
 
-   else if(cmd == "REPLAYS_DELETE") {
+  else if(cmd == "REPLAYS_DELETE") {
     UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST"));
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       pEntry = v_list->getEntries()[v_list->getSelected()];
@@ -2002,6 +1994,44 @@ void StateMainMenu::executeOneCommand(std::string cmd)
 
     v_buttonDrawn = reinterpret_cast<UIButtonDrawn *>(m_GUI->getChild("MAIN:NEWLEVELAVAILBLE"));
     v_buttonDrawn->showWindow(false);
+  }
+
+  else if(cmd == "FAVORITES_UPDATED") {
+    if(StateManager::instance()->isTopOfTheStates(this))
+      updateFavoriteLevelsList();
+    else
+      m_require_updateFavoriteLevelsList = true;
+  }
+    
+  else if(cmd == "REPLAYS_UPDATED") {
+    if(StateManager::instance()->isTopOfTheStates(this))
+      updateReplaysList();
+    else
+      m_require_updateReplaysList = true;
+  }
+
+  else if(cmd == "STATS_UPDATED") {
+    if(StateManager::instance()->isTopOfTheStates(this)) {
+      updateLevelsPacksList();
+      updateLevelsLists();
+      updateReplaysList();
+      updateStats();
+    } else
+      m_require_updateStats = true;
+  }
+
+  else if(cmd == "LEVELS_UPDATED" || cmd == "HIGHSCORES_UPDATED" || cmd == "BLACKLISTEDLEVELS_UPDATED") {
+    if(StateManager::instance()->isTopOfTheStates(this)) {
+      LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
+					   XMSession::instance()->idRoom(0),
+					   XMSession::instance()->debug(),
+					   xmDatabase::instance("main"));
+      updateLevelsPacksList();
+      updateLevelsLists();
+    } else
+      m_require_updateLevelsList = true;
+  } else {
+    GameState::executeOneCommand(cmd, args);
   }
 }
 

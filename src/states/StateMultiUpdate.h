@@ -49,7 +49,7 @@ protected:
   virtual void updateGUI();
 
   // for the message box when a thread badly finished
-  void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
   class ThreadInfos {
   public:

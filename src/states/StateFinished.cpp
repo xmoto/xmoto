@@ -25,27 +25,31 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Sound.h"
 #include "StateMessageBox.h"
 #include "StateUploadHighscore.h"
-#include "StateMenuContextReceiver.h"
 #include "Universe.h"
 #include "Replay.h"
 #include "helpers/Text.h"
 #include "Game.h"
+#include "helpers/Log.h"
 
 /* static members */
 UIRoot* StateFinished::m_sGUI = NULL;
 
 StateFinished::StateFinished(Universe* i_universe,
-			     StateMenuContextReceiver* i_receiver,
 			     bool drawStateBehind,
 			     bool updateStatesBehind
 			     ) :
   StateMenu(drawStateBehind,
 	    updateStatesBehind,
-	    i_receiver,
 	    true)
 {
   m_name    = "StateFinished";
   m_universe = i_universe;
+
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("RESTART");
+    StateManager::instance()->registerAsEmitter("NEXTLEVEL");
+    StateManager::instance()->registerAsEmitter("FINISH");
+  }
 }
 
 StateFinished::~StateFinished()
@@ -189,9 +193,7 @@ void StateFinished::checkEvents() {
     pTryAgainButton->setClicked(false);
 
     m_requestForEnd = true;
-    if(m_receiver != NULL) {
-      m_receiver->send(getId(), "RESTART");
-    }
+    StateManager::instance()->sendAsynchronousMessage("RESTART");
   }
 
   UIButton *pPlaynextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:PLAYNEXT_BUTTON"));
@@ -199,9 +201,7 @@ void StateFinished::checkEvents() {
     pPlaynextButton->setClicked(false);
 
     m_requestForEnd = true;
-    if(m_receiver != NULL) {
-      m_receiver->send(getId(), "NEXTLEVEL");
-    }
+    StateManager::instance()->sendAsynchronousMessage("NEXTLEVEL");
   }
 
   UIButton *pSavereplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:SAVEREPLAY_BUTTON"));
@@ -227,9 +227,7 @@ void StateFinished::checkEvents() {
     pAbortButton->setClicked(false);
 
     m_requestForEnd = true;
-    if(m_receiver != NULL) {
-      m_receiver->send(getId(), "FINISH");
-    }
+    StateManager::instance()->sendAsynchronousMessage("FINISH");
   }
 
   UIButton *pQuitButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:QUIT_BUTTON"));
@@ -242,7 +240,7 @@ void StateFinished::checkEvents() {
   }
 }
 
-void StateFinished::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+void StateFinished::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "QUIT") {
     switch(i_button) {
     case UI_MSGBOX_YES:
@@ -250,8 +248,6 @@ void StateFinished::send(const std::string& i_id, UIMsgBoxButton i_button, const
       GameApp::instance()->requestEnd();
       break;
     case UI_MSGBOX_NO:
-      return;
-      break;
     default:
       break;
     }
@@ -259,19 +255,27 @@ void StateFinished::send(const std::string& i_id, UIMsgBoxButton i_button, const
     if(i_button == UI_MSGBOX_OK) {
       if(m_universe != NULL) {
 	m_replayName = i_input;
-	m_commands.push("SAVEREPLAY");
+	addCommand("SAVEREPLAY");
       }
     }
   }
 }
 
-void StateFinished::executeOneCommand(std::string cmd) {
+void StateFinished::executeOneCommand(std::string cmd, std::string args)
+{
+  if(XMSession::instance()->debug() == true) {
+    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+		cmd.c_str(), args.c_str(), getName().c_str());
+  }
+
   if(cmd == "SAVEREPLAY") {
     try {
       m_universe->saveReplay(m_replayName);
     } catch(Exception &e) {
       StateManager::instance()->pushState(new StateMessageBox(NULL, e.getMsg(), UI_MSGBOX_OK));
     }
+  } else {
+    GameState::executeOneCommand(cmd, args);
   }
 }
 
@@ -282,9 +286,7 @@ void StateFinished::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i
   case SDLK_ESCAPE:
     /* quit this state */
     m_requestForEnd = true;
-    if(m_receiver != NULL) {
-      m_receiver->send(getId(), "FINISH");
-    }
+    StateManager::instance()->sendAsynchronousMessage("FINISH");
     break;
 
   default:

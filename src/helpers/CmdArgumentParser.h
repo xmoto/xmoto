@@ -18,15 +18,33 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEMENUCONTEXTRECEIVER_H__
-#define __STATEMENUCONTEXTRECEIVER_H__
+#ifndef __CMDARGUMENTPARSER_H__
+#define __CMDARGUMENTPARSER_H__
 
+#include "helpers/Singleton.h"
 #include <string>
 
-class StateMenuContextReceiver {
-  public:
-  virtual ~StateMenuContextReceiver() {};
-  virtual void send(const std::string& i_id, const std::string& i_message) = 0;
+class CmdArgumentParser : public Singleton<CmdArgumentParser> {
+  friend class Singleton<CmdArgumentParser>;
+private:
+  CmdArgumentParser() {}
+  ~CmdArgumentParser() {}
+
+public:
+  // update args to remove the argument requested
+  // raise an exception if it can't parse the args to get the requested type
+  float       getFloat(std::string& args);
+  int         getInt(std::string& args);
+  std::string getString(std::string& args);
+
+  // add the arg to args
+  void addFloat(float value, std::string& args);
+  void addInt(int value, std::string& args);
+  void addString(std::string value, std::string& args);
+
+private:
+  // update args
+  std::string nextToken(std::string& args);
 };
 
 #endif

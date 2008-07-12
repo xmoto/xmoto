@@ -96,7 +96,9 @@ helpers_SOURCES = helpers/VMath.h             \
 		  helpers/Singleton.h \
 		  helpers/MultiSingleton.h \
 		  helpers/Random.h \
-		  helpers/Random.cpp
+		  helpers/Random.cpp \
+		  helpers/CmdArgumentParser.h \
+		  helpers/CmdArgumentParser.cpp
 
 common_SOURCES = Image.cpp \
   VBezier.cpp PolyDraw.h PolyDraw.cpp \
@@ -134,6 +136,8 @@ common_SOURCES = Image.cpp \
 
 states_SOURCES = states/StateManager.h       	  \
                  states/StateManager.cpp     	  \
+		 states/GameState.h               \
+		 states/GameState.cpp             \
                  states/StateMenu.h          	  \
                  states/StateMenu.cpp        	  \
                  states/StateScene.h          	  \

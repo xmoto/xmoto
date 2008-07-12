@@ -30,15 +30,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StateEditProfile::m_sGUI = NULL;
 
-StateEditProfile::StateEditProfile(StateMenuContextReceiver* i_receiver,
-				   bool drawStateBehind,
+StateEditProfile::StateEditProfile(bool drawStateBehind,
 				   bool updateStatesBehind
 				   ):
   StateMenu(drawStateBehind,
 	    updateStatesBehind)
 {
   m_name     = "StateEditProfile";
-  m_receiver = i_receiver;
+
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("UPDATEPROFILE");
+  }
 }
 
 StateEditProfile::~StateEditProfile()
@@ -98,9 +100,7 @@ void StateEditProfile::checkEvents() {
       xmDatabase::instance("main")->stats_xmotoStarted(XMSession::instance()->sitekey(), pEntry->Text[0]);
 
       // tell the menu to update the displayed profile
-      if(m_receiver != NULL){
-	m_receiver->send(getId(), "UPDATEPROFILE");
-      }
+      StateManager::instance()->sendAsynchronousMessage("UPDATEPROFILE");
     }
 
     /* Should we jump to the web config now? */
@@ -254,7 +254,7 @@ void StateEditProfile::createProfileList() {
   }
 }
 
-void StateEditProfile::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
+void StateEditProfile::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
 {
   if(i_id == "NEWPROFILE"){
     switch(i_button){

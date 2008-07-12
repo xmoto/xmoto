@@ -216,7 +216,7 @@ bool StateUpdate::callBeforeLaunchingThread()
   return true;
 }
 
-void StateUpdate::send(const std::string& i_id,
+void StateUpdate::sendFromMessageBox(const std::string& i_id,
 		       UIMsgBoxButton i_button,
 		       const std::string& i_input)
 {
