@@ -537,7 +537,7 @@ void GameApp::displayCursor(bool display)
 	if(FS::getFileBaseName(ReplayFiles[i]) == "Latest") {
 	  continue;
 	}
-	addReplay(ReplayFiles[i], pDb);
+	addReplay(ReplayFiles[i], pDb, false);
 	if(pLoadReplaysInterface != NULL){
 	  pLoadReplaysInterface->loadReplayHook(ReplayFiles[i], (int)((i*100)/((float)ReplayFiles.size())));
 	}
@@ -549,7 +549,7 @@ void GameApp::displayCursor(bool display)
     pDb->replays_add_end();
   }
 
-  void GameApp::addReplay(const std::string& i_file, xmDatabase* threadDb) {
+  void GameApp::addReplay(const std::string& i_file, xmDatabase* threadDb, bool sendMessage) {
     ReplayInfo* rplInfos;
     xmDatabase* pDb = NULL;
 
@@ -570,7 +570,8 @@ void GameApp::displayCursor(bool display)
 		       rplInfos->Player,
 		       rplInfos->IsFinished,
 		       rplInfos->finishTime);
-      StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
+      if(sendMessage == true)
+	StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
 
     } catch(Exception &e2) {
       delete rplInfos;

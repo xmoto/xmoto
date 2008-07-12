@@ -644,7 +644,7 @@ StateManager::sendAsynchronousMessage(std::string message, std::string args)
     std::vector<GameState*>::iterator stateIterator = states.begin();
 
     if(states.size() == 0){
-      Logger::Log("*** Warning *** : sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
+      Logger::Log("*** Warning *** : sendAsynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
 		  message.c_str(), args.c_str());
     }
 
@@ -659,7 +659,7 @@ StateManager::sendAsynchronousMessage(std::string message, std::string args)
       ++stateIterator;
     }
   } else {
-    Logger::Log("*** Warning *** : sendSynchronousMessage message [% [%s]s] sent and there's no state to receive it.",
+    Logger::Log("*** Warning *** : sendAsynchronousMessage message [% [%s]s] sent and there's no state to receive it.",
 		message.c_str(),
 		args.c_str());
   }
