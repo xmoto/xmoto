@@ -21,17 +21,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATEMENU_H__
 #define __STATEMENU_H__
 
-#include "StateManager.h"
+#include "GameState.h"
 
 class UIRoot;
 class GameApp;
-class StateMenuContextReceiver;
 
 class StateMenu : public GameState {
  public:
   StateMenu(bool drawStateBehind,
 	    bool updateStatesBehind,
-	    StateMenuContextReceiver* i_receiver = NULL,
 	    bool i_doShade     = false,
 	    bool i_doShadeAnim = true);
   virtual ~StateMenu();
@@ -52,13 +50,9 @@ class StateMenu : public GameState {
   virtual void mouseDoubleClick(int nButton);
   virtual void mouseUp(int nButton);
   
-  virtual void send(const std::string& i_id, const std::string& i_message);
-  virtual void executeOneCommand(std::string cmd);
-
  protected:
   virtual void checkEvents() = 0;
   UIRoot *m_GUI;
-  StateMenuContextReceiver* m_receiver;  
 
  private:
 };

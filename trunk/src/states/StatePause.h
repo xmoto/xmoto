@@ -30,7 +30,6 @@ class Universe;
 class StatePause : public StateMenu {
   public:
   StatePause(Universe* i_universe,
-	     StateMenuContextReceiver* i_receiver = NULL,
 	     bool drawStateBehind    = true,
 	     bool updateStatesBehind = false
 	     );
@@ -44,7 +43,7 @@ class StatePause : public StateMenu {
   
   static void clean();
 
-  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
  protected:
   virtual void checkEvents();

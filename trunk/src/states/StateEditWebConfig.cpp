@@ -34,6 +34,10 @@ StateEditWebConfig::StateEditWebConfig(bool drawStateBehind,
 	      updateStatesBehind)
 {
   m_name    = "StateEditWebConfig";
+
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("CHANGE_WWW_ACCESS");
+  }
 }
 
 StateEditWebConfig::~StateEditWebConfig()
@@ -291,7 +295,7 @@ void StateEditWebConfig::updateGUI()
 
   updateGUIRights();
 }
-void StateEditWebConfig::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
+void StateEditWebConfig::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
 {
   /* The yes/no box open? */
   switch(i_button){

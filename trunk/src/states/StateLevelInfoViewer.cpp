@@ -41,11 +41,18 @@ StateLevelInfoViewer::StateLevelInfoViewer(const std::string& level,
 {
   m_level = level;
   m_name  = "StateLevelInfoViewer";
+
+  StateManager::instance()->registerAsObserver("REPLAYS_DELETE", this);
+  StateManager::instance()->registerAsObserver("REPLAYS_UPDATED", this);
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
+  }
 }
 
 StateLevelInfoViewer::~StateLevelInfoViewer()
 {
-
+  StateManager::instance()->unregisterAsObserver("REPLAYS_DELETE", this);
+  StateManager::instance()->unregisterAsObserver("REPLAYS_UPDATED", this);
 }
 
 
@@ -126,24 +133,23 @@ void StateLevelInfoViewer::checkEvents()
   }
 }
 
-void StateLevelInfoViewer::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+void StateLevelInfoViewer::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "REPLAYS_DELETE") {
     if(i_button == UI_MSGBOX_YES) {
-      m_commands.push("REPLAYS_DELETE");
+      addCommand("REPLAYS_DELETE");
     }
     return;
   }
 }
 
-void StateLevelInfoViewer::send(const std::string& i_id, const std::string& i_message) {
-  if(i_message == "REPLAYS_UPDATED") {
-    updateLevelInfoViewerReplays();
-    return;
-  }
-}
-
-void StateLevelInfoViewer::executeOneCommand(std::string cmd) {
+void StateLevelInfoViewer::executeOneCommand(std::string cmd, std::string args)
+{
   UIListEntry *pEntry = NULL;
+
+  if(XMSession::instance()->debug() == true) {
+    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+		cmd.c_str(), args.c_str(), getName().c_str());
+  }
 
   if(cmd == "REPLAYS_DELETE") {
     UIList* v_list = reinterpret_cast<UIList*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_LIST"));
@@ -164,6 +170,10 @@ void StateLevelInfoViewer::executeOneCommand(std::string cmd) {
 	updateLevelInfoViewerReplays();
       }
     }
+  } else if(cmd == "REPLAYS_UPDATED") {
+    updateLevelInfoViewerReplays();
+  } else {
+    GameState::executeOneCommand(cmd, args);
   }
 }
 

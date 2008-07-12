@@ -19,19 +19,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateRequestKey.h"
+#include "StateManager.h"
 #include "Game.h"
 #include "drawlib/DrawLib.h"
+#include "helpers/CmdArgumentParser.h"
 
 /* static members */
 UIRoot*  StateRequestKey::m_sGUI = NULL;
 
 StateRequestKey::StateRequestKey(const std::string& i_txt,
-				 StateMenuContextReceiver* i_receiver,
 				 bool drawStateBehind,
 				 bool updateStatesBehind):
 StateMenu(drawStateBehind,
 	  updateStatesBehind,
-	  i_receiver,
 	  false,
 	  true)
 {
@@ -75,11 +75,11 @@ void StateRequestKey::keyDown(int nKey, SDLMod mod,int nChar, const std::string&
   default:
     v_msg = XMKey((SDLKey)nKey, mod).toString();
 
-    if(m_receiver != NULL) {
-      if(v_msg != "") {
-	m_requestForEnd = true;
-	m_receiver->send("REQUESTKEY", v_msg);
-      }
+    if(v_msg != "") {
+      m_requestForEnd = true;
+      std::string args = "";
+      CmdArgumentParser::instance()->addString(v_msg, args);
+      StateManager::instance()->sendAsynchronousMessage("REQUESTKEY", args);
     }
   }
 }
@@ -89,11 +89,11 @@ void StateRequestKey::mouseDown(int nButton) {
 
   v_msg = XMKey(nButton).toString();
 
-  if(m_receiver != NULL) {
-    if(v_msg != "") {
-      m_requestForEnd = true;
-      m_receiver->send("REQUESTKEY", v_msg);
-    }
+  if(v_msg != "") {
+    m_requestForEnd = true;
+    std::string args = "";
+    CmdArgumentParser::instance()->addString(v_msg, args);
+    StateManager::instance()->sendAsynchronousMessage("REQUESTKEY", args);
   }
 }
 

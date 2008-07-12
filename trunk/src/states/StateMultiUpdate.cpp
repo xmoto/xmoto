@@ -144,7 +144,7 @@ void StateMultiUpdate::updateGUI()
   // update progress bars
 }
 
-void StateMultiUpdate::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
+void StateMultiUpdate::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
 {
 }
 

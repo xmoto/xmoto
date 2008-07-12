@@ -55,7 +55,7 @@ class StatePreplaying : public StateScene {
   virtual bool allowGhosts();
 
   private:
-  void executeOneCommand(std::string cmd);
+  void executeOneCommand(std::string cmd, std::string args);
 
   void secondInitPhase();
   bool m_secondInitPhaseDone;
@@ -67,6 +67,8 @@ class StatePreplaying : public StateScene {
 
   /* animation */
   CameraAnimation* m_cameraAnim;
+
+  unsigned int m_ghostDownloadMessageType;  
 };
 
 #endif

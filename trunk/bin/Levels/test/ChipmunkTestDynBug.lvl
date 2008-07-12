@@ -12,8 +12,7 @@
 	<script>
 function OnLoad()
 	Game.CameraZoom(-0.15);
-	Game.SetBlockCenter("wheel",0,0)
-	Game.SetDynamicBlockSelfRotation("wheel",1000,0,0)
+	Game.SetPhysicsBlockSelfRotation("wheel", 10000, 0, 0)
         Game.SetKeyHook("G", "GravityChange")
         Game.Message("Press G to change the gravity")
 	return true
@@ -34,8 +33,23 @@ end
 
 
 	</script>
+        <block id="rectinfinite">
+                <position y="39.288044" x="5.902365" physics="true" background="true"/>
+                <usetexture id="chessymiddle"/>
+                <physics grip="20" mass="INFINITY" elasticity="0.0" friction="0.5"/>
+                <vertex x="-25.713507" y="-53.382618"/>
+                <vertex x="-18.763507" y="-53.382618"/>
+                <vertex x="-18.763507" y="-57.807618"/>
+                <vertex x="-25.713507" y="-57.807618"/>
+        </block>
+        <entity id="path2509" typeid="Joint">
+                <size r="0.5"/>
+                <position y="37.202379" x="61.358935"/>
+                <joint connection-end="wheel" type="pivot" connection-start="rectinfinite"/>
+        </entity>
+ 
 	<block id="path2545">
-		<position y="37.453020" x="56.983935" dynamic="true"/>
+		<position y="37.453020" x="55.983935"/>
 		<usetexture id="Metal"/>
 		<vertex x="-47.434688" y="-31.375997"/>
 		<vertex x="-41.184688" y="-31.375997"/>
@@ -91,7 +105,7 @@ end
 		<vertex x="-47.434688" y="-46.375997"/>
 	</block>
 	<block id="rect2385">
-		<position y="37.453125" x="65.734375"/>
+		<position y="37.453125" x="66.734375"/>
 		<usetexture id="Metal"/>
 		<vertex x="-45.647188" y="-31.376207"/>
 		<vertex x="-41.184688" y="-31.376207"/>
@@ -144,7 +158,7 @@ end
 		<vertex x="-45.647188" y="-33.310582"/>
 	</block>
 	<block id="wheel">
-		<position y="37.202379" x="61.358935" dynamic="true"/>
+		<position y="37.202379" x="61.358935" physics="true"/>
 		<usetexture id="Wood3"/>
 		<vertex x="-41.202238" y="-44.204295"/>
 		<vertex x="-44.176383" y="-41.822236"/>

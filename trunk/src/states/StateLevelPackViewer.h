@@ -42,11 +42,11 @@ public:
   /* input */
   virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
 
-  virtual void send(const std::string& i_id, const std::string& i_message);
-
   void checkEvents();
   static void clean();
     
+  virtual void executeOneCommand(std::string cmd, std::string args);
+
 private:
   /* GUI */
   static UIRoot* m_sGUI;

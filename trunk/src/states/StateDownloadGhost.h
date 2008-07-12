@@ -40,8 +40,8 @@ protected:
   virtual void checkEvents() {}
   
 private:
-  std::string m_replayName;
-  bool        m_launchReplaying;
+  std::string  m_replayName;
+  bool         m_launchReplaying;
 };
 
 #endif

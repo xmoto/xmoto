@@ -29,10 +29,10 @@ public:
 		     bool updateStatesBehind = false);
   virtual ~StateUpgradeLevels();
 
-  virtual void send(const std::string& i_id,
-		    UIMsgBoxButton i_button,
-		    const std::string& i_input);
-  virtual void executeOneCommand(std::string cmd);
+  virtual void sendFromMessageBox(const std::string& i_id,
+				  UIMsgBoxButton i_button,
+				  const std::string& i_input);
+  virtual void executeOneCommand(std::string cmd, std::string args);
 
   void callAfterThreadFinished(int threadResult);
   void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);

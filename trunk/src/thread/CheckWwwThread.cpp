@@ -34,6 +34,12 @@ CheckWwwThread::CheckWwwThread(bool forceUpdate)
   m_forceUpdate   = forceUpdate;
   m_pWebRoom      = new WebRoom(this);
   m_pWebLevels    = new WebLevels(this);
+
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("HIGHSCORES_UPDATED");
+    StateManager::instance()->registerAsEmitter("NEW_LEVELS_TO_DOWNLOAD");
+    StateManager::instance()->registerAsEmitter("NO_NEW_LEVELS_TO_DOWNLOAD");
+  }
 }
 
 CheckWwwThread::~CheckWwwThread()

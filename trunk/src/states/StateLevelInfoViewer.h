@@ -47,9 +47,8 @@ public:
 protected:
   virtual void checkEvents();
 
-  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
-  virtual void send(const std::string& i_id, const std::string& i_message);
-  virtual void executeOneCommand(std::string cmd);
+  virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  virtual void executeOneCommand(std::string cmd, std::string args);
 
 private:
   /* GUI */

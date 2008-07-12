@@ -45,8 +45,6 @@ class StatePlaying : public StateScene {
   virtual void mouseDown(int nButton);
   virtual void mouseUp(int nButton);
   virtual bool renderOverShadow();
-  
-  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
   private:
   void onOneFinish();

@@ -24,23 +24,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "StateMessageBox.h"
 #include "helpers/Log.h"
-#include "StateMenuContextReceiver.h"
 #include "Universe.h"
 
 /* static members */
 UIRoot*  StatePause::m_sGUI = NULL;
 
 StatePause::StatePause(Universe* i_universe,
-		       StateMenuContextReceiver* i_receiver,
 		       bool drawStateBehind,
 		       bool updateStatesBehind):
   StateMenu(drawStateBehind,
 	    updateStatesBehind,
-	    i_receiver,
 	    true)
 {
   m_name  = "StatePause";
   m_universe = i_universe;
+
+  if(XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter("RESTART");
+    StateManager::instance()->registerAsEmitter("NEXTLEVEL");
+    StateManager::instance()->registerAsEmitter("ABORT");
+  }
 }
 
 StatePause::~StatePause()
@@ -100,10 +103,7 @@ void StatePause::checkEvents() {
     pRestartButton->setClicked(false);
 
     m_requestForEnd = true;
-    if(m_receiver != NULL) {
-      Logger::Log("StatePause::checkEvents RESTART");
-      m_receiver->send(getId(), "RESTART");
-    }
+    StateManager::instance()->sendAsynchronousMessage("RESTART");
   }
 
   UIButton *pPlayNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:PLAYNEXT_BUTTON"));
@@ -111,9 +111,7 @@ void StatePause::checkEvents() {
     pPlayNextButton->setClicked(false);
 
     m_requestForEnd = true;    
-    if(m_receiver != NULL) {
-      m_receiver->send(getId(), "NEXTLEVEL");
-    }
+    StateManager::instance()->sendAsynchronousMessage("NEXTLEVEL");
   }
 
   UIButton *pAbortButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:ABORT_BUTTON"));
@@ -121,9 +119,7 @@ void StatePause::checkEvents() {
     pAbortButton->setClicked(false);
 
     m_requestForEnd = true;
-    if(m_receiver != NULL) {
-      m_receiver->send(getId(), "ABORT");
-    }
+    StateManager::instance()->sendAsynchronousMessage("ABORT");
   }
 
   UIButton *pQuitButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:QUIT_BUTTON"));
@@ -220,7 +216,7 @@ void StatePause::createGUIIfNeeded() {
 
 }
 
-void StatePause::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+void StatePause::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "QUIT") {
     switch(i_button) {
     case UI_MSGBOX_YES:

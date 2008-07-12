@@ -51,6 +51,9 @@ StatePreplaying::StatePreplaying(const std::string i_idlevel, bool i_sameLevel):
   m_playAnimation = m_sameLevel == false;
 
   m_cameraAnim = NULL;
+
+  StateManager::instance()->registerAsObserver("GHOST_DOWNLOADED", this);
+  StateManager::instance()->registerAsObserver("GHOST_DOWNLOADING_FAILED", this);
 }
 
 StatePreplaying::~StatePreplaying()
@@ -58,6 +61,9 @@ StatePreplaying::~StatePreplaying()
   if(m_cameraAnim != NULL) {
     delete m_cameraAnim;
   }
+
+  StateManager::instance()->unregisterAsObserver("GHOST_DOWNLOADED", this);
+  StateManager::instance()->unregisterAsObserver("GHOST_DOWNLOADING_FAILED", this);
 }
 
 
@@ -314,15 +320,20 @@ void StatePreplaying::secondInitPhase()
   setAutoZoom(shouldBeAnimated());
 }
 
-void StatePreplaying::executeOneCommand(std::string cmd)
+void StatePreplaying::executeOneCommand(std::string cmd, std::string args)
 {
+  if(XMSession::instance()->debug() == true) {
+    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+		cmd.c_str(), args.c_str(), getName().c_str());
+  }
+
   if(cmd == "GHOST_DOWNLOADED"){
     m_ghostDownloaded = true;
   } else if (cmd == "GHOST_DOWNLOADING_FAILED") {
     m_ghostDownloading_failed = true;
   }
   else {
-    StateScene::executeOneCommand(cmd);
+    StateScene::executeOneCommand(cmd, args);
   }
 }
 

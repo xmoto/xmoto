@@ -31,7 +31,6 @@ class StateDeadMenu : public StateMenu {
   public:
   StateDeadMenu(Universe* i_universe,
 		bool i_doShadeAnim,
-		StateMenuContextReceiver* i_receiver = NULL,
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false
 		);
@@ -45,8 +44,8 @@ class StateDeadMenu : public StateMenu {
 
   static  void clean();
 
-  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
-  virtual void executeOneCommand(std::string cmd);
+  virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  virtual void executeOneCommand(std::string cmd, std::string args);
 
  protected:
   virtual void checkEvents();
