@@ -41,7 +41,7 @@ class StatePreplaying : public StateScene {
   virtual bool update();
   virtual bool render();
   /* input */
-  virtual void keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
 
  protected:
   std::string m_idlevel;

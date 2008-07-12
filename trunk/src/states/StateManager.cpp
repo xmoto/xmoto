@@ -347,14 +347,14 @@ void StateManager::drawCursor() {
   }
 }
 
-void StateManager::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateManager::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   if(m_statesStack.size() == 0)
     return;
   (m_statesStack.back())->keyDown(nKey, mod, nChar, i_utf8Char);
 }
 
-void StateManager::keyUp(int nKey,   SDLMod mod, const std::string& i_utf8Char)
+void StateManager::keyUp(SDLKey nKey,   SDLMod mod, const std::string& i_utf8Char)
 {
   if(m_statesStack.size() == 0)
     return;
@@ -380,6 +380,24 @@ void StateManager::mouseUp(int nButton)
   if(m_statesStack.size() == 0)
     return;
   (m_statesStack.back())->mouseUp(nButton);
+}
+
+void StateManager::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
+  if(m_statesStack.size() == 0)
+    return;
+  (m_statesStack.back())->joystickAxisMotion(i_joyNum, i_joyAxis, i_joyAxisValue);
+}
+
+void StateManager::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
+  if(m_statesStack.size() == 0)
+    return;
+  (m_statesStack.back())->joystickButtonDown(i_joyNum, i_joyButton);
+}
+
+void StateManager::joystickButtonUp(Uint8 i_joyNum, Uint8 i_joyButton) {
+  if(m_statesStack.size() == 0)
+    return;
+  (m_statesStack.back())->joystickButtonUp(i_joyNum, i_joyButton);
 }
 
 void StateManager::changeFocus(bool i_hasFocus) {

@@ -78,7 +78,7 @@ void StateHelp::checkEvents() {
   }
 }
 
-void StateHelp::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateHelp::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
 

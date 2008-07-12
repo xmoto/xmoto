@@ -748,42 +748,61 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return true;    
   }
 
+void UIList::eventGo() {
+  /* Uhh... send this to the default button, if any. And if anything is selected */
+  if(m_nVisibleSelected>=0
+     && m_nVisibleSelected < (int)(m_Entries.size()-m_filteredItems)
+     && m_pEnterButton != NULL) {
+    m_pEnterButton->setClicked(true);       
+    m_bChanged = true;
+    
+    try {
+      Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
+    } catch(Exception &e) {
+    }
+  }
+  
+  /* Under all circumstances set the activation flag */
+  m_bItemActivated = true;
+}
+
+void UIList::eventDown() {
+  if(m_nVisibleSelected >= (int)(m_Entries.size() - m_filteredItems - 1)) {
+    getRoot()->activateDown();
+  } else {
+    setVisibleSelected(m_nVisibleSelected + 1);
+  }         
+}
+
+void UIList::eventUp() {
+  if(m_nVisibleSelected <= 0) {
+    getRoot()->activateUp();
+  } else {
+    setVisibleSelected(m_nVisibleSelected - 1);
+  }
+}
+
+void UIList::eventLeft() {
+  getRoot()->activateLeft();
+}
+
+void UIList::eventRight() {
+  getRoot()->activateRight();
+}
+
   /*===========================================================================
   Up/down keys select elements
   ===========================================================================*/
   bool UIList::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
     switch(nKey) {
-      case SDLK_RETURN: 
-        /* Uhh... send this to the default button, if any. And if anything is selected */
-        if(m_nVisibleSelected>=0
-	   && m_nVisibleSelected < (int)(m_Entries.size()-m_filteredItems)
-	   && m_pEnterButton != NULL) {
-          m_pEnterButton->setClicked(true);       
-	  m_bChanged = true;
-          
-	  try {
-	    Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
-	  } catch(Exception &e) {
-	  }
-        }
-        
-        /* Under all circumstances set the activation flag */
-        m_bItemActivated = true;
-        return true;
-    
+    case SDLK_RETURN:
+	eventGo();
+        return true; 
       case SDLK_UP:
-        if(m_nVisibleSelected <= 0)
-          getRoot()->activateUp();
-        else {
-          setVisibleSelected(m_nVisibleSelected - 1);
-        }
+	eventUp();
         return true;
       case SDLK_DOWN:
-        if(m_nVisibleSelected >= (int)(m_Entries.size() - m_filteredItems - 1))
-          getRoot()->activateDown();
-        else {
-          setVisibleSelected(m_nVisibleSelected + 1);
-        }          
+	eventDown();
         return true;
       case SDLK_PAGEUP:
         for(int i=0;i<10;i++) {
@@ -806,10 +825,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       
       /* Left and right always selects another window */
       case SDLK_LEFT:
-        getRoot()->activateLeft();
+	eventLeft();
         return true;
       case SDLK_RIGHT:
-        getRoot()->activateRight();
+	eventRight();
         return true;
     }
     
@@ -847,6 +866,32 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* w00t? we don't want that silly keypress! */
     return false;
   }
+
+bool UIList::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
+  if(i_joyAxis % 2 == 0) { // horizontal
+    if(i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+      eventLeft();
+      return true;
+    } else if(i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
+      eventRight();
+      return true;
+    }
+  } else { // vertical
+    if(i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+      eventUp();
+      return true;
+    } else if(i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
+      eventDown();
+      return true;
+    }
+  }
+  return false;
+}
+
+bool UIList::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
+  eventGo();
+  return true;
+}
   
 void UIList::adaptRealSelectedOnVisibleEntries() { // m_nRealSelected must be >= 0 and < size()
   bool v_found;

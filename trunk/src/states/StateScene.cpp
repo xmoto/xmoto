@@ -133,9 +133,6 @@ bool StateScene::update()
   }
 
   try {
-  
-    InputHandler::instance()->updateUniverseInput(m_universe); // update input for the universe
-
     int nPhysSteps = 0;
     
     if(isLockedScene() == false) {  
@@ -233,7 +230,7 @@ void StateScene::onRenderFlush() {
   }
 }
 
-void StateScene::keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char) {
+void StateScene::keyUp(SDLKey nKey, SDLMod mod, const std::string& i_utf8Char) {
   switch(nKey) {
   case SDLK_TAB:
     if(m_cameraAnim != NULL) {
@@ -242,10 +239,12 @@ void StateScene::keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char) {
       }
     }
     break;
+  default:
+    break;
   }
 }
 
-void StateScene::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateScene::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   GameApp*  pGame = GameApp::instance();
 

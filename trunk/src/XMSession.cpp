@@ -1138,28 +1138,8 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
 
   /* server url, keep them easy to modify */
   v_config->createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL           );
-  v_config->createVar( "WebDbSyncUploadURL",     DEFAULT_UPLOADDBSYNC_URL           );
+  v_config->createVar( "WebDbSyncUploadURL",     DEFAULT_UPLOADDBSYNC_URL        );
   v_config->createVar( "WebThemesURL",           DEFAULT_WEBTHEMES_URL           );
   v_config->createVar( "WebThemesURLBase",       DEFAULT_WEBTHEMES_SPRITESURLBASE);
   v_config->createVar( "WebHighscoreUploadURL",  DEFAULT_UPLOADREPLAY_URL        );
-
-  /* Controls -- no options to change this for the moment, then, keep them here */
-  v_config->createVar( "ControllerMode1",        DEFAULT_CONTROLLERMODE);
-  v_config->createVar( "ControllerMode2",        DEFAULT_CONTROLLERMODE);
-  v_config->createVar( "ControllerMode3",        DEFAULT_CONTROLLERMODE);
-  v_config->createVar( "ControllerMode4",        DEFAULT_CONTROLLERMODE);
-
-  /* joystick */
-  v_config->createVar( "JoyIdx1",                "0"      );
-  v_config->createVar( "JoyAxisPrim1",           "1"      );
-  v_config->createVar( "JoyAxisPrimMax1",        "32760"  );
-  v_config->createVar( "JoyAxisPrimMin1",        "-32760" );
-  v_config->createVar( "JoyAxisPrimUL1",         "1024"   );
-  v_config->createVar( "JoyAxisPrimLL1",         "-1024"  );
-  v_config->createVar( "JoyAxisSec1",            "0"      );
-  v_config->createVar( "JoyAxisSecMax1",         "32760"  );
-  v_config->createVar( "JoyAxisSecMin1",         "-32760" );
-  v_config->createVar( "JoyAxisSecUL1",          "1024"   );
-  v_config->createVar( "JoyAxisSecLL1",          "-1024"  );
-  v_config->createVar( "JoyButtonChangeDir1",    "0"      );
 }

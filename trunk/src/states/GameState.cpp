@@ -158,7 +158,7 @@ void GameState::addCommand(std::string cmd, std::string args)
   m_commands.push(std::pair<std::string, std::string>(cmd, args));
 }
 
-void GameState::keyDown(int nKey, SDLMod mod, int nChar, const std::string& i_utf8Char) {
+void GameState::keyDown(SDLKey nKey, SDLMod mod, int nChar, const std::string& i_utf8Char) {
   GameApp* gameApp = GameApp::instance();
 
   if(nKey == SDLK_F12) {

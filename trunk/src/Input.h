@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class xmDatabase;
 
-enum XMKey_input {XMK_KEYBOARD, XMK_MOUSEBUTTON};
+enum XMKey_input {XMK_KEYBOARD, XMK_MOUSEBUTTON, XMK_JOYSTICKBUTTON, XMK_JOYSTICKAXIS};
 
 /* define a key to do something (keyboard:a, mouse:left, ...) */
 class XMKey {
@@ -36,28 +36,29 @@ class XMKey {
   XMKey();
   XMKey(SDL_Event &i_event);
   XMKey(const std::string& i_key, bool i_basicMode = false); /* basic mode is to give a simple letter, for scripts key */
-  XMKey(SDLKey nKey, SDLMod mod); // keyboard
-  XMKey(Uint8 nButton);           // mouse
+  XMKey(SDLKey nKey, SDLMod mod);           		      	       // keyboard
+  XMKey(Uint8 nButton);                     		      	       // mouse
+  XMKey(std::string* i_joyId, Uint8 i_joyButton); 	               // joystick button
+  XMKey(std::string* i_joyId, Uint8 i_joyAxis, Sint16 i_joyAxisValue); // joystick axis
 
   bool operator==(const XMKey& i_other) const;
   std::string toString();
   std::string toFancyString();
   bool isPressed(Uint8 *i_keystate, Uint8 i_mousestate);
 
+  bool isAnalogic() const;
+  float getAnalogicValue() const;
+
  private:
   XMKey_input m_input;
   SDLKey m_keyboard_sym;
   SDLMod m_keyboard_mod;
   Uint8  m_mouseButton_button;
+  std::string* m_joyId; // a pointer to avoid the copy while joyId are store from load to unload
+  Uint8  m_joyButton;
+  Uint8  m_joyAxis;
+  Sint16 m_joyAxisValue;
 };
-
-  /*===========================================================================
-  Controller modes
-  ===========================================================================*/
-  enum ControllerModeID {
-    CONTROLLER_MODE_KEYBOARD,
-    CONTROLLER_MODE_JOYSTICK1
-  };
 
   /*===========================================================================
   Script hooks
@@ -74,37 +75,8 @@ class XMKey {
   Inputs
   ===========================================================================*/
   enum InputEventType {
-    INPUT_KEY_DOWN,
-    INPUT_KEY_UP,
-    INPUT_MOUSE_DOWN,
-    INPUT_MOUSE_UP
-  };
-  
-  /*===========================================================================
-  Input actions
-  ===========================================================================*/
-  //enum InputActionBehaviour {
-  //  ACTION_BEHAVIOUR_INSTANT, /* A kind of action that takes effect instantly
-  //                               when the user control is activated */
-  //  ACTION_BEHAVIOUR_LINEAR_RAMP,
-  //};
-  
-  enum InputActionTypeID {
-    ACTION_NONE,
-    ACTION_DRIVE,             /* Param: Throttle [0; 1] or Brake [-1; 0] */
-    ACTION_PULL,              /* Param: Pull back on the handle bar [0; 1] or push forward on the handle bar [-1; 0] */
-    ACTION_CHANGEDIR,         /* Param: None */
-  };
-    
-  struct InputAction {
-    InputActionTypeID TypeID; /* Action type */
-    float fParam;             /* Action parameter */
-  };
-  
-  struct InputActionType {
-    const char *pcDesc;       /* Descriptive string */
-    InputActionTypeID TypeID; /* The ID */
-    //InputActionBehaviour
+    INPUT_DOWN,
+    INPUT_UP,
   };
 
   /*===========================================================================
@@ -125,15 +97,18 @@ public:
   void setMirrored(bool i_value);
 
   void loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
-  void handleInput(Universe* i_universe, InputEventType Type, int nKey,SDLMod mod);      
-  void updateUniverseInput(Universe* i_universe);
+  void handleInput(Universe* i_universe, InputEventType Type, const XMKey& i_xmkey);
   void init(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
   void uninit();
-      
+
   void resetScriptKeyHooks(void) {m_nNumScriptKeyHooks = 0;}
   void addScriptKeyHook(MotoGame *pGame,const std::string &basicKeyName,const std::string &FuncName);
 
   std::string getFancyKeyByAction(const std::string &Action);
+  std::string* getJoyId(Uint8 i_joynum);
+  std::string* getJoyIdByStrId(const std::string& i_name);
+  SDL_Joystick* getJoyById(std::string* i_id);
+  InputEventType joystickAxisSens(Sint16 m_joyAxisValue);
 
   void setDefaultConfig();
   void saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
@@ -148,18 +123,18 @@ public:
   void setCHANGEDIR(int i_player, XMKey i_value);
   XMKey getCHANGEDIR(int i_player) const;
 
+  static float joyRawToFloat(float raw, float neg, float deadzone_neg, float deadzone_pos, float pos);
+
 private:
 
   /* Data */
   int m_nNumScriptKeyHooks;
   InputScriptKeyHook m_ScriptKeyHooks[MAX_SCRIPT_KEY_HOOKS];
       
-  ControllerModeID m_ControllerModeID[4];
-  InputAction m_ActiveAction;
-
   std::vector<SDL_Joystick *> m_Joysticks;
+  std::vector<std::string>    m_JoysticksNames;
+  std::vector<std::string>    m_JoysticksIds;
       
-  /* For ControllerMode1 = CONTROLLER_MODE_KEYBOARD */
   XMKey m_nDriveKey[4];
   XMKey m_nBrakeKey[4];
   XMKey m_nPullBackKey[4];
@@ -167,27 +142,8 @@ private:
   XMKey m_nChangeDirKey[4];
   // to avoid key repetition
   bool m_changeDirKeyAlreadyPress[4];
-
-  /* For ControllerMode1 = CONTROLLER_MODE_JOYSTICK1 */
-  SDL_Joystick *m_pActiveJoystick1;
-  int m_nJoyAxisPrim1; /**< Primary axis: Driving and braking */
-  int m_nJoyAxisPrimMax1;
-  int m_nJoyAxisPrimMin1;
-  int m_nJoyAxisPrimUL1;
-  int m_nJoyAxisPrimLL1;
-  int m_nJoyAxisSec1; /**< Secondary axis: Pulling and pushing the handle bar */
-  int m_nJoyAxisSecMax1;
-  int m_nJoyAxisSecMin1;
-  int m_nJoyAxisSecUL1;
-  int m_nJoyAxisSecLL1;
-  int m_nJoyButtonChangeDir1;
      
   bool m_mirrored;
-
-  std::vector<bool> m_JoyButtonsPrev;
-      
-  /* Static data */
-  static InputActionType m_ActionTypeTable[];
 };
 
 

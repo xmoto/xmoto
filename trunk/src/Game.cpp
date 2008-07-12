@@ -246,43 +246,6 @@ GameApp::GameApp() {
     }
   }
 
-  /*===========================================================================
-  Key down event
-  ===========================================================================*/
-void GameApp::keyDown(int nKey, SDLMod mod, int nChar, const std::string& i_utf8Char) {
-  StateManager::instance()->keyDown(nKey, mod, nChar, i_utf8Char);
-}
-
-/*===========================================================================
-  Key up event
-  ===========================================================================*/
-  void GameApp::keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char) {
-    StateManager::instance()->keyUp(nKey, mod, i_utf8Char);
-  }
-
-void GameApp::changeFocus(bool i_hasFocus) {
-  StateManager::instance()->changeFocus(i_hasFocus);
-}
-
-void GameApp::changeVisibility(bool i_visible) {
-  StateManager::instance()->changeVisibility(i_visible);
-}
-
-  /*===========================================================================
-  Mouse events
-  ===========================================================================*/
-  void GameApp::mouseDoubleClick(int nButton) {
-    StateManager::instance()->mouseDoubleClick(nButton);
-  }
-
-  void GameApp::mouseDown(int nButton) {
-    StateManager::instance()->mouseDown(nButton);
-  }
-
-  void GameApp::mouseUp(int nButton) {
-    StateManager::instance()->mouseUp(nButton);
-  }
-
   std::string GameApp::determineNextLevel(const std::string& i_id_level) {
     if(m_currentPlayingList == NULL) {
       return "";

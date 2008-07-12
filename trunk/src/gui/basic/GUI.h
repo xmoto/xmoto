@@ -31,6 +31,8 @@ class GameApp;
 
 #include "../../Theme.h"
 
+#define GUI_JOYSTICK_MINIMUM_DETECTION 3000
+
 
 /*===========================================================================
   Alignments
@@ -173,6 +175,8 @@ public:
   virtual void mouseHover(int x,int y) {}
   virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {return false;}
   virtual bool keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char) {return false;}
+  virtual bool joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {return false;}
+  virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {return false;}
   virtual bool offerActivation(void) {return false;}
   virtual bool offerMouseEvent(void) {return true;}
   virtual std::string subContextHelp(int x,int y) {return "";}
@@ -292,7 +296,9 @@ public:
   /* Methods */
   virtual void paint(void);
   virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
-      
+  virtual bool joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
+  virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
+
   virtual bool offerActivation(void) {return true;}
   void hideText(bool bHideText) {m_hideText=bHideText;} 
 
@@ -536,7 +542,8 @@ public:
   virtual void mouseHover(int x,int y);      
   virtual bool offerActivation(void);
   virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
-      
+  virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
+
   /* Data interface */
   UIButtonState getState(void) {return m_State;}
   void setState(UIButtonState State) {m_State = State;}
@@ -557,6 +564,9 @@ protected:
       
   /* Helper methods */
   void _UncheckGroup(int nGroup);
+
+ private:
+  void actionnate();
 };
 
 class UIButtonDrawn : public UIButton {
@@ -614,9 +624,10 @@ public:
   virtual void mouseHover(int x,int y);      
   virtual bool offerActivation(void);
   virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
-
+  virtual bool joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
+  virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
   virtual std::string subContextHelp(int x,int y);
-      
+
   /* if position != -1, force the entry to this position */
   UIListEntry *addEntry(std::string Text,void *pvUser=NULL, int i_position = -1);
   virtual void clear();
@@ -705,6 +716,13 @@ private:
   void setScrollBarScrollerStartY(float y);
   float ScrollNbVisibleItems();
   bool isScrollBarRequired();
+
+  // keyboard/joystick/... events reaction
+  void eventGo();
+  void eventDown();
+  void eventUp();
+  void eventLeft();
+  void eventRight();
 
   int m_headerHeight;
   int m_headerSubBorderHeight;
@@ -808,7 +826,9 @@ public:
   virtual void mouseWheelDown(int x,int y);
   virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);      
   virtual bool keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char);  
-      
+  virtual bool joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
+  virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
+
   void deactivate(UIWindow *pWindow);
 
   void enableContextMenuDrawing(bool b) {m_bShowContextMenu=b;}
@@ -833,6 +853,10 @@ private:
 
   /* Helpers */      
   bool _RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+
+  bool _RootJoystickAxisMotionEvent(UIWindow *pWindow, Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
+  bool _RootJoystickButtonDownEvent(UIWindow *pWindow, Uint8 i_joyNum, Uint8 i_joyButton);
+
   bool _RootMouseEvent(UIWindow *pWindow,UIRootMouseEvent Event,int x,int y);
   void _RootPaint(int x,int y,UIWindow *pWindow,UIRect *pRect);
   void _ClipRect(UIRect *pRect,UIRect *pClipWith);

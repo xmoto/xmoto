@@ -166,6 +166,22 @@ void UIEdit::paint(void) {
     return false;
   }  
 
+bool UIEdit::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
+  return false;
+}
+
+bool UIEdit::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
+  //std::string  v_caption = getCaption();
+  //unsigned int v_length  = utf8::utf8_length(v_caption);
+  //std::string  v_begin;
+
+  //if(v_length > 1) {
+  //  v_begin = utf8_substring(getCaption(), v_length -1);
+  //}
+
+  return false;
+}
+
 	void UIEdit::setHasChanged(bool b_value) {
 		m_hasChanged = b_value;
 	}

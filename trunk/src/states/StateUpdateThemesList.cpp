@@ -36,7 +36,7 @@ StateUpdateThemesList::~StateUpdateThemesList()
   delete m_pThread;
 }
 
-void StateUpdateThemesList::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
+void StateUpdateThemesList::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
   if(nKey == SDLK_k && (mod & KMOD_CTRL) != 0) {
     if(m_threadStarted == true) {
       m_pThread->safeKill();

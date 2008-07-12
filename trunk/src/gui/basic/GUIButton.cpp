@@ -252,33 +252,41 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         return true;
       case SDLK_SPACE:
       case SDLK_RETURN:
-        if(m_Type == UI_BUTTON_TYPE_CHECK) {
-          m_bChecked = !m_bChecked;
-	  try {
-	    Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
-	  } catch(Exception &e) {
-	  }
-	}
-        else if(m_Type == UI_BUTTON_TYPE_RADIO) {
-          _UncheckGroup(getGroup());
-          m_bChecked = true;
-	  try {
-	    Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
-	  } catch(Exception &e) {
-	  }
-        }
-        else {
-          setClicked(true);
-	  try {
-	    Sound::playSampleByName(Theme::instance()->getSound("Button1")->FilePath());
-	  } catch(Exception &e) {
-	  }
-        }
+	actionnate();
+	return true;
         break;
     }
     
     return false;
   }  
+
+bool UIButton::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
+  actionnate();
+  return true;
+}
+
+void UIButton::actionnate() {
+  if(m_Type == UI_BUTTON_TYPE_CHECK) {
+    m_bChecked = !m_bChecked;
+    try {
+      Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
+    } catch(Exception &e) {
+    }
+  } else if(m_Type == UI_BUTTON_TYPE_RADIO) {
+    _UncheckGroup(getGroup());
+    m_bChecked = true;
+    try {
+      Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
+    } catch(Exception &e) {
+    }
+  } else {
+    setClicked(true);
+    try {
+      Sound::playSampleByName(Theme::instance()->getSound("Button1")->FilePath());
+    } catch(Exception &e) {
+    }
+  }
+}
 
   /*===========================================================================
   Misc

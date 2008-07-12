@@ -173,7 +173,7 @@ void StateLevelPackViewer::executeOneCommand(std::string cmd, std::string args)
   }
 }
 
-void StateLevelPackViewer::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
+void StateLevelPackViewer::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
   StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
 
