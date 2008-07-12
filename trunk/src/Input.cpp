@@ -67,7 +67,7 @@ XMKey::XMKey(SDLKey nKey,SDLMod mod) {
 }
 
 XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
-  int pos;
+  unsigned int pos;
   std::string v_current, v_rest;
 
   if(i_basicMode) {
