@@ -201,7 +201,8 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
       m_finished   = true;
       m_finishTime = m_replay->getFinishTime();
     } else {
-      m_dead = true;
+      m_dead     = true;
+      m_deadTime = m_bikeState.GameTime;
     }
   } else {
     BikeState* v_state;
