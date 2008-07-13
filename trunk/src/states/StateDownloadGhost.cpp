@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "thread/DownloadGhostThread.h"
 #include "helpers/Log.h"
 #include "Game.h"
+#include "helpers/CmdArgumentParser.h"
 
 StateDownloadGhost::StateDownloadGhost(std::string levelId,
 				       bool launchReplaying,
@@ -31,12 +32,14 @@ StateDownloadGhost::StateDownloadGhost(std::string levelId,
 				       bool updateStatesBehind)
   : StateUpdate(drawStateBehind, updateStatesBehind)
 {
-  m_pThread         = new DownloadGhostThread(this, levelId, launchReplaying);
+  m_pThread         = new DownloadGhostThread(levelId, launchReplaying);
   m_name            = "StateDownloadGhost";
   m_replayName      = "";
   m_launchReplaying = launchReplaying;
   // we don't want a message box on failure.
   m_messageOnFailure = launchReplaying;
+
+  StateManager::instance()->registerAsObserver("GHOST_DOWNLOADED_REPLAY_FILE", this);
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("CHANGE_WWW_ACCESS");
@@ -47,6 +50,7 @@ StateDownloadGhost::StateDownloadGhost(std::string levelId,
 
 StateDownloadGhost::~StateDownloadGhost()
 {
+  StateManager::instance()->unregisterAsObserver("GHOST_DOWNLOADED_REPLAY_FILE", this);
   delete m_pThread;
 }
 
@@ -80,5 +84,19 @@ void StateDownloadGhost::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::s
     if(m_threadStarted == true) {
       m_pThread->safeKill();
     }
+  }
+}
+
+void StateDownloadGhost::executeOneCommand(std::string cmd, std::string args)
+{
+  if(XMSession::instance()->debug() == true) {
+    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+		cmd.c_str(), args.c_str(), getName().c_str());
+  }
+
+  if(cmd == "GHOST_DOWNLOADED_REPLAY_FILE") {
+    setReplay(CmdArgumentParser::instance()->getString(args));
+  } else {
+    GameState::executeOneCommand(cmd, args);
   }
 }

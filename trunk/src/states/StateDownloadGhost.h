@@ -35,6 +35,8 @@ public:
 
   void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
 
+  virtual void executeOneCommand(std::string cmd, std::string args);
+
 protected:
   void callAfterThreadFinished(int threadResult);
   virtual void checkEvents() {}

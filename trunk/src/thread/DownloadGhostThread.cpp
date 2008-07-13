@@ -25,14 +25,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateDownloadGhost.h"
 #include "helpers/Log.h"
 #include "VFileIO.h"
+#include "helpers/CmdArgumentParser.h"
 
-DownloadGhostThread::DownloadGhostThread(GameState* pCallingState,
-					 std::string levelId,
+DownloadGhostThread::DownloadGhostThread(std::string levelId,
 					 bool i_onlyMainRoomGhost)
   : XMThread()
 {
   m_pWebRoom      = new WebRoom(this);
-  m_pCallingState = pCallingState;
   m_msg     = "";
   m_levelId = levelId;
   m_onlyMainRoomGhost = i_onlyMainRoomGhost;
@@ -104,8 +103,11 @@ int DownloadGhostThread::realThreadFunction()
 	}
 	m_pDb->read_DB_free(v_result);
       }
-      if(m_onlyMainRoomGhost) { /* only for the main room */
-	((StateDownloadGhost*)m_pCallingState)->setReplay(v_replayName);
+      if(m_onlyMainRoomGhost) {
+	/* only for the main room */
+	std::string args = "";
+	CmdArgumentParser::instance()->addString(v_replayName, args);
+	StateManager::instance()->sendAsynchronousMessage("GHOST_DOWNLOADED_REPLAY_FILE", args);
       }
     }
   }

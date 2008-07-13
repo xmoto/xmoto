@@ -29,8 +29,7 @@ class WebRoom;
 
 class DownloadGhostThread : public XMThread, public WWWAppInterface {
 public:
-  DownloadGhostThread(GameState* pCallingState,
-		      std::string levelId,
+  DownloadGhostThread(std::string levelId,
 		      bool i_onlyMainRoomGhost);
   virtual ~DownloadGhostThread();
 
@@ -42,7 +41,6 @@ public:
 private:
 
   WebRoom*    m_pWebRoom;
-  GameState*  m_pCallingState;
   std::string m_msg;
   std::string m_levelId;
   bool m_onlyMainRoomGhost;
