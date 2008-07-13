@@ -30,10 +30,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikeController.h"
 #include "Universe.h"
 
-#define INPUT_JOYSTICK_MINIMUM_DETECTION 100
-#define INPUT_JOYSTICK_MAXIMUM_VALUE     32760
-
-
 XMKey::XMKey() {
     m_input = XMK_NONE;
 }
@@ -241,9 +237,9 @@ bool XMKey::operator==(const XMKey& i_other) const {
       ! (
 	 // axes are not on the same side if the value are on the opposite sides
 	 (m_joyAxisValue         > INPUT_JOYSTICK_MINIMUM_DETECTION &&
-	  i_other.m_joyAxisValue < INPUT_JOYSTICK_MINIMUM_DETECTION)
+	  i_other.m_joyAxisValue < -(INPUT_JOYSTICK_MINIMUM_DETECTION))
 	 ||
-	 (m_joyAxisValue         < INPUT_JOYSTICK_MINIMUM_DETECTION &&
+	 (m_joyAxisValue         < -(INPUT_JOYSTICK_MINIMUM_DETECTION) &&
 	  i_other.m_joyAxisValue > INPUT_JOYSTICK_MINIMUM_DETECTION)
 	 );
   }
@@ -256,7 +252,7 @@ bool XMKey::operator==(const XMKey& i_other) const {
   return false;
 }
 
-std::string XMKey::toString() {
+std::string XMKey::toString() const {
   std::ostringstream v_res;
 
   switch(m_input) {
@@ -270,9 +266,6 @@ std::string XMKey::toString() {
     break;
 
   case XMK_JOYSTICKAXIS:
-    if(abs(m_joyAxisValue) < INPUT_JOYSTICK_MINIMUM_DETECTION) {
-      return "";
-    }
     // put the joyid at the end while it can contain any char
     v_res << "A" << ":" << ((int)m_joyAxis) << ":" << ((int)m_joyAxisValue) << ":" << *m_joyId;
     break;
@@ -290,7 +283,7 @@ std::string XMKey::toString() {
   return v_res.str();
 }
 
-std::string XMKey::toFancyString() {
+std::string XMKey::toFancyString() const {
   std::ostringstream v_res;
 
   if(m_input == XMK_KEYBOARD) {
@@ -691,6 +684,7 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type, const 
 	for(unsigned int i=0; i<i_universe->getScenes()[j]->Players().size(); i++) {
 	  v_biker = i_universe->getScenes()[j]->Players()[i];
 
+	  // if else is not valid while axis up can be a signal for two sides
 	  if(m_nDriveKey[p] == i_xmkey) {
 	    /* Start driving */
 	    if(i_xmkey.isAnalogic()) {
@@ -698,19 +692,25 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type, const 
 	    } else {
 	      v_biker->getControler()->setThrottle(1.0f);
 	    }
-	  } else if(m_nBrakeKey[p] == i_xmkey) {
+	  }
+
+	  if(m_nBrakeKey[p] == i_xmkey) {
 	    /* Brake */
 	    v_biker->getControler()->setBreak(1.0f);
-	  } else if((m_nPullBackKey[p]    == i_xmkey && m_mirrored == false) ||
-		    (m_nPushForwardKey[p] == i_xmkey && m_mirrored)) {
+	  }
+
+	  if((m_nPullBackKey[p]    == i_xmkey && m_mirrored == false) ||
+	     (m_nPushForwardKey[p] == i_xmkey && m_mirrored)) {
 	    /* Pull back */
 	    if(i_xmkey.isAnalogic()) {
 	      v_biker->getControler()->setPull(fabs(i_xmkey.getAnalogicValue()));
 	    } else {
 	      v_biker->getControler()->setPull(1.0f);
 	    }
-	  } else if((m_nPushForwardKey[p] == i_xmkey && m_mirrored == false) ||
-		    (m_nPullBackKey[p]    == i_xmkey && m_mirrored)) {
+	  }
+	  
+	  if((m_nPushForwardKey[p] == i_xmkey && m_mirrored == false) ||
+	     (m_nPullBackKey[p]    == i_xmkey && m_mirrored)) {
 	    /* Push forward */
 	    if(i_xmkey.isAnalogic()) {
 	      v_biker->getControler()->setPull(-fabs(i_xmkey.getAnalogicValue()));
@@ -718,7 +718,8 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type, const 
 	      v_biker->getControler()->setPull(-1.0f);
 	    }
 	  }
-	  else if(m_nChangeDirKey[p] == i_xmkey) {
+	  
+	  if(m_nChangeDirKey[p] == i_xmkey) {
 	    /* Change dir */
 	    if(m_changeDirKeyAlreadyPress[p] == false){
 	      v_biker->getControler()->setChangeDir(true);
@@ -738,25 +739,30 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type, const 
 	for(unsigned int i=0; i<i_universe->getScenes()[j]->Players().size(); i++) {
 	  v_biker = i_universe->getScenes()[j]->Players()[i];
 
+	  // if else is not valid while axis up can be a signal for two sides
 	  if(m_nDriveKey[p] == i_xmkey) {
 	    /* Stop driving */
 	    v_biker->getControler()->setThrottle(0.0f);
 	  }
-	  else if(m_nBrakeKey[p] == i_xmkey) {
+
+	  if(m_nBrakeKey[p] == i_xmkey) {
 	    /* Don't brake */
 	    v_biker->getControler()->setBreak(0.0f);
 	  }
-	  else if((m_nPullBackKey[p]    == i_xmkey && m_mirrored == false) ||
-		  (m_nPushForwardKey[p] == i_xmkey && m_mirrored)) {
+
+	  if((m_nPullBackKey[p]    == i_xmkey && m_mirrored == false) ||
+	     (m_nPushForwardKey[p] == i_xmkey && m_mirrored)) {
 	    /* Pull back */
 	    v_biker->getControler()->setPull(0.0f);
 	  }
-	  else if((m_nPushForwardKey[p] == i_xmkey && m_mirrored == false) ||
-		  (m_nPullBackKey[p]    == i_xmkey && m_mirrored)) {
+
+	  if((m_nPushForwardKey[p] == i_xmkey && m_mirrored == false) ||
+	     (m_nPullBackKey[p]    == i_xmkey && m_mirrored)) {
 	    /* Push forward */
 	    v_biker->getControler()->setPull(0.0f);
 	  }
-	  else if(m_nChangeDirKey[p] == i_xmkey) {
+
+	  if(m_nChangeDirKey[p] == i_xmkey) {
 	    m_changeDirKeyAlreadyPress[p] = false;
 	  }
 	  p++;

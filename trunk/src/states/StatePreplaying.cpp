@@ -270,7 +270,7 @@ void StatePreplaying::mouseDown(int nButton) {
 }
 
 void StatePreplaying::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
-  m_playAnimation = false;
+  //m_playAnimation = false; // don't do that while "xmoto -l 6" generate events at startup
 }
 
 void StatePreplaying::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {

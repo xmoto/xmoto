@@ -27,6 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Renderer.h"
 
 #define INPUT_NB_PLAYERS 4
+#define INPUT_JOYSTICK_MINIMUM_DETECTION 100
+#define INPUT_JOYSTICK_MAXIMUM_VALUE     32760
 
 class xmDatabase;
 
@@ -45,8 +47,8 @@ class XMKey {
   XMKey(std::string* i_joyId, Uint8 i_joyAxis, Sint16 i_joyAxisValue); // joystick axis
 
   bool operator==(const XMKey& i_other) const;
-  std::string toString();
-  std::string toFancyString();
+  std::string toString() const;
+  std::string toFancyString() const;
   bool isPressed(Uint8 *i_keystate, Uint8 i_mousestate);
 
   bool isDefined() const;
