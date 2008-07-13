@@ -262,11 +262,11 @@ msgstr "axe %i"
 
 #: src/GameText.h:97
 msgid "left"
-msgstr "droite"
+msgstr "gauche"
 
 #: src/GameText.h:98
 msgid "right"
-msgstr "gauche"
+msgstr "droite"
 
 #: src/GameText.h:99
 msgid "up"
