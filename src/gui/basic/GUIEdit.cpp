@@ -141,8 +141,7 @@ void UIEdit::paint(void) {
 	std::string s = getCaption();
 
 	if(m_nCursorPos > 0) {
-	  setCaption(utf8::utf8_delete(s, m_nCursorPos));
-	  m_nCursorPos--;
+	  setCaption(utf8::utf8_delete(s, m_nCursorPos--)); // m_nCursorPos-- must be done before setCaption (setCaption alter it if a bad value is given)
 	}
 
       }
