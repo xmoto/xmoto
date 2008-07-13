@@ -287,6 +287,10 @@ int Ghost::getFinishTime() {
   return m_replay->getFinishTime();
 }
 
+bool Ghost::didFinish() {
+  return m_replay->didFinish();
+}
+
 std::string Ghost::levelId() {
    return m_replay->getLevelId();
 }

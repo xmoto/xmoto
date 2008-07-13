@@ -123,6 +123,16 @@ bool StateReplaying::update()
       printf(" * %i frames rendered in %.2f seconds\n", m_benchmarkNbFrame, GameApp::getXMTime() - m_benchmarkStartTime);
       printf(" * Average framerate: %.2f fps\n", ((double)m_benchmarkNbFrame) / (GameApp::getXMTime() - m_benchmarkStartTime));
     }
+
+    if(m_replayBiker->isFinished()) {
+      if(m_replayBiker->didFinish()) { // update the time in case the biker finished to get the exact finish time
+	if(m_universe != NULL) {
+	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	    m_universe->getScenes()[i]->setTime(m_replayBiker->finishTime());
+	  }
+	}
+      }
+    }
   }
 
   return true;
