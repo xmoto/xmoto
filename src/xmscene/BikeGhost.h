@@ -34,7 +34,6 @@ class Ghost : public Biker {
   std::string playerName();
   std::string levelId();
   int getFinishTime();
- bool didFinish();
   void initLastToTakeEntities(Level* i_level);
   void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
   float diffToPlayer() const;
