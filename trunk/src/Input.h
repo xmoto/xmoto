@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "UserConfig.h"
 #include "Renderer.h"
 
+#define INPUT_NB_PLAYERS 4
+
 class xmDatabase;
 
 enum XMKey_input {XMK_KEYBOARD, XMK_MOUSEBUTTON, XMK_JOYSTICKBUTTON, XMK_JOYSTICKAXIS};
@@ -115,6 +117,8 @@ public:
 
   void setDefaultConfig();
   void saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
+
+  bool isANotSetKey(XMKey* i_xmkey) const;
   void setDRIVE(int i_player, XMKey i_value);
   XMKey getDRIVE(int i_player) const;
   void setBRAKE(int i_player, XMKey i_value);
@@ -138,13 +142,13 @@ private:
   std::vector<std::string>    m_JoysticksNames;
   std::vector<std::string>    m_JoysticksIds;
       
-  XMKey m_nDriveKey[4];
-  XMKey m_nBrakeKey[4];
-  XMKey m_nPullBackKey[4];
-  XMKey m_nPushForwardKey[4];
-  XMKey m_nChangeDirKey[4];
+  XMKey m_nDriveKey[INPUT_NB_PLAYERS];
+  XMKey m_nBrakeKey[INPUT_NB_PLAYERS];
+  XMKey m_nPullBackKey[INPUT_NB_PLAYERS];
+  XMKey m_nPushForwardKey[INPUT_NB_PLAYERS];
+  XMKey m_nChangeDirKey[INPUT_NB_PLAYERS];
   // to avoid key repetition
-  bool m_changeDirKeyAlreadyPress[4];
+  bool m_changeDirKeyAlreadyPress[INPUT_NB_PLAYERS];
      
   bool m_mirrored;
 };

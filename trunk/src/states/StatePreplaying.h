@@ -42,6 +42,9 @@ class StatePreplaying : public StateScene {
   virtual bool render();
   /* input */
   virtual void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual void mouseDown(int nButton);
+  virtual void joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
+  virtual void joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
 
  protected:
   std::string m_idlevel;

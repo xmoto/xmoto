@@ -62,6 +62,33 @@ void StateDeadJust::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string
   }
 }
 
+void StateDeadJust::mouseDown(int nButton) {
+  XMKey v_key = XMKey(nButton);
+
+  if(InputHandler::instance()->isANotSetKey(&v_key)) {
+    /* retart immediatly the level */
+    restartLevel();
+  }
+}
+
+void StateDeadJust::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
+  XMKey v_key = XMKey(InputHandler::instance()->getJoyId(i_joyNum), i_joyAxis, i_joyAxisValue);
+
+  if(InputHandler::instance()->isANotSetKey(&v_key)) {
+    /* retart immediatly the level */
+    restartLevel();
+  }
+}
+
+void StateDeadJust::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
+  XMKey v_key = XMKey(InputHandler::instance()->getJoyId(i_joyNum), i_joyButton);
+
+  if(InputHandler::instance()->isANotSetKey(&v_key)) {
+    /* retart immediatly the level */
+    restartLevel();
+  }
+}
+
 void StateDeadJust::restartLevel(bool i_reloadLevel) {
   restartLevelToPlay(i_reloadLevel);
 }
