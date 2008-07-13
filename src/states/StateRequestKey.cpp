@@ -100,6 +100,11 @@ void StateRequestKey::mouseDown(int nButton) {
 void StateRequestKey::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
   std::string v_msg;
 
+  // allow only minimum detection allowed
+  if(i_joyAxisValue < INPUT_JOYSTICK_MINIMUM_DETECTION && i_joyAxisValue > -(INPUT_JOYSTICK_MINIMUM_DETECTION)) {
+    return;
+  }
+
   v_msg = XMKey(InputHandler::instance()->getJoyId(i_joyNum), i_joyAxis, i_joyAxisValue).toString();
 
   if(v_msg != "") {
