@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class xmDatabase;
 
-enum XMKey_input {XMK_KEYBOARD, XMK_MOUSEBUTTON, XMK_JOYSTICKBUTTON, XMK_JOYSTICKAXIS};
+enum XMKey_input {XMK_NONE, XMK_KEYBOARD, XMK_MOUSEBUTTON, XMK_JOYSTICKBUTTON, XMK_JOYSTICKAXIS};
 enum XMKey_direction {XMKD_LEFT, XMKD_RIGHT, XMKD_UP, XMKD_DOWN, XMKD_NODIRECTION};
 
 /* define a key to do something (keyboard:a, mouse:left, ...) */
@@ -49,6 +49,7 @@ class XMKey {
   std::string toFancyString();
   bool isPressed(Uint8 *i_keystate, Uint8 i_mousestate);
 
+  bool isDefined() const;
   bool isAnalogic() const;
   float getAnalogicValue() const;
   bool isDirectionnel() const;
@@ -129,6 +130,8 @@ public:
   XMKey getFLIPRIGHT(int i_player) const;
   void setCHANGEDIR(int i_player, XMKey i_value);
   XMKey getCHANGEDIR(int i_player) const;
+  void setSCRIPTACTION(int i_player, int i_action, XMKey i_value);
+  XMKey getSCRIPTACTION(int i_player, int i_action) const;
 
   static float joyRawToFloat(float raw, float neg, float deadzone_neg, float deadzone_pos, float pos);
 
@@ -147,9 +150,9 @@ private:
   XMKey m_nPullBackKey[INPUT_NB_PLAYERS];
   XMKey m_nPushForwardKey[INPUT_NB_PLAYERS];
   XMKey m_nChangeDirKey[INPUT_NB_PLAYERS];
-  // to avoid key repetition
-  bool m_changeDirKeyAlreadyPress[INPUT_NB_PLAYERS];
-     
+  bool m_changeDirKeyAlreadyPress[INPUT_NB_PLAYERS]; // to avoid key repetition
+  XMKey m_nScriptActionKeys[INPUT_NB_PLAYERS][MAX_SCRIPT_KEY_HOOKS];
+
   bool m_mirrored;
 };
 
