@@ -79,6 +79,28 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CONFIGUREJOYSTICK    _("Configure Joystick...")
 #define GAMETEXT_CONTROLS             _("Controls")
 
+#define GAMETEXT_KEY_LEFTCONTROL       	  _("left control")
+#define GAMETEXT_KEY_RIGHTCONTROL      	  _("right control")
+#define GAMETEXT_KEY_LEFTSHIFT         	  _("left shift")
+#define GAMETEXT_KEY_RIGHTSHIFT        	  _("right shift")
+#define GAMETEXT_KEY_LEFTALT           	  _("left alt")
+#define GAMETEXT_KEY_RIGHTALT          	  _("right alt")
+#define GAMETEXT_KEY_LEFTMETA          	  _("left meta")
+#define GAMETEXT_KEY_RIGHTMETA         	  _("right meta")
+#define GAMETEXT_MOUSE_BUTTON          	  _("button %i")
+#define GAMETEXT_MOUSE_LEFTBUTTON      	  _("left button")
+#define GAMETEXT_MOUSE_MIDDLEBUTTON    	  _("middle button")
+#define GAMETEXT_MOUSE_RIGHTBUTTON     	  _("right button")
+#define GAMETEXT_MOUSE_WHEELUPBUTTON   	  _("wheel up")
+#define GAMETEXT_MOUSE_WHEELDOWNBUTTON 	  _("wheel down")
+#define GAMETEXT_JOYSTICK_AXIS         	  _("axis %i")
+#define GAMETEXT_JOYSTICK_DIRECTION_LEFT  _("left")
+#define GAMETEXT_JOYSTICK_DIRECTION_RIGHT _("right")
+#define GAMETEXT_JOYSTICK_DIRECTION_UP    _("up")
+#define GAMETEXT_JOYSTICK_DIRECTION_DOWN  _("down")
+#define GAMETEXT_JOYSTICK_DIRECTION_NONE  _("none")
+#define GAMETEXT_JOYSTICK_BUTTON          _("button %i")
+
 #define GAMETEXT_CREDITS                                                                     \
   std::string(_("Lead Programming")) +                                                       \
     ":Rasmus Neckelmann;"                                                                    \

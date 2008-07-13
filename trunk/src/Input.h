@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class xmDatabase;
 
 enum XMKey_input {XMK_KEYBOARD, XMK_MOUSEBUTTON, XMK_JOYSTICKBUTTON, XMK_JOYSTICKAXIS};
+enum XMKey_direction {XMKD_LEFT, XMKD_RIGHT, XMKD_UP, XMKD_DOWN, XMKD_NODIRECTION};
 
 /* define a key to do something (keyboard:a, mouse:left, ...) */
 class XMKey {
@@ -48,6 +49,8 @@ class XMKey {
 
   bool isAnalogic() const;
   float getAnalogicValue() const;
+  bool isDirectionnel() const;
+  XMKey_direction getDirection() const;
 
  private:
   XMKey_input m_input;
