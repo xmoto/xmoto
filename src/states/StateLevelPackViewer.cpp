@@ -76,6 +76,9 @@ void StateLevelPackViewer::enterAfterPop()
     m_require_updateLevelsList = false;
   }
 
+  // the three buttons are disabled, so enable them
+  updateRights();
+  
   GameApp::instance()->playMusic("menu1");
   StateMenu::enterAfterPop();
 }
