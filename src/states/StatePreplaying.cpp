@@ -261,8 +261,19 @@ bool StatePreplaying::render()
   return true;
 }
 
-void StatePreplaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
+void StatePreplaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
+  m_playAnimation = false;
+}
+
+void StatePreplaying::mouseDown(int nButton) {
+  m_playAnimation = false;
+}
+
+void StatePreplaying::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
+  m_playAnimation = false;
+}
+
+void StatePreplaying::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
   m_playAnimation = false;
 }
 

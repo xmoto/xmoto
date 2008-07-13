@@ -415,7 +415,7 @@ bool XMKey::isPressed(Uint8 *i_keystate, Uint8 i_mousestate) {
   void InputHandler::reset() {
     m_mirrored = false;
     resetScriptKeyHooks();
-    for(unsigned int i=0; i<4; i++){
+    for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++){
       m_changeDirKeyAlreadyPress[i] = false;
     }
   }
@@ -591,26 +591,15 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
   
     /* Get settings for mode */
     try {
-      m_nDriveKey[0]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive1", ""));
-      m_nBrakeKey[0]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake1", ""));
-      m_nPullBackKey[0]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft1", ""));
-      m_nPushForwardKey[0]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight1", ""));
-      m_nChangeDirKey[0]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir1", ""));
-      m_nDriveKey[1]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive2"    , ""));
-      m_nBrakeKey[1]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake2"    , ""));
-      m_nPullBackKey[1]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft2" , ""));
-      m_nPushForwardKey[1]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight2", ""));
-      m_nChangeDirKey[1]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir2", ""));
-      m_nDriveKey[2]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive3"    , ""));
-      m_nBrakeKey[2]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake3"    , ""));
-      m_nPullBackKey[2]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft3" , ""));
-      m_nPushForwardKey[2]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight3", ""));
-      m_nChangeDirKey[2]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir3", ""));
-      m_nDriveKey[3]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive4"    , ""));
-      m_nBrakeKey[3]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake4"    , ""));
-      m_nPullBackKey[3]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft4" , ""));
-      m_nPushForwardKey[3]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight4", ""));
-      m_nChangeDirKey[3]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir4", ""));
+      for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
+	std::ostringstream v_n;
+	v_n << (i+1);
+	m_nDriveKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive"     + v_n.str(), ""));
+	m_nBrakeKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake"     + v_n.str(), ""));
+	m_nPullBackKey[i]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft"  + v_n.str(), ""));
+	m_nPushForwardKey[i]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight" + v_n.str(), ""));
+	m_nChangeDirKey[i]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir" + v_n.str(), ""));
+      }
     } catch(Exception &e) {
       Logger::Log("** Warning ** : Invalid keys configuration!");
       setDefaultConfig();
@@ -791,60 +780,33 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type, const 
   ===========================================================================*/  
 
   std::string InputHandler::getFancyKeyByAction(const std::string &Action) {
-    if(Action == "Drive")    	return m_nDriveKey[0].toFancyString();
-    if(Action == "Brake")    	return m_nBrakeKey[0].toFancyString();
-    if(Action == "PullBack") 	return m_nPullBackKey[0].toFancyString();
-    if(Action == "PushForward") return m_nPushForwardKey[0].toFancyString();
-    if(Action == "ChangeDir")   return m_nChangeDirKey[0].toFancyString();
-
-    if(Action == "Drive 2")    	  return m_nDriveKey[1].toFancyString();
-    if(Action == "Brake 2")    	  return m_nBrakeKey[1].toFancyString();
-    if(Action == "PullBack 2") 	  return m_nPullBackKey[1].toFancyString();
-    if(Action == "PushForward 2") return m_nPushForwardKey[1].toFancyString();
-    if(Action == "ChangeDir 2")   return m_nChangeDirKey[1].toFancyString();
-
-    if(Action == "Drive 3")    	  return m_nDriveKey[2].toFancyString();
-    if(Action == "Brake 3")    	  return m_nBrakeKey[2].toFancyString();
-    if(Action == "PullBack 3") 	  return m_nPullBackKey[2].toFancyString();
-    if(Action == "PushForward 3") return m_nPushForwardKey[2].toFancyString();
-    if(Action == "ChangeDir 3")   return m_nChangeDirKey[2].toFancyString();
-
-    if(Action == "Drive 4")    	  return m_nDriveKey[3].toFancyString();
-    if(Action == "Brake 4")    	  return m_nBrakeKey[3].toFancyString();
-    if(Action == "PullBack 4") 	  return m_nPullBackKey[3].toFancyString();
-    if(Action == "PushForward 4") return m_nPushForwardKey[3].toFancyString();
-    if(Action == "ChangeDir 4")   return m_nChangeDirKey[3].toFancyString();
-
+    for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
+      std::ostringstream v_n;
+      
+      if(i !=0) { // nothing for player 0
+	v_n << " " << (i+1);
+      }
+      if(Action == "Drive"       + v_n.str()) return m_nDriveKey[i].toFancyString();
+      if(Action == "Brake"       + v_n.str()) return m_nBrakeKey[i].toFancyString();
+      if(Action == "PullBack"    + v_n.str()) return m_nPullBackKey[i].toFancyString();
+      if(Action == "PushForward" + v_n.str()) return m_nPushForwardKey[i].toFancyString();
+      if(Action == "ChangeDir"   + v_n.str()) return m_nChangeDirKey[i].toFancyString();
+    }
     return "?";
   }
 
 void InputHandler::saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile) {
-  std::string n;
+  pDb->config_setValue_begin();
 
-	pDb->config_setValue_begin();
+  for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
+    std::ostringstream v_n;
+    v_n << (i+1);
 
-  for(unsigned int i=0; i<4; i++) {
-    switch(i) {
-    case 0:
-      n = "1";
-      break;
-    case 1:
-      n = "2";
-      break;
-    case 2:
-      n = "3";
-      break;
-    case 3:
-      n = "4";
-      break;
-    }
-
-
-    pDb->config_setString(i_id_profile, "KeyDrive"     + n, m_nDriveKey[i].toString()      );
-    pDb->config_setString(i_id_profile, "KeyBrake"     + n, m_nBrakeKey[i].toString()      );
-    pDb->config_setString(i_id_profile, "KeyFlipLeft"  + n, m_nPullBackKey[i].toString()   );
-    pDb->config_setString(i_id_profile, "KeyFlipRight" + n, m_nPushForwardKey[i].toString());
-    pDb->config_setString(i_id_profile, "KeyChangeDir" + n, m_nChangeDirKey[i].toString()  );
+    pDb->config_setString(i_id_profile, "KeyDrive"     + v_n.str(), m_nDriveKey[i].toString()      );
+    pDb->config_setString(i_id_profile, "KeyBrake"     + v_n.str(), m_nBrakeKey[i].toString()      );
+    pDb->config_setString(i_id_profile, "KeyFlipLeft"  + v_n.str(), m_nPullBackKey[i].toString()   );
+    pDb->config_setString(i_id_profile, "KeyFlipRight" + v_n.str(), m_nPushForwardKey[i].toString());
+    pDb->config_setString(i_id_profile, "KeyChangeDir" + v_n.str(), m_nChangeDirKey[i].toString()  );
   }
 
   pDb->config_setValue_end();
@@ -888,4 +850,15 @@ void InputHandler::setCHANGEDIR(int i_player, XMKey i_value) {
 
 XMKey InputHandler::getCHANGEDIR(int i_player) const {
   return m_nChangeDirKey[i_player];
+}
+
+bool InputHandler::isANotSetKey(XMKey* i_xmkey) const {
+  for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
+    if(getDRIVE(i)     == *i_xmkey) return false;
+    if(getBRAKE(i)     == *i_xmkey) return false;
+    if(getFLIPLEFT(i)  == *i_xmkey) return false;
+    if(getFLIPRIGHT(i) == *i_xmkey) return false;
+    if(getCHANGEDIR(i) == *i_xmkey) return false;
+  }
+  return true;
 }

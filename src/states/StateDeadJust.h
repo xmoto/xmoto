@@ -32,6 +32,9 @@ class StateDeadJust : public StateScene {
   
   /* input */
   virtual void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual void mouseDown(int nButton);
+  virtual void joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
+  virtual void joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
 
   virtual void restartLevel(bool i_reloadLevel = false);
   virtual void nextLevel(bool i_positifOrder = true);
