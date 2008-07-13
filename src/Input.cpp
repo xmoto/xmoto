@@ -35,9 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 XMKey::XMKey() {
-    m_input = XMK_KEYBOARD;
-    m_keyboard_sym = SDLK_a;
-    m_keyboard_mod = KMOD_NONE;
+    m_input = XMK_NONE;
 }
 
 XMKey::XMKey(Uint8 nButton) {
@@ -111,6 +109,11 @@ XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
     return;
   }
 
+  if(i_key == "N") {
+    m_input = XMK_NONE;
+    return;
+  }
+
   v_rest = i_key;
   pos = v_rest.find(":", 0);
 
@@ -177,6 +180,10 @@ XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
   }
 }
 
+bool XMKey::isDefined() const {
+  return m_input != XMK_NONE;
+}
+
 bool XMKey::isAnalogic() const {
   return m_input == XMK_JOYSTICKAXIS;
 }
@@ -211,6 +218,10 @@ XMKey_direction XMKey::getDirection() const {
 
 bool XMKey::operator==(const XMKey& i_other) const {
   if(m_input != i_other.m_input) {
+    return false;
+  }
+
+  if(m_input == XMK_NONE || i_other.m_input == XMK_NONE) {
     return false;
   }
 
@@ -249,24 +260,31 @@ std::string XMKey::toString() {
   std::ostringstream v_res;
 
   switch(m_input) {
+
   case XMK_KEYBOARD:
     v_res << "K" << ":" << m_keyboard_sym << ":" << m_keyboard_mod;
     break;
+    
   case XMK_MOUSEBUTTON:
     v_res << "M" << ":" << ((int)m_mouseButton_button);
     break;
- case XMK_JOYSTICKAXIS:
-   if(abs(m_joyAxisValue) < INPUT_JOYSTICK_MINIMUM_DETECTION) {
-     return "";
-   }
-   // put the joyid at the end while it can contain any char
-   v_res << "A" << ":" << ((int)m_joyAxis) << ":" << ((int)m_joyAxisValue) << ":" << *m_joyId;
-   break;
 
- case XMK_JOYSTICKBUTTON:
-   // put the joyid at the end while it can contain any char
-   v_res << "J" << ":" << ((int)m_joyButton) << ":" << *m_joyId;
-   break;
+  case XMK_JOYSTICKAXIS:
+    if(abs(m_joyAxisValue) < INPUT_JOYSTICK_MINIMUM_DETECTION) {
+      return "";
+    }
+    // put the joyid at the end while it can contain any char
+    v_res << "A" << ":" << ((int)m_joyAxis) << ":" << ((int)m_joyAxisValue) << ":" << *m_joyId;
+    break;
+    
+  case XMK_JOYSTICKBUTTON:
+    // put the joyid at the end while it can contain any char
+    v_res << "J" << ":" << ((int)m_joyButton) << ":" << *m_joyId;
+    break;
+    
+  case XMK_NONE:
+    v_res << "N";
+    break;
   }
 
   return v_res.str();
@@ -379,6 +397,8 @@ std::string XMKey::toFancyString() {
     char v_button[256];
     snprintf(v_button, 256, GAMETEXT_JOYSTICK_BUTTON, m_joyButton+1); // +1 because it starts at 0
     v_res << "[" << GAMETEXT_JOYSTICK << "] " << v_button;
+  } else if(m_input == XMK_NONE) {
+    v_res << GAMETEXT_UNDEFINED;
   }
 
   return v_res.str();
@@ -586,24 +606,36 @@ void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string&
   Read configuration
   ===========================================================================*/  
 void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile) {
-    /* Set defaults */
-    setDefaultConfig();
+  std::string v_key;
+
+  /* Set defaults */
+  setDefaultConfig();
   
-    /* Get settings for mode */
-    try {
-      for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
-	std::ostringstream v_n;
-	v_n << (i+1);
-	m_nDriveKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive"     + v_n.str(), ""));
-	m_nBrakeKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake"     + v_n.str(), ""));
-	m_nPullBackKey[i]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft"  + v_n.str(), ""));
-	m_nPushForwardKey[i]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight" + v_n.str(), ""));
-	m_nChangeDirKey[i]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir" + v_n.str(), ""));
+  /* Get settings for mode */
+  try {
+    for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
+      std::ostringstream v_n;
+      v_n << (i+1);
+      m_nDriveKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive"     + v_n.str(), ""));
+      m_nBrakeKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake"     + v_n.str(), ""));
+      m_nPullBackKey[i]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft"  + v_n.str(), ""));
+      m_nPushForwardKey[i]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight" + v_n.str(), ""));
+      m_nChangeDirKey[i]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir" + v_n.str(), ""));
+      
+      for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
+	std::ostringstream v_k;
+	v_k << (k);
+
+	v_key = pDb->config_getString(i_id_profile, "KeyActionScript" + v_n.str() + "_" + v_k.str(), "");
+	if(v_key != "") {
+	  m_nScriptActionKeys[i][k] = XMKey(v_key);
+	}
       }
-    } catch(Exception &e) {
-      Logger::Log("** Warning ** : Invalid keys configuration!");
-      setDefaultConfig();
     }
+  } catch(Exception &e) {
+    Logger::Log("** Warning ** : Invalid keys configuration!");
+    setDefaultConfig();
+  }
 }
   
   /*===========================================================================
@@ -741,6 +773,11 @@ void InputHandler::handleInput(Universe* i_universe, InputEventType Type, const 
 	  /* Invoke script */
 	  m_ScriptKeyHooks[i].pGame->getLuaLibGame()->scriptCallVoid(m_ScriptKeyHooks[i].FuncName);
 	}
+	for(int j=0; j<INPUT_NB_PLAYERS; j++) {
+	  if(m_nScriptActionKeys[j][i] == i_xmkey) {
+	    m_ScriptKeyHooks[i].pGame->getLuaLibGame()->scriptCallVoid(m_ScriptKeyHooks[i].FuncName);
+	  }
+	}	
       }
     }
   }
@@ -807,6 +844,15 @@ void InputHandler::saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     pDb->config_setString(i_id_profile, "KeyFlipLeft"  + v_n.str(), m_nPullBackKey[i].toString()   );
     pDb->config_setString(i_id_profile, "KeyFlipRight" + v_n.str(), m_nPushForwardKey[i].toString());
     pDb->config_setString(i_id_profile, "KeyChangeDir" + v_n.str(), m_nChangeDirKey[i].toString()  );
+
+    for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
+      if(m_nScriptActionKeys[i][k].isDefined()) {
+	std::ostringstream v_k;
+	v_k << (k);
+
+	pDb->config_setString(i_id_profile, "KeyActionScript" + v_n.str() + "_" + v_k.str(), m_nScriptActionKeys[i][k].toString());
+      }
+    }
   }
 
   pDb->config_setValue_end();
@@ -852,6 +898,14 @@ XMKey InputHandler::getCHANGEDIR(int i_player) const {
   return m_nChangeDirKey[i_player];
 }
 
+void InputHandler::setSCRIPTACTION(int i_player, int i_action, XMKey i_value) {
+  m_nScriptActionKeys[i_player][i_action] = i_value;
+}
+
+XMKey InputHandler::getSCRIPTACTION(int i_player, int i_action) const {
+  return m_nScriptActionKeys[i_player][i_action];
+}
+
 bool InputHandler::isANotSetKey(XMKey* i_xmkey) const {
   for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
     if(getDRIVE(i)     == *i_xmkey) return false;
@@ -859,6 +913,10 @@ bool InputHandler::isANotSetKey(XMKey* i_xmkey) const {
     if(getFLIPLEFT(i)  == *i_xmkey) return false;
     if(getFLIPRIGHT(i) == *i_xmkey) return false;
     if(getCHANGEDIR(i) == *i_xmkey) return false;
+
+    for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
+      if(m_nScriptActionKeys[i][k] == *i_xmkey) return false;
+    }
   }
   return true;
 }

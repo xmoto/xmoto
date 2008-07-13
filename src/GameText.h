@@ -100,6 +100,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_JOYSTICK_DIRECTION_DOWN  _("down")
 #define GAMETEXT_JOYSTICK_DIRECTION_NONE  _("none")
 #define GAMETEXT_JOYSTICK_BUTTON          _("button %i")
+#define GAMETEXT_SCRIPTACTION             _("Script action")
 
 #define GAMETEXT_CREDITS                                                                     \
   std::string(_("Lead Programming")) +                                                       \
@@ -410,6 +411,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_TIME                 _("Time")
 #define GAMETEXT_TRYAGAIN             _("Try This Level Again")
 #define GAMETEXT_TUTORIAL             _("Tutorial")
+#define GAMETEXT_UNDEFINED            _("Undefined")
 #define GAMETEXT_UNKNOWN              _("Unknown")
 #define GAMETEXT_UNPACKED_LEVELS_PACK _("Unpacked levels")
 #define GAMETEXT_UNUPDATABLETHEMEONWEB _("Can't update this theme !\nThe theme is not available on the web\nor your theme list is not up to date")
