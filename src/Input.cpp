@@ -186,7 +186,29 @@ float XMKey::getAnalogicValue() const {
 				     -(INPUT_JOYSTICK_MAXIMUM_VALUE), -(INPUT_JOYSTICK_MINIMUM_DETECTION),
 				     INPUT_JOYSTICK_MINIMUM_DETECTION, INPUT_JOYSTICK_MAXIMUM_VALUE);
 }
-  
+
+bool XMKey::isDirectionnel() const {
+  return m_input == XMK_JOYSTICKAXIS;
+}
+
+XMKey_direction XMKey::getDirection() const {
+  if(m_joyAxis % 2 == 0) { // horizontal
+    if(m_joyAxisValue < -(INPUT_JOYSTICK_MINIMUM_DETECTION)) {
+      return XMKD_LEFT;
+    } else if(m_joyAxisValue > INPUT_JOYSTICK_MINIMUM_DETECTION) {
+      return XMKD_RIGHT;
+    }
+  } else { // vertical
+    if(m_joyAxisValue < -(INPUT_JOYSTICK_MINIMUM_DETECTION)) {
+      return XMKD_UP;
+    } else if(m_joyAxisValue > INPUT_JOYSTICK_MINIMUM_DETECTION) {
+      return XMKD_DOWN;
+    }
+  }
+
+  return XMKD_NODIRECTION;
+}
+
 bool XMKey::operator==(const XMKey& i_other) const {
   if(m_input != i_other.m_input) {
     return false;
@@ -254,13 +276,109 @@ std::string XMKey::toFancyString() {
   std::ostringstream v_res;
 
   if(m_input == XMK_KEYBOARD) {
-    v_res << "[" << GAMETEXT_KEYBOARD << "] " << SDL_GetKeyName(m_keyboard_sym);
+    std::string v_modifiers;
+
+    if((m_keyboard_mod & KMOD_LCTRL) == KMOD_LCTRL) {
+      v_modifiers += GAMETEXT_KEY_LEFTCONTROL;
+      v_modifiers += " ";
+    }
+
+    if((m_keyboard_mod & KMOD_RCTRL) == KMOD_RCTRL) {
+      v_modifiers += GAMETEXT_KEY_RIGHTCONTROL;
+      v_modifiers += " ";
+    }
+
+    if((m_keyboard_mod & KMOD_LALT) == KMOD_LALT) {
+      v_modifiers += GAMETEXT_KEY_LEFTALT;
+      v_modifiers += " ";
+    }
+
+    if((m_keyboard_mod & KMOD_RALT) == KMOD_RALT) {
+      v_modifiers += GAMETEXT_KEY_RIGHTALT;
+      v_modifiers += " ";
+    }
+
+    if((m_keyboard_mod & KMOD_LMETA) == KMOD_LMETA) {
+      v_modifiers += GAMETEXT_KEY_LEFTMETA;
+      v_modifiers += " ";
+    }
+
+    if((m_keyboard_mod & KMOD_RMETA) == KMOD_RMETA) {
+      v_modifiers += GAMETEXT_KEY_RIGHTMETA;
+      v_modifiers += " ";
+    }
+
+    if((m_keyboard_mod & KMOD_LSHIFT) == KMOD_LSHIFT) {
+      v_modifiers += GAMETEXT_KEY_LEFTSHIFT;
+      v_modifiers += " ";
+    }
+
+    if((m_keyboard_mod & KMOD_RSHIFT) == KMOD_RSHIFT) {
+      v_modifiers += GAMETEXT_KEY_RIGHTSHIFT;
+      v_modifiers += " ";
+    }
+
+    v_res << "[" << GAMETEXT_KEYBOARD << "] " << v_modifiers << SDL_GetKeyName(m_keyboard_sym);
   } else if(m_input == XMK_MOUSEBUTTON) {
-    v_res << "[" << GAMETEXT_MOUSE << "] " << ((int)m_mouseButton_button);
+    std::string v_button;
+    
+    switch(m_mouseButton_button) {
+    case SDL_BUTTON_LEFT:
+      v_button = GAMETEXT_MOUSE_LEFTBUTTON;
+      break;
+
+    case SDL_BUTTON_MIDDLE:
+      v_button = GAMETEXT_MOUSE_MIDDLEBUTTON;
+      break;
+
+    case SDL_BUTTON_RIGHT:
+      v_button = GAMETEXT_MOUSE_RIGHTBUTTON;
+      break;
+
+    case SDL_BUTTON_WHEELUP:
+      v_button = GAMETEXT_MOUSE_WHEELUPBUTTON;
+      break;
+
+    case SDL_BUTTON_WHEELDOWN:
+      v_button = GAMETEXT_MOUSE_WHEELDOWNBUTTON;
+      break;
+
+    default:
+      char v_button_tmp[256];
+      snprintf(v_button_tmp, 256, GAMETEXT_MOUSE_BUTTON, m_mouseButton_button);
+      v_button = v_button_tmp;
+    }
+    v_res << "[" << GAMETEXT_MOUSE << "] " << v_button;
   } else if(m_input == XMK_JOYSTICKAXIS) {
-    v_res << "[" << GAMETEXT_JOYSTICK << "]";
+    std::string v_direction;
+    char v_axis_tmp[256];
+    snprintf(v_axis_tmp, 256, GAMETEXT_JOYSTICK_AXIS, m_joyAxis);
+
+    if(isDirectionnel()) {
+      v_direction = " - ";
+      switch(getDirection()) {
+      case XMKD_LEFT:
+	v_direction += GAMETEXT_JOYSTICK_DIRECTION_LEFT;
+	break;
+      case XMKD_RIGHT:
+	v_direction += GAMETEXT_JOYSTICK_DIRECTION_RIGHT;
+	break;
+      case XMKD_UP:
+	v_direction += GAMETEXT_JOYSTICK_DIRECTION_UP;
+	break;
+      case XMKD_DOWN:
+	v_direction += GAMETEXT_JOYSTICK_DIRECTION_DOWN;
+	break;
+      case XMKD_NODIRECTION:
+	v_direction += GAMETEXT_JOYSTICK_DIRECTION_NONE;
+      }
+    }
+    v_res << "[" << GAMETEXT_JOYSTICK << "] " << v_axis_tmp << v_direction;
+    
   } else if(m_input == XMK_JOYSTICKBUTTON) {
-    v_res << "[" << GAMETEXT_JOYSTICK << "]" << ((int)m_joyButton)+1; // +1 because it starts at 0
+    char v_button[256];
+    snprintf(v_button, 256, GAMETEXT_JOYSTICK_BUTTON, m_joyButton+1); // +1 because it starts at 0
+    v_res << "[" << GAMETEXT_JOYSTICK << "] " << v_button;
   }
 
   return v_res.str();
