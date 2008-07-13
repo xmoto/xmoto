@@ -337,7 +337,7 @@ void StatePlaying::onOneFinish() {
     }
   }
   
-  /* update profiles */
+  /* update profile and stats */
   if(m_universe != NULL) {
     if(m_universe->getScenes().size() == 1) {
       if(m_universe->getScenes()[0]->Players().size() == 1) {
@@ -347,32 +347,23 @@ void StatePlaying::onOneFinish() {
 	  v_finish_time  = m_universe->getScenes()[0]->Players()[0]->finishTime();
 	}
         // Updating the stats if the Trainer has not been used
-        if(Trainer::instance()->trainerHasBeenUsed() == false){ // then, even time played is not saved
+        if(Trainer::instance()->trainerHasBeenUsed() == false){
             xmDatabase::instance("main")->profiles_addFinishTime(XMSession::instance()->sitekey(),
 								 XMSession::instance()->profile(),
-                                         m_universe->getScenes()[0]->getLevelSrc()->Id(),
-                                         TimeStamp,
-                                         v_finish_time);
+								 m_universe->getScenes()[0]->getLevelSrc()->Id(),
+								 TimeStamp,
+								 v_finish_time);
         }
-        StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
-      }
-    }
-  }	  
-  
-  /* Update stats */
-  /* update stats only in one player mode */
-  if(m_universe != NULL) {
-    if(m_universe->getScenes().size() == 1) {
-      if(m_universe->getScenes()[0]->Players().size() == 1) {
 	xmDatabase::instance("main")->stats_levelCompleted(XMSession::instance()->sitekey(),
 							   XMSession::instance()->profile(),
 							   m_universe->getScenes()[0]->getLevelSrc()->Id(),
 							   m_universe->getScenes()[0]->Players()[0]->finishTime());
 	StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
-	StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
+        StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
       }
     }
   }
+  
   StateManager::instance()->pushState(new StateFinished(m_universe, this));
 }
 
