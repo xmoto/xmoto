@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateEditWebConfig.h"
 #include "StateLevelPackViewer.h"
 #include "StateRequestKey.h"
+#include "StateOptions.h"
 
 #include "XMSession.h"
 #include "drawlib/DrawLib.h"
@@ -487,6 +488,7 @@ void StateManager::cleanStates() {
   StateMainMenu::clean();
   StatePause::clean();
   StateRequestKey::clean();
+  StateOptions::clean();
 }
 
 void StateManager::refreshStaticCaptions() {
