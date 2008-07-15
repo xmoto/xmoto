@@ -538,8 +538,10 @@ void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string&
 	    }
 	  }
 	  
-	  v_id << n;
-	  v_joyId = v_joyName + "_" + v_id.str();
+	  if(n > 0) {
+	    v_id << " " << (n+1); // +1 to get an id name starting at 1
+	  }
+	  v_joyId = v_joyName + v_id.str();
 	  m_Joysticks.push_back(v_joystick);
 	  m_JoysticksNames.push_back(v_joyName);
 	  m_JoysticksIds.push_back(v_joyId);
