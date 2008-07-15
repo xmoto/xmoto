@@ -866,8 +866,8 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   v_list = new UIList(v_window, 5, 5, "", v_window->getPosition().nWidth-10, v_window->getPosition().nHeight -43 -10 -10);
   v_list->setID("KEY_ACTION_LIST");
   v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_ACTION, 250);
-  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 250);
+  v_list->addColumn(GAMETEXT_ACTION, 200);
+  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 200);
   v_list->addColumn("", 0); // internal key name
   v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
 
