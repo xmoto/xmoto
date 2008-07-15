@@ -250,6 +250,8 @@ void XMSession::load(UserConfig* m_Config) {
 }
 
 void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
+  setToDefault();
+
   m_sitekey                        = pDb->getXmDbSiteKey();
   m_www          	    	   = pDb->config_getBool   (i_id_profile, "WebHighscores"    	       	  , m_www         );
   m_www_password 	    	   = pDb->config_getString (i_id_profile, "WWWPassword"      	       	  , m_www_password);
