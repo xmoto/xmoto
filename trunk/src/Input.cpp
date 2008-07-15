@@ -384,12 +384,12 @@ std::string XMKey::toFancyString() const {
 	v_direction += GAMETEXT_JOYSTICK_DIRECTION_NONE;
       }
     }
-    v_res << "[" << GAMETEXT_JOYSTICK << "] " << v_axis_tmp << v_direction;
+    v_res << "[" << GAMETEXT_JOYSTICK << "] " << v_axis_tmp << v_direction << " - " << *m_joyId;
     
   } else if(m_input == XMK_JOYSTICKBUTTON) {
     char v_button[256];
     snprintf(v_button, 256, GAMETEXT_JOYSTICK_BUTTON, m_joyButton+1); // +1 because it starts at 0
-    v_res << "[" << GAMETEXT_JOYSTICK << "] " << v_button;
+    v_res << "[" << GAMETEXT_JOYSTICK << "] " << v_button << " - " << *m_joyId;
   } else if(m_input == XMK_NONE) {
     v_res << GAMETEXT_UNDEFINED;
   }
@@ -539,7 +539,7 @@ void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string&
 	  }
 	  
 	  v_id << n;
-	  v_joyId = v_joyName + v_id.str();
+	  v_joyId = v_joyName + "_" + v_id.str();
 	  m_Joysticks.push_back(v_joystick);
 	  m_JoysticksNames.push_back(v_joyName);
 	  m_JoysticksIds.push_back(v_joyId);
@@ -605,29 +605,53 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
   setDefaultConfig();
   
   /* Get settings for mode */
-  try {
-    for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
-      std::ostringstream v_n;
-      v_n << (i+1);
-      m_nDriveKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive"     + v_n.str(), ""));
-      m_nBrakeKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake"     + v_n.str(), ""));
-      m_nPullBackKey[i]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft"  + v_n.str(), ""));
-      m_nPushForwardKey[i]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight" + v_n.str(), ""));
-      m_nChangeDirKey[i]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir" + v_n.str(), ""));
-      
-      for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
-	std::ostringstream v_k;
-	v_k << (k);
+  for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
+    std::ostringstream v_n;
+    v_n << (i+1);
 
-	v_key = pDb->config_getString(i_id_profile, "KeyActionScript" + v_n.str() + "_" + v_k.str(), "");
-	if(v_key != "") {
+    try {
+      m_nDriveKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive"     + v_n.str(), ""));
+    } catch(Exception &e) {
+      Logger::Log("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
+    }
+
+    try {
+      m_nBrakeKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake"     + v_n.str(), ""));
+    } catch(Exception &e) {
+      Logger::Log("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
+    }
+
+    try {
+      m_nPullBackKey[i]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft"  + v_n.str(), ""));
+    } catch(Exception &e) {
+      Logger::Log("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
+    }
+
+    try {
+      m_nPushForwardKey[i]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight" + v_n.str(), ""));
+    } catch(Exception &e) {
+      Logger::Log("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
+    }
+
+    try {
+      m_nChangeDirKey[i]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir" + v_n.str(), ""));
+    } catch(Exception &e) {
+      Logger::Log("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
+    }
+    
+    for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
+      std::ostringstream v_k;
+      v_k << (k);
+      
+      v_key = pDb->config_getString(i_id_profile, "KeyActionScript" + v_n.str() + "_" + v_k.str(), "");
+      if(v_key != "") {
+	try {
 	  m_nScriptActionKeys[i][k] = XMKey(v_key);
+	} catch(Exception &e) {
+	  Logger::Log("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
 	}
       }
     }
-  } catch(Exception &e) {
-    Logger::Log("** Warning ** : Invalid keys configuration!");
-    setDefaultConfig();
   }
 }
   

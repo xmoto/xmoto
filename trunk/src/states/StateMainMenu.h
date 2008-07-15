@@ -57,20 +57,8 @@ class StateMainMenu : public StateMenu {
   static UIRoot* m_sGUI;
   static void createGUIIfNeeded();
   static UIWindow* makeWindowReplays(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions(UIWindow* i_parent);
   static UIWindow* makeWindowLevels(UIWindow* i_parent);
   static UIWindow* makeWindowStats(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_general(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_video(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_audio(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_controls(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_rooms(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_ghosts(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_db(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_language(UIWindow* i_parent);
-
-  /* multirooms */
-  static UIWindow* makeRoomTab(UIWindow* i_parent, unsigned int i_number);
 
   void updateProfileStrings();
 
@@ -81,19 +69,6 @@ class StateMainMenu : public StateMenu {
   void updateReplaysList();
   void updateStats();
   void updateNewLevels();
-
-  /* options */
-  void createThemesList(UIList *pList);
-  void updateThemesList();
-  void updateResolutionsList();
-  void updateControlsList();
-  void createRoomsList(UIList *pList);
-  void updateRoomsList();
-  void updateOptions();
-  void updateAudioOptions();
-  void updateWWWOptions();
-  void updateDbOptions();
-  void updateGhostsOptions();
 
   /* Main menu background / title */
   Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;      
@@ -112,8 +87,7 @@ class StateMainMenu : public StateMenu {
   void checkEventsLevelsPackTab();
   void checkEventsReplays();
   void checkEventsMainWindow();
-  void checkEventsOptions();
-
+  void updateOptions();
   void updateInfoFrame();
   void updateReplaysRights();
 

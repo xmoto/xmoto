@@ -144,6 +144,8 @@ states_SOURCES = states/StateManager.h       	  \
                  states/StateScene.cpp        	  \
                  states/StateMainMenu.h       	  \
                  states/StateMainMenu.cpp      	  \
+                 states/StateOptions.h       	  \
+                 states/StateOptions.cpp      	  \
                  states/StateHelp.h          	  \
                  states/StateHelp.cpp        	  \
 		 states/StateMessageBoxReceiver.h \
