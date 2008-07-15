@@ -851,18 +851,6 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   v_window->setID("CONTROLS_TAB");
   v_window->showWindow(false);
 
-//  v_button = new UIButton(v_window, 5, 5, GAMETEXT_KEYBOARD, (v_window->getPosition().nWidth-40)/2, 28);
-//  v_button->setType(UI_BUTTON_TYPE_RADIO);
-//  v_button->setID("KEYBOARD");
-//  v_button->setFont(drawlib->getFontSmall());
-//  v_button->setGroup(200243);
-//
-//  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth-40)/2, 5, GAMETEXT_JOYSTICK, (v_window->getPosition().nWidth-40)/2, 28);
-//  v_button->setType(UI_BUTTON_TYPE_RADIO);
-//  v_button->setID("JOYSTICK");
-//  v_button->setFont(drawlib->getFontSmall());
-//  v_button->setGroup(200243);    
-//
   v_list = new UIList(v_window, 5, 5, "", v_window->getPosition().nWidth-10, v_window->getPosition().nHeight -43 -10 -10);
   v_list->setID("KEY_ACTION_LIST");
   v_list->setFont(drawlib->getFontSmall());
@@ -870,11 +858,6 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 200);
   v_list->addColumn("", 0); // internal key name
   v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
-
-//  v_button = new UIButton(v_window, 0, 180, GAMETEXT_CONFIGUREJOYSTICK, 207, 57);
-//  v_button->setType(UI_BUTTON_TYPE_LARGE);
-//  v_button->setID("CONFIGURE_JOYSTICK");
-//  v_button->setFont(drawlib->getFontSmall());
 
   return v_window;
 }
