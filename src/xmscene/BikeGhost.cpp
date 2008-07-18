@@ -194,6 +194,7 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
   /* stop the motor at the end */
   if(m_replay->endOfFile() && m_ghostBikeStates[m_ghostBikeStates.size()-1]->GameTime <= i_time) { // end of file, and interpolation is finished (before last future frame is in the feature)
     m_bikeState.fBikeEngineRPM = 0.0;
+    m_replay->peekState(m_ghostBikeStates[m_ghostBikeStates.size()-1]); // take the last frame
     m_bikeState = *(m_ghostBikeStates[m_ghostBikeStates.size()-1]); // put the last frame
     m_linearVelocity = 0.0;
 
