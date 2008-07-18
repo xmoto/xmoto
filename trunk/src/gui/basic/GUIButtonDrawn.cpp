@@ -117,6 +117,10 @@ void UIButtonDrawn::paint() {
   putText(x, y, getCaption(), -0.5, -0.5);
 
   /* Clear stuff */
-  m_bHover = false;
+
   m_bClicked = false;
+}
+
+void UIButtonDrawn::mouseOut(int x,int y) {
+  m_bHover = false;
 }

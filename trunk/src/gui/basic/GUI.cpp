@@ -689,6 +689,7 @@ UIRoot::UIRoot()
 {
   m_pApp = GameApp::instance();
   m_bShowContextMenu = true;
+  m_lastHover = NULL;
   _InitWindow();
 }
 
@@ -964,12 +965,21 @@ bool UIRoot::_RootJoystickButtonDownEvent(UIWindow *pWindow, Uint8 i_joyNum, Uin
       /* Recurse children */
       for(int i=(int)pWindow->getChildren().size()-1; i>=0; i--) {
         if(pWindow->getChildren()[i]->offerMouseEvent()) {
-          if(_RootMouseEvent(pWindow->getChildren()[i],Event,wx,wy)) return true;
-        }
+          if(_RootMouseEvent(pWindow->getChildren()[i],Event,wx,wy)) {
+	    return true;
+	  }
+	}
       }
       
       /* Then it must be this */
       if(pWindow != this) {
+	if(m_lastHover != pWindow) { // change of focus for the children
+	  if(m_lastHover != NULL) {
+	    m_lastHover->mouseOut(x, y);
+	  }
+	  m_lastHover = pWindow;
+	}
+
         switch(Event) {
           case UI_ROOT_MOUSE_LBUTTON_DOWN: pWindow->mouseLDown(wx,wy); break;
           case UI_ROOT_MOUSE_RBUTTON_DOWN: pWindow->mouseRDown(wx,wy); break;

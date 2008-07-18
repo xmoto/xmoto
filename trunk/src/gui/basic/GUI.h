@@ -173,6 +173,7 @@ public:
   virtual void mouseRDown(int x,int y) {}
   virtual void mouseRUp(int x,int y) {}
   virtual void mouseHover(int x,int y) {}
+  virtual void mouseOut(int x,int y) {}
   virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {return false;}
   virtual bool keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char) {return false;}
   virtual bool joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {return false;}
@@ -335,7 +336,8 @@ public:
   virtual void paint(void);
   virtual void mouseLDown(int x,int y);
   virtual void mouseHover(int x,int y);
-      
+  virtual void mouseOut(int x,int y);
+
   void makeMinimizable(int nMinX,int nMinY);
   void setMinimized(bool b);
       
@@ -539,7 +541,8 @@ public:
   virtual void mouseLUp(int x,int y);
   virtual void mouseRDown(int x,int y);
   virtual void mouseRUp(int x,int y);
-  virtual void mouseHover(int x,int y);      
+  virtual void mouseHover(int x,int y);
+  virtual void mouseOut(int x,int y);
   virtual bool offerActivation(void);
   virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
@@ -582,6 +585,7 @@ public:
 
   virtual void paint();
   void setBorder(int i_border);
+  virtual void mouseOut(int x,int y);
 
 private:
   int m_border;
@@ -864,6 +868,8 @@ private:
   void _ActivateByVector(int dx,int dy);
   void _ActivateByStep(int step);
   int _GetActiveIdx(UIRootActCandidate *pMap, unsigned int nNum);
+
+  UIWindow* m_lastHover;
 };
 
 #endif

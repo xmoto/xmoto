@@ -176,10 +176,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	putText(x,y,getCaption(), -0.5, -0.45);
         break;
     }
-    
-    /* Clear stuff */
-    m_bHover = false;
-    m_bClicked = false;
   }
 
   /*===========================================================================
@@ -226,6 +222,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   void UIButton::mouseHover(int x,int y) {
     m_bHover = true;
+  }
+
+  void UIButton::mouseOut(int x,int y) {
+    m_bHover = false;
   }
 
   bool UIButton::offerActivation(void) {
