@@ -509,8 +509,6 @@ bool XMKey::isPressed(Uint8 *i_keystate, Uint8 i_mousestate) {
   Init/uninit
   ===========================================================================*/  
 void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile) {
-  SDL_Joystick* v_joystick;
-
     /* Initialize joysticks (if any) */
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
     SDL_JoystickEventState(SDL_ENABLE);
@@ -520,39 +518,7 @@ void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string&
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
 
     /* Open all joysticks */
-    std::string v_joyName, v_joyId;
-    int n;
-    bool v_continueToOpen = true;
-
-    for(int i=0; i<SDL_NumJoysticks(); i++) {
-      if(v_continueToOpen) {
-	if( (v_joystick = SDL_JoystickOpen(i)) != NULL) {
-	  std::ostringstream v_id;
-	  n = 0;
-	  v_joyName = SDL_JoystickName(i);
-	  
-	  // check if there is an other joystick with the same name
-	  for(unsigned int j=0; j<m_Joysticks.size(); j++) {
-	    if(m_JoysticksNames[j] == v_joyName) {
-	      n++;
-	    }
-	  }
-	  
-	  if(n > 0) {
-	    v_id << " " << (n+1); // +1 to get an id name starting at 1
-	  }
-	  v_joyId = v_joyName + v_id.str();
-	  m_Joysticks.push_back(v_joystick);
-	  m_JoysticksNames.push_back(v_joyName);
-	  m_JoysticksIds.push_back(v_joyId);
-
-	  Logger::Log("Joystick found [%s], id is [%s]", v_joyName.c_str(), v_joyId.c_str());
-	} else {
-	  v_continueToOpen = false; // don't continue to open joystick to keep m_joysticks[joystick.num] working
-	  Logger::Log("** Warning ** : fail to open joystick [%s], abort to open other joysticks", v_joyName.c_str());
-	}
-      }
-    }
+    recheckJoysticks();
     loadConfig(pConfig, pDb, i_id_profile);
   }
 
@@ -967,4 +933,49 @@ bool InputHandler::isANotSetKey(XMKey* i_xmkey) const {
     }
   }
   return true;
+}
+
+void InputHandler::recheckJoysticks() {
+  std::string v_joyName, v_joyId;
+  int n;
+  bool v_continueToOpen = true;
+  SDL_Joystick* v_joystick;
+
+  m_Joysticks.clear();
+  m_JoysticksNames.clear();
+  m_JoysticksIds.clear();
+
+  for(int i=0; i<SDL_NumJoysticks(); i++) {
+    if(v_continueToOpen) {
+      if( (v_joystick = SDL_JoystickOpen(i)) != NULL) {
+	std::ostringstream v_id;
+	n = 0;
+	v_joyName = SDL_JoystickName(i);
+	
+	// check if there is an other joystick with the same name
+	for(unsigned int j=0; j<m_Joysticks.size(); j++) {
+	  if(m_JoysticksNames[j] == v_joyName) {
+	    n++;
+	  }
+	}
+	  
+	if(n > 0) {
+	  v_id << " " << (n+1); // +1 to get an id name starting at 1
+	}
+	v_joyId = v_joyName + v_id.str();
+	m_Joysticks.push_back(v_joystick);
+	m_JoysticksNames.push_back(v_joyName);
+	m_JoysticksIds.push_back(v_joyId);
+	
+	Logger::Log("Joystick found [%s], id is [%s]", v_joyName.c_str(), v_joyId.c_str());
+      } else {
+	v_continueToOpen = false; // don't continue to open joystick to keep m_joysticks[joystick.num] working
+	Logger::Log("** Warning ** : fail to open joystick [%s], abort to open other joysticks", v_joyName.c_str());
+      }
+    }
+  }
+}
+
+std::vector<std::string>& InputHandler::getJoysticksNames() {
+  return m_JoysticksNames;
 }

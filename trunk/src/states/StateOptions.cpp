@@ -68,6 +68,7 @@ void StateOptions::enter()
   m_GUI = m_sGUI;
 
   updateOptions();
+  updateJoysticksStrings();
 }
 
 void StateOptions::clean() {
@@ -845,19 +846,26 @@ UIWindow* StateOptions::makeWindowOptions_audio(UIWindow* i_parent) {
 UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   UIWindow*  v_window;
   UIList*    v_list;
+  UIStatic* v_someText;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_CONTROLS, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
   v_window->setID("CONTROLS_TAB");
   v_window->showWindow(false);
 
-  v_list = new UIList(v_window, 5, 5, "", v_window->getPosition().nWidth-10, v_window->getPosition().nHeight -43 -10 -10);
+  v_list = new UIList(v_window, 5, 5, "", v_window->getPosition().nWidth-10, v_window->getPosition().nHeight -43 -5 -57);
   v_list->setID("KEY_ACTION_LIST");
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_ACTION, 200);
   v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 200);
   v_list->addColumn("", 0); // internal key name
   v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
+
+  v_someText = new UIStatic(v_window, + 5, v_window->getPosition().nHeight -43 -57,
+			    GAMETEXT_NOJOYSTICKFOUND, v_window->getPosition().nWidth-80-5-5, 57);
+  v_someText->setID("STATIC_JOYSTICK_FOUND");
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText->setFont(drawlib->getFontSmall()); 
 
   return v_window;
 }
@@ -1615,6 +1623,24 @@ void StateOptions::createRoomsList(UIList *pList) {
       }
     }
     pList->setRealSelected(nRoom);
+  }
+}
+
+void StateOptions::updateJoysticksStrings() {
+  UIStatic*  v_someText; 
+  v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:STATIC_JOYSTICK_FOUND"));
+  unsigned int v_nbJoy = InputHandler::instance()->getJoysticksNames().size();
+
+  if(v_nbJoy == 0) {
+    v_someText->setCaption(GAMETEXT_NOJOYSTICKFOUND);    
+  } else if(v_nbJoy == 1) {
+    char buf[256];
+    snprintf(buf, 256, GAMETEXT_JOYSTICKSFOUND(v_nbJoy), v_nbJoy);
+    v_someText->setCaption(buf + std::string(" : ") + InputHandler::instance()->getJoysticksNames()[0]);
+  } else {
+    char buf[256];
+    snprintf(buf, 256, GAMETEXT_JOYSTICKSFOUND(v_nbJoy), v_nbJoy);
+    v_someText->setCaption(buf);
   }
 }
 

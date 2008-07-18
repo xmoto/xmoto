@@ -93,6 +93,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_MOUSE_RIGHTBUTTON     	  _("right button")
 #define GAMETEXT_MOUSE_WHEELUPBUTTON   	  _("wheel up")
 #define GAMETEXT_MOUSE_WHEELDOWNBUTTON 	  _("wheel down")
+#define GAMETEXT_NOJOYSTICKFOUND          _("No joystick found")
+#define GAMETEXT_JOYSTICKSFOUND(A)        ngettext("%i joystick found", "%i joysticks found", A)
 #define GAMETEXT_JOYSTICK_AXIS         	  _("axis %i")
 #define GAMETEXT_JOYSTICK_DIRECTION_LEFT  _("left")
 #define GAMETEXT_JOYSTICK_DIRECTION_RIGHT _("right")

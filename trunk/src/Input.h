@@ -117,6 +117,8 @@ public:
   std::string* getJoyIdByStrId(const std::string& i_name);
   SDL_Joystick* getJoyById(std::string* i_id);
   InputEventType joystickAxisSens(Sint16 m_joyAxisValue);
+  void recheckJoysticks();
+  std::vector<std::string>& getJoysticksNames();
 
   void setDefaultConfig();
   void saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
