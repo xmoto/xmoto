@@ -110,11 +110,11 @@ void StateHelp::createGUI() {
   v_someText = new UIStatic(v_frame, 0, 0, GAMETEXT_HELP, v_frame->getPosition().nWidth, 36);
   v_someText->setFont(drawLib->getFontMedium());
   v_someText = new UIStatic(v_frame, 10, 46,
-			    GAMETEXT_HELPTEXT(pGame->getUserConfig()->getString("KeyDrive1"),
-					      pGame->getUserConfig()->getString("KeyBrake1"),
-					      pGame->getUserConfig()->getString("KeyFlipLeft1"),
-					      pGame->getUserConfig()->getString("KeyFlipRight1"),
-					      pGame->getUserConfig()->getString("KeyChangeDir1")
+			    GAMETEXT_HELPTEXT(InputHandler::instance()->getFancyKeyByAction("Drive"),
+					      InputHandler::instance()->getFancyKeyByAction("Brake"),
+					      InputHandler::instance()->getFancyKeyByAction("PullBack"),
+					      InputHandler::instance()->getFancyKeyByAction("PushForward"),
+					      InputHandler::instance()->getFancyKeyByAction("ChangeDir")
 					      ),
 			    v_frame->getPosition().nWidth-20, v_frame->getPosition().nHeight-56);
   v_someText->setFont(drawLib->getFontSmall());
