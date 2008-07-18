@@ -229,7 +229,6 @@ void XMSession::load(const XMArguments* i_xmargs) {
 
 void XMSession::load(UserConfig* m_Config) {
   m_profile            = m_Config->getString("DefaultProfile");
-
   m_resolutionWidth    = m_Config->getInteger("DisplayWidth");
   m_resolutionHeight   = m_Config->getInteger("DisplayHeight");
   m_bpp                = m_Config->getInteger("DisplayBPP");
@@ -250,8 +249,6 @@ void XMSession::load(UserConfig* m_Config) {
 }
 
 void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
-  setToDefault();
-
   m_sitekey                        = pDb->getXmDbSiteKey();
   m_www          	    	   = pDb->config_getBool   (i_id_profile, "WebHighscores"    	       	  , m_www         );
   m_www_password 	    	   = pDb->config_getString (i_id_profile, "WWWPassword"      	       	  , m_www_password);
