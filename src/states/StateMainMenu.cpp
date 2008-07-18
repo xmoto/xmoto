@@ -91,8 +91,6 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
   StateManager::instance()->registerAsObserver("REPLAYS_DELETE", this);
   StateManager::instance()->registerAsObserver("UPDATEPROFILE", this);
   StateManager::instance()->registerAsObserver("REPLAYS_DELETE", this);
-  StateManager::instance()->registerAsObserver("CHANGE_WWW_ACCESS", this);
-  StateManager::instance()->registerAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->registerAsObserver("NEW_LEVELS_TO_DOWNLOAD", this);
   StateManager::instance()->registerAsObserver("NO_NEW_LEVELS_TO_DOWNLOAD", this);
   StateManager::instance()->registerAsObserver("FAVORITES_UPDATED", this);
@@ -117,8 +115,6 @@ StateMainMenu::~StateMainMenu()
   StateManager::instance()->unregisterAsObserver("REPLAYS_DELETE", this);
   StateManager::instance()->unregisterAsObserver("UPDATEPROFILE", this);
   StateManager::instance()->unregisterAsObserver("REPLAYS_DELETE", this);
-  StateManager::instance()->unregisterAsObserver("CHANGE_WWW_ACCESS", this);
-  StateManager::instance()->unregisterAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("NEW_LEVELS_TO_DOWNLOAD", this);
   StateManager::instance()->unregisterAsObserver("NO_NEW_LEVELS_TO_DOWNLOAD", this);
   StateManager::instance()->unregisterAsObserver("FAVORITES_UPDATED", this);
