@@ -34,6 +34,7 @@ bool xmDatabase::Trace = false;
 
 xmDatabase::xmDatabase()
 {
+  m_db = NULL;
 }
 
 void xmDatabase::init(const std::string& i_dbFile,
@@ -150,6 +151,10 @@ void xmDatabase::updateXMDirectories(const std::string& i_oldGameDir, const std:
 void xmDatabase::init(const std::string& i_dbFile)
 {
   if(sqlite3_open(i_dbFile.c_str(), &m_db) != 0){
+    if(m_db != NULL) {
+      sqlite3_close(m_db); // close even if it fails as requested in the documentation
+      m_db = NULL;
+    }
     throw Exception("Unable to open the database ("
 		    + i_dbFile
 		    + ") : "
