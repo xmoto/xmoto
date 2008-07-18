@@ -65,6 +65,7 @@ class StateOptions : public StateMenu {
   void updateDbOptions();
   void updateGhostsOptions();
   void updateProfileStrings();
+  void updateJoysticksStrings();
 
   void setInputKey(const std::string& i_strKey, const std::string& i_key);
 };
