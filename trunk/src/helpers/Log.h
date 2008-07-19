@@ -23,18 +23,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 
-#define LOG_ERROR       1
-#define LOG_WARNING     2
-#define LOG_INFO        3
-#define LOG_DEBUG       4
+enum LogLevel {LOG_ERROR, LOG_WARNING, LOG_INFO, LOG_DEBUG};
 
 			  // using ## gnu extension to allow empty args list
-#define LogError(format, ...)                                        Logger::LogLevel(LOG_ERROR,   format, ## __VA_ARGS__);
-#define LogWarning(format, ...)                                      Logger::LogLevel(LOG_WARNING, format, ## __VA_ARGS__);
-#define LogInfo(format, ...)                                         Logger::LogLevel(LOG_INFO,    format, ## __VA_ARGS__);
+#define LogError(format, ...)                                        Logger::LogLevelMsg(LOG_ERROR,   format, ## __VA_ARGS__);
+#define LogWarning(format, ...)                                      Logger::LogLevelMsg(LOG_WARNING, format, ## __VA_ARGS__);
+#define LogInfo(format, ...)                                         Logger::LogLevelMsg(LOG_INFO,    format, ## __VA_ARGS__);
 
 // a class using LogDebug must be aware of XMSession
-#define LogDebug(format, ...)   if(XMSession::instance()->debug()) { Logger::LogLevel(LOG_DEBUG,   format, ## __VA_ARGS__); }
+#define LogDebug(format, ...)   if(XMSession::instance()->debug()) { Logger::LogLevelMsg(LOG_DEBUG,   format, ## __VA_ARGS__); }
 
 class Logger {
   public:
@@ -43,7 +40,7 @@ class Logger {
   static bool isInitialized();
 
   static void setVerbose(bool i_value);
-  static void LogLevel(int i_level, const char *pcFmt, ...);
+  static void LogLevelMsg(LogLevel i_level, const char *pcFmt, ...);
 
   private:
   static bool  m_isInitialized;
