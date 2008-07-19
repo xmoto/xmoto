@@ -264,7 +264,7 @@ void StateFinished::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i
 void StateFinished::executeOneCommand(std::string cmd, std::string args)
 {
   if(XMSession::instance()->debug() == true) {
-    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+    LogInfo("cmd [%s [%s]] executed by state [%s].",
 		cmd.c_str(), args.c_str(), getName().c_str());
   }
 

@@ -55,7 +55,7 @@ int UploadHighscoreThread::realThreadFunction()
 
   v_replayInfos = Replay::getReplayInfos(m_highscorePath);
   if(v_replayInfos == NULL) {
-    Logger::Log("** Warning **: Unable to read the replay to send");
+    LogInfo("** Warning **: Unable to read the replay to send");
     return 1;
   }
   v_replayTime  = v_replayInfos->finishTime;

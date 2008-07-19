@@ -50,7 +50,7 @@ int UpdateThemeThread::realThreadFunction()
     setSafeKill(false);
     StateManager::instance()->sendAsynchronousMessage("UPDATE_THEMES_LISTS");
   } catch(Exception &e) {
-    Logger::Log(e.getMsg().c_str());
+    LogInfo(e.getMsg().c_str());
     return 1;
   }
 

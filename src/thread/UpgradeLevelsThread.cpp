@@ -43,7 +43,7 @@ UpgradeLevelsThread::~UpgradeLevelsThread()
 
 void UpgradeLevelsThread::setBeingDownloadedInformation(const std::string &p_information, bool p_isNew)
 {
-  Logger::Log(("setBeingDownloadedInformation" + p_information).c_str());
+  LogInfo(("setBeingDownloadedInformation" + p_information).c_str());
   setThreadCurrentMicroOperation(p_information);
 }
 
@@ -107,7 +107,7 @@ int UpgradeLevelsThread::realThreadFunction()
     std::string    webLevelsUrl   = XMSession::instance()->webLevelsUrl();
     m_pWebLevels->setWebsiteInfos(webLevelsUrl, pProxySettings);
 
-    Logger::Log("WWW: Checking for new or updated levels...");
+    LogInfo("WWW: Checking for new or updated levels...");
 
     clearCancelAsSoonAsPossible();
 
@@ -118,7 +118,7 @@ int UpgradeLevelsThread::realThreadFunction()
     int nULevels=0;
     nULevels = m_pWebLevels->nbLevelsToGet(m_pDb);
 
-    Logger::Log("WWW: %d new or updated level%s found",
+    LogInfo("WWW: %d new or updated level%s found",
 		nULevels,
 		(nULevels ==1 ) ? "" : "s");
 
@@ -131,7 +131,7 @@ int UpgradeLevelsThread::realThreadFunction()
       StateManager::instance()->sendAsynchronousMessage("NEWLEVELAVAILABLE");
     }
   } catch (Exception& e) {
-    Logger::Log("** Warning ** : Unable to check for extra levels [%s]", e.getMsg().c_str());
+    LogInfo("** Warning ** : Unable to check for extra levels [%s]", e.getMsg().c_str());
     m_msg = GAMETEXT_FAILEDCHECKLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
 
     return 1;
@@ -150,7 +150,7 @@ int UpgradeLevelsThread::realThreadFunction()
   setThreadProgress(0);
 
   try {                  
-    Logger::Log("WWW: Downloading levels...");
+    LogInfo("WWW: Downloading levels...");
 
     clearCancelAsSoonAsPossible();
 
@@ -169,13 +169,13 @@ int UpgradeLevelsThread::realThreadFunction()
   }
   catch(Exception& e) {
     m_msg = GAMETEXT_FAILEDDLLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
-    Logger::Log("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
+    LogInfo("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
 
     v_exit_code = 1;
   }
 
   /* Got some new levels... load them! */
-  Logger::Log("Loading new and updated levels...");
+  LogInfo("Loading new and updated levels...");
 
   setThreadCurrentOperation(GAMETEXT_LOADNEWLEVELS);
   setThreadProgress(0);

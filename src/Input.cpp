@@ -581,35 +581,35 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
       m_nDriveKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive"     + v_n.str(), m_nDriveKey[i].toString()));
     } catch(Exception &e) {
       m_nDriveKey[i] = XMKey(); // load default key (undefined) to not override the key while undefined keys are not saved to avoid config brake in case you forgot to plug your joystick
-      Logger::Log("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
+      LogInfo("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
     }
 
     try {
       m_nBrakeKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake"     + v_n.str(), m_nBrakeKey[i].toString()));
     } catch(Exception &e) {
       m_nBrakeKey[i] = XMKey();
-      Logger::Log("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
+      LogInfo("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
     }
 
     try {
       m_nPullBackKey[i]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft"  + v_n.str(), m_nPullBackKey[i].toString()));
     } catch(Exception &e) {
       m_nPullBackKey[i] = XMKey();
-      Logger::Log("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
+      LogInfo("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
     }
 
     try {
       m_nPushForwardKey[i]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight" + v_n.str(), m_nPushForwardKey[i].toString()));
     } catch(Exception &e) {
       m_nPushForwardKey[i] = XMKey();
-      Logger::Log("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
+      LogInfo("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
     }
 
     try {
       m_nChangeDirKey[i]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir" + v_n.str(), m_nChangeDirKey[i].toString()));
     } catch(Exception &e) {
       m_nChangeDirKey[i] = XMKey();
-      Logger::Log("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
+      LogInfo("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
     }
     
     for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
@@ -622,7 +622,7 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
 	  m_nScriptActionKeys[i][k] = XMKey(v_key);
 	} catch(Exception &e) {
 	  m_nScriptActionKeys[i][k] = XMKey();
-	  Logger::Log("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
+	  LogInfo("** Warning ** : Invalid key configuration: %s", e.getMsg().c_str());
 	}
       }
     }
@@ -967,10 +967,10 @@ void InputHandler::recheckJoysticks() {
 	m_JoysticksNames.push_back(v_joyName);
 	m_JoysticksIds.push_back(v_joyId);
 	
-	Logger::Log("Joystick found [%s], id is [%s]", v_joyName.c_str(), v_joyId.c_str());
+	LogInfo("Joystick found [%s], id is [%s]", v_joyName.c_str(), v_joyId.c_str());
       } else {
 	v_continueToOpen = false; // don't continue to open joystick to keep m_joysticks[joystick.num] working
-	Logger::Log("** Warning ** : fail to open joystick [%s], abort to open other joysticks", v_joyName.c_str());
+	LogInfo("** Warning ** : fail to open joystick [%s], abort to open other joysticks", v_joyName.c_str());
       }
     }
   }

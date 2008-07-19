@@ -59,20 +59,20 @@ void xmDatabase::init(const std::string& i_dbFile,
   createUserFunctions();
 
 //  if(sqlite3_threadsafe() == 0) {
-//    Logger::Log("** Warning ** Sqlite is not threadSafe !!!");
+//    LogInfo("** Warning ** Sqlite is not threadSafe !!!");
 //  } else {
-//    Logger::Log("Sqlite is threadSafe");
+//    LogInfo("Sqlite is threadSafe");
 //  }
 
   v_version = getXmDbVersion();
-  Logger::Log("XmDb version is %i", v_version);
+  LogInfo("XmDb version is %i", v_version);
 
   if(v_version > XMDB_VERSION) {
     throw Exception("Your XM database required a newer version of xmoto");
   }
 
   if(v_version < XMDB_VERSION) {
-    Logger::Log("Update XmDb version from %i to %i", v_version, XMDB_VERSION);
+    LogInfo("Update XmDb version from %i to %i", v_version, XMDB_VERSION);
 
     if(i_interface != NULL) {
       i_interface->updatingDatabase(GAMETEXT_DB_UPGRADING);
@@ -118,8 +118,8 @@ void xmDatabase::init(const std::string& i_dbFile,
 
 void xmDatabase::updateXMDirectories(const std::string& i_oldGameDir, const std::string& i_newGameDir,
 				     const std::string& i_oldUserDir, const std::string& i_newUserDir) {
-  Logger::Log("Updating XM directories from %s to %s", i_oldGameDir.c_str(), i_newGameDir.c_str());
-  Logger::Log("Updating XM directories from %s to %s", i_oldUserDir.c_str(), i_newUserDir.c_str());
+  LogInfo("Updating XM directories from %s to %s", i_oldGameDir.c_str(), i_newGameDir.c_str());
+  LogInfo("Updating XM directories from %s to %s", i_oldUserDir.c_str(), i_newUserDir.c_str());
 
   try {
     simpleSql("BEGIN TRANSACTION;");
@@ -372,7 +372,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     try {
       updateDB_stats(i_interface);
     } catch(Exception &e) {
-      Logger::Log(std::string("Oups, updateDB_stats() failed: " + e.getMsg()).c_str());
+      LogInfo(std::string("Oups, updateDB_stats() failed: " + e.getMsg()).c_str());
     }
 
   case 2:
@@ -393,7 +393,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       try {
 	updateDB_favorite(i_profile, i_interface);
       } catch(Exception &e) {
-	Logger::Log(std::string("Oups, updateDB_favorite() failed: " + e.getMsg()).c_str());
+	LogInfo(std::string("Oups, updateDB_favorite() failed: " + e.getMsg()).c_str());
       }
       updateXmDbVersion(4);
     } catch(Exception &e) {
@@ -409,7 +409,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       try {
 	updateDB_profiles(i_interface);
       } catch(Exception &e) {
-	Logger::Log(std::string("Oups, updateDB_profiles() failed: " + e.getMsg()).c_str());
+	LogInfo(std::string("Oups, updateDB_profiles() failed: " + e.getMsg()).c_str());
       }
       updateXmDbVersion(5);
     } catch(Exception &e) {
@@ -678,7 +678,7 @@ void xmDatabase::simpleSql(const std::string& i_sql) {
 		  NULL, &errMsg) != SQLITE_OK) {
     v_errMsg = errMsg;
     sqlite3_free(errMsg);
-    Logger::Log(i_sql.c_str());
+    LogInfo(i_sql.c_str());
     throw Exception(v_errMsg);
   }
 }
@@ -710,15 +710,15 @@ char** xmDatabase::readDB(const std::string& i_sql, unsigned int &i_nrow) {
      != SQLITE_OK) {
     v_errMsg = errMsg;
     sqlite3_free(errMsg);
-    Logger::Log("xmDb failed while running");
-    Logger::Log("%s", i_sql.c_str());
+    LogInfo("xmDb failed while running");
+    LogInfo("%s", i_sql.c_str());
     throw Exception("xmDb: " + v_errMsg);
 
   }
 	v_endTime = GameApp::getXMTime();
 
 	if(v_endTime - v_startTime > DB_MAX_SQL_RUNTIME) {
-		Logger::Log("** Warning ** : long query time detected (%.3f'') for query '%s'", v_endTime - v_startTime, i_sql.c_str());
+		LogInfo("** Warning ** : long query time detected (%.3f'') for query '%s'", v_endTime - v_startTime, i_sql.c_str());
 	}
 
   i_nrow = (unsigned int) v_nrow;

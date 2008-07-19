@@ -47,7 +47,7 @@ void Sound::init(XMSession* i_session) {
     m_nSampleRate = n;
     break;
   default:
-    Logger::Log("** Warning ** : invalid audio sample rate, falling back to 22050");
+    LogInfo("** Warning ** : invalid audio sample rate, falling back to 22050");
     m_nSampleRate = 22050;
     break;
   }      
@@ -58,7 +58,7 @@ void Sound::init(XMSession* i_session) {
     m_nSampleBits = n;
     break;
   default:
-	Logger::Log("** Warning ** : invalid audio sample bits, falling back to 16");
+	LogInfo("** Warning ** : invalid audio sample bits, falling back to 16");
 	m_nSampleRate = 16;
 	break;
   }      
@@ -67,7 +67,7 @@ void Sound::init(XMSession* i_session) {
   
   /* Init SDL stuff */
   if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
-    Logger::Log("** Warning ** : failed to initialize SDL audio (%s)",SDL_GetError());
+    LogInfo("** Warning ** : failed to initialize SDL audio (%s)",SDL_GetError());
     return;
   }
  
@@ -76,7 +76,7 @@ void Sound::init(XMSession* i_session) {
   else nFormat = AUDIO_S16;
   
   if(Mix_OpenAudio(m_nSampleRate,nFormat,m_nChannels,2048) < 0) {
-    Logger::Log("** Warning ** : failed to open mixer device (%s)",Mix_GetError());
+    LogInfo("** Warning ** : failed to open mixer device (%s)",Mix_GetError());
     SDL_QuitSubSystem(SDL_INIT_AUDIO);
     return;
   }

@@ -58,7 +58,7 @@ void StatePreplayingGame::initPlayers() {
   GameApp*  pGame  = GameApp::instance();
 
   /* add the players */
-  Logger::Log("Preplay level for %i player(s)", v_nbPlayer);
+  LogInfo("Preplay level for %i player(s)", v_nbPlayer);
 
   if(v_multiScenes == false) { // monoworld
     MotoGame* v_world = m_universe->getScenes()[0];

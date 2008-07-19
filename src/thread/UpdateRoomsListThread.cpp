@@ -44,7 +44,7 @@ int UpdateRoomsListThread::realThreadFunction()
   try {
     std::string v_destinationFile = FS::getUserDir() + "/" + DEFAULT_WEBROOMS_FILENAME;
 
-    Logger::Log("WWW: Checking for rooms...");
+    LogInfo("WWW: Checking for rooms...");
 
     /* download xml file */
     FSWeb::downloadFileBz2UsingMd5(v_destinationFile, XMSession::instance()->webRoomsURL(), NULL, NULL, XMSession::instance()->proxySettings());
@@ -53,7 +53,7 @@ int UpdateRoomsListThread::realThreadFunction()
     StateManager::instance()->sendAsynchronousMessage("UPDATE_ROOMS_LISTS");
   } catch(Exception &e) {
     /* file probably doesn't exist */
-    Logger::Log("** Warning ** : Failed to analyse webrooms file");
+    LogInfo("** Warning ** : Failed to analyse webrooms file");
     return 1;
   }
 

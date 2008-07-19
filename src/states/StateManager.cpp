@@ -118,7 +118,7 @@ GameState* StateManager::popState()
 
 void StateManager::flush() {
   while(m_statesStack.size() > 0 && m_statesStack.back()->requestForEnd()) {
-    //Logger::Log("Flush %s", m_statesStack.back()->getName().c_str());
+    //LogInfo("Flush %s", m_statesStack.back()->getName().c_str());
     delete popState();
   }
 
@@ -473,7 +473,7 @@ void StateManager::calculateFps()
   m_maxRenderFps = maxRenderFps;
   m_maxFps = (m_maxUpdateFps > m_maxRenderFps) ? m_maxUpdateFps : m_maxRenderFps;
 
-//  Logger::Log("MaxUpdateFps: %d MaxRenderFps: %d Max: %d TopStateRenderFps: %d",
+//  LogInfo("MaxUpdateFps: %d MaxRenderFps: %d Max: %d TopStateRenderFps: %d",
 //	      m_maxUpdateFps,
 //	      m_maxRenderFps,
 //	      m_maxFps,
@@ -568,7 +568,7 @@ StateManager::registerAsObserver(std::string message,
 
 	while(it != states.end()){
 	  if((*it)->getName() == name){
-	    Logger::Log("** Warning ** : state [%s] already registered as observer for this message [%s].",
+	    LogInfo("** Warning ** : state [%s] already registered as observer for this message [%s].",
 			name.c_str(), message.c_str());
 	    break;
 	  }
@@ -616,7 +616,7 @@ StateManager::unregisterAsObserver(std::string message, GameState* self)
       ++stateIterator;
     }
   } else {
-    Logger::Log("*** Warning *** : unregisterAsObserver message [%s] state [%], but not registered.",
+    LogInfo("*** Warning *** : unregisterAsObserver message [%s] state [%], but not registered.",
 		message.c_str(),
 		self->getName().c_str());
   }
@@ -640,7 +640,7 @@ StateManager::sendSynchronousMessage(std::string message, std::string args)
     std::vector<GameState*>::iterator stateIterator = states.begin();
 
     if(states.size() == 0){
-      Logger::Log("*** Warning *** : sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
+      LogInfo("*** Warning *** : sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
 		  message.c_str(), args.c_str());
     }
 
@@ -648,13 +648,13 @@ StateManager::sendSynchronousMessage(std::string message, std::string args)
       (*stateIterator)->executeOneCommand(message, args);
 
       if(XMSession::instance()->debug() == true)
-	Logger::Log("sendSynchronousMessage [%s [%s]] to [%s]",
+	LogInfo("sendSynchronousMessage [%s [%s]] to [%s]",
 		    message.c_str(), args.c_str(), (*stateIterator)->getName().c_str());
 
       ++stateIterator;
     }
   } else {
-    Logger::Log("*** Warning *** : sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
+    LogInfo("*** Warning *** : sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
 		message.c_str(), args.c_str());
   }
 }
@@ -670,7 +670,7 @@ StateManager::sendAsynchronousMessage(std::string message, std::string args)
     std::vector<GameState*>::iterator stateIterator = states.begin();
 
     if(states.size() == 0){
-      Logger::Log("*** Warning *** : sendAsynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
+      LogInfo("*** Warning *** : sendAsynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
 		  message.c_str(), args.c_str());
     }
 
@@ -678,14 +678,14 @@ StateManager::sendAsynchronousMessage(std::string message, std::string args)
       (*stateIterator)->send(message, args);
 
       if(XMSession::instance()->debug() == true)
-	Logger::Log("sendAsynchronousMessage [%s [%s]] to [%s]",
+	LogInfo("sendAsynchronousMessage [%s [%s]] to [%s]",
 		    message.c_str(), args.c_str(),
 		    (*stateIterator)->getName().c_str());
 
       ++stateIterator;
     }
   } else {
-    Logger::Log("*** Warning *** : sendAsynchronousMessage message [% [%s]s] sent and there's no state to receive it.",
+    LogInfo("*** Warning *** : sendAsynchronousMessage message [% [%s]s] sent and there's no state to receive it.",
 		message.c_str(),
 		args.c_str());
   }

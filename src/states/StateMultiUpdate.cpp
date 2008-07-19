@@ -98,7 +98,7 @@ bool StateMultiUpdate::update()
       pInfos->m_threadStarted = true;
 
       std::string msg = "thread " + id + " started";
-      Logger::Log(msg.c_str());
+      LogInfo(msg.c_str());
     }
 
     if(pInfos->m_threadStarted == true){

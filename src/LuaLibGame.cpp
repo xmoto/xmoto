@@ -294,7 +294,7 @@ int LuaLibGame::L_Game_Log(lua_State *pL) {
   for(int i=0; i<args_numberOfArguments(pL); i++)
     Out.append(luaL_checkstring(pL, i+1));
 
-  Logger::Log((char *)Out.c_str());
+  LogInfo((char *)Out.c_str());
 
   return 0;    
 }

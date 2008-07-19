@@ -875,7 +875,7 @@ void LevelsManager::addExternalLevel(std::string i_levelFile, xmDatabase *i_db) 
 		     v_level->isPhysics(),
 		     true);
   } catch(Exception &e) {
-    Logger::Log("** Warning ** : Unable to add external level (%s)", e.getMsg().c_str());
+    LogInfo("** Warning ** : Unable to add external level (%s)", e.getMsg().c_str());
   }
   delete v_level;
 }
@@ -924,7 +924,7 @@ void LevelsManager::reloadInternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterf
 		       v_level->isPhysics(),
 		       false);
     } catch(Exception &e) {
-      Logger::Log("** Warning (just mean that the level has been updated if the level is in xmoto.bin) ** : %s (%s - %s)",
+      LogInfo("** Warning (just mean that the level has been updated if the level is in xmoto.bin) ** : %s (%s - %s)",
 		e.getMsg().c_str(),
 		v_level->Name().c_str(),
 		v_level->FileName().c_str());
@@ -1049,7 +1049,7 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
 		       false);
       i_db->levels_addToNew(v_level->Id(), false);
     } catch(Exception &e) {
-      Logger::Log("** Warning ** : %s", e.getMsg().c_str() );
+      LogInfo("** Warning ** : %s", e.getMsg().c_str() );
     }
     delete v_level;
   }
@@ -1083,7 +1083,7 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
       i_db->levels_addToNew(v_level->Id(), true);
 
     } catch(Exception &e) {
-      Logger::Log("** Warning ** : %s", e.getMsg().c_str() );
+      LogInfo("** Warning ** : %s", e.getMsg().c_str() );
     }
     delete v_level;
   }

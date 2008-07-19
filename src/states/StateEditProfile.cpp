@@ -264,7 +264,7 @@ void StateEditProfile::sendFromMessageBox(const std::string& i_id, UIMsgBoxButto
       try {
 	xmDatabase::instance("main")->stats_createProfile(XMSession::instance()->sitekey(), PlayerName);
       } catch(Exception &e) {
-	Logger::Log("Unable to create the profile");
+	LogInfo("Unable to create the profile");
       }
       createProfileList();
       break;

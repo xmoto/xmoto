@@ -66,13 +66,27 @@ void Logger::LogRaw(const std::string &s) {
     printf("%s\n", s.c_str());
   }
 }
-  
-void Logger::Log(const char *pcFmt, ...) {
+
+void Logger::LogLevel(int i_level, const char *pcFmt, ...) {
   va_list List;
   char cBuf[4096];
   va_start(List, pcFmt);
   vsnprintf(cBuf, 4096, pcFmt, List);
   va_end(List);
   
-  LogRaw(cBuf);    
+  switch(i_level) {
+  case LOG_ERROR:
+    LogRaw(std::string("** Error ** : ")   + cBuf);
+    break;
+  case LOG_WARNING:
+    LogRaw(std::string("** Warning ** : ") + cBuf);
+    break;
+  case LOG_INFO:
+    LogRaw(cBuf);
+    break;
+  case LOG_DEBUG:
+    LogRaw(std::string("** Debug ** : ")   + cBuf);
+    break;
+  }
+
 }

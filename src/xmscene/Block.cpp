@@ -476,7 +476,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   updateCollisionLines(true);
 
   if(v_BSPTree.getNumErrors() > 0) {
-    Logger::Log("Error due to the block %s", Id().c_str());
+    LogInfo("Error due to the block %s", Id().c_str());
   }
 
   return v_BSPTree.getNumErrors();  
@@ -982,14 +982,14 @@ void Block::calculateEdgePosition_inout(Vector2f i_vA1,  Vector2f i_vB1, Vector2
     AABB aabbB;
     aabbB.addPointToAABB2f(o_b1);
     aabbB.addPointToAABB2f(o_b2);
-    Logger::Log("(%f,%f) (%f,%f) (%f,%f) (%f,%f) inter: (%f,%f)",
+    LogInfo("(%f,%f) (%f,%f) (%f,%f) (%f,%f) inter: (%f,%f)",
 		o_a1.x, o_a1.y, o_a2.x, o_a2.y,
 		o_b1.x, o_b1.y, o_b2.x, o_b2.y,
 		inter.x, inter.y);
-    Logger::Log("aabbA: (%f,%f)(%f,%f)",
+    LogInfo("aabbA: (%f,%f)(%f,%f)",
 		aabbA.getBMin().x, aabbA.getBMin().y,
 		aabbA.getBMax().x, aabbA.getBMax().y);
-    Logger::Log("aabbB: (%f,%f)(%f,%f)",
+    LogInfo("aabbB: (%f,%f)(%f,%f)",
 		aabbB.getBMin().x, aabbB.getBMin().y,
 		aabbB.getBMax().x, aabbB.getBMax().y);
     if(aabbA.pointTouchAABB2f(inter) == true && aabbB.pointTouchAABB2f(inter) == true){
@@ -997,7 +997,7 @@ void Block::calculateEdgePosition_inout(Vector2f i_vA1,  Vector2f i_vB1, Vector2
       o_a2 = o_b2;
       o_b2 = tmp;
       o_swapDone = true;
-      Logger::Log("swap done");
+      LogInfo("swap done");
     }
 #endif
   } else {

@@ -36,7 +36,7 @@ StatePreplayingReplay::StatePreplayingReplay(const std::string i_replay, bool i_
 
     ReplayInfo* v_info = Replay::getReplayInfos(i_replay);
     if(v_info == NULL) {
-      Logger::Log("Unable to retrieve infos about replays '%s'", i_replay.c_str());
+      LogInfo("Unable to retrieve infos about replays '%s'", i_replay.c_str());
       m_idlevel = "";
     } else {
       m_idlevel = v_info->Level;

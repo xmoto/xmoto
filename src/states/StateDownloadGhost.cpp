@@ -70,7 +70,7 @@ void StateDownloadGhost::callAfterThreadFinished(int threadResult)
   } else {
     if(threadResult == 0 && m_launchReplaying == true){
       std::string msg = "Replay to play: " + m_replayName;
-      Logger::Log(msg.c_str());
+      LogInfo(msg.c_str());
       StateManager::instance()->replaceState(new StatePreplayingReplay(m_replayName, false));
     }
     else{
@@ -90,7 +90,7 @@ void StateDownloadGhost::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::s
 void StateDownloadGhost::executeOneCommand(std::string cmd, std::string args)
 {
   if(XMSession::instance()->debug() == true) {
-    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+    LogInfo("cmd [%s [%s]] executed by state [%s].",
 		cmd.c_str(), args.c_str(), getName().c_str());
   }
 
