@@ -101,6 +101,7 @@ public:
   int resolutionWidth() const;
   int resolutionHeight() const;
   int bpp() const;
+  int maxRenderFps() const;
   bool windowed() const;
   void setResolutionWidth(int i_value);
   void setResolutionHeight(int i_value);
@@ -264,6 +265,7 @@ public:
   int  m_resolutionWidth;
   int  m_resolutionHeight;
   int  m_bpp;
+  int  m_maxRenderFps;
   bool m_windowed;
   bool m_glExts;
   std::string m_drawlib;

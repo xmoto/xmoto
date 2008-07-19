@@ -43,7 +43,6 @@ StateReplaying::StateReplaying(Universe* i_universe, const std::string& i_replay
   m_replayBiker  = i_replayBiker;
   m_stopToUpdate = false;
   m_updateFps = 100;
-  m_renderFps = 50;
 }
 
 StateReplaying::~StateReplaying()

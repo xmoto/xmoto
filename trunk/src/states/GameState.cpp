@@ -43,7 +43,7 @@ GameState::GameState(bool drawStateBehind,
 
   // default rendering and update fps
   m_updateFps          = 50;
-  m_renderFps          = 50;
+  m_renderFps          = XMSession::instance()->maxRenderFps();;
   m_curRenderFps       = m_renderFps;
 
   m_maxFps             = 0;
