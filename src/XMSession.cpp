@@ -40,6 +40,7 @@ void XMSession::setToDefault() {
   m_resolutionWidth  	          = DEFAULT_RESOLUTION_WIDTH;
   m_resolutionHeight 	          = DEFAULT_RESOLUTION_HEIGHT;
   m_bpp              	          = DEFAULT_BPP;
+  m_maxRenderFps                  = DEFAULT_MAXRENDERFPS;
   m_windowed         	          = DEFAULT_WINDOWED;
   m_glExts           	          = DEFAULT_GLEXTS;
   m_drawlib          	          = DEFAULT_DRAWLIB;
@@ -232,6 +233,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_resolutionWidth    = m_Config->getInteger("DisplayWidth");
   m_resolutionHeight   = m_Config->getInteger("DisplayHeight");
   m_bpp                = m_Config->getInteger("DisplayBPP");
+  m_maxRenderFps       = m_Config->getInteger("DisplayMaxRenderFPS");
   m_windowed           = m_Config->getBool("DisplayWindowed");
   m_drawlib            = m_Config->getString("DrawLib");
 
@@ -345,6 +347,7 @@ void XMSession::save(UserConfig* v_config, xmDatabase* pDb) {
   v_config->setInteger("DisplayWidth",          m_resolutionWidth);
   v_config->setInteger("DisplayHeight",         m_resolutionHeight);
   v_config->setInteger("DisplayBPP",            m_bpp);
+  v_config->setInteger("DisplayMaxRenderFPS",   m_maxRenderFps);
   v_config->setBool   ("DisplayWindowed",       m_windowed);
 
   v_config->setString ("WebThemesURL",          m_webThemesURL);
@@ -442,6 +445,10 @@ int XMSession::resolutionHeight() const {
 
 int XMSession::bpp() const {
   return m_bpp;
+}
+
+int XMSession::maxRenderFps() const {
+  return m_maxRenderFps;
 }
 
 bool XMSession::windowed() const {
@@ -1126,6 +1133,7 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
   v_config->createVar( "DisplayHeight",          "600"  );
   v_config->createVar( "DisplayBPP",             "32"   );
   v_config->createVar( "DisplayWindowed",        "true" );
+  v_config->createVar( "DisplayMaxRenderFPS",    "50" );
   v_config->createVar( "DrawLib",                DEFAULT_DRAWLIB);
 
   /* option not easy to change (not in the options tab) ; keep them here */ 
