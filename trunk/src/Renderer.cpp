@@ -1,3 +1,4 @@
+
 /*=============================================================================
 XMOTO
 
@@ -85,6 +86,7 @@ GameRenderer::GameRenderer() {
   m_allowGhostEffect = true;
   m_currentEdgeEffect = "";
   m_currentEdgeSprite = NULL;
+  m_curRegistrationStage = 0;
 }
 GameRenderer::~GameRenderer() {
 }
@@ -134,6 +136,8 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
   m_sizeMultOfEntitiesToTake       = 1.0;
   m_sizeMultOfEntitiesWhichMakeWin = 1.0;
 
+  beginTexturesRegistration();
+
   /* Optimize scene */
   for(unsigned int u=0; u<i_universe->getScenes().size(); u++) {
     v_level = i_universe->getScenes()[u]->getLevelSrc();
@@ -150,7 +154,7 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
       }
     }
 
-    std::vector<Block *> Blocks = v_level->Blocks();
+    std::vector<Block*>& Blocks = v_level->Blocks();
     int nVertexBytes = 0;
 
     for(unsigned int i=0; i<Blocks.size(); i++) {
@@ -168,7 +172,53 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     }
 
     LogInfo("GL: %d kB vertex buffers", nVertexBytes/1024);
+
+    // load sprites textures
+    std::vector<Entity*>& entities = v_level->Entities();
+    std::vector<Entity*>::const_iterator it = entities.begin();
+
+    while(it != entities.end()){
+      // loadSpriteTextures is implement in the base class Entity
+      // so we can't access to child class re-implementation
+      // with an Entity pointer
+      if((*it)->Speciality() == ET_PARTICLES_SOURCE
+	 && ((ParticlesSource*)(*it))->getType() == Smoke)
+	((ParticlesSourceSmoke*)(*it))->loadSpriteTextures();
+      else
+	(*it)->loadSpriteTextures();
+
+      ++it;
+    }
+
+    // sprites remplacement stored in level and the sky
+    TextureSprite* skySprite = (TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->Texture());
+    if(skySprite != NULL)
+      skySprite->loadTextures();
+    else
+      LogDebug("skySprite is NULL [%s]", v_level->Sky()->Texture().c_str());
+
+    AnimationSprite* v_sprite = NULL;
+    v_sprite = (AnimationSprite*)v_level->wreckerSprite();
+    if(v_sprite != NULL)
+      v_sprite->loadTextures();
+    v_sprite = (AnimationSprite*)v_level->flowerSprite();
+    if(v_sprite != NULL)
+      v_sprite->loadTextures();
+    v_sprite = (AnimationSprite*)v_level->strawberrySprite();
+    if(v_sprite != NULL)
+      v_sprite->loadTextures();
+    v_sprite = (AnimationSprite*)v_level->starSprite();
+    if(v_sprite != NULL)
+      v_sprite->loadTextures();
+
+    // debris sprite
+    EffectSprite* pDebrisType;
+    pDebrisType = (EffectSprite*) Theme::instance()->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
+    if(pDebrisType != NULL)
+      pDebrisType->loadTextures();
   }
+
+  endTexturesRegistration();
 }
 
 void GameRenderer::initCameras(Universe* i_universe)
@@ -385,6 +435,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
 	m_currentEdgeEffect = edgeEffect;
       }
 
+      LogDebug("edge effect sprite [%x] [%s] [%s] texture [%x]", m_currentEdgeSprite, m_currentEdgeSprite->getName().c_str(), m_currentEdgeSprite->getCurrentTextureFileName().c_str(), pTexture);
       int geomIndex = edgeGeomExists(pBlock, pTexture->Name);
       if(geomIndex < 0){
 	// create a new one
@@ -2036,7 +2087,7 @@ void GameRenderer::_RenderSky(MotoGame* i_scene, float i_zoom, float i_offset, c
   } else {
     LogInfo(std::string("** Invalid sky " + i_scene->getLevelSrc()->Sky()->Texture()).c_str());
     pDrawlib->clearGraphics();
-  } 
+  }
  }
 
   /*===========================================================================
@@ -3140,4 +3191,66 @@ void GameRenderer::calculateCameraScaleAndScreenAABB(Camera* pCamera, AABB& bbox
 
   bbox.addPointToAABB2f(v1);
   bbox.addPointToAABB2f(v2);
+}
+
+void GameRenderer::beginTexturesRegistration()
+{
+  m_curRegistrationStage++;
+
+  // zero is for persistent textures
+  if(m_curRegistrationStage == PERSISTANT)
+    m_curRegistrationStage++;
+
+  if(XMSession::instance()->debug() == true) {
+    LogDebug("---Begin texture registration---");
+    std::vector<Texture*> textures = Theme::instance()->getTextureManager()->getTextures();
+    std::vector<Texture*>::iterator it = textures.begin();
+    while(it != textures.end()){
+      if((*it)->curRegistrationStage != PERSISTANT)
+	LogDebug("  begin %s %d [%x]", (*it)->Name.c_str(), (*it)->curRegistrationStage, (*it));
+      ++it;
+    }
+    LogDebug("---Begin texture registration---");
+  }
+}
+
+void GameRenderer::endTexturesRegistration()
+{
+  // remove not used textures
+  std::vector<Texture*> textures = Theme::instance()->getTextureManager()->getTextures();
+  std::vector<Texture*>::iterator it = textures.begin();
+
+  while(it != textures.end()){
+    // zero is for persistent textures
+    if((*it)->curRegistrationStage != PERSISTANT)
+      if((*it)->curRegistrationStage != m_curRegistrationStage){
+	LogDebug("remove texture [%s] [%x]", (*it)->Name.c_str(), (*it));
+
+	(*it)->invalidateSpritesTexture();
+
+	Theme::instance()->getTextureManager()->destroyTexture((*it));
+	it = textures.erase(it);
+      } else
+	++it;
+    else
+      ++it;
+  }
+
+
+  if(XMSession::instance()->debug() == true) {
+    LogDebug("---End texture registration---");
+    std::vector<Texture*> textures = Theme::instance()->getTextureManager()->getTextures();
+    std::vector<Texture*>::iterator it = textures.begin();
+    while(it != textures.end()){
+      if((*it)->curRegistrationStage != PERSISTANT)
+	LogDebug("  end %s %d [%x]", (*it)->Name.c_str(), (*it)->curRegistrationStage, (*it));
+      ++it;
+    }
+    LogDebug("---End texture registration---");
+  }
+}
+
+unsigned int GameRenderer::currentRegistrationStage() const
+{
+  return m_curRegistrationStage;
 }

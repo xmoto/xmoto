@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "chipmunk/chipmunk.h"
 #include "Block.h"
 #include "ChipmunkWorld.h"
+#include "XMSession.h"
 
 // don't excceed this number of particles to not reduce significantly the fps
 #define PARTICLESSOURCE_TOTAL_MAX_PARTICLES 512
@@ -175,6 +176,17 @@ AABB& Entity::getAABB()
   return m_BCircle.getAABB();
 }
 
+void Entity::loadSpriteTextures()
+{
+  // for playerStart, Joints, and level's theme remplacement
+  if(getSprite() != NULL)
+    getSprite()->loadTextures();
+  else
+    LogDebug("entity [%s] type [%s] Sprite [%s] NULL",
+	     m_id.c_str(),
+	     SpecialityToStr(m_speciality).c_str(),
+	     m_spriteName.c_str());
+}
 
 EntitySpeciality Entity::SpecialityFromStr(std::string& i_typeStr) {
   if(i_typeStr == "PlayerStart")
@@ -276,7 +288,7 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
     v_entity->setSpriteName(typeName);
 
     // hard coded particles effects
-    if       (typeName == "Smoke") {
+    if(typeName == "Smoke") {
       // smoke has two sprites
       ((ParticlesSourceSmoke*)v_entity)->setSprite(v_entity->loadSprite(std::string("Smoke1")), 0);
       ((ParticlesSourceSmoke*)v_entity)->setSprite(v_entity->loadSprite(std::string("Smoke2")), 1);
@@ -700,7 +712,7 @@ void ParticlesSource::addDeadParticle(EntityParticle* pEntityParticle)
 ParticlesSourceMultiple::ParticlesSourceMultiple(const std::string& i_id, int i_particleTime_increment, unsigned int i_nbSprite)
   : ParticlesSource(i_id, i_particleTime_increment)
 {
-  m_sprites.reserve(i_nbSprite);
+  //m_sprites.reserve(i_nbSprite);
 }
 
 ParticlesSourceMultiple::~ParticlesSourceMultiple()
@@ -715,10 +727,21 @@ Sprite* ParticlesSourceMultiple::getSprite(unsigned int sprite) const
 
 void ParticlesSourceMultiple::setSprite(Sprite* i_sprite, unsigned int sprite)
 {
+  // to increment m_sprite size
+  m_sprites.push_back(NULL);
   m_sprites[sprite] = i_sprite;
 }
 
+void ParticlesSourceMultiple::loadSpriteTextures()
+{
+  std::vector<Sprite*>::iterator it = m_sprites.begin();
 
+  while(it != m_sprites.end()){
+    (*it)->loadTextures();
+
+    ++it;
+  }
+}
 
 
 ParticlesSourceSmoke::ParticlesSourceSmoke(const std::string& i_id)

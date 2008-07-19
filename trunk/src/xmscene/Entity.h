@@ -115,6 +115,8 @@ class Entity {
 
   AABB& getAABB();
 
+  void loadSpriteTextures();
+
 protected:
   std::string m_id;              /** Its own identifer */
   std::string m_spriteName;      /** Name of the sprite to be drawn */
@@ -267,6 +269,8 @@ public:
 
   Sprite* getSprite(unsigned int sprite=0) const;
   void setSprite(Sprite* i_sprite, unsigned int sprite=0);
+
+  void loadSpriteTextures();
 
 protected:
   std::vector<Sprite*> m_sprites;

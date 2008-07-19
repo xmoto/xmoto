@@ -150,6 +150,8 @@ public:
   void showReplayHelp(float p_speed, bool bAllowRewind);
   void switchFollow(MotoGame* i_scene);
 
+  unsigned int currentRegistrationStage() const;
+
 private:
   void renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int nHeight);
   void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed, float pLinVel = -1);
@@ -281,6 +283,10 @@ private:
 			    Vector2f B2,   Vector2f A2,
 			    Vector2f& ua1, Vector2f& ub1,
 			    Vector2f& ub2, Vector2f& ua2);
+
+  void beginTexturesRegistration();
+  void endTexturesRegistration();
+  unsigned int m_curRegistrationStage;
 };
 
 #endif
