@@ -384,13 +384,12 @@ void StateManager::mouseUp(int nButton)
 }
 
 void StateManager::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
-  int pnX, pnY;
   XMKey v_key;
 
   if(m_statesStack.size() == 0)
     return;
 
-  // first pad is to move the mouse in case the mouse is drawn
+  // second pad is to move the mouse in case the mouse is drawn
   //if(i_joyAxis == 0 || i_joyAxis == 1) {
   //  if(m_statesStack.back()->showCursor()) {
   //    GameApp::getMousePos(&pnX, &pnY);

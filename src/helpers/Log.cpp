@@ -67,7 +67,7 @@ void Logger::LogRaw(const std::string &s) {
   }
 }
 
-void Logger::LogLevel(int i_level, const char *pcFmt, ...) {
+void Logger::LogLevelMsg(LogLevel i_level, const char *pcFmt, ...) {
   va_list List;
   char cBuf[4096];
   va_start(List, pcFmt);
