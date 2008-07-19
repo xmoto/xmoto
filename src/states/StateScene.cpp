@@ -537,7 +537,9 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
 	}
       }
     }
-  } else {
+  }
+
+  else {
     GameState::executeOneCommand(cmd, args);
   }
 }

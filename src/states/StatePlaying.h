@@ -49,9 +49,14 @@ class StatePlaying : public StateScene {
   virtual void joystickButtonUp(Uint8 i_joyNum, Uint8 i_joyButton);
   virtual bool renderOverShadow();
 
+  protected:
+  virtual void executeOneCommand(std::string cmd, std::string args);
+
   private:
   void onOneFinish();
   void onAllDead();
+
+  void updateWithOptions();
 
   bool m_gameIsFinished;
   bool m_displayStats;

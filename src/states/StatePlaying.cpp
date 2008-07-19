@@ -46,6 +46,8 @@ StatePlaying::StatePlaying(Universe* i_universe):
   /* prepare stats */
   makeStatsStr();
 
+  StateManager::instance()->registerAsObserver("OPTIONS_UPDATED", this);
+
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("STATS_UPDATED");
     StateManager::instance()->registerAsEmitter("LEVELS_UPDATED");
@@ -54,6 +56,7 @@ StatePlaying::StatePlaying(Universe* i_universe):
 
 StatePlaying::~StatePlaying()
 {
+  StateManager::instance()->unregisterAsObserver("OPTIONS_UPDATED", this);
 }
 
 void StatePlaying::enter()
@@ -62,15 +65,7 @@ void StatePlaying::enter()
 
   m_gameIsFinished = false;
 
-  if(XMSession::instance()->hidePlayingInformation() == false) {
-    GameRenderer::instance()->setShowEngineCounter(XMSession::instance()->showEngineCounter());
-    GameRenderer::instance()->setShowMinimap(XMSession::instance()->showMinimap());
-    GameRenderer::instance()->setShowTimePanel(true);
-  } else {
-    GameRenderer::instance()->setShowEngineCounter(false);
-    GameRenderer::instance()->setShowMinimap(false);
-    GameRenderer::instance()->setShowTimePanel(false);
-  }
+  updateWithOptions();
 
   std::string v_level_name;
   try {
@@ -143,6 +138,33 @@ void StatePlaying::enterAfterPop()
   InputHandler::instance()->dealWithActivedKeys(m_universe);
   m_fLastPhysTime = GameApp::getXMTime();
   m_displayStats = false;
+}
+
+void StatePlaying::updateWithOptions() {
+  if(XMSession::instance()->hidePlayingInformation() == false) {
+    GameRenderer::instance()->setShowEngineCounter(XMSession::instance()->showEngineCounter());
+    GameRenderer::instance()->setShowMinimap(XMSession::instance()->showMinimap());
+    GameRenderer::instance()->setShowTimePanel(true);
+  } else {
+    GameRenderer::instance()->setShowEngineCounter(false);
+    GameRenderer::instance()->setShowMinimap(false);
+    GameRenderer::instance()->setShowTimePanel(false);
+  }
+
+  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+    m_universe->getScenes()[i]->setDeathAnim(XMSession::instance()->enableDeadAnimation());
+    m_universe->getScenes()[i]->setShowGhostTimeDiff(XMSession::instance()->showGhostTimeDifference());
+  }
+}
+
+void StatePlaying::executeOneCommand(std::string cmd, std::string args) {
+  if(cmd == "OPTIONS_UPDATED") {
+    updateWithOptions();
+  }
+
+  else {
+    StateScene::executeOneCommand(cmd, args);
+  }
 }
 
 bool StatePlaying::update()

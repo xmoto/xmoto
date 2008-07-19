@@ -99,6 +99,8 @@ void StateOptions::checkEvents() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
+    StateManager::instance()->sendAsynchronousMessage("OPTIONS_UPDATED");
+
     m_requestForEnd = true;
   }
 
