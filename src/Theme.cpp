@@ -81,8 +81,8 @@ std::string Theme::Name() const {
   return m_name;
 }
 
-Texture* Theme::loadTexture(std::string p_fileName, bool bSmall, bool bClamp, FilterMode eFilterMode) {
-  return m_texMan.loadTexture(p_fileName.c_str(), bSmall, bClamp, eFilterMode);
+Texture* Theme::loadTexture(std::string p_fileName, bool bSmall, bool bClamp, FilterMode eFilterMode, bool persistent, Sprite* associateSprite) {
+  return m_texMan.loadTexture(p_fileName.c_str(), bSmall, bClamp, eFilterMode, persistent, associateSprite);
 }
 
 std::vector<ThemeFile>* Theme::getRequiredFiles() {
@@ -449,6 +449,9 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
 			  v_fileBase + std::string(buf) + std::string(".") + v_fileExtension) == false) {
 	v_anim->addFrame(v_centerX, v_centerY, v_width, v_height, v_delay);
 
+	std::string fileName = THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
+	  v_fileBase + std::string(buf) + std::string(".") + v_fileExtension;
+
 	ThemeFile v_file = {THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
 			    v_fileBase + std::string(buf) + std::string(".") + v_fileExtension,
 			    v_sum};
@@ -607,6 +610,7 @@ Sprite::Sprite(Theme* p_associated_theme, std::string v_name) {
   m_associated_theme = p_associated_theme;
   m_name = v_name;
   m_blendmode = SPRITE_BLENDMODE_DEFAULT;
+  m_persistent = false;
 }
 
 Sprite::~Sprite() {
@@ -620,10 +624,15 @@ Texture* Sprite::getTexture(bool bSmall, bool bClamp, FilterMode eFilterMode) {
     v_currentTexture = m_associated_theme->loadTexture(getCurrentTextureFileName(),
 						       bSmall,
 						       bClamp,
-						       eFilterMode);
+						       eFilterMode,
+						       m_persistent,
+						       this);
     setCurrentTexture(v_currentTexture);
   }
-  
+
+  if(m_persistent == false)
+    v_currentTexture->curRegistrationStage = GameRenderer::instance()->currentRegistrationStage();
+
   return v_currentTexture;
 }
 
@@ -643,6 +652,8 @@ void Sprite::setBlendMode(SpriteBlendMode Mode) {
 std::string Sprite::getFileDir() {
   return THEME_SPRITE_FILE_DIR;
 }
+
+
 
 AnimationSprite::AnimationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileBase, std::string p_fileExtention) : Sprite(p_associated_theme, p_name) {
   m_current_frame = 0;
@@ -731,6 +742,36 @@ void AnimationSprite::cleanFrames() {
   m_frames.clear();
 }
 
+void AnimationSprite::loadTextures()
+{
+  unsigned int saveCurFrame = m_current_frame;
+
+  // reset frameTime so that getCurrentFrame does not increment it
+  m_fFrameTime = GameApp::getXMTime();
+
+  for(unsigned int i=0; i<m_frames.size(); i++) {
+    m_current_frame = i;
+    getTexture();
+  }
+
+  m_current_frame = saveCurFrame;
+}
+
+void AnimationSprite::invalidateTextures()
+{
+  unsigned int saveCurFrame = m_current_frame;
+
+  // reset frameTime so that getCurrentFrame does not increment it
+  m_fFrameTime = GameApp::getXMTime();
+
+  for(unsigned int i=0; i<m_frames.size(); i++) {
+    m_current_frame = i;
+    setCurrentTexture(NULL);
+  }
+
+  m_current_frame = saveCurFrame;
+}
+
 AnimationSpriteFrame::AnimationSpriteFrame(AnimationSprite *p_associatedAnimationSprite,
              float p_centerX,
              float p_centerY,
@@ -780,6 +821,7 @@ float AnimationSpriteFrame::getDelay() const {
 
 BikerPartSprite::BikerPartSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
   m_type = SPRITE_TYPE_BIKERPART;
+  m_persistent = true;
 }
 
 BikerPartSprite::~BikerPartSprite() {
@@ -827,6 +869,7 @@ Texture* EdgeEffectSprite::getTexture(bool bSmall, bool bClamp, FilterMode eFilt
 
 FontSprite::FontSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
   m_type = SPRITE_TYPE_FONT;
+  m_persistent = true;
 }
 
 FontSprite::~FontSprite() {
@@ -838,6 +881,7 @@ std::string FontSprite::getFileDir() {
 
 MiscSprite::MiscSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
   m_type = SPRITE_TYPE_MISC;
+  m_persistent = true;
 }
 
 MiscSprite::~MiscSprite() {
@@ -849,6 +893,7 @@ std::string MiscSprite::getFileDir() {
 
 UISprite::UISprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
   m_type = SPRITE_TYPE_UI;
+  m_persistent = true;
 }
 
 UISprite::~UISprite() {
@@ -877,7 +922,18 @@ SimpleFrameSprite::SimpleFrameSprite(Theme* p_associated_theme, std::string p_na
 SimpleFrameSprite::~SimpleFrameSprite() {
 }
 
-Texture* SimpleFrameSprite::getCurrentTexture() {
+void SimpleFrameSprite::loadTextures()
+{
+  getTexture();
+}
+
+void SimpleFrameSprite::invalidateTextures()
+{
+  setCurrentTexture(NULL);
+}
+
+Texture* SimpleFrameSprite::getCurrentTexture()
+{
   return m_texture;
 }
 

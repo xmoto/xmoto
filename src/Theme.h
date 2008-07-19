@@ -93,6 +93,9 @@ class xmDatabase;
 class Theme;
 class BikerTheme;
 
+
+
+
 class ThemeMusic {
  public:
   ThemeMusic(Theme* p_associated_theme, std::string i_name, std::string i_fileName);
@@ -123,6 +126,9 @@ class ThemeSound {
   std::string m_fileName;
 };
 
+
+
+
 class Sprite {
   public:
   Sprite(Theme* p_associated_theme, std::string v_name);
@@ -152,14 +158,19 @@ class Sprite {
   */
   Texture* getTexture(bool bSmall=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP);
 
+  // prefetch textures at level loading time
+  virtual void loadTextures() = 0;
+  virtual void invalidateTextures() = 0;
+  virtual std::string getCurrentTextureFileName() = 0;
+
  protected:
   virtual Texture* getCurrentTexture() = 0;
-  virtual std::string getCurrentTextureFileName() = 0;
   virtual void setCurrentTexture(Texture *p_texture) = 0;
   virtual std::string getFileDir();
   enum SpriteType m_type;
   // to sort entities by sprite for rendering
   unsigned int m_order;
+  bool m_persistent;
 
   private:
   Theme* m_associated_theme;
@@ -167,20 +178,29 @@ class Sprite {
   SpriteBlendMode m_blendmode;
 };
 
+
+
+
 class SimpleFrameSprite : public Sprite {
  public:
   SimpleFrameSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName);
   virtual ~SimpleFrameSprite();
 
+  void loadTextures();
+  void invalidateTextures();
+  std::string getCurrentTextureFileName();
+
  protected:
   Texture* getCurrentTexture();
-  std::string getCurrentTextureFileName();
   void setCurrentTexture(Texture *p_texture);
 
  private:
   std::string m_fileName;
   Texture* m_texture;
 };
+
+
+
 
 class TextureSprite : public SimpleFrameSprite {
  public:
@@ -193,6 +213,10 @@ class TextureSprite : public SimpleFrameSprite {
  private:
 };
 
+
+
+
+
 class BikerPartSprite : public SimpleFrameSprite {
  public:
   BikerPartSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
@@ -203,6 +227,10 @@ class BikerPartSprite : public SimpleFrameSprite {
 
  private:
 };
+
+
+
+
 
 class AnimationSprite;
 
@@ -235,6 +263,10 @@ class AnimationSpriteFrame {
   float m_delay;
 };
 
+
+
+
+
 class AnimationSprite : public Sprite {
  public:
   AnimationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileBase, std::string p_fileExtention);
@@ -245,9 +277,12 @@ class AnimationSprite : public Sprite {
   float getHeight();
   void  addFrame(float p_centerX, float p_centerY, float p_width, float p_height, float p_delay);
 
+  void loadTextures();
+  void invalidateTextures();
+  std::string getCurrentTextureFileName();
+
  protected:
   Texture* getCurrentTexture();
-  std::string getCurrentTextureFileName();
   void setCurrentTexture(Texture *p_texture);
   std::string getFileDir();
 
@@ -263,6 +298,10 @@ class AnimationSprite : public Sprite {
   bool  m_animation;
 };
 
+
+
+
+
 class EffectSprite : public SimpleFrameSprite {
  public:
   EffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
@@ -273,6 +312,10 @@ class EffectSprite : public SimpleFrameSprite {
 
  private:
 };
+
+
+
+
 
 class EdgeEffectSprite : public SimpleFrameSprite {
  public:
@@ -291,6 +334,10 @@ class EdgeEffectSprite : public SimpleFrameSprite {
   float m_fDepth;
 };
 
+
+
+
+
 class FontSprite : public SimpleFrameSprite {
  public:
   FontSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
@@ -301,6 +348,10 @@ class FontSprite : public SimpleFrameSprite {
 
  private:
 };
+
+
+
+
 
 class MiscSprite : public SimpleFrameSprite {
  public:
@@ -313,6 +364,10 @@ class MiscSprite : public SimpleFrameSprite {
  private:
 };
 
+
+
+
+
 class UISprite : public SimpleFrameSprite {
  public:
   UISprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
@@ -324,10 +379,14 @@ class UISprite : public SimpleFrameSprite {
  private:
 };
 
+
+
 struct ThemeFile {
   std::string filepath;
   std::string filemd5;
 };
+
+
 
 
 
@@ -338,7 +397,7 @@ class Theme : public Singleton<Theme> {
 private:
   Theme();
   ~Theme();
- 
+
 public:
   void load(std::string p_themeFile);
 
@@ -347,9 +406,11 @@ public:
   ThemeMusic* getMusic(std::string i_name);
   ThemeSound* getSound(std::string i_name);
   Texture* loadTexture(std::string p_fileName,
-			     bool bSmall=false,
-			     bool bClamp=false,
-			     FilterMode eFilterMode = FM_MIPMAP);
+		       bool bSmall=false,
+		       bool bClamp=false,
+		       FilterMode eFilterMode = FM_MIPMAP,
+		       bool persistent=false,
+		       Sprite* associateSprite=NULL);
 
   std::vector<Sprite*> getSpritesList();
   std::vector<ThemeSound*> getSoundsList();
@@ -357,6 +418,10 @@ public:
 
   BikerTheme* getPlayerTheme();
   BikerTheme* getGhostTheme();
+
+  TextureManager* getTextureManager() {
+    return &m_texMan;
+  }
 
   private:
   TextureManager m_texMan;
@@ -387,13 +452,13 @@ public:
 
   void newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem);
 
-
-
-
-  
   SpriteBlendMode strToBlendMode(const std::string &s);
   std::string blendModeToStr(SpriteBlendMode Mode);
 };
+
+
+
+
 
 class BikerTheme {
  public:
@@ -441,6 +506,10 @@ class BikerTheme {
   std::string m_UpperArm;
   std::string m_UpperLeg;
 };
+
+
+
+
 
 class ThemeChoicer {
  public:

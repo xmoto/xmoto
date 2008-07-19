@@ -599,16 +599,6 @@ StateManager::unregisterAsObserver(std::string message, GameState* self)
     while(stateIterator != states.end()){
       if(self == (*stateIterator)) {
 	states.erase(stateIterator);
-
-// add and remove all the time ? maybe better to only remove them at
-// the end of the program, as the number of messages is fixed
-#if 0	
-	// if there's no more registered state for this message,
-	// remove the entry
-	if(states.size() == 0){
-	  m_registeredStates.erase(itFind);
-	}
-#endif	
 	return;
       }
 

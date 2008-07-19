@@ -151,9 +151,12 @@ void StateOptions::checkEvents() {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       XMSession::instance()->setTheme(pEntry->Text[0]);
+      /* don't update theme, because it invalidates the relationship
+	 between sprites and textures.
       if(Theme::instance()->Name() != XMSession::instance()->theme()) {
 	GameApp::instance()->reloadTheme();
       }
+      */
     }
   }
 

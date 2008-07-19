@@ -25,6 +25,38 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Image.h"
 #include "VFileIO.h"
 #include "helpers/Log.h"
+#include "Renderer.h"
+#include "Theme.h"
+#include "XMSession.h"
+
+void Texture::addAssociatedSprite(Sprite* sprite)
+{
+  bool found = false;
+  std::vector<Sprite*>::iterator it = associatedSprites.begin();
+  while(it != associatedSprites.end()){
+    if((*it) == sprite){
+      found = true;
+      break;
+    }
+
+    ++it;
+  }
+  if(found == false){
+    associatedSprites.push_back(sprite);
+  }
+}
+
+void Texture::invalidateSpritesTexture()
+{
+  std::vector<Sprite*>::iterator it = associatedSprites.begin();
+  while(it != associatedSprites.end()){
+    (*it)->invalidateTextures();
+
+    LogDebug("associated sprite [%x]", (*it));
+
+    ++it;
+  }
+}
 
   /*===========================================================================
   Create texture from memory
@@ -41,7 +73,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pTexture->Name = Name;
     pTexture->nWidth = nWidth;
     pTexture->nHeight = nHeight;
-    pTexture->Tag = "";
     pTexture->isAlpha = bAlpha;
 
 #ifdef ENABLE_OPENGL
@@ -188,7 +219,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Shortcut to loading textures from image files
   ===========================================================================*/  
-  Texture *TextureManager::loadTexture(std::string Path,bool bSmall,bool bClamp, FilterMode eFilterMode) {
+  Texture* TextureManager::loadTexture(std::string Path,bool bSmall,bool bClamp,
+				       FilterMode eFilterMode, bool persistent,
+				       Sprite* associatedSprite) {
     /* Check file validity */
     image_info_t ii;
     Img TextureImage;
@@ -200,6 +233,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* if the texture is already loaded, return it */
     pTexture = getTexture(TexName);
     if(pTexture != NULL) {
+      pTexture->addAssociatedSprite(associatedSprite);
       return pTexture;
     }
 
@@ -237,6 +271,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
       
       pTexture = createTexture(TexName,pc,TextureImage.getWidth(),TextureImage.getHeight(),bAlpha,bClamp, eFilterMode);
+      pTexture->addAssociatedSprite(associatedSprite);
     }
     else {
       LogInfo("** Warning ** : TextureManager::loadTexture() : texture '%s' not found or invalid",Path.c_str());
@@ -255,18 +290,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return NULL;
   }
 
-  /*===========================================================================
-  Fetch all textures with the given tag 
-  ===========================================================================*/
-  std::vector<Texture *> TextureManager::fetchTaggedTextures(std::string Tag) {
-    std::vector<Texture *> Ret;
-    
-    for(unsigned int i=0;i<m_Textures.size();i++) {
-      if(m_Textures[i]->Tag == Tag) Ret.push_back(m_Textures[i]);
-    }
-    return Ret;
-  }
-  
   /*===========================================================================
   Unload everything in a very hateful manner
   ===========================================================================*/

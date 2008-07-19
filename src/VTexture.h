@@ -24,78 +24,89 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "helpers/VExcept.h"
 
+class Sprite;
 
-  enum FilterMode {
-    FM_NEAREST,
-    FM_LINEAR,
-    FM_MIPMAP
-  };
+enum FilterMode {
+  FM_NEAREST,
+  FM_LINEAR,
+  FM_MIPMAP
+};
 
-  /*===========================================================================
-  Our friendly texture exception friend
-  ===========================================================================*/    
-  class TextureError : public Exception {
-    public:
-      TextureError(std::string &iMsg)
-        : Exception(iMsg) {}
-      TextureError(const char *pc)
-        : Exception(std::string(pc)) {}
-    private:
-  };
+// Our friendly texture exception friend
+class TextureError : public Exception {
+public:
+  TextureError(std::string &iMsg)
+    : Exception(iMsg) {}
+  TextureError(const char *pc)
+    : Exception(std::string(pc)) {}
+};
 
-  /*===========================================================================
-  Texture
-  ===========================================================================*/    
-  //keesj:todo. I experimented with converting this struct to a
-  //class and extending it so that the opengl version would only
-  //contain nID and the SDL_based one the Surface pointer. I think it is
-  //a lot of work and because the game currently depends on SDL
-  //and nID is not a openGL specific structure
-  //it's 
-  struct Texture {
-    public:
-    Texture() {
-      nWidth = nHeight = 0;
-      nID = 0;
-      surface = NULL;
-      nSize = 0;
-      isAlpha = false;
-    }
- 
-    std::string Name;       /* Name */
-    int nWidth,nHeight;     /* Size */
-    unsigned int nID;       /* OpenGL name */
-    SDL_Surface * surface;  /* SDL_surface */
-    std::string Tag;        /* Optional tag */
-    int nSize;              /* Size in bytes */
-    bool isAlpha;           /* Whether the texture contains an alpha channel */
-    unsigned char *pcData;
-  };
+//keesj:todo. I experimented with converting this struct to a
+//class and extending it so that the opengl version would only
+//contain nID and the SDL_based one the Surface pointer. I think it is
+//a lot of work and because the game currently depends on SDL
+//and nID is not a openGL specific structure
+//it's
+#define PERSISTANT 0
+class Texture {
+public:
+  Texture() {
+    nWidth               = 0;
+    nHeight              = 0;
+    nID                  = 0;
+    surface              = NULL;
+    nSize                = 0;
+    isAlpha              = false;
+    curRegistrationStage = PERSISTANT;
+  }
 
-  /*===========================================================================
-  Texture manager
-  ===========================================================================*/    
-  class TextureManager {
-    public:
-      TextureManager() {m_nTexSpaceUsage=0;}
-    
-      /* Methods */
-      Texture *createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha=false,bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP);
-      void destroyTexture(Texture *pTexture);
-      Texture *loadTexture(std::string Path,bool bSmall=false,bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP);
-      Texture *getTexture(std::string Name);
-      std::vector<Texture *> fetchTaggedTextures(std::string Tag);
-      void unloadTextures(void);
-    
-      /* Data interface */
-      std::vector<Texture *> &getTextures(void) {return m_Textures;}
-      int getTextureUsage(void) {return m_nTexSpaceUsage;}
+  std::string    Name;
+  int            nWidth;
+  int            nHeight;
+  // OpenGL name
+  unsigned int   nID;
+  SDL_Surface*   surface;
+  // size in bytes
+  int            nSize;
+  bool           isAlpha;
+  unsigned char* pcData;
 
-    private:
-      /* Data */
-      std::vector<Texture *> m_Textures;      /* Textures */
-      
-      int m_nTexSpaceUsage;                   /* Bytes of textures resident */
-  };
+  // zero for persistent textures
+  unsigned int curRegistrationStage;
+
+  // when the texture is removed, keep the sprites informed so that
+  // it invalides its pointer on the texture
+  std::vector<Sprite*> associatedSprites;
+
+  void addAssociatedSprite(Sprite* sprite);
+  void invalidateSpritesTexture();
+};
+
+
+
+class TextureManager {
+public:
+  TextureManager() {
+    m_nTexSpaceUsage=0;
+  }
+
+  Texture* createTexture(std::string Name, unsigned char* pcData, int nWidth, int nHeight, bool bAlpha=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP);
+  void destroyTexture(Texture* pTexture);
+  Texture* loadTexture(std::string Path, bool bSmall=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP, bool persistent=false, Sprite* associatedSprite=NULL);
+  Texture* getTexture(std::string Name);
+  void unloadTextures(void);
+
+  std::vector<Texture *> &getTextures(void) {
+    return m_Textures;
+  }
+  int getTextureUsage(void) {
+    return m_nTexSpaceUsage;
+  }
+
+private:
+  std::vector<Texture *> m_Textures;
+
+  int m_nTexSpaceUsage;
+};
 
 #endif
