@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define LOG_INFO        3
 #define LOG_DEBUG       4
 
+			  // using ## gnu extension to allow empty args list
 #define LogError(format, ...)                                        Logger::LogLevel(LOG_ERROR,   format, ## __VA_ARGS__);
 #define LogWarning(format, ...)                                      Logger::LogLevel(LOG_WARNING, format, ## __VA_ARGS__);
 #define LogInfo(format, ...)                                         Logger::LogLevel(LOG_INFO,    format, ## __VA_ARGS__);
