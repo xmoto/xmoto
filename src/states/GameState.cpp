@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "drawlib/DrawLib.h"
 #include "Sound.h"
+#include "StateOptions.h"
 
 #define MENU_SHADING_TIME 0.3
 #define MENU_SHADING_VALUE 150
@@ -234,6 +235,10 @@ void GameState::keyDown(SDLKey nKey, SDLMod mod, int nChar, const std::string& i
     XMSession::instance()->setMirrorMode(XMSession::instance()->mirrorMode() == false);
     InputHandler::instance()->setMirrored(XMSession::instance()->mirrorMode());
     StateManager::instance()->sendAsynchronousMessage("MIRRORMODE_CHANGED");
+  }
+
+  if(nKey == SDLK_o && (mod & KMOD_CTRL) != 0){
+    StateManager::instance()->pushState(new StateOptions());
   }
 
   if(nKey == SDLK_s && (mod & KMOD_CTRL) != 0) {

@@ -26,7 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "drawlib/DrawLib.h"
 #include "StatePreplayingGame.h"
-#include "StateOptions.h"
 #include "helpers/Log.h"
 #include "helpers/Text.h"
 #include "CameraAnimation.h"
@@ -274,9 +273,6 @@ void StateScene::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i
   }
   else if(nKey == SDLK_PAGEUP){
     nextLevel();
-  }
-  else if(nKey == SDLK_o && (mod & KMOD_CTRL) != 0){
-    StateManager::instance()->pushState(new StateOptions());
   }
 
 #if defined(ENABLE_DEV)
