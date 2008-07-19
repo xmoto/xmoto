@@ -435,7 +435,6 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
 	m_currentEdgeEffect = edgeEffect;
       }
 
-      LogDebug("edge effect sprite [%x] [%s] [%s] texture [%x]", m_currentEdgeSprite, m_currentEdgeSprite->getName().c_str(), m_currentEdgeSprite->getCurrentTextureFileName().c_str(), pTexture);
       int geomIndex = edgeGeomExists(pBlock, pTexture->Name);
       if(geomIndex < 0){
 	// create a new one

@@ -52,7 +52,7 @@ void Texture::invalidateSpritesTexture()
   while(it != associatedSprites.end()){
     (*it)->invalidateTextures();
 
-    LogDebug("associated sprite [%x]", (*it));
+    LogDebug("associated sprite [%x] [%s]", (*it), (*it)->getName().c_str());
 
     ++it;
   }
