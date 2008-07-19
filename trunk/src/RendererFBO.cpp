@@ -81,7 +81,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           ((DrawLibOpenGL*)m_drawLib)->glGetObjectParameterivARB(m_ProgramID,
 								 GL_OBJECT_LINK_STATUS_ARB,(GLint*)&nStatus);
           if(!nStatus) {
-            Logger::Log("-- Failed to link SFXOverlay shader program --");
+            LogInfo("-- Failed to link SFXOverlay shader program --");
             
             /* Retrieve info-log */
             int nInfoLogLen = 0;
@@ -91,7 +91,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    int nCharsWritten = 0;
 	    ((DrawLibOpenGL*)m_drawLib)->glGetInfoLogARB(m_ProgramID,nInfoLogLen,
 							 (GLsizei*)&nCharsWritten,pcInfoLog);
-	    Logger::Log(pcInfoLog);
+	    LogInfo(pcInfoLog);
 	    delete [] pcInfoLog;
       			
             m_bUseShaders = false;
@@ -191,7 +191,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       GL_OBJECT_COMPILE_STATUS_ARB,(GLint*)&nStatus);
     if(!nStatus) {
       _FreeShaderSource(ppc,nNumLines);
-      Logger::Log("-- Failed to compile shader: %s --",File.c_str());
+      LogInfo("-- Failed to compile shader: %s --",File.c_str());
 
       /* Retrieve info-log */
       int nInfoLogLen = 0;
@@ -201,7 +201,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 		  int nCharsWritten = 0;
 		  ((DrawLibOpenGL*)m_drawLib)->glGetInfoLogARB(ShaderID,nInfoLogLen,
 		    (GLsizei*)&nCharsWritten,pcInfoLog);
-		  Logger::Log(pcInfoLog);
+		  LogInfo(pcInfoLog);
 		  delete [] pcInfoLog;
 	
       return false;

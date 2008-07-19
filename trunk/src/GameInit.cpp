@@ -66,7 +66,7 @@ int main(int nNumArgs, char **ppcArgs) {
   }
   catch (Exception &e) {
     if(Logger::isInitialized()) {
-      Logger::Log((std::string("Exception: ") + e.getMsg()).c_str());
+      LogError((std::string("Exception: ") + e.getMsg()).c_str());
     }    
 
     printf("fatal exception : %s\n", e.getMsg().c_str());        
@@ -150,15 +150,15 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
   Logger::setVerbose(XMSession::instance()->isVerbose()); /* apply verbose mode */
 
-  Logger::Log(std::string("X-Moto " + XMBuild::getVersionString(true)).c_str());
-  Logger::Log("compiled at "__DATE__" "__TIME__);
+  LogInfo(std::string("X-Moto " + XMBuild::getVersionString(true)).c_str());
+  LogInfo("compiled at "__DATE__" "__TIME__);
   if(SwapEndian::bigendien) {
-    Logger::Log("Systeme is bigendien");
+    LogInfo("Systeme is bigendien");
   } else {
-    Logger::Log("Systeme is littleendien");
+    LogInfo("Systeme is littleendien");
   }
-  Logger::Log("User directory: %s", FS::getUserDir().c_str());
-  Logger::Log("Data directory: %s", FS::getDataDir().c_str());
+  LogInfo("User directory: %s", FS::getUserDir().c_str());
+  LogInfo("Data directory: %s", FS::getDataDir().c_str());
 
   if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos()) {
     v_useGraphics = false;
@@ -189,7 +189,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     XMSession::instance()->setResolutionHeight(drawLib->getDispHeight());
     XMSession::instance()->setBpp(drawLib->getDispBPP());
     XMSession::instance()->setWindowed(drawLib->getWindowed());
-    Logger::Log("Resolution: %ix%i (%i bpp)", XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp());
+    LogInfo("Resolution: %ix%i (%i bpp)", XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp());
     /* */
     
     if(!drawLib->isNoGraphics()) {        
@@ -211,11 +211,11 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   }
   XMSession::instance()->loadProfile(XMSession::instance()->profile(), pDb);
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
-  Logger::Log("SiteKey: %s", XMSession::instance()->sitekey().c_str());
+  LogInfo("SiteKey: %s", XMSession::instance()->sitekey().c_str());
 
 #ifdef USE_GETTEXT
   std::string v_locale = Locales::init(XMSession::instance()->language());
-  Logger::Log("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
+  LogInfo("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
 #endif
 
   /* Init sound system */
@@ -243,7 +243,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   } catch(Exception &e) {
     /* if the theme cannot be loaded, try to reload from files */
     /* perhaps that the xm.db comes from an other computer */
-    Logger::Log("** warning ** : Theme cannot be reload, try to update themes into the database");
+    LogWarning("Theme cannot be reload, try to update themes into the database");
     ThemeChoicer::initThemesFromDir(pDb);
     reloadTheme();
   }
@@ -349,11 +349,11 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     }
     Sound::loadSample("Textures/Sounds/Squeek.ogg");
   } catch(Exception &e) {
-    Logger::Log("*** Warning *** : %s\n", e.getMsg().c_str());
+    LogWarning("%s", e.getMsg().c_str());
     /* hum, not cool */
   }
     
-  Logger::Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
+  LogInfo(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
 
   /* Find all files in the textures dir and load them */     
   UITexture::setApp(this);
@@ -382,7 +382,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if((m_PlaySpecificLevelId != "")) {
     /* ======= PLAY SPECIFIC LEVEL ======= */
     StateManager::instance()->pushState(new StatePreplayingGame(m_PlaySpecificLevelId, false));
-    Logger::Log("Playing as '%s'...", XMSession::instance()->profile().c_str());
+    LogInfo("Playing as '%s'...", XMSession::instance()->profile().c_str());
   }
   else if(m_PlaySpecificReplay != "") {
     /* ======= PLAY SPECIFIC REPLAY ======= */
@@ -419,7 +419,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     pDb->stats_xmotoStarted(XMSession::instance()->sitekey(), XMSession::instance()->profile());
   }
 
-  Logger::Log("UserInit ended at %.3f", GameApp::getXMTime());
+  LogInfo("UserInit ended at %.3f", GameApp::getXMTime());
 }
 
 void GameApp::manageEvent(SDL_Event* Event) {
@@ -540,7 +540,7 @@ void GameApp::run_loop() {
 
 void GameApp::run_unload() {
   if(Logger::isInitialized()) {
-    Logger::Log("UserUnload started at %.3f", GameApp::getXMTime());
+    LogInfo("UserUnload started at %.3f", GameApp::getXMTime());
   }
 
   if(m_pWebHighscores != NULL) {
@@ -567,7 +567,7 @@ void GameApp::run_unload() {
   SysMessage::destroy();  
 
   if(Logger::isInitialized()) {
-    Logger::Log("UserUnload saveConfig at %.3f", GameApp::getXMTime());
+    LogInfo("UserUnload saveConfig at %.3f", GameApp::getXMTime());
   }
   if(drawLib != NULL) { /* save config only if drawLib was initialized */
     XMSession::instance()->save(&m_Config, xmDatabase::instance("main"));
@@ -576,7 +576,7 @@ void GameApp::run_unload() {
   }
 
   if(Logger::isInitialized()) {
-    Logger::Log("UserUnload saveConfig ended at %.3f", GameApp::getXMTime());
+    LogInfo("UserUnload saveConfig ended at %.3f", GameApp::getXMTime());
   }
 
   if(drawLib != NULL) {
@@ -589,7 +589,7 @@ void GameApp::run_unload() {
   XMSession::destroy();
 
   if(Logger::isInitialized()) {
-    Logger::Log("UserUnload ended at %.3f", GameApp::getXMTime());
+    LogInfo("UserUnload ended at %.3f", GameApp::getXMTime());
   }
 
   /* Shutdown SDL */

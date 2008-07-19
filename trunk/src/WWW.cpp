@@ -185,7 +185,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
 			 const ProxySettings *p_proxy_settings
 			 ) {
   
-  Logger::Log(std::string("downloading " + 
+  LogInfo(std::string("downloading " + 
 			  p_web_file     +
 			  " to "         +
 			  p_local_file
@@ -316,7 +316,7 @@ void FSWeb::uploadReplay(const std::string& p_replayFilename,
 
   struct curl_httppost *v_post, *v_last;
 
-  Logger::Log(std::string("Uploading replay " + p_replayFilename).c_str());
+  LogInfo(std::string("Uploading replay " + p_replayFilename).c_str());
 
   /* open the file */
   if( (v_destinationFile = fopen(v_local_file.c_str(), "wb")) == false) {
@@ -521,7 +521,7 @@ void FSWeb::uploadDbSync(const std::string& p_dbSyncFilename,
   // curl seems not to like .str().c_str()
   char v_syncStr[256];
 
-  Logger::Log(std::string("Uploading dbsync " + p_dbSyncFilename + " to " + p_url_to_transfert).c_str());
+  LogInfo(std::string("Uploading dbsync " + p_dbSyncFilename + " to " + p_url_to_transfert).c_str());
 
   /* open the file */
   if( (v_destinationFile = fopen(p_answerFile.c_str(), "wb")) == false) {
@@ -891,7 +891,7 @@ void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WW
   }
 
   try {
-    Logger::Log("WWW: Downloading a theme...");
+    LogInfo("WWW: Downloading a theme...");
     
     std::string v_destinationFile, v_destinationFileXML, v_destinationFileXML_tmp;
     std::string v_sourceFile;
@@ -1064,7 +1064,7 @@ void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WW
       }
     }
     
-    Logger::Log("** Warning ** : Failed to update theme %s (%s)", i_id_theme.c_str(), e.getMsg().c_str());
+    LogInfo("** Warning ** : Failed to update theme %s (%s)", i_id_theme.c_str(), e.getMsg().c_str());
     throw Exception("Failed to update the theme");
     return;
   }
@@ -1081,7 +1081,7 @@ void WebThemes::updateThemeList(xmDatabase* i_pDb, WWWAppInterface* i_WebLevelAp
     }
   }
 
-  Logger::Log("WWW: Checking for new or updated themes...");
+  LogInfo("WWW: Checking for new or updated themes...");
   v_data.v_WebApp = i_WebLevelApp;
   v_data.v_nb_files_performed   = 0;
   v_data.v_nb_files_to_download = 1;

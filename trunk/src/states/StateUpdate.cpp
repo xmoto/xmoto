@@ -105,7 +105,7 @@ bool StateUpdate::update()
       }
     }
 
-    Logger::Log("thread ended");
+    LogInfo("thread ended");
 
     return true;
   }
@@ -118,7 +118,7 @@ bool StateUpdate::update()
     m_pThread->startThread();
     m_threadStarted = true;
 
-    Logger::Log("thread started");
+    LogInfo("thread started");
   }
 
   if(m_threadStarted == true){

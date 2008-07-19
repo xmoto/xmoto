@@ -493,7 +493,7 @@ void StateOptions::checkEvents() {
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       XMSession::instance()->setLanguage(pEntry->Text[1]);      
       //std::string v_locale = Locales::changeLocale(XMSession::instance()->language());
-      //Logger::Log("Locales changed to '%s'", v_locale.c_str());
+      //LogInfo("Locales changed to '%s'", v_locale.c_str());
       //StateManager::instance()->refreshStaticCaptions();
     }
   }
@@ -1656,7 +1656,7 @@ void StateOptions::updateProfileStrings() {
 
 void StateOptions::executeOneCommand(std::string cmd, std::string args) {
   if(XMSession::instance()->debug() == true) {
-    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+    LogInfo("cmd [%s [%s]] executed by state [%s].",
 		cmd.c_str(), args.c_str(), getName().c_str());
   }
 

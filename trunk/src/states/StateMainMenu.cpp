@@ -1193,7 +1193,7 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
   UIListEntry *pEntry = NULL;
 
   if(XMSession::instance()->debug() == true) {
-    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+    LogInfo("cmd [%s [%s]] executed by state [%s].",
 		cmd.c_str(), args.c_str(), getName().c_str());
   }
 
@@ -1222,12 +1222,12 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
 	try {
 	  Replay::deleteReplay(pEntry->Text[0]);
 	} catch(Exception &e) {
-	  Logger::Log(e.getMsg().c_str());
+	  LogInfo(e.getMsg().c_str());
 	}
 	try {
 	  xmDatabase::instance("main")->replays_delete(pEntry->Text[0]);
 	} catch(Exception &e) {
-	  Logger::Log(e.getMsg().c_str());
+	  LogInfo(e.getMsg().c_str());
 	}
 	StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
       }

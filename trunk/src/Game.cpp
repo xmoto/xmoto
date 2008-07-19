@@ -204,14 +204,14 @@ GameApp::GameApp() {
     
     /* User preference for format? must be either jpeg or png */
     if(v_ShotExtension != "jpeg" && v_ShotExtension != "jpg" && v_ShotExtension != "png") {
-      Logger::Log("** Warning ** : unsupported screenshot format '%s', using png instead!", v_ShotExtension.c_str());
+      LogInfo("** Warning ** : unsupported screenshot format '%s', using png instead!", v_ShotExtension.c_str());
       v_ShotExtension = "png";
     }    
 
     do {
       nShot++;
       if(nShot > 9999) {
-	Logger::Log("Too many screenshots !");
+	LogInfo("Too many screenshots !");
 	delete pShot;
 	return;
       }
@@ -222,7 +222,7 @@ GameApp::GameApp() {
     try {
       pShot->saveFile(v_destFile.c_str());
     } catch(Exception &e) {
-      Logger::Log(std::string("Unable to save the screenshot: " + e.getMsg()).c_str());
+      LogInfo(std::string("Unable to save the screenshot: " + e.getMsg()).c_str());
     }
 
     delete pShot;
@@ -563,7 +563,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
   int v_player_finishTime;
   bool v_exists;
 
-  if(XMSession::instance()->debug()) Logger::Log("addGhosts stategy:");
+  if(XMSession::instance()->debug()) LogInfo("addGhosts stategy:");
 
   v_replay_MYBEST_tmp = _getGhostReplayPath_bestOfThePlayer(i_motogame->getLevelSrc()->Id(), v_player_finishTime);
 
@@ -572,28 +572,28 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
     if( (XMSession::instance()->ghostStrategy_BESTOFREFROOM()    && i==0) ||
 	(XMSession::instance()->ghostStrategy_BESTOFOTHERROOMS() && i!=0) ){
 
-      if(XMSession::instance()->debug()) Logger::Log("Choosing ghost for room %i", i);
+      if(XMSession::instance()->debug()) LogInfo("Choosing ghost for room %i", i);
 
       v_replay_BESTOFROOM[i] = _getGhostReplayPath_bestOfTheRoom(i, i_motogame->getLevelSrc()->Id(), v_finishTime);
-      if(XMSession::instance()->debug()) Logger::Log("the room ghost: %s", v_replay_BESTOFROOM[i].c_str());
+      if(XMSession::instance()->debug()) LogInfo("the room ghost: %s", v_replay_BESTOFROOM[i].c_str());
 
       /* add MYBEST if MYBEST if better the BESTOF the other ROOM */
       if(v_player_finishTime > 0 && (v_finishTime < 0 || v_player_finishTime < v_finishTime)) {
 	v_replay_BESTOFROOM[i] = v_replay_MYBEST_tmp;
-	if(XMSession::instance()->debug()) Logger::Log("my best time is %i ; room one is %i", v_player_finishTime, v_finishTime);
-	if(XMSession::instance()->debug()) Logger::Log("my best is better than the one of the room => choose it");
+	if(XMSession::instance()->debug()) LogInfo("my best time is %i ; room one is %i", v_player_finishTime, v_finishTime);
+	if(XMSession::instance()->debug()) LogInfo("my best is better than the one of the room => choose it");
       }
       
       v_exists = false;
       for(unsigned int j=0; j<i; j++) {
       	if(v_replay_BESTOFROOM[i] == v_replay_BESTOFROOM[j]) {
       	  v_exists = true;
-	  if(XMSession::instance()->debug()) Logger::Log("the ghost is already set by room %i", j);
+	  if(XMSession::instance()->debug()) LogInfo("the ghost is already set by room %i", j);
       	}
       }
 
       if(v_replay_BESTOFROOM[i] != "" && v_exists == false) {
-	Logger::Log("add ghost %s", v_replay_BESTOFROOM[i].c_str());
+	LogInfo("add ghost %s", v_replay_BESTOFROOM[i].c_str());
 	i_motogame->addGhostFromFile(v_replay_BESTOFROOM[i],
 				     xmDatabase::instance("main")->webrooms_getName(XMSession::instance()->idRoom(i)),
 				     Theme::instance(), Theme::instance()->getGhostTheme(),
@@ -609,20 +609,20 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
 
   /* second, add your best */
   if(XMSession::instance()->ghostStrategy_MYBEST()) {
-    if(XMSession::instance()->debug()) Logger::Log("Choosing ghost MYBEST");
+    if(XMSession::instance()->debug()) LogInfo("Choosing ghost MYBEST");
     v_replay_MYBEST = _getGhostReplayPath_bestOfThePlayer(i_motogame->getLevelSrc()->Id(), v_finishTime);
-    if(XMSession::instance()->debug()) Logger::Log("MYBEST ghost is %s", v_replay_MYBEST.c_str());
+    if(XMSession::instance()->debug()) LogInfo("MYBEST ghost is %s", v_replay_MYBEST.c_str());
     if(v_replay_MYBEST != "") {
       v_exists = false;
       for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
 	if(v_replay_MYBEST == v_replay_BESTOFROOM[i]) {
-	  if(XMSession::instance()->debug()) Logger::Log("the ghost is already set by room %i", i);
+	  if(XMSession::instance()->debug()) LogInfo("the ghost is already set by room %i", i);
 	  v_exists = true;
 	}
       }
 
       if(v_exists == false) {
-	if(XMSession::instance()->debug()) Logger::Log("add ghost %s", v_replay_MYBEST.c_str());
+	if(XMSession::instance()->debug()) LogInfo("add ghost %s", v_replay_MYBEST.c_str());
 	i_motogame->addGhostFromFile(v_replay_MYBEST, GAMETEXT_GHOST_BEST,
 				     i_theme, i_theme->getGhostTheme(),
 				     TColor(85,255,255,0),
@@ -637,20 +637,20 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
 
   /* third, the best locally */
   if(XMSession::instance()->ghostStrategy_THEBEST()) {
-    if(XMSession::instance()->debug()) Logger::Log("Choosing ghost LOCAL BEST");
+    if(XMSession::instance()->debug()) LogInfo("Choosing ghost LOCAL BEST");
     v_replay_THEBEST = _getGhostReplayPath_bestOfLocal(i_motogame->getLevelSrc()->Id(), v_finishTime);
     if(v_replay_THEBEST != "") {
 
       v_exists = false;
       for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
 	if(v_replay_THEBEST == v_replay_BESTOFROOM[i]) {
-	  if(XMSession::instance()->debug()) Logger::Log("the ghost is already set by room %i", i);
+	  if(XMSession::instance()->debug()) LogInfo("the ghost is already set by room %i", i);
 	  v_exists = true;
 	}
       }
 
       if(v_replay_THEBEST != v_replay_MYBEST && v_exists == false) { /* don't add two times the same ghost */
-	if(XMSession::instance()->debug()) Logger::Log("add ghost %s", v_replay_THEBEST.c_str());
+	if(XMSession::instance()->debug()) LogInfo("add ghost %s", v_replay_THEBEST.c_str());
 	i_motogame->addGhostFromFile(v_replay_THEBEST, GAMETEXT_GHOST_LOCAL,
 				     i_theme, i_theme->getGhostTheme(),
 				     TColor(255,200,140,0),
@@ -663,7 +663,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
     }
   }
 
-  if(XMSession::instance()->debug()) Logger::Log("addGhosts stategy finished");
+  if(XMSession::instance()->debug()) LogInfo("addGhosts stategy finished");
 }
 
 void GameApp::addLevelToFavorite(const std::string& i_levelId) {
@@ -718,7 +718,7 @@ void GameApp::playMusic(const std::string& i_music) {
 	  Sound::playMusic(Theme::instance()->getMusic(i_music)->FilePath());
 	}
       } catch(Exception &e) {
-	Logger::Log("** Warning ** : PlayMusic(%s) failed", i_music.c_str());
+	LogInfo("** Warning ** : PlayMusic(%s) failed", i_music.c_str());
 	Sound::stopMusic();
       }
     }

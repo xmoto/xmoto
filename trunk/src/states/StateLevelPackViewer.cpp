@@ -165,7 +165,7 @@ void StateLevelPackViewer::checkEvents()
 void StateLevelPackViewer::executeOneCommand(std::string cmd, std::string args)
 {
   if(XMSession::instance()->debug() == true) {
-    Logger::Log("cmd [%s [%s]] executed by state [%s].",
+    LogInfo("cmd [%s [%s]] executed by state [%s].",
 		cmd.c_str(), args.c_str(), getName().c_str());
   }
 

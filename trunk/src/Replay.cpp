@@ -99,7 +99,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Save it */
     FileHandle *pfh = FS::openOFile(std::string("Replays/") + m_FileName);
     if(pfh == NULL) {
-      Logger::Log("** Warning ** : Failed to open replay file for output: %s",(std::string("Replays/") + m_FileName).c_str());
+      LogInfo("** Warning ** : Failed to open replay file for output: %s",(std::string("Replays/") + m_FileName).c_str());
       return;
     }        
     
@@ -189,7 +189,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         /* Try adding a .rpl extension */
         pfh = FS::openIFile(std::string("Replays/") + FileName + std::string(".rpl"));
         if(pfh == NULL) {    
-          Logger::Log("** Warning ** : Failed to open replay file for input: %s",(std::string("Replays/") + FileName).c_str());
+          LogInfo("** Warning ** : Failed to open replay file for input: %s",(std::string("Replays/") + FileName).c_str());
           throw Exception("Unable to open the replay");
         }
       }
@@ -204,13 +204,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Supported version? */
     if(nVersion != 0 && nVersion != 1) {
       FS::closeFile(pfh);
-      Logger::Log("** Warning ** : Unsupported replay file version (%d): %s",nVersion,(std::string("Replays/") + FileName).c_str());
+      LogInfo("** Warning ** : Unsupported replay file version (%d): %s",nVersion,(std::string("Replays/") + FileName).c_str());
       throw Exception("Unable to open the replay (unsupported version)");
     } else {
       /* Little/big endian safety check */
       if(FS::readInt_LE(pfh) != 0x12345678) {
         FS::closeFile(pfh);
-        Logger::Log("** Warning ** : Sorry, the replay you're trying to open are not endian-compatible with your computer!");
+        LogInfo("** Warning ** : Sorry, the replay you're trying to open are not endian-compatible with your computer!");
         throw Exception("Unable to open the replay");        
       }
   
@@ -275,7 +275,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
             delete [] m_pcInputEventsData; m_pcInputEventsData = NULL;
             FS::closeFile(pfh);
             _FreeReplay();
-            Logger::Log("** Warning ** : Failed to uncompress events in replay: %s",FileName.c_str());
+            LogInfo("** Warning ** : Failed to uncompress events in replay: %s",FileName.c_str());
             throw Exception("Unable to open the replay");
           }
           
@@ -299,7 +299,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(nNumChunks == 0) {
 	FS::closeFile(pfh);
 	_FreeReplay();
-	Logger::Log("** Warning ** : try to open a replay with no chunk");
+	LogInfo("** Warning ** : try to open a replay with no chunk");
 	throw Exception("Replay with no chunk !");
       }
 
@@ -338,7 +338,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           uLongf nSrcLen = nCompressedSize;
           int nZRet = uncompress((Bytef *)Chunk->pcChunkData,&nDestLen,(Bytef *)pcCompressed,nSrcLen);
           if(nZRet != Z_OK || nDestLen != Chunk->nNumStates * m_nStateSize) {
-            Logger::Log("** Warning ** : Failed to uncompress chunk %d in replay: %s",i,FileName.c_str());
+            LogInfo("** Warning ** : Failed to uncompress chunk %d in replay: %s",i,FileName.c_str());
             delete [] pcCompressed;
             Chunk->pcChunkData = NULL;
             FS::closeFile(pfh);

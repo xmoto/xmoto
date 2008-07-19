@@ -32,7 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Texture *TextureManager::createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha,bool bClamp, FilterMode eFilterMode) {
     /* Name free? */
     if(getTexture(Name) != NULL) {
-      Logger::Log("** Warning ** : TextureManager::createTexture() : Name '%s' already in use",Name.c_str());
+      LogInfo("** Warning ** : TextureManager::createTexture() : Name '%s' already in use",Name.c_str());
       throw TextureError("texture naming conflict");
     }
 
@@ -88,7 +88,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     glGetIntegerv( GL_MAX_TEXTURE_SIZE, &max_texture_size );
     if ( nWidth > max_texture_size || nHeight > max_texture_size ) {
 
-      Logger::Log("** Warning ** : TextureManager::createTexture() : Texture '%s' too large -- scaling to %i x %i",Name.c_str(), max_texture_size, max_texture_size );
+      LogInfo("** Warning ** : TextureManager::createTexture() : Texture '%s' too large -- scaling to %i x %i",Name.c_str(), max_texture_size, max_texture_size );
 
       unsigned char *newdata = new unsigned char[max_texture_size * max_texture_size * depth];
 
@@ -206,7 +206,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(TextureImage.checkFile( Path,&ii )) {
       /* Valid texture size? */
       if(ii.nWidth != ii.nHeight) {
-        Logger::Log("** Warning ** : TextureManager::loadTexture() : texture '%s' is not square",Path.c_str());
+        LogInfo("** Warning ** : TextureManager::loadTexture() : texture '%s' is not square",Path.c_str());
         throw TextureError("texture not square");
       }
       if(!(ii.nWidth == 1 ||
@@ -220,7 +220,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
          ii.nWidth == 256 ||
          ii.nWidth == 512 ||
          ii.nWidth == 1024)) {
-        Logger::Log("** Warning ** : TextureManager::loadTexture() : texture '%s' size is not power of two",Path.c_str());
+        LogInfo("** Warning ** : TextureManager::loadTexture() : texture '%s' size is not power of two",Path.c_str());
         throw TextureError("texture size not power of two");
       }
          
@@ -239,7 +239,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       pTexture = createTexture(TexName,pc,TextureImage.getWidth(),TextureImage.getHeight(),bAlpha,bClamp, eFilterMode);
     }
     else {
-      Logger::Log("** Warning ** : TextureManager::loadTexture() : texture '%s' not found or invalid",Path.c_str());
+      LogInfo("** Warning ** : TextureManager::loadTexture() : texture '%s' not found or invalid",Path.c_str());
       throw TextureError(std::string("invalid or missing texture file (" + Path + ")").c_str());
     }    
     

@@ -65,7 +65,7 @@ int UploadAllHighscoresThread::realThreadFunction()
     v_pWebRoom->upgrade(webRoomId, m_pDb);
     delete v_pWebRoom;
   } catch (Exception& e) {
-    Logger::Log("** Warning ** : Failed to analyse web-highscores file");   
+    LogInfo("** Warning ** : Failed to analyse web-highscores file");   
   }
 
   setThreadCurrentOperation(GAMETEXT_UPLOAD_ALL_HIGHSCORES);
@@ -113,10 +113,10 @@ int UploadAllHighscoresThread::realThreadFunction()
 				XMSession::instance()->uploadHighscoreUrl(),
 				this, XMSession::instance()->proxySettings(), v_msg_status_ok, m_msg);
 	    if(v_msg_status_ok == false) {
-	      Logger::Log(std::string("Failed to upload " + v_replay).c_str());
+	      LogInfo(std::string("Failed to upload " + v_replay).c_str());
 	    }
 	  } catch(Exception &e) {
-	    Logger::Log(std::string("Unable to upload " + v_replay).c_str());
+	    LogInfo(std::string("Unable to upload " + v_replay).c_str());
 	  }
 	}
       }

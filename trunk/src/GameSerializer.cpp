@@ -43,7 +43,7 @@
       v_ReplayEvents->push_back(p);
       }
     } catch(Exception &e) {
-      Logger::Log("** Warning ** : unable to unserialize game events !");
+      LogInfo("** Warning ** : unable to unserialize game events !");
       throw e;
     }
   }

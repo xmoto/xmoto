@@ -428,12 +428,12 @@ void xmDatabase::webLoadDataFirstTime() {
     read_DB_free(v_result);
 
     if(v_update) {
-      Logger::Log("Loading weblevels with delivered weblevels.xml");
+      LogInfo("Loading weblevels with delivered weblevels.xml");
       weblevels_updateDB("default/weblevels.xml");
     }
   } catch(Exception &e) {
     /* ok, no pb */
-    Logger::Log("** Warning ** : Loading delivered weblevels.xml failed");
+    LogInfo("** Warning ** : Loading delivered weblevels.xml failed");
   }
 
   /* updating webhighscores table with defaults */
@@ -446,11 +446,11 @@ void xmDatabase::webLoadDataFirstTime() {
     read_DB_free(v_result);
 
     if(v_update) {
-      Logger::Log("Loading webhighscores with delivered webhighscores.xml");
+      LogInfo("Loading webhighscores with delivered webhighscores.xml");
       webhighscores_updateDB("default/webhighscores.xml", DEFAULT_WEBHIGHSCORES_URL);
     }
   } catch(Exception &e) {
     /* ok, no pb */
-    Logger::Log("** Warning ** : Loading delivered webhighscores.xml failed");
+    LogInfo("** Warning ** : Loading delivered webhighscores.xml failed");
   }
 }

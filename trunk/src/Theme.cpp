@@ -90,7 +90,7 @@ std::vector<ThemeFile>* Theme::getRequiredFiles() {
 }
 
 void Theme::load(std::string p_themeFile) {
-  Logger::Log(std::string("Loading theme from file " + p_themeFile).c_str());
+  LogInfo(std::string("Loading theme from file " + p_themeFile).c_str());
 
   m_requiredFiles.clear();
 
@@ -212,7 +212,7 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
     }
 
     else {
-      Logger::Log("Warning: unknown type '%s' in theme file !", v_spriteType.c_str());
+      LogInfo("Warning: unknown type '%s' in theme file !", v_spriteType.c_str());
     }
   }
 
@@ -339,14 +339,14 @@ void Theme::newSpriteFromXML(TiXmlElement *pVarElem,
 
   pc = pVarElem->Attribute("name");
   if(pc == NULL) {
-    Logger::Log("** %s with no name", spriteTypeName);
+    LogInfo("** %s with no name", spriteTypeName);
     return;
   }
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
   if(pc == NULL) {
-    Logger::Log("** %s with no file", spriteTypeName);
+    LogInfo("** %s with no file", spriteTypeName);
     return;
   }
   v_fileName = pc;
@@ -381,15 +381,15 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
   float global_delay   = 0.1;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {Logger::Log("** Animation with no name"); return;}
+  if(pc == NULL) {LogInfo("** Animation with no name"); return;}
   v_name = pc;
   
   pc = pVarElem->Attribute("fileBase");
-  if(pc == NULL) {Logger::Log("** Animation with no fileBase"); return;}
+  if(pc == NULL) {LogInfo("** Animation with no fileBase"); return;}
   v_fileBase = pc;
 
   pc = pVarElem->Attribute("fileExtension");
-  if(pc == NULL) {Logger::Log("** Animation with no fileExtension"); return;}
+  if(pc == NULL) {LogInfo("** Animation with no fileExtension"); return;}
   v_fileExtension = pc;
 
   pc = pVarElem->Attribute("centerX");
@@ -484,14 +484,14 @@ void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem)
 
   pc = pVarElem->Attribute("name");
   if(pc == NULL) {
-    Logger::Log("** Sprite with no name");
+    LogInfo("** Sprite with no name");
     return;
   }
   v_name = pc;
   
   pc = pVarElem->Attribute("file");
   if(pc == NULL) {
-    Logger::Log("** Sprite with no name");
+    LogInfo("** Sprite with no name");
     return;
   }
   v_fileName = pc;
@@ -562,19 +562,19 @@ void Theme::newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_sum;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {Logger::Log("** Edge with no name"); return;}
+  if(pc == NULL) {LogInfo("** Edge with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {Logger::Log("** Edge with no file"); return;}
+  if(pc == NULL) {LogInfo("** Edge with no file"); return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("scale");
-  if(pc == NULL) {Logger::Log("** Edge with no scale"); return;}
+  if(pc == NULL) {LogInfo("** Edge with no scale"); return;}
   v_scale = pc;
 
   pc = pVarElem->Attribute("depth");
-  if(pc == NULL) {Logger::Log("Edge with no depth"); return;}
+  if(pc == NULL) {LogInfo("Edge with no depth"); return;}
   v_depth = pc;
 
   pc = pVarElem->Attribute("sum");
@@ -976,7 +976,7 @@ void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
       if(i_db->themes_exists(v_name) == false) {
 	i_db->themes_add(v_name, v_themesFiles[i]);
       } else {
-	Logger::Log(std::string("Theme " + v_name + " is present several times").c_str());
+	LogInfo(std::string("Theme " + v_name + " is present several times").c_str());
       }
     } catch(Exception &e) {
       /* anyway, give up this theme */

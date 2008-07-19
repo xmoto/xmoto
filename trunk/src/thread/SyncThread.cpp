@@ -64,7 +64,7 @@ int SyncThread::realThreadFunction() {
     FileCompression::bzip2(SYNC_UP_TMPFILE, SYNC_UP_TMPFILEBZ2);
     remove(std::string(SYNC_UP_TMPFILE).c_str());
   } catch(Exception &e) {
-    Logger::Log("** Warning **: %s", e.getMsg().c_str());
+    LogInfo("** Warning **: %s", e.getMsg().c_str());
     remove(std::string(SYNC_UP_TMPFILEBZ2).c_str());
     m_msg = e.getMsg();
     return 1;
@@ -87,7 +87,7 @@ int SyncThread::realThreadFunction() {
     }
   } catch(Exception &e) {
     m_msg = GAMETEXT_UPLOAD_HIGHSCORE_ERROR + std::string("\n") + e.getMsg();
-    Logger::Log("** Warning **: %s", e.getMsg().c_str());
+    LogInfo("** Warning **: %s", e.getMsg().c_str());
     remove(std::string(SYNC_UP_TMPFILEBZ2).c_str());
     return 1;
   }
