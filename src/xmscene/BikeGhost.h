@@ -46,8 +46,9 @@ class Ghost : public Biker {
   bool getRenderBikeFront();
   float getBikeEngineSpeed();
   float getBikeLinearVel();
+  double getAngle();
 
-   virtual void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
+  virtual void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
 
  protected:
   Replay* m_replay;

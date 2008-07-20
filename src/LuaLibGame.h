@@ -143,6 +143,9 @@ private:
   static int L_Game_PlaySound(lua_State *pL);
   static int L_Game_PlayMusic(lua_State *pL);
   static int L_Game_StopMusic(lua_State *pL);
+  static int L_Game_GetPlayerVelocity(lua_State *pL);
+  static int L_Game_GetPlayerSpeed(lua_State *pL);
+  static int L_Game_GetPlayerAngle(lua_State *pL);
 
   /* get the number of arguments */
   static int args_numberOfArguments(lua_State *pL);

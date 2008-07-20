@@ -83,6 +83,9 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"PlaySound",                    LuaLibGame::L_Game_PlaySound},
   {"PlayMusic",                    LuaLibGame::L_Game_PlayMusic},
   {"StopMusic",                    LuaLibGame::L_Game_StopMusic},
+  {"GetPlayerVelocity",            LuaLibGame::L_Game_GetPlayerVelocity},
+  {"GetPlayerSpeed",               LuaLibGame::L_Game_GetPlayerSpeed},
+  {"GetPlayerAngle",               LuaLibGame::L_Game_GetPlayerAngle},   
   {NULL, NULL}
 };
 MotoGame*     LuaLibGame::m_exec_world              = NULL;
@@ -820,6 +823,42 @@ int LuaLibGame::L_Game_PlayMusic(lua_State *pL) {
 int LuaLibGame::L_Game_StopMusic(lua_State *pL) {
   m_exec_world->createGameEvent(new MGE_StopMusic(m_exec_world->getTime()));
   return 0;
+}
+
+int LuaLibGame::L_Game_GetPlayerVelocity(lua_State *pL) {
+  /* no event for this */
+  int v_player = (int)X_luaL_check_number(pL,1);
+
+  if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
+    throw Exception("Invalid player");
+  }
+  lua_pushnumber(pL, m_exec_world->Players()[v_player]->getBikeLinearVel());
+
+  return 1;
+}
+
+int LuaLibGame::L_Game_GetPlayerSpeed(lua_State *pL) {
+  /* no event for this */
+  int v_player = (int)X_luaL_check_number(pL,1);
+  
+  if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
+    throw Exception("Invalid player");
+  }
+  lua_pushnumber(pL, m_exec_world->Players()[v_player]->getBikeEngineSpeed());
+
+  return 1;
+}
+
+int LuaLibGame::L_Game_GetPlayerAngle(lua_State *pL) {
+  /* no event for this */
+  int v_player = (int)X_luaL_check_number(pL,1);
+  
+  if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
+    throw Exception("Invalid player");
+  }
+  lua_pushnumber(pL, m_exec_world->Players()[v_player]->getAngle());
+
+  return 1; //return 1 value
 }
 
 int LuaLibGame::args_numberOfArguments(lua_State *pL) {

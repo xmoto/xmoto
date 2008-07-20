@@ -131,15 +131,22 @@ void PlayerBiker::updateToTime(int i_time, int i_timeStep,
   }
 
   /* somersault */
-  double fAngle = acos(m_bikeState.fFrameRot[0]);
   bool bCounterclock;
-  if(m_bikeState.fFrameRot[2] < 0.0f) fAngle = 2*3.14159f - fAngle;
 
-  if(m_somersaultCounter.update(fAngle, bCounterclock)) {
+  if(m_somersaultCounter.update(getAngle(), bCounterclock)) {
     if(m_bikerHooks != NULL) {
       m_bikerHooks->onSomersaultDone(bCounterclock);
     }
   }
+}
+
+double PlayerBiker::getAngle() {
+  double fAngle;
+
+  fAngle = acos(m_bikeState.fFrameRot[0]);
+  if(m_bikeState.fFrameRot[2] < 0.0f) fAngle = 2*3.14159f - fAngle;
+
+  return fAngle;
 }
 
 void PlayerBiker::initPhysics(Vector2f i_gravity) {
@@ -831,17 +838,16 @@ float PlayerBiker::getBikeEngineSpeed() {
 
 float PlayerBiker::getBikeLinearVel() {
 
-  Vector2f curpos = (m_bikeState.RearWheelP + m_bikeState.FrontWheelP) / 2;
-  Vector2f lastpos = (m_PrevRearWheelP + m_PrevFrontWheelP) / 2;
+  Vector2f curpos = (m_bikeState.RearWheelP + m_bikeState.FrontWheelP); // adding both rear and front to manage the side
+  Vector2f lastpos = (m_PrevRearWheelP + m_PrevFrontWheelP);
   Vector2f delta = curpos - lastpos;
-  float speed = 10 * sqrt(delta.x * delta.x + delta.y * delta.y) / PHYS_STEP_SIZE;
+  float speed = (3.6 * 100 * sqrt(delta.x * delta.x + delta.y * delta.y)) / PHYS_STEP_SIZE; /* *100 because PHYS_STEP_SIZE is in hundreaths */
 
   /* protection against invalid values */
-  if (speed > 400)
+  if (speed > 500)
     return 0;
 
-  return speed;  
-  
+  return speed;
 }
 
   void PlayerBiker::updateGameState() {

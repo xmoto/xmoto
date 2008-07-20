@@ -28,8 +28,8 @@
 #define CAMERA_OFFSETY_DEFAULT 0.0
 
 // declared for Active Camera Zooming
-#define SPEED_UNTIL_ZOOM_BEGIN 0.24
-#define SPEED_UNTIL_ZOOM_END   0.15
+#define SPEED_UNTIL_ZOOM_BEGIN 24.0
+#define SPEED_UNTIL_ZOOM_END   15.0
 #define CAM_ZOOM_NEAR    0.24
 #define CAM_ZOOM_FAR     0.18
 #define ZOOM_OUT_SPEED  -0.0004
