@@ -46,6 +46,7 @@ Camera::Camera(Vector2i upperleft, Vector2i downright){
   setRenderSurface(upperleft, downright);
   m_mirrored = false;
   m_allowActiveZoom = true;
+  m_cameraDeathOffset = Vector2f(0.0, 0.0);
 
   prepareForNewLevel();
 }
@@ -211,6 +212,14 @@ void Camera::guessDesiredCameraZoom() {
   }
 }
 
+void Camera::setPlayerDead() {
+  if(m_playerToFollow->getState()->Dir == DD_RIGHT) {
+    m_cameraDeathOffset = m_playerToFollow->getState()->CenterP - m_playerToFollow->getState()->KneeP;
+  } else {
+    m_cameraDeathOffset = m_playerToFollow->getState()->CenterP - m_playerToFollow->getState()->Knee2P;
+  }
+}
+
 void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   float v_move_camera_max;
   float v_fDesiredHorizontalScrollShift = 0.0;
@@ -240,19 +249,42 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   }
     
   /* Determine scroll */
-#if 0
   if(m_playerToFollow->isDead()) {
     if(m_playerToFollow->getState()->Dir == DD_RIGHT) {
-      m_Scroll = -m_playerToFollow->getState()->KneeP;
+      m_Scroll = -m_playerToFollow->getState()->KneeP - m_cameraDeathOffset;
     } else {
-      m_Scroll = -m_playerToFollow->getState()->Knee2P;
+      m_Scroll = -m_playerToFollow->getState()->Knee2P - m_cameraDeathOffset;
     }
+
+    // update X
+    if(m_cameraDeathOffset.x != 0.0 && m_cameraDeathOffset.y != 0.0) {
+      if(fabs(m_cameraDeathOffset.x) > 0.015) {
+	if(m_cameraDeathOffset.x > 0.0) {
+	  m_cameraDeathOffset.x -= 0.01;
+	} else {
+	  m_cameraDeathOffset.x += 0.01;
+	}
+      } else {
+	m_cameraDeathOffset.x = 0.0; 
+      }
+    }
+
+    // update Y
+    if(m_cameraDeathOffset.y != 0.0 && m_cameraDeathOffset.y != 0.0) {
+      if(fabs(m_cameraDeathOffset.x) > 0.015) {
+	if(m_cameraDeathOffset.y > 0.0) {
+	  m_cameraDeathOffset.y -= 0.01;
+	} else {
+	  m_cameraDeathOffset.y += 0.01;
+	}
+      } else {
+	m_cameraDeathOffset.y = 0.0; 
+      }
+    }
+
   } else {
     m_Scroll = -m_playerToFollow->getState()->CenterP;
   }
-#else
-  m_Scroll = -m_playerToFollow->getState()->CenterP;
-#endif
 
   /* Driving direction? */
   guessDesiredCameraPosition(v_fDesiredHorizontalScrollShift,

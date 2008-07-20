@@ -1088,6 +1088,13 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
 	m_players[i_player]->setBodyDetach(true);
       }
       m_players[i_player]->getControler()->stopContols();
+
+      // inform camera that the player dies (for the following point)
+      for(unsigned int i=0; i<m_cameras.size(); i++){
+	if(m_cameras[i]->getPlayerToFollow() == m_players[i_player]) {
+	  m_cameras[i]->setPlayerDead();
+	}
+      }
     }
   }
 
