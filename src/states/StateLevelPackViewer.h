@@ -52,7 +52,8 @@ private:
   static UIRoot* m_sGUI;
   static void createGUIIfNeeded();
   void updateGUI();
-    
+  void updateLevelsList();
+
   LevelsPack* m_pActiveLevelPack;
   bool m_require_updateLevelsList;
 
