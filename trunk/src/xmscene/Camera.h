@@ -91,6 +91,8 @@ public:
   bool isMirrored();
   void setMirrored(bool i_value);
 
+  void setPlayerDead(); // inform that the player dies
+
   float rotationAngle();
   void setRotationAngle(float i_value);
   void setRotationSpeed(float i_value);
@@ -129,6 +131,7 @@ private:
   RenderSurface m_renderSurf;
 
   float m_lastSpeedTime;
+  Vector2f m_cameraDeathOffset;
 
   void resetActiveZoom();
 };

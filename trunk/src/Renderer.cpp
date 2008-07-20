@@ -171,7 +171,7 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
       nVertexBytes += loadBlock(Blocks[i], i_universe, u, n_sameSceneAs, i);
     }
 
-    LogInfo("GL: %d kB vertex buffers", nVertexBytes/1024);
+    LogDebug("GL: %d kB vertex buffers", nVertexBytes/1024);
 
     // load sprites textures
     std::vector<Entity*>& entities = v_level->Entities();
