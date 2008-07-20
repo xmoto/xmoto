@@ -74,7 +74,7 @@ int main(int nNumArgs, char **ppcArgs) {
     
 #if defined(WIN32)
     char cBuf[1024];
-    sprintf(cBuf,"Fatal exception occured: %s\n"
+    snprintf(cBuf, 1024, "Fatal exception occured: %s\n"
 	    "Consult the file xmoto.log for more information about what\n"
 	    "might has occured.\n",e.getMsg().c_str());                    
     MessageBox(NULL,cBuf,"X-Moto Error",MB_OK|MB_ICONERROR);

@@ -1369,7 +1369,7 @@ int GameRenderer::nbParticlesRendered() const {
 
     if(nQuantity > 0) {
       char cBuf[256];    
-      sprintf(cBuf,"%d",nQuantity);
+      snprintf(cBuf, 256, "%d", nQuantity);
 
       /* Draw text */
       FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
@@ -2272,7 +2272,7 @@ void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) {
 	m_replayHelp = GAMETEXT_REPLAYHELPTEXT(std::string("<<-10"));
       } else {
 	char v_speed_str[5 + 1];
-	sprintf(v_speed_str, "% .2f", p_speed);
+	snprintf(v_speed_str, 5+1, "% .2f", p_speed);
 	m_replayHelp = GAMETEXT_REPLAYHELPTEXT(std::string(v_speed_str));
       }
     } else {
@@ -2282,7 +2282,7 @@ void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) {
 	m_replayHelp = GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string("<<-10"));
       } else {
 	char v_speed_str[256];
-	sprintf(v_speed_str, "% .2f", p_speed);
+	snprintf(v_speed_str, 256, "% .2f", p_speed);
 	m_replayHelp = GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string(v_speed_str));
       }
     }
