@@ -127,8 +127,15 @@ void StateLevelPackViewer::checkEvents()
     std::string v_id_level = pList->getSelectedLevel();
 
     if(v_id_level != "") {
-      GameApp::instance()->addLevelToFavorite(v_id_level);
+      GameApp::instance()->switchLevelToFavorite(v_id_level);
       StateManager::instance()->sendAsynchronousMessage("FAVORITES_UPDATED");
+
+      /* in case of the favorite package, the levels list must be updated */
+      if(m_pActiveLevelPack->Name() == VPACKAGENAME_FAVORITE_LEVELS) {
+	updateLevelsList();
+      } else {
+	updateRights();
+      }
     }
   }
 
@@ -311,23 +318,17 @@ void StateLevelPackViewer::createGUIIfNeeded()
   v_infoButton->setID("BESTPLAYER_VIEW");
 }
 
-void StateLevelPackViewer::updateGUI()
-{
+void StateLevelPackViewer::updateLevelsList() {
+  UILevelList *pList = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
+  int v_selected = pList->getSelected();
+  char **v_result;
+  unsigned int nrow;
   int v_totalProfileTime   = 0;
   int v_totalHighscoreTime = 0;
 
-  char **v_result;
-  unsigned int nrow;
   int v_playerHighscore;
   int v_roomHighscore;
   xmDatabase* pDb = xmDatabase::instance("main");
-
-  UIStatic *pTitle = reinterpret_cast<UIStatic*>(m_GUI->getChild("FRAME:VIEWER_TITLE"));
-  pTitle->setCaption(m_pActiveLevelPack->Name());
-
-  UILevelList *pList = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
-  pList->setNumeroted(true);
-  pList->makeActive();
 
   /* get selected item */
   std::string v_selected_levelName = "";
@@ -389,19 +390,36 @@ void StateLevelPackViewer::updateGUI()
 
   /* reselect the previous level */
   if(v_selected_levelName != "") {
-    int nLevel = 0;
+    int nLevel = -1;
     for(unsigned int i=0; i<pList->getEntries().size(); i++) {
       if(pList->getEntries()[i]->Text[0] == v_selected_levelName) {
 	nLevel = i;
 	break;
       }
     }
-    pList->setRealSelected(nLevel);
+
+    if(nLevel == -1) { // level not found, keep the same number in the list
+      pList->setRealSelected(v_selected);
+    } else {
+      pList->setRealSelected(nLevel);
+    }
   }
 
   /* ministat pack */
   UIStatic* pSomeText = reinterpret_cast<UIStatic *>(m_GUI->getChild("FRAME:MINISTAT"));
   pSomeText->setCaption(formatTime(v_totalProfileTime) + " / " + formatTime(v_totalHighscoreTime));
+}
+
+void StateLevelPackViewer::updateGUI()
+{
+  UIStatic *pTitle = reinterpret_cast<UIStatic*>(m_GUI->getChild("FRAME:VIEWER_TITLE"));
+  pTitle->setCaption(m_pActiveLevelPack->Name());
+
+  UILevelList *pList = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
+  pList->setNumeroted(true);
+  pList->makeActive();
+
+  updateLevelsList();
 }
 
 void StateLevelPackViewer::updateInfoFrame() {
@@ -440,6 +458,8 @@ std::string StateLevelPackViewer::getInfoFrameLevelId()
 void StateLevelPackViewer::updateRights() {
   UIButton* v_button;
   UILevelList* v_list   = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
+  std::string v_id_level = v_list->getSelectedLevel();
+  xmDatabase* pDb = xmDatabase::instance("main");
 
   v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("FRAME:PLAY_BUTTON"));
   v_button->enableWindow(v_list->nbVisibleItems() > 0);
@@ -447,4 +467,12 @@ void StateLevelPackViewer::updateRights() {
   v_button->enableWindow(v_list->nbVisibleItems() > 0);
   v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("FRAME:ADDTOFAVORITE_BUTTON"));
   v_button->enableWindow(v_list->nbVisibleItems() > 0);
+  
+  if(v_id_level != "") {
+    if(LevelsManager::instance()->isInFavorite(XMSession::instance()->profile(), v_id_level, pDb)) {
+      v_button->setCaption(GAMETEXT_DELETEFROMFAVORITE);
+    } else {
+      v_button->setCaption(GAMETEXT_ADDTOFAVORITE);
+    }
+  }
 }
