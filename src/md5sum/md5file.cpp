@@ -36,7 +36,7 @@ std::string md5file(std::string p_filename) {
   std::string sum = "";
   for(int i=0; i<16; i++) {
     char c[3];
-    sprintf(c,"%02x",md5digest[i]);   
+    snprintf(c, 3, "%02x", md5digest[i]);   
     sum += c;
   }
 

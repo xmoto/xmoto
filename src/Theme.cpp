@@ -443,7 +443,7 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
     if(pc != NULL) { v_sum = pc; };
 
     if(n < 100) {
-      sprintf(buf, "%02i", n);
+      snprintf(buf, 3, "%02i", n);
 
       if(isAFileOutOfDate(THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
 			  v_fileBase + std::string(buf) + std::string(".") + v_fileExtension) == false) {

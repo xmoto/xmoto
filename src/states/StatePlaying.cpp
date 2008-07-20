@@ -80,7 +80,7 @@ void StatePlaying::enter()
     LogInfo("** Warning ** : level '%s' cannot be loaded", v_level_name.c_str());
 
     char cBuf[256];
-    sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED, v_level_name.c_str());
+    snprintf(cBuf, 256, GAMETEXT_LEVELCANNOTBELOADED, v_level_name.c_str());
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, cBuf, UI_MSGBOX_OK);
     v_msgboxState->setId("ERROR");

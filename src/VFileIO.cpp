@@ -146,7 +146,7 @@ bool str_match_wildcard(char *pcMWildcard,char *pcMString, bool CaseSensitive) {
 
 void FS::_ThrowFileError(FileHandle *pfh,std::string Description) {
   char cBuf[512];
-  sprintf(cBuf,"%s (%s%s): %s",pfh->Name.c_str(),pfh->bRead?"I":"",pfh->bWrite?"O":"",Description.c_str());
+  snprintf(cBuf, 512, "%s (%s%s): %s", pfh->Name.c_str(),pfh->bRead?"I":"", pfh->bWrite?"O":"", Description.c_str());
   throw Exception(cBuf);
 }
 
@@ -737,7 +737,7 @@ void FS::writeBool(FileHandle *pfh,bool v) {
   
 void FS::writeLine(FileHandle *pfh,std::string Line) {
   char cBuf[512];
-  sprintf(cBuf,"%s\r\n",Line.c_str());
+  snprintf(cBuf, 512, "%s\r\n", Line.c_str());
   if(!writeBuf(pfh,cBuf,strlen(cBuf))) _ThrowFileError(pfh,"writeLine -> failed");
 }
   
@@ -745,9 +745,9 @@ void FS::writeLineF(FileHandle *pfh,char *pcFmt,...) {
   char cBuf[512],cBuf2[512];
   va_list List;
   va_start(List,pcFmt);
-  vsprintf(cBuf,pcFmt,List);
+  vsnprintf(cBuf, 512, pcFmt, List);
   va_end(List);
-  sprintf(cBuf2,"%s\r\n",cBuf);
+  snprintf(cBuf2, 512, "%s\r\n", cBuf);
   if(!writeBuf(pfh,cBuf2,strlen(cBuf2))) _ThrowFileError(pfh,"writeLineF -> failed");
 }
     
@@ -946,7 +946,7 @@ bool FS::copyFile(const std::string &From,const std::string &To, std::string &To
     int i = 1;
     while(1) {
       char cTemp[1024];
-      sprintf(cTemp,"%s (%d)%s",FullToBaseName.c_str(),i,FullToExt.c_str());
+      snprintf(cTemp, 1024, "%s (%d)%s", FullToBaseName.c_str(), i, FullToExt.c_str());
         
       /* What about this file then? */
       fp = fopen(cTemp,"rb");

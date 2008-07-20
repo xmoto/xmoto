@@ -1024,7 +1024,7 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
       }
 
       char msg[256];
-      sprintf(msg, "%+.2f", v_diffToGhost/100.0);
+      snprintf(msg, 256, "%+.2f", v_diffToGhost/100.0);
       this->gameMessage(msg,true);
     }
   }

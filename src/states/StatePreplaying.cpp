@@ -101,7 +101,7 @@ void StatePreplaying::enter()
   } catch(Exception &e) {
     LogInfo("** Warning ** : level '%s' cannot be loaded", m_idlevel.c_str());
     char cBuf[256];
-    sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED, m_idlevel.c_str());
+    snprintf(cBuf, 256, GAMETEXT_LEVELCANNOTBELOADED, m_idlevel.c_str());
     delete m_universe;
     m_universe = NULL;
     StateManager::instance()->replaceState(new StateMessageBox(NULL, cBuf, UI_MSGBOX_OK));
@@ -114,7 +114,7 @@ void StatePreplaying::enter()
 		  m_universe->getScenes()[i]->getLevelSrc()->Name().c_str());
       
       char cBuf[256];
-      sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
+      snprintf(cBuf, 256, GAMETEXT_NEWERXMOTOREQUIRED,
 	      m_universe->getScenes()[i]->getLevelSrc()->getRequiredVersion().c_str());
       
       delete m_universe;

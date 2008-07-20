@@ -105,7 +105,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	}
 	
 	void UserConfig::setFloat(std::string Name,float v) {
-	  char cBuf[256]; sprintf(cBuf,"%f",v);
+	  char cBuf[256];
+	  snprintf(cBuf,256, "%f", v);
 	  setValue(Name,cBuf);
 	}
 	
@@ -121,7 +122,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	}
 	
 	void UserConfig::setInteger(std::string Name,int v) {
-	  char cBuf[256]; sprintf(cBuf,"%d",v);
+	  char cBuf[256];
+	  snprintf(cBuf, 256, "%d", v);
 	  setValue(Name,cBuf);
 	}
 

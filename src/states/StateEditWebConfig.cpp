@@ -275,7 +275,7 @@ void StateEditWebConfig::updateGUI()
   char cBuf[256] = "";
   int  n = XMSession::instance()->proxySettings()->getPort();
   if(n > 0)
-    sprintf(cBuf,"%d",n);
+    snprintf(cBuf, 256, "%d", n);
   pPort->setCaption(cBuf);
   pLogin->setCaption(XMSession::instance()->proxySettings()->getAuthentificationUser());
   pPassword->setCaption(XMSession::instance()->proxySettings()->getAuthentificationPassword());

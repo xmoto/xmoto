@@ -284,7 +284,7 @@ VideoRecorder* StateManager::getVideoRecorder() {
 
 void StateManager::drawFps() {
   char cTemp[256];        
-  sprintf(cTemp, "u(%i) d(%i)", getCurrentUpdateFPS(), getCurrentRenderFPS());
+  snprintf(cTemp, 256, "u(%i) d(%i)", getCurrentUpdateFPS(), getCurrentRenderFPS());
 
   FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg = v_fm->getGlyph(cTemp);
