@@ -303,3 +303,7 @@ float Ghost::getBikeLinearVel() {
 float Ghost::getBikeEngineSpeed() {
   return 0.0; /* unable to know it */
 }
+
+double Ghost::getAngle() {
+  return 0.0; /* to do */
+}

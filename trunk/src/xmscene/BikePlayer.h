@@ -73,6 +73,7 @@ class PlayerBiker : public Biker {
 
   virtual float getRearWheelVelocity();
   virtual float getFrontWheelVelocity();
+  virtual double getAngle();
 
  private:
   SomersaultCounter m_somersaultCounter;

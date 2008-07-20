@@ -149,6 +149,7 @@ class Biker {
   virtual bool getRenderBikeFront() = 0; /* display the bikefront ? (for detach) */
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
   virtual float getBikeLinearVel() = 0; /* bike linear velocity */
+  virtual double getAngle() = 0; /* biker angle */
   virtual std::string getQuickDescription() const = 0;
   virtual std::string getDescription() const = 0;
   virtual float getBikeEngineRPM();

@@ -706,8 +706,6 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string texture)
 #define ENGINECOUNTER_NEEDLE_WIDTH_FACTOR (1.0/24)
 #define ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR (1.0/30)
 
-    pLinVel *= 100.0;
-
     float pSpeed_eff;
     float pLinVel_eff;
 
