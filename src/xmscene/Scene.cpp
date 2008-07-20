@@ -847,30 +847,20 @@ void MotoGame::cleanPlayers() {
     if(m_playEvents) {
       m_luaGame->scriptCallTblVoid(pEntity->Id(), "Touch");
       m_luaGame->scriptCallTblVoid(pEntity->Id(), "TouchBy", i_player);
-    }
 
-    if(pEntity->DoesMakeWin()) {
-      if(getNbRemainingStrawberries() == 0) {
-	makePlayerWin(i_player);
-      }
-    }
-
-    if(pEntity->DoesKill()) {
-      createGameEvent(new MGE_PlayerDies(getTime(), true, i_player));
-    }
-
-    if(pEntity->IsToTake()) {
-      /* OH... nice */
-      createGameEvent(new MGE_EntityDestroyed(getTime(), pEntity->Id(), pEntity->Speciality(), pEntity->DynamicPosition(), pEntity->Size()));
-
-      m_myLastStrawberries.push_back(getTime());
-
-      for(unsigned int i=0; i<m_ghosts.size(); i++) {
-	m_ghosts[i]->updateDiffToPlayer(m_myLastStrawberries);
+      if(pEntity->DoesMakeWin()) {
+	if(getNbRemainingStrawberries() == 0) {
+	  makePlayerWin(i_player);
+	}
       }
 
-      if(m_showGhostTimeDiff) {
-	DisplayDiffFromGhost();
+      if(pEntity->DoesKill()) {
+	createGameEvent(new MGE_PlayerDies(getTime(), true, i_player));
+      }
+
+      if(pEntity->IsToTake()) {
+	/* OH... nice */
+	createGameEvent(new MGE_EntityDestroyed(getTime(), pEntity->Id(), pEntity->Speciality(), pEntity->DynamicPosition(), pEntity->Size()));
       }
     }
   }
@@ -1136,6 +1126,17 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
 
       if(m_motoGameHooks != NULL) {
 	m_motoGameHooks->OnTakeEntity();
+      }
+
+      /* update timediff */
+      m_myLastStrawberries.push_back(getTime());
+      
+      for(unsigned int i=0; i<m_ghosts.size(); i++) {
+	m_ghosts[i]->updateDiffToPlayer(m_myLastStrawberries);
+      }
+      
+      if(m_showGhostTimeDiff) {
+	DisplayDiffFromGhost();
       }
     }
     
