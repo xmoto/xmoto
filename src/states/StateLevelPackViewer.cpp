@@ -123,20 +123,7 @@ void StateLevelPackViewer::checkEvents()
 
   if(pLevelAddToFavoriteButton != NULL && pLevelAddToFavoriteButton->isClicked()) {
     pLevelAddToFavoriteButton->setClicked(false);
-
-    std::string v_id_level = pList->getSelectedLevel();
-
-    if(v_id_level != "") {
-      GameApp::instance()->switchLevelToFavorite(v_id_level);
-      StateManager::instance()->sendAsynchronousMessage("FAVORITES_UPDATED");
-
-      /* in case of the favorite package, the levels list must be updated */
-      if(m_pActiveLevelPack->Name() == VPACKAGENAME_FAVORITE_LEVELS) {
-	updateLevelsList();
-      } else {
-	updateRights();
-      }
-    }
+    switchtoFavorites();
   }
 
   if(pLevelRandomizeButton!=NULL && pLevelRandomizeButton->isClicked()) {
@@ -169,6 +156,23 @@ void StateLevelPackViewer::checkEvents()
   }
 }
 
+void StateLevelPackViewer::switchtoFavorites() {
+  UILevelList* pList = reinterpret_cast<UILevelList*>(m_GUI->getChild("FRAME:LEVEL_LIST"));
+  std::string v_id_level = pList->getSelectedLevel();
+  
+  if(v_id_level != "") {
+    GameApp::instance()->switchLevelToFavorite(v_id_level, true);
+    StateManager::instance()->sendAsynchronousMessage("FAVORITES_UPDATED");
+    
+    /* in case of the favorite package, the levels list must be updated */
+    if(m_pActiveLevelPack->Name() == VPACKAGENAME_FAVORITE_LEVELS) {
+      updateLevelsList();
+    } else {
+      updateRights();
+    }
+  }
+}
+
 void StateLevelPackViewer::executeOneCommand(std::string cmd, std::string args)
 {
   if(XMSession::instance()->debug() == true) {
@@ -189,6 +193,8 @@ void StateLevelPackViewer::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std:
 
   if(nKey == SDLK_ESCAPE){
     m_requestForEnd = true;
+  } else if(nKey == SDLK_F3) {
+    switchtoFavorites();
   }
 }
 

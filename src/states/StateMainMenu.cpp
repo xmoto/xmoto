@@ -478,10 +478,35 @@ bool StateMainMenu::render()
 
 void StateMainMenu::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
 {
+  UILevelList* v_newLevelsList;
+  UILevelList* v_favoriteLevelsList;
+  UILevelList* v_list;
+
   switch(nKey) {
 
-  case SDLK_F1:
+  case SDLK_F1: /* display help */
     StateManager::instance()->pushState(new StateHelp());
+    break;
+
+  case SDLK_F3: /* switch favorites */
+    v_newLevelsList      = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST");
+    v_favoriteLevelsList = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:FAVORITE_LIST");
+    v_list               = NULL;
+
+    if(v_newLevelsList->isVisible() == true) {
+      v_list = v_newLevelsList;
+    } else if(v_favoriteLevelsList->isVisible() == true) {
+      v_list = v_favoriteLevelsList;
+    }
+
+    if(v_list != NULL) {
+      std::string v_id_level = v_list->getSelectedLevel();
+  
+      if(v_id_level != "") {
+	GameApp::instance()->switchLevelToFavorite(v_id_level, true);
+	StateManager::instance()->sendAsynchronousMessage("FAVORITES_UPDATED");
+      }
+    }
     break;
 
   case SDLK_ESCAPE:{
