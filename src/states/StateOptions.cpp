@@ -318,6 +318,15 @@ void StateOptions::checkEvents() {
     }
   }
 
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:ENABLEJOYSTICKS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    XMSession::instance()->setEnableJoysticks(v_button->getChecked());
+    InputHandler::instance()->enableJoysticks(XMSession::instance()->enableJoysticks());
+  }
+
+
   // www
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:PROXYCONFIG"));
   if(v_button->isClicked()) {
@@ -852,6 +861,7 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   UIWindow*  v_window;
   UIList*    v_list;
   UIStatic* v_someText;
+  UIButton* v_button;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_CONTROLS, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
@@ -866,10 +876,18 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   v_list->addColumn("", 0); // internal key name
   v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
 
-  v_someText = new UIStatic(v_window, + 5, v_window->getPosition().nHeight -43 -57,
-			    GAMETEXT_NOJOYSTICKFOUND, v_window->getPosition().nWidth-80-5-5, 57);
+  v_button = new UIButton(v_window, 5, v_window->getPosition().nHeight -43 -57 +10,
+			  GAMETEXT_ENABLEJOYSTICKS, 300, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("ENABLEJOYSTICKS");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(50028);
+  v_button->setContextHelp(CONTEXTHELP_ENABLEJOYSTICKS);
+
+  v_someText = new UIStatic(v_window, 300, v_window->getPosition().nHeight -43 -57,
+			    GAMETEXT_NOJOYSTICKFOUND, v_window->getPosition().nWidth-300-5, 57);
   v_someText->setID("STATIC_JOYSTICK_FOUND");
-  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText->setHAlign(UI_ALIGN_RIGHT);
   v_someText->setFont(drawlib->getFontSmall()); 
 
   return v_window;
@@ -1225,6 +1243,8 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->enableMenuMusic());
 
   // controls
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:ENABLEJOYSTICKS"));
+  v_button->setChecked(XMSession::instance()->enableJoysticks());
 
   // www
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLEWEB"));

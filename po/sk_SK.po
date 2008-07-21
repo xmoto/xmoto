@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-07-18 19:19+0200\n"
+"POT-Creation-Date: 2008-07-21 16:04+0200\n"
 "PO-Revision-Date: 2008-03-11 23:13+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
@@ -89,7 +89,7 @@ msgstr ""
 "na internet a hľadať nové levely\n"
 "a najlepšie časy iných hráčov?"
 
-#: src/GameText.h:53 src/GameText.h:129
+#: src/GameText.h:53 src/GameText.h:127
 msgid "Audio"
 msgstr "Audio"
 
@@ -238,7 +238,7 @@ msgstr ""
 msgid "right meta"
 msgstr ""
 
-#: src/GameText.h:90 src/GameText.h:106
+#: src/GameText.h:90 src/GameText.h:104
 #, c-format
 msgid "button %i"
 msgstr ""
@@ -264,14 +264,10 @@ msgid "wheel down"
 msgstr ""
 
 #: src/GameText.h:96
-msgid "Check joysticks"
-msgstr ""
-
-#: src/GameText.h:97
 msgid "No joystick found"
 msgstr ""
 
-#: src/GameText.h:98
+#: src/GameText.h:97
 #, c-format
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
@@ -279,188 +275,184 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: src/GameText.h:99
-msgid "Recheck the joysticks plugged on the system"
-msgstr ""
-
-#: src/GameText.h:100
+#: src/GameText.h:98
 #, c-format
 msgid "axis %i"
 msgstr ""
 
-#: src/GameText.h:101
+#: src/GameText.h:99
 msgid "left"
 msgstr ""
 
-#: src/GameText.h:102
+#: src/GameText.h:100
 msgid "right"
 msgstr ""
 
-#: src/GameText.h:103
+#: src/GameText.h:101
 msgid "up"
 msgstr ""
 
-#: src/GameText.h:104
+#: src/GameText.h:102
 msgid "down"
 msgstr ""
 
-#: src/GameText.h:105
+#: src/GameText.h:103
 msgid "none"
 msgstr ""
 
-#: src/GameText.h:107
+#: src/GameText.h:105
 msgid "Script action"
 msgstr ""
 
-#: src/GameText.h:110
+#: src/GameText.h:108
 msgid "Lead Programming"
 msgstr "Hlavné programovanie"
 
-#: src/GameText.h:117
+#: src/GameText.h:115
 msgid "Additional Programming"
 msgstr "Dodatočné programovanie"
 
-#: src/GameText.h:125
+#: src/GameText.h:123
 msgid "Graphics"
 msgstr "Grafika"
 
-#: src/GameText.h:133
+#: src/GameText.h:131
 msgid "MacOS X Support"
 msgstr "Podpora pre MacOS X"
 
-#: src/GameText.h:137
+#: src/GameText.h:135
 msgid "Localization"
 msgstr "Lokalizácia"
 
-#: src/GameText.h:138
+#: src/GameText.h:136
 msgid "Slovak"
 msgstr "Slovenčina"
 
-#: src/GameText.h:139
+#: src/GameText.h:137
 msgid "French"
 msgstr "Francúzština"
 
-#: src/GameText.h:140
+#: src/GameText.h:138
 msgid "Norwegian"
 msgstr "Nórština"
 
-#: src/GameText.h:141
+#: src/GameText.h:139
 msgid "German"
 msgstr "Nemčina"
 
-#: src/GameText.h:142
+#: src/GameText.h:140
 msgid "Finnish"
 msgstr "Fínština"
 
-#: src/GameText.h:143
+#: src/GameText.h:141
 msgid "Catalan"
 msgstr "Katalánština"
 
-#: src/GameText.h:144
+#: src/GameText.h:142
 msgid "Spanish"
 msgstr "Španielčina"
 
-#: src/GameText.h:145
+#: src/GameText.h:143
 msgid "Polish"
 msgstr "Poľština"
 
-#: src/GameText.h:146
+#: src/GameText.h:144
 msgid "Italian"
 msgstr "Taliančina"
 
-#: src/GameText.h:147
+#: src/GameText.h:145
 msgid "Swedish"
 msgstr "Švédština"
 
-#: src/GameText.h:148
+#: src/GameText.h:146
 msgid "Czech"
 msgstr "Čeština"
 
-#: src/GameText.h:149
+#: src/GameText.h:147
 msgid "Mikhail Brinchuk"
 msgstr "Mikhail Brinchuk"
 
-#: src/GameText.h:149
+#: src/GameText.h:147
 msgid "Russian"
 msgstr "Ruština"
 
-#: src/GameText.h:150
+#: src/GameText.h:148
 msgid "Brazilian Portuguese"
 msgstr "Brazílska portugalčina"
 
-#: src/GameText.h:151
+#: src/GameText.h:149
 msgid "Latvian"
 msgstr "Lotyšština"
 
-#: src/GameText.h:152
+#: src/GameText.h:150
 msgid "Danish"
 msgstr "Dánčina"
 
-#: src/GameText.h:154
+#: src/GameText.h:152
 msgid "Main testers"
 msgstr "Hlavní testovači"
 
-#: src/GameText.h:159
+#: src/GameText.h:157
 msgid "Thanks to"
 msgstr "Poďakovanie"
 
-#: src/GameText.h:160
+#: src/GameText.h:158
 msgid "for KDE/gnome integration"
 msgstr "za integráciu KDE/gnome"
 
-#: src/GameText.h:161
+#: src/GameText.h:159
 msgid "for Debian packaging"
 msgstr "za balíčky pre Debian"
 
-#: src/GameText.h:162
+#: src/GameText.h:160
 msgid "for Gentoo packaging"
 msgstr "za balíčky pre Gentoo"
 
-#: src/GameText.h:163
+#: src/GameText.h:161
 msgid "for Mandriva packaging"
 msgstr "za balíčky pre Mandrivu"
 
-#: src/GameText.h:164
+#: src/GameText.h:162
 msgid "for FreeBSD packaging"
 msgstr "za balíčky pre FreeBSD"
 
-#: src/GameText.h:165
+#: src/GameText.h:163
 msgid "for across/elma"
 msgstr "za across/elma"
 
-#: src/GameText.h:166
+#: src/GameText.h:164
 msgid "for making tinyxml"
 msgstr "za vytvorenie tinyxml"
 
-#: src/GameText.h:167
+#: src/GameText.h:165
 msgid "for the MD5 code"
 msgstr "za MD5 kód"
 
-#: src/GameText.h:169
+#: src/GameText.h:167
 msgid "Everyone who have made levels"
 msgstr "Každému, kto vyrobil levely"
 
-#: src/GameText.h:170
+#: src/GameText.h:168
 msgid "People who have provided bug reports"
 msgstr "Ľuďom, ktorí poskytli chybové hlásenia"
 
-#: src/GameText.h:171
+#: src/GameText.h:169
 msgid "Anyone who has helped in any way"
 msgstr "Komukoľvek, kto poskytol akúkoľvek pomoc"
 
-#: src/GameText.h:173
+#: src/GameText.h:171
 msgid "Credits"
 msgstr "Zásluhy"
 
-#: src/GameText.h:174
+#: src/GameText.h:172
 msgid "Player"
 msgstr "Hráč"
 
-#: src/GameText.h:175
+#: src/GameText.h:173
 msgid "Date"
 msgstr "Dátum"
 
-#: src/GameText.h:176
+#: src/GameText.h:174
 msgid ""
 "X-Moto uses a database on your computer to save all your scores and "
 "statistics. You can send these data using your web account on the X-Moto "
@@ -468,7 +460,7 @@ msgid ""
 "places."
 msgstr ""
 
-#: src/GameText.h:177
+#: src/GameText.h:175
 msgid ""
 "If you manually copied the X-Moto user files (.xmoto) on some other "
 "computers, you should not use this functionality otherwise your statistics "
@@ -476,83 +468,83 @@ msgid ""
 "copies you did."
 msgstr ""
 
-#: src/GameText.h:178
+#: src/GameText.h:176
 msgid "Synchronise"
 msgstr ""
 
-#: src/GameText.h:179
+#: src/GameText.h:177
 msgid "Synchronize when X-Moto ends"
 msgstr ""
 
-#: src/GameText.h:180
+#: src/GameText.h:178
 msgid "Upgrading database"
 msgstr "Upgradeujem databázu"
 
-#: src/GameText.h:181
+#: src/GameText.h:179
 msgid "Upgrading database stats for the profile"
 msgstr "Upgradeujem štatistiky databázy profilu"
 
-#: src/GameText.h:182
+#: src/GameText.h:180
 msgid "Upgrading database profile"
 msgstr "Upgradujem profil databázy"
 
-#: src/GameText.h:183
+#: src/GameText.h:181
 msgid "Death Animation"
 msgstr "Animácia smrti"
 
-#: src/GameText.h:184
+#: src/GameText.h:182
 msgid "Defaults"
 msgstr "Východzie"
 
-#: src/GameText.h:185
+#: src/GameText.h:183
 msgid "Do you really want to delete player?"
 msgstr "Skutočne si prajete vymazať hráča?"
 
-#: src/GameText.h:186
+#: src/GameText.h:184
 msgid "Do you really want to delete replay?"
 msgstr "Skutočne si prajete vymazať záznam?"
 
-#: src/GameText.h:187 src/GameText.h:190
+#: src/GameText.h:185 src/GameText.h:188
 msgid "Delete"
 msgstr "Vymazať"
 
-#: src/GameText.h:188
+#: src/GameText.h:186
 msgid "Delete from favorite"
 msgstr "Vymazať z obľúbených"
 
-#: src/GameText.h:189
+#: src/GameText.h:187
 msgid "Delete from blacklist"
 msgstr "Vymazať z čiernej listiny"
 
-#: src/GameText.h:191
+#: src/GameText.h:189
 msgid "Description"
 msgstr "Popis"
 
-#: src/GameText.h:192
+#: src/GameText.h:190
 msgid "Display Ghost time difference"
 msgstr "Zobrazovať časový rozdiel oproti duchovi"
 
-#: src/GameText.h:193
+#: src/GameText.h:191
 msgid "Display Ghost Information"
 msgstr "Zobrazovať informácie o duchovi"
 
-#: src/GameText.h:194
+#: src/GameText.h:192
 msgid "Direct Connection"
 msgstr "Priame spojenie"
 
-#: src/GameText.h:195
+#: src/GameText.h:193
 msgid "Downloading the ghost..."
 msgstr "Sťahujem ducha..."
 
-#: src/GameText.h:196
+#: src/GameText.h:194
 msgid "Downloading the highscore..."
 msgstr "Sťahujem najlepší čas..."
 
-#: src/GameText.h:197
+#: src/GameText.h:195
 msgid "Downloading high-scores..."
 msgstr "Sťahujem najlepšie časy..."
 
-#: src/GameText.h:198
+#: src/GameText.h:196
 msgid ""
 "Downloading extra levels...\n"
 "Press ESC to abort."
@@ -560,19 +552,19 @@ msgstr ""
 "Sťahujem extra levely...\n"
 "Stlačte ESC pre zrušenie."
 
-#: src/GameText.h:199
+#: src/GameText.h:197
 msgid "Checking for new levels..."
 msgstr "Kontrolujem nové levely..."
 
-#: src/GameText.h:200
+#: src/GameText.h:198
 msgid "Loading new and updated levels..."
 msgstr "Načítavam nové a aktualizované levely..."
 
-#: src/GameText.h:201
+#: src/GameText.h:199
 msgid "Checking for existing rooms..."
 msgstr "Kontrolujem jestvujúce miestnosti..."
 
-#: src/GameText.h:202
+#: src/GameText.h:200
 msgid ""
 "Downloading theme data required by new levels...\n"
 "Press ESC to abort."
@@ -580,103 +572,103 @@ msgstr ""
 "Sťahujem údaje pre tému, ktoré sú vyžadované novými levelmi...\n"
 "Stlačte ESC pre zrušenie."
 
-#: src/GameText.h:203
+#: src/GameText.h:201
 msgid "Checking for new themes..."
 msgstr "Kontrolujem nové témy..."
 
-#: src/GameText.h:204
+#: src/GameText.h:202
 msgid "Get More Levels!"
 msgstr "Získať nové levely!"
 
-#: src/GameText.h:205
+#: src/GameText.h:203
 msgid "Drive"
 msgstr "Pridať plyn"
 
-#: src/GameText.h:206
+#: src/GameText.h:204
 msgid "Enable Audio"
 msgstr "Povoliť audio"
 
-#: src/GameText.h:207
+#: src/GameText.h:205
 msgid "Check new levels at startup"
 msgstr "Zisťovať nové levely pri štarte"
 
-#: src/GameText.h:208
+#: src/GameText.h:206
 msgid "Check new highscores at startup"
 msgstr "Zisťovať nové rekordy pri štarte"
 
-#: src/GameText.h:209
+#: src/GameText.h:207
 msgid "Enable Context Help"
 msgstr "Povoliť kontextovú pomoc"
 
-#: src/GameText.h:210
+#: src/GameText.h:208
 msgid "Enable Engine Sound"
 msgstr "Povoliť zvuk motora"
 
-#: src/GameText.h:211
+#: src/GameText.h:209
 msgid "Enable Ghost"
 msgstr "Povoliť ducha"
 
-#: src/GameText.h:212
+#: src/GameText.h:210
 msgid "Show World Record in-game"
 msgstr "Zobrazovať svetový rekord počas hry"
 
-#: src/GameText.h:213
+#: src/GameText.h:211
 msgid "Enable Music"
 msgstr "Povoliť hudbu"
 
-#: src/GameText.h:214
+#: src/GameText.h:212
 msgid "Enable WWW Access"
 msgstr "Povoliť WWW prístup"
 
-#: src/GameText.h:215
+#: src/GameText.h:213
 msgid "Enter player name"
 msgstr "Zadajte meno hráča"
 
-#: src/GameText.h:216
+#: src/GameText.h:214
 msgid "Enter name of replay"
 msgstr "Zadajte názov záznamu"
 
-#: src/GameText.h:217
+#: src/GameText.h:215
 msgid "There are errors in the level, don't expect it to be playable!"
 msgstr "V leveli sú chyby, neočakávajte, že bude hrateľný!"
 
-#: src/GameText.h:218
+#: src/GameText.h:216
 msgid "Check your Internet connection !"
 msgstr "Skontrolujte vaše pripojenie k Internetu!"
 
-#: src/GameText.h:219
+#: src/GameText.h:217
 msgid "Failed to check for levels."
 msgstr "Zlyhala kontrola levelov."
 
-#: src/GameText.h:220
+#: src/GameText.h:218
 msgid "Failed to download high-scores."
 msgstr "Zlyhalo sťahovanie najlepších časov..."
 
-#: src/GameText.h:221
+#: src/GameText.h:219
 msgid "Failed to download levels."
 msgstr "Zlyhalo sťahovanie levelov."
 
-#: src/GameText.h:222
+#: src/GameText.h:220
 msgid "Failed to download the replay."
 msgstr "Zlyhalo sťahovanie záznamu."
 
-#: src/GameText.h:223
+#: src/GameText.h:221
 msgid "Failed to download the rooms list."
 msgstr "Zlyhalo sťahovanie zoznamu miestností."
 
-#: src/GameText.h:224
+#: src/GameText.h:222
 msgid "Failed to get the selected theme"
 msgstr "Zlyhalo získavanie vybranej témy"
 
-#: src/GameText.h:225
+#: src/GameText.h:223
 msgid "Failed to initialize level!"
 msgstr "Zlyhala inicializácia levelu!"
 
-#: src/GameText.h:226
+#: src/GameText.h:224
 msgid "Failed to load replay!"
 msgstr "Chyba pri nahrávaní záznamu!"
 
-#: src/GameText.h:227
+#: src/GameText.h:225
 msgid ""
 "Failed to save replay!\n"
 "Maybe you should try with another name?"
@@ -684,156 +676,156 @@ msgstr ""
 "Nepodarilo sa uložiť záznam!\n"
 "Skúste použiť iný názov"
 
-#: src/GameText.h:228
+#: src/GameText.h:226
 msgid "Failed to update the theme list"
 msgstr "Zlyhala aktualizácia zoznamu tém"
 
-#: src/GameText.h:229
+#: src/GameText.h:227
 msgid "File"
 msgstr "Súbor"
 
-#: src/GameText.h:230
+#: src/GameText.h:228
 msgid "Filter"
 msgstr "Filter"
 
-#: src/GameText.h:231
+#: src/GameText.h:229
 msgid "Finished!"
 msgstr "Dokončené!"
 
-#: src/GameText.h:232
+#: src/GameText.h:230
 msgid "Finish Time"
 msgstr "Čas dokončenia"
 
-#: src/GameText.h:233
+#: src/GameText.h:231
 msgid "Flip left"
 msgstr "Nahnúť sa vľavo"
 
-#: src/GameText.h:234
+#: src/GameText.h:232
 msgid "Flip right"
 msgstr "Nahnúť sa vpravo"
 
-#: src/GameText.h:235
+#: src/GameText.h:233
 msgid "Game Graphics"
 msgstr "Grafika hry"
 
-#: src/GameText.h:236
+#: src/GameText.h:234
 msgid "General"
 msgstr "Všeobecné"
 
-#: src/GameText.h:237
+#: src/GameText.h:235
 msgid "General Info"
 msgstr "Všeobecné info"
 
-#: src/GameText.h:238
+#: src/GameText.h:236
 msgid "Get this theme"
 msgstr "Získať túto tému"
 
-#: src/GameText.h:239
+#: src/GameText.h:237
 msgid "Local best"
 msgstr "Najlepšie miestne"
 
-#: src/GameText.h:240
+#: src/GameText.h:238
 msgid "Your best"
 msgstr "Vaše najlepšie"
 
-#: src/GameText.h:241
+#: src/GameText.h:239
 msgid "Type"
 msgstr "Typ"
 
-#: src/GameText.h:242 src/GameText.h:601
+#: src/GameText.h:240 src/GameText.h:600
 msgid "The highscore of the reference room"
 msgstr "Rekord referenčnej miestnosti"
 
-#: src/GameText.h:243 src/GameText.h:602
+#: src/GameText.h:241 src/GameText.h:601
 msgid "The highscore of the other rooms"
 msgstr "Rekord iných miestností"
 
-#: src/GameText.h:244 src/GameText.h:599
+#: src/GameText.h:242 src/GameText.h:598
 msgid "The best of my replays (on this computer)"
 msgstr "Moje najlepšie záznamy (na tomto počítači)"
 
-#: src/GameText.h:245 src/GameText.h:600
+#: src/GameText.h:243 src/GameText.h:599
 msgid "The best of the replays (on this computer)"
 msgstr "Najlepšie záznamy (na tomto počítači)"
 
-#: src/GameText.h:246
+#: src/GameText.h:244
 #, c-format
 msgid "Ghost of %s"
 msgstr "Duch %s"
 
-#: src/GameText.h:247
+#: src/GameText.h:245
 msgid "Ghost"
 msgstr "Duch"
 
-#: src/GameText.h:248
+#: src/GameText.h:246
 msgid "Help"
 msgstr "Pomoc"
 
-#: src/GameText.h:252
+#: src/GameText.h:250
 msgid "You control your bike using the keyboard"
 msgstr "Motocykel ovládate pomocou klávesnice"
 
-#: src/GameText.h:253
+#: src/GameText.h:251
 msgid "Accelerates"
 msgstr "Pridáva plyn"
 
-#: src/GameText.h:254
+#: src/GameText.h:252
 msgid "Brakes"
 msgstr "Brzdí"
 
-#: src/GameText.h:255
+#: src/GameText.h:253
 msgid "Rotates it counter-clockwise"
 msgstr "Otáča proti smeru hodinových ručičiek"
 
-#: src/GameText.h:256
+#: src/GameText.h:254
 msgid "Rotates it clockwise"
 msgstr "Otáča v smere hodinových ručičiek"
 
-#: src/GameText.h:257
+#: src/GameText.h:255
 msgid "Turns around and drives in the other direction"
 msgstr "Otáča a mení smer jazdy"
 
-#: src/GameText.h:258 src/GameText.h:365
+#: src/GameText.h:256 src/GameText.h:364
 msgid "Pause"
 msgstr "Pauza"
 
-#: src/GameText.h:259
+#: src/GameText.h:257
 msgid "Restart the level"
 msgstr "Reštartovať level"
 
-#: src/GameText.h:260
+#: src/GameText.h:258
 msgid "Previous/Next level"
 msgstr "Predchádzajúci/ďalší level"
 
-#: src/GameText.h:261
+#: src/GameText.h:259
 msgid "Add/remove to favorite levels"
 msgstr "Pridať/odstrániť do/zo zoznamu obľúbených levelov"
 
-#: src/GameText.h:262
+#: src/GameText.h:260
 msgid "Add/remove to blacklisted levels"
 msgstr "Pridať/odstrániť do/z čiernej listiny"
 
-#: src/GameText.h:263
+#: src/GameText.h:261
 msgid "change mirror mode"
 msgstr "zmeniť režim zrkadla"
 
-#: src/GameText.h:264
+#: src/GameText.h:262
 msgid "Enable/disable web"
 msgstr "Zapnúť/vypnúť web"
 
-#: src/GameText.h:265
+#: src/GameText.h:263
 msgid "Enable/disable ugly mode"
 msgstr "Zapnúť/vypnúť škaredý režim"
 
-#: src/GameText.h:266
+#: src/GameText.h:264
 msgid "Reload levels, themes and replays from directories"
 msgstr "Znovu načítať levely, témy a záznamy z adresárov"
 
-#: src/GameText.h:267
+#: src/GameText.h:265
 msgid "Take a screenshot"
 msgstr "Urobiť snímok obrazovky"
 
-#: src/GameText.h:269
+#: src/GameText.h:267
 msgid ""
 "Find all the strawberries and touch the flower to finish\n"
 "the level."
@@ -841,7 +833,7 @@ msgstr ""
 "Nájdite všetky jahody a dotknite sa kvetu pre ukončenie\n"
 "levelu."
 
-#: src/GameText.h:270
+#: src/GameText.h:268
 msgid ""
 "Read the README file or check out the website at\n"
 "http://xmoto.tuxfamily.org for more information."
@@ -849,240 +841,244 @@ msgstr ""
 "Čítajte súbor README alebo sa pozrite na website\n"
 "http://xmoto.tuxfamily.org pre viac informácií."
 
-#: src/GameText.h:272
+#: src/GameText.h:270
 msgid "Hide ghosts"
 msgstr "Skryť duchov"
 
-#: src/GameText.h:273
+#: src/GameText.h:271
 msgid "High"
 msgstr "Vysoká"
 
-#: src/GameText.h:274
+#: src/GameText.h:272
 msgid "Levels are being added into the database. Please wait."
 msgstr "Levely sú pridávané do databáze. Prosím čakajte."
 
-#: src/GameText.h:275
+#: src/GameText.h:273
 msgid "Internet Configuration"
 msgstr "Nastavenie internetu"
 
-#: src/GameText.h:276
+#: src/GameText.h:274
 msgid "Initializing input system..."
 msgstr "Inicializujem vstupný systém..."
 
-#: src/GameText.h:277
+#: src/GameText.h:275
 msgid "Initializing menus..."
 msgstr "Inicializujem ponuky..."
 
-#: src/GameText.h:278
+#: src/GameText.h:276
 msgid "Initializing renderer..."
 msgstr "Inicializujem renderer..."
 
-#: src/GameText.h:279
+#: src/GameText.h:277
 msgid "Initializing text renderer..."
 msgstr "Inicializujem textový renderer..."
 
-#: src/GameText.h:280
+#: src/GameText.h:278
 msgid "View Level Initially"
 msgstr "Zobraz level pred jazdou"
 
-#: src/GameText.h:281
+#: src/GameText.h:279
 msgid "Joystick"
 msgstr "Joystick"
 
-#: src/GameText.h:282
+#: src/GameText.h:280
+msgid "Enable joysticks"
+msgstr ""
+
+#: src/GameText.h:281
 msgid "Oops!"
 msgstr "Hops!"
 
-#: src/GameText.h:283
+#: src/GameText.h:282
 msgid "Press ENTER to try again"
 msgstr "Stlačte ENTER pre opätovný pokus"
 
-#: src/GameText.h:284
+#: src/GameText.h:283
 msgid "Press ESC to display the menu"
 msgstr "Stlačte ESC pre zobrazenie menu"
 
-#: src/GameText.h:285
+#: src/GameText.h:284
 msgid "Key"
 msgstr "Kláves"
 
-#: src/GameText.h:286
+#: src/GameText.h:285
 msgid "Keyboard"
 msgstr "Klávesnica"
 
-#: src/GameText.h:287
+#: src/GameText.h:286
 msgid "Language"
 msgstr "Jazyk"
 
-#: src/GameText.h:288
+#: src/GameText.h:287
 msgid "Language name"
 msgstr "Názov jazyka"
 
-#: src/GameText.h:289
+#: src/GameText.h:288
 msgid "Language code"
 msgstr "Kód jazyka"
 
-#: src/GameText.h:290
+#: src/GameText.h:289
 msgid "Level"
 msgstr "Level"
 
-#: src/GameText.h:291
+#: src/GameText.h:290
 msgid "Added to favorites"
 msgstr "Pridané k obľúbeným"
 
-#: src/GameText.h:292
+#: src/GameText.h:291
 msgid "Deleted from favorites"
 msgstr "Vymazané z obľúbených"
 
-#: src/GameText.h:293
+#: src/GameText.h:292
 msgid "Added to blacklist"
 msgstr "Pridané na čiernu listinu"
 
-#: src/GameText.h:294
+#: src/GameText.h:293
 msgid "Deleted from blacklist"
 msgstr "Vymazané z čiernej listiny"
 
-#: src/GameText.h:295
+#: src/GameText.h:294
 msgid "Level Info..."
 msgstr "Info o leveli..."
 
-#: src/GameText.h:296
+#: src/GameText.h:295
 msgid "Level Name"
 msgstr "Názov levelu"
 
-#: src/GameText.h:297
+#: src/GameText.h:296
 #, c-format
 msgid "Level '%s' cannot be loaded"
 msgstr "Level '%s' sa nepodarilo načítať"
 
-#: src/GameText.h:298
+#: src/GameText.h:297
 msgid "Level Pack"
 msgstr "Balík levelov"
 
-#: src/GameText.h:299
+#: src/GameText.h:298
 msgid "Level Packs"
 msgstr "Balíky levelov"
 
-#: src/GameText.h:300
+#: src/GameText.h:299
 #, c-format
 msgid "Level '%s' required by replay!"
 msgstr "Pre prehranie záznamu potrebujete level '%s'"
 
-#: src/GameText.h:301
+#: src/GameText.h:300
 msgid "Levels"
 msgstr "Levely"
 
-#: src/GameText.h:302
+#: src/GameText.h:301
 msgid "List All"
 msgstr "Zobraziť všetky"
 
-#: src/GameText.h:303
+#: src/GameText.h:302
 msgid "Loading..."
 msgstr "Nahrávam..."
 
-#: src/GameText.h:304
+#: src/GameText.h:303
 msgid "Loading levels..."
 msgstr "Nahrávam levely..."
 
-#: src/GameText.h:305
+#: src/GameText.h:304
 msgid "Loading menu graphics..."
 msgstr "Nahrávam grafiku menu..."
 
-#: src/GameText.h:306
+#: src/GameText.h:305
 msgid "Loading replays..."
 msgstr "Nahrávam záznamy..."
 
-#: src/GameText.h:307
+#: src/GameText.h:306
 msgid "Loading sounds..."
 msgstr "Nahrávam zvuky..."
 
-#: src/GameText.h:308
+#: src/GameText.h:307
 msgid "Loading textures..."
 msgstr "Nahrávam textúry..."
 
-#: src/GameText.h:309
+#: src/GameText.h:308
 msgid "Login"
 msgstr "Login"
 
-#: src/GameText.h:310
+#: src/GameText.h:309
 msgid "Low"
 msgstr "Nízka"
 
-#: src/GameText.h:311
+#: src/GameText.h:310
 msgid "Main"
 msgstr "Hlavné"
 
-#: src/GameText.h:312
+#: src/GameText.h:311
 msgid "Mouse"
 msgstr ""
 
-#: src/GameText.h:313 src/GameText.h:410
+#: src/GameText.h:312 src/GameText.h:409
 msgid "Theme"
 msgstr "Téma"
 
-#: src/GameText.h:314
+#: src/GameText.h:313
 msgid "Medium"
 msgstr "Stredná"
 
-#: src/GameText.h:315
+#: src/GameText.h:314
 msgid "Menu Graphics"
 msgstr "Grafika v menu"
 
-#: src/GameText.h:316
+#: src/GameText.h:315
 msgid "Total time you scored / total highscore time for levels you finished"
 msgstr ""
 "Celkový čas, kedy ste skórovali / celkový najlepší čas pre levely, ktoré ste "
 "dokončili"
 
-#: src/GameText.h:317
+#: src/GameText.h:316
 msgid "Level references unknown textures, it could be unplayable!"
 msgstr "Level odkazuje na neznáme textúry, nemusí byť hrateľný!"
 
-#: src/GameText.h:318
+#: src/GameText.h:317
 msgid "Mono"
 msgstr "Mono"
 
-#: src/GameText.h:319
+#: src/GameText.h:318
 msgid "Following are your most played levels"
 msgstr "Toto sú vaše najčastejšie hrané levely"
 
-#: src/GameText.h:320
+#: src/GameText.h:319
 msgid "Motion blur ghost"
 msgstr "Ducha rozmazať pohybom"
 
-#: src/GameText.h:321
+#: src/GameText.h:320
 msgid "Multi"
 msgstr "Multi"
 
-#: src/GameText.h:322
+#: src/GameText.h:321
 msgid "Semi-cooperative mode"
 msgstr "Režim čiastočnej spolupráce"
 
-#: src/GameText.h:323
+#: src/GameText.h:322
 msgid "Stop the game once a player ends the level"
 msgstr "Ukončiť hru, keď hráč ukončí level"
 
-#: src/GameText.h:324
+#: src/GameText.h:323
 msgid "Number of players"
 msgstr "Počet hráčov"
 
-#: src/GameText.h:325
+#: src/GameText.h:324
 msgid "New"
 msgstr "Nový"
 
-#: src/GameText.h:326
+#: src/GameText.h:325
 #, c-format
 msgid "X-Moto %s or newer required to load level"
 msgstr "X-Moto %s alebo novší je potrebný pre načítanie levelu"
 
-#: src/GameText.h:327
+#: src/GameText.h:326
 msgid "New highscore!"
 msgstr "Nový rekord!"
 
-#: src/GameText.h:328
+#: src/GameText.h:327
 msgid "New personal highscore!"
 msgstr "Nový osobný rekord!"
 
-#: src/GameText.h:329
+#: src/GameText.h:328
 #, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
@@ -1091,23 +1087,23 @@ msgstr[1] "K dispozícií sú %d nové alebo aktualizované levely. Stiahnuť te
 msgstr[2] ""
 "Je k dispozícií %d nových alebo aktualizovaných levelov. Stiahnuť teraz?"
 
-#: src/GameText.h:332
+#: src/GameText.h:331
 msgid "New Levels"
 msgstr "Nové levely"
 
-#: src/GameText.h:333
+#: src/GameText.h:332
 msgid "New levels available!"
 msgstr "Nové levely dostupné!"
 
-#: src/GameText.h:334
+#: src/GameText.h:333
 msgid "New Profile..."
 msgstr "Nový profil..."
 
-#: src/GameText.h:335
+#: src/GameText.h:334
 msgid "No"
 msgstr "Nie"
 
-#: src/GameText.h:336
+#: src/GameText.h:335
 msgid ""
 "No new or updated levels available.\n"
 "\n"
@@ -1117,19 +1113,19 @@ msgstr ""
 "\n"
 "Skúste to neskôr."
 
-#: src/GameText.h:337
+#: src/GameText.h:336
 msgid "No level following this one, sorry."
 msgstr "Po tomto leveli už nenasleduje ďalší, ľutujem."
 
-#: src/GameText.h:338
+#: src/GameText.h:337
 msgid "No statistics for this profile."
 msgstr "Tento profil neobsahuje štatistiku."
 
-#: src/GameText.h:339
+#: src/GameText.h:338
 msgid "Not finished"
 msgstr "Nedokončené"
 
-#: src/GameText.h:340
+#: src/GameText.h:339
 msgid ""
 "Important note!\n"
 "\n"
@@ -1153,75 +1149,75 @@ msgstr ""
 "Rovnako navštívte http://xmoto.tuxfamily.org, aby ste sa uistili,\n"
 "že používate najnovšiu verziu."
 
-#: src/GameText.h:350
+#: src/GameText.h:349
 msgid "# Levels"
 msgstr "# Levelov"
 
-#: src/GameText.h:351
+#: src/GameText.h:350
 msgid "OK"
 msgstr "OK"
 
-#: src/GameText.h:352
+#: src/GameText.h:351
 msgid "Open"
 msgstr "Otvoriť"
 
-#: src/GameText.h:353
+#: src/GameText.h:352
 msgid "Operation completed"
 msgstr "Operácia skončila"
 
-#: src/GameText.h:354
+#: src/GameText.h:353
 msgid "Options"
 msgstr "Voľby"
 
-#: src/GameText.h:355
+#: src/GameText.h:354
 msgid "Some options will not take effect before next restart!"
 msgstr "Niektoré voľby budú použité až po reštarte programu!"
 
-#: src/GameText.h:356
+#: src/GameText.h:355
 msgid "By author"
 msgstr "Od autora"
 
-#: src/GameText.h:357
+#: src/GameText.h:356
 msgid "Medals"
 msgstr "Medaile"
 
-#: src/GameText.h:358 src/GameText.h:393
+#: src/GameText.h:357 src/GameText.h:392
 msgid "Room"
 msgstr "Miestnosť"
 
-#: src/GameText.h:359
+#: src/GameText.h:358
 msgid "Special"
 msgstr "Špeciálne"
 
-#: src/GameText.h:360
+#: src/GameText.h:359
 msgid "Standard"
 msgstr "Štandardné"
 
-#: src/GameText.h:361
+#: src/GameText.h:360
 msgid "Web votes"
 msgstr "Webové hlasy"
 
-#: src/GameText.h:362 src/GameText.h:404
+#: src/GameText.h:361 src/GameText.h:403
 msgid "Statistics"
 msgstr "Štatistiky"
 
-#: src/GameText.h:363 src/GameText.h:633
+#: src/GameText.h:362 src/GameText.h:633
 msgid "By best driver"
 msgstr "Podľa najlepšieho jazdca"
 
-#: src/GameText.h:364
+#: src/GameText.h:363
 msgid "By length"
 msgstr "Podľa dĺžky"
 
-#: src/GameText.h:366
+#: src/GameText.h:365
 msgid "Password"
 msgstr "Heslo"
 
-#: src/GameText.h:367 src/GameText.h:368
+#: src/GameText.h:366 src/GameText.h:367
 msgid "Personal"
 msgstr "Osobné"
 
-#: src/GameText.h:369
+#: src/GameText.h:368
 #, c-format
 msgid "%i player"
 msgid_plural "%i players"
@@ -1229,201 +1225,201 @@ msgstr[0] "%i hráč"
 msgstr[1] "%i hráči"
 msgstr[2] "%i hráčov"
 
-#: src/GameText.h:370
+#: src/GameText.h:369
 msgid "Player Profile"
 msgstr "Profil hráča"
 
-#: src/GameText.h:371
+#: src/GameText.h:370
 msgid "Player Profiles"
 msgstr "Vlastnosti hráča"
 
-#: src/GameText.h:372
+#: src/GameText.h:371
 msgid "Play Next Level"
 msgstr "Hrať ďalší level"
 
-#: src/GameText.h:373
+#: src/GameText.h:372
 msgid "Port"
 msgstr "Port"
 
-#: src/GameText.h:374
+#: src/GameText.h:373
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
 msgstr "Stlačte ľubuvoľný kláves pre '%s' alebo ESC pre zrušenie..."
 
-#: src/GameText.h:375
+#: src/GameText.h:374
 msgid "Proxy Server"
 msgstr "Proxy server"
 
-#: src/GameText.h:376
+#: src/GameText.h:375
 msgid "Configure Proxy..."
 msgstr "Nastaviť proxy..."
 
-#: src/GameText.h:377
+#: src/GameText.h:376
 msgid "Quick start"
 msgstr "Rýchly štart"
 
-#: src/GameText.h:378
+#: src/GameText.h:377
 msgid "Quit Game"
 msgstr "Ukončiť hru"
 
-#: src/GameText.h:379
+#: src/GameText.h:378
 msgid "Do you really want to quit?"
 msgstr "Určite chcete hru ukončiť?"
 
-#: src/GameText.h:380
+#: src/GameText.h:379
 msgid "Randomize"
 msgstr "Náhodné"
 
-#: src/GameText.h:381
+#: src/GameText.h:380
 msgid "Reloading levels..."
 msgstr "Znovunahrávam levely..."
 
-#: src/GameText.h:382
+#: src/GameText.h:381
 msgid "Reloading replays..."
 msgstr "Znovunahrávam záznamy..."
 
-#: src/GameText.h:383
+#: src/GameText.h:382
 msgid "Reloading themes..."
 msgstr "Znovunahrávam témy..."
 
-#: src/GameText.h:384
+#: src/GameText.h:383
 msgid "Replay"
 msgstr "Záznam"
 
-#: src/GameText.h:385
+#: src/GameText.h:384
 msgid "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
 msgstr ""
 "Stop[esc] ||[medzerník]  << >>[klávesy vľavo/vpravo]  < >[klávesy hore/"
 "dole]   Rýchlosť:"
 
-#: src/GameText.h:386
+#: src/GameText.h:385
 msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
 msgstr ""
 "Stop[esc] ||[medzerník] >>[kláves vpravo] < >[klávesy hore/dole]   Rýchlosť:"
 
-#: src/GameText.h:388
+#: src/GameText.h:387
 msgid "The replay can't be played!"
 msgstr "Záznam nemohol byť prehraný!"
 
-#: src/GameText.h:389
+#: src/GameText.h:388
 #, c-format
 msgid "Replay of %s"
 msgstr "Záznam %s"
 
-#: src/GameText.h:390
+#: src/GameText.h:389
 msgid "Replays"
 msgstr "Záznamy"
 
-#: src/GameText.h:391
+#: src/GameText.h:390
 msgid "Restart This Level"
 msgstr "Reštartovať tento level"
 
-#: src/GameText.h:392
+#: src/GameText.h:391
 msgid "Resume Playing"
 msgstr "Pokračovať v prehrávaní"
 
-#: src/GameText.h:394
+#: src/GameText.h:393
 msgid "Run Windowed"
 msgstr "Spustiť v okne"
 
-#: src/GameText.h:395
+#: src/GameText.h:394
 msgid "Save"
 msgstr "Uložiť"
 
-#: src/GameText.h:396
+#: src/GameText.h:395
 #, c-format
 msgid "Saved as %s"
 msgstr "Uložené ako %s"
 
-#: src/GameText.h:397
+#: src/GameText.h:396
 msgid "Save Replay"
 msgstr "Uložiť záznam"
 
-#: src/GameText.h:398
+#: src/GameText.h:397
 msgid "Screen Resolution"
 msgstr "Rozlíšenie obrazovky"
 
-#: src/GameText.h:399
+#: src/GameText.h:398
 msgid "Show"
 msgstr "Zobraziť"
 
-#: src/GameText.h:400
+#: src/GameText.h:399
 msgid "Speedometer"
 msgstr "Tachometer"
 
-#: src/GameText.h:401
+#: src/GameText.h:400
 msgid "Info..."
 msgstr "Info..."
 
-#: src/GameText.h:402
+#: src/GameText.h:401
 msgid "Show Mini Map"
 msgstr "Zobraziť minimapu"
 
-#: src/GameText.h:403
+#: src/GameText.h:402
 msgid "Play!"
 msgstr "Hrať!"
 
-#: src/GameText.h:405
+#: src/GameText.h:404
 msgid "STATS"
 msgstr "ŠTATISTIKY"
 
-#: src/GameText.h:406
+#: src/GameText.h:405
 msgid "Stereo"
 msgstr "Stereo"
 
-#: src/GameText.h:407
+#: src/GameText.h:406
 msgid "Synchronisation down"
 msgstr ""
 
-#: src/GameText.h:408
+#: src/GameText.h:407
 msgid "Synchronisation up"
 msgstr ""
 
-#: src/GameText.h:409
+#: src/GameText.h:408
 msgid "Synchronisation done successfully"
 msgstr ""
 
-#: src/GameText.h:411
+#: src/GameText.h:410
 msgid "Available"
 msgstr "Dostupné"
 
-#: src/GameText.h:412
+#: src/GameText.h:411
 msgid "To download"
 msgstr "Na stiahnutie"
 
-#: src/GameText.h:413
+#: src/GameText.h:412
 msgid "To be updated"
 msgstr "Na aktualizáciu"
 
-#: src/GameText.h:414
+#: src/GameText.h:413
 msgid "The theme is now up to date"
 msgstr "Téma bola práve aktualizovaná"
 
-#: src/GameText.h:415
+#: src/GameText.h:414
 msgid "Time"
 msgstr "Čas"
 
-#: src/GameText.h:416
+#: src/GameText.h:415
 msgid "Try This Level Again"
 msgstr "Skúsiť tento level znovu"
 
-#: src/GameText.h:417
+#: src/GameText.h:416
 msgid "Tutorial"
 msgstr "Návod"
 
-#: src/GameText.h:418
+#: src/GameText.h:417
 msgid "Undefined"
 msgstr ""
 
-#: src/GameText.h:419
+#: src/GameText.h:418
 msgid "Unknown"
 msgstr "Neznámy"
 
-#: src/GameText.h:420
+#: src/GameText.h:419
 msgid "Unpacked levels"
 msgstr "Nerozbalené levely"
 
-#: src/GameText.h:421
+#: src/GameText.h:420
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
@@ -1433,126 +1429,126 @@ msgstr ""
 "Téma nie je dostupná na webe\n"
 "alebo váš zoznam tém nie je aktuálny"
 
-#: src/GameText.h:422
+#: src/GameText.h:421
 msgid "Update"
 msgstr "Aktualizovať"
 
-#: src/GameText.h:423
+#: src/GameText.h:422
 msgid "Updated"
 msgstr "Aktualizované"
 
-#: src/GameText.h:424
+#: src/GameText.h:423
 msgid "Check WWW"
 msgstr "Skontrolovať WWW"
 
-#: src/GameText.h:425
+#: src/GameText.h:424
 msgid "Update the rooms list"
 msgstr "Obnoviť zoznam miestností"
 
-#: src/GameText.h:426
+#: src/GameText.h:425
 msgid "Update the theme list"
 msgstr "Aktualizovať zoznam tém"
 
-#: src/GameText.h:427
+#: src/GameText.h:426
 msgid "Updating level lists..."
 msgstr "Aktualizovať zoznam levelov..."
 
-#: src/GameText.h:428
+#: src/GameText.h:427
 msgid "Upload"
 msgstr "Upload"
 
-#: src/GameText.h:429
+#: src/GameText.h:428
 msgid "Upload all highscores"
 msgstr "Uploadovať všetky rekordy"
 
-#: src/GameText.h:430
+#: src/GameText.h:429
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr "Objavila sa neočakávaná chyba. Website má zrejme nejaké problémy."
 
-#: src/GameText.h:431
+#: src/GameText.h:430
 msgid "Oh no !"
 msgstr "Ale nie!"
 
-#: src/GameText.h:432
+#: src/GameText.h:431
 msgid "Uploading the highscore..."
 msgstr "Uploadujem rekord..."
 
-#: src/GameText.h:433
+#: src/GameText.h:432
 msgid "Use crappy information"
 msgstr "Použiť informácie o slabých leveloch"
 
-#: src/GameText.h:434
+#: src/GameText.h:433
 msgid "Use Environment Vars"
 msgstr "Použiť premenné prostredia"
 
-#: src/GameText.h:435
+#: src/GameText.h:434
 msgid "Use Profile"
 msgstr "Použiť profil"
 
-#: src/GameText.h:436
+#: src/GameText.h:435
 msgid "Using HTTP Proxy"
 msgstr "Používam HTTP Proxy"
 
-#: src/GameText.h:437
+#: src/GameText.h:436
 msgid "Using SOCKS4 Proxy"
 msgstr "Používam SOCKS4 Proxy"
 
-#: src/GameText.h:438
+#: src/GameText.h:437
 msgid "Using SOCKS5 Proxy"
 msgstr "Používam SOCKS5 Proxy"
 
-#: src/GameText.h:439
+#: src/GameText.h:438
 msgid "Video"
 msgstr "Video"
 
-#: src/GameText.h:440
+#: src/GameText.h:439
 msgid "View"
 msgstr "Zobraziť"
 
-#: src/GameText.h:441
+#: src/GameText.h:440
 msgid "View the highscore"
 msgstr "Zobraziť rekord"
 
-#: src/GameText.h:442
+#: src/GameText.h:441
 #, c-format
 msgid "Do you want to update level \"%s\"?"
 msgstr "Prajete si aktualizovať level \"%s\"?"
 
-#: src/GameText.h:443
+#: src/GameText.h:442
 msgid "Warning"
 msgstr "Varovanie"
 
-#: src/GameText.h:445
+#: src/GameText.h:444
 msgid "WWW"
 msgstr "WWW"
 
-#: src/GameText.h:446
+#: src/GameText.h:445
 msgid "Reference room"
 msgstr "Referenčná miestnosť"
 
-#: src/GameText.h:447
+#: src/GameText.h:446
 #, c-format
 msgid "Room %i"
 msgstr "Miestnosť %i"
 
-#: src/GameText.h:449
+#: src/GameText.h:448
 #, c-format
 msgid "%d hours"
 msgstr "%d hodín"
 
-#: src/GameText.h:450
+#: src/GameText.h:449
 #, c-format
 msgid "%d minutes"
 msgstr "%d minút"
 
-#: src/GameText.h:452
+#: src/GameText.h:451
 #, c-format
 msgid "Stats since: %s"
 msgstr "Štatistiky od: %s"
 
-#: src/GameText.h:453
+#: src/GameText.h:452
 #, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
@@ -1560,7 +1556,7 @@ msgstr[0] "X-Moto bolo spustené %d-krát"
 msgstr[1] "X-Moto bolo spustené %d-krát"
 msgstr[2] "X-Moto bolo spustené %d-krát"
 
-#: src/GameText.h:454
+#: src/GameText.h:453
 #, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
@@ -1568,12 +1564,12 @@ msgstr[0] "%d rozličný level"
 msgstr[1] "%d rozličné levely"
 msgstr[2] "%d rozličných levelov"
 
-#: src/GameText.h:455
+#: src/GameText.h:454
 #, c-format
 msgid "Time played: %s"
 msgstr "Odohratý čas: %s"
 
-#: src/GameText.h:456
+#: src/GameText.h:455
 #, c-format
 msgid "%d play"
 msgid_plural "%d plays"
@@ -1581,7 +1577,7 @@ msgstr[0] "%i hra"
 msgstr[1] "%i hry"
 msgstr[2] "%i hier"
 
-#: src/GameText.h:457
+#: src/GameText.h:456
 #, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
@@ -1589,7 +1585,7 @@ msgstr[0] "%d úmrtie"
 msgstr[1] "%d úmrtia"
 msgstr[2] "%d úmrtí"
 
-#: src/GameText.h:458
+#: src/GameText.h:457
 #, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
@@ -1597,7 +1593,7 @@ msgstr[0] "%d dokončená"
 msgstr[1] "%d dokončené"
 msgstr[2] "%d dokončených"
 
-#: src/GameText.h:459
+#: src/GameText.h:458
 #, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
@@ -1605,433 +1601,433 @@ msgstr[0] "%d reštart"
 msgstr[1] "%d reštarty"
 msgstr[2] "%d reštartov"
 
-#: src/GameText.h:461
+#: src/GameText.h:460
 #, c-format
 msgid "%d seconds"
 msgstr "%d sekúnd"
 
-#: src/GameText.h:462
+#: src/GameText.h:461
 msgid "Yes"
 msgstr "Áno"
 
-#: src/GameText.h:463
+#: src/GameText.h:462
 msgid "Yes to all"
 msgstr "Áno pre všetky"
 
-#: src/GameText.h:464
+#: src/GameText.h:463
 msgid "Zoom in"
 msgstr "Priblížiť"
 
-#: src/GameText.h:465
+#: src/GameText.h:464
 msgid "Reinitialize zoom"
 msgstr "Znovuinicializovať lupu"
 
-#: src/GameText.h:466
+#: src/GameText.h:465
 msgid "Zoom out"
 msgstr "Oddialiť"
 
-#: src/GameText.h:469
+#: src/GameText.h:468
 msgid "Download the latest X-Moto world records and check for new levels"
 msgstr ""
 "Stiahnuť najčerstvejšie svetové rekordy X-Moto a skontrolovať nové levely"
 
-#: src/GameText.h:470
+#: src/GameText.h:469
 msgid "Configure how you are connected to the Internet"
 msgstr "Nastaviť spôsob pripojenie k internetu"
 
-#: src/GameText.h:471
+#: src/GameText.h:470
 msgid "Play this level again"
 msgstr "Hrať tento level odznovu"
 
-#: src/GameText.h:472
+#: src/GameText.h:471
 msgid "Save a replay for later viewing"
 msgstr "Uložiť záznam pre neskoršie prezeranie"
 
-#: src/GameText.h:473
+#: src/GameText.h:472
 msgid "Play next level"
 msgstr "Hrať ďalší level"
 
-#: src/GameText.h:474
+#: src/GameText.h:473
 msgid "Back to the main menu"
 msgstr "Späť do hlavného menu"
 
-#: src/GameText.h:475
+#: src/GameText.h:474
 msgid "Quit the game"
 msgstr "Ukončiť hru"
 
-#: src/GameText.h:476
+#: src/GameText.h:475
 msgid "Back to the game"
 msgstr "Späť do hry"
 
-#: src/GameText.h:477
+#: src/GameText.h:476
 msgid "Try this level again from the beginning"
 msgstr "Skúsiť tento level znovu od začiatku"
 
-#: src/GameText.h:478
+#: src/GameText.h:477
 msgid "Play next level instead"
 msgstr "Hrať radšej ďalší level"
 
-#: src/GameText.h:479
+#: src/GameText.h:478
 msgid "Try this level again"
 msgstr "Skúsiť tento level ešte raz"
 
-#: src/GameText.h:480
+#: src/GameText.h:479
 msgid "Built-in and stand-alone external levels"
 msgstr "Zabudované a samostatné externé levely"
 
-#: src/GameText.h:481
+#: src/GameText.h:480
 msgid "Levels grouped together in level packs"
 msgstr "Levely zoskupené do levelových balíkov"
 
-#: src/GameText.h:482
+#: src/GameText.h:481
 msgid "Browse levels available to you"
 msgstr "Prehliadať levely, ktoré sú vám prístupné"
 
-#: src/GameText.h:483
+#: src/GameText.h:482
 msgid "View list of recorded replays"
 msgstr "Zobraziť zoznam nahraných záznamov"
 
-#: src/GameText.h:484
+#: src/GameText.h:483
 msgid "Configure X-Moto preferences"
 msgstr "Nastaviť voľby X-Moto"
 
-#: src/GameText.h:485
+#: src/GameText.h:484
 msgid "Instructions of how to play X-Moto"
 msgstr "Inštruktáž ako hrať X-Moto"
 
-#: src/GameText.h:486
+#: src/GameText.h:485
 msgid "Change player profile"
 msgstr "Zmeniť profil hráča"
 
-#: src/GameText.h:487
+#: src/GameText.h:486
 msgid "Play tutorial of how to play the game"
 msgstr "Hrať návod na to, ako hrať túto hru"
 
-#: src/GameText.h:488
+#: src/GameText.h:487
 msgid "Play the selected level"
 msgstr "Spustiť vybraný level"
 
-#: src/GameText.h:489
+#: src/GameText.h:488
 msgid "View general information about the level, best times, and replays"
 msgstr "Zobraziť všeobecné informácie o leveli, najlepšíe časy a záznamy"
 
-#: src/GameText.h:490
+#: src/GameText.h:489
 msgid "Run the selected replay"
 msgstr "Spustiť vybraný záznam"
 
-#: src/GameText.h:491
+#: src/GameText.h:490
 msgid "Permanently delete the selected replay"
 msgstr "Permanentne vymazať vybraný záznam"
 
-#: src/GameText.h:492
+#: src/GameText.h:491
 msgid "Show replays of all players in list"
 msgstr "V zozname zobrazovať záznamy všetkých hráčov"
 
-#: src/GameText.h:493
+#: src/GameText.h:492
 msgid "General X-Moto preferences"
 msgstr "Všeobecné voľby X-Moto"
 
-#: src/GameText.h:494
+#: src/GameText.h:493
 msgid "Configure graphical options"
 msgstr "Nastaviť voľby grafiky"
 
-#: src/GameText.h:495
+#: src/GameText.h:494
 msgid "Configure audio options"
 msgstr "Nastaviť voľby audia"
 
-#: src/GameText.h:496
+#: src/GameText.h:495
 msgid "Configure control options"
 msgstr "Nastaviť voľby ovládania"
 
-#: src/GameText.h:497
+#: src/GameText.h:496
 msgid "Save options"
 msgstr "Uložiť voľby"
 
-#: src/GameText.h:498
+#: src/GameText.h:497
 msgid "Revert options to defaults"
 msgstr "Vrátiť voľby na východzie"
 
-#: src/GameText.h:499
+#: src/GameText.h:498
 msgid "Show a map of your surroundings when playing"
 msgstr "Zobrazovať mapu vášho okolia počas hry"
 
-#: src/GameText.h:500
+#: src/GameText.h:499
 msgid "Automatically download best times off the net when the game starts"
 msgstr "Automaticky sťahovať najlepšie časy z internetu, keď hra začne"
 
-#: src/GameText.h:501
+#: src/GameText.h:500
 msgid "Show the World Record for a given level when playing"
 msgstr "Zobrazovať svetový rekord pre daný level počas hry"
 
-#: src/GameText.h:502
+#: src/GameText.h:501
 msgid "Use crappy information from the website to update the crappy pack"
 msgstr ""
 "Použiť informácie o slabých leveloch z webu pre aktualizáciu balíka levelov"
 
-#: src/GameText.h:503
+#: src/GameText.h:502
 msgid "Enable high-color graphics"
 msgstr "Povoliť high-color grafiku"
 
-#: src/GameText.h:504
+#: src/GameText.h:503
 msgid "Enable true-color graphics"
 msgstr "Povoliť true-color grafiku"
 
-#: src/GameText.h:505
+#: src/GameText.h:504
 msgid "Select graphics resolution"
 msgstr "Vybrať grafické rozlíšenie"
 
-#: src/GameText.h:506
+#: src/GameText.h:505
 msgid "Run the game in a window"
 msgstr "Spustiť hru v okne"
 
-#: src/GameText.h:507
+#: src/GameText.h:506
 msgid "Not so fancy menu graphics"
 msgstr "Nie prilíš nazdobená grafika menu"
 
-#: src/GameText.h:508
+#: src/GameText.h:507
 msgid "A bit more fancy menu graphics"
 msgstr "Trošku nazdobenejšia grafika menu"
 
-#: src/GameText.h:509
+#: src/GameText.h:508
 msgid "Fanciest menu graphics"
 msgstr "Najnazdobenejšia grafika menu"
 
-#: src/GameText.h:510
+#: src/GameText.h:509
 msgid "Disable most graphics not important to the gameplay"
 msgstr "Vypnúť väčšinu grafiky, ktorá nie je dôležitá pre hru"
 
-#: src/GameText.h:511
+#: src/GameText.h:510
 msgid "Disable some of the most resource-intensive graphics, like particles"
 msgstr "Vypnúť niektoré z najnáročnejších grafík, ako napríklad úlomkov"
 
-#: src/GameText.h:512
+#: src/GameText.h:511
 msgid "Enable all graphical effects"
 msgstr "Povoliť všetky grafické efekty"
 
-#: src/GameText.h:513
+#: src/GameText.h:512
 msgid "Turn on sound effects"
 msgstr "Zapnúť zvukové efekty"
 
-#: src/GameText.h:514
+#: src/GameText.h:513
 msgid "Poor sound quality"
 msgstr "Slabá kvalita zvuku"
 
-#: src/GameText.h:515
+#: src/GameText.h:514
 msgid "Normal sound quality"
 msgstr "Bežná kvalita zvuku"
 
-#: src/GameText.h:516
+#: src/GameText.h:515
 msgid "Best sound quality"
 msgstr "Najlepšia kvalita zvuku"
 
-#: src/GameText.h:517
+#: src/GameText.h:516
 msgid "8-bit sound samples, poor quality"
 msgstr "8-bitové zvukové sample, slabá kvalita"
 
-#: src/GameText.h:518
+#: src/GameText.h:517
 msgid "16-bit sound samples, good quality"
 msgstr "16-bitové zvukové sample, dobrá kvalita"
 
-#: src/GameText.h:519
+#: src/GameText.h:518
 msgid "Mono (single channel) audio"
 msgstr "Mono (jeden kanál) audio"
 
-#: src/GameText.h:520
+#: src/GameText.h:519
 msgid "Stereo (two channel) audio"
 msgstr "Stereo (dva kanály) audio"
 
-#: src/GameText.h:521
+#: src/GameText.h:520
 msgid "Turn on engine noise"
 msgstr "Zapnúť zvuk motora"
 
-#: src/GameText.h:522
+#: src/GameText.h:521
 msgid "Select action to re-configure to another key"
 msgstr "Vyberte akciu, pre ktorú chcete zmeniť priradenie klávesu"
 
-#: src/GameText.h:523
+#: src/GameText.h:522
 msgid "View contents of level pack"
 msgstr "Zobraziť obsah levelového balíku"
 
-#: src/GameText.h:524
+#: src/GameText.h:523
 msgid "Select a player profile to use"
 msgstr "Vyberte hráča, ktorého profil chcete použiť"
 
-#: src/GameText.h:525
+#: src/GameText.h:524
 msgid "Use the selected player profile"
 msgstr "Použiť profil vybraného hráča"
 
-#: src/GameText.h:526
+#: src/GameText.h:525
 msgid "Create new player profile"
 msgstr "Vytvoriť nový profil hráča"
 
-#: src/GameText.h:527
+#: src/GameText.h:526
 msgid "Permanently delete selected player profile, including best times"
 msgstr "Permanentne vymazať vybraný profil hráča, vrátane najlepších časov"
 
-#: src/GameText.h:528
+#: src/GameText.h:527
 msgid "Select a level in the level pack to play"
 msgstr "Vyberte level v balíku levelov, ktorý chcete hrať"
 
-#: src/GameText.h:529
+#: src/GameText.h:528
 msgid "Close level pack"
 msgstr "Zavrieť balík levelov"
 
-#: src/GameText.h:530
+#: src/GameText.h:529
 msgid "General information about the level"
 msgstr "Všeobecné informácie o leveli"
 
-#: src/GameText.h:531
+#: src/GameText.h:530
 msgid "View best times for the level"
 msgstr "Zobraziť najlepšie časy levelu"
 
-#: src/GameText.h:532
+#: src/GameText.h:531
 msgid "View locally stored replays of the level"
 msgstr "Zobraziť lokálne uložené záznamy levelu"
 
-#: src/GameText.h:533
+#: src/GameText.h:532
 msgid "Only show personal best times for this level"
 msgstr "Zobrazovať iba najlepšie osobné časy pre tento level"
 
-#: src/GameText.h:534
+#: src/GameText.h:533
 msgid "Show all best times for this level"
 msgstr "Zobrazovať všetky najlepšie časy pre tento level"
 
-#: src/GameText.h:535
+#: src/GameText.h:534
 msgid "Only show personal replays for this level"
 msgstr "Zobrazovať iba osobné záznamy pre tento level"
 
-#: src/GameText.h:536
+#: src/GameText.h:535
 msgid "Show all replays for this level"
 msgstr "Zobrazovať všetky záznamy pre tento level"
 
-#: src/GameText.h:537
+#: src/GameText.h:536
 msgid "Run selected replay"
 msgstr "Spustiť vybraný záznam"
 
-#: src/GameText.h:538
+#: src/GameText.h:537
 msgid "Show helpful help strings such as this one"
 msgstr "Zobrazovať pomocné reťazce ako je napríklad tento"
 
-#: src/GameText.h:539
+#: src/GameText.h:538
 msgid ""
 "Let X-Moto look for more levels on the net, and install them automatically"
 msgstr ""
 "Nechať X-Moto nájsť viac levelov na nete a automaticky ich nainštalovať"
 
-#: src/GameText.h:540
+#: src/GameText.h:539
 msgid "Select this if you got a direct connection to the Internet"
 msgstr "Vyberte túto voľbu, ak máte priame pripojenie k internetu"
 
-#: src/GameText.h:541
+#: src/GameText.h:540
 msgid "Select this if you connect to the Internet through an HTTP proxy"
 msgstr "Vyberte túto voľbu, ak sa k internetu pripájate cez HTTP proxy"
 
-#: src/GameText.h:542
+#: src/GameText.h:541
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
 msgstr "Vyberte túto voľbu, ak sa k internetu pripájate cez SOCKS4 proxy"
 
-#: src/GameText.h:543
+#: src/GameText.h:542
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
 msgstr "Vyberte túto voľbu, ak sa k internetu pripájate cez SOCKS5 proxy"
 
-#: src/GameText.h:544
+#: src/GameText.h:543
 msgid "Use these settings"
 msgstr "Použiť tieto nastavenia"
 
-#: src/GameText.h:545
+#: src/GameText.h:544
 msgid "Write the IP address or host name of proxy server to use"
 msgstr "Napíšte IP adresu alebo host name proxy serveru, ktorý má byť použitý"
 
-#: src/GameText.h:546
+#: src/GameText.h:545
 msgid "Write the port number used by the proxy server"
 msgstr "Napíšte číslo portu, ktorý používa proxy server"
 
-#: src/GameText.h:547
+#: src/GameText.h:546
 msgid "New levels and levels updated from the Internet"
 msgstr "Nové levely a levely aktualizované z internetu"
 
-#: src/GameText.h:549
+#: src/GameText.h:548
 msgid "Show the ghost if possible in the game"
 msgstr "Zobrazovať pri hre ducha, kde je to možné"
 
-#: src/GameText.h:550
+#: src/GameText.h:549
 msgid "Choose which ghost to display"
 msgstr "Vyberte, ktorý duch sa má zobrazovať"
 
-#: src/GameText.h:551
+#: src/GameText.h:550
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr ""
 "Vytvoriť pre ducha efekt rozmazania pohybom (ak je to podporované vašou "
 "grafickou kartou)"
 
-#: src/GameText.h:552
+#: src/GameText.h:551
 msgid "When starting a level with a ghost, display who the ghost is of"
 msgstr "Ak sa spúšťa level so zobrazeným duchom, vypísať odkiaľ duch pochádza"
 
-#: src/GameText.h:553
+#: src/GameText.h:552
 msgid "Display the time difference between the ghost and you"
 msgstr "Zobrazovať časový rozdiel medzi duchom a vami"
 
-#: src/GameText.h:554
+#: src/GameText.h:553
 msgid "If you make a highscore it will automatically be saved as a replay"
 msgstr "Ak urobíte rekord, automaticky bude uložený ako záznam"
 
-#: src/GameText.h:555
+#: src/GameText.h:554
 msgid "View the replay of the room's highscore"
 msgstr "Zobraziť záznam rekordu miestnosti"
 
-#: src/GameText.h:557
+#: src/GameText.h:556
 msgid "Check for new levels at startup"
 msgstr "Zisťovať nové levely pri štarte"
 
-#: src/GameText.h:558
+#: src/GameText.h:557
 msgid "Check for new highscores at startup"
 msgstr "Zisťovať nové rekordy pri štarte"
 
-#: src/GameText.h:560
+#: src/GameText.h:559
 msgid "Show various statistics about X-Moto"
 msgstr "Zobraziť rôzne štatistiky o X-Moto"
 
-#: src/GameText.h:561
+#: src/GameText.h:560
 msgid "Update statistics (also happens each time X-Moto is started)"
 msgstr "Aktualizovať štatistiky (to sa deje tiež pri každom štarte X-Moto)"
 
-#: src/GameText.h:562
+#: src/GameText.h:561
 msgid "Enables background music in the main menu"
 msgstr "Zapína hudbu na pozadí v hlavnom menu"
 
-#: src/GameText.h:564
+#: src/GameText.h:563
 msgid "Choose the X-Moto graphics theme"
 msgstr "Vybrať X-Moto grafickú tému"
 
-#: src/GameText.h:565
+#: src/GameText.h:564
 msgid "Check for new themes on the web"
 msgstr "Zistovať nové témy na webe"
 
-#: src/GameText.h:566
+#: src/GameText.h:565
 msgid "Download or update the selected theme"
 msgstr "Stiahnuť alebo aktualizovať vybranú tému"
 
-#: src/GameText.h:567
+#: src/GameText.h:566
 msgid "Upload the replay on the website of highscores"
 msgstr "Uploadnuť záznam na website rekordov"
 
-#: src/GameText.h:568
+#: src/GameText.h:567
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
 "Uploadnuť vaše najlepšie záznamy do vašej miestnosti (užitočné, keď je práve "
 "vytvorená)"
 
-#: src/GameText.h:569
+#: src/GameText.h:568
 msgid "Configure the main www options"
 msgstr "Nastaviť hlavné www voľby"
 
-#: src/GameText.h:570
+#: src/GameText.h:569
 msgid "Configure the www options"
 msgstr ""
 
-#: src/GameText.h:571
+#: src/GameText.h:570
 msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
@@ -2039,175 +2035,179 @@ msgstr ""
 "Vyberte kam uploadowať/odkiaľ sťahovať záznamy, zoznamy rekordov (pre viac "
 "informácií, prejdite na website)"
 
-#: src/GameText.h:572
+#: src/GameText.h:571
 msgid "Choose your room"
 msgstr "Vyberte si miestnosť"
 
-#: src/GameText.h:573
+#: src/GameText.h:572
 msgid "Get the rooms list from the web"
 msgstr "Získať zoznam miestností z webu"
 
-#: src/GameText.h:574
+#: src/GameText.h:573
 msgid "Upload of highscore requires to log in (Except for WR)"
 msgstr "Upload rekordu vyžaduje prihlásenie (Okrem svet. rekordu)"
 
-#: src/GameText.h:575
+#: src/GameText.h:574
 msgid "Upload of highscore requires a password (Except for WR)"
 msgstr "Upload rekordu vyžaduje heslo (Okrem svet. rekordu)"
 
-#: src/GameText.h:576
+#: src/GameText.h:575
 msgid "Show the speedometer when playing"
 msgstr "Zobrazovať tachometer počas hrania"
 
-#: src/GameText.h:577
+#: src/GameText.h:576
 msgid "Enable animation of bike falling apart when dead"
 msgstr "Zapnúť animáciu rozpadajúceho sa motocykla pri smrti"
 
-#: src/GameText.h:578
+#: src/GameText.h:577
 msgid "Automatically scroll over the level before starting playing it"
 msgstr "Automatický prelet levelom pred jeho hraním"
 
-#: src/GameText.h:579
+#: src/GameText.h:578
 msgid "Run a dynamic zoom while playing"
 msgstr ""
 
-#: src/GameText.h:580
+#: src/GameText.h:579
 msgid "View the X-Moto credits"
 msgstr "Zobraziť zásluhy na X-Moto"
 
-#: src/GameText.h:581
+#: src/GameText.h:580
 msgid "Name of replay"
 msgstr "Názov záznamu"
 
-#: src/GameText.h:582
+#: src/GameText.h:581
 msgid "Level played in replay"
 msgstr "Záznam levelu"
 
-#: src/GameText.h:583
+#: src/GameText.h:582
 msgid "Player who recorded the replay"
 msgstr "Hráč, ktorý urobil záznam"
 
-#: src/GameText.h:584
+#: src/GameText.h:583
 msgid "Click to select screen resolution"
 msgstr "Kliknutím vyberte rozlíšenie obrazovky"
 
-#: src/GameText.h:585
+#: src/GameText.h:584
 msgid "Completed levels / total number of levels in pack"
 msgstr "Dokončené levely / celkový počet levelov v balíku"
 
-#: src/GameText.h:586
+#: src/GameText.h:585
 msgid "Name of level pack"
 msgstr "Názov balíka levelov"
 
-#: src/GameText.h:587
+#: src/GameText.h:586
 msgid "Add the level to the favorite levels list"
 msgstr "Pridať level do zoznamu obľúbených levelov"
 
-#: src/GameText.h:588
+#: src/GameText.h:587
 msgid "Delete the level from the favorite levels list"
 msgstr "Vymazať level zo zoznamu obľúbených levelov"
 
-#: src/GameText.h:589
+#: src/GameText.h:588
 msgid "Puzzle the levels pack list"
 msgstr "Zamiešať zoznam balíkov s levelmi"
 
-#: src/GameText.h:590
+#: src/GameText.h:589
 msgid "Enter text to filter the level list"
 msgstr "Zadajte text pre filtrovanie zoznamu levelov"
 
-#: src/GameText.h:591
+#: src/GameText.h:590
 msgid "Choose the number of players"
 msgstr "Vyberte počet hráčov"
 
-#: src/GameText.h:592
+#: src/GameText.h:591
 msgid "Your proxy login"
 msgstr "Váš login na proxy"
 
-#: src/GameText.h:593
+#: src/GameText.h:592
 msgid "Your password associated with your login"
 msgstr "Vaše heslo priradené k loginu"
 
-#: src/GameText.h:594
+#: src/GameText.h:593
 msgid "Enter text to filter the replay list"
 msgstr "Zadajte text pre filtrovanie zoznamu záznamov"
 
-#: src/GameText.h:595
+#: src/GameText.h:594
 msgid "Press to play X-Moto immediately"
 msgstr "Stlačte pre okamžité hranie X-Moto"
 
-#: src/GameText.h:596
+#: src/GameText.h:595
 msgid "Increase or decrease the quality of the levels selected"
 msgstr "Zvýšiť alebo znížiť kvalitu vybraných levelov"
 
-#: src/GameText.h:597
+#: src/GameText.h:596
 msgid "Increase or decrease the difficulty of the levels selected"
 msgstr "Zvýšiť alebo znížiť náročnosť vybraných levelov"
 
-#: src/GameText.h:598
+#: src/GameText.h:597
 msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
 msgstr ""
 "Ukončiť hru, keď hráč ukončí level alebo pokračovať, pokým hráč pokračuje"
 
-#: src/GameText.h:603
+#: src/GameText.h:602
 msgid "Don't show the ghosts while playing"
 msgstr "Nezobrazovať duchov počas hry"
 
-#: src/GameText.h:604
+#: src/GameText.h:603
 msgid "The scene is shared by all the players"
 msgstr "Scéna je zdieľaná všetkými hráčmi"
 
-#: src/GameText.h:605
+#: src/GameText.h:604
 msgid "Change the X-Moto language"
 msgstr "Zmeniť jazyk X-Moto"
 
-#: src/GameText.h:606
+#: src/GameText.h:605
 msgid "Name of the language"
 msgstr "Názov jazyka"
 
-#: src/GameText.h:607
+#: src/GameText.h:606
 msgid "Code of the language"
 msgstr "Kód jazyka"
 
-#: src/GameText.h:608
+#: src/GameText.h:607
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
 msgstr "Vymazať záznamy, o ktorých si X-Moto myslí, že nie sú zaujímavé"
 
-#: src/GameText.h:609
+#: src/GameText.h:608
 msgid "Remove levels not suitable for children"
 msgstr "Odstrániť levely, ktoré nie sú vhodné pre deti"
 
-#: src/GameText.h:610
+#: src/GameText.h:609
 msgid "Enable this room"
 msgstr "Povoliť túto miestnosť"
 
-#: src/GameText.h:611
+#: src/GameText.h:610
 msgid "Password associated to your profile for web access"
 msgstr ""
 
-#: src/GameText.h:612
+#: src/GameText.h:611
 msgid "Main options"
 msgstr ""
 
-#: src/GameText.h:613
+#: src/GameText.h:612
 msgid "Configure the X-Moto theme"
 msgstr ""
 
-#: src/GameText.h:614
+#: src/GameText.h:613
 msgid "Configure ghosts displayed while playing the game"
 msgstr ""
 
-#: src/GameText.h:615
+#: src/GameText.h:614
 msgid "Configure options linked to your X-Moto database"
 msgstr ""
 
-#: src/GameText.h:616
+#: src/GameText.h:615
 msgid "Synchronise your database on the web"
 msgstr ""
 
-#: src/GameText.h:617
+#: src/GameText.h:616
 msgid "Synchronise your database when your quit X-Moto"
+msgstr ""
+
+#: src/GameText.h:617
+msgid "Enable joysticks events"
 msgstr ""
 
 #: src/GameText.h:619

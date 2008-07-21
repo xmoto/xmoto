@@ -433,6 +433,14 @@ bool XMKey::isPressed(Uint8 *i_keystate, Uint8 i_mousestate) {
     }
   }
 
+bool InputHandler::areJoysticksEnabled() const {
+  return SDL_JoystickEventState(SDL_QUERY) == SDL_ENABLE;
+}
+
+void InputHandler::enableJoysticks(bool i_value) {
+  SDL_JoystickEventState(i_value ? SDL_ENABLE : SDL_IGNORE);
+}
+
   void InputHandler::dealWithActivedKeys(Universe* i_universe) {
     Uint8 *v_keystate  = SDL_GetKeyState(NULL);
     Uint8 v_mousestate = SDL_GetMouseState(NULL, NULL);
@@ -508,10 +516,11 @@ bool XMKey::isPressed(Uint8 *i_keystate, Uint8 i_mousestate) {
   /*===========================================================================
   Init/uninit
   ===========================================================================*/  
-void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile) {
+void InputHandler::init(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile, bool i_enableJoysticks) {
     /* Initialize joysticks (if any) */
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
-    SDL_JoystickEventState(SDL_ENABLE);
+
+    enableJoysticks(i_enableJoysticks);
     
     /* Enable unicode translation and key repeats */
     SDL_EnableUNICODE(1);         

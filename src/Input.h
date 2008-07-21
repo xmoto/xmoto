@@ -106,7 +106,7 @@ public:
 
   void loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
   void handleInput(Universe* i_universe, InputEventType Type, const XMKey& i_xmkey);
-  void init(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
+  void init(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile, bool i_enableJoysticks);
   void uninit();
 
   void resetScriptKeyHooks(void) {m_nNumScriptKeyHooks = 0;}
@@ -119,6 +119,8 @@ public:
   InputEventType joystickAxisSens(Sint16 m_joyAxisValue);
   void recheckJoysticks();
   std::vector<std::string>& getJoysticksNames();
+  bool areJoysticksEnabled () const;
+  void enableJoysticks(bool i_value);
 
   void setDefaultConfig();
   void saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
