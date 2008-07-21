@@ -227,6 +227,8 @@ public:
   std::string uploadDbSyncUrl() const;
   bool mirrorMode() const;
   void setMirrorMode(bool i_value);
+  bool enableJoysticks() const;
+  void setEnableJoysticks(bool i_value);
   bool useCrappyPack() const;
   void setUseCrappyPack(bool i_value);
   bool useChildrenCompliant() const;
@@ -339,7 +341,7 @@ public:
   bool m_mirrorMode;
   bool m_useCrappyPack;
   bool m_useChildrenCompliant;
-	bool m_forceChildrenCompliant;
+  bool m_forceChildrenCompliant;
   bool m_enableVideoRecording;
   std::string m_videoRecordName;
   int m_videoRecordingDivision;
@@ -348,6 +350,7 @@ public:
   int m_videoRecordingEndTime;
   bool m_hidePlayingInformation;
   bool m_dbsynchronizeOnQuit;
+  bool m_enableJoysticks;
 };
 
 #endif

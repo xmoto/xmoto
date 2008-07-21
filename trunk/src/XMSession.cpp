@@ -118,6 +118,7 @@ void XMSession::setToDefault() {
   m_enableInitZoom                = DEFAULT_ENABLEINITZOOM;
   m_enableActiveZoom              = DEFAULT_ENABLEACTIVEZOOM;
   m_dbsynchronizeOnQuit           = DEFAULT_DBSYNCHRONIZEONQUIT;
+  m_enableJoysticks               = DEFAULT_ENABLEJOYSTICKS;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -292,6 +293,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_hideGhosts                     = pDb->config_getBool   (i_id_profile, "HideGhosts"                    , m_hideGhosts     );
   m_multiStopWhenOneFinishes 	   = pDb->config_getBool   (i_id_profile, "MultiStopWhenOneFinishes"      , m_multiStopWhenOneFinishes);
   m_dbsynchronizeOnQuit            = pDb->config_getBool   (i_id_profile, "DbSynchronizeOnQuit"           , m_dbsynchronizeOnQuit);
+  m_enableJoysticks                = pDb->config_getBool   (i_id_profile, "EnableJoysticks"               , m_enableJoysticks);
 
   m_nbRoomsEnabled                 = pDb->config_getInteger(i_id_profile, "WebHighscoresNbRooms"          , m_nbRoomsEnabled);
   if(m_nbRoomsEnabled < 1) { m_nbRoomsEnabled = 1; }
@@ -409,6 +411,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "GhostMotionBlur"               , m_ghostMotionBlur);
 	pDb->config_setBool   (m_profile, "MultiStopWhenOneFinishes"      , m_multiStopWhenOneFinishes);
 	pDb->config_setBool   (m_profile, "DbSynchronizeOnQuit"           , m_dbsynchronizeOnQuit);
+	pDb->config_setBool   (m_profile, "EnableJoysticks"                 , m_enableJoysticks);
 	pDb->config_setString (m_profile, "MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium":"High");
 	pDb->config_setString (m_profile, "GameGraphics", m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium":"High");
 	pDb->config_setString (m_profile, "ProxyType",     proxySettings()->getTypeStr());
@@ -1006,6 +1009,14 @@ void XMSession::setChildrenCompliant(bool i_value) {
 
 bool XMSession::forceChildrenCompliant() const {
   return m_forceChildrenCompliant;
+}
+
+bool XMSession::enableJoysticks() const {
+  return m_enableJoysticks;
+}
+
+void XMSession::setEnableJoysticks(bool i_value) {
+  m_enableJoysticks = i_value;
 }
 
 ProxySettings* XMSession::proxySettings() {

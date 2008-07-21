@@ -363,7 +363,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   GameRenderer::instance()->init(drawLib);
   
   /* build handler */
-  InputHandler::instance()->init(&m_Config, pDb, XMSession::instance()->profile());
+  InputHandler::instance()->init(&m_Config, pDb, XMSession::instance()->profile(), XMSession::instance()->enableJoysticks());
   Replay::enableCompression(XMSession::instance()->compressReplays());
   
   /* load packs */
@@ -474,7 +474,7 @@ void GameApp::manageEvent(SDL_Event* Event) {
     break;
 
   case SDL_JOYAXISMOTION:
-    StateManager::instance()->joystickAxisMotion(Event->jaxis.which, Event->jaxis.axis, Event->jaxis.value);
+      StateManager::instance()->joystickAxisMotion(Event->jaxis.which, Event->jaxis.axis, Event->jaxis.value);
     break;
 
   case SDL_JOYBUTTONDOWN:

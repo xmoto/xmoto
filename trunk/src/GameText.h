@@ -277,6 +277,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_INITTEXT             _("Initializing text renderer...")
 #define GAMETEXT_INITZOOM             _("View Level Initially")
 #define GAMETEXT_JOYSTICK             _("Joystick")
+#define GAMETEXT_ENABLEJOYSTICKS      _("Enable joysticks")
 #define GAMETEXT_JUSTDEAD             _("Oops!")
 #define GAMETEXT_JUSTDEAD_RESTART     _("Press ENTER to try again")
 #define GAMETEXT_JUSTDEAD_DISPLAYMENU _("Press ESC to display the menu")
@@ -613,6 +614,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_DB_OPTIONS           _("Configure options linked to your X-Moto database")
 #define CONTEXTHELP_DBSYNCHRONIZE _("Synchronise your database on the web")
 #define CONTEXTHELP_DBSYNCHRONIZE_ONQUIT _("Synchronise your database when your quit X-Moto")
+#define CONTEXTHELP_ENABLEJOYSTICKS _("Enable joysticks events")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")
