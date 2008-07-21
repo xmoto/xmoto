@@ -61,6 +61,7 @@ private:
   std::string getInfoFrameLevelId();
 
   void updateRights();
+  void switchtoFavorites();
 };
 
 #endif
