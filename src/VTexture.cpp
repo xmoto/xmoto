@@ -64,7 +64,7 @@ void Texture::invalidateSpritesTexture()
   Texture *TextureManager::createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha,bool bClamp, FilterMode eFilterMode) {
     /* Name free? */
     if(getTexture(Name) != NULL) {
-      LogInfo("** Warning ** : TextureManager::createTexture() : Name '%s' already in use",Name.c_str());
+      LogWarning("TextureManager::createTexture() : Name '%s' already in use",Name.c_str());
       throw TextureError("texture naming conflict");
     }
 
@@ -119,7 +119,7 @@ void Texture::invalidateSpritesTexture()
     glGetIntegerv( GL_MAX_TEXTURE_SIZE, &max_texture_size );
     if ( nWidth > max_texture_size || nHeight > max_texture_size ) {
 
-      LogInfo("** Warning ** : TextureManager::createTexture() : Texture '%s' too large -- scaling to %i x %i",Name.c_str(), max_texture_size, max_texture_size );
+      LogWarning("TextureManager::createTexture() : Texture '%s' too large -- scaling to %i x %i",Name.c_str(), max_texture_size, max_texture_size );
 
       unsigned char *newdata = new unsigned char[max_texture_size * max_texture_size * depth];
 
@@ -240,7 +240,7 @@ void Texture::invalidateSpritesTexture()
     if(TextureImage.checkFile( Path,&ii )) {
       /* Valid texture size? */
       if(ii.nWidth != ii.nHeight) {
-        LogInfo("** Warning ** : TextureManager::loadTexture() : texture '%s' is not square",Path.c_str());
+        LogWarning("TextureManager::loadTexture() : texture '%s' is not square",Path.c_str());
         throw TextureError("texture not square");
       }
       if(!(ii.nWidth == 1 ||
@@ -254,7 +254,7 @@ void Texture::invalidateSpritesTexture()
          ii.nWidth == 256 ||
          ii.nWidth == 512 ||
          ii.nWidth == 1024)) {
-        LogInfo("** Warning ** : TextureManager::loadTexture() : texture '%s' size is not power of two",Path.c_str());
+        LogWarning("TextureManager::loadTexture() : texture '%s' size is not power of two",Path.c_str());
         throw TextureError("texture size not power of two");
       }
          
@@ -274,7 +274,7 @@ void Texture::invalidateSpritesTexture()
       pTexture->addAssociatedSprite(associatedSprite);
     }
     else {
-      LogInfo("** Warning ** : TextureManager::loadTexture() : texture '%s' not found or invalid",Path.c_str());
+      LogWarning("TextureManager::loadTexture() : texture '%s' not found or invalid",Path.c_str());
       throw TextureError(std::string("invalid or missing texture file (" + Path + ")").c_str());
     }    
     
