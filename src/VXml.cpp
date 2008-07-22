@@ -29,14 +29,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Load XML document from disk
   ===========================================================================*/
-  void XMLDocument::readFromFile(std::string File,unsigned long *pnCRC32) {
+  void XMLDocument::readFromFile(std::string File,unsigned long *pnCRC32, bool i_includeCurrentDir) {
     /* Clean up if a doc already is loaded */
     if(m_pXML) delete m_pXML;
     
     /* Load */
     std::string Line,Doc = "";    
     
-    FileHandle *pfh = FS::openIFile(File);
+    FileHandle *pfh = FS::openIFile(File, i_includeCurrentDir);
     if(pfh==NULL) return;
 
     m_pXML = new TiXmlDocument;
