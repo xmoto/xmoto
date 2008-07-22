@@ -35,7 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Methods */
       /* (if pnCRC32!=NULL, then readFromFile() should not parse XML,
           but just calculate the CRC32 of the text file) */
-      void readFromFile(std::string File,unsigned long *pnCRC32=NULL);
+      void readFromFile(std::string File,unsigned long *pnCRC32=NULL, bool i_includeCurrentDir=false);
       void writeToFile(std::string File);      
       
       /* Data interface */

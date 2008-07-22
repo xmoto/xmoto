@@ -458,7 +458,7 @@ FileHandle *FS::openOFile(std::string Path) {
   
 FileHandle *FS::openIFile(std::string Path, bool i_includeCurrentDir) {
   FileHandle *pfh = new FileHandle;
-    
+
   /* Okay. Absolute path? */
   if(isPathAbsolute(Path)) {      
     /* Yes ma'am */
@@ -468,13 +468,15 @@ FileHandle *FS::openIFile(std::string Path, bool i_includeCurrentDir) {
     /* user dir ? */
     pfh->fp = fopen((m_UserDir + std::string("/") + Path).c_str(),"rb");        
 
+    /* data dir ? */
     if(pfh->fp == NULL) {
-      if(m_bGotDataDir) { /* data dir ? */
+      if(m_bGotDataDir) {
 	pfh->fp = fopen((m_DataDir + std::string("/") + Path).c_str(),"rb");        
       }
 
+      /* current working dir ? */
       if(pfh->fp == NULL) {
-	if(i_includeCurrentDir) { /* current working dir ? */
+	if(i_includeCurrentDir) {
 	  pfh->fp = fopen(Path.c_str(),"rb");
 	}
       }
@@ -519,6 +521,7 @@ FileHandle *FS::openIFile(std::string Path, bool i_includeCurrentDir) {
     pfh->nSize = ftell(pfh->fp);
     fseek(pfh->fp,0,SEEK_SET);        
   }
+
   return pfh;
 }
     

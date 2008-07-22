@@ -345,10 +345,10 @@ void Level::loadXML(void) {
     m_xmlSource = new XMLDocument();
   }
 
-  m_xmlSource->readFromFile(m_fileName, NULL);
+  m_xmlSource->readFromFile(m_fileName, NULL, true);
 
   TiXmlDocument *pDoc = m_xmlSource->getLowLevelAccess();
-  if(pDoc == NULL) throw Exception("failed to load level XML");
+  if(pDoc == NULL) throw Exception("failed to load level XML " + m_fileName);
   
   /* Start the fantastic parsing by fetching the <level> element */
   TiXmlElement *pLevelElem = XML::findElement(*m_xmlSource, NULL,std::string("level"));    
