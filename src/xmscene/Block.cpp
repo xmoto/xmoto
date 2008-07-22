@@ -484,11 +484,12 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 
 void Block::addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem) {
   ConvexBlock *v_block = new ConvexBlock(this);
-  
+  float scale = TextureScale();
+
   for(unsigned int i=0; i<i_poly->Vertices().size(); i++) {
     v_block->addVertex(i_poly->Vertices()[i],
-		       Vector2f((InitialPosition().x + i_poly->Vertices()[i].x) * 0.25,
-                                (InitialPosition().y + i_poly->Vertices()[i].y) * 0.25));
+		       Vector2f((InitialPosition().x + i_poly->Vertices()[i].x) * 0.25 * scale,
+                                (InitialPosition().y + i_poly->Vertices()[i].y) * 0.25 * scale));
   }
   m_convexBlocks.push_back(v_block);
 }
@@ -744,30 +745,6 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
                                                       atof( XML::getOption(pj, "y", "0").c_str())),
                                              XML::getOption(pj, "edge", ""));
 
-      std::string k;
-      Vector2f v_TexturePosition;
-      k = XML::getOption(pj, "tx", "");
-      if(k != "") {
-        v_TexturePosition.x = atof( k.c_str() );
-      } else {
-        v_TexturePosition.x = pVertex->Position().x * pBlock->TextureScale();
-      }
-
-      k = XML::getOption(pj, "ty", "");
-      if(k != "") {
-        v_TexturePosition.y = atof( k.c_str() );
-      } else {
-        v_TexturePosition.y = pVertex->Position().y * pBlock->TextureScale();
-      }
-      pVertex->setTexturePosition(v_TexturePosition);
-      
-      TColor v_color = TColor(atoi(XML::getOption(pj,"r","255").c_str()),
-                              atoi(XML::getOption(pj,"g","255").c_str()),
-                              atoi(XML::getOption(pj,"b","255").c_str()),
-                              atoi(XML::getOption(pj,"a","255").c_str())
-                              );
-      pVertex->setColor(v_color);
-
       if(firstVertex == true){
 	firstVertex = false;	
       }
@@ -797,6 +774,7 @@ void Block::saveBinary(FileHandle *i_pfh) {
       FS::writeBool(i_pfh,     isLayer());
       FS::writeInt_LE(i_pfh,   getLayer());
       FS::writeString(i_pfh,   Texture());
+      FS::writeFloat_LE(i_pfh, TextureScale());
       FS::writeFloat_LE(i_pfh, InitialPosition().x);
       FS::writeFloat_LE(i_pfh, InitialPosition().y);
       FS::writeFloat_LE(i_pfh, Grip());
@@ -826,6 +804,7 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   pBlock->setIsLayer(FS::readBool(i_pfh));
   pBlock->setLayer(FS::readInt_LE(i_pfh));
   pBlock->setTexture(FS::readString(i_pfh));
+  pBlock->setTextureScale(FS::readFloat_LE(i_pfh));
 
   Vector2f v_Position;
   v_Position.x = FS::readFloat_LE(i_pfh);
