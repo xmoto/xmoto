@@ -171,7 +171,7 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
       nVertexBytes += loadBlock(Blocks[i], i_universe, u, n_sameSceneAs, i);
     }
 
-    LogDebug("GL: %d kB vertex buffers", nVertexBytes/1024);
+    LogInfo("GL: %d kB vertex buffers", nVertexBytes/1024);
 
     // load sprites textures
     std::vector<Entity*>& entities = v_level->Entities();
@@ -194,8 +194,9 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     TextureSprite* skySprite = (TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->Texture());
     if(skySprite != NULL)
       skySprite->loadTextures();
-    else
+    else{
       LogDebug("skySprite is NULL [%s]", v_level->Sky()->Texture().c_str());
+    }
 
     AnimationSprite* v_sprite = NULL;
     v_sprite = (AnimationSprite*)v_level->wreckerSprite();
@@ -3192,6 +3193,10 @@ void GameRenderer::calculateCameraScaleAndScreenAABB(Camera* pCamera, AABB& bbox
 
 void GameRenderer::beginTexturesRegistration()
 {
+  // as we will remove textures, the current texture in drawlib can
+  // became invalid -> set it to NULL
+  GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
+
   m_curRegistrationStage++;
 
   // zero is for persistent textures
@@ -3233,11 +3238,9 @@ void GameRenderer::endTexturesRegistration()
       ++it;
   }
 
-
   if(XMSession::instance()->debug() == true) {
     LogDebug("---End texture registration---");
-    std::vector<Texture*> textures = Theme::instance()->getTextureManager()->getTextures();
-    std::vector<Texture*>::iterator it = textures.begin();
+    it = textures.begin();
     while(it != textures.end()){
       if((*it)->curRegistrationStage != PERSISTANT)
 	LogDebug("  end %s %d [%x]", (*it)->Name.c_str(), (*it)->curRegistrationStage, (*it));
