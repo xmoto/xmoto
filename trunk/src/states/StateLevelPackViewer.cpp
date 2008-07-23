@@ -143,6 +143,7 @@ void StateLevelPackViewer::checkEvents()
 
   if(pShowHighscore != NULL && pShowHighscore->isClicked() == true){
     pShowHighscore->setClicked(false);
+    GameApp::instance()->setCurrentPlayingList(pList);
     StateManager::instance()->pushState(new StateDownloadGhost(getInfoFrameLevelId(), true));
   }
 

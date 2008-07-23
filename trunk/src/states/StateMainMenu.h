@@ -91,6 +91,7 @@ class StateMainMenu : public StateMenu {
   void updateInfoFrame();
   void updateReplaysRights();
 
+  UILevelList* getInfoFrameLevelsList();
   std::string getInfoFrameLevelId();
   void setInputKey(const std::string& i_strKey, const std::string& i_key);
 

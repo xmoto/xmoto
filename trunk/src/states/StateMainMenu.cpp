@@ -325,6 +325,7 @@ void StateMainMenu::checkEventsMainWindow() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
+    GameApp::instance()->setCurrentPlayingList(getInfoFrameLevelsList());
     StateManager::instance()->pushState(new StateDownloadGhost(getInfoFrameLevelId(), true));
   }
 }
@@ -1612,7 +1613,7 @@ void StateMainMenu::updateReplaysRights() {
 
 }
 
-std::string StateMainMenu::getInfoFrameLevelId()
+UILevelList* StateMainMenu::getInfoFrameLevelsList()
 {
   UILevelList* v_newLevelsList      = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST");
   UILevelList* v_favoriteLevelsList = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:FAVORITE_LIST");
@@ -1624,12 +1625,17 @@ std::string StateMainMenu::getInfoFrameLevelId()
     v_list = v_favoriteLevelsList;
   }
 
-  if(v_list == NULL) {
+  return v_list;
+}
+
+std::string StateMainMenu::getInfoFrameLevelId()
+{
+  UILevelList* v_list = getInfoFrameLevelsList();
+
+  if(v_list == NULL)
     return "";
-  }
-  else{
+  else
     return v_list->getSelectedLevel();
-  }
 }
 
 void StateMainMenu::refreshStaticCaptions() {

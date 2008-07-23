@@ -704,6 +704,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define SYS_MSG_TRAIN_RESTORING         _("Training position %i/%i restored")
 #define SYS_MSG_TRAIN_STORED            _("Stored as training position %i")
 
+#define SYS_MSG_NO_NEXT_HIGHSCORE       _("Can't find a highscore in the next 10 levels")
+
 // font to use to choice the GROUP : currently, two groups, GENERAL and ASIAN
 #define FONT_GROUP _("FontGroup:GENERAL")
 

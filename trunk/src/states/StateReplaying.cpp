@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateReplaying.h"
 #include "StatePreplayingReplay.h"
+#include "StateDownloadGhost.h"
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
 #include "xmscene/BikePlayer.h"
@@ -125,6 +126,49 @@ bool StateReplaying::update()
   }
 
   return true;
+}
+
+void StateReplaying::nextLevel(bool i_positifOrder) {
+  GameApp*  pGame  = GameApp::instance();
+  std::string v_nextLevel;
+  std::string v_currentLevel;
+  
+  // take the level id of the first world
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      v_currentLevel = m_universe->getScenes()[0]->getLevelSrc()->Id();
+    }
+  }
+
+  std::string v_id_profile;
+  std::string v_url;
+  bool        v_isAccessible;
+
+  unsigned int maxTry = 10;
+  unsigned int numTry = 0;
+  while(numTry < maxTry) {
+    if(i_positifOrder) {
+      v_nextLevel = pGame->determineNextLevel(v_currentLevel);
+    } else {
+      v_nextLevel = pGame->determinePreviousLevel(v_currentLevel);
+    }
+
+    LogDebug("cur lvl [%s] next [%s]", v_currentLevel.c_str(), v_nextLevel.c_str());
+
+    // if there's a highscore for the nextlevel in the main room of the
+    // profile ?
+    if(pGame->getHighscoreInfos(0, v_nextLevel, &v_id_profile, &v_url, &v_isAccessible)) {
+      StateManager::instance()->replaceState(new StateDownloadGhost(v_nextLevel, true));
+      break;
+    } else {
+      v_currentLevel = v_nextLevel;
+    }
+
+    numTry++;
+  }
+
+  if(numTry == maxTry)
+    SysMessage::instance()->displayText(SYS_MSG_NO_NEXT_HIGHSCORE);
 }
 
 void StateReplaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
