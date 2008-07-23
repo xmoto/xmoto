@@ -34,6 +34,8 @@ class StateReplaying : public StateScene {
   virtual void leave();
   
   virtual bool update();
+  virtual void nextLevel(bool i_positifOrder = true);
+
   /* input */
   virtual void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
 
