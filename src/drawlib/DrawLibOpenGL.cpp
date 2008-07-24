@@ -243,14 +243,14 @@ void DrawLibOpenGL::init(unsigned int nDispWidth, unsigned int nDispHeight, unsi
   
   /* At last, try to "set the video mode" */
   if((m_screen=SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, m_nDispBPP, nFlags)) == NULL) {
-    LogInfo("** Warning ** : Tried to set video mode %ix%i @ %i-bit, but SDL failed (%s)\n"
-		"                Now SDL will try determining a proper mode itself.", m_nDispWidth, m_nDispHeight, m_nDispBPP, SDL_GetError());
+    LogWarning("Tried to set video mode %ix%i @ %i-bit, but SDL failed (%s)\n"
+	       "                Now SDL will try determining a proper mode itself.", m_nDispWidth, m_nDispHeight, m_nDispBPP, SDL_GetError());
     m_nDispBPP = 0;
 
     /* Hmm, try letting it decide the BPP automatically */
     if((m_screen = SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0, nFlags)) == NULL) {       
       /* Still no luck */
-      LogInfo("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
+      LogWarning("Still no luck, now we'll try 800x600 in a window.");
       m_nDispWidth  = 800;
       m_nDispHeight = 600;
       m_nDispBPP    = 0;       
@@ -286,7 +286,7 @@ void DrawLibOpenGL::init(unsigned int nDispWidth, unsigned int nDispHeight, unsi
   LogInfo("GL: %s (%s)", glGetString(GL_RENDERER), glGetString(GL_VENDOR));
   if(glGetString(GL_RENDERER) == NULL
      || glGetString(GL_VENDOR) == NULL) {
-    LogInfo("** Warning ** : GL strings NULL!");
+    LogWarning("GL strings NULL!");
     throw Exception("GL strings are NULL!");
   }
 
@@ -295,7 +295,7 @@ void DrawLibOpenGL::init(unsigned int nDispWidth, unsigned int nDispHeight, unsi
 #if defined(WIN32) 
   if(!strcmp(reinterpret_cast<const char *>(glGetString(GL_RENDERER)),"GDI Generic") &&
      !strcmp(reinterpret_cast<const char *>(glGetString(GL_VENDOR)),"Microsoft Corporation")) {
-    LogInfo("** Warning ** : No GL hardware acceleration!");
+    LogWarning("No GL hardware acceleration!");
     //m_UserNotify = "It seems that no OpenGL hardware acceleration is available!\n"
     //               "Please make sure OpenGL is configured properly.";
   }
@@ -423,10 +423,10 @@ bool DrawLibOpenGL::isExtensionSupported(std::string Ext) {
 
   pcExtensions = glGetString(GL_EXTENSIONS);
   if(pcExtensions == NULL) {
-    LogInfo("Failed to determine OpenGL extensions. Try stopping all other\n"
-		"applications that might use your OpenGL hardware.\n"
-		"If it still doesn't work, please create a detailed bug report.\n"
-		);
+    LogError("Failed to determine OpenGL extensions. Try stopping all other\n"
+	     "applications that might use your OpenGL hardware.\n"
+	     "If it still doesn't work, please create a detailed bug report.\n"
+	     );
     throw Exception("glGetString() : NULL");
   }
 
@@ -663,7 +663,7 @@ int ScrapTextures::allocateAndLoadTexture(unsigned int width,
   } else {
     // there's four scraps, approximatly less than 100 characters, this
     // should not happen
-    LogInfo("Scrap is full.");
+    LogError("Scrap is full.");
     throw Exception("Scrap is full !");
   }
 }

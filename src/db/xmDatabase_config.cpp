@@ -324,13 +324,13 @@ void xmDatabase::updateDB_config(const std::string& i_sitekey) {
 	    read_DB_free(v_result);
 	  }
 	} catch(Exception &e) {
-	  LogInfo("** Warning ** : %s", e.getMsg().c_str());
+	  LogWarning("%s", e.getMsg().c_str());
 	}
       }
     } else {
-      LogInfo("** Warning ** : no configuration in 'config.dat'");
+      LogWarning("no configuration in 'config.dat'");
     }
   } else {
-    LogInfo("** Warning ** : failed to load or parse user configuration 'config.dat'");
+    LogWarning("failed to load or parse user configuration 'config.dat'");
   }
 }

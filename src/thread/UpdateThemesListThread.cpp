@@ -49,7 +49,7 @@ int UpdateThemesListThread::realThreadFunction()
     StateManager::instance()->sendAsynchronousMessage("UPDATE_THEMES_LISTS");
   } catch(Exception &e) {
     /* file probably doesn't exist */
-    LogInfo("** Warning ** : Failed to analyse web-themes file");
+    LogWarning("Failed to analyse web-themes file");
     return 1;
   }
 

@@ -433,7 +433,7 @@ void xmDatabase::webLoadDataFirstTime() {
     }
   } catch(Exception &e) {
     /* ok, no pb */
-    LogInfo("** Warning ** : Loading delivered weblevels.xml failed");
+    LogWarning("Loading delivered weblevels.xml failed");
   }
 
   /* updating webhighscores table with defaults */
@@ -451,6 +451,6 @@ void xmDatabase::webLoadDataFirstTime() {
     }
   } catch(Exception &e) {
     /* ok, no pb */
-    LogInfo("** Warning ** : Loading delivered webhighscores.xml failed");
+    LogWarning("Loading delivered webhighscores.xml failed");
   }
 }

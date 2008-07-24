@@ -27,7 +27,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWW.h"
 #include "VFileIO.h"
 #include "Replay.h"
-#include "helpers/Log.h"
 
 UploadHighscoreThread::UploadHighscoreThread(const std::string& i_highscorePath)
   : XMThread()
@@ -55,7 +54,7 @@ int UploadHighscoreThread::realThreadFunction()
 
   v_replayInfos = Replay::getReplayInfos(m_highscorePath);
   if(v_replayInfos == NULL) {
-    LogInfo("** Warning **: Unable to read the replay to send");
+    LogWarning("Unable to read the replay to send");
     return 1;
   }
   v_replayTime  = v_replayInfos->finishTime;

@@ -100,7 +100,7 @@ void XMThread::askThreadToSleep()
 
 void XMThread::killThread()
 {
-  LogInfo("Kill violently the thread");
+  LogWarning("Kill violently the thread");
   SDL_KillThread(m_pThread);
   m_pThread   = NULL;
   m_isRunning = false;

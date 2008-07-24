@@ -59,7 +59,7 @@ void xmDatabase::init(const std::string& i_dbFile,
   createUserFunctions();
 
 //  if(sqlite3_threadsafe() == 0) {
-//    LogInfo("** Warning ** Sqlite is not threadSafe !!!");
+//    LogWarning("Sqlite is not threadSafe !!!");
 //  } else {
 //    LogInfo("Sqlite is threadSafe");
 //  }
@@ -372,7 +372,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     try {
       updateDB_stats(i_interface);
     } catch(Exception &e) {
-      LogInfo(std::string("Oups, updateDB_stats() failed: " + e.getMsg()).c_str());
+      LogError(std::string("Oups, updateDB_stats() failed: " + e.getMsg()).c_str());
     }
 
   case 2:
@@ -393,7 +393,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       try {
 	updateDB_favorite(i_profile, i_interface);
       } catch(Exception &e) {
-	LogInfo(std::string("Oups, updateDB_favorite() failed: " + e.getMsg()).c_str());
+	LogError(std::string("Oups, updateDB_favorite() failed: " + e.getMsg()).c_str());
       }
       updateXmDbVersion(4);
     } catch(Exception &e) {
@@ -409,7 +409,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       try {
 	updateDB_profiles(i_interface);
       } catch(Exception &e) {
-	LogInfo(std::string("Oups, updateDB_profiles() failed: " + e.getMsg()).c_str());
+	LogError(std::string("Oups, updateDB_profiles() failed: " + e.getMsg()).c_str());
       }
       updateXmDbVersion(5);
     } catch(Exception &e) {
@@ -710,7 +710,7 @@ char** xmDatabase::readDB(const std::string& i_sql, unsigned int &i_nrow) {
      != SQLITE_OK) {
     v_errMsg = errMsg;
     sqlite3_free(errMsg);
-    LogInfo("xmDb failed while running");
+    LogError("xmDb failed while running");
     LogInfo("%s", i_sql.c_str());
     throw Exception("xmDb: " + v_errMsg);
 
@@ -718,7 +718,7 @@ char** xmDatabase::readDB(const std::string& i_sql, unsigned int &i_nrow) {
 	v_endTime = GameApp::getXMTime();
 
 	if(v_endTime - v_startTime > DB_MAX_SQL_RUNTIME) {
-		LogInfo("** Warning ** : long query time detected (%.3f'') for query '%s'", v_endTime - v_startTime, i_sql.c_str());
+	  LogWarning("long query time detected (%.3f'') for query '%s'", v_endTime - v_startTime, i_sql.c_str());
 	}
 
   i_nrow = (unsigned int) v_nrow;

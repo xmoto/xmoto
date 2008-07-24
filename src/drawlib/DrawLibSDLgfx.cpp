@@ -294,7 +294,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     if ((m_screen =
 	 SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, m_nDispBPP,
 			  nFlags)) == NULL) {
-      LogInfo("** Warning ** : Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
+      LogWarning("Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
 		  "                Now SDL will try determining a proper mode itself.",
 		  m_nDispWidth, m_nDispHeight, m_nDispBPP);
 
@@ -303,7 +303,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	   SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0,
 			    nFlags)) == NULL) {
 	/* Still no luck */
-	LogInfo("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
+	LogWarning("Still no luck, now we'll try 800x600 in a window.");
 	m_nDispWidth = 800;
 	m_nDispHeight = 600;
 	m_bWindowed = true;

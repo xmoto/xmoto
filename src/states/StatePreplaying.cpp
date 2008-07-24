@@ -99,7 +99,7 @@ void StatePreplaying::enter()
       m_universe->getScenes()[i]->loadLevel(xmDatabase::instance("main"), m_idlevel);
     }
   } catch(Exception &e) {
-    LogInfo("** Warning ** : level '%s' cannot be loaded", m_idlevel.c_str());
+    LogWarning("level '%s' cannot be loaded", m_idlevel.c_str());
     char cBuf[256];
     snprintf(cBuf, 256, GAMETEXT_LEVELCANNOTBELOADED, m_idlevel.c_str());
     delete m_universe;
@@ -110,7 +110,7 @@ void StatePreplaying::enter()
 
   for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
     if(m_universe->getScenes()[i]->getLevelSrc()->isXMotoTooOld()) {
-      LogInfo("** Warning ** : level '%s' requires newer X-Moto",
+      LogWarning("level '%s' requires newer X-Moto",
 		  m_universe->getScenes()[i]->getLevelSrc()->Name().c_str());
       
       char cBuf[256];
@@ -159,7 +159,7 @@ void StatePreplaying::enter()
     InputHandler::instance()->setMirrored(XMSession::instance()->mirrorMode());
 
   } catch(Exception &e) {
-    LogInfo(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
+    LogWarning(std::string("failed to initialize level\n" + e.getMsg()).c_str());
     delete m_universe;
     m_universe = NULL;
     StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK));
@@ -295,7 +295,7 @@ void StatePreplaying::secondInitPhase()
       }
     }
   } catch(Exception &e) {
-    LogInfo(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
+    LogWarning(std::string("failed to initialize level\n" + e.getMsg()).c_str());
     closePlaying();
     StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     return;
@@ -333,10 +333,8 @@ void StatePreplaying::secondInitPhase()
 
 void StatePreplaying::executeOneCommand(std::string cmd, std::string args)
 {
-  if(XMSession::instance()->debug() == true) {
-    LogInfo("cmd [%s [%s]] executed by state [%s].",
-		cmd.c_str(), args.c_str(), getName().c_str());
-  }
+  LogDebug("cmd [%s [%s]] executed by state [%s].",
+	   cmd.c_str(), args.c_str(), getName().c_str());
 
   if(cmd == "GHOST_DOWNLOADED"){
     m_ghostDownloaded = true;

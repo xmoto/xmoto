@@ -77,7 +77,7 @@ void StatePlaying::enter()
     }
   }
   catch(Exception &e) {
-    LogInfo("** Warning ** : level '%s' cannot be loaded", v_level_name.c_str());
+    LogWarning("level '%s' cannot be loaded", v_level_name.c_str());
 
     char cBuf[256];
     snprintf(cBuf, 256, GAMETEXT_LEVELCANNOTBELOADED, v_level_name.c_str());

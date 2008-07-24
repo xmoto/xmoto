@@ -922,7 +922,7 @@ void FS::deleteFile(const std::string &File) {
 bool FS::copyFile(const std::string &From,const std::string &To, std::string &To_really_done) {
   /* All file copying must happen inside the user directory... */
   if(m_UserDir == "") {
-    LogInfo("** Warning ** : No user directory, can't copy file '%s' to '%s'",From.c_str(),To.c_str());
+    LogWarning("No user directory, can't copy file '%s' to '%s'",From.c_str(),To.c_str());
     return false;
   }
 
@@ -998,7 +998,7 @@ bool FS::copyFile(const std::string &From,const std::string &To, std::string &To
 	fclose(in);
 	fclose(out);
 	remove(FullTo.c_str());
-	LogInfo("** Warning ** : Failed to copy all of '%s' to '%s'",FullFrom.c_str(),FullTo.c_str());
+	LogWarning("Failed to copy all of '%s' to '%s'",FullFrom.c_str(),FullTo.c_str());
 	return false;
       }
         
@@ -1006,14 +1006,14 @@ bool FS::copyFile(const std::string &From,const std::string &To, std::string &To
     }
     else {
       fclose(in);
-      LogInfo("** Warning ** : Failed to open file for output: %s",FullTo.c_str());
+      LogWarning("Failed to open file for output: %s",FullTo.c_str());
       return false;      
     }
       
     fclose(in);
   }
   else {
-    LogInfo("** Warning ** : Failed to open file for input: %s",FullFrom.c_str());
+    LogWarning("Failed to open file for input: %s",FullFrom.c_str());
     return false;
   }
     

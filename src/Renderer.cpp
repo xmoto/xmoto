@@ -381,7 +381,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
 	EdgeEffectSprite* pType = NULL;
 	pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, firstVertex->EdgeEffect());
 	if(pType == NULL) {
-	  LogInfo("** Invalid edge effect %s", firstVertex->EdgeEffect().c_str());
+	  LogWarning("Invalid edge effect %s", firstVertex->EdgeEffect().c_str());
 	  useOld = false;
 	}
 	else{
@@ -427,7 +427,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene
       if(edgeEffect != m_currentEdgeEffect) {
 	pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, edgeEffect);
 	if(pType == NULL) {
-	  LogInfo("** Invalid edge effect %s", edgeEffect.c_str());
+	  LogWarning("Invalid edge effect %s", edgeEffect.c_str());
 	  useOld = false;
 	  continue;
 	}
@@ -570,7 +570,7 @@ void GameRenderer::calculateEdgeTexture(Block* pBlock,
     Vector2f N1(-B1.y+A1.y, B1.x-A1.x);
 
     if(N1.x == 0.0 && N1.y == 0.0){
-      LogInfo("normal is null for block %s vertex (%f,%f)", pBlock->Id().c_str(), A1.x, A1.y);
+      LogWarning("normal is null for block %s vertex (%f,%f)", pBlock->Id().c_str(), A1.x, A1.y);
     }
 
     N1.normalize();
@@ -581,7 +581,7 @@ void GameRenderer::calculateEdgeTexture(Block* pBlock,
     Vector2f N2(-B2.y+A2.y, B2.x-A2.x);
 
     if(N2.x == 0.0 && N2.y == 0.0){
-      LogInfo("normal is null for block %s vertex (%f,%f)", pBlock->Id().c_str(), A2.x, A2.y);
+      LogWarning("normal is null for block %s vertex (%f,%f)", pBlock->Id().c_str(), A2.x, A2.y);
     }
 
     N2.normalize();
@@ -620,10 +620,10 @@ Texture* GameRenderer::loadTexture(std::string textureName)
     try {
       pTexture = pSprite->getTexture();
     } catch(Exception &e) {
-      LogInfo("** Warning ** : Texture '%s' not found!", textureName.c_str());
+      LogWarning("Texture '%s' not found!", textureName.c_str());
     }
   } else {
-    LogInfo("** Warning ** : Texture '%s' not found!", textureName.c_str());
+    LogWarning("Texture '%s' not found!", textureName.c_str());
   }
 
   return pTexture;
@@ -638,10 +638,10 @@ Texture* GameRenderer::loadTextureEdge(std::string textureName)
     try {
       pTexture = pSprite->getTexture();
     } catch(Exception &e) {
-      LogInfo("** Warning ** : Texture '%s' not found!", textureName.c_str());
+      LogWarning("Texture '%s' not found!", textureName.c_str());
     }
   } else {
-    LogInfo("** Warning ** : Texture '%s' not found!", textureName.c_str());
+    LogWarning("Texture '%s' not found!", textureName.c_str());
   }
 
   return pTexture;
@@ -2083,7 +2083,7 @@ void GameRenderer::_RenderSky(MotoGame* i_scene, float i_zoom, float i_offset, c
       pDrawlib->endDraw();
     }
   } else {
-    LogInfo(std::string("** Invalid sky " + i_scene->getLevelSrc()->Sky()->Texture()).c_str());
+    LogWarning(std::string("Invalid sky " + i_scene->getLevelSrc()->Sky()->Texture()).c_str());
     pDrawlib->clearGraphics();
   }
  }

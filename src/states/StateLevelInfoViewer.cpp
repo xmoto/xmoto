@@ -146,10 +146,8 @@ void StateLevelInfoViewer::executeOneCommand(std::string cmd, std::string args)
 {
   UIListEntry *pEntry = NULL;
 
-  if(XMSession::instance()->debug() == true) {
-    LogInfo("cmd [%s [%s]] executed by state [%s].",
-		cmd.c_str(), args.c_str(), getName().c_str());
-  }
+  LogDebug("cmd [%s [%s]] executed by state [%s].",
+	   cmd.c_str(), args.c_str(), getName().c_str());
 
   if(cmd == "REPLAYS_DELETE") {
     UIList* v_list = reinterpret_cast<UIList*>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_LIST"));
@@ -159,12 +157,12 @@ void StateLevelInfoViewer::executeOneCommand(std::string cmd, std::string args)
 	try {
 	  Replay::deleteReplay(pEntry->Text[0]);
 	} catch(Exception &e) {
-	  LogInfo(e.getMsg().c_str());
+	  LogError(e.getMsg().c_str());
 	}
 	try {
 	  xmDatabase::instance("main")->replays_delete(pEntry->Text[0]);
 	} catch(Exception &e) {
-	  LogInfo(e.getMsg().c_str());
+	  LogError(e.getMsg().c_str());
 	}
 	StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
 	updateLevelInfoViewerReplays();

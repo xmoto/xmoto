@@ -164,10 +164,8 @@ void StateDeadMenu::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i
 
 void StateDeadMenu::executeOneCommand(std::string cmd, std::string args)
 {
-  if(XMSession::instance()->debug() == true) {
-    LogInfo("cmd [%s [%s]] executed by state [%s].",
-		cmd.c_str(), args.c_str(), getName().c_str());
-  }
+  LogDebug("cmd [%s [%s]] executed by state [%s].",
+	   cmd.c_str(), args.c_str(), getName().c_str());
 
   if(cmd == "SAVEREPLAY") {
     try {
