@@ -37,7 +37,7 @@ std::vector<std::string>* System::getDisplayModes(int windowed) {
     
     /* Check is there are any modes available */
     if(sdl_modes == (SDL_Rect **)0){
-       LogInfo("** Warning ** : No display modes available.");
+       LogWarning("No display modes available.");
       throw Exception("getDisplayModes : No modes available.");
     }
     
@@ -46,9 +46,6 @@ std::vector<std::string>* System::getDisplayModes(int windowed) {
     modes->push_back("1024 X 768");
     modes->push_back("1280 X 1024");
     modes->push_back("1600 X 1200");
-    
-    /* Print valid modes */
-    //Log("Available Modes :");
     
     for(i=0; sdl_modes[i]; i++){
       char tmp[128];
@@ -64,7 +61,6 @@ std::vector<std::string>* System::getDisplayModes(int windowed) {
       
       /* Only single */
       bool findDouble = false;
-      //Log("size: %d", modes->size());
       for(unsigned int j=0; j<modes->size(); j++)
 	if(!strcmp(tmp, (*modes)[j].c_str())){
 	  findDouble = true;
@@ -73,7 +69,6 @@ std::vector<std::string>* System::getDisplayModes(int windowed) {
       
       if(!findDouble){
 	modes->push_back(tmp);
-	//Log("  %s", tmp);
       }
     }
     

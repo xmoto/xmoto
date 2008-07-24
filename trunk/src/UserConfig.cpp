@@ -51,10 +51,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	      }
 	    }
 	    else 
-	      LogInfo("** Warning ** : no configuration in 'config.dat'");
+	      LogWarning("no configuration in 'config.dat'");
 	  }
 	  else
-	    LogInfo("** Warning ** : failed to load or parse user configuration 'config.dat'");
+	    LogWarning("failed to load or parse user configuration 'config.dat'");
 	}
 
   /*===========================================================================
@@ -81,7 +81,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    FS::closeFile(pfh);
 	  }
 	  else
-	    LogInfo("** Warning ** : failed to save user configuration 'config.dat'");
+	    LogWarning("failed to save user configuration 'config.dat'");
 	}
 
   /*===========================================================================
@@ -144,7 +144,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	std::string UserConfig::getDefaultValue(std::string Name) {
 	  UserConfigVar *pVar = _FindVarByName(Name);
 	  if(pVar == NULL) {
-	    LogInfo("** Warning ** : impossible to get default value of unknown configuration variable '%s'",Name.c_str());
+	    LogWarning("impossible to get default value of unknown configuration variable '%s'",Name.c_str());
 	    return "";
 	  }
 	  return pVar->DefaultValue;
@@ -153,7 +153,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	std::string UserConfig::getValue(std::string Name) {
 	  UserConfigVar *pVar = _FindVarByName(Name);
 	  if(pVar == NULL) {
-	    LogInfo("** Warning ** : impossible to get value of unknown configuration variable '%s'",Name.c_str());
+	    LogWarning("impossible to get value of unknown configuration variable '%s'",Name.c_str());
 	    return "";
 	  }
 	  return pVar->Value;
@@ -162,7 +162,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	void UserConfig::setValue(std::string Name,std::string Value) {
 	  UserConfigVar *pVar = _FindVarByName(Name);
 	  if(pVar == NULL) {
-	    LogInfo("** Warning ** : impossible to set value of unknown configuration variable '%s'",Name.c_str());
+	    LogWarning("impossible to set value of unknown configuration variable '%s'",Name.c_str());
 	    return;
 	  }
 	  

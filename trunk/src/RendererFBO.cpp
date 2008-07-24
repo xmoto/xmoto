@@ -81,7 +81,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           ((DrawLibOpenGL*)m_drawLib)->glGetObjectParameterivARB(m_ProgramID,
 								 GL_OBJECT_LINK_STATUS_ARB,(GLint*)&nStatus);
           if(!nStatus) {
-            LogInfo("-- Failed to link SFXOverlay shader program --");
+            LogError("-- Failed to link SFXOverlay shader program --");
             
             /* Retrieve info-log */
             int nInfoLogLen = 0;
@@ -191,7 +191,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       GL_OBJECT_COMPILE_STATUS_ARB,(GLint*)&nStatus);
     if(!nStatus) {
       _FreeShaderSource(ppc,nNumLines);
-      LogInfo("-- Failed to compile shader: %s --",File.c_str());
+      LogError("-- Failed to compile shader: %s --",File.c_str());
 
       /* Retrieve info-log */
       int nInfoLogLen = 0;

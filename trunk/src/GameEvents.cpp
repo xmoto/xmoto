@@ -2190,7 +2190,7 @@ MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name, float p_volume
     try {
       Sound::playSampleByName(Theme::instance()->getSound(m_soundName)->FilePath(), m_volume);
     } catch(Exception &e) {
-      LogInfo("** Warning **: PlaySound(\"%s\") failed: %s", m_soundName.c_str(), e.getMsg().c_str());
+      LogWarning("PlaySound(\"%s\") failed: %s", m_soundName.c_str(), e.getMsg().c_str());
     }
   }
   
@@ -2236,7 +2236,7 @@ MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name, float p_volume
     try {
       GameApp::instance()->playMusic(m_musicName);
     } catch(Exception &e) {
-      LogInfo("** Warning **: PlayMusic(\"%s\") failed: %s", m_musicName.c_str(), e.getMsg().c_str());
+      LogWarning("PlayMusic(\"%s\") failed: %s", m_musicName.c_str(), e.getMsg().c_str());
     }
   }
   
@@ -2273,7 +2273,7 @@ MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name, float p_volume
     try {
       GameApp::instance()->playMusic("");
     } catch(Exception &e) {
-      LogInfo("** Warning **: StopMusic failed: %s", e.getMsg().c_str());
+      LogWarning("StopMusic failed: %s", e.getMsg().c_str());
     }
   }
   

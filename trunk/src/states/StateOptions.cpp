@@ -1680,10 +1680,8 @@ void StateOptions::updateProfileStrings() {
 }
 
 void StateOptions::executeOneCommand(std::string cmd, std::string args) {
-  if(XMSession::instance()->debug() == true) {
-    LogInfo("cmd [%s [%s]] executed by state [%s].",
-		cmd.c_str(), args.c_str(), getName().c_str());
-  }
+  LogDebug("cmd [%s [%s]] executed by state [%s].",
+	   cmd.c_str(), args.c_str(), getName().c_str());
 
   if(cmd == "REQUESTKEY") {
     UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:KEY_ACTION_LIST"));

@@ -1064,7 +1064,7 @@ void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WW
       }
     }
     
-    LogInfo("** Warning ** : Failed to update theme %s (%s)", i_id_theme.c_str(), e.getMsg().c_str());
+    LogWarning("Failed to update theme %s (%s)", i_id_theme.c_str(), e.getMsg().c_str());
     throw Exception("Failed to update the theme");
     return;
   }

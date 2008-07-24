@@ -89,10 +89,8 @@ void StateDownloadGhost::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::s
 
 void StateDownloadGhost::executeOneCommand(std::string cmd, std::string args)
 {
-  if(XMSession::instance()->debug() == true) {
-    LogInfo("cmd [%s [%s]] executed by state [%s].",
-		cmd.c_str(), args.c_str(), getName().c_str());
-  }
+  LogDebug("cmd [%s [%s]] executed by state [%s].",
+	   cmd.c_str(), args.c_str(), getName().c_str());
 
   if(cmd == "GHOST_DOWNLOADED_REPLAY_FILE") {
     setReplay(CmdArgumentParser::instance()->getString(args));

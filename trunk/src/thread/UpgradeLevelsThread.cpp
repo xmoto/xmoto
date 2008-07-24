@@ -131,7 +131,7 @@ int UpgradeLevelsThread::realThreadFunction()
       StateManager::instance()->sendAsynchronousMessage("NEWLEVELAVAILABLE");
     }
   } catch (Exception& e) {
-    LogInfo("** Warning ** : Unable to check for extra levels [%s]", e.getMsg().c_str());
+    LogWarning("Unable to check for extra levels [%s]", e.getMsg().c_str());
     m_msg = GAMETEXT_FAILEDCHECKLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
 
     return 1;
@@ -169,7 +169,7 @@ int UpgradeLevelsThread::realThreadFunction()
   }
   catch(Exception& e) {
     m_msg = GAMETEXT_FAILEDDLLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
-    LogInfo("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
+    LogWarning("Unable to download extra levels [%s]",e.getMsg().c_str());
 
     v_exit_code = 1;
   }

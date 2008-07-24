@@ -458,7 +458,7 @@ void MotoGame::cleanPlayers() {
     try {
       _GenerateLevel();
     } catch(Exception &e) {
-      LogInfo(std::string("** Warning ** : Level generation failed !\n" + e.getMsg()).c_str());
+      LogWarning(std::string("Level generation failed !\n" + e.getMsg()).c_str());
       throw Exception(e);
     }        
 
@@ -522,7 +522,7 @@ void MotoGame::cleanPlayers() {
       /* if no OnLoad(), assume success */
       /* Success? */
       if(!bOnLoadSuccess) {
-	LogInfo("OnLoad script function failed !");
+	LogError("OnLoad script function failed !");
 	throw Exception("OnLoad script function failed !");
       }
     }
@@ -573,7 +573,7 @@ void MotoGame::cleanPlayers() {
     ===========================================================================*/
   void MotoGame::_GenerateLevel(void) {
     if(m_pLevelSrc == NULL) {
-      LogInfo("** Warning ** : Can't generate level when no source is assigned!");
+      LogWarning("Can't generate level when no source is assigned!");
       return;
     }
         
@@ -614,7 +614,7 @@ void MotoGame::cleanPlayers() {
     nTotalBSPErrors = m_pLevelSrc->loadToPlay(m_chipmunkWorld);
 
     if(nTotalBSPErrors > 0) {
-      LogInfo(" %d BSP error%s in total",nTotalBSPErrors,nTotalBSPErrors==1?"":"s");
+      LogWarning(" %d BSP error%s in total",nTotalBSPErrors,nTotalBSPErrors==1?"":"s");
       gameMessage(std::string(GAMETEXT_WARNING) + ":");
       gameMessage(GAMETEXT_ERRORSINLEVEL);
     }

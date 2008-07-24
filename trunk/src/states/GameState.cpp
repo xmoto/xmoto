@@ -130,7 +130,7 @@ void GameState::setId(const std::string& i_id) {
 
 void GameState::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   /* by default, do nothing */
-  LogInfo("** Warning ** : StateMessageBoxReceiver::send() received, but nothing done !");
+  LogWarning("StateMessageBoxReceiver::send() received, but nothing done !");
 }
 
 void GameState::send(const std::string& i_message, const std::string& i_args)
@@ -150,7 +150,7 @@ void GameState::executeCommands()
 void GameState::executeOneCommand(std::string cmd, std::string args)
 {
   // default one do nothing.
-  LogInfo("** Warning ** : cmd [%s [%s]] executed by state [%s], but not handled by it.",
+  LogWarning("cmd [%s [%s]] executed by state [%s], but not handled by it.",
 	      cmd.c_str(), args.c_str(), getName().c_str());
 }
 

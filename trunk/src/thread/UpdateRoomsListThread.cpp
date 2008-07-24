@@ -53,7 +53,7 @@ int UpdateRoomsListThread::realThreadFunction()
     StateManager::instance()->sendAsynchronousMessage("UPDATE_ROOMS_LISTS");
   } catch(Exception &e) {
     /* file probably doesn't exist */
-    LogInfo("** Warning ** : Failed to analyse webrooms file");
+    LogWarning("Failed to analyse webrooms file");
     return 1;
   }
 

@@ -487,10 +487,8 @@ void StateScene::runAutoZoom() {
 
 void StateScene::executeOneCommand(std::string cmd, std::string args)
 {
-  if(XMSession::instance()->debug() == true) {
-    LogInfo("cmd [%s [%s]] executed by state [%s].",
-		cmd.c_str(), args.c_str(), getName().c_str());
-  }
+  LogDebug("cmd [%s [%s]] executed by state [%s].",
+	   cmd.c_str(), args.c_str(), getName().c_str());
 
   if(cmd == "ERROR") {
     closePlaying();

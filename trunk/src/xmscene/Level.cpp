@@ -366,7 +366,7 @@ void Level::loadXML(void) {
     if(compareVersionNumbers(XMBuild::getVersionString(),m_requiredVersion) < 0) {
       /* Our version is too low to load this */
       m_xmotoTooOld = true;
-      LogInfo("** Warning ** : Level '%s' requires a newer version (%s) to load!",m_id.c_str(),m_requiredVersion.c_str());
+      LogWarning("Level '%s' requires a newer version (%s) to load!",m_id.c_str(),m_requiredVersion.c_str());
     }
   }
   
@@ -612,7 +612,7 @@ void Level::loadXML(void) {
     try {
       m_playerStart = getStartEntity()->InitialPosition();
     } catch(Exception &e) {
-      LogInfo("Warning : no player start entity for level %s", Id().c_str());
+      LogWarning("no player start entity for level %s", Id().c_str());
       m_playerStart = Vector2f(0.0, 0.0);
     }
   }
@@ -622,7 +622,7 @@ void Level::loadXML(void) {
     int blockLayer = m_blocks[i]->getLayer();
     if(blockLayer != -1){
       if((getNumberLayer() == 0) || (blockLayer >= getNumberLayer())){
-	LogInfo("** Warning ** : Level '%s' Block '%s' as a layer, but the level has no layer", m_id.c_str(), m_blocks[i]->Id().c_str());
+	LogWarning("Level '%s' Block '%s' as a layer, but the level has no layer", m_id.c_str(), m_blocks[i]->Id().c_str());
 	throw Exception("the block has a layer but the level is without layers");
       }
     }
@@ -652,9 +652,9 @@ bool Level::loadReducedFromFile() {
   try {
     cached = importBinaryHeaderFromFile(cacheFileName, m_checkSum);
   } catch (Exception &e) {
-    LogInfo("** Warning **: Exception while loading binary level, will load "
-	      "XML instead for '%s' (%s)", FileName().c_str(),
-	      e.getMsg().c_str());
+    LogWarning("Exception while loading binary level, will load "
+	       "XML instead for '%s' (%s)", FileName().c_str(),
+	       e.getMsg().c_str());
   }
   
   // If we couldn't get it from the cache, then load from (slow) XML
@@ -700,7 +700,7 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
   /* Export binary... */
   FileHandle *pfh = FS::openOFile(FileName);
   if(pfh == NULL) {
-    LogInfo("** Warning ** : Failed to export binary: %s",FileName.c_str());
+    LogWarning("Failed to export binary: %s",FileName.c_str());
   }
   else {
     exportBinaryHeader(pfh);
@@ -855,7 +855,7 @@ bool Level::importBinaryHeaderFromFile(const std::string &FileName, const std::s
   try {
     importBinaryHeader(pfh);
     if(m_checkSum != pSum) {
-      LogInfo("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
+      LogWarning("CRC check failed, can't import: %s",FileName.c_str());
       FS::closeFile(pfh);
       return false;
     }
@@ -912,7 +912,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
       /* Right */
       std::string md5sum = FS::readString(pfh);
       if(md5sum != pSum) {
-        LogInfo("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
+        LogWarning("CRC check failed, can't import: %s",FileName.c_str());
         bRet = false;
       }
       else {
@@ -1017,7 +1017,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
 	try {
 	  m_playerStart = getStartEntity()->InitialPosition();
 	} catch(Exception &e) {
-	  LogInfo("Warning : no player start entity for level %s", Id().c_str());
+	  LogWarning("no player start entity for level %s", Id().c_str());
 	  m_playerStart = Vector2f(0.0, 0.0);
 	}
 
@@ -1039,7 +1039,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
       }
     }
     else {
-      LogInfo("** Warning ** : Invalid binary format (%d), can't import: %s",nFormat,FileName.c_str());
+      LogWarning("Invalid binary format (%d), can't import: %s",nFormat,FileName.c_str());
       bRet = false;
     }
              

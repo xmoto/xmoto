@@ -232,14 +232,14 @@ void xmDatabase::levels_cleanNoWWWLevels() {
 
 	v_basename  = FS::getFileBaseName(v_filepath);
 	if(FS::renameUserFile(v_filepath, v_savePath + "/" + v_basename + ".lvl") == false) {
-	  LogInfo("Unable to move the file into the trash");
+	  LogWarning("Unable to move the file into the trash");
 	}
       } catch(Exception &e) {
-	LogInfo("Removing the level failed !");
+	LogWarning("Removing the level failed !");
       }
 
     } else {
-      LogInfo("NOT Removing level %s (%s) : the level is not is the user space", v_name.c_str(), v_filepath.c_str());
+      LogWarning("NOT Removing level %s (%s) : the level is not is the user space", v_name.c_str(), v_filepath.c_str());
     }
   }
   read_DB_free(v_result);

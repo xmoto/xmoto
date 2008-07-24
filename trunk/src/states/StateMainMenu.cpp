@@ -1216,10 +1216,8 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
 {
   UIListEntry *pEntry = NULL;
 
-  if(XMSession::instance()->debug() == true) {
-    LogInfo("cmd [%s [%s]] executed by state [%s].",
-		cmd.c_str(), args.c_str(), getName().c_str());
-  }
+  LogDebug("cmd [%s [%s]] executed by state [%s].",
+	   cmd.c_str(), args.c_str(), getName().c_str());
 
   if(cmd == "UPDATEPROFILE") {
     updateProfileStrings();
@@ -1246,12 +1244,12 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
 	try {
 	  Replay::deleteReplay(pEntry->Text[0]);
 	} catch(Exception &e) {
-	  LogInfo(e.getMsg().c_str());
+	  LogError(e.getMsg().c_str());
 	}
 	try {
 	  xmDatabase::instance("main")->replays_delete(pEntry->Text[0]);
 	} catch(Exception &e) {
-	  LogInfo(e.getMsg().c_str());
+	  LogError(e.getMsg().c_str());
 	}
 	StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
       }

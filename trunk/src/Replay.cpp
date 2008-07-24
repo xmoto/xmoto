@@ -99,7 +99,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Save it */
     FileHandle *pfh = FS::openOFile(std::string("Replays/") + m_FileName);
     if(pfh == NULL) {
-      LogInfo("** Warning ** : Failed to open replay file for output: %s",(std::string("Replays/") + m_FileName).c_str());
+      LogWarning("Failed to open replay file for output: %s",(std::string("Replays/") + m_FileName).c_str());
       return;
     }        
     
@@ -189,7 +189,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         /* Try adding a .rpl extension */
         pfh = FS::openIFile(std::string("Replays/") + FileName + std::string(".rpl"));
         if(pfh == NULL) {    
-          LogInfo("** Warning ** : Failed to open replay file for input: %s",(std::string("Replays/") + FileName).c_str());
+          LogWarning("Failed to open replay file for input: %s",(std::string("Replays/") + FileName).c_str());
           throw Exception("Unable to open the replay");
         }
       }
@@ -198,32 +198,32 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Read header */
     int nVersion = FS::readByte(pfh); 
     if(bDisplayInformation) {
-      printf("%-30s: %i\n", "Replay file version", nVersion);
+      LogInfo("%-30s: %i\n", "Replay file version", nVersion);
     }
        
     /* Supported version? */
     if(nVersion != 0 && nVersion != 1) {
       FS::closeFile(pfh);
-      LogInfo("** Warning ** : Unsupported replay file version (%d): %s",nVersion,(std::string("Replays/") + FileName).c_str());
+      LogWarning("Unsupported replay file version (%d): %s",nVersion,(std::string("Replays/") + FileName).c_str());
       throw Exception("Unable to open the replay (unsupported version)");
     } else {
       /* Little/big endian safety check */
       if(FS::readInt_LE(pfh) != 0x12345678) {
         FS::closeFile(pfh);
-        LogInfo("** Warning ** : Sorry, the replay you're trying to open are not endian-compatible with your computer!");
+        LogWarning("Sorry, the replay you're trying to open are not endian-compatible with your computer!");
         throw Exception("Unable to open the replay");        
       }
   
       /* Read level ID */
       m_LevelID = FS::readString(pfh);
       if(bDisplayInformation) {
-	printf("%-30s: %s\n", "Level Id", m_LevelID.c_str());
+	LogInfo("%-30s: %s\n", "Level Id", m_LevelID.c_str());
       }
 
       /* Read player name */
       Player = m_PlayerName = FS::readString(pfh);
       if(bDisplayInformation) {
-	printf("%-30s: %s\n", "Player", Player.c_str());
+	LogInfo("%-30s: %s\n", "Player", Player.c_str());
       }      
 
       /* Read replay frame rate */
@@ -232,7 +232,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Read state size */
       m_nStateSize = FS::readInt_LE(pfh);
       if(bDisplayInformation) {
-	printf("%-30s: %i\n", "State size", m_nStateSize);
+	LogInfo("%-30s: %i\n", "State size", m_nStateSize);
       } 
       
       /* Read finish time if any */
@@ -240,9 +240,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_finishTime = GameApp::floatToTime(FS::readFloat_LE(pfh));
       if(bDisplayInformation) {
 	if(m_bFinished) {
-	  printf("%-30s: %.2f (%f)\n", "Finish time", m_finishTime / 100.0, m_finishTime / 100.0);
+	  LogInfo("%-30s: %.2f (%f)\n", "Finish time", m_finishTime / 100.0, m_finishTime / 100.0);
 	} else {
-	  printf("%-30s: %s\n", "Finish time", "unfinished");
+	  LogInfo("%-30s: %s\n", "Finish time", "unfinished");
 	}
       }
 
@@ -251,7 +251,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         /* Read uncompressed size */
         m_nInputEventsDataSize = FS::readInt_LE(pfh);
 	if(bDisplayInformation) {
-	  printf("%-30s: %i\n", "Events data size", m_nInputEventsDataSize);
+	  LogInfo("%-30s: %i\n", "Events data size", m_nInputEventsDataSize);
 	} 
         m_pcInputEventsData = new char [m_nInputEventsDataSize];
         
@@ -260,7 +260,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           /* Compressed */          
           int nCompressedEventsSize = FS::readInt_LE(pfh);
 	  if(bDisplayInformation) {
-	    printf("%-30s: %i\n", "Compressed events data size", nCompressedEventsSize);
+	    LogInfo("%-30s: %i\n", "Compressed events data size", nCompressedEventsSize);
 	  } 
           
           char *pcCompressedEvents = new char [nCompressedEventsSize];
@@ -275,7 +275,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
             delete [] m_pcInputEventsData; m_pcInputEventsData = NULL;
             FS::closeFile(pfh);
             _FreeReplay();
-            LogInfo("** Warning ** : Failed to uncompress events in replay: %s",FileName.c_str());
+            LogWarning("Failed to uncompress events in replay: %s",FileName.c_str());
             throw Exception("Unable to open the replay");
           }
           
@@ -294,25 +294,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Read chunks */
       unsigned int nNumChunks = FS::readInt_LE(pfh);
       if(bDisplayInformation) {
-	printf("%-30s: %i\n", "Number of chunks", nNumChunks);
+	LogInfo("%-30s: %i\n", "Number of chunks", nNumChunks);
       }
       if(nNumChunks == 0) {
 	FS::closeFile(pfh);
 	_FreeReplay();
-	LogInfo("** Warning ** : try to open a replay with no chunk");
+	LogWarning("try to open a replay with no chunk");
 	throw Exception("Replay with no chunk !");
       }
 
       for(unsigned int i=0;i<nNumChunks;i++) {
 	if(bDisplayInformation) {
-	  printf("Chunk %02i\n", i);
+	  LogInfo("Chunk %02i\n", i);
 	}  
   
         ReplayStateChunk* Chunk = new ReplayStateChunk();
         Chunk->nNumStates = FS::readInt_LE(pfh);
 
 	if(bDisplayInformation) {
-	  printf("   %-27s: %i\n", "Number of states", Chunk->nNumStates);
+	  LogInfo("   %-27s: %i\n", "Number of states", Chunk->nNumStates);
 	} 
 
         Chunk->pcChunkData = new char [Chunk->nNumStates * m_nStateSize];
@@ -320,13 +320,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         /* Compressed or not compressed? */
         if(FS::readBool(pfh)) {
 	  if(bDisplayInformation) {
-	    printf("   %-27s: %s\n", "Compressed data", "true");
+	    LogInfo("   %-27s: %s\n", "Compressed data", "true");
 	  } 
 
           /* Compressed! - read compressed size */
           int nCompressedSize = FS::readInt_LE(pfh);
 	  if(bDisplayInformation) {
-	    printf("   %-27s: %i\n", "Compressed states size", nCompressedSize);
+	    LogInfo("   %-27s: %i\n", "Compressed states size", nCompressedSize);
 	  }
 
           /* Read compressed data */
@@ -338,7 +338,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           uLongf nSrcLen = nCompressedSize;
           int nZRet = uncompress((Bytef *)Chunk->pcChunkData,&nDestLen,(Bytef *)pcCompressed,nSrcLen);
           if(nZRet != Z_OK || nDestLen != Chunk->nNumStates * m_nStateSize) {
-            LogInfo("** Warning ** : Failed to uncompress chunk %d in replay: %s",i,FileName.c_str());
+            LogWarning("Failed to uncompress chunk %d in replay: %s",i,FileName.c_str());
             delete [] pcCompressed;
             Chunk->pcChunkData = NULL;
             FS::closeFile(pfh);
@@ -351,7 +351,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         }
         else {
 	  if(bDisplayInformation) {
-	    printf("   %-27s: %s\n", "Compressed data", "false");
+	    LogInfo("   %-27s: %s\n", "Compressed data", "false");
 	  } 
 
           /* Not compressed! */
@@ -370,7 +370,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     /* Reconstruct game events that are going to happen during the replay */
     if(bDisplayInformation) {
-      printf("%-30s:\n", "Game Events");
+      LogInfo("%-30s:\n", "Game Events");
     }
 
     /* unserialize events */

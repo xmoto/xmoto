@@ -157,8 +157,8 @@ void BSP::recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines) {
         BSPPoly *pTempPoly = new BSPPoly();
 
 	if(pPoly->Vertices().empty()) {
-	  LogInfo("** Warning ** : recurse(), try to split an empty poly (no BestSplitter)");
-	  LogInfo("** Warning ** : Line causing the trouble is (%.5f %.5f ; %.5f %.5f)",
+	  LogWarning("recurse(), try to split an empty poly (no BestSplitter)");
+	  LogWarning("Line causing the trouble is (%.5f %.5f ; %.5f %.5f)",
 	      Lines[i]->P0().x, Lines[i]->P0().y, Lines[i]->P1().x, Lines[i]->P1().y);
 	} else {
 	  splitPoly(pPoly, NULL, pTempPoly, &Splitter);
@@ -171,14 +171,14 @@ void BSP::recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines) {
         m_polys.push_back(pPoly);
       } else {
 
-	LogInfo("** Warning ** : Lines causing the trouble are :");
+	LogWarning("Lines causing the trouble are :");
 	for(unsigned int i=0;i<Lines.size();i++) {
 	  LogInfo("%.5f %.5f ; %.5f %.5f",
 		      Lines[i]->P0().x, Lines[i]->P0().y, Lines[i]->P1().x, Lines[i]->P1().y);
 	}
 
         delete pPoly;
-        LogInfo("** Warning ** : BSP::recurse() - empty final polygon ignored");
+        LogWarning("BSP::recurse() - empty final polygon ignored");
         
         //m_nNumErrors++; not considered as an error now
       }
@@ -192,7 +192,7 @@ void BSP::recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines) {
       /* Also split the convex subspace */
       BSPPoly FrontSpace,BackSpace;
       if(pSubSpace->Vertices().empty()) {
-	LogInfo("** Warning ** : recurse(), try to split an empty poly (BestSplitter is set)");
+	LogWarning("recurse(), try to split an empty poly (BestSplitter is set)");
       }
       splitPoly(pSubSpace, &FrontSpace, &BackSpace, pBestSplitter);
       
@@ -252,7 +252,7 @@ void BSP::splitPoly(BSPPoly *pPoly, BSPPoly *pFront, BSPPoly *pBack, BSPLine *pL
   
   /* Empty? */
   if(pPoly->Vertices().empty()) {
-    LogInfo("** Error ** : BSP::splitPoly() - empty polygon encountered");
+    LogError("BSP::splitPoly() - empty polygon encountered");
     m_nNumErrors++;
     return;
   }
@@ -279,7 +279,7 @@ void BSP::splitPoly(BSPPoly *pPoly, BSPPoly *pFront, BSPPoly *pBack, BSPLine *pL
   /* Do we need a split, or can we draw a simple conclusion to this madness? */
   if(nNumInBack == 0 && nNumInFront == 0) {
     /* Everything is on the line */
-    LogInfo("** Error ** : BSP::splitPoly() - polygon fully plane aligned");
+    LogError("BSP::splitPoly() - polygon fully plane aligned");
     m_nNumErrors++;
   }
   else if(nNumInBack == 0 && nNumInFront > 0) {
@@ -340,7 +340,7 @@ void BSP::splitPoly(BSPPoly *pPoly, BSPPoly *pFront, BSPPoly *pBack, BSPLine *pL
 	float den = v.dot(pLine->Normal());
 	if(den == 0.0f) { 
 	  /* This should REALLY not be the case... warning! */
-	  LogInfo("** Error ** : BSP::splitPoly() - impossible case (1)");
+	  LogError("BSP::splitPoly() - impossible case (1)");
 	  m_nNumErrors++;
 	  
 	  /* Now it's best simply to ignore this */
@@ -438,7 +438,7 @@ void BSP::splitLines(std::vector<BSPLine *> &Lines,std::vector<BSPLine *> &Front
 	float den = v.dot(pLine->Normal());
 	if(den == 0.0f) { 
 	  /* This should REALLY not be the case... warning! */
-	  LogInfo("** Error ** : BSP::_SplitLines() - impossible case (1)");
+	  LogError("BSP::_SplitLines() - impossible case (1)");
 	  m_nNumErrors++;
 	  
 	  /* Now it's best simply to ignore this */
@@ -466,7 +466,7 @@ void BSP::splitLines(std::vector<BSPLine *> &Lines,std::vector<BSPLine *> &Front
 	}
 	else {
 	  /* Another thing we should just ignore */
-	  LogInfo("** Error ** : BSP::_SplitLines() - impossible case (2)");
+	  LogError("BSP::_SplitLines() - impossible case (2)");
 	  m_nNumErrors++;
 	  
 	  continue;

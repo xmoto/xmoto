@@ -57,7 +57,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Parse XML */
       m_pXML->Parse(Doc.c_str());
       if(m_pXML->Error()) {
-        LogInfo("** Warning ** : XML-parsing error in '%s' : %s",File.c_str(),m_pXML->ErrorDesc());
+        LogWarning("XML-parsing error in '%s' : %s",File.c_str(),m_pXML->ErrorDesc());
       }
     }
   }

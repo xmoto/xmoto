@@ -63,7 +63,7 @@ void CheckWwwThread::upgradeWebHighscores(const std::string& i_id_room)
     m_pWebRoom->upgrade(i_id_room, m_pDb);
     StateManager::instance()->sendAsynchronousMessage("HIGHSCORES_UPDATED");
   } catch (Exception& e) {
-    LogInfo("** Warning ** : Failed to analyse web-highscores file");   
+    LogWarning("Failed to analyse web-highscores file");   
   }
 }
 
@@ -120,7 +120,7 @@ int CheckWwwThread::realThreadFunction()
 	}
       }
     } catch (Exception& e) {
-      LogInfo("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());
+      LogWarning("Failed to update web-highscores [%s]",e.getMsg().c_str());
       m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
       return 1;
     }
@@ -138,7 +138,7 @@ int CheckWwwThread::realThreadFunction()
 	updateWebLevels();
 
       } catch (Exception& e){
-	LogInfo("** Warning ** : Failed to update web-levels [%s]",e.getMsg().c_str());
+	LogWarning("Failed to update web-levels [%s]",e.getMsg().c_str());
 	m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
 	return 1;
       }
