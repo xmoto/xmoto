@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-07-21 16:04+0200\n"
+"POT-Creation-Date: 2008-07-28 18:19+0200\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Nicolas Adenis-Lamarre\n"
 "Language-Team: X-Moto\n"
@@ -2536,7 +2536,14 @@ msgstr "Position %i/%i restorée"
 msgid "Stored as training position %i"
 msgstr "Position %i stockée"
 
-#: src/GameText.h:708
+#: src/GameText.h:707
+#, c-format
+msgid "Can't find a highscore in the next %i level"
+msgid_plural "Can't find a highscore in the next %i levels"
+msgstr[0] "Pas de record dans le niveau suivant (%i)"
+msgstr[1] "Pas de record dans les %i niveaux suivants"
+
+#: src/GameText.h:710
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 

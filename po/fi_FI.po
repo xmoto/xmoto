@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-07-21 16:04+0200\n"
+"POT-Creation-Date: 2008-07-28 18:19+0200\n"
 "PO-Revision-Date: 2007-10-17 14:34+0200\n"
 "Last-Translator: Ville Lahdenvuo <tuhoojabotti@gmail.com>\n"
 "Language-Team: \n"
@@ -2529,7 +2529,14 @@ msgstr "Harjoitus sijainti %i/%i varattu"
 msgid "Stored as training position %i"
 msgstr "%i Varattu harjoitus sijaintina "
 
-#: src/GameText.h:708
+#: src/GameText.h:707
+#, c-format
+msgid "Can't find a highscore in the next %i level"
+msgid_plural "Can't find a highscore in the next %i levels"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/GameText.h:710
 msgid "FontGroup:GENERAL"
 msgstr "FonttiRyhmä:GENERAL"
 

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-MOTO 3.0.0\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-07-21 16:04+0200\n"
+"POT-Creation-Date: 2008-07-28 18:19+0200\n"
 "PO-Revision-Date: 2007-06-12 17:26+0100\n"
 "Last-Translator: Wilhelm Francke <wilhelm.francke@gmail.com>\n"
 "Language-Team: English <en@li.org>\n"
@@ -2597,7 +2597,14 @@ msgstr ""
 msgid "Stored as training position %i"
 msgstr ""
 
-#: src/GameText.h:708
+#: src/GameText.h:707
+#, c-format
+msgid "Can't find a highscore in the next %i level"
+msgid_plural "Can't find a highscore in the next %i levels"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/GameText.h:710
 msgid "FontGroup:GENERAL"
 msgstr ""
 
