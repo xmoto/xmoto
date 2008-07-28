@@ -145,31 +145,37 @@ void StateReplaying::nextLevel(bool i_positifOrder) {
   std::string v_id_profile;
   std::string v_url;
   bool        v_isAccessible;
+  bool        v_noPlayList = false;
 
-  unsigned int maxTry = 10;
+  unsigned int maxTry = NEXTLEVEL_MAXTRY;
   unsigned int numTry = 0;
-  while(numTry < maxTry) {
+  while(numTry < maxTry && v_noPlayList != true) {
     if(i_positifOrder) {
       v_nextLevel = pGame->determineNextLevel(v_currentLevel);
     } else {
       v_nextLevel = pGame->determinePreviousLevel(v_currentLevel);
     }
 
-    LogDebug("cur lvl [%s] next [%s]", v_currentLevel.c_str(), v_nextLevel.c_str());
+    if(v_nextLevel != "") {
+      LogDebug("cur lvl [%s] next [%s]", v_currentLevel.c_str(), v_nextLevel.c_str());
 
-    // if there's a highscore for the nextlevel in the main room of the
-    // profile ?
-    if(pGame->getHighscoreInfos(0, v_nextLevel, &v_id_profile, &v_url, &v_isAccessible)) {
-      StateManager::instance()->replaceState(new StateDownloadGhost(v_nextLevel, true));
-      break;
+      // if there's a highscore for the nextlevel in the main room of the
+      // profile ?
+      if(pGame->getHighscoreInfos(0, v_nextLevel, &v_id_profile, &v_url, &v_isAccessible)) {
+	StateManager::instance()->replaceState(new StateDownloadGhost(v_nextLevel, true));
+	break;
+      } else {
+	v_currentLevel = v_nextLevel;
+      }
     } else {
-      v_currentLevel = v_nextLevel;
+      // abort because there is no playlist
+      v_noPlayList = true;
     }
 
     numTry++;
   }
 
-  if(numTry == maxTry) {
+  if(numTry == maxTry && v_noPlayList != true) {
     char buf[512];
     snprintf(buf, 512, SYS_MSG_NO_NEXT_HIGHSCORE(NEXTLEVEL_MAXTRY), NEXTLEVEL_MAXTRY);
     SysMessage::instance()->displayText(buf);
