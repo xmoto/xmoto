@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto_cs_CZ\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-07-21 16:04+0200\n"
+"POT-Creation-Date: 2008-07-28 18:19+0200\n"
 "PO-Revision-Date: 2008-06-19 22:30+0200\n"
 "Last-Translator: Tomáš Chvátal\n"
 "Language-Team: Čeština <cs@li.org>\n"
@@ -2527,7 +2527,14 @@ msgstr "Vícviková pozice %i/%i obnovena"
 msgid "Stored as training position %i"
 msgstr "Uloženo jako výcviková pozice %i"
 
-#: src/GameText.h:708
+#: src/GameText.h:707
+#, c-format
+msgid "Can't find a highscore in the next %i level"
+msgid_plural "Can't find a highscore in the next %i levels"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/GameText.h:710
 msgid "FontGroup:GENERAL"
 msgstr "Sukpina fontů: HLAVNÍ"
 

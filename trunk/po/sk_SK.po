@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-07-21 16:04+0200\n"
+"POT-Creation-Date: 2008-07-28 18:19+0200\n"
 "PO-Revision-Date: 2008-03-11 23:13+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
@@ -2547,7 +2547,15 @@ msgstr "Tréningová pozícia %i/%i obnovená"
 msgid "Stored as training position %i"
 msgstr "Uložené ako tréningová pozícia %i"
 
-#: src/GameText.h:708
+#: src/GameText.h:707
+#, c-format
+msgid "Can't find a highscore in the next %i level"
+msgid_plural "Can't find a highscore in the next %i levels"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/GameText.h:710
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 

@@ -35,6 +35,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SysMessage.h"
 #include "VideoRecorder.h"
 
+#define NEXTLEVEL_MAXTRY 10
+
 StateReplaying::StateReplaying(Universe* i_universe, const std::string& i_replay, ReplayBiker* i_replayBiker) :
   StateScene()
 {
@@ -167,8 +169,11 @@ void StateReplaying::nextLevel(bool i_positifOrder) {
     numTry++;
   }
 
-  if(numTry == maxTry)
-    SysMessage::instance()->displayText(SYS_MSG_NO_NEXT_HIGHSCORE);
+  if(numTry == maxTry) {
+    char buf[512];
+    snprintf(buf, 512, SYS_MSG_NO_NEXT_HIGHSCORE(NEXTLEVEL_MAXTRY), NEXTLEVEL_MAXTRY);
+    SysMessage::instance()->displayText(buf);
+  }
 }
 
 void StateReplaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
