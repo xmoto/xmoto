@@ -76,6 +76,9 @@ void StateLevelPackViewer::enterAfterPop()
     m_require_updateLevelsList = false;
   }
 
+  // reset the current playing list
+  GameApp::instance()->setCurrentPlayingList(NULL);
+
   // the three buttons are disabled, so enable them
   updateRights();
   
