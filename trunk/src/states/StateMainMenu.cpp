@@ -44,6 +44,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "thread/CheckWwwThread.h"
 #include "Replay.h"
 #include "helpers/CmdArgumentParser.h"
+#include <sstream>
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;

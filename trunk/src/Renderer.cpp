@@ -3122,44 +3122,6 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
     }
   }
 
-  void GameRenderer::_DrawRotatedMarker(Vector2f Pos,dReal *pfRot) {
-    Vector2f p0,p1,p2,p3,o0,o1,o2,o3;
-    Vector2f C = Pos;
-
-    o0 = Vector2f(-0.1,0.1);
-    o1 = Vector2f(0.1,0.1);
-    o2 = Vector2f(0.1,-0.1);
-    o3 = Vector2f(-0.1,-0.1);
-    
-    if(pfRot != NULL) {
-      p0 = Vector2f(o0.x*pfRot[0*4+0] + o0.y*pfRot[0*4+1],
-                    o0.x*pfRot[1*4+0] + o0.y*pfRot[1*4+1]);
-      p1 = Vector2f(o1.x*pfRot[0*4+0] + o1.y*pfRot[0*4+1],
-                    o1.x*pfRot[1*4+0] + o1.y*pfRot[1*4+1]);
-      p2 = Vector2f(o2.x*pfRot[0*4+0] + o2.y*pfRot[0*4+1],
-                    o2.x*pfRot[1*4+0] + o2.y*pfRot[1*4+1]);
-      p3 = Vector2f(o3.x*pfRot[0*4+0] + o3.y*pfRot[0*4+1],
-                    o3.x*pfRot[1*4+0] + o3.y*pfRot[1*4+1]);
-    }
-    else {
-      p0 = o0;
-      p1 = o1;
-      p2 = o2;
-      p3 = o3;
-    }
-
-    GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-    GameApp::instance()->getDrawLib()->setColorRGB(255,255,255);
-    GameApp::instance()->getDrawLib()->glVertex(p0+C);    
-    GameApp::instance()->getDrawLib()->glVertex(p2+C);
-    GameApp::instance()->getDrawLib()->endDraw();
-    GameApp::instance()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-    GameApp::instance()->getDrawLib()->setColorRGB(255,255,255);
-    GameApp::instance()->getDrawLib()->glVertex(p1+C);    
-    GameApp::instance()->getDrawLib()->glVertex(p3+C);
-    GameApp::instance()->getDrawLib()->endDraw();
-  }
-
 void GameRenderer::setCameraTransformations(Camera* pCamera, float xScale, float yScale)
 {
   /* Perform scaling/translation */    

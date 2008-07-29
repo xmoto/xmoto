@@ -21,8 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __VMATH_H__
 #define __VMATH_H__
 
-#include "../VCommon.h"
+#include "VCommon.h"
 #include "VExcept.h"
+#include <math.h>
 
 /*===========================================================================
   Vectors

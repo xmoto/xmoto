@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "xmscene/Scene.h"
 #include "gui/basic/GUI.h"
+#include "include/xm_OpenGL.h"
 
 class ParticlesSource;
 class Universe;
@@ -247,7 +248,6 @@ private:
 
   void _RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i);
 
-  void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
   void _RenderDebugInfo(void);
 
   void _RenderAlphaBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3,

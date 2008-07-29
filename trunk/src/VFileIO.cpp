@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <dirent.h>
 #endif
 #include <sys/stat.h>
+#include <stdarg.h>
 
 #include "helpers/VExcept.h"
 #include "helpers/Log.h"

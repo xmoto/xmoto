@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "helpers/Log.h"
 #include "helpers/VExcept.h"
+#include "include/xm_SDL.h"
 
 /*===========================================================================
   Globals

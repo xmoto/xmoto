@@ -23,13 +23,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 #include "helpers/VMath.h"
+#include "include/xm_ode.h"
+#include <vector>
 
 class Block;
 class Entity;
 class Zone;
-
-  class CollisionSystem;
-  struct GridCell;
+class CollisionSystem;
+struct GridCell;
 
 	/*===========================================================================
 	Structs

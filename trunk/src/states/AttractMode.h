@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define NO_KEY -2
 
 #include "VCommon.h"
+#include "include/xm_SDL.h"
 
 class AttractMode {
 public:
