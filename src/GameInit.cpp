@@ -359,6 +359,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   UITexture::setApp(this);
   UIWindow::setDrawLib(getDrawLib());
 
+  // init physics
+  dInitODE();
+
   /* Initialize renderer */
   GameRenderer::instance()->init(drawLib);
   
@@ -563,6 +566,7 @@ void GameApp::run_unload() {
     Sound::uninit();
   }
 
+  dCloseODE(); // uninit ODE
   GameRenderer::destroy();
   SysMessage::destroy();  
 
