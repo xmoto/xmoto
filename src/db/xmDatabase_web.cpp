@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "helpers/Log.h"
 #include "WWW.h"
+#include <sstream>
 
 bool xmDatabase::webrooms_checkKeyExists_id_room(const std::string& i_id_room) {
   return checkKey("SELECT count(1) FROM webrooms "

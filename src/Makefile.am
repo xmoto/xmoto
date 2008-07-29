@@ -4,9 +4,16 @@ SVNDEF = -D'SVN_REV="$(shell if test -d $(srcdir)/.svn; then svnversion -n $(src
 
 AM_CXXFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" -DLOCALESDIR=\"$(LOCALESDIR)\" -DASIAN_TTF_FILE=\"$(ASIAN_TTF_FILE)\" -DALLOW_DEV=$(ALLOW_DEV) -DCONFIGURE_DEFAULT_THEME=\"$(CONFIGURE_DEFAULT_THEME)\" $(GL_CFLAGS) $(SDL_CFLAGS) -DUSE_OPENGL=$(USE_OPENGL) -DUSE_SDLGFX=$(USE_SDLGFX) $(SVNDEF)
 AM_CFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" -DLOCALESDIR=\"$(LOCALESDIR)\" -DASIAN_TTF_FILE=\"$(ASIAN_TTF_FILE)\" -DALLOW_DEV=$(ALLOW_DEV) -DCONFIGURE_DEFAULT_THEME=\"$(CONFIGURE_DEFAULT_THEME)\" $(GL_CFLAGS) $(SDL_CFLAGS) -DUSE_OPENGL=$(USE_OPENGL) -DUSE_SDLGFX=$(USE_SDLGFX) $(SVNDEF)
-# AM_LDFLAGS = -s
 
-#AM_LDFLAGS=
+xminclude_SOURCES = include/xm_endian.h    \
+           	    include/xm_hashmap.h   \
+           	    include/xm_lua.h       \
+           	    include/xm_ode.h       \
+           	    include/xm_OpenGL.h    \
+           	    include/xm_SDL.h       \
+           	    include/xm_SDL_mixer.h \
+           	    include/xm_SDL_ttf.h
+
 
 image_SOURCES = image/tim.cpp image/tim_io_stdio.cpp \
   image/tim_jpeg.cpp image/tim_memory_crt.cpp \
@@ -106,6 +113,7 @@ common_SOURCES = Image.cpp \
   XMBuild.h XMBuild.cpp XMBuild_info.h \
   VFileIO.cpp VTexture.cpp \
   VXml.cpp \
+  $(xminclude_SOURCES) \
   $(helpers_SOURCES) \
   $(image_SOURCES) $(tinyxml_SOURCES) \
   $(md5_SOURCES) \

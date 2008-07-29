@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "xmscene/Level.h"
 #include "xmscene/Block.h"
+#include <sstream>
 
 luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"GetTime",                      LuaLibGame::L_Game_GetTime},

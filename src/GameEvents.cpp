@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Camera.h"
 #include "ScriptDynamicObjects.h"
 #include "Sound.h"
+#include <sstream>
 
   MotoGameEvent::MotoGameEvent(int p_eventTime) {
     m_eventTime = p_eventTime;

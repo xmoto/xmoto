@@ -29,7 +29,8 @@ class FontManager;
 class Sprite;
 class GameApp;
 
-#include "../../Theme.h"
+#include "Theme.h"
+#include "include/xm_SDL.h"
 
 #define GUI_JOYSTICK_MINIMUM_DETECTION 3000
 

@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 #include "VFileIO.h"
+#include "include/xm_SDL_mixer.h"
 #define DEFAULT_SAMPLE_VOLUME 1.0f
 
 class XMSession;

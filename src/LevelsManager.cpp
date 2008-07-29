@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "VFileIO.h"
 #include "WWWAppInterface.h"
+#include <sstream>
 
 LevelsPack::LevelsPack(std::string i_name, const std::string& i_sql, bool i_ascSort) {
   m_name         = i_name;

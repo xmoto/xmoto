@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "System.h"
 #include "VCommon.h"
+#include "include/xm_SDL.h"
 #include "Log.h"
 #include "VExcept.h"
 

@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Block.h"
 #include "ChipmunkWorld.h"
 #include "XMSession.h"
+#include <sstream>
 
 // don't excceed this number of particles to not reduce significantly the fps
 #define PARTICLESSOURCE_TOTAL_MAX_PARTICLES 512

@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "DrawLib.h"
 #include "GameText.h"
+#include "include/xm_SDL.h"
 
 #define DRAW_FONT_FILE_GENERAL "Textures/Fonts/DejaVuSans.ttf"
 

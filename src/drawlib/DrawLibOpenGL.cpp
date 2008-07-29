@@ -28,6 +28,7 @@
 #include "Image.h"
 #include "VFileIO.h"
 #include "VTexture.h"
+#include "include/xm_hashmap.h"
 #include "helpers/Singleton.h"
 
 #define UTF8_INTERLINE_SPACE 2

@@ -21,32 +21,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __DRAWLIB_H__
 #define __DRAWLIB_H__
 
-#ifdef HAVE_SDL_FRAMEWORK
-  #include <SDL_ttf.h>
-#else
-  #include <SDL/SDL_ttf.h>
-#endif
-
-#ifdef __GNUC__
-#if (__GNUC__ >= 3)
-#include <ext/hash_map>
-  namespace HashNamespace=__gnu_cxx;
-#else
-#include <hash_map>
-#define HashNamespace std
-#endif
-#else // #ifdef __GNUC__
-#include <hash_map>
-namespace HashNamespace=std;
-#endif
-struct hashcmp_str {
-  bool operator()(std::string s1, std::string s2) {
-    return s1 == s2;
-  }
-};
 
 #include "helpers/VMath.h"
 #include "helpers/Color.h"
+#include "include/xm_SDL_ttf.h"
 
 class Img;
 class Camera;

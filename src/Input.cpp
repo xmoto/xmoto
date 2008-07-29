@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Camera.h"
 #include "xmscene/BikeController.h"
 #include "Universe.h"
+#include <sstream>
 
 XMKey::XMKey() {
     m_input = XMK_NONE;

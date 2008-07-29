@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VXml.h"
 #include "../GameText.h"
 #include "Game.h"
+#include <sstream>
 
 /*
   IMPORTANT NOTE: this update is used ONLY when sitekey didn't exits !! 

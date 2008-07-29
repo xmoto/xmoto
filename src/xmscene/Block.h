@@ -26,6 +26,7 @@ class Line;
 
 #include "helpers/VMath.h"
 #include "helpers/Color.h"
+#include <vector>
 
 class FileHandle;
 class XMLDocument;

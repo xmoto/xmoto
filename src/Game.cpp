@@ -52,6 +52,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateMessageBox.h"
 #include "XMotoLoadReplaysInterface.h"
 #include "Replay.h"
+#include <sstream>
 
   bool GameApp::haveMouseMoved() {
     int nX,nY;

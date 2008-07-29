@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Color.h"
 #include "BasicSceneStructs.h"
 #include "Bike.h"
+#include <queue>
 
 #define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 500
 #define REPLAY_SPEED_INCREMENT 0.25

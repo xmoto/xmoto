@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "XMSession.h"
 #include "VFileIO.h"
+#include <sstream>
 
 #define XMDB_VERSION         27
 #define DB_MAX_SQL_RUNTIME 0.25
