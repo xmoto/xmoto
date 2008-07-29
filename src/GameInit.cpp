@@ -360,6 +360,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   UIWindow::setDrawLib(getDrawLib());
 
   // init physics
+  // if(dInitODE2(0) == 0) { /* erreur */} ; // ode 0.10
   dInitODE();
 
   /* Initialize renderer */
