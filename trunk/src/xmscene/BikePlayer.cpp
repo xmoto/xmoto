@@ -153,7 +153,6 @@ void PlayerBiker::initPhysics(Vector2f i_gravity) {
   m_bFirstPhysicsUpdate = true;
 
   /* Setup ODE */
-  dInitODE();
   m_WorldID = dWorldCreate();
   dWorldSetERP(m_WorldID,PHYS_WORLD_ERP);
   dWorldSetCFM(m_WorldID,PHYS_WORLD_CFM);
@@ -170,7 +169,6 @@ void PlayerBiker::initPhysics(Vector2f i_gravity) {
 void PlayerBiker::uninitPhysics(void) {
   dJointGroupDestroy(m_ContactGroup);
   dWorldDestroy(m_WorldID);
-  dCloseODE();
 }
 
 void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
