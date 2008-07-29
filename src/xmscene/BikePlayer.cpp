@@ -153,6 +153,7 @@ void PlayerBiker::initPhysics(Vector2f i_gravity) {
   m_bFirstPhysicsUpdate = true;
 
   /* Setup ODE */
+  dInitODE();
   m_WorldID = dWorldCreate();
   dWorldSetERP(m_WorldID,PHYS_WORLD_ERP);
   dWorldSetCFM(m_WorldID,PHYS_WORLD_CFM);
