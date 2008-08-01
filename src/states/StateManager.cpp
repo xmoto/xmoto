@@ -679,3 +679,13 @@ void StateManager::deleteToDeleteState()
     m_toDeleteStates.pop_back();
   }
 }
+
+bool StateManager::isThereASuchState(const std::string& i_name) {
+  for(unsigned int i=0; i<m_statesStack.size(); i++) {
+    if(m_statesStack[i]->getName() == i_name) {
+      return true;
+    }
+  }
+
+  return false;
+}

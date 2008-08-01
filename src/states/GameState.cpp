@@ -237,8 +237,10 @@ void GameState::keyDown(SDLKey nKey, SDLMod mod, int nChar, const std::string& i
     StateManager::instance()->sendAsynchronousMessage("MIRRORMODE_CHANGED");
   }
 
-  if(nKey == SDLK_o && (mod & KMOD_CTRL) != 0){
-    StateManager::instance()->pushState(new StateOptions());
+  if(nKey == SDLK_o && (mod & KMOD_CTRL) != 0) {
+    if(StateManager::instance()->isThereASuchState("StateOptions") == false) { // do not open stateOptions over stateOptions
+      StateManager::instance()->pushState(new StateOptions());
+    }
   }
 
   if(nKey == SDLK_s && (mod & KMOD_CTRL) != 0) {
