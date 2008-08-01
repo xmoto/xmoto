@@ -57,6 +57,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_AUTOZOOM             _("Auto zoom")
 #define GAMETEXT_DB                   _("Database")
 #define GAMETEXT_CAMERAACTIVEZOOM     _("Camera Active Zoom")
+#define GAMETEXT_BEATINGMODE          _("Beating mode")
 #define GAMETEXT_BESTTIMES            _("Best Times")
 #define GAMETEXT_BESTPLAYER           _("Best player")
 #define GAMETEXT_BRAKE                _("Brake")
@@ -615,6 +616,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_DBSYNCHRONIZE _("Synchronise your database on the web")
 #define CONTEXTHELP_DBSYNCHRONIZE_ONQUIT _("Synchronise your database when your quit X-Moto")
 #define CONTEXTHELP_ENABLEJOYSTICKS _("Enable joysticks events")
+#define CONTEXTHELP_BEATINGMODE _("Preselect the retry button when dying or finishing a level")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

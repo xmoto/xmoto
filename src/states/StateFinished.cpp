@@ -111,6 +111,12 @@ void StateFinished::enter()
     m_universe->isTheCurrentPlayAHighscore(v_is_a_personnal_highscore, v_is_a_room_highscore);
   }
 
+  /* activ button */
+  if(XMSession::instance()->beatingMode()) {
+    UIButton *pTryAgainButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:TRYAGAIN_BUTTON"));
+    pTryAgainButton->makeActive();  
+  }
+
   /* replay */
   if(m_universe != NULL) {
     if(m_universe->isAReplayToSave()) {
@@ -172,7 +178,7 @@ void StateFinished::enter()
     }
   }
   makeBestTimesWindow(v_pBestTimes, XMSession::instance()->profile(), v_id_level, v_finish_time);
-
+  
   StateMenu::enter();
 }
 

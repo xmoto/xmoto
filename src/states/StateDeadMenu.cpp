@@ -81,6 +81,12 @@ void StateDeadMenu::enter()
     saveReplayButton->enableWindow(m_universe->isAReplayToSave());
   }
 
+  /* activ button */
+  if(XMSession::instance()->beatingMode()) {
+    UIButton *pTryAgainButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:TRYAGAIN_BUTTON"));
+    pTryAgainButton->makeActive();  
+  }
+
   StateMenu::enter();
 }
 
