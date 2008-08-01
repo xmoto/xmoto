@@ -92,6 +92,8 @@ public:
   static void cleanStates();
   static void refreshStaticCaptions();
 
+  bool isThereASuchState(const std::string& i_name);
+
 private:
   GameState* popState();
 
