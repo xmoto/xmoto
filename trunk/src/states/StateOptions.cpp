@@ -136,6 +136,12 @@ void StateOptions::checkEvents() {
     XMSession::instance()->setEnableActiveZoom(v_button->getChecked()); 
   }
 
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:BEATINGMODE"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setBeatingMode(v_button->getChecked()); 
+  }
+
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:ENABLECONTEXTHELP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
@@ -644,6 +650,15 @@ UIWindow* StateOptions::makeWindowOptions_general(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_CAMERAACTIVEZOOM);
+
+  /* Button to enable/disable beating mode */
+  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 123-10, GAMETEXT_BEATINGMODE,
+			  (v_window->getPosition().nWidth-40)/2, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("BEATINGMODE");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(50023);
+  v_button->setContextHelp(CONTEXTHELP_BEATINGMODE);
 
   /* theme */
   v_window = new UIWindow(v_generalTabs, 20, 30, GAMETEXT_THEME, v_generalTabs->getPosition().nWidth-30, v_generalTabs->getPosition().nHeight);
@@ -1198,6 +1213,8 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->enableContextHelp());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:AUTOSAVEREPLAYS"));
   v_button->setChecked(XMSession::instance()->autosaveHighscoreReplays());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:BEATINGMODE"));
+  v_button->setChecked(XMSession::instance()->beatingMode());
 
   // video
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:16BPP"));
