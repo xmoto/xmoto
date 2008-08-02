@@ -47,8 +47,8 @@ StateOptions::StateOptions(bool drawStateBehind, bool updateStatesBehind):
   m_name = "StateOptions";
 
   StateManager::instance()->registerAsObserver("UPDATEPROFILE", this);
-  StateManager::instance()->registerAsObserver("UPDATE_THEMES_LISTS", this);
-  StateManager::instance()->registerAsObserver("UPDATE_ROOMS_LISTS", this);
+  StateManager::instance()->registerAsObserver("THEMES_UPDATED", this);
+  StateManager::instance()->registerAsObserver("ROOMS_UPDATED", this);
   StateManager::instance()->registerAsObserver("CHANGE_WWW_ACCESS", this);
   StateManager::instance()->registerAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->registerAsObserver("REQUESTKEY", this);
@@ -56,8 +56,8 @@ StateOptions::StateOptions(bool drawStateBehind, bool updateStatesBehind):
 
 StateOptions::~StateOptions() {
   StateManager::instance()->unregisterAsObserver("UPDATEPROFILE", this);
-  StateManager::instance()->unregisterAsObserver("UPDATE_THEMES_LISTS", this);
-  StateManager::instance()->unregisterAsObserver("UPDATE_ROOMS_LISTS", this);
+  StateManager::instance()->unregisterAsObserver("THEMES_UPDATED", this);
+  StateManager::instance()->unregisterAsObserver("ROOMS_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("CHANGE_WWW_ACCESS", this);
   StateManager::instance()->unregisterAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("REQUESTKEY", this);
@@ -1744,11 +1744,11 @@ void StateOptions::executeOneCommand(std::string cmd, std::string args) {
     updateOptions();
   }
 
-  else if(cmd == "UPDATE_THEMES_LISTS") {
+  else if(cmd == "THEMES_UPDATED") {
     updateThemesList();
   }
 
-  else if(cmd == "UPDATE_ROOMS_LISTS") {
+  else if(cmd == "ROOMS_UPDATED") {
     updateRoomsList();      
   }
 
