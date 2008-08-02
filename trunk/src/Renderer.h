@@ -215,8 +215,7 @@ private:
 	
   void _RenderSprites(MotoGame* i_scene, bool bForeground,bool bBackground);
   void _RenderSprite(MotoGame* i_scene, Entity *pSprite, float i_sizeMult = 1.0);
-  void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme,
-		   bool i_renderBikeFront = true,
+  void _RenderBike(Biker* i_biker, bool i_renderBikeFront = true,
 		   const TColor&  i_filterColor = TColor(255, 255, 255, 0),
 		   const TColor&  i_filterUglyColor = TColor(255, 255, 255, 0));
   void renderBodyPart(const Vector2f& i_from, const Vector2f& i_to,

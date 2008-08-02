@@ -995,7 +995,7 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
       }
 
       try {
-	_RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(), i_ghost->getBikeTheme(), true,
+	_RenderBike(i_ghost, true,
 		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
       } catch(Exception &e) {
 	i_scene->gameMessage("Unable to render the ghost", true, 50);
@@ -1019,8 +1019,7 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
     
   if(XMSession::instance()->ugly()) {
     if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
-      _RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(),
-		  i_ghost->getBikeTheme(),
+      _RenderBike(i_ghost,
 		  true,
 		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
     }
@@ -1127,9 +1126,7 @@ int GameRenderer::nbParticlesRendered() const {
       Biker* v_player = i_scene->Players()[i];
       if(v_player != pCamera->getPlayerToFollow()) {
 	try {
-	  _RenderBike(v_player->getState(),
-		      v_player->getState()->Parameters(),
-		      v_player->getBikeTheme(),
+	  _RenderBike(v_player,
 		      v_player->getRenderBikeFront(),
 		      v_player->getColorFilter(),
 		      v_player->getUglyColorFilter());
@@ -1143,9 +1140,7 @@ int GameRenderer::nbParticlesRendered() const {
     if(v_found) {
       try {
 	Biker* pBiker = pCamera->getPlayerToFollow();
-	_RenderBike(pBiker->getState(),
-		    pBiker->getState()->Parameters(),
-		    pBiker->getBikeTheme(),
+	_RenderBike(pBiker,
 		    pBiker->getRenderBikeFront(),
 		    pBiker->getColorFilter(),
 		    pBiker->getUglyColorFilter());
@@ -2800,8 +2795,12 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
   /*===========================================================================
   Rendering of the bike
   ===========================================================================*/
-  void GameRenderer::_RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme, bool i_renderBikeFront,
+  void GameRenderer::_RenderBike(Biker* i_biker, bool i_renderBikeFront,
 				 const TColor&  i_filterColor, const TColor&  i_filterUglyColor) {
+    BikeState*      pBike      = i_biker->getState();
+    BikeParameters* pBikeParms = pBike->Parameters();
+    BikerTheme*     p_theme    = i_biker->getBikeTheme();
+
     Sprite*  pSprite;
     Texture* pTexture;
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
@@ -2988,10 +2987,10 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
       }  
 
       /* Draw body/frame */
-      o0 = Vector2f(1.0  - 2.0 * pBike->changeDirPer, 0.5);
-      o1 = Vector2f(-1.0 + 2.0 * pBike->changeDirPer, 0.5);
-      o2 = Vector2f(-1.0 + 2.0 * pBike->changeDirPer,-0.5);
-      o3 = Vector2f(1.0  - 2.0 * pBike->changeDirPer,-0.5);
+      o0 = Vector2f(1.0  - 2.0 * i_biker->changeDirPer(), 0.5);
+      o1 = Vector2f(-1.0 + 2.0 * i_biker->changeDirPer(), 0.5);
+      o2 = Vector2f(-1.0 + 2.0 * i_biker->changeDirPer(),-0.5);
+      o3 = Vector2f(1.0  - 2.0 * i_biker->changeDirPer(),-0.5);
       p0 = Vector2f(o0.x*pBike->fFrameRot[0] + o0.y*pBike->fFrameRot[1],
                     o0.x*pBike->fFrameRot[2] + o0.y*pBike->fFrameRot[3]);
       p1 = Vector2f(o1.x*pBike->fFrameRot[0] + o1.y*pBike->fFrameRot[1],

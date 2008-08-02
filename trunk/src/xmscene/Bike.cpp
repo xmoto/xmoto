@@ -40,7 +40,6 @@ BikeState::BikeState() {
   reInitializeAnchors();
 
   GameTime = 0;
-  changeDirPer = 1.0;
 }
 
 BikeState& BikeState::operator=(const BikeState& i_copy) {
@@ -51,7 +50,6 @@ BikeState& BikeState::operator=(const BikeState& i_copy) {
   *(this->m_bikeAnchors)    = *(i_copy.m_bikeAnchors);
 
   this->Dir = i_copy.Dir;
-  this->changeDirPer = i_copy.changeDirPer;
   this->fBikeEngineRPM = i_copy.fBikeEngineRPM;
   this->RearWheelP = i_copy.RearWheelP;
   this->FrontWheelP = i_copy.FrontWheelP;
@@ -237,8 +235,9 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
   m_colorFilter = i_colorFilter;
   m_uglyColorFilter = i_uglyColorFilter;
   m_doInterpolation = true;
-	m_bodyDetach    = false;
-	m_wheelDetach   =  false;
+  m_bodyDetach      = false;
+  m_wheelDetach     =  false;
+  m_changeDirPer      = 1.0;
 }
 
 Biker::~Biker() { 
@@ -276,6 +275,14 @@ void Biker::updateToTime(int i_time, int i_timeStep,
   m_EngineSound->setRPM(getBikeEngineRPM());
   if(m_playSound) {
     m_EngineSound->update(i_time);
+  }
+
+  /* update direction */
+  if(m_changeDirPer < 1.0) {
+    m_changeDirPer += ((float)i_timeStep)*3.0 / 100.0;
+    if(m_changeDirPer > 1.0) {
+      m_changeDirPer = 1.0;
+    }
   }
 }
 
@@ -657,4 +664,8 @@ float Biker::getRearWheelVelocity() {
 
 float Biker::getFrontWheelVelocity() {
   return 0.0;
+}
+
+float Biker::changeDirPer() const {
+  return m_changeDirPer;
 }
