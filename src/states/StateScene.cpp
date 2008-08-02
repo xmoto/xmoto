@@ -583,66 +583,71 @@ void StateScene::displayStats() {
   // quality
   int v_quality_yoffset = 5;
 
-  v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_QUALITY);
-  v_fm->printString(v_fg,
-		    A.x - vborder*2,
-		    A.y - vborder*2 - v_fg->realHeight() - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset,
-		    MAKE_COLOR(220,255,255,255), true);
-
-  if(XMSession::instance()->ugly()) {
-    for(int i=0; i<(int)(m_quality); i++) {
-      GameApp::instance()->getDrawLib()->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
-							     A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_quality_yoffset),
-						    STATS_LEVELS_NOTES_SIZE/2,
-						    1.0, 0, MAKE_COLOR(255, 0, 0, 255));
-    }
-  } else {
-    for(int i=0; i<5; i++) {
-      if(i<(int)(m_quality)) {
-	GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
-							      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
-						     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
-							      A.y - vborder*2 -v_quality_yoffset),
-						     m_qualityTex, 0xFFFFFFFF, true);
-      } else {
-	GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
-							      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
-						     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
-							      A.y - vborder*2 -v_quality_yoffset),
-						     m_uncheckedTex, 0xFFFFFFFF, true);
+  if(m_quality >= 0.0) {
+    v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_QUALITY);
+    v_fm->printString(v_fg,
+		      A.x - vborder*2,
+		      A.y - vborder*2 - v_fg->realHeight() - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset,
+		      MAKE_COLOR(220,255,255,255), true);
+    
+    if(XMSession::instance()->ugly()) {
+      for(int i=0; i<(int)(m_quality); i++) {
+	GameApp::instance()->getDrawLib()->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
+							       A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_quality_yoffset),
+						      STATS_LEVELS_NOTES_SIZE/2,
+						      1.0, 0, MAKE_COLOR(255, 0, 0, 255));
+      }
+    } else {
+      for(int i=0; i<5; i++) {
+	if(i<(int)(m_quality)) {
+	  GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
+						       Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 -v_quality_yoffset),
+						       m_qualityTex, 0xFFFFFFFF, true);
+	} else {
+	  GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
+						       Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 -v_quality_yoffset),
+						       m_uncheckedTex, 0xFFFFFFFF, true);
+	}
       }
     }
   }
 
   // difficulty
   int v_difficulty_yoffset = v_fg->realHeight() + STATS_LEVELS_NOTES_SIZE + v_quality_yoffset;
-  v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_DIFFICULTY);
-  v_fm->printString(v_fg,
-		    A.x - vborder*2,
-		    A.y - vborder*2 - v_fg->realHeight() - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset,
-		    MAKE_COLOR(220,255,255,255), true);
 
-  if(XMSession::instance()->ugly()) {
-    for(int i=0; i<(int)(m_difficulty); i++) {
-      GameApp::instance()->getDrawLib()->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
-							     A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_difficulty_yoffset),
-						    STATS_LEVELS_NOTES_SIZE/2,
-						    1.0, 0, MAKE_COLOR(255, 0, 0, 255));
-    }
-  } else {
-    for(int i=0; i<5; i++) {
-      if(i<(int)(m_difficulty)) {
-	GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
-							      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
-						     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+  if(m_difficulty >= 0.0) {
+    v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_DIFFICULTY);
+    v_fm->printString(v_fg,
+		      A.x - vborder*2,
+		      A.y - vborder*2 - v_fg->realHeight() - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset,
+		      MAKE_COLOR(220,255,255,255), true);
+    
+    if(XMSession::instance()->ugly()) {
+      for(int i=0; i<(int)(m_difficulty); i++) {
+	GameApp::instance()->getDrawLib()->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
+							       A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_difficulty_yoffset),
+						      STATS_LEVELS_NOTES_SIZE/2,
+						      1.0, 0, MAKE_COLOR(255, 0, 0, 255));
+      }
+    } else {
+      for(int i=0; i<5; i++) {
+	if(i<(int)(m_difficulty)) {
+	  GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
+						       Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
 							      A.y - vborder*2 -v_difficulty_yoffset),
-						     m_difficultyTex, 0xFFFFFFFF, true);
-      } else {
-	GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
-							      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
-						     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
-							      A.y - vborder*2 -v_difficulty_yoffset),
-						     m_uncheckedTex, 0xFFFFFFFF, true);
+						       m_difficultyTex, 0xFFFFFFFF, true);
+	} else {
+	  GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
+						       Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 -v_difficulty_yoffset),
+						       m_uncheckedTex, 0xFFFFFFFF, true);
+	}
       }
     }
   }
