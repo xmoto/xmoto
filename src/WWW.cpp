@@ -1090,6 +1090,20 @@ void WebThemes::updateThemeList(xmDatabase* i_pDb, WWWAppInterface* i_WebLevelAp
   i_pDb->webthemes_updateDB(v_destinationFile);
 }
 
+bool WebThemes::isUpdatable(xmDatabase* i_pDb, const std::string& i_id_theme) {
+  char **v_result;
+  unsigned int nrow;
+
+  v_result = i_pDb->readDB("SELECT count(1) FROM webthemes WHERE id_theme=\"" + xmDatabase::protectString(i_id_theme) + "\";",
+			   nrow);
+  if(nrow == 1) {
+    i_pDb->read_DB_free(v_result);
+    return true;
+  }
+  i_pDb->read_DB_free(v_result);
+  return false;
+}
+
 void XMSync::syncUp(xmDatabase* i_pDb, const ProxySettings* pProxySettings,
 		    const std::string& i_sitekey, const std::string& i_profile) {
   // sync_buildServerFile(const std::string& i_outFile, const std::string& i_sitekey, const std::string& i_profile)

@@ -236,7 +236,7 @@ class WebThemes {
  public:
   static void updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WWWAppInterface* i_WebLevelApp);
   static void updateThemeList(xmDatabase* i_pDb, WWWAppInterface* i_WebLevelApp);
-  
+  static bool isUpdatable(xmDatabase* i_pDb, const std::string& i_id_theme);
 };
 
 class XMSync {

@@ -157,10 +157,14 @@ int UpgradeLevelsThread::realThreadFunction()
     setThreadCurrentMicroOperation("");
 
     // update theme before upgrading levels
-    setSafeKill(true);
-    WebThemes::updateThemeList(m_pDb, this);
-    WebThemes::updateTheme(m_pDb, m_id_theme, this);
-    setSafeKill(false);
+      setSafeKill(true);
+      WebThemes::updateThemeList(m_pDb, this);
+      /* update the theme only if that's an updatable theme to allow people having custom theme to update levels */
+      /* if a texture is missing, level rendering could be weired */
+      if(WebThemes::isUpdatable(m_pDb, m_id_theme)) {
+	WebThemes::updateTheme(m_pDb, m_id_theme, this);
+      }
+      setSafeKill(false);
 
     StateManager::instance()->sendAsynchronousMessage("UPDATE_THEMES_LISTS");
 
