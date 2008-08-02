@@ -126,6 +126,7 @@ void StateFinished::enter()
 	/* active upload button */
 	if(XMSession::instance()->www()) {
 	  v_uploadButton->enableWindow(v_is_a_room_highscore);
+	  v_uploadButton->makeActive(); // always preselect the upload button even in beating mode
 	}
       }
       
