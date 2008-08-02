@@ -49,7 +49,7 @@ StateEditProfile::~StateEditProfile()
 
 void StateEditProfile::enter()
 {
-  GameApp::instance()->playMusic("menu1");
+  GameApp::instance()->playMenuMusic("menu1");
   
   createGUIIfNeeded();
   m_GUI = m_sGUI;

@@ -174,11 +174,11 @@ void StatePreplaying::enter()
 
   // music
   if(m_playAnimation) {
-    pGame->playMusic("");
+    pGame->playGameMusic("");
   } else {
     if(m_universe->getScenes().size() > 0) {
       // play music of the first world
-      GameApp::instance()->playMusic(m_universe->getScenes()[0]->getLevelSrc()->Music());
+      GameApp::instance()->playGameMusic(m_universe->getScenes()[0]->getLevelSrc()->Music());
     }
   }
 

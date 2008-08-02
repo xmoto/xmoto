@@ -130,7 +130,7 @@ void StateMainMenu::enter()
   createGUIIfNeeded();
   m_GUI = m_sGUI;
 
-  GameApp::instance()->playMusic("menu1");
+  GameApp::instance()->playMenuMusic("menu1");
 
   StateMenu::enter();
 
@@ -195,7 +195,7 @@ void StateMainMenu::enterAfterPop()
     m_require_updateStats = false;
   }
 
-  GameApp::instance()->playMusic("menu1");
+  GameApp::instance()->playMenuMusic("menu1");
 }
 
 void StateMainMenu::leave() {

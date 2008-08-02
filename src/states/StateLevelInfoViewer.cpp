@@ -62,14 +62,14 @@ void StateLevelInfoViewer::enter()
   m_GUI = m_sGUI;
   updateGUI();
 
-  GameApp::instance()->playMusic("menu1");
+  GameApp::instance()->playMenuMusic("menu1");
 
   StateMenu::enter();
 }
 
 void StateLevelInfoViewer::enterAfterPop()
 {
-  GameApp::instance()->playMusic("menu1");
+  GameApp::instance()->playMenuMusic("menu1");
   StateMenu::enterAfterPop();
 }
 

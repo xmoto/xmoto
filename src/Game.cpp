@@ -707,23 +707,52 @@ bool GameApp::isRequestingEnd() {
   return m_bQuit;
 }
 
+void GameApp::playMenuMusic(const std::string& i_music) {
+  if(XMSession::instance()->enableAudio() && XMSession::instance()->enableMenuMusic()) {
+    playMusic(i_music);
+  } else {
+    playMusic("");
+  }
+}
+
+void GameApp::playGameMusic(const std::string& i_music) {
+  if(XMSession::instance()->enableAudio() && XMSession::instance()->enableGameMusic()) {
+    playMusic(i_music);
+  } else {
+    playMusic("");
+  }
+}
+
 void GameApp::playMusic(const std::string& i_music) {
-  if( (XMSession::instance()->enableAudio() && XMSession::instance()->enableMenuMusic()) || i_music == "") {
-    if(i_music != m_playingMusic) {
-      try {
-	if(i_music == "") {
-	  m_playingMusic = "";
-	  Sound::stopMusic();
-	} else {
-	  m_playingMusic = i_music;
-	  Sound::playMusic(Theme::instance()->getMusic(i_music)->FilePath());
-	}
-      } catch(Exception &e) {
-	LogWarning("PlayMusic(%s) failed", i_music.c_str());
+  LogDebug("Playing '%s'\n", i_music.c_str());
+
+  if(i_music != m_playingMusic) {
+    try {
+      if(i_music == "") {
+	m_playingMusic = "";
 	Sound::stopMusic();
+      } else {
+	m_playingMusic = i_music;
+	Sound::playMusic(Theme::instance()->getMusic(i_music)->FilePath());
       }
+    } catch(Exception &e) {
+      LogWarning("PlayMusic(%s) failed", i_music.c_str());
+      Sound::stopMusic();
     }
   }
+}
+
+void GameApp::toogleEnableMusic() {
+  m_playingMusic = ""; // tell the game the last music played is "" otherwise, it doesn't know when music is disable then enable back
+  XMSession::instance()->setEnableAudio(! XMSession::instance()->enableAudio());
+  Sound::setActiv(XMSession::instance()->enableAudio());
+
+  if(XMSession::instance()->enableAudio()) {
+    SysMessage::instance()->displayText(SYS_MSG_AUDIO_ENABLED);
+  } else {
+    SysMessage::instance()->displayText(SYS_MSG_AUDIO_DISABLED);
+  }
+  StateManager::instance()->sendAsynchronousMessage("ENABLEAUDIO_CHANGED");
 }
 
 std::string GameApp::getWebRoomURL(unsigned int i_number, xmDatabase* pDb) {

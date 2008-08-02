@@ -494,7 +494,10 @@ void Level::loadXML(void) {
       /* Music */
       TiXmlElement *pMusicElem = XML::findElement(*m_xmlSource, NULL, std::string("music"));
       if(pMusicElem != NULL) {
-	m_music = XML::getOption(pMusicElem, "name");  
+	m_music = XML::getOption(pMusicElem, "name");
+	if(m_music == "None") {
+	  m_music = "";
+	}
       }
     }
 

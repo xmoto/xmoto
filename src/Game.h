@@ -109,7 +109,9 @@ public:
   void addGhosts(MotoGame* i_motogame, Theme* i_theme);
 
   // to call while playing
-  void playMusic(const std::string& i_music); // "" => no music
+  void toogleEnableMusic();
+  void playMenuMusic(const std::string& i_music); // "" => no music
+  void playGameMusic(const std::string& i_music); // "" => no music
 
   // ask the game to close as soon as possible
   void requestEnd();
@@ -153,6 +155,7 @@ protected:
 
 private:
   void manageEvent(SDL_Event* Event);
+  void playMusic(const std::string& i_music); // "" => no music
 
   ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
 

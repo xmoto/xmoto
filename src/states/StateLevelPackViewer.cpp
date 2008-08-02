@@ -65,7 +65,7 @@ void StateLevelPackViewer::enter()
   updateInfoFrame();
   updateRights(); // update rights after updateinfoframe because it can hide the infoframe
 
-  GameApp::instance()->playMusic("menu1");
+  GameApp::instance()->playMenuMusic("menu1");
   StateMenu::enter();
 }
 
@@ -82,7 +82,7 @@ void StateLevelPackViewer::enterAfterPop()
   // the three buttons are disabled, so enable them
   updateRights();
   
-  GameApp::instance()->playMusic("menu1");
+  GameApp::instance()->playMenuMusic("menu1");
   StateMenu::enterAfterPop();
 }
 

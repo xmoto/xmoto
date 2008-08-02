@@ -308,7 +308,13 @@ void StateOptions::checkEvents() {
     v_button->setClicked(false);
 
     XMSession::instance()->setEnableMenuMusic(v_button->getChecked());
-    Sound::setActiv(XMSession::instance()->enableAudio());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_GAME_MUSIC"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    XMSession::instance()->setEnableGameMusic(v_button->getChecked());
   }
 
   // controls
@@ -864,11 +870,17 @@ UIWindow* StateOptions::makeWindowOptions_audio(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_ENGINE_SOUND);
     
-  v_button = new UIButton(v_window, 5, 145, GAMETEXT_ENABLEMUSIC, v_window->getPosition().nWidth-10, 28);
+  v_button = new UIButton(v_window, 5, 145, GAMETEXT_ENABLEMENUMUSIC, v_window->getPosition().nWidth-10, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("ENABLE_MENU_MUSIC");
   v_button->setFont(drawlib->getFontSmall());
-  v_button->setContextHelp(CONTEXTHELP_MUSIC);
+  v_button->setContextHelp(CONTEXTHELP_MENUMUSIC);
+
+  v_button = new UIButton(v_window, 5, 173, GAMETEXT_ENABLEGAMEMUSIC, v_window->getPosition().nWidth-10, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("ENABLE_GAME_MUSIC");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_GAMEMUSIC);
 
   return v_window;
 }
@@ -1259,6 +1271,8 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->enableEngineSound());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
   v_button->setChecked(XMSession::instance()->enableMenuMusic());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_GAME_MUSIC"));
+  v_button->setChecked(XMSession::instance()->enableGameMusic());
 
   // controls
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:ENABLEJOYSTICKS"));
@@ -1352,6 +1366,8 @@ void StateOptions::updateAudioOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND"));
   v_button->enableWindow(XMSession::instance()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
+  v_button->enableWindow(XMSession::instance()->enableAudio());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_GAME_MUSIC"));
   v_button->enableWindow(XMSession::instance()->enableAudio());
 }
 

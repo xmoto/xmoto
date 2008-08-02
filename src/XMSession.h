@@ -152,6 +152,8 @@ public:
   bool MultiStopWhenOneFinishes() const;
   void setEnableMenuMusic(bool i_value);
   bool enableMenuMusic() const;
+  void setEnableGameMusic(bool i_value);
+  bool enableGameMusic() const;
   void setEnableInitZoom(bool i_value);
   bool enableInitZoom() const;
   void setEnableActiveZoom(bool i_value);
@@ -298,6 +300,7 @@ public:
   bool m_showMinimap;
   bool m_multiStopWhenOneFinishes; /* in multiplayer, stop the game when one finishes the level */
   bool m_enableMenuMusic;
+  bool m_enableGameMusic;
   bool m_enableInitZoom; /* true: Perform initial level scroll/zoom */
   bool m_enableActiveZoom;
   bool m_enableDeadAnimation;
