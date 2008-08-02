@@ -29,9 +29,9 @@ UpdateDbThread::UpdateDbThread()
   : XMThread()
 {
   if(XMSession::instance()->debug() == true) {
-    StateManager::instance()->registerAsEmitter("UPDATE_LEVELS_LISTS");
-    StateManager::instance()->registerAsEmitter("UPDATE_REPLAYS_LISTS");
-    StateManager::instance()->registerAsEmitter("UPDATE_THEMES_LISTS");
+    StateManager::instance()->registerAsEmitter("LEVELS_UPDATED");
+    StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
+    StateManager::instance()->registerAsEmitter("THEMES_UPDATED");
   }
 }
 
@@ -46,15 +46,15 @@ int UpdateDbThread::realThreadFunction()
   // text is update in the state
   setThreadProgress(0);
   LevelsManager::instance()->reloadLevelsFromLvl(m_pDb, this);
-  StateManager::instance()->sendAsynchronousMessage("UPDATE_LEVELS_LISTS");
+  StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
 
   setThreadCurrentOperation(GAMETEXT_RELOADINGREPLAYS);
   GameApp::instance()->initReplaysFromDir(m_pDb, this);
-  StateManager::instance()->sendAsynchronousMessage("UPDATE_REPLAYS_LISTS");
+  StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
   
   setThreadCurrentOperation(GAMETEXT_RELOADINGTHEMES);
   ThemeChoicer::initThemesFromDir(m_pDb);
-  StateManager::instance()->sendAsynchronousMessage("UPDATE_THEMES_LISTS");
+  StateManager::instance()->sendAsynchronousMessage("THEMES_UPDATED");
 
   return 0;
 }

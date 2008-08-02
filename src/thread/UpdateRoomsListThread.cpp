@@ -50,7 +50,7 @@ int UpdateRoomsListThread::realThreadFunction()
     FSWeb::downloadFileBz2UsingMd5(v_destinationFile, XMSession::instance()->webRoomsURL(), NULL, NULL, XMSession::instance()->proxySettings());
     setThreadProgress(90);
     m_pDb->webrooms_updateDB(v_destinationFile);
-    StateManager::instance()->sendAsynchronousMessage("UPDATE_ROOMS_LISTS");
+    StateManager::instance()->sendAsynchronousMessage("ROOMS_UPDATED");
   } catch(Exception &e) {
     /* file probably doesn't exist */
     LogWarning("Failed to analyse webrooms file");
