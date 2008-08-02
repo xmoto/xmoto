@@ -881,8 +881,6 @@ UIWindow* StateMainMenu::makeWindowReplays(UIWindow* i_parent) {
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setID("REPLAYS_CLEAN_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_REPLAYS_CLEAN);
-  v_button->showWindow(false);
-  v_button->setCanGetFocus(false);
 
   /* filter */
   v_button = new UIButton(v_window, v_window->getPosition().nWidth-105, v_window->getPosition().nHeight-68,
