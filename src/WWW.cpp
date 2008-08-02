@@ -1094,7 +1094,7 @@ bool WebThemes::isUpdatable(xmDatabase* i_pDb, const std::string& i_id_theme) {
   char **v_result;
   unsigned int nrow;
 
-  v_result = i_pDb->readDB("SELECT count(1) FROM webthemes WHERE id_theme=\"" + xmDatabase::protectString(i_id_theme) + "\";",
+  v_result = i_pDb->readDB("SELECT id_theme FROM webthemes WHERE id_theme=\"" + xmDatabase::protectString(i_id_theme) + "\";",
 			   nrow);
   if(nrow == 1) {
     i_pDb->read_DB_free(v_result);
