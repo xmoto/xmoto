@@ -40,6 +40,7 @@ BikeState::BikeState() {
   reInitializeAnchors();
 
   GameTime = 0;
+  changeDirPer = 1.0;
 }
 
 BikeState& BikeState::operator=(const BikeState& i_copy) {
@@ -50,6 +51,7 @@ BikeState& BikeState::operator=(const BikeState& i_copy) {
   *(this->m_bikeAnchors)    = *(i_copy.m_bikeAnchors);
 
   this->Dir = i_copy.Dir;
+  this->changeDirPer = i_copy.changeDirPer;
   this->fBikeEngineRPM = i_copy.fBikeEngineRPM;
   this->RearWheelP = i_copy.RearWheelP;
   this->FrontWheelP = i_copy.FrontWheelP;

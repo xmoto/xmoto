@@ -45,7 +45,8 @@ class EngineSoundSimulator;
 class BikeState {
   public:
     DriveDir Dir;         /* Driving left or right? */
-  
+    float changeDirPer; // between 0.0 and 1.0, give the % of the change dir done (only for graphisms)
+
     float fBikeEngineRPM;
   
     Vector2f RearWheelP;  /* Rear wheel position */
