@@ -131,6 +131,7 @@ void PlayerBiker::updateToTime(int i_time, int i_timeStep,
     bChangeDir = true;
 
     m_bikeState.Dir = m_bikeState.Dir==DD_LEFT?DD_RIGHT:DD_LEFT; /* switch */
+    m_bikeState.changeDirPer = 0.0;
   }
 
   /* somersault */
@@ -183,6 +184,14 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
 
   /* Update gravity vector */
   dWorldSetGravity(m_WorldID, i_gravity.x, i_gravity.y, 0);
+
+  /* update direction */
+  if(m_bikeState.changeDirPer < 1.0) {
+    m_bikeState.changeDirPer += ((float)i_timeStep)*3.0 / 100.0;
+    if(m_bikeState.changeDirPer > 1.0) {
+      m_bikeState.changeDirPer = 1.0;
+    }
+  }
 
   /* Should we disable stuff? Ok ODE has an autodisable feature, but i'd rather
      roll my own here. */

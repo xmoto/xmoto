@@ -2988,10 +2988,10 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
       }  
 
       /* Draw body/frame */
-      o0 = Vector2f(-1,0.5);
-      o1 = Vector2f(1,0.5);
-      o2 = Vector2f(1,-0.5);
-      o3 = Vector2f(-1,-0.5);
+      o0 = Vector2f(1.0  - 2.0 * pBike->changeDirPer, 0.5);
+      o1 = Vector2f(-1.0 + 2.0 * pBike->changeDirPer, 0.5);
+      o2 = Vector2f(-1.0 + 2.0 * pBike->changeDirPer,-0.5);
+      o3 = Vector2f(1.0  - 2.0 * pBike->changeDirPer,-0.5);
       p0 = Vector2f(o0.x*pBike->fFrameRot[0] + o0.y*pBike->fFrameRot[1],
                     o0.x*pBike->fFrameRot[2] + o0.y*pBike->fFrameRot[3]);
       p1 = Vector2f(o1.x*pBike->fFrameRot[0] + o1.y*pBike->fFrameRot[1],
