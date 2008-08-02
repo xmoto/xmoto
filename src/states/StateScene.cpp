@@ -42,9 +42,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* control the particle generation by ask the particle renders to limit themself if there are too much particles on the screen */
 #define NB_PARTICLES_TO_RENDER_LIMITATION 512
 
-StateScene::StateScene(bool i_doShade, bool i_doShadeAnim)
-: GameState(false, false, i_doShade, i_doShadeAnim)
-{
+#define STATS_LEVELS_NOTES_SIZE 15
+
+void StateScene::init() {
+  Sprite *v_sprite;
+
   m_fLastPhysTime = -1.0;
   // while playing, we want 100 fps for the physic
   m_updateFps     = 100;
@@ -55,23 +57,41 @@ StateScene::StateScene(bool i_doShade, bool i_doShadeAnim)
   m_benchmarkNbFrame   = 0;
   m_benchmarkStartTime = GameApp::getXMTime();
 
+  /* stats */
+  m_difficulty = -1.0;
+  m_quality    = -1.0;
+    
+  m_uncheckedTex = m_qualityTex = m_difficultyTex = NULL;
+  v_sprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "qsChoiceUnchecked");
+  if(v_sprite != NULL) {
+    m_uncheckedTex = v_sprite->getTexture();
+  }
+  
+  v_sprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "qsChoiceQuality");
+  if(v_sprite != NULL) {
+    m_qualityTex = v_sprite->getTexture();
+  }
+  
+  v_sprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "qsChoiceDifficulty");
+  if(v_sprite != NULL) {
+    m_difficultyTex = v_sprite->getTexture();
+  }
+
+  // message registering
   initMessageRegistering();
+}
+
+StateScene::StateScene(bool i_doShade, bool i_doShadeAnim)
+: GameState(false, false, i_doShade, i_doShadeAnim)
+{
+  init();
 }
 
 StateScene::StateScene(Universe* i_universe, bool i_doShade, bool i_doShadeAnim)
   : GameState(false, false, i_doShade, i_doShadeAnim)
 {
-  m_fLastPhysTime = -1.0;
-  // while playing, we want 100 fps for the physic
-  m_updateFps     = 100;
-  m_showCursor = false;
-  m_cameraAnim = NULL;
+  init();
   m_universe   = i_universe;
-
-  m_benchmarkNbFrame   = 0;
-  m_benchmarkStartTime = GameApp::getXMTime();
-
-  initMessageRegistering();
 }
 
 StateScene::~StateScene()
@@ -559,6 +579,74 @@ void StateScene::displayStats() {
 		    GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth()   - vborder,
 		    GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight() - vborder,
 		    MAKE_COLOR(220,255,255,255), true);
+
+  // quality
+  int v_quality_yoffset = 5;
+
+  v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_QUALITY);
+  v_fm->printString(v_fg,
+		    A.x - vborder*2,
+		    A.y - vborder*2 - v_fg->realHeight() - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset,
+		    MAKE_COLOR(220,255,255,255), true);
+
+  if(XMSession::instance()->ugly()) {
+    for(int i=0; i<(int)(m_quality); i++) {
+      GameApp::instance()->getDrawLib()->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
+							     A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_quality_yoffset),
+						    STATS_LEVELS_NOTES_SIZE/2,
+						    1.0, 0, MAKE_COLOR(255, 0, 0, 255));
+    }
+  } else {
+    for(int i=0; i<5; i++) {
+      if(i<(int)(m_quality)) {
+	GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+							      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
+						     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+							      A.y - vborder*2 -v_quality_yoffset),
+						     m_qualityTex, 0xFFFFFFFF, true);
+      } else {
+	GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+							      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
+						     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+							      A.y - vborder*2 -v_quality_yoffset),
+						     m_uncheckedTex, 0xFFFFFFFF, true);
+      }
+    }
+  }
+
+  // difficulty
+  int v_difficulty_yoffset = v_fg->realHeight() + STATS_LEVELS_NOTES_SIZE + v_quality_yoffset;
+  v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_DIFFICULTY);
+  v_fm->printString(v_fg,
+		    A.x - vborder*2,
+		    A.y - vborder*2 - v_fg->realHeight() - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset,
+		    MAKE_COLOR(220,255,255,255), true);
+
+  if(XMSession::instance()->ugly()) {
+    for(int i=0; i<(int)(m_difficulty); i++) {
+      GameApp::instance()->getDrawLib()->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
+							     A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_difficulty_yoffset),
+						    STATS_LEVELS_NOTES_SIZE/2,
+						    1.0, 0, MAKE_COLOR(255, 0, 0, 255));
+    }
+  } else {
+    for(int i=0; i<5; i++) {
+      if(i<(int)(m_difficulty)) {
+	GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+							      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
+						     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+							      A.y - vborder*2 -v_difficulty_yoffset),
+						     m_difficultyTex, 0xFFFFFFFF, true);
+      } else {
+	GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+							      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
+						     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+							      A.y - vborder*2 -v_difficulty_yoffset),
+						     m_uncheckedTex, 0xFFFFFFFF, true);
+      }
+    }
+  }
+
 }
 
 void StateScene::makeStatsStr() {
@@ -602,6 +690,22 @@ void StateScene::makeStatsStr() {
 	       v_nbPlayed, v_nbCompleted, v_nbDied, v_nbRestart,
 	   formatTime(v_playedTime).c_str());
       m_statsStr = c_tmp;
+      v_pDb->read_DB_free(v_result);
+
+
+      // quality and difficulty
+      v_result = v_pDb->readDB("SELECT difficulty, quality "
+			       "FROM weblevels "
+			       "WHERE id_level=\"" + xmDatabase::protectString(v_idLevel) + "\";",
+			       nrow);
+      if(nrow != 1) {
+	/* not statistics */
+	m_difficulty = -1.0;
+	m_quality    = -1.0;
+      } else {
+	m_difficulty = atof(v_pDb->getResult(v_result, 2, 0, 0));
+	m_quality    = atof(v_pDb->getResult(v_result, 2, 0, 1));
+      }
       v_pDb->read_DB_free(v_result);
     }
   }

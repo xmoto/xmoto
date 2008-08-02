@@ -82,8 +82,11 @@ protected:
 
  /* stats to display */
  std::string m_statsStr;
+ float m_difficulty, m_quality;
+ Texture *m_uncheckedTex, *m_qualityTex, *m_difficultyTex;
 
 private:
+ void init();
   void initMessageRegistering();
 };
 
