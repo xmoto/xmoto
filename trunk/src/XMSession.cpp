@@ -67,6 +67,7 @@ void XMSession::setToDefault() {
   m_showMinimap                   = DEFAULT_SHOWMINIMAP;
   m_multiStopWhenOneFinishes      = DEFAULT_MULTISTOPWHENONEFINISHES;
   m_enableMenuMusic               = DEFAULT_ENABLEMENUMUSIC;
+  m_enableGameMusic               = DEFAULT_ENABLEGAMEMUSIC;
   m_enableDeadAnimation           = DEFAULT_ENABLEDEADANIMATION;
   m_menuGraphics                  = DEFAULT_MENUGRAPHICS;
   m_gameGraphics                  = DEFAULT_GAMEGRAPHICS;
@@ -275,6 +276,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_showEngineCounter              = pDb->config_getBool   (i_id_profile, "ShowEngineCounter"             , m_showEngineCounter);
   m_enableContextHelp        	   = pDb->config_getBool   (i_id_profile, "ContextHelp"                   , m_enableContextHelp);
   m_enableMenuMusic                = pDb->config_getBool   (i_id_profile, "MenuMusic"                     , m_enableMenuMusic  );
+  m_enableGameMusic                = pDb->config_getBool   (i_id_profile, "GameMusic"                     , m_enableGameMusic  );
   m_enableInitZoom           	   = pDb->config_getBool   (i_id_profile, "InitZoom"                      , m_enableInitZoom   );
   m_enableActiveZoom         	   = pDb->config_getBool   (i_id_profile, "CameraActiveZoom"              , m_enableActiveZoom );
   m_enableDeadAnimation      	   = pDb->config_getBool   (i_id_profile, "DeathAnim"                     , m_enableDeadAnimation);
@@ -394,6 +396,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "ShowEngineCounter"             , m_showEngineCounter);
 	pDb->config_setBool   (m_profile, "ContextHelp"                   , m_enableContextHelp);
 	pDb->config_setBool   (m_profile, "MenuMusic"                     , m_enableMenuMusic);
+	pDb->config_setBool   (m_profile, "GameMusic"                     , m_enableGameMusic);
 	pDb->config_setBool   (m_profile, "InitZoom"                      , m_enableInitZoom);
 	pDb->config_setBool   (m_profile, "CameraActiveZoom"              , m_enableActiveZoom);
 	pDb->config_setBool   (m_profile, "DeathAnim"                     , m_enableDeadAnimation);
@@ -685,6 +688,14 @@ void XMSession::setEnableMenuMusic(bool i_value) {
 
 bool XMSession::enableMenuMusic() const {
   return m_enableMenuMusic;
+}
+
+void XMSession::setEnableGameMusic(bool i_value) {
+  m_enableGameMusic = i_value;
+}
+
+bool XMSession::enableGameMusic() const {
+  return m_enableGameMusic;
 }
 
 void XMSession::setEnableInitZoom(bool i_value) {

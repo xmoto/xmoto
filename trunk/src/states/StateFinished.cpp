@@ -153,7 +153,7 @@ void StateFinished::enter()
   if(v_is_a_room_highscore || v_is_a_personnal_highscore) {
     /* play a sound */
     try {
-      GameApp::instance()->playMusic("");
+      GameApp::instance()->playGameMusic("");
       Sound::playSampleByName(Theme::instance()->getSound("NewHighscore")->FilePath());
     } catch(Exception &e) {
     }

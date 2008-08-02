@@ -209,7 +209,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ENABLEENGINESOUND    _("Enable Engine Sound")
 #define GAMETEXT_ENABLEGHOST          _("Enable Ghost")
 #define GAMETEXT_ENABLEINGAMEWORLDRECORD _("Show World Record in-game")
-#define GAMETEXT_ENABLEMUSIC          _("Enable Music")
+#define GAMETEXT_ENABLEMENUMUSIC          _("Enable menu music")
+#define GAMETEXT_ENABLEGAMEMUSIC          _("Enable game music")
 #define GAMETEXT_ENABLEWEBHIGHSCORES  _("Enable WWW Access")
 #define GAMETEXT_ENTERPLAYERNAME      _("Enter player name")
 #define GAMETEXT_ENTERREPLAYNAME      _("Enter name of replay")
@@ -559,7 +560,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 
 #define CONTEXTHELP_STATS _("Show various statistics about X-Moto")
 #define CONTEXTHELP_UPDATESTATS _("Update statistics (also happens each time X-Moto is started)")
-#define CONTEXTHELP_MUSIC _("Enables background music in the main menu")
+#define CONTEXTHELP_MENUMUSIC _("Enables background music in the main menu")
+#define CONTEXTHELP_GAMEMUSIC _("Enables background music while playing")
 
 #define CONTEXTHELP_THEMES _("Choose the X-Moto graphics theme")
 #define CONTEXTHELP_UPDATETHEMESLIST _("Check for new themes on the web")

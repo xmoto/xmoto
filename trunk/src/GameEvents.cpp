@@ -2235,7 +2235,7 @@ MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name, float p_volume
   
   void MGE_PlayMusic::doAction(MotoGame *p_pMotoGame) {
     try {
-      GameApp::instance()->playMusic(m_musicName);
+      GameApp::instance()->playGameMusic(m_musicName);
     } catch(Exception &e) {
       LogWarning("PlayMusic(\"%s\") failed: %s", m_musicName.c_str(), e.getMsg().c_str());
     }
@@ -2272,7 +2272,7 @@ MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name, float p_volume
   
   void MGE_StopMusic::doAction(MotoGame *p_pMotoGame) {
     try {
-      GameApp::instance()->playMusic("");
+      GameApp::instance()->playGameMusic("");
     } catch(Exception &e) {
       LogWarning("StopMusic failed: %s", e.getMsg().c_str());
     }
