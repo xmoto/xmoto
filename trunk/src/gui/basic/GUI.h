@@ -234,7 +234,7 @@ public:
   bool isBranchHidden(void);
   bool isDisabled(void); // recursive to parents
   bool isVisible(); // recursive to parents
-  bool canGetFocus(void) {return m_canGetFocus;}
+  bool canGetFocus(void) {return m_canGetFocus && isHidden() == false;}
   void setCanGetFocus(bool b) {m_canGetFocus = b;}
   void showWindow(bool b);      
   void enableWindow(bool b) {m_bDisable=!b;}
