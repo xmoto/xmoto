@@ -36,6 +36,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Trainer.h"
 #include "SysMessage.h"
 
+#define MINIMUM_VELOCITY_TO_GET_MAXIMUM_DEATH_SOUND 70.0
+
 StatePlaying::StatePlaying(Universe* i_universe):
   StateScene(i_universe)
 {
@@ -411,7 +413,24 @@ void StatePlaying::onAllDead() {
   
   /* Play the DIE!!! sound */
   try {
-    Sound::playSampleByName(Theme::instance()->getSound("Headcrash")->FilePath(), 0.3);
+    float v_deathVolume;
+    float v_maxVelocity = 0.0;
+
+    if(m_universe != NULL) {
+      for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	for(unsigned int j=0; j<m_universe->getScenes()[i]->Players().size(); j++) {
+	  if(m_universe->getScenes()[i]->Players()[j]->getBikeLinearVel() > v_maxVelocity) {
+	    v_maxVelocity = m_universe->getScenes()[i]->Players()[j]->getBikeLinearVel();
+	  }
+	}
+      }
+    }
+    // make deathVolume dependant of the velocity of the fastest of the players
+    v_deathVolume = v_maxVelocity / MINIMUM_VELOCITY_TO_GET_MAXIMUM_DEATH_SOUND;
+    if(v_deathVolume > 1.0) {
+      v_deathVolume = 1.0;
+    }
+    Sound::playSampleByName(Theme::instance()->getSound("Headcrash")->FilePath(), v_deathVolume);
   } catch(Exception &e) {
   }
   
