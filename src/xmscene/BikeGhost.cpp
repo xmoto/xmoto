@@ -177,6 +177,7 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
 			 CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			 MotoGame *i_motogame) {
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
+  DriveDir v_previousDir = m_bikeState.Dir;
 
   /* back in the past */
   // m_ghostBikeStates.size()/2-1 : it's the more recent frame in the past
@@ -276,6 +277,11 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
 	}
       }
     }
+  }
+
+  /* update change position */
+  if(v_previousDir != m_bikeState.Dir) {
+    m_changeDirPer = 0.0;
   }
 
   if(m_isActiv) {
