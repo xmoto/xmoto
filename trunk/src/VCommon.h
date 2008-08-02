@@ -38,7 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #endif
 
 //used a comparator in sdt::map
-#include <string>
+#include <string.h> // for strcmp
 struct ltstr {
   bool operator()(const char* s1, const char* s2) const {
     return strcmp(s1, s2) < 0;
