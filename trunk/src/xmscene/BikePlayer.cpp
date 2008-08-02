@@ -33,6 +33,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* This is the magic depth factor :)  - tweak to obtain max. stability */
 #define DEPTH_FACTOR    2
 
+// minimum velocity so that the wheel is detached once the player is dead
+#define DEAD_WHEEL_DETACH_SPEED_MIN 40
+
 ReplayBiker::ReplayBiker(std::string i_replayFile, Theme *i_theme, BikerTheme* i_bikerTheme)
 :Ghost(i_replayFile, true, i_theme, i_bikerTheme,
        TColor(255, 255, 255, 0),
@@ -699,10 +702,11 @@ int PlayerBiker::intersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts, C
          all the way through some geometry? Check it's path. */
       //nNumContacts = m_Collision.collideLine(
   } else {
-		if(m_bodyDetach) {
-			m_wheelDetach = true;
-		}
-	}
+    // detach the wheel if the player is dead and the velocity is too much
+    if(isDead() && getBikeLinearVel() > DEAD_WHEEL_DETACH_SPEED_MIN) {
+      m_wheelDetach = true;
+    }
+  }
   return nNumContacts;
 }
 
