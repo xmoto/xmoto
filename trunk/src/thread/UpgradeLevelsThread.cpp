@@ -178,19 +178,21 @@ int UpgradeLevelsThread::realThreadFunction()
     v_exit_code = 1;
   }
 
-  /* Got some new levels... load them! */
-  LogInfo("Loading new and updated levels...");
+  if(v_exit_code == 0) {
+    /* Got some new levels... load them! */
+    LogInfo("Loading new and updated levels...");
 
-  setThreadCurrentOperation(GAMETEXT_LOADNEWLEVELS);
-  setThreadProgress(0);
+    setThreadCurrentOperation(GAMETEXT_LOADNEWLEVELS);
+    setThreadProgress(0);
 
-  LevelsManager::instance()->updateLevelsFromLvl(m_pWebLevels->getNewDownloadedLevels(),
-						 m_pWebLevels->getUpdatedDownloadedLevels(),
-						 this, m_pDb);
+    LevelsManager::instance()->updateLevelsFromLvl(m_pWebLevels->getNewDownloadedLevels(),
+						   m_pWebLevels->getUpdatedDownloadedLevels(),
+						   this, m_pDb);
 
-  /* Update level lists */
-  StateManager::instance()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
-  StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
+    /* Update level lists */
+    StateManager::instance()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
+    StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
+  }
 
   return v_exit_code;
 }
