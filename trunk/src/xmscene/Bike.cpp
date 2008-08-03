@@ -269,6 +269,14 @@ float Biker::getBikeEngineRPM() {
 void Biker::updateToTime(int i_time, int i_timeStep,
 			     CollisionSystem *v_collisionSystem, Vector2f i_gravity,
 			     MotoGame *i_motogame) {
+  /* update direction - even if the biker is dead of finished */
+  if(m_changeDirPer < 1.0) {
+    m_changeDirPer += ((float)i_timeStep)*3.0 / 100.0;
+    if(m_changeDirPer > 1.0) {
+      m_changeDirPer = 1.0;
+    }
+  }
+
   if(isFinished() || isDead()) return;
 
   /* sound */
@@ -277,13 +285,6 @@ void Biker::updateToTime(int i_time, int i_timeStep,
     m_EngineSound->update(i_time);
   }
 
-  /* update direction */
-  if(m_changeDirPer < 1.0) {
-    m_changeDirPer += ((float)i_timeStep)*3.0 / 100.0;
-    if(m_changeDirPer > 1.0) {
-      m_changeDirPer = 1.0;
-    }
-  }
 }
 
 bool Biker::isTouching(const Entity* i_entity) const {
