@@ -38,6 +38,7 @@ then
   MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -mwindows -luserenv -lintl -lSDL_ttf -lSDL_mixer -lode xmoto_icone.o" # -mwindows to avoid dos window
   # -MD is for gettext (see gettext faq)
   CXXFLAGS="$CXXFLAGS"" -mthreads -MD"
+  LDFLAGS="$LDFLAGS"" -L/usr/i586-mingw32msvc/lib"
   AC_SUBST([MINGW32_LIBS])
 fi
 AM_CONDITIONAL([WIN32], test "$target_os" = "mingw32")
