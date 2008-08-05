@@ -19,12 +19,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateUpdate.h"
-#include "Game.h"
-#include "drawlib/DrawLib.h"
-#include "GameText.h"
-#include "XMSession.h"
+#include "../Game.h"
+#include "../drawlib/DrawLib.h"
+#include "../GameText.h"
+#include "../XMSession.h"
 #include "StateMessageBox.h"
-#include "helpers/Log.h"
+#include "../helpers/Log.h"
 
 
 /* static members */

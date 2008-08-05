@@ -24,6 +24,10 @@ extern "C" {
       #include <lua.h>
       #include <lualib.h>
       #include <lauxlib.h>
+    #elif defined(CMAKE_LUA_H)
+      #include "lua.h"
+      #include "lualib.h"
+      #include "lauxlib.h"
     #else
       #error Missing lua
     #endif

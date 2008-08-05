@@ -18,12 +18,12 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "Game.h"
-#include "GameText.h"
 #include "StateUpdateTheme.h"
+#include "../Game.h"
+#include "../GameText.h"
 #include "StateMessageBox.h"
-#include "thread/UpdateThemeThread.h"
-#include "helpers/Log.h"
+#include "../thread/UpdateThemeThread.h"
+#include "../helpers/Log.h"
 
 StateUpdateTheme::StateUpdateTheme(const std::string& i_id_theme,
 				   bool drawStateBehind,

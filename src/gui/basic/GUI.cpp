@@ -21,13 +21,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  In-game graphical user interface
  */
-#include "VXml.h"
 #include "GUI.h"
-#include "GameText.h"
-#include "drawlib/DrawLib.h"
-#include "Game.h"
-#include "helpers/Log.h"
-#include "helpers/utf8.h"
+#include "../../VXml.h"
+#include "../../GameText.h"
+#include "../../drawlib/DrawLib.h"
+#include "../../Game.h"
+#include "../../helpers/Log.h"
+#include "../../helpers/utf8.h"
 
   DrawLib* UIWindow::m_drawLib = NULL;
 

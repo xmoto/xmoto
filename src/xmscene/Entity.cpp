@@ -19,17 +19,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Entity.h"
-#include "VXml.h"
-#include "PhysSettings.h"
-#include "VFileIO.h"
-#include "Theme.h"
-#include "helpers/Log.h"
-#include "helpers/Random.h"
+#include "../VXml.h"
+#include "../PhysSettings.h"
+#include "../VFileIO.h"
+#include "../Theme.h"
+#include "../helpers/Log.h"
+#include "../helpers/Random.h"
 #include "Level.h"
-#include "chipmunk/chipmunk.h"
+#include "../chipmunk.h"
 #include "Block.h"
 #include "ChipmunkWorld.h"
-#include "XMSession.h"
+#include "../XMSession.h"
 #include <sstream>
 
 // don't excceed this number of particles to not reduce significantly the fps

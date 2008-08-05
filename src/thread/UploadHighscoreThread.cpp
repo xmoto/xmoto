@@ -19,14 +19,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "UploadHighscoreThread.h"
-#include "helpers/Log.h"
-#include "GameText.h"
-#include "Game.h"
-#include "XMSession.h"
-#include "states/StateManager.h"
-#include "WWW.h"
-#include "VFileIO.h"
-#include "Replay.h"
+#include "../helpers/Log.h"
+#include "../GameText.h"
+#include "../Game.h"
+#include "../XMSession.h"
+#include "../states/StateManager.h"
+#include "../WWW.h"
+#include "../VFileIO.h"
+#include "../Replay.h"
 
 UploadHighscoreThread::UploadHighscoreThread(const std::string& i_highscorePath)
   : XMThread()

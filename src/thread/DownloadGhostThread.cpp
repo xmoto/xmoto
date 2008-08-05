@@ -19,13 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "DownloadGhostThread.h"
-#include "Game.h"
-#include "GameText.h"
-#include "states/StateManager.h"
-#include "states/StateDownloadGhost.h"
-#include "helpers/Log.h"
-#include "VFileIO.h"
-#include "helpers/CmdArgumentParser.h"
+#include "../Game.h"
+#include "../GameText.h"
+#include "../states/StateManager.h"
+#include "../states/StateDownloadGhost.h"
+#include "../helpers/Log.h"
+#include "../VFileIO.h"
+#include "../helpers/CmdArgumentParser.h"
 
 DownloadGhostThread::DownloadGhostThread(std::string levelId,
 					 bool i_onlyMainRoomGhost)

@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __CMDARGUMENTPARSER_H__
 #define __CMDARGUMENTPARSER_H__
 
-#include "helpers/Singleton.h"
+#include "../helpers/Singleton.h"
 #include <string>
 
 class CmdArgumentParser : public Singleton<CmdArgumentParser> {

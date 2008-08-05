@@ -25,21 +25,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include "Level.h"
-#include "VFileIO.h"
-#include "XMBuild.h"
-#include "VXml.h"
-#include "helpers/Color.h"
-#include "helpers/Log.h"
-#include "db/xmDatabase.h"
+#include "../VFileIO.h"
+#include "../XMBuild.h"
+#include "../VXml.h"
+#include "../helpers/Color.h"
+#include "../helpers/Log.h"
+#include "../db/xmDatabase.h"
 #include "Block.h"
 #include "Entity.h"
 #include "Zone.h"
 #include "SkyApparence.h"
-#include "Collision.h"
+#include "../Collision.h"
 #include "Scene.h"
-#include "chipmunk/chipmunk.h"
+#include "../chipmunk.h"
 #include "ChipmunkWorld.h"
-#include "Theme.h"
+#include "../Theme.h"
 
 #define CACHE_LEVEL_FORMAT_VERSION 25
 

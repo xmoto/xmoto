@@ -19,11 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateMainMenu.h"
-#include "Game.h"
-#include "drawlib/DrawLib.h"
-#include "GameText.h"
-#include "gui/specific/GUIXMoto.h"
-#include "XMSession.h"
+#include "../Game.h"
+#include "../drawlib/DrawLib.h"
+#include "../GameText.h"
+#include "../gui/specific/GUIXMoto.h"
+#include "../XMSession.h"
 #include "StatePreplayingGame.h"
 #include "StatePreplayingReplay.h"
 #include "StateLevelInfoViewer.h"
@@ -37,13 +37,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateCheckWww.h"
 #include "StateUpgradeLevels.h"
 #include "StateDownloadGhost.h"
-#include "LevelsManager.h"
-#include "helpers/Log.h"
-#include "helpers/Text.h"
-#include "Sound.h"
-#include "thread/CheckWwwThread.h"
-#include "Replay.h"
-#include "helpers/CmdArgumentParser.h"
+#include "../LevelsManager.h"
+#include "../helpers/Log.h"
+#include "../helpers/Text.h"
+#include "../Sound.h"
+#include "../thread/CheckWwwThread.h"
+#include "../Replay.h"
+#include "../helpers/CmdArgumentParser.h"
 #include <sstream>
 
 /* static members */

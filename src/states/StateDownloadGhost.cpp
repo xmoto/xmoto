@@ -21,10 +21,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateDownloadGhost.h"
 #include "StatePreplayingReplay.h"
 #include "StateReplaying.h"
-#include "thread/DownloadGhostThread.h"
-#include "helpers/Log.h"
-#include "Game.h"
-#include "helpers/CmdArgumentParser.h"
+#include "../thread/DownloadGhostThread.h"
+#include "../helpers/Log.h"
+#include "../Game.h"
+#include "../helpers/CmdArgumentParser.h"
 
 StateDownloadGhost::StateDownloadGhost(std::string levelId,
 				       bool launchReplaying,

@@ -33,13 +33,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateRequestKey.h"
 #include "StateOptions.h"
 
-#include "XMSession.h"
-#include "drawlib/DrawLib.h"
-#include "Game.h"
-#include "helpers/Log.h"
-#include "SysMessage.h"
-#include "xmscene/Camera.h"
-#include "VideoRecorder.h"
+#include "../XMSession.h"
+#include "../drawlib/DrawLib.h"
+#include "../Game.h"
+#include "../helpers/Log.h"
+#include "../SysMessage.h"
+#include "../xmscene/Camera.h"
+#include "../VideoRecorder.h"
 
 StateManager::StateManager()
 {
