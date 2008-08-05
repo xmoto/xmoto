@@ -54,22 +54,22 @@ cpfmin(cpFloat a, cpFloat b)
 #define CP_HASH_COEF (3344921057ul)
 #define CP_HASH_PAIR(A, B) (((unsigned long int)(A))*CP_HASH_COEF ^ ((unsigned long int)(B))*CP_HASH_COEF)
 
-#include "chipmunk/cpVect.h"
-#include "chipmunk/cpBB.h"
-#include "chipmunk/cpBody.h"
-#include "chipmunk/cpArray.h"
-#include "chipmunk/cpHashSet.h"
-#include "chipmunk/cpSpaceHash.h"
+#include "cpVect.h"
+#include "cpBB.h"
+#include "cpBody.h"
+#include "cpArray.h"
+#include "cpHashSet.h"
+#include "cpSpaceHash.h"
 
-#include "chipmunk/cpShape.h"
-#include "chipmunk/cpPolyShape.h"
+#include "cpShape.h"
+#include "cpPolyShape.h"
 
-#include "chipmunk/cpArbiter.h"
-#include "chipmunk/cpCollision.h"
+#include "cpArbiter.h"
+#include "cpCollision.h"
 	
-#include "chipmunk/cpJoint.h"
+#include "cpJoint.h"
 
-#include "chipmunk/cpSpace.h"
+#include "cpSpace.h"
 
 
 void cpInitChipmunk(void);

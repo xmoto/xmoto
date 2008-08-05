@@ -20,12 +20,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateUpgradeLevels.h"
 #include "StateMessageBox.h"
-#include "thread/UpgradeLevelsThread.h"
-#include "GameText.h"
-#include "db/xmDatabase.h"
-#include "XMSession.h"
-#include "helpers/Log.h"
-#include "helpers/CmdArgumentParser.h"
+#include "../thread/UpgradeLevelsThread.h"
+#include "../GameText.h"
+#include "../db/xmDatabase.h"
+#include "../XMSession.h"
+#include "../helpers/Log.h"
+#include "../helpers/CmdArgumentParser.h"
 
 StateUpgradeLevels::StateUpgradeLevels(bool drawStateBehind,
 				       bool updateStatesBehind)

@@ -20,13 +20,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <algorithm>
 #include "Block.h"
-#include "Collision.h"
-#include "PhysSettings.h"
-#include "helpers/Log.h"
-#include "VFileIO.h"
-#include "VXml.h"
-#include "BSP.h"
-#include "chipmunk/chipmunk.h"
+#include "../Collision.h"
+#include "../PhysSettings.h"
+#include "../helpers/Log.h"
+#include "../VFileIO.h"
+#include "../VXml.h"
+#include "../BSP.h"
+#include "../chipmunk.h"
 #include "ChipmunkWorld.h"
 
 #define XM_DEFAULT_BLOCK_TEXTURE "default"

@@ -23,9 +23,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Bike.h"
 #include "BikeGhost.h"
-#include "SomersaultCounter.h"
+#include "../SomersaultCounter.h"
 #include "BikeController.h"
-#include "include/xm_ode.h"
+#include "../include/xm_ode.h"
 
 class ExternalForce {
 public:

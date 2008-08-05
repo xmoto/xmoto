@@ -19,10 +19,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateDeadJust.h"
-#include "Game.h"
+#include "../Game.h"
 #include "StateDeadMenu.h"
-#include "GameText.h"
-#include "Universe.h"
+#include "../GameText.h"
+#include "../Universe.h"
 
 StateDeadJust::StateDeadJust(Universe* i_universe)
 : StateScene(i_universe, true, true)

@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __DOWNLOADGHOSTTHREAD_H__
 
 #include "XMThread.h"
-#include "WWWAppInterface.h"
+#include "../WWWAppInterface.h"
 
 class GameState;
 class WebRoom;

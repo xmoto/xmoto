@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Math library. 
  */
 #include "VMath.h"
-#include "helpers/Log.h"
+#include "../helpers/Log.h"
 
 #define BIG_VALUE 99999999.0f
 

@@ -19,23 +19,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateOptions.h"
-#include "GameText.h"
-#include "Languages.h"
-#include "Game.h"
-#include "drawlib/DrawLib.h"
-#include "helpers/Text.h"
-#include "helpers/System.h"
+#include "../GameText.h"
+#include "../Languages.h"
+#include "../Game.h"
+#include "../drawlib/DrawLib.h"
+#include "../helpers/Text.h"
+#include "../helpers/System.h"
 #include "StateUpdateThemesList.h"
 #include "StateUpdateRoomsList.h"
 #include "StateUploadAllHighscores.h"
 #include "StateUpdateTheme.h"
 #include "StateCheckWww.h"
 #include "StateSync.h"
-#include "Sound.h"
+#include "../Sound.h"
 #include "StateRequestKey.h"
 #include "StateEditWebConfig.h"
-#include "helpers/Log.h"
-#include "helpers/CmdArgumentParser.h"
+#include "../helpers/Log.h"
+#include "../helpers/CmdArgumentParser.h"
 #include <sstream>
 
 /* static members */

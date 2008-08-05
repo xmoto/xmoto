@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Game object. Handles all of the gamestate management und so weiter.
  */
-#include "GameText.h"
+#include "../GameText.h"
 #include "../Game.h"
 #include "Scene.h"
 #include "../VFileIO.h"
@@ -33,15 +33,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeGhost.h"
 #include "BikePlayer.h"
 #include "BikeParameters.h"
-#include "helpers/Log.h"
+#include "../helpers/Log.h"
 #include "Camera.h"
 #include "Block.h"
 #include "Entity.h"
-#include "Replay.h"
-#include "LuaLibGame.h"
-#include "ScriptDynamicObjects.h"
+#include "../Replay.h"
+#include "../LuaLibGame.h"
+#include "../ScriptDynamicObjects.h"
 #include "ChipmunkWorld.h"
-#include "helpers/Random.h"
+#include "../helpers/Random.h"
 
   MotoGame::MotoGame() {
     m_bDeathAnimEnabled=true;

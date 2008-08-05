@@ -18,17 +18,17 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "GameText.h"
 #include "BikePlayer.h"
+#include "../GameText.h"
 #include "BikeParameters.h"
 #include "BikeAnchors.h"
-#include "PhysSettings.h"
-#include "Collision.h"
+#include "../PhysSettings.h"
+#include "../Collision.h"
 #include "Zone.h"
-#include "Game.h"
-#include "Replay.h"
-#include "Sound.h"
-#include "helpers/Log.h"
+#include "../Game.h"
+#include "../Replay.h"
+#include "../Sound.h"
+#include "../helpers/Log.h"
 
 /* This is the magic depth factor :)  - tweak to obtain max. stability */
 #define DEPTH_FACTOR    2

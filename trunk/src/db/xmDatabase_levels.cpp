@@ -19,10 +19,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "xmDatabase.h"
-#include "xmscene/Level.h"
-#include "VXml.h"
-#include "helpers/Log.h"
-#include "VFileIO.h"
+#include "../xmscene/Level.h"
+#include "../VXml.h"
+#include "../helpers/Log.h"
+#include "../VFileIO.h"
 
 void xmDatabase::levels_add_begin(bool i_isToReload) {
   simpleSql("BEGIN TRANSACTION;");

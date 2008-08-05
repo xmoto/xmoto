@@ -19,7 +19,7 @@
   =============================================================================*/
 
 #include "Camera.h"
-#include "Game.h"
+#include "../Game.h"
 #include "Bike.h"
 
 #define ZOOM_DEFAULT 0.24

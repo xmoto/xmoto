@@ -20,13 +20,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "GameState.h"
 #include "StateManager.h"
-#include "XMSession.h"
-#include "helpers/Log.h"
-#include "Game.h"
-#include "SysMessage.h"
-#include "GameText.h"
-#include "drawlib/DrawLib.h"
-#include "Sound.h"
+#include "../XMSession.h"
+#include "../helpers/Log.h"
+#include "../Game.h"
+#include "../SysMessage.h"
+#include "../GameText.h"
+#include "../drawlib/DrawLib.h"
+#include "../Sound.h"
 #include "StateOptions.h"
 
 #define MENU_SHADING_TIME 0.3

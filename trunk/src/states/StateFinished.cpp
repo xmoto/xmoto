@@ -18,18 +18,18 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "GameText.h"
 #include "StateFinished.h"
-#include "XMSession.h"
-#include "drawlib/DrawLib.h"
-#include "Sound.h"
+#include "../GameText.h"
+#include "../XMSession.h"
+#include "../drawlib/DrawLib.h"
+#include "../Sound.h"
 #include "StateMessageBox.h"
 #include "StateUploadHighscore.h"
-#include "Universe.h"
-#include "Replay.h"
-#include "helpers/Text.h"
-#include "Game.h"
-#include "helpers/Log.h"
+#include "../Universe.h"
+#include "../Replay.h"
+#include "../helpers/Text.h"
+#include "../Game.h"
+#include "../helpers/Log.h"
 
 /* static members */
 UIRoot* StateFinished::m_sGUI = NULL;
