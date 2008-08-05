@@ -43,6 +43,7 @@ void FileCompression::bunzip2(std::string p_fileIN, std::string p_fileOUT) {
   }
   b_in = BZ2_bzReadOpen (&bzerror_in, f_in, 0, 0, NULL, 0);
   if(bzerror_in != BZ_OK) {
+    BZ2_bzReadClose (&bzerror_in, b_in);
     fclose(f_in);
     throw Exception("Unable to read file " + p_fileIN);
   }
