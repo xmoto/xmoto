@@ -373,7 +373,14 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   /* load packs */
   LevelsManager::checkPrerequires();
   LevelsManager::instance()->makePacks(XMSession::instance()->profile(), XMSession::instance()->idRoom(0), XMSession::instance()->debug(), xmDatabase::instance("main"));
-  
+
+  /* Update stats */
+  if(XMSession::instance()->profile() != "") {
+    pDb->stats_xmotoStarted(XMSession::instance()->sitekey(), XMSession::instance()->profile());
+  }
+
+  /* try to not run sql at the same time you enter in the main menu (a thread to compute packs is run (concurrency)) */
+
   /* What to do? */
   if(m_PlaySpecificLevelFile != "") {
     try {
@@ -410,17 +417,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 	XMSession::instance()->setNotifyAtInit(false);
       }
     } 
-  }
-  
-  if (XMSession::instance()->ugly()){
-    drawLib->clearGraphics();
-  }
-  drawFrame();
-  drawLib->flushGraphics();
-
-  /* Update stats */
-  if(XMSession::instance()->profile() != "") {
-    pDb->stats_xmotoStarted(XMSession::instance()->sitekey(), XMSession::instance()->profile());
   }
 
   LogInfo("UserInit ended at %.3f", GameApp::getXMTime());

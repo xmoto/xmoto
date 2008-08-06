@@ -222,6 +222,7 @@ set(thread_src
  thread/UpdateThemesListThread.h thread/XMThread.h thread/UploadAllHighscoresThread.cpp
  thread/UpdateDbThread.h thread/UpdateRoomsListThread.cpp thread/UploadAllHighscoresThread.h
  thread/UpgradeLevelsThread.cpp thread/UpdateRoomsListThread.h thread/UpdateThemeThread.cpp
+ thread/LevelsPacksCountUpdateThread.h thread/LevelsPacksCountUpdateThread.cpp
 )
 
 set(gui_src

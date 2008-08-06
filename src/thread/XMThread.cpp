@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Log.h"
 #include "../VFileIO.h"
 
-XMThread::XMThread()
+XMThread::XMThread(const std::string& i_dbKey)
 {
   m_isRunning        = false;
   m_isSleeping       = false;
@@ -42,6 +42,7 @@ XMThread::XMThread()
   m_wakeUpInfos      = "";
   m_safeKill         = false;
   m_askSafeKill      = false;
+  m_dbKey            = i_dbKey;
 }
 
 XMThread::~XMThread()
@@ -53,7 +54,7 @@ XMThread::~XMThread()
   SDL_DestroyMutex(m_curMicOpMutex);
   SDL_DestroyMutex(m_sleepMutex);
   SDL_DestroyCond(m_sleepCond);
-  xmDatabase::destroy("thread");
+  xmDatabase::destroy(m_dbKey);
 }
 
 int XMThread::run(void* pThreadInstance)
@@ -197,7 +198,7 @@ void XMThread::setThreadCurrentMicroOperation(std::string curMicOp)
 int XMThread::threadFunctionEncapsulate()
 {
   // we can only have one thread at once.
-  m_pDb = xmDatabase::instance("thread");
+  m_pDb = xmDatabase::instance(m_dbKey);
   m_pDb->init(DATABASE_FILE);
 
   int returnValue = realThreadFunction();

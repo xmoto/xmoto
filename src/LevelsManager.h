@@ -48,8 +48,10 @@ class LevelsPack {
   std::string getLevelsQuery() const;
   std::string getLevelsWithHighscoresQuery(const std::string& i_profile,
 					   const std::string& i_id_room) const;
-  int getNumberOfLevels(xmDatabase *i_db);
-  int getNumberOfFinishedLevels(xmDatabase *i_db, const std::string& i_profile);
+  int getNumberOfLevels();
+  int getNumberOfFinishedLevels();
+
+  void updateCount(xmDatabase *i_db, const std::string& i_profile);
 
   private:
   void setHintsFromFile();
@@ -61,6 +63,8 @@ class LevelsPack {
   bool m_showTimes;
   bool m_showWebTimes;
   std::string m_description;
+
+  int m_nbLevels, m_nbFinishedLevels;
 };
 
 class LevelsManager : public Singleton<LevelsManager> {

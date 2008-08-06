@@ -166,9 +166,15 @@ void UIPackTree::addPack(LevelsPack* i_levelsPack,
   }
 
   std::ostringstream v_level_nb;
-  v_level_nb << i_nbFinishedLevels;
-  v_level_nb << "/";
-  v_level_nb << i_nbLevels;
+
+  if(i_nbFinishedLevels != -1 && i_nbLevels != -1) {
+    v_level_nb << i_nbFinishedLevels;
+    v_level_nb << "/";
+    v_level_nb << i_nbLevels;
+  } else {
+    v_level_nb << "?";
+  }
+
   p->Text.push_back(v_level_nb.str());
   p->bFiltered = i_nbLevels == 0; // filter packs with 0 levels
   checkForFilteredEntries();
@@ -181,9 +187,14 @@ void UIPackTree::updatePack(LevelsPack* i_levelsPack,
     if(getEntries()[i]->pvUser != NULL) {
       if(i_levelsPack == getEntries()[i]->pvUser) {
 	  std::ostringstream v_level_nb;
-	  v_level_nb << i_nbFinishedLevels;
-	  v_level_nb << "/";
-	  v_level_nb << i_nbLevels;
+
+	  if(i_nbFinishedLevels != -1 && i_nbLevels != -1) {
+	    v_level_nb << i_nbFinishedLevels;
+	    v_level_nb << "/";
+	    v_level_nb << i_nbLevels;
+	  } else {
+	    v_level_nb << "?";
+	  }
 	  getEntries()[i]->Text[1]   = v_level_nb.str();
 	  getEntries()[i]->bFiltered = (i_nbLevels == 0);
       }

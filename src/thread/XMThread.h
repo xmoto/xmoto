@@ -35,7 +35,7 @@ class xmDatabase;
  */
 class XMThread {
 public:
-  XMThread();
+  XMThread(const std::string& i_dbKey = "thread");
   virtual ~XMThread();
 
   void startThread();
@@ -98,6 +98,7 @@ private:
   SDL_cond*  m_sleepCond;
   bool m_safeKill;
   bool m_askSafeKill;
+  std::string m_dbKey;
 };
   
 #endif
