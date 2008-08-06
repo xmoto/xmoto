@@ -149,6 +149,13 @@ AC_ARG_WITH([enable-dev],
 )
 AC_SUBST([ALLOW_DEV])
 
+AC_ARG_WITH([unoptimized],
+  [AS_HELP_STRING([--with-unoptimized=0|1],
+    [Enable unoptimized])],
+  [CXXFLAGS=-g] # instead of -g -O2
+)
+AC_SUBST([ALLOW_DEV])
+
 dnl Put DEFAULT_THEME in makefiles
 AC_ARG_WITH([default-theme],
   [AS_HELP_STRING([--with-default-theme=],
@@ -187,9 +194,9 @@ displayRequirement() {
   REQ="$4"
 
   if test "$VAR" = "$GOOD_RES"; then
-    printf "| %15s | %10s | %63s |\n" "$STUFF" "enabled" "(""$REQ"")"
+    printf "| %16s | %10s | %63s |\n" "$STUFF" "enabled" "(""$REQ"")"
   else
-    printf "| %15s | %10s | %63s |\n" "$STUFF" "disabled" "(""$REQ"" missing)"
+    printf "| %16s | %10s | %63s |\n" "$STUFF" "disabled" "(""$REQ"" missing)"
   fi
 }
 
@@ -198,14 +205,14 @@ displayValue() {
   VAR="$2"
   COMMENT="$3"
 
-  printf "| %15s | %10s | %63s |\n" "$STUFF" "$VAR" "(""$COMMENT"")"
+  printf "| %16s | %10s | %63s |\n" "$STUFF" "$VAR" "(""$COMMENT"")"
 }
 
 
 displayVersion() {
   LIB="$1"
   VERSION="$2"
-  printf "| %15s | %10s | %63s |\n" "$LIB" "$VERSION" ""
+  printf "| %16s | %10s | %63s |\n" "$LIB" "$VERSION" ""
 }
 
 use_gettext=no
@@ -219,20 +226,22 @@ then
 fi
 
 echo
-echo   "+-----------------+------------+-----------------------------------------------------------------+"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
 displayRequirement "Locales" "$use_gettext" "yes" "gettext"
-echo   "+-----------------+------------+-----------------------------------------------------------------+"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
 displayRequirement "Asian ttf file" "$ASIAN_TTF_FILE" "$ASIAN_TTF_FILE" "$ASIAN_TTF_FILE"
-echo   "+-----------------+------------+-----------------------------------------------------------------+"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
 displayVersion "Lua" "$USE_LUA_VERSION"
-echo   "+-----------------+------------+-----------------------------------------------------------------+"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
 displayRequirement "Dev" "$with_enable_dev" "1" "--with-enable-dev=1 (for non official packages)"
-echo   "+-----------------+------------+-----------------------------------------------------------------+"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
+displayRequirement "Fast compilation" "$with_unoptimized" "1" "--with-unoptimized=1"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
 displayValue "Default theme" "$CONFIGURE_DEFAULT_THEME" "--with-default-theme=""$CONFIGURE_DEFAULT_THEME"
-echo   "+-----------------+------------+-----------------------------------------------------------------+"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
 displayRequirement "OpenGl" "$USE_OPENGL" "1" "--with-renderer-openGl=1"
-echo   "+-----------------+------------+-----------------------------------------------------------------+"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
 displayRequirement "SdlGfx" "$USE_SDLGFX" "1" "--with-renderer-sdlGfx=1 (unsafe)"
-echo   "+-----------------+------------+-----------------------------------------------------------------+"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
 
 echo "target os: ""$target_os"
