@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define XMDB_VERSION         27
 #define DB_MAX_SQL_RUNTIME 0.25
+#define DB_BUSY_TIMEOUT   60000 // 60 seconds
 
 bool xmDatabase::Trace = false;
 
@@ -56,6 +57,7 @@ void xmDatabase::init(const std::string& i_dbFile,
 		    + ") : " + sqlite3_errmsg(m_db));
   }
 
+  sqlite3_busy_timeout(m_db, DB_BUSY_TIMEOUT);
   sqlite3_trace(m_db, sqlTrace, NULL);
   createUserFunctions();
 
@@ -162,6 +164,7 @@ void xmDatabase::init(const std::string& i_dbFile)
 		    + sqlite3_errmsg(m_db));
   }
 
+  sqlite3_busy_timeout(m_db, DB_BUSY_TIMEOUT);
   sqlite3_trace(m_db, sqlTrace, NULL);
   createUserFunctions();
 }
@@ -679,7 +682,7 @@ void xmDatabase::simpleSql(const std::string& i_sql) {
 		  NULL, &errMsg) != SQLITE_OK) {
     v_errMsg = errMsg;
     sqlite3_free(errMsg);
-    LogInfo(i_sql.c_str());
+    LogInfo(std::string("simpleSql failed on running : " + i_sql).c_str());
     throw Exception(v_errMsg);
   }
 }
@@ -716,11 +719,11 @@ char** xmDatabase::readDB(const std::string& i_sql, unsigned int &i_nrow) {
     throw Exception("xmDb: " + v_errMsg);
 
   }
-	v_endTime = GameApp::getXMTime();
+  v_endTime = GameApp::getXMTime();
 
-	if(v_endTime - v_startTime > DB_MAX_SQL_RUNTIME) {
-	  LogWarning("long query time detected (%.3f'') for query '%s'", v_endTime - v_startTime, i_sql.c_str());
-	}
+  if(v_endTime - v_startTime > DB_MAX_SQL_RUNTIME) {
+    LogWarning("long query time detected (%.3f'') for query '%s'", v_endTime - v_startTime, i_sql.c_str());
+  }
 
   i_nrow = (unsigned int) v_nrow;
 

@@ -63,7 +63,7 @@ void CheckWwwThread::upgradeWebHighscores(const std::string& i_id_room)
     m_pWebRoom->upgrade(i_id_room, m_pDb);
     StateManager::instance()->sendAsynchronousMessage("HIGHSCORES_UPDATED");
   } catch (Exception& e) {
-    LogWarning("Failed to analyse web-highscores file");   
+    LogWarning("Failed to analyse web-highscores file");
   }
 }
 

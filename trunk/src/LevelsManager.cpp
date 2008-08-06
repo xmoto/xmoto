@@ -30,33 +30,51 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sstream>
 
 LevelsPack::LevelsPack(std::string i_name, const std::string& i_sql, bool i_ascSort) {
-  m_name         = i_name;
-  m_showTimes    = true;
-  m_showWebTimes = true;
-  //setHintsFromFile();
-  m_sql_levels   = i_sql;
-  m_ascSort      = i_ascSort;
+  m_name             = i_name;
+  m_showTimes        = true;
+  m_showWebTimes     = true;
+  m_sql_levels       = i_sql;
+  m_ascSort          = i_ascSort;
+  m_nbLevels         = -1;
+  m_nbFinishedLevels = -1;
 }
 
 LevelsPack::~LevelsPack() {
 }
 
-int LevelsPack::getNumberOfLevels(xmDatabase *i_db) {
+void LevelsPack::updateCount(xmDatabase *i_db, const std::string& i_profile) {
   char **v_result;
   unsigned int nrow;
-  int n;
 
-  v_result = i_db->readDB("SELECT count(id_level) FROM (" + m_sql_levels + ");",
+  /* number of levels*/
+  v_result = i_db->readDB("SELECT count(id_level) FROM (" + m_sql_levels + ");", nrow);
+
+  if(i_db->getResult(v_result, 1, 0, 0) == NULL) {
+    i_db->read_DB_free(v_result);
+    throw Exception("Unable to update level pack count");
+  }
+
+  m_nbLevels = atoi(i_db->getResult(v_result, 1, 0, 0));
+  i_db->read_DB_free(v_result);
+
+  /* finished levels */
+  v_result = i_db->readDB("SELECT count(1) FROM (SELECT a.id_level FROM (" +
+			  m_sql_levels +
+			  ") AS a INNER JOIN stats_profiles_levels AS b ON a.id_level=b.id_level "
+			  "WHERE b.id_profile=\"" + xmDatabase::protectString(i_profile) + "\" AND b.nbCompleted+0 > 0 "
+			  "GROUP BY a.id_level);",
 			  nrow);
 
   if(i_db->getResult(v_result, 1, 0, 0) == NULL) {
     i_db->read_DB_free(v_result);
-    return 0;
+    throw Exception("Unable to update level pack count");
   }
-
-  n = atoi(i_db->getResult(v_result, 1, 0, 0));
+  m_nbFinishedLevels = atoi(i_db->getResult(v_result, 1, 0, 0));
   i_db->read_DB_free(v_result);
-  return n;
+}
+
+int LevelsPack::getNumberOfLevels() {
+  return m_nbLevels;
 }
 
 std::string LevelsPack::getLevelsQuery() const {
@@ -75,25 +93,8 @@ std::string LevelsPack::getLevelsWithHighscoresQuery(const std::string& i_profil
     "GROUP BY a.id_level ORDER BY MIN(a.sort_field) " + std::string(m_ascSort ? "ASC":"DESC") + ";";
 }
 
-int LevelsPack::getNumberOfFinishedLevels(xmDatabase *i_db, const std::string& i_profile) {
-  char **v_result;
-  unsigned int nrow;
-  int n;
-
-  v_result = i_db->readDB("SELECT count(1) FROM (SELECT a.id_level FROM (" +
-			  m_sql_levels +
-			  ") AS a INNER JOIN stats_profiles_levels AS b ON a.id_level=b.id_level "
-			  "WHERE b.id_profile=\"" + xmDatabase::protectString(i_profile) + "\" AND b.nbCompleted+0 > 0 "
-			  "GROUP BY a.id_level);",
-			  nrow);
-
-  if(i_db->getResult(v_result, 1, 0, 0) == NULL) {
-    i_db->read_DB_free(v_result);
-    return 0;
-  }
-  n = atoi(i_db->getResult(v_result, 1, 0, 0));
-  i_db->read_DB_free(v_result);
-  return n;
+int LevelsPack::getNumberOfFinishedLevels() {
+  return m_nbFinishedLevels;
 }
 
 void LevelsPack::setHintsFromFile() {

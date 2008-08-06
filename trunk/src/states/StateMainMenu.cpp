@@ -45,6 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Replay.h"
 #include "../helpers/CmdArgumentParser.h"
 #include <sstream>
+#include "../thread/LevelsPacksCountUpdateThread.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -58,6 +59,7 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
 
   m_name    = "StateMainMenu";
   m_quickStartList = NULL;
+  m_levelsPacksCountThread = NULL;
 
   /* Load title screen textures */
   m_pTitleBL = NULL;
@@ -99,6 +101,7 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
   StateManager::instance()->registerAsObserver("LEVELS_UPDATED", this);
   StateManager::instance()->registerAsObserver("HIGHSCORES_UPDATED", this);
   StateManager::instance()->registerAsObserver("BLACKLISTEDLEVELS_UPDATED", this);
+  StateManager::instance()->registerAsObserver("LEVELSPACKS_COUNT_UPDATED", this);
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
@@ -108,6 +111,14 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
 
 StateMainMenu::~StateMainMenu()
 {
+  if(m_levelsPacksCountThread != NULL) {
+    /* cleaning thread */
+    if(m_levelsPacksCountThread->waitForThreadEnd() != 0) {
+      LogWarning("LevelpacksCount thread failed");     
+    }
+    delete m_levelsPacksCountThread;
+  }
+
   if(m_quickStartList != NULL) {
     delete m_quickStartList;
   }
@@ -122,6 +133,7 @@ StateMainMenu::~StateMainMenu()
   StateManager::instance()->unregisterAsObserver("LEVELS_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("HIGHSCORES_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("BLACKLISTEDLEVELS_UPDATED", this);
+  StateManager::instance()->unregisterAsObserver("LEVELSPACKS_COUNT_UPDATED", this);
 }
 
 
@@ -142,7 +154,8 @@ void StateMainMenu::enter()
   // show it before updating lists (which can take some time)
   StateManager::instance()->render(); 
 
-  updateLevelsPacksList();
+  updateLevelsPacksList(); // update list even if computation is not done the first time to display packs
+  updateLevelsPacksCountDetached();
   updateLevelsLists();
   updateReplaysList();
   updateStats();
@@ -177,7 +190,7 @@ void StateMainMenu::enterAfterPop()
 					 XMSession::instance()->debug(),
 					 xmDatabase::instance("main"));
     if(v_levelsListsUpdated == false) {
-      updateLevelsPacksList();
+      updateLevelsPacksCountDetached();
       updateLevelsLists();
       v_levelsListsUpdated = true;
     }
@@ -187,7 +200,7 @@ void StateMainMenu::enterAfterPop()
   if(m_require_updateStats) {
     // update lists and stats
     if(v_levelsListsUpdated == false) {
-      updateLevelsPacksList();
+      updateLevelsPacksCountDetached();
       updateLevelsLists();
       v_levelsListsUpdated = true;
     }
@@ -1233,7 +1246,7 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
 					 xmDatabase::instance("main"));
 
     // update lists and stats
-    updateLevelsPacksList();
+    updateLevelsPacksCountDetached();
     updateLevelsLists();
     updateReplaysList();
     updateStats();
@@ -1289,12 +1302,27 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
 
   else if(cmd == "STATS_UPDATED") {
     if(StateManager::instance()->isTopOfTheStates(this)) {
-      updateLevelsPacksList();
+      updateLevelsPacksCountDetached();
       updateLevelsLists();
       updateReplaysList();
       updateStats();
-    } else
+    } else {
       m_require_updateStats = true;
+    }
+  }
+
+  else if(cmd == "LEVELSPACKS_COUNT_UPDATED") {
+    if(m_levelsPacksCountThread != NULL) {
+      /* cleaning thread */
+      if(m_levelsPacksCountThread->isThreadRunning() == false) {
+	if(m_levelsPacksCountThread->waitForThreadEnd() != 0) {
+	  LogWarning("LevelpacksCount thread failed");     
+	}
+	delete m_levelsPacksCountThread;
+	m_levelsPacksCountThread = NULL;
+	updateLevelsPacksList();
+      }
+    }
   }
 
   else if(cmd == "LEVELS_UPDATED" || cmd == "HIGHSCORES_UPDATED" || cmd == "BLACKLISTEDLEVELS_UPDATED") {
@@ -1303,12 +1331,19 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
 					   XMSession::instance()->idRoom(0),
 					   XMSession::instance()->debug(),
 					   xmDatabase::instance("main"));
-      updateLevelsPacksList();
+      updateLevelsPacksCountDetached();
       updateLevelsLists();
     } else
       m_require_updateLevelsList = true;
   } else {
     GameState::executeOneCommand(cmd, args);
+  }
+}
+
+void StateMainMenu::updateLevelsPacksCountDetached() {
+  if(m_levelsPacksCountThread == NULL) {
+    m_levelsPacksCountThread = new LevelsPacksCountUpdateThread();
+    m_levelsPacksCountThread->startThread();
   }
 }
 
@@ -1342,19 +1377,17 @@ void StateMainMenu::updateLevelsPacksList() {
   LevelsManager* v_lm = LevelsManager::instance();
 
   pTree->clear();
-    
+
   for(unsigned int i=0; i<v_lm->LevelsPacks().size(); i++) {
     /* the unpackaged pack exists only in debug mode */
     if(v_lm->LevelsPacks()[i]->Name() != "" || XMSession::instance()->debug()) {
       if(v_lm->LevelsPacks()[i]->Name() == "") {
 	v_lm->LevelsPacks()[i]->setName(GAMETEXT_UNPACKED_LEVELS_PACK);
       }
-	
       pTree->addPack(v_lm->LevelsPacks()[i],
 		     v_lm->LevelsPacks()[i]->Group(),
-		     v_lm->LevelsPacks()[i]->getNumberOfFinishedLevels(xmDatabase::instance("main"),
-								       XMSession::instance()->profile()),
-		     v_lm->LevelsPacks()[i]->getNumberOfLevels(xmDatabase::instance("main"))
+		     v_lm->LevelsPacks()[i]->getNumberOfFinishedLevels(),
+		     v_lm->LevelsPacks()[i]->getNumberOfLevels()
 		     );
     }
   }
@@ -1529,10 +1562,11 @@ void StateMainMenu::updateNewLevels() {
 void StateMainMenu::updateLevelsPackInPackList(const std::string& v_levelPack) {
   UIPackTree *pTree = (UIPackTree *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:PACK_TAB:PACK_TREE");
   LevelsPack *v_pack = &(LevelsManager::instance()->LevelsPackByName(v_levelPack));
-  
+
+  v_pack->updateCount(xmDatabase::instance("main"), XMSession::instance()->profile());
   pTree->updatePack(v_pack,
-		    v_pack->getNumberOfFinishedLevels(xmDatabase::instance("main"), XMSession::instance()->profile()),
-		    v_pack->getNumberOfLevels(xmDatabase::instance("main")));
+		    v_pack->getNumberOfFinishedLevels(),
+		    v_pack->getNumberOfLevels());
 }
 
 void StateMainMenu::updateInfoFrame() {
