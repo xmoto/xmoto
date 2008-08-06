@@ -1,4 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6 FATAL_ERROR)
+
+# cmake -D CMAKE_GENERATOR="Unix Makefiles" ../trunk/src
+SET(CMAKE_GENERATOR "Unix Makefiles")
 PROJECT(xmoto)
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake_modules)
 
@@ -9,18 +12,21 @@ SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake_modules)
 # cross compilation on windows
 MESSAGE("System: "${CMAKE_SYSTEM_NAME})
 IF(CMAKE_SYSTEM_NAME MATCHES Windows)
- # which compilers to use for C and C++
- SET(CMAKE_C_COMPILER i586-mingw32msvc-gcc)
- SET(CMAKE_CXX_COMPILER i586-mingw32msvc-g++)
- # here is the target environment located
- SET(CMAKE_FIND_ROOT_PATH  /usr/i586-mingw32msvc)
 
- # adjust the default behaviour of the FIND_XXX() commands:
- # search headers and libraries in the target environment, search 
- # programs in the host environment
- set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
- set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
- set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+ IF(CMAKE_HOST_UNIX) # cross compiling windows version from unix system
+  # which compilers to use for C and C++
+  SET(CMAKE_C_COMPILER i586-mingw32msvc-gcc)
+  SET(CMAKE_CXX_COMPILER i586-mingw32msvc-g++)
+  # here is the target environment located
+  SET(CMAKE_FIND_ROOT_PATH  /usr/i586-mingw32msvc)
+
+  # adjust the default behaviour of the FIND_XXX() commands:
+  # search headers and libraries in the target environment, search 
+  # programs in the host environment
+  set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+  set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+  set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+ ENDIF(CMAKE_HOST_UNIX)
 
  ADD_DEFINITIONS(-mthreads -MD)
  link_libraries (mingw32 SDLmain SDL opengl32 glu32 -mwindows userenv intl)
@@ -59,12 +65,15 @@ IF(GETTEXT_FOUND)
 ENDIF(GETTEXT_FOUND)
 
 # include svn revision
+SET(SVN_REV exported)
 FIND_PACKAGE(Subversion)
 IF(Subversion_FOUND)
- Subversion_WC_INFO(${PROJECT_SOURCE_DIR} Project)
- SET(SVN_REV \"${Project_WC_REVISION}\")
+ IF(EXISTS ${PROJECT_SOURCE_DIR}/.svn)
+  Subversion_WC_INFO(${PROJECT_SOURCE_DIR} Project)
+  SET(SVN_REV ${Project_WC_REVISION})
+ ENDIF(EXISTS ${PROJECT_SOURCE_DIR}/.svn)
 ENDIF(Subversion_FOUND)
-ADD_DEFINITIONS(-DSVN_REV=${SVN_REV})
+ADD_DEFINITIONS(-DSVN_REV=\"${SVN_REV}\")
 
 # options
 #ADD_DEFINITIONS(-O2) # g++ optimisations
@@ -378,7 +387,7 @@ states/StateUploadAllHighscores.cpp
 )
 
 set(chipmunk_src
-chipmunk.h
+chipmunk/chipmunk.h
 chipmunk/cpArray.c
 chipmunk/cpJoint.c
 chipmunk/cpBB.c
@@ -430,3 +439,5 @@ TARGET_LINK_LIBRARIES(xmoto
  ${PNG_LIBRARY}      ${JPEG_LIBRARIES}    ${BZIP2_LIBRARIES} ${CURL_LIBRARIES}
  ${LUA_LIBRARIES}    ${SQLITE3_LIBRARIES} ${ODE_LIBRARY}     ${ZLIB_LIBRARIES}
 )
+
+MESSAGE("Jpeg libraries: "${JPEG_LIBRARIES})
