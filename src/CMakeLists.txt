@@ -441,4 +441,15 @@ TARGET_LINK_LIBRARIES(xmoto
  ${LUA_LIBRARIES}    ${SQLITE3_LIBRARIES} ${ODE_LIBRARY}     ${ZLIB_LIBRARIES}
 )
 
-MESSAGE("Jpeg libraries: "${JPEG_LIBRARIES})
+MESSAGE("OpenGL    libraries: "${OPENGL_LIBRARIES})
+MESSAGE("SDL       libraries: "${SDL_LIBRARY})
+MESSAGE("SDL_ttf   libraries: "${SDLTTF_LIBRARY})
+MESSAGE("SDM_mixer libraries: "${SDLMIXER_LIBRARY})
+MESSAGE("Png       libraries: "${PNG_LIBRARY})
+MESSAGE("Jpeg      libraries: "${JPEG_LIBRARIES})
+MESSAGE("Bzip2     libraries: "${BZIP2_LIBRARIES})
+MESSAGE("Curl      libraries: "${CURL_LIBRARIES})
+MESSAGE("Lua       libraries: "${LUA_LIBRARIES})
+MESSAGE("Sqlite3   libraries: "${SQLITE3_LIBRARIES})
+MESSAGE("Ode       libraries: "${ODE_LIBRARY})
+MESSAGE("Zlib      libraries: "${ZLIB_LIBRARIES})

@@ -99,7 +99,7 @@ XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
     m_input = XMK_KEYBOARD;
 
     if(i_key.length() != 1) {
-      throw Exception("Invalid key");
+      throw InvalidSystemKeyException();
     }
     m_keyboard_sym = (SDLKey)((int)(tolower(i_key[0]))); // give ascii key while sdl does the same
     m_keyboard_mod = KMOD_NONE;
@@ -115,7 +115,7 @@ XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
   pos = v_rest.find(":", 0);
 
   if(pos == std::string::npos) {
-    throw Exception("Invalid key");
+    throw InvalidSystemKeyException();
   }
   v_current = v_rest.substr(0, pos);
   v_rest = v_rest.substr(pos+1, v_rest.length() -pos -1);
@@ -125,7 +125,7 @@ XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
 
     pos = v_rest.find(":", 0);
     if(pos == std::string::npos) {
-      throw Exception("Invalid key");
+      throw InvalidSystemKeyException();
     }
     v_current = v_rest.substr(0, pos);
     v_rest = v_rest.substr(pos+1, v_rest.length() -pos -1);
@@ -143,7 +143,7 @@ XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
     // get the axis
     pos = v_rest.find(":", 0);
     if(pos == std::string::npos) {
-      throw Exception("Invalid key");
+      throw InvalidSystemKeyException();
     }
     v_current = v_rest.substr(0, pos);
     v_rest = v_rest.substr(pos+1, v_rest.length() -pos -1);
@@ -152,7 +152,7 @@ XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
     // get the axis value
     pos = v_rest.find(":", 0);
     if(pos == std::string::npos) {
-      throw Exception("Invalid key");
+      throw InvalidSystemKeyException();
     }
     v_current = v_rest.substr(0, pos);
     v_rest = v_rest.substr(pos+1, v_rest.length() -pos -1);
@@ -173,7 +173,7 @@ XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
     m_joyId     = InputHandler::instance()->getJoyIdByStrId(v_rest);
     m_joyButton = (Uint8) atoi(v_current.c_str());
   } else {
-    throw Exception("Invalid key");
+    throw InvalidSystemKeyException();
   }
 }
 
@@ -589,37 +589,42 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
 
     try {
       m_nDriveKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive"     + v_n.str(), m_nDriveKey[i].toString()));
+    } catch(InvalidSystemKeyException &e) {
+      /* keep default key */
     } catch(Exception &e) {
       m_nDriveKey[i] = XMKey(); // load default key (undefined) to not override the key while undefined keys are not saved to avoid config brake in case you forgot to plug your joystick
-      LogWarning("Invalid key configuration: %s", e.getMsg().c_str());
     }
 
     try {
       m_nBrakeKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake"     + v_n.str(), m_nBrakeKey[i].toString()));
+    } catch(InvalidSystemKeyException &e) {
+      /* keep default key */
     } catch(Exception &e) {
       m_nBrakeKey[i] = XMKey();
-      LogWarning("Invalid key configuration: %s", e.getMsg().c_str());
     }
 
     try {
       m_nPullBackKey[i]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft"  + v_n.str(), m_nPullBackKey[i].toString()));
+    } catch(InvalidSystemKeyException &e) {
+      /* keep default key */
     } catch(Exception &e) {
       m_nPullBackKey[i] = XMKey();
-      LogWarning("Invalid key configuration: %s", e.getMsg().c_str());
     }
 
     try {
       m_nPushForwardKey[i]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight" + v_n.str(), m_nPushForwardKey[i].toString()));
+    } catch(InvalidSystemKeyException &e) {
+      /* keep default key */
     } catch(Exception &e) {
       m_nPushForwardKey[i] = XMKey();
-      LogWarning("Invalid key configuration: %s", e.getMsg().c_str());
     }
 
     try {
       m_nChangeDirKey[i]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir" + v_n.str(), m_nChangeDirKey[i].toString()));
+    } catch(InvalidSystemKeyException &e) {
+      /* keep default key */
     } catch(Exception &e) {
       m_nChangeDirKey[i] = XMKey();
-      LogWarning("Invalid key configuration: %s", e.getMsg().c_str());
     }
     
     for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
@@ -630,9 +635,10 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
       if(v_key != "") { // don't override the default key if there is nothing in the config
 	try {
 	  m_nScriptActionKeys[i][k] = XMKey(v_key);
+	} catch(InvalidSystemKeyException &e) {
+	  /* keep default key */
 	} catch(Exception &e) {
 	  m_nScriptActionKeys[i][k] = XMKey();
-	  LogWarning("Invalid key configuration: %s", e.getMsg().c_str());
 	}
       }
     }
