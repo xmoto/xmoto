@@ -57,6 +57,11 @@ class SyntaxError : public Exception {
  private:
 };
 
+class InvalidSystemKeyException : public Exception {
+ public:
+  InvalidSystemKeyException() : Exception("Invalid Key") {}
+ private:
+};
 
 #endif
 
