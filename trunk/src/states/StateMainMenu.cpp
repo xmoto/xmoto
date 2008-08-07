@@ -1366,8 +1366,8 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
 					   XMSession::instance()->idRoom(0),
 					   XMSession::instance()->debug(),
 					   xmDatabase::instance("main"));
-      updateLevelsPacksCountDetached();
       updateLevelsLists();
+      updateLevelsPacksCountDetached();
     } else
       m_require_updateLevelsList = true;
   } else {
