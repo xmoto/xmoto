@@ -21,11 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __LANGUAGES_H__
 #define __LANGUAGES_H__
 
-#define NB_LANGUAGES  21
-#define LANGUAGE_NAME  0
-#define LANGUAGE_CODE  1
+enum {LANGUAGE_NAME = 0, LANGUAGE_CODE};
 
-char* LANGUAGES[NB_LANGUAGES][2] = {
+const char* LANGUAGES[][2] = {
   {"Català",      "ca_ES"},
   {"Èesky",       "cs_CZ"},
   {"Dansk",       "da_DK"},
@@ -46,7 +44,8 @@ char* LANGUAGES[NB_LANGUAGES][2] = {
   {"Portugues",   "pt_PT"},
   {"Русский",     "ru_RU"},
   {"Slovensky",   "sk_SK"},
-  {"Svenska",     "sv_SE"}
+  {"Svenska",     "sv_SE"},
+  {NULL, NULL}
 };
 
 #endif

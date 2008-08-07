@@ -1102,11 +1102,16 @@ UIWindow* StateOptions::makeWindowOptions_language(UIWindow* i_parent) {
   if(XMSession::instance()->language() == "") v_list->setRealSelected(n);
   n++;
 
-  for(unsigned int i=0; i<NB_LANGUAGES; i++) {
+  unsigned int i=0;
+  while(LANGUAGES[i][LANGUAGE_NAME] != NULL) {
     pEntry = v_list->addEntry(LANGUAGES[i][LANGUAGE_NAME], NULL);
     pEntry->Text.push_back(LANGUAGES[i][LANGUAGE_CODE]);
-    if(XMSession::instance()->language() == LANGUAGES[i][LANGUAGE_CODE]) v_list->setRealSelected(i+1);
+    if(XMSession::instance()->language() == LANGUAGES[i][LANGUAGE_CODE])
+      v_list->setRealSelected(i+1);
+
+    i++;
   }
+
   return v_window;
 }
 
