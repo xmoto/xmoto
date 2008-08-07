@@ -29,11 +29,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_WEBHIGHSCORES_FILENAME "webhighscores.xml"
 
 CheckWwwThread::CheckWwwThread(bool forceUpdate)
-  : XMThread()
+  : XMThread("CWT")
 {
   m_forceUpdate   = forceUpdate;
   m_pWebRoom      = new WebRoom(this);
   m_pWebLevels    = new WebLevels(this);
+  m_realHighscoresUpdate = false;
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("HIGHSCORES_UPDATED");
@@ -61,7 +62,7 @@ void CheckWwwThread::upgradeWebHighscores(const std::string& i_id_room)
 {
   try {
     m_pWebRoom->upgrade(i_id_room, m_pDb);
-    StateManager::instance()->sendAsynchronousMessage("HIGHSCORES_UPDATED");
+    m_realHighscoresUpdate = true;
   } catch (Exception& e) {
     LogWarning("Failed to analyse web-highscores file");
   }
@@ -119,9 +120,16 @@ int CheckWwwThread::realThreadFunction()
 	  setThreadProgress((100 * (i+1)) / XMSession::instance()->nbRoomsEnabled());
 	}
       }
+      if(m_realHighscoresUpdate) {
+	StateManager::instance()->sendAsynchronousMessage("HIGHSCORES_UPDATED");
+      }
     } catch (Exception& e) {
+      if(m_realHighscoresUpdate) {
+	StateManager::instance()->sendAsynchronousMessage("HIGHSCORES_UPDATED");
+      }
       LogWarning("Failed to update web-highscores [%s]",e.getMsg().c_str());
       m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+      StateManager::instance()->sendAsynchronousMessage("CHECKWWWW_DONE");
       return 1;
     }
     setThreadProgress(100);
@@ -140,12 +148,14 @@ int CheckWwwThread::realThreadFunction()
       } catch (Exception& e){
 	LogWarning("Failed to update web-levels [%s]",e.getMsg().c_str());
 	m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+	StateManager::instance()->sendAsynchronousMessage("CHECKWWWW_DONE");
 	return 1;
       }
     }
   }
 
   setThreadProgress(100);
+  StateManager::instance()->sendAsynchronousMessage("CHECKWWWW_DONE");
 
   return 0;
 }

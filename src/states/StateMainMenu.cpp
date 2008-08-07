@@ -46,6 +46,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/CmdArgumentParser.h"
 #include <sstream>
 #include "../thread/LevelsPacksCountUpdateThread.h"
+#include "../SysMessage.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -60,6 +61,7 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
   m_name    = "StateMainMenu";
   m_quickStartList = NULL;
   m_levelsPacksCountThread = NULL;
+  m_checkWwwThread         = NULL;
 
   /* Load title screen textures */
   m_pTitleBL = NULL;
@@ -102,6 +104,7 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
   StateManager::instance()->registerAsObserver("HIGHSCORES_UPDATED", this);
   StateManager::instance()->registerAsObserver("BLACKLISTEDLEVELS_UPDATED", this);
   StateManager::instance()->registerAsObserver("LEVELSPACKS_COUNT_UPDATED", this);
+  StateManager::instance()->registerAsObserver("CHECKWWWW_DONE", this);
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
@@ -119,6 +122,14 @@ StateMainMenu::~StateMainMenu()
     delete m_levelsPacksCountThread;
   }
 
+  if(m_checkWwwThread != NULL) {
+    /* cleaning thread */
+    if(m_checkWwwThread->waitForThreadEnd() != 0) {
+      LogWarning("CheckWWW thread failed");     
+    }
+    delete m_checkWwwThread;
+  }
+
   if(m_quickStartList != NULL) {
     delete m_quickStartList;
   }
@@ -134,6 +145,7 @@ StateMainMenu::~StateMainMenu()
   StateManager::instance()->unregisterAsObserver("HIGHSCORES_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("BLACKLISTEDLEVELS_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("LEVELSPACKS_COUNT_UPDATED", this);
+  StateManager::instance()->unregisterAsObserver("CHECKWWWW_DONE", this);
 }
 
 
@@ -155,13 +167,19 @@ void StateMainMenu::enter()
   StateManager::instance()->render(); 
 
   updateLevelsPacksList(); // update list even if computation is not done the first time to display packs
-  updateLevelsPacksCountDetached();
   updateLevelsLists();
   updateReplaysList();
   updateStats();
 
+  /* don't update packs count now if checks www must be done */
+  m_initialLevelsPacksDone = false;
   if(CheckWwwThread::isNeeded()) {
-    StateManager::instance()->pushState(new StateCheckWww());
+    if(m_checkWwwThread == NULL) {
+      m_checkWwwThread = new CheckWwwThread();
+      m_checkWwwThread->startThread();
+    }
+  } else {
+    updateLevelsPacksCountDetached();
   }
 }
 
@@ -1314,14 +1332,31 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
   else if(cmd == "LEVELSPACKS_COUNT_UPDATED") {
     if(m_levelsPacksCountThread != NULL) {
       /* cleaning thread */
-      if(m_levelsPacksCountThread->isThreadRunning() == false) {
-	if(m_levelsPacksCountThread->waitForThreadEnd() != 0) {
-	  LogWarning("LevelpacksCount thread failed");     
-	}
-	delete m_levelsPacksCountThread;
-	m_levelsPacksCountThread = NULL;
-	updateLevelsPacksList();
+      if(m_levelsPacksCountThread->waitForThreadEnd() != 0) {
+	LogWarning("LevelpacksCount thread failed");     
       }
+      delete m_levelsPacksCountThread;
+      m_levelsPacksCountThread = NULL;
+      LogInfo("Levelspacks count updated");
+      updateLevelsPacksList();
+    }
+  }
+
+  else if(cmd == "CHECKWWWW_DONE") {
+    if(m_checkWwwThread != NULL) {
+      /* cleaning thread */
+      if(m_checkWwwThread->waitForThreadEnd() != 0) {
+	LogWarning("CheckWWW thread failed");
+      }
+      delete m_checkWwwThread;
+      m_checkWwwThread = NULL;
+      SysMessage::instance()->displayText("WWW checks done");
+    }
+
+    /* if initial packs count has not been done (the only cause that check www has been run), do it now */
+    if(m_initialLevelsPacksDone == false) {
+      updateLevelsPacksCountDetached();
+      updateLevelsLists();      
     }
   }
 
@@ -1341,7 +1376,17 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
 }
 
 void StateMainMenu::updateLevelsPacksCountDetached() {
+  m_initialLevelsPacksDone = true;
+
   if(m_levelsPacksCountThread == NULL) {
+    m_levelsPacksCountThread = new LevelsPacksCountUpdateThread();
+    m_levelsPacksCountThread->startThread();
+  } else {
+    /* stop the current one to run a new one */
+    if(m_levelsPacksCountThread->waitForThreadEnd() != 0) {
+      LogWarning("LevelpacksCount thread failed");     
+    }
+    delete m_levelsPacksCountThread;
     m_levelsPacksCountThread = new LevelsPacksCountUpdateThread();
     m_levelsPacksCountThread->startThread();
   }
@@ -1353,9 +1398,15 @@ void StateMainMenu::updateLevelsLists() {
 }
 
 void StateMainMenu::createLevelLists(UILevelList *i_list, const std::string& i_packageName) {
+  LevelsManager::instance()->lockLevelsPacks();
   LevelsPack *v_levelsPack = &(LevelsManager::instance()->LevelsPackByName(i_packageName));
-  createLevelListsSql(i_list, v_levelsPack->getLevelsWithHighscoresQuery(XMSession::instance()->profile(),
-									 XMSession::instance()->idRoom(0)));
+  try {
+    createLevelListsSql(i_list, v_levelsPack->getLevelsWithHighscoresQuery(XMSession::instance()->profile(),
+									   XMSession::instance()->idRoom(0)));
+    LevelsManager::instance()->unlockLevelsPacks();
+  } catch(Exception &e) {
+    LevelsManager::instance()->unlockLevelsPacks();
+  }
 }
 
 void StateMainMenu::updateFavoriteLevelsList() {
@@ -1378,6 +1429,7 @@ void StateMainMenu::updateLevelsPacksList() {
 
   pTree->clear();
 
+  LevelsManager::instance()->lockLevelsPacks();
   for(unsigned int i=0; i<v_lm->LevelsPacks().size(); i++) {
     /* the unpackaged pack exists only in debug mode */
     if(v_lm->LevelsPacks()[i]->Name() != "" || XMSession::instance()->debug()) {
@@ -1391,6 +1443,7 @@ void StateMainMenu::updateLevelsPacksList() {
 		     );
     }
   }
+  LevelsManager::instance()->unlockLevelsPacks();
   
   /* reselect the previous pack */
   if(v_selected_packName != "") {
@@ -1560,13 +1613,19 @@ void StateMainMenu::updateNewLevels() {
 }
 
 void StateMainMenu::updateLevelsPackInPackList(const std::string& v_levelPack) {
-  UIPackTree *pTree = (UIPackTree *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:PACK_TAB:PACK_TREE");
-  LevelsPack *v_pack = &(LevelsManager::instance()->LevelsPackByName(v_levelPack));
+  LevelsManager::instance()->lockLevelsPacks();
+  try {
+    UIPackTree *pTree = (UIPackTree *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:PACK_TAB:PACK_TREE");
+    LevelsPack *v_pack = &(LevelsManager::instance()->LevelsPackByName(v_levelPack));
 
-  v_pack->updateCount(xmDatabase::instance("main"), XMSession::instance()->profile());
-  pTree->updatePack(v_pack,
-		    v_pack->getNumberOfFinishedLevels(),
-		    v_pack->getNumberOfLevels());
+    v_pack->updateCount(xmDatabase::instance("main"), XMSession::instance()->profile());
+    pTree->updatePack(v_pack,
+		      v_pack->getNumberOfFinishedLevels(),
+		      v_pack->getNumberOfLevels());
+    LevelsManager::instance()->unlockLevelsPacks();
+  } catch(Exception &e) {
+    LevelsManager::instance()->unlockLevelsPacks();
+  }
 }
 
 void StateMainMenu::updateInfoFrame() {

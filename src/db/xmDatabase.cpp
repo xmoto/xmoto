@@ -150,19 +150,28 @@ void xmDatabase::updateXMDirectories(const std::string& i_oldGameDir, const std:
   }
 }
 
-
-void xmDatabase::init(const std::string& i_dbFile)
+void xmDatabase::init(const std::string& i_dbFile, bool i_readOnly)
 {
-  if(sqlite3_open(i_dbFile.c_str(), &m_db) != 0){
-    if(m_db != NULL) {
-      sqlite3_close(m_db); // close even if it fails as requested in the documentation
-      m_db = NULL;
+  /* my sqlite version doesn't allow readonly ; wait to allow this */
+//  if(i_readOnly) {
+//    LogDebug("Database opened in read-only mode");
+//    if(sqlite3_open_v2(i_dbFile.c_str(), &m_db, SQLITE_OPEN_READONLY, NULL) != 0){
+//      if(m_db != NULL) {
+//	sqlite3_close(m_db); // close even if it fails as requested in the documentation
+//	m_db = NULL;
+//      }
+//      throw Exception("Unable to open the database (" + i_dbFile + ") : " + sqlite3_errmsg(m_db));
+//    }
+//  } else {
+//
+    if(sqlite3_open(i_dbFile.c_str(), &m_db) != 0){
+      if(m_db != NULL) {
+	sqlite3_close(m_db); // close even if it fails as requested in the documentation
+	m_db = NULL;
+      }
+      throw Exception("Unable to open the database (" + i_dbFile + ") : " + sqlite3_errmsg(m_db));
     }
-    throw Exception("Unable to open the database ("
-		    + i_dbFile
-		    + ") : "
-		    + sqlite3_errmsg(m_db));
-  }
+//  }
 
   sqlite3_busy_timeout(m_db, DB_BUSY_TIMEOUT);
   sqlite3_trace(m_db, sqlTrace, NULL);

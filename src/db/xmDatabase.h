@@ -44,7 +44,7 @@ public:
 	    const std::string& i_binPackCheckSum,
 	    bool i_dbDirsCheck,
 	    XmDatabaseUpdateInterface *i_interface = NULL);
-  void init(const std::string& i_dbFileUTF8);
+  void init(const std::string& i_dbFileUTF8, bool i_readOnly = false);
 
   /* RULE:
      all write access must be done from class xmDatabase

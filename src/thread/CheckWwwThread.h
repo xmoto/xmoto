@@ -50,6 +50,7 @@ private:
   bool        m_forceUpdate;
   WebRoom*    m_pWebRoom;
   WebLevels*  m_pWebLevels;
+  bool m_realHighscoresUpdate;
 };
 
 #endif

@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class Texture;
 class UILevelList;
 class LevelsPacksCountUpdateThread;
+class CheckWwwThread;
 
 class StateMainMenu : public StateMenu {
   public:
@@ -103,6 +104,8 @@ class StateMainMenu : public StateMenu {
   bool m_require_updateStats;
 
   LevelsPacksCountUpdateThread* m_levelsPacksCountThread;
+  bool m_initialLevelsPacksDone;
+  CheckWwwThread* m_checkWwwThread;
 };
 
 #endif

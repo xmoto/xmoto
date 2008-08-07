@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../states/StateManager.h"
 #include "../LevelsManager.h"
 
-LevelsPacksCountUpdateThread::LevelsPacksCountUpdateThread() : XMThread("LPCU") {
+LevelsPacksCountUpdateThread::LevelsPacksCountUpdateThread() : XMThread("LPCU", true) {
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("LEVELSPACKS_COUNT_UPDATED");
   }
@@ -35,6 +35,7 @@ LevelsPacksCountUpdateThread::~LevelsPacksCountUpdateThread() {
 int LevelsPacksCountUpdateThread::realThreadFunction() {
   LevelsManager* v_lm = LevelsManager::instance();
 
+  v_lm->lockLevelsPacks();
   try {
     for(unsigned int i=0; i<v_lm->LevelsPacks().size(); i++) {
       /* the unpackaged pack exists only in debug mode */
@@ -44,9 +45,11 @@ int LevelsPacksCountUpdateThread::realThreadFunction() {
     }
   } catch(Exception &e) {
     /* some packs could have been updated */
+    v_lm->unlockLevelsPacks();
     StateManager::instance()->sendAsynchronousMessage("LEVELSPACKS_COUNT_UPDATED");
     return 1;
   }
+  v_lm->unlockLevelsPacks();
 
   StateManager::instance()->sendAsynchronousMessage("LEVELSPACKS_COUNT_UPDATED");  
   return 0;
