@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Log.h"
 #include "../VFileIO.h"
 
-XMThread::XMThread(const std::string& i_dbKey)
+XMThread::XMThread(const std::string& i_dbKey, bool i_dbReadOnly)
 {
   m_isRunning        = false;
   m_isSleeping       = false;
@@ -43,6 +43,7 @@ XMThread::XMThread(const std::string& i_dbKey)
   m_safeKill         = false;
   m_askSafeKill      = false;
   m_dbKey            = i_dbKey;
+  m_dbReadOnly       = i_dbReadOnly;
 }
 
 XMThread::~XMThread()
@@ -199,7 +200,7 @@ int XMThread::threadFunctionEncapsulate()
 {
   // we can only have one thread at once.
   m_pDb = xmDatabase::instance(m_dbKey);
-  m_pDb->init(DATABASE_FILE);
+  m_pDb->init(DATABASE_FILE, m_dbReadOnly);
 
   int returnValue = realThreadFunction();
   m_isRunning     = false;

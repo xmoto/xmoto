@@ -35,7 +35,7 @@ class xmDatabase;
  */
 class XMThread {
 public:
-  XMThread(const std::string& i_dbKey = "thread");
+  XMThread(const std::string& i_dbKey = "thread", bool i_dbReadOnly = false);
   virtual ~XMThread();
 
   void startThread();
@@ -99,6 +99,7 @@ private:
   bool m_safeKill;
   bool m_askSafeKill;
   std::string m_dbKey;
+  bool m_dbReadOnly;
 };
   
 #endif

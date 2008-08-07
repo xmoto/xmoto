@@ -96,6 +96,8 @@ public:
 			   WWWAppInterface* pCaller,
 			   xmDatabase* i_db);
 
+  void lockLevelsPacks();
+  void unlockLevelsPacks();
   const std::vector<LevelsPack *> &LevelsPacks();
 
   static void checkPrerequires();
@@ -123,6 +125,7 @@ public:
   void reloadInternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 
   std::vector<LevelsPack *> m_levelsPacks;
+  SDL_mutex* m_levelsPackMutex;
 };
 
 #endif /* __LEVELSMANAGER__ */

@@ -58,14 +58,13 @@ void LevelsPack::updateCount(xmDatabase *i_db, const std::string& i_profile) {
   i_db->read_DB_free(v_result);
 
   /* finished levels */
-  v_result = i_db->readDB("SELECT count(1) FROM (SELECT a.id_level FROM (" +
-			  m_sql_levels +
+  v_result = i_db->readDB("SELECT count(1) FROM (SELECT a.id_level FROM (" + m_sql_levels +
 			  ") AS a INNER JOIN stats_profiles_levels AS b ON a.id_level=b.id_level "
 			  "WHERE b.id_profile=\"" + xmDatabase::protectString(i_profile) + "\" AND b.nbCompleted+0 > 0 "
 			  "GROUP BY a.id_level);",
 			  nrow);
 
-  if(i_db->getResult(v_result, 1, 0, 0) == NULL) {
+  if(nrow != 1) {
     i_db->read_DB_free(v_result);
     throw Exception("Unable to update level pack count");
   }
@@ -174,10 +173,12 @@ void LevelsPack::setShowWebTimes(bool i_showWebTimes) {
 }
 
 LevelsManager::LevelsManager() {
+  m_levelsPackMutex = SDL_CreateMutex();
 }
 
 LevelsManager::~LevelsManager() {
   clean();
+  SDL_DestroyMutex(m_levelsPackMutex);
 }
  
 void LevelsManager::clean() {
@@ -218,6 +219,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   char **v_result;
   unsigned int nrow;
 
+  lockLevelsPacks();
   cleanPacks();
 
   /* all levels */
@@ -800,7 +802,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
     v_pack->setDescription(v_levelPackStr);
     m_levelsPacks.push_back(v_pack);
   }
-  i_db->read_DB_free(v_result);  
+  i_db->read_DB_free(v_result);
+
+  unlockLevelsPacks();
 }
 
 const std::vector<LevelsPack *>& LevelsManager::LevelsPacks() {
@@ -1251,4 +1255,12 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN, uns
       "AND   e.id_level IS NULL "
       "GROUP BY a.id_level ORDER BY RANDOM();";
   }
+}
+
+void LevelsManager::lockLevelsPacks() {
+  SDL_LockMutex(m_levelsPackMutex);
+}
+
+void LevelsManager::unlockLevelsPacks() {
+  SDL_UnlockMutex(m_levelsPackMutex);
 }
