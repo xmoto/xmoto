@@ -58,7 +58,7 @@ void UIEdit::paint(void) {
   }
 
   /* cursor */
-  if(m_nCursorPos == (int) utf8::utf8_length(v_textToDisplay)) {
+  if(m_nCursorPos == utf8::utf8_length(v_textToDisplay)) {
     nCursorWidth = 6;
   } else {
     std::string s = utf8::utf8_substring(v_textToDisplay, m_nCursorPos, 1);
@@ -115,7 +115,7 @@ void UIEdit::paint(void) {
           getRoot()->activateLeft();
         return true;
       case SDLK_RIGHT:
-	if(m_nCursorPos < (int) utf8::utf8_length(getCaption())) {
+	if(m_nCursorPos < utf8::utf8_length(getCaption())) {
 	  m_nCursorPos++;
 	}
         else
@@ -132,7 +132,7 @@ void UIEdit::paint(void) {
       case SDLK_DELETE: {
 	std::string s = getCaption();
 
-	if(m_nCursorPos < (int) utf8::utf8_length(s)) {
+	if(m_nCursorPos < utf8::utf8_length(s)) {
 	  setCaption(utf8::utf8_delete(s, m_nCursorPos+1));
 	}
       }

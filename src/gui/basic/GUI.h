@@ -311,7 +311,7 @@ public:
 
 private:
   /* Data */
-  int m_nCursorPos;
+  unsigned int m_nCursorPos;
   bool m_hideText;    
   bool m_hasChanged;
 };
