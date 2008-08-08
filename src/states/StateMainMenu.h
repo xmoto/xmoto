@@ -73,6 +73,8 @@ class StateMainMenu : public StateMenu {
   void updateStats();
   void updateNewLevels();
 
+  void remakePacks();
+
   /* Main menu background / title */
   Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;      
   void drawBackground(); 
