@@ -183,6 +183,17 @@ void StateMainMenu::enter()
   }
 }
 
+void StateMainMenu::remakePacks() {
+  /* after make packs is done, updateLevelsPacksList must 
+     systematically done !!!
+  */
+  LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
+				       XMSession::instance()->idRoom(0),
+				       XMSession::instance()->debug(),
+				       xmDatabase::instance("main"));
+  updateLevelsPacksList();
+}
+
 void StateMainMenu::enterAfterPop()
 {
   bool v_levelsListsUpdated = false;
@@ -203,10 +214,7 @@ void StateMainMenu::enterAfterPop()
   }
 
   if(m_require_updateLevelsList) {
-    LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
-					 XMSession::instance()->idRoom(0),
-					 XMSession::instance()->debug(),
-					 xmDatabase::instance("main"));
+    remakePacks();
     if(v_levelsListsUpdated == false) {
       updateLevelsPacksCountDetached();
       updateLevelsLists();
@@ -1258,15 +1266,11 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
     updateOptions();
 
     // update packs
-    LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
-					 XMSession::instance()->idRoom(0),
-					 XMSession::instance()->debug(),
-					 xmDatabase::instance("main"));
-
+    remakePacks();
     // update lists and stats
-    updateLevelsPacksCountDetached();
     updateLevelsLists();
     updateReplaysList();
+    updateLevelsPacksCountDetached();
     updateStats();
   }
 
@@ -1362,12 +1366,9 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
 
   else if(cmd == "LEVELS_UPDATED" || cmd == "HIGHSCORES_UPDATED" || cmd == "BLACKLISTEDLEVELS_UPDATED") {
     if(StateManager::instance()->isTopOfTheStates(this)) {
-      LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
-					   XMSession::instance()->idRoom(0),
-					   XMSession::instance()->debug(),
-					   xmDatabase::instance("main"));
-      updateLevelsPacksCountDetached();
+      remakePacks();
       updateLevelsLists();
+      updateLevelsPacksCountDetached();
     } else
       m_require_updateLevelsList = true;
   } else {
