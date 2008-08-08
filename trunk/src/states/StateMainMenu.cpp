@@ -216,8 +216,8 @@ void StateMainMenu::enterAfterPop()
   if(m_require_updateLevelsList) {
     remakePacks();
     if(v_levelsListsUpdated == false) {
-      updateLevelsPacksCountDetached();
       updateLevelsLists();
+      updateLevelsPacksCountDetached();
       v_levelsListsUpdated = true;
     }
     m_require_updateLevelsList = false;
@@ -226,8 +226,8 @@ void StateMainMenu::enterAfterPop()
   if(m_require_updateStats) {
     // update lists and stats
     if(v_levelsListsUpdated == false) {
-      updateLevelsPacksCountDetached();
       updateLevelsLists();
+      updateLevelsPacksCountDetached();
       v_levelsListsUpdated = true;
     }
     updateStats();
