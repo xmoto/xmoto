@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __SYSMESSAGE_H__
 
 #include <string>
+#include <vector>
 #include "helpers/Singleton.h"
 
 class DrawLib;
@@ -45,7 +46,7 @@ private:
   float m_startDisplay;
 
   /* error msg */
-  std::string m_errorTxt;
+  std::vector<std::string> m_errorTxt;
   float m_startDisplayError;
 
   DrawLib* m_drawLib;
