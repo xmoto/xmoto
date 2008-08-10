@@ -122,6 +122,7 @@ void XMSession::setToDefault() {
   m_dbsynchronizeOnQuit           = DEFAULT_DBSYNCHRONIZEONQUIT;
   m_enableJoysticks               = DEFAULT_ENABLEJOYSTICKS;
   m_beatingMode                   = DEFAULT_BEATINGMODE;
+  m_proxySettings.setDefault();
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -1048,12 +1049,7 @@ ProxySettings* XMSession::proxySettings() {
 }
 
 ProxySettings::ProxySettings() {
-  m_useProxy     = false;
-  m_server       = "";
-  m_port         = -1;
-  m_type         = CURLPROXY_HTTP;
-  m_authUser     = "";
-  m_authPassword = "";
+  setDefault();
 }
 
 void ProxySettings::setServer(std::string p_server) {
@@ -1081,6 +1077,13 @@ void ProxySettings::setType(const std::string& p_type) {
 void ProxySettings::setAuthentification(std::string p_user, std::string p_password) {
   m_authUser     = p_user;
   m_authPassword = p_password;
+}
+
+void ProxySettings::setDefault() {
+  setDefaultServer();
+  setDefaultPort();
+  setDefaultType();
+  setDefaultAuthentification();
 }
 
 void ProxySettings::setDefaultServer() {

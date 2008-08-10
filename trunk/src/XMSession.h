@@ -53,6 +53,7 @@ class ProxySettings {
   void setType(const std::string& p_type); /* CURLPROXY_HTTP OR CURLPROXY_SOCKS5 */
   void setAuthentification(std::string p_user, std::string p_password);
 
+  void setDefault();
   void setDefaultServer();
   void setDefaultPort();
   void setDefaultType();
