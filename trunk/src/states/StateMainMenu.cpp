@@ -1347,20 +1347,26 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
   }
 
   else if(cmd == "CHECKWWWW_DONE") {
+    std::string v_error;
+    
     if(m_checkWwwThread != NULL) {
       /* cleaning thread */
       if(m_checkWwwThread->waitForThreadEnd() != 0) {
-	LogWarning("CheckWWW thread failed");
+	v_error = m_checkWwwThread->getMsg();
       }
       delete m_checkWwwThread;
       m_checkWwwThread = NULL;
-      SysMessage::instance()->displayText("WWW checks done");
     }
 
     /* if initial packs count has not been done (the only cause that check www has been run), do it now */
     if(m_initialLevelsPacksDone == false) {
       updateLevelsPacksCountDetached();
       updateLevelsLists();      
+    }
+
+    /* the error display is differed because updates of the lines before produces a mini freeze which make the animation less smooth */
+    if(v_error != "") {
+      SysMessage::instance()->displayError(v_error);
     }
   }
 

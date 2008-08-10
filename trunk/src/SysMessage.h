@@ -36,11 +36,18 @@ private:
 public:
   void setDrawLib(DrawLib* i_drawLib);
   void displayText(std::string i_msg);
+  void displayError(std::string i_msg);
   void render();
 
 private:
+  /* information message */
   std::string m_txt;
   float m_startDisplay;
+
+  /* error msg */
+  std::string m_errorTxt;
+  float m_startDisplayError;
+
   DrawLib* m_drawLib;
 };
 
