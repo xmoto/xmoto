@@ -147,7 +147,7 @@ int CheckWwwThread::realThreadFunction()
 
       } catch (Exception& e){
 	LogWarning("Failed to update web-levels [%s]",e.getMsg().c_str());
-	m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+	m_msg = GAMETEXT_FAILEDCHECKLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
 	StateManager::instance()->sendAsynchronousMessage("CHECKWWWW_DONE");
 	return 1;
       }

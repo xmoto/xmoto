@@ -49,7 +49,7 @@ void SysMessage::displayText(std::string i_msg) {
 
 void SysMessage::displayError(std::string i_msg) {
   m_startDisplayError = GameApp::getXMTime();
-  m_errorTxt          = i_msg;
+  m_errorTxt.push_back(i_msg);
 }
 
 void SysMessage::render() {
@@ -81,32 +81,37 @@ void SysMessage::render() {
   }
 
   /* error msg */
-  if(m_startDisplayError + SYSMSG_DISPLAYERROR_TIME + 2.0*(SYSMSG_DISPLAYERROR_ANIMATIONTIME) >= v_time) {
-    int x_offset = 0, y_offset = 0;
-    v_fg = v_fs->getGlyph(m_errorTxt);
-
-    if(m_startDisplayError + SYSMSG_DISPLAYERROR_ANIMATIONTIME > v_time) {
-      // start anim
-      y_offset = +(((m_startDisplayError + SYSMSG_DISPLAYERROR_ANIMATIONTIME - v_time)
-		    * (v_fg->realHeight() + 2*(SYSMSG_DISPLAYERROR_MARGIN)))
-		   / SYSMSG_DISPLAYERROR_ANIMATIONTIME);
-    } else if(m_startDisplayError + SYSMSG_DISPLAYERROR_TIME + SYSMSG_DISPLAYERROR_ANIMATIONTIME < v_time) {
-      // end anim
-      y_offset = -(((m_startDisplayError + SYSMSG_DISPLAYERROR_TIME + SYSMSG_DISPLAYERROR_ANIMATIONTIME - v_time)
-		    * (v_fg->realHeight() + 2*(SYSMSG_DISPLAYERROR_MARGIN)))
-		   / SYSMSG_DISPLAYERROR_ANIMATIONTIME);
+  if(m_errorTxt.size() > 0) {
+    if(m_startDisplayError + SYSMSG_DISPLAYERROR_TIME + 2.0*(SYSMSG_DISPLAYERROR_ANIMATIONTIME) >= v_time) {
+      int x_offset = 0, y_offset = 0;
+      v_fg = v_fs->getGlyph(m_errorTxt[0]);
+      
+      if(m_startDisplayError + SYSMSG_DISPLAYERROR_ANIMATIONTIME > v_time) {
+	// start anim
+	y_offset = +(((m_startDisplayError + SYSMSG_DISPLAYERROR_ANIMATIONTIME - v_time)
+		      * (v_fg->realHeight() + 2*(SYSMSG_DISPLAYERROR_MARGIN)))
+		     / SYSMSG_DISPLAYERROR_ANIMATIONTIME);
+      } else if(m_startDisplayError + SYSMSG_DISPLAYERROR_TIME + SYSMSG_DISPLAYERROR_ANIMATIONTIME < v_time) {
+	// end anim
+	y_offset = -(((m_startDisplayError + SYSMSG_DISPLAYERROR_TIME + SYSMSG_DISPLAYERROR_ANIMATIONTIME - v_time)
+		      * (v_fg->realHeight() + 2*(SYSMSG_DISPLAYERROR_MARGIN)))
+		     / SYSMSG_DISPLAYERROR_ANIMATIONTIME);
+      } else {
+	// normal
+      }
+      
+      m_drawLib->drawBox(Vector2f(x_offset, y_offset + m_drawLib->getDispHeight() - v_fg->realHeight() - 2*(SYSMSG_DISPLAYERROR_MARGIN)),
+			 Vector2f(x_offset + v_fg->realWidth() + 2*(SYSMSG_DISPLAYERROR_MARGIN), y_offset + m_drawLib->getDispHeight()),
+			 1.0, MAKE_COLOR(255,255,255,255), MAKE_COLOR(255,0,0,255));
+      
+      
+      v_fs->printString(v_fg,
+			x_offset + SYSMSG_DISPLAYERROR_MARGIN,
+			y_offset + m_drawLib->getDispHeight() - v_fg->realHeight() - SYSMSG_DISPLAYERROR_MARGIN,
+			MAKE_COLOR(0, 0, 0, 255));
     } else {
-      // normal
+      m_errorTxt.erase(m_errorTxt.begin());
+      m_startDisplayError = GameApp::getXMTime();      
     }
-
-    m_drawLib->drawBox(Vector2f(x_offset, y_offset + m_drawLib->getDispHeight() - v_fg->realHeight() - 2*(SYSMSG_DISPLAYERROR_MARGIN)),
-		       Vector2f(x_offset + v_fg->realWidth() + 2*(SYSMSG_DISPLAYERROR_MARGIN), y_offset + m_drawLib->getDispHeight()),
-		       1.0, MAKE_COLOR(255,255,255,255), MAKE_COLOR(255,0,0,255));
-
-
-    v_fs->printString(v_fg,
-		      x_offset + SYSMSG_DISPLAYERROR_MARGIN,
-		      y_offset + m_drawLib->getDispHeight() - v_fg->realHeight() - SYSMSG_DISPLAYERROR_MARGIN,
-		      MAKE_COLOR(0, 0, 0, 255));
   }
 }
