@@ -19,11 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateDownloadGhost.h"
+#include "../GameText.h"
 #include "StatePreplayingReplay.h"
 #include "StateReplaying.h"
 #include "../thread/DownloadGhostThread.h"
 #include "../helpers/Log.h"
 #include "../Game.h"
+#include "../SysMessage.h"
 #include "../helpers/CmdArgumentParser.h"
 
 StateDownloadGhost::StateDownloadGhost(std::string levelId,
@@ -65,6 +67,7 @@ void StateDownloadGhost::callAfterThreadFinished(int threadResult)
 
   if(threadResult != 0) {
     GameApp::instance()->enableWWW(false);
+    SysMessage::instance()->displayError(GAMETEXT_FAILEDDLREPLAY + std::string("\n") + SYS_MSG_WWW_DISABLED);
     StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
     StateManager::instance()->sendSynchronousMessage("GHOST_DOWNLOADING_FAILED");
   } else {
