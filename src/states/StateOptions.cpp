@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateEditWebConfig.h"
 #include "../helpers/Log.h"
 #include "../helpers/CmdArgumentParser.h"
+#include "StateMessageBox.h"
 #include <sstream>
 
 /* static members */
@@ -90,9 +91,10 @@ void StateOptions::checkEvents() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-    InputHandler::instance()->setDefaultConfig();
-    XMSession::instance()->setToDefault();
-    updateOptions();
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_RESETTODEFAULTS, UI_MSGBOX_YES|UI_MSGBOX_NO);
+    v_msgboxState->setId("RESETSTODEFAULTS");
+    v_msgboxState->makeActiveButton(UI_MSGBOX_NO);
+    StateManager::instance()->pushState(v_msgboxState);
   }
 
   // close
@@ -1766,6 +1768,16 @@ void StateOptions::executeOneCommand(std::string cmd, std::string args) {
     updateAudioOptions();
   }
 
+}
+
+void StateOptions::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+  if(i_id == "RESETSTODEFAULTS") {
+    if(i_button == UI_MSGBOX_YES) {
+      InputHandler::instance()->setDefaultConfig();
+      XMSession::instance()->setToDefault();
+      updateOptions();      
+    }
+  }
 }
 
 void StateOptions::setInputKey(const std::string& i_strKey, const std::string& i_key) {

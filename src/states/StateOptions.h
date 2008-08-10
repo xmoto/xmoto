@@ -33,6 +33,7 @@ class StateOptions : public StateMenu {
   virtual void enter();
   static void clean();  
 
+  virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
   virtual void executeOneCommand(std::string cmd, std::string args);
 
   protected:
