@@ -197,6 +197,7 @@ void StateMainMenu::remakePacks() {
 void StateMainMenu::enterAfterPop()
 {
   bool v_levelsListsUpdated = false;
+  bool v_needPacksCount = false;
 
   StateMenu::enterAfterPop();
 
@@ -217,7 +218,7 @@ void StateMainMenu::enterAfterPop()
     remakePacks();
     if(v_levelsListsUpdated == false) {
       updateLevelsLists();
-      updateLevelsPacksCountDetached();
+      v_needPacksCount = true;
       v_levelsListsUpdated = true;
     }
     m_require_updateLevelsList = false;
@@ -227,11 +228,16 @@ void StateMainMenu::enterAfterPop()
     // update lists and stats
     if(v_levelsListsUpdated == false) {
       updateLevelsLists();
-      updateLevelsPacksCountDetached();
+      v_needPacksCount = true;
       v_levelsListsUpdated = true;
     }
     updateStats();
     m_require_updateStats = false;
+  }
+
+  // differs the pack count at the end to limit the freeze
+  if(v_needPacksCount) {
+    updateLevelsPacksCountDetached();
   }
 
   GameApp::instance()->playMenuMusic("menu1");
