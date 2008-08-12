@@ -431,7 +431,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_UPDATINGLEVELS       _("Updating level lists...")
 #define GAMETEXT_UPLOAD_HIGHSCORE     _("Upload")
 #define GAMETEXT_UPLOAD_ALL_HIGHSCORES _("Upload all highscores")
-#define GAMETEXT_UPLOAD_HIGHSCORE_ERROR _("An unexpected error has occurred. There may be some problems with the web site.")
+#define GAMETEXT_UPLOAD_ERROR _("An unexpected error has occurred. There may be some problems with the web site.")
 #define GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE _("Oh no !")
 #define GAMETEXT_UPLOADING_HIGHSCORE  _("Uploading the highscore...")
 #define GAMETEXT_USECRAPPYINFORMATION _("Use crappy information")

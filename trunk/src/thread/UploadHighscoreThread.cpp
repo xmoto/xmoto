@@ -84,7 +84,7 @@ int UploadHighscoreThread::realThreadFunction()
 	}
       }
     } catch(Exception &e) {
-      m_msg = m_msg + webRoomName + ":\n" + GAMETEXT_UPLOAD_HIGHSCORE_ERROR + std::string("\n") + v_tmpMsg + "\n \n";
+      m_msg = m_msg + webRoomName + ":\n" + GAMETEXT_UPLOAD_ERROR + std::string("\n") + v_tmpMsg + "\n \n";
       v_failed = true;
     }
   }
