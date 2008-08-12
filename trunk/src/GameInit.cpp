@@ -403,20 +403,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     /* display what must be displayed */
     StateMainMenu* pMainMenu = new StateMainMenu();
     StateManager::instance()->pushState(pMainMenu);
-    
-    /* Do we have a player profile? */
-    if(XMSession::instance()->profile() == "" ||
-       pDb->stats_checkKeyExists_stats_profiles(XMSession::instance()->sitekey(), XMSession::instance()->profile()) == false) {
-      StateManager::instance()->pushState(new StateEditProfile(pMainMenu));
-
-      /* in case there is no profile, we show a message box */
-      /* Should we show a notification box? (with important one-time info) */
-      /* thus, is it really required to save this value as profile value ?!? */
-      if(XMSession::instance()->notifyAtInit()) {
-	StateManager::instance()->pushState(new StateMessageBox(NULL, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));
-	XMSession::instance()->setNotifyAtInit(false);
-      }
-    } 
   }
 
   LogInfo("UserInit ended at %.3f", GameApp::getXMTime());

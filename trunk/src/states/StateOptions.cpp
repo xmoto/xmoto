@@ -51,6 +51,7 @@ StateOptions::StateOptions(bool drawStateBehind, bool updateStatesBehind):
   StateManager::instance()->registerAsObserver("THEMES_UPDATED", this);
   StateManager::instance()->registerAsObserver("ROOMS_UPDATED", this);
   StateManager::instance()->registerAsObserver("CHANGE_WWW_ACCESS", this);
+  StateManager::instance()->registerAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->registerAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->registerAsObserver("REQUESTKEY", this);
 }
@@ -60,6 +61,7 @@ StateOptions::~StateOptions() {
   StateManager::instance()->unregisterAsObserver("THEMES_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("ROOMS_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("CHANGE_WWW_ACCESS", this);
+  StateManager::instance()->unregisterAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->unregisterAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("REQUESTKEY", this);
 }
@@ -1759,7 +1761,7 @@ void StateOptions::executeOneCommand(std::string cmd, std::string args) {
     updateRoomsList();      
   }
 
-  else if(cmd == "CHANGE_WWW_ACCESS") {
+  else if(cmd == "CHANGE_WWW_ACCESS" || cmd == "CONFIGURE_WWW_ACCESS") {
     updateWWWOptions();
     updateDbOptions();
   }

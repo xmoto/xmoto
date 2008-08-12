@@ -63,8 +63,10 @@ protected:
   std::string m_msg;
   // display the message, even if the thread succed
   bool m_messageOnSuccess;
+  bool m_messageOnSuccessModal;
   // dont display the message when the thread failed
   bool m_messageOnFailure;
+  bool m_messageOnFailureModal;
 
   // for child customization
   virtual void callAfterThreadFinished(int threadResult);

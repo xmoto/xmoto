@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Game.h"
 #include "../drawlib/DrawLib.h"
 #include "../GameText.h"
+#include "../SysMessage.h"
 #include "../XMSession.h"
 #include "StateMessageBox.h"
 #include "../helpers/Log.h"
@@ -42,6 +43,8 @@ StateUpdate::StateUpdate(bool drawStateBehind,
   m_msg              = "";
   m_messageOnSuccess = false;
   m_messageOnFailure = true;
+  m_messageOnSuccessModal = true;
+  m_messageOnFailureModal = true;
   init();
 }
 
@@ -88,18 +91,28 @@ bool StateUpdate::update()
 
     if(v_thread_res == 0) {
       if(m_messageOnSuccess == true && m_msg != "") {
-	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_msg, UI_MSGBOX_OK);
-	v_msgboxState->setId("SUCCESS");
-	StateManager::instance()->pushState(v_msgboxState);
+	if(m_messageOnSuccessModal) {
+	  StateMessageBox* v_msgboxState = new StateMessageBox(this, m_msg, UI_MSGBOX_OK);
+	  v_msgboxState->setId("SUCCESS");
+	  StateManager::instance()->pushState(v_msgboxState);
+	} else {
+	  SysMessage::instance()->displayInformation(m_msg);
+	  m_requestForEnd = true;
+	}
       } else {
 	m_requestForEnd = true;
       }
     }
     else {
       if(m_messageOnFailure == true && m_msg != "") {
-	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_msg, UI_MSGBOX_OK);
-	v_msgboxState->setId("ERROR");
-	StateManager::instance()->pushState(v_msgboxState);
+	if(m_messageOnFailureModal) {
+	  StateMessageBox* v_msgboxState = new StateMessageBox(this, m_msg, UI_MSGBOX_OK);
+	  v_msgboxState->setId("ERROR");
+	  StateManager::instance()->pushState(v_msgboxState);
+	} else {
+	  SysMessage::instance()->displayInformation(m_msg);
+	  m_requestForEnd = true;
+	}
       } else {
 	m_requestForEnd = true;
       }

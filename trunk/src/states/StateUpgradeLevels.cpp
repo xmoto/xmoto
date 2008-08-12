@@ -33,6 +33,7 @@ StateUpgradeLevels::StateUpgradeLevels(bool drawStateBehind,
 {
   m_pThread = new UpgradeLevelsThread(this, XMSession::instance()->theme());
   m_name    = "StateUpgradeLevels";
+  m_messageOnFailureModal = false;
 
   StateManager::instance()->registerAsObserver("NEWLEVELAVAILABLE", this);
   StateManager::instance()->registerAsObserver("ASKINGLEVELUPDATE", this);

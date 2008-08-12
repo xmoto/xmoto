@@ -105,6 +105,7 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
   StateManager::instance()->registerAsObserver("BLACKLISTEDLEVELS_UPDATED", this);
   StateManager::instance()->registerAsObserver("LEVELSPACKS_COUNT_UPDATED", this);
   StateManager::instance()->registerAsObserver("CHECKWWWW_DONE", this);
+  StateManager::instance()->registerAsObserver("CONFIGURE_WWW_ACCESS", this);
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
@@ -146,6 +147,7 @@ StateMainMenu::~StateMainMenu()
   StateManager::instance()->unregisterAsObserver("BLACKLISTEDLEVELS_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("LEVELSPACKS_COUNT_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("CHECKWWWW_DONE", this);
+  StateManager::instance()->unregisterAsObserver("CONFIGURE_WWW_ACCESS", this);
 }
 
 
@@ -172,14 +174,32 @@ void StateMainMenu::enter()
   updateStats();
 
   /* don't update packs count now if checks www must be done */
+  /* if profile is not initialized, don't update */
   m_initialLevelsPacksDone = false;
-  if(CheckWwwThread::isNeeded()) {
-    if(m_checkWwwThread == NULL) {
-      m_checkWwwThread = new CheckWwwThread();
-      m_checkWwwThread->startThread();
+
+  /* no profile */
+  if(XMSession::instance()->profile() == "" ||
+     xmDatabase::instance("main")->stats_checkKeyExists_stats_profiles(XMSession::instance()->sitekey(),
+								       XMSession::instance()->profile()) == false) {
+    StateManager::instance()->pushState(new StateEditProfile(this));
+    
+    /* in case there is no profile, we show a message box */
+    /* Should we show a notification box? (with important one-time info) */
+    /* thus, is it really required to save this value as profile value ?!? */
+    if(XMSession::instance()->notifyAtInit()) {
+      StateManager::instance()->pushState(new StateMessageBox(NULL, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));
+      XMSession::instance()->setNotifyAtInit(false);
     }
+    
   } else {
-    updateLevelsPacksCountDetached();
+    if(CheckWwwThread::isNeeded()) {
+      if(m_checkWwwThread == NULL) {
+	m_checkWwwThread = new CheckWwwThread();
+	m_checkWwwThread->startThread();
+      }
+    } else {
+      updateLevelsPacksCountDetached();
+    }
   }
 }
 
@@ -1350,6 +1370,15 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
       LogInfo("Levelspacks count updated");
       updateLevelsPacksList();
     }
+  }
+
+  else if(cmd == "CONFIGURE_WWW_ACCESS") {
+    if(CheckWwwThread::isNeeded()) {
+      if(m_checkWwwThread == NULL) {
+	m_checkWwwThread = new CheckWwwThread();
+	m_checkWwwThread->startThread();
+      }
+    }  
   }
 
   else if(cmd == "CHECKWWWW_DONE") {

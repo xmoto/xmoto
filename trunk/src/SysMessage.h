@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 #include <vector>
 #include "helpers/Singleton.h"
+#include "helpers/Color.h"
 
 class DrawLib;
 
@@ -38,6 +39,7 @@ public:
   void setDrawLib(DrawLib* i_drawLib);
   void displayText(std::string i_msg);
   void displayError(std::string i_msg);
+  void displayInformation(std::string i_msg);
   void render();
 
 private:
@@ -48,6 +50,11 @@ private:
   /* error msg */
   std::vector<std::string> m_errorTxt;
   float m_startDisplayError;
+  void drawBoxMsg(float& io_nextStartTime, std::vector<std::string>& i_msg, Color i_color);
+
+  /* information msg */
+  std::vector<std::string> m_informationTxt;
+  float m_startDisplayInformation;
 
   DrawLib* m_drawLib;
 };
