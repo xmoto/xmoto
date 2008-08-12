@@ -107,7 +107,7 @@ void StateEditProfile::checkEvents() {
     /* Should we jump to the web config now? */
     if(XMSession::instance()->webConfAtInit()) {
       StateManager::instance()->replaceState(new StateEditWebConfig());
-    }else{
+    } else{
       m_requestForEnd = true;
     }
   }

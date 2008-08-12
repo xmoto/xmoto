@@ -108,6 +108,7 @@ class StateMainMenu : public StateMenu {
   LevelsPacksCountUpdateThread* m_levelsPacksCountThread;
   bool m_initialLevelsPacksDone;
   CheckWwwThread* m_checkWwwThread;
+
 };
 
 #endif

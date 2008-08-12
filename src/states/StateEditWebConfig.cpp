@@ -36,7 +36,7 @@ StateEditWebConfig::StateEditWebConfig(bool drawStateBehind,
   m_name    = "StateEditWebConfig";
 
   if(XMSession::instance()->debug() == true) {
-    StateManager::instance()->registerAsEmitter("CHANGE_WWW_ACCESS");
+    StateManager::instance()->registerAsEmitter("CONFIGURE_WWW_ACCESS");
   }
 }
 
@@ -102,7 +102,7 @@ void StateEditWebConfig::checkEvents()
     XMSession::instance()->proxySettings()->setServer(pServer->getCaption());
     XMSession::instance()->proxySettings()->setAuthentification(pLogin->getCaption(), pPassword->getCaption());
     XMSession::instance()->setWWW(true);
-    StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
+    StateManager::instance()->sendAsynchronousMessage("CONFIGURE_WWW_ACCESS");
 
     m_requestForEnd = true;
   }
