@@ -25,7 +25,8 @@ StateSync::StateSync(bool drawStateBehind, bool updateStatesBehind)
 : StateUpdate(drawStateBehind, updateStatesBehind)
 {
   m_name = "StateSync";
-  m_messageOnSuccess = false;
+  m_messageOnSuccess = true;
+  m_messageOnSuccessModal = false;
   m_messageOnFailure = true;
   m_pThread = new SyncThread();
 }

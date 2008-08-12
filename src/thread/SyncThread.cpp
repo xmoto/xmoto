@@ -86,7 +86,7 @@ int SyncThread::realThreadFunction() {
       return 1;
     }
   } catch(Exception &e) {
-    m_msg = GAMETEXT_UPLOAD_HIGHSCORE_ERROR + std::string("\n") + e.getMsg();
+    m_msg = GAMETEXT_UPLOAD_ERROR + std::string("\n") + e.getMsg();
     LogWarning("%s", e.getMsg().c_str());
     remove(std::string(SYNC_UP_TMPFILEBZ2).c_str());
     return 1;
