@@ -41,6 +41,7 @@ class Universe {
   ~Universe();
 
   std::vector<MotoGame*>& getScenes();
+  MotoGame* getScene(std::string sceneId);
   void initPlay(int i_nbPlayer, bool i_multiScenes);
 
   Replay* getCurrentReplay();

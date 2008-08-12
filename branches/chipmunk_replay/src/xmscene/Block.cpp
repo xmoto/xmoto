@@ -20,14 +20,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <algorithm>
 #include "Block.h"
-#include "../Collision.h"
-#include "../PhysSettings.h"
-#include "../helpers/Log.h"
-#include "../VFileIO.h"
-#include "../VXml.h"
-#include "../BSP.h"
-#include "../chipmunk/chipmunk.h"
+#include "Collision.h"
+#include "PhysSettings.h"
+#include "helpers/Log.h"
+#include "VFileIO.h"
+#include "VXml.h"
+#include "BSP.h"
+#include "chipmunk/chipmunk.h"
 #include "ChipmunkWorld.h"
+#include "DBuffer.h"
 
 #define XM_DEFAULT_BLOCK_TEXTURE "default"
 
@@ -102,6 +103,7 @@ Block::Block(std::string i_id) {
   m_collisionElement = NULL;
   m_collisionMethod  = None;
   m_collisionRadius  = 0.0f;
+  m_hasMoved         = false;
 }
 
 Block::~Block() {
@@ -277,6 +279,7 @@ void Block::updatePhysics(int timeStep, CollisionSystem* io_collisionSystem) {
     }
 
     if(moved == true){
+      hasMoved(true);
       // inform collision system that there has been a change
       io_collisionSystem->moveDynBlock(this);
     }
@@ -1030,4 +1033,22 @@ Block::CollisionMethod Block::stringToColMethod(std::string method)
     return Circle;
   else
     return None;
+}
+
+void Block::serialize(DBuffer& buffer)
+{
+  buffer << Id();
+  buffer << DynamicPosition().x;
+  buffer << DynamicPosition().y;
+  buffer << DynamicRotation();
+}
+
+bool Block::hasMoved()
+{
+  return m_hasMoved;
+}
+
+void Block::hasMoved(bool moved)
+{
+  m_hasMoved = moved;
 }

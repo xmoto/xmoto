@@ -25,28 +25,50 @@
 #include "xmscene/Scene.h"
 #include "helpers/Log.h"
 #include "GameEvents.h"
-#include "DBuffer.h"
+#include "Replay.h"
 #include "Game.h"
   
-  /*===========================================================================
-    Decoding of event stream
-    ===========================================================================*/
-  void MotoGame::unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation) {
-    RecordedGameEvent *p;    
+// Decoding of event stream
+void MotoGame::unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation) {
+  RecordedGameEvent *p;    
 
-    try {
-      /* Continue until buffer is empty */
-      while((*Buffer).numRemainingBytes() > 0) {
+  try {
+    /* Continue until buffer is empty */
+    while((*Buffer).numRemainingBytes() > 0) {
       p = new RecordedGameEvent;
       p->bPassed = false;
       p->Event   = MotoGameEvent::getUnserialized(*Buffer, bDisplayInformation);
       v_ReplayEvents->push_back(p);
-      }
-    } catch(Exception &e) {
-      LogWarning("unable to unserialize game events !");
-      throw e;
     }
+  } catch(Exception &e) {
+    LogWarning("unable to unserialize game events !");
+    throw e;
   }
+}
+
+void MotoGame::unserializeChipmunkFrames(DBuffer* buffer, std::vector<ChipmunkFrame*>& v_chipmunkFrames, bool displayInformations)
+{
+  ChipmunkFrame* f;
+
+  /* Continue until buffer is empty */
+  while((*buffer).numRemainingBytes() > 0) {
+    f = new ChipmunkFrame();
+    (*buffer) >> f->frameId;
+    (*buffer) >> f->timeStamp;
+    unsigned int nbBlocks;
+    (*buffer) >> nbBlocks;
+    f->blockStates.reserve(nbBlocks);
+    for(unsigned int i=0; i<nbBlocks; i++){
+      ChipmunkBlockState state;
+      (*buffer) >> state.id;
+      (*buffer) >> state.posX;
+      (*buffer) >> state.posY;
+      (*buffer) >> state.rot;
+      f->blockStates.push_back(state);
+    }
+    v_chipmunkFrames.push_back(f);
+  }
+}
 
   /*===========================================================================
     Encoding of event buffer 

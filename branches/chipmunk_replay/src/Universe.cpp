@@ -264,14 +264,15 @@ void Universe::initReplay() {
     return;
   }
 
-  if(XMSession::instance()->storeReplays() && XMSession::instance()->multiNbPlayers() == 1 &&
-     m_scenes[0]->getLevelSrc()->isPhysics() == false) {
+  if(XMSession::instance()->storeReplays()
+     && XMSession::instance()->multiNbPlayers() == 1) {
     m_pJustPlayReplay = new Replay;
     m_pJustPlayReplay->createReplay("Latest.rpl",
 				    m_scenes[0]->getLevelSrc()->Id(),
 				    XMSession::instance()->profile(),
 				    XMSession::instance()->replayFrameRate(),
-				    sizeof(SerializedBikeState));
+				    sizeof(SerializedBikeState),
+				    m_scenes[0]->getLevelSrc()->isPhysics());
   }
 }
 

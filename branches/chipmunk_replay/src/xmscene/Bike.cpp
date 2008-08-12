@@ -18,17 +18,17 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "Bike.h"
-#include "../Replay.h"
-#include "Scene.h"
-#include "../GameEvents.h"
-#include "../GameText.h"
-#include "../PhysSettings.h"
-#include "../Game.h"
-#include "BikeParameters.h"
-#include "BikeAnchors.h"
-#include "../Sound.h"
-#include "../helpers/Log.h"
+#include "xmscene/Bike.h"
+#include "Replay.h"
+#include "xmscene/Scene.h"
+#include "GameEvents.h"
+#include "GameText.h"
+#include "PhysSettings.h"
+#include "Game.h"
+#include "xmscene/BikeParameters.h"
+#include "xmscene/BikeAnchors.h"
+#include "Sound.h"
+#include "helpers/Log.h"
 
 #define PHYSICAL_ENGINE_REDUCTION 0.05
 
@@ -238,6 +238,9 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
   m_bodyDetach      = false;
   m_wheelDetach     =  false;
   m_changeDirPer      = 1.0;
+
+  // from ISerializable. the bike always moves.
+  m_hasMoved = true;
 }
 
 Biker::~Biker() { 

@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class CollisionSystem;
 class Line;
 
-#include "../helpers/VMath.h"
-#include "../helpers/Color.h"
+#include "helpers/VMath.h"
+#include "helpers/Color.h"
 #include <vector>
 
 class FileHandle;
@@ -37,6 +37,7 @@ class cpBody;
 class cpShape;
 class ChipmunkWorld;
 template<class T> struct ColElement;
+class DBuffer;
 
 #define DEFAULT_EDGE_ANGLE 270.0f
 
@@ -253,6 +254,11 @@ class Block {
 				    bool i_useOld, bool i_AisLast,
 				    bool& o_swapDone, bool i_inside);
 
+  void serialize(DBuffer& buffer);
+
+  bool hasMoved();
+  void hasMoved(bool moved);
+
 private:
   std::string m_id;
   std::string m_texture;
@@ -312,6 +318,9 @@ private:
 
   EdgeDrawMethod  stringToEdge(std::string method);
   CollisionMethod stringToColMethod(std::string method);
+
+  // for chipmunk replaying
+  bool m_hasMoved;
 };
 
 #endif /* __BLOCK_H__ */

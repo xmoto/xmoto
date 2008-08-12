@@ -27,7 +27,53 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Camera.h"
 #include "ScriptDynamicObjects.h"
 #include "Sound.h"
+#include "xmscene/Scene.h"
 #include <sstream>
+
+MotoGameEventManager::MotoGameEventManager()
+{
+}
+
+MotoGameEventManager::~MotoGameEventManager()
+{
+  std::vector<RecordedGameEvent*>::iterator it = m_replayEvents.begin();
+
+  for(; it != m_replayEvents.end(); ++it) {
+    delete (*it);
+  }
+
+  m_replayEvents.clear();
+}
+
+void MotoGameEventManager::storeFrame(Scene* pScene)
+{
+  // serialize and delete them
+  while(pScene->getNumPendingGameEvents() > 0) {
+    MotoGameEvent* pEvent = pScene->getNextGameEvent();
+    pEvent->serialize(m_buffer);
+    pScene->destroyGameEvent(pEvent);
+  }
+}
+
+void MotoGameEventManager::unserializeFrames(Scene* pScene)
+{
+  RecordedGameEvent *p;    
+
+  try {
+    while(buffer.numRemainingBytes() > 0) {
+      p = new RecordedGameEvent;
+      p->bPassed = false;
+      p->Event   = MotoGameEvent::getUnserialized(m_buffer);
+      m_replayEvents->push_back(p);
+    }
+  } catch(Exception &e) {
+    LogWarning("unable to unserialize game events !");
+    throw e;
+  }
+}
+
+
+
 
   MotoGameEvent::MotoGameEvent(int p_eventTime) {
     m_eventTime = p_eventTime;
@@ -41,7 +87,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Buffer << (int) (this->getType());
   }
 
-  MotoGameEvent* MotoGameEvent::getUnserialized(DBuffer &Buffer, bool bDisplayInformation) {
+  MotoGameEvent* MotoGameEvent::getUnserialized(DBuffer &Buffer) {
     MotoGameEvent* v_event;
     float v_fEventTime;
     int v_eventTime;
@@ -173,9 +219,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       throw Exception("Can't unserialize ! (event of type " + error_type.str() + ")");
     }
     v_event->unserialize(Buffer);
-    if(bDisplayInformation) {
-      printf("   %6.2f %-27s\n", v_eventTime/100.0, v_event->toString().c_str());
-    }
+
+    LogDebug("   %6.2f %-27s\n", v_eventTime/100.0, v_event->toString().c_str());
 
     return v_event;
   }

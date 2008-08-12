@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 #include <vector>
 #include "BasicSceneStructs.h"
-#include "../helpers/Color.h"
-#include "../helpers/VMath.h"
+#include "helpers/Color.h"
+#include "helpers/VMath.h"
 
 class Level;
 class Entity;
@@ -126,6 +126,10 @@ class BikeState {
   static unsigned short _MatrixTo16Bits(const float *pfMatrix);
   static void _16BitsToMatrix(unsigned short n16,float *pfMatrix);
 
+  int getTime() {
+    return GameTime;
+  }
+
   private:
   /* Driving */
   float m_curBrake, m_curEngine;    
@@ -136,9 +140,9 @@ class BikeState {
   static void interpolateGameStateCubic(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t);
 };
 
-class Biker {
+class Biker : public ISerializable<BikeState> {
  public:
-  Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
+  Biker(Theme* i_theme, BikerTheme* i_bikerTheme,
 	const TColor& i_colorFilter,
 	const TColor& i_uglyColorFilter);
   virtual ~Biker();

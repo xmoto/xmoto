@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __VMATH_H__
 #define __VMATH_H__
 
-#include "../VCommon.h"
+#include "VCommon.h"
 #include "VExcept.h"
 #include <stdlib.h> // for rand
 #include <math.h>
@@ -37,7 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 template <typename _T>
 class Vector2 {
   public:
-  Vector2<_T>() {x=y=0;}
+  Vector2<_T>() {}
   Vector2<_T>(_T ix,_T iy) : x(ix),y(iy) {}
   Vector2<_T>(const Vector2<_T> &i) : x(i.x),y(i.y) {}
   

@@ -85,7 +85,22 @@ struct RecordedGameEvent {
   bool bPassed;             /* Whether we have passed it */
 };
 
-#include "xmscene/Scene.h"
+// two for a scene:
+// -the one for storing current play events.
+// -the one for playing events in the main ghost
+class MotoGameEventManager : public ISerializer {
+public:
+  MotoGameEventManager();
+  ~MotoGameEventManager();
+
+  void storeFrame(Scene* pScene);
+
+  void unserializeFrames(Scene* pScene);
+
+private:
+  std::vector<RecordedGameEvent*> m_replayEvents;
+};
+
 
 class MotoGameEvent {
   public:
@@ -101,7 +116,7 @@ class MotoGameEvent {
   virtual std::string toString() = 0;
 
   static MotoGameEvent* getUnserialized(DBuffer &Buffer, bool bDisplayInformation = false);
-  int getEventTime();
+  int getTime();
 
   protected:
   int m_eventTime;

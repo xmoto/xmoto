@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Game object. Handles all of the gamestate management und so weiter.
  */
-#include "../GameText.h"
+#include "GameText.h"
 #include "../Game.h"
 #include "Scene.h"
 #include "../VFileIO.h"
@@ -33,15 +33,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeGhost.h"
 #include "BikePlayer.h"
 #include "BikeParameters.h"
-#include "../helpers/Log.h"
+#include "helpers/Log.h"
 #include "Camera.h"
 #include "Block.h"
 #include "Entity.h"
-#include "../Replay.h"
-#include "../LuaLibGame.h"
-#include "../ScriptDynamicObjects.h"
+#include "Replay.h"
+#include "LuaLibGame.h"
+#include "ScriptDynamicObjects.h"
 #include "ChipmunkWorld.h"
-#include "../helpers/Random.h"
+#include "helpers/Random.h"
 
   MotoGame::MotoGame() {
     m_bDeathAnimEnabled=true;
@@ -66,6 +66,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_chipmunkWorld = NULL;
 
     m_halfUpdate = true;
+
+    m_eventManagerPlaying   = (ISerializer*)SerializerFactory::instance()->createObject("eventManager");
   }
   
   MotoGame::~MotoGame() {
@@ -290,7 +292,7 @@ void MotoGame::cleanPlayers() {
       /* We'd like to serialize the game state 25 times per second for the replay */
       if(getTime() - m_lastStateSerializationTime >= 100.0f/i_recordedReplay->getFrameRate()) {
         m_lastStateSerializationTime = getTime();
-        
+
         /* Get it */
 	/* only store the state if 1 player plays */
 	if(Players().size() == 1) {
@@ -298,7 +300,7 @@ void MotoGame::cleanPlayers() {
 	    SerializedBikeState BikeState;
 	    getSerializedBikeState(Players()[0]->getState(), getTime(), &BikeState);
 	    i_recordedReplay->storeState(BikeState);
-	    i_recordedReplay->storeBlocks(m_pLevelSrc->Blocks());
+	    i_recordedReplay->storeBlocks(m_pLevelSrc->Blocks(), getTime());
 	  }
 	}
       }
@@ -311,18 +313,14 @@ void MotoGame::cleanPlayers() {
     m_DelSchedule.clear();
   }
 
-  void MotoGame::executeEvents(Replay *p_replay) {
-    /* Handle events generated this update */
-    while(getNumPendingGameEvents() > 0) {
-      MotoGameEvent *pEvent = getNextGameEvent();
-      if(p_replay != NULL) {
-	/* Encode event */
-	_SerializeGameEventQueue(p_replay, pEvent);
-      }
-      
-      /* What event? */
+  void MotoGame::executeEvents() {
+    // events will be removed when serialized
+    MotoGameEvent* pEvent;
+    unsigned int numPendingEvents = getNumPendingGameEvents();
+    for(unsigned int i=0; i<numPendingEvents; i++) {
+      pEvent = getNextGameEvent();
       pEvent->doAction(this);
-      destroyGameEvent(pEvent);
+      pScene->createGameEvent(pEvent);
     }
   }
 
@@ -507,11 +505,11 @@ void MotoGame::cleanPlayers() {
     return v_ghost;
   }
 
-  std::vector<Ghost *>& MotoGame::Ghosts() {
+  std::vector<Ghost*>& MotoGame::Ghosts() {
     return m_ghosts;
   }
 
-  std::vector<Biker *>& MotoGame::Players() {
+  std::vector<Biker*>& MotoGame::Players() {
     return m_players;
   }
 

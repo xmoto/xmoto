@@ -21,9 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __MOTOGAME_H__
 #define __MOTOGAME_H__
 
-#include "../helpers/VMath.h"
-#include "../Collision.h"
-#include "../helpers/Color.h"
+#include "helpers/VMath.h"
+#include "Collision.h"
+#include "helpers/Color.h"
 #include "BasicSceneStructs.h"
 #include "Bike.h"
 #include <queue>
@@ -55,16 +55,13 @@ class Theme;
 class BikerTheme;
 class Biker;
 class ChipmunkWorld;
+class ChipmunkFrame;
 
-/*===========================================================================
-  Serialized bike state
-  ===========================================================================*/
+// Serialized bike state
 #define SER_BIKE_STATE_DIR_LEFT         0x01
 #define SER_BIKE_STATE_DIR_RIGHT        0x02
 
-/*===========================================================================
-  Arrow pointer
-  ===========================================================================*/
+// Arrow pointer
 struct ArrowPointer {
   ArrowPointer() {
     nArrowPointerMode = 0;
@@ -75,55 +72,50 @@ struct ArrowPointer {
   float fArrowPointerAngle;
 };
 
-/*===========================================================================
-  Requested player state
-  ===========================================================================*/
+// Requested player state
 struct GameReqPlayerPos {
   Vector2f Pos;
   bool bDriveRight;  
 };
 
-/*===========================================================================
-  Game message
-  ===========================================================================*/
+// Game message
 struct GameMessage {
-  bool bNew;                        /* Uninitialized */
-  Vector2f Pos,Vel;                 /* Screen position/velocity of message */
-  int removeTime;                   /* The time when it should be removed */
-  std::string Text;                 /* The text */
-  int nAlpha;                       /* Alpha amount */
-  bool bOnce;                       /* Unique message */
+  /* Uninitialized */
+  bool bNew;
+  Vector2f Pos, Vel;
+  int removeTime;
+  std::string Text;
+  int nAlpha;
+  bool bOnce;
 };  
 
-/*===========================================================================
-  Game object
-  ===========================================================================*/
-
+// Game object
 class MotoGameHooks {
 public:
   virtual ~MotoGameHooks() {};
   virtual void OnTakeEntity() = 0;
 };
 
+
 class MotoGame {
 public:          
   MotoGame();
   ~MotoGame();
 
-  void setHooks(MotoGameHooks *i_motoGameHooks);
+  void setHooks(MotoGameHooks* i_motoGameHooks);
 
   /* update of the structure */
-  void loadLevel(xmDatabase *i_db, const std::string& i_id_level);
-  void prePlayLevel(Replay *recordingReplay,
+  void loadLevel(xmDatabase* i_db, const std::string& i_id_level);
+  void prePlayLevel(Replay* recordingReplay,
 		    bool i_playEvents);
 
   void playLevel();
-  void updateLevel(int timeStep, Replay *i_recordedReplay = NULL);
+  void updateLevel(int timeStep, Replay* i_recordedReplay = NULL);
   void endLevel();
 
   /* entities */
-  void touchEntity(int i_player, Entity *pEntity, bool bHead); 
-  void deleteEntity(Entity *pEntity);
+  void touchEntity(int i_player, Entity* pEntity, bool bHead); 
+  void deleteEntity(Entity* pEntity);
 
   /* messages */
   void gameMessage(std::string Text,
@@ -131,35 +123,59 @@ public:
 		   int duration = MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION);
   void clearGameMessages();
   void updateGameMessages();
-  std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
+  std::vector<GameMessage*>& getGameMessage(void) {
+    return m_GameMessages;
+  }
 
   /* serialization */
-  static void getSerializedBikeState(BikeState *i_bikeState, int i_time, SerializedBikeState *pState);
-  static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation = false);
+  static void getSerializedBikeState(BikeState* i_bikeState, int i_time,
+				     SerializedBikeState* pState);
+  static void unserializeGameEvents(DBuffer* Buffer,
+				    std::vector<RecordedGameEvent*>* v_ReplayEvents,
+				    bool bDisplayInformation = false);
+  static void unserializeChipmunkFrames(DBuffer* Buffer,
+					std::vector<ChipmunkFrame*>& v_chipmunkFrames,
+					bool displayInformations);
 
   /* events */
-  void createGameEvent(MotoGameEvent *p_event);
-  void destroyGameEvent(MotoGameEvent *p_event);
+  void createGameEvent(MotoGameEvent* p_event);
+  void destroyGameEvent(MotoGameEvent* p_event);
+  // remove the events from the queue
   MotoGameEvent* getNextGameEvent();
   int getNumPendingGameEvents();
+
   void cleanEventsQueue();
-  void executeEvents(Replay *p_replay);
+  void executeEvents(Replay* p_replay);
 
   /* player */
-  void setPlayerPosition(int i_player, float x,float y,bool bFaceRight);
+  void setPlayerPosition(int i_player, float x, float y, bool bFaceRight);
   const Vector2f &getPlayerPosition(int i_player);
   bool getPlayerFaceDir(int i_player);
-  void setDeathAnim(bool b) {m_bDeathAnimEnabled=b;}
+  void setDeathAnim(bool b) {
+    m_bDeathAnimEnabled=b;
+  }
 
   /* Data interface */
-  Level *getLevelSrc(void) {return m_pLevelSrc;}
+  Level* getLevelSrc(void) {
+    return m_pLevelSrc;
+  }
 
-  int getTime(void) {return m_time;}
-  void setTime(int t) {m_time=t;}
-  ArrowPointer &getArrowPointer(void) {return m_Arrow;}
-  CollisionSystem *getCollisionHandler(void) {return &m_Collision;}
+  int getTime(void) {
+    return m_time;
+  }
+  void setTime(int t) {
+    m_time=t;
+  }
+  ArrowPointer& getArrowPointer(void) {
+    return m_Arrow;
+  }
+  CollisionSystem* getCollisionHandler(void) {
+    return &m_Collision;
+  }
 
-  void setShowGhostTimeDiff(bool b) { m_showGhostTimeDiff = b; }
+  void setShowGhostTimeDiff(bool b) {
+    m_showGhostTimeDiff = b;
+  }
 
   /* action for events */
   void SetEntityPos(std::string pEntityID, float pX, float pY);
@@ -184,10 +200,12 @@ public:
   void CameraAdaptToGravity();
 
   void killPlayer(int i_player);
-  void playerEntersZone(int i_player, Zone *pZone);
-  void playerLeavesZone(int i_player, Zone *pZone);
-  void playerTouchesEntity(int i_player, std::string p_entityID, bool p_bTouchedWithHead);
-  void addForceToPlayer(int i_player, const Vector2f& i_force, int i_startTime, int i_endTime);
+  void playerEntersZone(int i_player, Zone* pZone);
+  void playerLeavesZone(int i_player, Zone* pZone);
+  void playerTouchesEntity(int i_player, std::string p_entityID,
+			   bool p_bTouchedWithHead);
+  void addForceToPlayer(int i_player, const Vector2f& i_force,
+			int i_startTime, int i_endTime);
   void entityDestroyed(const std::string& i_entityId);
   void addDynamicObject(SDynamicObject* p_obj);
   void removeSDynamicOfObject(std::string pObject);
@@ -198,24 +216,24 @@ public:
   unsigned int getNbRemainingStrawberries();
   void makePlayerWin(int i_player);
 
-  void setGravity(float x,float y);
-  const Vector2f &getGravity(void);
+  void setGravity(float x, float y);
+  const Vector2f& getGravity(void);
 
   ReplayBiker* addReplayFromFile(std::string i_ghostFile,
-				 Theme *i_theme, BikerTheme* i_bikerTheme,
+				 Theme* i_theme, BikerTheme* i_bikerTheme,
 				 bool i_enableEngineSound);
   Ghost* addGhostFromFile(std::string i_ghostFile, std::string i_info,
-			  Theme *i_theme, BikerTheme* i_bikerTheme,
+			  Theme* i_theme, BikerTheme* i_bikerTheme,
 			  const TColor& i_filterColor,
 			  const TColor& i_filterUglyColor);
   PlayerBiker* addPlayerBiker(Vector2f i_position, DriveDir i_direction,
-			      Theme *i_theme, BikerTheme* i_bikerTheme,
+			      Theme* i_theme, BikerTheme* i_bikerTheme,
 			      const TColor& i_filterColor,
 			      const TColor& i_filterUglyColor,
 			      bool i_enableEngineSound);
 
-  std::vector<Ghost *> &Ghosts();
-  std::vector<Biker*> &Players();
+  std::vector<Ghost*>& Ghosts();
+  std::vector<Biker*>& Players();
 
   bool doesPlayEvents() const;
 
@@ -228,7 +246,7 @@ public:
   void setSpeed(float f);
   bool isPaused();
 
-  void handleEvent(MotoGameEvent *pEvent);
+  void handleEvent(MotoGameEvent* pEvent);
 
   void setInfos(std::string i_infos);
   std::string getInfos() const;
@@ -238,10 +256,11 @@ public:
   std::vector<Camera*>& Cameras();
 
   Camera* getCamera();
-  unsigned int  getNumberCameras();
+  unsigned int getNumberCameras();
   void setCurrentCamera(unsigned int currentCamera);
-  unsigned int  getCurrentCamera();
-  void addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom = true);
+  unsigned int getCurrentCamera();
+  void addCamera(Vector2i upperleft, Vector2i downright,
+		 bool i_useActiveZoom = true);
   void resetFollow();
   void removeCameras();
   void setAutoZoomCamera();
@@ -249,26 +268,32 @@ public:
 
 private:
 
-  /* Data */
   std::queue<MotoGameEvent*> m_GameEventQueue;
+  MotoGameEventManager* m_eventManagerPlaying;
   int m_time;
-  float m_floattantTimeStepDiff; // to play slowly replay
+  // to slowly play replay
+  float m_floattantTimeStepDiff;
   int m_lastStateSerializationTime; 
-  float m_speed_factor; /* nb hundreadths to increment each time ; is a float so that manage slow */
+  /* nb hundreadths to increment each time ; is a float so that manage
+     slow */
+  float m_speed_factor;
   bool  m_is_paused;
+  // we have to store the scene id in the replay
+  unsigned int m_sceneId;
 
-  MotoGameHooks *m_motoGameHooks;
+  MotoGameHooks* m_motoGameHooks;
   std::string m_infos;
   bool m_bDeathAnimEnabled;
-  Vector2f m_PhysGravity; /* gravity */
-  ArrowPointer m_Arrow;               /* Arrow */  
-  CollisionSystem m_Collision;        /* Collision system */
-  Level *m_pLevelSrc;              /* Source of level */            
-  LuaLibGame *m_luaGame;
+  Vector2f m_PhysGravity;
+  ArrowPointer m_Arrow;
+  CollisionSystem m_Collision;
+  Level* m_pLevelSrc;
+  LuaLibGame* m_luaGame;
 
-  std::vector<Entity *> m_DestroyedEntities; /* destroyed entities */
-  std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
-  std::vector<GameMessage *> m_GameMessages;
+  std::vector<Entity*> m_DestroyedEntities;
+  /* Entities scheduled for deletion */
+  std::vector<Entity*> m_DelSchedule;
+  std::vector<GameMessage*> m_GameMessages;
 
   std::vector<Biker*> m_players;
 
@@ -288,7 +313,7 @@ private:
   int m_lastCallToEveryHundreath;
   bool m_playEvents;
 
-  // some part of the game can be update only half on the time
+  // some part of the game can be updated only half on the time
   bool m_halfUpdate;
 
   std::vector<Camera*> m_cameras;
@@ -297,23 +322,25 @@ private:
   void cleanGhosts();
   void cleanPlayers();
 
-  /* Helpers */
-  void _GenerateLevel(void);          /* Called by playLevel() to 
-					 prepare the level */
-  bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,Zone *pZone);
-  void _KillEntity(Entity *pEnt);
+  // Called by playLevel() to prepare the level
+  void _GenerateLevel(void);
+  bool _DoCircleTouchZone(const Vector2f& Cp, float Cr, Zone* pZone);
+  void _KillEntity(Entity* pEnt);
   void _UpdateEntities(void);
   void _UpdateZones(void);
-  bool touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity);
+  bool touchEntityBodyExceptHead(const BikeState& pBike,
+				 const Entity& p_entity);
 
   void DisplayDiffFromGhost();
 
   void cleanScriptDynamicObjects();
   void nextStateScriptDynamicObjects(int i_nbCents);
 
-  void _SerializeGameEventQueue(DBuffer* Buffer,MotoGameEvent *pEvent);      
+  void _SerializeGameEventQueue(DBuffer* Buffer, MotoGameEvent* pEvent);
   void _UpdateDynamicCollisionLines(void);
 };
+
+
 
 class MotoGameOnBikerHooks : public OnBikerHooks {
 public:

@@ -73,9 +73,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       void operator >>(std::string &s); 
     
       /* Data interface */
-      bool isOutput(void) {if(m_bInit && m_bOutput) return true; return false;}
-      bool isInput(void) {if(m_bInit && !m_bOutput) return true; return false;}
-      
+      bool isOutput(void) {
+	if(m_bInit && m_bOutput)
+	  return true;
+	return false;
+      }
+      bool isInput(void) {
+	if(m_bInit && !m_bOutput)
+	  return true;
+	return false;
+      }
+
     private:
       /* Data */
       bool m_bInit;

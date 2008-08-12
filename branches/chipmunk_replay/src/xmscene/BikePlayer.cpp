@@ -18,17 +18,17 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
+#include "GameText.h"
 #include "BikePlayer.h"
-#include "../GameText.h"
 #include "BikeParameters.h"
 #include "BikeAnchors.h"
-#include "../PhysSettings.h"
-#include "../Collision.h"
+#include "PhysSettings.h"
+#include "Collision.h"
 #include "Zone.h"
-#include "../Game.h"
-#include "../Replay.h"
-#include "../Sound.h"
-#include "../helpers/Log.h"
+#include "Game.h"
+#include "Replay.h"
+#include "Sound.h"
+#include "helpers/Log.h"
 
 /* This is the magic depth factor :)  - tweak to obtain max. stability */
 #define DEPTH_FACTOR    2
@@ -396,7 +396,7 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
     if(!dBodyIsEnabled(m_FrameBodyID)) dBodyEnable(m_FrameBodyID);
   }
   if(dBodyIsEnabled(m_FrontWheelBodyID)) {
-    Vector2f WSP;
+    Vector2f WSP(0.0f, 0.0f);
     for(int i=0;i<nNumContacts;i++) {
       dJointAttach(dJointCreateContact(m_WorldID,m_ContactGroup,&Contacts[i]),m_FrontWheelBodyID,0);
       WSP.x = Contacts[i].geom.pos[0];
@@ -459,7 +459,7 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
     if(!dBodyIsEnabled(m_FrameBodyID)) dBodyEnable(m_FrameBodyID);
   }
   if(dBodyIsEnabled(m_RearWheelBodyID)) {
-    Vector2f WSP;
+    Vector2f WSP(0.0f, 0.0f);
     for(int i=0;i<nNumContacts;i++) {
       dJointAttach(dJointCreateContact(m_WorldID,m_ContactGroup,&Contacts[i]),m_RearWheelBodyID,0);
       WSP.x = Contacts[i].geom.pos[0];
