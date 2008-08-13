@@ -241,7 +241,7 @@ private:
   /* Helpers */
   void _Wait();
     
-  void _UpdateLoadingScreen(float fDone, const std::string &NextTask);
+  void _UpdateLoadingScreen(const std::string &NextTask = "");
       
   void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
   void _DownloadExtraLevels(void);

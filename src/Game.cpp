@@ -828,14 +828,14 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
   std::ostringstream v_percentage;
   v_percentage << i_percentage;
   v_percentage << "%";
-  _UpdateLoadingScreen(0, std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str() + std::string(" ") + i_level);
+  _UpdateLoadingScreen(std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str() + std::string(" ") + i_level);
 
   /* pump events to so that windows don't think the appli is crashed */
   SDL_PumpEvents();
 }
 
 void GameApp::updatingDatabase(std::string i_message) {
-  _UpdateLoadingScreen(0, i_message);
+  _UpdateLoadingScreen(i_message);
 
   /* pump events to so that windows don't think the appli is crashed */
   SDL_PumpEvents();
