@@ -1367,7 +1367,6 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
       }
       delete m_levelsPacksCountThread;
       m_levelsPacksCountThread = NULL;
-      LogInfo("Levelspacks count updated");
       updateLevelsPacksList();
     }
   }

@@ -353,7 +353,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     /* hum, not cool */
   }
     
-  LogInfo(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
+  LogDebug(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
 
   /* Find all files in the textures dir and load them */     
   UITexture::setApp(this);
@@ -554,7 +554,7 @@ void GameApp::run_unload() {
   SysMessage::destroy();  
 
   if(Logger::isInitialized()) {
-    LogInfo("UserUnload saveConfig at %.3f", GameApp::getXMTime());
+    LogDebug("UserUnload saveConfig at %.3f", GameApp::getXMTime());
   }
   if(drawLib != NULL) { /* save config only if drawLib was initialized */
     XMSession::instance()->save(&m_Config, xmDatabase::instance("main"));
@@ -563,7 +563,7 @@ void GameApp::run_unload() {
   }
 
   if(Logger::isInitialized()) {
-    LogInfo("UserUnload saveConfig ended at %.3f", GameApp::getXMTime());
+    LogDebug("UserUnload saveConfig ended at %.3f", GameApp::getXMTime());
   }
 
   if(drawLib != NULL) {
