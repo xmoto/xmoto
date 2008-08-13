@@ -118,7 +118,9 @@ void PlayerBiker::updateToTime(int i_time, int i_timeStep,
     if(i_time - m_lastSqueekTime > 100) {
       if(m_fHowMuchSqueek > .99) {
 	//printf("=>%.2f\n", m_fHowMuchSqueek);
+	//try {
 	//Sound::playSampleByName("Textures/Sounds/Squeek.ogg", m_fHowMuchSqueek);
+	// catch(Exception &e) {}
 	m_lastSqueekTime = i_time;
       }
     }

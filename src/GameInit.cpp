@@ -315,19 +315,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   
   _UpdateLoadingScreen();
 
-  /* Load sounds */
-  try {
-    for(unsigned int i=0; i<Theme::instance()->getSoundsList().size(); i++) {
-      Sound::loadSample(Theme::instance()->getSoundsList()[i]->FilePath());
-    }
-    Sound::loadSample("Textures/Sounds/Squeek.ogg");
-  } catch(Exception &e) {
-    LogWarning("%s", e.getMsg().c_str());
-    /* hum, not cool */
-  }
-    
-  LogDebug(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
-
   /* Find all files in the textures dir and load them */     
   UITexture::setApp(this);
   UIWindow::setDrawLib(getDrawLib());
