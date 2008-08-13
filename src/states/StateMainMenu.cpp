@@ -1395,8 +1395,8 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
 
     /* if initial packs count has not been done (the only cause that check www has been run), do it now */
     if(m_initialLevelsPacksDone == false) {
-      updateLevelsPacksCountDetached();
       updateLevelsLists();      
+      updateLevelsPacksCountDetached();
     }
 
     /* the error display is differed because updates of the lines before produces a mini freeze which make the animation less smooth */
