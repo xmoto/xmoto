@@ -156,8 +156,6 @@ void StateMainMenu::enter()
   createGUIIfNeeded();
   m_GUI = m_sGUI;
 
-  GameApp::instance()->playMenuMusic("menu1");
-
   StateMenu::enter();
 
   updateProfileStrings();
