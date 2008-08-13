@@ -121,6 +121,7 @@ public:
   void replays_add_end();
   void replays_delete(const std::string& i_replay);
   bool replays_exists(const std::string& i_name);
+  void replays_print();
 
   /* themes */
   bool themes_isIndexUptodate() const;

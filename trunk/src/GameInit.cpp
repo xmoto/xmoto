@@ -261,34 +261,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   
   /* List replays? */  
   if(v_xmArgs.isOptListReplays()) {
-    char **v_result;
-    unsigned int nrow;
-    
-    printf("\nReplay                    Level                     Player\n");
-    printf("-----------------------------------------------------------------------\n");
-    
-    v_result = pDb->readDB("SELECT a.name, a.id_profile, b.name "
-			    "FROM replays AS a LEFT OUTER JOIN levels AS b "
-			    "ON a.id_level = b.id_level;", nrow);
-    if(nrow == 0) {
-      printf("(none)\n");
-    } else {
-      std::string v_levelName;
-
-      for(unsigned int i=0; i<nrow; i++) {
-	if(pDb->getResult(v_result, 3, i, 2) == NULL) {
-	  v_levelName = GAMETEXT_UNKNOWN;
-	} else {
-	  v_levelName = pDb->getResult(v_result, 3, i, 2);
-	}
-	printf("%-25s %-25s %-25s\n",
-	       pDb->getResult(v_result, 3, i, 0),
-	       v_levelName.c_str(),
-	       pDb->getResult(v_result, 3, i, 1)
-	       );
-      }
-    }
-    pDb->read_DB_free(v_result);
+    pDb->replays_print();
     quit();
     return;
   }
@@ -340,7 +313,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     return;
   }
   
-  _UpdateLoadingScreen(0, GAMETEXT_INITMENUS);
+  _UpdateLoadingScreen();
 
   /* Load sounds */
   try {
@@ -636,10 +609,9 @@ void GameApp::_Wait()
   /*===========================================================================
   Update loading screen
   ===========================================================================*/
-  void GameApp::_UpdateLoadingScreen(float fDone, const std::string &NextTask) {
+  void GameApp::_UpdateLoadingScreen(const std::string &NextTask) {
     FontManager* v_fm;
     FontGlyph* v_fg;
-    int v_border = 3;
     int v_fh;
 
     getDrawLib()->clearGraphics();
@@ -652,24 +624,14 @@ void GameApp::_Wait()
 		      getDrawLib()->getDispWidth()/2 - 256,
 		      getDrawLib()->getDispHeight()/2 - 30,
 		      MAKE_COLOR(255,255,255, 255));
-
-    getDrawLib()->drawBox(Vector2f(getDrawLib()->getDispWidth()/2 - 256,
-				   getDrawLib()->getDispHeight()/2 - 30),              
-			  Vector2f(getDrawLib()->getDispWidth()/2 - 256 + (512.0f*fDone),
-				   getDrawLib()->getDispHeight()/2 - 30 + v_border),
-			  0,MAKE_COLOR(255,255,255,255));
-
-    getDrawLib()->drawBox(Vector2f(getDrawLib()->getDispWidth()/2 - 256,
-				   getDrawLib()->getDispHeight()/2 -30 + v_fh),              
-			  Vector2f(getDrawLib()->getDispWidth()/2 - 256 + (512.0f*fDone),
-				   getDrawLib()->getDispHeight()/2 - 30 + v_fh + v_border),
-			  0,MAKE_COLOR(255,255,255,255));
     
-    v_fm = getDrawLib()->getFontSmall();
-    v_fg = v_fm->getGlyph(NextTask);
-    v_fm->printString(v_fg,
-		      getDrawLib()->getDispWidth()/2 - 256,
-		      getDrawLib()->getDispHeight()/2 -30 + v_fh + 2,
-		      MAKE_COLOR(255,255,255,255));      
+    if(NextTask != "") {
+      v_fm = getDrawLib()->getFontSmall();
+      v_fg = v_fm->getGlyph(NextTask);
+      v_fm->printString(v_fg,
+			getDrawLib()->getDispWidth()/2 - 256,
+			getDrawLib()->getDispHeight()/2 -30 + v_fh + 2,
+			MAKE_COLOR(255,255,255,255));      
+    }
     getDrawLib()->flushGraphics();
   }
