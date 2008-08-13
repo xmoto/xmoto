@@ -197,7 +197,8 @@ SoundSample *Sound::findSample(const std::string &File) {
     if(m_Samples[i]->Name == File)
       return m_Samples[i];
   }
-  return NULL;
+
+  return loadSample(File);
 }
 
 void Sound::playSampleByName(const std::string &Name,float fVolume) {
