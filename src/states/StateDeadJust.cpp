@@ -41,8 +41,8 @@ void StateDeadJust::enter()
   if(m_universe != NULL) {
     for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
       m_universe->getScenes()[i]->clearGameMessages();
-      m_universe->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
-      m_universe->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
+      m_universe->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 150);
+      m_universe->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 150);
       m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name());
     }
   }
