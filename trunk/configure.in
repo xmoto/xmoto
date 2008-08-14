@@ -35,9 +35,9 @@ fi
 
 if test "$target_os" = "mingw32" # others libraries required by mingw32
 then
-  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -mwindows -luserenv -lintl -lSDL_ttf -lSDL_mixer -lode xmoto_icone.o" # -mwindows to avoid dos window
+  MINGW32_LIBS="-fstack-check -lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -mwindows -luserenv -lintl -lSDL_ttf -lSDL_mixer -lode xmoto_icone.o" # -mwindows to avoid dos window
   # -MD is for gettext (see gettext faq)
-  CXXFLAGS="$CXXFLAGS"" -mthreads -MD"
+  CFLAGS="$CFLAGS"" -mthreads -MD -fstack-check"
 
   # this one should be removed once i've found why it doesn't use it on my computer  
   LDFLAGS="$LDFLAGS"" -L/usr/i586-mingw32msvc/lib"
@@ -149,10 +149,15 @@ AC_ARG_WITH([enable-dev],
 )
 AC_SUBST([ALLOW_DEV])
 
+# instead of -g -O2
+UNOPTIMIZED_CFLAGS=`echo "$CFLAGS" | sed -e s+"\-O2"++`
+UNOPTIMIZED_CXXFLAGS=`echo "$CXXFLAGS" | sed -e s+"\-O2"++`
+
 AC_ARG_WITH([unoptimized],
   [AS_HELP_STRING([--with-unoptimized=0|1],
     [Enable unoptimized])],
-  [CXXFLAGS=-g] # instead of -g -O2
+  [CXXFLAGS=$UNOPTIMIZED_CXXFLAGS]
+  [CFLAGS=$UNOPTIMIZED_CFLAGS]
 )
 AC_SUBST([ALLOW_DEV])
 
