@@ -513,12 +513,26 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
 
   if(cmd == "ERROR") {
     closePlaying();
-    m_requestForEnd = true;
+
+    // there is no other state before
+    if(StateManager::instance()->numberOfStates() == 1) {
+      // run the mainmenu state
+      StateManager::instance()->replaceState(new StateMainMenu());
+    } else {
+      m_requestForEnd = true;
+    }
   }
 
   else if(cmd == "FINISH") {
     closePlaying();
-    m_requestForEnd = true;
+
+    // there is no other state before
+    if(StateManager::instance()->numberOfStates() == 1) {
+      // run the mainmenu state
+      StateManager::instance()->replaceState(new StateMainMenu());
+    } else {
+      m_requestForEnd = true;
+    }
   }
 
   else if(cmd == "RESTART") {
