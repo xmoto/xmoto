@@ -375,13 +375,13 @@ bool StatePreplaying::needToDownloadGhost()
     if(nrow != 0) {
       v_fileUrl    = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
       v_replayName = FS::getFileBaseName(v_fileUrl);
+
+      /* search if the replay is already downloaded */
+      if(xmDatabase::instance("main")->replays_exists(v_replayName) == false) {
+	v_need_one = true;
+      }
     }
     xmDatabase::instance("main")->read_DB_free(v_result);
-
-    /* search if the replay is already downloaded */
-    if(xmDatabase::instance("main")->replays_exists(v_replayName) == false) {
-      v_need_one = true;
-    }
   }
 
   return v_need_one;
