@@ -29,7 +29,7 @@
 #include "Game.h"
   
 // Decoding of event stream
-void MotoGame::unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation) {
+void MotoGame::unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents) {
   RecordedGameEvent *p;    
 
   try {
@@ -37,7 +37,7 @@ void MotoGame::unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEv
     while((*Buffer).numRemainingBytes() > 0) {
       p = new RecordedGameEvent;
       p->bPassed = false;
-      p->Event   = MotoGameEvent::getUnserialized(*Buffer, bDisplayInformation);
+      p->Event   = MotoGameEvent::getUnserialized(*Buffer);
       v_ReplayEvents->push_back(p);
     }
   } catch(Exception &e) {
@@ -46,7 +46,7 @@ void MotoGame::unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEv
   }
 }
 
-void MotoGame::unserializeChipmunkFrames(DBuffer* buffer, std::vector<ChipmunkFrame*>& v_chipmunkFrames, bool displayInformations)
+void MotoGame::unserializeChipmunkFrames(DBuffer* buffer, std::vector<ChipmunkFrame*>& v_chipmunkFrames)
 {
   ChipmunkFrame* f;
 

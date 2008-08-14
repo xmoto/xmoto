@@ -23,6 +23,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 
+class SerializerFactory : public Factory, public Singleton<SerializerFactory> {
+  friend class Singleton<SerializerFactory>;
+private:
+  SerializerFactory() {}
+  ~SerializerFactory() {}
+};
+
+
 class ISerializer {
 public:
   ISerializer(std::string& dataType) {
@@ -48,6 +56,9 @@ public:
   // in each ISerializable objects
   virtual void unserializeFrames(Scene* pScene) = 0;
 
+  // apply recorded state to objects
+  virtual void playFrame(Scene* pScene) = 0;
+
   std::string& getDataType() {
     return m_dataType;
   }
@@ -59,15 +70,6 @@ public:
 protected:
   std::string m_dataType;
   DBuffer     m_buffer;
-};
-
-
-
-class SerializerFactory : public Factory, public Singleton<SerializerFactory> {
-  friend class Singleton<SerializerFactory>;
-private:
-  SerializerFactory() {}
-  ~SerializerFactory() {}
 };
 
 

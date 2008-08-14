@@ -25,10 +25,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 enum LogLevel {LOG_ERROR, LOG_WARNING, LOG_INFO, LOG_DEBUG};
 
-			  // using ## gnu extension to allow empty args list
-#define LogError(format, ...)                                        Logger::LogLevelMsg(LOG_ERROR,   format, ## __VA_ARGS__);
-#define LogWarning(format, ...)                                      Logger::LogLevelMsg(LOG_WARNING, format, ## __VA_ARGS__);
-#define LogInfo(format, ...)                                         Logger::LogLevelMsg(LOG_INFO,    format, ## __VA_ARGS__);
+// using ## gnu extension to allow empty args list
+#define LogError(format, ...)   Logger::LogLevelMsg(LOG_ERROR,   format, ## __VA_ARGS__);
+#define LogWarning(format, ...) Logger::LogLevelMsg(LOG_WARNING, format, ## __VA_ARGS__);
+#define LogInfo(format, ...)    Logger::LogLevelMsg(LOG_INFO,    format, ## __VA_ARGS__);
 
 // a class using LogDebug must be aware of XMSession
 #define LogDebug(format, ...)   if(XMSession::instance()->debug()) { Logger::LogLevelMsg(LOG_DEBUG,   format, ## __VA_ARGS__); }

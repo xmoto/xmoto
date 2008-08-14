@@ -84,12 +84,10 @@ public:
   std::string giveAutomaticName();
 
 private:
-
   std::map<std::string, Replay*>      m_playingReplay;
   std::map<unsigned int, Scene*>      m_scenes;
   std::map<Scene*, std::vector<ISerializer*> > m_scenesSerializersRecording;
   std::map<Scene*, std::vector<ISerializer*> > m_scenesSerializersPlaying;
-  std::map<std::string, ISerializer*> m_serializers;
 
   bool m_compressionEnabled;
 

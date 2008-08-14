@@ -29,14 +29,17 @@ void createNewReplay()
 
 void addRecordingScene(Scene* pScene)
 {
+  m_scenes[m_scenes.size()] = pScene;
 }
 
 void addObjectTypeToRecord(Scene* pScene, std::string name)
 {
+  m_scenesSerializersRecording[pScene] = (ISerializer*)SerializerFactory::instance()->createObject(name);
 }
 
 void addObjectTypeToRecord(Scene* pScene, ISerializer* pSerializer)
 {
+  m_scenesSerializersRecording[pScene] = pSerializer
 }
 
 void startRecordingReplay()
@@ -47,7 +50,7 @@ void startRecordingReplay()
 void recordFrame()
 {
   std::map<Scene*, std::vector<ISerializer*> >::iterator itScene;
-  itScene= m_scenesSerializersRecording.begin();
+  itScene = m_scenesSerializersRecording.begin();
 
   while(itScene != m_scenesSerializersRecording.end()) {
     Scene* pScene                          = (*itScene).first;
@@ -57,7 +60,7 @@ void recordFrame()
     itSerializer = serializers.begin();
 
     while(itSerializer != serializers.end()) {
-      (*itSerializer)->storeFrame(pScene->getTime(), pScene);
+      (*itSerializer)->storeFrame(pScene);
 
       ++itSerializer;
     }
@@ -70,13 +73,18 @@ void endRecordingReplay()
 {
 }
 
-
 Replay* getCurrentRecordingReplay()
 {
 }
 
 void addPlayingReplay(std::string& fileName)
 {
+  // version 0: only player chunks
+  // version 1: add events
+  // version 2: generic handling
+
+  Replay* pReplay = new Replay();
+  pReplay->openReplay(fileName);
 }
 
 void playFrame()
@@ -92,7 +100,7 @@ void playFrame()
     itSerializer = serializers.begin();
 
     while(itSerializer != serializers.end()) {
-      (*itSerializer)->storeFrame(pScene->getTime(), pScene);
+      (*itSerializer)->playFrame(pScene);
 
       ++itSerializer;
     }

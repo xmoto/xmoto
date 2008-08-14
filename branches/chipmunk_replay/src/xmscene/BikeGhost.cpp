@@ -38,7 +38,7 @@ Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
   std::string v_playerName;
 
   m_replay = new Replay();
-  v_levelId = m_replay->openReplay(i_replayFile, v_playerName);
+  v_levelId = m_replay->openReplay(i_replayFile);
 
   // 4 states for cubical interpolation
 

@@ -507,6 +507,10 @@ bool XMSession::debug() const {
   return m_debug;
 }
 
+void XMSession::setDebug(bool i_value) {
+  m_debug = i_value;
+}
+
 bool XMSession::sqlTrace() const {
   return m_sqlTrace;
 }

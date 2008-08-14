@@ -37,11 +37,11 @@ public:
 #define REGISTER_OBJECT(name) registerObject(#name, \
                                              &createObjectHelper<name>)
 
-  void registerObject(std::string name, objectConstructor cons) {
+  void registerObject(std::string& name, objectConstructor cons) {
     m_registeredObjects[name] = cons;
   }
 
-  void* createObject(std::string name) {
+  void* createObject(std::string& name) {
     std::map<std::string, void*>::iterator itFind;
 
     itFind = m_registeredObjects.find(name);

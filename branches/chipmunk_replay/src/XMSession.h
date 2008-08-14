@@ -114,6 +114,7 @@ public:
   void setWWW(bool i_value);
   bool benchmark() const;
   bool debug() const;
+  void setDebug(bool i_value);
   bool sqlTrace() const;
   std::string profile() const;
   void setProfile(const std::string& i_profile);

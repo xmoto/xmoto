@@ -296,13 +296,16 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(v_xmArgs.isOptReplayInfos()) {
     Replay v_replay;
     std::string v_levelId;
-      std::string v_player;
-    
-    v_levelId = v_replay.openReplay(v_xmArgs.getOpt_replayInfos_file(), v_player, true);
+
+    // we want to display replay informations, set debug to true
+    XMSession::instance()->setDebug(true);
+    v_levelId = v_replay.openReplay(v_xmArgs.getOpt_replayInfos_file());
     if(v_levelId == "") {
       throw Exception("Invalid replay");
     }
-    
+
+    printf("Replay informations are in ~/.xmoto/xmoto.log\n");
+
     quit();
     return;	
   }

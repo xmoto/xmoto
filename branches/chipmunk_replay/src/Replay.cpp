@@ -52,7 +52,6 @@ Replay::Replay() {
   m_pcInputChipmunkData = NULL;
   m_nInputChipmunkDataSize = 0;
   m_version = 0;
-  m_displayInformation = false;
   m_curPos = 0;
 }
 
@@ -135,8 +134,7 @@ void Replay::saveReplay(void) {
   FS::closeFile(pfh);
 }
 
-std::string Replay::openReplay(const std::string &FileName, std::string &Player, bool bDisplayInformation) {
-  m_displayInformation = bDisplayInformation;
+std::string Replay::openReplay(const std::string& FileName) {
   /* Try opening as if it is a full path */
   FileHandle* pfh = FS::openIFile(FileName, true);
   if(pfh == NULL) {
@@ -178,9 +176,7 @@ std::string Replay::openReplay(const std::string &FileName, std::string &Player,
   m_nCurState = 0.0;
     
   /* Reconstruct game events that are going to happen during the replay */
-  if(m_displayInformation) {
-    LogInfo("%-30s:\n", "Game Events");
-  }
+  LogDebug("%-30s:\n", "Game Events");
 
   /* unserialize events */
   MotoGame::unserializeGameEvents(&m_replayEventsBuffer, &m_replayEvents, m_displayInformation);
@@ -519,18 +515,14 @@ void Replay::loadDBuffer(FileHandle* pfh, DBuffer& o_buffer, char** o_data, unsi
 {
   /* Read uncompressed size */
   (*o_size) = FS::readInt_LE(pfh);
-  if(m_displayInformation) {
-    LogInfo("%-30s: %i\n", "Data size", *o_size);
-  }
+  LogDebug("%-30s: %i\n", "Data size", *o_size);
 
   (*o_data) = new char [m_nInputEventsDataSize];
         
   if(FS::readBool(pfh)) {
     /* Compressed */          
     int nCompressedSize = FS::readInt_LE(pfh);
-    if(m_displayInformation) {
-      LogInfo("%-30s: %i\n", "Compressed data size", nCompressedSize);
-    } 
+    LogDebug("%-30s: %i\n", "Compressed data size", nCompressedSize);
       
     char *pcCompressed = new char [nCompressedSize];
     FS::readBuf(pfh, pcCompressed, nCompressedSize);
@@ -597,9 +589,8 @@ void Replay::saveChunks(FileHandle* pfh)
 void Replay::loadChunks(FileHandle* pfh)
 {
   unsigned int nNumChunks = FS::readInt_LE(pfh);
-  if(m_displayInformation) {
-    LogInfo("%-30s: %i\n", "Number of chunks", nNumChunks);
-  }
+  LogDebug("%-30s: %i\n", "Number of chunks", nNumChunks);
+
   if(nNumChunks == 0) {
     FS::closeFile(pfh);
     _FreeReplay();
@@ -608,62 +599,51 @@ void Replay::loadChunks(FileHandle* pfh)
   }
 
   for(unsigned int i=0; i<nNumChunks; i++) {
-    if(m_displayInformation) {
-      LogInfo("Chunk %02i\n", i);
-    }  
-  
-      ReplayStateChunk* Chunk = new ReplayStateChunk();
-      Chunk->nNumStates = FS::readInt_LE(pfh);
+    LogDebug("Chunk %02i\n", i);
 
-      if(m_displayInformation) {
-	LogInfo("   %-27s: %i\n", "Number of states", Chunk->nNumStates);
-      } 
+    ReplayStateChunk* Chunk = new ReplayStateChunk();
+    Chunk->nNumStates = FS::readInt_LE(pfh);
 
-      Chunk->pcChunkData = new char [Chunk->nNumStates * m_nStateSize];
-        
-      /* Compressed or not compressed? */
-      if(FS::readBool(pfh)) {
-	if(m_displayInformation) {
-	  LogInfo("   %-27s: %s\n", "Compressed data", "true");
-	} 
+    LogDebug("   %-27s: %i\n", "Number of states", Chunk->nNumStates);
 
-	/* Compressed! - read compressed size */
-	int nCompressedSize = FS::readInt_LE(pfh);
-	if(m_displayInformation) {
-	  LogInfo("   %-27s: %i\n", "Compressed states size", nCompressedSize);
-	}
+    Chunk->pcChunkData = new char [Chunk->nNumStates * m_nStateSize];
 
-	/* Read compressed data */
-	unsigned char *pcCompressed = new unsigned char [nCompressedSize];
-	FS::readBuf(pfh,(char *)pcCompressed,nCompressedSize);
-         
-	/* Uncompress it */           
-	uLongf nDestLen = Chunk->nNumStates * m_nStateSize;
-	uLongf nSrcLen = nCompressedSize;
-	int nZRet = uncompress((Bytef *)Chunk->pcChunkData,&nDestLen,(Bytef *)pcCompressed,nSrcLen);
-	if(nZRet != Z_OK || nDestLen != Chunk->nNumStates * m_nStateSize) {
-	  LogWarning("Failed to uncompress chunk %d in replay", i);
-	  delete [] pcCompressed;
-	  Chunk->pcChunkData = NULL;
-	  FS::closeFile(pfh);
-	  _FreeReplay();
-	  throw Exception("Unable to open the replay");
-	}
+    /* Compressed or not compressed? */
+    if(FS::readBool(pfh)) {
+      LogDebug("   %-27s: %s\n", "Compressed data", "true");
 
-	/* Clean up */
+      /* Compressed! - read compressed size */
+      int nCompressedSize = FS::readInt_LE(pfh);
+      LogDebug("   %-27s: %i\n", "Compressed states size", nCompressedSize);
+
+      /* Read compressed data */
+      unsigned char *pcCompressed = new unsigned char [nCompressedSize];
+      FS::readBuf(pfh,(char *)pcCompressed,nCompressedSize);
+
+      /* Uncompress it */           
+      uLongf nDestLen = Chunk->nNumStates * m_nStateSize;
+      uLongf nSrcLen = nCompressedSize;
+      int nZRet = uncompress((Bytef *)Chunk->pcChunkData,&nDestLen,(Bytef *)pcCompressed,nSrcLen);
+      if(nZRet != Z_OK || nDestLen != Chunk->nNumStates * m_nStateSize) {
+	LogWarning("Failed to uncompress chunk %d in replay", i);
 	delete [] pcCompressed;
+	Chunk->pcChunkData = NULL;
+	FS::closeFile(pfh);
+	_FreeReplay();
+	throw Exception("Unable to open the replay");
       }
-      else {
-	if(m_displayInformation) {
-	  LogInfo("   %-27s: %s\n", "Compressed data", "false");
-	} 
 
-	/* Not compressed! */
-	FS::readBuf(pfh,Chunk->pcChunkData,m_nStateSize*Chunk->nNumStates);
-      }
-        
-      m_Chunks.push_back(Chunk);
+      /* Clean up */
+      delete [] pcCompressed;
     }
+    else
+      LogDebug("   %-27s: %s\n", "Compressed data", "false");
+
+    /* Not compressed! */
+    FS::readBuf(pfh,Chunk->pcChunkData,m_nStateSize*Chunk->nNumStates);
+  }
+
+  m_Chunks.push_back(Chunk);
 }
 
 void Replay::saveHeader(FileHandle* pfh)
@@ -683,9 +663,7 @@ void Replay::loadHeader(FileHandle* pfh)
 {
   /* Read header */
   m_version = FS::readByte(pfh); 
-  if(m_displayInformation) {
-    LogInfo("%-30s: %i\n", "Replay file version", m_version);
-  }
+  LogDebug("%-30s: %i\n", "Replay file version", m_version);
        
   /* Supported version? */
   if(m_version < 0 || m_version > 2) {
@@ -702,34 +680,26 @@ void Replay::loadHeader(FileHandle* pfh)
   
     /* Read level ID */
     m_LevelID = FS::readString(pfh);
-    if(m_displayInformation) {
-      LogInfo("%-30s: %s\n", "Level Id", m_LevelID.c_str());
-    }
+    LogDebug("%-30s: %s\n", "Level Id", m_LevelID.c_str());
 
     /* Read player name */
     m_PlayerName = FS::readString(pfh);
-    if(m_displayInformation) {
-      LogInfo("%-30s: %s\n", "Player", m_PlayerName.c_str());
-    }      
+    LogDebug("%-30s: %s\n", "Player", m_PlayerName.c_str());
 
     /* Read replay frame rate */
     m_fFrameRate = FS::readFloat_LE(pfh);
 
     /* Read state size */
     m_nStateSize = FS::readInt_LE(pfh);
-    if(m_displayInformation) {
-      LogInfo("%-30s: %i\n", "State size", m_nStateSize);
-    } 
+    LogDebug("%-30s: %i\n", "State size", m_nStateSize);
       
     /* Read finish time if any */
     m_bFinished = FS::readBool(pfh);
     m_finishTime = GameApp::floatToTime(FS::readFloat_LE(pfh));
-    if(m_displayInformation) {
-      if(m_bFinished) {
-	LogInfo("%-30s: %.2f (%f)\n", "Finish time", m_finishTime / 100.0, m_finishTime / 100.0);
-      } else {
-	LogInfo("%-30s: %s\n", "Finish time", "unfinished");
-      }
+    if(m_bFinished) {
+      LogDebug("%-30s: %.2f (%f)\n", "Finish time", m_finishTime / 100.0, m_finishTime / 100.0);
+    } else {
+      LogDebug("%-30s: %s\n", "Finish time", "unfinished");
     }
   }
 }
