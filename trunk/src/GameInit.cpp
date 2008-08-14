@@ -361,8 +361,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     }
   else {
     /* display what must be displayed */
-    StateMainMenu* pMainMenu = new StateMainMenu();
-    StateManager::instance()->pushState(pMainMenu);
+    StateManager::instance()->pushState(new StateMainMenu());
   }
 
   LogInfo("UserInit ended at %.3f", GameApp::getXMTime());

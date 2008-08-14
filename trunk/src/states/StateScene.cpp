@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VideoRecorder.h"
 #include "../GameText.h"
 #include "../Game.h"
+#include "StateMainMenu.h"
 
 #define INPLAY_ANIMATION_TIME 1.0
 #define INPLAY_ANIMATION_SPEED 10
@@ -534,7 +535,14 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
 
   else if(cmd == "ABORT") {
     abortPlaying();
-    m_requestForEnd = true;
+
+    // there is no other state before
+    if(StateManager::instance()->numberOfStates() == 1) {
+      // run the mainmenu state
+      StateManager::instance()->replaceState(new StateMainMenu());
+    } else {
+      m_requestForEnd = true;
+    }
   }
 
   else if(cmd == "INTERPOLATION_CHANGED") {
