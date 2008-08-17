@@ -32,11 +32,17 @@ StateHelp::StateHelp(bool drawStateBehind,
 {
   m_name  = "StateHelp";
   createGUI(); // create the gui each time because it's small and keys can change
+  GameApp::instance()->playMenuMusic("menu1");
 }
 
 StateHelp::~StateHelp()
 {
   delete m_GUI;
+}
+
+void StateHelp::enterAfterPop() {
+  StateMenu::enterAfterPop();
+  GameApp::instance()->playMenuMusic("menu1");
 }
 
 void StateHelp::leave()

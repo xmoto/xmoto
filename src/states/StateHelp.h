@@ -32,6 +32,7 @@ class StateHelp : public StateMenu {
   virtual ~StateHelp();
 
   virtual void leave();
+  virtual void enterAfterPop();
 
   /* input */
   virtual void keyDown(SDLKey nKey, SDLMod mod, int nChar, const std::string& i_utf8Char);
