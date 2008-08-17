@@ -199,6 +199,8 @@ void StateMainMenu::enter()
       updateLevelsPacksCountDetached();
     }
   }
+
+  GameApp::instance()->playMenuMusic("menu1");
 }
 
 void StateMainMenu::remakePacks() {
