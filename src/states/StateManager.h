@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "../helpers/Singleton.h"
 #include "../VCommon.h"
+#include "../XMKey.h"
 #include "../include/xm_SDL.h"
 #include <string>
 #include <vector>
@@ -49,8 +50,7 @@ public:
   void update();
   void render();
   // input
-  void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
-  void keyUp(SDLKey nKey,   SDLMod mod, const std::string& i_utf8Char);
+  void xmKey(InputEventType i_type, const XMKey& i_xmkey);
   void mouseDown(int nButton);
   void mouseDoubleClick(int nButton);
   void mouseUp(int nButton);

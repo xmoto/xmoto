@@ -41,8 +41,7 @@ public:
   virtual bool updateWhenUnvisible() {return true;}
 
   /* input */
-  virtual void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
-  virtual void keyUp(SDLKey nKey,   SDLMod mod, const std::string& i_utf8Char);
+  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
 
   static void clean();
 

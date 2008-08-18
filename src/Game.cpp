@@ -41,6 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/specific/GUIXMoto.h"
 #include "xmscene/Camera.h"
 #include "xmscene/Entity.h"
+#include "UserConfig.h"
 
 #include <curl/curl.h>
 #include <iomanip>
@@ -149,6 +150,7 @@ GameApp::~GameApp() {
   XMSession::instance()->destroy();
 
   StateManager::cleanStates();
+  delete m_userConfig;
 }
 
 GameApp::GameApp() {
@@ -185,6 +187,8 @@ GameApp::GameApp() {
   m_hasMouseFocus    = true;
   m_hasKeyboardFocus = true;
   m_isIconified      = false;
+
+  m_userConfig = new UserConfig();
 }
    
   /*===========================================================================

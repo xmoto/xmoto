@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../CameraAnimation.h"
 #include "../Universe.h"
 #include "../VFileIO.h"
+#include "../Renderer.h"
 
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 100
 
@@ -261,7 +262,7 @@ bool StatePreplaying::render()
   return true;
 }
 
-void StatePreplaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
+void StatePreplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   m_playAnimation = false;
 }
 

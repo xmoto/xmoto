@@ -83,24 +83,26 @@ bool StateMenu::render()
   return true;
 }
 
-void StateMenu::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  GameState::keyDown(nKey, mod, nChar, i_utf8Char);
-
-  if((mod & (KMOD_CTRL|KMOD_ALT|KMOD_META)) == 0) {
-    m_GUI->keyDown(nKey, mod, nChar, i_utf8Char);
-  }
-  checkEvents();
-
-  if(nKey == SDLK_F5){
+void StateMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F5, KMOD_NONE)) {
     StateManager::instance()->pushState(new StateUpdateDb());
   }
-}
 
-void StateMenu::keyUp(SDLKey nKey, SDLMod mod, const std::string& i_utf8Char)
-{
-  m_GUI->keyUp(nKey, mod, i_utf8Char);
-  checkEvents();
+  else if(i_xmkey.isCharInput()) {
+    if(i_xmkey.getCharInputMod() == KMOD_NONE) {
+      switch(i_type) {
+      case INPUT_DOWN:
+	m_GUI->keyDown(i_xmkey.getCharInputKey(), i_xmkey.getCharInputMod(), i_xmkey.getCharInputUtf8());
+	break;
+      case INPUT_UP:
+	m_GUI->keyUp(i_xmkey.getCharInputKey(), i_xmkey.getCharInputMod(), i_xmkey.getCharInputUtf8());
+	break;
+      }
+      checkEvents();
+    }
+  }
+
+  GameState::xmKey(i_type, i_xmkey);
 }
 
 void StateMenu::mouseDown(int nButton)

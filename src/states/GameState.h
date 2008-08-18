@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __GAMESTATE_H__
 
 #include "StateMessageBoxReceiver.h"
+#include "../XMKey.h"
 #include <utility>
 #include <string>
 #include <queue>
@@ -49,8 +50,7 @@ public:
   virtual void onRenderFlush() {}
 
   /* input */
-  virtual void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
-  virtual void keyUp(SDLKey nKey,   SDLMod mod, const std::string& i_utf8Char) {}
+  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
   virtual void mouseDown(int nButton) {}
   virtual void mouseDoubleClick(int nButton) {}
   virtual void mouseUp(int nButton) {}

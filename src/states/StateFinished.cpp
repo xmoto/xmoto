@@ -285,22 +285,16 @@ void StateFinished::executeOneCommand(std::string cmd, std::string args)
   }
 }
 
-void StateFinished::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  switch(nKey) {
-
-  case SDLK_ESCAPE:
+void StateFinished::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     /* quit this state */
     m_requestForEnd = true;
     StateManager::instance()->sendAsynchronousMessage("FINISH");
-    break;
-
-  default:
-    StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
-    break;
-
   }
 
+  else {
+    StateMenu::xmKey(i_type, i_xmkey);
+  }
 }
 
 void StateFinished::clean() {

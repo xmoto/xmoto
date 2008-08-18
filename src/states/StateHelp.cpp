@@ -84,11 +84,10 @@ void StateHelp::checkEvents() {
   }
 }
 
-void StateHelp::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
+void StateHelp::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  StateMenu::xmKey(i_type, i_xmkey);
 
-  if(nKey == SDLK_ESCAPE){
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     m_requestForEnd = true;
   }
 }

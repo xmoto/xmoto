@@ -43,6 +43,11 @@ class UIWindow;
 class UILevelList;
 class SoundSample;
 class XMotoLoadReplaysInterface;
+class UIMsgBox;
+class UITabView;
+class UIButton;
+class UIFrame;
+class UIStatic;
 
 /*===========================================================================
   Game application
@@ -95,7 +100,7 @@ public:
   };
 
   UserConfig* getUserConfig() { /* to remove */
-    return &m_Config;
+    return m_userConfig;
   }
 
   void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
@@ -181,7 +186,6 @@ private:
   /* Various popups */
   UIMsgBox *m_pNotifyMsgBox;
   UIMsgBox *m_pInfoMsgBox;
-  UIRect m_InfoMsgBoxRect;
 
   /* Main menu buttons and stuff */
   int m_nNumMainMenuButtons;
@@ -227,7 +231,7 @@ private:
   std::string m_PlaySpecificLevelId;
   std::string m_PlaySpecificLevelFile;
 
-  UserConfig m_Config;
+  UserConfig* m_userConfig;
       
   DrawLib *drawLib;
 

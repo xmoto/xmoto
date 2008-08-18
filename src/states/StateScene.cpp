@@ -251,32 +251,34 @@ void StateScene::onRenderFlush() {
   }
 }
 
-void StateScene::keyUp(SDLKey nKey, SDLMod mod, const std::string& i_utf8Char) {
-  switch(nKey) {
-  case SDLK_TAB:
-    if(m_cameraAnim != NULL) {
-      if(autoZoom() && m_cameraAnim->allowNextStep()) {
-	m_cameraAnim->goNextStep();
+void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  GameApp* pGame = GameApp::instance();  
+
+  if(i_xmkey == XMKey(SDLK_TAB, KMOD_NONE)) {
+    if(i_type == INPUT_UP) {
+      if(m_cameraAnim != NULL) {
+	if(autoZoom() && m_cameraAnim->allowNextStep()) {
+	  m_cameraAnim->goNextStep();
+	}
+      }
+    } else {
+      if(autoZoom() == false) {
+	setAutoZoom(true);
       }
     }
-    break;
-  default:
-    break;
   }
-}
 
-void StateScene::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  GameApp*  pGame = GameApp::instance();
-
-  if(nKey == SDLK_RETURN && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0){
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_RETURN, KMOD_NONE)) {
     restartLevel();
-  } else if(nKey == SDLK_F2){
+  }
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F2, KMOD_NONE)) {
     if(m_universe != NULL) {
       m_universe->switchFollowCamera();
     }
   }
-  else if(nKey == SDLK_F3){
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F3, KMOD_NONE)) {
     if(m_universe != NULL) {
       if(m_universe->getScenes().size() > 0) { // just add the first world
 	pGame->switchLevelToFavorite(m_universe->getScenes()[0]->getLevelSrc()->Id(), true);
@@ -284,7 +286,8 @@ void StateScene::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i
       }
     }
   }
-  else if(nKey == SDLK_b && (mod & KMOD_CTRL) != 0){
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_b, KMOD_LCTRL)) {
     if(m_universe != NULL) {
       if(m_universe->getScenes().size() > 0) { // just blacklist the first world
 	pGame->switchLevelToBlacklist(m_universe->getScenes()[0]->getLevelSrc()->Id(), true);
@@ -292,12 +295,17 @@ void StateScene::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i
       }
     }
   }
-  else if(nKey == SDLK_PAGEUP){
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_PAGEUP, KMOD_NONE)) {
     nextLevel();
   }
 
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_PAGEDOWN, KMOD_NONE)) {
+    nextLevel(false);
+  }
+
 #if defined(ENABLE_DEV)
-  else if(nKey == SDLK_KP7){
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F7, KMOD_NONE)) {
     /* Zoom in */
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
@@ -308,7 +316,8 @@ void StateScene::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i
       }
     }
   }
-  else if(nKey == SDLK_KP9){
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F9, KMOD_NONE)) {
     /* Zoom out */
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
@@ -319,7 +328,8 @@ void StateScene::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i
       }
     }
   }
-  else if(nKey == SDLK_HOME){
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_HOME, KMOD_NONE)) {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
 	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
@@ -329,7 +339,8 @@ void StateScene::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i
       }
     }
   }
-  else if(nKey == SDLK_KP6){
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP6, KMOD_NONE)) {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
 	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
@@ -339,7 +350,8 @@ void StateScene::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i
       }
     }
   }
-  else if(nKey == SDLK_KP4){
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP4, KMOD_NONE)) {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
 	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
@@ -349,7 +361,8 @@ void StateScene::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i
       }
     }
   }
-  else if(nKey == SDLK_KP8){
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP8, KMOD_NONE)) {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
 	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
@@ -359,7 +372,8 @@ void StateScene::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i
       }
     }
   }
-  else if(nKey == SDLK_KP2){
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP2, KMOD_NONE)) {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
 	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
@@ -371,14 +385,8 @@ void StateScene::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i
   }
 #endif
 
-  else if(nKey == SDLK_PAGEDOWN){
-    nextLevel(false);
-  } else  if(nKey == SDLK_TAB){
-    if(autoZoom() == false) {
-      setAutoZoom(true);
-    }
-  } else{
-    GameState::keyDown(nKey, mod, nChar, i_utf8Char);
+  else {
+    GameState::xmKey(i_type, i_xmkey);
   }
 }
 

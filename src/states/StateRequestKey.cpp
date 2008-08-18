@@ -52,29 +52,15 @@ void StateRequestKey::enter()
   StateMenu::enter();
 }
 
-void StateRequestKey::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  std::string v_msg;
-
-  switch(nKey) {
-  case SDLK_ESCAPE:
+void StateRequestKey::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     m_requestForEnd = true;
-    break;
+  }
 
-    /* don't allow simple modifier key */
-  case SDLK_RSHIFT:
-  case SDLK_LSHIFT:
-  case SDLK_RCTRL:
-  case SDLK_LCTRL:
-  case SDLK_RALT:
-  case SDLK_LALT:
-  case SDLK_RMETA:
-  case SDLK_LMETA:
-    break;
+  else {
+    std::string v_msg;
 
-  default:
-    v_msg = XMKey((SDLKey)nKey, mod).toString();
-
+    v_msg = i_xmkey.toString();
     if(v_msg != "") {
       m_requestForEnd = true;
       std::string args = "";

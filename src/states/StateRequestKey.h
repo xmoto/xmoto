@@ -31,7 +31,7 @@ public:
   virtual ~StateRequestKey();
 
   virtual void enter();
-  virtual void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
   virtual void mouseDown(int nButton);
   virtual void joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
   virtual void joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);

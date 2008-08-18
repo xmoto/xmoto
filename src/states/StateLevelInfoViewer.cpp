@@ -175,12 +175,13 @@ void StateLevelInfoViewer::executeOneCommand(std::string cmd, std::string args)
   }
 }
 
-void StateLevelInfoViewer::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
-
-  if(nKey == SDLK_ESCAPE){
+void StateLevelInfoViewer::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     m_requestForEnd = true;
+  } 
+
+  else {
+    StateMenu::xmKey(i_type, i_xmkey);
   }
 }
 

@@ -40,8 +40,8 @@ void StateCheckWww::callAfterThreadFinished(int threadResult)
   m_msg = ((CheckWwwThread*)m_pThread)->getMsg();
 }
 
-void StateCheckWww::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
-  if(nKey == SDLK_k && (mod & KMOD_CTRL) != 0) {
+void StateCheckWww::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_k, KMOD_LCTRL)) {
     if(m_threadStarted == true) {
       m_pThread->safeKill();
     }

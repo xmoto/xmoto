@@ -30,7 +30,7 @@ public:
 		   bool updateStatesBehind = false);
   virtual ~StateUpdateTheme();
 
-  virtual void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
 
 protected:
   virtual void callAfterThreadFinished(int threadResult);
