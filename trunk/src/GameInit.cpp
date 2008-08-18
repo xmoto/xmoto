@@ -54,6 +54,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateMainMenu.h"
 #include "states/StateMessageBox.h"
 
+#include "UserConfig.h"
+#include "Renderer.h"
+
 #if defined(WIN32)
 int SDL_main(int nNumArgs, char **ppcArgs) {
 #else
@@ -144,9 +147,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   Logger::init(FS::getUserDir() + "/xmoto.log");
 
   /* load config file, the session */
-  XMSession::createDefaultConfig(&m_Config);
-  m_Config.loadFile();
-  XMSession::instance()->load(&m_Config); /* overload default session by userConfig */
+  XMSession::createDefaultConfig(m_userConfig);
+  m_userConfig->loadFile();
+  XMSession::instance()->load(m_userConfig); /* overload default session by userConfig */
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
   Logger::setVerbose(XMSession::instance()->isVerbose()); /* apply verbose mode */
 
@@ -327,7 +330,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   GameRenderer::instance()->init(drawLib);
   
   /* build handler */
-  InputHandler::instance()->init(&m_Config, pDb, XMSession::instance()->profile(), XMSession::instance()->enableJoysticks());
+  InputHandler::instance()->init(m_userConfig, pDb, XMSession::instance()->profile(), XMSession::instance()->enableJoysticks());
   Replay::enableCompression(XMSession::instance()->compressReplays());
   
   /* load packs */
@@ -368,27 +371,36 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 }
 
 void GameApp::manageEvent(SDL_Event* Event) {
-  int ch=0;
   static int nLastMouseClickX = -100,nLastMouseClickY = -100;
   static int nLastMouseClickButton = -100;
   static float fLastMouseClickTime = 0.0f;
   int nX,nY;
   std::string utf8Char;  
 
+  if(Event->type == SDL_KEYDOWN || Event->type == SDL_KEYDOWN) {
+    /* don't allow simple modifier key */
+    if(Event->key.keysym.sym == SDLK_RSHIFT ||
+       Event->key.keysym.sym == SDLK_LSHIFT ||
+       Event->key.keysym.sym == SDLK_RCTRL ||
+       Event->key.keysym.sym == SDLK_LCTRL ||
+       Event->key.keysym.sym == SDLK_RALT ||
+       Event->key.keysym.sym == SDLK_LALT ||
+       Event->key.keysym.sym == SDLK_RMETA ||
+       Event->key.keysym.sym == SDLK_LMETA
+       ) {
+      return;
+    }
+  }
+
   /* What event? */
   switch(Event->type) {
   case SDL_KEYDOWN: 
     utf8Char = unicode2utf8(Event->key.keysym.unicode);
-
-    /* if somebody understand this... */
-    if((Event->key.keysym.unicode&0xff80)==0) {
-      ch = Event->key.keysym.unicode & 0x7F;
-    }
-    StateManager::instance()->keyDown(Event->key.keysym.sym, Event->key.keysym.mod, ch, utf8Char);
+    StateManager::instance()->xmKey(INPUT_DOWN, XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
     break;
   case SDL_KEYUP: 
     utf8Char = unicode2utf8(Event->key.keysym.unicode);
-    StateManager::instance()->keyUp(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char);
+    StateManager::instance()->xmKey(INPUT_UP, XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
     break;
   case SDL_QUIT:  
     /* Force quit */
@@ -516,9 +528,9 @@ void GameApp::run_unload() {
     LogDebug("UserUnload saveConfig at %.3f", GameApp::getXMTime());
   }
   if(drawLib != NULL) { /* save config only if drawLib was initialized */
-    XMSession::instance()->save(&m_Config, xmDatabase::instance("main"));
-    InputHandler::instance()->saveConfig(&m_Config, xmDatabase::instance("main"), XMSession::instance()->profile());
-    m_Config.saveFile();
+    XMSession::instance()->save(m_userConfig, xmDatabase::instance("main"));
+    InputHandler::instance()->saveConfig(m_userConfig, xmDatabase::instance("main"), XMSession::instance()->profile());
+    m_userConfig->saveFile();
   }
 
   if(Logger::isInitialized()) {

@@ -159,67 +159,67 @@ void GameState::addCommand(std::string cmd, std::string args)
   m_commands.push(std::pair<std::string, std::string>(cmd, args));
 }
 
-void GameState::keyDown(SDLKey nKey, SDLMod mod, int nChar, const std::string& i_utf8Char) {
+void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   GameApp* gameApp = GameApp::instance();
 
-  if(nKey == SDLK_F12) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F12, KMOD_NONE)) {
     gameApp->gameScreenshot();
-    return;        
+    return; 
   }
 
-  if(nKey == SDLK_F8) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F8, KMOD_NONE)) {
     gameApp->enableWWW(XMSession::instance()->www() == false);
     StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
-    return;        
+    return;
   }
 
-  if(nKey == SDLK_F7) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F7, KMOD_NONE)) {
     gameApp->enableFps(XMSession::instance()->fps() == false);
-    return;        
+    return;
   }
 
-  if(nKey == SDLK_F9) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F9, KMOD_NONE)) {
     gameApp->switchUglyMode(XMSession::instance()->ugly() == false);
     if(XMSession::instance()->ugly()) {
       SysMessage::instance()->displayText(SYS_MSG_UGLY_MODE_ENABLED);
     } else {
       SysMessage::instance()->displayText(SYS_MSG_UGLY_MODE_DISABLED);
     }
-
+    
     if(XMSession::instance()->ugly() == true)
       GameApp::instance()->displayCursor(showCursor());
-
-    return;        
-  }
-
-  if(nKey == SDLK_RETURN && (mod & KMOD_ALT) != 0) {
-    gameApp->getDrawLib()->toogleFullscreen();
-    XMSession::instance()->setWindowed(XMSession::instance()->windowed() == false);
+    
     return;
   }
 
-  if(nKey == SDLK_F10) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F10, KMOD_NONE)) {
     gameApp->switchTestThemeMode(XMSession::instance()->testTheme() == false);
     if(XMSession::instance()->testTheme()) {
       SysMessage::instance()->displayText(SYS_MSG_THEME_MODE_ENABLED);
     } else {
       SysMessage::instance()->displayText(SYS_MSG_THEME_MODE_DISABLED);
     }
-    return;        
+    return;
   }
 
-  if(nKey == SDLK_F11) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F11, KMOD_NONE)) {
     gameApp->switchUglyOverMode(XMSession::instance()->uglyOver() == false);
     if(XMSession::instance()->uglyOver()) {
       SysMessage::instance()->displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
     } else {
       SysMessage::instance()->displayText(SYS_MSG_UGLY_OVER_MODE_DISABLED);
     }
-    return;        
+    return;
   }
 
-  /* activate/desactivate interpolation */
-  if(nKey == SDLK_i && (mod & KMOD_CTRL) != 0) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_RETURN, KMOD_LALT)) {
+    gameApp->getDrawLib()->toogleFullscreen();
+    XMSession::instance()->setWindowed(XMSession::instance()->windowed() == false);
+    return;
+  }
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_i, KMOD_LCTRL)) {
+    /* activate/desactivate interpolation */
     XMSession::instance()->setEnableReplayInterpolation(!XMSession::instance()->enableReplayInterpolation());
     if(XMSession::instance()->enableReplayInterpolation()) {
       SysMessage::instance()->displayText(SYS_MSG_INTERPOLATION_ENABLED);
@@ -231,19 +231,19 @@ void GameState::keyDown(SDLKey nKey, SDLMod mod, int nChar, const std::string& i
     return;
   }
 
-  if(nKey == SDLK_m && (mod & KMOD_CTRL) != 0) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_m, KMOD_LCTRL)) {
     XMSession::instance()->setMirrorMode(XMSession::instance()->mirrorMode() == false);
     InputHandler::instance()->setMirrored(XMSession::instance()->mirrorMode());
     StateManager::instance()->sendAsynchronousMessage("MIRRORMODE_CHANGED");
   }
 
-  if(nKey == SDLK_o && (mod & KMOD_CTRL) != 0) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_o, KMOD_LCTRL)) {
     if(StateManager::instance()->isThereASuchState("StateOptions") == false) { // do not open stateOptions over stateOptions
       StateManager::instance()->pushState(new StateOptions());
     }
   }
 
-  if(nKey == SDLK_s && (mod & KMOD_CTRL) != 0) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_s, KMOD_LCTRL)) {
     GameApp::instance()->toogleEnableMusic();
   }
 }

@@ -48,17 +48,18 @@ void StateDeadJust::enter()
   }
 }
 
-void StateDeadJust::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  if(nKey == SDLK_ESCAPE) {
+void StateDeadJust::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     StateManager::instance()->pushState(new StateDeadMenu(m_universe, false, this));
   }
-  else if(nKey == SDLK_RETURN && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0) {
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_RETURN, KMOD_NONE)) {
     /* retart immediatly the level */
     restartLevel();
   }
+
   else {
-    StateScene::keyDown(nKey, mod, nChar, i_utf8Char);
+    StateScene::xmKey(i_type, i_xmkey);
   }
 }
 

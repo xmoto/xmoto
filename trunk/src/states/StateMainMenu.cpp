@@ -546,19 +546,17 @@ bool StateMainMenu::render()
   return StateMenu::render();
 }
 
-void StateMainMenu::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
+void StateMainMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   UILevelList* v_newLevelsList;
   UILevelList* v_favoriteLevelsList;
   UILevelList* v_list;
 
-  switch(nKey) {
-
-  case SDLK_F1: /* display help */
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F1, KMOD_NONE)) {
     StateManager::instance()->pushState(new StateHelp());
-    break;
+  }
 
-  case SDLK_F3: /* switch favorites */
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F3, KMOD_NONE)) {
+    /* switch favorites */
     v_newLevelsList      = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST");
     v_favoriteLevelsList = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:FAVORITE_LIST");
     v_list               = NULL;
@@ -577,12 +575,12 @@ void StateMainMenu::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string
 	StateManager::instance()->sendAsynchronousMessage("FAVORITES_UPDATED");
       }
     }
-    break;
+  }
 
-  case SDLK_ESCAPE:{
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
     UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
-
+    
     if(v_windowLevels->isHidden() == false){
       v_windowLevels->showWindow(false);
     }
@@ -590,12 +588,9 @@ void StateMainMenu::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string
       v_windowReplays->showWindow(false);
     }
   }
-    break;
 
-  default:
-    StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
-    break;
-
+  else {
+    StateMenu::xmKey(i_type, i_xmkey);
   }
 }
 

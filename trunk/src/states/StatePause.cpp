@@ -132,26 +132,22 @@ void StatePause::checkEvents() {
   }
 }
 
-void StatePause::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  switch(nKey) {
-
-  case SDLK_ESCAPE:
+void StatePause::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     /* quit this state */
     m_requestForEnd = true;
-    break;
+  }
 
-  case SDLK_F3:
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F3, KMOD_NONE)) {
     if(m_universe != NULL) {
       if(m_universe->getScenes().size() > 0) { // just add the first world
 	GameApp::instance()->switchLevelToFavorite(m_universe->getScenes()[0]->getLevelSrc()->Id(), true);
       }
     }
-    break;
+  }
 
-  default:
-    StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
-    break;
+  else {
+    StateMenu::xmKey(i_type, i_xmkey);
   }
 }
 

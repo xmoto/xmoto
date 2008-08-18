@@ -794,7 +794,7 @@ void UIList::eventRight() {
   /*===========================================================================
   Up/down keys select elements
   ===========================================================================*/
-  bool UIList::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
+  bool UIList::keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char) {
     switch(nKey) {
     case SDLK_RETURN:
 	eventGo();
@@ -832,37 +832,38 @@ void UIList::eventRight() {
 	eventRight();
         return true;
     }
-    
-    /* Maybe it's a character? If so, try jumping to a suitable place in the list */
-    if(nChar != 0) {
-      bool bContinue;
-      unsigned int nPos = 0;
-      
-      do {
-        bContinue = false;
-        
-        /* Look at character number 'nPos' in all entries */
-        for(unsigned int i=0; i<m_Entries.size(); i++) {
-	  if(m_Entries[i]->bFiltered == false) {
-	    int nEntryIdx = i + m_nRealSelected + 1; /* always start looking at the next */
-	    nEntryIdx %= m_Entries.size();
-        
-	    if(m_Entries[nEntryIdx]->Text[0].length() > nPos) {
-	      if(tolower(m_Entries[nEntryIdx]->Text[0].at(nPos)) == tolower(nChar)) {
-		/* Nice, select this one */
-		setVisibleSelected(nEntryIdx);
-		bContinue = false;
-		return true;
-	      }
-            
-	      bContinue = true;
-	    }
-	  }
-        }
-        
-        nPos++;
-      } while(bContinue);
-    }
+
+// this must be adapted to utf8
+//    /* Maybe it's a character? If so, try jumping to a suitable place in the list */
+//    if(utf8::utf8_length(i_utf8Char) == 1) {
+//      bool bContinue;
+//      unsigned int nPos = 0;
+//      
+//      do {
+//        bContinue = false;
+//        
+//        /* Look at character number 'nPos' in all entries */
+//        for(unsigned int i=0; i<m_Entries.size(); i++) {
+//	  if(m_Entries[i]->bFiltered == false) {
+//	    int nEntryIdx = i + m_nRealSelected + 1; /* always start looking at the next */
+//	    nEntryIdx %= m_Entries.size();
+//        
+//	    if(m_Entries[nEntryIdx]->Text[0].length() > nPos) {
+//	      if(tolower(m_Entries[nEntryIdx]->Text[0].at(nPos)) == tolower(nChar)) {
+//		/* Nice, select this one */
+//		setVisibleSelected(nEntryIdx);
+//		bContinue = false;
+//		return true;
+//	      }
+//            
+//	      bContinue = true;
+//	    }
+//	  }
+//        }
+//        
+//        nPos++;
+//      } while(bContinue);
+//    }
     
     /* w00t? we don't want that silly keypress! */
     return false;

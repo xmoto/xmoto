@@ -175,7 +175,7 @@ public:
   virtual void mouseRUp(int x,int y) {}
   virtual void mouseHover(int x,int y) {}
   virtual void mouseOut(int x,int y) {}
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {return false;}
+  virtual bool keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char) {return false;}
   virtual bool keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char) {return false;}
   virtual bool joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {return false;}
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {return false;}
@@ -297,7 +297,7 @@ public:
     
   /* Methods */
   virtual void paint(void);
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual bool keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char);
   virtual bool joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
 
@@ -410,7 +410,7 @@ public:
     
   /* Virtual methods */
   virtual void paint(void);      
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual bool keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char);
   virtual bool offerActivation(void) {if(m_bTextInput) return true; return false;}
     
   /* Methods */
@@ -456,7 +456,7 @@ public:
   }      
 
   /* Virtual methods */
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual bool keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char);
 };
 
 /*===========================================================================
@@ -545,7 +545,7 @@ public:
   virtual void mouseHover(int x,int y);
   virtual void mouseOut(int x,int y);
   virtual bool offerActivation(void);
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual bool keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char);
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
 
   /* Data interface */
@@ -628,7 +628,7 @@ public:
   virtual void mouseWheelDown(int x,int y);
   virtual void mouseHover(int x,int y);      
   virtual bool offerActivation(void);
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  virtual bool keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char);
   virtual bool joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
   virtual std::string subContextHelp(int x,int y);
@@ -829,7 +829,7 @@ public:
   virtual void mouseHover(int x,int y);
   virtual void mouseWheelUp(int x,int y);
   virtual void mouseWheelDown(int x,int y);
-  virtual bool keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);      
+  virtual bool keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char);      
   virtual bool keyUp(int nKey, SDLMod mod, const std::string& i_utf8Char);  
   virtual bool joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
@@ -857,7 +857,7 @@ private:
   GameApp *m_pApp; /* Application */      
 
   /* Helpers */      
-  bool _RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
+  bool _RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey, SDLMod mod, const std::string& i_utf8Char);
 
   bool _RootJoystickAxisMotionEvent(UIWindow *pWindow, Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
   bool _RootJoystickButtonDownEvent(UIWindow *pWindow, Uint8 i_joyNum, Uint8 i_joyButton);

@@ -114,12 +114,7 @@ bool StateMultiUpdate::update()
   return true;
 }
 
-void StateMultiUpdate::keyDown(SDLKey nKey, SDLMod mod, int nChar, const std::string& i_utf8Char)
-{
-}
-
-void StateMultiUpdate::keyUp(SDLKey nKey, SDLMod mod, const std::string& i_utf8Char)
-{
+void StateMultiUpdate::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 }
 
 void StateMultiUpdate::clean()

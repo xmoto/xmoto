@@ -38,6 +38,10 @@
 #define TRESHOLD_OUT     1.0 * 1000
 #define DEFAULT_ROTATIONANGLE_SPEED 1.0
 
+#ifdef ENABLE_OPENGL
+#include "include/xm_OpenGL.h"
+#endif
+
 Camera::Camera(Vector2i upperleft, Vector2i downright){
   m_fScale         = ZOOM_DEFAULT;
   m_cameraOffsetX  = CAMERA_OFFSETX_DEFAULT;

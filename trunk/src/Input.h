@@ -21,52 +21,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __INPUT_H__
 #define __INPUT_H__
 
-#include "VCommon.h"
-#include "xmscene/Scene.h"
-#include "UserConfig.h"
-#include "Renderer.h"
-
 #define INPUT_NB_PLAYERS 4
-#define INPUT_JOYSTICK_MINIMUM_DETECTION 100
-#define INPUT_JOYSTICK_MAXIMUM_VALUE     32760
+
+#include "XMKey.h"
+#include "helpers/Singleton.h"
+#include <string>
+#include <vector>
 
 class xmDatabase;
-
-enum XMKey_input {XMK_NONE, XMK_KEYBOARD, XMK_MOUSEBUTTON, XMK_JOYSTICKBUTTON, XMK_JOYSTICKAXIS};
-enum XMKey_direction {XMKD_LEFT, XMKD_RIGHT, XMKD_UP, XMKD_DOWN, XMKD_NODIRECTION};
-
-/* define a key to do something (keyboard:a, mouse:left, ...) */
-class XMKey {
- public:
-  XMKey();
-  XMKey(SDL_Event &i_event);
-  XMKey(const std::string& i_key, bool i_basicMode = false); /* basic mode is to give a simple letter, for scripts key */
-  XMKey(SDLKey nKey, SDLMod mod);           		      	       // keyboard
-  XMKey(Uint8 nButton);                     		      	       // mouse
-  XMKey(std::string* i_joyId, Uint8 i_joyButton); 	               // joystick button
-  XMKey(std::string* i_joyId, Uint8 i_joyAxis, Sint16 i_joyAxisValue); // joystick axis
-
-  bool operator==(const XMKey& i_other) const;
-  std::string toString() const;
-  std::string toFancyString() const;
-  bool isPressed(Uint8 *i_keystate, Uint8 i_mousestate);
-
-  bool isDefined() const;
-  bool isAnalogic() const;
-  float getAnalogicValue() const;
-  bool isDirectionnel() const;
-  XMKey_direction getDirection() const;
-
- private:
-  XMKey_input m_input;
-  SDLKey m_keyboard_sym;
-  SDLMod m_keyboard_mod;
-  Uint8  m_mouseButton_button;
-  std::string* m_joyId; // a pointer to avoid the copy while joyId are store from load to unload
-  Uint8  m_joyButton;
-  Uint8  m_joyAxis;
-  Sint16 m_joyAxisValue;
-};
+class UserConfig;
+class Universe;
+class MotoGame;
 
   /*===========================================================================
   Script hooks
@@ -77,14 +42,6 @@ class XMKey {
     XMKey nKey;                 /* Hooked key */
     std::string FuncName;       /* Script function to invoke */    
     MotoGame *pGame;            /* Pointer to game */
-  };
-
-  /*===========================================================================
-  Inputs
-  ===========================================================================*/
-  enum InputEventType {
-    INPUT_DOWN,
-    INPUT_UP,
   };
 
   /*===========================================================================
@@ -139,6 +96,9 @@ public:
   void setSCRIPTACTION(int i_player, int i_action, XMKey i_value);
   XMKey getSCRIPTACTION(int i_player, int i_action) const;
 
+  void setSwitchUglyMode(XMKey i_value);
+  XMKey getSwitchUglyMode() const;
+
   static float joyRawToFloat(float raw, float neg, float deadzone_neg, float deadzone_pos, float pos);
 
 private:
@@ -158,6 +118,7 @@ private:
   XMKey m_nChangeDirKey[INPUT_NB_PLAYERS];
   bool m_changeDirKeyAlreadyPress[INPUT_NB_PLAYERS]; // to avoid key repetition
   XMKey m_nScriptActionKeys[INPUT_NB_PLAYERS][MAX_SCRIPT_KEY_HOOKS];
+  XMKey m_switchUglyMode;
 
   bool m_mirrored;
 };

@@ -24,7 +24,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "xmscene/Scene.h"
 #include "gui/basic/GUI.h"
+
+#ifdef ENABLE_OPENGL
 #include "include/xm_OpenGL.h"
+#endif
 
 class ParticlesSource;
 class Universe;

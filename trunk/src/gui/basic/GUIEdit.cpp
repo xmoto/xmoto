@@ -97,7 +97,7 @@ void UIEdit::paint(void) {
   /*===========================================================================
   Keyboard event handling
   ===========================================================================*/
-  bool UIEdit::keyDown(int nKey, SDLMod mod,int nChar, const std::string& i_utf8Char) {
+  bool UIEdit::keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char) {
     switch(nKey) {      
       case SDLK_UP:
         getRoot()->activateUp();

@@ -292,6 +292,8 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   Trainer.h \
   Input.cpp \
   Input.h \
+  XMKey.cpp \
+  XMKey.h \
   VideoRecorder.h \
   VideoRecorder.cpp \
   GameSerializer.cpp \

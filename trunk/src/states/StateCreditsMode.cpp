@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../GameText.h"
 #include "../Game.h"
 #include "../Universe.h"
+#include "../Renderer.h"
 
 StateCreditsMode::StateCreditsMode(Universe* i_universe, const std::string& i_replay, ReplayBiker* i_replayBiker):
 StateReplaying(i_universe, i_replay, i_replayBiker)
@@ -75,14 +76,8 @@ void StateCreditsMode::abort() {
   closePlaying();
 }
 
-void StateCreditsMode::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
+void StateCreditsMode::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   abort();
-}
-
-void StateCreditsMode::keyUp(SDLKey nKey, SDLMod mod, const std::string& i_utf8Char)
-{
-  /* declare to be sure it does nothing */
 }
 
 void StateCreditsMode::mouseDown(int nButton)

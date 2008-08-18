@@ -184,15 +184,15 @@ void StateDeadMenu::executeOneCommand(std::string cmd, std::string args)
   }
 }
 
-void StateDeadMenu::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  if(nKey == SDLK_ESCAPE){
+void StateDeadMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     /* quit this state */
     StateManager::instance()->sendAsynchronousMessage("ABORT");
     m_requestForEnd = true;
   }
+
   else {
-    StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
+    StateMenu::xmKey(i_type, i_xmkey);
   }
 }
 

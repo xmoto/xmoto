@@ -40,8 +40,7 @@ class StatePlaying : public StateScene {
   virtual void restartLevel(bool i_reloadLevel = false);
 
   /* input */
-  virtual void keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char);
-  virtual void keyUp(SDLKey nKey,   SDLMod mod, const std::string& i_utf8Char);
+  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
   virtual void mouseDown(int nButton);
   virtual void mouseUp(int nButton);
   virtual void joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);

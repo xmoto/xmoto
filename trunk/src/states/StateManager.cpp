@@ -348,18 +348,10 @@ void StateManager::drawCursor() {
   }
 }
 
-void StateManager::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
+void StateManager::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   if(m_statesStack.size() == 0)
     return;
-  (m_statesStack.back())->keyDown(nKey, mod, nChar, i_utf8Char);
-}
-
-void StateManager::keyUp(SDLKey nKey,   SDLMod mod, const std::string& i_utf8Char)
-{
-  if(m_statesStack.size() == 0)
-    return;
-  (m_statesStack.back())->keyUp(nKey, mod, i_utf8Char);
+  (m_statesStack.back())->xmKey(i_type, i_xmkey);
 }
 
 void StateManager::mouseDown(int nButton)

@@ -135,14 +135,8 @@ void StateEditProfile::checkEvents() {
   }
 }
 
-void StateEditProfile::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  switch(nKey) {
-
-  default:
-    StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
-    break;
-  }
+void StateEditProfile::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  StateMenu::xmKey(i_type, i_xmkey);
 }
 
 void StateEditProfile::clean() {

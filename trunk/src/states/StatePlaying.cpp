@@ -35,6 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Universe.h"
 #include "../Trainer.h"
 #include "../SysMessage.h"
+#include "../Renderer.h"
 
 #define MINIMUM_VELOCITY_TO_GET_MAXIMUM_DEATH_SOUND 70.0
 
@@ -215,9 +216,8 @@ bool StatePlaying::update()
   return true;
 }
 
-void StatePlaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  if(nKey == SDLK_ESCAPE){
+void StatePlaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     if(isLockedScene() == false) {
       /* Escape pauses */
       m_displayStats = true;
@@ -226,7 +226,7 @@ void StatePlaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string&
   }
 
 #if defined(ENABLE_DEV)
-  else if(nKey == SDLK_KP0 && (mod & KMOD_LCTRL) == KMOD_LCTRL){
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP0, KMOD_LCTRL)) {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
 	for(unsigned int i=0; i<m_universe->getScenes()[j]->Players().size(); i++) {
@@ -238,7 +238,8 @@ void StatePlaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string&
       }
     }
   }
-  else if(nKey == SDLK_KP0 && (mod & (KMOD_CTRL|KMOD_SHIFT|KMOD_ALT|KMOD_META)) == 0){        //TRAINER
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP0, KMOD_NONE)) {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
         Trainer::instance()->storePosition( m_universe->getScenes()[j]->getLevelSrc()->Id(),
@@ -250,7 +251,9 @@ void StatePlaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string&
       }
     }
   }
-  else if(nKey == SDLK_BACKSPACE){       //TRAINER
+
+  // TRAINER
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_BACKSPACE, KMOD_NONE)) {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
         if( Trainer::instance()->isRestorePositionAvailable( m_universe->getScenes()[j]->getLevelSrc()->Id() ) ) {
@@ -266,7 +269,8 @@ void StatePlaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string&
       }
     }
   }
-  else if(nKey == SDLK_KP_MINUS){        //TRAINER
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_MINUS, KMOD_NONE)) {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
         if( Trainer::instance()->isRestorePositionAvailable( m_universe->getScenes()[j]->getLevelSrc()->Id() ) ) {
@@ -282,7 +286,8 @@ void StatePlaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string&
       }
     }
   }
-  else if(nKey == SDLK_KP_PLUS){        //TRAINER
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_PLUS, KMOD_NONE)) {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
         if( Trainer::instance()->isRestorePositionAvailable( m_universe->getScenes()[j]->getLevelSrc()->Id() ) ) {
@@ -304,16 +309,15 @@ void StatePlaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string&
     // to avoid people changing direction during the autozoom
     if(m_autoZoom == false){
       /* Notify the controller */
-      InputHandler::instance()->handleInput(m_universe, INPUT_DOWN, XMKey(nKey, mod));
+      if(i_type == INPUT_DOWN) {
+	InputHandler::instance()->handleInput(m_universe, INPUT_DOWN, i_xmkey);
+      } else {
+	InputHandler::instance()->handleInput(m_universe, INPUT_UP, i_xmkey);
+      }
     }
+
+    StateScene::xmKey(i_type, i_xmkey);
   }
-
-  StateScene::keyDown(nKey, mod, nChar, i_utf8Char);
-}
-
-void StatePlaying::keyUp(SDLKey nKey, SDLMod mod, const std::string& i_utf8Char) {
-  InputHandler::instance()->handleInput(m_universe, INPUT_UP, XMKey(nKey, mod));
-  StateScene::keyUp(nKey, mod, i_utf8Char);
 }
 
 void StatePlaying::mouseDown(int nButton)

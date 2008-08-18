@@ -67,13 +67,8 @@ void StateMessageBox::checkEvents() {
   m_requestForEnd = true;
 }
 
-void StateMessageBox::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  switch(nKey) {
-  default:
-    StateMenu::keyDown(nKey, mod, nChar, i_utf8Char);
-    break;
-  }
+void StateMessageBox::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  StateMenu::xmKey(i_type, i_xmkey);
 }
 
 void StateMessageBox::createGUI(const std::string& i_text, int i_buttons,

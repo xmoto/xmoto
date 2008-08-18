@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Game.h"
 #include "../SysMessage.h"
 #include "../VideoRecorder.h"
+#include "../Renderer.h"
 
 #define NEXTLEVEL_MAXTRY 10
 
@@ -182,16 +183,13 @@ void StateReplaying::nextLevel(bool i_positifOrder) {
   }
 }
 
-void StateReplaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::string& i_utf8Char)
-{
-  switch(nKey) {
-    
-  case SDLK_ESCAPE:
+void StateReplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     m_requestForEnd = true;
     closePlaying();
-    break;          
+  }
 
-  case SDLK_RIGHT:
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_RIGHT, KMOD_NONE)) {
     /* Right arrow key: fast forward */
     if(m_stopToUpdate == false) {
       if(m_universe != NULL) {
@@ -200,9 +198,9 @@ void StateReplaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::strin
 	}
       }
     }
-    break;
+  }
 
-  case SDLK_LEFT:
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_LEFT, KMOD_NONE)) {
     if(m_universe != NULL) {
       if(m_universe->getScenes().size() > 0) {
 	if(m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false) {
@@ -216,9 +214,9 @@ void StateReplaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::strin
 	}
       }
     }
-    break;
+  }
 
-  case SDLK_SPACE:
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_SPACE, KMOD_NONE)) {
     /* pause */
     if(m_universe != NULL) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
@@ -230,13 +228,13 @@ void StateReplaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::strin
 						 m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
       }
     }
-    break;
+  }
 
-  case SDLK_UP:
+  else if(i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_UP, KMOD_NONE) || i_xmkey == XMKey(SDLK_UP, KMOD_LCTRL))) {
     /* faster */
     if(m_universe != NULL) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	if((mod & KMOD_CTRL) == 0) {
+	if(i_xmkey.getCharInputMod() != KMOD_LCTRL) {
 	  m_universe->getScenes()[i]->faster();
 	} else {
 	  m_universe->getScenes()[i]->faster(0.01);
@@ -247,13 +245,13 @@ void StateReplaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::strin
 						 m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
       }
     }
-    break;
+  }
 
-  case SDLK_DOWN:
+  else if(i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_DOWN, KMOD_NONE) || i_xmkey == XMKey(SDLK_DOWN, KMOD_LCTRL))) {
     /* slower */
     if(m_universe != NULL) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	if((mod & KMOD_CTRL) == 0) {
+	if(i_xmkey.getCharInputMod() != KMOD_LCTRL) {
 	  m_universe->getScenes()[i]->slower();
 	} else {
 	  m_universe->getScenes()[i]->slower(0.01);
@@ -265,10 +263,11 @@ void StateReplaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::strin
 						 m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
       }
     }
-    break;
+  }
 
 #if defined(ENABLE_DEV)
-  case SDLK_KP0:			        	//TRAINER
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP0, KMOD_NONE)) {
+    //TRAINER
     /* store current bike position (for trainer) */
     if(m_universe != NULL) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
@@ -280,12 +279,11 @@ void StateReplaying::keyDown(SDLKey nKey, SDLMod mod,int nChar, const std::strin
         SysMessage::instance()->displayText(sysmsg);
       }
     }
-    break;
+  }
 #endif
 
-
-  default:
-    StateScene::keyDown(nKey, mod, nChar, i_utf8Char);
+  else {
+    StateScene::xmKey(i_type, i_xmkey);
   }
 }
 

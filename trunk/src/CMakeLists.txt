@@ -140,6 +140,7 @@ XMSession_default.h
 Theme.cpp
 GUIBestTimes.cpp
 Input.h
+XMKey.h
 XMBuild.cpp
 XMArgs.h
 LuaLibGame.h
@@ -157,6 +158,7 @@ BSP.h
 VideoRecorder.cpp
 GameEvents.cpp
 Input.cpp
+XMKey.cpp
 Collision.h
 Replay.h
 XMArgs.cpp
