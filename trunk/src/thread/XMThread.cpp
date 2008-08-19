@@ -199,6 +199,7 @@ void XMThread::setThreadCurrentMicroOperation(std::string curMicOp)
 int XMThread::threadFunctionEncapsulate()
 {
   // we can only have one thread at once.
+  LogDebug("Open db for thread with key '%s'", m_dbKey.c_str());
   m_pDb = xmDatabase::instance(m_dbKey);
   m_pDb->init(DATABASE_FILE, m_dbReadOnly);
 

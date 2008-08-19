@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VFileIO.h"
 
 UploadAllHighscoresThread::UploadAllHighscoresThread(unsigned int i_number)
-  : XMThread()
+  : XMThread("UAHT")
 {
   m_number     = i_number;
   m_percentage = 0;

@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Theme.h"
 
 UpdateDbThread::UpdateDbThread()
-  : XMThread()
+  : XMThread("UDT")
 {
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("LEVELS_UPDATED");
