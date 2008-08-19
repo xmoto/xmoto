@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 DownloadGhostThread::DownloadGhostThread(std::string levelId,
 					 bool i_onlyMainRoomGhost)
-  : XMThread()
+  : XMThread("DGT")
 {
   m_pWebRoom      = new WebRoom(this);
   m_msg     = "";

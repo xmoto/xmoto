@@ -224,6 +224,12 @@ void StateMainMenu::enterAfterPop()
   // reset the current playing list
   GameApp::instance()->setCurrentPlayingList(NULL);
 
+  if(m_requestForEnd) {
+    return;
+  }
+
+  /* updates to do except if request for end is required */
+
   if(m_require_updateFavoriteLevelsList) {
     updateFavoriteLevelsList();
     m_require_updateFavoriteLevelsList = false;

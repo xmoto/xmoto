@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Replay.h"
 
 UploadHighscoreThread::UploadHighscoreThread(const std::string& i_highscorePath)
-  : XMThread()
+  : XMThread("UHT")
 {
   m_highscorePath = i_highscorePath;
 }
