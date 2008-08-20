@@ -379,7 +379,7 @@ void GameApp::manageEvent(SDL_Event* Event) {
   int nX,nY;
   std::string utf8Char;  
 
-  if(Event->type == SDL_KEYDOWN || Event->type == SDL_KEYDOWN) {
+  if(Event->type == SDL_KEYDOWN || Event->type == SDL_KEYUP) {
     /* don't allow simple modifier key */
     if(Event->key.keysym.sym == SDLK_RSHIFT ||
        Event->key.keysym.sym == SDLK_LSHIFT ||
