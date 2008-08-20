@@ -263,19 +263,10 @@ bool StatePreplaying::render()
 }
 
 void StatePreplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  m_playAnimation = false;
-}
-
-void StatePreplaying::mouseDown(int nButton) {
-  m_playAnimation = false;
-}
-
-void StatePreplaying::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
-  //m_playAnimation = false; // don't do that while "xmoto -l 6" generate events at startup
-}
-
-void StatePreplaying::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
-  m_playAnimation = false;
+  if(i_type == INPUT_DOWN) {
+    // don't allow down key so that xmoto -l 1 works with the animation at startup : some pad give events at startup about their status
+    m_playAnimation = false;
+  }
 }
 
 void StatePreplaying::secondInitPhase()

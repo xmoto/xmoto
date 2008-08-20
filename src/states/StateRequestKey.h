@@ -32,9 +32,6 @@ public:
 
   virtual void enter();
   virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
-  virtual void mouseDown(int nButton);
-  virtual void joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
-  virtual void joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
 
   static void clean();
 

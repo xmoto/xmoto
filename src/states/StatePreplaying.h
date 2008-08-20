@@ -42,9 +42,6 @@ class StatePreplaying : public StateScene {
   virtual bool render();
   /* input */
   virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
-  virtual void mouseDown(int nButton);
-  virtual void joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
-  virtual void joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
 
  protected:
   std::string m_idlevel;

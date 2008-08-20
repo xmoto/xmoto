@@ -263,7 +263,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  ctrl+B - " + std::string(_("Add/remove to blacklisted levels")) + "\n"\
 "  ctrl+M - " + std::string(_("change mirror mode")) + "\n"\
 "  F8 - " + std::string(_("Enable/disable web")) + "\n" \
-"  F9 - " + std::string(_("Enable/disable ugly mode")) + "\n" \
 "  F5 - " + std::string(_("Reload levels, themes and replays from directories")) + "\n" \
 "  F12 - " + std::string(_("Take a screenshot")) + "\n" \
 "\n" \
@@ -404,9 +403,11 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_STATISTICS           _("Statistics")
 #define GAMETEXT_STATS                _("STATS")
 #define GAMETEXT_STEREO               _("Stereo")
-#define GAMETEXT_SYNC_DOWN           _("Synchronisation down")
-#define GAMETEXT_SYNC_UP           _("Synchronisation up")
-#define GAMETEXT_SYNC_DONE         _("Synchronisation done successfully")
+#define GAMETEXT_SYNC_DOWN            _("Synchronisation down")
+#define GAMETEXT_SYNC_UP              _("Synchronisation up")
+#define GAMETEXT_SYNC_DONE            _("Synchronisation done successfully")
+#define GAMETEXT_SWITCHKEY            _("Key '%s' has been switched to '%s'")
+#define GAMETEXT_SWITCHUGLYMODE       _("Enable/disable ugly mode")
 #define GAMETEXT_THEMES               _("Theme")
 #define GAMETEXT_THEMEHOSTED          _("Available")
 #define GAMETEXT_THEMENOTHOSTED       _("To download")

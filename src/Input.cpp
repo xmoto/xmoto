@@ -280,6 +280,15 @@ std::string* InputHandler::getJoyId(Uint8 i_joynum) {
   return &(m_JoysticksIds[i_joynum]);
 }
 
+Uint8 InputHandler::getJoyNum(const std::string& i_name) {
+  for(unsigned int i=0; i<m_JoysticksIds.size(); i++) {
+    if(m_JoysticksIds[i] == i_name) {
+      return i;
+    }
+  }
+  throw Exception("Invalid joystick name");
+}
+
 std::string* InputHandler::getJoyIdByStrId(const std::string& i_name) {
   for(unsigned int i=0; i<m_JoysticksIds.size(); i++) {
     if(m_JoysticksIds[i] == i_name) {
@@ -568,7 +577,7 @@ XMKey InputHandler::getSwitchUglyMode() const {
   return m_switchUglyMode;
 }
 
-bool InputHandler::isANotSetKey(XMKey* i_xmkey) const {
+bool InputHandler::isANotGameSetKey(XMKey* i_xmkey) const {
   for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
     if(getDRIVE(i)     == *i_xmkey) return false;
     if(getBRAKE(i)     == *i_xmkey) return false;

@@ -84,6 +84,13 @@ bool StateMenu::render()
 }
 
 void StateMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  int nX,nY;
+  Uint8 nButton;
+  Uint8 v_joyNum;
+  Uint8 v_joyAxis;
+  Sint16 v_joyAxisValue;
+  Uint8 v_joyButton;
+
   if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F5, KMOD_NONE)) {
     StateManager::instance()->pushState(new StateUpdateDb());
   }
@@ -102,63 +109,48 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
+  else if(i_xmkey.toMouse(nX, nY, nButton)) {
+    if(i_xmkey.getRepetition() == 1) {
+      if(i_type == INPUT_DOWN) {
+	if(nButton == SDL_BUTTON_LEFT) {
+	  m_GUI->mouseLDown(nX, nY);
+	  checkEvents();
+	} else if(nButton == SDL_BUTTON_RIGHT) {
+	  m_GUI->mouseRDown(nX, nY);
+	  checkEvents();
+	} else if(nButton == SDL_BUTTON_WHEELUP) {
+	  m_GUI->mouseWheelUp(nX, nY);
+	  checkEvents();
+	} else if(nButton == SDL_BUTTON_WHEELDOWN) {
+	  m_GUI->mouseWheelDown(nX, nY);
+	  checkEvents();
+	}
+	
+      } else if(i_type == INPUT_UP) {
+	if(nButton == SDL_BUTTON_LEFT) {
+	  m_GUI->mouseLUp(nX, nY);
+	  checkEvents();
+	} else if(nButton == SDL_BUTTON_RIGHT) {
+	  m_GUI->mouseRUp(nX, nY);
+	  checkEvents();
+	}
+      }
+    } else if(i_xmkey.getRepetition() == 2) {
+      if(nButton == SDL_BUTTON_LEFT) {
+	m_GUI->mouseLDoubleClick(nX, nY);
+	checkEvents();
+      }
+    }
+  }
+
+  else if(i_type == INPUT_DOWN && i_xmkey.toJoystickButton(v_joyNum, v_joyButton)) {
+    m_GUI->joystickButtonDown(v_joyNum, v_joyButton);
+    checkEvents();
+  }
+
+  else if(i_xmkey.toJoystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue)) {
+    m_GUI->joystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue);
+  }
+
   GameState::xmKey(i_type, i_xmkey);
-}
-
-void StateMenu::mouseDown(int nButton)
-{
-  int nX,nY;        
-  GameApp::getMousePos(&nX,&nY);
-        
-  if(nButton == SDL_BUTTON_LEFT) {
-    m_GUI->mouseLDown(nX,nY);
-    checkEvents();
-  } else if(nButton == SDL_BUTTON_RIGHT) {
-    m_GUI->mouseRDown(nX,nY);
-    checkEvents();
-  } else if(nButton == SDL_BUTTON_WHEELUP) {
-    m_GUI->mouseWheelUp(nX,nY);
-    checkEvents();
-  } else if(nButton == SDL_BUTTON_WHEELDOWN) {
-    m_GUI->mouseWheelDown(nX,nY);
-    checkEvents();
-  }
-}
-
-void StateMenu::mouseDoubleClick(int nButton)
-{
-  int nX,nY;        
-  GameApp::getMousePos(&nX,&nY);
-  
-  if(nButton == SDL_BUTTON_LEFT) {
-    m_GUI->mouseLDoubleClick(nX, nY);
-    checkEvents();
-  }
-
-}
-
-void StateMenu::mouseUp(int nButton)
-{
-  int nX,nY;
-  GameApp::getMousePos(&nX,&nY);
-  
-  if(nButton == SDL_BUTTON_LEFT) {
-    m_GUI->mouseLUp(nX,nY);
-    checkEvents();
-  } else if(nButton == SDL_BUTTON_RIGHT) {
-    m_GUI->mouseRUp(nX,nY);
-    checkEvents();
-  }
-}
-
-void StateMenu::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
-  m_GUI->joystickAxisMotion(i_joyNum, i_joyAxis, i_joyAxisValue);
-}
-
-void StateMenu::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
-  m_GUI->joystickButtonDown(i_joyNum, i_joyButton);
-  checkEvents();
-}
-
-void StateMenu::joystickButtonUp(Uint8 i_joyNum, Uint8 i_joyButton) {
 }

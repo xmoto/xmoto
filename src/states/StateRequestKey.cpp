@@ -56,61 +56,19 @@ void StateRequestKey::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     m_requestForEnd = true;
   }
-
+  
   else {
-    std::string v_msg;
-
-    v_msg = i_xmkey.toString();
-    if(v_msg != "") {
-      m_requestForEnd = true;
-      std::string args = "";
-      CmdArgumentParser::instance()->addString(v_msg, args);
-      StateManager::instance()->sendAsynchronousMessage("REQUESTKEY", args);
+    if(i_type == INPUT_DOWN) {
+      std::string v_msg;
+      
+      v_msg = i_xmkey.toString();
+      if(v_msg != "") {
+	m_requestForEnd = true;
+	std::string args = "";
+	CmdArgumentParser::instance()->addString(v_msg, args);
+	StateManager::instance()->sendAsynchronousMessage("REQUESTKEY", args);
+      }
     }
-  }
-}
-
-void StateRequestKey::mouseDown(int nButton) {
-  std::string v_msg;
-
-  v_msg = XMKey(nButton).toString();
-
-  if(v_msg != "") {
-    m_requestForEnd = true;
-    std::string args = "";
-    CmdArgumentParser::instance()->addString(v_msg, args);
-    StateManager::instance()->sendAsynchronousMessage("REQUESTKEY", args);
-  }
-}
-
-void StateRequestKey::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
-  std::string v_msg;
-
-  // allow only minimum detection allowed
-  if(i_joyAxisValue < INPUT_JOYSTICK_MINIMUM_DETECTION && i_joyAxisValue > -(INPUT_JOYSTICK_MINIMUM_DETECTION)) {
-    return;
-  }
-
-  v_msg = XMKey(InputHandler::instance()->getJoyId(i_joyNum), i_joyAxis, i_joyAxisValue).toString();
-
-  if(v_msg != "") {
-    m_requestForEnd = true;
-    std::string args = "";
-    CmdArgumentParser::instance()->addString(v_msg, args);
-    StateManager::instance()->sendAsynchronousMessage("REQUESTKEY", args);
-  }
-}
-
-void StateRequestKey::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
-  std::string v_msg;
-
-  v_msg = XMKey(InputHandler::instance()->getJoyId(i_joyNum), i_joyButton).toString();
-
-  if(v_msg != "") {
-    m_requestForEnd = true;
-    std::string args = "";
-    CmdArgumentParser::instance()->addString(v_msg, args);
-    StateManager::instance()->sendAsynchronousMessage("REQUESTKEY", args);
   }
 }
 

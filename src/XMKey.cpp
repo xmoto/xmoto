@@ -21,19 +21,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMKey.h"
 #include "Input.h"
 #include "GameText.h"
+#include "Game.h"
 #include "helpers/VExcept.h"
 #include <sstream>
 
 XMKey::XMKey() {
     m_input = XMK_NONE;
+		m_repetition = 1;
 }
 
-XMKey::XMKey(Uint8 nButton) {
+XMKey::XMKey(Uint8 nButton, unsigned int i_repetition) {
   m_input              = XMK_MOUSEBUTTON;
   m_mouseButton_button = nButton;
+	m_repetition = i_repetition;
 }
 
 XMKey::XMKey(SDL_Event &i_event) {
+		m_repetition = 1;
+
   switch(i_event.type) {
 
   case SDL_KEYDOWN:
@@ -70,12 +75,14 @@ XMKey::XMKey(SDLKey nKey,SDLMod mod, const std::string& i_utf8Char) {
   m_keyboard_sym = nKey;
   m_keyboard_mod = (SDLMod) (mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_META)); // only allow these modifiers
   m_keyboard_utf8Char = i_utf8Char;
+	m_repetition = 1;
 }
 
 XMKey::XMKey(std::string* i_joyId, Uint8 i_joyButton) {
   m_input     = XMK_JOYSTICKBUTTON;
   m_joyId     = i_joyId;
   m_joyButton = i_joyButton;
+	m_repetition = 1;
 }
 
 XMKey::XMKey(std::string* i_joyId, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
@@ -83,11 +90,14 @@ XMKey::XMKey(std::string* i_joyId, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
   m_joyId        = i_joyId;
   m_joyAxis      = i_joyAxis;
   m_joyAxisValue = i_joyAxisValue;
+	m_repetition = 1;
 }
 
 XMKey::XMKey(const std::string& i_key, bool i_basicMode) {
   unsigned int pos;
   std::string v_current, v_rest;
+
+	m_repetition = 1;
 
   if(i_basicMode) {
     m_input = XMK_KEYBOARD;
@@ -175,6 +185,10 @@ bool XMKey::isDefined() const {
   return m_input != XMK_NONE;
 }
 
+unsigned int XMKey::getRepetition() const {
+	return m_repetition;
+}
+
 bool XMKey::isAnalogic() const {
   return m_input == XMK_JOYSTICKAXIS;
 }
@@ -211,6 +225,10 @@ bool XMKey::operator==(const XMKey& i_other) const {
   if(m_input != i_other.m_input) {
     return false;
   }
+
+	if(m_repetition != i_other.m_repetition) {
+		return false;
+	}
 
   if(m_input == XMK_NONE || i_other.m_input == XMK_NONE) {
     return false;
@@ -432,4 +450,43 @@ const std::string& XMKey::getCharInputUtf8() const {
   return m_keyboard_utf8Char;
 }
 
+bool XMKey::isPointerInput() const {
+  return m_input == XMK_MOUSEBUTTON;
+}
 
+void XMKey::getPointerInputPosition(int& x, int& y) const {
+  GameApp::getMousePos(&x, &y);
+}
+
+bool XMKey::toMouse(int& nX, int& nY, Uint8& nButton) const {
+  if(m_input != XMK_MOUSEBUTTON) {
+    return false;
+  }
+
+  getPointerInputPosition(nX, nY);
+  nButton = m_mouseButton_button;
+  return true;
+}
+
+bool XMKey::toJoystickButton(Uint8& o_joyNum, Uint8& o_joyButton) const {
+  if(m_input != XMK_JOYSTICKBUTTON) {
+    return false;
+  }
+
+  o_joyNum    = InputHandler::instance()->getJoyNum(*m_joyId); // takes potentially time // could be better by storing the joy id
+  o_joyButton = m_joyButton;
+
+  return true;
+}
+
+bool XMKey::toJoystickAxisMotion(Uint8& o_joyNum, Uint8& o_joyAxis, Sint16& o_joyAxisValue) const {
+  if(m_input != XMK_JOYSTICKAXIS) {
+    return false;
+  }
+
+  o_joyNum       = InputHandler::instance()->getJoyNum(*m_joyId); // takes potentially time // could be better by storing the joy id
+  o_joyAxis      = m_joyAxis;
+  o_joyAxisValue = m_joyAxisValue;
+
+  return true;
+}

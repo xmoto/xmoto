@@ -41,11 +41,6 @@ class StatePlaying : public StateScene {
 
   /* input */
   virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
-  virtual void mouseDown(int nButton);
-  virtual void mouseUp(int nButton);
-  virtual void joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
-  virtual void joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
-  virtual void joystickButtonUp(Uint8 i_joyNum, Uint8 i_joyButton);
   virtual bool renderOverShadow();
 
   protected:

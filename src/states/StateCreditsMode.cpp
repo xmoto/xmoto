@@ -79,30 +79,3 @@ void StateCreditsMode::abort() {
 void StateCreditsMode::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   abort();
 }
-
-void StateCreditsMode::mouseDown(int nButton)
-{
-  abort();
-}
-
-void StateCreditsMode::mouseDoubleClick(int nButton)
-{
-  abort();
-}
-
-void StateCreditsMode::mouseUp(int nButton)
-{
-  /* declare to be sure it does nothing */
-}
-
-void StateCreditsMode::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
-  abort();
-}
-
-void StateCreditsMode::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
-  abort();
-}
-
-void StateCreditsMode::joystickButtonUp(Uint8 i_joyNum, Uint8 i_joyButton) {
-  /* declare to be sure it does nothing */
-}

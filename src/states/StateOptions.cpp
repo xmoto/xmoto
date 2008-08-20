@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Log.h"
 #include "../helpers/CmdArgumentParser.h"
 #include "StateMessageBox.h"
+#include "../SysMessage.h"
 #include <sstream>
 
 /* static members */
@@ -903,8 +904,8 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   v_list = new UIList(v_window, 5, 5, "", v_window->getPosition().nWidth-10, v_window->getPosition().nHeight -43 -5 -57);
   v_list->setID("KEY_ACTION_LIST");
   v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_ACTION, 200);
-  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 200);
+  v_list->addColumn(GAMETEXT_ACTION, 250);
+  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 250);
   v_list->addColumn("", 0); // internal key name
   v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
 
@@ -1555,6 +1556,11 @@ void StateOptions::updateControlsList() {
       p->Text.push_back(InputHandler::instance()->getSCRIPTACTION(i, k).toString());
     } 
   }
+
+  p = pList->addEntry(GAMETEXT_SWITCHUGLYMODE);
+  p->Text.push_back(InputHandler::instance()->getSwitchUglyMode().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getSwitchUglyMode().toString());
+
 }
 
 void StateOptions::createThemesList(UIList *pList) {
@@ -1723,6 +1729,8 @@ void StateOptions::updateProfileStrings() {
 }
 
 void StateOptions::executeOneCommand(std::string cmd, std::string args) {
+	char v_tmp[256];
+
   LogDebug("cmd [%s [%s]] executed by state [%s].",
 	   cmd.c_str(), args.c_str(), getName().c_str());
 
@@ -1735,12 +1743,17 @@ void StateOptions::executeOneCommand(std::string cmd, std::string args) {
 
       // is key used
       for(unsigned int i=0;i<v_list->getEntries().size();i++) {
-	if(v_list->getEntries()[i]->Text[2] == key) {
-	  // switch keys
-	  v_list->getEntries()[i]->Text[1] = pEntry->Text[1];
-	  v_list->getEntries()[i]->Text[2] = pEntry->Text[2];
-	  setInputKey(v_list->getEntries()[i]->Text[0], v_list->getEntries()[i]->Text[2]);
-	}
+				if(v_list->getSelected() != i) {
+					if(v_list->getEntries()[i]->Text[2] == key) {
+						// switch keys
+						v_list->getEntries()[i]->Text[1] = pEntry->Text[1];
+						v_list->getEntries()[i]->Text[2] = pEntry->Text[2];
+						setInputKey(v_list->getEntries()[i]->Text[0], v_list->getEntries()[i]->Text[2]);
+						
+						snprintf(v_tmp, 256, GAMETEXT_SWITCHKEY, v_list->getEntries()[i]->Text[0].c_str(), v_list->getEntries()[i]->Text[1].c_str());
+						SysMessage::instance()->displayInformation(v_tmp);
+					}
+				}
       }
       pEntry->Text[1] = XMKey(key).toFancyString();
       pEntry->Text[2] = key;
@@ -1818,6 +1831,9 @@ void StateOptions::setInputKey(const std::string& i_strKey, const std::string& i
 	InputHandler::instance()->setSCRIPTACTION(i, k, XMKey(i_key));
       }
     }
+  }
 
+  if(i_strKey == GAMETEXT_SWITCHUGLYMODE) {
+    InputHandler::instance()->setSwitchUglyMode(XMKey(i_key));
   }
 }

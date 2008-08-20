@@ -354,56 +354,6 @@ void StateManager::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   (m_statesStack.back())->xmKey(i_type, i_xmkey);
 }
 
-void StateManager::mouseDown(int nButton)
-{
-  if(m_statesStack.size() == 0)
-    return;
-  (m_statesStack.back())->mouseDown(nButton);
-}
-
-void StateManager::mouseDoubleClick(int nButton)
-{
-  if(m_statesStack.size() == 0)
-    return;
-  (m_statesStack.back())->mouseDoubleClick(nButton);
-}
-
-void StateManager::mouseUp(int nButton)
-{
-  if(m_statesStack.size() == 0)
-    return;
-  (m_statesStack.back())->mouseUp(nButton);
-}
-
-void StateManager::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
-  XMKey v_key;
-
-  if(m_statesStack.size() == 0)
-    return;
-
-  // second pad is to move the mouse in case the mouse is drawn
-  //if(i_joyAxis == 0 || i_joyAxis == 1) {
-  //  if(m_statesStack.back()->showCursor()) {
-  //    GameApp::getMousePos(&pnX, &pnY);
-  //    //SDL_WarpMouse(pnX+10, pnY+10);
-  //  }
-  //}
-
-  (m_statesStack.back())->joystickAxisMotion(i_joyNum, i_joyAxis, i_joyAxisValue);
-}
-
-void StateManager::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
-  if(m_statesStack.size() == 0)
-    return;
-  (m_statesStack.back())->joystickButtonDown(i_joyNum, i_joyButton);
-}
-
-void StateManager::joystickButtonUp(Uint8 i_joyNum, Uint8 i_joyButton) {
-  if(m_statesStack.size() == 0)
-    return;
-  (m_statesStack.back())->joystickButtonUp(i_joyNum, i_joyButton);
-}
-
 void StateManager::changeFocus(bool i_hasFocus) {
   m_hasFocus = i_hasFocus;
 }
