@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-08-20 18:23+0200\n"
-"PO-Revision-Date: 2008-07-07 01:03+0200\n"
+"PO-Revision-Date: 2008-08-20 01:03+0200\n"
 "Last-Translator: Tadas Masiulionis <tadzikaz@gmail.com>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -171,7 +171,7 @@ msgstr "Keisti raktą..."
 
 #: src/GameText.h:73
 msgid "Checking for new or updated levels..."
-msgstr "Ieškoti naujų ir atnaujintų lygių..."
+msgstr "Ieškomi nauji ir atnaujinti lygiai..."
 
 #: src/GameText.h:74
 msgid "I'm a child"
@@ -185,14 +185,13 @@ msgstr "Pasirinkti lygį"
 msgid "Clean"
 msgstr "Išvalyti"
 
-# fuzzy
 #: src/GameText.h:77
 #, c-format
 msgid "Are you sure you want to delete %i replay"
 msgid_plural "Are you sure you want to delete %i replay"
 msgstr[0] "Ar tikrai ištrinti %i pakartojimą?"
 msgstr[1] "Ar tikrai ištrinti %i pakartojimus?"
-msgstr[2] "Ar tikrai ištrinti %i pakartojimus?"
+msgstr[2] "Ar tikrai ištrinti %i pakartojimų?"
 
 #: src/GameText.h:78
 msgid "There is no replay to clean"
@@ -438,7 +437,7 @@ msgstr "Kiekvienas, kas padarė lygius"
 
 #: src/GameText.h:169
 msgid "People who have provided bug reports"
-msgstr "Žmonės, kurie apranešė apie klaidas"
+msgstr "Žmonės, kurie pranešė apie klaidas"
 
 #: src/GameText.h:170
 msgid "Anyone who has helped in any way"
@@ -467,10 +466,6 @@ msgid ""
 "server. It is useful to save your data or if you play X-Moto from different "
 "places."
 msgstr ""
-"X-Moto naudoja jūsų kompiuteryje duomenų bazę, kad išsaugotų visus jūsų "
-"balus ir statistiką. Jūs galite siųsti duomenis naudodami savo tinklo "
-"abonentą X-Moto tarnybinėje stotyje. Naudinga išsaugoti jūsų duomenis, jei "
-"jūs žaidžiate X-Moto iš skirtingų vietų."
 
 #: src/GameText.h:177
 msgid ""
@@ -479,10 +474,6 @@ msgid ""
 "will be duplicated/not synchronized. If you did that, you should remove the "
 "copies you did."
 msgstr ""
-"Jeigu jūs rankiniu būdu nukopijuosite X-Moto vartotojo rinkmenas (.xmoto) į "
-"kitus kompiuterius, tai jūs negalėsite funkcionaliai naudotis, kitaip jūsų "
-"statistika bus sudubliuota/nesusinchronizuota. Jeigu tai atliksite, jūs "
-"turesite pašalinti padarytas kopijas."
 
 #: src/GameText.h:178
 msgid "Synchronise"
@@ -570,7 +561,7 @@ msgstr ""
 
 #: src/GameText.h:199
 msgid "Checking for new levels..."
-msgstr "Iėškomi nauji lygiai..."
+msgstr "Ieškomi nauji lygiai..."
 
 #: src/GameText.h:200
 msgid "Loading new and updated levels..."
@@ -747,19 +738,17 @@ msgstr "Vietinis geriausias"
 
 #: src/GameText.h:241
 msgid "Your best"
-msgstr "Tavo geriausias"
+msgstr "Jūsų geriausias"
 
 #: src/GameText.h:242
 msgid "Type"
 msgstr "Tipas"
 
 #: src/GameText.h:243 src/GameText.h:603
-#, fuzzy
 msgid "The highscore of the reference room"
 msgstr "Nurodyto kambario rekordai"
 
 #: src/GameText.h:244 src/GameText.h:604
-#, fuzzy
 msgid "The highscore of the other rooms"
 msgstr "Kitų kambarių rekordai"
 
@@ -826,11 +815,11 @@ msgstr "Pridėti/pašalinti parankinius lygius"
 
 #: src/GameText.h:263
 msgid "Add/remove to blacklisted levels"
-msgstr "Pridėti/pašalinti lygius, įtrauktus įjuodąjį sąrašą"
+msgstr "Pridėti/pašalinti lygius, įtrauktus į juodąjį sąrašą"
 
 #: src/GameText.h:264
 msgid "change mirror mode"
-msgstr "keisti veidrodžio režimą"
+msgstr "Keisti veidrodžio režimą"
 
 #: src/GameText.h:265
 msgid "Enable/disable web"
@@ -838,7 +827,7 @@ msgstr "Įjungti/išjungti tinklą"
 
 #: src/GameText.h:266
 msgid "Reload levels, themes and replays from directories"
-msgstr "Atkārtoti ielādēt līmeņus, tēmas un ierakstus no mapēm"
+msgstr "Perkrauti lygius, temas ir pakartojimus iš aplankalo"
 
 #: src/GameText.h:267
 msgid "Take a screenshot"
@@ -1048,7 +1037,7 @@ msgstr "Judėjimo vaiduoklis"
 
 #: src/GameText.h:318
 msgid "Multi"
-msgstr "Daug"
+msgstr "Žaidėjai"
 
 #: src/GameText.h:319
 msgid "Semi-cooperative mode"
@@ -1077,16 +1066,15 @@ msgstr "Nauji rekordai!"
 
 #: src/GameText.h:325
 msgid "New personal highscore!"
-msgstr "Nauji asmeniniai rekordai!"
+msgstr "Naujas asmeninis rekordas!"
 
-# fuzzy
 #: src/GameText.h:326
 #, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
-msgstr[0] "Yra %d naujas arba atnaujintas lygis. Atsiųsti dabar?"
-msgstr[1] "Yra %d nauji arba atnaujinti lygiai. Atsiųsti dabar?"
-msgstr[2] "Yra %d nauji arba atnaujinti lygiai. Atsiųsti dabar?"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: src/GameText.h:329
 msgid "New Levels"
@@ -1094,7 +1082,7 @@ msgstr "Nauji lygiai"
 
 #: src/GameText.h:330
 msgid "New levels available!"
-msgstr "Yra nauji lygiai!"
+msgstr "Atsisiųsk naujų lygių!"
 
 #: src/GameText.h:331
 msgid "New Profile..."
@@ -1261,7 +1249,9 @@ msgstr ""
 
 #: src/GameText.h:375
 msgid "Quick start"
-msgstr "Greitas paleidimas"
+msgstr ""
+"Greitas\n"
+"paleidimas"
 
 #: src/GameText.h:376
 msgid "Quit Game"
@@ -1422,7 +1412,7 @@ msgstr "Bandykite šį lygį dar kartą"
 
 #: src/GameText.h:418
 msgid "Tutorial"
-msgstr "Trumpas kursas"
+msgstr "Pamoka"
 
 #: src/GameText.h:419
 msgid "Undefined"
@@ -1471,7 +1461,6 @@ msgid "Updating level lists..."
 msgstr "Atnaujinamas lygių sąrašas..."
 
 #: src/GameText.h:429
-#, fuzzy
 msgid "Upload"
 msgstr "Nusiųsti"
 
@@ -1507,15 +1496,15 @@ msgstr "Naudoti profilį"
 
 #: src/GameText.h:437
 msgid "Using HTTP Proxy"
-msgstr "Naudojama HTTP tarpinė stotis"
+msgstr "Naudoti HTTP tarpinė stotis"
 
 #: src/GameText.h:438
 msgid "Using SOCKS4 Proxy"
-msgstr "Naudojama SOCKS4 tarpinė stotis"
+msgstr "Naudoti SOCKS4 tarpinė stotis"
 
 #: src/GameText.h:439
 msgid "Using SOCKS5 Proxy"
-msgstr "Naudojama SOCKS5 tarpinė stotis"
+msgstr "Naudoti SOCKS5 tarpinė stotis"
 
 #: src/GameText.h:440
 msgid "Video"
@@ -1547,7 +1536,7 @@ msgid "Reference room"
 msgstr "Nurodytas kambarys"
 
 #: src/GameText.h:448
-#, fuzzy, c-format
+#, c-format
 msgid "Room %i"
 msgstr "%i kambarys"
 
@@ -1562,9 +1551,9 @@ msgid "%d minutes"
 msgstr "%d minutės"
 
 #: src/GameText.h:453
-#, fuzzy, c-format
+#, c-format
 msgid "Stats since: %s"
-msgstr "Statistika"
+msgstr ""
 
 #: src/GameText.h:454
 #, c-format
@@ -1574,6 +1563,11 @@ msgstr[0] "X-Moto paleistas %d kartą"
 msgstr[1] "X-Moto paleistas %d kartus"
 msgstr[2] "X-Moto paleistas %d kartų"
 
+# msgid "X-Moto started %d time"
+# msgid_plural "X-Moto started %d times"
+# msgstr[0] "X-Moto paleistas %d kartą"
+# msgstr[1] "X-Moto paleistas %d kartus"
+# msgstr[2] "X-Moto paleistas %d kartų"
 #: src/GameText.h:455
 #, c-format
 msgid "%d different level"
@@ -1588,7 +1582,7 @@ msgid "Time played: %s"
 msgstr "Žaidimo laikas: %s"
 
 #: src/GameText.h:457
-#, fuzzy, c-format
+#, c-format
 msgid "%d play"
 msgid_plural "%d plays"
 msgstr[0] "%i žaidimas"
@@ -1604,7 +1598,7 @@ msgstr[1] "%d mirtys"
 msgstr[2] "%d mirčių"
 
 #: src/GameText.h:459
-#, fuzzy, c-format
+#, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
 msgstr[0] "%d pabaiga"
@@ -1630,7 +1624,7 @@ msgstr "Taip"
 
 #: src/GameText.h:464
 msgid "Yes to all"
-msgstr "Taip visiems"
+msgstr "Taip visus"
 
 #: src/GameText.h:465
 msgid "Zoom in"
@@ -1720,7 +1714,7 @@ msgstr "Keisti žaidėjo profilį"
 
 #: src/GameText.h:488
 msgid "Play tutorial of how to play the game"
-msgstr "Trumpas kursas, kaip žaisti žaidimą"
+msgstr "Pamoka, kaip žaisti žaidimą"
 
 #: src/GameText.h:489
 msgid "Play the selected level"
@@ -2148,11 +2142,11 @@ msgstr "Pasirinkite žaidėjų skaičių"
 
 #: src/GameText.h:594
 msgid "Your proxy login"
-msgstr "Tavo tarpinės stoties vartotojas"
+msgstr "Jūsų tarpinio serverio vartotojas"
 
 #: src/GameText.h:595
 msgid "Your password associated with your login"
-msgstr "Tavo slaptaždis susijęs su tavo vartotoju"
+msgstr "Jūsų slaptaždis susijęs su jūsų vartotoju"
 
 #: src/GameText.h:596
 msgid "Enter text to filter the replay list"
@@ -2209,7 +2203,6 @@ msgid "Remove levels not suitable for children"
 msgstr "Pašalinti lygius, kurie netinka vaikams"
 
 #: src/GameText.h:612
-#, fuzzy
 msgid "Enable this room"
 msgstr "Įjungti šį mastelį"
 
@@ -2231,7 +2224,7 @@ msgstr "Formuoti vaiduoklius, rodomus, kai žaidžiamas žaidimas"
 
 #: src/GameText.h:617
 msgid "Configure options linked to your X-Moto database"
-msgstr "Formuoti parinktis, sujungtas su jūsų X-Moto duomenų baze"
+msgstr ""
 
 #: src/GameText.h:618
 msgid "Synchronise your database on the web"
@@ -2239,7 +2232,7 @@ msgstr "Sinchronizuoti jūsų duomenų bazę tinklapyje"
 
 #: src/GameText.h:619
 msgid "Synchronise your database when your quit X-Moto"
-msgstr "Sinchronizuoti tavo duomenų bazę, kai išeini iš X-Moto"
+msgstr "Sinchronizuoti jūsų duomenų bazę, kai išeinate iš X-Moto"
 
 #: src/GameText.h:620
 msgid "Enable joysticks events"
@@ -2291,7 +2284,7 @@ msgstr "Labai netikę lygiai"
 
 #: src/GameText.h:634
 msgid "Scripted levels"
-msgstr "Senarijaus lygmenys"
+msgstr "Senarijaus lygiai"
 
 #: src/GameText.h:635
 msgid "Musical levels"
@@ -2375,7 +2368,7 @@ msgstr "Labai ilgi lygiai"
 
 #: src/GameText.h:657
 msgid "Levels with no highscore in your room"
-msgstr "Lygiai be rekordo tavo kambaryje"
+msgstr "Lygiai be rekordo jūsų kambaryje"
 
 #: src/GameText.h:659
 msgid "Somebody in the room made a better highscore than yours"
@@ -2391,11 +2384,11 @@ msgstr "Nauji ir atnaujinti lygiai nuo paskutinio patikrinimo"
 
 #: src/GameText.h:662
 msgid "Your favorite levels"
-msgstr "Tavo parankiniai lygiai"
+msgstr "Jūsų parankiniai lygiai"
 
 #: src/GameText.h:663
 msgid "Your blacklisted levels"
-msgstr "Tavo juodojo sąrašo lygiai"
+msgstr "Jūsų juodojo sąrašo lygiai"
 
 #: src/GameText.h:664
 msgid "Nicest X-Moto levels according to the web votes"
@@ -2562,12 +2555,10 @@ msgid "Fps disabled"
 msgstr "Kadrų sklaistinė išjungta"
 
 #: src/GameText.h:704
-#, fuzzy
 msgid "Audio enabled"
 msgstr "Garsas įjungtas"
 
 #: src/GameText.h:705
-#, fuzzy
 msgid "Audio disabled"
 msgstr "Garsas išjungtas"
 
@@ -2701,11 +2692,11 @@ msgstr "Sveiki atvykę į X-Moto!"
 msgid ""
 "This level is a short tutorial of\n"
 "how you play the game."
-msgstr "Šis lygis yra trumpas kursas, kaip žaisti žaidimą."
+msgstr "Šis lygis yra pamokymas, kaip žaisti žaidimą."
 
 #: src/LevelsText.h:41
 msgid "Please stay put and follow the instructions! :)"
-msgstr "Lūdzu, negrozies un seko norādījumiem! :)"
+msgstr "Prašom sekti savo padėti ir instrukcijas! :)"
 
 #: src/LevelsText.h:42
 msgid "Pick up the strawberry by touching it"
@@ -2713,11 +2704,11 @@ msgstr "Paimkite žemuogę, paliesdami ją"
 
 #: src/LevelsText.h:43
 msgid "Touch it to finish the level. Good luck with the rest :)"
-msgstr "Palieskite, kad baigtumėte lygį. Sėkmės su likusiais :)"
+msgstr "Palieskite gėlytę, kad baigtumėte lygį. Sėkmės su likusiais :)"
 
 #: src/LevelsText.h:44
 msgid "The first jump you're going to perform is very easy."
-msgstr "Pirmas šuolis, kurį ketinate įvykdyti, yra labai lengvas."
+msgstr "Pirmas šuolis, kurį ketinate atlikti, yra labai lengvas."
 
 #: src/LevelsText.h:45
 msgid ""
@@ -2739,7 +2730,7 @@ msgstr ""
 
 #: src/LevelsText.h:47
 msgid "Now for the most difficult jump in this tutorial!"
-msgstr "Dabar sudėtingiausiam šuoliui šiame trumpame kurse!"
+msgstr "Dabar sudėtingiausias šuolis šioje pamokoje!"
 
 #: src/LevelsText.h:48
 msgid "This time, speed alone won't do the job..."
@@ -2765,7 +2756,7 @@ msgstr "Galinis sustabdymas padės padidinti šuolio ilgį.Pabandykite..."
 
 #: src/LevelsText.h:51
 msgid "This tutorial will teach you the basics of jumping."
-msgstr "Ši trumpas kursas pamokys jus šokinėjimo pagrindų."
+msgstr "Ši pamoka jus pamokys šokinėjimo pagrindų."
 
 #: src/LevelsText.h:52
 msgid ""
@@ -2856,7 +2847,7 @@ msgid ""
 "areas where the ceiling is low.\n"
 "Beware that this can be pretty difficult :)"
 msgstr ""
-"Šis trumpas kursas pamokys jus kaip važiuoti ant užpakalinio rato\n"
+"Ši pamoka jus pamokys, kaip važiuoti ant užpakalinio rato\n"
 "per vietas, kur lubos yra žemos.\n"
 "Saugokitės, tai gali būti gana sudėtinga :)"
 
@@ -2870,7 +2861,7 @@ msgstr "Gražu! Dabar pabandykite kitą, bus truputį sudėtingiau..."
 
 #: src/LevelsText.h:67
 msgid "Good job! The next one is even more difficult..."
-msgstr "Geras darbas! Kitas yra dar sudėtingesnis..."
+msgstr "Atlikta gerai! Kitas yra dar sudėtingesnis..."
 
 #: src/LevelsText.h:68
 msgid ""
@@ -2879,6 +2870,31 @@ msgid ""
 msgstr ""
 "Dabar baigiant... Tai neilgas lygis, bet vietoj to yra mažiau vietos jūsų "
 "brangiai galvai. Sėkmės :)"
+
+#~ msgid ""
+#~ "X-Moto uses a database on your computer to save all your scores and "
+#~ "statistics. You can send these data using your web account on the X-Moto "
+#~ "server. It is usefull to save your data or if you play X-Moto from "
+#~ "different places."
+#~ msgstr ""
+#~ "X-Moto naudoja jūsų kompiuteryje duomenų bazę, kad išsaugotų visus jūsų "
+#~ "balus ir statistiką. Jūs galite siųsti duomenis naudodami savo tinklo "
+#~ "abonentą X-Moto tarnybinėje stotyje. Naudinga išsaugoti jūsų duomenis, "
+#~ "jei jūs žaidžiate X-Moto iš skirtingų vietų."
+
+#~ msgid ""
+#~ "If you manually copied the X-Moto user files (.xmoto) on some other "
+#~ "computers, you should not use this functionnality otherwise your "
+#~ "statistics will be duplicated/not synchronized. If you did that, you "
+#~ "should remove the copies you did."
+#~ msgstr ""
+#~ "Jeigu jūs rankiniu būdu nukopijuosite X-Moto vartotojo rinkmenas (.xmoto) "
+#~ "į kitus kompiuterius, tai jūs negalėsite funkcionaliai naudotis, kitaip "
+#~ "jūsų statistika bus sudubliuota/nesusinchronizuota. Jeigu tai atliksite, "
+#~ "jūs turesite pašalinti padarytas kopijas."
+
+#~ msgid "Enable Music"
+#~ msgstr "Įjunkti muziką"
 
 #~ msgid "Initializing input system..."
 #~ msgstr "Inicijuojama įvesties sistema..."
@@ -2892,5 +2908,5 @@ msgstr ""
 #~ msgid "Initializing text renderer..."
 #~ msgstr "Inicijuojamas teksto vaizdavimas..."
 
-#~ msgid "Enable Music"
-#~ msgstr "Įjunkti muziką"
+#~ msgid "Configure options linked to your X-Moto dabatase"
+#~ msgstr "Formuoti parinktis, sujungtas su jūsų X-Moto duomenų baze"
