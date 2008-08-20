@@ -216,7 +216,7 @@ msgstr "shift gauche"
 
 #: src/GameText.h:86
 msgid "right shift"
-msgstr "shift gauche"
+msgstr "shift droit"
 
 #: src/GameText.h:87
 msgid "left alt"
