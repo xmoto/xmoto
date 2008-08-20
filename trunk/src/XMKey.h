@@ -38,7 +38,7 @@ class XMKey {
   XMKey(SDL_Event &i_event);
   XMKey(const std::string& i_key, bool i_basicMode = false); /* basic mode is to give a simple letter, for scripts key */
   XMKey(SDLKey nKey, SDLMod mod, const std::string& i_utf8Char = "");  // keyboard
-  XMKey(Uint8 nButton);                     		      	       // mouse
+  XMKey(Uint8 nButton, unsigned int i_repetition = 1);                     		      	       // mouse
   XMKey(std::string* i_joyId, Uint8 i_joyButton); 	               // joystick button
   XMKey(std::string* i_joyId, Uint8 i_joyAxis, Sint16 i_joyAxisValue); // joystick axis
 
@@ -48,6 +48,8 @@ class XMKey {
   bool isPressed(Uint8 *i_keystate, Uint8 i_mousestate);
 
   bool isDefined() const;
+
+  unsigned int getRepetition() const;
 
   bool isAnalogic() const;
   float getAnalogicValue() const;
@@ -59,6 +61,13 @@ class XMKey {
   SDLMod getCharInputMod() const;
   const std::string& getCharInputUtf8() const;
 
+  bool isPointerInput() const;
+  void getPointerInputPosition(int& x, int& y) const;
+
+  bool toMouse(int& nX, int& nY, Uint8& nButton) const;
+  bool toJoystickButton(Uint8& o_joyNum, Uint8& o_joyButton) const;
+  bool toJoystickAxisMotion(Uint8& o_joyNum, Uint8& o_joyAxis, Sint16& o_joyAxisValue) const;
+
  private:
   XMKey_input m_input;
   SDLKey m_keyboard_sym;
@@ -69,6 +78,7 @@ class XMKey {
   Uint8  m_joyButton;
   Uint8  m_joyAxis;
   Sint16 m_joyAxisValue;
+  unsigned int m_repetition;
 };
 
 #endif

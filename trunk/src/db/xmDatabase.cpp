@@ -723,8 +723,9 @@ char** xmDatabase::readDB(const std::string& i_sql, unsigned int &i_nrow) {
      != SQLITE_OK) {
     v_errMsg = errMsg;
     sqlite3_free(errMsg);
-    LogError("xmDb failed while running");
+    LogError("xmDb failed while running :");
     LogInfo("%s", i_sql.c_str());
+    LogError("%s", v_errMsg.c_str())
     throw Exception("xmDb: " + v_errMsg);
 
   }

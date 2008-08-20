@@ -57,6 +57,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "UserConfig.h"
 #include "Renderer.h"
 
+#define MOUSE_DBCLICK_TIME 0.250f
+
 #if defined(WIN32)
 int SDL_main(int nNumArgs, char **ppcArgs) {
 #else
@@ -406,19 +408,19 @@ void GameApp::manageEvent(SDL_Event* Event) {
     /* Force quit */
     quit();
     break;
-  case SDL_MOUSEBUTTONDOWN:
-    /* Pass ordinary click */
-    StateManager::instance()->mouseDown(Event->button.button);
-    
+  case SDL_MOUSEBUTTONDOWN:    
     /* Is this a double click? */
     getMousePos(&nX,&nY);
     if(nX == nLastMouseClickX &&
        nY == nLastMouseClickY &&
        nLastMouseClickButton == Event->button.button &&
-       (getXMTime() - fLastMouseClickTime) < 0.250f) {                
+       (getXMTime() - fLastMouseClickTime) < MOUSE_DBCLICK_TIME) {
       
       /* Pass double click */
-      StateManager::instance()->mouseDoubleClick(Event->button.button);
+      StateManager::instance()->xmKey(INPUT_DOWN, XMKey(Event->button.button, 2));
+    } else {
+      /* Pass ordinary click */
+      StateManager::instance()->xmKey(INPUT_DOWN, XMKey(Event->button.button));
     }
     fLastMouseClickTime = getXMTime();
     nLastMouseClickX = nX;
@@ -427,21 +429,23 @@ void GameApp::manageEvent(SDL_Event* Event) {
     
     break;
   case SDL_MOUSEBUTTONUP:
-    StateManager::instance()->mouseUp(Event->button.button);
+    StateManager::instance()->xmKey(INPUT_UP, XMKey(Event->button.button));
     break;
 
   case SDL_JOYAXISMOTION:
-      StateManager::instance()->joystickAxisMotion(Event->jaxis.which, Event->jaxis.axis, Event->jaxis.value);
-    break;
-
+  StateManager::instance()->xmKey(InputHandler::instance()->joystickAxisSens(Event->jaxis.value),
+				  XMKey(InputHandler::instance()->getJoyId(Event->jbutton.which),
+					Event->jaxis.axis, Event->jaxis.value));
+  break;
+  
   case SDL_JOYBUTTONDOWN:
-    StateManager::instance()->joystickButtonDown(Event->jbutton.which, Event->jbutton.button);
-    break;
-
+  StateManager::instance()->xmKey(INPUT_DOWN, XMKey(InputHandler::instance()->getJoyId(Event->jbutton.which), Event->jbutton.button));
+  break;
+  
   case SDL_JOYBUTTONUP:
-    StateManager::instance()->joystickButtonUp(Event->jbutton.which, Event->jbutton.button);
-    break;
-
+  StateManager::instance()->xmKey(INPUT_UP, XMKey(InputHandler::instance()->getJoyId(Event->jbutton.which), Event->jbutton.button));
+  break;
+  
   case SDL_ACTIVEEVENT:
     
     if((Event->active.state & SDL_APPMOUSEFOCUS) != 0) { // mouse focus

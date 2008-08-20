@@ -305,7 +305,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 
 #if defined(ENABLE_DEV)
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F7, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP7, KMOD_NONE)) {
     /* Zoom in */
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
@@ -317,7 +317,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F9, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP9, KMOD_NONE)) {
     /* Zoom out */
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {

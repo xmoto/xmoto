@@ -178,7 +178,7 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     return;
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F9, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchUglyMode()) {
     gameApp->switchUglyMode(XMSession::instance()->ugly() == false);
     if(XMSession::instance()->ugly()) {
       SysMessage::instance()->displayText(SYS_MSG_UGLY_MODE_ENABLED);

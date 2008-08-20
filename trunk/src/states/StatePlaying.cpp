@@ -306,53 +306,16 @@ void StatePlaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 #endif
 
   else {
-    // to avoid people changing direction during the autozoom
-    if(m_autoZoom == false){
-      /* Notify the controller */
-      if(i_type == INPUT_DOWN) {
+    if(i_type == INPUT_DOWN) {
+      if(m_autoZoom == false){
+	// to avoid people changing direction during the autozoom
 	InputHandler::instance()->handleInput(m_universe, INPUT_DOWN, i_xmkey);
-      } else {
-	InputHandler::instance()->handleInput(m_universe, INPUT_UP, i_xmkey);
       }
+    } else {
+      InputHandler::instance()->handleInput(m_universe, INPUT_UP, i_xmkey);
     }
-
     StateScene::xmKey(i_type, i_xmkey);
   }
-}
-
-void StatePlaying::mouseDown(int nButton)
-{
-  // to avoid people changing direction during the autozoom
-  if(m_autoZoom == false){
-    InputHandler::instance()->handleInput(m_universe, INPUT_DOWN, XMKey(nButton));
-  }
-  StateScene::mouseDown(nButton);
-}
-
-void StatePlaying::mouseUp(int nButton)
-{
-  InputHandler::instance()->handleInput(m_universe, INPUT_UP, XMKey(nButton));
-
-  StateScene::mouseUp(nButton);
-}
-
-void StatePlaying::joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
-  // to avoid people changing direction during the autozoom
-  if(m_autoZoom == false){
-    InputHandler::instance()->handleInput(m_universe, InputHandler::instance()->joystickAxisSens(i_joyAxisValue),
-					  XMKey(InputHandler::instance()->getJoyId(i_joyNum), i_joyAxis, i_joyAxisValue));
-  }
-}
-
-void StatePlaying::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
-  // to avoid people changing direction during the autozoom
-  if(m_autoZoom == false){
-    InputHandler::instance()->handleInput(m_universe, INPUT_DOWN, XMKey(InputHandler::instance()->getJoyId(i_joyNum), i_joyButton));
-  }
-}
-
-void StatePlaying::joystickButtonUp(Uint8 i_joyNum, Uint8 i_joyButton) {
-  InputHandler::instance()->handleInput(m_universe, INPUT_UP, XMKey(InputHandler::instance()->getJoyId(i_joyNum), i_joyButton));
 }
 
 void StatePlaying::onOneFinish() {

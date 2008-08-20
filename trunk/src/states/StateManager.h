@@ -51,12 +51,6 @@ public:
   void render();
   // input
   void xmKey(InputEventType i_type, const XMKey& i_xmkey);
-  void mouseDown(int nButton);
-  void mouseDoubleClick(int nButton);
-  void mouseUp(int nButton);
-  void joystickAxisMotion(Uint8 i_joyNum, Uint8 i_joyAxis, Sint16 i_joyAxisValue);
-  void joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
-  void joystickButtonUp(Uint8 i_joyNum, Uint8 i_joyButton);
 
   void changeFocus(bool i_hasFocus);
   void changeVisibility(bool i_visible);

@@ -71,6 +71,7 @@ public:
 
   std::string getFancyKeyByAction(const std::string &Action);
   std::string* getJoyId(Uint8 i_joynum);
+  Uint8 getJoyNum(const std::string& i_name);
   std::string* getJoyIdByStrId(const std::string& i_name);
   SDL_Joystick* getJoyById(std::string* i_id);
   InputEventType joystickAxisSens(Sint16 m_joyAxisValue);
@@ -82,7 +83,7 @@ public:
   void setDefaultConfig();
   void saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
 
-  bool isANotSetKey(XMKey* i_xmkey) const;
+  bool isANotGameSetKey(XMKey* i_xmkey) const;
   void setDRIVE(int i_player, XMKey i_value);
   XMKey getDRIVE(int i_player) const;
   void setBRAKE(int i_player, XMKey i_value);
