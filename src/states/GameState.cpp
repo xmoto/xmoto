@@ -233,7 +233,6 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_m, KMOD_LCTRL)) {
     XMSession::instance()->setMirrorMode(XMSession::instance()->mirrorMode() == false);
-    InputHandler::instance()->setMirrored(XMSession::instance()->mirrorMode());
     StateManager::instance()->sendAsynchronousMessage("MIRRORMODE_CHANGED");
   }
 

@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEPLAYING_H__
 
 #include "StateScene.h"
+#include "../Input.h"
 
 class StatePlaying : public StateScene {
   public:
@@ -52,8 +53,12 @@ class StatePlaying : public StateScene {
 
   void updateWithOptions();
 
+	void handleInput(Universe* i_universe, InputEventType Type, const XMKey& i_xmkey);
+  void dealWithActivedKeys(Universe* i_universe); // apply already pressed keys
+
   bool m_gameIsFinished;
   bool m_displayStats;
+  bool m_changeDirKeyAlreadyPress[INPUT_NB_PLAYERS]; // to avoid key repetition
 };
 
 #endif
