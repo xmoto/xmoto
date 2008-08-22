@@ -90,20 +90,23 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   Uint8 v_joyAxis;
   Sint16 v_joyAxisValue;
   Uint8 v_joyButton;
+	SDLKey v_nKey;
+	SDLMod v_mod;
+	std::string v_utf8Char;
 
   if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F5, KMOD_NONE)) {
     StateManager::instance()->pushState(new StateUpdateDb());
   }
 
-  else if(i_xmkey.isCharInput()) {
-    if(i_xmkey.getCharInputMod() == KMOD_NONE) {
+	else if(i_xmkey.toKeyboard(v_nKey, v_mod, v_utf8Char)) {
+    if(v_mod == KMOD_NONE) {
       switch(i_type) {
       case INPUT_DOWN:
-	m_GUI->keyDown(i_xmkey.getCharInputKey(), i_xmkey.getCharInputMod(), i_xmkey.getCharInputUtf8());
-	break;
+				m_GUI->keyDown(v_nKey, v_mod, v_utf8Char);
+				break;
       case INPUT_UP:
-	m_GUI->keyUp(i_xmkey.getCharInputKey(), i_xmkey.getCharInputMod(), i_xmkey.getCharInputUtf8());
-	break;
+				m_GUI->keyUp(v_nKey, v_mod, v_utf8Char);
+				break;
       }
       checkEvents();
     }
@@ -112,42 +115,42 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   else if(i_xmkey.toMouse(nX, nY, nButton)) {
     if(i_xmkey.getRepetition() == 1) {
       if(i_type == INPUT_DOWN) {
-	if(nButton == SDL_BUTTON_LEFT) {
-	  m_GUI->mouseLDown(nX, nY);
-	  checkEvents();
-	} else if(nButton == SDL_BUTTON_RIGHT) {
-	  m_GUI->mouseRDown(nX, nY);
-	  checkEvents();
-	} else if(nButton == SDL_BUTTON_WHEELUP) {
-	  m_GUI->mouseWheelUp(nX, nY);
-	  checkEvents();
-	} else if(nButton == SDL_BUTTON_WHEELDOWN) {
-	  m_GUI->mouseWheelDown(nX, nY);
-	  checkEvents();
-	}
-	
+				if(nButton == SDL_BUTTON_LEFT) {
+					m_GUI->mouseLDown(nX, nY);
+					checkEvents();
+				} else if(nButton == SDL_BUTTON_RIGHT) {
+					m_GUI->mouseRDown(nX, nY);
+					checkEvents();
+				} else if(nButton == SDL_BUTTON_WHEELUP) {
+					m_GUI->mouseWheelUp(nX, nY);
+					checkEvents();
+				} else if(nButton == SDL_BUTTON_WHEELDOWN) {
+					m_GUI->mouseWheelDown(nX, nY);
+					checkEvents();
+				}
+				
       } else if(i_type == INPUT_UP) {
-	if(nButton == SDL_BUTTON_LEFT) {
-	  m_GUI->mouseLUp(nX, nY);
-	  checkEvents();
-	} else if(nButton == SDL_BUTTON_RIGHT) {
-	  m_GUI->mouseRUp(nX, nY);
-	  checkEvents();
-	}
+				if(nButton == SDL_BUTTON_LEFT) {
+					m_GUI->mouseLUp(nX, nY);
+					checkEvents();
+				} else if(nButton == SDL_BUTTON_RIGHT) {
+					m_GUI->mouseRUp(nX, nY);
+					checkEvents();
+				}
       }
     } else if(i_xmkey.getRepetition() == 2) {
       if(nButton == SDL_BUTTON_LEFT) {
-	m_GUI->mouseLDoubleClick(nX, nY);
-	checkEvents();
+				m_GUI->mouseLDoubleClick(nX, nY);
+				checkEvents();
       }
     }
   }
-
+	
   else if(i_type == INPUT_DOWN && i_xmkey.toJoystickButton(v_joyNum, v_joyButton)) {
     m_GUI->joystickButtonDown(v_joyNum, v_joyButton);
     checkEvents();
   }
-
+	
   else if(i_xmkey.toJoystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue)) {
     m_GUI->joystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue);
   }

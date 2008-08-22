@@ -154,10 +154,9 @@ void StatePreplaying::enter()
     InputHandler::instance()->reset();
     for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
       for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	m_universe->getScenes()[j]->Cameras()[i]->setMirrored(XMSession::instance()->mirrorMode());
+				m_universe->getScenes()[j]->Cameras()[i]->setMirrored(XMSession::instance()->mirrorMode());
       }
     }
-    InputHandler::instance()->setMirrored(XMSession::instance()->mirrorMode());
 
   } catch(Exception &e) {
     LogWarning(std::string("failed to initialize level\n" + e.getMsg()).c_str());

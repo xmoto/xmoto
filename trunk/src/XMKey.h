@@ -56,14 +56,7 @@ class XMKey {
   bool isDirectionnel() const;
   XMKey_direction getDirection() const;
 
-  bool isCharInput() const;
-  SDLKey getCharInputKey() const;
-  SDLMod getCharInputMod() const;
-  const std::string& getCharInputUtf8() const;
-
-  bool isPointerInput() const;
-  void getPointerInputPosition(int& x, int& y) const;
-
+	bool toKeyboard(SDLKey& nKey, SDLMod& o_mod, std::string& o_utf8Char) const;
   bool toMouse(int& nX, int& nY, Uint8& nButton) const;
   bool toJoystickButton(Uint8& o_joyNum, Uint8& o_joyButton) const;
   bool toJoystickAxisMotion(Uint8& o_joyNum, Uint8& o_joyAxis, Sint16& o_joyAxisValue) const;

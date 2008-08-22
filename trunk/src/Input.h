@@ -58,16 +58,17 @@ public:
       
   /* Methods */
   void reset();
-  void dealWithActivedKeys(Universe* i_universe); // apply already pressed keys
-  void setMirrored(bool i_value);
 
   void loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
-  void handleInput(Universe* i_universe, InputEventType Type, const XMKey& i_xmkey);
   void init(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile, bool i_enableJoysticks);
   void uninit();
 
   void resetScriptKeyHooks(void) {m_nNumScriptKeyHooks = 0;}
   void addScriptKeyHook(MotoGame *pGame,const std::string &basicKeyName,const std::string &FuncName);
+
+	int getNumScriptKeyHooks() const;
+	InputScriptKeyHook getScriptKeyHooks(int i) const;
+	XMKey getScriptActionKeys(int i_player, int i_actionScript) const;
 
   std::string getFancyKeyByAction(const std::string &Action);
   std::string* getJoyId(Uint8 i_joynum);
@@ -117,11 +118,9 @@ private:
   XMKey m_nPullBackKey[INPUT_NB_PLAYERS];
   XMKey m_nPushForwardKey[INPUT_NB_PLAYERS];
   XMKey m_nChangeDirKey[INPUT_NB_PLAYERS];
-  bool m_changeDirKeyAlreadyPress[INPUT_NB_PLAYERS]; // to avoid key repetition
   XMKey m_nScriptActionKeys[INPUT_NB_PLAYERS][MAX_SCRIPT_KEY_HOOKS];
   XMKey m_switchUglyMode;
 
-  bool m_mirrored;
 };
 
 

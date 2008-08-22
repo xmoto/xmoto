@@ -434,28 +434,16 @@ bool XMKey::isPressed(Uint8 *i_keystate, Uint8 i_mousestate) {
   return false;
 }
 
-bool XMKey::isCharInput() const {
-  return m_input == XMK_KEYBOARD;
-}
+bool XMKey::toKeyboard(SDLKey& nKey, SDLMod& o_mod, std::string& o_utf8Char) const {
+  if(m_input != XMK_KEYBOARD) {
+    return false;
+  }
 
-SDLKey XMKey::getCharInputKey() const {
-  return m_keyboard_sym;
-}
+	nKey       = m_keyboard_sym;
+	o_mod      = m_keyboard_mod;
+	o_utf8Char = m_keyboard_utf8Char;
 
-SDLMod XMKey::getCharInputMod() const {
-  return m_keyboard_mod;
-}
-
-const std::string& XMKey::getCharInputUtf8() const {
-  return m_keyboard_utf8Char;
-}
-
-bool XMKey::isPointerInput() const {
-  return m_input == XMK_MOUSEBUTTON;
-}
-
-void XMKey::getPointerInputPosition(int& x, int& y) const {
-  GameApp::getMousePos(&x, &y);
+  return true;
 }
 
 bool XMKey::toMouse(int& nX, int& nY, Uint8& nButton) const {
@@ -463,7 +451,7 @@ bool XMKey::toMouse(int& nX, int& nY, Uint8& nButton) const {
     return false;
   }
 
-  getPointerInputPosition(nX, nY);
+	GameApp::getMousePos(&nX, &nY);
   nButton = m_mouseButton_button;
   return true;
 }

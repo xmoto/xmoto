@@ -22,25 +22,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Input handler
  */
 #include "Input.h"
-#include "Game.h"
-#include "GameText.h"
-#include "LuaLibGame.h"
-#include "helpers/Log.h"
-#include "xmscene/Camera.h"
-#include "xmscene/BikeController.h"
-#include "Universe.h"
 #include <sstream>
+#include "helpers/VExcept.h"
+#include "helpers/Log.h"
+#include "db/xmDatabase.h"
 
   InputHandler::InputHandler() {
     reset();
   }
 
   void InputHandler::reset() {
-    m_mirrored = false;
     resetScriptKeyHooks();
-    for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++){
-      m_changeDirKeyAlreadyPress[i] = false;
-    }
   }
 
 bool InputHandler::areJoysticksEnabled() const {
@@ -50,78 +42,6 @@ bool InputHandler::areJoysticksEnabled() const {
 void InputHandler::enableJoysticks(bool i_value) {
   SDL_JoystickEventState(i_value ? SDL_ENABLE : SDL_IGNORE);
 }
-
-  void InputHandler::dealWithActivedKeys(Universe* i_universe) {
-    Uint8 *v_keystate  = SDL_GetKeyState(NULL);
-    Uint8 v_mousestate = SDL_GetMouseState(NULL, NULL);
-    unsigned int p, pW;
-    Biker *v_biker;
-
-    p = 0; // player number p
-    pW = 0; // number of players in the previous worlds
-    for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
-      for(unsigned int i=0; i<i_universe->getScenes()[j]->Players().size(); i++) {
-	v_biker = i_universe->getScenes()[j]->Players()[i];
-	
-	if(m_nDriveKey[p].isPressed(v_keystate, v_mousestate)) {
-	  /* Start driving */
-	  v_biker->getControler()->setThrottle(1.0f);
-	} else {
-	  v_biker->getControler()->setThrottle(0.0f);
-	}
-	
-	if(m_nBrakeKey[p].isPressed(v_keystate, v_mousestate)) {
-	  /* Brake */
-	  v_biker->getControler()->setBreak(1.0f);
-	} else {
-	  v_biker->getControler()->setBreak(0.0f);
-	}
-	
-	if(m_mirrored) {
-	  if(m_nPushForwardKey[p].isPressed(v_keystate, v_mousestate)) {
-	    v_biker->getControler()->setPull(1.0f);
-	  } else {
-	    v_biker->getControler()->setPull(0.0f);
-	  }
-	} else {
-	  
-	}
-	
-	// pull
-	if((m_nPullBackKey[p].isPressed(v_keystate, v_mousestate) && m_mirrored == false) ||
-	   (m_nPushForwardKey[p].isPressed(v_keystate, v_mousestate) && m_mirrored)) {
-	  /* Pull back */
-	  v_biker->getControler()->setPull(1.0f);
-	} else {
-	  
-	  // push // must be in pull else block to not set pull to 0
-	  if((m_nPushForwardKey[p].isPressed(v_keystate, v_mousestate) && m_mirrored == false) ||
-	     (m_nPullBackKey[p].isPressed(v_keystate, v_mousestate)    && m_mirrored)) {
-	    /* Push forward */
-	    v_biker->getControler()->setPull(-1.0f);
-	  } else {
-	    v_biker->getControler()->setPull(0.0f);
-	  }
-	}
-	
-	if(m_nChangeDirKey[p].isPressed(v_keystate, v_mousestate)) {
-	  /* Change dir */
-	  if(m_changeDirKeyAlreadyPress[p] == false){
-	    v_biker->getControler()->setChangeDir(true);
-	    m_changeDirKeyAlreadyPress[p] = true;
-	  }
-	} else {
-	  m_changeDirKeyAlreadyPress[p] = false;
-	}
-	p++;
-      }
-      pW+= i_universe->getScenes()[j]->Players().size();
-    }
-  }
-
-  void InputHandler::setMirrored(bool i_value) {
-    m_mirrored = i_value;
-  }
 
   /*===========================================================================
   Init/uninit
@@ -276,6 +196,18 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     }
   }  
 
+int InputHandler::getNumScriptKeyHooks() const {
+	return m_nNumScriptKeyHooks;
+}
+
+InputScriptKeyHook InputHandler::getScriptKeyHooks(int i) const {
+	return m_ScriptKeyHooks[i];
+}
+
+XMKey InputHandler::getScriptActionKeys(int i_player, int i_actionScript) const {
+	return m_nScriptActionKeys[i_player][i_actionScript];
+}
+
 std::string* InputHandler::getJoyId(Uint8 i_joynum) {
   return &(m_JoysticksIds[i_joynum]);
 }
@@ -310,125 +242,6 @@ SDL_Joystick* InputHandler::getJoyById(std::string* i_id) {
 InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
   return abs(m_joyAxisValue) < INPUT_JOYSTICK_MINIMUM_DETECTION ? INPUT_UP : INPUT_DOWN;
 }
-
-  /*===========================================================================
-  Handle an input event
-  ===========================================================================*/  
-void InputHandler::handleInput(Universe* i_universe, InputEventType Type, const XMKey& i_xmkey) {
-    unsigned int p, pW;
-    Biker *v_biker;
-
-    switch(Type) {
-    case INPUT_DOWN:
-      p = 0; // player number p
-      pW = 0; // number of players in the previous worlds
-      for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<i_universe->getScenes()[j]->Players().size(); i++) {
-	  v_biker = i_universe->getScenes()[j]->Players()[i];
-
-	  // if else is not valid while axis up can be a signal for two sides
-	  if(m_nDriveKey[p] == i_xmkey) {
-	    /* Start driving */
-	    if(i_xmkey.isAnalogic()) {
-	      v_biker->getControler()->setThrottle(fabs(i_xmkey.getAnalogicValue()));
-	    } else {
-	      v_biker->getControler()->setThrottle(1.0f);
-	    }
-	  }
-
-	  if(m_nBrakeKey[p] == i_xmkey) {
-	    /* Brake */
-	    v_biker->getControler()->setBreak(1.0f);
-	  }
-
-	  if((m_nPullBackKey[p]    == i_xmkey && m_mirrored == false) ||
-	     (m_nPushForwardKey[p] == i_xmkey && m_mirrored)) {
-	    /* Pull back */
-	    if(i_xmkey.isAnalogic()) {
-	      v_biker->getControler()->setPull(fabs(i_xmkey.getAnalogicValue()));
-	    } else {
-	      v_biker->getControler()->setPull(1.0f);
-	    }
-	  }
-	  
-	  if((m_nPushForwardKey[p] == i_xmkey && m_mirrored == false) ||
-	     (m_nPullBackKey[p]    == i_xmkey && m_mirrored)) {
-	    /* Push forward */
-	    if(i_xmkey.isAnalogic()) {
-	      v_biker->getControler()->setPull(-fabs(i_xmkey.getAnalogicValue()));
-	    } else {
-	      v_biker->getControler()->setPull(-1.0f);
-	    }
-	  }
-	  
-	  if(m_nChangeDirKey[p] == i_xmkey) {
-	    /* Change dir */
-	    if(m_changeDirKeyAlreadyPress[p] == false){
-	      v_biker->getControler()->setChangeDir(true);
-	      m_changeDirKeyAlreadyPress[p] = true;
-	    }
-	  }
-	  p++;
-	}
-	pW+= i_universe->getScenes()[j]->Players().size();
-      }
-
-      break;
-    case INPUT_UP:
-      p = 0; // player number p
-      pW = 0; // number of players in the previous worlds
-      for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<i_universe->getScenes()[j]->Players().size(); i++) {
-	  v_biker = i_universe->getScenes()[j]->Players()[i];
-
-	  // if else is not valid while axis up can be a signal for two sides
-	  if(m_nDriveKey[p] == i_xmkey) {
-	    /* Stop driving */
-	    v_biker->getControler()->setThrottle(0.0f);
-	  }
-
-	  if(m_nBrakeKey[p] == i_xmkey) {
-	    /* Don't brake */
-	    v_biker->getControler()->setBreak(0.0f);
-	  }
-
-	  if((m_nPullBackKey[p]    == i_xmkey && m_mirrored == false) ||
-	     (m_nPushForwardKey[p] == i_xmkey && m_mirrored)) {
-	    /* Pull back */
-	    v_biker->getControler()->setPull(0.0f);
-	  }
-
-	  if((m_nPushForwardKey[p] == i_xmkey && m_mirrored == false) ||
-	     (m_nPullBackKey[p]    == i_xmkey && m_mirrored)) {
-	    /* Push forward */
-	    v_biker->getControler()->setPull(0.0f);
-	  }
-
-	  if(m_nChangeDirKey[p] == i_xmkey) {
-	    m_changeDirKeyAlreadyPress[p] = false;
-	  }
-	  p++;
-	}
-	pW+= i_universe->getScenes()[j]->Players().size();
-      }
-      break;
-    }
-
-    /* Have the script hooked this key? */
-    if(Type == INPUT_DOWN) {
-      for(int i=0; i<m_nNumScriptKeyHooks; i++) {
-	if(m_ScriptKeyHooks[i].nKey == i_xmkey) {
-	  /* Invoke script */
-	  m_ScriptKeyHooks[i].pGame->getLuaLibGame()->scriptCallVoid(m_ScriptKeyHooks[i].FuncName);
-	}
-	for(int j=0; j<INPUT_NB_PLAYERS; j++) {
-	  if(m_nScriptActionKeys[j][i] == i_xmkey) {
-	    m_ScriptKeyHooks[i].pGame->getLuaLibGame()->scriptCallVoid(m_ScriptKeyHooks[i].FuncName);
-	  }
-	}	
-      }
-    }
-  }
 
   /*===========================================================================
   Set totally default configuration - useful for when something goes wrong
