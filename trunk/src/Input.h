@@ -66,9 +66,9 @@ public:
   void resetScriptKeyHooks(void) {m_nNumScriptKeyHooks = 0;}
   void addScriptKeyHook(MotoGame *pGame,const std::string &basicKeyName,const std::string &FuncName);
 
-	int getNumScriptKeyHooks() const;
-	InputScriptKeyHook getScriptKeyHooks(int i) const;
-	XMKey getScriptActionKeys(int i_player, int i_actionScript) const;
+  int getNumScriptKeyHooks() const;
+  InputScriptKeyHook getScriptKeyHooks(int i) const;
+  XMKey getScriptActionKeys(int i_player, int i_actionScript) const;
 
   std::string getFancyKeyByAction(const std::string &Action);
   std::string* getJoyId(Uint8 i_joynum);
@@ -100,6 +100,10 @@ public:
 
   void setSwitchUglyMode(XMKey i_value);
   XMKey getSwitchUglyMode() const;
+  void setSwitchBlacklist(XMKey i_value);
+  XMKey getSwitchBlacklist() const;
+  void setSwitchFavorite(XMKey i_value);
+  XMKey getSwitchFavorite() const;
 
   static float joyRawToFloat(float raw, float neg, float deadzone_neg, float deadzone_pos, float pos);
 
@@ -120,6 +124,8 @@ private:
   XMKey m_nChangeDirKey[INPUT_NB_PLAYERS];
   XMKey m_nScriptActionKeys[INPUT_NB_PLAYERS][MAX_SCRIPT_KEY_HOOKS];
   XMKey m_switchUglyMode;
+  XMKey m_switchBlacklist;
+  XMKey m_switchFavorite;
 
 };
 

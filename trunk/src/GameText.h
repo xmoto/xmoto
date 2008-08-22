@@ -259,8 +259,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  Esc - " + std::string(_("Pause")) + "\n" \
 "  Return - " + std::string(_("Restart the level")) + "\n" \
 "  PageDown/PageUp - " + std::string(_("Previous/Next level")) + "\n" \
-"  F3 - " + std::string(_("Add/remove to favorite levels")) + "\n"\
-"  ctrl+B - " + std::string(_("Add/remove to blacklisted levels")) + "\n"\
 "  ctrl+M - " + std::string(_("change mirror mode")) + "\n"\
 "  F8 - " + std::string(_("Enable/disable web")) + "\n" \
 "  F5 - " + std::string(_("Reload levels, themes and replays from directories")) + "\n" \
@@ -408,6 +406,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_SYNC_DONE            _("Synchronisation done successfully")
 #define GAMETEXT_SWITCHKEY            _("Key '%s' has been switched to '%s'")
 #define GAMETEXT_SWITCHUGLYMODE       _("Enable/disable ugly mode")
+#define GAMETEXT_SWITCHFAVORITE       _("Add/remove to favorite levels")
+#define GAMETEXT_SWITCHBLACKLIST      _("Add/remove to blacklisted levels")
 #define GAMETEXT_THEMES               _("Theme")
 #define GAMETEXT_THEMEHOSTED          _("Available")
 #define GAMETEXT_THEMENOTHOSTED       _("To download")

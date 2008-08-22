@@ -1557,6 +1557,14 @@ void StateOptions::updateControlsList() {
     } 
   }
 
+  p = pList->addEntry(GAMETEXT_SWITCHFAVORITE);
+  p->Text.push_back(InputHandler::instance()->getSwitchFavorite().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getSwitchFavorite().toString());
+
+  p = pList->addEntry(GAMETEXT_SWITCHBLACKLIST);
+  p->Text.push_back(InputHandler::instance()->getSwitchBlacklist().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getSwitchBlacklist().toString());
+
   p = pList->addEntry(GAMETEXT_SWITCHUGLYMODE);
   p->Text.push_back(InputHandler::instance()->getSwitchUglyMode().toFancyString());
   p->Text.push_back(InputHandler::instance()->getSwitchUglyMode().toString());
@@ -1831,6 +1839,14 @@ void StateOptions::setInputKey(const std::string& i_strKey, const std::string& i
 	InputHandler::instance()->setSCRIPTACTION(i, k, XMKey(i_key));
       }
     }
+  }
+
+  if(i_strKey == GAMETEXT_SWITCHFAVORITE) {
+    InputHandler::instance()->setSwitchFavorite(XMKey(i_key));
+  }
+
+  if(i_strKey == GAMETEXT_SWITCHBLACKLIST) {
+    InputHandler::instance()->setSwitchBlacklist(XMKey(i_key));
   }
 
   if(i_strKey == GAMETEXT_SWITCHUGLYMODE) {
