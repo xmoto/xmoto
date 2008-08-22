@@ -234,11 +234,11 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     /* faster */
     if(m_universe != NULL) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-				if(i_xmkey == XMKey(SDLK_UP, KMOD_NONE)) {
-					m_universe->getScenes()[i]->faster();
-				} else {
-					m_universe->getScenes()[i]->faster(0.01);
-				}
+	if(i_xmkey == XMKey(SDLK_UP, KMOD_NONE)) {
+	  m_universe->getScenes()[i]->faster();
+	} else {
+	  m_universe->getScenes()[i]->faster(0.01);
+	}
       }
       if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
 				GameRenderer::instance()->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
@@ -251,7 +251,7 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     /* slower */
     if(m_universe != NULL) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	if(i_xmkey == XMKey(SDLK_UP, KMOD_NONE)) {
+	if(i_xmkey == XMKey(SDLK_DOWN, KMOD_NONE)) {
 	  m_universe->getScenes()[i]->slower();
 	} else {
 	  m_universe->getScenes()[i]->slower(0.01);
