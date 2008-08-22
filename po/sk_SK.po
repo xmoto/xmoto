@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-08-20 18:23+0200\n"
-"PO-Revision-Date: 2008-03-11 23:13+0100\n"
+"PO-Revision-Date: 2008-08-20 21:59+0200\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -57,7 +57,7 @@ msgstr "Opustiť level"
 #: src/GameText.h:43
 #, c-format
 msgid "Web account password for profile '%s':"
-msgstr ""
+msgstr "Heslo pre profil na webový účet '%s':"
 
 #: src/GameText.h:44
 msgid "Add to favorite"
@@ -111,15 +111,15 @@ msgstr "Automatická lupa"
 
 #: src/GameText.h:58
 msgid "Database"
-msgstr ""
+msgstr "Databáza"
 
 #: src/GameText.h:59
 msgid "Camera Active Zoom"
-msgstr ""
+msgstr "Aktívne priblíženie kamery"
 
 #: src/GameText.h:60
 msgid "Beating mode"
-msgstr ""
+msgstr "Režim zdolávania"
 
 #: src/GameText.h:61
 msgid "Best Times"
@@ -212,101 +212,101 @@ msgstr "Ovládanie"
 
 #: src/GameText.h:83
 msgid "left control"
-msgstr ""
+msgstr "ľavý ctrl"
 
 #: src/GameText.h:84
 msgid "right control"
-msgstr ""
+msgstr "pravý ctrl"
 
 #: src/GameText.h:85
 msgid "left shift"
-msgstr ""
+msgstr "ľavý shift"
 
 #: src/GameText.h:86
 msgid "right shift"
-msgstr ""
+msgstr "pravý ctrl"
 
 #: src/GameText.h:87
 msgid "left alt"
-msgstr ""
+msgstr "ľavý alt"
 
 #: src/GameText.h:88
 msgid "right alt"
-msgstr ""
+msgstr "pravý alt"
 
 #: src/GameText.h:89
 msgid "left meta"
-msgstr ""
+msgstr "ľavý meta"
 
 #: src/GameText.h:90
 msgid "right meta"
-msgstr ""
+msgstr "pravý meta"
 
 #: src/GameText.h:91 src/GameText.h:105
 #, c-format
 msgid "button %i"
-msgstr ""
+msgstr "tlačidlo %i"
 
 #: src/GameText.h:92
 msgid "left button"
-msgstr ""
+msgstr "ľavé tlačidlo"
 
 #: src/GameText.h:93
 msgid "middle button"
-msgstr ""
+msgstr "stredné tlačidlo"
 
 #: src/GameText.h:94
 msgid "right button"
-msgstr ""
+msgstr "pravé tlačidlo"
 
 #: src/GameText.h:95
 msgid "wheel up"
-msgstr ""
+msgstr "zdvihnutie kolesa"
 
 #: src/GameText.h:96
 msgid "wheel down"
-msgstr ""
+msgstr "položenie kolesa"
 
 #: src/GameText.h:97
 msgid "No joystick found"
-msgstr ""
+msgstr "Nebol nájdený joystick"
 
 #: src/GameText.h:98
 #, c-format
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%i nájdený joystick"
+msgstr[1] "%i nájdené joysticky"
+msgstr[2] "%i nájdených joystickov"
 
 #: src/GameText.h:99
 #, c-format
 msgid "axis %i"
-msgstr ""
+msgstr "os %i"
 
 #: src/GameText.h:100
 msgid "left"
-msgstr ""
+msgstr "vľavo"
 
 #: src/GameText.h:101
 msgid "right"
-msgstr ""
+msgstr "vpravo"
 
 #: src/GameText.h:102
 msgid "up"
-msgstr ""
+msgstr "hore"
 
 #: src/GameText.h:103
 msgid "down"
-msgstr ""
+msgstr "dole"
 
 #: src/GameText.h:104
 msgid "none"
-msgstr ""
+msgstr "žiadny"
 
 #: src/GameText.h:106
 msgid "Script action"
-msgstr ""
+msgstr "Akcia skriptu"
 
 #: src/GameText.h:109
 msgid "Lead Programming"
@@ -458,7 +458,7 @@ msgstr "Dátum"
 
 #: src/GameText.h:175
 msgid "Difficulty"
-msgstr ""
+msgstr "Náročnosť"
 
 #: src/GameText.h:176
 msgid ""
@@ -467,6 +467,9 @@ msgid ""
 "server. It is useful to save your data or if you play X-Moto from different "
 "places."
 msgstr ""
+"X-Moto používa databázu na vašom počítači pre ukladanie všetkých vašich "
+"časov a štatistík. Môžete tieto dáta poslať cez váš webový účet na server X-"
+"Moto. Je užitočné ukladať si takto dáta, ak hráte X-Moto z rozličných miest."
 
 #: src/GameText.h:177
 msgid ""
@@ -475,14 +478,18 @@ msgid ""
 "will be duplicated/not synchronized. If you did that, you should remove the "
 "copies you did."
 msgstr ""
+"Ak ste ručne skopírovali užívateľské súbory (.xmoto) X-Moto na ďalšie "
+"počítače, nemali by ste túto funkciu používať, inak budú vaše štatistiky "
+"zdvojené/nesynchronizované. Ak ste tak už učinili, mali by ste odstrániť "
+"kópie, ktoré ste vytvorili."
 
 #: src/GameText.h:178
 msgid "Synchronise"
-msgstr ""
+msgstr "Synchronizovať"
 
 #: src/GameText.h:179
 msgid "Synchronize when X-Moto ends"
-msgstr ""
+msgstr "Synchronizovať pri ukončení X-Moto"
 
 #: src/GameText.h:180
 msgid "Upgrading database"
@@ -498,7 +505,7 @@ msgstr "Upgradujem profil databázy"
 
 #: src/GameText.h:183
 msgid "Death Animation"
-msgstr "Animácia smrti"
+msgstr "Animácia úmrtia"
 
 #: src/GameText.h:184
 msgid "Defaults"
@@ -622,11 +629,11 @@ msgstr "Zobrazovať svetový rekord počas hry"
 
 #: src/GameText.h:213
 msgid "Enable menu music"
-msgstr ""
+msgstr "Povoliť hudbu v menu"
 
 #: src/GameText.h:214
 msgid "Enable game music"
-msgstr ""
+msgstr "Povoliť hudbu v hre"
 
 #: src/GameText.h:215
 msgid "Enable WWW Access"
@@ -875,7 +882,7 @@ msgstr "Joystick"
 
 #: src/GameText.h:278
 msgid "Enable joysticks"
-msgstr ""
+msgstr "Povoliť joysticky"
 
 #: src/GameText.h:279
 msgid "Oops!"
@@ -1001,7 +1008,7 @@ msgstr "Hlavné"
 
 #: src/GameText.h:309
 msgid "Mouse"
-msgstr ""
+msgstr "Myš"
 
 #: src/GameText.h:310 src/GameText.h:411
 msgid "Theme"
@@ -1248,7 +1255,7 @@ msgstr "Nastaviť proxy..."
 
 #: src/GameText.h:374
 msgid "Quality"
-msgstr ""
+msgstr "Kvalita"
 
 #: src/GameText.h:375
 msgid "Quick start"
@@ -1308,7 +1315,7 @@ msgstr "Záznamy"
 
 #: src/GameText.h:389
 msgid "Are you sure you want to reset config to defaults ?"
-msgstr ""
+msgstr "Určite chcete nastaviť konfiguráciu na východziu?"
 
 #: src/GameText.h:390
 msgid "Restart This Level"
@@ -1316,7 +1323,7 @@ msgstr "Reštartovať tento level"
 
 #: src/GameText.h:391
 msgid "Resume Playing"
-msgstr "Pokračovať v prehrávaní"
+msgstr "Pokračovať v hre"
 
 #: src/GameText.h:393
 msgid "Run Windowed"
@@ -1369,20 +1376,20 @@ msgstr "Stereo"
 
 #: src/GameText.h:406
 msgid "Synchronisation down"
-msgstr ""
+msgstr "Synchronizujem zo servera"
 
 #: src/GameText.h:407
 msgid "Synchronisation up"
-msgstr ""
+msgstr "Synchronizujem na server"
 
 #: src/GameText.h:408
 msgid "Synchronisation done successfully"
-msgstr ""
+msgstr "Synchronizácia úspešne dokončená"
 
 #: src/GameText.h:409
 #, c-format
 msgid "Key '%s' has been switched to '%s'"
-msgstr ""
+msgstr "Kľúč '%s' bol prepnutý na '%s'"
 
 #: src/GameText.h:410
 msgid "Enable/disable ugly mode"
@@ -1418,7 +1425,7 @@ msgstr "Návod"
 
 #: src/GameText.h:419
 msgid "Undefined"
-msgstr ""
+msgstr "Nedefinovaný"
 
 #: src/GameText.h:420
 msgid "Unknown"
@@ -1598,9 +1605,9 @@ msgstr[2] "%d úmrtí"
 #, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
-msgstr[0] "%d dokončená"
-msgstr[1] "%d dokončené"
-msgstr[2] "%d dokončených"
+msgstr[0] "%d dokončená hra"
+msgstr[1] "%d dokončené hry"
+msgstr[2] "%d dokončených hier"
 
 #: src/GameText.h:460
 #, c-format
@@ -2008,7 +2015,7 @@ msgstr "Zapína hudbu na pozadí v hlavnom menu"
 
 #: src/GameText.h:564
 msgid "Enables background music while playing"
-msgstr ""
+msgstr "Povolí hudbu na pozadí počas hry"
 
 #: src/GameText.h:566
 msgid "Choose the X-Moto graphics theme"
@@ -2038,7 +2045,7 @@ msgstr "Nastaviť hlavné www voľby"
 
 #: src/GameText.h:572
 msgid "Configure the www options"
-msgstr ""
+msgstr "Nastaviť voľby www"
 
 #: src/GameText.h:573
 msgid ""
@@ -2070,7 +2077,7 @@ msgstr "Zobrazovať tachometer počas hrania"
 
 #: src/GameText.h:579
 msgid "Enable animation of bike falling apart when dead"
-msgstr "Zapnúť animáciu rozpadajúceho sa motocykla pri smrti"
+msgstr "Zapnúť animáciu rozpadajúceho sa motocykla pri úmrtí"
 
 #: src/GameText.h:580
 msgid "Automatically scroll over the level before starting playing it"
@@ -2078,7 +2085,7 @@ msgstr "Automatický prelet levelom pred jeho hraním"
 
 #: src/GameText.h:581
 msgid "Run a dynamic zoom while playing"
-msgstr ""
+msgstr "Spustí dynamickú lupu počas hry"
 
 #: src/GameText.h:582
 msgid "View the X-Moto credits"
@@ -2193,39 +2200,41 @@ msgstr "Povoliť túto miestnosť"
 
 #: src/GameText.h:613
 msgid "Password associated to your profile for web access"
-msgstr ""
+msgstr "Heslo priradené k vášmu profilu pre webový prístup"
 
 #: src/GameText.h:614
 msgid "Main options"
-msgstr ""
+msgstr "Hlavné voľby"
 
 #: src/GameText.h:615
 msgid "Configure the X-Moto theme"
-msgstr ""
+msgstr "Nastaviť tému X-Moto"
 
 #: src/GameText.h:616
 msgid "Configure ghosts displayed while playing the game"
-msgstr ""
+msgstr "Nastaviť duchov zobrazených počas hrania hry"
 
 #: src/GameText.h:617
 msgid "Configure options linked to your X-Moto database"
-msgstr ""
+msgstr "Nastaviť voľby spojené s vašou databázou X-Moto"
 
 #: src/GameText.h:618
 msgid "Synchronise your database on the web"
-msgstr ""
+msgstr "Synchronizovať vašu databázu s webom"
 
 #: src/GameText.h:619
 msgid "Synchronise your database when your quit X-Moto"
-msgstr ""
+msgstr "Synchronizovať vašu databázu pri ukončení X-Moto"
 
 #: src/GameText.h:620
 msgid "Enable joysticks events"
-msgstr ""
+msgstr "Povoliť udalosti joysticku"
 
 #: src/GameText.h:621
 msgid "Preselect the retry button when dying or finishing a level"
 msgstr ""
+"Prednastaviť kurzor na tlačidlo nového pokusu pri úmrtí alebo dokončení "
+"levelu"
 
 #: src/GameText.h:623
 msgid "Levels with no highscore"
@@ -2277,7 +2286,7 @@ msgstr "Hudobné levely"
 
 #: src/GameText.h:636
 msgid "Physics levels"
-msgstr ""
+msgstr "Levely s fyzikou"
 
 #: src/GameText.h:638
 msgid "Last played levels"
@@ -2401,7 +2410,7 @@ msgstr "X-Moto levely s hudbou na pozadí"
 
 #: src/GameText.h:670
 msgid "X-Moto levels using strongly physics"
-msgstr ""
+msgstr "Levely X-Moto, ktoré silne využívajú fyziku"
 
 #: src/GameText.h:671
 msgid "Last levels you have played"
