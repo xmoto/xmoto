@@ -118,7 +118,7 @@ msgstr "Kameros aktyvus mastelis"
 
 #: src/GameText.h:60
 msgid "Beating mode"
-msgstr ""
+msgstr "Mušimo režimas"
 
 #: src/GameText.h:61
 msgid "Best Times"
@@ -211,101 +211,101 @@ msgstr "Valdymas"
 
 #: src/GameText.h:83
 msgid "left control"
-msgstr ""
+msgstr "kairinis valdymas"
 
 #: src/GameText.h:84
 msgid "right control"
-msgstr ""
+msgstr "dešininis valdymas"
 
 #: src/GameText.h:85
 msgid "left shift"
-msgstr ""
+msgstr "kairinis shift"
 
 #: src/GameText.h:86
 msgid "right shift"
-msgstr ""
+msgstr "dešininis shift"
 
 #: src/GameText.h:87
 msgid "left alt"
-msgstr ""
+msgstr "kairinis alt"
 
 #: src/GameText.h:88
 msgid "right alt"
-msgstr ""
+msgstr "dešininis alt"
 
 #: src/GameText.h:89
 msgid "left meta"
-msgstr ""
+msgstr "kairinis meta"
 
 #: src/GameText.h:90
 msgid "right meta"
-msgstr ""
+msgstr "dešininis meta"
 
 #: src/GameText.h:91 src/GameText.h:105
 #, c-format
 msgid "button %i"
-msgstr ""
+msgstr "%i mygtukas"
 
 #: src/GameText.h:92
 msgid "left button"
-msgstr ""
+msgstr "kairinis mygtukas"
 
 #: src/GameText.h:93
 msgid "middle button"
-msgstr ""
+msgstr "vidurinis mygtukas"
 
 #: src/GameText.h:94
 msgid "right button"
-msgstr ""
+msgstr "dešininis mygtukas"
 
 #: src/GameText.h:95
 msgid "wheel up"
-msgstr ""
+msgstr "ratą pakelti"
 
 #: src/GameText.h:96
 msgid "wheel down"
-msgstr ""
+msgstr "ratą nuleisti"
 
 #: src/GameText.h:97
 msgid "No joystick found"
-msgstr ""
+msgstr "Vairalazdė nerasta"
 
 #: src/GameText.h:98
 #, c-format
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Rasta %i vairalazdė"
+msgstr[1] "Rastos %i vairalazdės"
+msgstr[2] "Rasta %i vairalazdžių"
 
 #: src/GameText.h:99
 #, c-format
 msgid "axis %i"
-msgstr ""
+msgstr "%i ašis"
 
 #: src/GameText.h:100
 msgid "left"
-msgstr ""
+msgstr "kairėn"
 
 #: src/GameText.h:101
 msgid "right"
-msgstr ""
+msgstr "dešinėn"
 
 #: src/GameText.h:102
 msgid "up"
-msgstr ""
+msgstr "viršun"
 
 #: src/GameText.h:103
 msgid "down"
-msgstr ""
+msgstr "žemyn"
 
 #: src/GameText.h:104
 msgid "none"
-msgstr ""
+msgstr "nėra"
 
 #: src/GameText.h:106
 msgid "Script action"
-msgstr ""
+msgstr "Skripto veiksmas"
 
 #: src/GameText.h:109
 msgid "Lead Programming"
@@ -457,7 +457,7 @@ msgstr "Data"
 
 #: src/GameText.h:175
 msgid "Difficulty"
-msgstr ""
+msgstr "Sunkumas"
 
 #: src/GameText.h:176
 msgid ""
@@ -466,6 +466,10 @@ msgid ""
 "server. It is useful to save your data or if you play X-Moto from different "
 "places."
 msgstr ""
+"X-Moto naudoja duomenų bazę jūsų kompiuteryje, kad išsaugotų rezultatus ir "
+"statistiką. Jūs galite nusiųsti šiuos duomenis, naudodami savo web abonentą "
+"X-Moto serveryje. Tai naudinga išsaugoti jūsų duomenis, jeigu žaidžiate X-"
+"Moto iš skirtingų vietų."
 
 #: src/GameText.h:177
 msgid ""
@@ -474,6 +478,10 @@ msgid ""
 "will be duplicated/not synchronized. If you did that, you should remove the "
 "copies you did."
 msgstr ""
+"Jeigu rankiniu būdu nukopijuosite X-Moto vartotojo rinkmenas (.xmoto) į kitą "
+"kompiuterį, jūs negalėsite funkcionaliai naudotis, nes jūsų statistika bus "
+"sudubliuota/nesinchronizuota. Jeigu tai padarėte, turėtumėte pašalinti "
+"padarytas kopijas."
 
 #: src/GameText.h:178
 msgid "Synchronise"
@@ -622,11 +630,11 @@ msgstr "Rodyti žaidime pasaulio rekordus"
 
 #: src/GameText.h:213
 msgid "Enable menu music"
-msgstr ""
+msgstr "Įjungti meniu muziką"
 
 #: src/GameText.h:214
 msgid "Enable game music"
-msgstr ""
+msgstr "Įjungti žaidimo muziką"
 
 #: src/GameText.h:215
 msgid "Enable WWW Access"
@@ -873,7 +881,7 @@ msgstr "Vairalazdė"
 
 #: src/GameText.h:278
 msgid "Enable joysticks"
-msgstr ""
+msgstr "Įjungti vairalazdę"
 
 #: src/GameText.h:279
 msgid "Oops!"
@@ -1072,9 +1080,9 @@ msgstr "Naujas asmeninis rekordas!"
 #, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Yra %d naujas arba atnaujintas lygis. Atsiųsti dabar?"
+msgstr[1] "Yra %d nauji arba atnaujinti lygiai. Atsiųsti dabar?"
+msgstr[2] "Yra %d naujų arba atnaujintų lygių. Atsiųsti dabar?"
 
 #: src/GameText.h:329
 msgid "New Levels"
@@ -1245,7 +1253,7 @@ msgstr "Formuoti tarpinę stotį..."
 
 #: src/GameText.h:374
 msgid "Quality"
-msgstr ""
+msgstr "Kokybė"
 
 #: src/GameText.h:375
 msgid "Quick start"
@@ -1306,7 +1314,7 @@ msgstr "Pakartojimai"
 
 #: src/GameText.h:389
 msgid "Are you sure you want to reset config to defaults ?"
-msgstr ""
+msgstr "Ar tikrai norite atstatyti nustatymus į numatytuosius?"
 
 #: src/GameText.h:390
 msgid "Restart This Level"
@@ -1380,7 +1388,7 @@ msgstr "Sinchronizacija atlikta sėkmingai"
 #: src/GameText.h:409
 #, c-format
 msgid "Key '%s' has been switched to '%s'"
-msgstr ""
+msgstr "Raktas '%s' perjungtas į '%s'"
 
 #: src/GameText.h:410
 msgid "Enable/disable ugly mode"
@@ -1416,7 +1424,7 @@ msgstr "Pamoka"
 
 #: src/GameText.h:419
 msgid "Undefined"
-msgstr ""
+msgstr "Neapibrėžtas"
 
 #: src/GameText.h:420
 msgid "Unknown"
@@ -1553,7 +1561,7 @@ msgstr "%d minutės"
 #: src/GameText.h:453
 #, c-format
 msgid "Stats since: %s"
-msgstr ""
+msgstr "Statistika nuo: %s"
 
 #: src/GameText.h:454
 #, c-format
@@ -2020,7 +2028,7 @@ msgstr "Įjungti foninę muziką pagrindiniame meniu"
 
 #: src/GameText.h:564
 msgid "Enables background music while playing"
-msgstr ""
+msgstr "Įjungti foninę muziką žaidžiant"
 
 #: src/GameText.h:566
 msgid "Choose the X-Moto graphics theme"
@@ -2224,7 +2232,7 @@ msgstr "Formuoti vaiduoklius, rodomus, kai žaidžiamas žaidimas"
 
 #: src/GameText.h:617
 msgid "Configure options linked to your X-Moto database"
-msgstr ""
+msgstr "Formuoti parinktis susietas su jūsų X-Moto duomenų baze"
 
 #: src/GameText.h:618
 msgid "Synchronise your database on the web"
@@ -2236,11 +2244,13 @@ msgstr "Sinchronizuoti jūsų duomenų bazę, kai išeinate iš X-Moto"
 
 #: src/GameText.h:620
 msgid "Enable joysticks events"
-msgstr ""
+msgstr "Įjungti vairalaizdės įvykius"
 
 #: src/GameText.h:621
 msgid "Preselect the retry button when dying or finishing a level"
 msgstr ""
+"Iš anksto pasirinkite pakartotinio bandymo mygtuką, mirdamas arba baigdamas "
+"lygį"
 
 #: src/GameText.h:623
 msgid "Levels with no highscore"
@@ -2580,9 +2590,9 @@ msgstr "Išsaugotas kaip mokomoji padėtis %i"
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Neįmanoma surasti rekordų sekančiame %i lygyje"
+msgstr[1] "Neįmanoma surasti rekordų sekančiuose %i lygiuose"
+msgstr[2] "Neįmanoma surasti rekordų sekančiuose %i lygyje"
 
 #: src/GameText.h:714
 msgid "FontGroup:GENERAL"
