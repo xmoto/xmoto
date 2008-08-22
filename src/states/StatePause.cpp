@@ -138,10 +138,20 @@ void StatePause::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     m_requestForEnd = true;
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F3, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchFavorite()) {
     if(m_universe != NULL) {
       if(m_universe->getScenes().size() > 0) { // just add the first world
 	GameApp::instance()->switchLevelToFavorite(m_universe->getScenes()[0]->getLevelSrc()->Id(), true);
+	StateManager::instance()->sendAsynchronousMessage("FAVORITES_UPDATED");
+      }
+    }
+  }
+
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchBlacklist()) {
+    if(m_universe != NULL) {
+      if(m_universe->getScenes().size() > 0) { // just blacklist the first world
+	GameApp::instance()->switchLevelToBlacklist(m_universe->getScenes()[0]->getLevelSrc()->Id(), true);
+	StateManager::instance()->sendAsynchronousMessage("BLACKLISTEDLEVELS_UPDATED");
       }
     }
   }

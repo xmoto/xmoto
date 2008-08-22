@@ -561,7 +561,7 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     StateManager::instance()->pushState(new StateHelp());
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F3, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchFavorite()) {
     /* switch favorites */
     v_newLevelsList      = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST");
     v_favoriteLevelsList = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:FAVORITE_LIST");

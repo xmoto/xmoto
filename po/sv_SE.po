@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-08-20 18:23+0200\n"
+"POT-Creation-Date: 2008-08-22 17:48+0200\n"
 "PO-Revision-Date: 2008-01-09 21:59+0100\n"
 "Last-Translator: Lukas Klingsbo <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
@@ -801,7 +801,7 @@ msgstr "Rotera medsols"
 msgid "Turns around and drives in the other direction"
 msgstr "Vänd och kör åt andra hållet"
 
-#: src/GameText.h:259 src/GameText.h:362
+#: src/GameText.h:259 src/GameText.h:360
 msgid "Pause"
 msgstr "Pausa"
 
@@ -814,30 +814,22 @@ msgid "Previous/Next level"
 msgstr "Förra/Nästa bana"
 
 #: src/GameText.h:262
-msgid "Add/remove to favorite levels"
-msgstr "Lägg till/ta bort banan ifrån favoritbanor"
-
-#: src/GameText.h:263
-msgid "Add/remove to blacklisted levels"
-msgstr "Lägg till/ta bort banan ifrån svartlistade banor"
-
-#: src/GameText.h:264
 msgid "change mirror mode"
 msgstr "ändra spegelläge"
 
-#: src/GameText.h:265
+#: src/GameText.h:263
 msgid "Enable/disable web"
 msgstr "Sätt på/av webben"
 
-#: src/GameText.h:266
+#: src/GameText.h:264
 msgid "Reload levels, themes and replays from directories"
 msgstr "Ladda om banor, teman och repriser ifrån mapparna"
 
-#: src/GameText.h:267
+#: src/GameText.h:265
 msgid "Take a screenshot"
 msgstr "Ta en skärmbild"
 
-#: src/GameText.h:269
+#: src/GameText.h:267
 msgid ""
 "Find all the strawberries and touch the flower to finish\n"
 "the level."
@@ -845,7 +837,7 @@ msgstr ""
 "Hitta alla jordgubbar och rör vid blomman för\n"
 " att klara banan."
 
-#: src/GameText.h:270
+#: src/GameText.h:268
 msgid ""
 "Read the README file or check out the website at\n"
 "http://xmoto.tuxfamily.org for more information."
@@ -853,249 +845,249 @@ msgstr ""
 "Läs README filen eller kolla på\n"
 " http://xmoto.tuxfamily.org för mer information."
 
-#: src/GameText.h:272
+#: src/GameText.h:270
 msgid "Hide ghosts"
 msgstr "Göm spöken"
 
-#: src/GameText.h:273
+#: src/GameText.h:271
 msgid "High"
 msgstr "Hög"
 
-#: src/GameText.h:274
+#: src/GameText.h:272
 msgid "Levels are being added into the database. Please wait."
 msgstr "Banor läggs till i databasen. Var god vänta..."
 
-#: src/GameText.h:275
+#: src/GameText.h:273
 msgid "Internet Configuration"
 msgstr "Internet konfigruation"
 
-#: src/GameText.h:276
+#: src/GameText.h:274
 msgid "View Level Initially"
 msgstr "Se början av banan"
 
-#: src/GameText.h:277
+#: src/GameText.h:275
 msgid "Joystick"
 msgstr "Joystick"
 
-#: src/GameText.h:278
+#: src/GameText.h:276
 msgid "Enable joysticks"
 msgstr ""
 
-#: src/GameText.h:279
+#: src/GameText.h:277
 msgid "Oops!"
 msgstr "Hoppsan!"
 
-#: src/GameText.h:280
+#: src/GameText.h:278
 msgid "Press ENTER to try again"
 msgstr "Tryck ENTER för att försöka igen"
 
-#: src/GameText.h:281
+#: src/GameText.h:279
 msgid "Press ESC to display the menu"
 msgstr "Tryck ESC för att visa menyn"
 
-#: src/GameText.h:282
+#: src/GameText.h:280
 msgid "Key"
 msgstr "Tangent"
 
-#: src/GameText.h:283
+#: src/GameText.h:281
 msgid "Keyboard"
 msgstr "Tangentbord"
 
-#: src/GameText.h:284
+#: src/GameText.h:282
 msgid "Language"
 msgstr ""
 
-#: src/GameText.h:285
+#: src/GameText.h:283
 msgid "Language name"
 msgstr ""
 
-#: src/GameText.h:286
+#: src/GameText.h:284
 msgid "Language code"
 msgstr ""
 
-#: src/GameText.h:287
+#: src/GameText.h:285
 msgid "Level"
 msgstr "Bana"
 
-#: src/GameText.h:288
+#: src/GameText.h:286
 msgid "Added to favorites"
 msgstr "Tilllagd till favoriter"
 
-#: src/GameText.h:289
+#: src/GameText.h:287
 msgid "Deleted from favorites"
 msgstr "Borttagen från favoriter"
 
-#: src/GameText.h:290
+#: src/GameText.h:288
 msgid "Added to blacklist"
 msgstr "Tillagd till svartlistan"
 
-#: src/GameText.h:291
+#: src/GameText.h:289
 msgid "Deleted from blacklist"
 msgstr "Borttagen från svartlistan"
 
-#: src/GameText.h:292
+#: src/GameText.h:290
 msgid "Level Info..."
 msgstr "Info om banan..."
 
-#: src/GameText.h:293
+#: src/GameText.h:291
 msgid "Level Name"
 msgstr "Banans namn"
 
-#: src/GameText.h:294
+#: src/GameText.h:292
 #, c-format
 msgid "Level '%s' cannot be loaded"
 msgstr "Bana '%s' kan inte laddas"
 
-#: src/GameText.h:295
+#: src/GameText.h:293
 msgid "Level Pack"
 msgstr "Level Pack"
 
-#: src/GameText.h:296
+#: src/GameText.h:294
 msgid "Level Packs"
 msgstr "Level Packs"
 
-#: src/GameText.h:297
+#: src/GameText.h:295
 #, c-format
 msgid "Level '%s' required by replay!"
 msgstr "Bana '%s' behövs för repris!"
 
-#: src/GameText.h:298
+#: src/GameText.h:296
 msgid "Levels"
 msgstr "Banor"
 
-#: src/GameText.h:299
+#: src/GameText.h:297
 msgid "List All"
 msgstr "Visa Alla"
 
-#: src/GameText.h:300
+#: src/GameText.h:298
 msgid "Loading..."
 msgstr "Laddar..."
 
-#: src/GameText.h:301
+#: src/GameText.h:299
 msgid "Loading levels..."
 msgstr "Laddar banor..."
 
-#: src/GameText.h:302
+#: src/GameText.h:300
 msgid "Loading menu graphics..."
 msgstr "Laddar meny grafik..."
 
-#: src/GameText.h:303
+#: src/GameText.h:301
 msgid "Loading replays..."
 msgstr "Laddar repriser..."
 
-#: src/GameText.h:304
+#: src/GameText.h:302
 msgid "Loading sounds..."
 msgstr "Laddar ljud..."
 
-#: src/GameText.h:305
+#: src/GameText.h:303
 msgid "Loading textures..."
 msgstr "Laddar strukturer..."
 
-#: src/GameText.h:306
+#: src/GameText.h:304
 msgid "Login"
 msgstr "Logga in"
 
-#: src/GameText.h:307
+#: src/GameText.h:305
 msgid "Low"
 msgstr "Låg"
 
-#: src/GameText.h:308
+#: src/GameText.h:306
 msgid "Main"
 msgstr "Huvudinställningar"
 
-#: src/GameText.h:309
+#: src/GameText.h:307
 msgid "Mouse"
 msgstr ""
 
-#: src/GameText.h:310 src/GameText.h:411
+#: src/GameText.h:308 src/GameText.h:411
 msgid "Theme"
 msgstr "Tema"
 
-#: src/GameText.h:311
+#: src/GameText.h:309
 msgid "Medium"
 msgstr "Medium"
 
-#: src/GameText.h:312
+#: src/GameText.h:310
 msgid "Menu Graphics"
 msgstr "Meny Grafik"
 
-#: src/GameText.h:313
+#: src/GameText.h:311
 msgid "Total time you scored / total highscore time for levels you finished"
 msgstr "Total tid du tog poäng / total rekordtid för banor du har klarat"
 
-#: src/GameText.h:314
+#: src/GameText.h:312
 msgid "Level references unknown textures, it could be unplayable!"
 msgstr "Banan refererar till okända strukturer, den kanske inte går att spela!"
 
-#: src/GameText.h:315
+#: src/GameText.h:313
 msgid "Mono"
 msgstr "Mono"
 
-#: src/GameText.h:316
+#: src/GameText.h:314
 msgid "Following are your most played levels"
 msgstr "Följande är dina mest spelade banor"
 
-#: src/GameText.h:317
+#: src/GameText.h:315
 msgid "Motion blur ghost"
 msgstr "Gör spökets rörelser suddiga"
 
-#: src/GameText.h:318
+#: src/GameText.h:316
 msgid "Multi"
 msgstr "Flera spelare"
 
-#: src/GameText.h:319
+#: src/GameText.h:317
 msgid "Semi-cooperative mode"
 msgstr "Semi-samarbetsvilligtläge"
 
-#: src/GameText.h:320
+#: src/GameText.h:318
 msgid "Stop the game once a player ends the level"
 msgstr "Stanna spelet så fort en spelare kommer till slutet på banan"
 
-#: src/GameText.h:321
+#: src/GameText.h:319
 msgid "Number of players"
 msgstr "Antal spelare"
 
-#: src/GameText.h:322
+#: src/GameText.h:320
 msgid "New"
 msgstr "Ny"
 
-#: src/GameText.h:323
+#: src/GameText.h:321
 #, c-format
 msgid "X-Moto %s or newer required to load level"
 msgstr "X-moto %s eller nyare behövs för att ladda banan"
 
-#: src/GameText.h:324
+#: src/GameText.h:322
 msgid "New highscore!"
 msgstr "Nytt highscore!"
 
-#: src/GameText.h:325
+#: src/GameText.h:323
 msgid "New personal highscore!"
 msgstr "Nytt personbästa!"
 
-#: src/GameText.h:326
+#: src/GameText.h:324
 #, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
 msgstr[0] "%d ny eller uppdaterad bana tillgänglig. Ladda ner nu?"
 msgstr[1] "%d nya eller uppdaterade banor tillgängliga. Ladda ner nu?"
 
-#: src/GameText.h:329
+#: src/GameText.h:327
 msgid "New Levels"
 msgstr "Nya Banor"
 
-#: src/GameText.h:330
+#: src/GameText.h:328
 msgid "New levels available!"
 msgstr "Nya banor tillgängliga!"
 
-#: src/GameText.h:331
+#: src/GameText.h:329
 msgid "New Profile..."
 msgstr "Ny profil..."
 
-#: src/GameText.h:332
+#: src/GameText.h:330
 msgid "No"
 msgstr "Nej"
 
-#: src/GameText.h:333
+#: src/GameText.h:331
 msgid ""
 "No new or updated levels available.\n"
 "\n"
@@ -1105,19 +1097,19 @@ msgstr ""
 "\n"
 "Försök igen någon annan gång."
 
-#: src/GameText.h:334
+#: src/GameText.h:332
 msgid "No level following this one, sorry."
 msgstr "Ursäkta, inga banor efter den här."
 
-#: src/GameText.h:335
+#: src/GameText.h:333
 msgid "No statistics for this profile."
 msgstr "Ingen statistik för den här profilen."
 
-#: src/GameText.h:336
+#: src/GameText.h:334
 msgid "Not finished"
 msgstr "Inte klarad"
 
-#: src/GameText.h:337
+#: src/GameText.h:335
 msgid ""
 "Important note!\n"
 "\n"
@@ -1140,252 +1132,260 @@ msgstr ""
 "/n Besök även http://xmoto.tuxfamily.org för att se till att du\n"
 "har den senaste versionen."
 
-#: src/GameText.h:347
+#: src/GameText.h:345
 msgid "# Levels"
 msgstr "# Banor"
 
-#: src/GameText.h:348
+#: src/GameText.h:346
 msgid "OK"
 msgstr "OK"
 
-#: src/GameText.h:349
+#: src/GameText.h:347
 msgid "Open"
 msgstr "Öppna"
 
-#: src/GameText.h:350
+#: src/GameText.h:348
 msgid "Operation completed"
 msgstr "Operation slutförd"
 
-#: src/GameText.h:351
+#: src/GameText.h:349
 msgid "Options"
 msgstr "Inställningar"
 
-#: src/GameText.h:352
+#: src/GameText.h:350
 msgid "Some options will not take effect before next restart!"
 msgstr ""
 "Några inställningar kommer inte att uppfyllas innan nästa omstart av spelet!"
 
-#: src/GameText.h:353
+#: src/GameText.h:351
 msgid "By author"
 msgstr "Av författare"
 
-#: src/GameText.h:354
+#: src/GameText.h:352
 msgid "Medals"
 msgstr "Medaljer"
 
-#: src/GameText.h:355 src/GameText.h:392
+#: src/GameText.h:353 src/GameText.h:390
 msgid "Room"
 msgstr "Rum"
 
-#: src/GameText.h:356
+#: src/GameText.h:354
 msgid "Special"
 msgstr "Special"
 
-#: src/GameText.h:357
+#: src/GameText.h:355
 msgid "Standard"
 msgstr "Standard"
 
-#: src/GameText.h:358
+#: src/GameText.h:356
 msgid "Web votes"
 msgstr "Webbröstningar"
 
-#: src/GameText.h:359 src/GameText.h:403
+#: src/GameText.h:357 src/GameText.h:401
 msgid "Statistics"
 msgstr "Statistik"
 
-#: src/GameText.h:360 src/GameText.h:637
+#: src/GameText.h:358 src/GameText.h:637
 msgid "By best driver"
 msgstr "Av bästa förare"
 
-#: src/GameText.h:361
+#: src/GameText.h:359
 msgid "By length"
 msgstr "På längd"
 
-#: src/GameText.h:363
+#: src/GameText.h:361
 msgid "Password"
 msgstr "Lösenord"
 
-#: src/GameText.h:364 src/GameText.h:365
+#: src/GameText.h:362 src/GameText.h:363
 msgid "Personal"
 msgstr "Personligt"
 
-#: src/GameText.h:366
+#: src/GameText.h:364
 #, c-format
 msgid "%i player"
 msgid_plural "%i players"
 msgstr[0] "%i spelare"
 msgstr[1] "%i spelare"
 
-#: src/GameText.h:367
+#: src/GameText.h:365
 msgid "Player Profile"
 msgstr "Spelar Profil"
 
-#: src/GameText.h:368
+#: src/GameText.h:366
 msgid "Player Profiles"
 msgstr "Spelar Profiler"
 
-#: src/GameText.h:369
+#: src/GameText.h:367
 msgid "Play Next Level"
 msgstr "Spela Nästa Bana"
 
-#: src/GameText.h:370
+#: src/GameText.h:368
 msgid "Port"
 msgstr "Port"
 
-#: src/GameText.h:371
+#: src/GameText.h:369
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
 msgstr "Tryck en tangent '%s' eller tryck ESC för att avbryta..."
 
-#: src/GameText.h:372
+#: src/GameText.h:370
 msgid "Proxy Server"
 msgstr "Proxy Server"
 
-#: src/GameText.h:373
+#: src/GameText.h:371
 msgid "Configure Proxy..."
 msgstr "Konfigruera Proxy..."
 
-#: src/GameText.h:374
+#: src/GameText.h:372
 msgid "Quality"
 msgstr ""
 
-#: src/GameText.h:375
+#: src/GameText.h:373
 msgid "Quick start"
 msgstr "Snabbstart"
 
-#: src/GameText.h:376
+#: src/GameText.h:374
 msgid "Quit Game"
 msgstr "Avsluta Spel"
 
-#: src/GameText.h:377
+#: src/GameText.h:375
 msgid "Do you really want to quit?"
 msgstr "Vill du verkligen avsluta?"
 
-#: src/GameText.h:378
+#: src/GameText.h:376
 msgid "Randomize"
 msgstr "Slumpa"
 
-#: src/GameText.h:379
+#: src/GameText.h:377
 msgid "Reloading levels..."
 msgstr "Laddar om banor..."
 
-#: src/GameText.h:380
+#: src/GameText.h:378
 msgid "Reloading replays..."
 msgstr "Laddar om repriser..."
 
-#: src/GameText.h:381
+#: src/GameText.h:379
 msgid "Reloading themes..."
 msgstr "Laddar om teman..."
 
-#: src/GameText.h:382
+#: src/GameText.h:380
 msgid "Replay"
 msgstr "Repris"
 
-#: src/GameText.h:383
+#: src/GameText.h:381
 msgid "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
 msgstr ""
 "Stop[esc] ||[space]<< >> [vänster/höger tangenterna] < > [upp/ner "
 "tangenterna] Hastighet:"
 
-#: src/GameText.h:384
+#: src/GameText.h:382
 msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
 msgstr ""
 "Stop[esc] ||[space] >> [höger tangent] < > [upp/ner tangenterna] Hastighet:"
 
-#: src/GameText.h:386
+#: src/GameText.h:384
 msgid "The replay can't be played!"
 msgstr "Reprisen kan inte spelas!"
 
-#: src/GameText.h:387
+#: src/GameText.h:385
 #, c-format
 msgid "Replay of %s"
 msgstr "Repris av %s"
 
-#: src/GameText.h:388
+#: src/GameText.h:386
 msgid "Replays"
 msgstr "Repriser"
 
-#: src/GameText.h:389
+#: src/GameText.h:387
 msgid "Are you sure you want to reset config to defaults ?"
 msgstr ""
 
-#: src/GameText.h:390
+#: src/GameText.h:388
 msgid "Restart This Level"
 msgstr "Starta om banan"
 
-#: src/GameText.h:391
+#: src/GameText.h:389
 msgid "Resume Playing"
 msgstr "Fortsätt spela"
 
-#: src/GameText.h:393
+#: src/GameText.h:391
 msgid "Run Windowed"
 msgstr "Kör i fönster"
 
-#: src/GameText.h:394
+#: src/GameText.h:392
 msgid "Save"
 msgstr "Spara"
 
-#: src/GameText.h:395
+#: src/GameText.h:393
 #, c-format
 msgid "Saved as %s"
 msgstr "Spara som %s"
 
-#: src/GameText.h:396
+#: src/GameText.h:394
 msgid "Save Replay"
 msgstr "Spara repris"
 
-#: src/GameText.h:397
+#: src/GameText.h:395
 msgid "Screen Resolution"
 msgstr "Skärm upplösning"
 
-#: src/GameText.h:398
+#: src/GameText.h:396
 msgid "Show"
 msgstr "Visa"
 
-#: src/GameText.h:399
+#: src/GameText.h:397
 msgid "Speedometer"
 msgstr "Hastighetsmätare"
 
-#: src/GameText.h:400
+#: src/GameText.h:398
 msgid "Info..."
 msgstr "Info..."
 
-#: src/GameText.h:401
+#: src/GameText.h:399
 msgid "Show Mini Map"
 msgstr "Visa minikarta"
 
-#: src/GameText.h:402
+#: src/GameText.h:400
 msgid "Play!"
 msgstr "Spela!"
 
-#: src/GameText.h:404
+#: src/GameText.h:402
 msgid "STATS"
 msgstr "STATS"
 
-#: src/GameText.h:405
+#: src/GameText.h:403
 msgid "Stereo"
 msgstr "Stereo"
 
-#: src/GameText.h:406
+#: src/GameText.h:404
 msgid "Synchronisation down"
 msgstr ""
 
-#: src/GameText.h:407
+#: src/GameText.h:405
 msgid "Synchronisation up"
 msgstr ""
 
-#: src/GameText.h:408
+#: src/GameText.h:406
 msgid "Synchronisation done successfully"
 msgstr ""
 
-#: src/GameText.h:409
+#: src/GameText.h:407
 #, c-format
 msgid "Key '%s' has been switched to '%s'"
 msgstr ""
 
-#: src/GameText.h:410
+#: src/GameText.h:408
 msgid "Enable/disable ugly mode"
 msgstr "Sätt på/av ful-läget"
+
+#: src/GameText.h:409
+msgid "Add/remove to favorite levels"
+msgstr "Lägg till/ta bort banan ifrån favoritbanor"
+
+#: src/GameText.h:410
+msgid "Add/remove to blacklisted levels"
+msgstr "Lägg till/ta bort banan ifrån svartlistade banor"
 
 #: src/GameText.h:412
 msgid "Available"

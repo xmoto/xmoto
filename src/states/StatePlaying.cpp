@@ -314,8 +314,8 @@ void StatePlaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   else {
     if(i_type == INPUT_DOWN) {
       if(m_autoZoom == false){
-				// to avoid people changing direction during the autozoom
-				handleInput(m_universe, INPUT_DOWN, i_xmkey);
+	// to avoid people changing direction during the autozoom
+	handleInput(m_universe, INPUT_DOWN, i_xmkey);
       }
     } else {
       handleInput(m_universe, INPUT_UP, i_xmkey);

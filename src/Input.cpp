@@ -182,6 +182,22 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     m_switchUglyMode = XMKey();
   }
 
+  try {
+    m_switchBlacklist = XMKey(pDb->config_getString(i_id_profile, "KeySwitchBlacklist", m_switchBlacklist.toString()));
+  } catch(InvalidSystemKeyException &e) {
+    /* keep default key */
+  } catch(Exception &e) {
+    m_switchBlacklist = XMKey();
+  }
+
+  try {
+    m_switchFavorite = XMKey(pDb->config_getString(i_id_profile, "KeySwitchFavorite", m_switchFavorite.toString()));
+  } catch(InvalidSystemKeyException &e) {
+    /* keep default key */
+  } catch(Exception &e) {
+    m_switchFavorite = XMKey();
+  }
+
 }
   
   /*===========================================================================
@@ -272,6 +288,8 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
     m_nChangeDirKey[3]   = XMKey(SDLK_n, KMOD_NONE);
     
     m_switchUglyMode     = XMKey(SDLK_F9, KMOD_NONE);
+    m_switchBlacklist    = XMKey(SDLK_b,  KMOD_LCTRL);
+    m_switchFavorite     = XMKey(SDLK_F3, KMOD_NONE);
   }  
 
   /*===========================================================================
@@ -331,6 +349,14 @@ void InputHandler::saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     pDb->config_setString(i_id_profile, "KeySwitchUglyMode", m_switchUglyMode.toString());
   }
 
+  if(m_switchBlacklist.isDefined()) {
+    pDb->config_setString(i_id_profile, "KeySwitchBlacklist", m_switchBlacklist.toString());
+  }
+
+  if(m_switchFavorite.isDefined()) {
+    pDb->config_setString(i_id_profile, "KeySwitchFavorite", m_switchFavorite.toString());
+  }
+
   pDb->config_setValue_end();
 }
 
@@ -388,6 +414,22 @@ void InputHandler::setSwitchUglyMode(XMKey i_value) {
 
 XMKey InputHandler::getSwitchUglyMode() const {
   return m_switchUglyMode;
+}
+
+void InputHandler::setSwitchBlacklist(XMKey i_value) {
+  m_switchBlacklist = i_value;
+}
+
+XMKey InputHandler::getSwitchBlacklist() const {
+  return m_switchBlacklist;
+}
+
+void InputHandler::setSwitchFavorite(XMKey i_value) {
+  m_switchFavorite = i_value;
+}
+
+XMKey InputHandler::getSwitchFavorite() const {
+  return m_switchFavorite;
 }
 
 bool InputHandler::isANotGameSetKey(XMKey* i_xmkey) const {
