@@ -383,11 +383,11 @@ void GameApp::manageEvent(SDL_Event* Event) {
     /* don't allow simple modifier key */
     if(Event->key.keysym.sym == SDLK_RSHIFT ||
        Event->key.keysym.sym == SDLK_LSHIFT ||
-       Event->key.keysym.sym == SDLK_RCTRL ||
-       Event->key.keysym.sym == SDLK_LCTRL ||
-       Event->key.keysym.sym == SDLK_RALT ||
-       Event->key.keysym.sym == SDLK_LALT ||
-       Event->key.keysym.sym == SDLK_RMETA ||
+       Event->key.keysym.sym == SDLK_RCTRL  ||
+       Event->key.keysym.sym == SDLK_LCTRL  ||
+       Event->key.keysym.sym == SDLK_RALT   ||
+       Event->key.keysym.sym == SDLK_LALT   ||
+       Event->key.keysym.sym == SDLK_RMETA  ||
        Event->key.keysym.sym == SDLK_LMETA
        ) {
       return;
@@ -396,11 +396,11 @@ void GameApp::manageEvent(SDL_Event* Event) {
 
   /* What event? */
   switch(Event->type) {
-  case SDL_KEYDOWN: 
+  case SDL_KEYDOWN:
     utf8Char = unicode2utf8(Event->key.keysym.unicode);
     StateManager::instance()->xmKey(INPUT_DOWN, XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
     break;
-  case SDL_KEYUP: 
+  case SDL_KEYUP:
     utf8Char = unicode2utf8(Event->key.keysym.unicode);
     StateManager::instance()->xmKey(INPUT_UP, XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
     break;

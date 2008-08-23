@@ -1735,6 +1735,7 @@ void StateMainMenu::updateReplaysRights() {
 
 	  v_button->enableWindow(v_enabled);
 	}
+	delete rplInfos;
       }
     }
   } else {

@@ -67,12 +67,9 @@ void UILevelList::hideRoomBestTime() {
 }
 
 void UILevelList::clear() {
-
-  // can't delete void*, it's undefined...
-  //
-  //  for(unsigned int i=0; i<getEntries().size(); i++) {
-  //    delete getEntries()[i]->pvUser;
-  //  }
+  for(unsigned int i=0; i<getEntries().size(); i++) {
+    delete getEntries()[i]->pvUser;
+  }
   UIList::clear();
 }
 
