@@ -151,11 +151,16 @@ void StateFinished::enter()
   }
 
   /* sound */
-  if(v_is_a_room_highscore || v_is_a_personnal_highscore) {
-    /* play a sound */
+  if(v_is_a_room_highscore) {
     try {
       GameApp::instance()->playGameMusic("");
       Sound::playSampleByName(Theme::instance()->getSound("NewHighscore")->FilePath());
+    } catch(Exception &e) {
+    }
+  } else {
+    try {
+      GameApp::instance()->playGameMusic("");
+      Sound::playSampleByName(Theme::instance()->getSound("EndOfLevel")->FilePath());
     } catch(Exception &e) {
     }
   }
