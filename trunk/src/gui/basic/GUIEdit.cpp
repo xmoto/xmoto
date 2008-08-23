@@ -133,7 +133,7 @@ void UIEdit::paint(void) {
 	std::string s = getCaption();
 
 	if(m_nCursorPos < utf8::utf8_length(s)) {
-	  setCaption(utf8::utf8_delete(s, m_nCursorPos+1));
+	  setCaptionResetCursor(utf8::utf8_delete(s, m_nCursorPos+1), false);
 	}
       }
         return true;
@@ -141,7 +141,7 @@ void UIEdit::paint(void) {
 	std::string s = getCaption();
 
 	if(m_nCursorPos > 0) {
-	  setCaption(utf8::utf8_delete(s, m_nCursorPos--)); // m_nCursorPos-- must be done before setCaption (setCaption alter it if a bad value is given)
+	  setCaptionResetCursor(utf8::utf8_delete(s, m_nCursorPos--), false); // m_nCursorPos-- must be done before setCaption (setCaption alter it if a bad value is given)
 	}
 
       }
@@ -156,7 +156,7 @@ void UIEdit::paint(void) {
 	  s = utf8::utf8_insert(s, i_utf8Char, m_nCursorPos);
 	}
 	m_nCursorPos++;
-	setCaption(s);
+	setCaptionResetCursor(s, false);
 	return true;
       }
       break;
@@ -181,21 +181,25 @@ bool UIEdit::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
   return false;
 }
 
-	void UIEdit::setHasChanged(bool b_value) {
-		m_hasChanged = b_value;
-	}
+void UIEdit::setHasChanged(bool b_value) {
+  m_hasChanged = b_value;
+}
 
-	bool UIEdit::hasChanged() {
-		return m_hasChanged;
-	}
+bool UIEdit::hasChanged() {
+  return m_hasChanged;
+}
 
-	void UIEdit::setCaption(std::string Caption) {
-		if(Caption != getCaption()) {
-			 m_hasChanged = true;
-		}
-		UIWindow::setCaption(Caption);
+void UIEdit::setCaption(const std::string& Caption) {
+  setCaptionResetCursor(Caption, true);
+}
 
-		if(m_nCursorPos > utf8::utf8_length(Caption)) {
-		  m_nCursorPos = utf8::utf8_length(Caption);
-		}
-	}
+void UIEdit::setCaptionResetCursor(const std::string& Caption, bool i_value) {
+  if(Caption != getCaption()) {
+    m_hasChanged = true;
+  }
+  UIWindow::setCaption(Caption);
+  
+  if(i_value || m_nCursorPos > utf8::utf8_length(Caption)) {
+    m_nCursorPos = utf8::utf8_length(Caption);
+  }
+}

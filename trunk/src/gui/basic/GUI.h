@@ -223,7 +223,7 @@ public:
   UIRect &getPosition(void) {return m_Pos;}
   void setPosition(int x,int y,int nWidth,int nHeight) {m_Pos.nX=x; m_Pos.nY=y; m_Pos.nWidth=nWidth; m_Pos.nHeight=nHeight;}
   std::string getCaption(void) {return m_Caption;}
-  virtual void setCaption(std::string Caption) {m_Caption=Caption;}
+  virtual void setCaption(const std::string& Caption) {m_Caption=Caption;}
   UITextStyle &getTextStyle(void) {return m_TextStyle;}
   void setTextSolidColor(Color c) {m_TextStyle.c0=m_TextStyle.c1=m_TextStyle.c2=m_TextStyle.c3=c;}
   void setTextGradientColors(Color a,Color b) {m_TextStyle.c0=m_TextStyle.c1=a; m_TextStyle.c2=m_TextStyle.c3=b;}
@@ -304,12 +304,14 @@ public:
   virtual bool offerActivation(void) {return true;}
   void hideText(bool bHideText) {m_hideText=bHideText;} 
 
-  void setCaption(std::string Caption);
+  void setCaption(const std::string& Caption);
 
   void setHasChanged(bool b_value);
   bool hasChanged();
 
 private:
+  void setCaptionResetCursor(const std::string& Caption, bool i_value = true);
+
   /* Data */
   unsigned int m_nCursorPos;
   bool m_hideText;    
