@@ -26,6 +26,7 @@ class Line;
 
 #include "helpers/VMath.h"
 #include "helpers/Color.h"
+#include "helpers/ISerializer.h"
 #include <vector>
 
 class FileHandle;
@@ -41,34 +42,53 @@ class DBuffer;
 
 #define DEFAULT_EDGE_ANGLE 270.0f
 
-/*===========================================================================
-  Convex block vertex
-  ===========================================================================*/
+struct BlockState {
+  std::string id;
+  float posX;
+  float posY;
+  float rot;
+};
+
+
+class BlockSerializer : public ISerializerImplEach<BlockState> {
+public:
+  BlockSerializer();
+  virtual ~BlockSerializer();
+
+  void storeFrame(Scene* pScene);
+  void playFrame(Scene* pScene);
+
+protected:
+  ISerializable<BlockState>* getObject(std::string id, Scene* pScene);
+}
+
+
 class ConvexBlockVertex {
   public:
-  ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition);
-  ~ConvexBlockVertex();
+  ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition)
+    : m_position(i_position), m_texturePosition(i_texturePosition) {
+  }
+  ~ConvexBlockVertex() {
+  }
 
-  /* called many many many times, so we inline it, and make it return a ref */
   inline Vector2f& Position() {
     return m_position;
   }
 
-  /* called many many many times, so we inline it, and make it return a ref */
   inline Vector2f& TexturePosition() {
     return m_texturePosition;
   }
 
-  void  setPosition(const Vector2f& i_position);
+  inline void setPosition(const Vector2f& i_position) {
+    m_position = i_position;
+  }
 
   private:
   Vector2f m_position;         /* Position of vertex */
   Vector2f m_texturePosition;  /* Posistion of the texture */
 };
 
-/*===========================================================================
-  Convex block
-  ===========================================================================*/
+
 class ConvexBlock {
  public:
   ConvexBlock(Block *i_srcBlock = NULL);
@@ -88,6 +108,7 @@ class ConvexBlock {
   std::vector<ConvexBlockVertex *> m_vertices; /* Vertices */
   Block *m_srcBlock;                           /* Source block */
 };
+
 
 class BlockVertex {
  public:
@@ -115,7 +136,8 @@ class BlockVertex {
   TColor m_color;
 };
 
-class Block {
+
+class Block : public ISerializable<BlockState> {
  public:
   Block(std::string i_id);
   ~Block();
@@ -254,10 +276,8 @@ class Block {
 				    bool i_useOld, bool i_AisLast,
 				    bool& o_swapDone, bool i_inside);
 
-  void serialize(DBuffer& buffer);
-
-  bool hasMoved();
-  void hasMoved(bool moved);
+  void serializeCurrentState(DBuffer& buffer);
+  void unserializeOneState(DBuffer& buffer, BlockState& state);
 
 private:
   std::string m_id;
@@ -319,8 +339,7 @@ private:
   EdgeDrawMethod  stringToEdge(std::string method);
   CollisionMethod stringToColMethod(std::string method);
 
-  // for chipmunk replaying
-  bool m_hasMoved;
+  void applyState(T* state);
 };
 
 #endif /* __BLOCK_H__ */

@@ -37,22 +37,64 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_DEFAULT_PHYS_BLOCK_FRICTION 0.5
 #define XM_DEFAULT_PHYS_BLOCK_ELASTICITY 0.0
 
-/* Vertex */
-ConvexBlockVertex::ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition) {
-  m_position         = i_position;
-  m_texturePosition  = i_texturePosition;
+// serializer
+BlockSerializer::BlockSerializer()
+: ISerializerImplEach("block")
+{
 }
 
-ConvexBlockVertex::~ConvexBlockVertex() {
+BlockSerializer::~BlockSerializer()
+{
 }
 
-void ConvexBlockVertex::setPosition(const Vector2f& i_position) {
-  m_position = i_position;
+void BlockSerializer::storeFrame(Scene* pScene)
+{
+  std::vector<Block*>& blocks = pScene->getLevelSrc()->Blocks();
+  std::vector<Block*>  movedPhysicalBlocks;
+
+  for(unsigned int i=0; i<i_blocks.size(); i++) {
+    if(i_blocks[i]->isPhysics() == true
+       && i_blocks[i]->hasMoved() == true) {
+      movedPhysicalBlocks.push_back(i_blocks[i]);
+      i_blocks[i]->hasMoved(false);
+    }
+  }
+
+  if(movedPhysicalBlocks.size() == 0)
+    return;
+
+  m_buffer << movedPhysicalBlocks.size();
+
+  std::vector<Block*>::iterator it = movedPhysicalBlocks.begin();
+  for(; it != movedPhysicalBlocks.end(); ++it) {
+    (*it)->serializeCurrentState(m_buffer);
+  }
+
+  movedPhysicalBlocks.clear();
 }
+
+void BlockSerializer::playFrame(Scene* pScene)
+{
+  std::vector<Block*>& blocks = pScene->getLevelSrc()->Blocks();
+  int curTime = pScene->getTime();
+
+  std::vector<Block*>::iterator it = blocks.begin();
+  for(; it != blocks.end(); ++it) {
+    if((*it)->isPhysics() == true)
+      (*it)->jumpToTime(curTime);
+  }
+}
+
+ISerializable<BlockState>*
+BlockSerializer::getObject(std::string id, Scene* pScene)
+{
+  return pScene->getLevelSrc()->getBlockById(id);
+}
+
 
 /* Block convex */
-ConvexBlock::ConvexBlock(Block *i_srcBlock) {
-  m_srcBlock = i_srcBlock;
+ConvexBlock::ConvexBlock(Block *i_srcBlock)
+  : m_srcBlock(i_srcBlock) {
 }
 
 ConvexBlock::~ConvexBlock() {
@@ -103,7 +145,6 @@ Block::Block(std::string i_id) {
   m_collisionElement = NULL;
   m_collisionMethod  = None;
   m_collisionRadius  = 0.0f;
-  m_hasMoved         = false;
 }
 
 Block::~Block() {
@@ -1035,7 +1076,7 @@ Block::CollisionMethod Block::stringToColMethod(std::string method)
     return None;
 }
 
-void Block::serialize(DBuffer& buffer)
+void Block::serializeCurrentState(DBuffer& buffer);
 {
   buffer << Id();
   buffer << DynamicPosition().x;
@@ -1043,12 +1084,16 @@ void Block::serialize(DBuffer& buffer)
   buffer << DynamicRotation();
 }
 
-bool Block::hasMoved()
+void Block::unserializeOneState(DBuffer& buffer, BlockState& state)
 {
-  return m_hasMoved;
+  buffer >> state.id;
+  buffer >> state.posX;
+  buffer >> state.posY;
+  buffer >> state.rot;
 }
 
-void Block::hasMoved(bool moved)
+void Block::applyState(BlockState* pState)
 {
-  m_hasMoved = moved;
+  setDynamicPosition(Vector2f(pState->posX, pState->posY));
+  setDynamicRotation(pState->rot);
 }

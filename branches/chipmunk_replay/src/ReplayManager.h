@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __REPLAYMANAGER_H__
 #define __REPLAYMANAGER_H__
 
-#include <helpers/Singleton.h"
+#include "helpers/Singleton.h"
 #include <string>
 #include <map>
 
@@ -52,8 +52,10 @@ public:
   void addRecordingScene(Scene* pScene);
   // we need serializer where each ISerialisable object stored its own frames (like blocks and bikes).
   void addObjectTypeToRecord(Scene* pScene, std::string name);
+
   // and serializer which stored all the frames (like events)
-  void addObjectTypeToRecord(Scene* pScene, ISerializer* pSerializer);
+  //  void addObjectTypeToRecord(Scene* pScene, ISerializer* pSerializer);
+
   void startRecordingReplay();
   void recordFrame();
   void endRecordingReplay();
@@ -70,7 +72,7 @@ public:
   }
 
   // playing
-  void addPlayingReplay(std::string& fileName);
+  void addPlayingReplay(Scene* pScene, std::string& fileName);
   void playFrame();
   void fastforward(int i_time);
   // i_minimumNbFrame, because sometimes, rewind do nothing if i_time

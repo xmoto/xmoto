@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VMath.h"
 #include "Collision.h"
 #include "helpers/Color.h"
-#include "BasicSceneStructs.h"
-#include "Bike.h"
+#include "xmscene/BasicSceneStructs.h"
+#include "xmscene/Bike.h"
 #include <queue>
 
 #define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 500
@@ -269,7 +269,6 @@ public:
 private:
 
   std::queue<MotoGameEvent*> m_GameEventQueue;
-  MotoGameEventManager* m_eventManagerPlaying;
   int m_time;
   // to slowly play replay
   float m_floattantTimeStepDiff;

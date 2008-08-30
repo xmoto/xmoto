@@ -77,14 +77,51 @@ Replay* getCurrentRecordingReplay()
 {
 }
 
-void addPlayingReplay(std::string& fileName)
+void addPlayingReplay(Scene* pScene, std::string& fileName)
 {
   // version 0: only player chunks
   // version 1: add events
   // version 2: generic handling
 
   Replay* pReplay = new Replay();
-  pReplay->openReplay(fileName);
+  // read the header of the replay, keeps the file handle open
+  FileHandle* pfh = pReplay->openReplay(fileName);
+
+  switch(pReplay->getVersion()) {
+  case 0: {
+    // only biker
+    ISerializer* pBike = SerializerFactory::instance()->createObject("BikerSerializer");
+    pBike->loadBuffer(pfh);
+    m_scenesSerializersPlaying[pScene].push_back(pBike);
+  }
+    break;
+  case 1: {
+    // biker and events
+    ISerializer* pBike  = SerializerFactory::instance()->createObject("BikerSerializer");
+    ISerializer* pEvent = SerializerFactory::instance()->createObject("MotoGameEventManager");
+    pBike->loadBuffer(pfh);
+    pEvent->loadBuffer(pfh);
+    m_scenesSerializersPlaying[pScene].push_back(pBike);
+    m_scenesSerializersPlaying[pScene].push_back(pEvent);
+  }
+    break;
+  case 2: {
+    // everything
+    int nbSavedStuffs  = FS::readByte(pfh); 
+    for(int i=0; i<nbSavedStuffs; i++) {
+      std::string stuff = FS::readString(pfh);
+      ISerializer* pSer = SerializerFactory::instance()->createObject(stuff);
+      pSer->loadBuffer(pfh);
+      m_scenesSerializersPlaying[pScene].push_back(pSer);
+    }
+
+  }
+    break;
+  default:
+    LogError();
+  }
+
+  FS::closeFile(pfh);
 }
 
 void playFrame()

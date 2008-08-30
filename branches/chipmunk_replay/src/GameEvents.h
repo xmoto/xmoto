@@ -91,7 +91,7 @@ struct RecordedGameEvent {
 class MotoGameEventManager : public ISerializer {
 public:
   MotoGameEventManager();
-  ~MotoGameEventManager();
+  virtual ~MotoGameEventManager();
 
   void storeFrame(Scene* pScene);
 

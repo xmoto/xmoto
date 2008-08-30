@@ -258,7 +258,10 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(pDb->replays_isIndexUptodate() == false) {
     initReplaysFromDir();
   }
-  
+
+  // register elements in factories
+  ISerializer::registerSerializers();
+
   /* List replays? */  
   if(v_xmArgs.isOptListReplays()) {
     char **v_result;

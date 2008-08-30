@@ -27,7 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   void DBuffer::_FreeDBuffer(void) {
     /* Free stuff if anything */
-    if(m_pcData != NULL && m_bOwnData) delete [] m_pcData;
+    if(m_pcData != NULL && m_bOwnData)
+      delete [] m_pcData;
     for(unsigned int i=0;i<m_Parts.size();i++) {
       delete [] m_Parts[i]->pcBuffer;
       delete m_Parts[i];

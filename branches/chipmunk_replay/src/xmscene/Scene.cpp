@@ -22,21 +22,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Game object. Handles all of the gamestate management und so weiter.
  */
 #include "GameText.h"
-#include "../Game.h"
-#include "Scene.h"
-#include "../VFileIO.h"
-#include "../BSP.h"
-#include "../Sound.h"
-#include "../PhysSettings.h"
-#include "../GameEvents.h"
-#include "Entity.h"
-#include "BikeGhost.h"
-#include "BikePlayer.h"
-#include "BikeParameters.h"
+#include "Game.h"
+#include "xmscene/Scene.h"
+#include "VFileIO.h"
+#include "BSP.h"
+#include "Sound.h"
+#include "PhysSettings.h"
+#include "GameEvents.h"
+#include "xmscene/Entity.h"
+#include "xmscene/BikeGhost.h"
+#include "xmscene/BikePlayer.h"
+#include "xmscene/BikeParameters.h"
 #include "helpers/Log.h"
-#include "Camera.h"
-#include "Block.h"
-#include "Entity.h"
+#include "xmscene/Camera.h"
+#include "xmscene/Block.h"
+#include "xmscene/Entity.h"
 #include "Replay.h"
 #include "LuaLibGame.h"
 #include "ScriptDynamicObjects.h"
@@ -66,8 +66,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_chipmunkWorld = NULL;
 
     m_halfUpdate = true;
-
-    m_eventManagerPlaying   = (ISerializer*)SerializerFactory::instance()->createObject("eventManager");
   }
   
   MotoGame::~MotoGame() {

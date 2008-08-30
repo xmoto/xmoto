@@ -152,6 +152,8 @@ std::string Replay::openReplay(const std::string& FileName) {
 
   loadHeader(pfh);
 
+  return pfh;
+
   /* Version 1 includes event data */
   if(m_version >= 1) {
     loadDBuffer(pfh, m_replayEventsBuffer,

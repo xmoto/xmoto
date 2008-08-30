@@ -22,6 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __ISERIALIZER_H__
 
 #include <string>
+#include "helpers/Factory.h"
+#include "helpers/Singleton.h"
 
 class SerializerFactory : public Factory, public Singleton<SerializerFactory> {
   friend class Singleton<SerializerFactory>;
@@ -33,8 +35,11 @@ private:
 
 class ISerializer {
 public:
-  ISerializer(std::string& dataType) {
-    m_dataType = dataType;
+  // call a game initialization to register the different serializers
+  // in the serializer factory
+  static void registerSerializers();
+
+  ISerializer() {
   }
   virtual ~ISerializer() {
   }
@@ -59,16 +64,15 @@ public:
   // apply recorded state to objects
   virtual void playFrame(Scene* pScene) = 0;
 
-  std::string& getDataType() {
-    return m_dataType;
-  }
-
   DBuffer* getBuffer() {
     return &m_buffer;
   }
 
+  void loadBuffer(FileHandle* pfh) {
+    
+  }
+
 protected:
-  std::string m_dataType;
   DBuffer     m_buffer;
 };
 
@@ -79,8 +83,7 @@ protected:
 // events beeing ISerializable objects too).
 template <typename T> class ISerializerImplEach : public ISerializer {
 public:
-  ISerializerImplEach(std::string& dataType)
-    : ISerializer(dataType) {
+  ISerializerImplEach() {
   }
   virtual ~ISerializerImplEach() {
   }
@@ -116,5 +119,12 @@ protected:
   // throw an exception if the object doesn't exist.
   virtual ISerializable<T>* getObject(std::string id, Scene* pScene) = 0;
 };
+
+
+void ISerializer::registerSerializers()
+{
+  SerializerFactory::instance()->REGISTER_OBJECT("MotoGameEventManager");
+  SerializerFactory::instance()->REGISTER_OBJECT("BlockSerializer");
+}
 
 #endif

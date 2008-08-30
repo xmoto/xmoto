@@ -119,6 +119,10 @@ public:
     return &m_replayEventsBuffer;
   }
 
+  unsigned int getVersion() {
+    return m_version;
+  }
+
 private: 
   std::vector<ReplayStateChunk*> m_Chunks;
   unsigned int m_nCurChunk;
