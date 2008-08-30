@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: ca_ES\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-08-22 17:48+0200\n"
-"PO-Revision-Date: 2008-07-07 22:39+0200\n"
+"PO-Revision-Date: 2008-08-24 10:59+0200\n"
 "Last-Translator: Joan Creus <joan.creus at gmail dot com>\n"
 "Language-Team: Català <ca@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -115,7 +115,7 @@ msgstr "Zoom Actiu de la Càmera"
 
 #: src/GameText.h:60
 msgid "Beating mode"
-msgstr ""
+msgstr "Mode de batre rècords"
 
 #: src/GameText.h:61
 msgid "Best Times"
@@ -207,96 +207,96 @@ msgstr "Controls"
 
 #: src/GameText.h:83
 msgid "left control"
-msgstr ""
+msgstr "control esquerre"
 
 #: src/GameText.h:84
 msgid "right control"
-msgstr ""
+msgstr "control dret"
 
 #: src/GameText.h:85
 msgid "left shift"
-msgstr ""
+msgstr "majúscules esquerra"
 
 #: src/GameText.h:86
 msgid "right shift"
-msgstr ""
+msgstr "majúscules dreta"
 
 #: src/GameText.h:87
 msgid "left alt"
-msgstr ""
+msgstr "alt esquerra"
 
 #: src/GameText.h:88
 msgid "right alt"
-msgstr ""
+msgstr "alt dreta"
 
 #: src/GameText.h:89
 msgid "left meta"
-msgstr ""
+msgstr "meta esquerra"
 
 #: src/GameText.h:90
 msgid "right meta"
-msgstr ""
+msgstr "meta dreta"
 
 #: src/GameText.h:91 src/GameText.h:105
 #, c-format
 msgid "button %i"
-msgstr ""
+msgstr "botó %i"
 
 #: src/GameText.h:92
 msgid "left button"
-msgstr ""
+msgstr "botó esquerre"
 
 #: src/GameText.h:93
 msgid "middle button"
-msgstr ""
+msgstr "botó del mig"
 
 #: src/GameText.h:94
 msgid "right button"
-msgstr ""
+msgstr "botó dret"
 
 #: src/GameText.h:95
 msgid "wheel up"
-msgstr ""
+msgstr "roda amunt"
 
 #: src/GameText.h:96
 msgid "wheel down"
-msgstr ""
+msgstr "roda avall"
 
 #: src/GameText.h:97
 msgid "No joystick found"
-msgstr ""
+msgstr "No s'ha trobat joystick"
 
 #: src/GameText.h:98
 #, c-format
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i joystick trobat"
+msgstr[1] "%i joysticks trobats"
 
 #: src/GameText.h:99
 #, c-format
 msgid "axis %i"
-msgstr ""
+msgstr "eix %i"
 
 #: src/GameText.h:100
 msgid "left"
-msgstr ""
+msgstr "esquerre"
 
 #: src/GameText.h:101
 msgid "right"
-msgstr ""
+msgstr "dret"
 
 #: src/GameText.h:102
 msgid "up"
-msgstr ""
+msgstr "amunt"
 
 #: src/GameText.h:103
 msgid "down"
-msgstr ""
+msgstr "avall"
 
 #: src/GameText.h:104
 msgid "none"
-msgstr ""
+msgstr "cap"
 
 #: src/GameText.h:106
 msgid "Script action"
@@ -452,7 +452,7 @@ msgstr "Data"
 
 #: src/GameText.h:175
 msgid "Difficulty"
-msgstr ""
+msgstr "Dificultat"
 
 #: src/GameText.h:176
 msgid ""
@@ -624,11 +624,11 @@ msgstr "Mostrar el Rècord Mundial durant la partida"
 
 #: src/GameText.h:213
 msgid "Enable menu music"
-msgstr ""
+msgstr "Activar música al menú"
 
 #: src/GameText.h:214
 msgid "Enable game music"
-msgstr ""
+msgstr "Activar música al joc"
 
 #: src/GameText.h:215
 msgid "Enable WWW Access"
@@ -853,7 +853,7 @@ msgstr "Alt"
 
 #: src/GameText.h:272
 msgid "Levels are being added into the database. Please wait."
-msgstr "Els nivells s'estan agregant a la base de dades. Si us plau, espera."
+msgstr "Els nivells s'estan afegint a la base de dades. Si us plau, espera."
 
 #: src/GameText.h:273
 msgid "Internet Configuration"
@@ -869,7 +869,7 @@ msgstr "Joystick"
 
 #: src/GameText.h:276
 msgid "Enable joysticks"
-msgstr ""
+msgstr "Activar joysticks"
 
 #: src/GameText.h:277
 msgid "Oops!"
@@ -1238,7 +1238,7 @@ msgstr "Configurar el proxy..."
 
 #: src/GameText.h:372
 msgid "Quality"
-msgstr ""
+msgstr "Qualitat"
 
 #: src/GameText.h:373
 msgid "Quick start"
@@ -1296,7 +1296,7 @@ msgstr "Repeticions"
 
 #: src/GameText.h:387
 msgid "Are you sure you want to reset config to defaults ?"
-msgstr ""
+msgstr "Segur que vols tornar a la configuració per defecte?"
 
 #: src/GameText.h:388
 msgid "Restart This Level"
@@ -1370,7 +1370,7 @@ msgstr "Sincronització acabada amb èxit"
 #: src/GameText.h:407
 #, c-format
 msgid "Key '%s' has been switched to '%s'"
-msgstr ""
+msgstr "La tecla '%s' s'ha canviat a '%s'"
 
 #: src/GameText.h:408
 msgid "Enable/disable ugly mode"
@@ -1414,7 +1414,7 @@ msgstr "Tutorial"
 
 #: src/GameText.h:419
 msgid "Undefined"
-msgstr ""
+msgstr "No definit"
 
 #: src/GameText.h:420
 msgid "Unknown"
@@ -2005,7 +2005,7 @@ msgstr "Activa la música de fons en el menú principal"
 
 #: src/GameText.h:564
 msgid "Enables background music while playing"
-msgstr ""
+msgstr "Activa la música de fons mentre jugues"
 
 #: src/GameText.h:566
 msgid "Choose the X-Moto graphics theme"
@@ -2221,11 +2221,11 @@ msgstr "Sincronitzar la teva base de dades quan surtis de l'X-Moto"
 
 #: src/GameText.h:620
 msgid "Enable joysticks events"
-msgstr ""
+msgstr "Activa esdeveniments de joysticks"
 
 #: src/GameText.h:621
 msgid "Preselect the retry button when dying or finishing a level"
-msgstr ""
+msgstr "Preseleccionar el botó de reintentar quan mors o acabes un nivell"
 
 #: src/GameText.h:623
 msgid "Levels with no highscore"
@@ -2562,8 +2562,8 @@ msgstr "Emmagatzemat com a posició d'entrenament %i"
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "No es troba cap rècord en el següent %i nivell"
+msgstr[1] "No es troba cap rècord en els següents %i nivells"
 
 #: src/GameText.h:714
 msgid "FontGroup:GENERAL"
@@ -2848,7 +2848,7 @@ msgstr "Bé! Ara prova el següent, que és una mica més difícil..."
 
 #: src/LevelsText.h:67
 msgid "Good job! The next one is even more difficult..."
-msgstr "Bon treball! El següent encara és més difícil..."
+msgstr "Bona feina! El següent encara és més difícil..."
 
 #: src/LevelsText.h:68
 msgid ""
@@ -2857,18 +2857,3 @@ msgid ""
 msgstr ""
 "Ara, per acabar... No és tan llarg, però en canvi\n"
 "encara hi ha menys espai per al teu preciós cap. Bona sort! :)"
-
-#~ msgid "Initializing input system..."
-#~ msgstr "Inicialitzant sistema d'entrada..."
-
-#~ msgid "Initializing menus..."
-#~ msgstr "Carregant els menús..."
-
-#~ msgid "Initializing renderer..."
-#~ msgstr "Carregant les imatges..."
-
-#~ msgid "Initializing text renderer..."
-#~ msgstr "Carregant les imatges del text..."
-
-#~ msgid "Enable Music"
-#~ msgstr "Activar la Música"
