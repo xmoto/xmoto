@@ -435,7 +435,9 @@ void FSWeb::uploadReplay(const std::string& p_replayFilename,
     uploadAnalyseMsg("xmoto_uploadReplayResult", v_local_file, p_msg_status, p_msg);
   }
 
-  remove(v_local_file.c_str());
+  if(XMSession::instance()->debug() == false) {
+    remove(v_local_file.c_str());
+  }
 }
 
 void FSWeb::uploadAnalyseMsg(const std::string& p_key,
@@ -627,8 +629,11 @@ void FSWeb::uploadDbSync(const std::string& p_dbSyncFilename,
       char v_err[256];
       
       curl_easy_cleanup(v_curl);
-      remove(p_answerFile.c_str());
-      
+
+      if(XMSession::instance()->debug() == false) {
+	remove(p_answerFile.c_str());
+      }      
+
       snprintf(v_err, 256, "error : unable to perform curl (curl[%i]: %s)",
 	       v_res, curl_easy_strerror(v_res));
       
@@ -646,7 +651,9 @@ void FSWeb::uploadDbSync(const std::string& p_dbSyncFilename,
   }
 
   // don't remove the answer file
-  // remove(v_local_file.c_str());
+  if(XMSession::instance()->debug() == false) {
+    remove(p_answerFile.c_str());
+  }
 }
 
 WebLevels::WebLevels(WWWAppInterface *p_WebLevelApp) {
