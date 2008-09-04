@@ -1699,6 +1699,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   void MGE_PenalityTime::serialize(DBuffer &Buffer) {
+    MotoGameEvent::serialize(Buffer);
     Buffer << GameApp::timeToFloat(m_penalityTime);
   }
 
