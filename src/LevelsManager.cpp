@@ -307,11 +307,11 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
 			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE b.nbCompleted+0 = 0 OR b.id_profile IS NULL "
-			  "AND d.id_level IS NULL "
+			  "WHERE d.id_level IS NULL "
 			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
 			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
-			  "GROUP BY a.id_level, b.id_profile");
+			  "GROUP BY a.id_level, b.id_profile "
+			  "HAVING MAX(b.nbCompleted+0) = 0 OR MAX(b.nbCompleted+0) IS NULL");
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
   v_pack->setDescription(VPACKAGENAME_DESC_INCOMPLETED_LEVELS);
   m_levelsPacks.push_back(v_pack);
