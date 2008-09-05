@@ -518,7 +518,13 @@ void MotoGame::cleanPlayers() {
   void MotoGame::playLevel() {
   /* Invoke the OnLoad() script function */
     if(m_playEvents) {
-      bool bOnLoadSuccess = m_luaGame->scriptCallBool("OnLoad", true);
+      bool bOnLoadSuccess;
+
+      try {
+	bOnLoadSuccess = m_luaGame->scriptCallBool("OnLoad", true);
+      } catch(Exception &e) {
+	bOnLoadSuccess = false;
+      }
       /* if no OnLoad(), assume success */
       /* Success? */
       if(!bOnLoadSuccess) {
