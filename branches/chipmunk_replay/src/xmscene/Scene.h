@@ -235,6 +235,12 @@ public:
   std::vector<Ghost*>& Ghosts();
   std::vector<Biker*>& Players();
 
+  Ghost* getGhostById(unsigned int id);
+  Biker* getBikerById(unsigned int id);
+
+  unsigned int registerGhost();
+  unsigned int registerBiker();
+
   bool doesPlayEvents() const;
 
   void fastforward(int i_time);
@@ -317,6 +323,9 @@ private:
 
   std::vector<Camera*> m_cameras;
   unsigned int m_currentCamera;
+
+  unsigned int m_maxBikerId;
+  unsigned int m_maxGhostId;
 
   void cleanGhosts();
   void cleanPlayers();

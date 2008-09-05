@@ -66,6 +66,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_chipmunkWorld = NULL;
 
     m_halfUpdate = true;
+
+    m_maxBikerId = 0;
+    m_maxGhostId = 0;
   }
   
   MotoGame::~MotoGame() {
@@ -1333,9 +1336,31 @@ bool MotoGame::isAutoZoomCamera(){
   return (getCurrentCamera() == getNumberCameras());
 }
 
-  std::vector<Camera*>& MotoGame::Cameras() {
-    return m_cameras;
-  }
+std::vector<Camera*>& MotoGame::Cameras() {
+  return m_cameras;
+}
+
+Ghost* MotoGame::getGhostById(unsigned int id)
+{
+  return m_ghosts[id];
+}
+
+Biker* MotoGame::getBikerById(unsigned int id)
+{
+  return m_players[id];
+}
+
+unsigned int MotoGame::registerGhost()
+{
+  return m_maxGhostId++;
+}
+
+unsigned int MotoGame::registerBiker()
+{
+  return m_maxBikerId++;
+}
+
+
 
 MotoGameOnBikerHooks::MotoGameOnBikerHooks(MotoGame* i_motoGame, int i_playerNumber) {
   m_motoGame = i_motoGame;

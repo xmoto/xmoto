@@ -30,11 +30,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 #include <sstream>
 
-MotoGameEventManager::MotoGameEventManager()
+EventSerializer::EventSerializer()
 {
 }
 
-MotoGameEventManager::~MotoGameEventManager()
+EventSerializer::~EventSerializer()
 {
   std::vector<RecordedGameEvent*>::iterator it = m_replayEvents.begin();
 
@@ -45,7 +45,7 @@ MotoGameEventManager::~MotoGameEventManager()
   m_replayEvents.clear();
 }
 
-void MotoGameEventManager::storeFrame(Scene* pScene)
+void EventSerializer::storeFrame(Scene* pScene)
 {
   // serialize and delete them
   while(pScene->getNumPendingGameEvents() > 0) {
@@ -55,7 +55,7 @@ void MotoGameEventManager::storeFrame(Scene* pScene)
   }
 }
 
-void MotoGameEventManager::unserializeFrames(Scene* pScene)
+void EventSerializer::unserializeFrames(Scene* pScene)
 {
   RecordedGameEvent *p;    
 
@@ -72,6 +72,10 @@ void MotoGameEventManager::unserializeFrames(Scene* pScene)
   }
 }
 
+void EventSerializer::playFrame(Scene* pScene)
+{
+
+}
 
 
 

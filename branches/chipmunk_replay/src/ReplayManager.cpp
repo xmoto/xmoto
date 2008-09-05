@@ -20,34 +20,44 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "ReplayManager.h"
 
-ReplayManager()
-~ReplayManager()
-
-void createNewReplay()
+ReplayManager::ReplayManager()
 {
 }
 
-void addRecordingScene(Scene* pScene)
+ReplayManager::~ReplayManager()
+{
+}
+
+void ReplayManager::createNewReplay()
+{
+}
+
+void ReplayManager::addRecordingScene(Scene* pScene)
 {
   m_scenes[m_scenes.size()] = pScene;
 }
 
-void addObjectTypeToRecord(Scene* pScene, std::string name)
+void ReplayManager::addObjectTypeToRecord(Scene* pScene, std::string name)
 {
-  m_scenesSerializersRecording[pScene] = (ISerializer*)SerializerFactory::instance()->createObject(name);
+  ISerializer* pSer  = (ISerializer*)SerializerFactory::instance()->createObject(name);
+  pSer->setPlaying(false);
+  m_scenesSerializersRecording[pScene] = pSer;
 }
 
-void addObjectTypeToRecord(Scene* pScene, ISerializer* pSerializer)
+/*
+void ReplayManager::addObjectTypeToRecord(Scene* pScene, ISerializer* pSer)
 {
-  m_scenesSerializersRecording[pScene] = pSerializer
+  pSer->setPlaying(false);
+  m_scenesSerializersRecording[pScene] = pSer;
 }
+*/
 
-void startRecordingReplay()
+void ReplayManager::startRecordingReplay()
 {
   m_recordReplay = true;
 }
 
-void recordFrame()
+void ReplayManager::recordFrame()
 {
   std::map<Scene*, std::vector<ISerializer*> >::iterator itScene;
   itScene = m_scenesSerializersRecording.begin();
@@ -69,19 +79,21 @@ void recordFrame()
   }
 }
 
-void endRecordingReplay()
+void ReplayManager::endRecordingReplay()
 {
 }
 
-Replay* getCurrentRecordingReplay()
+Replay* ReplayManager::getCurrentRecordingReplay()
 {
 }
 
-void addPlayingReplay(Scene* pScene, std::string& fileName)
+void ReplayManager::addPlayingReplay(Scene* pScene, std::string& fileName, bool mainReplay)
 {
   // version 0: only player chunks
   // version 1: add events
   // version 2: generic handling
+
+  // for non main replays, only load the biker informations
 
   Replay* pReplay = new Replay();
   // read the header of the replay, keeps the file handle open
@@ -92,17 +104,26 @@ void addPlayingReplay(Scene* pScene, std::string& fileName)
     // only biker
     ISerializer* pBike = SerializerFactory::instance()->createObject("BikerSerializer");
     pBike->loadBuffer(pfh);
+    pBike->setPlaying(true);
+    pBike->unserializeFrames(pScene);
     m_scenesSerializersPlaying[pScene].push_back(pBike);
   }
     break;
   case 1: {
     // biker and events
     ISerializer* pBike  = SerializerFactory::instance()->createObject("BikerSerializer");
-    ISerializer* pEvent = SerializerFactory::instance()->createObject("MotoGameEventManager");
     pBike->loadBuffer(pfh);
-    pEvent->loadBuffer(pfh);
+    pBike->setPlaying(true);
+    pBike->unserializeFrames(pScene);
     m_scenesSerializersPlaying[pScene].push_back(pBike);
-    m_scenesSerializersPlaying[pScene].push_back(pEvent);
+
+    if(mainReplay == true) {
+      ISerializer* pEvent = SerializerFactory::instance()->createObject("MotoGameEventManager");
+      pEvent->loadBuffer(pfh);
+      pEvent->setPlaying(true);
+      pEvent->unserializeFrames(pScene);
+      m_scenesSerializersPlaying[pScene].push_back(pEvent);
+    }
   }
     break;
   case 2: {
@@ -110,21 +131,35 @@ void addPlayingReplay(Scene* pScene, std::string& fileName)
     int nbSavedStuffs  = FS::readByte(pfh); 
     for(int i=0; i<nbSavedStuffs; i++) {
       std::string stuff = FS::readString(pfh);
-      ISerializer* pSer = SerializerFactory::instance()->createObject(stuff);
-      pSer->loadBuffer(pfh);
-      m_scenesSerializersPlaying[pScene].push_back(pSer);
+      if(mainReplay == false
+	 && stuff != "BikerSerializer") {
+	  skipBuffer(pfh);
+      } else {
+	ISerializer* pSer;
+	pSer = SerializerFactory::instance()->createObject(stuff);
+	if(pSer != NULL) {
+	  pSer->loadBuffer(pfh);
+	  pSer->setPlaying(true);
+	  pSer->unserializeFrames(pScene);
+	  m_scenesSerializersPlaying[pScene].push_back(pSer);
+	} else {
+	  LogWarning("Can't handle data type %s in replay %s",
+		     stuff.c_str(), fileName.c_str());
+	  skipBuffer(pfh);
+	}
+      }
     }
 
   }
     break;
   default:
-    LogError();
+    LogError("Unsuported replay version %d", pReplay->getVersion());
   }
 
   FS::closeFile(pfh);
 }
 
-void playFrame()
+void ReplayManager::playFrame()
 {
   std::map<Scene*, std::vector<ISerializer*> >::iterator itScene;
   itScene= m_scenesSerializersPlaying.begin();
@@ -146,22 +181,48 @@ void playFrame()
   }
 }
 
-void fastforward(int i_time)
+void ReplayManager::fastforward(int i_time)
 {
 }
 
-void fastrewind(int  i_time, int i_minimumNbFrame = 0)
+void ReplayManager::fastrewind(int  i_time, int i_minimumNbFrame = 0)
 {
 }
 
-void reinitializePlayingReplays()
+void ReplayManager::reinitializePlayingReplays()
 {
 }
 
-void deleteReplay(std::string& ReplayName)
+void ReplayManager::deleteReplay(std::string& ReplayName)
 {
+  FS::deleteFile(std::string("Replays/") + ReplayName + std::string(".rpl"));
 }
 
-std::string giveAutomaticName()
+std::string ReplayManager::giveAutomaticName()
 {
+  time_t date;
+  time(&date);
+  struct tm *TL = localtime(&date);
+
+  char date_str[256];
+  strftime(date_str, sizeof(date_str)-1, "%d-%m-%y %H_%M", TL);
+
+  return std::string(date_str);
+}
+
+void ReplayManager::skipBuffer(FileHandle* pfh)
+{
+  unsigned int size   = FS::readInt_LE(pfh);
+  bool useCompression = FS::readBool(pfh);
+
+  if(useCompression == true) {
+    int nCompressedSize = FS::readInt_LE(pfh);
+    char* pcCompressed = new char [nCompressedSize];
+    FS::readBuf(pfh, pcCompressed, nCompressedSize);
+    delete [] pcCompressed;
+  } else {
+    char* pcData = new char [size];
+    FS::readBuf(pfh, pcData, size);
+    delete [] pcData;
+  }
 }

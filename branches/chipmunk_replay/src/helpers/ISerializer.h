@@ -52,6 +52,9 @@ public:
     m_buffer.initInput(1024);
   }
 
+  // if the serializer need to do things before begining to store frames
+  virtual void initStoring(Scene* pScene) = 0;
+
   // a frame contains all the objects that this Serializer handle. In
   // a frame there's only the objects which have moved since the last
   // frame
@@ -72,8 +75,15 @@ public:
     
   }
 
+  void setPlaying(bool playing) {
+    m_playing = playing;
+  }
+
 protected:
-  DBuffer     m_buffer;
+  DBuffer m_buffer;
+  // true: playing
+  // false: recording
+  bool    m_playing;
 };
 
 
@@ -123,8 +133,9 @@ protected:
 
 void ISerializer::registerSerializers()
 {
-  SerializerFactory::instance()->REGISTER_OBJECT("MotoGameEventManager");
+  SerializerFactory::instance()->REGISTER_OBJECT("EventSerializer");
   SerializerFactory::instance()->REGISTER_OBJECT("BlockSerializer");
+  SerializerFactory::instance()->REGISTER_OBJECT("BikerSerializer");
 }
 
 #endif

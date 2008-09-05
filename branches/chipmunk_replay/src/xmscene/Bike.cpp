@@ -200,6 +200,36 @@ BikeParameters* BikeState::Parameters() {
   return m_bikeParameters;
 }
 
+
+
+BikerSerializer::BikerSerializer()
+{
+}
+
+BikerSerializer::~BikerSerializer()
+{
+}
+
+void BikerSerializer::initStoring(Scene* pScene)
+{
+  m_bikerId = pScene->registerBiker();
+}
+
+void BikerSerializer::storeFrame(Scene* pScene)
+{
+}
+
+void BikerSerializer::unserializeFrames(Scene* pScene)
+{
+  m_bikerId = pScene->registerGhost();
+}
+
+void BikerSerializer::playFrame(Scene* pScene)
+{
+}
+
+
+
 Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
 	     const TColor& i_colorFilter,
 	     const TColor& i_uglyColorFilter) {

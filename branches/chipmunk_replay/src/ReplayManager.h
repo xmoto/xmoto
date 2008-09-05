@@ -54,7 +54,7 @@ public:
   void addObjectTypeToRecord(Scene* pScene, std::string name);
 
   // and serializer which stored all the frames (like events)
-  //  void addObjectTypeToRecord(Scene* pScene, ISerializer* pSerializer);
+  //  void addObjectTypeToRecord(Scene* pScene, ISerializer* pSer);
 
   void startRecordingReplay();
   void recordFrame();
@@ -84,6 +84,8 @@ public:
   // util
   void deleteReplay(std::string& ReplayName);
   std::string giveAutomaticName();
+
+  void skipBuffer(FileHandle* pfh);
 
 private:
   std::map<std::string, Replay*>      m_playingReplay;

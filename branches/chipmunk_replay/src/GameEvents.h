@@ -88,14 +88,16 @@ struct RecordedGameEvent {
 // two for a scene:
 // -the one for storing current play events.
 // -the one for playing events in the main ghost
-class MotoGameEventManager : public ISerializer {
+class EventSerializer : public ISerializer {
 public:
-  MotoGameEventManager();
-  virtual ~MotoGameEventManager();
+  EventSerializer();
+  virtual ~EventSerializer();
 
   void storeFrame(Scene* pScene);
 
   void unserializeFrames(Scene* pScene);
+
+  void playFrame(Scene* pScene);
 
 private:
   std::vector<RecordedGameEvent*> m_replayEvents;

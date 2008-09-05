@@ -140,6 +140,24 @@ class BikeState {
   static void interpolateGameStateCubic(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t);
 };
 
+
+class BikerSerializer : public ISerializer {
+public:
+  BikerSerializer();
+  virtual ~BikerSerializer();
+
+  void initStoring(Scene* pScene);
+  void storeFrame(Scene* pScene);
+
+  void unserializeFrames(Scene* pScene);
+  void playFrame(Scene* pScene);
+
+private:
+  unsigned int m_bikerId;
+};
+
+
+
 class Biker : public ISerializable<BikeState> {
  public:
   Biker(Theme* i_theme, BikerTheme* i_bikerTheme,
