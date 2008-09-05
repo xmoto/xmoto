@@ -506,7 +506,11 @@ int LuaLibGame::L_Game_SetKeyHook(lua_State *pL) {
   /* no event for this */
 
   if(m_exec_activeInputHandler != NULL) {
-    m_exec_activeInputHandler->addScriptKeyHook(m_exec_world, luaL_checkstring(pL,1), luaL_checkstring(pL,2));
+    try {
+      m_exec_activeInputHandler->addScriptKeyHook(m_exec_world, luaL_checkstring(pL,1), luaL_checkstring(pL,2));
+    } catch(Exception &e) {
+      m_exec_world->gameMessage("** Warning ** : addScriptKeyHook failed", true);      
+    }
   }
   return 0;
 }
