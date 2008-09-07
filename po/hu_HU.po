@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-08-22 17:48+0200\n"
-"PO-Revision-Date: 2008-07-01 17:53+0100\n"
+"PO-Revision-Date: 2008-09-07 13:48+0100\n"
 "Last-Translator: Zoltán Balogh <ttapecs@gmail.com>\n"
 "Language-Team: X-moto\n"
 "MIME-Version: 1.0\n"
@@ -96,7 +96,7 @@ msgstr "Automatikus"
 
 #: src/GameText.h:56
 msgid "Automatic saving of replays"
-msgstr "Visszajátszások automatikus mentése"
+msgstr "Visszajátszások Automatikus Mentése"
 
 #: src/GameText.h:57
 msgid "Auto zoom"
@@ -108,11 +108,11 @@ msgstr "Adatbázis"
 
 #: src/GameText.h:59
 msgid "Camera Active Zoom"
-msgstr "Kamerafüggő közelítés"
+msgstr "Kamerafüggő Közelítés"
 
 #: src/GameText.h:60
 msgid "Beating mode"
-msgstr ""
+msgstr "Idődöntő Mód"
 
 #: src/GameText.h:61
 msgid "Best Times"
@@ -204,100 +204,100 @@ msgstr "Irányítás"
 
 #: src/GameText.h:83
 msgid "left control"
-msgstr ""
+msgstr "bal control"
 
 #: src/GameText.h:84
 msgid "right control"
-msgstr ""
+msgstr "jobb control"
 
 #: src/GameText.h:85
 msgid "left shift"
-msgstr ""
+msgstr "bal shift"
 
 #: src/GameText.h:86
 msgid "right shift"
-msgstr ""
+msgstr "jobb shift"
 
 #: src/GameText.h:87
 msgid "left alt"
-msgstr ""
+msgstr "bal alt"
 
 #: src/GameText.h:88
 msgid "right alt"
-msgstr ""
+msgstr "jobb alt"
 
 #: src/GameText.h:89
 msgid "left meta"
-msgstr ""
+msgstr "bal meta"
 
 #: src/GameText.h:90
 msgid "right meta"
-msgstr ""
+msgstr "jobb meta"
 
 #: src/GameText.h:91 src/GameText.h:105
 #, c-format
 msgid "button %i"
-msgstr ""
+msgstr "gomb %i"
 
 #: src/GameText.h:92
 msgid "left button"
-msgstr ""
+msgstr "bal gomb"
 
 #: src/GameText.h:93
 msgid "middle button"
-msgstr ""
+msgstr "középső gomb"
 
 #: src/GameText.h:94
 msgid "right button"
-msgstr ""
+msgstr "jobb gomb"
 
 #: src/GameText.h:95
 msgid "wheel up"
-msgstr ""
+msgstr "görgő fel"
 
 #: src/GameText.h:96
 msgid "wheel down"
-msgstr ""
+msgstr "görgő le"
 
 #: src/GameText.h:97
 msgid "No joystick found"
-msgstr ""
+msgstr "Nem található joystick"
 
 #: src/GameText.h:98
 #, c-format
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i joystick található"
+msgstr[1] "%i joystick található"
 
 #: src/GameText.h:99
 #, c-format
 msgid "axis %i"
-msgstr ""
+msgstr "tengely %i"
 
 #: src/GameText.h:100
 msgid "left"
-msgstr ""
+msgstr "bal"
 
 #: src/GameText.h:101
 msgid "right"
-msgstr ""
+msgstr "jobb"
 
 #: src/GameText.h:102
 msgid "up"
-msgstr ""
+msgstr "fel"
 
 #: src/GameText.h:103
 msgid "down"
-msgstr ""
+msgstr "le"
 
 #: src/GameText.h:104
 msgid "none"
-msgstr ""
+msgstr "semmi"
 
 #: src/GameText.h:106
 msgid "Script action"
-msgstr ""
+msgstr "Szkript akció"
 
 #: src/GameText.h:109
 msgid "Lead Programming"
@@ -449,7 +449,7 @@ msgstr "Dátum"
 
 #: src/GameText.h:175
 msgid "Difficulty"
-msgstr ""
+msgstr "Nehézség"
 
 #: src/GameText.h:176
 msgid ""
@@ -533,7 +533,7 @@ msgstr "Szellem időkülönbségének kijelzése"
 
 #: src/GameText.h:193
 msgid "Display Ghost Information"
-msgstr "Szellem Információ Megjelenítése"
+msgstr "Szelleminformáció megjelenítése"
 
 #: src/GameText.h:194
 msgid "Direct Connection"
@@ -621,15 +621,15 @@ msgstr "Világrekord mutatása játékban"
 
 #: src/GameText.h:213
 msgid "Enable menu music"
-msgstr ""
+msgstr "Menü Zene Engedélyezése"
 
 #: src/GameText.h:214
 msgid "Enable game music"
-msgstr ""
+msgstr "Játék Zene Engedélyezése"
 
 #: src/GameText.h:215
 msgid "Enable WWW Access"
-msgstr "Internet Hozzáférés Engedélyezése"
+msgstr "Internet hozzáférés engedélyezése"
 
 #: src/GameText.h:216
 msgid "Enter player name"
@@ -737,7 +737,7 @@ msgstr "Helyi legjobb"
 
 #: src/GameText.h:241
 msgid "Your best"
-msgstr "A te legjobbad"
+msgstr "A legjobb időd"
 
 #: src/GameText.h:242
 msgid "Type"
@@ -866,7 +866,7 @@ msgstr "Joystick"
 
 #: src/GameText.h:276
 msgid "Enable joysticks"
-msgstr ""
+msgstr "Joystickok engedélyezése"
 
 #: src/GameText.h:277
 msgid "Oops!"
@@ -1234,7 +1234,7 @@ msgstr "Proxy Beállítása..."
 
 #: src/GameText.h:372
 msgid "Quality"
-msgstr ""
+msgstr "Minőség"
 
 #: src/GameText.h:373
 msgid "Quick start"
@@ -1291,7 +1291,7 @@ msgstr "Visszajátszások"
 
 #: src/GameText.h:387
 msgid "Are you sure you want to reset config to defaults ?"
-msgstr ""
+msgstr "Biztosan vissza akarod állítani alapértelmezettre a beállításokat? "
 
 #: src/GameText.h:388
 msgid "Restart This Level"
@@ -1365,7 +1365,7 @@ msgstr "Sikeres szinkronizálás"
 #: src/GameText.h:407
 #, c-format
 msgid "Key '%s' has been switched to '%s'"
-msgstr ""
+msgstr "'%s' billentyű '%s' billentyűre cserélve"
 
 #: src/GameText.h:408
 msgid "Enable/disable ugly mode"
@@ -1409,7 +1409,7 @@ msgstr "Bevezetés"
 
 #: src/GameText.h:419
 msgid "Undefined"
-msgstr ""
+msgstr "Meghatározatlan"
 
 #: src/GameText.h:420
 msgid "Unknown"
@@ -1990,7 +1990,7 @@ msgstr "Háttérzene engedélyezése a főmenüben"
 
 #: src/GameText.h:564
 msgid "Enables background music while playing"
-msgstr ""
+msgstr "Háttérzene engedélyezése játék közben"
 
 #: src/GameText.h:566
 msgid "Choose the X-Moto graphics theme"
@@ -2205,11 +2205,12 @@ msgstr "Adatbázis szinkronizálása X-Moto bezárásakor"
 
 #: src/GameText.h:620
 msgid "Enable joysticks events"
-msgstr ""
+msgstr "Joystickok engedélyezése"
 
 #: src/GameText.h:621
 msgid "Preselect the retry button when dying or finishing a level"
 msgstr ""
+"Újrakezdő gomb előzetes kiválasztása meghaláskor vagy a pálya befejezésekor"
 
 #: src/GameText.h:623
 msgid "Levels with no highscore"
@@ -2505,11 +2506,11 @@ msgstr "Internethozzáférés letiltva"
 
 #: src/GameText.h:700
 msgid "Replay interpolation enabled"
-msgstr "Elnagyolt visszajátszás engedélyezve"
+msgstr "Visszajátszás interpoláció engedélyezve"
 
 #: src/GameText.h:701
 msgid "Replay interpolation disabled"
-msgstr "Elnagyolt visszajátszás letiltva"
+msgstr "Visszajátszás interpoláció letiltva"
 
 #: src/GameText.h:702
 msgid "Fps enabled"
@@ -2545,8 +2546,8 @@ msgstr "%i. edzőpozícióként mentve"
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Nincs legjobb eredmény ehhez az %i pályához"
+msgstr[1] "Nincs legjobb eredmény ehhez az %i pályához"
 
 #: src/GameText.h:714
 msgid "FontGroup:GENERAL"
@@ -2835,18 +2836,3 @@ msgid ""
 msgstr ""
 "Most az utolsó... Ez nem olyan hosszú, de helyette\n"
 "még kevesebb hely van a drága fejednek. Sok sikert! :)"
-
-#~ msgid "Initializing input system..."
-#~ msgstr "Beviteli rendszer előkészítése..."
-
-#~ msgid "Initializing menus..."
-#~ msgstr "Menük előkészítése..."
-
-#~ msgid "Initializing renderer..."
-#~ msgstr "Renderer előkészítése..."
-
-#~ msgid "Initializing text renderer..."
-#~ msgstr "Szöveg renderer előkészítése..."
-
-#~ msgid "Enable Music"
-#~ msgstr "Zene Engedélyezése"
