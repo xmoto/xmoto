@@ -84,7 +84,7 @@ int DownloadGhostThread::realThreadFunction()
 		
 		m_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);
 		m_pWebRoom->downloadReplay(v_fileUrl);
-		GameApp::instance()->addReplay(v_replayName);
+		GameApp::instance()->addReplay(v_replayName, m_pDb);
 		
 		setThreadProgress(100);
 		

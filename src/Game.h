@@ -153,7 +153,7 @@ public:
 
   void displayCursor(bool display);
 
-  void addReplay(const std::string& i_file, xmDatabase* threadDb = NULL, bool sendMessage = true);
+  void addReplay(const std::string& i_file, xmDatabase* pDb, bool sendMessage = true);
 
 protected:
   void createDefaultConfig();

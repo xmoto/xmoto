@@ -517,15 +517,8 @@ void GameApp::displayCursor(bool display)
     pDb->replays_add_end();
   }
 
-  void GameApp::addReplay(const std::string& i_file, xmDatabase* threadDb, bool sendMessage) {
+  void GameApp::addReplay(const std::string& i_file, xmDatabase* pDb, bool sendMessage) {
     ReplayInfo* rplInfos;
-    xmDatabase* pDb = NULL;
-
-    if(threadDb == NULL){
-      pDb = xmDatabase::instance("main");
-    } else {
-      pDb = threadDb;
-    }
     
     rplInfos = Replay::getReplayInfos(FS::getFileBaseName(i_file));
     if(rplInfos == NULL) {

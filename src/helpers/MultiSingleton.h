@@ -42,6 +42,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
       if(iter == m_instances.end()){
 	m_instances[key] = new T();
+	//printf("New instance (%s => %X)\n", key.c_str(), m_instances[key]);
       }
 
       returnObject = m_instances[key];

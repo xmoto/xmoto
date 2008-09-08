@@ -52,6 +52,7 @@ void xmDatabase::init(const std::string& i_dbFile,
   m_requiredReplaysUpdateAfterInit = false;
   m_requiredThemesUpdateAfterInit  = false;
 
+  //LogDebug("openDB(%X)", this);
   if(sqlite3_open(i_dbFile.c_str(), &m_db) != 0) {
     throw Exception("Unable to open the database (" + i_dbFile
 		    + ") : " + sqlite3_errmsg(m_db));
@@ -685,6 +686,8 @@ void xmDatabase::simpleSql(const std::string& i_sql) {
   char *errMsg;
   std::string v_errMsg;
 
+  //LogDebug("simpleSql(%X): %s", this, i_sql.c_str());
+
   if(sqlite3_exec(m_db,
 		  i_sql.c_str(),
 		  NULL,
@@ -714,7 +717,8 @@ char** xmDatabase::readDB(const std::string& i_sql, unsigned int &i_nrow) {
   int v_nrow;
 	double v_startTime, v_endTime;
 
-  //printf("%s\n", i_sql.c_str());
+
+	//LogDebug("readDB(%X): %s", this, i_sql.c_str());
 
 	v_startTime = GameApp::getXMTime();
   if(sqlite3_get_table(m_db,
