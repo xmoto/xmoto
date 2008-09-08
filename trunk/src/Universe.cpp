@@ -282,13 +282,15 @@ void Universe::saveReplay(const std::string &Name) {
 
   /* Try saving */
   std::string v_outputfile;
+  xmDatabase *pDb = xmDatabase::instance("main");
+
   if(!FS::copyFile("Replays/Latest.rpl",
 		   std::string("Replays/") + Name + std::string(".rpl"),
 		   v_outputfile)) {
     throw Exception("Failed to save replay " + Name);
   } else {
     /* Update replay list to reflect changes */
-     GameApp::instance()->addReplay(v_outputfile);
+    GameApp::instance()->addReplay(v_outputfile, pDb);
   }
 }
 
