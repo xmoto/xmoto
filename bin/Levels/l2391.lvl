@@ -346,7 +346,7 @@
 	</block>
 	<block id="path3353">
 		<position y="5.654687" x="20.380469"/>
-		<usetexture id="default"/>
+		<usetexture id="glass1"/>
 		<vertex x="-11.109315" y="4.775337"/>
 		<vertex x="-10.907558" y="4.734500"/>
 		<vertex x="-10.093707" y="4.552624"/>

@@ -4,8 +4,9 @@
 		<name>NoCrashNoob 01</name>
 		<description></description>
 		<author>No Crash, Noob</author>
-		<date></date>
+		<date>2007-06-12</date>
 		<sky>sky2</sky>
+		<border texture="KRWBlueRockDark"/>
 	</info>
 	<script>
 		x=0
