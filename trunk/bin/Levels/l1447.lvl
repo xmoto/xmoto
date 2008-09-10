@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="dungeonone" levelpack="Strikes back" rversion="0.2.7">
+<level id="dungeonone" rversion="0.2.7">
 	<info>
 		<name>fbb_Dungeon 1</name>
 		<description>A level in a Dungeon</description>
 		<author>flying bobby bobperson</author>
-		<date>2007-06-17</date>
+		<date>2007-07-17</date>
 		<sky drifted="false" use_params="false">Black</sky>
 		<border texture="Asphalt2"/>
 		<music name="batcave" />
@@ -177,7 +177,7 @@
 	</entity>
 	<block id="path3663">
 		<position y="17.526000" x="-20.179566" background="true"/>
-		<usetexture id="SolidOrange"/>
+		<usetexture id="Lava"/>
 		<vertex x="32.196428" y="-31.423298"/>
 		<vertex x="32.413277" y="-31.398472"/>
 		<vertex x="32.550286" y="-31.355083"/>
@@ -210,7 +210,7 @@
 	</block>
 	<block id="path3793">
 		<position y="17.526000" x="-20.179566" background="true"/>
-		<usetexture id="SolidOrange"/>
+		<usetexture id="Lava"/>
 		<vertex x="36.821429" y="-15.176999"/>
 		<vertex x="36.829573" y="-15.217214"/>
 		<vertex x="37.046079" y="-15.443394"/>
