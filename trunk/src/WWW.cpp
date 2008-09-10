@@ -649,11 +649,6 @@ void FSWeb::uploadDbSync(const std::string& p_dbSyncFilename,
   } else {
     uploadAnalyseMsg("xmoto_uploadDbSyncResult", p_answerFile, p_msg_status, p_msg);
   }
-
-  // don't remove the answer file
-  if(XMSession::instance()->debug() == false) {
-    remove(p_answerFile.c_str());
-  }
 }
 
 WebLevels::WebLevels(WWWAppInterface *p_WebLevelApp) {
