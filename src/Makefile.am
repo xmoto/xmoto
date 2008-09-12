@@ -163,6 +163,8 @@ states_SOURCES = states/StateManager.h       	  \
                  states/StateMessageBox.cpp    	  \
                  states/StatePause.h         	  \
                  states/StatePause.cpp       	  \
+                 states/StateVote.h         	  \
+                 states/StateVote.cpp       	  \
                  states/StateDeadJust.h      	  \
                  states/StateDeadJust.cpp    	  \
                  states/StateDeadMenu.h      	  \
