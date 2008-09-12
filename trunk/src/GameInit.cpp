@@ -53,7 +53,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StatePreplayingGame.h"
 #include "states/StateMainMenu.h"
 #include "states/StateMessageBox.h"
-			  //#include "states/StateVote.h"
+#include "states/StateVote.h"
 
 #include "UserConfig.h"
 #include "Renderer.h"
