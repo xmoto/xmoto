@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateLevelPackViewer.h"
 #include "StateRequestKey.h"
 #include "StateOptions.h"
+#include "StateVote.h"
 
 #include "../XMSession.h"
 #include "../drawlib/DrawLib.h"
@@ -436,6 +437,7 @@ void StateManager::cleanStates() {
   StatePause::clean();
   StateRequestKey::clean();
   StateOptions::clean();
+  StateVote::clean();
 }
 
 void StateManager::refreshStaticCaptions() {
