@@ -48,6 +48,8 @@ class StateVote : public StateMenu {
   /* GUI */
   static UIRoot* m_sGUI;
   static void createGUIIfNeeded();
+
+  bool isToSkip();
 };
 
 #endif
