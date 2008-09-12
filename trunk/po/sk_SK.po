@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-09-13 00:31+0200\n"
+"POT-Creation-Date: 2008-09-13 00:41+0200\n"
 "PO-Revision-Date: 2008-08-20 21:59+0200\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
@@ -75,7 +75,7 @@ msgstr "Akcia"
 msgid "All (on this computer)"
 msgstr "Všetky (na tomto počítači)"
 
-#: src/GameText.h:48 src/GameText.h:652
+#: src/GameText.h:48 src/GameText.h:653
 msgid "All levels"
 msgstr "Všetky levely"
 
@@ -1192,7 +1192,7 @@ msgstr "Webové hlasy"
 msgid "Statistics"
 msgstr "Štatistiky"
 
-#: src/GameText.h:358 src/GameText.h:663
+#: src/GameText.h:358 src/GameText.h:664
 msgid "By best driver"
 msgstr "Podľa najlepšieho jazdca"
 
@@ -2237,439 +2237,443 @@ msgstr ""
 "levelu"
 
 #: src/GameText.h:623
-msgid "No idea"
+msgid "Give your mind about this level"
 msgstr ""
 
 #: src/GameText.h:624
-msgid "Beginner"
+msgid "No idea"
 msgstr ""
 
 #: src/GameText.h:625
-msgid "Expert"
+msgid "Beginner"
 msgstr ""
 
 #: src/GameText.h:626
-msgid "Master"
+msgid "Expert"
 msgstr ""
 
 #: src/GameText.h:627
-msgid "God"
+msgid "Master"
 msgstr ""
 
 #: src/GameText.h:628
-msgid "Not nice at all"
+msgid "God"
 msgstr ""
 
 #: src/GameText.h:629
-msgid "Not nice"
+msgid "Not nice at all"
 msgstr ""
 
 #: src/GameText.h:630
-msgid "Nice"
+msgid "Not nice"
 msgstr ""
 
 #: src/GameText.h:631
-msgid "Really nice"
+msgid "Nice"
 msgstr ""
 
 #: src/GameText.h:632
-msgid "Send this report"
+msgid "Really nice"
 msgstr ""
 
 #: src/GameText.h:633
+msgid "Send this report"
+msgstr ""
+
+#: src/GameText.h:634
 msgid "Skip this report"
 msgstr ""
 
-#: src/GameText.h:635
+#: src/GameText.h:636
 msgid "You don't want to vote"
 msgstr ""
 
-#: src/GameText.h:636
+#: src/GameText.h:637
 msgid "Really easy"
 msgstr ""
 
-#: src/GameText.h:637
+#: src/GameText.h:638
 msgid "No technical difficulty"
 msgstr ""
 
-#: src/GameText.h:638
+#: src/GameText.h:639
 msgid "At least one difficulty"
 msgstr ""
 
-#: src/GameText.h:639
+#: src/GameText.h:640
 msgid "Several difficulties"
 msgstr ""
 
-#: src/GameText.h:640
+#: src/GameText.h:641
 msgid "Impossible"
 msgstr ""
 
-#: src/GameText.h:641
+#: src/GameText.h:642
 msgid "Basic blocks, no decoration"
 msgstr ""
 
-#: src/GameText.h:642
+#: src/GameText.h:643
 msgid "Basic decoration, not smooth blocks"
 msgstr ""
 
-#: src/GameText.h:643
+#: src/GameText.h:644
 msgid "Not original"
 msgstr ""
 
-#: src/GameText.h:644
+#: src/GameText.h:645
 msgid "Nice, could be better"
 msgstr ""
 
-#: src/GameText.h:645
+#: src/GameText.h:646
 msgid "Several textures, sprites, ..."
 msgstr ""
 
-#: src/GameText.h:646
+#: src/GameText.h:647
 msgid "Send this report on the webserver"
 msgstr ""
 
-#: src/GameText.h:647
+#: src/GameText.h:648
 msgid "Don't send this report on the webserver"
 msgstr ""
 
-#: src/GameText.h:649
+#: src/GameText.h:650
 msgid "Levels with no highscore"
 msgstr "Levely bez rekordu"
 
-#: src/GameText.h:650 src/GameText.h:684
+#: src/GameText.h:651 src/GameText.h:685
 msgid "Levels you have not completed"
 msgstr "Levely, ktoré ste nedokončili"
 
-#: src/GameText.h:651
+#: src/GameText.h:652
 msgid "You're not the highscore holder"
 msgstr "Nedržíte rekord pre tento level"
 
-#: src/GameText.h:653
+#: src/GameText.h:654
 msgid "New and updated levels"
 msgstr "Nové a aktualizované levely"
 
-#: src/GameText.h:654
+#: src/GameText.h:655
 msgid "Favorite levels"
 msgstr "Obľúbené levely"
 
-#: src/GameText.h:655
+#: src/GameText.h:656
 msgid "Blacklisted levels"
 msgstr "Levely na čiernej listine"
 
-#: src/GameText.h:656
+#: src/GameText.h:657
 msgid "Nicest levels"
 msgstr "Najkrajšie levely"
 
-#: src/GameText.h:657
+#: src/GameText.h:658
 msgid "Hardest levels"
 msgstr "Najťažšie levely"
 
-#: src/GameText.h:658
+#: src/GameText.h:659
 msgid "Easiest levels"
 msgstr "Najľahšie levely"
 
-#: src/GameText.h:659
+#: src/GameText.h:660
 msgid "Crappiest levels"
 msgstr "Najhoršie levely"
 
-#: src/GameText.h:660
+#: src/GameText.h:661
 msgid "Scripted levels"
 msgstr "Skriptované levely"
 
-#: src/GameText.h:661
+#: src/GameText.h:662
 msgid "Musical levels"
 msgstr "Hudobné levely"
 
-#: src/GameText.h:662
+#: src/GameText.h:663
 msgid "Physics levels"
 msgstr "Levely s fyzikou"
 
-#: src/GameText.h:664
+#: src/GameText.h:665
 msgid "Last played levels"
 msgstr "Naposledy hrané levely"
 
-#: src/GameText.h:665
+#: src/GameText.h:666
 msgid "Never played levels"
 msgstr "Nikdy nehrané levely"
 
-#: src/GameText.h:666
+#: src/GameText.h:667
 msgid "Most played levels"
 msgstr "Najčastejšie hrané levely"
 
-#: src/GameText.h:667
+#: src/GameText.h:668
 msgid "Less played levels (but played)"
 msgstr "Menej hrané levely"
 
-#: src/GameText.h:668
+#: src/GameText.h:669
 msgid "Last highscores"
 msgstr "Posledné rekordy"
 
-#: src/GameText.h:669
+#: src/GameText.h:670
 msgid "Last levels"
 msgstr "Posledné levely"
 
-#: src/GameText.h:670
+#: src/GameText.h:671
 msgid "Oldest highscores"
 msgstr "Najstaršie rekordy"
 
-#: src/GameText.h:671
+#: src/GameText.h:672
 msgid "Platinum"
 msgstr "Platinová"
 
-#: src/GameText.h:672
+#: src/GameText.h:673
 msgid "Gold"
 msgstr "Zlatá"
 
-#: src/GameText.h:673
+#: src/GameText.h:674
 msgid "Silver"
 msgstr "Strieborná"
 
-#: src/GameText.h:674
+#: src/GameText.h:675
 msgid "Bronze"
 msgstr "Bronzová"
 
-#: src/GameText.h:675
+#: src/GameText.h:676
 msgid "No medal"
 msgstr "Bez medaile"
 
-#: src/GameText.h:676
+#: src/GameText.h:677
 msgid "My levels"
 msgstr "Moje levely"
 
-#: src/GameText.h:677
+#: src/GameText.h:678
 msgid "Crappy levels"
 msgstr "Slabé levely"
 
-#: src/GameText.h:678
+#: src/GameText.h:679
 msgid "Shortest levels"
 msgstr "Najkratšie levely"
 
-#: src/GameText.h:679
+#: src/GameText.h:680
 msgid "Medium levels"
 msgstr "Priemerné levely"
 
-#: src/GameText.h:680
+#: src/GameText.h:681
 msgid "Long levels"
 msgstr "Dlhé levely"
 
-#: src/GameText.h:681
+#: src/GameText.h:682
 msgid "Very long levels"
 msgstr "Veľmi dlhé levely"
 
-#: src/GameText.h:683
+#: src/GameText.h:684
 msgid "Levels with no highscore in your room"
 msgstr "Levely bez rekordu vo vašej miestnosti"
 
-#: src/GameText.h:685
+#: src/GameText.h:686
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Niekto v miestnosti vytvoril lepší rekord ako je ten váš"
 
-#: src/GameText.h:686
+#: src/GameText.h:687
 msgid "All X-Moto levels"
 msgstr "Všetky X-Moto levely"
 
-#: src/GameText.h:687
+#: src/GameText.h:688
 msgid "New and updated levels since your last check"
 msgstr "Nové a aktualizované levely od poslednej kontroly"
 
-#: src/GameText.h:688
+#: src/GameText.h:689
 msgid "Your favorite levels"
 msgstr "Vaše obľúbené levely"
 
-#: src/GameText.h:689
+#: src/GameText.h:690
 msgid "Your blacklisted levels"
 msgstr "Levely na vašej čiernej listine"
 
-#: src/GameText.h:690
+#: src/GameText.h:691
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Najkrajšie levely X-Moto podľa hlasovania na webe"
 
-#: src/GameText.h:691
+#: src/GameText.h:692
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Najťažšie X-Moto levely podľa hlasovania na webe"
 
-#: src/GameText.h:692
+#: src/GameText.h:693
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Najjednoduchšie X-Moto levely podľa hlasovania na webe"
 
-#: src/GameText.h:693
+#: src/GameText.h:694
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Najslabšie X-Moto levely podľa hlasovania na webe"
 
-#: src/GameText.h:694
+#: src/GameText.h:695
 msgid "X-Moto levels which are dynamic"
 msgstr "X-Moto levely, ktoré sú dynamické"
 
-#: src/GameText.h:695
+#: src/GameText.h:696
 msgid "X-Moto levels with a background music"
 msgstr "X-Moto levely s hudbou na pozadí"
 
-#: src/GameText.h:696
+#: src/GameText.h:697
 msgid "X-Moto levels using strongly physics"
 msgstr "Levely X-Moto, ktoré silne využívajú fyziku"
 
-#: src/GameText.h:697
+#: src/GameText.h:698
 msgid "Last levels you have played"
 msgstr "Posledné levely, ktoré ste hrali"
 
-#: src/GameText.h:698
+#: src/GameText.h:699
 msgid "X-Moto levels you never played"
 msgstr "X-Moto levely, ktoré ste nikdy nehrali"
 
-#: src/GameText.h:699
+#: src/GameText.h:700
 msgid "X-Moto levels you have played the most"
 msgstr "X-Moto levely, ktoré ste hrali najviac"
 
-#: src/GameText.h:700
+#: src/GameText.h:701
 msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto levely, ktoré ste hrali len párkrát"
 
-#: src/GameText.h:701
+#: src/GameText.h:702
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "X-Moto levely, ktoré majú nedávno vytvorený rekord vo vašej miestnosti"
 
-#: src/GameText.h:702
+#: src/GameText.h:703
 msgid "Last created X-Moto levels"
 msgstr "Naposledy vytvorené X-Moto levely"
 
-#: src/GameText.h:703
+#: src/GameText.h:704
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto levely, ktoré majú dávno vytvorený rekord vo vašej miestnosti"
 
-#: src/GameText.h:704
+#: src/GameText.h:705
 msgid "You have the room highscore"
 msgstr "Máte rekord miestnosti"
 
-#: src/GameText.h:705
+#: src/GameText.h:706
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr ""
 "Váš osobný rekordný čas dokončenia levelu je takmer taký ako rekord v "
 "miestnosti (95%)"
 
-#: src/GameText.h:706
+#: src/GameText.h:707
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
 "Váš osobný rekordný čas dokončenia levelu je takmer taký ako rekord v "
 "miestnosti (90%-95%)"
 
-#: src/GameText.h:707
+#: src/GameText.h:708
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
 "Váš osobný rekordný čas dokončenia levelu je takmer taký ako rekord v "
 "miestnosti (80%-90%)"
 
-#: src/GameText.h:708
+#: src/GameText.h:709
 msgid "The room highscore is really better than your own highscore"
 msgstr "Rekord miestnosti je skutočne lepší ako ten váš"
 
-#: src/GameText.h:709
+#: src/GameText.h:710
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Balík levelov \"%s\""
 
-#: src/GameText.h:710
+#: src/GameText.h:711
 #, c-format
 msgid "Highscores by %s"
 msgstr "Rekordy od %s"
 
-#: src/GameText.h:711
+#: src/GameText.h:712
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Externé levely (tie, ktoré ste umiestnili do adresára 'My levels')"
 
-#: src/GameText.h:712
+#: src/GameText.h:713
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr ""
 "Levely označené ako 'slabé' sú skryté vo všetkých ďalších balíkoch levelov"
 
-#: src/GameText.h:713
+#: src/GameText.h:714
 msgid "The shortest levels (less than 25 seconds)"
 msgstr "Najkratšie levely (kratšie ako 25 sekúnd)"
 
-#: src/GameText.h:714
+#: src/GameText.h:715
 msgid "The medium levels (25 seconds to 60)"
 msgstr "Priemerne dlhé levely (25 až 60 sekúnd)"
 
-#: src/GameText.h:715
+#: src/GameText.h:716
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr "Dlhé levely (jedna až dve minúty)"
 
-#: src/GameText.h:716
+#: src/GameText.h:717
 msgid "The longest levels (more than 2 minutes)"
 msgstr "Veľmi dlhé levely (viac ako 2 minúty)"
 
-#: src/GameText.h:718
+#: src/GameText.h:719
 msgid "Ugly mode enabled"
 msgstr "Škaredý režim zapnutý"
 
-#: src/GameText.h:719
+#: src/GameText.h:720
 msgid "Ugly mode disabled"
 msgstr "Škaredý režim vypnutý"
 
-#: src/GameText.h:720
+#: src/GameText.h:721
 msgid "Theme mode enabled"
 msgstr "Režim tém zapnutý"
 
-#: src/GameText.h:721
+#: src/GameText.h:722
 msgid "Theme mode disabled"
 msgstr "Režim tém vypnutý"
 
-#: src/GameText.h:722
+#: src/GameText.h:723
 msgid "UglyOver mode enabled"
 msgstr "Režim UglyOver zapnutý"
 
-#: src/GameText.h:723
+#: src/GameText.h:724
 msgid "UglyOver mode disabled"
 msgstr "Režim UglyOver vypnutý"
 
-#: src/GameText.h:724
+#: src/GameText.h:725
 msgid "Web connection enabled"
 msgstr "Webové pripojenie zapnuté"
 
-#: src/GameText.h:725
+#: src/GameText.h:726
 msgid "Web connection disabled"
 msgstr "Webové pripojenie vypnuté"
 
-#: src/GameText.h:726
+#: src/GameText.h:727
 msgid "Replay interpolation enabled"
 msgstr "Interpolácia záznamu zapnutá"
 
-#: src/GameText.h:727
+#: src/GameText.h:728
 msgid "Replay interpolation disabled"
 msgstr "Interpolácia záznamu vypnutá"
 
-#: src/GameText.h:728
+#: src/GameText.h:729
 msgid "Fps enabled"
 msgstr "Fps zapnuté"
 
-#: src/GameText.h:729
+#: src/GameText.h:730
 msgid "Fps disabled"
 msgstr "Fps vypnuté"
 
-#: src/GameText.h:730
+#: src/GameText.h:731
 msgid "Audio enabled"
 msgstr "Audio zapnuté"
 
-#: src/GameText.h:731
+#: src/GameText.h:732
 msgid "Audio disabled"
 msgstr "Audio vypnuté"
 
-#: src/GameText.h:733
+#: src/GameText.h:734
 msgid "No training positions stored"
 msgstr "Neboli uložené žiadne tréningové pozície"
 
-#: src/GameText.h:734
+#: src/GameText.h:735
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr "Tréningová pozícia %i/%i obnovená"
 
-#: src/GameText.h:735
+#: src/GameText.h:736
 #, c-format
 msgid "Stored as training position %i"
 msgstr "Uložené ako tréningová pozícia %i"
 
-#: src/GameText.h:737
+#: src/GameText.h:738
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
@@ -2677,7 +2681,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: src/GameText.h:740
+#: src/GameText.h:741
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 

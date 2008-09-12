@@ -620,6 +620,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_ENABLEJOYSTICKS _("Enable joysticks events")
 #define CONTEXTHELP_BEATINGMODE _("Preselect the retry button when dying or finishing a level")
 
+#define GAMETEXT_GIVEYOURMING _("Give your mind about this level")
 #define GAMETEXT_NOIDEA       _("No idea")
 #define GAMETEXT_BEGINNER     _("Beginner")
 #define GAMETEXT_EXPERT       _("Expert")

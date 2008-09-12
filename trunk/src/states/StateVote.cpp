@@ -153,7 +153,7 @@ void StateVote::createGUIIfNeeded() {
   v_frame->setID("FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_MENU);
 
-	v_someText = new UIStatic(v_frame, 0, m_sGUI->getPosition().nHeight/5, "Give your mind about this level", m_sGUI->getPosition().nWidth, 50);
+	v_someText = new UIStatic(v_frame, 0, m_sGUI->getPosition().nHeight/5, GAMETEXT_GIVEYOURMING, m_sGUI->getPosition().nWidth, 50);
   v_someText->setFont(drawLib->getFontMedium());
   v_someText->setHAlign(UI_ALIGN_CENTER);
 
