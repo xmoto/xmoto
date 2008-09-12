@@ -94,6 +94,8 @@ void StateVote::checkEvents() {
     pButton->setClicked(false);
 
     if(isToSkip()) {
+      // the gamer won't have to vote for this level anymore 
+      xmDatabase::instance("main")->markAsVoted(XMSession::instance()->profile(), m_idlevel);
       m_requestForEnd = true;
     } else {
       pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:D_0"));

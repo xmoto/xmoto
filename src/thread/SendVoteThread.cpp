@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Random.h"
 #include "../db/xmDatabase.h"
 
-#define VOTE_ASK_FREQUENCY 2
+#define VOTE_ASK_FREQUENCY 5 // /1000
 
 SendVoteThread::SendVoteThread(const std::string& i_idlevel, const std::string& i_difficulty_value, const std::string& i_quality_value)
   : XMThread("SVT")
@@ -48,8 +48,13 @@ bool SendVoteThread::isToPropose(xmDatabase* pDb, const std::string& i_id_level)
   }
 
   // ask only sometimes
-  v_rand = (int) (101.0 * (rand() / (RAND_MAX + 1.0))); // 101 according to manpage to get a number between 0 and 100
+  v_rand = (int) (1001.0 * (rand() / (RAND_MAX + 1.0))); // 101 according to manpage to get a number between 0 and 1000
   if(v_rand > VOTE_ASK_FREQUENCY) {
+    return false;
+  }
+
+  // must be a weblevels
+  if(pDb->isOnTheWeb(i_id_level) == false) {
     return false;
   }
 

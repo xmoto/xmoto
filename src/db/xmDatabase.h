@@ -152,6 +152,7 @@ public:
   int webrooms_getHighscoreTime(const std::string& i_id_room,
 				const std::string& i_id_level); /* or a negativ value if not */
   void webLoadDataFirstTime();
+  bool isOnTheWeb(const std::string& i_id_level);
 
   /* configuration */
 	/* if you save several values, use begin and end to make it faster */
