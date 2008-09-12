@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-08-22 17:48+0200\n"
+"POT-Creation-Date: 2008-09-13 00:31+0200\n"
 "PO-Revision-Date: 2007-10-17 14:34+0200\n"
 "Last-Translator: Ville Lahdenvuo <tuhoojabotti@gmail.com>\n"
 "Language-Team: \n"
@@ -74,7 +74,7 @@ msgstr "Toiminto"
 msgid "All (on this computer)"
 msgstr "Kaikki (tällä tietokoneella)"
 
-#: src/GameText.h:48 src/GameText.h:626
+#: src/GameText.h:48 src/GameText.h:652
 msgid "All levels"
 msgstr "Kaikki kentät"
 
@@ -1184,7 +1184,7 @@ msgstr "Web-äänestys"
 msgid "Statistics"
 msgstr "Tilastot"
 
-#: src/GameText.h:358 src/GameText.h:637
+#: src/GameText.h:358 src/GameText.h:663
 msgid "By best driver"
 msgstr "Parhaan ajajan mukaan"
 
@@ -2217,343 +2217,439 @@ msgid "Preselect the retry button when dying or finishing a level"
 msgstr ""
 
 #: src/GameText.h:623
+msgid "No idea"
+msgstr ""
+
+#: src/GameText.h:624
+msgid "Beginner"
+msgstr ""
+
+#: src/GameText.h:625
+msgid "Expert"
+msgstr ""
+
+#: src/GameText.h:626
+msgid "Master"
+msgstr ""
+
+#: src/GameText.h:627
+msgid "God"
+msgstr ""
+
+#: src/GameText.h:628
+msgid "Not nice at all"
+msgstr ""
+
+#: src/GameText.h:629
+msgid "Not nice"
+msgstr ""
+
+#: src/GameText.h:630
+msgid "Nice"
+msgstr ""
+
+#: src/GameText.h:631
+msgid "Really nice"
+msgstr ""
+
+#: src/GameText.h:632
+msgid "Send this report"
+msgstr ""
+
+#: src/GameText.h:633
+msgid "Skip this report"
+msgstr ""
+
+#: src/GameText.h:635
+msgid "You don't want to vote"
+msgstr ""
+
+#: src/GameText.h:636
+msgid "Really easy"
+msgstr ""
+
+#: src/GameText.h:637
+msgid "No technical difficulty"
+msgstr ""
+
+#: src/GameText.h:638
+msgid "At least one difficulty"
+msgstr ""
+
+#: src/GameText.h:639
+msgid "Several difficulties"
+msgstr ""
+
+#: src/GameText.h:640
+msgid "Impossible"
+msgstr ""
+
+#: src/GameText.h:641
+msgid "Basic blocks, no decoration"
+msgstr ""
+
+#: src/GameText.h:642
+msgid "Basic decoration, not smooth blocks"
+msgstr ""
+
+#: src/GameText.h:643
+msgid "Not original"
+msgstr ""
+
+#: src/GameText.h:644
+msgid "Nice, could be better"
+msgstr ""
+
+#: src/GameText.h:645
+msgid "Several textures, sprites, ..."
+msgstr ""
+
+#: src/GameText.h:646
+msgid "Send this report on the webserver"
+msgstr ""
+
+#: src/GameText.h:647
+msgid "Don't send this report on the webserver"
+msgstr ""
+
+#: src/GameText.h:649
 msgid "Levels with no highscore"
 msgstr "Kentät ilman huipputulosta"
 
-#: src/GameText.h:624 src/GameText.h:658
+#: src/GameText.h:650 src/GameText.h:684
 msgid "Levels you have not completed"
 msgstr "Kentät, joita et ole suorittanut"
 
-#: src/GameText.h:625
+#: src/GameText.h:651
 msgid "You're not the highscore holder"
 msgstr "Et ole huipputuloksen haltija"
 
-#: src/GameText.h:627
+#: src/GameText.h:653
 msgid "New and updated levels"
 msgstr "Uudet ja päivitetyt kentät"
 
-#: src/GameText.h:628
+#: src/GameText.h:654
 msgid "Favorite levels"
 msgstr "Suosikkikentät"
 
-#: src/GameText.h:629
+#: src/GameText.h:655
 msgid "Blacklisted levels"
 msgstr "Mustan listan kentät"
 
-#: src/GameText.h:630
+#: src/GameText.h:656
 msgid "Nicest levels"
 msgstr "Hienoimmat kentät"
 
-#: src/GameText.h:631
+#: src/GameText.h:657
 msgid "Hardest levels"
 msgstr "Vaikeimmat kentät"
 
-#: src/GameText.h:632
+#: src/GameText.h:658
 msgid "Easiest levels"
 msgstr "Helpoimmat kentät"
 
-#: src/GameText.h:633
+#: src/GameText.h:659
 msgid "Crappiest levels"
 msgstr "Huonoimmat kentät"
 
-#: src/GameText.h:634
+#: src/GameText.h:660
 msgid "Scripted levels"
 msgstr "Skriptatut levelit"
 
-#: src/GameText.h:635
+#: src/GameText.h:661
 msgid "Musical levels"
 msgstr "Muskaaliset kentät"
 
-#: src/GameText.h:636
+#: src/GameText.h:662
 msgid "Physics levels"
 msgstr "Kentät, joissa on liikkuvia objekteja"
 
-#: src/GameText.h:638
+#: src/GameText.h:664
 msgid "Last played levels"
 msgstr "Viimeksi pelatut kentät"
 
-#: src/GameText.h:639
+#: src/GameText.h:665
 msgid "Never played levels"
 msgstr "Pelaamattomat kentät"
 
-#: src/GameText.h:640
+#: src/GameText.h:666
 msgid "Most played levels"
 msgstr "Eniten pelatut kentät"
 
-#: src/GameText.h:641
+#: src/GameText.h:667
 msgid "Less played levels (but played)"
 msgstr "Vähiten pelatut kentät kuitenkin joskus pelatut)"
 
-#: src/GameText.h:642
+#: src/GameText.h:668
 msgid "Last highscores"
 msgstr "Viimeisimmät huipputulokset"
 
-#: src/GameText.h:643
+#: src/GameText.h:669
 msgid "Last levels"
 msgstr "Viimeisimmät kentät"
 
-#: src/GameText.h:644
+#: src/GameText.h:670
 msgid "Oldest highscores"
 msgstr "Vanhimmat huipputulokset"
 
-#: src/GameText.h:645
+#: src/GameText.h:671
 msgid "Platinum"
 msgstr "Platina"
 
-#: src/GameText.h:646
+#: src/GameText.h:672
 msgid "Gold"
 msgstr "Kulta"
 
-#: src/GameText.h:647
+#: src/GameText.h:673
 msgid "Silver"
 msgstr "Hopea"
 
-#: src/GameText.h:648
+#: src/GameText.h:674
 msgid "Bronze"
 msgstr "Pronssi"
 
-#: src/GameText.h:649
+#: src/GameText.h:675
 msgid "No medal"
 msgstr "Ei mitalia"
 
-#: src/GameText.h:650
+#: src/GameText.h:676
 msgid "My levels"
 msgstr "Omat kentät"
 
-#: src/GameText.h:651
+#: src/GameText.h:677
 msgid "Crappy levels"
 msgstr "Huonot kentät"
 
-#: src/GameText.h:652
+#: src/GameText.h:678
 msgid "Shortest levels"
 msgstr "Lyhyimmät kentät"
 
-#: src/GameText.h:653
+#: src/GameText.h:679
 msgid "Medium levels"
 msgstr "Keskivaikeat kentät"
 
-#: src/GameText.h:654
+#: src/GameText.h:680
 msgid "Long levels"
 msgstr "Pitkät kentät"
 
-#: src/GameText.h:655
+#: src/GameText.h:681
 msgid "Very long levels"
 msgstr "Erittäin pitkät kentät"
 
-#: src/GameText.h:657
+#: src/GameText.h:683
 msgid "Levels with no highscore in your room"
 msgstr "Huipputuloksettomat kentät huoneessasi"
 
-#: src/GameText.h:659
+#: src/GameText.h:685
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Joku huoneessa teki paremman huipputuloksen kuin sinä"
 
-#: src/GameText.h:660
+#: src/GameText.h:686
 msgid "All X-Moto levels"
 msgstr "Kaikki X-Moto-kentät"
 
-#: src/GameText.h:661
+#: src/GameText.h:687
 msgid "New and updated levels since your last check"
 msgstr "Uudet ja päivitetyt kentät viime hakusi jälkeen"
 
-#: src/GameText.h:662
+#: src/GameText.h:688
 msgid "Your favorite levels"
 msgstr "Suosikkikentät"
 
-#: src/GameText.h:663
+#: src/GameText.h:689
 msgid "Your blacklisted levels"
 msgstr "Omat mustan listan kenttäsi"
 
-#: src/GameText.h:664
+#: src/GameText.h:690
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Web-äänestyksen mukaan hienoimmat X-Moto-kentät"
 
-#: src/GameText.h:665
+#: src/GameText.h:691
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Web-äänestyksen mukaan vaikeimmat X-Moto-kentät"
 
-#: src/GameText.h:666
+#: src/GameText.h:692
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Web-äänestyksen mukaan helpoimmat X-Moto-kentät"
 
-#: src/GameText.h:667
+#: src/GameText.h:693
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Huonoimmat X-Moto kentät web-äänestyksen mukaan"
 
-#: src/GameText.h:668
+#: src/GameText.h:694
 msgid "X-Moto levels which are dynamic"
 msgstr "Dynaamiset X-Moto-kentät"
 
-#: src/GameText.h:669
+#: src/GameText.h:695
 msgid "X-Moto levels with a background music"
 msgstr "Taustamusiikilliset X-Moto-kentät"
 
-#: src/GameText.h:670
+#: src/GameText.h:696
 msgid "X-Moto levels using strongly physics"
 msgstr "X-Moto kentät, jotka käyttävät paljon liikkyvia objekteja"
 
-#: src/GameText.h:671
+#: src/GameText.h:697
 msgid "Last levels you have played"
 msgstr "Viimeksi pelaamasi kentät"
 
-#: src/GameText.h:672
+#: src/GameText.h:698
 msgid "X-Moto levels you never played"
 msgstr "X-Moto-kentät, joita et ole koskaan pelannut"
 
-#: src/GameText.h:673
+#: src/GameText.h:699
 msgid "X-Moto levels you have played the most"
 msgstr "X-Moto-kentät, joita olet pelannut eniten"
 
-#: src/GameText.h:674
+#: src/GameText.h:700
 msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto-kentät, joita olet pelannut vain muutaman kerran"
 
-#: src/GameText.h:675
+#: src/GameText.h:701
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "X-Moto-kentät, joilla on tuore huipputulos huoneessasi"
 
-#: src/GameText.h:676
+#: src/GameText.h:702
 msgid "Last created X-Moto levels"
 msgstr "Tuoreimmat X-Moto-kentät"
 
-#: src/GameText.h:677
+#: src/GameText.h:703
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto-kentät, joilla on vanha huipputulos huoneessasi"
 
-#: src/GameText.h:678
+#: src/GameText.h:704
 msgid "You have the room highscore"
 msgstr "Sinulla on huoneen huipputulos"
 
-#: src/GameText.h:679
+#: src/GameText.h:705
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Huipputuloksesi on melkein huoneen huipputulos (95%)"
 
-#: src/GameText.h:680
+#: src/GameText.h:706
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Huipputuloksesi on melkein huoneen huipputulos (90%-95%)"
 
-#: src/GameText.h:681
+#: src/GameText.h:707
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Huipputuloksesi on melkein huoneen huipputulos (80%-90%)"
 
-#: src/GameText.h:682
+#: src/GameText.h:708
 msgid "The room highscore is really better than your own highscore"
 msgstr "Huoneen huipputulos on paljon parempi kuin omasi"
 
-#: src/GameText.h:683
+#: src/GameText.h:709
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Kenttäpaketti \"%s\""
 
-#: src/GameText.h:684
+#: src/GameText.h:710
 #, c-format
 msgid "Highscores by %s"
 msgstr "Huipputulokset pelaajalta %s"
 
-#: src/GameText.h:685
+#: src/GameText.h:711
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Oheiskentät ('My levels'-hakemistossa)"
 
-#: src/GameText.h:686
+#: src/GameText.h:712
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr "'Huonoiksi' merkatut kentät piilotetaan kaikissa muissa paketeissa"
 
-#: src/GameText.h:687
+#: src/GameText.h:713
 msgid "The shortest levels (less than 25 seconds)"
 msgstr "Lyhimmät kentät (alle 25 sekuntia)"
 
-#: src/GameText.h:688
+#: src/GameText.h:714
 msgid "The medium levels (25 seconds to 60)"
 msgstr "Keskiverto kentät (25:stä sekunnista 60:een)"
 
-#: src/GameText.h:689
+#: src/GameText.h:715
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr "Pitkät kentät (yhdestä minuutista kahteen minuuttiin)"
 
-#: src/GameText.h:690
+#: src/GameText.h:716
 msgid "The longest levels (more than 2 minutes)"
 msgstr "Pisimmät kentät (enemmän kuin 2 minuuttia)"
 
-#: src/GameText.h:692
+#: src/GameText.h:718
 msgid "Ugly mode enabled"
 msgstr "Ruma tila päällä"
 
-#: src/GameText.h:693
+#: src/GameText.h:719
 msgid "Ugly mode disabled"
 msgstr "Ruma tila pois päältä"
 
-#: src/GameText.h:694
+#: src/GameText.h:720
 msgid "Theme mode enabled"
 msgstr "Teematila päällä"
 
-#: src/GameText.h:695
+#: src/GameText.h:721
 msgid "Theme mode disabled"
 msgstr "Teematila pois päältä"
 
-#: src/GameText.h:696
+#: src/GameText.h:722
 msgid "UglyOver mode enabled"
 msgstr "Erittäin ruma tila päällä"
 
-#: src/GameText.h:697
+#: src/GameText.h:723
 msgid "UglyOver mode disabled"
 msgstr "Erittäin ruma tila pois päältä"
 
-#: src/GameText.h:698
+#: src/GameText.h:724
 msgid "Web connection enabled"
 msgstr "Internet-yhteys päällä"
 
-#: src/GameText.h:699
+#: src/GameText.h:725
 msgid "Web connection disabled"
 msgstr "Internet-yhteys pois päältä"
 
-#: src/GameText.h:700
+#: src/GameText.h:726
 msgid "Replay interpolation enabled"
 msgstr "Toistovideon interpolaatio päällä"
 
-#: src/GameText.h:701
+#: src/GameText.h:727
 msgid "Replay interpolation disabled"
 msgstr "Toistovideon interpolaatio pois päältä"
 
-#: src/GameText.h:702
+#: src/GameText.h:728
 msgid "Fps enabled"
 msgstr "Fps mahdollinen"
 
-#: src/GameText.h:703
+#: src/GameText.h:729
 msgid "Fps disabled"
 msgstr "Fps pois päältä"
 
-#: src/GameText.h:704
+#: src/GameText.h:730
 msgid "Audio enabled"
 msgstr "Ääni mahdollinen"
 
-#: src/GameText.h:705
+#: src/GameText.h:731
 msgid "Audio disabled"
 msgstr "Ääni pois päältä"
 
-#: src/GameText.h:707
+#: src/GameText.h:733
 msgid "No training positions stored"
 msgstr "Ei harjoitus sijainteja varattu"
 
-#: src/GameText.h:708
+#: src/GameText.h:734
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr "Harjoitus sijainti %i/%i varattu"
 
-#: src/GameText.h:709
+#: src/GameText.h:735
 #, c-format
 msgid "Stored as training position %i"
 msgstr "%i Varattu harjoitus sijaintina "
 
-#: src/GameText.h:711
+#: src/GameText.h:737
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/GameText.h:714
+#: src/GameText.h:740
 msgid "FontGroup:GENERAL"
 msgstr "FonttiRyhmä:GENERAL"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-08-22 17:48+0200\n"
+"POT-Creation-Date: 2008-09-13 00:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,7 +74,7 @@ msgstr ""
 msgid "All (on this computer)"
 msgstr ""
 
-#: src/GameText.h:48 src/GameText.h:626
+#: src/GameText.h:48 src/GameText.h:652
 msgid "All levels"
 msgstr ""
 
@@ -1152,7 +1152,7 @@ msgstr ""
 msgid "Statistics"
 msgstr ""
 
-#: src/GameText.h:358 src/GameText.h:637
+#: src/GameText.h:358 src/GameText.h:663
 msgid "By best driver"
 msgstr ""
 
@@ -2172,343 +2172,439 @@ msgid "Preselect the retry button when dying or finishing a level"
 msgstr ""
 
 #: src/GameText.h:623
-msgid "Levels with no highscore"
+msgid "No idea"
 msgstr ""
 
-#: src/GameText.h:624 src/GameText.h:658
-msgid "Levels you have not completed"
+#: src/GameText.h:624
+msgid "Beginner"
 msgstr ""
 
 #: src/GameText.h:625
-msgid "You're not the highscore holder"
+msgid "Expert"
+msgstr ""
+
+#: src/GameText.h:626
+msgid "Master"
 msgstr ""
 
 #: src/GameText.h:627
-msgid "New and updated levels"
+msgid "God"
 msgstr ""
 
 #: src/GameText.h:628
-msgid "Favorite levels"
+msgid "Not nice at all"
 msgstr ""
 
 #: src/GameText.h:629
-msgid "Blacklisted levels"
+msgid "Not nice"
 msgstr ""
 
 #: src/GameText.h:630
-msgid "Nicest levels"
+msgid "Nice"
 msgstr ""
 
 #: src/GameText.h:631
-msgid "Hardest levels"
+msgid "Really nice"
 msgstr ""
 
 #: src/GameText.h:632
-msgid "Easiest levels"
+msgid "Send this report"
 msgstr ""
 
 #: src/GameText.h:633
-msgid "Crappiest levels"
-msgstr ""
-
-#: src/GameText.h:634
-msgid "Scripted levels"
+msgid "Skip this report"
 msgstr ""
 
 #: src/GameText.h:635
-msgid "Musical levels"
+msgid "You don't want to vote"
 msgstr ""
 
 #: src/GameText.h:636
-msgid "Physics levels"
+msgid "Really easy"
+msgstr ""
+
+#: src/GameText.h:637
+msgid "No technical difficulty"
 msgstr ""
 
 #: src/GameText.h:638
-msgid "Last played levels"
+msgid "At least one difficulty"
 msgstr ""
 
 #: src/GameText.h:639
-msgid "Never played levels"
+msgid "Several difficulties"
 msgstr ""
 
 #: src/GameText.h:640
-msgid "Most played levels"
+msgid "Impossible"
 msgstr ""
 
 #: src/GameText.h:641
-msgid "Less played levels (but played)"
+msgid "Basic blocks, no decoration"
 msgstr ""
 
 #: src/GameText.h:642
-msgid "Last highscores"
+msgid "Basic decoration, not smooth blocks"
 msgstr ""
 
 #: src/GameText.h:643
-msgid "Last levels"
+msgid "Not original"
 msgstr ""
 
 #: src/GameText.h:644
-msgid "Oldest highscores"
+msgid "Nice, could be better"
 msgstr ""
 
 #: src/GameText.h:645
-msgid "Platinum"
+msgid "Several textures, sprites, ..."
 msgstr ""
 
 #: src/GameText.h:646
-msgid "Gold"
+msgid "Send this report on the webserver"
 msgstr ""
 
 #: src/GameText.h:647
-msgid "Silver"
-msgstr ""
-
-#: src/GameText.h:648
-msgid "Bronze"
+msgid "Don't send this report on the webserver"
 msgstr ""
 
 #: src/GameText.h:649
-msgid "No medal"
+msgid "Levels with no highscore"
 msgstr ""
 
-#: src/GameText.h:650
-msgid "My levels"
+#: src/GameText.h:650 src/GameText.h:684
+msgid "Levels you have not completed"
 msgstr ""
 
 #: src/GameText.h:651
-msgid "Crappy levels"
-msgstr ""
-
-#: src/GameText.h:652
-msgid "Shortest levels"
+msgid "You're not the highscore holder"
 msgstr ""
 
 #: src/GameText.h:653
-msgid "Medium levels"
+msgid "New and updated levels"
 msgstr ""
 
 #: src/GameText.h:654
-msgid "Long levels"
+msgid "Favorite levels"
 msgstr ""
 
 #: src/GameText.h:655
-msgid "Very long levels"
+msgid "Blacklisted levels"
+msgstr ""
+
+#: src/GameText.h:656
+msgid "Nicest levels"
 msgstr ""
 
 #: src/GameText.h:657
-msgid "Levels with no highscore in your room"
+msgid "Hardest levels"
+msgstr ""
+
+#: src/GameText.h:658
+msgid "Easiest levels"
 msgstr ""
 
 #: src/GameText.h:659
-msgid "Somebody in the room made a better highscore than yours"
+msgid "Crappiest levels"
 msgstr ""
 
 #: src/GameText.h:660
-msgid "All X-Moto levels"
+msgid "Scripted levels"
 msgstr ""
 
 #: src/GameText.h:661
-msgid "New and updated levels since your last check"
+msgid "Musical levels"
 msgstr ""
 
 #: src/GameText.h:662
-msgid "Your favorite levels"
-msgstr ""
-
-#: src/GameText.h:663
-msgid "Your blacklisted levels"
+msgid "Physics levels"
 msgstr ""
 
 #: src/GameText.h:664
-msgid "Nicest X-Moto levels according to the web votes"
+msgid "Last played levels"
 msgstr ""
 
 #: src/GameText.h:665
-msgid "Hardest X-Moto levels according to the web votes"
+msgid "Never played levels"
 msgstr ""
 
 #: src/GameText.h:666
-msgid "Easiest X-Moto levels according to the web votes"
+msgid "Most played levels"
 msgstr ""
 
 #: src/GameText.h:667
-msgid "Crappiest X-Moto levels according to the web votes"
+msgid "Less played levels (but played)"
 msgstr ""
 
 #: src/GameText.h:668
-msgid "X-Moto levels which are dynamic"
+msgid "Last highscores"
 msgstr ""
 
 #: src/GameText.h:669
-msgid "X-Moto levels with a background music"
+msgid "Last levels"
 msgstr ""
 
 #: src/GameText.h:670
-msgid "X-Moto levels using strongly physics"
+msgid "Oldest highscores"
 msgstr ""
 
 #: src/GameText.h:671
-msgid "Last levels you have played"
+msgid "Platinum"
 msgstr ""
 
 #: src/GameText.h:672
-msgid "X-Moto levels you never played"
+msgid "Gold"
 msgstr ""
 
 #: src/GameText.h:673
-msgid "X-Moto levels you have played the most"
+msgid "Silver"
 msgstr ""
 
 #: src/GameText.h:674
-msgid "X-Moto levels you have played only a few times"
+msgid "Bronze"
 msgstr ""
 
 #: src/GameText.h:675
-msgid "X-Moto levels having a recent highscore in your room"
+msgid "No medal"
 msgstr ""
 
 #: src/GameText.h:676
-msgid "Last created X-Moto levels"
+msgid "My levels"
 msgstr ""
 
 #: src/GameText.h:677
-msgid "X-Moto levels having an old highscore in your room"
+msgid "Crappy levels"
 msgstr ""
 
 #: src/GameText.h:678
-msgid "You have the room highscore"
+msgid "Shortest levels"
 msgstr ""
 
 #: src/GameText.h:679
-msgid "Your personal highscore finish time is almost the room highscore (95%)"
+msgid "Medium levels"
 msgstr ""
 
 #: src/GameText.h:680
+msgid "Long levels"
+msgstr ""
+
+#: src/GameText.h:681
+msgid "Very long levels"
+msgstr ""
+
+#: src/GameText.h:683
+msgid "Levels with no highscore in your room"
+msgstr ""
+
+#: src/GameText.h:685
+msgid "Somebody in the room made a better highscore than yours"
+msgstr ""
+
+#: src/GameText.h:686
+msgid "All X-Moto levels"
+msgstr ""
+
+#: src/GameText.h:687
+msgid "New and updated levels since your last check"
+msgstr ""
+
+#: src/GameText.h:688
+msgid "Your favorite levels"
+msgstr ""
+
+#: src/GameText.h:689
+msgid "Your blacklisted levels"
+msgstr ""
+
+#: src/GameText.h:690
+msgid "Nicest X-Moto levels according to the web votes"
+msgstr ""
+
+#: src/GameText.h:691
+msgid "Hardest X-Moto levels according to the web votes"
+msgstr ""
+
+#: src/GameText.h:692
+msgid "Easiest X-Moto levels according to the web votes"
+msgstr ""
+
+#: src/GameText.h:693
+msgid "Crappiest X-Moto levels according to the web votes"
+msgstr ""
+
+#: src/GameText.h:694
+msgid "X-Moto levels which are dynamic"
+msgstr ""
+
+#: src/GameText.h:695
+msgid "X-Moto levels with a background music"
+msgstr ""
+
+#: src/GameText.h:696
+msgid "X-Moto levels using strongly physics"
+msgstr ""
+
+#: src/GameText.h:697
+msgid "Last levels you have played"
+msgstr ""
+
+#: src/GameText.h:698
+msgid "X-Moto levels you never played"
+msgstr ""
+
+#: src/GameText.h:699
+msgid "X-Moto levels you have played the most"
+msgstr ""
+
+#: src/GameText.h:700
+msgid "X-Moto levels you have played only a few times"
+msgstr ""
+
+#: src/GameText.h:701
+msgid "X-Moto levels having a recent highscore in your room"
+msgstr ""
+
+#: src/GameText.h:702
+msgid "Last created X-Moto levels"
+msgstr ""
+
+#: src/GameText.h:703
+msgid "X-Moto levels having an old highscore in your room"
+msgstr ""
+
+#: src/GameText.h:704
+msgid "You have the room highscore"
+msgstr ""
+
+#: src/GameText.h:705
+msgid "Your personal highscore finish time is almost the room highscore (95%)"
+msgstr ""
+
+#: src/GameText.h:706
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
 
-#: src/GameText.h:681
+#: src/GameText.h:707
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
 
-#: src/GameText.h:682
-msgid "The room highscore is really better than your own highscore"
-msgstr ""
-
-#: src/GameText.h:683
-#, c-format
-msgid "Level pack \"%s\""
-msgstr ""
-
-#: src/GameText.h:684
-#, c-format
-msgid "Highscores by %s"
-msgstr ""
-
-#: src/GameText.h:685
-msgid "External levels (the one you put into the 'My levels' directory)"
-msgstr ""
-
-#: src/GameText.h:686
-msgid "Levels marked 'crappy' are hidden in all other packs"
-msgstr ""
-
-#: src/GameText.h:687
-msgid "The shortest levels (less than 25 seconds)"
-msgstr ""
-
-#: src/GameText.h:688
-msgid "The medium levels (25 seconds to 60)"
-msgstr ""
-
-#: src/GameText.h:689
-msgid "The long levels (1 minute to 2 minutes)"
-msgstr ""
-
-#: src/GameText.h:690
-msgid "The longest levels (more than 2 minutes)"
-msgstr ""
-
-#: src/GameText.h:692
-msgid "Ugly mode enabled"
-msgstr ""
-
-#: src/GameText.h:693
-msgid "Ugly mode disabled"
-msgstr ""
-
-#: src/GameText.h:694
-msgid "Theme mode enabled"
-msgstr ""
-
-#: src/GameText.h:695
-msgid "Theme mode disabled"
-msgstr ""
-
-#: src/GameText.h:696
-msgid "UglyOver mode enabled"
-msgstr ""
-
-#: src/GameText.h:697
-msgid "UglyOver mode disabled"
-msgstr ""
-
-#: src/GameText.h:698
-msgid "Web connection enabled"
-msgstr ""
-
-#: src/GameText.h:699
-msgid "Web connection disabled"
-msgstr ""
-
-#: src/GameText.h:700
-msgid "Replay interpolation enabled"
-msgstr ""
-
-#: src/GameText.h:701
-msgid "Replay interpolation disabled"
-msgstr ""
-
-#: src/GameText.h:702
-msgid "Fps enabled"
-msgstr ""
-
-#: src/GameText.h:703
-msgid "Fps disabled"
-msgstr ""
-
-#: src/GameText.h:704
-msgid "Audio enabled"
-msgstr ""
-
-#: src/GameText.h:705
-msgid "Audio disabled"
-msgstr ""
-
-#: src/GameText.h:707
-msgid "No training positions stored"
-msgstr ""
-
 #: src/GameText.h:708
-#, c-format
-msgid "Training position %i/%i restored"
+msgid "The room highscore is really better than your own highscore"
 msgstr ""
 
 #: src/GameText.h:709
 #, c-format
-msgid "Stored as training position %i"
+msgid "Level pack \"%s\""
+msgstr ""
+
+#: src/GameText.h:710
+#, c-format
+msgid "Highscores by %s"
 msgstr ""
 
 #: src/GameText.h:711
+msgid "External levels (the one you put into the 'My levels' directory)"
+msgstr ""
+
+#: src/GameText.h:712
+msgid "Levels marked 'crappy' are hidden in all other packs"
+msgstr ""
+
+#: src/GameText.h:713
+msgid "The shortest levels (less than 25 seconds)"
+msgstr ""
+
+#: src/GameText.h:714
+msgid "The medium levels (25 seconds to 60)"
+msgstr ""
+
+#: src/GameText.h:715
+msgid "The long levels (1 minute to 2 minutes)"
+msgstr ""
+
+#: src/GameText.h:716
+msgid "The longest levels (more than 2 minutes)"
+msgstr ""
+
+#: src/GameText.h:718
+msgid "Ugly mode enabled"
+msgstr ""
+
+#: src/GameText.h:719
+msgid "Ugly mode disabled"
+msgstr ""
+
+#: src/GameText.h:720
+msgid "Theme mode enabled"
+msgstr ""
+
+#: src/GameText.h:721
+msgid "Theme mode disabled"
+msgstr ""
+
+#: src/GameText.h:722
+msgid "UglyOver mode enabled"
+msgstr ""
+
+#: src/GameText.h:723
+msgid "UglyOver mode disabled"
+msgstr ""
+
+#: src/GameText.h:724
+msgid "Web connection enabled"
+msgstr ""
+
+#: src/GameText.h:725
+msgid "Web connection disabled"
+msgstr ""
+
+#: src/GameText.h:726
+msgid "Replay interpolation enabled"
+msgstr ""
+
+#: src/GameText.h:727
+msgid "Replay interpolation disabled"
+msgstr ""
+
+#: src/GameText.h:728
+msgid "Fps enabled"
+msgstr ""
+
+#: src/GameText.h:729
+msgid "Fps disabled"
+msgstr ""
+
+#: src/GameText.h:730
+msgid "Audio enabled"
+msgstr ""
+
+#: src/GameText.h:731
+msgid "Audio disabled"
+msgstr ""
+
+#: src/GameText.h:733
+msgid "No training positions stored"
+msgstr ""
+
+#: src/GameText.h:734
+#, c-format
+msgid "Training position %i/%i restored"
+msgstr ""
+
+#: src/GameText.h:735
+#, c-format
+msgid "Stored as training position %i"
+msgstr ""
+
+#: src/GameText.h:737
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/GameText.h:714
+#: src/GameText.h:740
 msgid "FontGroup:GENERAL"
 msgstr ""
 
