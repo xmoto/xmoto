@@ -717,13 +717,15 @@ void StateMainMenu::createGUIIfNeeded() {
 
 void StateMainMenu::updateProfileStrings() {
   UIStatic* v_strTxt;
+  xmDatabase* pDb = xmDatabase::instance("main");
 
   // profile title
   v_strTxt = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:PLAYERTAG"));
   std::string v_caption;
 
   if(XMSession::instance()->profile() != "") {
-    v_caption = std::string(GAMETEXT_PLAYER) + ": " + XMSession::instance()->profile() + "@" + GameApp::instance()->getWebRoomName(0);
+    v_caption = std::string(GAMETEXT_PLAYER) + ": " + XMSession::instance()->profile()
+      + "@" + GameApp::instance()->getWebRoomName(0, pDb);
   }
 
   v_strTxt->setCaption(v_caption);

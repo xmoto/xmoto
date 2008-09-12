@@ -18,39 +18,24 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEVOTE_H__
-#define __STATEVOTE_H__
+#ifndef __STATESENDVOTE_H__
+#define __STATESENDVOTE_H__
 
-#include "StateManager.h"
-#include "StateMenu.h"
+#include "StateUpdate.h"
 
-class StateVote : public StateMenu {
-  public:
-  StateVote(const std::string& i_idlevel,
-	    bool drawStateBehind    = true,
-	    bool updateStatesBehind = false
-	    );
-  virtual ~StateVote();
+class StateSendVote : public StateUpdate {
+public:
+  StateSendVote(const std::string& i_idlevel,
+		const std::string& i_difficulty_value, const std::string& i_quality_value,
+		bool drawStateBehind    = true,
+		bool updateStatesBehind = false);
+  virtual ~StateSendVote();
 
-  static void clean();
-
-  virtual void enter();
-  virtual void leave();
-
+  void callAfterThreadFinished(int threadResult);
   virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
 
-  protected:
-  virtual void checkEvents();
-
-  private:
-  std::string m_idlevel;
-
-  /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded();
-
-  bool isToSkip();
-  void updateRights();
+protected:
+  virtual void checkEvents() {}
 };
 
 #endif

@@ -135,13 +135,13 @@ public:
 
   void updateWebHighscores();
 
-  std::string getWebRoomURL(unsigned int i_number, xmDatabase* pDb = NULL);
-  std::string getWebRoomName(unsigned int i_number, xmDatabase* pDb = NULL);
+  std::string getWebRoomURL(unsigned int i_number, xmDatabase* pDb);
+  std::string getWebRoomName(unsigned int i_number, xmDatabase* pDb);
     
   std::string determineNextLevel(const std::string& i_id_level);
   std::string determinePreviousLevel(const std::string& i_id_level);
 
-  void initReplaysFromDir(xmDatabase* threadDb = NULL,
+  void initReplaysFromDir(xmDatabase* threadDb,
 			  XMotoLoadReplaysInterface* pLoadReplaysInterface = NULL);
 
   void gameScreenshot();

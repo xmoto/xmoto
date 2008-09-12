@@ -176,6 +176,9 @@ public:
    */
   void setSynchronized();
 
+  /* votes */
+  void markAsVoted(const std::string& i_profile, const std::string& i_id_level);
+  bool isVoted(const std::string& i_profile, const std::string& i_id_level);
 
   /* data fixes */
   void fixStatsProfilesLevelsNbCompleted();

@@ -8,7 +8,6 @@
 #include "helpers/VExcept.h"
 #include "helpers/Log.h"
 #include "VXml.h"
-#include <curl/curl.h>
 #include "GameText.h"
 
 #ifdef WIN32
@@ -24,7 +23,7 @@
 #include "db/xmDatabase.h"
 #include "md5sum/md5file.h"
 
-#define DEFAULT_REPLAYUPLOAD_MSGFILE "UploadReplayMsg.xml"
+#define DEFAULT_WWW_MSGFILE "wwwMsg.xml"
 
 void WebRoom::downloadReplay(const std::string& i_url) {
   std::string i_rplFilename = FS::getReplaysDir()
@@ -306,13 +305,11 @@ void FSWeb::uploadReplay(const std::string& p_replayFilename,
   std::string v_proxy_server;
   std::string v_proxy_auth_str;
   std::string v_www_agent = WWW_AGENT;
-  f_curl_upload_data v_data;
-  struct curl_slist *v_headers;
   std::string v_accept_language;
 
   FILE *v_destinationFile;
   std::string v_local_file;
-  v_local_file = FS::getUserDir() + "/" + DEFAULT_REPLAYUPLOAD_MSGFILE;
+  v_local_file = FS::getUserDir() + "/" + DEFAULT_WWW_MSGFILE;
 
   struct curl_httppost *v_post, *v_last;
 
@@ -320,7 +317,7 @@ void FSWeb::uploadReplay(const std::string& p_replayFilename,
 
   /* open the file */
   if( (v_destinationFile = fopen(v_local_file.c_str(), "wb")) == false) {
-    throw Exception("error : unable to open output file " DEFAULT_REPLAYUPLOAD_MSGFILE);
+    throw Exception("error : unable to open output file " DEFAULT_WWW_MSGFILE);
   }
       
   v_curl = curl_easy_init();
@@ -329,8 +326,6 @@ void FSWeb::uploadReplay(const std::string& p_replayFilename,
     remove(v_local_file.c_str());
     throw Exception("error : unable to init curl"); 
   }
-
-  curl_easy_setopt(v_curl, CURLOPT_URL, p_url_to_transfert.c_str());
 
   v_post = NULL;
   v_last = NULL;
@@ -347,68 +342,9 @@ void FSWeb::uploadReplay(const std::string& p_replayFilename,
   curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "replay",
          CURLFORM_FILE, p_replayFilename.c_str(), CURLFORM_END);
 
-  curl_easy_setopt(v_curl, CURLOPT_HTTPPOST, v_post);
-
-  curl_easy_setopt(v_curl, CURLOPT_TIMEOUT, DEFAULT_TRANSFERT_TIMEOUT);
-  curl_easy_setopt(v_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFERT_CONNECT_TIMEOUT);
-  curl_easy_setopt(v_curl, CURLOPT_WRITEDATA, v_destinationFile);
-  curl_easy_setopt(v_curl, CURLOPT_WRITEFUNCTION, FSWeb::writeData);
-  curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  v_www_agent.c_str());
-  curl_easy_setopt(v_curl, CURLOPT_NOSIGNAL, 1);
-  curl_easy_setopt(v_curl, CURLOPT_FAILONERROR, 1);
-  curl_easy_setopt(v_curl, CURLOPT_FOLLOWLOCATION, 1);
-  curl_easy_setopt(v_curl, CURLOPT_ENCODING, "gzip,deflate");
-
-  v_headers = NULL;
-  v_accept_language = "Accept-Language: " + std::string(WEB_LANGUAGE);
-  v_headers = curl_slist_append(v_headers, v_accept_language.c_str()); 
-  curl_easy_setopt(v_curl, CURLOPT_HTTPHEADER, v_headers);
-
-  /* set proxy settings */
-  if(p_proxy_settings != NULL && p_proxy_settings->getTypeStr() != "") {
-    /* v_proxy_server because 
-       after call to 
-       curl_easy_setopt(v_curl, CURLOPT_PROXY, p_proxy_settings->getServer().c_str());
-       result is destroyed on call to curl_easy_perform
-    */
-    v_proxy_server = p_proxy_settings->getServer();
-    v_proxy_auth_str =
-      p_proxy_settings->getAuthentificationUser()
-      + ":"
-      + p_proxy_settings->getAuthentificationPassword();
-
-    if(p_proxy_settings->useDefaultServer() == false) {
-      curl_easy_setopt(v_curl, CURLOPT_PROXY, v_proxy_server.c_str());
-    }
-    
-    if(p_proxy_settings->useDefaultPort() == false) {
-      curl_easy_setopt(v_curl, CURLOPT_PROXYPORT, p_proxy_settings->getPort());
-    }
-    
-    curl_easy_setopt(v_curl, CURLOPT_PROXYTYPE, p_proxy_settings->getType());
-   
-    if(p_proxy_settings->useDefaultAuthentification() == false) {
-      curl_easy_setopt(v_curl, CURLOPT_PROXYUSERPWD,
-           v_proxy_auth_str.c_str());
-    }
-  }
-  /* ***** */
-
-  if(p_WebApp != NULL) {
-    v_data.v_WebApp = p_WebApp;
-
-    curl_easy_setopt(v_curl, CURLOPT_NOPROGRESS, false);
-    curl_easy_setopt(v_curl, CURLOPT_PROGRESSFUNCTION, FSWeb::f_curl_progress_callback_upload);
-    curl_easy_setopt(v_curl, CURLOPT_PROGRESSDATA, &v_data);
-  }
-
-  v_res = curl_easy_perform(v_curl);
+  v_res = performPostCurl(v_curl, v_post, p_url_to_transfert, v_destinationFile, p_WebApp, p_proxy_settings);
 
   fclose(v_destinationFile);
-
-  /* free the headers */
-  curl_slist_free_all(v_headers);
-
 
   /* CURLE_ABORTED_BY_CALLBACK is not considered as an error */
   if(v_res != CURLE_ABORTED_BY_CALLBACK) {
@@ -439,6 +375,159 @@ void FSWeb::uploadReplay(const std::string& p_replayFilename,
     remove(v_local_file.c_str());
   }
 }
+
+CURLcode FSWeb::performPostCurl(CURL *p_curl,
+				struct curl_httppost *p_post,
+				const std::string& p_url_to_transfert,
+				FILE* p_destinationFile,
+				WWWAppInterface *p_WebApp,
+				const ProxySettings *p_proxy_settings) {
+  CURLcode v_res;
+  std::string v_www_agent = WWW_AGENT;
+  struct curl_slist *v_headers;
+  f_curl_upload_data v_data;
+  std::string v_accept_language;
+  std::string v_proxy_server;
+  std::string v_proxy_auth_str;
+
+  curl_easy_setopt(p_curl, CURLOPT_URL,            p_url_to_transfert.c_str());
+  curl_easy_setopt(p_curl, CURLOPT_HTTPPOST,       p_post);
+  curl_easy_setopt(p_curl, CURLOPT_TIMEOUT,        DEFAULT_TRANSFERT_TIMEOUT);
+  curl_easy_setopt(p_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFERT_CONNECT_TIMEOUT);
+  curl_easy_setopt(p_curl, CURLOPT_WRITEDATA,      p_destinationFile);
+  curl_easy_setopt(p_curl, CURLOPT_WRITEFUNCTION,  FSWeb::writeData);
+  curl_easy_setopt(p_curl, CURLOPT_USERAGENT,      v_www_agent.c_str());
+  curl_easy_setopt(p_curl, CURLOPT_NOSIGNAL,       1);
+  curl_easy_setopt(p_curl, CURLOPT_FAILONERROR,    1);
+  curl_easy_setopt(p_curl, CURLOPT_FOLLOWLOCATION, 1);
+  curl_easy_setopt(p_curl, CURLOPT_ENCODING,       "gzip,deflate");
+  v_headers = NULL;
+  v_accept_language = "Accept-Language: " + std::string(WEB_LANGUAGE);
+  v_headers = curl_slist_append(v_headers, v_accept_language.c_str()); 
+  curl_easy_setopt(p_curl, CURLOPT_HTTPHEADER, v_headers);
+
+  /* set proxy settings */
+  if(p_proxy_settings != NULL && p_proxy_settings->getTypeStr() != "") {
+    /* v_proxy_server because 
+       after call to 
+       curl_easy_setopt(p_curl, CURLOPT_PROXY, p_proxy_settings->getServer().c_str());
+       result is destroyed on call to curl_easy_perform
+    */
+    v_proxy_server = p_proxy_settings->getServer();
+    v_proxy_auth_str =
+      p_proxy_settings->getAuthentificationUser()
+      + ":"
+      + p_proxy_settings->getAuthentificationPassword();
+
+    if(p_proxy_settings->useDefaultServer() == false) {
+      curl_easy_setopt(p_curl, CURLOPT_PROXY, v_proxy_server.c_str());
+    }
+    
+    if(p_proxy_settings->useDefaultPort() == false) {
+      curl_easy_setopt(p_curl, CURLOPT_PROXYPORT, p_proxy_settings->getPort());
+    }
+    
+    curl_easy_setopt(p_curl, CURLOPT_PROXYTYPE, p_proxy_settings->getType());
+   
+    if(p_proxy_settings->useDefaultAuthentification() == false) {
+      curl_easy_setopt(p_curl, CURLOPT_PROXYUSERPWD,v_proxy_auth_str.c_str());
+    }
+  }
+  /* ***** */
+
+  if(p_WebApp != NULL) {
+    v_data.v_WebApp = p_WebApp;
+
+    curl_easy_setopt(p_curl, CURLOPT_NOPROGRESS, false);
+    curl_easy_setopt(p_curl, CURLOPT_PROGRESSFUNCTION, FSWeb::f_curl_progress_callback_upload);
+    curl_easy_setopt(p_curl, CURLOPT_PROGRESSDATA, &v_data);
+  }
+
+  v_res = curl_easy_perform(p_curl);
+
+  /* free the headers */
+  curl_slist_free_all(v_headers);
+
+  return v_res;
+}
+
+void FSWeb::sendVote(const std::string& p_id_level,
+		     const std::string& p_difficulty_value,
+		     const std::string& p_quality_value,
+		     const std::string& p_url_to_transfert,
+		     WWWAppInterface *p_WebApp,
+		     const ProxySettings *p_proxy_settings,
+		     bool &p_msg_status,
+		     std::string &p_msg) {
+  CURL *v_curl;
+  CURLcode v_res;
+
+  FILE *v_destinationFile;
+  std::string v_local_file;
+  v_local_file = FS::getUserDir() + "/" + DEFAULT_WWW_MSGFILE;
+
+  struct curl_httppost *v_post, *v_last;
+
+  LogInfo(std::string("Sending vote").c_str());
+
+  /* open the file */
+  if( (v_destinationFile = fopen(v_local_file.c_str(), "wb")) == false) {
+    throw Exception("error : unable to open output file " DEFAULT_WWW_MSGFILE);
+  }
+      
+  v_curl = curl_easy_init();
+  if(v_curl == NULL) {
+    fclose(v_destinationFile);
+    remove(v_local_file.c_str());
+    throw Exception("error : unable to init curl"); 
+  }
+
+  v_post = NULL;
+  v_last = NULL;
+  
+  curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "game_id",
+         CURLFORM_PTRCONTENTS, p_id_level.c_str(), CURLFORM_END);
+
+  curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "difficulty",
+         CURLFORM_PTRCONTENTS, p_difficulty_value.c_str(), CURLFORM_END);
+
+  curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "quality",
+         CURLFORM_PTRCONTENTS, p_quality_value.c_str(), CURLFORM_END);
+
+  v_res = performPostCurl(v_curl, v_post, p_url_to_transfert, v_destinationFile, p_WebApp, p_proxy_settings);
+
+  fclose(v_destinationFile);
+
+  /* CURLE_ABORTED_BY_CALLBACK is not considered as an error */
+  if(v_res != CURLE_ABORTED_BY_CALLBACK) {
+
+    if(v_res != CURLE_OK) {
+      char v_err[256];
+      
+      curl_easy_cleanup(v_curl);
+      remove(v_local_file.c_str());
+      
+      snprintf(v_err, 256, "error : unable to perform curl (curl[%i]: %s)",
+	       v_res, curl_easy_strerror(v_res));
+      
+      throw Exception(v_err);
+    }
+  }
+  curl_easy_cleanup(v_curl);
+
+  /* analyse de la réponse */
+  if(v_res == CURLE_ABORTED_BY_CALLBACK) {
+    p_msg_status = 0;
+    p_msg = "Aborted";
+  } else {
+    uploadAnalyseMsg("xmoto_sendVoteResult", v_local_file, p_msg_status, p_msg);
+  }
+
+  if(XMSession::instance()->debug() == false) {
+    remove(v_local_file.c_str());
+  }
+}
+
 
 void FSWeb::uploadAnalyseMsg(const std::string& p_key,
 			     const std::string& p_filename,
@@ -511,8 +600,6 @@ void FSWeb::uploadDbSync(const std::string& p_dbSyncFilename,
   std::string v_proxy_server;
   std::string v_proxy_auth_str;
   std::string v_www_agent = WWW_AGENT;
-  f_curl_upload_data v_data;
-  struct curl_slist *v_headers;
   std::string v_accept_language;
 
   FILE *v_destinationFile;
@@ -537,8 +624,6 @@ void FSWeb::uploadDbSync(const std::string& p_dbSyncFilename,
     throw Exception("error : unable to init curl"); 
   }
 
-  curl_easy_setopt(v_curl, CURLOPT_URL, p_url_to_transfert.c_str());
-
   v_post = NULL;
   v_last = NULL;
 
@@ -559,68 +644,9 @@ void FSWeb::uploadDbSync(const std::string& p_dbSyncFilename,
   curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "dbSync",
 	       CURLFORM_FILE, p_dbSyncFilename.c_str(), CURLFORM_END);
 
-  curl_easy_setopt(v_curl, CURLOPT_HTTPPOST, v_post);
-
-  curl_easy_setopt(v_curl, CURLOPT_TIMEOUT, DEFAULT_TRANSFERT_TIMEOUT);
-  curl_easy_setopt(v_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFERT_CONNECT_TIMEOUT);
-  curl_easy_setopt(v_curl, CURLOPT_WRITEDATA, v_destinationFile);
-  curl_easy_setopt(v_curl, CURLOPT_WRITEFUNCTION, FSWeb::writeData);
-  curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  v_www_agent.c_str());
-  curl_easy_setopt(v_curl, CURLOPT_NOSIGNAL, 1);
-  curl_easy_setopt(v_curl, CURLOPT_FAILONERROR, 1);
-  curl_easy_setopt(v_curl, CURLOPT_FOLLOWLOCATION, 1);
-  curl_easy_setopt(v_curl, CURLOPT_ENCODING, "gzip,deflate");
-
-  v_headers = NULL;
-  v_accept_language = "Accept-Language: " + std::string(WEB_LANGUAGE);
-  v_headers = curl_slist_append(v_headers, v_accept_language.c_str()); 
-  curl_easy_setopt(v_curl, CURLOPT_HTTPHEADER, v_headers);
-
-  /* set proxy settings */
-  if(p_proxy_settings != NULL && p_proxy_settings->getTypeStr() != "") {
-    /* v_proxy_server because 
-       after call to 
-       curl_easy_setopt(v_curl, CURLOPT_PROXY, p_proxy_settings->getServer().c_str());
-       result is destroyed on call to curl_easy_perform
-    */
-    v_proxy_server = p_proxy_settings->getServer();
-    v_proxy_auth_str =
-      p_proxy_settings->getAuthentificationUser()
-      + ":"
-      + p_proxy_settings->getAuthentificationPassword();
-
-    if(p_proxy_settings->useDefaultServer() == false) {
-      curl_easy_setopt(v_curl, CURLOPT_PROXY, v_proxy_server.c_str());
-    }
-    
-    if(p_proxy_settings->useDefaultPort() == false) {
-      curl_easy_setopt(v_curl, CURLOPT_PROXYPORT, p_proxy_settings->getPort());
-    }
-    
-    curl_easy_setopt(v_curl, CURLOPT_PROXYTYPE, p_proxy_settings->getType());
-   
-    if(p_proxy_settings->useDefaultAuthentification() == false) {
-      curl_easy_setopt(v_curl, CURLOPT_PROXYUSERPWD,
-           v_proxy_auth_str.c_str());
-    }
-  }
-  /* ***** */
-
-  if(p_WebApp != NULL) {
-    v_data.v_WebApp = p_WebApp;
-
-    curl_easy_setopt(v_curl, CURLOPT_NOPROGRESS, false);
-    curl_easy_setopt(v_curl, CURLOPT_PROGRESSFUNCTION, FSWeb::f_curl_progress_callback_upload);
-    curl_easy_setopt(v_curl, CURLOPT_PROGRESSDATA, &v_data);
-  }
-
-  v_res = curl_easy_perform(v_curl);
+  v_res = performPostCurl(v_curl, v_post, p_url_to_transfert, v_destinationFile, p_WebApp, p_proxy_settings);
 
   fclose(v_destinationFile);
-
-  /* free the headers */
-  curl_slist_free_all(v_headers);
-
 
   /* CURLE_ABORTED_BY_CALLBACK is not considered as an error */
   if(v_res != CURLE_ABORTED_BY_CALLBACK) {

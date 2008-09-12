@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateDeadMenu.h"
 #include "../GameText.h"
 #include "../Universe.h"
+#include "states/StateVote.h"
+#include "thread/SendVoteThread.h"
 
 StateDeadJust::StateDeadJust(Universe* i_universe)
 : StateScene(i_universe, true, true)
@@ -44,6 +46,14 @@ void StateDeadJust::enter()
       m_universe->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 150);
       m_universe->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 150);
       m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name());
+    }
+  }
+
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() == 1) {
+      if(SendVoteThread::isToPropose(xmDatabase::instance("main"), m_universe->getScenes()[0]->getLevelSrc()->Id())) {
+	StateManager::instance()->pushState(new StateVote(m_universe->getScenes()[0]->getLevelSrc()->Id()));
+      }
     }
   }
 }

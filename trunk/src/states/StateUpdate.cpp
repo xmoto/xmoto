@@ -110,7 +110,7 @@ bool StateUpdate::update()
 	  v_msgboxState->setId("ERROR");
 	  StateManager::instance()->pushState(v_msgboxState);
 	} else {
-	  SysMessage::instance()->displayInformation(m_msg);
+	  SysMessage::instance()->displayError(m_msg);
 	  m_requestForEnd = true;
 	}
       } else {

@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 #include <vector>
 #include <stdio.h>
+#include <curl/curl.h>
 
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(__MACH__)
   //#define USE_HASH_MAP // removed because it seems to segfault i don't know why when i refresh levels using F5 and quit
@@ -51,6 +52,7 @@ class ThemeChoice;
 #define DEFAULT_WEBTHEMES_FILENAME        "webthemes.xml"
 #define DEFAULT_WEBTHEMES_SPRITESURLBASE  "http://xmoto.tuxfamily.org/sprites"
 #define DEFAULT_UPLOADREPLAY_URL          "http://xmoto.tuxfamily.org/tools/UploadReplay.php"
+#define DEFAULT_SENDVOTE_URL              "http://xmoto.tuxfamily.org/tools/SendVote.php"
 #define DEFAULT_WEBROOMS_URL              "http://xmoto.tuxfamily.org/rooms.xml"
 #define DEFAULT_WEBROOMS_FILENAME         "webrooms.xml"
 #define DEFAULT_WEBROOM_NAME              "WR"
@@ -146,6 +148,15 @@ class FSWeb {
 			   std::string& p_msg,
 			   const std::string& p_answerFile);
 
+  static void sendVote(const std::string& p_id_level,
+		       const std::string& p_difficulty_value,
+		       const std::string& p_quality_value,
+		       const std::string& p_url_to_transfert,
+		       WWWAppInterface *p_WebApp,
+		       const ProxySettings *p_proxy_settings,
+		       bool &p_msg_status,
+		       std::string &p_msg);
+
   static int f_curl_progress_callback_upload(void *clientp,
 					     double dltotal,
 					     double dlnow,
@@ -164,6 +175,13 @@ class FSWeb {
 				 const std::string& p_filename,
 				 bool &p_msg_status_ok,
 				 std::string &p_msg);
+
+  static CURLcode performPostCurl(CURL *p_curl,
+				  struct curl_httppost *p_post,
+				  const std::string& p_url_to_transfert,
+				  FILE* p_destinationFile,
+				  WWWAppInterface *p_WebApp,
+				  const ProxySettings *p_proxy_settings);
 };
 
 class WebRoom {

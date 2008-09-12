@@ -53,7 +53,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StatePreplayingGame.h"
 #include "states/StateMainMenu.h"
 #include "states/StateMessageBox.h"
-#include "states/StateVote.h"
 
 #include "UserConfig.h"
 #include "Renderer.h"
@@ -262,7 +261,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   
   /* Update replays */
   if(pDb->replays_isIndexUptodate() == false) {
-    initReplaysFromDir();
+    initReplaysFromDir(pDb);
   }
   
   /* List replays? */  
@@ -368,7 +367,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   else {
     /* display what must be displayed */
     StateManager::instance()->pushState(new StateMainMenu());
-    //StateManager::instance()->pushState(new StateVote("_iL00_"));
   }
 
   LogInfo("UserInit ended at %.3f", GameApp::getXMTime());
