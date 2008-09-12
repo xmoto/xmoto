@@ -30,6 +30,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Text.h"
 #include "../Game.h"
 #include "../helpers/Log.h"
+#include "states/StateVote.h"
+#include "thread/SendVoteThread.h"
 
 /* static members */
 UIRoot* StateFinished::m_sGUI = NULL;
@@ -185,6 +187,14 @@ void StateFinished::enter()
   }
   makeBestTimesWindow(v_pBestTimes, XMSession::instance()->profile(), v_id_level, v_finish_time);
   
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() == 1) {
+      if(SendVoteThread::isToPropose(xmDatabase::instance("main"), m_universe->getScenes()[0]->getLevelSrc()->Id())) {
+	StateManager::instance()->pushState(new StateVote(m_universe->getScenes()[0]->getLevelSrc()->Id()));
+      }
+    }
+  }
+
   StateMenu::enter();
 }
 

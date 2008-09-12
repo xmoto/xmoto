@@ -18,39 +18,29 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEVOTE_H__
-#define __STATEVOTE_H__
+#ifndef __SENDVOTETHREAD_H__
+#define __SENDVOTETHREAD_H__
 
-#include "StateManager.h"
-#include "StateMenu.h"
+#include "XMThread.h"
+#include "../WWWAppInterface.h"
 
-class StateVote : public StateMenu {
+class xmDatabase;
+
+class SendVoteThread : public XMThread, public WWWAppInterface {
   public:
-  StateVote(const std::string& i_idlevel,
-	    bool drawStateBehind    = true,
-	    bool updateStatesBehind = false
-	    );
-  virtual ~StateVote();
+  SendVoteThread(const std::string& i_idlevel, const std::string& i_difficulty_value, const std::string& i_quality_value);
+  virtual ~SendVoteThread();
+  std::string getMsg() const;
 
-  static void clean();
+  void setTaskProgress(float p_percent);
 
-  virtual void enter();
-  virtual void leave();
+  virtual int realThreadFunction();
 
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  static bool isToPropose(xmDatabase* pDb, const std::string& i_id_level); // return false if it's not necessary to run it
 
-  protected:
-  virtual void checkEvents();
-
-  private:
-  std::string m_idlevel;
-
-  /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded();
-
-  bool isToSkip();
-  void updateRights();
+private:
+  std::string m_msg;
+  std::string m_idlevel, m_difficulty_value, m_quality_value;
 };
 
 #endif

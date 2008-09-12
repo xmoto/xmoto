@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Universe.h"
 #include "../Replay.h"
 #include "../helpers/Log.h"
+#include "states/StateVote.h"
+#include "thread/SendVoteThread.h"
 
 /* static members */
 UIRoot*  StateDeadMenu::m_sGUI = NULL;
@@ -85,6 +87,14 @@ void StateDeadMenu::enter()
   if(XMSession::instance()->beatingMode()) {
     UIButton *pTryAgainButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:TRYAGAIN_BUTTON"));
     pTryAgainButton->makeActive();  
+  }
+
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() == 1) {
+      if(SendVoteThread::isToPropose(xmDatabase::instance("main"), m_universe->getScenes()[0]->getLevelSrc()->Id())) {
+	StateManager::instance()->pushState(new StateVote(m_universe->getScenes()[0]->getLevelSrc()->Id()));
+      }
+    }
   }
 
   StateMenu::enter();

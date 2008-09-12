@@ -757,10 +757,6 @@ std::string GameApp::getWebRoomURL(unsigned int i_number, xmDatabase* pDb) {
   unsigned int nrow;
   std::string v_url;
 
-  if(pDb == NULL){
-    pDb = xmDatabase::instance("main");
-  }
-
   v_result = pDb->readDB("SELECT highscoresUrl FROM webrooms WHERE id_room=" + XMSession::instance()->idRoom(i_number) + ";", nrow);
   if(nrow != 1) {
     pDb->read_DB_free(v_result);
@@ -776,10 +772,6 @@ std::string GameApp::getWebRoomName(unsigned int i_number, xmDatabase* pDb) {
   char **v_result;
   unsigned int nrow;
   std::string v_name;
-
-  if(pDb == NULL){
-    pDb = xmDatabase::instance("main");
-  }
 
   /* set the room name ; set to WR if it cannot be determined */
   v_name = "WR";

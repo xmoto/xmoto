@@ -68,7 +68,7 @@ void UILevelList::hideRoomBestTime() {
 
 void UILevelList::clear() {
   for(unsigned int i=0; i<getEntries().size(); i++) {
-    delete getEntries()[i]->pvUser;
+    delete ((std::string*)getEntries()[i]->pvUser);
   }
   UIList::clear();
 }

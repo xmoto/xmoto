@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Game.h"
 #include "../GameText.h"
 #include "../drawlib/DrawLib.h"
+#include "StateSendVote.h"
 
 /* static members */
 UIRoot*  StateVote::m_sGUI = NULL;
@@ -49,6 +50,10 @@ void StateVote::enter() {
   pButtonQ0->setChecked(true);
   pButtonD0->setChecked(true);
 
+  pButtonD0->makeActive(); // make active a simple radio button to avoid the send button to be pressed by error
+
+  updateRights();  
+
   StateMenu::enter();
 }
 
@@ -63,27 +68,60 @@ void StateVote::clean() {
   }
 }
 
-void StateVote::checkEvents() {
+void StateVote::updateRights() {
   UIButton *pButton;
-  bool v_isToSkip = isToSkip();
 
   pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:SEND"));
-
-  if(v_isToSkip) {
+  if(isToSkip()) {
     pButton->setCaption(GAMETEXT_SKIPTHISREPORT);
     pButton->setContextHelp(CONTEXTHELP_SKIPTHISREPORT);
   } else {
     pButton->setCaption(GAMETEXT_SENDTHISREPORT);
     pButton->setContextHelp(CONTEXTHELP_SENDTHISREPORT);
   }
+}
 
+void StateVote::checkEvents() {
+  UIButton *pButton;
+
+  std::string v_difficulty;
+  std::string v_quality;;
+
+  updateRights();
+
+  pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:SEND"));
   if(pButton->isClicked()) {
     pButton->setClicked(false);
 
-    if(v_isToSkip) {
+    if(isToSkip()) {
       m_requestForEnd = true;
     } else {
+      pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:D_0"));
+      if(pButton->getChecked()) v_difficulty = "0";
+      pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:D_1"));
+      if(pButton->getChecked()) v_difficulty = "1";
+      pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:D_2"));
+      if(pButton->getChecked()) v_difficulty = "2";
+      pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:D_3"));
+      if(pButton->getChecked()) v_difficulty = "3";
+      pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:D_4"));
+      if(pButton->getChecked()) v_difficulty = "4";
+      pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:D_5"));
+      if(pButton->getChecked()) v_difficulty = "5";
+      pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:Q_0"));
+      if(pButton->getChecked()) v_quality = "0";
+      pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:Q_1"));
+      if(pButton->getChecked()) v_quality = "1";
+      pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:Q_2"));
+      if(pButton->getChecked()) v_quality = "2";
+      pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:Q_3"));
+      if(pButton->getChecked()) v_quality = "3";
+      pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:Q_4"));
+      if(pButton->getChecked()) v_quality = "4";
+      pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:Q_5"));
+      if(pButton->getChecked()) v_quality = "5";
 
+      StateManager::instance()->replaceState(new StateSendVote(m_idlevel, v_difficulty, v_quality));
     }
   }
 }
@@ -244,6 +282,6 @@ void StateVote::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 
   else {
-		StateMenu::xmKey(i_type, i_xmkey);
+    StateMenu::xmKey(i_type, i_xmkey);
   }
 }

@@ -18,39 +18,15 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEVOTE_H__
-#define __STATEVOTE_H__
+#include "xmDatabase.h"
 
-#include "StateManager.h"
-#include "StateMenu.h"
+void xmDatabase::markAsVoted(const std::string& i_profile, const std::string& i_id_level) {
+    simpleSql(std::string("INSERT INTO profiles_votes(id_profile, id_level) VALUES(") +
+	      "\"" + protectString(i_profile) + "\", \"" + protectString(i_id_level) + "\");");
+}
 
-class StateVote : public StateMenu {
-  public:
-  StateVote(const std::string& i_idlevel,
-	    bool drawStateBehind    = true,
-	    bool updateStatesBehind = false
-	    );
-  virtual ~StateVote();
-
-  static void clean();
-
-  virtual void enter();
-  virtual void leave();
-
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
-
-  protected:
-  virtual void checkEvents();
-
-  private:
-  std::string m_idlevel;
-
-  /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded();
-
-  bool isToSkip();
-  void updateRights();
-};
-
-#endif
+bool xmDatabase::isVoted(const std::string& i_profile, const std::string& i_id_level) {
+  return checkKey("SELECT count(1) FROM profiles_votes WHERE "
+		  "id_profile=\"" + protectString(i_profile) + "\" AND "
+		  "id_level=\""   + protectString(i_id_level) + "\";");
+}

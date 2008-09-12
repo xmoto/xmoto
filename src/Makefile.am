@@ -215,6 +215,8 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateMultiUpdate.h       \
 		 states/StateCheckWww.cpp        \
 		 states/StateCheckWww.h          \
+		 states/StateSendVote.cpp        \
+		 states/StateSendVote.h          \
 		 states/StateSync.cpp            \
 		 states/StateSync.h              \
 		 states/StateUpgradeLevels.cpp   \
@@ -251,6 +253,8 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/XMThreads.h                \
 		 thread/CheckWwwThread.cpp         \
 		 thread/CheckWwwThread.h           \
+		 thread/SendVoteThread.cpp         \
+		 thread/SendVoteThread.h           \
 		 thread/SyncThread.cpp             \
 		 thread/SyncThread.h               \
 		 thread/UpgradeLevelsThread.cpp    \
@@ -327,6 +331,7 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   db/xmDatabase_themes.cpp \
   db/xmDatabase_config.cpp \
   db/xmDatabase_sync.cpp \
+  db/xmDatabase_votes.cpp \
   db/xmDatabase_fixes.cpp \
   db/xmDatabaseUpdateInterface.h \
   Universe.h   \
