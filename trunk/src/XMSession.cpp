@@ -122,6 +122,7 @@ void XMSession::setToDefault() {
   m_dbsynchronizeOnQuit           = DEFAULT_DBSYNCHRONIZEONQUIT;
   m_enableJoysticks               = DEFAULT_ENABLEJOYSTICKS;
   m_beatingMode                   = DEFAULT_BEATINGMODE;
+  m_webForms                      = DEFAULT_WEBFORMS;
   m_proxySettings.setDefault();
 }
 
@@ -300,6 +301,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_dbsynchronizeOnQuit            = pDb->config_getBool   (i_id_profile, "DbSynchronizeOnQuit"           , m_dbsynchronizeOnQuit);
   m_enableJoysticks                = pDb->config_getBool   (i_id_profile, "EnableJoysticks"               , m_enableJoysticks);
   m_beatingMode                    = pDb->config_getBool   (i_id_profile, "BeatingMode"                   , m_beatingMode);
+  m_webForms                       = pDb->config_getBool   (i_id_profile, "WebForms"                   , m_webForms);
 
   m_nbRoomsEnabled                 = pDb->config_getInteger(i_id_profile, "WebHighscoresNbRooms"          , m_nbRoomsEnabled);
   if(m_nbRoomsEnabled < 1) { m_nbRoomsEnabled = 1; }
@@ -420,6 +422,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "DbSynchronizeOnQuit"           , m_dbsynchronizeOnQuit);
 	pDb->config_setBool   (m_profile, "EnableJoysticks"                 , m_enableJoysticks);
 	pDb->config_setBool   (m_profile, "BeatingMode"                   , m_beatingMode);
+	pDb->config_setBool   (m_profile, "WebForms"                      , m_webForms);
 
 	pDb->config_setString (m_profile, "MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium":"High");
 	pDb->config_setString (m_profile, "GameGraphics", m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium":"High");
@@ -1042,6 +1045,14 @@ void XMSession::setBeatingMode(bool i_value) {
 
 bool XMSession::beatingMode() const {
   return m_beatingMode;
+}
+
+void XMSession::setWebForms(bool i_value) {
+  m_webForms = i_value;
+}
+
+bool XMSession::webForms() const {
+  return m_webForms;
 }
 
 ProxySettings* XMSession::proxySettings() {

@@ -390,6 +390,13 @@ void StateOptions::checkEvents() {
     XMSession::instance()->setUseCrappyPack(v_button->getChecked());
   }
 
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:ALLOWWEBFORMS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setWebForms(v_button->getChecked());
+  }
+
+
   v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:WWW_PASSWORD"));
   if(v_edit->hasChanged()) {
     v_edit->setHasChanged(false);
@@ -951,7 +958,6 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("ENABLEWEB");
   v_button->setFont(drawlib->getFontSmall());
-  v_button->setGroup(50123);
   v_button->setContextHelp(CONTEXTHELP_DOWNLOAD_BEST_TIMES);
 
   // password
@@ -972,28 +978,30 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("ENABLECHECKNEWLEVELSATSTARTUP");
   v_button->setFont(drawlib->getFontSmall());
-  v_button->setGroup(50123);
   v_button->setContextHelp(CONTEXTHELP_ENABLE_CHECK_NEW_LEVELS_AT_STARTUP);
   
   v_button = new UIButton(v_window, 5, 110, GAMETEXT_ENABLECHECKHIGHSCORESATSTARTUP, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("ENABLECHECKHIGHSCORESATSTARTUP");
   v_button->setFont(drawlib->getFontSmall());
-  v_button->setGroup(50123);
   v_button->setContextHelp(CONTEXTHELP_ENABLE_CHECK_HIGHSCORES_AT_STARTUP);
 
-  v_button = new UIButton(v_window, 5, 140, GAMETEXT_ENABLEINGAMEWORLDRECORD, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 140, GAMETEXT_ALLOWWEBFORMS, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("ALLOWWEBFORMS");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_ALLOWWEBFORMS);
+
+  v_button = new UIButton(v_window, 5, 170, GAMETEXT_ENABLEINGAMEWORLDRECORD, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("INGAMEWORLDRECORD");
   v_button->setFont(drawlib->getFontSmall());
-  v_button->setGroup(50123);
   v_button->setContextHelp(CONTEXTHELP_INGAME_WORLD_RECORD);
 
-  v_button = new UIButton(v_window, 5, 170, GAMETEXT_USECRAPPYINFORMATION, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 200, GAMETEXT_USECRAPPYINFORMATION, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("USECRAPPYINFORMATION");
   v_button->setFont(drawlib->getFontSmall());
-  v_button->setGroup(50123);
   v_button->setContextHelp(CONTEXTHELP_USECRAPPYINFORMATION);
 
   v_button = new UIButton(v_window, v_window->getPosition().nWidth-225, v_window->getPosition().nHeight -57 - 20 -20,
@@ -1299,6 +1307,8 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->showHighscoreInGame());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:USECRAPPYINFORMATION"));
   v_button->setChecked(XMSession::instance()->useCrappyPack());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:ALLOWWEBFORMS"));
+  v_button->setChecked(XMSession::instance()->webForms());
 
   v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:WWW_PASSWORD"));
   v_edit->setCaption(XMSession::instance()->wwwPassword());
@@ -1406,6 +1416,9 @@ void StateOptions::updateWWWOptions() {
   v_button->enableWindow(XMSession::instance()->www());
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP"));
+  v_button->enableWindow(XMSession::instance()->www());
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:ALLOWWEBFORMS"));
   v_button->enableWindow(XMSession::instance()->www());
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:PROXYCONFIG"));
