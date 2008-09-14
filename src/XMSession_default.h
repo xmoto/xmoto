@@ -112,6 +112,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_ENABLEACTIVEZOOM            true
 #define DEFAULT_ENABLEJOYSTICKS             true
 #define DEFAULT_BEATINGMODE                 false
+#define DEFAULT_WEBFORMS                    true
 #define DEFAULT_PROXY_PORT                  -1
 #define DEFAULT_PROXY_TYPE                  ""
 #define DEFAULT_PROXY_SERVER                ""

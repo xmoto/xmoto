@@ -248,6 +248,8 @@ public:
   bool dbsynchronizeOnQuit() const;
   void setBeatingMode(bool i_value);
   bool beatingMode() const;
+  void setWebForms(bool i_value);
+  bool webForms() const;
 
   // there are two dbSync values, one for the profile side, one on the serveur side
   // note that because these values must always be synchronised with db, there are always read and write from and to the db
@@ -358,6 +360,7 @@ public:
   bool m_dbsynchronizeOnQuit;
   bool m_enableJoysticks;
   bool m_beatingMode;
+  bool m_webForms;
 };
 
 #endif

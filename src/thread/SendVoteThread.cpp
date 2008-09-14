@@ -43,7 +43,7 @@ SendVoteThread::~SendVoteThread()
 bool SendVoteThread::isToPropose(xmDatabase* pDb, const std::string& i_id_level) {
   int v_rand;
 
-  if(XMSession::instance()->www() == false) {
+  if(XMSession::instance()->www() == false ||  XMSession::instance()->webForms() == false) {
     return false;
   }
 
