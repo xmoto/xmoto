@@ -86,7 +86,7 @@ void SysMessage::render() {
     v_fm->printString(v_fg,
 		      m_drawLib->getDispWidth()/2 - v_fg->realWidth()/2,
 		      m_drawLib->getDispHeight()/3 - v_fg->realHeight()/2,
-		      MAKE_COLOR(255, 255, 255, v_shadow), true);
+		      MAKE_COLOR(255, 255, 255, v_shadow), 0.0, true);
   }
 
   /* error msg */
@@ -129,7 +129,7 @@ void SysMessage::drawBoxMsg(float& io_nextStartTime, std::vector<std::string>& i
     v_fs->printString(v_fg,
 		      x_offset + SYSMSG_DISPLAYBOXMSG_MARGIN,
 		      y_offset + m_drawLib->getDispHeight() - v_fg->realHeight() - SYSMSG_DISPLAYBOXMSG_MARGIN,
-		      MAKE_COLOR(0, 0, 0, 255));
+		      MAKE_COLOR(0, 0, 0, 255), 0.0);
   } else {
     i_msg.erase(i_msg.begin());
     io_nextStartTime = GameApp::getXMTime();

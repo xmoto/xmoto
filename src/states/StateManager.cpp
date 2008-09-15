@@ -289,7 +289,7 @@ void StateManager::drawFps() {
 
   FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg = v_fm->getGlyph(cTemp);
-  v_fm->printString(v_fg, 0, 130, MAKE_COLOR(255,255,255,255), true);
+  v_fm->printString(v_fg, 0, 130, MAKE_COLOR(255,255,255,255), -1.0, true);
 }
 
 void StateManager::drawStack() {
@@ -324,7 +324,7 @@ void StateManager::drawStack() {
     drawLib->drawBox(Vector2f(xoff,     yoff - (i * h)), Vector2f(xoff + w/2, yoff - ((i+1) * h)), 1.0, bg_update);
     drawLib->drawBox(Vector2f(xoff+w/2, yoff - (i * h)), Vector2f(xoff + w,   yoff - ((i+1) * h)), 1.0, bg_render);
     v_fg = v_fm->getGlyph(m_statesStack[i]->getName());
-    v_fm->printString(v_fg, (w-v_fg->realWidth())/2 + xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, true);
+    v_fm->printString(v_fg, (w-v_fg->realWidth())/2 + xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, 0.0, true);
 
     i++;
     ++stateIterator;

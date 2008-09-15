@@ -608,7 +608,7 @@ void StateScene::displayStats() {
   v_fm->printString(v_fg,
 		    GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth()   - vborder,
 		    GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight() - vborder,
-		    MAKE_COLOR(220,255,255,255), true);
+		    MAKE_COLOR(220,255,255,255), -1.0, true);
 
   // quality
   int v_quality_yoffset = 5;
@@ -618,7 +618,7 @@ void StateScene::displayStats() {
     v_fm->printString(v_fg,
 		      A.x - vborder*2,
 		      A.y - vborder*2 - v_fg->realHeight() - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset,
-		      MAKE_COLOR(220,255,255,255), true);
+		      MAKE_COLOR(220,255,255,255), -1.0, true);
     
     if(XMSession::instance()->ugly()) {
       for(int i=0; i<(int)(m_quality); i++) {
@@ -654,7 +654,7 @@ void StateScene::displayStats() {
     v_fm->printString(v_fg,
 		      A.x - vborder*2,
 		      A.y - vborder*2 - v_fg->realHeight() - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset,
-		      MAKE_COLOR(220,255,255,255), true);
+		      MAKE_COLOR(220,255,255,255), -1.0, true);
     
     if(XMSession::instance()->ugly()) {
       for(int i=0; i<(int)(m_difficulty); i++) {

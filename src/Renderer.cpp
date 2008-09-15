@@ -1299,7 +1299,7 @@ int GameRenderer::nbParticlesRendered() const {
     v_fm->printString(v_fg,
 		      5,
 		      pDrawlib->getDispHeight() - v_fg->realHeight() - 2,
-		      MAKE_COLOR(255,255,255,255), -1.0, true);
+		      MAKE_COLOR(255,255,255,255), 0.0, true);
   }
 
   /*===========================================================================
@@ -1424,7 +1424,7 @@ int GameRenderer::nbParticlesRendered() const {
 	v_fm->printString(v_fg,
 			  (int)(pDrawlib->getDispWidth()/2 - v_fg->realWidth()/2),
 			  (int)(pMsg->Pos[1] * pDrawlib->getDispHeight()),
-			  MAKE_COLOR(255,255,255,pMsg->nAlpha), true);
+			  MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
       }
     }
   }
@@ -2352,7 +2352,7 @@ void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) {
       
       FontManager* v_fm = pDrawlib->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(Text);
-      v_fm->printString(v_fg, (int)vx, (int)vy, c, true);
+      v_fm->printString(v_fg, (int)vx, (int)vy, c, 0.0, true);
 
 #ifdef ENABLE_OPENGL
       glPopMatrix();
@@ -2544,7 +2544,7 @@ void GameRenderer::renderTimePanel(MotoGame* i_scene) {
 
   v_fm->printString(v_fg,
 		    x, y,
-		    MAKE_COLOR(255,255,255,255), true);
+		    MAKE_COLOR(255,255,255,255), -1.0, true);
 
   /* next things must be rendered only by the first camera */
   if(i_scene->getCurrentCamera() != 0)
@@ -2553,10 +2553,10 @@ void GameRenderer::renderTimePanel(MotoGame* i_scene) {
   v_fm = pDrawlib->getFontSmall();
 
   v_fg = v_fm->getGlyph(m_bestTime);
-  v_fm->printString(v_fg, x, y+28, MAKE_COLOR(255,255,255,255), true);
+  v_fm->printString(v_fg, x, y+28, MAKE_COLOR(255,255,255,255), -1.0, true);
 
   v_fg = v_fm->getGlyph(m_worldRecordTime);
-  v_fm->printString(v_fg, x, y+48, MAKE_COLOR(255,255,255,255), true);
+  v_fm->printString(v_fg, x, y+48, MAKE_COLOR(255,255,255,255), -1.0, true);
 }
 
 void GameRenderer::renderReplayHelpMessage(MotoGame* i_scene) {
@@ -2569,7 +2569,7 @@ void GameRenderer::renderReplayHelpMessage(MotoGame* i_scene) {
   v_fm->printString(v_fg,
 		    GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth(),
 		    0,
-		    MAKE_COLOR(255,255,255,255), true);
+		    MAKE_COLOR(255,255,255,255), -1.0, true);
 }
 
 void GameRenderer::_RenderParticleDraw(Vector2f position, Texture* pTexture, float fSize, float fAngle, TColor c)
