@@ -1299,7 +1299,7 @@ int GameRenderer::nbParticlesRendered() const {
     v_fm->printString(v_fg,
 		      5,
 		      pDrawlib->getDispHeight() - v_fg->realHeight() - 2,
-		      MAKE_COLOR(255,255,255,255), true);
+		      MAKE_COLOR(255,255,255,255), -1.0, true);
   }
 
   /*===========================================================================

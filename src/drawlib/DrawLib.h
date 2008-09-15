@@ -46,9 +46,9 @@ class FontManager {
   
   virtual FontGlyph* getGlyph(const std::string& i_string) = 0;
   
-  virtual void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, bool i_shadowEffect = false) = 0;
+  virtual void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, float i_perCentered = -1.0, bool i_shadowEffect = false) = 0;
   virtual void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
-			       Color c1,Color c2,Color c3,Color c4, bool i_shadowEffect = false) = 0;
+			       Color c1,Color c2,Color c3,Color c4, float i_perCentered = -1.0, bool i_shadowEffect = false) = 0;
   
 
   static std::string getDrawFontFile();

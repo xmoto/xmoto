@@ -104,9 +104,9 @@ class SDLFontManager : public FontManager {
   virtual ~SDLFontManager();
 
   FontGlyph* getGlyph(const std::string& i_string);
-  void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, bool i_shadowEffect = false);
+  void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, float i_perCentered = -1.0, bool i_shadowEffect = false);
   void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
-		       Color c1, Color c2, Color c3, Color c4, bool i_shadowEffect = false);
+		       Color c1, Color c2, Color c3, Color c4, float i_perCentered = -1.0, bool i_shadowEffect = false);
   private:
   DrawLib * m_drawlib;
   std::string i_fontFile;
@@ -121,7 +121,7 @@ FontGlyph* SDLFontManager::getGlyph(const std::string& i_string) {
 };
 
 void SDLFontManager::printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
-      Color c1, Color c2, Color c3, Color c4, bool i_shadowEffect) {
+      Color c1, Color c2, Color c3, Color c4, float i_perCentered, bool i_shadowEffect) {
 
  
 	SDL_Color color={99,0,33};
@@ -129,9 +129,9 @@ void SDLFontManager::printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
 	SDL_FreeSurface(text_surface);
 
 }
-void SDLFontManager::printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, bool i_shadowEffect) {
+void SDLFontManager::printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, float i_perCentered, bool i_shadowEffect) {
 
-  printStringGrad(i_glyph, i_x, i_y, i_color, i_color, i_color, i_color);
+  printStringGrad(i_glyph, i_x, i_y, i_color, i_color, i_color, i_color, i_perCentered);
 }
 
 SDLFontManager::~SDLFontManager() {

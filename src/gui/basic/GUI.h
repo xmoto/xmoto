@@ -185,10 +185,10 @@ public:
 
   /* Painting */
   void putText(int x,int y, std::string Text,
-	       float i_xper = 0.0, float i_yper = 0.0);
+	       float i_xper = 0.0, float i_yper = 0.0, float i_perCentered = -1.0);
   void putTextS(int x,int y, std::string Text,
 		int& o_width, int &o_height,
-		float i_xper = 0.0, float i_yper = 0.0);
+		float i_xper = 0.0, float i_yper = 0.0, float i_perCentered = -1.0);
   void putImage(int x,int y,int nWidth,int nHeight,Texture *pImage);
   void putElem(int x,int y,int nWidth,int nHeight,UIElem Elem,bool bDisabled,bool bActive=false);
   void putRect(int x,int y,int nWidth,int nHeight,Color c);

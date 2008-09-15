@@ -114,7 +114,7 @@ void UIButtonDrawn::paint() {
   /* draw the caption */
   x = getPosition().nWidth/2;
   y = getPosition().nHeight/2;
-  putText(x, y, getCaption(), -0.5, -0.5);
+  putText(x, y, getCaption(), -0.5, -0.5, 0.0);
 
   /* Clear stuff */
 
