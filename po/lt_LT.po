@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-09-14 21:44+0200\n"
-"PO-Revision-Date: 2008-08-20 01:03+0200\n"
+"PO-Revision-Date: 2008-09-13 20:30+0200\n"
 "Last-Translator: Tadas Masiulionis <tadzikaz@gmail.com>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -126,7 +126,7 @@ msgstr "Geriausi laikai"
 
 #: src/GameText.h:62
 msgid "Best player"
-msgstr "Geriausi žaidėjai"
+msgstr "Geriausias žaidėjas"
 
 #: src/GameText.h:63
 msgid "Brake"
@@ -325,7 +325,7 @@ msgstr "Mac OS X palaikymas"
 
 #: src/GameText.h:136
 msgid "Localization"
-msgstr "Vietovė"
+msgstr "Vertėjai"
 
 #: src/GameText.h:137
 msgid "Slovak"
@@ -1416,7 +1416,7 @@ msgstr "Laikas"
 
 #: src/GameText.h:417
 msgid "Try This Level Again"
-msgstr "Bandykite šį lygį dar kartą"
+msgstr "Bandyti šį lygį dar kartą"
 
 #: src/GameText.h:418
 msgid "Tutorial"
@@ -1508,15 +1508,15 @@ msgstr ""
 
 #: src/GameText.h:438
 msgid "Using HTTP Proxy"
-msgstr "Naudoti HTTP tarpinė stotis"
+msgstr "Naudoti HTTP tarpinį serverį"
 
 #: src/GameText.h:439
 msgid "Using SOCKS4 Proxy"
-msgstr "Naudoti SOCKS4 tarpinė stotis"
+msgstr "Naudoti SOCKS4 tarpinį serverį"
 
 #: src/GameText.h:440
 msgid "Using SOCKS5 Proxy"
-msgstr "Naudoti SOCKS5 tarpinė stotis"
+msgstr "Naudoti SOCKS5 tarpinį serverį"
 
 #: src/GameText.h:441
 msgid "Video"
@@ -2262,51 +2262,51 @@ msgstr ""
 
 #: src/GameText.h:625
 msgid "Give your mind about this level"
-msgstr ""
+msgstr "Pateik savo nuomonę apie šį lygį"
 
 #: src/GameText.h:626
 msgid "No idea"
-msgstr ""
+msgstr "Nėra idėjų"
 
 #: src/GameText.h:627
 msgid "Beginner"
-msgstr ""
+msgstr "Naujokas"
 
 #: src/GameText.h:628
 msgid "Expert"
-msgstr ""
+msgstr "Ekspertas"
 
 #: src/GameText.h:629
 msgid "Master"
-msgstr ""
+msgstr "Profesionalas"
 
 #: src/GameText.h:630
 msgid "God"
-msgstr ""
+msgstr "Asas"
 
 #: src/GameText.h:631
 msgid "Not nice at all"
-msgstr ""
+msgstr "Visai negražu"
 
 #: src/GameText.h:632
 msgid "Not nice"
-msgstr ""
+msgstr "Negražu"
 
 #: src/GameText.h:633
 msgid "Nice"
-msgstr ""
+msgstr "Gražu"
 
 #: src/GameText.h:634
 msgid "Really nice"
-msgstr ""
+msgstr "Išties gražu"
 
 #: src/GameText.h:635
 msgid "Send this report"
-msgstr ""
+msgstr "Siųsti šį raportą"
 
 #: src/GameText.h:636
 msgid "Skip this report"
-msgstr ""
+msgstr "Praleisti šį raportą"
 
 #: src/GameText.h:638
 msgid "You don't want to vote"
@@ -2314,51 +2314,51 @@ msgstr ""
 
 #: src/GameText.h:639
 msgid "Really easy"
-msgstr ""
+msgstr "Išties lengvas"
 
 #: src/GameText.h:640
 msgid "No technical difficulty"
-msgstr ""
+msgstr "Nėra techninio sunkumo"
 
 #: src/GameText.h:641
 msgid "At least one difficulty"
-msgstr ""
+msgstr "Bent jau vienas sunkumas"
 
 #: src/GameText.h:642
 msgid "Several difficulties"
-msgstr ""
+msgstr "Keletas sunkumų"
 
 #: src/GameText.h:643
 msgid "Impossible"
-msgstr ""
+msgstr "Neįmanoma"
 
 #: src/GameText.h:644
 msgid "Basic blocks, no decoration"
-msgstr ""
+msgstr "Pagrindiniai blokai, jokio dekoravimo"
 
 #: src/GameText.h:645
 msgid "Basic decoration, not smooth blocks"
-msgstr ""
+msgstr "Pagrindinis dekoravimas, neglotnūs blokai"
 
 #: src/GameText.h:646
 msgid "Not original"
-msgstr ""
+msgstr "Neoriginalus"
 
 #: src/GameText.h:647
 msgid "Nice, could be better"
-msgstr ""
+msgstr "Gražu, bet galėjo būti geriau"
 
 #: src/GameText.h:648
 msgid "Several textures, sprites, ..."
-msgstr ""
+msgstr "Keletas struktūrų, spruklių, ..."
 
 #: src/GameText.h:649
 msgid "Send this report on the webserver"
-msgstr ""
+msgstr "Siųsti šį raportą į web serverį"
 
 #: src/GameText.h:650
 msgid "Don't send this report on the webserver"
-msgstr ""
+msgstr "Nesiųsti šio raporto į web serverį"
 
 #: src/GameText.h:652
 msgid "Levels with no highscore"
