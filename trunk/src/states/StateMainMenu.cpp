@@ -952,8 +952,8 @@ UIWindow* StateMainMenu::makeWindowReplays(UIWindow* i_parent) {
   v_button->showWindow(false);
 
   /* filter */
-  v_button = new UIButton(v_window, v_window->getPosition().nWidth-105, v_window->getPosition().nHeight-68,
-			  GAMETEXT_LISTALL, 115, 57);
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth-150, v_window->getPosition().nHeight-68,
+			  GAMETEXT_LISTALL, 150, 57);
   v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setChecked(false);
