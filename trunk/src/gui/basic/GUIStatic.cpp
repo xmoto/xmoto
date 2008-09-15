@@ -69,16 +69,20 @@ void UIStatic::setAllowContextHelp(bool i_value) {
     /* Determine text size */
     int v_x=0, v_y=0;
     float perX=0.0, perY=0.0;
-    
+    float perCentered = -1.0;
+
     /* Find out where to draw the text */
     if(getHAlign() == UI_ALIGN_LEFT) {
       v_x = 0;
+      perCentered = -1.0;
     } else if(getHAlign() == UI_ALIGN_RIGHT) {
       v_x = getPosition().nWidth;
       perX=-1.0;
+      perCentered = 1.0;
     } else if(getHAlign() == UI_ALIGN_CENTER) {
       v_x = getPosition().nWidth/2;
       perX = -0.5;
+      perCentered = 0.0;
     }
 
     if(getVAlign() == UI_ALIGN_TOP) {
@@ -96,7 +100,7 @@ void UIStatic::setAllowContextHelp(bool i_value) {
     else
       setTextSolidColor(m_normalColor);
 
-    putText(v_x, v_y, getCaption(), perX, perY);
+    putText(v_x, v_y, getCaption(), perX, perY, perCentered);
   }
 
 

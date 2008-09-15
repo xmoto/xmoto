@@ -114,11 +114,11 @@ public:
   virtual ~GLFontManager();
 
   FontGlyph* getGlyph(const std::string& i_string);
-  void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, bool i_shadowEffect = false);
+  void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, float i_perCentered = -1.0, bool i_shadowEffect = false);
   void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
-		       Color c1, Color c2, Color c3, Color c4, bool i_shadowEffect = false);
+		       Color c1, Color c2, Color c3, Color c4, float i_perCentered = -1.0, bool i_shadowEffect = false);
   void printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
-			  Color c1, Color c2, Color c3, Color c4);
+			  Color c1, Color c2, Color c3, Color c4, float i_perCentered = -1.0);
 
   virtual unsigned int nbGlyphsInMemory();
 
@@ -128,6 +128,8 @@ private:
 
   std::vector<GLFontGlyphLetter*> m_glyphsLettersList;
   HashNamespace::hash_map<const char*, GLFontGlyphLetter*, HashNamespace::hash<const char*>, hashcmp_str> m_glyphsLetters;
+
+  unsigned int getLonguestLineSize(const std::string& i_value, unsigned int i_start = 0, unsigned int i_nbLinesToRead = -1);
 };
 
 
@@ -934,24 +936,27 @@ FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
 }
 
 void GLFontManager::printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
-				    Color c1, Color c2, Color c3, Color c4, bool i_shadowEffect) {
+				    Color c1, Color c2, Color c3, Color c4, float i_perCentered, bool i_shadowEffect) {
 
   if(i_shadowEffect) {
-    printStringGradOne(i_glyph, i_x,   i_y,   INVERT_COLOR(c1), INVERT_COLOR(c2), INVERT_COLOR(c3), INVERT_COLOR(c4));
-    printStringGradOne(i_glyph, i_x+1, i_y+1, c1, c2, c3, c4);
+    printStringGradOne(i_glyph, i_x,   i_y,   INVERT_COLOR(c1), INVERT_COLOR(c2), INVERT_COLOR(c3), INVERT_COLOR(c4), i_perCentered);
+    printStringGradOne(i_glyph, i_x+1, i_y+1, c1, c2, c3, c4, i_perCentered);
   } else {
-    printStringGradOne(i_glyph, i_x, i_y, c1, c2, c3, c4);
+    printStringGradOne(i_glyph, i_x, i_y, c1, c2, c3, c4, i_perCentered);
   }
 }
 
 void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
-				       Color c1, Color c2, Color c3, Color c4) {
+				       Color c1, Color c2, Color c3, Color c4, float i_perCentered) {
   GLFontGlyph* v_glyph = (GLFontGlyph*) i_glyph;
   GLFontGlyphLetter* v_glyphLetter;
   int v_x, v_y;
-  unsigned int n = 0;
+  unsigned int n;
   std::string v_value, v_char;
   unsigned int v_lineHeight;
+  unsigned int v_longuest_linesize;
+  unsigned int v_current_linesize;
+  unsigned int v_size;
 
   int oldTextureId = -1;
   int newTextureId;
@@ -987,10 +992,6 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
   if(v_value == "")
     return;
 
-  v_y = -i_y + m_drawLib->getDispHeight() - v_glyph->firstLineDrawHeight();/* la taille de la 1ere ligne */
-  v_x = i_x;
-  v_lineHeight = 0;
-
   try {
     /* draw the glyph */
     glEnable(GL_TEXTURE_2D);
@@ -999,11 +1000,21 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
     // the first glBegin/glEnd will draw nothing
     glBegin(GL_QUADS);
 
-    unsigned int size = v_value.size();
-    while(n < size) {
+    v_longuest_linesize = getLonguestLineSize(v_value);
+    v_size = v_value.size();
+    v_current_linesize = getLonguestLineSize(v_value, 0, 1);
+    v_x = i_x + (v_longuest_linesize - v_current_linesize)/2 * (i_perCentered+1.0);
+
+    v_y = -i_y + m_drawLib->getDispHeight() - v_glyph->firstLineDrawHeight();/* la taille de la 1ere ligne */
+    v_lineHeight = 0;
+
+    n = 0;
+
+    while(n < v_size) {
       utf8::getNextChar(v_value, n, v_char);
       if(v_char == "\n") {
-	v_x  = i_x;
+	v_current_linesize = getLonguestLineSize(v_value, n, 1);
+	v_x  = i_x + (v_longuest_linesize - v_current_linesize)/2 * (i_perCentered+1.0);
 	v_y -= v_lineHeight + UTF8_INTERLINE_SPACE;
 	v_lineHeight = 0;
       } else {
@@ -1050,8 +1061,46 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
   }
 }
 
-void GLFontManager::printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, bool i_shadowEffect) {
-  printStringGrad(i_glyph, i_x, i_y, i_color, i_color, i_color, i_color, i_shadowEffect);
+unsigned int GLFontManager::getLonguestLineSize(const std::string& i_value, unsigned int i_start, unsigned int i_nbLinesToRead) {
+  unsigned int v_longuest_linesize = 0;
+  unsigned int v_current_linesize;
+  unsigned int n = i_start;
+  unsigned int v_size = i_value.size();
+  std::string v_char;
+  unsigned int v_line_n = 0;
+  GLFontGlyphLetter* v_glyphLetter;
+
+  v_current_linesize = -UTF8_INTERCHAR_SPACE;
+  while(n < v_size) {
+    utf8::getNextChar(i_value, n, v_char);
+    if(v_char == "\n") {
+      if(v_current_linesize > v_longuest_linesize) {
+	v_longuest_linesize = v_current_linesize;
+      }
+      v_current_linesize = 0;
+      v_line_n++;
+
+      // enough lines read
+      if(i_nbLinesToRead > 0 && v_line_n == i_nbLinesToRead) {
+	return v_longuest_linesize;
+      }
+    } else {
+      v_glyphLetter = m_glyphsLetters[v_char.c_str()];
+      if(v_glyphLetter != NULL) {
+	v_current_linesize += v_glyphLetter->realWidth() + UTF8_INTERCHAR_SPACE;
+      }
+    }
+  }
+
+  if(v_current_linesize > v_longuest_linesize) {
+    v_longuest_linesize = v_current_linesize;
+  }
+
+  return v_longuest_linesize;
+}
+
+void GLFontManager::printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, float i_perCentered, bool i_shadowEffect) {
+  printStringGrad(i_glyph, i_x, i_y, i_color, i_color, i_color, i_color, i_perCentered, i_shadowEffect);
 }
 
 #endif

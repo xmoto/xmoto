@@ -173,7 +173,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       default:
         x = getPosition().nWidth/2;
 	y = getPosition().nHeight/2;
-	putText(x,y,getCaption(), -0.5, -0.45);
+	putText(x,y,getCaption(), -0.5, -0.45, 0.0);
         break;
     }
   }

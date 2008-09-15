@@ -457,7 +457,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
   ===========================================================================*/
   void UIWindow::putTextS(int x,int y, std::string Text,
 			  int& o_width, int &o_height,
-			  float i_xper, float i_yper) {
+			  float i_xper, float i_yper, float i_perCentered) {
     if(m_curFont == NULL)
       return;
 
@@ -484,16 +484,16 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     v_fm->printStringGrad(v_fg,
 			  getAbsPosX()+x + (int)(((float)v_fg->realWidth()) * i_xper),
 			  getAbsPosY()+y + (int)(((float)v_fg->realHeight()) * i_yper),
-			  c0, c1, c2, c3);
+			  c0, c1, c2, c3, i_perCentered);
     o_width  = v_fg->realWidth();
     o_height = v_fg->realHeight();
 }
 
-  void UIWindow::putText(int x,int y,std::string Text, float i_xper, float i_yper) {
+  void UIWindow::putText(int x,int y,std::string Text, float i_xper, float i_yper, float i_perCentered) {
     int v_width, v_height;
     putTextS(x, y, Text,
 	     v_width, v_height,
-	     i_xper, i_yper);
+	     i_xper, i_yper, i_perCentered);
   }
    
   void UIWindow::putImage(int x,int y,int nWidth,int nHeight,Texture *pImage) {

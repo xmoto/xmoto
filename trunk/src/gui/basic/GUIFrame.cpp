@@ -128,7 +128,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           else
             setTextSolidColor(MAKE_COLOR(188,186,67,255));
 
-          putText(4,14, utf8::txt2vertical(getCaption()));
+          putText(4,14, utf8::txt2vertical(getCaption()), 0.0, 0.0, 0.0);
         }
         break;
     }
