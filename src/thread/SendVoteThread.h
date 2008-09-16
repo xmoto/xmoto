@@ -41,6 +41,8 @@ class SendVoteThread : public XMThread, public WWWAppInterface {
 private:
   std::string m_msg;
   std::string m_idlevel, m_difficulty_value, m_quality_value;
+
+  static bool hasPlayedEnough(xmDatabase* pDb, const std::string& i_id_level);
 };
 
 #endif

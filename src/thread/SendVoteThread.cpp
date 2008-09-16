@@ -26,7 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Random.h"
 #include "../db/xmDatabase.h"
 
-#define VOTE_ASK_FREQUENCY 5 // /1000
+#define VOTE_ASK_FREQUENCY 10 // /1000
+#define PLAYED_ENOUGH_TIME 1500
 
 SendVoteThread::SendVoteThread(const std::string& i_idlevel, const std::string& i_difficulty_value, const std::string& i_quality_value)
   : XMThread("SVT")
@@ -38,6 +39,29 @@ SendVoteThread::SendVoteThread(const std::string& i_idlevel, const std::string& 
 
 SendVoteThread::~SendVoteThread()
 {
+}
+
+bool SendVoteThread::hasPlayedEnough(xmDatabase* pDb, const std::string& i_id_level) {
+  char **v_result;
+  unsigned int nrow;
+  int v_playedTime;
+
+  v_result = pDb->readDB("SELECT IFNULL(SUM(playedTime), 0) "
+			 "FROM stats_profiles_levels "
+			 "WHERE id_profile = \"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
+			 "AND id_level=\"" + xmDatabase::protectString(i_id_level) + "\" "
+			 "GROUP BY sitekey;",
+			 nrow);
+  if(nrow != 1) {
+    /* should not happend */
+    pDb->read_DB_free(v_result);
+    return false;
+  }
+    
+  v_playedTime = atoi(pDb->getResult(v_result, 1, 0, 0));
+  pDb->read_DB_free(v_result);
+
+  return v_playedTime > PLAYED_ENOUGH_TIME;
 }
 
 bool SendVoteThread::isToPropose(xmDatabase* pDb, const std::string& i_id_level) {
@@ -60,6 +84,11 @@ bool SendVoteThread::isToPropose(xmDatabase* pDb, const std::string& i_id_level)
 
   // if the vote has already be done, don't revote
   if(pDb->isVoted(XMSession::instance()->profile(), i_id_level)) {
+    return false;
+  }
+
+  // check that the level has been played a minimum
+  if(hasPlayedEnough(pDb, i_id_level) == false) {
     return false;
   }
 
