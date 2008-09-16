@@ -50,7 +50,7 @@ bool SendVoteThread::hasPlayedEnough(xmDatabase* pDb, const std::string& i_id_le
 			 "FROM stats_profiles_levels "
 			 "WHERE id_profile = \"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
 			 "AND id_level=\"" + xmDatabase::protectString(i_id_level) + "\" "
-			 "GROUP BY sitekey;",
+			 "GROUP BY id_profile, id_level;",
 			 nrow);
   if(nrow != 1) {
     /* should not happend */
