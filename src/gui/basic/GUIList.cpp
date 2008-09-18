@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../Sound.h"
 #include <sstream>
 
-#define GUILIST_SCROLL_SIZE 4
+#define GUILIST_SCROLL_SIZE 10
 
   int UIList::HeaderHeight() {
     return m_headerHeight;
@@ -532,12 +532,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/
   void UIList::mouseWheelDown(int x,int y) {
     /* Scroll down! */
-    _Scroll(-16);
+    _Scroll(-16*GUILIST_SCROLL_SIZE);
   }
   
   void UIList::mouseWheelUp(int x,int y) {
     /* Scroll up! */
-    _Scroll(16);
+    _Scroll(16*GUILIST_SCROLL_SIZE);
   }
   
   void UIList::mouseLDoubleClick(int x,int y) {
