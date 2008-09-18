@@ -110,10 +110,10 @@ Central place to keep many in-game text strings
     ":Rasmus Neckelmann;"                                                                    \
     ":Nicolas Adenis-Lamarre;"                                                               \
     ":Emmanuel Gorse;"                                                                       \
-    ":Richard Franks;"                                                                       \
-    ":Kees Jongenburger;"                                                                    \
     ":;"                                                                                     \
     + std::string(_("Additional Programming")) +                                             \
+    ":Richard Franks;"                                                                       \
+    ":Kees Jongenburger;"                                                                    \
     ":Eric Piel;"                                                                            \
     ":Christoph Sommer;"                                                                     \
     ":Frederic Huard;"                                                                       \
@@ -149,6 +149,7 @@ Central place to keep many in-game text strings
     ":Lucas Hermann Negri (" + std::string(_("Brazilian Portuguese")) + ");"                 \
     ":Jānis Rūcis (" + std::string(_("Latvian")) + ");"                                      \
     ":Kristian Jagd (" + std::string(_("Danish")) + ");"                                     \
+    ":Tadas Masiulionis (" + std::string(_("Lithuanian")) + ");"                                     \
     ":;"                                                                                     \
     + std::string(_("Main testers")) +                                                       \
     ":Jose Alberto Coelho;"                                                                  \
