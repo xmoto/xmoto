@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-09-18 20:21+0200\n"
+"POT-Creation-Date: 2008-09-19 18:18+0200\n"
 "PO-Revision-Date: 2008-09-13 20:30+0200\n"
 "Last-Translator: Tadas Masiulionis <tadzikaz@gmail.com>\n"
 "Language-Team: Lithuanian\n"
@@ -311,7 +311,7 @@ msgstr "Skripto veiksmas"
 msgid "Lead Programming"
 msgstr "Pagrindinis programavimas"
 
-#: src/GameText.h:116
+#: src/GameText.h:114
 msgid "Additional Programming"
 msgstr "Papildomas programavimas"
 
@@ -325,7 +325,7 @@ msgstr "Mac OS X palaikymas"
 
 #: src/GameText.h:136
 msgid "Localization"
-msgstr "Vertėjai"
+msgstr "Vertimas"
 
 #: src/GameText.h:137
 msgid "Slovak"
@@ -393,7 +393,7 @@ msgstr "Daniškai"
 
 #: src/GameText.h:152
 msgid "Lithuanian"
-msgstr ""
+msgstr "Lietuviškai"
 
 #: src/GameText.h:154
 msgid "Main testers"
@@ -437,15 +437,15 @@ msgstr "MD5 kodui"
 
 #: src/GameText.h:169
 msgid "Everyone who have made levels"
-msgstr "Kiekvienas, kas padarė lygius"
+msgstr "Kiekvienam, kuris sukūrė lygius"
 
 #: src/GameText.h:170
 msgid "People who have provided bug reports"
-msgstr "Žmonės, kurie pranešė apie klaidas"
+msgstr "Žmonėms, kurie pranešė apie klaidas"
 
 #: src/GameText.h:171
 msgid "Anyone who has helped in any way"
-msgstr "Bet kas, kas padėjo bet kokiu atveju"
+msgstr "Visiems, kurie padėjo bet kokiu atveju"
 
 #: src/GameText.h:173
 msgid "Credits"
@@ -1241,11 +1241,11 @@ msgstr "Spauskite raktą, kokį norite \"%s\" arba ESC, kad atšauktumėte"
 
 #: src/GameText.h:371
 msgid "Proxy Server"
-msgstr "Tarpinė stotis"
+msgstr "Tarpinis serveris"
 
 #: src/GameText.h:372
 msgid "Configure Proxy..."
-msgstr "Formuoti tarpinę stotį..."
+msgstr "Formuoti tarpinį serverį..."
 
 #: src/GameText.h:373
 msgid "Quality"
@@ -1371,11 +1371,11 @@ msgstr "Stereo"
 
 #: src/GameText.h:405
 msgid "Synchronisation down"
-msgstr "Sinchronizuoti žemyn"
+msgstr "Sinchronizuoja iš serverio"
 
 #: src/GameText.h:406
 msgid "Synchronisation up"
-msgstr "Sinchronizuoti aukštyn"
+msgstr "Sinchronizuoja į serverį"
 
 #: src/GameText.h:407
 msgid "Synchronisation done successfully"
@@ -1508,7 +1508,7 @@ msgstr "Naudoti profilį"
 
 #: src/GameText.h:438
 msgid "Allow web forms"
-msgstr ""
+msgstr "Įjungti tinklapio formas"
 
 #: src/GameText.h:439
 msgid "Using HTTP Proxy"
@@ -1706,11 +1706,11 @@ msgstr "Įmontuoti ir vienos pozicijos išoriniai lygiai"
 
 #: src/GameText.h:484
 msgid "Levels grouped together in level packs"
-msgstr "Lygiai susirinkti kartu į lygių paketus"
+msgstr "Lygiai sugrupuoti kartu į lygių paketus"
 
 #: src/GameText.h:485
 msgid "Browse levels available to you"
-msgstr "Peržiūrėkite lygmenis, pasiekiamus jums"
+msgstr "Naršyti pasiekiamus lygius"
 
 #: src/GameText.h:486
 msgid "View list of recorded replays"
@@ -1798,7 +1798,7 @@ msgstr ""
 
 #: src/GameText.h:506
 msgid "Allow X-Moto to ask you your mind about levels"
-msgstr ""
+msgstr "Leisti X-Moto klausti jūsų nuomonės apie lygius"
 
 #: src/GameText.h:507
 msgid "Enable high-color graphics"
@@ -1959,15 +1959,17 @@ msgstr "Pasirinkite, jei turite tiesioginį ryšį prie interneto"
 
 #: src/GameText.h:545
 msgid "Select this if you connect to the Internet through an HTTP proxy"
-msgstr "Pasirinkite, jei jūs jungiatės prie interneto per HTTP tarpinę stotį"
+msgstr "Pasirinkite, jei jūs jungiatės prie interneto per HTTP tarpinį serverį"
 
 #: src/GameText.h:546
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
-msgstr "Pasirinkite, jei jūs jungiatės prie interneto per SOCKS4 tarpinę stotį"
+msgstr ""
+"Pasirinkite, jei jūs jungiatės prie interneto per SOCKS4 tarpinį serverį"
 
 #: src/GameText.h:547
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
-msgstr "Pasirinkite, jei jūs jungiatės prie interneto per SOCKS5 tarpinę stotį"
+msgstr ""
+"Pasirinkite, jei jūs jungiatės prie interneto per SOCKS5 tarpinį serverį"
 
 #: src/GameText.h:548
 msgid "Use these settings"
@@ -1975,11 +1977,11 @@ msgstr "Naudoti šiuos nustatymus"
 
 #: src/GameText.h:549
 msgid "Write the IP address or host name of proxy server to use"
-msgstr "Naudojimui įrašykite tarpinės stoties IP adresą arba vardą"
+msgstr "Naudojimui įrašykite tarpinio serverio IP adresą arba vardą"
 
 #: src/GameText.h:550
 msgid "Write the port number used by the proxy server"
-msgstr "Įrašykite tarpinės stoties naudojamo prievado numerį"
+msgstr "Įrašykite tarpinio serverio naudojamo prievado numerį"
 
 #: src/GameText.h:551
 msgid "New levels and levels updated from the Internet"
@@ -2061,7 +2063,7 @@ msgstr "Nusiųsti pakartojimą į rekordų tinklapį"
 #: src/GameText.h:573
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
-"NUsiųskite savo geriausius pakartojimus į jūsų kambarį\n"
+"Nusiųskite savo geriausius pakartojimus į jūsų kambarį\n"
 "(naudinga, kai jis buvo tik sukurtas)"
 
 #: src/GameText.h:574
@@ -2114,7 +2116,7 @@ msgstr "Paleisti kintamą mastelį, kai žaidžiate"
 
 #: src/GameText.h:585
 msgid "View the X-Moto credits"
-msgstr "Rodyti X-Moto padėkas"
+msgstr "Parodyti X-Moto padėkas"
 
 #: src/GameText.h:586
 msgid "Name of replay"
@@ -2174,7 +2176,7 @@ msgstr "Įveskite tekstą, kad filtruotumėte pakartojimų sąrašą"
 
 #: src/GameText.h:600
 msgid "Press to play X-Moto immediately"
-msgstr "Susispauskite, kad žaistumėte tuoj pat X-Moto"
+msgstr "Paspauskite ir pradėkite žaisti X-Moto"
 
 #: src/GameText.h:601
 msgid "Increase or decrease the quality of the levels selected"
@@ -2314,7 +2316,7 @@ msgstr "Praleisti šį raportą"
 
 #: src/GameText.h:639
 msgid "You don't want to vote"
-msgstr ""
+msgstr "Jūs nenorite balsuoti"
 
 #: src/GameText.h:640
 msgid "Really easy"
@@ -3001,8 +3003,8 @@ msgstr ""
 #~ msgstr ""
 #~ "X-Moto naudoja jūsų kompiuteryje duomenų bazę, kad išsaugotų visus jūsų "
 #~ "balus ir statistiką. Jūs galite siųsti duomenis naudodami savo tinklo "
-#~ "abonentą X-Moto tarnybinėje stotyje. Naudinga išsaugoti jūsų duomenis, "
-#~ "jei jūs žaidžiate X-Moto iš skirtingų vietų."
+#~ "abonentą X-Moto serveryje. Naudinga išsaugoti jūsų duomenis, jei jūs "
+#~ "žaidžiate X-Moto iš skirtingų vietų."
 
 #~ msgid ""
 #~ "If you manually copied the X-Moto user files (.xmoto) on some other "

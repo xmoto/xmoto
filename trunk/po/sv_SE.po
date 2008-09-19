@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-09-18 20:21+0200\n"
+"POT-Creation-Date: 2008-09-19 18:18+0200\n"
 "PO-Revision-Date: 2008-01-09 21:59+0100\n"
 "Last-Translator: Lukas Klingsbo <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
@@ -312,7 +312,7 @@ msgstr ""
 msgid "Lead Programming"
 msgstr "Huvudprogrammerare"
 
-#: src/GameText.h:116
+#: src/GameText.h:114
 msgid "Additional Programming"
 msgstr "Andra programmerare"
 
