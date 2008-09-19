@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-09-18 20:21+0200\n"
+"POT-Creation-Date: 2008-09-19 18:18+0200\n"
 "PO-Revision-Date: 2008-03-11 20:09-0300\n"
 "Last-Translator: Lucas Hermann Negri <kkndrox@gmail.com>\n"
 "Language-Team: Portuguese/Brazil\n"
@@ -309,7 +309,7 @@ msgstr ""
 msgid "Lead Programming"
 msgstr "Programação principal"
 
-#: src/GameText.h:116
+#: src/GameText.h:114
 msgid "Additional Programming"
 msgstr "Programação adicional"
 

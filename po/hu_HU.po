@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-09-18 20:21+0200\n"
+"POT-Creation-Date: 2008-09-19 18:18+0200\n"
 "PO-Revision-Date: 2008-09-07 13:48+0100\n"
 "Last-Translator: Zoltán Balogh <ttapecs@gmail.com>\n"
 "Language-Team: X-moto\n"
@@ -303,7 +303,7 @@ msgstr "Szkript akció"
 msgid "Lead Programming"
 msgstr "Vezető Fejlesztők"
 
-#: src/GameText.h:116
+#: src/GameText.h:114
 msgid "Additional Programming"
 msgstr "További Fejlesztők"
 
