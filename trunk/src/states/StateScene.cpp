@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/Camera.h"
 #include "../XMSession.h"
 #include "../xmscene/Entity.h"
+#include "../xmscene/Scene.h"
 #include "StateMessageBox.h"
 #include "../drawlib/DrawLib.h"
 #include "StatePreplayingGame.h"

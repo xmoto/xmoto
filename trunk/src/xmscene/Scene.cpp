@@ -42,6 +42,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../ScriptDynamicObjects.h"
 #include "ChipmunkWorld.h"
 #include "../helpers/Random.h"
+#include "PhysicsSettings.h"
 
   MotoGame::MotoGame() {
     m_bDeathAnimEnabled=true;
@@ -66,6 +67,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_chipmunkWorld = NULL;
 
     m_halfUpdate = true;
+
+    m_physicsSettings = NULL;
   }
   
   MotoGame::~MotoGame() {
@@ -90,6 +93,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       i_db->read_DB_free(v_result);
 
       m_pLevelSrc->loadReducedFromFile();
+
     } catch(Exception &e) {
       delete m_pLevelSrc;
       m_pLevelSrc = NULL;
@@ -214,7 +218,7 @@ void MotoGame::cleanPlayers() {
       return;
 
     if(m_halfUpdate == true) {
-      getLevelSrc()->updateToTime(*this);
+      getLevelSrc()->updateToTime(*this, m_physicsSettings);
       m_halfUpdate = false;
     } else
       m_halfUpdate = true;
@@ -263,7 +267,7 @@ void MotoGame::cleanPlayers() {
     }
     
     for(unsigned int i=0; i<m_players.size(); i++) {
-      m_players[i]->updateToTime(m_time, timeStep, &m_Collision, m_PhysGravity, this);      
+      m_players[i]->updateToTime(m_time, timeStep, &m_Collision, m_PhysGravity, this);
 
       if(m_playEvents) {
 	/* New wheel-spin particles? */
@@ -296,7 +300,7 @@ void MotoGame::cleanPlayers() {
 	if(Players().size() == 1) {
 	  if(Players()[0]->isDead() == false && Players()[0]->isFinished() == false) {
 	    SerializedBikeState BikeState;
-	    getSerializedBikeState(Players()[0]->getState(), getTime(), &BikeState);
+	    getSerializedBikeState(Players()[0]->getState(), getTime(), &BikeState, m_physicsSettings);
 	    i_recordedReplay->storeState(BikeState);
 	    i_recordedReplay->storeBlocks(m_pLevelSrc->Blocks());
 	  }
@@ -372,6 +376,9 @@ void MotoGame::cleanPlayers() {
     
     /* Create Lua state */
     m_luaGame = new LuaLibGame(this);
+
+    /* physics */
+    m_physicsSettings = new PhysicsSettings("Physics/original.xml");
     
     /* Clear collision system */
     m_Collision.reset();
@@ -379,7 +386,7 @@ void MotoGame::cleanPlayers() {
 
     /* Set default gravity */
     m_PhysGravity.x = 0;
-    m_PhysGravity.y = PHYS_WORLD_GRAV;
+    m_PhysGravity.y = -(m_physicsSettings->WorldGravity());
 
     m_time = 0;
     m_floattantTimeStepDiff = 0.0;
@@ -451,7 +458,7 @@ void MotoGame::cleanPlayers() {
     // load chimunk
     if(m_pLevelSrc->isPhysics()) {
       LogInfo("Running a physics level");
-      m_chipmunkWorld = new ChipmunkWorld();
+      m_chipmunkWorld = new ChipmunkWorld(m_physicsSettings);
     }
 
     /* Generate extended level data to be used by the game */
@@ -481,7 +488,7 @@ void MotoGame::cleanPlayers() {
 					   Theme *i_theme, BikerTheme* i_bikerTheme,
 					   bool i_enableEngineSound) {
     ReplayBiker* v_biker = NULL;
-    v_biker = new ReplayBiker(i_ghostFile, i_theme, i_bikerTheme);
+    v_biker = new ReplayBiker(i_ghostFile, m_physicsSettings, i_theme, i_bikerTheme);
     v_biker->setPlaySound(i_enableEngineSound);
     m_players.push_back(v_biker);
     return v_biker;
@@ -498,7 +505,7 @@ void MotoGame::cleanPlayers() {
       throw Exception("No level defined");
     }
 
-    v_ghost = new Ghost(i_ghostFile, false, i_theme, i_bikerTheme,
+    v_ghost = new Ghost(i_ghostFile, m_physicsSettings, false, i_theme, i_bikerTheme,
 			i_filterColor, i_filterUglyColor);
     v_ghost->setPlaySound(false);
     v_ghost->setInfo(i_info);
@@ -572,6 +579,10 @@ void MotoGame::cleanPlayers() {
       delete m_chipmunkWorld;
       m_chipmunkWorld = NULL;
     }
+
+    if(m_physicsSettings != NULL) {
+      delete m_physicsSettings;
+    }
   }
 
   /*===========================================================================
@@ -617,7 +628,7 @@ void MotoGame::cleanPlayers() {
     /* For each input block */
     int nTotalBSPErrors = 0;
     
-    nTotalBSPErrors = m_pLevelSrc->loadToPlay(m_chipmunkWorld);
+    nTotalBSPErrors = m_pLevelSrc->loadToPlay(m_chipmunkWorld, m_physicsSettings);
 
     if(nTotalBSPErrors > 0) {
       LogWarning(" %d BSP error%s in total",nTotalBSPErrors,nTotalBSPErrors==1?"":"s");
@@ -629,16 +640,16 @@ void MotoGame::cleanPlayers() {
       /* Give limits to collision system */
       m_Collision.defineLine( m_pLevelSrc->LeftLimit(), m_pLevelSrc->TopLimit(),
 			      m_pLevelSrc->LeftLimit(), m_pLevelSrc->BottomLimit(),
-			      DEFAULT_PHYS_WHEEL_GRIP);
+			      m_physicsSettings->BikeWheelBlockGrip());
       m_Collision.defineLine( m_pLevelSrc->LeftLimit(), m_pLevelSrc->BottomLimit(),
 			      m_pLevelSrc->RightLimit(), m_pLevelSrc->BottomLimit(),
-			      DEFAULT_PHYS_WHEEL_GRIP );
+			      m_physicsSettings->BikeWheelBlockGrip());
       m_Collision.defineLine( m_pLevelSrc->RightLimit(), m_pLevelSrc->BottomLimit(),
 			      m_pLevelSrc->RightLimit(), m_pLevelSrc->TopLimit(),
-			      DEFAULT_PHYS_WHEEL_GRIP );
+			      m_physicsSettings->BikeWheelBlockGrip());
       m_Collision.defineLine( m_pLevelSrc->RightLimit(), m_pLevelSrc->TopLimit(),
 			      m_pLevelSrc->LeftLimit(), m_pLevelSrc->TopLimit(),
-			      DEFAULT_PHYS_WHEEL_GRIP );
+			      m_physicsSettings->BikeWheelBlockGrip());
 
       /* Show stats about the collision system */
       CollisionSystemStats CStats;
@@ -1206,7 +1217,7 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
 					const TColor& i_filterColor,
 					const TColor& i_filterUglyColor,
 					bool i_enableEngineSound) {
-    PlayerBiker* v_playerBiker = new PlayerBiker(i_position, i_direction, m_PhysGravity,
+    PlayerBiker* v_playerBiker = new PlayerBiker(m_physicsSettings, i_position, i_direction, m_PhysGravity,
 						 i_theme, i_bikerTheme,
 						 i_filterColor, i_filterUglyColor);
     v_playerBiker->setOnBikerHooks(new MotoGameOnBikerHooks(this, m_players.size()));
@@ -1346,6 +1357,10 @@ bool MotoGame::isAutoZoomCamera(){
   std::vector<Camera*>& MotoGame::Cameras() {
     return m_cameras;
   }
+
+PhysicsSettings* MotoGame::getPhysicsSettings() {
+  return m_physicsSettings;
+}
 
 MotoGameOnBikerHooks::MotoGameOnBikerHooks(MotoGame* i_motoGame, int i_playerNumber) {
   m_motoGame = i_motoGame;

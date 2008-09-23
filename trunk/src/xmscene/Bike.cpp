@@ -29,23 +29,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeAnchors.h"
 #include "../Sound.h"
 #include "../helpers/Log.h"
+#include "PhysicsSettings.h"
 
-#define PHYSICAL_ENGINE_REDUCTION 0.05
-
-BikeState::BikeState() {
-  m_bikeParameters = new BikeParameters();
+BikeState::BikeState(PhysicsSettings* i_physicsSettings) {
+  m_bikeParameters = new BikeParameters(i_physicsSettings);
   m_bikeAnchors    = new BikeAnchors();
 
-  reInitializeSpeed();
   reInitializeAnchors();
 
   GameTime = 0;
 }
 
 BikeState& BikeState::operator=(const BikeState& i_copy) {
-  this->m_curBrake = i_copy.m_curBrake;
-  this->m_curEngine = i_copy.m_curEngine;
-
   *(this->m_bikeParameters) = *(i_copy.m_bikeParameters);
   *(this->m_bikeAnchors)    = *(i_copy.m_bikeAnchors);
 
@@ -170,24 +165,6 @@ BikeState::~BikeState() {
   }
 
 
-void BikeState::reInitializeSpeed() {
-  m_curBrake  = 0.0;
-  m_curEngine = 0.0;
-}
-
-float BikeState::CurrentBrake() const {
-  return m_curBrake;
-}
-
-float BikeState::CurrentEngine() const {
-  return m_curEngine;
-}
-
-void BikeState::physicalUpdate() {
-  if(m_curEngine > 0.0)
-    m_curEngine -= m_bikeParameters->MaxEngine() * PHYSICAL_ENGINE_REDUCTION; 
-}
-
 void BikeState::reInitializeAnchors() {
   m_bikeAnchors->update(m_bikeParameters);
 }
@@ -200,10 +177,14 @@ BikeParameters* BikeState::Parameters() {
   return m_bikeParameters;
 }
 
-Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
+Biker::Biker(PhysicsSettings* i_physicsSettings,
+	     Theme *i_theme, BikerTheme* i_bikerTheme,
 	     const TColor& i_colorFilter,
 	     const TColor& i_uglyColorFilter) {
+
   m_EngineSound = new EngineSoundSimulator();
+  m_physicsSettings = i_physicsSettings;
+  m_bikeState   = new BikeState(m_physicsSettings);
 
   /* sound engine */
   try {
@@ -243,6 +224,7 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
 Biker::~Biker() { 
 	cleanCollisionPoints();
   delete m_EngineSound;
+  delete m_bikeState;
 }
 
 const TColor& Biker::getColorFilter() const {
@@ -263,7 +245,11 @@ int Biker::deadTime() const {
 
 
 float Biker::getBikeEngineRPM() {
-  return m_bikeState.fBikeEngineRPM;
+  return m_bikeState->fBikeEngineRPM;
+}
+
+PhysicsSettings* Biker::getPhysicsSettings() {
+  return m_physicsSettings;
 }
 
 void Biker::updateToTime(int i_time, int i_timeStep,
@@ -538,7 +524,7 @@ void BikeState::interpolateGameState(std::vector<BikeState*> &i_ghostBikeStates,
 }
 
   void BikeState::convertStateFromReplay(SerializedBikeState *pReplayState,
-          BikeState *pBikeS) 
+					 BikeState *pBikeS, PhysicsSettings* i_physicsSettings) 
   {
     bool bUpdateRider=true,bUpdateAltRider=true;
     
@@ -555,7 +541,7 @@ void BikeState::interpolateGameState(std::vector<BikeState*> &i_ghostBikeStates,
     _16BitsToMatrix(pReplayState->nRearWheelRot,pBikeS->fRearWheelRot);
     
     /* Update engine stuff */
-    pBikeS->fBikeEngineRPM = ENGINE_MIN_RPM + (ENGINE_MAX_RPM - ENGINE_MIN_RPM) * ((float)pReplayState->cBikeEngineRPM) / 255.0f;
+    pBikeS->fBikeEngineRPM = i_physicsSettings->EngineRpmMin() + (i_physicsSettings->EngineRpmMax()-i_physicsSettings->EngineRpmMin()) * ((float)pReplayState->cBikeEngineRPM) / 255.0f;
     
     pBikeS->SwingAnchorP.x = pBikeS->Anchors()->AR.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->AR.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
     pBikeS->SwingAnchorP.y = pBikeS->Anchors()->AR.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->AR.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;

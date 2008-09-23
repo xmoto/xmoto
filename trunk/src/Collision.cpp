@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Block.h"
 #include "xmscene/Zone.h"
 #include "xmscene/Entity.h"
+#include "xmscene/PhysicsSettings.h"
 
 /* 
    Prior to version 0.1.11, the far largest time sink in the game was the 
@@ -359,7 +360,7 @@ CollisionSystem::~CollisionSystem() {
   /*===========================================================================
   Calculate collision between line and system
   ===========================================================================*/
-  int CollisionSystem::collideLine(float x1,float y1,float x2,float y2,dContact *pContacts,int nMaxC) {
+int CollisionSystem::collideLine(float x1,float y1,float x2,float y2,dContact *pContacts,int nMaxC, PhysicsSettings* i_physicsSettings) {
     int nNumC = 0;
 
     /* Calculate bounding box of line */
@@ -413,7 +414,7 @@ CollisionSystem::~CollisionSystem() {
 	  Vector2f W = Vector2f(vx,vy);
 	  W.normalize();
 
-	  _SetWheelContactParams(&c,T,W,0.0f, blockLines[j]->fGrip);                                           
+	  _SetWheelContactParams(&c,T,W,0.0f, blockLines[j]->fGrip, i_physicsSettings);
 	  int nOldC = nNumC;
 	  nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);                         
 	  if(nNumC != nOldC)
@@ -462,7 +463,7 @@ CollisionSystem::~CollisionSystem() {
             Vector2f W = Vector2f(vx,vy);
             W.normalize();
 
-	    _SetWheelContactParams(&c,T,W, 0.0f, m_pGrid[i].Lines[j]->fGrip);
+	    _SetWheelContactParams(&c,T,W, 0.0f, m_pGrid[i].Lines[j]->fGrip, i_physicsSettings);
 	    nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);                 
           }                                      
         }          
@@ -476,7 +477,8 @@ CollisionSystem::~CollisionSystem() {
   /*===========================================================================
   Calculate precise intersections between circle and geometry, if any
   ===========================================================================*/
-  int CollisionSystem::_CollideCircleAndLine(Line *pLine,float x,float y,float r,dContact *pContacts,int nOldNumC,int nMaxC, float fGrip) {
+  int CollisionSystem::_CollideCircleAndLine(Line *pLine,float x,float y,float r,dContact *pContacts,int nOldNumC,int nMaxC,
+					     float fGrip, PhysicsSettings* i_physicsSettings) {
     int nNumC = nOldNumC;
 
     /* First do a bounding box collision check */
@@ -516,7 +518,7 @@ CollisionSystem::~CollisionSystem() {
 //      float fDepth = _CalculateCircleLineDepth(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1),Vector2f(pLine->x2,pLine->y2));
       double fDepth = _CalculateDepth(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1));
       _SetWheelContactParams(&c,Vector2f(pLine->x1,pLine->y1),
-                              W,fDepth, fGrip);                                   
+			     W,fDepth, fGrip, i_physicsSettings);
       nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);            
       //return nNumC;
     }
@@ -536,7 +538,7 @@ CollisionSystem::~CollisionSystem() {
 //      float fDepth = _CalculateCircleLineDepth(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1),Vector2f(pLine->x2,pLine->y2));
       double fDepth = _CalculateDepth(Vector2f(x,y),r,Vector2f(pLine->x2,pLine->y2));
       _SetWheelContactParams(&c,Vector2f(pLine->x2,pLine->y2),
-                              W,fDepth, fGrip);                                   
+			     W,fDepth, fGrip, i_physicsSettings);
       nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);            
       //return nNumC;
     }
@@ -559,11 +561,11 @@ CollisionSystem::~CollisionSystem() {
       //if((xxx % 200) == 0) 
       //  printf("%f\n",fDepth);
         
-      _SetWheelContactParams(&c,T1,W,fDepth, fGrip); 
+      _SetWheelContactParams(&c,T1,W,fDepth, fGrip, i_physicsSettings); 
       nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);
         
       if(n>1) {
-        _SetWheelContactParams(&c,T2,W,fDepth, fGrip); 
+        _SetWheelContactParams(&c,T2,W,fDepth, fGrip, i_physicsSettings);
 //        _SetWheelContactParams(&c,T2,W,_CalculateDepth(Vector2f(x,y),r,T2));                                   
         nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);
       }
@@ -572,7 +574,7 @@ CollisionSystem::~CollisionSystem() {
     return nNumC;
   }
   
-  int CollisionSystem::collideCircle(float x,float y,float r,dContact *pContacts,int nMaxC) {
+  int CollisionSystem::collideCircle(float x,float y,float r,dContact *pContacts,int nMaxC, PhysicsSettings* i_physicsSettings) {
     int nNumC = 0;
   
     /* Calculate bounding box of circle */
@@ -614,7 +616,7 @@ CollisionSystem::~CollisionSystem() {
 	int nOldC = nNumC;
 	nNumC = _CollideCircleAndLine(blockLines[j], x, y, r,
 				      pContacts,nNumC,nMaxC,
-				      blockLines[j]->fGrip);
+				      blockLines[j]->fGrip, i_physicsSettings);
 
 	if(nOldC != nNumC)
 	  m_bDynamicTouched = true;
@@ -644,7 +646,7 @@ CollisionSystem::~CollisionSystem() {
         /* Check all lines in cell */
         for(unsigned int j=0; j<m_pGrid[i].Lines.size(); j++) {
           nNumC = _CollideCircleAndLine(m_pGrid[i].Lines[j],x,y,r,pContacts,nNumC,nMaxC,
-					m_pGrid[i].Lines[j]->fGrip);
+					m_pGrid[i].Lines[j]->fGrip, i_physicsSettings);
         }          
       }
     }
@@ -682,7 +684,8 @@ CollisionSystem::~CollisionSystem() {
   /*===========================================================================
   Helpers 
   ===========================================================================*/
-  void CollisionSystem::_SetWheelContactParams(dContact *pc,const Vector2f &Pos,const Vector2f &NormalT,double fDepth, float fGrip) {
+void CollisionSystem::_SetWheelContactParams(dContact *pc,const Vector2f &Pos,const Vector2f &NormalT,
+					     double fDepth, float fGrip, PhysicsSettings* i_physicsSettings) {
     memset(pc,0,sizeof(dContact));
     Vector2f Normal = NormalT;
     Normal.normalize();
@@ -698,8 +701,8 @@ CollisionSystem::~CollisionSystem() {
     pc->surface.mu = fGrip;
     //pc->surface.mu = 0.9; //.7; //8;
     //pc->surface.bounce = 0.3;
-    pc->surface.soft_erp = PHYS_WHEEL_ERP;     
-    pc->surface.soft_cfm = PHYS_WHEEL_CFM; 
+    pc->surface.soft_erp = i_physicsSettings->BikeWheelErp();
+    pc->surface.soft_cfm = i_physicsSettings->BikeWheelCfm();
     pc->surface.mode = dContactApprox1_1 | dContactSlip1;
   }  
 

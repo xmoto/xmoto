@@ -43,19 +43,19 @@ private:
 
 class ReplayBiker : public Ghost {
  public:
-  ReplayBiker(std::string i_replayFile, Theme *i_theme, BikerTheme* i_bikerTheme);
+  ReplayBiker(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
+	      Theme *i_theme, BikerTheme* i_bikerTheme);
   std::string getQuickDescription() const;
  private:
 };
 
 class PlayerBiker : public Biker {
  public:
-  PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_filterColor, const TColor& i_filterUglyColor);
+  PlayerBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_filterColor, const TColor& i_filterUglyColor);
   virtual ~PlayerBiker();
 
   void updateToTime(int i_time, int i_timeStep,
-		    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-		    MotoGame *i_motogame);
+		    CollisionSystem *i_collisionSystem, Vector2f i_gravity, MotoGame *i_motogame);
   void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
   BikeController* getControler();
 

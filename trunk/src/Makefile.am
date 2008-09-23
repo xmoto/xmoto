@@ -347,6 +347,8 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   xmscene/Block.cpp \
   xmscene/Entity.h   \
   xmscene/Entity.cpp \
+  xmscene/PhysicsSettings.h   \
+  xmscene/PhysicsSettings.cpp \
   xmscene/SkyApparence.h   \
   xmscene/SkyApparence.cpp \
   xmscene/BikeController.h \

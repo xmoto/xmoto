@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Block.h"
 #include "ChipmunkWorld.h"
 #include "../XMSession.h"
+#include "PhysicsSettings.h"
 #include <sstream>
 
 // don't excceed this number of particles to not reduce significantly the fps
@@ -162,7 +163,7 @@ void Entity::setAlive(bool alive) {
 }
 
 
-bool Entity::updateToTime(int i_time, Vector2f& i_gravity) {
+bool Entity::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings) {
   return false;
 }
 
@@ -649,7 +650,7 @@ void ParticlesSource::unloadToPlay() {
   deleteParticles();
 }
 
-bool ParticlesSource::updateToTime(int i_time, Vector2f& i_gravity) {
+bool ParticlesSource::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings) {
   unsigned int i;
 
   if(i_time > m_lastParticleTime + m_particleTime_increment) {  
@@ -660,7 +661,7 @@ bool ParticlesSource::updateToTime(int i_time, Vector2f& i_gravity) {
 	m_particles.erase(m_particles.begin() + i);
 	m_totalOfParticles--;
       } else {
-	m_particles[i]->updateToTime(i_time, i_gravity);
+	m_particles[i]->updateToTime(i_time, i_gravity, i_physicsSettings);
 	i++;
       }
     }
@@ -781,8 +782,8 @@ void ParticlesSourceSmoke::addParticle(int i_curTime) {
   m_totalOfParticles++;
 }
 
-bool ParticlesSourceSmoke::updateToTime(int i_time, Vector2f& i_gravity) {
-  if(ParticlesSource::updateToTime(i_time, i_gravity) == true) {
+bool ParticlesSourceSmoke::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings) {
+  if(ParticlesSource::updateToTime(i_time, i_gravity, i_physicsSettings) == true) {
     /* Generate smoke */
     if(NotSoRandom::randomNum(0, 5) < 1)
       addParticle(i_time);
@@ -822,8 +823,8 @@ void ParticlesSourceFire::addParticle(int i_curTime) {
   m_totalOfParticles++;
 }
 
-bool ParticlesSourceFire::updateToTime(int i_time, Vector2f& i_gravity) {
-  if(ParticlesSource::updateToTime(i_time, i_gravity) == true) {
+bool ParticlesSourceFire::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings) {
+  if(ParticlesSource::updateToTime(i_time, i_gravity, i_physicsSettings) == true) {
     /* Generate fire */
     /* maximum 5s for a fire particule, but it can be destroyed before */
     addParticle(i_time);
@@ -894,8 +895,8 @@ void ParticlesSourceDebris::addParticle(int i_curTime) {
   m_totalOfParticles++;
 }
 
-bool ParticlesSourceDebris::updateToTime(int i_time, Vector2f& i_gravity) {
-  return ParticlesSource::updateToTime(i_time, i_gravity);
+bool ParticlesSourceDebris::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings) {
+  return ParticlesSource::updateToTime(i_time, i_gravity, i_physicsSettings);
 }
 
 
@@ -928,7 +929,7 @@ void EntityParticle::init(const Vector2f& i_position,
   setSize(0.5);  
 }
 
-bool EntityParticle::updateToTime(int i_time, Vector2f& i_gravity) {
+bool EntityParticle::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings) {
   float v_timeStep = 0.025;
 
   m_velocity += m_acceleration * v_timeStep;
@@ -962,8 +963,8 @@ void SmokeParticle::init(const Vector2f& i_position, const Vector2f& i_velocity,
   setSpriteName(i_spriteName);
 }
 
-bool SmokeParticle::updateToTime(int i_time, Vector2f& i_gravity) {
-  EntityParticle::updateToTime(i_time, i_gravity);
+bool SmokeParticle::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings) {
+  EntityParticle::updateToTime(i_time, i_gravity, i_physicsSettings);
 
   float v_timeStep = 0.025;
   TColor v_color(Color());
@@ -1009,8 +1010,8 @@ void FireParticle::init(const Vector2f& i_position, const Vector2f& i_velocity, 
   setSpriteName(i_spriteName);
 }
 
-bool FireParticle::updateToTime(int i_time, Vector2f& i_gravity) {
-  EntityParticle::updateToTime(i_time, i_gravity);
+bool FireParticle::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings) {
+  EntityParticle::updateToTime(i_time, i_gravity, i_physicsSettings);
 
   float v_timeStep = 0.040;
   TColor v_color(Color());
@@ -1083,13 +1084,13 @@ void DebrisParticle::init(const Vector2f& i_position, const Vector2f& i_velocity
   setSpriteName(i_spriteName); 
 }
 
-bool DebrisParticle::updateToTime(int i_time, Vector2f& i_gravity) {
-  EntityParticle::updateToTime(i_time, i_gravity);
+bool DebrisParticle::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings) {
+  EntityParticle::updateToTime(i_time, i_gravity, i_physicsSettings);
 
   float v_timeStep = 0.025;
   TColor v_color(Color());
 
-  m_acceleration = i_gravity * (-5.5f / PHYS_WORLD_GRAV);
+  m_acceleration = i_gravity * (-5.5f / -(i_physicsSettings->WorldGravity()));
 
   int v_a = v_color.Alpha() - (int)(120.0f * v_timeStep);
   if(v_a >= 0) {

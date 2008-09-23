@@ -27,7 +27,8 @@
 #include "GameEvents.h"
 #include "DBuffer.h"
 #include "Game.h"
-  
+#include "xmscene/PhysicsSettings.h"
+
   /*===========================================================================
     Decoding of event stream
     ===========================================================================*/
@@ -58,7 +59,7 @@
   /*===========================================================================
     Serializer
     ===========================================================================*/
-  void MotoGame::getSerializedBikeState(BikeState *i_bikeState, int i_time, SerializedBikeState *pState) {
+void MotoGame::getSerializedBikeState(BikeState *i_bikeState, int i_time, SerializedBikeState *pState, PhysicsSettings* i_physicsSettings) {
     /* Get. */
     pState->fGameTime = GameApp::timeToFloat(i_time);
     
@@ -102,7 +103,7 @@
     pState->fMaxYDiff = fMaxY;
     
     /* Update engine stuff */    
-    int n = (int)(((i_bikeState->fBikeEngineRPM-ENGINE_MIN_RPM)/ENGINE_MAX_RPM)*255.0f);
+    int n = (int)(((i_bikeState->fBikeEngineRPM-i_physicsSettings->EngineRpmMin())/i_physicsSettings->EngineRpmMax())*255.0f);
     if(n<0) n=0;
     if(n>255) n=255;
     pState->cBikeEngineRPM = n;

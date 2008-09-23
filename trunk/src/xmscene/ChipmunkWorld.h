@@ -25,12 +25,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class cpSpace;
 class cpBody;
+class PlayerBiker;
 class Biker;
+class PhysicsSettings;
 
 class ChipmunkWorld
 {
 public:
-  ChipmunkWorld();
+  ChipmunkWorld(PhysicsSettings* i_physicsSettings);
   ~ChipmunkWorld();
   void resizeHashes(unsigned int i_dim, unsigned int i_size);
 
@@ -45,11 +47,11 @@ public:
   void setBackWheel(cpBody *body, unsigned int i_player);
   void setGravity(float i_x, float i_y);
 
-  void addPlayer(Biker* i_biker);
+  void addPlayer(PlayerBiker* i_biker);
   void updateWheelsPosition(const std::vector<Biker*>& i_players);
 
 private:
-  void initPhysics();
+  void initPhysics(PhysicsSettings* i_physicsSettings);
   cpSpace *m_space;
   cpBody *m_body;
 

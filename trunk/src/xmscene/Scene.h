@@ -29,7 +29,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <queue>
 
 #define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 500
-#define REPLAY_SPEED_INCREMENT 0.25
+#define REPLAY_SPEED_INCREMENT                 0.25
+#define PHYS_STEP_SIZE                         1
 
 class Level;
 class BikeState;
@@ -55,6 +56,7 @@ class Theme;
 class BikerTheme;
 class Biker;
 class ChipmunkWorld;
+class PhysicsSettings;
 
 /*===========================================================================
   Serialized bike state
@@ -134,7 +136,7 @@ public:
   std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
 
   /* serialization */
-  static void getSerializedBikeState(BikeState *i_bikeState, int i_time, SerializedBikeState *pState);
+  static void getSerializedBikeState(BikeState *i_bikeState, int i_time, SerializedBikeState *pState, PhysicsSettings* i_physicsSettings);
   static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation = false);
 
   /* events */
@@ -219,6 +221,8 @@ public:
 
   bool doesPlayEvents() const;
 
+  PhysicsSettings* getPhysicsSettings();
+
   void fastforward(int i_time);
   void fastrewind(int i_time);
   void pause();
@@ -283,6 +287,8 @@ private:
   std::vector<SDynamicObject*> m_SDynamicObjects;
 
   int m_nLastEventSeq;
+
+  PhysicsSettings* m_physicsSettings;
 
   /* for EveryHundreath function */
   int m_lastCallToEveryHundreath;
