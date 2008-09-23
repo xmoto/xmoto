@@ -92,6 +92,8 @@ void PhysicsSettings::load(const std::string& i_filename) {
   bool v_rider_lowerarm_mass_done            = false;
   bool v_rider_foot_mass_done                = false;
   bool v_rider_hand_mass_done                = false;
+  bool v_rider_anchors_erp_done              = false;
+  bool v_rider_anchors_cfm_done              = false;
 
   try {
     v_xml.readFromFile(i_filename);
@@ -404,6 +406,16 @@ void PhysicsSettings::load(const std::string& i_filename) {
 	v_rider_hand_mass_done = true;
       }
 
+      else if(v_name == "rider_anchors_erp") {
+	m_rider_anchors_erp      = atof(v_value.c_str());
+	v_rider_anchors_erp_done = true;
+      }
+
+      else if(v_name == "rider_anchors_cfm") {
+	m_rider_anchors_cfm      = atof(v_value.c_str());
+	v_rider_anchors_cfm_done = true;
+      }
+
     }
 
     if(v_world_erp_done                      == false ||
@@ -461,7 +473,10 @@ void PhysicsSettings::load(const std::string& i_filename) {
        v_rider_upperarm_mass_done            == false ||
        v_rider_lowerarm_mass_done            == false ||
        v_rider_foot_mass_done                == false ||
-       v_rider_hand_mass_done                == false
+       v_rider_hand_mass_done                == false ||
+       v_rider_anchors_erp_done              == false ||
+       v_rider_anchors_cfm_done              == false
+
        ) {
       throw Exception("Incomplete xml file");
     }

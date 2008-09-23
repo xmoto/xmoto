@@ -57,6 +57,7 @@
 <parameter name="rider_lowerarm_mass" 	  	 value="5.0"      />
 <parameter name="rider_foot_mass" 	  	 value="5.0"      />
 <parameter name="rider_hand_mass" 	  	 value="5.0"      />
-
+<parameter name="rider_anchors_erp" 	  	 value="0.3"      />
+<parameter name="rider_anchors_cfm" 	  	 value="0.03"     />
 
 </xmoto_physics>
