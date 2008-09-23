@@ -20,48 +20,56 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "BikeParameters.h"
 #include "../PhysSettings.h"
+#include "PhysicsSettings.h"
 
-BikeParameters::BikeParameters() {
-  setDefaults();
+BikeParameters::BikeParameters(PhysicsSettings* i_physicsSettings) {
+  setDefaults(i_physicsSettings);
 }
 
 BikeParameters::~BikeParameters() {
 }
 
-void BikeParameters::setDefaults() {
-  WR = PHYS_WHEEL_RADIUS;                     
-  Ch = PHYS_MASS_ELEVATION;    
-  Wb = PHYS_WHEEL_BASE;
+void BikeParameters::setDefaults(PhysicsSettings* i_physicsSettings) {
+  WR = i_physicsSettings->BikeWheelRadius();
+  Wb = i_physicsSettings->BikeWheelBase();
+  Wm = i_physicsSettings->BikeWheelMass();
 
-  RVx = PHYS_REAR_SUSP_ANCHOR_X;
-  RVy = PHYS_REAR_SUSP_ANCHOR_Y;
-  FVx = PHYS_FRONT_SUSP_ANCHOR_X;
-  FVy = PHYS_FRONT_SUSP_ANCHOR_Y;
+  Ch = i_physicsSettings->MassElevation();
+
+  RVx = i_physicsSettings->BikeRearSuspensionAnchorX();
+  RVy = i_physicsSettings->BikeRearSuspensionAnchorY();
+  FVx = i_physicsSettings->BikeFrontSuspensionAnchorX();
+  FVy = i_physicsSettings->BikeFrontSuspensionAnchorY();
     
-  PEVx = PHYS_RIDER_ELBOW_X;
-  PEVy = PHYS_RIDER_ELBOW_Y;
-  PHVx = PHYS_RIDER_HAND_X;
-  PHVy = PHYS_RIDER_HAND_Y;
-  PSVx = PHYS_RIDER_SHOULDER_X;
-  PSVy = PHYS_RIDER_SHOULDER_Y;
-  PLVx = PHYS_RIDER_LOWERBODY_X;
-  PLVy = PHYS_RIDER_LOWERBODY_Y;
-  PKVx = PHYS_RIDER_KNEE_X; 
-  PKVy = PHYS_RIDER_KNEE_Y;
-  PFVx = PHYS_RIDER_FOOT_X;
-  PFVy = PHYS_RIDER_FOOT_Y;
+  PEVx = i_physicsSettings->RiderElbowX();
+  PEVy = i_physicsSettings->RiderElbowY();
+  PHVx = i_physicsSettings->RiderHandX();
+  PHVy = i_physicsSettings->RiderHandY();
+  PSVx = i_physicsSettings->RiderShoulderX();
+  PSVy = i_physicsSettings->RiderShoulderY();
+  PLVx = i_physicsSettings->RiderLowerbodyX();
+  PLVy = i_physicsSettings->RiderLowerbodyY();
+  PKVx = i_physicsSettings->RiderKneeX(); 
+  PKVy = i_physicsSettings->RiderKneeY();
+  PFVx = i_physicsSettings->RiderFootX();
+  PFVy = i_physicsSettings->RiderFootY();
   
-  Wm = PHYS_WHEEL_MASS;
-  BPm = PHYS_RIDER_BODYPART_MASS;                 
-  Fm = PHYS_FRAME_MASS;
-  IL = PHYS_INERTIAL_LENGTH;
-  IH = PHYS_INERTIAL_HEIGHT;
+  BPm_torso = i_physicsSettings->RiderTorsoMass();
+  BPm_uleg  = i_physicsSettings->RiderUpperlegMass();
+  BPm_lleg  = i_physicsSettings->RiderLowerlegMass();
+  BPm_uarm  = i_physicsSettings->RiderUpperarmMass();
+  BPm_larm  = i_physicsSettings->RiderLowerarmMass();
+  BPm_foot  = i_physicsSettings->RiderFootMass();
+  BPm_hand  = i_physicsSettings->RiderHandMass();
+
+  Fm = i_physicsSettings->BikeFrameMass();
+  IL = i_physicsSettings->InertialLength();
+  IH = i_physicsSettings->InertialHeight();
   
-  fMaxBrake =  PHYS_MAX_BRAKING;
-  fMaxEngine = PHYS_MAX_ENGINE;
+  fMaxEngine = i_physicsSettings->EnginePowerMax();
   
-  fHeadSize = PHYS_RIDER_HEAD_SIZE;
-  fNeckLength = PHYS_RIDER_NECK_LENGTH;
+  fHeadSize = i_physicsSettings->RiderHeadSize();
+  fNeckLength = i_physicsSettings->RiderNeckLength();
 }
 
 float BikeParameters::WheelRadius() const {
@@ -74,8 +82,4 @@ float BikeParameters::HeadSize()    const {
 
 float BikeParameters::MaxEngine()   const {
   return fMaxEngine;
-}
-
-float BikeParameters::MaxBrake()    const {
-  return fMaxBrake;
 }

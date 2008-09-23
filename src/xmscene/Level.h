@@ -38,6 +38,7 @@ class CollisionSystem;
 class XMLDocument;
 class ChipmunkWorld;
 class Sprite;
+class PhysicsSettings;
 
 /*===========================================================================
   Level source object - holds all stored information about a level
@@ -69,7 +70,7 @@ class Level {
 
   /* load level so that it is possible to play */
   /* to replay a level, unload then, reload it */
-  int loadToPlay(ChipmunkWorld* i_chipmunkWorld); /* return the number of errors found */
+  int loadToPlay(ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings); /* return the number of errors found */
   void unloadToPlay();
 
   std::string Id()          const;
@@ -130,7 +131,7 @@ class Level {
   static int compareVersionNumbers(const std::string &i_v1, const std::string &i_v2);
 
   /* because some objects like entities have an internal movement */
-  void updateToTime(MotoGame& i_scene);
+  void updateToTime(MotoGame& i_scene, PhysicsSettings* i_physicsSettings);
   /* this method calls objects because rewind in replay can required some actions (like removing particles) */
 
   /* the entity will be destroyed by the level */

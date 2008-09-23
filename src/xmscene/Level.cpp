@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Scene.h"
 #include "../chipmunk/chipmunk.h"
 #include "ChipmunkWorld.h"
+#include "PhysicsSettings.h"
 #include "../Theme.h"
 
 #define CACHE_LEVEL_FORMAT_VERSION 25
@@ -319,7 +320,7 @@ void Level::revertEntityDestroyed(const std::string& i_entityId) {
   throw Exception("Entity '" + i_entityId + "' can't be reverted");
 }
 
-void Level::updateToTime(MotoGame& i_scene) {
+void Level::updateToTime(MotoGame& i_scene, PhysicsSettings* i_physicsSettings) {
   int      v_time    = i_scene.getTime();
   Vector2f v_gravity = i_scene.getGravity();
 
@@ -327,18 +328,18 @@ void Level::updateToTime(MotoGame& i_scene) {
   unsigned int         size       = v_entities.size();
 
   for(unsigned int i=0; i<size; i++) {
-    v_entities[i]->updateToTime(v_time, v_gravity);
+    v_entities[i]->updateToTime(v_time, v_gravity, i_physicsSettings);
   }
 
   std::vector<Entity*> v_externalEntities = EntitiesExterns();
   size                                    = v_externalEntities.size();
 
   for(unsigned int i=0; i<size; i++) {
-    v_externalEntities[i]->updateToTime(v_time, v_gravity);
+    v_externalEntities[i]->updateToTime(v_time, v_gravity, i_physicsSettings);
   }
 }
 
-void Level::loadXML(void) {
+void Level::loadXML() {
   /* Load XML document and fetch tinyxml handle */
   unloadLevelBody();
   if(m_xmlSource == NULL) {
@@ -1134,13 +1135,13 @@ int Level::compareVersionNumbers(const std::string &v1,const std::string &v2) {
   return 0;    
 }
 
-int Level::loadToPlay(ChipmunkWorld* i_chipmunkWorld) {
+int Level::loadToPlay(ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings) {
   int v_nbErrors = 0;
 
   /* preparing blocks */
   for(unsigned int i=0; i<m_blocks.size(); i++) {
     try {
-      v_nbErrors += m_blocks[i]->loadToPlay(m_pCollisionSystem, i_chipmunkWorld);
+      v_nbErrors += m_blocks[i]->loadToPlay(m_pCollisionSystem, i_chipmunkWorld, i_physicsSettings);
     } catch(Exception &e) {
       throw Exception("Fail to load block '" + m_blocks[i]->Id() + "' :\n" + e.getMsg());
     }

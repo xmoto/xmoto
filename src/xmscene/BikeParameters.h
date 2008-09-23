@@ -23,17 +23,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "../helpers/VMath.h"
 
+class PhysicsSettings;
+
 class BikeParameters {
   public:
-  BikeParameters();
+  BikeParameters(PhysicsSettings* i_physicsSettings);
   ~BikeParameters();
 
-  void setDefaults();
+  void setDefaults(PhysicsSettings* i_physicsSettings);
 
   float WheelRadius() const;
   float HeadSize()    const;
   float MaxEngine()   const;
-  float MaxBrake()    const;
 
   //  private:
 
@@ -56,13 +57,19 @@ class BikeParameters {
   
   /* Physical */
   float Wm;             /* Wheel mass [kg] */
-  float BPm;            /* Player body part mass [kg] */
+  float BPm_torso;            /* Player body part mass [kg] */
+  float BPm_uleg;
+  float BPm_lleg;
+  float BPm_uarm;
+  float BPm_larm;
+  float BPm_foot;
+  float BPm_hand;
   float Fm;             /* Frame mass [kg] */
   float IL;             /* Frame "inertia" length [m] */
   float IH;             /* Frame "inertia" height [m] */
   
   /* Braking/engine performance */
-  float fMaxBrake, fMaxEngine;
+  float fMaxEngine;
 };
 
 #endif /* BIKEPARAMETERS */

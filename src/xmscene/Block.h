@@ -36,6 +36,7 @@ class Block;
 class cpBody;
 class cpShape;
 class ChipmunkWorld;
+class PhysicsSettings;
 template<class T> struct ColElement;
 
 #define DEFAULT_EDGE_ANGLE 270.0f
@@ -145,7 +146,7 @@ class Block {
   }
   bool isPhysics() const;
   bool isLayer() const;
-  float Grip() const;
+  float GripPer20() const;
   float Mass() const;
   float Friction() const;
   float Elasticity() const;
@@ -179,7 +180,7 @@ class Block {
   void setDynamic(bool i_dynamic);
   void setPhysics(bool i_physics);
   void setIsLayer(bool i_isLayer);
-  void setGrip(float i_grip);
+  void setGripPer20(float i_gripPer20);
   void setMass(float i_mass);
   void setFriction(float i_friction);
   void setElasticity(float i_elasticity);
@@ -203,7 +204,7 @@ class Block {
   void translate(float x, float y);
   void setPhysicsPosition(float ix, float iy);
 
-  int loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld);
+  int loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings);
   void unloadToPlay();
 
   void saveBinary(FileHandle *i_pfh);
@@ -273,7 +274,7 @@ private:
   // in case of a non m_backgroundLevel, if m_layer is != -1, then it's
   // a static block from the second static blocks layer
   int   m_layer;
-  float m_grip;                         /* GRIP of the block */
+  float m_gripPer20;                         /* GRIP of the block /20 of the physicSettings */
 
   /* chipmunk physics */
   float m_mass;       /* mass of the block */

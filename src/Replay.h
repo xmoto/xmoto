@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define STATES_PER_CHUNK 512
 
 class BikeState;
+class PhysicsSettings;
 
   /*===========================================================================
   Structs
@@ -62,8 +63,8 @@ class BikeState;
       void storeState(const SerializedBikeState& state);
       void storeBlocks(const std::vector<Block *>& i_blocks);
       /* go and get the next state */
-      void loadState(BikeState* state);  
-      void peekState(BikeState* state); /* get current state */
+      void loadState(BikeState* state, PhysicsSettings* i_physicsSettings);  
+      void peekState(BikeState* state, PhysicsSettings* i_physicsSettings); /* get current state */
       
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,unsigned int nStateSize);
       void saveReplay(void);

@@ -479,10 +479,10 @@ bool Replay::nextState(int p_frames) {
   return true;
 }
 
-  void Replay::loadState(BikeState* state) {
+  void Replay::loadState(BikeState* state, PhysicsSettings* i_physicsSettings) {
     /* (11th july, 2006) rasmus: i've swapped the two following lines, it apparently fixes
        interpolation in replays, but i don't know if it break something else */  
-    peekState(state);
+    peekState(state, i_physicsSettings);
 
     m_bEndOfFile = (m_nCurChunk       == m_Chunks.size()-1 && 
         (int)m_nCurState  == m_Chunks[m_nCurChunk]->nNumStates-1);
@@ -492,14 +492,14 @@ bool Replay::nextState(int p_frames) {
     }
   }
   
-  void Replay::peekState(BikeState* state) {
+  void Replay::peekState(BikeState* state, PhysicsSettings* i_physicsSettings) {
     SerializedBikeState v_bs;
 
     /* Like loadState() but this one does not advance the cursor... it just takes a peek */
     memcpy((char *)&v_bs, &m_Chunks[m_nCurChunk]->pcChunkData[((int)m_nCurState)*m_nStateSize], m_nStateSize);
     SwapEndian::LittleSerializedBikeState(v_bs);
 
-    BikeState::convertStateFromReplay(&v_bs, state);
+    BikeState::convertStateFromReplay(&v_bs, state, i_physicsSettings);
   }
   
   std::string Replay::giveAutomaticName() {

@@ -41,6 +41,7 @@ class BikeAnchors;
 class BikeParameters;
 class BikeController;
 class EngineSoundSimulator;
+class PhysicsSettings;
 
 class BikeState {
   public:
@@ -103,23 +104,18 @@ class BikeState {
     int GameTime; // time of the state, for replays;
     
     /* Bonusinfo */    
-  BikeState();
+  BikeState(PhysicsSettings* i_physicsSettings);
   virtual ~BikeState();
   
   BikeState& operator=(const BikeState& i_copy);
 
-  void reInitializeSpeed();
-  void physicalUpdate();
   void reInitializeAnchors();
 
-  float CurrentBrake() const;
-  float CurrentEngine() const;
-    
   BikeAnchors* Anchors();
   BikeParameters* Parameters();
 
   static void interpolateGameState(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t);
-  static void convertStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
+  static void convertStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS, PhysicsSettings* i_physicsSettings);
 
   static signed char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
   static float _Map8BitsToCoord(float fRef,float fMaxDiff,signed char c);
@@ -128,7 +124,6 @@ class BikeState {
 
   private:
   /* Driving */
-  float m_curBrake, m_curEngine;    
   BikeParameters* m_bikeParameters;
   BikeAnchors*    m_bikeAnchors;
 
@@ -138,13 +133,14 @@ class BikeState {
 
 class Biker {
  public:
-  Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
+  Biker(PhysicsSettings* i_physicsSettings,
+	Theme *i_theme, BikerTheme* i_bikerTheme,
 	const TColor& i_colorFilter,
 	const TColor& i_uglyColorFilter);
   virtual ~Biker();
   inline BikeState* getState()
   {
-    return &m_bikeState;
+    return m_bikeState;
   }
   virtual bool getRenderBikeFront() = 0; /* display the bikefront ? (for detach) */
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
@@ -157,6 +153,8 @@ class Biker {
 			     CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			     MotoGame *i_motogame);
   void setPlaySound(bool i_value);
+
+  PhysicsSettings* getPhysicsSettings();
 
   void setFinished(bool i_value, int i_finishTime);
   void setDead(bool i_value, int i_deadTime);
@@ -204,7 +202,7 @@ class Biker {
  protected:
   BikerTheme* m_bikerTheme;
   bool m_playSound;
-  BikeState m_bikeState;
+  BikeState* m_bikeState;
   EngineSoundSimulator* m_EngineSound;
   bool m_finished;
   int m_finishTime;
@@ -215,6 +213,8 @@ class Biker {
 	bool m_wheelDetach;
   std::vector<Entity *> m_entitiesTouching;
   std::vector<Zone *>   m_zonesTouching;
+
+  PhysicsSettings* m_physicsSettings;
 
   /* Wheels spinning dirt up... muzakka! :D */
   bool m_bWheelSpin;                  /* Do it captain */

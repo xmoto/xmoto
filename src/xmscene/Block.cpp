@@ -28,10 +28,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../BSP.h"
 #include "../chipmunk/chipmunk.h"
 #include "ChipmunkWorld.h"
+#include "PhysicsSettings.h"
 
 #define XM_DEFAULT_BLOCK_TEXTURE "default"
-
-#define XM_DEFAULT_PHYS_BLOCK_GRIP DEFAULT_PHYS_WHEEL_GRIP
 #define XM_DEFAULT_PHYS_BLOCK_MASS 30.0
 #define XM_DEFAULT_PHYS_BLOCK_FRICTION 0.5
 #define XM_DEFAULT_PHYS_BLOCK_ELASTICITY 0.0
@@ -83,7 +82,7 @@ Block::Block(std::string i_id) {
   m_dynamic          = false;
   m_physics          = false;
   m_isLayer          = false;
-  m_grip             = XM_DEFAULT_PHYS_BLOCK_GRIP;
+  m_gripPer20        = 20.0;
   m_mass             = XM_DEFAULT_PHYS_BLOCK_MASS;
   m_friction         = XM_DEFAULT_PHYS_BLOCK_FRICTION;
   m_elasticity       = XM_DEFAULT_PHYS_BLOCK_ELASTICITY;
@@ -285,7 +284,7 @@ void Block::updatePhysics(int timeStep, CollisionSystem* io_collisionSystem) {
   }
 }
 
-int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld) {
+int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings) {
 
   m_dynamicPosition       = m_initialPosition;
   m_dynamicRotation       = m_initialRotation;
@@ -322,7 +321,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 				     DynamicPosition().y + Vertices()[i]->Position().y,
 				     DynamicPosition().x + Vertices()[inext]->Position().x,
 				     DynamicPosition().y + Vertices()[inext]->Position().y,
-				     Grip());
+				     GripPer20() * i_physicsSettings->BikeWheelBlockGrip() / 20.0);
       
 
       if(i_chipmunkWorld != NULL) {
@@ -345,7 +344,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
       /* Define collision lines */
       Line *v_line = new Line;
       v_line->x1 = v_line->y1 = v_line->x2 = v_line->y2 = 0.0f;
-      v_line->fGrip = m_grip;
+      v_line->fGrip = GripPer20() * i_physicsSettings->BikeWheelBlockGrip() / 20.0;
       m_collisionLines.push_back(v_line);
     }
 
@@ -523,8 +522,8 @@ Vector2f Block::InitialPosition() const {
   return m_initialPosition;
 }
 
-float Block::Grip() const {
-  return m_grip;
+float Block::GripPer20() const {
+  return m_gripPer20;
 }
 
 float Block::Mass() const {
@@ -577,8 +576,8 @@ void Block::setIsLayer(bool i_isLayer) {
   m_isLayer = i_isLayer;
 }
 
-void Block::setGrip(float i_grip) {
-  m_grip = i_grip;
+void Block::setGripPer20(float i_gripPer20) {
+  m_gripPer20 = i_gripPer20;
 }
 
 void Block::setMass(float i_mass) {
@@ -692,8 +691,8 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
 
   if(pPhysicsElem != NULL) {
     char str[16];
-    snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_GRIP);
-    pBlock->setGrip(atof(XML::getOption(pPhysicsElem, "grip", str).c_str()));
+
+    pBlock->setGripPer20(atof(XML::getOption(pPhysicsElem, "grip", "20.0").c_str()));
 
     snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_MASS);
     std::string mass = XML::getOption(pPhysicsElem, "mass", str);
@@ -711,7 +710,7 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
     snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_ELASTICITY);
     pBlock->setElasticity(atof(XML::getOption(pPhysicsElem, "elasticity", str).c_str()));
   } else {
-    pBlock->setGrip(XM_DEFAULT_PHYS_BLOCK_GRIP);
+    pBlock->setGripPer20(20.0);
     pBlock->setMass(XM_DEFAULT_PHYS_BLOCK_MASS);
     pBlock->setFriction(XM_DEFAULT_PHYS_BLOCK_FRICTION);
     pBlock->setElasticity(XM_DEFAULT_PHYS_BLOCK_ELASTICITY);
@@ -777,7 +776,7 @@ void Block::saveBinary(FileHandle *i_pfh) {
       FS::writeFloat_LE(i_pfh, TextureScale());
       FS::writeFloat_LE(i_pfh, InitialPosition().x);
       FS::writeFloat_LE(i_pfh, InitialPosition().y);
-      FS::writeFloat_LE(i_pfh, Grip());
+      FS::writeFloat_LE(i_pfh, GripPer20());
       FS::writeFloat_LE(i_pfh, Mass());
       FS::writeFloat_LE(i_pfh, Friction());
       FS::writeFloat_LE(i_pfh, Elasticity());
@@ -810,7 +809,7 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   v_Position.x = FS::readFloat_LE(i_pfh);
   v_Position.y = FS::readFloat_LE(i_pfh);
   pBlock->setInitialPosition(v_Position);
-  pBlock->setGrip(FS::readFloat_LE(i_pfh));
+  pBlock->setGripPer20(FS::readFloat_LE(i_pfh));
   pBlock->setMass(FS::readFloat_LE(i_pfh));
   pBlock->setFriction(FS::readFloat_LE(i_pfh));
   pBlock->setElasticity(FS::readFloat_LE(i_pfh));

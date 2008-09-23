@@ -21,10 +21,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ChipmunkWorld.h"
 #include "../chipmunk/chipmunk.h"
 #include "../PhysSettings.h"
-#include "Bike.h"
+#include "BikePlayer.h"
+#include "PhysicsSettings.h"
 
-ChipmunkWorld::ChipmunkWorld() {
-  initPhysics();
+ChipmunkWorld::ChipmunkWorld(PhysicsSettings* i_physicsSettings) {
+  initPhysics(i_physicsSettings);
 }
 
 ChipmunkWorld::~ChipmunkWorld() {
@@ -35,7 +36,7 @@ void ChipmunkWorld::setGravity(float i_x, float i_y) {
   m_space->gravity = cpv(i_x * CHIP_GRAVITY_RATIO, i_y * CHIP_GRAVITY_RATIO);
 }
 
-void ChipmunkWorld::initPhysics()
+void ChipmunkWorld::initPhysics(PhysicsSettings* i_physicsSettings)
 {
   cpBody *staticBody;
 
@@ -47,7 +48,7 @@ void ChipmunkWorld::initPhysics()
   cpResetShapeIdCounter();
 
   // do need to resolve gravity between ODE and Chipmunk
-  space->gravity = cpv(0.0f, CHIP_GRAVITY);
+  space->gravity = cpv(0.0f, -i_physicsSettings->WorldGravity() * CHIP_GRAVITY_RATIO);
 
   // static body to 'hang' the ground segments on -- never moves
   staticBody = cpBodyNew(INFINITY,INFINITY);
@@ -104,7 +105,7 @@ void ChipmunkWorld::setBackWheel(cpBody *body, unsigned int i_player)
   m_ab[i_player] = body;
 }
 
-void ChipmunkWorld::addPlayer(Biker* i_biker) {
+void ChipmunkWorld::addPlayer(PlayerBiker* i_biker) {
   // Create two anchors for the wheels
   cpBody* v_ab;
   cpBody* v_af;
@@ -113,7 +114,7 @@ void ChipmunkWorld::addPlayer(Biker* i_biker) {
 
   // Wheel mass.. as above ODE/Chipmunk
   cpFloat mass=CHIP_WHEEL_MASS;
-  cpFloat wheel_moment = cpMomentForCircle(mass, PHYS_WHEEL_RADIUS * CHIP_SCALE_RATIO, 0.0f, cpvzero);
+  cpFloat wheel_moment = cpMomentForCircle(mass, i_biker->getPhysicsSettings()->BikeWheelRadius() * CHIP_SCALE_RATIO, 0.0f, cpvzero);
   cpShape *shape;
   
   v_ab = cpBodyNew(INFINITY, INFINITY);
@@ -134,13 +135,13 @@ void ChipmunkWorld::addPlayer(Biker* i_biker) {
   // creating collision shapes for the wheels
   //   change to collision group 1 
   //   -- we don't want (or need) them to collide with the terrain
-  shape = cpCircleShapeNew(v_wf, PHYS_WHEEL_RADIUS * CHIP_SCALE_RATIO, cpvzero);
+  shape = cpCircleShapeNew(v_wf, i_biker->getPhysicsSettings()->BikeWheelRadius() * CHIP_SCALE_RATIO, cpvzero);
   shape->u = CHIP_WHEEL_FRICTION;
   shape->e = CHIP_WHEEL_ELASTICITY;
   shape->group = 1;
   cpSpaceAddShape(m_space, shape);
   
-  shape = cpCircleShapeNew(v_wb, PHYS_WHEEL_RADIUS * CHIP_SCALE_RATIO, cpvzero);
+  shape = cpCircleShapeNew(v_wb, i_biker->getPhysicsSettings()->BikeWheelRadius() * CHIP_SCALE_RATIO, cpvzero);
   shape->u = CHIP_WHEEL_FRICTION;
   shape->e = CHIP_WHEEL_ELASTICITY;
   shape->group = 1;

@@ -30,6 +30,7 @@ class Block;
 class Entity;
 class Zone;
 class CollisionSystem;
+class PhysicsSettings;
 struct GridCell;
 
 	/*===========================================================================
@@ -151,8 +152,8 @@ struct GridCell;
     bool checkBoxFast(float fMinX,float fMinY,float fMaxX,float fMaxY);
     bool checkCirclePath(float x1,float y1,float x2,float y2,float r);
     
-    int collideLine(float x1,float y1,float x2,float y2,dContact *pContacts,int nMaxC);
-    int collideCircle(float x,float y,float r,dContact *pContacts,int nMaxC);
+    int collideLine(float x1,float y1,float x2,float y2,dContact *pContacts,int nMaxC, PhysicsSettings* i_physicsSettings);
+    int collideCircle(float x,float y,float r,dContact *pContacts,int nMaxC, PhysicsSettings* i_physicsSettings);
     int collideCirclePath(float x1,float y1,float x2,float y2,float r,float *cx,float *cy,int nMaxC);
     
     void getStats(CollisionSystemStats *p);
@@ -227,8 +228,8 @@ struct GridCell;
     
     /* Helpers */
     bool _CheckCircleAndLine(Line *pLine,float x,float y,float r);
-    int _CollideCircleAndLine(Line *pLine,float x,float y,float r,dContact *pContacts,int nOldNumC,int nMaxC, float fGrip);
-    void _SetWheelContactParams(dContact *pc,const Vector2f &Pos,const Vector2f &NormalT,double fDepth, float fGrip);
+    int _CollideCircleAndLine(Line *pLine,float x,float y,float r,dContact *pContacts,int nOldNumC,int nMaxC, float fGrip, PhysicsSettings* i_physicsSettings);
+    void _SetWheelContactParams(dContact *pc,const Vector2f &Pos,const Vector2f &NormalT,double fDepth, float fGrip, PhysicsSettings* i_physicsSettings);
     double _CalculateDepth(const Vector2f &Cp,float Cr,Vector2f P);
     double _CalculateCircleLineDepth(const Vector2f &Cp,float Cr,Vector2f P1,Vector2f P2);
     int _AddContactToList(dContact *pContacts,int nNumContacts,dContact *pc,int nMaxContacts);

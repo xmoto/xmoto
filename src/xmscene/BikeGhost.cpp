@@ -28,10 +28,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define INTERPOLATION_MAXIMUM_TIME  300
 #define INTERPOLATION_MAXIMUM_SPACE 5.0
 
-Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
+Ghost::Ghost(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
+	     bool i_isActiv,
 	     Theme *i_theme, BikerTheme* i_bikerTheme,
 	     const TColor& i_colorFilter,
-	     const TColor& i_uglyColorFilter) : Biker(i_theme, i_bikerTheme,
+	     const TColor& i_uglyColorFilter) : Biker(i_physicsSettings,
+						      i_theme, i_bikerTheme,
 						      i_colorFilter,
 						      i_uglyColorFilter) {
   std::string v_levelId;
@@ -43,15 +45,15 @@ Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
   // 4 states for cubical interpolation
 
   // 50% of states are before the time T, 50% are after
-  m_ghostBikeStates.push_back(new BikeState());
-  m_ghostBikeStates.push_back(new BikeState());
-  m_ghostBikeStates.push_back(new BikeState());
-  m_ghostBikeStates.push_back(new BikeState());
+  m_ghostBikeStates.push_back(new BikeState(m_physicsSettings));
+  m_ghostBikeStates.push_back(new BikeState(m_physicsSettings));
+  m_ghostBikeStates.push_back(new BikeState(m_physicsSettings));
+  m_ghostBikeStates.push_back(new BikeState(m_physicsSettings));
 
   for(unsigned int i=0; i<m_ghostBikeStates.size(); i++) {
-    m_replay->peekState(m_ghostBikeStates[i]);
+    m_replay->peekState(m_ghostBikeStates[i], m_physicsSettings);
   }
-  m_bikeState = *(m_ghostBikeStates[0]);
+  *m_bikeState = *(m_ghostBikeStates[0]); // copy
 
   m_diffToPlayer = 0.0;
 
@@ -177,7 +179,7 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
 			 CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			 MotoGame *i_motogame) {
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
-  DriveDir v_previousDir = m_bikeState.Dir;
+  DriveDir v_previousDir = m_bikeState->Dir;
 
   /* back in the past */
   // m_ghostBikeStates.size()/2-1 : it's the more recent frame in the past
@@ -185,7 +187,7 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
     m_replay->fastrewind(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime - i_time, 1);
 
     for(unsigned int i=0; i<m_ghostBikeStates.size(); i++) {
-      m_replay->peekState(m_ghostBikeStates[i]);
+      m_replay->peekState(m_ghostBikeStates[i], m_physicsSettings);
     }
 
     m_finished = false;
@@ -194,9 +196,9 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
 
   /* stop the motor at the end */
   if(m_replay->endOfFile() && m_ghostBikeStates[m_ghostBikeStates.size()-1]->GameTime <= i_time) { // end of file, and interpolation is finished (before last future frame is in the feature)
-    m_bikeState.fBikeEngineRPM = 0.0;
-    m_replay->peekState(m_ghostBikeStates[m_ghostBikeStates.size()-1]); // take the last frame
-    m_bikeState = *(m_ghostBikeStates[m_ghostBikeStates.size()-1]); // put the last frame
+    m_bikeState->fBikeEngineRPM = 0.0;
+    m_replay->peekState(m_ghostBikeStates[m_ghostBikeStates.size()-1], m_physicsSettings); // take the last frame
+    *m_bikeState = *(m_ghostBikeStates[m_ghostBikeStates.size()-1]); // copy last frame
     m_linearVelocity = 0.0;
 
     if(m_replay->didFinish()) {
@@ -204,7 +206,7 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
       m_finishTime = m_replay->getFinishTime();
     } else {
       m_dead     = true;
-      m_deadTime = m_bikeState.GameTime;
+      m_deadTime = m_bikeState->GameTime;
     }
   } else {
     BikeState* v_state;
@@ -230,15 +232,15 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
 	  *(m_ghostBikeStates[m_ghostBikeStates.size()-1]) = *(m_ghostBikeStates[m_ghostBikeStates.size()-1-1]);
 	} else {
 	  // read the replay
-	  m_replay->loadState(m_ghostBikeStates[m_ghostBikeStates.size()-1]);
-	  m_replay->loadState(&m_bikeState);
+	  m_replay->loadState(m_ghostBikeStates[m_ghostBikeStates.size()-1], m_physicsSettings);
+	  m_replay->loadState(m_bikeState, m_physicsSettings);
 	}
 
       } while(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime < i_time &&
 	      m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime > m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime);
 
 
-      m_bikeState = *(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]);
+      *m_bikeState = *(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]); // copy
 
       v_beforePos  = m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->CenterP;
       v_beforeTime = m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime;
@@ -273,14 +275,14 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
 	  v_interpolation_value = (i_time - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime) 
 	    /((float)(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime - m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime));
 
-	  BikeState::interpolateGameState(m_ghostBikeStates, &m_bikeState, v_interpolation_value);
+	  BikeState::interpolateGameState(m_ghostBikeStates, m_bikeState, v_interpolation_value);
 	}
       }
     }
   }
 
   /* update change position */
-  if(v_previousDir != m_bikeState.Dir) {
+  if(v_previousDir != m_bikeState->Dir) {
     m_changeDirPer = 0.0;
   }
 

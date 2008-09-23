@@ -248,7 +248,7 @@ void Universe::finalizeReplay(bool i_finished) {
 
   /* save the last state because scene don't record each frame */
   SerializedBikeState BikeState;
-  MotoGame::getSerializedBikeState(m_scenes[0]->Players()[0]->getState(), m_scenes[0]->getTime(), &BikeState);
+  MotoGame::getSerializedBikeState(m_scenes[0]->Players()[0]->getState(), m_scenes[0]->getTime(), &BikeState, m_scenes[0]->getPhysicsSettings());
   m_pJustPlayReplay->storeState(BikeState);
   m_pJustPlayReplay->finishReplay(i_finished, i_finished ? m_scenes[0]->Players()[0]->finishTime() : 0);
 }
