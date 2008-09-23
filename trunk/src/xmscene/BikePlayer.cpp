@@ -1074,7 +1074,8 @@ float PlayerBiker::getBikeLinearVel() {
     dBodySetFiniteRotationMode(m_PlayerHandAnchorBodyID2,1);
     dBodySetFiniteRotationAxis(m_PlayerHandAnchorBodyID2,0,0,1);
 
-    float fERP = 0.3; float fCFM = 0.03f;
+    float fERP = m_bikeState->Parameters()->RErp;
+    float fCFM = m_bikeState->Parameters()->RCfm;
 
     /* Connect em */
     m_KneeHingeID = dJointCreateHinge(m_WorldID,0);

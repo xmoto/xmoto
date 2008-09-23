@@ -65,6 +65,9 @@ void BikeParameters::setDefaults(PhysicsSettings* i_physicsSettings) {
   Fm = i_physicsSettings->BikeFrameMass();
   IL = i_physicsSettings->InertialLength();
   IH = i_physicsSettings->InertialHeight();
+
+  RErp = i_physicsSettings->RiderAnchorsErp();
+  RCfm = i_physicsSettings->RiderAnchorsCfm();
   
   fMaxEngine = i_physicsSettings->EnginePowerMax();
   

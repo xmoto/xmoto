@@ -67,6 +67,9 @@ class BikeParameters {
   float Fm;             /* Frame mass [kg] */
   float IL;             /* Frame "inertia" length [m] */
   float IH;             /* Frame "inertia" height [m] */
+
+  float RErp;
+  float RCfm;
   
   /* Braking/engine performance */
   float fMaxEngine;

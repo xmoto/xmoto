@@ -88,6 +88,8 @@ class PhysicsSettings {
   float RiderLowerarmMass()            const { return m_rider_lowerarm_mass;            }
   float RiderFootMass()                const { return m_rider_foot_mass;                }
   float RiderHandMass()                const { return m_rider_hand_mass;                }
+  float RiderAnchorsErp()              const { return m_rider_anchors_erp;              }
+  float RiderAnchorsCfm()              const { return m_rider_anchors_cfm;              }
 
   private:
   void load(const std::string& i_filename);
@@ -150,7 +152,8 @@ class PhysicsSettings {
   float m_rider_lowerarm_mass;
   float m_rider_foot_mass;
   float m_rider_hand_mass;
-
+  float m_rider_anchors_erp;
+  float m_rider_anchors_cfm;
 };
 
 #endif
