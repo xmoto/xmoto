@@ -720,14 +720,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_nScroll   = 0;
   }
 
+  /* Implements Knuth shuffle
+   * http://en.wikipedia.org/wiki/Knuth_shuffle
+   * */
   void UIList::randomize() {
     UIListEntry *v_tmp;
     int r;
-
-    for(unsigned int i = 0; i<m_Entries.size(); i++) {
-      r = randomIntNum(0, m_Entries.size() -1);
-      v_tmp = m_Entries[i];
-      m_Entries[i] = m_Entries[r];
+    int n = m_Entries.size();
+    while (n > 1) {
+      r = randomIntNum(0, n);
+      n--;
+      v_tmp = m_Entries[n];
+      m_Entries[n] = m_Entries[r];
       m_Entries[r] = v_tmp;
     }
   }

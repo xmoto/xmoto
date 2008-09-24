@@ -409,7 +409,7 @@ inline float randomNum(float fMin,float fMax)
 }
 inline int randomIntNum(int nMin, int nMax)
 {
-  return nMin + (int) (((float)nMax) * rand()/(RAND_MAX+1.0));
+  return nMin + (int) (((float)nMax-nMin) * rand()/(RAND_MAX+1.0));
 }
 
 void intersectLineLine2fCramer(Vector2f& A1, Vector2f& A2, Vector2f& B1, Vector2f& B2, Vector2f& contactPoint);
