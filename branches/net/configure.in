@@ -35,7 +35,7 @@ fi
 
 if test "$target_os" = "mingw32" # others libraries required by mingw32
 then
-  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -mwindows -luserenv -lintl -lSDL_ttf -lSDL_mixer -lode xmoto_icone.o" # -mwindows to avoid dos window
+  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -mwindows -luserenv -lintl -lSDL_ttf -lSDL_mixer -lSDL_net -lode xmoto_icone.o" # -mwindows to avoid dos window
   # -MD is for gettext (see gettext faq)
   # CFLAGS="$CFLAGS"" -mthreads -MD" => produce unstable .exe
   LDFLAGS="$LDFLAGS"" -mthreads -MD"
@@ -51,6 +51,7 @@ if test "$target_os" != "mingw32"
 then
   AM_PATH_SDL(1.0.0, [], [AC_MSG_ERROR(SDL required)])
   AC_SDL_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
+  AC_SDL_CHECK_LIB(SDL_net, SDLNet_TCP_Open, [], [AC_MSG_ERROR(SDL_net required)])
 
   dnl sdl_ttf
   #AC_CHECK_HEADERS([SDL/SDL_ttf.h],[],[AC_MSG_ERROR(SDL_ttf headers required)])

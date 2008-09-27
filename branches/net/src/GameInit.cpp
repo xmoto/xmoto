@@ -56,6 +56,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "UserConfig.h"
 #include "Renderer.h"
+#include "net/thread/ServerThread.h"
+#include <SDL_net.h>
 
 #define MOUSE_DBCLICK_TIME 0.250f
 
@@ -164,6 +166,8 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   }
   LogInfo("User directory: %s", FS::getUserDir().c_str());
   LogInfo("Data directory: %s", FS::getDataDir().c_str());
+
+  initNetwork();
 
   if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos()) {
     v_useGraphics = false;
@@ -525,6 +529,9 @@ void GameApp::run_unload() {
   }
 
   dCloseODE(); // uninit ODE
+
+  uninitNetwork();
+
   GameRenderer::destroy();
   SysMessage::destroy();  
 
@@ -637,3 +644,24 @@ void GameApp::_Wait()
     }
     getDrawLib()->flushGraphics();
   }
+
+
+void GameApp::initNetwork() {
+  if(SDLNet_Init()==-1) {
+    throw Exception(SDLNet_GetError());
+  }
+
+  m_serverThread = new ServerThread();
+  m_serverThread->startThread();
+}
+
+void GameApp::uninitNetwork() {
+  if(m_serverThread->isThreadRunning()) {
+    m_serverThread->askThreadToEnd();
+    m_serverThread->waitForThreadEnd();
+  }
+
+  delete m_serverThread;
+
+  SDLNet_Quit();
+}
