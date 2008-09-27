@@ -656,9 +656,11 @@ void GameApp::initNetwork() {
 }
 
 void GameApp::uninitNetwork() {
-  if(m_serverThread->isThreadRunning()) {
-    m_serverThread->askThreadToEnd();
-    m_serverThread->waitForThreadEnd();
+  if(m_serverThread != NULL) {
+    if(m_serverThread->isThreadRunning()) {
+      m_serverThread->askThreadToEnd();
+      m_serverThread->waitForThreadEnd();
+    }
   }
 
   delete m_serverThread;

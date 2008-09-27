@@ -31,9 +31,19 @@ ServerClientListenerThread::ServerClientListenerThread(TCPsocket i_csd) {
 ServerClientListenerThread::~ServerClientListenerThread() {
 }
 
+std::string ServerClientListenerThread::getIp(IPaddress* i_ip) {
+  Uint32 val = SDLNet_Read32(&i_ip->host);
+  char str[3+1+3+1+3+1+3+1];
+  
+  snprintf(str, 3+1+3+1+3+1+3+1,"%i.%i.%i.%i",
+	   val >> 24, (val >> 16) %256, (val >> 8) %256, val%256);
+
+  return std::string(str);
+}
+
 int ServerClientListenerThread::realThreadFunction() {
   char buffer[XM_SERVER_CLIENT_BUFFER_SIZE +1];
-  IPaddress ip, *remoteIP;
+  IPaddress *remoteIP;
   int nread;
 
   /* Get the remote address */
@@ -44,7 +54,7 @@ int ServerClientListenerThread::realThreadFunction() {
 
   /* Print the address, converting in the host format */
   LogInfo("Host connected: %s:%d",
-	  SDLNet_ResolveIP(remoteIP), SDLNet_Read16(&remoteIP->port));
+	  getIp(remoteIP).c_str(), SDLNet_Read16(&remoteIP->port));
 
 
   while( (nread = SDLNet_TCP_Recv(m_csd, buffer, XM_SERVER_CLIENT_BUFFER_SIZE)) > 0) {
@@ -53,7 +63,7 @@ int ServerClientListenerThread::realThreadFunction() {
   }
 
   LogInfo("Host disconnected: %s:%d",
-	  SDLNet_ResolveIP(remoteIP), SDLNet_Read16(&remoteIP->port));
+	  getIp(remoteIP).c_str(), SDLNet_Read16(&remoteIP->port));
   
   return 0;
 }

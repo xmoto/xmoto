@@ -20,7 +20,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "ServerThread.h"
 #include "../../helpers/Log.h"
+#include "../../helpers/VExcept.h"
 #include <SDL_net.h>
+#include <string>
 #include "ServerClientListenerThread.h"
 
 #define XM_SERVER_PORT 4130
@@ -31,6 +33,9 @@ ServerThread::ServerThread() {
 
 ServerThread::~ServerThread() {
 }
+
+// only this thread write messages to clients
+// only clientListener read messages
 
 int ServerThread::realThreadFunction() {
   IPaddress ip;
@@ -61,30 +66,24 @@ int ServerThread::realThreadFunction() {
 
     if((csd = SDLNet_TCP_Accept(sd)) == 0) {
       SDL_Delay(XM_SERVER_CHECKCLIENT_WAIT);
-
-      // check for disconnected clients
-      i=0;
-      while(i<m_serverClientListenerThread.size()) {
-	if(m_serverClientListenerThread[i]->isThreadRunning() == false) {
-	  SDLNet_TCP_Close(*(m_serverClientListenerThread[i]->socket()));
-	  delete m_serverClientListenerThread[i];
-	  m_serverClientListenerThread.erase(m_serverClientListenerThread.begin() + i);
-	}
-	i++;
-      }
-
+      cleanDisconnectedClients();
     } else {
       v_serverClientListenerThread = new ServerClientListenerThread(csd);
       m_serverClientListenerThread.push_back(v_serverClientListenerThread);
-      v_serverClientListenerThread->startThread();	
+      v_serverClientListenerThread->startThread();
+
+      std::string v_msg = "Xmoto server\n";
+      sendToClient((void*) v_msg.c_str(), v_msg.length(), m_serverClientListenerThread.size()-1);
     }
   }
 
   LogInfo("server: %i client(s) still connnected", m_serverClientListenerThread.size());
-  for(i=0; i<m_serverClientListenerThread.size(); i++) {
-    m_serverClientListenerThread[i]->killThread();
-    SDLNet_TCP_Close(*(m_serverClientListenerThread[i]->socket()));
-    delete m_serverClientListenerThread[i];
+
+  // disconnect all clients
+  i=0;
+  while(i<m_serverClientListenerThread.size()) {
+    removeClient(i);
+    i++;
   }
 
   LogInfo("server: close connexion");
@@ -92,4 +91,46 @@ int ServerThread::realThreadFunction() {
 
   LogInfo("server: ending normally");
   return 0;
+}
+
+void ServerThread::removeClient(unsigned int i) {
+  if(m_serverClientListenerThread[i]->isThreadRunning()) {
+    m_serverClientListenerThread[i]->killThread();
+  }
+
+  SDLNet_TCP_Close(*(m_serverClientListenerThread[i]->socket()));
+  delete m_serverClientListenerThread[i];
+  m_serverClientListenerThread.erase(m_serverClientListenerThread.begin() + i);
+}
+
+void ServerThread::cleanDisconnectedClients() {
+  unsigned int i=0;
+  while(i<m_serverClientListenerThread.size()) {
+    if(m_serverClientListenerThread[i]->isThreadRunning() == false) {
+      removeClient(i);
+    } else {
+      i++;
+    }
+  }
+}
+
+void ServerThread::sendToClient(void* data, int len, unsigned int i) {
+  int nread;
+
+  if( (nread = SDLNet_TCP_Send(*(m_serverClientListenerThread[i]->socket()), data, len)) != len) {
+    throw Exception("TCP_Send failed");
+  }
+}
+
+void ServerThread::sendToAllClients(void* data, int len, unsigned int i_except) {
+  unsigned int i=0;
+  
+  while(i<m_serverClientListenerThread.size()) {
+    try {
+      sendToClient(data, len, i);
+      i++;
+    } catch(Exception &e) {
+      removeClient(i);
+    }
+  }
 }

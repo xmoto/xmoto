@@ -35,6 +35,8 @@ class ServerClientListenerThread : public XMThread {
 
   private:
   TCPsocket m_csd;
+
+  static std::string getIp(IPaddress* i_ip);
 };
 
 #endif

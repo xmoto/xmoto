@@ -35,6 +35,12 @@ class ServerThread : public XMThread {
 
   private:
   std::vector<ServerClientListenerThread*> m_serverClientListenerThread;
+
+  // if i_execpt >= 0, send to all exept him
+  void sendToAllClients(void* data, int len, unsigned int i_except = -1);
+  void sendToClient(void* data, int len, unsigned int i);
+  void removeClient(unsigned int i);
+  void cleanDisconnectedClients();
 };
 
 #endif
