@@ -1,13 +1,13 @@
 # translation of de.po to Deutsch
 # Jens Erler <mothbox@gmx.net>, 2007,2008.
-#
-#
+# 
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-09-19 18:18+0200\n"
-"PO-Revision-Date: 2008-09-18 12:33+0100\n"
+"PO-Revision-Date: 2008-09-26 00:37+0100\n"
 "Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -157,7 +157,7 @@ msgstr "Abbrechen"
 
 #: src/GameText.h:70
 msgid "Change..."
-msgstr "Wechseln..."
+msgstr "Wechseln"
 
 #: src/GameText.h:71
 msgid "Change direction"
@@ -165,7 +165,7 @@ msgstr "Richtung wechseln"
 
 #: src/GameText.h:72
 msgid "Change Key..."
-msgstr "Taste ändern..."
+msgstr "Taste ändern"
 
 #: src/GameText.h:73
 msgid "Checking for new or updated levels..."
@@ -389,7 +389,7 @@ msgstr "Dänisch"
 
 #: src/GameText.h:152
 msgid "Lithuanian"
-msgstr ""
+msgstr "Litauisch"
 
 #: src/GameText.h:154
 msgid "Main testers"
@@ -930,7 +930,7 @@ msgstr "Von der Schwarzen Liste gestrichen"
 
 #: src/GameText.h:291
 msgid "Level Info..."
-msgstr "Level-Infos..."
+msgstr "Level-Infos"
 
 #: src/GameText.h:292
 msgid "Level Name"
@@ -1084,7 +1084,7 @@ msgstr "Neue Levels verfügbar!"
 
 #: src/GameText.h:330
 msgid "New Profile..."
-msgstr "Neues Profil..."
+msgstr "Neues Profil"
 
 #: src/GameText.h:331
 msgid "No"
@@ -1231,7 +1231,7 @@ msgstr "Port"
 #: src/GameText.h:370
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
-msgstr "Neue Taste für '%s' drücken oder ESC um abzubrechen..."
+msgstr "Neue Taste für '%s' drücken oder ESC um abzubrechen"
 
 #: src/GameText.h:371
 msgid "Proxy Server"
@@ -1247,13 +1247,11 @@ msgstr "Qualität"
 
 #: src/GameText.h:374
 msgid "Quick start"
-msgstr ""
-"Schnelles\n"
-"  Spiel"
+msgstr "Kickstart"
 
 #: src/GameText.h:375
 msgid "Quit Game"
-msgstr "Spiel beenden"
+msgstr "Beenden"
 
 #: src/GameText.h:376
 msgid "Do you really want to quit?"
@@ -1347,7 +1345,7 @@ msgstr "Tacho"
 
 #: src/GameText.h:399
 msgid "Info..."
-msgstr "Info..."
+msgstr "Info"
 
 #: src/GameText.h:400
 msgid "Show Mini Map"
