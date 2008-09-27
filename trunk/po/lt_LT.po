@@ -102,7 +102,7 @@ msgstr "Automatiškai"
 
 #: src/GameText.h:56
 msgid "Automatic saving of replays"
-msgstr "Automatiškai išsaugoti atkartojimą"
+msgstr "Automatiškai išsaugoti pakartojimus"
 
 #: src/GameText.h:57
 msgid "Auto zoom"
@@ -114,7 +114,7 @@ msgstr "Duomenų bazė"
 
 #: src/GameText.h:59
 msgid "Camera Active Zoom"
-msgstr "Kameros aktyvus mastelis"
+msgstr "Kintamas vaizdo mastelis"
 
 #: src/GameText.h:60
 msgid "Beating mode"
@@ -329,47 +329,47 @@ msgstr "Vertimas"
 
 #: src/GameText.h:137
 msgid "Slovak"
-msgstr "Slovakiškai"
+msgstr "slovakiškai"
 
 #: src/GameText.h:138
 msgid "French"
-msgstr "Prancūziškai"
+msgstr "prancūziškai"
 
 #: src/GameText.h:139
 msgid "Norwegian"
-msgstr "Norvegiškai"
+msgstr "norvegiškai"
 
 #: src/GameText.h:140
 msgid "German"
-msgstr "Vokiškai"
+msgstr "vokiškai"
 
 #: src/GameText.h:141
 msgid "Finnish"
-msgstr "Suomiškai"
+msgstr "suomiškai"
 
 #: src/GameText.h:142
 msgid "Catalan"
-msgstr "Kataloniškai"
+msgstr "kataloniškai"
 
 #: src/GameText.h:143
 msgid "Spanish"
-msgstr "Ispaniškai"
+msgstr "ispaniškai"
 
 #: src/GameText.h:144
 msgid "Polish"
-msgstr "Lenkiškai"
+msgstr "lenkiškai"
 
 #: src/GameText.h:145
 msgid "Italian"
-msgstr "Itališkai"
+msgstr "itališkai"
 
 #: src/GameText.h:146
 msgid "Swedish"
-msgstr "Švediškai"
+msgstr "švediškai"
 
 #: src/GameText.h:147
 msgid "Czech"
-msgstr "Čekiškai"
+msgstr "čekiškai"
 
 #: src/GameText.h:148
 msgid "Mikhail Brinchuk"
@@ -377,23 +377,23 @@ msgstr "Mikhail Brinchuk"
 
 #: src/GameText.h:148
 msgid "Russian"
-msgstr "Rusiškai"
+msgstr "rusiškai"
 
 #: src/GameText.h:149
 msgid "Brazilian Portuguese"
-msgstr "Portugališkai"
+msgstr "portugališkai"
 
 #: src/GameText.h:150
 msgid "Latvian"
-msgstr "Latviškai"
+msgstr "latviškai"
 
 #: src/GameText.h:151
 msgid "Danish"
-msgstr "Daniškai"
+msgstr "daniškai"
 
 #: src/GameText.h:152
 msgid "Lithuanian"
-msgstr "Lietuviškai"
+msgstr "lietuviškai"
 
 #: src/GameText.h:154
 msgid "Main testers"
@@ -557,7 +557,7 @@ msgstr "Atsiunčiamas vaiduoklis..."
 
 #: src/GameText.h:197
 msgid "Downloading the highscore..."
-msgstr "Tiek lejupielādēts rekords..."
+msgstr "Atsiunčiamas rekordas..."
 
 #: src/GameText.h:198
 msgid "Downloading high-scores..."
@@ -658,7 +658,7 @@ msgstr "Lygyje yra klaidų, padėkite ištaisyti jas!"
 
 #: src/GameText.h:220
 msgid "Check your Internet connection !"
-msgstr "Patikrink savo interneto ryšį!"
+msgstr "Patikrinkite savo interneto ryšį!"
 
 #: src/GameText.h:221
 msgid "Failed to check for levels."
@@ -787,7 +787,7 @@ msgstr "Pagalba"
 
 #: src/GameText.h:254
 msgid "You control your bike using the keyboard"
-msgstr "Valdykite motociklą, naudodami klaviatūrą"
+msgstr "Valdykite motociklą, naudodamiesi klaviatūrą"
 
 #: src/GameText.h:255
 msgid "Accelerates"
@@ -869,7 +869,7 @@ msgstr "Interneto formavimas"
 
 #: src/GameText.h:275
 msgid "View Level Initially"
-msgstr "Rodyti lygio inicialus"
+msgstr "Aprodyti lygį, prieš važiavimą"
 
 #: src/GameText.h:276
 msgid "Joystick"
@@ -1283,7 +1283,7 @@ msgstr "Perkraunamos temos..."
 
 #: src/GameText.h:381
 msgid "Replay"
-msgstr "Pakartoti"
+msgstr "Pakartojimas"
 
 #: src/GameText.h:382
 msgid "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
@@ -1492,7 +1492,7 @@ msgstr "O ne!"
 
 #: src/GameText.h:434
 msgid "Uploading the highscore..."
-msgstr "Išsiunčiami rekordai..."
+msgstr "Išsiunčiamas rekordas..."
 
 #: src/GameText.h:435
 msgid "Use crappy information"
@@ -1500,7 +1500,7 @@ msgstr "Naudoti niekam tikusią informaciją"
 
 #: src/GameText.h:436
 msgid "Use Environment Vars"
-msgstr "Naudoti aplinkos kintamuosius"
+msgstr "Naudoti terpės kintamuosius"
 
 #: src/GameText.h:437
 msgid "Use Profile"
@@ -1670,7 +1670,7 @@ msgstr "Žaisti šį lygį dar kartą"
 
 #: src/GameText.h:475
 msgid "Save a replay for later viewing"
-msgstr "Isaugoti pakartojimą vėlesniam peržiūrėjimui"
+msgstr "Išsaugoti pakartojimą vėlesniam peržiūrėjimui"
 
 #: src/GameText.h:476
 msgid "Play next level"
@@ -1710,7 +1710,7 @@ msgstr "Lygiai sugrupuoti kartu į lygių paketus"
 
 #: src/GameText.h:485
 msgid "Browse levels available to you"
-msgstr "Naršyti pasiekiamus lygius"
+msgstr "Naršyti lygius"
 
 #: src/GameText.h:486
 msgid "View list of recorded replays"
@@ -1743,7 +1743,7 @@ msgstr ""
 
 #: src/GameText.h:493
 msgid "Run the selected replay"
-msgstr "Paleisti pasirinktą pakartojimą"
+msgstr "Rodyti pasirinktą pakartojimą"
 
 #: src/GameText.h:494
 msgid "Permanently delete the selected replay"
@@ -1779,12 +1779,12 @@ msgstr "Sugrąžinti numatytas parinktis"
 
 #: src/GameText.h:502
 msgid "Show a map of your surroundings when playing"
-msgstr "Rodyti jūsų apylinkių žemėlapį, kai žaidžiate"
+msgstr "Žaidimo metu rodyti fragmentinį lygio žemėlapį"
 
 #: src/GameText.h:503
 msgid "Automatically download best times off the net when the game starts"
 msgstr ""
-"Automatiškai atsiųsti geriausius laikus iš tinklo, kai žaidimas prasideda"
+"Automatiškai atsiųsti geriausius laikus iš tinklo, kai pradedamas žaidimas"
 
 #: src/GameText.h:504
 msgid "Show the World Record for a given level when playing"
@@ -1798,7 +1798,7 @@ msgstr ""
 
 #: src/GameText.h:506
 msgid "Allow X-Moto to ask you your mind about levels"
-msgstr "Leisti X-Moto klausti jūsų nuomonės apie lygius"
+msgstr "Leisite X-Moto klausti jūsų nuomonės apie lygius"
 
 #: src/GameText.h:507
 msgid "Enable high-color graphics"
@@ -1835,7 +1835,7 @@ msgstr "Išjungti didžiąją dalį grafikos, nesvarbios žaidimui"
 #: src/GameText.h:515
 msgid "Disable some of the most resource-intensive graphics, like particles"
 msgstr ""
-"Įšjungti grafikos elementus, naudojančių daugiausiai kompiuterio išteklių"
+"Išjungti grafikos elementus, naudojančių daugiausiai kompiuterio išteklių"
 
 #: src/GameText.h:516
 msgid "Enable all graphical effects"
@@ -1905,11 +1905,11 @@ msgstr ""
 
 #: src/GameText.h:532
 msgid "Select a level in the level pack to play"
-msgstr "Pasirinkite žaidimui lygį iš lygių paketo"
+msgstr "Pasirinkite lygį iš sąrašo"
 
 #: src/GameText.h:533
 msgid "Close level pack"
-msgstr "Uždaryti lygių paketą"
+msgstr "Uždaryti lygių sąrašą"
 
 #: src/GameText.h:534
 msgid "General information about the level"
@@ -1925,7 +1925,7 @@ msgstr "Rodyti išsaugotus vietinius lygio pakartojimus"
 
 #: src/GameText.h:537
 msgid "Only show personal best times for this level"
-msgstr "Rodyti tik asmeninius lygio geriausius laikus"
+msgstr "Rodyti tik asmeninius šio lygio geriausius laikus"
 
 #: src/GameText.h:538
 msgid "Show all best times for this level"
@@ -1941,11 +1941,11 @@ msgstr "Rodyti visus lygio pakartojimus"
 
 #: src/GameText.h:541
 msgid "Run selected replay"
-msgstr "Paleisti pasirinktą pakartojimą"
+msgstr "Rodyti pasirinktą pakartojimą"
 
 #: src/GameText.h:542
 msgid "Show helpful help strings such as this one"
-msgstr "Parodykite naudingas pagalbos virveles tokias kaip šis"
+msgstr "Parodo naudingas pagalbos eilutes, tokias kaip ši"
 
 #: src/GameText.h:543
 msgid ""
@@ -1959,17 +1959,15 @@ msgstr "Pasirinkite, jei turite tiesioginį ryšį prie interneto"
 
 #: src/GameText.h:545
 msgid "Select this if you connect to the Internet through an HTTP proxy"
-msgstr "Pasirinkite, jei jūs jungiatės prie interneto per HTTP tarpinį serverį"
+msgstr "Pasirinkite, jei jungiatės prie interneto per HTTP tarpinį serverį"
 
 #: src/GameText.h:546
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
-msgstr ""
-"Pasirinkite, jei jūs jungiatės prie interneto per SOCKS4 tarpinį serverį"
+msgstr "Pasirinkite, jei jungiatės prie interneto per SOCKS4 tarpinį serverį"
 
 #: src/GameText.h:547
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
-msgstr ""
-"Pasirinkite, jei jūs jungiatės prie interneto per SOCKS5 tarpinį serverį"
+msgstr "Pasirinkite, jei jungiatės prie interneto per SOCKS5 tarpinį serverį"
 
 #: src/GameText.h:548
 msgid "Use these settings"
@@ -1985,7 +1983,7 @@ msgstr "Įrašykite tarpinio serverio naudojamo prievado numerį"
 
 #: src/GameText.h:551
 msgid "New levels and levels updated from the Internet"
-msgstr "Nauji lygiai ir lygiai atnaujinti iš interneto"
+msgstr "Nauji ir atnaujinti lygiai iš interneto"
 
 #: src/GameText.h:553
 msgid "Show the ghost if possible in the game"
@@ -1999,12 +1997,12 @@ msgstr "Pasirinkite, kuri vaiduoklį rodyti"
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr ""
-"Padarykite judėjimo dėmės efektus vaiduokliui (jei tai palaikoma jūsų\n"
-"grafinės kortos)"
+"Padarykite judėjimo dėmės efektus vaiduokliui\n"
+"(jei tai palaikoma jūsų vaizdo plokštės)"
 
 #: src/GameText.h:556
 msgid "When starting a level with a ghost, display who the ghost is of"
-msgstr "Kai pradėdamas lygis su vaiduokliu, rodyti, kas yra vaiduoklis"
+msgstr "Kai pradėdamas lygis su vaiduokliu, rodyti, kuris yra vaiduoklis"
 
 #: src/GameText.h:557
 msgid "Display the time difference between the ghost and you"
@@ -2012,11 +2010,11 @@ msgstr "Rodyti laiko skirtumą tarp vaiduoklio ir jūsų"
 
 #: src/GameText.h:558
 msgid "If you make a highscore it will automatically be saved as a replay"
-msgstr "Jeigu jūs pasieksite rekordą, pakartojimas bus automatiškai išsaugotas"
+msgstr "Pakartojimas bus automatiškai išsaugotas, jei pasieksite rekordą"
 
 #: src/GameText.h:559
 msgid "View the replay of the room's highscore"
-msgstr "Rodyti kambario rekordų pakartojimus"
+msgstr "Kambario rekordo pakartojimas"
 
 #: src/GameText.h:561
 msgid "Check for new levels at startup"
@@ -2042,7 +2040,7 @@ msgstr "Įjungti foninę muziką pagrindiniame meniu"
 
 #: src/GameText.h:567
 msgid "Enables background music while playing"
-msgstr "Įjungti foninę muziką žaidžiant"
+msgstr "Įjungti foninę muziką žaidžimo metu"
 
 #: src/GameText.h:569
 msgid "Choose the X-Moto graphics theme"
@@ -2063,8 +2061,8 @@ msgstr "Nusiųsti pakartojimą į rekordų tinklapį"
 #: src/GameText.h:573
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
-"Nusiųskite savo geriausius pakartojimus į jūsų kambarį\n"
-"(naudinga, kai jis buvo tik sukurtas)"
+"Nusiųskite savo geriausius pakartojimus į savo kambarį\n"
+"(naudinga, kai tik buvo jis sukurtas)"
 
 #: src/GameText.h:574
 msgid "Configure the main www options"
@@ -2079,7 +2077,7 @@ msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
 msgstr ""
-"Pasirinkite kur nusiųsti/atsiųsti pakartojimų, rekordų sąrašus\n"
+"Pasirinkite, kur nusiųsti/atsiųsti pakartojimų, rekordų sąrašus\n"
 "(daugiau informacijos ieškokite tinklapyje)"
 
 #: src/GameText.h:577
@@ -2092,7 +2090,7 @@ msgstr "Gauti kambarių sąrašą iš tinklo"
 
 #: src/GameText.h:579
 msgid "Upload of highscore requires to log in (Except for WR)"
-msgstr "Nusiųsti rekordus, reikalaujančius vartotojo (išskyrus WR)"
+msgstr "Nusiųsti rekordus, reikalaujančius prisijungti (išskyrus WR)"
 
 #: src/GameText.h:580
 msgid "Upload of highscore requires a password (Except for WR)"
@@ -2100,11 +2098,11 @@ msgstr "Nusiųsti rekordus, reikalaujančius slaptažodžio (išskyrus WR)"
 
 #: src/GameText.h:581
 msgid "Show the speedometer when playing"
-msgstr "Rodyti spidometrą, kai žaidžiate"
+msgstr "Žaidimo metu rodyti spidometrą"
 
 #: src/GameText.h:582
 msgid "Enable animation of bike falling apart when dead"
-msgstr "Įjungti dužtančio motociklo animaciją"
+msgstr "Animuotas dūžtantis motociklas"
 
 #: src/GameText.h:583
 msgid "Automatically scroll over the level before starting playing it"
@@ -2112,19 +2110,19 @@ msgstr "Automatiškai persukti lygį pradžioje žaidimo"
 
 #: src/GameText.h:584
 msgid "Run a dynamic zoom while playing"
-msgstr "Paleisti kintamą mastelį, kai žaidžiate"
+msgstr "Žaidimo metu keičiasi vaizdo mastelis"
 
 #: src/GameText.h:585
 msgid "View the X-Moto credits"
-msgstr "Parodyti X-Moto padėkas"
+msgstr "X-Moto padėkos"
 
 #: src/GameText.h:586
 msgid "Name of replay"
-msgstr "Pakartojimo vardas"
+msgstr "Pakartojimo pavadinimas"
 
 #: src/GameText.h:587
 msgid "Level played in replay"
-msgstr "Lygis žaidė pakartojime"
+msgstr "Lygis, kuris yra pakartojime"
 
 #: src/GameText.h:588
 msgid "Player who recorded the replay"
@@ -2132,7 +2130,7 @@ msgstr "Žaidėjas, kuris įrašė pakartojimą"
 
 #: src/GameText.h:589
 msgid "Click to select screen resolution"
-msgstr "Spraktelėkite, kas pasirinktumėte ekrano raišką"
+msgstr "Pasirinktumėte ekrano raišką"
 
 #: src/GameText.h:590
 msgid "Completed levels / total number of levels in pack"
@@ -2144,7 +2142,7 @@ msgstr "Lygio paketo vardas"
 
 #: src/GameText.h:592
 msgid "Add the level to the favorite levels list"
-msgstr "Pridėti lygį parankinių lygių sąrašą"
+msgstr "Pridėti lygį į parankinių lygių sąrašą"
 
 #: src/GameText.h:593
 msgid "Delete the level from the favorite levels list"
@@ -2196,7 +2194,7 @@ msgstr ""
 
 #: src/GameText.h:608
 msgid "Don't show the ghosts while playing"
-msgstr "Nerodyti vaiduoklių, kai žaidžiama"
+msgstr "Žaidimo metu nerodyti vaiduoklių"
 
 #: src/GameText.h:609
 msgid "The scene is shared by all the players"
@@ -2242,11 +2240,11 @@ msgstr "Formuoti X-Moto tema"
 
 #: src/GameText.h:619
 msgid "Configure ghosts displayed while playing the game"
-msgstr "Formuoti vaiduoklius, rodomus, kai žaidžiamas žaidimas"
+msgstr "Formuoti vaiduoklius, rodomus žaidimo metu"
 
 #: src/GameText.h:620
 msgid "Configure options linked to your X-Moto database"
-msgstr "Formuoti parinktis susietas su jūsų X-Moto duomenų baze"
+msgstr "Formuoti parinktis, susietas su jūsų X-Moto duomenų baze"
 
 #: src/GameText.h:621
 msgid "Synchronise your database on the web"
@@ -2464,7 +2462,7 @@ msgstr "Bronza"
 
 #: src/GameText.h:679
 msgid "No medal"
-msgstr "Nėra medalio"
+msgstr "Be medalio"
 
 #: src/GameText.h:680
 msgid "My levels"
@@ -2496,7 +2494,7 @@ msgstr "Lygiai be rekordo jūsų kambaryje"
 
 #: src/GameText.h:689
 msgid "Somebody in the room made a better highscore than yours"
-msgstr "Kažkas kambaryje palenkė jūsų rekordą"
+msgstr "Kažkas kambaryje pagerino jūsų rekordą"
 
 #: src/GameText.h:690
 msgid "All X-Moto levels"
@@ -2603,7 +2601,7 @@ msgstr "Lygių paketas \"%s\""
 #: src/GameText.h:714
 #, c-format
 msgid "Highscores by %s"
-msgstr "%s rekordai"
+msgstr "Žaidėjo %s rekordai"
 
 #: src/GameText.h:715
 msgid "External levels (the one you put into the 'My levels' directory)"
@@ -2672,7 +2670,7 @@ msgstr "Pakartojimo įterpimas išjungtas"
 
 #: src/GameText.h:732
 msgid "Fps enabled"
-msgstr "Kadrų sklaistinė įjungta"
+msgstr "Kadrų skleistinė įjungta"
 
 #: src/GameText.h:733
 msgid "Fps disabled"
@@ -2785,20 +2783,20 @@ msgid ""
 "The primary objective of the game is for you\n"
 "to collect all of them, and then find the flower."
 msgstr ""
-"Pirminis žaidimo tikslas yra jums, kad rinkti\n"
-"juos visus ir paskui surasti gėlę."
+"Pagrindinis žaidimo tikslas yra surinkti\n"
+"visas žemuoges ir paskui surasti gėlę."
 
 #: src/LevelsText.h:36
 msgid ""
 "The icon to the right of your time,\n"
 "indicates how many strawberries still left."
 msgstr ""
-"Piktograma dešinėje jūsų laiko, rodo,\n"
+"Piktograma, dešinėje jūsų laiko, rodo,\n"
 "kiek žemuogių vis dar liko."
 
 #: src/LevelsText.h:37
 msgid "Drive in its direction..."
-msgstr "Važiuokite savo kryptimi..."
+msgstr "Važiuokite pirmyn..."
 
 #: src/LevelsText.h:38
 msgid ""
@@ -2828,7 +2826,7 @@ msgstr "Paimkite žemuogę, paliesdami ją"
 
 #: src/LevelsText.h:43
 msgid "Touch it to finish the level. Good luck with the rest :)"
-msgstr "Palieskite gėlytę, kad baigtumėte lygį. Sėkmės su likusiais :)"
+msgstr "Palieskite gėlę, kad baigtumėte lygį. Sėkmės su likusiais :)"
 
 #: src/LevelsText.h:44
 msgid "The first jump you're going to perform is very easy."
@@ -2876,7 +2874,9 @@ msgid ""
 "That will cause the rear suspension to increase the\n"
 "length of the jump.\n"
 "Try it..."
-msgstr "Galinis sustabdymas padės padidinti šuolio ilgį.Pabandykite..."
+msgstr ""
+"Galinis sustabdymas padės padidinti šuolio ilgį.\n"
+"Pabandykite..."
 
 #: src/LevelsText.h:51
 msgid "This tutorial will teach you the basics of jumping."
@@ -2963,7 +2963,7 @@ msgstr ""
 
 #: src/LevelsText.h:62
 msgid "Try getting under the next obstacle when you feel you're ready."
-msgstr "Pabandykite pasiekti po kita kliūtimi, kai jausitės pasiruošę."
+msgstr "Kai jausitės pasiruošę, pabandykite patekti po kita kliūtimi."
 
 #: src/LevelsText.h:64
 msgid ""
@@ -2985,15 +2985,15 @@ msgstr "Gražu! Dabar pabandykite kitą, bus truputį sudėtingiau..."
 
 #: src/LevelsText.h:67
 msgid "Good job! The next one is even more difficult..."
-msgstr "Atlikta gerai! Kitas yra dar sudėtingesnis..."
+msgstr "Atlikta gerai! Sekantis dar sudėtingesnis..."
 
 #: src/LevelsText.h:68
 msgid ""
 "Now for the final one... It's not that long, but instead\n"
 "there's even less room for your precious head. Good luck! :)"
 msgstr ""
-"Dabar baigiant... Tai neilgas lygis, bet vietoj to yra mažiau vietos jūsų "
-"brangiai galvai. Sėkmės :)"
+"Dabar pabaigai dar vienas... Tai neilgas lygis, kuriame\n"
+"turite mažiau vietos savo brangiai galvai. Sėkmės :)"
 
 #~ msgid ""
 #~ "X-Moto uses a database on your computer to save all your scores and "
@@ -3003,7 +3003,7 @@ msgstr ""
 #~ msgstr ""
 #~ "X-Moto naudoja jūsų kompiuteryje duomenų bazę, kad išsaugotų visus jūsų "
 #~ "balus ir statistiką. Jūs galite siųsti duomenis naudodami savo tinklo "
-#~ "abonentą X-Moto serveryje. Naudinga išsaugoti jūsų duomenis, jei jūs "
+#~ "abonentą X-Moto serveryje. Naudinga išsaugoti jūsų duomenis, jei "
 #~ "žaidžiate X-Moto iš skirtingų vietų."
 
 #~ msgid ""
