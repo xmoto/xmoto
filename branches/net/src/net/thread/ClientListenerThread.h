@@ -36,6 +36,9 @@ class ClientListenerThread : public XMThread {
 
   private:
   NetClient* m_netClient;
+
+  std::string getCommand(void* data, int len);
+  std::string getChatMessage(void* data, int len);
 };
 
 #endif
