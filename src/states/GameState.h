@@ -124,7 +124,6 @@ protected:
   bool m_showCursor;
 
   void addCommand(std::string cmd, std::string args="");
-  std::queue<std::pair<std::string, std::string> > m_commands;
 
 private:
   bool        m_isHide;
@@ -136,6 +135,9 @@ private:
   bool  m_doShade;
   bool  m_doShadeAnim;
   float m_nShadeTime;
+
+  std::queue<std::pair<std::string, std::string> > m_commands;
+  SDL_mutex* m_commandsMutex;
 };
 
 #endif
