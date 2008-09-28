@@ -23,25 +23,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../helpers/VExcept.h"
 #include <SDL_net.h>
 #include <string>
+#include "../helpers/Net.h"
 
-#define XM_SERVER_PORT 4130
 #define XM_SERVER_WAIT_TIMEOUT 2000
 #define XM_SERVER_NB_SOCKETS_MAX 32
 #define XM_SERVER_CLIENT_BUFFER_SIZE 1024
 
-NetClient::NetClient(TCPsocket i_socket, IPaddress *i_remoteIP) {
+NetSClient::NetSClient(TCPsocket i_socket, IPaddress *i_remoteIP) {
     m_socket      = i_socket;
     m_remoteIP    = i_remoteIP;
 }
 
-NetClient::~NetClient() {
+NetSClient::~NetSClient() {
 }
 
-TCPsocket* NetClient::socket() {
+TCPsocket* NetSClient::socket() {
   return &m_socket;
 }
 
-IPaddress* NetClient::remoteIP() {
+IPaddress* NetSClient::remoteIP() {
   return m_remoteIP;
 }
 
@@ -113,7 +113,7 @@ int ServerThread::realThreadFunction() {
 	      	i++;
 	      } else {
 	      	LogInfo("Host disconnected: %s:%d",
-	      		getIp(m_clients[i]->remoteIP()).c_str(),
+	      		XMNet::getIp(m_clients[i]->remoteIP()).c_str(),
 	      		SDLNet_Read16(&(m_clients[i]->remoteIP())->port));
 	      	removeClient(i);
 	      }
@@ -179,16 +179,6 @@ void ServerThread::sendToAllClients(void* data, int len, unsigned int i_except) 
   }
 }
 
-std::string ServerThread::getIp(IPaddress* i_ip) {
-  Uint32 val = SDLNet_Read32(&i_ip->host);
-  char str[3+1+3+1+3+1+3+1];
-  
-  snprintf(str, 3+1+3+1+3+1+3+1,"%i.%i.%i.%i",
-	   val >> 24, (val >> 16) %256, (val >> 8) %256, val%256);
-
-  return std::string(str);
-}
-
 void ServerThread::acceptClient(TCPsocket* sd) {
   TCPsocket csd;
   IPaddress *remoteIP;
@@ -207,7 +197,7 @@ void ServerThread::acceptClient(TCPsocket* sd) {
 
   /* Print the address, converting in the host format */
   LogInfo("Host connected: %s:%d",
-	  getIp(remoteIP).c_str(), SDLNet_Read16(&remoteIP->port));
+	  XMNet::getIp(remoteIP).c_str(), SDLNet_Read16(&remoteIP->port));
 
   scn = SDLNet_TCP_AddSocket(m_set, csd);
   if(scn == -1) {
@@ -216,7 +206,7 @@ void ServerThread::acceptClient(TCPsocket* sd) {
     return;
   }
 
-  m_clients.push_back(new NetClient(csd, remoteIP));
+  m_clients.push_back(new NetSClient(csd, remoteIP));
 
   // welcome
   std::string v_msg = "Xmoto server\n";

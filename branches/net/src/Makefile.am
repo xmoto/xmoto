@@ -264,7 +264,11 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/LevelsPacksCountUpdateThread.h   \
 		 thread/LevelsPacksCountUpdateThread.cpp \
 		 net/thread/ServerThread.cpp             \
-		 net/thread/ServerThread.h
+		 net/thread/ServerThread.h       \
+		 net/XMNetClient.cpp             \
+		 net/XMNetClient.h               \
+		 net/helpers/Net.cpp             \
+		 net/helpers/Net.h
 
 if WIN32
 common_SOURCES += $(bz2_SOURCES)

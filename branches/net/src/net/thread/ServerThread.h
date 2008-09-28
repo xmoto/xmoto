@@ -25,10 +25,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 #include <SDL_net.h>
 
-class NetClient {
+#define XM_SERVER_PORT 4130
+
+class NetSClient {
   public:
-  NetClient(TCPsocket i_socket, IPaddress* i_remoteIP);
-  ~NetClient();
+  NetSClient(TCPsocket i_socket, IPaddress* i_remoteIP);
+  ~NetSClient();
 
   TCPsocket* socket();
   IPaddress* remoteIP();
@@ -46,11 +48,10 @@ class ServerThread : public XMThread {
   virtual ~ServerThread();
 
   int realThreadFunction();
-  static std::string getIp(IPaddress* i_ip);
 
   private:
   SDLNet_SocketSet m_set;
-  std::vector<NetClient*> m_clients;
+  std::vector<NetSClient*> m_clients;
 
   void acceptClient(TCPsocket* sd);
   void manageClient(unsigned int i, void* data, int len);
