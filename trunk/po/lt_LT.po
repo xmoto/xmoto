@@ -260,11 +260,11 @@ msgstr "dešininis mygtukas"
 
 #: src/GameText.h:95
 msgid "wheel up"
-msgstr "ratą pakelti"
+msgstr "pakelti ratą"
 
 #: src/GameText.h:96
 msgid "wheel down"
-msgstr "ratą nuleisti"
+msgstr "nuleisti ratą"
 
 #: src/GameText.h:97
 msgid "No joystick found"
@@ -787,7 +787,7 @@ msgstr "Pagalba"
 
 #: src/GameText.h:254
 msgid "You control your bike using the keyboard"
-msgstr "Valdykite motociklą, naudodamiesi klaviatūrą"
+msgstr "Motociklo valdymui naudokite klaviatūrą"
 
 #: src/GameText.h:255
 msgid "Accelerates"
@@ -799,11 +799,11 @@ msgstr "Stabdžiai"
 
 #: src/GameText.h:257
 msgid "Rotates it counter-clockwise"
-msgstr "Sukti prieš laikrodžio rodyklę"
+msgstr "Suktis prieš laikrodžio rodyklę"
 
 #: src/GameText.h:258
 msgid "Rotates it clockwise"
-msgstr "Sukti pagal laikrodžio rodyklę"
+msgstr "Suktis pagal laikrodžio rodyklę"
 
 #: src/GameText.h:259
 msgid "Turns around and drives in the other direction"
@@ -861,7 +861,7 @@ msgstr "Aukšta"
 
 #: src/GameText.h:273
 msgid "Levels are being added into the database. Please wait."
-msgstr "Lygiai pridedami į duomenų bazę. Prašome palaukti."
+msgstr "Lygiai įkeliami į duomenų bazę. Prašome palaukti."
 
 #: src/GameText.h:274
 msgid "Internet Configuration"
@@ -1694,7 +1694,7 @@ msgstr "Pabandykite šį lygį vėl nuo pradžios"
 
 #: src/GameText.h:481
 msgid "Play next level instead"
-msgstr "Žaisti kitą lygį vietoj to"
+msgstr "Žaisti sekantį lygį"
 
 #: src/GameText.h:482
 msgid "Try this level again"
@@ -1702,7 +1702,7 @@ msgstr "Bandyti šį lygį dar kartą"
 
 #: src/GameText.h:483
 msgid "Built-in and stand-alone external levels"
-msgstr "Įmontuoti ir vienos pozicijos išoriniai lygiai"
+msgstr "Jūsų pasirinkti mėgstamiausi lygiai"
 
 #: src/GameText.h:484
 msgid "Levels grouped together in level packs"
@@ -2061,8 +2061,8 @@ msgstr "Nusiųsti pakartojimą į rekordų tinklapį"
 #: src/GameText.h:573
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
-"Nusiųskite savo geriausius pakartojimus į savo kambarį\n"
-"(naudinga, kai tik buvo jis sukurtas)"
+"Nusiųskite savo geriausius pakartojimus į savo kambarį (naudinga, kai tik "
+"buvo jis sukurtas)"
 
 #: src/GameText.h:574
 msgid "Configure the main www options"
@@ -2077,8 +2077,8 @@ msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
 msgstr ""
-"Pasirinkite, kur nusiųsti/atsiųsti pakartojimų, rekordų sąrašus\n"
-"(daugiau informacijos ieškokite tinklapyje)"
+"Pasirinkite, kur nusiųsti/atsiųsti pakartojimų, rekordų sąrašus (daugiau "
+"informacijos ieškokite tinklapyje)"
 
 #: src/GameText.h:577
 msgid "Choose your room"
@@ -2138,7 +2138,7 @@ msgstr "Pabaigti lygiai / visas lygių skaičius pakete"
 
 #: src/GameText.h:591
 msgid "Name of level pack"
-msgstr "Lygio paketo vardas"
+msgstr "Lygio paketo pavadinimas"
 
 #: src/GameText.h:592
 msgid "Add the level to the favorite levels list"
@@ -2189,8 +2189,7 @@ msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
 msgstr ""
-"Sustabdyti žaidimą, kai tik žaidėjas baigia lygį ar tęstis tuo metu,\n"
-"kai žaidėjas važiuoja"
+"Sustabdyti žaidimą, kai žaidėjas baigia lygį arba tęsti kol žaidėjas važiuoja"
 
 #: src/GameText.h:608
 msgid "Don't show the ghosts while playing"
