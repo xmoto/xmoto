@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Net.h"
 
 #define XM_SERVER_WAIT_TIMEOUT 2000
-#define XM_SERVER_NB_SOCKETS_MAX 32
+#define XM_SERVER_NB_SOCKETS_MAX 128
 #define XM_SERVER_CLIENT_BUFFER_SIZE 1024
 
 NetSClient::NetSClient(TCPsocket i_socket, IPaddress *i_remoteIP) {
@@ -209,12 +209,12 @@ void ServerThread::acceptClient(TCPsocket* sd) {
   m_clients.push_back(new NetSClient(csd, remoteIP));
 
   // welcome
-  std::string v_msg = "Xmoto server\n";
-  try {
-    sendToClient((void*) v_msg.c_str(), v_msg.length(), m_clients.size()-1);
-  } catch(Exception &e) {
-    removeClient(m_clients.size()-1);
-  }
+  //std::string v_msg = "Xmoto server\n";
+  //try {
+  //  sendToClient((void*) v_msg.c_str(), v_msg.length(), m_clients.size()-1);
+  //} catch(Exception &e) {
+  //  removeClient(m_clients.size()-1);
+  //}
 }
 
 void ServerThread::manageClient(unsigned int i, void* data, int len) {

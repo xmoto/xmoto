@@ -18,46 +18,31 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __SERVERTHREAD_H__
-#define __SERVERTHREAD_H__
+#ifndef __XMNETCLIENT_H__
+#define __XMNETCLIENT_H__
 
-#include "../../thread/XMThread.h"
-#include <vector>
 #include <SDL_net.h>
+#include <string>
+#include "../helpers/Singleton.h"
 
-#define XM_SERVER_PORT 4130
+class ClientListenerThread;
 
-class NetSClient {
+class NetClient : public Singleton<NetClient> {
   public:
-  NetSClient(TCPsocket i_socket, IPaddress* i_remoteIP);
-  ~NetSClient();
+  NetClient();
+  ~NetClient();
 
+  void connect(const std::string& i_server, int i_port);
+  void disconnect();
+  bool isConnected();
   TCPsocket* socket();
-  IPaddress* remoteIP();
+
+  void sendChatMessage(const std::string& i_msg);
 
   private:
-  TCPsocket m_socket;
-  IPaddress* m_remoteIP;
-};
-
-class ServerThread : public XMThread {
-  public:
-  ServerThread();
-  virtual ~ServerThread();
-
-  int realThreadFunction();
-
-  private:
-  SDLNet_SocketSet m_set;
-  std::vector<NetSClient*> m_clients;
-
-  void acceptClient(TCPsocket* sd);
-  void manageClient(unsigned int i, void* data, int len);
-
-  // if i_execpt >= 0, send to all exept him
-  void sendToAllClients(void* data, int len, unsigned int i_except = -1);
-  void sendToClient(void* data, int len, unsigned int i);
-  void removeClient(unsigned int i);
+  bool m_isConnected;
+  TCPsocket m_sd;
+  ClientListenerThread* m_clientListenerThread;
 };
 
 #endif

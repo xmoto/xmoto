@@ -57,7 +57,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "UserConfig.h"
 #include "Renderer.h"
 #include "net/thread/ServerThread.h"
-#include "net/XMNetClient.h"
+#include "net/NetClient.h"
 #include <SDL_net.h>
 
 #define MOUSE_DBCLICK_TIME 0.250f
@@ -660,7 +660,7 @@ void GameApp::initNetwork() {
 
   // start client
   try {
-    XMNetClient::instance()->connect("127.0.0.1", XM_SERVER_PORT);
+    NetClient::instance()->connect("127.0.0.1", XM_SERVER_PORT);
   } catch(Exception &e) {
     LogError("Unable to connect to the server");
   }
@@ -668,10 +668,10 @@ void GameApp::initNetwork() {
 
 void GameApp::uninitNetwork() {
   // stop the client
-  if(XMNetClient::instance()->isConnected()) {
-    XMNetClient::instance()->disconnect();
+  if(NetClient::instance()->isConnected()) {
+    NetClient::instance()->disconnect();
   }
-  XMNetClient::destroy();
+  NetClient::destroy();
 
   // stop the server
   if(m_serverThread != NULL) {

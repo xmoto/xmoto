@@ -265,8 +265,10 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/LevelsPacksCountUpdateThread.cpp \
 		 net/thread/ServerThread.cpp             \
 		 net/thread/ServerThread.h       \
-		 net/XMNetClient.cpp             \
-		 net/XMNetClient.h               \
+		 net/thread/ClientListenerThread.cpp             \
+		 net/thread/ClientListenerThread.h       \
+		 net/NetClient.cpp             \
+		 net/NetClient.h               \
 		 net/helpers/Net.cpp             \
 		 net/helpers/Net.h
 
