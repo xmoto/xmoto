@@ -64,10 +64,13 @@ GameState::GameState(bool drawStateBehind,
     StateManager::instance()->registerAsEmitter("MIRRORMODE_CHANGED");
     StateManager::instance()->registerAsEmitter("ENABLEAUDIO_CHANGED");
   }
+
+  m_commandsMutex = SDL_CreateMutex();
 }
 
 GameState::~GameState()
 {
+  SDL_DestroyMutex(m_commandsMutex);
 }
 
 bool GameState::doUpdate()
@@ -135,16 +138,19 @@ void GameState::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_but
 
 void GameState::send(const std::string& i_message, const std::string& i_args)
 {
+  SDL_LockMutex(m_commandsMutex);
   m_commands.push(std::pair<std::string, std::string>(i_message, i_args));
+  SDL_UnlockMutex(m_commandsMutex);
 }
 
 void GameState::executeCommands()
 {
+  SDL_LockMutex(m_commandsMutex);
   while(m_commands.empty() == false){
     executeOneCommand(m_commands.front().first, m_commands.front().second);
     m_commands.pop();
   }
-
+  SDL_UnlockMutex(m_commandsMutex);
 }
 
 void GameState::executeOneCommand(std::string cmd, std::string args)
@@ -156,7 +162,9 @@ void GameState::executeOneCommand(std::string cmd, std::string args)
 
 void GameState::addCommand(std::string cmd, std::string args)
 {
+  SDL_LockMutex(m_commandsMutex);
   m_commands.push(std::pair<std::string, std::string>(cmd, args));
+  SDL_UnlockMutex(m_commandsMutex);
 }
 
 void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
