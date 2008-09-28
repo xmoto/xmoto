@@ -23,6 +23,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "../../thread/XMThread.h"
 #include <vector>
+#include <SDL_net.h>
+
+class NetClient {
+  public:
+  NetClient(TCPsocket i_socket, IPaddress* i_remoteIP);
+  ~NetClient();
+
+  TCPsocket* socket();
+  IPaddress* remoteIP();
+
+  private:
+  TCPsocket m_socket;
+  IPaddress* m_remoteIP;
+};
 
 class ServerClientListenerThread;
 
@@ -32,15 +46,19 @@ class ServerThread : public XMThread {
   virtual ~ServerThread();
 
   int realThreadFunction();
+  static std::string getIp(IPaddress* i_ip);
 
   private:
-  std::vector<ServerClientListenerThread*> m_serverClientListenerThread;
+  SDLNet_SocketSet m_set;
+  std::vector<NetClient*> m_clients;
+
+  void acceptClient(TCPsocket* sd);
+  void manageClient(unsigned int i, void* data, int len);
 
   // if i_execpt >= 0, send to all exept him
   void sendToAllClients(void* data, int len, unsigned int i_except = -1);
   void sendToClient(void* data, int len, unsigned int i);
   void removeClient(unsigned int i);
-  void cleanDisconnectedClients();
 };
 
 #endif

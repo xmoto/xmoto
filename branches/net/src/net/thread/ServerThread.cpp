@@ -23,25 +23,43 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../helpers/VExcept.h"
 #include <SDL_net.h>
 #include <string>
-#include "ServerClientListenerThread.h"
 
 #define XM_SERVER_PORT 4130
-#define XM_SERVER_CHECKCLIENT_WAIT 2000
+#define XM_SERVER_WAIT_TIMEOUT 2000
+#define XM_SERVER_NB_SOCKETS_MAX 32
+#define XM_SERVER_CLIENT_BUFFER_SIZE 1024
+
+NetClient::NetClient(TCPsocket i_socket, IPaddress *i_remoteIP) {
+    m_socket      = i_socket;
+    m_remoteIP    = i_remoteIP;
+}
+
+NetClient::~NetClient() {
+}
+
+TCPsocket* NetClient::socket() {
+  return &m_socket;
+}
+
+IPaddress* NetClient::remoteIP() {
+  return m_remoteIP;
+}
 
 ServerThread::ServerThread() {
+    m_set = NULL;
 }
 
 ServerThread::~ServerThread() {
 }
 
-// only this thread write messages to clients
-// only clientListener read messages
-
 int ServerThread::realThreadFunction() {
   IPaddress ip;
-  TCPsocket sd, csd;
+  TCPsocket sd;
+  int n_activ;
   unsigned int i;
-  ServerClientListenerThread* v_serverClientListenerThread;
+  char buffer[XM_SERVER_CLIENT_BUFFER_SIZE];
+  int nread;
+  int ssn;
 
   LogInfo("server: starting");
 
@@ -50,74 +68,96 @@ int ServerThread::realThreadFunction() {
     LogError("server: SDLNet_ResolveHost: %s\n", SDLNet_GetError());
     return 1;
   }
+
+  m_set = SDLNet_AllocSocketSet(XM_SERVER_NB_SOCKETS_MAX);
+  if(!m_set) {
+    LogError("server: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
+    return 1;
+  }
  
   /* Open a connection with the IP provided (listen on the host's port) */
   LogInfo("server: open connexion");
   if((sd = SDLNet_TCP_Open(&ip)) == 0) {
     LogError("server: SDLNet_TCP_Open: %s\n", SDLNet_GetError());
+    SDLNet_FreeSocketSet(m_set);
+    return 1;
+  }
+
+  ssn = SDLNet_TCP_AddSocket(m_set, sd);
+  if(ssn == -1) {
+    LogError("server: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+    SDLNet_FreeSocketSet(m_set);
+    SDLNet_TCP_Close(sd);
     return 1;
   }
 
   /* Wait for a connection, send data and term */
   while(m_askThreadToEnd == false) {
-
-    /* This check the sd if there is a pending connection.
-     * If there is one, accept that, and open a new socket for communicating */
-
-    if((csd = SDLNet_TCP_Accept(sd)) == 0) {
-      SDL_Delay(XM_SERVER_CHECKCLIENT_WAIT);
-      cleanDisconnectedClients();
+    n_activ = SDLNet_CheckSockets(m_set, XM_SERVER_WAIT_TIMEOUT);
+    if(n_activ == -1) {
+      LogError("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
+      m_askThreadToEnd = true;
     } else {
-      v_serverClientListenerThread = new ServerClientListenerThread(csd);
-      m_serverClientListenerThread.push_back(v_serverClientListenerThread);
-      v_serverClientListenerThread->startThread();
+      if(n_activ != 0) {
+	// server socket
+	if(SDLNet_SocketReady(sd)) {
+	  acceptClient(&sd);
+	} else {
 
-      std::string v_msg = "Xmoto server\n";
-      sendToClient((void*) v_msg.c_str(), v_msg.length(), m_serverClientListenerThread.size()-1);
+	  i = 0;
+	  while(i<m_clients.size()) {
+	    if(SDLNet_SocketReady(*(m_clients[i]->socket()))) {
+	      if( (nread = SDLNet_TCP_Recv(*(m_clients[i]->socket()),
+	      				   buffer, XM_SERVER_CLIENT_BUFFER_SIZE)) > 0) {
+	      	manageClient(i, buffer, nread);
+	      	i++;
+	      } else {
+	      	LogInfo("Host disconnected: %s:%d",
+	      		getIp(m_clients[i]->remoteIP()).c_str(),
+	      		SDLNet_Read16(&(m_clients[i]->remoteIP())->port));
+	      	removeClient(i);
+	      }
+	    } else {
+	      i++;
+	    }
+	  }
+	}
+      }
     }
   }
 
-  LogInfo("server: %i client(s) still connnected", m_serverClientListenerThread.size());
+  LogInfo("server: %i client(s) still connnected", m_clients.size());
 
   // disconnect all clients
   i=0;
-  while(i<m_serverClientListenerThread.size()) {
+  while(i<m_clients.size()) {
     removeClient(i);
     i++;
   }
 
+  SDLNet_TCP_DelSocket(m_set, sd);
+
   LogInfo("server: close connexion");
   SDLNet_TCP_Close(sd);
+
+  SDLNet_FreeSocketSet(m_set);
+  m_set = NULL;
 
   LogInfo("server: ending normally");
   return 0;
 }
 
 void ServerThread::removeClient(unsigned int i) {
-  if(m_serverClientListenerThread[i]->isThreadRunning()) {
-    m_serverClientListenerThread[i]->killThread();
-  }
-
-  SDLNet_TCP_Close(*(m_serverClientListenerThread[i]->socket()));
-  delete m_serverClientListenerThread[i];
-  m_serverClientListenerThread.erase(m_serverClientListenerThread.begin() + i);
-}
-
-void ServerThread::cleanDisconnectedClients() {
-  unsigned int i=0;
-  while(i<m_serverClientListenerThread.size()) {
-    if(m_serverClientListenerThread[i]->isThreadRunning() == false) {
-      removeClient(i);
-    } else {
-      i++;
-    }
-  }
+  SDLNet_TCP_DelSocket(m_set, *(m_clients[i]->socket()));
+  SDLNet_TCP_Close(*(m_clients[i]->socket()));
+  delete m_clients[i];
+  m_clients.erase(m_clients.begin() + i);
 }
 
 void ServerThread::sendToClient(void* data, int len, unsigned int i) {
   int nread;
-
-  if( (nread = SDLNet_TCP_Send(*(m_serverClientListenerThread[i]->socket()), data, len)) != len) {
+  
+  if( (nread = SDLNet_TCP_Send(*(m_clients[i]->socket()), data, len)) != len) {
     throw Exception("TCP_Send failed");
   }
 }
@@ -125,12 +165,68 @@ void ServerThread::sendToClient(void* data, int len, unsigned int i) {
 void ServerThread::sendToAllClients(void* data, int len, unsigned int i_except) {
   unsigned int i=0;
   
-  while(i<m_serverClientListenerThread.size()) {
-    try {
-      sendToClient(data, len, i);
+  while(i<m_clients.size()) {
+    if(i != i_except) {
+      try {
+	sendToClient(data, len, i);
+	i++;
+      } catch(Exception &e) {
+	removeClient(i);
+      }
+    } else {
       i++;
-    } catch(Exception &e) {
-      removeClient(i);
     }
   }
+}
+
+std::string ServerThread::getIp(IPaddress* i_ip) {
+  Uint32 val = SDLNet_Read32(&i_ip->host);
+  char str[3+1+3+1+3+1+3+1];
+  
+  snprintf(str, 3+1+3+1+3+1+3+1,"%i.%i.%i.%i",
+	   val >> 24, (val >> 16) %256, (val >> 8) %256, val%256);
+
+  return std::string(str);
+}
+
+void ServerThread::acceptClient(TCPsocket* sd) {
+  TCPsocket csd;
+  IPaddress *remoteIP;
+  int scn;
+
+  if((csd = SDLNet_TCP_Accept(*sd)) == 0) {
+    return;
+  }
+
+  /* Get the remote address */
+  if((remoteIP = SDLNet_TCP_GetPeerAddress(csd)) == NULL) {
+    LogWarning("server: SDLNet_TCP_GetPeerAddress: %s\n", SDLNet_GetError());
+    SDLNet_TCP_Close(csd);
+    return;
+  }
+
+  /* Print the address, converting in the host format */
+  LogInfo("Host connected: %s:%d",
+	  getIp(remoteIP).c_str(), SDLNet_Read16(&remoteIP->port));
+
+  scn = SDLNet_TCP_AddSocket(m_set, csd);
+  if(scn == -1) {
+    LogError("server: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+    SDLNet_TCP_Close(csd);
+    return;
+  }
+
+  m_clients.push_back(new NetClient(csd, remoteIP));
+
+  // welcome
+  std::string v_msg = "Xmoto server\n";
+  try {
+    sendToClient((void*) v_msg.c_str(), v_msg.length(), m_clients.size()-1);
+  } catch(Exception &e) {
+    removeClient(m_clients.size()-1);
+  }
+}
+
+void ServerThread::manageClient(unsigned int i, void* data, int len) {
+  sendToAllClients(data, len, i);
 }
