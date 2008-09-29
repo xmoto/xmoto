@@ -288,6 +288,15 @@ Sprite* Theme::getSprite(enum SpriteType pSpriteType, std::string pName) {
   return NULL;
 }
 
+std::string  Theme::getHashMusic(const std::string& i_key) {
+    unsigned int hash=0;
+    for(unsigned int i=0; i<i_key.size(); i++) {
+      hash += (unsigned int)(i_key[i]);
+    }
+    return m_musics[hash % m_musics.size()]->Name();
+}
+
+
 ThemeMusic* Theme::getMusic(std::string i_name) {
   for(unsigned int i=0; i<m_musics.size(); i++) {
     if(m_musics[i]->Name() == i_name) {

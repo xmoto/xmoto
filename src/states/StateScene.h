@@ -84,6 +84,8 @@ protected:
  float m_difficulty, m_quality;
  Texture *m_uncheckedTex, *m_qualityTex, *m_difficultyTex;
 
+ void playLevelMusic();
+
 private:
  void init();
   void initMessageRegistering();

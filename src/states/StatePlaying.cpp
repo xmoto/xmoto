@@ -98,12 +98,7 @@ void StatePlaying::enter()
 
   setScoresTimes();
 
-  if(m_universe != NULL) {
-    if(m_universe->getScenes().size() > 0) {
-      // play music of the first world
-      GameApp::instance()->playGameMusic(m_universe->getScenes()[0]->getLevelSrc()->Music());
-    }
-  }
+  playLevelMusic();
 
   // read keys for more reactivity
   dealWithActivedKeys(m_universe);
