@@ -413,8 +413,8 @@ public:
 		       bool persistent=false,
 		       Sprite* associateSprite=NULL);
 
-  std::vector<Sprite*> getSpritesList();
-  std::vector<ThemeSound*> getSoundsList();
+  std::vector<Sprite*>& getSpritesList();
+  std::vector<ThemeSound*>& getSoundsList();
   std::vector<ThemeFile>* getRequiredFiles();
 
   BikerTheme* getPlayerTheme();

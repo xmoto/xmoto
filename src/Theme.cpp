@@ -28,11 +28,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "VFileIO.h"
 
-std::vector<Sprite*> Theme::getSpritesList() {
+std::vector<Sprite*>& Theme::getSpritesList() {
   return m_sprites;
 }
 
-std::vector<ThemeSound*> Theme::getSoundsList() {
+std::vector<ThemeSound*>& Theme::getSoundsList() {
   return m_sounds;
 }
 
