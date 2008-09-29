@@ -35,7 +35,6 @@ NA_chatMessage::~NA_chatMessage() {
 }
 
 void NA_chatMessage::execute() {
-  printf("a '%s'\n", m_msg.c_str());
   SysMessage::instance()->displayInformation(m_msg);
 }
 
