@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "ClientListenerThread.h"
 #include "../NetClient.h"
+#include "../NetActions.h"
 #include "../../helpers/Log.h"
 #include "../../helpers/VExcept.h"
 
@@ -43,7 +44,6 @@ int ClientListenerThread::realThreadFunction() {
   while( (nread = SDLNet_TCP_Recv(*(m_netClient->socket()),
 			       buffer, XM_CLIENT_BUFFER_SIZE)) > 0) {
     v_packetSize = getSubPacketSize(buffer, nread, v_cmdStart);
-    LogInfo("Packet received, subpacket size is : %i", v_packetSize);
     if(v_packetSize <= 0) {
       return 1; // invalid command
     }
@@ -66,7 +66,7 @@ int ClientListenerThread::realThreadFunction() {
 
 void ClientListenerThread::manageClientSubPacket(void* data, unsigned int len) {
   if(isCommand(data, len, "message")) {
-    LogInfo("client[message]:%s", getChatMessage(((char*)data)+8, len-8).c_str());
+    m_netClient->addNetAction(new NA_chatMessage(getChatMessage(((char*)data)+8, len-8)));
   } else {
     throw Exception("client: invalid command");
   }

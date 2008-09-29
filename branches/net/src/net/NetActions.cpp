@@ -18,40 +18,27 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __XMNETCLIENT_H__
-#define __XMNETCLIENT_H__
+#include "NetActions.h"
+#include "../SysMessage.h"
 
-#include <SDL_net.h>
-#include <string>
-#include <vector>
-#include "../helpers/Singleton.h"
-#include "../include/xm_SDL.h"
+NetAction::NetAction() {
+}
 
-class ClientListenerThread;
-class NetAction;
+NetAction::~NetAction() {
+}
 
-class NetClient : public Singleton<NetClient> {
-  public:
-  NetClient();
-  ~NetClient();
+NA_chatMessage::NA_chatMessage(const std::string& i_msg) {
+  m_msg = i_msg;
+}
 
-  void connect(const std::string& i_server, int i_port);
-  void disconnect();
-  bool isConnected();
-  TCPsocket* socket();
+NA_chatMessage::~NA_chatMessage() {
+}
 
-  void executeNetActions();
-  void addNetAction(NetAction* i_act);
+void NA_chatMessage::execute() {
+  printf("a '%s'\n", m_msg.c_str());
+  SysMessage::instance()->displayInformation(m_msg);
+}
 
-  void sendChatMessage(const std::string& i_msg);
-
-  private:
-  bool m_isConnected;
-  TCPsocket m_sd;
-  ClientListenerThread* m_clientListenerThread;
-
-  std::vector<NetAction*> m_netActions;
-  SDL_mutex* m_netActionsMutex;
-};
-
-#endif
+std::string NA_chatMessage::getMessage() {
+  return m_msg;
+}

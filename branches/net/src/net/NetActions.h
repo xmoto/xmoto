@@ -18,40 +18,30 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __XMNETCLIENT_H__
-#define __XMNETCLIENT_H__
+#ifndef __NETACTIONS_H__
+#define __NETACTIONS_H__
 
-#include <SDL_net.h>
 #include <string>
-#include <vector>
-#include "../helpers/Singleton.h"
-#include "../include/xm_SDL.h"
 
-class ClientListenerThread;
-class NetAction;
-
-class NetClient : public Singleton<NetClient> {
+class NetAction {
   public:
-  NetClient();
-  ~NetClient();
-
-  void connect(const std::string& i_server, int i_port);
-  void disconnect();
-  bool isConnected();
-  TCPsocket* socket();
-
-  void executeNetActions();
-  void addNetAction(NetAction* i_act);
-
-  void sendChatMessage(const std::string& i_msg);
+  NetAction();
+  virtual ~NetAction();
+  virtual void execute() = 0;
 
   private:
-  bool m_isConnected;
-  TCPsocket m_sd;
-  ClientListenerThread* m_clientListenerThread;
+};
 
-  std::vector<NetAction*> m_netActions;
-  SDL_mutex* m_netActionsMutex;
+class NA_chatMessage : public NetAction {
+  public:
+  NA_chatMessage(const std::string& i_msg);
+  virtual ~NA_chatMessage();
+  virtual void execute();
+
+  std::string getMessage();
+
+  private:
+  std::string m_msg;
 };
 
 #endif

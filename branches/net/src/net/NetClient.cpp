@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "NetClient.h"
+#include "NetActions.h"
 #include "thread/ClientListenerThread.h"
 #include "../helpers/VExcept.h"
 #include "../helpers/Log.h"
@@ -28,9 +29,36 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 NetClient::NetClient() {
     m_isConnected = false;
     m_clientListenerThread = NULL;
+    m_netActionsMutex = SDL_CreateMutex();
 }
 
 NetClient::~NetClient() {
+  SDL_DestroyMutex(m_netActionsMutex);
+
+  for(unsigned int i=0; i<m_netActions.size(); i++) {
+    delete m_netActions[i];
+  }
+}
+
+void NetClient::executeNetActions() {
+  if(m_netActions.size() == 0) {
+    return; // try to not lock via mutex if not needed
+  }
+
+  SDL_LockMutex(m_netActionsMutex);
+  for(unsigned int i=0; i<m_netActions.size(); i++) {
+    LogInfo("Execute NetAction");
+    m_netActions[i]->execute();
+    delete m_netActions[i];
+  }
+  m_netActions.clear();
+  SDL_UnlockMutex(m_netActionsMutex);
+}
+
+void NetClient::addNetAction(NetAction* i_act) {
+  SDL_LockMutex(m_netActionsMutex);
+  m_netActions.push_back(i_act);
+  SDL_UnlockMutex(m_netActionsMutex);
 }
 
 void NetClient::connect(const std::string& i_server, int i_port) {

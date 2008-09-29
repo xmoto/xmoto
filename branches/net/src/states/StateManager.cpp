@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateRequestKey.h"
 #include "StateOptions.h"
 #include "StateVote.h"
+#include "../net/NetClient.h"
 
 #include "../XMSession.h"
 #include "../drawlib/DrawLib.h"
@@ -205,6 +206,9 @@ void StateManager::update()
   if(oneUpdate == true){
     m_updateFpsNbFrame++;
   }
+
+  /* update net */
+  NetClient::instance()->executeNetActions();
 
   /* update fps */
   if(m_lastFpsTime + 1000 < GameApp::getXMTimeInt()) {
