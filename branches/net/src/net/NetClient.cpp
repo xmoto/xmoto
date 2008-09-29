@@ -72,9 +72,11 @@ void NetClient::sendChatMessage(const std::string& i_msg) {
   std::string v_data;
   
   std::ostringstream v_nb;
-  v_nb << i_msg.size();
 
-  v_data = "message\n" + v_nb.str() + "\n" + i_msg + "\n";
+  int v_subPacketSize = std::string("message").length() + 1 + i_msg.length() + 1;
+
+  v_nb << v_subPacketSize;
+  v_data = v_nb.str() + "\n" + "message\n" + i_msg + "\n";
 
   // don't send the \0
   if( (nread = SDLNet_TCP_Send(m_sd, v_data.c_str(), v_data.size())) != v_data.size()) {
