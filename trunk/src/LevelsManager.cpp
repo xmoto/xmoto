@@ -273,19 +273,6 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   v_pack->setDescription(VPACKAGENAME_DESC_SCRIPTED);
   m_levelsPacks.push_back(v_pack);
 
-  /* musical */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_MUSICAL),
-			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
-			  "FROM levels AS a "
-			  "LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level "
-                          "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE a.music<>\"\" AND (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
-			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
-			  "AND c.id_level IS NULL");
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  v_pack->setDescription(VPACKAGENAME_DESC_MUSICAL);
-  m_levelsPacks.push_back(v_pack);
-
   /* physics */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_PHYSICS),
 			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "

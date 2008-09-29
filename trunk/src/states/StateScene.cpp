@@ -804,3 +804,17 @@ void StateScene::nextLevelToPlay(bool i_positifOrder) {
     StateManager::instance()->replaceState(new StatePreplayingGame(v_nextLevel, v_currentLevel == v_nextLevel));
   }
 }
+
+void StateScene::playLevelMusic() {
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      // play music of the first world
+      if(m_universe->getScenes()[0]->getLevelSrc()->Music() != "") {
+	GameApp::instance()->playGameMusic(m_universe->getScenes()[0]->getLevelSrc()->Music());
+      } 
+      else {
+	GameApp::instance()->playGameMusic(Theme::instance()->getHashMusic(m_universe->getScenes()[0]->getLevelSrc()->Id()));
+      }
+    }
+  }
+}

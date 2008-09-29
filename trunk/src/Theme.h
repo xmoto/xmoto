@@ -403,6 +403,7 @@ public:
 
   std::string Name() const;
   Sprite* getSprite(enum SpriteType pSpriteType, std::string pName);
+  std::string getHashMusic(const std::string& i_key);
   ThemeMusic* getMusic(std::string i_name);
   ThemeSound* getSound(std::string i_name);
   Texture* loadTexture(std::string p_fileName,
