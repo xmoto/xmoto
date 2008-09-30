@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <SDL_net.h>
 #include <string>
 #include "../helpers/Net.h"
+#include "../../XMSession.h"
 
 #define XM_SERVER_WAIT_TIMEOUT 2000
 #define XM_SERVER_NB_SOCKETS_MAX 128
@@ -64,7 +65,7 @@ int ServerThread::realThreadFunction() {
   LogInfo("server: starting");
 
   /* Resolving the host using NULL make network interface to listen */
-  if(SDLNet_ResolveHost(&ip, NULL, XM_SERVER_PORT) < 0) {
+  if(SDLNet_ResolveHost(&ip, NULL, XMSession::instance()->serverPort()) < 0) {
     LogError("server: SDLNet_ResolveHost: %s\n", SDLNet_GetError());
     return 1;
   }
@@ -91,7 +92,7 @@ int ServerThread::realThreadFunction() {
     return 1;
   }
 
-  /* Wait for a connection, send data and term */
+  /* Wait for a connection */
   while(m_askThreadToEnd == false) {
     n_activ = SDLNet_CheckSockets(m_set, XM_SERVER_WAIT_TIMEOUT);
     if(n_activ == -1) {

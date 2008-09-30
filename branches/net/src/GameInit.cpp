@@ -653,14 +653,15 @@ void GameApp::initNetwork() {
   }
 
   // start server
-  m_serverThread = new ServerThread();
-  m_serverThread->startThread();
-
-  SDL_Delay(1000); // wait 1s for tests only
+  if(XMSession::instance()->serverStartAtStartup() || true) {
+    m_serverThread = new ServerThread();
+    m_serverThread->startThread();
+  }
 
   // start client
+  SDL_Delay(1000); // wait 1s for tests only
   try {
-    NetClient::instance()->connect("127.0.0.1", XM_SERVER_PORT);
+    NetClient::instance()->connect("127.0.0.1", XMSession::instance()->clientServerPort());
   } catch(Exception &e) {
     LogError("Unable to connect to the server");
   }

@@ -250,6 +250,14 @@ public:
   bool beatingMode() const;
   void setWebForms(bool i_value);
   bool webForms() const;
+  bool serverStartAtStartup() const;
+  void setServerStartAtStartup(bool i_value);
+  int serverPort() const;
+  void setServerPort(int i_value);
+  std::string clientServerName() const;
+  void clientServerName(const std::string& i_value);
+  int clientServerPort() const;
+  void clientServerPort(int i_value);
 
   // there are two dbSync values, one for the profile side, one on the serveur side
   // note that because these values must always be synchronised with db, there are always read and write from and to the db
@@ -361,6 +369,10 @@ public:
   bool m_enableJoysticks;
   bool m_beatingMode;
   bool m_webForms;
+  bool m_serverStartAtStartup;
+  int m_serverPort;
+  std::string m_clientServerName;
+  int m_clientServerPort;
 };
 
 #endif

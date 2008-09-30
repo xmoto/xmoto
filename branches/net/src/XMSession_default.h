@@ -119,6 +119,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_PROXY_AUTHUSER              ""
 #define DEFAULT_PROXY_AUTHPWD               ""
 #define DEFAULT_DBSYNCHRONIZEONQUIT         false
+#define DEFAULT_SERVERSTARTATSTARTUP        false
+#define DEFAULT_SERVERPORT                  4130
+#define DEFAULT_CLIENTSERVERNAME            ""
+#define DEFAULT_CLIENTSERVERPORT            DEFAULT_SERVERPORT
 
 class XMDefault {
   public:

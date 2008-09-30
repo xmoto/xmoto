@@ -189,6 +189,8 @@ GameApp::GameApp() {
   m_isIconified      = false;
 
   m_userConfig = new UserConfig();
+
+  m_serverThread = NULL;
 }
    
   /*===========================================================================

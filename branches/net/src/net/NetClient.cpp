@@ -82,7 +82,8 @@ void NetClient::connect(const std::string& i_server, int i_port) {
 
 void NetClient::disconnect() {
   if(m_clientListenerThread->isThreadRunning()) {
-    m_clientListenerThread->killThread();
+    m_clientListenerThread->askThreadToEnd();
+    m_clientListenerThread->waitForThreadEnd();
   }
   delete m_clientListenerThread;
 

@@ -123,6 +123,10 @@ void XMSession::setToDefault() {
   m_enableJoysticks               = DEFAULT_ENABLEJOYSTICKS;
   m_beatingMode                   = DEFAULT_BEATINGMODE;
   m_webForms                      = DEFAULT_WEBFORMS;
+  m_serverStartAtStartup          = DEFAULT_SERVERSTARTATSTARTUP;
+  m_serverPort                    = DEFAULT_SERVERPORT;
+  m_clientServerName              = DEFAULT_CLIENTSERVERNAME;
+  m_clientServerPort              = DEFAULT_CLIENTSERVERPORT;
   m_proxySettings.setDefault();
 }
 
@@ -303,6 +307,11 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_beatingMode                    = pDb->config_getBool   (i_id_profile, "BeatingMode"                   , m_beatingMode);
   m_webForms                       = pDb->config_getBool   (i_id_profile, "WebForms"                   , m_webForms);
 
+  m_serverStartAtStartup = pDb->config_getBool   (i_id_profile, "ServerStartAtStartup", m_serverStartAtStartup);
+  m_serverPort           = pDb->config_getInteger(i_id_profile, "ServerPort", m_serverPort);
+  m_clientServerName     = pDb->config_getString (i_id_profile, "ClientServerName", m_clientServerName);
+  m_clientServerPort     = pDb->config_getInteger(i_id_profile, "ClientServerPort", m_clientServerPort);
+
   m_nbRoomsEnabled                 = pDb->config_getInteger(i_id_profile, "WebHighscoresNbRooms"          , m_nbRoomsEnabled);
   if(m_nbRoomsEnabled < 1) { m_nbRoomsEnabled = 1; }
   if(m_nbRoomsEnabled > ROOMS_NB_MAX) { m_nbRoomsEnabled = ROOMS_NB_MAX; }
@@ -423,6 +432,11 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "EnableJoysticks"                 , m_enableJoysticks);
 	pDb->config_setBool   (m_profile, "BeatingMode"                   , m_beatingMode);
 	pDb->config_setBool   (m_profile, "WebForms"                      , m_webForms);
+
+	pDb->config_setBool   (m_profile, "ServerStartAtStartup", m_serverStartAtStartup);
+	pDb->config_setInteger(m_profile, "ServerPort"          , m_serverPort);
+	pDb->config_setString (m_profile, "ClientServerName"    , m_clientServerName);
+	pDb->config_setInteger(m_profile, "ClientServerPort"    , m_clientServerPort);
 
 	pDb->config_setString (m_profile, "MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium":"High");
 	pDb->config_setString (m_profile, "GameGraphics", m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium":"High");
@@ -1053,6 +1067,38 @@ void XMSession::setWebForms(bool i_value) {
 
 bool XMSession::webForms() const {
   return m_webForms;
+}
+
+bool XMSession::serverStartAtStartup() const {
+  return m_serverStartAtStartup;
+}
+
+void XMSession::setServerStartAtStartup(bool i_value) {
+  m_serverStartAtStartup = i_value;
+}
+
+int XMSession::serverPort() const {
+  return m_serverPort;
+}
+
+void XMSession::setServerPort(int i_value) {
+  m_serverPort = i_value;
+}
+
+std::string XMSession::clientServerName() const {
+  return m_clientServerName;
+}
+
+void XMSession::clientServerName(const std::string& i_value) {
+  m_clientServerName = i_value;
+}
+
+int XMSession::clientServerPort() const {
+  return m_clientServerPort;
+}
+
+void XMSession::clientServerPort(int i_value) {
+  m_clientServerPort = i_value;
 }
 
 ProxySettings* XMSession::proxySettings() {

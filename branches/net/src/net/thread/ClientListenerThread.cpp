@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../helpers/Log.h"
 #include "../../helpers/VExcept.h"
 
+#define XM_CLIENT_WAIT_TIMEOUT 2000
 #define XM_CLIENT_BUFFER_SIZE 1024
 #define XM_CLIENT_MAX_PACKET_SIZE_DIGITS 6 // limit the size of a command : n digits
 
@@ -40,28 +41,64 @@ int ClientListenerThread::realThreadFunction() {
   std::string v_cmd;
   unsigned int v_packetSize;
   unsigned int v_cmdStart;
+  SDLNet_SocketSet v_set;
+  int scn;
+  int n_activ;
+  bool v_onError = false;
 
-  while( (nread = SDLNet_TCP_Recv(*(m_netClient->socket()),
-			       buffer, XM_CLIENT_BUFFER_SIZE)) > 0) {
-    v_packetSize = getSubPacketSize(buffer, nread, v_cmdStart);
-    if(v_packetSize <= 0) {
-      return 1; // invalid command
-    }
-    
-    try {
-      if(nread-v_cmdStart == v_packetSize) {
-	manageClientSubPacket(((char*)buffer)+v_cmdStart, nread-v_cmdStart);
-      } else {
-	LogError("client: packet concatenation still not supported");
-	// todo : concat buffers if buffer doesn't make a full command
+  // use a set to get the timeout
+  v_set = SDLNet_AllocSocketSet(1);
+  if(!v_set) {
+    LogError("client: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
+    return 1;
+  }
+
+  scn = SDLNet_TCP_AddSocket(v_set, *(m_netClient->socket()));
+  if(scn == -1) {
+    LogError("client: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+    return 1;
+  }
+
+  /* Wait for a connection */
+  while(m_askThreadToEnd == false) {
+    n_activ = SDLNet_CheckSockets(v_set, XM_CLIENT_WAIT_TIMEOUT);
+    if(n_activ == -1) {
+      LogError("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
+      m_askThreadToEnd = true;
+      v_onError = true;
+    } else {
+      if(n_activ != 0) {
+	if(SDLNet_SocketReady(*(m_netClient->socket()))) {
+	  if( (nread = SDLNet_TCP_Recv(*(m_netClient->socket()),
+				       buffer, XM_CLIENT_BUFFER_SIZE)) > 0) {
+	    v_packetSize = getSubPacketSize(buffer, nread, v_cmdStart);
+	    if(v_packetSize <= 0) {
+	      m_askThreadToEnd = true; // invalid command
+	      v_onError = true;
+	    } else {
+    	      try {
+		if(nread-v_cmdStart == v_packetSize) {
+		  manageClientSubPacket(((char*)buffer)+v_cmdStart, nread-v_cmdStart);
+		} else {
+		  LogError("client: packet concatenation still not supported");
+		  // todo : concat buffers if buffer doesn't make a full command
+		}
+	      } catch(Exception &e) {
+		LogError("client: bad command received");
+		m_askThreadToEnd = true; // invalid command, stop the listener
+		v_onError = true;
+	      }
+	    }
+	  }
+	}
       }
-    } catch(Exception &e) {
-      LogError("client: bad command received");
-      return 1; // invalid command, stop the listener
     }
   }
 
-  return 1;
+  SDLNet_TCP_DelSocket(v_set, *(m_netClient->socket()));
+  SDLNet_FreeSocketSet(v_set);
+
+  return 0;
 }
 
 void ClientListenerThread::manageClientSubPacket(void* data, unsigned int len) {
