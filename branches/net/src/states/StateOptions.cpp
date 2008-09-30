@@ -456,6 +456,20 @@ void StateOptions::checkEvents() {
       }
   }
 
+  // server tab
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:STARTATSTARTUP_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setServerStartAtStartup(v_button->getChecked());
+  }
+
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:PORT"));
+  if(v_edit->hasChanged()) {
+    v_edit->setHasChanged(false);
+    XMSession::instance()->setServerPort(atoi(v_edit->getCaption().c_str()));
+  }
+
+  // ghosts
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:ENABLE_GHOSTS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
@@ -933,6 +947,14 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   return v_window;
 }
 
+#define GAMETEXT_SERVER _("Server")
+#define GAMETEXT_PORT _("Port")
+#define GAMETEXT_STARTATSTARTUP _("Start at startup")
+#define CONTEXTHELP_SERVER_OPTIONS _("Server configuration to play via the network")
+#define CONTEXTHELP_STARTSERVERATSTARTUP _("Start the server at X-Moto startup")
+#define CONTEXTHELP_SERVERSTARTSTOP _("Start/stop the server")
+#define CONTEXTHELP_SERVERPORT _("Port on which the server must listen to")
+
 UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   UIWindow *v_window, *v_wwwwindow;
   UIStatic* v_someText;
@@ -944,14 +966,16 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_wwwwindow->setID("WWW_TAB");
   v_wwwwindow->showWindow(false);
 
-  UITabView *v_roomsTabs = new UITabView(v_wwwwindow, 0, 0, "", v_wwwwindow->getPosition().nWidth, v_wwwwindow->getPosition().nHeight);
-  v_roomsTabs->setID("TABS");
-  v_roomsTabs->setFont(drawlib->getFontSmall());
-  v_roomsTabs->setTabContextHelp(0, CONTEXTHELP_WWW_MAIN_OPTIONS);
-  v_roomsTabs->setTabContextHelp(1, CONTEXTHELP_WWW_ROOMS_OPTIONS);
+  UITabView *v_wwwTabs = new UITabView(v_wwwwindow, 0, 0, "", v_wwwwindow->getPosition().nWidth, v_wwwwindow->getPosition().nHeight);
+  v_wwwTabs->setHideDisabledTabs(true);
+  v_wwwTabs->setID("TABS");
+  v_wwwTabs->setFont(drawlib->getFontSmall());
+  v_wwwTabs->setTabContextHelp(0, CONTEXTHELP_WWW_MAIN_OPTIONS);
+  v_wwwTabs->setTabContextHelp(1, CONTEXTHELP_WWW_ROOMS_OPTIONS);
+  v_wwwTabs->setTabContextHelp(2 + ROOMS_NB_MAX - 1, CONTEXTHELP_SERVER_OPTIONS);
 
-  v_window = new UIWindow(v_roomsTabs, 20, 30, GAMETEXT_MAIN, v_roomsTabs->getPosition().nWidth-30,
-			  v_roomsTabs->getPosition().nHeight);
+  v_window = new UIWindow(v_wwwTabs, 20, 30, GAMETEXT_MAIN, v_wwwTabs->getPosition().nWidth-30,
+			  v_wwwTabs->getPosition().nHeight);
   v_window->setID("MAIN_TAB");
 
   v_button = new UIButton(v_window, 5, 0, GAMETEXT_ENABLEWEBHIGHSCORES, (v_window->getPosition().nWidth-40), 28);
@@ -1020,8 +1044,45 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
 
 
   for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
-    v_window = makeRoomTab(v_roomsTabs, i);
+    v_window = makeRoomTab(v_wwwTabs, i);
   }
+
+  // server config
+  v_window = new UIWindow(v_wwwTabs, 20, 30, GAMETEXT_SERVER, v_wwwTabs->getPosition().nWidth-30,
+			  v_wwwTabs->getPosition().nHeight);
+  v_window->setID("SERVER_TAB");
+  v_window->showWindow(false);
+
+  v_button = new UIButton(v_window, 5, 0, GAMETEXT_STARTATSTARTUP, 200, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("STARTATSTARTUP_BUTTON");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_STARTSERVERATSTARTUP);
+
+  v_someText = new UIStatic(v_window, 5, 35, GAMETEXT_PORT + std::string(":"),
+			    200, 30);
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText->setFont(drawlib->getFontSmall()); 
+  v_edit = new UIEdit(v_window, 5, 65, "", 100, 25);
+  v_edit->setFont(drawlib->getFontSmall());
+  v_edit->setID("PORT");
+  v_edit->setContextHelp(CONTEXTHELP_SERVERPORT);
+
+  // server status
+  v_someText = new UIStatic(v_window, 0, v_window->getPosition().nHeight-30-20-20, "...",
+			    v_window->getPosition().nWidth, 30);
+  v_someText->setID("STATUS");
+  v_someText->setHAlign(UI_ALIGN_CENTER);
+  v_someText->setFont(drawlib->getFontSmall()); 
+
+  // start/stop
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth/2- 207/2,
+			  v_window->getPosition().nHeight -57 - 20 -20 - 30,
+			  "", 207, 57);
+  v_button->setType(UI_BUTTON_TYPE_LARGE);
+  v_button->setID("STARTSTOP");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_SERVERSTARTSTOP);
 
   return v_wwwwindow;
 }
@@ -1325,6 +1386,13 @@ void StateOptions::updateOptions() {
 	v_button->setChecked(v_enabled);
       }
    }
+  // server
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:STARTATSTARTUP_BUTTON"));
+  v_button->setChecked(XMSession::instance()->serverStartAtStartup());
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:PORT"));
+  std::ostringstream v_strPort;
+  v_strPort << XMSession::instance()->serverPort();
+  v_edit->setCaption(v_strPort.str());
 
   // ghosts
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:ENABLE_GHOSTS"));

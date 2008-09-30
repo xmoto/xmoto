@@ -757,6 +757,7 @@ public:
         
     m_nSelected = 0;
     m_bChanged = false;
+    m_hideDisabledTabs = false;
   }      
 
   /* Methods */
@@ -786,11 +787,15 @@ public:
   void selectChildren(unsigned int i);
   void selectChildrenById(const std::string& i_id);
 
+  void setHideDisabledTabs(bool i_value) { m_hideDisabledTabs = i_value; }
+  bool hideDisabledTabs() const { return m_hideDisabledTabs; }
+
 private:
   /* Data */
   bool m_bChanged;
   unsigned int m_nSelected;
   std::vector<std::string> m_TabContextHelp;
+  bool m_hideDisabledTabs;
 };
 
 /*===========================================================================

@@ -53,41 +53,44 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 		int v_width, v_height;
 
     FontManager* v_fm = m_drawLib->getFontSmall();
+    FontGlyph* v_fg;
     Color v_color;
 
     for(unsigned int i=0;i<getChildren().size();i++) {
-      FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
-      v_width = v_fg->realWidth();
-      v_height = v_fg->realHeight();
-      
-      v_color = getChildren()[i]->isDisabled() ? MAKE_COLOR(70,70,70,255) : MAKE_COLOR(188,186,67,255);
-      setTextSolidColor(v_color);
 
-      if(isUglyMode()) {
-	putRect(nCX-8, 0, v_width+16, 2, MAKE_COLOR(188,186,67,255));
-	putRect(nCX-8, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
-	putRect(nCX+v_width+8-2, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
-      } else {
-	putElem(nCX-8,0,-1,-1,UI_ELEM_FRAME_TL,false);        
-	putElem(nCX,0,v_width,8,UI_ELEM_FRAME_TM,false);
-	putElem(nCX+v_width,0,-1,-1,UI_ELEM_FRAME_TR,false);                
-	putElem(nCX-8,8,-1,nHeaderHeight-8,UI_ELEM_FRAME_ML,false);
-	putElem(nCX+v_width,8,-1,nHeaderHeight-8,UI_ELEM_FRAME_MR,false);
-      }
+      if(m_hideDisabledTabs == false || getChildren()[i]->isDisabled() == false) {
+	v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
+	v_width = v_fg->realWidth();
+	v_height = v_fg->realHeight();
       
-      if(i == m_nSelected) {
-	putElem(2, nHeaderHeight, nCX-8, 8, UI_ELEM_FRAME_TM, false);
-	putElem(nCX+v_width+6, nHeaderHeight, getPosition().nWidth-nCX-v_width-6-2, 8,
-		UI_ELEM_FRAME_TM, false);
-      }
-      
-      if(i != m_nSelected && isUglyMode() == false) {
-	putRect(nCX-6, 2, v_width+16-4, nHeaderHeight-2, MAKE_COLOR(40,30,30,255));
-      }
-      putTextS(nCX, nCY, getChildren()[i]->getCaption(), v_width, v_height);
+	v_color = getChildren()[i]->isDisabled() ? MAKE_COLOR(70,70,70,255) : MAKE_COLOR(188,186,67,255);
+	setTextSolidColor(v_color);
+
+	if(isUglyMode()) {
+	  putRect(nCX-8, 0, v_width+16, 2, MAKE_COLOR(188,186,67,255));
+	  putRect(nCX-8, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
+	  putRect(nCX+v_width+8-2, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
+	} else {
+	  putElem(nCX-8,0,-1,-1,UI_ELEM_FRAME_TL,false);        
+	  putElem(nCX,0,v_width,8,UI_ELEM_FRAME_TM,false);
+	  putElem(nCX+v_width,0,-1,-1,UI_ELEM_FRAME_TR,false);                
+	  putElem(nCX-8,8,-1,nHeaderHeight-8,UI_ELEM_FRAME_ML,false);
+	  putElem(nCX+v_width,8,-1,nHeaderHeight-8,UI_ELEM_FRAME_MR,false);
+	}
 	
-      nCX += v_width + 18;
-
+	if(i == m_nSelected) {
+	  putElem(2, nHeaderHeight, nCX-8, 8, UI_ELEM_FRAME_TM, false);
+	  putElem(nCX+v_width+6, nHeaderHeight, getPosition().nWidth-nCX-v_width-6-2, 8,
+		  UI_ELEM_FRAME_TM, false);
+	}
+	
+	if(i != m_nSelected && isUglyMode() == false) {
+	  putRect(nCX-6, 2, v_width+16-4, nHeaderHeight-2, MAKE_COLOR(40,30,30,255));
+	}
+	putTextS(nCX, nCY, getChildren()[i]->getCaption(), v_width, v_height);
+	
+	nCX += v_width + 18;
+      }
     }
     m_bChanged = false;
   }
@@ -136,16 +139,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Header height */
     int nHeaderHeight=24;
     int nCX = 8;
+    FontManager* v_fm = m_drawLib->getFontSmall();
+    FontGlyph* v_fg;
+    int v_width;
 
     for(unsigned int i=0;i<getChildren().size();i++) {
-      if(getChildren()[i]->isDisabled() == false) {
-	FontManager* v_fm = m_drawLib->getFontSmall();
-	FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
-	int v_width = v_fg->realWidth();
+
+      if(m_hideDisabledTabs == false || getChildren()[i]->isDisabled() == false) {
+	v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
+	v_width = v_fg->realWidth();
 	
-	if(x >= nCX-8 && y >= -4 && x < nCX+8+v_width && y < nHeaderHeight) {
-	  selectChildren(i);
-	  break;
+	if(getChildren()[i]->isDisabled() == false) {
+	  if(x >= nCX-8 && y >= -4 && x < nCX+8+v_width && y < nHeaderHeight) {
+	    selectChildren(i);
+	    break;
+	  }
 	}
 	nCX += v_width + 18;
       }
@@ -163,18 +171,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Oh... cursor inside a tab-button? */
     int nHeaderHeight=24;
     int nCX = 8;
+    FontManager* v_fm = m_drawLib->getFontSmall();
+    FontGlyph* v_fg;
+    int v_width;
 
     for(unsigned int i=0;i<getChildren().size();i++) {
-      if(getChildren()[i]->isDisabled() == false) {
-	FontManager* v_fm = m_drawLib->getFontSmall();
-	FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
-	int v_width = v_fg->realWidth();
+
+      if(m_hideDisabledTabs == false || getChildren()[i]->isDisabled() == false) {
+	v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
+	v_width = v_fg->realWidth();
 	
-	if(x >= nCX-8 && y >= -4 && x < nCX+16+v_width && y < nHeaderHeight) {
-	  /* This one! */
-	  if(i < m_TabContextHelp.size())
-	    return m_TabContextHelp[i];
-	  return "";
+	if(getChildren()[i]->isDisabled() == false) {
+	  if(x >= nCX-8 && y >= -4 && x < nCX+16+v_width && y < nHeaderHeight) {
+	    /* This one! */
+	    if(i < m_TabContextHelp.size())
+	      return m_TabContextHelp[i];
+	    return "";
+	  }
 	}
 	nCX += v_width + 18;
       }

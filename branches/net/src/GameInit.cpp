@@ -231,7 +231,10 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     Sound::init(XMSession::instance());
   }
 
-  initNetwork();
+  // no command line need the network for the moment
+  if(v_useGraphics) {
+    initNetwork();
+  }
 
   /* Init renderer */
   if(v_useGraphics) {
