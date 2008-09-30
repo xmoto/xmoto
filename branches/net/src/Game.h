@@ -48,7 +48,6 @@ class UITabView;
 class UIButton;
 class UIFrame;
 class UIStatic;
-class ServerThread;
 
 /*===========================================================================
   Game application
@@ -266,8 +265,6 @@ private:
   bool m_hasMouseFocus;
   bool m_hasKeyboardFocus;
   bool m_isIconified;
-
-  ServerThread* m_serverThread;
 };
 
 #endif

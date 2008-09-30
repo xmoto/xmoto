@@ -56,7 +56,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "UserConfig.h"
 #include "Renderer.h"
-#include "net/thread/ServerThread.h"
+#include "net/NetServer.h"
 #include "net/NetClient.h"
 #include <SDL_net.h>
 
@@ -168,8 +168,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   LogInfo("User directory: %s", FS::getUserDir().c_str());
   LogInfo("Data directory: %s", FS::getDataDir().c_str());
 
-  initNetwork();
-
   if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos()) {
     v_useGraphics = false;
   }
@@ -232,6 +230,8 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(v_useGraphics) {
     Sound::init(XMSession::instance());
   }
+
+  initNetwork();
 
   /* Init renderer */
   if(v_useGraphics) {
@@ -653,9 +653,8 @@ void GameApp::initNetwork() {
   }
 
   // start server
-  if(XMSession::instance()->serverStartAtStartup() || true) {
-    m_serverThread = new ServerThread();
-    m_serverThread->startThread();
+  if(XMSession::instance()->serverStartAtStartup()) {
+    NetServer::instance()->start();
   }
 
   // start client
@@ -674,14 +673,10 @@ void GameApp::uninitNetwork() {
   }
   NetClient::destroy();
 
-  // stop the server
-  if(m_serverThread != NULL) {
-    if(m_serverThread->isThreadRunning()) {
-      m_serverThread->askThreadToEnd();
-      m_serverThread->waitForThreadEnd();
-    }
-    delete m_serverThread;
+  if(NetServer::instance()->isStarted()) {
+    NetServer::instance()->stop();
   }
+  NetServer::destroy();
 
   SDLNet_Quit();
 }

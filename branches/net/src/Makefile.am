@@ -269,6 +269,8 @@ thread_SOURCES = thread/XMThread.h                 \
 		 net/thread/ClientListenerThread.h       \
 		 net/NetClient.cpp             \
 		 net/NetClient.h               \
+		 net/NetServer.cpp             \
+		 net/NetServer.h               \
 		 net/helpers/Net.cpp             \
 		 net/helpers/Net.h \
 		 net/NetActions.h  \

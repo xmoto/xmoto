@@ -113,7 +113,7 @@ int ServerThread::realThreadFunction() {
 	      	manageClient(i, buffer, nread);
 	      	i++;
 	      } else {
-	      	LogInfo("Host disconnected: %s:%d",
+	      	LogInfo("server: host disconnected: %s:%d",
 	      		XMNet::getIp(m_clients[i]->remoteIP()).c_str(),
 	      		SDLNet_Read16(&(m_clients[i]->remoteIP())->port));
 	      	removeClient(i);
@@ -197,7 +197,7 @@ void ServerThread::acceptClient(TCPsocket* sd) {
   }
 
   /* Print the address, converting in the host format */
-  LogInfo("Host connected: %s:%d",
+  LogInfo("server: host connected: %s:%d",
 	  XMNet::getIp(remoteIP).c_str(), SDLNet_Read16(&remoteIP->port));
 
   scn = SDLNet_TCP_AddSocket(m_set, csd);
