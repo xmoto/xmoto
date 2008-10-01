@@ -468,6 +468,14 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_ZOOMINIT 	      _("Reinitialize zoom")
 #define GAMETEXT_ZOOMOUT 	      _("Zoom out")
 
+#define GAMETEXT_SERVER _("Server")
+#define GAMETEXT_PORT _("Port")
+#define GAMETEXT_STARTATSTARTUP _("Launch at startup")
+#define GAMETEXT_SERVERSTART _("Start the server")
+#define GAMETEXT_SERVERSTOP _("Stop the server")
+#define GAMETEXT_SERVERSTATUSON _("Server is currently started")
+#define GAMETEXT_SERVERSTATUSOFF _("Server is currently stopped")
+
 /* Context help strings */
 #define CONTEXTHELP_UPDATEHIGHSCORES _("Download the latest X-Moto world records and check for new levels")
 #define CONTEXTHELP_PROXYCONFIG _("Configure how you are connected to the Internet")
@@ -649,6 +657,11 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_QREALLYNICE   _("Several textures, sprites, ...")
 #define CONTEXTHELP_SENDTHISREPORT  _("Send this report on the webserver")
 #define CONTEXTHELP_SKIPTHISREPORT  _("Don't send this report on the webserver")
+
+#define CONTEXTHELP_SERVER_OPTIONS _("Server configuration to play via the network")
+#define CONTEXTHELP_STARTSERVERATSTARTUP _("Start the server at X-Moto startup")
+#define CONTEXTHELP_SERVERSTARTSTOP _("Start/stop the server")
+#define CONTEXTHELP_SERVERPORT _("Port on which the server must listen to")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

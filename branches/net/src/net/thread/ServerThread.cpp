@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Net.h"
 #include "../../XMSession.h"
 
-#define XM_SERVER_WAIT_TIMEOUT 2000
+#define XM_SERVER_WAIT_TIMEOUT 1000
 #define XM_SERVER_NB_SOCKETS_MAX 128
 #define XM_SERVER_CLIENT_BUFFER_SIZE 1024
 

@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "NetServer.h"
 #include "thread/ServerThread.h"
+#include "../states/StateManager.h"
 
 NetServer::NetServer() {
     m_isStarted = false;
@@ -33,6 +34,7 @@ void NetServer::start() {
   m_serverThread = new ServerThread();
   m_serverThread->startThread();
   m_isStarted = true;
+  StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
 }
 
 void NetServer::stop() {
@@ -44,8 +46,15 @@ void NetServer::stop() {
   m_serverThread = NULL;
 
   m_isStarted = false;
+  StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
 }
 
 bool NetServer::isStarted() {
+  // check that the server has not finished
+  if(m_isStarted) {
+    if(m_serverThread->isThreadRunning() == false) {
+      stop();
+    }
+  }
   return m_isStarted;
 }

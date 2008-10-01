@@ -38,6 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/CmdArgumentParser.h"
 #include "StateMessageBox.h"
 #include "../SysMessage.h"
+#include "../net/NetServer.h"
 #include <sstream>
 
 /* static members */
@@ -55,6 +56,7 @@ StateOptions::StateOptions(bool drawStateBehind, bool updateStatesBehind):
   StateManager::instance()->registerAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->registerAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->registerAsObserver("REQUESTKEY", this);
+  StateManager::instance()->registerAsObserver("SERVER_STATUS_CHANGED", this);
 }
 
 StateOptions::~StateOptions() {
@@ -65,6 +67,7 @@ StateOptions::~StateOptions() {
   StateManager::instance()->unregisterAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->unregisterAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("REQUESTKEY", this);
+  StateManager::instance()->unregisterAsObserver("SERVER_STATUS_CHANGED", this);
 }
 
 void StateOptions::enter()
@@ -73,6 +76,7 @@ void StateOptions::enter()
   m_GUI = m_sGUI;
 
   updateOptions();
+  updateServerStrings();
   updateJoysticksStrings();
 }
 
@@ -464,9 +468,37 @@ void StateOptions::checkEvents() {
   }
 
   v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:PORT"));
-  if(v_edit->hasChanged()) {
-    v_edit->setHasChanged(false);
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:DEFAULT_PORT"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setServerPort(DEFAULT_SERVERPORT);
+    v_edit->enableWindow(false);
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:CUSTOM_PORT"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
     XMSession::instance()->setServerPort(atoi(v_edit->getCaption().c_str()));
+    v_edit->enableWindow(true);
+  }
+
+  if(v_edit->isDisabled() == false) {
+    if(v_edit->hasChanged() && v_button->getChecked()) {
+      v_edit->setHasChanged(false);
+      XMSession::instance()->setServerPort(atoi(v_edit->getCaption().c_str()));
+    }
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:STARTSTOP"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    if(NetServer::instance()->isStarted()) {
+      NetServer::instance()->stop();
+    } else {
+      NetServer::instance()->start();
+    }
   }
 
   // ghosts
@@ -947,14 +979,6 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   return v_window;
 }
 
-#define GAMETEXT_SERVER _("Server")
-#define GAMETEXT_PORT _("Port")
-#define GAMETEXT_STARTATSTARTUP _("Start at startup")
-#define CONTEXTHELP_SERVER_OPTIONS _("Server configuration to play via the network")
-#define CONTEXTHELP_STARTSERVERATSTARTUP _("Start the server at X-Moto startup")
-#define CONTEXTHELP_SERVERSTARTSTOP _("Start/stop the server")
-#define CONTEXTHELP_SERVERPORT _("Port on which the server must listen to")
-
 UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   UIWindow *v_window, *v_wwwwindow;
   UIStatic* v_someText;
@@ -1059,11 +1083,27 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_STARTSERVERATSTARTUP);
 
-  v_someText = new UIStatic(v_window, 5, 35, GAMETEXT_PORT + std::string(":"),
+  // port
+  v_someText = new UIStatic(v_window, 5, 30, GAMETEXT_PORT + std::string(":"),
 			    200, 30);
   v_someText->setHAlign(UI_ALIGN_LEFT);
   v_someText->setFont(drawlib->getFontSmall()); 
-  v_edit = new UIEdit(v_window, 5, 65, "", 100, 25);
+
+  v_button = new UIButton(v_window, 20, 60, "Default port", 200, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setGroup(501);
+  v_button->setID("DEFAULT_PORT");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_SERVERPORT);
+
+  v_button = new UIButton(v_window, 20, 90, "Custom port", 200, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setGroup(501);
+  v_button->setID("CUSTOM_PORT");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_SERVERPORT);
+
+  v_edit = new UIEdit(v_window, 20+35, 120, "", 100, 25);
   v_edit->setFont(drawlib->getFontSmall());
   v_edit->setID("PORT");
   v_edit->setContextHelp(CONTEXTHELP_SERVERPORT);
@@ -1085,6 +1125,19 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_button->setContextHelp(CONTEXTHELP_SERVERSTARTSTOP);
 
   return v_wwwwindow;
+}
+
+void StateOptions::updateServerStrings() {
+  UIStatic* v_someText;
+  UIButton* v_button;
+
+  v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:STATUS"));
+  v_someText->setCaption(NetServer::instance()->isStarted() ?
+			GAMETEXT_SERVERSTATUSON : GAMETEXT_SERVERSTATUSOFF);
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:STARTSTOP"));
+  v_button->setCaption(NetServer::instance()->isStarted() ?
+		       GAMETEXT_SERVERSTOP : GAMETEXT_SERVERSTART);
 }
 
 UIWindow* StateOptions::makeWindowOptions_ghosts(UIWindow* i_parent) {
@@ -1389,7 +1442,12 @@ void StateOptions::updateOptions() {
   // server
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:STARTATSTARTUP_BUTTON"));
   v_button->setChecked(XMSession::instance()->serverStartAtStartup());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:DEFAULT_PORT"));
+  v_button->setChecked(XMSession::instance()->serverPort() == DEFAULT_SERVERPORT);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:CUSTOM_PORT"));
+  v_button->setChecked(XMSession::instance()->serverPort() != DEFAULT_SERVERPORT);
   v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:PORT"));
+  v_edit->enableWindow(XMSession::instance()->serverPort() != DEFAULT_SERVERPORT);
   std::ostringstream v_strPort;
   v_strPort << XMSession::instance()->serverPort();
   v_edit->setCaption(v_strPort.str());
@@ -1870,6 +1928,10 @@ void StateOptions::executeOneCommand(std::string cmd, std::string args) {
 
   else if(cmd == "ENABLEAUDIO_CHANGED") {
     updateAudioOptions();
+  }
+
+  else if(cmd == "SERVER_STATUS_CHANGED") {
+    updateServerStrings();
   }
 
 }
