@@ -555,7 +555,7 @@ void GameApp::displayCursor(bool display)
     m_PlaySpecificLevelFile = i_leveFile;
   }
 
-void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
+void GameApp::addGhosts(Scene* i_motogame, Theme* i_theme) {
   std::string v_replay_MYBEST;
   std::string v_replay_THEBEST;
   std::string v_replay_BESTOFROOM[ROOMS_NB_MAX];

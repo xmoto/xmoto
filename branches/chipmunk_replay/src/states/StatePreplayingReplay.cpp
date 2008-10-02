@@ -50,6 +50,7 @@ StatePreplayingReplay::~StatePreplayingReplay() {
 }
 
 void StatePreplayingReplay::initUniverse() {
+  // one player, no multi scenes.
   m_universe->initPlay(1, false);
 }
 

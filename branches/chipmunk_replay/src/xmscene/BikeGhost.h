@@ -25,10 +25,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class Ghost : public Biker {
  public:
-  Ghost(std::string i_replayFile, bool i_isActiv, Theme *i_theme,
-	BikerTheme* i_bikerTheme,
+  Ghost(Scene* pScene, std::string i_replayFile, bool i_isActiv,
+	Theme* i_theme,	BikerTheme* i_bikerTheme,
 	const TColor& i_colorFilter,
-	const TColor& i_uglyColorFilter);
+	const TColor& i_uglyColorFilter,
+	bool mainReplay=false);
   ~Ghost();
 
   std::string playerName();

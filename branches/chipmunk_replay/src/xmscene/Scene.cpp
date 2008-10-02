@@ -43,7 +43,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ChipmunkWorld.h"
 #include "helpers/Random.h"
 
-  MotoGame::MotoGame() {
+  Scene::Scene() {
     m_bDeathAnimEnabled=true;
     m_lastCallToEveryHundreath = 0;
 
@@ -71,12 +71,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_maxGhostId = 0;
   }
   
-  MotoGame::~MotoGame() {
+  Scene::~Scene() {
     cleanPlayers();
     cleanGhosts();
   }
 
-  void MotoGame::loadLevel(xmDatabase *i_db, const std::string& i_id_level) {
+  void Scene::loadLevel(xmDatabase *i_db, const std::string& i_id_level) {
     char **v_result;
     unsigned int nrow;
 
@@ -100,14 +100,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
 
-void MotoGame::cleanGhosts() {
+void Scene::cleanGhosts() {
   for(unsigned int i=0; i<m_ghosts.size(); i++) {
     delete m_ghosts[i];
   }
   m_ghosts.clear();
 }
 
-void MotoGame::cleanPlayers() {
+void Scene::cleanPlayers() {
   for(unsigned int i=0; i<m_players.size(); i++) {
     if(m_players[i]->getOnBikerHooks() != NULL) {
       delete m_players[i]->getOnBikerHooks();
@@ -117,26 +117,26 @@ void MotoGame::cleanPlayers() {
   m_players.clear();
 }
 
-  void MotoGame::setHooks(MotoGameHooks *i_motoGameHooks) {
+  void Scene::setHooks(MotoGameHooks *i_motoGameHooks) {
     m_motoGameHooks = i_motoGameHooks;
   }
 
   /*===========================================================================
     Teleporting
     ===========================================================================*/
-  void MotoGame::setPlayerPosition(int i_player, float x,float y,bool bFaceRight) {
+  void Scene::setPlayerPosition(int i_player, float x,float y,bool bFaceRight) {
     /* Going to teleport? Do it now, before we tinker to much with the state */
     if(m_players[i_player]->isDead() == false) {
       m_players[i_player]->initToPosition(Vector2f(x,y), bFaceRight?DD_RIGHT:DD_LEFT, m_PhysGravity);
     }
   }
   
-  const Vector2f &MotoGame::getPlayerPosition(int i_player) {
+  const Vector2f &Scene::getPlayerPosition(int i_player) {
     return m_players[i_player]->getState()->CenterP;
     throw Exception("Invalid player number");
   }
   
-  bool MotoGame::getPlayerFaceDir(int i_player) {
+  bool Scene::getPlayerFaceDir(int i_player) {
     return m_players[i_player]->getState()->Dir == DD_RIGHT;
     throw Exception("Invalid player number");
   }
@@ -144,7 +144,7 @@ void MotoGame::cleanPlayers() {
   /*===========================================================================
     Add game message
     ===========================================================================*/
-  void MotoGame::gameMessage(std::string Text, bool bOnce, int duration) {
+  void Scene::gameMessage(std::string Text, bool bOnce, int duration) {
     /* "unique"? */
     GameMessage *pMsg = NULL;
     
@@ -202,7 +202,7 @@ void MotoGame::cleanPlayers() {
     updateGameMessages();
   }
 
-  void MotoGame::clearGameMessages(void) {
+  void Scene::clearGameMessages(void) {
     for(unsigned int i=0 ;i<m_GameMessages.size() ;i++)
       m_GameMessages[i]->removeTime=0;
   }
@@ -210,7 +210,7 @@ void MotoGame::cleanPlayers() {
   /*===========================================================================
     Update game
     ===========================================================================*/
-  void MotoGame::updateLevel(int timeStep, Replay *i_recordedReplay) {
+  void Scene::updateLevel(int timeStep, Replay *i_recordedReplay) {
     float v_diff;
 
     if(m_is_paused)
@@ -314,7 +314,7 @@ void MotoGame::cleanPlayers() {
     m_DelSchedule.clear();
   }
 
-  void MotoGame::executeEvents() {
+  void Scene::executeEvents() {
     // events will be removed when serialized
     MotoGameEvent* pEvent;
     unsigned int numPendingEvents = getNumPendingGameEvents();
@@ -325,7 +325,7 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  void MotoGame::updateGameMessages() {
+  void Scene::updateGameMessages() {
     /* Handle game messages (keep them in place) */
     int i=0;
     while(1) {
@@ -361,8 +361,7 @@ void MotoGame::cleanPlayers() {
   /*===========================================================================
     Prepare the specified level for playing through this game object
     ===========================================================================*/
-  void MotoGame::prePlayLevel(Replay *recordingReplay,
-			      bool i_playEvents) {
+  void Scene::prePlayLevel(bool i_playEvents) {
     m_playEvents = i_playEvents;
     /* load the level if not */
     if(m_pLevelSrc->isFullyLoaded() == false) {
@@ -472,24 +471,24 @@ void MotoGame::cleanPlayers() {
     /* execute events */
     m_lastStateSerializationTime = -100;
     if(m_playEvents) {
-      executeEvents(recordingReplay);
+      executeEvents();
     }
   }
 
-  ReplayBiker* MotoGame::addReplayFromFile(std::string i_ghostFile,
-					   Theme *i_theme, BikerTheme* i_bikerTheme,
-					   bool i_enableEngineSound) {
+  ReplayBiker* Scene::addReplayFromFile(std::string i_ghostFile,
+					Theme *i_theme, BikerTheme* i_bikerTheme,
+					bool i_enableEngineSound) {
     ReplayBiker* v_biker = NULL;
-    v_biker = new ReplayBiker(i_ghostFile, i_theme, i_bikerTheme);
+    v_biker = new ReplayBiker(this, i_ghostFile, i_theme, i_bikerTheme);
     v_biker->setPlaySound(i_enableEngineSound);
     m_players.push_back(v_biker);
     return v_biker;
   }
 
-  Ghost* MotoGame::addGhostFromFile(std::string i_ghostFile, std::string i_info,
-				    Theme *i_theme, BikerTheme* i_bikerTheme,
-				    const TColor& i_filterColor,
-				    const TColor& i_filterUglyColor) {
+  Ghost* Scene::addGhostFromFile(std::string i_ghostFile, std::string i_info,
+				 Theme *i_theme, BikerTheme* i_bikerTheme,
+				 const TColor& i_filterColor,
+				 const TColor& i_filterUglyColor) {
     Ghost* v_ghost = NULL;
 
     /* the level must be set to add a ghost */
@@ -497,7 +496,7 @@ void MotoGame::cleanPlayers() {
       throw Exception("No level defined");
     }
 
-    v_ghost = new Ghost(i_ghostFile, false, i_theme, i_bikerTheme,
+    v_ghost = new Ghost(this, i_ghostFile, false, i_theme, i_bikerTheme,
 			i_filterColor, i_filterUglyColor);
     v_ghost->setPlaySound(false);
     v_ghost->setInfo(i_info);
@@ -506,15 +505,15 @@ void MotoGame::cleanPlayers() {
     return v_ghost;
   }
 
-  std::vector<Ghost*>& MotoGame::Ghosts() {
+  std::vector<Ghost*>& Scene::Ghosts() {
     return m_ghosts;
   }
 
-  std::vector<Biker*>& MotoGame::Players() {
+  std::vector<Biker*>& Scene::Players() {
     return m_players;
   }
 
-  void MotoGame::playLevel() {
+  void Scene::playLevel() {
   /* Invoke the OnLoad() script function */
     if(m_playEvents) {
       bool bOnLoadSuccess = m_luaGame->scriptCallBool("OnLoad", true);
@@ -530,7 +529,7 @@ void MotoGame::cleanPlayers() {
   /*===========================================================================
     Free this game object
     ===========================================================================*/
-  void MotoGame::endLevel(void) {
+  void Scene::endLevel(void) {
     /* If not already freed */
     if(m_pLevelSrc != NULL) {
       /* Clean up */
@@ -570,7 +569,7 @@ void MotoGame::cleanPlayers() {
   /*===========================================================================
     Level generation (i.e. parsing of level source)
     ===========================================================================*/
-  void MotoGame::_GenerateLevel(void) {
+  void Scene::_GenerateLevel(void) {
     if(m_pLevelSrc == NULL) {
       LogWarning("Can't generate level when no source is assigned!");
       return;
@@ -644,7 +643,7 @@ void MotoGame::cleanPlayers() {
   }
 
 
-  bool MotoGame::touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity) {
+  bool Scene::touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity) {
     Vector2f res1, res2;
 
     if(pBike.Dir == DD_RIGHT) {
@@ -720,7 +719,7 @@ void MotoGame::cleanPlayers() {
   /*===========================================================================
     Update zone specific stuff -- call scripts where needed
     ===========================================================================*/
-  void MotoGame::_UpdateZones(void) {
+  void Scene::_UpdateZones(void) {
     /* Check player touching for each zone */
     for(unsigned int i=0;i<m_pLevelSrc->Zones().size();i++) {
       Zone *pZone = m_pLevelSrc->Zones()[i];
@@ -750,7 +749,7 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  void MotoGame::_UpdateEntities(void) {
+  void Scene::_UpdateEntities(void) {
     for(unsigned int j=0; j<m_players.size(); j++) {
       Biker* v_player = m_players[j];
 
@@ -834,14 +833,14 @@ void MotoGame::cleanPlayers() {
   /*===========================================================================
     Entity stuff (public)
     ===========================================================================*/
-  void MotoGame::deleteEntity(Entity *pEntity) {
+  void Scene::deleteEntity(Entity *pEntity) {
     /* Already scheduled for deletion? */
     for(unsigned int i=0; i<m_DelSchedule.size(); i++)
       if(m_DelSchedule[i] == pEntity) return;
     m_DelSchedule.push_back(pEntity);
   }
   
-  void MotoGame::touchEntity(int i_player, Entity *pEntity,bool bHead) {
+  void Scene::touchEntity(int i_player, Entity *pEntity,bool bHead) {
     /* Start by invoking scripts if any */
     if(m_playEvents) {
       m_luaGame->scriptCallTblVoid(pEntity->Id(), "Touch");
@@ -864,15 +863,15 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  void MotoGame::createGameEvent(MotoGameEvent *p_event) {
+  void Scene::createGameEvent(MotoGameEvent *p_event) {
     m_GameEventQueue.push(p_event);
   }
   
-  void MotoGame::destroyGameEvent(MotoGameEvent *p_event) {
+  void Scene::destroyGameEvent(MotoGameEvent *p_event) {
     delete p_event;
   }
 
-  MotoGameEvent* MotoGame::getNextGameEvent() {
+  MotoGameEvent* Scene::getNextGameEvent() {
     /* Anything in queue? */
     if(getNumPendingGameEvents() > 0) {
       MotoGameEvent *v_event = m_GameEventQueue.front();
@@ -884,11 +883,11 @@ void MotoGame::cleanPlayers() {
     return NULL;
   }
 
-  int MotoGame::getNumPendingGameEvents(void) {
+  int Scene::getNumPendingGameEvents(void) {
     return m_GameEventQueue.size();
   }
 
-  void MotoGame::cleanEventsQueue() {
+  void Scene::cleanEventsQueue() {
     MotoGameEvent *v_event;
 
     while(m_GameEventQueue.empty() == false) {
@@ -898,7 +897,7 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  void MotoGame::handleEvent(MotoGameEvent *pEvent) {     
+  void Scene::handleEvent(MotoGameEvent *pEvent) {     
     switch(pEvent->getType()) {
       case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
       case GAME_EVENT_PLAYERS_TOUCHE_ENTITY:
@@ -910,11 +909,11 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  void MotoGame::SetEntityPos(std::string pEntityID, float pX, float pY) {
+  void Scene::SetEntityPos(std::string pEntityID, float pX, float pY) {
     SetEntityPos(m_pLevelSrc->getEntityById(pEntityID), pX, pY);
   }
 
-  void MotoGame::SetEntityPos(Entity *pEntity, float pX, float pY) {
+  void Scene::SetEntityPos(Entity *pEntity, float pX, float pY) {
     pEntity->setDynamicPosition(Vector2f(pX, pY));
     // move it in the collision system only if it's not dead
     if(pEntity->isAlive() == true){
@@ -922,12 +921,12 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-void MotoGame::translateEntity(std::string pEntityID, float x, float y)
+void Scene::translateEntity(std::string pEntityID, float x, float y)
 {
   translateEntity(m_pLevelSrc->getEntityById(pEntityID), x, y);
 }
 
-void MotoGame::translateEntity(Entity* pEntity, float x, float y)
+void Scene::translateEntity(Entity* pEntity, float x, float y)
 {
   pEntity->translate(x, y);
   if(pEntity->isAlive() == true){
@@ -935,39 +934,39 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
   }
 }
 
-  void MotoGame::PlaceInGameArrow(float pX, float pY, float pAngle) {
+  void Scene::PlaceInGameArrow(float pX, float pY, float pAngle) {
     getArrowPointer().nArrowPointerMode = 1;
     getArrowPointer().ArrowPointerPos = Vector2f(pX, pY);
     getArrowPointer().fArrowPointerAngle = pAngle;
   }
 
-  void MotoGame::PlaceScreenArrow(float pX, float pY, float pAngle) {
+  void Scene::PlaceScreenArrow(float pX, float pY, float pAngle) {
     getArrowPointer().nArrowPointerMode = 2;
     getArrowPointer().ArrowPointerPos = Vector2f(pX, pY);
     getArrowPointer().fArrowPointerAngle = pAngle;
   }
 
-  void MotoGame::HideArrow() {
+  void Scene::HideArrow() {
     getArrowPointer().nArrowPointerMode = 0;
   }
 
-  void MotoGame::MoveBlock(std::string pBlockID, float pX, float pY) {
+  void Scene::MoveBlock(std::string pBlockID, float pX, float pY) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
     MoveBlock(v_block, pX, pY);
   }
   
-  void MotoGame::MoveBlock(Block* pBlock, float pX, float pY) {
+  void Scene::MoveBlock(Block* pBlock, float pX, float pY) {
     pBlock->translate(pX, pY);
     m_Collision.moveDynBlock(pBlock);
   }
   
-  void MotoGame::SetBlockPos(std::string pBlockID, float pX, float pY) {
+  void Scene::SetBlockPos(std::string pBlockID, float pX, float pY) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
     v_block->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
     m_Collision.moveDynBlock(v_block);
   }
   
-  void MotoGame::SetPhysicsBlockPos(std::string pBlockID, float pX, float pY) {
+  void Scene::SetPhysicsBlockPos(std::string pBlockID, float pX, float pY) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
     v_block->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
     if (v_block->isPhysics()) {
@@ -978,29 +977,29 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     m_Collision.moveDynBlock(v_block);
   }
   
-  void MotoGame::SetBlockCenter(std::string pBlockID, float pX, float pY) {
+  void Scene::SetBlockCenter(std::string pBlockID, float pX, float pY) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
     v_block->setCenter(Vector2f(pX, pY));
     m_Collision.moveDynBlock(v_block);
   }
   
-  void MotoGame::SetBlockRotation(std::string pBlockID, float pAngle) {
+  void Scene::SetBlockRotation(std::string pBlockID, float pAngle) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
     SetBlockRotation(v_block, pAngle);
   }     
   
-  void MotoGame::SetBlockRotation(Block* pBlock, float pAngle) {
+  void Scene::SetBlockRotation(Block* pBlock, float pAngle) {
     if(pBlock->setDynamicRotation(pAngle) == true)
       m_Collision.moveDynBlock(pBlock);
   }     
   
-  void MotoGame::SetEntityDrawAngle(std::string pEntityID, float pAngle) {
+  void Scene::SetEntityDrawAngle(std::string pEntityID, float pAngle) {
     Entity *v_entity;
     v_entity = getLevelSrc()->getEntityById(pEntityID);
     v_entity->setDrawAngle(pAngle);
   }
 
-  void MotoGame::DisplayDiffFromGhost() {
+  void Scene::DisplayDiffFromGhost() {
     if(m_ghosts.size() > 0) {
       float v_diffToGhost;
 
@@ -1018,14 +1017,14 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     }
   }
   
-  void MotoGame::cleanScriptDynamicObjects() {
+  void Scene::cleanScriptDynamicObjects() {
     for(unsigned int i=0; i<m_SDynamicObjects.size(); i++) {
       delete m_SDynamicObjects[i];
     }
     m_SDynamicObjects.clear();
   }
 
-  void MotoGame::nextStateScriptDynamicObjects(int i_nbCents) {
+  void Scene::nextStateScriptDynamicObjects(int i_nbCents) {
     unsigned int i = 0;
 
     while(i < m_SDynamicObjects.size()) {
@@ -1038,7 +1037,7 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     }
   }
 
-  void MotoGame::removeSDynamicOfObject(std::string pObject) {
+  void Scene::removeSDynamicOfObject(std::string pObject) {
     unsigned int i = 0;
 
     while(i < m_SDynamicObjects.size()) {
@@ -1051,25 +1050,25 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     }
   }
 
-  void MotoGame::CameraZoom(float pZoom) {
+  void Scene::CameraZoom(float pZoom) {
     getCamera()->desactiveActionZoom();
     getCamera()->setRelativeZoom(pZoom);
   }
    
-  void MotoGame::CameraMove(float p_x, float p_y) {
+  void Scene::CameraMove(float p_x, float p_y) {
     getCamera()->desactiveActionZoom();
     getCamera()->moveCamera(p_x, p_y);
   }
 
-  void MotoGame::CameraRotate(float i_angle) {
+  void Scene::CameraRotate(float i_angle) {
     getCamera()->setDesiredRotationAngle(i_angle);
   }
    
-  void MotoGame::CameraAdaptToGravity() {
+  void Scene::CameraAdaptToGravity() {
     getCamera()->adaptRotationAngleToGravity(m_PhysGravity);
   }
 
-  void MotoGame::killPlayer(int i_player) {
+  void Scene::killPlayer(int i_player) {
     if(m_players[i_player]->isDead() == false && m_players[i_player]->isFinished() == false) {
       m_players[i_player]->setDead(true, getTime());
 
@@ -1087,29 +1086,29 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     }
   }
 
-  void MotoGame::addForceToPlayer(int i_player, const Vector2f& i_force, int i_startTime, int i_endTime) {
+  void Scene::addForceToPlayer(int i_player, const Vector2f& i_force, int i_startTime, int i_endTime) {
     m_players[i_player]->addBodyForce(m_time, i_force, i_startTime, i_endTime);
  }
 
-  void MotoGame::playerEntersZone(int i_player, Zone *pZone) {
+  void Scene::playerEntersZone(int i_player, Zone *pZone) {
     if(m_playEvents) {
       m_luaGame->scriptCallTblVoid(pZone->Id(), "OnEnter");
       m_luaGame->scriptCallTblVoid(pZone->Id(), "OnEnterBy", i_player);
     }
   }
   
-  void MotoGame::playerLeavesZone(int i_player, Zone *pZone) {
+  void Scene::playerLeavesZone(int i_player, Zone *pZone) {
     if(m_playEvents) {
       m_luaGame->scriptCallTblVoid(pZone->Id(), "OnLeave");
       m_luaGame->scriptCallTblVoid(pZone->Id(), "OnLeaveBy", i_player);
     }
   }
 
-  void MotoGame::playerTouchesEntity(int i_player, std::string p_entityID, bool p_bTouchedWithHead) {
+  void Scene::playerTouchesEntity(int i_player, std::string p_entityID, bool p_bTouchedWithHead) {
     touchEntity(i_player, getLevelSrc()->getEntityById(p_entityID), p_bTouchedWithHead);
   }
 
-  void MotoGame::entityDestroyed(const std::string& i_entityId) {
+  void Scene::entityDestroyed(const std::string& i_entityId) {
     Entity *v_entity;
     v_entity = getLevelSrc()->getEntityById(i_entityId);
 
@@ -1143,11 +1142,11 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     deleteEntity(v_entity);
   }
 
-  void MotoGame::addDynamicObject(SDynamicObject *p_obj) {
+  void Scene::addDynamicObject(SDynamicObject *p_obj) {
     m_SDynamicObjects.push_back(p_obj);
   }
 
-  void MotoGame::createKillEntityEvent(std::string p_entityID) {
+  void Scene::createKillEntityEvent(std::string p_entityID) {
     Entity *v_entity;
     v_entity = m_pLevelSrc->getEntityById(p_entityID);
     createGameEvent(new MGE_EntityDestroyed(getTime(),
@@ -1157,23 +1156,23 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
                                             v_entity->Size()));
   }
 
-  unsigned int MotoGame::getNbRemainingStrawberries() {
+  unsigned int Scene::getNbRemainingStrawberries() {
     return m_pLevelSrc->countToTakeEntities();
   }
 
-  void MotoGame::makePlayerWin(int i_player) {
+  void Scene::makePlayerWin(int i_player) {
     if(m_players[i_player]->isDead() == false && m_players[i_player]->isFinished() == false) {
       m_players[i_player]->setFinished(true, getTime());
     }
   }
 
-  void MotoGame::addPenalityTime(int i_time) {
+  void Scene::addPenalityTime(int i_time) {
     if(i_time > 0) {
       m_time += i_time;
     }
   }
 
-  void MotoGame::_KillEntity(Entity *pEnt) {
+  void Scene::_KillEntity(Entity *pEnt) {
     getLevelSrc()->killEntity(pEnt->Id());
     /* now that rendering use the space partionnement,
        we have to remove entity from the collision system */
@@ -1194,7 +1193,7 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
   }
 
 
-  PlayerBiker* MotoGame::addPlayerBiker(Vector2f i_position, DriveDir i_direction,
+  PlayerBiker* Scene::addPlayerBiker(Vector2f i_position, DriveDir i_direction,
 					Theme *i_theme, BikerTheme* i_bikerTheme,
 					const TColor& i_filterColor,
 					const TColor& i_filterUglyColor,
@@ -1213,7 +1212,7 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     return v_playerBiker;
   }
 
-  void MotoGame::setGravity(float x,float y) {
+  void Scene::setGravity(float x,float y) {
     m_PhysGravity.x=x;
     m_PhysGravity.y=y;
 
@@ -1231,22 +1230,22 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     //m_renderer->adaptRotationAngleToGravity();
   }
 
-  const Vector2f & MotoGame::getGravity() {
+  const Vector2f & Scene::getGravity() {
     return m_PhysGravity;
   }
 
-  void MotoGame::pause() {
+  void Scene::pause() {
     m_is_paused = ! m_is_paused;
   }
 
-  float MotoGame::getSpeed() const {
+  float Scene::getSpeed() const {
     if(m_is_paused) {
       return 0.0;
     }
     return m_speed_factor;
   }
 
-  void MotoGame::slower(float i_increment) {
+  void Scene::slower(float i_increment) {
     if(m_is_paused == false) {
       m_speed_factor -= i_increment;
     }
@@ -1257,17 +1256,17 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     }
   }
 
-  void MotoGame::faster(float i_increment) {
+  void Scene::faster(float i_increment) {
     if(m_is_paused == false) {
       m_speed_factor += i_increment;
     }
   }
 
-  void MotoGame::fastforward(int i_time) {
+  void Scene::fastforward(int i_time) {
     m_time += i_time;
   }
 
-  void MotoGame::fastrewind(int i_time) {
+  void Scene::fastrewind(int i_time) {
     if(getLevelSrc() != NULL) {
       if(getLevelSrc()->isScripted() == false) {
 	m_time -= i_time;
@@ -1276,53 +1275,53 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     }
   }
 
-  bool MotoGame::doesPlayEvents() const {
+  bool Scene::doesPlayEvents() const {
     return m_playEvents;
   }
 
-  void MotoGame::setInfos(std::string i_infos) {
+  void Scene::setInfos(std::string i_infos) {
     m_infos = i_infos;
   }
 
-  std::string MotoGame::getInfos() const {
+  std::string Scene::getInfos() const {
     return m_infos;
   }
 
-  LuaLibGame* MotoGame::getLuaLibGame() {
+  LuaLibGame* Scene::getLuaLibGame() {
     return m_luaGame;
   }
 
-  Camera* MotoGame::getCamera(){
+  Camera* Scene::getCamera(){
     return m_cameras[m_currentCamera];
   }
-  unsigned int MotoGame::getNumberCameras(){
+  unsigned int Scene::getNumberCameras(){
     // the last camera is the autozoom one
     return m_cameras.size()==1?1:m_cameras.size()-1;
   }
-  void MotoGame::setCurrentCamera(unsigned int currentCamera){
+  void Scene::setCurrentCamera(unsigned int currentCamera){
     m_currentCamera = currentCamera;
   }
-  unsigned int MotoGame::getCurrentCamera(){
+  unsigned int Scene::getCurrentCamera(){
     return m_currentCamera;
   }
-  void MotoGame::addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom){
+  void Scene::addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom){
     Camera* i_cam = new Camera(upperleft, downright);
     i_cam->allowActiveZoom(i_useActiveZoom);
     m_cameras.push_back(i_cam);
     m_cameras.back()->initCamera();
   }
-  void MotoGame::resetFollow(){
+  void Scene::resetFollow(){
     for(unsigned int i=0; i<m_cameras.size(); i++){
       m_cameras[i]->setPlayerToFollow(NULL);
     }
   }
-  void MotoGame::removeCameras(){
+  void Scene::removeCameras(){
     for(unsigned int i=0; i<m_cameras.size(); i++){
       delete m_cameras[i];
     }
     m_cameras.clear();
   }
-  void MotoGame::setAutoZoomCamera(){
+  void Scene::setAutoZoomCamera(){
     if(m_cameras.size() == 1){
       setCurrentCamera(0);
     }
@@ -1332,30 +1331,30 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     }
   }
 
-bool MotoGame::isAutoZoomCamera(){
+bool Scene::isAutoZoomCamera(){
   return (getCurrentCamera() == getNumberCameras());
 }
 
-std::vector<Camera*>& MotoGame::Cameras() {
+std::vector<Camera*>& Scene::Cameras() {
   return m_cameras;
 }
 
-Ghost* MotoGame::getGhostById(unsigned int id)
+Ghost* Scene::getGhostById(unsigned int id)
 {
   return m_ghosts[id];
 }
 
-Biker* MotoGame::getBikerById(unsigned int id)
+Biker* Scene::getBikerById(unsigned int id)
 {
   return m_players[id];
 }
 
-unsigned int MotoGame::registerGhost()
+unsigned int Scene::registerGhost()
 {
   return m_maxGhostId++;
 }
 
-unsigned int MotoGame::registerBiker()
+unsigned int Scene::registerBiker()
 {
   return m_maxBikerId++;
 }

@@ -41,16 +41,9 @@ void ReplayManager::addObjectTypeToRecord(Scene* pScene, std::string name)
 {
   ISerializer* pSer  = (ISerializer*)SerializerFactory::instance()->createObject(name);
   pSer->setPlaying(false);
+  pSer->initStoring(pScene);
   m_scenesSerializersRecording[pScene] = pSer;
 }
-
-/*
-void ReplayManager::addObjectTypeToRecord(Scene* pScene, ISerializer* pSer)
-{
-  pSer->setPlaying(false);
-  m_scenesSerializersRecording[pScene] = pSer;
-}
-*/
 
 void ReplayManager::startRecordingReplay()
 {
@@ -87,7 +80,7 @@ Replay* ReplayManager::getCurrentRecordingReplay()
 {
 }
 
-void ReplayManager::addPlayingReplay(Scene* pScene, std::string& fileName, bool mainReplay)
+Replay* ReplayManager::addPlayingReplay(Scene* pScene, std::string& fileName, bool mainReplay)
 {
   // version 0: only player chunks
   // version 1: add events
@@ -157,6 +150,10 @@ void ReplayManager::addPlayingReplay(Scene* pScene, std::string& fileName, bool 
   }
 
   FS::closeFile(pfh);
+
+  m_playingReplay[] = pReplay;
+
+  return pReplay;
 }
 
 void ReplayManager::playFrame()

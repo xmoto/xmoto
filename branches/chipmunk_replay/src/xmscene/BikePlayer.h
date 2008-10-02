@@ -43,7 +43,8 @@ private:
 
 class ReplayBiker : public Ghost {
  public:
-  ReplayBiker(std::string i_replayFile, Theme *i_theme, BikerTheme* i_bikerTheme);
+  ReplayBiker(Scene* pScene, std::string i_replayFile,
+	      Theme* i_theme, BikerTheme* i_bikerTheme);
   std::string getQuickDescription() const;
  private:
 };

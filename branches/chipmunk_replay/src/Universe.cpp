@@ -63,7 +63,7 @@ Universe::~Universe() {
 }
 
 void Universe::addScene() {
-  MotoGame*        v_motoGame      = new MotoGame();
+  Scene*           v_motoGame      = new Scene();
   XMMotoGameHooks* v_motoGameHooks = new XMMotoGameHooks();
 
   /* Tell collision system whether we want debug-info or not */
@@ -257,7 +257,8 @@ Replay* Universe::getCurrentReplay() {
 }
 
 void Universe::initReplay() {
-  if(m_pJustPlayReplay != NULL) delete m_pJustPlayReplay;
+  if(m_pJustPlayReplay != NULL)
+    delete m_pJustPlayReplay;
   m_pJustPlayReplay = NULL;
 
   if(m_scenes.size() != 1) {
@@ -294,4 +295,9 @@ void Universe::saveReplay(const std::string &Name) {
 
 std::vector<MotoGame*>& Universe::getScenes() {
   return m_scenes;
+}
+
+Scene* getScene(std::string sceneId)
+{
+  
 }

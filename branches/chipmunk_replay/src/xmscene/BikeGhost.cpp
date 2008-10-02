@@ -28,16 +28,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define INTERPOLATION_MAXIMUM_TIME  300
 #define INTERPOLATION_MAXIMUM_SPACE 5.0
 
-Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
+Ghost::Ghost(Scene* pScene, std::string i_replayFile, bool i_isActiv,
 	     Theme *i_theme, BikerTheme* i_bikerTheme,
 	     const TColor& i_colorFilter,
-	     const TColor& i_uglyColorFilter) : Biker(i_theme, i_bikerTheme,
-						      i_colorFilter,
-						      i_uglyColorFilter) {
+	     const TColor& i_uglyColorFilter,
+	     bool mainReplay)
+: Biker(i_theme, i_bikerTheme,
+	i_colorFilter,
+	i_uglyColorFilter) {
   std::string v_levelId;
   std::string v_playerName;
 
-  m_replay = new Replay();
+  m_replay = ReplayManager::instance()->addPlayingReplay(pScene, i_replayFile, mainReplay);
+
   v_levelId = m_replay->openReplay(i_replayFile);
 
   // 4 states for cubical interpolation

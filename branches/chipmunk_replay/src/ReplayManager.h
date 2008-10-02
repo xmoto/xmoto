@@ -72,7 +72,9 @@ public:
   }
 
   // playing
-  void addPlayingReplay(Scene* pScene, std::string& fileName);
+  //void addPlayingReplay(Scene* pScene, std::string& fileName, bool mainReplay);
+  // temporary returns the Replay*
+  Replay* addPlayingReplay(Scene* pScene, std::string& fileName, bool mainReplay);
   void playFrame();
   void fastforward(int i_time);
   // i_minimumNbFrame, because sometimes, rewind do nothing if i_time
@@ -88,6 +90,7 @@ public:
   void skipBuffer(FileHandle* pfh);
 
 private:
+  // what's that string for ??
   std::map<std::string, Replay*>      m_playingReplay;
   std::map<unsigned int, Scene*>      m_scenes;
   std::map<Scene*, std::vector<ISerializer*> > m_scenesSerializersRecording;

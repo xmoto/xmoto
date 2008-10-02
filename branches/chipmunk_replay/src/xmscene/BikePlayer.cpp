@@ -36,13 +36,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // minimum velocity so that the wheel is detached once the player is dead
 #define DEAD_WHEEL_DETACH_SPEED_MIN 40
 
-ReplayBiker::ReplayBiker(std::string i_replayFile, Theme *i_theme, BikerTheme* i_bikerTheme)
-:Ghost(i_replayFile, true, i_theme, i_bikerTheme,
-       TColor(255, 255, 255, 0),
-       TColor(GET_RED(i_bikerTheme->getUglyRiderColor()),
-	      GET_GREEN(i_bikerTheme->getUglyRiderColor()),
-	      GET_BLUE(i_bikerTheme->getUglyRiderColor()),
-	      GET_ALPHA(i_bikerTheme->getUglyRiderColor()))) {
+ReplayBiker::ReplayBiker(Scene* pScene, std::string i_replayFile, Theme *i_theme, BikerTheme* i_bikerTheme)
+: Ghost(pScene, i_replayFile, true,
+	i_theme, i_bikerTheme,
+	TColor(255, 255, 255, 0),
+	TColor(GET_RED(i_bikerTheme->getUglyRiderColor()),
+	       GET_GREEN(i_bikerTheme->getUglyRiderColor()),
+	       GET_BLUE(i_bikerTheme->getUglyRiderColor()),
+	       GET_ALPHA(i_bikerTheme->getUglyRiderColor())),
+	true)
+{
 }
 
 std::string ReplayBiker::getQuickDescription() const {

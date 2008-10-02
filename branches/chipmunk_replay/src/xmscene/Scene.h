@@ -97,17 +97,16 @@ public:
 };
 
 
-class MotoGame {
+class Scene {
 public:          
-  MotoGame();
-  ~MotoGame();
+  Scene();
+  ~Scene();
 
   void setHooks(MotoGameHooks* i_motoGameHooks);
 
   /* update of the structure */
   void loadLevel(xmDatabase* i_db, const std::string& i_id_level);
-  void prePlayLevel(Replay* recordingReplay,
-		    bool i_playEvents);
+  void prePlayLevel(bool i_playEvents);
 
   void playLevel();
   void updateLevel(int timeStep, Replay* i_recordedReplay = NULL);
@@ -145,7 +144,7 @@ public:
   int getNumPendingGameEvents();
 
   void cleanEventsQueue();
-  void executeEvents(Replay* p_replay);
+  void executeEvents();
 
   /* player */
   void setPlayerPosition(int i_player, float x, float y, bool bFaceRight);

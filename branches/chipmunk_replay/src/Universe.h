@@ -28,38 +28,41 @@ class XMMotoGameHooks : public MotoGameHooks {
 public:
   XMMotoGameHooks();
   virtual ~XMMotoGameHooks();
-  void setGameApps(MotoGame *i_MotoGame);
+  void setGameApps(Scene* i_MotoGame);
   void OnTakeEntity();
 
 private:
-  MotoGame *m_MotoGame;
+  Scene* m_MotoGame;
 };
 
 class Universe {
-  public:
+public:
   Universe();
   ~Universe();
 
-  std::vector<MotoGame*>& getScenes();
-  MotoGame* getScene(std::string sceneId);
+  std::vector<Scene*>& getScenes();
+  Scene* getScene(std::string sceneId);
   void initPlay(int i_nbPlayer, bool i_multiScenes);
 
   Replay* getCurrentReplay();
   bool isAReplayToSave() const;
   void initReplay();
-  void finalizeReplay(bool i_finished);   /* call to close the replay */
+  /* call to close the replay */
+  void finalizeReplay(bool i_finished);
   void saveReplay(const std::string &Name);
   void isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room);
   void TeleportationCheatTo(int i_player, Vector2f i_position);
   void switchFollowCamera();
 
-  private:
-  std::vector<MotoGame*>        m_scenes; /* Game objects */
+private:
+  /* Game objects */
+  std::vector<Scene*>           m_scenes;
   std::vector<XMMotoGameHooks*> m_motoGameHooks;
-  Replay *m_pJustPlayReplay;
+  Replay* m_pJustPlayReplay;
 
   void removeAllWorlds();
 
-  void initCameras(int nbPlayer); // init camera according to the number of players and the existing scenes
+  // init camera according to the number of players and the existing scenes
+  void initCameras(int nbPlayer);
   void addScene();
 };
