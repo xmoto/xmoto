@@ -49,7 +49,8 @@ void NetAction::send(TCPsocket* i_sd, const void* subPacketData, int subPacketLe
 
 NetAction* NetAction::newNetAction(void* data, unsigned int len) {
   if(isCommand(data, len, NA_chatMessage::ActionKey)) {
-    return new NA_chatMessage(((char*)data)+8, len-8);
+    return new NA_chatMessage(((char*)data)+NA_chatMessage::ActionKey.size(),
+			      len          -NA_chatMessage::ActionKey.size());
   } else {
     throw Exception("client: invalid command");
   }
