@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/VExcept.h"
 #include "../helpers/Log.h"
 #include "helpers/Net.h"
-#include <sstream>
 
 NetClient::NetClient() {
     m_isConnected = false;
@@ -96,23 +95,10 @@ bool NetClient::isConnected() {
   return m_isConnected;
 }
 
-void NetClient::sendChatMessage(const std::string& i_msg) {
-  unsigned int nread;
-  std::string v_data;
-  
-  std::ostringstream v_nb;
-
-  int v_subPacketSize = std::string("message").length() + 1 + i_msg.length() + 1;
-
-  v_nb << v_subPacketSize;
-  v_data = v_nb.str() + "\n" + "message\n" + i_msg + "\n";
-
-  // don't send the \0
-  if( (nread = SDLNet_TCP_Send(m_sd, v_data.c_str(), v_data.size())) != v_data.size()) {
-    throw Exception("TCP_Send failed");
-  }
-}
-
 TCPsocket* NetClient::socket() {
   return &m_sd;
+}
+
+void NetClient::send(NetAction* i_netAction) {
+  i_netAction->send(&m_sd);
 }

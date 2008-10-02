@@ -22,21 +22,36 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __NETACTIONS_H__
 
 #include <string>
+#include <SDL_net.h>
 
 class NetAction {
   public:
   NetAction();
   virtual ~NetAction();
+  virtual std::string actionKey() = 0;
+
   virtual void execute() = 0;
+  virtual void send(TCPsocket* i_sd) = 0;
+
+  static NetAction* newNetAction(void* data, unsigned int len);
+
+  protected:
+  void send(TCPsocket* i_sd, const void* subPacketData, int subPacketLen);
 
   private:
+  static bool isCommand(void* data, unsigned int len, const std::string& i_cmd);
 };
 
 class NA_chatMessage : public NetAction {
   public:
   NA_chatMessage(const std::string& i_msg);
+  NA_chatMessage(void* data, unsigned int len);
   virtual ~NA_chatMessage();
+  std::string actionKey() { return ActionKey; };
+  static std::string ActionKey;
+
   virtual void execute();
+  void send(TCPsocket* i_sd);
 
   std::string getMessage();
 

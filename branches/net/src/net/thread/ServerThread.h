@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class NetSClient {
   public:
-  NetSClient(TCPsocket i_socket, IPaddress* i_remoteIP);
+  NetSClient(TCPsocket i_socket, IPaddress* i_remoteIP, int i_identifier);
   ~NetSClient();
 
   TCPsocket* socket();
@@ -36,6 +36,9 @@ class NetSClient {
   private:
   TCPsocket m_socket;
   IPaddress* m_remoteIP;
+
+  int m_identifier;
+  std::string m_profile;
 };
 
 class ServerThread : public XMThread {
@@ -48,6 +51,7 @@ class ServerThread : public XMThread {
   private:
   SDLNet_SocketSet m_set;
   std::vector<NetSClient*> m_clients;
+  int m_nextIdentifier;
 
   void acceptClient(TCPsocket* sd);
   void manageClient(unsigned int i, void* data, int len);

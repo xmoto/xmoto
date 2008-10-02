@@ -38,12 +38,11 @@ class NetClient : public Singleton<NetClient> {
   void connect(const std::string& i_server, int i_port);
   void disconnect();
   bool isConnected();
+  void send(NetAction* i_netAction);
   TCPsocket* socket();
 
   void executeNetActions();
   void addNetAction(NetAction* i_act);
-
-  void sendChatMessage(const std::string& i_msg);
 
   private:
   bool m_isConnected;

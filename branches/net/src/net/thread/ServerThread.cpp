@@ -30,9 +30,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_SERVER_NB_SOCKETS_MAX 128
 #define XM_SERVER_CLIENT_BUFFER_SIZE 1024
 
-NetSClient::NetSClient(TCPsocket i_socket, IPaddress *i_remoteIP) {
+NetSClient::NetSClient(TCPsocket i_socket, IPaddress *i_remoteIP, int i_identifier) {
     m_socket      = i_socket;
     m_remoteIP    = i_remoteIP;
+    m_identifier  = i_identifier;
 }
 
 NetSClient::~NetSClient() {
@@ -48,6 +49,7 @@ IPaddress* NetSClient::remoteIP() {
 
 ServerThread::ServerThread() {
     m_set = NULL;
+    m_nextIdentifier = 1;
 }
 
 ServerThread::~ServerThread() {
@@ -207,7 +209,7 @@ void ServerThread::acceptClient(TCPsocket* sd) {
     return;
   }
 
-  m_clients.push_back(new NetSClient(csd, remoteIP));
+  m_clients.push_back(new NetSClient(csd, remoteIP, m_nextIdentifier++));
 
   // welcome
   //std::string v_msg = "Xmoto server\n";

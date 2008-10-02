@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BikeController.h"
 #include "../LuaLibGame.h"
 #include "../net/NetClient.h"
+#include "../net/NetActions.h"
 
 #define MINIMUM_VELOCITY_TO_GET_MAXIMUM_DEATH_SOUND 70.0
 
@@ -409,7 +410,8 @@ void StatePlaying::onAllDead() {
   }
   
   if(NetClient::instance()->isConnected()) {
-    NetClient::instance()->sendChatMessage(XMSession::instance()->profile() + " has just died");
+    NA_chatMessage nacm(XMSession::instance()->profile() + " has just died");
+    NetClient::instance()->send(&nacm);
   }
 
   if(XMSession::instance()->enableDeadAnimation()) {

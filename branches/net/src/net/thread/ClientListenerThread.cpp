@@ -85,7 +85,7 @@ int ClientListenerThread::realThreadFunction() {
 	      try {
 		if(v_packetOffset-v_cmdStart >= v_packetSize) {
 		  LogDebug("One packet to manage");
-		  manageClientSubPacket(((char*)buffer)+v_cmdStart, v_packetSize);
+		  m_netClient->addNetAction(NetAction::newNetAction(((char*)buffer)+v_cmdStart, v_packetSize));
 		  
 		  // remove the managed packet
 		  // main case : the buffer contains exactly one command
@@ -127,14 +127,6 @@ int ClientListenerThread::realThreadFunction() {
   return 0;
 }
 
-void ClientListenerThread::manageClientSubPacket(void* data, unsigned int len) {
-  if(isCommand(data, len, "message")) {
-    m_netClient->addNetAction(new NA_chatMessage(getChatMessage(((char*)data)+8, len-8)));
-  } else {
-    throw Exception("client: invalid command");
-  }
-}
-
 // return the size of the packet or 0 if no packet is available
 unsigned int ClientListenerThread::getSubPacketSize(void* data, unsigned int len, unsigned int& o_cmdStart) {
   unsigned int i=0;
@@ -151,21 +143,4 @@ unsigned int ClientListenerThread::getSubPacketSize(void* data, unsigned int len
     i++;
   }
   return 0;
-}
-
-bool ClientListenerThread::isCommand(void* data, unsigned int len, const std::string& i_cmd) {
-  if(i_cmd.length() + 1 > len) {
-    return false;
-  }
-
-  if(((char*) data)[i_cmd.length()] != '\n') {
-    return false;
-  }
-
-  return strncmp((char*)data, i_cmd.c_str(), i_cmd.length()) == 0;
-}
-
-std::string ClientListenerThread::getChatMessage(void* data, unsigned int len) {
-  ((char*)data)[len-1] = '\0';
-  return std::string((char*)data);
 }
