@@ -23,6 +23,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 #include <SDL_net.h>
+#include "../xmscene/BasicSceneStructs.h"
+
+#define NETACTION_MAX_PACKET_SIZE 1024 * 10 // bytes
 
 class NetAction {
   public:
@@ -34,12 +37,16 @@ class NetAction {
   virtual void send(TCPsocket* i_sd) = 0;
 
   static NetAction* newNetAction(void* data, unsigned int len);
+  static void logStats();
 
   protected:
   void send(TCPsocket* i_sd, const void* subPacketData, int subPacketLen);
 
   private:
   static bool isCommand(void* data, unsigned int len, const std::string& i_cmd);
+  static char m_buffer[NETACTION_MAX_PACKET_SIZE];
+  static unsigned int m_biggestPacket;
+  static unsigned int m_nbPacketsSent;
 };
 
 class NA_chatMessage : public NetAction {
@@ -57,6 +64,23 @@ class NA_chatMessage : public NetAction {
 
   private:
   std::string m_msg;
+};
+
+class NA_frame : public NetAction {
+  public:
+  NA_frame(SerializedBikeState* i_state);
+  NA_frame(void* data, unsigned int len);
+  virtual ~NA_frame();
+  std::string actionKey() { return ActionKey; };
+  static std::string ActionKey;
+
+  virtual void execute();
+  void send(TCPsocket* i_sd);
+
+  SerializedBikeState getState();
+
+  private:
+   SerializedBikeState m_state;
 };
 
 #endif

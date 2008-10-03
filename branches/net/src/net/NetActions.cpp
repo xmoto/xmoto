@@ -21,14 +21,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "NetActions.h"
 #include "../SysMessage.h"
 #include "../helpers/VExcept.h"
+#include "../helpers/Log.h"
 #include <sstream>
 
+char NetAction::m_buffer[NETACTION_MAX_PACKET_SIZE];
+unsigned int NetAction::m_biggestPacket = 0;
+unsigned int NetAction::m_nbPacketsSent = 0;
+
 std::string NA_chatMessage::ActionKey = "message";
+std::string NA_frame::ActionKey       = "frame";
 
 NetAction::NetAction() {
 }
 
 NetAction::~NetAction() {
+}
+
+void NetAction::logStats() {
+  LogInfo("net: number of packets sent : %u", NetAction::m_nbPacketsSent);
+  LogInfo("net: biggest packet sent : %u bytes", NetAction::m_biggestPacket);
 }
 
 void NetAction::send(TCPsocket* i_sd, const void* subPacketData, int subPacketLen) {
@@ -38,20 +49,39 @@ void NetAction::send(TCPsocket* i_sd, const void* subPacketData, int subPacketLe
   int v_subPacketSize = actionKey().length() + 1 + subPacketLen + 1;
   std::ostringstream v_nb;
   v_nb << v_subPacketSize;
+  unsigned int v_totalPacketSize = v_nb.str().length() + 1 + v_subPacketSize;
 
-  v_data = v_nb.str() + "\n" + actionKey() + "\n" + std::string((char*)subPacketData) + "\n";
+  if(v_totalPacketSize > NetAction::m_biggestPacket) {
+    NetAction::m_biggestPacket = v_totalPacketSize;
+  }
+
+  if(v_totalPacketSize > NETACTION_MAX_PACKET_SIZE) {
+    throw Exception("net: too big packet to send");
+  }
+
+  snprintf(m_buffer, NETACTION_MAX_PACKET_SIZE, "%s\n%s\n", v_nb.str().c_str(), actionKey().c_str());
+  memcpy(m_buffer + v_nb.str().length() + 1 + actionKey().length() + 1, subPacketData, subPacketLen);
+  m_buffer[v_totalPacketSize-1] = '\n';
 
   // don't send the \0
-  if( (nread = SDLNet_TCP_Send(*i_sd, v_data.c_str(), v_data.size())) != v_data.size()) {
+  if( (nread = SDLNet_TCP_Send(*i_sd, m_buffer, v_totalPacketSize)) != v_totalPacketSize) {
     throw Exception("TCP_Send failed");
   }
+  NetAction::m_nbPacketsSent++;
 }
 
 NetAction* NetAction::newNetAction(void* data, unsigned int len) {
   if(isCommand(data, len, NA_chatMessage::ActionKey)) {
-    return new NA_chatMessage(((char*)data)+NA_chatMessage::ActionKey.size(),
-			      len          -NA_chatMessage::ActionKey.size());
-  } else {
+    return new NA_chatMessage(((char*)data)+(NA_chatMessage::ActionKey.size()+1),
+			      len          -(NA_chatMessage::ActionKey.size()+1));
+  } 
+
+  else if(isCommand(data, len, NA_frame::ActionKey)) {
+    return new NA_frame(((char*)data)+(NA_frame::ActionKey.size()+1),
+			      len    -(NA_frame::ActionKey.size()+1));
+  } 
+  
+  else {
     throw Exception("client: invalid command");
   }
 }
@@ -91,4 +121,30 @@ void NA_chatMessage::send(TCPsocket* i_sd) {
 
 std::string NA_chatMessage::getMessage() {
   return m_msg;
+}
+
+NA_frame::NA_frame(SerializedBikeState* i_state) {
+  m_state = *i_state;
+}
+
+NA_frame::NA_frame(void* data, unsigned int len) {
+  if(len-1 != sizeof(SerializedBikeState)) {
+    throw Exception("Invalid NA_frame");
+  }
+  memcpy(&m_state, data, len-1); // -1 because in the protocol, you always finish by a \n
+}
+
+NA_frame::~NA_frame() {
+}
+
+void NA_frame::execute() {
+  LogInfo("Frame received");
+}
+
+void NA_frame::send(TCPsocket* i_sd) {
+  NetAction::send(i_sd, &m_state, sizeof(SerializedBikeState));
+}
+
+SerializedBikeState NA_frame::getState() {
+  return m_state;
 }

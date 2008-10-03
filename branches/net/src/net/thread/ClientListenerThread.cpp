@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../XMSession.h"
 
 #define XM_CLIENT_WAIT_TIMEOUT 1000
-#define XM_CLIENT_MAX_PACKET_SIZE 1024 * 50 // bytes
+#define XM_CLIENT_MAX_PACKET_SIZE 1024 * 10 // bytes
 #define XM_CLIENT_MAX_PACKET_SIZE_DIGITS 6 // limit the size of a command : n digits
 
 ClientListenerThread::ClientListenerThread(NetClient* i_netClient) {
@@ -80,7 +80,8 @@ int ClientListenerThread::realThreadFunction() {
 	    v_notEnoughData = false; // you don't know if the buffer is full enough
 
 	    while( (v_packetSize = getSubPacketSize(buffer, v_packetOffset, v_cmdStart)) > 0 &&
-		   v_notEnoughData == false) {
+		   v_notEnoughData  == false &&
+		   m_askThreadToEnd == false) {
 	      LogDebug("Packet size is %u", v_packetSize);
 	      try {
 		if(v_packetOffset-v_cmdStart >= v_packetSize) {
@@ -104,7 +105,7 @@ int ClientListenerThread::realThreadFunction() {
 		  v_notEnoughData = true;
 		}
 	      } catch(Exception &e) {
-		LogError("client: bad command received");
+		LogError("client: bad command received (%s)", e.getMsg().c_str());
 		m_askThreadToEnd = true; // invalid command, stop the listener
 		v_onError = true;
 	      }

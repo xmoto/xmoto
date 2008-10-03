@@ -43,6 +43,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ChipmunkWorld.h"
 #include "../helpers/Random.h"
 #include "PhysicsSettings.h"
+#include "../net/NetClient.h"
+#include "../net/NetActions.h"
 
   MotoGame::MotoGame() {
     m_bDeathAnimEnabled=true;
@@ -296,13 +298,22 @@ void MotoGame::cleanPlayers() {
         m_lastStateSerializationTime = getTime();
         
         /* Get it */
-	/* only store the state if 1 player plays */
-	if(Players().size() == 1) {
-	  if(Players()[0]->isDead() == false && Players()[0]->isFinished() == false) {
-	    SerializedBikeState BikeState;
-	    getSerializedBikeState(Players()[0]->getState(), getTime(), &BikeState, m_physicsSettings);
-	    i_recordedReplay->storeState(BikeState);
-	    i_recordedReplay->storeBlocks(m_pLevelSrc->Blocks());
+	for(unsigned int i=0; i<Players().size(); i++) {
+	  if(Players().size() == 1 || NetClient::instance()->isConnected()) {
+	    if(Players()[i]->isDead() == false && Players()[i]->isFinished() == false) {
+	      SerializedBikeState BikeState;
+	      getSerializedBikeState(Players()[i]->getState(), getTime(), &BikeState, m_physicsSettings);
+
+	      /* only store the state if 1 player plays */
+	      if(Players().size() == 1) {
+		i_recordedReplay->storeState(BikeState);
+		i_recordedReplay->storeBlocks(m_pLevelSrc->Blocks());
+	      }
+
+	      // always send
+	      NA_frame na(&BikeState);
+	      NetClient::instance()->send(&na);
+	    }
 	  }
 	}
       }

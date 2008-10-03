@@ -58,6 +58,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Renderer.h"
 #include "net/NetServer.h"
 #include "net/NetClient.h"
+#include "net/NetActions.h"
 #include <SDL_net.h>
 
 #define MOUSE_DBCLICK_TIME 0.250f
@@ -679,7 +680,9 @@ void GameApp::uninitNetwork() {
   if(NetServer::instance()->isStarted()) {
     NetServer::instance()->stop();
   }
+
   NetServer::destroy();
+  NetAction::logStats();
 
   SDLNet_Quit();
 }
