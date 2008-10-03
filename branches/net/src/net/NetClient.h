@@ -29,6 +29,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class ClientListenerThread;
 class NetAction;
+class NetGhost;
+class Universe;
 
 class NetClient : public Singleton<NetClient> {
   public:
@@ -44,6 +46,11 @@ class NetClient : public Singleton<NetClient> {
   void executeNetActions();
   void addNetAction(NetAction* i_act);
 
+  std::vector<NetGhost*>& NetGhosts();
+  void addNetGhost(NetGhost* i_ghost);
+  void resetPlay(Universe* i_universe);
+  Universe* getUniverse();
+
   private:
   bool m_isConnected;
   TCPsocket m_sd;
@@ -51,6 +58,9 @@ class NetClient : public Singleton<NetClient> {
 
   std::vector<NetAction*> m_netActions;
   SDL_mutex* m_netActionsMutex;
+
+  std::vector<NetGhost*> m_netGhosts;
+  Universe* m_universe; 
 };
 
 #endif

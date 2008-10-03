@@ -27,13 +27,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define NETACTION_MAX_PACKET_SIZE 1024 * 10 // bytes
 
+class NetClient;
+
 class NetAction {
   public:
   NetAction();
   virtual ~NetAction();
   virtual std::string actionKey() = 0;
 
-  virtual void execute() = 0;
+  virtual void execute(NetClient* i_netClient) = 0;
   virtual void send(TCPsocket* i_sd) = 0;
 
   static NetAction* newNetAction(void* data, unsigned int len);
@@ -57,7 +59,7 @@ class NA_chatMessage : public NetAction {
   std::string actionKey() { return ActionKey; };
   static std::string ActionKey;
 
-  virtual void execute();
+  virtual void execute(NetClient* i_netClient);
   void send(TCPsocket* i_sd);
 
   std::string getMessage();
@@ -74,7 +76,7 @@ class NA_frame : public NetAction {
   std::string actionKey() { return ActionKey; };
   static std::string ActionKey;
 
-  virtual void execute();
+  virtual void execute(NetClient* i_netClient);
   void send(TCPsocket* i_sd);
 
   SerializedBikeState getState();

@@ -22,6 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../SysMessage.h"
 #include "../helpers/VExcept.h"
 #include "../helpers/Log.h"
+#include "NetClient.h"
+#include "../Universe.h"
+#include "../Theme.h"
+#include "../xmscene/BikeGhost.h"
 #include <sstream>
 
 char NetAction::m_buffer[NETACTION_MAX_PACKET_SIZE];
@@ -111,7 +115,7 @@ NA_chatMessage::NA_chatMessage(void* data, unsigned int len) {
 NA_chatMessage::~NA_chatMessage() {
 }
 
-void NA_chatMessage::execute() {
+void NA_chatMessage::execute(NetClient* i_netClient) {
   SysMessage::instance()->displayInformation(m_msg);
 }
 
@@ -137,8 +141,41 @@ NA_frame::NA_frame(void* data, unsigned int len) {
 NA_frame::~NA_frame() {
 }
 
-void NA_frame::execute() {
-  LogInfo("Frame received");
+void NA_frame::execute(NetClient* i_netClient) {
+  //LogInfo("Frame received");
+  NetGhost* v_ghost;
+  Universe* v_universe = i_netClient->getUniverse();
+
+  /*
+
+    NEED A MUTEX
+    
+   */
+
+  if(i_netClient->NetGhosts().size() == 0) {
+    /* add the net ghost */
+    if(v_universe != NULL) {
+      for(unsigned int i=0; i<v_universe->getScenes().size(); i++) {
+	v_ghost = v_universe->getScenes()[i]->addNetGhost("Net ghost", Theme::instance(),
+							  Theme::instance()->getGhostTheme(),
+							  TColor(255,255,255,0),
+							  TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+								 GET_GREEN(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+								 GET_BLUE(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+								 0)
+							  );
+	i_netClient->addNetGhost(v_ghost);
+      }
+    }
+  }
+  
+  if(i_netClient->getUniverse() != NULL) {
+    // take the physic of the first world
+    if(i_netClient->getUniverse()->getScenes().size() > 0) {
+      BikeState::convertStateFromReplay(&m_state, i_netClient->NetGhosts()[0]->getState(),
+					i_netClient->getUniverse()->getScenes()[0]->getPhysicsSettings());
+    }
+  }
 }
 
 void NA_frame::send(TCPsocket* i_sd) {

@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 ReplayBiker::ReplayBiker(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
 			 Theme *i_theme, BikerTheme* i_bikerTheme)
-:Ghost(i_replayFile, i_physicsSettings, true, i_theme, i_bikerTheme,
+:FileGhost(i_replayFile, i_physicsSettings, true, i_theme, i_bikerTheme,
        TColor(255, 255, 255, 0),
        TColor(GET_RED(i_bikerTheme->getUglyRiderColor()),
 	      GET_GREEN(i_bikerTheme->getUglyRiderColor()),

@@ -310,7 +310,7 @@ void MotoGame::cleanPlayers() {
 		i_recordedReplay->storeBlocks(m_pLevelSrc->Blocks());
 	      }
 
-	      // always send
+	      // always send (framerate network = framerate replay for the moment)
 	      NA_frame na(&BikeState);
 	      NetClient::instance()->send(&na);
 	    }
@@ -505,22 +505,38 @@ void MotoGame::cleanPlayers() {
     return v_biker;
   }
 
-  Ghost* MotoGame::addGhostFromFile(std::string i_ghostFile, std::string i_info,
-				    Theme *i_theme, BikerTheme* i_bikerTheme,
-				    const TColor& i_filterColor,
-				    const TColor& i_filterUglyColor) {
-    Ghost* v_ghost = NULL;
+  FileGhost* MotoGame::addGhostFromFile(std::string i_ghostFile, const std::string& i_info,
+					Theme *i_theme, BikerTheme* i_bikerTheme,
+					const TColor& i_filterColor,
+					const TColor& i_filterUglyColor) {
+    FileGhost* v_ghost = NULL;
 
     /* the level must be set to add a ghost */
     if(m_pLevelSrc == NULL) {
       throw Exception("No level defined");
     }
 
-    v_ghost = new Ghost(i_ghostFile, m_physicsSettings, false, i_theme, i_bikerTheme,
-			i_filterColor, i_filterUglyColor);
+    v_ghost = new FileGhost(i_ghostFile, m_physicsSettings, false, i_theme, i_bikerTheme,
+			    i_filterColor, i_filterUglyColor);
     v_ghost->setPlaySound(false);
     v_ghost->setInfo(i_info);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
+    m_ghosts.push_back(v_ghost);
+    return v_ghost;
+  }
+
+  NetGhost* MotoGame::addNetGhost(const std::string& i_info,
+				  Theme *i_theme,
+				  BikerTheme* i_bikerTheme,
+				  const TColor& i_filterColor,
+				  const TColor& i_filterUglyColor) {
+    NetGhost* v_ghost = NULL;
+    LogInfo("New NetGhost");
+
+    v_ghost = new NetGhost(m_physicsSettings, i_theme, i_bikerTheme,
+			   i_filterColor, i_filterUglyColor);
+    v_ghost->setPlaySound(false);
+    v_ghost->setInfo(i_info);
     m_ghosts.push_back(v_ghost);
     return v_ghost;
   }
@@ -1309,7 +1325,7 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     return m_playEvents;
   }
 
-  void MotoGame::setInfos(std::string i_infos) {
+  void MotoGame::setInfos(const std::string& i_infos) {
     m_infos = i_infos;
   }
 

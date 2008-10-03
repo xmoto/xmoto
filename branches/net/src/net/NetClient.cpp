@@ -29,6 +29,7 @@ NetClient::NetClient() {
     m_isConnected = false;
     m_clientListenerThread = NULL;
     m_netActionsMutex = SDL_CreateMutex();
+    m_universe = NULL;
 }
 
 NetClient::~NetClient() {
@@ -46,8 +47,8 @@ void NetClient::executeNetActions() {
 
   SDL_LockMutex(m_netActionsMutex);
   for(unsigned int i=0; i<m_netActions.size(); i++) {
-    LogInfo("Execute NetAction");
-    m_netActions[i]->execute();
+    //LogInfo("Execute NetAction");
+    m_netActions[i]->execute(this);
     delete m_netActions[i];
   }
   m_netActions.clear();
@@ -101,4 +102,21 @@ TCPsocket* NetClient::socket() {
 
 void NetClient::send(NetAction* i_netAction) {
   i_netAction->send(&m_sd);
+}
+
+void NetClient::resetPlay(Universe* i_universe) {
+  m_netGhosts.clear();
+  m_universe = i_universe;
+}
+
+std::vector<NetGhost*>& NetClient::NetGhosts() {
+  return m_netGhosts;
+}
+
+Universe* NetClient::getUniverse() {
+  return m_universe;
+}
+
+void NetClient::addNetGhost(NetGhost* i_ghost) {
+  m_netGhosts.push_back(i_ghost);
 }

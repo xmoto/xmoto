@@ -169,7 +169,7 @@ void ServerThread::sendToAllClients(void* data, int len, unsigned int i_except) 
   unsigned int i=0;
   
   while(i<m_clients.size()) {
-    if(i != i_except) {
+    if(i != i_except /*|| true*/ /* resend to the client for tests only */) {
       try {
 	sendToClient(data, len, i);
 	i++;

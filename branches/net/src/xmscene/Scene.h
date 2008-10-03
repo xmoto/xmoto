@@ -34,7 +34,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class Level;
 class BikeState;
+class FileGhost;
 class Ghost;
+class NetGhost;
 class PlayerBiker;
 class ReplayBiker;
 class MotoGameOnBikerHooks;
@@ -206,15 +208,20 @@ public:
   ReplayBiker* addReplayFromFile(std::string i_ghostFile,
 				 Theme *i_theme, BikerTheme* i_bikerTheme,
 				 bool i_enableEngineSound);
-  Ghost* addGhostFromFile(std::string i_ghostFile, std::string i_info,
-			  Theme *i_theme, BikerTheme* i_bikerTheme,
-			  const TColor& i_filterColor,
-			  const TColor& i_filterUglyColor);
+  FileGhost* addGhostFromFile(std::string i_ghostFile, const std::string& i_info,
+			      Theme *i_theme, BikerTheme* i_bikerTheme,
+			      const TColor& i_filterColor,
+			      const TColor& i_filterUglyColor);
   PlayerBiker* addPlayerBiker(Vector2f i_position, DriveDir i_direction,
 			      Theme *i_theme, BikerTheme* i_bikerTheme,
 			      const TColor& i_filterColor,
 			      const TColor& i_filterUglyColor,
 			      bool i_enableEngineSound);
+
+  NetGhost* addNetGhost(const std::string& i_info, Theme *i_theme,
+			BikerTheme* i_bikerTheme,
+			const TColor& i_filterColor,
+			const TColor& i_filterUglyColor);
 
   std::vector<Ghost *> &Ghosts();
   std::vector<Biker*> &Players();
@@ -234,7 +241,7 @@ public:
 
   void handleEvent(MotoGameEvent *pEvent);
 
-  void setInfos(std::string i_infos);
+  void setInfos(const std::string& i_infos);
   std::string getInfos() const;
 
   LuaLibGame* getLuaLibGame();

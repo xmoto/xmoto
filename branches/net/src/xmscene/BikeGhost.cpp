@@ -28,14 +28,35 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define INTERPOLATION_MAXIMUM_TIME  300
 #define INTERPOLATION_MAXIMUM_SPACE 5.0
 
-Ghost::Ghost(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
+Ghost::Ghost(PhysicsSettings* i_physicsSettings,
+	     Theme *i_theme, BikerTheme* i_bikerTheme,
+	     const TColor& i_colorFilter,
+	     const TColor& i_uglyColorFilter)
+: Biker(i_physicsSettings, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
+  m_diffToPlayer = 0.0;
+}
+
+Ghost::~Ghost() {
+}
+
+float Ghost::diffToPlayer() const {
+  return m_diffToPlayer;
+}
+
+bool Ghost::getRenderBikeFront() {
+  return true;
+}
+
+void Ghost::setInfo(const std::string& i_info) {
+  m_info = i_info;
+}
+
+FileGhost::FileGhost(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
 	     bool i_isActiv,
 	     Theme *i_theme, BikerTheme* i_bikerTheme,
 	     const TColor& i_colorFilter,
-	     const TColor& i_uglyColorFilter) : Biker(i_physicsSettings,
-						      i_theme, i_bikerTheme,
-						      i_colorFilter,
-						      i_uglyColorFilter) {
+	     const TColor& i_uglyColorFilter)
+  : Ghost (i_physicsSettings, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
   std::string v_levelId;
   std::string v_playerName;
 
@@ -55,21 +76,18 @@ Ghost::Ghost(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
   }
   *m_bikeState = *(m_ghostBikeStates[0]); // copy
 
-  m_diffToPlayer = 0.0;
-
-  m_info = "";
   m_isActiv = i_isActiv;
   m_linearVelocity = 0.0;
   m_teleportationOccured = false;
 }
 
-Ghost::~Ghost() {
+FileGhost::~FileGhost() {
   for(unsigned int i=0; i<m_ghostBikeStates.size(); i++) {
     delete m_ghostBikeStates[i];
   }
 }
 
-void Ghost::execReplayEvents(int i_time, MotoGame *i_motogame) {
+void FileGhost::execReplayEvents(int i_time, MotoGame *i_motogame) {
   std::vector<RecordedGameEvent *> *v_replayEvents;
   v_replayEvents = m_replay->getEvents();
   
@@ -100,11 +118,7 @@ void Ghost::execReplayEvents(int i_time, MotoGame *i_motogame) {
   }
 }
 
-void Ghost::setInfo(std::string i_info) {
-  m_info = i_info;
-}
-
-std::string Ghost::getDescription() const {
+std::string FileGhost::getDescription() const {
   char c_tmp[1024];
 
   snprintf(c_tmp, 1024,
@@ -117,7 +131,7 @@ std::string Ghost::getDescription() const {
     "\n(" + formatTime(m_replay->getFinishTime()) + ")";
 }
 
-std::string Ghost::getQuickDescription() const {
+std::string FileGhost::getQuickDescription() const {
   char c_tmp[1024];
 
   snprintf(c_tmp, 1024,
@@ -127,11 +141,11 @@ std::string Ghost::getQuickDescription() const {
   return std::string(c_tmp);
 }
 
-std::string Ghost::playerName() {
+std::string FileGhost::playerName() {
   return m_replay->getPlayerName();
 }
 
-void Ghost::initLastToTakeEntities(Level* i_level) {
+void FileGhost::initLastToTakeEntities(Level* i_level) {
   std::vector<RecordedGameEvent *> *v_replayEvents;
   v_replayEvents = m_replay->getEvents();
     
@@ -151,11 +165,7 @@ void Ghost::initLastToTakeEntities(Level* i_level) {
   }
 }
 
-float Ghost::diffToPlayer() const {
-  return m_diffToPlayer;
-}
-
-void Ghost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
+void FileGhost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
   /* no strawberry, no update */
   if(i_lastToTakeEntities.size() == 0) {
     return;
@@ -170,12 +180,12 @@ void Ghost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
                  - m_lastToTakeEntities[i_lastToTakeEntities.size()-1];
 }
 
-void Ghost::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity) {
+void FileGhost::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity) {
   m_teleportationOccured = true;
   m_linearVelocity = 0.0;
 }
 
-void Ghost::updateToTime(int i_time, int i_timeStep,
+void FileGhost::updateToTime(int i_time, int i_timeStep,
 			 CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			 MotoGame *i_motogame) {
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
@@ -292,26 +302,56 @@ void Ghost::updateToTime(int i_time, int i_timeStep,
   }
 }
 
-int Ghost::getFinishTime() {
+int FileGhost::getFinishTime() {
   return m_replay->getFinishTime();
 }
 
-std::string Ghost::levelId() {
+std::string FileGhost::levelId() {
    return m_replay->getLevelId();
 }
 
-bool Ghost::getRenderBikeFront() {
-  return true;
-}
-
-float Ghost::getBikeLinearVel() {
+float FileGhost::getBikeLinearVel() {
   return m_linearVelocity;
 }
 
-float Ghost::getBikeEngineSpeed() {
+float FileGhost::getBikeEngineSpeed() {
   return 0.0; /* unable to know it */
 }
 
-double Ghost::getAngle() {
+double FileGhost::getAngle() {
+  return 0.0; /* to do */
+}
+
+
+NetGhost::NetGhost(PhysicsSettings* i_physicsSettings,
+		   Theme *i_theme, BikerTheme* i_bikerTheme,
+		   const TColor& i_colorFilter,
+		   const TColor& i_uglyColorFilter) 
+  : Ghost(i_physicsSettings, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
+}
+
+NetGhost::~NetGhost() {
+}
+
+void NetGhost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
+}
+
+std::string NetGhost::getQuickDescription() const {
+  return "Net Ghost";
+}
+
+std::string NetGhost::getDescription() const {
+  return "Net Ghost";
+}
+
+float NetGhost::getBikeEngineSpeed() {
+  return 0.0; /* unable to know it */
+}
+
+float NetGhost::getBikeLinearVel() {
+  return 0.0; /* to do */
+}
+
+double NetGhost::getAngle() {
   return 0.0; /* to do */
 }

@@ -41,7 +41,7 @@ private:
 };
 
 
-class ReplayBiker : public Ghost {
+class ReplayBiker : public FileGhost {
  public:
   ReplayBiker(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
 	      Theme *i_theme, BikerTheme* i_bikerTheme);

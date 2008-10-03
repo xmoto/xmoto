@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Universe.h"
 #include "../VFileIO.h"
 #include "../Renderer.h"
+#include "../net/NetClient.h"
 
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 100
 
@@ -285,6 +286,7 @@ void StatePreplaying::secondInitPhase()
 	/* anyway */
       }
     }
+
   } catch(Exception &e) {
     LogWarning(std::string("failed to initialize level\n" + e.getMsg()).c_str());
     closePlaying();
@@ -293,6 +295,9 @@ void StatePreplaying::secondInitPhase()
   }
 
   /* Prepare level */
+  if(NetClient::instance()->isConnected()) {
+    NetClient::instance()->resetPlay(m_universe);
+  }
   GameRenderer::instance()->prepareForNewLevel(m_universe);
 
   /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
