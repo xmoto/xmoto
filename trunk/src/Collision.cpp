@@ -349,14 +349,7 @@ CollisionSystem::~CollisionSystem() {
     /* None of the touched cells contain any geometry */
     return false;
   }
-      
-  /*===========================================================================
-  Boolean check of collision between circle-path and system
-  ===========================================================================*/
-  bool CollisionSystem::checkCirclePath(float x1,float y1,float x2,float y2,float r) {
-    return false;
-  }
-      
+
   /*===========================================================================
   Calculate collision between line and system
   ===========================================================================*/

@@ -213,6 +213,7 @@ void MotoGame::cleanPlayers() {
     ===========================================================================*/
   void MotoGame::updateLevel(int timeStep, Replay *i_recordedReplay) {
     float v_diff;
+    int v_previousTime;
 
     if(m_is_paused)
       return;
@@ -229,14 +230,21 @@ void MotoGame::cleanPlayers() {
     if(m_speed_factor != 1.00f) {
 
       // save the diff when timeStep is not an integer to make nice rewind/forward
+      v_previousTime = m_time;
       v_diff = ((float)timeStep) * m_speed_factor;
       m_floattantTimeStepDiff += v_diff - ((int) v_diff);
       m_time += (int)(v_diff);
       m_time += ((int)m_floattantTimeStepDiff);
       m_floattantTimeStepDiff -= ((int)m_floattantTimeStepDiff);
 
-      if(m_time < 0)
+      if(m_time < 0) {
 	m_time = 0;
+      }
+
+      if(v_previousTime > m_time) {
+	onRewinding();
+      }
+
     } else {
       m_time += timeStep;
     }     
@@ -1290,8 +1298,39 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
       if(getLevelSrc()->isScripted() == false) {
 	m_time -= i_time;
 	if(m_time < 0) m_time = 0;
+	onRewinding();
       }
     }
+  }
+
+  void MotoGame::onRewinding() {
+    bool v_continue = true;
+    unsigned int i = m_myLastStrawberries.size()-1;
+
+    // remove strawberries untaken
+    while(v_continue) {
+      // > because updateToTime is done after m_time increase
+      if(m_myLastStrawberries[i] > m_time) { 
+	m_myLastStrawberries.erase(m_myLastStrawberries.begin() + i);
+
+	if(i == 0) {
+	  v_continue = false;
+	} else {
+	  i--;
+	}
+	
+      } else {
+	v_continue = false;
+      }
+    }
+
+    // update diffs
+    for(unsigned int i=0; i<m_ghosts.size(); i++) {
+      m_ghosts[i]->updateDiffToPlayer(m_myLastStrawberries);
+    }
+
+    // update times of messages
+    clearGameMessages();
   }
 
   bool MotoGame::doesPlayEvents() const {
