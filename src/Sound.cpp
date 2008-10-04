@@ -273,6 +273,14 @@ void Sound::playMusic(std::string i_musicPath) {
   }
 }
 
+void Sound::togglePauseMusic() {
+    if(m_pMenuMusic != NULL && Mix_PlayingMusic() && Mix_PausedMusic() == false) {
+	Mix_PauseMusic();
+    } else if(m_pMenuMusic != NULL && Mix_PlayingMusic() && Mix_PausedMusic()) {
+        Mix_ResumeMusic();
+    }
+}
+
 void Sound::stopMusic() {
   if(m_pMenuMusic != NULL && Mix_PlayingMusic()) {
     Mix_HaltMusic();
