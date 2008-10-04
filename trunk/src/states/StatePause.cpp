@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Game.h"
 #include "../drawlib/DrawLib.h"
 #include "../GameText.h"
+#include "../Sound.h"
 #include "StateMessageBox.h"
 #include "../helpers/Log.h"
 #include "../Universe.h"
@@ -68,6 +69,7 @@ void StatePause::enter()
     }
   }
 
+  Sound::togglePauseMusic();
   
   createGUIIfNeeded();
   m_GUI = m_sGUI;
@@ -88,6 +90,8 @@ void StatePause::leave()
       m_universe->getScenes()[i]->setInfos("");
     }
   }
+  
+  Sound::togglePauseMusic();
 }
 
 void StatePause::checkEvents() {

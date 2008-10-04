@@ -88,6 +88,7 @@ class XMSession;
       static int getNumSamples(void) {return m_Samples.size();}
     
       static void playMusic(std::string i_musicPath);
+      static void togglePauseMusic();
       static void stopMusic();
       static bool isPlayingMusic();
 
