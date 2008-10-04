@@ -277,6 +277,7 @@ private:
   std::vector<Biker*> m_players;
 
   bool m_showGhostTimeDiff;
+  void onRewinding();
 
   std::vector<Ghost*> m_ghosts;
   std::vector<float> m_myLastStrawberries;
