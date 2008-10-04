@@ -294,7 +294,7 @@ void MotoGame::cleanPlayers() {
     /* save the replay */
     if(i_recordedReplay != NULL) {
       /* We'd like to serialize the game state 25 times per second for the replay */
-      if(getTime() - m_lastStateSerializationTime >= 100.0f/i_recordedReplay->getFrameRate()) {
+      if(getTime() - m_lastStateSerializationTime >= 100.0f/i_recordedReplay->getFrameRate() || true) {
         m_lastStateSerializationTime = getTime();
         
         /* Get it */
@@ -306,8 +306,8 @@ void MotoGame::cleanPlayers() {
 
 	      /* only store the state if 1 player plays */
 	      if(Players().size() == 1) {
-		i_recordedReplay->storeState(BikeState);
-		i_recordedReplay->storeBlocks(m_pLevelSrc->Blocks());
+		//i_recordedReplay->storeState(BikeState);
+		//i_recordedReplay->storeBlocks(m_pLevelSrc->Blocks());
 	      }
 
 	      // always send (framerate network = framerate replay for the moment)

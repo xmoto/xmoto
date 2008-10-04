@@ -1089,7 +1089,7 @@ std::string XMSession::clientServerName() const {
   return m_clientServerName;
 }
 
-void XMSession::clientServerName(const std::string& i_value) {
+void XMSession::setClientServerName(const std::string& i_value) {
   m_clientServerName = i_value;
 }
 
@@ -1097,7 +1097,7 @@ int XMSession::clientServerPort() const {
   return m_clientServerPort;
 }
 
-void XMSession::clientServerPort(int i_value) {
+void XMSession::setClientServerPort(int i_value) {
   m_clientServerPort = i_value;
 }
 

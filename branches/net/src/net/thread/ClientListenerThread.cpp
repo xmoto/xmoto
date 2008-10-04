@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../helpers/Log.h"
 #include "../../helpers/VExcept.h"
 #include "../../XMSession.h"
+#include "../../states/StateManager.h"
 
 #define XM_CLIENT_WAIT_TIMEOUT 1000
 #define XM_CLIENT_MAX_PACKET_SIZE 1024 * 10 // bytes
@@ -61,6 +62,8 @@ int ClientListenerThread::realThreadFunction() {
     LogError("client: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
     return 1;
   }
+
+  StateManager::instance()->sendAsynchronousMessage("CLIENT_STATUS_CHANGED");
 
   /* Wait for a connection */
   while(m_askThreadToEnd == false) {
@@ -124,6 +127,8 @@ int ClientListenerThread::realThreadFunction() {
   } else {
     LogInfo("client: ending normally");
   }
+
+  StateManager::instance()->sendAsynchronousMessage("CLIENT_STATUS_CHANGED");
 
   return 0;
 }

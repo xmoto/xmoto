@@ -661,13 +661,6 @@ void GameApp::initNetwork() {
     NetServer::instance()->start();
   }
 
-  // start client
-  SDL_Delay(1000); // wait 1s for tests only
-  try {
-    NetClient::instance()->connect("127.0.0.1", XMSession::instance()->clientServerPort());
-  } catch(Exception &e) {
-    LogError("Unable to connect to the server");
-  }
 }
 
 void GameApp::uninitNetwork() {

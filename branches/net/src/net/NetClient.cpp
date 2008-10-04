@@ -64,6 +64,10 @@ void NetClient::addNetAction(NetAction* i_act) {
 void NetClient::connect(const std::string& i_server, int i_port) {
   IPaddress ip;
 
+  if(m_isConnected) {
+    throw Exception("Already connected");
+  }
+
   if (SDLNet_ResolveHost(&ip, i_server.c_str(), i_port) < 0) {
     throw Exception(SDLNet_GetError());
   }
@@ -93,6 +97,12 @@ void NetClient::disconnect() {
 }
 
 bool NetClient::isConnected() {
+  // check that the client has not finished
+  if(m_isConnected) {
+    if(m_clientListenerThread->isThreadRunning() == false) {
+      disconnect();
+    }
+  }
   return m_isConnected;
 }
 

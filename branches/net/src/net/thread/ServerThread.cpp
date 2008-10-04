@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 #include "../helpers/Net.h"
 #include "../../XMSession.h"
+#include "../../states/StateManager.h"
 
 #define XM_SERVER_WAIT_TIMEOUT 1000
 #define XM_SERVER_NB_SOCKETS_MAX 128
@@ -94,6 +95,8 @@ int ServerThread::realThreadFunction() {
     return 1;
   }
 
+  StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
+
   /* Wait for a connection */
   while(m_askThreadToEnd == false) {
     n_activ = SDLNet_CheckSockets(m_set, XM_SERVER_WAIT_TIMEOUT);
@@ -146,6 +149,7 @@ int ServerThread::realThreadFunction() {
   SDLNet_FreeSocketSet(m_set);
   m_set = NULL;
 
+  StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
   LogInfo("server: ending normally");
   return 0;
 }

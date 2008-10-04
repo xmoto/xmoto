@@ -475,6 +475,14 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_SERVERSTOP _("Stop the server")
 #define GAMETEXT_SERVERSTATUSON _("Server is currently started")
 #define GAMETEXT_SERVERSTATUSOFF _("Server is currently stopped")
+#define GAMETEXT_DEFAULT_PORT _("Default port")
+#define GAMETEXT_CUSTOM_PORT _("Custom port")
+#define GAMETEXT_NETWORK _("Network")
+#define GAMETEXT_CLIENTSTATUSON _("You're currently connected")
+#define GAMETEXT_CLIENTSTATUSOFF _("You're currently disconnected")
+#define GAMETEXT_CLIENTCONNECT _("Connect")
+#define GAMETEXT_CLIENTDISCONNECT _("Disconnect")
+#define GAMETEXT_UNABLETOCONNECTONTHESERVER _("Unable to connect on the server")
 
 /* Context help strings */
 #define CONTEXTHELP_UPDATEHIGHSCORES _("Download the latest X-Moto world records and check for new levels")
@@ -662,6 +670,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_STARTSERVERATSTARTUP _("Start the server at X-Moto startup")
 #define CONTEXTHELP_SERVERSTARTSTOP _("Start/stop the server")
 #define CONTEXTHELP_SERVERPORT _("Port on which the server must listen to")
+#define CONTEXTHELP_SERVER _("Server on which you want to connect")
+#define CONTEXTHELP_CLIENTCONNECTDISCONNECT _("Connect/disconnect the client to the server")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

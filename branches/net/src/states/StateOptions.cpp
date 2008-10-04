@@ -1089,14 +1089,14 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_someText->setHAlign(UI_ALIGN_LEFT);
   v_someText->setFont(drawlib->getFontSmall()); 
 
-  v_button = new UIButton(v_window, 20, 60, "Default port", 200, 28);
+  v_button = new UIButton(v_window, 20, 60, GAMETEXT_DEFAULT_PORT, 200, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(501);
   v_button->setID("DEFAULT_PORT");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_SERVERPORT);
 
-  v_button = new UIButton(v_window, 20, 90, "Custom port", 200, 28);
+  v_button = new UIButton(v_window, 20, 90, GAMETEXT_CUSTOM_PORT, 200, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(501);
   v_button->setID("CUSTOM_PORT");
