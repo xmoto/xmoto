@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-09-19 18:18+0200\n"
+"POT-Creation-Date: 2008-10-04 20:40+0200\n"
 "PO-Revision-Date: 2007-10-17 14:34+0200\n"
 "Last-Translator: Ville Lahdenvuo <tuhoojabotti@gmail.com>\n"
 "Language-Team: \n"
@@ -47,7 +47,7 @@ msgstr "44 kHz"
 
 #: src/GameText.h:41
 msgid "8-bit"
-msgstr "8-bit"
+msgstr "8-bittinen"
 
 #: src/GameText.h:42
 msgid "Quit level"
@@ -118,7 +118,7 @@ msgstr "Aktiivinen Zoom"
 
 #: src/GameText.h:60
 msgid "Beating mode"
-msgstr ""
+msgstr "Hakkaus moodi"
 
 #: src/GameText.h:61
 msgid "Best Times"
@@ -190,7 +190,7 @@ msgstr "Poista"
 msgid "Are you sure you want to delete %i replay"
 msgid_plural "Are you sure you want to delete %i replay"
 msgstr[0] "Tahdotko varmasti poistaa toistovideon %i ?"
-msgstr[1] "Tahdotko varmasti poistaa toistovideon %i ?"
+msgstr[1] "Tahdotko varmasti poistaa %i toistovideota?"
 
 #: src/GameText.h:78
 msgid "There is no replay to clean"
@@ -210,100 +210,100 @@ msgstr "Näppäimet"
 
 #: src/GameText.h:83
 msgid "left control"
-msgstr ""
+msgstr "vasen Control"
 
 #: src/GameText.h:84
 msgid "right control"
-msgstr ""
+msgstr "Oikea Control"
 
 #: src/GameText.h:85
 msgid "left shift"
-msgstr ""
+msgstr "Vasen Shift"
 
 #: src/GameText.h:86
 msgid "right shift"
-msgstr ""
+msgstr "Oikea Shift"
 
 #: src/GameText.h:87
 msgid "left alt"
-msgstr ""
+msgstr "vasen Alt"
 
 #: src/GameText.h:88
 msgid "right alt"
-msgstr ""
+msgstr "Oikea Alt"
 
 #: src/GameText.h:89
 msgid "left meta"
-msgstr ""
+msgstr "vasen Meta"
 
 #: src/GameText.h:90
 msgid "right meta"
-msgstr ""
+msgstr "oikea Meta"
 
 #: src/GameText.h:91 src/GameText.h:105
 #, c-format
 msgid "button %i"
-msgstr ""
+msgstr "nappi %i"
 
 #: src/GameText.h:92
 msgid "left button"
-msgstr ""
+msgstr "vasen nappi"
 
 #: src/GameText.h:93
 msgid "middle button"
-msgstr ""
+msgstr "keskimmäinen nappi"
 
 #: src/GameText.h:94
 msgid "right button"
-msgstr ""
+msgstr "oikea nappi"
 
 #: src/GameText.h:95
 msgid "wheel up"
-msgstr ""
+msgstr "pyörä ylös"
 
 #: src/GameText.h:96
 msgid "wheel down"
-msgstr ""
+msgstr "pyörä alas"
 
 #: src/GameText.h:97
 msgid "No joystick found"
-msgstr ""
+msgstr "Joystickiä ei havaittu"
 
 #: src/GameText.h:98
 #, c-format
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i joysticki löydetty"
+msgstr[1] "%i joystickiä löydetty"
 
 #: src/GameText.h:99
 #, c-format
 msgid "axis %i"
-msgstr ""
+msgstr "akseli %i"
 
 #: src/GameText.h:100
 msgid "left"
-msgstr ""
+msgstr "vasen"
 
 #: src/GameText.h:101
 msgid "right"
-msgstr ""
+msgstr "oikea"
 
 #: src/GameText.h:102
 msgid "up"
-msgstr ""
+msgstr "ylös"
 
 #: src/GameText.h:103
 msgid "down"
-msgstr ""
+msgstr "alas"
 
 #: src/GameText.h:104
 msgid "none"
-msgstr ""
+msgstr "none"
 
 #: src/GameText.h:106
 msgid "Script action"
-msgstr ""
+msgstr "Skripti toiminto"
 
 #: src/GameText.h:109
 msgid "Lead Programming"
@@ -391,7 +391,7 @@ msgstr "tanska"
 
 #: src/GameText.h:152
 msgid "Lithuanian"
-msgstr ""
+msgstr "liettua"
 
 #: src/GameText.h:154
 msgid "Main testers"
@@ -459,7 +459,7 @@ msgstr "Päiväys"
 
 #: src/GameText.h:176
 msgid "Difficulty"
-msgstr ""
+msgstr "Vaikeus"
 
 #: src/GameText.h:177
 msgid ""
@@ -468,10 +468,10 @@ msgid ""
 "server. It is useful to save your data or if you play X-Moto from different "
 "places."
 msgstr ""
-"X-Mto käyttää tietokantaa tietokoneellasi johon se tallentaa kaikki parhaat "
-"suorituksesiVoit lähettää nämä tiedot käyttämällä internet käyttäjääsi X-"
-"Moton servereille.Se on käytännöllinen tietojen tallennukseen jos pelaat "
-"muissa paikoissa."
+"X-Moto käyttää tietokantaa tietokoneellasi johon se tallentaa kaikki parhaat "
+"suorituksesi. Voit lähettää nämä tiedot käyttämällä internet käyttäjääsi X-"
+"Moton servereille. Se on käytännöllinen tietojen tallennukseen jos pelaat "
+"muillakin tietokoneilla."
 
 #: src/GameText.h:178
 msgid ""
@@ -480,6 +480,9 @@ msgid ""
 "will be duplicated/not synchronized. If you did that, you should remove the "
 "copies you did."
 msgstr ""
+"Jos olet kopioinut X-Moton käyttäjätiedot (.xmoto) toiselta tietokoneelta, "
+"sinun ei pitäisi käyttää tätä toimintoa, muutoin menetät kaikki "
+"statistiikkasi. Sinun tulisi poistaa kaikki kopiot mitkä olet tehnyt."
 
 #: src/GameText.h:179
 msgid "Synchronise"
@@ -627,11 +630,11 @@ msgstr "Näytä maailmanennätykset pelissä"
 
 #: src/GameText.h:214
 msgid "Enable menu music"
-msgstr ""
+msgstr "Salli valikko musiikki"
 
 #: src/GameText.h:215
 msgid "Enable game music"
-msgstr ""
+msgstr "Salli peli musiikki"
 
 #: src/GameText.h:216
 msgid "Enable WWW Access"
@@ -850,7 +853,7 @@ msgstr "Piilota haamut"
 
 #: src/GameText.h:272
 msgid "High"
-msgstr "High"
+msgstr "Korkea"
 
 #: src/GameText.h:273
 msgid "Levels are being added into the database. Please wait."
@@ -870,7 +873,7 @@ msgstr "Joystick"
 
 #: src/GameText.h:277
 msgid "Enable joysticks"
-msgstr ""
+msgstr "Salli Joystickit"
 
 #: src/GameText.h:278
 msgid "Oops!"
@@ -996,7 +999,7 @@ msgstr "Main"
 
 #: src/GameText.h:308
 msgid "Mouse"
-msgstr ""
+msgstr "Hiiri"
 
 #: src/GameText.h:309 src/GameText.h:412
 msgid "Theme"
@@ -1004,7 +1007,7 @@ msgstr "Teema"
 
 #: src/GameText.h:310
 msgid "Medium"
-msgstr "Medium"
+msgstr "Keskiverto"
 
 #: src/GameText.h:311
 msgid "Menu Graphics"
@@ -1188,7 +1191,7 @@ msgstr "Web-äänestys"
 msgid "Statistics"
 msgstr "Tilastot"
 
-#: src/GameText.h:359 src/GameText.h:667
+#: src/GameText.h:359 src/GameText.h:666
 msgid "By best driver"
 msgstr "Parhaan ajajan mukaan"
 
@@ -1242,7 +1245,7 @@ msgstr "Säädä välityspalvelin..."
 
 #: src/GameText.h:373
 msgid "Quality"
-msgstr ""
+msgstr "Laatu"
 
 #: src/GameText.h:374
 msgid "Quick start"
@@ -1301,7 +1304,7 @@ msgstr "Toistovideot"
 
 #: src/GameText.h:388
 msgid "Are you sure you want to reset config to defaults ?"
-msgstr ""
+msgstr "Oletko varma että haluat palauttaa oletus asetukset?"
 
 #: src/GameText.h:389
 msgid "Restart This Level"
@@ -1362,20 +1365,20 @@ msgstr "Stereo"
 
 #: src/GameText.h:405
 msgid "Synchronisation down"
-msgstr ""
+msgstr "Syknronisaatio alas"
 
 #: src/GameText.h:406
 msgid "Synchronisation up"
-msgstr ""
+msgstr "Syknronisaatio ylös"
 
 #: src/GameText.h:407
 msgid "Synchronisation done successfully"
-msgstr ""
+msgstr "Syknronisaatio valmis"
 
 #: src/GameText.h:408
 #, c-format
 msgid "Key '%s' has been switched to '%s'"
-msgstr ""
+msgstr "Näppäin '%s' on vaihdettu '%s':si"
 
 #: src/GameText.h:409
 msgid "Enable/disable ugly mode"
@@ -1419,7 +1422,7 @@ msgstr "Opastus"
 
 #: src/GameText.h:420
 msgid "Undefined"
-msgstr ""
+msgstr "Määrittelemätön"
 
 #: src/GameText.h:421
 msgid "Unknown"
@@ -1499,7 +1502,7 @@ msgstr "Käytä profiilia"
 
 #: src/GameText.h:438
 msgid "Allow web forms"
-msgstr ""
+msgstr "Salli web lomakkeet"
 
 #: src/GameText.h:439
 msgid "Using HTTP Proxy"
@@ -1773,7 +1776,7 @@ msgstr ""
 
 #: src/GameText.h:506
 msgid "Allow X-Moto to ask you your mind about levels"
-msgstr ""
+msgstr "Anna X-Moton kysyä mielipiteitä kentistä"
 
 #: src/GameText.h:507
 msgid "Enable high-color graphics"
@@ -2010,7 +2013,7 @@ msgstr "Taustamusiikki päävalikossa"
 
 #: src/GameText.h:567
 msgid "Enables background music while playing"
-msgstr ""
+msgstr "Sallii taustamusiikin pelattaessa"
 
 #: src/GameText.h:569
 msgid "Choose the X-Moto graphics theme"
@@ -2222,117 +2225,119 @@ msgstr "Synkronisoi tietokantasi kun lopetat X-Moton"
 
 #: src/GameText.h:623
 msgid "Enable joysticks events"
-msgstr ""
+msgstr "Salli joystickit"
 
 #: src/GameText.h:624
 msgid "Preselect the retry button when dying or finishing a level"
 msgstr ""
+"Valitsee automaagisesti 'pelaa uudestaan' napin, jos kuolet tai läpäiset "
+"kentän"
 
 #: src/GameText.h:626
 msgid "Give your mind about this level"
-msgstr ""
+msgstr "Anna mielesi tästä kentästä"
 
 #: src/GameText.h:627
 msgid "No idea"
-msgstr ""
+msgstr "En osaa sanoa"
 
 #: src/GameText.h:628
 msgid "Beginner"
-msgstr ""
+msgstr "Aloittelija"
 
 #: src/GameText.h:629
 msgid "Expert"
-msgstr ""
+msgstr "Expertti"
 
 #: src/GameText.h:630
 msgid "Master"
-msgstr ""
+msgstr "Mestari"
 
 #: src/GameText.h:631
 msgid "God"
-msgstr ""
+msgstr "Jumala"
 
 #: src/GameText.h:632
 msgid "Not nice at all"
-msgstr ""
+msgstr "Ei yhtään kaunis"
 
 #: src/GameText.h:633
 msgid "Not nice"
-msgstr ""
+msgstr "Ei kaunis"
 
 #: src/GameText.h:634
 msgid "Nice"
-msgstr ""
+msgstr "Kaunis"
 
 #: src/GameText.h:635
 msgid "Really nice"
-msgstr ""
+msgstr "Todella Kaunis"
 
 #: src/GameText.h:636
 msgid "Send this report"
-msgstr ""
+msgstr "Lähetä tämä arvointi"
 
 #: src/GameText.h:637
 msgid "Skip this report"
-msgstr ""
+msgstr "ohita arviointi"
 
 #: src/GameText.h:639
 msgid "You don't want to vote"
-msgstr ""
+msgstr "Et halua äänestää"
 
 #: src/GameText.h:640
 msgid "Really easy"
-msgstr ""
+msgstr "Todella helppo"
 
 #: src/GameText.h:641
 msgid "No technical difficulty"
-msgstr ""
+msgstr "Ei teknillistä vaikeutta"
 
 #: src/GameText.h:642
 msgid "At least one difficulty"
-msgstr ""
+msgstr "Ainakin yksi vaikeus"
 
 #: src/GameText.h:643
 msgid "Several difficulties"
-msgstr ""
+msgstr "Monia vaikeuksia"
 
 #: src/GameText.h:644
 msgid "Impossible"
-msgstr ""
+msgstr "Mahdoton"
 
 #: src/GameText.h:645
 msgid "Basic blocks, no decoration"
-msgstr ""
+msgstr "Normaaleja palikoita, ei koristeita"
 
 #: src/GameText.h:646
 msgid "Basic decoration, not smooth blocks"
-msgstr ""
+msgstr "Normiaalit koristeet, ei pehmeät palikat"
 
 #: src/GameText.h:647
 msgid "Not original"
-msgstr ""
+msgstr "Ei originaali"
 
 #: src/GameText.h:648
 msgid "Nice, could be better"
-msgstr ""
+msgstr "Kiva, voisi olla parempi"
 
 #: src/GameText.h:649
 msgid "Several textures, sprites, ..."
-msgstr ""
+msgstr "Useita tekstuureja ja spritejä"
 
 #: src/GameText.h:650
 msgid "Send this report on the webserver"
-msgstr ""
+msgstr "Lähetä tämä arvostelu web-serverillemme"
 
 #: src/GameText.h:651
 msgid "Don't send this report on the webserver"
-msgstr ""
+msgstr "Älä lähetä tätä arvostelua web-serverillemme"
 
 #: src/GameText.h:653
 msgid "Levels with no highscore"
 msgstr "Kentät ilman huipputulosta"
 
-#: src/GameText.h:654 src/GameText.h:688
+#: src/GameText.h:654 src/GameText.h:687
 msgid "Levels you have not completed"
 msgstr "Kentät, joita et ole suorittanut"
 
@@ -2370,302 +2375,294 @@ msgstr "Huonoimmat kentät"
 
 #: src/GameText.h:664
 msgid "Scripted levels"
-msgstr "Skriptatut levelit"
+msgstr "Skriptatut kentät"
 
 #: src/GameText.h:665
-msgid "Musical levels"
-msgstr "Muskaaliset kentät"
-
-#: src/GameText.h:666
 msgid "Physics levels"
 msgstr "Kentät, joissa on liikkuvia objekteja"
 
-#: src/GameText.h:668
+#: src/GameText.h:667
 msgid "Last played levels"
 msgstr "Viimeksi pelatut kentät"
 
-#: src/GameText.h:669
+#: src/GameText.h:668
 msgid "Never played levels"
 msgstr "Pelaamattomat kentät"
 
-#: src/GameText.h:670
+#: src/GameText.h:669
 msgid "Most played levels"
 msgstr "Eniten pelatut kentät"
 
-#: src/GameText.h:671
+#: src/GameText.h:670
 msgid "Less played levels (but played)"
 msgstr "Vähiten pelatut kentät kuitenkin joskus pelatut)"
 
-#: src/GameText.h:672
+#: src/GameText.h:671
 msgid "Last highscores"
 msgstr "Viimeisimmät huipputulokset"
 
-#: src/GameText.h:673
+#: src/GameText.h:672
 msgid "Last levels"
 msgstr "Viimeisimmät kentät"
 
-#: src/GameText.h:674
+#: src/GameText.h:673
 msgid "Oldest highscores"
 msgstr "Vanhimmat huipputulokset"
 
-#: src/GameText.h:675
+#: src/GameText.h:674
 msgid "Platinum"
 msgstr "Platina"
 
-#: src/GameText.h:676
+#: src/GameText.h:675
 msgid "Gold"
 msgstr "Kulta"
 
-#: src/GameText.h:677
+#: src/GameText.h:676
 msgid "Silver"
 msgstr "Hopea"
 
-#: src/GameText.h:678
+#: src/GameText.h:677
 msgid "Bronze"
 msgstr "Pronssi"
 
-#: src/GameText.h:679
+#: src/GameText.h:678
 msgid "No medal"
 msgstr "Ei mitalia"
 
-#: src/GameText.h:680
+#: src/GameText.h:679
 msgid "My levels"
 msgstr "Omat kentät"
 
-#: src/GameText.h:681
+#: src/GameText.h:680
 msgid "Crappy levels"
 msgstr "Huonot kentät"
 
-#: src/GameText.h:682
+#: src/GameText.h:681
 msgid "Shortest levels"
 msgstr "Lyhyimmät kentät"
 
-#: src/GameText.h:683
+#: src/GameText.h:682
 msgid "Medium levels"
 msgstr "Keskivaikeat kentät"
 
-#: src/GameText.h:684
+#: src/GameText.h:683
 msgid "Long levels"
 msgstr "Pitkät kentät"
 
-#: src/GameText.h:685
+#: src/GameText.h:684
 msgid "Very long levels"
 msgstr "Erittäin pitkät kentät"
 
-#: src/GameText.h:687
+#: src/GameText.h:686
 msgid "Levels with no highscore in your room"
 msgstr "Huipputuloksettomat kentät huoneessasi"
 
-#: src/GameText.h:689
+#: src/GameText.h:688
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Joku huoneessa teki paremman huipputuloksen kuin sinä"
 
-#: src/GameText.h:690
+#: src/GameText.h:689
 msgid "All X-Moto levels"
 msgstr "Kaikki X-Moto-kentät"
 
-#: src/GameText.h:691
+#: src/GameText.h:690
 msgid "New and updated levels since your last check"
 msgstr "Uudet ja päivitetyt kentät viime hakusi jälkeen"
 
-#: src/GameText.h:692
+#: src/GameText.h:691
 msgid "Your favorite levels"
 msgstr "Suosikkikentät"
 
-#: src/GameText.h:693
+#: src/GameText.h:692
 msgid "Your blacklisted levels"
 msgstr "Omat mustan listan kenttäsi"
 
-#: src/GameText.h:694
+#: src/GameText.h:693
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Web-äänestyksen mukaan hienoimmat X-Moto-kentät"
 
-#: src/GameText.h:695
+#: src/GameText.h:694
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Web-äänestyksen mukaan vaikeimmat X-Moto-kentät"
 
-#: src/GameText.h:696
+#: src/GameText.h:695
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Web-äänestyksen mukaan helpoimmat X-Moto-kentät"
 
-#: src/GameText.h:697
+#: src/GameText.h:696
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Huonoimmat X-Moto kentät web-äänestyksen mukaan"
 
-#: src/GameText.h:698
+#: src/GameText.h:697
 msgid "X-Moto levels which are dynamic"
 msgstr "Dynaamiset X-Moto-kentät"
 
-#: src/GameText.h:699
-msgid "X-Moto levels with a background music"
-msgstr "Taustamusiikilliset X-Moto-kentät"
-
-#: src/GameText.h:700
+#: src/GameText.h:698
 msgid "X-Moto levels using strongly physics"
 msgstr "X-Moto kentät, jotka käyttävät paljon liikkyvia objekteja"
 
-#: src/GameText.h:701
+#: src/GameText.h:699
 msgid "Last levels you have played"
 msgstr "Viimeksi pelaamasi kentät"
 
-#: src/GameText.h:702
+#: src/GameText.h:700
 msgid "X-Moto levels you never played"
 msgstr "X-Moto-kentät, joita et ole koskaan pelannut"
 
-#: src/GameText.h:703
+#: src/GameText.h:701
 msgid "X-Moto levels you have played the most"
 msgstr "X-Moto-kentät, joita olet pelannut eniten"
 
-#: src/GameText.h:704
+#: src/GameText.h:702
 msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto-kentät, joita olet pelannut vain muutaman kerran"
 
-#: src/GameText.h:705
+#: src/GameText.h:703
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "X-Moto-kentät, joilla on tuore huipputulos huoneessasi"
 
-#: src/GameText.h:706
+#: src/GameText.h:704
 msgid "Last created X-Moto levels"
 msgstr "Tuoreimmat X-Moto-kentät"
 
-#: src/GameText.h:707
+#: src/GameText.h:705
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto-kentät, joilla on vanha huipputulos huoneessasi"
 
-#: src/GameText.h:708
+#: src/GameText.h:706
 msgid "You have the room highscore"
 msgstr "Sinulla on huoneen huipputulos"
 
-#: src/GameText.h:709
+#: src/GameText.h:707
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Huipputuloksesi on melkein huoneen huipputulos (95%)"
 
-#: src/GameText.h:710
+#: src/GameText.h:708
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Huipputuloksesi on melkein huoneen huipputulos (90%-95%)"
 
-#: src/GameText.h:711
+#: src/GameText.h:709
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Huipputuloksesi on melkein huoneen huipputulos (80%-90%)"
 
-#: src/GameText.h:712
+#: src/GameText.h:710
 msgid "The room highscore is really better than your own highscore"
 msgstr "Huoneen huipputulos on paljon parempi kuin omasi"
 
-#: src/GameText.h:713
+#: src/GameText.h:711
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Kenttäpaketti \"%s\""
 
-#: src/GameText.h:714
+#: src/GameText.h:712
 #, c-format
 msgid "Highscores by %s"
 msgstr "Huipputulokset pelaajalta %s"
 
-#: src/GameText.h:715
+#: src/GameText.h:713
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Oheiskentät ('My levels'-hakemistossa)"
 
-#: src/GameText.h:716
+#: src/GameText.h:714
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr "'Huonoiksi' merkatut kentät piilotetaan kaikissa muissa paketeissa"
 
-#: src/GameText.h:717
+#: src/GameText.h:715
 msgid "The shortest levels (less than 25 seconds)"
 msgstr "Lyhimmät kentät (alle 25 sekuntia)"
 
-#: src/GameText.h:718
+#: src/GameText.h:716
 msgid "The medium levels (25 seconds to 60)"
 msgstr "Keskiverto kentät (25:stä sekunnista 60:een)"
 
-#: src/GameText.h:719
+#: src/GameText.h:717
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr "Pitkät kentät (yhdestä minuutista kahteen minuuttiin)"
 
-#: src/GameText.h:720
+#: src/GameText.h:718
 msgid "The longest levels (more than 2 minutes)"
 msgstr "Pisimmät kentät (enemmän kuin 2 minuuttia)"
 
-#: src/GameText.h:722
+#: src/GameText.h:720
 msgid "Ugly mode enabled"
 msgstr "Ruma tila päällä"
 
-#: src/GameText.h:723
+#: src/GameText.h:721
 msgid "Ugly mode disabled"
 msgstr "Ruma tila pois päältä"
 
-#: src/GameText.h:724
+#: src/GameText.h:722
 msgid "Theme mode enabled"
 msgstr "Teematila päällä"
 
-#: src/GameText.h:725
+#: src/GameText.h:723
 msgid "Theme mode disabled"
 msgstr "Teematila pois päältä"
 
-#: src/GameText.h:726
+#: src/GameText.h:724
 msgid "UglyOver mode enabled"
 msgstr "Erittäin ruma tila päällä"
 
-#: src/GameText.h:727
+#: src/GameText.h:725
 msgid "UglyOver mode disabled"
 msgstr "Erittäin ruma tila pois päältä"
 
-#: src/GameText.h:728
+#: src/GameText.h:726
 msgid "Web connection enabled"
 msgstr "Internet-yhteys päällä"
 
-#: src/GameText.h:729
+#: src/GameText.h:727
 msgid "Web connection disabled"
 msgstr "Internet-yhteys pois päältä"
 
-#: src/GameText.h:730
+#: src/GameText.h:728
 msgid "Replay interpolation enabled"
 msgstr "Toistovideon interpolaatio päällä"
 
-#: src/GameText.h:731
+#: src/GameText.h:729
 msgid "Replay interpolation disabled"
 msgstr "Toistovideon interpolaatio pois päältä"
 
-#: src/GameText.h:732
+#: src/GameText.h:730
 msgid "Fps enabled"
 msgstr "Fps mahdollinen"
 
-#: src/GameText.h:733
+#: src/GameText.h:731
 msgid "Fps disabled"
 msgstr "Fps pois päältä"
 
-#: src/GameText.h:734
+#: src/GameText.h:732
 msgid "Audio enabled"
 msgstr "Ääni mahdollinen"
 
-#: src/GameText.h:735
+#: src/GameText.h:733
 msgid "Audio disabled"
 msgstr "Ääni pois päältä"
 
-#: src/GameText.h:737
+#: src/GameText.h:735
 msgid "No training positions stored"
 msgstr "Ei harjoitus sijainteja varattu"
 
-#: src/GameText.h:738
+#: src/GameText.h:736
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr "Harjoitus sijainti %i/%i varattu"
 
-#: src/GameText.h:739
+#: src/GameText.h:737
 #, c-format
 msgid "Stored as training position %i"
 msgstr "%i Varattu harjoitus sijaintina "
 
-#: src/GameText.h:741
+#: src/GameText.h:739
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Kentästä %i ei löydy huipputulosta"
+msgstr[1] "Kentistä (%i) ei löydy huipputuloksia"
 
-#: src/GameText.h:744
+#: src/GameText.h:742
 msgid "FontGroup:GENERAL"
 msgstr "FonttiRyhmä:GENERAL"
 
@@ -2953,6 +2950,12 @@ msgid ""
 msgstr ""
 "Nyt viimeiselle...Se ei ole niin pitkä, mutta sen sijaan\n"
 "siellä on vielä vähemmän tilaa pääkullallesi. Onnea matkaan! :)"
+
+#~ msgid "Musical levels"
+#~ msgstr "Muskaaliset kentät"
+
+#~ msgid "X-Moto levels with a background music"
+#~ msgstr "Taustamusiikilliset X-Moto-kentät"
 
 #~ msgid "Initializing input system..."
 #~ msgstr "Käynnistetään syötejärjestelmää..."

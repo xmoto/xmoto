@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-09-19 18:18+0200\n"
+"POT-Creation-Date: 2008-10-04 20:40+0200\n"
 "PO-Revision-Date: 2008-01-10 09:30+0100\n"
 "Last-Translator: Mateusz Kosibowicz <mateusz.kosibowcz@gmail.com>\n"
 "Language-Team: Polish\n"
@@ -1187,7 +1187,7 @@ msgstr "Głosy na www"
 msgid "Statistics"
 msgstr "Statystyki"
 
-#: src/GameText.h:359 src/GameText.h:667
+#: src/GameText.h:359 src/GameText.h:666
 msgid "By best driver"
 msgstr "Wg. najlepszego gracza"
 
@@ -2337,7 +2337,7 @@ msgstr ""
 msgid "Levels with no highscore"
 msgstr "Poziomy bez rekordu"
 
-#: src/GameText.h:654 src/GameText.h:688
+#: src/GameText.h:654 src/GameText.h:687
 msgid "Levels you have not completed"
 msgstr "Poziomy nieukończone"
 
@@ -2378,294 +2378,286 @@ msgid "Scripted levels"
 msgstr "Oskryptowane poziomy"
 
 #: src/GameText.h:665
-msgid "Musical levels"
-msgstr "Musicale"
-
-#: src/GameText.h:666
 msgid "Physics levels"
 msgstr ""
 
-#: src/GameText.h:668
+#: src/GameText.h:667
 msgid "Last played levels"
 msgstr "Ostatnio wybierane poziomy"
 
-#: src/GameText.h:669
+#: src/GameText.h:668
 msgid "Never played levels"
 msgstr "Nigdy nie wybierane"
 
-#: src/GameText.h:670
+#: src/GameText.h:669
 msgid "Most played levels"
 msgstr "Najczęściej wybierane"
 
-#: src/GameText.h:671
+#: src/GameText.h:670
 msgid "Less played levels (but played)"
 msgstr "Najrzadziej wybierane"
 
-#: src/GameText.h:672
+#: src/GameText.h:671
 msgid "Last highscores"
 msgstr "Najnowsze rekordy"
 
-#: src/GameText.h:673
+#: src/GameText.h:672
 msgid "Last levels"
 msgstr "Najnowsze poziomy"
 
-#: src/GameText.h:674
+#: src/GameText.h:673
 msgid "Oldest highscores"
 msgstr "Najstarsze rekordy"
 
-#: src/GameText.h:675
+#: src/GameText.h:674
 msgid "Platinum"
 msgstr "Platyna"
 
-#: src/GameText.h:676
+#: src/GameText.h:675
 msgid "Gold"
 msgstr "Złoto"
 
-#: src/GameText.h:677
+#: src/GameText.h:676
 msgid "Silver"
 msgstr "Srebro"
 
-#: src/GameText.h:678
+#: src/GameText.h:677
 msgid "Bronze"
 msgstr "Brąz"
 
-#: src/GameText.h:679
+#: src/GameText.h:678
 msgid "No medal"
 msgstr "Brak medalu"
 
-#: src/GameText.h:680
+#: src/GameText.h:679
 msgid "My levels"
 msgstr "Moje poziomy"
 
-#: src/GameText.h:681
+#: src/GameText.h:680
 msgid "Crappy levels"
 msgstr "Słabe poziomy"
 
-#: src/GameText.h:682
+#: src/GameText.h:681
 msgid "Shortest levels"
 msgstr "Najkrótsze poziomy"
 
-#: src/GameText.h:683
+#: src/GameText.h:682
 msgid "Medium levels"
 msgstr "Niedługie poziomy"
 
-#: src/GameText.h:684
+#: src/GameText.h:683
 msgid "Long levels"
 msgstr "Długie poziomy"
 
-#: src/GameText.h:685
+#: src/GameText.h:684
 msgid "Very long levels"
 msgstr "Bardzo długie poziomy"
 
-#: src/GameText.h:687
+#: src/GameText.h:686
 msgid "Levels with no highscore in your room"
 msgstr "Poziomy bez rekordu w Twoim pokoju"
 
-#: src/GameText.h:689
+#: src/GameText.h:688
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Ktoś w pokoju uzyskał lepszy czas niż Ty"
 
-#: src/GameText.h:690
+#: src/GameText.h:689
 msgid "All X-Moto levels"
 msgstr "Wszystkie poziomy"
 
-#: src/GameText.h:691
+#: src/GameText.h:690
 msgid "New and updated levels since your last check"
 msgstr "Nowe i uaktualnione poziomy od ostatniego sprawdzania"
 
-#: src/GameText.h:692
+#: src/GameText.h:691
 msgid "Your favorite levels"
 msgstr "Twoje ulubione poziomy"
 
-#: src/GameText.h:693
+#: src/GameText.h:692
 msgid "Your blacklisted levels"
 msgstr "Twoje poziomy na czarnej liście"
 
-#: src/GameText.h:694
+#: src/GameText.h:693
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Najlepsze poziomy wg. głosów w serwisie www"
 
-#: src/GameText.h:695
+#: src/GameText.h:694
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Najtrudniejsze poziomy wg. głosów w serwisie www"
 
-#: src/GameText.h:696
+#: src/GameText.h:695
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Najłatwiejsze poziomy wg. głosów w serwisie www"
 
-#: src/GameText.h:697
+#: src/GameText.h:696
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Najgorsze poziomy wg. głosów w serwisie www"
 
-#: src/GameText.h:698
+#: src/GameText.h:697
 msgid "X-Moto levels which are dynamic"
 msgstr "Poziome, które są dynamiczne"
 
-#: src/GameText.h:699
-msgid "X-Moto levels with a background music"
-msgstr "Poziomy z muzyką"
-
-#: src/GameText.h:700
+#: src/GameText.h:698
 msgid "X-Moto levels using strongly physics"
 msgstr ""
 
-#: src/GameText.h:701
+#: src/GameText.h:699
 msgid "Last levels you have played"
 msgstr "Poziomy, w które grałeś ostatnio"
 
-#: src/GameText.h:702
+#: src/GameText.h:700
 msgid "X-Moto levels you never played"
 msgstr "Poziomy, w które nigdy nie grałeś"
 
-#: src/GameText.h:703
+#: src/GameText.h:701
 msgid "X-Moto levels you have played the most"
 msgstr "Poziomy, w które grasz najczęściej"
 
-#: src/GameText.h:704
+#: src/GameText.h:702
 msgid "X-Moto levels you have played only a few times"
 msgstr "Poziomy włączane tylko kilka razy"
 
-#: src/GameText.h:705
+#: src/GameText.h:703
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "Poziomy mające najnowsze rekordy w Twoim pokoju"
 
-#: src/GameText.h:706
+#: src/GameText.h:704
 msgid "Last created X-Moto levels"
 msgstr "Najnowsze poziomy"
 
-#: src/GameText.h:707
+#: src/GameText.h:705
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "Poziomy, które mają najstarsze rekordy w Twoim pokoju"
 
-#: src/GameText.h:708
+#: src/GameText.h:706
 msgid "You have the room highscore"
 msgstr "Uzyskałeś rekord pokoju"
 
-#: src/GameText.h:709
+#: src/GameText.h:707
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Twój rekord jest blisko rekordu danego pokoju (95%)"
 
-#: src/GameText.h:710
+#: src/GameText.h:708
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Twój rekord jest blisko rekordu danego pokoju (90%-95%)"
 
-#: src/GameText.h:711
+#: src/GameText.h:709
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Twój rekord jest blisko rekordu danego pokoju (80%-90%)"
 
-#: src/GameText.h:712
+#: src/GameText.h:710
 msgid "The room highscore is really better than your own highscore"
 msgstr "Rekord danego pokoju jest znacznie lepszy od Twojego"
 
-#: src/GameText.h:713
+#: src/GameText.h:711
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Pakiet poziomów \"%s\""
 
-#: src/GameText.h:714
+#: src/GameText.h:712
 #, c-format
 msgid "Highscores by %s"
 msgstr "Rekordy - %s"
 
-#: src/GameText.h:715
+#: src/GameText.h:713
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Zewnętrzne poziomy (z katalogu 'My levels')"
 
-#: src/GameText.h:716
+#: src/GameText.h:714
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr "Poziomy oznaczone jako 'słabe' są ukryte w innych pakietach"
 
-#: src/GameText.h:717
+#: src/GameText.h:715
 msgid "The shortest levels (less than 25 seconds)"
 msgstr "Najkrótsze poziomy (mniej niż 25 sekund)"
 
-#: src/GameText.h:718
+#: src/GameText.h:716
 msgid "The medium levels (25 seconds to 60)"
 msgstr "Niedługie poziomy (od 25 sekund do 60)"
 
-#: src/GameText.h:719
+#: src/GameText.h:717
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr "Długie poziomy (od 1 minuty do 2 minut)"
 
-#: src/GameText.h:720
+#: src/GameText.h:718
 msgid "The longest levels (more than 2 minutes)"
 msgstr "Bardzo długie poziomy (dłuższe niz 2 minuty)"
 
-#: src/GameText.h:722
+#: src/GameText.h:720
 msgid "Ugly mode enabled"
 msgstr "Tryb Ugly aktywny"
 
-#: src/GameText.h:723
+#: src/GameText.h:721
 msgid "Ugly mode disabled"
 msgstr "Tryb Ugly nieaktywny"
 
-#: src/GameText.h:724
+#: src/GameText.h:722
 msgid "Theme mode enabled"
 msgstr "Motyw aktywny"
 
-#: src/GameText.h:725
+#: src/GameText.h:723
 msgid "Theme mode disabled"
 msgstr "Motyw nieaktywny"
 
-#: src/GameText.h:726
+#: src/GameText.h:724
 msgid "UglyOver mode enabled"
 msgstr "UglyOver aktywne"
 
-#: src/GameText.h:727
+#: src/GameText.h:725
 msgid "UglyOver mode disabled"
 msgstr "UglyOver nieaktywne"
 
-#: src/GameText.h:728
+#: src/GameText.h:726
 msgid "Web connection enabled"
 msgstr "Połączenie z internetem aktywne"
 
-#: src/GameText.h:729
+#: src/GameText.h:727
 msgid "Web connection disabled"
 msgstr "Połączenie z internetem nieaktywne"
 
-#: src/GameText.h:730
+#: src/GameText.h:728
 msgid "Replay interpolation enabled"
 msgstr "Interpolacja na powtórkach aktywna"
 
-#: src/GameText.h:731
+#: src/GameText.h:729
 msgid "Replay interpolation disabled"
 msgstr "Interpolacja na powtórkach nieaktywna"
 
-#: src/GameText.h:732
+#: src/GameText.h:730
 msgid "Fps enabled"
 msgstr "Wyświetalnie FPS"
 
-#: src/GameText.h:733
+#: src/GameText.h:731
 msgid "Fps disabled"
 msgstr "Tryb Ugly nieaktywny"
 
-#: src/GameText.h:734
+#: src/GameText.h:732
 #, fuzzy
 msgid "Audio enabled"
 msgstr "Wyświetalnie FPS"
 
-#: src/GameText.h:735
+#: src/GameText.h:733
 #, fuzzy
 msgid "Audio disabled"
 msgstr "Tryb Ugly nieaktywny"
 
-#: src/GameText.h:737
+#: src/GameText.h:735
 msgid "No training positions stored"
 msgstr ""
 
-#: src/GameText.h:738
+#: src/GameText.h:736
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr ""
 
-#: src/GameText.h:739
+#: src/GameText.h:737
 #, c-format
 msgid "Stored as training position %i"
 msgstr ""
 
-#: src/GameText.h:741
+#: src/GameText.h:739
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
@@ -2673,7 +2665,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: src/GameText.h:744
+#: src/GameText.h:742
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 
@@ -2955,6 +2947,12 @@ msgid ""
 msgstr ""
 "Teraz ostatnia... Nie jest najdłuższa, ale \n"
 "jest jeszcze mniej miejsca na głowę. Powodzenia! :]"
+
+#~ msgid "Musical levels"
+#~ msgstr "Musicale"
+
+#~ msgid "X-Moto levels with a background music"
+#~ msgstr "Poziomy z muzyką"
 
 #~ msgid "Initializing input system..."
 #~ msgstr "Inicjalizacja systemu wejściowego"
