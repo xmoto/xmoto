@@ -71,6 +71,9 @@ protected:
 
  void displayStats();
 
+ // next level when you play levels (it can be different, replaying for exemple)
+ void playingNextLevel(bool i_positifOrder);
+
  /* animation */
  CameraAnimation* m_cameraAnim;
 

@@ -755,6 +755,45 @@ void StateScene::nextLevel(bool i_positifOrder) {
   /* do nothing, it's depends of the scene ; often empty for animation steps */
 }
 
+void StateScene::playingNextLevel(bool i_positifOrder) {
+  GameApp*  pGame  = GameApp::instance();
+  std::string v_nextLevel;
+  std::string v_currentLevel;
+  
+  // take the level id of the first world
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      v_currentLevel = m_universe->getScenes()[0]->getLevelSrc()->Id();
+    }
+  }
+
+  if(i_positifOrder) {
+    v_nextLevel = pGame->determineNextLevel(v_currentLevel);
+  } else {
+    v_nextLevel = pGame->determinePreviousLevel(v_currentLevel);
+  }
+
+  /* update stats */
+  if(v_nextLevel != "") {
+    if(m_universe != NULL) {
+      if(m_universe->getScenes().size() == 1) {
+	if(m_universe->getScenes()[0]->Players().size() == 1) {
+	  if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
+	     m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
+	    xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->sitekey(),
+							     XMSession::instance()->profile(),
+							     v_currentLevel,
+							     m_universe->getScenes()[0]->getTime());
+	    StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
+	  }
+	}
+      }
+    }
+  }
+
+  nextLevelToPlay(i_positifOrder);
+}
+
 void StateScene::restartLevelToPlay(bool i_reloadLevel) {
   std::string v_level;
   
