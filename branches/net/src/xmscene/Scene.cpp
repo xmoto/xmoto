@@ -59,6 +59,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_playEvents = true;
 
     m_lastStateSerializationTime = -100; /* loong time ago :) */
+    m_lastStateUploadTime        = -100;
 
     m_pLevelSrc = NULL;
 
@@ -215,6 +216,9 @@ void MotoGame::cleanPlayers() {
     ===========================================================================*/
   void MotoGame::updateLevel(int timeStep, Replay *i_recordedReplay) {
     float v_diff;
+    bool v_recordReplay;
+    bool v_uploadFrame;
+    SerializedBikeState BikeState;
 
     if(m_is_paused)
       return;
@@ -291,29 +295,45 @@ void MotoGame::cleanPlayers() {
 
     executeEvents(i_recordedReplay);
 
+    // record the replay only if
+    v_recordReplay = 
+      i_recordedReplay != NULL                                                            &&
+      getTime() - m_lastStateSerializationTime >= 100.0f/i_recordedReplay->getFrameRate() && // limit the framerate
+      Players().size() == 1;                                                                 // supported in one player mode only
+
+    // upload the frame only if
+    v_uploadFrame =
+      NetClient::instance()->isConnected() &&
+      getTime() - m_lastStateUploadTime >= 100.0f/XMSession::instance()->clientFramerateUpload();
+
+    if(v_recordReplay) {
+      m_lastStateSerializationTime = getTime();
+    }
+
+    if(v_uploadFrame) {
+      m_lastStateUploadTime = getTime();
+    }
+
     /* save the replay */
-    if(i_recordedReplay != NULL) {
-      /* We'd like to serialize the game state 25 times per second for the replay */
-      if(getTime() - m_lastStateSerializationTime >= 100.0f/i_recordedReplay->getFrameRate() || true) {
-        m_lastStateSerializationTime = getTime();
-        
-        /* Get it */
-	for(unsigned int i=0; i<Players().size(); i++) {
-	  if(Players().size() == 1 || NetClient::instance()->isConnected()) {
-	    if(Players()[i]->isDead() == false && Players()[i]->isFinished() == false) {
-	      SerializedBikeState BikeState;
-	      getSerializedBikeState(Players()[i]->getState(), getTime(), &BikeState, m_physicsSettings);
+    if(v_recordReplay || v_uploadFrame) {
+      for(unsigned int i=0; i<Players().size(); i++) {
 
-	      /* only store the state if 1 player plays */
-	      if(Players().size() == 1) {
-		//i_recordedReplay->storeState(BikeState);
-		//i_recordedReplay->storeBlocks(m_pLevelSrc->Blocks());
-	      }
+	// in both case, don't get when player is dead (in the frame, you don't get the 'died' information, thus via the network, you're not able to draw the player correctly)
+	if(Players()[i]->isDead() == false && Players()[i]->isFinished() == false) {
 
-	      // always send (framerate network = framerate replay for the moment)
-	      NA_frame na(&BikeState);
-	      NetClient::instance()->send(&na);
-	    }
+	  // get the state only if we need it for replay or frame
+	  if(v_uploadFrame || (v_recordReplay && i == 0)) { // /* only store the state if 1 player plays for replays */
+	    getSerializedBikeState(Players()[i]->getState(), getTime(), &BikeState, m_physicsSettings);
+	  }
+
+	  if(v_uploadFrame) {
+	    NA_frame na(&BikeState);
+	    NetClient::instance()->send(&na);
+	  }
+	  
+	  if(v_recordReplay && i == 0) {
+	    i_recordedReplay->storeState(BikeState);
+	    i_recordedReplay->storeBlocks(m_pLevelSrc->Blocks());
 	  }
 	}
       }
@@ -489,7 +509,9 @@ void MotoGame::cleanPlayers() {
     getLevelSrc()->spawnEntity(v_debris);
 
     /* execute events */
-    m_lastStateSerializationTime = -100;
+    m_lastStateSerializationTime = -100; // reset the last serialization time
+    m_lastStateUploadTime        = -100;
+
     if(m_playEvents) {
       executeEvents(recordingReplay);
     }

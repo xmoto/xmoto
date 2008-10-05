@@ -258,6 +258,8 @@ public:
   void setClientServerName(const std::string& i_value);
   int clientServerPort() const;
   void setClientServerPort(int i_value);
+  int clientFramerateUpload() const;
+  void setClientFramerateUpload(int i_value);
 
   // there are two dbSync values, one for the profile side, one on the serveur side
   // note that because these values must always be synchronised with db, there are always read and write from and to the db
@@ -373,6 +375,7 @@ public:
   int m_serverPort;
   std::string m_clientServerName;
   int m_clientServerPort;
+  int m_clientFramerateUpload;
 };
 
 #endif
