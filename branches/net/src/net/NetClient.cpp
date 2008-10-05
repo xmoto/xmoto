@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/VExcept.h"
 #include "../helpers/Log.h"
 #include "helpers/Net.h"
+#include "../states/StateManager.h"
 
 NetClient::NetClient() {
     m_isConnected = false;
@@ -111,7 +112,13 @@ TCPsocket* NetClient::socket() {
 }
 
 void NetClient::send(NetAction* i_netAction) {
-  i_netAction->send(&m_sd);
+  try {
+    i_netAction->send(&m_sd);
+  } catch(Exception &e) {
+    disconnect();
+    StateManager::instance()->sendAsynchronousMessage("CLIENT_DISCONNECTED_BY_ERROR");
+    throw e;
+  }
 }
 
 void NetClient::resetPlay(Universe* i_universe) {

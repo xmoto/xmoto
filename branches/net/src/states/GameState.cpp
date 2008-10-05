@@ -58,6 +58,8 @@ GameState::GameState(bool drawStateBehind,
 
   m_showCursor = true;
 
+  StateManager::instance()->registerAsObserver("CLIENT_DISCONNECTED_BY_ERROR", this);
+
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("CHANGE_WWW_ACCESS");
     StateManager::instance()->registerAsEmitter("INTERPOLATION_CHANGED");
@@ -68,6 +70,7 @@ GameState::GameState(bool drawStateBehind,
 
 GameState::~GameState()
 {
+  StateManager::instance()->unregisterAsObserver("CLIENT_DISCONNECTED_BY_ERROR", this);
 }
 
 bool GameState::doUpdate()
@@ -149,9 +152,19 @@ void GameState::executeCommands()
 
 void GameState::executeOneCommand(std::string cmd, std::string args)
 {
-  // default one do nothing.
-  LogWarning("cmd [%s [%s]] executed by state [%s], but not handled by it.",
-	      cmd.c_str(), args.c_str(), getName().c_str());
+  if(cmd == "CLIENT_DISCONNECTED_BY_ERROR") {
+    // to not multiply the messages, only the top message gives the error
+    if(StateManager::instance()->isTopOfTheStates(this)) {
+      SysMessage::instance()->displayError(GAMETEXT_CLIENTNETWORKERROR);
+    }
+
+  } else {
+
+    // default one do nothing.
+    LogWarning("cmd [%s [%s]] executed by state [%s], but not handled by it.",
+	       cmd.c_str(), args.c_str(), getName().c_str());
+
+  }
 }
 
 void GameState::addCommand(std::string cmd, std::string args)

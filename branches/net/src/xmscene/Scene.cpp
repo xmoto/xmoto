@@ -328,7 +328,10 @@ void MotoGame::cleanPlayers() {
 
 	  if(v_uploadFrame) {
 	    NA_frame na(&BikeState);
-	    NetClient::instance()->send(&na);
+	    try {
+	      NetClient::instance()->send(&na);
+	    } catch(Exception &e) {
+	    }
 	  }
 	  
 	  if(v_recordReplay && i == 0) {

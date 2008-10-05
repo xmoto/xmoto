@@ -483,6 +483,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_CLIENTCONNECT _("Connect")
 #define GAMETEXT_CLIENTDISCONNECT _("Disconnect")
 #define GAMETEXT_UNABLETOCONNECTONTHESERVER _("Unable to connect on the server")
+#define GAMETEXT_CLIENTNETWORKERROR _("Network error: you're disconnected")
 
 /* Context help strings */
 #define CONTEXTHELP_UPDATEHIGHSCORES _("Download the latest X-Moto world records and check for new levels")

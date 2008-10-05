@@ -54,12 +54,14 @@ int ClientListenerThread::realThreadFunction() {
   v_set = SDLNet_AllocSocketSet(1);
   if(!v_set) {
     LogError("client: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
+    StateManager::instance()->sendAsynchronousMessage("CLIENT_DISCONNECTED_BY_ERROR");
     return 1;
   }
 
   scn = SDLNet_TCP_AddSocket(v_set, *(m_netClient->socket()));
   if(scn == -1) {
     LogError("client: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+    StateManager::instance()->sendAsynchronousMessage("CLIENT_DISCONNECTED_BY_ERROR");
     return 1;
   }
 
@@ -124,6 +126,7 @@ int ClientListenerThread::realThreadFunction() {
 
   if(v_onError) {
     LogInfo("client: ending on error");
+    StateManager::instance()->sendAsynchronousMessage("CLIENT_DISCONNECTED_BY_ERROR");
   } else {
     LogInfo("client: ending normally");
   }

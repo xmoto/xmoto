@@ -571,8 +571,10 @@ StateManager::sendSynchronousMessage(std::string message, std::string args)
     std::vector<GameState*>::iterator stateIterator = states.begin();
 
     if(states.size() == 0){
-      LogWarning("sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
-		  message.c_str(), args.c_str());
+      if(XMSession::instance()->debug()) {
+	LogWarning("sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
+		   message.c_str(), args.c_str());
+      }
     }
 
     while(stateIterator != states.end()){
@@ -584,8 +586,10 @@ StateManager::sendSynchronousMessage(std::string message, std::string args)
       ++stateIterator;
     }
   } else {
-    LogWarning("sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
-		message.c_str(), args.c_str());
+    if(XMSession::instance()->debug()) {
+      LogWarning("sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
+		 message.c_str(), args.c_str());
+    }
   }
 }
 
