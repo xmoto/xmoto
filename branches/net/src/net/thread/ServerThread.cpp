@@ -180,6 +180,7 @@ int ServerThread::realThreadFunction() {
 		    delete v_netAction;
 		  } catch(Exception &e) {
 		    LogError("%s", e.getMsg().c_str());
+		    removeClient(i);
 		  }
 
 		  break; // stop : a channel is assigned to only one client
@@ -195,7 +196,7 @@ int ServerThread::realThreadFunction() {
 	  while(i<m_clients.size()) {
 	    if(SDLNet_SocketReady(*(m_clients[i]->tcpSocket()))) {
 	      try {
-	      	manageClient(i);
+	      	manageClientTCP(i);
 		i++;
 	      } catch(Exception &e) {
 	      	LogInfo("server: host disconnected: %s:%d (TCP)",
@@ -310,28 +311,23 @@ void ServerThread::acceptClient() {
   //}
 }
 
-void ServerThread::manageClient(unsigned int i) {
+void ServerThread::manageClientTCP(unsigned int i) {
   NetAction* v_netAction;
 
-  try {
-    while(m_clients[i]->tcpReader->TCPReadAction(m_clients[i]->tcpSocket(), &v_netAction)) {
-      // manage v_netAction
-
-      if(v_netAction->actionKey() == NA_udpBind::ActionKey) {
-	try {
-	  if(m_clients[i]->isUdpBinded() == false) {
-	    m_clients[i]->bindUdp(&m_udpsd, ((NA_udpBind*)v_netAction)->getPort());
-	  }
-	} catch(Exception &e) {
-	  LogWarning("Unable to bind upd");
+  while(m_clients[i]->tcpReader->TCPReadAction(m_clients[i]->tcpSocket(), &v_netAction)) {
+    // manage v_netAction
+    
+    if(v_netAction->actionKey() == NA_udpBind::ActionKey) {
+      try {
+	if(m_clients[i]->isUdpBinded() == false) {
+	  m_clients[i]->bindUdp(&m_udpsd, ((NA_udpBind*)v_netAction)->getPort());
 	}
-      } else {
-	sendToAllClients(v_netAction, i);
+      } catch(Exception &e) {
+	LogWarning("Unable to bind upd");
       }
-      delete v_netAction;
+    } else {
+      sendToAllClients(v_netAction, i);
     }
-  } catch(Exception &e) {
-    removeClient(i);    
+    delete v_netAction;
   }
-
 }

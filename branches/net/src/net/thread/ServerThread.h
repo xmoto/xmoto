@@ -67,7 +67,7 @@ class ServerThread : public XMThread {
   std::vector<NetSClient*> m_clients;
 
   void acceptClient();
-  void manageClient(unsigned int i);
+  void manageClientTCP(unsigned int i);
 
   // if i_execpt >= 0, send to all exept him
   void sendToAllClients(NetAction* i_netAction, unsigned int i_except = -1);

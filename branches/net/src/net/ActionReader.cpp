@@ -46,7 +46,7 @@ bool ActionReader::TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction) {
     if( (nread = SDLNet_TCP_Recv(*(i_tcpsd),
 				 m_tcpBuffer+m_tcpPacketOffset,
 				 XM_MAX_PACKET_SIZE-m_tcpPacketOffset)) <= 0) {
-      return false;
+      throw Exception("Unable to read on socket");
     }
     m_tcpPacketOffset += nread;
     LogDebug("Data received (%u bytes available)", m_tcpPacketOffset);
@@ -100,9 +100,20 @@ unsigned int ActionReader::getSubPacketSize(void* data, unsigned int len, unsign
       ((char*)data)[i] = '\0';
       res = atoi((char*)data);
       ((char*)data)[i] = '\n'; // must be reset in case packet is not full
+
+      if(res == 0) {
+	LogWarning("server: nasty client detected");
+	throw Exception("server: nasty client detected");
+      }
+
       return res;
     }
     i++;
+  }
+
+  if(i == XM_MAX_PACKET_SIZE_DIGITS+1) {
+    LogWarning("server: nasty client detected");
+    throw Exception("server: nasty client detected");
   }
 
   return 0;
