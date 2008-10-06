@@ -27,6 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Singleton.h"
 #include "../include/xm_SDL.h"
 
+#define XM_CLIENT_MAX_UDP_PACKET_SIZE 1024 // bytes
+
 class ClientListenerThread;
 class NetAction;
 class NetGhost;
@@ -41,7 +43,9 @@ class NetClient : public Singleton<NetClient> {
   void disconnect();
   bool isConnected();
   void send(NetAction* i_netAction);
-  TCPsocket* socket();
+  TCPsocket* tcpSocket();
+  UDPsocket* udpSocket();
+  UDPpacket* sendPacket();
 
   void executeNetActions();
   void addNetAction(NetAction* i_act);
@@ -53,8 +57,11 @@ class NetClient : public Singleton<NetClient> {
 
   private:
   bool m_isConnected;
-  TCPsocket m_sd;
+  IPaddress serverIp;
+  TCPsocket m_tcpsd;
+  UDPsocket m_udpsd;
   ClientListenerThread* m_clientListenerThread;
+  UDPpacket* m_udpSendPacket;
 
   std::vector<NetAction*> m_netActions;
   SDL_mutex* m_netActionsMutex;

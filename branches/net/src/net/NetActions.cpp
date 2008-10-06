@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "NetClient.h"
 #include "../Universe.h"
 #include "../Theme.h"
+#include "../XMSession.h"
 #include "../xmscene/BikeGhost.h"
 #include <sstream>
 
@@ -34,6 +35,7 @@ unsigned int NetAction::m_nbPacketsSent = 0;
 
 std::string NA_chatMessage::ActionKey = "message";
 std::string NA_frame::ActionKey       = "frame";
+std::string NA_udpBind::ActionKey     = "udpbinding";
 
 NetAction::NetAction() {
 }
@@ -46,10 +48,10 @@ void NetAction::logStats() {
   LogInfo("net: biggest packet sent : %u bytes", NetAction::m_biggestPacket);
 }
 
-void NetAction::send(TCPsocket* i_sd, const void* subPacketData, int subPacketLen) {
+void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, const void* subPacketData, int subPacketLen) {
   unsigned int nread;
   std::string v_data;
-  
+
   int v_subPacketSize = actionKey().length() + 1 + subPacketLen + 1;
   std::ostringstream v_nb;
   v_nb << v_subPacketSize;
@@ -67,9 +69,26 @@ void NetAction::send(TCPsocket* i_sd, const void* subPacketData, int subPacketLe
   memcpy(m_buffer + v_nb.str().length() + 1 + actionKey().length() + 1, subPacketData, subPacketLen);
   m_buffer[v_totalPacketSize-1] = '\n';
 
-  // don't send the \0
-  if( (nread = SDLNet_TCP_Send(*i_sd, m_buffer, v_totalPacketSize)) != v_totalPacketSize) {
-    throw Exception("TCP_Send failed");
+  if(i_udpsd != NULL) {
+    if((v_totalPacketSize) > (unsigned int) i_sendPacket->maxlen) {
+      LogWarning("UDP packet too big");
+    } else {
+      i_sendPacket->len = v_totalPacketSize;
+      memcpy(i_sendPacket->data, m_buffer, v_totalPacketSize);
+
+      if(SDLNet_UDP_Send(*i_udpsd, -1, i_sendPacket) == 0) {
+	LogWarning("SDLNet_UDP_Send faild : %s", SDLNet_GetError());
+      }
+    }
+
+  } else if(i_tcpsd != NULL) {
+    // don't send the \0
+    if( (nread = SDLNet_TCP_Send(*i_tcpsd, m_buffer, v_totalPacketSize)) != v_totalPacketSize) {
+      throw Exception("TCP_Send failed");
+    }
+
+  } else {
+    LogWarning("Packet not send, no protocol set");
   }
   NetAction::m_nbPacketsSent++;
 }
@@ -83,10 +102,15 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
   else if(isCommand(data, len, NA_frame::ActionKey)) {
     return new NA_frame(((char*)data)+(NA_frame::ActionKey.size()+1),
 			      len    -(NA_frame::ActionKey.size()+1));
-  } 
+  }
   
+  else if(isCommand(data, len, NA_udpBind::ActionKey)) {
+    return new NA_udpBind(((char*)data)+(NA_udpBind::ActionKey.size()+1),
+	                        len    -(NA_udpBind::ActionKey.size()+1));
+  } 
+
   else {
-    throw Exception("client: invalid command");
+    throw Exception("net: invalid command");
   }
 }
 
@@ -119,8 +143,8 @@ void NA_chatMessage::execute(NetClient* i_netClient) {
   SysMessage::instance()->displayInformation(m_msg);
 }
 
-void NA_chatMessage::send(TCPsocket* i_sd) {
-  NetAction::send(i_sd, m_msg.c_str(), m_msg.size()); // don't send the \0
+void NA_chatMessage::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) {
+  NetAction::send(i_tcpsd, NULL, NULL, m_msg.c_str(), m_msg.size()); // don't send the \0
 }
 
 std::string NA_chatMessage::getMessage() {
@@ -145,12 +169,6 @@ void NA_frame::execute(NetClient* i_netClient) {
   //LogInfo("Frame received");
   NetGhost* v_ghost;
   Universe* v_universe = i_netClient->getUniverse();
-
-  /*
-
-    NEED A MUTEX
-    
-   */
 
   if(i_netClient->NetGhosts().size() == 0) {
     /* add the net ghost */
@@ -178,10 +196,43 @@ void NA_frame::execute(NetClient* i_netClient) {
   }
 }
 
-void NA_frame::send(TCPsocket* i_sd) {
-  NetAction::send(i_sd, &m_state, sizeof(SerializedBikeState));
+void NA_frame::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) {
+  if(i_udpsd != NULL) {
+    // if udp is available, prefer udp
+    NetAction::send(NULL, i_udpsd, i_sendPacket, &m_state, sizeof(SerializedBikeState));
+  } else {
+    NetAction::send(i_tcpsd, i_udpsd, i_sendPacket, &m_state, sizeof(SerializedBikeState));
+  }
 }
 
 SerializedBikeState NA_frame::getState() {
   return m_state;
+}
+
+NA_udpBind::NA_udpBind(int i_port) {
+  m_port = i_port;
+}
+
+NA_udpBind::NA_udpBind(void* data, unsigned int len) {
+  ((char*)data)[len-1] = '\0';
+  m_port = atoi((char*)data);
+  ((char*)data)[len-1] = '\n';
+}
+
+NA_udpBind::~NA_udpBind() {
+}
+
+void NA_udpBind::execute(NetClient* i_netClient) {
+  // do nothing on the client side
+}
+
+void NA_udpBind::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) {
+  char v_buf[6];
+  int n;
+  n = snprintf(v_buf, 6, "%i", m_port);
+  NetAction::send(i_tcpsd, NULL, NULL, v_buf, n); // don't send the \0
+}
+
+int NA_udpBind::getPort() {
+  return m_port;
 }

@@ -25,20 +25,30 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 #include <SDL_net.h>
 
+class ActionReader;
+class NetAction;
+
 class NetSClient {
   public:
-  NetSClient(TCPsocket i_socket, IPaddress* i_remoteIP, int i_identifier);
+  NetSClient(TCPsocket i_tcpsocket, IPaddress *i_tcpRemoteIP);
   ~NetSClient();
 
-  TCPsocket* socket();
-  IPaddress* remoteIP();
+  TCPsocket* tcpSocket();
+  IPaddress* tcpRemoteIP();
+  int udpChannel() const; // <0 => invalid
+  void setChannel(int i_value);
+  bool isUdpBinded() const;
+  void bindUdp(UDPsocket* i_udpsd, int i_port);
+  void unbindUdp(UDPsocket* i_udpsd);
+
+  ActionReader* tcpReader;
 
   private:
-  TCPsocket m_socket;
-  IPaddress* m_remoteIP;
-
-  int m_identifier;
-  std::string m_profile;
+  TCPsocket m_tcpSocket;
+  IPaddress m_tcpRemoteIP;
+  IPaddress m_udpRemoteIP;
+  int m_udpChannel;
+  bool m_isUdpBinded;
 };
 
 class ServerThread : public XMThread {
@@ -49,16 +59,19 @@ class ServerThread : public XMThread {
   int realThreadFunction();
 
   private:
+  TCPsocket m_tcpsd;
+  UDPsocket m_udpsd;
+  UDPpacket* m_udpPacket;
+
   SDLNet_SocketSet m_set;
   std::vector<NetSClient*> m_clients;
-  int m_nextIdentifier;
 
-  void acceptClient(TCPsocket* sd);
-  void manageClient(unsigned int i, void* data, int len);
+  void acceptClient();
+  void manageClient(unsigned int i);
 
   // if i_execpt >= 0, send to all exept him
-  void sendToAllClients(void* data, int len, unsigned int i_except = -1);
-  void sendToClient(void* data, int len, unsigned int i);
+  void sendToAllClients(NetAction* i_netAction, unsigned int i_except = -1);
+  void sendToClient(NetAction* i_netAction, unsigned int i);
   void removeClient(unsigned int i);
 };
 

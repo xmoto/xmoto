@@ -18,26 +18,31 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __CLIENTLISTENERTHREAD_H__
-#define __CLIENTLISTENERTHREAD_H__
+#ifndef __ACTIONREADER_H__
+#define __ACTIONREADER_H__
 
-#include "../../thread/XMThread.h"
-#include <vector>
 #include <SDL_net.h>
 
-class NetClient;
+#define XM_MAX_PACKET_SIZE 1024 * 10 // bytes
 
-class ClientListenerThread : public XMThread {
+class NetAction;
+
+class ActionReader {
   public:
-  ClientListenerThread(NetClient* i_netClient);
-  ~ClientListenerThread();
+  ActionReader();
+  ~ActionReader();
 
-  int realThreadFunction();
+  // return true if a packet is returned ; you should reread to get more action (socket in not read while true is returned)
+  bool TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction);
+  static NetAction* UDPReadAction(Uint8* data, int len);
 
   private:
-  NetClient* m_netClient;
+  unsigned int m_tcpPacketOffset;
+  bool m_tcpNotEnoughData;
+  char m_tcpBuffer[XM_MAX_PACKET_SIZE];
+  bool m_tcpPossiblyInBuffer; // an action is possibly in the buffer
 
-  void manageClientSubPacket(void* data, unsigned int len);
+  static unsigned int getSubPacketSize(void* data, unsigned int len, unsigned int& o_cmdStart);
 };
 
 #endif

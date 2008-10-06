@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/VExcept.h"
 #include "../helpers/Log.h"
 #include "helpers/Net.h"
+#include "../XMSession.h"
 #include "../states/StateManager.h"
 
 NetClient::NetClient() {
@@ -31,6 +32,11 @@ NetClient::NetClient() {
     m_clientListenerThread = NULL;
     m_netActionsMutex = SDL_CreateMutex();
     m_universe = NULL;
+    m_udpSendPacket = SDLNet_AllocPacket(XM_CLIENT_MAX_UDP_PACKET_SIZE);
+
+    if(!m_udpSendPacket) {
+      throw Exception("SDLNet_AllocPacket: " + std::string(SDLNet_GetError()));
+    }
 }
 
 NetClient::~NetClient() {
@@ -39,6 +45,12 @@ NetClient::~NetClient() {
   for(unsigned int i=0; i<m_netActions.size(); i++) {
     delete m_netActions[i];
   }
+
+  SDLNet_FreePacket(m_udpSendPacket);
+}
+
+UDPpacket* NetClient::sendPacket() {
+  return m_udpSendPacket;
 }
 
 void NetClient::executeNetActions() {
@@ -63,19 +75,27 @@ void NetClient::addNetAction(NetAction* i_act) {
 }
 
 void NetClient::connect(const std::string& i_server, int i_port) {
-  IPaddress ip;
+  int v_localUdpPort = XMSession::instance()->clientUdpPort();
 
   if(m_isConnected) {
     throw Exception("Already connected");
   }
 
-  if (SDLNet_ResolveHost(&ip, i_server.c_str(), i_port) < 0) {
+  if (SDLNet_ResolveHost(&serverIp, i_server.c_str(), i_port) < 0) {
     throw Exception(SDLNet_GetError());
   }
 
-  if (!(m_sd = SDLNet_TCP_Open(&ip))) {
+  if (!(m_tcpsd = SDLNet_TCP_Open(&serverIp))) {
     throw Exception(SDLNet_GetError());
   }
+
+  if((m_udpsd = SDLNet_UDP_Open(v_localUdpPort)) == 0) {
+    LogError("server: SDLNet_UDP_Open: %s", SDLNet_GetError());
+    SDLNet_TCP_Close(m_tcpsd);
+    throw Exception(SDLNet_GetError());
+  }
+  m_udpSendPacket->address.host = serverIp.host;
+  m_udpSendPacket->address.port = serverIp.port;
 
   m_clientListenerThread = new ClientListenerThread(this);
   m_clientListenerThread->startThread();
@@ -83,6 +103,13 @@ void NetClient::connect(const std::string& i_server, int i_port) {
   m_isConnected = true;
 
   LogInfo("client: connected on %s:%d", i_server.c_str(), i_port);
+
+  // bind udp port on server
+  NA_udpBind na(v_localUdpPort);
+  try {
+    NetClient::instance()->send(&na);
+  } catch(Exception &e) {
+  }
 }
 
 void NetClient::disconnect() {
@@ -93,7 +120,8 @@ void NetClient::disconnect() {
   delete m_clientListenerThread;
 
   LogInfo("client: disconnected")
-  SDLNet_TCP_Close(m_sd);
+  SDLNet_TCP_Close(m_tcpsd);
+  SDLNet_UDP_Close(m_udpsd);
   m_isConnected = false;
 }
 
@@ -107,13 +135,17 @@ bool NetClient::isConnected() {
   return m_isConnected;
 }
 
-TCPsocket* NetClient::socket() {
-  return &m_sd;
+TCPsocket* NetClient::tcpSocket() {
+  return &m_tcpsd;
+}
+
+UDPsocket* NetClient::udpSocket() {
+  return &m_udpsd;
 }
 
 void NetClient::send(NetAction* i_netAction) {
   try {
-    i_netAction->send(&m_sd);
+    i_netAction->send(&m_tcpsd, &m_udpsd, m_udpSendPacket);
   } catch(Exception &e) {
     disconnect();
     StateManager::instance()->sendAsynchronousMessage("CLIENT_DISCONNECTED_BY_ERROR");

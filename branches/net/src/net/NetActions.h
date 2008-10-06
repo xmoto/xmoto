@@ -36,19 +36,36 @@ class NetAction {
   virtual std::string actionKey() = 0;
 
   virtual void execute(NetClient* i_netClient) = 0;
-  virtual void send(TCPsocket* i_sd) = 0;
+  virtual void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) = 0;
 
   static NetAction* newNetAction(void* data, unsigned int len);
   static void logStats();
 
   protected:
-  void send(TCPsocket* i_sd, const void* subPacketData, int subPacketLen);
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, const void* subPacketData, int subPacketLen);
 
   private:
   static bool isCommand(void* data, unsigned int len, const std::string& i_cmd);
   static char m_buffer[NETACTION_MAX_PACKET_SIZE];
   static unsigned int m_biggestPacket;
   static unsigned int m_nbPacketsSent;
+};
+
+class NA_udpBind : public NetAction {
+  public:
+  NA_udpBind(int i_port);
+  NA_udpBind(void* data, unsigned int len);
+  virtual ~NA_udpBind();
+  std::string actionKey() { return ActionKey; };
+  static std::string ActionKey;
+
+  virtual void execute(NetClient* i_netClient);
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket);
+
+  int getPort();
+
+  private:
+  int m_port;
 };
 
 class NA_chatMessage : public NetAction {
@@ -60,7 +77,7 @@ class NA_chatMessage : public NetAction {
   static std::string ActionKey;
 
   virtual void execute(NetClient* i_netClient);
-  void send(TCPsocket* i_sd);
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket);
 
   std::string getMessage();
 
@@ -77,7 +94,7 @@ class NA_frame : public NetAction {
   static std::string ActionKey;
 
   virtual void execute(NetClient* i_netClient);
-  void send(TCPsocket* i_sd);
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket);
 
   SerializedBikeState getState();
 

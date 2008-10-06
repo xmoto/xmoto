@@ -26,72 +26,126 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Net.h"
 #include "../../XMSession.h"
 #include "../../states/StateManager.h"
+#include "../ActionReader.h"
+#include "../NetActions.h"
 
 #define XM_SERVER_WAIT_TIMEOUT 1000
 #define XM_SERVER_NB_SOCKETS_MAX 128
-#define XM_SERVER_CLIENT_BUFFER_SIZE 1024
+#define XM_SERVER_MAX_UDP_PACKET_SIZE 1024 // bytes
 
-NetSClient::NetSClient(TCPsocket i_socket, IPaddress *i_remoteIP, int i_identifier) {
-    m_socket      = i_socket;
-    m_remoteIP    = i_remoteIP;
-    m_identifier  = i_identifier;
+NetSClient::NetSClient(TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
+    m_tcpSocket   = i_tcpSocket;
+    m_udpChannel  = -1;
+    m_tcpRemoteIP = *i_tcpRemoteIP;
+    m_isUdpBinded = false;
+    tcpReader = new ActionReader();
 }
 
 NetSClient::~NetSClient() {
+  delete tcpReader;
 }
 
-TCPsocket* NetSClient::socket() {
-  return &m_socket;
+TCPsocket* NetSClient::tcpSocket() {
+  return &m_tcpSocket;
 }
 
-IPaddress* NetSClient::remoteIP() {
-  return m_remoteIP;
+IPaddress* NetSClient::tcpRemoteIP() {
+  return &m_tcpRemoteIP;
+}
+
+int NetSClient::udpChannel() const {
+  return m_udpChannel;
+}
+
+void NetSClient::setChannel(int i_value) {
+  m_udpChannel = i_value;
+}
+
+bool NetSClient::isUdpBinded() const {
+  return m_isUdpBinded;
+}
+
+void NetSClient::bindUdp(UDPsocket* i_udpsd, int i_port) {
+  m_udpRemoteIP.host = m_tcpRemoteIP.host;
+  SDLNet_Write16(i_port, &(m_udpRemoteIP.port));
+
+  if( (m_udpChannel = SDLNet_UDP_Bind(*i_udpsd, -1, &m_udpRemoteIP)) == -1) {
+    LogError("server: SDLNet_UDP_Bind: %s", SDLNet_GetError());
+    return;
+  }
+
+  LogInfo("server: host binded: %s:%i (UDP)",
+	  XMNet::getIp(&m_udpRemoteIP).c_str(), i_port);
+
+  m_isUdpBinded = true;
+}
+
+void NetSClient::unbindUdp(UDPsocket* i_udpsd) {
+  SDLNet_UDP_Unbind(*i_udpsd, m_udpChannel);
+  m_isUdpBinded = false;
 }
 
 ServerThread::ServerThread() {
     m_set = NULL;
-    m_nextIdentifier = 1;
+    m_udpPacket = SDLNet_AllocPacket(XM_SERVER_MAX_UDP_PACKET_SIZE);
+
+    if(!m_udpPacket) {
+      throw Exception("SDLNet_AllocPacket: " + std::string(SDLNet_GetError()));
+    }
 }
 
 ServerThread::~ServerThread() {
+  SDLNet_FreePacket(m_udpPacket);
 }
 
 int ServerThread::realThreadFunction() {
   IPaddress ip;
-  TCPsocket sd;
   int n_activ;
   unsigned int i;
-  char buffer[XM_SERVER_CLIENT_BUFFER_SIZE];
-  int nread;
   int ssn;
 
   LogInfo("server: starting");
 
   /* Resolving the host using NULL make network interface to listen */
   if(SDLNet_ResolveHost(&ip, NULL, XMSession::instance()->serverPort()) < 0) {
-    LogError("server: SDLNet_ResolveHost: %s\n", SDLNet_GetError());
+    LogError("server: SDLNet_ResolveHost: %s", SDLNet_GetError());
     return 1;
   }
 
   m_set = SDLNet_AllocSocketSet(XM_SERVER_NB_SOCKETS_MAX);
   if(!m_set) {
-    LogError("server: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
+    LogError("server: SDLNet_AllocSocketSet: %s", SDLNet_GetError());
     return 1;
   }
  
   /* Open a connection with the IP provided (listen on the host's port) */
   LogInfo("server: open connexion");
-  if((sd = SDLNet_TCP_Open(&ip)) == 0) {
-    LogError("server: SDLNet_TCP_Open: %s\n", SDLNet_GetError());
+  if((m_tcpsd = SDLNet_TCP_Open(&ip)) == 0) {
+    LogError("server: SDLNet_TCP_Open: %s", SDLNet_GetError());
     SDLNet_FreeSocketSet(m_set);
     return 1;
   }
-
-  ssn = SDLNet_TCP_AddSocket(m_set, sd);
-  if(ssn == -1) {
-    LogError("server: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+  if((m_udpsd = SDLNet_UDP_Open(XMSession::instance()->serverPort())) == 0) {
+    LogError("server: SDLNet_UDP_Open: %s", SDLNet_GetError());
     SDLNet_FreeSocketSet(m_set);
-    SDLNet_TCP_Close(sd);
+    SDLNet_TCP_Close(m_tcpsd);
+    return 1;
+  }
+
+  ssn = SDLNet_TCP_AddSocket(m_set, m_tcpsd);
+  if(ssn == -1) {
+    LogError("server: SDLNet_TCP_AddSocket: %s", SDLNet_GetError());
+    SDLNet_FreeSocketSet(m_set);
+    SDLNet_TCP_Close(m_tcpsd);
+    SDLNet_UDP_Close(m_udpsd);
+    return 1;
+  }
+  ssn = SDLNet_UDP_AddSocket(m_set, m_udpsd);
+  if(ssn == -1) {
+    LogError("server: SDLNet_UDP_AddSocket: %s", SDLNet_GetError());
+    SDLNet_FreeSocketSet(m_set);
+    SDLNet_TCP_Close(m_tcpsd);
+    SDLNet_UDP_Close(m_udpsd);
     return 1;
   }
 
@@ -101,26 +155,52 @@ int ServerThread::realThreadFunction() {
   while(m_askThreadToEnd == false) {
     n_activ = SDLNet_CheckSockets(m_set, XM_SERVER_WAIT_TIMEOUT);
     if(n_activ == -1) {
-      LogError("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
+      LogError("SDLNet_CheckSockets: %s", SDLNet_GetError());
       m_askThreadToEnd = true;
     } else {
+
       if(n_activ != 0) {
 	// server socket
-	if(SDLNet_SocketReady(sd)) {
-	  acceptClient(&sd);
-	} else {
+	if(SDLNet_SocketReady(m_tcpsd)) {
+	  acceptClient();
+	}
 
+	else if(SDLNet_SocketReady(m_udpsd)) {
+
+	  // udp socket
+	  if( SDLNet_UDP_Recv(m_udpsd, m_udpPacket) == 1) {
+	    if(m_udpPacket->channel >= 0) {
+	      for(unsigned int i=0; i<m_clients.size(); i++) {
+		if(m_clients[i]->udpChannel() == m_udpPacket->channel) {
+
+		  NetAction* v_netAction;
+		  try {
+		    v_netAction = ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len);
+		    sendToAllClients(v_netAction, i);
+		    delete v_netAction;
+		  } catch(Exception &e) {
+		    LogError("%s", e.getMsg().c_str());
+		  }
+
+		  break; // stop : a channel is assigned to only one client
+		}
+	      }
+	    } else {
+	      LogWarning("server: udp packet received without channel");
+	    }
+	  }
+
+	} else {
 	  i = 0;
 	  while(i<m_clients.size()) {
-	    if(SDLNet_SocketReady(*(m_clients[i]->socket()))) {
-	      if( (nread = SDLNet_TCP_Recv(*(m_clients[i]->socket()),
-	      				   buffer, XM_SERVER_CLIENT_BUFFER_SIZE)) > 0) {
-	      	manageClient(i, buffer, nread);
-	      	i++;
-	      } else {
-	      	LogInfo("server: host disconnected: %s:%d",
-	      		XMNet::getIp(m_clients[i]->remoteIP()).c_str(),
-	      		SDLNet_Read16(&(m_clients[i]->remoteIP())->port));
+	    if(SDLNet_SocketReady(*(m_clients[i]->tcpSocket()))) {
+	      try {
+	      	manageClient(i);
+		i++;
+	      } catch(Exception &e) {
+	      	LogInfo("server: host disconnected: %s:%d (TCP)",
+	      		XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
+	      		SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port));
 	      	removeClient(i);
 	      }
 	    } else {
@@ -129,6 +209,7 @@ int ServerThread::realThreadFunction() {
 	  }
 	}
       }
+
     }
   }
 
@@ -141,10 +222,12 @@ int ServerThread::realThreadFunction() {
     i++;
   }
 
-  SDLNet_TCP_DelSocket(m_set, sd);
+  SDLNet_TCP_DelSocket(m_set, m_tcpsd);
+  SDLNet_UDP_DelSocket(m_set, m_udpsd);
 
   LogInfo("server: close connexion");
-  SDLNet_TCP_Close(sd);
+  SDLNet_TCP_Close(m_tcpsd);
+  SDLNet_UDP_Close(m_udpsd);
 
   SDLNet_FreeSocketSet(m_set);
   m_set = NULL;
@@ -155,27 +238,30 @@ int ServerThread::realThreadFunction() {
 }
 
 void ServerThread::removeClient(unsigned int i) {
-  SDLNet_TCP_DelSocket(m_set, *(m_clients[i]->socket()));
-  SDLNet_TCP_Close(*(m_clients[i]->socket()));
+  SDLNet_TCP_DelSocket(m_set, *(m_clients[i]->tcpSocket()));
+  SDLNet_TCP_Close(*(m_clients[i]->tcpSocket()));
+  if(m_clients[i]->isUdpBinded()) {
+    m_clients[i]->unbindUdp(&m_udpsd);
+  }
   delete m_clients[i];
   m_clients.erase(m_clients.begin() + i);
 }
 
-void ServerThread::sendToClient(void* data, int len, unsigned int i) {
-  int nread;
-  
-  if( (nread = SDLNet_TCP_Send(*(m_clients[i]->socket()), data, len)) != len) {
-    throw Exception("TCP_Send failed");
+void ServerThread::sendToClient(NetAction* i_netAction, unsigned int i) {
+  if(m_clients[i]->isUdpBinded()) {
+    i_netAction->send(m_clients[i]->tcpSocket(), &m_udpsd, m_udpPacket);
+  } else {
+    i_netAction->send(m_clients[i]->tcpSocket(), NULL, NULL);
   }
 }
 
-void ServerThread::sendToAllClients(void* data, int len, unsigned int i_except) {
+void ServerThread::sendToAllClients(NetAction* i_netAction, unsigned int i_except) {
   unsigned int i=0;
   
   while(i<m_clients.size()) {
     if(i != i_except /*|| true*/ /* resend to the client for tests only */) {
       try {
-	sendToClient(data, len, i);
+	sendToClient(i_netAction, i);
 	i++;
       } catch(Exception &e) {
 	removeClient(i);
@@ -186,34 +272,34 @@ void ServerThread::sendToAllClients(void* data, int len, unsigned int i_except) 
   }
 }
 
-void ServerThread::acceptClient(TCPsocket* sd) {
+void ServerThread::acceptClient() {
   TCPsocket csd;
-  IPaddress *remoteIP;
+  IPaddress *tcpRemoteIP;
   int scn;
 
-  if((csd = SDLNet_TCP_Accept(*sd)) == 0) {
+  if((csd = SDLNet_TCP_Accept(m_tcpsd)) == 0) {
     return;
   }
 
   /* Get the remote address */
-  if((remoteIP = SDLNet_TCP_GetPeerAddress(csd)) == NULL) {
-    LogWarning("server: SDLNet_TCP_GetPeerAddress: %s\n", SDLNet_GetError());
+  if((tcpRemoteIP = SDLNet_TCP_GetPeerAddress(csd)) == NULL) {
+    LogWarning("server: SDLNet_TCP_GetPeerAddress: %s", SDLNet_GetError());
     SDLNet_TCP_Close(csd);
     return;
   }
 
   /* Print the address, converting in the host format */
-  LogInfo("server: host connected: %s:%d",
-	  XMNet::getIp(remoteIP).c_str(), SDLNet_Read16(&remoteIP->port));
+  LogInfo("server: host connected: %s:%d (TCP)",
+	  XMNet::getIp(tcpRemoteIP).c_str(), SDLNet_Read16(&tcpRemoteIP->port));
 
   scn = SDLNet_TCP_AddSocket(m_set, csd);
   if(scn == -1) {
-    LogError("server: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+    LogError("server: SDLNet_TCP_AddSocket: %s", SDLNet_GetError());
     SDLNet_TCP_Close(csd);
     return;
   }
 
-  m_clients.push_back(new NetSClient(csd, remoteIP, m_nextIdentifier++));
+  m_clients.push_back(new NetSClient(csd, tcpRemoteIP));
 
   // welcome
   //std::string v_msg = "Xmoto server\n";
@@ -224,6 +310,28 @@ void ServerThread::acceptClient(TCPsocket* sd) {
   //}
 }
 
-void ServerThread::manageClient(unsigned int i, void* data, int len) {
-  sendToAllClients(data, len, i);
+void ServerThread::manageClient(unsigned int i) {
+  NetAction* v_netAction;
+
+  try {
+    while(m_clients[i]->tcpReader->TCPReadAction(m_clients[i]->tcpSocket(), &v_netAction)) {
+      // manage v_netAction
+
+      if(v_netAction->actionKey() == NA_udpBind::ActionKey) {
+	try {
+	  if(m_clients[i]->isUdpBinded() == false) {
+	    m_clients[i]->bindUdp(&m_udpsd, ((NA_udpBind*)v_netAction)->getPort());
+	  }
+	} catch(Exception &e) {
+	  LogWarning("Unable to bind upd");
+	}
+      } else {
+	sendToAllClients(v_netAction, i);
+      }
+      delete v_netAction;
+    }
+  } catch(Exception &e) {
+    removeClient(i);    
+  }
+
 }

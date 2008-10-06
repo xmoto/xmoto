@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWW.h"
 #include <curl/curl.h>
 #include "VideoRecorder.h"
+#include "helpers/VMath.h"
 #include <sstream>
 
 XMSession::XMSession() {
@@ -128,6 +129,7 @@ void XMSession::setToDefault() {
   m_clientServerName              = DEFAULT_CLIENTSERVERNAME;
   m_clientServerPort              = DEFAULT_CLIENTSERVERPORT;
   m_clientFramerateUpload         = DEFAULT_CLIENTFRAMERATEUPLOAD;
+  m_clientUdpPort                 = randomIntNum(1025, 65535); // port range available by common users are between 1024 and 65535
   m_proxySettings.setDefault();
 }
 
@@ -313,6 +315,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_clientServerName      = pDb->config_getString (i_id_profile, "ClientServerName"     , m_clientServerName);
   m_clientServerPort      = pDb->config_getInteger(i_id_profile, "ClientServerPort"     , m_clientServerPort);
   m_clientFramerateUpload = pDb->config_getInteger(i_id_profile, "ClientFramerateUpload", m_clientFramerateUpload);
+  m_clientUdpPort         = pDb->config_getInteger(i_id_profile, "ClientUdpPort"        , m_clientUdpPort);
 
   m_nbRoomsEnabled                 = pDb->config_getInteger(i_id_profile, "WebHighscoresNbRooms"          , m_nbRoomsEnabled);
   if(m_nbRoomsEnabled < 1) { m_nbRoomsEnabled = 1; }
@@ -440,6 +443,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setString (m_profile, "ClientServerName"     , m_clientServerName);
 	pDb->config_setInteger(m_profile, "ClientServerPort"     , m_clientServerPort);
 	pDb->config_setInteger(m_profile, "ClientFramerateUpload", m_clientFramerateUpload);
+	pDb->config_setInteger(m_profile, "ClientUdpPort"        , m_clientUdpPort);
 
 	pDb->config_setString (m_profile, "MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium":"High");
 	pDb->config_setString (m_profile, "GameGraphics", m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium":"High");
@@ -1110,6 +1114,14 @@ int XMSession::clientFramerateUpload() const {
 
 void XMSession::setClientFramerateUpload(int i_value) {
   m_clientFramerateUpload = i_value;
+}
+
+int XMSession::clientUdpPort() const {
+  return m_clientUdpPort;
+}
+
+void XMSession::setClientUdpPort(int i_value) {
+  m_clientUdpPort = i_value;
 }
 
 ProxySettings* XMSession::proxySettings() {
