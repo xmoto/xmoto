@@ -168,12 +168,12 @@ void StateVote::createGUIIfNeeded() {
   v_button->setContextHelp(CONTEXTHELP_SKIPTHISREPORT);
 
   // difficulty
-  v_someText = new UIStatic(v_frame, 0, m_sGUI->getPosition().nHeight/5 + 50,
-			    GAMETEXT_DIFFICULTY, m_sGUI->getPosition().nWidth, 30);
+  v_someText = new UIStatic(v_frame, m_sGUI->getPosition().nWidth/2 -150 -10 +33 , m_sGUI->getPosition().nHeight/5 + 60,
+			    GAMETEXT_DIFFICULTY, 150, 30);
   v_someText->setFont(drawLib->getFontSmall());
-  v_someText->setHAlign(UI_ALIGN_CENTER);
+  v_someText->setHAlign(UI_ALIGN_LEFT);
 
-  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 -150 -10, m_sGUI->getPosition().nHeight/5 + 50 +30,
+  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 -150 -10, m_sGUI->getPosition().nHeight/5 + 80 +30,
 			  GAMETEXT_NOIDEA, 150, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(11000);
@@ -182,7 +182,7 @@ void StateVote::createGUIIfNeeded() {
   v_button->setFont(drawLib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_NOIDEA);
 
-  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 +10, m_sGUI->getPosition().nHeight/5 + 50 +30,
+  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 -150 -10, m_sGUI->getPosition().nHeight/5 + 80 +65,
 			  GAMETEXT_BEGINNER, 150, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(11000);
@@ -190,7 +190,7 @@ void StateVote::createGUIIfNeeded() {
   v_button->setFont(drawLib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_DBEGINNER);
 
-  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 -150 -10, m_sGUI->getPosition().nHeight/5 + 50 +60,
+  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 -150 -10, m_sGUI->getPosition().nHeight/5 + 80 +100,
 			  GAMETEXT_MEDIUM, 150, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(11000);
@@ -198,7 +198,7 @@ void StateVote::createGUIIfNeeded() {
   v_button->setFont(drawLib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_DMEDIUM);
 
-  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 +10, m_sGUI->getPosition().nHeight/5 + 50 +60,
+  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 -150 -10, m_sGUI->getPosition().nHeight/5 + 80 +135,
 			  GAMETEXT_EXPERT, 150, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(11000);
@@ -206,7 +206,7 @@ void StateVote::createGUIIfNeeded() {
   v_button->setFont(drawLib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_DEXPERT);
 
-  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 -150 -10, m_sGUI->getPosition().nHeight/5 + 50 +90,
+  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 -150 -10, m_sGUI->getPosition().nHeight/5 + 80 +170,
 			  GAMETEXT_MASTER, 150, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(11000);
@@ -214,7 +214,7 @@ void StateVote::createGUIIfNeeded() {
   v_button->setFont(drawLib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_DMASTER);
   
-  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 +10, m_sGUI->getPosition().nHeight/5 + 50 +90,
+  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 -150 -10, m_sGUI->getPosition().nHeight/5 + 80 +205,
 			  GAMETEXT_GOD, 150, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(11000);
@@ -223,11 +223,11 @@ void StateVote::createGUIIfNeeded() {
   v_button->setContextHelp(CONTEXTHELP_DGOD);
 
   // quality
-  v_someText = new UIStatic(v_frame, 0, m_sGUI->getPosition().nHeight/5 + 50 + 150, GAMETEXT_QUALITY, m_sGUI->getPosition().nWidth, 30);
+  v_someText = new UIStatic(v_frame, m_sGUI->getPosition().nWidth/2 +30 +33, m_sGUI->getPosition().nHeight/5 + 60, GAMETEXT_QUALITY, 150, 30);
   v_someText->setFont(drawLib->getFontSmall());
-  v_someText->setHAlign(UI_ALIGN_CENTER);
+  v_someText->setHAlign(UI_ALIGN_LEFT);
 
-  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 -150 -10, m_sGUI->getPosition().nHeight/5 + 50 + 150 +30,
+  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 +30, m_sGUI->getPosition().nHeight/5 + 80 +30,
 			  GAMETEXT_NOIDEA, 150, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(12000);
@@ -236,7 +236,7 @@ void StateVote::createGUIIfNeeded() {
   v_button->setFont(drawLib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_NOIDEA);
 
-  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 +10, m_sGUI->getPosition().nHeight/5 + 50 + 150 +30,
+  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 +30, m_sGUI->getPosition().nHeight/5 + 80 +65,
 			  GAMETEXT_NOTNICEATALL, 150, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(12000);
@@ -244,7 +244,7 @@ void StateVote::createGUIIfNeeded() {
   v_button->setFont(drawLib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_QNOTNICEATALL);
 
-  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 -150 -10, m_sGUI->getPosition().nHeight/5 + 50 + 150 +60,
+  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 +30, m_sGUI->getPosition().nHeight/5 + 80 +100,
 			  GAMETEXT_NOTNICE, 150, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(12000);
@@ -252,7 +252,7 @@ void StateVote::createGUIIfNeeded() {
   v_button->setFont(drawLib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_QNOTNICE);
 
-  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 +10, m_sGUI->getPosition().nHeight/5 + 50 + 150 +60,
+  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 +30, m_sGUI->getPosition().nHeight/5 + 80 +135,
 			  GAMETEXT_MEDIUM, 150, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(12000);
@@ -260,7 +260,7 @@ void StateVote::createGUIIfNeeded() {
   v_button->setFont(drawLib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_QMEDIUM);
 
-  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 -150 -10, m_sGUI->getPosition().nHeight/5 + 50 + 150 +90,
+  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 +30, m_sGUI->getPosition().nHeight/5 + 80 +170,
 			  GAMETEXT_NICE, 150, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(12000);
@@ -268,7 +268,7 @@ void StateVote::createGUIIfNeeded() {
   v_button->setFont(drawLib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_QNICE);
   
-  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 +10, m_sGUI->getPosition().nHeight/5 + 50 + 150 +90,
+  v_button = new UIButton(v_frame, m_sGUI->getPosition().nWidth/2 +30, m_sGUI->getPosition().nHeight/5 + 80 +205,
 			  GAMETEXT_REALLYNICE, 150, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setGroup(12000);
