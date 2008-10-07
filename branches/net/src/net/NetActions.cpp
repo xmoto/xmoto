@@ -30,8 +30,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sstream>
 
 char NetAction::m_buffer[NETACTION_MAX_PACKET_SIZE];
-unsigned int NetAction::m_biggestPacket = 0;
-unsigned int NetAction::m_nbPacketsSent = 0;
+unsigned int NetAction::m_biggestTCPPacket   = 0;
+unsigned int NetAction::m_biggestUDPPacket   = 0;
+unsigned int NetAction::m_nbTCPPacketsSent   = 0;
+unsigned int NetAction::m_nbUDPPacketsSent   = 0;
+unsigned int NetAction::m_TCPPacketsSizeSent = 0;
+unsigned int NetAction::m_UDPPacketsSizeSent = 0;
 
 std::string NA_chatMessage::ActionKey = "message";
 std::string NA_frame::ActionKey       = "frame";
@@ -44,8 +48,12 @@ NetAction::~NetAction() {
 }
 
 void NetAction::logStats() {
-  LogInfo("net: number of packets sent : %u", NetAction::m_nbPacketsSent);
-  LogInfo("net: biggest packet sent : %u bytes", NetAction::m_biggestPacket);
+  LogInfo("net: number of TCP packets sent : %u", NetAction::m_nbTCPPacketsSent);
+  LogInfo("net: biggest TCP packet sent : %u bytes", NetAction::m_biggestTCPPacket);
+  LogInfo("net: size of TCP packets sent : %u bytes", NetAction::m_TCPPacketsSizeSent);
+  LogInfo("net: number of UDP packets sent : %u", NetAction::m_nbUDPPacketsSent);
+  LogInfo("net: biggest UDP packet sent : %u bytes", NetAction::m_biggestUDPPacket);
+  LogInfo("net: size of UDP packets sent : %u bytes", NetAction::m_UDPPacketsSizeSent);
 }
 
 void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, const void* subPacketData, int subPacketLen) {
@@ -56,10 +64,6 @@ void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPa
   std::ostringstream v_nb;
   v_nb << v_subPacketSize;
   unsigned int v_totalPacketSize = v_nb.str().length() + 1 + v_subPacketSize;
-
-  if(v_totalPacketSize > NetAction::m_biggestPacket) {
-    NetAction::m_biggestPacket = v_totalPacketSize;
-  }
 
   if(v_totalPacketSize > NETACTION_MAX_PACKET_SIZE) {
     throw Exception("net: too big packet to send");
@@ -79,6 +83,12 @@ void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPa
       if(SDLNet_UDP_Send(*i_udpsd, -1, i_sendPacket) == 0) {
 	LogWarning("SDLNet_UDP_Send faild : %s", SDLNet_GetError());
       }
+
+      if(v_totalPacketSize > NetAction::m_biggestUDPPacket) {
+	NetAction::m_biggestUDPPacket = v_totalPacketSize;
+      }
+      NetAction::m_nbUDPPacketsSent++;
+      NetAction::m_UDPPacketsSizeSent += v_totalPacketSize;
     }
 
   } else if(i_tcpsd != NULL) {
@@ -87,10 +97,15 @@ void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPa
       throw Exception("TCP_Send failed");
     }
 
+    if(v_totalPacketSize > NetAction::m_biggestTCPPacket) {
+      NetAction::m_biggestTCPPacket = v_totalPacketSize;
+    }
+    NetAction::m_nbTCPPacketsSent++;
+    NetAction::m_TCPPacketsSizeSent += v_totalPacketSize;
+
   } else {
     LogWarning("Packet not send, no protocol set");
   }
-  NetAction::m_nbPacketsSent++;
 }
 
 NetAction* NetAction::newNetAction(void* data, unsigned int len) {

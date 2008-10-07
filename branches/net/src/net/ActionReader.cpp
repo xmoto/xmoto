@@ -126,4 +126,6 @@ NetAction* ActionReader::UDPReadAction(Uint8* data, int len) {
   if( (v_size = ActionReader::getSubPacketSize(data, len, v_cmdStart)) > 0) {
     return NetAction::newNetAction(((char*)data)+v_cmdStart, v_size);
   }
+
+  throw Exception("server: nasty client detected");
 }

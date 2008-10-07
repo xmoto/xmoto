@@ -47,8 +47,12 @@ class NetAction {
   private:
   static bool isCommand(void* data, unsigned int len, const std::string& i_cmd);
   static char m_buffer[NETACTION_MAX_PACKET_SIZE];
-  static unsigned int m_biggestPacket;
-  static unsigned int m_nbPacketsSent;
+  static unsigned int m_biggestTCPPacket;
+  static unsigned int m_biggestUDPPacket;
+  static unsigned int m_nbTCPPacketsSent;
+  static unsigned int m_nbUDPPacketsSent;
+  static unsigned int m_TCPPacketsSizeSent;
+  static unsigned int m_UDPPacketsSizeSent;
 };
 
 class NA_udpBind : public NetAction {
