@@ -46,6 +46,7 @@ class NetClient : public Singleton<NetClient> {
   TCPsocket* tcpSocket();
   UDPsocket* udpSocket();
   UDPpacket* sendPacket();
+  std::string udpBindKey() const;
 
   void executeNetActions();
   void addNetAction(NetAction* i_act);
@@ -62,6 +63,7 @@ class NetClient : public Singleton<NetClient> {
   UDPsocket m_udpsd;
   ClientListenerThread* m_clientListenerThread;
   UDPpacket* m_udpSendPacket;
+  std::string m_udpBindKey;
 
   std::vector<NetAction*> m_netActions;
   SDL_mutex* m_netActionsMutex;

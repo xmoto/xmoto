@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Net.h"
 #include "../XMSession.h"
 #include "../states/StateManager.h"
+#include <sstream>
+#include "../helpers/VMath.h"
 
 NetClient::NetClient() {
     m_isConnected = false;
@@ -37,6 +39,10 @@ NetClient::NetClient() {
     if(!m_udpSendPacket) {
       throw Exception("SDLNet_AllocPacket: " + std::string(SDLNet_GetError()));
     }
+
+    std::ostringstream v_rd;
+    v_rd << randomIntNum(1, RAND_MAX);
+    m_udpBindKey = v_rd.str();
 }
 
 NetClient::~NetClient() {
@@ -47,6 +53,10 @@ NetClient::~NetClient() {
   }
 
   SDLNet_FreePacket(m_udpSendPacket);
+}
+
+std::string NetClient::udpBindKey() const {
+  return m_udpBindKey;
 }
 
 UDPpacket* NetClient::sendPacket() {
@@ -75,7 +85,6 @@ void NetClient::addNetAction(NetAction* i_act) {
 }
 
 void NetClient::connect(const std::string& i_server, int i_port) {
-  int v_localUdpPort = XMSession::instance()->clientUdpPort();
 
   if(m_isConnected) {
     throw Exception("Already connected");
@@ -89,7 +98,7 @@ void NetClient::connect(const std::string& i_server, int i_port) {
     throw Exception(SDLNet_GetError());
   }
 
-  if((m_udpsd = SDLNet_UDP_Open(v_localUdpPort)) == 0) {
+  if((m_udpsd = SDLNet_UDP_Open(0)) == 0) {
     LogError("server: SDLNet_UDP_Open: %s", SDLNet_GetError());
     SDLNet_TCP_Close(m_tcpsd);
     throw Exception(SDLNet_GetError());
@@ -105,7 +114,7 @@ void NetClient::connect(const std::string& i_server, int i_port) {
   LogInfo("client: connected on %s:%d", i_server.c_str(), i_port);
 
   // bind udp port on server
-  NA_udpBind na(v_localUdpPort);
+  NA_udpBindKey na(m_udpBindKey);
   try {
     NetClient::instance()->send(&na);
   } catch(Exception &e) {

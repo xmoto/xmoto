@@ -675,7 +675,10 @@ void GameApp::uninitNetwork() {
   }
 
   NetServer::destroy();
-  NetAction::logStats();
+
+  if(Logger::isInitialized()) {
+    NetAction::logStats();
+  }
 
   SDLNet_Quit();
 }

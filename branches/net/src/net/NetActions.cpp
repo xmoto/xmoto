@@ -37,9 +37,11 @@ unsigned int NetAction::m_nbUDPPacketsSent   = 0;
 unsigned int NetAction::m_TCPPacketsSizeSent = 0;
 unsigned int NetAction::m_UDPPacketsSizeSent = 0;
 
-std::string NA_chatMessage::ActionKey = "message";
-std::string NA_frame::ActionKey       = "frame";
-std::string NA_udpBind::ActionKey     = "udpbinding";
+std::string NA_chatMessage::ActionKey  = "message";
+std::string NA_frame::ActionKey        = "frame";
+std::string NA_udpBindKey::ActionKey   = "udpbindingKey";
+std::string NA_udpBind::ActionKey      = "udpbind";
+std::string NA_udpBindQuery::ActionKey = "udpbindingQuery";
 
 NetAction::NetAction() {
 }
@@ -53,7 +55,7 @@ void NetAction::logStats() {
   LogInfo("net: size of TCP packets sent : %u bytes", NetAction::m_TCPPacketsSizeSent);
   LogInfo("net: number of UDP packets sent : %u", NetAction::m_nbUDPPacketsSent);
   LogInfo("net: biggest UDP packet sent : %u bytes", NetAction::m_biggestUDPPacket);
-  LogInfo("net: size of UDP packets sent : %u bytes", NetAction::m_UDPPacketsSizeSent);
+  LogInfo("net: size of UDP packets sent : %i bytes", NetAction::m_UDPPacketsSizeSent);
 }
 
 void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, const void* subPacketData, int subPacketLen) {
@@ -70,7 +72,9 @@ void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPa
   }
 
   snprintf(m_buffer, NETACTION_MAX_PACKET_SIZE, "%s\n%s\n", v_nb.str().c_str(), actionKey().c_str());
-  memcpy(m_buffer + v_nb.str().length() + 1 + actionKey().length() + 1, subPacketData, subPacketLen);
+  if(subPacketLen != 0) {
+    memcpy(m_buffer + v_nb.str().length() + 1 + actionKey().length() + 1, subPacketData, subPacketLen);
+  }
   m_buffer[v_totalPacketSize-1] = '\n';
 
   if(i_udpsd != NULL) {
@@ -119,10 +123,20 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
 			      len    -(NA_frame::ActionKey.size()+1));
   }
   
+  else if(isCommand(data, len, NA_udpBindKey::ActionKey)) {
+    return new NA_udpBindKey(((char*)data)+(NA_udpBindKey::ActionKey.size()+1),
+	                           len    -(NA_udpBindKey::ActionKey.size()+1));
+  }
+
+  else if(isCommand(data, len, NA_udpBindQuery::ActionKey)) {
+    return new NA_udpBindQuery(((char*)data)+(NA_udpBindQuery::ActionKey.size()+1),
+			             len    -(NA_udpBindQuery::ActionKey.size()+1));
+  }
+
   else if(isCommand(data, len, NA_udpBind::ActionKey)) {
     return new NA_udpBind(((char*)data)+(NA_udpBind::ActionKey.size()+1),
 	                        len    -(NA_udpBind::ActionKey.size()+1));
-  } 
+  }
 
   else {
     throw Exception("net: invalid command");
@@ -139,6 +153,10 @@ bool NetAction::isCommand(void* data, unsigned int len, const std::string& i_cmd
   }
 
   return strncmp((char*)data, i_cmd.c_str(), i_cmd.length()) == 0;
+}
+
+void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) {
+  NetAction::send(i_tcpsd, i_udpsd, i_sendPacket, NULL, 0);
 }
 
 NA_chatMessage::NA_chatMessage(const std::string& i_msg) {
@@ -224,30 +242,68 @@ SerializedBikeState NA_frame::getState() {
   return m_state;
 }
 
-NA_udpBind::NA_udpBind(int i_port) {
-  m_port = i_port;
+NA_udpBind::NA_udpBind(const std::string& i_key) {
+  m_key = i_key;
 }
 
 NA_udpBind::NA_udpBind(void* data, unsigned int len) {
   ((char*)data)[len-1] = '\0';
-  m_port = atoi((char*)data);
+  m_key = std::string((char*)data);
   ((char*)data)[len-1] = '\n';
 }
 
 NA_udpBind::~NA_udpBind() {
 }
 
-void NA_udpBind::execute(NetClient* i_netClient) {
-  // do nothing on the client side
-}
-
 void NA_udpBind::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) {
-  char v_buf[6];
-  int n;
-  n = snprintf(v_buf, 6, "%i", m_port);
-  NetAction::send(i_tcpsd, NULL, NULL, v_buf, n); // don't send the \0
+  // force UDP
+  NetAction::send(NULL, i_udpsd, i_sendPacket, m_key.c_str(), m_key.size()); // don't send the \0
 }
 
-int NA_udpBind::getPort() {
-  return m_port;
+std::string NA_udpBind::key() const {
+  return m_key;
+}
+
+NA_udpBindQuery::NA_udpBindQuery() {
+}
+
+NA_udpBindQuery::NA_udpBindQuery(void* data, unsigned int len) {
+}
+
+NA_udpBindQuery::~NA_udpBindQuery() {
+}
+
+void NA_udpBindQuery::execute(NetClient* i_netClient) {
+  NA_udpBind na(i_netClient->udpBindKey());
+  try {
+    i_netClient->send(&na);
+  } catch(Exception &e) {
+  }
+}
+
+void NA_udpBindQuery::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) {
+  // force TCP
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, 0);
+}
+
+NA_udpBindKey::NA_udpBindKey(const std::string& i_key) {
+  m_key = i_key;
+}
+
+NA_udpBindKey::NA_udpBindKey(void* data, unsigned int len) {
+  ((char*)data)[len-1] = '\0';
+  m_key = std::string((char*)data);
+  ((char*)data)[len-1] = '\n';
+}
+
+NA_udpBindKey::~NA_udpBindKey() {
+}
+
+void NA_udpBindKey::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) {
+  // force TCP
+  NetAction::send(i_tcpsd, NULL, NULL, m_key.c_str(), m_key.size()); // don't send the \0
+}
+
+std::string NA_udpBindKey::key() const {
+  return m_key;
 }

@@ -35,8 +35,8 @@ class NetAction {
   virtual ~NetAction();
   virtual std::string actionKey() = 0;
 
-  virtual void execute(NetClient* i_netClient) = 0;
-  virtual void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) = 0;
+  virtual void execute(NetClient* i_netClient) {};
+  virtual void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket);
 
   static NetAction* newNetAction(void* data, unsigned int len);
   static void logStats();
@@ -57,19 +57,52 @@ class NetAction {
 
 class NA_udpBind : public NetAction {
   public:
-  NA_udpBind(int i_port);
+  NA_udpBind(const std::string& i_key);
   NA_udpBind(void* data, unsigned int len);
   virtual ~NA_udpBind();
   std::string actionKey() { return ActionKey; };
   static std::string ActionKey;
 
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket);
+
+  std::string key() const;
+
+  private:
+  std::string m_key;
+};
+
+class NA_udpBindQuery : public NetAction {
+  public:
+  NA_udpBindQuery();
+  NA_udpBindQuery(void* data, unsigned int len);
+  virtual ~NA_udpBindQuery();
+  std::string actionKey() { return ActionKey; };
+  static std::string ActionKey;
+  
   virtual void execute(NetClient* i_netClient);
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket);
 
-  int getPort();
+  private:
+};
+
+/* the client send its key by tcp (udpBindKey) */
+/* then, the server ask via tcp (udpBindQuery) the client to send an udp packet (udpBind) */
+/* the server bind */
+
+class NA_udpBindKey : public NetAction {
+  public:
+  NA_udpBindKey(const std::string& i_key);
+  NA_udpBindKey(void* data, unsigned int len);
+  virtual ~NA_udpBindKey();
+  std::string actionKey() { return ActionKey; };
+  static std::string ActionKey;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket);
+
+  std::string key() const;
 
   private:
-  int m_port;
+  std::string m_key;
 };
 
 class NA_chatMessage : public NetAction {

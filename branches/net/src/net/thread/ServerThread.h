@@ -38,10 +38,13 @@ class NetSClient {
   int udpChannel() const; // <0 => invalid
   void setChannel(int i_value);
   bool isUdpBinded() const;
-  void bindUdp(UDPsocket* i_udpsd, int i_port);
+  void bindUdp(UDPsocket* i_udpsd, IPaddress i_udpIPAdress);
   void unbindUdp(UDPsocket* i_udpsd);
 
   ActionReader* tcpReader;
+
+  void setUdpBindKey(const std::string& i_key);
+  std::string udpBindKey() const;
 
   private:
   TCPsocket m_tcpSocket;
@@ -49,6 +52,7 @@ class NetSClient {
   IPaddress m_udpRemoteIP;
   int m_udpChannel;
   bool m_isUdpBinded;
+  std::string m_udpBindKey;
 };
 
 class ServerThread : public XMThread {

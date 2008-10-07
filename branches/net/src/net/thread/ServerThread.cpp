@@ -65,9 +65,8 @@ bool NetSClient::isUdpBinded() const {
   return m_isUdpBinded;
 }
 
-void NetSClient::bindUdp(UDPsocket* i_udpsd, int i_port) {
-  m_udpRemoteIP.host = m_tcpRemoteIP.host;
-  SDLNet_Write16(i_port, &(m_udpRemoteIP.port));
+void NetSClient::bindUdp(UDPsocket* i_udpsd, IPaddress i_udpIPAdress) {
+  m_udpRemoteIP = i_udpIPAdress;
 
   if( (m_udpChannel = SDLNet_UDP_Bind(*i_udpsd, -1, &m_udpRemoteIP)) == -1) {
     LogError("server: SDLNet_UDP_Bind: %s", SDLNet_GetError());
@@ -75,14 +74,21 @@ void NetSClient::bindUdp(UDPsocket* i_udpsd, int i_port) {
   }
 
   LogInfo("server: host binded: %s:%i (UDP)",
-	  XMNet::getIp(&m_udpRemoteIP).c_str(), i_port);
-
+	  XMNet::getIp(&m_udpRemoteIP).c_str(), SDLNet_Read16(&(m_udpRemoteIP.port)));
   m_isUdpBinded = true;
 }
 
 void NetSClient::unbindUdp(UDPsocket* i_udpsd) {
   SDLNet_UDP_Unbind(*i_udpsd, m_udpChannel);
   m_isUdpBinded = false;
+}
+
+void NetSClient::setUdpBindKey(const std::string& i_key) {
+  m_udpBindKey = i_key;
+}
+
+std::string NetSClient::udpBindKey() const {
+  return m_udpBindKey;
 }
 
 ServerThread::ServerThread() {
@@ -187,7 +193,21 @@ int ServerThread::realThreadFunction() {
 		}
 	      }
 	    } else {
-	      LogWarning("server: udp packet received without channel");
+	      NetAction* v_netAction;
+	      try {
+		v_netAction = ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len);
+		if(v_netAction->actionKey() == NA_udpBind::ActionKey) {
+		  for(unsigned int i=0; i<m_clients.size(); i++) {
+		    if(m_clients[i]->isUdpBinded() == false) {
+		      if(m_clients[i]->udpBindKey() == ((NA_udpBind*)v_netAction)->key()) {
+			LogInfo("UDP bind key received via UDP: %s", ((NA_udpBind*)v_netAction)->key().c_str());
+			m_clients[i]->bindUdp(&m_udpsd, m_udpPacket->address);
+		      }
+		    }
+		  }
+		}
+	      } catch(Exception &e) {
+	      }
 	    }
 	  }
 
@@ -301,14 +321,6 @@ void ServerThread::acceptClient() {
   }
 
   m_clients.push_back(new NetSClient(csd, tcpRemoteIP));
-
-  // welcome
-  //std::string v_msg = "Xmoto server\n";
-  //try {
-  //  sendToClient((void*) v_msg.c_str(), v_msg.length(), m_clients.size()-1);
-  //} catch(Exception &e) {
-  //  removeClient(m_clients.size()-1);
-  //}
 }
 
 void ServerThread::manageClientTCP(unsigned int i) {
@@ -317,14 +329,20 @@ void ServerThread::manageClientTCP(unsigned int i) {
   while(m_clients[i]->tcpReader->TCPReadAction(m_clients[i]->tcpSocket(), &v_netAction)) {
     // manage v_netAction
     
-    if(v_netAction->actionKey() == NA_udpBind::ActionKey) {
+    if(v_netAction->actionKey() == NA_udpBindKey::ActionKey) {
+
+      // udpBindKey received
+      LogInfo("UDP bind key of client %i is %s", i, ((NA_udpBindKey*)v_netAction)->key().c_str());
+      m_clients[i]->setUdpBindKey(((NA_udpBindKey*)v_netAction)->key());
+
+      // query bind udp
+      NA_udpBindQuery na;
       try {
-	if(m_clients[i]->isUdpBinded() == false) {
-	  m_clients[i]->bindUdp(&m_udpsd, ((NA_udpBind*)v_netAction)->getPort());
-	}
+	sendToClient(&na, i);
       } catch(Exception &e) {
-	LogWarning("Unable to bind upd");
       }
+    } else if(v_netAction->actionKey() == NA_udpBind::ActionKey || v_netAction->actionKey() == NA_udpBindQuery::ActionKey) {
+      // don't manage these actions
     } else {
       sendToAllClients(v_netAction, i);
     }
