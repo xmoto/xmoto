@@ -36,13 +36,13 @@ class NetAction {
   virtual std::string actionKey() = 0;
 
   virtual void execute(NetClient* i_netClient) {};
-  virtual void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket);
+  virtual void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
 
   static NetAction* newNetAction(void* data, unsigned int len);
   static void logStats();
 
   protected:
-  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, const void* subPacketData, int subPacketLen);
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP, const void* subPacketData, int subPacketLen);
 
   private:
   static bool isCommand(void* data, unsigned int len, const std::string& i_cmd);
@@ -63,7 +63,7 @@ class NA_udpBind : public NetAction {
   std::string actionKey() { return ActionKey; };
   static std::string ActionKey;
 
-  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket);
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
 
   std::string key() const;
 
@@ -80,7 +80,7 @@ class NA_udpBindQuery : public NetAction {
   static std::string ActionKey;
   
   virtual void execute(NetClient* i_netClient);
-  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket);
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
 
   private:
 };
@@ -97,7 +97,7 @@ class NA_udpBindKey : public NetAction {
   std::string actionKey() { return ActionKey; };
   static std::string ActionKey;
 
-  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket);
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
 
   std::string key() const;
 
@@ -114,7 +114,7 @@ class NA_chatMessage : public NetAction {
   static std::string ActionKey;
 
   virtual void execute(NetClient* i_netClient);
-  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket);
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
 
   std::string getMessage();
 
@@ -131,7 +131,7 @@ class NA_frame : public NetAction {
   static std::string ActionKey;
 
   virtual void execute(NetClient* i_netClient);
-  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket);
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
 
   SerializedBikeState getState();
 

@@ -35,6 +35,7 @@ class NetSClient {
 
   TCPsocket* tcpSocket();
   IPaddress* tcpRemoteIP();
+  IPaddress* udpRemoteIP();
   int udpChannel() const; // <0 => invalid
   void setChannel(int i_value);
   bool isUdpBinded() const;

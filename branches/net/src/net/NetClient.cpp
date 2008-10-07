@@ -154,7 +154,7 @@ UDPsocket* NetClient::udpSocket() {
 
 void NetClient::send(NetAction* i_netAction) {
   try {
-    i_netAction->send(&m_tcpsd, &m_udpsd, m_udpSendPacket);
+    i_netAction->send(&m_tcpsd, &m_udpsd, m_udpSendPacket, &m_udpSendPacket->address);
   } catch(Exception &e) {
     disconnect();
     StateManager::instance()->sendAsynchronousMessage("CLIENT_DISCONNECTED_BY_ERROR");

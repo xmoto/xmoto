@@ -58,7 +58,8 @@ void NetAction::logStats() {
   LogInfo("net: size of UDP packets sent : %i bytes", NetAction::m_UDPPacketsSizeSent);
 }
 
-void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, const void* subPacketData, int subPacketLen) {
+void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP,
+		     const void* subPacketData, int subPacketLen) {
   unsigned int nread;
   std::string v_data;
 
@@ -155,8 +156,8 @@ bool NetAction::isCommand(void* data, unsigned int len, const std::string& i_cmd
   return strncmp((char*)data, i_cmd.c_str(), i_cmd.length()) == 0;
 }
 
-void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) {
-  NetAction::send(i_tcpsd, i_udpsd, i_sendPacket, NULL, 0);
+void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  NetAction::send(i_tcpsd, i_udpsd, i_sendPacket, i_udpRemoteIP, NULL, 0);
 }
 
 NA_chatMessage::NA_chatMessage(const std::string& i_msg) {
@@ -176,8 +177,8 @@ void NA_chatMessage::execute(NetClient* i_netClient) {
   SysMessage::instance()->displayInformation(m_msg);
 }
 
-void NA_chatMessage::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) {
-  NetAction::send(i_tcpsd, NULL, NULL, m_msg.c_str(), m_msg.size()); // don't send the \0
+void NA_chatMessage::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, m_msg.c_str(), m_msg.size()); // don't send the \0
 }
 
 std::string NA_chatMessage::getMessage() {
@@ -229,12 +230,12 @@ void NA_frame::execute(NetClient* i_netClient) {
   }
 }
 
-void NA_frame::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) {
+void NA_frame::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
   if(i_udpsd != NULL) {
     // if udp is available, prefer udp
-    NetAction::send(NULL, i_udpsd, i_sendPacket, &m_state, sizeof(SerializedBikeState));
+    NetAction::send(NULL, i_udpsd, i_sendPacket, i_udpRemoteIP, &m_state, sizeof(SerializedBikeState));
   } else {
-    NetAction::send(i_tcpsd, i_udpsd, i_sendPacket, &m_state, sizeof(SerializedBikeState));
+    NetAction::send(i_tcpsd, i_udpsd, i_sendPacket, i_udpRemoteIP, &m_state, sizeof(SerializedBikeState));
   }
 }
 
@@ -255,9 +256,9 @@ NA_udpBind::NA_udpBind(void* data, unsigned int len) {
 NA_udpBind::~NA_udpBind() {
 }
 
-void NA_udpBind::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) {
+void NA_udpBind::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
   // force UDP
-  NetAction::send(NULL, i_udpsd, i_sendPacket, m_key.c_str(), m_key.size()); // don't send the \0
+  NetAction::send(NULL, i_udpsd, i_sendPacket, i_udpRemoteIP, m_key.c_str(), m_key.size()); // don't send the \0
 }
 
 std::string NA_udpBind::key() const {
@@ -281,9 +282,9 @@ void NA_udpBindQuery::execute(NetClient* i_netClient) {
   }
 }
 
-void NA_udpBindQuery::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) {
+void NA_udpBindQuery::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
   // force TCP
-  NetAction::send(i_tcpsd, NULL, NULL, NULL, 0);
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, NULL, 0);
 }
 
 NA_udpBindKey::NA_udpBindKey(const std::string& i_key) {
@@ -299,9 +300,9 @@ NA_udpBindKey::NA_udpBindKey(void* data, unsigned int len) {
 NA_udpBindKey::~NA_udpBindKey() {
 }
 
-void NA_udpBindKey::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket) {
+void NA_udpBindKey::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
   // force TCP
-  NetAction::send(i_tcpsd, NULL, NULL, m_key.c_str(), m_key.size()); // don't send the \0
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, m_key.c_str(), m_key.size()); // don't send the \0
 }
 
 std::string NA_udpBindKey::key() const {

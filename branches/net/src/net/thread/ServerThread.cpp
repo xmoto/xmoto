@@ -53,6 +53,10 @@ IPaddress* NetSClient::tcpRemoteIP() {
   return &m_tcpRemoteIP;
 }
 
+IPaddress* NetSClient::udpRemoteIP() {
+  return &m_udpRemoteIP;
+}
+
 int NetSClient::udpChannel() const {
   return m_udpChannel;
 }
@@ -174,7 +178,7 @@ int ServerThread::realThreadFunction() {
 	else if(SDLNet_SocketReady(m_udpsd)) {
 
 	  // udp socket
-	  if( SDLNet_UDP_Recv(m_udpsd, m_udpPacket) == 1) {
+	  if(SDLNet_UDP_Recv(m_udpsd, m_udpPacket) == 1) {
 	    if(m_udpPacket->channel >= 0) {
 	      for(unsigned int i=0; i<m_clients.size(); i++) {
 		if(m_clients[i]->udpChannel() == m_udpPacket->channel) {
@@ -270,9 +274,9 @@ void ServerThread::removeClient(unsigned int i) {
 
 void ServerThread::sendToClient(NetAction* i_netAction, unsigned int i) {
   if(m_clients[i]->isUdpBinded()) {
-    i_netAction->send(m_clients[i]->tcpSocket(), &m_udpsd, m_udpPacket);
+    i_netAction->send(m_clients[i]->tcpSocket(), &m_udpsd, m_udpPacket, m_clients[i]->udpRemoteIP());
   } else {
-    i_netAction->send(m_clients[i]->tcpSocket(), NULL, NULL);
+    i_netAction->send(m_clients[i]->tcpSocket(), NULL, NULL, NULL);
   }
 }
 
