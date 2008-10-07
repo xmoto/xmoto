@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../GameText.h"
 #include "../Game.h"
 #include "StateMainMenu.h"
+#include "../net/NetClient.h"
 
 #define INPLAY_ANIMATION_TIME 1.0
 #define INPLAY_ANIMATION_SPEED 10
@@ -456,6 +457,10 @@ void StateScene::abortPlaying() {
 }
 
 void StateScene::closePlaying() {
+  if(NetClient::instance()->isConnected()) {
+    NetClient::instance()->endPlay();
+  }
+
   if(m_universe != NULL) {
     delete m_universe;
     m_universe = NULL;

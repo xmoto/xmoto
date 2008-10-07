@@ -53,7 +53,8 @@ class NetClient : public Singleton<NetClient> {
 
   std::vector<NetGhost*>& NetGhosts();
   void addNetGhost(NetGhost* i_ghost);
-  void resetPlay(Universe* i_universe);
+  void startPlay(Universe* i_universe);
+  void endPlay();
   Universe* getUniverse();
 
   private:

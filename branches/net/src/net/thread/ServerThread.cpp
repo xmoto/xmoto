@@ -69,16 +69,16 @@ bool NetSClient::isUdpBinded() const {
   return m_isUdpBinded;
 }
 
-void NetSClient::bindUdp(UDPsocket* i_udpsd, IPaddress i_udpIPAdress) {
+void NetSClient::bindUdp(UDPsocket* i_udpsd, IPaddress i_udpIPAdress, int i_nextUdpBoundId) {
   m_udpRemoteIP = i_udpIPAdress;
 
-  if( (m_udpChannel = SDLNet_UDP_Bind(*i_udpsd, -1, &m_udpRemoteIP)) == -1) {
+  if( (m_udpChannel = SDLNet_UDP_Bind(*i_udpsd, i_nextUdpBoundId, &m_udpRemoteIP)) == -1) {
     LogError("server: SDLNet_UDP_Bind: %s", SDLNet_GetError());
     return;
   }
 
-  LogInfo("server: host binded: %s:%i (UDP)",
-	  XMNet::getIp(&m_udpRemoteIP).c_str(), SDLNet_Read16(&(m_udpRemoteIP.port)));
+  LogInfo("server: host binded: %s:%i (UDP, channel %i)",
+	  XMNet::getIp(&m_udpRemoteIP).c_str(), SDLNet_Read16(&(m_udpRemoteIP.port)), m_udpChannel);
   m_isUdpBinded = true;
 }
 
@@ -97,6 +97,7 @@ std::string NetSClient::udpBindKey() const {
 
 ServerThread::ServerThread() {
     m_set = NULL;
+    m_nextUdpBoundId = 0;
     m_udpPacket = SDLNet_AllocPacket(XM_SERVER_MAX_UDP_PACKET_SIZE);
 
     if(!m_udpPacket) {
@@ -205,10 +206,12 @@ int ServerThread::realThreadFunction() {
 		    if(m_clients[i]->isUdpBinded() == false) {
 		      if(m_clients[i]->udpBindKey() == ((NA_udpBind*)v_netAction)->key()) {
 			LogInfo("UDP bind key received via UDP: %s", ((NA_udpBind*)v_netAction)->key().c_str());
-			m_clients[i]->bindUdp(&m_udpsd, m_udpPacket->address);
+			m_clients[i]->bindUdp(&m_udpsd, m_udpPacket->address, m_nextUdpBoundId++);
 		      }
 		    }
 		  }
+		} else {
+		  LogWarning("Packet received without a channel");
 		}
 	      } catch(Exception &e) {
 	      }

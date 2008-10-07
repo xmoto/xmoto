@@ -103,8 +103,7 @@ void NetClient::connect(const std::string& i_server, int i_port) {
     SDLNet_TCP_Close(m_tcpsd);
     throw Exception(SDLNet_GetError());
   }
-  m_udpSendPacket->address.host = serverIp.host;
-  m_udpSendPacket->address.port = serverIp.port;
+  m_udpSendPacket->address = serverIp;
 
   m_clientListenerThread = new ClientListenerThread(this);
   m_clientListenerThread->startThread();
@@ -162,9 +161,13 @@ void NetClient::send(NetAction* i_netAction) {
   }
 }
 
-void NetClient::resetPlay(Universe* i_universe) {
-  m_netGhosts.clear();
+void NetClient::startPlay(Universe* i_universe) {
   m_universe = i_universe;
+}
+
+void NetClient::endPlay() {
+  m_netGhosts.clear();
+  m_universe = NULL;
 }
 
 std::vector<NetGhost*>& NetClient::NetGhosts() {

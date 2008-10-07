@@ -298,7 +298,7 @@ void StatePreplaying::secondInitPhase()
 
   /* Prepare level */
   if(NetClient::instance()->isConnected()) {
-    NetClient::instance()->resetPlay(m_universe);
+    NetClient::instance()->startPlay(m_universe);
   }
   GameRenderer::instance()->prepareForNewLevel(m_universe);
 

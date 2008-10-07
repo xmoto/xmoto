@@ -39,7 +39,7 @@ class NetSClient {
   int udpChannel() const; // <0 => invalid
   void setChannel(int i_value);
   bool isUdpBinded() const;
-  void bindUdp(UDPsocket* i_udpsd, IPaddress i_udpIPAdress);
+  void bindUdp(UDPsocket* i_udpsd, IPaddress i_udpIPAdress, int i_nextUdpBoundId);
   void unbindUdp(UDPsocket* i_udpsd);
 
   ActionReader* tcpReader;
@@ -67,6 +67,7 @@ class ServerThread : public XMThread {
   TCPsocket m_tcpsd;
   UDPsocket m_udpsd;
   UDPpacket* m_udpPacket;
+  int m_nextUdpBoundId;
 
   SDLNet_SocketSet m_set;
   std::vector<NetSClient*> m_clients;

@@ -205,29 +205,29 @@ void NA_frame::execute(NetClient* i_netClient) {
   NetGhost* v_ghost;
   Universe* v_universe = i_netClient->getUniverse();
 
+  if(v_universe == NULL) {
+    return;
+  }
+
   if(i_netClient->NetGhosts().size() == 0) {
     /* add the net ghost */
-    if(v_universe != NULL) {
-      for(unsigned int i=0; i<v_universe->getScenes().size(); i++) {
-	v_ghost = v_universe->getScenes()[i]->addNetGhost("Net ghost", Theme::instance(),
-							  Theme::instance()->getGhostTheme(),
-							  TColor(255,255,255,0),
-							  TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-								 GET_GREEN(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-								 GET_BLUE(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-								 0)
-							  );
-	i_netClient->addNetGhost(v_ghost);
-      }
+    for(unsigned int i=0; i<v_universe->getScenes().size(); i++) {
+      v_ghost = v_universe->getScenes()[i]->addNetGhost("Net ghost", Theme::instance(),
+							Theme::instance()->getGhostTheme(),
+							TColor(255,255,255,0),
+							TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+							       GET_GREEN(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+							       GET_BLUE(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+							       0)
+							);
+      i_netClient->addNetGhost(v_ghost);
     }
   }
   
-  if(i_netClient->getUniverse() != NULL) {
-    // take the physic of the first world
-    if(i_netClient->getUniverse()->getScenes().size() > 0) {
-      BikeState::convertStateFromReplay(&m_state, i_netClient->NetGhosts()[0]->getState(),
-					i_netClient->getUniverse()->getScenes()[0]->getPhysicsSettings());
-    }
+  // take the physic of the first world
+  if(i_netClient->getUniverse()->getScenes().size() > 0) {
+    BikeState::convertStateFromReplay(&m_state, i_netClient->NetGhosts()[0]->getState(),
+				      i_netClient->getUniverse()->getScenes()[0]->getPhysicsSettings());
   }
 }
 
