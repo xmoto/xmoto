@@ -85,6 +85,7 @@ void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPa
       i_sendPacket->len = v_totalPacketSize;
       memcpy(i_sendPacket->data, m_buffer, v_totalPacketSize);
 
+      i_sendPacket->address = *i_udpRemoteIP;
       if(SDLNet_UDP_Send(*i_udpsd, -1, i_sendPacket) == 0) {
 	LogWarning("SDLNet_UDP_Send faild : %s", SDLNet_GetError());
       }
