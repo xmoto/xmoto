@@ -155,11 +155,11 @@ class NA_presentation : public NetAction {
   std::string m_name;
 };
 
-class NA_startingLevel : public NetAction {
+class NA_playingLevel : public NetAction {
   public:
-  NA_startingLevel(const std::string& i_levelId);
-  NA_startingLevel(void* data, unsigned int len);
-  virtual ~NA_startingLevel();
+  NA_playingLevel(const std::string& i_levelId);
+  NA_playingLevel(void* data, unsigned int len);
+  virtual ~NA_playingLevel();
   std::string actionKey() { return ActionKey; };
   static std::string ActionKey;
 

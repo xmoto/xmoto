@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Game.h"
 #include "StateMainMenu.h"
 #include "../net/NetClient.h"
+#include "../net/NetActions.h"
 
 #define INPLAY_ANIMATION_TIME 1.0
 #define INPLAY_ANIMATION_SPEED 10
@@ -95,6 +96,15 @@ StateScene::StateScene(Universe* i_universe, bool i_doShade, bool i_doShadeAnim)
 {
   init();
   m_universe   = i_universe;
+
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() != 0) {
+      if(NetClient::instance()->isConnected()) {
+	NA_playingLevel na(m_universe->getScenes()[0]->getLevelSrc()->Id());
+	NetClient::instance()->send(&na);
+      }
+    }
+  }
 }
 
 StateScene::~StateScene()
@@ -457,6 +467,12 @@ void StateScene::abortPlaying() {
 }
 
 void StateScene::closePlaying() {
+  if(NetClient::instance()->isConnected()) {
+    // stop playing
+    NA_playingLevel na("");
+    NetClient::instance()->send(&na);
+  }
+
   if(NetClient::instance()->isConnected()) {
     NetClient::instance()->endPlay();
   }

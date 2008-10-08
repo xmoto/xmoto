@@ -28,8 +28,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/Level.h"
 #include "../Game.h"
 #include "../xmscene/BikePlayer.h"
-#include "../net/NetClient.h"
-#include "../net/NetActions.h"
 
 StatePreplayingGame::StatePreplayingGame(const std::string i_idlevel, bool i_sameLevel)
 : StatePreplaying(i_idlevel, i_sameLevel) {
@@ -97,18 +95,6 @@ void StatePreplayingGame::initPlayers() {
 }
 
 void StatePreplayingGame::runPlaying() {
-  if(m_sameLevel == false) {
-    if(m_universe != NULL) {
-      if(m_universe->getScenes().size() != 0) {
-	
-	if(NetClient::instance()->isConnected()) {
-	  NA_startingLevel na(m_universe->getScenes()[0]->getLevelSrc()->Id());
-	  NetClient::instance()->send(&na);
-	}
-      }
-    }
-  }
-
   StateManager::instance()->replaceState(new StatePlaying(m_universe));
 }
 

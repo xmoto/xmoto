@@ -386,8 +386,8 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     LogInfo("Client[%i]'s name is \"%s\"", i_client, m_clients[i_client]->name().c_str());
   }
 
-  else if(i_netAction->actionKey() == NA_startingLevel::ActionKey) {
-    m_clients[i_client]->setPlayingLevelId(((NA_startingLevel*)i_netAction)->getLevelId());
+  else if(i_netAction->actionKey() == NA_playingLevel::ActionKey) {
+    m_clients[i_client]->setPlayingLevelId(((NA_playingLevel*)i_netAction)->getLevelId());
     LogInfo("Client[%i] is playing \"%s\"", i_client, m_clients[i_client]->playingLevelId().c_str());
   }
 
