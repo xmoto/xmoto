@@ -278,7 +278,10 @@ NA_udpBindQuery::~NA_udpBindQuery() {
 void NA_udpBindQuery::execute(NetClient* i_netClient) {
   NA_udpBind na(i_netClient->udpBindKey());
   try {
-    i_netClient->send(&na);
+    // send the packet 3 times to get more change it arrives
+    for(unsigned int i=0; i<3; i++) {
+      i_netClient->send(&na);
+    }
   } catch(Exception &e) {
   }
 }
