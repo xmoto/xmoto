@@ -71,7 +71,7 @@ void NetClient::executeNetActions() {
   SDL_LockMutex(m_netActionsMutex);
   for(unsigned int i=0; i<m_netActions.size(); i++) {
     //LogInfo("Execute NetAction");
-    m_netActions[i]->execute(this);
+    m_netActions[i]->executeClient(this);
     delete m_netActions[i];
   }
   m_netActions.clear();

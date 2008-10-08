@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define NETACTION_MAX_PACKET_SIZE 1024 * 10 // bytes
 
 class NetClient;
+class ServerThread;
 
 class NetAction {
   public:
@@ -35,8 +36,8 @@ class NetAction {
   virtual ~NetAction();
   virtual std::string actionKey() = 0;
 
-  virtual void execute(NetClient* i_netClient) {};
   virtual void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+  virtual void executeClient(NetClient* i_netClient)       = 0;
 
   static NetAction* newNetAction(void* data, unsigned int len);
   static void logStats();
@@ -64,6 +65,7 @@ class NA_udpBind : public NetAction {
   static std::string ActionKey;
 
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+  virtual void executeClient(NetClient* i_netClient);
 
   std::string key() const;
 
@@ -78,9 +80,9 @@ class NA_udpBindQuery : public NetAction {
   virtual ~NA_udpBindQuery();
   std::string actionKey() { return ActionKey; };
   static std::string ActionKey;
-  
-  virtual void execute(NetClient* i_netClient);
-  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);  
+  virtual void executeClient(NetClient* i_netClient);
 
   private:
 };
@@ -98,6 +100,7 @@ class NA_udpBindKey : public NetAction {
   static std::string ActionKey;
 
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+  virtual void executeClient(NetClient* i_netClient);
 
   std::string key() const;
 
@@ -113,8 +116,8 @@ class NA_chatMessage : public NetAction {
   std::string actionKey() { return ActionKey; };
   static std::string ActionKey;
 
-  virtual void execute(NetClient* i_netClient);
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+  virtual void executeClient(NetClient* i_netClient);
 
   std::string getMessage();
 
@@ -130,8 +133,8 @@ class NA_frame : public NetAction {
   std::string actionKey() { return ActionKey; };
   static std::string ActionKey;
 
-  virtual void execute(NetClient* i_netClient);
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+  virtual void executeClient(NetClient* i_netClient);
 
   SerializedBikeState getState();
 
@@ -148,6 +151,7 @@ class NA_presentation : public NetAction {
   static std::string ActionKey;
 
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+  virtual void executeClient(NetClient* i_netClient);
 
   std::string getName();
 
@@ -164,7 +168,7 @@ class NA_playingLevel : public NetAction {
   static std::string ActionKey;
 
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
-  virtual void execute(NetClient* i_netClient);
+  virtual void executeClient(NetClient* i_netClient);
 
   std::string getLevelId();
 

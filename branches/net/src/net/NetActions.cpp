@@ -188,7 +188,7 @@ NA_chatMessage::NA_chatMessage(void* data, unsigned int len) {
 NA_chatMessage::~NA_chatMessage() {
 }
 
-void NA_chatMessage::execute(NetClient* i_netClient) {
+void NA_chatMessage::executeClient(NetClient* i_netClient) {
   SysMessage::instance()->displayInformation(m_msg);
 }
 
@@ -214,7 +214,7 @@ NA_frame::NA_frame(void* data, unsigned int len) {
 NA_frame::~NA_frame() {
 }
 
-void NA_frame::execute(NetClient* i_netClient) {
+void NA_frame::executeClient(NetClient* i_netClient) {
   //LogInfo("Frame received");
   NetGhost* v_ghost;
   Universe* v_universe = i_netClient->getUniverse();
@@ -276,6 +276,10 @@ void NA_udpBind::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendP
   NetAction::send(NULL, i_udpsd, i_sendPacket, i_udpRemoteIP, m_key.c_str(), m_key.size()); // don't send the \0
 }
 
+void NA_udpBind::executeClient(NetClient* i_netClient) {
+  /* should never happend */
+}
+
 std::string NA_udpBind::key() const {
   return m_key;
 }
@@ -289,7 +293,7 @@ NA_udpBindQuery::NA_udpBindQuery(void* data, unsigned int len) {
 NA_udpBindQuery::~NA_udpBindQuery() {
 }
 
-void NA_udpBindQuery::execute(NetClient* i_netClient) {
+void NA_udpBindQuery::executeClient(NetClient* i_netClient) {
   NA_udpBind na(i_netClient->udpBindKey());
   try {
     // send the packet 3 times to get more change it arrives
@@ -323,6 +327,10 @@ void NA_udpBindKey::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_se
   NetAction::send(i_tcpsd, NULL, NULL, NULL, m_key.c_str(), m_key.size()); // don't send the \0
 }
 
+void NA_udpBindKey::executeClient(NetClient* i_netClient) {
+  /* should never happend */
+}
+
 std::string NA_udpBindKey::key() const {
   return m_key;
 }
@@ -342,6 +350,9 @@ NA_presentation::~NA_presentation() {
 
 void NA_presentation::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
   NetAction::send(i_tcpsd, NULL, NULL, NULL, m_name.c_str(), m_name.size()); // don't send the \0
+}
+
+void NA_presentation::executeClient(NetClient* i_netClient) {
 }
 
 std::string NA_presentation::getName() {
@@ -369,6 +380,6 @@ std::string NA_playingLevel::getLevelId() {
   return m_levelId;
 }
 
-void NA_playingLevel::execute(NetClient* i_netClient) {
+void NA_playingLevel::executeClient(NetClient* i_netClient) {
   SysMessage::instance()->displayInformation("Somebody is starting a level");
 }
