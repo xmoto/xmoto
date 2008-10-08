@@ -221,7 +221,7 @@ int ServerThread::realThreadFunction() {
 	      NetAction* v_netAction;
 	      try {
 		v_netAction = ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len);
-		if(v_netAction->actionKey() == NA_udpBind::ActionKey) {
+		if(v_netAction->actionType() == TNA_udpBind) {
 		  for(unsigned int i=0; i<m_clients.size(); i++) {
 		    if(m_clients[i]->isUdpBinded() == false) {
 		      if(m_clients[i]->udpBindKey() == ((NA_udpBind*)v_netAction)->key()) {
@@ -356,7 +356,7 @@ void ServerThread::manageClientTCP(unsigned int i) {
   while(m_clients[i]->tcpReader->TCPReadAction(m_clients[i]->tcpSocket(), &v_netAction)) {
     // manage v_netAction
     
-    if(v_netAction->actionKey() == NA_udpBindKey::ActionKey) {
+    if(v_netAction->actionType() == TNA_udpBindKey) {
 
       // udpBindKey received
       LogInfo("UDP bind key of client %i is %s", i, ((NA_udpBindKey*)v_netAction)->key().c_str());
@@ -368,8 +368,8 @@ void ServerThread::manageClientTCP(unsigned int i) {
 	sendToClient(&na, i);
       } catch(Exception &e) {
       }
-    } else if(v_netAction->actionKey() == NA_udpBind::ActionKey ||
-	      v_netAction->actionKey() == NA_udpBindQuery::ActionKey) {
+    } else if(v_netAction->actionType() == TNA_udpBind ||
+	      v_netAction->actionType() == TNA_udpBindQuery) {
       // don't manage these actions
     } else {
       manageAction(v_netAction, i);
@@ -381,17 +381,17 @@ void ServerThread::manageClientTCP(unsigned int i) {
 void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   unsigned int i;
 
-  if(i_netAction->actionKey() == NA_presentation::ActionKey) {
+  if(i_netAction->actionType() == TNA_presentation) {
     m_clients[i_client]->setName(((NA_presentation*)i_netAction)->getName());
     LogInfo("Client[%i]'s name is \"%s\"", i_client, m_clients[i_client]->name().c_str());
   }
 
-  else if(i_netAction->actionKey() == NA_playingLevel::ActionKey) {
+  else if(i_netAction->actionType() == TNA_playingLevel) {
     m_clients[i_client]->setPlayingLevelId(((NA_playingLevel*)i_netAction)->getLevelId());
     LogInfo("Client[%i] is playing \"%s\"", i_client, m_clients[i_client]->playingLevelId().c_str());
   }
 
-  else if(i_netAction->actionKey() == NA_frame::ActionKey) {
+  else if(i_netAction->actionType() == TNA_frame) {
 
     i = 0;
     while(i<m_clients.size()) {

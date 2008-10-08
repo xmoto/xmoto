@@ -38,12 +38,21 @@ unsigned int NetAction::m_TCPPacketsSizeSent = 0;
 unsigned int NetAction::m_UDPPacketsSizeSent = 0;
 
 std::string NA_chatMessage::ActionKey  = "message";
-std::string NA_frame::ActionKey        = "f"; // frame : while it's sent a lot, reduce it at maximum
+// frame : while it's sent a lot, reduce it at maximum
+std::string NA_frame::ActionKey        = "f";
 std::string NA_udpBindKey::ActionKey   = "udpbindingKey";
 std::string NA_udpBind::ActionKey      = "udpbind";
 std::string NA_udpBindQuery::ActionKey = "udpbindingQuery";
 std::string NA_presentation::ActionKey = "presentation";
 std::string NA_playingLevel::ActionKey = "playingLevel";
+
+NetActionType NA_chatMessage::NAType  = TNA_chatMessage;
+NetActionType NA_frame::NAType        = TNA_frame;
+NetActionType NA_udpBindKey::NAType   = TNA_udpBindKey;
+NetActionType NA_udpBind::NAType      = TNA_udpBind;
+NetActionType NA_udpBindQuery::NAType = TNA_udpBindQuery;
+NetActionType NA_presentation::NAType = TNA_presentation;
+NetActionType NA_playingLevel::NAType = TNA_playingLevel;
 
 NetAction::NetAction() {
 }
