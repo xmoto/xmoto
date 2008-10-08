@@ -102,9 +102,8 @@ void StatePreplayingGame::runPlaying() {
       if(m_universe->getScenes().size() != 0) {
 	
 	if(NetClient::instance()->isConnected()) {
-	  NA_chatMessage nacm(XMSession::instance()->profile() + " starts to play \"" +
-			      m_universe->getScenes()[0]->getLevelSrc()->Name() + "\"");
-	  NetClient::instance()->send(&nacm);
+	  NA_startingLevel na(m_universe->getScenes()[0]->getLevelSrc()->Id());
+	  NetClient::instance()->send(&na);
 	}
       }
     }

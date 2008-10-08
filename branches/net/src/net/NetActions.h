@@ -139,4 +139,37 @@ class NA_frame : public NetAction {
    SerializedBikeState m_state;
 };
 
+class NA_presentation : public NetAction {
+  public:
+  NA_presentation(const std::string& i_name);
+  NA_presentation(void* data, unsigned int len);
+  virtual ~NA_presentation();
+  std::string actionKey() { return ActionKey; };
+  static std::string ActionKey;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  std::string getName();
+
+  private:
+  std::string m_name;
+};
+
+class NA_startingLevel : public NetAction {
+  public:
+  NA_startingLevel(const std::string& i_levelId);
+  NA_startingLevel(void* data, unsigned int len);
+  virtual ~NA_startingLevel();
+  std::string actionKey() { return ActionKey; };
+  static std::string ActionKey;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+  virtual void execute(NetClient* i_netClient);
+
+  std::string getLevelId();
+
+  private:
+  std::string m_levelId;
+};
+
 #endif

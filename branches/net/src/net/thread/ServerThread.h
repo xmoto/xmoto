@@ -47,6 +47,12 @@ class NetSClient {
   void setUdpBindKey(const std::string& i_key);
   std::string udpBindKey() const;
 
+  void setName(const std::string& i_name);
+  std::string name() const;
+
+  void setPlayingLevelId(const std::string& i_levelId);
+  std::string playingLevelId() const;
+
   private:
   TCPsocket m_tcpSocket;
   IPaddress m_tcpRemoteIP;
@@ -54,6 +60,8 @@ class NetSClient {
   int m_udpChannel;
   bool m_isUdpBinded;
   std::string m_udpBindKey;
+  std::string m_name;
+  std::string m_playingLevelId;
 };
 
 class ServerThread : public XMThread {
@@ -74,6 +82,8 @@ class ServerThread : public XMThread {
 
   void acceptClient();
   void manageClientTCP(unsigned int i);
+
+  void manageAction(NetAction* i_netAction, unsigned int i_client);
 
   // if i_execpt >= 0, send to all exept him
   void sendToAllClients(NetAction* i_netAction, unsigned int i_except = -1);

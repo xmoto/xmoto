@@ -118,6 +118,13 @@ void NetClient::connect(const std::string& i_server, int i_port) {
     NetClient::instance()->send(&na);
   } catch(Exception &e) {
   }
+
+  // presentation
+  NA_presentation nap(XMSession::instance()->profile());
+  try {
+    NetClient::instance()->send(&nap);
+  } catch(Exception &e) {
+  }
 }
 
 void NetClient::disconnect() {

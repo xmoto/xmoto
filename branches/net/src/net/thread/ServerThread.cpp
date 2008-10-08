@@ -70,6 +70,10 @@ bool NetSClient::isUdpBinded() const {
 }
 
 void NetSClient::bindUdp(UDPsocket* i_udpsd, IPaddress i_udpIPAdress, int i_nextUdpBoundId) {
+  if(i_nextUdpBoundId > SDLNET_MAX_UDPCHANNELS) {
+    throw Exception("Too much udp binding");
+  }
+
   m_udpRemoteIP = i_udpIPAdress;
 
   if( (m_udpChannel = SDLNet_UDP_Bind(*i_udpsd, i_nextUdpBoundId, &m_udpRemoteIP)) == -1) {
@@ -93,6 +97,22 @@ void NetSClient::setUdpBindKey(const std::string& i_key) {
 
 std::string NetSClient::udpBindKey() const {
   return m_udpBindKey;
+}
+
+void NetSClient::setName(const std::string& i_name) {
+  m_name = i_name;
+}
+
+std::string NetSClient::name() const {
+  return m_name;
+}
+
+void NetSClient::setPlayingLevelId(const std::string& i_levelId) {
+  m_playingLevelId = i_levelId;
+}
+
+std::string NetSClient::playingLevelId() const {
+  return m_playingLevelId;
 }
 
 ServerThread::ServerThread() {
@@ -187,7 +207,7 @@ int ServerThread::realThreadFunction() {
 		  NetAction* v_netAction;
 		  try {
 		    v_netAction = ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len);
-		    sendToAllClients(v_netAction, i);
+		    manageAction(v_netAction, i);
 		    delete v_netAction;
 		  } catch(Exception &e) {
 		    LogError("%s", e.getMsg().c_str());
@@ -287,7 +307,7 @@ void ServerThread::sendToAllClients(NetAction* i_netAction, unsigned int i_excep
   unsigned int i=0;
   
   while(i<m_clients.size()) {
-    if(i != i_except /*|| true*/ /* resend to the client for tests only */) {
+    if(i != i_except) {
       try {
 	sendToClient(i_netAction, i);
 	i++;
@@ -348,11 +368,51 @@ void ServerThread::manageClientTCP(unsigned int i) {
 	sendToClient(&na, i);
       } catch(Exception &e) {
       }
-    } else if(v_netAction->actionKey() == NA_udpBind::ActionKey || v_netAction->actionKey() == NA_udpBindQuery::ActionKey) {
+    } else if(v_netAction->actionKey() == NA_udpBind::ActionKey ||
+	      v_netAction->actionKey() == NA_udpBindQuery::ActionKey) {
       // don't manage these actions
     } else {
-      sendToAllClients(v_netAction, i);
+      manageAction(v_netAction, i);
     }
     delete v_netAction;
+  }
+}
+
+void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
+  unsigned int i;
+
+  if(i_netAction->actionKey() == NA_presentation::ActionKey) {
+    m_clients[i_client]->setName(((NA_presentation*)i_netAction)->getName());
+    LogInfo("Client[%i]'s name is \"%s\"", i_client, m_clients[i_client]->name().c_str());
+  }
+
+  else if(i_netAction->actionKey() == NA_startingLevel::ActionKey) {
+    m_clients[i_client]->setPlayingLevelId(((NA_startingLevel*)i_netAction)->getLevelId());
+    LogInfo("Client[%i] is playing \"%s\"", i_client, m_clients[i_client]->playingLevelId().c_str());
+  }
+
+  else if(i_netAction->actionKey() == NA_frame::ActionKey) {
+
+    i = 0;
+    while(i<m_clients.size()) {
+      if(i != i_client &&
+	 m_clients[i_client]->playingLevelId() != "" &&
+	 m_clients[i_client]->playingLevelId() == m_clients[i]->playingLevelId()
+	 ) {
+	try {
+	  sendToClient(i_netAction, i);
+	  i++;
+	} catch(Exception &e) {
+	  removeClient(i);
+	}
+      } else {
+	i++;
+      }
+    }
+  }
+
+  else {
+    // chat
+    sendToAllClients(i_netAction, i_client);
   }
 }

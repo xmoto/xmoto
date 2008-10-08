@@ -38,10 +38,12 @@ unsigned int NetAction::m_TCPPacketsSizeSent = 0;
 unsigned int NetAction::m_UDPPacketsSizeSent = 0;
 
 std::string NA_chatMessage::ActionKey  = "message";
-std::string NA_frame::ActionKey        = "frame";
+std::string NA_frame::ActionKey        = "f"; // frame : while it's sent a lot, reduce it at maximum
 std::string NA_udpBindKey::ActionKey   = "udpbindingKey";
 std::string NA_udpBind::ActionKey      = "udpbind";
 std::string NA_udpBindQuery::ActionKey = "udpbindingQuery";
+std::string NA_presentation::ActionKey = "presentation";
+std::string NA_startingLevel::ActionKey = "startingLevel";
 
 NetAction::NetAction() {
 }
@@ -140,7 +142,19 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
 	                        len    -(NA_udpBind::ActionKey.size()+1));
   }
 
+  else if(isCommand(data, len, NA_presentation::ActionKey)) {
+    return new NA_presentation(((char*)data)+(NA_presentation::ActionKey.size()+1),
+			             len    -(NA_presentation::ActionKey.size()+1));
+  }
+
+  else if(isCommand(data, len, NA_startingLevel::ActionKey)) {
+    return new NA_startingLevel(((char*)data)+(NA_startingLevel::ActionKey.size()+1),
+			              len    -(NA_startingLevel::ActionKey.size()+1));
+  }
+
   else {
+    //((char*)data)[len-1] = '\0';
+    //LogInfo("Invalid command : %s", (char*)data);
     throw Exception("net: invalid command");
   }
 }
@@ -311,4 +325,50 @@ void NA_udpBindKey::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_se
 
 std::string NA_udpBindKey::key() const {
   return m_key;
+}
+
+NA_presentation::NA_presentation(const std::string& i_name) {
+  m_name = i_name;
+}
+
+NA_presentation::NA_presentation(void* data, unsigned int len) {
+  ((char*)data)[len-1] = '\0';
+  m_name = std::string((char*)data);
+  ((char*)data)[len-1] = '\n';
+}
+
+NA_presentation::~NA_presentation() {
+}
+
+void NA_presentation::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, m_name.c_str(), m_name.size()); // don't send the \0
+}
+
+std::string NA_presentation::getName() {
+  return m_name;
+}
+
+NA_startingLevel::NA_startingLevel(const std::string& i_levelId) {
+  m_levelId = i_levelId;
+}
+
+NA_startingLevel::NA_startingLevel(void* data, unsigned int len) {
+  ((char*)data)[len-1] = '\0';
+  m_levelId = std::string((char*)data);
+  ((char*)data)[len-1] = '\n';
+}
+
+NA_startingLevel::~NA_startingLevel() {
+}
+
+void NA_startingLevel::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, m_levelId.c_str(), m_levelId.size()); // don't send the \0
+}
+
+std::string NA_startingLevel::getLevelId() {
+  return m_levelId;
+}
+
+void NA_startingLevel::execute(NetClient* i_netClient) {
+  SysMessage::instance()->displayInformation("Somebody is starting a level");
 }
