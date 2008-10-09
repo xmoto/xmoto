@@ -412,7 +412,7 @@ void StatePlaying::onAllDead() {
   if(NetClient::instance()->isConnected()) {
     NA_chatMessage nacm(XMSession::instance()->profile() + " has just died");
     try {
-      NetClient::instance()->send(&nacm);
+      NetClient::instance()->send(&nacm, 0);
     } catch(Exception &e) {
     }
   }

@@ -101,7 +101,7 @@ StateScene::StateScene(Universe* i_universe, bool i_doShade, bool i_doShadeAnim)
     if(m_universe->getScenes().size() != 0) {
       if(NetClient::instance()->isConnected()) {
 	NA_playingLevel na(m_universe->getScenes()[0]->getLevelSrc()->Id());
-	NetClient::instance()->send(&na);
+	NetClient::instance()->send(&na, 0);
       }
     }
   }
@@ -470,7 +470,7 @@ void StateScene::closePlaying() {
   if(NetClient::instance()->isConnected()) {
     // stop playing
     NA_playingLevel na("");
-    NetClient::instance()->send(&na);
+    NetClient::instance()->send(&na, 0);
   }
 
   if(NetClient::instance()->isConnected()) {

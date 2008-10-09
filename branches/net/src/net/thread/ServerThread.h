@@ -30,15 +30,15 @@ class NetAction;
 
 class NetSClient {
   public:
-  NetSClient(TCPsocket i_tcpsocket, IPaddress *i_tcpRemoteIP);
+  NetSClient(unsigned int i_id, TCPsocket i_tcpsocket, IPaddress *i_tcpRemoteIP);
   ~NetSClient();
 
   TCPsocket* tcpSocket();
   IPaddress* tcpRemoteIP();
   IPaddress* udpRemoteIP();
   bool isUdpBinded() const;
-  void bindUdp(UDPsocket* i_udpsd, IPaddress i_udpIPAdress, int i_nextUdpBoundId);
-  void unbindUdp(UDPsocket* i_udpsd);
+  void bindUdp(IPaddress i_udpIPAdress);
+  void unbindUdp();
 
   ActionReader* tcpReader;
 
@@ -51,7 +51,10 @@ class NetSClient {
   void setPlayingLevelId(const std::string& i_levelId);
   std::string playingLevelId() const;
 
+  unsigned int Id() const;
+
   private:
+  unsigned int m_id; // uniq id of the client
   TCPsocket m_tcpSocket;
   IPaddress m_tcpRemoteIP;
   IPaddress m_udpRemoteIP;
@@ -72,7 +75,7 @@ class ServerThread : public XMThread {
   TCPsocket m_tcpsd;
   UDPsocket m_udpsd;
   UDPpacket* m_udpPacket;
-  int m_nextUdpBoundId;
+  unsigned int m_nextClientId;
 
   SDLNet_SocketSet m_set;
   std::vector<NetSClient*> m_clients;
@@ -84,8 +87,8 @@ class ServerThread : public XMThread {
   void manageAction(NetAction* i_netAction, unsigned int i_client);
 
   // if i_execpt >= 0, send to all exept him
-  void sendToAllClients(NetAction* i_netAction, unsigned int i_except = -1);
-  void sendToClient(NetAction* i_netAction, unsigned int i);
+  void sendToAllClients(NetAction* i_netAction, int i_src, int i_subsrc, unsigned int i_except = -1);
+  void sendToClient(NetAction* i_netAction, unsigned int i, int i_src, int i_subsrc);
   void removeClient(unsigned int i);
 };
 

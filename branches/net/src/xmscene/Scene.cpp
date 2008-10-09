@@ -329,7 +329,7 @@ void MotoGame::cleanPlayers() {
 	  if(v_uploadFrame) {
 	    NA_frame na(&BikeState);
 	    try {
-	      NetClient::instance()->send(&na);
+	      NetClient::instance()->send(&na, i);
 	    } catch(Exception &e) {
 	    }
 	  }
@@ -550,7 +550,8 @@ void MotoGame::cleanPlayers() {
     return v_ghost;
   }
 
-  NetGhost* MotoGame::addNetGhost(const std::string& i_info,
+  NetGhost* MotoGame::addNetGhost(int i_source, int i_subsource,
+				  const std::string& i_info,
 				  Theme *i_theme,
 				  BikerTheme* i_bikerTheme,
 				  const TColor& i_filterColor,
@@ -558,7 +559,7 @@ void MotoGame::cleanPlayers() {
     NetGhost* v_ghost = NULL;
     LogInfo("New NetGhost");
 
-    v_ghost = new NetGhost(m_physicsSettings, i_theme, i_bikerTheme,
+    v_ghost = new NetGhost(i_source, i_subsource, m_physicsSettings, i_theme, i_bikerTheme,
 			   i_filterColor, i_filterUglyColor);
     v_ghost->setPlaySound(false);
     v_ghost->setInfo(i_info);

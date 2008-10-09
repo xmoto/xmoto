@@ -33,7 +33,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_SERVER_NB_SOCKETS_MAX 128
 #define XM_SERVER_MAX_UDP_PACKET_SIZE 1024 // bytes
 
-NetSClient::NetSClient(TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
+NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
+    m_id = i_id;
     m_tcpSocket   = i_tcpSocket;
     m_tcpRemoteIP = *i_tcpRemoteIP;
     m_isUdpBinded = false;
@@ -42,6 +43,10 @@ NetSClient::NetSClient(TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
 
 NetSClient::~NetSClient() {
   delete tcpReader;
+}
+
+unsigned int NetSClient::Id() const {
+  return m_id;
 }
 
 TCPsocket* NetSClient::tcpSocket() {
@@ -60,7 +65,7 @@ bool NetSClient::isUdpBinded() const {
   return m_isUdpBinded;
 }
 
-void NetSClient::bindUdp(UDPsocket* i_udpsd, IPaddress i_udpIPAdress, int i_nextUdpBoundId) {
+void NetSClient::bindUdp(IPaddress i_udpIPAdress) {
   m_udpRemoteIP = i_udpIPAdress;
 
   LogInfo("server: host binded: %s:%i (UDP)",
@@ -68,7 +73,7 @@ void NetSClient::bindUdp(UDPsocket* i_udpsd, IPaddress i_udpIPAdress, int i_next
   m_isUdpBinded = true;
 }
 
-void NetSClient::unbindUdp(UDPsocket* i_udpsd) {
+void NetSClient::unbindUdp() {
   m_isUdpBinded = false;
 }
 
@@ -98,7 +103,7 @@ std::string NetSClient::playingLevelId() const {
 
 ServerThread::ServerThread() {
     m_set = NULL;
-    m_nextUdpBoundId = 0;
+    m_nextClientId = 0;
     m_udpPacket = SDLNet_AllocPacket(XM_SERVER_MAX_UDP_PACKET_SIZE);
 
     if(!m_udpPacket) {
@@ -230,13 +235,14 @@ void ServerThread::removeClient(unsigned int i) {
   SDLNet_TCP_DelSocket(m_set, *(m_clients[i]->tcpSocket()));
   SDLNet_TCP_Close(*(m_clients[i]->tcpSocket()));
   if(m_clients[i]->isUdpBinded()) {
-    m_clients[i]->unbindUdp(&m_udpsd);
+    m_clients[i]->unbindUdp();
   }
   delete m_clients[i];
   m_clients.erase(m_clients.begin() + i);
 }
 
-void ServerThread::sendToClient(NetAction* i_netAction, unsigned int i) {
+void ServerThread::sendToClient(NetAction* i_netAction, unsigned int i, int i_src, int i_subsrc) {
+  i_netAction->setSource(i_src, i_subsrc);
   if(m_clients[i]->isUdpBinded()) {
     i_netAction->send(m_clients[i]->tcpSocket(), &m_udpsd, m_udpPacket, m_clients[i]->udpRemoteIP());
   } else {
@@ -244,13 +250,13 @@ void ServerThread::sendToClient(NetAction* i_netAction, unsigned int i) {
   }
 }
 
-void ServerThread::sendToAllClients(NetAction* i_netAction, unsigned int i_except) {
+void ServerThread::sendToAllClients(NetAction* i_netAction, int i_src, int i_subsrc, unsigned int i_except) {
   unsigned int i=0;
   
   while(i<m_clients.size()) {
     if(i != i_except) {
       try {
-	sendToClient(i_netAction, i);
+	sendToClient(i_netAction, i, i_src, i_subsrc);
 	i++;
       } catch(Exception &e) {
 	removeClient(i);
@@ -288,7 +294,7 @@ void ServerThread::acceptClient() {
     return;
   }
 
-  m_clients.push_back(new NetSClient(csd, tcpRemoteIP));
+  m_clients.push_back(new NetSClient(m_nextClientId++, csd, tcpRemoteIP));
 }
 
 void ServerThread::manageClientTCP(unsigned int i) {
@@ -331,7 +337,7 @@ void ServerThread::manageClientUDP() {
 	    if(m_clients[i]->isUdpBinded() == false) {
 	      if(m_clients[i]->udpBindKey() == ((NA_udpBind*)v_netAction)->key()) {
 		LogInfo("UDP bind key received via UDP: %s", ((NA_udpBind*)v_netAction)->key().c_str());
-		m_clients[i]->bindUdp(&m_udpsd, m_udpPacket->address, m_nextUdpBoundId++);
+		m_clients[i]->bindUdp(m_udpPacket->address);
 		break; // stop : only one client
 	      }
 	    }
@@ -369,7 +375,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       // query bind udp
       NA_udpBindQuery na;
       try {
-      	sendToClient(&na, i_client);
+      	sendToClient(&na, i_client, -1, 0);
       } catch(Exception &e) {
       }
     }
@@ -377,7 +383,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       
   case TNA_chatMessage:
     {
-      sendToAllClients(i_netAction, i_client);
+      sendToAllClients(i_netAction, i_client, m_clients[i_client]->Id(), i_netAction->getSubSource());
     }
     break;
     
@@ -390,7 +396,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
 	   m_clients[i_client]->playingLevelId() == m_clients[i]->playingLevelId()
 	   ) {
 	  try {
-	    sendToClient(i_netAction, i);
+	    sendToClient(i_netAction, i, m_clients[i_client]->Id(), i_netAction->getSubSource());
 	    i++;
 	  } catch(Exception &e) {
 	    removeClient(i);

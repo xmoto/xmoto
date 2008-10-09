@@ -48,6 +48,10 @@ class NetAction {
   virtual NetActionType actionType() = 0;
 
   virtual void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+  void setSource(int i_src, int i_subsrc);
+
+  int getSource() const;
+  int getSubSource() const;
 
   static NetAction* newNetAction(void* data, unsigned int len);
   static void logStats();
@@ -55,8 +59,21 @@ class NetAction {
   protected:
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP, const void* subPacketData, int subPacketLen);
 
+  int m_source;    // source client
+  int m_subsource; // a client can have several players : 0, 1, 2 or 3
+  // the client sending a packet :
+  // => (-1, [0,1,2,3])
+  // the client receiving a packet from an other client
+  // => (x, [0,1,2,3])
+  // the client receiving a packet from the server
+  // => (-1, 0)
+  // the serveur sending a packet to a client
+  // => (-1, 0)
+  // the server transfering a packet from a client x to others clients
+  // => (x, [0,1,2,3])
+
   private:
-  static bool isCommand(void* data, unsigned int len, const std::string& i_cmd);
+  static std::string getLine(void* data, unsigned int len, unsigned int* v_local_offset);
   static char m_buffer[NETACTION_MAX_PACKET_SIZE];
   static unsigned int m_biggestTCPPacket;
   static unsigned int m_biggestUDPPacket;

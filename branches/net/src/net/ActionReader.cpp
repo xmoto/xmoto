@@ -102,8 +102,8 @@ unsigned int ActionReader::getSubPacketSize(void* data, unsigned int len, unsign
       ((char*)data)[i] = '\n'; // must be reset in case packet is not full
 
       if(res == 0) {
-	LogWarning("server: nasty client detected");
-	throw Exception("server: nasty client detected");
+	LogWarning("net: nasty client detected (1)");
+	throw Exception("net: nasty client detected");
       }
 
       return res;
@@ -112,8 +112,8 @@ unsigned int ActionReader::getSubPacketSize(void* data, unsigned int len, unsign
   }
 
   if(i == XM_MAX_PACKET_SIZE_DIGITS+1) {
-    LogWarning("server: nasty client detected");
-    throw Exception("server: nasty client detected");
+    LogWarning("net: nasty client detected (2)");
+    throw Exception("net: nasty client detected");
   }
 
   return 0;
@@ -127,5 +127,5 @@ NetAction* ActionReader::UDPReadAction(Uint8* data, int len) {
     return NetAction::newNetAction(((char*)data)+v_cmdStart, v_size);
   }
 
-  throw Exception("server: nasty client detected");
+  throw Exception("net: nasty client detected (3)");
 }

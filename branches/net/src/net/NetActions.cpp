@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../XMSession.h"
 #include <sstream>
 
+#define NETACTION_MAX_SUBSRC 4 // maximum 4 players by client
+
 char NetAction::m_buffer[NETACTION_MAX_PACKET_SIZE];
 unsigned int NetAction::m_biggestTCPPacket   = 0;
 unsigned int NetAction::m_biggestUDPPacket   = 0;
@@ -51,6 +53,8 @@ NetActionType NA_presentation::NAType = TNA_presentation;
 NetActionType NA_playingLevel::NAType = TNA_playingLevel;
 
 NetAction::NetAction() {
+  m_source    = -2; // < -1 => undefined
+  m_subsource = -2;
 }
 
 NetAction::~NetAction() {
@@ -70,18 +74,31 @@ void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPa
   unsigned int nread;
   std::string v_data;
 
-  int v_subPacketSize = actionKey().length() + 1 + subPacketLen + 1;
-  std::ostringstream v_nb;
-  v_nb << v_subPacketSize;
-  unsigned int v_totalPacketSize = v_nb.str().length() + 1 + v_subPacketSize;
+  if(m_source < -1 || m_subsource < -1) {
+    throw Exception("Invalid source");
+  }
+
+  unsigned int v_subPacketSize = subPacketLen + 1;
+  std::ostringstream v_nb, v_src, v_subsrc;
+  v_src    << m_source;
+  v_subsrc << m_subsource;
+  unsigned int v_subHeaderSize    =
+    v_src.str().length()    + 1 +
+    v_subsrc.str().length() + 1 +
+    actionKey().length()    + 1;
+  v_nb << (v_subHeaderSize + v_subPacketSize);
+  unsigned int v_headerSize = v_nb.str().length() + 1 + v_subHeaderSize;
+
+  unsigned int v_totalPacketSize = v_headerSize + v_subPacketSize;
 
   if(v_totalPacketSize > NETACTION_MAX_PACKET_SIZE) {
     throw Exception("net: too big packet to send");
   }
 
-  snprintf(m_buffer, NETACTION_MAX_PACKET_SIZE, "%s\n%s\n", v_nb.str().c_str(), actionKey().c_str());
+  snprintf(m_buffer, NETACTION_MAX_PACKET_SIZE, "%s\n%s\n%s\n%s\n",
+	   v_nb.str().c_str(), v_src.str().c_str(), v_subsrc.str().c_str(), actionKey().c_str());
   if(subPacketLen != 0) {
-    memcpy(m_buffer + v_nb.str().length() + 1 + actionKey().length() + 1, subPacketData, subPacketLen);
+    memcpy(m_buffer + v_headerSize, subPacketData, subPacketLen);
   }
   m_buffer[v_totalPacketSize-1] = '\n';
 
@@ -121,40 +138,64 @@ void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPa
   }
 }
 
+void NetAction::setSource(int i_src, int i_subsrc) {
+  m_source    = i_src;
+  m_subsource = i_subsrc;
+}
+
+int NetAction::getSource() const {
+  return m_source;
+}
+
+int NetAction::getSubSource() const {
+  return m_subsource;
+}
+
 NetAction* NetAction::newNetAction(void* data, unsigned int len) {
-  if(isCommand(data, len, NA_chatMessage::ActionKey)) {
-    return new NA_chatMessage(((char*)data)+(NA_chatMessage::ActionKey.size()+1),
-			      len          -(NA_chatMessage::ActionKey.size()+1));
-  } 
+  std::string v_cmd;
+  int v_src, v_subsrc;
+  unsigned int v_local_offset, v_totalOffset = 0;
+  NetAction* v_res;
 
-  else if(isCommand(data, len, NA_frame::ActionKey)) {
-    return new NA_frame(((char*)data)+(NA_frame::ActionKey.size()+1),
-			      len    -(NA_frame::ActionKey.size()+1));
-  }
-  
-  else if(isCommand(data, len, NA_udpBindKey::ActionKey)) {
-    return new NA_udpBindKey(((char*)data)+(NA_udpBindKey::ActionKey.size()+1),
-	                           len    -(NA_udpBindKey::ActionKey.size()+1));
-  }
+  v_src = atoi(getLine(((char*)data)+v_totalOffset, len-v_totalOffset, &v_local_offset).c_str());
+  v_totalOffset += v_local_offset;
 
-  else if(isCommand(data, len, NA_udpBindQuery::ActionKey)) {
-    return new NA_udpBindQuery(((char*)data)+(NA_udpBindQuery::ActionKey.size()+1),
-			             len    -(NA_udpBindQuery::ActionKey.size()+1));
+  v_subsrc = atoi(getLine(((char*)data+v_totalOffset), len-v_totalOffset, &v_local_offset).c_str());
+  v_totalOffset += v_local_offset;
+
+  if(v_src < -1 || v_subsrc < -1 || v_subsrc >= NETACTION_MAX_SUBSRC) {
+    throw Exception("Invalid source");
   }
 
-  else if(isCommand(data, len, NA_udpBind::ActionKey)) {
-    return new NA_udpBind(((char*)data)+(NA_udpBind::ActionKey.size()+1),
-	                        len    -(NA_udpBind::ActionKey.size()+1));
+  v_cmd = getLine(((char*)data+v_totalOffset), len, &v_local_offset);
+  v_totalOffset += v_local_offset;
+
+  if(v_cmd == NA_chatMessage::ActionKey) {
+    v_res = new NA_chatMessage(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
-  else if(isCommand(data, len, NA_presentation::ActionKey)) {
-    return new NA_presentation(((char*)data)+(NA_presentation::ActionKey.size()+1),
-			             len    -(NA_presentation::ActionKey.size()+1));
+  else if(v_cmd == NA_frame::ActionKey) {
+    v_res = new NA_frame(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
-  else if(isCommand(data, len, NA_playingLevel::ActionKey)) {
-    return new NA_playingLevel(((char*)data)+(NA_playingLevel::ActionKey.size()+1),
-			              len    -(NA_playingLevel::ActionKey.size()+1));
+  else if(v_cmd == NA_udpBindKey::ActionKey) {
+    v_res = new NA_udpBindKey(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_udpBindQuery::ActionKey) {
+    v_res = new NA_udpBindQuery(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_udpBind::ActionKey) {
+    v_res = new NA_udpBind(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_presentation::ActionKey) {
+    v_res = new NA_presentation(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_playingLevel::ActionKey) {
+    v_res = new NA_playingLevel(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
   else {
@@ -162,18 +203,29 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
     //LogInfo("Invalid command : %s", (char*)data);
     throw Exception("net: invalid command");
   }
+
+  v_res->setSource(v_src, v_subsrc);
+  return v_res;
 }
 
-bool NetAction::isCommand(void* data, unsigned int len, const std::string& i_cmd) {
-  if(i_cmd.length() + 1 > len) {
-    return false;
+std::string NetAction::getLine(void* data, unsigned int len, unsigned int* v_local_offset) {
+  std::string v_res;
+  *v_local_offset = 0;
+
+  while(*v_local_offset < len && ((char*)data)[*v_local_offset] != '\n') {
+    (*v_local_offset)++;
+  }
+  (*v_local_offset)++;
+
+  if(*v_local_offset >= len) {
+    throw Exception("NetAction: no line found");
   }
 
-  if(((char*) data)[i_cmd.length()] != '\n') {
-    return false;
-  }
+  ((char*)data)[(*v_local_offset)-1] = '\0';
+  v_res = std::string(((char*)data));
+  ((char*)data)[(*v_local_offset)-1] = '\n';
 
-  return strncmp((char*)data, i_cmd.c_str(), i_cmd.length()) == 0;
+  return v_res;
 }
 
 void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {

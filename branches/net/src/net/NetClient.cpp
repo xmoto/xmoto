@@ -119,19 +119,23 @@ void NetClient::connect(const std::string& i_server, int i_port) {
   // bind udp port on server
   NA_udpBindKey na(m_udpBindKey);
   try {
-    NetClient::instance()->send(&na);
+    NetClient::instance()->send(&na, 0);
   } catch(Exception &e) {
   }
 
   // presentation
   NA_presentation nap(XMSession::instance()->profile());
   try {
-    NetClient::instance()->send(&nap);
+    NetClient::instance()->send(&nap, 0);
   } catch(Exception &e) {
   }
 }
 
 void NetClient::disconnect() {
+  if(m_isConnected == false) {
+    return;
+  }
+
   if(m_clientListenerThread->isThreadRunning()) {
     m_clientListenerThread->askThreadToEnd();
     m_clientListenerThread->waitForThreadEnd();
@@ -162,12 +166,15 @@ UDPsocket* NetClient::udpSocket() {
   return &m_udpsd;
 }
 
-void NetClient::send(NetAction* i_netAction) {
+void NetClient::send(NetAction* i_netAction, int i_subsrc) {
+  i_netAction->setSource(0, i_subsrc);
+
   try {
     i_netAction->send(&m_tcpsd, &m_udpsd, m_udpSendPacket, &m_udpSendPacket->address);
   } catch(Exception &e) {
     disconnect();
     StateManager::instance()->sendAsynchronousMessage("CLIENT_DISCONNECTED_BY_ERROR");
+    LogWarning("send failed : %s", e.getMsg().c_str());
     throw e;
   }
 }
@@ -194,7 +201,7 @@ void NetClient::manageAction(NetAction* i_netAction) {
       try {
 	// send the packet 3 times to get more change it arrives
 	for(unsigned int i=0; i<3; i++) {
-	  send(&na);
+	  send(&na, 0);
 	}
       } catch(Exception &e) {
       }
@@ -214,16 +221,25 @@ void NetClient::manageAction(NetAction* i_netAction) {
   case TNA_frame:
     {
       //LogInfo("Frame received");
-      NetGhost* v_ghost;
+      NetGhost* v_ghost = NULL;
 
       if(m_universe == NULL) {
 	return;
       }
 
-      if(m_netGhosts.size() == 0) {
+      for(unsigned int i=0; i<m_netGhosts.size(); i++) {
+	if(m_netGhosts[i]->source()    == i_netAction->getSource() &&
+	   m_netGhosts[i]->subSource() == i_netAction->getSubSource()) {
+	  v_ghost = m_netGhosts[i];
+	  break;
+	}
+      }
+
+      if(v_ghost == NULL) {
 	/* add the net ghost */
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	  v_ghost = m_universe->getScenes()[i]->addNetGhost("Net ghost", Theme::instance(),
+	  v_ghost = m_universe->getScenes()[i]->addNetGhost(i_netAction->getSource(), i_netAction->getSubSource(),
+							    "Net ghost", Theme::instance(),
 							    Theme::instance()->getGhostTheme(),
 							    TColor(255,255,255,0),
 							    TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
@@ -237,7 +253,7 @@ void NetClient::manageAction(NetAction* i_netAction) {
       
       // take the physic of the first world
       if(m_universe->getScenes().size() > 0) {
-	BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(), m_netGhosts[0]->getState(),
+	BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(), v_ghost->getState(),
 					  m_universe->getScenes()[0]->getPhysicsSettings());
       }
     }

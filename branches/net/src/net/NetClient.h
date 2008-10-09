@@ -42,7 +42,7 @@ class NetClient : public Singleton<NetClient> {
   void connect(const std::string& i_server, int i_port);
   void disconnect();
   bool isConnected();
-  void send(NetAction* i_netAction);
+  void send(NetAction* i_netAction, int i_subsrc);
   TCPsocket* tcpSocket();
   UDPsocket* udpSocket();
   UDPpacket* sendPacket();
