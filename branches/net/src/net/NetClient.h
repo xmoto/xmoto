@@ -51,11 +51,8 @@ class NetClient : public Singleton<NetClient> {
   void executeNetActions();
   void addNetAction(NetAction* i_act);
 
-  std::vector<NetGhost*>& NetGhosts();
-  void addNetGhost(NetGhost* i_ghost);
   void startPlay(Universe* i_universe);
   void endPlay();
-  Universe* getUniverse();
 
   private:
   bool m_isConnected;
@@ -70,7 +67,9 @@ class NetClient : public Singleton<NetClient> {
   SDL_mutex* m_netActionsMutex;
 
   std::vector<NetGhost*> m_netGhosts;
-  Universe* m_universe; 
+  Universe* m_universe;
+
+  void manageAction(NetAction* i_netAction);
 };
 
 #endif

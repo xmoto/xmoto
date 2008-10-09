@@ -19,14 +19,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "NetActions.h"
-#include "../SysMessage.h"
 #include "../helpers/VExcept.h"
 #include "../helpers/Log.h"
 #include "NetClient.h"
-#include "../Universe.h"
-#include "../Theme.h"
 #include "../XMSession.h"
-#include "../xmscene/BikeGhost.h"
 #include <sstream>
 
 char NetAction::m_buffer[NETACTION_MAX_PACKET_SIZE];
@@ -197,10 +193,6 @@ NA_chatMessage::NA_chatMessage(void* data, unsigned int len) {
 NA_chatMessage::~NA_chatMessage() {
 }
 
-void NA_chatMessage::executeClient(NetClient* i_netClient) {
-  SysMessage::instance()->displayInformation(m_msg);
-}
-
 void NA_chatMessage::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
   NetAction::send(i_tcpsd, NULL, NULL, NULL, m_msg.c_str(), m_msg.size()); // don't send the \0
 }
@@ -223,37 +215,6 @@ NA_frame::NA_frame(void* data, unsigned int len) {
 NA_frame::~NA_frame() {
 }
 
-void NA_frame::executeClient(NetClient* i_netClient) {
-  //LogInfo("Frame received");
-  NetGhost* v_ghost;
-  Universe* v_universe = i_netClient->getUniverse();
-
-  if(v_universe == NULL) {
-    return;
-  }
-
-  if(i_netClient->NetGhosts().size() == 0) {
-    /* add the net ghost */
-    for(unsigned int i=0; i<v_universe->getScenes().size(); i++) {
-      v_ghost = v_universe->getScenes()[i]->addNetGhost("Net ghost", Theme::instance(),
-							Theme::instance()->getGhostTheme(),
-							TColor(255,255,255,0),
-							TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-							       GET_GREEN(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-							       GET_BLUE(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-							       0)
-							);
-      i_netClient->addNetGhost(v_ghost);
-    }
-  }
-  
-  // take the physic of the first world
-  if(i_netClient->getUniverse()->getScenes().size() > 0) {
-    BikeState::convertStateFromReplay(&m_state, i_netClient->NetGhosts()[0]->getState(),
-				      i_netClient->getUniverse()->getScenes()[0]->getPhysicsSettings());
-  }
-}
-
 void NA_frame::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
   if(i_udpsd != NULL) {
     // if udp is available, prefer udp
@@ -263,8 +224,8 @@ void NA_frame::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPac
   }
 }
 
-SerializedBikeState NA_frame::getState() {
-  return m_state;
+SerializedBikeState* NA_frame::getState() {
+  return &m_state;
 }
 
 NA_udpBind::NA_udpBind(const std::string& i_key) {
@@ -285,10 +246,6 @@ void NA_udpBind::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendP
   NetAction::send(NULL, i_udpsd, i_sendPacket, i_udpRemoteIP, m_key.c_str(), m_key.size()); // don't send the \0
 }
 
-void NA_udpBind::executeClient(NetClient* i_netClient) {
-  /* should never happend */
-}
-
 std::string NA_udpBind::key() const {
   return m_key;
 }
@@ -300,17 +257,6 @@ NA_udpBindQuery::NA_udpBindQuery(void* data, unsigned int len) {
 }
 
 NA_udpBindQuery::~NA_udpBindQuery() {
-}
-
-void NA_udpBindQuery::executeClient(NetClient* i_netClient) {
-  NA_udpBind na(i_netClient->udpBindKey());
-  try {
-    // send the packet 3 times to get more change it arrives
-    for(unsigned int i=0; i<3; i++) {
-      i_netClient->send(&na);
-    }
-  } catch(Exception &e) {
-  }
 }
 
 void NA_udpBindQuery::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
@@ -336,10 +282,6 @@ void NA_udpBindKey::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_se
   NetAction::send(i_tcpsd, NULL, NULL, NULL, m_key.c_str(), m_key.size()); // don't send the \0
 }
 
-void NA_udpBindKey::executeClient(NetClient* i_netClient) {
-  /* should never happend */
-}
-
 std::string NA_udpBindKey::key() const {
   return m_key;
 }
@@ -359,9 +301,6 @@ NA_presentation::~NA_presentation() {
 
 void NA_presentation::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
   NetAction::send(i_tcpsd, NULL, NULL, NULL, m_name.c_str(), m_name.size()); // don't send the \0
-}
-
-void NA_presentation::executeClient(NetClient* i_netClient) {
 }
 
 std::string NA_presentation::getName() {
@@ -387,8 +326,4 @@ void NA_playingLevel::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_
 
 std::string NA_playingLevel::getLevelId() {
   return m_levelId;
-}
-
-void NA_playingLevel::executeClient(NetClient* i_netClient) {
-  SysMessage::instance()->displayInformation("Somebody is starting a level");
 }

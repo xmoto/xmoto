@@ -28,6 +28,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../states/StateManager.h"
 #include <sstream>
 #include "../helpers/VMath.h"
+#include "../SysMessage.h"
+#include "../Universe.h"
+#include "../Theme.h"
+#include "../xmscene/BikeGhost.h"
 
 NetClient::NetClient() {
     m_isConnected = false;
@@ -71,7 +75,7 @@ void NetClient::executeNetActions() {
   SDL_LockMutex(m_netActionsMutex);
   for(unsigned int i=0; i<m_netActions.size(); i++) {
     //LogInfo("Execute NetAction");
-    m_netActions[i]->executeClient(this);
+    manageAction(m_netActions[i]);
     delete m_netActions[i];
   }
   m_netActions.clear();
@@ -177,14 +181,79 @@ void NetClient::endPlay() {
   m_universe = NULL;
 }
 
-std::vector<NetGhost*>& NetClient::NetGhosts() {
-  return m_netGhosts;
-}
+void NetClient::manageAction(NetAction* i_netAction) {
+  switch(i_netAction->actionType()) {
 
-Universe* NetClient::getUniverse() {
-  return m_universe;
-}
+  case TNA_udpBind:
+    /* should not happend */
+    break;
 
-void NetClient::addNetGhost(NetGhost* i_ghost) {
-  m_netGhosts.push_back(i_ghost);
+  case TNA_udpBindQuery:
+    {
+      NA_udpBind na(m_udpBindKey);
+      try {
+	// send the packet 3 times to get more change it arrives
+	for(unsigned int i=0; i<3; i++) {
+	  send(&na);
+	}
+      } catch(Exception &e) {
+      }
+    }
+    break;
+
+  case TNA_udpBindKey:
+    /* should not happend */
+    break;
+      
+  case TNA_chatMessage:
+    {
+      SysMessage::instance()->displayInformation(((NA_chatMessage*)i_netAction)->getMessage());
+    }
+    break;
+    
+  case TNA_frame:
+    {
+      //LogInfo("Frame received");
+      NetGhost* v_ghost;
+
+      if(m_universe == NULL) {
+	return;
+      }
+
+      if(m_netGhosts.size() == 0) {
+	/* add the net ghost */
+	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	  v_ghost = m_universe->getScenes()[i]->addNetGhost("Net ghost", Theme::instance(),
+							    Theme::instance()->getGhostTheme(),
+							    TColor(255,255,255,0),
+							    TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+								   GET_GREEN(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+								   GET_BLUE(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+								   0)
+							    );
+	  m_netGhosts.push_back(v_ghost);
+	}
+      }
+      
+      // take the physic of the first world
+      if(m_universe->getScenes().size() > 0) {
+	BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(), m_netGhosts[0]->getState(),
+					  m_universe->getScenes()[0]->getPhysicsSettings());
+      }
+    }
+    break;
+      
+  case TNA_presentation:
+    {
+      /* ... */
+    }
+    break;
+
+  case TNA_playingLevel:
+    {
+      SysMessage::instance()->displayInformation("Somebody is starting a level");
+    }
+    break;
+
+  }
 }

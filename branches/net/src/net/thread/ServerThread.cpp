@@ -35,7 +35,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 NetSClient::NetSClient(TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
     m_tcpSocket   = i_tcpSocket;
-    m_udpChannel  = -1;
     m_tcpRemoteIP = *i_tcpRemoteIP;
     m_isUdpBinded = false;
     tcpReader = new ActionReader();
@@ -57,37 +56,19 @@ IPaddress* NetSClient::udpRemoteIP() {
   return &m_udpRemoteIP;
 }
 
-int NetSClient::udpChannel() const {
-  return m_udpChannel;
-}
-
-void NetSClient::setChannel(int i_value) {
-  m_udpChannel = i_value;
-}
-
 bool NetSClient::isUdpBinded() const {
   return m_isUdpBinded;
 }
 
 void NetSClient::bindUdp(UDPsocket* i_udpsd, IPaddress i_udpIPAdress, int i_nextUdpBoundId) {
-  if(i_nextUdpBoundId > SDLNET_MAX_UDPCHANNELS) {
-    throw Exception("Too much udp binding");
-  }
-
   m_udpRemoteIP = i_udpIPAdress;
 
-  if( (m_udpChannel = SDLNet_UDP_Bind(*i_udpsd, i_nextUdpBoundId, &m_udpRemoteIP)) == -1) {
-    LogError("server: SDLNet_UDP_Bind: %s", SDLNet_GetError());
-    return;
-  }
-
-  LogInfo("server: host binded: %s:%i (UDP, channel %i)",
-	  XMNet::getIp(&m_udpRemoteIP).c_str(), SDLNet_Read16(&(m_udpRemoteIP.port)), m_udpChannel);
+  LogInfo("server: host binded: %s:%i (UDP)",
+	  XMNet::getIp(&m_udpRemoteIP).c_str(), SDLNet_Read16(&(m_udpRemoteIP.port)));
   m_isUdpBinded = true;
 }
 
 void NetSClient::unbindUdp(UDPsocket* i_udpsd) {
-  SDLNet_UDP_Unbind(*i_udpsd, m_udpChannel);
   m_isUdpBinded = false;
 }
 
@@ -197,47 +178,7 @@ int ServerThread::realThreadFunction() {
 	}
 
 	else if(SDLNet_SocketReady(m_udpsd)) {
-
-	  // udp socket
-	  if(SDLNet_UDP_Recv(m_udpsd, m_udpPacket) == 1) {
-	    if(m_udpPacket->channel >= 0) {
-	      for(unsigned int i=0; i<m_clients.size(); i++) {
-		if(m_clients[i]->udpChannel() == m_udpPacket->channel) {
-
-		  NetAction* v_netAction;
-		  try {
-		    v_netAction = ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len);
-		    manageAction(v_netAction, i);
-		    delete v_netAction;
-		  } catch(Exception &e) {
-		    LogError("%s", e.getMsg().c_str());
-		    removeClient(i);
-		  }
-
-		  break; // stop : a channel is assigned to only one client
-		}
-	      }
-	    } else {
-	      NetAction* v_netAction;
-	      try {
-		v_netAction = ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len);
-		if(v_netAction->actionType() == TNA_udpBind) {
-		  for(unsigned int i=0; i<m_clients.size(); i++) {
-		    if(m_clients[i]->isUdpBinded() == false) {
-		      if(m_clients[i]->udpBindKey() == ((NA_udpBind*)v_netAction)->key()) {
-			LogInfo("UDP bind key received via UDP: %s", ((NA_udpBind*)v_netAction)->key().c_str());
-			m_clients[i]->bindUdp(&m_udpsd, m_udpPacket->address, m_nextUdpBoundId++);
-		      }
-		    }
-		  }
-		} else {
-		  LogWarning("Packet received without a channel");
-		}
-	      } catch(Exception &e) {
-	      }
-	    }
-	  }
-
+	  manageClientUDP();
 	} else {
 	  i = 0;
 	  while(i<m_clients.size()) {
@@ -354,65 +295,126 @@ void ServerThread::manageClientTCP(unsigned int i) {
   NetAction* v_netAction;
 
   while(m_clients[i]->tcpReader->TCPReadAction(m_clients[i]->tcpSocket(), &v_netAction)) {
-    // manage v_netAction
-    
-    if(v_netAction->actionType() == TNA_udpBindKey) {
-
-      // udpBindKey received
-      LogInfo("UDP bind key of client %i is %s", i, ((NA_udpBindKey*)v_netAction)->key().c_str());
-      m_clients[i]->setUdpBindKey(((NA_udpBindKey*)v_netAction)->key());
-
-      // query bind udp
-      NA_udpBindQuery na;
-      try {
-	sendToClient(&na, i);
-      } catch(Exception &e) {
-      }
-    } else if(v_netAction->actionType() == TNA_udpBind ||
-	      v_netAction->actionType() == TNA_udpBindQuery) {
-      // don't manage these actions
-    } else {
-      manageAction(v_netAction, i);
-    }
+    manageAction(v_netAction, i);
     delete v_netAction;
   }
 }
 
-void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
-  unsigned int i;
+void ServerThread::manageClientUDP() {
+  bool v_managedPacket;
+  NetAction* v_netAction;
 
-  if(i_netAction->actionType() == TNA_presentation) {
-    m_clients[i_client]->setName(((NA_presentation*)i_netAction)->getName());
-    LogInfo("Client[%i]'s name is \"%s\"", i_client, m_clients[i_client]->name().c_str());
-  }
-
-  else if(i_netAction->actionType() == TNA_playingLevel) {
-    m_clients[i_client]->setPlayingLevelId(((NA_playingLevel*)i_netAction)->getLevelId());
-    LogInfo("Client[%i] is playing \"%s\"", i_client, m_clients[i_client]->playingLevelId().c_str());
-  }
-
-  else if(i_netAction->actionType() == TNA_frame) {
-
-    i = 0;
-    while(i<m_clients.size()) {
-      if(i != i_client &&
-	 m_clients[i_client]->playingLevelId() != "" &&
-	 m_clients[i_client]->playingLevelId() == m_clients[i]->playingLevelId()
-	 ) {
+  if(SDLNet_UDP_Recv(m_udpsd, m_udpPacket) == 1) {
+    v_managedPacket = false;
+    for(unsigned int i=0; i<m_clients.size(); i++) {
+      if(m_clients[i]->udpRemoteIP()->host == m_udpPacket->address.host && 
+	 m_clients[i]->udpRemoteIP()->port == m_udpPacket->address.port)  {
+	v_managedPacket = true;
 	try {
-	  sendToClient(i_netAction, i);
-	  i++;
+	  v_netAction = ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len);
+	  manageAction(v_netAction, i);
+	  delete v_netAction;
 	} catch(Exception &e) {
+	  LogError("%s", e.getMsg().c_str());
 	  removeClient(i);
 	}
-      } else {
-	i++;
+	break; // stop : only one client
+      }
+    }
+
+    // anonym packet ? find the associated client
+    if(v_managedPacket == false) {
+      try {
+	v_netAction = ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len);
+	if(v_netAction->actionType() == TNA_udpBind) {
+	  for(unsigned int i=0; i<m_clients.size(); i++) {
+	    if(m_clients[i]->isUdpBinded() == false) {
+	      if(m_clients[i]->udpBindKey() == ((NA_udpBind*)v_netAction)->key()) {
+		LogInfo("UDP bind key received via UDP: %s", ((NA_udpBind*)v_netAction)->key().c_str());
+		m_clients[i]->bindUdp(&m_udpsd, m_udpPacket->address, m_nextUdpBoundId++);
+		break; // stop : only one client
+	      }
+	    }
+	  }
+	} else {
+	  LogWarning("Packet of unknown client received");
+	}
+      } catch(Exception &e) {
       }
     }
   }
+}
 
-  else {
-    // chat
-    sendToAllClients(i_netAction, i_client);
+void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
+
+  switch(i_netAction->actionType()) {
+
+  case TNA_udpBind:
+    /* managed before */
+    break;
+
+  case TNA_udpBindQuery:
+    {
+      /* should not be received */
+      throw Exception("");
+    }
+    break;
+
+  case TNA_udpBindKey:
+    {
+      // udpBindKey received
+      LogInfo("UDP bind key of client %i is %s", i_client, ((NA_udpBindKey*)i_netAction)->key().c_str());
+      m_clients[i_client]->setUdpBindKey(((NA_udpBindKey*)i_netAction)->key());
+      
+      // query bind udp
+      NA_udpBindQuery na;
+      try {
+      	sendToClient(&na, i_client);
+      } catch(Exception &e) {
+      }
+    }
+    break;
+      
+  case TNA_chatMessage:
+    {
+      sendToAllClients(i_netAction, i_client);
+    }
+    break;
+    
+  case TNA_frame:
+    {
+      unsigned int i = 0;
+      while(i<m_clients.size()) {
+	if(i != i_client &&
+	   m_clients[i_client]->playingLevelId() != "" &&
+	   m_clients[i_client]->playingLevelId() == m_clients[i]->playingLevelId()
+	   ) {
+	  try {
+	    sendToClient(i_netAction, i);
+	    i++;
+	  } catch(Exception &e) {
+	    removeClient(i);
+	  }
+	} else {
+	  i++;
+	}
+      }
+    }
+    break;
+
+  case TNA_presentation:
+    {
+      m_clients[i_client]->setName(((NA_presentation*)i_netAction)->getName());
+      LogInfo("Client[%i]'s name is \"%s\"", i_client, m_clients[i_client]->name().c_str());
+    }
+    break;
+
+  case TNA_playingLevel:
+    {
+      m_clients[i_client]->setPlayingLevelId(((NA_playingLevel*)i_netAction)->getLevelId());
+      LogInfo("Client[%i] is playing \"%s\"", i_client, m_clients[i_client]->playingLevelId().c_str());
+    }
+    break;
+
   }
 }

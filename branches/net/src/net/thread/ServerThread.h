@@ -36,8 +36,6 @@ class NetSClient {
   TCPsocket* tcpSocket();
   IPaddress* tcpRemoteIP();
   IPaddress* udpRemoteIP();
-  int udpChannel() const; // <0 => invalid
-  void setChannel(int i_value);
   bool isUdpBinded() const;
   void bindUdp(UDPsocket* i_udpsd, IPaddress i_udpIPAdress, int i_nextUdpBoundId);
   void unbindUdp(UDPsocket* i_udpsd);
@@ -57,7 +55,6 @@ class NetSClient {
   TCPsocket m_tcpSocket;
   IPaddress m_tcpRemoteIP;
   IPaddress m_udpRemoteIP;
-  int m_udpChannel;
   bool m_isUdpBinded;
   std::string m_udpBindKey;
   std::string m_name;
@@ -82,6 +79,7 @@ class ServerThread : public XMThread {
 
   void acceptClient();
   void manageClientTCP(unsigned int i);
+  void manageClientUDP();
 
   void manageAction(NetAction* i_netAction, unsigned int i_client);
 
