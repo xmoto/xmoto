@@ -329,7 +329,7 @@ void MotoGame::cleanPlayers() {
 	  if(v_uploadFrame) {
 	    NA_frame na(&BikeState);
 	    try {
-	      NetClient::instance()->send(&na, i);
+	      NetClient::instance()->send(&na, Players()[i]->localNetId());
 	    } catch(Exception &e) {
 	    }
 	  }
@@ -1265,7 +1265,7 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
   }
 
 
-  PlayerBiker* MotoGame::addPlayerBiker(Vector2f i_position, DriveDir i_direction,
+  PlayerBiker* MotoGame::addPlayerBiker(int i_localNetId, Vector2f i_position, DriveDir i_direction,
 					Theme *i_theme, BikerTheme* i_bikerTheme,
 					const TColor& i_filterColor,
 					const TColor& i_filterUglyColor,
@@ -1275,6 +1275,7 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
 						 i_filterColor, i_filterUglyColor);
     v_playerBiker->setOnBikerHooks(new MotoGameOnBikerHooks(this, m_players.size()));
     v_playerBiker->setPlaySound(i_enableEngineSound);
+    v_playerBiker->setLocalNetId(i_localNetId);
     m_players.push_back(v_playerBiker);
 
     if(m_chipmunkWorld != NULL) {

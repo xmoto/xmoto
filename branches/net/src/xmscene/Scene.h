@@ -212,7 +212,7 @@ public:
 			      Theme *i_theme, BikerTheme* i_bikerTheme,
 			      const TColor& i_filterColor,
 			      const TColor& i_filterUglyColor);
-  PlayerBiker* addPlayerBiker(Vector2f i_position, DriveDir i_direction,
+  PlayerBiker* addPlayerBiker(int i_localNetId, Vector2f i_position, DriveDir i_direction,
 			      Theme *i_theme, BikerTheme* i_bikerTheme,
 			      const TColor& i_filterColor,
 			      const TColor& i_filterUglyColor,

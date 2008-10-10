@@ -155,6 +155,8 @@ class Biker {
   void setPlaySound(bool i_value);
 
   PhysicsSettings* getPhysicsSettings();
+  int localNetId() const; // id of the biker for the network part (must be 0, 1, 2 or 3)
+  void setLocalNetId(int i_value);
 
   void setFinished(bool i_value, int i_finishTime);
   void setDead(bool i_value, int i_deadTime);
@@ -230,6 +232,8 @@ class Biker {
 
   /* changedir anim */
   float m_changeDirPer; // between 0.0 and 1.0, give the % of the change dir done (only for graphisms)
+
+  int m_localNetId;
 };
 
 class OnBikerHooks {
