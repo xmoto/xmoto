@@ -46,6 +46,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "PhysSettings.h"
 #include "xmscene/BasicSceneStructs.h"
 
+#define ABS(x) ((x) > 0.0 ? (x) : -(x))
+#define SIGNE(x) ((x) >= 0.0 ? 1.0 : -1.0)
 
 #ifdef ENABLE_OPENGL
 #include "drawlib/DrawLibOpenGL.h"
@@ -812,6 +814,29 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string texture)
     pDrawlib->glVertex(pcenterr);
     pDrawlib->endDraw();
   }
+
+  /*========================================================
+   * Calculate the new position of a point according to the
+   * animation when changing the direction
+   * ========================================================*/
+  Vector2f GameRenderer::calculateChangeDirPosition(Biker* i_biker, const Vector2f i_p){
+      BikeState* pBike = i_biker->getState();
+      Vector2f C = i_biker->getState()->CenterP;
+      Vector2f s1, s2, p;
+
+      p = i_p - C;
+
+      s1 = Vector2f(0.0,1.0);
+      s1 = Vector2f( s1.x*pBike->fFrameRot[0] + s1.y*pBike->fFrameRot[1], 
+                     s1.x*pBike->fFrameRot[2] + s1.y*pBike->fFrameRot[3]); 
+      s1.normalize();
+      
+      s2 = p - s1 * (p.x*s1.x + p.y*s1.y);
+      p = p + s2 * (2.0 * (i_biker->changeDirPer() - 1.0)) + C;
+
+      return p;
+  }
+
   
   /*===========================================================================
   Minimap rendering
@@ -2919,99 +2944,105 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
       /* Draw swing arm */
       if(pBike->Dir == DD_RIGHT) {       
         Sv = pBike->SwingAnchorP - Rc;
-	//try {
-	  Sv.normalize();
-	  //} catch(Exception &e) {
-	  //Sv = Vector2f(0.0, 0.0);
-	  //}
-        p0 = pBike->RearWheelP + Vector2f(-Sv.y,Sv.x)*0.07f - Sv*0.08f;
-        p1 = pBike->SwingAnchorP + Vector2f(-Sv.y,Sv.x)*0.07f;
-        p2 = pBike->SwingAnchorP - Vector2f(-Sv.y,Sv.x)*0.07f;
-        p3 = pBike->RearWheelP - Vector2f(-Sv.y,Sv.x)*0.07f - Sv*0.08f;
+	    Sv.normalize();
+        
+        p0 = pBike->RearWheelP + Vector2f(-Sv.y,Sv.x)*0.07f - Sv*0.08f ;
+        p1 = pBike->SwingAnchorP + Vector2f(-Sv.y,Sv.x)*0.07f ;
+        p2 = pBike->SwingAnchorP - Vector2f(-Sv.y,Sv.x)*0.07f ;
+        p3 = pBike->RearWheelP - Vector2f(-Sv.y,Sv.x)*0.07f - Sv*0.08f ;
       }
       else {
         Sv = pBike->SwingAnchor2P - Fc;
-	//try {
-	  Sv.normalize();
-	  //} catch(Exception &e) {
-	  //Sv = Vector2f(0.0, 0.0);
-	  //}
+	    Sv.normalize();
+        
         p0 = pBike->FrontWheelP + Vector2f(-Sv.y,Sv.x)*0.07f - Sv*0.08f;
         p1 = pBike->SwingAnchor2P + Vector2f(-Sv.y,Sv.x)*0.07f;
         p2 = pBike->SwingAnchor2P - Vector2f(-Sv.y,Sv.x)*0.07f;
         p3 = pBike->FrontWheelP - Vector2f(-Sv.y,Sv.x)*0.07f - Sv*0.08f;
       }        
+      
+      p0 = calculateChangeDirPosition(i_biker,p0);
+      p1 = calculateChangeDirPosition(i_biker,p1);
+      p2 = calculateChangeDirPosition(i_biker,p2);
+      p3 = calculateChangeDirPosition(i_biker,p3);
 
       pSprite = p_theme->getRear();
       if(pSprite != NULL) {
-	pTexture = pSprite->getTexture(false, false, FM_LINEAR);
-	if(pTexture != NULL) {
-	  _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3);
-	}
+	    pTexture = pSprite->getTexture(false, false, FM_LINEAR);
+	    if(pTexture != NULL) {
+	      _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3);
+	    }
       }
 
       /* Draw front suspension */
+      
+      
       if(pBike->Dir == DD_RIGHT) {
         Sv = pBike->FrontAnchorP - Fc;
-	//try {
-	  Sv.normalize();
-	  //} catch(Exception &e) {
-	  //Sv = Vector2f(0.0, 0.0);
-	  //}
-        p0 = pBike->FrontWheelP + Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.05f;
-        p1 = pBike->FrontAnchorP + Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.35f;
-        p2 = pBike->FrontAnchorP - Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.35f;
-        p3 = pBike->FrontWheelP - Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.05f;
+	    Sv.normalize();
+       
+        p0 = pBike->FrontWheelP + Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.05f ;
+        p1 = pBike->FrontAnchorP + Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.35f ;
+        p2 = pBike->FrontAnchorP - Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.35f ;
+        p3 = pBike->FrontWheelP - Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.05f ;
       }
       else {
         Sv = pBike->FrontAnchor2P - Rc;
-	//try {
-	  Sv.normalize();
-	  //} catch(Exception &e) {
-	  //Sv = Vector2f(0.0, 0.0);
-	  //}
-        p0 = pBike->RearWheelP + Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.05f;
-        p1 = pBike->FrontAnchor2P + Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.35f;
-        p2 = pBike->FrontAnchor2P - Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.35f;
-        p3 = pBike->RearWheelP - Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.05f;
+	    Sv.normalize();
+      
+        p0 = pBike->RearWheelP + Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.05f ;
+        p1 = pBike->FrontAnchor2P + Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.35f ;
+        p2 = pBike->FrontAnchor2P - Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.35f ;
+        p3 = pBike->RearWheelP - Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.05f ;
       }
+      
+      p0 = calculateChangeDirPosition(i_biker,p0);
+      p1 = calculateChangeDirPosition(i_biker,p1);
+      p2 = calculateChangeDirPosition(i_biker,p2);
+      p3 = calculateChangeDirPosition(i_biker,p3);
 
       if(i_renderBikeFront) {
-	pSprite = p_theme->getFront();
-	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture(false, false, FM_LINEAR);
-	  if(pTexture != NULL) {
-	    _RenderAlphaBlendedSection(pTexture,p3,p0,p1,p2);
-	  }
-	}    
-      }  
+	    pSprite = p_theme->getFront();
+	    if(pSprite != NULL) {
+	      pTexture = pSprite->getTexture(false, false, FM_LINEAR);
+	      if(pTexture != NULL) {
+	        _RenderAlphaBlendedSection(pTexture,p3,p0,p1,p2);
+	      }
+	    }    
+      } 
 
       /* Draw body/frame */
-      o0 = Vector2f(1.0  - 2.0 * i_biker->changeDirPer(), 0.5);
-      o1 = Vector2f(-1.0 + 2.0 * i_biker->changeDirPer(), 0.5);
-      o2 = Vector2f(-1.0 + 2.0 * i_biker->changeDirPer(),-0.5);
-      o3 = Vector2f(1.0  - 2.0 * i_biker->changeDirPer(),-0.5);
-      p0 = Vector2f(o0.x*pBike->fFrameRot[0] + o0.y*pBike->fFrameRot[1],
-                    o0.x*pBike->fFrameRot[2] + o0.y*pBike->fFrameRot[3]);
-      p1 = Vector2f(o1.x*pBike->fFrameRot[0] + o1.y*pBike->fFrameRot[1],
-                    o1.x*pBike->fFrameRot[2] + o1.y*pBike->fFrameRot[3]);
-      p2 = Vector2f(o2.x*pBike->fFrameRot[0] + o2.y*pBike->fFrameRot[1],
-                    o2.x*pBike->fFrameRot[2] + o2.y*pBike->fFrameRot[3]);
-      p3 = Vector2f(o3.x*pBike->fFrameRot[0] + o3.y*pBike->fFrameRot[1],
-                    o3.x*pBike->fFrameRot[2] + o3.y*pBike->fFrameRot[3]);
       
+      o0 = Vector2f(-1.0, 0.5);
+      o1 = Vector2f(1.0, 0.5);
+      o2 = Vector2f(1.0,-0.5);
+      o3 = Vector2f(-1.0,-0.5);
       C = pBike->CenterP; 
+      
+      p0 = C + Vector2f(o0.x*pBike->fFrameRot[0] + o0.y*pBike->fFrameRot[1],
+                        o0.x*pBike->fFrameRot[2] + o0.y*pBike->fFrameRot[3]);
+      p1 = C + Vector2f(o1.x*pBike->fFrameRot[0] + o1.y*pBike->fFrameRot[1],
+                        o1.x*pBike->fFrameRot[2] + o1.y*pBike->fFrameRot[3]);
+      p2 = C + Vector2f(o2.x*pBike->fFrameRot[0] + o2.y*pBike->fFrameRot[1],
+                        o2.x*pBike->fFrameRot[2] + o2.y*pBike->fFrameRot[3]);
+      p3 = C + Vector2f(o3.x*pBike->fFrameRot[0] + o3.y*pBike->fFrameRot[1],
+                        o3.x*pBike->fFrameRot[2] + o3.y*pBike->fFrameRot[3]);
+      
+      p0 = calculateChangeDirPosition(i_biker,p0);
+      p1 = calculateChangeDirPosition(i_biker,p1);
+      p2 = calculateChangeDirPosition(i_biker,p2);
+      p3 = calculateChangeDirPosition(i_biker,p3);
 
       pSprite = p_theme->getBody();
       if(pSprite != NULL) {
-	pTexture = pSprite->getTexture(false, false, FM_LINEAR);
-	if(pTexture != NULL) {
-	  if(pBike->Dir == DD_RIGHT) {
-	    _RenderAlphaBlendedSection(pTexture,p3+C,p2+C,p1+C,p0+C, i_filterColor);
-	  } else {
-	    _RenderAlphaBlendedSection(pTexture,p2+C,p3+C,p0+C,p1+C, i_filterColor);
-	  }
-	}
+	    pTexture = pSprite->getTexture(false, false, FM_LINEAR);
+	      if(pTexture != NULL) {
+	        if(pBike->Dir == DD_RIGHT) {
+	          _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0, i_filterColor);
+	        } else {
+	          _RenderAlphaBlendedSection(pTexture,p2,p3,p0,p1, i_filterColor);
+	        }
+	      }
       }
     }
 

@@ -159,6 +159,8 @@ public:
 private:
   void renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int nHeight);
   void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed, float pLinVel = -1);
+  
+  Vector2f calculateChangeDirPosition(Biker* i_biker, const Vector2f i_p);
       
   std::string getBestTime(void) {return m_bestTime;}
 
