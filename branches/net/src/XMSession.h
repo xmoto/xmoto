@@ -254,6 +254,8 @@ public:
   void setServerStartAtStartup(bool i_value);
   int serverPort() const;
   void setServerPort(int i_value);
+  int serverMaxClients() const;
+  void setServerMaxClients(int i_value);
   std::string clientServerName() const;
   void setClientServerName(const std::string& i_value);
   int clientServerPort() const;
@@ -373,6 +375,7 @@ public:
   bool m_webForms;
   bool m_serverStartAtStartup;
   int m_serverPort;
+  int m_serverMaxClients;
   std::string m_clientServerName;
   int m_clientServerPort;
   int m_clientFramerateUpload;

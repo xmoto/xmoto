@@ -45,7 +45,7 @@ void SysMessage::setDrawLib(DrawLib* i_drawLib)
 
 void SysMessage::displayText(std::string i_msg) {
   m_startDisplay = GameApp::getXMTime();
-  m_txt      = i_msg;
+  m_txt = i_msg;
 }
 
 void SysMessage::displayError(std::string i_msg) {
@@ -89,9 +89,10 @@ void SysMessage::render() {
 		      MAKE_COLOR(255, 255, 255, v_shadow), 0.0, true);
   }
 
-  /* error msg */
+  /* error/information msg */
   if(m_errorTxt.size() > 0) {
     drawBoxMsg(m_startDisplayError, m_errorTxt, MAKE_COLOR(255,0,0,255));
+    m_startDisplayInformation = GameApp::getXMTime(); // reset information until it can be displayed
   } else if(m_informationTxt.size() > 0) {
     drawBoxMsg(m_startDisplayInformation, m_informationTxt, MAKE_COLOR(0,0,255,255));
   }

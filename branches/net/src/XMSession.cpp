@@ -126,6 +126,7 @@ void XMSession::setToDefault() {
   m_webForms                      = DEFAULT_WEBFORMS;
   m_serverStartAtStartup          = DEFAULT_SERVERSTARTATSTARTUP;
   m_serverPort                    = DEFAULT_SERVERPORT;
+  m_serverMaxClients              = DEFAULT_SERVERMAXCLIENTS;
   m_clientServerName              = DEFAULT_CLIENTSERVERNAME;
   m_clientServerPort              = DEFAULT_CLIENTSERVERPORT;
   m_clientFramerateUpload         = DEFAULT_CLIENTFRAMERATEUPLOAD;
@@ -311,6 +312,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
 
   m_serverStartAtStartup  = pDb->config_getBool   (i_id_profile, "ServerStartAtStartup" , m_serverStartAtStartup);
   m_serverPort            = pDb->config_getInteger(i_id_profile, "ServerPort"           , m_serverPort);
+  m_serverMaxClients      = pDb->config_getInteger(i_id_profile, "ServerMaxClients"     , m_serverMaxClients);
   m_clientServerName      = pDb->config_getString (i_id_profile, "ClientServerName"     , m_clientServerName);
   m_clientServerPort      = pDb->config_getInteger(i_id_profile, "ClientServerPort"     , m_clientServerPort);
   m_clientFramerateUpload = pDb->config_getInteger(i_id_profile, "ClientFramerateUpload", m_clientFramerateUpload);
@@ -438,6 +440,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 
 	pDb->config_setBool   (m_profile, "ServerStartAtStartup" , m_serverStartAtStartup);
 	pDb->config_setInteger(m_profile, "ServerPort"           , m_serverPort);
+	pDb->config_setInteger(m_profile, "ServerMaxClients"           , m_serverMaxClients);
 	pDb->config_setString (m_profile, "ClientServerName"     , m_clientServerName);
 	pDb->config_setInteger(m_profile, "ClientServerPort"     , m_clientServerPort);
 	pDb->config_setInteger(m_profile, "ClientFramerateUpload", m_clientFramerateUpload);
@@ -1087,6 +1090,14 @@ int XMSession::serverPort() const {
 
 void XMSession::setServerPort(int i_value) {
   m_serverPort = i_value;
+}
+
+int XMSession::serverMaxClients() const {
+  return m_serverMaxClients;
+}
+
+void XMSession::setServerMaxClients(int i_value) {
+  m_serverMaxClients = i_value;
 }
 
 std::string XMSession::clientServerName() const {

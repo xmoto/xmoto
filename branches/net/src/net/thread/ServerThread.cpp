@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../states/StateManager.h"
 #include "../ActionReader.h"
 #include "../NetActions.h"
+#include "../../GameText.h"
 
 #define XM_SERVER_WAIT_TIMEOUT 1000
 #define XM_SERVER_NB_SOCKETS_MAX 128
@@ -286,6 +287,19 @@ void ServerThread::acceptClient() {
   /* Print the address, converting in the host format */
   LogInfo("server: host connected: %s:%d (TCP)",
 	  XMNet::getIp(tcpRemoteIP).c_str(), SDLNet_Read16(&tcpRemoteIP->port));
+
+  // to much clients ?
+  if(m_clients.size() >= XMSession::instance()->serverMaxClients()) {
+    NA_chatMessage na(GAMETEXT_TOO_MUCH_CLIENTS);
+    na.setSource(-1, 0);
+    try {
+      na.send(&csd, NULL, NULL, NULL);
+    } catch(Exception &e) {
+    }
+
+    SDLNet_TCP_Close(csd);
+    return;
+  }
 
   scn = SDLNet_TCP_AddSocket(m_set, csd);
   if(scn == -1) {

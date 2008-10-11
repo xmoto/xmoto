@@ -109,6 +109,7 @@ int ClientListenerThread::realThreadFunction() {
 	      m_netClient->addNetAction(v_netAction);
 	    }
 	  } catch(Exception &e) {
+	    LogError("net: %s", e.getMsg().c_str());
 	    m_askThreadToEnd = true; // invalid command, stop the listener
 	    v_onError = true;
 	  }

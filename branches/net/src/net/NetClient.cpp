@@ -74,7 +74,7 @@ void NetClient::executeNetActions() {
 
   SDL_LockMutex(m_netActionsMutex);
   for(unsigned int i=0; i<m_netActions.size(); i++) {
-    //LogInfo("Execute NetAction");
+    //LogInfo("Execute NetAction (%s)", m_netActions[i]->actionKey().c_str());
     manageAction(m_netActions[i]);
     delete m_netActions[i];
   }
@@ -173,7 +173,6 @@ void NetClient::send(NetAction* i_netAction, int i_subsrc) {
     i_netAction->send(&m_tcpsd, &m_udpsd, m_udpSendPacket, &m_udpSendPacket->address);
   } catch(Exception &e) {
     disconnect();
-    StateManager::instance()->sendAsynchronousMessage("CLIENT_DISCONNECTED_BY_ERROR");
     LogWarning("send failed : %s", e.getMsg().c_str());
     throw e;
   }
@@ -214,6 +213,7 @@ void NetClient::manageAction(NetAction* i_netAction) {
       
   case TNA_chatMessage:
     {
+      //KY
       SysMessage::instance()->displayInformation(((NA_chatMessage*)i_netAction)->getMessage());
     }
     break;
