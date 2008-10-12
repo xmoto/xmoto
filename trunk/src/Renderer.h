@@ -230,7 +230,7 @@ private:
 		      float i_c41, float i_c42,
 		      Sprite *i_sprite,
 		      const TColor& i_filterColor,
-		      DriveDir i_direction,
+		      Biker* i_biker,
 		      int i_90_rotation = 0
 		      );
   void _RenderBlocks(MotoGame* i_scene);
