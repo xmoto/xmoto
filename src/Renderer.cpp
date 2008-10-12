@@ -2774,9 +2774,9 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
 				    float i_c21, float i_c22,
 				    float i_c31, float i_c32,
 				    float i_c41, float i_c42,
-				    Sprite *i_sprite,
+				    Sprite* i_sprite,
 				    const TColor& i_filterColor,
-				    DriveDir i_direction,
+				    Biker* i_biker,
 				    int i_90_rotation
 				    ) {
     Texture *pTexture;
@@ -2792,7 +2792,7 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
     Sv = i_from - i_to;
     Sv.normalize();
 
-    if(i_direction == DD_RIGHT) {
+    if(i_biker->getState()->Dir == DD_RIGHT) {
       p0 = i_from + Vector2f(-Sv.y, Sv.x) * i_c11 + Sv * i_c12;
       p1 = i_to   + Vector2f(-Sv.y, Sv.x) * i_c21 + Sv * i_c22;
       p2 = i_to   - Vector2f(-Sv.y, Sv.x) * i_c31 + Sv * i_c32;
@@ -2804,6 +2804,11 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
       p3 = i_from + Vector2f(-Sv.y, Sv.x) * i_c41 + Sv * i_c42;
     }
 
+    p0 = calculateChangeDirPosition(i_biker,p0);
+    p1 = calculateChangeDirPosition(i_biker,p1);
+    p2 = calculateChangeDirPosition(i_biker,p2);
+    p3 = calculateChangeDirPosition(i_biker,p3);
+    
     switch(i_90_rotation) {
       case 0:
       _RenderAlphaBlendedSection(pTexture, p1, p2, p3, p0, i_filterColor);
@@ -3057,7 +3062,7 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
 		     0.24, 0.46,
 		     p_theme->getTorso(),
 		     i_filterColor,
-		     pBike->Dir
+		     i_biker
 		     );
 
       /* upper leg */
@@ -3069,7 +3074,7 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
 		     0.10, 0.14,
 		     p_theme->getUpperLeg(),
 		     i_filterColor,
-		     pBike->Dir, 1
+		     i_biker, 1
 		     );
 
       /* lower leg */
@@ -3081,7 +3086,7 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
 		     0.23, 0.10,
 		     p_theme->getLowerLeg(),
 		     i_filterColor,
-		     pBike->Dir
+		     i_biker
 		     );
 
       /* upper arm */
@@ -3093,7 +3098,7 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
 		     0.10, 0.09,
 		     p_theme->getUpperArm(),
 		     i_filterColor,
-		     pBike->Dir
+		     i_biker
 		     );
 
       /* lower arm */
@@ -3105,7 +3110,7 @@ void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
 		     0.10, 0.09,
 		     p_theme->getLowerArm(),
 		     i_filterColor,
-		     pBike->Dir, 2
+		     i_biker, 2
 		     );
 
     }
