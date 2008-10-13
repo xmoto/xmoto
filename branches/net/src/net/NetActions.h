@@ -22,7 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __NETACTIONS_H__
 
 #include <string>
-#include <SDL_net.h>
+#include <vector>
+#include "../include/xm_SDL_net.h"
 #include "../xmscene/BasicSceneStructs.h"
 
 #define XM_NET_PROTOCOL_VERSION 1
@@ -39,7 +40,13 @@ enum NetActionType {
   TNA_serverError,
   TNA_frame,
   TNA_changeName,
-  TNA_playingLevel
+  TNA_playingLevel,
+  TNA_changeClients
+};
+
+struct NetInfosClient {
+  unsigned int NetId;
+  std::string Name;
 };
 
 class NetAction {
@@ -74,7 +81,7 @@ class NetAction {
   // the server transfering a packet from a client x to others clients
   // => (x, [0,1,2,3])
 
-  static std::string getLine(void* data, unsigned int len, unsigned int* v_local_offset);
+  static std::string getLine(void* data, unsigned int len, unsigned int* o_local_offset);
 
   private:
   static char m_buffer[NETACTION_MAX_PACKET_SIZE];
@@ -231,6 +238,28 @@ class NA_playingLevel : public NetAction {
 
   private:
   std::string m_levelId;
+};
+
+class NA_changeClients : public NetAction {
+  public:
+  NA_changeClients();
+  NA_changeClients(void* data, unsigned int len);
+  virtual ~NA_changeClients();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void add(NetInfosClient* i_infoClient);
+  void remove(NetInfosClient* i_infoClient);
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  const std::vector<NetInfosClient>& getAddedInfosClients() const;
+  const std::vector<NetInfosClient>& getRemovedInfosClients() const;
+
+  private:
+  std::vector<NetInfosClient> m_netAddedInfosClients;
+  std::vector<NetInfosClient> m_netRemovedInfosClients;
 };
 
 #endif

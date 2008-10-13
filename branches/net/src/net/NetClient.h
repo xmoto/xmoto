@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XMNETCLIENT_H__
 #define __XMNETCLIENT_H__
 
-#include <SDL_net.h>
+#include "../include/xm_SDL_net.h"
 #include <string>
 #include <vector>
 #include "../helpers/Singleton.h"

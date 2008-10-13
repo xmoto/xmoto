@@ -35,24 +35,26 @@ unsigned int NetAction::m_nbUDPPacketsSent   = 0;
 unsigned int NetAction::m_TCPPacketsSizeSent = 0;
 unsigned int NetAction::m_UDPPacketsSizeSent = 0;
 
-std::string NA_chatMessage::ActionKey  = "message";
+std::string NA_chatMessage::ActionKey   = "message";
 // frame : while it's sent a lot, reduce it at maximum
-std::string NA_frame::ActionKey        = "f";
-std::string NA_clientInfos::ActionKey  = "clientInfos";
-std::string NA_udpBind::ActionKey      = "udpbind";
-std::string NA_udpBindQuery::ActionKey = "udpbindingQuery";
-std::string NA_changeName::ActionKey = "changeName";
-std::string NA_playingLevel::ActionKey = "playingLevel";
-std::string NA_serverError::ActionKey  = "serverError";
+std::string NA_frame::ActionKey        	= "f";
+std::string NA_clientInfos::ActionKey  	= "clientInfos";
+std::string NA_udpBind::ActionKey      	= "udpbind";
+std::string NA_udpBindQuery::ActionKey 	= "udpbindingQuery";
+std::string NA_changeName::ActionKey    = "changeName";
+std::string NA_playingLevel::ActionKey  = "playingLevel";
+std::string NA_serverError::ActionKey   = "serverError";
+std::string NA_changeClients::ActionKey = "changeClients";
 
-NetActionType NA_chatMessage::NAType  = TNA_chatMessage;
-NetActionType NA_frame::NAType        = TNA_frame;
-NetActionType NA_clientInfos::NAType  = TNA_clientInfos;
-NetActionType NA_udpBind::NAType      = TNA_udpBind;
-NetActionType NA_udpBindQuery::NAType = TNA_udpBindQuery;
-NetActionType NA_changeName::NAType = TNA_changeName;
-NetActionType NA_playingLevel::NAType = TNA_playingLevel;
-NetActionType NA_serverError::NAType  = TNA_serverError;
+NetActionType NA_chatMessage::NAType   = TNA_chatMessage;
+NetActionType NA_frame::NAType         = TNA_frame;
+NetActionType NA_clientInfos::NAType   = TNA_clientInfos;
+NetActionType NA_udpBind::NAType       = TNA_udpBind;
+NetActionType NA_udpBindQuery::NAType  = TNA_udpBindQuery;
+NetActionType NA_changeName::NAType    = TNA_changeName;
+NetActionType NA_playingLevel::NAType  = TNA_playingLevel;
+NetActionType NA_serverError::NAType   = TNA_serverError;
+NetActionType NA_changeClients::NAType = TNA_changeClients;
 
 NetAction::NetAction() {
   m_source    = -2; // < -1 => undefined
@@ -156,21 +158,19 @@ int NetAction::getSubSource() const {
 NetAction* NetAction::newNetAction(void* data, unsigned int len) {
   std::string v_cmd;
   int v_src, v_subsrc;
-  unsigned int v_local_offset, v_totalOffset = 0;
+  unsigned int v_totalOffset = 0;
   NetAction* v_res;
 
-  v_src = atoi(getLine(((char*)data)+v_totalOffset, len-v_totalOffset, &v_local_offset).c_str());
-  v_totalOffset += v_local_offset;
-
-  v_subsrc = atoi(getLine(((char*)data+v_totalOffset), len-v_totalOffset, &v_local_offset).c_str());
-  v_totalOffset += v_local_offset;
+  v_src = atoi(getLine(((char*)data)+v_totalOffset, len-v_totalOffset, &v_totalOffset).c_str());
+  v_subsrc = atoi(getLine(((char*)data+v_totalOffset), len-v_totalOffset, &v_totalOffset).c_str());
 
   if(v_src < -1 || v_subsrc < -1 || v_subsrc >= NETACTION_MAX_SUBSRC) {
     throw Exception("Invalid source");
   }
 
-  v_cmd = getLine(((char*)data+v_totalOffset), len, &v_local_offset);
-  v_totalOffset += v_local_offset;
+  v_cmd = getLine(((char*)data+v_totalOffset), len, &v_totalOffset);
+
+  //printf("cmd = %s (%i/%i)\n", v_cmd.c_str(), v_totalOffset, len-v_totalOffset);
 
   if(v_cmd == NA_chatMessage::ActionKey) {
     v_res = new NA_chatMessage(((char*)data)+v_totalOffset, len-v_totalOffset);
@@ -204,6 +204,10 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
     v_res = new NA_serverError(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
+  else if(v_cmd == NA_changeClients::ActionKey) {
+    v_res = new NA_changeClients(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
   else {
     //((char*)data)[len-1] = '\0';
     //LogInfo("Invalid command : %s", (char*)data);
@@ -214,22 +218,28 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
   return v_res;
 }
 
-std::string NetAction::getLine(void* data, unsigned int len, unsigned int* v_local_offset) {
+std::string NetAction::getLine(void* data, unsigned int len, unsigned int* o_local_offset) {
   std::string v_res;
-  *v_local_offset = 0;
+  unsigned int v_offset = 0;
 
-  while(*v_local_offset < len && ((char*)data)[*v_local_offset] != '\n') {
-    (*v_local_offset)++;
-  }
-  (*v_local_offset)++;
-
-  if(*v_local_offset > len) {
+  if(len <= 0) {
     throw Exception("NetAction: no line found");
   }
 
-  ((char*)data)[(*v_local_offset)-1] = '\0';
+  while(v_offset < len && ((char*)data)[v_offset] != '\n') {
+    v_offset++;
+  }
+  v_offset++;
+
+  if(v_offset > len) {
+    throw Exception("NetAction: no line found");
+  }
+
+  ((char*)data)[v_offset-1] = '\0';
   v_res = std::string(((char*)data));
-  ((char*)data)[(*v_local_offset)-1] = '\n';
+  ((char*)data)[v_offset-1] = '\n';
+
+  *o_local_offset += v_offset;
 
   return v_res;
 }
@@ -312,7 +322,7 @@ NA_udpBind::NA_udpBind(const std::string& i_key) {
 }
 
 NA_udpBind::NA_udpBind(void* data, unsigned int len) {
-  unsigned int v_localOffset;
+  unsigned int v_localOffset = 0;
   m_key = getLine(data, len, &v_localOffset);
 }
 
@@ -348,7 +358,7 @@ NA_clientInfos::NA_clientInfos(int i_protocolVersion, const std::string& i_udpBi
 }
 
 NA_clientInfos::NA_clientInfos(void* data, unsigned int len) {
-  unsigned int v_localOffset;
+  unsigned int v_localOffset = 0;
   m_protocolVersion = atoi(getLine(data, len, &v_localOffset).c_str());
   m_udpBindKey      = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
 }
@@ -357,14 +367,12 @@ NA_clientInfos::~NA_clientInfos() {
 }
 
 void NA_clientInfos::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
-  std::ostringstream v_protocolVersion;
-  v_protocolVersion << m_protocolVersion;
-
-  std::string v_send;
-  v_send = v_protocolVersion.str() + "\n" + m_udpBindKey;
+  std::ostringstream v_send;
+  v_send << m_protocolVersion << "\n";
+  v_send << m_udpBindKey;
 
   // force TCP
-  NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.c_str(), v_send.size()); // don't send the \0
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.str().c_str(), v_send.str().size()); // don't send the \0
 }
 
 int NA_clientInfos::protocolVersion() const {
@@ -380,7 +388,7 @@ NA_changeName::NA_changeName(const std::string& i_name) {
 }
 
 NA_changeName::NA_changeName(void* data, unsigned int len) {
-  unsigned int v_localOffset;
+  unsigned int v_localOffset = 0;
   m_name = getLine(data, len, &v_localOffset);
 }
 
@@ -400,7 +408,7 @@ NA_playingLevel::NA_playingLevel(const std::string& i_levelId) {
 }
 
 NA_playingLevel::NA_playingLevel(void* data, unsigned int len) {
-  unsigned int v_localOffset;
+  unsigned int v_localOffset = 0;
   m_levelId = getLine(data, len, &v_localOffset);
 }
 
@@ -413,4 +421,70 @@ void NA_playingLevel::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_
 
 std::string NA_playingLevel::getLevelId() {
   return m_levelId;
+}
+
+NA_changeClients::NA_changeClients() {
+}
+
+NA_changeClients::NA_changeClients(void* data, unsigned int len) {
+  unsigned int v_localOffset = 0;
+  std::string v_symbol;
+  NetInfosClient v_infosClient;
+
+  if(len == 1) { // no client
+    return;
+  }
+
+  while(v_localOffset < len) {
+    v_symbol = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
+    v_infosClient.NetId = atoi(getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset).c_str());
+    v_infosClient.Name  = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
+
+    if(v_symbol == "+") {
+      m_netAddedInfosClients.push_back(v_infosClient);
+    } else if(v_symbol == "-") {
+      m_netRemovedInfosClients.push_back(v_infosClient);
+    }
+  }
+}
+
+NA_changeClients::~NA_changeClients() {
+}
+
+void NA_changeClients::add(NetInfosClient* i_infoClient) {
+  m_netAddedInfosClients.push_back(*i_infoClient);
+}
+
+void NA_changeClients::remove(NetInfosClient* i_infoClient) {
+  m_netRemovedInfosClients.push_back(*i_infoClient);
+}
+
+void NA_changeClients::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  std::ostringstream v_send;  
+
+  for(unsigned int i=0; i<m_netAddedInfosClients.size(); i++) {
+    v_send << "+" << "\n";
+    v_send << m_netAddedInfosClients[i].NetId << "\n";
+    v_send << m_netAddedInfosClients[i].Name  << "\n";
+  }
+  
+  for(unsigned int i=0; i<m_netRemovedInfosClients.size(); i++) {
+    v_send << "-" << "\n";
+    v_send << m_netRemovedInfosClients[i].NetId << "\n";
+    v_send << m_netRemovedInfosClients[i].Name  << "\n";
+  }
+
+  if(m_netAddedInfosClients.size() > 0 || m_netRemovedInfosClients.size() > 0) {
+    NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.str().c_str(), v_send.str().size()-1); // don't send the \0 and the last \n
+  } else {
+    NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.str().c_str(), v_send.str().size()); // don't send the \0
+  }
+}
+
+const std::vector<NetInfosClient>& NA_changeClients::getAddedInfosClients() const {
+  return m_netAddedInfosClients;
+}
+
+const std::vector<NetInfosClient>& NA_changeClients::getRemovedInfosClients() const {
+  return m_netRemovedInfosClients;
 }

@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __ACTIONREADER_H__
 #define __ACTIONREADER_H__
 
-#include <SDL_net.h>
+#include "../include/xm_SDL_net.h"
 
 #define XM_MAX_PACKET_SIZE 1024 * 10 // bytes
 

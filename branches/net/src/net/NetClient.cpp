@@ -268,7 +268,7 @@ void NetClient::manageAction(NetAction* i_netAction) {
 
   case TNA_playingLevel:
     {
-      SysMessage::instance()->displayInformation("Somebody is starting a level");
+      //SysMessage::instance()->displayInformation("Somebody is starting a level");
     }
     break;
 
@@ -279,5 +279,21 @@ void NetClient::manageAction(NetAction* i_netAction) {
       SysMessage::instance()->displayError(_(((NA_serverError*)i_netAction)->getMessage().c_str()));
     }
     break;
+
+  case TNA_changeClients:
+    {
+      LogInfo("Client list update");
+      LogInfo("----------");
+      for(unsigned int i=0; i<((NA_changeClients*)i_netAction)->getAddedInfosClients().size(); i++) {
+	LogInfo("+ %s", ((NA_changeClients*)i_netAction)->getAddedInfosClients()[i].Name.c_str());
+      }
+      for(unsigned int i=0; i<((NA_changeClients*)i_netAction)->getRemovedInfosClients().size(); i++) {
+	LogInfo("- %s", ((NA_changeClients*)i_netAction)->getRemovedInfosClients()[i].Name.c_str());
+      }
+      LogInfo("----------");
+
+    }
+    break;
+
   }
 }

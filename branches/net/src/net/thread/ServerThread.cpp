@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ServerThread.h"
 #include "../../helpers/Log.h"
 #include "../../helpers/VExcept.h"
-#include <SDL_net.h>
 #include <string>
 #include "../helpers/Net.h"
 #include "../../XMSession.h"
@@ -46,7 +45,7 @@ NetSClient::~NetSClient() {
   delete tcpReader;
 }
 
-unsigned int NetSClient::Id() const {
+unsigned int NetSClient::id() const {
   return m_id;
 }
 
@@ -238,6 +237,18 @@ void ServerThread::removeClient(unsigned int i) {
   if(m_clients[i]->isUdpBinded()) {
     m_clients[i]->unbindUdp();
   }
+
+  // send new client to other clients
+  NA_changeClients nacc;
+  NetInfosClient nic;
+  try {
+    nic.NetId = m_clients[i]->id();
+    nic.Name  = m_clients[i]->name();
+    nacc.remove(&nic);
+    sendToAllClients(&nacc, -1, 0, i);
+  } catch(Exception &e) {
+  }
+
   delete m_clients[i];
   m_clients.erase(m_clients.begin() + i);
 }
@@ -350,7 +361,7 @@ void ServerThread::manageClientUDP() {
 	  for(unsigned int i=0; i<m_clients.size(); i++) {
 	    if(m_clients[i]->isUdpBinded() == false) {
 	      if(m_clients[i]->udpBindKey() == ((NA_udpBind*)v_netAction)->key()) {
-		LogInfo("UDP bind key received via UDP: %s", ((NA_udpBind*)v_netAction)->key().c_str());
+		//LogInfo("UDP bind key received via UDP: %s", ((NA_udpBind*)v_netAction)->key().c_str());
 		m_clients[i]->bindUdp(m_udpPacket->address);
 		break; // stop : only one client
 	      }
@@ -374,6 +385,8 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     break;
 
   case TNA_udpBindQuery:
+  case TNA_serverError:
+  case TNA_changeClients:
     {
       /* should not be received */
       throw Exception("");
@@ -394,8 +407,8 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       }
 
       // udpBindKey received
-      LogInfo("Protocol version of client %i is %i", i_client, ((NA_clientInfos*)i_netAction)->protocolVersion());
-      LogInfo("UDP bind key of client %i is %s", i_client, ((NA_clientInfos*)i_netAction)->udpBindKey().c_str());
+      //LogInfo("Protocol version of client %i is %i", i_client, ((NA_clientInfos*)i_netAction)->protocolVersion());
+      //LogInfo("UDP bind key of client %i is %s", i_client, ((NA_clientInfos*)i_netAction)->udpBindKey().c_str());
       m_clients[i_client]->setUdpBindKey(((NA_clientInfos*)i_netAction)->udpBindKey());
       
       // query bind udp
@@ -404,12 +417,27 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       	sendToClient(&naq, i_client, -1, 0);
       } catch(Exception &e) {
       }
+
+      // send the current clients list to the client
+      NA_changeClients nacc;
+      NetInfosClient nic;
+      try {
+	for(unsigned int i=0; i<m_clients.size(); i++) {
+	  if(m_clients[i]->name() != "") {
+	    nic.NetId = m_clients[i]->id();
+	    nic.Name  = m_clients[i]->name();
+	    nacc.add(&nic);
+	  }
+	}
+      	sendToClient(&nacc, i_client, -1, 0);
+      } catch(Exception &e) {
+      }
     }
     break;
       
   case TNA_chatMessage:
     {
-      sendToAllClients(i_netAction, i_client, m_clients[i_client]->Id(), i_netAction->getSubSource());
+      sendToAllClients(i_netAction, i_client, m_clients[i_client]->id(), i_netAction->getSubSource());
     }
     break;
     
@@ -422,7 +450,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
 	   m_clients[i_client]->playingLevelId() == m_clients[i]->playingLevelId()
 	   ) {
 	  try {
-	    sendToClient(i_netAction, i, m_clients[i_client]->Id(), i_netAction->getSubSource());
+	    sendToClient(i_netAction, i, m_clients[i_client]->id(), i_netAction->getSubSource());
 	    i++;
 	  } catch(Exception &e) {
 	    removeClient(i);
@@ -437,20 +465,32 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_changeName:
     {
       m_clients[i_client]->setName(((NA_changeName*)i_netAction)->getName());
-      LogInfo("Client[%i]'s name is \"%s\"", i_client, m_clients[i_client]->name().c_str());
+      if(m_clients[i_client]->name() == "") {
+	throw Exception("Invalid name provided");
+      }
+      //LogInfo("Client[%i]'s name is \"%s\"", i_client, m_clients[i_client]->name().c_str());
+
+      // send new client to other clients
+      NA_changeClients nacc;
+      NetInfosClient nic;
+      try {
+	nic.NetId = m_clients[i_client]->id();
+	nic.Name  = m_clients[i_client]->name();
+	nacc.add(&nic);
+      	sendToAllClients(&nacc, -1, 0, i_client);
+      } catch(Exception &e) {
+      }
+
     }
     break;
 
   case TNA_playingLevel:
     {
       m_clients[i_client]->setPlayingLevelId(((NA_playingLevel*)i_netAction)->getLevelId());
-      LogInfo("Client[%i] is playing \"%s\"", i_client, m_clients[i_client]->playingLevelId().c_str());
+      sendToClient(i_netAction, i_client, m_clients[i_client]->id(), i_netAction->getSubSource());
+      //LogInfo("Client[%i] is playing \"%s\"", i_client, m_clients[i_client]->playingLevelId().c_str());
     }
     break;
 
-  case TNA_serverError:
-    /* should not be received */
-    throw Exception("");
-    break;
   }
 }
