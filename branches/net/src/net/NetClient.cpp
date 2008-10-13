@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Universe.h"
 #include "../Theme.h"
 #include "../xmscene/BikeGhost.h"
+#include "../GameText.h"
 
 NetClient::NetClient() {
     m_isConnected = false;
@@ -117,14 +118,14 @@ void NetClient::connect(const std::string& i_server, int i_port) {
   LogInfo("client: connected on %s:%d", i_server.c_str(), i_port);
 
   // bind udp port on server
-  NA_udpBindKey na(m_udpBindKey);
+  NA_clientInfos na(XM_NET_PROTOCOL_VERSION, m_udpBindKey);
   try {
     NetClient::instance()->send(&na, 0);
   } catch(Exception &e) {
   }
 
-  // presentation
-  NA_presentation nap(XMSession::instance()->profile());
+  // changeName
+  NA_changeName nap(XMSession::instance()->profile());
   try {
     NetClient::instance()->send(&nap, 0);
   } catch(Exception &e) {
@@ -207,7 +208,7 @@ void NetClient::manageAction(NetAction* i_netAction) {
     }
     break;
 
-  case TNA_udpBindKey:
+  case TNA_clientInfos:
     /* should not happend */
     break;
       
@@ -259,7 +260,7 @@ void NetClient::manageAction(NetAction* i_netAction) {
     }
     break;
       
-  case TNA_presentation:
+  case TNA_changeName:
     {
       /* ... */
     }
@@ -271,5 +272,12 @@ void NetClient::manageAction(NetAction* i_netAction) {
     }
     break;
 
+  case TNA_serverError:
+    {
+      //KY
+      // try to translate this message : server messages are sent untranslated
+      SysMessage::instance()->displayError(_(((NA_serverError*)i_netAction)->getMessage().c_str()));
+    }
+    break;
   }
 }

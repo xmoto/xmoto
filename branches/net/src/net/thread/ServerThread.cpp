@@ -290,7 +290,7 @@ void ServerThread::acceptClient() {
 
   // to much clients ?
   if(m_clients.size() >= XMSession::instance()->serverMaxClients()) {
-    NA_chatMessage na(GAMETEXT_TOO_MUCH_CLIENTS);
+    NA_serverError na(UNTRANSLATED_GAMETEXT_TOO_MUCH_CLIENTS);
     na.setSource(-1, 0);
     try {
       na.send(&csd, NULL, NULL, NULL);
@@ -380,16 +380,27 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     }
     break;
 
-  case TNA_udpBindKey:
+  case TNA_clientInfos:
     {
+      // check protocol version
+      if(((NA_clientInfos*)i_netAction)->protocolVersion() != XM_NET_PROTOCOL_VERSION) {
+	NA_serverError na(UNTRANSLATED_GAMETEXT_SERVER_PROTOCOL_VERSION_INCOMPATIBLE);
+	na.setSource(-1, 0);
+	try {
+	  sendToClient(&na, i_client, -1, 0);
+	} catch(Exception &e) {
+	}
+	throw Exception("Protocol version incompatible");
+      }
+
       // udpBindKey received
-      LogInfo("UDP bind key of client %i is %s", i_client, ((NA_udpBindKey*)i_netAction)->key().c_str());
-      m_clients[i_client]->setUdpBindKey(((NA_udpBindKey*)i_netAction)->key());
+      LogInfo("UDP bind key of client %i is %s", i_client, ((NA_clientInfos*)i_netAction)->udpBindKey().c_str());
+      m_clients[i_client]->setUdpBindKey(((NA_clientInfos*)i_netAction)->udpBindKey());
       
       // query bind udp
-      NA_udpBindQuery na;
+      NA_udpBindQuery naq;
       try {
-      	sendToClient(&na, i_client, -1, 0);
+      	sendToClient(&naq, i_client, -1, 0);
       } catch(Exception &e) {
       }
     }
@@ -422,9 +433,9 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     }
     break;
 
-  case TNA_presentation:
+  case TNA_changeName:
     {
-      m_clients[i_client]->setName(((NA_presentation*)i_netAction)->getName());
+      m_clients[i_client]->setName(((NA_changeName*)i_netAction)->getName());
       LogInfo("Client[%i]'s name is \"%s\"", i_client, m_clients[i_client]->name().c_str());
     }
     break;
@@ -436,5 +447,9 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     }
     break;
 
+  case TNA_serverError:
+    /* should not be received */
+    throw Exception("");
+    break;
   }
 }

@@ -484,7 +484,12 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_CLIENTDISCONNECT _("Disconnect")
 #define GAMETEXT_UNABLETOCONNECTONTHESERVER _("Unable to connect on the server")
 #define GAMETEXT_CLIENTNETWORKERROR _("Network error: you're disconnected")
-#define GAMETEXT_TOO_MUCH_CLIENTS _("Sorry, there are already too much clients connected")
+#define UNTRANSLATED_GAMETEXT_TOO_MUCH_CLIENTS "Sorry, there are already too much clients connected"
+#define UNTRANSLATED_GAMETEXT_SERVER_PROTOCOL_VERSION_INCOMPATIBLE "Server protocol version incompatible"
+
+			  // to get them into the .po
+#define GAMETEXT_TOO_MUCH_CLIENTS _(UNTRANSLATED_GAMETEXT_TOO_MUCH_CLIENTS)
+#define GAMETEXT_SERVER_PROTOCOL_VERSION_INCOMPATIBLE _(UNTRANSLATED_GAMETEXT_SERVER_PROTOCOL_VERSION_INCOMPATIBLE)
 
 /* Context help strings */
 #define CONTEXTHELP_UPDATEHIGHSCORES _("Download the latest X-Moto world records and check for new levels")

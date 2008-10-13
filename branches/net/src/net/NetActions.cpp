@@ -38,19 +38,21 @@ unsigned int NetAction::m_UDPPacketsSizeSent = 0;
 std::string NA_chatMessage::ActionKey  = "message";
 // frame : while it's sent a lot, reduce it at maximum
 std::string NA_frame::ActionKey        = "f";
-std::string NA_udpBindKey::ActionKey   = "udpbindingKey";
+std::string NA_clientInfos::ActionKey  = "clientInfos";
 std::string NA_udpBind::ActionKey      = "udpbind";
 std::string NA_udpBindQuery::ActionKey = "udpbindingQuery";
-std::string NA_presentation::ActionKey = "presentation";
+std::string NA_changeName::ActionKey = "changeName";
 std::string NA_playingLevel::ActionKey = "playingLevel";
+std::string NA_serverError::ActionKey  = "serverError";
 
 NetActionType NA_chatMessage::NAType  = TNA_chatMessage;
 NetActionType NA_frame::NAType        = TNA_frame;
-NetActionType NA_udpBindKey::NAType   = TNA_udpBindKey;
+NetActionType NA_clientInfos::NAType  = TNA_clientInfos;
 NetActionType NA_udpBind::NAType      = TNA_udpBind;
 NetActionType NA_udpBindQuery::NAType = TNA_udpBindQuery;
-NetActionType NA_presentation::NAType = TNA_presentation;
+NetActionType NA_changeName::NAType = TNA_changeName;
 NetActionType NA_playingLevel::NAType = TNA_playingLevel;
+NetActionType NA_serverError::NAType  = TNA_serverError;
 
 NetAction::NetAction() {
   m_source    = -2; // < -1 => undefined
@@ -178,8 +180,8 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
     v_res = new NA_frame(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
-  else if(v_cmd == NA_udpBindKey::ActionKey) {
-    v_res = new NA_udpBindKey(((char*)data)+v_totalOffset, len-v_totalOffset);
+  else if(v_cmd == NA_clientInfos::ActionKey) {
+    v_res = new NA_clientInfos(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
   else if(v_cmd == NA_udpBindQuery::ActionKey) {
@@ -190,12 +192,16 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
     v_res = new NA_udpBind(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
-  else if(v_cmd == NA_presentation::ActionKey) {
-    v_res = new NA_presentation(((char*)data)+v_totalOffset, len-v_totalOffset);
+  else if(v_cmd == NA_changeName::ActionKey) {
+    v_res = new NA_changeName(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
   else if(v_cmd == NA_playingLevel::ActionKey) {
     v_res = new NA_playingLevel(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_serverError::ActionKey) {
+    v_res = new NA_serverError(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
   else {
@@ -253,6 +259,27 @@ std::string NA_chatMessage::getMessage() {
   return m_msg;
 }
 
+NA_serverError::NA_serverError(const std::string& i_msg) {
+  m_msg = i_msg;
+}
+
+NA_serverError::NA_serverError(void* data, unsigned int len) {
+  ((char*)data)[len-1] = '\0';
+  m_msg = std::string((char*)data);
+  ((char*)data)[len-1] = '\n';
+}
+
+NA_serverError::~NA_serverError() {
+}
+
+void NA_serverError::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, m_msg.c_str(), m_msg.size()); // don't send the \0
+}
+
+std::string NA_serverError::getMessage() {
+  return m_msg;
+}
+
 NA_frame::NA_frame(SerializedBikeState* i_state) {
   m_state = *i_state;
 }
@@ -285,9 +312,8 @@ NA_udpBind::NA_udpBind(const std::string& i_key) {
 }
 
 NA_udpBind::NA_udpBind(void* data, unsigned int len) {
-  ((char*)data)[len-1] = '\0';
-  m_key = std::string((char*)data);
-  ((char*)data)[len-1] = '\n';
+  unsigned int v_localOffset;
+  m_key = getLine(data, len, &v_localOffset);
 }
 
 NA_udpBind::~NA_udpBind() {
@@ -316,46 +342,56 @@ void NA_udpBindQuery::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_
   NetAction::send(i_tcpsd, NULL, NULL, NULL, NULL, 0);
 }
 
-NA_udpBindKey::NA_udpBindKey(const std::string& i_key) {
-  m_key = i_key;
+NA_clientInfos::NA_clientInfos(int i_protocolVersion, const std::string& i_udpBindKey) {
+  m_protocolVersion = i_protocolVersion;
+  m_udpBindKey      = i_udpBindKey;
 }
 
-NA_udpBindKey::NA_udpBindKey(void* data, unsigned int len) {
-  ((char*)data)[len-1] = '\0';
-  m_key = std::string((char*)data);
-  ((char*)data)[len-1] = '\n';
+NA_clientInfos::NA_clientInfos(void* data, unsigned int len) {
+  unsigned int v_localOffset;
+  m_protocolVersion = atoi(getLine(data, len, &v_localOffset).c_str());
+  m_udpBindKey      = getLine(data, len, &v_localOffset);
 }
 
-NA_udpBindKey::~NA_udpBindKey() {
+NA_clientInfos::~NA_clientInfos() {
 }
 
-void NA_udpBindKey::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+void NA_clientInfos::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  std::ostringstream v_protocolVersion;
+  v_protocolVersion << m_protocolVersion;
+
+  std::string v_send;
+  v_send = v_protocolVersion.str() + "\n" + m_udpBindKey;
+
   // force TCP
-  NetAction::send(i_tcpsd, NULL, NULL, NULL, m_key.c_str(), m_key.size()); // don't send the \0
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.c_str(), v_send.size()); // don't send the \0
 }
 
-std::string NA_udpBindKey::key() const {
-  return m_key;
+int NA_clientInfos::protocolVersion() const {
+  return m_protocolVersion;
 }
 
-NA_presentation::NA_presentation(const std::string& i_name) {
+std::string NA_clientInfos::udpBindKey() const {
+  return m_udpBindKey;
+}
+
+NA_changeName::NA_changeName(const std::string& i_name) {
   m_name = i_name;
 }
 
-NA_presentation::NA_presentation(void* data, unsigned int len) {
-  ((char*)data)[len-1] = '\0';
-  m_name = std::string((char*)data);
-  ((char*)data)[len-1] = '\n';
+NA_changeName::NA_changeName(void* data, unsigned int len) {
+  unsigned int v_localOffset;
+  m_name = getLine(data, len, &v_localOffset);
 }
 
-NA_presentation::~NA_presentation() {
+NA_changeName::~NA_changeName() {
 }
 
-void NA_presentation::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+void NA_changeName::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
   NetAction::send(i_tcpsd, NULL, NULL, NULL, m_name.c_str(), m_name.size()); // don't send the \0
 }
 
-std::string NA_presentation::getName() {
+std::string NA_changeName::getName() {
   return m_name;
 }
 
@@ -364,9 +400,8 @@ NA_playingLevel::NA_playingLevel(const std::string& i_levelId) {
 }
 
 NA_playingLevel::NA_playingLevel(void* data, unsigned int len) {
-  ((char*)data)[len-1] = '\0';
-  m_levelId = std::string((char*)data);
-  ((char*)data)[len-1] = '\n';
+  unsigned int v_localOffset;
+  m_levelId = getLine(data, len, &v_localOffset);
 }
 
 NA_playingLevel::~NA_playingLevel() {

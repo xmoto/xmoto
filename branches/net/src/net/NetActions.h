@@ -25,18 +25,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <SDL_net.h>
 #include "../xmscene/BasicSceneStructs.h"
 
+#define XM_NET_PROTOCOL_VERSION 1
 #define NETACTION_MAX_PACKET_SIZE 1024 * 2 // bytes
 
 class NetClient;
 class ServerThread;
 
 enum NetActionType {
+  TNA_clientInfos,
   TNA_udpBind,
   TNA_udpBindQuery,
-  TNA_udpBindKey,
   TNA_chatMessage,
+  TNA_serverError,
   TNA_frame,
-  TNA_presentation,
+  TNA_changeName,
   TNA_playingLevel
 };
 
@@ -72,8 +74,9 @@ class NetAction {
   // the server transfering a packet from a client x to others clients
   // => (x, [0,1,2,3])
 
-  private:
   static std::string getLine(void* data, unsigned int len, unsigned int* v_local_offset);
+
+  private:
   static char m_buffer[NETACTION_MAX_PACKET_SIZE];
   static unsigned int m_biggestTCPPacket;
   static unsigned int m_biggestUDPPacket;
@@ -116,15 +119,15 @@ class NA_udpBindQuery : public NetAction {
   private:
 };
 
-/* the client send its key by tcp (udpBindKey) */
+/* the client send its key by tcp (clientInfos) */
 /* then, the server ask via tcp (udpBindQuery) the client to send an udp packet (udpBind) */
 /* the server bind */
 
-class NA_udpBindKey : public NetAction {
+class NA_clientInfos : public NetAction {
   public:
-  NA_udpBindKey(const std::string& i_key);
-  NA_udpBindKey(void* data, unsigned int len);
-  virtual ~NA_udpBindKey();
+  NA_clientInfos(int i_protocolVersion, const std::string& i_udpBindKey);
+  NA_clientInfos(void* data, unsigned int len);
+  virtual ~NA_clientInfos();
   std::string actionKey()    { return ActionKey; }
   NetActionType actionType() { return NAType; }
   static std::string ActionKey;
@@ -132,10 +135,12 @@ class NA_udpBindKey : public NetAction {
 
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
 
-  std::string key() const;
+  int protocolVersion() const;
+  std::string udpBindKey() const;
 
   private:
-  std::string m_key;
+  int m_protocolVersion;
+  std::string m_udpBindKey;
 };
 
 class NA_chatMessage : public NetAction {
@@ -153,6 +158,24 @@ class NA_chatMessage : public NetAction {
   std::string getMessage();
 
   private:
+  std::string m_msg;
+};
+
+class NA_serverError : public NetAction {
+ public:
+  NA_serverError(const std::string& i_msg);
+  NA_serverError(void* data, unsigned int len);
+  virtual ~NA_serverError();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+  
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+  
+  std::string getMessage();
+  
+ private:
   std::string m_msg;
 };
 
@@ -174,11 +197,11 @@ class NA_frame : public NetAction {
    SerializedBikeState m_state;
 };
 
-class NA_presentation : public NetAction {
+class NA_changeName : public NetAction {
   public:
-  NA_presentation(const std::string& i_name);
-  NA_presentation(void* data, unsigned int len);
-  virtual ~NA_presentation();
+  NA_changeName(const std::string& i_name);
+  NA_changeName(void* data, unsigned int len);
+  virtual ~NA_changeName();
   std::string actionKey()    { return ActionKey; }
   NetActionType actionType() { return NAType; }
   static std::string ActionKey;
