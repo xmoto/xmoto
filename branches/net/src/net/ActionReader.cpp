@@ -81,7 +81,7 @@ bool ActionReader::TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction) {
 	m_tcpNotEnoughData = true;
       }
     } catch(Exception &e) {
-      LogError("client: bad command received (%s)", e.getMsg().c_str());
+      LogError("net: bad command received (%s)", e.getMsg().c_str());
       throw Exception("Invalid command");
     }
   }

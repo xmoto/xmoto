@@ -394,6 +394,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       }
 
       // udpBindKey received
+      LogInfo("Protocol version of client %i is %i", i_client, ((NA_clientInfos*)i_netAction)->protocolVersion());
       LogInfo("UDP bind key of client %i is %s", i_client, ((NA_clientInfos*)i_netAction)->udpBindKey().c_str());
       m_clients[i_client]->setUdpBindKey(((NA_clientInfos*)i_netAction)->udpBindKey());
       

@@ -113,7 +113,7 @@ void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPa
 
       i_sendPacket->address = *i_udpRemoteIP;
       if(SDLNet_UDP_Send(*i_udpsd, -1, i_sendPacket) == 0) {
-	LogWarning("SDLNet_UDP_Send faild : %s", SDLNet_GetError());
+	LogWarning("SDLNet_UDP_Send failed : %s", SDLNet_GetError());
       }
 
       if(v_totalPacketSize > NetAction::m_biggestUDPPacket) {
@@ -223,7 +223,7 @@ std::string NetAction::getLine(void* data, unsigned int len, unsigned int* v_loc
   }
   (*v_local_offset)++;
 
-  if(*v_local_offset >= len) {
+  if(*v_local_offset > len) {
     throw Exception("NetAction: no line found");
   }
 
@@ -350,7 +350,7 @@ NA_clientInfos::NA_clientInfos(int i_protocolVersion, const std::string& i_udpBi
 NA_clientInfos::NA_clientInfos(void* data, unsigned int len) {
   unsigned int v_localOffset;
   m_protocolVersion = atoi(getLine(data, len, &v_localOffset).c_str());
-  m_udpBindKey      = getLine(data, len, &v_localOffset);
+  m_udpBindKey      = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
 }
 
 NA_clientInfos::~NA_clientInfos() {
