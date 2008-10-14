@@ -484,6 +484,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_CLIENTDISCONNECT _("Disconnect")
 #define GAMETEXT_UNABLETOCONNECTONTHESERVER _("Unable to connect on the server")
 #define GAMETEXT_CLIENTNETWORKERROR _("Network error: you're disconnected")
+#define GAMETEXT_CONNECTED_PLAYERS _("Connected players:")
 #define UNTRANSLATED_GAMETEXT_TOO_MUCH_CLIENTS "Sorry, there are already too much clients connected"
 #define UNTRANSLATED_GAMETEXT_SERVER_PROTOCOL_VERSION_INCOMPATIBLE "Server protocol version incompatible"
 

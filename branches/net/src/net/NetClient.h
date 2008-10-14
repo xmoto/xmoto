@@ -74,6 +74,8 @@ class NetClient : public Singleton<NetClient> {
   void startPlay(Universe* i_universe);
   void endPlay();
 
+  std::vector<NetOtherClient*>& otherClients();
+
   private:
   bool m_isConnected;
   IPaddress serverIp;

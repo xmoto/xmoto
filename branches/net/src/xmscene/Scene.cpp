@@ -1071,20 +1071,26 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
   }
 
   void MotoGame::DisplayDiffFromGhost() {
+    bool v_diffAvailable = false;
+
     if(m_ghosts.size() > 0) {
       float v_diffToGhost;
 
       /* take the more */
-      v_diffToGhost = m_ghosts[0]->diffToPlayer();
-      for(unsigned int i=1; i<m_ghosts.size(); i++) {
-	if(m_ghosts[i]->diffToPlayer() > v_diffToGhost) {
-	  v_diffToGhost = m_ghosts[i]->diffToPlayer();
+      for(unsigned int i=0; i<m_ghosts.size(); i++) {
+	if(m_ghosts[i]->diffToPlayerAvailable()) {
+	  if(v_diffAvailable == false || m_ghosts[i]->diffToPlayer() > v_diffToGhost) {
+	    v_diffToGhost = m_ghosts[i]->diffToPlayer();
+	    v_diffAvailable = true;
+	  }
 	}
       }
 
-      char msg[256];
-      snprintf(msg, 256, "%+.2f", v_diffToGhost/100.0);
-      this->gameMessage(msg,true);
+      if(v_diffAvailable) {
+	char msg[256];
+	snprintf(msg, 256, "%+.2f", v_diffToGhost/100.0);
+	this->gameMessage(msg,true);
+      }
     }
   }
   

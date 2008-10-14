@@ -198,6 +198,10 @@ void NetClient::endPlay() {
   m_universe = NULL;
 }
 
+std::vector<NetOtherClient*>& NetClient::otherClients() {
+  return m_otherClients;
+}
+
 void NetClient::manageAction(NetAction* i_netAction) {
   switch(i_netAction->actionType()) {
 

@@ -31,6 +31,7 @@ class Ghost : public Biker {
 	const TColor& i_uglyColorFilter);
   ~Ghost();
 
+  virtual bool diffToPlayerAvailable() const { return true; };
   virtual void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) = 0;
   float diffToPlayer() const;
   virtual bool getRenderBikeFront();
@@ -90,6 +91,7 @@ class NetGhost : public Ghost {
 	   const TColor& i_uglyColorFilter);
   ~NetGhost();
 
+  virtual bool diffToPlayerAvailable() const { return false; };
   virtual void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
 
   std::string getQuickDescription() const;
