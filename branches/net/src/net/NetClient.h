@@ -85,6 +85,8 @@ class NetClient : public Singleton<NetClient> {
   UDPpacket* m_udpSendPacket;
   std::string m_udpBindKey;
 
+  unsigned int getOtherClientNumberById(int i_id) const;
+
   std::vector<NetAction*> m_netActions;
   SDL_mutex* m_netActionsMutex;
 

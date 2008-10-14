@@ -1365,10 +1365,14 @@ void StateMainMenu::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i
     }
   }
 
-  if(i_id == "REPLAYS_DELETE") {
+  else if(i_id == "REPLAYS_DELETE") {
     if(i_button == UI_MSGBOX_YES) {
       addCommand("REPLAYS_DELETE");
     }
+  }
+
+  else {
+    StateMenu::sendFromMessageBox(i_id, i_button, i_input);
   }
 }
 

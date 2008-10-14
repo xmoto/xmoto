@@ -1944,6 +1944,10 @@ void StateOptions::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_
       updateOptions();      
     }
   }
+
+  else {
+    StateMenu::sendFromMessageBox(i_id, i_button, i_input);
+  }
 }
 
 void StateOptions::setInputKey(const std::string& i_strKey, const std::string& i_key) {

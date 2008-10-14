@@ -231,6 +231,10 @@ void StateUpdate::sendFromMessageBox(const std::string& i_id,
   if(i_id == "ERROR" || i_id == "SUCCESS") {
     m_requestForEnd = true;
   }
+
+  else {
+    GameState::sendFromMessageBox(i_id, i_button, i_input);
+  }
 }
 
 void StateUpdate::onThreadFinishes(bool i_res) {

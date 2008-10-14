@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../drawlib/DrawLib.h"
 #include "../Sound.h"
 #include "StateOptions.h"
+#include "StateMessageBox.h"
 #include "../net/NetClient.h"
 
 #define MENU_SHADING_TIME 0.3
@@ -163,8 +164,15 @@ void GameState::setId(const std::string& i_id) {
 }
 
 void GameState::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
-  /* by default, do nothing */
-  LogWarning("StateMessageBoxReceiver::send() received, but nothing done !");
+  if(i_id == "CHATMESSAGE"){
+    if(i_button == UI_MSGBOX_OK) {
+      NA_chatMessage na(i_input);
+      try {
+	NetClient::instance()->send(&na, 0);
+      } catch(Exception &e) {
+      }
+    }
+  }
 }
 
 void GameState::send(const std::string& i_message, const std::string& i_args)
@@ -288,5 +296,14 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_s, KMOD_LCTRL)) {
     GameApp::instance()->toogleEnableMusic();
+  }
+
+  // net chat
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_c, KMOD_LCTRL) && NetClient::instance()->isConnected()) {
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, std::string(GAMETEXT_CHATMESSAGE) + ":",
+							 UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, "");
+    v_msgboxState->setId("CHATMESSAGE");
+    StateManager::instance()->pushState(v_msgboxState);
+    return; 
   }
 }

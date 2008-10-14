@@ -437,7 +437,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       
   case TNA_chatMessage:
     {
-      sendToAllClients(i_netAction, i_client, m_clients[i_client]->id(), i_netAction->getSubSource());
+      sendToAllClients(i_netAction, m_clients[i_client]->id(), i_netAction->getSubSource(), i_client);
     }
     break;
     

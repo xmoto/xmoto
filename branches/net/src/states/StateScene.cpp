@@ -406,6 +406,10 @@ void StateScene::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_bu
   if(i_id == "ERROR") {
     addCommand("ERROR");
   }
+
+  else {
+    GameState::sendFromMessageBox(i_id, i_button, i_input);
+  }
 }
 
 void StateScene::setScoresTimes() {

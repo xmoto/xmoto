@@ -202,6 +202,15 @@ std::vector<NetOtherClient*>& NetClient::otherClients() {
   return m_otherClients;
 }
 
+unsigned int NetClient::getOtherClientNumberById(int i_id) const {
+  for(unsigned int i=0; i<m_otherClients.size(); i++) {
+    if(m_otherClients[i]->id() == i_id) {
+      return i;
+    }
+  }
+  throw Exception("Invalid id");
+}
+
 void NetClient::manageAction(NetAction* i_netAction) {
   switch(i_netAction->actionType()) {
 
@@ -228,8 +237,11 @@ void NetClient::manageAction(NetAction* i_netAction) {
       
   case TNA_chatMessage:
     {
-      //KY
-      SysMessage::instance()->displayInformation(((NA_chatMessage*)i_netAction)->getMessage());
+      try {
+	SysMessage::instance()->displayInformation(m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name() +
+						   ": " + ((NA_chatMessage*)i_netAction)->getMessage());
+      } catch(Exception &e) {
+      }
     }
     break;
     
