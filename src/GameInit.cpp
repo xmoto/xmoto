@@ -96,6 +96,7 @@ void GameApp::run(int nNumArgs, char** ppcArgs) {
 
 void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   XMArguments v_xmArgs;
+  m_isODEInitialized = false;
   bool v_useGraphics = true;
 
   /* check args */
@@ -327,6 +328,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   // init physics
   // if(dInitODE2(0) == 0) { /* erreur */} ; // ode 0.10
   dInitODE();
+  m_isODEInitialized = true;
 
   /* Initialize renderer */
   GameRenderer::instance()->init(drawLib);
@@ -524,7 +526,9 @@ void GameApp::run_unload() {
     Sound::uninit();
   }
 
-  dCloseODE(); // uninit ODE
+  if(m_isODEInitialized ==  true){
+    dCloseODE(); // uninit ODE
+  }
   GameRenderer::destroy();
   SysMessage::destroy();  
 

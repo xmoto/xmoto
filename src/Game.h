@@ -212,6 +212,9 @@ private:
 
   /* if true, don't ask for updating levels */
   bool m_updateAutomaticallyLevels;
+
+  /* a way to know if ODE has been initialized */
+  bool m_isODEInitialized;
      
   /* Internet connection configurator */
   UIFrame *m_pWebConfEditor;      
