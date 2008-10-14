@@ -146,6 +146,12 @@ void NetClient::disconnect() {
   LogInfo("client: disconnected")
   SDLNet_TCP_Close(m_tcpsd);
   SDLNet_UDP_Close(m_udpsd);
+
+  for(unsigned int i=0; i<m_otherClients.size(); i++) {
+    delete m_otherClients[i];
+    m_otherClients.clear();
+  }
+
   m_isConnected = false;
 }
 
@@ -184,7 +190,11 @@ void NetClient::startPlay(Universe* i_universe) {
 }
 
 void NetClient::endPlay() {
-  m_netGhosts.clear();
+  for(unsigned int i=0; i<m_otherClients.size(); i++) {
+    for(unsigned int j=0; j<NETACTION_MAX_SUBSRC; j++) {
+      m_otherClients[i]->setNetGhost(j, NULL);
+    }
+  }
   m_universe = NULL;
 }
 
@@ -223,24 +233,32 @@ void NetClient::manageAction(NetAction* i_netAction) {
     {
       //LogInfo("Frame received");
       NetGhost* v_ghost = NULL;
+      int v_clientId = -1;
 
       if(m_universe == NULL) {
 	return;
       }
 
-      for(unsigned int i=0; i<m_netGhosts.size(); i++) {
-	if(m_netGhosts[i]->source()    == i_netAction->getSource() &&
-	   m_netGhosts[i]->subSource() == i_netAction->getSubSource()) {
-	  v_ghost = m_netGhosts[i];
+      // search the client
+      for(unsigned int i=0; i<m_otherClients.size(); i++) {
+	if(m_otherClients[i]->id() == i_netAction->getSource()) {
+	  v_clientId = i;
 	  break;
 	}
+      }
+      if(v_clientId < 0) {
+	return; // client not declared
+      }
+
+      // check if the ghost already exists
+      if(m_otherClients[v_clientId]->netGhost(i_netAction->getSubSource()) != NULL) {
+	v_ghost = m_otherClients[v_clientId]->netGhost(i_netAction->getSubSource());
       }
 
       if(v_ghost == NULL) {
 	/* add the net ghost */
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	  v_ghost = m_universe->getScenes()[i]->addNetGhost(i_netAction->getSource(), i_netAction->getSubSource(),
-							    "Net ghost", Theme::instance(),
+	  v_ghost = m_universe->getScenes()[i]->addNetGhost("Net ghost", Theme::instance(),
 							    Theme::instance()->getGhostTheme(),
 							    TColor(255,255,255,0),
 							    TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
@@ -248,7 +266,7 @@ void NetClient::manageAction(NetAction* i_netAction) {
 								   GET_BLUE(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
 								   0)
 							    );
-	  m_netGhosts.push_back(v_ghost);
+	  m_otherClients[v_clientId]->setNetGhost(i_netAction->getSubSource(), v_ghost);
 	}
       }
       
@@ -262,7 +280,12 @@ void NetClient::manageAction(NetAction* i_netAction) {
       
   case TNA_changeName:
     {
-      /* ... */
+      // change the client name
+      for(unsigned int i=0; i<m_otherClients.size(); i++) {
+	if(m_otherClients[i]->id() == i_netAction->getSource()) {
+	  m_otherClients[i]->setName(((NA_changeName*)i_netAction)->getName());
+	}
+      }
     }
     break;
 
@@ -282,18 +305,58 @@ void NetClient::manageAction(NetAction* i_netAction) {
 
   case TNA_changeClients:
     {
-      LogInfo("Client list update");
-      LogInfo("----------");
-      for(unsigned int i=0; i<((NA_changeClients*)i_netAction)->getAddedInfosClients().size(); i++) {
-	LogInfo("+ %s", ((NA_changeClients*)i_netAction)->getAddedInfosClients()[i].Name.c_str());
-      }
-      for(unsigned int i=0; i<((NA_changeClients*)i_netAction)->getRemovedInfosClients().size(); i++) {
-	LogInfo("- %s", ((NA_changeClients*)i_netAction)->getRemovedInfosClients()[i].Name.c_str());
-      }
-      LogInfo("----------");
+      NetInfosClient nic;
 
+      for(unsigned int i=0; i<((NA_changeClients*)i_netAction)->getAddedInfosClients().size(); i++) {
+	m_otherClients.push_back(new NetOtherClient(((NA_changeClients*)i_netAction)->getAddedInfosClients()[i].NetId,
+						    ((NA_changeClients*)i_netAction)->getAddedInfosClients()[i].Name));
+      }
+
+      for(unsigned int i=0; i<((NA_changeClients*)i_netAction)->getRemovedInfosClients().size(); i++) {
+	unsigned int j=0;
+	while(j<m_otherClients.size()) {
+	  if(m_otherClients[j]->id() == ((NA_changeClients*)i_netAction)->getRemovedInfosClients()[i].NetId) {
+	    delete m_otherClients[j];
+	    m_otherClients.erase(m_otherClients.begin()+j);
+	  } else {
+	    j++;
+	  }
+	}
+      }
     }
     break;
 
   }
+}
+
+NetOtherClient::NetOtherClient(int i_id, const std::string& i_name) {
+  m_id       = i_id;
+  m_name     = i_name;
+
+  for(unsigned int i=0; i<NETACTION_MAX_SUBSRC; i++) {
+    m_ghosts[i] = NULL;
+  }
+}
+
+NetOtherClient::~NetOtherClient() {
+}
+
+int NetOtherClient::id() const {
+  return m_id;
+}
+
+std::string NetOtherClient::name() const {
+  return m_name;
+}
+
+void NetOtherClient::setName(const std::string& i_name) {
+  m_name = i_name;
+}
+
+NetGhost* NetOtherClient::netGhost(unsigned int i_subsrc) {
+  return m_ghosts[i_subsrc];
+}
+
+void NetOtherClient::setNetGhost(unsigned int i_subsrc, NetGhost* i_netGhost) {
+  m_ghosts[i_subsrc] = i_netGhost;
 }

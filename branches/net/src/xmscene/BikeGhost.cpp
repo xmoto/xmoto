@@ -323,25 +323,14 @@ double FileGhost::getAngle() {
 }
 
 
-NetGhost::NetGhost(int i_source, int i_subsource,
-		   PhysicsSettings* i_physicsSettings,
+NetGhost::NetGhost(PhysicsSettings* i_physicsSettings,
 		   Theme *i_theme, BikerTheme* i_bikerTheme,
 		   const TColor& i_colorFilter,
 		   const TColor& i_uglyColorFilter) 
   : Ghost(i_physicsSettings, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
-  m_source    = i_source;
-  m_subsource = i_subsource;
 }
 
 NetGhost::~NetGhost() {
-}
-
-int NetGhost::source() const {
-  return m_source;
-}
-
-int NetGhost::subSource() const {
-  return m_subsource;
 }
 
 void NetGhost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {

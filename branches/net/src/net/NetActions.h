@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define XM_NET_PROTOCOL_VERSION 1
 #define NETACTION_MAX_PACKET_SIZE 1024 * 2 // bytes
+#define NETACTION_MAX_SUBSRC 4 // maximum 4 players by client
 
 class NetClient;
 class ServerThread;
@@ -45,7 +46,7 @@ enum NetActionType {
 };
 
 struct NetInfosClient {
-  unsigned int NetId;
+  int NetId;
   std::string Name;
 };
 

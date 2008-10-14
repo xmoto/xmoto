@@ -84,14 +84,11 @@ class FileGhost : public Ghost {
 
 class NetGhost : public Ghost {
  public:
-  NetGhost(int i_source, int i_subsource,
-	   PhysicsSettings* i_physicsSettings,
+  NetGhost(PhysicsSettings* i_physicsSettings,
 	   Theme *i_theme, BikerTheme* i_bikerTheme,
 	   const TColor& i_colorFilter,
 	   const TColor& i_uglyColorFilter);
   ~NetGhost();
-  int source() const;
-  int subSource() const;
 
   virtual void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
 
@@ -102,8 +99,6 @@ class NetGhost : public Ghost {
   double getAngle();
  
  private:
-  int m_source;
-  int m_subsource;
 };
 
 #endif

@@ -218,8 +218,7 @@ public:
 			      const TColor& i_filterUglyColor,
 			      bool i_enableEngineSound);
 
-  NetGhost* addNetGhost(int i_source, int i_subsource,
-			const std::string& i_info, Theme *i_theme,
+  NetGhost* addNetGhost(const std::string& i_info, Theme *i_theme,
 			BikerTheme* i_bikerTheme,
 			const TColor& i_filterColor,
 			const TColor& i_filterUglyColor);

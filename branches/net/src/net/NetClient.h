@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 #include "../helpers/Singleton.h"
 #include "../include/xm_SDL.h"
+#include "NetActions.h"
 
 #define XM_CLIENT_MAX_UDP_PACKET_SIZE 1024 // bytes
 
@@ -33,6 +34,25 @@ class ClientListenerThread;
 class NetAction;
 class NetGhost;
 class Universe;
+
+class NetOtherClient {
+ public:
+  NetOtherClient(int i_id, const std::string& i_name);
+  ~NetOtherClient();
+
+  int id() const;
+
+  std::string name() const;
+  void setName(const std::string& i_name);
+
+  NetGhost* netGhost(unsigned int i_subsrc);
+  void setNetGhost(unsigned int i_subsrc, NetGhost* i_netGhost);
+
+ private:
+  int m_id;
+  std::string  m_name;
+  NetGhost*    m_ghosts[NETACTION_MAX_SUBSRC];
+};
 
 class NetClient : public Singleton<NetClient> {
   public:
@@ -66,8 +86,9 @@ class NetClient : public Singleton<NetClient> {
   std::vector<NetAction*> m_netActions;
   SDL_mutex* m_netActionsMutex;
 
-  std::vector<NetGhost*> m_netGhosts;
   Universe* m_universe;
+
+  std::vector<NetOtherClient*> m_otherClients;
 
   void manageAction(NetAction* i_netAction);
 };

@@ -25,8 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../XMSession.h"
 #include <sstream>
 
-#define NETACTION_MAX_SUBSRC 4 // maximum 4 players by client
-
 char NetAction::m_buffer[NETACTION_MAX_PACKET_SIZE];
 unsigned int NetAction::m_biggestTCPPacket   = 0;
 unsigned int NetAction::m_biggestUDPPacket   = 0;
@@ -164,7 +162,7 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
   v_src = atoi(getLine(((char*)data)+v_totalOffset, len-v_totalOffset, &v_totalOffset).c_str());
   v_subsrc = atoi(getLine(((char*)data+v_totalOffset), len-v_totalOffset, &v_totalOffset).c_str());
 
-  if(v_src < -1 || v_subsrc < -1 || v_subsrc >= NETACTION_MAX_SUBSRC) {
+  if(v_src < -1 || v_subsrc < 0 || v_subsrc >= NETACTION_MAX_SUBSRC) { // subsrc must be 0, 1 or 2 or 3
     throw Exception("Invalid source");
   }
 
@@ -438,9 +436,9 @@ NA_changeClients::NA_changeClients(void* data, unsigned int len) {
   while(v_localOffset < len) {
     v_symbol = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
     v_infosClient.NetId = atoi(getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset).c_str());
-    v_infosClient.Name  = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
 
     if(v_symbol == "+") {
+      v_infosClient.Name  = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
       m_netAddedInfosClients.push_back(v_infosClient);
     } else if(v_symbol == "-") {
       m_netRemovedInfosClients.push_back(v_infosClient);
@@ -471,7 +469,6 @@ void NA_changeClients::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i
   for(unsigned int i=0; i<m_netRemovedInfosClients.size(); i++) {
     v_send << "-" << "\n";
     v_send << m_netRemovedInfosClients[i].NetId << "\n";
-    v_send << m_netRemovedInfosClients[i].Name  << "\n";
   }
 
   if(m_netAddedInfosClients.size() > 0 || m_netRemovedInfosClients.size() > 0) {

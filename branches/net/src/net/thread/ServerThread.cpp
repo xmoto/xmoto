@@ -418,7 +418,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       } catch(Exception &e) {
       }
 
-      // send the current clients list to the client
+      // send the current clients list to the client only when the client has a name
       NA_changeClients nacc;
       NetInfosClient nic;
       try {
