@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Theme.h"
 #include "../xmscene/BikeGhost.h"
 #include "../GameText.h"
+#include "../db/xmDatabase.h"
 
 NetClient::NetClient() {
     m_isConnected = false;
@@ -238,8 +239,10 @@ void NetClient::manageAction(NetAction* i_netAction) {
   case TNA_chatMessage:
     {
       try {
-	SysMessage::instance()->displayInformation(m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name() +
-						   ": " + ((NA_chatMessage*)i_netAction)->getMessage());
+	std::string v_str = m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name() +
+	  ": " + ((NA_chatMessage*)i_netAction)->getMessage();
+	SysMessage::instance()->displayInformation(v_str);
+	SysMessage::instance()->addConsoleLine(v_str);
       } catch(Exception &e) {
       }
     }
@@ -307,7 +310,34 @@ void NetClient::manageAction(NetAction* i_netAction) {
 
   case TNA_playingLevel:
     {
-      //SysMessage::instance()->displayInformation("Somebody is starting a level");
+      try {
+	std::string v_levelId = ((NA_playingLevel*)i_netAction)->getLevelId();
+	NetOtherClient* v_client = m_otherClients[getOtherClientNumberById(i_netAction->getSource())];
+	char buf[512];
+	char **v_result;
+	unsigned int nrow;
+	std::string v_levelName;
+
+	if(v_levelId != "" && v_levelId != v_client->lastPlayingLevelId()) {
+	  xmDatabase* pDb = xmDatabase::instance("main");
+  
+	  v_result = pDb->readDB("SELECT name FROM levels where id_level=\"" + xmDatabase::protectString(v_levelId) + "\";", nrow);
+	  if(nrow == 0) {
+	    v_levelName = GAMETEXT_UNKNOWN;
+	  } else {
+	    v_levelName = pDb->getResult(v_result, 1, 0, 0);  
+	  }
+	  pDb->read_DB_free(v_result);
+
+	  snprintf(buf, 512, GAMETEXT_CLIENTPLAYING, v_client->name().c_str(), v_levelName.c_str());
+	  SysMessage::instance()->addConsoleLine(buf);
+	}
+
+	// updating playing level
+	v_client->setPlayingLevelId(v_levelId);
+
+      } catch(Exception &e) {
+      }
     }
     break;
 
@@ -322,16 +352,21 @@ void NetClient::manageAction(NetAction* i_netAction) {
   case TNA_changeClients:
     {
       NetInfosClient nic;
+      char buf[512];
 
       for(unsigned int i=0; i<((NA_changeClients*)i_netAction)->getAddedInfosClients().size(); i++) {
 	m_otherClients.push_back(new NetOtherClient(((NA_changeClients*)i_netAction)->getAddedInfosClients()[i].NetId,
 						    ((NA_changeClients*)i_netAction)->getAddedInfosClients()[i].Name));
+	snprintf(buf, 512, GAMETEXT_CLIENTCONNECTSERVER, ((NA_changeClients*)i_netAction)->getAddedInfosClients()[i].Name.c_str());
+	SysMessage::instance()->addConsoleLine(buf);
       }
 
       for(unsigned int i=0; i<((NA_changeClients*)i_netAction)->getRemovedInfosClients().size(); i++) {
 	unsigned int j=0;
 	while(j<m_otherClients.size()) {
 	  if(m_otherClients[j]->id() == ((NA_changeClients*)i_netAction)->getRemovedInfosClients()[i].NetId) {
+	    snprintf(buf, 512, GAMETEXT_CLIENTDISCONNECTSERVER, m_otherClients[j]->name().c_str());
+	    SysMessage::instance()->addConsoleLine(buf);
 	    delete m_otherClients[j];
 	    m_otherClients.erase(m_otherClients.begin()+j);
 	  } else {
@@ -367,6 +402,17 @@ std::string NetOtherClient::name() const {
 
 void NetOtherClient::setName(const std::string& i_name) {
   m_name = i_name;
+}
+
+std::string NetOtherClient::lastPlayingLevelId() {
+  return m_lastPlayingLevelId;
+}
+
+void NetOtherClient::setPlayingLevelId(const std::string& i_id_level) {
+  m_playingLevelId = i_id_level;
+  if(m_playingLevelId != "") {
+    m_lastPlayingLevelId = m_playingLevelId;
+  }
 }
 
 NetGhost* NetOtherClient::netGhost(unsigned int i_subsrc) {

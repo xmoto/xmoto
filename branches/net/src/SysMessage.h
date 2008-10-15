@@ -37,9 +37,10 @@ private:
 
 public:
   void setDrawLib(DrawLib* i_drawLib);
-  void displayText(std::string i_msg);
-  void displayError(std::string i_msg);
-  void displayInformation(std::string i_msg);
+  void displayText(const std::string& i_msg);
+  void displayError(const std::string& i_msg);
+  void displayInformation(const std::string& i_msg);
+  void addConsoleLine(const std::string& i_line);
   void render();
 
 private:
@@ -55,6 +56,10 @@ private:
   /* information msg */
   std::vector<std::string> m_informationTxt;
   float m_startDisplayInformation;
+
+  /* console */
+  std::vector<std::string> m_console;
+  float m_consoleLastShowTime;
 
   DrawLib* m_drawLib;
 };

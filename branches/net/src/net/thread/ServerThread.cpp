@@ -487,8 +487,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_playingLevel:
     {
       m_clients[i_client]->setPlayingLevelId(((NA_playingLevel*)i_netAction)->getLevelId());
-      sendToClient(i_netAction, i_client, m_clients[i_client]->id(), i_netAction->getSubSource());
-      //LogInfo("Client[%i] is playing \"%s\"", i_client, m_clients[i_client]->playingLevelId().c_str());
+      sendToAllClients(i_netAction, m_clients[i_client]->id(), i_netAction->getSubSource(), i_client);
     }
     break;
 

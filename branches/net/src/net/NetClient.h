@@ -45,6 +45,9 @@ class NetOtherClient {
   std::string name() const;
   void setName(const std::string& i_name);
 
+  std::string lastPlayingLevelId();
+  void setPlayingLevelId(const std::string& i_idlevel);
+
   NetGhost* netGhost(unsigned int i_subsrc);
   void setNetGhost(unsigned int i_subsrc, NetGhost* i_netGhost);
 
@@ -52,6 +55,8 @@ class NetOtherClient {
   int m_id;
   std::string  m_name;
   NetGhost*    m_ghosts[NETACTION_MAX_SUBSRC];
+  std::string m_playingLevelId;
+  std::string m_lastPlayingLevelId;
 };
 
 class NetClient : public Singleton<NetClient> {

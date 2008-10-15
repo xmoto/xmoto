@@ -169,6 +169,7 @@ void GameState::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_but
       NA_chatMessage na(i_input);
       try {
 	NetClient::instance()->send(&na, 0);
+	SysMessage::instance()->addConsoleLine(XMSession::instance()->profile() + ": " + i_input);
       } catch(Exception &e) {
       }
     }
