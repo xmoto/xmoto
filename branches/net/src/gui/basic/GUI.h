@@ -208,7 +208,7 @@ public:
   UIRoot *getRoot(void);
       
   /* Generic message boxing */
-  UIMsgBox *msgBox(std::string Text,UIMsgBoxButton Buttons,bool bTextInput=false,bool bQuery=false);
+  UIMsgBox *msgBox(std::string Text,UIMsgBoxButton Buttons,bool bTextInput=false,bool bQuery=false,bool i_verticallyLarge=false);
     
   /* Data interface */
   UIWindow *getPrimaryChild(void) {return m_pPrimaryChild;}
@@ -414,7 +414,7 @@ public:
   virtual void paint(void);      
   virtual bool keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char);
   virtual bool offerActivation(void) {if(m_bTextInput) return true; return false;}
-    
+
   /* Methods */
   bool setClicked(std::string Text);
   UIMsgBoxButton getClicked(void);
