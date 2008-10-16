@@ -59,7 +59,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "net/NetServer.h"
 #include "net/NetClient.h"
 #include "net/NetActions.h"
-#include <SDL_net.h>
+#include "include/xm_SDL_net.h"
 
 #define MOUSE_DBCLICK_TIME 0.250f
 
