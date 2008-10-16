@@ -686,11 +686,11 @@ msgstr "Nepavyko gauti pasirinktos temos."
 
 #: src/GameText.h:227
 msgid "Failed to initialize level!"
-msgstr "Nepavyko inicijuoti lygio!"
+msgstr "Nepavyko iškviesti lygio!"
 
 #: src/GameText.h:228
 msgid "Failed to load replay!"
-msgstr "Nepavyko užkrauti pakartojimo!"
+msgstr "Nepavyko įkelti pakartojimo!"
 
 #: src/GameText.h:229
 msgid ""
@@ -1066,7 +1066,7 @@ msgstr "X-Moto %s arba naujesnis reikalauja įkelti lygį"
 
 #: src/GameText.h:323
 msgid "New highscore!"
-msgstr "Nauji rekordai!"
+msgstr "Naujas rekordas!"
 
 #: src/GameText.h:324
 msgid "New personal highscore!"
@@ -1648,7 +1648,7 @@ msgstr "Padidinti"
 
 #: src/GameText.h:468
 msgid "Reinitialize zoom"
-msgstr "Perinicijuoti mastelį"
+msgstr "Atstatyti pradinį mastelį"
 
 #: src/GameText.h:469
 msgid "Zoom out"
@@ -2061,8 +2061,8 @@ msgstr "Nusiųsti pakartojimą į rekordų tinklapį"
 #: src/GameText.h:573
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
-"Nusiųskite savo geriausius pakartojimus į savo kambarį (naudinga, kai tik "
-"buvo jis sukurtas)"
+"Nusiųskite savo geriausius pakartojimus į savo kambarį (naudinga naujai "
+"sukurtame kambaryje)"
 
 #: src/GameText.h:574
 msgid "Configure the main www options"
@@ -2582,7 +2582,7 @@ msgstr ""
 
 #: src/GameText.h:710
 msgid "The room highscore is really better than your own highscore"
-msgstr "Kambario rekordai iš tiesų geresni negu jūsų rekordai"
+msgstr "Kambario rekordas iš tiesų geresnis negu jūsų rekordas"
 
 #: src/GameText.h:711
 #, c-format
@@ -2726,7 +2726,7 @@ msgid ""
 "... and the one to the left is the best of all\n"
 "on this computer."
 msgstr ""
-"... ir kairėje yra geriausias laikas visų\n"
+"... ir kairėje yra geriausias laikas iš visų\n"
 "šiame kompiuteryje."
 
 #: src/LevelsText.h:26
@@ -2759,15 +2759,15 @@ msgstr ": Keisti kryptį"
 
 #: src/LevelsText.h:32
 msgid ": Rotate anti-clockwise"
-msgstr ": Sukti prieš laikrodžio rodyklę"
+msgstr ": Suktis prieš laikrodžio rodyklę"
 
 #: src/LevelsText.h:33
 msgid ": Rotate clockwise"
-msgstr ": Sukti pagal laikrodžio rodyklę"
+msgstr ": Suktis pagal laikrodžio rodyklę"
 
 #: src/LevelsText.h:34
 msgid "Okay. The red dot on your minimap is a strawberry."
-msgstr "Gerai. Raudonas taškas ant jūsų minižemėlapio yra žemuogė."
+msgstr "Gerai. Raudonas taškas ant jūsų mažo žemėlapio yra žemuogė."
 
 #: src/LevelsText.h:35
 msgid ""
@@ -2782,7 +2782,7 @@ msgid ""
 "The icon to the right of your time,\n"
 "indicates how many strawberries still left."
 msgstr ""
-"Piktograma, dešinėje jūsų laiko, rodo,\n"
+"Žemuogė, esanti dešinėje jūsų laiko, rodo,\n"
 "kiek žemuogių vis dar liko."
 
 #: src/LevelsText.h:37
@@ -2805,7 +2805,7 @@ msgstr "Sveiki atvykę į X-Moto!"
 msgid ""
 "This level is a short tutorial of\n"
 "how you play the game."
-msgstr "Šis lygis yra pamokymas, kaip žaisti žaidimą."
+msgstr "Šis lygis pamokys, kaip žaisti žaidimą."
 
 #: src/LevelsText.h:41
 msgid "Please stay put and follow the instructions! :)"
@@ -2883,7 +2883,7 @@ msgstr ""
 
 #: src/LevelsText.h:53
 msgid "That was pretty easy, right?"
-msgstr "Tai buvo gana lengva, teisa?"
+msgstr "Tai buvo gana lengva, tiesa?"
 
 #: src/LevelsText.h:54
 msgid ""
@@ -2917,7 +2917,7 @@ msgid ""
 msgstr ""
 "Sudėtinga dalis, kurioje turite išlaikyti pusiausvyrą.\n"
 "Kai atstumas, kuriuo jūs turite važiuoti, yra ganėtinai\n"
-"trumpas, jūs neturite išlaikyti pusiausvyrą."
+"trumpas, jums nereikia išlaikyti pusiausvyrą."
 
 #: src/LevelsText.h:59
 msgid ""
@@ -3018,16 +3018,16 @@ msgstr ""
 #~ msgstr "Įjunkti muziką"
 
 #~ msgid "Initializing input system..."
-#~ msgstr "Inicijuojama įvesties sistema..."
+#~ msgstr "Iškviečiama įvesties sistema..."
 
 #~ msgid "Initializing menus..."
-#~ msgstr "Inicijuojamas meniu..."
+#~ msgstr "Iškviečiamas meniu..."
 
 #~ msgid "Initializing renderer..."
-#~ msgstr "Inicijuojamas vaizdavimas"
+#~ msgstr "Iškviečiamas vaizdavimas"
 
 #~ msgid "Initializing text renderer..."
-#~ msgstr "Inicijuojamas teksto vaizdavimas..."
+#~ msgstr "Iškvieičiamas teksto vaizdavimas..."
 
 #~ msgid "Configure options linked to your X-Moto dabatase"
 #~ msgstr "Formuoti parinktis, sujungtas su jūsų X-Moto duomenų baze"
