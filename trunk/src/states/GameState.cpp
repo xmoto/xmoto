@@ -145,12 +145,28 @@ void GameState::send(const std::string& i_message, const std::string& i_args)
 
 void GameState::executeCommands()
 {
-  SDL_LockMutex(m_commandsMutex);
-  while(m_commands.empty() == false){
-    executeOneCommand(m_commands.front().first, m_commands.front().second);
-    m_commands.pop();
+  std::string v_cmd, v_args;
+  
+  // there is not a lot of commands run, thus, lock/unlock for each command instead of global lock should not cost a lot (i hope)
+  
+  while(true) {
+    SDL_LockMutex(m_commandsMutex);
+    
+    if(m_commands.empty()) {
+      SDL_UnlockMutex(m_commandsMutex);
+      return; // no more commands to run : finished
+ 
+    } else {
+      v_cmd  = m_commands.front().first;
+      v_args = m_commands.front().second;
+      m_commands.pop();
+      SDL_UnlockMutex(m_commandsMutex);
+      
+      // execute the command, but be sure you've not the mutex on the commands
+      executeOneCommand(v_cmd, v_args);
+    }
+
   }
-  SDL_UnlockMutex(m_commandsMutex);
 }
 
 void GameState::executeOneCommand(std::string cmd, std::string args)
