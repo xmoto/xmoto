@@ -118,44 +118,10 @@ bool GameState::render() {
 		     0, MAKE_COLOR(0,0,0, v_nShade));
   }
 
-  // render only on the top state
-  if(StateManager::instance()->isTopOfTheStates(this)) {
-
-    // net infos
-    if(NetClient::instance()->isConnected()) {
-      FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
-      FontGlyph* v_fg;
-      int vborder = 10;
-      int v_voffset = 0;
-      
-      v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_CONNECTED_PLAYERS);
-      v_fm->printString(v_fg,
-			GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder,
-			MAKE_COLOR(240,240,240,255), -1.0, true);
-      v_voffset += v_fg->realHeight();
-      
-      // you
-      v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(XMSession::instance()->profile());
-      v_fm->printString(v_fg,
-			GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
-			MAKE_COLOR(200,200,200,255), -1.0, true);     
-      v_voffset += v_fg->realHeight();
-      
-      for(unsigned int i=0; i<NetClient::instance()->otherClients().size(); i++) {
-	v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(NetClient::instance()->otherClients()[i]->name());
-	v_fm->printString(v_fg,
-			  GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
-			  MAKE_COLOR(200,200,200,255), -1.0, true);     
-	v_voffset += v_fg->realHeight();
-      }
-    }
-  }
-
   return renderOverShadow();
 }
 
 bool GameState::renderOverShadow() {
-  // do nothing by default
   return true;
 }
 

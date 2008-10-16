@@ -35,6 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateVote.h"
 #include "../net/NetClient.h"
 
+#include "../GameText.h"
 #include "../XMSession.h"
 #include "../drawlib/DrawLib.h"
 #include "../Game.h"
@@ -220,6 +221,38 @@ void StateManager::update()
   }
 }
 
+void StateManager::renderOverAll() {
+
+  // net infos
+  if(NetClient::instance()->isConnected()) {
+    FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
+    FontGlyph* v_fg;
+    int vborder = 10;
+    int v_voffset = 0;
+    
+    v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_CONNECTED_PLAYERS);
+    v_fm->printString(v_fg,
+		      GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder,
+		      MAKE_COLOR(240,240,240,255), -1.0, true);
+    v_voffset += v_fg->realHeight();
+    
+    // you
+    v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(XMSession::instance()->profile());
+    v_fm->printString(v_fg,
+		      GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
+		      MAKE_COLOR(200,200,200,255), -1.0, true);     
+    v_voffset += v_fg->realHeight();
+    
+    for(unsigned int i=0; i<NetClient::instance()->otherClients().size(); i++) {
+      v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(NetClient::instance()->otherClients()[i]->name());
+      v_fm->printString(v_fg,
+			GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
+			MAKE_COLOR(200,200,200,255), -1.0, true);     
+      v_voffset += v_fg->realHeight();
+    }
+  }
+}
+
 void StateManager::render()
 {
   std::vector<GameState*>::iterator stateIterator;
@@ -248,6 +281,8 @@ void StateManager::render()
 
       ++stateIterator;
     }
+
+    renderOverAll();
 
     // FPS
     if(XMSession::instance()->fps()) {
