@@ -1,7 +1,7 @@
 # translation of de.po to Deutsch
 # Jens Erler <mothbox@gmx.net>, 2007,2008.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
