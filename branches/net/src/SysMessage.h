@@ -41,6 +41,7 @@ public:
   void displayError(const std::string& i_msg);
   void displayInformation(const std::string& i_msg);
   void addConsoleLine(const std::string& i_line);
+  void showConsole();
   void render();
 
 private:

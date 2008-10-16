@@ -135,6 +135,10 @@ void SysMessage::addConsoleLine(const std::string& i_line) {
     m_console.erase(m_console.begin());
   }
 
+  showConsole();
+}
+
+void SysMessage::showConsole() {
   m_consoleLastShowTime = GameApp::getXMTime();
 }
 

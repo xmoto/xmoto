@@ -241,7 +241,6 @@ void NetClient::manageAction(NetAction* i_netAction) {
       try {
 	std::string v_str = m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name() +
 	  ": " + ((NA_chatMessage*)i_netAction)->getMessage();
-	SysMessage::instance()->displayInformation(v_str);
 	SysMessage::instance()->addConsoleLine(v_str);
       } catch(Exception &e) {
       }

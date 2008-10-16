@@ -406,6 +406,7 @@ void GameApp::manageEvent(SDL_Event* Event) {
   /* What event? */
   switch(Event->type) {
   case SDL_KEYDOWN:
+    //printf("%i\n", Event->key.keysym.sym);
     utf8Char = unicode2utf8(Event->key.keysym.unicode);
     StateManager::instance()->xmKey(INPUT_DOWN, XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
     break;
