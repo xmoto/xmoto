@@ -74,7 +74,7 @@ std::string win32_getUserDir(bool i_asUtf8 = false) {
 }
 #endif
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__MORPHOS__) && !defined(__amigaos4__)
 void strlwr(char *pc) {
   for(unsigned int i=0; i<strlen(pc); i++) pc[i] = tolower(pc[i]);
 }
@@ -1067,7 +1067,24 @@ void FS::init(const std::string& AppDir, const std::string& i_binFile, const std
     m_bGotDataDir = true;
   } 
   else throw Exception("invalid process directory");
-           
+#elsif defined(__MORPHOS__) || defined(__amigaos4__)         
+  if(i_userDirPath != "") {
+    m_UserDir = m_UserDirUTF8 = i_userDirPath;
+  } else {
+    m_UserDir = "PROGDIR:userdata"; /*getenv("HOME");*/
+    if(!isDir(m_UserDir))
+      throw Exception("invalid user home directory");
+
+    m_UserDir = m_UserDir /*+ std::string("/.") + AppDir*/;
+    m_UserDirUTF8 = m_UserDir;
+  }
+
+  /* And the data dir? */
+  m_DataDir = std::string("PROGDIR:data");
+  if(isDir(m_DataDir)) {
+    /* Got a system-wide installation to fall back to! */
+    m_bGotDataDir = true;
+  }
 #else /* Assume unix-like */
       /* Determine users home dir, so we can find out where to get/save user 
 	 files */
@@ -1075,10 +1092,10 @@ void FS::init(const std::string& AppDir, const std::string& i_binFile, const std
   if(i_userDirPath != "") {
     m_UserDir = m_UserDirUTF8 = i_userDirPath;
   } else {
-    m_UserDir = getenv("HOME");            
+    m_UserDir = getenv("HOME");
     if(!isDir(m_UserDir)) 
       throw Exception("invalid user home directory");
-      
+
     m_UserDir = m_UserDir + std::string("/.") + AppDir;
     m_UserDirUTF8 = m_UserDir;
   }

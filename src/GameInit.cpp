@@ -59,11 +59,41 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define MOUSE_DBCLICK_TIME 0.250f
 
+#ifdef __amigaos4__
+#include <dos/dos.h>
+#include <proto/exec.h>
+BOOL LibraryOK( STRPTR libname, ULONG version, ULONG revision )
+ {
+     struct Library *libBase;
+     BOOL ok = FALSE;
+     if( libBase = (struct Library *)IExec->OpenLibrary( libname, version ))
+     {
+     if (libBase->lib_Version > version || (libBase->lib_Version == version && libBase->lib_Revision >=revision))
+       {
+             ok =  TRUE;
+         }
+         IExec->CloseLibrary( libBase );
+     }
+     return ok;
+ }
+#endif 
+
 #if defined(WIN32)
 int SDL_main(int nNumArgs, char **ppcArgs) {
 #else
 int main(int nNumArgs, char **ppcArgs) {
 #endif
+
+#ifdef __amigaos4__
+     /* checking for MiniGL 2.0 */
+
+     if(!LibraryOK( "minigl.library", 2, 0 ))
+        {
+        printf("I need MiniGL 2.0 Beta or newer. Please upgrade!\n");
+         return RETURN_FAIL;
+        }
+#endif
+
   /* Start application */
   try {     
     /* Setup basic info */
