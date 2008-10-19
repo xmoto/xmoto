@@ -276,7 +276,7 @@ void NetClient::manageAction(NetAction* i_netAction) {
       if(v_ghost == NULL) {
 	/* add the net ghost */
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	  v_ghost = m_universe->getScenes()[i]->addNetGhost("Net ghost", Theme::instance(),
+	  v_ghost = m_universe->getScenes()[i]->addNetGhost(m_otherClients[v_clientId]->name(), Theme::instance(),
 							    Theme::instance()->getGhostTheme(),
 							    TColor(255,255,255,0),
 							    TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),

@@ -337,11 +337,15 @@ void NetGhost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
 }
 
 std::string NetGhost::getQuickDescription() const {
-  return "Net Ghost";
+  char c_tmp[256];
+  snprintf(c_tmp, 256, GAMETEXT_GHOSTOF, m_info.c_str()); 
+  return std::string(c_tmp);
 }
 
 std::string NetGhost::getDescription() const {
-  return "Net Ghost";
+  char c_tmp[256];
+  snprintf(c_tmp, 256, GAMETEXT_GHOSTOF, m_info.c_str()); 
+  return std::string(c_tmp);
 }
 
 float NetGhost::getBikeEngineSpeed() {
