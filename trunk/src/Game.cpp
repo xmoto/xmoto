@@ -125,7 +125,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Set window title */
     SDL_WM_SetCaption(XMBuild::getVersionString(true).c_str(), XMBuild::getVersionString(true).c_str());
 
-#if !defined(WIN32) && !defined(__APPLE__) 
+#if !defined(WIN32) && !defined(__APPLE__) && !defined(__amigaos4__) 
     SDL_Surface *v_icon = SDL_LoadBMP(GAMEDATADIR "/xmoto_icone_x.ico");
     if(v_icon != NULL) {
       SDL_SetColorKey(v_icon, SDL_SRCCOLORKEY,

@@ -36,7 +36,7 @@ extern "C" {
 /*==============================================================================
 Hmm, stricmp() is microsoftish
 ==============================================================================*/
-#if !defined(WIN32)
+#if !defined(WIN32) && !defined(__amigaos4__)
   static int stricmp(char *pc1,char *pc2) {
     int s1 = strlen(pc1);
     int s2 = strlen(pc2);
