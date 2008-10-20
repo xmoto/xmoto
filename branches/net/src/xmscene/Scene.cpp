@@ -322,11 +322,12 @@ void MotoGame::cleanPlayers() {
 	if(Players()[i]->isDead() == false && Players()[i]->isFinished() == false) {
 
 	  // get the state only if we need it for replay or frame
-	  if(v_uploadFrame || (v_recordReplay && i == 0)) { // /* only store the state if 1 player plays for replays */
+	  if((v_uploadFrame && Players()[i]->localNetId() >= 0) ||
+	     (v_recordReplay && i == 0)) { // /* only store the state if 1 player plays for replays */
 	    getSerializedBikeState(Players()[i]->getState(), getTime(), &BikeState, m_physicsSettings);
 	  }
 
-	  if(v_uploadFrame) {
+	  if(v_uploadFrame && Players()[i]->localNetId() >= 0) {
 	    NA_frame na(&BikeState);
 	    try {
 	      NetClient::instance()->send(&na, Players()[i]->localNetId());
