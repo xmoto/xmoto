@@ -346,8 +346,8 @@ void ServerThread::manageClientUDP() {
 	  manageAction(v_netAction, i);
 	  delete v_netAction;
 	} catch(Exception &e) {
-	  LogError("%s", e.getMsg().c_str());
-	  removeClient(i);
+	  // ok, a bad packet received, forget it
+	  LogInfo("bad udp packet received");
 	}
 	break; // stop : only one client
       }
@@ -371,6 +371,7 @@ void ServerThread::manageClientUDP() {
 	  LogWarning("Packet of unknown client received");
 	}
       } catch(Exception &e) {
+	/* forget this bad packet */
       }
     }
   }

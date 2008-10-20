@@ -42,8 +42,6 @@ bool ActionReader::TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction) {
 
   *i_netAction = NULL;
 
-  try {
-
   if(m_tcpPossiblyInBuffer == false) { // don't read from the socket if there is possibly still packets in the buffer
     if( (nread = SDLNet_TCP_Recv(*(i_tcpsd),
 				 m_tcpBuffer+m_tcpPacketOffset,
@@ -89,12 +87,6 @@ bool ActionReader::TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction) {
   }
 
   return false; // no more action readable
-
-  } catch(Exception &e) {
-    LogInfo("TCP packet failed");
-    throw e;
-  }
-
 }
 
 // return the size of the packet or 0 if no packet is available
@@ -133,13 +125,8 @@ NetAction* ActionReader::UDPReadAction(Uint8* data, int len) {
   unsigned int v_size;
   unsigned int v_cmdStart;
 
-  try {
-    if( (v_size = ActionReader::getSubPacketSize(data, len, v_cmdStart)) > 0) {
-      return NetAction::newNetAction(((char*)data)+v_cmdStart, v_size);
-    }
-  } catch(Exception &e) {
-    LogInfo("UDP packet failed");
-    throw e;
+  if( (v_size = ActionReader::getSubPacketSize(data, len, v_cmdStart)) > 0) {
+    return NetAction::newNetAction(((char*)data)+v_cmdStart, v_size);
   }
 
   throw Exception("net: nasty client detected (3)");

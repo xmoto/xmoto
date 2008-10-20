@@ -97,6 +97,7 @@ int ClientListenerThread::realThreadFunction() {
 	      v_netAction = ActionReader::UDPReadAction(v_udpReceiptPacket->data, v_udpReceiptPacket->len);
 	      m_netClient->addNetAction(v_netAction);
 	    } catch(Exception &e) {
+	      // ok, forget it, probably a bad packet received
 	      LogError("%s", e.getMsg().c_str());
 	    }
 
