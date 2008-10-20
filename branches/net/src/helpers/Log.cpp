@@ -90,3 +90,11 @@ void Logger::LogLevelMsg(LogLevel i_level, const char *pcFmt, ...) {
   }
 
 }
+
+void Logger::LogData(void* data, unsigned int len) {
+  fprintf(m_fd, "Packet:\n");
+  fflush(m_fd);
+  fwrite(data, len, 1, m_fd);
+  fflush(m_fd);
+  fprintf(m_fd, "==========\n");
+}
