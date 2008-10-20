@@ -113,9 +113,9 @@ unsigned int ActionReader::getSubPacketSize(void* data, unsigned int len, unsign
 
   if(i == XM_MAX_PACKET_SIZE_DIGITS+1) {
     LogWarning("net: nasty client detected (2)");
-    LogWarning("net: data length = %u", len);
-    data[len-1] = '\0';
-    LogWarning("net: data beginning = %s", data);
+    LogDebug("net: data length = %u", len);
+    ((char*)data)[len-1] = '\0';
+    LogDebug("net: data beginning = %s", data);
     throw Exception("net: nasty client detected");
   }
 
