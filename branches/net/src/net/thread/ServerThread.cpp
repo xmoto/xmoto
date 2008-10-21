@@ -192,7 +192,7 @@ int ServerThread::realThreadFunction() {
 	      	manageClientTCP(i);
 		i++;
 	      } catch(Exception &e) {
-	      	LogInfo("server: host disconnected: %s:%d (TCP)",
+		LogInfo("server: bad TCP packet received by client %u (%s:%d)", i,
 	      		XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
 	      		SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port));
 	      	removeClient(i);
@@ -347,7 +347,8 @@ void ServerThread::manageClientUDP() {
 	  delete v_netAction;
 	} catch(Exception &e) {
 	  // ok, a bad packet received, forget it
-	  LogInfo("bad udp packet received");
+	  LogWarning("server: bad UDP packet received by client %u (%s:%i)", i,
+		     XMNet::getIp(&(m_udpPacket->address)).c_str(), SDLNet_Read16(&(m_udpPacket->address.port)));
 	}
 	break; // stop : only one client
       }
@@ -372,6 +373,8 @@ void ServerThread::manageClientUDP() {
 	}
       } catch(Exception &e) {
 	/* forget this bad packet */
+	LogWarning("server: bad anonym UDP packet received by %s:%i",
+		   XMNet::getIp(&(m_udpPacket->address)).c_str(), SDLNet_Read16(&(m_udpPacket->address.port)));
       }
     }
   }
@@ -469,7 +472,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       if(m_clients[i_client]->name() == "") {
 	throw Exception("Invalid name provided");
       }
-      //LogInfo("Client[%i]'s name is \"%s\"", i_client, m_clients[i_client]->name().c_str());
+      LogInfo("Client[%i]'s name is \"%s\"", i_client, m_clients[i_client]->name().c_str());
 
       // send new client to other clients
       NA_changeClients nacc;
