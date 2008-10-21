@@ -248,7 +248,7 @@ private:
   void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
   void _RenderZone(Zone *i_zone);
 
-  void _RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i);
+  void _RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float i_textOffset);
 
   void _RenderDebugInfo(void);
 

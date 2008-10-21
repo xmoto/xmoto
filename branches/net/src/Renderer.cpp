@@ -983,7 +983,15 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
     pDrawlib->setClipRect(0,0,pDrawlib->getDispWidth(),pDrawlib->getDispHeight());
   }
 
-void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
+void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float i_textOffset) {
+  //if(m_screenBBox.getBMin().x < i_ghost->getState()->CenterP.x &&
+  //   m_screenBBox.getBMax().x > i_ghost->getState()->CenterP.x &&
+  //   m_screenBBox.getBMin().y < i_ghost->getState()->CenterP.y &&
+  //   m_screenBBox.getBMax().y > i_ghost->getState()->CenterP.y) {
+  //  m_nGhostInfoTrans = 255;
+  //  m_fNextGhostInfoUpdate = 0.0f;
+  //}
+
   /* Render ghost - ugly mode? */
   if(XMSession::instance()->ugly() == false) {
     if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
@@ -1010,7 +1018,7 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
  
     if(i_ghost->getDescription() != "") {
       if(m_nGhostInfoTrans > 0 && XMSession::instance()->showGhostsInfos()) {
-	_RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i*3.0,-1.5f),
+	_RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i_textOffset, -1.0f),
 			  i_ghost->getDescription(),
 			  MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
       }
@@ -1106,18 +1114,31 @@ int GameRenderer::nbParticlesRendered() const {
     /* ghosts */
     bool v_found = false;
     int v_found_i = 0;
+    float v_textOffset, v_found_textOffset;
+
     for(unsigned int i=0; i<i_scene->Ghosts().size(); i++) {
       Ghost* v_ghost = i_scene->Ghosts()[i];
+      v_textOffset = 0.0;
+
+      for(unsigned int j=0; j<i; j++) {
+	if(fabs(i_scene->Ghosts()[j]->getState()->CenterP.x - v_ghost->getState()->CenterP.x) < 2.0 &&
+	   fabs(i_scene->Ghosts()[j]->getState()->CenterP.y - v_ghost->getState()->CenterP.y) < 2.0
+	   ) {
+	  v_textOffset += 2.0;
+	}
+      }
+
       if(v_ghost != pCamera->getPlayerToFollow()) {
-	_RenderGhost(i_scene, v_ghost, i);
+	_RenderGhost(i_scene, v_ghost, i, v_textOffset);
       } else {
 	v_found = true;
 	v_found_i = i;
+	v_found_textOffset = v_textOffset;
       }
     }
     /* draw the player to follow over the others */
     if(v_found) {
-      _RenderGhost(i_scene, i_scene->Ghosts()[v_found_i], v_found_i);
+      _RenderGhost(i_scene, i_scene->Ghosts()[v_found_i], v_found_i, v_found_textOffset);
     }
 
     /* ... followed by the bike ... */
@@ -1161,7 +1182,7 @@ int GameRenderer::nbParticlesRendered() const {
     if(i_scene->getTime() > m_fNextGhostInfoUpdate) {
       if(m_nGhostInfoTrans > 0) {
 	if(m_fNextGhostInfoUpdate > 1.5f) {
-	  m_nGhostInfoTrans-=16;
+	  m_nGhostInfoTrans-=8;
 	}
 	m_fNextGhostInfoUpdate += 0.025f;
       }
