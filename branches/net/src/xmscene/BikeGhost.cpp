@@ -34,6 +34,7 @@ Ghost::Ghost(PhysicsSettings* i_physicsSettings,
 	     const TColor& i_uglyColorFilter)
 : Biker(i_physicsSettings, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
   m_diffToPlayer = 0.0;
+  m_reference = false;
 }
 
 Ghost::~Ghost() {
@@ -45,6 +46,14 @@ float Ghost::diffToPlayer() const {
 
 bool Ghost::getRenderBikeFront() {
   return true;
+}
+
+void Ghost::setReference(bool i_value) {
+  m_reference = i_value;
+}
+
+bool Ghost::isReference() const {
+  return m_reference;
 }
 
 void Ghost::setInfo(const std::string& i_info) {

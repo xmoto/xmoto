@@ -531,7 +531,7 @@ void MotoGame::cleanPlayers() {
     return v_biker;
   }
 
-  FileGhost* MotoGame::addGhostFromFile(std::string i_ghostFile, const std::string& i_info,
+  FileGhost* MotoGame::addGhostFromFile(std::string i_ghostFile, const std::string& i_info, bool i_isReference,
 					Theme *i_theme, BikerTheme* i_bikerTheme,
 					const TColor& i_filterColor,
 					const TColor& i_filterUglyColor) {
@@ -546,6 +546,7 @@ void MotoGame::cleanPlayers() {
 			    i_filterColor, i_filterUglyColor);
     v_ghost->setPlaySound(false);
     v_ghost->setInfo(i_info);
+    v_ghost->setReference(i_isReference);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
     m_ghosts.push_back(v_ghost);
     return v_ghost;
@@ -1079,7 +1080,7 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
 
       /* take the more */
       for(unsigned int i=0; i<m_ghosts.size(); i++) {
-	if(m_ghosts[i]->diffToPlayerAvailable()) {
+	if(m_ghosts[i]->diffToPlayerAvailable() && m_ghosts[i]->isReference()) {
 	  if(v_diffAvailable == false || m_ghosts[i]->diffToPlayer() > v_diffToGhost) {
 	    v_diffToGhost = m_ghosts[i]->diffToPlayer();
 	    v_diffAvailable = true;

@@ -37,9 +37,13 @@ class Ghost : public Biker {
   virtual bool getRenderBikeFront();
   void setInfo(const std::string& i_info);
 
+  void setReference(bool i_value);
+  bool isReference() const;
+  
   protected:
   float m_diffToPlayer; /* time diff between the ghost and the player */
   std::string m_info;
+  bool m_reference;
 };
 
 class FileGhost : public Ghost {

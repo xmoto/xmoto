@@ -593,7 +593,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
       if(v_replay_BESTOFROOM[i] != "" && v_exists == false) {
 	LogInfo("add ghost %s", v_replay_BESTOFROOM[i].c_str());
 	i_motogame->addGhostFromFile(v_replay_BESTOFROOM[i],
-				     xmDatabase::instance("main")->webrooms_getName(XMSession::instance()->idRoom(i)),
+				     xmDatabase::instance("main")->webrooms_getName(XMSession::instance()->idRoom(i)), i==0,
 				     Theme::instance(), Theme::instance()->getGhostTheme(),
 				     TColor(255,255,255,0),
 				     TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
@@ -621,7 +621,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
 
       if(v_exists == false) {
 	LogDebug("add ghost %s", v_replay_MYBEST.c_str());
-	i_motogame->addGhostFromFile(v_replay_MYBEST, GAMETEXT_GHOST_BEST,
+	i_motogame->addGhostFromFile(v_replay_MYBEST, GAMETEXT_GHOST_BEST, true,
 				     i_theme, i_theme->getGhostTheme(),
 				     TColor(85,255,255,0),
 				     TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
@@ -649,7 +649,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
 
       if(v_replay_THEBEST != v_replay_MYBEST && v_exists == false) { /* don't add two times the same ghost */
 	LogDebug("add ghost %s", v_replay_THEBEST.c_str());
-	i_motogame->addGhostFromFile(v_replay_THEBEST, GAMETEXT_GHOST_LOCAL,
+	i_motogame->addGhostFromFile(v_replay_THEBEST, GAMETEXT_GHOST_LOCAL, false,
 				     i_theme, i_theme->getGhostTheme(),
 				     TColor(255,200,140,0),
 				     TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),

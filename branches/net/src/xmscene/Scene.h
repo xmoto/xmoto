@@ -208,7 +208,7 @@ public:
   ReplayBiker* addReplayFromFile(std::string i_ghostFile,
 				 Theme *i_theme, BikerTheme* i_bikerTheme,
 				 bool i_enableEngineSound);
-  FileGhost* addGhostFromFile(std::string i_ghostFile, const std::string& i_info,
+  FileGhost* addGhostFromFile(std::string i_ghostFile, const std::string& i_info, bool i_isReference,
 			      Theme *i_theme, BikerTheme* i_bikerTheme,
 			      const TColor& i_filterColor,
 			      const TColor& i_filterUglyColor);
