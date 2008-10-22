@@ -246,6 +246,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_GHOST_STRATEGY_MYBEST  _("The best of my replays (on this computer)")
 #define GAMETEXT_GHOST_STRATEGY_THEBEST _("The best of the replays (on this computer)")
 #define GAMETEXT_GHOSTOF              _("Ghost of %s")
+#define GAMETEXT_WEBGHOSTOF           _("Web ghost of %s")
 #define GAMETEXT_GHOSTTAB             _("Ghost")
 #define GAMETEXT_HELP                 _("Help")
 

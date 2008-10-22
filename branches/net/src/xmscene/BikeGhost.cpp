@@ -347,13 +347,13 @@ void NetGhost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
 
 std::string NetGhost::getQuickDescription() const {
   char c_tmp[256];
-  snprintf(c_tmp, 256, GAMETEXT_GHOSTOF, m_info.c_str()); 
+  snprintf(c_tmp, 256, GAMETEXT_WEBGHOSTOF, m_info.c_str()); 
   return std::string(c_tmp);
 }
 
 std::string NetGhost::getDescription() const {
   char c_tmp[256];
-  snprintf(c_tmp, 256, GAMETEXT_GHOSTOF, m_info.c_str()); 
+  snprintf(c_tmp, 256, GAMETEXT_WEBGHOSTOF, m_info.c_str()); 
   return std::string(c_tmp);
 }
 
