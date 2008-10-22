@@ -178,9 +178,6 @@ private:
 
   bool m_allowGhostEffect; // ask to not do the ghost effect
 
-  float m_fNextGhostInfoUpdate;
-  int m_nGhostInfoTrans;
-
   float m_previousEngineSpeed;
   float m_previousEngineLinVel;
 

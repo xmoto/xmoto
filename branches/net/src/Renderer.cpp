@@ -51,6 +51,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLibOpenGL.h"
 #endif
 
+#define GHOST_INFO_DURATION  3.0
+#define GHOST_INFO_FADE_TIME 0.5
+#define GHOST_INFO_INSCREEN_MARGE 2.0
+
   /* to sort blocks on their texture */
   struct AscendingTextureSort {
     bool operator() (Block* b1, Block* b2) {
@@ -131,8 +135,6 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
   m_screenBBox.reset();
   m_layersBBox.reset();
 
-  m_fNextGhostInfoUpdate = 0.0f;
-  m_nGhostInfoTrans      = 255;
   m_sizeMultOfEntitiesToTake       = 1.0;
   m_sizeMultOfEntitiesWhichMakeWin = 1.0;
 
@@ -984,13 +986,20 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
   }
 
 void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float i_textOffset) {
-  //if(m_screenBBox.getBMin().x < i_ghost->getState()->CenterP.x &&
-  //   m_screenBBox.getBMax().x > i_ghost->getState()->CenterP.x &&
-  //   m_screenBBox.getBMin().y < i_ghost->getState()->CenterP.y &&
-  //   m_screenBBox.getBMax().y > i_ghost->getState()->CenterP.y) {
-  //  m_nGhostInfoTrans = 255;
-  //  m_fNextGhostInfoUpdate = 0.0f;
-  //}
+  float v_diffInfoTextTime;
+  int v_textTrans;
+
+  if(m_screenBBox.getBMin().x+GHOST_INFO_INSCREEN_MARGE < i_ghost->getState()->CenterP.x &&
+     m_screenBBox.getBMax().x-GHOST_INFO_INSCREEN_MARGE > i_ghost->getState()->CenterP.x &&
+     m_screenBBox.getBMin().y+GHOST_INFO_INSCREEN_MARGE < i_ghost->getState()->CenterP.y &&
+     m_screenBBox.getBMax().y-GHOST_INFO_INSCREEN_MARGE > i_ghost->getState()->CenterP.y) {
+    i_scene->getCamera()->setGhostIn(i);
+  } else if(m_screenBBox.getBMin().x-GHOST_INFO_INSCREEN_MARGE > i_ghost->getState()->CenterP.x ||
+	    m_screenBBox.getBMax().x+GHOST_INFO_INSCREEN_MARGE < i_ghost->getState()->CenterP.x ||
+            m_screenBBox.getBMin().y-GHOST_INFO_INSCREEN_MARGE > i_ghost->getState()->CenterP.y ||
+            m_screenBBox.getBMax().y+GHOST_INFO_INSCREEN_MARGE < i_ghost->getState()->CenterP.y) {
+    i_scene->getCamera()->setGhostOut(i);
+  }
 
   /* Render ghost - ugly mode? */
   if(XMSession::instance()->ugly() == false) {
@@ -1017,10 +1026,27 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float 
     }
  
     if(i_ghost->getDescription() != "") {
-      if(m_nGhostInfoTrans > 0 && XMSession::instance()->showGhostsInfos()) {
-	_RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i_textOffset, -1.0f),
-			  i_ghost->getDescription(),
-			  MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
+      if(XMSession::instance()->showGhostsInfos()) {
+	if(i_scene->getCamera()->isGhostIn(i)) {
+	  v_diffInfoTextTime = GameApp::getXMTime() - i_scene->getCamera()->getGhostLastIn(i);
+
+	  if(v_diffInfoTextTime < GHOST_INFO_FADE_TIME + GHOST_INFO_DURATION + GHOST_INFO_FADE_TIME) {
+
+	    if(v_diffInfoTextTime < GHOST_INFO_FADE_TIME) {
+	      v_textTrans = ((v_diffInfoTextTime-GHOST_INFO_FADE_TIME)*255) / GHOST_INFO_FADE_TIME;
+	    }
+	    else if(v_diffInfoTextTime >= GHOST_INFO_FADE_TIME &&
+		    v_diffInfoTextTime < GHOST_INFO_FADE_TIME + GHOST_INFO_DURATION) {
+	      v_textTrans = 255;
+	    } else {
+	      v_textTrans = 255 - (((v_diffInfoTextTime-GHOST_INFO_FADE_TIME-GHOST_INFO_DURATION)*255) / GHOST_INFO_FADE_TIME);
+	    }
+	    
+	    _RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i_textOffset, -1.0f),
+			      i_ghost->getDescription(),
+			      MAKE_COLOR(255,255,255, v_textTrans));
+	  }
+	}
       }
     }
   }
@@ -1175,16 +1201,6 @@ int GameRenderer::nbParticlesRendered() const {
 	}
       } catch(Exception &e) {
 	i_scene->gameMessage("Unable to render the biker", true, 50);
-      }
-    }
-
-    /* ghost information */
-    if(i_scene->getTime() > m_fNextGhostInfoUpdate) {
-      if(m_nGhostInfoTrans > 0) {
-	if(m_fNextGhostInfoUpdate > 1.5f) {
-	  m_nGhostInfoTrans-=8;
-	}
-	m_fNextGhostInfoUpdate += 0.025f;
       }
     }
     

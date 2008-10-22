@@ -488,3 +488,39 @@ void Camera::allowActiveZoom(bool i_value) {
 
   initZoom();
 }
+
+void Camera::clearGhostsVisibility() {
+  m_ghostVisibility.clear();
+}
+
+void Camera::checkGhostVisibilityExists(unsigned int i) {
+  CameraGhostVisibility cgv;
+
+  for(unsigned int j=m_ghostVisibility.size(); j<=i; j++) {
+    cgv.isIn = false;
+    m_ghostVisibility.push_back(cgv);
+  }
+}
+
+void Camera::setGhostIn(unsigned int i) {
+  checkGhostVisibilityExists(i);
+
+  if(m_ghostVisibility[i].isIn == false) {
+    m_ghostVisibility[i].lastIn = GameApp::getXMTime();
+  }
+  m_ghostVisibility[i].isIn   = true;
+}
+
+void Camera::setGhostOut(unsigned int i) {
+  checkGhostVisibilityExists(i);
+  m_ghostVisibility[i].isIn = false;
+}
+
+float Camera::getGhostLastIn(unsigned int i) {
+  checkGhostVisibilityExists(i);
+  return m_ghostVisibility[i].lastIn;
+}
+
+bool Camera::isGhostIn(unsigned int i) {
+  return m_ghostVisibility[i].isIn;
+}
