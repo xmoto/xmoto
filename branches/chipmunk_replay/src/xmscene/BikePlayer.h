@@ -56,7 +56,7 @@ class PlayerBiker : public Biker {
 
   void updateToTime(int i_time, int i_timeStep,
 		    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-		    MotoGame *i_motogame);
+		    Scene* i_motogame);
   void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
   BikeController* getControler();
 

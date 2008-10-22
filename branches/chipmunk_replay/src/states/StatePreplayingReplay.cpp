@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Replay.h"
 #include "../xmscene/Camera.h"
 #include "../xmscene/BikePlayer.h"
+#include "ReplayManager.h"
 
 StatePreplayingReplay::StatePreplayingReplay(const std::string i_replay, bool i_sameLevel)
 : StatePreplaying("", i_sameLevel) {
@@ -56,16 +57,16 @@ void StatePreplayingReplay::initUniverse() {
 
 void StatePreplayingReplay::preloadLevels() {
   for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-    m_universe->getScenes()[i]->prePlayLevel(NULL, false);
+    m_universe->getScenes()[i]->prePlayLevel(false);
   }
 }
 
 void StatePreplayingReplay::initPlayers() {
   if(m_universe->getScenes().size() > 0) {
-    m_replayBiker = m_universe->getScenes()[0]->addReplayFromFile(m_replay,
-								  Theme::instance(),
-								  Theme::instance()->getPlayerTheme(),
-								  XMSession::instance()->enableEngineSound());
+    m_replayBiker = (ReplayBiker*)ReplayManager::instance()->addPlayingReplay(m_universe->getScenes()[0], true,
+									      m_replay, "",
+									      Theme::instance(), Theme::instance()->getPlayerTheme(),
+									      TColor(), TColor());
     m_universe->getScenes()[0]->getCamera()->setPlayerToFollow(m_replayBiker);
     m_universe->getScenes()[0]->getCamera()->setScroll(false, m_universe->getScenes()[0]->getGravity());
   }

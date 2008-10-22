@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 #include "xmscene/Scene.h"
 
-class MotoGame;
+class Scene;
 class XMMotoGameHooks;
 
 class XMMotoGameHooks : public MotoGameHooks {
@@ -41,7 +41,6 @@ public:
   ~Universe();
 
   std::vector<Scene*>& getScenes();
-  Scene* getScene(std::string sceneId);
   void initPlay(int i_nbPlayer, bool i_multiScenes);
 
   Replay* getCurrentReplay();

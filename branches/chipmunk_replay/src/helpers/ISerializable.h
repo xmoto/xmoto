@@ -24,15 +24,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 
 // T must have a method 'int getTime()'
-template <typename T> class ISerializable {
+template <class T> class ISerializable {
 public:
   ISerializable() {
     initReplaying();
   }
   virtual ~ISerializable() {
-    std::vector<T*>::iterator it = m_states.begin();
+    // gcc doesn't like std::vector<T*>::iterator
+    std::vector<void*>::iterator it = m_states.begin();
     while(it != m_states.end()) {
-      delete (*it);
+      delete (T*)(*it);
       ++it;
     }
     m_states.erase();

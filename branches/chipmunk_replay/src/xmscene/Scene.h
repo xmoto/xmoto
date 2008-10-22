@@ -18,8 +18,8 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __MOTOGAME_H__
-#define __MOTOGAME_H__
+#ifndef __SCENE_H__
+#define __SCENE_H__
 
 #include "helpers/VMath.h"
 #include "Collision.h"
@@ -351,14 +351,14 @@ private:
 
 class MotoGameOnBikerHooks : public OnBikerHooks {
 public:
-  MotoGameOnBikerHooks(MotoGame* i_motoGame, int i_playerNumber);
+  MotoGameOnBikerHooks(Scene* i_motoGame, int i_playerNumber);
   virtual ~MotoGameOnBikerHooks();
   void onSomersaultDone(bool i_counterclock);
   void onWheelTouches(int i_wheel, bool i_touch);
   void onHeadTouches();
 
 private:
-  MotoGame* m_motoGame;
+  Scene* m_motoGame;
   int m_playerNumber;
 };
 

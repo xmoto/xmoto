@@ -70,7 +70,7 @@ Ghost::~Ghost() {
   }
 }
 
-void Ghost::execReplayEvents(int i_time, MotoGame *i_motogame) {
+void Ghost::execReplayEvents(int i_time, Scene *i_motogame) {
   std::vector<RecordedGameEvent *> *v_replayEvents;
   v_replayEvents = m_replay->getEvents();
   
@@ -178,7 +178,7 @@ void Ghost::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i
 
 void Ghost::updateToTime(int i_time, int i_timeStep,
 			 CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-			 MotoGame *i_motogame) {
+			 Scene* i_motogame) {
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
   DriveDir v_previousDir = m_bikeState.Dir;
 

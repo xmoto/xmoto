@@ -24,6 +24,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 #include "helpers/Factory.h"
 #include "helpers/Singleton.h"
+#include "DBuffer.h"
+#include "helpers/ISerializable.h"
+#include "helpers/Log.h"
+
+class Scene;
+class FileHandle;
 
 class SerializerFactory : public Factory, public Singleton<SerializerFactory> {
   friend class Singleton<SerializerFactory>;
@@ -106,16 +112,16 @@ public:
     T* pObjectState;
 
     try {
-      while(buffer.numRemainingBytes() > 0) {
+      while(m_buffer.numRemainingBytes() > 0) {
 	unsigned int nbObjects;
-	buffer >> nbObjects;
+	m_buffer >> nbObjects;
 
 	for(unsigned int i=0; i<nbObjects; i++){
-	  buffer >> id;
+	  m_buffer >> id;
 	  pObject = getObject(id, pScene);
 	  pObjectState = new T;
-	  pObject->unserializeOneState(buffer, *pObjectState);
-	  pObject->addState(pAbjectState);
+	  pObject->unserializeOneState(m_buffer, *pObjectState);
+	  pObject->addState(pObjectState);
 	}
       }
     } catch(Exception& e) {
@@ -129,13 +135,5 @@ protected:
   // throw an exception if the object doesn't exist.
   virtual ISerializable<T>* getObject(std::string id, Scene* pScene) = 0;
 };
-
-
-void ISerializer::registerSerializers()
-{
-  SerializerFactory::instance()->REGISTER_OBJECT("EventSerializer");
-  SerializerFactory::instance()->REGISTER_OBJECT("BlockSerializer");
-  SerializerFactory::instance()->REGISTER_OBJECT("BikerSerializer");
-}
 
 #endif

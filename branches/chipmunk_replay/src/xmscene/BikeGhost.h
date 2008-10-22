@@ -40,7 +40,7 @@ class Ghost : public Biker {
   float diffToPlayer() const;
   virtual void updateToTime(int i_time, int i_timeStep,
 			    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-			    MotoGame *i_motogame);
+			    Scene* i_motogame);
   void setInfo(std::string i_info);
   std::string getQuickDescription() const;
   std::string getDescription() const;
@@ -65,7 +65,7 @@ class Ghost : public Biker {
  /* because we have not the real one, but the one before and the one after */
  std::vector<BikeState*> m_ghostBikeStates;
 
- void execReplayEvents(int i_time, MotoGame *i_motogame);
+ void execReplayEvents(int i_time, Scene* i_motogame);
 };
 
 #endif

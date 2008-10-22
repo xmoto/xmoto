@@ -127,7 +127,7 @@ class GameRenderer : public Singleton<GameRenderer> {
 public:
   void init(DrawLib* i_drawLib); /* only called at start-up, and not per-level */
   void shutdown(void);
-  void render(MotoGame* i_scene);
+  void render(Scene* i_scene);
 
   void prepareForNewLevel(Universe* i_universe);
   void unprepareForNewLevel(void);
@@ -149,12 +149,12 @@ public:
   void setShowEngineCounter(bool i_value);
   bool showMinimap() const;
   void showReplayHelp(float p_speed, bool bAllowRewind);
-  void switchFollow(MotoGame* i_scene);
+  void switchFollow(Scene* i_scene);
 
   unsigned int currentRegistrationStage() const;
 
 private:
-  void renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int nHeight);
+  void renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHeight);
   void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed, float pLinVel = -1);
       
   std::string getBestTime(void) {return m_bestTime;}
@@ -213,8 +213,8 @@ private:
   void renderEngineCounterNeedle(int nWidth, int nHeight, Vector2f center, float value);
 	
 	
-  void _RenderSprites(MotoGame* i_scene, bool bForeground,bool bBackground);
-  void _RenderSprite(MotoGame* i_scene, Entity *pSprite, float i_sizeMult = 1.0);
+  void _RenderSprites(Scene* i_scene, bool bForeground,bool bBackground);
+  void _RenderSprite(Scene* i_scene, Entity *pSprite, float i_sizeMult = 1.0);
   void _RenderBike(Biker* i_biker, bool i_renderBikeFront = true,
 		   const TColor&  i_filterColor = TColor(255, 255, 255, 0),
 		   const TColor&  i_filterUglyColor = TColor(255, 255, 255, 0));
@@ -228,24 +228,24 @@ private:
 		      DriveDir i_direction,
 		      int i_90_rotation = 0
 		      );
-  void _RenderBlocks(MotoGame* i_scene);
+  void _RenderBlocks(Scene* i_scene);
   void _RenderBlock(Block* block);
   void _RenderBlockEdges(Block* block);
-  void _RenderDynamicBlocks(MotoGame* i_scene, bool bBackground=false);
-  void _RenderBackground(MotoGame* i_scene);
-  void _RenderLayers(MotoGame* i_scene, bool renderFront);
-  void _RenderLayer(MotoGame* i_scene, int layer);
-  void _RenderSky(MotoGame* i_scene, float i_zoom, float i_offset, const TColor& i_color,
+  void _RenderDynamicBlocks(Scene* i_scene, bool bBackground=false);
+  void _RenderBackground(Scene* i_scene);
+  void _RenderLayers(Scene* i_scene, bool renderFront);
+  void _RenderLayer(Scene* i_scene, int layer);
+  void _RenderSky(Scene* i_scene, float i_zoom, float i_offset, const TColor& i_color,
 		  float i_driftZoom, const TColor &i_driftColor, bool i_drifted);
-  void _RenderGameMessages(MotoGame* i_scene); 
-  void _RenderGameStatus(MotoGame* i_scene);
-  void _RenderParticles(MotoGame* i_scene, bool bFront=true);
+  void _RenderGameMessages(Scene* i_scene); 
+  void _RenderGameStatus(Scene* i_scene);
+  void _RenderParticles(Scene* i_scene, bool bFront=true);
   void _RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c);
-  void _RenderParticle(MotoGame* i_scene, ParticlesSource *i_source, unsigned int sprite=0);
+  void _RenderParticle(Scene* i_scene, ParticlesSource *i_source, unsigned int sprite=0);
   void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
   void _RenderZone(Zone *i_zone);
 
-  void _RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i);
+  void _RenderGhost(Scene* i_scene, Biker* i_ghost, int i);
 
   void _RenderDebugInfo(void);
 
@@ -257,16 +257,16 @@ private:
   void _RenderCircle(unsigned int nSteps,Color CircleColor,const Vector2f &C,float fRadius);
   void _deleteGeoms(std::vector<Geom *>& geom, bool useFree=false);
 
-  void renderTimePanel(MotoGame* i_scene);
-  void renderReplayHelpMessage(MotoGame* i_scene);
+  void renderTimePanel(Scene* i_scene);
+  void renderReplayHelpMessage(Scene* i_scene);
 
   Texture* loadTexture(std::string textureName);
   Texture* loadTextureEdge(std::string textureName);
   int  edgeGeomExists(Block* pBlock, std::string texture);
   void initCameras(Universe* i_universe);
   int  loadBlock(Block* pBlock, Universe* i_universe, unsigned int currentScene, int sameSceneAs, int blockIndex);
-  int  loadBlockGeom(Block* pBlock, std::vector<Geom *>* pGeoms, Texture* pTexture, Vector2f Center, MotoGame* pScene);
-  int  loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene);
+  int  loadBlockGeom(Block* pBlock, std::vector<Geom *>* pGeoms, Texture* pTexture, Vector2f Center, Scene* pScene);
+  int  loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene);
   void calculateEdgePosition(Block* pBlock,
 			     BlockVertex* vertexA1,
 			     BlockVertex* vertexB1,

@@ -60,7 +60,7 @@ public:
 
 protected:
   ISerializable<BlockState>* getObject(std::string id, Scene* pScene);
-}
+};
 
 
 class ConvexBlockVertex {
@@ -339,7 +339,7 @@ private:
   EdgeDrawMethod  stringToEdge(std::string method);
   CollisionMethod stringToColMethod(std::string method);
 
-  void applyState(T* state);
+  void applyState(BlockState* state);
 };
 
 #endif /* __BLOCK_H__ */

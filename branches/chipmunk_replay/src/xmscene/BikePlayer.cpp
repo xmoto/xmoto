@@ -99,7 +99,7 @@ std::string PlayerBiker::getQuickDescription() const {
 
 void PlayerBiker::updateToTime(int i_time, int i_timeStep,
 			       CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-			       MotoGame *i_motogame) {
+			       Scene* i_motogame) {
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
 
   if(isFinished()) {

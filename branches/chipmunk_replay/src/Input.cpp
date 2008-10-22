@@ -648,7 +648,7 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
   /*===========================================================================
   Add script key hook
   ===========================================================================*/  
-  void InputHandler::addScriptKeyHook(MotoGame *pGame,const std::string &basicKeyName,const std::string &FuncName) {
+  void InputHandler::addScriptKeyHook(Scene* pGame,const std::string &basicKeyName,const std::string &FuncName) {
     if(m_nNumScriptKeyHooks < MAX_SCRIPT_KEY_HOOKS) {
       m_ScriptKeyHooks[m_nNumScriptKeyHooks].FuncName = FuncName;
       m_ScriptKeyHooks[m_nNumScriptKeyHooks].nKey = XMKey(basicKeyName, true);

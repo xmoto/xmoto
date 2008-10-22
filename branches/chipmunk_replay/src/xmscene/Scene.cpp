@@ -286,7 +286,7 @@ void Scene::cleanPlayers() {
       m_chipmunkWorld->updateWheelsPosition(m_players);
     }
 
-    executeEvents(i_recordedReplay);
+    executeEvents();
 
     /* save the replay */
     if(i_recordedReplay != NULL) {
@@ -360,8 +360,8 @@ void Scene::cleanPlayers() {
 
   /*===========================================================================
     Prepare the specified level for playing through this game object
-    ===========================================================================*/
-  void Scene::prePlayLevel(bool i_playEvents) {
+    ===========================================================================*/ 
+ void Scene::prePlayLevel(bool i_playEvents) {
     m_playEvents = i_playEvents;
     /* load the level if not */
     if(m_pLevelSrc->isFullyLoaded() == false) {
@@ -477,10 +477,11 @@ void Scene::cleanPlayers() {
 
   ReplayBiker* Scene::addReplayFromFile(std::string i_ghostFile,
 					Theme *i_theme, BikerTheme* i_bikerTheme,
-					bool i_enableEngineSound) {
+					) {
     ReplayBiker* v_biker = NULL;
+
     v_biker = new ReplayBiker(this, i_ghostFile, i_theme, i_bikerTheme);
-    v_biker->setPlaySound(i_enableEngineSound);
+    v_biker->setPlaySound(XMSession::instance()->enableEngineSound());
     m_players.push_back(v_biker);
     return v_biker;
   }

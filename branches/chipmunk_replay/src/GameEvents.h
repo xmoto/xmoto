@@ -109,10 +109,10 @@ class MotoGameEvent {
   MotoGameEvent(int p_eventTime);
   virtual ~MotoGameEvent();
 
-  virtual void doAction(MotoGame *p_pMotoGame)          = 0;
+  virtual void doAction(Scene *p_pMotoGame)          = 0;
   virtual void serialize(DBuffer &Buffer)               = 0;
   virtual void unserialize(DBuffer &Buffer) = 0;
-  virtual void revert(MotoGame *p_pMotoGame);
+  virtual void revert(Scene *p_pMotoGame);
   virtual GameEventType getType()                       = 0;
 
   virtual std::string toString() = 0;
@@ -130,7 +130,7 @@ class MGE_PlayersDie : public MotoGameEvent {
   MGE_PlayersDie(int p_eventTime, bool p_bKilledByWrecker);
   ~MGE_PlayersDie();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -148,7 +148,7 @@ class MGE_PlayerDies : public MotoGameEvent {
   MGE_PlayerDies(int p_eventTime, bool p_bKilledByWrecker, int i_player);
   ~MGE_PlayerDies();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -167,7 +167,7 @@ class MGE_PlayersEnterZone : public MotoGameEvent {
   MGE_PlayersEnterZone(int p_eventTime, Zone *p_zone);
   ~MGE_PlayersEnterZone();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -185,7 +185,7 @@ class MGE_PlayerEntersZone : public MotoGameEvent {
   MGE_PlayerEntersZone(int p_eventTime, Zone *p_zone, int i_player);
   ~MGE_PlayerEntersZone();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -204,7 +204,7 @@ class MGE_PlayersLeaveZone : public MotoGameEvent {
   MGE_PlayersLeaveZone(int p_eventTime, Zone *p_zone);
   ~MGE_PlayersLeaveZone();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -222,7 +222,7 @@ class MGE_PlayerLeavesZone : public MotoGameEvent {
   MGE_PlayerLeavesZone(int p_eventTime, Zone *p_zone, int i_player);
   ~MGE_PlayerLeavesZone();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -241,7 +241,7 @@ class MGE_PlayersToucheEntity : public MotoGameEvent {
   MGE_PlayersToucheEntity(int p_eventTime, std::string p_entityID, bool p_bTouchedWithHead);
   ~MGE_PlayersToucheEntity();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -260,7 +260,7 @@ class MGE_PlayerTouchesEntity : public MotoGameEvent {
   MGE_PlayerTouchesEntity(int p_eventTime, std::string p_entityID, bool p_bTouchedWithHead, int i_player);
   ~MGE_PlayerTouchesEntity();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -280,10 +280,10 @@ class MGE_EntityDestroyed : public MotoGameEvent {
   MGE_EntityDestroyed(int p_eventTime, std::string i_entityId, EntitySpeciality i_entityType, Vector2f i_entityPosition, float i_entitySize);
   ~MGE_EntityDestroyed();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
-  void revert(MotoGame *p_pMotoGame);
+  void revert(Scene *p_pMotoGame);
   static GameEventType SgetType();
   GameEventType getType();
 
@@ -303,7 +303,7 @@ class MGE_ClearMessages : public MotoGameEvent {
   MGE_ClearMessages(int p_eventTime);
   ~MGE_ClearMessages();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -320,7 +320,7 @@ class MGE_PlaceInGameArrow : public MotoGameEvent {
   MGE_PlaceInGameArrow(int p_eventTime, float p_x, float p_y, float p_angle);
   ~MGE_PlaceInGameArrow();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -339,7 +339,7 @@ class MGE_PlaceScreenarrow : public MotoGameEvent {
   MGE_PlaceScreenarrow(int p_eventTime, float p_x, float p_y, float p_angle);
   ~MGE_PlaceScreenarrow();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -357,7 +357,7 @@ class MGE_HideArrow : public MotoGameEvent {
   MGE_HideArrow(int p_eventTime);
   ~MGE_HideArrow();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -374,7 +374,7 @@ class MGE_Message : public MotoGameEvent {
   MGE_Message(int p_eventTime, std::string p_message);
   ~MGE_Message();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -392,7 +392,7 @@ class MGE_MoveBlock : public MotoGameEvent {
   MGE_MoveBlock(int p_eventTime, std::string p_blockID, float p_x, float p_y);
   ~MGE_MoveBlock();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -411,7 +411,7 @@ class MGE_SetPhysicsBlockPos : public MotoGameEvent {
   MGE_SetPhysicsBlockPos(int p_eventTime, std::string p_blockID, float p_x, float p_y);
   ~MGE_SetPhysicsBlockPos();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -430,7 +430,7 @@ class MGE_SetBlockPos : public MotoGameEvent {
   MGE_SetBlockPos(int p_eventTime, std::string p_blockID, float p_x, float p_y);
   ~MGE_SetBlockPos();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -449,7 +449,7 @@ class MGE_SetGravity : public MotoGameEvent {
   MGE_SetGravity(int p_eventTime, float p_x, float p_y);
   ~MGE_SetGravity();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -467,7 +467,7 @@ class MGE_SetPlayersPosition : public MotoGameEvent {
   MGE_SetPlayersPosition(int p_eventTime, float p_x, float p_y, bool p_bRight);
   ~MGE_SetPlayersPosition();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -486,7 +486,7 @@ class MGE_SetPlayerPosition : public MotoGameEvent {
   MGE_SetPlayerPosition(int p_eventTime, float p_x, float p_y, bool p_bRight, int i_player);
   ~MGE_SetPlayerPosition();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -506,7 +506,7 @@ class MGE_AddForceToPlayer : public MotoGameEvent {
   MGE_AddForceToPlayer(int p_eventTime, const Vector2f& i_force, int i_startTime, int i_endTime, int i_player);
   ~MGE_AddForceToPlayer();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -526,7 +526,7 @@ class MGE_SetEntityPos : public MotoGameEvent {
   MGE_SetEntityPos(int p_eventTime, std::string p_entityID, float p_x, float p_y);
   ~MGE_SetEntityPos();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -545,7 +545,7 @@ class MGE_SetBlockCenter : public MotoGameEvent {
   MGE_SetBlockCenter(int p_eventTime, std::string p_blockID, float p_x, float p_y);
   ~MGE_SetBlockCenter();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -564,7 +564,7 @@ class MGE_SetBlockRotation : public MotoGameEvent {
   MGE_SetBlockRotation(int p_eventTime, std::string p_blockID, float p_angle);
   ~MGE_SetBlockRotation();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -587,7 +587,7 @@ class MGE_SetDynamicBlockSelfRotation : public MotoGameEvent {
 				  int   p_endTime);
   ~MGE_SetDynamicBlockSelfRotation();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -613,7 +613,7 @@ class MGE_SetPhysicsBlockSelfRotation : public MotoGameEvent {
                                   int   endTime);
   ~MGE_SetPhysicsBlockSelfRotation();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -638,7 +638,7 @@ class MGE_SetPhysicsBlockTranslation : public MotoGameEvent {
 				 int period, int startTime, int endTime);
   ~MGE_SetPhysicsBlockTranslation();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -667,7 +667,7 @@ class MGE_SetDynamicEntityRotation : public MotoGameEvent {
                                int   p_endTime);
   ~MGE_SetDynamicEntityRotation();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -694,7 +694,7 @@ class MGE_SetDynamicEntitySelfRotation : public MotoGameEvent {
 				  int   p_endTime);
   ~MGE_SetDynamicEntitySelfRotation();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -722,7 +722,7 @@ class MGE_SetDynamicEntityTranslation : public MotoGameEvent {
                                   int   p_endTime);
   ~MGE_SetDynamicEntityTranslation();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -744,7 +744,7 @@ class MGE_SetDynamicEntityNone : public MotoGameEvent {
   MGE_SetDynamicEntityNone(int p_eventTime, std::string p_entityID);
   ~MGE_SetDynamicEntityNone();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -768,7 +768,7 @@ class MGE_SetDynamicBlockRotation : public MotoGameEvent {
                               int   p_endTime);
   ~MGE_SetDynamicBlockRotation();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -798,7 +798,7 @@ class MGE_SetDynamicBlockTranslation : public MotoGameEvent {
                                  int   p_endTime);
   ~MGE_SetDynamicBlockTranslation();
 
-  void doAction(MotoGame* pMotoGame);
+  void doAction(Scene* pMotoGame);
   void serialize(DBuffer& Buffer);
   void unserialize(DBuffer& Buffer);
   static GameEventType SgetType();
@@ -820,7 +820,7 @@ class MGE_SetDynamicBlockNone : public MotoGameEvent {
   MGE_SetDynamicBlockNone(int p_eventTime, std::string p_blockID);
   ~MGE_SetDynamicBlockNone();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -838,7 +838,7 @@ class MGE_CameraMove : public MotoGameEvent {
   MGE_CameraMove(int p_eventTime, float p_moveX, float p_moveY);
   ~MGE_CameraMove();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -856,7 +856,7 @@ class MGE_CameraZoom : public MotoGameEvent {
   MGE_CameraZoom(int p_eventTime, float p_zoom);
   ~MGE_CameraZoom();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -874,7 +874,7 @@ class MGE_PenalityTime : public MotoGameEvent {
   MGE_PenalityTime(int p_eventTime, int p_penatityTime);
   ~MGE_PenalityTime();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -892,7 +892,7 @@ class MGE_CameraRotate : public MotoGameEvent {
   MGE_CameraRotate(int p_eventTime, float p_angle);
   ~MGE_CameraRotate();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -909,7 +909,7 @@ class MGE_CameraAdaptToGravity : public MotoGameEvent {
   MGE_CameraAdaptToGravity(int p_eventTime);
   ~MGE_CameraAdaptToGravity();
 
-  void doAction(MotoGame *p_pMotoGame);
+  void doAction(Scene *p_pMotoGame);
   void serialize(DBuffer &Buffer);
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
@@ -926,7 +926,7 @@ class MGE_SetCameraRotationSpeed : public MotoGameEvent {
    MGE_SetCameraRotationSpeed(int p_eventTime, float p_speed);
    ~MGE_SetCameraRotationSpeed();                                                                  
                                                                                                      
-   void doAction(MotoGame *p_pMotoGame);                                                         
+   void doAction(Scene *p_pMotoGame);                                                         
    void serialize(DBuffer &Buffer);                                                              
    void unserialize(DBuffer &Buffer);                                                            
    static GameEventType SgetType();                                                              
@@ -945,7 +945,7 @@ class MGE_PlaySound : public MotoGameEvent {
   MGE_PlaySound(int p_eventTime, std::string p_soundName, float p_volume = DEFAULT_SAMPLE_VOLUME);
   ~MGE_PlaySound();
   
-  void doAction(MotoGame *p_pMotoGame);                                                    
+  void doAction(Scene *p_pMotoGame);                                                    
   void serialize(DBuffer &Buffer);                                                         
   void unserialize(DBuffer &Buffer);                                                       
   static GameEventType SgetType();                                                         
@@ -966,7 +966,7 @@ class MGE_PlayMusic : public MotoGameEvent {
    MGE_PlayMusic(int p_eventTime, std::string p_musicName);                                                      
    ~MGE_PlayMusic();                                                                                             
                                                                                                                        
-   void doAction(MotoGame *p_pMotoGame);                                                                         
+   void doAction(Scene* p_pMotoGame);                                                                         
    void serialize(DBuffer &Buffer);                                                                              
    void unserialize(DBuffer &Buffer);                                                                            
    static GameEventType SgetType();                                                                              
@@ -985,7 +985,7 @@ class MGE_StopMusic : public MotoGameEvent {
    MGE_StopMusic(int p_eventTime);                                                                                                                               
    ~MGE_StopMusic();                                                                                             
                                                                                                                        
-   void doAction(MotoGame *p_pMotoGame);                                                                         
+   void doAction(Scene* p_pMotoGame);                                                                         
    void serialize(DBuffer &Buffer);                                                                              
    void unserialize(DBuffer &Buffer);                                                                            
    static GameEventType SgetType();                                                                              

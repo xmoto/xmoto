@@ -296,8 +296,3 @@ void Universe::saveReplay(const std::string &Name) {
 std::vector<MotoGame*>& Universe::getScenes() {
   return m_scenes;
 }
-
-Scene* getScene(std::string sceneId)
-{
-  
-}

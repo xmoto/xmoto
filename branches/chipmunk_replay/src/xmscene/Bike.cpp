@@ -222,6 +222,31 @@ void BikerSerializer::storeFrame(Scene* pScene)
 void BikerSerializer::unserializeFrames(Scene* pScene)
 {
   m_bikerId = pScene->registerGhost();
+
+  Ghost* pGhost = pScene->getGhostById(m_bikerId);
+
+    int frameId;
+    int timeStamp;
+    std::string id = "";
+    ISerializable<T>* pObject;
+    T* pObjectState;
+
+    try {
+      while(buffer.numRemainingBytes() > 0) {
+	unsigned int nbObjects;
+	buffer >> nbObjects;
+
+	for(unsigned int i=0; i<nbObjects; i++){
+	  buffer >> id;
+	  pObject = getObject(id, pScene);
+	  pObjectState = new T;
+	  pObject->unserializeOneState(buffer, *pObjectState);
+	  pObject->addState(pAbjectState);
+	}
+      }
+    } catch(Exception& e) {
+      LogWarning("unable to unserialize object [%s].", id.c_str());
+    }
 }
 
 void BikerSerializer::playFrame(Scene* pScene)

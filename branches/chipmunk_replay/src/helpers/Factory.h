@@ -21,6 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __FACTORY_H__
 #define __FACTORY_H__
 
+#include <map>
+#include <string>
+
 typedef void* (*objectConstructor)();
 
 // createObjectHelper from the book "Game Programming Gems #5",
@@ -37,12 +40,12 @@ public:
 #define REGISTER_OBJECT(name) registerObject(#name, \
                                              &createObjectHelper<name>)
 
-  void registerObject(std::string& name, objectConstructor cons) {
+  void registerObject(std::string name, objectConstructor cons) {
     m_registeredObjects[name] = cons;
   }
 
-  void* createObject(std::string& name) {
-    std::map<std::string, void*>::iterator itFind;
+  void* createObject(std::string name) {
+    std::map<std::string, objectConstructor>::iterator itFind;
 
     itFind = m_registeredObjects.find(name);
     if(itFind != m_registeredObjects.end()) {

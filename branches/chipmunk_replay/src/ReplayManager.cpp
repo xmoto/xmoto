@@ -80,7 +80,11 @@ Replay* ReplayManager::getCurrentRecordingReplay()
 {
 }
 
-Replay* ReplayManager::addPlayingReplay(Scene* pScene, std::string& fileName, bool mainReplay)
+Ghost* ReplayManager::addPlayingReplay(Scene* pScene, bool mainReplay, std::string& fileName,
+					std::string i_info,
+					Theme *i_theme, BikerTheme* i_bikerTheme,
+					const TColor& i_filterColor,
+					const TColor& i_filterUglyColor)
 {
   // version 0: only player chunks
   // version 1: add events
@@ -92,6 +96,8 @@ Replay* ReplayManager::addPlayingReplay(Scene* pScene, std::string& fileName, bo
   // read the header of the replay, keeps the file handle open
   FileHandle* pfh = pReplay->openReplay(fileName);
 
+  Ghost* pGhost = NULL;
+
   switch(pReplay->getVersion()) {
   case 0: {
     // only biker
@@ -100,6 +106,11 @@ Replay* ReplayManager::addPlayingReplay(Scene* pScene, std::string& fileName, bo
     pBike->setPlaying(true);
     pBike->unserializeFrames(pScene);
     m_scenesSerializersPlaying[pScene].push_back(pBike);
+
+    if(mainReplay == true)
+      pGhost = pScene->addReplayFromFile();
+    else
+      pGhost = pScene->addGhostFromFile();
   }
     break;
   case 1: {
@@ -153,7 +164,7 @@ Replay* ReplayManager::addPlayingReplay(Scene* pScene, std::string& fileName, bo
 
   m_playingReplay[] = pReplay;
 
-  return pReplay;
+  return pGhost;
 }
 
 void ReplayManager::playFrame()

@@ -319,7 +319,7 @@ void Level::revertEntityDestroyed(const std::string& i_entityId) {
   throw Exception("Entity '" + i_entityId + "' can't be reverted");
 }
 
-void Level::updateToTime(MotoGame& i_scene) {
+void Level::updateToTime(Scene& i_scene) {
   int      v_time    = i_scene.getTime();
   Vector2f v_gravity = i_scene.getGravity();
 

@@ -53,6 +53,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMotoLoadReplaysInterface.h"
 #include "Replay.h"
 #include <sstream>
+#include "ReplayManager.h"
 
   bool GameApp::haveMouseMoved() {
     int nX,nY;
@@ -563,6 +564,11 @@ void GameApp::addGhosts(Scene* i_motogame, Theme* i_theme) {
   int v_finishTime;
   int v_player_finishTime;
   bool v_exists;
+  TColor filterUglyColor = TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
+				  GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
+				  GET_BLUE(i_theme->getGhostTheme()->getUglyRiderColor()),
+				  0);
+  ReplayManager* pRepMan = ReplayManager::instance();
 
   LogDebug("addGhosts stategy:");
 
@@ -595,15 +601,12 @@ void GameApp::addGhosts(Scene* i_motogame, Theme* i_theme) {
 
       if(v_replay_BESTOFROOM[i] != "" && v_exists == false) {
 	LogInfo("add ghost %s", v_replay_BESTOFROOM[i].c_str());
-	i_motogame->addGhostFromFile(v_replay_BESTOFROOM[i],
-				     xmDatabase::instance("main")->webrooms_getName(XMSession::instance()->idRoom(i)),
-				     Theme::instance(), Theme::instance()->getGhostTheme(),
-				     TColor(255,255,255,0),
-				     TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
-					    GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
-					    GET_BLUE(i_theme->getGhostTheme()->getUglyRiderColor()),
-					    0)
-				     );
+	pRepMan->addPlayingReplay(i_motogame, false,
+				  v_replay_BESTOFROOM[i],
+				  xmDatabase::instance("main")->webrooms_getName(XMSession::instance()->idRoom(i)),
+				  Theme::instance(), Theme::instance()->getGhostTheme(),
+				  TColor(255,255,255,0),
+				  filterUglyColor);
       }
     }
   }
@@ -624,14 +627,11 @@ void GameApp::addGhosts(Scene* i_motogame, Theme* i_theme) {
 
       if(v_exists == false) {
 	LogDebug("add ghost %s", v_replay_MYBEST.c_str());
-	i_motogame->addGhostFromFile(v_replay_MYBEST, GAMETEXT_GHOST_BEST,
-				     i_theme, i_theme->getGhostTheme(),
-				     TColor(85,255,255,0),
-				     TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
-					    GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
-					    GET_BLUE(i_theme->getGhostTheme()->getUglyRiderColor()),
-					    0)
-				     );
+	pRepMan->addPlayingReplay(i_motogame, false,
+				  v_replay_MYBEST, GAMETEXT_GHOST_BEST,
+				  i_theme, i_theme->getGhostTheme(),
+				  TColor(85,255,255,0),
+				  filterUglyColor);
       }
     }
   }
@@ -652,14 +652,11 @@ void GameApp::addGhosts(Scene* i_motogame, Theme* i_theme) {
 
       if(v_replay_THEBEST != v_replay_MYBEST && v_exists == false) { /* don't add two times the same ghost */
 	LogDebug("add ghost %s", v_replay_THEBEST.c_str());
-	i_motogame->addGhostFromFile(v_replay_THEBEST, GAMETEXT_GHOST_LOCAL,
-				     i_theme, i_theme->getGhostTheme(),
-				     TColor(255,200,140,0),
-				     TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
-					    GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
-					    GET_BLUE(i_theme->getGhostTheme()->getUglyRiderColor()),
-					    0)
-				     );
+	pRepMan->addPlayingReplay(i_motogame, false,
+				  v_replay_THEBEST, GAMETEXT_GHOST_LOCAL,
+				  i_theme, i_theme->getGhostTheme(),
+				  TColor(255,200,140,0),
+				  filterUglyColor);
       }
     }
   }

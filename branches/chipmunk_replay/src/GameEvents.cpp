@@ -229,7 +229,7 @@ void EventSerializer::playFrame(Scene* pScene)
     return v_event;
   }
 
-  void MotoGameEvent::revert(MotoGame *p_pMotoGame) {
+  void MotoGameEvent::revert(Scene *p_pMotoGame) {
   }
 
   int MotoGameEvent::getEventTime() {
@@ -250,7 +250,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_PlayersDie::~MGE_PlayersDie() {
   } 
   
-  void MGE_PlayersDie::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PlayersDie::doAction(Scene *p_pMotoGame) {
     for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
       p_pMotoGame->killPlayer(i);
     }
@@ -290,7 +290,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_PlayerDies::~MGE_PlayerDies() {
   } 
   
-  void MGE_PlayerDies::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PlayerDies::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->killPlayer(m_player);
   }
 
@@ -329,7 +329,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_PlayersEnterZone::~MGE_PlayersEnterZone() {
   } 
   
-  void MGE_PlayersEnterZone::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PlayersEnterZone::doAction(Scene *p_pMotoGame) {
     for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
       p_pMotoGame->playerEntersZone(i, m_zone);
     }
@@ -370,7 +370,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_PlayerEntersZone::~MGE_PlayerEntersZone() {
   } 
   
-  void MGE_PlayerEntersZone::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PlayerEntersZone::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->playerEntersZone(m_player, m_zone);
   }
 
@@ -408,7 +408,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_PlayersLeaveZone::~MGE_PlayersLeaveZone() {
   } 
   
-  void MGE_PlayersLeaveZone::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PlayersLeaveZone::doAction(Scene *p_pMotoGame) {
     for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
       p_pMotoGame->playerLeavesZone(i, m_zone);
     }
@@ -448,7 +448,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_PlayerLeavesZone::~MGE_PlayerLeavesZone() {
   } 
   
-  void MGE_PlayerLeavesZone::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PlayerLeavesZone::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->playerLeavesZone(m_player, m_zone);
   }
 
@@ -488,7 +488,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_PlayersToucheEntity::~MGE_PlayersToucheEntity() {
   } 
   
-  void MGE_PlayersToucheEntity::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PlayersToucheEntity::doAction(Scene *p_pMotoGame) {
     for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
       p_pMotoGame->playerTouchesEntity(i, m_entityID, m_bTouchedWithHead);
     }
@@ -531,7 +531,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_PlayerTouchesEntity::~MGE_PlayerTouchesEntity() {
   } 
   
-  void MGE_PlayerTouchesEntity::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PlayerTouchesEntity::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->playerTouchesEntity(m_player, m_entityID, m_bTouchedWithHead);
   }
 
@@ -573,7 +573,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_EntityDestroyed::~MGE_EntityDestroyed() {
   }
   
-  void MGE_EntityDestroyed::doAction(MotoGame *p_pMotoGame) {
+  void MGE_EntityDestroyed::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->entityDestroyed(m_entityId);
   }
 
@@ -615,7 +615,7 @@ void EventSerializer::playFrame(Scene* pScene)
     Buffer >> m_entityPosition.y;   
   }
 
-  void MGE_EntityDestroyed::revert(MotoGame *p_pMotoGame) {
+  void MGE_EntityDestroyed::revert(Scene *p_pMotoGame) {
     p_pMotoGame->getLevelSrc()->revertEntityDestroyed(m_entityId);
   }
 
@@ -643,7 +643,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_ClearMessages::~MGE_ClearMessages() {
   } 
   
-  void MGE_ClearMessages::doAction(MotoGame *p_pMotoGame) {
+  void MGE_ClearMessages::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->clearGameMessages();
   }
 
@@ -686,7 +686,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_PlaceInGameArrow::~MGE_PlaceInGameArrow() {
   } 
   
-  void MGE_PlaceInGameArrow::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PlaceInGameArrow::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->PlaceInGameArrow(m_x, m_y, m_angle);
   }
 
@@ -735,7 +735,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_PlaceScreenarrow::~MGE_PlaceScreenarrow() {
   } 
   
-  void MGE_PlaceScreenarrow::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PlaceScreenarrow::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->PlaceScreenArrow(m_x, m_y, m_angle); 
   }
 
@@ -772,7 +772,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_HideArrow::~MGE_HideArrow() {
   } 
   
-  void MGE_HideArrow::doAction(MotoGame *p_pMotoGame) {
+  void MGE_HideArrow::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->HideArrow();
   }
 
@@ -809,7 +809,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_Message::~MGE_Message() {
   } 
   
-  void MGE_Message::doAction(MotoGame *p_pMotoGame) {
+  void MGE_Message::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->gameMessage(m_message);
   }
 
@@ -854,7 +854,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_MoveBlock::~MGE_MoveBlock() {
   } 
   
-  void MGE_MoveBlock::doAction(MotoGame *p_pMotoGame) {
+  void MGE_MoveBlock::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->MoveBlock(m_blockID, m_x, m_y);
   }
 
@@ -903,7 +903,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetBlockPos::~MGE_SetBlockPos() {
   } 
   
-  void MGE_SetBlockPos::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetBlockPos::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->SetBlockPos(m_blockID, m_x, m_y);
   }
 
@@ -952,7 +952,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetPhysicsBlockPos::~MGE_SetPhysicsBlockPos() {
   }
 
-  void MGE_SetPhysicsBlockPos::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetPhysicsBlockPos::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->SetPhysicsBlockPos(m_blockID, m_x, m_y);
   }
 
@@ -997,7 +997,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetGravity::~MGE_SetGravity() {
   } 
   
-  void MGE_SetGravity::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetGravity::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->setGravity(m_x, m_y);
   }
 
@@ -1044,7 +1044,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetPlayersPosition::~MGE_SetPlayersPosition() {
   } 
   
-  void MGE_SetPlayersPosition::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetPlayersPosition::doAction(Scene *p_pMotoGame) {
     for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
       p_pMotoGame->setPlayerPosition(i, m_x, m_y, m_bRight);
     }
@@ -1099,7 +1099,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetPlayerPosition::~MGE_SetPlayerPosition() {
   } 
   
-  void MGE_SetPlayerPosition::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetPlayerPosition::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->setPlayerPosition(m_player, m_x, m_y, m_bRight);
   }
 
@@ -1150,7 +1150,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetEntityPos::~MGE_SetEntityPos() {
   } 
   
-  void MGE_SetEntityPos::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetEntityPos::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->SetEntityPos(m_entityID, m_x, m_y);
   }
 
@@ -1199,7 +1199,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetBlockCenter::~MGE_SetBlockCenter() {
   } 
   
-  void MGE_SetBlockCenter::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetBlockCenter::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->SetBlockCenter(m_blockID, m_x, m_y);
   }
 
@@ -1246,7 +1246,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetBlockRotation::~MGE_SetBlockRotation() {
   } 
   
-  void MGE_SetBlockRotation::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetBlockRotation::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->SetBlockRotation(m_blockID, m_angle);
   }
 
@@ -1303,7 +1303,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetDynamicEntityRotation::~MGE_SetDynamicEntityRotation() {
   } 
   
-  void MGE_SetDynamicEntityRotation::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetDynamicEntityRotation::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicEntityRotation(m_entityID,
                    m_fInitAngle, m_fRadius,
                    m_period,
@@ -1375,7 +1375,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetDynamicEntityTranslation::~MGE_SetDynamicEntityTranslation() {
   } 
   
-  void MGE_SetDynamicEntityTranslation::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetDynamicEntityTranslation::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicEntityTranslation(m_entityID,
                 m_x, m_y,
                 m_period,
@@ -1431,7 +1431,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetDynamicEntityNone::~MGE_SetDynamicEntityNone() {
   } 
   
-  void MGE_SetDynamicEntityNone::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetDynamicEntityNone::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->removeSDynamicOfObject(m_entityID);
   }
 
@@ -1486,7 +1486,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetDynamicBlockRotation::~MGE_SetDynamicBlockRotation() {
   } 
   
-  void MGE_SetDynamicBlockRotation::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetDynamicBlockRotation::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicBlockRotation(m_blockID,
                   m_fInitAngle, m_fRadius,
                   m_period,
@@ -1558,7 +1558,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetDynamicBlockTranslation::~MGE_SetDynamicBlockTranslation() {
   } 
   
-  void MGE_SetDynamicBlockTranslation::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetDynamicBlockTranslation::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicBlockTranslation(m_blockID,
                      m_x, m_y,
                      m_period,
@@ -1615,7 +1615,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetDynamicBlockNone::~MGE_SetDynamicBlockNone() {
   } 
   
-  void MGE_SetDynamicBlockNone::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetDynamicBlockNone::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->removeSDynamicOfObject(m_blockID);
   }
 
@@ -1656,7 +1656,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_CameraMove::~MGE_CameraMove() {
   } 
   
-  void MGE_CameraMove::doAction(MotoGame *p_pMotoGame) {
+  void MGE_CameraMove::doAction(Scene *p_pMotoGame) {
     for(unsigned int i=0; i<p_pMotoGame->getNumberCameras(); i++) {
     p_pMotoGame->setCurrentCamera(i);
       p_pMotoGame->CameraMove(m_moveX, m_moveY);
@@ -1700,7 +1700,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_CameraZoom::~MGE_CameraZoom() {
   } 
   
-  void MGE_CameraZoom::doAction(MotoGame *p_pMotoGame) {
+  void MGE_CameraZoom::doAction(Scene *p_pMotoGame) {
     for(unsigned int i=0; i<p_pMotoGame->getNumberCameras(); i++) {
       p_pMotoGame->setCurrentCamera(i);
       p_pMotoGame->CameraZoom(m_zoom);
@@ -1743,7 +1743,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_PenalityTime::~MGE_PenalityTime() {
   }
 
-  void MGE_PenalityTime::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PenalityTime::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->addPenalityTime(m_penalityTime);
   }
 
@@ -1794,7 +1794,7 @@ void EventSerializer::playFrame(Scene* pScene)
   MGE_SetDynamicBlockSelfRotation::~MGE_SetDynamicBlockSelfRotation() {
   }
   
-  void MGE_SetDynamicBlockSelfRotation::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetDynamicBlockSelfRotation::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicBlockSelfRotation(m_blockID,
 								m_period,
 								m_startTime, m_endTime));  
@@ -1863,7 +1863,7 @@ MGE_SetPhysicsBlockSelfRotation::~MGE_SetPhysicsBlockSelfRotation()
 {
 }
 
-  void MGE_SetPhysicsBlockSelfRotation::doAction(MotoGame *p_pMotoGame)
+  void MGE_SetPhysicsBlockSelfRotation::doAction(Scene *p_pMotoGame)
 {
   p_pMotoGame->addDynamicObject(new SPhysicBlockSelfRotation(m_blockID,
 							     m_startTime, m_endTime,
@@ -1932,7 +1932,7 @@ MGE_SetPhysicsBlockTranslation::~MGE_SetPhysicsBlockTranslation()
 {
 }
 
-void MGE_SetPhysicsBlockTranslation::doAction(MotoGame* pMotoGame)
+void MGE_SetPhysicsBlockTranslation::doAction(Scene* pMotoGame)
 {
   pMotoGame->addDynamicObject(new SPhysicBlockTranslation(m_blockID,
 							  m_x, m_y,
@@ -2007,7 +2007,7 @@ std::string MGE_SetPhysicsBlockTranslation::toString()
   MGE_SetDynamicEntitySelfRotation::~MGE_SetDynamicEntitySelfRotation() {
   }
   
-  void MGE_SetDynamicEntitySelfRotation::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetDynamicEntitySelfRotation::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicEntitySelfRotation(m_entityID,
 								 m_period,
 								 m_startTime, m_endTime));  
@@ -2058,7 +2058,7 @@ std::string MGE_SetPhysicsBlockTranslation::toString()
   MGE_CameraRotate::~MGE_CameraRotate() {
   } 
   
-  void MGE_CameraRotate::doAction(MotoGame *p_pMotoGame) {
+  void MGE_CameraRotate::doAction(Scene *p_pMotoGame) {
     for(unsigned int i=0; i<p_pMotoGame->getNumberCameras(); i++) {
       p_pMotoGame->setCurrentCamera(i);
       p_pMotoGame->CameraRotate(m_angle);
@@ -2094,7 +2094,7 @@ std::string MGE_SetPhysicsBlockTranslation::toString()
   MGE_CameraAdaptToGravity::~MGE_CameraAdaptToGravity() {
   } 
   
-  void MGE_CameraAdaptToGravity::doAction(MotoGame *p_pMotoGame) {
+  void MGE_CameraAdaptToGravity::doAction(Scene *p_pMotoGame) {
     for(unsigned int i=0; i<p_pMotoGame->getNumberCameras(); i++) {
       p_pMotoGame->setCurrentCamera(i);
       p_pMotoGame->CameraAdaptToGravity();
@@ -2143,7 +2143,7 @@ std::string MGE_SetPhysicsBlockTranslation::toString()
   MGE_AddForceToPlayer::~MGE_AddForceToPlayer() {
   } 
   
-  void MGE_AddForceToPlayer::doAction(MotoGame *p_pMotoGame) {
+  void MGE_AddForceToPlayer::doAction(Scene *p_pMotoGame) {
     p_pMotoGame->addForceToPlayer(m_player, m_force, m_startTime, m_endTime);
   }
 
@@ -2190,7 +2190,7 @@ std::string MGE_SetPhysicsBlockTranslation::toString()
   MGE_SetCameraRotationSpeed::~MGE_SetCameraRotationSpeed() {
   } 
   
-  void MGE_SetCameraRotationSpeed::doAction(MotoGame *p_pMotoGame) {
+  void MGE_SetCameraRotationSpeed::doAction(Scene *p_pMotoGame) {
     for(unsigned int i=0; i<p_pMotoGame->getNumberCameras(); i++) {
       p_pMotoGame->Cameras()[i]->setRotationSpeed(m_speed);
     }
@@ -2232,7 +2232,7 @@ MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name, float p_volume
   MGE_PlaySound::~MGE_PlaySound() {
   }
   
-  void MGE_PlaySound::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PlaySound::doAction(Scene *p_pMotoGame) {
     if(XMSession::instance()->enableAudio() == false) {
       return;
     }
@@ -2282,7 +2282,7 @@ MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name, float p_volume
   MGE_PlayMusic::~MGE_PlayMusic() {
   }
   
-  void MGE_PlayMusic::doAction(MotoGame *p_pMotoGame) {
+  void MGE_PlayMusic::doAction(Scene *p_pMotoGame) {
     try {
       GameApp::instance()->playGameMusic(m_musicName);
     } catch(Exception &e) {
@@ -2319,7 +2319,7 @@ MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name, float p_volume
   MGE_StopMusic::~MGE_StopMusic() {
   }
   
-  void MGE_StopMusic::doAction(MotoGame *p_pMotoGame) {
+  void MGE_StopMusic::doAction(Scene *p_pMotoGame) {
     try {
       GameApp::instance()->playGameMusic("");
     } catch(Exception &e) {

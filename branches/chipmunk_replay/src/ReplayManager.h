@@ -30,7 +30,7 @@ class ISerializer;
 class Scene;
 
 class ReplayManager : public Singleton<ReplayManager> {
-  friend class Singleton<ReplayManager>
+  friend class Singleton<ReplayManager>;
 private:
   ReplayManager();
   ~ReplayManager();
@@ -74,7 +74,11 @@ public:
   // playing
   //void addPlayingReplay(Scene* pScene, std::string& fileName, bool mainReplay);
   // temporary returns the Replay*
-  Replay* addPlayingReplay(Scene* pScene, std::string& fileName, bool mainReplay);
+  Ghost* addPlayingReplay(Scene* pScene, bool mainReplay, std::string& fileName,
+			   std::string i_info,
+			   Theme *i_theme, BikerTheme* i_bikerTheme,
+			   const TColor& i_filterColor,
+			   const TColor& i_filterUglyColor);
   void playFrame();
   void fastforward(int i_time);
   // i_minimumNbFrame, because sometimes, rewind do nothing if i_time

@@ -76,7 +76,7 @@ class XMKey {
   struct InputScriptKeyHook {
     XMKey nKey;                 /* Hooked key */
     std::string FuncName;       /* Script function to invoke */    
-    MotoGame *pGame;            /* Pointer to game */
+    Scene *pGame;            /* Pointer to game */
   };
 
   /*===========================================================================
@@ -110,7 +110,7 @@ public:
   void uninit();
 
   void resetScriptKeyHooks(void) {m_nNumScriptKeyHooks = 0;}
-  void addScriptKeyHook(MotoGame *pGame,const std::string &basicKeyName,const std::string &FuncName);
+  void addScriptKeyHook(Scene *pGame,const std::string &basicKeyName,const std::string &FuncName);
 
   std::string getFancyKeyByAction(const std::string &Action);
   std::string* getJoyId(Uint8 i_joynum);

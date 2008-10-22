@@ -48,6 +48,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Methods */
       void initOutput(int nPartSize);
       void initInput(char *pcInput,int nInputSize);
+      void initInput(int nInputSize);
       
       template<typename _ConstIter>
       void writeBuf(_ConstIter pcBuf,int nBufSize);
