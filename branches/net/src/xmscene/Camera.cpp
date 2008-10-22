@@ -522,5 +522,6 @@ float Camera::getGhostLastIn(unsigned int i) {
 }
 
 bool Camera::isGhostIn(unsigned int i) {
+  checkGhostVisibilityExists(i);
   return m_ghostVisibility[i].isIn;
 }
