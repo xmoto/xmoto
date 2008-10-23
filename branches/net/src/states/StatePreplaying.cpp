@@ -80,6 +80,7 @@ void StatePreplaying::enter()
   GameRenderer::instance()->setShowMinimap(false);
   GameRenderer::instance()->setShowTimePanel(false);
   GameRenderer::instance()->hideReplayHelp();
+  GameRenderer::instance()->setShowGhostsText(false);
 
   m_universe =  new Universe();
 

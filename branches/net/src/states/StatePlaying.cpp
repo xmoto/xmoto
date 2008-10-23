@@ -160,6 +160,8 @@ void StatePlaying::updateWithOptions() {
     GameRenderer::instance()->setShowTimePanel(false);
   }
 
+  GameRenderer::instance()->setShowGhostsText(true);
+
   for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
     m_universe->getScenes()[i]->setDeathAnim(XMSession::instance()->enableDeadAnimation());
     m_universe->getScenes()[i]->setShowGhostTimeDiff(XMSession::instance()->showGhostTimeDifference());

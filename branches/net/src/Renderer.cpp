@@ -45,7 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Entity.h"
 #include "PhysSettings.h"
 #include "xmscene/BasicSceneStructs.h"
-
+#include <sstream>
 
 #ifdef ENABLE_OPENGL
 #include "drawlib/DrawLibOpenGL.h"
@@ -91,6 +91,7 @@ GameRenderer::GameRenderer() {
   m_currentEdgeEffect = "";
   m_currentEdgeSprite = NULL;
   m_curRegistrationStage = 0;
+  m_showGhostsText = true;
 }
 GameRenderer::~GameRenderer() {
 }
@@ -104,6 +105,7 @@ GameRenderer::~GameRenderer() {
     m_Overlay.init(GameApp::instance()->getDrawLib(),512,512);
 
     m_nParticlesRendered = 0;
+    m_arrowSprite = (MiscSprite*) Theme::instance()->getSprite(SPRITE_TYPE_MISC, "Arrow");
   }
 
   /*===========================================================================
@@ -1025,7 +1027,8 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float 
       }
     }
  
-    if(i_ghost->getDescription() != "") {
+    /* ghost description */
+    if(i_ghost->getDescription() != "" && showGhostsText()) {
       if(XMSession::instance()->showGhostsInfos()) {
 	if(i_scene->getCamera()->isGhostIn(i)) {
 	  v_diffInfoTextTime = GameApp::getXMTime() - i_scene->getCamera()->getGhostLastIn(i);
@@ -1033,13 +1036,13 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float 
 	  if(v_diffInfoTextTime < GHOST_INFO_FADE_TIME + GHOST_INFO_DURATION + GHOST_INFO_FADE_TIME) {
 
 	    if(v_diffInfoTextTime < GHOST_INFO_FADE_TIME) {
-	      v_textTrans = ((v_diffInfoTextTime-GHOST_INFO_FADE_TIME)*255) / GHOST_INFO_FADE_TIME;
+	      v_textTrans = (int)(((v_diffInfoTextTime-GHOST_INFO_FADE_TIME)*255) / GHOST_INFO_FADE_TIME);
 	    }
 	    else if(v_diffInfoTextTime >= GHOST_INFO_FADE_TIME &&
 		    v_diffInfoTextTime < GHOST_INFO_FADE_TIME + GHOST_INFO_DURATION) {
 	      v_textTrans = 255;
 	    } else {
-	      v_textTrans = 255 - (((v_diffInfoTextTime-GHOST_INFO_FADE_TIME-GHOST_INFO_DURATION)*255) / GHOST_INFO_FADE_TIME);
+	      v_textTrans = 255 - ((int)(((v_diffInfoTextTime-GHOST_INFO_FADE_TIME-GHOST_INFO_DURATION)*255) / GHOST_INFO_FADE_TIME));
 	    }
 	    
 	    _RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i_textOffset, -1.0f),
@@ -1047,6 +1050,48 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float 
 			      MAKE_COLOR(255,255,255, v_textTrans));
 	  }
 	}
+      }
+    }
+
+    /* ghost arrow indication */
+    Vector2f v_arrowPoint;
+    float v_arrowAngle;
+    float v_spriteSize = 0.3;
+    float v_spriteOffset = 0.5;
+    float v_arrowAngleDeg;
+    Vector2f p1(1,0), p2(1,0), p3(1,0), p4(1,0);
+    AABBSide v_side;
+
+    if(getGhostDirection(i_ghost, &m_screenBBox, &v_arrowPoint, &v_arrowAngle, &v_side)) {
+      v_arrowAngleDeg = (v_arrowAngle * 180) / M_PI - 45.0;
+      p1.rotateXY(v_arrowAngleDeg);
+      p2.rotateXY(90+v_arrowAngleDeg);
+      p3.rotateXY(180+v_arrowAngleDeg);
+      p4.rotateXY(270+v_arrowAngleDeg);
+
+      p1 = p1 * v_spriteSize;
+      p2 = p2 * v_spriteSize;
+      p3 = p3 * v_spriteSize;
+      p4 = p4 * v_spriteSize;
+
+      if(v_arrowPoint.x > m_screenBBox.getBMax().x - v_spriteOffset) {
+	v_arrowPoint.x = m_screenBBox.getBMax().x - v_spriteOffset;
+      }
+
+      if(v_arrowPoint.x < m_screenBBox.getBMin().x + v_spriteOffset) {
+	v_arrowPoint.x = m_screenBBox.getBMin().x + v_spriteOffset;
+      }
+
+      if(v_arrowPoint.y > m_screenBBox.getBMax().y - v_spriteOffset) {
+	v_arrowPoint.y = m_screenBBox.getBMax().y - v_spriteOffset;
+      }
+
+      if(v_arrowPoint.y < m_screenBBox.getBMin().y + v_spriteOffset) {
+	v_arrowPoint.y = m_screenBBox.getBMin().y + v_spriteOffset;
+      }
+
+      if(m_arrowSprite != NULL) {
+	_RenderAlphaBlendedSection(m_arrowSprite->getTexture(), p1+v_arrowPoint, p2+v_arrowPoint, p3+v_arrowPoint, p4+v_arrowPoint);
       }
     }
   }
@@ -1058,6 +1103,58 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float 
 		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
     }
   }
+}
+
+bool GameRenderer::getGhostDirection(Biker* i_ghost, AABB* i_screenBBox,
+				     Vector2f* o_arrowPoint, float* o_arrowAngle, AABBSide* o_side) {
+  Vector2f v_centerPoint = Vector2f(i_screenBBox->getBMin().x + (i_screenBBox->getBMax().x-i_screenBBox->getBMin().x)/2.0,
+				    i_screenBBox->getBMin().y + (i_screenBBox->getBMax().y-i_screenBBox->getBMin().y)/2.0);
+  float a, b;
+    
+  if(i_screenBBox->lineTouchBorder(v_centerPoint, i_ghost->getState()->CenterP, *o_arrowPoint, *o_side) == false) {
+    return false;
+  }
+
+  if(*o_side == AABB_TOP || *o_side == AABB_BOTTOM) {
+    a = (i_screenBBox->getBMax().y-i_screenBBox->getBMin().y)/2.0;
+    b = o_arrowPoint->x - (i_screenBBox->getBMin().x + (i_screenBBox->getBMax().x-i_screenBBox->getBMin().x)/2.0);
+  } else {
+    a = (i_screenBBox->getBMax().x-i_screenBBox->getBMin().x)/2.0;
+    b = o_arrowPoint->y - (i_screenBBox->getBMin().y + (i_screenBBox->getBMax().y-i_screenBBox->getBMin().y)/2.0);
+  }
+
+  switch(*o_side) {
+  case AABB_TOP:
+    if(b>=0) {
+      *o_arrowAngle = atan(a/b) - M_PI/2;
+    } else {
+      *o_arrowAngle = atan(a/b) + M_PI/2;
+    }
+    break;
+  case AABB_BOTTOM:
+    if(b>=0) {
+      *o_arrowAngle = atan(a/-b) - M_PI/2;
+    } else {
+      *o_arrowAngle = atan(a/-b) + M_PI/2;
+    }
+    break;
+  case AABB_LEFT:
+    if(b>=0) {
+      *o_arrowAngle = atan(a/b);
+    } else {
+      *o_arrowAngle = atan(a/b) + M_PI;
+    }
+    break;
+  case AABB_RIGHT:
+    if(b>=0) {
+      *o_arrowAngle = atan(a/-b);
+    } else {
+      *o_arrowAngle = atan(a/-b) + M_PI;
+    }
+    break;
+  }
+
+  return true;
 }
 
 int GameRenderer::nbParticlesRendered() const {
@@ -1445,10 +1542,8 @@ int GameRenderer::nbParticlesRendered() const {
       p3 = p3 * 50.0f;
       p4 = p4 * 50.0f;
 
-      MiscSprite* pType;
-      pType = (MiscSprite*) Theme::instance()->getSprite(SPRITE_TYPE_MISC, "Arrow");
-      if(pType != NULL) {
-	_RenderAlphaBlendedSectionSP(pType->getTexture(),p1+C,p2+C,p3+C,p4+C);      
+      if(m_arrowSprite != NULL) {
+	_RenderAlphaBlendedSectionSP(m_arrowSprite->getTexture(),p1+C,p2+C,p3+C,p4+C);      
       }
     }
         
@@ -2481,6 +2576,14 @@ void GameRenderer::setShowTimePanel(bool i_value) {
   void GameRenderer::setShowEngineCounter(bool i_value) {
     m_showEngineCounter = i_value;
   }
+
+void GameRenderer::setShowGhostsText(bool i_value) {
+  m_showGhostsText = i_value;
+}
+
+bool GameRenderer::showGhostsText() const {
+  return m_showGhostsText;
+}
 
   void GameRenderer::switchFollow(MotoGame* i_scene) {
     Camera*  pCamera  = i_scene->getCamera();
