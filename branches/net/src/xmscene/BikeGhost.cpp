@@ -140,6 +140,10 @@ std::string FileGhost::getDescription() const {
     "\n(" + formatTime(m_replay->getFinishTime()) + ")";
 }
 
+std::string FileGhost::getVeryQuickDescription() const {
+  return m_replay->getPlayerName();
+}
+
 std::string FileGhost::getQuickDescription() const {
   char c_tmp[1024];
 
@@ -343,6 +347,10 @@ NetGhost::~NetGhost() {
 }
 
 void NetGhost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
+}
+
+std::string NetGhost::getVeryQuickDescription() const {
+  return m_info;
 }
 
 std::string NetGhost::getQuickDescription() const {

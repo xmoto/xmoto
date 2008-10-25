@@ -207,6 +207,8 @@ public:
   bool ghostMotionBlur() const;
   void setShowGhostsInfos(bool i_value);
   bool showGhostsInfos() const;
+  void setShowGhostsArrows(bool i_value);
+  bool showGhostsArrows() const;
   void setHideGhosts(bool i_value);
   bool hideGhosts() const;
   float replayFrameRate() const;
@@ -343,6 +345,7 @@ public:
   bool m_showGhostTimeDifference;
   bool m_ghostMotionBlur;
   bool m_showGhostsInfos;
+  bool m_showGhostsArrows;
   bool m_hideGhosts;
   float m_replayFrameRate;
   std::string m_webThemesURL;

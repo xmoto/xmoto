@@ -58,6 +58,10 @@ std::string ReplayBiker::getQuickDescription() const {
   return std::string(c_tmp);
 }
 
+std::string ReplayBiker::getVeryQuickDescription() const {
+  return m_replay->getPlayerName();
+}
+
 PlayerBiker::PlayerBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
 			 Theme *i_theme, BikerTheme* i_bikerTheme,
 			 const TColor& i_filterColor,
@@ -92,6 +96,10 @@ PlayerBiker::~PlayerBiker() {
 
 std::string PlayerBiker::getDescription() const {
   return "";
+}
+
+std::string PlayerBiker::getVeryQuickDescription() const {
+  return GAMETEXT_PLAYER;
 }
 
 std::string PlayerBiker::getQuickDescription() const {

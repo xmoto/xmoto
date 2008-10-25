@@ -248,7 +248,7 @@ private:
   void _RenderParticles(MotoGame* i_scene, bool bFront=true);
   void _RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c);
   void _RenderParticle(MotoGame* i_scene, ParticlesSource *i_source, unsigned int sprite=0);
-  void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
+  void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff, float i_centering = 0.0);
   void _RenderZone(Zone *i_zone);
 
   void _RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float i_textOffset);

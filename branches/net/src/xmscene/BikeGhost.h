@@ -64,8 +64,9 @@ class FileGhost : public Ghost {
   virtual void updateToTime(int i_time, int i_timeStep,
 			    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			    MotoGame *i_motogame);
-  std::string getQuickDescription() const;
   std::string getDescription() const;
+  std::string getQuickDescription() const;
+  std::string getVeryQuickDescription() const;
   float getBikeEngineSpeed();
   float getBikeLinearVel();
   double getAngle();
@@ -98,8 +99,9 @@ class NetGhost : public Ghost {
   virtual bool diffToPlayerAvailable() const { return false; };
   virtual void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
 
-  std::string getQuickDescription() const;
   std::string getDescription() const;
+  std::string getQuickDescription() const;
+  std::string getVeryQuickDescription() const;
   float getBikeEngineSpeed();
   float getBikeLinearVel();
   double getAngle();
