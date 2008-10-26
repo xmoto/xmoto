@@ -29,7 +29,7 @@ enum GraphicsLevel {
 #include "XMSession_default.h"
 
 #include <string>
-#include "helpers/Singleton.h"
+#include "helpers/MultiSingleton.h"
 
 /*
   XMSession   : current session options
@@ -80,8 +80,8 @@ class ProxySettings {
   std::string m_authPassword;
 };
 
-class XMSession : public Singleton<XMSession> {
-  friend class Singleton<XMSession>;
+class XMSession : public MultiSingleton<XMSession> {
+  friend class MultiSingleton<XMSession>;
 
 private:
   XMSession();
