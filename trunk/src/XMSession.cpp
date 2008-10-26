@@ -27,6 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VideoRecorder.h"
 #include <sstream>
 
+#define PROPAGATE(A,B,C) A::propagate(this,boost::bind(&A::B, _1, C))
+
 XMSession::XMSession() {
   setToDefault();
 
@@ -36,6 +38,9 @@ XMSession::XMSession() {
 }
 
 void XMSession::setToDefault() {
+  // Initialise propagation in MultiSingleton
+  setIsPropagator(false);
+
   m_language                      = DEFAULT_LANGUAGE;
   m_verbose          	          = DEFAULT_VERBOSE;
   m_resolutionWidth  	          = DEFAULT_RESOLUTION_WIDTH;
@@ -340,6 +345,7 @@ int XMSession::dbSync(xmDatabase* pDb, const std::string& i_id_profile) {
 }
 
 void XMSession::setDbSync(xmDatabase* pDb, const std::string& i_id_profile, int i_dbSync) {
+  XMSession::propagate(this,boost::bind(&XMSession::setDbSync, _1, pDb, i_id_profile, i_dbSync));
   pDb->config_setInteger(i_id_profile, "dbSync", i_dbSync);
 }
 
@@ -348,6 +354,7 @@ int XMSession::dbSyncServer(xmDatabase* pDb, const std::string& i_id_profile) {
 }
 
 void XMSession::setDbSyncServer(xmDatabase* pDb, const std::string& i_id_profile, int i_dbSyncServer) {
+  XMSession::propagate(this,boost::bind(&XMSession::setDbSync, _1, pDb, i_id_profile, i_dbSyncServer));
   pDb->config_setInteger(i_id_profile, "dbSyncServer", i_dbSyncServer);
 }
 
@@ -471,18 +478,22 @@ bool XMSession::windowed() const {
 }
 
 void XMSession::setResolutionWidth(int i_value) {
+  PROPAGATE(XMSession,setResolutionWidth,i_value);
   m_resolutionWidth = i_value;
 }
 
 void XMSession::setResolutionHeight(int i_value) {
+  PROPAGATE(XMSession,setResolutionHeight,i_value);
   m_resolutionHeight = i_value;
 }
 
 void XMSession::setBpp(int i_value) {
+  PROPAGATE(XMSession,setBpp,i_value);
   m_bpp = i_value;
 }
 
 void XMSession::setWindowed(bool i_value) {
+  PROPAGATE(XMSession,setWindowed,i_value);
   m_windowed = i_value;
 }
 
@@ -499,6 +510,7 @@ bool XMSession::www() const {
 }
 
 void XMSession::setWWW(bool i_value) {
+  PROPAGATE(XMSession,setWWW,i_value);
   m_www = i_value;
 }
 
@@ -519,6 +531,7 @@ std::string XMSession::profile() const {
 }
 
 void XMSession::setProfile(const std::string& i_profile) {
+  PROPAGATE(XMSession,setProfile,i_profile);
   m_profile = i_profile;
 }
 
@@ -531,6 +544,7 @@ std::string XMSession::wwwPassword() const {
 }
 
 void XMSession::setWwwPassword(const std::string& i_password) {
+  PROPAGATE(XMSession,setWwwPassword,i_password);
   m_www_password = i_password;
 }
 
@@ -551,6 +565,7 @@ bool XMSession::fps() const {
 }
 
 void XMSession::setFps(bool i_value) {
+  PROPAGATE(XMSession,setFps,i_value);
   m_fps = i_value;
 }
 
@@ -567,14 +582,17 @@ bool XMSession::testTheme() const {
 }
 
 void XMSession::setUgly(bool i_value) {
+  PROPAGATE(XMSession,setUgly,i_value);
   m_ugly = i_value;
 }
 
 void XMSession::setUglyOver(bool i_value) {
+  PROPAGATE(XMSession,setUglyOver,i_value);
   m_uglyOver = i_value;
 }
 
 void XMSession::setTestTheme(bool i_value) {
+  PROPAGATE(XMSession,setTestTheme,i_value);
   m_testTheme = i_value;
 }
 
@@ -583,6 +601,7 @@ bool XMSession::ghostStrategy_MYBEST() const {
 }
 
 void XMSession::setGhostStrategy_MYBEST(bool i_value) {
+  PROPAGATE(XMSession,setGhostStrategy_MYBEST,i_value);
   m_ghostStrategy_MYBEST = i_value;
 }
 
@@ -591,6 +610,7 @@ bool XMSession::ghostStrategy_THEBEST() const {
 }
 
 void XMSession::setGhostStrategy_THEBEST(bool i_value) {
+  PROPAGATE(XMSession,setGhostStrategy_THEBEST,i_value);
   m_ghostStrategy_THEBEST = i_value;
 }
 
@@ -599,6 +619,7 @@ bool XMSession::ghostStrategy_BESTOFREFROOM() const {
 }
 
 void XMSession::setGhostStrategy_BESTOFREFROOM(bool i_value) {
+  PROPAGATE(XMSession,setGhostStrategy_BESTOFREFROOM,i_value);
   m_ghostStrategy_BESTOFREFROOM = i_value;
 }
 
@@ -607,6 +628,7 @@ bool XMSession::ghostStrategy_BESTOFOTHERROOMS() const {
 }
 
 void XMSession::setGhostStrategy_BESTOFOTHERROOMS(bool i_value) {
+  PROPAGATE(XMSession,setGhostStrategy_BESTOFOTHERROOMS,i_value);
   m_ghostStrategy_BESTOFOTHERROOMS = i_value;
 }
 
@@ -615,10 +637,12 @@ bool XMSession::autosaveHighscoreReplays() const {
 }
 
 void XMSession::setAutosaveHighscoreReplays(bool i_value) {
+  PROPAGATE(XMSession,setAutosaveHighscoreReplays,i_value);
   m_autosaveHighscoreReplays = i_value;
 }
 
 void XMSession::setEnableGhosts(bool i_value) {
+  PROPAGATE(XMSession,setEnableGhosts,i_value);
   m_enableGhosts = i_value;
 }
  
@@ -627,6 +651,7 @@ bool XMSession::enableGhosts() const {
 }
 
 void XMSession::setEnableEngineSound(bool i_value) {
+  PROPAGATE(XMSession,setEnableEngineSound,i_value);
   m_enableEngineSound = i_value;
 }
 
@@ -663,6 +688,7 @@ bool XMSession::hidePlayingInformation() {
 }
 
 void XMSession::setShowEngineCounter(bool i_value) {
+  PROPAGATE(XMSession,setShowEngineCounter,i_value);
   m_showEngineCounter = i_value;
 }
 
@@ -671,6 +697,7 @@ bool XMSession::showEngineCounter() const {
 }
 
 void XMSession::setShowMinimap(bool i_value) {
+  PROPAGATE(XMSession,setShowMinimap,i_value);
   m_showMinimap = i_value;
 }
 
@@ -679,6 +706,7 @@ bool XMSession::showMinimap() const {
 }
 
 void XMSession::setMultiStopWhenOneFinishes(bool i_value) {
+  PROPAGATE(XMSession,setMultiStopWhenOneFinishes,i_value);
   m_multiStopWhenOneFinishes = i_value;
 }
 
@@ -687,6 +715,7 @@ bool XMSession::MultiStopWhenOneFinishes() const {
 }
 
 void XMSession::setEnableMenuMusic(bool i_value) {
+  PROPAGATE(XMSession,setEnableMenuMusic,i_value);
   m_enableMenuMusic = i_value;
 }
 
@@ -695,6 +724,7 @@ bool XMSession::enableMenuMusic() const {
 }
 
 void XMSession::setEnableGameMusic(bool i_value) {
+  PROPAGATE(XMSession,setEnableGameMusic,i_value);
   m_enableGameMusic = i_value;
 }
 
@@ -703,6 +733,7 @@ bool XMSession::enableGameMusic() const {
 }
 
 void XMSession::setEnableInitZoom(bool i_value) {
+  PROPAGATE(XMSession,setEnableInitZoom,i_value);
   m_enableInitZoom = i_value;
 }
 
@@ -711,6 +742,7 @@ bool XMSession::enableInitZoom() const {
 }
 
 void XMSession::setEnableActiveZoom(bool i_value) {
+  PROPAGATE(XMSession,setEnableActiveZoom,i_value);
   m_enableActiveZoom = i_value;
 }
 
@@ -719,6 +751,7 @@ bool XMSession::enableActiveZoom() const {
 }
 
 void XMSession::setEnableDeadAnimation(bool i_value) {
+  PROPAGATE(XMSession,setEnableDeadAnimation,i_value);
   m_enableDeadAnimation = i_value;
 }
 
@@ -727,6 +760,7 @@ bool XMSession::enableDeadAnimation() const {
 }
 
 void XMSession::setMenuGraphics(GraphicsLevel i_value) {
+  PROPAGATE(XMSession,setMenuGraphics,i_value);
   m_menuGraphics = i_value;
 }
 
@@ -735,6 +769,7 @@ GraphicsLevel XMSession::menuGraphics() const {
 }
 
 void XMSession::setGameGraphics(GraphicsLevel i_value) {
+  PROPAGATE(XMSession,setGameGraphics,i_value);
   m_gameGraphics = i_value;
 }
 
@@ -744,6 +779,7 @@ GraphicsLevel XMSession::gameGraphics() const {
 
 
 void XMSession::setQuickStartQualityMIN(int i_value) {
+  PROPAGATE(XMSession,setQuickStartQualityMIN,i_value);
   m_quickStartQualityMIN = i_value;
 }
 
@@ -752,6 +788,7 @@ int XMSession::quickStartQualityMIN() const {
 }
 
 void XMSession::setQuickStartQualityMAX(int i_value) {
+  PROPAGATE(XMSession,setQuickStartQualityMAX,i_value);
   m_quickStartQualityMAX = i_value;
 }
 
@@ -760,6 +797,7 @@ int XMSession::quickStartQualityMAX() const {
 }
 
 void XMSession::setQuickStartDifficultyMIN(int i_value) {
+  PROPAGATE(XMSession,setQuickStartDifficultyMIN,i_value);
   m_quickStartDifficultyMIN = i_value;
 }
 
@@ -768,6 +806,7 @@ int XMSession::quickStartDifficultyMIN() const {
 }
 
 void XMSession::setQuickStartDifficultyMAX(int i_value) {
+  PROPAGATE(XMSession,setQuickStartDifficultyMAX,i_value);
   m_quickStartDifficultyMAX = i_value;
 }
 
@@ -776,6 +815,7 @@ int XMSession::quickStartDifficultyMAX() const {
 }
 
 void XMSession::setMultiNbPlayers(int i_value) {
+  PROPAGATE(XMSession,setMultiNbPlayers,i_value);
   m_multiNbPlayers = i_value;
 }
 
@@ -784,6 +824,7 @@ int XMSession::multiNbPlayers() const {
 }
 
 void XMSession::setMultiScenes(bool i_value) {
+  PROPAGATE(XMSession,setMultiScenes,i_value);
   m_multiScenes = i_value;
 }
 
@@ -792,6 +833,7 @@ bool XMSession::multiScenes() const {
 }
 
 void XMSession::setEnableContextHelp(bool i_value) {
+  PROPAGATE(XMSession,setEnableContextHelp,i_value);
   m_enableContextHelp = i_value;
 }
 
@@ -800,6 +842,7 @@ bool XMSession::enableContextHelp() const {
 }
 
 void XMSession::setTheme(const std::string& i_value) {
+  PROPAGATE(XMSession,setTheme,i_value);
   m_theme = i_value;
 }
 
@@ -808,6 +851,7 @@ std::string XMSession::theme() const {
 }
 
 void XMSession::setEnableAudio(bool i_value) {
+  PROPAGATE(XMSession,setEnableAudio,i_value);
   m_enableAudio = i_value;
 }
 
@@ -816,6 +860,7 @@ bool XMSession::enableAudio() const {
 }
 
 void XMSession::setAudioSampleRate(int i_value) {
+  PROPAGATE(XMSession,setAudioSampleRate,i_value);
   m_audioSampleRate = i_value;
 }
 
@@ -824,6 +869,7 @@ int XMSession::audioSampleRate() const {
 }
 
 void XMSession::setAudioSampleBits(int i_value) {
+  PROPAGATE(XMSession,setAudioSampleBits,i_value);
   m_audioSampleBits = i_value;
 }
 
@@ -832,6 +878,7 @@ int XMSession::audioSampleBits() const {
 }
 
 void XMSession::setAudioChannels(int i_value) {
+  PROPAGATE(XMSession,setAudioChannels,i_value);
   m_audioChannels = i_value;
 }
 
@@ -840,6 +887,7 @@ int XMSession::audioChannels() const {
 }
 
 void XMSession::setEnableAudioEngine(bool i_value) {
+  PROPAGATE(XMSession,setEnableAudioEngine,i_value);
   m_enableAudioEngine = i_value;
 }
 
@@ -848,6 +896,7 @@ bool XMSession::enableAudioEngine() const {
 }
 
 void XMSession::setCheckNewLevelsAtStartup(bool i_value) {
+  PROPAGATE(XMSession,setCheckNewLevelsAtStartup,i_value);
   m_checkNewLevelsAtStartup = i_value;
 }
 
@@ -856,6 +905,7 @@ bool XMSession::checkNewLevelsAtStartup() const {
 }
 
 void XMSession::setCheckNewHighscoresAtStartup(bool i_value) {
+  PROPAGATE(XMSession,setCheckNewHighscoresAtStartup,i_value);
   m_checkNewHighscoresAtStartup = i_value;
 }
 
@@ -864,6 +914,7 @@ bool XMSession::checkNewHighscoresAtStartup() const {
 }
 
 void XMSession::setShowHighscoreInGame(bool i_value) {
+  PROPAGATE(XMSession,setShowHighscoreInGame,i_value);
   m_showHighscoreInGame = i_value;
 }
 
@@ -876,10 +927,12 @@ unsigned int XMSession::nbRoomsEnabled() const {
 }
 
 void XMSession::setNbRoomsEnabled(unsigned int i_value) {
+  PROPAGATE(XMSession,setNbRoomsEnabled,i_value);
   m_nbRoomsEnabled = i_value;
 }
 
 void XMSession::setIdRoom(unsigned int i_number, const std::string& i_value) {
+  XMSession::propagate(this,boost::bind(&XMSession::setIdRoom, _1, i_number, i_value));
   m_idRoom[i_number] = i_value;
 }
 
@@ -888,6 +941,7 @@ std::string XMSession::idRoom(unsigned int i_number) const {
 }
 
 void XMSession::setShowGhostTimeDifference(bool i_value) {
+  PROPAGATE(XMSession,setShowGhostTimeDifference,i_value);
   m_showGhostTimeDifference = i_value;
 }
 
@@ -896,6 +950,7 @@ bool XMSession::showGhostTimeDifference() const {
 }
 
 void XMSession::setGhostMotionBlur(bool i_value) {
+  PROPAGATE(XMSession,setGhostMotionBlur,i_value);
   m_ghostMotionBlur = i_value;
 }
 
@@ -904,6 +959,7 @@ bool XMSession::ghostMotionBlur() const {
 }
 
 void XMSession::setShowGhostsInfos(bool i_value) {
+  PROPAGATE(XMSession,setShowGhostsInfos,i_value);
   m_showGhostsInfos = i_value;
 }
 
@@ -912,6 +968,7 @@ bool XMSession::showGhostsInfos() const {
 }
 
 void XMSession::setHideGhosts(bool i_value) {
+  PROPAGATE(XMSession,setHideGhosts,i_value);
   m_hideGhosts = i_value;
 }
 
@@ -920,6 +977,7 @@ bool XMSession::hideGhosts() const {
 }
 
 void XMSession::setDbsynchronizeOnQuit(bool i_value) {
+  PROPAGATE(XMSession,setDbsynchronizeOnQuit,i_value);
   m_dbsynchronizeOnQuit = i_value;
 }
 
@@ -944,6 +1002,7 @@ std::string XMSession::webRoomsURL() const {
 }
 
 void XMSession::setWebConfAtInit(bool i_value) {
+  PROPAGATE(XMSession,setWebConfAtInit,i_value);
   m_webConfAtInit = i_value;
 }
 
@@ -964,6 +1023,7 @@ bool XMSession::enableReplayInterpolation() const {
 }
 
 void XMSession::setEnableReplayInterpolation(bool i_value) {
+  PROPAGATE(XMSession,setEnableReplayInterpolation,i_value);
   m_enableReplayInterpolation = i_value;
 }
 
@@ -980,10 +1040,12 @@ std::string XMSession::language() const {
 }
 
 void XMSession::setLanguage(const std::string& i_value) {
+  PROPAGATE(XMSession,setLanguage,i_value);
   m_language = i_value;
 }
 
 void XMSession::setNotifyAtInit(bool i_value) {
+  PROPAGATE(XMSession,setNotifyAtInit,i_value);
   m_notifyAtInit = i_value;
 }
 
@@ -1004,6 +1066,7 @@ bool XMSession::mirrorMode() const {
 }
 
 void XMSession::setMirrorMode(bool i_value) {
+  PROPAGATE(XMSession,setMirrorMode,i_value);
   m_mirrorMode = i_value;
 }
 
@@ -1012,6 +1075,7 @@ bool XMSession::useCrappyPack() const {
 }
 
 void XMSession::setUseCrappyPack(bool i_value) {
+  PROPAGATE(XMSession,setUseCrappyPack,i_value);
   m_useCrappyPack = i_value;
 }
 
@@ -1024,6 +1088,7 @@ bool XMSession::useChildrenCompliant() const {
 }
 
 void XMSession::setChildrenCompliant(bool i_value) {
+  PROPAGATE(XMSession,setChildrenCompliant,i_value);
   m_useChildrenCompliant = i_value;
 }
 
@@ -1036,10 +1101,12 @@ bool XMSession::enableJoysticks() const {
 }
 
 void XMSession::setEnableJoysticks(bool i_value) {
+  PROPAGATE(XMSession,setEnableJoysticks,i_value);
   m_enableJoysticks = i_value;
 }
 
 void XMSession::setBeatingMode(bool i_value) {
+  PROPAGATE(XMSession,setBeatingMode,i_value);
   m_beatingMode = i_value;
 }
 
@@ -1048,6 +1115,7 @@ bool XMSession::beatingMode() const {
 }
 
 void XMSession::setWebForms(bool i_value) {
+  PROPAGATE(XMSession,setWebForms,i_value);
   m_webForms = i_value;
 }
 

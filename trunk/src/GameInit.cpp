@@ -182,8 +182,15 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   /* load config file, the session */
   XMSession::createDefaultConfig(m_userConfig);
   m_userConfig->loadFile();
-  XMSession::instance()->load(m_userConfig); /* overload default session by userConfig */
+  
+  XMSession::setDefaultInstance("live");
+
+  XMSession::instance("live")->load(m_userConfig); /* overload default session by userConfig */
+  XMSession::instance("file")->load(m_userConfig); /* overload default session by userConfig */
+  //XMSession::enablePropagation("file");
+  
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
+
   Logger::setVerbose(XMSession::instance()->isVerbose()); /* apply verbose mode */
 
   LogInfo(std::string("X-Moto " + XMBuild::getVersionString(true)).c_str());
@@ -221,10 +228,12 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 
     drawLib->init(XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp(), XMSession::instance()->windowed());
     /* drawlib can change the final resolution if it fails, then, reinit session one's */
+    //XMSession::disablePropagation("file");
     XMSession::instance()->setResolutionWidth(drawLib->getDispWidth());
     XMSession::instance()->setResolutionHeight(drawLib->getDispHeight());
     XMSession::instance()->setBpp(drawLib->getDispBPP());
     XMSession::instance()->setWindowed(drawLib->getWindowed());
+    //XMSession::enablePropagation("file");
     LogInfo("Resolution: %ix%i (%i bpp)", XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp());
     /* */
     
@@ -245,9 +254,12 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(XMSession::instance()->sqlTrace()) {
     pDb->setTrace(XMSession::instance()->sqlTrace());
   }
-  XMSession::instance()->loadProfile(XMSession::instance()->profile(), pDb);
+  //XMSession::disablePropagation("file");
+  XMSession::instance("file")->loadProfile(XMSession::instance("file")->profile(), pDb);
+  XMSession::instance("live")->loadProfile(XMSession::instance("live")->profile(), pDb);
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
   LogInfo("SiteKey: %s", XMSession::instance()->sitekey().c_str());
+  XMSession::enablePropagation("file");
 
 #ifdef USE_GETTEXT
   std::string v_locale = Locales::init(XMSession::instance()->language());
@@ -566,8 +578,8 @@ void GameApp::run_unload() {
     LogDebug("UserUnload saveConfig at %.3f", GameApp::getXMTime());
   }
   if(drawLib != NULL) { /* save config only if drawLib was initialized */
-    XMSession::instance()->save(m_userConfig, xmDatabase::instance("main"));
-    InputHandler::instance()->saveConfig(m_userConfig, xmDatabase::instance("main"), XMSession::instance()->profile());
+    XMSession::instance("file")->save(m_userConfig, xmDatabase::instance("main"));
+    InputHandler::instance()->saveConfig(m_userConfig, xmDatabase::instance("main"), XMSession::instance("file")->profile());
     m_userConfig->saveFile();
   }
 
