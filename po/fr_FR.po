@@ -541,7 +541,7 @@ msgstr "Afficher les informations sur le fantôme"
 
 #: src/GameText.h:195
 msgid "Display bike arrow indication"
-msgstr ""
+msgstr "Afficher la flèche d'indication de la moto"
 
 #: src/GameText.h:196
 msgid "Direct Connection"
@@ -777,7 +777,7 @@ msgstr "Fantôme de %s"
 #: src/GameText.h:250
 #, c-format
 msgid "Web ghost of %s"
-msgstr ""
+msgstr "Fantôme réseau de %s"
 
 #: src/GameText.h:251
 msgid "Ghost"
@@ -1644,86 +1644,86 @@ msgstr "Dézoomer"
 
 #: src/GameText.h:473
 msgid "Server"
-msgstr ""
+msgstr "Serveur"
 
 #: src/GameText.h:475
 msgid "Launch at startup"
-msgstr ""
+msgstr "Lancer au démarrage"
 
 #: src/GameText.h:476
 msgid "Start the server"
-msgstr ""
+msgstr "Démarrer le serveur"
 
 #: src/GameText.h:477
 msgid "Stop the server"
-msgstr ""
+msgstr "Arrêter le serveur"
 
 #: src/GameText.h:478
 msgid "Server is currently started"
-msgstr ""
+msgstr "Le serveur est actuellement démarré"
 
 #: src/GameText.h:479
 msgid "Server is currently stopped"
-msgstr ""
+msgstr "Le serveur est actuellement arrêté"
 
 #: src/GameText.h:480
 msgid "Default port"
-msgstr ""
+msgstr "Port par défaut"
 
 #: src/GameText.h:481
 msgid "Custom port"
-msgstr ""
+msgstr "Port personnalisé"
 
 #: src/GameText.h:482
 msgid "Network"
-msgstr ""
+msgstr "Réseau"
 
 #: src/GameText.h:483
 msgid "You're currently connected"
-msgstr ""
+msgstr "Vous êtes actuellement connectés"
 
 #: src/GameText.h:484
 msgid "You're currently disconnected"
-msgstr ""
+msgstr "Vous êtes actuellement déconnectés"
 
 #: src/GameText.h:485
 msgid "Connect"
-msgstr ""
+msgstr "Connecter"
 
 #: src/GameText.h:486
 msgid "Disconnect"
-msgstr ""
+msgstr "Déconnecter"
 
 #: src/GameText.h:487
 msgid "Unable to connect on the server"
-msgstr ""
+msgstr "Impossible de se connecter au serveur"
 
 #: src/GameText.h:488
 msgid "Network error: you're disconnected"
-msgstr ""
+msgstr "Erreur réseau: vous êtes déconnectés"
 
 #: src/GameText.h:489
 msgid "Connected players:"
-msgstr ""
+msgstr "Joueurs connectés:"
 
 #: src/GameText.h:490
 msgid "Chat message"
-msgstr ""
+msgstr "Message chat"
 
 #: src/GameText.h:491
 #, c-format
 msgid "%s has join the game"
-msgstr ""
+msgstr "%s a rejoint le jeu"
 
 #: src/GameText.h:492
 #, c-format
 msgid "%s left the game"
-msgstr ""
+msgstr "%s a quitté le jeu"
 
 #: src/GameText.h:493
 #, c-format
 msgid "%s is playing level %s"
-msgstr ""
+msgstr "%s joue au niveau %s"
 
 #: src/GameText.h:502
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -2075,7 +2075,7 @@ msgstr "Affiche des informations sur le fantôme lors du démarrage d'un niveau"
 
 #: src/GameText.h:587
 msgid "Display an arrow to display where are located the bikes on the map"
-msgstr ""
+msgstr "Afficher une flèche pour indiquer où les motos sont sur la carte"
 
 #: src/GameText.h:588
 msgid "Display the time difference between the ghost and you"
@@ -2433,27 +2433,27 @@ msgstr "Ne pas envoyer ce rapport sur le serveur web"
 
 #: src/GameText.h:684
 msgid "Server configuration to play via the network"
-msgstr ""
+msgstr "Configuration du serveur pour jouer via le réseau"
 
 #: src/GameText.h:685
 msgid "Start the server at X-Moto startup"
-msgstr ""
+msgstr "Lancer le serveur au démarrage d'X-Moto"
 
 #: src/GameText.h:686
 msgid "Start/stop the server"
-msgstr ""
+msgstr "Démarrer/Arrêter le serveur"
 
 #: src/GameText.h:687
 msgid "Port on which the server must listen to"
-msgstr ""
+msgstr "Port sur lequel le serveur doit écouter"
 
 #: src/GameText.h:688
 msgid "Server on which you want to connect"
-msgstr ""
+msgstr "Serveur sur lequel vous voulez vous connecter"
 
 #: src/GameText.h:689
 msgid "Connect/disconnect the client to the server"
-msgstr ""
+msgstr "Connecter/déconnecter le client du serveur"
 
 #: src/GameText.h:691
 msgid "Levels with no highscore"
