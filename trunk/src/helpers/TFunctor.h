@@ -37,6 +37,8 @@ template <class TClass, typename TArg1> class TFunctor1A : public TFunctor<TClas
         m_argument1 = i_argument1;
     }
 
+    virtual ~TFunctor1A() {}
+
     void call( TClass* i_object ){
         (*i_object.*m_fpt)(m_argument1);
     }
@@ -52,6 +54,8 @@ template <class TClass, typename TArg1> class TFunctor1ARef : public TFunctor<TC
         m_fpt = i_fpt;
         m_argument1 = i_argument1;
     }
+
+    virtual ~TFunctor1ARef() {}
 
     void call( TClass* i_object ){
         (*i_object.*m_fpt)(m_argument1);
@@ -71,6 +75,8 @@ template <class TClass, typename TArg1 ,typename TArg2> class TFunctor1A2ARef : 
         m_argument1 = i_argument1;
         m_argument2 = i_argument2;
     }
+
+    virtual ~TFunctor1A2ARef() {}
 
     void call( TClass* i_object ){
         (*i_object.*m_fpt)(m_argument1, m_argument2);
@@ -92,6 +98,8 @@ template <class TClass, typename TArg1 ,typename TArg2, typename TArg3> class TF
         m_argument2 = i_argument2;
         m_argument3 = i_argument3;
     }
+
+    virtual ~TFunctor1A2ARef3A() {}
 
     void call( TClass* i_object ){
         (*i_object.*m_fpt)(m_argument1, m_argument2, m_argument3);
