@@ -1067,7 +1067,7 @@ void FS::init(const std::string& AppDir, const std::string& i_binFile, const std
     m_bGotDataDir = true;
   } 
   else throw Exception("invalid process directory");
-#elsif defined(__MORPHOS__) || defined(__amigaos4__)         
+#elif defined(__MORPHOS__) || defined(__amigaos4__)         
   if(i_userDirPath != "") {
     m_UserDir = m_UserDirUTF8 = i_userDirPath;
   } else {
