@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: ca_ES\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-10-04 20:40+0200\n"
-"PO-Revision-Date: 2008-08-24 10:59+0200\n"
+"PO-Revision-Date: 2008-10-26 11:36+0100\n"
 "Last-Translator: Joan Creus <joan.creus at gmail dot com>\n"
 "Language-Team: Català <ca@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -300,7 +300,7 @@ msgstr "cap"
 
 #: src/GameText.h:106
 msgid "Script action"
-msgstr ""
+msgstr "Acció preprogramada"
 
 #: src/GameText.h:109
 msgid "Lead Programming"
@@ -388,7 +388,7 @@ msgstr "Danès"
 
 #: src/GameText.h:152
 msgid "Lithuanian"
-msgstr ""
+msgstr "Lituà"
 
 #: src/GameText.h:154
 msgid "Main testers"
@@ -1498,7 +1498,7 @@ msgstr "Utilitzar Perfil"
 
 #: src/GameText.h:438
 msgid "Allow web forms"
-msgstr ""
+msgstr "Permetre formularis web"
 
 #: src/GameText.h:439
 msgid "Using HTTP Proxy"
@@ -1774,7 +1774,7 @@ msgstr ""
 
 #: src/GameText.h:506
 msgid "Allow X-Moto to ask you your mind about levels"
-msgstr ""
+msgstr "Permetre que X-Moto et demani l'opinió sobre els nivells"
 
 #: src/GameText.h:507
 msgid "Enable high-color graphics"
@@ -2241,103 +2241,103 @@ msgstr "Preseleccionar el botó de reintentar quan mors o acabes un nivell"
 
 #: src/GameText.h:626
 msgid "Give your mind about this level"
-msgstr ""
+msgstr "Opinar sobre aquest nivell"
 
 #: src/GameText.h:627
 msgid "No idea"
-msgstr ""
+msgstr "Ni idea"
 
 #: src/GameText.h:628
 msgid "Beginner"
-msgstr ""
+msgstr "Principiant"
 
 #: src/GameText.h:629
 msgid "Expert"
-msgstr ""
+msgstr "Expert"
 
 #: src/GameText.h:630
 msgid "Master"
-msgstr ""
+msgstr "Mestre"
 
 #: src/GameText.h:631
 msgid "God"
-msgstr ""
+msgstr "Déu"
 
 #: src/GameText.h:632
 msgid "Not nice at all"
-msgstr ""
+msgstr "Gens bo"
 
 #: src/GameText.h:633
 msgid "Not nice"
-msgstr ""
+msgstr "No és bo"
 
 #: src/GameText.h:634
 msgid "Nice"
-msgstr ""
+msgstr "Bo"
 
 #: src/GameText.h:635
 msgid "Really nice"
-msgstr ""
+msgstr "Molt bo"
 
 #: src/GameText.h:636
 msgid "Send this report"
-msgstr ""
+msgstr "Enviar aquest informe"
 
 #: src/GameText.h:637
 msgid "Skip this report"
-msgstr ""
+msgstr "Saltar aquest informe"
 
 #: src/GameText.h:639
 msgid "You don't want to vote"
-msgstr ""
+msgstr "No vols votar"
 
 #: src/GameText.h:640
 msgid "Really easy"
-msgstr ""
+msgstr "Molt fàcil"
 
 #: src/GameText.h:641
 msgid "No technical difficulty"
-msgstr ""
+msgstr "Sense dificultat tècnica"
 
 #: src/GameText.h:642
 msgid "At least one difficulty"
-msgstr ""
+msgstr "Almenys una dificultat"
 
 #: src/GameText.h:643
 msgid "Several difficulties"
-msgstr ""
+msgstr "Dificultats diverses"
 
 #: src/GameText.h:644
 msgid "Impossible"
-msgstr ""
+msgstr "Impossible"
 
 #: src/GameText.h:645
 msgid "Basic blocks, no decoration"
-msgstr ""
+msgstr "Blocs bàsics, sense decoració"
 
 #: src/GameText.h:646
 msgid "Basic decoration, not smooth blocks"
-msgstr ""
+msgstr "Decoració bàsica, sense blocs treballats"
 
 #: src/GameText.h:647
 msgid "Not original"
-msgstr ""
+msgstr "No és original"
 
 #: src/GameText.h:648
 msgid "Nice, could be better"
-msgstr ""
+msgstr "Bo, però podria ser millor"
 
 #: src/GameText.h:649
 msgid "Several textures, sprites, ..."
-msgstr ""
+msgstr "Textures variades, sprites, ..."
 
 #: src/GameText.h:650
 msgid "Send this report on the webserver"
-msgstr ""
+msgstr "Enviar aquest informe pel servidor web"
 
 #: src/GameText.h:651
 msgid "Don't send this report on the webserver"
-msgstr ""
+msgstr "No enviar aquest informe pel servidor web"
 
 #: src/GameText.h:653
 msgid "Levels with no highscore"
@@ -2961,9 +2961,3 @@ msgid ""
 msgstr ""
 "Ara, per acabar... No és tan llarg, però en canvi\n"
 "encara hi ha menys espai per al teu preciós cap. Bona sort! :)"
-
-#~ msgid "Musical levels"
-#~ msgstr "Nivells amb música"
-
-#~ msgid "X-Moto levels with a background music"
-#~ msgstr "Nivells de l'X-Moto amb música de fons"
