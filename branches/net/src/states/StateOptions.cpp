@@ -545,10 +545,10 @@ void StateOptions::checkEvents() {
     XMSession::instance()->setShowGhostsInfos(v_button->getChecked());
   }
 
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_ARROWS"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_BIKERS_ARROWS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    XMSession::instance()->setShowGhostsArrows(v_button->getChecked());
+    XMSession::instance()->setShowBikersArrows(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:HIDEGHOSTS"));
@@ -1203,11 +1203,11 @@ UIWindow* StateOptions::makeWindowOptions_ghosts(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_INFO);
 
-  v_button = new UIButton(v_window, 5, 237, GAMETEXT_DISPLAYGHOSTARROW, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 237, GAMETEXT_DISPLAYBIKERARROW, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("DISPLAY_GHOSTS_ARROWS");
+  v_button->setID("DISPLAY_BIKERS_ARROWS");
   v_button->setFont(drawlib->getFontSmall());
-  v_button->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_ARROW);
+  v_button->setContextHelp(CONTEXTHELP_DISPLAY_BIKER_ARROW);
 
   v_button = new UIButton(v_window, 5, 266, GAMETEXT_MOTIONBLURGHOST, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
@@ -1479,8 +1479,8 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->showGhostTimeDifference());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_INFOS"));
   v_button->setChecked(XMSession::instance()->showGhostsInfos());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_ARROWS"));
-  v_button->setChecked(XMSession::instance()->showGhostsArrows());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_BIKERS_ARROWS"));
+  v_button->setChecked(XMSession::instance()->showBikersArrows());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:HIDEGHOSTS"));
   v_button->setChecked(XMSession::instance()->hideGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:MOTION_BLUR_GHOST"));
@@ -1623,7 +1623,7 @@ void StateOptions::updateGhostsOptions() {
   v_button->enableWindow(XMSession::instance()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_INFOS"));
   v_button->enableWindow(XMSession::instance()->enableGhosts());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_ARROWS"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_BIKERS_ARROWS"));
   v_button->enableWindow(XMSession::instance()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:HIDEGHOSTS"));
   v_button->enableWindow(XMSession::instance()->enableGhosts());

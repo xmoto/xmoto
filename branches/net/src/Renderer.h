@@ -216,8 +216,9 @@ private:
   void calculateCameraScaleAndScreenAABB(Camera* pCamera, AABB& bbox);
 
   void renderEngineCounterNeedle(int nWidth, int nHeight, Vector2f center, float value);
-	
-  bool getGhostDirection(Biker* i_ghost, AABB* i_screenBBox, Vector2f* o_arrowPoint, float* o_arrowAngle, AABBSide* o_side);
+
+  void displayArrowIndication(Biker* i_biker, AABB *i_screenBBox);
+  bool getBikerDirection(Biker* i_biker, AABB* i_screenBBox, Vector2f* o_arrowPoint, float* o_arrowAngle, AABBSide* o_side);
 	
   void _RenderSprites(MotoGame* i_scene, bool bForeground,bool bBackground);
   void _RenderSprite(MotoGame* i_scene, Entity *pSprite, float i_sizeMult = 1.0);

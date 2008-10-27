@@ -1054,103 +1054,8 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float 
     }
 
     /* ghost arrow indication */
-    if(XMSession::instance()->showGhostsArrows()) {
-      Vector2f v_arrowPoint;
-      float v_arrowAngle;
-      float v_spriteSize;
-      float v_spriteSizeMin = 0.2;
-      float v_spriteSizeMax = 0.7;
-      float v_spriteSizeLimitMin = 5.0; //
-      float v_spriteSizeLimitMax = 60.0; // if the distance if more than 40m, arrow will no more be reduced and will be v_spriteSizeMin
-      float v_spriteOffset = 0.5; // don't display the arrow exactly at the border
-      float v_infoOffset = 1.0; // don't display the name exactly at the border
-      float v_ghostOutMarge = 1.5; // don't display the arrow if the ghost is almost on the screen
-      float v_arrowAngleDeg;
-      Vector2f p1(1,0), p2(1,0), p3(1,0), p4(1,0);
-      AABBSide v_side;
-      float v_distance; // distance between the center of the camera and the ghost
-      float a, b;
-      Vector2f v_infoPosition;
-
-      // display the arrow only if the ghost if far enough of the screen
-      if(m_screenBBox.getBMin().x - v_ghostOutMarge > i_ghost->getState()->CenterP.x ||
-	 m_screenBBox.getBMax().x + v_ghostOutMarge < i_ghost->getState()->CenterP.x ||
-	 m_screenBBox.getBMin().y - v_ghostOutMarge > i_ghost->getState()->CenterP.y ||
-	 m_screenBBox.getBMax().y + v_ghostOutMarge < i_ghost->getState()->CenterP.y
-	 ) {
-	
-	// display the arrow only if the ghost in not on the screen
-	if(getGhostDirection(i_ghost, &m_screenBBox, &v_arrowPoint, &v_arrowAngle, &v_side)) {
-	  
-	  a = i_ghost->getState()->CenterP.x - (m_screenBBox.getBMin().x + (m_screenBBox.getBMax().x - m_screenBBox.getBMin().x)/2.0);
-	  b = i_ghost->getState()->CenterP.y - (m_screenBBox.getBMin().y + (m_screenBBox.getBMax().y - m_screenBBox.getBMin().y)/2.0);
-	  
-	  v_distance = sqrt(a*a + b*b);
-	  if(v_distance < v_spriteSizeLimitMin) {
-	    v_spriteSize = v_spriteSizeMax;
-	  } else if(v_distance > v_spriteSizeLimitMax) {
-	    v_spriteSize = v_spriteSizeMin;
-	  } else {
-	    v_spriteSize = v_spriteSizeMax - (((v_distance - v_spriteSizeLimitMin) / (v_spriteSizeLimitMax - v_spriteSizeLimitMin)) * v_spriteSizeMax);
-	    if(v_spriteSize < v_spriteSizeMin) {
-	      v_spriteSize = v_spriteSizeMin;
-	    }
-	  }
-	  
-	  v_arrowAngleDeg = (v_arrowAngle * 180) / M_PI - 45.0;
-	  p1.rotateXY(v_arrowAngleDeg);
-	  p2.rotateXY(90+v_arrowAngleDeg);
-	  p3.rotateXY(180+v_arrowAngleDeg);
-	  p4.rotateXY(270+v_arrowAngleDeg);
-	  
-	  p1 = p1 * v_spriteSize;
-	  p2 = p2 * v_spriteSize;
-	  p3 = p3 * v_spriteSize;
-	  p4 = p4 * v_spriteSize;
-	  
-	  v_infoPosition = v_arrowPoint;
-
-	  // arrow
-	  if(v_arrowPoint.x > m_screenBBox.getBMax().x - v_spriteOffset) {
-	    v_arrowPoint.x = m_screenBBox.getBMax().x - v_spriteOffset;
-	  }
-	  
-	  if(v_arrowPoint.x < m_screenBBox.getBMin().x + v_spriteOffset) {
-	    v_arrowPoint.x = m_screenBBox.getBMin().x + v_spriteOffset;
-	  }
-	  
-	  if(v_arrowPoint.y > m_screenBBox.getBMax().y - v_spriteOffset) {
-	    v_arrowPoint.y = m_screenBBox.getBMax().y - v_spriteOffset;
-	  }
-	  
-	  if(v_arrowPoint.y < m_screenBBox.getBMin().y + v_spriteOffset) {
-	    v_arrowPoint.y = m_screenBBox.getBMin().y + v_spriteOffset;
-	  }
-	  
-	  // info
-	  if(v_infoPosition.x > m_screenBBox.getBMax().x - v_infoOffset) {
-	    v_infoPosition.x = m_screenBBox.getBMax().x - v_infoOffset;
-	  }
-	  
-	  if(v_infoPosition.x < m_screenBBox.getBMin().x + v_infoOffset) {
-	    v_infoPosition.x = m_screenBBox.getBMin().x + v_infoOffset;
-	  }
-	  
-	  if(v_infoPosition.y > m_screenBBox.getBMax().y - v_infoOffset) {
-	    v_infoPosition.y = m_screenBBox.getBMax().y - v_infoOffset;
-	  }
-	  
-	  if(v_infoPosition.y < m_screenBBox.getBMin().y + v_infoOffset) {
-	    v_infoPosition.y = m_screenBBox.getBMin().y + v_infoOffset;
-	  }
-
-	  if(m_arrowSprite != NULL) {
-	    _RenderAlphaBlendedSection(m_arrowSprite->getTexture(), p1+v_arrowPoint, p2+v_arrowPoint, p3+v_arrowPoint, p4+v_arrowPoint);
-	    _RenderInGameText(v_infoPosition, i_ghost->getVeryQuickDescription(),
-			      MAKE_COLOR(255,255,255, 255), 0.5, 0.5);
-	  }
-	}
-      }
+    if(XMSession::instance()->showBikersArrows()) {
+      displayArrowIndication(i_ghost, &m_screenBBox);
     }
   }
     
@@ -1163,13 +1068,113 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float 
   }
 }
 
-bool GameRenderer::getGhostDirection(Biker* i_ghost, AABB* i_screenBBox,
+void GameRenderer::displayArrowIndication(Biker* i_biker, AABB *i_screenBBox) {
+  Vector2f v_arrowPoint;
+  float v_arrowAngle;
+  float v_spriteSize;
+  float v_spriteSizeMin = 0.2;
+  float v_spriteSizeMax = 0.7;
+  float v_spriteSizeLimitMin = 5.0; //
+  float v_spriteSizeLimitMax = 60.0; // if the distance if more than 40m, arrow will no more be reduced and will be v_spriteSizeMin
+  float v_spriteOffset = 0.5; // don't display the arrow exactly at the border
+  float v_infoOffset = 1.0; // don't display the name exactly at the border
+  float v_bikerOutMarge = 1.5; // don't display the arrow if the biker is almost on the screen
+  float v_arrowAngleDeg;
+  
+  Vector2f p1(1,0), p2(1,0), p3(1,0), p4(1,0);
+  AABBSide v_side;
+  float v_distance; // distance between the center of the camera and the biker
+  float a, b;
+  Vector2f v_infoPosition;
+
+  // display the arrow only if the biker if far enough of the screen
+  if(i_screenBBox->getBMin().x - v_bikerOutMarge > i_biker->getState()->CenterP.x ||
+     i_screenBBox->getBMax().x + v_bikerOutMarge < i_biker->getState()->CenterP.x ||
+     i_screenBBox->getBMin().y - v_bikerOutMarge > i_biker->getState()->CenterP.y ||
+     i_screenBBox->getBMax().y + v_bikerOutMarge < i_biker->getState()->CenterP.y
+     ) {
+	
+    // display the arrow only if the biker in not on the screen
+    if(getBikerDirection(i_biker, i_screenBBox, &v_arrowPoint, &v_arrowAngle, &v_side)) {
+	  
+      a = i_biker->getState()->CenterP.x - (i_screenBBox->getBMin().x + (i_screenBBox->getBMax().x - i_screenBBox->getBMin().x)/2.0);
+      b = i_biker->getState()->CenterP.y - (i_screenBBox->getBMin().y + (i_screenBBox->getBMax().y - i_screenBBox->getBMin().y)/2.0);
+
+      v_distance = sqrt(a*a + b*b);
+      if(v_distance < v_spriteSizeLimitMin) {
+	v_spriteSize = v_spriteSizeMax;
+      } else if(v_distance > v_spriteSizeLimitMax) {
+	v_spriteSize = v_spriteSizeMin;
+      } else {
+	v_spriteSize = v_spriteSizeMax - (((v_distance - v_spriteSizeLimitMin) / (v_spriteSizeLimitMax - v_spriteSizeLimitMin)) * v_spriteSizeMax);
+	if(v_spriteSize < v_spriteSizeMin) {
+	  v_spriteSize = v_spriteSizeMin;
+	}
+      }
+	  
+      v_arrowAngleDeg = (v_arrowAngle * 180) / M_PI - 45.0;
+      p1.rotateXY(v_arrowAngleDeg);
+      p2.rotateXY(90+v_arrowAngleDeg);
+      p3.rotateXY(180+v_arrowAngleDeg);
+      p4.rotateXY(270+v_arrowAngleDeg);
+	  
+      p1 = p1 * v_spriteSize;
+      p2 = p2 * v_spriteSize;
+      p3 = p3 * v_spriteSize;
+      p4 = p4 * v_spriteSize;
+	  
+      v_infoPosition = v_arrowPoint;
+
+      // arrow
+      if(v_arrowPoint.x > i_screenBBox->getBMax().x - v_spriteOffset) {
+	v_arrowPoint.x = i_screenBBox->getBMax().x - v_spriteOffset;
+      }
+	  
+      if(v_arrowPoint.x < i_screenBBox->getBMin().x + v_spriteOffset) {
+	v_arrowPoint.x = i_screenBBox->getBMin().x + v_spriteOffset;
+      }
+	  
+      if(v_arrowPoint.y > i_screenBBox->getBMax().y - v_spriteOffset) {
+	v_arrowPoint.y = i_screenBBox->getBMax().y - v_spriteOffset;
+      }
+	  
+      if(v_arrowPoint.y < i_screenBBox->getBMin().y + v_spriteOffset) {
+	v_arrowPoint.y = i_screenBBox->getBMin().y + v_spriteOffset;
+      }
+	  
+      // info
+      if(v_infoPosition.x > i_screenBBox->getBMax().x - v_infoOffset) {
+	v_infoPosition.x = i_screenBBox->getBMax().x - v_infoOffset;
+      }
+	  
+      if(v_infoPosition.x < i_screenBBox->getBMin().x + v_infoOffset) {
+	v_infoPosition.x = i_screenBBox->getBMin().x + v_infoOffset;
+      }
+	  
+      if(v_infoPosition.y > i_screenBBox->getBMax().y - v_infoOffset) {
+	v_infoPosition.y = i_screenBBox->getBMax().y - v_infoOffset;
+      }
+	  
+      if(v_infoPosition.y < i_screenBBox->getBMin().y + v_infoOffset) {
+	v_infoPosition.y = i_screenBBox->getBMin().y + v_infoOffset;
+      }
+
+      if(m_arrowSprite != NULL) {
+	_RenderAlphaBlendedSection(m_arrowSprite->getTexture(), p1+v_arrowPoint, p2+v_arrowPoint, p3+v_arrowPoint, p4+v_arrowPoint);
+	_RenderInGameText(v_infoPosition, i_biker->getVeryQuickDescription(),
+			  MAKE_COLOR(255,255,255, 255), 0.5, 0.5);
+      }
+    }
+  }
+}
+
+bool GameRenderer::getBikerDirection(Biker* i_biker, AABB* i_screenBBox,
 				     Vector2f* o_arrowPoint, float* o_arrowAngle, AABBSide* o_side) {
   Vector2f v_centerPoint = Vector2f(i_screenBBox->getBMin().x + (i_screenBBox->getBMax().x-i_screenBBox->getBMin().x)/2.0,
 				    i_screenBBox->getBMin().y + (i_screenBBox->getBMax().y-i_screenBBox->getBMin().y)/2.0);
   float a, b;
     
-  if(i_screenBBox->lineTouchBorder(v_centerPoint, i_ghost->getState()->CenterP, *o_arrowPoint, *o_side) == false) {
+  if(i_screenBBox->lineTouchBorder(v_centerPoint, i_biker->getState()->CenterP, *o_arrowPoint, *o_side) == false) {
     return false;
   }
 
@@ -1332,6 +1337,9 @@ int GameRenderer::nbParticlesRendered() const {
 		      v_player->getRenderBikeFront(),
 		      v_player->getColorFilter(),
 		      v_player->getUglyColorFilter());
+	  if(XMSession::instance()->showBikersArrows()) {
+	    displayArrowIndication(v_player, &m_screenBBox);
+	  }
 	} catch(Exception &e) {
 	  i_scene->gameMessage("Unable to render the biker", true, 50);
 	}

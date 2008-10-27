@@ -95,7 +95,7 @@ void XMSession::setToDefault() {
   m_showGhostTimeDifference       = DEFAULT_SHOWGHOSTTIMEDIFFERENCE;
   m_ghostMotionBlur               = DEFAULT_GHOSTMOTIONBLUR;
   m_showGhostsInfos               = DEFAULT_SHOWGHOSTSINFOS;
-  m_showGhostsArrows              = DEFAULT_SHOWGHOSTSARROWS;
+  m_showBikersArrows              = DEFAULT_SHOWBIKERSARROWS;
   m_hideGhosts                    = DEFAULT_HIDEGHOSTS;
   m_replayFrameRate               = DEFAULT_REPLAYFRAMERATE;
   m_webThemesURL                  = DEFAULT_WEBTHEMES_URL;
@@ -303,7 +303,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_ghostStrategy_BESTOFOTHERROOMS = pDb->config_getBool   (i_id_profile, "GhostStrategy_BESTOFOTHERROOMS", m_ghostStrategy_BESTOFOTHERROOMS);
   m_showGhostTimeDifference        = pDb->config_getBool   (i_id_profile, "ShowGhostTimeDiff"             , m_showGhostTimeDifference);
   m_showGhostsInfos                = pDb->config_getBool   (i_id_profile, "DisplayGhostInfo"              , m_showGhostsInfos);
-  m_showGhostsArrows                = pDb->config_getBool   (i_id_profile, "DisplayGhostArrow"              , m_showGhostsArrows);
+  m_showBikersArrows               = pDb->config_getBool   (i_id_profile, "DisplayBikerArrow"             , m_showBikersArrows);
   m_ghostMotionBlur                = pDb->config_getBool   (i_id_profile, "GhostMotionBlur"               , m_ghostMotionBlur);
   m_hideGhosts                     = pDb->config_getBool   (i_id_profile, "HideGhosts"                    , m_hideGhosts     );
   m_multiStopWhenOneFinishes 	   = pDb->config_getBool   (i_id_profile, "MultiStopWhenOneFinishes"      , m_multiStopWhenOneFinishes);
@@ -432,7 +432,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "GhostStrategy_BESTOFOTHERROOMS", m_ghostStrategy_BESTOFOTHERROOMS);
 	pDb->config_setBool   (m_profile, "ShowGhostTimeDiff"             , m_showGhostTimeDifference);
 	pDb->config_setBool   (m_profile, "DisplayGhostInfo"              , m_showGhostsInfos);
-	pDb->config_setBool   (m_profile, "DisplayGhostArrow"              , m_showGhostsArrows);
+	pDb->config_setBool   (m_profile, "DisplayBikerArrow"              , m_showBikersArrows);
 	pDb->config_setBool   (m_profile, "HideGhosts"                    , m_hideGhosts);
 	pDb->config_setBool   (m_profile, "GhostMotionBlur"               , m_ghostMotionBlur);
 	pDb->config_setBool   (m_profile, "MultiStopWhenOneFinishes"      , m_multiStopWhenOneFinishes);
@@ -935,12 +935,12 @@ bool XMSession::showGhostsInfos() const {
   return m_showGhostsInfos;
 }
 
-void XMSession::setShowGhostsArrows(bool i_value) {
-  m_showGhostsArrows = i_value;
+void XMSession::setShowBikersArrows(bool i_value) {
+  m_showBikersArrows = i_value;
 }
 
-bool XMSession::showGhostsArrows() const {
-  return m_showGhostsArrows;
+bool XMSession::showBikersArrows() const {
+  return m_showBikersArrows;
 }
 
 void XMSession::setHideGhosts(bool i_value) {
