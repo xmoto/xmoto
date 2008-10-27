@@ -1147,7 +1147,7 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float 
 	  if(m_arrowSprite != NULL) {
 	    _RenderAlphaBlendedSection(m_arrowSprite->getTexture(), p1+v_arrowPoint, p2+v_arrowPoint, p3+v_arrowPoint, p4+v_arrowPoint);
 	    _RenderInGameText(v_infoPosition, i_ghost->getVeryQuickDescription(),
-			      MAKE_COLOR(255,255,255, 255), 0.5);
+			      MAKE_COLOR(255,255,255, 255), 0.5, 0.5);
 	  }
 	}
       }
@@ -2497,7 +2497,7 @@ void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) {
     po[3] = m[3]*pi[0] + m[7]*pi[1] + m[11]*pi[2] + m[15]*pi[3]; \
   }    
   
-void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c, float i_centering) {
+void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c, float i_xcentering, float i_ycentering) {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 #ifdef ENABLE_OPENGL
     //keesj:todo i have no idea what is actualy going on here
@@ -2542,7 +2542,7 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
       
       FontManager* v_fm = pDrawlib->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(Text);
-      v_fm->printString(v_fg, (int)(vx - (v_fg->realWidth() * i_centering)), (int)vy, c, 0.0, true);
+      v_fm->printString(v_fg, (int)(vx - (v_fg->realWidth() * i_xcentering)), (int)(vy - (v_fg->realHeight() * i_ycentering)), c, 0.0, true);
 
 #ifdef ENABLE_OPENGL
       glPopMatrix();
