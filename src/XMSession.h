@@ -18,6 +18,7 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
+
 #ifndef __XMCONF_H__
 #define __XMCONF_H__
 
@@ -26,10 +27,12 @@ enum GraphicsLevel {
   GFX_MEDIUM,
   GFX_HIGH
 };
+
 #include "XMSession_default.h"
 
 #include <string>
 #include "helpers/MultiSingleton.h"
+#include "helpers/TFunctor.h"
 
 /*
   XMSession   : current session options

@@ -183,11 +183,10 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   XMSession::createDefaultConfig(m_userConfig);
   m_userConfig->loadFile();
   
-  XMSession::setDefaultInstance("live");
 
-  XMSession::instance("live")->load(m_userConfig); /* overload default session by userConfig */
   XMSession::instance("file")->load(m_userConfig); /* overload default session by userConfig */
-  //XMSession::enablePropagation("file");
+  (* XMSession::instance("live")) = (* XMSession::instance("file")) ; /* copying the resulting session in "live" instance */
+  XMSession::setDefaultInstance("live");
   
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
 
@@ -228,12 +227,10 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 
     drawLib->init(XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp(), XMSession::instance()->windowed());
     /* drawlib can change the final resolution if it fails, then, reinit session one's */
-    //XMSession::disablePropagation("file");
     XMSession::instance()->setResolutionWidth(drawLib->getDispWidth());
     XMSession::instance()->setResolutionHeight(drawLib->getDispHeight());
     XMSession::instance()->setBpp(drawLib->getDispBPP());
     XMSession::instance()->setWindowed(drawLib->getWindowed());
-    //XMSession::enablePropagation("file");
     LogInfo("Resolution: %ix%i (%i bpp)", XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp());
     /* */
     
@@ -254,8 +251,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(XMSession::instance()->sqlTrace()) {
     pDb->setTrace(XMSession::instance()->sqlTrace());
   }
-  //XMSession::disablePropagation("file");
+  
   XMSession::instance("file")->loadProfile(XMSession::instance("file")->profile(), pDb);
+  /* Do NOT copy the raw object cause the live instance should have been altered previously (about drawLib properties) */
   XMSession::instance("live")->loadProfile(XMSession::instance("live")->profile(), pDb);
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
   LogInfo("SiteKey: %s", XMSession::instance()->sitekey().c_str());
