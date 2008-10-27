@@ -48,6 +48,7 @@ Software dependencies for compiling on non-Windows platforms:
  - lua (5.x)
  - ode (0.x)
  - SDL_mixer (1.2.7)
+ - SDL_net (1.2)
  - libsqlite
  - libcurl
  - SDL_ttf 
