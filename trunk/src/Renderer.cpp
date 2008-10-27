@@ -1326,7 +1326,7 @@ int GameRenderer::nbParticlesRendered() const {
     /* ghosts */
     bool v_found = false;
     int v_found_i = 0;
-    float v_textOffset, v_found_textOffset;
+    float v_textOffset, v_found_textOffset = 0.0;
 
     for(unsigned int i=0; i<i_scene->Ghosts().size(); i++) {
       Ghost* v_ghost = i_scene->Ghosts()[i];

@@ -1084,7 +1084,7 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     bool v_diffAvailable = false;
 
     if(m_ghosts.size() > 0) {
-      float v_diffToGhost;
+      float v_diffToGhost = 0.0;
 
       /* take the more */
       for(unsigned int i=0; i<m_ghosts.size(); i++) {
