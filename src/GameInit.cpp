@@ -186,6 +186,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 
   XMSession::instance("file")->load(m_userConfig); /* overload default session by userConfig */
   (* XMSession::instance("live")) = (* XMSession::instance("file")) ; /* copying the resulting session in "live" instance */
+  (* XMSession::instance("temp")) = (* XMSession::instance("file")) ; /* copying the resulting session in a needed temporary instance */
   XMSession::setDefaultInstance("live");
   
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
@@ -227,11 +228,11 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 
     drawLib->init(XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp(), XMSession::instance()->windowed());
     /* drawlib can change the final resolution if it fails, then, reinit session one's */
-    XMSession::instance()->setResolutionWidth(drawLib->getDispWidth());
-    XMSession::instance()->setResolutionHeight(drawLib->getDispHeight());
-    XMSession::instance()->setBpp(drawLib->getDispBPP());
-    XMSession::instance()->setWindowed(drawLib->getWindowed());
-    LogInfo("Resolution: %ix%i (%i bpp)", XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp());
+    XMSession::instance("temp")->setResolutionWidth(drawLib->getDispWidth());
+    XMSession::instance("temp")->setResolutionHeight(drawLib->getDispHeight());
+    XMSession::instance("temp")->setBpp(drawLib->getDispBPP());
+    XMSession::instance("temp")->setWindowed(drawLib->getWindowed());
+    LogInfo("Resolution: %ix%i (%i bpp)", XMSession::instance("temp")->resolutionWidth(), XMSession::instance("temp")->resolutionHeight(), XMSession::instance("temp")->bpp());
     /* */
     
     if(!drawLib->isNoGraphics()) {        
@@ -253,8 +254,15 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   }
   
   XMSession::instance("file")->loadProfile(XMSession::instance("file")->profile(), pDb);
-  /* Do NOT copy the raw object cause the live instance should have been altered previously (about drawLib properties) */
-  XMSession::instance("live")->loadProfile(XMSession::instance("live")->profile(), pDb);
+  (* XMSession::instance("live")) = (* XMSession::instance("file")) ; /* copying the resulting session in "live" instance */
+  
+  /* Live instance should be altered by drawLib changes. Apply this alterations */
+  XMSession::instance()->setResolutionWidth(XMSession::instance("temp")->resolutionWidth());
+  XMSession::instance()->setResolutionHeight(XMSession::instance("temp")->resolutionHeight());
+  XMSession::instance()->setBpp(XMSession::instance("temp")->bpp());
+  XMSession::instance()->setWindowed(XMSession::instance("temp")->windowed());
+  XMSession::destroy("temp");
+  
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
   LogInfo("SiteKey: %s", XMSession::instance()->sitekey().c_str());
   XMSession::enablePropagation("file");
@@ -592,7 +600,8 @@ void GameApp::run_unload() {
   InputHandler::destroy();
   LevelsManager::destroy();
   Theme::destroy();
-  XMSession::destroy();
+  XMSession::destroy("live");
+  XMSession::destroy("file");
 
   if(Logger::isInitialized()) {
     LogInfo("UserUnload ended at %.3f", GameApp::getXMTime());
