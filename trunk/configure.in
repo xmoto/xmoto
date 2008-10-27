@@ -105,11 +105,6 @@ AC_CHECK_HEADER(lua50/lua.h,  AC_DEFINE(HAVE_LUA50_LUA_H) [USE_LUA_VERSION="5.0"
 AC_CHECK_HEADER(lua51/lua.h,  AC_DEFINE(HAVE_LUA51_LUA_H) [USE_LUA_VERSION="5.1"])
 AC_CHECK_HEADER(lua5.1/lua.h, AC_DEFINE(HAVE_LUA5_1_LUA_H)[USE_LUA_VERSION="5.1"])
 
-dnl boost::function and boost::bind just need the headers
-USE_BOOST_VERSION="unknown"
-AC_CHECK_HEADER(boost/function.hpp, AC_DEFINE(HAVE_BOOST_FUNCTION_H), [USE_BOOST_VERSION="unknown"])
-AC_CHECK_HEADER(boost/bind.hpp,     AC_DEFINE(HAVE_BOOST_BIND_H),     [USE_BOOST_VERSION="unknown"])
-
 AC_LANG_PUSH([C++])
 
 if test "$target_os" != "mingw32" # make me crazy to detect it because it compiles

@@ -23,9 +23,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <map>
 #include <string>
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
 #include <SDL/SDL_mutex.h>
+
+#include "TFunctor.h"
 
   template<typename T> class MultiSingleton {
   public:
@@ -103,7 +103,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    delete iter->second;
 	    m_instances.erase(iter);
         m_enabledPropagations.erase(iter2);
-        //m_enabledPropagations.erase;
       }
 
       SDL_UnlockMutex(m_pMutex);
@@ -135,7 +134,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    delete iter->second;
 	    m_instances.erase(iter);
         m_enabledPropagations.erase(iter2);
-        //m_enabledPropagations.erase;
       }
 
       SDL_UnlockMutex(m_pMutex);
@@ -167,7 +165,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         m_isPropagator = value;
     }
 
-    static void propagate(MultiSingleton<T> * caller,typename boost::function<void (T *)> method){
+    static void propagate(MultiSingleton<T> * caller,TFunctor<T>* method){
         caller->setIsPropagator(true);
         
         if(m_isPropagating != true){
@@ -181,8 +179,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
                     iter2 = m_enabledPropagations.find(iter->first);
 
                     if( iter2->second == true ){
-                        // Bah là on propage !
-                        method(iter->second);
+                        method->call(iter->second);
                     }
                 }
             }
