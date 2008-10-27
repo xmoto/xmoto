@@ -357,7 +357,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     return false;
   }
   
-  UIMsgBox *UIWindow::msgBox(std::string Text,UIMsgBoxButton Buttons,bool bTextInput,bool bQuery) {
+  UIMsgBox *UIWindow::msgBox(std::string Text,UIMsgBoxButton Buttons,bool bTextInput,bool bQuery, bool i_verticallyLarge) {
     unsigned int nNumButtons = 0;
     
     if(Buttons & UI_MSGBOX_OK)
@@ -375,7 +375,13 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     FontGlyph* v_fg = m_curFont->getGlyph(Text);
 
     const unsigned int nButtonSize = 57;
-    int w = (v_fg->realWidth() > nNumButtons*115 ? (v_fg->realWidth()) : nNumButtons*115) + 16 + 100;
+    int w;
+
+    if(i_verticallyLarge) {
+      w = (getPosition().nWidth*4)/5;
+    } else {
+      w = (v_fg->realWidth() > nNumButtons*115 ? (v_fg->realWidth()) : nNumButtons*115) + 16 + 100;
+    }
     int h = v_fg->realHeight() + nButtonSize + 24 + 100;
     
     if(bTextInput) h+=40;    

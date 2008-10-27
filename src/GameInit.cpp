@@ -56,6 +56,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "UserConfig.h"
 #include "Renderer.h"
+#include "net/NetServer.h"
+#include "net/NetClient.h"
+#include "net/NetActions.h"
+#include "include/xm_SDL_net.h"
 
 #define MOUSE_DBCLICK_TIME 0.250f
 
@@ -277,6 +281,11 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     Sound::init(XMSession::instance());
   }
 
+  // no command line need the network for the moment
+  if(v_useGraphics) {
+    initNetwork();
+  }
+
   /* Init renderer */
   if(v_useGraphics) {
     switchUglyMode(XMSession::instance()->ugly());
@@ -447,6 +456,7 @@ void GameApp::manageEvent(SDL_Event* Event) {
   /* What event? */
   switch(Event->type) {
   case SDL_KEYDOWN:
+    //printf("%i\n", Event->key.keysym.sym);
     utf8Char = unicode2utf8(Event->key.keysym.unicode);
     StateManager::instance()->xmKey(INPUT_DOWN, XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
     break;
@@ -577,6 +587,9 @@ void GameApp::run_unload() {
   if(m_isODEInitialized ==  true){
     dCloseODE(); // uninit ODE
   }
+
+  uninitNetwork();
+
   GameRenderer::destroy();
   SysMessage::destroy();  
 
@@ -690,3 +703,36 @@ void GameApp::_Wait()
     }
     getDrawLib()->flushGraphics();
   }
+
+
+void GameApp::initNetwork() {
+  if(SDLNet_Init()==-1) {
+    throw Exception(SDLNet_GetError());
+  }
+
+  // start server
+  if(XMSession::instance()->serverStartAtStartup()) {
+    NetServer::instance()->start();
+  }
+
+}
+
+void GameApp::uninitNetwork() {
+  // stop the client
+  if(NetClient::instance()->isConnected()) {
+    NetClient::instance()->disconnect();
+  }
+  NetClient::destroy();
+
+  if(NetServer::instance()->isStarted()) {
+    NetServer::instance()->stop();
+  }
+
+  NetServer::destroy();
+
+  if(Logger::isInitialized()) {
+    NetAction::logStats();
+  }
+
+  SDLNet_Quit();
+}

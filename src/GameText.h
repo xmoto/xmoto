@@ -192,6 +192,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DESCRIPTION          _("Description")
 #define GAMETEXT_DISPLAYGHOSTTIMEDIFF _("Display Ghost time difference")
 #define GAMETEXT_DISPLAYGHOSTINFO     _("Display Ghost Information")
+#define GAMETEXT_DISPLAYBIKERARROW    _("Display bike arrow indication")
 #define GAMETEXT_DIRECTCONN           _("Direct Connection")
 #define GAMETEXT_DLGHOST              _("Downloading the ghost...")
 #define GAMETEXT_DLHIGHSCORE          _("Downloading the highscore...")
@@ -246,6 +247,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_GHOST_STRATEGY_MYBEST  _("The best of my replays (on this computer)")
 #define GAMETEXT_GHOST_STRATEGY_THEBEST _("The best of the replays (on this computer)")
 #define GAMETEXT_GHOSTOF              _("Ghost of %s")
+#define GAMETEXT_WEBGHOSTOF           _("Web ghost of %s")
 #define GAMETEXT_GHOSTTAB             _("Ghost")
 #define GAMETEXT_HELP                 _("Help")
 
@@ -468,6 +470,34 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_ZOOMINIT 	      _("Reinitialize zoom")
 #define GAMETEXT_ZOOMOUT 	      _("Zoom out")
 
+#define GAMETEXT_SERVER _("Server")
+#define GAMETEXT_PORT _("Port")
+#define GAMETEXT_STARTATSTARTUP _("Launch at startup")
+#define GAMETEXT_SERVERSTART _("Start the server")
+#define GAMETEXT_SERVERSTOP _("Stop the server")
+#define GAMETEXT_SERVERSTATUSON _("Server is currently started")
+#define GAMETEXT_SERVERSTATUSOFF _("Server is currently stopped")
+#define GAMETEXT_DEFAULT_PORT _("Default port")
+#define GAMETEXT_CUSTOM_PORT _("Custom port")
+#define GAMETEXT_NETWORK _("Network")
+#define GAMETEXT_CLIENTSTATUSON _("You're currently connected")
+#define GAMETEXT_CLIENTSTATUSOFF _("You're currently disconnected")
+#define GAMETEXT_CLIENTCONNECT _("Connect")
+#define GAMETEXT_CLIENTDISCONNECT _("Disconnect")
+#define GAMETEXT_UNABLETOCONNECTONTHESERVER _("Unable to connect on the server")
+#define GAMETEXT_CLIENTNETWORKERROR _("Network error: you're disconnected")
+#define GAMETEXT_CONNECTED_PLAYERS _("Connected players:")
+#define GAMETEXT_CHATMESSAGE _("Chat message")
+#define GAMETEXT_CLIENTCONNECTSERVER _("%s has join the game")
+#define GAMETEXT_CLIENTDISCONNECTSERVER _("%s left the game")
+#define GAMETEXT_CLIENTPLAYING _("%s is playing level %s")
+#define UNTRANSLATED_GAMETEXT_TOO_MUCH_CLIENTS "Sorry, there are already too much clients connected"
+#define UNTRANSLATED_GAMETEXT_SERVER_PROTOCOL_VERSION_INCOMPATIBLE "Server protocol version incompatible"
+
+			  // to get them into the .po
+#define GAMETEXT_TOO_MUCH_CLIENTS _(UNTRANSLATED_GAMETEXT_TOO_MUCH_CLIENTS)
+#define GAMETEXT_SERVER_PROTOCOL_VERSION_INCOMPATIBLE _(UNTRANSLATED_GAMETEXT_SERVER_PROTOCOL_VERSION_INCOMPATIBLE)
+
 /* Context help strings */
 #define CONTEXTHELP_UPDATEHIGHSCORES _("Download the latest X-Moto world records and check for new levels")
 #define CONTEXTHELP_PROXYCONFIG _("Configure how you are connected to the Internet")
@@ -554,6 +584,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_GHOST_STRATEGIES _("Choose which ghost to display")
 #define CONTEXTHELP_MOTIONBLURGHOST _("Make motion blur effect for the ghost (if supported by your graphics card)")
 #define CONTEXTHELP_DISPLAY_GHOST_INFO _("When starting a level with a ghost, display who the ghost is of")
+#define CONTEXTHELP_DISPLAY_BIKER_ARROW _("Display an arrow to display where are located the bikes on the map")
 #define CONTEXTHELP_DISPLAY_GHOST_TIMEDIFF _("Display the time difference between the ghost and you")
 #define CONTEXTHELP_AUTOSAVEREPLAYS _("If you make a highscore it will automatically be saved as a replay")
 #define CONTEXTHELP_VIEWTHEHIGHSCORE _("View the replay of the room's highscore")
@@ -649,6 +680,13 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_QREALLYNICE   _("Several textures, sprites, ...")
 #define CONTEXTHELP_SENDTHISREPORT  _("Send this report on the webserver")
 #define CONTEXTHELP_SKIPTHISREPORT  _("Don't send this report on the webserver")
+
+#define CONTEXTHELP_SERVER_OPTIONS _("Server configuration to play via the network")
+#define CONTEXTHELP_STARTSERVERATSTARTUP _("Start the server at X-Moto startup")
+#define CONTEXTHELP_SERVERSTARTSTOP _("Start/stop the server")
+#define CONTEXTHELP_SERVERPORT _("Port on which the server must listen to")
+#define CONTEXTHELP_SERVER _("Server on which you want to connect")
+#define CONTEXTHELP_CLIENTCONNECTDISCONNECT _("Connect/disconnect the client to the server")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

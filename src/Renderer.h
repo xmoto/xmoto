@@ -154,6 +154,9 @@ public:
   void showReplayHelp(float p_speed, bool bAllowRewind);
   void switchFollow(MotoGame* i_scene);
 
+  void setShowGhostsText(bool i_value);
+  bool showGhostsText() const;
+
   unsigned int currentRegistrationStage() const;
 
 private:
@@ -180,15 +183,13 @@ private:
 
   bool m_allowGhostEffect; // ask to not do the ghost effect
 
-  float m_fNextGhostInfoUpdate;
-  int m_nGhostInfoTrans;
-
   float m_previousEngineSpeed;
   float m_previousEngineLinVel;
 
   bool m_showMinimap;
   bool m_showEngineCounter;
   bool m_showTimePanel;
+  bool m_showGhostsText;
 
   /* FBO overlay */
   SFXOverlay m_Overlay;
@@ -208,6 +209,7 @@ private:
   float m_xScaleDefault;
   float m_yScaleDefault;
   float m_rotationAngleForTheFrame;
+  MiscSprite* m_arrowSprite;
 
   /* Subroutines */
 	
@@ -216,7 +218,9 @@ private:
   void calculateCameraScaleAndScreenAABB(Camera* pCamera, AABB& bbox);
 
   void renderEngineCounterNeedle(int nWidth, int nHeight, Vector2f center, float value);
-	
+
+  void displayArrowIndication(Biker* i_biker, AABB *i_screenBBox);
+  bool getBikerDirection(Biker* i_biker, AABB* i_screenBBox, Vector2f* o_arrowPoint, float* o_arrowAngle, AABBSide* o_side);
 	
   void _RenderSprites(MotoGame* i_scene, bool bForeground,bool bBackground);
   void _RenderSprite(MotoGame* i_scene, Entity *pSprite, float i_sizeMult = 1.0);
@@ -247,10 +251,10 @@ private:
   void _RenderParticles(MotoGame* i_scene, bool bFront=true);
   void _RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c);
   void _RenderParticle(MotoGame* i_scene, ParticlesSource *i_source, unsigned int sprite=0);
-  void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
+  void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff, float i_xcentering = 0.0, float i_ycentering = 0.0);
   void _RenderZone(Zone *i_zone);
 
-  void _RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i);
+  void _RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float i_textOffset);
 
   void _RenderDebugInfo(void);
 

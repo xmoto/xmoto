@@ -281,6 +281,8 @@ void StateFinished::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i
 	addCommand("SAVEREPLAY");
       }
     }
+  } else {
+    StateMenu::sendFromMessageBox(i_id, i_button, i_input);
   }
 }
 

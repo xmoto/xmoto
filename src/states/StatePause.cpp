@@ -240,4 +240,8 @@ void StatePause::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_bu
       break;
     }
   }
+
+  else {
+    StateMenu::sendFromMessageBox(i_id, i_button, i_input);
+  }
 }

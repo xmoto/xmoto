@@ -28,6 +28,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../drawlib/DrawLib.h"
 #include "../Sound.h"
 #include "StateOptions.h"
+#include "StateMessageBox.h"
+#include "../net/NetClient.h"
 
 #define MENU_SHADING_TIME 0.3
 #define MENU_SHADING_VALUE 150
@@ -58,6 +60,8 @@ GameState::GameState(bool drawStateBehind,
 
   m_showCursor = true;
 
+  StateManager::instance()->registerAsObserver("CLIENT_DISCONNECTED_BY_ERROR", this);
+
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("CHANGE_WWW_ACCESS");
     StateManager::instance()->registerAsEmitter("INTERPOLATION_CHANGED");
@@ -70,6 +74,7 @@ GameState::GameState(bool drawStateBehind,
 
 GameState::~GameState()
 {
+  StateManager::instance()->unregisterAsObserver("CLIENT_DISCONNECTED_BY_ERROR", this);
   SDL_DestroyMutex(m_commandsMutex);
 }
 
@@ -97,6 +102,8 @@ void GameState::enterAfterPop()
 }
 
 bool GameState::render() {
+  DrawLib* drawLib = GameApp::instance()->getDrawLib();
+
   // shade
   if(XMSession::instance()->ugly() == false && m_doShade) {
     float v_currentTime = GameApp::getXMTime();
@@ -108,7 +115,6 @@ bool GameState::render() {
       v_nShade = MENU_SHADING_VALUE;
     }
 
-    DrawLib* drawLib = GameApp::instance()->getDrawLib();
     drawLib->drawBox(Vector2f(0,0),
 		     Vector2f(drawLib->getDispWidth(),
 			      drawLib->getDispHeight()),
@@ -119,7 +125,6 @@ bool GameState::render() {
 }
 
 bool GameState::renderOverShadow() {
-  // do nothing by default
   return true;
 }
 
@@ -132,8 +137,16 @@ void GameState::setId(const std::string& i_id) {
 }
 
 void GameState::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
-  /* by default, do nothing */
-  LogWarning("StateMessageBoxReceiver::send() received, but nothing done !");
+  if(i_id == "CHATMESSAGE"){
+    if(i_button == UI_MSGBOX_OK) {
+      NA_chatMessage na(i_input);
+      try {
+	NetClient::instance()->send(&na, 0);
+	SysMessage::instance()->addConsoleLine(XMSession::instance()->profile() + ": " + i_input);
+      } catch(Exception &e) {
+      }
+    }
+  }
 }
 
 void GameState::send(const std::string& i_message, const std::string& i_args)
@@ -171,9 +184,19 @@ void GameState::executeCommands()
 
 void GameState::executeOneCommand(std::string cmd, std::string args)
 {
-  // default one do nothing.
-  LogWarning("cmd [%s [%s]] executed by state [%s], but not handled by it.",
-	      cmd.c_str(), args.c_str(), getName().c_str());
+  if(cmd == "CLIENT_DISCONNECTED_BY_ERROR") {
+    // to not multiply the messages, only the top message gives the error
+    if(StateManager::instance()->isTopOfTheStates(this)) {
+      SysMessage::instance()->displayError(GAMETEXT_CLIENTNETWORKERROR);
+    }
+
+  } else {
+
+    // default one do nothing.
+    LogWarning("cmd [%s [%s]] executed by state [%s], but not handled by it.",
+	       cmd.c_str(), args.c_str(), getName().c_str());
+
+  }
 }
 
 void GameState::addCommand(std::string cmd, std::string args)
@@ -269,4 +292,18 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_s, KMOD_LCTRL)) {
     GameApp::instance()->toogleEnableMusic();
   }
+
+  // net chat
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_c, KMOD_LCTRL) && NetClient::instance()->isConnected()) {
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, std::string(GAMETEXT_CHATMESSAGE) + ":",
+							 UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, "", false, true, false, true);
+    v_msgboxState->setId("CHATMESSAGE");
+    StateManager::instance()->pushState(v_msgboxState);
+    return; 
+  }
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_WORLD_18, KMOD_NONE)) {
+    SysMessage::instance()->showConsole();
+  }
+
 }

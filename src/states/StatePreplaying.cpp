@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Universe.h"
 #include "../VFileIO.h"
 #include "../Renderer.h"
+#include "../net/NetClient.h"
 
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 100
 
@@ -70,7 +71,7 @@ StatePreplaying::~StatePreplaying()
 
 void StatePreplaying::enter()
 {
-  GameApp*  pGame  = GameApp::instance();
+  GameApp*  pGame = GameApp::instance();
  unsigned int v_nbPlayer = XMSession::instance()->multiNbPlayers();
 
   StateScene::enter();
@@ -79,6 +80,7 @@ void StatePreplaying::enter()
   GameRenderer::instance()->setShowMinimap(false);
   GameRenderer::instance()->setShowTimePanel(false);
   GameRenderer::instance()->hideReplayHelp();
+  GameRenderer::instance()->setShowGhostsText(false);
 
   m_universe =  new Universe();
 
@@ -259,6 +261,8 @@ bool StatePreplaying::render()
 }
 
 void StatePreplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  StateScene::xmKey(i_type, i_xmkey);
+
   if(i_type == INPUT_DOWN) {
     // don't allow down key so that xmoto -l 1 works with the animation at startup : some pad give events at startup about their status
     m_playAnimation = false;
@@ -282,6 +286,7 @@ void StatePreplaying::secondInitPhase()
 	/* anyway */
       }
     }
+
   } catch(Exception &e) {
     LogWarning(std::string("failed to initialize level\n" + e.getMsg()).c_str());
     closePlaying();
@@ -290,6 +295,9 @@ void StatePreplaying::secondInitPhase()
   }
 
   /* Prepare level */
+  if(NetClient::instance()->isConnected()) {
+    NetClient::instance()->startPlay(m_universe);
+  }
   GameRenderer::instance()->prepareForNewLevel(m_universe);
 
   /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */

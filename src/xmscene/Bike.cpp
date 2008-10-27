@@ -185,6 +185,7 @@ Biker::Biker(PhysicsSettings* i_physicsSettings,
   m_EngineSound = new EngineSoundSimulator();
   m_physicsSettings = i_physicsSettings;
   m_bikeState   = new BikeState(m_physicsSettings);
+  m_localNetId = -1;
 
   /* sound engine */
   try {
@@ -227,6 +228,10 @@ Biker::~Biker() {
   delete m_bikeState;
 }
 
+void Biker::setLocalNetId(int i_value) {
+  m_localNetId = i_value;
+}
+
 const TColor& Biker::getColorFilter() const {
   return m_colorFilter;
 }
@@ -243,6 +248,9 @@ int Biker::deadTime() const {
   return m_deadTime;
 }
 
+int Biker::localNetId() const {
+  return m_localNetId;
+}
 
 float Biker::getBikeEngineRPM() {
   return m_bikeState->fBikeEngineRPM;

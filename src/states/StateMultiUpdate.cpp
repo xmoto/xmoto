@@ -141,6 +141,7 @@ void StateMultiUpdate::updateGUI()
 
 void StateMultiUpdate::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
 {
+  StateMenu::sendFromMessageBox(i_id, i_button, i_input);
 }
 
 void StateMultiUpdate::initThreadInfos(ThreadInfos* pInfos)

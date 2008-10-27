@@ -139,6 +139,8 @@ void StateLevelInfoViewer::sendFromMessageBox(const std::string& i_id, UIMsgBoxB
       addCommand("REPLAYS_DELETE");
     }
     return;
+  } else {
+    StateMenu::sendFromMessageBox(i_id, i_button, i_input);
   }
 }
 

@@ -47,6 +47,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sstream>
 #include "../thread/LevelsPacksCountUpdateThread.h"
 #include "../SysMessage.h"
+#include "../net/NetClient.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -106,6 +107,7 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
   StateManager::instance()->registerAsObserver("LEVELSPACKS_COUNT_UPDATED", this);
   StateManager::instance()->registerAsObserver("CHECKWWWW_DONE", this);
   StateManager::instance()->registerAsObserver("CONFIGURE_WWW_ACCESS", this);
+  StateManager::instance()->registerAsObserver("CLIENT_STATUS_CHANGED", this);
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
@@ -148,6 +150,7 @@ StateMainMenu::~StateMainMenu()
   StateManager::instance()->unregisterAsObserver("LEVELSPACKS_COUNT_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("CHECKWWWW_DONE", this);
   StateManager::instance()->unregisterAsObserver("CONFIGURE_WWW_ACCESS", this);
+  StateManager::instance()->unregisterAsObserver("CLIENT_STATUS_CHANGED", this);
 }
 
 
@@ -170,6 +173,7 @@ void StateMainMenu::enter()
   updateLevelsLists();
   updateReplaysList();
   updateStats();
+  updateClientStrings();
 
   /* don't update packs count now if checks www must be done */
   /* if profile is not initialized, don't update */
@@ -281,6 +285,7 @@ void StateMainMenu::checkEvents() {
   checkEventsLevelsFavoriteTab();
   checkEventsLevelsNewTab();
   checkEventsLevelsMultiTab();
+  checkEventsNetworkTab();
 
   // replay tab
   checkEventsReplays();
@@ -433,6 +438,71 @@ void StateMainMenu::checkEventsLevelsMultiTab() {
       v_button->setClicked(false);
       if(v_button->getChecked()) {
 	XMSession::instance()->setMultiNbPlayers(i+1);
+      }
+    }
+  }
+}
+
+void StateMainMenu::updateClientStrings() {
+  UIStatic* v_someText;
+  UIButton* v_button;
+
+  v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:STATUS"));
+  v_someText->setCaption(NetClient::instance()->isConnected() ?
+			 GAMETEXT_CLIENTSTATUSON : GAMETEXT_CLIENTSTATUSOFF);
+  
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CONNECTDISCONNECT"));
+  v_button->setCaption(NetClient::instance()->isConnected() ?
+		       GAMETEXT_CLIENTDISCONNECT : GAMETEXT_CLIENTCONNECT);
+}
+
+void StateMainMenu::checkEventsNetworkTab() {
+  UIButton* v_button;
+  UIEdit* v_edit;
+
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:SERVER"));
+  if(v_edit->hasChanged()) {
+    v_edit->setHasChanged(false);
+    XMSession::instance()->setClientServerName(v_edit->getCaption());
+  }
+
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:PORT"));
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:DEFAULT_PORT"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setClientServerPort(DEFAULT_SERVERPORT);
+    v_edit->enableWindow(false);
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CUSTOM_PORT"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setClientServerPort(atoi(v_edit->getCaption().c_str()));
+    v_edit->enableWindow(true);
+  }
+
+  if(v_edit->isDisabled() == false) {
+    if(v_edit->hasChanged() && v_button->getChecked()) {
+      v_edit->setHasChanged(false);
+      XMSession::instance()->setClientServerPort(atoi(v_edit->getCaption().c_str()));
+    }
+  }
+
+  // connect/disconnect
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CONNECTDISCONNECT"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    if(NetClient::instance()->isConnected()) {
+      NetClient::instance()->disconnect();
+    } else {
+      try {
+	NetClient::instance()->connect(XMSession::instance()->clientServerName(),
+				       XMSession::instance()->clientServerPort());
+      } catch(Exception &e) {
+	SysMessage::instance()->displayError(GAMETEXT_UNABLETOCONNECTONTHESERVER);
+	LogError("Unable to connect to the server");
       }
     }
   }
@@ -978,6 +1048,7 @@ UIWindow* StateMainMenu::makeWindowLevels(UIWindow* i_parent) {
   UIButton*    v_button;
   UIPackTree*  v_packTree;
   UILevelList* v_list;
+  UIEdit*      v_edit;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIFrame(i_parent, 220, i_parent->getPosition().nHeight*7/30, "",
@@ -1129,6 +1200,64 @@ UIWindow* StateMainMenu::makeWindowLevels(UIWindow* i_parent) {
   v_button->setGroup(50050);
   v_button->setContextHelp(CONTEXTHELP_MULTISTOPWHENONEFINISHES);    
 
+  UIWindow *v_netOptionsTab = new UIWindow(v_levelTabs, 20, 40, GAMETEXT_NETWORK,
+					   v_levelTabs->getPosition().nWidth-40, v_levelTabs->getPosition().nHeight);
+  v_netOptionsTab->showWindow(false);
+  v_netOptionsTab->setID("NET_TAB");
+
+  // server
+  v_someText = new UIStatic(v_netOptionsTab, 5, 30, GAMETEXT_SERVER + std::string(":"),
+			    200, 30);
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText->setFont(drawlib->getFontSmall()); 
+
+  v_edit = new UIEdit(v_netOptionsTab, 5, 60, "", 200, 25);
+  v_edit->setFont(drawlib->getFontSmall());
+  v_edit->setID("SERVER");
+  v_edit->setContextHelp(CONTEXTHELP_SERVER);
+
+  // port
+  v_someText = new UIStatic(v_netOptionsTab, 5, 90, GAMETEXT_PORT + std::string(":"),
+			    200, 30);
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText->setFont(drawlib->getFontSmall()); 
+
+  v_button = new UIButton(v_netOptionsTab, 20, 120, GAMETEXT_DEFAULT_PORT, 200, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setGroup(501);
+  v_button->setID("DEFAULT_PORT");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_SERVERPORT);
+
+  v_button = new UIButton(v_netOptionsTab, 20, 150, GAMETEXT_CUSTOM_PORT, 200, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setGroup(501);
+  v_button->setID("CUSTOM_PORT");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_SERVERPORT);
+
+  v_edit = new UIEdit(v_netOptionsTab, 20+35, 180, "", 100, 25);
+  v_edit->setFont(drawlib->getFontSmall());
+  v_edit->setID("PORT");
+  v_edit->setContextHelp(CONTEXTHELP_SERVERPORT);
+
+  // client status
+  v_someText = new UIStatic(v_netOptionsTab, 0, v_netOptionsTab->getPosition().nHeight-30-20-20, "...",
+			    v_netOptionsTab->getPosition().nWidth, 30);
+  v_someText->setID("STATUS");
+  v_someText->setHAlign(UI_ALIGN_CENTER);
+  v_someText->setFont(drawlib->getFontSmall()); 
+
+  // start/stop
+  v_button = new UIButton(v_netOptionsTab, v_netOptionsTab->getPosition().nWidth/2- 207/2,
+			  v_netOptionsTab->getPosition().nHeight -57 - 20 -20 - 30,
+			  "", 207, 57);
+  v_button->setType(UI_BUTTON_TYPE_LARGE);
+  v_button->setID("CONNECTDISCONNECT");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_CLIENTCONNECTDISCONNECT);
+
+
   return v_window;
 }
 
@@ -1236,10 +1365,14 @@ void StateMainMenu::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i
     }
   }
 
-  if(i_id == "REPLAYS_DELETE") {
+  else if(i_id == "REPLAYS_DELETE") {
     if(i_button == UI_MSGBOX_YES) {
       addCommand("REPLAYS_DELETE");
     }
+  }
+
+  else {
+    StateMenu::sendFromMessageBox(i_id, i_button, i_input);
   }
 }
 
@@ -1414,7 +1547,13 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
       updateLevelsPacksCountDetached();
     } else
       m_require_updateLevelsList = true;
-  } else {
+  }
+
+  else if(cmd == "CLIENT_STATUS_CHANGED") {
+    updateClientStrings();
+  }
+
+  else {
     GameState::executeOneCommand(cmd, args);
   }
 }
@@ -1641,12 +1780,26 @@ void StateMainMenu::checkEventsReplays() {
 
 void StateMainMenu::updateOptions() {
   UIButton* v_button;
+  UIEdit* v_edit;
 
   // level tab (multi)
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES"));
   v_button->setChecked(XMSession::instance()->MultiStopWhenOneFinishes());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:MULTISCENES"));
   v_button->setChecked(XMSession::instance()->multiScenes() == false);
+
+  // network
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:SERVER"));
+  v_edit->setCaption(XMSession::instance()->clientServerName());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:DEFAULT_PORT"));
+  v_button->setChecked(XMSession::instance()->clientServerPort() == DEFAULT_CLIENTSERVERPORT);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CUSTOM_PORT"));
+  v_button->setChecked(XMSession::instance()->clientServerPort() != DEFAULT_CLIENTSERVERPORT);
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:PORT"));
+  v_edit->enableWindow(XMSession::instance()->clientServerPort() != DEFAULT_CLIENTSERVERPORT);
+  std::ostringstream v_strPort;
+  v_strPort << XMSession::instance()->clientServerPort();
+  v_edit->setCaption(v_strPort.str());
 }
 
 void StateMainMenu::updateNewLevels() {

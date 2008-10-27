@@ -210,6 +210,8 @@ public:
   bool ghostMotionBlur() const;
   void setShowGhostsInfos(bool i_value);
   bool showGhostsInfos() const;
+  void setShowBikersArrows(bool i_value);
+  bool showBikersArrows() const;
   void setHideGhosts(bool i_value);
   bool hideGhosts() const;
   float replayFrameRate() const;
@@ -253,6 +255,18 @@ public:
   bool beatingMode() const;
   void setWebForms(bool i_value);
   bool webForms() const;
+  bool serverStartAtStartup() const;
+  void setServerStartAtStartup(bool i_value);
+  int serverPort() const;
+  void setServerPort(int i_value);
+  int serverMaxClients() const;
+  void setServerMaxClients(int i_value);
+  std::string clientServerName() const;
+  void setClientServerName(const std::string& i_value);
+  int clientServerPort() const;
+  void setClientServerPort(int i_value);
+  int clientFramerateUpload() const;
+  void setClientFramerateUpload(int i_value);
 
   // there are two dbSync values, one for the profile side, one on the serveur side
   // note that because these values must always be synchronised with db, there are always read and write from and to the db
@@ -334,6 +348,7 @@ public:
   bool m_showGhostTimeDifference;
   bool m_ghostMotionBlur;
   bool m_showGhostsInfos;
+  bool m_showBikersArrows;
   bool m_hideGhosts;
   float m_replayFrameRate;
   std::string m_webThemesURL;
@@ -364,6 +379,12 @@ public:
   bool m_enableJoysticks;
   bool m_beatingMode;
   bool m_webForms;
+  bool m_serverStartAtStartup;
+  int m_serverPort;
+  int m_serverMaxClients;
+  std::string m_clientServerName;
+  int m_clientServerPort;
+  int m_clientFramerateUpload;
 };
 
 #endif

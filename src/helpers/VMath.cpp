@@ -139,10 +139,31 @@ void AABB::addPointToAABB2f(const Vector2f &Point) {
   if(Point.y > BMax.y) BMax.y = Point.y;    
 }
 
-bool AABB::lineTouchAABB2f(const Vector2f &P0,const Vector2f &P1) {
-  if(pointTouchAABB2f(P0)) return true;
-  if(pointTouchAABB2f(P1)) return true;
+bool AABB::lineTouchBorder(const Vector2f &P0,const Vector2f &P1, Vector2f& o_touchOnePoint, AABBSide& o_side) {
+  if(intersectLineLine2f(P0, P1, BMin, Vector2f(BMin.x, BMax.y), o_touchOnePoint) != 0) {
+    o_side = AABB_LEFT;
+    return true;
+  }
 
+  if(intersectLineLine2f(P0, P1, Vector2f(BMin.x, BMax.y), BMax, o_touchOnePoint) != 0) {
+    o_side = AABB_TOP;
+    return true;
+  }
+
+  if(intersectLineLine2f(P0, P1, BMax, Vector2f(BMax.x, BMin.y), o_touchOnePoint) != 0) {
+    o_side = AABB_RIGHT;
+    return true;
+  }
+
+  if(intersectLineLine2f(P0, P1, Vector2f(BMax.x, BMin.y), BMin, o_touchOnePoint) != 0) {
+    o_side = AABB_BOTTOM;
+    return true;
+  }
+
+  return false;
+}
+
+bool AABB::lineTouchAABB2f(const Vector2f &P0,const Vector2f &P1) {
   if(P0.x < BMin.x && P1.x < BMin.x) return false;
   if(P0.y < BMin.y && P1.y < BMin.y) return false;
   if(P0.x > BMax.x && P1.x > BMax.x) return false;
@@ -150,29 +171,37 @@ bool AABB::lineTouchAABB2f(const Vector2f &P0,const Vector2f &P1) {
 
   Vector2f v = P1 - P0;
   float x,y;
-    
+
   if(v.y != 0.0f) {
     /* Top */
     y = BMin.y;
     x = P0.x + v.x*(y - P0.y) / v.y;
-    if(x >= BMin.x && x < BMax.x) return true;
+    if(x >= BMin.x && x < BMax.x) {
+      return true;
+    }
 
     /* Bottom */
     y = BMax.y;
     x = P0.x + v.x*(y - P0.y) / v.y;
-    if(x >= BMin.x && x < BMax.x) return true;
+    if(x >= BMin.x && x < BMax.x) {
+      return true;
+    }
   }
 
   if(v.x != 0.0f) {
     /* Left */
     x = BMin.x;
     y = P0.y + v.y*(x - P0.x) / v.x;
-    if(y >= BMin.y && y < BMax.y) return true;
+    if(y >= BMin.y && y < BMax.y) {
+      return true;
+    }
 
     /* Right */
     x = BMax.x;
     y = P0.y + v.y*(x - P0.x) / v.x;
-    if(y >= BMin.y && y < BMax.y) return true;
+    if(y >= BMin.y && y < BMax.y) {
+      return true;
+    }
   }
     
   /* No touch */
@@ -361,7 +390,7 @@ int intersectLineLine2f(const Vector2f &A0, const Vector2f &A1,
 }  
   
   
-void intersectLineLine2fCramer(Vector2f& A1, Vector2f& A2, Vector2f& B1, Vector2f& B2, Vector2f& contactPoint)
+void intersectLineLine2fCramer(Vector2f A1, Vector2f A2, Vector2f B1, Vector2f B2, Vector2f& contactPoint)
 {
   // equations of lines (A1, A2) and (B1, B2)
   // a*x + b*y = e

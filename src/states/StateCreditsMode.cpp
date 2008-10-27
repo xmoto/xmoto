@@ -46,6 +46,7 @@ void StateCreditsMode::enter()
   renderer->hideReplayHelp();
   renderer->setShowTimePanel(false);
   renderer->setShowMinimap(false);
+  renderer->setShowGhostsText(false);
 
   if(m_universe != NULL) {
     for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {

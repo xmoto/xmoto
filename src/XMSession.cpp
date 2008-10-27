@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWW.h"
 #include <curl/curl.h>
 #include "VideoRecorder.h"
+#include "helpers/VMath.h"
 #include <sstream>
 
 #define PROPAGATE(A,B,C,D) A::propagate(this,new TFunctor1A<A,D>(&A::B,C))
@@ -100,6 +101,7 @@ void XMSession::setToDefault() {
   m_showGhostTimeDifference       = DEFAULT_SHOWGHOSTTIMEDIFFERENCE;
   m_ghostMotionBlur               = DEFAULT_GHOSTMOTIONBLUR;
   m_showGhostsInfos               = DEFAULT_SHOWGHOSTSINFOS;
+  m_showBikersArrows              = DEFAULT_SHOWBIKERSARROWS;
   m_hideGhosts                    = DEFAULT_HIDEGHOSTS;
   m_replayFrameRate               = DEFAULT_REPLAYFRAMERATE;
   m_webThemesURL                  = DEFAULT_WEBTHEMES_URL;
@@ -129,6 +131,12 @@ void XMSession::setToDefault() {
   m_enableJoysticks               = DEFAULT_ENABLEJOYSTICKS;
   m_beatingMode                   = DEFAULT_BEATINGMODE;
   m_webForms                      = DEFAULT_WEBFORMS;
+  m_serverStartAtStartup          = DEFAULT_SERVERSTARTATSTARTUP;
+  m_serverPort                    = DEFAULT_SERVERPORT;
+  m_serverMaxClients              = DEFAULT_SERVERMAXCLIENTS;
+  m_clientServerName              = DEFAULT_CLIENTSERVERNAME;
+  m_clientServerPort              = DEFAULT_CLIENTSERVERPORT;
+  m_clientFramerateUpload         = DEFAULT_CLIENTFRAMERATEUPLOAD;
   m_proxySettings.setDefault();
 }
 
@@ -301,6 +309,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_ghostStrategy_BESTOFOTHERROOMS = pDb->config_getBool   (i_id_profile, "GhostStrategy_BESTOFOTHERROOMS", m_ghostStrategy_BESTOFOTHERROOMS);
   m_showGhostTimeDifference        = pDb->config_getBool   (i_id_profile, "ShowGhostTimeDiff"             , m_showGhostTimeDifference);
   m_showGhostsInfos                = pDb->config_getBool   (i_id_profile, "DisplayGhostInfo"              , m_showGhostsInfos);
+  m_showBikersArrows               = pDb->config_getBool   (i_id_profile, "DisplayBikerArrow"             , m_showBikersArrows);
   m_ghostMotionBlur                = pDb->config_getBool   (i_id_profile, "GhostMotionBlur"               , m_ghostMotionBlur);
   m_hideGhosts                     = pDb->config_getBool   (i_id_profile, "HideGhosts"                    , m_hideGhosts     );
   m_multiStopWhenOneFinishes 	   = pDb->config_getBool   (i_id_profile, "MultiStopWhenOneFinishes"      , m_multiStopWhenOneFinishes);
@@ -308,6 +317,13 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_enableJoysticks                = pDb->config_getBool   (i_id_profile, "EnableJoysticks"               , m_enableJoysticks);
   m_beatingMode                    = pDb->config_getBool   (i_id_profile, "BeatingMode"                   , m_beatingMode);
   m_webForms                       = pDb->config_getBool   (i_id_profile, "WebForms"                   , m_webForms);
+
+  m_serverStartAtStartup  = pDb->config_getBool   (i_id_profile, "ServerStartAtStartup" , m_serverStartAtStartup);
+  m_serverPort            = pDb->config_getInteger(i_id_profile, "ServerPort"           , m_serverPort);
+  m_serverMaxClients      = pDb->config_getInteger(i_id_profile, "ServerMaxClients"     , m_serverMaxClients);
+  m_clientServerName      = pDb->config_getString (i_id_profile, "ClientServerName"     , m_clientServerName);
+  m_clientServerPort      = pDb->config_getInteger(i_id_profile, "ClientServerPort"     , m_clientServerPort);
+  m_clientFramerateUpload = pDb->config_getInteger(i_id_profile, "ClientFramerateUpload", m_clientFramerateUpload);
 
   m_nbRoomsEnabled                 = pDb->config_getInteger(i_id_profile, "WebHighscoresNbRooms"          , m_nbRoomsEnabled);
   if(m_nbRoomsEnabled < 1) { m_nbRoomsEnabled = 1; }
@@ -424,6 +440,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "GhostStrategy_BESTOFOTHERROOMS", m_ghostStrategy_BESTOFOTHERROOMS);
 	pDb->config_setBool   (m_profile, "ShowGhostTimeDiff"             , m_showGhostTimeDifference);
 	pDb->config_setBool   (m_profile, "DisplayGhostInfo"              , m_showGhostsInfos);
+	pDb->config_setBool   (m_profile, "DisplayBikerArrow"              , m_showBikersArrows);
 	pDb->config_setBool   (m_profile, "HideGhosts"                    , m_hideGhosts);
 	pDb->config_setBool   (m_profile, "GhostMotionBlur"               , m_ghostMotionBlur);
 	pDb->config_setBool   (m_profile, "MultiStopWhenOneFinishes"      , m_multiStopWhenOneFinishes);
@@ -431,6 +448,13 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "EnableJoysticks"                 , m_enableJoysticks);
 	pDb->config_setBool   (m_profile, "BeatingMode"                   , m_beatingMode);
 	pDb->config_setBool   (m_profile, "WebForms"                      , m_webForms);
+
+	pDb->config_setBool   (m_profile, "ServerStartAtStartup" , m_serverStartAtStartup);
+	pDb->config_setInteger(m_profile, "ServerPort"           , m_serverPort);
+	pDb->config_setInteger(m_profile, "ServerMaxClients"           , m_serverMaxClients);
+	pDb->config_setString (m_profile, "ClientServerName"     , m_clientServerName);
+	pDb->config_setInteger(m_profile, "ClientServerPort"     , m_clientServerPort);
+	pDb->config_setInteger(m_profile, "ClientFramerateUpload", m_clientFramerateUpload);
 
 	pDb->config_setString (m_profile, "MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium":"High");
 	pDb->config_setString (m_profile, "GameGraphics", m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium":"High");
@@ -968,6 +992,15 @@ bool XMSession::showGhostsInfos() const {
   return m_showGhostsInfos;
 }
 
+void XMSession::setShowBikersArrows(bool i_value) {
+  PROPAGATE(XMSession,setShowBikersArrows,i_value,bool);
+  m_showBikersArrows = i_value;
+}
+
+bool XMSession::showBikersArrows() const {
+  return m_showBikersArrows;
+}
+
 void XMSession::setHideGhosts(bool i_value) {
   PROPAGATE(XMSession,setHideGhosts,i_value,bool);
   m_hideGhosts = i_value;
@@ -1122,6 +1155,60 @@ void XMSession::setWebForms(bool i_value) {
 
 bool XMSession::webForms() const {
   return m_webForms;
+}
+
+bool XMSession::serverStartAtStartup() const {
+  return m_serverStartAtStartup;
+}
+
+void XMSession::setServerStartAtStartup(bool i_value) {
+  PROPAGATE(XMSession,setServerStartAtStartup,i_value,bool);
+  m_serverStartAtStartup = i_value;
+}
+
+int XMSession::serverPort() const {
+  return m_serverPort;
+}
+
+void XMSession::setServerPort(int i_value) {
+  PROPAGATE(XMSession,setServerPort,i_value,int);
+  m_serverPort = i_value;
+}
+
+int XMSession::serverMaxClients() const {
+  return m_serverMaxClients;
+}
+
+void XMSession::setServerMaxClients(int i_value) {
+  PROPAGATE(XMSession,setServerMaxClients,i_value,int);
+  m_serverMaxClients = i_value;
+}
+
+std::string XMSession::clientServerName() const {
+  return m_clientServerName;
+}
+
+void XMSession::setClientServerName(const std::string& i_value) {
+  PROPAGATE_REF(XMSession,setClientServerName,i_value,std::string);
+  m_clientServerName = i_value;
+}
+
+int XMSession::clientServerPort() const {
+  return m_clientServerPort;
+}
+
+void XMSession::setClientServerPort(int i_value) {
+  PROPAGATE(XMSession,setClientServerPort,i_value,int);
+  m_clientServerPort = i_value;
+}
+
+int XMSession::clientFramerateUpload() const {
+  return m_clientFramerateUpload;
+}
+
+void XMSession::setClientFramerateUpload(int i_value) {
+  PROPAGATE(XMSession,setClientFramerateUpload,i_value,int);
+  m_clientFramerateUpload = i_value;
 }
 
 ProxySettings* XMSession::proxySettings() {

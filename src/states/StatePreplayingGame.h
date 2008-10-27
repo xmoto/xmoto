@@ -28,6 +28,8 @@ class StatePreplayingGame : public StatePreplaying {
   StatePreplayingGame(const std::string i_idlevel, bool i_sameLevel);
   virtual ~StatePreplayingGame();
 
+  virtual void nextLevel(bool i_positifOrder = true);
+
   protected:
   virtual void initUniverse();
   virtual void preloadLevels();

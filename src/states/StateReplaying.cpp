@@ -70,6 +70,8 @@ void StateReplaying::enter()
     GameRenderer::instance()->setShowTimePanel(false);
   }
 
+  GameRenderer::instance()->setShowGhostsText(true);
+
   try {
     if(XMSession::instance()->hidePlayingInformation() == false) {
       // display replay informations

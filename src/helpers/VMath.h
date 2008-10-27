@@ -326,7 +326,9 @@ inline bool circleTouchCircle2f(const Vector2f &Cp1, float Cr1,
   return xSquared + ySquared <= sumRadiiSquared;
 }
 
-
+enum AABBSide {
+  AABB_TOP, AABB_BOTTOM, AABB_LEFT, AABB_RIGHT
+};
 
 class AABB {
  public:
@@ -336,6 +338,7 @@ class AABB {
   Vector2f& getBMin() {return BMin;}
   Vector2f& getBMax() {return BMax;}
 
+  bool lineTouchBorder(const Vector2f &P0,const Vector2f &P1, Vector2f& o_touchOnePoint, AABBSide& o_side);
   bool lineTouchAABB2f(const Vector2f& P0, const Vector2f& P1);
   bool circleTouchAABB2f(const Vector2f& Cp, const float Cr);
   bool pointTouchAABB2f(const Vector2f& P);
@@ -412,7 +415,7 @@ inline int randomIntNum(int nMin, int nMax)
   return nMin + (int) (((float)nMax-nMin) * rand()/(RAND_MAX+1.0));
 }
 
-void intersectLineLine2fCramer(Vector2f& A1, Vector2f& A2, Vector2f& B1, Vector2f& B2, Vector2f& contactPoint);
+void intersectLineLine2fCramer(Vector2f A1, Vector2f A2, Vector2f B1, Vector2f B2, Vector2f& contactPoint);
 void calculatePointOnNormal(Vector2f& A1, Vector2f& B1, float length, bool inside, Vector2f& A2, Vector2f& B2);
 void calculatePointOnVector(Vector2f& A1, Vector2f& A2, float length, Vector2f& newA2);
 

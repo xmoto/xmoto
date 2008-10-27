@@ -298,20 +298,23 @@ void StateEditWebConfig::updateGUI()
 void StateEditWebConfig::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
 {
   /* The yes/no box open? */
-  switch(i_button){
-  case UI_MSGBOX_YES:
-    /* Show the actual web config editor */
-    XMSession::instance()->setWWW(true);
-    break;
-  case UI_MSGBOX_NO:
-    /* No internet connection thank you */
-    XMSession::instance()->setWWW(false);
-    StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
-    m_requestForEnd = true;
-    break;
-  default:
-    break;
+  if(i_id == "EDITWEBCONF") {
+    switch(i_button){
+    case UI_MSGBOX_YES:
+      /* Show the actual web config editor */
+      XMSession::instance()->setWWW(true);
+      break;
+    case UI_MSGBOX_NO:
+      /* No internet connection thank you */
+      XMSession::instance()->setWWW(false);
+      StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
+      m_requestForEnd = true;
+      break;
+    default:
+      break;
+    }
+    XMSession::instance()->setWebConfAtInit(false);
+  } else {
+    StateMenu::sendFromMessageBox(i_id, i_button, i_input);
   }
-
-  XMSession::instance()->setWebConfAtInit(false);
 }

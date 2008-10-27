@@ -43,6 +43,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ChipmunkWorld.h"
 #include "../helpers/Random.h"
 #include "PhysicsSettings.h"
+#include "../net/NetClient.h"
+#include "../net/NetActions.h"
 
   MotoGame::MotoGame() {
     m_bDeathAnimEnabled=true;
@@ -57,6 +59,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_playEvents = true;
 
     m_lastStateSerializationTime = -100; /* loong time ago :) */
+    m_lastStateUploadTime        = -100;
 
     m_pLevelSrc = NULL;
 
@@ -214,6 +217,9 @@ void MotoGame::cleanPlayers() {
   void MotoGame::updateLevel(int timeStep, Replay *i_recordedReplay) {
     float v_diff;
     int v_previousTime;
+    bool v_recordReplay;
+    bool v_uploadFrame;
+    SerializedBikeState BikeState;
 
     if(m_is_paused)
       return;
@@ -297,18 +303,47 @@ void MotoGame::cleanPlayers() {
 
     executeEvents(i_recordedReplay);
 
+    // record the replay only if
+    v_recordReplay = 
+      i_recordedReplay != NULL                                                            &&
+      getTime() - m_lastStateSerializationTime >= 100.0f/i_recordedReplay->getFrameRate() && // limit the framerate
+      Players().size() == 1;                                                                 // supported in one player mode only
+
+    // upload the frame only if
+    v_uploadFrame =
+      NetClient::instance()->isConnected() &&
+      getTime() - m_lastStateUploadTime >= 100.0f/XMSession::instance()->clientFramerateUpload();
+
+    if(v_recordReplay) {
+      m_lastStateSerializationTime = getTime();
+    }
+
+    if(v_uploadFrame) {
+      m_lastStateUploadTime = getTime();
+    }
+
     /* save the replay */
-    if(i_recordedReplay != NULL) {
-      /* We'd like to serialize the game state 25 times per second for the replay */
-      if(getTime() - m_lastStateSerializationTime >= 100.0f/i_recordedReplay->getFrameRate()) {
-        m_lastStateSerializationTime = getTime();
-        
-        /* Get it */
-	/* only store the state if 1 player plays */
-	if(Players().size() == 1) {
-	  if(Players()[0]->isDead() == false && Players()[0]->isFinished() == false) {
-	    SerializedBikeState BikeState;
-	    getSerializedBikeState(Players()[0]->getState(), getTime(), &BikeState, m_physicsSettings);
+    if(v_recordReplay || v_uploadFrame) {
+      for(unsigned int i=0; i<Players().size(); i++) {
+
+	// in both case, don't get when player is dead (in the frame, you don't get the 'died' information, thus via the network, you're not able to draw the player correctly)
+	if(Players()[i]->isDead() == false && Players()[i]->isFinished() == false) {
+
+	  // get the state only if we need it for replay or frame
+	  if((v_uploadFrame && Players()[i]->localNetId() >= 0) ||
+	     (v_recordReplay && i == 0)) { // /* only store the state if 1 player plays for replays */
+	    getSerializedBikeState(Players()[i]->getState(), getTime(), &BikeState, m_physicsSettings);
+	  }
+
+	  if(v_uploadFrame && Players()[i]->localNetId() >= 0) {
+	    NA_frame na(&BikeState);
+	    try {
+	      NetClient::instance()->send(&na, Players()[i]->localNetId());
+	    } catch(Exception &e) {
+	    }
+	  }
+	  
+	  if(v_recordReplay && i == 0) {
 	    i_recordedReplay->storeState(BikeState);
 	    i_recordedReplay->storeBlocks(m_pLevelSrc->Blocks());
 	  }
@@ -486,7 +521,9 @@ void MotoGame::cleanPlayers() {
     getLevelSrc()->spawnEntity(v_debris);
 
     /* execute events */
-    m_lastStateSerializationTime = -100;
+    m_lastStateSerializationTime = -100; // reset the last serialization time
+    m_lastStateUploadTime        = -100;
+
     if(m_playEvents) {
       executeEvents(recordingReplay);
     }
@@ -502,22 +539,39 @@ void MotoGame::cleanPlayers() {
     return v_biker;
   }
 
-  Ghost* MotoGame::addGhostFromFile(std::string i_ghostFile, std::string i_info,
-				    Theme *i_theme, BikerTheme* i_bikerTheme,
-				    const TColor& i_filterColor,
-				    const TColor& i_filterUglyColor) {
-    Ghost* v_ghost = NULL;
+  FileGhost* MotoGame::addGhostFromFile(std::string i_ghostFile, const std::string& i_info, bool i_isReference,
+					Theme *i_theme, BikerTheme* i_bikerTheme,
+					const TColor& i_filterColor,
+					const TColor& i_filterUglyColor) {
+    FileGhost* v_ghost = NULL;
 
     /* the level must be set to add a ghost */
     if(m_pLevelSrc == NULL) {
       throw Exception("No level defined");
     }
 
-    v_ghost = new Ghost(i_ghostFile, m_physicsSettings, false, i_theme, i_bikerTheme,
-			i_filterColor, i_filterUglyColor);
+    v_ghost = new FileGhost(i_ghostFile, m_physicsSettings, false, i_theme, i_bikerTheme,
+			    i_filterColor, i_filterUglyColor);
     v_ghost->setPlaySound(false);
     v_ghost->setInfo(i_info);
+    v_ghost->setReference(i_isReference);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
+    m_ghosts.push_back(v_ghost);
+    return v_ghost;
+  }
+
+  NetGhost* MotoGame::addNetGhost(const std::string& i_info,
+				  Theme *i_theme,
+				  BikerTheme* i_bikerTheme,
+				  const TColor& i_filterColor,
+				  const TColor& i_filterUglyColor) {
+    NetGhost* v_ghost = NULL;
+    LogInfo("New NetGhost");
+
+    v_ghost = new NetGhost(m_physicsSettings, i_theme, i_bikerTheme,
+			   i_filterColor, i_filterUglyColor);
+    v_ghost->setPlaySound(false);
+    v_ghost->setInfo(i_info);
     m_ghosts.push_back(v_ghost);
     return v_ghost;
   }
@@ -1027,20 +1081,26 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
   }
 
   void MotoGame::DisplayDiffFromGhost() {
+    bool v_diffAvailable = false;
+
     if(m_ghosts.size() > 0) {
       float v_diffToGhost;
 
       /* take the more */
-      v_diffToGhost = m_ghosts[0]->diffToPlayer();
-      for(unsigned int i=1; i<m_ghosts.size(); i++) {
-	if(m_ghosts[i]->diffToPlayer() > v_diffToGhost) {
-	  v_diffToGhost = m_ghosts[i]->diffToPlayer();
+      for(unsigned int i=0; i<m_ghosts.size(); i++) {
+	if(m_ghosts[i]->diffToPlayerAvailable() && m_ghosts[i]->isReference()) {
+	  if(v_diffAvailable == false || m_ghosts[i]->diffToPlayer() > v_diffToGhost) {
+	    v_diffToGhost = m_ghosts[i]->diffToPlayer();
+	    v_diffAvailable = true;
+	  }
 	}
       }
 
-      char msg[256];
-      snprintf(msg, 256, "%+.2f", v_diffToGhost/100.0);
-      this->gameMessage(msg,true);
+      if(v_diffAvailable) {
+	char msg[256];
+	snprintf(msg, 256, "%+.2f", v_diffToGhost/100.0);
+	this->gameMessage(msg,true);
+      }
     }
   }
   
@@ -1220,7 +1280,7 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
   }
 
 
-  PlayerBiker* MotoGame::addPlayerBiker(Vector2f i_position, DriveDir i_direction,
+  PlayerBiker* MotoGame::addPlayerBiker(int i_localNetId, Vector2f i_position, DriveDir i_direction,
 					Theme *i_theme, BikerTheme* i_bikerTheme,
 					const TColor& i_filterColor,
 					const TColor& i_filterUglyColor,
@@ -1230,6 +1290,7 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
 						 i_filterColor, i_filterUglyColor);
     v_playerBiker->setOnBikerHooks(new MotoGameOnBikerHooks(this, m_players.size()));
     v_playerBiker->setPlaySound(i_enableEngineSound);
+    v_playerBiker->setLocalNetId(i_localNetId);
     m_players.push_back(v_playerBiker);
 
     if(m_chipmunkWorld != NULL) {
@@ -1337,7 +1398,7 @@ void MotoGame::translateEntity(Entity* pEntity, float x, float y)
     return m_playEvents;
   }
 
-  void MotoGame::setInfos(std::string i_infos) {
+  void MotoGame::setInfos(const std::string& i_infos) {
     m_infos = i_infos;
   }
 

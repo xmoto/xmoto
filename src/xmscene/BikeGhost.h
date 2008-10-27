@@ -24,28 +24,49 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Bike.h"
 
 class Ghost : public Biker {
+  public:
+  Ghost(PhysicsSettings* i_physicsSettings,
+	Theme *i_theme, BikerTheme* i_bikerTheme,
+	const TColor& i_colorFilter,
+	const TColor& i_uglyColorFilter);
+  ~Ghost();
+
+  virtual bool diffToPlayerAvailable() const { return true; };
+  virtual void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) = 0;
+  float diffToPlayer() const;
+  virtual bool getRenderBikeFront();
+  void setInfo(const std::string& i_info);
+
+  void setReference(bool i_value);
+  bool isReference() const;
+  
+  protected:
+  float m_diffToPlayer; /* time diff between the ghost and the player */
+  std::string m_info;
+  bool m_reference;
+};
+
+class FileGhost : public Ghost {
  public:
-  Ghost(std::string i_replayFile,
+  FileGhost(std::string i_replayFile,
 	PhysicsSettings* i_physicsSettings,
 	bool i_isActiv, Theme *i_theme,
 	BikerTheme* i_bikerTheme,
 	const TColor& i_colorFilter,
 	const TColor& i_uglyColorFilter);
-  ~Ghost();
+  ~FileGhost();
 
   std::string playerName();
   std::string levelId();
   int getFinishTime();
   void initLastToTakeEntities(Level* i_level);
-  void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
-  float diffToPlayer() const;
+  virtual void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
   virtual void updateToTime(int i_time, int i_timeStep,
 			    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			    MotoGame *i_motogame);
-  void setInfo(std::string i_info);
-  std::string getQuickDescription() const;
   std::string getDescription() const;
-  bool getRenderBikeFront();
+  std::string getQuickDescription() const;
+  std::string getVeryQuickDescription() const;
   float getBikeEngineSpeed();
   float getBikeLinearVel();
   double getAngle();
@@ -57,16 +78,35 @@ class Ghost : public Biker {
 
  private:
   std::vector<float> m_lastToTakeEntities;
-  float m_diffToPlayer; /* time diff between the ghost and the player */
-  std::string m_info;
   bool m_isActiv;
   double m_linearVelocity;
- bool m_teleportationOccured; // true if the teleportation occured since the last update
+  bool m_teleportationOccured; // true if the teleportation occured since the last update
 
  /* because we have not the real one, but the one before and the one after */
  std::vector<BikeState*> m_ghostBikeStates;
 
  void execReplayEvents(int i_time, MotoGame *i_motogame);
+};
+
+class NetGhost : public Ghost {
+ public:
+  NetGhost(PhysicsSettings* i_physicsSettings,
+	   Theme *i_theme, BikerTheme* i_bikerTheme,
+	   const TColor& i_colorFilter,
+	   const TColor& i_uglyColorFilter);
+  ~NetGhost();
+
+  virtual bool diffToPlayerAvailable() const { return false; };
+  virtual void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
+
+  std::string getDescription() const;
+  std::string getQuickDescription() const;
+  std::string getVeryQuickDescription() const;
+  float getBikeEngineSpeed();
+  float getBikeLinearVel();
+  double getAngle();
+ 
+ private:
 };
 
 #endif

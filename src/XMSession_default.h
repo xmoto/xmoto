@@ -92,7 +92,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_NBROOMSENABLED              1
 #define DEFAULT_SHOWGHOSTTIMEDIFFERENCE     true
 #define DEFAULT_GHOSTMOTIONBLUR             true
-#define DEFAULT_SHOWGHOSTSINFOS             false
+#define DEFAULT_SHOWGHOSTSINFOS             true
+#define DEFAULT_SHOWBIKERSARROWS            true
 #define DEFAULT_HIDEGHOSTS                  false
 #define DEFAULT_REPLAYFRAMERATE             25.0
 #define DEFAULT_STOREREPLAYS                true
@@ -119,6 +120,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_PROXY_AUTHUSER              ""
 #define DEFAULT_PROXY_AUTHPWD               ""
 #define DEFAULT_DBSYNCHRONIZEONQUIT         false
+#define DEFAULT_SERVERSTARTATSTARTUP        false
+#define DEFAULT_SERVERPORT                  4130
+#define DEFAULT_SERVERMAXCLIENTS            64
+#define DEFAULT_CLIENTSERVERNAME            "localhost"
+#define DEFAULT_CLIENTSERVERPORT            DEFAULT_SERVERPORT
+#define DEFAULT_CLIENTFRAMERATEUPLOAD       50
 
 class XMDefault {
   public:

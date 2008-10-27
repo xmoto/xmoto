@@ -38,7 +38,8 @@ public:
 		  const std::string& i_inputText = "",
 		  bool i_query = false,
 		  bool drawStateBehind    = true,
-		  bool updateStatesBehind = false);
+		  bool updateStatesBehind = false,
+		  bool i_verticallyLarge = false);
   virtual ~StateMessageBox();
 
   virtual void leave();
@@ -56,7 +57,7 @@ private:
   UIMsgBoxButton m_clickedButton;
 
   void createGUI(const std::string& i_text, int i_buttons,
-		 bool i_input, const std::string& i_inputText, bool i_query);
+		 bool i_input, const std::string& i_inputText, bool i_query, bool i_verticallyLarge);
 };
 
 #endif

@@ -36,6 +36,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../GameText.h"
 #include "../Game.h"
 #include "StateMainMenu.h"
+#include "../net/NetClient.h"
+#include "../net/NetActions.h"
 
 #define INPLAY_ANIMATION_TIME 1.0
 #define INPLAY_ANIMATION_SPEED 10
@@ -94,6 +96,15 @@ StateScene::StateScene(Universe* i_universe, bool i_doShade, bool i_doShadeAnim)
 {
   init();
   m_universe   = i_universe;
+
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() != 0) {
+      if(NetClient::instance()->isConnected()) {
+	NA_playingLevel na(m_universe->getScenes()[0]->getLevelSrc()->Id());
+	NetClient::instance()->send(&na, 0);
+      }
+    }
+  }
 }
 
 StateScene::~StateScene()
@@ -395,6 +406,10 @@ void StateScene::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_bu
   if(i_id == "ERROR") {
     addCommand("ERROR");
   }
+
+  else {
+    GameState::sendFromMessageBox(i_id, i_button, i_input);
+  }
 }
 
 void StateScene::setScoresTimes() {
@@ -456,6 +471,16 @@ void StateScene::abortPlaying() {
 }
 
 void StateScene::closePlaying() {
+  if(NetClient::instance()->isConnected()) {
+    // stop playing
+    NA_playingLevel na("");
+    NetClient::instance()->send(&na, 0);
+  }
+
+  if(NetClient::instance()->isConnected()) {
+    NetClient::instance()->endPlay();
+  }
+
   if(m_universe != NULL) {
     delete m_universe;
     m_universe = NULL;
@@ -753,6 +778,45 @@ void StateScene::restartLevel(bool i_reloadLevel) {
 
 void StateScene::nextLevel(bool i_positifOrder) {
   /* do nothing, it's depends of the scene ; often empty for animation steps */
+}
+
+void StateScene::playingNextLevel(bool i_positifOrder) {
+  GameApp*  pGame  = GameApp::instance();
+  std::string v_nextLevel;
+  std::string v_currentLevel;
+  
+  // take the level id of the first world
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() > 0) {
+      v_currentLevel = m_universe->getScenes()[0]->getLevelSrc()->Id();
+    }
+  }
+
+  if(i_positifOrder) {
+    v_nextLevel = pGame->determineNextLevel(v_currentLevel);
+  } else {
+    v_nextLevel = pGame->determinePreviousLevel(v_currentLevel);
+  }
+
+  /* update stats */
+  if(v_nextLevel != "") {
+    if(m_universe != NULL) {
+      if(m_universe->getScenes().size() == 1) {
+	if(m_universe->getScenes()[0]->Players().size() == 1) {
+	  if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
+	     m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
+	    xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->sitekey(),
+							     XMSession::instance()->profile(),
+							     v_currentLevel,
+							     m_universe->getScenes()[0]->getTime());
+	    StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
+	  }
+	}
+      }
+    }
+  }
+
+  nextLevelToPlay(i_positifOrder);
 }
 
 void StateScene::restartLevelToPlay(bool i_reloadLevel) {
