@@ -45,6 +45,7 @@ class StatePreplaying : public StateScene {
 
  protected:
   std::string m_idlevel;
+  bool m_sameLevel;
 
   virtual void initUniverse()  = 0;
   virtual void preloadLevels() = 0;
@@ -63,7 +64,6 @@ class StatePreplaying : public StateScene {
   bool m_ghostDownloading_failed;
 
   bool m_playAnimation; // must the animation be played ; must be rearmed each time you play a new level
-  bool m_sameLevel;
 
   /* animation */
   CameraAnimation* m_cameraAnim;

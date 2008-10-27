@@ -287,5 +287,7 @@ void StateEditProfile::sendFromMessageBox(const std::string& i_id, UIMsgBoxButto
     default:
       break;
     }
+  } else {
+    StateMenu::sendFromMessageBox(i_id, i_button, i_input);
   }
 }

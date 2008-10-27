@@ -41,6 +41,7 @@ class Logger {
 
   static void setVerbose(bool i_value);
   static void LogLevelMsg(LogLevel i_level, const char *pcFmt, ...);
+  static void LogData(void* data, unsigned int len);
 
   private:
   static bool  m_isInitialized;

@@ -88,6 +88,8 @@ class StateMainMenu : public StateMenu {
 
   void checkEventsLevelsFavoriteTab();
   void checkEventsLevelsNewTab();
+  void checkEventsNetworkTab();
+  void updateClientStrings();
   void checkEventsLevelsMultiTab();
   void checkEventsLevelsPackTab();
   void checkEventsReplays();

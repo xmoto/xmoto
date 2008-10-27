@@ -45,6 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Entity.h"
 #include "PhysSettings.h"
 #include "xmscene/BasicSceneStructs.h"
+#include <sstream>
 
 #define ABS(x) ((x) > 0.0 ? (x) : -(x))
 #define SIGNE(x) ((x) >= 0.0 ? 1.0 : -1.0)
@@ -52,6 +53,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifdef ENABLE_OPENGL
 #include "drawlib/DrawLibOpenGL.h"
 #endif
+
+#define GHOST_INFO_DURATION  3.0
+#define GHOST_INFO_FADE_TIME 0.5
+#define GHOST_INFO_INSCREEN_MARGE 2.0
 
   /* to sort blocks on their texture */
   struct AscendingTextureSort {
@@ -89,6 +94,7 @@ GameRenderer::GameRenderer() {
   m_currentEdgeEffect = "";
   m_currentEdgeSprite = NULL;
   m_curRegistrationStage = 0;
+  m_showGhostsText = true;
 }
 GameRenderer::~GameRenderer() {
 }
@@ -102,6 +108,7 @@ GameRenderer::~GameRenderer() {
     m_Overlay.init(GameApp::instance()->getDrawLib(),512,512);
 
     m_nParticlesRendered = 0;
+    m_arrowSprite = (MiscSprite*) Theme::instance()->getSprite(SPRITE_TYPE_MISC, "Arrow");
   }
 
   /*===========================================================================
@@ -133,8 +140,6 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
   m_screenBBox.reset();
   m_layersBBox.reset();
 
-  m_fNextGhostInfoUpdate = 0.0f;
-  m_nGhostInfoTrans      = 255;
   m_sizeMultOfEntitiesToTake       = 1.0;
   m_sizeMultOfEntitiesWhichMakeWin = 1.0;
 
@@ -1008,7 +1013,22 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
     pDrawlib->setClipRect(0,0,pDrawlib->getDispWidth(),pDrawlib->getDispHeight());
   }
 
-void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
+void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float i_textOffset) {
+  float v_diffInfoTextTime;
+  int v_textTrans;
+
+  if(m_screenBBox.getBMin().x+GHOST_INFO_INSCREEN_MARGE < i_ghost->getState()->CenterP.x &&
+     m_screenBBox.getBMax().x-GHOST_INFO_INSCREEN_MARGE > i_ghost->getState()->CenterP.x &&
+     m_screenBBox.getBMin().y+GHOST_INFO_INSCREEN_MARGE < i_ghost->getState()->CenterP.y &&
+     m_screenBBox.getBMax().y-GHOST_INFO_INSCREEN_MARGE > i_ghost->getState()->CenterP.y) {
+    i_scene->getCamera()->setGhostIn(i);
+  } else if(m_screenBBox.getBMin().x-GHOST_INFO_INSCREEN_MARGE > i_ghost->getState()->CenterP.x ||
+	    m_screenBBox.getBMax().x+GHOST_INFO_INSCREEN_MARGE < i_ghost->getState()->CenterP.x ||
+            m_screenBBox.getBMin().y-GHOST_INFO_INSCREEN_MARGE > i_ghost->getState()->CenterP.y ||
+            m_screenBBox.getBMax().y+GHOST_INFO_INSCREEN_MARGE < i_ghost->getState()->CenterP.y) {
+    i_scene->getCamera()->setGhostOut(i);
+  }
+
   /* Render ghost - ugly mode? */
   if(XMSession::instance()->ugly() == false) {
     if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
@@ -1033,12 +1053,35 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
       }
     }
  
-    if(i_ghost->getDescription() != "") {
-      if(m_nGhostInfoTrans > 0 && XMSession::instance()->showGhostsInfos()) {
-	_RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i*3.0,-1.5f),
-			  i_ghost->getDescription(),
-			  MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
+    /* ghost description */
+    if(i_ghost->getDescription() != "" && showGhostsText()) {
+      if(XMSession::instance()->showGhostsInfos()) {
+	if(i_scene->getCamera()->isGhostIn(i)) {
+	  v_diffInfoTextTime = GameApp::getXMTime() - i_scene->getCamera()->getGhostLastIn(i);
+
+	  if(v_diffInfoTextTime < GHOST_INFO_FADE_TIME + GHOST_INFO_DURATION + GHOST_INFO_FADE_TIME) {
+
+	    if(v_diffInfoTextTime < GHOST_INFO_FADE_TIME) {
+	      v_textTrans = (int)(((v_diffInfoTextTime-GHOST_INFO_FADE_TIME)*255) / GHOST_INFO_FADE_TIME);
+	    }
+	    else if(v_diffInfoTextTime >= GHOST_INFO_FADE_TIME &&
+		    v_diffInfoTextTime < GHOST_INFO_FADE_TIME + GHOST_INFO_DURATION) {
+	      v_textTrans = 255;
+	    } else {
+	      v_textTrans = 255 - ((int)(((v_diffInfoTextTime-GHOST_INFO_FADE_TIME-GHOST_INFO_DURATION)*255) / GHOST_INFO_FADE_TIME));
+	    }
+	    
+	    _RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i_textOffset, -1.0f),
+			      i_ghost->getDescription(),
+			      MAKE_COLOR(255,255,255, v_textTrans), 0.5);
+	  }
+	}
       }
+    }
+
+    /* ghost arrow indication */
+    if(XMSession::instance()->showBikersArrows()) {
+      displayArrowIndication(i_ghost, &m_screenBBox);
     }
   }
     
@@ -1049,6 +1092,158 @@ void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i) {
 		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
     }
   }
+}
+
+void GameRenderer::displayArrowIndication(Biker* i_biker, AABB *i_screenBBox) {
+  Vector2f v_arrowPoint;
+  float v_arrowAngle;
+  float v_spriteSize;
+  float v_spriteSizeMin = 0.2;
+  float v_spriteSizeMax = 0.7;
+  float v_spriteSizeLimitMin = 5.0; //
+  float v_spriteSizeLimitMax = 60.0; // if the distance if more than 40m, arrow will no more be reduced and will be v_spriteSizeMin
+  float v_spriteOffset = 0.5; // don't display the arrow exactly at the border
+  float v_infoOffset = 1.0; // don't display the name exactly at the border
+  float v_bikerOutMarge = 1.5; // don't display the arrow if the biker is almost on the screen
+  float v_arrowAngleDeg;
+  
+  Vector2f p1(1,0), p2(1,0), p3(1,0), p4(1,0);
+  AABBSide v_side;
+  float v_distance; // distance between the center of the camera and the biker
+  float a, b;
+  Vector2f v_infoPosition;
+
+  // display the arrow only if the biker if far enough of the screen
+  if(i_screenBBox->getBMin().x - v_bikerOutMarge > i_biker->getState()->CenterP.x ||
+     i_screenBBox->getBMax().x + v_bikerOutMarge < i_biker->getState()->CenterP.x ||
+     i_screenBBox->getBMin().y - v_bikerOutMarge > i_biker->getState()->CenterP.y ||
+     i_screenBBox->getBMax().y + v_bikerOutMarge < i_biker->getState()->CenterP.y
+     ) {
+	
+    // display the arrow only if the biker in not on the screen
+    if(getBikerDirection(i_biker, i_screenBBox, &v_arrowPoint, &v_arrowAngle, &v_side)) {
+	  
+      a = i_biker->getState()->CenterP.x - (i_screenBBox->getBMin().x + (i_screenBBox->getBMax().x - i_screenBBox->getBMin().x)/2.0);
+      b = i_biker->getState()->CenterP.y - (i_screenBBox->getBMin().y + (i_screenBBox->getBMax().y - i_screenBBox->getBMin().y)/2.0);
+
+      v_distance = sqrt(a*a + b*b);
+      if(v_distance < v_spriteSizeLimitMin) {
+	v_spriteSize = v_spriteSizeMax;
+      } else if(v_distance > v_spriteSizeLimitMax) {
+	v_spriteSize = v_spriteSizeMin;
+      } else {
+	v_spriteSize = v_spriteSizeMax - (((v_distance - v_spriteSizeLimitMin) / (v_spriteSizeLimitMax - v_spriteSizeLimitMin)) * v_spriteSizeMax);
+	if(v_spriteSize < v_spriteSizeMin) {
+	  v_spriteSize = v_spriteSizeMin;
+	}
+      }
+	  
+      v_arrowAngleDeg = (v_arrowAngle * 180) / M_PI - 45.0;
+      p1.rotateXY(v_arrowAngleDeg);
+      p2.rotateXY(90+v_arrowAngleDeg);
+      p3.rotateXY(180+v_arrowAngleDeg);
+      p4.rotateXY(270+v_arrowAngleDeg);
+	  
+      p1 = p1 * v_spriteSize;
+      p2 = p2 * v_spriteSize;
+      p3 = p3 * v_spriteSize;
+      p4 = p4 * v_spriteSize;
+	  
+      v_infoPosition = v_arrowPoint;
+
+      // arrow
+      if(v_arrowPoint.x > i_screenBBox->getBMax().x - v_spriteOffset) {
+	v_arrowPoint.x = i_screenBBox->getBMax().x - v_spriteOffset;
+      }
+	  
+      if(v_arrowPoint.x < i_screenBBox->getBMin().x + v_spriteOffset) {
+	v_arrowPoint.x = i_screenBBox->getBMin().x + v_spriteOffset;
+      }
+	  
+      if(v_arrowPoint.y > i_screenBBox->getBMax().y - v_spriteOffset) {
+	v_arrowPoint.y = i_screenBBox->getBMax().y - v_spriteOffset;
+      }
+	  
+      if(v_arrowPoint.y < i_screenBBox->getBMin().y + v_spriteOffset) {
+	v_arrowPoint.y = i_screenBBox->getBMin().y + v_spriteOffset;
+      }
+	  
+      // info
+      if(v_infoPosition.x > i_screenBBox->getBMax().x - v_infoOffset) {
+	v_infoPosition.x = i_screenBBox->getBMax().x - v_infoOffset;
+      }
+	  
+      if(v_infoPosition.x < i_screenBBox->getBMin().x + v_infoOffset) {
+	v_infoPosition.x = i_screenBBox->getBMin().x + v_infoOffset;
+      }
+	  
+      if(v_infoPosition.y > i_screenBBox->getBMax().y - v_infoOffset) {
+	v_infoPosition.y = i_screenBBox->getBMax().y - v_infoOffset;
+      }
+	  
+      if(v_infoPosition.y < i_screenBBox->getBMin().y + v_infoOffset) {
+	v_infoPosition.y = i_screenBBox->getBMin().y + v_infoOffset;
+      }
+
+      if(m_arrowSprite != NULL) {
+	_RenderAlphaBlendedSection(m_arrowSprite->getTexture(), p1+v_arrowPoint, p2+v_arrowPoint, p3+v_arrowPoint, p4+v_arrowPoint);
+	_RenderInGameText(v_infoPosition, i_biker->getVeryQuickDescription(),
+			  MAKE_COLOR(255,255,255, 255), 0.5, 0.5);
+      }
+    }
+  }
+}
+
+bool GameRenderer::getBikerDirection(Biker* i_biker, AABB* i_screenBBox,
+				     Vector2f* o_arrowPoint, float* o_arrowAngle, AABBSide* o_side) {
+  Vector2f v_centerPoint = Vector2f(i_screenBBox->getBMin().x + (i_screenBBox->getBMax().x-i_screenBBox->getBMin().x)/2.0,
+				    i_screenBBox->getBMin().y + (i_screenBBox->getBMax().y-i_screenBBox->getBMin().y)/2.0);
+  float a, b;
+    
+  if(i_screenBBox->lineTouchBorder(v_centerPoint, i_biker->getState()->CenterP, *o_arrowPoint, *o_side) == false) {
+    return false;
+  }
+
+  if(*o_side == AABB_TOP || *o_side == AABB_BOTTOM) {
+    a = (i_screenBBox->getBMax().y-i_screenBBox->getBMin().y)/2.0;
+    b = o_arrowPoint->x - (i_screenBBox->getBMin().x + (i_screenBBox->getBMax().x-i_screenBBox->getBMin().x)/2.0);
+  } else {
+    a = (i_screenBBox->getBMax().x-i_screenBBox->getBMin().x)/2.0;
+    b = o_arrowPoint->y - (i_screenBBox->getBMin().y + (i_screenBBox->getBMax().y-i_screenBBox->getBMin().y)/2.0);
+  }
+
+  switch(*o_side) {
+  case AABB_TOP:
+    if(b>=0) {
+      *o_arrowAngle = atan(a/b) - M_PI/2;
+    } else {
+      *o_arrowAngle = atan(a/b) + M_PI/2;
+    }
+    break;
+  case AABB_BOTTOM:
+    if(b>=0) {
+      *o_arrowAngle = atan(a/-b) - M_PI/2;
+    } else {
+      *o_arrowAngle = atan(a/-b) + M_PI/2;
+    }
+    break;
+  case AABB_LEFT:
+    if(b>=0) {
+      *o_arrowAngle = atan(a/b);
+    } else {
+      *o_arrowAngle = atan(a/b) + M_PI;
+    }
+    break;
+  case AABB_RIGHT:
+    if(b>=0) {
+      *o_arrowAngle = atan(a/-b);
+    } else {
+      *o_arrowAngle = atan(a/-b) + M_PI;
+    }
+    break;
+  }
+
+  return true;
 }
 
 int GameRenderer::nbParticlesRendered() const {
@@ -1131,18 +1326,31 @@ int GameRenderer::nbParticlesRendered() const {
     /* ghosts */
     bool v_found = false;
     int v_found_i = 0;
+    float v_textOffset, v_found_textOffset;
+
     for(unsigned int i=0; i<i_scene->Ghosts().size(); i++) {
       Ghost* v_ghost = i_scene->Ghosts()[i];
+      v_textOffset = 0.0;
+
+      for(unsigned int j=0; j<i; j++) {
+	if(fabs(i_scene->Ghosts()[j]->getState()->CenterP.x - v_ghost->getState()->CenterP.x) < 2.0 &&
+	   fabs(i_scene->Ghosts()[j]->getState()->CenterP.y - v_ghost->getState()->CenterP.y) < 2.0
+	   ) {
+	  v_textOffset += 2.0;
+	}
+      }
+
       if(v_ghost != pCamera->getPlayerToFollow()) {
-	_RenderGhost(i_scene, v_ghost, i);
+	_RenderGhost(i_scene, v_ghost, i, v_textOffset);
       } else {
 	v_found = true;
 	v_found_i = i;
+	v_found_textOffset = v_textOffset;
       }
     }
     /* draw the player to follow over the others */
     if(v_found) {
-      _RenderGhost(i_scene, i_scene->Ghosts()[v_found_i], v_found_i);
+      _RenderGhost(i_scene, i_scene->Ghosts()[v_found_i], v_found_i, v_found_textOffset);
     }
 
     /* ... followed by the bike ... */
@@ -1155,6 +1363,9 @@ int GameRenderer::nbParticlesRendered() const {
 		      v_player->getRenderBikeFront(),
 		      v_player->getColorFilter(),
 		      v_player->getUglyColorFilter());
+	  if(XMSession::instance()->showBikersArrows()) {
+	    displayArrowIndication(v_player, &m_screenBBox);
+	  }
 	} catch(Exception &e) {
 	  i_scene->gameMessage("Unable to render the biker", true, 50);
 	}
@@ -1179,16 +1390,6 @@ int GameRenderer::nbParticlesRendered() const {
 	}
       } catch(Exception &e) {
 	i_scene->gameMessage("Unable to render the biker", true, 50);
-      }
-    }
-
-    /* ghost information */
-    if(i_scene->getTime() > m_fNextGhostInfoUpdate) {
-      if(m_nGhostInfoTrans > 0) {
-	if(m_fNextGhostInfoUpdate > 1.5f) {
-	  m_nGhostInfoTrans-=16;
-	}
-	m_fNextGhostInfoUpdate += 0.025f;
       }
     }
     
@@ -1433,10 +1634,8 @@ int GameRenderer::nbParticlesRendered() const {
       p3 = p3 * 50.0f;
       p4 = p4 * 50.0f;
 
-      MiscSprite* pType;
-      pType = (MiscSprite*) Theme::instance()->getSprite(SPRITE_TYPE_MISC, "Arrow");
-      if(pType != NULL) {
-	_RenderAlphaBlendedSectionSP(pType->getTexture(),p1+C,p2+C,p3+C,p4+C);      
+      if(m_arrowSprite != NULL) {
+	_RenderAlphaBlendedSectionSP(m_arrowSprite->getTexture(),p1+C,p2+C,p3+C,p4+C);      
       }
     }
         
@@ -2332,7 +2531,7 @@ void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) {
     po[3] = m[3]*pi[0] + m[7]*pi[1] + m[11]*pi[2] + m[15]*pi[3]; \
   }    
   
-  void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c) {
+void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c, float i_xcentering, float i_ycentering) {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 #ifdef ENABLE_OPENGL
     //keesj:todo i have no idea what is actualy going on here
@@ -2377,7 +2576,7 @@ void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) {
       
       FontManager* v_fm = pDrawlib->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(Text);
-      v_fm->printString(v_fg, (int)vx, (int)vy, c, 0.0, true);
+      v_fm->printString(v_fg, (int)(vx - (v_fg->realWidth() * i_xcentering)), (int)(vy - (v_fg->realHeight() * i_ycentering)), c, 0.0, true);
 
 #ifdef ENABLE_OPENGL
       glPopMatrix();
@@ -2469,6 +2668,14 @@ void GameRenderer::setShowTimePanel(bool i_value) {
   void GameRenderer::setShowEngineCounter(bool i_value) {
     m_showEngineCounter = i_value;
   }
+
+void GameRenderer::setShowGhostsText(bool i_value) {
+  m_showGhostsText = i_value;
+}
+
+bool GameRenderer::showGhostsText() const {
+  return m_showGhostsText;
+}
 
   void GameRenderer::switchFollow(MotoGame* i_scene) {
     Camera*  pCamera  = i_scene->getCamera();

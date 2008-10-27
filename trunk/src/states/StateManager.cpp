@@ -33,7 +33,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateRequestKey.h"
 #include "StateOptions.h"
 #include "StateVote.h"
+#include "../net/NetClient.h"
 
+#include "../GameText.h"
 #include "../XMSession.h"
 #include "../drawlib/DrawLib.h"
 #include "../Game.h"
@@ -206,6 +208,9 @@ void StateManager::update()
     m_updateFpsNbFrame++;
   }
 
+  /* update net */
+  NetClient::instance()->executeNetActions();
+
   /* update fps */
   if(m_lastFpsTime + 1000 < GameApp::getXMTimeInt()) {
     m_currentRenderFps = m_renderFpsNbFrame;
@@ -213,6 +218,38 @@ void StateManager::update()
     m_renderFpsNbFrame = 0;
     m_updateFpsNbFrame = 0;
     m_lastFpsTime += 1000;
+  }
+}
+
+void StateManager::renderOverAll() {
+
+  // net infos
+  if(NetClient::instance()->isConnected()) {
+    FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
+    FontGlyph* v_fg;
+    int vborder = 10;
+    int v_voffset = 0;
+    
+    v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_CONNECTED_PLAYERS);
+    v_fm->printString(v_fg,
+		      GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder,
+		      MAKE_COLOR(240,240,240,255), -1.0, true);
+    v_voffset += v_fg->realHeight();
+    
+    // you
+    v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(XMSession::instance()->profile());
+    v_fm->printString(v_fg,
+		      GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
+		      MAKE_COLOR(200,200,200,255), -1.0, true);     
+    v_voffset += v_fg->realHeight();
+    
+    for(unsigned int i=0; i<NetClient::instance()->otherClients().size(); i++) {
+      v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(NetClient::instance()->otherClients()[i]->name());
+      v_fm->printString(v_fg,
+			GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
+			MAKE_COLOR(200,200,200,255), -1.0, true);     
+      v_voffset += v_fg->realHeight();
+    }
   }
 }
 
@@ -244,6 +281,8 @@ void StateManager::render()
 
       ++stateIterator;
     }
+
+    renderOverAll();
 
     // FPS
     if(XMSession::instance()->fps()) {
@@ -567,8 +606,10 @@ StateManager::sendSynchronousMessage(std::string message, std::string args)
     std::vector<GameState*>::iterator stateIterator = states.begin();
 
     if(states.size() == 0){
-      LogWarning("sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
-		  message.c_str(), args.c_str());
+      if(XMSession::instance()->debug()) {
+	LogWarning("sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
+		   message.c_str(), args.c_str());
+      }
     }
 
     while(stateIterator != states.end()){
@@ -580,8 +621,10 @@ StateManager::sendSynchronousMessage(std::string message, std::string args)
       ++stateIterator;
     }
   } else {
-    LogWarning("sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
-		message.c_str(), args.c_str());
+    if(XMSession::instance()->debug()) {
+      LogWarning("sendSynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
+		 message.c_str(), args.c_str());
+    }
   }
 }
 
@@ -596,8 +639,10 @@ StateManager::sendAsynchronousMessage(std::string message, std::string args)
     std::vector<GameState*>::iterator stateIterator = states.begin();
 
     if(states.size() == 0){
-      LogWarning("sendAsynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
-		  message.c_str(), args.c_str());
+      if(XMSession::instance()->debug()) {
+	LogWarning("sendAsynchronousMessage message [%s [%s]] sent and there's no state to receive it.",
+		   message.c_str(), args.c_str());
+      }
     }
 
     while(stateIterator != states.end()){
@@ -610,9 +655,11 @@ StateManager::sendAsynchronousMessage(std::string message, std::string args)
       ++stateIterator;
     }
   } else {
-    LogWarning("sendAsynchronousMessage message [% [%s]s] sent and there's no state to receive it.",
-		message.c_str(),
-		args.c_str());
+    if(XMSession::instance()->debug()) {
+      LogWarning("sendAsynchronousMessage message [% [%s]s] sent and there's no state to receive it.",
+		 message.c_str(),
+		 args.c_str());
+    }
   }
 }
 

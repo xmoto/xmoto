@@ -208,7 +208,7 @@ public:
   UIRoot *getRoot(void);
       
   /* Generic message boxing */
-  UIMsgBox *msgBox(std::string Text,UIMsgBoxButton Buttons,bool bTextInput=false,bool bQuery=false);
+  UIMsgBox *msgBox(std::string Text,UIMsgBoxButton Buttons,bool bTextInput=false,bool bQuery=false,bool i_verticallyLarge=false);
     
   /* Data interface */
   UIWindow *getPrimaryChild(void) {return m_pPrimaryChild;}
@@ -414,7 +414,7 @@ public:
   virtual void paint(void);      
   virtual bool keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char);
   virtual bool offerActivation(void) {if(m_bTextInput) return true; return false;}
-    
+
   /* Methods */
   bool setClicked(std::string Text);
   UIMsgBoxButton getClicked(void);
@@ -757,6 +757,7 @@ public:
         
     m_nSelected = 0;
     m_bChanged = false;
+    m_hideDisabledTabs = false;
   }      
 
   /* Methods */
@@ -786,11 +787,15 @@ public:
   void selectChildren(unsigned int i);
   void selectChildrenById(const std::string& i_id);
 
+  void setHideDisabledTabs(bool i_value) { m_hideDisabledTabs = i_value; }
+  bool hideDisabledTabs() const { return m_hideDisabledTabs; }
+
 private:
   /* Data */
   bool m_bChanged;
   unsigned int m_nSelected;
   std::vector<std::string> m_TabContextHelp;
+  bool m_hideDisabledTabs;
 };
 
 /*===========================================================================

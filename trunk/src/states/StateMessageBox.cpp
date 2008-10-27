@@ -30,13 +30,14 @@ StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
 				 const std::string& i_inputText,
 				 bool i_query,
 				 bool drawStateBehind,
-				 bool updateStatesBehind):
+				 bool updateStatesBehind,
+				 bool i_verticallyLarge):
   StateMenu(drawStateBehind,
 	    updateStatesBehind)
 {
   m_receiver      = i_receiver;
   m_clickedButton = UI_MSGBOX_NOTHING;
-  createGUI(i_text, i_buttons, i_input, i_inputText, i_query);
+  createGUI(i_text, i_buttons, i_input, i_inputText, i_query, i_verticallyLarge);
   m_name          = "StateMessageBox";
 }
 
@@ -72,7 +73,8 @@ void StateMessageBox::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 }
 
 void StateMessageBox::createGUI(const std::string& i_text, int i_buttons,
-				bool i_input, const std::string& i_inputText, bool i_query) {
+				bool i_input, const std::string& i_inputText, bool i_query,
+				bool i_verticallyLarge) {
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   m_GUI = new UIRoot();
@@ -81,7 +83,7 @@ void StateMessageBox::createGUI(const std::string& i_text, int i_buttons,
 		     drawlib->getDispWidth(),
 		     drawlib->getDispHeight());
 
-  m_msgbox = m_GUI->msgBox(i_text, (UIMsgBoxButton)(i_buttons), i_input);
+  m_msgbox = m_GUI->msgBox(i_text, (UIMsgBoxButton)(i_buttons), i_input, false, i_verticallyLarge);
   if(i_input) {
     m_msgbox->setTextInputFont(drawlib->getFontMedium());
     m_msgbox->setTextInput(i_inputText);

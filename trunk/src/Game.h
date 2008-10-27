@@ -162,6 +162,9 @@ private:
   void manageEvent(SDL_Event* Event);
   void playMusic(const std::string& i_music); // "" => no music
 
+  void initNetwork();
+  void uninitNetwork();
+
   ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
 
   std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */

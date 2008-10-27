@@ -24,6 +24,11 @@
 #include "../VCommon.h"
 #include "Bike.h"
 
+struct CameraGhostVisibility {
+  bool isIn;
+  float lastIn;
+};
+
 class RenderSurface {
 public:
   void update(Vector2i upperleft, Vector2i downright){
@@ -101,11 +106,21 @@ public:
 
   void allowActiveZoom(bool i_value);
 
+  // assume that a ghost added is never removed and do not change of id (which is the case)
+  void clearGhostsVisibility();
+  void setGhostIn(unsigned int i);
+  void setGhostOut(unsigned int i);
+  bool isGhostIn(unsigned int i);
+  float getGhostLastIn(unsigned int i);
+
 private:
   bool  m_mirrored;
   float m_rotationAngle;
   float m_rotationSpeed;
   float m_desiredRotationAngle;
+
+  std::vector<CameraGhostVisibility> m_ghostVisibility;
+  void checkGhostVisibilityExists(unsigned int i);
 
   float m_fScale;
   // for not zooming in and out all the time

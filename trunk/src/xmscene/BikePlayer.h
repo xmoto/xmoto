@@ -41,11 +41,12 @@ private:
 };
 
 
-class ReplayBiker : public Ghost {
+class ReplayBiker : public FileGhost {
  public:
   ReplayBiker(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
 	      Theme *i_theme, BikerTheme* i_bikerTheme);
   std::string getQuickDescription() const;
+  std::string getVeryQuickDescription() const;
  private:
 };
 
@@ -59,6 +60,7 @@ class PlayerBiker : public Biker {
   void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
   BikeController* getControler();
 
+  std::string getVeryQuickDescription() const;
   std::string getQuickDescription() const;
   std::string getDescription() const;
   void setBodyDetach(bool state);

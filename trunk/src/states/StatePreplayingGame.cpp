@@ -65,7 +65,7 @@ void StatePreplayingGame::initPlayers() {
     
     for(unsigned int i=0; i<v_nbPlayer; i++) {
       v_world->setCurrentCamera(i);
-      v_world->getCamera()->setPlayerToFollow(v_world->addPlayerBiker(v_world->getLevelSrc()->PlayerStart(),
+      v_world->getCamera()->setPlayerToFollow(v_world->addPlayerBiker(i, v_world->getLevelSrc()->PlayerStart(),
 								      DD_RIGHT,
 								      Theme::instance(), Theme::instance()->getPlayerTheme(),
 								      pGame->getColorFromPlayerNumber(i),
@@ -80,7 +80,7 @@ void StatePreplayingGame::initPlayers() {
       v_world = m_universe->getScenes()[i];
       v_world->setCurrentCamera(0);
       
-      v_world->getCamera()->setPlayerToFollow(v_world->addPlayerBiker(v_world->getLevelSrc()->PlayerStart(),
+      v_world->getCamera()->setPlayerToFollow(v_world->addPlayerBiker(i, v_world->getLevelSrc()->PlayerStart(),
 								      DD_RIGHT,
 								      Theme::instance(), Theme::instance()->getPlayerTheme(),
 								      pGame->getColorFromPlayerNumber(i),
@@ -96,4 +96,8 @@ void StatePreplayingGame::initPlayers() {
 
 void StatePreplayingGame::runPlaying() {
   StateManager::instance()->replaceState(new StatePlaying(m_universe));
+}
+
+void StatePreplayingGame::nextLevel(bool i_positifOrder) {
+  playingNextLevel(i_positifOrder);
 }

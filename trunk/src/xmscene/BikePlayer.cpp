@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 ReplayBiker::ReplayBiker(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
 			 Theme *i_theme, BikerTheme* i_bikerTheme)
-:Ghost(i_replayFile, i_physicsSettings, true, i_theme, i_bikerTheme,
+:FileGhost(i_replayFile, i_physicsSettings, true, i_theme, i_bikerTheme,
        TColor(255, 255, 255, 0),
        TColor(GET_RED(i_bikerTheme->getUglyRiderColor()),
 	      GET_GREEN(i_bikerTheme->getUglyRiderColor()),
@@ -56,6 +56,10 @@ std::string ReplayBiker::getQuickDescription() const {
 	   m_replay->getPlayerName().c_str()); 
   
   return std::string(c_tmp);
+}
+
+std::string ReplayBiker::getVeryQuickDescription() const {
+  return m_replay->getPlayerName();
 }
 
 PlayerBiker::PlayerBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
@@ -92,6 +96,10 @@ PlayerBiker::~PlayerBiker() {
 
 std::string PlayerBiker::getDescription() const {
   return "";
+}
+
+std::string PlayerBiker::getVeryQuickDescription() const {
+  return GAMETEXT_PLAYER;
 }
 
 std::string PlayerBiker::getQuickDescription() const {

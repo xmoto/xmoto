@@ -98,6 +98,8 @@ private:
   void drawStack();
   void drawCursor();
 
+  void renderOverAll();
+
   void deleteToDeleteState();
 
   bool m_isVisible;

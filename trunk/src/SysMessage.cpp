@@ -29,10 +29,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME 0.4
 #define SYSMSG_DISPLAYBOXMSG_MARGIN 20
 
+#define SYSMSG_CONSOLEDISPLAY_TIME 4.0
+#define SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME 1.0
+#define SYSMSG_CONSOLEDISPLAY_MAXNBLINES 5
+
 SysMessage::SysMessage() {
   m_startDisplay = GameApp::getXMTime() - SYSMSG_DISPLAY_TIME;
   m_startDisplayError = GameApp::getXMTime() - SYSMSG_DISPLAYBOXMSG_TIME - 2.0*(SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME);
   m_startDisplayInformation = GameApp::getXMTime() - SYSMSG_DISPLAYBOXMSG_TIME - 2.0*(SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME);
+  m_consoleLastShowTime = GameApp::getXMTime() - SYSMSG_CONSOLEDISPLAY_TIME - SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME;
 }
 
 SysMessage::~SysMessage() {
@@ -43,19 +48,19 @@ void SysMessage::setDrawLib(DrawLib* i_drawLib)
   m_drawLib = i_drawLib;  
 }
 
-void SysMessage::displayText(std::string i_msg) {
+void SysMessage::displayText(const std::string& i_msg) {
   m_startDisplay = GameApp::getXMTime();
-  m_txt      = i_msg;
+  m_txt = i_msg;
 }
 
-void SysMessage::displayError(std::string i_msg) {
+void SysMessage::displayError(const std::string& i_msg) {
   if(m_errorTxt.size() == 0) {
     m_startDisplayError = GameApp::getXMTime();
   }
   m_errorTxt.push_back(i_msg);
 }
 
-void SysMessage::displayInformation(std::string i_msg) {
+void SysMessage::displayInformation(const std::string& i_msg) {
   if(m_informationTxt.size() == 0) {
     m_startDisplayInformation = GameApp::getXMTime();
   }
@@ -67,13 +72,14 @@ void SysMessage::render() {
     return;
 
   float v_time = GameApp::getXMTime();
-  FontManager* v_fm = m_drawLib->getFontMedium();
+  FontManager* v_fm;
   FontGlyph* v_fg;
+  int v_shadow;
+
+  v_fm = m_drawLib->getFontMedium();
 
   /* basic system message */
   if(m_startDisplay + SYSMSG_DISPLAY_TIME > v_time) {
-    int v_shadow;
-
     if(m_startDisplay + SYSMSG_DISPLAY_DECREASE_TIME > v_time) {
       v_shadow = 255;
     } else {
@@ -89,12 +95,51 @@ void SysMessage::render() {
 		      MAKE_COLOR(255, 255, 255, v_shadow), 0.0, true);
   }
 
-  /* error msg */
+  /* error/information msg */
   if(m_errorTxt.size() > 0) {
     drawBoxMsg(m_startDisplayError, m_errorTxt, MAKE_COLOR(255,0,0,255));
+    m_startDisplayInformation = GameApp::getXMTime(); // reset information until it can be displayed
   } else if(m_informationTxt.size() > 0) {
     drawBoxMsg(m_startDisplayInformation, m_informationTxt, MAKE_COLOR(0,0,255,255));
   }
+
+  /* console */
+  int v_consoleBorder = 10;
+  int v_consoleYOffset = 0;
+
+  v_fm = m_drawLib->getFontSmall();
+
+  if(m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME + SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME > v_time) {
+    if(m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME > v_time) {
+      v_shadow = 255;
+    } else {
+      v_shadow = ((m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME + SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME - v_time)
+		  * 255)/SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME;
+    }
+
+    for(unsigned int i=0; i<m_console.size(); i++) {
+      v_fg = v_fm->getGlyph(m_console[i]);
+      v_fm->printString(v_fg,
+			m_drawLib->getDispWidth()/3,
+			v_consoleBorder+v_consoleYOffset,
+			MAKE_COLOR(255, 255, 255, v_shadow), 0.0, true);
+      v_consoleYOffset += v_fg->realHeight();
+    }
+  }
+}
+
+void SysMessage::addConsoleLine(const std::string& i_line) {
+  m_console.push_back(i_line);
+
+  if(m_console.size() > SYSMSG_CONSOLEDISPLAY_MAXNBLINES) {
+    m_console.erase(m_console.begin());
+  }
+
+  showConsole();
+}
+
+void SysMessage::showConsole() {
+  m_consoleLastShowTime = GameApp::getXMTime();
 }
 
 void SysMessage::drawBoxMsg(float& io_nextStartTime, std::vector<std::string>& i_msg, Color i_color) {

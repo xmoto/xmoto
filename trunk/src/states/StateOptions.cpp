@@ -38,6 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/CmdArgumentParser.h"
 #include "StateMessageBox.h"
 #include "../SysMessage.h"
+#include "../net/NetServer.h"
 #include <sstream>
 
 /* static members */
@@ -55,6 +56,7 @@ StateOptions::StateOptions(bool drawStateBehind, bool updateStatesBehind):
   StateManager::instance()->registerAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->registerAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->registerAsObserver("REQUESTKEY", this);
+  StateManager::instance()->registerAsObserver("SERVER_STATUS_CHANGED", this);
 }
 
 StateOptions::~StateOptions() {
@@ -65,6 +67,7 @@ StateOptions::~StateOptions() {
   StateManager::instance()->unregisterAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->unregisterAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("REQUESTKEY", this);
+  StateManager::instance()->unregisterAsObserver("SERVER_STATUS_CHANGED", this);
 }
 
 void StateOptions::enter()
@@ -73,6 +76,7 @@ void StateOptions::enter()
   m_GUI = m_sGUI;
 
   updateOptions();
+  updateServerStrings();
   updateJoysticksStrings();
 }
 
@@ -456,6 +460,48 @@ void StateOptions::checkEvents() {
       }
   }
 
+  // server tab
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:STARTATSTARTUP_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setServerStartAtStartup(v_button->getChecked());
+  }
+
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:PORT"));
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:DEFAULT_PORT"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setServerPort(DEFAULT_SERVERPORT);
+    v_edit->enableWindow(false);
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:CUSTOM_PORT"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setServerPort(atoi(v_edit->getCaption().c_str()));
+    v_edit->enableWindow(true);
+  }
+
+  if(v_edit->isDisabled() == false) {
+    if(v_edit->hasChanged() && v_button->getChecked()) {
+      v_edit->setHasChanged(false);
+      XMSession::instance()->setServerPort(atoi(v_edit->getCaption().c_str()));
+    }
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:STARTSTOP"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    if(NetServer::instance()->isStarted()) {
+      NetServer::instance()->stop();
+    } else {
+      NetServer::instance()->start();
+    }
+  }
+
+  // ghosts
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:ENABLE_GHOSTS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
@@ -497,6 +543,12 @@ void StateOptions::checkEvents() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setShowGhostsInfos(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_BIKERS_ARROWS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setShowBikersArrows(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:HIDEGHOSTS"));
@@ -944,14 +996,16 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_wwwwindow->setID("WWW_TAB");
   v_wwwwindow->showWindow(false);
 
-  UITabView *v_roomsTabs = new UITabView(v_wwwwindow, 0, 0, "", v_wwwwindow->getPosition().nWidth, v_wwwwindow->getPosition().nHeight);
-  v_roomsTabs->setID("TABS");
-  v_roomsTabs->setFont(drawlib->getFontSmall());
-  v_roomsTabs->setTabContextHelp(0, CONTEXTHELP_WWW_MAIN_OPTIONS);
-  v_roomsTabs->setTabContextHelp(1, CONTEXTHELP_WWW_ROOMS_OPTIONS);
+  UITabView *v_wwwTabs = new UITabView(v_wwwwindow, 0, 0, "", v_wwwwindow->getPosition().nWidth, v_wwwwindow->getPosition().nHeight);
+  v_wwwTabs->setHideDisabledTabs(true);
+  v_wwwTabs->setID("TABS");
+  v_wwwTabs->setFont(drawlib->getFontSmall());
+  v_wwwTabs->setTabContextHelp(0, CONTEXTHELP_WWW_MAIN_OPTIONS);
+  v_wwwTabs->setTabContextHelp(1, CONTEXTHELP_WWW_ROOMS_OPTIONS);
+  v_wwwTabs->setTabContextHelp(2 + ROOMS_NB_MAX - 1, CONTEXTHELP_SERVER_OPTIONS);
 
-  v_window = new UIWindow(v_roomsTabs, 20, 30, GAMETEXT_MAIN, v_roomsTabs->getPosition().nWidth-30,
-			  v_roomsTabs->getPosition().nHeight);
+  v_window = new UIWindow(v_wwwTabs, 20, 30, GAMETEXT_MAIN, v_wwwTabs->getPosition().nWidth-30,
+			  v_wwwTabs->getPosition().nHeight);
   v_window->setID("MAIN_TAB");
 
   v_button = new UIButton(v_window, 5, 0, GAMETEXT_ENABLEWEBHIGHSCORES, (v_window->getPosition().nWidth-40), 28);
@@ -1020,10 +1074,76 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
 
 
   for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
-    v_window = makeRoomTab(v_roomsTabs, i);
+    v_window = makeRoomTab(v_wwwTabs, i);
   }
 
+  // server config
+  v_window = new UIWindow(v_wwwTabs, 20, 30, GAMETEXT_SERVER, v_wwwTabs->getPosition().nWidth-30,
+			  v_wwwTabs->getPosition().nHeight);
+  v_window->setID("SERVER_TAB");
+  v_window->showWindow(false);
+
+  v_button = new UIButton(v_window, 5, 0, GAMETEXT_STARTATSTARTUP, 200, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("STARTATSTARTUP_BUTTON");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_STARTSERVERATSTARTUP);
+
+  // port
+  v_someText = new UIStatic(v_window, 5, 30, GAMETEXT_PORT + std::string(":"),
+			    200, 30);
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText->setFont(drawlib->getFontSmall()); 
+
+  v_button = new UIButton(v_window, 20, 60, GAMETEXT_DEFAULT_PORT, 200, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setGroup(501);
+  v_button->setID("DEFAULT_PORT");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_SERVERPORT);
+
+  v_button = new UIButton(v_window, 20, 90, GAMETEXT_CUSTOM_PORT, 200, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setGroup(501);
+  v_button->setID("CUSTOM_PORT");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_SERVERPORT);
+
+  v_edit = new UIEdit(v_window, 20+35, 120, "", 100, 25);
+  v_edit->setFont(drawlib->getFontSmall());
+  v_edit->setID("PORT");
+  v_edit->setContextHelp(CONTEXTHELP_SERVERPORT);
+
+  // server status
+  v_someText = new UIStatic(v_window, 0, v_window->getPosition().nHeight-30-20-20, "...",
+			    v_window->getPosition().nWidth, 30);
+  v_someText->setID("STATUS");
+  v_someText->setHAlign(UI_ALIGN_CENTER);
+  v_someText->setFont(drawlib->getFontSmall()); 
+
+  // start/stop
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth/2- 207/2,
+			  v_window->getPosition().nHeight -57 - 20 -20 - 30,
+			  "", 207, 57);
+  v_button->setType(UI_BUTTON_TYPE_LARGE);
+  v_button->setID("STARTSTOP");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_SERVERSTARTSTOP);
+
   return v_wwwwindow;
+}
+
+void StateOptions::updateServerStrings() {
+  UIStatic* v_someText;
+  UIButton* v_button;
+
+  v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:STATUS"));
+  v_someText->setCaption(NetServer::instance()->isStarted() ?
+			GAMETEXT_SERVERSTATUSON : GAMETEXT_SERVERSTATUSOFF);
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:STARTSTOP"));
+  v_button->setCaption(NetServer::instance()->isStarted() ?
+		       GAMETEXT_SERVERSTOP : GAMETEXT_SERVERSTART);
 }
 
 UIWindow* StateOptions::makeWindowOptions_ghosts(UIWindow* i_parent) {
@@ -1083,7 +1203,13 @@ UIWindow* StateOptions::makeWindowOptions_ghosts(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_INFO);
 
-  v_button = new UIButton(v_window, 5, 237, GAMETEXT_MOTIONBLURGHOST, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 237, GAMETEXT_DISPLAYBIKERARROW, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("DISPLAY_BIKERS_ARROWS");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_DISPLAY_BIKER_ARROW);
+
+  v_button = new UIButton(v_window, 5, 266, GAMETEXT_MOTIONBLURGHOST, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("MOTION_BLUR_GHOST");
   v_button->setFont(drawlib->getFontSmall());
@@ -1325,6 +1451,18 @@ void StateOptions::updateOptions() {
 	v_button->setChecked(v_enabled);
       }
    }
+  // server
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:STARTATSTARTUP_BUTTON"));
+  v_button->setChecked(XMSession::instance()->serverStartAtStartup());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:DEFAULT_PORT"));
+  v_button->setChecked(XMSession::instance()->serverPort() == DEFAULT_SERVERPORT);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:CUSTOM_PORT"));
+  v_button->setChecked(XMSession::instance()->serverPort() != DEFAULT_SERVERPORT);
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:SERVER_TAB:PORT"));
+  v_edit->enableWindow(XMSession::instance()->serverPort() != DEFAULT_SERVERPORT);
+  std::ostringstream v_strPort;
+  v_strPort << XMSession::instance()->serverPort();
+  v_edit->setCaption(v_strPort.str());
 
   // ghosts
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:ENABLE_GHOSTS"));
@@ -1341,6 +1479,8 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->showGhostTimeDifference());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_INFOS"));
   v_button->setChecked(XMSession::instance()->showGhostsInfos());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_BIKERS_ARROWS"));
+  v_button->setChecked(XMSession::instance()->showBikersArrows());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:HIDEGHOSTS"));
   v_button->setChecked(XMSession::instance()->hideGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:MOTION_BLUR_GHOST"));
@@ -1482,6 +1622,8 @@ void StateOptions::updateGhostsOptions() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_GHOST_TIMEDIFFERENCE"));
   v_button->enableWindow(XMSession::instance()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_INFOS"));
+  v_button->enableWindow(XMSession::instance()->enableGhosts());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:DISPLAY_BIKERS_ARROWS"));
   v_button->enableWindow(XMSession::instance()->enableGhosts());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GHOSTS_TAB:HIDEGHOSTS"));
   v_button->enableWindow(XMSession::instance()->enableGhosts());
@@ -1804,6 +1946,10 @@ void StateOptions::executeOneCommand(std::string cmd, std::string args) {
     updateAudioOptions();
   }
 
+  else if(cmd == "SERVER_STATUS_CHANGED") {
+    updateServerStrings();
+  }
+
 }
 
 void StateOptions::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
@@ -1813,6 +1959,10 @@ void StateOptions::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_
       XMSession::instance()->setToDefault();
       updateOptions();      
     }
+  }
+
+  else {
+    StateMenu::sendFromMessageBox(i_id, i_button, i_input);
   }
 }
 
