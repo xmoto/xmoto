@@ -569,7 +569,7 @@ std::string XMSession::wwwPassword() const {
 }
 
 void XMSession::setWwwPassword(const std::string& i_password) {
-  PROPAGATE_REF(XMSession,setProfile,i_password,std::string);
+  PROPAGATE_REF(XMSession,setWwwPassword,i_password,std::string);
   m_www_password = i_password;
 }
 
