@@ -1106,7 +1106,8 @@ void GameRenderer::displayArrowIndication(Biker* i_biker, AABB *i_screenBBox) {
   float v_infoOffset = 1.0; // don't display the name exactly at the border
   float v_bikerOutMarge = 1.5; // don't display the arrow if the biker is almost on the screen
   float v_arrowAngleDeg;
-  
+  std::ostringstream v_distanceStr;
+
   Vector2f p1(1,0), p2(1,0), p3(1,0), p4(1,0);
   AABBSide v_side;
   float v_distance; // distance between the center of the camera and the biker
@@ -1127,6 +1128,8 @@ void GameRenderer::displayArrowIndication(Biker* i_biker, AABB *i_screenBBox) {
       b = i_biker->getState()->CenterP.y - (i_screenBBox->getBMin().y + (i_screenBBox->getBMax().y - i_screenBBox->getBMin().y)/2.0);
 
       v_distance = sqrt(a*a + b*b);
+      v_distanceStr << ((int)v_distance) << "m";
+  
       if(v_distance < v_spriteSizeLimitMin) {
 	v_spriteSize = v_spriteSizeMax;
       } else if(v_distance > v_spriteSizeLimitMax) {
@@ -1187,7 +1190,7 @@ void GameRenderer::displayArrowIndication(Biker* i_biker, AABB *i_screenBBox) {
 
       if(m_arrowSprite != NULL) {
 	_RenderAlphaBlendedSection(m_arrowSprite->getTexture(), p1+v_arrowPoint, p2+v_arrowPoint, p3+v_arrowPoint, p4+v_arrowPoint);
-	_RenderInGameText(v_infoPosition, i_biker->getVeryQuickDescription(),
+	_RenderInGameText(v_infoPosition, i_biker->getVeryQuickDescription() + "\n" + v_distanceStr.str(),
 			  MAKE_COLOR(255,255,255, 255), 0.5, 0.5);
       }
     }
