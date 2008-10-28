@@ -134,7 +134,7 @@ int ServerThread::realThreadFunction() {
     LogError("server: SDLNet_AllocSocketSet: %s", SDLNet_GetError());
     return 1;
   }
- 
+
   /* Open a connection with the IP provided (listen on the host's port) */
   LogInfo("server: open connexion");
   if((m_tcpsd = SDLNet_TCP_Open(&ip)) == 0) {
@@ -142,6 +142,7 @@ int ServerThread::realThreadFunction() {
     SDLNet_FreeSocketSet(m_set);
     return 1;
   }
+
   if((m_udpsd = SDLNet_UDP_Open(XMSession::instance()->serverPort())) == 0) {
     LogError("server: SDLNet_UDP_Open: %s", SDLNet_GetError());
     SDLNet_FreeSocketSet(m_set);

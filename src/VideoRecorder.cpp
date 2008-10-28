@@ -33,6 +33,8 @@ VideoRecorder::VideoRecorder(const std::string& i_videoName, int i_division, int
     m_framerate = i_frameRate;
     m_nbFrames  = 0;
 
+    LogInfo("New video recorder: name=%s, division=%i, frame rate=%i", i_videoName.c_str(), i_division, i_frameRate);
+
     m_directory = FS::getUserDir() + "/Videos/" + i_videoName;
 		v_listFile = m_directory + "/pictures.lst";
 

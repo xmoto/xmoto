@@ -1315,7 +1315,7 @@ msgstr "Redémarrer ce niveau"
 
 #: src/GameText.h:392
 msgid "Resume Playing"
-msgstr "Continuer de jouer"
+msgstr "Continuer à jouer"
 
 #: src/GameText.h:394
 msgid "Run Windowed"

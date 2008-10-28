@@ -123,8 +123,13 @@ int main(int nNumArgs, char **ppcArgs) {
 }
 
 void GameApp::run(int nNumArgs, char** ppcArgs) {
-  run_load(nNumArgs, ppcArgs);
-  run_loop();
+  try {
+    run_load(nNumArgs, ppcArgs);
+    run_loop();
+  } catch(Exception &e) {
+    run_unload();
+    throw e;
+  }
   run_unload();
 }
 
@@ -192,7 +197,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   (* XMSession::instance("live")) = (* XMSession::instance("file")) ; /* copying the resulting session in "live" instance */
   (* XMSession::instance("temp")) = (* XMSession::instance("file")) ; /* copying the resulting session in a needed temporary instance */
   XMSession::setDefaultInstance("live");
-  
+
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
 
   Logger::setVerbose(XMSession::instance()->isVerbose()); /* apply verbose mode */
@@ -276,6 +281,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   LogInfo("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
 #endif
 
+  // allocate the statemanager instance so that if it fails, it's not in a thread (serverThread for example)
+  StateManager::instance();
+
   /* Init sound system */
   if(v_useGraphics) {
     Sound::init(XMSession::instance());
@@ -310,7 +318,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     ThemeChoicer::initThemesFromDir(pDb);
     reloadTheme();
   }
-  
+
   /* load levels */
   if(pDb->levels_isIndexUptodate() == false) {
       LevelsManager::instance()->reloadLevelsFromLvl(pDb, v_useGraphics ? this : NULL);
@@ -578,6 +586,8 @@ void GameApp::run_unload() {
     InputHandler::instance()->uninit(); // uinit the input, but you can still save the config
   }
 
+  uninitNetwork();
+
   StateManager::destroy();
   
   if(Sound::isInitialized()) {
@@ -587,8 +597,6 @@ void GameApp::run_unload() {
   if(m_isODEInitialized ==  true){
     dCloseODE(); // uninit ODE
   }
-
-  uninitNetwork();
 
   GameRenderer::destroy();
   SysMessage::destroy();  
