@@ -63,8 +63,8 @@ XMArguments::XMArguments() {
   m_opt_videoRecording = false;
   m_opt_videoRecordingDivision  = false;
   m_opt_videoRecordingFramerate = false;
-  m_opt_videoRecordingStartTime = -1;
-  m_opt_videoRecordingEndTime   = -1;
+  m_opt_videoRecordingStartTime = false;
+  m_opt_videoRecordingEndTime   = false;
   m_opt_hidePlayingInformation  = false;
   m_opt_forceChildrenCompliant  = false;
   m_opt_default_theme           = false;
