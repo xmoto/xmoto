@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-10-27 21:42+0100\n"
+"POT-Creation-Date: 2008-10-29 21:50+0100\n"
 "PO-Revision-Date: 2008-09-07 13:48+0100\n"
 "Last-Translator: Zoltán Balogh <ttapecs@gmail.com>\n"
 "Language-Team: X-moto\n"
@@ -1707,7 +1707,7 @@ msgstr ""
 
 #: src/GameText.h:491
 #, c-format
-msgid "%s has join the game"
+msgid "%s joined the game"
 msgstr ""
 
 #: src/GameText.h:492

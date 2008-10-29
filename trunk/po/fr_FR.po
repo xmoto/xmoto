@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-10-27 21:42+0100\n"
+"POT-Creation-Date: 2008-10-29 21:50+0100\n"
 "PO-Revision-Date: 2008-09-14 21:46+0200\n"
 "Last-Translator: Nicolas Adenis-Lamarre\n"
 "Language-Team: X-Moto\n"
@@ -1712,8 +1712,8 @@ msgstr "Message chat"
 
 #: src/GameText.h:491
 #, c-format
-msgid "%s has join the game"
-msgstr "%s a rejoint le jeu"
+msgid "%s joined the game"
+msgstr ""
 
 #: src/GameText.h:492
 #, c-format
@@ -3076,6 +3076,9 @@ msgid ""
 msgstr ""
 "Enfin, le dernier... Il n'est pas très long, mais\n"
 "il y a encore moins de place pour votre tête. Bonne chance ! :)"
+
+#~ msgid "%s has join the game"
+#~ msgstr "%s a rejoint le jeu"
 
 #~ msgid "Musical levels"
 #~ msgstr "Niveaux musicaux"

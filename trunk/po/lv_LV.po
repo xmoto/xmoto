@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2008-10-27 21:42+0100\n"
+"POT-Creation-Date: 2008-10-29 21:50+0100\n"
 "PO-Revision-Date: 2008-01-24 01:03+0200\n"
 "Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
 "Language-Team: Latvian\n"
@@ -1737,7 +1737,7 @@ msgstr ""
 
 #: src/GameText.h:491
 #, c-format
-msgid "%s has join the game"
+msgid "%s joined the game"
 msgstr ""
 
 #: src/GameText.h:492
