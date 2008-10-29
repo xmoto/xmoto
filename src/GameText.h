@@ -272,6 +272,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 
 #define GAMETEXT_HIDEGHOSTS           _("Hide ghosts")
 #define GAMETEXT_HIGH                 _("High")
+#define GAMETEXT_HIGHSCOREOFTHEROOM   _("Highscore of the room")
 #define GAMETEXT_LOAD_LEVEL_HOOK      _("Levels are being added into the database. Please wait.")
 #define GAMETEXT_INETCONF             _("Internet Configuration")
 #define GAMETEXT_INITZOOM             _("View Level Initially")
@@ -466,6 +467,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_XSECONDS             _("%d seconds")
 #define GAMETEXT_YES                  _("Yes")
 #define GAMETEXT_YES_FOR_ALL          _("Yes to all")
+#define GAMETEXT_YOURBESTTIME  	      _("Your best time")
 #define GAMETEXT_ZOOMIN  	      _("Zoom in")
 #define GAMETEXT_ZOOMINIT 	      _("Reinitialize zoom")
 #define GAMETEXT_ZOOMOUT 	      _("Zoom out")
