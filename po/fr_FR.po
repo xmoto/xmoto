@@ -1713,7 +1713,7 @@ msgstr "Message chat"
 #: src/GameText.h:491
 #, c-format
 msgid "%s joined the game"
-msgstr ""
+msgstr "%s a rejoint le jeu"
 
 #: src/GameText.h:492
 #, c-format
@@ -3076,27 +3076,3 @@ msgid ""
 msgstr ""
 "Enfin, le dernier... Il n'est pas très long, mais\n"
 "il y a encore moins de place pour votre tête. Bonne chance ! :)"
-
-#~ msgid "%s has join the game"
-#~ msgstr "%s a rejoint le jeu"
-
-#~ msgid "Musical levels"
-#~ msgstr "Niveaux musicaux"
-
-#~ msgid "X-Moto levels with a background music"
-#~ msgstr "Niveaux X-Moto avec de la musique en fond"
-
-#~ msgid "Initializing input system..."
-#~ msgstr "Initialisation des touches..."
-
-#~ msgid "Initializing menus..."
-#~ msgstr "Initialisation des menus..."
-
-#~ msgid "Initializing renderer..."
-#~ msgstr "Initialisation du rendu..."
-
-#~ msgid "Initializing text renderer..."
-#~ msgstr "Initialisation du rendu de texte..."
-
-#~ msgid "Enable Music"
-#~ msgstr "Activer la musique"
