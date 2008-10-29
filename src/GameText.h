@@ -488,7 +488,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_CLIENTNETWORKERROR _("Network error: you're disconnected")
 #define GAMETEXT_CONNECTED_PLAYERS _("Connected players:")
 #define GAMETEXT_CHATMESSAGE _("Chat message")
-#define GAMETEXT_CLIENTCONNECTSERVER _("%s has join the game")
+#define GAMETEXT_CLIENTCONNECTSERVER _("%s joined the game")
 #define GAMETEXT_CLIENTDISCONNECTSERVER _("%s left the game")
 #define GAMETEXT_CLIENTPLAYING _("%s is playing level %s")
 #define UNTRANSLATED_GAMETEXT_TOO_MUCH_CLIENTS "Sorry, there are already too much clients connected"
