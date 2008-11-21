@@ -82,6 +82,7 @@ public:
 
   void addAssociatedSprite(Sprite* sprite);
   void invalidateSpritesTexture();
+  void removeAssociatedSprites();
 };
 
 
@@ -96,9 +97,10 @@ public:
   void destroyTexture(Texture* pTexture);
   Texture* loadTexture(std::string Path, bool bSmall=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP, bool persistent=false, Sprite* associatedSprite=NULL);
   Texture* getTexture(std::string Name);
+  void removeAssociatedSpritesFromTextures();
   void unloadTextures(void);
 
-  std::vector<Texture *> &getTextures(void) {
+  std::vector<Texture*>& getTextures(void) {
     return m_Textures;
   }
   int getTextureUsage(void) {
@@ -106,7 +108,7 @@ public:
   }
 
 private:
-  std::vector<Texture *> m_Textures;
+  std::vector<Texture*> m_Textures;
 
   int m_nTexSpaceUsage;
 };

@@ -38,7 +38,7 @@ SDynamicObject::SDynamicObject(int p_startTime, int p_endTime, int pPeriod) {
 SDynamicObject::~SDynamicObject() {
 }
 
-bool SDynamicObject::nextState(MotoGame* v_motoGame, int i_nbCents) {
+bool SDynamicObject::nextState(Scene* v_motoGame, int i_nbCents) {
   int v_realNbCents;
 
   v_realNbCents = i_nbCents;
@@ -197,7 +197,7 @@ SDynamicEntityMove::SDynamicEntityMove(std::string pEntity, int p_startTime, int
 SDynamicEntityMove::~SDynamicEntityMove() {
 }
 
-void SDynamicEntityMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
+void SDynamicEntityMove::performMove(Scene* v_motoGame, int i_nbCents) {
   if(m_entity == NULL)
     m_entity = v_motoGame->getLevelSrc()->getEntityById(m_entityName);
 
@@ -262,7 +262,7 @@ SDynamicBlockMove::SDynamicBlockMove(std::string pBlock, int p_startTime, int p_
 SDynamicBlockMove::~SDynamicBlockMove() {
 }
 
-void SDynamicBlockMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
+void SDynamicBlockMove::performMove(Scene* v_motoGame, int i_nbCents) {
   if(m_block == NULL)
     m_block = v_motoGame->getLevelSrc()->getBlockById(m_blockName);
   
@@ -343,10 +343,10 @@ SPhysicBlockMove::SPhysicBlockMove(std::string blockName, int startTime, int end
   m_block     = NULL;
 }
 
-void SPhysicBlockMove::performMove(MotoGame* pMotoGame, int i_nbCents)
+void SPhysicBlockMove::performMove(Scene* pScene, int i_nbCents)
 {
   if(m_block == NULL)
-    m_block = pMotoGame->getLevelSrc()->getBlockById(m_blockName);
+    m_block = pScene->getLevelSrc()->getBlockById(m_blockName);
   
   if(i_nbCents > 0) {
     for(int i=0; i<i_nbCents; i++) {

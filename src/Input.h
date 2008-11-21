@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class xmDatabase;
 class UserConfig;
 class Universe;
-class MotoGame;
+class Scene;
 
   /*===========================================================================
   Script hooks
@@ -41,7 +41,7 @@ class MotoGame;
   struct InputScriptKeyHook {
     XMKey nKey;                 /* Hooked key */
     std::string FuncName;       /* Script function to invoke */    
-    MotoGame *pGame;            /* Pointer to game */
+    Scene *pGame;            /* Pointer to game */
   };
 
   /*===========================================================================
@@ -64,7 +64,7 @@ public:
   void uninit();
 
   void resetScriptKeyHooks(void) {m_nNumScriptKeyHooks = 0;}
-  void addScriptKeyHook(MotoGame *pGame,const std::string &basicKeyName,const std::string &FuncName);
+  void addScriptKeyHook(Scene *pGame,const std::string &basicKeyName,const std::string &FuncName);
 
   int getNumScriptKeyHooks() const;
   InputScriptKeyHook getScriptKeyHooks(int i) const;

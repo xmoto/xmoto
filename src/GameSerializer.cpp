@@ -32,7 +32,7 @@
   /*===========================================================================
     Decoding of event stream
     ===========================================================================*/
-  void MotoGame::unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation) {
+  void Scene::unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation) {
     RecordedGameEvent *p;    
 
     try {
@@ -40,7 +40,7 @@
       while((*Buffer).numRemainingBytes() > 0) {
       p = new RecordedGameEvent;
       p->bPassed = false;
-      p->Event   = MotoGameEvent::getUnserialized(*Buffer, bDisplayInformation);
+      p->Event   = SceneEvent::getUnserialized(*Buffer, bDisplayInformation);
       v_ReplayEvents->push_back(p);
       }
     } catch(Exception &e) {
@@ -52,14 +52,14 @@
   /*===========================================================================
     Encoding of event buffer 
     ===========================================================================*/
-  void MotoGame::_SerializeGameEventQueue(DBuffer* Buffer, MotoGameEvent *pEvent) {
+  void Scene::_SerializeGameEventQueue(DBuffer* Buffer, SceneEvent *pEvent) {
     pEvent->serialize(*Buffer);
   }
 
   /*===========================================================================
     Serializer
     ===========================================================================*/
-void MotoGame::getSerializedBikeState(BikeState *i_bikeState, int i_time, SerializedBikeState *pState, PhysicsSettings* i_physicsSettings) {
+void Scene::getSerializedBikeState(BikeState *i_bikeState, int i_time, SerializedBikeState *pState, PhysicsSettings* i_physicsSettings) {
     /* Get. */
     pState->fGameTime = GameApp::timeToFloat(i_time);
     

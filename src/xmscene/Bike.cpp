@@ -262,7 +262,7 @@ PhysicsSettings* Biker::getPhysicsSettings() {
 
 void Biker::updateToTime(int i_time, int i_timeStep,
 			     CollisionSystem *v_collisionSystem, Vector2f i_gravity,
-			     MotoGame *i_motogame) {
+			     Scene *i_motogame) {
   /* update direction - even if the biker is dead of finished */
   if(m_changeDirPer < 1.0) {
     m_changeDirPer += ((float)i_timeStep)*3.0 / 100.0;

@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define INPLAY_ANIMATION_SPEED          10
 #define INPLAY_ANIMATION_MAX_OFFSET    0.5
 
-CameraAnimation::CameraAnimation(Camera* i_camera, DrawLib* i_drawLib, MotoGame* i_motoGame) {
+CameraAnimation::CameraAnimation(Camera* i_camera, DrawLib* i_drawLib, Scene* i_motoGame) {
   m_step         = 0;
   m_camera       = i_camera;
   m_drawLib      = i_drawLib;
@@ -97,7 +97,7 @@ bool CameraAnimation::allowNextStep() {
 }
 
 // autozoom
-AutoZoomCameraAnimation::AutoZoomCameraAnimation(Camera* i_camera, DrawLib* i_drawLib, MotoGame* i_motoGame)
+AutoZoomCameraAnimation::AutoZoomCameraAnimation(Camera* i_camera, DrawLib* i_drawLib, Scene* i_motoGame)
   : CameraAnimation(i_camera, i_drawLib, i_motoGame) {
 }
 
@@ -290,7 +290,7 @@ void AutoZoomCameraAnimation::goNextStep() {
 }
 
 // zooming
-ZoomingCameraAnimation::ZoomingCameraAnimation(Camera* i_camera, DrawLib* i_drawLib, MotoGame* i_motoGame)
+ZoomingCameraAnimation::ZoomingCameraAnimation(Camera* i_camera, DrawLib* i_drawLib, Scene* i_motoGame)
   : CameraAnimation(i_camera, i_drawLib, i_motoGame) {
 }
 

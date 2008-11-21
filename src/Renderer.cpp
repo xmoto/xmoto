@@ -108,7 +108,7 @@ GameRenderer::~GameRenderer() {
     m_Overlay.init(GameApp::instance()->getDrawLib(),512,512);
 
     m_nParticlesRendered = 0;
-    m_arrowSprite = (MiscSprite*) Theme::instance()->getSprite(SPRITE_TYPE_MISC, "Arrow");
+    m_arrowSprite = NULL;
   }
 
   /*===========================================================================
@@ -224,6 +224,10 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     pDebrisType = (EffectSprite*) Theme::instance()->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
     if(pDebrisType != NULL)
       pDebrisType->loadTextures();
+
+    // and now the arrow sprite stored in the renderer
+    m_arrowSprite = (MiscSprite*)Theme::instance()->getSprite(SPRITE_TYPE_MISC, "Arrow");
+    m_arrowSprite->loadTextures();
   }
 
   endTexturesRegistration();
@@ -249,7 +253,7 @@ int GameRenderer::loadBlock(Block* pBlock,
 			    int sameSceneAs,
 			    int blockIndex)
 {
-  MotoGame* pScene  = i_universe->getScenes()[currentScene];
+  Scene* pScene  = i_universe->getScenes()[currentScene];
   int nVertexBytes  = 0;
   bool dynamicBlock = false;
   std::vector<Geom *>* pGeoms;
@@ -302,7 +306,7 @@ int GameRenderer::loadBlockGeom(Block* pBlock,
 				std::vector<Geom *>* pGeoms,
 				Texture* pTexture,
 				Vector2f Center,
-				MotoGame* pScene)
+				Scene* pScene)
 {
   std::vector<ConvexBlock *> ConvexBlocks = pBlock->ConvexBlocks();
   int nVertexBytes  = 0;
@@ -363,7 +367,7 @@ int GameRenderer::loadBlockGeom(Block* pBlock,
   return nVertexBytes;
 }
 
-int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, MotoGame* pScene)
+int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 {
   int nVertexBytes  = 0;
   if(XMSession::instance()->gameGraphics() != GFX_LOW){
@@ -852,7 +856,7 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string texture)
     pDrawlib->glVertexSP(x + nWidth/2  + (float)(Px - cameraPosX)*MINIMAPZOOM, \
                          y + nHeight/2 - (float)(Py - cameraPosY)*MINIMAPZOOM);    
 
-void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int nHeight) {
+void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHeight) {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
     Camera*  pCamera  = i_scene->getCamera();
     Biker*   pBiker   = pCamera->getPlayerToFollow();
@@ -1013,7 +1017,7 @@ void GameRenderer::renderMiniMap(MotoGame* i_scene, int x,int y,int nWidth,int n
     pDrawlib->setClipRect(0,0,pDrawlib->getDispWidth(),pDrawlib->getDispHeight());
   }
 
-void GameRenderer::_RenderGhost(MotoGame* i_scene, Biker* i_ghost, int i, float i_textOffset) {
+void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_textOffset) {
   float v_diffInfoTextTime;
   int v_textTrans;
 
@@ -1256,7 +1260,7 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Main rendering function
   ===========================================================================*/
-  void GameRenderer::render(MotoGame* i_scene) {
+  void GameRenderer::render(Scene* i_scene) {
     Camera*  pCamera  = i_scene->getCamera();
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
@@ -1534,7 +1538,7 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Game status rendering
   ===========================================================================*/
-  void GameRenderer::_RenderGameStatus(MotoGame* i_scene) {
+  void GameRenderer::_RenderGameStatus(Scene* i_scene) {
     Sprite* pType = NULL;
 
     // do not render it if it's the autozoom camera or ...
@@ -1608,7 +1612,7 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Game message rendering
   ===========================================================================*/
-  void GameRenderer::_RenderGameMessages(MotoGame* i_scene) {
+  void GameRenderer::_RenderGameMessages(Scene* i_scene) {
     float v_fZoom = 60.0f;
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
@@ -1659,7 +1663,7 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Sprite rendering main
   ===========================================================================*/
-void GameRenderer::_RenderSprites(MotoGame* i_scene, bool bForeground,bool bBackground) {
+void GameRenderer::_RenderSprites(Scene* i_scene, bool bForeground,bool bBackground) {
     Entity *pEnt;
 
     AABB screenBigger;
@@ -1735,7 +1739,7 @@ void GameRenderer::_RenderSprites(MotoGame* i_scene, bool bForeground,bool bBack
   /*===========================================================================
   Render a sprite
   ===========================================================================*/
-void GameRenderer::_RenderSprite(MotoGame* i_scene, Entity *pEntity, float i_sizeMult) {  
+void GameRenderer::_RenderSprite(Scene* i_scene, Entity *pEntity, float i_sizeMult) {  
     AnimationSprite* v_sprite = NULL;
     float v_centerX = 0.0f;
     float v_centerY = 0.0f;
@@ -1891,7 +1895,7 @@ void GameRenderer::_RenderSprite(MotoGame* i_scene, Entity *pEntity, float i_siz
   /*===========================================================================
   Blocks (dynamic)
   ===========================================================================*/
-void GameRenderer::_RenderDynamicBlocks(MotoGame* i_scene, bool bBackground) {
+void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
     /* FIX::display only visible dyn blocks */
@@ -2159,7 +2163,7 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
   /*===========================================================================
   Blocks (static)
   ===========================================================================*/
-  void GameRenderer::_RenderBlocks(MotoGame* i_scene) {
+  void GameRenderer::_RenderBlocks(Scene* i_scene) {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
     for(int layer=-1; layer<=0; layer++){
@@ -2251,7 +2255,7 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
   /*===========================================================================
   Sky.
   ===========================================================================*/
-void GameRenderer::_RenderSky(MotoGame* i_scene, float i_zoom, float i_offset, const TColor& i_color,
+void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, const TColor& i_color,
 			      float i_driftZoom, const TColor& i_driftColor, bool i_drifted) {
   DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
   TextureSprite* pType;
@@ -2313,7 +2317,7 @@ void GameRenderer::_RenderSky(MotoGame* i_scene, float i_zoom, float i_offset, c
   /*===========================================================================
   And background rendering
   ===========================================================================*/
-  void GameRenderer::_RenderBackground(MotoGame* i_scene) { 
+  void GameRenderer::_RenderBackground(Scene* i_scene) { 
     /* Render STATIC background blocks */
     std::vector<Block *> Blocks = i_scene->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox);
 
@@ -2338,7 +2342,7 @@ void GameRenderer::_RenderSky(MotoGame* i_scene, float i_zoom, float i_offset, c
     }
   }
 
-void GameRenderer::_RenderLayer(MotoGame* i_scene, int layer) {
+void GameRenderer::_RenderLayer(Scene* i_scene, int layer) {
     if(GameApp::instance()->getDrawLib()->getBackend() != DrawLib::backend_OpenGl) {
       return;
     }
@@ -2393,7 +2397,7 @@ void GameRenderer::_RenderLayer(MotoGame* i_scene, int layer) {
 #endif
   }
 
-void GameRenderer::_RenderLayers(MotoGame* i_scene, bool renderFront) { 
+void GameRenderer::_RenderLayers(Scene* i_scene, bool renderFront) { 
     /* Render background level blocks */
     int nbLayer = i_scene->getLevelSrc()->getNumberLayer();
     for(int layer=0; layer<nbLayer; layer++){
@@ -2680,7 +2684,7 @@ bool GameRenderer::showGhostsText() const {
   return m_showGhostsText;
 }
 
-  void GameRenderer::switchFollow(MotoGame* i_scene) {
+  void GameRenderer::switchFollow(Scene* i_scene) {
     Camera*  pCamera  = i_scene->getCamera();
 
     if(pCamera->getPlayerToFollow() == NULL)
@@ -2725,7 +2729,7 @@ bool GameRenderer::showGhostsText() const {
   }
 
 
-void GameRenderer::renderTimePanel(MotoGame* i_scene) {
+void GameRenderer::renderTimePanel(Scene* i_scene) {
   int x = 0;
   int y = 0;
   FontGlyph* v_fg;
@@ -2794,7 +2798,7 @@ void GameRenderer::renderTimePanel(MotoGame* i_scene) {
   v_fm->printString(v_fg, x, y+48, MAKE_COLOR(255,255,255,255), -1.0, true);
 }
 
-void GameRenderer::renderReplayHelpMessage(MotoGame* i_scene) {
+void GameRenderer::renderReplayHelpMessage(Scene* i_scene) {
   /* next things must be rendered only the first camera */
   if(i_scene->getCurrentCamera() != 0)
     return;
@@ -2826,7 +2830,7 @@ void GameRenderer::_RenderParticleDraw(Vector2f position, Texture* pTexture, flo
   GameApp::instance()->getDrawLib()->drawImageTextureSet(p1, p2, p3, p4, MAKE_COLOR(c.Red(), c.Green(), c.Blue(), c.Alpha()), false, true);
 }
 
-void GameRenderer::_RenderParticle(MotoGame* i_scene, ParticlesSource* i_source, unsigned int sprite)
+void GameRenderer::_RenderParticle(Scene* i_scene, ParticlesSource* i_source, unsigned int sprite)
 {
   std::vector<EntityParticle*>& v_particles = i_source->Particles();
   unsigned int size = v_particles.size();
@@ -2843,7 +2847,7 @@ void GameRenderer::_RenderParticle(MotoGame* i_scene, ParticlesSource* i_source,
   }
 }
   
-void GameRenderer::_RenderParticles(MotoGame* i_scene, bool bFront) {
+void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
     AABB screenBigger;
     Vector2f screenMin = m_screenBBox.getBMin();
     Vector2f screenMax = m_screenBBox.getBMax();

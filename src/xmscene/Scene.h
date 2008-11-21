@@ -39,12 +39,12 @@ class Ghost;
 class NetGhost;
 class PlayerBiker;
 class ReplayBiker;
-class MotoGameOnBikerHooks;
+class SceneOnBikerHooks;
 class LuaLibGame;
 class xmDatabase;
 class Camera;
 class Entity;
-class MotoGameEvent;
+class SceneEvent;
 class Replay;
 class GameRenderer;
 class CollisionSystem;
@@ -103,18 +103,18 @@ struct GameMessage {
   Game object
   ===========================================================================*/
 
-class MotoGameHooks {
+class SceneHooks {
 public:
-  virtual ~MotoGameHooks() {};
+  virtual ~SceneHooks() {};
   virtual void OnTakeEntity() = 0;
 };
 
-class MotoGame {
+class Scene {
 public:          
-  MotoGame();
-  ~MotoGame();
+  Scene();
+  ~Scene();
 
-  void setHooks(MotoGameHooks *i_motoGameHooks);
+  void setHooks(SceneHooks *i_motoGameHooks);
 
   /* update of the structure */
   void loadLevel(xmDatabase *i_db, const std::string& i_id_level);
@@ -142,9 +142,9 @@ public:
   static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation = false);
 
   /* events */
-  void createGameEvent(MotoGameEvent *p_event);
-  void destroyGameEvent(MotoGameEvent *p_event);
-  MotoGameEvent* getNextGameEvent();
+  void createGameEvent(SceneEvent *p_event);
+  void destroyGameEvent(SceneEvent *p_event);
+  SceneEvent* getNextGameEvent();
   int getNumPendingGameEvents();
   void cleanEventsQueue();
   void executeEvents(Replay *p_replay);
@@ -239,7 +239,7 @@ public:
   void setSpeed(float f);
   bool isPaused();
 
-  void handleEvent(MotoGameEvent *pEvent);
+  void handleEvent(SceneEvent *pEvent);
 
   void setInfos(const std::string& i_infos);
   std::string getInfos() const;
@@ -261,7 +261,7 @@ public:
 private:
 
   /* Data */
-  std::queue<MotoGameEvent*> m_GameEventQueue;
+  std::queue<SceneEvent*> m_GameEventQueue;
   int m_time;
   float m_floattantTimeStepDiff; // to play slowly replay
   int m_lastStateSerializationTime;
@@ -269,7 +269,7 @@ private:
   float m_speed_factor; /* nb hundreadths to increment each time ; is a float so that manage slow */
   bool  m_is_paused;
 
-  MotoGameHooks *m_motoGameHooks;
+  SceneHooks *m_motoGameHooks;
   std::string m_infos;
   bool m_bDeathAnimEnabled;
   Vector2f m_PhysGravity; /* gravity */
@@ -326,20 +326,20 @@ private:
   void cleanScriptDynamicObjects();
   void nextStateScriptDynamicObjects(int i_nbCents);
 
-  void _SerializeGameEventQueue(DBuffer* Buffer,MotoGameEvent *pEvent);      
+  void _SerializeGameEventQueue(DBuffer* Buffer,SceneEvent *pEvent);      
   void _UpdateDynamicCollisionLines(void);
 };
 
-class MotoGameOnBikerHooks : public OnBikerHooks {
+class SceneOnBikerHooks : public OnBikerHooks {
 public:
-  MotoGameOnBikerHooks(MotoGame* i_motoGame, int i_playerNumber);
-  virtual ~MotoGameOnBikerHooks();
+  SceneOnBikerHooks(Scene* i_motoGame, int i_playerNumber);
+  virtual ~SceneOnBikerHooks();
   void onSomersaultDone(bool i_counterclock);
   void onWheelTouches(int i_wheel, bool i_touch);
   void onHeadTouches();
 
 private:
-  MotoGame* m_motoGame;
+  Scene* m_motoGame;
   int m_playerNumber;
 };
 

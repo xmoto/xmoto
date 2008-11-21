@@ -58,6 +58,12 @@ void Texture::invalidateSpritesTexture()
   }
 }
 
+void Texture::removeAssociatedSprites()
+{
+  associatedSprites.clear();
+}
+
+
   /*===========================================================================
   Create texture from memory
   ===========================================================================*/
@@ -284,11 +290,25 @@ void Texture::invalidateSpritesTexture()
   /*===========================================================================
   Get loaded texture by name
   ===========================================================================*/  
-  Texture *TextureManager::getTexture(std::string Name) {
-    for(unsigned int i=0;i<m_Textures.size();i++)
-      if(m_Textures[i]->Name == Name) return m_Textures[i];
+  Texture* TextureManager::getTexture(std::string Name) {
+    for(unsigned int i=0; i<m_Textures.size(); i++)
+      if(m_Textures[i]->Name == Name)
+	return m_Textures[i];
     return NULL;
   }
+
+void TextureManager::removeAssociatedSpritesFromTextures()
+{
+  // when loading a new theme, sprites are destroyed
+  // -> have to remove them from textures
+  std::vector<Texture*>::iterator it = m_Textures.begin();
+
+  while(it != m_Textures.end()){
+    (*it)->removeAssociatedSprites();
+
+    ++it;
+  }
+}
 
   /*===========================================================================
   Unload everything in a very hateful manner

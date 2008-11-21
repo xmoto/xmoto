@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class Block;
 class Entity;
 class Joint;
-class MotoGame;
+class Scene;
 class xmDatabase;
 class FileHandle;
 class SkyApparence;
@@ -131,7 +131,7 @@ class Level {
   static int compareVersionNumbers(const std::string &i_v1, const std::string &i_v2);
 
   /* because some objects like entities have an internal movement */
-  void updateToTime(MotoGame& i_scene, PhysicsSettings* i_physicsSettings);
+  void updateToTime(Scene& i_scene, PhysicsSettings* i_physicsSettings);
   /* this method calls objects because rewind in replay can required some actions (like removing particles) */
 
   /* the entity will be destroyed by the level */

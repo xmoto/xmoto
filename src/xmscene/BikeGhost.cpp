@@ -96,7 +96,7 @@ FileGhost::~FileGhost() {
   }
 }
 
-void FileGhost::execReplayEvents(int i_time, MotoGame *i_motogame) {
+void FileGhost::execReplayEvents(int i_time, Scene *i_motogame) {
   std::vector<RecordedGameEvent *> *v_replayEvents;
   v_replayEvents = m_replay->getEvents();
   
@@ -167,7 +167,7 @@ void FileGhost::initLastToTakeEntities(Level* i_level) {
 
   /* Start looking for events */
   for(unsigned int i=0; i<v_replayEvents->size(); i++) {
-    MotoGameEvent *v_event = (*v_replayEvents)[i]->Event;
+    SceneEvent *v_event = (*v_replayEvents)[i]->Event;
       
     if(v_event->getType() == GAME_EVENT_ENTITY_DESTROYED) {
       if(i_level->getEntityById(((MGE_EntityDestroyed*)v_event)->EntityId())->IsToTake()) {
@@ -200,7 +200,7 @@ void FileGhost::initToPosition(Vector2f i_position, DriveDir i_direction, Vector
 
 void FileGhost::updateToTime(int i_time, int i_timeStep,
 			 CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-			 MotoGame *i_motogame) {
+			 Scene *i_motogame) {
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
   DriveDir v_previousDir = m_bikeState->Dir;
 

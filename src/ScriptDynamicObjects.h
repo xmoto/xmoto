@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 
-class MotoGame;
+class Scene;
 class Entity;
 class Block;
 
@@ -33,14 +33,14 @@ class SDynamicObject {
   virtual ~SDynamicObject();
   
   /* return false if the dynamic is finished */
-  bool nextState(MotoGame* v_motoGame, int i_nbCents);
+  bool nextState(Scene* v_motoGame, int i_nbCents);
   inline std::string& getObjectId() {
     return m_objectId;
   }
   
  protected:
   bool isTimeToMove();
-  virtual void performMove(MotoGame* v_motoGame, int i_nbCents) = 0;  
+  virtual void performMove(Scene* v_motoGame, int i_nbCents) = 0;  
   int Period() const;
 
   std::string m_objectId;
@@ -106,7 +106,7 @@ class SDynamicEntityMove : public SDynamicObject {
   SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime, int pPeriod);
   virtual ~SDynamicEntityMove();
 
-  void performMove(MotoGame* p_motoGame, int i_nbCents);
+  void performMove(Scene* p_motoGame, int i_nbCents);
 
  protected:
   virtual void performXY(float *vx, float *vy, float *vAngle) = 0;
@@ -152,7 +152,7 @@ class SDynamicBlockMove : public SDynamicObject {
   SDynamicBlockMove(std::string pBlock, int p_startTime, int p_endTime, int pPeriod);
   virtual ~SDynamicBlockMove();
 
-  void performMove(MotoGame* p_motoGame, int i_nbCents);
+  void performMove(Scene* p_motoGame, int i_nbCents);
 
  protected:
   virtual void performXY(float *vx, float *vy, float *vAngle) = 0;
@@ -202,7 +202,7 @@ public:
   SPhysicBlockMove(std::string blockName, int startTime, int endTime, int period);
   virtual ~SPhysicBlockMove() {}
   
-  void performMove(MotoGame* pMotoGame, int i_nbCents);
+  void performMove(Scene* pScene, int i_nbCents);
 
 protected:
   virtual void applyForce() = 0;

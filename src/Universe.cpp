@@ -31,24 +31,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "Renderer.h"
 
-void XMMotoGameHooks::OnTakeEntity() {
+void XMSceneHooks::OnTakeEntity() {
     /* Play yummy-yummy sound */
     try {
-      Sound::playSampleByName(Theme::instance()->getSound(m_MotoGame->getLevelSrc()->SoundForPickUpStrawberry())->FilePath());
+      Sound::playSampleByName(Theme::instance()->getSound(m_Scene->getLevelSrc()->SoundForPickUpStrawberry())->FilePath());
     } catch(Exception &e) {
     }
 }
 
 
-void XMMotoGameHooks::setGameApps(MotoGame *i_MotoGame) {
-  m_MotoGame = i_MotoGame;
+void XMSceneHooks::setGameApps(Scene *i_Scene) {
+  m_Scene = i_Scene;
 }
 
-XMMotoGameHooks::XMMotoGameHooks() {
-  m_MotoGame = NULL;
+XMSceneHooks::XMSceneHooks() {
+  m_Scene = NULL;
 }
   
-XMMotoGameHooks::~XMMotoGameHooks() {
+XMSceneHooks::~XMSceneHooks() {
 }
 
 Universe::Universe() {
@@ -64,8 +64,8 @@ Universe::~Universe() {
 }
 
 void Universe::addScene() {
-  MotoGame*        v_motoGame      = new MotoGame();
-  XMMotoGameHooks* v_motoGameHooks = new XMMotoGameHooks();
+  Scene*        v_motoGame      = new Scene();
+  XMSceneHooks* v_motoGameHooks = new XMSceneHooks();
 
   /* Tell collision system whether we want debug-info or not */
   v_motoGame->getCollisionHandler()->setDebug(XMSession::instance()->debug());
@@ -248,7 +248,7 @@ void Universe::finalizeReplay(bool i_finished) {
 
   /* save the last state because scene don't record each frame */
   SerializedBikeState BikeState;
-  MotoGame::getSerializedBikeState(m_scenes[0]->Players()[0]->getState(), m_scenes[0]->getTime(), &BikeState, m_scenes[0]->getPhysicsSettings());
+  Scene::getSerializedBikeState(m_scenes[0]->Players()[0]->getState(), m_scenes[0]->getTime(), &BikeState, m_scenes[0]->getPhysicsSettings());
   m_pJustPlayReplay->storeState(BikeState);
   m_pJustPlayReplay->finishReplay(i_finished, i_finished ? m_scenes[0]->Players()[0]->finishTime() : 0);
 }
@@ -294,6 +294,6 @@ void Universe::saveReplay(const std::string &Name) {
   }
 }
 
-std::vector<MotoGame*>& Universe::getScenes() {
+std::vector<Scene*>& Universe::getScenes() {
   return m_scenes;
 }
