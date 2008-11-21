@@ -21,18 +21,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 #include "xmscene/Scene.h"
 
-class MotoGame;
-class XMMotoGameHooks;
+class Scene;
+class XMSceneHooks;
 
-class XMMotoGameHooks : public MotoGameHooks {
+class XMSceneHooks : public SceneHooks {
 public:
-  XMMotoGameHooks();
-  virtual ~XMMotoGameHooks();
-  void setGameApps(MotoGame *i_MotoGame);
+  XMSceneHooks();
+  virtual ~XMSceneHooks();
+  void setGameApps(Scene *i_Scene);
   void OnTakeEntity();
 
 private:
-  MotoGame *m_MotoGame;
+  Scene *m_Scene;
 };
 
 class Universe {
@@ -40,7 +40,7 @@ class Universe {
   Universe();
   ~Universe();
 
-  std::vector<MotoGame*>& getScenes();
+  std::vector<Scene*>& getScenes();
   void initPlay(int i_nbPlayer, bool i_multiScenes);
 
   Replay* getCurrentReplay();
@@ -53,8 +53,8 @@ class Universe {
   void switchFollowCamera();
 
   private:
-  std::vector<MotoGame*>        m_scenes; /* Game objects */
-  std::vector<XMMotoGameHooks*> m_motoGameHooks;
+  std::vector<Scene*>        m_scenes; /* Game objects */
+  std::vector<XMSceneHooks*> m_motoGameHooks;
   Replay *m_pJustPlayReplay;
 
   void removeAllWorlds();

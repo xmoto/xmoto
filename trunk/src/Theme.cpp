@@ -95,7 +95,8 @@ void Theme::load(std::string p_themeFile) {
 
   m_requiredFiles.clear();
 
-  cleanSprites(); /* removing existing sprites */
+  m_texMan.removeAssociatedSpritesFromTextures();
+  cleanSprites();
   cleanMusics();
   cleanSounds();
 

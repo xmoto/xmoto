@@ -63,7 +63,7 @@ class FileGhost : public Ghost {
   virtual void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
   virtual void updateToTime(int i_time, int i_timeStep,
 			    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-			    MotoGame *i_motogame);
+			    Scene *i_motogame);
   std::string getDescription() const;
   std::string getQuickDescription() const;
   std::string getVeryQuickDescription() const;
@@ -85,7 +85,7 @@ class FileGhost : public Ghost {
  /* because we have not the real one, but the one before and the one after */
  std::vector<BikeState*> m_ghostBikeStates;
 
- void execReplayEvents(int i_time, MotoGame *i_motogame);
+ void execReplayEvents(int i_time, Scene *i_motogame);
 };
 
 class NetGhost : public Ghost {

@@ -374,7 +374,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     /* unserialize events */
-    MotoGame::unserializeGameEvents(this, &m_ReplayEvents, bDisplayInformation);
+    Scene::unserializeGameEvents(this, &m_ReplayEvents, bDisplayInformation);
     initOutput(1024);
     for(unsigned int i=0; i<m_ReplayEvents.size(); i++) {
       m_ReplayEvents[i]->Event->serialize(*this);

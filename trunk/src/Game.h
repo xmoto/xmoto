@@ -111,7 +111,7 @@ public:
 
   std::string getWorldRecord(unsigned int i_number, const std::string &LevelID);
 
-  void addGhosts(MotoGame* i_motogame, Theme* i_theme);
+  void addGhosts(Scene* i_motogame, Theme* i_theme);
 
   // to call while playing
   void toogleEnableMusic();

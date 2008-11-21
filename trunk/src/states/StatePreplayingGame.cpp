@@ -61,7 +61,7 @@ void StatePreplayingGame::initPlayers() {
   LogInfo("Preplay level for %i player(s)", v_nbPlayer);
 
   if(v_multiScenes == false) { // monoworld
-    MotoGame* v_world = m_universe->getScenes()[0];
+    Scene* v_world = m_universe->getScenes()[0];
     
     for(unsigned int i=0; i<v_nbPlayer; i++) {
       v_world->setCurrentCamera(i);
@@ -74,7 +74,7 @@ void StatePreplayingGame::initPlayers() {
       v_world->getCamera()->setScroll(false, v_world->getGravity());
     }
   } else { // multiworlds
-    MotoGame* v_world;
+    Scene* v_world;
     
     for(unsigned int i=0; i<v_nbPlayer; i++) {
       v_world = m_universe->getScenes()[i];

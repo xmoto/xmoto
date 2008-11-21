@@ -24,12 +24,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 #include "include/xm_lua.h"
 
-class MotoGame;
+class Scene;
 class InputHandler;
 
 class LuaLibGame {
 public:
-  LuaLibGame(MotoGame *i_pMotoGame);
+  LuaLibGame(Scene *i_pScene);
   ~LuaLibGame();
 
   void loadScript(const std::string& i_scriptCode, const std::string& i_scriptFilename);
@@ -44,11 +44,11 @@ public:
 
 private:
   lua_State *m_pL;
-  MotoGame* m_pMotoGame;
+  Scene* m_pScene;
   InputHandler *m_pActiveInputHandler;
 
   static InputHandler* m_exec_activeInputHandler;
-  static MotoGame*     m_exec_world;
+  static Scene*     m_exec_world;
   static luaL_reg      m_gameFuncs[];
 
   /*

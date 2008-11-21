@@ -89,7 +89,7 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"GetPlayerAngle",               LuaLibGame::L_Game_GetPlayerAngle},   
   {NULL, NULL}
 };
-MotoGame*     LuaLibGame::m_exec_world              = NULL;
+Scene*     LuaLibGame::m_exec_world              = NULL;
 InputHandler* LuaLibGame::m_exec_activeInputHandler = NULL;
 
 /*===========================================================================
@@ -106,14 +106,14 @@ lua_Number X_luaL_check_number(lua_State *L,int narg) {
   return d;    
 }
 
-LuaLibGame::LuaLibGame(MotoGame *i_pMotoGame) {
+LuaLibGame::LuaLibGame(Scene *i_pScene) {
   m_pL = lua_open();
   luaopen_base(m_pL);   
   luaopen_math(m_pL);
   luaopen_table(m_pL);
   luaL_openlib(m_pL, "Game", m_gameFuncs, 0);
 
-  m_pMotoGame           = i_pMotoGame;
+  m_pScene           = i_pScene;
   m_pActiveInputHandler = InputHandler::instance();
 }
 
@@ -122,7 +122,7 @@ LuaLibGame::~LuaLibGame() {
 }
 
 void LuaLibGame::setWorld() {
-  m_exec_world              = m_pMotoGame;
+  m_exec_world              = m_pScene;
   m_exec_activeInputHandler = m_pActiveInputHandler;
 }
 
