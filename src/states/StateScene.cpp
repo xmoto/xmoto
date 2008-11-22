@@ -873,12 +873,11 @@ void StateScene::playLevelMusic() {
   if(m_universe != NULL) {
     if(m_universe->getScenes().size() > 0) {
       // play music of the first world
-      if(m_universe->getScenes()[0]->getLevelSrc()->Music() != "") {
+      if(m_universe->getScenes()[0]->getLevelSrc()->Music() == "" && XMSession::instance()->musicOnAllLevels()) {
+	GameApp::instance()->playGameMusic(Theme::instance()->getHashMusic(m_universe->getScenes()[0]->getLevelSrc()->Id()));
+      } else {
 	GameApp::instance()->playGameMusic(m_universe->getScenes()[0]->getLevelSrc()->Music());
       } 
-      else {
-	GameApp::instance()->playGameMusic(Theme::instance()->getHashMusic(m_universe->getScenes()[0]->getLevelSrc()->Id()));
-      }
     }
   }
 }

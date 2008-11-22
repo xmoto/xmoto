@@ -324,6 +324,14 @@ void StateOptions::checkEvents() {
     v_button->setClicked(false);
 
     XMSession::instance()->setEnableGameMusic(v_button->getChecked());
+    updateAudioOptions();
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_MUSIC_ON_ALL_LEVELS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    XMSession::instance()->setMusicOnAllLevels(v_button->getChecked());
   }
 
   // controls
@@ -946,6 +954,12 @@ UIWindow* StateOptions::makeWindowOptions_audio(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_GAMEMUSIC);
 
+  v_button = new UIButton(v_window, 25, 201, GAMETEXT_MUSICONALLLEVELS, v_window->getPosition().nWidth-10, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("ENABLE_MUSIC_ON_ALL_LEVELS");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_MUSICONALLLEVELS);
+
   return v_window;
 }
 
@@ -1417,6 +1431,8 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->enableMenuMusic());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_GAME_MUSIC"));
   v_button->setChecked(XMSession::instance()->enableGameMusic());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_MUSIC_ON_ALL_LEVELS"));
+  v_button->setChecked(XMSession::instance()->musicOnAllLevels());
 
   // controls
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:ENABLEJOYSTICKS"));
@@ -1529,6 +1545,8 @@ void StateOptions::updateAudioOptions() {
   v_button->enableWindow(XMSession::instance()->enableAudio());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_GAME_MUSIC"));
   v_button->enableWindow(XMSession::instance()->enableAudio());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:AUDIO_TAB:ENABLE_MUSIC_ON_ALL_LEVELS"));
+  v_button->enableWindow(XMSession::instance()->enableAudio() && XMSession::instance()->enableGameMusic());
 }
 
 void StateOptions::updateDbOptions() {
