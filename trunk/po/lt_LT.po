@@ -549,7 +549,7 @@ msgstr "Rodyti vaiduoklio informaciją"
 
 #: src/GameText.h:195
 msgid "Display bike arrow indication"
-msgstr ""
+msgstr "Rodyti motociklo rodyklės indikaciją"
 
 #: src/GameText.h:196
 msgid "Direct Connection"
@@ -784,7 +784,7 @@ msgstr "%s vaiduoklis"
 #: src/GameText.h:250
 #, c-format
 msgid "Web ghost of %s"
-msgstr ""
+msgstr "%s tinklo vaiduoklis"
 
 #: src/GameText.h:251
 msgid "Ghost"
@@ -870,7 +870,7 @@ msgstr "Aukšta"
 
 #: src/GameText.h:275
 msgid "Highscore of the room"
-msgstr ""
+msgstr "Kambario rekordas"
 
 #: src/GameText.h:276
 msgid "Levels are being added into the database. Please wait."
@@ -1657,7 +1657,7 @@ msgstr "Taip visus"
 
 #: src/GameText.h:470
 msgid "Your best time"
-msgstr ""
+msgstr "Jūsų geriausias laikas"
 
 #: src/GameText.h:471
 msgid "Zoom in"
@@ -1673,86 +1673,86 @@ msgstr "Sumažinti"
 
 #: src/GameText.h:475
 msgid "Server"
-msgstr ""
+msgstr "Serveris"
 
 #: src/GameText.h:477
 msgid "Launch at startup"
-msgstr ""
+msgstr "Paleisti startuojant"
 
 #: src/GameText.h:478
 msgid "Start the server"
-msgstr ""
+msgstr "Įjungti serverį"
 
 #: src/GameText.h:479
 msgid "Stop the server"
-msgstr ""
+msgstr "Išjungti serverį"
 
 #: src/GameText.h:480
 msgid "Server is currently started"
-msgstr ""
+msgstr "Serveris įjungtas"
 
 #: src/GameText.h:481
 msgid "Server is currently stopped"
-msgstr ""
+msgstr "Serveris išjungtas"
 
 #: src/GameText.h:482
 msgid "Default port"
-msgstr ""
+msgstr "Numatytasis prievadas"
 
 #: src/GameText.h:483
 msgid "Custom port"
-msgstr ""
+msgstr "Kitas prievadas"
 
 #: src/GameText.h:484
 msgid "Network"
-msgstr ""
+msgstr "Tinklas"
 
 #: src/GameText.h:485
 msgid "You're currently connected"
-msgstr ""
+msgstr "Jūs prisijungęs"
 
 #: src/GameText.h:486
 msgid "You're currently disconnected"
-msgstr ""
+msgstr "Jūs atsijungęs"
 
 #: src/GameText.h:487
 msgid "Connect"
-msgstr ""
+msgstr "Prisijungti"
 
 #: src/GameText.h:488
 msgid "Disconnect"
-msgstr ""
+msgstr "Atsijungti"
 
 #: src/GameText.h:489
 msgid "Unable to connect on the server"
-msgstr ""
+msgstr "Neįmanoma prisijungti prie serverio"
 
 #: src/GameText.h:490
 msgid "Network error: you're disconnected"
-msgstr ""
+msgstr "Tinklo klaida: jūs atsijungęs"
 
 #: src/GameText.h:491
 msgid "Connected players:"
-msgstr ""
+msgstr "Prisijungę žaidėjai:"
 
 #: src/GameText.h:492
 msgid "Chat message"
-msgstr ""
+msgstr "Pokalbių žinutė"
 
 #: src/GameText.h:493
 #, c-format
 msgid "%s joined the game"
-msgstr ""
+msgstr "%s prisijungė prie žaidimo"
 
 #: src/GameText.h:494
 #, c-format
 msgid "%s left the game"
-msgstr ""
+msgstr "%s atsijungė nuo žaidimo"
 
 #: src/GameText.h:495
 #, c-format
 msgid "%s is playing level %s"
-msgstr ""
+msgstr "%s žaidžia lygį %s"
 
 #: src/GameText.h:504
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -2106,7 +2106,7 @@ msgstr "Kai pradėdamas lygis su vaiduokliu, rodyti, kuris yra vaiduoklis"
 
 #: src/GameText.h:589
 msgid "Display an arrow to display where are located the bikes on the map"
-msgstr ""
+msgstr "Rodyti rodyklę, kur yra motociklas žemėlapyje"
 
 #: src/GameText.h:590
 msgid "Display the time difference between the ghost and you"
@@ -2469,27 +2469,27 @@ msgstr "Nesiųsti šio raporto į web serverį"
 
 #: src/GameText.h:686
 msgid "Server configuration to play via the network"
-msgstr ""
+msgstr "Serverio formavimas žaidimui per tinklą"
 
 #: src/GameText.h:687
 msgid "Start the server at X-Moto startup"
-msgstr ""
+msgstr "Įjungti serverį paleidus X-Moto"
 
 #: src/GameText.h:688
 msgid "Start/stop the server"
-msgstr ""
+msgstr "Įjungti/išjungti serverį"
 
 #: src/GameText.h:689
 msgid "Port on which the server must listen to"
-msgstr ""
+msgstr "Prievadas, į kurį serveris turi kreiptis"
 
 #: src/GameText.h:690
 msgid "Server on which you want to connect"
-msgstr ""
+msgstr "Serveris, prie kurio norite prisijungti"
 
 #: src/GameText.h:691
 msgid "Connect/disconnect the client to the server"
-msgstr ""
+msgstr "Prijungti/atjungti klientą nuo serverio"
 
 #: src/GameText.h:693
 msgid "Levels with no highscore"
