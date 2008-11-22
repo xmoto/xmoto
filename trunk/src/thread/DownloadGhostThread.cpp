@@ -103,7 +103,8 @@ int DownloadGhostThread::realThreadFunction()
 	}
 	m_pDb->read_DB_free(v_result);
       }
-      if(m_onlyMainRoomGhost == true && i == 0
+      if(
+	 (m_onlyMainRoomGhost == true && i == 0)
 	 || m_onlyMainRoomGhost == false) {
 	/* only for the main room */
 	std::string args = "";
