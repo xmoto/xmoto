@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-11-22 17:37+0100\n"
 "PO-Revision-Date: 2007-05-04 23:56+0200\n"
-"Last-Translator: AvovA <avova@rbcmail.ru>\n"
+"Last-Translator: Tadas Masiulionis <tadzikaz@gmail.com>\n"
 "Language-Team: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,15 +110,15 @@ msgstr "Авто приближение"
 
 #: src/GameText.h:58
 msgid "Database"
-msgstr ""
+msgstr "База данных"
 
 #: src/GameText.h:59
 msgid "Camera Active Zoom"
-msgstr ""
+msgstr "Активная камера зум"
 
 #: src/GameText.h:60
 msgid "Beating mode"
-msgstr ""
+msgstr "Избиения режим"
 
 #: src/GameText.h:61
 msgid "Best Times"
@@ -175,16 +175,15 @@ msgstr "Поиск новых или обновленных уровней"
 
 #: src/GameText.h:74
 msgid "I'm a child"
-msgstr ""
+msgstr "Я ребёнок"
 
 #: src/GameText.h:75
 msgid "Choose Level"
 msgstr "Выберите уровень"
 
 #: src/GameText.h:76
-#, fuzzy
 msgid "Clean"
-msgstr "Каталонский"
+msgstr "Очистить"
 
 #: src/GameText.h:77
 #, fuzzy, c-format
@@ -246,7 +245,7 @@ msgstr ""
 #: src/GameText.h:91 src/GameText.h:105
 #, c-format
 msgid "button %i"
-msgstr ""
+msgstr "Клавиш %i"
 
 #: src/GameText.h:92
 msgid "left button"
@@ -276,9 +275,9 @@ msgstr ""
 #, c-format
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Найден %i джойстик"
+msgstr[1] "Найдены %i джойстика"
+msgstr[2] "Найдено %i джойстиков"
 
 #: src/GameText.h:99
 #, c-format
@@ -395,7 +394,7 @@ msgstr "Датский"
 
 #: src/GameText.h:152
 msgid "Lithuanian"
-msgstr ""
+msgstr "Литовский"
 
 #: src/GameText.h:154
 msgid "Main testers"
@@ -467,7 +466,7 @@ msgstr "Дата"
 
 #: src/GameText.h:177
 msgid "Difficulty"
-msgstr ""
+msgstr "Трудность"
 
 #: src/GameText.h:178
 msgid ""
@@ -487,7 +486,7 @@ msgstr ""
 
 #: src/GameText.h:180
 msgid "Synchronise"
-msgstr ""
+msgstr "Синхронизировать"
 
 #: src/GameText.h:181
 msgid "Synchronize when X-Moto ends"
@@ -635,11 +634,11 @@ msgstr "Показывать мировой рекорд во время игр�
 
 #: src/GameText.h:216
 msgid "Enable menu music"
-msgstr ""
+msgstr "Включить музыку меню"
 
 #: src/GameText.h:217
 msgid "Enable game music"
-msgstr ""
+msgstr "Включить музыку игры"
 
 #: src/GameText.h:218
 msgid "Enable WWW Access"
@@ -783,7 +782,7 @@ msgstr "Призрак %s"
 #: src/GameText.h:251
 #, c-format
 msgid "Web ghost of %s"
-msgstr ""
+msgstr "Веб призрак %s"
 
 #: src/GameText.h:252
 msgid "Ghost"
@@ -1017,7 +1016,7 @@ msgstr "Основные"
 
 #: src/GameText.h:312
 msgid "Mouse"
-msgstr ""
+msgstr "Мышь"
 
 #: src/GameText.h:313 src/GameText.h:416
 msgid "Theme"
@@ -1262,7 +1261,7 @@ msgstr "Настроить прокси..."
 
 #: src/GameText.h:377
 msgid "Quality"
-msgstr ""
+msgstr "Качество"
 
 #: src/GameText.h:378
 msgid "Quick start"
@@ -1320,7 +1319,7 @@ msgstr "Демки"
 
 #: src/GameText.h:392
 msgid "Are you sure you want to reset config to defaults ?"
-msgstr ""
+msgstr "Уверены ли, что хотите сбросить конфигурации по умолчанию?"
 
 #: src/GameText.h:393
 msgid "Restart This Level"
@@ -1483,9 +1482,8 @@ msgid "Updating level lists..."
 msgstr "Обновление списка уровней..."
 
 #: src/GameText.h:434
-#, fuzzy
 msgid "Upload"
-msgstr "Обновлено"
+msgstr "Загрузить"
 
 #: src/GameText.h:435
 msgid "Upload all highscores"
@@ -1521,7 +1519,7 @@ msgstr "Использовать профиль"
 
 #: src/GameText.h:442
 msgid "Allow web forms"
-msgstr ""
+msgstr "Разрешить веб-формах"
 
 #: src/GameText.h:443
 msgid "Using HTTP Proxy"
@@ -1562,12 +1560,12 @@ msgstr "Сеть"
 
 #: src/GameText.h:453
 msgid "Reference room"
-msgstr ""
+msgstr "Указаное комната"
 
 #: src/GameText.h:454
-#, fuzzy, c-format
+#, c-format
 msgid "Room %i"
-msgstr "Комната"
+msgstr "%i комната"
 
 #: src/GameText.h:456
 #, c-format
@@ -1580,9 +1578,9 @@ msgid "%d minutes"
 msgstr "%d минут"
 
 #: src/GameText.h:459
-#, fuzzy, c-format
+#, c-format
 msgid "Stats since: %s"
-msgstr "Статистика"
+msgstr "Статистика от: %s"
 
 #: src/GameText.h:460
 #, c-format
@@ -1603,31 +1601,31 @@ msgstr[2] ""
 #: src/GameText.h:462
 #, c-format
 msgid "Time played: %s"
-msgstr ""
+msgstr "Время игры: %s"
 
 #: src/GameText.h:463
-#, fuzzy, c-format
+#, c-format
 msgid "%d play"
 msgid_plural "%d plays"
-msgstr[0] "%i игрок"
-msgstr[1] "%i игрока"
-msgstr[2] "%i игроков"
+msgstr[0] "%d игрок"
+msgstr[1] "%d игрока"
+msgstr[2] "%d игроков"
 
 #: src/GameText.h:464
 #, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%d смерть"
+msgstr[1] "%d смерти"
+msgstr[2] "%d смертей"
 
 #: src/GameText.h:465
-#, fuzzy, c-format
+#, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
-msgstr[0] "Не завершен"
-msgstr[1] "Не завершен"
-msgstr[2] "Не завершен"
+msgstr[0] "%d закончен"
+msgstr[1] "%d закончены"
+msgstr[2] "%d закончены"
 
 #: src/GameText.h:466
 #, c-format
@@ -1652,7 +1650,7 @@ msgstr "Да для всех"
 
 #: src/GameText.h:471
 msgid "Your best time"
-msgstr ""
+msgstr "Ваше лучший время"
 
 #: src/GameText.h:472
 msgid "Zoom in"
@@ -1668,7 +1666,7 @@ msgstr "Отдалить"
 
 #: src/GameText.h:476
 msgid "Server"
-msgstr ""
+msgstr "Сервер"
 
 #: src/GameText.h:478
 msgid "Launch at startup"
@@ -1676,11 +1674,11 @@ msgstr ""
 
 #: src/GameText.h:479
 msgid "Start the server"
-msgstr ""
+msgstr "Старт сервера"
 
 #: src/GameText.h:480
 msgid "Stop the server"
-msgstr ""
+msgstr "Стоп сервера"
 
 #: src/GameText.h:481
 msgid "Server is currently started"
@@ -1700,7 +1698,7 @@ msgstr ""
 
 #: src/GameText.h:485
 msgid "Network"
-msgstr ""
+msgstr "Сеть"
 
 #: src/GameText.h:486
 msgid "You're currently connected"
@@ -1728,7 +1726,7 @@ msgstr ""
 
 #: src/GameText.h:492
 msgid "Connected players:"
-msgstr ""
+msgstr "Подключены игроки:"
 
 #: src/GameText.h:493
 msgid "Chat message"
@@ -2312,12 +2310,11 @@ msgstr ""
 
 #: src/GameText.h:648
 msgid "Remove levels not suitable for children"
-msgstr ""
+msgstr "Удалить уровни, которые не пригодные для детей"
 
 #: src/GameText.h:649
-#, fuzzy
 msgid "Enable this room"
-msgstr "Включить звук"
+msgstr "Включить эту комнату"
 
 #: src/GameText.h:650
 msgid "Password associated to your profile for web access"
@@ -2325,7 +2322,7 @@ msgstr ""
 
 #: src/GameText.h:651
 msgid "Main options"
-msgstr ""
+msgstr "Основные настройки"
 
 #: src/GameText.h:652
 msgid "Configure the X-Moto theme"
@@ -2361,47 +2358,47 @@ msgstr ""
 
 #: src/GameText.h:661
 msgid "No idea"
-msgstr ""
+msgstr "Нет идеи"
 
 #: src/GameText.h:662
 msgid "Beginner"
-msgstr ""
+msgstr "Начинающий"
 
 #: src/GameText.h:663
 msgid "Expert"
-msgstr ""
+msgstr "Эксперт"
 
 #: src/GameText.h:664
 msgid "Master"
-msgstr ""
+msgstr "Хозяин"
 
 #: src/GameText.h:665
 msgid "God"
-msgstr ""
+msgstr "Бог"
 
 #: src/GameText.h:666
 msgid "Not nice at all"
-msgstr ""
+msgstr "Совсем некрасивый"
 
 #: src/GameText.h:667
 msgid "Not nice"
-msgstr ""
+msgstr "Некрасивый"
 
 #: src/GameText.h:668
 msgid "Nice"
-msgstr ""
+msgstr "Красивый"
 
 #: src/GameText.h:669
 msgid "Really nice"
-msgstr ""
+msgstr "Очен прекрасный"
 
 #: src/GameText.h:670
 msgid "Send this report"
-msgstr ""
+msgstr "Отправить этот доклад"
 
 #: src/GameText.h:671
 msgid "Skip this report"
-msgstr ""
+msgstr "Пропустить этот доклад"
 
 #: src/GameText.h:673
 msgid "You don't want to vote"
@@ -2409,11 +2406,11 @@ msgstr ""
 
 #: src/GameText.h:674
 msgid "Really easy"
-msgstr ""
+msgstr "Действительно легко"
 
 #: src/GameText.h:675
 msgid "No technical difficulty"
-msgstr ""
+msgstr "Никаких технических трудностей"
 
 #: src/GameText.h:676
 msgid "At least one difficulty"
@@ -2425,7 +2422,7 @@ msgstr ""
 
 #: src/GameText.h:678
 msgid "Impossible"
-msgstr ""
+msgstr "Невозможный"
 
 #: src/GameText.h:679
 msgid "Basic blocks, no decoration"
@@ -2449,11 +2446,11 @@ msgstr ""
 
 #: src/GameText.h:684
 msgid "Send this report on the webserver"
-msgstr ""
+msgstr "Отправить этот доклад на веб-сервер"
 
 #: src/GameText.h:685
 msgid "Don't send this report on the webserver"
-msgstr ""
+msgstr "Не отправить этот доклад на веб-сервер"
 
 #: src/GameText.h:687
 msgid "Server configuration to play via the network"
@@ -2465,7 +2462,7 @@ msgstr ""
 
 #: src/GameText.h:689
 msgid "Start/stop the server"
-msgstr ""
+msgstr "Старт/стоп сервера"
 
 #: src/GameText.h:690
 msgid "Port on which the server must listen to"
@@ -2530,7 +2527,7 @@ msgstr "Заскриптованные уровни"
 
 #: src/GameText.h:707
 msgid "Physics levels"
-msgstr ""
+msgstr "Физические уровени"
 
 #: src/GameText.h:709
 msgid "Last played levels"
@@ -2785,14 +2782,12 @@ msgid "Fps disabled"
 msgstr "Показ Кдр/Сек выключен"
 
 #: src/GameText.h:774
-#, fuzzy
 msgid "Audio enabled"
-msgstr "Показ Кдр/Сек включён"
+msgstr "Звук включен"
 
 #: src/GameText.h:775
-#, fuzzy
 msgid "Audio disabled"
-msgstr "Показ Кдр/Сек выключен"
+msgstr "Звук выключен"
 
 #: src/GameText.h:777
 msgid "No training positions stored"
