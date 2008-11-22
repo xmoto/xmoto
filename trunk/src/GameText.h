@@ -172,6 +172,7 @@ Central place to keep many in-game text strings
 
 #define GAMETEXT_CREDITSBUTTON        _("Credits")
 #define GAMETEXT_PLAYER               _("Player")
+#define GAMETEXT_MUSICONALLLEVELS      _("Play music on all levels")
 #define GAMETEXT_DATE                 _("Date")
 #define GAMETEXT_DIFFICULTY           _("Difficulty")
 #define GAMETEXT_DBSYNCHRONIZE_EXPLANATION _("X-Moto uses a database on your computer to save all your scores and statistics. You can send these data using your web account on the X-Moto server. It is useful to save your data or if you play X-Moto from different places.")
@@ -689,6 +690,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_SERVERPORT _("Port on which the server must listen to")
 #define CONTEXTHELP_SERVER _("Server on which you want to connect")
 #define CONTEXTHELP_CLIENTCONNECTDISCONNECT _("Connect/disconnect the client to the server")
+#define CONTEXTHELP_MUSICONALLLEVELS _("Enables background music for levels that do not have their own music track")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

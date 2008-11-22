@@ -137,6 +137,7 @@ void XMSession::setToDefault() {
   m_clientServerName              = DEFAULT_CLIENTSERVERNAME;
   m_clientServerPort              = DEFAULT_CLIENTSERVERPORT;
   m_clientFramerateUpload         = DEFAULT_CLIENTFRAMERATEUPLOAD;
+  m_musicOnAllLevels              = DEFAULT_MUSICONALLLEVELS;
   m_proxySettings.setDefault();
 }
 
@@ -324,6 +325,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_clientServerName      = pDb->config_getString (i_id_profile, "ClientServerName"     , m_clientServerName);
   m_clientServerPort      = pDb->config_getInteger(i_id_profile, "ClientServerPort"     , m_clientServerPort);
   m_clientFramerateUpload = pDb->config_getInteger(i_id_profile, "ClientFramerateUpload", m_clientFramerateUpload);
+  m_musicOnAllLevels      = pDb->config_getBool   (i_id_profile, "MusicOnAllLevels"     , m_musicOnAllLevels);
 
   m_nbRoomsEnabled                 = pDb->config_getInteger(i_id_profile, "WebHighscoresNbRooms"          , m_nbRoomsEnabled);
   if(m_nbRoomsEnabled < 1) { m_nbRoomsEnabled = 1; }
@@ -455,6 +457,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setString (m_profile, "ClientServerName"     , m_clientServerName);
 	pDb->config_setInteger(m_profile, "ClientServerPort"     , m_clientServerPort);
 	pDb->config_setInteger(m_profile, "ClientFramerateUpload", m_clientFramerateUpload);
+	pDb->config_setBool   (m_profile, "MusicOnAllLevels"     , m_musicOnAllLevels);
 
 	pDb->config_setString (m_profile, "MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium":"High");
 	pDb->config_setString (m_profile, "GameGraphics", m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium":"High");
@@ -1209,6 +1212,15 @@ int XMSession::clientFramerateUpload() const {
 void XMSession::setClientFramerateUpload(int i_value) {
   PROPAGATE(XMSession,setClientFramerateUpload,i_value,int);
   m_clientFramerateUpload = i_value;
+}
+
+bool XMSession::musicOnAllLevels() const {
+  return m_musicOnAllLevels;
+}
+
+void XMSession::setMusicOnAllLevels(bool i_value) {
+  PROPAGATE(XMSession,setMusicOnAllLevels,i_value,bool);
+  m_musicOnAllLevels = i_value;
 }
 
 ProxySettings* XMSession::proxySettings() {
