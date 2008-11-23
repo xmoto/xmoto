@@ -372,6 +372,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_PLAYNEXT             _("Play Next Level")
 #define GAMETEXT_PORT                 _("Port")
 #define GAMETEXT_PRESSANYKEYTO        _("Press key you want to '%s' or ESC to cancel...")
+#define GAMETEXT_PRESSCTRLCTOCHAT     _("Press %s to chat")
 #define GAMETEXT_PROXYSERVER          _("Proxy Server")
 #define GAMETEXT_PROXYCONFIG          _("Configure Proxy...")
 #define GAMETEXT_QUALITY              _("Quality")

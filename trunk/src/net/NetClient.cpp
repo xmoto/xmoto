@@ -118,6 +118,10 @@ void NetClient::connect(const std::string& i_server, int i_port) {
 
   LogInfo("client: connected on %s:%d", i_server.c_str(), i_port);
 
+  char buf[512];
+  snprintf(buf, 512, GAMETEXT_PRESSCTRLCTOCHAT, XMKey(SDLK_c, KMOD_LCTRL).toFancyString().c_str());
+  SysMessage::instance()->addConsoleLine(buf);
+
   // bind udp port on server
   NA_clientInfos na(XM_NET_PROTOCOL_VERSION, m_udpBindKey);
   try {
