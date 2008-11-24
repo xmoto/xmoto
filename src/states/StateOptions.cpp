@@ -1097,7 +1097,7 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_window->setID("SERVER_TAB");
   v_window->showWindow(false);
 
-  v_button = new UIButton(v_window, 5, 0, GAMETEXT_STARTATSTARTUP, 200, 28);
+  v_button = new UIButton(v_window, 5, 0, GAMETEXT_STARTATSTARTUP, 400, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("STARTATSTARTUP_BUTTON");
   v_button->setFont(drawlib->getFontSmall());

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-11-23 12:10+0100\n"
-"PO-Revision-Date: 2008-09-26 00:37+0100\n"
+"PO-Revision-Date: 2008-11-24 19:01+0100\n"
 "Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -453,7 +453,7 @@ msgstr "Spieler"
 
 #: src/GameText.h:175
 msgid "Play music on all levels"
-msgstr ""
+msgstr "Musik für alle Level"
 
 #: src/GameText.h:176
 msgid "Date"
@@ -549,7 +549,7 @@ msgstr "Informationen über Geist anzeigen"
 
 #: src/GameText.h:196
 msgid "Display bike arrow indication"
-msgstr ""
+msgstr "Zeige Wegweiser zu anderen Fahrern / Geistern"
 
 #: src/GameText.h:197
 msgid "Direct Connection"
@@ -783,7 +783,7 @@ msgstr "Geist von %s"
 #: src/GameText.h:251
 #, c-format
 msgid "Web ghost of %s"
-msgstr ""
+msgstr "Web-Geist von %s"
 
 #: src/GameText.h:252
 msgid "Ghost"
@@ -871,7 +871,7 @@ msgstr "Hoch"
 
 #: src/GameText.h:276
 msgid "Highscore of the room"
-msgstr ""
+msgstr "Rekord des Raumes"
 
 #: src/GameText.h:277
 msgid "Levels are being added into the database. Please wait."
@@ -1253,7 +1253,7 @@ msgstr "Neue Taste für '%s' drücken oder ESC um abzubrechen"
 #: src/GameText.h:375
 #, c-format
 msgid "Press %s to chat"
-msgstr ""
+msgstr "Drücke %s zu Chatten"
 
 #: src/GameText.h:376
 msgid "Proxy Server"
@@ -1269,7 +1269,7 @@ msgstr "Qualität"
 
 #: src/GameText.h:379
 msgid "Quick start"
-msgstr "Kickstart"
+msgstr "Kick-Start"
 
 #: src/GameText.h:380
 msgid "Quit Game"
@@ -1651,7 +1651,7 @@ msgstr "Ja, Alle"
 
 #: src/GameText.h:472
 msgid "Your best time"
-msgstr ""
+msgstr "Deine Bestzeit"
 
 #: src/GameText.h:473
 msgid "Zoom in"
@@ -1667,86 +1667,86 @@ msgstr "Herauszoomen"
 
 #: src/GameText.h:477
 msgid "Server"
-msgstr ""
+msgstr "Server"
 
 #: src/GameText.h:479
 msgid "Launch at startup"
-msgstr ""
+msgstr "Den Server mit X-Moto starten"
 
 #: src/GameText.h:480
 msgid "Start the server"
-msgstr ""
+msgstr "Server starten"
 
 #: src/GameText.h:481
 msgid "Stop the server"
-msgstr ""
+msgstr "Server stoppen"
 
 #: src/GameText.h:482
 msgid "Server is currently started"
-msgstr ""
+msgstr "Der Server ist online"
 
 #: src/GameText.h:483
 msgid "Server is currently stopped"
-msgstr ""
+msgstr "Der Server ist offline"
 
 #: src/GameText.h:484
 msgid "Default port"
-msgstr ""
+msgstr "Standard-Port"
 
 #: src/GameText.h:485
 msgid "Custom port"
-msgstr ""
+msgstr "Manueller Port"
 
 #: src/GameText.h:486
 msgid "Network"
-msgstr ""
+msgstr "Netzwerk"
 
 #: src/GameText.h:487
 msgid "You're currently connected"
-msgstr ""
+msgstr "Du bist verbunden"
 
 #: src/GameText.h:488
 msgid "You're currently disconnected"
-msgstr ""
+msgstr "Du bist nicht verbunden"
 
 #: src/GameText.h:489
 msgid "Connect"
-msgstr ""
+msgstr "Verbinden"
 
 #: src/GameText.h:490
 msgid "Disconnect"
-msgstr ""
+msgstr "Trennen"
 
 #: src/GameText.h:491
 msgid "Unable to connect on the server"
-msgstr ""
+msgstr "Verbindung fehlgeschlagen"
 
 #: src/GameText.h:492
 msgid "Network error: you're disconnected"
-msgstr ""
+msgstr "Netzwerkfehler: Du bist nicht verbunden"
 
 #: src/GameText.h:493
 msgid "Connected players:"
-msgstr ""
+msgstr "Spieler online:"
 
 #: src/GameText.h:494
 msgid "Chat message"
-msgstr ""
+msgstr "Chat-Nachricht"
 
 #: src/GameText.h:495
 #, c-format
 msgid "%s joined the game"
-msgstr ""
+msgstr "%s ist dabei"
 
 #: src/GameText.h:496
 #, c-format
 msgid "%s left the game"
-msgstr ""
+msgstr "%s hat uns verlassen"
 
 #: src/GameText.h:497
 #, c-format
 msgid "%s is playing level %s"
-msgstr ""
+msgstr "%s spielt jetzt %s"
 
 #: src/GameText.h:506
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -2104,7 +2104,7 @@ msgstr ""
 
 #: src/GameText.h:591
 msgid "Display an arrow to display where are located the bikes on the map"
-msgstr ""
+msgstr "Zeigt einen Wegweiser zu den anderen Bikes im Level an"
 
 #: src/GameText.h:592
 msgid "Display the time difference between the ghost and you"
@@ -2463,32 +2463,33 @@ msgstr "Lade den Bericht nicht auf den Webserver"
 
 #: src/GameText.h:688
 msgid "Server configuration to play via the network"
-msgstr ""
+msgstr "Server-Konfiguaration für Netzwerk-Spiel"
 
 #: src/GameText.h:689
 msgid "Start the server at X-Moto startup"
-msgstr ""
+msgstr "Starte den Server zusammen mit X-Moto"
 
 #: src/GameText.h:690
 msgid "Start/stop the server"
-msgstr ""
+msgstr "Starten/Stoppen des Servers"
 
 #: src/GameText.h:691
 msgid "Port on which the server must listen to"
-msgstr ""
+msgstr "Der Port, auf dem der Server lauscht"
 
 #: src/GameText.h:692
 msgid "Server on which you want to connect"
-msgstr ""
+msgstr "Anvisierter Server"
 
 #: src/GameText.h:693
 msgid "Connect/disconnect the client to the server"
-msgstr ""
+msgstr "Verbinde/Trenne den Klienten"
 
 #: src/GameText.h:694
 msgid ""
 "Enables background music for levels that do not have their own music track"
 msgstr ""
+"Aktiviert Hintergrundmusik auch für die Levels, die keine eigene Musik haben"
 
 #: src/GameText.h:696
 msgid "Levels with no highscore"
