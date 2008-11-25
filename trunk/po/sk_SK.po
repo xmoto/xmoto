@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-11-23 12:10+0100\n"
-"PO-Revision-Date: 2008-08-20 21:59+0200\n"
+"PO-Revision-Date: 2008-11-24 21:31+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -394,7 +394,7 @@ msgstr "Dánčina"
 
 #: src/GameText.h:152
 msgid "Lithuanian"
-msgstr ""
+msgstr "Litovčina"
 
 #: src/GameText.h:154
 msgid "Main testers"
@@ -458,7 +458,7 @@ msgstr "Hráč"
 
 #: src/GameText.h:175
 msgid "Play music on all levels"
-msgstr ""
+msgstr "Prehrávať hudbu vo všetkých leveloch"
 
 #: src/GameText.h:176
 msgid "Date"
@@ -553,7 +553,7 @@ msgstr "Zobrazovať informácie o duchovi"
 
 #: src/GameText.h:196
 msgid "Display bike arrow indication"
-msgstr ""
+msgstr "Zobraziť šípky, ktoré ukazujú na motocykle"
 
 #: src/GameText.h:197
 msgid "Direct Connection"
@@ -787,7 +787,7 @@ msgstr "Duch %s"
 #: src/GameText.h:251
 #, c-format
 msgid "Web ghost of %s"
-msgstr ""
+msgstr "Webový duch %s"
 
 #: src/GameText.h:252
 msgid "Ghost"
@@ -875,7 +875,7 @@ msgstr "Vysoká"
 
 #: src/GameText.h:276
 msgid "Highscore of the room"
-msgstr ""
+msgstr "Rekord miestnosti"
 
 #: src/GameText.h:277
 msgid "Levels are being added into the database. Please wait."
@@ -1261,7 +1261,7 @@ msgstr "Stlačte ľubuvoľný kláves pre '%s' alebo ESC pre zrušenie..."
 #: src/GameText.h:375
 #, c-format
 msgid "Press %s to chat"
-msgstr ""
+msgstr "Stlačte %s pre chat"
 
 #: src/GameText.h:376
 msgid "Proxy Server"
@@ -1531,7 +1531,7 @@ msgstr "Použiť profil"
 
 #: src/GameText.h:443
 msgid "Allow web forms"
-msgstr ""
+msgstr "Povoliť webové formuláre"
 
 #: src/GameText.h:444
 msgid "Using HTTP Proxy"
@@ -1662,7 +1662,7 @@ msgstr "Áno pre všetky"
 
 #: src/GameText.h:472
 msgid "Your best time"
-msgstr ""
+msgstr "Váš najlepší čas"
 
 #: src/GameText.h:473
 msgid "Zoom in"
@@ -1678,86 +1678,86 @@ msgstr "Oddialiť"
 
 #: src/GameText.h:477
 msgid "Server"
-msgstr ""
+msgstr "Server"
 
 #: src/GameText.h:479
 msgid "Launch at startup"
-msgstr ""
+msgstr "Spustiť pri štarte"
 
 #: src/GameText.h:480
 msgid "Start the server"
-msgstr ""
+msgstr "Spustiť server"
 
 #: src/GameText.h:481
 msgid "Stop the server"
-msgstr ""
+msgstr "Zastaviť server"
 
 #: src/GameText.h:482
 msgid "Server is currently started"
-msgstr ""
+msgstr "Server je momentálne spustený"
 
 #: src/GameText.h:483
 msgid "Server is currently stopped"
-msgstr ""
+msgstr "Server je momentálne zastavený"
 
 #: src/GameText.h:484
 msgid "Default port"
-msgstr ""
+msgstr "Východzí port"
 
 #: src/GameText.h:485
 msgid "Custom port"
-msgstr ""
+msgstr "Vlastný port"
 
 #: src/GameText.h:486
 msgid "Network"
-msgstr ""
+msgstr "Sieť"
 
 #: src/GameText.h:487
 msgid "You're currently connected"
-msgstr ""
+msgstr "Teraz ste pripojený"
 
 #: src/GameText.h:488
 msgid "You're currently disconnected"
-msgstr ""
+msgstr "Teraz ste odpojený"
 
 #: src/GameText.h:489
 msgid "Connect"
-msgstr ""
+msgstr "Pripojiť"
 
 #: src/GameText.h:490
 msgid "Disconnect"
-msgstr ""
+msgstr "Odpojiť"
 
 #: src/GameText.h:491
 msgid "Unable to connect on the server"
-msgstr ""
+msgstr "Nepodarilo sa pripojiť k serveru"
 
 #: src/GameText.h:492
 msgid "Network error: you're disconnected"
-msgstr ""
+msgstr "Chyba siete: boli ste odpojený"
 
 #: src/GameText.h:493
 msgid "Connected players:"
-msgstr ""
+msgstr "Pripojení hráči: "
 
 #: src/GameText.h:494
 msgid "Chat message"
-msgstr ""
+msgstr "Správa"
 
 #: src/GameText.h:495
 #, c-format
 msgid "%s joined the game"
-msgstr ""
+msgstr "%s sa pripojil(a) k hre"
 
 #: src/GameText.h:496
 #, c-format
 msgid "%s left the game"
-msgstr ""
+msgstr "%s opustil(a) hru"
 
 #: src/GameText.h:497
 #, c-format
 msgid "%s is playing level %s"
-msgstr ""
+msgstr "%s hrá level %s"
 
 #: src/GameText.h:506
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -1899,7 +1899,7 @@ msgstr ""
 
 #: src/GameText.h:540
 msgid "Allow X-Moto to ask you your mind about levels"
-msgstr ""
+msgstr "Povoliť X-Moto, aby sa pýtal na váš názor na levely"
 
 #: src/GameText.h:541
 msgid "Enable high-color graphics"
@@ -2104,7 +2104,7 @@ msgstr "Ak sa spúšťa level so zobrazeným duchom, vypísať odkiaľ duch poch
 
 #: src/GameText.h:591
 msgid "Display an arrow to display where are located the bikes on the map"
-msgstr ""
+msgstr "Zobrazovať šípku, ktorá ukazuje, kde sú motocykle na mape"
 
 #: src/GameText.h:592
 msgid "Display the time difference between the ghost and you"
@@ -2363,132 +2363,132 @@ msgstr ""
 
 #: src/GameText.h:661
 msgid "Give your mind about this level"
-msgstr ""
+msgstr "Vyjadriť názor na tento level"
 
 #: src/GameText.h:662
 msgid "No idea"
-msgstr ""
+msgstr "Nemám tušenia"
 
 #: src/GameText.h:663
 msgid "Beginner"
-msgstr ""
+msgstr "Začiatočník"
 
 #: src/GameText.h:664
 msgid "Expert"
-msgstr ""
+msgstr "Expert"
 
 #: src/GameText.h:665
 msgid "Master"
-msgstr ""
+msgstr "Šampión"
 
 #: src/GameText.h:666
 msgid "God"
-msgstr ""
+msgstr "Poloboh"
 
 #: src/GameText.h:667
 msgid "Not nice at all"
-msgstr ""
+msgstr "Veľmi škaredý"
 
 #: src/GameText.h:668
 msgid "Not nice"
-msgstr ""
+msgstr "Nepekný"
 
 #: src/GameText.h:669
 msgid "Nice"
-msgstr ""
+msgstr "Pekný"
 
 #: src/GameText.h:670
 msgid "Really nice"
-msgstr ""
+msgstr "Naozaj pekný"
 
 #: src/GameText.h:671
 msgid "Send this report"
-msgstr ""
+msgstr "Odoslať toto hlásenie"
 
 #: src/GameText.h:672
 msgid "Skip this report"
-msgstr ""
+msgstr "Preskočiť toto hlásenie"
 
 #: src/GameText.h:674
 msgid "You don't want to vote"
-msgstr ""
+msgstr "Neprajete si hlasovať"
 
 #: src/GameText.h:675
 msgid "Really easy"
-msgstr ""
+msgstr "Naozaj ľahký"
 
 #: src/GameText.h:676
 msgid "No technical difficulty"
-msgstr ""
+msgstr "Žiadna technická prekážka"
 
 #: src/GameText.h:677
 msgid "At least one difficulty"
-msgstr ""
+msgstr "Aspoň jedna prekážka"
 
 #: src/GameText.h:678
 msgid "Several difficulties"
-msgstr ""
+msgstr "Viacero prekážok"
 
 #: src/GameText.h:679
 msgid "Impossible"
-msgstr ""
+msgstr "Nemožné"
 
 #: src/GameText.h:680
 msgid "Basic blocks, no decoration"
-msgstr ""
+msgstr "Jednoduché bloky, bez dekorácie"
 
 #: src/GameText.h:681
 msgid "Basic decoration, not smooth blocks"
-msgstr ""
+msgstr "Základná dekorácia, nevyrovnané bloky"
 
 #: src/GameText.h:682
 msgid "Not original"
-msgstr ""
+msgstr "Neoriginálny"
 
 #: src/GameText.h:683
 msgid "Nice, could be better"
-msgstr ""
+msgstr "Pekné, mohlo by byť lepšie"
 
 #: src/GameText.h:684
 msgid "Several textures, sprites, ..."
-msgstr ""
+msgstr "Zopár textúr, sprajtov, ..."
 
 #: src/GameText.h:685
 msgid "Send this report on the webserver"
-msgstr ""
+msgstr "Poslať toto hlásenie na webový server"
 
 #: src/GameText.h:686
 msgid "Don't send this report on the webserver"
-msgstr ""
+msgstr "Neposielať toto hlásenie na webový server"
 
 #: src/GameText.h:688
 msgid "Server configuration to play via the network"
-msgstr ""
+msgstr "Nastavenie servera pre hru po sieti"
 
 #: src/GameText.h:689
 msgid "Start the server at X-Moto startup"
-msgstr ""
+msgstr "Spustiť server pri štarte X-Moto"
 
 #: src/GameText.h:690
 msgid "Start/stop the server"
-msgstr ""
+msgstr "Spustiť/zastaviť server"
 
 #: src/GameText.h:691
 msgid "Port on which the server must listen to"
-msgstr ""
+msgstr "Port, na ktorom má server načúvať"
 
 #: src/GameText.h:692
 msgid "Server on which you want to connect"
-msgstr ""
+msgstr "Server, ku ktorému sa chcete pripojiť"
 
 #: src/GameText.h:693
 msgid "Connect/disconnect the client to the server"
-msgstr ""
+msgstr "Pripojiť/odpojiť klienta od serveru"
 
 #: src/GameText.h:694
 msgid ""
 "Enables background music for levels that do not have their own music track"
-msgstr ""
+msgstr "Povolí hudbu na pozadí pre levely, ktoré nemajú vlastnú hudobnú stopu"
 
 #: src/GameText.h:696
 msgid "Levels with no highscore"
@@ -2823,9 +2823,9 @@ msgstr "Uložené ako tréningová pozícia %i"
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Nemôžem nájsť rekord pre nasledujúci level"
+msgstr[1] "Nemôžem nájsť rekord pre nasledujúce %i levely"
+msgstr[2] "Nemôžem nájsť rekord pre nasledujúcich %i levelov"
 
 #: src/GameText.h:785
 msgid "FontGroup:GENERAL"
