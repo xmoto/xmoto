@@ -34,6 +34,7 @@ X-Moto 0.5.0 2008-11
  * fix: button and frame blinking sometimes
  * fix: menu buttons are grey after playing
  * fix: f5 doesn't recompute the numbers of levels made
+ * fix: commanline options alter config 
 	
 X-Moto 0.4.2 2008-03-18
 -----------------------
