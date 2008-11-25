@@ -1,15 +1,39 @@
-X-Moto 0.5.0 2008-
+X-Moto 0.5.0 2008-11
 -----------------------
- * Added dependency for SDL_net
- * first network support to see other people playing the same levels
+ * added dependency for SDL_net
+ * first network support (proof of concept)
  * synchronisation of the database with the webserver to share it among the places you play X-Moto
- * chipmunk integration. Blocks reacts to physics (require special levels).
+ * chipmunk integration. Blocks reacts to physics, joints and scripts calls (require special levels) - replay saving still unsupported
  * save config separatly for each profile
  * --noDBDirsCheck command line options added. It disables the files find when X-Moto detects that you changed your configuration directory (usefull if you use X-Moto on a USB key)
  * --defaultTheme option to change the default theme for new profiles (and --with-default-theme= at compilation time) ; so that packager can change it.
  * optimisations for particles handling
  * joystick support improved
  * special chars (unicode) is now allowed in the edit controls
+ * input handling improvement (better keys configuration)
+ * ingame voting system
+ * show ghost time difference while watching replays
+ * make next/previous level buttons work with highscores
+ * make it possible to pause the game and change config
+ * When dead animation: Follow the driver instead of the backwheel
+ * optimize dynamic blocks, particle sources and entities handling
+ * optimize string printing in opengl
+ * new script functions : GetPlayerVelocity, GetPlayerSpeed, GetPlayerAngle
+ * add a scale factor to block textures
+ * add an arrow pointing the off-screen ghosts
+ * fix: mirror mode : the minimap is not mirrored
+ * fix: remove unused textures from memory
+ * fix: display the last frame of replays
+ * fix: levels and drivers names with weird symbols are not shown correctly
+ * fix: show the exact time of death while playing a replay
+ * fix: Scale LevelPackViewer window to full screen size
+ * fix: xmoto crashed with SIGSEGV in atoi at startup
+ * fix: xmoto crash due to invalid utf-8 char splitting
+ * fix: ODE INTERNAL ERROR 1: assertion "g_bODEInitialized" failed in dCloseODE()
+ * fix: make keyboard key interface algorithm switch better
+ * fix: button and frame blinking sometimes
+ * fix: menu buttons are grey after playing
+ * fix: f5 doesn't recompute the numbers of levels made
 	
 X-Moto 0.4.2 2008-03-18
 -----------------------
