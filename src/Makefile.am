@@ -14,6 +14,7 @@ xminclude_SOURCES = include/xm_endian.h    \
            	    include/xm_OpenGL.h    \
            	    include/xm_SDL.h       \
            	    include/xm_SDL_mixer.h \
+           	    include/xm_SDL_net.h   \
            	    include/xm_SDL_ttf.h
 
 
@@ -104,6 +105,7 @@ helpers_SOURCES = helpers/VMath.h             \
                   iqsort.h \
 		  helpers/Singleton.h \
 		  helpers/MultiSingleton.h \
+		  helpers/TFunctor.h \
 		  helpers/Random.h \
 		  helpers/Random.cpp \
 		  helpers/CmdArgumentParser.h \
