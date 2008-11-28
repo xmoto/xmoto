@@ -1,4 +1,4 @@
-X-Moto 0.5.0 2008-11
+X-Moto 0.5.0 2008-11-28
 -----------------------
  * added dependency for SDL_net
  * first network support (proof of concept)
