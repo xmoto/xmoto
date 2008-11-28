@@ -436,7 +436,7 @@ void StateFinished::makeBestTimesWindow(UIBestTimes *pWindow,
   
   v_result = i_db->readDB("SELECT finishTime, id_profile FROM profile_completedLevels "
 			  "WHERE id_level=\""   + xmDatabase::protectString(LevelID)    + "\" "
-			  "ORDER BY finishTime LIMIT 10;",
+			  "ORDER BY 0+finishTime LIMIT 10;",
 			  nrow);
   for(unsigned int i=0; i<nrow; i++) {
     v_finishTime  = atoi(i_db->getResult(v_result, 2, i, 0));
@@ -450,7 +450,7 @@ void StateFinished::makeBestTimesWindow(UIBestTimes *pWindow,
   v_result = i_db->readDB("SELECT finishTime FROM profile_completedLevels "
 			  "WHERE id_profile=\"" + xmDatabase::protectString(PlayerName) + "\" "
 			  "AND   id_level=\""   + xmDatabase::protectString(LevelID)    + "\" "
-			  "ORDER BY finishTime LIMIT 10;",
+			  "ORDER BY 0+finishTime LIMIT 10;",
 			  nrow);
     for(unsigned int i=0; i<nrow; i++) {
       v_finishTime  = atoi(i_db->getResult(v_result, 1, i, 0));
