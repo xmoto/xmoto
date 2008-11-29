@@ -457,7 +457,7 @@ msgstr "Žaidėjas"
 
 #: src/GameText.h:175
 msgid "Play music on all levels"
-msgstr ""
+msgstr "Leisti muziką visuose lygiuose"
 
 #: src/GameText.h:176
 msgid "Date"
@@ -497,7 +497,7 @@ msgstr "Sinchronizuoti"
 
 #: src/GameText.h:181
 msgid "Synchronize when X-Moto ends"
-msgstr "Sinchronizuoti, kai X-Moto išsijungiamas"
+msgstr "Sinchronizuoti, kai X-Moto išjungiamas"
 
 #: src/GameText.h:182
 msgid "Upgrading database"
@@ -1259,7 +1259,7 @@ msgstr "Spauskite raktą, kokį norite \"%s\" arba ESC, kad atšauktumėte"
 #: src/GameText.h:375
 #, c-format
 msgid "Press %s to chat"
-msgstr ""
+msgstr "Spauskite %s pokalbiui"
 
 #: src/GameText.h:376
 msgid "Proxy Server"
@@ -1718,11 +1718,11 @@ msgstr "Tinklas"
 
 #: src/GameText.h:487
 msgid "You're currently connected"
-msgstr "Jūs prisijungęs"
+msgstr "Jūs estae prisijungęs"
 
 #: src/GameText.h:488
 msgid "You're currently disconnected"
-msgstr "Jūs atsijungęs"
+msgstr "Jūs esate atsijungęs"
 
 #: src/GameText.h:489
 msgid "Connect"
@@ -2064,19 +2064,24 @@ msgstr ""
 
 #: src/GameText.h:578
 msgid "Select this if you got a direct connection to the Internet"
-msgstr "Pasirinkite, jei turite tiesioginį ryšį prie interneto"
+msgstr "Pasirinkite šį punktą, jei turite tiesioginį ryšį prie interneto"
 
 #: src/GameText.h:579
 msgid "Select this if you connect to the Internet through an HTTP proxy"
-msgstr "Pasirinkite, jei jungiatės prie interneto per HTTP tarpinį serverį"
+msgstr ""
+"Pasirinkite šį punktą, jei jungiatės prie interneto per HTTP tarpinį serverį"
 
 #: src/GameText.h:580
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
-msgstr "Pasirinkite, jei jungiatės prie interneto per SOCKS4 tarpinį serverį"
+msgstr ""
+"Pasirinkite šį punktą, jei jungiatės prie interneto per SOCKS4 tarpinį "
+"serverį"
 
 #: src/GameText.h:581
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
-msgstr "Pasirinkite, jei jungiatės prie interneto per SOCKS5 tarpinį serverį"
+msgstr ""
+"Pasirinkite šį punktą, jei jungiatės prie interneto per SOCKS5 tarpinį "
+"serverį"
 
 #: src/GameText.h:582
 msgid "Use these settings"
@@ -2119,7 +2124,7 @@ msgstr "Rodyti rodyklę, kur yra motociklas žemėlapyje"
 
 #: src/GameText.h:592
 msgid "Display the time difference between the ghost and you"
-msgstr "Rodyti laiko skirtumą tarp vaiduoklio ir jūsų"
+msgstr "Rodyti laiko skirtumą tarp jūsų ir vaiduoklio"
 
 #: src/GameText.h:593
 msgid "If you make a highscore it will automatically be saved as a replay"
@@ -2243,11 +2248,11 @@ msgstr "Žaidėjas, kuris įrašė pakartojimą"
 
 #: src/GameText.h:624
 msgid "Click to select screen resolution"
-msgstr "Pasirinktumėte ekrano raišką"
+msgstr "Pasirinkite norimą ekrano raišką"
 
 #: src/GameText.h:625
 msgid "Completed levels / total number of levels in pack"
-msgstr "Pabaigti lygiai / visas lygių skaičius pakete"
+msgstr "Pabaigti lygiai/visas lygių skaičius pakete"
 
 #: src/GameText.h:626
 msgid "Name of level pack"
@@ -2327,8 +2332,8 @@ msgstr "Kalbos kodas"
 #: src/GameText.h:648
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
 msgstr ""
-"Ištrinti pakartojimus, kuriuos X-Moto vertina, neįdomiais ir\n"
-"nevertais saugoti"
+"Ištrinti pakartojimus, kuriuos X-Moto vertina, kai neįdomius ir\n"
+"nevertus išsaugoti"
 
 #: src/GameText.h:649
 msgid "Remove levels not suitable for children"
@@ -2336,7 +2341,7 @@ msgstr "Pašalinti lygius, kurie netinka vaikams"
 
 #: src/GameText.h:650
 msgid "Enable this room"
-msgstr "Įjungti šį mastelį"
+msgstr "Įjungti šį kambarį"
 
 #: src/GameText.h:651
 msgid "Password associated to your profile for web access"
@@ -2373,8 +2378,7 @@ msgstr "Įjungti vairalaizdės įvykius"
 #: src/GameText.h:659
 msgid "Preselect the retry button when dying or finishing a level"
 msgstr ""
-"Iš anksto pasirinkite pakartotinio bandymo mygtuką, mirdamas arba baigdamas "
-"lygį"
+"Iš anksto pasirinkti pakartotinio bandymo mygtuką, mirdus arba pabaigus lygį"
 
 #: src/GameText.h:661
 msgid "Give your mind about this level"
@@ -2434,7 +2438,7 @@ msgstr "Išties lengvas"
 
 #: src/GameText.h:676
 msgid "No technical difficulty"
-msgstr "Nėra techninio sunkumo"
+msgstr "Nėra techninių sunkumų"
 
 #: src/GameText.h:677
 msgid "At least one difficulty"
@@ -2503,7 +2507,7 @@ msgstr "Prijungti/atjungti klientą nuo serverio"
 #: src/GameText.h:694
 msgid ""
 "Enables background music for levels that do not have their own music track"
-msgstr ""
+msgstr "Įjungti lygiams foninę muziką, kurie neturi savo garso takelio"
 
 #: src/GameText.h:696
 msgid "Levels with no highscore"
@@ -2683,7 +2687,7 @@ msgstr "X-Moto lygiai, kurių niekada nežaidėte"
 
 #: src/GameText.h:744
 msgid "X-Moto levels you have played the most"
-msgstr "X-Moto lygiai, kuriuos žaidėte labiausiai"
+msgstr "X-Moto lygiai, kuriuos žaidėte dažniausiai"
 
 #: src/GameText.h:745
 msgid "X-Moto levels you have played only a few times"
@@ -2691,7 +2695,7 @@ msgstr "X-Moto lygiai, kuriuos žaidėte tik kelis kartus"
 
 #: src/GameText.h:746
 msgid "X-Moto levels having a recent highscore in your room"
-msgstr "X-Moto lygiai turi nesenus rekordus jūsų kambaryje"
+msgstr "X-Moto lygiai, kurie turi neseniai pagerintus rekordus jūsų kambaryje"
 
 #: src/GameText.h:747
 msgid "Last created X-Moto levels"
@@ -2699,28 +2703,28 @@ msgstr "Paskutiniai sukurti X-Moto lygiai"
 
 #: src/GameText.h:748
 msgid "X-Moto levels having an old highscore in your room"
-msgstr "X-Moto lygiai, turintys seną rekordą jūsų kambaryje"
+msgstr "X-Moto lygiai, turintys senus rekordus jūsų kambaryje"
 
 #: src/GameText.h:749
 msgid "You have the room highscore"
-msgstr "Jūs turite kambario rekordą"
+msgstr "Jūs esate kambario rekordininkas"
 
 #: src/GameText.h:750
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr ""
-"Jūsų asmeninio rekordo pabaigos laikas yra beveik kambario rekordas (95 %)"
+"Jūsų pasiekto asmeninio rekordo laikas yra beveik kambario rekordas (95 %)"
 
 #: src/GameText.h:751
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
-"Jūsų asmeninio rekordo pabaigos laikas yra beveik kambario rekordas (90%-95%)"
+"Jūsų pasiekto asmeninio rekordo laikas yra beveik kambario rekordas (90%-95%)"
 
 #: src/GameText.h:752
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
-"Jūsų asmeninio rekordo pabaigos laikas yra beveik kambario rekordas (80%-90%)"
+"Jūsų pasiekto asmeninio rekordo laikas yra beveik kambario rekordas (80%-90%)"
 
 #: src/GameText.h:753
 msgid "The room highscore is really better than your own highscore"
@@ -2853,14 +2857,14 @@ msgstr "Viršutiniame kairiame kampe, jūs turite savo laikmačius"
 
 #: src/LevelsText.h:23
 msgid "The big one is your current time"
-msgstr "Didelis yra jūsų dabartinis laikas"
+msgstr "Didelis laikmatis rodo jūsų dabartinį laiką"
 
 #: src/LevelsText.h:24
 msgid ""
 "The small one to the right is your own best time\n"
 "for the current level..."
 msgstr ""
-"Mažas dešinėje yra jūsų geriausias laikas\n"
+"Mažas laikmatis dešinėje rodo jūsų geriausią laiką\n"
 "šiame lygyje..."
 
 #: src/LevelsText.h:25
@@ -2868,15 +2872,15 @@ msgid ""
 "... and the one to the left is the best of all\n"
 "on this computer."
 msgstr ""
-"... ir kairėje yra geriausias laikas iš visų\n"
-"šiame kompiuteryje."
+"... ir laikmatis kairėje rodo geriausią laiką iš visų\n"
+"esančiame šiame kompiuteryje."
 
 #: src/LevelsText.h:26
 msgid ""
 "Down here there's the minimap, which shows the level\n"
 "around you, so you know where you're heading."
 msgstr ""
-"Žemai yra mažas žemėlapis, kuris rodo lygį aplink jus,\n"
+"Apačioje yra matomas mažas žemėlapis, kuris rodo lygį aplink jus,\n"
 "todėl jūs žinote, kur esate."
 
 #: src/LevelsText.h:27
@@ -2909,7 +2913,7 @@ msgstr ": Suktis pagal laikrodžio rodyklę"
 
 #: src/LevelsText.h:34
 msgid "Okay. The red dot on your minimap is a strawberry."
-msgstr "Gerai. Raudonas taškas ant jūsų mažo žemėlapio yra žemuogė."
+msgstr "Gerai. Raudonas taškas jūsų mažame žemėlapyje yra žemuogė."
 
 #: src/LevelsText.h:35
 msgid ""
@@ -3118,7 +3122,7 @@ msgstr "Gražu! Dabar pabandykite kitą, bus truputį sudėtingiau..."
 
 #: src/LevelsText.h:67
 msgid "Good job! The next one is even more difficult..."
-msgstr "Atlikta gerai! Sekantis dar sudėtingesnis..."
+msgstr "Atlikta gerai! Sekantis bus dar sudėtingesnis..."
 
 #: src/LevelsText.h:68
 msgid ""
