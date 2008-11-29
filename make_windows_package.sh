@@ -56,6 +56,7 @@ function makeNSI {
   echo "	File ogg.dll"
   echo "	File SDL.dll"
   echo "	File SDL_mixer.dll"
+  echo "	File SDL_net.dll"
   echo "	File vorbis.dll"
   echo "	File vorbisfile.dll"
   echo "	File zlib1.dll"
