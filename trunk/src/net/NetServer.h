@@ -33,6 +33,7 @@ class NetServer : public Singleton<NetServer> {
   void start();
   void stop();
   bool isStarted();
+  void wait();
 
   private:
   ServerThread* m_serverThread;
