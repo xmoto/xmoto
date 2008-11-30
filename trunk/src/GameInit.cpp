@@ -60,7 +60,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "net/NetClient.h"
 #include "net/NetActions.h"
 #include "include/xm_SDL_net.h"
+
+#if !defined(WIN32)
 #include <signal.h>
+#endif
 
 #define MOUSE_DBCLICK_TIME 0.250f
 
@@ -228,6 +231,8 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     v_useGraphics = false;
   }
 
+  // doesn't work on windows
+#if !defined(WIN32)
   if(v_xmArgs.isOptServerOnly()) {
     struct sigaction v_act;
 
@@ -241,6 +246,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
       LogWarning("sigaction failed");
     }
   }
+#endif
 
   // init not so random numbers
   NotSoRandom::init();
