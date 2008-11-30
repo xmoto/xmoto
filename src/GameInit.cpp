@@ -60,6 +60,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "net/NetClient.h"
 #include "net/NetActions.h"
 #include "include/xm_SDL_net.h"
+#include <signal.h>
 
 #define MOUSE_DBCLICK_TIME 0.250f
 
@@ -120,6 +121,17 @@ int main(int nNumArgs, char **ppcArgs) {
 #endif
   }
   return 0;
+}
+
+void xmexit_term(int i_signal) {
+  if(GameApp::instance()->standAloneServer() != NULL) {
+    if(Logger::isInitialized()) {
+      LogInfo("signal received.");
+    }
+    GameApp::instance()->standAloneServer()->stop();
+    GameApp::instance()->run_unload();
+  }
+  exit(0);
 }
 
 void GameApp::run(int nNumArgs, char** ppcArgs) {
@@ -212,8 +224,22 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   LogInfo("User directory: %s", FS::getUserDir().c_str());
   LogInfo("Data directory: %s", FS::getDataDir().c_str());
 
-  if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos()) {
+  if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos() || v_xmArgs.isOptServerOnly()) {
     v_useGraphics = false;
+  }
+
+  if(v_xmArgs.isOptServerOnly()) {
+    struct sigaction v_act;
+
+    v_act.sa_handler = xmexit_term;
+
+    if(sigaction(SIGTERM, &v_act, NULL) != 0) {
+      LogWarning("sigaction failed");
+    }
+
+    if(sigaction(SIGINT, &v_act, NULL) != 0) {
+      LogWarning("sigaction failed");
+    }
   }
 
   // init not so random numbers
@@ -290,8 +316,8 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   }
 
   // no command line need the network for the moment
-  if(v_useGraphics) {
-    initNetwork();
+  if(v_useGraphics || v_xmArgs.isOptServerOnly()) {
+    initNetwork(v_xmArgs.isOptServerOnly());
   }
 
   /* Init renderer */
@@ -379,25 +405,29 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   }
   
   /* requires graphics now */
-  if(v_useGraphics == false) {
+  if(v_useGraphics == false && v_xmArgs.isOptServerOnly() == false) {
     quit();
     return;
   }
   
-  _UpdateLoadingScreen();
+  if(v_xmArgs.isOptServerOnly() == false) {
+    _UpdateLoadingScreen();
 
-  /* Find all files in the textures dir and load them */     
-  UITexture::setApp(this);
-  UIWindow::setDrawLib(getDrawLib());
+    /* Find all files in the textures dir and load them */     
+    UITexture::setApp(this);
+    UIWindow::setDrawLib(getDrawLib());
+  }
 
   // init physics
   // if(dInitODE2(0) == 0) { /* erreur */} ; // ode 0.10
   dInitODE();
   m_isODEInitialized = true;
 
-  /* Initialize renderer */
-  GameRenderer::instance()->init(drawLib);
-  
+  if(v_xmArgs.isOptServerOnly() == false) {
+    /* Initialize renderer */
+    GameRenderer::instance()->init(drawLib);
+  }  
+
   /* build handler */
   InputHandler::instance()->init(m_userConfig, pDb, XMSession::instance()->profile(), XMSession::instance()->enableJoysticks());
   Replay::enableCompression(XMSession::instance()->compressReplays());
@@ -407,33 +437,48 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   LevelsManager::instance()->makePacks(XMSession::instance()->profile(), XMSession::instance()->idRoom(0), XMSession::instance()->debug(), xmDatabase::instance("main"));
 
   /* Update stats */
-  if(XMSession::instance()->profile() != "") {
-    pDb->stats_xmotoStarted(XMSession::instance()->sitekey(), XMSession::instance()->profile());
+  if(v_xmArgs.isOptServerOnly() == false) {
+    if(XMSession::instance()->profile() != "") {
+      pDb->stats_xmotoStarted(XMSession::instance()->sitekey(), XMSession::instance()->profile());
+    }
   }
 
-  /* try to not run sql at the same time you enter in the main menu (a thread to compute packs is run (concurrency)) */
-
-  /* What to do? */
-  if(m_PlaySpecificLevelFile != "") {
+  if(v_xmArgs.isOptServerOnly()) {
     try {
-      LevelsManager::instance()->addExternalLevel(m_PlaySpecificLevelFile, xmDatabase::instance("main"));
-      m_PlaySpecificLevelId = LevelsManager::instance()->LevelByFileName(m_PlaySpecificLevelFile, xmDatabase::instance("main"));
+      NetServer::instance()->start();
+      m_standAloneServer = NetServer::instance();
+      NetServer::instance()->wait();
+      quit();
+      return;
     } catch(Exception &e) {
-      m_PlaySpecificLevelId = m_PlaySpecificLevelFile;
+      LogError((std::string("Exception: ") + e.getMsg()).c_str());
     }
-  }
-  if((m_PlaySpecificLevelId != "")) {
-    /* ======= PLAY SPECIFIC LEVEL ======= */
-    StateManager::instance()->pushState(new StatePreplayingGame(m_PlaySpecificLevelId, false));
-    LogInfo("Playing as '%s'...", XMSession::instance()->profile().c_str());
-  }
-  else if(m_PlaySpecificReplay != "") {
-    /* ======= PLAY SPECIFIC REPLAY ======= */
-    StateManager::instance()->pushState(new StatePreplayingReplay(m_PlaySpecificReplay, false));
+  } else {
+
+    /* try to not run sql at the same time you enter in the main menu (a thread to compute packs is run (concurrency)) */
+
+    /* What to do? */
+    if(m_PlaySpecificLevelFile != "") {
+      try {
+	LevelsManager::instance()->addExternalLevel(m_PlaySpecificLevelFile, xmDatabase::instance("main"));
+	m_PlaySpecificLevelId = LevelsManager::instance()->LevelByFileName(m_PlaySpecificLevelFile, xmDatabase::instance("main"));
+      } catch(Exception &e) {
+	m_PlaySpecificLevelId = m_PlaySpecificLevelFile;
+      }
     }
-  else {
-    /* display what must be displayed */
-    StateManager::instance()->pushState(new StateMainMenu());
+    if((m_PlaySpecificLevelId != "")) {
+      /* ======= PLAY SPECIFIC LEVEL ======= */
+      StateManager::instance()->pushState(new StatePreplayingGame(m_PlaySpecificLevelId, false));
+      LogInfo("Playing as '%s'...", XMSession::instance()->profile().c_str());
+    }
+    else if(m_PlaySpecificReplay != "") {
+      /* ======= PLAY SPECIFIC REPLAY ======= */
+      StateManager::instance()->pushState(new StatePreplayingReplay(m_PlaySpecificReplay, false));
+    }
+    else {
+      /* display what must be displayed */
+      StateManager::instance()->pushState(new StateMainMenu());
+    }
   }
 
   LogInfo("UserInit ended at %.3f", GameApp::getXMTime());
@@ -560,7 +605,7 @@ void GameApp::run_loop() {
 
     /* Update user app */
     drawFrame();
-
+    
     if(XMSession::instance()->timedemo() == false) {
       _Wait();
     }
@@ -713,14 +758,16 @@ void GameApp::_Wait()
   }
 
 
-void GameApp::initNetwork() {
+void GameApp::initNetwork(bool i_forceNoServerStarted) {
   if(SDLNet_Init()==-1) {
     throw Exception(SDLNet_GetError());
   }
 
-  // start server
-  if(XMSession::instance()->serverStartAtStartup()) {
-    NetServer::instance()->start();
+  // start server if gui
+  if(i_forceNoServerStarted == false) {
+    if(XMSession::instance()->serverStartAtStartup()) {
+      NetServer::instance()->start();
+    }
   }
 
 }

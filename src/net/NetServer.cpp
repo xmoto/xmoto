@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "NetServer.h"
 #include "thread/ServerThread.h"
+#include "../helpers/VExcept.h"
 
 NetServer::NetServer() {
     m_isStarted = false;
@@ -54,4 +55,12 @@ bool NetServer::isStarted() {
     }
   }
   return m_isStarted;
+}
+
+void NetServer::wait() {
+  if(m_isStarted) {
+    if(m_serverThread->waitForThreadEnd() != 0) {
+      throw Exception("Server ended with an error");
+    }
+  }
 }

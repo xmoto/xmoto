@@ -48,6 +48,7 @@ class UITabView;
 class UIButton;
 class UIFrame;
 class UIStatic;
+class NetServer;
 
 /*===========================================================================
   Game application
@@ -155,6 +156,8 @@ public:
 
   void addReplay(const std::string& i_file, xmDatabase* pDb, bool sendMessage = true);
 
+  NetServer* standAloneServer();
+
 protected:
   void createDefaultConfig();
 
@@ -162,7 +165,7 @@ private:
   void manageEvent(SDL_Event* Event);
   void playMusic(const std::string& i_music); // "" => no music
 
-  void initNetwork();
+  void initNetwork(bool i_forceNoServerStarted);
   void uninitNetwork();
 
   ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
@@ -240,6 +243,9 @@ private:
   UserConfig* m_userConfig;
       
   DrawLib *drawLib;
+
+  // standalone server;
+  NetServer* m_standAloneServer;
 
   /* Run-time fun */
   bool m_bQuit;		/* Quit flag */

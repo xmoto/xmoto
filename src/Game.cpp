@@ -188,6 +188,8 @@ GameApp::GameApp() {
   m_hasKeyboardFocus = true;
   m_isIconified      = false;
 
+  m_standAloneServer = NULL;
+
   m_userConfig = new UserConfig();
 }
    
@@ -834,4 +836,8 @@ void GameApp::drawFrame(void) {
   Sound::update();
   StateManager::instance()->update();
   StateManager::instance()->render(); 
+}
+
+NetServer* GameApp::standAloneServer() {
+  return m_standAloneServer;
 }
