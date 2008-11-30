@@ -96,6 +96,7 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
 
   StateManager::instance()->registerAsObserver("REPLAYS_DELETE", this);
   StateManager::instance()->registerAsObserver("UPDATEPROFILE", this);
+  StateManager::instance()->registerAsObserver("UPDATEREFERENCEROOM", this);
   StateManager::instance()->registerAsObserver("NEW_LEVELS_TO_DOWNLOAD", this);
   StateManager::instance()->registerAsObserver("NO_NEW_LEVELS_TO_DOWNLOAD", this);
   StateManager::instance()->registerAsObserver("FAVORITES_UPDATED", this);
@@ -139,6 +140,7 @@ StateMainMenu::~StateMainMenu()
 
   StateManager::instance()->unregisterAsObserver("REPLAYS_DELETE", this);
   StateManager::instance()->unregisterAsObserver("UPDATEPROFILE", this);
+  StateManager::instance()->unregisterAsObserver("UPDATEREFERENCEROOM", this);
   StateManager::instance()->unregisterAsObserver("NEW_LEVELS_TO_DOWNLOAD", this);
   StateManager::instance()->unregisterAsObserver("NO_NEW_LEVELS_TO_DOWNLOAD", this);
   StateManager::instance()->unregisterAsObserver("FAVORITES_UPDATED", this);
@@ -1434,6 +1436,11 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
     updateReplaysList();
     updateLevelsPacksCountDetached();
     updateStats();
+  }
+
+  else if(cmd == "UPDATEREFERENCEROOM") {
+    updateProfileStrings();
+    m_require_updateLevelsList = true;
   }
 
   else if(cmd == "REPLAYS_DELETE") {

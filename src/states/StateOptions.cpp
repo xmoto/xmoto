@@ -427,6 +427,12 @@ void StateOptions::checkEvents() {
 	  v_list->getEntries()[v_list->getSelected()];
 	  XMSession::instance()->setIdRoom(i, *((std::string*)v_list->getEntries()[v_list->getSelected()]->pvUser));
 	  updateProfileStrings();
+
+	  // reference room was changed
+	  if(i==0) {
+	    // tell that to other states
+	    StateManager::instance()->sendAsynchronousMessage("UPDATEREFERENCEROOM");
+	  }
 	}
       }
 
