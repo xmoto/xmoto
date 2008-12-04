@@ -287,6 +287,8 @@ void StatePreplaying::secondInitPhase()
       }
     }
 
+    GameRenderer::instance()->prepareForNewLevel(m_universe);
+
   } catch(Exception &e) {
     LogWarning(std::string("failed to initialize level\n" + e.getMsg()).c_str());
     closePlaying();
@@ -298,7 +300,6 @@ void StatePreplaying::secondInitPhase()
   if(NetClient::instance()->isConnected()) {
     NetClient::instance()->startPlay(m_universe);
   }
-  GameRenderer::instance()->prepareForNewLevel(m_universe);
 
   /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
   // animation
