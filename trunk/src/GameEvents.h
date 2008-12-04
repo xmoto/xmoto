@@ -73,7 +73,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     GAME_EVENT_PLAYSOUND                    = 37,
     GAME_EVENT_PLAYMUSIC                    = 38,
     GAME_EVENT_STOPMUSIC                    = 39,
-    GAME_EVENT_SETPHYSICSBLOCKPOS           = 40,
+    /*           = 40, */
     GAME_EVENT_SETPHYSICSBLOCKSELFROTATION  = 41,
     GAME_EVENT_SETPHYSICSBLOCKTRANSLATION   = 42
   };
@@ -374,25 +374,6 @@ class MGE_MoveBlock : public SceneEvent {
   MGE_MoveBlock(int p_eventTime);
   MGE_MoveBlock(int p_eventTime, std::string p_blockID, float p_x, float p_y);
   ~MGE_MoveBlock();
-
-  void doAction(Scene *p_pScene);
-  void serialize(DBuffer &Buffer);
-  void unserialize(DBuffer &Buffer);
-  static GameEventType SgetType();
-  GameEventType getType();
-
-  std::string toString();
-
- private:
-  std::string m_blockID;
-  float m_x, m_y;
-};
-
-class MGE_SetPhysicsBlockPos : public SceneEvent {
- public:
-  MGE_SetPhysicsBlockPos(int p_eventTime);
-  MGE_SetPhysicsBlockPos(int p_eventTime, std::string p_blockID, float p_x, float p_y);
-  ~MGE_SetPhysicsBlockPos();
 
   void doAction(Scene *p_pScene);
   void serialize(DBuffer &Buffer);
