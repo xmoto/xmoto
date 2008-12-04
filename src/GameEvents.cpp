@@ -104,8 +104,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       v_event = new MGE_MoveBlock(v_eventTime);
     } else if(MGE_SetBlockPos::SgetType() == v_eventType) {
       v_event = new MGE_SetBlockPos(v_eventTime);
-    } else if(MGE_SetPhysicsBlockPos::SgetType() == v_eventType) {
-      v_event = new MGE_SetPhysicsBlockPos(v_eventTime);
     } else if(MGE_SetGravity::SgetType() == v_eventType) {
       v_event = new MGE_SetGravity(v_eventTime);
     } else if(MGE_SetPlayersPosition::SgetType() == v_eventType) {
@@ -880,55 +878,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   std::string MGE_SetBlockPos::toString() {
-    return "Block " + m_blockID + "'s position is changed";
-  }
-
-  //////////////////////////////
-  MGE_SetPhysicsBlockPos::MGE_SetPhysicsBlockPos(int p_eventTime)
-  : SceneEvent(p_eventTime) {
-    m_blockID = "";
-    m_x = 0.0;
-    m_y = 0.0;
-  }
-
-  MGE_SetPhysicsBlockPos::MGE_SetPhysicsBlockPos(int p_eventTime,
-                                   std::string p_blockID,
-                                   float p_x, float p_y)
-  : SceneEvent(p_eventTime) {
-    m_blockID = p_blockID;
-    m_x = p_x;
-    m_y = p_y;
-  }
-
-  MGE_SetPhysicsBlockPos::~MGE_SetPhysicsBlockPos() {
-  }
-
-  void MGE_SetPhysicsBlockPos::doAction(Scene *p_pScene) {
-    p_pScene->SetPhysicsBlockPos(m_blockID, m_x, m_y);
-  }
-
-  void MGE_SetPhysicsBlockPos::serialize(DBuffer &Buffer) {
-    SceneEvent::serialize(Buffer);
-    Buffer << m_blockID;
-    Buffer << m_x;
-    Buffer << m_y;
-  }
-
-  void MGE_SetPhysicsBlockPos::unserialize(DBuffer &Buffer) {
-    Buffer >> m_blockID;
-    Buffer >> m_x;
-    Buffer >> m_y;
-  }
-
-  GameEventType MGE_SetPhysicsBlockPos::SgetType() {
-    return GAME_EVENT_SETPHYSICSBLOCKPOS;
-  }
-
-  GameEventType MGE_SetPhysicsBlockPos::getType() {
-    return SgetType();
-  }
-
-  std::string MGE_SetPhysicsBlockPos::toString() {
     return "Block " + m_blockID + "'s position is changed";
   }
 

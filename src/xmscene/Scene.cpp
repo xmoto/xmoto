@@ -1044,16 +1044,8 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
   void Scene::SetBlockPos(std::string pBlockID, float pX, float pY) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
     v_block->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
-    m_Collision.moveDynBlock(v_block);
-  }
-  
-  void Scene::SetPhysicsBlockPos(std::string pBlockID, float pX, float pY) {
-    Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
-    if (v_block->isPhysics()) {
+    if(v_block->isPhysics()) {
       v_block->setPhysicsPosition(pX, pY);
-    } else {
-      // report error?
     }
     m_Collision.moveDynBlock(v_block);
   }

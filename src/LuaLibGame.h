@@ -64,7 +64,6 @@ private:
   static int L_Game_MoveBlock(lua_State *pL);
   static int L_Game_GetBlockPos(lua_State *pL);
   static int L_Game_SetBlockPos(lua_State *pL);
-  static int L_Game_SetPhysicsBlockPos(lua_State *pL);
   static int L_Game_PlaceInGameArrow(lua_State *pL);
   static int L_Game_PlaceScreenArrow(lua_State *pL);
   static int L_Game_HideArrow(lua_State *pL);

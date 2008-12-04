@@ -36,7 +36,6 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"MoveBlock",                    LuaLibGame::L_Game_MoveBlock},
   {"GetBlockPos",                  LuaLibGame::L_Game_GetBlockPos},
   {"SetBlockPos",                  LuaLibGame::L_Game_SetBlockPos},
-  {"SetPhysicsBlockPos",           LuaLibGame::L_Game_SetPhysicsBlockPos},
   {"PlaceInGameArrow",             LuaLibGame::L_Game_PlaceInGameArrow},
   {"PlaceScreenArrow",             LuaLibGame::L_Game_PlaceScreenArrow},
   {"HideArrow",                    LuaLibGame::L_Game_HideArrow},
@@ -375,16 +374,6 @@ int LuaLibGame::L_Game_MoveBlock(lua_State *pL) {
   /* event for this */
 
   m_exec_world->createGameEvent(new MGE_MoveBlock(m_exec_world->getTime(),
-						 luaL_checkstring(pL,1),
-						 X_luaL_check_number(pL,2),
-						 X_luaL_check_number(pL,3)));
-  return 0;
-}
-
-int LuaLibGame::L_Game_SetPhysicsBlockPos(lua_State *pL) {
-  /* event for this */
-
-  m_exec_world->createGameEvent(new MGE_SetPhysicsBlockPos(m_exec_world->getTime(),
 						 luaL_checkstring(pL,1),
 						 X_luaL_check_number(pL,2),
 						 X_luaL_check_number(pL,3)));
