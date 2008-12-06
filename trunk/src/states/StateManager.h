@@ -87,6 +87,7 @@ public:
   static void refreshStaticCaptions();
 
   bool isThereASuchState(const std::string& i_name);
+  bool isThereASuchStateId(const std::string& i_id);
 
 private:
   GameState* popState();

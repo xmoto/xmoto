@@ -680,3 +680,13 @@ bool StateManager::isThereASuchState(const std::string& i_name) {
 
   return false;
 }
+
+bool StateManager::isThereASuchStateId(const std::string& i_id) {
+  for(unsigned int i=0; i<m_statesStack.size(); i++) {
+    if(m_statesStack[i]->getId() == i_id) {
+      return true;
+    }
+  }
+
+  return false;
+}
