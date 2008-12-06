@@ -511,7 +511,7 @@ void StateOptions::checkEvents() {
     if(NetServer::instance()->isStarted()) {
       NetServer::instance()->stop();
     } else {
-      NetServer::instance()->start();
+      NetServer::instance()->start(true);
     }
   }
 
