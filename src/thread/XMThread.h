@@ -39,6 +39,8 @@ public:
   virtual ~XMThread();
 
   void startThread();
+  int runInMain();
+
   int  waitForThreadEnd();
   bool isThreadRunning();
   virtual void askThreadToEnd();

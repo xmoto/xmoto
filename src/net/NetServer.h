@@ -30,7 +30,7 @@ class NetServer : public Singleton<NetServer> {
   NetServer();
   ~NetServer();
 
-  void start();
+  void start(bool i_deamon);
   void stop();
   bool isStarted();
   void wait();

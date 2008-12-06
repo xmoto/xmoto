@@ -74,6 +74,15 @@ void XMThread::startThread()
     m_pThread          = SDL_CreateThread(&XMThread::run, this);
 }
 
+int XMThread::runInMain() {
+  m_progress         = -1;
+  m_currentOperation = "";
+  m_askThreadToEnd   = false;
+  m_isRunning        = true; // set before running the thread
+
+  return run(this);
+}
+
 int XMThread::waitForThreadEnd()
 {
   int returnValue;

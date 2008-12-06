@@ -30,10 +30,17 @@ NetServer::NetServer() {
 NetServer::~NetServer() {
 }
 
-void NetServer::start() {
+void NetServer::start(bool i_deamon) {
   m_serverThread = new ServerThread();
-  m_serverThread->startThread();
-  m_isStarted = true;
+
+  if(i_deamon) {
+    m_serverThread->startThread();
+    m_isStarted = true;
+  } else {
+    if(m_serverThread->runInMain() != 0) {
+      throw Exception("Server thread failed");
+    }
+  }
 }
 
 void NetServer::stop() {

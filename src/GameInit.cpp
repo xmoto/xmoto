@@ -451,9 +451,8 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 
   if(v_xmArgs.isOptServerOnly()) {
     try {
-      NetServer::instance()->start();
       m_standAloneServer = NetServer::instance();
-      NetServer::instance()->wait();
+      NetServer::instance()->start(false);
       quit();
       return;
     } catch(Exception &e) {
@@ -772,7 +771,7 @@ void GameApp::initNetwork(bool i_forceNoServerStarted) {
   // start server if gui
   if(i_forceNoServerStarted == false) {
     if(XMSession::instance()->serverStartAtStartup()) {
-      NetServer::instance()->start();
+      NetServer::instance()->start(true);
     }
   }
 
