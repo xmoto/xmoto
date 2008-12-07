@@ -216,6 +216,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
 
   Logger::setVerbose(XMSession::instance()->isVerbose()); /* apply verbose mode */
+  Logger::setActiv(XMSession::instance()->noLog() == false); /* apply log activ mode */
 
   LogInfo(std::string("X-Moto " + XMBuild::getVersionString(true)).c_str());
   LogInfo("compiled at "__DATE__" "__TIME__);

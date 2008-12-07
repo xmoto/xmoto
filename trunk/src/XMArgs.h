@@ -66,6 +66,7 @@ class XMArguments {
   bool isOptTimedemo() const;
   bool isOptFps() const;
   bool isOptUgly() const;
+  bool isOptNoLog() const;
   bool isOptTestTheme() const;
   bool isOptBenchmark() const;
   bool isOptCleanCache() const;
@@ -115,6 +116,7 @@ class XMArguments {
   std::string m_drawlib_lib;
   bool m_opt_ugly;
   bool m_opt_nosound;
+  bool m_opt_noLog;
 
   /* config */
   bool m_opt_configpath;
