@@ -132,6 +132,7 @@ public:
   void setUgly(bool i_value);
   bool uglyOver() const;
   void setUglyOver(bool i_value);
+  bool noLog() const;
   bool testTheme() const;
   void setTestTheme(bool i_value);
   bool ghostStrategy_MYBEST() const;
@@ -388,6 +389,7 @@ public:
   int m_clientServerPort;
   int m_clientFramerateUpload;
   bool m_musicOnAllLevels;
+  bool m_noLog;
 };
 
 #endif

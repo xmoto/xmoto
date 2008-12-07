@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdarg.h>
 
 bool  Logger::m_isInitialized = false;
+bool  Logger::m_activ         = true;
 bool  Logger::m_verbose       = false;
 FILE* Logger::m_fd            = NULL;
 
@@ -58,7 +59,15 @@ void Logger::setVerbose(bool i_value) {
   m_verbose = i_value;
 }
 
+void Logger::setActiv(bool i_value) {
+  m_activ = i_value;
+}
+
 void Logger::LogRaw(const std::string &s) {
+  if(m_activ == false) {
+    return;
+  }
+
   fprintf(m_fd, "%s\n", s.c_str());
   fflush(m_fd);
   
@@ -92,6 +101,10 @@ void Logger::LogLevelMsg(LogLevel i_level, const char *pcFmt, ...) {
 }
 
 void Logger::LogData(void* data, unsigned int len) {
+  if(m_activ == false) {
+    return;
+  }
+
   fprintf(m_fd, "=== Packet [%u]: ===\n", len);
   fflush(m_fd);
   fwrite(data, len, 1, m_fd);

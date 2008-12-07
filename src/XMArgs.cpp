@@ -39,6 +39,7 @@ XMArguments::XMArguments() {
   m_opt_noexts         = false;
   m_opt_drawlib        = false;
   m_opt_ugly           = false;
+  m_opt_noLog          = false;
   m_opt_nowww          = false;
   m_opt_help           = false;
   m_opt_verbose        = false;
@@ -200,6 +201,8 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       m_opt_benchmark = true;
     } else if(v_opt == "--cleancache") {
       m_opt_cleanCache = true;
+    } else if(v_opt == "--noLog") {
+      m_opt_noLog = true;
     } else if(v_opt == "--cleanNoWWWLevels") {
       m_opt_cleanNoWWWLevels = true;
     } else if(v_opt == "-ri" || v_opt == "--replayInfos") {
@@ -465,6 +468,10 @@ bool XMArguments::isOptUgly() const {
   return m_opt_ugly;
 }
 
+bool XMArguments::isOptNoLog() const {
+  return m_opt_noLog;
+}
+
 bool XMArguments::isOptTestTheme() const {
   return m_opt_testTheme;
 }
@@ -596,6 +603,7 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t\tperformance.\n");
   printf("\t--cleancache\n\t\tDeletes the content of the level cache.\n");
   printf("\t--cleanNoWWWLevels\n\t\tCheck web levels list and remove levels which are not available on the web.\n");
+  printf("\t--noLog\n\t\tDon't log information into the xmoto.log file\n");
   printf("\t--videoRecording\n\t\tEnable video recording.\n");
   printf("\t--videoRecordingSizeDivision DIVISION\n\t\tChange video size (1=full, 2=50%%, 4=25%%).\n");
   printf("\t--videoRecordingFramerate FRAMERATE\n\t\tChange video framerate.\n");

@@ -63,6 +63,7 @@ void XMSession::setToDefault() {
   m_ugly      	     	          = DEFAULT_UGLY;
   m_uglyOver         	          = DEFAULT_UGLYOVER;
   m_testTheme 	     	          = DEFAULT_TESTTHEME;
+  m_noLog                         = DEFAULT_NOLOG;
   m_ghostStrategy_MYBEST          = DEFAULT_GHOST_MYBEST;
   m_ghostStrategy_THEBEST         = DEFAULT_GHOST_THEBEST;
   m_ghostStrategy_BESTOFREFROOM   = DEFAULT_GHOSTBESTREFROOM;
@@ -205,6 +206,10 @@ void XMSession::load(const XMArguments* i_xmargs) {
 
   if(i_xmargs->isOptUgly()) {
     m_ugly = true;
+  }
+
+  if(i_xmargs->isOptNoLog()) {
+    m_noLog = true;
   }
 
   if(i_xmargs->isOptTestTheme()) {
@@ -603,6 +608,10 @@ bool XMSession::ugly() const {
 
 bool XMSession::uglyOver() const {
   return m_uglyOver;
+}
+
+bool XMSession::noLog() const {
+  return m_noLog;
 }
 
 bool XMSession::testTheme() const {
