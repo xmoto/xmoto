@@ -36,6 +36,7 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"MoveBlock",                    LuaLibGame::L_Game_MoveBlock},
   {"GetBlockPos",                  LuaLibGame::L_Game_GetBlockPos},
   {"SetBlockPos",                  LuaLibGame::L_Game_SetBlockPos},
+  {"SetPhysicsBlockPos",           LuaLibGame::L_Game_SetBlockPos},
   {"PlaceInGameArrow",             LuaLibGame::L_Game_PlaceInGameArrow},
   {"PlaceScreenArrow",             LuaLibGame::L_Game_PlaceScreenArrow},
   {"HideArrow",                    LuaLibGame::L_Game_HideArrow},
