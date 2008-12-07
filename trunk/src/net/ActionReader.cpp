@@ -46,7 +46,7 @@ bool ActionReader::TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction) {
     if( (nread = SDLNet_TCP_Recv(*(i_tcpsd),
 				 m_tcpBuffer+m_tcpPacketOffset,
 				 XM_MAX_PACKET_SIZE-m_tcpPacketOffset)) <= 0) {
-      throw Exception("Unable to read on socket");
+      throw DisconnectedException();
     }
     m_tcpPacketOffset += nread;
     LogDebug("Data received (%u bytes available)", m_tcpPacketOffset);

@@ -192,10 +192,15 @@ int ServerThread::realThreadFunction() {
 	      try {
 	      	manageClientTCP(i);
 		i++;
-	      } catch(Exception &e) {
-		LogInfo("server: bad TCP packet received by client %u (%s:%d)", i,
+	      } catch(DisconnectedException &e) {
+		LogInfo("server: client %u disconnected (%s:%d) : %s", i,
 	      		XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
-	      		SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port));
+	      		SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
+	      	removeClient(i);	
+	      } catch(Exception &e) {
+		LogInfo("server: bad TCP packet received by client %u (%s:%d) : %s", i,
+	      		XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
+	      		SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
 	      	removeClient(i);
 	      }
 	    } else {
@@ -348,8 +353,8 @@ void ServerThread::manageClientUDP() {
 	  delete v_netAction;
 	} catch(Exception &e) {
 	  // ok, a bad packet received, forget it
-	  LogWarning("server: bad UDP packet received by client %u (%s:%i)", i,
-		     XMNet::getIp(&(m_udpPacket->address)).c_str(), SDLNet_Read16(&(m_udpPacket->address.port)));
+	  LogWarning("server: bad UDP packet received by client %u (%s:%i) : %s", i,
+		     XMNet::getIp(&(m_udpPacket->address)).c_str(), SDLNet_Read16(&(m_udpPacket->address.port)), e.getMsg().c_str());
 	}
 	break; // stop : only one client
       }

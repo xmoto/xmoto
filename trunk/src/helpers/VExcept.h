@@ -63,5 +63,11 @@ class InvalidSystemKeyException : public Exception {
  private:
 };
 
+class DisconnectedException : public Exception {
+ public:
+  DisconnectedException() : Exception("Disconnected") {}
+ private:
+};
+
 #endif
 
