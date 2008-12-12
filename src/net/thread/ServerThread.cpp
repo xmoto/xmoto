@@ -269,9 +269,7 @@ void ServerThread::sendToClient(NetAction* i_netAction, unsigned int i, int i_sr
 }
 
 void ServerThread::sendToAllClients(NetAction* i_netAction, int i_src, int i_subsrc, unsigned int i_except) {
-  unsigned int i=0;
-  
-  while(i<m_clients.size()) {
+  for(unsigned int i=0; i<m_clients.size(); i++) {
     if(i != i_except) {
       try {
 	sendToClient(i_netAction, i, i_src, i_subsrc);
@@ -279,7 +277,6 @@ void ServerThread::sendToAllClients(NetAction* i_netAction, int i_src, int i_sub
 	// don't remove the client while removeclient function can call sendToAllClients ...
       }
     }
-    i++;
   }
 }
 
@@ -451,8 +448,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     
   case TNA_frame:
     {
-      unsigned int i = 0;
-      while(i<m_clients.size()) {
+      for(unsigned int i=0; i<m_clients.size(); i++) {
 	if(i != i_client &&
 	   m_clients[i_client]->playingLevelId() != "" &&
 	   m_clients[i_client]->playingLevelId() == m_clients[i]->playingLevelId()
@@ -462,7 +458,6 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
 	  } catch(Exception &e) {
 	    // don't remove the client, it will be done in the main loop
 	  }
-	  i++;
 	}
       }
     }
