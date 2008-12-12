@@ -275,13 +275,11 @@ void ServerThread::sendToAllClients(NetAction* i_netAction, int i_src, int i_sub
     if(i != i_except) {
       try {
 	sendToClient(i_netAction, i, i_src, i_subsrc);
-	i++;
       } catch(Exception &e) {
-	removeClient(i);
+	// don't remove the client while removeclient function can call sendToAllClients ...
       }
-    } else {
-      i++;
     }
+    i++;
   }
 }
 
@@ -461,11 +459,9 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
 	   ) {
 	  try {
 	    sendToClient(i_netAction, i, m_clients[i_client]->id(), i_netAction->getSubSource());
-	    i++;
 	  } catch(Exception &e) {
-	    removeClient(i);
+	    // don't remove the client, it will be done in the main loop
 	  }
-	} else {
 	  i++;
 	}
       }
