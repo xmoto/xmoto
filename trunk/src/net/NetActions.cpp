@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Log.h"
 #include "NetClient.h"
 #include "../XMSession.h"
+#include "extSDL_net.h"
 #include <sstream>
 
 char NetAction::m_buffer[NETACTION_MAX_PACKET_SIZE];
@@ -125,7 +126,7 @@ void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPa
 
   } else if(i_tcpsd != NULL) {
     // don't send the \0
-    if( (nread = SDLNet_TCP_Send(*i_tcpsd, m_buffer, v_totalPacketSize)) != v_totalPacketSize) {
+    if( (nread = SDLNet_TCP_Send_noBlocking(*i_tcpsd, m_buffer, v_totalPacketSize)) != v_totalPacketSize) {
       throw Exception("TCP_Send failed");
     }
 
