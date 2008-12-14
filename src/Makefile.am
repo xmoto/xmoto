@@ -278,7 +278,9 @@ thread_SOURCES = thread/XMThread.h                 \
 		 net/NetActions.h    \
 		 net/NetActions.cpp  \
 		 net/ActionReader.h    \
-		 net/ActionReader.cpp
+		 net/ActionReader.cpp \
+		 net/extSDL_net.h     \
+		 net/extSDL_net.cpp
 
 if WIN32
 common_SOURCES += $(bz2_SOURCES)
