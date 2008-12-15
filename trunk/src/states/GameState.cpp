@@ -304,7 +304,7 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_WORLD_18, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getShowConsole()) {
     SysMessage::instance()->showConsole();
   }
 

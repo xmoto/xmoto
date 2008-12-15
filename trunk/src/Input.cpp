@@ -198,6 +198,22 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     m_switchFavorite = XMKey();
   }
 
+  try {
+    m_restartLevel = XMKey(pDb->config_getString(i_id_profile, "KeyRestartLevel", m_restartLevel.toString()));
+  } catch(InvalidSystemKeyException &e) {
+    /* keep default key */
+  } catch(Exception &e) {
+    m_restartLevel = XMKey();
+  }
+
+  try {
+    m_showConsole = XMKey(pDb->config_getString(i_id_profile, "KeyShowConsole", m_showConsole.toString()));
+  } catch(InvalidSystemKeyException &e) {
+    /* keep default key */
+  } catch(Exception &e) {
+    m_showConsole = XMKey();
+  }
+
 }
   
   /*===========================================================================
@@ -290,6 +306,8 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
     m_switchUglyMode     = XMKey(SDLK_F9, KMOD_NONE);
     m_switchBlacklist    = XMKey(SDLK_b,  KMOD_LCTRL);
     m_switchFavorite     = XMKey(SDLK_F3, KMOD_NONE);
+    m_restartLevel       = XMKey(SDLK_RETURN,   KMOD_NONE);
+    m_showConsole        = XMKey(SDLK_WORLD_18, KMOD_NONE);
   }  
 
   /*===========================================================================
@@ -355,6 +373,14 @@ void InputHandler::saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
 
   if(m_switchFavorite.isDefined()) {
     pDb->config_setString(i_id_profile, "KeySwitchFavorite", m_switchFavorite.toString());
+  }
+
+  if(m_restartLevel.isDefined()) {
+    pDb->config_setString(i_id_profile, "KeyRestartLevel", m_restartLevel.toString());
+  }
+
+  if(m_showConsole.isDefined()) {
+    pDb->config_setString(i_id_profile, "KeyShowConsole", m_showConsole.toString());
   }
 
   pDb->config_setValue_end();
@@ -430,6 +456,22 @@ void InputHandler::setSwitchFavorite(XMKey i_value) {
 
 XMKey InputHandler::getSwitchFavorite() const {
   return m_switchFavorite;
+}
+
+void InputHandler::setRestartLevel(XMKey i_value) {
+  m_restartLevel = i_value;
+}
+
+XMKey InputHandler::getRestartLevel() const {
+  return m_restartLevel;
+}
+
+void InputHandler::setShowConsole(XMKey i_value) {
+  m_showConsole = i_value;
+}
+
+XMKey InputHandler::getShowConsole() const {
+  return m_showConsole;
 }
 
 bool InputHandler::isANotGameSetKey(XMKey* i_xmkey) const {
