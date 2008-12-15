@@ -1358,20 +1358,14 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
 
   void Scene::onRewinding() {
     bool v_continue = true;
-    unsigned int i = m_myLastStrawberries.size()-1;
+    int i = m_myLastStrawberries.size()-1;
 
     // remove strawberries untaken
-    while(v_continue) {
+    while(v_continue && i>=0) { // must be at least one strawberry
       // > because updateToTime is done after m_time increase
       if(m_myLastStrawberries[i] > m_time) { 
 	m_myLastStrawberries.erase(m_myLastStrawberries.begin() + i);
-
-	if(i == 0) {
-	  v_continue = false;
-	} else {
-	  i--;
-	}
-	
+	i--;
       } else {
 	v_continue = false;
       }
