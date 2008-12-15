@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "xmscene/Scene.h"
 #include "gui/basic/GUI.h"
+#include "XMSession.h"
 
 #ifdef ENABLE_OPENGL
 #include "include/xm_OpenGL.h"
@@ -180,6 +181,8 @@ private:
   std::string m_bestTime;
   std::string m_replayHelp;
   std::string m_worldRecordTime;
+
+  GraphicsLevel m_graphicsLevel;
 
   bool m_allowGhostEffect; // ask to not do the ghost effect
 
