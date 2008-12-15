@@ -1699,6 +1699,29 @@ void StateOptions::updateControlsList() {
     
   UIListEntry *p;
 
+
+  p = pList->addEntry(GAMETEXT_SWITCHFAVORITE);
+  p->Text.push_back(InputHandler::instance()->getSwitchFavorite().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getSwitchFavorite().toString());
+
+  p = pList->addEntry(GAMETEXT_SWITCHBLACKLIST);
+  p->Text.push_back(InputHandler::instance()->getSwitchBlacklist().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getSwitchBlacklist().toString());
+
+  p = pList->addEntry(GAMETEXT_SWITCHUGLYMODE);
+  p->Text.push_back(InputHandler::instance()->getSwitchUglyMode().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getSwitchUglyMode().toString());
+
+  p = pList->addEntry(GAMETEXT_RESTARTLEVEL);
+  p->Text.push_back(InputHandler::instance()->getRestartLevel().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getRestartLevel().toString());
+
+  p = pList->addEntry(GAMETEXT_SHOWCONSOLE);
+  p->Text.push_back(InputHandler::instance()->getShowConsole().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getShowConsole().toString());
+
+  // player keys
+
   for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
     std::ostringstream v_n;
 
@@ -1735,18 +1758,6 @@ void StateOptions::updateControlsList() {
       p->Text.push_back(InputHandler::instance()->getSCRIPTACTION(i, k).toString());
     } 
   }
-
-  p = pList->addEntry(GAMETEXT_SWITCHFAVORITE);
-  p->Text.push_back(InputHandler::instance()->getSwitchFavorite().toFancyString());
-  p->Text.push_back(InputHandler::instance()->getSwitchFavorite().toString());
-
-  p = pList->addEntry(GAMETEXT_SWITCHBLACKLIST);
-  p->Text.push_back(InputHandler::instance()->getSwitchBlacklist().toFancyString());
-  p->Text.push_back(InputHandler::instance()->getSwitchBlacklist().toString());
-
-  p = pList->addEntry(GAMETEXT_SWITCHUGLYMODE);
-  p->Text.push_back(InputHandler::instance()->getSwitchUglyMode().toFancyString());
-  p->Text.push_back(InputHandler::instance()->getSwitchUglyMode().toString());
 
 }
 
@@ -2038,5 +2049,13 @@ void StateOptions::setInputKey(const std::string& i_strKey, const std::string& i
 
   if(i_strKey == GAMETEXT_SWITCHUGLYMODE) {
     InputHandler::instance()->setSwitchUglyMode(XMKey(i_key));
+  }
+
+  if(i_strKey == GAMETEXT_RESTARTLEVEL) {
+    InputHandler::instance()->setRestartLevel(XMKey(i_key));
+  }
+
+  if(i_strKey == GAMETEXT_SHOWCONSOLE) {
+    InputHandler::instance()->setShowConsole(XMKey(i_key));
   }
 }

@@ -63,7 +63,7 @@ void StateDeadJust::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     StateManager::instance()->pushState(new StateDeadMenu(m_universe, false, this));
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_RETURN, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getRestartLevel()) {
     /* retart immediatly the level */
     restartLevel();
   }

@@ -104,6 +104,10 @@ public:
   XMKey getSwitchBlacklist() const;
   void setSwitchFavorite(XMKey i_value);
   XMKey getSwitchFavorite() const;
+  void setRestartLevel(XMKey i_value);
+  XMKey getRestartLevel() const;
+  void setShowConsole(XMKey i_value);
+  XMKey getShowConsole() const;
 
   static float joyRawToFloat(float raw, float neg, float deadzone_neg, float deadzone_pos, float pos);
 
@@ -126,7 +130,8 @@ private:
   XMKey m_switchUglyMode;
   XMKey m_switchBlacklist;
   XMKey m_switchFavorite;
-
+  XMKey m_restartLevel;
+  XMKey m_showConsole;
 };
 
 
