@@ -855,7 +855,7 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string texture)
   /*===========================================================================
   Minimap rendering
   ===========================================================================*/
-  #define MINIMAPZOOM 5.0f
+#define MINIMAPZOOM 5.0f
   #define MINIMAPALPHA 128
   #define MINIVERTEX(Px,Py) \
     pDrawlib->glVertexSP(x + nWidth/2  + (float)(Px - cameraPosX)*MINIMAPZOOM, \
@@ -1505,15 +1505,16 @@ int GameRenderer::nbParticlesRendered() const {
     /* minimap + counter */
     if(pCamera->getPlayerToFollow() != NULL) {
       if(showMinimap()) {
-	renderMiniMap(i_scene, 0, pDrawlib->getDispHeight()-100,
-		      150,100);
+	renderMiniMap(i_scene, 0, pDrawlib->getDispHeight()- (pDrawlib->getDispHeight()/6),
+		      pDrawlib->getDispWidth()/5, pDrawlib->getDispHeight()/6);
       }
       if(showEngineCounter()
 	 && XMSession::instance()->ugly() == false
 	 && i_scene->getNumberCameras() == 1) {
-	renderEngineCounter(pDrawlib->getDispWidth()-128,
-			    pDrawlib->getDispHeight()-128,
-			    128, 128,
+	int v_engineCounterSize = pDrawlib->getDispWidth()/7;
+	renderEngineCounter(pDrawlib->getDispWidth()- v_engineCounterSize,
+			    pDrawlib->getDispHeight()-v_engineCounterSize,
+			    v_engineCounterSize, v_engineCounterSize,
 			    pCamera->getPlayerToFollow()->getBikeEngineSpeed(),
 			    pCamera->getPlayerToFollow()->getBikeLinearVel());
       }
