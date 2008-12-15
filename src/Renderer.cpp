@@ -95,6 +95,7 @@ GameRenderer::GameRenderer() {
   m_currentEdgeSprite = NULL;
   m_curRegistrationStage = 0;
   m_showGhostsText = true;
+  m_graphicsLevel = GFX_HIGH;
 }
 GameRenderer::~GameRenderer() {
 }
@@ -118,6 +119,9 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
   // level of the first world
   Level* v_level;
   int n_sameSceneAs;
+
+  // set the graphical level on time by level in case it changes while playing
+  m_graphicsLevel = XMSession::instance()->gameGraphics();
 
   if(i_universe == NULL) {
     return;
@@ -164,15 +168,16 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     std::vector<Block*>& Blocks = v_level->Blocks();
     int nVertexBytes = 0;
 
+    bool v_loadLayers = m_graphicsLevel == GFX_HIGH;
+    bool v_loadBackgroundBlocks = m_graphicsLevel != GFX_LOW;
+
     for(unsigned int i=0; i<Blocks.size(); i++) {
       /* do not load into the graphic card blocks which won't be
 	 displayed. On ati card with free driver, levels like green
 	 hill zone act 2 doesn't work if there's too much vertex loaded */
-      if(XMSession::instance()->gameGraphics() != GFX_HIGH
-	 && Blocks[i]->getLayer() != -1)
+      if(v_loadLayers == false && Blocks[i]->getLayer() != -1)
 	continue;
-      if(XMSession::instance()->gameGraphics() == GFX_LOW
-	 && Blocks[i]->isBackground() == true)
+      if(v_loadBackgroundBlocks == false && Blocks[i]->isBackground() == true)
 	continue;
 
       nVertexBytes += loadBlock(Blocks[i], i_universe, u, n_sameSceneAs, i);
@@ -370,7 +375,7 @@ int GameRenderer::loadBlockGeom(Block* pBlock,
 int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 {
   int nVertexBytes  = 0;
-  if(XMSession::instance()->gameGraphics() != GFX_LOW){
+  if(m_graphicsLevel != GFX_LOW){
     m_currentEdgeEffect = "";
     m_currentEdgeSprite = NULL;
 
@@ -1294,7 +1299,7 @@ int GameRenderer::nbParticlesRendered() const {
 		 pSky->Drifted());
     }    
 
-    if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
+    if(m_graphicsLevel == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* background level blocks */
       _RenderLayers(i_scene, false);
     }
@@ -1302,7 +1307,7 @@ int GameRenderer::nbParticlesRendered() const {
     // the layers may have change the scale transformation
     setCameraTransformations(pCamera, m_xScale, m_yScale);
 
-    if(XMSession::instance()->gameGraphics() != GFX_LOW && XMSession::instance()->ugly() == false) {
+    if(m_graphicsLevel != GFX_LOW && XMSession::instance()->ugly() == false) {
       /* Background blocks */
       _RenderDynamicBlocks(i_scene, true);
       _RenderBackground(i_scene);
@@ -1311,7 +1316,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
     _RenderSprites(i_scene, false,true);
 
-    if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
+    if(m_graphicsLevel == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* Render particles (back!) */    
       _RenderParticles(i_scene, false);
     }
@@ -1400,7 +1405,7 @@ int GameRenderer::nbParticlesRendered() const {
       }
     }
     
-    if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
+    if(m_graphicsLevel == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* Render particles (front!) */    
       _RenderParticles(i_scene, true);
     }
@@ -1409,7 +1414,7 @@ int GameRenderer::nbParticlesRendered() const {
     _RenderSprites(i_scene, true,false);
 
     /* and finally finally, front layers */
-    if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
+    if(m_graphicsLevel == GFX_HIGH && XMSession::instance()->ugly() == false) {
       _RenderLayers(i_scene, true);
     }
 
@@ -1999,7 +2004,7 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
       }
       if(pDrawlib->getBackend() == DrawLib::backend_SdlGFX){
 	/* Render all special edges (if quality!=low) */
-	if(XMSession::instance()->gameGraphics() != GFX_LOW) {
+	if(m_graphicsLevel != GFX_LOW) {
 	  for(unsigned int i=0;i<Blocks.size();i++) {
 	    if(Blocks[i]->isBackground() == bBackground){
 	      _RenderBlockEdges(Blocks[i]);
@@ -2186,7 +2191,7 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
 	}
 	if(pDrawlib->getBackend() == DrawLib::backend_SdlGFX){
 	  /* Render all special edges (if quality!=low) */
-	  if(XMSession::instance()->gameGraphics() != GFX_LOW) {
+	  if(m_graphicsLevel != GFX_LOW) {
 	    for(unsigned int i=0;i<Blocks.size();i++) {
 	      if(Blocks[i]->isBackground() == false) {
 		_RenderBlockEdges(Blocks[i]);
@@ -2263,7 +2268,7 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
   float uZoom = 1.0 / i_zoom;
   float uDriftZoom = 1.0 / i_driftZoom;
 
-  if(XMSession::instance()->gameGraphics() != GFX_HIGH) {
+  if(m_graphicsLevel != GFX_HIGH) {
     i_drifted = false;
   }
 
@@ -2332,7 +2337,7 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
 
     if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
       /* Render all special edges (if quality != low) */
-      if(XMSession::instance()->gameGraphics() != GFX_LOW) {
+      if(m_graphicsLevel != GFX_LOW) {
 	for(unsigned int i=0;i<Blocks.size();i++) {
 	  if(Blocks[i]->isBackground() == true) {
 	    _RenderBlockEdges(Blocks[i]);
