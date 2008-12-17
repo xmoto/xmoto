@@ -1649,13 +1649,18 @@ void StateMainMenu::updateReplaysList() {
   unsigned int nrow;
   bool v_listAll;
   UIList* v_list;
-  int v_selected;
+  std::string v_selected_replay;
 
   v_listAll = ((UIButton *) m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST_ALL"))->getChecked();
   v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST");
 
+
   /* Clear list */
-  v_selected = v_list->getSelected();
+  int v_selected = v_list->getSelected();
+  if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+    v_selected_replay = v_list->getEntries()[v_list->getSelected()]->Text[0];
+  }
+
   v_list->clear();
     
   /* Enumerate replays */
@@ -1681,7 +1686,22 @@ void StateMainMenu::updateReplaysList() {
   }
   xmDatabase::instance("main")->read_DB_free(v_result); 
 
-  v_list->setRealSelected(v_selected);
+ /* reselect the previous replay */
+  if(v_selected_replay != "") {
+    int nReplay = -1;
+    for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
+      if(v_list->getEntries()[i]->Text[0] == v_selected_replay) {
+	nReplay = i;
+	break;
+      }
+    }
+
+    if(nReplay == -1) { // replay not found, keep the same number in the list
+      v_list->setRealSelected(v_selected);
+    } else {
+      v_list->setRealSelected(nReplay);
+    }
+  }
 
   // apply the filter
   UIEdit*      v_edit;
@@ -1865,6 +1885,8 @@ void StateMainMenu::updateReplaysRights() {
   std::string v_replay;
   ReplayInfo* rplInfos;
 
+  // upload button
+  v_button->enableWindow(false);
   if(v_list->nbVisibleItems() > 0) {
     UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
     if(pEntry != NULL) {
@@ -1900,8 +1922,6 @@ void StateMainMenu::updateReplaysRights() {
 	delete rplInfos;
       }
     }
-  } else {
-    v_button->enableWindow(false);
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_SHOW_BUTTON"));
