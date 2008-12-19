@@ -175,6 +175,8 @@ void StateOptions::checkEvents() {
 	GameApp::instance()->reloadTheme();
       }
       */
+
+      SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
     }
   }
 
@@ -199,11 +201,13 @@ void StateOptions::checkEvents() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setBpp(16); 
+    SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
   }
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:32BPP"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    XMSession::instance()->setBpp(32); 
+    XMSession::instance()->setBpp(32);
+    SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
   }
 
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
@@ -216,6 +220,8 @@ void StateOptions::checkEvents() {
       sscanf(pEntry->Text[0].c_str(),"%d X %d", &nW, &nH);
       XMSession::instance()->setResolutionWidth(nW);
       XMSession::instance()->setResolutionHeight(nH);
+
+      SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
     }
   }
 
@@ -223,6 +229,8 @@ void StateOptions::checkEvents() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setWindowed(v_button->getChecked());
+
+    SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:MENULOW"));
@@ -600,6 +608,8 @@ void StateOptions::checkEvents() {
       //std::string v_locale = Locales::changeLocale(XMSession::instance()->language());
       //LogInfo("Locales changed to '%s'", v_locale.c_str());
       //StateManager::instance()->refreshStaticCaptions();
+
+      SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
     }
   }
 
