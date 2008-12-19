@@ -1187,7 +1187,7 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
     touchEntity(i_player, getLevelSrc()->getEntityById(p_entityID), p_bTouchedWithHead);
   }
 
-  void Scene::entityDestroyed(const std::string& i_entityId) {
+  void Scene::entityDestroyed(const std::string& i_entityId, int i_time) {
     Entity *v_entity;
     v_entity = getLevelSrc()->getEntityById(i_entityId);
 
@@ -1206,7 +1206,7 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
       }
 
       /* update timediff */
-      m_myLastStrawberries.push_back(getTime());
+      m_myLastStrawberries.push_back(i_time);
       
       for(unsigned int i=0; i<m_ghosts.size(); i++) {
 	m_ghosts[i]->updateDiffToPlayer(m_myLastStrawberries);

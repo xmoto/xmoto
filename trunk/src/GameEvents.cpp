@@ -523,7 +523,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
   void MGE_EntityDestroyed::doAction(Scene *p_pScene) {
-    p_pScene->entityDestroyed(m_entityId);
+    p_pScene->entityDestroyed(m_entityId, m_eventTime);
   }
 
   void MGE_EntityDestroyed::serialize(DBuffer &Buffer) {
