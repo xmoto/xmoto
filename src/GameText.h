@@ -103,6 +103,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_JOYSTICK_DIRECTION_DOWN  _("down")
 #define GAMETEXT_JOYSTICK_DIRECTION_NONE  _("none")
 #define GAMETEXT_JOYSTICK_BUTTON          _("button %i")
+#define GAMETEXT_OPTION_NEED_TO_RESTART _("You must restart so that this option takes effect")
 #define GAMETEXT_SCRIPTACTION             _("Script action")
 
 #define GAMETEXT_CREDITS                                                                     \
