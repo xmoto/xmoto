@@ -1036,7 +1036,15 @@ void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WW
 	/* if v_md5Dist == "", don't download ; it's a manually adding */
 	if(FS::fileExists((*v_required_files)[i].filepath) == false || (v_md5Local != v_md5Dist && v_md5Dist != "")) {
 	  v_data.v_nb_files_performed = v_nb_files_performed;
-	  
+
+	  if(FS::fileExists((*v_required_files)[i].filepath) == false) {
+	    LogInfo("The file %s must be downloaded because it is missing on the system", (*v_required_files)[i].filepath.c_str());
+	  } else {
+	    if(v_md5Local != v_md5Dist && v_md5Dist != "") {
+	      LogInfo("The file %s must be downloaded because local md5sum=%s and distant md5sum=%s", (*v_required_files)[i].filepath.c_str(), v_md5Local.c_str(), v_md5Dist.c_str());
+	    }
+	  }
+
 	  float v_percentage = (((float)v_nb_files_performed) * 100.0) / ((float)v_nb_files_to_download);
 	  if(i_WebLevelApp != NULL) {
 	    i_WebLevelApp->setTaskProgress(v_percentage);
