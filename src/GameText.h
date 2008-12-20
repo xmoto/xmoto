@@ -635,6 +635,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_PROXYLOGIN    _("Your proxy login")
 #define CONTEXTHELP_PROXYPASSWORD _("Your password associated with your login")
 #define CONTEXTHELP_REPLAYS_FILTER _("Enter text to filter the replay list")
+#define CONTEXTHELP_ROOMS_FILTER _("Enter text to filter the rooms list")
 #define CONTEXTHELP_QUICKSTART _("Press to play X-Moto immediately")
 #define CONTEXTHELP_QUICKSTART_QUALITY    _("Increase or decrease the quality of the levels selected")
 #define CONTEXTHELP_QUICKSTART_DIFFICULTY _("Increase or decrease the difficulty of the levels selected")

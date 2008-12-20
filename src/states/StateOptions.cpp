@@ -423,12 +423,21 @@ void StateOptions::checkEvents() {
     XMSession::instance()->setWwwPassword(v_edit->getCaption());
   }
 
+  std::string v_tabId;
   for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
       std::ostringstream v_strRoom;
       v_strRoom << i;
 
-      v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
-							  + ":ROOMS_LIST"));
+      v_tabId = "MAIN:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str();
+      v_list = reinterpret_cast<UIList *>(m_GUI->getChild(v_tabId + ":ROOMS_LIST"));
+
+      /* check filter */
+      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild(v_tabId + ":ROOMS_FILTER"));
+      if(v_edit->hasChanged()) {
+      	v_edit->setHasChanged(false);
+      	v_list->setFilter(v_edit->getCaption());
+      }
+
       if(v_list->isChanged()) {
 	v_list->setChanged(false);
 	if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
@@ -1332,6 +1341,8 @@ UIWindow* StateOptions::makeRoomTab(UIWindow* i_parent, unsigned int i_number) {
   UIWindow* v_window;
   UIList*   v_list;
   UIButton*  v_button;
+  UIStatic* v_someText;
+  UIEdit*   v_edit;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   std::string v_roomTitle;
@@ -1359,7 +1370,15 @@ UIWindow* StateOptions::makeRoomTab(UIWindow* i_parent, unsigned int i_number) {
     v_button->setContextHelp(CONTEXTHELP_ROOM_ENABLE);
   }
 
-  v_list = new UIList(v_window, 20, 25, "", v_window->getPosition().nWidth-215 - 20 - 20, v_window->getPosition().nHeight - 20 - 50);
+  v_someText = new UIStatic(v_window, 20, 25, std::string(GAMETEXT_FILTER) + ":", 90, 25);
+  v_someText->setFont(drawlib->getFontSmall());
+  v_someText->setHAlign(UI_ALIGN_RIGHT);
+  v_edit = new UIEdit(v_window, 120, 25, "", 200, 25);
+  v_edit->setFont(drawlib->getFontSmall());
+  v_edit->setID("ROOMS_FILTER");
+  v_edit->setContextHelp(CONTEXTHELP_ROOMS_FILTER);
+
+  v_list = new UIList(v_window, 20, 55, "", v_window->getPosition().nWidth-215 - 20 - 20, v_window->getPosition().nHeight - 40 - 50);
   v_list->setID("ROOMS_LIST");
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_ROOM, v_list->getPosition().nWidth);
@@ -1834,6 +1853,7 @@ void StateOptions::createThemesList(UIList *pList) {
 
 void StateOptions::updateRoomsList() {
   UIList* v_list;
+  std::string v_tabId;
   unsigned int j;
   bool v_found;
 
@@ -1841,8 +1861,8 @@ void StateOptions::updateRoomsList() {
       std::ostringstream v_strRoom;
       v_strRoom << i;
 
-      v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str()
-							  + ":ROOMS_LIST"));
+      v_tabId = "MAIN:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str();
+      v_list = reinterpret_cast<UIList *>(m_GUI->getChild(v_tabId + ":ROOMS_LIST"));
       createRoomsList(v_list);
 
       std::string v_id_room = XMSession::instance()->idRoom(i);
@@ -1856,7 +1876,13 @@ void StateOptions::updateRoomsList() {
 	}
 	j++;
       }
+
+      // apply the filter
+      UIEdit*      v_edit;
+      v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild(v_tabId + ":ROOMS_FILTER"));
+      v_list->setFilter(v_edit->getCaption());
   }
+
 }
 
 void StateOptions::createRoomsList(UIList *pList) {
