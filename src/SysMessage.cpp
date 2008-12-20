@@ -33,10 +33,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME 1.0
 #define SYSMSG_CONSOLEDISPLAY_MAXNBLINES 5
 
+SysMsg::SysMsg(const std::string& i_msg, SysMsgType i_type) {
+    text  = i_msg;
+    time = GameApp::getXMTime();
+    type = i_type;
+}
+
+SysMsg::~SysMsg() {
+}
+
 SysMessage::SysMessage() {
   m_startDisplay = GameApp::getXMTime() - SYSMSG_DISPLAY_TIME;
-  m_startDisplayError = GameApp::getXMTime() - SYSMSG_DISPLAYBOXMSG_TIME - 2.0*(SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME);
-  m_startDisplayInformation = GameApp::getXMTime() - SYSMSG_DISPLAYBOXMSG_TIME - 2.0*(SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME);
   m_consoleLastShowTime = GameApp::getXMTime() - SYSMSG_CONSOLEDISPLAY_TIME - SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME;
 }
 
@@ -54,17 +61,11 @@ void SysMessage::displayText(const std::string& i_msg) {
 }
 
 void SysMessage::displayError(const std::string& i_msg) {
-  if(m_errorTxt.size() == 0) {
-    m_startDisplayError = GameApp::getXMTime();
-  }
-  m_errorTxt.push_back(i_msg);
+  m_sysMsg.push_back(new SysMsg(i_msg, SYSMSG_ERROR));
 }
 
 void SysMessage::displayInformation(const std::string& i_msg) {
-  if(m_informationTxt.size() == 0) {
-    m_startDisplayInformation = GameApp::getXMTime();
-  }
-  m_informationTxt.push_back(i_msg);
+  m_sysMsg.push_back(new SysMsg(i_msg, SYSMSG_INFORMATION));
 }
 
 void SysMessage::render() {
@@ -96,12 +97,8 @@ void SysMessage::render() {
   }
 
   /* error/information msg */
-  if(m_errorTxt.size() > 0) {
-    drawBoxMsg(m_startDisplayError, m_errorTxt, MAKE_COLOR(255,0,0,255));
-    m_startDisplayInformation = GameApp::getXMTime(); // reset information until it can be displayed
-  } else if(m_informationTxt.size() > 0) {
-    drawBoxMsg(m_startDisplayInformation, m_informationTxt, MAKE_COLOR(0,0,255,255));
-  }
+  cleanBoxMsg();
+  drawBoxMsg();
 
   /* console */
   int v_consoleBorder = 10;
@@ -142,41 +139,72 @@ void SysMessage::showConsole() {
   m_consoleLastShowTime = GameApp::getXMTime();
 }
 
-void SysMessage::drawBoxMsg(float& io_nextStartTime, std::vector<std::string>& i_msg, Color i_color) {
-  float v_time = GameApp::getXMTime();
+void SysMessage::cleanBoxMsg() {
+  float v_time;
+
+  if(m_sysMsg.size() == 0) {
+    return;
+  }
+  
+  v_time = GameApp::getXMTime();
+  while(m_sysMsg[0]->time + SYSMSG_DISPLAYBOXMSG_TIME + 2.0*(SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME) < v_time) {
+    delete m_sysMsg[0];
+    m_sysMsg.erase(m_sysMsg.begin());
+    
+    if(m_sysMsg.size() == 0) {
+      return;
+    }
+  }
+}
+
+/* draw recursively to be able to compute offset before drawing */
+void SysMessage::drawBoxMsg_one(unsigned int i, float i_time, int x_offset, int y_offset) {
   FontManager* v_fs = m_drawLib->getFontSmall();
   FontGlyph* v_fg;
+  int v_boxHeight;
+  Color c;
 
-  if(io_nextStartTime + SYSMSG_DISPLAYBOXMSG_TIME + 2.0*(SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME) >= v_time) {
-    int x_offset = 0, y_offset = 0;
-    v_fg = v_fs->getGlyph(i_msg[0]);
+  v_fg = v_fs->getGlyph(m_sysMsg[i]->text);
+
+  /* remove the hidden part */
+  if(m_sysMsg[i]->time + SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME > i_time) {
+    /* apparition (start animation) */
+    y_offset += -(((m_sysMsg[i]->time + SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME - i_time)
+		   * (v_fg->realHeight() + 2*(SYSMSG_DISPLAYBOXMSG_MARGIN)))
+		  / SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME);
     
-    if(io_nextStartTime + SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME > v_time) {
-      // start anim
-      y_offset = +(((io_nextStartTime + SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME - v_time)
-		    * (v_fg->realHeight() + 2*(SYSMSG_DISPLAYBOXMSG_MARGIN)))
-		   / SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME);
-    } else if(io_nextStartTime + SYSMSG_DISPLAYBOXMSG_TIME + SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME < v_time) {
-      // end anim
-      y_offset = -(((io_nextStartTime + SYSMSG_DISPLAYBOXMSG_TIME + SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME - v_time)
-		    * (v_fg->realHeight() + 2*(SYSMSG_DISPLAYBOXMSG_MARGIN)))
-		   / SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME);
-    } else {
-      // normal
-    }
+  } else if(m_sysMsg[i]->time + SYSMSG_DISPLAYBOXMSG_TIME + SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME < i_time) {
+    /* disparition (end animation) */
     
-    m_drawLib->drawBox(Vector2f(x_offset,
-				y_offset + m_drawLib->getDispHeight() - v_fg->realHeight() - 2*(SYSMSG_DISPLAYBOXMSG_MARGIN)),
-		       Vector2f(x_offset + v_fg->realWidth() + 2*(SYSMSG_DISPLAYBOXMSG_MARGIN),
-				y_offset + m_drawLib->getDispHeight()),
-		       1.0, MAKE_COLOR(255,255,255,255), i_color);
-    
-    v_fs->printString(v_fg,
-		      x_offset + SYSMSG_DISPLAYBOXMSG_MARGIN,
-		      y_offset + m_drawLib->getDispHeight() - v_fg->realHeight() - SYSMSG_DISPLAYBOXMSG_MARGIN,
-		      MAKE_COLOR(0, 0, 0, 255), 0.0);
-  } else {
-    i_msg.erase(i_msg.begin());
-    io_nextStartTime = GameApp::getXMTime();
+    y_offset += (((m_sysMsg[i]->time + SYSMSG_DISPLAYBOXMSG_TIME + SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME - i_time)
+		  * (v_fg->realHeight() + 2*(SYSMSG_DISPLAYBOXMSG_MARGIN)))
+		 / SYSMSG_DISPLAYBOXMSG_ANIMATIONTIME);
+  }
+  
+  v_boxHeight = v_fg->realHeight() + 2*(SYSMSG_DISPLAYBOXMSG_MARGIN);
+
+  /* draw next boxes */
+  if(m_sysMsg.size() > i+1) {
+    /* add offset for the next box */
+    drawBoxMsg_one(i+1, i_time, x_offset, y_offset + v_boxHeight);    
+  }
+
+  /* draw the box */
+  c = m_sysMsg[i]->type == SYSMSG_INFORMATION ? MAKE_COLOR(0,0,255,255) : MAKE_COLOR(255,0,0,255);
+  
+  m_drawLib->drawBox(Vector2f(x_offset, m_drawLib->getDispHeight() - y_offset - v_boxHeight),
+		     Vector2f(x_offset + v_fg->realWidth() + 2*(SYSMSG_DISPLAYBOXMSG_MARGIN),
+			      m_drawLib->getDispHeight() - y_offset),
+		     1.0, MAKE_COLOR(255,255,255,255), c);
+  
+  v_fs->printString(v_fg,
+		    x_offset + SYSMSG_DISPLAYBOXMSG_MARGIN,
+		    m_drawLib->getDispHeight() - y_offset - v_fg->realHeight() - SYSMSG_DISPLAYBOXMSG_MARGIN,
+		    MAKE_COLOR(0, 0, 0, 255), 0.0);
+}
+
+void SysMessage::drawBoxMsg() {
+  if(m_sysMsg.size() > 0) {
+    drawBoxMsg_one(0, GameApp::getXMTime(), 0, 0);
   }
 }

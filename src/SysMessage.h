@@ -28,6 +28,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class DrawLib;
 
+enum SysMsgType {SYSMSG_INFORMATION, SYSMSG_ERROR};
+
+class SysMsg {
+ public:
+  SysMsg(const std::string& i_msg, SysMsgType i_type);
+  ~SysMsg();
+
+  std::string text;
+  float time;
+  SysMsgType type;
+};
+
 class SysMessage : public Singleton<SysMessage> {
   friend class Singleton<SysMessage>;
 
@@ -50,13 +62,12 @@ private:
   float m_startDisplay;
 
   /* error msg */
-  std::vector<std::string> m_errorTxt;
-  float m_startDisplayError;
-  void drawBoxMsg(float& io_nextStartTime, std::vector<std::string>& i_msg, Color i_color);
-
   /* information msg */
-  std::vector<std::string> m_informationTxt;
-  float m_startDisplayInformation;
+  std::vector<SysMsg*> m_sysMsg;
+
+  void cleanBoxMsg();
+  void drawBoxMsg();
+  void drawBoxMsg_one(unsigned int i, float i_time, int x_offset, int y_offset);
 
   /* console */
   std::vector<std::string> m_console;
