@@ -65,6 +65,7 @@ private:
   /* information msg */
   std::vector<SysMsg*> m_sysMsg;
 
+  void displayMsg(const std::string& i_msg, SysMsgType i_type);
   void cleanBoxMsg();
   void drawBoxMsg();
   void drawBoxMsg_one(unsigned int i, float i_time, int x_offset, int y_offset);

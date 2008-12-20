@@ -60,12 +60,23 @@ void SysMessage::displayText(const std::string& i_msg) {
   m_txt = i_msg;
 }
 
+void SysMessage::displayMsg(const std::string& i_msg, SysMsgType i_type) {
+  if(m_sysMsg.size() > 0) {
+    if(m_sysMsg[m_sysMsg.size()-1]->text == i_msg) {
+      // don't add the message if that's alread the same as the previous one and that the previous one is still displayed
+      return;
+    }
+  }
+  
+  m_sysMsg.push_back(new SysMsg(i_msg, i_type));
+}
+
 void SysMessage::displayError(const std::string& i_msg) {
-  m_sysMsg.push_back(new SysMsg(i_msg, SYSMSG_ERROR));
+  displayMsg(i_msg, SYSMSG_ERROR);
 }
 
 void SysMessage::displayInformation(const std::string& i_msg) {
-  m_sysMsg.push_back(new SysMsg(i_msg, SYSMSG_INFORMATION));
+  displayMsg(i_msg, SYSMSG_INFORMATION);
 }
 
 void SysMessage::render() {
