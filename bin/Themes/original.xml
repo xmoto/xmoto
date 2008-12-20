@@ -220,7 +220,7 @@
 <sprite type="Effect" name="Smoke2"    	     file="Smoke2.png" />
 
 <sprite type="EdgeEffect" name="BlueBricks" 	 file="EdgeBlueBricks1.jpg" scale="0.8" depth="0.3" />
-<sprite type="EdgeEffect" name="Grass"      	 file="EdgeGrass1.png"      scale="0.5" depth="0.3" />
+<sprite type="EdgeEffect" name="Grass"      	 file="EdgeGrass1.png"      scale="0.9" depth="0.7" />
 <sprite type="EdgeEffect" name="EdgeGrass2" 	 file="EdgeGrass1.png"      scale="0.27" depth="0.75" />
 <sprite type="EdgeEffect" name="GrayBricks" 	 file="EdgeGrayBricks1.jpg" scale="0.8" depth="0.3" />
 <sprite type="EdgeEffect" name="Ice1"       	 file="EdgeIce1.png"        scale="0.6" depth="1.5" />
@@ -237,6 +237,7 @@
 <sprite type="EdgeEffect" name="dirt_fx"         file="dirt_fx_471.png" scale="1" depth="1" />
 <sprite type="EdgeEffect" name="stone_fx"        file="stone_fx_483.png" scale="1" depth="1" />
 <sprite type="EdgeEffect" name="street2"         file="street2_404.png" scale="1" depth="0.4" />
+<sprite type="EdgeEffect" name="EarthVines"      file="EarthVines.png" scale="0.8" depth="0.8" />
 
 <sprite type="Misc" name="Arrow" file="Arrow.png" />
 <sprite type="Misc" name="EngineCounter" file="enginecounter.png" />
