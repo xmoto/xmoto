@@ -18,32 +18,22 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEPLAYING_H__
-#define __STATEPLAYING_H__
+#ifndef __STATEPLAYINGNET_H__
+#define __STATEPLAYINGNET_H__
 
-#include "StateScene.h"
-#include "../Input.h"
+#include "StatePlaying.h"
 
-class StatePlaying : public StateScene {
+class StatePlayingNet : public StatePlaying {
   public:
-  StatePlaying(Universe* i_universe);
-  virtual ~StatePlaying() =0;
-
-  virtual void enter();
-  virtual void enterAfterPop();
-  virtual void executeOneCommand(std::string cmd, std::string args);
-  virtual bool renderOverShadow();
-
-  protected:
-  void handleControllers(InputEventType Type, const XMKey& i_xmkey);
-  void handleScriptKeys(InputEventType Type, const XMKey& i_xmkey);
-  void dealWithActivedKeys(); // apply already pressed keys
-  void updateWithOptions();
+  StatePlayingNet(Universe* i_universe);
+  virtual ~StatePlayingNet();
   
-  bool m_displayStats;
+  virtual void enter();
+  
+  /* input */
+  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
 
   private:
-  bool m_changeDirKeyAlreadyPress[INPUT_NB_PLAYERS]; // to avoid key repetition
 };
 
 #endif

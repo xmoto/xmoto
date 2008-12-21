@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Log.h"
 #include "PhysicsSettings.h"
 #include "Scene.h"
+#include "BikeController.h"
 
 // autodisabler options
 #define PHYS_SLEEP_EPS                0.02   // 2006-04-23: changed from 0.008
@@ -68,6 +69,8 @@ PlayerBiker::PlayerBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position
 			 const TColor& i_filterUglyColor)
   : Biker(i_physicsSettings, i_theme, i_bikerTheme, i_filterColor, i_filterUglyColor) {
 
+  m_BikeC = new BikeControllerPlayer();
+
   m_somersaultCounter.init();
 
   bFrontWheelTouching = false;
@@ -92,6 +95,7 @@ PlayerBiker::~PlayerBiker() {
     delete m_externalForces[i];
   }
   uninitPhysics();
+  delete m_BikeC;
 }
 
 std::string PlayerBiker::getDescription() const {
@@ -140,8 +144,8 @@ void PlayerBiker::updateToTime(int i_time, int i_timeStep,
 
   /* controler */
   bool bChangeDir = false;
-  if(m_BikeC.ChangeDir()) {
-    m_BikeC.setChangeDir(false);
+  if(m_BikeC->ChangeDir()) {
+    m_BikeC->setChangeDir(false);
     bChangeDir = true;
 
     m_bikeState->Dir = m_bikeState->Dir==DD_LEFT?DD_RIGHT:DD_LEFT; /* switch */
@@ -281,13 +285,13 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
   }
 
   /* Apply attitude control (SIMPLISTIC!) */
-  // when you want to rotate in opposite direction  (m_BikeC.Pull() * m_fLastAttitudeDir < 0) it's true
+  // when you want to rotate in opposite direction  (m_BikeC->Pull() * m_fLastAttitudeDir < 0) it's true
   //  benetnash: I don't think It will affect highscores in any way
   if(isDead() == false && isFinished() == false) {
-    if((m_BikeC.Pull() != 0.0f) && (i_time/100.0 > m_fNextAttitudeCon /*XXX*/ || (m_BikeC.Pull() * m_fLastAttitudeDir < 0) /*XXX*/ )) {
-      m_fAttitudeCon = m_BikeC.Pull() * m_physicsSettings->RiderAttitudeTorque();
+    if((m_BikeC->Pull() != 0.0f) && (i_time/100.0 > m_fNextAttitudeCon /*XXX*/ || (m_BikeC->Pull() * m_fLastAttitudeDir < 0) /*XXX*/ )) {
+      m_fAttitudeCon = m_BikeC->Pull() * m_physicsSettings->RiderAttitudeTorque();
       m_fLastAttitudeDir = m_fAttitudeCon;
-      m_fNextAttitudeCon = (i_time/100.0) + (0.6f * fabsf(m_BikeC.Pull()));
+      m_fNextAttitudeCon = (i_time/100.0) + (0.6f * fabsf(m_BikeC->Pull()));
     }
   }
 
@@ -330,13 +334,13 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
     if(m_bikeState->Dir == DD_RIGHT) {
       float f = -fRearWheelAngVel;
       if(f<0.0f) f=0.0f;
-      m_bikeState->fBikeEngineRPM = m_physicsSettings->EngineRpmMin() + (m_physicsSettings->EngineRpmMax() - m_physicsSettings->EngineRpmMin()) * (f / m_physicsSettings->BikeWheelRoll_velocityMax()) * m_BikeC.Drive();
+      m_bikeState->fBikeEngineRPM = m_physicsSettings->EngineRpmMin() + (m_physicsSettings->EngineRpmMax() - m_physicsSettings->EngineRpmMin()) * (f / m_physicsSettings->BikeWheelRoll_velocityMax()) * m_BikeC->Drive();
       if(m_bikeState->fBikeEngineRPM < m_physicsSettings->EngineRpmMin()) m_bikeState->fBikeEngineRPM = m_physicsSettings->EngineRpmMin();
       if(m_bikeState->fBikeEngineRPM > m_physicsSettings->EngineRpmMax()) m_bikeState->fBikeEngineRPM = m_physicsSettings->EngineRpmMax();
     } else if(m_bikeState->Dir == DD_LEFT) {
       float f = fFrontWheelAngVel;
       if(f<0.0f) f=0.0f;
-      m_bikeState->fBikeEngineRPM = m_physicsSettings->EngineRpmMin() + (m_physicsSettings->EngineRpmMax() - m_physicsSettings->EngineRpmMin()) * (f / m_physicsSettings->BikeWheelRoll_velocityMax()) * m_BikeC.Drive();
+      m_bikeState->fBikeEngineRPM = m_physicsSettings->EngineRpmMin() + (m_physicsSettings->EngineRpmMax() - m_physicsSettings->EngineRpmMin()) * (f / m_physicsSettings->BikeWheelRoll_velocityMax()) * m_BikeC->Drive();
       if(m_bikeState->fBikeEngineRPM < m_physicsSettings->EngineRpmMin()) m_bikeState->fBikeEngineRPM = m_physicsSettings->EngineRpmMin();
       if(m_bikeState->fBikeEngineRPM > m_physicsSettings->EngineRpmMax()) m_bikeState->fBikeEngineRPM = m_physicsSettings->EngineRpmMax();
     }
@@ -344,24 +348,24 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
 
   /* Apply motor/brake torques */
   if(isDead() == false && isFinished() == false) {
-    if(m_BikeC.Drive() < 0.0f) {
+    if(m_BikeC->Drive() < 0.0f) {
       /* Brake! */
       if(!bSleep) {
 	//printf("Brake!\n");
 
-	dBodyAddTorque(m_RearWheelBodyID,0,0,dBodyGetAngularVel(m_RearWheelBodyID)[2]*m_physicsSettings->BikeBrakeFactor()*m_BikeC.Drive());
-	dBodyAddTorque(m_FrontWheelBodyID,0,0,dBodyGetAngularVel(m_FrontWheelBodyID)[2]*m_physicsSettings->BikeBrakeFactor()*m_BikeC.Drive());
+	dBodyAddTorque(m_RearWheelBodyID,0,0,dBodyGetAngularVel(m_RearWheelBodyID)[2]*m_physicsSettings->BikeBrakeFactor()*m_BikeC->Drive());
+	dBodyAddTorque(m_FrontWheelBodyID,0,0,dBodyGetAngularVel(m_FrontWheelBodyID)[2]*m_physicsSettings->BikeBrakeFactor()*m_BikeC->Drive());
       }
     } else {
       /* Throttle? */
-      if(m_BikeC.Drive() > 0.0f) {
+      if(m_BikeC->Drive() > 0.0f) {
 	if(m_bikeState->Dir == DD_RIGHT) {
 	  if(fRearWheelAngVel > -(m_physicsSettings->BikeWheelRoll_velocityMax())) {
 	    m_nStillFrames=0;
 	    dBodyEnable(m_FrontWheelBodyID);
 	    dBodyEnable(m_RearWheelBodyID);
 	    dBodyEnable(m_FrameBodyID);
-	    dBodyAddTorque(m_RearWheelBodyID,0,0,-m_bikeState->Parameters()->MaxEngine()*m_physicsSettings->EngineDamp()*m_BikeC.Drive());
+	    dBodyAddTorque(m_RearWheelBodyID,0,0,-m_bikeState->Parameters()->MaxEngine()*m_physicsSettings->EngineDamp()*m_BikeC->Drive());
 	    
 	    //printf("Drive!\n");
 	  }
@@ -371,7 +375,7 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
 	    dBodyEnable(m_FrontWheelBodyID);
 	    dBodyEnable(m_RearWheelBodyID);
 	    dBodyEnable(m_FrameBodyID);
-	    dBodyAddTorque(m_FrontWheelBodyID,0,0,m_bikeState->Parameters()->MaxEngine()*m_physicsSettings->EngineDamp()*m_BikeC.Drive());
+	    dBodyAddTorque(m_FrontWheelBodyID,0,0,m_bikeState->Parameters()->MaxEngine()*m_physicsSettings->EngineDamp()*m_BikeC->Drive());
 	  }
 	}
       }
@@ -440,7 +444,7 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
 
     if(m_bikeState->Dir == DD_LEFT) {
       if(isDead() == false && isFinished() == false) {
-	if(fabs(fFrontWheelAngVel) > 5 && m_BikeC.Drive()>0.0f && nNumContacts > 0) {
+	if(fabs(fFrontWheelAngVel) > 5 && m_BikeC->Drive()>0.0f && nNumContacts > 0) {
 	  m_bWheelSpin = true;
 	  m_WheelSpinPoint = WSP;
 	  m_WheelSpinDir.x = (((m_bikeState->FrontWheelP.y - WSP.y))*1 + (m_bikeState->FrontWheelP.x - WSP.x)) /2;
@@ -504,7 +508,7 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
 
     if(m_bikeState->Dir == DD_RIGHT) {
       if(isDead() == false && isFinished() == false) {
-	if(fabs(fRearWheelAngVel) > 5 && m_BikeC.Drive()>0 && nNumContacts > 0) {
+	if(fabs(fRearWheelAngVel) > 5 && m_BikeC->Drive()>0 && nNumContacts > 0) {
 	  m_bWheelSpin = true;
 	  m_WheelSpinPoint = WSP;
 	  m_WheelSpinDir.x = ((-(m_bikeState->RearWheelP.y - WSP.y))*1 + (m_bikeState->RearWheelP.x - WSP.x)) /2;
@@ -829,12 +833,12 @@ void PlayerBiker::clearStates() {
 
   if(isDead() == false && isFinished() == false) {
     /* BIKE_C */
-    memset(&m_BikeC,0,sizeof(m_BikeC));
+    m_BikeC->stopControls();
   }
 }
 
 BikeController* PlayerBiker::getControler() {
-  return &m_BikeC;
+  return m_BikeC;
 }
 
 float PlayerBiker::getBikeEngineSpeed() {

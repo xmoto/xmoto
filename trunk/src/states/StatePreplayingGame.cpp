@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StatePreplayingGame.h"
-#include "StatePlaying.h"
+#include "StatePlayingLocal.h"
 #include "StateManager.h"
 #include "../XMSession.h"
 #include "../Universe.h"
@@ -95,7 +95,7 @@ void StatePreplayingGame::initPlayers() {
 }
 
 void StatePreplayingGame::runPlaying() {
-  StateManager::instance()->replaceState(new StatePlaying(m_universe));
+  StateManager::instance()->replaceState(new StatePlayingLocal(m_universe));
 }
 
 void StatePreplayingGame::nextLevel(bool i_positifOrder) {

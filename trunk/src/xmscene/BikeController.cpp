@@ -19,14 +19,37 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "BikeController.h"
+#include "../net/NetActions.h"
+#include "../net/NetClient.h"
 
-BikeController::BikeController()
-{
-  m_brokenBreaks = false;
-  stopContols();
+BikeController::BikeController() {
 }
 
-void BikeController::stopContols() {
+BikeController::~BikeController() {
+}
+
+BikeControllerPlayer::BikeControllerPlayer()
+{
+  m_brokenBreaks = false;
+  stopControls();
+}
+
+BikeControllerPlayer::~BikeControllerPlayer() {
+}
+
+float BikeControllerPlayer::Drive() const {
+  return m_drive;
+}
+
+float BikeControllerPlayer::Pull() const {
+  return m_pull;
+}
+
+bool BikeControllerPlayer::ChangeDir() const {
+  return m_changeDir;
+}
+
+void BikeControllerPlayer::stopControls() {
   m_drive      = 0.0;      
   m_pull       = 0.0;  
   m_changeDir  = false;
@@ -34,24 +57,7 @@ void BikeController::stopContols() {
   m_break      = 0.0;
 }
 
-float BikeController::Drive() const {
-  return m_drive;
-}
-
-float BikeController::Pull() const {
-  return m_pull;
-}
-
-bool BikeController::ChangeDir() const {
-  return m_changeDir;
-}
-
-void BikeController::setDrive(float i_drive)
-{
-  m_drive = i_drive;
-}
-
-void BikeController::setThrottle(float i_throttle)
+void BikeControllerPlayer::setThrottle(float i_throttle)
 {
   m_throttle = i_throttle;
   if(m_throttle > 0.0f){
@@ -62,7 +68,7 @@ void BikeController::setThrottle(float i_throttle)
   }
 }
 
-void BikeController::setBreak(float i_break)
+void BikeControllerPlayer::setBreak(float i_break)
 {
   if(m_brokenBreaks) {
     return;
@@ -77,15 +83,46 @@ void BikeController::setBreak(float i_break)
   }
 }
 
-void BikeController::setPull(float i_pull) {
+void BikeControllerPlayer::setPull(float i_pull) {
   m_pull = i_pull;
 }
 
-void BikeController::setChangeDir(bool i_changeDir) {
+void BikeControllerPlayer::setChangeDir(bool i_changeDir) {
   m_changeDir = i_changeDir;
 }
 
-void BikeController::breakBreaks() {
+void BikeControllerPlayer::breakBreaks() {
   m_break = 0.0;
   m_brokenBreaks = true;
+}
+
+BikeControllerNet::BikeControllerNet(int i_localNetId) {
+  m_localNetId = i_localNetId;
+}
+
+BikeControllerNet::~BikeControllerNet() {
+}
+
+void BikeControllerNet::setBreak(float i_break) {
+  NA_playerControl na(PC_BRAKE, i_break);
+  NetClient::instance()->send(&na, m_localNetId);
+}
+
+void BikeControllerNet::setThrottle(float i_throttle) {
+  NA_playerControl na(PC_THROTTLE, i_throttle);
+  NetClient::instance()->send(&na, m_localNetId);
+}
+
+void BikeControllerNet::setPull(float i_pull) {
+  NA_playerControl na(PC_PULL, i_pull);
+  NetClient::instance()->send(&na, m_localNetId);
+}
+
+void BikeControllerNet::setChangeDir(bool i_changeDir) {
+  NA_playerControl na(PC_CHANGEDIR, i_changeDir);
+  NetClient::instance()->send(&na, m_localNetId);
+}
+
+void BikeControllerNet::stopControls() {
+  // nothing to reinitialize
 }

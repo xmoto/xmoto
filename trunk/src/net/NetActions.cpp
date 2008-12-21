@@ -44,6 +44,8 @@ std::string NA_changeName::ActionKey    = "changeName";
 std::string NA_playingLevel::ActionKey  = "playingLevel";
 std::string NA_serverError::ActionKey   = "serverError";
 std::string NA_changeClients::ActionKey = "changeClients";
+// control : while it's sent a lot, reduce it at maximum
+std::string NA_playerControl::ActionKey  = "c";
 
 NetActionType NA_chatMessage::NAType   = TNA_chatMessage;
 NetActionType NA_frame::NAType         = TNA_frame;
@@ -54,6 +56,7 @@ NetActionType NA_changeName::NAType    = TNA_changeName;
 NetActionType NA_playingLevel::NAType  = TNA_playingLevel;
 NetActionType NA_serverError::NAType   = TNA_serverError;
 NetActionType NA_changeClients::NAType = TNA_changeClients;
+NetActionType NA_playerControl::NAType  = TNA_playerControl;
 
 NetAction::NetAction() {
   m_source    = -2; // < -1 => undefined
@@ -177,6 +180,10 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
 
   else if(v_cmd == NA_frame::ActionKey) {
     v_res = new NA_frame(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_playerControl::ActionKey) {
+    v_res = new NA_playerControl(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
   else if(v_cmd == NA_clientInfos::ActionKey) {
@@ -485,4 +492,42 @@ const std::vector<NetInfosClient>& NA_changeClients::getAddedInfosClients() cons
 
 const std::vector<NetInfosClient>& NA_changeClients::getRemovedInfosClients() const {
   return m_netRemovedInfosClients;
+}
+
+NA_playerControl::NA_playerControl(PlayerControl i_control, float i_value) {
+  m_control = i_control;
+  m_floatValue = i_value;
+}
+
+NA_playerControl::NA_playerControl(PlayerControl i_control, bool i_value) {
+  m_control = i_control;
+  m_boolValue = i_value;
+}
+
+NA_playerControl::NA_playerControl(void* data, unsigned int len) {
+  LogInfo("Receiving NA_playerControl...");
+  // todo
+  //unsigned int v_localOffset = 0;
+  //m_levelId = getLine(data, len, &v_localOffset);
+}
+
+NA_playerControl::~NA_playerControl() {
+}
+
+void NA_playerControl::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  LogInfo("Sending NA_playerControl...");
+  // todo
+  //NetAction::send(i_tcpsd, NULL, NULL, NULL, m_levelId.c_str(), m_levelId.size()); // don't send the \0
+}
+
+PlayerControl NA_playerControl::getType() {
+  return m_control;
+}
+
+float NA_playerControl::getFloatValue() {
+  return m_floatValue;
+}
+
+bool NA_playerControl::getBoolValue() {
+  return m_boolValue;
 }

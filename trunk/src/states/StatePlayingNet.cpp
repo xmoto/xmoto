@@ -18,32 +18,31 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEPLAYING_H__
-#define __STATEPLAYING_H__
+#include "StatePlayingNet.h"
+#include "../Universe.h"
+#include "StateManager.h"
 
-#include "StateScene.h"
-#include "../Input.h"
 
-class StatePlaying : public StateScene {
-  public:
-  StatePlaying(Universe* i_universe);
-  virtual ~StatePlaying() =0;
+StatePlayingNet::StatePlayingNet(Universe* i_universe):
+  StatePlaying(i_universe)
+{
+  m_name = "StatePlayingNet";
+}
 
-  virtual void enter();
-  virtual void enterAfterPop();
-  virtual void executeOneCommand(std::string cmd, std::string args);
-  virtual bool renderOverShadow();
+StatePlayingNet::~StatePlayingNet()
+{
+}
 
-  protected:
-  void handleControllers(InputEventType Type, const XMKey& i_xmkey);
-  void handleScriptKeys(InputEventType Type, const XMKey& i_xmkey);
-  void dealWithActivedKeys(); // apply already pressed keys
-  void updateWithOptions();
-  
-  bool m_displayStats;
+void StatePlayingNet::enter()
+{
+  StatePlaying::enter();
+}
 
-  private:
-  bool m_changeDirKeyAlreadyPress[INPUT_NB_PLAYERS]; // to avoid key repetition
-};
-
-#endif
+void StatePlayingNet::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
+    StateManager::instance()->sendAsynchronousMessage("ABORT");
+  } else {
+    handleControllers(i_type, i_xmkey);
+    StateScene::xmKey(i_type, i_xmkey);
+  }
+}

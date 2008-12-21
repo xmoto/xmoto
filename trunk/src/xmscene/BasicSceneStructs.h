@@ -68,4 +68,8 @@ struct SerializedBikeState {
   signed char cKneeX,cKneeY;               /* Knee position */
 };
 
+/* controls */
+enum PlayerControl {PC_DRIVE = 1, PC_BRAKE = 2, PC_THROTTLE = 3, PC_PULL = 4, PC_CHANGEDIR = 5};
+
+
 #endif /* __BASICSCENESTRUCTS_H__ */

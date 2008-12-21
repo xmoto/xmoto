@@ -24,8 +24,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Bike.h"
 #include "BikeGhost.h"
 #include "../SomersaultCounter.h"
-#include "BikeController.h"
 #include "../include/xm_ode.h"
+
+class BikeController;
+class BikeControllerPlayer;
 
 class ExternalForce {
 public:
@@ -39,7 +41,6 @@ private:
   int m_endTime;
   Vector2f m_force;
 };
-
 
 class ReplayBiker : public FileGhost {
  public:
@@ -78,9 +79,13 @@ class PlayerBiker : public Biker {
   virtual float getFrontWheelVelocity();
   virtual double getAngle();
 
+  BikeControllerPlayer* m_BikeC;
+  int N;
+
  private:
+  PlayerBiker();
+
   SomersaultCounter m_somersaultCounter;
-  BikeController m_BikeC;
   bool m_bFirstPhysicsUpdate;
 
   float m_fAttitudeCon;
