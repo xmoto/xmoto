@@ -126,3 +126,7 @@ void BikeControllerNet::setChangeDir(bool i_changeDir) {
 void BikeControllerNet::stopControls() {
   // nothing to reinitialize
 }
+
+void BikeControllerNet::setLocalNetId(int i_value) {
+  m_localNetId = i_value;
+}

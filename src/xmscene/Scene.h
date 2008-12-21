@@ -38,6 +38,7 @@ class FileGhost;
 class Ghost;
 class NetGhost;
 class PlayerBiker;
+class PlayerNetClient;
 class ReplayBiker;
 class SceneOnBikerHooks;
 class LuaLibGame;
@@ -216,6 +217,11 @@ public:
 			      const TColor& i_filterColor,
 			      const TColor& i_filterUglyColor,
 			      bool i_enableEngineSound);
+
+  PlayerNetClient* addPlayerNetClient(Vector2f i_position, DriveDir i_direction,
+				      Theme *i_theme, BikerTheme* i_bikerTheme,
+				      const TColor& i_filterColor,
+				      const TColor& i_filterUglyColor);
 
   NetGhost* addNetGhost(const std::string& i_info, Theme *i_theme,
 			BikerTheme* i_bikerTheme,

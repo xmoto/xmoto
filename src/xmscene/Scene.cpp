@@ -1273,25 +1273,37 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
   }
 
 
-  PlayerBiker* Scene::addPlayerBiker(int i_localNetId, Vector2f i_position, DriveDir i_direction,
-					Theme *i_theme, BikerTheme* i_bikerTheme,
-					const TColor& i_filterColor,
-					const TColor& i_filterUglyColor,
-					bool i_enableEngineSound) {
-    PlayerBiker* v_playerBiker = new PlayerBiker(m_physicsSettings, i_position, i_direction, m_PhysGravity,
-						 i_theme, i_bikerTheme,
-						 i_filterColor, i_filterUglyColor);
-    v_playerBiker->setOnBikerHooks(new SceneOnBikerHooks(this, m_players.size()));
-    v_playerBiker->setPlaySound(i_enableEngineSound);
-    v_playerBiker->setLocalNetId(i_localNetId);
-    m_players.push_back(v_playerBiker);
-
-    if(m_chipmunkWorld != NULL) {
-      m_chipmunkWorld->addPlayer(v_playerBiker);
-    }
-
-    return v_playerBiker;
+PlayerBiker* Scene::addPlayerBiker(int i_localNetId, Vector2f i_position, DriveDir i_direction,
+				   Theme *i_theme, BikerTheme* i_bikerTheme,
+				   const TColor& i_filterColor,
+				   const TColor& i_filterUglyColor,
+				   bool i_enableEngineSound) {
+  PlayerBiker* v_playerBiker = new PlayerBiker(m_physicsSettings, i_position, i_direction, m_PhysGravity,
+					       i_theme, i_bikerTheme,
+					       i_filterColor, i_filterUglyColor);
+  v_playerBiker->setOnBikerHooks(new SceneOnBikerHooks(this, m_players.size()));
+  v_playerBiker->setPlaySound(i_enableEngineSound);
+  v_playerBiker->setLocalNetId(i_localNetId);
+  m_players.push_back(v_playerBiker);
+  
+  if(m_chipmunkWorld != NULL) {
+    m_chipmunkWorld->addPlayer(v_playerBiker);
   }
+  
+  return v_playerBiker;
+}
+
+PlayerNetClient* Scene::addPlayerNetClient(Vector2f i_position, DriveDir i_direction,
+					   Theme *i_theme, BikerTheme* i_bikerTheme,
+					   const TColor& i_filterColor,
+					   const TColor& i_filterUglyColor) {
+  PlayerNetClient* v_playerNetClient = new PlayerNetClient(m_physicsSettings,
+							   i_position, i_direction, m_PhysGravity,
+							   i_theme, i_bikerTheme, i_filterColor, i_filterUglyColor);
+  m_players.push_back(v_playerNetClient);
+  
+  return v_playerNetClient;
+}
 
   void Scene::setGravity(float x,float y) {
     m_PhysGravity.x=x;

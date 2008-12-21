@@ -475,6 +475,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     }
     if((m_PlaySpecificLevelId != "")) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
+      //StateManager::instance()->pushState(new StatePreplayingGame(m_PlaySpecificLevelId, false));
       StateManager::instance()->pushState(new StatePreplayingGame(m_PlaySpecificLevelId, false));
       LogInfo("Playing as '%s'...", XMSession::instance()->profile().c_str());
     }
