@@ -185,10 +185,16 @@ states_SOURCES = states/StateManager.h       	  \
                  states/StateLevelPackViewer.cpp \
                  states/StatePlaying.h           \
                  states/StatePlaying.cpp         \
+                 states/StatePlayingLocal.h           \
+                 states/StatePlayingLocal.cpp         \
+                 states/StatePlayingNet.h        \
+                 states/StatePlayingNet.cpp      \
                  states/StatePreplaying.h        \
                  states/StatePreplaying.cpp      \
                  states/StatePreplayingGame.h    \
                  states/StatePreplayingGame.cpp  \
+                 states/StatePreplayingNet.h    \
+                 states/StatePreplayingNet.cpp  \
                  states/StatePreplayingReplay.h  \
                  states/StatePreplayingReplay.cpp  \
                  states/StatePreplayingCredits.h   \

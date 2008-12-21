@@ -492,5 +492,10 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     }
     break;
 
+  case TNA_playerControl:
+    {
+    }
+    break;
+
   }
 }

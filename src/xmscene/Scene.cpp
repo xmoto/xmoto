@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Entity.h"
 #include "BikeGhost.h"
 #include "BikePlayer.h"
+#include "BikeController.h"
 #include "BikeParameters.h"
 #include "../helpers/Log.h"
 #include "Camera.h"
@@ -1154,7 +1155,7 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
       if(m_bDeathAnimEnabled) {
 	m_players[i_player]->setBodyDetach(true);
       }
-      m_players[i_player]->getControler()->stopContols();
+      m_players[i_player]->getControler()->stopControls();
 
       // inform camera that the player dies (for the following point)
       for(unsigned int i=0; i<m_cameras.size(); i++){

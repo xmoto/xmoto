@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../gui/specific/GUIXMoto.h"
 #include "../XMSession.h"
 #include "StatePreplayingGame.h"
+#include "StatePreplayingNet.h"
 #include "StatePreplayingReplay.h"
 #include "StateLevelInfoViewer.h"
 #include "StateMessageBox.h"

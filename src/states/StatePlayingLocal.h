@@ -18,32 +18,37 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEPLAYING_H__
-#define __STATEPLAYING_H__
+#ifndef __STATEPLAYINGLOCAL_H__
+#define __STATEPLAYINGLOCAL_H__
 
-#include "StateScene.h"
-#include "../Input.h"
+#include "StatePlaying.h"
 
-class StatePlaying : public StateScene {
+class StatePlayingLocal : public StatePlaying {
   public:
-  StatePlaying(Universe* i_universe);
-  virtual ~StatePlaying() =0;
-
-  virtual void enter();
-  virtual void enterAfterPop();
-  virtual void executeOneCommand(std::string cmd, std::string args);
-  virtual bool renderOverShadow();
-
-  protected:
-  void handleControllers(InputEventType Type, const XMKey& i_xmkey);
-  void handleScriptKeys(InputEventType Type, const XMKey& i_xmkey);
-  void dealWithActivedKeys(); // apply already pressed keys
-  void updateWithOptions();
+  StatePlayingLocal(Universe* i_universe);
+  virtual ~StatePlayingLocal();
   
-  bool m_displayStats;
+  virtual void enter();
+  virtual void leave();
+  /* called when a new state is pushed or poped on top of the
+     current one*/
+  virtual void enterAfterPop();
+  
+  virtual bool update();
+  virtual void abortPlaying();
+  virtual void nextLevel(bool i_positifOrder = true);
+  virtual void restartLevel(bool i_reloadLevel = false);
+
+  /* input */
+  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
 
   private:
-  bool m_changeDirKeyAlreadyPress[INPUT_NB_PLAYERS]; // to avoid key repetition
+  void onOneFinish();
+  void onAllDead();
+
+  void handleInput(InputEventType Type, const XMKey& i_xmkey);
+
+  bool m_gameIsFinished;
 };
 
 #endif

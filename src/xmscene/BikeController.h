@@ -24,21 +24,30 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class BikeController {
   public:
   BikeController();
+  virtual ~BikeController();
 
-  float Drive() const;
-  float Pull() const;
-  bool ChangeDir() const;
+  virtual void setBreak(float i_break)        = 0;
+  virtual void setThrottle(float i_throttle)  = 0;
+  virtual void setPull(float i_pull)          = 0;
+  virtual void setChangeDir(bool i_changeDir) = 0;
+  virtual void stopControls()                 = 0; // inform the contoller that controls must stop
 
-  // direct drive access (for analogic access)
-  void setDrive(float i_drive);
+};
 
-  void setBreak(float i_break);
-  void setThrottle(float i_throttle);
+class BikeControllerPlayer : public BikeController {
+  public:
+  BikeControllerPlayer();
+  virtual ~BikeControllerPlayer();
 
-  void setPull(float i_pull);
-  void setChangeDir(bool i_changeDir);
+  virtual void setBreak(float i_break);
+  virtual void setThrottle(float i_throttle);
+  virtual void setPull(float i_pull);
+  virtual void setChangeDir(bool i_changeDir);
+  virtual void stopControls();
 
-  void stopContols();
+  float Drive()    const;
+  float Pull()     const;
+  bool  ChangeDir() const;
 
   void breakBreaks();
 
@@ -56,6 +65,22 @@ class BikeController {
 
   // broken key
   bool m_brokenBreaks;
+};
+
+class BikeControllerNet : public BikeController {
+  public:
+  BikeControllerNet(int i_localNetId);
+  virtual ~BikeControllerNet();
+
+  virtual void setBreak(float i_break);
+  virtual void setThrottle(float i_throttle);
+  virtual void setPull(float i_pull);
+  virtual void setChangeDir(bool i_changeDir);
+
+  virtual void stopControls();
+
+  private:
+  int m_localNetId;
 };
 
 #endif /* BIKECONTROLER */

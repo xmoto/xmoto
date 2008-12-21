@@ -51,6 +51,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateReplaying.h"
 #include "states/StatePreplayingReplay.h"
 #include "states/StatePreplayingGame.h"
+#include "states/StatePreplayingNet.h"
 #include "states/StateMainMenu.h"
 #include "states/StateMessageBox.h"
 

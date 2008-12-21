@@ -42,7 +42,8 @@ enum NetActionType {
   TNA_frame,
   TNA_changeName,
   TNA_playingLevel,
-  TNA_changeClients
+  TNA_changeClients,
+  TNA_playerControl
 };
 
 struct NetInfosClient {
@@ -261,6 +262,29 @@ class NA_changeClients : public NetAction {
   private:
   std::vector<NetInfosClient> m_netAddedInfosClients;
   std::vector<NetInfosClient> m_netRemovedInfosClients;
+};
+
+class NA_playerControl : public NetAction {
+  public:
+  NA_playerControl(PlayerControl i_control, float i_value);
+  NA_playerControl(PlayerControl i_control, bool i_value);
+  NA_playerControl(void* data, unsigned int len);
+  virtual ~NA_playerControl();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  PlayerControl getType();
+  float getFloatValue();
+  bool  getBoolValue();
+
+  private:
+  PlayerControl m_control;
+  float         m_floatValue;
+  bool          m_boolValue;
 };
 
 #endif
