@@ -84,7 +84,6 @@ PlayerBiker::PlayerBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position
   m_clearDynamicTouched = false;
   m_lastSqueekTime = 0;
 
-  clearStates();
   initPhysics(i_gravity);
   initToPosition(i_position, i_direction, i_gravity);
   m_bikerHooks = NULL;
@@ -769,78 +768,6 @@ void PlayerBiker::initToPosition(Vector2f i_position, DriveDir i_direction, Vect
   updateGameState();
 }
 
-void PlayerBiker::clearStates() {
-  /* BIKE_S */
-  m_bikeState->CenterP = Vector2f(0,0);
-  m_bikeState->Dir = DD_RIGHT;
-  m_bikeState->fBikeEngineRPM = 0.0f;
-  m_bikeState->Elbow2P = Vector2f(0,0);
-  m_bikeState->ElbowP = Vector2f(0,0);
-  m_bikeState->Foot2P = Vector2f(0,0);
-  m_bikeState->FootP = Vector2f(0,0);
-  m_bikeState->FrontAnchor2P = Vector2f(0,0);
-  m_bikeState->FrontAnchorP = Vector2f(0,0);
-  m_bikeState->FrontWheelP = Vector2f(0,0);
-  m_bikeState->Hand2P = Vector2f(0,0);
-  m_bikeState->HandP = Vector2f(0,0);
-  m_bikeState->Head2P = Vector2f(0,0);
-  m_bikeState->HeadP = Vector2f(0,0);
-  m_bikeState->Knee2P = Vector2f(0,0);
-  m_bikeState->KneeP = Vector2f(0,0);
-  m_bikeState->LowerBody2P = Vector2f(0,0);
-  m_bikeState->LowerBodyP = Vector2f(0,0);
-  //m_bikeState->pfFramePos = NULL;
-  //m_bikeState->pfFrameRot = NULL;
-  //m_bikeState->pfFrontWheelPos = NULL;
-  //m_bikeState->pfFrontWheelRot = NULL;
-  //m_bikeState->pfRearWheelPos = NULL;
-  //m_bikeState->pfRearWheelRot = NULL;
-  //m_bikeState->pfPlayerLArmPos = NULL;
-  //m_bikeState->pfPlayerUArmPos = NULL;
-  //m_bikeState->pfPlayerLLegPos = NULL;
-  //m_bikeState->pfPlayerULegPos = NULL;
-  //m_bikeState->pfPlayerTorsoPos = NULL;
-  //m_bikeState->pfPlayerTorsoRot = NULL;
-  m_bikeState->PlayerLArmP = Vector2f(0,0);
-  m_bikeState->PlayerLLegP = Vector2f(0,0);
-  m_bikeState->PlayerTorsoP = Vector2f(0,0);
-  m_bikeState->PlayerUArmP = Vector2f(0,0);
-  m_bikeState->PlayerULegP = Vector2f(0,0);
-  //m_bikeState->pfPlayerLArm2Pos = NULL;
-  //m_bikeState->pfPlayerUArm2Pos = NULL;
-  //m_bikeState->pfPlayerLLeg2Pos = NULL;
-  //m_bikeState->pfPlayerULeg2Pos = NULL;
-  //m_bikeState->pfPlayerTorso2Pos = NULL;
-  //m_bikeState->pfPlayerTorso2Rot = NULL;
-  m_bikeState->PlayerLArm2P = Vector2f(0,0);
-  m_bikeState->PlayerLLeg2P = Vector2f(0,0);
-  m_bikeState->PlayerTorso2P = Vector2f(0,0);
-  m_bikeState->PlayerUArm2P = Vector2f(0,0);
-  m_bikeState->PlayerULeg2P = Vector2f(0,0);
-  m_bikeState->PrevFq = Vector2f(0,0);
-  m_bikeState->PrevRq = Vector2f(0,0);
-  m_bikeState->PrevPFq = Vector2f(0,0);
-  m_bikeState->PrevPHq = Vector2f(0,0);
-  m_bikeState->PrevPFq2 = Vector2f(0,0);
-  m_bikeState->PrevPHq2 = Vector2f(0,0);
-  m_bikeState->RearWheelP = Vector2f(0,0);
-  m_bikeState->RFrontWheelP = Vector2f(0,0);
-  m_bikeState->RRearWheelP = Vector2f(0,0);
-  m_bikeState->Shoulder2P = Vector2f(0,0);
-  m_bikeState->ShoulderP = Vector2f(0,0);
-  m_bikeState->SwingAnchor2P = Vector2f(0,0);
-  m_bikeState->SwingAnchorP = Vector2f(0,0);
-
-  if(isDead() == false && isFinished() == false) {
-    /* BIKE_C */
-    m_BikeC->stopControls();
-  }
-}
-
-BikeController* PlayerBiker::getControler() {
-  return m_BikeC;
-}
-
 float PlayerBiker::getBikeEngineSpeed() {
 	float fWheelAngVel;
 	float speed;
@@ -1327,6 +1254,9 @@ Vector2f PlayerBiker::determineForceToAdd(int i_time) {
   return v_res;
 }
 
+BikeController* PlayerBiker::getControler() {
+  return m_BikeC;
+}
 
 ExternalForce::ExternalForce(int i_startTime, int i_endTime, Vector2f i_force) {
   m_startTime = i_startTime;
@@ -1344,4 +1274,63 @@ int ExternalForce::endTime() {
 
 Vector2f ExternalForce::force() {
   return m_force;
+}
+
+PlayerNetClient::PlayerNetClient(PhysicsSettings* i_physicsSettings,
+				 Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
+				 Theme *i_theme, BikerTheme* i_bikerTheme,
+				 const TColor& i_colorFilter,
+				 const TColor& i_uglyColorFilter) 
+  : Biker(i_physicsSettings, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
+  m_BikeC = new BikeControllerNet(-1);
+  initToPosition(i_position, i_direction, i_gravity);
+}
+
+PlayerNetClient::~PlayerNetClient() {
+  delete m_BikeC;
+}
+
+bool PlayerNetClient::getRenderBikeFront() {
+  return true;
+}
+
+float PlayerNetClient::getBikeEngineSpeed() {
+  return 0.0;
+}
+
+float PlayerNetClient::getBikeLinearVel() {
+  return 0.0;
+}
+
+double PlayerNetClient::getAngle() {
+  return 0.0;
+}
+
+std::string PlayerNetClient::getVeryQuickDescription() const {
+  return "Player Net Client";
+}
+
+std::string PlayerNetClient::getQuickDescription() const {
+  return "Player Net Client";
+}
+
+std::string PlayerNetClient::getDescription() const {
+  return "Player Net Client";
+}
+
+BikeController* PlayerNetClient::getControler() {
+  return m_BikeC;
+}
+
+void PlayerNetClient::setLocalNetId(int i_value) {
+  Biker::setLocalNetId(i_value);
+  m_BikeC->setLocalNetId(localNetId());
+}
+
+void PlayerNetClient::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity) {
+  clearStates();
+  m_bikeState->reInitializeAnchors();
+  setBodyDetach(false);
+  m_bikeState->Dir = i_direction;
+  /* seems not enough to initialize correctly the biker */
 }

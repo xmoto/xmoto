@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../include/xm_ode.h"
 
 class BikeController;
+class BikeControllerNet;
 class BikeControllerPlayer;
 
 class ExternalForce {
@@ -59,7 +60,6 @@ class PlayerBiker : public Biker {
   void updateToTime(int i_time, int i_timeStep,
 		    CollisionSystem *i_collisionSystem, Vector2f i_gravity, Scene *i_motogame);
   void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
-  BikeController* getControler();
 
   std::string getVeryQuickDescription() const;
   std::string getQuickDescription() const;
@@ -79,11 +79,12 @@ class PlayerBiker : public Biker {
   virtual float getFrontWheelVelocity();
   virtual double getAngle();
 
-  BikeControllerPlayer* m_BikeC;
-  int N;
+  virtual BikeController* getControler();
 
  private:
   PlayerBiker();
+
+  BikeControllerPlayer* m_BikeC;
 
   SomersaultCounter m_somersaultCounter;
   bool m_bFirstPhysicsUpdate;
@@ -165,7 +166,6 @@ class PlayerBiker : public Biker {
   void initPhysics(Vector2f i_gravity);
   void uninitPhysics();
   void updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity);
-  void clearStates();
   void updateGameState();
   void prepareBikePhysics(Vector2f StartPos);
   void prepareRider(Vector2f StartPos);
@@ -177,5 +177,29 @@ class PlayerBiker : public Biker {
   bool intersectHeadLine(Vector2f Cp,float Cr,Vector2f A0,Vector2f A1);
 };
 
+class PlayerNetClient : public Biker {
+ public:
+  PlayerNetClient(PhysicsSettings* i_physicsSettings,
+		  Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
+		  Theme *i_theme, BikerTheme* i_bikerTheme,
+		  const TColor& i_colorFilter,
+		  const TColor& i_uglyColorFilter);
+  ~PlayerNetClient();
+
+  virtual bool   getRenderBikeFront();
+  virtual float  getBikeEngineSpeed();
+  virtual float  getBikeLinearVel();
+  virtual double getAngle();
+  virtual std::string getVeryQuickDescription() const;
+  virtual std::string getQuickDescription() const;
+  virtual std::string getDescription() const;
+
+  virtual void setLocalNetId(int i_value);
+  virtual BikeController* getControler();
+  void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
+  
+ private:
+  BikeControllerNet* m_BikeC;
+};
 
 #endif

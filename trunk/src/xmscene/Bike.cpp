@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Game.h"
 #include "BikeParameters.h"
 #include "BikeAnchors.h"
+#include "BikeController.h"
 #include "../Sound.h"
 #include "../helpers/Log.h"
 #include "PhysicsSettings.h"
@@ -378,10 +379,6 @@ void Biker::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i
 void Biker::resetAutoDisabler() {
 }
 
-BikeController* Biker::getControler() {
-  return NULL;
-}
-
 void Biker::setPlaySound(bool i_value) {
   m_playSound = i_value;
 }
@@ -663,4 +660,58 @@ float Biker::getFrontWheelVelocity() {
 
 float Biker::changeDirPer() const {
   return m_changeDirPer;
+}
+
+void Biker::clearStates() {
+  /* BIKE_S */
+  m_bikeState->CenterP = Vector2f(0,0);
+  m_bikeState->Dir = DD_RIGHT;
+  m_bikeState->fBikeEngineRPM = 0.0f;
+  m_bikeState->Elbow2P = Vector2f(0,0);
+  m_bikeState->ElbowP = Vector2f(0,0);
+  m_bikeState->Foot2P = Vector2f(0,0);
+  m_bikeState->FootP = Vector2f(0,0);
+  m_bikeState->FrontAnchor2P = Vector2f(0,0);
+  m_bikeState->FrontAnchorP = Vector2f(0,0);
+  m_bikeState->FrontWheelP = Vector2f(0,0);
+  m_bikeState->Hand2P = Vector2f(0,0);
+  m_bikeState->HandP = Vector2f(0,0);
+  m_bikeState->Head2P = Vector2f(0,0);
+  m_bikeState->HeadP = Vector2f(0,0);
+  m_bikeState->Knee2P = Vector2f(0,0);
+  m_bikeState->KneeP = Vector2f(0,0);
+  m_bikeState->LowerBody2P = Vector2f(0,0);
+  m_bikeState->LowerBodyP = Vector2f(0,0);
+  m_bikeState->PlayerLArmP = Vector2f(0,0);
+  m_bikeState->PlayerLLegP = Vector2f(0,0);
+  m_bikeState->PlayerTorsoP = Vector2f(0,0);
+  m_bikeState->PlayerUArmP = Vector2f(0,0);
+  m_bikeState->PlayerULegP = Vector2f(0,0);
+  m_bikeState->PlayerLArm2P = Vector2f(0,0);
+  m_bikeState->PlayerLLeg2P = Vector2f(0,0);
+  m_bikeState->PlayerTorso2P = Vector2f(0,0);
+  m_bikeState->PlayerUArm2P = Vector2f(0,0);
+  m_bikeState->PlayerULeg2P = Vector2f(0,0);
+  m_bikeState->PrevFq = Vector2f(0,0);
+  m_bikeState->PrevRq = Vector2f(0,0);
+  m_bikeState->PrevPFq = Vector2f(0,0);
+  m_bikeState->PrevPHq = Vector2f(0,0);
+  m_bikeState->PrevPFq2 = Vector2f(0,0);
+  m_bikeState->PrevPHq2 = Vector2f(0,0);
+  m_bikeState->RearWheelP = Vector2f(0,0);
+  m_bikeState->RFrontWheelP = Vector2f(0,0);
+  m_bikeState->RRearWheelP = Vector2f(0,0);
+  m_bikeState->Shoulder2P = Vector2f(0,0);
+  m_bikeState->ShoulderP = Vector2f(0,0);
+  m_bikeState->SwingAnchor2P = Vector2f(0,0);
+  m_bikeState->SwingAnchorP = Vector2f(0,0);
+
+  if(isDead() == false && isFinished() == false) {
+    /* BIKE_C */
+    getControler()->stopControls();
+  }
+}
+
+BikeController* Biker::getControler() {
+  return NULL;
 }

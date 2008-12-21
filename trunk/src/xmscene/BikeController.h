@@ -78,6 +78,7 @@ class BikeControllerNet : public BikeController {
   virtual void setChangeDir(bool i_changeDir);
 
   virtual void stopControls();
+  void setLocalNetId(int i_value);
 
   private:
   int m_localNetId;

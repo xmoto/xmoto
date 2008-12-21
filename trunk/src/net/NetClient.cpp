@@ -380,6 +380,10 @@ void NetClient::manageAction(NetAction* i_netAction) {
     }
     break;
 
+  case TNA_playerControl:
+    /* should not happend */   
+    break;
+
   }
 }
 

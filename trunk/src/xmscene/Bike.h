@@ -157,7 +157,7 @@ class Biker {
 
   PhysicsSettings* getPhysicsSettings();
   int localNetId() const; // id of the biker for the network part (must be 0, 1, 2 or 3)
-  void setLocalNetId(int i_value);
+  virtual void setLocalNetId(int i_value);
 
   void setFinished(bool i_value, int i_finishTime);
   void setDead(bool i_value, int i_deadTime);
@@ -190,6 +190,8 @@ class Biker {
   bool isTouching(const Zone* i_zone) const;
   touch setTouching(Zone* i_zone, bool i_isTouching);
 
+  void clearStates();
+
   virtual void setBodyDetach(bool state);
   const TColor& getColorFilter() const;
   const TColor& getUglyColorFilter() const;
@@ -213,7 +215,7 @@ class Biker {
   int m_deadTime;
   OnBikerHooks* m_bikerHooks;
   bool m_bodyDetach;
-	bool m_wheelDetach;
+  bool m_wheelDetach;
   std::vector<Entity *> m_entitiesTouching;
   std::vector<Zone *>   m_zonesTouching;
 

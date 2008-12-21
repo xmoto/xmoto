@@ -52,12 +52,10 @@ void StatePreplayingNet::initPlayers() {
   Scene* v_world = m_universe->getScenes()[0];
     
   v_world->setCurrentCamera(0);
-  v_world->getCamera()->setPlayerToFollow(v_world->addPlayerBiker(0, v_world->getLevelSrc()->PlayerStart(),
-								  DD_RIGHT,
-								  Theme::instance(), Theme::instance()->getPlayerTheme(),
-								  pGame->getColorFromPlayerNumber(0),
-								  pGame->getUglyColorFromPlayerNumber(0),
-								  XMSession::instance()->enableEngineSound()));
+  v_world->getCamera()->setPlayerToFollow(
+		  v_world->addPlayerNetClient(v_world->getLevelSrc()->PlayerStart(), DD_RIGHT,
+					      Theme::instance(), Theme::instance()->getPlayerTheme(),
+					      pGame->getColorFromPlayerNumber(0), pGame->getUglyColorFromPlayerNumber(0)));
   v_world->getCamera()->setScroll(false, v_world->getGravity());
 }
 
