@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class cpSpace;
 class cpBody;
-class PlayerBiker;
+class PlayerLocalBiker;
 class Biker;
 class PhysicsSettings;
 
@@ -47,7 +47,7 @@ public:
   void setBackWheel(cpBody *body, unsigned int i_player);
   void setGravity(float i_x, float i_y);
 
-  void addPlayer(PlayerBiker* i_biker);
+  void addPlayer(PlayerLocalBiker* i_biker);
   void updateWheelsPosition(const std::vector<Biker*>& i_players);
 
 private:

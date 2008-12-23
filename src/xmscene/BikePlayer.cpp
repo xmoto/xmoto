@@ -39,31 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define PHYS_SUSP_SQUEEK_POINT 0.01
 
-ReplayBiker::ReplayBiker(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
-			 Theme *i_theme, BikerTheme* i_bikerTheme)
-:FileGhost(i_replayFile, i_physicsSettings, true, i_theme, i_bikerTheme,
-       TColor(255, 255, 255, 0),
-       TColor(GET_RED(i_bikerTheme->getUglyRiderColor()),
-	      GET_GREEN(i_bikerTheme->getUglyRiderColor()),
-	      GET_BLUE(i_bikerTheme->getUglyRiderColor()),
-	      GET_ALPHA(i_bikerTheme->getUglyRiderColor()))) {
-}
-
-std::string ReplayBiker::getQuickDescription() const {
-  char c_tmp[1024];
-  
-  snprintf(c_tmp, 1024,
-	   GAMETEXT_REPLAYOF,
-	   m_replay->getPlayerName().c_str()); 
-  
-  return std::string(c_tmp);
-}
-
-std::string ReplayBiker::getVeryQuickDescription() const {
-  return m_replay->getPlayerName();
-}
-
-PlayerBiker::PlayerBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
+PlayerLocalBiker::PlayerLocalBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
 			 Theme *i_theme, BikerTheme* i_bikerTheme,
 			 const TColor& i_filterColor,
 			 const TColor& i_filterUglyColor)
@@ -89,7 +65,7 @@ PlayerBiker::PlayerBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position
   m_bikerHooks = NULL;
 }
 
-PlayerBiker::~PlayerBiker() {
+PlayerLocalBiker::~PlayerLocalBiker() {
   for(unsigned int i=0; i<m_externalForces.size(); i++) {
     delete m_externalForces[i];
   }
@@ -97,19 +73,19 @@ PlayerBiker::~PlayerBiker() {
   delete m_BikeC;
 }
 
-std::string PlayerBiker::getDescription() const {
+std::string PlayerLocalBiker::getDescription() const {
   return "";
 }
 
-std::string PlayerBiker::getVeryQuickDescription() const {
+std::string PlayerLocalBiker::getVeryQuickDescription() const {
   return GAMETEXT_PLAYER;
 }
 
-std::string PlayerBiker::getQuickDescription() const {
+std::string PlayerLocalBiker::getQuickDescription() const {
   return GAMETEXT_PLAYER;
 }
 
-void PlayerBiker::updateToTime(int i_time, int i_timeStep,
+void PlayerLocalBiker::updateToTime(int i_time, int i_timeStep,
 			       CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			       Scene *i_motogame) {
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
@@ -161,7 +137,7 @@ void PlayerBiker::updateToTime(int i_time, int i_timeStep,
   }
 }
 
-double PlayerBiker::getAngle() {
+double PlayerLocalBiker::getAngle() {
   double fAngle;
 
   fAngle = acos(m_bikeState->fFrameRot[0]);
@@ -170,7 +146,7 @@ double PlayerBiker::getAngle() {
   return fAngle;
 }
 
-void PlayerBiker::initPhysics(Vector2f i_gravity) {
+void PlayerLocalBiker::initPhysics(Vector2f i_gravity) {
   m_bFirstPhysicsUpdate = true;
 
   /* Setup ODE */
@@ -187,12 +163,12 @@ void PlayerBiker::initPhysics(Vector2f i_gravity) {
   m_bikeState->Parameters()->setDefaults(m_physicsSettings);
 }
 
-void PlayerBiker::uninitPhysics(void) {
+void PlayerLocalBiker::uninitPhysics(void) {
   dJointGroupDestroy(m_ContactGroup);
   dWorldDestroy(m_WorldID);
 }
 
-void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
+void PlayerLocalBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
   /* No wheel spin per default */
   m_bWheelSpin = false;
 
@@ -688,7 +664,7 @@ void PlayerBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_c
   m_bFirstPhysicsUpdate = false;
 }
 
-bool PlayerBiker::intersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp, CollisionSystem *v_collisionSystem) {
+bool PlayerLocalBiker::intersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp, CollisionSystem *v_collisionSystem) {
   if(v_collisionSystem->checkCircle(Cp.x,Cp.y,Cr)) return true;
 
   if(!m_bFirstPhysicsUpdate) {
@@ -702,7 +678,7 @@ bool PlayerBiker::intersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp
   return false;
 }
 
-int PlayerBiker::intersectBodyLevel(Vector2f Cp,float Cr,dContact *pContacts, CollisionSystem *v_collisionSystem) {
+int PlayerLocalBiker::intersectBodyLevel(Vector2f Cp,float Cr,dContact *pContacts, CollisionSystem *v_collisionSystem) {
   int nNumContacts = v_collisionSystem->collideCircle(Cp.x,Cp.y,Cr,pContacts,100, m_physicsSettings);
   if(nNumContacts == 0) {
       /* Nothing... but what if we are moving so fast that the circle has moved
@@ -713,7 +689,7 @@ int PlayerBiker::intersectBodyLevel(Vector2f Cp,float Cr,dContact *pContacts, Co
 
 }
 
-int PlayerBiker::intersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts, CollisionSystem *v_collisionSystem) {
+int PlayerLocalBiker::intersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts, CollisionSystem *v_collisionSystem) {
   int nNumContacts = v_collisionSystem->collideCircle(Cp.x,Cp.y,Cr,pContacts,100, m_physicsSettings);
   if(nNumContacts == 0) {
       /* Nothing... but what if we are moving so fast that the circle has moved
@@ -728,7 +704,7 @@ int PlayerBiker::intersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts, C
   return nNumContacts;
 }
 
-void PlayerBiker::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity) {
+void PlayerLocalBiker::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity) {
   /* Clear stuff */
   clearStates();
 
@@ -768,7 +744,7 @@ void PlayerBiker::initToPosition(Vector2f i_position, DriveDir i_direction, Vect
   updateGameState();
 }
 
-float PlayerBiker::getBikeEngineSpeed() {
+float PlayerLocalBiker::getBikeEngineSpeed() {
 	float fWheelAngVel;
 	float speed;
 
@@ -782,7 +758,7 @@ float PlayerBiker::getBikeEngineSpeed() {
 	return speed >= 0.0 ? speed : -speed;
 }
 
-float PlayerBiker::getBikeLinearVel() {
+float PlayerLocalBiker::getBikeLinearVel() {
 
   Vector2f curpos = (m_bikeState->RearWheelP + m_bikeState->FrontWheelP); // adding both rear and front to manage the side
   Vector2f lastpos = (m_PrevRearWheelP + m_PrevFrontWheelP);
@@ -796,7 +772,7 @@ float PlayerBiker::getBikeLinearVel() {
   return speed;
 }
 
-  void PlayerBiker::updateGameState() {
+  void PlayerLocalBiker::updateGameState() {
     bool bUpdateRider=true,bUpdateAltRider=true;
 
     /* Replaying? */
@@ -916,7 +892,7 @@ float PlayerBiker::getBikeLinearVel() {
   /*===========================================================================
   Prepare rider
   ===========================================================================*/
-  void PlayerBiker::prepareRider(Vector2f StartPos) {
+  void PlayerLocalBiker::prepareRider(Vector2f StartPos) {
     /* Allocate bodies */
     m_PlayerTorsoBodyID = dBodyCreate(m_WorldID);
     m_PlayerLLegBodyID = dBodyCreate(m_WorldID);
@@ -1130,7 +1106,7 @@ float PlayerBiker::getBikeLinearVel() {
   /*===========================================================================
   Set up bike physics
   ===========================================================================*/
-  void PlayerBiker::prepareBikePhysics(Vector2f StartPos) {
+  void PlayerLocalBiker::prepareBikePhysics(Vector2f StartPos) {
     /* Create bodies */
     m_FrontWheelBodyID = dBodyCreate(m_WorldID);
     m_RearWheelBodyID = dBodyCreate(m_WorldID);
@@ -1164,7 +1140,7 @@ float PlayerBiker::getBikeLinearVel() {
     prepareRider(StartPos);
   }
 
-void PlayerBiker::setBodyDetach(bool state) {
+void PlayerLocalBiker::setBodyDetach(bool state) {
   Biker::setBodyDetach(state);
 
   if(m_bodyDetach) {
@@ -1200,36 +1176,36 @@ void PlayerBiker::setBodyDetach(bool state) {
   }
 }
 
-void PlayerBiker::addBodyForce(int i_time, const Vector2f& i_force, int i_startTime, int i_endTime) {
+void PlayerLocalBiker::addBodyForce(int i_time, const Vector2f& i_force, int i_startTime, int i_endTime) {
   // endtime is 0 => infinite, else, the time is relativ to i_time
   m_externalForces.push_back(new ExternalForce(i_time + i_startTime, i_endTime == 0 ? 0 : i_time + i_endTime, i_force));
 }
 
-void PlayerBiker::resetAutoDisabler() {
+void PlayerLocalBiker::resetAutoDisabler() {
   m_nStillFrames = 0;
 }
 
-bool PlayerBiker::isSqueeking() {
+bool PlayerLocalBiker::isSqueeking() {
   return m_bSqueeking;
 }
 
-float PlayerBiker::howMuchSqueek() {
+float PlayerLocalBiker::howMuchSqueek() {
   return m_fHowMuchSqueek;
 }
 
-bool PlayerBiker::getRenderBikeFront() {
+bool PlayerLocalBiker::getRenderBikeFront() {
   return m_wheelDetach == false;
 }
 
-float PlayerBiker::getRearWheelVelocity() {
+float PlayerLocalBiker::getRearWheelVelocity() {
   return dBodyGetAngularVel(m_RearWheelBodyID)[2];
 }
 
-float PlayerBiker::getFrontWheelVelocity() {
+float PlayerLocalBiker::getFrontWheelVelocity() {
   return dBodyGetAngularVel(m_FrontWheelBodyID)[2];
 }
 
-Vector2f PlayerBiker::determineForceToAdd(int i_time) {
+Vector2f PlayerLocalBiker::determineForceToAdd(int i_time) {
   unsigned int i;
   Vector2f v_res = Vector2f(0.0, 0.0);
 
@@ -1254,7 +1230,7 @@ Vector2f PlayerBiker::determineForceToAdd(int i_time) {
   return v_res;
 }
 
-BikeController* PlayerBiker::getControler() {
+BikeController* PlayerLocalBiker::getControler() {
   return m_BikeC;
 }
 

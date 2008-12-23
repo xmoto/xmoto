@@ -816,13 +816,13 @@ void Scene::cleanPlayers() {
 	     pZone->doesCircleTouch(v_player->getState()->RearWheelP,  v_player->getState()->Parameters()->WheelRadius()) ||
 	     pZone->doesCircleTouch(v_player->getState()->HeadP, v_player->getState()->Parameters()->HeadSize())) {       
 	    /* In the zone -- did he just enter it? */
-	    if(v_player->setTouching(pZone, true) == PlayerBiker::added){
+	    if(v_player->setTouching(pZone, true) == PlayerLocalBiker::added){
 	      createGameEvent(new MGE_PlayerEntersZone(getTime(), pZone, j));
 	    }
 	  } else {
 	    /* Not in the zone... but was he during last update? - i.e. has 
 	       he just left it? */      
-	    if(v_player->setTouching(pZone, false) == PlayerBiker::removed){
+	    if(v_player->setTouching(pZone, false) == PlayerLocalBiker::removed){
 	      createGameEvent(new MGE_PlayerLeavesZone(getTime(), pZone, j));
 	    }
 	  }
@@ -871,7 +871,7 @@ void Scene::cleanPlayers() {
 				   entities[i]->Size(),
 				   HeadPos,
 				   v_player->getState()->Parameters()->HeadSize())) {
-	      if(v_player->setTouching(entities[i], true) == PlayerBiker::added){
+	      if(v_player->setTouching(entities[i], true) == PlayerLocalBiker::added){
 		createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
 							    entities[i]->Id(),
 							    true, j));
@@ -886,7 +886,7 @@ void Scene::cleanPlayers() {
 					  entities[i]->Size(),
 					  v_player->getState()->RearWheelP,
 					  v_player->getState()->Parameters()->WheelRadius())) {
-	      if(v_player->setTouching(entities[i], true) == PlayerBiker::added){
+	      if(v_player->setTouching(entities[i], true) == PlayerLocalBiker::added){
 		createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
 							    entities[i]->Id(),
 							    false, j));
@@ -894,7 +894,7 @@ void Scene::cleanPlayers() {
 	      
 	      /* body then ?*/
 	    } else if(touchEntityBodyExceptHead(*(v_player->getState()), *(entities[i]))) {
-	      if(v_player->setTouching(entities[i], true) == PlayerBiker::added){
+	      if(v_player->setTouching(entities[i], true) == PlayerLocalBiker::added){
 		createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
 							    entities[i]->Id(),
 							    false, j));
@@ -1273,12 +1273,12 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
   }
 
 
-PlayerBiker* Scene::addPlayerBiker(int i_localNetId, Vector2f i_position, DriveDir i_direction,
+PlayerLocalBiker* Scene::addPlayerLocalBiker(int i_localNetId, Vector2f i_position, DriveDir i_direction,
 				   Theme *i_theme, BikerTheme* i_bikerTheme,
 				   const TColor& i_filterColor,
 				   const TColor& i_filterUglyColor,
 				   bool i_enableEngineSound) {
-  PlayerBiker* v_playerBiker = new PlayerBiker(m_physicsSettings, i_position, i_direction, m_PhysGravity,
+  PlayerLocalBiker* v_playerBiker = new PlayerLocalBiker(m_physicsSettings, i_position, i_direction, m_PhysGravity,
 					       i_theme, i_bikerTheme,
 					       i_filterColor, i_filterUglyColor);
   v_playerBiker->setOnBikerHooks(new SceneOnBikerHooks(this, m_players.size()));

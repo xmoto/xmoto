@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../GameText.h"
 #include "../helpers/Text.h"
 #include "../GameEvents.h"
+#include "../Theme.h"
 #include "Level.h"
 
 #define INTERPOLATION_MAXIMUM_TIME  300
@@ -375,4 +376,28 @@ float NetGhost::getBikeLinearVel() {
 
 double NetGhost::getAngle() {
   return 0.0; /* to do */
+}
+
+ReplayBiker::ReplayBiker(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
+			 Theme *i_theme, BikerTheme* i_bikerTheme)
+:FileGhost(i_replayFile, i_physicsSettings, true, i_theme, i_bikerTheme,
+       TColor(255, 255, 255, 0),
+       TColor(GET_RED(i_bikerTheme->getUglyRiderColor()),
+	      GET_GREEN(i_bikerTheme->getUglyRiderColor()),
+	      GET_BLUE(i_bikerTheme->getUglyRiderColor()),
+	      GET_ALPHA(i_bikerTheme->getUglyRiderColor()))) {
+}
+
+std::string ReplayBiker::getQuickDescription() const {
+  char c_tmp[1024];
+  
+  snprintf(c_tmp, 1024,
+	   GAMETEXT_REPLAYOF,
+	   m_replay->getPlayerName().c_str()); 
+  
+  return std::string(c_tmp);
+}
+
+std::string ReplayBiker::getVeryQuickDescription() const {
+  return m_replay->getPlayerName();
 }
