@@ -37,7 +37,7 @@ class BikeState;
 class FileGhost;
 class Ghost;
 class NetGhost;
-class PlayerBiker;
+class PlayerLocalBiker;
 class PlayerNetClient;
 class ReplayBiker;
 class SceneOnBikerHooks;
@@ -212,7 +212,7 @@ public:
 			      Theme *i_theme, BikerTheme* i_bikerTheme,
 			      const TColor& i_filterColor,
 			      const TColor& i_filterUglyColor);
-  PlayerBiker* addPlayerBiker(int i_localNetId, Vector2f i_position, DriveDir i_direction,
+  PlayerLocalBiker* addPlayerLocalBiker(int i_localNetId, Vector2f i_position, DriveDir i_direction,
 			      Theme *i_theme, BikerTheme* i_bikerTheme,
 			      const TColor& i_filterColor,
 			      const TColor& i_filterUglyColor,

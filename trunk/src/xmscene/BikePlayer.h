@@ -43,19 +43,10 @@ private:
   Vector2f m_force;
 };
 
-class ReplayBiker : public FileGhost {
+class PlayerLocalBiker : public Biker {
  public:
-  ReplayBiker(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
-	      Theme *i_theme, BikerTheme* i_bikerTheme);
-  std::string getQuickDescription() const;
-  std::string getVeryQuickDescription() const;
- private:
-};
-
-class PlayerBiker : public Biker {
- public:
-  PlayerBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_filterColor, const TColor& i_filterUglyColor);
-  virtual ~PlayerBiker();
+  PlayerLocalBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_filterColor, const TColor& i_filterUglyColor);
+  virtual ~PlayerLocalBiker();
 
   void updateToTime(int i_time, int i_timeStep,
 		    CollisionSystem *i_collisionSystem, Vector2f i_gravity, Scene *i_motogame);
@@ -82,7 +73,7 @@ class PlayerBiker : public Biker {
   virtual BikeController* getControler();
 
  private:
-  PlayerBiker();
+  PlayerLocalBiker();
 
   BikeControllerPlayer* m_BikeC;
 

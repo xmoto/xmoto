@@ -88,6 +88,15 @@ class FileGhost : public Ghost {
  void execReplayEvents(int i_time, Scene *i_motogame);
 };
 
+class ReplayBiker : public FileGhost {
+ public:
+  ReplayBiker(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
+	      Theme *i_theme, BikerTheme* i_bikerTheme);
+  std::string getQuickDescription() const;
+  std::string getVeryQuickDescription() const;
+ private:
+};
+
 class NetGhost : public Ghost {
  public:
   NetGhost(PhysicsSettings* i_physicsSettings,

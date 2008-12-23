@@ -105,7 +105,7 @@ void ChipmunkWorld::setBackWheel(cpBody *body, unsigned int i_player)
   m_ab[i_player] = body;
 }
 
-void ChipmunkWorld::addPlayer(PlayerBiker* i_biker) {
+void ChipmunkWorld::addPlayer(PlayerLocalBiker* i_biker) {
   // Create two anchors for the wheels
   cpBody* v_ab;
   cpBody* v_af;
