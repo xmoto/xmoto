@@ -1,18 +1,15 @@
-# translation of ca_ES.po to Català
-# Joan Creus <joan.creus at gmail dot com>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: ca_ES\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-12-20 22:45+0100\n"
-"PO-Revision-Date: 2008-10-26 11:36+0100\n"
-"Last-Translator: Joan Creus <joan.creus at gmail dot com>\n"
-"Language-Team: Català <ca@li.org>\n"
+"PO-Revision-Date: 2008-12-05 19:29+0100\n"
+"Last-Translator: Trullo <analpaper@gmail.com>\n"
+"Language-Team: <XMoto>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: KBabel 1.11.4\n"
 
 #: src/GameText.h:33
 msgid "en_EN"
@@ -456,7 +453,7 @@ msgstr "Jugador"
 
 #: src/GameText.h:176
 msgid "Play music on all levels"
-msgstr ""
+msgstr "Reprodueix musica en tots els nivells"
 
 #: src/GameText.h:177
 msgid "Date"
@@ -552,7 +549,7 @@ msgstr "Mostrar informació del Fantasma"
 
 #: src/GameText.h:197
 msgid "Display bike arrow indication"
-msgstr ""
+msgstr "Mostra la fletxa indicadora de la moto"
 
 #: src/GameText.h:198
 msgid "Direct Connection"
@@ -786,7 +783,7 @@ msgstr "Fantasma de %s"
 #: src/GameText.h:252
 #, c-format
 msgid "Web ghost of %s"
-msgstr ""
+msgstr "Anima web de %s"
 
 #: src/GameText.h:253
 msgid "Ghost"
@@ -874,7 +871,7 @@ msgstr "Alt"
 
 #: src/GameText.h:277
 msgid "Highscore of the room"
-msgstr ""
+msgstr "Record de la sala"
 
 #: src/GameText.h:278
 msgid "Levels are being added into the database. Please wait."
@@ -1256,7 +1253,7 @@ msgstr "Prem una tecla per '%s' o ESC per cancel·lar..."
 #: src/GameText.h:376
 #, c-format
 msgid "Press %s to chat"
-msgstr ""
+msgstr "Prem %s per conversar"
 
 #: src/GameText.h:377
 msgid "Proxy Server"
@@ -1657,7 +1654,7 @@ msgstr "Sí a tots"
 
 #: src/GameText.h:475
 msgid "Your best time"
-msgstr ""
+msgstr "El teu millor temps"
 
 #: src/GameText.h:476
 msgid "Zoom in"
@@ -1673,86 +1670,86 @@ msgstr "Allunyar Enfocament"
 
 #: src/GameText.h:480
 msgid "Server"
-msgstr ""
+msgstr "Servidor"
 
 #: src/GameText.h:482
 msgid "Launch at startup"
-msgstr ""
+msgstr "Carrega al inici"
 
 #: src/GameText.h:483
 msgid "Start the server"
-msgstr ""
+msgstr "Inicia el servidor"
 
 #: src/GameText.h:484
 msgid "Stop the server"
-msgstr ""
+msgstr "Atura el servidor"
 
 #: src/GameText.h:485
 msgid "Server is currently started"
-msgstr ""
+msgstr "El servidor esta actualment iniciat"
 
 #: src/GameText.h:486
 msgid "Server is currently stopped"
-msgstr ""
+msgstr "El servidor esta actualment aturat"
 
 #: src/GameText.h:487
 msgid "Default port"
-msgstr ""
+msgstr "Port per defecte"
 
 #: src/GameText.h:488
 msgid "Custom port"
-msgstr ""
+msgstr "Port personalitzat"
 
 #: src/GameText.h:489
 msgid "Network"
-msgstr ""
+msgstr "Xarxa"
 
 #: src/GameText.h:490
 msgid "You're currently connected"
-msgstr ""
+msgstr "Actualment estas connectat"
 
 #: src/GameText.h:491
 msgid "You're currently disconnected"
-msgstr ""
+msgstr "Actualment estas desconnectat"
 
 #: src/GameText.h:492
 msgid "Connect"
-msgstr ""
+msgstr "Connectat"
 
 #: src/GameText.h:493
 msgid "Disconnect"
-msgstr ""
+msgstr "Desconnectat"
 
 #: src/GameText.h:494
 msgid "Unable to connect on the server"
-msgstr ""
+msgstr "No s'ha pogut connectar amb el servidor"
 
 #: src/GameText.h:495
 msgid "Network error: you're disconnected"
-msgstr ""
+msgstr "Error de xarxa: estas desconnectat"
 
 #: src/GameText.h:496
 msgid "Connected players:"
-msgstr ""
+msgstr "Jugadors conectats:"
 
 #: src/GameText.h:497
 msgid "Chat message"
-msgstr ""
+msgstr "Missatge"
 
 #: src/GameText.h:498
 #, c-format
 msgid "%s joined the game"
-msgstr ""
+msgstr "%s ha entrat al joc"
 
 #: src/GameText.h:499
 #, c-format
 msgid "%s left the game"
-msgstr ""
+msgstr "%s ha sortit del joc"
 
 #: src/GameText.h:500
 #, c-format
 msgid "%s is playing level %s"
-msgstr ""
+msgstr "%s esta jugant al nivell %s"
 
 #: src/GameText.h:509
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -2105,7 +2102,7 @@ msgstr "Quan s'inicia un nivell amb fantasma, mostra de qui és"
 
 #: src/GameText.h:594
 msgid "Display an arrow to display where are located the bikes on the map"
-msgstr ""
+msgstr "Mostra una fletxa en el lloc on es troben les motos"
 
 #: src/GameText.h:595
 msgid "Display the time difference between the ghost and you"
@@ -2470,32 +2467,32 @@ msgstr "No enviar aquest informe pel servidor web"
 
 #: src/GameText.h:692
 msgid "Server configuration to play via the network"
-msgstr ""
+msgstr "Configuració del servidor per jugar en xarxa"
 
 #: src/GameText.h:693
 msgid "Start the server at X-Moto startup"
-msgstr ""
+msgstr "Inicia el servidor al inici del X-Moto"
 
 #: src/GameText.h:694
 msgid "Start/stop the server"
-msgstr ""
+msgstr "Inicia/Atura els servidor"
 
 #: src/GameText.h:695
 msgid "Port on which the server must listen to"
-msgstr ""
+msgstr "Port on el servidor ha de escoltar per"
 
 #: src/GameText.h:696
 msgid "Server on which you want to connect"
-msgstr ""
+msgstr "Servidor on et vols connectar"
 
 #: src/GameText.h:697
 msgid "Connect/disconnect the client to the server"
-msgstr ""
+msgstr "Connecta/Desconnecta el client del servdidor"
 
 #: src/GameText.h:698
 msgid ""
 "Enables background music for levels that do not have their own music track"
-msgstr ""
+msgstr "Activa la musica de fons per als nivells que no tenen una propia"
 
 #: src/GameText.h:700
 msgid "Levels with no highscore"

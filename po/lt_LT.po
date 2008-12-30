@@ -3,12 +3,13 @@
 # This file is distributed under the same license as the xmoto package.
 # Tadas Masiulionis <tadzikaz@gmail.com>, 2008.
 #
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-12-20 22:45+0100\n"
-"PO-Revision-Date: 2008-09-13 20:30+0200\n"
+"PO-Revision-Date: 2008-12-26 03:26+0200\n"
 "Last-Translator: Tadas Masiulionis <tadzikaz@gmail.com>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -305,7 +306,7 @@ msgstr "nėra"
 
 #: src/GameText.h:106
 msgid "You must restart so that this option takes effect"
-msgstr ""
+msgstr "Jūs turite įkelti iš naujo žaidimą, kad šį parinktis aktyvuotusi"
 
 #: src/GameText.h:107
 msgid "Script action"
@@ -1344,7 +1345,7 @@ msgstr "Perkrauti šį lygį"
 
 #: src/GameText.h:396
 msgid "Restart level"
-msgstr ""
+msgstr "Perkrauti lygį"
 
 #: src/GameText.h:397
 msgid "Resume Playing"
@@ -1377,7 +1378,7 @@ msgstr "Rodyti"
 
 #: src/GameText.h:405
 msgid "Show console"
-msgstr ""
+msgstr "Rodyti komandinę eilutę"
 
 #: src/GameText.h:406
 msgid "Speedometer"
@@ -2304,7 +2305,7 @@ msgstr "Įveskite tekstą, kad filtruotumėte pakartojimų sąrašą"
 
 #: src/GameText.h:638
 msgid "Enter text to filter the rooms list"
-msgstr ""
+msgstr "Įveskite tekstą kambarių sąrašo filtravimui"
 
 #: src/GameText.h:639
 msgid "Press to play X-Moto immediately"
