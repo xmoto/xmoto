@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateVote.h"
 #include "thread/SendVoteThread.h"
 
+#define STATE_DEAD_MAX_TIME 700
+
 StateDeadJust::StateDeadJust(Universe* i_universe)
 : StateScene(i_universe, true, true)
 {
@@ -39,6 +41,7 @@ StateDeadJust::~StateDeadJust()
 void StateDeadJust::enter()
 {
   StateScene::enter();
+  m_enterTime = GameApp::getXMTimeInt();
 
   if(m_universe != NULL) {
     for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
@@ -60,7 +63,7 @@ void StateDeadJust::enter()
 
 void StateDeadJust::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
-    StateManager::instance()->pushState(new StateDeadMenu(m_universe, false, this));
+    StateManager::instance()->pushState(new StateDeadMenu(m_universe, true, true));
   }
 
   else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getRestartLevel()) {
@@ -79,4 +82,13 @@ void StateDeadJust::restartLevel(bool i_reloadLevel) {
 
 void StateDeadJust::nextLevel(bool i_positifOrder) {
   nextLevelToPlay(i_positifOrder);
+}
+
+bool StateDeadJust::update() {
+  if(GameApp::getXMTimeInt() - m_enterTime > STATE_DEAD_MAX_TIME*10) {
+    StateManager::instance()->pushState(new StateDeadMenu(m_universe, true, true));
+    return false;
+  } else {
+    return StateScene::update();
+  }
 }
