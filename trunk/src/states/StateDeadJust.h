@@ -29,12 +29,16 @@ class StateDeadJust : public StateScene {
   virtual ~StateDeadJust();
   
   virtual void enter();
+  virtual bool update();
   
   /* input */
   virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
 
   virtual void restartLevel(bool i_reloadLevel = false);
   virtual void nextLevel(bool i_positifOrder = true);
+
+  private:
+  int m_enterTime;
 };
 
 #endif
