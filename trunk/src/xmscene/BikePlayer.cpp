@@ -772,122 +772,107 @@ float PlayerLocalBiker::getBikeLinearVel() {
   return speed;
 }
 
-  void PlayerLocalBiker::updateGameState() {
-    bool bUpdateRider=true,bUpdateAltRider=true;
+void PlayerLocalBiker::updateGameState() {
+  /* Nope... Get current bike state */
+  m_bikeState->RearWheelP.x  = ((dReal *)dBodyGetPosition( m_RearWheelBodyID ))[0];
+  m_bikeState->RearWheelP.y  = ((dReal *)dBodyGetPosition( m_RearWheelBodyID ))[1];
+  m_bikeState->FrontWheelP.x = ((dReal *)dBodyGetPosition( m_FrontWheelBodyID ))[0];
+  m_bikeState->FrontWheelP.y = ((dReal *)dBodyGetPosition( m_FrontWheelBodyID ))[1];
+  m_bikeState->CenterP.x     = ((dReal *)dBodyGetPosition( m_FrameBodyID ))[0];
+  m_bikeState->CenterP.y     = ((dReal *)dBodyGetPosition( m_FrameBodyID ))[1];
 
-    /* Replaying? */
-      /* Nope... Get current bike state */
-      m_bikeState->RearWheelP.x = ((dReal *)dBodyGetPosition( m_RearWheelBodyID ))[0];     /* 4 bytes */
-      m_bikeState->RearWheelP.y = ((dReal *)dBodyGetPosition( m_RearWheelBodyID ))[1];     /* 4 bytes */
-      m_bikeState->FrontWheelP.x = ((dReal *)dBodyGetPosition( m_FrontWheelBodyID ))[0];   /* 4 bytes */
-      m_bikeState->FrontWheelP.y = ((dReal *)dBodyGetPosition( m_FrontWheelBodyID ))[1];   /* 4 bytes */
-      m_bikeState->CenterP.x = ((dReal *)dBodyGetPosition( m_FrameBodyID ))[0];            /* 4 bytes */
-      m_bikeState->CenterP.y = ((dReal *)dBodyGetPosition( m_FrameBodyID ))[1];            /* 4 bytes */
-                                                                                      /* ------- */
-                                                                                      /* 24 bytes total */
+  m_bikeState->fFrameRot[0] = ((dReal *)dBodyGetRotation( m_FrameBodyID ))[0];
+  m_bikeState->fFrameRot[1] = ((dReal *)dBodyGetRotation( m_FrameBodyID ))[1];
+  m_bikeState->fFrameRot[2] = ((dReal *)dBodyGetRotation( m_FrameBodyID ))[4];
+  m_bikeState->fFrameRot[3] = ((dReal *)dBodyGetRotation( m_FrameBodyID ))[5];
 
-      m_bikeState->fFrameRot[0] = ((dReal *)dBodyGetRotation( m_FrameBodyID ))[0];
-      m_bikeState->fFrameRot[1] = ((dReal *)dBodyGetRotation( m_FrameBodyID ))[1];
-      m_bikeState->fFrameRot[2] = ((dReal *)dBodyGetRotation( m_FrameBodyID ))[4];
-      m_bikeState->fFrameRot[3] = ((dReal *)dBodyGetRotation( m_FrameBodyID ))[5];           /* 16 bytes */
+  m_bikeState->fFrontWheelRot[0] = ((dReal *)dBodyGetRotation( m_FrontWheelBodyID ))[0];
+  m_bikeState->fFrontWheelRot[1] = ((dReal *)dBodyGetRotation( m_FrontWheelBodyID ))[1];
+  m_bikeState->fFrontWheelRot[2] = ((dReal *)dBodyGetRotation( m_FrontWheelBodyID ))[4];
+  m_bikeState->fFrontWheelRot[3] = ((dReal *)dBodyGetRotation( m_FrontWheelBodyID ))[5];
 
-      m_bikeState->fFrontWheelRot[0] = ((dReal *)dBodyGetRotation( m_FrontWheelBodyID ))[0];
-      m_bikeState->fFrontWheelRot[1] = ((dReal *)dBodyGetRotation( m_FrontWheelBodyID ))[1];
-      m_bikeState->fFrontWheelRot[2] = ((dReal *)dBodyGetRotation( m_FrontWheelBodyID ))[4];
-      m_bikeState->fFrontWheelRot[3] = ((dReal *)dBodyGetRotation( m_FrontWheelBodyID ))[5]; /* 16 bytes */
+  m_bikeState->fRearWheelRot[0] = ((dReal *)dBodyGetRotation( m_RearWheelBodyID ))[0];
+  m_bikeState->fRearWheelRot[1] = ((dReal *)dBodyGetRotation( m_RearWheelBodyID ))[1];
+  m_bikeState->fRearWheelRot[2] = ((dReal *)dBodyGetRotation( m_RearWheelBodyID ))[4];
+  m_bikeState->fRearWheelRot[3] = ((dReal *)dBodyGetRotation( m_RearWheelBodyID ))[5];
 
-      m_bikeState->fRearWheelRot[0] = ((dReal *)dBodyGetRotation( m_RearWheelBodyID ))[0];
-      m_bikeState->fRearWheelRot[1] = ((dReal *)dBodyGetRotation( m_RearWheelBodyID ))[1];
-      m_bikeState->fRearWheelRot[2] = ((dReal *)dBodyGetRotation( m_RearWheelBodyID ))[4];
-      m_bikeState->fRearWheelRot[3] = ((dReal *)dBodyGetRotation( m_RearWheelBodyID ))[5];   /* 16 bytes */
-                                                                                        /* -------- */
-                                                                                        /* 48 bytes total */
+  m_bikeState->SwingAnchorP.x = m_bikeState->Anchors()->AR.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->AR.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
+  m_bikeState->SwingAnchorP.y = m_bikeState->Anchors()->AR.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->AR.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
+    
+  m_bikeState->SwingAnchor2P.x = m_bikeState->Anchors()->AR2.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->AR2.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
+  m_bikeState->SwingAnchor2P.y = m_bikeState->Anchors()->AR2.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->AR2.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
 
-    m_bikeState->SwingAnchorP.x = m_bikeState->Anchors()->AR.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->AR.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
-    m_bikeState->SwingAnchorP.y = m_bikeState->Anchors()->AR.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->AR.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
+  m_bikeState->FrontAnchorP.x = m_bikeState->Anchors()->AF.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->AF.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
+  m_bikeState->FrontAnchor2P.x = m_bikeState->Anchors()->AF2.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->AF2.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
 
-    m_bikeState->SwingAnchor2P.x = m_bikeState->Anchors()->AR2.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->AR2.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
-    m_bikeState->SwingAnchor2P.y = m_bikeState->Anchors()->AR2.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->AR2.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
+  m_bikeState->FrontAnchorP.y = m_bikeState->Anchors()->AF.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->AF.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
+  m_bikeState->FrontAnchor2P.y = m_bikeState->Anchors()->AF2.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->AF2.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
 
-    m_bikeState->FrontAnchorP.x = m_bikeState->Anchors()->AF.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->AF.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
-    m_bikeState->FrontAnchor2P.x = m_bikeState->Anchors()->AF2.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->AF2.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
+  /* Calculate desired hand/foot positions */
+  m_bikeState->WantedFootP.x = m_bikeState->Anchors()->PFp.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->PFp.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
+  m_bikeState->WantedFootP.y = m_bikeState->Anchors()->PFp.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->PFp.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
+  m_bikeState->WantedHandP.x = m_bikeState->Anchors()->PHp.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->PHp.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
+  m_bikeState->WantedHandP.y = m_bikeState->Anchors()->PHp.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->PHp.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
 
-    m_bikeState->FrontAnchorP.y = m_bikeState->Anchors()->AF.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->AF.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
-    m_bikeState->FrontAnchor2P.y = m_bikeState->Anchors()->AF2.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->AF2.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
+  m_bikeState->WantedFoot2P.x = m_bikeState->Anchors()->PFp2.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->PFp2.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
+  m_bikeState->WantedFoot2P.y = m_bikeState->Anchors()->PFp2.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->PFp2.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
+  m_bikeState->WantedHand2P.x = m_bikeState->Anchors()->PHp2.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->PHp2.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
+  m_bikeState->WantedHand2P.y = m_bikeState->Anchors()->PHp2.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->PHp2.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
 
-    /* Calculate desired hand/foot positions */
-    m_bikeState->WantedFootP.x = m_bikeState->Anchors()->PFp.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->PFp.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
-    m_bikeState->WantedFootP.y = m_bikeState->Anchors()->PFp.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->PFp.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
-    m_bikeState->WantedHandP.x = m_bikeState->Anchors()->PHp.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->PHp.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
-    m_bikeState->WantedHandP.y = m_bikeState->Anchors()->PHp.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->PHp.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
+  dVector3 T;
+  dJointGetHingeAnchor(m_HandHingeID,T);
+  m_bikeState->HandP.x = T[0]; m_bikeState->HandP.y = T[1];
 
-    m_bikeState->WantedFoot2P.x = m_bikeState->Anchors()->PFp2.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->PFp2.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
-    m_bikeState->WantedFoot2P.y = m_bikeState->Anchors()->PFp2.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->PFp2.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
-    m_bikeState->WantedHand2P.x = m_bikeState->Anchors()->PHp2.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->PHp2.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
-    m_bikeState->WantedHand2P.y = m_bikeState->Anchors()->PHp2.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->PHp2.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
+  dJointGetHingeAnchor(m_ElbowHingeID,T);
+  m_bikeState->ElbowP.x = T[0]; m_bikeState->ElbowP.y = T[1];
 
-    /* Still a replay question... */
-      dVector3 T;
+  dJointGetHingeAnchor(m_ShoulderHingeID,T);
+  m_bikeState->ShoulderP.x = T[0]; m_bikeState->ShoulderP.y = T[1];
 
-      dJointGetHingeAnchor(m_HandHingeID,T);
-      m_bikeState->HandP.x = T[0]; m_bikeState->HandP.y = T[1];            /* 8 bytes */
+  dJointGetHingeAnchor(m_LowerBodyHingeID,T);
+  m_bikeState->LowerBodyP.x = T[0]; m_bikeState->LowerBodyP.y = T[1];
 
-      dJointGetHingeAnchor(m_ElbowHingeID,T);
-      m_bikeState->ElbowP.x = T[0]; m_bikeState->ElbowP.y = T[1];          /* 8 bytes */
+  dJointGetHingeAnchor(m_KneeHingeID,T);
+  m_bikeState->KneeP.x = T[0]; m_bikeState->KneeP.y = T[1];
 
-      dJointGetHingeAnchor(m_ShoulderHingeID,T);
-      m_bikeState->ShoulderP.x = T[0]; m_bikeState->ShoulderP.y = T[1];    /* 8 bytes */
+  dJointGetHingeAnchor(m_FootHingeID,T);
+  m_bikeState->FootP.x = T[0]; m_bikeState->FootP.y = T[1];
 
-      dJointGetHingeAnchor(m_LowerBodyHingeID,T);
-      m_bikeState->LowerBodyP.x = T[0]; m_bikeState->LowerBodyP.y = T[1];  /* 8 bytes */
+  dJointGetHingeAnchor(m_HandHingeID2,T);
+  m_bikeState->Hand2P.x = T[0]; m_bikeState->Hand2P.y = T[1];
 
-      dJointGetHingeAnchor(m_KneeHingeID,T);
-      m_bikeState->KneeP.x = T[0]; m_bikeState->KneeP.y = T[1];            /* 8 bytes */
+  dJointGetHingeAnchor(m_ElbowHingeID2,T);
+  m_bikeState->Elbow2P.x = T[0]; m_bikeState->Elbow2P.y = T[1];
 
-      dJointGetHingeAnchor(m_FootHingeID,T);
-      m_bikeState->FootP.x = T[0]; m_bikeState->FootP.y = T[1];            /* 8 bytes */
-                                                                /* ------- */
-                                                                /* 48 bytes total */
+  dJointGetHingeAnchor(m_ShoulderHingeID2,T);
+  m_bikeState->Shoulder2P.x = T[0]; m_bikeState->Shoulder2P.y = T[1];
 
-      dJointGetHingeAnchor(m_HandHingeID2,T);
-      m_bikeState->Hand2P.x = T[0]; m_bikeState->Hand2P.y = T[1];
+  dJointGetHingeAnchor(m_LowerBodyHingeID2,T);
+  m_bikeState->LowerBody2P.x = T[0]; m_bikeState->LowerBody2P.y = T[1];
 
-      dJointGetHingeAnchor(m_ElbowHingeID2,T);
-      m_bikeState->Elbow2P.x = T[0]; m_bikeState->Elbow2P.y = T[1];
+  dJointGetHingeAnchor(m_KneeHingeID2,T);
+  m_bikeState->Knee2P.x = T[0]; m_bikeState->Knee2P.y = T[1];
 
-      dJointGetHingeAnchor(m_ShoulderHingeID2,T);
-      m_bikeState->Shoulder2P.x = T[0]; m_bikeState->Shoulder2P.y = T[1];
+  dJointGetHingeAnchor(m_FootHingeID2,T);
+  m_bikeState->Foot2P.x = T[0]; m_bikeState->Foot2P.y = T[1];
 
-      dJointGetHingeAnchor(m_LowerBodyHingeID2,T);
-      m_bikeState->LowerBody2P.x = T[0]; m_bikeState->LowerBody2P.y = T[1];
+  Vector2f V;
+  /* Calculate head position */
+  V = (m_bikeState->ShoulderP - m_bikeState->LowerBodyP);
+  V.normalize();
+  m_bikeState->HeadP = m_bikeState->ShoulderP + V*m_bikeState->Parameters()->fNeckLength;
 
-      dJointGetHingeAnchor(m_KneeHingeID2,T);
-      m_bikeState->Knee2P.x = T[0]; m_bikeState->Knee2P.y = T[1];
+  /* Calculate head position (Alt.) */
+  V = (m_bikeState->Shoulder2P - m_bikeState->LowerBody2P);
+  V.normalize();
+  m_bikeState->Head2P = m_bikeState->Shoulder2P + V*m_bikeState->Parameters()->fNeckLength;
 
-      dJointGetHingeAnchor(m_FootHingeID2,T);
-      m_bikeState->Foot2P.x = T[0]; m_bikeState->Foot2P.y = T[1];
-
-    Vector2f V;
-    if(bUpdateRider) {
-      /* Calculate head position */
-      V = (m_bikeState->ShoulderP - m_bikeState->LowerBodyP);
-      V.normalize();
-      m_bikeState->HeadP = m_bikeState->ShoulderP + V*m_bikeState->Parameters()->fNeckLength;
-    }
-
-    if(bUpdateAltRider) {
-      /* Calculate head position (Alt.) */
-      V = (m_bikeState->Shoulder2P - m_bikeState->LowerBody2P);
-      V.normalize();
-      m_bikeState->Head2P = m_bikeState->Shoulder2P + V*m_bikeState->Parameters()->fNeckLength;
-    }
-
-    /* Internally we'd like to know the abs. relaxed position of the wheels */
-    m_bikeState->RFrontWheelP.x = m_bikeState->Anchors()->Fp.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->Fp.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
-    m_bikeState->RFrontWheelP.y = m_bikeState->Anchors()->Fp.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->Fp.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
-    m_bikeState->RRearWheelP.x = m_bikeState->Anchors()->Rp.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->Rp.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
-    m_bikeState->RRearWheelP.y = m_bikeState->Anchors()->Rp.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->Rp.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
-  }
+  /* Internally we'd like to know the abs. relaxed position of the wheels */
+  m_bikeState->RFrontWheelP.x = m_bikeState->Anchors()->Fp.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->Fp.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
+  m_bikeState->RFrontWheelP.y = m_bikeState->Anchors()->Fp.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->Fp.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
+  m_bikeState->RRearWheelP.x = m_bikeState->Anchors()->Rp.x*m_bikeState->fFrameRot[0] + m_bikeState->Anchors()->Rp.y*m_bikeState->fFrameRot[1] + m_bikeState->CenterP.x;
+  m_bikeState->RRearWheelP.y = m_bikeState->Anchors()->Rp.x*m_bikeState->fFrameRot[2] + m_bikeState->Anchors()->Rp.y*m_bikeState->fFrameRot[3] + m_bikeState->CenterP.y;
+}
 
   /*===========================================================================
   Prepare rider
@@ -1304,9 +1289,6 @@ void PlayerNetClient::setLocalNetId(int i_value) {
 }
 
 void PlayerNetClient::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity) {
-  clearStates();
-  m_bikeState->reInitializeAnchors();
-  setBodyDetach(false);
   m_bikeState->Dir = i_direction;
-  /* seems not enough to initialize correctly the biker */
+  setBodyDetach(false);
 }
