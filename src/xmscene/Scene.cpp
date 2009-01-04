@@ -597,7 +597,7 @@ void Scene::cleanPlayers() {
       }
       /* if no OnLoad(), assume success */
       /* Success? */
-      if(!bOnLoadSuccess) {
+      if(bOnLoadSuccess == false) {
 	LogError("OnLoad script function failed !");
 	throw Exception("OnLoad script function failed !");
       }
