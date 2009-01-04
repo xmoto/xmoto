@@ -134,14 +134,14 @@ bool LuaLibGame::scriptCallBool(const std::string& FuncName,bool bDefault) {
   
   bool bRet = bDefault;
   
-    /* Fetch global function */
+  /* Fetch global function */
   lua_getglobal(m_pL,FuncName.c_str());
   
   /* Is it really a function and not just a pile of ****? */
   if(lua_isfunction(m_pL,-1)) {
     /* Call! */
     if(lua_pcall(m_pL,0,1,0) != 0) {
-        throw Exception("failed to invoke (bool) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
+      throw Exception("failed to invoke (bool) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
     }
     
     /* Retrieve return value */
@@ -360,13 +360,20 @@ int LuaLibGame::L_Game_Message(lua_State *pL) {
 int LuaLibGame::L_Game_IsPlayerInZone(lua_State *pL) {
   /* no event for this */
   bool res = false;
-  Zone* v_zone = m_exec_world->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1));
+  Zone* v_zone;
 
-  for(unsigned int i=0; i<m_exec_world->Players().size(); i++) {
-    if(m_exec_world->Players()[i]->isTouching(v_zone)) {
-      res = true;
+  try {
+    v_zone = m_exec_world->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1));
+
+    for(unsigned int i=0; i<m_exec_world->Players().size(); i++) {
+      if(m_exec_world->Players()[i]->isTouching(v_zone)) {
+	res = true;
+      }
     }
+  } catch(Exception &e) {
+    /* res will be false */
   }
+
   lua_pushboolean(pL, res?1:0);
   return 1;
 }
@@ -385,9 +392,17 @@ int LuaLibGame::L_Game_GetBlockPos(lua_State *pL) {
   /* no event for this */
 
   /* Find the specified block and return its position */
-  Block* pBlock = m_exec_world->getLevelSrc()->getBlockById(luaL_checkstring(pL,1));
-  lua_pushnumber(pL,pBlock->DynamicPosition().x);
-  lua_pushnumber(pL,pBlock->DynamicPosition().y);
+  Block* pBlock;
+
+  try {
+    pBlock = m_exec_world->getLevelSrc()->getBlockById(luaL_checkstring(pL,1));
+    lua_pushnumber(pL,pBlock->DynamicPosition().x);
+    lua_pushnumber(pL,pBlock->DynamicPosition().y);
+  } catch(Exception &e) {
+    lua_pushnumber(pL, 0);
+    lua_pushnumber(pL, 0);
+  }
+
   return 2;
 }
   
@@ -451,7 +466,14 @@ int LuaLibGame::L_Game_GetEntityPos(lua_State *pL) {
   /* no event for this */
 
   /* Find the specified entity and return its position */
-  Entity *p = m_exec_world->getLevelSrc()->getEntityById(luaL_checkstring(pL,1));
+  Entity *p;
+
+  try {
+    p = m_exec_world->getLevelSrc()->getEntityById(luaL_checkstring(pL,1));
+  } catch(Exception &e) {
+    p = NULL;
+  }
+
   if(p != NULL) {
     lua_pushnumber(pL,p->DynamicPosition().x);
     lua_pushnumber(pL,p->DynamicPosition().y);
@@ -466,7 +488,11 @@ int LuaLibGame::L_Game_GetEntityPos(lua_State *pL) {
   
 int LuaLibGame::L_Game_GetEntityRadius(lua_State *pL) {
   /* no event for this */
-  lua_pushnumber(pL, m_exec_world->getLevelSrc()->getEntityById(luaL_checkstring(pL,1))->Size());
+  try {
+    lua_pushnumber(pL, m_exec_world->getLevelSrc()->getEntityById(luaL_checkstring(pL,1))->Size());
+  } catch(Exception &e) {
+    lua_pushnumber(pL, 0);
+  }
   return 1;
 }
 
@@ -475,7 +501,11 @@ int LuaLibGame::L_Game_IsEntityTouched(lua_State *pL) {
 
   bool v_touch = false;
   if(m_exec_world->Players().size() > 0) {
-    v_touch = m_exec_world->Players()[0]->isTouching(m_exec_world->getLevelSrc()->getEntityById(luaL_checkstring(pL,1)));
+    try {
+      v_touch = m_exec_world->Players()[0]->isTouching(m_exec_world->getLevelSrc()->getEntityById(luaL_checkstring(pL,1)));
+    } catch(Exception &e) {
+      /* v_touch will be false */
+    }
   }
 
   lua_pushnumber(pL, v_touch? 1:0);
@@ -684,16 +714,24 @@ int LuaLibGame::L_Game_PenaltyTime(lua_State *pL) {
 
 int LuaLibGame::L_Game_IsAPlayerInZone(lua_State *pL) {
   /* no event for this */
-  Zone* v_zone = m_exec_world->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1));
-  int v_player = (int)X_luaL_check_number(pL, 2);
+  Zone* v_zone;
+  int v_player;
 
-  if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
-    std::ostringstream v_txt_player;
-    v_txt_player << v_player;
-    throw Exception("Invalid player " + v_txt_player.str());
+  try {
+    v_zone = m_exec_world->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1));
+    v_player = (int)X_luaL_check_number(pL, 2);
+    
+    if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
+      std::ostringstream v_txt_player;
+      v_txt_player << v_player;
+      throw Exception("Invalid player " + v_txt_player.str());
+    }
+
+    lua_pushboolean(pL, m_exec_world->Players()[v_player]->isTouching(v_zone)?1:0);
+  } catch(Exception &e) {
+    lua_pushboolean(pL, 0);
   }
 
-  lua_pushboolean(pL, m_exec_world->Players()[v_player]->isTouching(v_zone)?1:0);
   return 1;
 }
 
