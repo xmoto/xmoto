@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __LEVELSRC_H__
 #define __LEVELSRC_H__
 
+#define CACHE_LEVEL_FORMAT_VERSION 25
+
 #include <string>
 #include <vector>
 #include "BasicSceneStructs.h"

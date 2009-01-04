@@ -170,16 +170,7 @@ void FS::_FindFilesRecursive(const std::string &DirX,const std::string &Wildcard
   if((fh = _findfirst((Dir + std::string("/") + Wildcard).c_str(),&fd)) != -1L) {
     do {
       if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
-	std::string F = Dir + std::string("/") + std::string(fd.name);
-	bool bFound = false;
-	for(unsigned int k=0; k<List.size(); k++) {
-	  if(getFileBaseName(List[k]) == getFileBaseName(F)) {  
-	    bFound = true;
-	    break;
-	  }
-	}
-	if(!bFound)
-	  List.push_back(F);
+	List.push_back(Dir + std::string("/") + std::string(fd.name));
       }
     } while(_findnext(fh,&fd)==0);
     _findclose(fh);
@@ -216,15 +207,7 @@ void FS::_FindFilesRecursive(const std::string &DirX,const std::string &Wildcard
 	if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
 	  /* Match! */
 	  if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-	    bool bFound = false;
-	    for(unsigned int k = 0;k<List.size();k++) {
-	      if(FS::getFileBaseName(List[k]) == FS::getFileBaseName(F)) {  
-		bFound = true;
-		break;
-	      }
-	    }
-	    if(!bFound)
-	      List.push_back(F);
+	    List.push_back(F);
 	  }             
 	}
       }
@@ -274,16 +257,7 @@ std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
       if((fh = _findfirst((UDirToSearch + Wildcard).c_str(),&fd)) != -1L) {
 	do {
 	  if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
-	    std::string F = UDirToSearch + std::string(fd.name);
-	    bool bFound = false;
-	    for(unsigned int k=0; k<Result.size(); k++) {
-	      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-		bFound = true;
-		break;
-	      }
-	    }
-	    if(!bFound)
-	      Result.push_back(F);
+	    Result.push_back(UDirToSearch + std::string(fd.name));
 	  }
 	} while(_findnext(fh,&fd)==0);
 	_findclose(fh);
@@ -300,16 +274,7 @@ std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
     if((fh = _findfirst((DataDirToSearch + Wildcard).c_str(),&fd)) != -1L) {
       do {
 	if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
-	  std::string F = DataDirToSearch + std::string(fd.name);
-	  bool bFound = false;
-	  for(unsigned int k=0; k<Result.size(); k++) {
-	    if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-	      bFound = true;
-	      break;
-	    }
-	  }
-	  if(!bFound)
-	    Result.push_back(F);
+	  Result.push_back(DataDirToSearch + std::string(fd.name));
 	}
       } while(_findnext(fh,&fd)==0);
       _findclose(fh);
@@ -327,16 +292,7 @@ std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
 	  if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
 	    /* Match! */
 	    if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-	      std::string F = UDirToSearch + std::string(dp->d_name);
-	      bool bFound = false;
-	      for(unsigned int k = 0;k<Result.size();k++) {
-		if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-		  bFound = true;
-		  break;
-		}
-	      }
-	      if(!bFound)
-		Result.push_back(F);
+	      Result.push_back(UDirToSearch + std::string(dp->d_name));
 	    }
 	  }
 	} else {
@@ -346,7 +302,7 @@ std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
       }
     }
   }
-    
+
   if(AltDirToSearch != UDirToSearch) {
     if(bRecurse) {
       _FindFilesRecursive(AltDirToSearch,Wildcard,Result);
@@ -358,16 +314,7 @@ std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
 	  if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
 	    /* Match! */
 	    if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-	      std::string F = AltDirToSearch + std::string(dp->d_name);
-	      bool bFound = false;
-	      for(unsigned int k = 0;k<Result.size();k++) {
-		if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-		  bFound = true;
-		  break;
-		}
-	      }
-	      if(!bFound)
-		Result.push_back(F);
+	      Result.push_back(AltDirToSearch + std::string(dp->d_name));
 	    }
 	  }
 	} else {
@@ -377,7 +324,7 @@ std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
       }
     }
   }
-    
+
   if(DataDirToSearch != AltDirToSearch && DataDirToSearch != UDirToSearch) {
     if(bRecurse) {
       _FindFilesRecursive(DataDirToSearch,Wildcard,Result);
@@ -390,16 +337,7 @@ std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
 	  if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
 	    /* Match! */
 	    if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-	      std::string F = DataDirToSearch + std::string(dp->d_name);
-	      bool bFound = false;
-	      for(unsigned int k = 0;k<Result.size();k++) {
-		if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-		  bFound = true;
-		  break;
-		}
-	      }
-	      if(!bFound)
-		Result.push_back(F);
+	      Result.push_back(DataDirToSearch + std::string(dp->d_name));
 	    }             
 	  }
 	} else {
@@ -425,8 +363,6 @@ std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
       Result.push_back(m_PackFiles[i].Name);
     }
   }
-    
-  //	for(unsigned int i=0;i<Result.size();i++) printf("%s\n",Result[i].c_str());
 
   /* Return file listing */
   return Result;

@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VFileIO.h"
 #include <sstream>
 
-#define XMDB_VERSION         28
+#define XMDB_VERSION         29
 #define DB_MAX_SQL_RUNTIME 0.25
 #define DB_BUSY_TIMEOUT   60000 // 60 seconds
 
@@ -663,6 +663,16 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       updateXmDbVersion(28);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 27: " + e.getMsg());
+    }
+
+  case 28:
+    try {
+      simpleSql("ALTER TABLE levels ADD COLUMN loadingCacheFormatVersion DEFAULT NULL;");
+      simpleSql("ALTER TABLE levels ADD COLUMN loaded DEFAULT NULL;");
+      simpleSql("CREATE INDEX levels_checkSum_idx1 ON levels(checkSum);");
+      updateXmDbVersion(29);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 28: " + e.getMsg());
     }
 
     // next

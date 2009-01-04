@@ -42,8 +42,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "PhysicsSettings.h"
 #include "../Theme.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 25
-
 Level::Level() {
   m_xmotoTooOld = false;
   m_leftLimit   = 0.0;

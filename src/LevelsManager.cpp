@@ -801,42 +801,47 @@ const std::vector<LevelsPack *>& LevelsManager::LevelsPacks() {
 void LevelsManager::reloadExternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface)
 {
   std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/MyLevels/*.lvl", true);
+  std::string v_levelName;
 
   i_db->levels_add_begin(true);
-
   for(unsigned int i=0; i<LvlFiles.size(); i++) {
     bool bCached = false;
 
-    Level *v_level = new Level();
+    /* add the level from the unloaded levels if possible to make it faster */
+    if(i_db->levels_add_fast(LvlFiles[i], v_levelName, true) == false) {
+      Level *v_level = new Level();
 
-    try {
-      if(i_loadLevelsInterface != NULL) {
-	i_loadLevelsInterface->loadLevelHook(LvlFiles[i], (i*100) / LvlFiles.size());
-      }
+      try {
+	v_level->setFileName(LvlFiles[i]);
+	bCached = v_level->loadReducedFromFile();
+	
+	v_levelName = v_level->Name();
 
-      v_level->setFileName(LvlFiles[i]);
-      bCached = v_level->loadReducedFromFile();
-      
-      // Check for ID conflict
-      if(doesLevelExist(v_level->Id(), i_db)) {
-	throw Exception("Duplicate level ID");
+	// Check for ID conflict
+	if(doesLevelExist(v_level->Id(), i_db)) {
+	  throw Exception("Duplicate level ID");
+	}
+	i_db->levels_add(v_level->Id(),
+			 v_level->FileName(),
+			 v_level->Name(),
+			 v_level->Checksum(),
+			 v_level->Author(),
+			 v_level->Description(),
+			 v_level->Date(),
+			 v_level->Pack(),
+			 v_level->PackNum(),
+			 v_level->Music(),
+			 v_level->isScripted(),
+			 v_level->isPhysics(),
+			 true);
+      } catch(Exception &e) {
       }
-      i_db->levels_add(v_level->Id(),
-		       v_level->FileName(),
-		       v_level->Name(),
-		       v_level->Checksum(),
-		       v_level->Author(),
-		       v_level->Description(),
-		       v_level->Date(),
-		       v_level->Pack(),
-		       v_level->PackNum(),
-		       v_level->Music(),
-		       v_level->isScripted(),
-		       v_level->isPhysics(),
-		       true);
-    } catch(Exception &e) {
+      delete v_level;
     }
-    delete v_level;
+
+    if(i_loadLevelsInterface != NULL) {
+      i_loadLevelsInterface->loadLevelHook(v_levelName, (i*100) / LvlFiles.size());
+    }
   }
 
   i_db->levels_add_end();
@@ -881,6 +886,7 @@ void LevelsManager::reloadLevelsFromLvl(xmDatabase* i_db, XMotoLoadLevelsInterfa
 void LevelsManager::reloadInternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface)
 {
   std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl", true);
+  std::string v_levelName;
 
   i_db->levels_add_begin(false);
 
@@ -893,41 +899,44 @@ void LevelsManager::reloadInternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterf
       continue; // don't load external levels now
     }
 
-    Level *v_level = new Level();
+    /* add the level from the unloaded levels if possible to make it faster */
+    if(i_db->levels_add_fast(LvlFiles[i], v_levelName, false) == false) {
+      Level *v_level = new Level();
 
-    try {
-      v_level->setFileName(LvlFiles[i]);
-      bCached = v_level->loadReducedFromFile();
-      
-      // Check for ID conflict
-      if(doesLevelExist(v_level->Id(), i_db)) {
-	throw Exception("Duplicate level ID");
+      try {
+	v_level->setFileName(LvlFiles[i]);
+	bCached = v_level->loadReducedFromFile();
+	
+	// Check for ID conflict
+	if(doesLevelExist(v_level->Id(), i_db)) {
+	  throw Exception("Duplicate level ID");
+	}
+	i_db->levels_add(v_level->Id(),
+			 v_level->FileName(),
+			 v_level->Name(),
+			 v_level->Checksum(),
+			 v_level->Author(),
+			 v_level->Description(),
+			 v_level->Date(),
+			 v_level->Pack(),
+			 v_level->PackNum(),
+			 v_level->Music(),
+			 v_level->isScripted(),
+			 v_level->isPhysics(),
+			 false);
+      } catch(Exception &e) {
+	LogWarning("(just mean that the level has been updated if the level is in xmoto.bin) ** : %s (%s - %s)",
+		   e.getMsg().c_str(),
+		   v_level->Name().c_str(),
+		   v_level->FileName().c_str());
       }
-      i_db->levels_add(v_level->Id(),
-		       v_level->FileName(),
-		       v_level->Name(),
-		       v_level->Checksum(),
-		       v_level->Author(),
-		       v_level->Description(),
-		       v_level->Date(),
-		       v_level->Pack(),
-		       v_level->PackNum(),
-		       v_level->Music(),
-		       v_level->isScripted(),
-		       v_level->isPhysics(),
-		       false);
-    } catch(Exception &e) {
-      LogWarning("(just mean that the level has been updated if the level is in xmoto.bin) ** : %s (%s - %s)",
-		e.getMsg().c_str(),
-		v_level->Name().c_str(),
-		v_level->FileName().c_str());
+      v_levelName = v_level->Name();
+      delete v_level;
     }
 
     if(i_loadLevelsInterface != NULL) {
-      i_loadLevelsInterface->loadLevelHook(v_level->Name(), (i*100) / LvlFiles.size());
+      i_loadLevelsInterface->loadLevelHook(v_levelName, (i*100) / LvlFiles.size());
     }
-
-    delete v_level;
   }
 
   i_db->levels_add_end();

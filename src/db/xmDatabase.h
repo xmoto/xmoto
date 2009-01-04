@@ -93,6 +93,7 @@ public:
   void levels_addToNew(const std::string& i_id_level, bool i_isAnUpdate);
 
   void levels_add_begin(bool i_isToReload);
+  bool levels_add_fast(const std::string& i_filepath, std::string& o_levelName, bool i_isToReload);
   void levels_add(const std::string& i_id_level,
 		  const std::string& i_filepath, const std::string& i_name,
 		  const std::string& i_checkSum,
