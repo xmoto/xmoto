@@ -23,18 +23,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VXml.h"
 #include "../helpers/Log.h"
 #include "../VFileIO.h"
+#include <sstream>
 
 void xmDatabase::levels_add_begin(bool i_isToReload) {
+  std::ostringstream v_cacheFV;
+  v_cacheFV << CACHE_LEVEL_FORMAT_VERSION;
+
   simpleSql("BEGIN TRANSACTION;");
 
   if(i_isToReload) {
-    simpleSql("DELETE FROM levels WHERE isToReload=1;");
+    simpleSql("DELETE FROM levels "
+	      "WHERE isToReload=1 "
+	      "AND (loadingCacheFormatVersion IS NULL OR loadingCacheFormatVersion < " + v_cacheFV.str() + ");");
+    simpleSql("UPDATE levels SET loaded=0 WHERE isToReload=1;");
   } else {
-    simpleSql("DELETE FROM levels;");
+    simpleSql("DELETE FROM levels "
+	      "WHERE (loadingCacheFormatVersion IS NULL OR loadingCacheFormatVersion < " + v_cacheFV.str() + ");");
+    simpleSql("UPDATE levels SET loaded=0;");
   }
 }
 
 void xmDatabase::levels_add_end() {
+  simpleSql("DELETE FROM levels WHERE loaded=0;");
   simpleSql("COMMIT;");
 }
 
@@ -164,9 +174,12 @@ void xmDatabase::levels_add(const std::string& i_id_level,
 			    const std::string& i_music,
 			    bool i_isScripted, bool i_isPhysics,
 			    bool i_isToReload) {
+  std::ostringstream v_cacheFV;
+  v_cacheFV << CACHE_LEVEL_FORMAT_VERSION;
+
   simpleSql("INSERT INTO levels(id_level,"
 	    "filepath, name, checkSum, author, description, "
-	    "date_str, packName, packNum, music, isScripted, isPhysics, isToReload) "
+	    "date_str, packName, packNum, music, isScripted, isPhysics, isToReload, loaded, loadingCacheFormatVersion) "
 	    "VALUES(\"" + protectString(i_id_level) + "\", " +
 	    "\"" + protectString(i_filepath)        + "\", " +
 	    "\"" + protectString(i_name)            + "\", " +
@@ -180,7 +193,7 @@ void xmDatabase::levels_add(const std::string& i_id_level,
 	    std::string(i_isScripted  ? "1" : "0")  + ", "   +
 	    std::string(i_isPhysics   ? "1" : "0")  + ", "   +
 	    std::string(i_isToReload  ? "1" : "0")  +
-	    std::string(");"));
+	    std::string(", 1, " + v_cacheFV.str() + ");"));
 }
 
 void xmDatabase::levels_update(const std::string& i_id_level,
@@ -190,6 +203,9 @@ void xmDatabase::levels_update(const std::string& i_id_level,
 			       const std::string& i_date, const std::string& i_packName, const std::string& i_packNum,
 			       const std::string& i_music, bool i_isScripted, bool i_isPhysics,
 			       bool i_isToReload) {
+  std::ostringstream v_cacheFV;
+  v_cacheFV << CACHE_LEVEL_FORMAT_VERSION;
+
   simpleSql("UPDATE levels SET name=\""  + 
 	    protectString(i_name)     	 + "\", filepath=\"" +
 	    protectString(i_filepath) 	 + "\", checkSum=\"" + 
@@ -202,7 +218,8 @@ void xmDatabase::levels_update(const std::string& i_id_level,
 	    protectString(i_music)       + "\", isScripted=" +
 	    std::string(i_isScripted  ? "1" : "0") + ", isPhysics=" +
 	    std::string(i_isPhysics   ? "1" : "0") + ", isToReload=" +
-	    std::string(i_isToReload  ? "1" : "0") + " WHERE id_level=\"" +
+	    std::string(i_isToReload  ? "1" : "0") + ", loaded=1, loadingCacheFormatVersion = " + v_cacheFV.str() +
+	    " WHERE id_level=\"" +
 	    protectString(i_id_level)    + "\";");
 }
 
@@ -243,4 +260,38 @@ void xmDatabase::levels_cleanNoWWWLevels() {
     }
   }
   read_DB_free(v_result);
+}
+
+// if a level has the same checksum and has been loaded in the save cache format version, don't reanalyse the level,
+// just resussite it from the trash (loaded=0)
+bool xmDatabase::levels_add_fast(const std::string& i_filepath, std::string& o_levelName, bool i_isToReload) {
+  char **v_result;
+  unsigned int nrow;
+  std::string v_checksum;
+  std::string v_cond;
+  if(i_isToReload) {
+    v_cond = "isToReload=1 AND ";
+  }
+
+  v_checksum = FS::md5sum(i_filepath);
+
+  v_result = readDB("SELECT name FROM levels "
+		    "WHERE " + v_cond   +
+		    "filepath=\"" + protectString(i_filepath) + "\" "
+		    "AND checkSum=\"" + protectString(v_checksum) + "\";",
+		    nrow);
+
+  if(nrow != 1) {
+    read_DB_free(v_result);
+    return false;
+  }
+
+  o_levelName = getResult(v_result, 1, 0, 0);
+  read_DB_free(v_result);
+
+  // found it in the database
+  simpleSql("UPDATE levels SET loaded=1 WHERE " + v_cond +
+	    "filepath=\"" + protectString(i_filepath) + "\" "
+	    "AND checkSum=\"" + protectString(v_checksum) + "\";");
+  return true;
 }

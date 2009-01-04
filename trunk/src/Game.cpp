@@ -495,23 +495,16 @@ void GameApp::displayCursor(bool display)
   void GameApp::initReplaysFromDir(xmDatabase* threadDb,
 				   XMotoLoadReplaysInterface* pLoadReplaysInterface) {
     std::vector<std::string> ReplayFiles;
+
     ReplayFiles = FS::findPhysFiles("Replays/*.rpl");
-    xmDatabase* pDb = NULL;
-
-    if(threadDb == NULL){
-      pDb = xmDatabase::instance("main");
-    } else {
-      pDb = threadDb;
-    }
-
-    pDb->replays_add_begin();
+    threadDb->replays_add_begin();
 
     for(unsigned int i=0; i<ReplayFiles.size(); i++) {
       try {
 	if(FS::getFileBaseName(ReplayFiles[i]) == "Latest") {
 	  continue;
 	}
-	addReplay(ReplayFiles[i], pDb, false);
+	addReplay(ReplayFiles[i], threadDb, false);
 	if(pLoadReplaysInterface != NULL){
 	  pLoadReplaysInterface->loadReplayHook(ReplayFiles[i], (int)((i*100)/((float)ReplayFiles.size())));
 	}
@@ -520,7 +513,7 @@ void GameApp::displayCursor(bool display)
 	// ok, forget this replay
       }
     }
-    pDb->replays_add_end();
+    threadDb->replays_add_end();
   }
 
   void GameApp::addReplay(const std::string& i_file, xmDatabase* pDb, bool sendMessage) {
