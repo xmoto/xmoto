@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2008-12-20 22:45+0100\n"
 "PO-Revision-Date: \n"
-"Last-Translator: Asciimonster <asciimonster@myrealbox.com>\n"
+"Last-Translator: Andre Parhan <dyingmuppet@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -115,7 +115,7 @@ msgstr "Actieve Zoom voor Camera"
 
 #: src/GameText.h:60
 msgid "Beating mode"
-msgstr ""
+msgstr "Versla modus"
 
 #: src/GameText.h:61
 msgid "Best Times"
@@ -207,104 +207,104 @@ msgstr "Spelbesturing"
 
 #: src/GameText.h:83
 msgid "left control"
-msgstr ""
+msgstr "linker control"
 
 #: src/GameText.h:84
 msgid "right control"
-msgstr ""
+msgstr "rechter control"
 
 #: src/GameText.h:85
 msgid "left shift"
-msgstr ""
+msgstr "linker shift"
 
 #: src/GameText.h:86
 msgid "right shift"
-msgstr ""
+msgstr "rechter shift"
 
 #: src/GameText.h:87
 msgid "left alt"
-msgstr ""
+msgstr "linker alt"
 
 #: src/GameText.h:88
 msgid "right alt"
-msgstr ""
+msgstr "rechter alt"
 
 #: src/GameText.h:89
 msgid "left meta"
-msgstr ""
+msgstr "linker meta"
 
 #: src/GameText.h:90
 msgid "right meta"
-msgstr ""
+msgstr "rechter meta"
 
 #: src/GameText.h:91 src/GameText.h:105
 #, c-format
 msgid "button %i"
-msgstr ""
+msgstr "knop %i"
 
 #: src/GameText.h:92
 msgid "left button"
-msgstr ""
+msgstr "linker knop"
 
 #: src/GameText.h:93
 msgid "middle button"
-msgstr ""
+msgstr "middelste knop"
 
 #: src/GameText.h:94
 msgid "right button"
-msgstr ""
+msgstr "rechter knop"
 
 #: src/GameText.h:95
 msgid "wheel up"
-msgstr ""
+msgstr "wiel omhoog"
 
 #: src/GameText.h:96
 msgid "wheel down"
-msgstr ""
+msgstr "wiel omlaag"
 
 #: src/GameText.h:97
 msgid "No joystick found"
-msgstr ""
+msgstr "Geen joysticks gevonden"
 
 #: src/GameText.h:98
 #, c-format
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i joystick gevonden"
+msgstr[1] "%i joysticks gevonden"
 
 #: src/GameText.h:99
 #, c-format
 msgid "axis %i"
-msgstr ""
+msgstr "as %i"
 
 #: src/GameText.h:100
 msgid "left"
-msgstr ""
+msgstr "links"
 
 #: src/GameText.h:101
 msgid "right"
-msgstr ""
+msgstr "rechts"
 
 #: src/GameText.h:102
 msgid "up"
-msgstr ""
+msgstr "omhoog"
 
 #: src/GameText.h:103
 msgid "down"
-msgstr ""
+msgstr "omlaag"
 
 #: src/GameText.h:104
 msgid "none"
-msgstr ""
+msgstr "geen"
 
 #: src/GameText.h:106
 msgid "You must restart so that this option takes effect"
-msgstr ""
+msgstr "Je moet opnieuw starten zodat deze optie effect heeft"
 
 #: src/GameText.h:107
 msgid "Script action"
-msgstr ""
+msgstr "Script actie"
 
 #: src/GameText.h:110
 msgid "Lead Programming"
@@ -392,7 +392,7 @@ msgstr "Deens"
 
 #: src/GameText.h:153
 msgid "Lithuanian"
-msgstr ""
+msgstr "Litouws"
 
 #: src/GameText.h:155
 msgid "Main testers"
@@ -456,7 +456,7 @@ msgstr "Speler"
 
 #: src/GameText.h:176
 msgid "Play music on all levels"
-msgstr ""
+msgstr "Speel muziek in alle levels"
 
 #: src/GameText.h:177
 msgid "Date"
@@ -464,7 +464,7 @@ msgstr "Datum"
 
 #: src/GameText.h:178
 msgid "Difficulty"
-msgstr ""
+msgstr "Moeilijkheid"
 
 #: src/GameText.h:179
 msgid ""
@@ -473,6 +473,10 @@ msgid ""
 "server. It is useful to save your data or if you play X-Moto from different "
 "places."
 msgstr ""
+"X-Moto gebruikt een database op jouw computer on al jouw scores en "
+"statistieken op te slaan. Je kan deze data naar de X-Moto server sturen met "
+"jouw gebruikers account. Het is handig je data op te slaan als je X-Moto "
+"speelt van meerdere plaatsen."
 
 #: src/GameText.h:180
 msgid ""
@@ -481,6 +485,10 @@ msgid ""
 "will be duplicated/not synchronized. If you did that, you should remove the "
 "copies you did."
 msgstr ""
+"Als je handmatig de X-Moto gebruikers bestanden (.xmoto) hebt gekopieerd van "
+"een andere computer, moet je deze functie NIET gebruiken anders worden je "
+"statistieken verdubbeld/niet gesynchroniseerd. Als je dat hebt gedaan, moet "
+"je alle kopieën verwijderen."
 
 #: src/GameText.h:181
 msgid "Synchronise"
@@ -544,7 +552,7 @@ msgstr "Toon Informatie over Spook"
 
 #: src/GameText.h:197
 msgid "Display bike arrow indication"
-msgstr ""
+msgstr "Geef motor richting indicatie"
 
 #: src/GameText.h:198
 msgid "Direct Connection"
@@ -632,11 +640,11 @@ msgstr "Toon wereldrecord in het spel"
 
 #: src/GameText.h:217
 msgid "Enable menu music"
-msgstr ""
+msgstr "Activeer menu muziek"
 
 #: src/GameText.h:218
 msgid "Enable game music"
-msgstr ""
+msgstr "Activeer spel muziek"
 
 #: src/GameText.h:219
 msgid "Enable WWW Access"
@@ -778,7 +786,7 @@ msgstr "Spook van %s"
 #: src/GameText.h:252
 #, c-format
 msgid "Web ghost of %s"
-msgstr ""
+msgstr "Web spook van %s"
 
 #: src/GameText.h:253
 msgid "Ghost"
@@ -866,7 +874,7 @@ msgstr "Hoog"
 
 #: src/GameText.h:277
 msgid "Highscore of the room"
-msgstr ""
+msgstr "Topscore van de kamer"
 
 #: src/GameText.h:278
 msgid "Levels are being added into the database. Please wait."
@@ -887,7 +895,7 @@ msgstr "Joystick"
 
 #: src/GameText.h:282
 msgid "Enable joysticks"
-msgstr ""
+msgstr "Activeer joysticks"
 
 #: src/GameText.h:283
 msgid "Oops!"
@@ -1013,7 +1021,7 @@ msgstr "Algemeen"
 
 #: src/GameText.h:313
 msgid "Mouse"
-msgstr ""
+msgstr "Muis"
 
 #: src/GameText.h:314 src/GameText.h:420
 msgid "Theme"
@@ -1251,7 +1259,7 @@ msgstr "Druk op een toets voor '%s' of ESC om te annuleren..."
 #: src/GameText.h:376
 #, c-format
 msgid "Press %s to chat"
-msgstr ""
+msgstr "Druk %s om te chatten"
 
 #: src/GameText.h:377
 msgid "Proxy Server"
@@ -1263,7 +1271,7 @@ msgstr "Proxy configureren..."
 
 #: src/GameText.h:379
 msgid "Quality"
-msgstr ""
+msgstr "Kwaliteit"
 
 #: src/GameText.h:380
 msgid "Quick start"
@@ -1322,6 +1330,7 @@ msgstr "Herhalingen"
 #: src/GameText.h:394
 msgid "Are you sure you want to reset config to defaults ?"
 msgstr ""
+"Weet je zeker dat je de configuratie wilt resetten naar de standaarden ?"
 
 #: src/GameText.h:395
 msgid "Restart This Level"
@@ -1329,7 +1338,7 @@ msgstr "Level herstarten"
 
 #: src/GameText.h:396
 msgid "Restart level"
-msgstr ""
+msgstr "Herstart level"
 
 #: src/GameText.h:397
 msgid "Resume Playing"
@@ -1362,7 +1371,7 @@ msgstr "Tonen"
 
 #: src/GameText.h:405
 msgid "Show console"
-msgstr ""
+msgstr "Geef console weer"
 
 #: src/GameText.h:406
 msgid "Speedometer"
@@ -1403,7 +1412,7 @@ msgstr "Synchronisatie succesvol"
 #: src/GameText.h:416
 #, c-format
 msgid "Key '%s' has been switched to '%s'"
-msgstr ""
+msgstr "Toets '%s' is verwisseld met '%s'"
 
 #: src/GameText.h:417
 msgid "Enable/disable ugly mode"
@@ -1447,7 +1456,7 @@ msgstr "Oefening"
 
 #: src/GameText.h:428
 msgid "Undefined"
-msgstr ""
+msgstr "Ongedefinieerd"
 
 #: src/GameText.h:429
 msgid "Unknown"
@@ -1528,7 +1537,7 @@ msgstr "Gebruik profiel"
 
 #: src/GameText.h:446
 msgid "Allow web forms"
-msgstr ""
+msgstr "Sta web forms toe"
 
 #: src/GameText.h:447
 msgid "Using HTTP Proxy"
@@ -1653,7 +1662,7 @@ msgstr "Alles ja"
 
 #: src/GameText.h:475
 msgid "Your best time"
-msgstr ""
+msgstr "Jouw beste tijd"
 
 #: src/GameText.h:476
 msgid "Zoom in"
@@ -1669,86 +1678,86 @@ msgstr "Uitzoomen"
 
 #: src/GameText.h:480
 msgid "Server"
-msgstr ""
+msgstr "Server"
 
 #: src/GameText.h:482
 msgid "Launch at startup"
-msgstr ""
+msgstr "Activeer tijdens opstarten"
 
 #: src/GameText.h:483
 msgid "Start the server"
-msgstr ""
+msgstr "Start de server"
 
 #: src/GameText.h:484
 msgid "Stop the server"
-msgstr ""
+msgstr "Stop de server"
 
 #: src/GameText.h:485
 msgid "Server is currently started"
-msgstr ""
+msgstr "Server is nu gestart"
 
 #: src/GameText.h:486
 msgid "Server is currently stopped"
-msgstr ""
+msgstr "Server is nu gestopt"
 
 #: src/GameText.h:487
 msgid "Default port"
-msgstr ""
+msgstr "Standaard poort"
 
 #: src/GameText.h:488
 msgid "Custom port"
-msgstr ""
+msgstr "Aparte poort"
 
 #: src/GameText.h:489
 msgid "Network"
-msgstr ""
+msgstr "Netwerk"
 
 #: src/GameText.h:490
 msgid "You're currently connected"
-msgstr ""
+msgstr "Je bent nu verbonden"
 
 #: src/GameText.h:491
 msgid "You're currently disconnected"
-msgstr ""
+msgstr "Je bent niet verbonden"
 
 #: src/GameText.h:492
 msgid "Connect"
-msgstr ""
+msgstr "Verbind"
 
 #: src/GameText.h:493
 msgid "Disconnect"
-msgstr ""
+msgstr "Verbreek"
 
 #: src/GameText.h:494
 msgid "Unable to connect on the server"
-msgstr ""
+msgstr "Onmogelijk met de server te verbinden"
 
 #: src/GameText.h:495
 msgid "Network error: you're disconnected"
-msgstr ""
+msgstr "Netwerk fout: je verbinding is verbroken"
 
 #: src/GameText.h:496
 msgid "Connected players:"
-msgstr ""
+msgstr "Verbonden spelers:"
 
 #: src/GameText.h:497
 msgid "Chat message"
-msgstr ""
+msgstr "Chat bericht"
 
 #: src/GameText.h:498
 #, c-format
 msgid "%s joined the game"
-msgstr ""
+msgstr "%s komt het spel binnen"
 
 #: src/GameText.h:499
 #, c-format
 msgid "%s left the game"
-msgstr ""
+msgstr "%s verlaat het spel"
 
 #: src/GameText.h:500
 #, c-format
 msgid "%s is playing level %s"
-msgstr ""
+msgstr "%s speelt level %s"
 
 #: src/GameText.h:509
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -1889,7 +1898,7 @@ msgstr ""
 
 #: src/GameText.h:543
 msgid "Allow X-Moto to ask you your mind about levels"
-msgstr ""
+msgstr "Geef toestemming aan X-Moto om je gedachten te vragen over levels"
 
 #: src/GameText.h:544
 msgid "Enable high-color graphics"
@@ -2096,6 +2105,7 @@ msgstr "Aan het begin van een level met een spook, toon van wie de spook is"
 #: src/GameText.h:594
 msgid "Display an arrow to display where are located the bikes on the map"
 msgstr ""
+"Geef een pijl weer om aan te geven waar andere motoren zijn op de kaart"
 
 #: src/GameText.h:595
 msgid "Display the time difference between the ghost and you"
@@ -2131,7 +2141,7 @@ msgstr "Activeer achtergrondmuziek voor menu's"
 
 #: src/GameText.h:605
 msgid "Enables background music while playing"
-msgstr ""
+msgstr "Activeer achtergrond muziek tijdens het spelen"
 
 #: src/GameText.h:607
 msgid "Choose the X-Moto graphics theme"
@@ -2265,7 +2275,7 @@ msgstr "Voer filter in voor de herhalingen"
 
 #: src/GameText.h:638
 msgid "Enter text to filter the rooms list"
-msgstr ""
+msgstr "Voer tekst in om de kamer lijst te filteren"
 
 #: src/GameText.h:639
 msgid "Press to play X-Moto immediately"
@@ -2337,7 +2347,7 @@ msgstr "Spoken instellen die getoond wordne tijdens het spelen"
 
 #: src/GameText.h:659
 msgid "Configure options linked to your X-Moto database"
-msgstr ""
+msgstr "Configureer opties gekoppeld aan jouw X-Moto database"
 
 #: src/GameText.h:660
 msgid "Synchronise your database on the web"
@@ -2349,140 +2359,140 @@ msgstr "Synchroniseer database wanneer X-Moto wordt afgesloten"
 
 #: src/GameText.h:662
 msgid "Enable joysticks events"
-msgstr ""
+msgstr "Activeer joysticks gebeurtenissen"
 
 #: src/GameText.h:663
 msgid "Preselect the retry button when dying or finishing a level"
-msgstr ""
+msgstr "Pre-selecteer de herstart knop met sterven of finishen van een level"
 
 #: src/GameText.h:665
 msgid "Give your mind about this level"
-msgstr ""
+msgstr "Geef jouw gedachten over dit level"
 
 #: src/GameText.h:666
 msgid "No idea"
-msgstr ""
+msgstr "Geen idee"
 
 #: src/GameText.h:667
 msgid "Beginner"
-msgstr ""
+msgstr "Beginner"
 
 #: src/GameText.h:668
 msgid "Expert"
-msgstr ""
+msgstr "Expert"
 
 #: src/GameText.h:669
 msgid "Master"
-msgstr ""
+msgstr "Meester"
 
 #: src/GameText.h:670
 msgid "God"
-msgstr ""
+msgstr "God"
 
 #: src/GameText.h:671
 msgid "Not nice at all"
-msgstr ""
+msgstr "Helemaal niet leuk"
 
 #: src/GameText.h:672
 msgid "Not nice"
-msgstr ""
+msgstr "Niet leuk"
 
 #: src/GameText.h:673
 msgid "Nice"
-msgstr ""
+msgstr "Leuk"
 
 #: src/GameText.h:674
 msgid "Really nice"
-msgstr ""
+msgstr "Ontzettend leuk"
 
 #: src/GameText.h:675
 msgid "Send this report"
-msgstr ""
+msgstr "Stuur dit rapport"
 
 #: src/GameText.h:676
 msgid "Skip this report"
-msgstr ""
+msgstr "Sla dit rapport over"
 
 #: src/GameText.h:678
 msgid "You don't want to vote"
-msgstr ""
+msgstr "Je wilt niet stemmen"
 
 #: src/GameText.h:679
 msgid "Really easy"
-msgstr ""
+msgstr "Ontzettend makkelijk"
 
 #: src/GameText.h:680
 msgid "No technical difficulty"
-msgstr ""
+msgstr "Geen technische moeilijkheden"
 
 #: src/GameText.h:681
 msgid "At least one difficulty"
-msgstr ""
+msgstr "In ieder geval een moeilijkheid"
 
 #: src/GameText.h:682
 msgid "Several difficulties"
-msgstr ""
+msgstr "Verschillende moeilijkheden"
 
 #: src/GameText.h:683
 msgid "Impossible"
-msgstr ""
+msgstr "Onmogelijk"
 
 #: src/GameText.h:684
 msgid "Basic blocks, no decoration"
-msgstr ""
+msgstr "Basis blokken, geen decoratie"
 
 #: src/GameText.h:685
 msgid "Basic decoration, not smooth blocks"
-msgstr ""
+msgstr "Basis decoratie, geen gladde blokken"
 
 #: src/GameText.h:686
 msgid "Not original"
-msgstr ""
+msgstr "Niet origineel"
 
 #: src/GameText.h:687
 msgid "Nice, could be better"
-msgstr ""
+msgstr "Leuk, maar kan beter"
 
 #: src/GameText.h:688
 msgid "Several textures, sprites, ..."
-msgstr ""
+msgstr "Verschillende texturen, poppetjes, ..."
 
 #: src/GameText.h:689
 msgid "Send this report on the webserver"
-msgstr ""
+msgstr "Zend dit rapport naar de webserver"
 
 #: src/GameText.h:690
 msgid "Don't send this report on the webserver"
-msgstr ""
+msgstr "Zend dit rapport niet naar de webserver"
 
 #: src/GameText.h:692
 msgid "Server configuration to play via the network"
-msgstr ""
+msgstr "Server configuratie om via het netwerk te spelen"
 
 #: src/GameText.h:693
 msgid "Start the server at X-Moto startup"
-msgstr ""
+msgstr "Start de server tijdens X-Moto startop"
 
 #: src/GameText.h:694
 msgid "Start/stop the server"
-msgstr ""
+msgstr "Start/stop de server"
 
 #: src/GameText.h:695
 msgid "Port on which the server must listen to"
-msgstr ""
+msgstr "Poort waar de server naar moet luisteren"
 
 #: src/GameText.h:696
 msgid "Server on which you want to connect"
-msgstr ""
+msgstr "Server waarmee je wilt verbinden"
 
 #: src/GameText.h:697
 msgid "Connect/disconnect the client to the server"
-msgstr ""
+msgstr "Verbind/verbreek de cliënt met de server"
 
 #: src/GameText.h:698
 msgid ""
 "Enables background music for levels that do not have their own music track"
-msgstr ""
+msgstr "Activeert achtergrond muziek voor levels die hun eigen muziek hebben"
 
 #: src/GameText.h:700
 msgid "Levels with no highscore"
@@ -2814,8 +2824,8 @@ msgstr "Opgeslagen als trainingspositie %i"
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Kan geen topscore vinden in het volgende level"
+msgstr[1] "Kan geen topscore vinden in de volgende %i levels"
 
 #: src/GameText.h:789
 msgid "FontGroup:GENERAL"
