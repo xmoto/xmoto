@@ -1243,7 +1243,7 @@ PlayerNetClient::PlayerNetClient(PhysicsSettings* i_physicsSettings,
 				 const TColor& i_colorFilter,
 				 const TColor& i_uglyColorFilter) 
   : Biker(i_physicsSettings, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
-  m_BikeC = new BikeControllerNet(-1);
+  m_BikeC = new BikeControllerNet(0);
   initToPosition(i_position, i_direction, i_gravity);
 }
 

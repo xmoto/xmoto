@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../XMSession.h"
 #include "extSDL_net.h"
 #include <sstream>
+#include "helpers/SwapEndian.h"
 
 char NetAction::m_buffer[NETACTION_MAX_PACKET_SIZE];
 unsigned int NetAction::m_biggestTCPPacket   = 0;
@@ -496,28 +497,41 @@ const std::vector<NetInfosClient>& NA_changeClients::getRemovedInfosClients() co
 
 NA_playerControl::NA_playerControl(PlayerControl i_control, float i_value) {
   m_control = i_control;
-  m_floatValue = i_value;
+  m_value = i_value;
 }
 
 NA_playerControl::NA_playerControl(PlayerControl i_control, bool i_value) {
   m_control = i_control;
-  m_boolValue = i_value;
+  m_value = i_value ? 0.5 : -0.5; // negativ or positiv
 }
 
 NA_playerControl::NA_playerControl(void* data, unsigned int len) {
-  LogInfo("Receiving NA_playerControl...");
-  // todo
-  //unsigned int v_localOffset = 0;
-  //m_levelId = getLine(data, len, &v_localOffset);
+  unsigned int v_localOffset = 0;
+
+  m_control = (PlayerControl) atoi(getLine(data, len, &v_localOffset).c_str());
+  if(PlayerControl_isValid(m_control) == false) {
+    throw Exception("Invalid player control");
+  }
+
+  if(len-v_localOffset-1 != 4) {
+    throw Exception("Invalid player control");
+  }
+  
+  m_value = SwapEndian::read4LFloat(((char*)data) + v_localOffset);
+
+  // don't allow value not between -1 and 1, but don't reject the client if not because float can be sometimes surprising
+  if(m_value < -1.0) m_value = -1.0;
+  if(m_value >  1.0) m_value =  1.0;
 }
 
 NA_playerControl::~NA_playerControl() {
 }
 
 void NA_playerControl::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
-  LogInfo("Sending NA_playerControl...");
-  // todo
-  //NetAction::send(i_tcpsd, NULL, NULL, NULL, m_levelId.c_str(), m_levelId.size()); // don't send the \0
+  char buf[7];
+  snprintf(buf, 3, "%i\n", (int)(m_control));
+  SwapEndian::write4LFloat(buf+2, m_value);
+  NetAction::send(i_tcpsd, i_udpsd, i_sendPacket, i_udpRemoteIP, buf, 6); // don't send the \0
 }
 
 PlayerControl NA_playerControl::getType() {
@@ -525,9 +539,9 @@ PlayerControl NA_playerControl::getType() {
 }
 
 float NA_playerControl::getFloatValue() {
-  return m_floatValue;
+  return m_value;
 }
 
 bool NA_playerControl::getBoolValue() {
-  return m_boolValue;
+  return m_value > 0.0;
 }

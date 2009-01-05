@@ -203,11 +203,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
   void DBuffer::operator <<(float n) {
-    writeBuf_LE((char *)&n, sizeof(int));
+    writeBuf_LE((char *)&n, sizeof(float));
   }
   
   void DBuffer::operator >>(float &n) {
-    readBuf_LE((char *)&n, sizeof(int));
+    readBuf_LE((char *)&n, sizeof(float));
   }
 
   void DBuffer::operator <<(std::string s) {

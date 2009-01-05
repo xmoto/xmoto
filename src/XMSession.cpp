@@ -133,6 +133,7 @@ void XMSession::setToDefault() {
   m_beatingMode                   = DEFAULT_BEATINGMODE;
   m_webForms                      = DEFAULT_WEBFORMS;
   m_serverStartAtStartup          = DEFAULT_SERVERSTARTATSTARTUP;
+  m_clientConnectAtStartup        = DEFAULT_CLIENTCONNECTATSTARTUP;
   m_serverPort                    = DEFAULT_SERVERPORT;
   m_serverMaxClients              = DEFAULT_SERVERMAXCLIENTS;
   m_clientServerName              = DEFAULT_CLIENTSERVERNAME;
@@ -325,6 +326,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_webForms                       = pDb->config_getBool   (i_id_profile, "WebForms"                   , m_webForms);
 
   m_serverStartAtStartup  = pDb->config_getBool   (i_id_profile, "ServerStartAtStartup" , m_serverStartAtStartup);
+  m_clientConnectAtStartup = pDb->config_getBool  (i_id_profile, "ClientConnectAtStartup" , m_clientConnectAtStartup);
   m_serverPort            = pDb->config_getInteger(i_id_profile, "ServerPort"           , m_serverPort);
   m_serverMaxClients      = pDb->config_getInteger(i_id_profile, "ServerMaxClients"     , m_serverMaxClients);
   m_clientServerName      = pDb->config_getString (i_id_profile, "ClientServerName"     , m_clientServerName);
@@ -457,6 +459,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "WebForms"                      , m_webForms);
 
 	pDb->config_setBool   (m_profile, "ServerStartAtStartup" , m_serverStartAtStartup);
+	pDb->config_setBool   (m_profile, "ClientConnectAtStartup" , m_clientConnectAtStartup);
 	pDb->config_setInteger(m_profile, "ServerPort"           , m_serverPort);
 	pDb->config_setInteger(m_profile, "ServerMaxClients"           , m_serverMaxClients);
 	pDb->config_setString (m_profile, "ClientServerName"     , m_clientServerName);
@@ -1176,6 +1179,15 @@ bool XMSession::serverStartAtStartup() const {
 void XMSession::setServerStartAtStartup(bool i_value) {
   PROPAGATE(XMSession,setServerStartAtStartup,i_value,bool);
   m_serverStartAtStartup = i_value;
+}
+
+bool XMSession::clientConnectAtStartup() const {
+  return m_clientConnectAtStartup;
+}
+
+void XMSession::setClientConnectAtStartup(bool i_value) {
+  PROPAGATE(XMSession,setClientConnectAtStartup,i_value,bool);
+  m_clientConnectAtStartup = i_value;
 }
 
 int XMSession::serverPort() const {

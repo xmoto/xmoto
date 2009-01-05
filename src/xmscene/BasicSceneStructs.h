@@ -70,6 +70,7 @@ struct SerializedBikeState {
 
 /* controls */
 enum PlayerControl {PC_DRIVE = 1, PC_BRAKE = 2, PC_THROTTLE = 3, PC_PULL = 4, PC_CHANGEDIR = 5};
+bool PlayerControl_isValid(PlayerControl p);
 
 
 #endif /* __BASICSCENESTRUCTS_H__ */

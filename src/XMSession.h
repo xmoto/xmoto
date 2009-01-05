@@ -258,6 +258,8 @@ public:
   bool webForms() const;
   bool serverStartAtStartup() const;
   void setServerStartAtStartup(bool i_value);
+  bool clientConnectAtStartup() const;
+  void setClientConnectAtStartup(bool i_value);
   int serverPort() const;
   void setServerPort(int i_value);
   int serverMaxClients() const;
@@ -383,6 +385,7 @@ public:
   bool m_beatingMode;
   bool m_webForms;
   bool m_serverStartAtStartup;
+  bool m_clientConnectAtStartup;
   int m_serverPort;
   int m_serverMaxClients;
   std::string m_clientServerName;
