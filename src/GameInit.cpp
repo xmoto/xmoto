@@ -325,7 +325,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 
   // no command line need the network for the moment
   if(v_useGraphics || v_xmArgs.isOptServerOnly()) {
-    initNetwork(v_xmArgs.isOptServerOnly());
+    initNetwork(v_xmArgs.isOptServerOnly(), v_xmArgs.isOptServerOnly());
   }
 
   /* Init renderer */
@@ -475,7 +475,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     }
     if((m_PlaySpecificLevelId != "")) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
-      //StateManager::instance()->pushState(new StatePreplayingGame(m_PlaySpecificLevelId, false));
       StateManager::instance()->pushState(new StatePreplayingGame(m_PlaySpecificLevelId, false));
       LogInfo("Playing as '%s'...", XMSession::instance()->profile().c_str());
     }
@@ -766,7 +765,7 @@ void GameApp::_Wait()
   }
 
 
-void GameApp::initNetwork(bool i_forceNoServerStarted) {
+  void GameApp::initNetwork(bool i_forceNoServerStarted, bool i_forceNoClientStarted) {
   if(SDLNet_Init()==-1) {
     throw Exception(SDLNet_GetError());
   }
@@ -775,6 +774,18 @@ void GameApp::initNetwork(bool i_forceNoServerStarted) {
   if(i_forceNoServerStarted == false) {
     if(XMSession::instance()->serverStartAtStartup()) {
       NetServer::instance()->start(true);
+    }
+  }
+
+  if(i_forceNoClientStarted == false) {
+    if(XMSession::instance()->clientConnectAtStartup()) {
+      try {
+	NetClient::instance()->connect(XMSession::instance()->clientServerName(),
+				       XMSession::instance()->clientServerPort());
+      } catch(Exception &e) {
+	SysMessage::instance()->displayError(GAMETEXT_UNABLETOCONNECTONTHESERVER);
+	LogError("Unable to connect to the server");
+      }
     }
   }
 
