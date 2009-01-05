@@ -361,6 +361,7 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   Universe.h   \
   Universe.cpp \
   xmscene/BasicSceneStructs.h \
+  xmscene/BasicSceneStructs.cpp \
   xmscene/Scene.h \
   xmscene/Scene.cpp \
   xmscene/Level.h \

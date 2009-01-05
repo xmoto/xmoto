@@ -16,7 +16,6 @@ static double DoubleNoSwap(double d);
 static void   SerializedBikeStateSwap  (SerializedBikeState& sbs);
 static void   SerializedBikeStateNoSwap(SerializedBikeState& sbs);
 
-
 // Generic endian swapping
 template <typename _T>
 static void SwapInPlace(_T& n) {
@@ -127,4 +126,15 @@ void SwapEndian::Swap_Init() {
     _BigSerializedBikeState    = SerializedBikeStateNoSwap;
     _LittleSerializedBikeState = SerializedBikeStateSwap;
   }
+}
+
+void SwapEndian::write4LFloat(char *str /* size = 4 */, float f) {
+  float ftmp = LittleFloat(f);
+  memcpy(str, &ftmp, 4);
+}
+
+float SwapEndian::read4LFloat(const char* str) {
+  float f;
+  memcpy(&f, str, 4);
+  return LittleFloat(f);
 }

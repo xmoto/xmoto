@@ -20,6 +20,9 @@ class SwapEndian {
   static double	BigDouble   (double d) {return _BigDouble(d);   }
   static double	LittleDouble(double d) {return _LittleDouble(d);}
   
+  static void write4LFloat(char* str /* size = 4 */, float f);
+  static float read4LFloat(const char* str);
+
   static void   BigSerializedBikeState   (SerializedBikeState& sbs)
     { _BigSerializedBikeState   (sbs); }
   static void   LittleSerializedBikeState(SerializedBikeState& sbs)

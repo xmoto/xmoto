@@ -104,23 +104,31 @@ BikeControllerNet::~BikeControllerNet() {
 }
 
 void BikeControllerNet::setBreak(float i_break) {
-  NA_playerControl na(PC_BRAKE, i_break);
-  NetClient::instance()->send(&na, m_localNetId);
+  if(NetClient::instance()->isConnected()) {
+    NA_playerControl na(PC_BRAKE, i_break);
+    NetClient::instance()->send(&na, m_localNetId);
+  }
 }
 
 void BikeControllerNet::setThrottle(float i_throttle) {
-  NA_playerControl na(PC_THROTTLE, i_throttle);
-  NetClient::instance()->send(&na, m_localNetId);
+  if(NetClient::instance()->isConnected()) {
+    NA_playerControl na(PC_THROTTLE, i_throttle);
+    NetClient::instance()->send(&na, m_localNetId);
+  }
 }
 
 void BikeControllerNet::setPull(float i_pull) {
-  NA_playerControl na(PC_PULL, i_pull);
-  NetClient::instance()->send(&na, m_localNetId);
+  if(NetClient::instance()->isConnected()) {
+    NA_playerControl na(PC_PULL, i_pull);
+    NetClient::instance()->send(&na, m_localNetId);
+  }
 }
 
 void BikeControllerNet::setChangeDir(bool i_changeDir) {
-  NA_playerControl na(PC_CHANGEDIR, i_changeDir);
-  NetClient::instance()->send(&na, m_localNetId);
+  if(NetClient::instance()->isConnected()) {
+    NA_playerControl na(PC_CHANGEDIR, i_changeDir);
+    NetClient::instance()->send(&na, m_localNetId);
+  }
 }
 
 void BikeControllerNet::stopControls() {

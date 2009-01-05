@@ -283,8 +283,7 @@ class NA_playerControl : public NetAction {
 
   private:
   PlayerControl m_control;
-  float         m_floatValue;
-  bool          m_boolValue;
+  float         m_value;
 };
 
 #endif

@@ -165,7 +165,7 @@ private:
   void manageEvent(SDL_Event* Event);
   void playMusic(const std::string& i_music); // "" => no music
 
-  void initNetwork(bool i_forceNoServerStarted);
+  void initNetwork(bool i_forceNoServerStarted, bool i_forceNoClientStarted);
   void uninitNetwork();
 
   ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
