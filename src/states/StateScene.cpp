@@ -427,7 +427,7 @@ void StateScene::setScoresTimes() {
   }
 
   /* get best result */
-  v_result = xmDatabase::instance("main")->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+  v_result = xmDatabase::instance("main")->readDB("SELECT MIN(finishTime+0) FROM profile_completedLevels WHERE "
 						  "id_level=\"" + 
 						  xmDatabase::protectString(v_id_level) + "\";",
 						  nrow);
@@ -438,7 +438,7 @@ void StateScene::setScoresTimes() {
   xmDatabase::instance("main")->read_DB_free(v_result);
     
   /* get best player result */
-  v_result = xmDatabase::instance("main")->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+  v_result = xmDatabase::instance("main")->readDB("SELECT MIN(finishTime+0) FROM profile_completedLevels WHERE "
 						  "id_level=\"" + 
 						  xmDatabase::protectString(v_id_level) + "\" " + 
 						  "AND id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile())  + "\";",
