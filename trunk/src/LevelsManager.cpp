@@ -83,7 +83,7 @@ std::string LevelsPack::getLevelsQuery() const {
 
 std::string LevelsPack::getLevelsWithHighscoresQuery(const std::string& i_profile,
 						     const std::string& i_id_room) const {
-  return "SELECT a.id_level AS id_level, MIN(a.name) AS name, MIN(c.finishTime), MIN(b.finishTime) "
+  return "SELECT a.id_level AS id_level, MIN(a.name) AS name, MIN(c.finishTime+0), MIN(b.finishTime+0) "
     "FROM ("+ m_sql_levels + ") AS a "
     "LEFT OUTER JOIN webhighscores AS b "
     "ON (a.id_level = b.id_level AND b.id_room=" + i_id_room + ") "
