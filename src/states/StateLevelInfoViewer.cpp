@@ -435,7 +435,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
     if(pLV_BestTimes_All->getChecked()) {
       v_result = xmDatabase::instance("main")->readDB("SELECT finishTime, id_profile FROM profile_completedLevels "
 			      "WHERE id_level=\""   + xmDatabase::protectString(m_level)    + "\" "
-			      "ORDER BY finishTime LIMIT 10;",
+			      "ORDER BY finishTime+0 LIMIT 10;",
 			      nrow);
       for(unsigned int i=0; i<nrow; i++) {
 	v_finishTime  = atoi(xmDatabase::instance("main")->getResult(v_result, 2, i, 0));
@@ -449,7 +449,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
       v_result = xmDatabase::instance("main")->readDB("SELECT finishTime FROM profile_completedLevels "
 			      "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile())  + "\" "
 			      "AND   id_level=\""   + xmDatabase::protectString(m_level)    + "\" "
-			      "ORDER BY finishTime LIMIT 10;",
+			      "ORDER BY finishTime+0 LIMIT 10;",
 			      nrow);
       for(unsigned int i=0; i<nrow; i++) {
 	v_finishTime  = atoi(xmDatabase::instance("main")->getResult(v_result, 1, i, 0));
