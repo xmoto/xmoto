@@ -426,7 +426,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "SELECT id_level, name, sort_field FROM ("
 			  "SELECT a.id_level AS id_level, MAX(b.name) AS name, "
 			  "UPPER(MAX(b.name)) AS sort_field, "
-			  "MIN(c.finishTime) AS webFinishTime, MIN(a.finishTime) AS userFinishTime "
+			  "MIN(c.finishTime+0) AS webFinishTime, MIN(a.finishTime+0) AS userFinishTime "
 			  "FROM profile_completedLevels AS a INNER JOIN levels AS b "
 			  "ON (a.id_level = b.id_level "
 			  "AND a.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
@@ -455,7 +455,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "SELECT id_level, name, sort_field FROM ("
 			  "SELECT a.id_level AS id_level, MAX(b.name) AS name, "
 			  "UPPER(MAX(b.name)) AS sort_field, "
-			  "MIN(c.finishTime) AS webFinishTime, MIN(a.finishTime) AS userFinishTime "
+			  "MIN(c.finishTime+0) AS webFinishTime, MIN(a.finishTime+0) AS userFinishTime "
 			  "FROM profile_completedLevels AS a INNER JOIN levels AS b "
 			  "ON (a.id_level = b.id_level "
 			  "AND a.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
@@ -486,7 +486,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "SELECT id_level, name, sort_field FROM ("
 			  "SELECT a.id_level AS id_level, MAX(b.name) AS name, "
 			  "UPPER(MAX(b.name)) AS sort_field, "
-			  "MIN(c.finishTime) AS webFinishTime, MIN(a.finishTime) AS userFinishTime "
+			  "MIN(c.finishTime+0) AS webFinishTime, MIN(a.finishTime+0) AS userFinishTime "
 			  "FROM profile_completedLevels AS a INNER JOIN levels AS b "
 			  "ON (a.id_level = b.id_level "
 			  "AND a.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
@@ -517,7 +517,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			  "SELECT id_level, name, sort_field FROM ("
 			  "SELECT a.id_level AS id_level, MAX(a.name) AS name, "
 			  "UPPER(MAX(a.name)) AS sort_field, "
-			  "MIN(c.finishTime) AS webFinishTime, MIN(b.finishTime) AS userFinishTime "
+			  "MIN(c.finishTime+0) AS webFinishTime, MIN(b.finishTime+0) AS userFinishTime "
 			  "FROM levels AS a LEFT OUTER JOIN profile_completedLevels AS b "
 			  "ON (a.id_level = b.id_level "
 			  "AND b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
@@ -582,7 +582,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   
   /* most played levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_MOST_PLAYED),
-			  "SELECT a.id_level AS id_level, MIN(a.name) AS name, SUM(b.nbPlayed) AS sort_field "
+			  "SELECT a.id_level AS id_level, MIN(a.name) AS name, SUM(b.nbPlayed+0) AS sort_field "
 			  "FROM levels AS a INNER JOIN stats_profiles_levels AS b "
 			  "ON (a.id_level=b.id_level AND "
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
@@ -599,7 +599,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 
   /* less played levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_LESS_PLAYED),
-			  "SELECT a.id_level AS id_level, MIN(a.name) AS name, SUM(b.nbPlayed) AS sort_field "
+			  "SELECT a.id_level AS id_level, MIN(a.name) AS name, SUM(b.nbPlayed+0) AS sort_field "
 			  "FROM levels AS a INNER JOIN stats_profiles_levels AS b "
 			  "ON (a.id_level=b.id_level AND "
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
@@ -1163,7 +1163,7 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN, uns
 
   /* if xmoto run only 1 time, run the tutorial pack */
   bool v_tutorials = false;
-  v_result = i_db->readDB("SELECT SUM(nbStarts) "
+  v_result = i_db->readDB("SELECT SUM(nbStarts+0) "
 			  "FROM stats_profiles "
 			  "WHERE id_profile=\"" + xmDatabase::protectString(i_profile) + "\" "
 			  "GROUP BY id_profile;",
@@ -1180,7 +1180,7 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN, uns
 
   if(v_tutorials) {
     return
-      "SELECT a.id_level, MIN(a.name), MIN(b.finishTime), MIN(c.finishTime) "
+      "SELECT a.id_level, MIN(a.name), MIN(b.finishTime+0), MIN(c.finishTime+0) "
       "FROM levels AS a "
       "LEFT OUTER JOIN webhighscores AS b ON (a.id_level = b.id_level AND b.id_room=" + i_id_room + ") "
       "LEFT OUTER JOIN profile_completedLevels AS c "
@@ -1221,7 +1221,7 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN, uns
 
   if(v_haveEnoughLevels) {
     return
-      "SELECT a.id_level, MIN(a.name), MIN(c.finishTime), MIN(d.finishTime) "
+      "SELECT a.id_level, MIN(a.name), MIN(c.finishTime+0), MIN(d.finishTime+0) "
       "FROM levels AS a "
       "INNER JOIN weblevels AS b ON a.id_level = b.id_level "
       "LEFT OUTER JOIN webhighscores AS c ON (a.id_level = c.id_level AND c.id_room=" + i_id_room + ") "
@@ -1239,7 +1239,7 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN, uns
   } else {
     /* all levels randomly */
     return
-      "SELECT a.id_level, MIN(a.name), MIN(b.finishTime), MIN(c.finishTime) "
+      "SELECT a.id_level, MIN(a.name), MIN(b.finishTime+0), MIN(c.finishTime+0) "
       "FROM levels AS a "
       "LEFT OUTER JOIN webhighscores AS b ON (a.id_level = b.id_level AND b.id_room=" + i_id_room + ") "
       "LEFT OUTER JOIN profile_completedLevels AS c "
