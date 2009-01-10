@@ -42,6 +42,7 @@ class Universe {
 
   std::vector<Scene*>& getScenes();
   void initPlay(int i_nbPlayer, bool i_multiScenes);
+  void initPlayServer();
 
   Replay* getCurrentReplay();
   bool isAReplayToSave() const;

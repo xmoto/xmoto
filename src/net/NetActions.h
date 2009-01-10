@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 #include "../include/xm_SDL_net.h"
 #include "../xmscene/BasicSceneStructs.h"
+#include "BasicStructures.h"
 
 #define XM_NET_PROTOCOL_VERSION 1
 #define NETACTION_MAX_PACKET_SIZE 1024 * 2 // bytes
@@ -43,7 +44,9 @@ enum NetActionType {
   TNA_changeName,
   TNA_playingLevel,
   TNA_changeClients,
-  TNA_playerControl
+  TNA_playerControl,
+  TNA_clientMode,
+  TNA_prepareToPlay
 };
 
 struct NetInfosClient {
@@ -66,6 +69,7 @@ class NetAction {
 
   static NetAction* newNetAction(void* data, unsigned int len);
   static void logStats();
+  static std::string getFancyBytes(unsigned int i_bytes);
 
   protected:
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP, const void* subPacketData, int subPacketLen);
@@ -284,6 +288,42 @@ class NA_playerControl : public NetAction {
   private:
   PlayerControl m_control;
   float         m_value;
+};
+
+class NA_clientMode : public NetAction {
+  public:
+  NA_clientMode(NetClientMode i_mode);
+  NA_clientMode(void* data, unsigned int len);
+  virtual ~NA_clientMode();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  NetClientMode mode() const;
+
+  private:
+  NetClientMode m_mode;
+};
+
+class NA_prepareToPlay : public NetAction {
+  public:
+  NA_prepareToPlay(const std::string& i_id_level);
+  NA_prepareToPlay(void* data, unsigned int len);
+  virtual ~NA_prepareToPlay();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  std::string idLevel() const;
+
+  private:
+  std::string m_id_level;
 };
 
 #endif

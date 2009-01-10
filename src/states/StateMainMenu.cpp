@@ -49,6 +49,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../thread/LevelsPacksCountUpdateThread.h"
 #include "../SysMessage.h"
 #include "../net/NetClient.h"
+#include "states/StateWaitServerInstructions.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -492,6 +493,18 @@ void StateMainMenu::checkEventsNetworkTab() {
     }
   }
 
+  // multi scenes
+  v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:SERVER_SIMPLE_GHOST_MODE"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+  
+    XMSession::instance()->setClientGhostMode(v_button->getChecked());
+  
+    if(NetClient::instance()->isConnected()) {
+      SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_SERVERRECONNECT);
+    }
+  }
+
   // connect/disconnect
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CONNECTDISCONNECT"));
   if(v_button->isClicked()) {
@@ -503,6 +516,13 @@ void StateMainMenu::checkEventsNetworkTab() {
       try {
 	NetClient::instance()->connect(XMSession::instance()->clientServerName(),
 				       XMSession::instance()->clientServerPort());
+	// don't send in ghost mode to be compatible with old servers
+	if(XMSession::instance()->clientGhostMode() == false) {
+	  NetClient::instance()->changeMode(XMSession::instance()->clientGhostMode() ? NETCLIENT_GHOST_MODE : NETCLIENT_SLAVE_MODE);
+	}
+	if(XMSession::instance()->clientGhostMode() == false) {
+	  StateManager::instance()->pushState(new StateWaitServerInstructions());
+	}
       } catch(Exception &e) {
 	SysMessage::instance()->displayError(GAMETEXT_UNABLETOCONNECTONTHESERVER);
 	LogError("Unable to connect to the server");
@@ -1244,6 +1264,16 @@ UIWindow* StateMainMenu::makeWindowLevels(UIWindow* i_parent) {
   v_edit->setID("PORT");
   v_edit->setContextHelp(CONTEXTHELP_SERVERPORT);
 
+  // mode
+  v_button = new UIButton(v_netOptionsTab, v_netOptionsTab->getPosition().nWidth-220, 60, 
+  			  GAMETEXT_CLIENTGHOSTMODE, 220, 25);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setID("SERVER_SIMPLE_GHOST_MODE");
+  v_button->setGroup(50058);
+  v_button->setContextHelp(CONTEXTHELP_CLIENTGHOSTMODE); 
+  v_button->enableWindow(false);// still in developpment;
+
   // client status
   v_someText = new UIStatic(v_netOptionsTab, 0, v_netOptionsTab->getPosition().nHeight-30-20-20, "...",
 			    v_netOptionsTab->getPosition().nWidth, 30);
@@ -1819,6 +1849,8 @@ void StateMainMenu::updateOptions() {
   // network
   v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:SERVER"));
   v_edit->setCaption(XMSession::instance()->clientServerName());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:SERVER_SIMPLE_GHOST_MODE"));
+  v_button->setChecked(XMSession::instance()->clientGhostMode());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:DEFAULT_PORT"));
   v_button->setChecked(XMSession::instance()->clientServerPort() == DEFAULT_CLIENTSERVERPORT);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CUSTOM_PORT"));

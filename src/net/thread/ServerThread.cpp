@@ -28,13 +28,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../ActionReader.h"
 #include "../NetActions.h"
 #include "../../GameText.h"
+#include "../../Universe.h"
+#include "../../Game.h"
+#include "../../db/xmDatabase.h"
+#include "../../xmscene/Level.h"
+#include "../../xmscene/BikeController.h"
 
-#define XM_SERVER_WAIT_TIMEOUT 1000
+#define XM_SERVER_UPLOADING_FPS 30
 #define XM_SERVER_NB_SOCKETS_MAX 128
 #define XM_SERVER_MAX_UDP_PACKET_SIZE 1024 // bytes
 
 NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
-    m_id = i_id;
+    m_id   = i_id;
+    m_mode = NETCLIENT_GHOST_MODE;
+    m_isMarkedToPlay = false;
+    m_numScene  = 0;
+    m_numPlayer = 0;
     m_tcpSocket   = i_tcpSocket;
     m_tcpRemoteIP = *i_tcpRemoteIP;
     m_isUdpBinded = false;
@@ -93,6 +102,35 @@ std::string NetSClient::name() const {
   return m_name;
 }
 
+void NetSClient::setMode(NetClientMode i_mode) {
+  m_mode = i_mode;
+}
+
+NetClientMode NetSClient::mode() const {
+  return m_mode;
+}
+
+void NetSClient::markToPlay(bool i_value) {
+  m_isMarkedToPlay = i_value;
+}
+
+bool NetSClient::isMarkedToPlay() {
+  return m_isMarkedToPlay;
+}
+
+void NetSClient::markScenePlayer(unsigned int i_numScene, unsigned int i_numPlayer) {
+  m_numScene  = i_numScene;
+  m_numPlayer = i_numPlayer;
+}
+
+unsigned int NetSClient::getNumScene() const {
+  return m_numScene;
+}
+
+unsigned int NetSClient::getNumPlayer() const {
+  return m_numPlayer;
+}
+
 void NetSClient::setPlayingLevelId(const std::string& i_levelId) {
   m_playingLevelId = i_levelId;
 }
@@ -106,6 +144,11 @@ ServerThread::ServerThread() {
     m_nextClientId = 0;
     m_udpPacket = SDLNet_AllocPacket(XM_SERVER_MAX_UDP_PACKET_SIZE);
 
+    m_universe = NULL;
+    SP2_setPhase(SP2_PHASE_WAIT_CLIENTS);
+    m_lastFrameTimeStamp = -1;
+    m_frameLate          = 0;
+
     if(!m_udpPacket) {
       throw Exception("SDLNet_AllocPacket: " + std::string(SDLNet_GetError()));
     }
@@ -117,9 +160,8 @@ ServerThread::~ServerThread() {
 
 int ServerThread::realThreadFunction() {
   IPaddress ip;
-  int n_activ;
-  unsigned int i;
   int ssn;
+  unsigned int i;
 
   LogInfo("server: starting");
 
@@ -169,50 +211,19 @@ int ServerThread::realThreadFunction() {
 
   StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
 
-  /* Wait for a connection */
+  // manage server
   while(m_askThreadToEnd == false) {
-    n_activ = SDLNet_CheckSockets(m_set, XM_SERVER_WAIT_TIMEOUT);
-    if(n_activ == -1) {
-      LogError("SDLNet_CheckSockets: %s", SDLNet_GetError());
-      m_askThreadToEnd = true;
-    } else {
-
-      if(n_activ != 0) {
-	// server socket
-	if(SDLNet_SocketReady(m_tcpsd)) {
-	  acceptClient();
-	}
-
-	else if(SDLNet_SocketReady(m_udpsd)) {
-	  manageClientUDP();
-	} else {
-	  i = 0;
-	  while(i<m_clients.size()) {
-	    if(SDLNet_SocketReady(*(m_clients[i]->tcpSocket()))) {
-	      try {
-	      	manageClientTCP(i);
-		i++;
-	      } catch(DisconnectedException &e) {
-		LogInfo("server: client %u disconnected (%s:%d) : %s", i,
-	      		XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
-	      		SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
-	      	removeClient(i);	
-	      } catch(Exception &e) {
-		LogInfo("server: bad TCP packet received by client %u (%s:%d) : %s", i,
-	      		XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
-	      		SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
-	      	removeClient(i);
-	      }
-	    } else {
-	      i++;
-	    }
-	  }
-	}
-      }
-
+    try {
+      run_loop();
+    } catch(Exception &e) {
+      LogWarning("Exception: %s", e.getMsg().c_str());
     }
   }
 
+  // end the game
+  SP2_setPhase(SP2_PHASE_NONE);
+
+  // disconnection
   LogInfo("server: %i client(s) still connnected", m_clients.size());
 
   // disconnect all clients
@@ -237,7 +248,247 @@ int ServerThread::realThreadFunction() {
   return 0;
 }
 
+void ServerThread::SP2_initPlaying() {
+  unsigned int v_numPlayer;
+  unsigned int v_localNetId = 0;
+  m_fLastPhysTime = GameApp::getXMTime();
+
+  /* get a random level */
+  std::string v_id_level = "_iL08_"; /* hehe not so random */
+
+  m_universe = new Universe();
+  m_universe->initPlayServer();
+
+  try {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      v_numPlayer = 0;
+      m_universe->getScenes()[i]->loadLevel(m_pDb, v_id_level);
+      if(m_universe->getScenes()[i]->getLevelSrc()->isXMotoTooOld()) {
+	throw Exception("Level " + v_id_level + " is too old");
+      }
+      m_universe->getScenes()[i]->prePlayLevel(NULL, true);
+      
+      // add the bikers
+      for(unsigned int j=0; j<m_clients.size(); j++) {
+	if(m_clients[j]->isMarkedToPlay()) {
+	  m_universe->getScenes()[i]->addPlayerLocalBiker(v_localNetId, m_universe->getScenes()[i]->getLevelSrc()->PlayerStart(),
+							  DD_RIGHT,
+							  Theme::instance(), Theme::instance()->getPlayerTheme(),
+							  GameApp::getColorFromPlayerNumber(v_numPlayer),
+							  GameApp::getUglyColorFromPlayerNumber(v_numPlayer), false);
+	  m_clients[j]->markScenePlayer(0, v_numPlayer);
+	  v_numPlayer++;
+	  v_localNetId++;
+	}
+      }
+      m_universe->getScenes()[i]->playLevel();
+    }
+  } catch(Exception &e) {
+    LogWarning("Server: Unable to load level %s",  v_id_level.c_str());
+    throw Exception("Unable to load level " + v_id_level);
+  }
+
+  try {
+    NA_prepareToPlay na(v_id_level);
+    sendToAllClientsMarkedToPlay(&na, -1, 0);
+  } catch(Exception &e) {
+    /* bad */
+  }
+}
+
+void ServerThread::SP2_uninitPlaying() {
+  delete m_universe;
+  m_universe = NULL;
+}
+
+void ServerThread::SP2_updateScenePlaying() {
+  int nPhysSteps;
+  Scene* v_scene;
+  SerializedBikeState BikeState;
+  static int n = -1;
+  n++;
+
+  nPhysSteps =0;
+  while (m_fLastPhysTime + (PHYS_STEP_SIZE)/100.0 <= GameApp::getXMTime() && nPhysSteps < 10) {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      v_scene = m_universe->getScenes()[i];
+      v_scene->updateLevel(PHYS_STEP_SIZE, NULL);      
+    }
+    m_fLastPhysTime += PHYS_STEP_SIZE/100.0;
+    nPhysSteps++;
+  }
+
+  // if the delay is too long, reinitialize
+  if(m_fLastPhysTime + PHYS_STEP_SIZE/100.0 < GameApp::getXMTime()) {
+    m_fLastPhysTime = GameApp::getXMTime();
+  }
+
+  // send to each client his frame and the frame of the others
+  if(n%(100/XM_SERVER_UPLOADING_FPS) == 0) {
+    for(unsigned int i=0; i<m_clients.size(); i++) {
+      if(m_clients[i]->isMarkedToPlay()) {
+	v_scene = m_universe->getScenes()[m_clients[i]->getNumScene()];
+
+	v_scene->getSerializedBikeState(v_scene->Players()[m_clients[i]->getNumPlayer()]->getState(),
+					v_scene->getTime(), &BikeState, v_scene->getPhysicsSettings());
+	NA_frame na(&BikeState);
+	try {
+	  sendToClient(&na, i, -1, 0);
+	  sendToAllClientsMarkedToPlay(&na, m_clients[i]->id(), 0, i);
+	} catch(Exception &e) {
+	}
+      }
+    }
+  }
+}
+
+void ServerThread::SP2_updateCheckScenePlaying() {
+  Scene* v_scene;
+  bool v_nobodyPlaying = true;
+
+  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+    v_scene = m_universe->getScenes()[i];
+    for(unsigned int j=0; j<v_scene->Players().size(); j++) {
+      if(v_scene->Players()[j]->isDead() == false && v_scene->Players()[j]->isFinished() == false) {
+	v_nobodyPlaying = false;
+      }
+    }
+  }
+
+  if(v_nobodyPlaying) {
+    SP2_setPhase(SP2_PHASE_WAIT_CLIENTS);
+  }
+}
+
+void ServerThread::SP2_setPhase(ServerP2Phase i_sp2phase) {
+  SP2_unsetPhase();
+  m_sp2phase = i_sp2phase;
+
+  switch(m_sp2phase) {
+  case SP2_PHASE_NONE:
+    m_wantedSleepingFramerate = 1;
+    break;
+
+  case SP2_PHASE_WAIT_CLIENTS:
+    m_wantedSleepingFramerate = 10;
+    break;
+    
+  case SP2_PHASE_PLAYING:
+    m_wantedSleepingFramerate = 200;
+    SP2_initPlaying();
+    break;
+  }
+}
+
+void ServerThread::SP2_unsetPhase() {
+  switch(m_sp2phase) {
+  case SP2_PHASE_NONE:
+    break;
+
+  case SP2_PHASE_WAIT_CLIENTS:
+    break;
+    
+  case SP2_PHASE_PLAYING:
+    SP2_uninitPlaying();
+    break;
+  }
+}
+
+unsigned int ServerThread::nbClientsInMode(NetClientMode i_mode) {
+  unsigned int n=0;
+
+  for(unsigned int i=0; i<m_clients.size(); i++) {
+    if(m_clients[i]->mode() == i_mode) {
+      n++;
+    }
+  }
+
+  return n;
+}
+
+void ServerThread::run_loop() {
+  manageNetwork();
+
+  switch(m_sp2phase) {
+
+  case SP2_PHASE_NONE:
+    break;
+
+  case SP2_PHASE_WAIT_CLIENTS:
+    if(nbClientsInMode(NETCLIENT_SLAVE_MODE) > 0) {
+      // mark clients as to play
+      for(unsigned int i=0; i<m_clients.size(); i++) {
+	if(m_clients[i]->mode() == NETCLIENT_SLAVE_MODE) {
+	  m_clients[i]->markToPlay(true);
+	}
+      }
+      SP2_setPhase(SP2_PHASE_PLAYING);
+    }
+    break;
+    
+  case SP2_PHASE_PLAYING:
+    SP2_updateScenePlaying();
+    SP2_updateCheckScenePlaying();
+    break;
+    
+  }
+
+  GameApp::wait(m_lastFrameTimeStamp, m_frameLate, m_wantedSleepingFramerate);
+}
+
+void ServerThread::manageNetwork() {
+  int n_activ;
+  unsigned int i;
+
+  n_activ = SDLNet_CheckSockets(m_set, 0);
+  if(n_activ == -1) {
+    LogError("SDLNet_CheckSockets: %s", SDLNet_GetError());
+    m_askThreadToEnd = true;
+  } else {
+    
+    if(n_activ != 0) {
+      // server socket
+      if(SDLNet_SocketReady(m_tcpsd)) {
+	acceptClient();
+      }
+      
+      else if(SDLNet_SocketReady(m_udpsd)) {
+	manageClientUDP();
+      } else {
+	i = 0;
+	while(i<m_clients.size()) {
+	  if(SDLNet_SocketReady(*(m_clients[i]->tcpSocket()))) {
+	    try {
+	      manageClientTCP(i);
+	      i++;
+	    } catch(DisconnectedException &e) {
+	      LogInfo("server: client %u disconnected (%s:%d) : %s", i,
+		      XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
+		      SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
+	      removeClient(i);	
+	    } catch(Exception &e) {
+	      LogInfo("server: bad TCP packet received by client %u (%s:%d) : %s", i,
+		      XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
+		      SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
+	      removeClient(i);
+	    }
+	  } else {
+	    i++;
+	  }
+	}
+      }
+    }    
+  }
+}
+
 void ServerThread::removeClient(unsigned int i) {
+  // remove the client from the scene if he is playing
+  if(m_universe != NULL) {
+    if(m_clients[i]->isMarkedToPlay()) {
+      m_universe->getScenes()[m_clients[i]->getNumScene()]->killPlayer(m_clients[i]->getNumPlayer());
+    }
+  }
+
   SDLNet_TCP_DelSocket(m_set, *(m_clients[i]->tcpSocket()));
   SDLNet_TCP_Close(*(m_clients[i]->tcpSocket()));
   if(m_clients[i]->isUdpBinded()) {
@@ -268,9 +519,26 @@ void ServerThread::sendToClient(NetAction* i_netAction, unsigned int i, int i_sr
   }
 }
 
-void ServerThread::sendToAllClients(NetAction* i_netAction, int i_src, int i_subsrc, unsigned int i_except) {
+void ServerThread::sendToAllClientsHavingMode(NetClientMode i_mode,
+					      NetAction* i_netAction, int i_src, int i_subsrc, unsigned int i_except) {
   for(unsigned int i=0; i<m_clients.size(); i++) {
-    if(i != i_except) {
+    if(i != i_except && (i_mode == NETCLIENT_ANY_MODE || i_mode == m_clients[i]->mode())) {
+      try {
+	sendToClient(i_netAction, i, i_src, i_subsrc);
+      } catch(Exception &e) {
+	// don't remove the client while removeclient function can call sendToAllClients ...
+      }
+    }
+  }
+}
+
+void ServerThread::sendToAllClients(NetAction* i_netAction, int i_src, int i_subsrc, unsigned int i_except) {
+  sendToAllClientsHavingMode(NETCLIENT_ANY_MODE, i_netAction, i_src, i_subsrc, i_except);
+}
+
+void ServerThread::sendToAllClientsMarkedToPlay(NetAction* i_netAction, int i_src, int i_subsrc, unsigned int i_except) {
+  for(unsigned int i=0; i<m_clients.size(); i++) {
+    if(i != i_except && m_clients[i]->isMarkedToPlay()) {
       try {
 	sendToClient(i_netAction, i, i_src, i_subsrc);
       } catch(Exception &e) {
@@ -382,6 +650,8 @@ void ServerThread::manageClientUDP() {
 }
 
 void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
+  Scene* v_scene;
+  unsigned int v_numPlayer;
 
   switch(i_netAction->actionType()) {
 
@@ -392,6 +662,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_udpBindQuery:
   case TNA_serverError:
   case TNA_changeClients:
+  case TNA_prepareToPlay:
     {
       /* should not be received */
       throw Exception("");
@@ -449,14 +720,16 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_frame:
     {
       for(unsigned int i=0; i<m_clients.size(); i++) {
-	if(i != i_client &&
-	   m_clients[i_client]->playingLevelId() != "" &&
-	   m_clients[i_client]->playingLevelId() == m_clients[i]->playingLevelId()
-	   ) {
-	  try {
-	    sendToClient(i_netAction, i, m_clients[i_client]->id(), i_netAction->getSubSource());
-	  } catch(Exception &e) {
-	    // don't remove the client, it will be done in the main loop
+	if(m_clients[i_client]->mode() == NETCLIENT_GHOST_MODE) {
+	  if(i != i_client &&
+	     m_clients[i_client]->playingLevelId() != "" &&
+	     m_clients[i_client]->playingLevelId() == m_clients[i]->playingLevelId()
+	     ) {
+	    try {
+	      sendToClient(i_netAction, i, m_clients[i_client]->id(), i_netAction->getSubSource());
+	    } catch(Exception &e) {
+	      // don't remove the client, it will be done in the main loop
+	    }
 	  }
 	}
       }
@@ -494,6 +767,32 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
 
   case TNA_playerControl:
     {
+      if(m_universe != NULL) {
+	v_scene     = m_universe->getScenes()[m_clients[i_client]->getNumScene()];
+	v_numPlayer = m_clients[i_client]->getNumPlayer();
+
+	// apply the control on the client
+	switch(((NA_playerControl*)i_netAction)->getType()) {
+	case PC_BRAKE:
+	  v_scene->Players()[v_numPlayer]->getControler()->setBreak(((NA_playerControl*)i_netAction)->getFloatValue());
+	  break;
+	case PC_THROTTLE:
+	  v_scene->Players()[v_numPlayer]->getControler()->setThrottle(((NA_playerControl*)i_netAction)->getFloatValue());
+	    break;
+	case PC_PULL:
+	  v_scene->Players()[v_numPlayer]->getControler()->setPull(((NA_playerControl*)i_netAction)->getFloatValue());
+	  break;
+	case PC_CHANGEDIR:
+	  v_scene->Players()[v_numPlayer]->getControler()->setChangeDir(((NA_playerControl*)i_netAction)->getBoolValue());
+	  break;
+	}
+      }
+    }
+    break;
+
+  case TNA_clientMode:
+    {
+      m_clients[i_client]->setMode(((NA_clientMode*)i_netAction)->mode());
     }
     break;
 

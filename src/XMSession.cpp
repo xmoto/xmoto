@@ -137,6 +137,7 @@ void XMSession::setToDefault() {
   m_serverPort                    = DEFAULT_SERVERPORT;
   m_serverMaxClients              = DEFAULT_SERVERMAXCLIENTS;
   m_clientServerName              = DEFAULT_CLIENTSERVERNAME;
+  m_clientGhostMode               = DEFAULT_CLIENTGHOSTMODE;
   m_clientServerPort              = DEFAULT_CLIENTSERVERPORT;
   m_clientFramerateUpload         = DEFAULT_CLIENTFRAMERATEUPLOAD;
   m_musicOnAllLevels              = DEFAULT_MUSICONALLLEVELS;
@@ -1199,12 +1200,12 @@ void XMSession::setServerPort(int i_value) {
   m_serverPort = i_value;
 }
 
-int XMSession::serverMaxClients() const {
+unsigned int XMSession::serverMaxClients() const {
   return m_serverMaxClients;
 }
 
-void XMSession::setServerMaxClients(int i_value) {
-  PROPAGATE(XMSession,setServerMaxClients,i_value,int);
+void XMSession::setServerMaxClients(unsigned int i_value) {
+  PROPAGATE(XMSession,setServerMaxClients,i_value, unsigned int);
   m_serverMaxClients = i_value;
 }
 
@@ -1215,6 +1216,14 @@ std::string XMSession::clientServerName() const {
 void XMSession::setClientServerName(const std::string& i_value) {
   PROPAGATE_REF(XMSession,setClientServerName,i_value,std::string);
   m_clientServerName = i_value;
+}
+
+bool XMSession::clientGhostMode() const {
+  return m_clientGhostMode;
+}
+
+void XMSession::setClientGhostMode(bool i_value) {
+  m_clientGhostMode = i_value;
 }
 
 int XMSession::clientServerPort() const {

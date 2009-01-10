@@ -123,8 +123,8 @@ public:
   void requestEnd();
   bool isRequestingEnd();
 
-  TColor getColorFromPlayerNumber(int i_player);
-  TColor getUglyColorFromPlayerNumber(int i_player);
+  static TColor getColorFromPlayerNumber(int i_player);
+  static TColor getUglyColorFromPlayerNumber(int i_player);
 
   bool getHighscoreInfos(unsigned int i_number,
 			 const std::string& i_id_level, std::string* io_id_profile, std::string* io_url, bool* o_isAccessible);
@@ -157,6 +157,8 @@ public:
   void addReplay(const std::string& i_file, xmDatabase* pDb, bool sendMessage = true);
 
   NetServer* standAloneServer();
+
+  static void wait(int& io_lastFrameTimeStamp, int& io_frameLate, int i_maxFps);
 
 protected:
   void createDefaultConfig();
@@ -255,8 +257,7 @@ private:
   int m_frameLate;
 
   /* Helpers */
-  void _Wait();
-    
+
   void _UpdateLoadingScreen(const std::string &NextTask = "");
       
   void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);

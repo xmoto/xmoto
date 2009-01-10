@@ -32,9 +32,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 StatePreplayingNet::StatePreplayingNet(const std::string i_idlevel, bool i_sameLevel)
 : StatePreplaying(i_idlevel, i_sameLevel) {
     m_name  = "StatePreplayingNet";
+
+    StateManager::instance()->registerAsObserver("NET_PREPARE_PLAYING", this);
 }
 
 StatePreplayingNet::~StatePreplayingNet() {
+  StateManager::instance()->unregisterAsObserver("NET_PREPARE_PLAYING", this);
 }
 
 void StatePreplayingNet::initUniverse() {
@@ -61,4 +64,13 @@ void StatePreplayingNet::initPlayers() {
 
 void StatePreplayingNet::runPlaying() {
   StateManager::instance()->replaceState(new StatePlayingNet(m_universe));
+}
+
+void StatePreplayingNet::executeOneCommand(std::string cmd, std::string args) {
+  if(cmd == "NET_PREPARE_PLAYING") {
+    closePlaying();
+    StateManager::instance()->replaceState(new StatePreplayingNet(args, true));
+  } else {
+    StateScene::executeOneCommand(cmd, args);
+  }
 }

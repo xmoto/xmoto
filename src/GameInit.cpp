@@ -51,7 +51,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateReplaying.h"
 #include "states/StatePreplayingReplay.h"
 #include "states/StatePreplayingGame.h"
-#include "states/StatePreplayingNet.h"
+#include "states/StateWaitServerInstructions.h"
 #include "states/StateMainMenu.h"
 #include "states/StateMessageBox.h"
 
@@ -455,11 +455,13 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     try {
       m_standAloneServer = NetServer::instance();
       NetServer::instance()->start(false);
-      quit();
-      return;
     } catch(Exception &e) {
       LogError((std::string("Exception: ") + e.getMsg()).c_str());
     }
+
+    quit();
+    return;
+
   } else {
 
     /* try to not run sql at the same time you enter in the main menu (a thread to compute packs is run (concurrency)) */
@@ -475,7 +477,12 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     }
     if((m_PlaySpecificLevelId != "")) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
-      StateManager::instance()->pushState(new StatePreplayingGame(m_PlaySpecificLevelId, false));
+
+      if(XMSession::instance()->clientGhostMode() == false && NetClient::instance()->isConnected()) {
+	  StateManager::instance()->pushState(new StateWaitServerInstructions());
+      } else {
+	StateManager::instance()->pushState(new StatePreplayingGame(m_PlaySpecificLevelId, false));
+      }
       LogInfo("Playing as '%s'...", XMSession::instance()->profile().c_str());
     }
     else if(m_PlaySpecificReplay != "") {
@@ -614,7 +621,7 @@ void GameApp::run_loop() {
     drawFrame();
     
     if(XMSession::instance()->timedemo() == false) {
-      _Wait();
+      GameApp::wait(m_lastFrameTimeStamp, m_frameLate, StateManager::instance()->getMaxFps());
     }
   }
 }
@@ -690,18 +697,18 @@ void GameApp::run_unload() {
 }
 
 
-void GameApp::_Wait()
+ void GameApp::wait(int& io_lastFrameTimeStamp, int& io_frameLate, int i_maxFps)
 {
-  if(m_lastFrameTimeStamp < 0){
-    m_lastFrameTimeStamp = getXMTimeInt();
+  if(io_lastFrameTimeStamp < 0){
+    io_lastFrameTimeStamp = getXMTimeInt();
   }
 
   /* Does app want us to delay a bit after the frame? */
   int currentTimeStamp        = getXMTimeInt();
-  int currentFrameMinDuration = 1000/StateManager::instance()->getMaxFps();
-  int lastFrameDuration       = currentTimeStamp - m_lastFrameTimeStamp;
+  int currentFrameMinDuration = 1000/i_maxFps;
+  int lastFrameDuration       = currentTimeStamp - io_lastFrameTimeStamp;
   // late from the lasts frame is not forget
-  int delta = currentFrameMinDuration - (lastFrameDuration + m_frameLate);
+  int delta = currentFrameMinDuration - (lastFrameDuration + io_frameLate);
 
   // if we have toooo much late (1/10 second), let reset delta
   int maxDelta = -100;
@@ -720,17 +727,17 @@ void GameApp::_Wait()
     // now that we have sleep, see if we don't have too much sleep
     if(sleepTime >= delta){
       int tooMuchSleep = sleepTime - delta;
-      m_frameLate      = tooMuchSleep;
+      io_frameLate      = tooMuchSleep;
     }
   }
   else{
     // we're late
     // -> update late time
-    m_frameLate = (-delta);
+    io_frameLate = (-delta);
   }
 
   // the sleeping time is not included in the next frame time
-  m_lastFrameTimeStamp = getXMTimeInt();
+  io_lastFrameTimeStamp = getXMTimeInt();
 }
 
 
@@ -782,6 +789,10 @@ void GameApp::_Wait()
       try {
 	NetClient::instance()->connect(XMSession::instance()->clientServerName(),
 				       XMSession::instance()->clientServerPort());
+	// don't send in ghost mode to be compatible with old servers
+	if(XMSession::instance()->clientGhostMode() == false) {
+	  NetClient::instance()->changeMode(XMSession::instance()->clientGhostMode() ? NETCLIENT_GHOST_MODE : NETCLIENT_SLAVE_MODE);
+	}
       } catch(Exception &e) {
 	SysMessage::instance()->displayError(GAMETEXT_UNABLETOCONNECTONTHESERVER);
 	LogError("Unable to connect to the server");

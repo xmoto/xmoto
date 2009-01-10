@@ -76,6 +76,8 @@ class NetClient : public Singleton<NetClient> {
   void executeNetActions();
   void addNetAction(NetAction* i_act);
 
+  void changeMode(NetClientMode i_mode);
+
   void startPlay(Universe* i_universe);
   void endPlay();
 
@@ -100,6 +102,7 @@ class NetClient : public Singleton<NetClient> {
   std::vector<NetOtherClient*> m_otherClients;
 
   void manageAction(NetAction* i_netAction);
+  void cleanOtherClientsGhosts();
 };
 
 #endif
