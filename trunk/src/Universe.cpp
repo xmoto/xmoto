@@ -85,6 +85,11 @@ void Universe::removeAllWorlds() {
   m_scenes.clear();
 }
 
+void Universe::initPlayServer() {
+  // just one scene for all players
+  addScene();
+}
+
 void Universe::initPlay(int i_nbPlayer, bool i_multiScenes) {
   if(i_multiScenes) {
     for(int i=0; i<i_nbPlayer; i++) {

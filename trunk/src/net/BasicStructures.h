@@ -18,24 +18,9 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEPREPLAYINGNET_H__
-#define __STATEPREPLAYINGNET_H__
+#ifndef __NETBASICSTRUCTURES_H__
+#define __NETBASICSTRUCTURES_H__
 
-#include "StatePreplaying.h"
+enum NetClientMode { NETCLIENT_ANY_MODE = 1, NETCLIENT_GHOST_MODE = 2, NETCLIENT_SLAVE_MODE = 3 };
 
-class StatePreplayingNet : public StatePreplaying {
-  public:
-  StatePreplayingNet(const std::string i_idlevel, bool i_sameLevel);
-  virtual ~StatePreplayingNet();
-  virtual void executeOneCommand(std::string cmd, std::string args);
-
-  protected:
-  virtual void initUniverse();
-  virtual void preloadLevels();
-  virtual void initPlayers();
-  virtual void runPlaying();
-
-  private:
-};
-
-#endif
+ #endif

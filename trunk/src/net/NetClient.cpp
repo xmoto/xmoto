@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Net.h"
 #include "../XMSession.h"
 #include "../states/StateManager.h"
+#include "../states/StatePreplayingNet.h"
 #include <sstream>
 #include "../helpers/VMath.h"
 #include "../SysMessage.h"
@@ -203,6 +204,14 @@ void NetClient::endPlay() {
   m_universe = NULL;
 }
 
+void NetClient::changeMode(NetClientMode i_mode) {
+  NA_clientMode na(i_mode);
+  try {
+    send(&na, 0);
+  } catch(Exception &e) {
+  }
+}
+
 std::vector<NetOtherClient*>& NetClient::otherClients() {
   return m_otherClients;
 }
@@ -220,6 +229,9 @@ void NetClient::manageAction(NetAction* i_netAction) {
   switch(i_netAction->actionType()) {
 
   case TNA_udpBind:
+  case TNA_clientInfos:
+  case TNA_clientMode:
+  case TNA_playerControl:
     /* should not happend */
     break;
 
@@ -235,10 +247,6 @@ void NetClient::manageAction(NetAction* i_netAction) {
       }
     }
     break;
-
-  case TNA_clientInfos:
-    /* should not happend */
-    break;
       
   case TNA_chatMessage:
     {
@@ -253,7 +261,6 @@ void NetClient::manageAction(NetAction* i_netAction) {
     
   case TNA_frame:
     {
-      //LogInfo("Frame received");
       NetGhost* v_ghost = NULL;
       int v_clientId = -1;
 
@@ -261,41 +268,55 @@ void NetClient::manageAction(NetAction* i_netAction) {
 	return;
       }
 
-      // search the client
-      for(unsigned int i=0; i<m_otherClients.size(); i++) {
-	if(m_otherClients[i]->id() == i_netAction->getSource()) {
-	  v_clientId = i;
-	  break;
-	}
-      }
-      if(v_clientId < 0) {
-	return; // client not declared
-      }
-
-      // check if the ghost already exists
-      if(m_otherClients[v_clientId]->netGhost(i_netAction->getSubSource()) != NULL) {
-	v_ghost = m_otherClients[v_clientId]->netGhost(i_netAction->getSubSource());
-      }
-
-      if(v_ghost == NULL) {
-	/* add the net ghost */
+      /* the server sending us our own frame */
+      if(i_netAction->getSource() == -1) {
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	  v_ghost = m_universe->getScenes()[i]->addNetGhost(m_otherClients[v_clientId]->name(), Theme::instance(),
-							    Theme::instance()->getGhostTheme(),
-							    TColor(255,255,255,0),
-							    TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-								   GET_GREEN(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-								   GET_BLUE(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-								   0)
-							    );
-	  m_otherClients[v_clientId]->setNetGhost(i_netAction->getSubSource(), v_ghost);
+	  for(unsigned int j=0; j<m_universe->getScenes()[i]->Players().size(); j++) {
+	      BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(),
+						m_universe->getScenes()[i]->Players()[j]->getState(),
+						m_universe->getScenes()[i]->getPhysicsSettings());
+	      // adjust the time of the server frame to the time of the local scene
+	      m_universe->getScenes()[i]->setTime(m_universe->getScenes()[i]->Players()[j]->getState()->GameTime);
+	  }
 	}
-      }
-      
-      // take the physic of the first world
-      if(m_universe->getScenes().size() > 0) {
-	BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(), v_ghost->getState(),
-					  m_universe->getScenes()[0]->getPhysicsSettings());
+      } else {
+
+	// search the client
+	for(unsigned int i=0; i<m_otherClients.size(); i++) {
+	  if(m_otherClients[i]->id() == i_netAction->getSource()) {
+	    v_clientId = i;
+	    break;
+	  }
+	}
+	if(v_clientId < 0) {
+	  return; // client not declared
+	}
+	
+	// check if the ghost already exists
+	if(m_otherClients[v_clientId]->netGhost(i_netAction->getSubSource()) != NULL) {
+	  v_ghost = m_otherClients[v_clientId]->netGhost(i_netAction->getSubSource());
+	}
+	
+	if(v_ghost == NULL) {
+	  /* add the net ghost */
+	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	    v_ghost = m_universe->getScenes()[i]->addNetGhost(m_otherClients[v_clientId]->name(), Theme::instance(),
+							      Theme::instance()->getGhostTheme(),
+							      TColor(255,255,255,0),
+							      TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+								     GET_GREEN(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+								     GET_BLUE(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+								     0)
+							      );
+	    m_otherClients[v_clientId]->setNetGhost(i_netAction->getSubSource(), v_ghost);
+	  }
+	}
+	
+	// take the physic of the first world
+	if(m_universe->getScenes().size() > 0) {
+	  BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(), v_ghost->getState(),
+					    m_universe->getScenes()[0]->getPhysicsSettings());
+	}
       }
     }
     break;
@@ -380,8 +401,10 @@ void NetClient::manageAction(NetAction* i_netAction) {
     }
     break;
 
-  case TNA_playerControl:
-    /* should not happend */   
+  case TNA_prepareToPlay:
+    {
+      StateManager::instance()->sendAsynchronousMessage("NET_PREPARE_PLAYING", ((NA_prepareToPlay*)i_netAction)->idLevel());
+    }
     break;
 
   }

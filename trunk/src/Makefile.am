@@ -227,6 +227,8 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateSendVote.h          \
 		 states/StateSync.cpp            \
 		 states/StateSync.h              \
+		 states/StateWaitServerInstructions.h   \
+		 states/StateWaitServerInstructions.cpp \
 		 states/StateUpgradeLevels.cpp   \
 		 states/StateUpgradeLevels.h     \
 		 states/StateDownloadGhost.cpp   \
@@ -281,6 +283,7 @@ thread_SOURCES = thread/XMThread.h                 \
 		 net/NetServer.h               \
 		 net/helpers/Net.cpp             \
 		 net/helpers/Net.h   \
+		 net/BasicStructures.h    \
 		 net/NetActions.h    \
 		 net/NetActions.cpp  \
 		 net/ActionReader.h    \

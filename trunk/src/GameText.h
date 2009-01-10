@@ -104,6 +104,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_JOYSTICK_DIRECTION_NONE  _("none")
 #define GAMETEXT_JOYSTICK_BUTTON          _("button %i")
 #define GAMETEXT_OPTION_NEED_TO_RESTART _("You must restart so that this option takes effect")
+#define GAMETEXT_OPTION_NEED_TO_SERVERRECONNECT _("You must reconnect to the server so that this option takes effect")
 #define GAMETEXT_SCRIPTACTION             _("Script action")
 
 #define GAMETEXT_CREDITS                                                                     \
@@ -487,6 +488,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_DEFAULT_PORT _("Default port")
 #define GAMETEXT_CUSTOM_PORT _("Custom port")
 #define GAMETEXT_NETWORK _("Network")
+#define GAMETEXT_CLIENTGHOSTMODE _("Simple ghost mode")
 #define GAMETEXT_CLIENTSTATUSON _("You're currently connected")
 #define GAMETEXT_CLIENTSTATUSOFF _("You're currently disconnected")
 #define GAMETEXT_CLIENTCONNECT _("Connect")
@@ -696,6 +698,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_SERVER _("Server on which you want to connect")
 #define CONTEXTHELP_CLIENTCONNECTDISCONNECT _("Connect/disconnect the client to the server")
 #define CONTEXTHELP_MUSICONALLLEVELS _("Enables background music for levels that do not have their own music track")
+#define CONTEXTHELP_CLIENTGHOSTMODE _("Network playing mode : just see other players as ghosts")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

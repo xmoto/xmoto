@@ -262,10 +262,12 @@ public:
   void setClientConnectAtStartup(bool i_value);
   int serverPort() const;
   void setServerPort(int i_value);
-  int serverMaxClients() const;
-  void setServerMaxClients(int i_value);
+  unsigned int serverMaxClients() const;
+  void setServerMaxClients(unsigned int i_value);
   std::string clientServerName() const;
   void setClientServerName(const std::string& i_value);
+  bool clientGhostMode() const;
+  void setClientGhostMode(bool i_value);
   int clientServerPort() const;
   void setClientServerPort(int i_value);
   int clientFramerateUpload() const;
@@ -387,10 +389,11 @@ public:
   bool m_serverStartAtStartup;
   bool m_clientConnectAtStartup;
   int m_serverPort;
-  int m_serverMaxClients;
+  unsigned int m_serverMaxClients;
   std::string m_clientServerName;
   int m_clientServerPort;
   int m_clientFramerateUpload;
+  bool m_clientGhostMode;
   bool m_musicOnAllLevels;
   bool m_noLog;
 };

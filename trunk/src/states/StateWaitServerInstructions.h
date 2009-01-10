@@ -18,24 +18,21 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEPREPLAYINGNET_H__
-#define __STATEPREPLAYINGNET_H__
+#ifndef __STATEWAITSERVERINSTRUCTIONS_H__
+#define __STATEWAITSERVERINSTRUCTIONS_H__
 
-#include "StatePreplaying.h"
+#include "GameState.h"
 
-class StatePreplayingNet : public StatePreplaying {
-  public:
-  StatePreplayingNet(const std::string i_idlevel, bool i_sameLevel);
-  virtual ~StatePreplayingNet();
+class StateWaitServerInstructions : public GameState {
+public:
+  StateWaitServerInstructions();
+  virtual ~StateWaitServerInstructions();
+
+  virtual bool render();
   virtual void executeOneCommand(std::string cmd, std::string args);
 
-  protected:
-  virtual void initUniverse();
-  virtual void preloadLevels();
-  virtual void initPlayers();
-  virtual void runPlaying();
-
-  private:
+  /* input */
+  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
 };
 
 #endif

@@ -29,6 +29,7 @@ class StatePlayingNet : public StatePlaying {
   virtual ~StatePlayingNet();
   
   virtual void enter();
+  virtual void executeOneCommand(std::string cmd, std::string args);
   
   /* input */
   virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
