@@ -35,6 +35,7 @@ class StatePreplayingNet : public StatePreplaying {
   virtual void preloadLevels();
   virtual void initPlayers();
   virtual void runPlaying();
+  virtual bool allowGhosts();
 
   private:
 };
