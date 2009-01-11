@@ -32,6 +32,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Log.h"
 #include "PhysicsSettings.h"
 
+#define XM_MAX_EXTRAPOLATION_T 5.0
+
 BikeState::BikeState(PhysicsSettings* i_physicsSettings) {
   m_bikeParameters = new BikeParameters(i_physicsSettings);
   m_bikeAnchors    = new BikeAnchors();
@@ -536,7 +538,8 @@ void BikeState::extrapolateGameStateLinear(std::vector<BikeState*> &i_bikeStates
   /* First of all inherit everything from B */
   *p = *pB;
   
-  if(pA->Dir != pB->Dir) {
+  if(pA->Dir != pB->Dir || t > XM_MAX_EXTRAPOLATION_T) {
+    printf("%.2f\n", t);
     return;
   }
   
