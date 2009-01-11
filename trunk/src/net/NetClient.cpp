@@ -37,12 +37,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../db/xmDatabase.h"
 
 #define XMCLIENT_KILL_ALERT_DURATION 100
+#define XMCLIENT_PREPARE_TO_PLAY_DURATION 100
 
 NetClient::NetClient() {
     m_isConnected = false;
     m_clientListenerThread = NULL;
     m_netActionsMutex = SDL_CreateMutex();
     m_universe = NULL;
+    m_mode = NETCLIENT_GHOST_MODE;
     m_udpSendPacket = SDLNet_AllocPacket(XM_CLIENT_MAX_UDP_PACKET_SIZE);
 
     if(!m_udpSendPacket) {
@@ -197,6 +199,10 @@ void NetClient::startPlay(Universe* i_universe) {
   m_universe = i_universe;
 }
 
+bool NetClient::isPlayInitialized() {
+  return m_universe != NULL;
+}
+
 void NetClient::endPlay() {
   for(unsigned int i=0; i<m_otherClients.size(); i++) {
     for(unsigned int j=0; j<NETACTION_MAX_SUBSRC; j++) {
@@ -207,11 +213,17 @@ void NetClient::endPlay() {
 }
 
 void NetClient::changeMode(NetClientMode i_mode) {
+  m_mode = i_mode;
+
   NA_clientMode na(i_mode);
   try {
     send(&na, 0);
   } catch(Exception &e) {
   }
+}
+
+NetClientMode NetClient::mode() const {
+  return m_mode;
 }
 
 std::vector<NetOtherClient*>& NetClient::otherClients() {
@@ -277,6 +289,8 @@ void NetClient::manageAction(NetAction* i_netAction) {
 	      BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(),
 						m_universe->getScenes()[i]->Players()[j]->getState(),
 						m_universe->getScenes()[i]->getPhysicsSettings());
+	      m_universe->getScenes()[i]->Players()[j]->stateExternallyUpdated();
+
 	      // adjust the time of the server frame to the time of the local scene
 	      m_universe->getScenes()[i]->setTime(m_universe->getScenes()[i]->Players()[j]->getState()->GameTime);
 	  }
@@ -302,14 +316,15 @@ void NetClient::manageAction(NetAction* i_netAction) {
 	if(v_ghost == NULL) {
 	  /* add the net ghost */
 	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	    v_ghost = m_universe->getScenes()[i]->addNetGhost(m_otherClients[v_clientId]->name(), Theme::instance(),
-							      Theme::instance()->getGhostTheme(),
-							      TColor(255,255,255,0),
-							      TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-								     GET_GREEN(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-								     GET_BLUE(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-								     0)
-							      );
+	    v_ghost = m_universe->getScenes()[i]->
+	      addNetGhost(m_otherClients[v_clientId]->name(), Theme::instance(),
+			  Theme::instance()->getGhostTheme(),
+			  TColor(255,255,255,0),
+			  TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+				 GET_GREEN(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+				 GET_BLUE(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+				 0)
+			  );
 	    m_otherClients[v_clientId]->setNetGhost(i_netAction->getSubSource(), v_ghost);
 	  }
 	}
@@ -318,6 +333,7 @@ void NetClient::manageAction(NetAction* i_netAction) {
 	if(m_universe->getScenes().size() > 0) {
 	  BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(), v_ghost->getState(),
 					    m_universe->getScenes()[0]->getPhysicsSettings());
+	  v_ghost->stateExternallyUpdated();
 	}
       }
     }
@@ -406,6 +422,23 @@ void NetClient::manageAction(NetAction* i_netAction) {
   case TNA_prepareToPlay:
     {
       StateManager::instance()->sendAsynchronousMessage("NET_PREPARE_PLAYING", ((NA_prepareToPlay*)i_netAction)->idLevel());
+    }
+    break;
+
+  case TNA_prepareToGo:
+    {
+      if(m_universe != NULL) {
+	std::ostringstream v_alert;
+
+	if(((NA_prepareToGo*)i_netAction)->time() == 0) {
+	  v_alert << GAMETEXT_GO;
+	} else {
+	  v_alert << ((NA_prepareToGo*)i_netAction)->time();
+	}
+	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	  m_universe->getScenes()[i]->gameMessage(v_alert.str(), true, XMCLIENT_PREPARE_TO_PLAY_DURATION);
+	}
+      }
     }
     break;
 

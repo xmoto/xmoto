@@ -115,6 +115,8 @@ class BikeState {
   BikeParameters* Parameters();
 
   static void interpolateGameState(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t);
+  static void extrapolateGameStateLinear(std::vector<BikeState*> &i_bikeStates, BikeState *p, float t);
+
   static void convertStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS, PhysicsSettings* i_physicsSettings);
 
   static signed char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
@@ -142,6 +144,9 @@ class Biker {
   {
     return m_bikeState;
   }
+
+  virtual void stateExternallyUpdated() {}
+
   virtual bool getRenderBikeFront() = 0; /* display the bikefront ? (for detach) */
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
   virtual float getBikeLinearVel() = 0; /* bike linear velocity */

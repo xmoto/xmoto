@@ -47,6 +47,7 @@ enum NetActionType {
   TNA_playerControl,
   TNA_clientMode,
   TNA_prepareToPlay,
+  TNA_prepareToGo,
   TNA_killAlert
 };
 
@@ -345,5 +346,22 @@ class NA_killAlert : public NetAction {
   int m_time;
 };
 
+class NA_prepareToGo : public NetAction {
+  public:
+  NA_prepareToGo(int i_time);
+  NA_prepareToGo(void* data, unsigned int len);
+  virtual ~NA_prepareToGo();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  int time() const;
+
+  private:
+  int m_time;
+};
 
 #endif

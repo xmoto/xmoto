@@ -77,8 +77,10 @@ class NetClient : public Singleton<NetClient> {
   void addNetAction(NetAction* i_act);
 
   void changeMode(NetClientMode i_mode);
+  NetClientMode mode() const;
 
   void startPlay(Universe* i_universe);
+  bool isPlayInitialized();
   void endPlay();
 
   std::vector<NetOtherClient*>& otherClients();
@@ -98,6 +100,7 @@ class NetClient : public Singleton<NetClient> {
   SDL_mutex* m_netActionsMutex;
 
   Universe* m_universe;
+  NetClientMode m_mode;
 
   std::vector<NetOtherClient*> m_otherClients;
 

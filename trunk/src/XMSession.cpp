@@ -334,6 +334,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_clientServerPort      = pDb->config_getInteger(i_id_profile, "ClientServerPort"     , m_clientServerPort);
   m_clientFramerateUpload = pDb->config_getInteger(i_id_profile, "ClientFramerateUpload", m_clientFramerateUpload);
   m_musicOnAllLevels      = pDb->config_getBool   (i_id_profile, "MusicOnAllLevels"     , m_musicOnAllLevels);
+  m_clientGhostMode       = pDb->config_getBool   (i_id_profile, "ClientGhostMode"      , m_clientGhostMode);
 
   m_nbRoomsEnabled                 = pDb->config_getInteger(i_id_profile, "WebHighscoresNbRooms"          , m_nbRoomsEnabled);
   if(m_nbRoomsEnabled < 1) { m_nbRoomsEnabled = 1; }
@@ -467,6 +468,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setInteger(m_profile, "ClientServerPort"     , m_clientServerPort);
 	pDb->config_setInteger(m_profile, "ClientFramerateUpload", m_clientFramerateUpload);
 	pDb->config_setBool   (m_profile, "MusicOnAllLevels"     , m_musicOnAllLevels);
+	pDb->config_setBool   (m_profile, "ClientGhostMode"      , m_clientGhostMode);
 
 	pDb->config_setString (m_profile, "MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium":"High");
 	pDb->config_setString (m_profile, "GameGraphics", m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium":"High");
@@ -1223,6 +1225,7 @@ bool XMSession::clientGhostMode() const {
 }
 
 void XMSession::setClientGhostMode(bool i_value) {
+  PROPAGATE(XMSession,setClientGhostMode,i_value,bool);
   m_clientGhostMode = i_value;
 }
 

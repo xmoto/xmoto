@@ -34,12 +34,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../xmscene/Level.h"
 #include "../../xmscene/BikeController.h"
 
-#define XM_SERVER_UPLOADING_FPS_PLAYER   40
-#define XM_SERVER_UPLOADING_FPS_OPLAYERS 20
+#define XM_SERVER_UPLOADING_FPS_PLAYER   25
+#define XM_SERVER_UPLOADING_FPS_OPLAYERS 10
 #define XM_SERVER_PLAYER_INACTIV_TIME_MAX  1000
 #define XM_SERVER_PLAYER_INACTIV_TIME_PREV  300
 #define XM_SERVER_NB_SOCKETS_MAX 128
 #define XM_SERVER_MAX_UDP_PACKET_SIZE 1024 // bytes
+#define XM_SERVER_PREPLAYING_TIME 300
+
 
 NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
     m_id   = i_id;
@@ -272,13 +274,32 @@ int ServerThread::realThreadFunction() {
   return 0;
 }
 
+std::string ServerThread::SP2_determineLevel() {
+  char **v_result;
+  unsigned int nrow;
+  std::string v_id_level;
+ 
+  // don't allow own levels (isToReload=1)
+  v_result = m_pDb->readDB("SELECT id_level FROM levels WHERE isToReload=0 ORDER BY RANDOM() LIMIT 1;",
+			 nrow);
+  if(nrow == 0) {
+    m_pDb->read_DB_free(v_result);
+    throw Exception("Unable to get a level");
+  }
+  v_id_level = m_pDb->getResult(v_result, 1, 0, 0);  
+  m_pDb->read_DB_free(v_result);
+  /* */
+
+  return v_id_level;
+}
+
 void ServerThread::SP2_initPlaying() {
   unsigned int v_numPlayer;
   unsigned int v_localNetId = 0;
+  std::string v_id_level;
   m_fLastPhysTime = GameApp::getXMTime();
 
-  /* get a random level */
-  std::string v_id_level = "_iL08_"; /* hehe not so random */
+  v_id_level = SP2_determineLevel();
 
   m_universe = new Universe();
   m_universe->initPlayServer();
@@ -318,6 +339,9 @@ void ServerThread::SP2_initPlaying() {
   } catch(Exception &e) {
     /* bad */
   }
+
+  m_sceneStartTime = (GameApp::getXMTimeInt()/10) + XM_SERVER_PREPLAYING_TIME;
+  m_lastPrepareToGoAlert = -1;
 }
 
 void ServerThread::SP2_uninitPlaying() {
@@ -348,6 +372,7 @@ void ServerThread::SP2_manageInactivity() {
 	  } catch(Exception &e) {
 	    /* hehe, ok, no pb */
 	  }
+
 	}
       }
     }
@@ -355,27 +380,61 @@ void ServerThread::SP2_manageInactivity() {
 
 }
 
+bool ServerThread::SP2_managePreplayTime() {
+  int v_waitTime;
+
+  if(m_sceneStartTime <= GameApp::getXMTimeInt()/10 && m_lastPrepareToGoAlert < 0) {
+    return false;
+  }
+
+  v_waitTime = (m_sceneStartTime - (GameApp::getXMTimeInt()/10))/100;
+
+  if(v_waitTime < 0) { /* only the GO! has not been send and time is just under 0 */
+    m_lastPrepareToGoAlert = -1;
+    try {
+      NA_prepareToGo na(0);
+      sendToAllClientsMarkedToPlay(&na, -1, 0);
+    } catch(Exception &e) {
+      /* ok, not good */
+    }
+  } else {
+    try {
+      if(m_lastPrepareToGoAlert != v_waitTime) {
+	NA_prepareToGo na(v_waitTime+1);
+	sendToAllClientsMarkedToPlay(&na, -1, 0);
+	m_lastPrepareToGoAlert = v_waitTime;
+      }
+    } catch(Exception &e) {
+      /* ok, not good */
+      }
+  }
+
+  return true;
+}
+
 void ServerThread::SP2_updateScenePlaying() {
   int nPhysSteps;
   Scene* v_scene;
   SerializedBikeState BikeState;
 
-  SP2_manageInactivity();
-
-  /* update the scene */
-  nPhysSteps =0;
-  while (m_fLastPhysTime + (PHYS_STEP_SIZE)/100.0 <= GameApp::getXMTime() && nPhysSteps < 10) {
-    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-      v_scene = m_universe->getScenes()[i];
-      v_scene->updateLevel(PHYS_STEP_SIZE, NULL);      
+  if(SP2_managePreplayTime() == false) {
+    SP2_manageInactivity();
+  
+    /* update the scene */
+    nPhysSteps =0;
+    while (m_fLastPhysTime + (PHYS_STEP_SIZE)/100.0 <= GameApp::getXMTime() && nPhysSteps < 10) {
+      for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	v_scene = m_universe->getScenes()[i];
+	v_scene->updateLevel(PHYS_STEP_SIZE, NULL);      
+      }
+      m_fLastPhysTime += PHYS_STEP_SIZE/100.0;
+      nPhysSteps++;
     }
-    m_fLastPhysTime += PHYS_STEP_SIZE/100.0;
-    nPhysSteps++;
-  }
-
-  // if the delay is too long, reinitialize
-  if(m_fLastPhysTime + PHYS_STEP_SIZE/100.0 < GameApp::getXMTime()) {
-    m_fLastPhysTime = GameApp::getXMTime();
+    
+    // if the delay is too long, reinitialize
+    if(m_fLastPhysTime + PHYS_STEP_SIZE/100.0 < GameApp::getXMTime()) {
+      m_fLastPhysTime = GameApp::getXMTime();
+    }
   }
 
   // send to each client his frame and the frame of the others
@@ -436,7 +495,11 @@ void ServerThread::SP2_setPhase(ServerP2Phase i_sp2phase) {
     
   case SP2_PHASE_PLAYING:
     m_wantedSleepingFramerate = 200;
-    SP2_initPlaying();
+    try {
+      SP2_initPlaying();
+    } catch(Exception &e) {
+      SP2_setPhase(SP2_PHASE_WAIT_CLIENTS);
+    }
     break;
   }
 }
@@ -724,6 +787,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_serverError:
   case TNA_changeClients:
   case TNA_prepareToPlay:
+  case TNA_prepareToGo:
   case TNA_killAlert:
     {
       /* should not be received */

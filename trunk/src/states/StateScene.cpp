@@ -477,7 +477,7 @@ void StateScene::closePlaying() {
     NetClient::instance()->send(&na, 0);
   }
 
-  if(NetClient::instance()->isConnected()) {
+  if(NetClient::instance()->isPlayInitialized()) {
     NetClient::instance()->endPlay();
   }
 
@@ -620,7 +620,7 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
 
 void StateScene::displayStats() {
   FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
-  FontGlyph* v_fg   = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(m_statsStr);
+  FontGlyph* v_fg   = v_fm->getGlyph(m_statsStr);
   Vector2f A = Vector2f(GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth(),
 			GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight());
   Vector2f B= Vector2f(GameApp::instance()->getDrawLib()->getDispWidth(),

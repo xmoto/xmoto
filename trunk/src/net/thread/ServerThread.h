@@ -107,6 +107,8 @@ class ServerThread : public XMThread {
   int m_frameLate;
   int m_wantedSleepingFramerate;
   int m_currentFrame;
+  int m_sceneStartTime;
+  int m_lastPrepareToGoAlert;
 
   SDLNet_SocketSet m_set;
   std::vector<NetSClient*> m_clients;
@@ -136,6 +138,8 @@ class ServerThread : public XMThread {
   void SP2_setPhase(ServerP2Phase i_sp2phase);
   void SP2_unsetPhase();
   void SP2_manageInactivity();
+  bool SP2_managePreplayTime();
+  std::string SP2_determineLevel();
 };
 
 #endif

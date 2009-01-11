@@ -185,12 +185,21 @@ class PlayerNetClient : public Biker {
   virtual std::string getQuickDescription() const;
   virtual std::string getDescription() const;
 
+  virtual void  updateToTime(int i_time, int i_timeStep,
+			     CollisionSystem *i_collisionSystem, Vector2f i_gravity,
+			     Scene *i_motogame);
+  virtual void stateExternallyUpdated();
+
   virtual void setLocalNetId(int i_value);
   virtual BikeController* getControler();
   void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
   
  private:
   BikeControllerNet* m_BikeC;
+
+  /* previous states */
+  bool m_previousBikeStatesInitialized;
+  std::vector<BikeState*> m_previousBikeStates;
 };
 
 #endif

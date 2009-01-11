@@ -22,11 +22,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../net/NetClient.h"
 #include "StateManager.h"
 #include "StatePreplayingNet.h"
+#include "../Game.h"
+#include "../GameText.h"
+#include "../drawlib/DrawLib.h"
 
 StateWaitServerInstructions::StateWaitServerInstructions():
 GameState(true, false, true, true)
 {
   m_name             = "StateWaitServerInstructions";
+
+  m_showCursor = false;
+
+  m_renderFps = 30;
+  m_updateFps = 30;
 
   StateManager::instance()->registerAsObserver("CLIENT_DISCONNECTED_BY_ERROR", this);
   StateManager::instance()->registerAsObserver("NET_PREPARE_PLAYING", this);
@@ -39,7 +47,18 @@ StateWaitServerInstructions::~StateWaitServerInstructions()
 }
 
 bool StateWaitServerInstructions::render() {
+  FontManager* v_fm;
+  FontGlyph* v_fg;
+
   GameState::render();
+
+  v_fm = GameApp::instance()->getDrawLib()->getFontMedium();
+  v_fg = v_fm->getGlyph(GAMETEXT_WAIT_XMSERVER);
+  v_fm->printString(v_fg,
+		    (GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth())   /2,
+		    (GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight()) /2,
+		    MAKE_COLOR(220,255,255,255), -0.5, true);
+
 
   return true;
 }

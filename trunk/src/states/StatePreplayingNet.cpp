@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/Level.h"
 #include "../Game.h"
 #include "../xmscene/BikePlayer.h"
+#include "../net/NetClient.h"
 
 StatePreplayingNet::StatePreplayingNet(const std::string i_idlevel, bool i_sameLevel)
 : StatePreplaying(i_idlevel, i_sameLevel) {
@@ -38,6 +39,14 @@ StatePreplayingNet::StatePreplayingNet(const std::string i_idlevel, bool i_sameL
 
 StatePreplayingNet::~StatePreplayingNet() {
   StateManager::instance()->unregisterAsObserver("NET_PREPARE_PLAYING", this);
+}
+
+void StatePreplayingNet::abortPlaying() {
+  StateScene::abortPlaying();
+
+  if(NetClient::instance()->isConnected()) {
+    NetClient::instance()->disconnect();
+  }
 }
 
 void StatePreplayingNet::initUniverse() {

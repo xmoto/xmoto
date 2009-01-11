@@ -37,6 +37,14 @@ StatePlayingNet::~StatePlayingNet()
   StateManager::instance()->unregisterAsObserver("NET_PREPARE_PLAYING", this);
 }
 
+void StatePlayingNet::abortPlaying() {
+  StateScene::abortPlaying();
+
+  if(NetClient::instance()->isConnected()) {
+    NetClient::instance()->disconnect();
+  }
+}
+
 void StatePlayingNet::executeOneCommand(std::string cmd, std::string args) {
   if(cmd == "NET_PREPARE_PLAYING") {
     closePlaying();
