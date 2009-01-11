@@ -28,6 +28,7 @@ class StatePreplayingNet : public StatePreplaying {
   StatePreplayingNet(const std::string i_idlevel, bool i_sameLevel);
   virtual ~StatePreplayingNet();
   virtual void executeOneCommand(std::string cmd, std::string args);
+  virtual void abortPlaying();
 
   protected:
   virtual void initUniverse();

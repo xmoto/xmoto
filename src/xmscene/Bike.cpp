@@ -528,6 +528,54 @@ void BikeState::interpolateGameState(std::vector<BikeState*> &i_ghostBikeStates,
   }
 }
 
+void BikeState::extrapolateGameStateLinear(std::vector<BikeState*> &i_bikeStates, BikeState *p, float t) {
+  BikeState *pA, *pB;
+  pA = i_bikeStates[0];
+  pB = i_bikeStates[1];
+
+  /* First of all inherit everything from B */
+  *p = *pB;
+  
+  if(pA->Dir != pB->Dir) {
+    return;
+  }
+  
+  p->CenterP = pB->CenterP + (pB->CenterP - pA->CenterP)*t;
+
+  p->RearWheelP     = pB->RearWheelP     + (pB->RearWheelP     - pA->RearWheelP)*t;
+  p->FrontWheelP    = pB->FrontWheelP    + (pB->FrontWheelP    - pA->FrontWheelP)*t;
+  p->fBikeEngineRPM = pB->fBikeEngineRPM + (pB->fBikeEngineRPM - pA->fBikeEngineRPM)*t;
+  
+  for(unsigned int i=0; i<4; i++) {
+    p->fFrameRot[i] = pB->fFrameRot[i] + (pB->fFrameRot[i] - pA->fFrameRot[i])*t;
+  }
+  
+  if(pA->Dir == DD_RIGHT) {
+    p->HeadP = pB->HeadP + (pB->HeadP - pA->HeadP)*t;
+    p->HandP = pB->HandP + (pB->HandP - pA->HandP)*t;
+    p->ElbowP = pB->ElbowP + (pB->ElbowP - pA->ElbowP)*t;
+    p->ShoulderP = pB->ShoulderP + (pB->ShoulderP - pA->ShoulderP)*t;
+    p->LowerBodyP = pB->LowerBodyP + (pB->LowerBodyP - pA->LowerBodyP)*t;
+    p->KneeP = pB->KneeP + (pB->KneeP - pA->KneeP)*t;
+    p->FootP = pB->FootP + (pB->FootP - pA->FootP)*t;
+    p->SwingAnchorP = pB->SwingAnchorP + (pB->SwingAnchorP - pA->SwingAnchorP)*t;
+    p->FrontAnchorP = pB->FrontAnchorP + (pB->FrontAnchorP - pA->FrontAnchorP)*t;
+    
+  } else {
+    p->Head2P = pB->Head2P + (pB->Head2P - pA->Head2P)*t;
+    p->Hand2P = pB->Hand2P + (pB->Hand2P - pA->Hand2P)*t;
+    p->Elbow2P = pB->Elbow2P + (pB->Elbow2P - pA->Elbow2P)*t;
+    p->Shoulder2P = pB->Shoulder2P + (pB->Shoulder2P - pA->Shoulder2P)*t;
+    p->LowerBody2P = pB->LowerBody2P + (pB->LowerBody2P - pA->LowerBody2P)*t;
+    p->Knee2P = pB->Knee2P + (pB->Knee2P - pA->Knee2P)*t;
+    p->Foot2P = pB->Foot2P + (pB->Foot2P - pA->Foot2P)*t;
+    p->SwingAnchor2P = pB->SwingAnchor2P + (pB->SwingAnchor2P - pA->SwingAnchor2P)*t;
+    p->FrontAnchor2P = pB->FrontAnchor2P + (pB->FrontAnchor2P - pA->FrontAnchor2P)*t;
+  }
+  
+  p->GameTime = pB->GameTime + (int)(((float)(pB->GameTime - pA->GameTime))*t);
+}
+
   void BikeState::convertStateFromReplay(SerializedBikeState *pReplayState,
 					 BikeState *pBikeS, PhysicsSettings* i_physicsSettings) 
   {

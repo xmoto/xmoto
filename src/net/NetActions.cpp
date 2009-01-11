@@ -50,6 +50,7 @@ std::string NA_playerControl::ActionKey = "c";
 std::string NA_clientMode::ActionKey  	= "clientMode";
 std::string NA_prepareToPlay::ActionKey = "prepareToPlay";
 std::string NA_killAlert::ActionKey     = "killAlert";
+std::string NA_prepareToGo::ActionKey   = "prepareToGo";
 
 NetActionType NA_chatMessage::NAType   = TNA_chatMessage;
 NetActionType NA_frame::NAType         = TNA_frame;
@@ -64,6 +65,7 @@ NetActionType NA_playerControl::NAType = TNA_playerControl;
 NetActionType NA_clientMode::NAType    = TNA_clientMode;
 NetActionType NA_prepareToPlay::NAType = TNA_prepareToPlay;
 NetActionType NA_killAlert::NAType     = TNA_killAlert;
+NetActionType NA_prepareToGo::NAType   = TNA_prepareToGo;
 
 NetAction::NetAction() {
   m_source    = -2; // < -1 => undefined
@@ -252,6 +254,10 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
 
   else if(v_cmd == NA_killAlert::ActionKey) {
     v_res = new NA_killAlert(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_prepareToGo::ActionKey) {
+    v_res = new NA_prepareToGo(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
   else {
@@ -650,5 +656,29 @@ void NA_killAlert::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sen
 }
 
 int NA_killAlert::time() const {
+  return m_time;
+}
+
+NA_prepareToGo::NA_prepareToGo(int i_time) {
+  m_time = i_time;
+}
+
+NA_prepareToGo::NA_prepareToGo(void* data, unsigned int len) {
+  unsigned int v_localOffset = 0;
+  m_time = atoi(getLine(data, len, &v_localOffset).c_str());
+}
+
+NA_prepareToGo::~NA_prepareToGo() {
+}
+
+void NA_prepareToGo::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  std::ostringstream v_send;
+  v_send << m_time;
+  
+  // force TCP
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.str().c_str(), v_send.str().size()); // don't send the \0
+}
+
+int NA_prepareToGo::time() const {
   return m_time;
 }

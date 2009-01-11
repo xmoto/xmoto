@@ -1245,10 +1245,18 @@ PlayerNetClient::PlayerNetClient(PhysicsSettings* i_physicsSettings,
   : Biker(i_physicsSettings, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
   m_BikeC = new BikeControllerNet(0);
   initToPosition(i_position, i_direction, i_gravity);
+
+  m_previousBikeStatesInitialized = false;
+  m_previousBikeStates.push_back(new BikeState(i_physicsSettings));
+  m_previousBikeStates.push_back(new BikeState(i_physicsSettings));
 }
 
 PlayerNetClient::~PlayerNetClient() {
   delete m_BikeC;
+
+  for(unsigned int i=0; i<m_previousBikeStates.size(); i++) {
+    delete m_previousBikeStates[i];
+  }
 }
 
 bool PlayerNetClient::getRenderBikeFront() {
@@ -1291,4 +1299,38 @@ void PlayerNetClient::setLocalNetId(int i_value) {
 void PlayerNetClient::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity) {
   m_bikeState->Dir = i_direction;
   setBodyDetach(false);
+}
+
+void PlayerNetClient::updateToTime(int i_time, int i_timeStep,
+				   CollisionSystem *i_collisionSystem, Vector2f i_gravity,
+				   Scene *i_motogame) {
+  float v_interpolation_value;
+  Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
+
+  /* extrapolate frames */
+  if(m_previousBikeStatesInitialized == false) {
+    return;
+  }
+
+  if(m_previousBikeStates[1]->GameTime > m_previousBikeStates[0]->GameTime) {
+    v_interpolation_value = ((i_time - m_previousBikeStates[0]->GameTime) 
+			     /((float)(m_previousBikeStates[1]->GameTime - m_previousBikeStates[0]->GameTime))) - 1.0;
+    BikeState::extrapolateGameStateLinear(m_previousBikeStates, m_bikeState, v_interpolation_value);
+  }
+}
+
+void PlayerNetClient::stateExternallyUpdated() {
+  BikeState* v_state;
+
+  /* update previous states */
+  if(m_previousBikeStatesInitialized == false) {
+    *(m_previousBikeStates[0]) = *m_bikeState;
+    *(m_previousBikeStates[1]) = *m_bikeState;
+    m_previousBikeStatesInitialized = true;
+  } else {
+    v_state = m_previousBikeStates[0];
+    m_previousBikeStates[0] = m_previousBikeStates[1];
+    m_previousBikeStates[1] = v_state;
+    *v_state = *m_bikeState;
+  }
 }
