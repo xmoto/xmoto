@@ -60,6 +60,10 @@ class NetSClient {
   void markScenePlayer(unsigned int i_numScene, unsigned int i_numPlayer);
   unsigned int getNumScene() const;
   unsigned int getNumPlayer() const;
+  int lastActivTime() const;
+  void setLastActivTime(int i_time);
+  int lastInactivTimeAlert() const;
+  void setLastInactivTimeAlert(int i_time);
 
   void setPlayingLevelId(const std::string& i_levelId);
   std::string playingLevelId() const;
@@ -79,6 +83,8 @@ class NetSClient {
   std::string m_udpBindKey;
   std::string m_name;
   std::string m_playingLevelId;
+  int m_lastActivTime;
+  int m_lastInactivTimeAlert;
 };
 
 class ServerThread : public XMThread {
@@ -100,6 +106,7 @@ class ServerThread : public XMThread {
   int m_lastFrameTimeStamp;
   int m_frameLate;
   int m_wantedSleepingFramerate;
+  int m_currentFrame;
 
   SDLNet_SocketSet m_set;
   std::vector<NetSClient*> m_clients;
@@ -128,7 +135,7 @@ class ServerThread : public XMThread {
   void SP2_updateCheckScenePlaying();
   void SP2_setPhase(ServerP2Phase i_sp2phase);
   void SP2_unsetPhase();
-
+  void SP2_manageInactivity();
 };
 
 #endif

@@ -34,7 +34,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../xmscene/Level.h"
 #include "../../xmscene/BikeController.h"
 
-#define XM_SERVER_UPLOADING_FPS 30
+#define XM_SERVER_UPLOADING_FPS_PLAYER   40
+#define XM_SERVER_UPLOADING_FPS_OPLAYERS 20
+#define XM_SERVER_PLAYER_INACTIV_TIME_MAX  1000
+#define XM_SERVER_PLAYER_INACTIV_TIME_PREV  300
 #define XM_SERVER_NB_SOCKETS_MAX 128
 #define XM_SERVER_MAX_UDP_PACKET_SIZE 1024 // bytes
 
@@ -48,6 +51,8 @@ NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tc
     m_tcpRemoteIP = *i_tcpRemoteIP;
     m_isUdpBinded = false;
     tcpReader = new ActionReader();
+    m_lastActivTime        =  0;
+    m_lastInactivTimeAlert = -1;
 }
 
 NetSClient::~NetSClient() {
@@ -110,6 +115,23 @@ NetClientMode NetSClient::mode() const {
   return m_mode;
 }
 
+int NetSClient::lastActivTime() const {
+  return m_lastActivTime;
+}
+
+void NetSClient::setLastActivTime(int i_time) {
+  m_lastActivTime        = i_time;
+  m_lastInactivTimeAlert = -1;
+}
+
+int NetSClient::lastInactivTimeAlert() const {
+  return m_lastInactivTimeAlert;
+}
+
+void NetSClient::setLastInactivTimeAlert(int i_time) {
+  m_lastInactivTimeAlert = i_time;
+}
+
 void NetSClient::markToPlay(bool i_value) {
   m_isMarkedToPlay = i_value;
 }
@@ -121,6 +143,7 @@ bool NetSClient::isMarkedToPlay() {
 void NetSClient::markScenePlayer(unsigned int i_numScene, unsigned int i_numPlayer) {
   m_numScene  = i_numScene;
   m_numPlayer = i_numPlayer;
+  m_lastActivTime = GameApp::getXMTimeInt();
 }
 
 unsigned int NetSClient::getNumScene() const {
@@ -148,6 +171,7 @@ ServerThread::ServerThread() {
     SP2_setPhase(SP2_PHASE_WAIT_CLIENTS);
     m_lastFrameTimeStamp = -1;
     m_frameLate          = 0;
+    m_currentFrame       = 0;
 
     if(!m_udpPacket) {
       throw Exception("SDLNet_AllocPacket: " + std::string(SDLNet_GetError()));
@@ -301,13 +325,44 @@ void ServerThread::SP2_uninitPlaying() {
   m_universe = NULL;
 }
 
+void ServerThread::SP2_manageInactivity() {
+  int v_inactivDiff;
+  int v_prevTime;
+  
+  /* kill players not playing for a too long time */
+  for(unsigned int i=0; i<m_clients.size(); i++) {
+    v_inactivDiff = GameApp::getXMTimeInt() - m_clients[i]->lastActivTime();
+
+    if(m_clients[i]->isMarkedToPlay() && XM_SERVER_PLAYER_INACTIV_TIME_MAX * 10 < v_inactivDiff) {
+      m_universe->getScenes()[m_clients[i]->getNumScene()]->killPlayer(m_clients[i]->getNumPlayer());
+    } else {
+      v_prevTime = XM_SERVER_PLAYER_INACTIV_TIME_MAX * 10 - v_inactivDiff;
+
+      if(m_clients[i]->isMarkedToPlay() && XM_SERVER_PLAYER_INACTIV_TIME_PREV * 10 > v_prevTime) {
+	if(m_clients[i]->lastInactivTimeAlert() != v_prevTime/1000) {
+	  m_clients[i]->setLastInactivTimeAlert(v_prevTime/1000);
+	  
+	  NA_killAlert na(m_clients[i]->lastInactivTimeAlert()+1);
+	  try {
+	    sendToClient(&na, i, -1, 0);
+	  } catch(Exception &e) {
+	    /* hehe, ok, no pb */
+	  }
+	}
+      }
+    }
+  }
+
+}
+
 void ServerThread::SP2_updateScenePlaying() {
   int nPhysSteps;
   Scene* v_scene;
   SerializedBikeState BikeState;
-  static int n = -1;
-  n++;
 
+  SP2_manageInactivity();
+
+  /* update the scene */
   nPhysSteps =0;
   while (m_fLastPhysTime + (PHYS_STEP_SIZE)/100.0 <= GameApp::getXMTime() && nPhysSteps < 10) {
     for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
@@ -324,7 +379,7 @@ void ServerThread::SP2_updateScenePlaying() {
   }
 
   // send to each client his frame and the frame of the others
-  if(n%(100/XM_SERVER_UPLOADING_FPS) == 0) {
+  if(m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_PLAYER) == 0 || m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_OPLAYERS) == 0) {
     for(unsigned int i=0; i<m_clients.size(); i++) {
       if(m_clients[i]->isMarkedToPlay()) {
 	v_scene = m_universe->getScenes()[m_clients[i]->getNumScene()];
@@ -333,13 +388,19 @@ void ServerThread::SP2_updateScenePlaying() {
 					v_scene->getTime(), &BikeState, v_scene->getPhysicsSettings());
 	NA_frame na(&BikeState);
 	try {
-	  sendToClient(&na, i, -1, 0);
-	  sendToAllClientsMarkedToPlay(&na, m_clients[i]->id(), 0, i);
+	  if(m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_PLAYER) == 0) {
+	    sendToClient(&na, i, -1, 0);
+	  }
+	  if(m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_OPLAYERS) == 0) {
+	    sendToAllClientsMarkedToPlay(&na, m_clients[i]->id(), 0, i);
+	  }
 	} catch(Exception &e) {
 	}
       }
     }
   }
+
+  m_currentFrame = (m_currentFrame +1) % 1000;
 }
 
 void ServerThread::SP2_updateCheckScenePlaying() {
@@ -663,6 +724,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_serverError:
   case TNA_changeClients:
   case TNA_prepareToPlay:
+  case TNA_killAlert:
     {
       /* should not be received */
       throw Exception("");
@@ -768,6 +830,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_playerControl:
     {
       if(m_universe != NULL) {
+	m_clients[i_client]->setLastActivTime(GameApp::getXMTimeInt());
 	v_scene     = m_universe->getScenes()[m_clients[i_client]->getNumScene()];
 	v_numPlayer = m_clients[i_client]->getNumPlayer();
 
