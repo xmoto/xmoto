@@ -492,6 +492,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     else {
       /* display what must be displayed */
       StateManager::instance()->pushState(new StateMainMenu());
+      if(XMSession::instance()->clientGhostMode() == false && NetClient::instance()->isConnected()) {
+	  StateManager::instance()->pushState(new StateWaitServerInstructions());
+      }
     }
   }
 

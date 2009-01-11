@@ -83,3 +83,7 @@ void StatePreplayingNet::executeOneCommand(std::string cmd, std::string args) {
     StateScene::executeOneCommand(cmd, args);
   }
 }
+
+bool StatePreplayingNet::allowGhosts() {
+  return false;
+}
