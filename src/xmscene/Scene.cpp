@@ -1414,7 +1414,10 @@ PlayerNetClient* Scene::addPlayerNetClient(Vector2f i_position, DriveDir i_direc
   }
   unsigned int Scene::getNumberCameras(){
     // the last camera is the autozoom one
-    return m_cameras.size()==1?1:m_cameras.size()-1;
+    if(m_cameras.size() <= 1) {
+      return m_cameras.size();
+    }
+    return m_cameras.size()-1;
   }
   void Scene::setCurrentCamera(unsigned int currentCamera){
     m_currentCamera = currentCamera;
