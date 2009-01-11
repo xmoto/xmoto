@@ -539,7 +539,6 @@ void BikeState::extrapolateGameStateLinear(std::vector<BikeState*> &i_bikeStates
   *p = *pB;
   
   if(pA->Dir != pB->Dir || t > XM_MAX_EXTRAPOLATION_T) {
-    printf("%.2f\n", t);
     return;
   }
   
