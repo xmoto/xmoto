@@ -36,6 +36,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../GameText.h"
 #include "../db/xmDatabase.h"
 
+#define XMCLIENT_KILL_ALERT_DURATION 100
+
 NetClient::NetClient() {
     m_isConnected = false;
     m_clientListenerThread = NULL;
@@ -404,6 +406,18 @@ void NetClient::manageAction(NetAction* i_netAction) {
   case TNA_prepareToPlay:
     {
       StateManager::instance()->sendAsynchronousMessage("NET_PREPARE_PLAYING", ((NA_prepareToPlay*)i_netAction)->idLevel());
+    }
+    break;
+
+  case TNA_killAlert:
+    {
+      if(m_universe != NULL) {
+	std::ostringstream v_alert;
+	v_alert << ((NA_killAlert*)i_netAction)->time();
+	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	    m_universe->getScenes()[i]->gameMessage(v_alert.str(), true, XMCLIENT_KILL_ALERT_DURATION);
+	}
+      }
     }
     break;
 
