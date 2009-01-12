@@ -110,7 +110,7 @@ void StateFinished::enter()
   v_pRoomsTimes_str->setCaption(v_roomsTimes);
 
   if(m_universe != NULL) {
-    m_universe->isTheCurrentPlayAHighscore(v_is_a_personnal_highscore, v_is_a_room_highscore);
+    m_universe->isTheCurrentPlayAHighscore(xmDatabase::instance("main"), v_is_a_personnal_highscore, v_is_a_room_highscore);
   }
 
   /* activ button */
@@ -140,7 +140,7 @@ void StateFinished::enter()
 	  v_replayName = Replay::giveAutomaticName();
 
 	  try {
-	    m_universe->saveReplay(v_replayName);
+	    m_universe->saveReplay(xmDatabase::instance("main"), v_replayName);
 	  } catch(Exception &e) {
 	    StateManager::instance()->pushState(new StateMessageBox(this, e.getMsg(), UI_MSGBOX_OK));
 	  }
@@ -293,7 +293,7 @@ void StateFinished::executeOneCommand(std::string cmd, std::string args)
 
   if(cmd == "SAVEREPLAY") {
     try {
-      m_universe->saveReplay(m_replayName);
+      m_universe->saveReplay(xmDatabase::instance("main"), m_replayName);
     } catch(Exception &e) {
       StateManager::instance()->pushState(new StateMessageBox(NULL, e.getMsg(), UI_MSGBOX_OK));
     }

@@ -31,7 +31,7 @@ NetServer::~NetServer() {
 }
 
 void NetServer::start(bool i_deamon) {
-  m_serverThread = new ServerThread();
+  m_serverThread = new ServerThread("NETSERVER");
 
   if(i_deamon) {
     m_serverThread->startThread();

@@ -190,14 +190,13 @@ void Universe::switchFollowCamera() {
   }
 }
 
-void Universe::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
+void Universe::isTheCurrentPlayAHighscore(xmDatabase *pDb, bool& o_personal, bool& o_room) {
   int v_best_personal_time;
   int v_current_time;
   int v_best_room_time;
   char **v_result;
   unsigned int nrow;
   char *v_res;
-  xmDatabase *pDb = xmDatabase::instance("main");
 
   o_personal = o_room = false;
 
@@ -281,13 +280,12 @@ void Universe::initReplay() {
   }
 }
 
-void Universe::saveReplay(const std::string &Name) {
+void Universe::saveReplay(xmDatabase *pDb, const std::string &Name) {
   /* This is simply a job of copying the Replays/Latest.rpl file into 
      Replays/Name.rpl */
 
   /* Try saving */
   std::string v_outputfile;
-  xmDatabase *pDb = xmDatabase::instance("main");
 
   if(!FS::copyFile("Replays/Latest.rpl",
 		   std::string("Replays/") + Name + std::string(".rpl"),

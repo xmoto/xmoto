@@ -164,7 +164,8 @@ std::string NetSClient::playingLevelId() const {
   return m_playingLevelId;
 }
 
-ServerThread::ServerThread() {
+ServerThread::ServerThread(const std::string& i_dbKey) 
+  : XMThread(i_dbKey) {
     m_set = NULL;
     m_nextClientId = 0;
     m_udpPacket = SDLNet_AllocPacket(XM_SERVER_MAX_UDP_PACKET_SIZE);

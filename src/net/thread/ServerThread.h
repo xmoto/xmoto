@@ -89,7 +89,7 @@ class NetSClient {
 
 class ServerThread : public XMThread {
   public:
-  ServerThread();
+  ServerThread(const std::string& i_dbKey);
   virtual ~ServerThread();
 
   int realThreadFunction();

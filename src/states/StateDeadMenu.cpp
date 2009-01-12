@@ -187,7 +187,7 @@ void StateDeadMenu::executeOneCommand(std::string cmd, std::string args)
 
   if(cmd == "SAVEREPLAY") {
     try {
-      m_universe->saveReplay(m_replayName);
+      m_universe->saveReplay(xmDatabase::instance("main"), m_replayName);
     } catch(Exception &e) {
       StateManager::instance()->pushState(new StateMessageBox(NULL, e.getMsg(), UI_MSGBOX_OK));
     }

@@ -48,8 +48,8 @@ class Universe {
   bool isAReplayToSave() const;
   void initReplay();
   void finalizeReplay(bool i_finished);   /* call to close the replay */
-  void saveReplay(const std::string &Name);
-  void isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room);
+  void saveReplay(xmDatabase *pDb, const std::string &Name);
+  void isTheCurrentPlayAHighscore(xmDatabase *pDb, bool& o_personal, bool& o_room);
   void TeleportationCheatTo(int i_player, Vector2f i_position);
   void switchFollowCamera();
 
