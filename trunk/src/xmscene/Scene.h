@@ -119,11 +119,10 @@ public:
 
   /* update of the structure */
   void loadLevel(xmDatabase *i_db, const std::string& i_id_level);
-  void prePlayLevel(Replay *recordingReplay,
-		    bool i_playEvents);
+  void prePlayLevel(DBuffer* i_eventRecorder, bool i_playEvents);
 
   void playLevel();
-  void updateLevel(int timeStep, Replay *i_recordedReplay = NULL);
+  void updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder);
   void endLevel();
 
   /* entities */
@@ -148,7 +147,7 @@ public:
   SceneEvent* getNextGameEvent();
   int getNumPendingGameEvents();
   void cleanEventsQueue();
-  void executeEvents(Replay *p_replay);
+  void executeEvents(DBuffer *i_recorder);
 
   /* player */
   void setPlayerPosition(int i_player, float x,float y,bool bFaceRight);

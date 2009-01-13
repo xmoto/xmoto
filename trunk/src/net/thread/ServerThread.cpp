@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../NetActions.h"
 #include "../../GameText.h"
 #include "../../Universe.h"
+#include "../../DBuffer.h"
 #include "../../Game.h"
 #include "../../db/xmDatabase.h"
 #include "../../xmscene/Level.h"
@@ -41,7 +42,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_SERVER_NB_SOCKETS_MAX 128
 #define XM_SERVER_MAX_UDP_PACKET_SIZE 1024 // bytes
 #define XM_SERVER_PREPLAYING_TIME 300
-
 
 NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
     m_id   = i_id;
@@ -171,6 +171,8 @@ ServerThread::ServerThread(const std::string& i_dbKey)
     m_udpPacket = SDLNet_AllocPacket(XM_SERVER_MAX_UDP_PACKET_SIZE);
 
     m_universe = NULL;
+    m_DBuffer = new DBuffer();
+    m_DBuffer->initOutput(XM_NET_MAX_EVENTS_SHOT_SIZE);
     SP2_setPhase(SP2_PHASE_WAIT_CLIENTS);
     m_lastFrameTimeStamp = -1;
     m_frameLate          = 0;
@@ -183,6 +185,7 @@ ServerThread::ServerThread(const std::string& i_dbKey)
 
 ServerThread::~ServerThread() {
   SDLNet_FreePacket(m_udpPacket);
+  delete m_DBuffer;
 }
 
 int ServerThread::realThreadFunction() {
@@ -281,7 +284,10 @@ std::string ServerThread::SP2_determineLevel() {
   std::string v_id_level;
  
   // don't allow own levels (isToReload=1)
-  v_result = m_pDb->readDB("SELECT id_level FROM levels WHERE isToReload=0 ORDER BY RANDOM() LIMIT 1;",
+  v_result = m_pDb->readDB("SELECT id_level "
+                           "FROM levels "
+                           "WHERE isToReload=0 AND isScripted=0 AND isPhysics=0 "
+                           "ORDER BY RANDOM() LIMIT 1;",
 			 nrow);
   if(nrow == 0) {
     m_pDb->read_DB_free(v_result);
@@ -312,7 +318,10 @@ void ServerThread::SP2_initPlaying() {
       if(m_universe->getScenes()[i]->getLevelSrc()->isXMotoTooOld()) {
 	throw Exception("Level " + v_id_level + " is too old");
       }
-      m_universe->getScenes()[i]->prePlayLevel(NULL, true);
+
+      m_DBuffer->clear();
+      m_universe->getScenes()[i]->prePlayLevel(m_DBuffer, true);
+      SP2_sendSceneEvents(m_DBuffer);
       
       // add the bikers
       for(unsigned int j=0; j<m_clients.size(); j++) {
@@ -418,6 +427,17 @@ bool ServerThread::SP2_managePreplayTime() {
   return true;
 }
 
+void ServerThread::SP2_sendSceneEvents(DBuffer* i_buffer) {
+  try {
+    if(i_buffer->isEmpty() == false) {
+      NA_gameEvents na(i_buffer);
+      sendToAllClientsMarkedToPlay(&na, -1, 0);
+    }
+  } catch(Exception &e) {
+    /* ok, not good */
+  }
+}
+
 void ServerThread::SP2_updateScenePlaying() {
   int nPhysSteps;
   Scene* v_scene;
@@ -425,18 +445,20 @@ void ServerThread::SP2_updateScenePlaying() {
 
   if(SP2_managePreplayTime() == false) {
     SP2_manageInactivity();
-  
+
     /* update the scene */
+    m_DBuffer->clear();
     nPhysSteps =0;
     while (m_fLastPhysTime + (PHYS_STEP_SIZE)/100.0 <= GameApp::getXMTime() && nPhysSteps < 10) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	v_scene = m_universe->getScenes()[i];
-	v_scene->updateLevel(PHYS_STEP_SIZE, NULL);      
+	v_scene->updateLevel(PHYS_STEP_SIZE, NULL, m_DBuffer);
       }
       m_fLastPhysTime += PHYS_STEP_SIZE/100.0;
       nPhysSteps++;
     }
-    
+    SP2_sendSceneEvents(m_DBuffer);
+
     // if the delay is too long, reinitialize
     if(m_fLastPhysTime + PHYS_STEP_SIZE/100.0 < GameApp::getXMTime()) {
       m_fLastPhysTime = GameApp::getXMTime();
@@ -796,6 +818,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_prepareToPlay:
   case TNA_prepareToGo:
   case TNA_killAlert:
+  case TNA_gameEvents:
     {
       /* should not be received */
       throw Exception("");

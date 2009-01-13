@@ -34,6 +34,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Theme.h"
 #include "../xmscene/BikeGhost.h"
 #include "../GameText.h"
+#include "../DBuffer.h"
+#include "../GameEvents.h"
 #include "../db/xmDatabase.h"
 
 #define XMCLIENT_KILL_ALERT_DURATION 100
@@ -449,6 +451,23 @@ void NetClient::manageAction(NetAction* i_netAction) {
 	v_alert << ((NA_killAlert*)i_netAction)->time();
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	    m_universe->getScenes()[i]->gameMessage(v_alert.str(), true, XMCLIENT_KILL_ALERT_DURATION);
+	}
+      }
+    }
+    break;
+
+  case TNA_gameEvents:
+    {
+      if(m_universe != NULL) {
+	DBuffer v_buffer;
+	v_buffer.initInput(((NA_gameEvents*)i_netAction)->buffer(), ((NA_gameEvents*)i_netAction)->bufferSize());
+
+	while(v_buffer.numRemainingBytes() > 0) {
+	  SceneEvent* v_se = SceneEvent::getUnserialized(v_buffer, false);
+	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	    m_universe->getScenes()[i]->handleEvent(v_se);
+	  }
+	  delete v_se;
 	}
       }
     }

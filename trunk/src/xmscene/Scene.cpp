@@ -215,7 +215,7 @@ void Scene::cleanPlayers() {
   /*===========================================================================
     Update game
     ===========================================================================*/
-  void Scene::updateLevel(int timeStep, Replay *i_recordedReplay) {
+  void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder) {
     float v_diff;
     int v_previousTime;
     bool v_recordReplay;
@@ -302,12 +302,12 @@ void Scene::cleanPlayers() {
       m_chipmunkWorld->updateWheelsPosition(m_players);
     }
 
-    executeEvents(i_recordedReplay);
+    executeEvents(i_eventRecorder);
 
     // record the replay only if
     v_recordReplay = 
-      i_recordedReplay != NULL                                                            &&
-      getTime() - m_lastStateSerializationTime >= 100.0f/i_recordedReplay->getFrameRate() && // limit the framerate
+      i_frameRecorder != NULL                                                            &&
+      getTime() - m_lastStateSerializationTime >= 100.0f/i_frameRecorder->getFrameRate() && // limit the framerate
       Players().size() == 1;                                                                 // supported in one player mode only
 
     // upload the frame only if
@@ -345,8 +345,8 @@ void Scene::cleanPlayers() {
 	  }
 	  
 	  if(v_recordReplay && i == 0) {
-	    i_recordedReplay->storeState(BikeState);
-	    i_recordedReplay->storeBlocks(m_pLevelSrc->Blocks());
+	    i_frameRecorder->storeState(BikeState);
+	    i_frameRecorder->storeBlocks(m_pLevelSrc->Blocks());
 	  }
 	}
       }
@@ -359,13 +359,13 @@ void Scene::cleanPlayers() {
     m_DelSchedule.clear();
   }
 
-  void Scene::executeEvents(Replay *p_replay) {
+  void Scene::executeEvents(DBuffer *i_recorder) {
     /* Handle events generated this update */
     while(getNumPendingGameEvents() > 0) {
       SceneEvent *pEvent = getNextGameEvent();
-      if(p_replay != NULL) {
+      if(i_recorder != NULL) {
 	/* Encode event */
-	_SerializeGameEventQueue(p_replay, pEvent);
+	_SerializeGameEventQueue(i_recorder, pEvent);
       }
       
       /* What event? */
@@ -410,8 +410,8 @@ void Scene::cleanPlayers() {
   /*===========================================================================
     Prepare the specified level for playing through this game object
     ===========================================================================*/
-  void Scene::prePlayLevel(Replay *recordingReplay,
-			      bool i_playEvents) {
+  void Scene::prePlayLevel(DBuffer *i_recorder,
+			   bool i_playEvents) {
     m_playEvents = i_playEvents;
     /* load the level if not */
     if(m_pLevelSrc->isFullyLoaded() == false) {
@@ -526,7 +526,7 @@ void Scene::cleanPlayers() {
     m_lastStateUploadTime        = -100;
 
     if(m_playEvents) {
-      executeEvents(recordingReplay);
+      executeEvents(i_recorder);
     }
   }
 

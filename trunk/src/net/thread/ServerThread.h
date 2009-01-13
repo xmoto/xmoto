@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class ActionReader;
 class NetAction;
 class Universe;
+class DBuffer;
 
 enum ServerP2Phase { SP2_PHASE_NONE, SP2_PHASE_WAIT_CLIENTS, SP2_PHASE_PLAYING };
 
@@ -101,6 +102,7 @@ class ServerThread : public XMThread {
   unsigned int m_nextClientId;
 
   Universe* m_universe;
+  DBuffer* m_DBuffer;
   ServerP2Phase m_sp2phase;
   double m_fLastPhysTime;
   int m_lastFrameTimeStamp;
@@ -140,6 +142,7 @@ class ServerThread : public XMThread {
   void SP2_manageInactivity();
   bool SP2_managePreplayTime();
   std::string SP2_determineLevel();
+  void SP2_sendSceneEvents(DBuffer* i_buffer);
 };
 
 #endif

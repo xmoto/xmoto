@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateManager.h"
 #include "../XMSession.h"
 #include "../Universe.h"
+#include "../Replay.h"
 #include "../helpers/Log.h"
 #include "../xmscene/Camera.h"
 #include "../xmscene/Level.h"

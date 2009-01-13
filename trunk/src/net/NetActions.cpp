@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Log.h"
 #include "NetClient.h"
 #include "../XMSession.h"
+#include "../DBuffer.h"
 #include "extSDL_net.h"
 #include <sstream>
 #include "helpers/SwapEndian.h"
@@ -51,6 +52,8 @@ std::string NA_clientMode::ActionKey  	= "clientMode";
 std::string NA_prepareToPlay::ActionKey = "prepareToPlay";
 std::string NA_killAlert::ActionKey     = "killAlert";
 std::string NA_prepareToGo::ActionKey   = "prepareToGo";
+// events are send regularly
+std::string NA_gameEvents::ActionKey    = "e";
 
 NetActionType NA_chatMessage::NAType   = TNA_chatMessage;
 NetActionType NA_frame::NAType         = TNA_frame;
@@ -66,6 +69,7 @@ NetActionType NA_clientMode::NAType    = TNA_clientMode;
 NetActionType NA_prepareToPlay::NAType = TNA_prepareToPlay;
 NetActionType NA_killAlert::NAType     = TNA_killAlert;
 NetActionType NA_prepareToGo::NAType   = TNA_prepareToGo;
+NetActionType NA_gameEvents::NAType    = TNA_gameEvents;
 
 NetAction::NetAction() {
   m_source    = -2; // < -1 => undefined
@@ -258,6 +262,10 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
 
   else if(v_cmd == NA_prepareToGo::ActionKey) {
     v_res = new NA_prepareToGo(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_gameEvents::ActionKey) {
+    v_res = new NA_gameEvents(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
   else {
@@ -681,4 +689,29 @@ void NA_prepareToGo::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_s
 
 int NA_prepareToGo::time() const {
   return m_time;
+}
+
+NA_gameEvents::NA_gameEvents(DBuffer* i_buffer) {
+  m_bufferLength = i_buffer->copyTo(m_buffer, XM_NET_MAX_EVENTS_SHOT_SIZE);
+}
+
+NA_gameEvents::NA_gameEvents(void* data, unsigned int len) {
+  m_bufferLength = len-1;
+  memcpy(m_buffer, data, len-1);
+}
+
+NA_gameEvents::~NA_gameEvents() {
+}
+
+void NA_gameEvents::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  // force TCP
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, m_buffer, m_bufferLength); // don't send the \0
+}
+
+char* NA_gameEvents::buffer() {
+  return m_buffer;
+}
+
+int NA_gameEvents::bufferSize() {
+  return m_bufferLength;
 }
