@@ -75,7 +75,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Data interface */
       bool isOutput(void) {if(m_bInit && m_bOutput) return true; return false;}
       bool isInput(void) {if(m_bInit && !m_bOutput) return true; return false;}
-      
+
+      void clear();
+      // copy the buffer to i_str ; throw en exception if maxLen is not big enough ; return the number of bytes copied
+      int copyTo(char* i_str, int maxLen);
+      bool isEmpty() const;
+
     private:
       /* Data */
       bool m_bInit;

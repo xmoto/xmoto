@@ -30,9 +30,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_NET_PROTOCOL_VERSION 1
 #define NETACTION_MAX_PACKET_SIZE 1024 * 2 // bytes
 #define NETACTION_MAX_SUBSRC 4 // maximum 4 players by client
+#define XM_NET_MAX_EVENTS_SHOT_SIZE 1024
 
 class NetClient;
 class ServerThread;
+class DBuffer;
 
 enum NetActionType {
   TNA_clientInfos,
@@ -48,7 +50,8 @@ enum NetActionType {
   TNA_clientMode,
   TNA_prepareToPlay,
   TNA_prepareToGo,
-  TNA_killAlert
+  TNA_killAlert,
+  TNA_gameEvents
 };
 
 struct NetInfosClient {
@@ -362,6 +365,26 @@ class NA_prepareToGo : public NetAction {
 
   private:
   int m_time;
+};
+
+class NA_gameEvents : public NetAction {
+  public:
+  NA_gameEvents(DBuffer* i_buffer);
+  NA_gameEvents(void* data, unsigned int len);
+  virtual ~NA_gameEvents();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  char* buffer();
+  int bufferSize();
+
+  private:
+  char m_buffer[XM_NET_MAX_EVENTS_SHOT_SIZE];
+  int m_bufferLength;
 };
 
 #endif

@@ -232,3 +232,41 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     s = c;
   }
 
+void DBuffer::clear() {
+  /* keep only the first part */
+  while(m_Parts.size() > 1) {
+    delete [] m_Parts[1]->pcBuffer;
+    delete m_Parts[1];
+    m_Parts.erase(m_Parts.begin() + 1);
+  }
+
+  if(m_Parts.size() == 1) {
+    m_Parts[0]->nPtr = 0; // clear the first part
+  }
+}
+
+int DBuffer::copyTo(char* i_str, int maxLen) {
+  int v_cur = 0;
+
+  for(unsigned int i=0; i<m_Parts.size(); i++) {
+    if(m_Parts[i]->nPtr != 0) {
+      if(v_cur + m_Parts[i]->nPtr > maxLen) {
+	throw Exception("DBuffer::copyTo : destination too small");
+      }
+      memcpy(i_str, m_Parts[i]->pcBuffer, m_Parts[i]->nPtr);
+      v_cur += m_Parts[i]->nPtr;
+   }
+  }
+
+  return v_cur;
+}
+
+bool DBuffer::isEmpty() const {
+  for(unsigned int i=0; i<m_Parts.size(); i++) {
+    if(m_Parts[i]->nPtr != 0) {
+      return false;
+    }
+  }
+  
+  return true;
+}

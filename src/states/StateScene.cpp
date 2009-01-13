@@ -35,6 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VideoRecorder.h"
 #include "../GameText.h"
 #include "../Game.h"
+#include "../Replay.h"
 #include "StateMainMenu.h"
 #include "../net/NetClient.h"
 #include "../net/NetActions.h"
@@ -175,7 +176,8 @@ bool StateScene::update()
       while (( m_fLastPhysTime + (PHYS_STEP_SIZE)/100.0 <= GameApp::getXMTime()) && nPhysSteps < 10 && (XMSession::instance()->enableVideoRecording() == false || nPhysSteps == 0)) {
 	if(m_universe != NULL) {
 	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	    m_universe->getScenes()[i]->updateLevel(PHYS_STEP_SIZE, m_universe->getCurrentReplay());
+	    m_universe->getScenes()[i]->updateLevel(PHYS_STEP_SIZE,
+						    m_universe->getCurrentReplay(), m_universe->getCurrentReplay());
 	  }
 	}
 	m_fLastPhysTime += PHYS_STEP_SIZE/100.0;
