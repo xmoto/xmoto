@@ -55,6 +55,9 @@ class StatePreplaying : public StateScene {
   virtual bool needToDownloadGhost();
   virtual bool allowGhosts();
 
+  // which state to display on failure
+  virtual void onLoadingFailure(const std::string& i_msg);
+
   private:
   void executeOneCommand(std::string cmd, std::string args);
 

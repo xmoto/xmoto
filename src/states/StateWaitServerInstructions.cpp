@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 StateWaitServerInstructions::StateWaitServerInstructions():
 GameState(true, false, true, true)
 {
-  m_name             = "StateWaitServerInstructions";
+  m_name = "StateWaitServerInst";
 
   m_showCursor = false;
 

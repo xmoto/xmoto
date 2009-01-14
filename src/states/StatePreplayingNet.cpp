@@ -29,6 +29,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Game.h"
 #include "../xmscene/BikePlayer.h"
 #include "../net/NetClient.h"
+#include "StateWaitServerInstructions.h"
+#include "StateMessageBox.h"
+#include "../helpers/Text.h"
+#include "../SysMessage.h"
 
 StatePreplayingNet::StatePreplayingNet(const std::string i_idlevel, bool i_sameLevel)
 : StatePreplaying(i_idlevel, i_sameLevel) {
@@ -86,4 +90,11 @@ void StatePreplayingNet::executeOneCommand(std::string cmd, std::string args) {
 
 bool StatePreplayingNet::allowGhosts() {
   return false;
+}
+
+void StatePreplayingNet::onLoadingFailure(const std::string& i_msg) {
+  StateManager::instance()->replaceState(new StateWaitServerInstructions());
+
+  // display a simple error to not break the states order
+  SysMessage::instance()->displayError(i_msg);
 }

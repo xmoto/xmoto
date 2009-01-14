@@ -88,7 +88,7 @@ void StatePreplaying::enter()
     initUniverse();
   } catch(Exception &e) {
     delete m_universe;
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, "Ooops", UI_MSGBOX_OK));
+    onLoadingFailure("Ooops");
     return;
   }  
 
@@ -107,7 +107,7 @@ void StatePreplaying::enter()
     snprintf(cBuf, 256, GAMETEXT_LEVELCANNOTBELOADED, m_idlevel.c_str());
     delete m_universe;
     m_universe = NULL;
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, cBuf, UI_MSGBOX_OK));
+    onLoadingFailure(cBuf);
     return;
   }
 
@@ -122,7 +122,7 @@ void StatePreplaying::enter()
       
       delete m_universe;
       m_universe = NULL;
-      StateManager::instance()->replaceState(new StateMessageBox(NULL, cBuf, UI_MSGBOX_OK));
+      onLoadingFailure(cBuf);
       return;
     }
   }
@@ -164,7 +164,7 @@ void StatePreplaying::enter()
     LogWarning(std::string("failed to initialize level\n" + e.getMsg()).c_str());
     delete m_universe;
     m_universe = NULL;
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    onLoadingFailure(e.getMsg());
     return;
   }
 
@@ -183,6 +183,10 @@ void StatePreplaying::enter()
 
   /* prepare stats */
   makeStatsStr();
+}
+
+void StatePreplaying::onLoadingFailure(const std::string& i_msg) {
+  StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(i_msg, 50), UI_MSGBOX_OK));
 }
 
 bool StatePreplaying::shouldBeAnimated() const {
@@ -292,7 +296,7 @@ void StatePreplaying::secondInitPhase()
   } catch(Exception &e) {
     LogWarning(std::string("failed to initialize level\n" + e.getMsg()).c_str());
     closePlaying();
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    onLoadingFailure(e.getMsg());
     return;
   }
 

@@ -37,6 +37,8 @@ class StatePreplayingNet : public StatePreplaying {
   virtual void runPlaying();
   virtual bool allowGhosts();
 
+  virtual void onLoadingFailure(const std::string& i_msg);
+
   private:
 };
 
