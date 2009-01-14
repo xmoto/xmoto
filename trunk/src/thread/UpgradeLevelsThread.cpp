@@ -97,6 +97,7 @@ bool UpgradeLevelsThread::shouldLevelBeUpdated(const std::string &LevelID)
 int UpgradeLevelsThread::realThreadFunction()
 {
   int v_exit_code = 0;
+  bool v_shouldBeLoadedInBase = false;
 
   /* Check for extra levels */
   try {
@@ -169,6 +170,7 @@ int UpgradeLevelsThread::realThreadFunction()
     StateManager::instance()->sendAsynchronousMessage("THEMES_UPDATED");
 
     // don't safe kill here
+    v_shouldBeLoadedInBase = true;
     m_pWebLevels->upgrade(m_pDb);
   }
   catch(Exception& e) {
@@ -178,7 +180,7 @@ int UpgradeLevelsThread::realThreadFunction()
     v_exit_code = 1;
   }
 
-  if(v_exit_code == 0) {
+  if(v_exit_code == 0 || v_shouldBeLoadedInBase) {
     /* Got some new levels... load them! */
     LogInfo("Loading new and updated levels...");
 
