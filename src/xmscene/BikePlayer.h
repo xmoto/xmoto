@@ -188,7 +188,7 @@ class PlayerNetClient : public Biker {
   virtual void  updateToTime(int i_time, int i_timeStep,
 			     CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			     Scene *i_motogame);
-  virtual void stateExternallyUpdated();
+  virtual BikeState* getStateForUpdate();
 
   virtual void setLocalNetId(int i_value);
   virtual BikeController* getControler();
@@ -198,8 +198,12 @@ class PlayerNetClient : public Biker {
   BikeControllerNet* m_BikeC;
 
   /* previous states */
+  BikeState* m_bikeStateForUpdate;
+  bool m_stateExternallyUpdated;
   bool m_previousBikeStatesInitialized;
   std::vector<BikeState*> m_previousBikeStates;
+  BikeState* m_lastExtrapolateBikeState;
+  int m_lastFrameTimeUpdate;
 };
 
 #endif

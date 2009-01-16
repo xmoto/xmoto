@@ -34,6 +34,7 @@ class ClientListenerThread;
 class NetAction;
 class NetGhost;
 class Universe;
+class xmDatabase;
 
 class NetOtherClient {
  public:
@@ -46,7 +47,8 @@ class NetOtherClient {
   void setName(const std::string& i_name);
 
   std::string lastPlayingLevelId();
-  void setPlayingLevelId(const std::string& i_idlevel);
+  void setPlayingLevelId(xmDatabase* pDb, const std::string& i_idlevel);
+  std::string playingLevelName();
 
   NetGhost* netGhost(unsigned int i_subsrc);
   void setNetGhost(unsigned int i_subsrc, NetGhost* i_netGhost);
@@ -56,6 +58,7 @@ class NetOtherClient {
   std::string  m_name;
   NetGhost*    m_ghosts[NETACTION_MAX_SUBSRC];
   std::string m_playingLevelId;
+  std::string m_playingLevelName;
   std::string m_lastPlayingLevelId;
 };
 
@@ -73,7 +76,7 @@ class NetClient : public Singleton<NetClient> {
   UDPpacket* sendPacket();
   std::string udpBindKey() const;
 
-  void executeNetActions();
+  void executeNetActions(xmDatabase* pDb);
   void addNetAction(NetAction* i_act);
 
   void changeMode(NetClientMode i_mode);
@@ -104,7 +107,7 @@ class NetClient : public Singleton<NetClient> {
 
   std::vector<NetOtherClient*> m_otherClients;
 
-  void manageAction(NetAction* i_netAction);
+  void manageAction(xmDatabase* pDb, NetAction* i_netAction);
   void cleanOtherClientsGhosts();
 };
 
