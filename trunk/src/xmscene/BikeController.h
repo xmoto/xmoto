@@ -32,6 +32,7 @@ class BikeController {
   virtual void setChangeDir(bool i_changeDir) = 0;
   virtual void stopControls()                 = 0; // inform the contoller that controls must stop
 
+  virtual bool isDriving() = 0;
 };
 
 class BikeControllerPlayer : public BikeController {
@@ -49,6 +50,7 @@ class BikeControllerPlayer : public BikeController {
   float Pull()     const;
   bool  ChangeDir() const;
 
+  virtual bool isDriving();
   void breakBreaks();
 
   private:
@@ -77,6 +79,7 @@ class BikeControllerNet : public BikeController {
   virtual void setPull(float i_pull);
   virtual void setChangeDir(bool i_changeDir);
 
+  virtual bool isDriving();
   virtual void stopControls();
   void setLocalNetId(int i_value);
 

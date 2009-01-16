@@ -115,7 +115,8 @@ class BikeState {
   BikeParameters* Parameters();
 
   static void interpolateGameState(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t);
-  static void extrapolateGameStateLinear(std::vector<BikeState*> &i_bikeStates, BikeState *p, float t);
+  static void interpolateGameStateLinear(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t);
+  static void interpolateGameStateCubic(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t);
 
   static void convertStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS, PhysicsSettings* i_physicsSettings);
 
@@ -128,9 +129,6 @@ class BikeState {
   /* Driving */
   BikeParameters* m_bikeParameters;
   BikeAnchors*    m_bikeAnchors;
-
-  static void interpolateGameStateLinear(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t);
-  static void interpolateGameStateCubic(std::vector<BikeState*> &i_ghostBikeStates, BikeState *p,float t);
 };
 
 class Biker {
@@ -145,7 +143,13 @@ class Biker {
     return m_bikeState;
   }
 
-  virtual void stateExternallyUpdated() {}
+  virtual BikeState* getStateForUpdate()
+  {
+    return m_bikeState;
+  }
+
+  virtual void stateBeforeExternalUpdated() {}
+  virtual void stateAfterExternalUpdated() {}
 
   virtual bool getRenderBikeFront() = 0; /* display the bikefront ? (for detach) */
   virtual float getBikeEngineSpeed() = 0; /* engine speed */

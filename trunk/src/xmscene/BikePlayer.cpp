@@ -36,6 +36,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // autodisabler options
 #define PHYS_SLEEP_EPS                0.02   // 2006-04-23: changed from 0.008
 #define PHYS_SLEEP_FRAMES             20     // 150
+#define XM_DEEXTRAPOLATION_TIME 2
+#define XM_MAX_EXTRAPOLATION_T 3.0
 
 #define PHYS_SUSP_SQUEEK_POINT 0.01
 
@@ -1249,6 +1251,11 @@ PlayerNetClient::PlayerNetClient(PhysicsSettings* i_physicsSettings,
   m_previousBikeStatesInitialized = false;
   m_previousBikeStates.push_back(new BikeState(i_physicsSettings));
   m_previousBikeStates.push_back(new BikeState(i_physicsSettings));
+
+  m_bikeStateForUpdate = new BikeState(m_physicsSettings);
+  m_stateExternallyUpdated = false;
+  m_lastExtrapolateBikeState = new BikeState(i_physicsSettings);
+  m_lastFrameTimeUpdate = 0;
 }
 
 PlayerNetClient::~PlayerNetClient() {
@@ -1257,6 +1264,9 @@ PlayerNetClient::~PlayerNetClient() {
   for(unsigned int i=0; i<m_previousBikeStates.size(); i++) {
     delete m_previousBikeStates[i];
   }
+
+  delete m_bikeStateForUpdate;
+  delete m_lastExtrapolateBikeState;
 }
 
 bool PlayerNetClient::getRenderBikeFront() {
@@ -1304,33 +1314,90 @@ void PlayerNetClient::initToPosition(Vector2f i_position, DriveDir i_direction, 
 void PlayerNetClient::updateToTime(int i_time, int i_timeStep,
 				   CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 				   Scene *i_motogame) {
-  float v_interpolation_value;
+  float v_xpolation_value;
+  BikeState* v_tmp;
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
+
+  if(m_stateExternallyUpdated) {
+    m_stateExternallyUpdated = false;
+
+    // update states
+    *m_lastExtrapolateBikeState = *m_bikeState;
+    m_lastFrameTimeUpdate = GameApp::getXMTimeInt();
+
+    /* update previous states */
+    if(m_previousBikeStatesInitialized == false) {
+      *(m_previousBikeStates[0])  = *m_bikeStateForUpdate;
+      *(m_previousBikeStates[1])  = *m_bikeStateForUpdate;
+      *m_lastExtrapolateBikeState = *m_bikeStateForUpdate;
+      m_previousBikeStatesInitialized = true;
+    } else {
+      v_tmp = m_previousBikeStates[0];
+      m_previousBikeStates[0]    = m_previousBikeStates[1];
+      m_previousBikeStates[1]    = v_tmp;
+      *(m_previousBikeStates[1]) = *m_bikeStateForUpdate;
+    }
+  }
 
   /* extrapolate frames */
   if(m_previousBikeStatesInitialized == false) {
     return;
   }
 
-  if(m_previousBikeStates[1]->GameTime > m_previousBikeStates[0]->GameTime) {
-    v_interpolation_value = ((i_time - m_previousBikeStates[0]->GameTime) 
-			     /((float)(m_previousBikeStates[1]->GameTime - m_previousBikeStates[0]->GameTime))) - 1.0;
-    BikeState::extrapolateGameStateLinear(m_previousBikeStates, m_bikeState, v_interpolation_value);
+  /* second version
+     objectiv : remove brutal frameX to frameX+1 change (at the end of extrapolation in version 1)
+
+               F1 received               F2 received                  F3 received                
+                    |                         |                           |
+                    AAABBBBBBBBBBBBBBBBBBBBBBBAAABBBBBBBBBBBBBBBBBBBBBBBBAAABBBBBB
+                                                 -
+                                             first B = F2
+
+  A: desextrapolate from last B extrapolation to Fx
+  B: extrapolate
+
+     In case of F3 happend while F2(AAA) :
+
+     F2        F3
+      |         |
+      AAAAAAAAAAAAAABBBB
+                 -> start to desinterpolate for last A to F3
+                    -
+                  first B = F3
+  */
+  if(m_previousBikeStatesInitialized && m_lastFrameTimeUpdate + (XM_DEEXTRAPOLATION_TIME*10) > GameApp::getXMTimeInt()) {
+    // A
+    if(m_lastExtrapolateBikeState->Dir != m_previousBikeStates[1]->Dir) {
+      *m_bikeState = *(m_previousBikeStates[1]);
+    } else {
+      // interpolate from m_lastExtrapolateBikeState to m_previousBikeStates[1]
+      v_xpolation_value = (GameApp::getXMTimeInt()-m_lastFrameTimeUpdate) / ((float)(XM_DEEXTRAPOLATION_TIME*10));
+      v_tmp = m_previousBikeStates[0];
+      m_previousBikeStates[0] = m_lastExtrapolateBikeState;
+      BikeState::interpolateGameStateLinear(m_previousBikeStates, m_bikeState, v_xpolation_value);
+      m_previousBikeStates[0] = v_tmp;
+    }
+  } else {
+    /// B
+    if(m_previousBikeStates[0]->Dir != m_previousBikeStates[1]->Dir) {
+      *m_bikeState = *(m_previousBikeStates[1]);
+    } else {
+      if(m_previousBikeStates[1]->GameTime > m_previousBikeStates[0]->GameTime) {
+	v_xpolation_value = (((i_time - XM_DEEXTRAPOLATION_TIME) - m_previousBikeStates[1]->GameTime) 
+			     /((float)(m_previousBikeStates[1]->GameTime - m_previousBikeStates[0]->GameTime))) +1.0;
+
+	if(v_xpolation_value < XM_MAX_EXTRAPOLATION_T) {
+	  BikeState::interpolateGameStateLinear(m_previousBikeStates, m_bikeState, v_xpolation_value);
+	}
+      } else {
+	// cannot extrapolate
+	*m_bikeState = *(m_previousBikeStates[1]);
+      }
+    }
   }
 }
 
-void PlayerNetClient::stateExternallyUpdated() {
-  BikeState* v_state;
-
-  /* update previous states */
-  if(m_previousBikeStatesInitialized == false) {
-    *(m_previousBikeStates[0]) = *m_bikeState;
-    *(m_previousBikeStates[1]) = *m_bikeState;
-    m_previousBikeStatesInitialized = true;
-  } else {
-    v_state = m_previousBikeStates[0];
-    m_previousBikeStates[0] = m_previousBikeStates[1];
-    m_previousBikeStates[1] = v_state;
-    *v_state = *m_bikeState;
-  }
+BikeState* PlayerNetClient::getStateForUpdate() {
+  m_stateExternallyUpdated = true;
+  return m_bikeStateForUpdate;
 }

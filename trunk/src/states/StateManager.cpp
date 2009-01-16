@@ -209,7 +209,7 @@ void StateManager::update()
   }
 
   /* update net */
-  NetClient::instance()->executeNetActions();
+  NetClient::instance()->executeNetActions(xmDatabase::instance("main"));
 
   /* update fps */
   if(m_lastFpsTime + 1000 < GameApp::getXMTimeInt()) {
@@ -245,6 +245,7 @@ void StateManager::renderOverAll() {
     
     for(unsigned int i=0; i<NetClient::instance()->otherClients().size(); i++) {
       v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(NetClient::instance()->otherClients()[i]->name());
+
       v_fm->printString(v_fg,
 			GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
 			MAKE_COLOR(200,200,200,255), -1.0, true);     

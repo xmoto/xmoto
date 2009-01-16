@@ -21,6 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeController.h"
 #include "../net/NetActions.h"
 #include "../net/NetClient.h"
+#include "../helpers/VMath.h"
+
+#define XM_MIN_DRIVE_DETECTION 0.1
 
 BikeController::BikeController() {
 }
@@ -47,6 +50,10 @@ float BikeControllerPlayer::Pull() const {
 
 bool BikeControllerPlayer::ChangeDir() const {
   return m_changeDir;
+}
+
+bool BikeControllerPlayer::isDriving() {
+  return fabs(m_drive) > XM_MIN_DRIVE_DETECTION;
 }
 
 void BikeControllerPlayer::stopControls() {
@@ -137,4 +144,8 @@ void BikeControllerNet::stopControls() {
 
 void BikeControllerNet::setLocalNetId(int i_value) {
   m_localNetId = i_value;
+}
+
+bool BikeControllerNet::isDriving() {
+  return false; // unable to get this information
 }

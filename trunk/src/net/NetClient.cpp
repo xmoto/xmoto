@@ -76,7 +76,7 @@ UDPpacket* NetClient::sendPacket() {
   return m_udpSendPacket;
 }
 
-void NetClient::executeNetActions() {
+void NetClient::executeNetActions(xmDatabase* pDb) {
   if(m_netActions.size() == 0) {
     return; // try to not lock via mutex if not needed
   }
@@ -84,7 +84,7 @@ void NetClient::executeNetActions() {
   SDL_LockMutex(m_netActionsMutex);
   for(unsigned int i=0; i<m_netActions.size(); i++) {
     //LogInfo("Execute NetAction (%s)", m_netActions[i]->actionKey().c_str());
-    manageAction(m_netActions[i]);
+    manageAction(pDb, m_netActions[i]);
     delete m_netActions[i];
   }
   m_netActions.clear();
@@ -241,7 +241,7 @@ unsigned int NetClient::getOtherClientNumberById(int i_id) const {
   throw Exception("Invalid id");
 }
 
-void NetClient::manageAction(NetAction* i_netAction) {
+void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
   switch(i_netAction->actionType()) {
 
   case TNA_udpBind:
@@ -289,12 +289,11 @@ void NetClient::manageAction(NetAction* i_netAction) {
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	  for(unsigned int j=0; j<m_universe->getScenes()[i]->Players().size(); j++) {
 	      BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(),
-						m_universe->getScenes()[i]->Players()[j]->getState(),
+						m_universe->getScenes()[i]->Players()[j]->getStateForUpdate(),
 						m_universe->getScenes()[i]->getPhysicsSettings());
-	      m_universe->getScenes()[i]->Players()[j]->stateExternallyUpdated();
 
 	      // adjust the time of the server frame to the time of the local scene
-	      m_universe->getScenes()[i]->setTime(m_universe->getScenes()[i]->Players()[j]->getState()->GameTime);
+	      m_universe->getScenes()[i]->setTime(((NA_frame*)i_netAction)->getState()->fGameTime*100.0);
 	  }
 	}
       } else {
@@ -333,9 +332,8 @@ void NetClient::manageAction(NetAction* i_netAction) {
 	
 	// take the physic of the first world
 	if(m_universe->getScenes().size() > 0) {
-	  BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(), v_ghost->getState(),
+	  BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(), v_ghost->getStateForUpdate(),
 					    m_universe->getScenes()[0]->getPhysicsSettings());
-	  v_ghost->stateExternallyUpdated();
 	}
       }
     }
@@ -358,27 +356,15 @@ void NetClient::manageAction(NetAction* i_netAction) {
 	std::string v_levelId = ((NA_playingLevel*)i_netAction)->getLevelId();
 	NetOtherClient* v_client = m_otherClients[getOtherClientNumberById(i_netAction->getSource())];
 	char buf[512];
-	char **v_result;
-	unsigned int nrow;
-	std::string v_levelName;
-
-	if(v_levelId != "" && v_levelId != v_client->lastPlayingLevelId()) {
-	  xmDatabase* pDb = xmDatabase::instance("main");
-  
-	  v_result = pDb->readDB("SELECT name FROM levels where id_level=\"" + xmDatabase::protectString(v_levelId) + "\";", nrow);
-	  if(nrow == 0) {
-	    v_levelName = GAMETEXT_UNKNOWN;
-	  } else {
-	    v_levelName = pDb->getResult(v_result, 1, 0, 0);  
-	  }
-	  pDb->read_DB_free(v_result);
-
-	  snprintf(buf, 512, GAMETEXT_CLIENTPLAYING, v_client->name().c_str(), v_levelName.c_str());
-	  SysMessage::instance()->addConsoleLine(buf);
-	}
 
 	// updating playing level
-	v_client->setPlayingLevelId(v_levelId);
+	if(v_levelId != "" && v_levelId != v_client->lastPlayingLevelId()) {
+	  v_client->setPlayingLevelId(pDb, v_levelId);
+	  snprintf(buf, 512, GAMETEXT_CLIENTPLAYING, v_client->name().c_str(), v_client->playingLevelName().c_str());
+	  SysMessage::instance()->addConsoleLine(buf);
+	} else {
+	  v_client->setPlayingLevelId(pDb, v_levelId);
+	}
 
       } catch(Exception &e) {
       }
@@ -504,11 +490,33 @@ std::string NetOtherClient::lastPlayingLevelId() {
   return m_lastPlayingLevelId;
 }
 
-void NetOtherClient::setPlayingLevelId(const std::string& i_id_level) {
-  m_playingLevelId = i_id_level;
-  if(m_playingLevelId != "") {
-    m_lastPlayingLevelId = m_playingLevelId;
+void NetOtherClient::setPlayingLevelId(xmDatabase* pDb, const std::string& i_id_level) {
+
+  if(i_id_level != "") {
+    m_lastPlayingLevelId = i_id_level;
   }
+
+  // update levelName
+  if(i_id_level == "") {
+    m_playingLevelName = "";
+  } else if(i_id_level != m_playingLevelId) {
+    char **v_result;
+    unsigned int nrow;
+  
+    v_result = pDb->readDB("SELECT name FROM levels where id_level=\"" + xmDatabase::protectString(i_id_level) + "\";", nrow);
+    if(nrow == 0) {
+      m_playingLevelName = GAMETEXT_UNKNOWN;
+    } else {
+      m_playingLevelName = pDb->getResult(v_result, 1, 0, 0);  
+    }
+    pDb->read_DB_free(v_result);    
+  }
+
+  m_playingLevelId = i_id_level;
+}
+
+std::string NetOtherClient::playingLevelName() {
+  return m_playingLevelName;
 }
 
 NetGhost* NetOtherClient::netGhost(unsigned int i_subsrc) {

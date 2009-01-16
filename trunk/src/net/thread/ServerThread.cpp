@@ -363,28 +363,43 @@ void ServerThread::SP2_manageInactivity() {
   int v_inactivDiff;
   int v_prevTime;
   Biker* v_player;
+  bool v_isOk;
 
   /* kill players not playing for a too long time */
   for(unsigned int i=0; i<m_clients.size(); i++) {
     if(m_clients[i]->isMarkedToPlay()) {
       v_player = m_universe->getScenes()[m_clients[i]->getNumScene()]->Players()[m_clients[i]->getNumPlayer()];
-      
+
       if(v_player->isDead() == false && v_player->isFinished() == false) {
-	v_inactivDiff = GameApp::getXMTimeInt() - m_clients[i]->lastActivTime();
-	if(XM_SERVER_PLAYER_INACTIV_TIME_MAX * 10 < v_inactivDiff) {
-	  m_universe->getScenes()[m_clients[i]->getNumScene()]->killPlayer(m_clients[i]->getNumPlayer());
-	} else {
-	  v_prevTime = XM_SERVER_PLAYER_INACTIV_TIME_MAX * 10 - v_inactivDiff;
+
+	v_isOk = false;
+
+	// check driving
+	if(v_player->getControler() != NULL) {
+	  if(v_player->getControler()->isDriving()) {
+	    m_clients[i]->setLastActivTime(GameApp::getXMTimeInt());	    
+	    v_isOk = true;
+	  }
+	}
 	  
-	  if(m_clients[i]->isMarkedToPlay() && XM_SERVER_PLAYER_INACTIV_TIME_PREV * 10 > v_prevTime) {
-	    if(m_clients[i]->lastInactivTimeAlert() != v_prevTime/1000) {
-	      m_clients[i]->setLastInactivTimeAlert(v_prevTime/1000);
-	      
-	      NA_killAlert na(m_clients[i]->lastInactivTimeAlert()+1);
-	      try {
-		sendToClient(&na, i, -1, 0);
-	      } catch(Exception &e) {
+	// check last move
+	if(v_isOk == false) {
+	  v_inactivDiff = GameApp::getXMTimeInt() - m_clients[i]->lastActivTime();
+	  if(XM_SERVER_PLAYER_INACTIV_TIME_MAX * 10 < v_inactivDiff) {
+	    m_universe->getScenes()[m_clients[i]->getNumScene()]->killPlayer(m_clients[i]->getNumPlayer());
+	  } else {
+	    v_prevTime = XM_SERVER_PLAYER_INACTIV_TIME_MAX * 10 - v_inactivDiff;
+	    
+	    if(m_clients[i]->isMarkedToPlay() && XM_SERVER_PLAYER_INACTIV_TIME_PREV * 10 > v_prevTime) {
+	      if(m_clients[i]->lastInactivTimeAlert() != v_prevTime/1000) {
+		m_clients[i]->setLastInactivTimeAlert(v_prevTime/1000);
+		
+		NA_killAlert na(m_clients[i]->lastInactivTimeAlert()+1);
+		try {
+		  sendToClient(&na, i, -1, 0);
+		} catch(Exception &e) {
 		/* hehe, ok, no pb */
+		}
 	      }
 	    }
 	  }
