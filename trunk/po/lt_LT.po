@@ -311,6 +311,7 @@ msgstr "Jūs turite įkelti iš naujo žaidimą, kad šį parinktis aktyvuotusi"
 #: src/GameText.h:107
 msgid "You must reconnect to the server so that this option takes effect"
 msgstr ""
+"Jūs turite iš naujo prisijungti prie serverio, kad šį parinktis aktyvuotųsi"
 
 #: src/GameText.h:108
 msgid "Script action"
@@ -799,6 +800,8 @@ msgid ""
 "Please wait the next party\n"
 "Or press escape to disconnect"
 msgstr ""
+"Palaukite kito žaidėjo\n"
+"arba atsijunkite paspaudę ESC"
 
 #: src/GameText.h:254
 #, c-format
@@ -1741,7 +1744,7 @@ msgstr "Tinklas"
 
 #: src/GameText.h:492
 msgid "Simple ghost mode"
-msgstr ""
+msgstr "Paprastas vaiduoklio režimas"
 
 #: src/GameText.h:493
 msgid "You're currently connected"
@@ -2437,7 +2440,7 @@ msgstr "Asas"
 
 #: src/GameText.h:674
 msgid "Go !"
-msgstr ""
+msgstr "Važiuok!"
 
 #: src/GameText.h:675
 msgid "Not nice at all"
@@ -2546,7 +2549,7 @@ msgstr "Įjungti lygiams foninę muziką, kurie neturi savo garso takelio"
 
 #: src/GameText.h:703
 msgid "Network playing mode : just see other players as ghosts"
-msgstr ""
+msgstr "Tinklo žaidimo režimas: tik stebėkite kitus žaidėjus kaip vaiduokliai"
 
 #: src/GameText.h:705
 msgid "Levels with no highscore"
