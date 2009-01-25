@@ -272,18 +272,9 @@ void DrawLibOpenGL::init(unsigned int nDispWidth, unsigned int nDispHeight, unsi
                     
   m_nDispBPP = pVidInfo->vfmt->BitsPerPixel;
 
-  /* Did we get a z-buffer? */        
-  int nDepthBits;
-  SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE, &nDepthBits);
-  if(nDepthBits == 0)
-    throw Exception("no depth buffer");  
-  
   m_menuCamera = new Camera(Vector2i(0, 0),
 			    Vector2i(m_nDispWidth, m_nDispHeight));
   m_menuCamera->setCamera2d();
-
-  glClearDepth(1);
-  glDepthFunc(GL_LEQUAL);
 
   /* Output some general info */
   LogInfo("GL: %s (%s)", glGetString(GL_RENDERER), glGetString(GL_VENDOR));
