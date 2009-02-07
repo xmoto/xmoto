@@ -1282,11 +1282,17 @@ UIWindow* StateOptions::makeWindowOptions_language(UIWindow* i_parent) {
 
   unsigned int i=0;
   while(LANGUAGES[i][LANGUAGE_NAME] != NULL) {
-    pEntry = v_list->addEntry(LANGUAGES[i][LANGUAGE_NAME], NULL);
+    
+    if(std::string(_("FontGroup:GENERAL")) == std::string("FontGroup:ASIAN")) {
+      pEntry = v_list->addEntry(LANGUAGES[i][LANGUAGE_ASIAN_NAME], NULL);
+    } else {
+      pEntry = v_list->addEntry(LANGUAGES[i][LANGUAGE_NAME], NULL);
+    }
+
     pEntry->Text.push_back(LANGUAGES[i][LANGUAGE_CODE]);
     if(XMSession::instance()->language() == LANGUAGES[i][LANGUAGE_CODE])
       v_list->setRealSelected(i+1);
-
+  
     i++;
   }
 

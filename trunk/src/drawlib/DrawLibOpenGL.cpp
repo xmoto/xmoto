@@ -159,7 +159,7 @@ DrawLibOpenGL::DrawLibOpenGL() : DrawLib(){
   Transform an OpenGL vertex to pure 2D 
   ===========================================================================*/
 void DrawLibOpenGL::glVertexSP(float x,float y) { 	 
-  glVertex2f(x, m_nActualHeight - y); 	 
+  glVertex2f(x, m_nDispHeight - y); 	 
 } 	 
 
 void DrawLibOpenGL::glVertex(float x,float y) { 	 
@@ -171,7 +171,7 @@ void DrawLibOpenGL::glTexCoord(float x,float y){
 }
 
 void DrawLibOpenGL::screenProjVertex(float *x, float *y) {
-  *y = m_nActualHeight - (*y);
+  *y = m_nDispHeight - (*y);
 }
 
 void DrawLibOpenGL::setClipRect(int x, int y, unsigned int w, unsigned int h){
@@ -400,7 +400,7 @@ void DrawLibOpenGL::init(unsigned int nDispWidth, unsigned int nDispHeight, unsi
   /* Set background color to black */
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT);
-  SDL_GL_SwapBuffers();  
+  SDL_GL_SwapBuffers();
 }
 
 void DrawLibOpenGL::unInit()
