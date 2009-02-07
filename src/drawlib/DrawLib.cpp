@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "DrawLib.h"
 #include "../GameText.h"
 #include "../include/xm_SDL.h"
+#include "../VFileIO.h"
 
 #define DRAW_FONT_FILE_GENERAL "Textures/Fonts/DejaVuSans.ttf"
 
@@ -70,6 +71,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_backend = backend_None;
     return NULL;
   }
+
+void DrawLib::checkFontPrerequites() {
+  if(FS::fileExists(FontManager::getDrawFontFile()) == false) {
+    throw Exception("File " + FontManager::getDrawFontFile() + " is missing");
+  }
+}
 
  DrawLib::DrawLib() {
   m_nDispWidth=800;
@@ -310,13 +317,6 @@ void DrawLib::resetGraphics() {
 
 void DrawLib::setDontUseGLExtensions(bool dont_use) {
   m_bDontUseGLExtensions = dont_use;
-}
-
-void DrawLib::setDrawDims(unsigned int nActualW, unsigned int nActualH, unsigned int w, unsigned int h) {
-  m_nDrawWidth = w;
-  m_nDrawHeight = h;
-  m_nActualWidth = nActualW;
-  m_nActualHeight = nActualH;
 }
 
 bool DrawLib::useVBOs() {

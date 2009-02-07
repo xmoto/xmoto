@@ -314,6 +314,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_MAIN                 _("Main")
 #define GAMETEXT_MOUSE                _("Mouse")
 #define GAMETEXT_THEME                _("Theme")
+#define GAMETEXT_TTF_MISSING          "You must install the font file for your langage:" // not translated because always displayed in english
 #define GAMETEXT_MEDIUM               _("Medium")
 #define GAMETEXT_MENUGFX              _("Menu Graphics")
 #define CONTEXTHELP_MINISTATTIMEFORPACKLEVEL _("Total time you scored / total highscore time for levels you finished")

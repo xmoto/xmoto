@@ -22,8 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Game application. (init-related stuff)
  */
  
-/* rneckelmann 2006-09-30: moved a lot of stuff from Game.cpp into here to 
-                           make it a tad smaller */ 
 #include "GameText.h"
 #include "Game.h"
 #include "VFileIO.h"
@@ -153,6 +151,8 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   XMArguments v_xmArgs;
   m_isODEInitialized = false;
   bool v_useGraphics = true;
+  bool v_missingFont = false;
+  std::string v_missingFontError;
 
   /* check args */
   try {
@@ -207,12 +207,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   /* load config file, the session */
   XMSession::createDefaultConfig(m_userConfig);
   m_userConfig->loadFile();
-  
 
-  XMSession::instance("file")->load(m_userConfig); /* overload default session by userConfig */
-  (* XMSession::instance("live")) = (* XMSession::instance("file")) ; /* copying the resulting session in "live" instance */
-  (* XMSession::instance("temp")) = (* XMSession::instance("file")) ; /* copying the resulting session in a needed temporary instance */
-  XMSession::setDefaultInstance("live");
+  XMSession::setDefaultInstance("live");  
+  XMSession::instance()->load(m_userConfig); /* overload default session by userConfig */
 
   XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
 
@@ -253,10 +250,50 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   // init not so random numbers
   NotSoRandom::init();
 
-  _InitWin(v_useGraphics);
+  //gettext  requires database (pour la config de la langue)
+  //database requires drawlib  (pour visualiser les upgrades)
+  //drawlib  requires gettext  (pour choisir la fonte)
 
-  /* Init the window */
+  /* database */
+  /* thus, resolution/bpp/windowed parameters cannot be stored in the db (or some minor modifications are required) */
+  xmDatabase* pDb = xmDatabase::instance("main");
+  pDb->init(DATABASE_FILE,
+	    XMSession::instance()->profile() == "" ? std::string("") : XMSession::instance()->profile(),
+	    FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
+	    v_xmArgs.isOptNoDBDirsCheck() == false,
+	    NULL); // v_useGraphics : NULL because drawlib is still not initialized
+  if(XMSession::instance()->sqlTrace()) {
+    pDb->setTrace(XMSession::instance()->sqlTrace());
+  }
+
+  XMSession::instance("file")->load(m_userConfig);  
+  XMSession::instance("file")->loadProfile(XMSession::instance("file")->profile(), pDb);
+  (* XMSession::instance()) = (* XMSession::instance("file"));
+
+  XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs */
+  // enable propagation only after overloading by command args
+  XMSession::enablePropagation("file");
+
+  LogInfo("SiteKey: %s", XMSession::instance()->sitekey().c_str());
+
+#ifdef USE_GETTEXT
+  std::string v_locale = Locales::init(XMSession::instance()->language());
+  LogInfo("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
+
+  // some asian langages require ttf files ; change to us in case of problem
+  try {
+    DrawLib::checkFontPrerequites();
+  } catch(Exception &e) {
+    v_missingFont = true;
+    v_missingFontError = e.getMsg();
+    Locales::changeLocale("en_US");
+  }
+#endif
+
+  /* drawlib */
   if(v_useGraphics) {
+    _InitWin(v_useGraphics);
+
     /* init drawLib */
     drawLib = DrawLib::DrawLibFromName(XMSession::instance()->drawlib());
 
@@ -269,51 +306,23 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     drawLib->setNoGraphics(v_useGraphics == false);
     drawLib->setDontUseGLExtensions(XMSession::instance()->glExts() == false);
 
+    LogInfo("Wanted resolution: %ix%i (%i bpp)",
+            XMSession::instance()->resolutionWidth(),
+	    XMSession::instance()->resolutionHeight(),
+	    XMSession::instance()->bpp());
     drawLib->init(XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp(), XMSession::instance()->windowed());
     /* drawlib can change the final resolution if it fails, then, reinit session one's */
-    XMSession::instance("temp")->setResolutionWidth(drawLib->getDispWidth());
-    XMSession::instance("temp")->setResolutionHeight(drawLib->getDispHeight());
-    XMSession::instance("temp")->setBpp(drawLib->getDispBPP());
-    XMSession::instance("temp")->setWindowed(drawLib->getWindowed());
-    LogInfo("Resolution: %ix%i (%i bpp)", XMSession::instance("temp")->resolutionWidth(), XMSession::instance("temp")->resolutionHeight(), XMSession::instance("temp")->bpp());
+    XMSession::instance()->setResolutionWidth(drawLib->getDispWidth());
+    XMSession::instance()->setResolutionHeight(drawLib->getDispHeight());
+    XMSession::instance()->setBpp(drawLib->getDispBPP());
+    XMSession::instance()->setWindowed(drawLib->getWindowed());
+    LogInfo("Resolution: %ix%i (%i bpp)",
+            XMSession::instance()->resolutionWidth(),
+	    XMSession::instance()->resolutionHeight(),
+	    XMSession::instance()->bpp());
     /* */
-    
-    if(!drawLib->isNoGraphics()) {        
-      drawLib->setDrawDims(XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(),
-			   XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight());
-    }
-  }
 
-  /* database -- require drawlib initialized */
-  /* thus, resolution/bpp/windowed parameters cannot be stored in the db (or some minor modifications are required) */
-  xmDatabase* pDb = xmDatabase::instance("main");
-  pDb->init(DATABASE_FILE,
-	    XMSession::instance()->profile() == "" ? std::string("") : XMSession::instance()->profile(),
-	    FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
-	    v_xmArgs.isOptNoDBDirsCheck() == false,
-	    v_useGraphics ? this : NULL);
-  if(XMSession::instance()->sqlTrace()) {
-    pDb->setTrace(XMSession::instance()->sqlTrace());
   }
-  
-  XMSession::instance("file")->loadProfile(XMSession::instance("file")->profile(), pDb);
-  (* XMSession::instance("live")) = (* XMSession::instance("file")) ; /* copying the resulting session in "live" instance */
-  
-  /* Live instance should be altered by drawLib changes. Apply this alterations */
-  XMSession::instance()->setResolutionWidth(XMSession::instance("temp")->resolutionWidth());
-  XMSession::instance()->setResolutionHeight(XMSession::instance("temp")->resolutionHeight());
-  XMSession::instance()->setBpp(XMSession::instance("temp")->bpp());
-  XMSession::instance()->setWindowed(XMSession::instance("temp")->windowed());
-  XMSession::destroy("temp");
-  
-  XMSession::instance()->load(&v_xmArgs); /* overload default session by xmargs     */
-  LogInfo("SiteKey: %s", XMSession::instance()->sitekey().c_str());
-  XMSession::enablePropagation("file");
-
-#ifdef USE_GETTEXT
-  std::string v_locale = Locales::init(XMSession::instance()->language());
-  LogInfo("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
-#endif
 
   // allocate the statemanager instance so that if it fails, it's not in a thread (serverThread for example)
   StateManager::instance();
@@ -495,6 +504,11 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
       if(XMSession::instance()->clientGhostMode() == false && NetClient::instance()->isConnected()) {
 	  StateManager::instance()->pushState(new StateWaitServerInstructions());
       }
+    }
+
+    /* display error information to the player */
+    if(v_missingFont) {
+      SysMessage::instance()->displayError(GAMETEXT_TTF_MISSING + std::string("\n") + v_missingFontError);
     }
   }
 

@@ -210,7 +210,6 @@ class DrawLib {
   /*
    * set the reference drawing size
    **/
-  void setDrawDims(unsigned int nActualW, unsigned int nActualH, unsigned int w, unsigned int h);
   bool useVBOs();
   bool useFBOs();
   bool useShaders();
@@ -223,12 +222,11 @@ class DrawLib {
   FontManager* getFontMedium();
   FontManager* getFontBig();
   virtual FontManager* getFontManager(const std::string &i_fontFile, unsigned int i_fontSize);
+  static void checkFontPrerequites();
 
   Camera* getMenuCamera();
 
  protected:    
-  unsigned int m_nDrawWidth, m_nDrawHeight;
-  unsigned int m_nActualWidth, m_nActualHeight;
   unsigned int m_nDispWidth, m_nDispHeight, m_nDispBPP;	/* Screen stuff */
   unsigned int m_nLScissorX, m_nLScissorY, m_nLScissorW, m_nLScissorH;
 
