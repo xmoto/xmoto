@@ -2134,8 +2134,8 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
 {
   DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
   if(pDrawlib->getBackend() == DrawLib::backend_OpenGl) {
-    for(unsigned int i=0; i<pBlock->getEdgeGeoms().size(); i++){
-      int geom = pBlock->getEdgeGeoms()[i];
+    for(unsigned int i=pBlock->getEdgeGeoms().size(); i>0; i--){
+      int geom = pBlock->getEdgeGeoms()[i-1];
       pDrawlib->setTexture(m_edgeGeoms[geom]->pTexture, BLEND_MODE_A);
       pDrawlib->setColorRGB(255, 255, 255);
 
