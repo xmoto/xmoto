@@ -1281,11 +1281,11 @@ void UIRoot::_ActivateByStep(int step) {
       return;
     }
     else {
-        unsigned int nBest = nActive + step;
+        int nBest = nActive + step;
         if(nBest < 0 ){
             nBest += nNum;
         }
-        if(nBest >= nNum){
+        if(nBest >= (int)nNum){
             nBest -= nNum;
         }
         deactivate(this);
