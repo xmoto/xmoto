@@ -101,6 +101,8 @@ void StateEditWebConfig::checkEvents()
     XMSession::instance()->proxySettings()->setPort(atoi(pPort->getCaption().c_str()));
     XMSession::instance()->proxySettings()->setServer(pServer->getCaption());
     XMSession::instance()->proxySettings()->setAuthentification(pLogin->getCaption(), pPassword->getCaption());
+    XMSession::instance()->markProxyUpdated();
+
     XMSession::instance()->setWWW(true);
     StateManager::instance()->sendAsynchronousMessage("CONFIGURE_WWW_ACCESS");
 
