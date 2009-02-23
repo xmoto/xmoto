@@ -1260,8 +1260,25 @@ ProxySettings* XMSession::proxySettings() {
   return &m_proxySettings;
 }
 
+void XMSession::setProxySettings(const ProxySettings& i_value) {
+  m_proxySettings = i_value;
+}
+
+void XMSession::markProxyUpdated() {
+  PROPAGATE_REF(XMSession, setProxySettings, m_proxySettings, ProxySettings);
+}
+
 ProxySettings::ProxySettings() {
   setDefault();
+}
+
+void ProxySettings::operator=(const ProxySettings& i_copy) {
+  m_useProxy     = i_copy.m_useProxy;
+  m_server       = i_copy.m_server;
+  m_port         = i_copy.m_port;
+  m_type         = i_copy.m_type;
+  m_authUser     = i_copy.m_authUser;
+  m_authPassword = i_copy.m_authPassword;
 }
 
 void ProxySettings::setServer(std::string p_server) {

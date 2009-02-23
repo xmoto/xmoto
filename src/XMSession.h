@@ -51,6 +51,8 @@ class xmDatabase;
 class ProxySettings {
  public:
   ProxySettings();
+  void operator=(const ProxySettings& i_copy);
+
   void setServer(std::string p_server);
   void setPort(long p_port);
   void setType(const std::string& p_type); /* CURLPROXY_HTTP OR CURLPROXY_SOCKS5 */
@@ -220,6 +222,8 @@ public:
   std::string webThemesURLBase() const;
   std::string webRoomsURL() const;
   ProxySettings* proxySettings();
+  void setProxySettings(const ProxySettings& i_value);
+  void markProxyUpdated();
   void setWebConfAtInit(bool i_value);
   bool webConfAtInit() const;
   bool storeReplays() const;
