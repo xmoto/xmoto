@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Log.h"
 #include "states/StateVote.h"
 #include "thread/SendVoteThread.h"
+#include "SysMessage.h"
 
 /* static members */
 UIRoot* StateFinished::m_sGUI = NULL;
@@ -121,6 +122,7 @@ void StateFinished::enter()
 
   /* replay */
   if(m_universe != NULL) {
+
     if(m_universe->isAReplayToSave()) {
 
       /* upload button */
@@ -148,6 +150,11 @@ void StateFinished::enter()
 	  snprintf(v_str, 256, GAMETEXT_SAVE_AS, v_replayName.c_str());
 	  v_pNewHighscoreSaved_str->setCaption(v_str);
 	}
+      }
+    } else {
+      // there is no highscore to save, but we want even make it enable, just to display a message
+      if(m_universe->isAnErrorOnSaving()) {
+	v_uploadButton->enableWindow(true);
       }
     }
   }
@@ -242,7 +249,14 @@ void StateFinished::checkEvents() {
     pUploadButton->setClicked(false);
 
     std::string v_replayPath = FS::getUserDir() + "/Replays/Latest.rpl";
-    StateManager::instance()->pushState(new StateUploadHighscore(v_replayPath));
+
+    if(m_universe->isAnErrorOnSaving()) {
+      // fake upload
+      SysMessage::instance()->displayError(SYS_MSG_UNSAVABLE_LEVEL);
+    } else {
+      // normal upload
+      StateManager::instance()->pushState(new StateUploadHighscore(v_replayPath));
+    }
   }
 
   UIButton *pAbortButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:ABORT_BUTTON"));
