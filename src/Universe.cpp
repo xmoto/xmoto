@@ -241,6 +241,17 @@ bool Universe::isAReplayToSave() const {
   return m_pJustPlayReplay != NULL;
 }
 
+bool Universe::isAnErrorOnSaving() const {
+
+  // fake an error on physics level
+  for(unsigned int i=0; i<m_scenes.size(); i++) {
+    if(m_scenes[i]->getLevelSrc()->isPhysics()) {
+      return true;
+    }
+  }
+  return false;
+}
+
 void Universe::finalizeReplay(bool i_finished) {
   if(m_scenes.size() != 1) {
     return;

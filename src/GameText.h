@@ -788,6 +788,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define SYS_MSG_TRAIN_NO_RESTORE_AVAIL  _("No training positions stored")
 #define SYS_MSG_TRAIN_RESTORING         _("Training position %i/%i restored")
 #define SYS_MSG_TRAIN_STORED            _("Stored as training position %i")
+#define SYS_MSG_UNSAVABLE_LEVEL         _("Physic levels recording is still not implemented.\nSorry.")
 
 #define SYS_MSG_NO_NEXT_HIGHSCORE(A)    ngettext("Can't find a highscore in the next %i level", "Can't find a highscore in the next %i levels", A)
 
