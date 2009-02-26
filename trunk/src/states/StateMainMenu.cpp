@@ -1273,6 +1273,9 @@ UIWindow* StateMainMenu::makeWindowLevels(UIWindow* i_parent) {
   v_button->setGroup(50058);
   v_button->setContextHelp(CONTEXTHELP_CLIENTGHOSTMODE); 
 
+  // still not official
+  v_button->showWindow(false);
+
   // client status
   v_someText = new UIStatic(v_netOptionsTab, 0, v_netOptionsTab->getPosition().nHeight-30-20-20, "...",
 			    v_netOptionsTab->getPosition().nWidth, 30);
