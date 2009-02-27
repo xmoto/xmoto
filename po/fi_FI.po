@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-02-19 19:00+0100\n"
+"POT-Creation-Date: 2009-02-27 20:26+0100\n"
 "PO-Revision-Date: 2008-11-24 20:54+0200\n"
 "Last-Translator: Maximum <max@mymail.fi>\n"
 "Language-Team: \n"
@@ -2835,14 +2835,20 @@ msgstr "Harjoitus sijainti %i/%i varattu"
 msgid "Stored as training position %i"
 msgstr "%i Varattu harjoitus sijaintina "
 
-#: src/GameText.h:792
+#: src/GameText.h:791
+msgid ""
+"Physic levels recording is still not implemented.\n"
+"Sorry."
+msgstr ""
+
+#: src/GameText.h:793
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] "Kentästä %i ei löydy huipputulosta"
 msgstr[1] "Kentistä (%i) ei löydy huipputuloksia"
 
-#: src/GameText.h:795
+#: src/GameText.h:796
 msgid "FontGroup:GENERAL"
 msgstr "FonttiRyhmä:GENERAL"
 
