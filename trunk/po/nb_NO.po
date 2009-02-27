@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-MOTO 3.0.0\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-02-19 19:00+0100\n"
+"POT-Creation-Date: 2009-02-27 20:26+0100\n"
 "PO-Revision-Date: 2007-06-12 17:26+0100\n"
 "Last-Translator: Wilhelm Francke <wilhelm.francke@gmail.com>\n"
 "Language-Team: English <en@li.org>\n"
@@ -2897,14 +2897,20 @@ msgstr ""
 msgid "Stored as training position %i"
 msgstr ""
 
-#: src/GameText.h:792
+#: src/GameText.h:791
+msgid ""
+"Physic levels recording is still not implemented.\n"
+"Sorry."
+msgstr ""
+
+#: src/GameText.h:793
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/GameText.h:795
+#: src/GameText.h:796
 msgid "FontGroup:GENERAL"
 msgstr ""
 

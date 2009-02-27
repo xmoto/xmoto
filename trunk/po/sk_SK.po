@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-02-19 19:00+0100\n"
+"POT-Creation-Date: 2009-02-27 20:26+0100\n"
 "PO-Revision-Date: 2008-11-24 21:31+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
@@ -2857,7 +2857,13 @@ msgstr "Tréningová pozícia %i/%i obnovená"
 msgid "Stored as training position %i"
 msgstr "Uložené ako tréningová pozícia %i"
 
-#: src/GameText.h:792
+#: src/GameText.h:791
+msgid ""
+"Physic levels recording is still not implemented.\n"
+"Sorry."
+msgstr ""
+
+#: src/GameText.h:793
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
@@ -2865,7 +2871,7 @@ msgstr[0] "Nemôžem nájsť rekord pre nasledujúci level"
 msgstr[1] "Nemôžem nájsť rekord pre nasledujúce %i levely"
 msgstr[2] "Nemôžem nájsť rekord pre nasledujúcich %i levelov"
 
-#: src/GameText.h:795
+#: src/GameText.h:796
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 

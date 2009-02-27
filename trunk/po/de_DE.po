@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-02-19 19:00+0100\n"
+"POT-Creation-Date: 2009-02-27 20:26+0100\n"
 "PO-Revision-Date: 2009-02-19 11:47+0100\n"
 "Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: German\n"
@@ -2856,14 +2856,20 @@ msgstr "Trainingsposition %i/%i wiederhergestellt"
 msgid "Stored as training position %i"
 msgstr "Gespeichert als Trainingsposition %i"
 
-#: src/GameText.h:792
+#: src/GameText.h:791
+msgid ""
+"Physic levels recording is still not implemented.\n"
+"Sorry."
+msgstr ""
+
+#: src/GameText.h:793
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] "Kann keinen Rekord im nächsten Level finden."
 msgstr[1] "Kann keinen Rekord in den nächsten %i Levels finden."
 
-#: src/GameText.h:795
+#: src/GameText.h:796
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 

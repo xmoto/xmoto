@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XMoto Dutch\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-02-19 19:00+0100\n"
+"POT-Creation-Date: 2009-02-27 20:26+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Andre Parhan <dyingmuppet@gmail.com>\n"
 "Language-Team: \n"
@@ -2842,14 +2842,20 @@ msgstr "Training posities %i/%i hersteld"
 msgid "Stored as training position %i"
 msgstr "Opgeslagen als trainingspositie %i"
 
-#: src/GameText.h:792
+#: src/GameText.h:791
+msgid ""
+"Physic levels recording is still not implemented.\n"
+"Sorry."
+msgstr ""
+
+#: src/GameText.h:793
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] "Kan geen topscore vinden in het volgende level"
 msgstr[1] "Kan geen topscore vinden in de volgende %i levels"
 
-#: src/GameText.h:795
+#: src/GameText.h:796
 msgid "FontGroup:GENERAL"
 msgstr "Fontgroep: ALGEMEEN"
 
