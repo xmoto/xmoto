@@ -379,6 +379,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
                           "LEFT OUTER JOIN weblevels AS d ON a.id_level = d.id_level "
                           "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = e.id_level AND e.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
                           "WHERE a.id_profile = \"" + xmDatabase::protectString(i_playerName) + "\" "
+			  "AND   a.id_room = " + i_id_room + " "
                           "AND   b.id_profile IS NULL "
                           "AND   e.id_level   IS NULL "
 			  "AND (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
