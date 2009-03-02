@@ -735,6 +735,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_MEDIUM_LEVELS              _("Medium levels")
 #define VPACKAGENAME_LONG_LEVELS                _("Long levels")
 #define VPACKAGENAME_VERY_LONG_LEVELS           _("Very long levels")
+#define VPACKAGENAME_LEVELS_STOLEN              _("Stolen highscores")
 
 #define VPACKAGENAME_DESC_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore in your room")
 #define VPACKAGENAME_DESC_INCOMPLETED_LEVELS         _("Levels you have not completed")
@@ -769,6 +770,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_DESC_MEDIUM_LEVELS          _("The medium levels (25 seconds to 60)")
 #define VPACKAGENAME_DESC_LONG_LEVELS            _("The long levels (1 minute to 2 minutes)")
 #define VPACKAGENAME_DESC_VERY_LONG_LEVELS       _("The longest levels (more than 2 minutes)")
+#define VPACKAGENAME_DESC_LEVELS_STOLEN          _("Levels for which you owned the highscore")
 
 #define SYS_MSG_UGLY_MODE_ENABLED      	_("Ugly mode enabled")
 #define SYS_MSG_UGLY_MODE_DISABLED     	_("Ugly mode disabled")

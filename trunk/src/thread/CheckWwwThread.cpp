@@ -120,6 +120,8 @@ int CheckWwwThread::realThreadFunction()
 	  setThreadProgress((100 * (i+1)) / XMSession::instance()->nbRoomsEnabled());
 	}
       }
+      m_pDb->updateMyHighscoresFromHighscores(XMSession::instance()->profile());
+
       if(m_realHighscoresUpdate) {
 	StateManager::instance()->sendAsynchronousMessage("HIGHSCORES_UPDATED");
       }

@@ -128,7 +128,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_CLIENTSERVERNAME            "localhost"
 #define DEFAULT_CLIENTGHOSTMODE             true
 #define DEFAULT_CLIENTSERVERPORT            DEFAULT_SERVERPORT
-#define DEFAULT_CLIENTFRAMERATEUPLOAD       50
+#define DEFAULT_CLIENTFRAMERATEUPLOAD       10
 #define DEFAULT_MUSICONALLLEVELS            false
 
 class XMDefault {

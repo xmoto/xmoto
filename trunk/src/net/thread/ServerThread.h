@@ -70,6 +70,8 @@ class NetSClient {
   std::string playingLevelId() const;
 
   unsigned int id() const;
+  int points();
+  void addPoints(int i_points);
 
   private:
   unsigned int m_id;    // uniq id of the client
@@ -86,6 +88,7 @@ class NetSClient {
   std::string m_playingLevelId;
   int m_lastActivTime;
   int m_lastInactivTimeAlert;
+  int m_points;
 };
 
 class ServerThread : public XMThread {
@@ -143,6 +146,7 @@ class ServerThread : public XMThread {
   bool SP2_managePreplayTime();
   std::string SP2_determineLevel();
   void SP2_sendSceneEvents(DBuffer* i_buffer);
+  void SP2_addPointsToClient(unsigned int i_client, unsigned int i_points);
 };
 
 #endif

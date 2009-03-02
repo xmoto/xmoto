@@ -63,6 +63,7 @@ int UploadAllHighscoresThread::realThreadFunction()
     v_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);
     v_pWebRoom->update(webRoomId);
     v_pWebRoom->upgrade(webRoomId, m_pDb);
+    m_pDb->updateMyHighscoresFromHighscores(XMSession::instance()->profile());
     delete v_pWebRoom;
   } catch (Exception& e) {
     LogWarning("Failed to analyse web-highscores file");   
