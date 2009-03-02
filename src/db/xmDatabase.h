@@ -154,6 +154,7 @@ public:
 				const std::string& i_id_level); /* or a negativ value if not */
   void webLoadDataFirstTime();
   bool isOnTheWeb(const std::string& i_id_level);
+  void updateMyHighscoresFromHighscores(const std::string& i_id_profile);
 
   /* configuration */
 	/* if you save several values, use begin and end to make it faster */

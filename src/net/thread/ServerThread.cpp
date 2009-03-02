@@ -55,6 +55,7 @@ NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tc
     tcpReader = new ActionReader();
     m_lastActivTime        =  0;
     m_lastInactivTimeAlert = -1;
+    m_points = 0;
 }
 
 NetSClient::~NetSClient() {
@@ -63,6 +64,14 @@ NetSClient::~NetSClient() {
 
 unsigned int NetSClient::id() const {
   return m_id;
+}
+
+int NetSClient::points() {
+  return m_points;
+}
+
+void NetSClient::addPoints(int i_points) {
+  m_points += i_points;
 }
 
 TCPsocket* NetSClient::tcpSocket() {
@@ -969,4 +978,15 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     break;
 
   }
+}
+
+void ServerThread::SP2_addPointsToClient(unsigned int i_client, unsigned int i_points) {
+//  NA_points na(m_clients[i_client]->id(), m_clients[i_client]->points());
+//
+//  try {
+//    sendToClient(&na, i_client, -1, 0);
+//    sendToAllClientsHavingMode(NETCLIENT_SLAVE_MODE, &na, m_clients[i]->id(), 0, i_client);
+//  } catch(Exception &e) {
+//    /* ok, no pb */
+//  }
 }

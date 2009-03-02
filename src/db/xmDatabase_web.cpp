@@ -459,3 +459,41 @@ void xmDatabase::webLoadDataFirstTime() {
     LogWarning("Loading delivered webhighscores.xml failed");
   }
 }
+
+void xmDatabase::updateMyHighscoresFromHighscores(const std::string& i_id_profile) {
+  char **v_result;
+  unsigned int nrow;
+  std::string v_res;
+
+  /* get my highscores which are in webhighscores but not in levels_mywebhighscores */
+  try {
+    v_result = readDB("SELECT a.id_profile, a.id_room, a.id_level "
+                      "FROM webhighscores AS a "
+		      "LEFT OUTER JOIN levels_mywebhighscores AS b ON (a.id_room    = b.id_room     "
+		                                                  "AND a.id_level   = b.id_level    "
+		                                                  "AND a.id_profile = b.id_profile) "
+		      "WHERE a.id_profile = \"" + protectString(i_id_profile) + "\" "
+		      "AND   b.id_profile IS NULL;",
+		      nrow);
+
+    try {
+      simpleSql("BEGIN TRANSACTION;");
+      for(unsigned int i=0; i<nrow; i++) {
+	simpleSql("INSERT INTO levels_mywebhighscores("
+		  "id_profile, id_room, id_level) "
+		  "VALUES(\"" + protectString(getResult(v_result, 3, i, 0)) + "\", " +
+		  getResult(v_result, 3, i, 1)                              + ", " +
+		  "\""        + protectString(getResult(v_result, 3, i, 2)) + "\");");
+      }
+      simpleSql("COMMIT;");
+    } catch(Exception &e) {
+      simpleSql("ROLLBACK;");
+    }
+
+    read_DB_free(v_result);
+  } catch(Exception &e) {
+    /* ok, no pb */
+    LogWarning("Unable to update my highscores");
+  }
+
+}
