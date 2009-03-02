@@ -301,7 +301,7 @@ msgstr "Vous devez redémarrer pour que cette option prenne effet"
 
 #: src/GameText.h:107
 msgid "You must reconnect to the server so that this option takes effect"
-msgstr ""
+msgstr "Vous devez vous reconnecter au serveur pour que l'option prenne effet"
 
 #: src/GameText.h:108
 msgid "Script action"
@@ -791,6 +791,8 @@ msgid ""
 "Please wait the next party\n"
 "Or press escape to disconnect"
 msgstr ""
+"Veuillez attendre la partie suivante\n"
+"Appuyez sur Echap pour vous déconnecter"
 
 #: src/GameText.h:254
 #, c-format
@@ -1719,7 +1721,7 @@ msgstr "Réseau"
 
 #: src/GameText.h:493
 msgid "Simple ghost mode"
-msgstr ""
+msgstr "Simple mode fantôme"
 
 #: src/GameText.h:494
 msgid "You're currently connected"
@@ -2404,7 +2406,7 @@ msgstr "Dieu"
 
 #: src/GameText.h:675
 msgid "Go !"
-msgstr ""
+msgstr "Go !"
 
 #: src/GameText.h:676
 msgid "Not nice at all"
@@ -2515,6 +2517,7 @@ msgstr ""
 #: src/GameText.h:704
 msgid "Network playing mode : just see other players as ghosts"
 msgstr ""
+"Mode de jeu réseau : voir simplement les autres joueurs en tant que fantôme"
 
 #: src/GameText.h:706
 msgid "Levels with no highscore"
@@ -2638,7 +2641,7 @@ msgstr "Niveaux très longs"
 
 #: src/GameText.h:738
 msgid "Stolen highscores"
-msgstr ""
+msgstr "Records volés"
 
 #: src/GameText.h:740
 msgid "Levels with no highscore in your room"
@@ -2774,7 +2777,7 @@ msgstr "Niveaux les plus longs (plus de 2 minutes)"
 
 #: src/GameText.h:773
 msgid "Levels for which you owned the highscore"
-msgstr ""
+msgstr "Les niveaux pour lesquels vous aviez le record"
 
 #: src/GameText.h:775
 msgid "Ugly mode enabled"
@@ -2851,6 +2854,8 @@ msgid ""
 "Physic levels recording is still not implemented.\n"
 "Sorry."
 msgstr ""
+"L'enregistrement des niveaux physiques n'est pas encore possible.\n"
+"Désolé."
 
 #: src/GameText.h:795
 #, c-format
