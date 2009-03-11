@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-03-11 13:38+0100\n"
-"PO-Revision-Date: 2009-02-19 11:47+0100\n"
+"PO-Revision-Date: 2009-03-11 17:35+0100\n"
 "Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -2521,7 +2521,7 @@ msgstr "Anvisierter Server"
 
 #: src/GameText.h:702
 msgid "Connect/disconnect the client to the server"
-msgstr "Verbinde/Trenne den Klienten"
+msgstr "Verbindung aufbauen/ trennen"
 
 #: src/GameText.h:703
 msgid ""
@@ -2861,6 +2861,9 @@ msgid ""
 "Physic levels recording is still not implemented.\n"
 "Sorry."
 msgstr ""
+"Die Replay-Funktion für Chipmunk-Levels ist leider noch nicht "
+"implementiert.\n"
+"Sorry."
 
 #: src/GameText.h:793
 #, c-format
