@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-03-02 22:32+0100\n"
+"POT-Creation-Date: 2009-03-11 13:38+0100\n"
 "PO-Revision-Date: 2009-02-19 11:47+0100\n"
 "Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: German\n"
@@ -2537,7 +2537,7 @@ msgstr "Netzwerkmodus: Andere Spieler erscheinen nur als Geister"
 msgid "Levels with no highscore"
 msgstr "Levels ohne Rekord"
 
-#: src/GameText.h:707 src/GameText.h:741
+#: src/GameText.h:707 src/GameText.h:740
 msgid "Levels you have not completed"
 msgstr "Nicht abgeschlossene Levels"
 
@@ -2653,231 +2653,223 @@ msgstr "Lange Distanz"
 msgid "Very long levels"
 msgstr "Marathon-Distanz"
 
-#: src/GameText.h:738
-msgid "Stolen highscores"
-msgstr ""
-
-#: src/GameText.h:740
+#: src/GameText.h:739
 msgid "Levels with no highscore in your room"
 msgstr "Levels ohne Raum-Bestzeiten"
 
-#: src/GameText.h:742
+#: src/GameText.h:741
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Jemand in dem Raum hat bereits eine bessere Bestzeit erzielt"
 
-#: src/GameText.h:743
+#: src/GameText.h:742
 msgid "All X-Moto levels"
 msgstr "Alle Level"
 
-#: src/GameText.h:744
+#: src/GameText.h:743
 msgid "New and updated levels since your last check"
 msgstr "Neue und aktualisierte Levels"
 
-#: src/GameText.h:745
+#: src/GameText.h:744
 msgid "Your favorite levels"
 msgstr "Favoriten"
 
-#: src/GameText.h:746
+#: src/GameText.h:745
 msgid "Your blacklisted levels"
 msgstr "Schwarze Liste"
 
-#: src/GameText.h:747
+#: src/GameText.h:746
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Schönste Levels (nach Web-Abstimmung)"
 
-#: src/GameText.h:748
+#: src/GameText.h:747
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Schwerste Levels (nach Web-Abstimmung)"
 
-#: src/GameText.h:749
+#: src/GameText.h:748
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Einfachste Levels (Nach Web-Abstimmung)"
 
-#: src/GameText.h:750
+#: src/GameText.h:749
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Schrottigste Levels (nach Web-Abstimmung)"
 
-#: src/GameText.h:751
+#: src/GameText.h:750
 msgid "X-Moto levels which are dynamic"
 msgstr "Levels mit Bewegungselementen"
 
-#: src/GameText.h:752
+#: src/GameText.h:751
 msgid "X-Moto levels using strongly physics"
 msgstr "Levels mit dynamischen Elementen"
 
-#: src/GameText.h:753
+#: src/GameText.h:752
 msgid "Last levels you have played"
 msgstr "Zuletzt gespielte Levels"
 
-#: src/GameText.h:754
+#: src/GameText.h:753
 msgid "X-Moto levels you never played"
 msgstr "Nie gespielte Levels"
 
-#: src/GameText.h:755
+#: src/GameText.h:754
 msgid "X-Moto levels you have played the most"
 msgstr "Meistgespielte Levels"
 
-#: src/GameText.h:756
+#: src/GameText.h:755
 msgid "X-Moto levels you have played only a few times"
 msgstr "Selten gespielte Levels"
 
-#: src/GameText.h:757
+#: src/GameText.h:756
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "Levels mit aktueller Bestzeit im Raum"
 
-#: src/GameText.h:758
+#: src/GameText.h:757
 msgid "Last created X-Moto levels"
 msgstr "Zuletzt erstellte Levels"
 
-#: src/GameText.h:759
+#: src/GameText.h:758
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "Levels mit alter Bestzeit im Raum"
 
-#: src/GameText.h:760
+#: src/GameText.h:759
 msgid "You have the room highscore"
 msgstr "Du bist Rekord-Halter im Raum"
 
-#: src/GameText.h:761
+#: src/GameText.h:760
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (95%)"
 
-#: src/GameText.h:762
+#: src/GameText.h:761
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (90%-95%)"
 
-#: src/GameText.h:763
+#: src/GameText.h:762
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (80%-90%)"
 
-#: src/GameText.h:764
+#: src/GameText.h:763
 msgid "The room highscore is really better than your own highscore"
 msgstr "Der Rekord des Raumes liegt weit über deiner Bestzeit"
 
-#: src/GameText.h:765
+#: src/GameText.h:764
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Level-Paket \"%s\""
 
-#: src/GameText.h:766
+#: src/GameText.h:765
 #, c-format
 msgid "Highscores by %s"
 msgstr "Bestzeiten von %s"
 
-#: src/GameText.h:767
+#: src/GameText.h:766
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Externe Levels (eigenständig im 'My Levels' Ordner platziert)"
 
-#: src/GameText.h:768
+#: src/GameText.h:767
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr ""
 "Diese als 'Schrott' markierten Levels bleiben für andere Pakete unsichtbar."
 
-#: src/GameText.h:769
+#: src/GameText.h:768
 msgid "The shortest levels (less than 25 seconds)"
 msgstr "Die kürzesten Levels (weniger als 25 Sekunden)"
 
-#: src/GameText.h:770
+#: src/GameText.h:769
 msgid "The medium levels (25 seconds to 60)"
 msgstr "Die mittlere Distanz (25 bis 60 Sekunden)"
 
-#: src/GameText.h:771
+#: src/GameText.h:770
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr "Lange Levels (1 bis 2 Minuten)"
 
-#: src/GameText.h:772
+#: src/GameText.h:771
 msgid "The longest levels (more than 2 minutes)"
 msgstr "Marathon Levels (länger als 2 Minuten)"
 
 #: src/GameText.h:773
-msgid "Levels for which you owned the highscore"
-msgstr ""
-
-#: src/GameText.h:775
 msgid "Ugly mode enabled"
 msgstr "Strich-Modus aktiviert"
 
-#: src/GameText.h:776
+#: src/GameText.h:774
 msgid "Ugly mode disabled"
 msgstr "Strich-Modus deaktiviert"
 
-#: src/GameText.h:777
+#: src/GameText.h:775
 msgid "Theme mode enabled"
 msgstr "Themen-Modus aktiviert"
 
-#: src/GameText.h:778
+#: src/GameText.h:776
 msgid "Theme mode disabled"
 msgstr "Themen-Modus deaktiviert"
 
-#: src/GameText.h:779
+#: src/GameText.h:777
 msgid "UglyOver mode enabled"
 msgstr "Strich-modus aktiviert"
 
-#: src/GameText.h:780
+#: src/GameText.h:778
 msgid "UglyOver mode disabled"
 msgstr "Strich-Modus deaktiviert"
 
-#: src/GameText.h:781
+#: src/GameText.h:779
 msgid "Web connection enabled"
 msgstr "Internet-Verbindung aktiviert"
 
-#: src/GameText.h:782
+#: src/GameText.h:780
 msgid "Web connection disabled"
 msgstr "Internet-Verbindung deaktiviert"
 
-#: src/GameText.h:783
+#: src/GameText.h:781
 msgid "Replay interpolation enabled"
 msgstr "Replay-Interpolation aktiviert"
 
-#: src/GameText.h:784
+#: src/GameText.h:782
 msgid "Replay interpolation disabled"
 msgstr "Replay-Interpolation deaktiviert"
 
-#: src/GameText.h:785
+#: src/GameText.h:783
 msgid "Fps enabled"
 msgstr "Frames/Sekunde-Anzeige aktiviert"
 
-#: src/GameText.h:786
+#: src/GameText.h:784
 msgid "Fps disabled"
 msgstr "Frames/Sekunde-Anzeige deaktiviert"
 
-#: src/GameText.h:787
+#: src/GameText.h:785
 msgid "Audio enabled"
 msgstr "Audio aktiviert"
 
-#: src/GameText.h:788
+#: src/GameText.h:786
 msgid "Audio disabled"
 msgstr "Audio deaktiviert"
 
-#: src/GameText.h:790
+#: src/GameText.h:788
 msgid "No training positions stored"
 msgstr "Keine Trainingspositionen gespeichert"
 
-#: src/GameText.h:791
+#: src/GameText.h:789
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr "Trainingsposition %i/%i wiederhergestellt"
 
-#: src/GameText.h:792
+#: src/GameText.h:790
 #, c-format
 msgid "Stored as training position %i"
 msgstr "Gespeichert als Trainingsposition %i"
 
-#: src/GameText.h:793
+#: src/GameText.h:791
 msgid ""
 "Physic levels recording is still not implemented.\n"
 "Sorry."
 msgstr ""
 
-#: src/GameText.h:795
+#: src/GameText.h:793
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] "Kann keinen Rekord im nächsten Level finden."
 msgstr[1] "Kann keinen Rekord in den nächsten %i Levels finden."
 
-#: src/GameText.h:798
+#: src/GameText.h:796
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 

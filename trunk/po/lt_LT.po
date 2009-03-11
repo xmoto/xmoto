@@ -2,14 +2,14 @@
 # Copyright (C) 2008 X-Moto Development Team
 # This file is distributed under the same license as the xmoto package.
 # Tadas Masiulionis <tadzikaz@gmail.com>, 2008.
-#
-#
+# 
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-03-02 22:32+0100\n"
-"PO-Revision-Date: 2008-12-26 03:26+0200\n"
+"POT-Creation-Date: 2009-03-11 13:38+0100\n"
+"PO-Revision-Date: 2009-03-07 15:48+0200\n"
 "Last-Translator: Tadas Masiulionis <tadzikaz@gmail.com>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -311,7 +311,9 @@ msgstr "Jūs turite įkelti iš naujo žaidimą, kad šį parinktis aktyvuotusi"
 #: src/GameText.h:107
 msgid "You must reconnect to the server so that this option takes effect"
 msgstr ""
-"Jūs turite iš naujo prisijungti prie serverio, kad šį parinktis aktyvuotųsi"
+"Jūs turite iš naujo prisijungti prie serverio, kad šį parinktis "
+"aktyvuotųsiJūs turite iš naujo prisijungti prie serverio, kad šį parinktis "
+"aktyvuotųsi"
 
 #: src/GameText.h:108
 msgid "Script action"
@@ -339,47 +341,47 @@ msgstr "Vertimas"
 
 #: src/GameText.h:139
 msgid "Slovak"
-msgstr "slovakiškai"
+msgstr "slovakų"
 
 #: src/GameText.h:140
 msgid "French"
-msgstr "prancūziškai"
+msgstr "prancūzų"
 
 #: src/GameText.h:141
 msgid "Norwegian"
-msgstr "norvegiškai"
+msgstr "norvegų"
 
 #: src/GameText.h:142
 msgid "German"
-msgstr "vokiškai"
+msgstr "vokiečių"
 
 #: src/GameText.h:143
 msgid "Finnish"
-msgstr "suomiškai"
+msgstr "suomių"
 
 #: src/GameText.h:144
 msgid "Catalan"
-msgstr "kataloniškai"
+msgstr "katalonų"
 
 #: src/GameText.h:145
 msgid "Spanish"
-msgstr "ispaniškai"
+msgstr "ispanų"
 
 #: src/GameText.h:146
 msgid "Polish"
-msgstr "lenkiškai"
+msgstr "lenkų"
 
 #: src/GameText.h:147
 msgid "Italian"
-msgstr "itališkai"
+msgstr "italų"
 
 #: src/GameText.h:148
 msgid "Swedish"
-msgstr "švediškai"
+msgstr "švedų"
 
 #: src/GameText.h:149
 msgid "Czech"
-msgstr "čekiškai"
+msgstr "čekų"
 
 #: src/GameText.h:150
 msgid "Mikhail Brinchuk"
@@ -387,23 +389,23 @@ msgstr "Mikhail Brinchuk"
 
 #: src/GameText.h:150
 msgid "Russian"
-msgstr "rusiškai"
+msgstr "rusų"
 
 #: src/GameText.h:151
 msgid "Brazilian Portuguese"
-msgstr "portugališkai"
+msgstr "portugalų"
 
 #: src/GameText.h:152
 msgid "Latvian"
-msgstr "latviškai"
+msgstr "latvių"
 
 #: src/GameText.h:153
 msgid "Danish"
-msgstr "daniškai"
+msgstr "danų"
 
 #: src/GameText.h:154
 msgid "Lithuanian"
-msgstr "lietuviškai"
+msgstr "lietuvių"
 
 #: src/GameText.h:156
 msgid "Main testers"
@@ -801,6 +803,7 @@ msgid ""
 "Or press escape to disconnect"
 msgstr ""
 "Palaukite kito žaidėjo\n"
+"arba atsijunkite paspaudę ESCPalaukite kito žaidėjo\n"
 "arba atsijunkite paspaudę ESC"
 
 #: src/GameText.h:254
@@ -2555,7 +2558,7 @@ msgstr "Tinklo žaidimo režimas: tik stebėkite kitus žaidėjus kaip vaiduokli
 msgid "Levels with no highscore"
 msgstr "Lygiai be rekordų"
 
-#: src/GameText.h:707 src/GameText.h:741
+#: src/GameText.h:707 src/GameText.h:740
 msgid "Levels you have not completed"
 msgstr "Jūsų neužbaigti lygiai"
 
@@ -2671,227 +2674,221 @@ msgstr "Ilgi lygiai"
 msgid "Very long levels"
 msgstr "Labai ilgi lygiai"
 
-#: src/GameText.h:738
-msgid "Stolen highscores"
-msgstr ""
-
-#: src/GameText.h:740
+#: src/GameText.h:739
 msgid "Levels with no highscore in your room"
 msgstr "Lygiai be rekordo jūsų kambaryje"
 
-#: src/GameText.h:742
+#: src/GameText.h:741
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Kažkas kambaryje pagerino jūsų rekordą"
 
-#: src/GameText.h:743
+#: src/GameText.h:742
 msgid "All X-Moto levels"
 msgstr "Visi X-Moto lygiai"
 
-#: src/GameText.h:744
+#: src/GameText.h:743
 msgid "New and updated levels since your last check"
 msgstr "Nauji ir atnaujinti lygiai nuo paskutinio patikrinimo"
 
-#: src/GameText.h:745
+#: src/GameText.h:744
 msgid "Your favorite levels"
 msgstr "Jūsų parankiniai lygiai"
 
-#: src/GameText.h:746
+#: src/GameText.h:745
 msgid "Your blacklisted levels"
 msgstr "Jūsų juodojo sąrašo lygiai"
 
-#: src/GameText.h:747
+#: src/GameText.h:746
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Gražiausi X-Moto lygiai pagal tinklo balsus"
 
-#: src/GameText.h:748
+#: src/GameText.h:747
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Sunkiausi X-Moto lygiai pagal tinklo balsus"
 
-#: src/GameText.h:749
+#: src/GameText.h:748
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Lengviausi X-Moto lygiai pagal tinklo balsus"
 
-#: src/GameText.h:750
+#: src/GameText.h:749
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Labai netikę X-Moto lygiai pagal tinklo balsus"
 
-#: src/GameText.h:751
+#: src/GameText.h:750
 msgid "X-Moto levels which are dynamic"
 msgstr "Dinamiški X-Moto lygiai"
 
-#: src/GameText.h:752
+#: src/GameText.h:751
 msgid "X-Moto levels using strongly physics"
 msgstr "X-Moto lygiai, naudojantys ypatingąją fiziką"
 
-#: src/GameText.h:753
+#: src/GameText.h:752
 msgid "Last levels you have played"
 msgstr "Paskutiniai jūsų žaisti lygiai"
 
-#: src/GameText.h:754
+#: src/GameText.h:753
 msgid "X-Moto levels you never played"
 msgstr "X-Moto lygiai, kurių niekada nežaidėte"
 
-#: src/GameText.h:755
+#: src/GameText.h:754
 msgid "X-Moto levels you have played the most"
 msgstr "X-Moto lygiai, kuriuos žaidėte dažniausiai"
 
-#: src/GameText.h:756
+#: src/GameText.h:755
 msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto lygiai, kuriuos žaidėte tik kelis kartus"
 
-#: src/GameText.h:757
+#: src/GameText.h:756
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "X-Moto lygiai, kurie turi neseniai pagerintus rekordus jūsų kambaryje"
 
-#: src/GameText.h:758
+#: src/GameText.h:757
 msgid "Last created X-Moto levels"
 msgstr "Paskutiniai sukurti X-Moto lygiai"
 
-#: src/GameText.h:759
+#: src/GameText.h:758
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto lygiai, turintys senus rekordus jūsų kambaryje"
 
-#: src/GameText.h:760
+#: src/GameText.h:759
 msgid "You have the room highscore"
 msgstr "Jūs esate kambario rekordininkas"
 
-#: src/GameText.h:761
+#: src/GameText.h:760
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr ""
 "Jūsų pasiekto asmeninio rekordo laikas yra beveik kambario rekordas (95 %)"
 
-#: src/GameText.h:762
+#: src/GameText.h:761
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
 "Jūsų pasiekto asmeninio rekordo laikas yra beveik kambario rekordas (90%-95%)"
 
-#: src/GameText.h:763
+#: src/GameText.h:762
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
 "Jūsų pasiekto asmeninio rekordo laikas yra beveik kambario rekordas (80%-90%)"
 
-#: src/GameText.h:764
+#: src/GameText.h:763
 msgid "The room highscore is really better than your own highscore"
 msgstr "Kambario rekordas iš tiesų geresnis negu jūsų rekordas"
 
-#: src/GameText.h:765
+#: src/GameText.h:764
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Lygių paketas \"%s\""
 
-#: src/GameText.h:766
+#: src/GameText.h:765
 #, c-format
 msgid "Highscores by %s"
 msgstr "Žaidėjo %s rekordai"
 
-#: src/GameText.h:767
+#: src/GameText.h:766
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Išoriniai lygiai (tokius jūs padedate į 'Mano lygiai' aplankalą)"
 
-#: src/GameText.h:768
+#: src/GameText.h:767
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr ""
 "Lygiai, pažymėti, kaip 'niekam tikę', yra paslėpti visuose kituose paketuose"
 
-#: src/GameText.h:769
+#: src/GameText.h:768
 msgid "The shortest levels (less than 25 seconds)"
 msgstr "Trumpiausi lygiai (mažiau negu 25 sekundės)"
 
-#: src/GameText.h:770
+#: src/GameText.h:769
 msgid "The medium levels (25 seconds to 60)"
 msgstr "Vidutiniai lygiai (nuo 25 iki 60 sekundžių)"
 
-#: src/GameText.h:771
+#: src/GameText.h:770
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr "Ilgi lygiai (nuo 1 iki 2 minučių)"
 
-#: src/GameText.h:772
+#: src/GameText.h:771
 msgid "The longest levels (more than 2 minutes)"
 msgstr "Ilgiausi lygiai (daugiau negu 2 minutės)"
 
 #: src/GameText.h:773
-msgid "Levels for which you owned the highscore"
-msgstr ""
-
-#: src/GameText.h:775
 msgid "Ugly mode enabled"
 msgstr "Bjaurus režimas įjungtas"
 
-#: src/GameText.h:776
+#: src/GameText.h:774
 msgid "Ugly mode disabled"
 msgstr "Bjaurus režimas išjungtas"
 
-#: src/GameText.h:777
+#: src/GameText.h:775
 msgid "Theme mode enabled"
 msgstr "Temų režimas įjungtas"
 
-#: src/GameText.h:778
+#: src/GameText.h:776
 msgid "Theme mode disabled"
 msgstr "Temų režimas išjungtas"
 
-#: src/GameText.h:779
+#: src/GameText.h:777
 msgid "UglyOver mode enabled"
 msgstr "Virš bjaurumo režimas įjungtas"
 
-#: src/GameText.h:780
+#: src/GameText.h:778
 msgid "UglyOver mode disabled"
 msgstr "Virš bjaurumo režimas išjungtas"
 
-#: src/GameText.h:781
+#: src/GameText.h:779
 msgid "Web connection enabled"
 msgstr "Tinklo ryšys įjungtas"
 
-#: src/GameText.h:782
+#: src/GameText.h:780
 msgid "Web connection disabled"
 msgstr "Tinklo ryšys išjungtas"
 
-#: src/GameText.h:783
+#: src/GameText.h:781
 msgid "Replay interpolation enabled"
 msgstr "Pakartojimo įterpimas įjungtas"
 
-#: src/GameText.h:784
+#: src/GameText.h:782
 msgid "Replay interpolation disabled"
 msgstr "Pakartojimo įterpimas išjungtas"
 
-#: src/GameText.h:785
+#: src/GameText.h:783
 msgid "Fps enabled"
 msgstr "Kadrų skleistinė įjungta"
 
-#: src/GameText.h:786
+#: src/GameText.h:784
 msgid "Fps disabled"
 msgstr "Kadrų sklaistinė išjungta"
 
-#: src/GameText.h:787
+#: src/GameText.h:785
 msgid "Audio enabled"
 msgstr "Garsas įjungtas"
 
-#: src/GameText.h:788
+#: src/GameText.h:786
 msgid "Audio disabled"
 msgstr "Garsas išjungtas"
 
-#: src/GameText.h:790
+#: src/GameText.h:788
 msgid "No training positions stored"
 msgstr "Nėra išsaugota mokomųjų padėčių"
 
-#: src/GameText.h:791
+#: src/GameText.h:789
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr "Mokomoji padėtis %i/%i atkurta"
 
-#: src/GameText.h:792
+#: src/GameText.h:790
 #, c-format
 msgid "Stored as training position %i"
 msgstr "Išsaugotas kaip mokomoji padėtis %i"
 
-#: src/GameText.h:793
+#: src/GameText.h:791
 msgid ""
 "Physic levels recording is still not implemented.\n"
 "Sorry."
 msgstr ""
+"Fizikinių lygių įrašymas dar nėra įgyvendintas.\n"
+"Atsiprašome."
 
-#: src/GameText.h:795
+#: src/GameText.h:793
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
@@ -2899,7 +2896,7 @@ msgstr[0] "Neįmanoma surasti rekordų sekančiame %i lygyje"
 msgstr[1] "Neįmanoma surasti rekordų sekančiuose %i lygiuose"
 msgstr[2] "Neįmanoma surasti rekordų sekančiuose %i lygyje"
 
-#: src/GameText.h:798
+#: src/GameText.h:796
 msgid "FontGroup:GENERAL"
 msgstr "Šriftų grupė: BENDRA"
 
@@ -3187,6 +3184,12 @@ msgid ""
 msgstr ""
 "Dabar pabaigai dar vienas... Tai neilgas lygis, kuriame\n"
 "turite mažiau vietos savo brangiai galvai. Sėkmės :)"
+
+#~ msgid "Stolen highscores"
+#~ msgstr "Pasisavinti rekordai"
+
+#~ msgid "Levels for which you owned the highscore"
+#~ msgstr "Jūsų pasisavinti lygių rekordai"
 
 #~ msgid "Musical levels"
 #~ msgstr "Muzikiniai lygiai"

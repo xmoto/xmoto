@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-03-02 22:32+0100\n"
+"POT-Creation-Date: 2009-03-11 13:38+0100\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: KuanYen\n"
 "Language-Team: X-Moto\n"
@@ -2495,7 +2495,7 @@ msgstr "線上玩模式：只看見其他玩家的鬼影"
 msgid "Levels with no highscore"
 msgstr "目前沒有人過的了的關卡"
 
-#: src/GameText.h:707 src/GameText.h:741
+#: src/GameText.h:707 src/GameText.h:740
 msgid "Levels you have not completed"
 msgstr "你已經完成的關卡"
 
@@ -2611,230 +2611,222 @@ msgstr "路程遠的關卡"
 msgid "Very long levels"
 msgstr "路程遠的要命關卡"
 
-#: src/GameText.h:738
-msgid "Stolen highscores"
-msgstr ""
-
-#: src/GameText.h:740
+#: src/GameText.h:739
 msgid "Levels with no highscore in your room"
 msgstr "你的遊戲間裡沒有最高紀錄的關卡"
 
-#: src/GameText.h:742
+#: src/GameText.h:741
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "在遊戲間裡有個人創造了一個比你還高的紀錄"
 
-#: src/GameText.h:743
+#: src/GameText.h:742
 msgid "All X-Moto levels"
 msgstr "X-Moto的所有關卡"
 
-#: src/GameText.h:744
+#: src/GameText.h:743
 msgid "New and updated levels since your last check"
 msgstr "自從上次檢查後新的升級關卡"
 
-#: src/GameText.h:745
+#: src/GameText.h:744
 msgid "Your favorite levels"
 msgstr "你最愛的關卡"
 
-#: src/GameText.h:746
+#: src/GameText.h:745
 msgid "Your blacklisted levels"
 msgstr "你的黑名單關卡"
 
-#: src/GameText.h:747
+#: src/GameText.h:746
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "透過網路投票選出的最佳關卡"
 
-#: src/GameText.h:748
+#: src/GameText.h:747
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "透過網路投票選出的最難關卡"
 
-#: src/GameText.h:749
+#: src/GameText.h:748
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "透過網路投票選出的最容易關卡"
 
-#: src/GameText.h:750
+#: src/GameText.h:749
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "透過網路投票選出的最垃圾關卡"
 
-#: src/GameText.h:751
+#: src/GameText.h:750
 msgid "X-Moto levels which are dynamic"
 msgstr "動態的X-Moto關卡"
 
-#: src/GameText.h:752
+#: src/GameText.h:751
 msgid "X-Moto levels using strongly physics"
 msgstr "有強大物理模擬的X-Moto關卡"
 
-#: src/GameText.h:753
+#: src/GameText.h:752
 msgid "Last levels you have played"
 msgstr "你最近所玩過的X-Moto關卡"
 
-#: src/GameText.h:754
+#: src/GameText.h:753
 msgid "X-Moto levels you never played"
 msgstr "你從未玩過的X-Moto關卡"
 
-#: src/GameText.h:755
+#: src/GameText.h:754
 msgid "X-Moto levels you have played the most"
 msgstr "你最常玩的X-Moto關卡"
 
-#: src/GameText.h:756
+#: src/GameText.h:755
 msgid "X-Moto levels you have played only a few times"
 msgstr "你只玩過一兩次的X-Moto關卡"
 
-#: src/GameText.h:757
+#: src/GameText.h:756
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "最近在你的遊戲間有最高紀錄的X-Moto關卡"
 
-#: src/GameText.h:758
+#: src/GameText.h:757
 msgid "Last created X-Moto levels"
 msgstr "最近才被創造出的X-Moto關卡"
 
-#: src/GameText.h:759
+#: src/GameText.h:758
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto在你的遊戲間裡有一關有舊的最高紀錄"
 
-#: src/GameText.h:760
+#: src/GameText.h:759
 msgid "You have the room highscore"
 msgstr "你有遊戲間裡有最高紀錄"
 
-#: src/GameText.h:761
+#: src/GameText.h:760
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "你的個人最高分幾乎是遊戲間裡的最高紀錄(95%)"
 
-#: src/GameText.h:762
+#: src/GameText.h:761
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr " 你的個人最高分幾乎是遊戲間裡的最高紀錄 (90%-95%)"
 
-#: src/GameText.h:763
+#: src/GameText.h:762
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "你的個人最高分幾乎是遊戲間裡的最高紀錄 (80%-90%)"
 
-#: src/GameText.h:764
+#: src/GameText.h:763
 msgid "The room highscore is really better than your own highscore"
 msgstr "遊戲間裡的最高分真的比你的還高"
 
-#: src/GameText.h:765
+#: src/GameText.h:764
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Pack \"%s\""
 
-#: src/GameText.h:766
+#: src/GameText.h:765
 #, c-format
 msgid "Highscores by %s"
 msgstr "最高紀錄由%s創下"
 
-#: src/GameText.h:767
+#: src/GameText.h:766
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "擴充關卡(你之前放進「我的關卡」的那些)"
 
-#: src/GameText.h:768
+#: src/GameText.h:767
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr "被標記「廢物」的關卡在其他的遊戲包裡都會被隱藏"
 
-#: src/GameText.h:769
+#: src/GameText.h:768
 msgid "The shortest levels (less than 25 seconds)"
 msgstr "路程最短的關卡(少於25秒)"
 
-#: src/GameText.h:770
+#: src/GameText.h:769
 msgid "The medium levels (25 seconds to 60)"
 msgstr "路程中等的關卡(25秒到60秒)"
 
-#: src/GameText.h:771
+#: src/GameText.h:770
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr "路程較長的關卡 (1分鐘到2分鐘)"
 
-#: src/GameText.h:772
+#: src/GameText.h:771
 msgid "The longest levels (more than 2 minutes)"
 msgstr "路程有夠遠的關卡(超過2分鐘)"
 
 #: src/GameText.h:773
-msgid "Levels for which you owned the highscore"
-msgstr ""
-
-#: src/GameText.h:775
 msgid "Ugly mode enabled"
 msgstr "火柴人模式開啟"
 
-#: src/GameText.h:776
+#: src/GameText.h:774
 msgid "Ugly mode disabled"
 msgstr "關閉火柴人模式"
 
-#: src/GameText.h:777
+#: src/GameText.h:775
 msgid "Theme mode enabled"
 msgstr "佈景主題模式開啟"
 
-#: src/GameText.h:778
+#: src/GameText.h:776
 msgid "Theme mode disabled"
 msgstr "佈景主題模式關閉"
 
-#: src/GameText.h:779
+#: src/GameText.h:777
 msgid "UglyOver mode enabled"
 msgstr "噁爛到極點的火柴人模式開啟"
 
-#: src/GameText.h:780
+#: src/GameText.h:778
 msgid "UglyOver mode disabled"
 msgstr "噁爛到極點的火柴人模式關閉"
 
-#: src/GameText.h:781
+#: src/GameText.h:779
 msgid "Web connection enabled"
 msgstr "網路連接啟用"
 
-#: src/GameText.h:782
+#: src/GameText.h:780
 msgid "Web connection disabled"
 msgstr "網路連接停用"
 
-#: src/GameText.h:783
+#: src/GameText.h:781
 msgid "Replay interpolation enabled"
 msgstr "重播紀錄更改啟用"
 
-#: src/GameText.h:784
+#: src/GameText.h:782
 msgid "Replay interpolation disabled"
 msgstr "重播紀錄更改停用"
 
-#: src/GameText.h:785
+#: src/GameText.h:783
 msgid "Fps enabled"
 msgstr "顯示Fps"
 
-#: src/GameText.h:786
+#: src/GameText.h:784
 msgid "Fps disabled"
 msgstr "不顯示Fps"
 
-#: src/GameText.h:787
+#: src/GameText.h:785
 msgid "Audio enabled"
 msgstr "開啟聲音"
 
-#: src/GameText.h:788
+#: src/GameText.h:786
 msgid "Audio disabled"
 msgstr "關閉聲音"
 
-#: src/GameText.h:790
+#: src/GameText.h:788
 msgid "No training positions stored"
 msgstr "No training positions stored"
 
-#: src/GameText.h:791
+#: src/GameText.h:789
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr " Training position %i/%i restored"
 
-#: src/GameText.h:792
+#: src/GameText.h:790
 #, c-format
 msgid "Stored as training position %i"
 msgstr "Stored as training position %i"
 
-#: src/GameText.h:793
+#: src/GameText.h:791
 msgid ""
 "Physic levels recording is still not implemented.\n"
 "Sorry."
 msgstr ""
 
-#: src/GameText.h:795
+#: src/GameText.h:793
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/GameText.h:798
+#: src/GameText.h:796
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:ASIAN"
 
