@@ -155,6 +155,8 @@ public:
   void webLoadDataFirstTime();
   bool isOnTheWeb(const std::string& i_id_level);
   void updateMyHighscoresFromHighscores(const std::string& i_id_profile);
+  void updateMyHighscoresKnownStolenBack(const std::string& i_id_profile);
+  bool markMyHighscoresKnownStolen(const std::string& i_id_profile, std::string& o_stolen_msg);
 
   /* configuration */
 	/* if you save several values, use begin and end to make it faster */

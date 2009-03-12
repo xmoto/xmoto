@@ -96,6 +96,7 @@ int CheckWwwThread::realThreadFunction()
   std::string webRoomUrl;
   std::string webRoomName;
   std::string webLevelsUrl;
+  std::string v_stolen_msg;
   ProxySettings* pProxySettings;
 
   if(XMSession::instance()->www() == true){
@@ -121,6 +122,10 @@ int CheckWwwThread::realThreadFunction()
 	}
       }
       m_pDb->updateMyHighscoresFromHighscores(XMSession::instance()->profile());
+
+      if(m_pDb->markMyHighscoresKnownStolen(XMSession::instance()->profile(), v_stolen_msg)) {
+	StateManager::instance()->sendAsynchronousMessage("MYHIGHSCORES_STOLEN", v_stolen_msg);
+      }
 
       if(m_realHighscoresUpdate) {
 	StateManager::instance()->sendAsynchronousMessage("HIGHSCORES_UPDATED");
