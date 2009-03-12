@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VFileIO.h"
 #include <sstream>
 
-#define XMDB_VERSION         30
+#define XMDB_VERSION         31
 #define DB_MAX_SQL_RUNTIME 0.25
 #define DB_BUSY_TIMEOUT   60000 // 60 seconds
 
@@ -681,6 +681,17 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       updateXmDbVersion(30);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 29: " + e.getMsg());
+    }
+
+  case 30:
+    try {
+      simpleSql("ALTER TABLE levels_mywebhighscores ADD COLUMN known_stolen DEFAULT 0;");
+      simpleSql("ALTER TABLE levels_mywebhighscores ADD COLUMN known_stolen_date;");
+      simpleSql("CREATE INDEX levels_mywebhighscores_idx1 ON levels_mywebhighscores(known_stolen);");
+      simpleSql("CREATE INDEX levels_mywebhighscores_idx2 ON levels_mywebhighscores(known_stolen_date);");
+      updateXmDbVersion(31);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 30: " + e.getMsg());
     }
 
     // next

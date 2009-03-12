@@ -277,6 +277,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_HIDEGHOSTS           _("Hide ghosts")
 #define GAMETEXT_HIGH                 _("High")
 #define GAMETEXT_HIGHSCOREOFTHEROOM   _("Highscore of the room")
+#define GAMETEXT_HIGHSCORE_STOLEN     _("%s: %s beat your highscore for level '%s'")
 #define GAMETEXT_LOAD_LEVEL_HOOK      _("Levels are being added into the database. Please wait.")
 #define GAMETEXT_INETCONF             _("Internet Configuration")
 #define GAMETEXT_INITZOOM             _("View Level Initially")

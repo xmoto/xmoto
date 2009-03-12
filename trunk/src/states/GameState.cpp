@@ -61,6 +61,7 @@ GameState::GameState(bool drawStateBehind,
   m_showCursor = true;
 
   StateManager::instance()->registerAsObserver("CLIENT_DISCONNECTED_BY_ERROR", this);
+  StateManager::instance()->registerAsObserver("MYHIGHSCORES_STOLEN", this);
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("CHANGE_WWW_ACCESS");
@@ -75,6 +76,7 @@ GameState::GameState(bool drawStateBehind,
 GameState::~GameState()
 {
   StateManager::instance()->unregisterAsObserver("CLIENT_DISCONNECTED_BY_ERROR", this);
+  StateManager::instance()->unregisterAsObserver("MYHIGHSCORES_STOLEN", this);
   SDL_DestroyMutex(m_commandsMutex);
 }
 
@@ -190,7 +192,12 @@ void GameState::executeOneCommand(std::string cmd, std::string args)
       SysMessage::instance()->displayError(GAMETEXT_CLIENTNETWORKERROR);
     }
 
-  } else {
+  } else if(cmd == "MYHIGHSCORES_STOLEN") {
+    // to not multiply the messages, only the top message gives the error
+    if(StateManager::instance()->isTopOfTheStates(this)) {
+      SysMessage::instance()->displayInformation(args);
+    }
+  } else{
 
     // default one do nothing.
     LogWarning("cmd [%s [%s]] executed by state [%s], but not handled by it.",

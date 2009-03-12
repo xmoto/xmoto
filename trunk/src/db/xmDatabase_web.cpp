@@ -19,11 +19,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "xmDatabase.h"
+#include "../GameText.h"
 #include "../VXml.h"
 #include "../helpers/VExcept.h"
 #include "../helpers/Log.h"
 #include "../WWW.h"
 #include <sstream>
+
+#define XM_NB_THIEFS_MAX 3
 
 bool xmDatabase::webrooms_checkKeyExists_id_room(const std::string& i_id_room) {
   return checkKey("SELECT count(1) FROM webrooms "
@@ -420,7 +423,6 @@ void xmDatabase::webthemes_addTheme(const std::string& i_id_theme, const std::st
 void xmDatabase::webLoadDataFirstTime() {
   char **v_result;
   unsigned int nrow;
-  std::string v_res;
   bool v_update = false;
 
   /* updating weblevels table with defaults */
@@ -463,7 +465,6 @@ void xmDatabase::webLoadDataFirstTime() {
 void xmDatabase::updateMyHighscoresFromHighscores(const std::string& i_id_profile) {
   char **v_result;
   unsigned int nrow;
-  std::string v_res;
 
   /* get my highscores which are in webhighscores but not in levels_mywebhighscores */
   try {
@@ -476,18 +477,20 @@ void xmDatabase::updateMyHighscoresFromHighscores(const std::string& i_id_profil
 		      "AND   b.id_profile IS NULL;",
 		      nrow);
 
-    try {
-      simpleSql("BEGIN TRANSACTION;");
-      for(unsigned int i=0; i<nrow; i++) {
-	simpleSql("INSERT INTO levels_mywebhighscores("
-		  "id_profile, id_room, id_level) "
-		  "VALUES(\"" + protectString(getResult(v_result, 3, i, 0)) + "\", " +
-		  getResult(v_result, 3, i, 1)                              + ", " +
-		  "\""        + protectString(getResult(v_result, 3, i, 2)) + "\");");
+    if(nrow > 0) {
+      try {
+	simpleSql("BEGIN TRANSACTION;");
+	for(unsigned int i=0; i<nrow; i++) {
+	  simpleSql("INSERT INTO levels_mywebhighscores("
+		    "id_profile, id_room, id_level) "
+		    "VALUES(\"" + protectString(getResult(v_result, 3, i, 0)) + "\", " +
+		    getResult(v_result, 3, i, 1)                              + ", " +
+		    "\""        + protectString(getResult(v_result, 3, i, 2)) + "\");");
+	}
+	simpleSql("COMMIT;");
+      } catch(Exception &e) {
+	simpleSql("ROLLBACK;");
       }
-      simpleSql("COMMIT;");
-    } catch(Exception &e) {
-      simpleSql("ROLLBACK;");
     }
 
     read_DB_free(v_result);
@@ -496,4 +499,109 @@ void xmDatabase::updateMyHighscoresFromHighscores(const std::string& i_id_profil
     LogWarning("Unable to update my highscores");
   }
 
+  /* reset levels i get back */
+  updateMyHighscoresKnownStolenBack(i_id_profile);
+}
+
+void xmDatabase::updateMyHighscoresKnownStolenBack(const std::string& i_id_profile) {
+  char **v_result;
+  unsigned int nrow;
+
+  /* reset to known_stolen=0 levels where known_stolen = 1 but highscore owner = i_id_profile */
+  try {
+    v_result = readDB("SELECT a.id_profile, a.id_room, a.id_level "
+                      "FROM webhighscores AS a "
+		      "INNER JOIN levels_mywebhighscores AS b ON (a.id_room    = b.id_room     "
+                                           		     "AND a.id_level   = b.id_level    "
+		                                             "AND a.id_profile = b.id_profile) "
+		      "WHERE a.id_profile = \"" + protectString(i_id_profile) + "\" "
+		      "AND   b.known_stolen = 1;",
+		      nrow);
+
+    if(nrow > 0) {
+      try {
+	simpleSql("BEGIN TRANSACTION;");
+	for(unsigned int i=0; i<nrow; i++) {
+	  simpleSql("UPDATE levels_mywebhighscores "
+		    "SET known_stolen=0 "
+		    "WHERE id_profile=\"" + protectString(getResult(v_result, 3, i, 0)) + "\" "
+		    "AND   id_room="      + getResult(v_result, 3, i, 1) + " "
+		    "AND   id_level=\""   + protectString(getResult(v_result, 3, i, 2)) + "\";");
+	}
+	simpleSql("COMMIT;");
+      } catch(Exception &e) {
+	simpleSql("ROLLBACK;");
+      }
+    }
+
+    read_DB_free(v_result);
+  } catch(Exception &e) {
+    /* ok, no pb */
+    LogWarning("Unable to update known stolen on my highscores");
+  }
+}
+
+bool xmDatabase::markMyHighscoresKnownStolen(const std::string& i_id_profile, std::string& o_stolen_msg) {
+  char **v_result;
+  unsigned int nrow;
+  bool v_res;
+  char v_line_info[256];
+  
+  v_res = false;
+  o_stolen_msg = "";
+
+  try {
+    v_result = readDB("SELECT a.id_room, a.id_level, c.name, a.id_profile, d.name "
+                      "FROM webhighscores AS a "
+		      "INNER JOIN levels_mywebhighscores AS b ON (a.id_room    = b.id_room     "
+                                           		     "AND a.id_level   = b.id_level    "
+		                                             "AND b.id_profile = \"" + protectString(i_id_profile) + "\") "
+                      "INNER JOIN levels AS c ON a.id_level = c.id_level "
+                      "INNER JOIN webrooms AS d ON a.id_room=d.id_room "
+		      "WHERE a.id_profile <> \"" + protectString(i_id_profile) + "\" "
+		      "AND   b.known_stolen = 0 "
+		      "ORDER BY a.date DESC;",
+		      nrow);
+
+    if(nrow > 0) {
+      v_res = true;
+
+      try {
+	simpleSql("BEGIN TRANSACTION;");
+	for(unsigned int i=0; i<nrow; i++) {
+	  
+	  if(i<XM_NB_THIEFS_MAX) {
+	    if(o_stolen_msg != "") {
+	      o_stolen_msg += "\n";
+	    }
+
+	    snprintf(v_line_info, 256, GAMETEXT_HIGHSCORE_STOLEN,
+		     getResult(v_result, 5, i, 4),
+		     getResult(v_result, 5, i, 3),
+		     getResult(v_result, 5, i, 2));
+	    o_stolen_msg += v_line_info;
+
+	  } else if(i == XM_NB_THIEFS_MAX) {
+	    o_stolen_msg += "\n...";
+	  }
+
+	  simpleSql("UPDATE levels_mywebhighscores "
+		    "SET known_stolen=1, known_stolen_date=datetime('now', 'localtime') "
+		    "WHERE id_profile=\"" + protectString(i_id_profile) + "\" "
+		    "AND   id_room="      + getResult(v_result, 5, i, 0) + " "
+		    "AND   id_level=\""   + protectString(getResult(v_result, 5, i, 1)) + "\";");
+	}
+	simpleSql("COMMIT;");
+      } catch(Exception &e) {
+	simpleSql("ROLLBACK;");
+      }
+    }
+
+    read_DB_free(v_result);
+  } catch(Exception &e) {
+    /* ok, no pb */
+    LogWarning("Unable to update known stolen on my highscores");
+  }
+
+  return v_res;
 }

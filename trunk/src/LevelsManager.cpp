@@ -369,7 +369,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 
   /* stolen highscores */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_LEVELS_STOLEN),
-			  "SELECT a.id_level AS id_level,  c.name AS name, UPPER(c.name) AS sort_field "
+			  "SELECT a.id_level AS id_level,  c.name AS name, a.known_stolen_date AS sort_field "
 			  "FROM levels_mywebhighscores AS a "
 			  "LEFT OUTER JOIN webhighscores AS b ON (a.id_room    = b.id_room    AND "
                                                                  "a.id_level   = b.id_level   AND "
@@ -383,7 +383,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
                           "AND   b.id_profile IS NULL "
                           "AND   e.id_level   IS NULL "
 			  "AND (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
-			  "AND (d.children_compliant IS NULL OR xm_userChildrenCompliant(d.children_compliant)=1)");
+			  "AND (d.children_compliant IS NULL OR xm_userChildrenCompliant(d.children_compliant)=1)", false);
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
   v_pack->setDescription(VPACKAGENAME_DESC_LEVELS_STOLEN);
   m_levelsPacks.push_back(v_pack);
