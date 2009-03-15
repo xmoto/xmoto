@@ -35,7 +35,7 @@ const char* LANGUAGES[][3] = {
   {"Magyar",      "Magyar",      "hu_HU"},
   {"Italiano",    "Italiano",    "it_IT"},
   {"Latviešu",    "Latviesu",    "lv_LV"},
-  {"Lietuviškai", "Lietuviskai", "lt_LT"},
+  {"Lietuvių",    "Lietuviu",    "lt_LT"},
   {"Norsk",       "Norsk",       "nb_NO"},
   {"Norsk",       "Norsk",       "nn_NO"},
   {"Nederlands",  "Nederlands",  "nl_NL"},
