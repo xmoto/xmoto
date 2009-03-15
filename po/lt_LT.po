@@ -900,7 +900,7 @@ msgstr "Kambario rekordas"
 #: src/GameText.h:280
 #, c-format
 msgid "%s: %s beat your highscore for level '%s'"
-msgstr ""
+msgstr "%s: %s įveikė jūsų '%s' lygio rekordą"
 
 #: src/GameText.h:281
 msgid "Levels are being added into the database. Please wait."
@@ -1080,7 +1080,7 @@ msgstr "Toliau yra jūsų labiausiai žaisti lygiai"
 
 #: src/GameText.h:325
 msgid "Motion blur ghost"
-msgstr "Judėjimo vaiduoklis"
+msgstr "Vaiduoklio judėjimo pėdsakas"
 
 #: src/GameText.h:326
 msgid "Multi"
@@ -2149,8 +2149,8 @@ msgstr "Pasirinkite, kuri vaiduoklį rodyti"
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr ""
-"Padarykite judėjimo dėmės efektus vaiduokliui\n"
-"(jei tai palaikoma jūsų vaizdo plokštės)"
+"Suteikite vaiduokliui judėjimo pėdsakus(jei tai palaikoma jūsų vaizdo "
+"plokštės)"
 
 #: src/GameText.h:598
 msgid "When starting a level with a ghost, display who the ghost is of"
