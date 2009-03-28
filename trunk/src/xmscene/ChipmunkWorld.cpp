@@ -21,11 +21,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ChipmunkWorld.h"
 #include "../chipmunk/chipmunk.h"
 #include "../PhysSettings.h"
+#include "../helpers/Log.h"
 #include "BikePlayer.h"
 #include "PhysicsSettings.h"
+#include "Level.h"
 
-ChipmunkWorld::ChipmunkWorld(PhysicsSettings* i_physicsSettings) {
-  initPhysics(i_physicsSettings);
+#define CHIPMUNK_ITERATION 8
+
+ChipmunkWorld::ChipmunkWorld(PhysicsSettings* i_physicsSettings, Level* i_level) {
+    initPhysics(i_physicsSettings, i_level);
 }
 
 ChipmunkWorld::~ChipmunkWorld() {
@@ -36,9 +40,11 @@ void ChipmunkWorld::setGravity(float i_x, float i_y) {
   m_space->gravity = cpv(i_x * CHIP_GRAVITY_RATIO, i_y * CHIP_GRAVITY_RATIO);
 }
 
-void ChipmunkWorld::initPhysics(PhysicsSettings* i_physicsSettings)
+void ChipmunkWorld::initPhysics(PhysicsSettings* i_physicsSettings, Level* i_level)
 {
   cpBody *staticBody;
+  float v_dm;
+  int v_count;
 
   cpInitChipmunk();
 
@@ -53,9 +59,21 @@ void ChipmunkWorld::initPhysics(PhysicsSettings* i_physicsSettings)
   // static body to 'hang' the ground segments on -- never moves
   staticBody = cpBodyNew(INFINITY,INFINITY);
   setBody(staticBody);
+
+  // The spatial hashes used by Chipmunk’s collision detection are fairly size sensitive. dim is the size of the hash cells. Setting dim to the average objects size is likely to give the best performance.
+  // count is the suggested minimum number of cells in the hash table. Bigger is better, but only to a point. Setting count to ~10x the number of objects in the hash is probably a good starting point.
+  // By default, dim is 100.0, and count is 1000.
+
+  v_dm    = i_level->maxPhysicBlocksSize(); // Nicolas Adenis-Lamarre : take the max seems to give better result for xmoto (probably because there are a lot of small round blocks)
+  v_count = i_level->nbPhysicBlocks() * 10;
+
+  resizeHashes(v_dm, v_count);
+  m_space->iterations = CHIPMUNK_ITERATION;
+
+  LogInfo("Chipmunk init : hash (dimension=%.2f, count=%i), iteration=%i", v_dm, v_count, CHIPMUNK_ITERATION);
 }
 
-void ChipmunkWorld::resizeHashes(unsigned int i_dim, unsigned int i_size)
+void ChipmunkWorld::resizeHashes(float i_dim, unsigned int i_size)
 {
   if (m_space != NULL) {
     cpSpaceResizeActiveHash(m_space, i_dim, i_size);

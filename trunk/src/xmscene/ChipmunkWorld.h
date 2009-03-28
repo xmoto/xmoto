@@ -28,13 +28,14 @@ class cpBody;
 class PlayerLocalBiker;
 class Biker;
 class PhysicsSettings;
+class Level;
 
 class ChipmunkWorld
 {
 public:
-  ChipmunkWorld(PhysicsSettings* i_physicsSettings);
+  ChipmunkWorld(PhysicsSettings* i_physicsSettings, Level* i_level);
   ~ChipmunkWorld();
-  void resizeHashes(unsigned int i_dim, unsigned int i_size);
+  void resizeHashes(float i_dim, unsigned int i_size);
 
   cpSpace *getSpace();
   void setSpace(cpSpace* s);
@@ -51,7 +52,7 @@ public:
   void updateWheelsPosition(const std::vector<Biker*>& i_players);
 
 private:
-  void initPhysics(PhysicsSettings* i_physicsSettings);
+  void initPhysics(PhysicsSettings* i_physicsSettings, Level* i_level);
   cpSpace *m_space;
   cpBody *m_body;
 

@@ -502,7 +502,7 @@ void Scene::cleanPlayers() {
     // load chimunk
     if(m_pLevelSrc->isPhysics()) {
       LogInfo("Running a physics level");
-      m_chipmunkWorld = new ChipmunkWorld(m_physicsSettings);
+      m_chipmunkWorld = new ChipmunkWorld(m_physicsSettings, m_pLevelSrc);
     }
 
     /* Generate extended level data to be used by the game */
