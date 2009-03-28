@@ -100,6 +100,9 @@ class Level {
   bool isPhysics() const;
 
   void updatePhysics(int timeStep, CollisionSystem* p_CollisionSystem, ChipmunkWorld* i_chipmunkWorld);
+  float averagePhysicBlocksSize() const;
+  float maxPhysicBlocksSize() const;
+  int   nbPhysicBlocks() const;
 
   Block*  getBlockById(const std::string& i_id);
   Entity* getEntityById(const std::string& i_id);

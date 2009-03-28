@@ -1341,3 +1341,122 @@ void Level::loadRemplacementSprites()
   m_flowerSprite     = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForFlower());
   m_starSprite       = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForStar());
 }
+
+float Level::averagePhysicBlocksSize() const {
+  int v_nb;
+  float v_total;
+  float xmin, xmax, ymin, ymax;
+
+  if(m_isPhysics == false) {
+    return 0;
+  }  
+
+  v_nb    = 0;
+  v_total = 0.0;
+
+  for(unsigned int i=0; i<m_blocks.size(); i++) {
+    if(m_blocks[i]->isPhysics()) {
+      v_nb ++;
+
+      for(unsigned int j=0; j<m_blocks[i]->Vertices().size(); j++) {
+	if(j == 0) {
+	  xmin = m_blocks[i]->Vertices()[j]->Position().x;
+	  xmax = m_blocks[i]->Vertices()[j]->Position().x;
+	  ymin = m_blocks[i]->Vertices()[j]->Position().y;
+	  ymax = m_blocks[i]->Vertices()[j]->Position().y;
+	} else {
+	  if(xmin > m_blocks[i]->Vertices()[j]->Position().x) {
+	    xmin = m_blocks[i]->Vertices()[j]->Position().x;
+	  }
+	  if(xmax < m_blocks[i]->Vertices()[j]->Position().x) {
+	    xmax = m_blocks[i]->Vertices()[j]->Position().x;
+	  }
+	  if(ymin > m_blocks[i]->Vertices()[j]->Position().y) {
+	    ymin = m_blocks[i]->Vertices()[j]->Position().y;
+	  }
+	  if(ymax < m_blocks[i]->Vertices()[j]->Position().y) {
+	    ymax = m_blocks[i]->Vertices()[j]->Position().y;
+	  }
+	}
+      }
+
+      if(xmax - xmin > ymax - ymin) {
+	v_total += xmax - xmin;
+      } else {
+	v_total += ymax - ymin;
+      }
+    }
+  }
+
+  if(v_nb == 0) {
+    return 0;
+  }
+
+  return v_total/v_nb;
+}
+
+float Level::maxPhysicBlocksSize() const {
+  float v_max;
+  float xmin, xmax, ymin, ymax;
+
+  if(m_isPhysics == false) {
+    return 0;
+  }  
+
+  v_max = 0.0;
+
+  for(unsigned int i=0; i<m_blocks.size(); i++) {
+    if(m_blocks[i]->isPhysics()) {
+      for(unsigned int j=0; j<m_blocks[i]->Vertices().size(); j++) {
+	if(j == 0) {
+	  xmin = m_blocks[i]->Vertices()[j]->Position().x;
+	  xmax = m_blocks[i]->Vertices()[j]->Position().x;
+	  ymin = m_blocks[i]->Vertices()[j]->Position().y;
+	  ymax = m_blocks[i]->Vertices()[j]->Position().y;
+	} else {
+	  if(xmin > m_blocks[i]->Vertices()[j]->Position().x) {
+	    xmin = m_blocks[i]->Vertices()[j]->Position().x;
+	  }
+	  if(xmax < m_blocks[i]->Vertices()[j]->Position().x) {
+	    xmax = m_blocks[i]->Vertices()[j]->Position().x;
+	  }
+	  if(ymin > m_blocks[i]->Vertices()[j]->Position().y) {
+	    ymin = m_blocks[i]->Vertices()[j]->Position().y;
+	  }
+	  if(ymax < m_blocks[i]->Vertices()[j]->Position().y) {
+	    ymax = m_blocks[i]->Vertices()[j]->Position().y;
+	  }
+	}
+      }
+
+      if(xmax - xmin > ymax - ymin) {
+	if(v_max < xmax - xmin) {
+	  v_max += xmax - xmin;
+	}
+      } else {
+	if(v_max < ymax - ymin) {
+	  v_max += ymax - ymin;
+	}
+      }
+    }
+  }
+
+  return v_max;
+}
+
+int Level::nbPhysicBlocks() const {
+  int v_nb;
+
+  if(m_isPhysics == false) {
+    return 0;
+  }  
+
+  v_nb = 0;
+  for(unsigned int i=0; i<m_blocks.size(); i++) {
+    if(m_blocks[i]->isPhysics()) {
+      v_nb++;
+    }
+  }
+
+  return v_nb;
+}
