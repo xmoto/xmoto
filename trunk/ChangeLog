@@ -1,6 +1,25 @@
-X-Moto 0.5.1 200
+X-Moto 0.5.1 2009-04-12
 -----------------------
-
+ * Track stolen levels (new pack + info box)
+ * Change restart button (enter by default) and show console (world_18)
+ * After changing the game settings, the game must be restarted (info box)
+ * Chineese language support
+ * Chipmunk hash functions to improve performances
+ * Make levels/replays db load faster
+ * Filter on rooms lists
+ *  --server option to run the server only (without the gui)
+ * After death, display the menu after a few seconds
+ * bugfix: Pushing the "Backspace" key will crash/close Xmoto
+ * bugfix: Segmentation fault on gfx quality change
+ * bugfix: Load downloded levels into the database after a levels download failure 
+ * bugfix: Xmoto crashes with unknown block in scripting.
+ * bugfix: Segmentation fault in replays
+ * bugfix: change reference room doenst update the player name @xxx
+ * bugfix: Replay Strawberry Time Glitch
+ * bugfix: Replays Menu glitch.
+ * bugfix: chat box can be opened many times at the same time
+ * bugfix: proxy configuration bug
+	
 X-Moto 0.5.0 2008-11-28
 -----------------------
  * added dependency for SDL_net
