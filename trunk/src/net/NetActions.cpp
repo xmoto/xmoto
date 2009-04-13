@@ -54,6 +54,8 @@ std::string NA_killAlert::ActionKey     = "killAlert";
 std::string NA_prepareToGo::ActionKey   = "prepareToGo";
 // events are send regularly
 std::string NA_gameEvents::ActionKey    = "e";
+std::string NA_srvCmd::ActionKey        = "srvCmd";
+std::string NA_srvCmdAsw::ActionKey     = "srvCmdAsw";
 
 NetActionType NA_chatMessage::NAType   = TNA_chatMessage;
 NetActionType NA_frame::NAType         = TNA_frame;
@@ -70,6 +72,8 @@ NetActionType NA_prepareToPlay::NAType = TNA_prepareToPlay;
 NetActionType NA_killAlert::NAType     = TNA_killAlert;
 NetActionType NA_prepareToGo::NAType   = TNA_prepareToGo;
 NetActionType NA_gameEvents::NAType    = TNA_gameEvents;
+NetActionType NA_srvCmd::NAType        = TNA_srvCmd;
+NetActionType NA_srvCmdAsw::NAType     = TNA_srvCmdAsw;
 
 NetAction::NetAction() {
   m_source    = -2; // < -1 => undefined
@@ -266,6 +270,14 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
 
   else if(v_cmd == NA_gameEvents::ActionKey) {
     v_res = new NA_gameEvents(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_srvCmd::ActionKey) {
+    v_res = new NA_srvCmd(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_srvCmdAsw::ActionKey) {
+    v_res = new NA_srvCmdAsw(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
   else {
@@ -714,4 +726,46 @@ char* NA_gameEvents::buffer() {
 
 int NA_gameEvents::bufferSize() {
   return m_bufferLength;
+}
+
+NA_srvCmd::NA_srvCmd(const std::string& i_cmd) {
+  m_cmd = i_cmd;
+}
+
+NA_srvCmd::NA_srvCmd(void* data, unsigned int len) {
+  ((char*)data)[len-1] = '\0';
+  m_cmd = std::string((char*)data);
+  ((char*)data)[len-1] = '\n';
+}
+
+NA_srvCmd::~NA_srvCmd() {
+}
+
+void NA_srvCmd::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, m_cmd.c_str(), m_cmd.size()); // don't send the \0
+}
+
+std::string NA_srvCmd::getCommand() {
+  return m_cmd;
+}
+
+NA_srvCmdAsw::NA_srvCmdAsw(const std::string& i_answer) {
+  m_answer = i_answer;
+}
+
+NA_srvCmdAsw::NA_srvCmdAsw(void* data, unsigned int len) {
+  ((char*)data)[len-1] = '\0';
+  m_answer = std::string((char*)data);
+  ((char*)data)[len-1] = '\n';
+}
+
+NA_srvCmdAsw::~NA_srvCmdAsw() {
+}
+
+void NA_srvCmdAsw::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, m_answer.c_str(), m_answer.size()); // don't send the \0
+}
+
+std::string NA_srvCmdAsw::getAnswer() {
+  return m_answer;
 }

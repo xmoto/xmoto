@@ -843,6 +843,7 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_prepareToGo:
   case TNA_killAlert:
   case TNA_gameEvents:
+  case TNA_srvCmdAsw:
     {
       /* should not be received */
       throw Exception("");
@@ -974,6 +975,12 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_clientMode:
     {
       m_clients[i_client]->setMode(((NA_clientMode*)i_netAction)->mode());
+    }
+    break;
+
+  case TNA_srvCmd:
+    {
+      LogInfo("server cmd: %", ((NA_srvCmd*)i_netAction)->getCommand().c_str());
     }
     break;
 

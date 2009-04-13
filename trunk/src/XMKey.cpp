@@ -33,7 +33,7 @@ XMKey::XMKey() {
 XMKey::XMKey(Uint8 nButton, unsigned int i_repetition) {
   m_input              = XMK_MOUSEBUTTON;
   m_mouseButton_button = nButton;
-	m_repetition = i_repetition;
+  m_repetition = i_repetition;
 }
 
 XMKey::XMKey(SDL_Event &i_event) {
@@ -226,9 +226,9 @@ bool XMKey::operator==(const XMKey& i_other) const {
     return false;
   }
 
-	if(m_repetition != i_other.m_repetition) {
-		return false;
-	}
+  if(m_repetition != i_other.m_repetition) {
+    return false;
+  }
 
   if(m_input == XMK_NONE || i_other.m_input == XMK_NONE) {
     return false;

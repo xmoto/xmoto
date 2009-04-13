@@ -51,7 +51,9 @@ enum NetActionType {
   TNA_prepareToPlay,
   TNA_prepareToGo,
   TNA_killAlert,
-  TNA_gameEvents
+  TNA_gameEvents,
+  TNA_srvCmd,
+  TNA_srvCmdAsw
 };
 
 struct NetInfosClient {
@@ -385,6 +387,42 @@ class NA_gameEvents : public NetAction {
   private:
   char m_buffer[XM_NET_MAX_EVENTS_SHOT_SIZE];
   int m_bufferLength;
+};
+
+class NA_srvCmd : public NetAction {
+  public:
+  NA_srvCmd(const std::string& i_cmd);
+  NA_srvCmd(void* data, unsigned int len);
+  virtual ~NA_srvCmd();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  std::string getCommand();
+
+  private:
+  std::string m_cmd;
+};
+
+class NA_srvCmdAsw : public NetAction {
+  public:
+  NA_srvCmdAsw(const std::string& i_answer);
+  NA_srvCmdAsw(void* data, unsigned int len);
+  virtual ~NA_srvCmdAsw();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  std::string getAnswer();
+
+  private:
+  std::string m_answer;
 };
 
 #endif

@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateLevelPackViewer.h"
 #include "StateRequestKey.h"
 #include "StateOptions.h"
+#include "StateServerConsole.h"
 #include "StateVote.h"
 #include "../net/NetClient.h"
 
@@ -478,6 +479,7 @@ void StateManager::cleanStates() {
   StateRequestKey::clean();
   StateOptions::clean();
   StateVote::clean();
+  StateServerConsole::clean();
 }
 
 void StateManager::refreshStaticCaptions() {

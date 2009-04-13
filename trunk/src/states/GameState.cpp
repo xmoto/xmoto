@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Sound.h"
 #include "StateOptions.h"
 #include "StateMessageBox.h"
+#include "StateServerConsole.h"
 #include "../net/NetClient.h"
 
 #define MENU_SHADING_TIME 0.3
@@ -311,8 +312,16 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_s, (SDLMod) (KMOD_LCTRL | KMOD_LALT)) && NetClient::instance()->isConnected()) {
+    if(StateManager::instance()->isThereASuchStateId("SERVERCONSOLE") == false) { // do not open several console
+      StateServerConsole* v_console = new StateServerConsole(true, true);
+      v_console->setId("SERVERCONSOLE");
+      StateManager::instance()->pushState(v_console);
+      return; 
+    }
+  }
+
   else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getShowConsole()) {
     SysMessage::instance()->showConsole();
   }
-
 }

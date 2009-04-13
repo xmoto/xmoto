@@ -37,7 +37,9 @@ gui_basic_SOURCES = gui/basic/GUI.h               \
 		    gui/basic/GUIFrame.cpp        \
 		    gui/basic/GUIList.cpp         \
 		    gui/basic/GUIStatic.cpp       \
-		    gui/basic/GUITabView.cpp
+		    gui/basic/GUITabView.cpp      \
+		    gui/basic/GUIConsole.h        \
+		    gui/basic/GUIConsole.cpp
 
 gui_specific_SOURCES = gui/specific/GUIXMoto.h   \
                        gui/specific/GUIXMoto.cpp
@@ -163,6 +165,8 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateMessageBoxReceiver.h \
 	         states/StateMessageBox.h      	  \
                  states/StateMessageBox.cpp    	  \
+	         states/StateServerConsole.h   	  \
+                 states/StateServerConsole.cpp    \
                  states/StatePause.h         	  \
                  states/StatePause.cpp       	  \
                  states/StateVote.h         	  \
