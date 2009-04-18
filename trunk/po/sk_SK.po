@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-03-12 18:56+0100\n"
-"PO-Revision-Date: 2008-11-24 21:31+0100\n"
+"PO-Revision-Date: 2008-04-14 13:54+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -306,11 +306,11 @@ msgstr "žiadny"
 
 #: src/GameText.h:106
 msgid "You must restart so that this option takes effect"
-msgstr ""
+msgstr "Pre aktiváciu tejto voľby musíte hru znovu spustiť"
 
 #: src/GameText.h:107
 msgid "You must reconnect to the server so that this option takes effect"
-msgstr ""
+msgstr "Pre aktiváciu tejto voľby sa musíte opäť prihlásiť k serveru"
 
 #: src/GameText.h:108
 msgid "Script action"
@@ -797,6 +797,8 @@ msgid ""
 "Please wait the next party\n"
 "Or press escape to disconnect"
 msgstr ""
+"Prosím, počkajte na ďalšiu hru\n"
+"alebo stlačte Esc pre odpojenie"
 
 #: src/GameText.h:254
 #, c-format
@@ -894,7 +896,7 @@ msgstr "Rekord miestnosti"
 #: src/GameText.h:280
 #, c-format
 msgid "%s: %s beat your highscore for level '%s'"
-msgstr ""
+msgstr "%s: %s zlepšil váš rekord pre level '%s'"
 
 #: src/GameText.h:281
 msgid "Levels are being added into the database. Please wait."
@@ -1360,7 +1362,7 @@ msgstr "Reštartovať tento level"
 
 #: src/GameText.h:400
 msgid "Restart level"
-msgstr ""
+msgstr "Reštartovať level"
 
 #: src/GameText.h:401
 msgid "Resume Playing"
@@ -1393,7 +1395,7 @@ msgstr "Zobraziť"
 
 #: src/GameText.h:409
 msgid "Show console"
-msgstr ""
+msgstr "Ukázať konzolu"
 
 #: src/GameText.h:410
 msgid "Speedometer"
@@ -1741,7 +1743,7 @@ msgstr "Sieť"
 
 #: src/GameText.h:494
 msgid "Simple ghost mode"
-msgstr ""
+msgstr "Jednoduchý režim s duchom"
 
 #: src/GameText.h:495
 msgid "You're currently connected"
@@ -2305,7 +2307,7 @@ msgstr "Zadajte text pre filtrovanie zoznamu záznamov"
 
 #: src/GameText.h:643
 msgid "Enter text to filter the rooms list"
-msgstr ""
+msgstr "Zadajte text pre filter zoznamu miestností"
 
 #: src/GameText.h:644
 msgid "Press to play X-Moto immediately"
@@ -2422,7 +2424,7 @@ msgstr "Poloboh"
 
 #: src/GameText.h:676
 msgid "Go !"
-msgstr ""
+msgstr "Štart!"
 
 #: src/GameText.h:677
 msgid "Not nice at all"
@@ -2531,7 +2533,7 @@ msgstr "Povolí hudbu na pozadí pre levely, ktoré nemajú vlastnú hudobnú st
 
 #: src/GameText.h:705
 msgid "Network playing mode : just see other players as ghosts"
-msgstr ""
+msgstr "Režim sieťovej hry: uvidíte ostatných hráčov ako duchov"
 
 #: src/GameText.h:707
 msgid "Levels with no highscore"
@@ -2655,7 +2657,7 @@ msgstr "Veľmi dlhé levely"
 
 #: src/GameText.h:739
 msgid "Stolen highscores"
-msgstr ""
+msgstr "Ukradnuté rekordy"
 
 #: src/GameText.h:741
 msgid "Levels with no highscore in your room"
@@ -2798,7 +2800,7 @@ msgstr "Veľmi dlhé levely (viac ako 2 minúty)"
 
 #: src/GameText.h:774
 msgid "Levels for which you owned the highscore"
-msgstr ""
+msgstr "Levely, pre ktoré ste minulosti držali rekord"
 
 #: src/GameText.h:776
 msgid "Ugly mode enabled"
@@ -2875,6 +2877,8 @@ msgid ""
 "Physic levels recording is still not implemented.\n"
 "Sorry."
 msgstr ""
+"Nahrávanie fyzikálnych levelov ešte nie je implementované.\n"
+"Ľutujeme."
 
 #: src/GameText.h:796
 #, c-format
