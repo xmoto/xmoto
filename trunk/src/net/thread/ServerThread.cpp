@@ -21,7 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ServerThread.h"
 #include "../../helpers/Log.h"
 #include "../../helpers/VExcept.h"
+#include "../../helpers/utf8.h"
 #include <string>
+#include <sstream>
 #include "../helpers/Net.h"
 #include "../../XMSession.h"
 #include "../../states/StateManager.h"
@@ -56,10 +58,19 @@ NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tc
     m_lastActivTime        =  0;
     m_lastInactivTimeAlert = -1;
     m_points = 0;
+    m_isAdminConnected = false;
 }
 
 NetSClient::~NetSClient() {
   delete tcpReader;
+}
+
+bool NetSClient::isAdminConnected() const {
+  return m_isAdminConnected;
+}
+
+void NetSClient::setAdminConnected(bool i_value) {
+  m_isAdminConnected = i_value;
 }
 
 unsigned int NetSClient::id() const {
@@ -988,9 +999,69 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
 }
 
 void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd) {
+  std::string v_answer;
+  std::vector<std::string> v_args;
+
   LogInfo("server cmd: %s", i_cmd.c_str());
 
-  NA_srvCmdAsw na("Unknown command");
+  utf8::utf8_split(i_cmd, " ", v_args);
+
+  if(v_args.size() < 1) {
+    v_answer = "";
+
+  } else if(v_args[0] == "help") {
+    if(v_args.size() != 1) {
+      v_answer += "help: invalid arguments\n";
+    } else {
+      v_answer += "help: list commands\n";
+      v_answer += "login <password>: connect on the server\n";
+      v_answer += "logout: disconnect from the server\n";
+      v_answer += "lp: list connected players\n";
+    }
+  } else if(v_args[0] == "login") {
+    if(v_args.size() != 2) {
+      v_answer += "login: invalid arguments\n";
+    } else  if(m_clients[i_client]->isAdminConnected()) {
+      v_answer += "Already connected";
+    } else {
+      m_clients[i_client]->setAdminConnected(true);
+      v_answer += "Connected";
+    }
+  } else if(m_clients[i_client]->isAdminConnected() == false) {
+    // don't allow to continue if the client is not connected
+    v_answer += "You must login first";
+
+  } else if(v_args[0] == "logout") {
+    if(v_args.size() != 1) {
+      v_answer += "logout: invalid arguments\n";
+    } else {
+      m_clients[i_client]->setAdminConnected(false);
+      v_answer += "Disconnected";
+    }
+
+  } else if(v_args[0] == "lp") {
+    if(v_args.size() != 1) {
+      v_answer += "lp: invalid arguments\n";
+    } else {
+      char v_clientstr[20];
+      for(unsigned int i=0; i<m_clients.size(); i++) {
+	snprintf(v_clientstr, 20, "%5u: %-12s", m_clients[i]->id(), m_clients[i]->name().c_str());
+	v_answer += v_clientstr;
+	if(m_clients.size() % 3 == 0) {
+	  v_answer += "\n";
+	}
+      }
+      if(m_clients.size() %3 != 0) {
+	v_answer += "\n";
+      }
+    }
+
+  } else {
+    v_answer = "Unknown command : \"" + v_args[0] + "\"\nType help to get more information\n";
+  }
+
+  // send the answer
+  NA_srvCmdAsw na(v_answer);
   try {
     sendToClient(&na, i_client, -1, 0);
   } catch(Exception &e) {

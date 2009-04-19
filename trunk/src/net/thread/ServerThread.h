@@ -73,6 +73,10 @@ class NetSClient {
   int points();
   void addPoints(int i_points);
 
+  // admin connexion
+  bool isAdminConnected() const;
+  void setAdminConnected(bool i_value);
+
   private:
   unsigned int m_id;    // uniq id of the client
   NetClientMode m_mode; // playing mode (simple ghost or slave)
@@ -89,6 +93,7 @@ class NetSClient {
   int m_lastActivTime;
   int m_lastInactivTimeAlert;
   int m_points;
+  bool m_isAdminConnected;
 };
 
 class ServerThread : public XMThread {

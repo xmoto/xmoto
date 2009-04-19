@@ -171,3 +171,28 @@ std::string utf8::utf8_substring(const std::string& i_a, unsigned int i_numChar,
   return i_a.substr(n_begin, n_end-n_begin);
 }
 
+void utf8::utf8_split(const std::string& i_line, const std::string& i_char, std::vector<std::string>& o_split) {
+
+  unsigned int n=0;
+  unsigned int n_previous = 0;
+  unsigned int v_previous_split = 0;
+  std::string v_char;
+  std::string v_arg;
+
+  while(i_line.length() > n) {
+    n_previous = n;
+    v_char = getNextChar(i_line, n);
+    if(v_char == i_char) {
+      v_arg = i_line.substr(v_previous_split, n_previous-v_previous_split);
+      if(v_arg != "") {
+	o_split.push_back(v_arg);
+      }
+      v_previous_split = n;
+    }
+  }
+
+  v_arg = i_line.substr(v_previous_split, i_line.length()-v_previous_split);
+  if(v_arg != "") {
+    o_split.push_back(v_arg);
+  }
+}

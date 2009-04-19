@@ -85,9 +85,11 @@ void UIConsole::paint() {
   }
  
   // draw cursor
-  if((GameApp::getXMTimeInt()/100) % 10 < 5) {
-    v_fg = v_fm->getGlyph(UIC_CURSOR);
-    v_fm->printString(v_fg, v_cursorXOffset, v_cursorYOffset, MAKE_COLOR(255, 255, 255, 255));
+  if(m_waitAnswer == false) {
+    if((GameApp::getXMTimeInt()/100) % 10 < 5) {
+      v_fg = v_fm->getGlyph(UIC_CURSOR);
+      v_fm->printString(v_fg, v_cursorXOffset, v_cursorYOffset, MAKE_COLOR(255, 255, 255, 255));
+    }
   }
 
   // remove lines if on bottom
@@ -105,6 +107,7 @@ void UIConsole::giveAnswer(const std::string& i_line) {
   m_lines.push_back(i_line);
   m_cursorLine++;
   addNewLine(UIC_PROMPT);
+  m_cursorChar = utf8::utf8_length(UIC_PROMPT);
   m_cursorLine++;
   m_waitAnswer = false;
 }
@@ -118,6 +121,18 @@ bool UIConsole::keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char) {
     execInternal("exit");
     return true;
   }
+
+  if(nKey == SDLK_l && (mod & KMOD_LCTRL) == KMOD_LCTRL) {
+    if(m_waitAnswer) {
+      m_lines.erase(m_lines.begin(), m_lines.end());
+      m_cursorLine = -1;
+    } else {
+      m_lines.erase(m_lines.begin(), m_lines.end()-1);
+      m_cursorLine = 0;
+    }
+    return true;
+  }
+
 
   // console is very limited is waiting for an answer
   if(m_waitAnswer) {
@@ -233,7 +248,6 @@ bool UIConsole::execInternal(const std::string& i_action) {
 }
 
 void UIConsole::execLine(const std::string& i_line) {
-  unsigned int v_prompt_length = utf8::utf8_length(UIC_PROMPT);
   std::string v_action = actionFromLine(i_line);
 
   // add in history
@@ -241,17 +255,21 @@ void UIConsole::execLine(const std::string& i_line) {
   m_history_n = -1;
 
   m_lastEdit = UIC_PROMPT;
-  m_cursorChar = v_prompt_length;
 
   // call
   if(v_action != "") {
     if(execInternal(v_action)) {
       m_cursorLine++;
       addNewLine(UIC_PROMPT);
+      m_cursorChar = utf8::utf8_length(UIC_PROMPT);
     } else {
       m_hook->exec(v_action);
       m_waitAnswer = true;
     }
+  } else { // simple new line without command
+    m_cursorLine++;
+    addNewLine(UIC_PROMPT);
+    m_cursorChar = utf8::utf8_length(UIC_PROMPT);
   }
 
 }

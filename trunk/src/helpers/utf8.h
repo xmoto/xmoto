@@ -37,6 +37,8 @@ class utf8 {
   static std::string utf8_delete(const std::string& i_a, unsigned int i_numChar);
   static unsigned int utf8_length(const std::string& i_a);
   static std::string utf8_substring(const std::string& i_a, unsigned int i_numChar, unsigned int i_nbChars);
+
+  static void utf8_split(const std::string& i_line, const std::string& i_char, std::vector<std::string>& o_split);
 };
 
 #endif
