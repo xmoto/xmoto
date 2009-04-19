@@ -1001,6 +1001,8 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
 void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd) {
   std::string v_answer;
   std::vector<std::string> v_args;
+  char **v_result;
+  unsigned int nrow;
 
   LogInfo("server cmd: %s", i_cmd.c_str());
 
@@ -1014,22 +1016,45 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "help: invalid arguments\n";
     } else {
       v_answer += "help: list commands\n";
-      v_answer += "login <password>: connect on the server\n";
+      v_answer += "login [password]: connect on the server\n";
       v_answer += "logout: disconnect from the server\n";
       v_answer += "lp: list connected players\n";
+      v_answer += "lsadmins: list admins\n";
+      v_answer += "rmadmin <id admin>: remove admin\n";
     }
   } else if(v_args[0] == "login") {
-    if(v_args.size() != 2) {
+    if(v_args.size() == 1) { // no arguments (local admins)
+      if(XMNet::getIp(m_clients[i_client]->tcpRemoteIP()) == "127.0.0.1") {
+	// local admins are allowed only when there is no other admin
+	v_result = m_pDb->readDB("SELECT id, id_profile "
+				 "FROM srv_admins;",
+				 nrow);
+	m_pDb->read_DB_free(v_result);
+	if(nrow == 0) {
+	  m_clients[i_client]->setAdminConnected(true);
+	  v_answer += "Local admin\n";
+	  v_answer += "Connected\n";
+	} else {
+	  v_answer += "Local admins are allowed only when no other admin exists\n";
+	}
+      } else {
+	v_answer += "Only local admins are allowed to connect without password\n";
+      }
+    } else if(v_args.size() != 2) {
       v_answer += "login: invalid arguments\n";
     } else  if(m_clients[i_client]->isAdminConnected()) {
-      v_answer += "Already connected";
+      v_answer += "Already connected\n";
     } else {
-      m_clients[i_client]->setAdminConnected(true);
-      v_answer += "Connected";
+      if(m_pDb->srv_isAdmin(m_clients[i_client]->name(), v_args[1])) {
+	m_clients[i_client]->setAdminConnected(true);
+	v_answer += "Connected\n";
+      } else {
+	v_answer += "Invalid password\n";
+      }
     }
   } else if(m_clients[i_client]->isAdminConnected() == false) {
     // don't allow to continue if the client is not connected
-    v_answer += "You must login first";
+    v_answer += "You must login first\n";
 
   } else if(v_args[0] == "logout") {
     if(v_args.size() != 1) {
@@ -1039,19 +1064,54 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "Disconnected";
     }
 
+  } else if(v_args[0] == "lsadmins") {
+    if(v_args.size() != 1) {
+      v_answer += "lsadmins: invalid arguments\n";
+    } else {
+      char v_adminstr[20];
+
+      v_result = m_pDb->readDB("SELECT id, id_profile "
+			       "FROM srv_admins "
+			       "ORDER BY id_profile;",
+			       nrow);
+      for(unsigned int i=0; i<nrow; i++) {
+	snprintf(v_adminstr, 20, "%5s: %-12s", 
+		 m_pDb->getResult(v_result, 2, i, 0),
+		 m_pDb->getResult(v_result, 2, i, 1));
+	v_answer += v_adminstr;
+	if(i % 3 == 2) {
+	  v_answer += "\n";
+	}
+      }
+      if(nrow %3 != 2) {
+	v_answer += "\n";
+      }
+      m_pDb->read_DB_free(v_result);
+    }
+
+  } else if(v_args[0] == "rmadmin") {
+    if(v_args.size() != 2) {
+      v_answer += "rmadmin: invalid arguments\n";
+    } else {
+      m_pDb->srv_removeAdmin(atoi(v_args[1].c_str()));
+      v_answer += "admin removed\n";
+    }
+
   } else if(v_args[0] == "lp") {
     if(v_args.size() != 1) {
       v_answer += "lp: invalid arguments\n";
     } else {
-      char v_clientstr[20];
+      char v_clientstr[38];
       for(unsigned int i=0; i<m_clients.size(); i++) {
-	snprintf(v_clientstr, 20, "%5u: %-12s", m_clients[i]->id(), m_clients[i]->name().c_str());
+	snprintf(v_clientstr, 38, "%5u: %-12s %-17s",
+		 m_clients[i]->id(), m_clients[i]->name().c_str(),
+		 ("(" + XMNet::getIp(m_clients[i]->tcpRemoteIP()) + ")").c_str());
 	v_answer += v_clientstr;
-	if(m_clients.size() % 3 == 0) {
+	if(i % 3 == 2) {
 	  v_answer += "\n";
 	}
       }
-      if(m_clients.size() %3 != 0) {
+      if(m_clients.size() %3 != 2) {
 	v_answer += "\n";
       }
     }

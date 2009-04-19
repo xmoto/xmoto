@@ -185,6 +185,11 @@ public:
   void markAsVoted(const std::string& i_profile, const std::string& i_id_level);
   bool isVoted(const std::string& i_profile, const std::string& i_id_level);
 
+  /* server cmd */
+  bool srv_isAdmin(const std::string& i_profile, const std::string& i_password);
+  void srv_addAdmin(const std::string& i_profile, const std::string& i_password);
+  void srv_removeAdmin(int id);
+
   /* data fixes */
   void fixStatsProfilesLevelsNbCompleted();
 

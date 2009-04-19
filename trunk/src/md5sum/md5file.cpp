@@ -62,3 +62,21 @@ std::string md5Contents(std::string p_md5File) {
 
   return std::string(v_md5web);
 }
+
+std::string md5sum(const std::string& i_content) {
+  md5_state_s md5state;
+  md5_byte_t  md5digest[16];
+  std::string sum = "";
+
+  md5_init(&md5state);
+  md5_append(&md5state, (md5_byte_t*)(i_content.c_str()), i_content.size());
+  md5_finish(&md5state, md5digest);
+
+  for(int i=0; i<16; i++) {
+    char c[3];
+    snprintf(c, 3, "%02x", md5digest[i]);   
+    sum += c;
+  }
+
+  return sum;
+}

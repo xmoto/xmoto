@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VFileIO.h"
 #include <sstream>
 
-#define XMDB_VERSION         31
+#define XMDB_VERSION         33
 #define DB_MAX_SQL_RUNTIME 0.25
 #define DB_BUSY_TIMEOUT   60000 // 60 seconds
 
@@ -692,6 +692,22 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       updateXmDbVersion(31);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 30: " + e.getMsg());
+    }
+
+  case 31:
+    try {
+      simpleSql("CREATE TABLE srv_admins(id INTEGER PRIMARY KEY AUTOINCREMENT, id_profile UNIQUE, password);");
+      updateXmDbVersion(32);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 31: " + e.getMsg());
+    }
+
+  case 32:
+    try {
+      simpleSql("CREATE TABLE srv_bans(id INTEGER PRIMARY KEY AUTOINCREMENT, id_profile, ip, from_date, nb_days);");
+      updateXmDbVersion(33);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 32: " + e.getMsg());
     }
 
     // next
