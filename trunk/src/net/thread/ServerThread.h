@@ -147,6 +147,9 @@ class ServerThread : public XMThread {
   std::string SP2_determineLevel();
   void SP2_sendSceneEvents(DBuffer* i_buffer);
   void SP2_addPointsToClient(unsigned int i_client, unsigned int i_points);
+
+  // server cmd
+  void manageSrvCmd(unsigned int i_client, const std::string& i_cmd);
 };
 
 #endif

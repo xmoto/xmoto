@@ -20,8 +20,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateServerConsole.h"
 #include "../Game.h"
+#include "../GameText.h"
 #include "../drawlib/DrawLib.h"
 #include "../gui/basic/GUIConsole.h"
+#include "../net/NetClient.h"
+#include "StateManager.h"
 
 /* static members */
 UIRoot*  StateServerConsole::m_sGUI = NULL;
@@ -31,9 +34,12 @@ StateServerConsole::StateServerConsole(bool drawStateBehind,
   StateMenu(drawStateBehind,
 	    updateStatesBehind) {
   m_name          = "StateServerConsole";
+
+  StateManager::instance()->registerAsObserver("NET_SRVCMDASW", this);
 }
 
 StateServerConsole::~StateServerConsole() {
+  StateManager::instance()->unregisterAsObserver("NET_SRVCMDASW", this);
 }
 
 void StateServerConsole::enter()
@@ -69,8 +75,11 @@ void StateServerConsole::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
 void StateServerConsole::createGUIIfNeeded()
 {
-  if(m_sGUI != NULL)
+  if(m_sGUI != NULL) {
+    m_console = reinterpret_cast<UIConsole *>(m_sGUI->getChild("SRVCONSOLE"));
+    m_console->setHook(this);
     return;
+  }
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
@@ -82,6 +91,7 @@ void StateServerConsole::createGUIIfNeeded()
 
 
   m_console = new UIConsole(m_sGUI, 10, 10, "", m_sGUI->getPosition().nWidth-20, m_sGUI->getPosition().nHeight-20);
+  m_console->setHook(this);
   m_console->setID("SRVCONSOLE");
   m_console->setFont(drawLib->getFontSmall());
 }
@@ -91,5 +101,30 @@ void StateServerConsole::clean()
   if(StateServerConsole::m_sGUI != NULL) {
     delete StateServerConsole::m_sGUI;
     StateServerConsole::m_sGUI = NULL;
+  }
+}
+
+void StateServerConsole::exec(const std::string& i_cmd) {
+  if(NetClient::instance()->isConnected()) {
+    try {
+      NA_srvCmd na(i_cmd);
+      NetClient::instance()->send(&na, 0);
+    } catch(Exception &e) {
+      m_console->giveAnswer(GAMETEXT_UNABLETOCONNECTONTHESERVER);
+    }
+  } else {
+    m_console->giveAnswer(GAMETEXT_STATUS_DECONNECTED);
+  }
+}
+
+void StateServerConsole::exit() {
+  m_requestForEnd = true;
+}
+
+void StateServerConsole::executeOneCommand(std::string cmd, std::string args) {
+
+  if(cmd == "NET_SRVCMDASW") {
+    m_console->giveAnswer(args);
+    return;
   }
 }

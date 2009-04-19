@@ -248,6 +248,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
   case TNA_clientInfos:
   case TNA_clientMode:
   case TNA_playerControl:
+  case TNA_srvCmd:
     /* should not happend */
     break;
 
@@ -456,6 +457,12 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 	  delete v_se;
 	}
       }
+    }
+    break;
+
+  case TNA_srvCmdAsw:
+    {
+      StateManager::instance()->sendAsynchronousMessage("NET_SRVCMDASW", ((NA_srvCmdAsw*)i_netAction)->getAnswer());
     }
     break;
 

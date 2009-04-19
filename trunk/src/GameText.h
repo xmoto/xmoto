@@ -413,6 +413,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_STARTLEVEL           _("Play!")
 #define GAMETEXT_STATISTICS           _("Statistics")
 #define GAMETEXT_STATS                _("STATS")
+#define GAMETEXT_STATUS_DECONNECTED   _("You are currently disconnected")
 #define GAMETEXT_STEREO               _("Stereo")
 #define GAMETEXT_SYNC_DOWN            _("Synchronisation down")
 #define GAMETEXT_SYNC_UP              _("Synchronisation up")

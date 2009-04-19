@@ -980,10 +980,21 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
 
   case TNA_srvCmd:
     {
-      LogInfo("server cmd: %", ((NA_srvCmd*)i_netAction)->getCommand().c_str());
+      manageSrvCmd(i_client, ((NA_srvCmd*)i_netAction)->getCommand());
     }
     break;
 
+  }
+}
+
+void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd) {
+  LogInfo("server cmd: %s", i_cmd.c_str());
+
+  NA_srvCmdAsw na("Unknown command");
+  try {
+    sendToClient(&na, i_client, -1, 0);
+  } catch(Exception &e) {
+    /* ok, no pb */
   }
 }
 
