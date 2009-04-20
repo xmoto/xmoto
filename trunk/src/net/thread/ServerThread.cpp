@@ -641,34 +641,35 @@ void ServerThread::manageNetwork() {
 	acceptClient();
       }
       
-      else if(SDLNet_SocketReady(m_udpsd)) {
+      if(SDLNet_SocketReady(m_udpsd)) {
 	manageClientUDP();
-      } else {
-	i = 0;
-	while(i<m_clients.size()) {
-	  if(SDLNet_SocketReady(*(m_clients[i]->tcpSocket()))) {
-	    try {
-	      if(manageClientTCP(i) == false) {
-		removeClient(i);
-	      } else {
-		i++;
-	      }
-	    } catch(DisconnectedException &e) {
-	      LogInfo("server: client %u disconnected (%s:%d) : %s", i,
-		      XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
-		      SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
+      }
+	
+      i = 0;
+      while(i<m_clients.size()) {
+	if(SDLNet_SocketReady(*(m_clients[i]->tcpSocket()))) {
+	  try {
+	    if(manageClientTCP(i) == false) {
 	      removeClient(i);
-	    } catch(Exception &e) {
-	      LogInfo("server: bad TCP packet received by client %u (%s:%d) : %s", i,
-		      XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
-		      SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
-	      removeClient(i);
+	    } else {
+	      i++;
 	    }
-	  } else {
-	    i++;
+	  } catch(DisconnectedException &e) {
+	    LogInfo("server: client %u disconnected (%s:%d) : %s", i,
+		    XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
+		    SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
+	    removeClient(i);
+	  } catch(Exception &e) {
+	    LogInfo("server: bad TCP packet received by client %u (%s:%d) : %s", i,
+		    XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
+		    SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
+	    removeClient(i);
 	  }
+	} else {
+	  i++;
 	}
       }
+
     }    
   }
 
