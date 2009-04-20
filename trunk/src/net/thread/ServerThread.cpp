@@ -643,33 +643,33 @@ void ServerThread::manageNetwork() {
       
       if(SDLNet_SocketReady(m_udpsd)) {
 	manageClientUDP();
-      }
+      } else {
 	
-      i = 0;
-      while(i<m_clients.size()) {
-	if(SDLNet_SocketReady(*(m_clients[i]->tcpSocket()))) {
-	  try {
-	    if(manageClientTCP(i) == false) {
+	i = 0;
+	while(i<m_clients.size()) {
+	  if(SDLNet_SocketReady(*(m_clients[i]->tcpSocket()))) {
+	    try {
+	      if(manageClientTCP(i) == false) {
+		removeClient(i);
+	      } else {
+		i++;
+	      }
+	    } catch(DisconnectedException &e) {
+	      LogInfo("server: client %u disconnected (%s:%d) : %s", i,
+		      XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
+		      SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
 	      removeClient(i);
-	    } else {
-	      i++;
+	    } catch(Exception &e) {
+	      LogInfo("server: bad TCP packet received by client %u (%s:%d) : %s", i,
+		      XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
+		      SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
+	      removeClient(i);
 	    }
-	  } catch(DisconnectedException &e) {
-	    LogInfo("server: client %u disconnected (%s:%d) : %s", i,
-		    XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
-		    SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
-	    removeClient(i);
-	  } catch(Exception &e) {
-	    LogInfo("server: bad TCP packet received by client %u (%s:%d) : %s", i,
-		    XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
-		    SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
-	    removeClient(i);
+	  } else {
+	    i++;
 	  }
-	} else {
-	  i++;
 	}
       }
-
     }    
   }
 
@@ -763,6 +763,12 @@ void ServerThread::acceptClient() {
   // check bans - don't go over this code, while this is the only way to become a client (new NetSClient)
   if(m_pDb->srv_isBanned("", XMNet::getIp(tcpRemoteIP))) {
     LogInfo("server: banned client rejected (%s)", (XMNet::getIp(tcpRemoteIP)).c_str());
+    NA_serverError na("Connexion refused");
+    na.setSource(-1, 0);
+    try {
+      na.send(&csd, NULL, NULL, NULL);
+    } catch(Exception &e) {
+    }
     SDLNet_TCP_Close(csd);
     return;
   }
@@ -961,6 +967,14 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       // check bans
       if(m_pDb->srv_isBanned(m_clients[i_client]->name(), XMNet::getIp(m_clients[i_client]->tcpRemoteIP()))) {
         LogInfo("server: banned client rejected (%s)", m_clients[i_client]->name().c_str());
+
+	NA_serverError na("Connexion refused");
+	try {
+	  sendToClient(&na, i_client, -1, 0);
+	} catch(Exception &e) {
+	  /* ok, no pb */
+	}
+
 	return false;
       }
 
@@ -1257,6 +1271,12 @@ void ServerThread::cleanClientsMarkedToBeRemoved() {
 
   for(unsigned int i=0; i<m_clientMarkToBeRemoved.size(); i++) {
     try {
+      NA_serverError na("Connexion refused");
+      try {
+	sendToClient(&na, i, -1, 0);
+      } catch(Exception &e) {
+	/* ok, no pb */
+      }
       removeClient(getClientById(m_clientMarkToBeRemoved[i]));
     } catch(Exception &e) {
       /* probably already disconnected */
