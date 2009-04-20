@@ -46,7 +46,6 @@ class UIConsole : public UIWindow {
 
  private:
   UIConsoleHook* m_hook;
-  int m_cursorLine;
   int m_cursorChar;
   std::vector<std::string> m_lines;
   std::vector<std::string> m_history;

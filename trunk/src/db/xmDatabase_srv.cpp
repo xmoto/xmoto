@@ -39,11 +39,54 @@ bool xmDatabase::srv_isAdmin(const std::string& i_profile, const std::string& i_
   return true;
 }
 
-void xmDatabase::srv_addAdmin(const std::string& i_login, const std::string& i_password) {
+void xmDatabase::srv_addAdmin(const std::string& i_profile, const std::string& i_password) {
+  std::string v_md5password = md5sum(i_password);
+  simpleSql("INSERT INTO srv_admins(id_profile, password) VALUES (\"" + protectString(i_profile) + "\", \"" + protectString(v_md5password) + "\");");
 }
 
 void xmDatabase::srv_removeAdmin(int id) {
   std::ostringstream v_n;
   v_n << id;
   simpleSql("DELETE FROM srv_admins WHERE id=" + v_n.str() + ";");
+}
+
+void xmDatabase::srv_addBan(const std::string& i_profile, const std::string& i_ip, unsigned int i_nbDays) {
+  std::ostringstream v_n;
+  v_n << i_nbDays;
+
+  if(checkKey("SELECT count(1) FROM srv_bans WHERE id_profile=\"" + protectString(i_profile) + "\" AND ip=\"" + protectString(i_ip) + "\";")) {
+    simpleSql("UPDATE srv_bans SET from_date=datetime('now'), nb_days=" + v_n.str() + " "
+	      "WHERE id_profile=\"" + protectString(i_profile) + "\" AND ip=\"" + protectString(i_ip) + "\";");
+  } else {
+    simpleSql("INSERT INTO srv_bans(id_profile, ip, from_date, nb_days) VALUES (\"" + protectString(i_profile) + "\", \"" + protectString(i_ip) + "\", datetime('now'), " + v_n.str() + ");");
+  }
+}
+
+void xmDatabase::srv_removeBan(int id) {
+  std::ostringstream v_n;
+  v_n << id;
+  simpleSql("DELETE FROM srv_bans WHERE id=" + v_n.str() + ";");
+}
+
+bool xmDatabase::srv_isBanned(const std::string& i_profile, const std::string& i_ip) {
+  char **v_result;
+  unsigned int nrow;
+
+  v_result = readDB("SELECT id FROM srv_bans "
+		    "WHERE (id_profile = '*' OR id_profile=\"" + protectString(i_profile) + "\") "
+		    "AND   (ip         = '*' OR ip        =\"" + protectString(i_ip)      + "\") "
+		    "AND   nb_days - (julianday('now')-julianday(from_date)) > 0",
+		    nrow);
+  read_DB_free(v_result);
+  return nrow != 0;
+}
+
+void xmDatabase::srv_cleanBans() {
+  simpleSql("DELETE FROM srv_bans WHERE nb_days - (julianday('now')-julianday(from_date)) <= 0;");
+}
+
+void xmDatabase::srv_changePassword(const std::string& i_profile, const std::string& i_password) {
+  std::string v_md5password = md5sum(i_password);
+  simpleSql("UPDATE srv_admins SET password=\"" + protectString(v_md5password) + "\" "
+	    "WHERE id_profile=\"" + protectString(i_profile) + "\";");
 }

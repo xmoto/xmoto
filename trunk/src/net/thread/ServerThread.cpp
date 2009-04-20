@@ -44,6 +44,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_SERVER_NB_SOCKETS_MAX 128
 #define XM_SERVER_MAX_UDP_PACKET_SIZE 1024 // bytes
 #define XM_SERVER_PREPLAYING_TIME 300
+#define XM_SERVER_DEFAULT_BAN_NBDAYS 30
 
 NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
     m_id   = i_id;
@@ -647,13 +648,16 @@ void ServerThread::manageNetwork() {
 	while(i<m_clients.size()) {
 	  if(SDLNet_SocketReady(*(m_clients[i]->tcpSocket()))) {
 	    try {
-	      manageClientTCP(i);
-	      i++;
+	      if(manageClientTCP(i) == false) {
+		removeClient(i);
+	      } else {
+		i++;
+	      }
 	    } catch(DisconnectedException &e) {
 	      LogInfo("server: client %u disconnected (%s:%d) : %s", i,
 		      XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
 		      SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
-	      removeClient(i);	
+	      removeClient(i);
 	    } catch(Exception &e) {
 	      LogInfo("server: bad TCP packet received by client %u (%s:%d) : %s", i,
 		      XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
@@ -667,6 +671,9 @@ void ServerThread::manageNetwork() {
       }
     }    
   }
+
+  // remove client marked to be removed
+  cleanClientsMarkedToBeRemoved();
 }
 
 void ServerThread::removeClient(unsigned int i) {
@@ -708,9 +715,9 @@ void ServerThread::sendToClient(NetAction* i_netAction, unsigned int i, int i_sr
 }
 
 void ServerThread::sendToAllClientsHavingMode(NetClientMode i_mode,
-					      NetAction* i_netAction, int i_src, int i_subsrc, unsigned int i_except) {
+					      NetAction* i_netAction, int i_src, int i_subsrc, int i_except) {
   for(unsigned int i=0; i<m_clients.size(); i++) {
-    if(i != i_except && (i_mode == NETCLIENT_ANY_MODE || i_mode == m_clients[i]->mode())) {
+    if((int)i != i_except && (i_mode == NETCLIENT_ANY_MODE || i_mode == m_clients[i]->mode())) {
       try {
 	sendToClient(i_netAction, i, i_src, i_subsrc);
       } catch(Exception &e) {
@@ -720,13 +727,13 @@ void ServerThread::sendToAllClientsHavingMode(NetClientMode i_mode,
   }
 }
 
-void ServerThread::sendToAllClients(NetAction* i_netAction, int i_src, int i_subsrc, unsigned int i_except) {
+void ServerThread::sendToAllClients(NetAction* i_netAction, int i_src, int i_subsrc, int i_except) {
   sendToAllClientsHavingMode(NETCLIENT_ANY_MODE, i_netAction, i_src, i_subsrc, i_except);
 }
 
-void ServerThread::sendToAllClientsMarkedToPlay(NetAction* i_netAction, int i_src, int i_subsrc, unsigned int i_except) {
+void ServerThread::sendToAllClientsMarkedToPlay(NetAction* i_netAction, int i_src, int i_subsrc, int i_except) {
   for(unsigned int i=0; i<m_clients.size(); i++) {
-    if(i != i_except && m_clients[i]->isMarkedToPlay()) {
+    if((int)i != i_except && m_clients[i]->isMarkedToPlay()) {
       try {
 	sendToClient(i_netAction, i, i_src, i_subsrc);
       } catch(Exception &e) {
@@ -748,6 +755,13 @@ void ServerThread::acceptClient() {
   /* Get the remote address */
   if((tcpRemoteIP = SDLNet_TCP_GetPeerAddress(csd)) == NULL) {
     LogWarning("server: SDLNet_TCP_GetPeerAddress: %s", SDLNet_GetError());
+    SDLNet_TCP_Close(csd);
+    return;
+  }
+
+  // check bans - don't go over this code, while this is the only way to become a client (new NetSClient)
+  if(m_pDb->srv_isBanned("", XMNet::getIp(tcpRemoteIP))) {
+    LogInfo("server: banned client rejected (%s)", (XMNet::getIp(tcpRemoteIP)).c_str());
     SDLNet_TCP_Close(csd);
     return;
   }
@@ -779,13 +793,17 @@ void ServerThread::acceptClient() {
   m_clients.push_back(new NetSClient(m_nextClientId++, csd, tcpRemoteIP));
 }
 
-void ServerThread::manageClientTCP(unsigned int i) {
+bool ServerThread::manageClientTCP(unsigned int i) {
   NetAction* v_netAction;
 
   while(m_clients[i]->tcpReader->TCPReadAction(m_clients[i]->tcpSocket(), &v_netAction)) {
-    manageAction(v_netAction, i);
+    if(manageAction(v_netAction, i) == false) {
+      delete v_netAction;
+      return false;
+    }
     delete v_netAction;
   }
+  return true;
 }
 
 void ServerThread::manageClientUDP() {
@@ -800,7 +818,11 @@ void ServerThread::manageClientUDP() {
 	v_managedPacket = true;
 	try {
 	  v_netAction = ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len);
-	  manageAction(v_netAction, i);
+	  if(manageAction(v_netAction, i) == false) {
+	    delete v_netAction;
+	    removeClient(i);
+	    return;
+	  }
 	  delete v_netAction;
 	} catch(Exception &e) {
 	  // ok, a bad packet received, forget it
@@ -837,7 +859,7 @@ void ServerThread::manageClientUDP() {
   }
 }
 
-void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
+bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   Scene* v_scene;
   unsigned int v_numPlayer;
 
@@ -934,6 +956,13 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       if(m_clients[i_client]->name() == "") {
 	throw Exception("Invalid name provided");
       }
+
+      // check bans
+      if(m_pDb->srv_isBanned(m_clients[i_client]->name(), XMNet::getIp(m_clients[i_client]->tcpRemoteIP()))) {
+        LogInfo("server: banned client rejected (%s)", m_clients[i_client]->name().c_str());
+	return false;
+      }
+
       LogInfo("Client[%i]'s name is \"%s\"", i_client, m_clients[i_client]->name().c_str());
 
       // send new client to other clients
@@ -996,6 +1025,8 @@ void ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     break;
 
   }
+
+  return true;
 }
 
 void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd) {
@@ -1018,8 +1049,16 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "help: list commands\n";
       v_answer += "login [password]: connect on the server\n";
       v_answer += "logout: disconnect from the server\n";
-      v_answer += "lp: list connected players\n";
+      v_answer += "changepassword <password>: change your password\n";
+      v_answer += "lsplayers: list connected players\n";
+      v_answer += "lsbans: list banned players\n";
+
+      std::ostringstream v_n;
+      v_n << XM_SERVER_DEFAULT_BAN_NBDAYS;
+      v_answer += "ban <id player> <ip|profile> [nbdays]: ban player <id player> for nbdays (default is " + v_n.str() + "), by ip or profile\n";
+      v_answer += "unban <id ban>: remove a ban\n";
       v_answer += "lsadmins: list admins\n";
+      v_answer += "addadmin <id player> <password>: add player <id player> as admin\n";
       v_answer += "rmadmin <id admin>: remove admin\n";
     }
   } else if(v_args[0] == "login") {
@@ -1064,6 +1103,14 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "Disconnected";
     }
 
+  } else if(v_args[0] == "changepassword") {
+    if(v_args.size() != 2) {
+      v_answer += "changepassword: invalid arguments\n";
+    } else {
+      m_pDb->srv_changePassword(m_clients[i_client]->name(), v_args[1]);
+      v_answer += "Password changed";
+    }
+
   } else if(v_args[0] == "lsadmins") {
     if(v_args.size() != 1) {
       v_answer += "lsadmins: invalid arguments\n";
@@ -1097,9 +1144,23 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "admin removed\n";
     }
 
-  } else if(v_args[0] == "lp") {
+  } else if(v_args[0] == "addadmin") {
+    if(v_args.size() != 3) {
+      v_answer += "addadmin: invalid arguments\n";
+    } else {
+      try {
+	unsigned int v_nclient = getClientById(atoi(v_args[1].c_str()));
+	m_pDb->srv_addAdmin(m_clients[v_nclient]->name(), v_args[2]);
+	v_answer += "admin added\n";
+      } catch(Exception &e) {
+	v_answer += "unable to add the admin\n";
+	v_answer += e.getMsg() + "\n";
+      }      
+    }
+
+  } else if(v_args[0] == "lsplayers") {
     if(v_args.size() != 1) {
-      v_answer += "lp: invalid arguments\n";
+      v_answer += "lsplayers: invalid arguments\n";
     } else {
       char v_clientstr[38];
       for(unsigned int i=0; i<m_clients.size(); i++) {
@@ -1116,6 +1177,54 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       }
     }
 
+  } else if(v_args[0] == "lsbans") {
+    if(v_args.size() != 1) {
+      v_answer += "lsban: invalid arguments\n";
+    } else {
+      // clean old bans before reading them
+      m_pDb->srv_cleanBans();
+
+      v_result = m_pDb->readDB("SELECT id, id_profile, ip, ROUND(nb_days - (julianday('now')-julianday(from_date)), 1) remaining "
+			       "FROM srv_bans "
+			       "ORDER BY id;",
+			       nrow);
+      for(unsigned int i=0; i<nrow; i++) {
+	std::ostringstream v_n;
+	v_n << atof(m_pDb->getResult(v_result, 4, i, 3));
+	v_answer += m_pDb->getResult(v_result, 4, i, 0);
+	v_answer += ": " + std::string(m_pDb->getResult(v_result, 4, i, 1)) + ", " + std::string(m_pDb->getResult(v_result, 4, i, 2)) + " -> ";
+	v_answer += v_n.str() + std::string(" days remaining");
+	v_answer += "\n";
+      }
+      m_pDb->read_DB_free(v_result);
+    }
+
+  } else if(v_args[0] == "ban") {
+    if(v_args.size() != 3 && v_args.size() != 4) {
+      v_answer += "ban: invalid arguments\n";
+    } else {
+
+      try {
+	unsigned int v_nclient = getClientById(atoi(v_args[1].c_str()));
+	m_pDb->srv_addBan(v_args[2] == "profile" ? m_clients[v_nclient]->name() : "*",
+			  v_args[2] == "ip"      ? XMNet::getIp(m_clients[v_nclient]->tcpRemoteIP()) : "*",
+			  v_args.size() == 4     ? atoi(v_args[3].c_str()) : XM_SERVER_DEFAULT_BAN_NBDAYS);
+	m_clientMarkToBeRemoved.push_back(atoi(v_args[1].c_str()));
+	v_answer += "ban added\n";
+      } catch(Exception &e) {
+	v_answer += "unable to add the ban\n";
+	v_answer += e.getMsg() + "\n";
+      }   
+    }
+
+  } else if(v_args[0] == "unban") {
+    if(v_args.size() != 2) {
+      v_answer += "unban: invalid arguments\n";
+    } else {
+      m_pDb->srv_removeBan(atoi(v_args[1].c_str()));
+      v_answer += "ban removed\n";
+    }
+
   } else {
     v_answer = "Unknown command : \"" + v_args[0] + "\"\nType help to get more information\n";
   }
@@ -1127,6 +1236,32 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
   } catch(Exception &e) {
     /* ok, no pb */
   }
+}
+
+unsigned int ServerThread::getClientById(unsigned int i_id) const {
+  for(unsigned int i=0; i<m_clients.size(); i++) {
+    if(m_clients[i]->id() == i_id) {
+      return i;
+    }
+  }
+  throw Exception("Client not found");
+}
+
+void ServerThread::cleanClientsMarkedToBeRemoved() {
+
+  // main case : no client to remove
+  if(m_clientMarkToBeRemoved.empty()) {
+    return;
+  }
+
+  for(unsigned int i=0; i<m_clientMarkToBeRemoved.size(); i++) {
+    try {
+      removeClient(getClientById(m_clientMarkToBeRemoved[i]));
+    } catch(Exception &e) {
+      /* probably already disconnected */
+    }
+  }
+  m_clientMarkToBeRemoved.clear();
 }
 
 void ServerThread::SP2_addPointsToClient(unsigned int i_client, unsigned int i_points) {

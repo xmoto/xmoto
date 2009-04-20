@@ -37,7 +37,6 @@ UIConsole::UIConsole(UIWindow *pParent, int x, int y, std::string Caption, int n
   initW(pParent, x , y, Caption, nWidth, nHeight);
 
   m_hook = NULL;
-  m_cursorLine = 0;
   m_history_n = -1;
   m_waitAnswer = false;
 
@@ -70,12 +69,12 @@ void UIConsole::paint() {
     v_fm->printString(v_fg, v_XOffset, v_YOffset,
 		      MAKE_COLOR(255, 255, 255, 255));
 
-    if(m_cursorLine == (int) i) {
+    if(m_lines.size()-1 == (int) i) {
 
-      if(m_cursorChar == (int) utf8::utf8_length(m_lines[m_cursorLine])) {
+      if(m_cursorChar == (int) utf8::utf8_length(m_lines[i])) {
 	v_cursorXOffset = v_XOffset + v_fg->realWidth();
       } else {
-	std::string s = utf8::utf8_substring(m_lines[m_cursorLine], 0, m_cursorChar);
+	std::string s = utf8::utf8_substring(m_lines[i], 0, m_cursorChar);
 	v_cursorXOffset = v_XOffset + v_fm->getGlyph(s)->realWidth();
       }
       v_cursorYOffset = v_YOffset;
@@ -95,7 +94,6 @@ void UIConsole::paint() {
   // remove lines if on bottom
   if(v_YOffset > getPosition().nY + getPosition().nHeight) {
     m_lines.erase(m_lines.begin());
-    m_cursorLine--;
   }
 }
 
@@ -105,10 +103,8 @@ bool UIConsole::offerActivation() {
 
 void UIConsole::giveAnswer(const std::string& i_line) {
   m_lines.push_back(i_line);
-  m_cursorLine++;
   addNewLine(UIC_PROMPT);
   m_cursorChar = utf8::utf8_length(UIC_PROMPT);
-  m_cursorLine++;
   m_waitAnswer = false;
 }
 
@@ -125,10 +121,8 @@ bool UIConsole::keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char) {
   if(nKey == SDLK_l && (mod & KMOD_LCTRL) == KMOD_LCTRL) {
     if(m_waitAnswer) {
       m_lines.erase(m_lines.begin(), m_lines.end());
-      m_cursorLine = -1;
     } else {
       m_lines.erase(m_lines.begin(), m_lines.end()-1);
-      m_cursorLine = 0;
     }
     return true;
   }
@@ -140,13 +134,13 @@ bool UIConsole::keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char) {
   }
 
   if(nKey == SDLK_RETURN) {
-    execLine(m_lines[m_cursorLine]);
+    execLine(m_lines[m_lines.size()-1]);
     return true;
   }
 
   if(nKey == SDLK_BACKSPACE) {
     if(m_cursorChar > (int) utf8::utf8_length(UIC_PROMPT)) {
-      m_lines[m_cursorLine] = utf8::utf8_delete(m_lines[m_cursorLine], m_cursorChar);
+      m_lines[m_lines.size()-1] = utf8::utf8_delete(m_lines[m_lines.size()-1], m_cursorChar);
       m_cursorChar--;
     }
     return true;
@@ -181,40 +175,40 @@ bool UIConsole::keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char) {
   }
 
   if(nKey == SDLK_RIGHT) {
-    if(m_cursorChar < (int) utf8::utf8_length(m_lines[m_cursorLine])) {
+    if(m_cursorChar < (int) utf8::utf8_length(m_lines[m_lines.size()-1])) {
       m_cursorChar++;
     }
     return true;
   }
 
   if(nKey == SDLK_DELETE) {
-    if(m_cursorChar < (int) utf8::utf8_length(m_lines[m_cursorLine])) {
-      m_lines[m_cursorLine] = utf8::utf8_delete(m_lines[m_cursorLine], m_cursorChar+1);
+    if(m_cursorChar < (int) utf8::utf8_length(m_lines[m_lines.size()-1])) {
+      m_lines[m_lines.size()-1] = utf8::utf8_delete(m_lines[m_lines.size()-1], m_cursorChar+1);
     }
     return true;
   }
 
   // add the key
   if(utf8::utf8_length(i_utf8Char) == 1) { // alt/... and special keys must not be kept
-    if(m_cursorChar == (int) utf8::utf8_length(m_lines[m_cursorLine])) {
-      m_lines[m_cursorLine] += i_utf8Char;
+    if(m_cursorChar == (int) utf8::utf8_length(m_lines[m_lines.size()-1])) {
+      m_lines[m_lines.size()-1] += i_utf8Char;
     } else {
       std::string s;
-      s = utf8::utf8_substring(m_lines[m_cursorLine], 0, m_cursorChar);
+      s = utf8::utf8_substring(m_lines[m_lines.size()-1], 0, m_cursorChar);
       s += i_utf8Char;
-      s += utf8::utf8_substring(m_lines[m_cursorLine], m_cursorChar,
-				utf8::utf8_length(m_lines[m_cursorLine]) - m_cursorChar);
-      m_lines[m_cursorLine] = s;
+      s += utf8::utf8_substring(m_lines[m_lines.size()-1], m_cursorChar,
+				utf8::utf8_length(m_lines[m_lines.size()-1]) - m_cursorChar);
+      m_lines[m_lines.size()-1] = s;
     }
     m_cursorChar++;
-    m_lastEdit = m_lines[m_cursorLine];
+    m_lastEdit = m_lines[m_lines.size()-1];
   }
 
   return true;
 }
 
 void UIConsole::changeLine(const std::string& i_action) {
-  m_lines[m_cursorLine] = UIC_PROMPT + i_action; 
+  m_lines[m_lines.size()-1] = UIC_PROMPT + i_action; 
   m_cursorChar = utf8::utf8_length(UIC_PROMPT) + utf8::utf8_length(i_action);
 }
 
@@ -259,7 +253,6 @@ void UIConsole::execLine(const std::string& i_line) {
   // call
   if(v_action != "") {
     if(execInternal(v_action)) {
-      m_cursorLine++;
       addNewLine(UIC_PROMPT);
       m_cursorChar = utf8::utf8_length(UIC_PROMPT);
     } else {
@@ -267,7 +260,6 @@ void UIConsole::execLine(const std::string& i_line) {
       m_waitAnswer = true;
     }
   } else { // simple new line without command
-    m_cursorLine++;
     addNewLine(UIC_PROMPT);
     m_cursorChar = utf8::utf8_length(UIC_PROMPT);
   }

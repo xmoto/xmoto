@@ -124,18 +124,19 @@ class ServerThread : public XMThread {
   std::vector<NetSClient*> m_clients;
 
   void acceptClient();
-  void manageClientTCP(unsigned int i);
+  bool manageClientTCP(unsigned int i);
   void manageClientUDP();
 
-  void manageAction(NetAction* i_netAction, unsigned int i_client);
+  // return false if the client must be deconnected
+  bool manageAction(NetAction* i_netAction, unsigned int i_client);
 
   void run_loop();
   void manageNetwork();
 
   // if i_execpt >= 0, send to all exept him
-  void sendToAllClients(NetAction* i_netAction, int i_src, int i_subsrc, unsigned int i_except = -1);
-  void sendToAllClientsHavingMode(NetClientMode i_mode, NetAction* i_netAction, int i_src, int i_subsrc, unsigned int i_except = -1);
-  void sendToAllClientsMarkedToPlay(NetAction* i_netAction, int i_src, int i_subsrc, unsigned int i_except = -1);
+  void sendToAllClients(NetAction* i_netAction, int i_src, int i_subsrc, int i_except = -1);
+  void sendToAllClientsHavingMode(NetClientMode i_mode, NetAction* i_netAction, int i_src, int i_subsrc, int i_except = -1);
+  void sendToAllClientsMarkedToPlay(NetAction* i_netAction, int i_src, int i_subsrc, int i_except = -1);
   void sendToClient(NetAction* i_netAction, unsigned int i, int i_src, int i_subsrc);
   void removeClient(unsigned int i);
   unsigned int nbClientsInMode(NetClientMode i_mode);
@@ -154,7 +155,11 @@ class ServerThread : public XMThread {
   void SP2_addPointsToClient(unsigned int i_client, unsigned int i_points);
 
   // server cmd
+  unsigned int getClientById(unsigned int i_id) const;
   void manageSrvCmd(unsigned int i_client, const std::string& i_cmd);
+
+  std::vector<unsigned int> m_clientMarkToBeRemoved;
+  void cleanClientsMarkedToBeRemoved();
 };
 
 #endif
