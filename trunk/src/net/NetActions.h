@@ -76,6 +76,7 @@ class NetAction {
 
   static NetAction* newNetAction(void* data, unsigned int len);
   static void logStats();
+  static std::string getStats();
   static std::string getFancyBytes(unsigned int i_bytes);
 
   protected:

@@ -37,11 +37,7 @@ UIConsole::UIConsole(UIWindow *pParent, int x, int y, std::string Caption, int n
   initW(pParent, x , y, Caption, nWidth, nHeight);
 
   m_hook = NULL;
-  m_history_n = -1;
-  m_waitAnswer = false;
-
-  addNewLine(UIC_PROMPT);
-  m_cursorChar = utf8::utf8_length(UIC_PROMPT);
+  reset();
 }      
 
 UIConsole::~UIConsole() {
@@ -69,7 +65,7 @@ void UIConsole::paint() {
     v_fm->printString(v_fg, v_XOffset, v_YOffset,
 		      MAKE_COLOR(255, 255, 255, 255));
 
-    if(m_lines.size()-1 == (int) i) {
+    if(m_lines.size()-1 == i) {
 
       if(m_cursorChar == (int) utf8::utf8_length(m_lines[i])) {
 	v_cursorXOffset = v_XOffset + v_fg->realWidth();
@@ -101,8 +97,27 @@ bool UIConsole::offerActivation() {
   return false;
 }
 
+void UIConsole::reset(const std::string& i_cmd) {
+  m_lines.clear();
+  m_waitAnswer = false;
+  m_lastEdit = "";
+  m_history_n = -1;
+
+  if(i_cmd == "") {
+    addNewLine(UIC_PROMPT);
+    m_cursorChar = utf8::utf8_length(UIC_PROMPT);
+  } else {
+    execCommand(i_cmd);
+  }
+}
+
 void UIConsole::giveAnswer(const std::string& i_line) {
-  m_lines.push_back(i_line);
+  std::vector<std::string> v_res;
+
+  utf8::utf8_split(i_line, "\n", v_res);
+  for(unsigned int i=0; i<v_res.size(); i++) {
+    m_lines.push_back(v_res[i]);
+  }
   addNewLine(UIC_PROMPT);
   m_cursorChar = utf8::utf8_length(UIC_PROMPT);
   m_waitAnswer = false;
@@ -241,6 +256,22 @@ bool UIConsole::execInternal(const std::string& i_action) {
   return false;
 }
 
+void UIConsole::execCommand(const std::string& i_action) {
+  // call
+  if(i_action != "") {
+    if(execInternal(i_action)) {
+      addNewLine(UIC_PROMPT);
+      m_cursorChar = utf8::utf8_length(UIC_PROMPT);
+    } else {
+      m_hook->exec(i_action);
+      m_waitAnswer = true;
+    }
+  } else { // simple new line without command
+    addNewLine(UIC_PROMPT);
+    m_cursorChar = utf8::utf8_length(UIC_PROMPT);
+  }
+}
+
 void UIConsole::execLine(const std::string& i_line) {
   std::string v_action = actionFromLine(i_line);
 
@@ -250,18 +281,5 @@ void UIConsole::execLine(const std::string& i_line) {
 
   m_lastEdit = UIC_PROMPT;
 
-  // call
-  if(v_action != "") {
-    if(execInternal(v_action)) {
-      addNewLine(UIC_PROMPT);
-      m_cursorChar = utf8::utf8_length(UIC_PROMPT);
-    } else {
-      m_hook->exec(v_action);
-      m_waitAnswer = true;
-    }
-  } else { // simple new line without command
-    addNewLine(UIC_PROMPT);
-    m_cursorChar = utf8::utf8_length(UIC_PROMPT);
-  }
-
+  execCommand(v_action);
 }

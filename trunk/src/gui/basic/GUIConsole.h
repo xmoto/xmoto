@@ -43,6 +43,8 @@ class UIConsole : public UIWindow {
   virtual bool offerActivation();
   virtual bool keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char);
   void giveAnswer(const std::string& i_line);
+  void reset(const std::string& i_cmd = ""); /* command to run at startup */
+  void execCommand(const std::string& i_action);
 
  private:
   UIConsoleHook* m_hook;

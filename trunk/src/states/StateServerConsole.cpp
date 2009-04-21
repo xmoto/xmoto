@@ -45,6 +45,7 @@ StateServerConsole::~StateServerConsole() {
 void StateServerConsole::enter()
 {
   createGUIIfNeeded();
+  m_console->reset("banner");
   m_GUI = m_sGUI;
 
   StateMenu::enter();

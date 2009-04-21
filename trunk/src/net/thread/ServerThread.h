@@ -122,6 +122,8 @@ class ServerThread : public XMThread {
 
   unsigned int m_nFollowingUdp; // to avoid tcp famine
   unsigned int m_nInactivNetLoop; // number of loop without traffic
+  std::string m_startTimeStr;
+  std::string m_banner;
 
   SDLNet_SocketSet m_set;
   std::vector<NetSClient*> m_clients;

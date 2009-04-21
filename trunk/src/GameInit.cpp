@@ -287,6 +287,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     v_missingFont = true;
     v_missingFontError = e.getMsg();
     Locales::changeLocale("en_US");
+    LogWarning("font prerequisites missing, switching to en_US: %s", e.getMsg().c_str());
   }
 #endif
 

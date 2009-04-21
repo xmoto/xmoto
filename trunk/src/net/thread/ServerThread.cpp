@@ -47,6 +47,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_SERVER_DEFAULT_BAN_NBDAYS 30
 #define XM_SERVER_MAX_FOLLOWING_UDP 100
 #define XM_SERVER_MIN_INACTIVITY_LOOP_TO_SLEEP 1000
+#define XM_SERVER_DEFAULT_BANNER "Welcome on this server"
 
 NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
     m_id   = i_id;
@@ -202,6 +203,8 @@ ServerThread::ServerThread(const std::string& i_dbKey)
     m_currentFrame       = 0;
     m_nFollowingUdp      = 0;
     m_nInactivNetLoop    = 0;
+    m_startTimeStr       = GameApp::getTimeStamp();
+    m_banner             = XM_SERVER_DEFAULT_BANNER;
 
     if(!m_udpPacket) {
       throw Exception("SDLNet_AllocPacket: " + std::string(SDLNet_GetError()));
@@ -1098,7 +1101,17 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "lsadmins: list admins\n";
       v_answer += "addadmin <id player> <password>: add player <id player> as admin\n";
       v_answer += "rmadmin <id admin>: remove admin\n";
+      v_answer += "stats: server statistics\n";
     }
+
+  } else if(v_args[0] == "banner") {
+    if(v_args.size() != 1) {
+      v_answer += "banner: invalid arguments\n";
+    } else {
+      v_answer += m_banner + "\n";
+      v_answer += "Type help to get more information";
+    }
+
   } else if(v_args[0] == "login") {
     if(v_args.size() == 1) { // no arguments (local admins)
       if(XMNet::getIp(m_clients[i_client]->tcpRemoteIP()) == "127.0.0.1") {
@@ -1261,6 +1274,14 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     } else {
       m_pDb->srv_removeBan(atoi(v_args[1].c_str()));
       v_answer += "ban removed\n";
+    }
+
+  } else if(v_args[0] == "stats") {
+    if(v_args.size() != 1) {
+      v_answer += "stats: invalid arguments\n";
+    } else {
+      v_answer += "start time : " + m_startTimeStr + "\n";
+      v_answer += NetAction::getStats() + "\n";
     }
 
   } else {

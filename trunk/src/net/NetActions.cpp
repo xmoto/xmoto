@@ -104,6 +104,25 @@ std::string NetAction::getFancyBytes(unsigned int i_bytes) {
   return v_s.str();
 }
 
+/* std::string version */
+std::string NetAction::getStats() {
+  std::string v_stats;
+
+  std::ostringstream v_nbTCP, v_nbUDP;
+  v_nbTCP << NetAction::m_nbTCPPacketsSent;
+  v_nbUDP << NetAction::m_nbUDPPacketsSent;
+
+  v_stats += "number of TCP packets sent : " + v_nbTCP.str()                                  + "\n";
+  v_stats += "biggest TCP packet sent : "    + getFancyBytes(NetAction::m_biggestTCPPacket)   + "\n";
+  v_stats += "size of TCP packets sent : "   + getFancyBytes(NetAction::m_TCPPacketsSizeSent) + "\n";
+  v_stats += "number of UDP packets sent : " + v_nbUDP.str()                                  + "\n";
+  v_stats += "biggest UDP packet sent : "    + getFancyBytes(NetAction::m_biggestUDPPacket)   + "\n";
+  v_stats += "size of UDP packets sent : "   + getFancyBytes(NetAction::m_UDPPacketsSizeSent);
+
+  return v_stats;
+}
+
+/* log version */
 void NetAction::logStats() {
   LogInfo("%-31s : %u", "net: number of TCP packets sent", NetAction::m_nbTCPPacketsSent);
   LogInfo("%-31s : %s", "net: biggest TCP packet sent"   , getFancyBytes(NetAction::m_biggestTCPPacket).c_str());
