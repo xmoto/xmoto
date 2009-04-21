@@ -46,6 +46,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_SERVER_PREPLAYING_TIME 300
 #define XM_SERVER_DEFAULT_BAN_NBDAYS 30
 #define XM_SERVER_MAX_FOLLOWING_UDP 100
+#define XM_SERVER_MIN_INACTIVITY_LOOP_TO_SLEEP 1000
 
 NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
     m_id   = i_id;
@@ -200,6 +201,7 @@ ServerThread::ServerThread(const std::string& i_dbKey)
     m_frameLate          = 0;
     m_currentFrame       = 0;
     m_nFollowingUdp      = 0;
+    m_nInactivNetLoop    = 0;
 
     if(!m_udpPacket) {
       throw Exception("SDLNet_AllocPacket: " + std::string(SDLNet_GetError()));
@@ -598,10 +600,10 @@ unsigned int ServerThread::nbClientsInMode(NetClientMode i_mode) {
 }
 
 void ServerThread::run_loop() {
-  bool v_canSleep = true;
-
   if(manageNetwork()) {
-    v_canSleep = false;
+    m_nInactivNetLoop = 0; // reset net activity
+  } else {
+    m_nInactivNetLoop++;
   }
 
   switch(m_sp2phase) {
@@ -628,7 +630,7 @@ void ServerThread::run_loop() {
     
   }
 
-  if(v_canSleep) {
+  if(m_nInactivNetLoop > XM_SERVER_MIN_INACTIVITY_LOOP_TO_SLEEP) {
     GameApp::wait(m_lastFrameTimeStamp, m_frameLate, m_wantedSleepingFramerate);
   }
 }
