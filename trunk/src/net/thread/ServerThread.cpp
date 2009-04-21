@@ -598,7 +598,11 @@ unsigned int ServerThread::nbClientsInMode(NetClientMode i_mode) {
 }
 
 void ServerThread::run_loop() {
-  manageNetwork();
+  bool v_canSleep = true;
+
+  if(manageNetwork()) {
+    v_canSleep = false;
+  }
 
   switch(m_sp2phase) {
 
@@ -624,12 +628,15 @@ void ServerThread::run_loop() {
     
   }
 
-  GameApp::wait(m_lastFrameTimeStamp, m_frameLate, m_wantedSleepingFramerate);
+  if(v_canSleep) {
+    GameApp::wait(m_lastFrameTimeStamp, m_frameLate, m_wantedSleepingFramerate);
+  }
 }
 
-void ServerThread::manageNetwork() {
+bool ServerThread::manageNetwork() {
   int n_activ;
   unsigned int i;
+  bool v_needMore = false;;
 
   n_activ = SDLNet_CheckSockets(m_set, 0);
   if(n_activ == -1) {
@@ -640,6 +647,8 @@ void ServerThread::manageNetwork() {
     if(n_activ == 0) {
       m_nFollowingUdp = 0;
     } else {
+      v_needMore = true;
+
       // server socket
       if(SDLNet_SocketReady(m_tcpsd)) {
 	acceptClient();
@@ -685,6 +694,8 @@ void ServerThread::manageNetwork() {
 
   // remove client marked to be removed
   cleanClientsMarkedToBeRemoved();
+
+  return v_needMore;
 }
 
 void ServerThread::removeClient(unsigned int i) {

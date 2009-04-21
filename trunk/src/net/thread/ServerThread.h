@@ -133,7 +133,7 @@ class ServerThread : public XMThread {
   bool manageAction(NetAction* i_netAction, unsigned int i_client);
 
   void run_loop();
-  void manageNetwork();
+  bool manageNetwork(); // return true if there is possibly something else to manage on network
 
   // if i_execpt >= 0, send to all exept him
   void sendToAllClients(NetAction* i_netAction, int i_src, int i_subsrc, int i_except = -1);
