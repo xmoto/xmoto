@@ -120,6 +120,8 @@ class ServerThread : public XMThread {
   int m_sceneStartTime;
   int m_lastPrepareToGoAlert;
 
+  unsigned int m_nFollowingUdp; // to avoid tcp famine
+
   SDLNet_SocketSet m_set;
   std::vector<NetSClient*> m_clients;
 

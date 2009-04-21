@@ -45,6 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_SERVER_MAX_UDP_PACKET_SIZE 1024 // bytes
 #define XM_SERVER_PREPLAYING_TIME 300
 #define XM_SERVER_DEFAULT_BAN_NBDAYS 30
+#define XM_SERVER_MAX_FOLLOWING_UDP 100
 
 NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
     m_id   = i_id;
@@ -198,6 +199,7 @@ ServerThread::ServerThread(const std::string& i_dbKey)
     m_lastFrameTimeStamp = -1;
     m_frameLate          = 0;
     m_currentFrame       = 0;
+    m_nFollowingUdp      = 0;
 
     if(!m_udpPacket) {
       throw Exception("SDLNet_AllocPacket: " + std::string(SDLNet_GetError()));
@@ -635,16 +637,24 @@ void ServerThread::manageNetwork() {
     m_askThreadToEnd = true;
   } else {
     
-    if(n_activ != 0) {
+    if(n_activ == 0) {
+      m_nFollowingUdp = 0;
+    } else {
       // server socket
       if(SDLNet_SocketReady(m_tcpsd)) {
 	acceptClient();
       }
       
-      if(SDLNet_SocketReady(m_udpsd)) {
+      /*
+	avoid udp only management ; by the way, avoid (check tcp at least every MAX_FOLLOWING_UDP)
+	but don't check at each time tcp packets while it's less a  priority and less often
+       */
+      if(m_nFollowingUdp < XM_SERVER_MAX_FOLLOWING_UDP && SDLNet_SocketReady(m_udpsd)) {
 	manageClientUDP();
+	m_nFollowingUdp++;
       } else {
-	
+	m_nFollowingUdp = 0;	
+
 	i = 0;
 	while(i<m_clients.size()) {
 	  if(SDLNet_SocketReady(*(m_clients[i]->tcpSocket()))) {
