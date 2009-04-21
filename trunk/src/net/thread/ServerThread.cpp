@@ -1253,6 +1253,8 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
   } else if(v_args[0] == "ban") {
     if(v_args.size() != 3 && v_args.size() != 4) {
       v_answer += "ban: invalid arguments\n";
+    } if(v_args[2] != "ip" && v_args[2] != "profile") {
+      v_answer += "ban: invalid arguments\n";
     } else {
 
       try {
