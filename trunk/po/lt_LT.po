@@ -1,17 +1,17 @@
 # Lithuanian translations for xmoto package.
 # Copyright (C) 2008 X-Moto Development Team
 # This file is distributed under the same license as the xmoto package.
-# Tadas Masiulionis <tadzikaz@gmail.com>, 2008.
-# 
-# 
+#
+#
+# Tadas Masiulionis <tadzikaz@gmail.com>, 2008, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-04-19 13:10+0200\n"
-"PO-Revision-Date: 2009-03-07 15:48+0200\n"
+"PO-Revision-Date: 2009-04-19 21:24+0300\n"
 "Last-Translator: Tadas Masiulionis <tadzikaz@gmail.com>\n"
-"Language-Team: Lithuanian\n"
+"Language-Team: Lithuanian <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -457,11 +457,11 @@ msgstr "Žmonėms, kurie pranešė apie klaidas"
 
 #: src/GameText.h:173
 msgid "Anyone who has helped in any way"
-msgstr "Visiems, kurie padėjo bet kokiu atveju"
+msgstr "Visiems, kurie padėjo bet kokiu būdu"
 
 #: src/GameText.h:175
 msgid "Credits"
-msgstr "Padėkos"
+msgstr "Autoriai"
 
 #: src/GameText.h:176
 msgid "Player"
@@ -469,7 +469,7 @@ msgstr "Žaidėjas"
 
 #: src/GameText.h:177
 msgid "Play music on all levels"
-msgstr "Leisti muziką visuose lygiuose"
+msgstr "Įjungti muziką visuose lygiuose"
 
 #: src/GameText.h:178
 msgid "Date"
@@ -1423,7 +1423,7 @@ msgstr "STATISTIKA"
 
 #: src/GameText.h:416
 msgid "You are currently disconnected"
-msgstr ""
+msgstr "Jūs esate atsijungęs"
 
 #: src/GameText.h:417
 msgid "Stereo"
@@ -2829,11 +2829,11 @@ msgstr "Jūsų pasisavinti lygių rekordai"
 
 #: src/GameText.h:777
 msgid "Ugly mode enabled"
-msgstr "Bjaurus režimas įjungtas"
+msgstr "Netvarkingas režimas įjungtas"
 
 #: src/GameText.h:778
 msgid "Ugly mode disabled"
-msgstr "Bjaurus režimas išjungtas"
+msgstr "Netvarkingas režimas išjungtas"
 
 #: src/GameText.h:779
 msgid "Theme mode enabled"
