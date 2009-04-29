@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-04-19 13:10+0200\n"
-"PO-Revision-Date: 2008-09-07 13:48+0100\n"
+"PO-Revision-Date: 2009-04-28 19:21+0100\n"
 "Last-Translator: Zoltán Balogh <ttapecs@gmail.com>\n"
 "Language-Team: X-moto\n"
 "MIME-Version: 1.0\n"
@@ -297,11 +297,11 @@ msgstr "semmi"
 
 #: src/GameText.h:106
 msgid "You must restart so that this option takes effect"
-msgstr ""
+msgstr "Újra kell indítanod ehhez a beállításhoz"
 
 #: src/GameText.h:107
 msgid "You must reconnect to the server so that this option takes effect"
-msgstr ""
+msgstr "Újra kell csatlakoznod a szerverre, hogy ez a beállítás életbe lépjen"
 
 #: src/GameText.h:108
 msgid "Script action"
@@ -393,7 +393,7 @@ msgstr "Dán"
 
 #: src/GameText.h:154
 msgid "Lithuanian"
-msgstr ""
+msgstr "Litván"
 
 #: src/GameText.h:156
 msgid "Main testers"
@@ -457,7 +457,7 @@ msgstr "Játékos"
 
 #: src/GameText.h:177
 msgid "Play music on all levels"
-msgstr ""
+msgstr "Zene játszása minden pályán"
 
 #: src/GameText.h:178
 msgid "Date"
@@ -553,7 +553,7 @@ msgstr "Szelleminformáció megjelenítése"
 
 #: src/GameText.h:198
 msgid "Display bike arrow indication"
-msgstr ""
+msgstr "Motorhelyzetnyíl mutatása"
 
 #: src/GameText.h:199
 msgid "Direct Connection"
@@ -789,11 +789,13 @@ msgid ""
 "Please wait the next party\n"
 "Or press escape to disconnect"
 msgstr ""
+"Kérlek várd meg a következő kört\n"
+"Vagy nyomd meg az escape-et, hogy lecsatlakozz"
 
 #: src/GameText.h:254
 #, c-format
 msgid "Web ghost of %s"
-msgstr ""
+msgstr "%s webszelleme"
 
 #: src/GameText.h:255
 msgid "Ghost"
@@ -881,12 +883,12 @@ msgstr "Magas"
 
 #: src/GameText.h:279
 msgid "Highscore of the room"
-msgstr ""
+msgstr "A szoba legjobb eredménye"
 
 #: src/GameText.h:280
 #, c-format
 msgid "%s: %s beat your highscore for level '%s'"
-msgstr ""
+msgstr "%s: %s megdöntötte a legjobb idődet a '%s' pályán"
 
 #: src/GameText.h:281
 msgid "Levels are being added into the database. Please wait."
@@ -1267,7 +1269,7 @@ msgstr "Nyomj le egy billentyűt: '%s' vagy az ESC-et visszavonáshoz"
 #: src/GameText.h:380
 #, c-format
 msgid "Press %s to chat"
-msgstr ""
+msgstr "Nyomj %s-t a chathez"
 
 #: src/GameText.h:381
 msgid "Proxy Server"
@@ -1344,7 +1346,7 @@ msgstr "Pálya Újrakezdése"
 
 #: src/GameText.h:400
 msgid "Restart level"
-msgstr ""
+msgstr "Pálya újrakezdése"
 
 #: src/GameText.h:401
 msgid "Resume Playing"
@@ -1377,7 +1379,7 @@ msgstr "Mutat"
 
 #: src/GameText.h:409
 msgid "Show console"
-msgstr ""
+msgstr "Konzol mutatása"
 
 #: src/GameText.h:410
 msgid "Speedometer"
@@ -1401,7 +1403,7 @@ msgstr "STATISZTIKA"
 
 #: src/GameText.h:416
 msgid "You are currently disconnected"
-msgstr ""
+msgstr "Nem vagy csatlakozva"
 
 #: src/GameText.h:417
 msgid "Stereo"
@@ -1546,7 +1548,7 @@ msgstr "Profil használata"
 
 #: src/GameText.h:451
 msgid "Allow web forms"
-msgstr ""
+msgstr "Webes kérdőívek engedélyezése"
 
 #: src/GameText.h:452
 msgid "Using HTTP Proxy"
@@ -1671,7 +1673,7 @@ msgstr "Mindet"
 
 #: src/GameText.h:480
 msgid "Your best time"
-msgstr ""
+msgstr "A legjobb időd"
 
 #: src/GameText.h:481
 msgid "Zoom in"
@@ -1687,90 +1689,90 @@ msgstr "Távolítás"
 
 #: src/GameText.h:485
 msgid "Server"
-msgstr ""
+msgstr "Szerver"
 
 #: src/GameText.h:487
 msgid "Launch at startup"
-msgstr ""
+msgstr "Indítás programinduláskor"
 
 #: src/GameText.h:488
 msgid "Start the server"
-msgstr ""
+msgstr "Szerver indítása"
 
 #: src/GameText.h:489
 msgid "Stop the server"
-msgstr ""
+msgstr "Szerver leállítása"
 
 #: src/GameText.h:490
 msgid "Server is currently started"
-msgstr ""
+msgstr "Szerver fut"
 
 #: src/GameText.h:491
 msgid "Server is currently stopped"
-msgstr ""
+msgstr "Szerver nem fut"
 
 #: src/GameText.h:492
 msgid "Default port"
-msgstr ""
+msgstr "Alapértelmezett port"
 
 #: src/GameText.h:493
 msgid "Custom port"
-msgstr ""
+msgstr "Saját port"
 
 #: src/GameText.h:494
 msgid "Network"
-msgstr ""
+msgstr "Hálózat"
 
 #: src/GameText.h:495
 msgid "Simple ghost mode"
-msgstr ""
+msgstr "Egyszerű szellem mód"
 
 #: src/GameText.h:496
 msgid "You're currently connected"
-msgstr ""
+msgstr "Csatlakozva vagy"
 
 #: src/GameText.h:497
 msgid "You're currently disconnected"
-msgstr ""
+msgstr "Nem vagy csatlakozva"
 
 #: src/GameText.h:498
 msgid "Connect"
-msgstr ""
+msgstr "Csatlakozás"
 
 #: src/GameText.h:499
 msgid "Disconnect"
-msgstr ""
+msgstr "Lecsatlakozás"
 
 #: src/GameText.h:500
 msgid "Unable to connect on the server"
-msgstr ""
+msgstr "Nem sikerült csatlakozni a szerverhez"
 
 #: src/GameText.h:501
 msgid "Network error: you're disconnected"
-msgstr ""
+msgstr "Hálózati hiba: nem vagy csatlakozva"
 
 #: src/GameText.h:502
 msgid "Connected players:"
-msgstr ""
+msgstr "Csatlakozott játékosok"
 
 #: src/GameText.h:503
 msgid "Chat message"
-msgstr ""
+msgstr "Chat üzenet"
 
 #: src/GameText.h:504
 #, c-format
 msgid "%s joined the game"
-msgstr ""
+msgstr "%s csatlakozott a játékhoz"
 
 #: src/GameText.h:505
 #, c-format
 msgid "%s left the game"
-msgstr ""
+msgstr "%s elhagyta a játékot"
 
 #: src/GameText.h:506
 #, c-format
 msgid "%s is playing level %s"
-msgstr ""
+msgstr "%s a(z) %s pályát játssza"
 
 #: src/GameText.h:515
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -1911,6 +1913,7 @@ msgstr "A silány pályacsomag frissítése az Internetes információk alapján
 #: src/GameText.h:549
 msgid "Allow X-Moto to ask you your mind about levels"
 msgstr ""
+"X-Moto engedése, hogy megkérdezze a véleményed a pályákkal kapcsolatban"
 
 #: src/GameText.h:550
 msgid "Enable high-color graphics"
@@ -2113,7 +2116,7 @@ msgstr "Szellem tulajdonosának kiírása pálya kezdésekor"
 
 #: src/GameText.h:600
 msgid "Display an arrow to display where are located the bikes on the map"
-msgstr ""
+msgstr "Egy nyíl mutatása a motorok elhelyezkedéséről a pályán"
 
 #: src/GameText.h:601
 msgid "Display the time difference between the ghost and you"
@@ -2284,7 +2287,7 @@ msgstr "Írj be szöveget hogy szűrd a visszajátszáslistát"
 
 #: src/GameText.h:644
 msgid "Enter text to filter the rooms list"
-msgstr ""
+msgstr "Írj be szöveget hogy szűrd a szobalistát"
 
 #: src/GameText.h:645
 msgid "Press to play X-Moto immediately"
@@ -2378,140 +2381,141 @@ msgstr ""
 
 #: src/GameText.h:671
 msgid "Give your mind about this level"
-msgstr ""
+msgstr "Mondd el a véleményed a pályáról"
 
 #: src/GameText.h:672
 msgid "No idea"
-msgstr ""
+msgstr "Nem tudom"
 
 #: src/GameText.h:673
 msgid "Beginner"
-msgstr ""
+msgstr "Kezdő"
 
 #: src/GameText.h:674
 msgid "Expert"
-msgstr ""
+msgstr "Haladó"
 
 #: src/GameText.h:675
 msgid "Master"
-msgstr ""
+msgstr "Mester"
 
 #: src/GameText.h:676
 msgid "God"
-msgstr ""
+msgstr "Isten"
 
 #: src/GameText.h:677
 msgid "Go !"
-msgstr ""
+msgstr "Nyomás !"
 
 #: src/GameText.h:678
 msgid "Not nice at all"
-msgstr ""
+msgstr "Nem túl szép"
 
 #: src/GameText.h:679
 msgid "Not nice"
-msgstr ""
+msgstr "Nem szép"
 
 #: src/GameText.h:680
 msgid "Nice"
-msgstr ""
+msgstr "Szép"
 
 #: src/GameText.h:681
 msgid "Really nice"
-msgstr ""
+msgstr "Nagyon szép"
 
 #: src/GameText.h:682
 msgid "Send this report"
-msgstr ""
+msgstr "Jelentés küldése"
 
 #: src/GameText.h:683
 msgid "Skip this report"
-msgstr ""
+msgstr "Jelentés kihagyása"
 
 #: src/GameText.h:685
 msgid "You don't want to vote"
-msgstr ""
+msgstr "Nem akarok szavazni"
 
 #: src/GameText.h:686
 msgid "Really easy"
-msgstr ""
+msgstr "Nagyon könnyű"
 
 #: src/GameText.h:687
 msgid "No technical difficulty"
-msgstr ""
+msgstr "Nincs technikai nehézség"
 
 #: src/GameText.h:688
 msgid "At least one difficulty"
-msgstr ""
+msgstr "Legalább egy nehézség"
 
 #: src/GameText.h:689
 msgid "Several difficulties"
-msgstr ""
+msgstr "Sok nehézség"
 
 #: src/GameText.h:690
 msgid "Impossible"
-msgstr ""
+msgstr "Lehetetlen"
 
 #: src/GameText.h:691
 msgid "Basic blocks, no decoration"
-msgstr ""
+msgstr "Egyszerű tömbök, nincs díszítés"
 
 #: src/GameText.h:692
 msgid "Basic decoration, not smooth blocks"
-msgstr ""
+msgstr "Alap dekoráció, nincsenek simított tömbök"
 
 #: src/GameText.h:693
 msgid "Not original"
-msgstr ""
+msgstr "Nem eredeti"
 
 #: src/GameText.h:694
 msgid "Nice, could be better"
-msgstr ""
+msgstr "Szép, de lehetne szebb"
 
 #: src/GameText.h:695
 msgid "Several textures, sprites, ..."
-msgstr ""
+msgstr "Számos textúra, plakát, ..."
 
 #: src/GameText.h:696
 msgid "Send this report on the webserver"
-msgstr ""
+msgstr "Küldd el ezt a jelentést a webszerverre"
 
 #: src/GameText.h:697
 msgid "Don't send this report on the webserver"
-msgstr ""
+msgstr "Ne küldd el ezt a jelentést a webszerverre"
 
 #: src/GameText.h:699
 msgid "Server configuration to play via the network"
-msgstr ""
+msgstr "Szerver beállítások a hálózati játékhoz"
 
 #: src/GameText.h:700
 msgid "Start the server at X-Moto startup"
-msgstr ""
+msgstr "Szerver indítása X-Moto indulásakor"
 
 #: src/GameText.h:701
 msgid "Start/stop the server"
-msgstr ""
+msgstr "Szerver indítása/leállítása"
 
 #: src/GameText.h:702
 msgid "Port on which the server must listen to"
-msgstr ""
+msgstr "Port amin figyel a szerver"
 
 #: src/GameText.h:703
 msgid "Server on which you want to connect"
-msgstr ""
+msgstr "Szerver amire csatlakozni akarsz"
 
 #: src/GameText.h:704
 msgid "Connect/disconnect the client to the server"
-msgstr ""
+msgstr "Csatlakozás/lecsatlakozás a szerverről"
 
 #: src/GameText.h:705
 msgid ""
 "Enables background music for levels that do not have their own music track"
 msgstr ""
+"Háttérzene engedélyezése azokra a pályákra amelyeknek nincs saját zeneszámuk"
 
 #: src/GameText.h:706
 msgid "Network playing mode : just see other players as ghosts"
-msgstr ""
+msgstr "Hálózati játék mód: a többiek, csak mint szellemek látása"
 
 #: src/GameText.h:708
 msgid "Levels with no highscore"
@@ -2635,7 +2639,7 @@ msgstr "Nagyon hosszú pályák"
 
 #: src/GameText.h:740
 msgid "Stolen highscores"
-msgstr ""
+msgstr "Ellopott legjobb eredmények"
 
 #: src/GameText.h:742
 msgid "Levels with no highscore in your room"
@@ -2771,7 +2775,7 @@ msgstr "A leghosszabb pályák (több mint 2 perc)"
 
 #: src/GameText.h:775
 msgid "Levels for which you owned the highscore"
-msgstr ""
+msgstr "Pályák, amiken a tied volt a legjobb eredmény"
 
 #: src/GameText.h:777
 msgid "Ugly mode enabled"
@@ -2848,6 +2852,8 @@ msgid ""
 "Physic levels recording is still not implemented.\n"
 "Sorry."
 msgstr ""
+"A visszajátszás a fizikás pályákhoz még nincs támogatva.\n"
+"Bocsi."
 
 #: src/GameText.h:797
 #, c-format
@@ -3143,9 +3149,3 @@ msgid ""
 msgstr ""
 "Most az utolsó... Ez nem olyan hosszú, de helyette\n"
 "még kevesebb hely van a drága fejednek. Sok sikert! :)"
-
-#~ msgid "Musical levels"
-#~ msgstr "Zenés pályák"
-
-#~ msgid "X-Moto levels with a background music"
-#~ msgstr "X-Moto pályák háttérzenével"
