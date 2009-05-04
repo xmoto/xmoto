@@ -209,6 +209,12 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     else{
       LogDebug("skySprite is NULL [%s]", v_level->Sky()->Texture().c_str());
     }
+    TextureSprite* skySprite2 =(TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->BlendTexture());
+    if(skySprite2 != NULL)
+      skySprite2->loadTextures();
+    else{
+      LogDebug("skySprite2 is NULL [%s]", v_level->Sky()->BlendTexture().c_str());
+    }    
 
     AnimationSprite* v_sprite = NULL;
     v_sprite = (AnimationSprite*)v_level->wreckerSprite();
@@ -2265,6 +2271,7 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
 			      float i_driftZoom, const TColor& i_driftColor, bool i_drifted) {
   DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
   TextureSprite* pType;
+  TextureSprite* pType2;
   float fDrift = 0.0;
   float uZoom = 1.0 / i_zoom;
   float uDriftZoom = 1.0 / i_driftZoom;
@@ -2275,10 +2282,14 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
 
   pType = (TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
 							i_scene->getLevelSrc()->Sky()->Texture());
+  pType2= (TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
+                                                        i_scene->getLevelSrc()->Sky()->BlendTexture());
   
-  if(pType != NULL) {
+  
+  if(pType != NULL && pType2 != NULL) {
     if(i_drifted) {
       pDrawlib->setTexture(pType->getTexture(), BLEND_MODE_A);
+//      pDrawlib->setTexture(pType->getTexture(), BLEND_MODE_B);
     }
     
     pDrawlib->setTexture(pType->getTexture(),BLEND_MODE_NONE);
@@ -2300,7 +2311,7 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
     pDrawlib->endDraw();
     
     if(i_drifted) {
-      pDrawlib->setTexture(pType->getTexture(),BLEND_MODE_B);
+      pDrawlib->setTexture(pType2->getTexture(),BLEND_MODE_B);
       pDrawlib->startDraw(DRAW_MODE_POLYGON);
       pDrawlib->setColorRGBA(i_driftColor.Red(), i_driftColor.Green(), i_driftColor.Blue(), i_driftColor.Alpha());
       fDrift = GameApp::instance()->getXMTime() / 15.0f;

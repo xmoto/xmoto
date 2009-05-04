@@ -29,6 +29,7 @@ SkyApparence::~SkyApparence() {
 
 void SkyApparence::reInit() {
     m_texture     = "sky1";
+    m_blendTexture= m_texture;
     m_zoom        = 1.0;
     m_offset      = 0.015;
     m_driftZoom   = 1.0;
@@ -91,6 +92,10 @@ std::string SkyApparence::Texture() const {
   return m_texture;
 }
 
+std::string SkyApparence::BlendTexture() const {
+  return m_blendTexture;
+}
+
 float SkyApparence::Zoom() const {
   return m_zoom;
 }
@@ -118,6 +123,10 @@ const TColor& SkyApparence::DriftTextureColor() const {
 
 void SkyApparence::setTexture(std::string i_texture) {
   m_texture = i_texture;
+}
+
+void SkyApparence::setBlendTexture(std::string i_texture) {
+  m_blendTexture = i_texture;
 }
 
 void SkyApparence::setZoom(float i_zoom) {

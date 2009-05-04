@@ -417,7 +417,11 @@ void Level::loadXML() {
       
       /* Sky */
       Tmp = XML::getElementText(*m_xmlSource, pInfoElem,"sky");
-      if(Tmp != "") m_sky->setTexture(Tmp);
+      if(Tmp != "") {
+        m_sky->setTexture(Tmp);
+        m_sky->setBlendTexture(Tmp);
+      }
+      
 
       /* advanced sky parameters ? */
       bool v_useAdvancedOptions = false;
@@ -478,6 +482,14 @@ void Level::loadXML() {
 	    m_sky->setDriftTextureColor(TColor(v_r, v_g, v_b, v_a)); 
 	  }
 	}
+	
+	/* Sky Blend texture */
+        v_skyValue = XML::getOption(pSkyElem, "BlendTexture");
+	if(v_skyValue != "") {
+	  m_sky->setBlendTexture(v_skyValue.c_str());
+	  v_useAdvancedOptions = true;
+	}
+	
       }
       if(v_useAdvancedOptions == false) {
 	/* set old values in case no option is used */
@@ -720,7 +732,9 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
     FS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Green());
     FS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Blue());
     FS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Alpha());
-
+    
+    FS::writeString(pfh,   m_sky->BlendTexture());
+    
     FS::writeString(pfh,m_borderTexture);
     FS::writeString(pfh,m_scriptFileName);
 
@@ -934,7 +948,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         m_sky->setTexture(FS::readString(pfh));
 	m_sky->setZoom(FS::readFloat_LE(pfh));
 	m_sky->setOffset(FS::readFloat_LE(pfh));
-
+        
 	int v_r, v_g, v_b, v_a;
 	v_r = FS::readInt_LE(pfh);
 	v_g = FS::readInt_LE(pfh);
@@ -951,7 +965,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
 	v_a = FS::readInt_LE(pfh);
 	m_sky->setDriftTextureColor(TColor(v_r, v_g, v_b, v_a));
 	/* *** */
-
+        m_sky->setBlendTexture(FS::readString(pfh));
         m_borderTexture = FS::readString(pfh);
 
         m_scriptFileName = FS::readString(pfh);

@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     ~SkyApparence();
     
     std::string Texture() const;
+    std::string BlendTexture() const;
     float Zoom() const;
     float Offset() const;
     const TColor& TextureColor() const;
@@ -38,6 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     const TColor& DriftTextureColor() const;
     
     void setTexture(std::string i_texture);
+    void setBlendTexture(std::string i_texture);
     void setZoom(float i_zoom);
     void setOffset(float i_offset);
     void setTextureColor(const TColor& i_color);
@@ -50,6 +52,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     private:
     std::string                 m_texture;
+    std::string                 m_blendTexture;
     float  			m_zoom;
     float  			m_offset;
     TColor 			m_color;
