@@ -79,7 +79,8 @@ void xmDatabase::sync_buildServerFile(const std::string& i_outFile, const std::s
 	       XML::str2xmlstr(getResult(v_result, 8, i, 1)).c_str(),
 	       atoi(getResult(v_result, 8, i, 2)), atoi(getResult(v_result, 8, i, 3)),
 	       atoi(getResult(v_result, 8, i, 4)), atoi(getResult(v_result, 8, i, 5)),
-	       atoi(getResult(v_result, 8, i, 6)), getResult(v_result, 8, i, 7) == NULL ? "" : getResult(v_result, 8, i, 7));
+	       getResult(v_result, 8, i, 6) == NULL ? 0 : atoi(getResult(v_result, 8, i, 6)),
+	       getResult(v_result, 8, i, 7) == NULL ? "" : getResult(v_result, 8, i, 7));
       FS::writeLine(pfh, v_line);
     }
     FS::writeLine(pfh, "</stats_levels>");
