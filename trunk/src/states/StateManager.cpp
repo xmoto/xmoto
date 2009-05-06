@@ -325,8 +325,13 @@ VideoRecorder* StateManager::getVideoRecorder() {
 }
 
 void StateManager::drawFps() {
-  char cTemp[256];        
-  snprintf(cTemp, 256, "u(%i) d(%i)", getCurrentUpdateFPS(), getCurrentRenderFPS());
+  char cTemp[128];        
+
+  if(NetClient::instance()->isConnected()) {
+    snprintf(cTemp, 128, "u(%i) d(%i) n(%i)", getCurrentUpdateFPS(), getCurrentRenderFPS(), NetClient::instance()->getOwnFrameFPS());
+  } else {
+    snprintf(cTemp, 128, "u(%i) d(%i)", getCurrentUpdateFPS(), getCurrentRenderFPS());
+  }
 
   FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg = v_fm->getGlyph(cTemp);

@@ -1221,7 +1221,6 @@ void XMSession::setClientServerName(const std::string& i_value) {
 }
 
 bool XMSession::clientGhostMode() const {
-  return true; // still not official
   return m_clientGhostMode;
 }
 

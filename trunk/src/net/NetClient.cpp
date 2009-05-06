@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "thread/ClientListenerThread.h"
 #include "../helpers/VExcept.h"
 #include "../helpers/Log.h"
+#include "../Game.h"
 #include "helpers/Net.h"
 #include "../XMSession.h"
 #include "../states/StateManager.h"
@@ -56,6 +57,10 @@ NetClient::NetClient() {
     std::ostringstream v_rd;
     v_rd << randomIntNum(1, RAND_MAX);
     m_udpBindKey = v_rd.str();
+
+    m_lastOwnFPS = 0;
+    m_currentOwnFramesNb = 0;
+    m_currentOwnFramesTime = GameApp::getXMTimeInt();
 }
 
 NetClient::~NetClient() {
@@ -241,6 +246,10 @@ unsigned int NetClient::getOtherClientNumberById(int i_id) const {
   throw Exception("Invalid id");
 }
 
+int NetClient::getOwnFrameFPS() const {
+  return m_lastOwnFPS;
+}
+
 void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
   switch(i_netAction->actionType()) {
 
@@ -287,6 +296,14 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 
       /* the server sending us our own frame */
       if(i_netAction->getSource() == -1) {
+
+	if(GameApp::getXMTimeInt() - m_currentOwnFramesTime > 1000) {
+	  m_lastOwnFPS = (m_currentOwnFramesNb*1000) / (GameApp::getXMTimeInt() - m_currentOwnFramesTime);
+	  m_currentOwnFramesTime = GameApp::getXMTimeInt();
+	  m_currentOwnFramesNb = 0;
+	}
+	m_currentOwnFramesNb++;
+
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	  for(unsigned int j=0; j<m_universe->getScenes()[i]->Players().size(); j++) {
 	      BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(),

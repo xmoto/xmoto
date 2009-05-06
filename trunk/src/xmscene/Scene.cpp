@@ -215,7 +215,7 @@ void Scene::cleanPlayers() {
   /*===========================================================================
     Update game
     ===========================================================================*/
-  void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder) {
+void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder, bool i_fast) {
     float v_diff;
     int v_previousTime;
     bool v_recordReplay;
@@ -324,7 +324,7 @@ void Scene::cleanPlayers() {
     }
 
     /* save the replay */
-    if(v_recordReplay || v_uploadFrame) {
+    if((v_recordReplay || v_uploadFrame) && i_fast == false) {
       for(unsigned int i=0; i<Players().size(); i++) {
 
 	// in both case, don't get when player is dead (in the frame, you don't get the 'died' information, thus via the network, you're not able to draw the player correctly)

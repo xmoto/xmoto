@@ -88,6 +88,8 @@ class NetClient : public Singleton<NetClient> {
 
   std::vector<NetOtherClient*>& otherClients();
 
+  int getOwnFrameFPS() const;
+
   private:
   bool m_isConnected;
   IPaddress serverIp;
@@ -109,6 +111,10 @@ class NetClient : public Singleton<NetClient> {
 
   void manageAction(xmDatabase* pDb, NetAction* i_netAction);
   void cleanOtherClientsGhosts();
+
+  int m_lastOwnFPS;
+  int m_currentOwnFramesNb;
+  int m_currentOwnFramesTime;
 };
 
 #endif

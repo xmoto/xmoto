@@ -119,6 +119,7 @@ class ServerThread : public XMThread {
   int m_currentFrame;
   int m_sceneStartTime;
   int m_lastPrepareToGoAlert;
+  int m_firstFrameSent; // send the first frame only one time before the game starts
 
   unsigned int m_nFollowingUdp; // to avoid tcp famine
   unsigned int m_nInactivNetLoop; // number of loop without traffic

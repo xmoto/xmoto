@@ -122,7 +122,7 @@ public:
   void prePlayLevel(DBuffer* i_eventRecorder, bool i_playEvents);
 
   void playLevel();
-  void updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder);
+  void updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder, bool i_fast = false);
   void endLevel();
 
   /* entities */

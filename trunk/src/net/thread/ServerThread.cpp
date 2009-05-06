@@ -37,7 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../xmscene/Level.h"
 #include "../../xmscene/BikeController.h"
 
-#define XM_SERVER_UPLOADING_FPS_PLAYER   12
+#define XM_SERVER_UPLOADING_FPS_PLAYER   20
 #define XM_SERVER_UPLOADING_FPS_OPLAYERS 8
 #define XM_SERVER_PLAYER_INACTIV_TIME_MAX  1000
 #define XM_SERVER_PLAYER_INACTIV_TIME_PREV  300
@@ -48,6 +48,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_SERVER_MAX_FOLLOWING_UDP 100
 #define XM_SERVER_MIN_INACTIVITY_LOOP_TO_SLEEP 1000
 #define XM_SERVER_DEFAULT_BANNER "Welcome on this server"
+#define XM_SERVER_UNPLAYING_SLEEP 10
 
 NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
     m_id   = i_id;
@@ -485,6 +486,8 @@ void ServerThread::SP2_updateScenePlaying() {
   int nPhysSteps;
   Scene* v_scene;
   SerializedBikeState BikeState;
+  bool v_updateDone = false;
+  bool v_firstFrame = false;
 
   if(SP2_managePreplayTime() == false) {
     SP2_manageInactivity();
@@ -492,45 +495,57 @@ void ServerThread::SP2_updateScenePlaying() {
     /* update the scene */
     m_DBuffer->clear();
     nPhysSteps =0;
+
     while (m_fLastPhysTime + (PHYS_STEP_SIZE)/100.0 <= GameApp::getXMTime() && nPhysSteps < 10) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	v_scene = m_universe->getScenes()[i];
-	v_scene->updateLevel(PHYS_STEP_SIZE, NULL, m_DBuffer);
+	v_scene->updateLevel(PHYS_STEP_SIZE, NULL, m_DBuffer, nPhysSteps!=0);
       }
+      v_updateDone = true;
       m_fLastPhysTime += PHYS_STEP_SIZE/100.0;
       nPhysSteps++;
     }
-    SP2_sendSceneEvents(m_DBuffer);
 
     // if the delay is too long, reinitialize
     if(m_fLastPhysTime + PHYS_STEP_SIZE/100.0 < GameApp::getXMTime()) {
       m_fLastPhysTime = GameApp::getXMTime();
     }
-  }
-
-  // send to each client his frame and the frame of the others
-  if(m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_PLAYER) == 0 || m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_OPLAYERS) == 0) {
-    for(unsigned int i=0; i<m_clients.size(); i++) {
-      if(m_clients[i]->isMarkedToPlay()) {
-	v_scene = m_universe->getScenes()[m_clients[i]->getNumScene()];
-
-	v_scene->getSerializedBikeState(v_scene->Players()[m_clients[i]->getNumPlayer()]->getState(),
-					v_scene->getTime(), &BikeState, v_scene->getPhysicsSettings());
-	NA_frame na(&BikeState);
-	try {
-	  if(m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_PLAYER) == 0) {
-	    sendToClient(&na, i, -1, 0);
-	  }
-	  if(m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_OPLAYERS) == 0) {
-	    sendToAllClientsMarkedToPlay(&na, m_clients[i]->id(), 0, i);
-	  }
-	} catch(Exception &e) {
-	}
-      }
+    SP2_sendSceneEvents(m_DBuffer);
+  } else {
+    /* send the first frame regularly, so that the client received it once ready */
+    if(GameApp::getXMTimeInt() - m_firstFrameSent > 100) { /* 100 => 10 times / seconde */
+      m_firstFrameSent = GameApp::getXMTimeInt();
+      v_firstFrame = true;
     }
   }
 
-  m_currentFrame = (m_currentFrame +1) % 1000;
+  // send to each client his frame and the frame of the others
+  if(v_updateDone || v_firstFrame) {
+    if(v_firstFrame ||
+       (m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_PLAYER) == 0 || m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_OPLAYERS) == 0)) {
+      for(unsigned int i=0; i<m_clients.size(); i++) {
+	if(m_clients[i]->isMarkedToPlay()) {
+	  v_scene = m_universe->getScenes()[m_clients[i]->getNumScene()];
+	  
+	  v_scene->getSerializedBikeState(v_scene->Players()[m_clients[i]->getNumPlayer()]->getState(),
+					  v_scene->getTime(), &BikeState, v_scene->getPhysicsSettings());
+	  NA_frame na(&BikeState);
+	  try {
+	    if(v_firstFrame ||
+	       m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_PLAYER) == 0) {
+	      sendToClient(&na, i, -1, 0);
+	    }
+	    if(v_firstFrame ||
+	       m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_OPLAYERS) == 0) {
+	      sendToAllClientsMarkedToPlay(&na, m_clients[i]->id(), 0, i);
+	    }
+	  } catch(Exception &e) {
+	  }
+	}
+      }
+    }
+    m_currentFrame = (m_currentFrame +1) % 1000;
+  }
 }
 
 void ServerThread::SP2_updateCheckScenePlaying() {
@@ -565,6 +580,7 @@ void ServerThread::SP2_setPhase(ServerP2Phase i_sp2phase) {
     break;
     
   case SP2_PHASE_PLAYING:
+    m_firstFrameSent = GameApp::getXMTimeInt();
     m_wantedSleepingFramerate = 200;
     try {
       SP2_initPlaying();
@@ -633,9 +649,18 @@ void ServerThread::run_loop() {
     
   }
 
-  if(m_nInactivNetLoop > XM_SERVER_MIN_INACTIVITY_LOOP_TO_SLEEP) {
-    GameApp::wait(m_lastFrameTimeStamp, m_frameLate, m_wantedSleepingFramerate);
+  if(m_sp2phase == SP2_PHASE_PLAYING) {
+    /* that's not normal that if you comment the wait, it's not smooth, find why */
+    if(m_nInactivNetLoop > XM_SERVER_MIN_INACTIVITY_LOOP_TO_SLEEP) {
+      GameApp::wait(m_lastFrameTimeStamp, m_frameLate, m_wantedSleepingFramerate);
+    }
+  } else {
+    /* sleep only if network is not active */
+    if(m_nInactivNetLoop > XM_SERVER_MIN_INACTIVITY_LOOP_TO_SLEEP) {
+      SDL_Delay(XM_SERVER_UNPLAYING_SLEEP);
+    }
   }
+
 }
 
 bool ServerThread::manageNetwork() {
