@@ -172,9 +172,12 @@ class Block {
   cpShape* getPhysicShape() {
     return m_shape;
   }
+  
+  const TColor& getBlendColor() const;
 
   void setTexture(const std::string& i_texture);
   void setTextureScale(float i_textureScale);
+  void setBlendColor(const TColor& i_blendColor);
   void setInitialPosition(const Vector2f& i_initialPosition);
   void setBackground(bool i_background);
   void setDynamic(bool i_dynamic);
@@ -260,6 +263,8 @@ private:
   float       m_textureScale;
   Vector2f    m_initialPosition;
   float       m_initialRotation;       
+  
+  TColor      m_blendColor;
 
   std::vector<BlockVertex*> m_vertices;
   std::vector<ConvexBlock*> m_convexBlocks;

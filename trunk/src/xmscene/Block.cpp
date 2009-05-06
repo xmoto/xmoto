@@ -101,6 +101,11 @@ Block::Block(std::string i_id) {
   m_collisionElement = NULL;
   m_collisionMethod  = None;
   m_collisionRadius  = 0.0f;
+  m_blendColor.setRed(255);
+  m_blendColor.setGreen(255);
+  m_blendColor.setBlue(255);
+  m_blendColor.setAlpha(255);
+
 }
 
 Block::~Block() {
@@ -123,6 +128,7 @@ Block::~Block() {
   m_collisionLines.clear();
 
   m_edgeGeoms.clear();
+  
 }
 
 void Block::setCenter(const Vector2f& i_center) {
@@ -503,6 +509,7 @@ void Block::unloadToPlay() {
     delete m_collisionLines[i];
   }
   m_collisionLines.clear();
+  
 }
 
 bool Block::isPhysics() const {
@@ -647,6 +654,7 @@ void BlockVertex::setColor(const TColor &i_color) {
   m_color = i_color;
 }
 
+
 bool Block::isPhysics_readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
   TiXmlElement* pPositionElem   = XML::findElement(*i_xmlSource, pElem, std::string("position"));
 
@@ -673,6 +681,20 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
   if(pUseTextureElem != NULL) {
     pBlock->setTexture(XML::getOption(pUseTextureElem,"id", "default"));
     pBlock->setTextureScale(atof(XML::getOption(pUseTextureElem,"scale","1").c_str()));
+    
+    
+    /* Color blending for blocks */
+    int blendColor_r = 255, blendColor_g = 255, blendColor_b = 255, blendColor_a = 255;
+    std::string v_blendColor = XML::getOption(pUseTextureElem,"color_r");
+    if(v_blendColor != "") blendColor_r = atoi(v_blendColor.c_str());
+    v_blendColor = XML::getOption(pUseTextureElem,"color_g");
+    if(v_blendColor != "") blendColor_g = atoi(v_blendColor.c_str());
+    v_blendColor = XML::getOption(pUseTextureElem,"color_b");
+    if(v_blendColor != "") blendColor_b = atoi(v_blendColor.c_str());
+    v_blendColor = XML::getOption(pUseTextureElem,"color_a");
+    if(v_blendColor != "") blendColor_a = atoi(v_blendColor.c_str());
+    pBlock->setBlendColor(TColor(blendColor_r,blendColor_g,blendColor_b,blendColor_a));
+    
   }
 
   if(pPositionElem != NULL) {
@@ -774,6 +796,12 @@ void Block::saveBinary(FileHandle *i_pfh) {
       FS::writeInt_LE(i_pfh,   getLayer());
       FS::writeString(i_pfh,   Texture());
       FS::writeFloat_LE(i_pfh, TextureScale());
+      
+      FS::writeInt_LE(i_pfh, m_blendColor.Red());
+      FS::writeInt_LE(i_pfh, m_blendColor.Green());
+      FS::writeInt_LE(i_pfh, m_blendColor.Blue());
+      FS::writeInt_LE(i_pfh, m_blendColor.Alpha());
+      
       FS::writeFloat_LE(i_pfh, InitialPosition().x);
       FS::writeFloat_LE(i_pfh, InitialPosition().y);
       FS::writeFloat_LE(i_pfh, GripPer20());
@@ -804,6 +832,13 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   pBlock->setLayer(FS::readInt_LE(i_pfh));
   pBlock->setTexture(FS::readString(i_pfh));
   pBlock->setTextureScale(FS::readFloat_LE(i_pfh));
+
+  TColor v_blendColor = TColor(255,255,255,255);
+  v_blendColor.setRed(FS::readInt_LE(i_pfh));
+  v_blendColor.setGreen(FS::readInt_LE(i_pfh));
+  v_blendColor.setBlue(FS::readInt_LE(i_pfh));
+  v_blendColor.setAlpha(FS::readInt_LE(i_pfh));
+  pBlock->setBlendColor(v_blendColor);
 
   Vector2f v_Position;
   v_Position.x = FS::readFloat_LE(i_pfh);
@@ -1029,4 +1064,14 @@ Block::CollisionMethod Block::stringToColMethod(std::string method)
     return Circle;
   else
     return None;
+}
+
+void Block::setBlendColor(const TColor& i_blendColor)
+{
+  m_blendColor = i_blendColor;
+}
+
+const TColor& Block::getBlendColor() const
+{
+  return m_blendColor;
 }

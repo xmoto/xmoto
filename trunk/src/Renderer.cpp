@@ -1951,7 +1951,11 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 	  }
 
 	  pDrawlib->setTexture(m_DynamicGeoms[geom]->pTexture, BLEND_MODE_A);
-	  pDrawlib->setColorRGB(255, 255, 255);
+	  
+	  /* set flashy blendColor */
+	  TColor v_blendColor =  TColor(block->getBlendColor());
+	  pDrawlib->setColorRGBA(v_blendColor.Red(), v_blendColor.Green(), v_blendColor.Blue(), v_blendColor.Alpha());
+
 
 	  /* VBO optimized? */
 	  if(pDrawlib->useVBOs()) {
@@ -2085,7 +2089,10 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
     int geom = block->getGeom();
     pDrawlib->setTexture(m_StaticGeoms[geom]->pTexture, BLEND_MODE_A);
-    pDrawlib->setColorRGB(255, 255, 255);
+    
+    /* set flashy blendColor */
+    TColor v_blendColor =  TColor(block->getBlendColor());
+    pDrawlib->setColorRGBA(v_blendColor.Red(), v_blendColor.Green(), v_blendColor.Blue(), v_blendColor.Alpha());
 
     if(pDrawlib->getBackend() == DrawLib::backend_OpenGl) {
 #ifdef ENABLE_OPENGL
