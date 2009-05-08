@@ -863,6 +863,7 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string texture)
   ===========================================================================*/
 #define MINIMAPZOOM 5.0f
   #define MINIMAPALPHA 128
+  #define MINIMAPALPHA_BACK 212
   #define MINIVERTEX(Px,Py) \
     pDrawlib->glVertexSP(x + nWidth/2  + (float)(Px - cameraPosX)*MINIMAPZOOM, \
                          y + nHeight/2 - (float)(Py - cameraPosY)*MINIMAPZOOM);    
@@ -883,7 +884,7 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
     float cameraPosY = pCamera->getCameraPositionY();
 
     pDrawlib->drawBox(Vector2f(x,y),Vector2f(x+nWidth,y+nHeight),1,
-				       MAKE_COLOR(0,0,0,MINIMAPALPHA),
+				       MAKE_COLOR(0,0,0,MINIMAPALPHA_BACK),
 				       MAKE_COLOR(255,255,255,MINIMAPALPHA));
     // the scissor zone is in the screen coordinates
     Vector2i bottomLeft = pCamera->getDispBottomLeft();
@@ -938,7 +939,7 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
 	    Vector2f Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition(); 	 
 
 	    pDrawlib->startDraw(DRAW_MODE_POLYGON); 	 
-	    pDrawlib->setColorRGB(128,128,128);
+	    pDrawlib->setColorRGB(168,168,168);
 	    /* TOFIX::what's THAT ??!? -->> put all the vertices in a vector and draw them in one opengl call ! */
 	    for(unsigned int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) { 	 
 	      Vector2f P = Center + ConvexBlocks[j]->Vertices()[k]->Position(); 	 
