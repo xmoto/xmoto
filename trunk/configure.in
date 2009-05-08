@@ -9,6 +9,8 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 
 dnl endianness
+dnl libkern/OSByteOrder.h for macosx
+AC_CHECK_HEADERS(libkern/OSByteOrder.h)
 AC_C_BIGENDIAN(AC_DEFINE([XMOTO_BIG_ENDIAN]),
 AC_DEFINE([XMOTO_LITTLE_ENDIAN]))
 
