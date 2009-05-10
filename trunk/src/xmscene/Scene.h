@@ -67,6 +67,8 @@ class PhysicsSettings;
 #define SER_BIKE_STATE_DIR_LEFT         0x01
 #define SER_BIKE_STATE_DIR_RIGHT        0x02
 
+enum MessageType {levelID, scripted, gameMsg};
+
 /*===========================================================================
   Arrow pointer
   ===========================================================================*/
@@ -98,6 +100,7 @@ struct GameMessage {
   std::string Text;                 /* The text */
   int nAlpha;                       /* Alpha amount */
   bool bOnce;                       /* Unique message */
+  MessageType msgType;
 };  
 
 /*===========================================================================
@@ -132,11 +135,11 @@ public:
   /* messages */
   void gameMessage(std::string Text,
 		   bool bOnce = false,
-		   int duration = MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION);
+		   int duration = MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION, MessageType i_msgType = gameMsg);
   void clearGameMessages();
   void updateGameMessages();
   std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
-
+  
   /* serialization */
   static void getSerializedBikeState(BikeState *i_bikeState, int i_time, SerializedBikeState *pState, PhysicsSettings* i_physicsSettings);
   static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation = false);

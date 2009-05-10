@@ -324,7 +324,7 @@ void StatePreplaying::secondInitPhase()
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	m_universe->getScenes()[i]->gameMessage(m_universe->getScenes()[i]->getLevelSrc()->Name(),
 						false,
-						PRESTART_ANIMATION_LEVEL_MSG_DURATION);
+						PRESTART_ANIMATION_LEVEL_MSG_DURATION, levelID);
       }
     }
   }

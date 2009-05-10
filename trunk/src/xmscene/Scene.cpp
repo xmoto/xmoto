@@ -149,7 +149,7 @@ void Scene::cleanPlayers() {
   /*===========================================================================
     Add game message
     ===========================================================================*/
-  void Scene::gameMessage(std::string Text, bool bOnce, int duration) {
+  void Scene::gameMessage(std::string Text, bool bOnce, int duration, MessageType i_msgType) {
     /* "unique"? */
     GameMessage *pMsg = NULL;
     
@@ -171,6 +171,7 @@ void Scene::cleanPlayers() {
 	pMsg->nAlpha = 255;
 	pMsg->bOnce = bOnce;
 	pMsg->Text = Text;
+	pMsg->msgType = i_msgType;
 	m_GameMessages.push_back(pMsg);	
       } else {
 	/* split the message if \n is encoutered */
@@ -195,6 +196,7 @@ void Scene::cleanPlayers() {
 	pMsg->nAlpha = 255;
 	pMsg->bOnce = bOnce;
 	pMsg->Text = v_txtRest;
+	pMsg->msgType = i_msgType;
 	m_GameMessages.push_back(pMsg);
       }
     } else {
@@ -202,6 +204,7 @@ void Scene::cleanPlayers() {
       pMsg->Text = Text;
       pMsg->removeTime = getTime() + duration;
       pMsg->nAlpha = 255;
+      pMsg->msgType = i_msgType;
     }
 
     updateGameMessages();

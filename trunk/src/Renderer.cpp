@@ -1665,10 +1665,35 @@ int GameRenderer::nbParticlesRendered() const {
         GameMessage *pMsg = i_scene->getGameMessage()[i];
 	FontManager* v_fm = pDrawlib->getFontMedium();
 	FontGlyph* v_fg = v_fm->getGlyph(pMsg->Text);
-	v_fm->printString(v_fg,
-			  (int)(pDrawlib->getDispWidth()/2 - v_fg->realWidth()/2),
-			  (int)(pMsg->Pos[1] * pDrawlib->getDispHeight()),
-			  MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
+
+	int posX = int(pDrawlib->getDispWidth()/2 - v_fg->realWidth()/2);
+	int posY = 0;
+
+	switch(i_scene->getGameMessage()[i]->msgType) {
+
+	case levelID:
+	  //put text to higher position
+	  posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight() - pDrawlib->getDispHeight()/6);
+	  pDrawlib->drawBox(Vector2f(posX- 10,posY- 5),
+			    Vector2f(posX + v_fg->realWidth() +10, posY+33),
+			    1,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,244,176,pMsg->nAlpha));
+	  break;
+	  
+	case scripted:
+	  //scripted text for display under the bike
+	  posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight() + pDrawlib->getDispHeight()/5);
+	  pDrawlib->drawBox(Vector2f(posX- 15,posY- 15),
+			    Vector2f(posX + v_fg->realWidth() +15 , posY+v_fg->realHeight()+ 15),
+			    0,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,255,255,pMsg->nAlpha));
+	  break;
+	  
+	case gameMsg:
+	  //without evil text background or border
+	  posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight());
+	  break;
+        }
+
+	v_fm->printString(v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
       }
     }
   }
