@@ -28,7 +28,7 @@ class FontGlyph;
 
 class StatePreplaying : public StateScene {
   public:
-  StatePreplaying(const std::string i_idlevel, bool i_sameLevel);
+  StatePreplaying(const std::string& i_id, const std::string i_idlevel, bool i_sameLevel);
   virtual ~StatePreplaying();
   
   virtual void enter();

@@ -27,8 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BikePlayer.h"
 #include "../Renderer.h"
 
-StatePlaying::StatePlaying(Universe* i_universe)
-: StateScene(i_universe) {
+StatePlaying::StatePlaying(Universe* i_universe, const std::string& i_id)
+: StateScene(i_universe, i_id) {
   m_displayStats = false;
 
   for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++){

@@ -41,8 +41,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define MINIMUM_VELOCITY_TO_GET_MAXIMUM_DEATH_SOUND 70.0
 
-StatePlayingLocal::StatePlayingLocal(Universe* i_universe):
-  StatePlaying(i_universe)
+StatePlayingLocal::StatePlayingLocal(Universe* i_universe, const std::string& i_id):
+StatePlaying(i_universe, i_id)
 {
   m_name = "StatePlayingLocal";
   m_gameIsFinished = false;
@@ -364,7 +364,7 @@ void StatePlayingLocal::onAllDead() {
   }
   
   if(XMSession::instance()->enableDeadAnimation()) {
-    StateManager::instance()->replaceState(new StateDeadJust(m_universe));
+    StateManager::instance()->replaceState(new StateDeadJust(m_universe, getId()), this->getId());
   } else {
     StateManager::instance()->pushState(new StateDeadMenu(m_universe, true, this));
   }

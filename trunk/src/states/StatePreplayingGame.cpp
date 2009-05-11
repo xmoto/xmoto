@@ -30,8 +30,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Game.h"
 #include "../xmscene/BikePlayer.h"
 
-StatePreplayingGame::StatePreplayingGame(const std::string i_idlevel, bool i_sameLevel)
-: StatePreplaying(i_idlevel, i_sameLevel) {
+StatePreplayingGame::StatePreplayingGame(const std::string& i_id, const std::string i_idlevel, bool i_sameLevel)
+: StatePreplaying(i_id, i_idlevel, i_sameLevel) {
     m_name  = "StatePreplayingGame";
 }
 
@@ -96,7 +96,7 @@ void StatePreplayingGame::initPlayers() {
 }
 
 void StatePreplayingGame::runPlaying() {
-  StateManager::instance()->replaceState(new StatePlayingLocal(m_universe));
+  StateManager::instance()->replaceState(new StatePlayingLocal(m_universe, getId()), this->getId());
 }
 
 void StatePreplayingGame::nextLevel(bool i_positifOrder) {

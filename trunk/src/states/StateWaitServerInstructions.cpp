@@ -26,10 +26,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../GameText.h"
 #include "../drawlib/DrawLib.h"
 
-StateWaitServerInstructions::StateWaitServerInstructions():
+StateWaitServerInstructions::StateWaitServerInstructions(const std::string& i_id):
 GameState(true, false, true, true)
 {
   m_name = "StateWaitServerInst";
+  setId(i_id);
 
   m_showCursor = false;
 
@@ -67,7 +68,8 @@ void StateWaitServerInstructions::executeOneCommand(std::string cmd, std::string
   if(cmd == "CLIENT_DISCONNECTED_BY_ERROR") {
     m_requestForEnd = true;
   } else if(cmd == "NET_PREPARE_PLAYING") {
-    StateManager::instance()->replaceState(new StatePreplayingNet(args, true));
+    StateManager::instance()->replaceState(new StatePreplayingNet(getId(), args, true),
+					   this->getId());
   } else {
     GameState::executeOneCommand(cmd, args);
   }

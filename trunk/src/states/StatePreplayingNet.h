@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StatePreplayingNet : public StatePreplaying {
   public:
-  StatePreplayingNet(const std::string i_idlevel, bool i_sameLevel);
+  StatePreplayingNet(const std::string& i_id, const std::string i_idlevel, bool i_sameLevel);
   virtual ~StatePreplayingNet();
   virtual void executeOneCommand(std::string cmd, std::string args);
   virtual void abortPlaying();

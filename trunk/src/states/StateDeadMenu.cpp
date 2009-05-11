@@ -92,7 +92,8 @@ void StateDeadMenu::enter()
   if(m_universe != NULL) {
     if(m_universe->getScenes().size() == 1) {
       if(SendVoteThread::isToPropose(xmDatabase::instance("main"), m_universe->getScenes()[0]->getLevelSrc()->Id())) {
-	StateManager::instance()->pushState(new StateVote(m_universe->getScenes()[0]->getLevelSrc()->Id()));
+	StateManager::instance()->pushState(new StateVote(StateManager::instance()->getUniqueId(),
+							  m_universe->getScenes()[0]->getLevelSrc()->Id()));
       }
     }
   }

@@ -38,8 +38,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define NEXTLEVEL_MAXTRY 10
 
-StateReplaying::StateReplaying(Universe* i_universe, const std::string& i_replay, ReplayBiker* i_replayBiker) :
-  StateScene()
+StateReplaying::StateReplaying(const std::string& i_id, Universe* i_universe, const std::string& i_replay, ReplayBiker* i_replayBiker) :
+  StateScene(i_id)
 {
   m_name         = "StateReplaying";
   m_universe     = i_universe;
@@ -97,7 +97,8 @@ void StateReplaying::enter()
     setScoresTimes();    
   } catch(Exception &e) {
     abortPlaying();
-    StateManager::instance()->replaceState(new StateMessageBox(this, splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    StateManager::instance()->replaceState(new StateMessageBox(this, splitText(e.getMsg(), 50), UI_MSGBOX_OK),
+					   this->getId());
     return;
   }
 }
@@ -162,7 +163,8 @@ void StateReplaying::nextLevel(bool i_positifOrder) {
       // if there's a highscore for the nextlevel in the main room of the
       // profile ?
       if(pGame->getHighscoreInfos(0, v_nextLevel, &v_id_profile, &v_url, &v_isAccessible)) {
-	StateManager::instance()->replaceState(new StateDownloadGhost(v_nextLevel, true));
+	StateManager::instance()->replaceState(new StateDownloadGhost(getId(), v_nextLevel, true),
+					       this->getId());
 	break;
       } else {
 	v_currentLevel = v_nextLevel;
@@ -289,5 +291,6 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 void StateReplaying::restartLevel(bool i_reloadLevel) {
   closePlaying();
   GameRenderer::instance()->unprepareForNewLevel();
-  StateManager::instance()->replaceState(new StatePreplayingReplay(m_replay, true));
+  StateManager::instance()->replaceState(new StatePreplayingReplay(getId(), m_replay, true),
+					 this->getId());
 }

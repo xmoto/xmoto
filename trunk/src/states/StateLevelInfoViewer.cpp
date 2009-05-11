@@ -110,7 +110,8 @@ void StateLevelInfoViewer::checkEvents()
       if(pListEntry != NULL && !pListEntry->Text.empty()) {
 	/* Do it captain */
 	std::string playSpecificReplay = pListEntry->Text[0];
-	StateManager::instance()->pushState(new StatePreplayingReplay(playSpecificReplay, false));
+	StateManager::instance()->pushState(new StatePreplayingReplay(StateManager::instance()->getUniqueId(),
+								      playSpecificReplay, false));
       }
     }
   }

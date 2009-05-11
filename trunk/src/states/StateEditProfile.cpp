@@ -30,13 +30,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StateEditProfile::m_sGUI = NULL;
 
-StateEditProfile::StateEditProfile(bool drawStateBehind,
+StateEditProfile::StateEditProfile(const std::string& i_id,
+				   bool drawStateBehind,
 				   bool updateStatesBehind
 				   ):
   StateMenu(drawStateBehind,
 	    updateStatesBehind)
 {
   m_name     = "StateEditProfile";
+  setId(i_id);
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("UPDATEPROFILE");
@@ -106,7 +108,7 @@ void StateEditProfile::checkEvents() {
 
     /* Should we jump to the web config now? */
     if(XMSession::instance()->webConfAtInit()) {
-      StateManager::instance()->replaceState(new StateEditWebConfig());
+      StateManager::instance()->replaceState(new StateEditWebConfig(), this->getId());
     } else{
       m_requestForEnd = true;
     }

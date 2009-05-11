@@ -40,8 +40,12 @@ private:
   ~StateManager();
 
 public:
+
+  std::string getUniqueId();
+
   void pushState(GameState* pNewState);
-  void replaceState(GameState* pNewState);
+  /* replace only the last state with id = i_parentId */
+  void replaceState(GameState* pNewState, const std::string& i_parentId);
 
   // after some events, a state can requestForEnd
   // -> return NULL or the state which requested to be ended
@@ -141,6 +145,9 @@ private:
 
   // messages and associate observer states
   std::map<std::string, std::vector<GameState*> > m_registeredStates;
+
+  //
+  int m_currentUniqueId;
 };
 
 #endif

@@ -59,7 +59,8 @@ void StateHelp::checkEvents() {
 
     try {
       GameApp::instance()->setCurrentPlayingList(NULL);
-      StateManager::instance()->pushState(new StatePreplayingGame("tut1", false));
+      StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),
+								  "tut1", false));
     } catch(Exception &e) {
     }
   }
@@ -70,7 +71,8 @@ void StateHelp::checkEvents() {
     pCreditsButton->setClicked(false);
 
     try {
-      StateManager::instance()->pushState(new StatePreplayingCredits("credits.rpl"));      
+      StateManager::instance()->pushState(new StatePreplayingCredits(StateManager::instance()->getUniqueId(),
+								     "credits.rpl"));      
     } catch(Exception &e) {
     }
   }

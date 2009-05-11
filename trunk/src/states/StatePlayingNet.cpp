@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateManager.h"
 #include "../net/NetClient.h"
 
-StatePlayingNet::StatePlayingNet(Universe* i_universe):
-  StatePlaying(i_universe)
+StatePlayingNet::StatePlayingNet(Universe* i_universe, const std::string& i_id):
+StatePlaying(i_universe, i_id)
 {
   m_name = "StatePlayingNet";
 
@@ -48,7 +48,7 @@ void StatePlayingNet::abortPlaying() {
 void StatePlayingNet::executeOneCommand(std::string cmd, std::string args) {
   if(cmd == "NET_PREPARE_PLAYING") {
     closePlaying();
-    StateManager::instance()->replaceState(new StatePreplayingNet(args, true));
+    StateManager::instance()->replaceState(new StatePreplayingNet(getId(), args, true), this->getId());
   } else {
     StatePlaying::executeOneCommand(cmd, args);
   }

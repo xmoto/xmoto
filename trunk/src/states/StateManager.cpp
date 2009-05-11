@@ -44,6 +44,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../SysMessage.h"
 #include "../xmscene/Camera.h"
 #include "../VideoRecorder.h"
+#include <sstream>
 
 StateManager::StateManager()
 {
@@ -75,6 +76,8 @@ StateManager::StateManager()
 					XMSession::instance()->videoRecordingDivision(),
 					XMSession::instance()->videoRecordingFramerate());
   }
+
+  m_currentUniqueId = 0;
 }
 
 StateManager::~StateManager()
@@ -90,6 +93,13 @@ StateManager::~StateManager()
   }
 
   m_registeredStates.clear();
+}
+
+std::string StateManager::getUniqueId() {
+  std::ostringstream v_n;
+  v_n << m_currentUniqueId;
+  m_currentUniqueId++;
+  return v_n.str();
 }
 
 void StateManager::pushState(GameState* pNewState)
@@ -133,23 +143,21 @@ void StateManager::flush() {
   }
 }
 
-void StateManager::replaceState(GameState* pNewState)
+void StateManager::replaceState(GameState* pNewState, const std::string& i_parentId)
 {
-  GameState* pPreviousState = NULL;
-
-  if(m_statesStack.size() != 0){
-    (m_statesStack.back())->leave();
-    pPreviousState = m_statesStack.back();
-    m_statesStack.pop_back();
+  for(int i=m_statesStack.size()-1; i>=0; i--) {
+    if(m_statesStack[i]->getId() == i_parentId) {
+      m_statesStack[i]->leave();
+      m_toDeleteStates.push_back(m_statesStack[i]);
+      m_statesStack[i] = pNewState;
+      pNewState->enter();
+      calculateWhichStateIsRendered();
+      calculateFps();
+      return;
+    }
   }
-  
-  m_statesStack.push_back(pNewState);
-  (m_statesStack.back())->enter();
 
-  calculateWhichStateIsRendered();
-  calculateFps();
-
-  m_toDeleteStates.push_back(pPreviousState);
+  throw Exception("No state to replace");
 }
 
 bool StateManager::needUpdateOrRender() {
@@ -369,7 +377,12 @@ void StateManager::drawStack() {
 
     drawLib->drawBox(Vector2f(xoff,     yoff - (i * h)), Vector2f(xoff + w/2, yoff - ((i+1) * h)), 1.0, bg_update);
     drawLib->drawBox(Vector2f(xoff+w/2, yoff - (i * h)), Vector2f(xoff + w,   yoff - ((i+1) * h)), 1.0, bg_render);
-    v_fg = v_fm->getGlyph(m_statesStack[i]->getName());
+
+    if(m_statesStack[i]->getId() == "") {
+      v_fg = v_fm->getGlyph(m_statesStack[i]->getName());
+    } else {
+      v_fg = v_fm->getGlyph(m_statesStack[i]->getName() + " (" + m_statesStack[i]->getId() + ")");
+    }
     v_fm->printString(v_fg, (w-v_fg->realWidth())/2 + xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, 0.0, true);
 
     i++;

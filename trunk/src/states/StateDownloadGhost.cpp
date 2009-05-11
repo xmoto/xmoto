@@ -28,7 +28,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../SysMessage.h"
 #include "../helpers/CmdArgumentParser.h"
 
-StateDownloadGhost::StateDownloadGhost(std::string levelId,
+StateDownloadGhost::StateDownloadGhost(const std::string& i_id,
+				       std::string levelId,
 				       bool launchReplaying,
 				       bool drawStateBehind,
 				       bool updateStatesBehind)
@@ -74,7 +75,8 @@ void StateDownloadGhost::callAfterThreadFinished(int threadResult)
     if(threadResult == 0 && m_launchReplaying == true){
       std::string msg = "Replay to play: " + m_replayName;
       LogInfo(msg.c_str());
-      StateManager::instance()->replaceState(new StatePreplayingReplay(m_replayName, false));
+      StateManager::instance()->replaceState(new StatePreplayingReplay(getId(), m_replayName, false),
+					     this->getId());
     }
     else{
       StateManager::instance()->sendAsynchronousMessage("GHOST_DOWNLOADED");

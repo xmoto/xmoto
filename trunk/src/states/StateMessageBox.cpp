@@ -54,6 +54,8 @@ void StateMessageBox::leave()
 {
   if(m_receiver != NULL) {
     m_receiver->sendFromMessageBox(getId(), m_clickedButton, m_msgbox->getTextInput());
+  } else {
+    sendFromMessageBox(getId(), m_clickedButton, m_msgbox->getTextInput());
   }
 }
 

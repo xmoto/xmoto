@@ -86,15 +86,17 @@ void StateScene::init() {
   initMessageRegistering();
 }
 
-StateScene::StateScene(bool i_doShade, bool i_doShadeAnim)
+StateScene::StateScene(const std::string& i_id, bool i_doShade, bool i_doShadeAnim)
 : GameState(false, false, i_doShade, i_doShadeAnim)
 {
+  setId(i_id);
   init();
 }
 
-StateScene::StateScene(Universe* i_universe, bool i_doShade, bool i_doShadeAnim)
+StateScene::StateScene(Universe* i_universe, const std::string& i_id, bool i_doShade, bool i_doShadeAnim)
   : GameState(false, false, i_doShade, i_doShadeAnim)
 {
+  setId(i_id);
   init();
   m_universe   = i_universe;
 
@@ -199,7 +201,7 @@ bool StateScene::update()
       }
     }
   } catch(Exception &e) {
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK));  
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK), this->getId());
   }
 
   runAutoZoom();
@@ -236,7 +238,7 @@ bool StateScene::render()
 
     ParticlesSource::setAllowParticleGeneration(GameRenderer::instance()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
   } catch(Exception &e) {
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK), this->getId());
   }
 
   GameState::render();
@@ -553,7 +555,7 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
     // there is no other state before
     if(StateManager::instance()->numberOfStates() == 1) {
       // run the mainmenu state
-      StateManager::instance()->replaceState(new StateMainMenu());
+      StateManager::instance()->replaceState(new StateMainMenu(), this->getId());
     } else {
       m_requestForEnd = true;
     }
@@ -565,7 +567,7 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
     // there is no other state before
     if(StateManager::instance()->numberOfStates() == 1) {
       // run the mainmenu state
-      StateManager::instance()->replaceState(new StateMainMenu());
+      StateManager::instance()->replaceState(new StateMainMenu(), this->getId());
     } else {
       m_requestForEnd = true;
     }
@@ -589,7 +591,7 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
     // there is no other state before
     if(StateManager::instance()->numberOfStates() == 1) {
       // run the mainmenu state
-      StateManager::instance()->replaceState(new StateMainMenu());
+      StateManager::instance()->replaceState(new StateMainMenu(), this->getId());
     } else {
       m_requestForEnd = true;
     }
@@ -843,7 +845,8 @@ void StateScene::restartLevelToPlay(bool i_reloadLevel) {
     }
   }
 
-  StateManager::instance()->replaceState(new StatePreplayingGame(v_level, true));
+  StateManager::instance()->replaceState(new StatePreplayingGame(getId(), v_level, true),
+					 this->getId());
 
 }
 
@@ -867,7 +870,8 @@ void StateScene::nextLevelToPlay(bool i_positifOrder) {
 
   if(v_nextLevel != "") {
     closePlaying();
-    StateManager::instance()->replaceState(new StatePreplayingGame(v_nextLevel, v_currentLevel == v_nextLevel));
+    StateManager::instance()->replaceState(new StatePreplayingGame(getId(), v_nextLevel, v_currentLevel == v_nextLevel),
+					   this->getId());
   }
 }
 

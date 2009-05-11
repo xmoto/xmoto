@@ -120,7 +120,8 @@ void StateLevelPackViewer::checkEvents()
     std::string i_level = pList->getSelectedLevel();
     if(i_level != "") {
       GameApp::instance()->setCurrentPlayingList(pList);
-      StateManager::instance()->pushState(new StatePreplayingGame(i_level, false));
+      StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),
+								  i_level, false));
     }
   }
 
@@ -147,7 +148,8 @@ void StateLevelPackViewer::checkEvents()
   if(pShowHighscore != NULL && pShowHighscore->isClicked() == true){
     pShowHighscore->setClicked(false);
     GameApp::instance()->setCurrentPlayingList(pList);
-    StateManager::instance()->pushState(new StateDownloadGhost(getInfoFrameLevelId(), true));
+    StateManager::instance()->pushState(new StateDownloadGhost(StateManager::instance()->getUniqueId(),
+							       getInfoFrameLevelId(), true));
   }
 
   if(pLevelInfoButton!=NULL && pLevelInfoButton->isClicked()) {

@@ -38,8 +38,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 100
 
-StatePreplaying::StatePreplaying(const std::string i_idlevel, bool i_sameLevel):
-  StateScene()
+StatePreplaying::StatePreplaying(const std::string& i_id, const std::string i_idlevel, bool i_sameLevel):
+  StateScene(i_id)
 {
   m_name  = "StatePreplaying";
   m_idlevel = i_idlevel;
@@ -169,7 +169,8 @@ void StatePreplaying::enter()
   }
 
   if(needToDownloadGhost() == true){
-    StateManager::instance()->pushState(new StateDownloadGhost(m_idlevel));
+    StateManager::instance()->pushState(new StateDownloadGhost(StateManager::instance()->getUniqueId(),
+							       m_idlevel));
   } else {
     m_ghostDownloaded = true;
   }
@@ -186,7 +187,8 @@ void StatePreplaying::enter()
 }
 
 void StatePreplaying::onLoadingFailure(const std::string& i_msg) {
-  StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(i_msg, 50), UI_MSGBOX_OK));
+  StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(i_msg, 50), UI_MSGBOX_OK),
+					 this->getId());
 }
 
 bool StatePreplaying::shouldBeAnimated() const {

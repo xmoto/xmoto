@@ -25,10 +25,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateDownloadGhost : public StateUpdate {
 public:
-  StateDownloadGhost(std::string levelId,
-		     bool launchReplaying    = false,
-		     bool drawStateBehind    = true,
-		     bool updateStatesBehind = false);
+StateDownloadGhost(const std::string& i_id,
+		   std::string levelId,
+		   bool launchReplaying    = false,
+		   bool drawStateBehind    = true,
+		   bool updateStatesBehind = false);
   virtual ~StateDownloadGhost();
 
   void setReplay(std::string replayName);

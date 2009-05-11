@@ -304,7 +304,7 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   // net chat
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_c, KMOD_LCTRL) && NetClient::instance()->isConnected()) {
     if(StateManager::instance()->isThereASuchStateId("CHATMESSAGE") == false) { // do not open several chat box
-      StateMessageBox* v_msgboxState = new StateMessageBox(this, std::string(GAMETEXT_CHATMESSAGE) + ":",
+      StateMessageBox* v_msgboxState = new StateMessageBox(NULL, std::string(GAMETEXT_CHATMESSAGE) + ":",
 							   UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, "", false, true, false, true);
       v_msgboxState->setId("CHATMESSAGE");
       StateManager::instance()->pushState(v_msgboxState);

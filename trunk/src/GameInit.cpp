@@ -489,21 +489,23 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
 
       if(XMSession::instance()->clientGhostMode() == false && NetClient::instance()->isConnected()) {
-	  StateManager::instance()->pushState(new StateWaitServerInstructions());
+	  StateManager::instance()->pushState(new StateWaitServerInstructions(StateManager::instance()->getUniqueId()));
       } else {
-	StateManager::instance()->pushState(new StatePreplayingGame(m_PlaySpecificLevelId, false));
+	StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),
+								    m_PlaySpecificLevelId, false));
       }
       LogInfo("Playing as '%s'...", XMSession::instance()->profile().c_str());
     }
     else if(m_PlaySpecificReplay != "") {
       /* ======= PLAY SPECIFIC REPLAY ======= */
-      StateManager::instance()->pushState(new StatePreplayingReplay(m_PlaySpecificReplay, false));
+      StateManager::instance()->pushState(new StatePreplayingReplay(StateManager::instance()->getUniqueId(),
+								    m_PlaySpecificReplay, false));
     }
     else {
       /* display what must be displayed */
       StateManager::instance()->pushState(new StateMainMenu());
       if(XMSession::instance()->clientGhostMode() == false && NetClient::instance()->isConnected()) {
-	  StateManager::instance()->pushState(new StateWaitServerInstructions());
+	  StateManager::instance()->pushState(new StateWaitServerInstructions(StateManager::instance()->getUniqueId()));
       }
     }
 
