@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VFileIO.h"
 #include "assert.h"
 #include <stdarg.h>
+#include <cstdio>
 
 bool  Logger::m_isInitialized = false;
 bool  Logger::m_activ         = true;
