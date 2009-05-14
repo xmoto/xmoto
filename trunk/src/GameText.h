@@ -266,13 +266,43 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  Esc - " + std::string(_("Pause")) + "\n" \
 "  Return - " + std::string(_("Restart the level")) + "\n" \
 "  PageDown/PageUp - " + std::string(_("Previous/Next level")) + "\n" \
-"  ctrl+M - " + std::string(_("change mirror mode")) + "\n"\
+"  " + "\n"\
 "  F8 - " + std::string(_("Enable/disable web")) + "\n" \
 "  F5 - " + std::string(_("Reload levels, themes and replays from directories")) + "\n" \
 "  F12 - " + std::string(_("Take a screenshot")) + "\n" \
-"\n" \
+"  " + "\n" \
+ + std::string(_("Use Quick Play button to immediately start a game with a random level,\nor use Levels button to select from level packs.")) + "\n" \
+"  " + "\n" \
  + std::string(_("Find all the strawberries and touch the flower to finish\nthe level.")) + "\n" \
- + std::string(_("Read the README file or check out the website at\nhttp://xmoto.tuxfamily.org for more information."))
+ + std::string(_("Read the README file or check out the website at\nhttp://xmoto.tuxfamily.org\nfor more information."))
+
+#define GAMETEXT_HELPTEXT_PLAYINGLEVEL(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY) \
+std::string(_("You control your bike using the keyboard")) + ":\n" \
+"  " + accelerate_KEY + " - " + _("Accelerates") + "\n" \
+"  " + brake_KEY + " - " + std::string(_("Brakes")) + "\n" \
+"  " + rotate_counter_clockwise_KEY + " - " + std::string(_("Rotates it counter-clockwise")) + "\n" \
+"  " + rotate_clockwise_KEY + " - " + std::string(_("Rotates it clockwise")) + "\n" \
+"  " + change_direction_KEY + " - " + std::string(_("Turns around and drives in the other direction")) + "\n" \
+"  " + "\n" \
+"  Esc - " + std::string(_("Pause")) + "\n" \
+"  Return - " + std::string(_("Restart the level")) + "\n" \
+"  PageDown/PageUp - " + std::string(_("Previous/Next level")) + "\n" \
+"  ctrl+M - " + std::string(_("change mirror mode")) + "\n"\
+"  ctrl+B - " + std::string(_("Toggle blacklist")) + "\n"\
+"  ctrl+S - " + std::string(_("Enable/disable audio")) +"\n"\
+"  ctrl+O - " + std::string(_("Open options menu"))  + "\n"\
+"  F1 - " + std::string(_("Show this help")) + "\n"\
+"  F2 - " + std::string(_("Show the ghost if possible in the game")) + "\n"\
+"  F3 - " + std::string(_("Toggle favorite")) + "\n"\
+"  F7 - " + std::string(_("Enable/disable FPS display")) + "\n"\
+"  F8 - " + std::string(_("Enable/disable web")) + "\n" \
+"  F9 - " + std::string(_("Enable/disable ugly mode")) + "\n"\
+"  F10- " + std::string(_("Enable/disable theme mode")) + "\n"\
+"  F11- " + std::string(_("Enable/disable ugly over mode")) + "\n"\
+"  F12 - " + std::string(_("Take a screenshot")) + "\n" \
+"  " + "\n" \
+ + std::string(_("Find all the strawberries and touch the flower to finish\nthe level.")) + "\n" \
+
 
 #define GAMETEXT_HIDEGHOSTS           _("Hide ghosts")
 #define GAMETEXT_HIGH                 _("High")

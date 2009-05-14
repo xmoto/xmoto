@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "StateServerConsole.h"
 #include "../net/NetClient.h"
+#include "StateHelp.h"
 
 #define MENU_SHADING_TIME 0.3
 #define MENU_SHADING_VALUE 150
@@ -216,6 +217,11 @@ void GameState::addCommand(std::string cmd, std::string args)
 
 void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   GameApp* gameApp = GameApp::instance();
+
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F1, KMOD_NONE)) {
+    if (StateManager::instance()->isThereASuchState("StateHelp") == false) StateManager::instance()->pushState(new StateHelp(true,false,true, false));
+    return;
+  }
 
   if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F12, KMOD_NONE)) {
     gameApp->gameScreenshot();

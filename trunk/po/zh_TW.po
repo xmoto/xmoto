@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-04-19 13:10+0200\n"
+"POT-Creation-Date: 2009-05-14 18:47+0200\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: KuanYen\n"
 "Language-Team: X-Moto\n"
@@ -68,7 +68,7 @@ msgstr "動作"
 msgid "All (on this computer)"
 msgstr "所有的（在這台電腦上）"
 
-#: src/GameText.h:48 src/GameText.h:711
+#: src/GameText.h:48 src/GameText.h:741
 msgid "All levels"
 msgstr "所有關卡"
 
@@ -760,19 +760,19 @@ msgstr "你的最佳時間"
 msgid "Type"
 msgstr "樣式"
 
-#: src/GameText.h:248 src/GameText.h:651
+#: src/GameText.h:248 src/GameText.h:681
 msgid "The highscore of the reference room"
 msgstr "遊戲間的最高分"
 
-#: src/GameText.h:249 src/GameText.h:652
+#: src/GameText.h:249 src/GameText.h:682
 msgid "The highscore of the other rooms"
 msgstr "其他遊戲間的最高分"
 
-#: src/GameText.h:250 src/GameText.h:649
+#: src/GameText.h:250 src/GameText.h:679
 msgid "The best of my replays (on this computer)"
 msgstr "我的最佳重播紀錄(在這台電腦上)"
 
-#: src/GameText.h:251 src/GameText.h:650
+#: src/GameText.h:251 src/GameText.h:680
 msgid "The best of the replays (on this computer)"
 msgstr "最佳重播紀錄(在這台電腦上)"
 
@@ -800,47 +800,43 @@ msgstr "鬼影"
 msgid "Help"
 msgstr "幫助"
 
-#: src/GameText.h:260
+#: src/GameText.h:260 src/GameText.h:280
 msgid "You control your bike using the keyboard"
 msgstr "用你的鍵盤來控制小車車"
 
-#: src/GameText.h:261
+#: src/GameText.h:261 src/GameText.h:281
 msgid "Accelerates"
 msgstr "加速"
 
-#: src/GameText.h:262
+#: src/GameText.h:262 src/GameText.h:282
 msgid "Brakes"
 msgstr "煞車"
 
-#: src/GameText.h:263
+#: src/GameText.h:263 src/GameText.h:283
 msgid "Rotates it counter-clockwise"
 msgstr "長條順時旋轉"
 
-#: src/GameText.h:264
+#: src/GameText.h:264 src/GameText.h:284
 msgid "Rotates it clockwise"
 msgstr "順時針旋轉"
 
-#: src/GameText.h:265
+#: src/GameText.h:265 src/GameText.h:285
 msgid "Turns around and drives in the other direction"
 msgstr "換個方向，再繼續駕駛下去"
 
-#: src/GameText.h:266 src/GameText.h:370
+#: src/GameText.h:266 src/GameText.h:287 src/GameText.h:400
 msgid "Pause"
 msgstr "暫停一下"
 
-#: src/GameText.h:267
+#: src/GameText.h:267 src/GameText.h:288
 msgid "Restart the level"
 msgstr "我要重玩一次"
 
-#: src/GameText.h:268
+#: src/GameText.h:268 src/GameText.h:289
 msgid "Previous/Next level"
 msgstr "前/後一關"
 
-#: src/GameText.h:269
-msgid "change mirror mode"
-msgstr "改變鏡像模式"
-
-#: src/GameText.h:270
+#: src/GameText.h:270 src/GameText.h:298
 msgid "Enable/disable web"
 msgstr "啟用/禁用 骨架"
 
@@ -848,11 +844,17 @@ msgstr "啟用/禁用 骨架"
 msgid "Reload levels, themes and replays from directories"
 msgstr "重新整理關卡、佈景主題及重播紀錄"
 
-#: src/GameText.h:272
+#: src/GameText.h:272 src/GameText.h:302
 msgid "Take a screenshot"
 msgstr "拍下螢幕快照"
 
 #: src/GameText.h:274
+msgid ""
+"Use Quick Play button to immediately start a game with a random level,\n"
+"or use Levels button to select from level packs."
+msgstr ""
+
+#: src/GameText.h:276 src/GameText.h:304
 msgid ""
 "Find all the strawberries and touch the flower to finish\n"
 "the level."
@@ -860,266 +862,309 @@ msgstr ""
 "找到所有的可口草莓，再去撞花，就能完成\n"
 "關卡啦！"
 
-#: src/GameText.h:275
+#: src/GameText.h:277
 msgid ""
 "Read the README file or check out the website at\n"
-"http://xmoto.tuxfamily.org for more information."
+"http://xmoto.tuxfamily.org\n"
+"for more information."
 msgstr ""
-"可以看README檔或上我們的網站\n"
-"http://xmoto.tuxfamily.org來得到更多更多的資訊"
 
-#: src/GameText.h:277
+#: src/GameText.h:290
+msgid "change mirror mode"
+msgstr "改變鏡像模式"
+
+#: src/GameText.h:291
+msgid "Toggle blacklist"
+msgstr ""
+
+#: src/GameText.h:292
+msgid "Enable/disable audio"
+msgstr ""
+
+#: src/GameText.h:293
+msgid "Open options menu"
+msgstr ""
+
+#: src/GameText.h:294
+msgid "Show this help"
+msgstr ""
+
+#: src/GameText.h:295 src/GameText.h:626
+msgid "Show the ghost if possible in the game"
+msgstr "如果可以，在遊戲中顯示鬼影"
+
+#: src/GameText.h:296
+msgid "Toggle favorite"
+msgstr ""
+
+#: src/GameText.h:297
+msgid "Enable/disable FPS display"
+msgstr ""
+
+#: src/GameText.h:299 src/GameText.h:452
+msgid "Enable/disable ugly mode"
+msgstr "啟用/關閉 火柴人模式"
+
+#: src/GameText.h:300
+msgid "Enable/disable theme mode"
+msgstr ""
+
+#: src/GameText.h:301
+msgid "Enable/disable ugly over mode"
+msgstr ""
+
+#: src/GameText.h:307
 msgid "Hide ghosts"
 msgstr "隱藏鬼影"
 
-#: src/GameText.h:278
+#: src/GameText.h:308
 msgid "High"
 msgstr "高"
 
-#: src/GameText.h:279
+#: src/GameText.h:309
 msgid "Highscore of the room"
 msgstr ""
 
-#: src/GameText.h:280
+#: src/GameText.h:310
 #, c-format
 msgid "%s: %s beat your highscore for level '%s'"
 msgstr ""
 
-#: src/GameText.h:281
+#: src/GameText.h:311
 msgid "Levels are being added into the database. Please wait."
 msgstr "正在把關卡增加到資料庫中，等等我..."
 
-#: src/GameText.h:282
+#: src/GameText.h:312
 msgid "Internet Configuration"
 msgstr "網際網路設定"
 
-#: src/GameText.h:283
+#: src/GameText.h:313
 msgid "View Level Initially"
 msgstr "瀏覽關卡的開頭"
 
-#: src/GameText.h:284
+#: src/GameText.h:314
 msgid "Joystick"
 msgstr "搖桿"
 
-#: src/GameText.h:285
+#: src/GameText.h:315
 msgid "Enable joysticks"
 msgstr ""
 
-#: src/GameText.h:286
+#: src/GameText.h:316
 msgid "Oops!"
 msgstr "真是糟糕阿 !"
 
-#: src/GameText.h:287
+#: src/GameText.h:317
 msgid "Press ENTER to try again"
 msgstr "按ENTER再玩一次"
 
-#: src/GameText.h:288
+#: src/GameText.h:318
 msgid "Press ESC to display the menu"
 msgstr "按ESC來顯示選單"
 
-#: src/GameText.h:289
+#: src/GameText.h:319
 msgid "Key"
 msgstr "按鍵"
 
-#: src/GameText.h:290
+#: src/GameText.h:320
 msgid "Keyboard"
 msgstr "鍵盤"
 
-#: src/GameText.h:291
+#: src/GameText.h:321
 msgid "Language"
 msgstr "語言"
 
-#: src/GameText.h:292
+#: src/GameText.h:322
 msgid "Language name"
 msgstr "語言名稱"
 
-#: src/GameText.h:293
+#: src/GameText.h:323
 msgid "Language code"
 msgstr "語言編碼"
 
-#: src/GameText.h:294
+#: src/GameText.h:324
 msgid "Level"
 msgstr "關卡"
 
-#: src/GameText.h:295
+#: src/GameText.h:325
 msgid "Added to favorites"
 msgstr "加入最愛"
 
-#: src/GameText.h:296
+#: src/GameText.h:326
 msgid "Deleted from favorites"
 msgstr "刪除最愛"
 
-#: src/GameText.h:297
+#: src/GameText.h:327
 msgid "Added to blacklist"
 msgstr "加到黑名單"
 
-#: src/GameText.h:298
+#: src/GameText.h:328
 msgid "Deleted from blacklist"
 msgstr "刪除黑名單"
 
-#: src/GameText.h:299
+#: src/GameText.h:329
 msgid "Level Info..."
 msgstr "關卡資訊..."
 
-#: src/GameText.h:300
+#: src/GameText.h:330
 msgid "Level Name"
 msgstr "關卡名稱"
 
-#: src/GameText.h:301
+#: src/GameText.h:331
 #, c-format
 msgid "Level '%s' cannot be loaded"
 msgstr "關卡'%s' 無法被載入"
 
-#: src/GameText.h:302
+#: src/GameText.h:332
 msgid "Level Pack"
 msgstr "關卡包"
 
-#: src/GameText.h:303
+#: src/GameText.h:333
 msgid "Level Packs"
 msgstr "關卡包"
 
-#: src/GameText.h:304
+#: src/GameText.h:334
 #, c-format
 msgid "Level '%s' required by replay!"
 msgstr "關卡'%s' 會被重播 !"
 
-#: src/GameText.h:305
+#: src/GameText.h:335
 msgid "Levels"
 msgstr "關卡"
 
-#: src/GameText.h:306
+#: src/GameText.h:336
 msgid "List All"
 msgstr "所有目錄"
 
-#: src/GameText.h:307
+#: src/GameText.h:337
 msgid "Loading..."
 msgstr "載入中..."
 
-#: src/GameText.h:308
+#: src/GameText.h:338
 msgid "Loading levels..."
 msgstr "載入關卡中..."
 
-#: src/GameText.h:309
+#: src/GameText.h:339
 msgid "Loading menu graphics..."
 msgstr "載入目錄圖形中..."
 
-#: src/GameText.h:310
+#: src/GameText.h:340
 msgid "Loading replays..."
 msgstr "載入重播檔中..."
 
-#: src/GameText.h:311
+#: src/GameText.h:341
 msgid "Loading sounds..."
 msgstr "載入聲音中..."
 
-#: src/GameText.h:312
+#: src/GameText.h:342
 msgid "Loading textures..."
 msgstr "載入材質中..."
 
-#: src/GameText.h:313
+#: src/GameText.h:343
 msgid "Login"
 msgstr "登入"
 
-#: src/GameText.h:314
+#: src/GameText.h:344
 msgid "Low"
 msgstr "低"
 
-#: src/GameText.h:315
+#: src/GameText.h:345
 msgid "Main"
 msgstr "主要的"
 
-#: src/GameText.h:316
+#: src/GameText.h:346
 msgid "Mouse"
 msgstr "滑鼠"
 
-#: src/GameText.h:317 src/GameText.h:425
+#: src/GameText.h:347 src/GameText.h:455
 msgid "Theme"
 msgstr "佈景"
 
-#: src/GameText.h:319
+#: src/GameText.h:349
 msgid "Medium"
 msgstr "中等"
 
-#: src/GameText.h:320
+#: src/GameText.h:350
 msgid "Menu Graphics"
 msgstr "選單圖形"
 
-#: src/GameText.h:321
+#: src/GameText.h:351
 msgid "Total time you scored / total highscore time for levels you finished"
 msgstr "你得分的總時間 /你完成的關卡總分"
 
-#: src/GameText.h:322
+#: src/GameText.h:352
 msgid "Level references unknown textures, it could be unplayable!"
 msgstr "關卡可能涉及未知的地圖材質，可能沒辦法玩喔!"
 
-#: src/GameText.h:323
+#: src/GameText.h:353
 msgid "Mono"
 msgstr "單聲道"
 
-#: src/GameText.h:324
+#: src/GameText.h:354
 msgid "Following are your most played levels"
 msgstr "接著的是你最常玩的關卡"
 
-#: src/GameText.h:325
+#: src/GameText.h:355
 msgid "Motion blur ghost"
 msgstr "鬼影的動感模糊"
 
-#: src/GameText.h:326
+#: src/GameText.h:356
 msgid "Multi"
 msgstr "綜合"
 
-#: src/GameText.h:327
+#: src/GameText.h:357
 msgid "Semi-cooperative mode"
 msgstr "合作模式"
 
-#: src/GameText.h:328
+#: src/GameText.h:358
 msgid "Stop the game once a player ends the level"
 msgstr "當我過關就停止遊戲"
 
-#: src/GameText.h:329
+#: src/GameText.h:359
 msgid "Number of players"
 msgstr "玩家數目"
 
-#: src/GameText.h:330
+#: src/GameText.h:360
 msgid "New"
 msgstr "新"
 
-#: src/GameText.h:331
+#: src/GameText.h:361
 #, c-format
 msgid "X-Moto %s or newer required to load level"
 msgstr "X-Moto %s 或更新需要載入的關卡"
 
-#: src/GameText.h:332
+#: src/GameText.h:362
 msgid "New highscore!"
 msgstr "新的最高紀錄喔!"
 
-#: src/GameText.h:333
+#: src/GameText.h:363
 msgid "New personal highscore!"
 msgstr "新的個人最高紀錄喔!"
 
-#: src/GameText.h:334
+#: src/GameText.h:364
 #, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
 msgstr[0] "%d 個新的或升級關卡，你想現在下載嗎?"
 msgstr[1] "%d 個新的或升級關卡，你想現在下載嗎?"
 
-#: src/GameText.h:337
+#: src/GameText.h:367
 msgid "New Levels"
 msgstr "新關卡"
 
-#: src/GameText.h:338
+#: src/GameText.h:368
 msgid "New levels available!"
 msgstr "新的可玩關卡!"
 
-#: src/GameText.h:339
+#: src/GameText.h:369
 msgid "New Profile..."
 msgstr "開新帳號..."
 
-#: src/GameText.h:340
+#: src/GameText.h:370
 msgid "No"
 msgstr "不"
 
-#: src/GameText.h:341
+#: src/GameText.h:371
 msgid ""
 "No new or updated levels available.\n"
 "\n"
@@ -1129,19 +1174,19 @@ msgstr ""
 "\n"
 "請稍候再試(你也可以自己做一個！)"
 
-#: src/GameText.h:342
+#: src/GameText.h:372
 msgid "No level following this one, sorry."
 msgstr "抱歉，下面沒有關卡啦..."
 
-#: src/GameText.h:343
+#: src/GameText.h:373
 msgid "No statistics for this profile."
 msgstr "這個帳號什麼都沒有."
 
-#: src/GameText.h:344
+#: src/GameText.h:374
 msgid "Not finished"
 msgstr "未完成"
 
-#: src/GameText.h:345
+#: src/GameText.h:375
 msgid ""
 "Important note!\n"
 "\n"
@@ -1165,315 +1210,311 @@ msgstr ""
 "也可以拜訪 http://xmoto.tuxfamily.org來定你是否擁有\n"
 "最新的版本！"
 
-#: src/GameText.h:355
+#: src/GameText.h:385
 msgid "# Levels"
 msgstr "# 關卡"
 
-#: src/GameText.h:356
+#: src/GameText.h:386
 msgid "OK"
 msgstr "好"
 
-#: src/GameText.h:357
+#: src/GameText.h:387
 msgid "Open"
 msgstr "開啟"
 
-#: src/GameText.h:358
+#: src/GameText.h:388
 msgid "Operation completed"
 msgstr "作業完成了"
 
-#: src/GameText.h:359
+#: src/GameText.h:389
 msgid "Options"
 msgstr "選項"
 
-#: src/GameText.h:360
+#: src/GameText.h:390
 msgid "Some options will not take effect before next restart!"
 msgstr "有些設定可能要等到你下次重開遊戲才會生效喔！"
 
-#: src/GameText.h:361
+#: src/GameText.h:391
 msgid "By author"
 msgstr "作者"
 
-#: src/GameText.h:362
+#: src/GameText.h:392
 msgid "Medals"
 msgstr "榮譽勳章"
 
-#: src/GameText.h:363 src/GameText.h:402
+#: src/GameText.h:393 src/GameText.h:432
 msgid "Room"
 msgstr "遊戲室"
 
-#: src/GameText.h:364
+#: src/GameText.h:394
 msgid "Special"
 msgstr "特別"
 
-#: src/GameText.h:365
+#: src/GameText.h:395
 msgid "Standard"
 msgstr "標準"
 
-#: src/GameText.h:366
+#: src/GameText.h:396
 msgid "Web votes"
 msgstr "網路投票"
 
-#: src/GameText.h:367 src/GameText.h:414
+#: src/GameText.h:397 src/GameText.h:444
 msgid "Statistics"
 msgstr "統計資料"
 
-#: src/GameText.h:368 src/GameText.h:721
+#: src/GameText.h:398 src/GameText.h:751
 msgid "By best driver"
 msgstr "最強駕駛員"
 
-#: src/GameText.h:369
+#: src/GameText.h:399
 msgid "By length"
 msgstr "路程"
 
-#: src/GameText.h:371
+#: src/GameText.h:401
 msgid "Password"
 msgstr "密碼"
 
-#: src/GameText.h:372 src/GameText.h:373
+#: src/GameText.h:402 src/GameText.h:403
 msgid "Personal"
 msgstr "個人"
 
-#: src/GameText.h:374
+#: src/GameText.h:404
 #, c-format
 msgid "%i player"
 msgid_plural "%i players"
 msgstr[0] "%i 玩家"
 msgstr[1] "%i 玩家"
 
-#: src/GameText.h:375
+#: src/GameText.h:405
 msgid "Player Profile"
 msgstr "玩家帳號"
 
-#: src/GameText.h:376
+#: src/GameText.h:406
 msgid "Player Profiles"
 msgstr "玩家帳號"
 
-#: src/GameText.h:377
+#: src/GameText.h:407
 msgid "Play Next Level"
 msgstr "來人！下一關！"
 
-#: src/GameText.h:378 src/GameText.h:486
+#: src/GameText.h:408 src/GameText.h:516
 msgid "Port"
 msgstr "阜"
 
-#: src/GameText.h:379
+#: src/GameText.h:409
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
 msgstr "按任何你想要的件來設定 '%s' 或是按ESC取消..."
 
-#: src/GameText.h:380
+#: src/GameText.h:410
 #, c-format
 msgid "Press %s to chat"
 msgstr ""
 
-#: src/GameText.h:381
+#: src/GameText.h:411
 msgid "Proxy Server"
 msgstr "代理伺服器"
 
-#: src/GameText.h:382
+#: src/GameText.h:412
 msgid "Configure Proxy..."
 msgstr "設定代理伺服器..."
 
-#: src/GameText.h:383
+#: src/GameText.h:413
 msgid "Quality"
 msgstr ""
 
-#: src/GameText.h:384
+#: src/GameText.h:414
 msgid "Quick start"
 msgstr "快速開始"
 
-#: src/GameText.h:385
+#: src/GameText.h:415
 msgid "Quit Game"
 msgstr "我不玩了"
 
-#: src/GameText.h:386
+#: src/GameText.h:416
 msgid "Do you really want to quit?"
 msgstr "你真的不玩了嗎 ?"
 
-#: src/GameText.h:387
+#: src/GameText.h:417
 msgid "Randomize"
 msgstr "隨機"
 
-#: src/GameText.h:388
+#: src/GameText.h:418
 msgid "Reloading levels..."
 msgstr "重新整理關卡..."
 
-#: src/GameText.h:389
+#: src/GameText.h:419
 msgid "Reloading replays..."
 msgstr "重新整理重播檔..."
 
-#: src/GameText.h:390
+#: src/GameText.h:420
 msgid "Reloading themes..."
 msgstr "重新整理佈景..."
 
-#: src/GameText.h:391
+#: src/GameText.h:421
 msgid "Replay"
 msgstr "重播"
 
-#: src/GameText.h:392
+#: src/GameText.h:422
 msgid "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
 msgstr "停止[Esc] ||[空白鍵]  << >>[左/右鍵]  < >[上/下鍵]  速度："
 
-#: src/GameText.h:393
+#: src/GameText.h:423
 msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
 msgstr "停止[Esc] ||[空白鍵] >>[右鍵]  < >[上/下鍵]  速度："
 
-#: src/GameText.h:395
+#: src/GameText.h:425
 msgid "The replay can't be played!"
 msgstr "無法重播耶！"
 
-#: src/GameText.h:396
+#: src/GameText.h:426
 #, c-format
 msgid "Replay of %s"
 msgstr "%s 的重播紀錄"
 
-#: src/GameText.h:397
+#: src/GameText.h:427
 msgid "Replays"
 msgstr "重播紀錄"
 
-#: src/GameText.h:398
+#: src/GameText.h:428
 msgid "Are you sure you want to reset config to defaults ?"
 msgstr "你真的要重設所有設定回預設值嗎？"
 
-#: src/GameText.h:399
+#: src/GameText.h:429
 msgid "Restart This Level"
 msgstr "重玩這一關"
 
-#: src/GameText.h:400
+#: src/GameText.h:430
 msgid "Restart level"
 msgstr "重新關卡"
 
-#: src/GameText.h:401
+#: src/GameText.h:431
 msgid "Resume Playing"
 msgstr "繼續這一關"
 
-#: src/GameText.h:403
+#: src/GameText.h:433
 msgid "Run Windowed"
 msgstr "視窗模式"
 
-#: src/GameText.h:404
+#: src/GameText.h:434
 msgid "Save"
 msgstr "儲存"
 
-#: src/GameText.h:405
+#: src/GameText.h:435
 #, c-format
 msgid "Saved as %s"
 msgstr "存成 %s"
 
-#: src/GameText.h:406
+#: src/GameText.h:436
 msgid "Save Replay"
 msgstr "儲存播放紀錄"
 
-#: src/GameText.h:407
+#: src/GameText.h:437
 msgid "Screen Resolution"
 msgstr "螢幕解析度"
 
-#: src/GameText.h:408
+#: src/GameText.h:438
 msgid "Show"
 msgstr "看！"
 
-#: src/GameText.h:409
+#: src/GameText.h:439
 msgid "Show console"
 msgstr "顯示操控台"
 
-#: src/GameText.h:410
+#: src/GameText.h:440
 msgid "Speedometer"
 msgstr "速度表"
 
-#: src/GameText.h:411
+#: src/GameText.h:441
 msgid "Info..."
 msgstr "訊息..."
 
-#: src/GameText.h:412
+#: src/GameText.h:442
 msgid "Show Mini Map"
 msgstr "顯示可愛的迷你地圖"
 
-#: src/GameText.h:413
+#: src/GameText.h:443
 msgid "Play!"
 msgstr "衝啊!"
 
-#: src/GameText.h:415
+#: src/GameText.h:445
 msgid "STATS"
 msgstr "統計"
 
-#: src/GameText.h:416
+#: src/GameText.h:446
 msgid "You are currently disconnected"
 msgstr ""
 
-#: src/GameText.h:417
+#: src/GameText.h:447
 msgid "Stereo"
 msgstr "雙聲道"
 
-#: src/GameText.h:418
+#: src/GameText.h:448
 msgid "Synchronisation down"
 msgstr "同步回來"
 
-#: src/GameText.h:419
+#: src/GameText.h:449
 msgid "Synchronisation up"
 msgstr "同步上去"
 
-#: src/GameText.h:420
+#: src/GameText.h:450
 msgid "Synchronisation done successfully"
 msgstr "同步化完成"
 
-#: src/GameText.h:421
+#: src/GameText.h:451
 #, c-format
 msgid "Key '%s' has been switched to '%s'"
 msgstr "'%s' 按鍵已經切換成 '%s' 按鍵"
 
-#: src/GameText.h:422
-msgid "Enable/disable ugly mode"
-msgstr "啟用/關閉 火柴人模式"
-
-#: src/GameText.h:423
+#: src/GameText.h:453
 msgid "Add/remove to favorite levels"
 msgstr "增加到最愛關卡/從最愛關卡移除"
 
-#: src/GameText.h:424
+#: src/GameText.h:454
 msgid "Add/remove to blacklisted levels"
 msgstr "增加到黑名單/從黑名單移除"
 
-#: src/GameText.h:426
+#: src/GameText.h:456
 msgid "Available"
 msgstr "可用的"
 
-#: src/GameText.h:427
+#: src/GameText.h:457
 msgid "To download"
 msgstr "下載"
 
-#: src/GameText.h:428
+#: src/GameText.h:458
 msgid "To be updated"
 msgstr "升級"
 
-#: src/GameText.h:429
+#: src/GameText.h:459
 msgid "The theme is now up to date"
 msgstr "佈景主題正在升級中"
 
-#: src/GameText.h:430
+#: src/GameText.h:460
 msgid "Time"
 msgstr "時間"
 
-#: src/GameText.h:431
+#: src/GameText.h:461
 msgid "Try This Level Again"
 msgstr "再試一次"
 
-#: src/GameText.h:432
+#: src/GameText.h:462
 msgid "Tutorial"
 msgstr "訓練課程"
 
-#: src/GameText.h:433
+#: src/GameText.h:463
 msgid "Undefined"
 msgstr "不確定"
 
-#: src/GameText.h:434
+#: src/GameText.h:464
 msgid "Unknown"
 msgstr "未知的"
 
-#: src/GameText.h:435
+#: src/GameText.h:465
 msgid "Unpacked levels"
 msgstr "未打包關卡"
 
-#: src/GameText.h:436
+#: src/GameText.h:466
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
@@ -1483,1367 +1524,1363 @@ msgstr ""
 "可能是在網路上還找不到這個\n"
 "或是你的佈景主題列表沒更新"
 
-#: src/GameText.h:437
+#: src/GameText.h:467
 msgid "Update"
 msgstr "更新"
 
-#: src/GameText.h:438
+#: src/GameText.h:468
 msgid "Updated"
 msgstr "已更新"
 
-#: src/GameText.h:439
+#: src/GameText.h:469
 msgid "Check WWW"
 msgstr "檢查 WWW"
 
-#: src/GameText.h:440
+#: src/GameText.h:470
 msgid "Update the rooms list"
 msgstr "更新遊戲間列表"
 
-#: src/GameText.h:441
+#: src/GameText.h:471
 msgid "Update the theme list"
 msgstr "更新佈景主題列表"
 
-#: src/GameText.h:442
+#: src/GameText.h:472
 msgid "Updating level lists..."
 msgstr "更新關卡列表中..."
 
-#: src/GameText.h:443
+#: src/GameText.h:473
 msgid "Upload"
 msgstr "上傳"
 
-#: src/GameText.h:444
+#: src/GameText.h:474
 msgid "Upload all highscores"
 msgstr "上傳所有最高紀錄"
 
-#: src/GameText.h:445
+#: src/GameText.h:475
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr "一個我作夢都沒想到的錯誤發生了 ，真是糟糕啊！可能是網路出了問題。"
 
-#: src/GameText.h:446
+#: src/GameText.h:476
 msgid "Oh no !"
 msgstr "喔！不！"
 
-#: src/GameText.h:447
+#: src/GameText.h:477
 msgid "Uploading the highscore..."
 msgstr "上傳最高紀錄中..."
 
-#: src/GameText.h:448
+#: src/GameText.h:478
 msgid "Use crappy information"
 msgstr "使用腦殘的資訊'"
 
-#: src/GameText.h:449
+#: src/GameText.h:479
 msgid "Use Environment Vars"
 msgstr "使用環境變數"
 
-#: src/GameText.h:450
+#: src/GameText.h:480
 msgid "Use Profile"
 msgstr "使用帳號"
 
-#: src/GameText.h:451
+#: src/GameText.h:481
 msgid "Allow web forms"
 msgstr "Allow web forms"
 
-#: src/GameText.h:452
+#: src/GameText.h:482
 msgid "Using HTTP Proxy"
 msgstr "使用HTTP Proxy"
 
-#: src/GameText.h:453
+#: src/GameText.h:483
 msgid "Using SOCKS4 Proxy"
 msgstr "使用SOCKS4 Proxy"
 
-#: src/GameText.h:454
+#: src/GameText.h:484
 msgid "Using SOCKS5 Proxy"
 msgstr "使用SOCKS5 Proxy"
 
-#: src/GameText.h:455
+#: src/GameText.h:485
 msgid "Video"
 msgstr "影視"
 
-#: src/GameText.h:456
+#: src/GameText.h:486
 msgid "View"
 msgstr "觀看"
 
-#: src/GameText.h:457
+#: src/GameText.h:487
 msgid "View the highscore"
 msgstr "觀看最高紀錄"
 
-#: src/GameText.h:458
+#: src/GameText.h:488
 #, c-format
 msgid "Do you want to update level \"%s\"?"
 msgstr "你真的要更新 \"%s\" 關卡嗎?"
 
-#: src/GameText.h:459
+#: src/GameText.h:489
 msgid "Warning"
 msgstr "注意"
 
-#: src/GameText.h:461
+#: src/GameText.h:491
 msgid "WWW"
 msgstr "WWW"
 
-#: src/GameText.h:462
+#: src/GameText.h:492
 msgid "Reference room"
 msgstr "遊戲間出處"
 
-#: src/GameText.h:463
+#: src/GameText.h:493
 #, c-format
 msgid "Room %i"
 msgstr "%i 房"
 
-#: src/GameText.h:465
+#: src/GameText.h:495
 #, c-format
 msgid "%d hours"
 msgstr "%d 小時"
 
-#: src/GameText.h:466
+#: src/GameText.h:496
 #, c-format
 msgid "%d minutes"
 msgstr "%d 分鐘"
 
-#: src/GameText.h:468
+#: src/GameText.h:498
 #, c-format
 msgid "Stats since: %s"
 msgstr "從 %s 開始統計"
 
-#: src/GameText.h:469
+#: src/GameText.h:499
 #, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
 msgstr[0] "X-Moto開啟第 %d次 "
 msgstr[1] "X-Moto開啟了%d次"
 
-#: src/GameText.h:470
+#: src/GameText.h:500
 #, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
 msgstr[0] "%d 不同關卡"
 msgstr[1] "%d 不同關卡"
 
-#: src/GameText.h:471
+#: src/GameText.h:501
 #, c-format
 msgid "Time played: %s"
 msgstr "總遊戲時間: %s"
 
-#: src/GameText.h:472
+#: src/GameText.h:502
 #, c-format
 msgid "%d play"
 msgid_plural "%d plays"
 msgstr[0] "玩了%d次"
 msgstr[1] "玩了%d次"
 
-#: src/GameText.h:473
+#: src/GameText.h:503
 #, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
 msgstr[0] "掛點%d次"
 msgstr[1] "掛點%d次"
 
-#: src/GameText.h:474
+#: src/GameText.h:504
 #, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
 msgstr[0] "完成%d次"
 msgstr[1] "完成%d次"
 
-#: src/GameText.h:475
+#: src/GameText.h:505
 #, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
 msgstr[0] "重玩%d次"
 msgstr[1] "重玩%d次"
 
-#: src/GameText.h:477
+#: src/GameText.h:507
 #, c-format
 msgid "%d seconds"
 msgstr "%d 秒"
 
-#: src/GameText.h:478
+#: src/GameText.h:508
 msgid "Yes"
 msgstr "好"
 
-#: src/GameText.h:479
+#: src/GameText.h:509
 msgid "Yes to all"
 msgstr "全部皆是"
 
-#: src/GameText.h:480
+#: src/GameText.h:510
 msgid "Your best time"
 msgstr "您的最佳時間"
 
-#: src/GameText.h:481
+#: src/GameText.h:511
 msgid "Zoom in"
 msgstr "放大"
 
-#: src/GameText.h:482
+#: src/GameText.h:512
 msgid "Reinitialize zoom"
 msgstr "控制縮放"
 
-#: src/GameText.h:483
+#: src/GameText.h:513
 msgid "Zoom out"
 msgstr "縮小"
 
-#: src/GameText.h:485
+#: src/GameText.h:515
 msgid "Server"
 msgstr "伺服器"
 
-#: src/GameText.h:487
+#: src/GameText.h:517
 msgid "Launch at startup"
 msgstr "起動時開啟"
 
-#: src/GameText.h:488
+#: src/GameText.h:518
 msgid "Start the server"
 msgstr "啟用伺服器"
 
-#: src/GameText.h:489
+#: src/GameText.h:519
 msgid "Stop the server"
 msgstr "停止伺服器"
 
-#: src/GameText.h:490
+#: src/GameText.h:520
 msgid "Server is currently started"
 msgstr "伺服器順利起動"
 
-#: src/GameText.h:491
+#: src/GameText.h:521
 msgid "Server is currently stopped"
 msgstr "伺服器順利停止"
 
-#: src/GameText.h:492
+#: src/GameText.h:522
 msgid "Default port"
 msgstr "伺服器順利結束"
 
-#: src/GameText.h:493
+#: src/GameText.h:523
 msgid "Custom port"
 msgstr "自訂Port"
 
-#: src/GameText.h:494
+#: src/GameText.h:524
 msgid "Network"
 msgstr "網路"
 
-#: src/GameText.h:495
+#: src/GameText.h:525
 msgid "Simple ghost mode"
 msgstr "簡單的鬼影模式"
 
-#: src/GameText.h:496
+#: src/GameText.h:526
 msgid "You're currently connected"
 msgstr "你已經順利地連接"
 
-#: src/GameText.h:497
+#: src/GameText.h:527
 msgid "You're currently disconnected"
 msgstr "你已經順利的斷線"
 
-#: src/GameText.h:498
+#: src/GameText.h:528
 msgid "Connect"
 msgstr "連接"
 
-#: src/GameText.h:499
+#: src/GameText.h:529
 msgid "Disconnect"
 msgstr "斷線"
 
-#: src/GameText.h:500
+#: src/GameText.h:530
 msgid "Unable to connect on the server"
 msgstr "無法連接到伺服器"
 
-#: src/GameText.h:501
+#: src/GameText.h:531
 msgid "Network error: you're disconnected"
 msgstr "網路錯誤：你斷線囉"
 
-#: src/GameText.h:502
+#: src/GameText.h:532
 msgid "Connected players:"
 msgstr "線上玩家數"
 
-#: src/GameText.h:503
+#: src/GameText.h:533
 msgid "Chat message"
 msgstr "聊天訊息"
 
-#: src/GameText.h:504
+#: src/GameText.h:534
 #, c-format
 msgid "%s joined the game"
 msgstr "%s 加入遊戲"
 
-#: src/GameText.h:505
+#: src/GameText.h:535
 #, c-format
 msgid "%s left the game"
 msgstr "%s 離開遊戲"
 
-#: src/GameText.h:506
+#: src/GameText.h:536
 #, c-format
 msgid "%s is playing level %s"
 msgstr "%s 在玩 %s"
 
-#: src/GameText.h:515
+#: src/GameText.h:545
 msgid "Download the latest X-Moto world records and check for new levels"
 msgstr "下載最新的X-Moto世界紀錄並順便檢查新關卡"
 
-#: src/GameText.h:516
+#: src/GameText.h:546
 msgid "Configure how you are connected to the Internet"
 msgstr "設定網路連線"
 
-#: src/GameText.h:517
+#: src/GameText.h:547
 msgid "Play this level again"
 msgstr "再玩一次這一關"
 
-#: src/GameText.h:518
+#: src/GameText.h:548
 msgid "Save a replay for later viewing"
 msgstr "存起來以便日後欣賞"
 
-#: src/GameText.h:519
+#: src/GameText.h:549
 msgid "Play next level"
 msgstr "玩下一關"
 
-#: src/GameText.h:520
+#: src/GameText.h:550
 msgid "Back to the main menu"
 msgstr "回主選單"
 
-#: src/GameText.h:521
+#: src/GameText.h:551
 msgid "Quit the game"
 msgstr "離開遊戲"
 
-#: src/GameText.h:522
+#: src/GameText.h:552
 msgid "Back to the game"
 msgstr "返回遊戲"
 
-#: src/GameText.h:523
+#: src/GameText.h:553
 msgid "Try this level again from the beginning"
 msgstr "從起點再試一次這關"
 
-#: src/GameText.h:524
+#: src/GameText.h:554
 msgid "Play next level instead"
 msgstr "玩下一關"
 
-#: src/GameText.h:525
+#: src/GameText.h:555
 msgid "Try this level again"
 msgstr "再試一次"
 
-#: src/GameText.h:526
+#: src/GameText.h:556
 msgid "Built-in and stand-alone external levels"
 msgstr "內建及獨立的擴充關卡"
 
-#: src/GameText.h:527
+#: src/GameText.h:557
 msgid "Levels grouped together in level packs"
 msgstr "關卡組與關卡包一起"
 
-#: src/GameText.h:528
+#: src/GameText.h:558
 msgid "Browse levels available to you"
 msgstr "瀏覽可用的關卡"
 
-#: src/GameText.h:529
+#: src/GameText.h:559
 msgid "View list of recorded replays"
 msgstr "觀看最高紀錄清單"
 
-#: src/GameText.h:530
+#: src/GameText.h:560
 msgid "Configure X-Moto preferences"
 msgstr "X-Moto偏好設定"
 
-#: src/GameText.h:531
+#: src/GameText.h:561
 msgid "Instructions of how to play X-Moto"
 msgstr "教你怎麼玩 X-Moto"
 
-#: src/GameText.h:532
+#: src/GameText.h:562
 msgid "Change player profile"
 msgstr "編輯你的帳號"
 
-#: src/GameText.h:533
+#: src/GameText.h:563
 msgid "Play tutorial of how to play the game"
 msgstr "玩「訓練關卡」"
 
-#: src/GameText.h:534
+#: src/GameText.h:564
 msgid "Play the selected level"
 msgstr "玩你選擇的關卡"
 
-#: src/GameText.h:535
+#: src/GameText.h:565
 msgid "View general information about the level, best times, and replays"
 msgstr "觀看這一關的資訊、最高紀錄及重播紀錄"
 
-#: src/GameText.h:536
+#: src/GameText.h:566
 msgid "Run the selected replay"
 msgstr "播放選取的重播紀錄"
 
-#: src/GameText.h:537
+#: src/GameText.h:567
 msgid "Permanently delete the selected replay"
 msgstr "永久刪除這個重播紀錄"
 
-#: src/GameText.h:538
+#: src/GameText.h:568
 msgid "Show replays of all players in list"
 msgstr "顯示在列表上所有玩家的重播紀錄"
 
-#: src/GameText.h:539
+#: src/GameText.h:569
 msgid "General X-Moto preferences"
 msgstr "X-Moto一般設定"
 
-#: src/GameText.h:540
+#: src/GameText.h:570
 msgid "Configure graphical options"
 msgstr "影像選項"
 
-#: src/GameText.h:541
+#: src/GameText.h:571
 msgid "Configure audio options"
 msgstr "聲音選項"
 
-#: src/GameText.h:542
+#: src/GameText.h:572
 msgid "Configure control options"
 msgstr "控制選項"
 
-#: src/GameText.h:543
+#: src/GameText.h:573
 msgid "Save options"
 msgstr "儲存設定"
 
-#: src/GameText.h:544
+#: src/GameText.h:574
 msgid "Revert options to defaults"
 msgstr "設為預設值"
 
-#: src/GameText.h:545
+#: src/GameText.h:575
 msgid "Show a map of your surroundings when playing"
 msgstr "在玩的時候秀出你週遭的地圖"
 
-#: src/GameText.h:546
+#: src/GameText.h:576
 msgid "Automatically download best times off the net when the game starts"
 msgstr "當遊戲開始時自動下載世界紀錄"
 
-#: src/GameText.h:547
+#: src/GameText.h:577
 msgid "Show the World Record for a given level when playing"
 msgstr "在玩的時候秀出世界紀錄"
 
-#: src/GameText.h:548
+#: src/GameText.h:578
 msgid "Use crappy information from the website to update the crappy pack"
 msgstr "使用腦殘的資訊從網路上升級腦殘的關卡 "
 
-#: src/GameText.h:549
+#: src/GameText.h:579
 msgid "Allow X-Moto to ask you your mind about levels"
 msgstr "允許X-Moto詢問您對於這關的看法"
 
-#: src/GameText.h:550
+#: src/GameText.h:580
 msgid "Enable high-color graphics"
 msgstr "啟用高彩圖像"
 
-#: src/GameText.h:551
+#: src/GameText.h:581
 msgid "Enable true-color graphics"
 msgstr "啟用全彩圖像"
 
-#: src/GameText.h:552
+#: src/GameText.h:582
 msgid "Select graphics resolution"
 msgstr "選擇圖像解析度"
 
-#: src/GameText.h:553
+#: src/GameText.h:583
 msgid "Run the game in a window"
 msgstr "在視窗裡執行遊戲"
 
-#: src/GameText.h:554
+#: src/GameText.h:584
 msgid "Not so fancy menu graphics"
 msgstr "我不要這麼古怪的主選單"
 
-#: src/GameText.h:555
+#: src/GameText.h:585
 msgid "A bit more fancy menu graphics"
 msgstr "我要怪一點的主選單"
 
-#: src/GameText.h:556
+#: src/GameText.h:586
 msgid "Fanciest menu graphics"
 msgstr "古怪到爆掉的主選單(好吧，不一定會爆掉)"
 
-#: src/GameText.h:557
+#: src/GameText.h:587
 msgid "Disable most graphics not important to the gameplay"
 msgstr "把遊戲裡不必要的圖像取消掉"
 
-#: src/GameText.h:558
+#: src/GameText.h:588
 msgid "Disable some of the most resource-intensive graphics, like particles"
 msgstr "把一些會吃資源的特效取消掉，例如粒子系統(撞到東西會冒火花那一種)"
 
-#: src/GameText.h:559
+#: src/GameText.h:589
 msgid "Enable all graphical effects"
 msgstr "啟用圖像特效"
 
-#: src/GameText.h:560
+#: src/GameText.h:590
 msgid "Turn on sound effects"
 msgstr "啟用聲音特效"
 
-#: src/GameText.h:561
+#: src/GameText.h:591
 msgid "Poor sound quality"
 msgstr "差勁的聲音品質"
 
-#: src/GameText.h:562
+#: src/GameText.h:592
 msgid "Normal sound quality"
 msgstr "普通的聲音品質"
 
-#: src/GameText.h:563
+#: src/GameText.h:593
 msgid "Best sound quality"
 msgstr "最佳的聲音品質"
 
-#: src/GameText.h:564
+#: src/GameText.h:594
 msgid "8-bit sound samples, poor quality"
 msgstr "8-bit的聲音樣本，差勁品質"
 
-#: src/GameText.h:565
+#: src/GameText.h:595
 msgid "16-bit sound samples, good quality"
 msgstr "16-bit聲音樣本，好品質"
 
-#: src/GameText.h:566
+#: src/GameText.h:596
 msgid "Mono (single channel) audio"
 msgstr "聲音只有單聲道"
 
-#: src/GameText.h:567
+#: src/GameText.h:597
 msgid "Stereo (two channel) audio"
 msgstr "聲音還有雙聲道"
 
-#: src/GameText.h:568
+#: src/GameText.h:598
 msgid "Turn on engine noise"
 msgstr "我要引擎的噪音"
 
-#: src/GameText.h:569
+#: src/GameText.h:599
 msgid "Select action to re-configure to another key"
 msgstr "選擇一個動作來指定新按鍵"
 
-#: src/GameText.h:570
+#: src/GameText.h:600
 msgid "View contents of level pack"
 msgstr "檢視關卡包目錄"
 
-#: src/GameText.h:571
+#: src/GameText.h:601
 msgid "Select a player profile to use"
 msgstr "選擇一個帳號來使用"
 
-#: src/GameText.h:572
+#: src/GameText.h:602
 msgid "Use the selected player profile"
 msgstr "使用所選帳號"
 
-#: src/GameText.h:573
+#: src/GameText.h:603
 msgid "Create new player profile"
 msgstr "開新使用者帳號"
 
-#: src/GameText.h:574
+#: src/GameText.h:604
 msgid "Permanently delete selected player profile, including best times"
 msgstr "永久刪除使用者帳號，包括最佳紀錄"
 
-#: src/GameText.h:575
+#: src/GameText.h:605
 msgid "Select a level in the level pack to play"
 msgstr "在關卡包中選一個來玩一玩"
 
-#: src/GameText.h:576
+#: src/GameText.h:606
 msgid "Close level pack"
 msgstr "關上關卡包"
 
-#: src/GameText.h:577
+#: src/GameText.h:607
 msgid "General information about the level"
 msgstr "這關卡的一般資訊"
 
-#: src/GameText.h:578
+#: src/GameText.h:608
 msgid "View best times for the level"
 msgstr "看這關的最佳紀錄"
 
-#: src/GameText.h:579
+#: src/GameText.h:609
 msgid "View locally stored replays of the level"
 msgstr "檢視(在本機的)該關卡重播紀錄"
 
-#: src/GameText.h:580
+#: src/GameText.h:610
 msgid "Only show personal best times for this level"
 msgstr "只檢視這關的個人最佳紀錄"
 
-#: src/GameText.h:581
+#: src/GameText.h:611
 msgid "Show all best times for this level"
 msgstr "秀出所有這關的最佳紀錄"
 
-#: src/GameText.h:582
+#: src/GameText.h:612
 msgid "Only show personal replays for this level"
 msgstr "只秀出個人於這關的最佳紀錄"
 
-#: src/GameText.h:583
+#: src/GameText.h:613
 msgid "Show all replays for this level"
 msgstr "秀出這一關所有的重播記錄"
 
-#: src/GameText.h:584
+#: src/GameText.h:614
 msgid "Run selected replay"
 msgstr "播放所選重播紀錄"
 
-#: src/GameText.h:585
+#: src/GameText.h:615
 msgid "Show helpful help strings such as this one"
 msgstr "顯示有用的東西，像是這個"
 
-#: src/GameText.h:586
+#: src/GameText.h:616
 msgid ""
 "Let X-Moto look for more levels on the net, and install them automatically"
 msgstr "讓X-Moto自動搜尋並下載安裝關卡"
 
-#: src/GameText.h:587
+#: src/GameText.h:617
 msgid "Select this if you got a direct connection to the Internet"
 msgstr "如果你直接連上網路，請選這個"
 
-#: src/GameText.h:588
+#: src/GameText.h:618
 msgid "Select this if you connect to the Internet through an HTTP proxy"
 msgstr "如果你有使用HTTP Proxy來連上網路，請選這個"
 
-#: src/GameText.h:589
+#: src/GameText.h:619
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
 msgstr "如果你使用SOCKS4 Proxy來連上網路，請選這個"
 
-#: src/GameText.h:590
+#: src/GameText.h:620
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
 msgstr "如果你使用SOCKS5 Proxy來連上網路，請選擇這個"
 
-#: src/GameText.h:591
+#: src/GameText.h:621
 msgid "Use these settings"
 msgstr "使用這些設定"
 
-#: src/GameText.h:592
+#: src/GameText.h:622
 msgid "Write the IP address or host name of proxy server to use"
 msgstr "輸入 Proxy server的IP或Host name"
 
-#: src/GameText.h:593
+#: src/GameText.h:623
 msgid "Write the port number used by the proxy server"
 msgstr "輸入Proxy server的Port name"
 
-#: src/GameText.h:594
+#: src/GameText.h:624
 msgid "New levels and levels updated from the Internet"
 msgstr "從網路上來的更新更新的關卡及升級"
 
-#: src/GameText.h:596
-msgid "Show the ghost if possible in the game"
-msgstr "如果可以，在遊戲中顯示鬼影"
-
-#: src/GameText.h:597
+#: src/GameText.h:627
 msgid "Choose which ghost to display"
 msgstr "選擇鬼影來顯示"
 
-#: src/GameText.h:598
+#: src/GameText.h:628
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr "開啟動感模糊(如果顯示卡支援)"
 
-#: src/GameText.h:599
+#: src/GameText.h:629
 msgid "When starting a level with a ghost, display who the ghost is of"
 msgstr "是否顯示這個鬼影紀錄保持人的名稱"
 
-#: src/GameText.h:600
+#: src/GameText.h:630
 msgid "Display an arrow to display where are located the bikes on the map"
 msgstr "顯示一個箭頭來標明小車車在小地圖的哪個位置"
 
-#: src/GameText.h:601
+#: src/GameText.h:631
 msgid "Display the time difference between the ghost and you"
 msgstr "顯示你與鬼影的時間差"
 
-#: src/GameText.h:602
+#: src/GameText.h:632
 msgid "If you make a highscore it will automatically be saved as a replay"
 msgstr "如果你破了最高紀錄，我將會自動錄影並儲存"
 
-#: src/GameText.h:603
+#: src/GameText.h:633
 msgid "View the replay of the room's highscore"
 msgstr "檢視這個遊戲間的最高分"
 
-#: src/GameText.h:605
+#: src/GameText.h:635
 msgid "Check for new levels at startup"
 msgstr "在開始時檢查先關卡"
 
-#: src/GameText.h:606
+#: src/GameText.h:636
 msgid "Check for new highscores at startup"
 msgstr "開始時檢查最高紀錄"
 
-#: src/GameText.h:608
+#: src/GameText.h:638
 msgid "Show various statistics about X-Moto"
 msgstr "顯示X-Moto的所有統計資料"
 
-#: src/GameText.h:609
+#: src/GameText.h:639
 msgid "Update statistics (also happens each time X-Moto is started)"
 msgstr "更新統計資料(在每次開啟X-Moto亦是如此)"
 
-#: src/GameText.h:610
+#: src/GameText.h:640
 msgid "Enables background music in the main menu"
 msgstr "開啟主選單的背景音樂"
 
-#: src/GameText.h:611
+#: src/GameText.h:641
 msgid "Enables background music while playing"
 msgstr "在玩的時候要有背景音樂"
 
-#: src/GameText.h:613
+#: src/GameText.h:643
 msgid "Choose the X-Moto graphics theme"
 msgstr "選擇X-Moto佈景主題"
 
-#: src/GameText.h:614
+#: src/GameText.h:644
 msgid "Check for new themes on the web"
 msgstr "檢查新的主題"
 
-#: src/GameText.h:615
+#: src/GameText.h:645
 msgid "Download or update the selected theme"
 msgstr "下載或升級所選的佈景主題"
 
-#: src/GameText.h:616
+#: src/GameText.h:646
 msgid "Upload the replay on the website of highscores"
 msgstr "上傳重播紀錄"
 
-#: src/GameText.h:617
+#: src/GameText.h:647
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr "上傳你的最佳紀錄"
 
-#: src/GameText.h:618
+#: src/GameText.h:648
 msgid "Configure the main www options"
 msgstr "網際網路選項"
 
-#: src/GameText.h:619
+#: src/GameText.h:649
 msgid "Configure the www options"
 msgstr "網際網路選項"
 
-#: src/GameText.h:620
+#: src/GameText.h:650
 msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
 msgstr "選擇要上傳的位置(詳細資訊 請上xmoto網站查詢)"
 
-#: src/GameText.h:621
+#: src/GameText.h:651
 msgid "Choose your room"
 msgstr "選擇遊戲間"
 
-#: src/GameText.h:622
+#: src/GameText.h:652
 msgid "Get the rooms list from the web"
 msgstr "取得遊戲間清單"
 
-#: src/GameText.h:623
+#: src/GameText.h:653
 msgid "Upload of highscore requires to log in (Except for WR)"
 msgstr "您必須登入才能上傳紀錄(世界紀錄除外)"
 
-#: src/GameText.h:624
+#: src/GameText.h:654
 msgid "Upload of highscore requires a password (Except for WR)"
 msgstr "上傳最高紀錄需要密碼(世界紀錄除外)"
 
-#: src/GameText.h:625
+#: src/GameText.h:655
 msgid "Show the speedometer when playing"
 msgstr "玩的時候顯示速度表"
 
-#: src/GameText.h:626
+#: src/GameText.h:656
 msgid "Enable animation of bike falling apart when dead"
 msgstr "開啟「掛掉時會有五馬分屍」的動畫"
 
-#: src/GameText.h:627
+#: src/GameText.h:657
 msgid "Automatically scroll over the level before starting playing it"
 msgstr "在玩一關前自動捲動過整張地圖"
 
-#: src/GameText.h:628
+#: src/GameText.h:658
 msgid "Run a dynamic zoom while playing"
 msgstr "在玩的時候啟用動態縮放"
 
-#: src/GameText.h:629
+#: src/GameText.h:659
 msgid "View the X-Moto credits"
 msgstr "檢視X-Moto的偉人們"
 
-#: src/GameText.h:630
+#: src/GameText.h:660
 msgid "Name of replay"
 msgstr "重播紀錄的名字"
 
-#: src/GameText.h:631
+#: src/GameText.h:661
 msgid "Level played in replay"
 msgstr "Level played in replay"
 
-#: src/GameText.h:632
+#: src/GameText.h:662
 msgid "Player who recorded the replay"
 msgstr "紀錄此重播的玩家"
 
-#: src/GameText.h:633
+#: src/GameText.h:663
 msgid "Click to select screen resolution"
 msgstr "按一下以選擇螢幕解析度"
 
-#: src/GameText.h:634
+#: src/GameText.h:664
 msgid "Completed levels / total number of levels in pack"
 msgstr "在這個關卡包中的 已完成關卡 / 關卡總數"
 
-#: src/GameText.h:635
+#: src/GameText.h:665
 msgid "Name of level pack"
 msgstr "關卡包的名字"
 
-#: src/GameText.h:636
+#: src/GameText.h:666
 msgid "Add the level to the favorite levels list"
 msgstr "增加關卡到「我的最愛關卡」中"
 
-#: src/GameText.h:637
+#: src/GameText.h:667
 msgid "Delete the level from the favorite levels list"
 msgstr "從「我的最愛關卡」中刪除"
 
-#: src/GameText.h:638
+#: src/GameText.h:668
 msgid "Puzzle the levels pack list"
 msgstr "Puzzle關卡包清單"
 
-#: src/GameText.h:639
+#: src/GameText.h:669
 msgid "Enter text to filter the level list"
 msgstr "輸入你想搜尋的來過濾關卡"
 
-#: src/GameText.h:640
+#: src/GameText.h:670
 msgid "Choose the number of players"
 msgstr "選擇玩家數"
 
-#: src/GameText.h:641
+#: src/GameText.h:671
 msgid "Your proxy login"
 msgstr "你的Proxy login"
 
-#: src/GameText.h:642
+#: src/GameText.h:672
 msgid "Your password associated with your login"
 msgstr "你的密碼組合及登錄"
 
-#: src/GameText.h:643
+#: src/GameText.h:673
 msgid "Enter text to filter the replay list"
 msgstr "輸入你想搜尋的來過濾清單"
 
-#: src/GameText.h:644
+#: src/GameText.h:674
 msgid "Enter text to filter the rooms list"
 msgstr "搜尋遊戲間列表"
 
-#: src/GameText.h:645
+#: src/GameText.h:675
 msgid "Press to play X-Moto immediately"
 msgstr "趕快按下去來玩令人愉悅的X-Moto"
 
-#: src/GameText.h:646
+#: src/GameText.h:676
 msgid "Increase or decrease the quality of the levels selected"
 msgstr "提昇或降低被選關卡的品質"
 
-#: src/GameText.h:647
+#: src/GameText.h:677
 msgid "Increase or decrease the difficulty of the levels selected"
 msgstr "提昇或降低被選關卡的難度"
 
-#: src/GameText.h:648
+#: src/GameText.h:678
 msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
 msgstr "當玩家玩完一關就停止遊戲，或是當玩家在玩時繼續遊戲"
 
-#: src/GameText.h:653
+#: src/GameText.h:683
 msgid "Don't show the ghosts while playing"
 msgstr "玩的時候不要顯示鬼影"
 
-#: src/GameText.h:654
+#: src/GameText.h:684
 msgid "The scene is shared by all the players"
 msgstr "佈景景象被所有玩家分享"
 
-#: src/GameText.h:655
+#: src/GameText.h:685
 msgid "Change the X-Moto language"
 msgstr "改變X-Moto的語言/Change the X-Moto language"
 
-#: src/GameText.h:656
+#: src/GameText.h:686
 msgid "Name of the language"
 msgstr "語言"
 
-#: src/GameText.h:657
+#: src/GameText.h:687
 msgid "Code of the language"
 msgstr "語言代碼"
 
-#: src/GameText.h:658
+#: src/GameText.h:688
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
 msgstr "刪除X-Moto認為你應該已經沒啥興趣的重播紀錄"
 
-#: src/GameText.h:659
+#: src/GameText.h:689
 msgid "Remove levels not suitable for children"
 msgstr "移除兒童不宜的關卡(不要想歪)"
 
-#: src/GameText.h:660
+#: src/GameText.h:690
 msgid "Enable this room"
 msgstr "啟用這個遊戲間"
 
-#: src/GameText.h:661
+#: src/GameText.h:691
 msgid "Password associated to your profile for web access"
 msgstr "為了登錄網路，請輸入密碼"
 
-#: src/GameText.h:662
+#: src/GameText.h:692
 msgid "Main options"
 msgstr "主要選項"
 
-#: src/GameText.h:663
+#: src/GameText.h:693
 msgid "Configure the X-Moto theme"
 msgstr "設定X-Moto的佈景主題"
 
-#: src/GameText.h:664
+#: src/GameText.h:694
 msgid "Configure ghosts displayed while playing the game"
 msgstr "設定在玩遊戲時的鬼影"
 
-#: src/GameText.h:665
+#: src/GameText.h:695
 msgid "Configure options linked to your X-Moto database"
 msgstr "設定選項來連接到你的X-Moto資料庫"
 
-#: src/GameText.h:666
+#: src/GameText.h:696
 msgid "Synchronise your database on the web"
 msgstr "用網路同步化你的資料庫"
 
-#: src/GameText.h:667
+#: src/GameText.h:697
 msgid "Synchronise your database when your quit X-Moto"
 msgstr "離開X-Moto時同步化資料庫"
 
-#: src/GameText.h:668
+#: src/GameText.h:698
 msgid "Enable joysticks events"
 msgstr "俺要用搖桿"
 
-#: src/GameText.h:669
+#: src/GameText.h:699
 msgid "Preselect the retry button when dying or finishing a level"
 msgstr "當掛點或過了一關時，讓「再試一次」取得駐點"
 
-#: src/GameText.h:671
+#: src/GameText.h:701
 msgid "Give your mind about this level"
 msgstr "Give your mind about this level"
 
-#: src/GameText.h:672
+#: src/GameText.h:702
 msgid "No idea"
 msgstr "不了解..."
 
-#: src/GameText.h:673
+#: src/GameText.h:703
 msgid "Beginner"
 msgstr "新手"
 
-#: src/GameText.h:674
+#: src/GameText.h:704
 msgid "Expert"
 msgstr "專家"
 
-#: src/GameText.h:675
+#: src/GameText.h:705
 msgid "Master"
 msgstr "天才"
 
-#: src/GameText.h:676
+#: src/GameText.h:706
 msgid "God"
 msgstr "神人"
 
-#: src/GameText.h:677
+#: src/GameText.h:707
 msgid "Go !"
 msgstr "衝啊！"
 
-#: src/GameText.h:678
+#: src/GameText.h:708
 msgid "Not nice at all"
 msgstr "唉~"
 
-#: src/GameText.h:679
+#: src/GameText.h:709
 msgid "Not nice"
 msgstr "不是很好"
 
-#: src/GameText.h:680
+#: src/GameText.h:710
 msgid "Nice"
 msgstr "好"
 
-#: src/GameText.h:681
+#: src/GameText.h:711
 msgid "Really nice"
 msgstr "好極了"
 
-#: src/GameText.h:682
+#: src/GameText.h:712
 msgid "Send this report"
 msgstr "寄出這份報告"
 
-#: src/GameText.h:683
+#: src/GameText.h:713
 msgid "Skip this report"
 msgstr "略過這份報告"
 
-#: src/GameText.h:685
+#: src/GameText.h:715
 msgid "You don't want to vote"
 msgstr "你不想投票"
 
-#: src/GameText.h:686
+#: src/GameText.h:716
 msgid "Really easy"
 msgstr "簡單到不行"
 
-#: src/GameText.h:687
+#: src/GameText.h:717
 msgid "No technical difficulty"
 msgstr "沒有技術性的難度"
 
-#: src/GameText.h:688
+#: src/GameText.h:718
 msgid "At least one difficulty"
 msgstr "至少有一個難關"
 
-#: src/GameText.h:689
+#: src/GameText.h:719
 msgid "Several difficulties"
 msgstr "數個難關"
 
-#: src/GameText.h:690
+#: src/GameText.h:720
 msgid "Impossible"
 msgstr "幾乎不可能"
 
-#: src/GameText.h:691
+#: src/GameText.h:721
 msgid "Basic blocks, no decoration"
 msgstr "基本，沒有裝飾"
 
-#: src/GameText.h:692
+#: src/GameText.h:722
 msgid "Basic decoration, not smooth blocks"
 msgstr "基本裝飾，但邊緣不平滑"
 
-#: src/GameText.h:693
+#: src/GameText.h:723
 msgid "Not original"
 msgstr "Not original"
 
-#: src/GameText.h:694
+#: src/GameText.h:724
 msgid "Nice, could be better"
 msgstr "不錯，可以更好"
 
-#: src/GameText.h:695
+#: src/GameText.h:725
 msgid "Several textures, sprites, ..."
 msgstr "數種材質，鬼影..."
 
-#: src/GameText.h:696
+#: src/GameText.h:726
 msgid "Send this report on the webserver"
 msgstr "寄出這份報告到伺服器"
 
-#: src/GameText.h:697
+#: src/GameText.h:727
 msgid "Don't send this report on the webserver"
 msgstr "不要寄這份報告到伺服器"
 
-#: src/GameText.h:699
+#: src/GameText.h:729
 msgid "Server configuration to play via the network"
 msgstr "線上玩伺服器設定"
 
-#: src/GameText.h:700
+#: src/GameText.h:730
 msgid "Start the server at X-Moto startup"
 msgstr "在X-Moto開始時啟用伺服器"
 
-#: src/GameText.h:701
+#: src/GameText.h:731
 msgid "Start/stop the server"
 msgstr "啟用/停止 伺服器"
 
-#: src/GameText.h:702
+#: src/GameText.h:732
 msgid "Port on which the server must listen to"
 msgstr "Port on which the server must listen to"
 
-#: src/GameText.h:703
+#: src/GameText.h:733
 msgid "Server on which you want to connect"
 msgstr "Server on which you want to connect"
 
-#: src/GameText.h:704
+#: src/GameText.h:734
 msgid "Connect/disconnect the client to the server"
 msgstr "連接/斷開 到伺服器的終端機"
 
-#: src/GameText.h:705
+#: src/GameText.h:735
 msgid ""
 "Enables background music for levels that do not have their own music track"
 msgstr "當遇到沒有背景音樂的關卡時，我會隨便選一個播放。"
 
-#: src/GameText.h:706
+#: src/GameText.h:736
 msgid "Network playing mode : just see other players as ghosts"
 msgstr "線上玩模式：只看見其他玩家的鬼影"
 
-#: src/GameText.h:708
+#: src/GameText.h:738
 msgid "Levels with no highscore"
 msgstr "目前沒有人過的了的關卡"
 
-#: src/GameText.h:709 src/GameText.h:743
+#: src/GameText.h:739 src/GameText.h:773
 msgid "Levels you have not completed"
 msgstr "你已經完成的關卡"
 
-#: src/GameText.h:710
+#: src/GameText.h:740
 msgid "You're not the highscore holder"
 msgstr "你不是最高紀錄保持人..."
 
-#: src/GameText.h:712
+#: src/GameText.h:742
 msgid "New and updated levels"
 msgstr "新的和更新的關卡"
 
-#: src/GameText.h:713
+#: src/GameText.h:743
 msgid "Favorite levels"
 msgstr "最愛的關卡"
 
-#: src/GameText.h:714
+#: src/GameText.h:744
 msgid "Blacklisted levels"
 msgstr "關卡黑名單"
 
-#: src/GameText.h:715
+#: src/GameText.h:745
 msgid "Nicest levels"
 msgstr "最讚關卡"
 
-#: src/GameText.h:716
+#: src/GameText.h:746
 msgid "Hardest levels"
 msgstr "最難關卡"
 
-#: src/GameText.h:717
+#: src/GameText.h:747
 msgid "Easiest levels"
 msgstr "最易關卡"
 
-#: src/GameText.h:718
+#: src/GameText.h:748
 msgid "Crappiest levels"
 msgstr "最廢物的關卡"
 
-#: src/GameText.h:719
+#: src/GameText.h:749
 msgid "Scripted levels"
 msgstr "Script關卡"
 
-#: src/GameText.h:720
+#: src/GameText.h:750
 msgid "Physics levels"
 msgstr "物理模擬關卡"
 
-#: src/GameText.h:722
+#: src/GameText.h:752
 msgid "Last played levels"
 msgstr "上次玩的關卡"
 
-#: src/GameText.h:723
+#: src/GameText.h:753
 msgid "Never played levels"
 msgstr "從沒玩過的關卡"
 
-#: src/GameText.h:724
+#: src/GameText.h:754
 msgid "Most played levels"
 msgstr "玩過最多次的關卡"
 
-#: src/GameText.h:725
+#: src/GameText.h:755
 msgid "Less played levels (but played)"
 msgstr "玩過但是很少玩的關卡"
 
-#: src/GameText.h:726
+#: src/GameText.h:756
 msgid "Last highscores"
 msgstr "最近的最高紀錄"
 
-#: src/GameText.h:727
+#: src/GameText.h:757
 msgid "Last levels"
 msgstr "最新關卡"
 
-#: src/GameText.h:728
+#: src/GameText.h:758
 msgid "Oldest highscores"
 msgstr "很舊的關卡"
 
-#: src/GameText.h:729
+#: src/GameText.h:759
 msgid "Platinum"
 msgstr "白金級"
 
-#: src/GameText.h:730
+#: src/GameText.h:760
 msgid "Gold"
 msgstr "黃金級"
 
-#: src/GameText.h:731
+#: src/GameText.h:761
 msgid "Silver"
 msgstr "銀級"
 
-#: src/GameText.h:732
+#: src/GameText.h:762
 msgid "Bronze"
 msgstr "銅級"
 
-#: src/GameText.h:733
+#: src/GameText.h:763
 msgid "No medal"
 msgstr "沒獎章的關卡"
 
-#: src/GameText.h:734
+#: src/GameText.h:764
 msgid "My levels"
 msgstr "我的關卡"
 
-#: src/GameText.h:735
+#: src/GameText.h:765
 msgid "Crappy levels"
 msgstr "垃圾關卡"
 
-#: src/GameText.h:736
+#: src/GameText.h:766
 msgid "Shortest levels"
 msgstr "路程最短的關卡"
 
-#: src/GameText.h:737
+#: src/GameText.h:767
 msgid "Medium levels"
 msgstr "普通難度關卡"
 
-#: src/GameText.h:738
+#: src/GameText.h:768
 msgid "Long levels"
 msgstr "路程遠的關卡"
 
-#: src/GameText.h:739
+#: src/GameText.h:769
 msgid "Very long levels"
 msgstr "路程遠的要命關卡"
 
-#: src/GameText.h:740
+#: src/GameText.h:770
 msgid "Stolen highscores"
 msgstr ""
 
-#: src/GameText.h:742
+#: src/GameText.h:772
 msgid "Levels with no highscore in your room"
 msgstr "你的遊戲間裡沒有最高紀錄的關卡"
 
-#: src/GameText.h:744
+#: src/GameText.h:774
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "在遊戲間裡有個人創造了一個比你還高的紀錄"
 
-#: src/GameText.h:745
+#: src/GameText.h:775
 msgid "All X-Moto levels"
 msgstr "X-Moto的所有關卡"
 
-#: src/GameText.h:746
+#: src/GameText.h:776
 msgid "New and updated levels since your last check"
 msgstr "自從上次檢查後新的升級關卡"
 
-#: src/GameText.h:747
+#: src/GameText.h:777
 msgid "Your favorite levels"
 msgstr "你最愛的關卡"
 
-#: src/GameText.h:748
+#: src/GameText.h:778
 msgid "Your blacklisted levels"
 msgstr "你的黑名單關卡"
 
-#: src/GameText.h:749
+#: src/GameText.h:779
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "透過網路投票選出的最佳關卡"
 
-#: src/GameText.h:750
+#: src/GameText.h:780
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "透過網路投票選出的最難關卡"
 
-#: src/GameText.h:751
+#: src/GameText.h:781
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "透過網路投票選出的最容易關卡"
 
-#: src/GameText.h:752
+#: src/GameText.h:782
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "透過網路投票選出的最垃圾關卡"
 
-#: src/GameText.h:753
+#: src/GameText.h:783
 msgid "X-Moto levels which are dynamic"
 msgstr "動態的X-Moto關卡"
 
-#: src/GameText.h:754
+#: src/GameText.h:784
 msgid "X-Moto levels using strongly physics"
 msgstr "有強大物理模擬的X-Moto關卡"
 
-#: src/GameText.h:755
+#: src/GameText.h:785
 msgid "Last levels you have played"
 msgstr "你最近所玩過的X-Moto關卡"
 
-#: src/GameText.h:756
+#: src/GameText.h:786
 msgid "X-Moto levels you never played"
 msgstr "你從未玩過的X-Moto關卡"
 
-#: src/GameText.h:757
+#: src/GameText.h:787
 msgid "X-Moto levels you have played the most"
 msgstr "你最常玩的X-Moto關卡"
 
-#: src/GameText.h:758
+#: src/GameText.h:788
 msgid "X-Moto levels you have played only a few times"
 msgstr "你只玩過一兩次的X-Moto關卡"
 
-#: src/GameText.h:759
+#: src/GameText.h:789
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "最近在你的遊戲間有最高紀錄的X-Moto關卡"
 
-#: src/GameText.h:760
+#: src/GameText.h:790
 msgid "Last created X-Moto levels"
 msgstr "最近才被創造出的X-Moto關卡"
 
-#: src/GameText.h:761
+#: src/GameText.h:791
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto在你的遊戲間裡有一關有舊的最高紀錄"
 
-#: src/GameText.h:762
+#: src/GameText.h:792
 msgid "You have the room highscore"
 msgstr "你有遊戲間裡有最高紀錄"
 
-#: src/GameText.h:763
+#: src/GameText.h:793
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "你的個人最高分幾乎是遊戲間裡的最高紀錄(95%)"
 
-#: src/GameText.h:764
+#: src/GameText.h:794
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr " 你的個人最高分幾乎是遊戲間裡的最高紀錄 (90%-95%)"
 
-#: src/GameText.h:765
+#: src/GameText.h:795
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "你的個人最高分幾乎是遊戲間裡的最高紀錄 (80%-90%)"
 
-#: src/GameText.h:766
+#: src/GameText.h:796
 msgid "The room highscore is really better than your own highscore"
 msgstr "遊戲間裡的最高分真的比你的還高"
 
-#: src/GameText.h:767
+#: src/GameText.h:797
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Pack \"%s\""
 
-#: src/GameText.h:768
+#: src/GameText.h:798
 #, c-format
 msgid "Highscores by %s"
 msgstr "最高紀錄由%s創下"
 
-#: src/GameText.h:769
+#: src/GameText.h:799
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "擴充關卡(你之前放進「我的關卡」的那些)"
 
-#: src/GameText.h:770
+#: src/GameText.h:800
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr "被標記「廢物」的關卡在其他的遊戲包裡都會被隱藏"
 
-#: src/GameText.h:771
+#: src/GameText.h:801
 msgid "The shortest levels (less than 25 seconds)"
 msgstr "路程最短的關卡(少於25秒)"
 
-#: src/GameText.h:772
+#: src/GameText.h:802
 msgid "The medium levels (25 seconds to 60)"
 msgstr "路程中等的關卡(25秒到60秒)"
 
-#: src/GameText.h:773
+#: src/GameText.h:803
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr "路程較長的關卡 (1分鐘到2分鐘)"
 
-#: src/GameText.h:774
+#: src/GameText.h:804
 msgid "The longest levels (more than 2 minutes)"
 msgstr "路程有夠遠的關卡(超過2分鐘)"
 
-#: src/GameText.h:775
+#: src/GameText.h:805
 msgid "Levels for which you owned the highscore"
 msgstr ""
 
-#: src/GameText.h:777
+#: src/GameText.h:807
 msgid "Ugly mode enabled"
 msgstr "火柴人模式開啟"
 
-#: src/GameText.h:778
+#: src/GameText.h:808
 msgid "Ugly mode disabled"
 msgstr "關閉火柴人模式"
 
-#: src/GameText.h:779
+#: src/GameText.h:809
 msgid "Theme mode enabled"
 msgstr "佈景主題模式開啟"
 
-#: src/GameText.h:780
+#: src/GameText.h:810
 msgid "Theme mode disabled"
 msgstr "佈景主題模式關閉"
 
-#: src/GameText.h:781
+#: src/GameText.h:811
 msgid "UglyOver mode enabled"
 msgstr "噁爛到極點的火柴人模式開啟"
 
-#: src/GameText.h:782
+#: src/GameText.h:812
 msgid "UglyOver mode disabled"
 msgstr "噁爛到極點的火柴人模式關閉"
 
-#: src/GameText.h:783
+#: src/GameText.h:813
 msgid "Web connection enabled"
 msgstr "網路連接啟用"
 
-#: src/GameText.h:784
+#: src/GameText.h:814
 msgid "Web connection disabled"
 msgstr "網路連接停用"
 
-#: src/GameText.h:785
+#: src/GameText.h:815
 msgid "Replay interpolation enabled"
 msgstr "重播紀錄更改啟用"
 
-#: src/GameText.h:786
+#: src/GameText.h:816
 msgid "Replay interpolation disabled"
 msgstr "重播紀錄更改停用"
 
-#: src/GameText.h:787
+#: src/GameText.h:817
 msgid "Fps enabled"
 msgstr "顯示Fps"
 
-#: src/GameText.h:788
+#: src/GameText.h:818
 msgid "Fps disabled"
 msgstr "不顯示Fps"
 
-#: src/GameText.h:789
+#: src/GameText.h:819
 msgid "Audio enabled"
 msgstr "開啟聲音"
 
-#: src/GameText.h:790
+#: src/GameText.h:820
 msgid "Audio disabled"
 msgstr "關閉聲音"
 
-#: src/GameText.h:792
+#: src/GameText.h:822
 msgid "No training positions stored"
 msgstr "No training positions stored"
 
-#: src/GameText.h:793
+#: src/GameText.h:823
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr " Training position %i/%i restored"
 
-#: src/GameText.h:794
+#: src/GameText.h:824
 #, c-format
 msgid "Stored as training position %i"
 msgstr "Stored as training position %i"
 
-#: src/GameText.h:795
+#: src/GameText.h:825
 msgid ""
 "Physic levels recording is still not implemented.\n"
 "Sorry."
 msgstr ""
 
-#: src/GameText.h:797
+#: src/GameText.h:827
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/GameText.h:800
+#: src/GameText.h:830
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:ASIAN"
 
@@ -3134,6 +3171,13 @@ msgid ""
 msgstr ""
 "現在這是最後一個了...這次路程不長\n"
 "但取代而之的是更困難的障礙物！祝你好運！ :)"
+
+#~ msgid ""
+#~ "Read the README file or check out the website at\n"
+#~ "http://xmoto.tuxfamily.org for more information."
+#~ msgstr ""
+#~ "可以看README檔或上我們的網站\n"
+#~ "http://xmoto.tuxfamily.org來得到更多更多的資訊"
 
 #~ msgid ""
 #~ "X-Moto uses a database on your computer to save all your scores and "

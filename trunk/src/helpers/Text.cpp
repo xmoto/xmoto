@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Text.h"
+#include <cstdio>
 
 std::string txtToLower(const std::string& i_str) {
     std::string v_res;

@@ -27,7 +27,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class StateHelp : public StateMenu {
   public:
   StateHelp(bool drawStateBehind    = true,
-	    bool updateStatesBehind = false
+	    bool updateStatesBehind = false,
+	    bool i_gameHelp         = false,
+	    bool i_allowSceneOver = true
 	    );
   virtual ~StateHelp();
 
@@ -43,6 +45,9 @@ class StateHelp : public StateMenu {
  private:
   /* GUI */
   void createGUI();
+
+  bool m_gameHelp;
+  bool m_allowSceneOver;
 };
 
 #endif

@@ -26,13 +26,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StatePreplayingCredits.h"
 
 StateHelp::StateHelp(bool drawStateBehind,
-		     bool updateStatesBehind):
+		     bool updateStatesBehind, bool i_gameHelp, bool i_allowSceneOver):
   StateMenu(drawStateBehind,
 	    updateStatesBehind)
 {
   m_name  = "StateHelp";
+  m_gameHelp = i_gameHelp;
+  m_allowSceneOver = i_allowSceneOver;
   createGUI(); // create the gui each time because it's small and keys can change
-  GameApp::instance()->playMenuMusic("menu1");
 }
 
 StateHelp::~StateHelp()
@@ -42,7 +43,6 @@ StateHelp::~StateHelp()
 
 void StateHelp::enterAfterPop() {
   StateMenu::enterAfterPop();
-  GameApp::instance()->playMenuMusic("menu1");
 }
 
 void StateHelp::leave()
@@ -52,28 +52,27 @@ void StateHelp::leave()
 
 void StateHelp::checkEvents() {
 
-  /* Find first tutorial level */
-  UIButton *pTutorialButton = (UIButton *) m_GUI->getChild("FRAME:TUTORIAL_BUTTON");
-  if(pTutorialButton->isClicked()) {
-    pTutorialButton->setClicked(false);
-
-    try {
-      GameApp::instance()->setCurrentPlayingList(NULL);
-      StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),
-								  "tut1", false));
-    } catch(Exception &e) {
+  if (m_allowSceneOver) {
+    /* Find first tutorial level */
+    UIButton *pTutorialButton = (UIButton *) m_GUI->getChild("FRAME:TUTORIAL_BUTTON");
+    if(pTutorialButton->isClicked()) {
+      pTutorialButton->setClicked(false);
+  
+      try {
+        GameApp::instance()->setCurrentPlayingList(NULL);
+        StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),"tut1", false));
+      } catch(Exception &e) {
+      }
     }
-  }
-
-  /* View credits? */
-  UIButton *pCreditsButton = (UIButton *)m_GUI->getChild("FRAME:CREDITS_BUTTON");
-  if(pCreditsButton->isClicked()) {
-    pCreditsButton->setClicked(false);
-
-    try {
-      StateManager::instance()->pushState(new StatePreplayingCredits(StateManager::instance()->getUniqueId(),
-								     "credits.rpl"));      
-    } catch(Exception &e) {
+    /* View credits? */
+    UIButton *pCreditsButton = (UIButton *)m_GUI->getChild("FRAME:CREDITS_BUTTON");
+    if(pCreditsButton->isClicked()) {
+      pCreditsButton->setClicked(false);  
+  
+      try {
+        StateManager::instance()->pushState(new StatePreplayingCredits(StateManager::instance()->getUniqueId(),"credits.rpl"));      
+      } catch(Exception &e) {
+      }
     }
   }
 
@@ -89,7 +88,8 @@ void StateHelp::checkEvents() {
 void StateHelp::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   StateMenu::xmKey(i_type, i_xmkey);
 
-  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
+  if(i_type == INPUT_DOWN && ( i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+			       i_xmkey == XMKey(SDLK_F1,     KMOD_NONE) )) {
     m_requestForEnd = true;
   }
 }
@@ -106,45 +106,57 @@ void StateHelp::createGUI() {
 		     drawLib->getDispWidth(),
 		     drawLib->getDispHeight());
   
-  
   int v_offsetX = drawLib->getDispWidth()  / 10;
   int v_offsetY = drawLib->getDispHeight() / 10;
-  v_frame = new UIFrame(m_GUI, v_offsetX, v_offsetY, "",
-			drawLib->getDispWidth()  - 2*v_offsetX,
-			drawLib->getDispHeight() - 2*v_offsetY);
-  v_frame->setID("FRAME");
 
+  v_frame = new UIFrame(m_GUI, v_offsetX, m_gameHelp ? v_offsetY / 2 : v_offsetY, "",
+			drawLib->getDispWidth()  - 2*v_offsetX,
+			m_gameHelp ? drawLib->getDispHeight() - v_offsetY : drawLib->getDispHeight() - 2*v_offsetY
+			);
+  v_frame->setID("FRAME");
+  
   v_someText = new UIStatic(v_frame, 0, 0, GAMETEXT_HELP, v_frame->getPosition().nWidth, 36);
   v_someText->setFont(drawLib->getFontMedium());
-  v_someText = new UIStatic(v_frame, 10, 46,
+  v_someText = new UIStatic(v_frame, 10, 40, m_gameHelp ?
+			    GAMETEXT_HELPTEXT_PLAYINGLEVEL(InputHandler::instance()->getFancyKeyByAction("Drive"),
+					      InputHandler::instance()->getFancyKeyByAction("Brake"),
+					      InputHandler::instance()->getFancyKeyByAction("PullBack"),
+					      InputHandler::instance()->getFancyKeyByAction("PushForward"),
+					      InputHandler::instance()->getFancyKeyByAction("ChangeDir")
+					      ) :
 			    GAMETEXT_HELPTEXT(InputHandler::instance()->getFancyKeyByAction("Drive"),
 					      InputHandler::instance()->getFancyKeyByAction("Brake"),
 					      InputHandler::instance()->getFancyKeyByAction("PullBack"),
 					      InputHandler::instance()->getFancyKeyByAction("PushForward"),
 					      InputHandler::instance()->getFancyKeyByAction("ChangeDir")
 					      ),
-			    v_frame->getPosition().nWidth-20, v_frame->getPosition().nHeight-56);
+			    v_frame->getPosition().nWidth-20,
+			    m_gameHelp ? v_frame->getPosition().nHeight-46 :
+			                 v_frame->getPosition().nHeight-56);
   v_someText->setFont(drawLib->getFontSmall());
   v_someText->setVAlign(UI_ALIGN_TOP);
   v_someText->setHAlign(UI_ALIGN_LEFT);
-
-  UIButton *pTutorialButton = new UIButton(v_frame, v_frame->getPosition().nWidth-240, v_frame->getPosition().nHeight-62,
-					   GAMETEXT_TUTORIAL, 115, 57);
-  pTutorialButton->setContextHelp(CONTEXTHELP_TUTORIAL);
-  pTutorialButton->setFont(drawLib->getFontSmall());
-  pTutorialButton->setType(UI_BUTTON_TYPE_SMALL);
-  pTutorialButton->setID("TUTORIAL_BUTTON");    
-
-  UIButton *pCreditsButton = new UIButton(v_frame, v_frame->getPosition().nWidth-360, v_frame->getPosition().nHeight-62,
-					  GAMETEXT_CREDITSBUTTON, 115, 57);
-  pCreditsButton->setContextHelp(CONTEXTHELP_CREDITS);
-  pCreditsButton->setFont(drawLib->getFontSmall());
-  pCreditsButton->setType(UI_BUTTON_TYPE_SMALL);
-  pCreditsButton->setID("CREDITS_BUTTON");
-
+  
+  if (m_allowSceneOver) {
+    UIButton *pTutorialButton = new UIButton(v_frame, v_frame->getPosition().nWidth-240, v_frame->getPosition().nHeight-62,
+					     GAMETEXT_TUTORIAL, 115, 57);
+    pTutorialButton->setContextHelp(CONTEXTHELP_TUTORIAL);
+    pTutorialButton->setFont(drawLib->getFontSmall());
+    pTutorialButton->setType(UI_BUTTON_TYPE_SMALL);
+    pTutorialButton->setID("TUTORIAL_BUTTON");    
+    
+    UIButton *pCreditsButton = new UIButton(v_frame, v_frame->getPosition().nWidth-360, v_frame->getPosition().nHeight-62,
+					    GAMETEXT_CREDITSBUTTON, 115, 57);
+    pCreditsButton->setContextHelp(CONTEXTHELP_CREDITS);
+    pCreditsButton->setFont(drawLib->getFontSmall());
+    pCreditsButton->setType(UI_BUTTON_TYPE_SMALL);
+    pCreditsButton->setID("CREDITS_BUTTON");
+  }
+  
   UIButton *pCloseButton = new UIButton(v_frame, v_frame->getPosition().nWidth-120, v_frame->getPosition().nHeight-62,
 					GAMETEXT_CLOSE, 115, 57);
   pCloseButton->setFont(drawLib->getFontSmall());
   pCloseButton->setType(UI_BUTTON_TYPE_SMALL);
   pCloseButton->setID("CLOSE_BUTTON");
 }
+
