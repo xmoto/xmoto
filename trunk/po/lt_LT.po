@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-05-14 18:47+0200\n"
-"PO-Revision-Date: 2009-04-19 21:24+0300\n"
+"PO-Revision-Date: 2009-05-15 12:45+0300\n"
 "Last-Translator: Tadas Masiulionis <tadzikaz@gmail.com>\n"
-"Language-Team: Lithuanian <>\n"
+"Language-Team: Lithuanian <tadzikaz@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -872,6 +872,10 @@ msgid ""
 "Use Quick Play button to immediately start a game with a random level,\n"
 "or use Levels button to select from level packs."
 msgstr ""
+"Naudokite mygtuką „Greitas paleidimas“, kad tuoj pat galėtumėte paleisti "
+"žaidimą\n"
+"su skirtingais lygiais arba naudokite mygtuką „Lygiai“, kuriuos pasirinksite "
+"iš lygių paketo."
 
 #: src/GameText.h:276 src/GameText.h:304
 msgid ""
@@ -885,6 +889,9 @@ msgid ""
 "http://xmoto.tuxfamily.org\n"
 "for more information."
 msgstr ""
+"Skaitykite README rinkmeną arba apsilankykite mūsų tinklapyje adresu\n"
+"http://xmoto.tuxfamily.org, kuriame rasite daugiau jus dominančios "
+"informacijos."
 
 #: src/GameText.h:290
 msgid "change mirror mode"
@@ -892,19 +899,19 @@ msgstr "Keisti veidrodžio režimą"
 
 #: src/GameText.h:291
 msgid "Toggle blacklist"
-msgstr ""
+msgstr "Toggle juodasis sąrašas"
 
 #: src/GameText.h:292
 msgid "Enable/disable audio"
-msgstr ""
+msgstr "Įjungti/išjungti garsą"
 
 #: src/GameText.h:293
 msgid "Open options menu"
-msgstr ""
+msgstr "Atverti parinkčių meniu"
 
 #: src/GameText.h:294
 msgid "Show this help"
-msgstr ""
+msgstr "Rodyti šią pagalbą"
 
 #: src/GameText.h:295 src/GameText.h:626
 msgid "Show the ghost if possible in the game"
@@ -912,11 +919,11 @@ msgstr "Rodyti vaiduoklį, jeigu yra galimybė žaidime"
 
 #: src/GameText.h:296
 msgid "Toggle favorite"
-msgstr ""
+msgstr "Toogle parankiniai"
 
 #: src/GameText.h:297
 msgid "Enable/disable FPS display"
-msgstr ""
+msgstr "Įjungti/išjungti FPS rodymą"
 
 #: src/GameText.h:299 src/GameText.h:452
 msgid "Enable/disable ugly mode"
@@ -924,11 +931,11 @@ msgstr "Įjungti/išjungti bjaurų režimą"
 
 #: src/GameText.h:300
 msgid "Enable/disable theme mode"
-msgstr ""
+msgstr "Įjungti/išjungti temų režimą"
 
 #: src/GameText.h:301
 msgid "Enable/disable ugly over mode"
-msgstr ""
+msgstr "Įjungti/išjungti bjaurųjį režimą"
 
 #: src/GameText.h:307
 msgid "Hide ghosts"
@@ -2461,7 +2468,7 @@ msgstr "Įjungti vairalaizdės įvykius"
 #: src/GameText.h:699
 msgid "Preselect the retry button when dying or finishing a level"
 msgstr ""
-"Iš anksto pasirinkti pakartotinio bandymo mygtuką, mirdus arba pabaigus lygį"
+"Iš anksto pasirinkti pakartotinio bandymo mygtuką, mirus arba pabaigus lygį"
 
 #: src/GameText.h:701
 msgid "Give your mind about this level"
@@ -2469,23 +2476,23 @@ msgstr "Pateik savo nuomonę apie šį lygį"
 
 #: src/GameText.h:702
 msgid "No idea"
-msgstr "Nėra idėjų"
+msgstr "Neturiu nuomonės"
 
 #: src/GameText.h:703
 msgid "Beginner"
-msgstr "Naujokas"
+msgstr "Naujokams"
 
 #: src/GameText.h:704
 msgid "Expert"
-msgstr "Ekspertas"
+msgstr "Ekspertams"
 
 #: src/GameText.h:705
 msgid "Master"
-msgstr "Profesionalas"
+msgstr "Profesionalams"
 
 #: src/GameText.h:706
 msgid "God"
-msgstr "Asas"
+msgstr "Asams"
 
 #: src/GameText.h:707
 msgid "Go !"
@@ -2493,27 +2500,27 @@ msgstr "Važiuok!"
 
 #: src/GameText.h:708
 msgid "Not nice at all"
-msgstr "Visai negražu"
+msgstr "Bjauri"
 
 #: src/GameText.h:709
 msgid "Not nice"
-msgstr "Negražu"
+msgstr "Negraži"
 
 #: src/GameText.h:710
 msgid "Nice"
-msgstr "Gražu"
+msgstr "Graži"
 
 #: src/GameText.h:711
 msgid "Really nice"
-msgstr "Išties gražu"
+msgstr "Puiki"
 
 #: src/GameText.h:712
 msgid "Send this report"
-msgstr "Siųsti šį raportą"
+msgstr "Siųsti šią apklausą"
 
 #: src/GameText.h:713
 msgid "Skip this report"
-msgstr "Praleisti šį raportą"
+msgstr "Praleisti šią apklausą"
 
 #: src/GameText.h:715
 msgid "You don't want to vote"
@@ -2561,11 +2568,11 @@ msgstr "Keletas struktūrų, spruklių, ..."
 
 #: src/GameText.h:726
 msgid "Send this report on the webserver"
-msgstr "Siųsti šį raportą į web serverį"
+msgstr "Siųsti šią apklausą į web serverį"
 
 #: src/GameText.h:727
 msgid "Don't send this report on the webserver"
-msgstr "Nesiųsti šio raporto į web serverį"
+msgstr "Nesiųsti šios apklausos į web serverį"
 
 #: src/GameText.h:729
 msgid "Server configuration to play via the network"
