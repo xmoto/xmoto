@@ -37,7 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../xmscene/Level.h"
 #include "../../xmscene/BikeController.h"
 
-#define XM_SERVER_UPLOADING_FPS_PLAYER   20
+#define XM_SERVER_UPLOADING_FPS_PLAYER   25
 #define XM_SERVER_UPLOADING_FPS_OPLAYERS 8
 #define XM_SERVER_PLAYER_INACTIV_TIME_MAX  1000
 #define XM_SERVER_PLAYER_INACTIV_TIME_PREV  300
