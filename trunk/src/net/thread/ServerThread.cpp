@@ -373,7 +373,14 @@ void ServerThread::SP2_initPlaying() {
   }
 
   try {
-    NA_prepareToPlay na(v_id_level);
+    std::vector<int> v_players;
+    for(unsigned int i=0; i<m_clients.size(); i++) {
+      if(m_clients[i]->isMarkedToPlay()) {
+	v_players.push_back(m_clients[i]->id());
+      }
+    }
+
+    NA_prepareToPlay na(v_id_level, v_players);
     sendToAllClientsMarkedToPlay(&na, -1, 0);
   } catch(Exception &e) {
     /* bad */

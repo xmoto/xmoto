@@ -1049,7 +1049,7 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
   if(XMSession::instance()->ugly() == false) {
     if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
       /* No not ugly, fancy! Render into overlay? */      
-      if(XMSession::instance()->ghostMotionBlur()
+      if(XMSession::instance()->ghostMotionBlur() && i_ghost->getBikeTheme()->getGhostEffect()
 	 && m_allowGhostEffect) {
 	m_Overlay.beginRendering();
 	m_Overlay.fade(0.15);
@@ -1062,7 +1062,7 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
 	i_scene->gameMessage("Unable to render the ghost", true, 50);
       }
 
-      if(XMSession::instance()->ghostMotionBlur()
+      if(XMSession::instance()->ghostMotionBlur() && i_ghost->getBikeTheme()->getGhostEffect()
 	 && m_allowGhostEffect) {
 	m_Overlay.endRendering();
 	m_Overlay.present();

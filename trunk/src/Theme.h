@@ -418,6 +418,7 @@ public:
   std::vector<ThemeFile>* getRequiredFiles();
 
   BikerTheme* getPlayerTheme();
+  BikerTheme* getNetPlayerTheme();
   BikerTheme* getGhostTheme();
 
   TextureManager* getTextureManager() {
@@ -435,6 +436,7 @@ public:
   bool isAFileOutOfDate(const std::string& i_file); // to not download old files for compatibilities
 
   BikerTheme *m_player;
+  BikerTheme *m_netplayer;
   BikerTheme *m_ghost;
 
   void cleanSprites();
@@ -474,7 +476,8 @@ class BikerTheme {
 	     std::string p_UpperArm,
 	     std::string p_UpperLeg,
 	     Color p_UglyRiderColor,
-	     Color p_UglyWheelColor
+	     Color p_UglyWheelColor,
+	     bool p_ghostEffect
 	     );
   ~BikerTheme();
 
@@ -491,12 +494,15 @@ class BikerTheme {
   Color getUglyRiderColor();
   Color getUglyWheelColor();
 
+  bool getGhostEffect() const;
+
  private:
   Theme* m_associated_theme;
 
   Color m_UglyRiderColor;
   Color m_UglyWheelColor;
   
+  bool m_ghostEffect;
   std::string m_Body;
   std::string m_Front;
   std::string m_Rear;

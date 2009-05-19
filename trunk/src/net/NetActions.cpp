@@ -654,24 +654,43 @@ NetClientMode NA_clientMode::mode() const {
   return m_mode;
 }
 
-NA_prepareToPlay::NA_prepareToPlay(const std::string& i_id_level) {
+NA_prepareToPlay::NA_prepareToPlay(const std::string& i_id_level, std::vector<int>& i_players) {
   m_id_level = i_id_level;
+
+  // copy the vector
+  m_players = i_players;
 }
 
 NA_prepareToPlay::NA_prepareToPlay(void* data, unsigned int len) {
   unsigned int v_localOffset = 0;
-  m_id_level = getLine(data, len, &v_localOffset);
+  unsigned int v_nplayers;
+
+  m_id_level = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
+  v_nplayers = atoi(getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset).c_str());
+  for(unsigned int i=0; i<v_nplayers; i++) {
+    m_players.push_back(atoi(getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset).c_str()));
+  }
 }
 
 NA_prepareToPlay::~NA_prepareToPlay() {
 }
 
 void NA_prepareToPlay::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
-  NetAction::send(i_tcpsd, NULL, NULL, NULL, m_id_level.c_str(), m_id_level.size()); // don't send the \0
+  std::ostringstream v_send;
+  v_send << m_id_level       << "\n";
+  v_send << m_players.size() << "\n";
+  for(unsigned int i=0; i<m_players.size(); i++) {
+    v_send << m_players[i]   << "\n";
+  }
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.str().c_str(), v_send.str().size()); // don't send the \0
 }
 
 std::string NA_prepareToPlay::idLevel() const {
   return m_id_level;
+}
+
+const std::vector<int>& NA_prepareToPlay::players() {
+  return m_players;
 }
 
 NA_killAlert::NA_killAlert(int i_time) {

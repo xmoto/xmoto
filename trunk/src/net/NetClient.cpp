@@ -250,6 +250,23 @@ int NetClient::getOwnFrameFPS() const {
   return m_lastOwnFPS;
 }
 
+void NetClient::updateOtherClientsMode(std::vector<int> i_slavePlayers) {
+  bool v_found;
+
+  for(unsigned int i=0; i<m_otherClients.size(); i++) {
+    v_found = false;
+    for(unsigned j=0; j<i_slavePlayers.size(); j++) {
+      if(m_otherClients[i]->id() == i_slavePlayers[j]) {
+	m_otherClients[i]->setMode(NETCLIENT_SLAVE_MODE);
+	v_found = true;
+      }
+    }
+    if(v_found == false) {
+      m_otherClients[i]->setMode(NETCLIENT_GHOST_MODE);
+    }
+  }
+}
+
 void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
   switch(i_netAction->actionType()) {
 
@@ -334,16 +351,33 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 	
 	if(v_ghost == NULL) {
 	  /* add the net ghost */
+
+	  // if this is a client of the current party, add it as normal player
+	  bool v_isSlaveMode = m_otherClients[v_clientId]->mode() == NETCLIENT_SLAVE_MODE;
+
 	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	    v_ghost = m_universe->getScenes()[i]->
-	      addNetGhost(m_otherClients[v_clientId]->name(), Theme::instance(),
-			  Theme::instance()->getGhostTheme(),
-			  TColor(255,255,255,0),
-			  TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-				 GET_GREEN(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-				 GET_BLUE(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-				 0)
-			  );
+
+	    if(v_isSlaveMode) {
+	      v_ghost = m_universe->getScenes()[i]->
+		addNetGhost(m_otherClients[v_clientId]->name(), Theme::instance(),
+			    Theme::instance()->getNetPlayerTheme(),
+			    TColor(0,255,255,0),
+			    TColor(GET_RED(Theme::instance()->getNetPlayerTheme()->getUglyRiderColor()),
+				   GET_GREEN(Theme::instance()->getNetPlayerTheme()->getUglyRiderColor()),
+				   GET_BLUE(Theme::instance()->getNetPlayerTheme()->getUglyRiderColor()),
+				   0)
+			    );
+	    } else {
+	      v_ghost = m_universe->getScenes()[i]->
+		addNetGhost(m_otherClients[v_clientId]->name(), Theme::instance(),
+			    Theme::instance()->getGhostTheme(),
+			    TColor(255,255,255,0),
+			    TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+				   GET_GREEN(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+				   GET_BLUE(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+				   0)
+			    );
+	    }
 	    m_otherClients[v_clientId]->setNetGhost(i_netAction->getSubSource(), v_ghost);
 	  }
 	}
@@ -427,6 +461,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 
   case TNA_prepareToPlay:
     {
+      updateOtherClientsMode(((NA_prepareToPlay*)i_netAction)->players());
       StateManager::instance()->sendAsynchronousMessage("NET_PREPARE_PLAYING", ((NA_prepareToPlay*)i_netAction)->idLevel());
     }
     break;
@@ -489,6 +524,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 NetOtherClient::NetOtherClient(int i_id, const std::string& i_name) {
   m_id       = i_id;
   m_name     = i_name;
+  m_netMode  = NETCLIENT_ANY_MODE;
 
   for(unsigned int i=0; i<NETACTION_MAX_SUBSRC; i++) {
     m_ghosts[i] = NULL;
@@ -508,6 +544,14 @@ std::string NetOtherClient::name() const {
 
 void NetOtherClient::setName(const std::string& i_name) {
   m_name = i_name;
+}
+
+NetClientMode NetOtherClient::mode() const {
+  return m_netMode;
+}
+
+void NetOtherClient::setMode(NetClientMode i_netMode) {
+  m_netMode = i_netMode;
 }
 
 std::string NetOtherClient::lastPlayingLevelId() {

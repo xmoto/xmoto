@@ -44,7 +44,9 @@ class NetOtherClient {
   int id() const;
 
   std::string name() const;
+  NetClientMode mode() const;
   void setName(const std::string& i_name);
+  void setMode(NetClientMode i_netMode);
 
   std::string lastPlayingLevelId();
   void setPlayingLevelId(xmDatabase* pDb, const std::string& i_idlevel);
@@ -53,10 +55,12 @@ class NetOtherClient {
   NetGhost* netGhost(unsigned int i_subsrc);
   void setNetGhost(unsigned int i_subsrc, NetGhost* i_netGhost);
 
+
  private:
   int m_id;
   std::string  m_name;
   NetGhost*    m_ghosts[NETACTION_MAX_SUBSRC];
+  NetClientMode m_netMode;
   std::string m_playingLevelId;
   std::string m_playingLevelName;
   std::string m_lastPlayingLevelId;
@@ -108,6 +112,8 @@ class NetClient : public Singleton<NetClient> {
   NetClientMode m_mode;
 
   std::vector<NetOtherClient*> m_otherClients;
+
+  void updateOtherClientsMode(std::vector<int> i_slavePlayers);
 
   void manageAction(xmDatabase* pDb, NetAction* i_netAction);
   void cleanOtherClientsGhosts();

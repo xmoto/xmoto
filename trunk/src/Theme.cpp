@@ -48,8 +48,24 @@ Theme::Theme() {
           THEME_PLAYER_UPPERARM,
           THEME_PLAYER_UPPERLEG,
           THEME_PLAYER_UGLYRIDERCOLOR,
-          THEME_PLAYER_UGLYWHEELCOLOR
+	  THEME_PLAYER_UGLYWHEELCOLOR,
+	  false
           );
+
+  m_netplayer = new BikerTheme(this,
+			       THEME_PLAYER_BODY,
+			       THEME_PLAYER_FRONT,
+			       THEME_PLAYER_REAR,
+			       THEME_PLAYER_WHEEL,
+			       THEME_PLAYER_LOWERARM,
+			       THEME_PLAYER_LOWERLEG,
+			       THEME_PLAYER_TORSO,
+			       THEME_PLAYER_UPPERARM,
+			       THEME_PLAYER_UPPERLEG,
+			       THEME_PLAYER_UGLYRIDERCOLOR,
+			       THEME_PLAYER_UGLYWHEELCOLOR,
+			       false
+			       );
 
   m_ghost = new BikerTheme(this,
          THEME_GHOST_BODY,
@@ -62,12 +78,14 @@ Theme::Theme() {
          THEME_GHOST_UPPERARM,
          THEME_GHOST_UPPERLEG,
          THEME_GHOST_UGLYRIDERCOLOR,
-         THEME_GHOST_UGLYWHEELCOLOR
+         THEME_GHOST_UGLYWHEELCOLOR,
+         true
          );
 }
 
 Theme::~Theme() {
   delete m_player;
+  delete m_netplayer;
   delete m_ghost;
 
   cleanSprites();
@@ -634,6 +652,10 @@ BikerTheme* Theme::getPlayerTheme() {
   return m_player;
 }
 
+BikerTheme* Theme::getNetPlayerTheme() {
+  return m_netplayer;
+}
+
 BikerTheme* Theme::getGhostTheme() {
   return m_ghost;
 }
@@ -988,7 +1010,8 @@ BikerTheme::BikerTheme(Theme* p_associated_theme,
            std::string p_UpperArm,
            std::string p_UpperLeg,
            Color p_UglyRiderColor,
-           Color p_UglyWheelColor
+	   Color p_UglyWheelColor,
+	   bool p_ghostEffect
            ) {
   m_associated_theme = p_associated_theme;
   m_Body           = p_Body;
@@ -1003,6 +1026,7 @@ BikerTheme::BikerTheme(Theme* p_associated_theme,
 
   m_UglyRiderColor = p_UglyRiderColor;
   m_UglyWheelColor = p_UglyWheelColor;
+  m_ghostEffect    = p_ghostEffect;
 }
  
 BikerTheme::~BikerTheme() {
@@ -1050,6 +1074,10 @@ Color BikerTheme::getUglyRiderColor() {
 
 Color BikerTheme::getUglyWheelColor() {
   return m_UglyWheelColor;
+}
+
+bool BikerTheme::getGhostEffect() const {
+  return m_ghostEffect;
 }
 
 void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {

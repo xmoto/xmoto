@@ -318,7 +318,7 @@ class NA_clientMode : public NetAction {
 
 class NA_prepareToPlay : public NetAction {
   public:
-  NA_prepareToPlay(const std::string& i_id_level);
+  NA_prepareToPlay(const std::string& i_id_level, std::vector<int>& i_players);
   NA_prepareToPlay(void* data, unsigned int len);
   virtual ~NA_prepareToPlay();
   std::string actionKey()    { return ActionKey; }
@@ -329,9 +329,11 @@ class NA_prepareToPlay : public NetAction {
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
 
   std::string idLevel() const;
+  const std::vector<int>& players();
 
   private:
   std::string m_id_level;
+  std::vector<int> m_players;
 };
 
 class NA_killAlert : public NetAction {
