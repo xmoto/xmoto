@@ -428,12 +428,14 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(v_xmArgs.isOptUpdateLevelsOnly()) {
     UpgradeLevelsThread* m_upgradeLevelsThread;
     bool v_currentVerbosity = Logger::isVerbose();
+    int v_res;
 
     m_upgradeLevelsThread = new UpgradeLevelsThread(XMSession::instance()->theme(), true);
 
     // force verbosity while updating levels
     Logger::setVerbose(true);
-    if(m_upgradeLevelsThread->runInMain() != 0) {
+    v_res = m_upgradeLevelsThread->runInMain();
+    if(v_res != 0 && v_res != 2 /* 2 for no level to update */) {
       LogError("Not able to update levels");
     }
     Logger::setVerbose(v_currentVerbosity);

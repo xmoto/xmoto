@@ -123,7 +123,7 @@ int UpgradeLevelsThread::realThreadFunction()
 
     if(nULevels == 0) {
       m_msg = GAMETEXT_NONEWLEVELS;
-      return 1;
+      return 2 /* 2 for no new levels to update */;
     }
     else {
       StateManager::instance()->sendAsynchronousMessage("NEW_LEVELS_TO_DOWNLOAD");
