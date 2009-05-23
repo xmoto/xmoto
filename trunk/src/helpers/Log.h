@@ -39,6 +39,7 @@ class Logger {
   static void uninit();
   static bool isInitialized();
 
+  static bool isVerbose();
   static void setVerbose(bool i_value);
   static void setActiv(bool i_value);
   static void LogLevelMsg(LogLevel i_level, const char *pcFmt, ...);

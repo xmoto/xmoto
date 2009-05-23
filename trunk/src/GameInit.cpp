@@ -53,6 +53,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateMainMenu.h"
 #include "states/StateMessageBox.h"
 
+#include "thread/UpgradeLevelsThread.h"
+
 #include "UserConfig.h"
 #include "Renderer.h"
 #include "net/NetServer.h"
@@ -226,7 +228,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   LogInfo("User directory: %s", FS::getUserDir().c_str());
   LogInfo("Data directory: %s", FS::getDataDir().c_str());
 
-  if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos() || v_xmArgs.isOptServerOnly()) {
+  if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos() || v_xmArgs.isOptServerOnly() || v_xmArgs.isOptUpdateLevelsOnly()) {
     v_useGraphics = false;
   }
 
@@ -421,7 +423,25 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     quit();
     return;
   }
-  
+
+  /* -updateLevels */
+  if(v_xmArgs.isOptUpdateLevelsOnly()) {
+    UpgradeLevelsThread* m_upgradeLevelsThread;
+    bool v_currentVerbosity = Logger::isVerbose();
+
+    m_upgradeLevelsThread = new UpgradeLevelsThread(XMSession::instance()->theme(), true);
+
+    // force verbosity while updating levels
+    Logger::setVerbose(true);
+    if(m_upgradeLevelsThread->runInMain() != 0) {
+      LogError("Not able to update levels");
+    }
+    Logger::setVerbose(v_currentVerbosity);
+
+    quit();
+    return;
+  }
+
   /* requires graphics now */
   if(v_useGraphics == false && v_xmArgs.isOptServerOnly() == false) {
     quit();

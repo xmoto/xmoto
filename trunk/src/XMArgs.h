@@ -92,6 +92,7 @@ class XMArguments {
   bool isOptForceChildrenCompliant() const;
   bool isOptNoDBDirsCheck() const;
   bool isOptServerOnly() const;
+  bool isOptUpdateLevelsOnly() const;
 
   private:
   /* pack options */
@@ -172,6 +173,9 @@ class XMArguments {
   bool m_opt_videoRecordingEndTime; /* value in cent of seconds, a negativ value for always */
   int m_opt_videoRecordingEndTime_value;
   bool m_opt_hidePlayingInformation;
+
+  /* update levels only */
+  bool m_opt_updateLevelsOnly;
 
   /* server */
   bool m_opt_serverOnly;

@@ -56,6 +56,10 @@ bool Logger::isInitialized() {
   return m_isInitialized;
 }
 
+bool Logger::isVerbose() {
+  return m_verbose;
+}
+
 void Logger::setVerbose(bool i_value) {
   m_verbose = i_value;
 }

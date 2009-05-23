@@ -26,12 +26,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../states/StateUpgradeLevels.h"
 #include "../helpers/CmdArgumentParser.h"
 
-UpgradeLevelsThread::UpgradeLevelsThread(GameState* pCallingState, const std::string& i_id_theme)
+UpgradeLevelsThread::UpgradeLevelsThread(const std::string& i_id_theme, bool i_updateAutomaticallyLevels)
   : XMThread("ULT")
 {
   m_pWebLevels    = new WebLevels(this);
-  m_pCallingState = pCallingState;
-  m_updateAutomaticallyLevels = false;
+  m_updateAutomaticallyLevels = i_updateAutomaticallyLevels;
   m_msg = "";
   m_id_theme = i_id_theme;
 }
@@ -43,7 +42,6 @@ UpgradeLevelsThread::~UpgradeLevelsThread()
 
 void UpgradeLevelsThread::setBeingDownloadedInformation(const std::string &p_information, bool p_isNew)
 {
-  LogInfo(("setBeingDownloadedInformation" + p_information).c_str());
   setThreadCurrentMicroOperation(p_information);
 }
 
@@ -140,8 +138,10 @@ int UpgradeLevelsThread::realThreadFunction()
 
   setThreadProgress(100);
 
-  // sleep while we don't have the user response
-  sleepThread();
+  if(m_updateAutomaticallyLevels == false) {
+    // sleep while we don't have the user response
+    sleepThread();
+  }
 
   if(m_askThreadToEnd == true){
     return 0;
