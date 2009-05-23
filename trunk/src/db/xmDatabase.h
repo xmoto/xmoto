@@ -91,6 +91,8 @@ public:
   void levels_delToBlacklist(const std::string& i_profile, const std::string& i_id_level);
   void levels_cleanNew();
   void levels_addToNew(const std::string& i_id_level, bool i_isAnUpdate);
+  void levels_addToNew_begin();
+  void levels_addToNew_end();
 
   void levels_add_begin(bool i_isToReload);
   bool levels_add_fast(const std::string& i_filepath, std::string& o_levelName, bool i_isToReload);

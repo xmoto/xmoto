@@ -1041,76 +1041,83 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
   int   current = 0;
   float total   = 100.0 / (float)(NewLvl.size() + UpdatedLvl.size());
 
-  i_db->levels_cleanNew();
+  try {
+    i_db->levels_addToNew_begin();
+    i_db->levels_cleanNew();
 
-  /* new */
-  for(unsigned int i=0; i<NewLvl.size(); i++) {
-    bool bCached = false;
-    v_level = new Level();
-
-    try {
-      pCaller->setTaskProgress(current * total);
-      current++;
-
-      v_level->setFileName(NewLvl[i]);
-      bCached = v_level->loadReducedFromFile();
+    /* new */
+    for(unsigned int i=0; i<NewLvl.size(); i++) {
+      bool bCached = false;
+      v_level = new Level();
       
-      // Check for ID conflict
-      if(doesLevelExist(v_level->Id(), i_db)) {
-	throw Exception("Duplicate level ID");
+      try {
+	pCaller->setTaskProgress(current * total);
+	current++;
+	
+	v_level->setFileName(NewLvl[i]);
+	bCached = v_level->loadReducedFromFile();
+	
+	// Check for ID conflict
+	if(doesLevelExist(v_level->Id(), i_db)) {
+	  throw Exception("Duplicate level ID");
+	}
+	i_db->levels_add(v_level->Id(),
+			 v_level->FileName(),
+			 v_level->Name(),
+			 v_level->Checksum(),
+			 v_level->Author(),
+			 v_level->Description(),
+			 v_level->Date(),
+			 v_level->Pack(),
+			 v_level->PackNum(),
+			 v_level->Music(),
+			 v_level->isScripted(),
+			 v_level->isPhysics(),
+			 false);
+	i_db->levels_addToNew(v_level->Id(), false);
+      } catch(Exception &e) {
+	LogWarning("%s", e.getMsg().c_str() );
       }
-      i_db->levels_add(v_level->Id(),
-		       v_level->FileName(),
-		       v_level->Name(),
-		       v_level->Checksum(),
-		       v_level->Author(),
-		       v_level->Description(),
-		       v_level->Date(),
-		       v_level->Pack(),
-		       v_level->PackNum(),
-		       v_level->Music(),
-		       v_level->isScripted(),
-		       v_level->isPhysics(),
-		       false);
-      i_db->levels_addToNew(v_level->Id(), false);
-    } catch(Exception &e) {
-      LogWarning("%s", e.getMsg().c_str() );
+      delete v_level;
     }
-    delete v_level;
-  }
-
-  /* updated */
-  for(unsigned int i=0; i<UpdatedLvl.size(); i++) {
-    bool bCached = false;
-    v_level = new Level();
-
-    try {
-      v_level->setFileName(UpdatedLvl[i]);
-      bCached = v_level->loadReducedFromFile();
-
-      pCaller->setTaskProgress(current * total);
-      pCaller->setBeingDownloadedInformation(v_level->Name());
-      current++;
-
-      i_db->levels_update(v_level->Id(),
-			  v_level->FileName(),
-			  v_level->Name(),
-			  v_level->Checksum(),
-			  v_level->Author(),
-			  v_level->Description(),
-			  v_level->Date(),
-			  v_level->Pack(),
-			  v_level->PackNum(),
-			  v_level->Music(),
-			  v_level->isScripted(),
-			  v_level->isPhysics(),
-			  false);
-      i_db->levels_addToNew(v_level->Id(), true);
-
-    } catch(Exception &e) {
-      LogWarning("%s", e.getMsg().c_str() );
+    
+    /* updated */
+    for(unsigned int i=0; i<UpdatedLvl.size(); i++) {
+      bool bCached = false;
+      v_level = new Level();
+      
+      try {
+	v_level->setFileName(UpdatedLvl[i]);
+	bCached = v_level->loadReducedFromFile();
+	
+	pCaller->setTaskProgress(current * total);
+	pCaller->setBeingDownloadedInformation(v_level->Name());
+	current++;
+	
+	i_db->levels_update(v_level->Id(),
+			    v_level->FileName(),
+			    v_level->Name(),
+			    v_level->Checksum(),
+			    v_level->Author(),
+			    v_level->Description(),
+			    v_level->Date(),
+			    v_level->Pack(),
+			    v_level->PackNum(),
+			    v_level->Music(),
+			    v_level->isScripted(),
+			    v_level->isPhysics(),
+			    false);
+	i_db->levels_addToNew(v_level->Id(), true);
+	
+      } catch(Exception &e) {
+	LogWarning("%s", e.getMsg().c_str() );
+      }
+      delete v_level;
     }
-    delete v_level;
+    i_db->levels_addToNew_end();
+  } catch(Exception &e) {
+    i_db->levels_addToNew_end(); // commit what has been done even if it failed
+    throw e;
   }
 }
 

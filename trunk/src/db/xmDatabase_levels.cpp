@@ -152,6 +152,14 @@ void xmDatabase::updateDB_favorite(const std::string& i_profile,
   }
 }
 
+void xmDatabase::levels_addToNew_begin() {
+  simpleSql("BEGIN TRANSACTION;");
+}
+
+void xmDatabase::levels_addToNew_end() {
+  simpleSql("COMMIT;");
+}
+
 void xmDatabase::levels_cleanNew() {
    simpleSql("DELETE FROM levels_new;");
 }
