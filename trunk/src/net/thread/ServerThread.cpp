@@ -678,7 +678,7 @@ void ServerThread::run_loop() {
 bool ServerThread::manageNetwork() {
   int n_activ;
   unsigned int i;
-  bool v_needMore = false;;
+  bool v_needMore = false;
 
   n_activ = SDLNet_CheckSockets(m_set, 0);
   if(n_activ == -1) {

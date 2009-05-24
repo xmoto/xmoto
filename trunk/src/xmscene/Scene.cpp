@@ -316,6 +316,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     // upload the frame only if
     v_uploadFrame =
       NetClient::instance()->isConnected() &&
+      NetClient::instance()->mode() == NETCLIENT_GHOST_MODE &&
       getTime() - m_lastStateUploadTime >= 100.0f/XMSession::instance()->clientFramerateUpload();
 
     if(v_recordReplay) {
