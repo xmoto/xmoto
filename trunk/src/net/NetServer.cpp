@@ -71,3 +71,10 @@ void NetServer::wait() {
     }
   }
 }
+
+bool NetServer::acceptConnections() {
+  if(isStarted() == false) {
+    return false;
+  }
+  return m_serverThread->acceptConnections();
+}

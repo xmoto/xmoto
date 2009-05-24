@@ -101,6 +101,7 @@ class ServerThread : public XMThread {
   ServerThread(const std::string& i_dbKey);
   virtual ~ServerThread();
 
+  bool acceptConnections() const;
   int realThreadFunction();
 
   private:
@@ -125,6 +126,7 @@ class ServerThread : public XMThread {
   unsigned int m_nInactivNetLoop; // number of loop without traffic
   std::string m_startTimeStr;
   std::string m_banner;
+  bool m_acceptConnections;
 
   SDLNet_SocketSet m_set;
   std::vector<NetSClient*> m_clients;

@@ -206,6 +206,7 @@ ServerThread::ServerThread(const std::string& i_dbKey)
     m_nInactivNetLoop    = 0;
     m_startTimeStr       = GameApp::getTimeStamp();
     m_banner             = XM_SERVER_DEFAULT_BANNER;
+    m_acceptConnections  = false;
 
     if(!m_udpPacket) {
       throw Exception("SDLNet_AllocPacket: " + std::string(SDLNet_GetError()));
@@ -268,6 +269,7 @@ int ServerThread::realThreadFunction() {
     return 1;
   }
 
+  m_acceptConnections = true;
   StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
 
   // manage server
@@ -278,6 +280,9 @@ int ServerThread::realThreadFunction() {
       LogWarning("Exception: %s", e.getMsg().c_str());
     }
   }
+
+  // close the server
+  m_acceptConnections = false;
 
   // end the game
   SP2_setPhase(SP2_PHASE_NONE);
@@ -1372,4 +1377,8 @@ void ServerThread::SP2_addPointsToClient(unsigned int i_client, unsigned int i_p
 //  } catch(Exception &e) {
 //    /* ok, no pb */
 //  }
+}
+
+bool ServerThread::acceptConnections() const {
+  return m_acceptConnections;
 }

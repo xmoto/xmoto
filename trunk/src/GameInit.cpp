@@ -828,6 +828,19 @@ void GameApp::run_unload() {
 
   if(i_forceNoClientStarted == false) {
     if(XMSession::instance()->clientConnectAtStartup()) {
+
+      /* special case : if xmoto is it's own server, you must wait that the server is started
+	 test ip is not a good solution, by the way, people starting the server
+	 should use it or lost less than 1 second at startup
+       */
+      if(XMSession::instance()->serverStartAtStartup()) {
+	// wait that server is started
+	while(NetServer::instance()->acceptConnections() == false) {
+	  LogInfo("Server still not accepting connections, wait");
+	  SDL_Delay(100);
+	}
+      }
+
       try {
 	NetClient::instance()->connect(XMSession::instance()->clientServerName(),
 				       XMSession::instance()->clientServerPort());

@@ -34,6 +34,7 @@ class NetServer : public Singleton<NetServer> {
   void stop();
   bool isStarted();
   void wait();
+  bool acceptConnections();
 
   private:
   ServerThread* m_serverThread;
