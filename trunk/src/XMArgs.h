@@ -93,6 +93,7 @@ class XMArguments {
   bool isOptNoDBDirsCheck() const;
   bool isOptServerOnly() const;
   bool isOptUpdateLevelsOnly() const;
+  bool isOptClientConnectAtStartup() const;
 
   private:
   /* pack options */
@@ -179,6 +180,9 @@ class XMArguments {
 
   /* server */
   bool m_opt_serverOnly;
+
+  /* net */
+  bool m_opt_clientConnectAtStartup;
 
   /* specific */
   bool m_opt_noDBDirsCheck;

@@ -73,6 +73,7 @@ XMArguments::XMArguments() {
   m_opt_noDBDirsCheck 	      	= false;
   m_opt_serverOnly    	      	= false;
   m_opt_updateLevelsOnly        = false;
+  m_opt_clientConnectAtStartup  = false;
 }
 
 void XMArguments::parse(int i_argc, char **i_argv) {
@@ -267,6 +268,8 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       m_opt_serverOnly = true;
     } else if(v_opt == "--updateLevelsOnly") {
       m_opt_updateLevelsOnly = true;
+    } else if(v_opt == "--connectAtStartup") {
+      m_opt_clientConnectAtStartup = true;
     } else if(v_opt == "--defaultTheme") {
       m_opt_default_theme = true;
       if(i+1 >= i_argc) {
@@ -572,6 +575,10 @@ bool XMArguments::isOptServerOnly() const {
   return m_opt_serverOnly;
 }
 
+bool XMArguments::isOptClientConnectAtStartup() const {
+  return m_opt_clientConnectAtStartup;
+}
+
 bool XMArguments::isOptUpdateLevelsOnly() const {
   return m_opt_updateLevelsOnly;
 }
@@ -623,6 +630,7 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t--noDBDirsCheck\n\t\tDon't check that system and user dirs changed at startup.\n");
   printf("\t--server\n\t\tRun X-Moto as a server only (no gui).\n");
   printf("\t--updateServerOnly\n\t\tOnly update levels (no gui).\n");
+  printf("\t--connectAtStartup\n\t\tConnect the client to the server at startup.\n");
   printf("\t-h, -?, -help, --help\n\t\tDisplay this message.\n");
   printf("\t--pack [BIN] [DIR]\n\t\tBuild the BIN package from directory DIR.\n");
   printf("\t--unpack [BIN] [DIR] [no_list]\n\t\tUnpack the BIN package into the dir DIR.\n");

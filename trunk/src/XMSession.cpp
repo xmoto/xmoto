@@ -254,6 +254,11 @@ void XMSession::load(const XMArguments* i_xmargs) {
   if(i_xmargs->isOptForceChildrenCompliant()) {
     m_forceChildrenCompliant = true;
   }
+
+  if(i_xmargs->isOptClientConnectAtStartup()) {
+    m_clientConnectAtStartup = true;
+  }
+
 }
 
 void XMSession::load(UserConfig* m_Config) {
