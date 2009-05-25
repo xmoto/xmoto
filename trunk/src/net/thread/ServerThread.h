@@ -77,6 +77,9 @@ class NetSClient {
   bool isAdminConnected() const;
   void setAdminConnected(bool i_value);
 
+  int lastGhostFrameTime() const;
+  void setLastGhostFrameTime(int v_time);
+
   private:
   unsigned int m_id;    // uniq id of the client
   NetClientMode m_mode; // playing mode (simple ghost or slave)
@@ -94,6 +97,7 @@ class NetSClient {
   int m_lastInactivTimeAlert;
   int m_points;
   bool m_isAdminConnected;
+  int m_lastGhostFrameTime;
 };
 
 class ServerThread : public XMThread {

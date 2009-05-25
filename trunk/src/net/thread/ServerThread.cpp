@@ -38,7 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../xmscene/BikeController.h"
 
 #define XM_SERVER_UPLOADING_FPS_PLAYER   25
-#define XM_SERVER_UPLOADING_FPS_OPLAYERS 12
+#define XM_SERVER_UPLOADING_FPS_OPLAYERS 15
 #define XM_SERVER_PLAYER_INACTIV_TIME_MAX  1000
 #define XM_SERVER_PLAYER_INACTIV_TIME_PREV  300
 #define XM_SERVER_NB_SOCKETS_MAX 128
@@ -64,6 +64,7 @@ NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tc
     m_lastInactivTimeAlert = -1;
     m_points = 0;
     m_isAdminConnected = false;
+    m_lastGhostFrameTime = 0;
 }
 
 NetSClient::~NetSClient() {
@@ -88,6 +89,14 @@ int NetSClient::points() {
 
 void NetSClient::addPoints(int i_points) {
   m_points += i_points;
+}
+
+int NetSClient::lastGhostFrameTime() const {
+  return m_lastGhostFrameTime;
+}
+
+void NetSClient::setLastGhostFrameTime(int v_time) {
+  m_lastGhostFrameTime = v_time;
 }
 
 TCPsocket* NetSClient::tcpSocket() {
@@ -1003,19 +1012,23 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     
   case TNA_frame:
     {
-      for(unsigned int i=0; i<m_clients.size(); i++) {
-	if(m_clients[i_client]->mode() == NETCLIENT_GHOST_MODE) {
-	  if(i != i_client &&
-	     m_clients[i_client]->playingLevelId() != "" &&
-	     m_clients[i_client]->playingLevelId() == m_clients[i]->playingLevelId()
-	     ) {
-	    try {
-	      sendToClient(i_netAction, i, m_clients[i_client]->id(), i_netAction->getSubSource());
-	    } catch(Exception &e) {
-	      // don't remove the client, it will be done in the main loop
+      /* clients are limited in number of frame send to avoid too much frames */
+      if(GameApp::getXMTimeInt() - m_clients[i_client]->lastGhostFrameTime() > 1000 / XM_SERVER_UPLOADING_FPS_OPLAYERS) {
+	for(unsigned int i=0; i<m_clients.size(); i++) {
+	  if(m_clients[i_client]->mode() == NETCLIENT_GHOST_MODE) {
+	    if(i != i_client &&
+	       m_clients[i_client]->playingLevelId() != "" &&
+	       m_clients[i_client]->playingLevelId() == m_clients[i]->playingLevelId()
+	       ) {
+	      try {
+		sendToClient(i_netAction, i, m_clients[i_client]->id(), i_netAction->getSubSource());
+	      } catch(Exception &e) {
+		// don't remove the client, it will be done in the main loop
+	      }
 	    }
 	  }
 	}
+	m_clients[i_client]->setLastGhostFrameTime(GameApp::getXMTimeInt());
       }
     }
     break;
