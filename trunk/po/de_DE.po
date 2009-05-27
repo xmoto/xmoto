@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-05-14 18:47+0200\n"
-"PO-Revision-Date: 2009-03-11 17:35+0100\n"
+"PO-Revision-Date: 2009-05-26 23:15+0100\n"
 "Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -301,7 +301,7 @@ msgstr "keine"
 
 #: src/GameText.h:106
 msgid "You must restart so that this option takes effect"
-msgstr "Ein Neustart erforderlich"
+msgstr "Hierfür ist ein Neustart erforderlich!"
 
 #: src/GameText.h:107
 msgid "You must reconnect to the server so that this option takes effect"
@@ -864,6 +864,8 @@ msgid ""
 "Use Quick Play button to immediately start a game with a random level,\n"
 "or use Levels button to select from level packs."
 msgstr ""
+"Per Kickstart-Knopf wird das Spiel mit einem zufälligen Level gestartet.\n"
+"Zum Level-Manager führt der Levels-Knopf."
 
 #: src/GameText.h:276 src/GameText.h:304
 msgid ""
@@ -879,6 +881,9 @@ msgid ""
 "http://xmoto.tuxfamily.org\n"
 "for more information."
 msgstr ""
+"Lies die README-Datei oder konsultiere unsere Website unter\n"
+"http://xmoto.tuxfamily.org,\n"
+"um mehr zu erfahren."
 
 #: src/GameText.h:290
 msgid "change mirror mode"
@@ -886,19 +891,19 @@ msgstr "Spiegel-Modus ändern"
 
 #: src/GameText.h:291
 msgid "Toggle blacklist"
-msgstr ""
+msgstr "Level auf die Blacklist setzen oder davon entfernen"
 
 #: src/GameText.h:292
 msgid "Enable/disable audio"
-msgstr ""
+msgstr "Audio an- oder ausschalten"
 
 #: src/GameText.h:293
 msgid "Open options menu"
-msgstr ""
+msgstr "Optionen Menü öffnen"
 
 #: src/GameText.h:294
 msgid "Show this help"
-msgstr ""
+msgstr "Diese Hilfe anzeigen"
 
 #: src/GameText.h:295 src/GameText.h:626
 msgid "Show the ghost if possible in the game"
@@ -906,23 +911,23 @@ msgstr "Geist im Spiel anzeigen, wenn möglich"
 
 #: src/GameText.h:296
 msgid "Toggle favorite"
-msgstr ""
+msgstr "Zu Favoriten hinzufügen oder davon entfernen"
 
 #: src/GameText.h:297
 msgid "Enable/disable FPS display"
-msgstr ""
+msgstr "FPS-Anzeige aktivieren/ deaktivieren"
 
 #: src/GameText.h:299 src/GameText.h:452
 msgid "Enable/disable ugly mode"
-msgstr "Strich-Modus aktivieren/deaktivieren"
+msgstr "Ugly-Modus aktivieren/deaktivieren"
 
 #: src/GameText.h:300
 msgid "Enable/disable theme mode"
-msgstr ""
+msgstr "Themen-Modus aktivieren/ deaktivieren"
 
 #: src/GameText.h:301
 msgid "Enable/disable ugly over mode"
-msgstr ""
+msgstr "Ugly-Over-Modus aktivieren/ deaktivieren"
 
 #: src/GameText.h:307
 msgid "Hide ghosts"
@@ -939,7 +944,7 @@ msgstr "Rekord des Raumes"
 #: src/GameText.h:310
 #, c-format
 msgid "%s: %s beat your highscore for level '%s'"
-msgstr ""
+msgstr "%s: %s hat deinen Rekord für das Level '%s' geschlagen"
 
 #: src/GameText.h:311
 msgid "Levels are being added into the database. Please wait."
@@ -1459,7 +1464,7 @@ msgstr "STATS"
 
 #: src/GameText.h:446
 msgid "You are currently disconnected"
-msgstr ""
+msgstr "Du bist nicht verbunden"
 
 #: src/GameText.h:447
 msgid "Stereo"
@@ -2701,7 +2706,7 @@ msgstr "Marathon-Distanz"
 
 #: src/GameText.h:770
 msgid "Stolen highscores"
-msgstr ""
+msgstr "Geklaute Rekorde"
 
 #: src/GameText.h:772
 msgid "Levels with no highscore in your room"
@@ -2838,15 +2843,15 @@ msgstr "Marathon Levels (länger als 2 Minuten)"
 
 #: src/GameText.h:805
 msgid "Levels for which you owned the highscore"
-msgstr ""
+msgstr "Levels, in denen du einmal Rekordhalter warst"
 
 #: src/GameText.h:807
 msgid "Ugly mode enabled"
-msgstr "Strich-Modus aktiviert"
+msgstr "Ugly-Modus aktiviert"
 
 #: src/GameText.h:808
 msgid "Ugly mode disabled"
-msgstr "Strich-Modus deaktiviert"
+msgstr "Ugly-Modus deaktiviert"
 
 #: src/GameText.h:809
 msgid "Theme mode enabled"
@@ -2858,11 +2863,11 @@ msgstr "Themen-Modus deaktiviert"
 
 #: src/GameText.h:811
 msgid "UglyOver mode enabled"
-msgstr "Strich-modus aktiviert"
+msgstr "Ugly-Over-Modus aktiviert"
 
 #: src/GameText.h:812
 msgid "UglyOver mode disabled"
-msgstr "Strich-Modus deaktiviert"
+msgstr "Ugly-Over-Modus deaktiviert"
 
 #: src/GameText.h:813
 msgid "Web connection enabled"
