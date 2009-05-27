@@ -71,6 +71,8 @@ class Camera;
         
     std::vector<GeomPoly *> Polys;    
     Texture *pTexture;
+    TColor edgeBlendColor;
+    float edgeScale;
     
     Vector2f Min,Max; /* AABB */
   };
@@ -204,6 +206,7 @@ private:
   float m_sizeMultOfEntitiesWhichMakeWin;
   int   m_nParticlesRendered;
   std::string       m_currentEdgeEffect;
+  TColor            m_currentEdgeBlendColor;
   EdgeEffectSprite* m_currentEdgeSprite;
 
 

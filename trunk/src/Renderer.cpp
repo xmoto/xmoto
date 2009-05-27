@@ -1,4 +1,3 @@
-
 /*=============================================================================
 XMOTO
 
@@ -92,6 +91,7 @@ GameRenderer::GameRenderer() {
   m_showTimePanel = true;
   m_allowGhostEffect = true;
   m_currentEdgeEffect = "";
+  m_currentEdgeBlendColor = DEFAULT_EDGE_BLENDCOLOR;
   m_currentEdgeSprite = NULL;
   m_curRegistrationStage = 0;
   m_showGhostsText = true;
@@ -268,6 +268,7 @@ int GameRenderer::loadBlock(Block* pBlock,
   int nVertexBytes  = 0;
   bool dynamicBlock = false;
   std::vector<Geom *>* pGeoms;
+  
   if(pBlock->isDynamic() == true){
     dynamicBlock = true;
     pGeoms = &m_DynamicGeoms;
@@ -323,6 +324,7 @@ int GameRenderer::loadBlockGeom(Block* pBlock,
   int nVertexBytes  = 0;
   Geom* pSuitableGeom = new Geom;
   pSuitableGeom->pTexture = pTexture;
+;
   int geomIndex = pGeoms->size();
   pGeoms->push_back(pSuitableGeom);
   pBlock->setGeom(geomIndex);
@@ -383,6 +385,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
   int nVertexBytes  = 0;
   if(m_graphicsLevel != GFX_LOW){
     m_currentEdgeEffect = "";
+    m_currentEdgeBlendColor = DEFAULT_EDGE_BLENDCOLOR;
     m_currentEdgeSprite = NULL;
 
     Vector2f oldC2, oldB2;
@@ -407,10 +410,9 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 	  useOld = false;
 	}
 	else{
+	  Vector2f a1, b1, b2, a2, c1, c2;
 	  m_currentEdgeSprite = pType;
 	  m_currentEdgeEffect = firstVertex->EdgeEffect();
-
-	  Vector2f a1, b1, b2, a2, c1, c2;
 	  calculateEdgePosition(pBlock,
 				lastVertex, firstVertex, secondVertex,
 				Center,
@@ -421,6 +423,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 	  useOld = true;
 	  m_currentEdgeSprite = NULL;
 	  m_currentEdgeEffect = "";
+	  m_currentEdgeBlendColor = DEFAULT_EDGE_BLENDCOLOR;
 	}
       }
     }
@@ -446,7 +449,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       }
 
       EdgeEffectSprite* pType = NULL;
-      if(edgeEffect != m_currentEdgeEffect) {
+      if(edgeEffect != m_currentEdgeEffect) {   //if a new edge effect texture occurs, load it
 	pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, edgeEffect);
 	if(pType == NULL) {
 	  LogWarning("Invalid edge effect %s", edgeEffect.c_str());
@@ -456,13 +459,16 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 
 	m_currentEdgeSprite = pType;
 	m_currentEdgeEffect = edgeEffect;
+	m_currentEdgeBlendColor = pBlock->getEdgeMaterialColor(m_currentEdgeEffect);
       }
-
-      int geomIndex = edgeGeomExists(pBlock, pTexture->Name);
+      
+      // if a geom for current edge effect exists, get its index number
+      int geomIndex = edgeGeomExists(pBlock, pTexture->Name); 
       if(geomIndex < 0){
 	// create a new one
 	Geom* pGeom = new Geom;
-	geomIndex = m_edgeGeoms.size();
+	geomIndex = m_edgeGeoms.size(); 
+	
 	m_edgeGeoms.push_back(pGeom);
 	pBlock->addEdgeGeom(geomIndex);
 	pGeom->pTexture = pTexture;
@@ -470,7 +476,10 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 	pGeom->Polys.push_back(pPoly);
       }
       Geom*     pGeom = m_edgeGeoms[geomIndex];
+
       GeomPoly* pPoly = pGeom->Polys[0];
+
+      pGeom->edgeBlendColor = m_currentEdgeBlendColor;
 
       Vector2f a1, b1, b2, a2, c1, c2;
       calculateEdgePosition(pBlock,
@@ -2176,7 +2185,9 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
     for(unsigned int i=pBlock->getEdgeGeoms().size(); i>0; i--){
       int geom = pBlock->getEdgeGeoms()[i-1];
       pDrawlib->setTexture(m_edgeGeoms[geom]->pTexture, BLEND_MODE_A);
-      pDrawlib->setColorRGB(255, 255, 255);
+      
+      TColor v_blendColor = m_edgeGeoms[geom]->edgeBlendColor;
+      pDrawlib->setColorRGBA(v_blendColor.Red(), v_blendColor.Green(), v_blendColor.Blue(), v_blendColor.Alpha());
 
       /* VBO optimized? */
       if(pDrawlib->useVBOs()) {

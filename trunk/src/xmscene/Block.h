@@ -40,6 +40,14 @@ class PhysicsSettings;
 template<class T> struct ColElement;
 
 #define DEFAULT_EDGE_ANGLE 270.0f
+#define DEFAULT_EDGE_BLENDCOLOR TColor(255, 255, 255, 255)
+
+struct EdgeMaterial {
+  int index;
+  std::string texture;
+  TColor color;
+  float scale;
+};
 
 /*===========================================================================
   Convex block vertex
@@ -189,6 +197,7 @@ class Block {
   void setElasticity(float i_elasticity);
   void setCenter(const Vector2f& i_center);
   void setEdgeDrawMethod(EdgeDrawMethod method);
+  void addEdgeMaterial(std::string i_texture, const TColor& i_blendColor);
   // in degres, not radian
   void setEdgeAngle(float angle);
 
@@ -200,7 +209,7 @@ class Block {
      returns true if bounding circle has changed.
    */
   bool setDynamicRotation(float i_dynamicRotation);
-
+    
   void setCollisionMethod(CollisionMethod method);
   void setCollisionRadius(float radius);
 
@@ -235,8 +244,9 @@ class Block {
     m_layer = layer;
   }
 
-  void addEdgeGeom(int geom);
+  void addEdgeGeom(int geomIndex);
   std::vector<int>& getEdgeGeoms();
+  const TColor& getEdgeMaterialColor( std::string i_textureName ) const;
   bool edgeGeomExists(std::string texture);
 
   void updatePhysics(int timeStep, CollisionSystem* io_collisionSystem);
@@ -270,6 +280,9 @@ private:
   std::vector<ConvexBlock*> m_convexBlocks;
   // one geom for each edge texture
   std::vector<int> m_edgeGeoms;
+  // one blendColor and one scale value for each geom
+  std::vector<EdgeMaterial> m_edgeMaterial;
+//  std::vector<float> m_edgeGeomScale;
 
   bool  m_background;
   bool  m_dynamic;

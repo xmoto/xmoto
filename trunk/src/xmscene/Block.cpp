@@ -105,7 +105,6 @@ Block::Block(std::string i_id) {
   m_blendColor.setGreen(255);
   m_blendColor.setBlue(255);
   m_blendColor.setAlpha(255);
-
 }
 
 Block::~Block() {
@@ -128,6 +127,9 @@ Block::~Block() {
   m_collisionLines.clear();
 
   m_edgeGeoms.clear();
+  
+ // for(unsigned int i=0; i<edgeGeomBlendColor.size(); i++) delete edgeGeomBlendColor[i];
+  m_edgeMaterial.clear();
   
 }
 
@@ -744,6 +746,21 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
     pBlock->setEdgeDrawMethod(pBlock->stringToEdge(methodStr));
     // 270 is the default one for the 'angle' edge draw method, not used for the others
     pBlock->setEdgeAngle(atof(XML::getOption(pEdgeElem, "angle", "270.0").c_str()));
+    
+    //check for geoms assignments: blendColor and scale
+    for(TiXmlElement *pedge = pEdgeElem->FirstChildElement(); pedge!=NULL; pedge=pedge->NextSiblingElement()) {
+      if( !strcmp(pedge->Value(), "material") ) {  //strcmp returns 0 in case of match, thats why the NOT means actually TRUE here
+        std::string v_edgeName = XML::getOption(pedge, "name", "not_used").c_str();
+        
+        int blendColor_r, blendColor_g, blendColor_b, blendColor_a;
+        std::string v_blendColor = XML::getOption(pedge, "color_r", "255"); blendColor_r = atoi(v_blendColor.c_str());
+        v_blendColor = XML::getOption(pedge, "color_g", "255"); blendColor_g = atoi(v_blendColor.c_str());
+        v_blendColor = XML::getOption(pedge, "color_b", "255"); blendColor_b = atoi(v_blendColor.c_str());
+        v_blendColor = XML::getOption(pedge, "color_a", "255"); blendColor_a = atoi(v_blendColor.c_str());
+        pBlock->addEdgeMaterial(v_edgeName, TColor(blendColor_r, blendColor_g, blendColor_b, blendColor_a));
+      }
+    }
+    
   } else {
     pBlock->setEdgeDrawMethod(angle);
     pBlock->setEdgeAngle(DEFAULT_EDGE_ANGLE);
@@ -758,6 +775,7 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
   float lastX = 0.0;
   float lastY = 0.0;
   bool  firstVertex = true;
+  
   /* Get vertices */
   for(TiXmlElement *pj = pElem->FirstChildElement(); pj!=NULL; pj=pj->NextSiblingElement()) {
     if(!strcmp(pj->Value(),"vertex")) {
@@ -810,6 +828,16 @@ void Block::saveBinary(FileHandle *i_pfh) {
       FS::writeFloat_LE(i_pfh, Elasticity());
       FS::writeInt_LE(i_pfh,   getEdgeDrawMethod());
       FS::writeFloat_LE(i_pfh, edgeAngle());
+      
+      FS::writeInt_LE(i_pfh, m_edgeMaterial.size());
+      for(unsigned int i=0; i<m_edgeMaterial.size(); i++) {
+        FS::writeString(i_pfh, m_edgeMaterial[i].texture);
+        FS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Red());
+        FS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Green());
+        FS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Blue());
+        FS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Alpha());
+      }
+      
       FS::writeInt_LE(i_pfh,   getCollisionMethod());
       FS::writeFloat_LE(i_pfh, getCollisionRadius());
 
@@ -850,6 +878,21 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   pBlock->setElasticity(FS::readFloat_LE(i_pfh));
   pBlock->setEdgeDrawMethod((EdgeDrawMethod)FS::readInt_LE(i_pfh));
   pBlock->setEdgeAngle(FS::readFloat_LE(i_pfh));
+  
+  int geomSize = FS::readInt_LE(i_pfh);  //get size of geoms and read out as many times
+  for( int i=0; i<geomSize; i++) {
+    EdgeMaterial v_geomMat;
+    v_geomMat.texture = FS::readString(i_pfh);
+    TColor v_edgeMatColor = TColor(255,255,255,255);
+    v_edgeMatColor.setRed(FS::readInt_LE(i_pfh));
+    v_edgeMatColor.setGreen(FS::readInt_LE(i_pfh));
+    v_edgeMatColor.setBlue(FS::readInt_LE(i_pfh));
+    v_edgeMatColor.setAlpha(FS::readInt_LE(i_pfh));
+    v_geomMat.color = v_edgeMatColor;
+    pBlock->m_edgeMaterial.push_back(v_geomMat);
+  }
+      
+  
   pBlock->setCollisionMethod((CollisionMethod)FS::readInt_LE(i_pfh));
   pBlock->setCollisionRadius(FS::readFloat_LE(i_pfh));
   
@@ -866,9 +909,9 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   return pBlock;
 }
 
-void Block::addEdgeGeom(int geom)
+void Block::addEdgeGeom(int geomIndex)
 {
-  m_edgeGeoms.push_back(geom);
+  m_edgeGeoms.push_back(geomIndex);
 }
 
 std::vector<int>& Block::getEdgeGeoms()
@@ -1074,4 +1117,24 @@ void Block::setBlendColor(const TColor& i_blendColor)
 const TColor& Block::getBlendColor() const
 {
   return m_blendColor;
+}
+
+void Block::addEdgeMaterial( std::string i_texture, const TColor& i_blendColor )
+{
+  if((i_texture != "" ) && (i_texture != "not_used")) {
+    EdgeMaterial geomMat;
+    geomMat.color = i_blendColor;
+    geomMat.texture = i_texture;
+    m_edgeMaterial.push_back(geomMat);
+  };
+}
+
+const TColor& Block::getEdgeMaterialColor(std::string i_textureName) const
+{   
+   for(int i=0; i<m_edgeMaterial.size(); i++) {
+     if(m_edgeMaterial[i].texture == i_textureName) {
+       return m_edgeMaterial[i].color;
+     }
+   }
+   return DEFAULT_EDGE_BLENDCOLOR;
 }
