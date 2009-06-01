@@ -105,6 +105,7 @@ Block::Block(std::string i_id) {
   m_blendColor.setGreen(255);
   m_blendColor.setBlue(255);
   m_blendColor.setAlpha(255);
+  m_edgeDefaultColor = DEFAULT_EDGE_BLENDCOLOR; // assign it or get random colors if no edge material is added
 }
 
 Block::~Block() {
@@ -1136,5 +1137,5 @@ const TColor& Block::getEdgeMaterialColor(std::string i_textureName) const
        return m_edgeMaterial[i].color;
      }
    }
-   return DEFAULT_EDGE_BLENDCOLOR;
+   return m_edgeDefaultColor;
 }

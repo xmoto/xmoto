@@ -282,7 +282,7 @@ private:
   std::vector<int> m_edgeGeoms;
   // one blendColor and one scale value for each geom
   std::vector<EdgeMaterial> m_edgeMaterial;
-//  std::vector<float> m_edgeGeomScale;
+  TColor m_edgeDefaultColor;
 
   bool  m_background;
   bool  m_dynamic;
