@@ -41,12 +41,14 @@ template<class T> struct ColElement;
 
 #define DEFAULT_EDGE_ANGLE 270.0f
 #define DEFAULT_EDGE_BLENDCOLOR TColor(255, 255, 255, 255)
+#define DEFAULT_EDGE_SCALE -1.0f
+#define DEFAULT_EDGE_DEPTH -1.0f
 
 struct EdgeMaterial {
   int index;
   std::string texture;
   TColor color;
-  float scale;
+  float scale, depth;
 };
 
 /*===========================================================================
@@ -197,7 +199,7 @@ class Block {
   void setElasticity(float i_elasticity);
   void setCenter(const Vector2f& i_center);
   void setEdgeDrawMethod(EdgeDrawMethod method);
-  void addEdgeMaterial(std::string i_texture, const TColor& i_blendColor);
+  void addEdgeMaterial(std::string i_texture, const TColor& i_blendColor, float i_scale, float i_depth);
   // in degres, not radian
   void setEdgeAngle(float angle);
 
@@ -247,6 +249,8 @@ class Block {
   void addEdgeGeom(int geomIndex);
   std::vector<int>& getEdgeGeoms();
   const TColor& getEdgeMaterialColor( std::string i_textureName ) const;
+  float getEdgeMaterialDepth( std::string i_textureName );
+  float getEdgeMaterialScale( std::string i_textureName );
   bool edgeGeomExists(std::string texture);
 
   void updatePhysics(int timeStep, CollisionSystem* io_collisionSystem);
@@ -280,7 +284,7 @@ private:
   std::vector<ConvexBlock*> m_convexBlocks;
   // one geom for each edge texture
   std::vector<int> m_edgeGeoms;
-  // one blendColor and one scale value for each geom
+  // one Material (edge texture, blend color, scale and depth ) for each geom
   std::vector<EdgeMaterial> m_edgeMaterial;
   TColor m_edgeDefaultColor;
 

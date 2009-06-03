@@ -759,7 +759,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   } 
   
   void MGE_Message::doAction(Scene *p_pScene) {
-    p_pScene->gameMessage(m_message, true, MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION, scripted);
+    p_pScene->gameMessage(m_message, false, MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION, scripted);
   }
 
   void MGE_Message::serialize(DBuffer &Buffer) {

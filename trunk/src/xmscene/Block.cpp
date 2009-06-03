@@ -1,4 +1,4 @@
-/*=============================================================================
+/*===========================================================================
 XMOTO
 
 This file is part of XMOTO.
@@ -758,7 +758,10 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
         v_blendColor = XML::getOption(pedge, "color_g", "255"); blendColor_g = atoi(v_blendColor.c_str());
         v_blendColor = XML::getOption(pedge, "color_b", "255"); blendColor_b = atoi(v_blendColor.c_str());
         v_blendColor = XML::getOption(pedge, "color_a", "255"); blendColor_a = atoi(v_blendColor.c_str());
-        pBlock->addEdgeMaterial(v_edgeName, TColor(blendColor_r, blendColor_g, blendColor_b, blendColor_a));
+        
+        float v_scale = atof(XML::getOption(pedge, "scale", "-1.0f").c_str()); //set scale default alias -1
+        float v_depth = atof(XML::getOption(pedge, "depth", "-1.0f").c_str()); //det depth default alias -1
+        pBlock->addEdgeMaterial(v_edgeName, TColor(blendColor_r, blendColor_g, blendColor_b, blendColor_a), v_scale, v_depth);
       }
     }
     
@@ -837,6 +840,8 @@ void Block::saveBinary(FileHandle *i_pfh) {
         FS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Green());
         FS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Blue());
         FS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Alpha());
+        FS::writeFloat_LE(i_pfh, m_edgeMaterial[i].scale);
+        FS::writeFloat_LE(i_pfh, m_edgeMaterial[i].depth);
       }
       
       FS::writeInt_LE(i_pfh,   getCollisionMethod());
@@ -890,6 +895,8 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
     v_edgeMatColor.setBlue(FS::readInt_LE(i_pfh));
     v_edgeMatColor.setAlpha(FS::readInt_LE(i_pfh));
     v_geomMat.color = v_edgeMatColor;
+    v_geomMat.scale = FS::readFloat_LE(i_pfh);
+    v_geomMat.depth = FS::readFloat_LE(i_pfh);
     pBlock->m_edgeMaterial.push_back(v_geomMat);
   }
       
@@ -1120,22 +1127,44 @@ const TColor& Block::getBlendColor() const
   return m_blendColor;
 }
 
-void Block::addEdgeMaterial( std::string i_texture, const TColor& i_blendColor )
+void Block::addEdgeMaterial( std::string i_texture, const TColor& i_blendColor, float i_scale, float i_depth )
 {
   if((i_texture != "" ) && (i_texture != "not_used")) {
     EdgeMaterial geomMat;
     geomMat.color = i_blendColor;
     geomMat.texture = i_texture;
+    geomMat.scale = i_scale;
+    geomMat.depth = i_depth;
     m_edgeMaterial.push_back(geomMat);
   };
 }
 
 const TColor& Block::getEdgeMaterialColor(std::string i_textureName) const
 {   
-   for(int i=0; i<m_edgeMaterial.size(); i++) {
+   for(unsigned int i=0; i<m_edgeMaterial.size(); i++) {
      if(m_edgeMaterial[i].texture == i_textureName) {
        return m_edgeMaterial[i].color;
      }
    }
    return m_edgeDefaultColor;
+}
+
+float Block::getEdgeMaterialDepth(std::string i_textureName)
+{
+  for(unsigned int i=0; i<m_edgeMaterial.size(); i++) {
+     if(m_edgeMaterial[i].texture == i_textureName) {
+       return m_edgeMaterial[i].depth;
+     }
+   }
+   return DEFAULT_EDGE_DEPTH;
+}
+
+float Block::getEdgeMaterialScale(std::string i_textureName)
+{
+  for(unsigned int i=0; i<m_edgeMaterial.size(); i++) {
+     if(m_edgeMaterial[i].texture == i_textureName) {
+       return m_edgeMaterial[i].scale;
+     }
+   }
+   return DEFAULT_EDGE_SCALE;
 }

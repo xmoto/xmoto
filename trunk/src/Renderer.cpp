@@ -566,7 +566,10 @@ void GameRenderer::calculateEdgePosition(Block* pBlock,
   Vector2f vCPos = vertexC1->Position();
 
   /* link A to B */
-  float fDepth  = m_currentEdgeSprite->getDepth();
+  /*get scale value from material, if value is set there, if not (-1), get value from theme */
+  float fDepth = pBlock->getEdgeMaterialDepth(m_currentEdgeSprite->getName());
+  if(fDepth == DEFAULT_EDGE_DEPTH) fDepth = m_currentEdgeSprite->getDepth();
+  
   // add a small border because polygons are a bit larger to avoid gap polygon pb.
   float v_border; 
   if(fDepth > 0)
@@ -593,7 +596,8 @@ void GameRenderer::calculateEdgeTexture(Block* pBlock,
 					Vector2f& ua1, Vector2f& ub1,
 					Vector2f& ub2, Vector2f& ua2)
 {
-  float fXScale = m_currentEdgeSprite->getScale();
+  float fXScale = pBlock->getEdgeMaterialScale(m_currentEdgeSprite->getName()); //look if theres a material scale defined
+  if(fXScale == DEFAULT_EDGE_SCALE) fXScale = m_currentEdgeSprite->getScale();
 
   switch(pBlock->getEdgeDrawMethod()){
   case Block::inside:
@@ -1691,8 +1695,8 @@ int GameRenderer::nbParticlesRendered() const {
 	case scripted:
 	  //scripted text for display under the bike
 	  posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight() + pDrawlib->getDispHeight()/5);
-	  pDrawlib->drawBox(Vector2f(posX- 15,posY- 15),
-			    Vector2f(posX + v_fg->realWidth() +15 , posY+v_fg->realHeight()+ 15),
+	  pDrawlib->drawBox(Vector2f(posX- 15,posY- 1),
+			    Vector2f(posX + v_fg->realWidth() +15 , posY+v_fg->realHeight()+ 2),
 			    0,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,255,255,pMsg->nAlpha));
 	  break;
 	  
