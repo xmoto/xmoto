@@ -174,17 +174,18 @@ void Scene::cleanPlayers() {
 	pMsg->msgType = i_msgType;
 	m_GameMessages.push_back(pMsg);	
       } else {
-	/* split the message if \n is encoutered */
+	/* split the message if \n is encountered */
 	std::string v_txtRest = Text;
 	int n = v_txtRest.find_first_of("\n");
 
-	while(n >= 0 && (unsigned int)n < v_txtRest.length()) {
+	while(n >= 0 && (unsigned int)n < v_txtRest.length()) {  
 	  pMsg = new GameMessage;
 	  pMsg->removeTime = getTime() + duration;
 	  pMsg->bNew = true;
 	  pMsg->nAlpha = 255;
 	  pMsg->bOnce = bOnce;
 	  pMsg->Text = v_txtRest.substr(0, n);
+	  pMsg->msgType = i_msgType;
 	  m_GameMessages.push_back(pMsg);
 	  v_txtRest = v_txtRest.substr(n+1, v_txtRest.length()-1);
 	  n = v_txtRest.find_first_of("\n");
