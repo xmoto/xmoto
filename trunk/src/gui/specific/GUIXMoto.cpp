@@ -35,7 +35,7 @@ UILevelList::UILevelList(UIWindow *pParent,
   :UIList(pParent, x, y, Caption, nWidth, nHeight) {
     addColumn(GAMETEXT_LEVEL, getPosition().nWidth - 175);
     addColumn(std::string(GAMETEXT_TIME) + ":",80, GAMETEXT_YOURBESTTIME);
-    addColumn("WR:",80, GAMETEXT_HIGHSCOREOFTHEROOM);  
+    addColumn(std::string(GAMETEXT_ROOM) + ":",80, GAMETEXT_HIGHSCOREOFTHEROOM);  
 }
 
 UILevelList::~UILevelList() {
