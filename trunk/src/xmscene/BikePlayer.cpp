@@ -36,7 +36,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // autodisabler options
 #define PHYS_SLEEP_EPS                0.02   // 2006-04-23: changed from 0.008
 #define PHYS_SLEEP_FRAMES             20     // 150
-#define XM_DEEXTRAPOLATION_TIME 2
 #define XM_MAX_EXTRAPOLATION_T 3.0
 
 #define PHYS_SUSP_SQUEEK_POINT 0.01
@@ -1365,13 +1364,20 @@ void PlayerNetClient::updateToTime(int i_time, int i_timeStep,
                     -
                   first B = F3
   */
-  if(m_previousBikeStatesInitialized && m_lastFrameTimeUpdate + (XM_DEEXTRAPOLATION_TIME*10) > GameApp::getXMTimeInt()) {
+
+  /* it seems to give good result to desinterpolate 50% of the time of the two last frames :
+     if fps = 1 => desinterpolate for 0,5 seconds (very bad case)
+     if fps = 10 => desinterpolate for 0,05 seconds (ok)
+  */
+  int v_deextrapolation_time = (m_previousBikeStates[1]->GameTime - m_previousBikeStates[0]->GameTime) /* / 2 -- without /2 it seems to give better results */;
+
+  if(m_previousBikeStatesInitialized && m_lastFrameTimeUpdate + (v_deextrapolation_time*10) > GameApp::getXMTimeInt()) {
     // A
     if(m_lastExtrapolateBikeState->Dir != m_previousBikeStates[1]->Dir) {
       *m_bikeState = *(m_previousBikeStates[1]);
     } else {
       // interpolate from m_lastExtrapolateBikeState to m_previousBikeStates[1]
-      v_xpolation_value = (GameApp::getXMTimeInt()-m_lastFrameTimeUpdate) / ((float)(XM_DEEXTRAPOLATION_TIME*10));
+      v_xpolation_value = (GameApp::getXMTimeInt()-m_lastFrameTimeUpdate) / ((float)(v_deextrapolation_time*10));
       v_tmp = m_previousBikeStates[0];
       m_previousBikeStates[0] = m_lastExtrapolateBikeState;
       BikeState::interpolateGameStateLinear(m_previousBikeStates, m_bikeState, v_xpolation_value);
@@ -1383,7 +1389,7 @@ void PlayerNetClient::updateToTime(int i_time, int i_timeStep,
       *m_bikeState = *(m_previousBikeStates[1]);
     } else {
       if(m_previousBikeStates[1]->GameTime > m_previousBikeStates[0]->GameTime) {
-	v_xpolation_value = (((i_time - XM_DEEXTRAPOLATION_TIME) - m_previousBikeStates[1]->GameTime) 
+	v_xpolation_value = (((i_time - v_deextrapolation_time) - m_previousBikeStates[1]->GameTime) 
 			     /((float)(m_previousBikeStates[1]->GameTime - m_previousBikeStates[0]->GameTime))) +1.0;
 
 	if(v_xpolation_value < XM_MAX_EXTRAPOLATION_T) {
