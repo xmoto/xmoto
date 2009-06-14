@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../chipmunk/chipmunk.h"
 #include "ChipmunkWorld.h"
 #include "PhysicsSettings.h"
+#include "../Theme.h"
 
 #define XM_DEFAULT_BLOCK_TEXTURE "default"
 #define XM_DEFAULT_PHYS_BLOCK_MASS 30.0
@@ -491,13 +492,28 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 }
 
 void Block::addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem) {
-  ConvexBlock *v_block = new ConvexBlock(this);
-  float scale = TextureScale();
+  ConvexBlock* v_block = new ConvexBlock(this);
+  float scale = TextureScale() * 0.25;
+  Sprite* pSprite = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
+						 this->getTexture());
+  
+  if(pSprite != NULL) 
+  {
+    try{
+      Texture* v_texture = pSprite->getTexture();
+      int v_textureSize = v_texture->nWidth;
+      if(v_textureSize < 256)
+	// divide by texturesize to prevent upscaling of textures < 256x256
+	scale *= (256/v_textureSize);
+    } catch(Exception& e) {
+      ;
+    }
+  }
 
-  for(unsigned int i=0; i<i_poly->Vertices().size(); i++) {
+  for(unsigned int i=0; i<i_poly->Vertices().size(); i++) {	
     v_block->addVertex(i_poly->Vertices()[i],
-		       Vector2f((InitialPosition().x + i_poly->Vertices()[i].x) * 0.25 * scale,
-                                (InitialPosition().y + i_poly->Vertices()[i].y) * 0.25 * scale));
+		       Vector2f((InitialPosition().x + i_poly->Vertices()[i].x) * scale,
+                                (InitialPosition().y + i_poly->Vertices()[i].y) * scale));
   }
   m_convexBlocks.push_back(v_block);
 }
@@ -816,7 +832,7 @@ void Block::saveBinary(FileHandle *i_pfh) {
       FS::writeBool(i_pfh,     isPhysics());
       FS::writeBool(i_pfh,     isLayer());
       FS::writeInt_LE(i_pfh,   getLayer());
-      FS::writeString(i_pfh,   Texture());
+      FS::writeString(i_pfh,   getTexture());
       FS::writeFloat_LE(i_pfh, TextureScale());
       
       FS::writeInt_LE(i_pfh, m_blendColor.Red());

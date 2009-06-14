@@ -60,7 +60,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /* to sort blocks on their texture */
   struct AscendingTextureSort {
     bool operator() (Block* b1, Block* b2) {
-      return b1->Texture() < b2->Texture();
+      return b1->getTexture() < b2->getTexture();
     }
   };
 
@@ -286,7 +286,7 @@ int GameRenderer::loadBlock(Block* pBlock,
     Center = pBlock->DynamicPosition();
   }
 
-  Texture* pTexture = loadTexture(pBlock->Texture());
+  Texture* pTexture = loadTexture(pBlock->getTexture());
   if(pTexture == NULL){
     pScene->gameMessage(GAMETEXT_MISSINGTEXTURES, true);
   }

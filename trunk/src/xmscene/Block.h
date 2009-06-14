@@ -26,6 +26,7 @@ class Line;
 
 #include "../helpers/VMath.h"
 #include "../helpers/Color.h"
+#include "../VTexture.h"
 #include <vector>
 
 class FileHandle;
@@ -133,7 +134,7 @@ class Block {
   inline std::string& Id() {
     return m_id;
   }
-  inline std::string& Texture() {
+  inline std::string& getTexture() {
     return m_texture;
   }
   Vector2f InitialPosition() const;
