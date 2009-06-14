@@ -387,6 +387,8 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
     m_currentEdgeEffect = "";
     m_currentEdgeBlendColor = DEFAULT_EDGE_BLENDCOLOR;
     m_currentEdgeSprite = NULL;
+    m_currentEdgeMaterialScale = DEFAULT_EDGE_SCALE;
+    m_currentEdgeMaterialDepth = DEFAULT_EDGE_DEPTH;
 
     Vector2f oldC2, oldB2;
     bool useOld   = false;
@@ -424,6 +426,8 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 	  m_currentEdgeSprite = NULL;
 	  m_currentEdgeEffect = "";
 	  m_currentEdgeBlendColor = DEFAULT_EDGE_BLENDCOLOR;
+	  m_currentEdgeMaterialScale = DEFAULT_EDGE_SCALE;
+	  m_currentEdgeMaterialDepth = DEFAULT_EDGE_DEPTH;
 	}
       }
     }
@@ -460,6 +464,9 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 	m_currentEdgeSprite = pType;
 	m_currentEdgeEffect = edgeEffect;
 	m_currentEdgeBlendColor = pBlock->getEdgeMaterialColor(m_currentEdgeEffect);
+	m_currentEdgeMaterialScale = pBlock->getEdgeMaterialScale(m_currentEdgeSprite->getName());
+        m_currentEdgeMaterialDepth = pBlock->getEdgeMaterialDepth(m_currentEdgeSprite->getName());
+
       }
       
       // if a geom for current edge effect exists, get its index number
@@ -489,6 +496,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 			    oldC2, oldB2, useOld, AisLast, swapDone);
 
       Vector2f ua1, ub1, ub2, ua2;
+      
       calculateEdgeTexture(pBlock,
 			   a1, b1, b2, a2,
 			   ua1, ub1, ub2, ua2);
@@ -566,8 +574,8 @@ void GameRenderer::calculateEdgePosition(Block* pBlock,
   Vector2f vCPos = vertexC1->Position();
 
   /* link A to B */
-  /*get scale value from material, if value is set there, if not (-1), get value from theme */
-  float fDepth = pBlock->getEdgeMaterialDepth(m_currentEdgeSprite->getName());
+  /*get scale value from inksmoto material, if value is set there, if not (-1), get value from theme */
+  float fDepth = m_currentEdgeMaterialDepth; 
   if(fDepth == DEFAULT_EDGE_DEPTH) fDepth = m_currentEdgeSprite->getDepth();
   
   // add a small border because polygons are a bit larger to avoid gap polygon pb.
@@ -596,7 +604,7 @@ void GameRenderer::calculateEdgeTexture(Block* pBlock,
 					Vector2f& ua1, Vector2f& ub1,
 					Vector2f& ub2, Vector2f& ua2)
 {
-  float fXScale = pBlock->getEdgeMaterialScale(m_currentEdgeSprite->getName()); //look if theres a material scale defined
+  float fXScale = m_currentEdgeMaterialScale; //look if theres a inksmoto material scale defined
   if(fXScale == DEFAULT_EDGE_SCALE) fXScale = m_currentEdgeSprite->getScale();
 
   switch(pBlock->getEdgeDrawMethod()){

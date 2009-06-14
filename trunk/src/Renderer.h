@@ -208,6 +208,8 @@ private:
   std::string       m_currentEdgeEffect;
   TColor            m_currentEdgeBlendColor;
   EdgeEffectSprite* m_currentEdgeSprite;
+  float             m_currentEdgeMaterialScale;
+  float             m_currentEdgeMaterialDepth;
 
 
   float m_xScale;
