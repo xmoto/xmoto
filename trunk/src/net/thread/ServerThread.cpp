@@ -679,6 +679,8 @@ void ServerThread::run_loop() {
     /* sleep only if network is not active */
     if(m_nInactivNetLoop > XM_SERVER_MIN_INACTIVITY_LOOP_TO_SLEEP) {
       SDL_Delay(XM_SERVER_UNPLAYING_SLEEP);
+    } else {
+      SDL_Delay(1); // always sleep the minimum time to limit the cpu usage
     }
   }
 
