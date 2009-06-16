@@ -181,7 +181,8 @@ private:
   std::vector<Geom*> m_edgeGeoms;
 
   std::string m_bestTime;
-  std::string m_replayHelp;
+  std::string m_replayHelp_l;
+  std::string m_replayHelp_r;
   std::string m_worldRecordTime;
 
   GraphicsLevel m_graphicsLevel;

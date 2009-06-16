@@ -419,9 +419,10 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_RELOADINGREPLAYS     _("Reloading replays...")
 #define GAMETEXT_RELOADINGTHEMES      _("Reloading themes...")
 #define GAMETEXT_REPLAY               _("Replay")
-#define GAMETEXT_REPLAYHELPTEXT(current_speed) _("Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:") + current_speed + "x"
-#define GAMETEXT_REPLAYHELPTEXTNOREWIND(current_speed) _("Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:") + current_speed + "x"
-  // + "a" + "X"
+#define GAMETEXT_REPLAYHELPTEXTNOREWIND_L _("  Stop:\n    >>\n   < >\n Speed:" )
+#define GAMETEXT_REPLAYHELPTEXTNOREWIND_R(current_speed) _("[esc] , [space]\n[right key]\n[up/down keys]\n") + current_speed + "x"
+#define GAMETEXT_REPLAYHELPTEXT_L    _("  Stop:\n<< >>\n   < >\n Speed:" )
+#define GAMETEXT_REPLAYHELPTEXT_R(current_speed) _("[esc] , [space]\n[left/right keys]\n[up/down keys]\n") + current_speed + "x"
 #define GAMETEXT_REPLAYNOTFOUND       _("The replay can't be played!")
 #define GAMETEXT_REPLAYOF             _("Replay of %s")
 #define GAMETEXT_REPLAYS              _("Replays")

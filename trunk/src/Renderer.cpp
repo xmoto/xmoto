@@ -2565,29 +2565,36 @@ void GameRenderer::_RenderLayers(Scene* i_scene, bool renderFront) {
   void GameRenderer::showReplayHelp(float p_speed, bool bAllowRewind) {
     if(bAllowRewind) {
       if(p_speed >= 10.0) {
-	m_replayHelp = GAMETEXT_REPLAYHELPTEXT(std::string(">> 10"));
+	m_replayHelp_l = GAMETEXT_REPLAYHELPTEXT_L;//(std::string(">> 10"));
+	m_replayHelp_r = GAMETEXT_REPLAYHELPTEXT_R(std::string("> 10"));
       } else if(p_speed <= -10.0) {
-	m_replayHelp = GAMETEXT_REPLAYHELPTEXT(std::string("<<-10"));
+	m_replayHelp_l = GAMETEXT_REPLAYHELPTEXT_L;//(std::string("<<-10"));
+	m_replayHelp_r = GAMETEXT_REPLAYHELPTEXT_R(std::string("< -10"));
       } else {
 	char v_speed_str[5 + 1];
 	snprintf(v_speed_str, 5+1, "% .2f", p_speed);
-	m_replayHelp = GAMETEXT_REPLAYHELPTEXT(std::string(v_speed_str));
+	m_replayHelp_l = GAMETEXT_REPLAYHELPTEXT_L;//(std::string(v_speed_str));
+	m_replayHelp_r = GAMETEXT_REPLAYHELPTEXT_R(std::string(v_speed_str));
       }
     } else {
       if(p_speed >= 10.0) {
-	m_replayHelp = GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string(">> 10"));
+	m_replayHelp_l = GAMETEXT_REPLAYHELPTEXTNOREWIND_L;
+	m_replayHelp_r = GAMETEXT_REPLAYHELPTEXTNOREWIND_R(std::string("> 10"));
       } else if(p_speed <= -10.0) {
-	m_replayHelp = GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string("<<-10"));
+	m_replayHelp_l = GAMETEXT_REPLAYHELPTEXTNOREWIND_L;
+	m_replayHelp_r = GAMETEXT_REPLAYHELPTEXTNOREWIND_R(std::string("< -10"));
       } else {
 	char v_speed_str[256];
 	snprintf(v_speed_str, 256, "% .2f", p_speed);
-	m_replayHelp = GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string(v_speed_str));
+	m_replayHelp_l = GAMETEXT_REPLAYHELPTEXTNOREWIND_L;
+	m_replayHelp_r = GAMETEXT_REPLAYHELPTEXTNOREWIND_R(std::string(v_speed_str));
       }
     }
   }
 
   void GameRenderer::hideReplayHelp() {
-    m_replayHelp = "";
+    m_replayHelp_l = "";
+    m_replayHelp_r = "";
   }
   
   /*===========================================================================
@@ -2877,10 +2884,24 @@ void GameRenderer::renderReplayHelpMessage(Scene* i_scene) {
     return;
 
   FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
-  FontGlyph* v_fg = v_fm->getGlyph(m_replayHelp);
-  v_fm->printString(v_fg,
-		    GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth(),
-		    0,
+  FontGlyph* v_fg_l = v_fm->getGlyph(m_replayHelp_l);
+  FontGlyph* v_fg_r = v_fm->getGlyph(m_replayHelp_r);
+  
+  // a nice Box
+  int v_displayWidth = GameApp::instance()->getDrawLib()->getDispWidth(),
+      posX = v_displayWidth - v_fg_r->realWidth(),
+      posY = 5;
+  Vector2f A(posX - v_fg_l->realWidth() - 20, posY - 5), B(v_displayWidth, v_fg_r->realHeight() + posY + 7);
+  GameApp::instance()->getDrawLib()->drawBox(A,B,1,MAKE_COLOR(0,0,0,118),MAKE_COLOR(255,255,255,255));
+  
+  v_fm->printString(v_fg_l,
+		    posX - v_fg_l->realWidth() - 12, //give some space between left and right part
+		    posY,
+		    MAKE_COLOR(255,255,255,255), -1.0, true);
+  
+  v_fm->printString(v_fg_r,
+		    posX - 7, //give some space to right side of screen
+		    posY,
 		    MAKE_COLOR(255,255,255,255), -1.0, true);
 }
 
