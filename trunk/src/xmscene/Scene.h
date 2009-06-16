@@ -136,6 +136,7 @@ public:
   void gameMessage(std::string Text,
 		   bool bOnce = false,
 		   int duration = MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION, MessageType i_msgType = gameMsg);
+  void packGameMessages(); //makes multiple GameMessages into one
   void clearGameMessages();
   void updateGameMessages();
   std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}

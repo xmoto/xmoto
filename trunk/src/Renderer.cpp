@@ -2565,15 +2565,15 @@ void GameRenderer::_RenderLayers(Scene* i_scene, bool renderFront) {
   void GameRenderer::showReplayHelp(float p_speed, bool bAllowRewind) {
     if(bAllowRewind) {
       if(p_speed >= 10.0) {
-	m_replayHelp_l = GAMETEXT_REPLAYHELPTEXT_L;//(std::string(">> 10"));
+	m_replayHelp_l = GAMETEXT_REPLAYHELPTEXT_L;
 	m_replayHelp_r = GAMETEXT_REPLAYHELPTEXT_R(std::string("> 10"));
       } else if(p_speed <= -10.0) {
-	m_replayHelp_l = GAMETEXT_REPLAYHELPTEXT_L;//(std::string("<<-10"));
+	m_replayHelp_l = GAMETEXT_REPLAYHELPTEXT_L;
 	m_replayHelp_r = GAMETEXT_REPLAYHELPTEXT_R(std::string("< -10"));
       } else {
 	char v_speed_str[5 + 1];
 	snprintf(v_speed_str, 5+1, "% .2f", p_speed);
-	m_replayHelp_l = GAMETEXT_REPLAYHELPTEXT_L;//(std::string(v_speed_str));
+	m_replayHelp_l = GAMETEXT_REPLAYHELPTEXT_L;
 	m_replayHelp_r = GAMETEXT_REPLAYHELPTEXT_R(std::string(v_speed_str));
       }
     } else {
