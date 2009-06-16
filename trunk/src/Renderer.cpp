@@ -2891,9 +2891,11 @@ void GameRenderer::renderReplayHelpMessage(Scene* i_scene) {
   int v_displayWidth = GameApp::instance()->getDrawLib()->getDispWidth(),
       posX = v_displayWidth - v_fg_r->realWidth(),
       posY = 5;
-  Vector2f A(posX - v_fg_l->realWidth() - 20, posY - 5), B(v_displayWidth, v_fg_r->realHeight() + posY + 7);
-  GameApp::instance()->getDrawLib()->drawBox(A,B,1,MAKE_COLOR(0,0,0,118),MAKE_COLOR(255,255,255,255));
-  
+  // but just in case there is replayHelp displayed
+  if(m_replayHelp_l != "") {  
+    Vector2f A(posX - v_fg_l->realWidth() - 20, posY - 5), B(v_displayWidth, v_fg_r->realHeight() + posY + 7);
+    GameApp::instance()->getDrawLib()->drawBox(A,B,1,MAKE_COLOR(0,0,0,118),MAKE_COLOR(255,255,255,255));
+  }
   v_fm->printString(v_fg_l,
 		    posX - v_fg_l->realWidth() - 12, //give some space between left and right part
 		    posY,
