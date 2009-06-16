@@ -215,9 +215,10 @@ void Scene::packGameMessages() {   //put multiple GameMessages into one, if they
 
   for( int i = m_GameMessages.size()-1 ; i > 0 ; i-- ) {
     
-    if( (m_GameMessages[i]->removeTime - m_GameMessages[i-1]->removeTime < 1500) && 
+    if( (m_GameMessages[i]->removeTime - m_GameMessages[i-1]->removeTime < 1000) && 
         (m_GameMessages[i]->msgType == m_GameMessages[i-1]->msgType) &&
-        (m_GameMessages[i]->bOnce == m_GameMessages[i-1]->bOnce)) {                   //of same Type?
+        (m_GameMessages[i]->bOnce == m_GameMessages[i-1]->bOnce) &&
+        (m_GameMessages[i]->nAlpha == m_GameMessages[i-1]->nAlpha)) {                   //of same Type?
     
       m_GameMessages[i-1]->Text = m_GameMessages[i-1]->Text + "\n" + m_GameMessages[i]->Text;
       m_GameMessages[i-1]->removeTime = m_GameMessages[i]->removeTime;              //set removeTime of latest Message
