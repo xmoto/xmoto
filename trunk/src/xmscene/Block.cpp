@@ -501,10 +501,12 @@ void Block::addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem) {
   {
     try{
       Texture* v_texture = pSprite->getTexture();
-      int v_textureSize = v_texture->nWidth;
-      if(v_textureSize < 256)
-	// divide by texturesize to prevent upscaling of textures < 256x256
-	scale *= (256/v_textureSize);
+      if(v_texture != NULL) {
+	int v_textureSize = v_texture->nWidth;
+	if(v_textureSize < 256)
+	  // divide by texturesize to prevent upscaling of textures < 256x256
+	  scale *= (256/v_textureSize);
+      }
     } catch(Exception& e) {
       ;
     }
