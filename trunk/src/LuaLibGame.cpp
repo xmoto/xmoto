@@ -27,7 +27,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "xmscene/Level.h"
 #include "xmscene/Block.h"
+#include "xmscene/ScriptTimer.h"
 #include <sstream>
+
+#define STIMER_DELAY_DEFAULT 100
+#define STIMER_LOOPS_DEFAULT 0
 
 luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"GetTime",                      LuaLibGame::L_Game_GetTime},
@@ -86,7 +90,10 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"StopMusic",                    LuaLibGame::L_Game_StopMusic},
   {"GetPlayerVelocity",            LuaLibGame::L_Game_GetPlayerVelocity},
   {"GetPlayerSpeed",               LuaLibGame::L_Game_GetPlayerSpeed},
-  {"GetPlayerAngle",               LuaLibGame::L_Game_GetPlayerAngle},   
+  {"GetPlayerAngle",               LuaLibGame::L_Game_GetPlayerAngle}, 
+  {"StartTimer",               LuaLibGame::L_Game_StartTimer},   
+  {"SetTimerDelay",               LuaLibGame::L_Game_SetTimerDelay}, 
+  {"StopTimer",               LuaLibGame::L_Game_StopTimer}, 
   {NULL, NULL}
 };
 Scene*     LuaLibGame::m_exec_world              = NULL;
@@ -528,8 +535,8 @@ int LuaLibGame::L_Game_SetKeyHook(lua_State *pL) {
   if(m_exec_activeInputHandler != NULL) {
     try {
       m_exec_activeInputHandler->addScriptKeyHook(m_exec_world, luaL_checkstring(pL,1), luaL_checkstring(pL,2));
-    } catch(Exception &e) {
-      m_exec_world->gameMessage("** Warning ** : addScriptKeyHook failed", true);      
+    } catch(Exception &e) {  
+			luaL_error (pL, "AddScriptKeyHook failed");    
     }
   }
   return 0;
@@ -721,11 +728,9 @@ int LuaLibGame::L_Game_IsAPlayerInZone(lua_State *pL) {
     v_zone = m_exec_world->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1));
     v_player = (int)X_luaL_check_number(pL, 2);
     
-    if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
-      std::ostringstream v_txt_player;
-      v_txt_player << v_player;
-      throw Exception("Invalid player " + v_txt_player.str());
-    }
+  if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
+    luaL_error (pL, "Invalid player number");
+  }
 
     lua_pushboolean(pL, m_exec_world->Players()[v_player]->isTouching(v_zone)?1:0);
   } catch(Exception &e) {
@@ -741,10 +746,7 @@ int LuaLibGame::L_Game_SetAPlayerPosition(lua_State *pL) {
   int v_player = (int)X_luaL_check_number(pL,4);
 
   if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
-    std::ostringstream v_txt_player;
-    v_txt_player << v_player;
-    printf("player is %i\n", v_player);
-    //throw Exception("Invalid player " + v_txt_player.str());
+		luaL_error (pL, "Invalid player number");
   }
 
   m_exec_world->createGameEvent(new MGE_SetPlayerPosition(m_exec_world->getTime(),
@@ -763,9 +765,7 @@ int LuaLibGame::L_Game_GetAPlayerPosition(lua_State *pL) {
   int v_player = (int)X_luaL_check_number(pL,1);
 
   if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
-    std::ostringstream v_txt_player;
-    v_txt_player << v_player;
-    throw Exception("Invalid player " + v_txt_player.str());
+		luaL_error (pL, "Invalid player number");
   }
 
   x = m_exec_world->Players()[v_player]->getState()->CenterP.x;
@@ -783,9 +783,7 @@ int LuaLibGame::L_Game_KillAPlayer(lua_State *pL) {
   int v_player = (int)X_luaL_check_number(pL,1);
 
   if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
-    std::ostringstream v_txt_player;
-    v_txt_player << v_player;
-    throw Exception("Invalid player " + v_txt_player.str());
+		luaL_error (pL, "Invalid player number");
   }
 
   m_exec_world->createGameEvent(new MGE_PlayerDies(m_exec_world->getTime(), false, v_player));
@@ -796,9 +794,7 @@ int LuaLibGame::L_Game_WinAPlayer(lua_State *pL) {
   int v_player = (int)X_luaL_check_number(pL,1);
 
   if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
-    std::ostringstream v_txt_player;
-    v_txt_player << v_player;
-    throw Exception("Invalid player " + v_txt_player.str());
+		luaL_error (pL, "Invalid player number");
   }
 
   m_exec_world->makePlayerWin(v_player);
@@ -858,41 +854,109 @@ int LuaLibGame::L_Game_StopMusic(lua_State *pL) {
   return 0;
 }
 
+/* by Tuhoojabotti */
 int LuaLibGame::L_Game_GetPlayerVelocity(lua_State *pL) {
   /* no event for this */
   int v_player = (int)X_luaL_check_number(pL,1);
 
   if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
-    throw Exception("Invalid player");
+		luaL_error (pL, "Invalid player number");
   }
   lua_pushnumber(pL, m_exec_world->Players()[v_player]->getBikeLinearVel());
 
   return 1;
 }
-
+/* by Tuhoojabotti */
 int LuaLibGame::L_Game_GetPlayerSpeed(lua_State *pL) {
   /* no event for this */
   int v_player = (int)X_luaL_check_number(pL,1);
   
   if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
-    throw Exception("Invalid player");
+		luaL_error (pL, "Invalid player number");
   }
   lua_pushnumber(pL, m_exec_world->Players()[v_player]->getBikeEngineSpeed());
 
   return 1;
 }
-
+/* by Tuhoojabotti */
 int LuaLibGame::L_Game_GetPlayerAngle(lua_State *pL) {
   /* no event for this */
   int v_player = (int)X_luaL_check_number(pL,1);
   
   if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
-    throw Exception("Invalid player");
+		luaL_error (pL, "Invalid player number");
   }
   lua_pushnumber(pL, m_exec_world->Players()[v_player]->getAngle());
 
   return 1; //return 1 value
 }
+
+/*=====================================================
+        Script Timer Functions! by Tuhoojabotti
+=====================================================*/
+/* I say that THIS code is beautiful. */
+//START
+int LuaLibGame::L_Game_StartTimer(lua_State *pL) {
+	args_CheckNumberOfArguments(pL, 1, 3); //we need 1 or 3 args
+	//set the defaults
+  int v_numargs=args_numberOfArguments(pL); 
+  std::string v_name="";
+	int v_delay = STIMER_DELAY_DEFAULT;
+	int v_loops=STIMER_LOOPS_DEFAULT;
+	ScriptTimer* v_timer=NULL;
+
+  //get parameters
+	v_name=(std::string)luaL_checkstring(pL,1);
+	v_timer=m_exec_world->getScriptTimerByName(v_name);
+	//check the optional args
+	if(v_numargs>1){
+		v_delay=(int)luaL_checknumber(pL,2);
+	}
+	if(v_numargs>2){
+		v_loops=(int)luaL_checknumber(pL,3);
+	}
+	//if timer is not found
+	if(v_timer==NULL){
+		m_exec_world->createScriptTimer(v_name,v_delay,v_loops); //create timer
+	}else{
+		if(v_numargs == 1){ //only name given
+			v_timer->StartTimer(); //start the timer
+		}else{ //numarg is not 1 so it can only be 2 or 3 which is okay
+			v_timer->ResetTimer(v_delay,v_loops,m_exec_world->getTime());
+			/* For example: if only delay is given then the loops=0 (default) */
+		}
+	}
+  return 0; //return no values to the script
+}
+//SET DELAY
+int LuaLibGame::L_Game_SetTimerDelay(lua_State *pL) {
+	args_CheckNumberOfArguments(pL, 2, 2); //exactly 2 args needed
+  std::string v_name=(std::string)luaL_checkstring(pL,1);
+	int v_delay=(int)luaL_checknumber(pL,2);
+	ScriptTimer* v_timer=m_exec_world->getScriptTimerByName(v_name);
+
+	if(v_timer!=NULL){
+		v_timer->SetTimerDelay(v_delay);
+	}else{
+		luaL_error (pL, "An error occured, timer doesn't exist!");   
+	}
+	return 0; //return no values to the script
+}
+//STOP
+int LuaLibGame::L_Game_StopTimer(lua_State *pL) {
+	args_CheckNumberOfArguments(pL, 1, 1); //exactly 1 arg needed
+  std::string v_name = (std::string)luaL_checkstring(pL,1); //get name
+  ScriptTimer* v_timer=m_exec_world->getScriptTimerByName(v_name);
+  if(v_timer!=NULL){ //timer is found
+		v_timer->PauseTimer(); //pause it
+  }else{
+		luaL_error (pL, "An error occured, timer doesn't exist!"); 
+	}
+  return 0; //return no values to the script
+}
+/*=====================================================
+            Script Helpers
+=====================================================*/
 
 int LuaLibGame::args_numberOfArguments(lua_State *pL) {
   return lua_gettop(pL);
@@ -903,11 +967,11 @@ void LuaLibGame::args_CheckNumberOfArguments(lua_State *pL, int i_from, int i_to
 
   if(i_to == -1) {
     if(n != i_from) {
-      throw Exception("Invalid number of arguments");
+      luaL_error (pL, "Invalid number of arguments");  
     }
   } else {
     if(n < i_from || n > i_to) {
-      throw Exception("Invalid number of arguments");
+      luaL_error (pL, "Invalid number of arguments");  
     }
   }
 }

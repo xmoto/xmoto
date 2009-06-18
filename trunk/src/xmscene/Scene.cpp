@@ -18,9 +18,6 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-/* 
- *  Game object. Handles all of the gamestate management und so weiter.
- */
 #include "../GameText.h"
 #include "../Game.h"
 #include "Scene.h"
@@ -46,7 +43,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "PhysicsSettings.h"
 #include "../net/NetClient.h"
 #include "../net/NetActions.h"
+#include "ScriptTimer.h"
 
+/* 
+ *  Game object. Handles all of the gamestate management und so weiter.
+ */
   Scene::Scene() {
     m_bDeathAnimEnabled=true;
     m_lastCallToEveryHundreath = 0;
@@ -73,11 +74,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_halfUpdate = true;
 
     m_physicsSettings = NULL;
+
   }
   
   Scene::~Scene() {
     cleanPlayers();
     cleanGhosts();
+		cleanScriptTimers();
   }
 
   void Scene::loadLevel(xmDatabase *i_db, const std::string& i_id_level) {
@@ -283,6 +286,25 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
       _UpdateZones();
       _UpdateEntities();
     }
+	
+
+	/* update ScriptTimers */
+    try {
+			unsigned int i=0;
+			while(i<m_ScriptTimers.size()){
+				m_ScriptTimers[i]->UpdateTimer(getTime());
+				if(m_ScriptTimers[i]->isFinished()==true){
+					delete m_ScriptTimers[i];
+					m_ScriptTimers.erase(m_ScriptTimers.begin() + i);
+				}else{ //only grow index if we don't delete anything
+					i++;
+				}
+			}
+		} catch(Exception &e) {
+			LogWarning(std::string("Script Timer Update Failed!!\n" + e.getMsg()).c_str());
+			throw e;
+		}
+	
 
     /* Invoke Tick() script function */
     /* and play script dynamic objects */
@@ -657,6 +679,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
 
     cleanPlayers();
     cleanGhosts();
+		cleanScriptTimers();
 
     removeCameras();
 
@@ -1526,4 +1549,28 @@ void SceneOnBikerHooks::onWheelTouches(int i_wheel, bool i_touch) {
 void SceneOnBikerHooks::onHeadTouches() {
   m_motoGame->createGameEvent(new MGE_PlayerDies(m_motoGame->getTime(), false, m_playerNumber));
 }
+
+
+/*===========================================================================*/
+/* ScriptTimer methods (public)                                              */
+/*===========================================================================*/
+  ScriptTimer* Scene::getScriptTimerByName(std::string TimerName){
+		for(unsigned int i=0; i<m_ScriptTimers.size(); i++) {
+		    if(m_ScriptTimers[i]->GetName()==TimerName){
+			return m_ScriptTimers[i];
+			}
+		}
+    return NULL;
+  }
+
+	void Scene::createScriptTimer(std::string TimerName, float delay, int loops){
+		m_ScriptTimers.push_back(new ScriptTimer(TimerName, delay, loops, m_luaGame, getTime()));
+	}
+
+	void Scene::cleanScriptTimers(){
+		for(unsigned int i=0; i<m_ScriptTimers.size(); i++) {
+    	delete m_ScriptTimers[i];
+		}
+		m_ScriptTimers.clear();
+	}
 

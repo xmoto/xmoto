@@ -60,6 +60,7 @@ class BikerTheme;
 class Biker;
 class ChipmunkWorld;
 class PhysicsSettings;
+class ScriptTimer;
 
 /*===========================================================================
   Serialized bike state
@@ -152,6 +153,13 @@ public:
   int getNumPendingGameEvents();
   void cleanEventsQueue();
   void executeEvents(DBuffer *i_recorder);
+
+  /* Script Timer */
+  ScriptTimer* getScriptTimerByName(std::string TimerName);
+	void createScriptTimer(std::string TimerName, float delay, int loops);
+	void cleanScriptTimers();
+  std::vector<ScriptTimer*> m_ScriptTimers;
+
 
   /* player */
   void setPlayerPosition(int i_player, float x,float y,bool bFaceRight);
