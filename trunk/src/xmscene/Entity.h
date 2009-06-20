@@ -220,7 +220,7 @@ private:
 
 
 
-typedef enum particleSourceType {None, Smoke, Fire, Star, Debris} particleSourceType;
+typedef enum particleSourceType {None, Smoke, Fire, Star, Debris, Sparkle} particleSourceType;
 
 class ParticlesSource : public Entity {
  public:
@@ -317,7 +317,14 @@ class ParticlesSourceDebris : public ParticlesSource {
   void addParticle(int i_curTime);
 };
 
-
+class ParticlesSourceSparkle : public ParticlesSource {
+ public:
+  ParticlesSourceSparkle(const std::string& i_id);
+  virtual ~ParticlesSourceSparkle();
+	int m_last_time;
+  bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
+  void addParticle(int i_curTime);
+};
 
 
 /**
@@ -397,6 +404,18 @@ class DebrisParticle : public EntityParticle {
   virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
 
  private:
+};
+
+class SparkleParticle : public EntityParticle {
+ public:
+  SparkleParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
+  virtual ~SparkleParticle();
+  void init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
+
+  virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
+
+ private:
+  float m_SparkleSeed;
 };
 
 #endif /* __ENTITY_H__ */

@@ -3072,6 +3072,25 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
 	  }
 	}
 
+	if(index < size && particleSources[index]->getType() == Sparkle) {
+	  // sparkle
+	  EffectSprite* pSparkleType = (EffectSprite*) particleSources[index]->getSprite();
+	  if(pSparkleType != NULL) {
+	    GameApp::instance()->getDrawLib()->setTexture(pSparkleType->getTexture(), BLEND_MODE_A);
+
+	    for(; index < size; index++) {
+	      if(particleSources[index]->getType() != Sparkle)
+		break;
+	      _RenderParticle(i_scene, particleSources[index]);
+	    }
+	  } else {
+	    for(; index < size; index++) {
+	      if(particleSources[index]->getType() != Sparkle)
+		break;
+	    }	
+	  }
+	}
+
       }
 
     } catch(Exception &e) {

@@ -42,6 +42,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define PARTICLES_SOURCE_STAR_TIME_INCREMENT   2
 #define PARTICLES_SOURCE_FIRE_TIME_INCREMENT   4
 #define PARTICLES_SOURCE_DEBRIS_TIME_INCREMENT 2
+#define PARTICLES_SOURCE_SPARKLE_TIME_INCREMENT 1
+#define PS_SPARKLE_DELAY_MIN 150
+#define PS_SPARKLE_DELAY_MAX 250
+
+/*====================================================
+Entity "an object that the biker can found on his way"
+====================================================*/
+/* includes: particle sources, strawberries, sprites, wreckers, end of levels*/
 
 Entity::Entity(const std::string& i_id) {
   m_id          = i_id;
@@ -267,6 +275,8 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
 	v_entity = new ParticlesSourceStar(id);
       } else if(typeName == "Debris") {
 	v_entity = new ParticlesSourceDebris(id);
+      } else if(typeName == "Sparkle") {
+	v_entity = new ParticlesSourceSparkle(id);
       } else {
 	throw Exception("Entity " + id + " has an invalid type name");
       }
@@ -299,7 +309,9 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
     } else if(typeName == "Debris") {
       v_entity->setSprite(v_entity->loadSprite(std::string("Debris1")));
       v_entity->setSpriteName("Debris1");
-    }
+    } else if(typeName == "Sparkle")   {
+      v_entity->setSprite(v_entity->loadSprite(std::string("Fire1")));
+		}
     break;
   case ET_JOINT:
     break;
@@ -460,7 +472,9 @@ Entity* Entity::readFromBinary(FileHandle *i_pfh) {
 }
 
 
-
+/*===========================================
+									Joints
+===========================================*/
 
 void Joint::saveBinary(FileHandle *i_pfh)
 {
@@ -620,6 +634,10 @@ void Joint::setNextCollisionGroup()
 unsigned int Joint::m_currentCollisionGroup = 2;
 
 
+/*===========================================
+				Particle Effects
+===========================================*/
+
 int ParticlesSource::m_totalOfParticles = 0;
 bool ParticlesSource::m_allowParticleGeneration = true;
 
@@ -710,7 +728,9 @@ void ParticlesSource::addDeadParticle(EntityParticle* pEntityParticle)
   m_deadParticles.push_back(pEntityParticle);
 }
 
-
+/*===========================================
+	Multiple Particle Effects (many sprites)
+===========================================*/
 ParticlesSourceMultiple::ParticlesSourceMultiple(const std::string& i_id, int i_particleTime_increment, unsigned int i_nbSprite)
   : ParticlesSource(i_id, i_particleTime_increment)
 {
@@ -745,7 +765,9 @@ void ParticlesSourceMultiple::loadSpriteTextures()
   }
 }
 
-
+/*===========================================
+				 Smoke Effect
+===========================================*/
 ParticlesSourceSmoke::ParticlesSourceSmoke(const std::string& i_id)
   : ParticlesSourceMultiple(i_id, PARTICLES_SOURCE_SMOKE_TIME_INCREMENT, 2) {
   m_type = Smoke;
@@ -793,6 +815,9 @@ bool ParticlesSourceSmoke::updateToTime(int i_time, Vector2f& i_gravity, Physics
   return false;
 }
 
+/*===========================================
+				 Fire Effect
+===========================================*/
 ParticlesSourceFire::ParticlesSourceFire(const std::string& i_id)
   : ParticlesSource(i_id, PARTICLES_SOURCE_FIRE_TIME_INCREMENT) {
   m_type = Fire;
@@ -832,7 +857,9 @@ bool ParticlesSourceFire::updateToTime(int i_time, Vector2f& i_gravity, PhysicsS
   }
   return false;
 }
-
+/*===========================================
+				 Star Effect
+===========================================*/
 ParticlesSourceStar::ParticlesSourceStar(const std::string& i_id)
   : ParticlesSource(i_id, PARTICLES_SOURCE_STAR_TIME_INCREMENT) {
   setSpriteName("Star");
@@ -862,7 +889,9 @@ void ParticlesSourceStar::addParticle(int i_curTime) {
   m_particles.push_back(pEntityParticle);
   m_totalOfParticles++;
 }
-
+/*===========================================
+				 Debris Effect
+===========================================*/
 ParticlesSourceDebris::ParticlesSourceDebris(const std::string& i_id)
   : ParticlesSource(i_id, PARTICLES_SOURCE_DEBRIS_TIME_INCREMENT) {
   // debris are created outside of an entity, so we have to put the
@@ -899,11 +928,57 @@ bool ParticlesSourceDebris::updateToTime(int i_time, Vector2f& i_gravity, Physic
   return ParticlesSource::updateToTime(i_time, i_gravity, i_physicsSettings);
 }
 
+/*===========================================
+				 Sparkle Effect
+===========================================*/
+ParticlesSourceSparkle::ParticlesSourceSparkle(const std::string& i_id)
+  : ParticlesSource(i_id, PARTICLES_SOURCE_SPARKLE_TIME_INCREMENT) {
+  m_type = Sparkle;
+	m_last_time=0;
+}
 
+ParticlesSourceSparkle::~ParticlesSourceSparkle() {
+}
 
+void ParticlesSourceSparkle::addParticle(int i_curTime) {
+  if(hasReachedMaxParticles() == true)
+    return;
 
+  Vector2f    v_velocity(NotSoRandom::randomNum(-4,  4),
+			 NotSoRandom::randomNum(0, 2));
+  int         v_killTime   = i_curTime + 500;
+  std::string v_spriteName = SpriteName();
 
+  EntityParticle* pEntityParticle = getExistingParticle();
+  if(pEntityParticle == NULL){
+    pEntityParticle = new SparkleParticle(DynamicPosition(), v_velocity,
+				       v_killTime, v_spriteName);
+  } else {
+    ((SparkleParticle*)pEntityParticle)->init(DynamicPosition(), v_velocity,
+					   v_killTime, v_spriteName);
+  }
 
+  m_particles.push_back(pEntityParticle);
+  m_totalOfParticles++;
+}
+
+bool ParticlesSourceSparkle::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings) {
+	/*if(ParticlesSource::updateToTime(i_time, i_gravity, i_physicsSettings) == true) {
+    addParticle(i_time);
+    return true;
+  }*/
+	ParticlesSource::updateToTime(i_time, i_gravity, i_physicsSettings);
+	if(i_time>m_last_time+NotSoRandom::randomNum(PS_SPARKLE_DELAY_MIN, PS_SPARKLE_DELAY_MAX)){
+		m_last_time=i_time;
+		for(int i=0; i<NotSoRandom::randomNum(4, 10);i++){addParticle(i_time);}
+		//return true;
+	}
+	return false;
+}
+
+/*===========================================
+				 Base for an single particle
+===========================================*/
 EntityParticle::EntityParticle()
   : Entity("")
 {
@@ -942,7 +1017,9 @@ bool EntityParticle::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettin
 
 
 
-
+/*===========================================
+				Single Smoke Particle
+===========================================*/
 SmokeParticle::SmokeParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName)
   : EntityParticle()
 {
@@ -990,7 +1067,9 @@ bool SmokeParticle::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSetting
   return false;
 }
 
-
+/*===========================================
+				Single Fire Particle
+===========================================*/
 FireParticle::FireParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName)
   : EntityParticle() 
 {
@@ -1038,7 +1117,9 @@ bool FireParticle::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings
   return false;
 }
 
-
+/*===========================================
+				Single Star Particle
+===========================================*/
 StarParticle::StarParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName)
   : EntityParticle()
 {
@@ -1060,7 +1141,9 @@ void StarParticle::init(const Vector2f& i_position,
   m_acceleration = Vector2f(0,-4);
   setSpriteName(i_spriteName);
 }
-
+/*===========================================
+				Single Debris Particle
+===========================================*/
 DebrisParticle::DebrisParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName)
   : EntityParticle() 
 {
@@ -1102,4 +1185,51 @@ bool DebrisParticle::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettin
 
   return true;
 }
+/*===========================================
+				Single Sparkle Particle
+===========================================*/
+SparkleParticle::SparkleParticle(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName)
+  : EntityParticle() 
+{
+  init(i_position, i_velocity, i_killTime, i_spriteName);
+}
 
+SparkleParticle::~SparkleParticle() {
+}
+
+void SparkleParticle::init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName)
+{
+  EntityParticle::init(i_position, i_velocity, i_killTime);
+  
+  m_SparkleSeed = NotSoRandom::randomNum(0,100);
+  setSize(0.05);
+  setColor(TColor(255,255,0,255));
+  setSpriteName(i_spriteName);
+}
+
+bool SparkleParticle::updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings) {
+  EntityParticle::updateToTime(i_time, i_gravity, i_physicsSettings);
+
+  float v_timeStep = 0.040;
+  TColor v_color(Color());
+
+  int v_g = Color().Green() - (int)(NotSoRandom::randomNum(190,210) * v_timeStep);
+  v_color.setGreen(v_g < 0 ? 0 : v_g);
+
+  int v_b = Color().Blue()  - (int)(NotSoRandom::randomNum(400,400) * v_timeStep);
+  v_color.setBlue(v_b < 0 ? 0 : v_b);
+
+  int v_a = Color().Alpha() - (int)(250.0f * (v_timeStep/1.5));
+  if(v_a >= 0) {
+    v_color.setAlpha(v_a);
+    setColor(v_color);
+  } else {
+    m_killTime = i_time;
+  }
+      
+  //m_velocity.x = cos((i_time + m_SparkleSeed)) * 0.1f;
+
+  m_acceleration.y = -1.0;
+
+  return false;
+}
