@@ -45,6 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "PhysSettings.h"
 #include "xmscene/BasicSceneStructs.h"
 #include <sstream>
+#include "states/GameState.h"
 
 #define ABS(x) ((x) > 0.0 ? (x) : -(x))
 #define SIGNE(x) ((x) >= 0.0 ? 1.0 : -1.0)
@@ -56,6 +57,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define GHOST_INFO_DURATION  3.0
 #define GHOST_INFO_FADE_TIME 0.5
 #define GHOST_INFO_INSCREEN_MARGE 2.0
+
+//for ScreenShadowing
+#define MENU_SHADING_TIME 0.3
+#define MENU_SHADING_VALUE 150
 
   /* to sort blocks on their texture */
   struct AscendingTextureSort {
@@ -1558,6 +1563,8 @@ int GameRenderer::nbParticlesRendered() const {
 
     renderReplayHelpMessage(i_scene);
 
+    _RenderScreenShadow(i_scene);
+
     /* And then the game messages */
     _RenderGameMessages(i_scene);            
 
@@ -2719,6 +2726,30 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
     }      
     pDrawlib->endDraw();
   }
+  
+  void GameRenderer::_RenderScreenShadow(Scene* i_scene) {
+    //put shadow code from GameState::render() here
+    //TODO:: make shading distinct for the cameras in multiplayer
+    
+    DrawLib* pDrawLib = GameApp::instance()->getDrawLib();
+
+    // shade
+    if(XMSession::instance()->ugly() == false && m_doShade) {
+      float v_currentTime = GameApp::getXMTime();
+      int   v_nShade;
+    
+      if(v_currentTime - m_nShadeTime < MENU_SHADING_TIME && m_doShadeAnim) {
+        v_nShade = (int ) ((v_currentTime - m_nShadeTime) * (MENU_SHADING_VALUE / MENU_SHADING_TIME));
+      } else {
+        v_nShade = MENU_SHADING_VALUE;
+      }
+
+      pDrawLib->drawBox(Vector2f(0,0),
+		       Vector2f(pDrawLib->getDispWidth(),
+			        pDrawLib->getDispHeight()),
+		       0, MAKE_COLOR(0,0,0, v_nShade));  
+    }
+  }
 
   float GameRenderer::SizeMultOfEntitiesToTake() const {
     return m_sizeMultOfEntitiesToTake;
@@ -3579,4 +3610,11 @@ void GameRenderer::endTexturesRegistration()
 unsigned int GameRenderer::currentRegistrationStage() const
 {
   return m_curRegistrationStage;
+}
+
+void GameRenderer::setScreenShade(bool i_doShade, bool i_doShadeAnim, float i_nShadeTime) 
+{ 
+  m_doShade = i_doShade; 
+  m_doShadeAnim = i_doShadeAnim; 
+  m_nShadeTime = i_nShadeTime;
 }

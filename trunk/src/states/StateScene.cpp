@@ -216,7 +216,7 @@ bool StateScene::render()
   if (XMSession::instance()->ugly()) {
     pGame->getDrawLib()->clearGraphics();
   }
-
+  
   try {
     if(autoZoom() == false){
       if(m_universe != NULL) {

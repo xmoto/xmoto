@@ -33,7 +33,7 @@ StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
 				 bool updateStatesBehind,
 				 bool i_verticallyLarge):
   StateMenu(drawStateBehind,
-	    updateStatesBehind)
+	    updateStatesBehind, true, false)
 {
   m_receiver      = i_receiver;
   m_clickedButton = UI_MSGBOX_NOTHING;

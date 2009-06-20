@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateServerConsole.h"
 #include "../net/NetClient.h"
 #include "StateHelp.h"
+#include "../Renderer.h"
 
 #define MENU_SHADING_TIME 0.3
 #define MENU_SHADING_VALUE 150
@@ -106,25 +107,8 @@ void GameState::enterAfterPop()
 }
 
 bool GameState::render() {
-  DrawLib* drawLib = GameApp::instance()->getDrawLib();
-
-  // shade
-  if(XMSession::instance()->ugly() == false && m_doShade) {
-    float v_currentTime = GameApp::getXMTime();
-    int   v_nShade;
-    
-    if(v_currentTime - m_nShadeTime < MENU_SHADING_TIME && m_doShadeAnim) {
-      v_nShade = (int ) ((v_currentTime - m_nShadeTime) * (MENU_SHADING_VALUE / MENU_SHADING_TIME));
-    } else {
-      v_nShade = MENU_SHADING_VALUE;
-    }
-
-    drawLib->drawBox(Vector2f(0,0),
-		     Vector2f(drawLib->getDispWidth(),
-			      drawLib->getDispHeight()),
-		     0, MAKE_COLOR(0,0,0, v_nShade));
-  }
-
+  //  left the shade call here to not do damage on other things I even not know about
+  GameRenderer::instance()->setScreenShade(m_doShade, m_doShadeAnim, m_nShadeTime);
   return renderOverShadow();
 }
 

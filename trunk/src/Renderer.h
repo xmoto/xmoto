@@ -150,6 +150,7 @@ public:
   void setWorldRecordTime(const std::string &s) {m_worldRecordTime = s;}
   void setShowMinimap(bool i_value);
   void setShowTimePanel(bool i_value);
+  void setScreenShade(bool i_doShade, bool i_doShadeAnim, float i_nShadeTime); 
   void hideReplayHelp();
   bool showEngineCounter() const;
   void setShowEngineCounter(bool i_value);
@@ -196,6 +197,10 @@ private:
   bool m_showEngineCounter;
   bool m_showTimePanel;
   bool m_showGhostsText;
+  
+  bool m_doShade;  // for Screenshadowing, like death
+  bool m_doShadeAnim;
+  float m_nShadeTime;
 
   /* FBO overlay */
   SFXOverlay m_Overlay;
@@ -266,7 +271,8 @@ private:
   void _RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_textOffset);
 
   void _RenderDebugInfo(void);
-
+  
+  void _RenderScreenShadow(Scene* i_scene);
   void _RenderAlphaBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3,
 				  const TColor& i_filterColor = TColor(255, 255, 255, 0));
   void _RenderAdditiveBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);

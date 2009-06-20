@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 StateHelp::StateHelp(bool drawStateBehind,
 		     bool updateStatesBehind, bool i_gameHelp, bool i_allowSceneOver):
   StateMenu(drawStateBehind,
-	    updateStatesBehind)
+	    updateStatesBehind, true, false)
 {
   m_name  = "StateHelp";
   m_gameHelp = i_gameHelp;
