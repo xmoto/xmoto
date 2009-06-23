@@ -34,7 +34,7 @@ UIRoot*  StateUpdate::m_sGUI = NULL;
 StateUpdate::StateUpdate(bool drawStateBehind,
 			 bool updateStatesBehind):
   StateMenu(drawStateBehind,
-	    updateStatesBehind)
+	    updateStatesBehind, true, false)
 {
   m_name             = "StateUpdate";
   m_threadStarted    = false;
