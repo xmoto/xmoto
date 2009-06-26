@@ -180,9 +180,9 @@ AC_SUBST([CONFIGURE_DEFAULT_THEME])
 dnl asian font
 if test "$target_os" = "mingw32" # windows...
 then
-  DEFAULT_ASIAN_TTF_FILE="Textures/Fonts/bkai00mp.ttf"
+  DEFAULT_ASIAN_TTF_FILE="Textures/Fonts/wqy-zenhei.ttf"
 else
-  DEFAULT_ASIAN_TTF_FILE="/usr/share/fonts/truetype/arphic/bkai00mp.ttf"
+  DEFAULT_ASIAN_TTF_FILE="/usr/share/fonts/truetype/wqy/wqy-zenhei.ttf"
 fi
 
 AC_ARG_WITH([asian-ttf-file],
