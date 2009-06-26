@@ -82,7 +82,9 @@ int SyncThread::realThreadFunction() {
 			XMSession::instance()->proxySettings(), v_msg_status_ok, m_msg,
 			v_syncDownFile);
     if(v_msg_status_ok == false) {
-      remove(std::string(SYNC_UP_TMPFILEBZ2).c_str());
+      if(XMSession::instance()->debug() == false) {
+	remove(std::string(SYNC_UP_TMPFILEBZ2).c_str());
+      }
       return 1;
     }
   } catch(Exception &e) {
