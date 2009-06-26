@@ -401,7 +401,7 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   xmscene/ChipmunkWorld.cpp \
   xmscene/ChipmunkWorld.h \
 	xmscene/ScriptTimer.cpp \
-	xmscene/ScirptTimer.h
+	xmscene/ScriptTimer.h
 
 
 if WIN32
