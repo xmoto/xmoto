@@ -1,26 +1,25 @@
-# translation of it.po to
-# translation of xmoto.po to
-# Copyright (C) 2007 Free Software Foundation, Inc.
+# translation of xmoto.po to Turkish
+# Copyright (C) 2009 X-Moto Team
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <manzariluca@sudsistemi.it>, 2007.
-# 
+#
+# Anıl Özbek <ozbekanil@gmail.com>, 2008, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: it\n"
+"Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-07-01 21:19+0200\n"
-"PO-Revision-Date: 2008-03-24 22:28+0100\n"
-"Last-Translator: Carmine 'earcar' Paolino <earcar@gmail.com>\n"
-"Language-Team:  <en@li.org>\n"
+"PO-Revision-Date: 2009-06-29 14:27+0300\n"
+"Last-Translator: Anıl Özbek <ozbekanil@gmail.com>\n"
+"Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=0;\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: src/GameText.h:33
 msgid "en_EN"
-msgstr "it_IT"
+msgstr "tr_TR"
 
 #: src/GameText.h:35
 msgid "11 kHz"
@@ -32,7 +31,7 @@ msgstr "16-bit"
 
 #: src/GameText.h:37
 msgid "16 bits per pixel"
-msgstr "16 bit per pixel"
+msgstr "Piksel başına 16-bit"
 
 #: src/GameText.h:38
 msgid "22 kHz"
@@ -40,7 +39,7 @@ msgstr "22 kHz"
 
 #: src/GameText.h:39
 msgid "32 bits per pixel"
-msgstr "32 bit per pixel"
+msgstr "Piksel başına 32-bit"
 
 #: src/GameText.h:40
 msgid "44 kHz"
@@ -52,32 +51,32 @@ msgstr "8-bit"
 
 #: src/GameText.h:42
 msgid "Quit level"
-msgstr "Esci dal livello"
+msgstr "Bölümden çık"
 
 #: src/GameText.h:43
 #, c-format
 msgid "Web account password for profile '%s':"
-msgstr ""
+msgstr "Profil için internet hesabı parolası '%s':"
 
 #: src/GameText.h:44
 msgid "Add to favorite"
-msgstr "Aggiungi ai preferiti"
+msgstr "Favorilere ekle"
 
 #: src/GameText.h:45
 msgid "Add to blacklist"
-msgstr "Aggiungi alla lista nera"
+msgstr "Kara listeye ekle"
 
 #: src/GameText.h:46
 msgid "Action"
-msgstr "Azione"
+msgstr "Hareket"
 
 #: src/GameText.h:47 src/GameText.h:52
 msgid "All (on this computer)"
-msgstr "Tutti (su questo computer)"
+msgstr "Hepsi (bu bilgisayardaki)"
 
 #: src/GameText.h:48 src/GameText.h:743
 msgid "All levels"
-msgstr "Tutti i livelli"
+msgstr "Tüm bölümler"
 
 #: src/GameText.h:49
 msgid ""
@@ -85,322 +84,322 @@ msgid ""
 "to the Internet to look for more levels\n"
 "and best times of other players?"
 msgstr ""
-"Vuoi permettere ad X-Moto di connettersi\n"
-"ad Internet per cercare altri livelli\n"
-"e punteggi migliori di altri giocatori?"
+"X-Moto'nun yeni bölümler ve\n"
+"diğer oyuncuların en iyi süreleri için\n"
+"internete bağlanmasını ister misiniz?"
 
 #: src/GameText.h:53 src/GameText.h:130
 msgid "Audio"
-msgstr "Audio"
+msgstr "Ses"
 
 #: src/GameText.h:54
 msgid "Author"
-msgstr "Autore"
+msgstr "Hazırlayan"
 
 #: src/GameText.h:55
 msgid "Automatic"
-msgstr "Automatico"
+msgstr "Otomatik"
 
 #: src/GameText.h:56
 msgid "Automatic saving of replays"
-msgstr "Salvataggio automatico dei replay"
+msgstr "Tekrar oynatımların otomatik saklanması"
 
 #: src/GameText.h:57
 msgid "Auto zoom"
-msgstr "Zoom automatico"
+msgstr "Otomatik yaklaştırma"
 
 #: src/GameText.h:58
 msgid "Database"
-msgstr ""
+msgstr "Veritabanı"
 
 #: src/GameText.h:59
 msgid "Camera Active Zoom"
-msgstr ""
+msgstr "Aktif Kamera Yakınlığı"
 
 #: src/GameText.h:60
 msgid "Beating mode"
-msgstr ""
+msgstr "Dövüş kipi"
 
 #: src/GameText.h:61
 msgid "Best Times"
-msgstr "Tempi migliori"
+msgstr "En İyi Süreler"
 
 #: src/GameText.h:62
 msgid "Best player"
-msgstr "Miglior giocatore"
+msgstr "En iyi oyuncu"
 
 #: src/GameText.h:63
 msgid "Brake"
-msgstr "Freno"
+msgstr "Fren"
 
 #: src/GameText.h:64
 #, c-format
 msgid "(by %s)"
-msgstr "(di %s)"
+msgstr "(%s den)"
 
 #: src/GameText.h:65
 msgid "Move Camera to left"
-msgstr "Muovi la telecamera a sinistra"
+msgstr "Kamerayı sola hareket ettir"
 
 #: src/GameText.h:66
 msgid "Move Camera to right"
-msgstr "Muovi la telecamera a destra"
+msgstr "Kamerayı sola hareket ettir"
 
 #: src/GameText.h:67
 msgid "Move Camera down"
-msgstr "Muovi la telecamera in basso"
+msgstr "Kamerayı aşağıya hareket ettir"
 
 #: src/GameText.h:68
 msgid "Move Camera up"
-msgstr "Muovi la telecamera in alto"
+msgstr "Kamerayı yukarıya hareket ettir"
 
 #: src/GameText.h:69
 msgid "Cancel"
-msgstr "Cancella"
+msgstr "İptal"
 
 #: src/GameText.h:70
 msgid "Change..."
-msgstr "Cambia..."
+msgstr "Değiştir..."
 
 #: src/GameText.h:71
 msgid "Change direction"
-msgstr "Cambia direzione"
+msgstr "Yönü değiştir"
 
 #: src/GameText.h:72
 msgid "Change Key..."
-msgstr "Cambia tasto..."
+msgstr "Tuşu Değiştir..."
 
 #: src/GameText.h:73
 msgid "Checking for new or updated levels..."
-msgstr "Controllo per livelli nuovi o aggiornati..."
+msgstr "Yeni veya güncellenmiş bölümleri kontrol et..."
 
 #: src/GameText.h:74
 msgid "I'm a child"
-msgstr "Sono un bambino"
+msgstr "Ben bir çocuğum"
 
 #: src/GameText.h:75
 msgid "Choose Level"
-msgstr "Scegli il livello"
+msgstr "Bölüm Seçin"
 
 #: src/GameText.h:76
 msgid "Clean"
-msgstr "Pulito"
+msgstr "Temizle"
 
 #: src/GameText.h:77
 #, c-format
 msgid "Are you sure you want to delete %i replay"
 msgid_plural "Are you sure you want to delete %i replay"
-msgstr[0] "Vuoi davvero cancellare il replay %i?"
-msgstr[1] "Vuoi davvero cancellare i replay %i?"
+msgstr[0] "%i tekrar oynatımını silmek istediğinizden emin misiniz"
+msgstr[1] ""
 
 #: src/GameText.h:78
 msgid "There is no replay to clean"
-msgstr "Non ci sono replay da pulire"
+msgstr "Temizlenecek bir tekrar oynatım yok"
 
 #: src/GameText.h:79
 msgid "Close"
-msgstr "Chiudi"
+msgstr "Kapat"
 
 #: src/GameText.h:80
 msgid "Configure Joystick..."
-msgstr "Configura il joystick"
+msgstr "Oyun kontrolörünü ayarla..."
 
 #: src/GameText.h:81
 msgid "Controls"
-msgstr "Controlli"
+msgstr "Kontroller"
 
 #: src/GameText.h:83
 msgid "left control"
-msgstr ""
+msgstr "sol kontrol"
 
 #: src/GameText.h:84
 msgid "right control"
-msgstr ""
+msgstr "sağ kontrol"
 
 #: src/GameText.h:85
 msgid "left shift"
-msgstr ""
+msgstr "sol shift"
 
 #: src/GameText.h:86
 msgid "right shift"
-msgstr ""
+msgstr "sağ shift"
 
 #: src/GameText.h:87
 msgid "left alt"
-msgstr ""
+msgstr "sol alt"
 
 #: src/GameText.h:88
 msgid "right alt"
-msgstr ""
+msgstr "sağ alt"
 
 #: src/GameText.h:89
 msgid "left meta"
-msgstr ""
+msgstr "sol meta"
 
 #: src/GameText.h:90
 msgid "right meta"
-msgstr ""
+msgstr "sağ meta"
 
 #: src/GameText.h:91 src/GameText.h:105
 #, c-format
 msgid "button %i"
-msgstr ""
+msgstr "%i düğmesi"
 
 #: src/GameText.h:92
 msgid "left button"
-msgstr ""
+msgstr "sol tuş"
 
 #: src/GameText.h:93
 msgid "middle button"
-msgstr ""
+msgstr "orta tuş"
 
 #: src/GameText.h:94
 msgid "right button"
-msgstr ""
+msgstr "sağ tuş"
 
 #: src/GameText.h:95
 msgid "wheel up"
-msgstr ""
+msgstr "teker yukarı"
 
 #: src/GameText.h:96
 msgid "wheel down"
-msgstr ""
+msgstr "teker aşağı"
 
 #: src/GameText.h:97
 msgid "No joystick found"
-msgstr ""
+msgstr "Oyun kontrolörü bulanamadı"
 
 #: src/GameText.h:98
 #, c-format
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
-msgstr[0] ""
+msgstr[0] "%i oyun kontrolörü bulundu"
 msgstr[1] ""
 
 #: src/GameText.h:99
 #, c-format
 msgid "axis %i"
-msgstr ""
+msgstr "%i ekseni"
 
 #: src/GameText.h:100
 msgid "left"
-msgstr ""
+msgstr "sol"
 
 #: src/GameText.h:101
 msgid "right"
-msgstr ""
+msgstr "sağ"
 
 #: src/GameText.h:102
 msgid "up"
-msgstr ""
+msgstr "yukarı"
 
 #: src/GameText.h:103
 msgid "down"
-msgstr ""
+msgstr "aşağı"
 
 #: src/GameText.h:104
 msgid "none"
-msgstr ""
+msgstr "hiçbiri"
 
 #: src/GameText.h:106
 msgid "You must restart so that this option takes effect"
-msgstr ""
+msgstr "Bu ayarın geçerli olabilmesi için oyunu yeniden başlatmalısınız"
 
 #: src/GameText.h:107
 msgid "You must reconnect to the server so that this option takes effect"
-msgstr ""
+msgstr "Bu ayarın geçerli olabilmesi için sunucuya yeniden bağlanmalısınız"
 
 #: src/GameText.h:108
 msgid "Script action"
-msgstr ""
+msgstr "Betik hareketi"
 
 #: src/GameText.h:111
 msgid "Lead Programming"
-msgstr "Programmazione Principale"
+msgstr "Temel Programlama"
 
 #: src/GameText.h:116
 msgid "Additional Programming"
-msgstr "Programmazione Addizionale"
+msgstr "Ek Programlama"
 
 #: src/GameText.h:126
 msgid "Graphics"
-msgstr "Grafica"
+msgstr "Grafikler"
 
 #: src/GameText.h:134
 msgid "MacOS X Support"
-msgstr "Supporto MacOS X"
+msgstr "MacOS X Desteği"
 
 #: src/GameText.h:138
 msgid "Localization"
-msgstr "Internazionalizzazione"
+msgstr "Yerelleştirme"
 
 #: src/GameText.h:139
 msgid "Slovak"
-msgstr "Slovacco"
+msgstr "Slovakça"
 
 #: src/GameText.h:140
 msgid "French"
-msgstr "Francese"
+msgstr "Fransızca"
 
 #: src/GameText.h:141
 msgid "Norwegian"
-msgstr "Norvegese"
+msgstr "Norveççe"
 
 #: src/GameText.h:142
 msgid "German"
-msgstr "Tedesco"
+msgstr "Almanca"
 
 #: src/GameText.h:143
 msgid "Finnish"
-msgstr "Finlandese"
+msgstr "Fince"
 
 #: src/GameText.h:144
 msgid "Catalan"
-msgstr "Catalano"
+msgstr "Katalanca"
 
 #: src/GameText.h:145
 msgid "Spanish"
-msgstr "Spagnolo"
+msgstr "İspanyolca"
 
 #: src/GameText.h:146
 msgid "Polish"
-msgstr "Polacco"
+msgstr "Lehçe"
 
 #: src/GameText.h:147
 msgid "Italian"
-msgstr "Italiano"
+msgstr "İtalyanca"
 
 #: src/GameText.h:148
 msgid "Swedish"
-msgstr "Svedese"
+msgstr "İsveççe"
 
 #: src/GameText.h:149
 msgid "Czech"
-msgstr "Ceco"
+msgstr "Çekçe"
 
 #: src/GameText.h:150
 msgid "Mikhail Brinchuk"
-msgstr "Mikhail Brinchuk"
+msgstr ""
 
 #: src/GameText.h:150
 msgid "Russian"
-msgstr "Russo"
+msgstr "Rusça"
 
 #: src/GameText.h:151
 msgid "Brazilian Portuguese"
-msgstr "Portoghese Brasiliano"
+msgstr "Portekizce"
 
 #: src/GameText.h:152
 msgid "Latvian"
-msgstr "Lituano"
+msgstr "Letonca"
 
 #: src/GameText.h:153
 msgid "Danish"
-msgstr "Danese"
+msgstr "Danca"
 
 #: src/GameText.h:154
 msgid "Lithuanian"
-msgstr ""
+msgstr "Litvanyaca"
 
 #: src/GameText.h:155
 msgid "Turkish"
@@ -408,75 +407,75 @@ msgstr ""
 
 #: src/GameText.h:157
 msgid "Main testers"
-msgstr "Tester principali"
+msgstr "Ana testçiler"
 
 #: src/GameText.h:162
 msgid "Thanks to"
-msgstr "Si ringraziano"
+msgstr "Teşekkürler"
 
 #: src/GameText.h:163
 msgid "for KDE/gnome integration"
-msgstr "per l'integrazione KDE/Gnome"
+msgstr "KDE/GNOME bütünleştirmesi için"
 
 #: src/GameText.h:164
 msgid "for Debian packaging"
-msgstr "per il paccketto Debian"
+msgstr "Debian paketleri için"
 
 #: src/GameText.h:165
 msgid "for Gentoo packaging"
-msgstr "per il pacchetto Gentoo"
+msgstr "Gentoo paketleri için"
 
 #: src/GameText.h:166
 msgid "for Mandriva packaging"
-msgstr "per il pacchetto Mandriva"
+msgstr "Mandriva paketleri için"
 
 #: src/GameText.h:167
 msgid "for FreeBSD packaging"
-msgstr "per il paccketto FreeBSD"
+msgstr "FreeBSD paketleri için"
 
 #: src/GameText.h:168
 msgid "for across/elma"
-msgstr "per across/elma"
+msgstr "across/elma için"
 
 #: src/GameText.h:169
 msgid "for making tinyxml"
-msgstr "per tinyxml"
+msgstr "tinyxml'yi yaptıkları için"
 
 #: src/GameText.h:170
 msgid "for the MD5 code"
-msgstr "per il codice MD5"
+msgstr "MD5 kodu için"
 
 #: src/GameText.h:172
 msgid "Everyone who have made levels"
-msgstr "Chiunque abbia realizzato dei livelli"
+msgstr "Bölüm yapan herkese"
 
 #: src/GameText.h:173
 msgid "People who have provided bug reports"
-msgstr "Coloro che hanno segnalato bug"
+msgstr "Hata bildiriminde bulunan insanlara"
 
 #: src/GameText.h:174
 msgid "Anyone who has helped in any way"
-msgstr "Qualunque persona che abbia aiutato in qualsiasi modo"
+msgstr "Herhangi bir şekilde yadımı dokunmuş herkese"
 
 #: src/GameText.h:176
 msgid "Credits"
-msgstr "Crediti"
+msgstr "Hazırlayanlar"
 
 #: src/GameText.h:177
 msgid "Player"
-msgstr "Giocatore"
+msgstr "Oyuncu"
 
 #: src/GameText.h:178
 msgid "Play music on all levels"
-msgstr ""
+msgstr "Tüm bölümlerde müzik çal"
 
 #: src/GameText.h:179
 msgid "Date"
-msgstr "Data"
+msgstr "Tarih"
 
 #: src/GameText.h:180
 msgid "Difficulty"
-msgstr ""
+msgstr "Zorluk"
 
 #: src/GameText.h:181
 msgid ""
@@ -485,6 +484,10 @@ msgid ""
 "server. It is useful to save your data or if you play X-Moto from different "
 "places."
 msgstr ""
+"X-Moto puanlarınızı ve istatistiklerinizi saklamak için bilgisayarınız "
+"üzerinde bir veritabanı kullanır. Bu bilgileri internet hesabınızla X-Moto "
+"sunucularına gönderebilirsiniz. Bu bilgilerinizi saklamak ve farklı "
+"bilgisayarlarda oynamak için oldukça kullanışlıdır."
 
 #: src/GameText.h:182
 msgid ""
@@ -493,366 +496,373 @@ msgid ""
 "will be duplicated/not synchronized. If you did that, you should remove the "
 "copies you did."
 msgstr ""
+"Eğer X-Moto kullanıcı dosyalarını (.xmoto) diğer bilgisayarlara elle "
+"kopyaladıysanız, bu işlevselliği kullanmamalısınız, aksi takdirde "
+"istatistikleriniz karışacaktır. Eğer bunu yaptıysanız kopyaladıklarınızı "
+"silin"
 
 #: src/GameText.h:183
 msgid "Synchronise"
-msgstr ""
+msgstr "Eşzamanlama"
 
 #: src/GameText.h:184
 msgid "Synchronize when X-Moto ends"
-msgstr ""
+msgstr "X-Moto kapandığında eşzamanla"
 
 #: src/GameText.h:185
 msgid "Upgrading database"
-msgstr "Aggiornamento del database"
+msgstr "Veritabanını yükselt"
 
 #: src/GameText.h:186
 msgid "Upgrading database stats for the profile"
-msgstr "Aggiornamento del database delle statistiche per il profilo"
+msgstr "Veritabanı istatistiklerini profil için yükselt"
 
 #: src/GameText.h:187
 msgid "Upgrading database profile"
-msgstr "Aggiornamento del database del profilo"
+msgstr "Veritabanı profili yükselt"
 
 #: src/GameText.h:188
 msgid "Death Animation"
-msgstr "La moto si rompe dopo la morte"
+msgstr "Ölüm Animasyonu"
 
 #: src/GameText.h:189
 msgid "Defaults"
-msgstr "Predefiniti"
+msgstr "Öntanımlılar"
 
 #: src/GameText.h:190
 msgid "Do you really want to delete player?"
-msgstr "Vuoi davvero cancellare il giocatore?"
+msgstr "Oyuncuyu gerçekten silmek istiyor musunuz?"
 
 #: src/GameText.h:191
 msgid "Do you really want to delete replay?"
-msgstr "Vuoi davvero cancellare il replay?"
+msgstr "Tekrar oynatımı gerçekten silmek istiyor musunuz?"
 
 #: src/GameText.h:192 src/GameText.h:195
 msgid "Delete"
-msgstr "Cancella"
+msgstr "Sil"
 
 #: src/GameText.h:193
 msgid "Delete from favorite"
-msgstr "Rimuovi dai preferiti"
+msgstr "Favorilerden sil"
 
 #: src/GameText.h:194
 msgid "Delete from blacklist"
-msgstr "Rimuovi dalla lista nera"
+msgstr "Kara listeden sil"
 
 #: src/GameText.h:196
 msgid "Description"
-msgstr "Descrizione"
+msgstr "Açıklama"
 
 #: src/GameText.h:197
 msgid "Display Ghost time difference"
-msgstr "Mostra la differenza di tempo rispetto al fantasma"
+msgstr "Hayalet zamanı farkını göster"
 
 #: src/GameText.h:198
 msgid "Display Ghost Information"
-msgstr "Mostra le informazioni sul fantasma"
+msgstr "Hayalet bilgilerini göster"
 
 #: src/GameText.h:199
+#, fuzzy
 msgid "Display bike arrow indication"
-msgstr ""
+msgstr "Yönlendirme oklarını göster"
 
 #: src/GameText.h:200
 msgid "Direct Connection"
-msgstr "Connessione diretta"
+msgstr "Doğrudan Bağlantı"
 
 #: src/GameText.h:201
 msgid "Downloading the ghost..."
-msgstr "Scarico il fantasma..."
+msgstr "Hayalet indiriliyor..."
 
 #: src/GameText.h:202
 msgid "Downloading the highscore..."
-msgstr "Scarico il punteggio migliore..."
+msgstr "Yüksekpuan indiriliyor..."
 
 #: src/GameText.h:203
 msgid "Downloading high-scores..."
-msgstr "Scarico i punteggi migliori..."
+msgstr "Yüksek-puanlar indiriliyor..."
 
 #: src/GameText.h:204
 msgid ""
 "Downloading extra levels...\n"
 "Press ESC to abort."
 msgstr ""
-"Scarico i livelli extra...\n"
-"Premi ESC per interrompere."
+"Ek bölümler indiriliyor...\n"
+"İptal etmek için ESC'ye basın."
 
 #: src/GameText.h:205
 msgid "Checking for new levels..."
-msgstr "Cerco nuovi livelli..."
+msgstr "Yeni bölümler kontrol ediliyor..."
 
 #: src/GameText.h:206
 msgid "Loading new and updated levels..."
-msgstr "Carico i livelli nuovi e aggiornati..."
+msgstr "Yeni ve güncellenmiş bölümler yükleniyor..."
 
 #: src/GameText.h:207
 msgid "Checking for existing rooms..."
-msgstr "Cerco le stanze..."
+msgstr "Varolan odalar kontrol ediliyor"
 
 #: src/GameText.h:208
 msgid ""
 "Downloading theme data required by new levels...\n"
 "Press ESC to abort."
 msgstr ""
-"Scarico i temi richiesti dai nuovi livelli...\n"
-"Premi ESC per interrompere."
+"Yeni bölümlerin ihtiyaç duyduğu tema dosyaları indiriliyor...\n"
+" İptal etmek için ESC'ye basın."
 
 #: src/GameText.h:209
 msgid "Checking for new themes..."
-msgstr "Cerco nuovi temi..."
+msgstr "Yeni temalar kontrol ediliyor..."
 
 #: src/GameText.h:210
 msgid "Get More Levels!"
-msgstr "Scarica altri livelli!"
+msgstr "Daha fazla bölüm!"
 
 #: src/GameText.h:211
 msgid "Drive"
-msgstr "Acceleratore"
+msgstr "Sür"
 
 #: src/GameText.h:212
 msgid "Enable Audio"
-msgstr "Abilita Audio"
+msgstr "Ses Aktif"
 
 #: src/GameText.h:213
 msgid "Check new levels at startup"
-msgstr "Cerca nuovi livelli all'avvio"
+msgstr "Açılırken yeni bölümleri kontrol et"
 
 #: src/GameText.h:214
 msgid "Check new highscores at startup"
-msgstr "Cerca nuovi punteggi migliori all'avvio"
+msgstr "Açılırken yeni yüksekpuanları kontrol et"
 
 #: src/GameText.h:215
 msgid "Enable Context Help"
-msgstr "Abilita Aiuto Contestuale"
+msgstr "İçerik Yardımını Etkinleştir"
 
 #: src/GameText.h:216
 msgid "Enable Engine Sound"
-msgstr "Abilita Rumore del Motore"
+msgstr "Motor Sesini Etkinleştir"
 
 #: src/GameText.h:217
 msgid "Enable Ghost"
-msgstr "Abilita Fantasma"
+msgstr "Hayaleti etkinleştir"
 
 #: src/GameText.h:218
 msgid "Show World Record in-game"
-msgstr "Visualizza Record Mondiale durante il gioco"
+msgstr "Oyun içinde Dünya Rekorunu göster"
 
 #: src/GameText.h:219
 msgid "Enable menu music"
-msgstr ""
+msgstr "Menü müziğini etkinleştir"
 
 #: src/GameText.h:220
 msgid "Enable game music"
-msgstr ""
+msgstr "Oyun müziğini etkinleştir"
 
 #: src/GameText.h:221
 msgid "Enable WWW Access"
-msgstr "Abilita Accesso a Internet"
+msgstr "İnternet erişimini etkinleştir"
 
 #: src/GameText.h:222
 msgid "Enter player name"
-msgstr "Scrivi il nome del giocatore"
+msgstr "Oyuncu ismini girin"
 
 #: src/GameText.h:223
 msgid "Enter name of replay"
-msgstr "Scrivi il nome del replay"
+msgstr "Tekrar oynatımın ismini girin"
 
 #: src/GameText.h:224
 msgid "There are errors in the level, don't expect it to be playable!"
-msgstr "Ci sono errori nel livello, non aspettarti che sia giocabile!"
+msgstr "Bölümde hatalar var. Oynanabilir olmasını ummayın!"
 
 #: src/GameText.h:225
 msgid "Check your Internet connection !"
-msgstr "Controlla la tua connessione ad Internet!"
+msgstr "İnternet bağlantınızı kontrol edin!"
 
 #: src/GameText.h:226
 msgid "Failed to check for levels."
-msgstr "Il controllo dei nuovi livelli è fallito."
+msgstr "Bölümlerin kontrolü başarısızlığa uğradı."
 
 #: src/GameText.h:227
 msgid "Failed to download high-scores."
-msgstr "Lo scaricamento dei punteggi migliori è fallito!"
+msgstr "Yüksek-puanların indirilmesi başarısızlığa uğradı."
 
 #: src/GameText.h:228
 msgid "Failed to download levels."
-msgstr "Lo scaricamento dei livelli è fallito!"
+msgstr "Bölümlerin indirilmesi başarısızlığa uğradı."
 
 #: src/GameText.h:229
 msgid "Failed to download the replay."
-msgstr "Lo scaricamento del replay è fallito!"
+msgstr "Tekrar oynatımların indirilmesi başarısızlığa uğradı."
 
 #: src/GameText.h:230
 msgid "Failed to download the rooms list."
-msgstr "Lo scaricamento della lista delle stanze è fallito!"
+msgstr "Oda listesinin indirilmesi başarısızlığa uğradı."
 
 #: src/GameText.h:231
 msgid "Failed to get the selected theme"
-msgstr "Lo scaricamento del tema selezionato è fallito!"
+msgstr "Seçilen temanın alınması başarısızlığa uğradı"
 
 #: src/GameText.h:232
 msgid "Failed to initialize level!"
-msgstr "L'inizializzazione del livello è fallito!"
+msgstr "Bölümün başlatılması başarısızlığa uğradı!"
 
 #: src/GameText.h:233
 msgid "Failed to load replay!"
-msgstr "Il caricamento del livello è fallito!"
+msgstr "Tekrar oynatımın yüklenmesi başarısızlığa uğradı!"
 
 #: src/GameText.h:234
 msgid ""
 "Failed to save replay!\n"
 "Maybe you should try with another name?"
 msgstr ""
-"Il salvataggio del replay è fallito!\n"
-"Prova con un nome differente"
+"Tekrar oynatımın saklanması başarısızlığa uğradı!\n"
+"Belki başka bir isim kullanmayı denemelisiniz?"
 
 #: src/GameText.h:235
 msgid "Failed to update the theme list"
-msgstr "L'aggiornamento della lista dei temi è fallito!"
+msgstr "Tema listesinin güncelleştirilmesi başarısızlığa uğradı"
 
 #: src/GameText.h:236
 msgid "File"
-msgstr "File"
+msgstr "Dosya"
 
 #: src/GameText.h:237
 msgid "Filter"
-msgstr "Filtro"
+msgstr "Filtre"
 
 #: src/GameText.h:238
 msgid "Finished!"
-msgstr "Completato!"
+msgstr "Bitti!"
 
 #: src/GameText.h:239
 msgid "Finish Time"
-msgstr "Tempo Impiegato"
+msgstr "Bitirme Süresi"
 
 #: src/GameText.h:240
 msgid "Flip left"
-msgstr "Ruota verso sinistra"
+msgstr "Sola çevir"
 
 #: src/GameText.h:241
 msgid "Flip right"
-msgstr "Ruota verso destra"
+msgstr "Sağa çevir"
 
 #: src/GameText.h:242
 msgid "Game Graphics"
-msgstr "Grafica del Gioco"
+msgstr "Oyun Grafikleri"
 
 #: src/GameText.h:243
 msgid "General"
-msgstr "Generali"
+msgstr "Genel"
 
 #: src/GameText.h:244
 msgid "General Info"
-msgstr "Informazioni Generali"
+msgstr "Genel Bilgi"
 
 #: src/GameText.h:245
 msgid "Get this theme"
-msgstr "Scarica questo tema"
+msgstr "Bu temayı al"
 
 #: src/GameText.h:246
 msgid "Local best"
-msgstr "Migliore locale"
+msgstr "Yerel en iyi"
 
 #: src/GameText.h:247
 msgid "Your best"
-msgstr "Il tuo migliore"
+msgstr "Sizin en iyiniz"
 
 #: src/GameText.h:248
 msgid "Type"
-msgstr "Tipo"
+msgstr "Tip"
 
 #: src/GameText.h:249 src/GameText.h:683
 msgid "The highscore of the reference room"
-msgstr "Punteggio migliore della stanza"
+msgstr "Referans alınan odanın yüksekpuanı"
 
 #: src/GameText.h:250 src/GameText.h:684
 msgid "The highscore of the other rooms"
-msgstr "Punteggio migliore delle altre stanze"
+msgstr "Diğer odaların yüksekpuanı"
 
 #: src/GameText.h:251 src/GameText.h:681
 msgid "The best of my replays (on this computer)"
-msgstr "Il migliore dei miei replay (su questo computer)"
+msgstr "Tekrar oynatımlarımın en iyisi (bu bilgisayarda)"
 
 #: src/GameText.h:252 src/GameText.h:682
 msgid "The best of the replays (on this computer)"
-msgstr "Il migliore dei replay (su questo computer)"
+msgstr "Tekrar oynatımların en iyisi (bu bilgisayarda)"
 
 #: src/GameText.h:253
 #, c-format
 msgid "Ghost of %s"
-msgstr "Fantasma di %s"
+msgstr "%s nin hayaleti"
 
 #: src/GameText.h:254
 msgid ""
 "Please wait the next party\n"
 "Or press escape to disconnect"
 msgstr ""
+"Lütfen sıradaki parti için bekleyin\n"
+"Ya da bağlnatıyı kesmek için ESC'ye basın"
 
 #: src/GameText.h:255
 #, c-format
 msgid "Web ghost of %s"
-msgstr ""
+msgstr "%s nin İnternet hayaleti"
 
 #: src/GameText.h:256
 msgid "Ghost"
-msgstr "Fantasma"
+msgstr "Hayalet"
 
 #: src/GameText.h:257
 msgid "Help"
-msgstr "Aiuto"
+msgstr "Yardım"
 
 #: src/GameText.h:261 src/GameText.h:281
 msgid "You control your bike using the keyboard"
-msgstr "Controlla la moto usando la tastiera"
+msgstr "Motosikletinizi klavye ile kontrol ediyorsunuz"
 
 #: src/GameText.h:262 src/GameText.h:282
 msgid "Accelerates"
-msgstr "Accelera"
+msgstr "Gaz"
 
 #: src/GameText.h:263 src/GameText.h:283
 msgid "Brakes"
-msgstr "Frena"
+msgstr "Fren"
 
 #: src/GameText.h:264 src/GameText.h:284
 msgid "Rotates it counter-clockwise"
-msgstr "Ruota in senso antiorario"
+msgstr "Saat yönünün tersine döndür"
 
 #: src/GameText.h:265 src/GameText.h:285
 msgid "Rotates it clockwise"
-msgstr "Ruota in senso orario"
+msgstr "Saat yönünde döndür"
 
 #: src/GameText.h:266 src/GameText.h:286
 msgid "Turns around and drives in the other direction"
-msgstr "Cambia il verso e guida in senso opposto"
+msgstr "Geriye dön ve diğer yöne doğru sür"
 
 #: src/GameText.h:267 src/GameText.h:288 src/GameText.h:401
 msgid "Pause"
-msgstr "Pausa"
+msgstr "Ara Ver"
 
 #: src/GameText.h:268 src/GameText.h:289
 msgid "Restart the level"
-msgstr "Ricomincia il livello"
+msgstr "Bölümü yeniden başlat"
 
 #: src/GameText.h:269 src/GameText.h:290
 msgid "Previous/Next level"
-msgstr "Livello Precedente/Successivo"
+msgstr "Önceki/Sonraki bölüm"
 
 #: src/GameText.h:271 src/GameText.h:299
 msgid "Enable/disable web"
-msgstr "Abilita/disabilita web"
+msgstr "İnternete bağlan/bağlanma"
 
 #: src/GameText.h:272
 msgid "Reload levels, themes and replays from directories"
-msgstr "Ricarica i livelli, i temi e replay dalle cartelle"
+msgstr "Bölümleri, temaları ve tekrar oynatımları dizinlerden tekrar yükle"
 
 #: src/GameText.h:273 src/GameText.h:303
 msgid "Take a screenshot"
-msgstr "Scatta una foto allo schermo"
+msgstr "Bir ekran görüntüsü al"
 
 #: src/GameText.h:275
 msgid ""
@@ -864,7 +874,9 @@ msgstr ""
 msgid ""
 "Find all the strawberries and touch the flower to finish\n"
 "the level."
-msgstr "Trova tutte le fragole e tocca il fiore per terminare il livello."
+msgstr ""
+"Bölümü bitirmek için tüm çilekleri bul ve\n"
+"çiçeğe dokun."
 
 #: src/GameText.h:278
 msgid ""
@@ -875,7 +887,7 @@ msgstr ""
 
 #: src/GameText.h:291
 msgid "change mirror mode"
-msgstr "Modalità specchio"
+msgstr "ayna kipini değiştir"
 
 #: src/GameText.h:292
 msgid "Toggle blacklist"
@@ -895,7 +907,7 @@ msgstr ""
 
 #: src/GameText.h:296 src/GameText.h:628
 msgid "Show the ghost if possible in the game"
-msgstr "Mostra il fantasma (se possibile)"
+msgstr "Eğer mümkünse oyunda hayaleti göster"
 
 #: src/GameText.h:297
 msgid "Toggle favorite"
@@ -907,7 +919,7 @@ msgstr ""
 
 #: src/GameText.h:300 src/GameText.h:454
 msgid "Enable/disable ugly mode"
-msgstr "Abilita/disabilita modalità brutta"
+msgstr "Tatsız kipi aç/kapa"
 
 #: src/GameText.h:301
 msgid "Enable/disable theme mode"
@@ -919,166 +931,167 @@ msgstr ""
 
 #: src/GameText.h:308
 msgid "Hide ghosts"
-msgstr "Nascondi fantasma"
+msgstr "Hayaletleri gizle"
 
 #: src/GameText.h:309
 msgid "High"
-msgstr "Alta"
+msgstr "Yüksek"
 
 #: src/GameText.h:310
 msgid "Highscore of the room"
-msgstr ""
+msgstr "Odanın yüksekpuanı"
 
 #: src/GameText.h:311
 #, c-format
 msgid "%s: %s beat your highscore for level '%s'"
-msgstr ""
+msgstr "%s: %s sizin '%s' bölümündeki yüksekpuanınızı geçti"
 
 #: src/GameText.h:312
 msgid "Levels are being added into the database. Please wait."
-msgstr "Aggiunta dei livelli al database. Attendere."
+msgstr "Bölümler veritabanına eklenmeye başlandı. Lütfen bekleyin."
 
 #: src/GameText.h:313
 msgid "Internet Configuration"
-msgstr "Configurazione accesso a Internet"
+msgstr "İnternet Yapılandırması"
 
 #: src/GameText.h:314
+#, fuzzy
 msgid "View Level Initially"
-msgstr "Mostra il livello all'inizio"
+msgstr "Bölüm Başlangıçlarına Bak"
 
 #: src/GameText.h:315
 msgid "Joystick"
-msgstr "Joystick"
+msgstr "Oyun Kontrolörü"
 
 #: src/GameText.h:316
 msgid "Enable joysticks"
-msgstr ""
+msgstr "Oyun Kontrolörünü etkinleştir"
 
 #: src/GameText.h:317
 msgid "Oops!"
-msgstr "Oops!"
+msgstr "Hay aksi!"
 
 #: src/GameText.h:318
 msgid "Press ENTER to try again"
-msgstr "Premi INVIO per riprovare"
+msgstr "Tekrar denemek için ENTER'e basın"
 
 #: src/GameText.h:319
 msgid "Press ESC to display the menu"
-msgstr "Premi ESC per mostrare il menu"
+msgstr "Menüyü görüntülemek için ESC'ye basın"
 
 #: src/GameText.h:320
 msgid "Key"
-msgstr "Tasto"
+msgstr "Tuş"
 
 #: src/GameText.h:321
 msgid "Keyboard"
-msgstr "Tastiera"
+msgstr "Klavye"
 
 #: src/GameText.h:322
 msgid "Language"
-msgstr "Lingua"
+msgstr "Dil "
 
 #: src/GameText.h:323
 msgid "Language name"
-msgstr "Lingua"
+msgstr "Dil ismi"
 
 #: src/GameText.h:324
 msgid "Language code"
-msgstr "Codice Lingua"
+msgstr "Dil kodu"
 
 #: src/GameText.h:325
 msgid "Level"
-msgstr "Livello"
+msgstr "Bölüm"
 
 #: src/GameText.h:326
 msgid "Added to favorites"
-msgstr "Aggiunto ai preferiti"
+msgstr "Favorilere eklendi"
 
 #: src/GameText.h:327
 msgid "Deleted from favorites"
-msgstr "Rimosso dai preferiti"
+msgstr "Favorilerden silindi"
 
 #: src/GameText.h:328
 msgid "Added to blacklist"
-msgstr "Aggiunto alla lista nera"
+msgstr "Kara listeye eklendi"
 
 #: src/GameText.h:329
 msgid "Deleted from blacklist"
-msgstr "Rimosso dalla lista nera"
+msgstr "Kara listeden silindi"
 
 #: src/GameText.h:330
 msgid "Level Info..."
-msgstr "Informazioni sul livello..."
+msgstr "Bölüm bilgisi..."
 
 #: src/GameText.h:331
 msgid "Level Name"
-msgstr "Nome del livello"
+msgstr "Bölüm İsmi"
 
 #: src/GameText.h:332
 #, c-format
 msgid "Level '%s' cannot be loaded"
-msgstr "Il livello '%s' non può essere caricato"
+msgstr "Bölüm '%s' yüklenemedi"
 
 #: src/GameText.h:333
 msgid "Level Pack"
-msgstr "Pacchetto di livelli"
+msgstr "Bölüm paketi"
 
 #: src/GameText.h:334
 msgid "Level Packs"
-msgstr "Pacchetti di livelli"
+msgstr "Bölüm paketleri"
 
 #: src/GameText.h:335
 #, c-format
 msgid "Level '%s' required by replay!"
-msgstr "Livello '%s' richiesto dal replay!"
+msgstr "Bölüm '%s' tekrar oynatım tarafından ihtiyaç duyuluyor!"
 
 #: src/GameText.h:336
 msgid "Levels"
-msgstr "Livelli"
+msgstr "Bölümler"
 
 #: src/GameText.h:337
 msgid "List All"
-msgstr "Tutti"
+msgstr "Hepsini Listele"
 
 #: src/GameText.h:338
 msgid "Loading..."
-msgstr "Caricamento..."
+msgstr "Yükleniyor..."
 
 #: src/GameText.h:339
 msgid "Loading levels..."
-msgstr "Caricamento dei livelli..."
+msgstr "Bölümler yükleniyor..."
 
 #: src/GameText.h:340
 msgid "Loading menu graphics..."
-msgstr "Caricamento della grafica del menu..."
+msgstr "Menü grafikleri yükleniyor..."
 
 #: src/GameText.h:341
 msgid "Loading replays..."
-msgstr "Caricamento dei replay..."
+msgstr "Tekrar oynatımlar yükleniyor..."
 
 #: src/GameText.h:342
 msgid "Loading sounds..."
-msgstr "Caricamento dei suoni..."
+msgstr "Sesler yükleniyor..."
 
 #: src/GameText.h:343
 msgid "Loading textures..."
-msgstr "Caricamento delle textures..."
+msgstr "Yüzeyler yükleniyor..."
 
 #: src/GameText.h:344
 msgid "Login"
-msgstr "Nome utente"
+msgstr "Oturum Açma"
 
 #: src/GameText.h:345
 msgid "Low"
-msgstr "Bassa"
+msgstr "Düşük"
 
 #: src/GameText.h:346
 msgid "Main"
-msgstr "Principale"
+msgstr "Ana"
 
 #: src/GameText.h:347
 msgid "Mouse"
-msgstr ""
+msgstr "Fare"
 
 #: src/GameText.h:348 src/GameText.h:457
 msgid "Theme"
@@ -1086,89 +1099,90 @@ msgstr "Tema"
 
 #: src/GameText.h:350
 msgid "Medium"
-msgstr "Media"
+msgstr "Orta"
 
 #: src/GameText.h:351
 msgid "Menu Graphics"
-msgstr "Grafica Menu"
+msgstr "Menü Grafikleri"
 
 #: src/GameText.h:352
 msgid "Total time you scored / total highscore time for levels you finished"
-msgstr "Tempo totale dei punteggi migliori dei livelli che hai completato"
+msgstr ""
+"Elde ettiğin toplam süre / bitirdiğin bölümlerin yüksekpuanlarının toplam "
+"süresi"
 
 #: src/GameText.h:353
 msgid "Level references unknown textures, it could be unplayable!"
-msgstr ""
-"Il livello fa riferimenti a texture sconosciute, potrebbe non essere "
-"giocabile!"
+msgstr "Bölüm bilinmeyen yüzeylere başvuruyor, bölüm oynanmaz olabilir!"
 
 #: src/GameText.h:354
 msgid "Mono"
-msgstr "Mono"
+msgstr "Tek"
 
 #: src/GameText.h:355
 msgid "Following are your most played levels"
-msgstr "I seguenti livelli sono stati giocati più volte"
+msgstr "Aşağıdakiler en çok oynanan bölümlerdir"
 
 #: src/GameText.h:356
 msgid "Motion blur ghost"
-msgstr "Fantasma in Motion Blur"
+msgstr "Hareket bulanıklığı açık hayalet"
 
 #: src/GameText.h:357
 msgid "Multi"
-msgstr "Multigiocatore"
+msgstr "Çoklu"
 
 #: src/GameText.h:358
+#, fuzzy
 msgid "Semi-cooperative mode"
-msgstr "Modalità Semi-cooperativa"
+msgstr "Kısmi-işbirlikçi kip"
 
 #: src/GameText.h:359
 msgid "Stop the game once a player ends the level"
-msgstr "Ferma il gioco quando un giocatore finisce il livello"
+msgstr "Bir oyuncu bölümü bitirdiğinde oyunu durdur"
 
 #: src/GameText.h:360
 msgid "Number of players"
-msgstr "Numero di giocatori"
+msgstr "Oyuncu sayısı"
 
 #: src/GameText.h:361
 msgid "New"
-msgstr "Nuovo"
+msgstr "Yeni"
 
 #: src/GameText.h:362
 #, c-format
 msgid "X-Moto %s or newer required to load level"
-msgstr "Serve almeno la versione %s di X-Moto per caricare il livello"
+msgstr "Bölümün yüklenmesi için X-Moto %s veya daha yeni bir sürümü gerekiyor"
 
 #: src/GameText.h:363
 msgid "New highscore!"
-msgstr "Nuovo punteggio massimo!"
+msgstr "Yeni yüksekpuan!"
 
 #: src/GameText.h:364
 msgid "New personal highscore!"
-msgstr "Nuovo punteggio massimo personale!"
+msgstr "Yeni kişisel yüksekpuan!"
 
 #: src/GameText.h:365
 #, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
-msgstr[0] "%d livello nuovo o aggiornato. Scaricarlo ora?"
-msgstr[1] "%d livelli nuovi o aggiornati. Scaricarli ora?"
+msgstr[0] "%i yeni veya güncellenmiş bölüm hazır. Şimdi yüklensin mi?"
+msgstr[1] ""
 
 #: src/GameText.h:368
 msgid "New Levels"
-msgstr "Nuovi livelli"
+msgstr "Yeni Bölümler"
 
 #: src/GameText.h:369
 msgid "New levels available!"
-msgstr "Nuovi livelli disponibili!"
+msgstr "Yeni bölümler hazır!"
 
 #: src/GameText.h:370
 msgid "New Profile..."
-msgstr "Nuovo profilo..."
+msgstr "Yeni Profil..."
 
 #: src/GameText.h:371
 msgid "No"
-msgstr "No"
+msgstr "Hayır"
 
 #: src/GameText.h:372
 msgid ""
@@ -1176,21 +1190,21 @@ msgid ""
 "\n"
 "Try again another time."
 msgstr ""
-"Nessun livello nuovo (o aggiornato) disponibile.\n"
+"Yeni veya güncellenmiş bölüm yok.\n"
 "\n"
-"Prova un'altra volta."
+"Daha sonra tekrar deneyin."
 
 #: src/GameText.h:373
 msgid "No level following this one, sorry."
-msgstr "Spiacente, nessun livello segue questo."
+msgstr "Ne yazık ki bu bölümü takip eden bir bölüm yok."
 
 #: src/GameText.h:374
 msgid "No statistics for this profile."
-msgstr "Non ci sono statistiche per questo profilo."
+msgstr "Bu profil için istatistik bulunmuyor."
 
 #: src/GameText.h:375
 msgid "Not finished"
-msgstr "Incompleto"
+msgstr "Bitirilmemiş"
 
 #: src/GameText.h:376
 msgid ""
@@ -1205,162 +1219,161 @@ msgid ""
 "Also visit http://xmoto.tuxfamily.org to make sure you've\n"
 "got the latest version."
 msgstr ""
-"Nota importante!\n"
+"Önemli nor!\n"
 "\n"
-"Questa è una versione in fase di sviluppo di X-Moto!\n"
-"Tutti i tipi di commenti sono molto apprezzati, di modo che il gioco possa "
-"essere migliorato.\n"
-"Mail riguardanti bug, idee, commenti, caratteristiche mancanti, proteste, "
-"ecc. possono essere inviate a\n"
-" xmoto@tuxfamily.org\n"
-"\n"
-"Inoltre visita http://xmoto.tuxfamily.org per essere sicuro di avere la "
-"versione più recente."
+"Bu X-Moto'nun geliştirilmekte olan bir sürümüdür!\n"
+"Oyunun daha iyiye gitmesi için her türlü geri bildirim çok değerlidir.\n"
+"Hataları, fikirleri, yorumları, istekleri ve şikayetleri\n"
+"xmoto@tuxfamily.org adresine postalayabilirsiniz.\n"
+"Ayrıca http://xmoto.tuxfamily.org adresini ziyaret ederek\n"
+"son sürüme sahip olup olmadığınıza emin olun."
 
 #: src/GameText.h:386
 msgid "# Levels"
-msgstr "# Livelli"
+msgstr "# Bölümler"
 
 #: src/GameText.h:387
 msgid "OK"
-msgstr "OK"
+msgstr "Tamam"
 
 #: src/GameText.h:388
 msgid "Open"
-msgstr "Apri"
+msgstr "Aç"
 
 #: src/GameText.h:389
 msgid "Operation completed"
-msgstr "Operazione completata"
+msgstr "İşlem tamamlandı"
 
 #: src/GameText.h:390
 msgid "Options"
-msgstr "Opzioni"
+msgstr "Seçenekler"
 
 #: src/GameText.h:391
 msgid "Some options will not take effect before next restart!"
-msgstr "Alcune opzioni non avranno effetto prima del prossimo riavvio!"
+msgstr ""
+"Bazı seçenekler bir sonraki yeniden başlatmaya kadar aktif olmayacaktır!"
 
 #: src/GameText.h:392
 msgid "By author"
-msgstr "Per autore"
+msgstr "Hazırlayıcısına"
 
 #: src/GameText.h:393
 msgid "Medals"
-msgstr "Medaglie"
+msgstr "Madalyalar"
 
 #: src/GameText.h:394 src/GameText.h:434
 msgid "Room"
-msgstr "Stanza"
+msgstr "Oda"
 
 #: src/GameText.h:395
 msgid "Special"
-msgstr "Speciale"
+msgstr "Özel"
 
 #: src/GameText.h:396
 msgid "Standard"
-msgstr "Standard"
+msgstr "Standart"
 
 #: src/GameText.h:397
 msgid "Web votes"
-msgstr "Voti Web"
+msgstr "İnternet oyları"
 
 #: src/GameText.h:398 src/GameText.h:446
 msgid "Statistics"
-msgstr "Statistiche"
+msgstr "İstatistikler"
 
 #: src/GameText.h:399 src/GameText.h:753
 msgid "By best driver"
-msgstr "Per miglior giocatore"
+msgstr "En iyi sürücüsüne"
 
 #: src/GameText.h:400
 msgid "By length"
-msgstr "Per lunghezza"
+msgstr "Uzunluğuna"
 
 #: src/GameText.h:402
 msgid "Password"
-msgstr "Password"
+msgstr "Parola"
 
 #: src/GameText.h:403 src/GameText.h:404
 msgid "Personal"
-msgstr "Personale"
+msgstr "Kişisel"
 
 #: src/GameText.h:405
 #, c-format
 msgid "%i player"
 msgid_plural "%i players"
-msgstr[0] "%i giocatore"
-msgstr[1] "%i giocatori"
+msgstr[0] "%i oyuncu"
+msgstr[1] ""
 
 #: src/GameText.h:406
 msgid "Player Profile"
-msgstr "Profilo del giocatore"
+msgstr "Oyuncu Profili"
 
 #: src/GameText.h:407
 msgid "Player Profiles"
-msgstr "Profili dei giocatori"
+msgstr "Oyuncu Profilleri"
 
 #: src/GameText.h:408
 msgid "Play Next Level"
-msgstr "Gioca il livello seguente"
+msgstr "Sonraki Bölümü Oyna"
 
 #: src/GameText.h:409 src/GameText.h:518
 msgid "Port"
-msgstr "Porta"
+msgstr "Bağlantı noktası"
 
 #: src/GameText.h:410
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
-msgstr "Premi il tasto che vuoi assegnare a '%s' o ESC per annullare..."
+msgstr ""
+"'%s' için istediğiniz bir tuşa basın ya da iptal etmek için ESC'ye basın..."
 
 #: src/GameText.h:411
 #, c-format
 msgid "Press %s to chat"
-msgstr ""
+msgstr "Sohbet etmek için %s tuşuna basın"
 
 #: src/GameText.h:412
 msgid "Proxy Server"
-msgstr "Server proxy"
+msgstr "Vekil Sunucu"
 
 #: src/GameText.h:413
 msgid "Configure Proxy..."
-msgstr "Configura il proxy..."
+msgstr "Vekil Sunucuyu Ayarla..."
 
 #: src/GameText.h:414
 msgid "Quality"
-msgstr ""
+msgstr "Kalite"
 
 #: src/GameText.h:415
 msgid "Quick start"
-msgstr "Avvio rapido"
+msgstr "Hızlı Başlat"
 
 #: src/GameText.h:416
 msgid "Quit Game"
-msgstr "Esci dal gioco"
+msgstr "Oyundan Çık"
 
 #: src/GameText.h:417
 msgid "Do you really want to quit?"
-msgstr "Vuoi davvero uscire?"
+msgstr "Gerçekten çıkmak istiyor musunuz?"
 
 #: src/GameText.h:418
 msgid "Randomize"
-msgstr "Rimescola"
+msgstr "Rastgele"
 
 #: src/GameText.h:419
 msgid "Reloading levels..."
-msgstr "Ricaricamento dei livelli..."
+msgstr "Bölümler yeniden yükleniyor..."
 
 #: src/GameText.h:420
 msgid "Reloading replays..."
-msgstr "Ricaricamento dei replay..."
+msgstr "Tekrar oynatımlar yeniden yükleniyor..."
 
 #: src/GameText.h:421
 msgid "Reloading themes..."
-msgstr "Ricaricamento dei temi..."
+msgstr "Temalar yeniden yükleniyor..."
 
 #: src/GameText.h:422
 msgid "Replay"
-msgstr "Replay"
+msgstr "Tekrar oynat"
 
 #: src/GameText.h:423
 msgid ""
@@ -1394,81 +1407,81 @@ msgstr ""
 
 #: src/GameText.h:427
 msgid "The replay can't be played!"
-msgstr "Il replay non può essere mostrato!"
+msgstr "Tekrar oynatım oynatılamıyor!"
 
 #: src/GameText.h:428
 #, c-format
 msgid "Replay of %s"
-msgstr "Replay di %s"
+msgstr "%s nin tekrar oynatımı"
 
 #: src/GameText.h:429
 msgid "Replays"
-msgstr "Replays"
+msgstr "Tekrar Oynatımlar"
 
 #: src/GameText.h:430
 msgid "Are you sure you want to reset config to defaults ?"
-msgstr ""
+msgstr "Ayarları öntanımlı haline döndürmek istediğinizden emin misiniz?"
 
 #: src/GameText.h:431
 msgid "Restart This Level"
-msgstr "Ricomincia questo livello"
+msgstr "Bu Bölümü Yeniden Başlat"
 
 #: src/GameText.h:432
 msgid "Restart level"
-msgstr ""
+msgstr "Bölümü yeniden başlat"
 
 #: src/GameText.h:433
 msgid "Resume Playing"
-msgstr "Riprendi il gioco"
+msgstr "Oynamaya Geri Dön"
 
 #: src/GameText.h:435
 msgid "Run Windowed"
-msgstr "Esegui in finestra"
+msgstr "Pencerede Çalış"
 
 #: src/GameText.h:436
 msgid "Save"
-msgstr "Salva"
+msgstr "Kaydet"
 
 #: src/GameText.h:437
 #, c-format
 msgid "Saved as %s"
-msgstr "Salvato come %s"
+msgstr "%s olarak kaydedildi."
 
 #: src/GameText.h:438
 msgid "Save Replay"
-msgstr "Salva il replay"
+msgstr "Tekrar oynatımı kaydet"
 
 #: src/GameText.h:439
 msgid "Screen Resolution"
-msgstr "Risoluzione dello Schermo"
+msgstr "Ekran Çözünürlüğü"
 
 #: src/GameText.h:440
 msgid "Show"
-msgstr "Mostra"
+msgstr "Göster"
 
 #: src/GameText.h:441
 msgid "Show console"
-msgstr ""
+msgstr "Konsolu göster"
 
 #: src/GameText.h:442
 msgid "Speedometer"
-msgstr "Tachimetro"
+msgstr "Hız göstergesi"
 
 #: src/GameText.h:443
 msgid "Info..."
-msgstr "Info..."
+msgstr "Bilgi..."
 
 #: src/GameText.h:444
 msgid "Show Mini Map"
-msgstr "Mostra la mini mappa"
+msgstr "Küçük Harita Göster"
 
 #: src/GameText.h:445
 msgid "Play!"
-msgstr "Gioca!"
+msgstr "Oyna!"
 
 #: src/GameText.h:447
 msgid "STATS"
-msgstr "STATISTICHE"
+msgstr "İSTATİSTİKLER"
 
 #: src/GameText.h:448
 msgid "You are currently disconnected"
@@ -1479,69 +1492,70 @@ msgid "Stereo"
 msgstr "Stereo"
 
 #: src/GameText.h:450
+#, fuzzy
 msgid "Synchronisation down"
-msgstr ""
+msgstr "Eşzamanlamayı aşağıya kaydır"
 
 #: src/GameText.h:451
 msgid "Synchronisation up"
-msgstr ""
+msgstr "Eşzamanlamayı yukarıya kaydır"
 
 #: src/GameText.h:452
 msgid "Synchronisation done successfully"
-msgstr ""
+msgstr "Eşzamanlama başarıyla gerçekleşti"
 
 #: src/GameText.h:453
 #, c-format
 msgid "Key '%s' has been switched to '%s'"
-msgstr ""
+msgstr "'%s' tuşu '%s' olarak değiştirildi"
 
 #: src/GameText.h:455
 msgid "Add/remove to favorite levels"
-msgstr "Aggiungi/Rimuovi il livello (d)alla lista dei preferiti"
+msgstr "Favori bölümlere ekle/çıkar"
 
 #: src/GameText.h:456
 msgid "Add/remove to blacklisted levels"
-msgstr "Aggiungi/Rimuovi il livello (d)alla lista nera"
+msgstr "Kara listeye ekle/çıkar"
 
 #: src/GameText.h:458
 msgid "Available"
-msgstr "Disponibile"
+msgstr "Hazır"
 
 #: src/GameText.h:459
 msgid "To download"
-msgstr "Da scaricare"
+msgstr "Yüklemeye"
 
 #: src/GameText.h:460
 msgid "To be updated"
-msgstr "Da aggiornare"
+msgstr "Güncelleştirmeye"
 
 #: src/GameText.h:461
 msgid "The theme is now up to date"
-msgstr "Il tema è ora aggiornato"
+msgstr "Tema şimdi güncelleştirildi"
 
 #: src/GameText.h:462
 msgid "Time"
-msgstr "Tempo"
+msgstr "Süre"
 
 #: src/GameText.h:463
 msgid "Try This Level Again"
-msgstr "Riprova questo livello"
+msgstr "Bu Bölümü Tekrar Dene"
 
 #: src/GameText.h:464
 msgid "Tutorial"
-msgstr "Tutorial"
+msgstr "Eğitsel"
 
 #: src/GameText.h:465
 msgid "Undefined"
-msgstr ""
+msgstr "Tanımlanmamış"
 
 #: src/GameText.h:466
 msgid "Unknown"
-msgstr "Sconosciuti"
+msgstr "Bilinmeyen"
 
 #: src/GameText.h:467
 msgid "Unpacked levels"
-msgstr "Livelli non inseriti in nessun pacchetto"
+msgstr "Bölümler açılıyor"
 
 #: src/GameText.h:468
 msgid ""
@@ -1549,84 +1563,84 @@ msgid ""
 "The theme is not available on the web\n"
 "or your theme list is not up to date"
 msgstr ""
-"Non è stato possibile aggiornare questo tema!\n"
-"Il tema non è disponibile sul web\n"
-"o la tua lista dei temi non è aggiornata"
+"Bu tema güncelleştirilemiyor>\n"
+"Tema internette bulunmuyor ya da\n"
+"tema listeniz güncel değil"
 
 #: src/GameText.h:469
 msgid "Update"
-msgstr "Aggiorna"
+msgstr "Güncelle"
 
 #: src/GameText.h:470
 msgid "Updated"
-msgstr "Aggiornato"
+msgstr "Güncelleştirilmiş"
 
 #: src/GameText.h:471
 msgid "Check WWW"
-msgstr "Prova connessione"
+msgstr "İnterneti Kontrol Et"
 
 #: src/GameText.h:472
 msgid "Update the rooms list"
-msgstr "Aggiorna la lista delle stanze"
+msgstr "Oda listesini güncelle"
 
 #: src/GameText.h:473
 msgid "Update the theme list"
-msgstr "Aggiorna la lista dei temi"
+msgstr "Tema listesini güncelle"
 
 #: src/GameText.h:474
 msgid "Updating level lists..."
-msgstr "Aggiornamento della lista dei livelli..."
+msgstr "Bölüm listesi güncelleştiriliyor"
 
 #: src/GameText.h:475
 msgid "Upload"
-msgstr "Invia"
+msgstr "Gönderme"
 
 #: src/GameText.h:476
 msgid "Upload all highscores"
-msgstr "Invia tutti i punteggi"
+msgstr "Tüm yüksekpuanlar gönderiliyor"
 
 #: src/GameText.h:477
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr ""
-"C'è stato un errore imprevisto. Probabilmente ci sono problemi col sito web."
+"Beklenmeyen bir hata gerçekleşti. İnternet sitesinde bazı sorunlar olabilir."
 
 #: src/GameText.h:478
 msgid "Oh no !"
-msgstr "Oh no !"
+msgstr "Of, hayır!"
 
 #: src/GameText.h:479
 msgid "Uploading the highscore..."
-msgstr "Invio del punteggio..."
+msgstr "Yüksekpuanlar gönderiliyor..."
 
 #: src/GameText.h:480
 msgid "Use crappy information"
-msgstr "Scarica informazioni livelli peggiori"
+msgstr "Niteliksiz bilgiyi kullan"
 
 #: src/GameText.h:481
 msgid "Use Environment Vars"
-msgstr "Utilizza le Variabili d'Ambiente"
+msgstr "Ortam değişkenlerini kullan"
 
 #: src/GameText.h:482
 msgid "Use Profile"
-msgstr "Utilizza il Profilo"
+msgstr "Profili kullan"
 
 #: src/GameText.h:483
 msgid "Allow web forms"
-msgstr ""
+msgstr "İnternet formlarına izin ver"
 
 #: src/GameText.h:484
 msgid "Using HTTP Proxy"
-msgstr "Proxy HTTP"
+msgstr "HTTP vekil sunucusu kullan"
 
 #: src/GameText.h:485
 msgid "Using SOCKS4 Proxy"
-msgstr "Proxy SOCKS4"
+msgstr "SOCKS4 vekil sunucusu kullan"
 
 #: src/GameText.h:486
 msgid "Using SOCKS5 Proxy"
-msgstr "Proxy SOCKS5"
+msgstr "SOCKS5 vekil sunucusu kullan"
 
 #: src/GameText.h:487
 msgid "Video"
@@ -1634,1440 +1648,1443 @@ msgstr "Video"
 
 #: src/GameText.h:488
 msgid "View"
-msgstr "Guarda"
+msgstr "Göster"
 
 #: src/GameText.h:489
 msgid "View the highscore"
-msgstr "Guarda l'highscore"
+msgstr "Yüksek puanları göster"
 
 #: src/GameText.h:490
 #, c-format
 msgid "Do you want to update level \"%s\"?"
-msgstr "Vuoi aggiornare il livello \"%s\"?"
+msgstr "\"%s\" bölümünü güncelleştirmek istiyor musunuz?"
 
 #: src/GameText.h:491
 msgid "Warning"
-msgstr "Attenzione"
+msgstr "Uyarı"
 
 #: src/GameText.h:493
 msgid "WWW"
-msgstr "Internet"
+msgstr "İnternet"
 
 #: src/GameText.h:494
 msgid "Reference room"
-msgstr "Stanza di riferimento"
+msgstr "Referans odası"
 
 #: src/GameText.h:495
 #, c-format
 msgid "Room %i"
-msgstr "Stanza %i"
+msgstr "Oda %i"
 
 #: src/GameText.h:497
 #, c-format
 msgid "%d hours"
-msgstr "%d ore"
+msgstr "%d saat"
 
 #: src/GameText.h:498
 #, c-format
 msgid "%d minutes"
-msgstr "%d minuti"
+msgstr "%d dakika"
 
 #: src/GameText.h:500
 #, c-format
 msgid "Stats since: %s"
-msgstr "Statistiche dal: %s"
+msgstr "%s den sonra istatistikler"
 
 #: src/GameText.h:501
 #, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
-msgstr[0] "X-Moto eseguito %d volta"
-msgstr[1] "X-Moto eseguito %d volte"
+msgstr[0] "X-Moto %d  kez başlatıldı"
+msgstr[1] ""
 
 #: src/GameText.h:502
 #, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
-msgstr[0] "%d livello diverso"
-msgstr[1] "%d livelli diversi"
+msgstr[0] "%d farklı bölüm"
+msgstr[1] ""
 
 #: src/GameText.h:503
 #, c-format
 msgid "Time played: %s"
-msgstr "Tempo di gioco: %s"
+msgstr "Oynanan süre: %s"
 
 #: src/GameText.h:504
 #, c-format
 msgid "%d play"
 msgid_plural "%d plays"
-msgstr[0] "Giocato %i volta"
-msgstr[1] "Giocato %i volte"
+msgstr[0] "%d oynama"
+msgstr[1] ""
 
 #: src/GameText.h:505
 #, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
-msgstr[0] "Morto %d volta"
-msgstr[1] "Morto %d volte"
+msgstr[0] "%d ölüm"
+msgstr[1] ""
 
 #: src/GameText.h:506
 #, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
-msgstr[0] "Finito %d volta"
-msgstr[1] "Finito %d volte"
+msgstr[0] "%d bitirme"
+msgstr[1] ""
 
 #: src/GameText.h:507
 #, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
-msgstr[0] "Riavviato %d volta"
-msgstr[1] "Riavviato %d volte"
+msgstr[0] "%d yeniden başlatma"
+msgstr[1] ""
 
 #: src/GameText.h:509
 #, c-format
 msgid "%d seconds"
-msgstr "%d secondi"
+msgstr "%d saniye"
 
 #: src/GameText.h:510
 msgid "Yes"
-msgstr "Si"
+msgstr "Evet"
 
 #: src/GameText.h:511
 msgid "Yes to all"
-msgstr "Si a tutti"
+msgstr "Hepsine evet"
 
 #: src/GameText.h:512
 msgid "Your best time"
-msgstr ""
+msgstr "En iyi zamanınız"
 
 #: src/GameText.h:513
 msgid "Zoom in"
-msgstr "Aumenta l'ingrandimento"
+msgstr "Yakınlaştır"
 
 #: src/GameText.h:514
 msgid "Reinitialize zoom"
-msgstr "Reimposta il livello di ingrandimento"
+msgstr "Yakınlaştırmayı sıfırla"
 
 #: src/GameText.h:515
 msgid "Zoom out"
-msgstr "Riduci l'ingrandimento"
+msgstr "Uzaklaştır"
 
 #: src/GameText.h:517
 msgid "Server"
-msgstr ""
+msgstr "Sunucu"
 
 #: src/GameText.h:519
 msgid "Launch at startup"
-msgstr ""
+msgstr "Açılırken başlat"
 
 #: src/GameText.h:520
 msgid "Start the server"
-msgstr ""
+msgstr "Sunucu başlat"
 
 #: src/GameText.h:521
 msgid "Stop the server"
-msgstr ""
+msgstr "Sunucuyu durdur"
 
 #: src/GameText.h:522
 msgid "Server is currently started"
-msgstr ""
+msgstr "Sunucu şu anda başladı"
 
 #: src/GameText.h:523
 msgid "Server is currently stopped"
-msgstr ""
+msgstr "Sunucu şu anda durdu"
 
 #: src/GameText.h:524
 msgid "Default port"
-msgstr ""
+msgstr "Öntanımlı bağlantı noktası"
 
 #: src/GameText.h:525
 msgid "Custom port"
-msgstr ""
+msgstr "Özel bağlantı noktası"
 
 #: src/GameText.h:526
 msgid "Network"
-msgstr ""
+msgstr "Ağ"
 
 #: src/GameText.h:527
 msgid "Simple ghost mode"
-msgstr ""
+msgstr "Basit hayalet kipi"
 
 #: src/GameText.h:528
 msgid "You're currently connected"
-msgstr ""
+msgstr "Şu anda bağlandınız"
 
 #: src/GameText.h:529
 msgid "You're currently disconnected"
-msgstr ""
+msgstr "Şu anda bağlantıdan ayrıldınız"
 
 #: src/GameText.h:530
 msgid "Connect"
-msgstr ""
+msgstr "Bağlan"
 
 #: src/GameText.h:531
 msgid "Disconnect"
-msgstr ""
+msgstr "Bağlantıyı kes"
 
 #: src/GameText.h:532
 msgid "Unable to connect on the server"
-msgstr ""
+msgstr "Sunucuya bağlanılamadı"
 
 #: src/GameText.h:533
 msgid "Network error: you're disconnected"
-msgstr ""
+msgstr "Ağ hatası: bağlantı koptu"
 
 #: src/GameText.h:534
 msgid "Connected players:"
-msgstr ""
+msgstr "Bağlı oyuncular"
 
 #: src/GameText.h:535
 msgid "Chat message"
-msgstr ""
+msgstr "Sohbet iletisi"
 
 #: src/GameText.h:536
 #, c-format
 msgid "%s joined the game"
-msgstr ""
+msgstr "%s oyuna katıldı"
 
 #: src/GameText.h:537
 #, c-format
 msgid "%s left the game"
-msgstr ""
+msgstr "%s oyundan çıktı"
 
 #: src/GameText.h:538
 #, c-format
 msgid "%s is playing level %s"
-msgstr ""
+msgstr "%s %s bölümünü oynuyor"
 
 #: src/GameText.h:547
 msgid "Download the latest X-Moto world records and check for new levels"
-msgstr "Scarica gli ultimi record mondiali di X-Moto e cerca nuovi livelli"
+msgstr "En son X-Moto dünya rekorlarını indir ve yeni bölümleri kontrol et"
 
 #: src/GameText.h:548
 msgid "Configure how you are connected to the Internet"
-msgstr "Configura secondo la tua connessione ad Internet"
+msgstr "İnternete nasıl bağlanacağınızı ayarlayın"
 
 #: src/GameText.h:549
 msgid "Play this level again"
-msgstr "Rigioca questo livello"
+msgstr "Bu bölümü tekrar oyna"
 
 #: src/GameText.h:550
 msgid "Save a replay for later viewing"
-msgstr "Salva il replay per vederlo in seguito"
+msgstr "Sonradan izlemek için bir tekrar oynatım kaydet"
 
 #: src/GameText.h:551
 msgid "Play next level"
-msgstr "Gioca il livello seguente"
+msgstr "Sonraki bölümü oyna"
 
 #: src/GameText.h:552
 msgid "Back to the main menu"
-msgstr "Torna al menu principale"
+msgstr "Ana menüye dön"
 
 #: src/GameText.h:553
 msgid "Quit the game"
-msgstr "Esci dal gioco"
+msgstr "Oyundan çık"
 
 #: src/GameText.h:554
 msgid "Back to the game"
-msgstr "Riprendi la partita"
+msgstr "Oyuna dön"
 
 #: src/GameText.h:555
 msgid "Try this level again from the beginning"
-msgstr "Riprova questo livello dall'inizio"
+msgstr "Bu bölümü baştan bir daha dene"
 
 #: src/GameText.h:556
 msgid "Play next level instead"
-msgstr "Gioca il prossimo livello"
+msgstr "Onun yerine sonraki bölümü oyna"
 
 #: src/GameText.h:557
 msgid "Try this level again"
-msgstr "Riprova questo livello"
+msgstr "Bu bölümü tekrar dene"
 
 #: src/GameText.h:558
 msgid "Built-in and stand-alone external levels"
-msgstr "Livelli interni ed esterni stand-alone"
+msgstr "Yerleşik ve bağımsız harici bölümler"
 
 #: src/GameText.h:559
 msgid "Levels grouped together in level packs"
-msgstr "Livelli raggruppati in pacchetti"
+msgstr "Bölümler bölüm paketlerinde birlikte gruplanmış"
 
 #: src/GameText.h:560
 msgid "Browse levels available to you"
-msgstr "Cerca livelli disponibili"
+msgstr "Hazır olan bölümleri görüntüle"
 
 #: src/GameText.h:561
 msgid "View list of recorded replays"
-msgstr "Mostra la lista dei replay registrati"
+msgstr "Kaydedilmiş tekrar oynatımların listesini görüntüle"
 
 #: src/GameText.h:562
 msgid "Configure X-Moto preferences"
-msgstr "Configura le opzioni di X-Moto"
+msgstr "X-Moto tercihlerini ayarla"
 
 #: src/GameText.h:563
 msgid "Instructions of how to play X-Moto"
-msgstr "Istruzioni su come giocare a X-Moto"
+msgstr "X-Moto'yu nasıl oynayacağınız hakkında açıklamalar"
 
 #: src/GameText.h:564
 msgid "Change player profile"
-msgstr "Cambia profilo giocatore"
+msgstr "Oyuncu profilini değiştir"
 
 #: src/GameText.h:565
 msgid "Play tutorial of how to play the game"
-msgstr "Gioca il tutorial per apprendere il gioco"
+msgstr "Nasıl oynayacağınızı gösteren eğitseli oyna"
 
 #: src/GameText.h:566
 msgid "Play the selected level"
-msgstr "Gioca il livello selezionato"
+msgstr "Seçilen bölümü oyna"
 
 #: src/GameText.h:567
 msgid "View general information about the level, best times, and replays"
-msgstr "Mostra informazioni sul livello, tempi migliori e replay"
+msgstr ""
+"Bölüm hakkında genel bilgileri göster, en iyi süreler, tekrar oynatımlar"
 
 #: src/GameText.h:568
 msgid "Run the selected replay"
-msgstr "Riproduci il replay selezionato"
+msgstr "Seçilen tekrar oynatımı çalıştır"
 
 #: src/GameText.h:569
 msgid "Permanently delete the selected replay"
-msgstr "Elimina definitivamente il replay selezionato"
+msgstr "Seçilen tekrar oynatımı kalıcı olarak sil"
 
 #: src/GameText.h:570
 msgid "Show replays of all players in list"
-msgstr "Mostra i replay di tutti i giocatori nella lista"
+msgstr "Listedeki tüm oyuncuların tekrar oynatımlarını göster"
 
 #: src/GameText.h:571
 msgid "General X-Moto preferences"
-msgstr "Opzioni generali di X-Moto"
+msgstr "Genel X-Moto tercihleri"
 
 #: src/GameText.h:572
 msgid "Configure graphical options"
-msgstr "Configura le opzioni video"
+msgstr "Grafik seçeneklerini ayarla"
 
 #: src/GameText.h:573
 msgid "Configure audio options"
-msgstr "Configura le opzioni audio"
+msgstr "Ses seçeneklerini ayarla"
 
 #: src/GameText.h:574
 msgid "Configure control options"
-msgstr "Configura i controlli"
+msgstr "Kontrol seçeneklerini ayarla"
 
 #: src/GameText.h:575
 msgid "Save options"
-msgstr "Salva preferenze"
+msgstr "Kaydetme seçenekleri"
 
 #: src/GameText.h:576
 msgid "Revert options to defaults"
-msgstr "Reimposta i valori predefiniti"
+msgstr "Seçenekleri öntanımlılara döndür"
 
 #: src/GameText.h:577
 msgid "Show a map of your surroundings when playing"
-msgstr "Mostra la mappa del percorso durante il gioco"
+msgstr "Oynarken etrafı gösteren bir harita göster"
 
 #: src/GameText.h:578
 msgid "Automatically download best times off the net when the game starts"
-msgstr ""
-"Ottieni automaticamente i punteggi migliori dalla rete all'avvio del gioco"
+msgstr "Oyun başladığında en iyi süreleri internetten otomatik olarak indir"
 
 #: src/GameText.h:579
 msgid "Show the World Record for a given level when playing"
-msgstr "Mostra il Record Mondiale del livello durante il gioco"
+msgstr "Oynarken bölümün Dünya Rekorunu göster"
 
 #: src/GameText.h:580
+#, fuzzy
 msgid "Use crappy information from the website to update the crappy pack"
-msgstr "Scarica informazioni sui livelli peggiori"
+msgstr ""
+"Niteliksiz paketleri güncellemek için İnternet sitesindeki niteliksiz "
+"bilgileri kullan"
 
 #: src/GameText.h:581
 msgid "Allow X-Moto to ask you your mind about levels"
-msgstr ""
+msgstr "X-Moto'ya bölümler hakkında fikrinizi sorması için izin ver"
 
 #: src/GameText.h:582
 msgid "Enable high-color graphics"
-msgstr "Abilita la grafica high-color"
+msgstr "Yüksek-renk grafikleri etkinleştir"
 
 #: src/GameText.h:583
 msgid "Enable true-color graphics"
-msgstr "Abilita la grafica true-color"
+msgstr "Gerçek-renk grafikleri etkinleştir"
 
 #: src/GameText.h:584
 msgid "Select graphics resolution"
-msgstr "Seleziona la risoluzione"
+msgstr "Grafik çözünürlüğünü seçin"
 
 #: src/GameText.h:585
 msgid "Run the game in a window"
-msgstr "Lancia il gioco in finestra"
+msgstr "Oyunu bir pencerede çalıştır"
 
 #: src/GameText.h:586
 msgid "Not so fancy menu graphics"
-msgstr "Grafica dei menu minimale"
+msgstr "Çok süslü olmayan menü grafikleri"
 
 #: src/GameText.h:587
 msgid "A bit more fancy menu graphics"
-msgstr "Grafica dei menu un po' più elaborata"
+msgstr "Biraz daha süslü menü grafikleri"
 
 #: src/GameText.h:588
 msgid "Fanciest menu graphics"
-msgstr "Grafica dei menu molto elaborata"
+msgstr "En süslü menü grafikleri"
 
 #: src/GameText.h:589
 msgid "Disable most graphics not important to the gameplay"
-msgstr "Disattiva gli effetti grafici che compromettono la giocabilità"
+msgstr "Oynanırlık önemsenmeksizin çoğu grafik devre dışı bırakılır"
 
 #: src/GameText.h:590
 msgid "Disable some of the most resource-intensive graphics, like particles"
-msgstr "Disabilita gli effetti grafici che utilizzano molte risorse"
+msgstr ""
+"Parçacıklar gibi yoğun kaynak gerektiren grafikler devre dışı bırakılır"
 
 #: src/GameText.h:591
 msgid "Enable all graphical effects"
-msgstr "Abilita tutti gli effetti grafici"
+msgstr "Tüm grafik efektleri etkinleştirilir"
 
 #: src/GameText.h:592
 msgid "Turn on sound effects"
-msgstr "Attiva gli effetti sonori"
+msgstr "Ses efektlerini aç"
 
 #: src/GameText.h:593
 msgid "Poor sound quality"
-msgstr "Bassa qualità audio"
+msgstr "Düşük ses kalitesi"
 
 #: src/GameText.h:594
 msgid "Normal sound quality"
-msgstr "Qualità audio normale"
+msgstr "Normal ses kalitesi"
 
 #: src/GameText.h:595
 msgid "Best sound quality"
-msgstr "Alta qualità audio"
+msgstr "En iyi ses kalitesi"
 
 #: src/GameText.h:596
 msgid "8-bit sound samples, poor quality"
-msgstr "Suoni campionati a 8-bit, bassa qualità"
+msgstr "8-bit ses örneklemesi, düşük kalite"
 
 #: src/GameText.h:597
 msgid "16-bit sound samples, good quality"
-msgstr "Suoni campionati a 16-bit, alta qualità"
+msgstr "16-bit ses örneklemesi, iyi kalite"
 
 #: src/GameText.h:598
 msgid "Mono (single channel) audio"
-msgstr "Audio mono (un solo canale)"
+msgstr "Mono (tek kanal) ses"
 
 #: src/GameText.h:599
 msgid "Stereo (two channel) audio"
-msgstr "Audio stereo (due canali)"
+msgstr "Stereo (iki kanal) ses"
 
 #: src/GameText.h:600
 msgid "Turn on engine noise"
-msgstr "Abilita il rumore del motore"
+msgstr "Motor gürültüsünü aç"
 
 #: src/GameText.h:601
 msgid "Select action to re-configure to another key"
-msgstr "Seleziona l'azione a cui assegnare un nuovo tasto"
+msgstr "Bir başka tuşla değiştirmek istediğiniz hareketi seçin"
 
 #: src/GameText.h:602
 msgid "View contents of level pack"
-msgstr "Mostra i contenuti del pacchetto di livelli"
+msgstr "Bölüm paketinin içeriğini göster"
 
 #: src/GameText.h:603
 msgid "Select a player profile to use"
-msgstr "Seleziona un profilo giocatore da usare"
+msgstr "Kullanmak için bir oyuncu profili seçin"
 
 #: src/GameText.h:604
 msgid "Use the selected player profile"
-msgstr "Utilizza il profilo giocatore selezionato"
+msgstr "Seçilen oyuncu profilini kullan"
 
 #: src/GameText.h:605
 msgid "Create new player profile"
-msgstr "Crea un nuovo profilo giocatore"
+msgstr "Yeni bir oyuncu profili oluştur"
 
 #: src/GameText.h:606
 msgid "Permanently delete selected player profile, including best times"
 msgstr ""
-"Elimina definitivamente il profilo giocatore selezionato, inclusi i tempi "
-"migliori"
+"Seçilen oyuncu profilini en iyi süreler de dahil olmak üzere kalıcı olarak "
+"sil"
 
 #: src/GameText.h:607
 msgid "Select a level in the level pack to play"
-msgstr "Seleziona un livello da giocare all'interno del pacchetto"
+msgstr "Oynamak için bölüm paketinden bir bölüm seçin"
 
 #: src/GameText.h:608
 msgid "Close level pack"
-msgstr "Chiudi il pacchetto di livelli"
+msgstr "Oyun paketini kapat"
 
 #: src/GameText.h:609
 msgid "General information about the level"
-msgstr "Informazioni generali sul livello"
+msgstr "Bölüm hakkında genel bilgiler"
 
 #: src/GameText.h:610
 msgid "View best times for the level"
-msgstr "Mostra i tempi migliori del livello"
+msgstr "Bölümün en iyi sürelerini göster"
 
 #: src/GameText.h:611
 msgid "View locally stored replays of the level"
-msgstr "Mostra i replay del livello sul computer locale"
+msgstr "Bölümün yerel olarak saklanmış tekrar oynatımlarını göster"
 
 #: src/GameText.h:612
 msgid "Only show personal best times for this level"
-msgstr "Mostra solo i migliori tempi personali del livello"
+msgstr "Bu bölüm için sadece kişisel en iyi süreleri göster"
 
 #: src/GameText.h:613
 msgid "Show all best times for this level"
-msgstr "Mostra tutti i migliori tempi del livello"
+msgstr "Bu bölüm için tüm en iyi süreleri göster"
 
 #: src/GameText.h:614
 msgid "Only show personal replays for this level"
-msgstr "Mostra solo i replay personali del livello"
+msgstr "Bu bölüm için sadece kişisel tekrar oynatımları göster"
 
 #: src/GameText.h:615
 msgid "Show all replays for this level"
-msgstr "Mostra tutti i replay del livello"
+msgstr "Bu bölüm için tüm tekrar oynatımları göster"
 
 #: src/GameText.h:616
 msgid "Run selected replay"
-msgstr "Riproduci il replay selezionato"
+msgstr "Seçilen tekrar oynatımı çalıştır"
 
 #: src/GameText.h:617
 msgid "Show helpful help strings such as this one"
-msgstr "Mostra messaggi di aiuto rapido, come questo :-)"
+msgstr "Bunun gibi yardımcı bilgilendirmeleri göster"
 
 #: src/GameText.h:618
 msgid ""
 "Let X-Moto look for more levels on the net, and install them automatically"
 msgstr ""
-"Permetti a X-Moto di cercare nuovi livelli in rete e installarli "
-"automaticamente"
+"X-Moto'ya yeni bölümler için interneti kontrol etmesine ve onları otomatik "
+"olarak kurmasına izin ver"
 
 #: src/GameText.h:619
 msgid "Select this if you got a direct connection to the Internet"
-msgstr "Seleziona se ti connetti direttamente ad internet"
+msgstr "Eğer doğrudan bir internet bağlantınız varsa bunu seçin"
 
 #: src/GameText.h:620
 msgid "Select this if you connect to the Internet through an HTTP proxy"
-msgstr "Connessione tramite proxy HTTP"
+msgstr ""
+"Eğer internete bir HTTP vekil sunucusu aracılığıyla bağlanıyorsanız bunu "
+"seçin"
 
 #: src/GameText.h:621
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
-msgstr "Connessione tramite proxy SOCKS4"
+msgstr ""
+"Eğer internete bir SOCKS4 vekil sunucusu aracılığıyla bağlanıyorsanız bunu "
+"seçin"
 
 #: src/GameText.h:622
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
-msgstr "Connessione tramite proxy SOCKS5"
+msgstr ""
+"Eğer internete bir SOCKS5 vekil sunucusu aracılığıyla bağlanıyorsanız bunu "
+"seçin"
 
 #: src/GameText.h:623
 msgid "Use these settings"
-msgstr "Utilizza queste impostazioni"
+msgstr "Bu ayarları kullan"
 
 #: src/GameText.h:624
 msgid "Write the IP address or host name of proxy server to use"
-msgstr "Scrivi l'indirizzo IP o l'hostname del server proxy da utilizzare"
+msgstr "Kullanılacak vekil sunucunun IP adresini ya da konak ismini yazın"
 
 #: src/GameText.h:625
 msgid "Write the port number used by the proxy server"
-msgstr "Scrivi il numero della porta utilizzata dal server proxy"
+msgstr "Vekil sunucusu tarafından kullanılacak kapı numarasını yazın"
 
 #: src/GameText.h:626
 msgid "New levels and levels updated from the Internet"
-msgstr "Livelli nuovi e aggiornati da internet"
+msgstr "İnternetten yeni bölümler ve bölüm güncelleştirmeleri"
 
 #: src/GameText.h:629
 msgid "Choose which ghost to display"
-msgstr "Scegli quale fantasma mostrare"
+msgstr "Hangi hayaletin gösterileceğini seçin"
 
 #: src/GameText.h:630
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
-msgstr "Mostra il fantasma sfocato (solo se supportato dalla tua scheda video)"
+msgstr ""
+"Hayalet için hareket bulanıklığı efekti yap (eğer ekran kartınızca "
+"destekleniyorsa)"
 
 #: src/GameText.h:631
 msgid "When starting a level with a ghost, display who the ghost is of"
 msgstr ""
-"Quando si comincia un livello con un fantasma, mostra di chi è il fantasma"
+"Hayalet gösterilen bir bölüme başlandığında hayaletin kimin olduğunu göster"
 
 #: src/GameText.h:632
 msgid "Display an arrow to display where are located the bikes on the map"
-msgstr ""
+msgstr "Motosikletlerin nerede olduğunu harita üzerinde oklarla göster"
 
 #: src/GameText.h:633
 msgid "Display the time difference between the ghost and you"
-msgstr "Mostra la differenza di tempo fra te e il fantasma"
+msgstr "Hayalet ile aranızdaki süre farkını göster"
 
 #: src/GameText.h:634
 msgid "If you make a highscore it will automatically be saved as a replay"
 msgstr ""
-"Se realizzi un punteggio massimo questo sarà automaticamente salvato nei "
-"replay"
+"Eğer bir yüksekpuan yaparsanız otomatik olarak tekrar oynatımı kaydedilecek"
 
 #: src/GameText.h:635
 msgid "View the replay of the room's highscore"
-msgstr "Mostra il replay del punteggio massimo della stanza"
+msgstr "Odadaki yüksekpuanların tekrar oynatımlarını göster"
 
 #: src/GameText.h:637
 msgid "Check for new levels at startup"
-msgstr "Controlla se ci sono nuovi livelli all'avvio del gioco"
+msgstr "Başlangıçta yeni bölümleri kontrol et"
 
 #: src/GameText.h:638
 msgid "Check for new highscores at startup"
-msgstr "Controlla se ci sono nuovi punteggi migliori all'avvio del gioco"
+msgstr "Başlangıçta yeni yüksekpuanları kontrol et"
 
 #: src/GameText.h:640
 msgid "Show various statistics about X-Moto"
-msgstr "Mostra varie statistiche relative a X-Moto"
+msgstr "X-Moto hakkında çeşitli istatistikler göster"
 
 #: src/GameText.h:641
 msgid "Update statistics (also happens each time X-Moto is started)"
-msgstr ""
-"Aggiorna le statistiche (eseguito automaticamente ad ogni avvio di X.Moto)"
+msgstr "İstatistikleri güncelle (X-Moto'nun her açılışında da gerçekleşiyor)"
 
 #: src/GameText.h:642
 msgid "Enables background music in the main menu"
-msgstr "Abilita la musica di sottofondo nel menu principale"
+msgstr "Ana menüde arkaplan müziğini etkinleştir"
 
 #: src/GameText.h:643
 msgid "Enables background music while playing"
-msgstr ""
+msgstr "Oynarken arkaplan müziğini etkinleştir"
 
 #: src/GameText.h:645
 msgid "Choose the X-Moto graphics theme"
-msgstr "Scegli il tema grafico di X-Moto"
+msgstr "X-Moto grafik temasını seçin"
 
 #: src/GameText.h:646
 msgid "Check for new themes on the web"
-msgstr "Cerca nuovi temi sul web"
+msgstr "Yeni temalar için interneti kontrol et"
 
 #: src/GameText.h:647
 msgid "Download or update the selected theme"
-msgstr "Ottieni oppure aggiorna il tema selezionato"
+msgstr "Seçilen temayı indir ya da  güncelleştir"
 
 #: src/GameText.h:648
 msgid "Upload the replay on the website of highscores"
-msgstr "Invia questo replay al sito dei punteggi migliori"
+msgstr "Yüksekpuanın tekrar oynatımını internet sitesine gönder"
 
 #: src/GameText.h:649
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
-"Invia i tuoi replay migliori alla stanza (utile se la stanza è stata appena "
-"creata)"
+"En iyi tekrar oynatımlarınızı odanıza gönderin (yeni oluşturulduğunda "
+"kullanışlıdır)"
 
 #: src/GameText.h:650
 msgid "Configure the main www options"
-msgstr "Configura le opzioni principali relative a Internet"
+msgstr "Temel internet seçeneklerini ayarlayın"
 
 #: src/GameText.h:651
 msgid "Configure the www options"
-msgstr ""
+msgstr "İnternet seçeneklerini ayarlayın"
 
 #: src/GameText.h:652
 msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
 msgstr ""
-"Scegli dove inviare e da dove ottenere replay e liste dei punteggi migliori "
-"(visita il sito web per maggiori informazioni)"
+"Tekrar oynatımları, yüksekpuan listelerini nereye indireceğinizi/"
+"göndereceğinizi seçin (daha fazla bilgi için internet sitesini kontrol edin)"
 
 #: src/GameText.h:653
 msgid "Choose your room"
-msgstr "Scegli la tua stanza"
+msgstr "Odanızı seçin"
 
 #: src/GameText.h:654
 msgid "Get the rooms list from the web"
-msgstr "Scarica la lista delle stanze dal web"
+msgstr "İnternetten oda listesini alın"
 
 #: src/GameText.h:655
 msgid "Upload of highscore requires to log in (Except for WR)"
-msgstr ""
-"L'invio di un punteggio richiede il log in (fatta eccezione si tratti di un "
-"record mondiale)"
+msgstr "Yüksekpuanların gönderimleri giriş yapmayı gerektirir (DR hariç)"
 
 #: src/GameText.h:656
 msgid "Upload of highscore requires a password (Except for WR)"
-msgstr ""
-"L'invio di un punteggio richiede la password (fatta eccezione si tratti di "
-"un record mondiale)"
+msgstr "Yüksekpuanların gönderimleri bir parolayı gerektirir (DR hariç)"
 
 #: src/GameText.h:657
 msgid "Show the speedometer when playing"
-msgstr "Mostra il tachimetro durante il gioco"
+msgstr "Oynarken hız göstergesini göster"
 
 #: src/GameText.h:658
 msgid "Enable animation of bike falling apart when dead"
-msgstr "Abilita l'animazione della moto che si rompe quando muori"
+msgstr "Motosikletin dağılma efektini etkinleştir"
 
 #: src/GameText.h:659
 msgid "Automatically scroll over the level before starting playing it"
-msgstr ""
-"Mostra automaticamente una panoramica del livello prima di iniziare la "
-"partita"
+msgstr "Oynamaya başlamadan önce otomatik olarak bölüme göz at"
 
 #: src/GameText.h:660
 msgid "Run a dynamic zoom while playing"
-msgstr ""
+msgstr "Oynarken dinamik yakınlaştırma kullan"
 
 #: src/GameText.h:661
 msgid "View the X-Moto credits"
-msgstr "Mostra i crediti di X-Moto"
+msgstr "X-Moto'yu hazırlayanları görüntüle"
 
 #: src/GameText.h:662
 msgid "Name of replay"
-msgstr "Nome del replay"
+msgstr "Tekrar oynatımın ismi"
 
 #: src/GameText.h:663
 msgid "Level played in replay"
-msgstr "Livello giocato nel replay"
+msgstr "Tekrar oynatımda oynanan bölüm"
 
 #: src/GameText.h:664
 msgid "Player who recorded the replay"
-msgstr "Giocatore che ha registrato il replay"
+msgstr "Tekrar oynatımı kaydeden oyuncu"
 
 #: src/GameText.h:665
 msgid "Click to select screen resolution"
-msgstr "Clicca per selezionare la risoluzione dello schermo"
+msgstr "Ekran çözünürlüğünü seçmek için tıklayın"
 
 #: src/GameText.h:666
 msgid "Completed levels / total number of levels in pack"
-msgstr "Livelli completati / totale di livelli nel pacchetto"
+msgstr "Tamamlanan bölümler / Paketteki toplam bölüm sayısı"
 
 #: src/GameText.h:667
 msgid "Name of level pack"
-msgstr "Nome del pacchetto di livelli"
+msgstr "Bölüm paketinin ismi"
 
 #: src/GameText.h:668
 msgid "Add the level to the favorite levels list"
-msgstr "Aggiungi il livello alla lista dei preferiti"
+msgstr "Bölümü favori bölümler listesine ekle"
 
 #: src/GameText.h:669
 msgid "Delete the level from the favorite levels list"
-msgstr "Rimuovi il livello dalla lista dei preferiti"
+msgstr "Bölümü favori bölümler listesinden sil"
 
 #: src/GameText.h:670
 msgid "Puzzle the levels pack list"
-msgstr "Genera la lista del pacchetto di livelli"
+msgstr "Bölüm paket listesini çöz"
 
 #: src/GameText.h:671
 msgid "Enter text to filter the level list"
-msgstr "Inserisci un testo per filtrare la lista dei livelli"
+msgstr "Bölüm listesini filtrelemek için metin girin"
 
 #: src/GameText.h:672
 msgid "Choose the number of players"
-msgstr "Scegli il numero di giocatori"
+msgstr "Oyuncu sayısını seçin"
 
 #: src/GameText.h:673
 msgid "Your proxy login"
-msgstr "Il nome utente del tuo account sul proxy"
+msgstr "Vekil sunucu girişiniz"
 
 #: src/GameText.h:674
 msgid "Your password associated with your login"
-msgstr "La password associata al tuo login"
+msgstr "Girişinizle ilişkilendirilmiş parola"
 
 #: src/GameText.h:675
 msgid "Enter text to filter the replay list"
-msgstr "Inserisci un testo per filtrare la lista dei replay"
+msgstr "Tekrar oynatım listesini filtrelemek için metin girin"
 
 #: src/GameText.h:676
 msgid "Enter text to filter the rooms list"
-msgstr ""
+msgstr "Oda listesini filtrelemek için metin girin"
 
 #: src/GameText.h:677
 msgid "Press to play X-Moto immediately"
-msgstr "Clicca per giocare subito a X-Moto"
+msgstr "X-Moto'yu hemen oynamak için basın"
 
 #: src/GameText.h:678
 msgid "Increase or decrease the quality of the levels selected"
-msgstr "Aumenta o diminuisci la qualità dei livelli selezionati"
+msgstr "Seçilecek bölümlerin kalitesini artırın veya azaltın"
 
 #: src/GameText.h:679
 msgid "Increase or decrease the difficulty of the levels selected"
-msgstr "Aumenta o diminuisci la difficoltà dei livelli selezionati"
+msgstr "Seçilecek bölümlerin zorluğunu artırın veya azaltın"
 
 #: src/GameText.h:680
 msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
 msgstr ""
-"Ferma il gioco quando un giocatore finisce il livello o continua finché "
-"tutti abbiano finito"
+"Bir oyuncu bölümü bitirdiğinde oyunu durdur ya da bir oyuncu oynarken oyuna "
+"devam et"
 
 #: src/GameText.h:685
 msgid "Don't show the ghosts while playing"
-msgstr "Non mostrare il fantasma durante il gioco"
+msgstr "Oynarken hayaletleri gösterme"
 
 #: src/GameText.h:686
 msgid "The scene is shared by all the players"
-msgstr "La scena è condivisa da tutti i giocatori"
+msgstr "Sahne tüm oyuncularla paylaşılıyor"
 
 #: src/GameText.h:687
 msgid "Change the X-Moto language"
-msgstr "Cambia la lingua di X-Moto"
+msgstr "X-Moto'nun dilini değiştir"
 
 #: src/GameText.h:688
 msgid "Name of the language"
-msgstr "Nome della lingua"
+msgstr "Dilin ismi"
 
 #: src/GameText.h:689
 msgid "Code of the language"
-msgstr "Codice della lingua"
+msgstr "Dilin kodu"
 
 #: src/GameText.h:690
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
-msgstr "Cancella i replay che X-Moto stima non siano interessanti"
+msgstr ""
 
 #: src/GameText.h:691
 msgid "Remove levels not suitable for children"
-msgstr "Cancella i livelli non adatti ai bambini"
+msgstr "Çocuklar için uygun olmayan bölümleri sil"
 
 #: src/GameText.h:692
 msgid "Enable this room"
-msgstr "Abilita questa stanza"
+msgstr "Bu odayı etkinleştir"
 
 #: src/GameText.h:693
 msgid "Password associated to your profile for web access"
-msgstr ""
+msgstr "İnternet erişimi için profilinizle ilişkilendirilmiş parola"
 
 #: src/GameText.h:694
 msgid "Main options"
-msgstr ""
+msgstr "Temel seçenekler"
 
 #: src/GameText.h:695
 msgid "Configure the X-Moto theme"
-msgstr ""
+msgstr "X-Moto temasını ayarla"
 
 #: src/GameText.h:696
 msgid "Configure ghosts displayed while playing the game"
-msgstr ""
+msgstr "Oynarken hayaletlerin görüntülenmesini ayarla"
 
 #: src/GameText.h:697
 msgid "Configure options linked to your X-Moto database"
-msgstr ""
+msgstr "X-Moto veritabanıyla ilgili seçenekleri ayarla"
 
 #: src/GameText.h:698
 msgid "Synchronise your database on the web"
-msgstr ""
+msgstr "Veritabanınızı internet üzerinden eş zamanlama"
 
 #: src/GameText.h:699
 msgid "Synchronise your database when your quit X-Moto"
-msgstr ""
+msgstr "X-Moto'dan çıkarken veritabanınızı eş zamanlama"
 
 #: src/GameText.h:700
 msgid "Enable joysticks events"
-msgstr ""
+msgstr "Oyun kontrolörü olaylarını etkinleştir"
 
 #: src/GameText.h:701
 msgid "Preselect the retry button when dying or finishing a level"
-msgstr ""
+msgstr "Ölündüğünde veya bölüm tamamlandığında yeniden deneyi önseçimle"
 
 #: src/GameText.h:703
 msgid "Give your mind about this level"
-msgstr ""
+msgstr "Bu bölüm hakkındaki fikriniz"
 
 #: src/GameText.h:704
 msgid "No idea"
-msgstr ""
+msgstr "Fikrim yok"
 
 #: src/GameText.h:705
 msgid "Beginner"
-msgstr ""
+msgstr "Acemi"
 
 #: src/GameText.h:706
 msgid "Expert"
-msgstr ""
+msgstr "Uzman"
 
 #: src/GameText.h:707
 msgid "Master"
-msgstr ""
+msgstr "Üstat"
 
 #: src/GameText.h:708
 msgid "God"
-msgstr ""
+msgstr "İlah"
 
 #: src/GameText.h:709
 msgid "Go !"
-msgstr ""
+msgstr "Git !"
 
 #: src/GameText.h:710
 msgid "Not nice at all"
-msgstr ""
+msgstr "Hiç iyi değil"
 
 #: src/GameText.h:711
 msgid "Not nice"
-msgstr ""
+msgstr "İyi değil"
 
 #: src/GameText.h:712
 msgid "Nice"
-msgstr ""
+msgstr "İyi"
 
 #: src/GameText.h:713
 msgid "Really nice"
-msgstr ""
+msgstr "Çok iyi"
 
 #: src/GameText.h:714
 msgid "Send this report"
-msgstr ""
+msgstr "Bu raporu gönder"
 
 #: src/GameText.h:715
 msgid "Skip this report"
-msgstr ""
+msgstr "Bu raporu es geç"
 
 #: src/GameText.h:717
 msgid "You don't want to vote"
-msgstr ""
+msgstr "Oy vermek istemiyorsunuz"
 
 #: src/GameText.h:718
 msgid "Really easy"
-msgstr ""
+msgstr "Gerçekten kolay"
 
 #: src/GameText.h:719
 msgid "No technical difficulty"
-msgstr ""
+msgstr "Teknik zorluğu yok"
 
 #: src/GameText.h:720
 msgid "At least one difficulty"
-msgstr ""
+msgstr "En azından zor bir yeri var"
 
 #: src/GameText.h:721
 msgid "Several difficulties"
-msgstr ""
+msgstr "Birkaç zorluk"
 
 #: src/GameText.h:722
 msgid "Impossible"
-msgstr ""
+msgstr "İmkansız"
 
 #: src/GameText.h:723
 msgid "Basic blocks, no decoration"
-msgstr ""
+msgstr "Temel bloklar, dekorasyon yok"
 
 #: src/GameText.h:724
 msgid "Basic decoration, not smooth blocks"
-msgstr ""
+msgstr "Temel dekorasyonlar, düzgün bloklar yok"
 
 #: src/GameText.h:725
 msgid "Not original"
-msgstr ""
+msgstr "Özgün değil"
 
 #: src/GameText.h:726
 msgid "Nice, could be better"
-msgstr ""
+msgstr "İyi ama daha iyi olabilirdi"
 
 #: src/GameText.h:727
 msgid "Several textures, sprites, ..."
-msgstr ""
+msgstr "Birkaç yüzey, hareketli obje..."
 
 #: src/GameText.h:728
 msgid "Send this report on the webserver"
-msgstr ""
+msgstr "Bu raporu internet sunucusuna gönder"
 
 #: src/GameText.h:729
 msgid "Don't send this report on the webserver"
-msgstr ""
+msgstr "Bu raporu internet sunucusuna gönderme"
 
 #: src/GameText.h:731
 msgid "Server configuration to play via the network"
-msgstr ""
+msgstr "Ağ üzerinden oynamak için sunucu ayarları"
 
 #: src/GameText.h:732
 msgid "Start the server at X-Moto startup"
-msgstr ""
+msgstr "Sunucuyu X-Moto açılışında başlat"
 
 #: src/GameText.h:733
 msgid "Start/stop the server"
-msgstr ""
+msgstr "Sunucuyu Başlat/durdur"
 
 #: src/GameText.h:734
+#, fuzzy
 msgid "Port on which the server must listen to"
-msgstr ""
+msgstr "Sunucuların kontrol etmesi gereken bağlantı noktası"
 
 #: src/GameText.h:735
 msgid "Server on which you want to connect"
-msgstr ""
+msgstr "Bağlantı kurmak istediğiniz sunucu"
 
 #: src/GameText.h:736
 msgid "Connect/disconnect the client to the server"
-msgstr ""
+msgstr "İstemciyi sunucuya bağla / bağlantısını kes"
 
 #: src/GameText.h:737
 msgid ""
 "Enables background music for levels that do not have their own music track"
-msgstr ""
+msgstr "Kendi müziği olmayan bölümler için arkaplan müziğini etkinleştir"
 
 #: src/GameText.h:738
 msgid "Network playing mode : just see other players as ghosts"
-msgstr ""
+msgstr "Ağdan oynama kipi: Diğer oyuncuları sadece hayalet olarak göster"
 
 #: src/GameText.h:740
 msgid "Levels with no highscore"
-msgstr "Livelli senza punteggio"
+msgstr "Bölümler ve yüksekpuanlar"
 
 #: src/GameText.h:741 src/GameText.h:775
 msgid "Levels you have not completed"
-msgstr "Livelli non completati"
+msgstr "Bitirmediğiniz bölümler"
 
 #: src/GameText.h:742
 msgid "You're not the highscore holder"
-msgstr "Livelli dove non detieni il punteggio migliore"
+msgstr "Yüksekpuana sahip değilsiniz"
 
 #: src/GameText.h:744
 msgid "New and updated levels"
-msgstr "Livelli nuovi o aggiornati"
+msgstr "Yeni ve güncelleştirilmiş bölümler"
 
 #: src/GameText.h:745
 msgid "Favorite levels"
-msgstr "Livelli preferiti"
+msgstr "Favori bölümler"
 
 #: src/GameText.h:746
 msgid "Blacklisted levels"
-msgstr "Livelli nella lista nera"
+msgstr "Kara listedeki bölümler"
 
 #: src/GameText.h:747
 msgid "Nicest levels"
-msgstr "Livelli migliori"
+msgstr "En hoş bölümler"
 
 #: src/GameText.h:748
 msgid "Hardest levels"
-msgstr "Livelli più difficili"
+msgstr "En zor bölümler"
 
 #: src/GameText.h:749
 msgid "Easiest levels"
-msgstr "Livelli più facili"
+msgstr "En kolay bölümler"
 
 #: src/GameText.h:750
 msgid "Crappiest levels"
-msgstr "Livelli peggiori"
+msgstr "En kötü bölümler"
 
 #: src/GameText.h:751
 msgid "Scripted levels"
-msgstr "Livelli scriptati"
+msgstr "Betiksel bölümler"
 
 #: src/GameText.h:752
 msgid "Physics levels"
-msgstr ""
+msgstr "Fiziksel bölümler"
 
 #: src/GameText.h:754
 msgid "Last played levels"
-msgstr "Livelli giocati di recente"
+msgstr "En son oynanan bölümler"
 
 #: src/GameText.h:755
 msgid "Never played levels"
-msgstr "Livelli mai giocati"
+msgstr "Hiç oynanmamış bölümler"
 
 #: src/GameText.h:756
 msgid "Most played levels"
-msgstr "Livelli più giocati"
+msgstr "En çok oynanan bölümler"
 
 #: src/GameText.h:757
 msgid "Less played levels (but played)"
-msgstr "Livelli meno giocati (ma giocati)"
+msgstr "En az oynanan bölümler (ama oynanmış)"
 
 #: src/GameText.h:758
 msgid "Last highscores"
-msgstr "Punteggi migliori recenti"
+msgstr "Son yüksekpuanlar"
 
 #: src/GameText.h:759
 msgid "Last levels"
-msgstr "Livelli più recenti"
+msgstr "Son bölümler"
 
 #: src/GameText.h:760
 msgid "Oldest highscores"
-msgstr "Livelli più vecchi"
+msgstr "En eski yüksekpuanlar"
 
 #: src/GameText.h:761
 msgid "Platinum"
-msgstr "Platino"
+msgstr "Platin"
 
 #: src/GameText.h:762
 msgid "Gold"
-msgstr "Oro"
+msgstr "Altın"
 
 #: src/GameText.h:763
 msgid "Silver"
-msgstr "Argento"
+msgstr "Gümüş"
 
 #: src/GameText.h:764
 msgid "Bronze"
-msgstr "Bronzo"
+msgstr "Bronz"
 
 #: src/GameText.h:765
 msgid "No medal"
-msgstr "Nessuna medaglia"
+msgstr "Madalya yok"
 
 #: src/GameText.h:766
 msgid "My levels"
-msgstr "Miei livelli"
+msgstr "Benim bölümlerim"
 
 #: src/GameText.h:767
 msgid "Crappy levels"
-msgstr "Livelli scadenti"
+msgstr "Kötü bölümler"
 
 #: src/GameText.h:768
 msgid "Shortest levels"
-msgstr "Livelli più corti"
+msgstr "Kısa bölümler"
 
 #: src/GameText.h:769
 msgid "Medium levels"
-msgstr "Livelli medi"
+msgstr "Normal bölümler"
 
 #: src/GameText.h:770
 msgid "Long levels"
-msgstr "Livelli lunghi"
+msgstr "Uzun bölümler"
 
 #: src/GameText.h:771
 msgid "Very long levels"
-msgstr "Livelli molto lunghi"
+msgstr "Çok uzun bölümler"
 
 #: src/GameText.h:772
 msgid "Stolen highscores"
-msgstr ""
+msgstr "Çalınan yüksekpuanlar"
 
 #: src/GameText.h:774
 msgid "Levels with no highscore in your room"
-msgstr "Livelli senza punteggio nella stanza"
+msgstr "Odanızdaki yüksekpuansız bölümler"
 
 #: src/GameText.h:776
 msgid "Somebody in the room made a better highscore than yours"
-msgstr "Qualcuno nella stanza ha realizzato un punteggio migliore del tuo"
+msgstr "Odanızdaki birisi sizinkinden daha iyi bir yüksekpuan yaptı"
 
 #: src/GameText.h:777
 msgid "All X-Moto levels"
-msgstr "Tutti i livelli di X-Moto"
+msgstr "Tüm X-Moto bölümleri"
 
 #: src/GameText.h:778
 msgid "New and updated levels since your last check"
-msgstr "Livelli nuovi e aggiornati dall'ultimo controllo"
+msgstr "Son kontrol edişinizden sonraki yeni ve güncelleştirilmiş bölümler"
 
 #: src/GameText.h:779
 msgid "Your favorite levels"
-msgstr "I tuoi livelli preferiti"
+msgstr "Favori bölümleriniz"
 
 #: src/GameText.h:780
 msgid "Your blacklisted levels"
-msgstr "La tua lista nera di livelli"
+msgstr "Kara listenizdeki bölümler"
 
 #: src/GameText.h:781
 msgid "Nicest X-Moto levels according to the web votes"
-msgstr "Livelli migliori secondo i voti sul web"
+msgstr "İnternet oynamalarına göre en hoş X-Moto bölümleri"
 
 #: src/GameText.h:782
 msgid "Hardest X-Moto levels according to the web votes"
-msgstr "Livelli più difficili secondo i voti sul web"
+msgstr "İnternet oynamalarına göre en zor X-Moto bölümleri"
 
 #: src/GameText.h:783
 msgid "Easiest X-Moto levels according to the web votes"
-msgstr "Livelli più facili secondo i voti sul web"
+msgstr "İnternet oynamalarına göre en kolay X-Moto bölümleri"
 
 #: src/GameText.h:784
 msgid "Crappiest X-Moto levels according to the web votes"
-msgstr "Livelli più scadenti secondo i voti sul web"
+msgstr "İnternet oynamalarına göre en kötü X-Moto bölümleri"
 
 #: src/GameText.h:785
 msgid "X-Moto levels which are dynamic"
-msgstr "Livelli dinamici"
+msgstr "Dinamik X-Moto bölümleri"
 
 #: src/GameText.h:786
 msgid "X-Moto levels using strongly physics"
-msgstr ""
+msgstr "Ağırlıklı olarak fizik kullanan X-Moto bölümleri"
 
 #: src/GameText.h:787
 msgid "Last levels you have played"
-msgstr "Ultimi livelli giocati"
+msgstr "Oynadığınız son bölümler"
 
 #: src/GameText.h:788
 msgid "X-Moto levels you never played"
-msgstr "Livelli mai giocati"
+msgstr "Hiç oynamadığınız X-Moto bölümleri"
 
 #: src/GameText.h:789
 msgid "X-Moto levels you have played the most"
-msgstr "Livelli giocati più spesso"
+msgstr "En çok oynadığınız X-Moto bölümleri"
 
 #: src/GameText.h:790
 msgid "X-Moto levels you have played only a few times"
-msgstr "Livelli giocati raramente"
+msgstr "Birkaç kez oynadığınız X-Moto bölümleri"
 
 #: src/GameText.h:791
 msgid "X-Moto levels having a recent highscore in your room"
-msgstr ""
-"Livelli che all'interno della stanza hanno un punteggio migliore recente"
+msgstr "Odanızdaki yüksekpuanlı en son X-Moto bölümleri"
 
 #: src/GameText.h:792
 msgid "Last created X-Moto levels"
-msgstr "Livelli creati di recente"
+msgstr "Son oluşturulan X-Moto bölümü"
 
 #: src/GameText.h:793
 msgid "X-Moto levels having an old highscore in your room"
-msgstr ""
-"Livelli che all'interno della stanza hanno un punteggio migliore vecchio"
+msgstr "Odanızdaki eski bir yüksekpuanı olan X-Moto bölümleri"
 
 #: src/GameText.h:794
 msgid "You have the room highscore"
-msgstr "Detieni il punteggio migliore all'interno della stanza"
+msgstr "Odanın yüksek puanı sizde"
 
 #: src/GameText.h:795
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr ""
-"Il tuo punteggio migliore è vicino al miglior punteggio all'interno della "
-"stanza (95%)"
+"Kişisel yüksekpuanlı bitirme süreniz hemen hemen odanın yüksekpuanınkiyle "
+"aynı (%95)"
 
 #: src/GameText.h:796
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
-"Il tuo punteggio migliore è vicino al miglior punteggio all'interno della "
-"stanza (90%-95%)"
+"Kişisel yüksekpuanlı bitirme süreniz hemen hemen odanın yüksekpuanınkiyle "
+"aynı (%90-%95)"
 
 #: src/GameText.h:797
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
-"Il tuo punteggio migliore è vicino al miglior punteggio all'interno della "
-"stanza (80%-90%)"
+"Kişisel yüksekpuanlı bitirme süreniz hemen hemen odanın yüksekpuanınkiyle "
+"aynı (%80-%90)"
 
 #: src/GameText.h:798
 msgid "The room highscore is really better than your own highscore"
-msgstr "Il punteggio migliore della stanza è parecchio più alto del tuo"
+msgstr "Odanın yüksekpuanı sizinkinden bir hayli yüksek"
 
 #: src/GameText.h:799
 #, c-format
 msgid "Level pack \"%s\""
-msgstr "Pacchetto di livelli \"%s\""
+msgstr "Bölüm paketi \"%s\""
 
 #: src/GameText.h:800
 #, c-format
 msgid "Highscores by %s"
-msgstr "Punteggi migliori di %s"
+msgstr "%s nin yüksekpuanları"
 
 #: src/GameText.h:801
 msgid "External levels (the one you put into the 'My levels' directory)"
-msgstr "Livelli esterni (quelli inseriti della cartella 'My levels')"
+msgstr "Ek bölümler (sizin 'My levels' dizinine koyduklarınız)"
 
 #: src/GameText.h:802
 msgid "Levels marked 'crappy' are hidden in all other packs"
-msgstr ""
-"I livelli definiti 'scadenti' sono nascosti in tutti gli altri pacchetti"
+msgstr "Niteliksiz olarak işaretlenen bölümler diğer tüm paketlerde gizlidir"
 
 #: src/GameText.h:803
 msgid "The shortest levels (less than 25 seconds)"
-msgstr "I livelli più corti (meno di 25 secondi)"
+msgstr "En kısa bölümler (25 saniyeden daha az)"
 
 #: src/GameText.h:804
 msgid "The medium levels (25 seconds to 60)"
-msgstr "I livelli medi (da 25 a 60 secondi)"
+msgstr "Normal bölümler (25 ile 60 saniye arasında)"
 
 #: src/GameText.h:805
 msgid "The long levels (1 minute to 2 minutes)"
-msgstr "I livelli lunghi (da 1 a 2 minuti)"
+msgstr "Uzun bölümler (1 ile 2 dakika arasında)"
 
 #: src/GameText.h:806
 msgid "The longest levels (more than 2 minutes)"
-msgstr "I livelli più lunghi (più di 2 minuti)"
+msgstr "En uzun bölümler (2 dakikadan daha fazla)"
 
 #: src/GameText.h:807
 msgid "Levels for which you owned the highscore"
-msgstr ""
+msgstr "En yüksekpuanı size ait olan bölümler"
 
 #: src/GameText.h:809
 msgid "Ugly mode enabled"
-msgstr "Modalità sgradevole abilitata"
+msgstr "Tatsız kip açıldı"
 
 #: src/GameText.h:810
 msgid "Ugly mode disabled"
-msgstr "Modalità sgradevole disabilitata"
+msgstr "Tatsız kip kapatıldı"
 
 #: src/GameText.h:811
 msgid "Theme mode enabled"
-msgstr "Trame abilitate"
+msgstr "Tema kipi açıldı"
 
 #: src/GameText.h:812
 msgid "Theme mode disabled"
-msgstr "Trame disabilitate"
+msgstr "Tema kipi kapatıldı"
 
 #: src/GameText.h:813
 msgid "UglyOver mode enabled"
-msgstr "Modalità Poligoni abilitata"
+msgstr "ÜsteTatsız kipi açıldı"
 
 #: src/GameText.h:814
 msgid "UglyOver mode disabled"
-msgstr "Modalità Poligoni disabilitata"
+msgstr "ÜsteTatsız kipi kapatıldı"
 
 #: src/GameText.h:815
 msgid "Web connection enabled"
-msgstr "Connessione al web abilitata"
+msgstr "İnternet bağlantısı aktifleştirildi"
 
 #: src/GameText.h:816
 msgid "Web connection disabled"
-msgstr "Connessione al web disabilitata"
+msgstr "İnternet bağlantısı devre dışı bırakıldı"
 
 #: src/GameText.h:817
 msgid "Replay interpolation enabled"
-msgstr "Interpolazione dei replay abilitata"
+msgstr "Tekrar oynatma ekleme aktifleştirildi"
 
 #: src/GameText.h:818
 msgid "Replay interpolation disabled"
-msgstr "Interpolazione dei replay disabilitata"
+msgstr "Tekrar oynatma ekleme devre dışı bırakıldı"
 
 #: src/GameText.h:819
 msgid "Fps enabled"
-msgstr "FPS abilitati"
+msgstr "Saniye başına kare sayısını göster"
 
 #: src/GameText.h:820
 msgid "Fps disabled"
-msgstr "FPS disabilitati"
+msgstr "Saniye başına kare sayısını gizle"
 
 #: src/GameText.h:821
 msgid "Audio enabled"
-msgstr "Audio abilitato"
+msgstr "Ses aktifleştirildi"
 
 #: src/GameText.h:822
 msgid "Audio disabled"
-msgstr "Audio disabilitato"
+msgstr "Ses devre dışı bırakıldı"
 
 #: src/GameText.h:824
 msgid "No training positions stored"
-msgstr "Nessuna posizione di allenamento salvata"
+msgstr ""
 
 #: src/GameText.h:825
 #, c-format
 msgid "Training position %i/%i restored"
-msgstr "Posizione di allenamento %i/%i ripristinata"
+msgstr ""
 
 #: src/GameText.h:826
 #, c-format
 msgid "Stored as training position %i"
-msgstr "Salvata come posizione di allenamento %i"
+msgstr ""
 
 #: src/GameText.h:827
 msgid ""
 "Physic levels recording is still not implemented.\n"
 "Sorry."
 msgstr ""
+"Fizik bölümlerinin kayıt desteği henüz yoktur.\n"
+"Üzgünüz."
 
 #: src/GameText.h:829
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
-msgstr[0] ""
+msgstr[0] "Sonraki %i bölümünün bir yüksekpuanı bulunamadı"
 msgstr[1] ""
 
 #: src/GameText.h:832
 msgid "FontGroup:GENERAL"
-msgstr "FontGroup:GENERAL"
+msgstr "ÖnGrup:GENEL"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."
-msgstr "Innanzitutto diamo uno sguardo all'interfaccia utente..."
+msgstr "İlk önce kullanıcı arayüzüne bir göz atalım..."
 
 #: src/LevelsText.h:22
 msgid "In the upper left corner, you've got your timers"
-msgstr "Nell'angolo in alto a sinistra ci sono i tuoi cronometri"
+msgstr "Sol üst köşede zaman göstergeleriniz var"
 
 #: src/LevelsText.h:23
 msgid "The big one is your current time"
-msgstr "Il più grande è il tuo tempo istantaneo"
+msgstr "Büyük olan sizin o andaki süreniz"
 
 #: src/LevelsText.h:24
 msgid ""
 "The small one to the right is your own best time\n"
 "for the current level..."
 msgstr ""
-"Il più piccolo alla destra è il tuo tempo migliore\n"
-"per il livello corrente..."
+"Sağdaki küçük olan sizin o bölümdeki\n"
+"en iyi süreniz..."
 
 #: src/LevelsText.h:25
 msgid ""
 "... and the one to the left is the best of all\n"
 "on this computer."
-msgstr ""
-"... e quello a sinistra è il migliore di tutti\n"
-"in questo computer."
+msgstr "... ve soldaki ise bu bilgisayardaki en iyi süre."
 
 #: src/LevelsText.h:26
 msgid ""
 "Down here there's the minimap, which shows the level\n"
 "around you, so you know where you're heading."
 msgstr ""
-"In basso c'è la minimappa, che mostra il livello\n"
-"attorno a te, così sai dove stai andando."
+"Aşağıda etrafınızı gösteren minik harita var. \n"
+"Böylece nereye gittiğinizi görebilirsiniz."
 
 #: src/LevelsText.h:27
 msgid "Now let's look at your controls."
-msgstr "Ora vediamo i controlli."
+msgstr "Şimdi kontrollere bakalım."
 
 #: src/LevelsText.h:28
 msgid "(You seem to be using a joystick, can't help with that :P)"
 msgstr ""
-"(Sembra che tu stia usando un joystick, non posso aiutarti con quello :P)"
+"(Oyun kontrolörü kullanıyorsunuz gibi görünüyor.\n"
+"Bu konuda yardımcı olamayacağız :P)"
 
 #: src/LevelsText.h:29
 msgid ": Drive forward"
-msgstr ": Accelera"
+msgstr ": İleri sür"
 
 #: src/LevelsText.h:30
 msgid ": Brake"
-msgstr ": Frena"
+msgstr ": Fren"
 
 #: src/LevelsText.h:31
 msgid ": Change direction"
-msgstr ": Cambia direzione"
+msgstr ": Yön değiştir"
 
 #: src/LevelsText.h:32
 msgid ": Rotate anti-clockwise"
-msgstr ": Ruota in senso antiorario"
+msgstr ": Saat yönünün tersine çevir"
 
 #: src/LevelsText.h:33
 msgid ": Rotate clockwise"
-msgstr ": Ruota in senso orario"
+msgstr ": Saat yönünde çevir"
 
 #: src/LevelsText.h:34
 msgid "Okay. The red dot on your minimap is a strawberry."
-msgstr "Okay. Il punto rosso sulla minimappa è una fragola."
+msgstr "Tamam. Haritanızdaki kırmızı noktalar çilekleri gösteriyor."
 
 #: src/LevelsText.h:35
 msgid ""
 "The primary objective of the game is for you\n"
 "to collect all of them, and then find the flower."
 msgstr ""
-"L'obiettivo principale del gioco è\n"
-"raccoglierle tutte e poi trovare il fiore."
+"Oyundaki temel amacınız tüm çilekleri toplamak\n"
+"ve bundan sonra da çiçeği bulmak."
 
 #: src/LevelsText.h:36
 msgid ""
 "The icon to the right of your time,\n"
 "indicates how many strawberries still left."
 msgstr ""
-"L'icona alla destra del tuo tempo,\n"
-"indica quante fragole devi ancora raccogliere."
+"Sürenizin yanındaki simge,\n"
+"kaç tane çilek kaldığını gösterir."
 
 #: src/LevelsText.h:37
 msgid "Drive in its direction..."
-msgstr "Guida verso di loro..."
+msgstr "Bu yönde sür..."
 
 #: src/LevelsText.h:38
 msgid ""
 "When done, head for the flower.\n"
 "It's the purple dot on your minimap."
 msgstr ""
-"Quando hai finito, vai a prendere il fiore.\n"
-"E' il punto viola sulla tua minimappa."
+"Tamamlandığında, çiçeğe yönlen.\n"
+"Haritadaki mor renkli nokta çiçektir."
 
 #: src/LevelsText.h:39
 msgid "Welcome to X-Moto!"
-msgstr "Benvenuto in X-Moto!"
+msgstr "X-Moto'ya Hoş geldiniz."
 
 #: src/LevelsText.h:40
 msgid ""
 "This level is a short tutorial of\n"
 "how you play the game."
 msgstr ""
-"Questo livello è un breve tutorial\n"
-"su come giocare."
+"Bu X-Moto'yu nasıl oynayacağınızı\n"
+"öğreten kısa bir eğitseldir."
 
 #: src/LevelsText.h:41
 msgid "Please stay put and follow the instructions! :)"
-msgstr "Per favore segui le istruzioni :)"
+msgstr "Lütfen olduğunuz yerde kalın ve açıklamaları takip edin! :)"
 
 #: src/LevelsText.h:42
 msgid "Pick up the strawberry by touching it"
-msgstr "Prendi la fragola toccandola"
+msgstr "Çileğe dokunarak onu alın"
 
 #: src/LevelsText.h:43
 msgid "Touch it to finish the level. Good luck with the rest :)"
-msgstr "Tocca il fiore per finire il livello. Buona fortuna per il resto :)"
+msgstr "Bölümü bitirmek için ona dokunun. Geri kalanında iyi şanslar :)"
 
 #: src/LevelsText.h:44
 msgid "The first jump you're going to perform is very easy."
-msgstr "Il primo salto che affronterai è molto facile."
+msgstr "Gerçkleştireceğiniz ilk atlama çok kolay."
 
 #: src/LevelsText.h:45
 msgid ""
@@ -3075,37 +3092,38 @@ msgid ""
 "the air, try to adjust your attitude with the left\n"
 "and right arrow keys, so you'll land on your wheels."
 msgstr ""
-"Guida verso sinistra, accelera, e quando sei in\n"
-"aria prova ad aggiustare l'orientamento della moto\n"
-"con le frecce, in modo da atterrare sulle ruote."
+"Sola doğru sürün, hızlanın ve havalandığınız zaman\n"
+"dengenizi sağlamak için sol ve sağ yön tuşlarını\n"
+"kullanın, böylece toprağa tek parça olarak inebileceksiniz."
 
 #: src/LevelsText.h:46
 msgid ""
 "The next jump is a bit trickier. You'll need all the\n"
 "speed you can get to reach the other side..."
 msgstr ""
-"Il prossimo salto è un po' più complesso. Avrai bisogno di\n"
-"prendere più velocità possibile per raggiungere l'altra parte..."
+"Sonraki atlayış biraz daha hüner gerektiriyor.\n"
+"Hızlanabildiğiniz kadar hızlanın ve diğer tarafa ulaşmaya çalışın"
 
 #: src/LevelsText.h:47
 msgid "Now for the most difficult jump in this tutorial!"
-msgstr "E ora il salto più difficile del tutorial!"
+msgstr "Şimdi sıra dersimizdeki en zor atlayışta!"
 
 #: src/LevelsText.h:48
 msgid "This time, speed alone won't do the job..."
-msgstr "Questa volta, la velocità da sola non basta..."
+msgstr "Bu sefer sadece hızlanmak işe yaramayacak..."
 
 #: src/LevelsText.h:49
+#, fuzzy
 msgid ""
 "Here's the plan:\n"
 "Again, you'll have to obtain maximum speed, but when\n"
 "you reach the edge of the jump, pull the bike's front\n"
 "wheel up."
 msgstr ""
-"Questo è il piano:\n"
-"Di nuovo, devi raggiungere la massima velocità, ma\n"
-"quando raggiungi la cima della rampa, tira in su la\n"
-"ruota davanti."
+"İşte planımız şöyle:\n"
+"Yine, ulaşabildiğiniz en üst hıza çıkın, fakat\n"
+"atlayışı yapacağınız yere geldiğinizde motosikletin önünü çevirin\n"
+"tekerlekler üst tarafa gelsin."
 
 #: src/LevelsText.h:50 src/LevelsText.h:63
 msgid ""
@@ -3113,47 +3131,40 @@ msgid ""
 "length of the jump.\n"
 "Try it..."
 msgstr ""
-"Questo farà sì che la sospensione posteriore aumenti\n"
-"la lunghezza del salto.\n"
-"Prova..."
 
 #: src/LevelsText.h:51
 msgid "This tutorial will teach you the basics of jumping."
-msgstr "Questo tutorial ti insegnerà le basi del salto."
+msgstr ""
 
 #: src/LevelsText.h:52
 msgid ""
 "Remember you can turn around your bike\n"
 "by pressing :"
-msgstr "Ricorda che puoi girare la tua moto premendo: "
+msgstr ""
 
 #: src/LevelsText.h:53
 msgid "That was pretty easy, right?"
-msgstr "È stato facile, vero?"
+msgstr ""
 
 #: src/LevelsText.h:54
 msgid ""
 "Accelerate NOW! Obtain maximum speed, and try to\n"
 "keep the front wheel at the ground..."
 msgstr ""
-"Accelera ORA! Ottieni la massima velocità, e prova a\n"
-"mantenere la ruota davanti incollata al terreno..."
 
 #: src/LevelsText.h:55
 msgid "Nice jump there! :)"
-msgstr "Ottimo salto! :)"
+msgstr ""
 
 #: src/LevelsText.h:56
 msgid "Congrats, you're now a master jumper!"
-msgstr "Congratulazioni, ora sei un saltatore provetto!"
+msgstr ""
 
 #: src/LevelsText.h:57
 msgid ""
 "The basic idea is that when driving on the rear wheel,\n"
 "your head is lowered quite a lot..."
 msgstr ""
-"L'idea di base è che quando guidi sulla ruota posteriore,\n"
-"la tua testa è abbassata un bel po'..."
 
 #: src/LevelsText.h:58
 msgid ""
@@ -3161,9 +3172,6 @@ msgid ""
 "When the distance you have to drive is quite short,\n"
 "you don't need to keep the balance."
 msgstr ""
-"La parte difficile è mantenere il bilanciamento.\n"
-"Quando la distanza che devi percorrere è breve,\n"
-"non serve mantenere il bilanciamento."
 
 #: src/LevelsText.h:59
 msgid ""
@@ -3172,10 +3180,6 @@ msgid ""
 "combination, and you should be on the other side.\n"
 "Try it..."
 msgstr ""
-"Accelera (piano) verso destra impennando la ruota davanti.\n"
-"Prima che la tua testa urti il blocco, fai una veloce\n"
-"combinazione, e dovresti trovarti dall'altra parte.\n"
-"Prova..."
 
 #: src/LevelsText.h:60
 msgid ""
@@ -3183,9 +3187,6 @@ msgid ""
 "This time keep your hands off the left and right arrow keys,\n"
 "they're not delicate enough to help you keep balance."
 msgstr ""
-"Ora ne proverai uno un po' più difficile...\n"
-"Questa volta non toccare le frecce a sinistra o destra,\n"
-"non sono abbastanza delicate per mantenere il bilanciamento."
 
 #: src/LevelsText.h:61
 msgid ""
@@ -3193,13 +3194,10 @@ msgid ""
 "Try to drive a bit back and forth on your rear wheel,\n"
 "keeping the bike as steady as possible..."
 msgstr ""
-"Piuttosto regola l'angolazione accelerando e frenando.\n"
-"Prova un po' a guidare avanti e indietro sulla ruota\n"
-"posteriore, tenendo la moto più stabile possibile..."
 
 #: src/LevelsText.h:62
 msgid "Try getting under the next obstacle when you feel you're ready."
-msgstr "Prova ad attraversare il prossimo ostacolo non appena ti senti pronto."
+msgstr ""
 
 #: src/LevelsText.h:64
 msgid ""
@@ -3207,65 +3205,39 @@ msgid ""
 "areas where the ceiling is low.\n"
 "Beware that this can be pretty difficult :)"
 msgstr ""
-"Questo tutorial ti insegnerà a impennare in aree\n"
-"dove il soffitto è basso.\n"
-"Attento che può diventare difficile :)"
 
 #: src/LevelsText.h:65
 msgid "Not that difficult, right?"
-msgstr "Non era poi così difficile, no?"
+msgstr "Çok zor değilmiş, değil mi?"
 
 #: src/LevelsText.h:66
 msgid "Nice! Now try the next one, it's a bit more difficult..."
-msgstr "Ottimo! Ora prova il prossimo, è un po' più difficile..."
+msgstr "Güzel! Şimdi bir sonrakini dene, bu biraz daha zor"
 
 #: src/LevelsText.h:67
 msgid "Good job! The next one is even more difficult..."
-msgstr "Bel lavoro! Il prossimo è ancora più difficile..."
+msgstr "İyi iş çıkardın! Bir sonraki biraz daha zor..."
 
 #: src/LevelsText.h:68
 msgid ""
 "Now for the final one... It's not that long, but instead\n"
 "there's even less room for your precious head. Good luck! :)"
 msgstr ""
-"Ora l'ultimo... Non è così lungo, ma c'è ancora meno\n"
-"spazio per la tua preziosissima testa. Buona fortuna! :)"
-
-#~ msgid ""
-#~ "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
-#~ msgstr ""
-#~ "Stop[esc] ||[barra spaziatrice]  << >>[frecce sinistra/destra]  < >"
-#~ "[frecce su/giù]   Velocità:"
-
-#~ msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
-#~ msgstr ""
-#~ "Stop[esc] ||[barra spaziatrice] >>[freccia destra] < >[freccie su/giù  "
-#~ "Velocità:"
+"Şimdi son bir tane... Çok uzun değil ama bunun yerine\n"
+"değerli başın için daha az yer var. İyi şanslar :)"
 
 #~ msgid ""
 #~ "Read the README file or check out the website at\n"
 #~ "http://xmoto.tuxfamily.org for more information."
 #~ msgstr ""
-#~ "Leggi il file README o controlla il sito web all'url\n"
-#~ "http://xmoto.tuxfamily.org per maggiori informazioni."
+#~ "Daha fazla bilgi için README dosyasını okuyun veya\n"
+#~ " http://xmoto.tuxfamily.org adresini kontrol edin"
 
-#~ msgid "Musical levels"
-#~ msgstr "Livelli musicali"
+#~ msgid ""
+#~ "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
+#~ msgstr ""
+#~ "Dur[esc] ||[boşluk]  << >>[sol/sağ tuşları]  < >[yukarı/aşağı tuşları]   "
+#~ "Hız:"
 
-#~ msgid "X-Moto levels with a background music"
-#~ msgstr "Livelli con musica di sottofondo"
-
-#~ msgid "Initializing input system..."
-#~ msgstr "Inizializzazione del sistema di input..."
-
-#~ msgid "Initializing menus..."
-#~ msgstr "Inizializzazione dei menu..."
-
-#~ msgid "Initializing renderer..."
-#~ msgstr "Inizializzazione del render..."
-
-#~ msgid "Initializing text renderer..."
-#~ msgstr "Inizializzazione del render di testo..."
-
-#~ msgid "Enable Music"
-#~ msgstr "Abilita Musica"
+#~ msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
+#~ msgstr "Dur[esc] ||[boşluk] >>[sağ tuş] < >[yukarı/aşağı tuşları]   Hız:"

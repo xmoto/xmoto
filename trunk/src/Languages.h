@@ -45,7 +45,8 @@ const char* LANGUAGES[][3] = {
   {"Русский",     "Russian",     "ru_RU"},
   {"Slovensky",   "Slovensky",   "sk_SK"},
   {"Svenska",     "Svenska",     "sv_SE"},
-  {"Taiwanese",   "繁體中文",     "zh_TW"},
+  {"Taiwanese",   "繁體中文",      "zh_TW"},
+  {"Türkçe",       "Turkce",     "tr_TR"},
   {NULL, NULL, NULL}
 };
 

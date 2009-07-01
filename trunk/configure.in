@@ -122,7 +122,7 @@ AC_LANG_POP()
 
 AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_ERROR(libcurl required)])
 
-ALL_LINGUAS="fr_FR de_DE es_ES ca_ES ca_FR ca_AD ca_IT sk_SK nb_NO nn_NO fi_FI pl_PL ru_RU it_IT sv_SE cs_CZ pt_BR pt_PT lv_LV da_DK hu_HU nl_NL lt_LT zh_TW"
+ALL_LINGUAS="fr_FR de_DE es_ES ca_ES ca_FR ca_AD ca_IT sk_SK nb_NO nn_NO fi_FI pl_PL ru_RU it_IT sv_SE cs_CZ pt_BR pt_PT lv_LV da_DK hu_HU nl_NL lt_LT zh_TW tr_TR"
 AM_GNU_GETTEXT()
 
 dnl Put LOCALESDIR in makefiles
