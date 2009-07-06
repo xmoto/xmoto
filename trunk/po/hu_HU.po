@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-07-01 21:19+0200\n"
-"PO-Revision-Date: 2009-04-28 19:21+0100\n"
+"PO-Revision-Date: 2009-07-02 15:45+0100\n"
 "Last-Translator: Zoltán Balogh <ttapecs@gmail.com>\n"
 "Language-Team: X-moto\n"
 "MIME-Version: 1.0\n"
@@ -397,7 +397,7 @@ msgstr "Litván"
 
 #: src/GameText.h:155
 msgid "Turkish"
-msgstr ""
+msgstr "Török"
 
 #: src/GameText.h:157
 msgid "Main testers"
@@ -862,6 +862,8 @@ msgid ""
 "Use Quick Play button to immediately start a game with a random level,\n"
 "or use Levels button to select from level packs."
 msgstr ""
+"Használd a Gyors Kezdés gombot az azonnali játékkezdéshez véletlen pályán,\n"
+"vagy használd a Pályák gombot, hogy a pályacsomagok közül választhass"
 
 #: src/GameText.h:277 src/GameText.h:305
 msgid ""
@@ -877,6 +879,9 @@ msgid ""
 "http://xmoto.tuxfamily.org\n"
 "for more information."
 msgstr ""
+"Olvasd el a README fájlt vagy lapozgasd a\n"
+"http://xmoto.tuxfamily.org-ot\n"
+"további információkért."
 
 #: src/GameText.h:291
 msgid "change mirror mode"
@@ -884,19 +889,19 @@ msgstr "Átváltás tükör módba"
 
 #: src/GameText.h:292
 msgid "Toggle blacklist"
-msgstr ""
+msgstr "Hozzáadás/eltávolítás a feketelistához"
 
 #: src/GameText.h:293
 msgid "Enable/disable audio"
-msgstr ""
+msgstr "Hang engedélyezése/letiltása"
 
 #: src/GameText.h:294
 msgid "Open options menu"
-msgstr ""
+msgstr "Beállítások menü megnyitása"
 
 #: src/GameText.h:295
 msgid "Show this help"
-msgstr ""
+msgstr "Súgó mutatása"
 
 #: src/GameText.h:296 src/GameText.h:628
 msgid "Show the ghost if possible in the game"
@@ -904,11 +909,11 @@ msgstr "Szellem mutatása a játékban ha lehetséges"
 
 #: src/GameText.h:297
 msgid "Toggle favorite"
-msgstr ""
+msgstr "Hozzáadás/eltávolítás a kedvencekhez"
 
 #: src/GameText.h:298
 msgid "Enable/disable FPS display"
-msgstr ""
+msgstr "FPS kijelzés engedélyezése/letiltása"
 
 #: src/GameText.h:300 src/GameText.h:454
 msgid "Enable/disable ugly mode"
@@ -916,11 +921,11 @@ msgstr "Ronda mód engedélyezése/letiltása"
 
 #: src/GameText.h:301
 msgid "Enable/disable theme mode"
-msgstr ""
+msgstr "Témafigyelő mód engedélyezése/letiltása"
 
 #: src/GameText.h:302
 msgid "Enable/disable ugly over mode"
-msgstr ""
+msgstr "Felülronda mód engedélyezése/letiltása"
 
 #: src/GameText.h:308
 msgid "Hide ghosts"
@@ -1334,7 +1339,7 @@ msgstr "Minőség"
 
 #: src/GameText.h:415
 msgid "Quick start"
-msgstr "Gyors kezdés"
+msgstr "Gyors Kezdés"
 
 #: src/GameText.h:416
 msgid "Quit Game"
@@ -1371,6 +1376,10 @@ msgid ""
 "   < >\n"
 " Speed:"
 msgstr ""
+"  Megállít:\n"
+"    >>\n"
+"   < >\n"
+" Sebesség:"
 
 #: src/GameText.h:424
 msgid ""
@@ -1378,6 +1387,9 @@ msgid ""
 "[right key]\n"
 "[up/down keys]\n"
 msgstr ""
+"[esc] , [space]\n"
+"[jobb]\n"
+"[fel/le]\n"
 
 #: src/GameText.h:425
 msgid ""
@@ -1386,6 +1398,10 @@ msgid ""
 "   < >\n"
 " Speed:"
 msgstr ""
+"  Megállít:\n"
+"<< >>\n"
+"   < >\n"
+" Sebesség:"
 
 #: src/GameText.h:426
 msgid ""
@@ -1393,6 +1409,9 @@ msgid ""
 "[left/right keys]\n"
 "[up/down keys]\n"
 msgstr ""
+"[esc] , [space]\n"
+"[bal/jobb]\n"
+"[fel/le]\n"
 
 #: src/GameText.h:427
 msgid "The replay can't be played!"
@@ -3212,17 +3231,3 @@ msgid ""
 msgstr ""
 "Most az utolsó... Ez nem olyan hosszú, de helyette\n"
 "még kevesebb hely van a drága fejednek. Sok sikert! :)"
-
-#~ msgid ""
-#~ "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
-#~ msgstr "Megállít[esc] ||[space] <<>>[bal/jobb] <>[fel/le] Sebesség:"
-
-#~ msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
-#~ msgstr "Megállít[esc] ||[space] >>[jobb] <>[fel/le] Sebesség:"
-
-#~ msgid ""
-#~ "Read the README file or check out the website at\n"
-#~ "http://xmoto.tuxfamily.org for more information."
-#~ msgstr ""
-#~ "Olvasd el a README fájlt vagy lapozgasd a\n"
-#~ "http://xmoto.tuxfamily.org-ot további információkért."
