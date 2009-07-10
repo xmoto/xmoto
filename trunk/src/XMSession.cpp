@@ -128,6 +128,7 @@ void XMSession::setToDefault() {
   m_hidePlayingInformation        = DEFAULT_HIDEPLAYINGINFORMATION;
   m_enableInitZoom                = DEFAULT_ENABLEINITZOOM;
   m_enableActiveZoom              = DEFAULT_ENABLEACTIVEZOOM;
+  m_enableTrailCam                = DEFAULT_ENABLETRAILCAM;
   m_dbsynchronizeOnQuit           = DEFAULT_DBSYNCHRONIZEONQUIT;
   m_enableJoysticks               = DEFAULT_ENABLEJOYSTICKS;
   m_beatingMode                   = DEFAULT_BEATINGMODE;
@@ -308,6 +309,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_enableGameMusic                = pDb->config_getBool   (i_id_profile, "GameMusic"                     , m_enableGameMusic  );
   m_enableInitZoom           	   = pDb->config_getBool   (i_id_profile, "InitZoom"                      , m_enableInitZoom   );
   m_enableActiveZoom         	   = pDb->config_getBool   (i_id_profile, "CameraActiveZoom"              , m_enableActiveZoom );
+  m_enableTrailCam                 = pDb->config_getBool   (i_id_profile, "CameraTrailCam"                , m_enableTrailCam   );
   m_enableDeadAnimation      	   = pDb->config_getBool   (i_id_profile, "DeathAnim"                     , m_enableDeadAnimation);
   m_checkNewLevelsAtStartup        = pDb->config_getBool   (i_id_profile, "CheckNewLevelsAtStartup"       , m_checkNewLevelsAtStartup);
   m_checkNewHighscoresAtStartup    = pDb->config_getBool   (i_id_profile, "CheckHighscoresAtStartup"  , m_checkNewHighscoresAtStartup);
@@ -442,6 +444,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "GameMusic"                     , m_enableGameMusic);
 	pDb->config_setBool   (m_profile, "InitZoom"                      , m_enableInitZoom);
 	pDb->config_setBool   (m_profile, "CameraActiveZoom"              , m_enableActiveZoom);
+	pDb->config_setBool   (m_profile, "CameraTrailCam"                , m_enableTrailCam);
 	pDb->config_setBool   (m_profile, "DeathAnim"                     , m_enableDeadAnimation);
 	pDb->config_setBool   (m_profile, "CheckNewLevelsAtStartup"       , m_checkNewLevelsAtStartup);
 	pDb->config_setBool   (m_profile, "CheckHighscoresAtStartup"      , m_checkNewHighscoresAtStartup);
@@ -796,6 +799,15 @@ void XMSession::setEnableActiveZoom(bool i_value) {
 
 bool XMSession::enableActiveZoom() const {
   return m_enableActiveZoom;
+}
+
+void XMSession::setEnableTrailCam(bool i_value) {
+  PROPAGATE(XMSession,setEnableTrailCam,i_value,bool);
+  m_enableTrailCam = i_value;
+}
+
+bool XMSession::enableTrailCam() const {
+  return m_enableTrailCam;
 }
 
 void XMSession::setEnableDeadAnimation(bool i_value) {

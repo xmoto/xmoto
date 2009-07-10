@@ -73,6 +73,16 @@ FileGhost::FileGhost(std::string i_replayFile, PhysicsSettings* i_physicsSetting
   m_replay = new Replay();
   v_levelId = m_replay->openReplay(i_replayFile, v_playerName);
 
+  
+  
+  // all states for Ghost Trail
+  unsigned int i=0;
+  while( !m_replay->endOfFile()) {
+    m_allGhostBikeStates.push_back(new BikeState(m_physicsSettings));
+    m_replay->loadState(m_allGhostBikeStates[i], m_physicsSettings);
+    i++;
+  }
+  
   // 4 states for cubical interpolation
 
   // 50% of states are before the time T, 50% are after
@@ -80,6 +90,7 @@ FileGhost::FileGhost(std::string i_replayFile, PhysicsSettings* i_physicsSetting
   m_ghostBikeStates.push_back(new BikeState(m_physicsSettings));
   m_ghostBikeStates.push_back(new BikeState(m_physicsSettings));
   m_ghostBikeStates.push_back(new BikeState(m_physicsSettings));
+
 
   for(unsigned int i=0; i<m_ghostBikeStates.size(); i++) {
     m_replay->peekState(m_ghostBikeStates[i], m_physicsSettings);
@@ -89,11 +100,15 @@ FileGhost::FileGhost(std::string i_replayFile, PhysicsSettings* i_physicsSetting
   m_isActiv = i_isActiv;
   m_linearVelocity = 0.0;
   m_teleportationOccured = false;
+  
 }
 
 FileGhost::~FileGhost() {
   for(unsigned int i=0; i<m_ghostBikeStates.size(); i++) {
     delete m_ghostBikeStates[i];
+  }
+  for(unsigned int i=0; i<m_allGhostBikeStates.size(); i++) {
+    delete m_allGhostBikeStates[i];
   }
 }
 
@@ -401,3 +416,6 @@ std::string ReplayBiker::getQuickDescription() const {
 std::string ReplayBiker::getVeryQuickDescription() const {
   return m_replay->getPlayerName();
 }
+
+
+

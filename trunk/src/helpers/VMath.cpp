@@ -30,6 +30,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define ABS(x) ((x) > 0.0 ? (x) : -(x))
 
+
+/*===========================================================================
+  Simple Interpolation
+  ===========================================================================*/
+float SimpleInterpolate(float i_old,float i_new,float i_smooth){
+	return i_old + (i_new - i_old) * (1.0 / i_smooth);
+}
+
 /*===========================================================================
   Bounding Circle
   ===========================================================================*/

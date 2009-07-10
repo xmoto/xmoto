@@ -396,6 +396,8 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   xmscene/BikeGhost.cpp \
   xmscene/BikePlayer.h  \
   xmscene/BikePlayer.cpp \
+  xmscene/GhostTrail.h\
+  xmscene/GhostTrail.cpp\
   xmscene/Camera.h \
   xmscene/Camera.cpp \
   xmscene/ChipmunkWorld.cpp \

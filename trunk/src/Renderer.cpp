@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Bike.h"
 #include "xmscene/BikeGhost.h"
 #include "xmscene/BikePlayer.h"
+#include "xmscene/GhostTrail.h"
 #include "helpers/Log.h"
 #include "helpers/Text.h"
 #include "drawlib/DrawLib.h"
@@ -61,6 +62,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //for ScreenShadowing
 #define MENU_SHADING_TIME 0.3
 #define MENU_SHADING_VALUE 150
+
+//for ghost trail
+#define FINE_TRAIL_SCALE 0.3
+#define UGLY_TRAIL_SCALE 0.3
+#define FINE_TRAIL_COLOR 255
+#define UGLY_TRAIL_COLOR 80
 
   /* to sort blocks on their texture */
   struct AscendingTextureSort {
@@ -245,12 +252,16 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     m_arrowSprite = (MiscSprite*)Theme::instance()->getSprite(SPRITE_TYPE_MISC, "Arrow");
     m_arrowSprite->loadTextures();
   }
-
+//  loadGhostTrail(i_universe->getScenes()[0]);
+//  i_universe->getScenes()[0]->Cameras()[0]->setRenderGhostTrail(false);
+  
   endTexturesRegistration();
 }
 
 void GameRenderer::initCameras(Universe* i_universe)
 {
+  loadGhostTrail(i_universe->getScenes()[0]);
+ 
   for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
     unsigned int numberCamera = i_universe->getScenes()[j]->getNumberCameras();
     if(numberCamera > 1){
@@ -259,6 +270,7 @@ void GameRenderer::initCameras(Universe* i_universe)
     for(unsigned int i=0; i<numberCamera; i++){
       i_universe->getScenes()[j]->setCurrentCamera(i);
       i_universe->getScenes()[j]->getCamera()->prepareForNewLevel();
+      i_universe->getScenes()[j]->getCamera()->initTrailCam(i_universe->getScenes()[j]);
     }
   }
 }
@@ -656,6 +668,13 @@ void GameRenderer::calculateEdgeTexture(Block* pBlock,
     ua2.y = ub2.y = 0.99;
   }
     break;
+  }
+}
+
+void GameRenderer::loadGhostTrail(Scene* i_scene) {
+  FileGhost* v_ghost = i_scene->getFileGhost();
+  if( v_ghost != 0) {
+    i_scene->getGhostTrail()->initGhostTrail(v_ghost);
   }
 }
 
@@ -1136,6 +1155,83 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
   }
 }
 
+//by tuhoojabotti
+void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i_scale) {
+	//get trail data
+  GhostTrail* v_ghostTrail = i_scene->getGhostTrail(); if(v_ghostTrail == 0){return;}
+  std::vector<Vector2f>* v_ghostTrailData = v_ghostTrail->getGhostTrailData();
+	//setup colors and stuff
+	TColor c = TColor(FINE_TRAIL_COLOR,FINE_TRAIL_COLOR,0,255);
+	float fSize=0;
+	float v_last_size=1;
+	int lines_drawn=0;
+	int v_offset=0;
+	//grab rendering device
+	DrawLib* pDrawlib = GameApp::instance()->getDrawLib(); if(pDrawlib==0){return;}
+	//draw nice or ugly?
+	if(XMSession::instance()->ugly() == false) {
+		v_offset=1; //default
+	  for(unsigned int i=0; i < (*v_ghostTrailData).size(); i=i+v_offset) {
+			if (!(i>0)){v_last_size=0.1;continue;}
+			//get speed/size
+			float xdiff=(*v_ghostTrailData)[i-v_offset].x - (*v_ghostTrailData)[i].x;if(xdiff<0){xdiff=-xdiff;}
+			float ydiff=(*v_ghostTrailData)[i-v_offset].y - (*v_ghostTrailData)[i].y;if(ydiff<0){ydiff=-ydiff;}
+			fSize=sqrt(pow(xdiff,2)+pow(ydiff,2));	
+			if(fSize>v_last_size*2){v_last_size=0.1f; continue;} //if the size (=speed) has doupled then skip (must be teleport)		
+			if(fSize>1){fSize=1;} if(fSize<0.1f){fSize=0.1f;}    //max and min sizes
+			//we need to check that the line is inside the screen, why to draw 2000-5000 lines when we can draw 100 by skipping non-visible ones.
+			Vector2f scr_max = i_screenBBox->getBMax();Vector2f scr_min = i_screenBBox->getBMin();Vector2f point = (*v_ghostTrailData)[i];
+			if(scr_max.x < point.x - xdiff*2){v_last_size=fSize;continue;}if(scr_min.x > point.x + xdiff*2){v_last_size=fSize;continue;}//x-axis
+			if(scr_max.y < point.y - ydiff*2){v_last_size=fSize;continue;}if(scr_min.y > point.y + ydiff*2){v_last_size=fSize;continue;}//y-axis
+			//speed change? Make it smooth!
+			if(v_last_size>fSize){fSize=fSize+(v_last_size-fSize)/1.3;}
+			c.setGreen(FINE_TRAIL_COLOR-(fSize*FINE_TRAIL_COLOR));//set fancy colour
+			//render at last!
+			pDrawlib->DrawLine(
+					(*v_ghostTrailData)[i-v_offset], 												//start pos
+					(*v_ghostTrailData)[i],   												//end pos
+					MAKE_COLOR(c.Red(),c.Green(),c.Blue(),c.Alpha()), //color
+					(v_last_size*FINE_TRAIL_SCALE*i_scale), 					//start size
+					(fSize*FINE_TRAIL_SCALE*i_scale),						 			//end size
+					true //ROUND OH YEAH! ;-)      			              //toggle rounded ends
+			);
+			lines_drawn++;
+			v_last_size=fSize;
+  	}
+	}else{ //UGLY MODE
+		v_offset=5;
+		c.setRed(UGLY_TRAIL_COLOR); //darker color in ugly mode
+		for(unsigned int i=0; i < (*v_ghostTrailData).size(); i=i+v_offset) {
+			if (!(i>0)){v_last_size=0.1;continue;}
+			//get speed/size
+			float xdiff=(*v_ghostTrailData)[i-v_offset].x - (*v_ghostTrailData)[i].x;if(xdiff<0){xdiff=-xdiff;}
+			float ydiff=(*v_ghostTrailData)[i-v_offset].y - (*v_ghostTrailData)[i].y;if(ydiff<0){ydiff=-ydiff;}
+			fSize=sqrt(pow(xdiff,2)+pow(ydiff,2))/6;			
+			if(fSize>v_last_size*2){v_last_size=0.1f; continue;} //if the size has doupled then skip (must be teleport)
+			if(fSize>1){fSize=1;} if(fSize<0.1f){fSize=0.1f;}    //max and min sizes
+			//we need to check that the line is inside the screen, why to draw 2000-5000 lines when we can draw 100 by skipping non-visible ones.
+			Vector2f scr_max = i_screenBBox->getBMax();Vector2f scr_min = i_screenBBox->getBMin();Vector2f point = (*v_ghostTrailData)[i];
+			if(scr_max.x < point.x - xdiff){v_last_size=fSize;continue;}if(scr_min.x > point.x + xdiff){v_last_size=fSize;continue;}//x-axis
+			if(scr_max.y < point.y - ydiff){v_last_size=fSize;continue;}if(scr_min.y > point.y + ydiff){v_last_size=fSize;continue;}//y-axis
+			c.setGreen(UGLY_TRAIL_COLOR-(fSize*UGLY_TRAIL_COLOR));//set fancy colour
+			//finally render!
+			pDrawlib->DrawLine(
+					(*v_ghostTrailData)[i-v_offset], 												//start pos
+					(*v_ghostTrailData)[i],   												//end pos
+					MAKE_COLOR(c.Red(),c.Green(),c.Blue(),c.Alpha()), //color
+					(v_last_size*UGLY_TRAIL_SCALE*i_scale), 					//start size
+					(fSize*UGLY_TRAIL_SCALE*i_scale),       					//end size
+					false //UGLY :')                 									//toggle rounded ends
+			);
+			v_last_size=fSize;
+			lines_drawn++;
+		}	
+	} 
+	//print amount of lines drawn, usefull for testing.
+	//std::stringstream out; out << lines_drawn;
+	//i_scene->gameMessage("drawed "+out.str()+" lines.", true, 50);
+}
+
 void GameRenderer::displayArrowIndication(Biker* i_biker, AABB *i_screenBBox) {
   Vector2f v_arrowPoint;
   float v_arrowAngle;
@@ -1376,7 +1472,7 @@ int GameRenderer::nbParticlesRendered() const {
     for(unsigned int i=0; i<i_scene->Ghosts().size(); i++) {
       Ghost* v_ghost = i_scene->Ghosts()[i];
       v_textOffset = 0.0;
-
+     
       for(unsigned int j=0; j<i; j++) {
 	if(fabs(i_scene->Ghosts()[j]->getState()->CenterP.x - v_ghost->getState()->CenterP.x) < 2.0 &&
 	   fabs(i_scene->Ghosts()[j]->getState()->CenterP.y - v_ghost->getState()->CenterP.y) < 2.0
@@ -1387,6 +1483,9 @@ int GameRenderer::nbParticlesRendered() const {
 
       if(v_ghost != pCamera->getPlayerToFollow()) {
 	_RenderGhost(i_scene, v_ghost, i, v_textOffset);
+        if(i_scene->getGhostTrail()->getRenderGhostTrail()) {
+        	_RenderGhostTrail(i_scene, &m_screenBBox, m_sizeMultOfEntitiesToTake); 
+        }
       } else {
 	v_found = true;
 	v_found_i = i;
@@ -1396,7 +1495,8 @@ int GameRenderer::nbParticlesRendered() const {
     /* draw the player to follow over the others */
     if(v_found) {
       _RenderGhost(i_scene, i_scene->Ghosts()[v_found_i], v_found_i, v_found_textOffset);
-    }
+      
+    } 
 
     /* ... followed by the bike ... */
     v_found = false;

@@ -202,6 +202,48 @@ void DrawLib::checkFontPrerequites() {
   }
   
     
+	//another function for circle (that other one didn't work when I tried using it.)
+	void DrawLib::DrawFilledCircle(unsigned int nSteps,Color CircleColor,const Vector2f &C,float fRadius) {
+		//DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
+		setTexture(NULL, BLEND_MODE_NONE);
+		bool bAlpha = false;/* Alpha? */
+		if(GET_ALPHA(CircleColor) != 255){bAlpha = true;}
+		if(bAlpha){setBlendMode(BLEND_MODE_A);}
+		startDraw(DRAW_MODE_POLYGON);
+		if(bAlpha){setBlendMode(BLEND_MODE_A);}
+		setColor(CircleColor);
+		for(unsigned int i=0;i<nSteps;i++) {
+			float r = (PI * 2.0f * (float)i)/ (float)nSteps;            
+			glVertex( Vector2f(C.x + fRadius*sinf(r),C.y + fRadius*cosf(r)) );
+		}      
+		endDraw();
+	 	if(bAlpha){setBlendMode(BLEND_MODE_NONE);}
+	} 
+	//a function to draw a fancy line. (used to render the ghost trail) by tuhoojabotti
+	void DrawLib::DrawLine(Vector2f& i_p1, Vector2f& i_p2,const Color& i_color, float i_thickness1, float i_thickness2, bool i_rounded){
+		setTexture(NULL, BLEND_MODE_NONE);
+		//declare
+		float xd=i_p1.x-i_p2.x; float yd=i_p1.y-i_p2.y; //get differences
+		float ang=atan2(yd,xd)+(90 / 57.29578f); //calculate angle to make thickness
+		Vector2f p1,p2,p3,p4; //declare line draw points
+		//calculate!
+		p1=Vector2f(i_p1.x+cos(ang)*-i_thickness1/2,i_p1.y+sin(ang)*-i_thickness1/2);
+		p2=Vector2f(i_p1.x+cos(ang+PI*2)*i_thickness1/2,i_p1.y+sin(ang+PI*2)*i_thickness1/2);
+		p3=Vector2f(i_p2.x+cos(ang+PI*2)*i_thickness2/2,i_p2.y+sin(ang+PI*2)*i_thickness2/2);
+		p4=Vector2f(i_p2.x+cos(ang)*-i_thickness2/2,i_p2.y+sin(ang)*-i_thickness2/2);	
+		//DRAW!
+		startDraw(DRAW_MODE_POLYGON);      
+		setColor(i_color);
+		glVertex(p1);glVertex(p2);glVertex(p3);glVertex(p4);
+		endDraw();  		
+		//round the ends
+		if(i_rounded==true){
+			if(i_thickness1>0.045){DrawFilledCircle(20,i_color,i_p1,i_thickness1/2);}
+			if(i_thickness2>0.045){DrawFilledCircle(20,i_color,i_p2,i_thickness2/2);}
+		}
+	}  
+
+
   /*===========================================================================
   Primitive: circle
   ===========================================================================*/
@@ -353,10 +395,10 @@ void DrawLib::drawImageTextureSet(const Vector2f &a,const Vector2f &b, const Vec
     startDraw(DRAW_MODE_POLYGON);
     setColor(Tint);
 
-    if(a.x == d.x && a.y == b.y && c.x == b.x && c.y == d.y ||
-       d.x == c.x && d.y == a.y && b.x == a.x && b.y == c.y ||
-       c.x == b.x && c.y == d.y && a.x == d.x && a.y == b.y ||
-       b.x == a.x && b.y == c.y && d.x == c.x && d.y == a.y
+    if((a.x == d.x && a.y == b.y && c.x == b.x && c.y == d.y) ||
+       (d.x == c.x && d.y == a.y && b.x == a.x && b.y == c.y) ||
+       (c.x == b.x && c.y == d.y && a.x == d.x && a.y == b.y) ||
+       (b.x == a.x && b.y == c.y && d.x == c.x && d.y == a.y)
        ) { // simple case, no rotation, 90, 180, 270
       v_absorb = 0.00;
     } else {

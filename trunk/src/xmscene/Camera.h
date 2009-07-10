@@ -23,6 +23,7 @@
 
 #include "../VCommon.h"
 #include "Bike.h"
+#include "GhostTrail.h"
 
 struct CameraGhostVisibility {
   bool isIn;
@@ -55,6 +56,7 @@ private:
 class Camera {
 public:
   Camera(Vector2i upperleft, Vector2i downright);
+  ~Camera();
   void  setAbsoluteZoom(float i_absZoom);
   void  setRelativeZoom(float i_relZoom);
   void  desactiveActionZoom();
@@ -105,6 +107,7 @@ public:
   void adaptRotationAngleToGravity(Vector2f& gravity);
 
   void allowActiveZoom(bool i_value);
+  void allowTrailCam(bool i_value);
 
   // assume that a ghost added is never removed and do not change of id (which is the case)
   void clearGhostsVisibility();
@@ -113,6 +116,17 @@ public:
   bool isGhostIn(unsigned int i);
   float getGhostLastIn(unsigned int i);
 
+  // trail cam stuff
+  void initTrailCam(Scene* i_scene);
+  Vector2f updateTrailCam();
+  void trailCamTrackingShot();
+  void setActivateTrackingShot(bool i_shot) {m_trackingShotActivated = i_shot;};
+  void toggleTrackingShot(Scene* i_scene);
+  void toggleTrailCam();
+  unsigned int locateNearestPointOnInterpolatedTrail(bool i_optimize);
+  void checkIfNearTrail();                           //updates m_catchTrail
+  bool getTrailAvailable() { return m_trailAvailable; };
+  
 private:
   bool  m_mirrored;
   float m_rotationAngle;
@@ -131,7 +145,20 @@ private:
   bool  m_useActiveZoom; // enable/disable activ zoom for this camera ; some actions disable it (like user zooming, script zooming)
   float m_initialZoom;
   bool m_allowActiveZoom; // globally enable active zoom feature for this camera
+
+  // trail cam stuff  
+  GhostTrail* m_ghostTrail;
+  unsigned int m_currentNearestTrailDataPosition;
+  bool m_useTrailCam;
+  bool m_trackingShotActivated;
+  bool m_catchTrail; // set true if cam is near the ghost trail
+//  bool m_renderGhostTrail;
+//  bool m_renderGhostTrailBeforeTS;
+  bool m_trailAvailable;
+  float m_trackShotIndex; // current step on ghost trail
+  unsigned int m_trackShotStartIndex;
   
+  // basic cam control
   float m_cameraOffsetX;
   float m_cameraOffsetY;
   Biker* m_playerToFollow;
