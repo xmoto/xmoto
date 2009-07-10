@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/Camera.h"
 #include "../XMSession.h"
 #include "../xmscene/BikePlayer.h"
+#include "../xmscene/BikeGhost.h"
 #include "StateMessageBox.h"
 #include "StateDownloadGhost.h"
 #include "../drawlib/DrawLib.h"
@@ -181,7 +182,8 @@ void StatePreplaying::enter()
   } else {
     playLevelMusic();
   }
-
+ 
+//   m_universe->getScenes()[0]->getCamera()->getGhostTrail()->initGhostTrail(m_universe->getScenes()[0]->getFileGhost());
   /* prepare stats */
   makeStatsStr();
 }

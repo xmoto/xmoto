@@ -165,6 +165,8 @@ public:
   bool enableInitZoom() const;
   void setEnableActiveZoom(bool i_value);
   bool enableActiveZoom() const;
+  void setEnableTrailCam(bool i_value);
+  bool enableTrailCam() const;
   void setEnableDeadAnimation(bool i_value);
   bool enableDeadAnimation() const;
   void setMenuGraphics(GraphicsLevel i_value);
@@ -334,6 +336,7 @@ public:
   bool m_enableGameMusic;
   bool m_enableInitZoom; /* true: Perform initial level scroll/zoom */
   bool m_enableActiveZoom;
+  bool m_enableTrailCam;
   bool m_enableDeadAnimation;
   GraphicsLevel m_menuGraphics;
   GraphicsLevel m_gameGraphics;

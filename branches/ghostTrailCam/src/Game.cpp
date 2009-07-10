@@ -155,6 +155,7 @@ GameApp::~GameApp() {
 
   StateManager::cleanStates();
   delete m_userConfig;
+//  delete m_fileGhost;
 }
 
 GameApp::GameApp() {
@@ -591,7 +592,8 @@ void GameApp::addGhosts(Scene* i_motogame, Theme* i_theme) {
 
       if(v_replay_BESTOFROOM[i] != "" && v_exists == false) {
 	LogInfo("add ghost %s", v_replay_BESTOFROOM[i].c_str());
-	i_motogame->addGhostFromFile(v_replay_BESTOFROOM[i],
+
+        i_motogame->addGhostFromFile(v_replay_BESTOFROOM[i],
 				     xmDatabase::instance("main")->webrooms_getName(XMSession::instance()->idRoom(i)), i==0,
 				     Theme::instance(), Theme::instance()->getGhostTheme(),
 				     TColor(255,255,255,0),
@@ -599,7 +601,7 @@ void GameApp::addGhosts(Scene* i_motogame, Theme* i_theme) {
 					    GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
 					    GET_BLUE(i_theme->getGhostTheme()->getUglyRiderColor()),
 					    0)
-				     );
+			   );
       }
     }
   }

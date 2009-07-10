@@ -191,6 +191,9 @@ class DrawLib {
    **/
   virtual void flushGraphics() = 0;
 
+  /* For Ghost Trail */
+	void DrawFilledCircle(unsigned int nSteps,Color CircleColor,const Vector2f &C,float fRadius);
+	void DrawLine(Vector2f& i_p1, Vector2f& i_p2,const Color& i_color, float i_thickness1, float i_thickness2, bool i_rounded);
   /* Methods - primitives */
   virtual void drawCircle(const Vector2f & Center, float fRadius,
 			  float fBorder = 1.0f, Color Back =

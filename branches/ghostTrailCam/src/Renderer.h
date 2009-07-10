@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 #include "gui/basic/GUI.h"
 #include "XMSession.h"
+#include "xmscene/BikeGhost.h"
 
 #ifdef ENABLE_OPENGL
 #include "include/xm_OpenGL.h"
@@ -217,6 +218,7 @@ private:
   float             m_currentEdgeMaterialScale;
   float             m_currentEdgeMaterialDepth;
 
+  //GhostTrail* m_ghostTrail;
 
   float m_xScale;
   float m_yScale;
@@ -269,7 +271,7 @@ private:
   void _RenderZone(Zone *i_zone);
 
   void _RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_textOffset);
-
+  void _RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i_scale);
   void _RenderDebugInfo(void);
   
   void _RenderScreenShadow(Scene* i_scene);
@@ -284,6 +286,7 @@ private:
   void renderTimePanel(Scene* i_scene);
   void renderReplayHelpMessage(Scene* i_scene);
 
+  void loadGhostTrail(Scene* i_scene);
   Texture* loadTexture(std::string textureName);
   Texture* loadTextureEdge(std::string textureName);
   int  edgeGeomExists(Block* pBlock, std::string texture);

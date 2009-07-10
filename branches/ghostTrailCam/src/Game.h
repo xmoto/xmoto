@@ -159,6 +159,8 @@ public:
   NetServer* standAloneServer();
 
   static void wait(int& io_lastFrameTimeStamp, int& io_frameLate, int i_maxFps);
+  
+ // inline FileGhost* getFileGhost() { return m_fileGhost; };
 
 protected:
   void createDefaultConfig();
@@ -171,6 +173,7 @@ private:
   void uninitNetwork();
 
   ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
+//  FileGhost* m_fileGhost;     /* link to the File Ghost to make it accessible in Renderer*/
 
   std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
 

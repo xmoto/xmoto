@@ -418,7 +418,7 @@ inline int randomIntNum(int nMin, int nMax)
 void intersectLineLine2fCramer(Vector2f A1, Vector2f A2, Vector2f B1, Vector2f B2, Vector2f& contactPoint);
 void calculatePointOnNormal(Vector2f& A1, Vector2f& B1, float length, bool inside, Vector2f& A2, Vector2f& B2);
 void calculatePointOnVector(Vector2f& A1, Vector2f& A2, float length, Vector2f& newA2);
-
+float SimpleInterpolate(float i_old,float i_new,float i_smooth);
 float interpolation_cubic(float i_a, float i_b, float i_c, float i_d, float t);
 Vector2f interpolation_cubic(Vector2f i_a, Vector2f i_b, Vector2f i_c, Vector2f i_d, float t);
 

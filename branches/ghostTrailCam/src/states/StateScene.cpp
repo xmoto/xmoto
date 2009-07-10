@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMainMenu.h"
 #include "../net/NetClient.h"
 #include "../net/NetActions.h"
+#include "../SysMessage.h"
 
 #define INPLAY_ANIMATION_TIME 1.0
 #define INPLAY_ANIMATION_SPEED 10
@@ -293,6 +294,20 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
       m_universe->switchFollowCamera();
     }
   }
+  
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F4, KMOD_NONE)) {
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  if(m_universe->getScenes()[j]->Cameras()[i]->getTrailAvailable()) {
+            m_universe->getScenes()[j]->Cameras()[i]->toggleTrackingShot(m_universe->getScenes()[j]);
+          } else {
+            SysMessage::instance()->displayText(SYS_MSG_TRAIL_NA);
+          }
+        }
+      }
+    }
+  }
 
   else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchFavorite()) {
     if(m_universe != NULL) {
@@ -319,7 +334,41 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_PAGEDOWN, KMOD_NONE)) {
     nextLevel(false);
   }
+  
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_t, KMOD_LCTRL)) {
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->toggleTrailCam();
+	  if(m_universe->getScenes()[j]->Cameras()[i]->getTrailAvailable() == false) {
+	    SysMessage::instance()->displayText(SYS_MSG_TRAILCAM_NA);
+	  }
+	  else if(XMSession::instance()->enableTrailCam()) {
+	    SysMessage::instance()->displayText(SYS_MSG_TRAILCAM_ACTIVATED);
+	  }
+	  else SysMessage::instance()->displayText(SYS_MSG_TRAILCAM_DEACTIVATED);
+        }
+      }
+    }
+  }
 
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_g, KMOD_LCTRL)) {
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+          m_universe->getScenes()[j]->getGhostTrail()->toggleRenderGhostTrail();
+	  if(m_universe->getScenes()[j]->Cameras()[i]->getTrailAvailable() == false) {
+	    SysMessage::instance()->displayText(SYS_MSG_TRAIL_NA);
+	  }
+	  else if(m_universe->getScenes()[j]->getGhostTrail()->getRenderGhostTrail()) {
+	    SysMessage::instance()->displayText(SYS_MSG_TRAIL_VISIBLE);
+	  }
+	  else SysMessage::instance()->displayText(SYS_MSG_TRAIL_INVISIBLE);
+        }
+      }
+    }
+  }
+  
 #if defined(ENABLE_DEV)
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP7, KMOD_NONE)) {
     /* Zoom in */

@@ -144,6 +144,12 @@ void StateOptions::checkEvents() {
     v_button->setClicked(false);
     XMSession::instance()->setEnableActiveZoom(v_button->getChecked()); 
   }
+  
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:CAMERATRAILCAM"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setEnableTrailCam(v_button->getChecked()); 
+  } 
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:BEATINGMODE"));
   if(v_button->isClicked()) {
@@ -754,8 +760,17 @@ UIWindow* StateOptions::makeWindowOptions_general(UIWindow* i_parent) {
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_CAMERAACTIVEZOOM);
 
+  /* Button to enable/disable trail cam */
+  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 123-10, GAMETEXT_CAMERATRAILCAM,
+			  (v_window->getPosition().nWidth-40)/2, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("CAMERATRAILCAM");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(50023);
+  v_button->setContextHelp(CONTEXTHELP_CAMERATRAILCAM);
+
   /* Button to enable/disable beating mode */
-  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 123-10, GAMETEXT_BEATINGMODE,
+  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 153-10, GAMETEXT_BEATINGMODE,
 			  (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("BEATINGMODE");
@@ -1420,6 +1435,8 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->enableDeadAnimation());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:CAMERAACTIVEZOOM"));
   v_button->setChecked(XMSession::instance()->enableActiveZoom());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:CAMERATRAILCAM"));
+  v_button->setChecked(XMSession::instance()->enableTrailCam());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:ENABLECONTEXTHELP"));
   v_button->setChecked(XMSession::instance()->enableContextHelp());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:AUTOSAVEREPLAYS"));

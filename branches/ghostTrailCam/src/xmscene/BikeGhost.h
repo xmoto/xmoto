@@ -70,8 +70,11 @@ class FileGhost : public Ghost {
   float getBikeEngineSpeed();
   float getBikeLinearVel();
   double getAngle();
+  Replay* getReplay() { return m_replay; };
 
   virtual void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
+
+  inline std::vector<BikeState*>* getAllGhostBikeStates() {return &m_allGhostBikeStates; };
 
  protected:
   Replay* m_replay;
@@ -84,8 +87,12 @@ class FileGhost : public Ghost {
 
  /* because we have not the real one, but the one before and the one after */
  std::vector<BikeState*> m_ghostBikeStates;
+ std::vector<BikeState*> m_allGhostBikeStates; //for ghost trail use
 
  void execReplayEvents(int i_time, Scene *i_motogame);
+  
+  //stuff needed for GhostTrail
+ PhysicsSettings* m_pyhsicsSettings;
 };
 
 class ReplayBiker : public FileGhost {
@@ -117,5 +124,4 @@ class NetGhost : public Ghost {
  
  private:
 };
-
 #endif

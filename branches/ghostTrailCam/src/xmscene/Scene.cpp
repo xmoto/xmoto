@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../PhysSettings.h"
 #include "../GameEvents.h"
 #include "Entity.h"
-#include "BikeGhost.h"
+#include "GhostTrail.h"
 #include "BikePlayer.h"
 #include "BikeController.h"
 #include "BikeParameters.h"
@@ -74,13 +74,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_halfUpdate = true;
 
     m_physicsSettings = NULL;
+    
+    m_fileGhost = NULL;
+    m_ghostTrail = NULL;
 
   }
   
   Scene::~Scene() {
     cleanPlayers();
     cleanGhosts();
-		cleanScriptTimers();
+    cleanScriptTimers();
+    if(m_ghostTrail != 0) delete m_ghostTrail;		
   }
 
   void Scene::loadLevel(xmDatabase *i_db, const std::string& i_id_level) {
@@ -113,6 +117,7 @@ void Scene::cleanGhosts() {
     delete m_ghosts[i];
   }
   m_ghosts.clear();
+//  if(m_fileGhost != 0) delete m_fileGhost;
 }
 
 void Scene::cleanPlayers() {
@@ -602,6 +607,10 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     v_ghost->setReference(i_isReference);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
     m_ghosts.push_back(v_ghost);
+    if(i_info=="WR") {  // then we ve got our ghost trail!
+      m_ghostTrail = new GhostTrail();
+      m_fileGhost = v_ghost;
+    }
     return v_ghost;
   }
 
@@ -647,7 +656,11 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
       }
     }
   }
-
+  
+/*  void Scene::setFileGhost(FileGhost* i_fileGhost) {
+    m_fileGhost = i_fileGhost;
+  }
+*/
   /*===========================================================================
     Free this game object
     ===========================================================================*/
@@ -1470,9 +1483,10 @@ PlayerNetClient* Scene::addPlayerNetClient(Vector2f i_position, DriveDir i_direc
   unsigned int Scene::getCurrentCamera(){
     return m_currentCamera;
   }
-  void Scene::addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom){
+  void Scene::addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom, bool i_useTrailCam){
     Camera* i_cam = new Camera(upperleft, downright);
     i_cam->allowActiveZoom(i_useActiveZoom);
+    i_cam->allowTrailCam(i_useTrailCam);
     m_cameras.push_back(i_cam);
     m_cameras.back()->initCamera();
   }

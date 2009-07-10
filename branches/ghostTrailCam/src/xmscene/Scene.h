@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Color.h"
 #include "BasicSceneStructs.h"
 #include "Bike.h"
+#include "BikeGhost.h"
+#include "GhostTrail.h"
 #include <queue>
 
 #define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 500
@@ -239,6 +241,11 @@ public:
 			const TColor& i_filterColor,
 			const TColor& i_filterUglyColor);
 
+  //for ghost trail
+  inline GhostTrail* getGhostTrail() { return m_ghostTrail; };
+  //void setFileGhost(FileGhost* i_fileGhost);
+  inline FileGhost* getFileGhost() { return m_fileGhost; };
+  
   std::vector<Ghost *> &Ghosts();
   std::vector<Biker*> &Players();
 
@@ -268,7 +275,7 @@ public:
   unsigned int  getNumberCameras();
   void setCurrentCamera(unsigned int currentCamera);
   unsigned int  getCurrentCamera();
-  void addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom = true);
+  void addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom = true, bool i_useTraiCam = true);
   void resetFollow();
   void removeCameras();
   void setAutoZoomCamera();
@@ -303,6 +310,8 @@ private:
   bool m_showGhostTimeDiff;
   void onRewinding();
 
+  FileGhost* m_fileGhost; //for ghost trail
+  GhostTrail* m_ghostTrail;
   std::vector<Ghost*> m_ghosts;
   std::vector<float> m_myLastStrawberries;
 
