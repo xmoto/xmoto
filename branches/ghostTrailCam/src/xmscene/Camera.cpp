@@ -41,7 +41,7 @@
 #define DEFAULT_ROTATIONANGLE_SPEED 1.0
 
 // declared for Trail Camera
-#define TRAIL_TRACKINGSPEED 0.2
+#define TRAIL_TRACKINGSPEED 0.3
 #define TRAILCAM_CATCHPROXIMITY 2.0
 #define TRAILCAM_FORWARDSTEPS 15   // better make dependent from speed
 #define TRAILCAM_SMOOTHNESS 3
@@ -189,8 +189,8 @@ void Camera::trailCamTrackingShot() {
     if( (*m_ghostTrail->getSimplifiedGhostTrailData()).size() > unsigned (m_trackShotIndex))
     {
       Vector2f v_step;
-      v_step.x = (*m_ghostTrail->getSimplifiedGhostTrailData())[int(m_trackShotIndex)].x;
-      v_step.y = (*m_ghostTrail->getSimplifiedGhostTrailData())[int(m_trackShotIndex)].y;
+      v_step.x = SimpleInterpolate((*m_ghostTrail->getSimplifiedGhostTrailData())[int(m_trackShotIndex)].x,getCameraPositionX(),1.1);//SMOOTH :')
+      v_step.y = SimpleInterpolate((*m_ghostTrail->getSimplifiedGhostTrailData())[int(m_trackShotIndex)].y,getCameraPositionY(),1.1);//SMOOTH :')
       setCameraPosition(v_step.x,v_step.y);
       m_trackShotIndex += TRAIL_TRACKINGSPEED;
     } 
@@ -317,6 +317,9 @@ void Camera::guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
   
     Vector2f v_shiftVector = -updateTrailCam() + m_playerToFollow->getState()->CenterP; //get aim 
         
+		v_shiftVector.x = SimpleInterpolate(v_shiftVector.x,getCameraPositionX(),1.01);
+		v_shiftVector.y = SimpleInterpolate(v_shiftVector.y,getCameraPositionY(),1.01);
+
     p_fDesiredVerticalScrollShift = v_shiftVector.y;
     p_fDesiredHorizontalScrollShift = v_shiftVector.x;
   }

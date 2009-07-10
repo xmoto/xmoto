@@ -1170,9 +1170,9 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 	DrawLib* pDrawlib = GameApp::instance()->getDrawLib(); if(pDrawlib==0){return;}
 	//draw nice or ugly?
 	if(XMSession::instance()->ugly() == false) {
-	  for(unsigned int i=0; i < (*v_ghostTrailData).size(); i++) {
+		v_offset=1; //default
+	  for(unsigned int i=0; i < (*v_ghostTrailData).size(); i=i+v_offset) {
 			if (!(i>0)){v_last_size=0.1;continue;}
-			v_offset=1; //default
 			//get speed/size
 			float xdiff=(*v_ghostTrailData)[i-v_offset].x - (*v_ghostTrailData)[i].x;if(xdiff<0){xdiff=-xdiff;}
 			float ydiff=(*v_ghostTrailData)[i-v_offset].y - (*v_ghostTrailData)[i].y;if(ydiff<0){ydiff=-ydiff;}
@@ -1193,16 +1193,16 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 					MAKE_COLOR(c.Red(),c.Green(),c.Blue(),c.Alpha()), //color
 					(v_last_size*FINE_TRAIL_SCALE*i_scale), 					//start size
 					(fSize*FINE_TRAIL_SCALE*i_scale),						 			//end size
-					true //ROUND OH YEAH! ;-)      										//toggle rounded ends
+					true //ROUND OH YEAH! ;-)      			              //toggle rounded ends
 			);
 			lines_drawn++;
 			v_last_size=fSize;
   	}
 	}else{ //UGLY MODE
+		v_offset=5;
 		c.setRed(UGLY_TRAIL_COLOR); //darker color in ugly mode
-		for(unsigned int i=0; i < (*v_ghostTrailData).size(); i=i+3) {
+		for(unsigned int i=0; i < (*v_ghostTrailData).size(); i=i+v_offset) {
 			if (!(i>0)){v_last_size=0.1;continue;}
-			v_offset=4;
 			//get speed/size
 			float xdiff=(*v_ghostTrailData)[i-v_offset].x - (*v_ghostTrailData)[i].x;if(xdiff<0){xdiff=-xdiff;}
 			float ydiff=(*v_ghostTrailData)[i-v_offset].y - (*v_ghostTrailData)[i].y;if(ydiff<0){ydiff=-ydiff;}
