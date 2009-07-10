@@ -356,12 +356,14 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
 	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-          m_universe->getScenes()[j]->getGhostTrail()->toggleRenderGhostTrail();
+          if(m_universe->getScenes()[j]->getGhostTrail() != 0)
+            m_universe->getScenes()[j]->getGhostTrail()->toggleRenderGhostTrail();
 	  if(m_universe->getScenes()[j]->Cameras()[i]->getTrailAvailable() == false) {
 	    SysMessage::instance()->displayText(SYS_MSG_TRAIL_NA);
 	  }
-	  else if(m_universe->getScenes()[j]->getGhostTrail()->getRenderGhostTrail()) {
-	    SysMessage::instance()->displayText(SYS_MSG_TRAIL_VISIBLE);
+	  else if(m_universe->getScenes()[j]->getGhostTrail() != 0) {
+	    if(m_universe->getScenes()[j]->getGhostTrail()->getRenderGhostTrail()) 
+	        SysMessage::instance()->displayText(SYS_MSG_TRAIL_VISIBLE);
 	  }
 	  else SysMessage::instance()->displayText(SYS_MSG_TRAIL_INVISIBLE);
         }

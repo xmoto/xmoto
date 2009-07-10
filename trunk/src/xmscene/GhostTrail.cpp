@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define TRAIL_INTERPOLATION_STEP 0.1
 
 GhostTrail::GhostTrail() {
+  m_renderGhostTrail = false;
 }
 
 GhostTrail::~GhostTrail() {
@@ -33,7 +34,6 @@ GhostTrail::~GhostTrail() {
 }
 
 void GhostTrail::initGhostTrail(FileGhost* i_ghost) {
-//  m_renderGhostTrail = false;
 //  m_renderGTBeforeTS = false;
   
   if(i_ghost != 0){// && m_trailData.size() == 0){

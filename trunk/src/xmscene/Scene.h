@@ -242,7 +242,7 @@ public:
 			const TColor& i_filterUglyColor);
 
   //for ghost trail
-  inline GhostTrail* getGhostTrail() { return m_ghostTrail; };
+  inline GhostTrail* getGhostTrail() {  return m_ghostTrail; };
   //void setFileGhost(FileGhost* i_fileGhost);
   inline FileGhost* getFileGhost() { return m_fileGhost; };
   

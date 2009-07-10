@@ -1483,9 +1483,10 @@ int GameRenderer::nbParticlesRendered() const {
 
       if(v_ghost != pCamera->getPlayerToFollow()) {
 	_RenderGhost(i_scene, v_ghost, i, v_textOffset);
-        if(i_scene->getGhostTrail()->getRenderGhostTrail()) {
+        if(i_scene->getGhostTrail() != 0)
+          if(i_scene->getGhostTrail()->getRenderGhostTrail()) {
         	_RenderGhostTrail(i_scene, &m_screenBBox, m_sizeMultOfEntitiesToTake); 
-        }
+          }
       } else {
 	v_found = true;
 	v_found_i = i;
