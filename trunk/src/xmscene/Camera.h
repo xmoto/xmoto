@@ -123,6 +123,7 @@ public:
   void setActivateTrackingShot(bool i_shot) {m_trackingShotActivated = i_shot;};
   void toggleTrackingShot(Scene* i_scene);
   void toggleTrailCam();
+  void setUseTrailCam(bool i_value) { m_useTrailCam = i_value; };
   unsigned int locateNearestPointOnInterpolatedTrail(bool i_optimize);
   void checkIfNearTrail();                           //updates m_catchTrail
   bool getTrailAvailable() { return m_trailAvailable; };

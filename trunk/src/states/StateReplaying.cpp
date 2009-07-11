@@ -72,6 +72,8 @@ void StateReplaying::enter()
 
   GameRenderer::instance()->setShowGhostsText(true);
 
+  m_universe->getScenes()[0]->Cameras()[0]->setUseTrailCam(false);
+
   try {
     if(XMSession::instance()->hidePlayingInformation() == false) {
       // display replay informations
