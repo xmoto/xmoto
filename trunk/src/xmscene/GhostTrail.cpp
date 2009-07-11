@@ -45,20 +45,10 @@ void GhostTrail::initGhostTrail(FileGhost* i_ghost) {
   
     for(unsigned int i=0; i < (*i_ghost->getAllGhostBikeStates()).size(); i++) {
       m_trailData.push_back( (*i_ghost->getAllGhostBikeStates())[i]->CenterP );
-    }/*
+    }
     
-   unsigned int v_trailDataSize = m_trailData.size();
-   if(v_trailDataSize != 0) {
-    int step = int( v_trailDataSize / (v_trailDataSize/2));
-    for( unsigned int i=0; i<v_trailDataSize; i++) {
-      if( i%step == 0 ) m_simplifiedTrailData.push_back(m_trailData[i]); //every stepth index
-    } 
-   }
-   */
-   
-   
-   // now lets try real linear interpolation
-   
+    
+   // now lets try real linear interpolation   
    Vector2f v_P_old = m_trailData[0], 
 		      v_P_new, 
 		      v_vecCum = Vector2f(0,0),
@@ -98,7 +88,7 @@ void GhostTrail::initGhostTrail(FileGhost* i_ghost) {
      } while( i<int(v_vecTmp.length()/v_time) );
    }
    
-   // now interpolated path: cumulate Vector.length, every n length pushBack median
+   // now smoothen path in time: cumulate Vector.length, every n length pushBack median
    // interpolated in time, not position
    float v_cumulum = 0; 
    for(unsigned int i=1; i<m_interpolatedTrailData.size(); i++) {

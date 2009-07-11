@@ -45,7 +45,7 @@
 #define TRAILCAM_CATCHPROXIMITY 2.0
 #define TRAILCAM_FORWARDSTEPS 10   // better make dependent from speed
 #define TRAILCAM_SMOOTHNESS 3
-#define TRAILCAM_MAXSPEED 0.05
+#define TRAILCAM_MAXSPEED 0.03
 #define TRAIL_SPEEDREACTIVITY 0.0005
 
 #ifdef ENABLE_OPENGL
@@ -486,29 +486,34 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) { //patch active 
     m_recenter_camera_fast = false;
   }
 
+// modify v_moce camera max for trailcam -> the nearer v_fDes.. to m_fCurrScroll, the slower, vice versa
+//  if(v_fDesiredHorizontalScrollShift
+//  v_move_camera_max
+
+
   if(v_fDesiredHorizontalScrollShift != m_fCurrentHorizontalScrollShift) {
     float d = v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift;
-    if(fabs(d)<v_move_camera_max || isSmooth == false) {
+    if((fabs(d)<v_move_camera_max || isSmooth == false) /*|| m_fCurrentHorizontalScrollShift > v_fDesiredHorizontalScrollShift*/) {
       m_fCurrentHorizontalScrollShift = v_fDesiredHorizontalScrollShift;
     }
     else if(d < 0.0f) {
-      m_fCurrentHorizontalScrollShift -= v_move_camera_max;
+      m_fCurrentHorizontalScrollShift -= v_move_camera_max * fabs(d)/2; 
     }
     else if(d > 0.0f) {
-      m_fCurrentHorizontalScrollShift += v_move_camera_max;
+      m_fCurrentHorizontalScrollShift += v_move_camera_max * fabs(d)/2; 
     }
   }
     
   if(v_fDesiredVerticalScrollShift != m_fCurrentVerticalScrollShift) {
     float d = v_fDesiredVerticalScrollShift - m_fCurrentVerticalScrollShift;
-    if(fabs(d)<0.01f || isSmooth == false) {
+    if((fabs(d)<0.01f || isSmooth == false)/* || m_fCurrentVerticalScrollShift > v_fDesiredVerticalScrollShift*/) {
       m_fCurrentVerticalScrollShift = v_fDesiredVerticalScrollShift;
     }
     else if(d < 0.0f) {
-      m_fCurrentVerticalScrollShift -= v_move_camera_max;
+      m_fCurrentVerticalScrollShift -= v_move_camera_max * fabs(d)/2;
     }
     else if(d > 0.0f) {
-      m_fCurrentVerticalScrollShift += v_move_camera_max;
+      m_fCurrentVerticalScrollShift += v_move_camera_max * fabs(d)/2; 
     }
   }
   
