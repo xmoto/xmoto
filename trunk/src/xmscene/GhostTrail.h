@@ -41,7 +41,6 @@ class GhostTrail {
   std::vector<Vector2f> m_trailData;
   std::vector<Vector2f> m_simplifiedTrailData;
   std::vector<Vector2f> m_interpolatedTrailData;
-  bool m_renderGhostTrail;
   bool m_renderGTBeforeTS; // is set to remember if GT visibility was set before Tracking Shot
   bool m_trailAvailable;
 };

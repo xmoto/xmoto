@@ -153,8 +153,6 @@ private:
   bool m_useTrailCam;
   bool m_trackingShotActivated;
   bool m_catchTrail; // set true if cam is near the ghost trail
-//  bool m_renderGhostTrail;
-//  bool m_renderGhostTrailBeforeTS;
   bool m_trailAvailable;
   float m_trackShotIndex; // current step on ghost trail
   unsigned int m_trackShotStartIndex;

@@ -129,6 +129,7 @@ void XMSession::setToDefault() {
   m_enableInitZoom                = DEFAULT_ENABLEINITZOOM;
   m_enableActiveZoom              = DEFAULT_ENABLEACTIVEZOOM;
   m_enableTrailCam                = DEFAULT_ENABLETRAILCAM;
+  m_ghostTrailRenderingActivated  = DEFAULT_GHOSTTRAILRENDER_ACTIVATED;
   m_dbsynchronizeOnQuit           = DEFAULT_DBSYNCHRONIZEONQUIT;
   m_enableJoysticks               = DEFAULT_ENABLEJOYSTICKS;
   m_beatingMode                   = DEFAULT_BEATINGMODE;
@@ -808,6 +809,15 @@ void XMSession::setEnableTrailCam(bool i_value) {
 
 bool XMSession::enableTrailCam() const {
   return m_enableTrailCam;
+}
+
+void XMSession::setGhostTrailRenderingActivated(bool i_value) {
+  PROPAGATE(XMSession,setGhostTrailRenderingActivated,i_value,bool);
+  m_ghostTrailRenderingActivated = i_value;
+}
+
+bool XMSession::ghostTrailRenderingActivated() const {
+  return m_ghostTrailRenderingActivated;
 }
 
 void XMSession::setEnableDeadAnimation(bool i_value) {

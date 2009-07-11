@@ -19,12 +19,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "GhostTrail.h"
+#include "../XMSession.h"
 
 #define TRAIL_INTERPOLATED_TRAIL_INTERNODE_LENGTH 0.3
 #define TRAIL_INTERPOLATION_STEP 0.1
 
 GhostTrail::GhostTrail() {
-  m_renderGhostTrail = false;
 }
 
 GhostTrail::~GhostTrail() {
@@ -34,11 +34,9 @@ GhostTrail::~GhostTrail() {
 }
 
 void GhostTrail::initGhostTrail(FileGhost* i_ghost) {
-//  m_renderGTBeforeTS = false;
   
-  if(i_ghost != 0){// && m_trailData.size() == 0){
+  if(i_ghost != 0){
   try {
-    m_renderGhostTrail= false;
     m_trailData.clear();
     m_interpolatedTrailData.clear();
     m_simplifiedTrailData.clear();
@@ -109,15 +107,15 @@ void GhostTrail::initGhostTrail(FileGhost* i_ghost) {
 }
 
 void GhostTrail::setRenderGhostTrail(bool i_render) {
-  m_renderGhostTrail = i_render;
+  XMSession::instance()->setGhostTrailRenderingActivated(i_render);
 }
 
 bool GhostTrail::getRenderGhostTrail() {
-  return m_renderGhostTrail;
+  return XMSession::instance()->ghostTrailRenderingActivated();
 }
 
 void GhostTrail::toggleRenderGhostTrail() {
-  if(m_renderGhostTrail)
-	m_renderGhostTrail=false;
-  else m_renderGhostTrail=true;  
+  if(XMSession::instance()->ghostTrailRenderingActivated())
+	XMSession::instance()->setGhostTrailRenderingActivated(false);
+  else XMSession::instance()->setGhostTrailRenderingActivated(true);  
 }
