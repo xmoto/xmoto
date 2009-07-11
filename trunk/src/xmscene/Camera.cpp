@@ -28,6 +28,7 @@
 #define ZOOM_DEFAULT_NO_AUTOZOOM 0.195
 #define CAMERA_OFFSETX_DEFAULT 0.6
 #define CAMERA_OFFSETY_DEFAULT 0.0
+#define CAMERA_SMOOTHNESS 0.5
 
 // declared for Active Camera Zooming
 #define SPEED_UNTIL_ZOOM_BEGIN 24.0
@@ -493,27 +494,21 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) { //patch active 
 
   if(v_fDesiredHorizontalScrollShift != m_fCurrentHorizontalScrollShift) {
     float d = v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift;
-    if((fabs(d)<v_move_camera_max || isSmooth == false) /*|| m_fCurrentHorizontalScrollShift > v_fDesiredHorizontalScrollShift*/) {
+    if(fabs(d)<v_move_camera_max || isSmooth == false) {
       m_fCurrentHorizontalScrollShift = v_fDesiredHorizontalScrollShift;
     }
-    else if(d < 0.0f) {
-      m_fCurrentHorizontalScrollShift -= v_move_camera_max * fabs(d)/2; 
-    }
-    else if(d > 0.0f) {
-      m_fCurrentHorizontalScrollShift += v_move_camera_max * fabs(d)/2; 
+    else {
+      m_fCurrentHorizontalScrollShift += v_move_camera_max * d * CAMERA_SMOOTHNESS; 
     }
   }
     
   if(v_fDesiredVerticalScrollShift != m_fCurrentVerticalScrollShift) {
     float d = v_fDesiredVerticalScrollShift - m_fCurrentVerticalScrollShift;
-    if((fabs(d)<0.01f || isSmooth == false)/* || m_fCurrentVerticalScrollShift > v_fDesiredVerticalScrollShift*/) {
+    if(fabs(d)<0.01f || isSmooth == false) {
       m_fCurrentVerticalScrollShift = v_fDesiredVerticalScrollShift;
     }
-    else if(d < 0.0f) {
-      m_fCurrentVerticalScrollShift -= v_move_camera_max * fabs(d)/2;
-    }
-    else if(d > 0.0f) {
-      m_fCurrentVerticalScrollShift += v_move_camera_max * fabs(d)/2; 
+    else {
+      m_fCurrentVerticalScrollShift += v_move_camera_max * d * CAMERA_SMOOTHNESS;
     }
   }
   
