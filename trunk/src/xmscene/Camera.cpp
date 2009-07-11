@@ -43,11 +43,11 @@
 
 // declared for Trail Camera
 #define TRAIL_TRACKINGSPEED 0.3
-#define TRAILCAM_CATCHPROXIMITY 2.0
+#define TRAILCAM_CATCHPROXIMITY 2.3
 #define TRAILCAM_FORWARDSTEPS 10   // better make dependent from speed
 #define TRAILCAM_SMOOTHNESS 3
 #define TRAILCAM_MAXSPEED 0.03
-#define TRAIL_SPEEDREACTIVITY 0.0005
+#define TRAIL_SPEEDREACTIVITY 0.0006
 
 #ifdef ENABLE_OPENGL
 #include "include/xm_OpenGL.h"
@@ -156,7 +156,6 @@ void Camera::initTrailCam(Scene* i_scene) {
     m_trailAvailable = i_scene->getGhostTrail()->getGhostTrailAvailable(); 
     if(m_ghostTrail != 0){
        m_trailAvailable = true;
-//       m_ghostTrail->setRenderGhostTrail(false);
     }
     else {
       m_trailAvailable = false;
@@ -317,8 +316,6 @@ void Camera::guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
     normal_voffset = 2.0;        
   
     Vector2f v_shiftVector = -updateTrailCam() + m_playerToFollow->getState()->CenterP; //get aim 
-    // hierhin muss ein spezieller algo hin, der anhand der naehe zum zielvektor die scrollgeschwindigkeit modifiziert,
-    // oder auch nur ne abfrage der naehe, parameter m_trailCamDriveForce= abh von naehe
         
     p_fDesiredVerticalScrollShift = v_shiftVector.y;
     p_fDesiredHorizontalScrollShift = v_shiftVector.x;
@@ -401,7 +398,7 @@ void Camera::setPlayerDead() {
   }
 }
 
-void Camera::setScroll(bool isSmooth, const Vector2f& gravity) { //patch active scroll here
+void Camera::setScroll(bool isSmooth, const Vector2f& gravity) { 
   float v_move_camera_max;
   float v_fDesiredHorizontalScrollShift = 0.0;
   float v_fDesiredVerticalScrollShift   = 0.0;
@@ -426,7 +423,7 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) { //patch active 
   if(! m_catchTrail && m_recenter_camera_fast) {
     v_move_camera_max = 0.05;
   } else if(m_catchTrail) {
-    v_move_camera_max = TRAIL_SPEEDREACTIVITY*m_playerToFollow->getBikeLinearVel();
+    v_move_camera_max = TRAIL_SPEEDREACTIVITY*m_playerToFollow->getBikeLinearVel() + 0.002;
     if(v_move_camera_max >= TRAILCAM_MAXSPEED) v_move_camera_max = TRAILCAM_MAXSPEED;
   } else {
     v_move_camera_max = 0.01;
@@ -487,14 +484,9 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) { //patch active 
     m_recenter_camera_fast = false;
   }
 
-// modify v_moce camera max for trailcam -> the nearer v_fDes.. to m_fCurrScroll, the slower, vice versa
-//  if(v_fDesiredHorizontalScrollShift
-//  v_move_camera_max
-
-
   if(v_fDesiredHorizontalScrollShift != m_fCurrentHorizontalScrollShift) {
     float d = v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift;
-    if(fabs(d)<v_move_camera_max || isSmooth == false) {
+    if(fabs(d)<0.01f || isSmooth == false) {
       m_fCurrentHorizontalScrollShift = v_fDesiredHorizontalScrollShift;
     }
     else {
