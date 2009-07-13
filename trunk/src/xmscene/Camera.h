@@ -127,6 +127,7 @@ public:
   unsigned int locateNearestPointOnInterpolatedTrail(bool i_optimize);
   void checkIfNearTrail();                           //updates m_catchTrail
   bool getTrailAvailable() { return m_trailAvailable; };
+  Vector2f getTrailCamAimPos();
   
 private:
   bool  m_mirrored;

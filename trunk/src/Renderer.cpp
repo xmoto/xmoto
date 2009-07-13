@@ -1233,6 +1233,7 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 	if( XMSession::instance()->debug() ) {
           std::stringstream out; out << lines_drawn;
 	  i_scene->gameMessage("drawed "+out.str()+" lines.", true, 50);
+	  _RenderCircle(20,MAKE_COLOR(10,10,255,255),i_scene->Cameras()[0]->getTrailCamAimPos(), 0.25);
 	}
 }
 

@@ -44,7 +44,7 @@
 // declared for Trail Camera
 #define TRAIL_TRACKINGSPEED 0.3
 #define TRAILCAM_CATCHPROXIMITY 2.3
-#define TRAILCAM_FORWARDSTEPS 10   // better make dependent from speed
+#define TRAILCAM_FORWARDSTEPS 20   // better make dependent from speed
 #define TRAILCAM_SMOOTHNESS 3
 #define TRAILCAM_MAXSPEED 0.03
 #define TRAIL_SPEEDREACTIVITY 0.0006
@@ -179,6 +179,10 @@ Vector2f Camera::updateTrailCam() {
     }
   }
   return Vector2f(0,0);
+}
+
+Vector2f Camera::getTrailCamAimPos() {
+  return (*m_ghostTrail->getSimplifiedGhostTrailData())[m_currentNearestTrailDataPosition + TRAILCAM_FORWARDSTEPS];// + m_playerToFollow->getState()->CenterP;
 }
 
 void Camera::trailCamTrackingShot() {
