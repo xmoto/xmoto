@@ -48,6 +48,7 @@
 #define TRAILCAM_SMOOTHNESS 3
 #define TRAILCAM_MAXSPEED 0.03
 #define TRAIL_SPEEDREACTIVITY 0.0006
+#define TRAILCAM_TRACKINGSHOT_SPEED 0.008  // smaller is faster
 
 #ifdef ENABLE_OPENGL
 #include "include/xm_OpenGL.h"
@@ -187,18 +188,24 @@ Vector2f Camera::getTrailCamAimPos() {
 
 void Camera::trailCamTrackingShot() {
   //calculate camera offset for trail cam here
-  
-  if( m_trackingShotActivated && m_trailAvailable)  {
-    m_ghostTrail->setRenderGhostTrail(true);
-    if( (*m_ghostTrail->getSimplifiedGhostTrailData()).size() > unsigned (m_trackShotIndex))
-    {
-      Vector2f v_step;
-      v_step.x = SimpleInterpolate((*m_ghostTrail->getSimplifiedGhostTrailData())[int(m_trackShotIndex)].x,getCameraPositionX(),1.1);//SMOOTH :')
-      v_step.y = SimpleInterpolate((*m_ghostTrail->getSimplifiedGhostTrailData())[int(m_trackShotIndex)].y,getCameraPositionY(),1.1);//SMOOTH :')
-      setCameraPosition(v_step.x,v_step.y);
-      m_trackShotIndex += TRAIL_TRACKINGSPEED;
-    } 
-    else m_trackShotIndex = m_trackShotStartIndex; // restart trail tracking on current player position
+  if(m_previousTSStepTime < 0.0){
+    m_previousTSStepTime = GameApp::getXMTime();
+  } else {
+    if(GameApp::getXMTime() - m_previousTSStepTime > TRAILCAM_TRACKINGSHOT_SPEED) { /* do it regularly */
+      m_previousTSStepTime = GameApp::getXMTime();
+      
+      if( m_trackingShotActivated && m_trailAvailable)  {
+	m_ghostTrail->setRenderGhostTrail(true);
+	if( (*m_ghostTrail->getSimplifiedGhostTrailData()).size() > unsigned (m_trackShotIndex)) {
+          Vector2f v_step;
+          v_step.x = SimpleInterpolate((*m_ghostTrail->getSimplifiedGhostTrailData())[int(m_trackShotIndex)].x,getCameraPositionX(),1.1);//SMOOTH :')
+          v_step.y = SimpleInterpolate((*m_ghostTrail->getSimplifiedGhostTrailData())[int(m_trackShotIndex)].y,getCameraPositionY(),1.1);//SMOOTH :')
+          setCameraPosition(v_step.x,v_step.y);
+          m_trackShotIndex += TRAIL_TRACKINGSPEED;
+        } 
+        else m_trackShotIndex = m_trackShotStartIndex; // restart trail tracking on current player position
+      }
+    }
   }
 }
 
@@ -215,7 +222,7 @@ void Camera::toggleTrackingShot(Scene *i_scene) {
       m_ghostTrail->setRenderGTBeforeTS(m_ghostTrail->getRenderGhostTrail());
     i_scene->pause();
     m_trackingShotActivated = true;
-    m_trackShotStartIndex = locateNearestPointOnInterpolatedTrail(false);
+    m_trackShotStartIndex = locateNearestPointOnInterpolatedTrail(false);  //test true here
     m_trackShotIndex = m_trackShotStartIndex;
   }
 }
