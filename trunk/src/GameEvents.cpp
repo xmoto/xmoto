@@ -128,6 +128,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       v_event = new MGE_SetDynamicBlockNone(v_eventTime);
     } else if(MGE_CameraMove::SgetType() == v_eventType) {
       v_event = new MGE_CameraMove(v_eventTime);
+    } else if(MGE_CameraSetPos::SgetType() == v_eventType) {
+      v_event = new MGE_CameraSetPos(v_eventTime);
     } else if(MGE_CameraZoom::SgetType() == v_eventType) {
       v_event = new MGE_CameraZoom(v_eventTime);
     } else if(MGE_PenalityTime::SgetType() == v_eventType) {
@@ -1584,6 +1586,52 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   std::string MGE_CameraMove::toString() {
     return "Camera moves";
+  }
+
+  //////////////////////////////
+  MGE_CameraSetPos::MGE_CameraSetPos(int p_eventTime) 
+  : SceneEvent(p_eventTime) {
+    m_X = 0.0;
+    m_Y = 0.0;
+  }
+
+  MGE_CameraSetPos::MGE_CameraSetPos(int p_eventTime, float p_X, float p_Y)
+  : SceneEvent(p_eventTime) {
+    m_X = p_X;
+    m_Y = p_Y;
+  }
+
+  MGE_CameraSetPos::~MGE_CameraSetPos() {
+  } 
+  
+  void MGE_CameraSetPos::doAction(Scene *p_pScene) {
+    for(unsigned int i=0; i<p_pScene->getNumberCameras(); i++) {
+    p_pScene->setCurrentCamera(i);
+      p_pScene->CameraSetPos(m_X, m_Y);
+    }
+  }
+
+  void MGE_CameraSetPos::serialize(DBuffer &Buffer) {
+    SceneEvent::serialize(Buffer);
+    Buffer << m_X;
+    Buffer << m_Y;
+  }
+  
+  void MGE_CameraSetPos::unserialize(DBuffer &Buffer) {
+    Buffer >> m_X;
+    Buffer >> m_Y;
+  }
+
+  GameEventType MGE_CameraSetPos::SgetType() {
+    return GAME_EVENT_CAMERASETPOS;
+  }
+
+  GameEventType MGE_CameraSetPos::getType() {
+    return SgetType();
+  }
+
+  std::string MGE_CameraSetPos::toString() {
+    return "Camera position is set";
   }
 
   //////////////////////////////

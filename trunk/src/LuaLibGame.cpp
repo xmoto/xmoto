@@ -94,6 +94,7 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"StartTimer",               LuaLibGame::L_Game_StartTimer},   
   {"SetTimerDelay",               LuaLibGame::L_Game_SetTimerDelay}, 
   {"StopTimer",               LuaLibGame::L_Game_StopTimer}, 
+	{"SetCameraPosition",               LuaLibGame::L_Game_SetCameraPosition}, 
   {NULL, NULL}
 };
 Scene*     LuaLibGame::m_exec_world              = NULL;
@@ -684,6 +685,14 @@ int LuaLibGame::L_Game_CameraZoom(lua_State *pL) {
 int LuaLibGame::L_Game_CameraMove(lua_State *pL) {
   /* event for this */
   m_exec_world->createGameEvent(new MGE_CameraMove(m_exec_world->getTime(),
+						  X_luaL_check_number(pL,1),
+						  X_luaL_check_number(pL,2)));
+  return 0;
+}
+
+int LuaLibGame::L_Game_SetCameraPosition(lua_State *pL) {
+  /* event for this */
+  m_exec_world->createGameEvent(new MGE_CameraSetPos(m_exec_world->getTime(),
 						  X_luaL_check_number(pL,1),
 						  X_luaL_check_number(pL,2)));
   return 0;

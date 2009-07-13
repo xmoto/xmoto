@@ -1171,12 +1171,13 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 	//draw nice or ugly?
 	if(XMSession::instance()->ugly() == false) {
 		v_offset=1; //default
+		if(i_scale!=1){v_offset=6;} //in zoom out mode we want to reduce lagging by drawing less curvier.
 	  for(unsigned int i=0; i < (*v_ghostTrailData).size(); i=i+v_offset) {
 			if (!(i>0)){v_last_size=0.1;continue;}
 			//get speed/size
 			float xdiff=(*v_ghostTrailData)[i-v_offset].x - (*v_ghostTrailData)[i].x;if(xdiff<0){xdiff=-xdiff;}
 			float ydiff=(*v_ghostTrailData)[i-v_offset].y - (*v_ghostTrailData)[i].y;if(ydiff<0){ydiff=-ydiff;}
-			fSize=sqrt(pow(xdiff,2)+pow(ydiff,2));	
+			fSize=sqrt(pow(xdiff,2)+pow(ydiff,2))/v_offset;	
 			if(fSize>v_last_size*2){v_last_size=0.1f; continue;} //if the size (=speed) has doupled then skip (must be teleport)		
 			if(fSize>1){fSize=1;} if(fSize<0.1f){fSize=0.1f;}    //max and min sizes
 			//we need to check that the line is inside the screen, why to draw 2000-5000 lines when we can draw 100 by skipping non-visible ones.
@@ -1188,11 +1189,11 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 			c.setGreen(FINE_TRAIL_COLOR-(fSize*FINE_TRAIL_COLOR));//set fancy colour
 			//render at last!
 			pDrawlib->DrawLine(
-					(*v_ghostTrailData)[i-v_offset], 												//start pos
+					(*v_ghostTrailData)[i-v_offset], 									//start pos
 					(*v_ghostTrailData)[i],   												//end pos
 					MAKE_COLOR(c.Red(),c.Green(),c.Blue(),c.Alpha()), //color
-					(v_last_size*FINE_TRAIL_SCALE*i_scale), 					//start size
-					(fSize*FINE_TRAIL_SCALE*i_scale),						 			//end size
+					(v_last_size*FINE_TRAIL_SCALE*i_scale), 	//start size
+					(fSize*FINE_TRAIL_SCALE*i_scale),				//end size
 					true //ROUND OH YEAH! ;-)      			              //toggle rounded ends
 			);
 			lines_drawn++;
@@ -1200,6 +1201,7 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
   	}
 	}else{ //UGLY MODE
 		v_offset=5;
+		if(i_scale!=1){v_offset=8;} //in zoom out mode we want to reduce lagging by drawing less curvier.
 		c.setRed(UGLY_TRAIL_COLOR); //darker color in ugly mode
 		for(unsigned int i=0; i < (*v_ghostTrailData).size(); i=i+v_offset) {
 			if (!(i>0)){v_last_size=0.1;continue;}
@@ -1216,7 +1218,7 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 			c.setGreen(UGLY_TRAIL_COLOR-(fSize*UGLY_TRAIL_COLOR));//set fancy colour
 			//finally render!
 			pDrawlib->DrawLine(
-					(*v_ghostTrailData)[i-v_offset], 												//start pos
+					(*v_ghostTrailData)[i-v_offset], 									//start pos
 					(*v_ghostTrailData)[i],   												//end pos
 					MAKE_COLOR(c.Red(),c.Green(),c.Blue(),c.Alpha()), //color
 					(v_last_size*UGLY_TRAIL_SCALE*i_scale), 					//start size
@@ -1228,8 +1230,10 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 		}	
 	} 
 	//print amount of lines drawn, usefull for testing.
-	//std::stringstream out; out << lines_drawn;
-	//i_scene->gameMessage("drawed "+out.str()+" lines.", true, 50);
+	if( XMSession::instance()->debug() ) {
+          std::stringstream out; out << lines_drawn;
+	  i_scene->gameMessage("drawed "+out.str()+" lines.", true, 50);
+	}
 }
 
 void GameRenderer::displayArrowIndication(Biker* i_biker, AABB *i_screenBBox) {

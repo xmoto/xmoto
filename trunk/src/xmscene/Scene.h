@@ -197,6 +197,7 @@ public:
 
   void CameraZoom(float pZoom);
   void CameraMove(float p_x, float p_y);
+	void CameraSetPos(float p_x, float p_y);
   void CameraRotate(float i_angle);
   void CameraAdaptToGravity();
 

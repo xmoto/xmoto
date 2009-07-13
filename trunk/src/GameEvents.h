@@ -75,7 +75,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     GAME_EVENT_STOPMUSIC                    = 39,
     /*           = 40, */
     GAME_EVENT_SETPHYSICSBLOCKSELFROTATION  = 41,
-    GAME_EVENT_SETPHYSICSBLOCKTRANSLATION   = 42
+    GAME_EVENT_SETPHYSICSBLOCKTRANSLATION   = 42,
+		GAME_EVENT_CAMERASETPOS                 = 43
   };
 
 class SceneEvent;
@@ -812,6 +813,24 @@ class MGE_CameraMove : public SceneEvent {
 
  private:
   float m_moveX, m_moveY;
+};
+
+class MGE_CameraSetPos : public SceneEvent {
+ public:
+  MGE_CameraSetPos(int p_eventTime);
+  MGE_CameraSetPos(int p_eventTime, float p_X, float p_Y);
+  ~MGE_CameraSetPos();
+
+  void doAction(Scene *p_pScene);
+  void serialize(DBuffer &Buffer);
+  void unserialize(DBuffer &Buffer);
+  static GameEventType SgetType();
+  GameEventType getType();
+
+  std::string toString();
+
+ private:
+  float m_X, m_Y;
 };
 
 class MGE_CameraZoom : public SceneEvent {

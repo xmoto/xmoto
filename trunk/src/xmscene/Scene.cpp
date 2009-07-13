@@ -1198,6 +1198,11 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
     getCamera()->moveCamera(p_x, p_y);
   }
 
+  void Scene::CameraSetPos(float p_x, float p_y) {
+    getCamera()->desactiveActionZoom();
+    getCamera()->setCameraPosition(p_x, p_y);
+  }
+
   void Scene::CameraRotate(float i_angle) {
     getCamera()->setDesiredRotationAngle(i_angle);
   }

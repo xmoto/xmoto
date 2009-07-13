@@ -396,7 +396,7 @@ void DrawLibOpenGL::init(unsigned int nDispWidth, unsigned int nDispHeight, unsi
   }
   else
     LogInfo("GL: not using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
-    
+ 
   /* Set background color to black */
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT);
