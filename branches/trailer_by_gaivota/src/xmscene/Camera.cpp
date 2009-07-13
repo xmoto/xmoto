@@ -44,7 +44,7 @@
 // declared for Trail Camera
 #define TRAIL_TRACKINGSPEED 0.3
 #define TRAILCAM_CATCHPROXIMITY 2.3
-#define TRAILCAM_FORWARDSTEPS 20   // better make dependent from speed
+#define TRAILCAM_FORWARDSTEPS 18   // better make dependent from speed
 #define TRAILCAM_SMOOTHNESS 3
 #define TRAILCAM_MAXSPEED 0.03
 #define TRAIL_SPEEDREACTIVITY 0.0006
