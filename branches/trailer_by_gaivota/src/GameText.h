@@ -115,6 +115,7 @@ Central place to keep many in-game text strings
     ":Emmanuel Gorse;"                                                                       \
     ":;"                                                                                     \
     + std::string(_("Additional Programming")) +                                             \
+    ":Ville Lahdenvuo;"                                                                       \
     ":Richard Franks;"                                                                       \
     ":Kees Jongenburger;"                                                                    \
     ":Eric Piel;"                                                                            \

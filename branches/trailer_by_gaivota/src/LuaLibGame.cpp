@@ -901,9 +901,8 @@ int LuaLibGame::L_Game_GetPlayerAngle(lua_State *pL) {
 }
 
 /*=====================================================
-        Script Timer Functions! by Tuhoojabotti
+        Script Timer Functions! by tuhoojabotti
 =====================================================*/
-/* I say that THIS code is beautiful. */
 //START
 int LuaLibGame::L_Game_StartTimer(lua_State *pL) {
 	args_CheckNumberOfArguments(pL, 1, 3); //we need 1 or 3 args
@@ -913,16 +912,17 @@ int LuaLibGame::L_Game_StartTimer(lua_State *pL) {
 	int v_delay = STIMER_DELAY_DEFAULT;
 	int v_loops=STIMER_LOOPS_DEFAULT;
 	ScriptTimer* v_timer=NULL;
-
   //get parameters
 	v_name=(std::string)luaL_checkstring(pL,1);
 	v_timer=m_exec_world->getScriptTimerByName(v_name);
 	//check the optional args
 	if(v_numargs>1){
 		v_delay=(int)luaL_checknumber(pL,2);
+		if(v_delay<1){luaL_error (pL, "StartTimer: delay can't be smaller than 1.");}
 	}
 	if(v_numargs>2){
 		v_loops=(int)luaL_checknumber(pL,3);
+		if(v_loops<0){luaL_error (pL, "StartTimer: loops can't be smaller than 0.");}
 	}
 	//if timer is not found
 	if(v_timer==NULL){
@@ -943,7 +943,6 @@ int LuaLibGame::L_Game_SetTimerDelay(lua_State *pL) {
   std::string v_name=(std::string)luaL_checkstring(pL,1);
 	int v_delay=(int)luaL_checknumber(pL,2);
 	ScriptTimer* v_timer=m_exec_world->getScriptTimerByName(v_name);
-
 	if(v_timer!=NULL){
 		v_timer->SetTimerDelay(v_delay);
 	}else{
