@@ -191,6 +191,10 @@ Vector2f Camera::getTrailCamAimPos() {
   return (*m_ghostTrail->getSimplifiedGhostTrailData())[m_currentNearestTrailDataPosition + m_trailCamForwardSteps];
 }
 
+Vector2f Camera::getNearestPointOnTrailPos() {
+  return (*m_ghostTrail->getSimplifiedGhostTrailData())[m_currentNearestTrailDataPosition];
+}
+
 void Camera::trailCamTrackingShot() {
   //calculate camera offset for trail cam here
   if(m_previousTSStepTime < 0.0){

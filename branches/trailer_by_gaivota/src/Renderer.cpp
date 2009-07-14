@@ -1236,6 +1236,7 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 		std::stringstream out2; out2 << i_scene->getCamera()->getCurrentZoom();
 	  i_scene->gameMessage("drawed "+out.str()+" lines. Zoom is "+out2.str()+".", true, 50);
 	  _RenderCircle(20,MAKE_COLOR(10,10,255,255),i_scene->Cameras()[0]->getTrailCamAimPos(), 0.25);
+	  _RenderCircle(20,MAKE_COLOR(255,10,10,255),i_scene->Cameras()[0]->getNearestPointOnTrailPos(), 0.25);	  
 	}
 }
 

@@ -128,6 +128,7 @@ public:
   void checkIfNearTrail();                           //updates m_catchTrail
   bool getTrailAvailable() { return m_trailAvailable; };
   Vector2f getTrailCamAimPos();
+  Vector2f getNearestPointOnTrailPos();
   float m_previousTSStepTime;
   int m_trailCamForwardSteps;
   
