@@ -1169,7 +1169,8 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 	//draw nice or ugly?
 	if(XMSession::instance()->ugly() == false) {
 		v_offset=1; //default
-		if(i_scale!=1){v_offset=6;} //in zoom out mode we want to reduce lagging by drawing less curvier.
+		if(i_scene->getCamera()->getCurrentZoom()<0.07){v_offset=5;} //in zoom out mode we want to reduce lagging by drawing less curvier.
+		if(i_scene->getCamera()->getCurrentZoom()<0.025){v_offset=10;} //super huge lvl
 	  for(unsigned int i=0; i < (*v_ghostTrailData).size(); i=i+v_offset) {
 			if (!(i>0)){v_last_size=0.1;continue;}
 			//get speed/size
@@ -1180,26 +1181,26 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 			if(fSize>1){fSize=1;} if(fSize<0.1f){fSize=0.1f;}    //max and min sizes
 			//we need to check that the line is inside the screen, why to draw 2000-5000 lines when we can draw 100 by skipping non-visible ones.
 			Vector2f scr_max = i_screenBBox->getBMax();Vector2f scr_min = i_screenBBox->getBMin();Vector2f point = (*v_ghostTrailData)[i];
-			if(scr_max.x < point.x - xdiff*2){v_last_size=fSize;continue;}if(scr_min.x > point.x + xdiff*2){v_last_size=fSize;continue;}//x-axis
-			if(scr_max.y < point.y - ydiff*2){v_last_size=fSize;continue;}if(scr_min.y > point.y + ydiff*2){v_last_size=fSize;continue;}//y-axis
-			//speed change? Make it smooth!
-			if(v_last_size>fSize){fSize=fSize+(v_last_size-fSize)/1.3;}
+			if(scr_max.x < point.x - xdiff*2.5){v_last_size=fSize;continue;}if(scr_min.x > point.x + xdiff*2.5){v_last_size=fSize;continue;}//x-axis
+			if(scr_max.y < point.y - ydiff*2.5){v_last_size=fSize;continue;}if(scr_min.y > point.y + ydiff*2.5){v_last_size=fSize;continue;}//y-axis	
+			if(v_last_size>fSize){fSize=fSize+(v_last_size-fSize)/1.26;}//speed change? Make it smooth!
 			c.setGreen(FINE_TRAIL_COLOR-(fSize*FINE_TRAIL_COLOR));//set fancy colour
 			//render at last!
 			pDrawlib->DrawLine(
 					(*v_ghostTrailData)[i-v_offset], 									//start pos
 					(*v_ghostTrailData)[i],   												//end pos
 					MAKE_COLOR(c.Red(),c.Green(),c.Blue(),c.Alpha()), //color
-					(v_last_size*FINE_TRAIL_SCALE*i_scale), 	//start size
-					(fSize*FINE_TRAIL_SCALE*i_scale),				//end size
-					true //ROUND OH YEAH! ;-)      			              //toggle rounded ends
+					(v_last_size*FINE_TRAIL_SCALE*i_scale), 	        //start size
+					(fSize*FINE_TRAIL_SCALE*i_scale),				          //end size
+					(i_scale>0.4)                                     //toggle rounded ends
 			);
 			lines_drawn++;
 			v_last_size=fSize;
   	}
 	}else{ //UGLY MODE
 		v_offset=5;
-		if(i_scale!=1){v_offset=8;} //in zoom out mode we want to reduce lagging by drawing less curvier.
+		if(i_scene->getCamera()->getCurrentZoom()<0.08){v_offset=8;} //in zoom out mode we want to reduce lagging by drawing less curvier.
+		if(i_scene->getCamera()->getCurrentZoom()<0.025){v_offset=12;} //super huge lvl
 		c.setRed(UGLY_TRAIL_COLOR); //darker color in ugly mode
 		for(unsigned int i=0; i < (*v_ghostTrailData).size(); i=i+v_offset) {
 			if (!(i>0)){v_last_size=0.1;continue;}
@@ -1219,8 +1220,8 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 					(*v_ghostTrailData)[i-v_offset], 									//start pos
 					(*v_ghostTrailData)[i],   												//end pos
 					MAKE_COLOR(c.Red(),c.Green(),c.Blue(),c.Alpha()), //color
-					(v_last_size*UGLY_TRAIL_SCALE*i_scale), 					//start size
-					(fSize*UGLY_TRAIL_SCALE*i_scale),       					//end size
+					(v_last_size*UGLY_TRAIL_SCALE*(i_scale/2)), 			//start size
+					(fSize*UGLY_TRAIL_SCALE*(i_scale/2)),    					//end size
 					false //UGLY :')                 									//toggle rounded ends
 			);
 			v_last_size=fSize;
@@ -1229,8 +1230,9 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 	} 
 	//print amount of lines drawn, usefull for testing.
 	if( XMSession::instance()->debug() ) {
-          std::stringstream out; out << lines_drawn;
-	  i_scene->gameMessage("drawed "+out.str()+" lines.", true, 50);
+		std::stringstream out; out << lines_drawn;
+		std::stringstream out2; out2 << i_scene->getCamera()->getCurrentZoom();
+	  i_scene->gameMessage("drawed "+out.str()+" lines. Zoom is "+out2.str()+".", true, 50);
 	  _RenderCircle(20,MAKE_COLOR(10,10,255,255),i_scene->Cameras()[0]->getTrailCamAimPos(), 0.25);
 	}
 }
