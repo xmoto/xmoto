@@ -1158,7 +1158,7 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 	//get trail data
   GhostTrail* v_ghostTrail = i_scene->getGhostTrail(); if(v_ghostTrail == 0){return;}
   std::vector<Vector2f>* v_ghostTrailData = v_ghostTrail->getGhostTrailData();
-	//setup colors and stuff
+	//setup colors and declare vars
 	TColor c = TColor(FINE_TRAIL_COLOR,FINE_TRAIL_COLOR,0,255);
 	float fSize=0;
 	float v_last_size=1;
