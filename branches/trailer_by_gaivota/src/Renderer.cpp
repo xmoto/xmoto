@@ -252,8 +252,6 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     m_arrowSprite = (MiscSprite*)Theme::instance()->getSprite(SPRITE_TYPE_MISC, "Arrow");
     m_arrowSprite->loadTextures();
   }
-//  loadGhostTrail(i_universe->getScenes()[0]);
-//  i_universe->getScenes()[0]->Cameras()[0]->setRenderGhostTrail(false);
   
   endTexturesRegistration();
 }
@@ -1489,7 +1487,7 @@ int GameRenderer::nbParticlesRendered() const {
       if(v_ghost != pCamera->getPlayerToFollow()) {
 	_RenderGhost(i_scene, v_ghost, i, v_textOffset);
         if(i_scene->getGhostTrail() != 0)
-          if(i_scene->getGhostTrail()->getRenderGhostTrail()) {
+          if(XMSession::instance()->renderGhostTrail() || XMSession::instance()->renderGhostTrailTS()) { 
         	_RenderGhostTrail(i_scene, &m_screenBBox, m_sizeMultOfEntitiesToTake); 
           }
       } else {

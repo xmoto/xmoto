@@ -31,17 +31,13 @@ class GhostTrail {
   inline std::vector<Vector2f>* getGhostTrailData() { return &m_trailData; };
   inline std::vector<Vector2f>* getSimplifiedGhostTrailData() { return &m_simplifiedTrailData; };
   inline std::vector<Vector2f>* getInterpolatedGhostTrailData() { return &m_interpolatedTrailData; };
-  void setRenderGhostTrail(bool i_render);  //tell renderer to render ghosttrail
-  void setRenderGTBeforeTS(bool i_value) { m_renderGTBeforeTS = i_value; };
-  bool getRenderGTBeforeTS() {return m_renderGTBeforeTS; };
   void toggleRenderGhostTrail();
-  bool getRenderGhostTrail();
   bool getGhostTrailAvailable() { return m_trailAvailable; };
+  
  private: 
   std::vector<Vector2f> m_trailData;
   std::vector<Vector2f> m_simplifiedTrailData;
   std::vector<Vector2f> m_interpolatedTrailData;
-  bool m_renderGTBeforeTS; // is set to remember if GT visibility was set before Tracking Shot
   bool m_trailAvailable;
 };
 #endif

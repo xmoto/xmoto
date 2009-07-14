@@ -129,7 +129,8 @@ void XMSession::setToDefault() {
   m_enableInitZoom                = DEFAULT_ENABLEINITZOOM;
   m_enableActiveZoom              = DEFAULT_ENABLEACTIVEZOOM;
   m_enableTrailCam                = DEFAULT_ENABLETRAILCAM;
-  m_ghostTrailRenderingActivated  = DEFAULT_GHOSTTRAILRENDER_ACTIVATED;
+  m_renderGhostTrail              = DEFAULT_GHOSTTRAILRENDERING;
+  m_renderGhostTrailTS            = DEFAULT_GHOSTTRAILRENDERING_TS;
   m_dbsynchronizeOnQuit           = DEFAULT_DBSYNCHRONIZEONQUIT;
   m_enableJoysticks               = DEFAULT_ENABLEJOYSTICKS;
   m_beatingMode                   = DEFAULT_BEATINGMODE;
@@ -811,13 +812,22 @@ bool XMSession::enableTrailCam() const {
   return m_enableTrailCam;
 }
 
-void XMSession::setGhostTrailRenderingActivated(bool i_value) {
-  PROPAGATE(XMSession,setGhostTrailRenderingActivated,i_value,bool);
-  m_ghostTrailRenderingActivated = i_value;
+void XMSession::setRenderGhostTrail(bool i_value) {
+  PROPAGATE(XMSession,setRenderGhostTrail,i_value,bool);
+  m_renderGhostTrail = i_value;
 }
 
-bool XMSession::ghostTrailRenderingActivated() const {
-  return m_ghostTrailRenderingActivated;
+bool XMSession::renderGhostTrail() const {
+  return m_renderGhostTrail;
+}
+
+void XMSession::setRenderGhostTrailTS(bool i_value) {
+  PROPAGATE(XMSession,setRenderGhostTrailTS,i_value,bool);
+  m_renderGhostTrailTS = i_value;
+}
+
+bool XMSession::renderGhostTrailTS() const {
+  return m_renderGhostTrailTS;
 }
 
 void XMSession::setEnableDeadAnimation(bool i_value) {

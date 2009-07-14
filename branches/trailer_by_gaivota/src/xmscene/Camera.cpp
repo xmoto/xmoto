@@ -195,7 +195,6 @@ void Camera::trailCamTrackingShot() {
       m_previousTSStepTime = GameApp::getXMTime();
       
       if( m_trackingShotActivated && m_trailAvailable)  {
-	m_ghostTrail->setRenderGhostTrail(true);
 	if( (*m_ghostTrail->getSimplifiedGhostTrailData()).size() > unsigned (m_trackShotIndex)) {
           Vector2f v_step;
           v_step.x = SimpleInterpolate((*m_ghostTrail->getSimplifiedGhostTrailData())[int(m_trackShotIndex)].x,getCameraPositionX(),1.1);//SMOOTH :')
@@ -212,14 +211,12 @@ void Camera::trailCamTrackingShot() {
 void Camera::toggleTrackingShot(Scene *i_scene) {
   if(m_trackingShotActivated) { 
     m_trackingShotActivated = false;
-    if(m_ghostTrail != 0)
-      m_ghostTrail->setRenderGhostTrail(m_ghostTrail->getRenderGTBeforeTS());
+    XMSession::instance()->setRenderGhostTrailTS(false);
     initCameraPosition();
     i_scene->pause();
   }
   else {
-    if(m_ghostTrail != 0)
-      m_ghostTrail->setRenderGTBeforeTS(m_ghostTrail->getRenderGhostTrail());
+    XMSession::instance()->setRenderGhostTrailTS(true);
     i_scene->pause();
     m_trackingShotActivated = true;
     m_trackShotStartIndex = locateNearestPointOnInterpolatedTrail(false);  //test true here

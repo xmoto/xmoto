@@ -85,6 +85,7 @@ void StateScene::init() {
 
   // message registering
   initMessageRegistering();
+  
 }
 
 StateScene::StateScene(const std::string& i_id, bool i_doShade, bool i_doShadeAnim)
@@ -362,10 +363,11 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 	    SysMessage::instance()->displayText(SYS_MSG_TRAIL_NA);
 	  }
 	  else if(m_universe->getScenes()[j]->getGhostTrail() != 0) {
-	    if(m_universe->getScenes()[j]->getGhostTrail()->getRenderGhostTrail()) 
+	    if(XMSession::instance()->renderGhostTrail()) 
 	        SysMessage::instance()->displayText(SYS_MSG_TRAIL_VISIBLE);
+	  
+	    else SysMessage::instance()->displayText(SYS_MSG_TRAIL_INVISIBLE);
 	  }
-	  else SysMessage::instance()->displayText(SYS_MSG_TRAIL_INVISIBLE);
         }
       }
     }

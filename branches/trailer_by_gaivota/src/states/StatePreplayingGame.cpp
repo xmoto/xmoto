@@ -94,8 +94,7 @@ void StatePreplayingGame::initPlayers() {
   /* initreplay */
   m_universe->initReplay();
   
-//  m_universe->getScenes()[0]->getCamera()->getGhostTrail()->initGhostTrail(m_universe->getScenes()[0]->getFileGhost());
-
+//  if(!XMSession::instance()->renderGhostTrailBeforeTrackingShot()) XMSession::instance()->setGhostTrailRenderingActivated(false);
 }
 
 void StatePreplayingGame::runPlaying() {

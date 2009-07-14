@@ -167,8 +167,10 @@ public:
   bool enableActiveZoom() const;
   void setEnableTrailCam(bool i_value);
   bool enableTrailCam() const;
-  void setGhostTrailRenderingActivated(bool i_value);
-  bool ghostTrailRenderingActivated() const;
+  void setRenderGhostTrail(bool i_value);
+  bool renderGhostTrail() const;
+  void setRenderGhostTrailTS(bool i_value);
+  bool renderGhostTrailTS() const;
   void setEnableDeadAnimation(bool i_value);
   bool enableDeadAnimation() const;
   void setMenuGraphics(GraphicsLevel i_value);
@@ -339,7 +341,8 @@ public:
   bool m_enableInitZoom; /* true: Perform initial level scroll/zoom */
   bool m_enableActiveZoom;
   bool m_enableTrailCam;
-  bool m_ghostTrailRenderingActivated;
+  bool m_renderGhostTrail;
+  bool m_renderGhostTrailTS;
   bool m_enableDeadAnimation;
   GraphicsLevel m_menuGraphics;
   GraphicsLevel m_gameGraphics;

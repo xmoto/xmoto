@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define TRAIL_INTERPOLATION_STEP 0.1
 
 GhostTrail::GhostTrail() {
-  m_renderGTBeforeTS = false;
+  XMSession::instance()->setRenderGhostTrailTS( false );
 }
 
 GhostTrail::~GhostTrail() {
@@ -37,7 +37,9 @@ GhostTrail::~GhostTrail() {
 void GhostTrail::initGhostTrail(FileGhost* i_ghost) {
   
   if(i_ghost != 0){
+  
   try {
+  
     m_trailData.clear();
     m_interpolatedTrailData.clear();
     m_simplifiedTrailData.clear();
@@ -107,16 +109,8 @@ void GhostTrail::initGhostTrail(FileGhost* i_ghost) {
  }
 }
 
-void GhostTrail::setRenderGhostTrail(bool i_render) {
-  XMSession::instance()->setGhostTrailRenderingActivated(i_render);
-}
-
-bool GhostTrail::getRenderGhostTrail() {
-  return XMSession::instance()->ghostTrailRenderingActivated();
-}
-
 void GhostTrail::toggleRenderGhostTrail() {
-  if(XMSession::instance()->ghostTrailRenderingActivated())
-	XMSession::instance()->setGhostTrailRenderingActivated(false);
-  else XMSession::instance()->setGhostTrailRenderingActivated(true);  
+  if(XMSession::instance()->renderGhostTrail())
+	XMSession::instance()->setRenderGhostTrail(false);
+  else XMSession::instance()->setRenderGhostTrail(true);  
 }

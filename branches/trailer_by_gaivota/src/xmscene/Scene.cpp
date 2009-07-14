@@ -77,7 +77,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     m_fileGhost = NULL;
     m_ghostTrail = NULL;
-
   }
   
   Scene::~Scene() {
@@ -104,7 +103,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       i_db->read_DB_free(v_result);
 
       m_pLevelSrc->loadReducedFromFile();
-
+      
     } catch(Exception &e) {
       delete m_pLevelSrc;
       m_pLevelSrc = NULL;
