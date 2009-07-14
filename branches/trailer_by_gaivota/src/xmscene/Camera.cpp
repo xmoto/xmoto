@@ -44,7 +44,7 @@
 // declared for Trail Camera
 #define TRAIL_TRACKINGSPEED 0.3
 #define TRAILCAM_CATCHPROXIMITY 2.3
-#define TRAILCAM_FORWARDSTEPS 18   // better make dependent from speed
+#define TRAILCAM_MAX_FORWARDSTEPS 21   // better make dependent from speed
 #define TRAILCAM_SMOOTHNESS 3
 #define TRAILCAM_MAXSPEED 0.03
 #define TRAIL_SPEEDREACTIVITY 0.0006
@@ -91,6 +91,7 @@ void Camera::prepareForNewLevel() {
   m_ghostTrail = NULL;
   m_trackingShotActivated = false;
   m_catchTrail = false;
+  m_trailCamForwardSteps = 0;
 }
 
 void Camera::resetActiveZoom()
@@ -172,10 +173,14 @@ void Camera::initTrailCam(Scene* i_scene) {
 Vector2f Camera::updateTrailCam() {
   if( m_useTrailCam && m_catchTrail && m_trailAvailable ) {
   
-    if(((*m_ghostTrail->getSimplifiedGhostTrailData()).size() > (m_currentNearestTrailDataPosition + TRAILCAM_FORWARDSTEPS)) ) {
+    //calculate how many forward steps depending from player speed
+    m_trailCamForwardSteps = int(m_playerToFollow->getBikeLinearVel() * 0.7) ;
+    if(m_trailCamForwardSteps > TRAILCAM_MAX_FORWARDSTEPS) m_trailCamForwardSteps = TRAILCAM_MAX_FORWARDSTEPS;
+  
+    if(((*m_ghostTrail->getSimplifiedGhostTrailData()).size() > (m_currentNearestTrailDataPosition + m_trailCamForwardSteps)) ) {
       
       // we want to use the trail to predict the camera track
-      return (*m_ghostTrail->getSimplifiedGhostTrailData())[m_currentNearestTrailDataPosition+TRAILCAM_FORWARDSTEPS];
+      return (*m_ghostTrail->getSimplifiedGhostTrailData())[m_currentNearestTrailDataPosition+m_trailCamForwardSteps];
       
     }
   }
@@ -183,7 +188,7 @@ Vector2f Camera::updateTrailCam() {
 }
 
 Vector2f Camera::getTrailCamAimPos() {
-  return (*m_ghostTrail->getSimplifiedGhostTrailData())[m_currentNearestTrailDataPosition + TRAILCAM_FORWARDSTEPS];// + m_playerToFollow->getState()->CenterP;
+  return (*m_ghostTrail->getSimplifiedGhostTrailData())[m_currentNearestTrailDataPosition + m_trailCamForwardSteps];
 }
 
 void Camera::trailCamTrackingShot() {
@@ -431,7 +436,10 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   if(! m_catchTrail && m_recenter_camera_fast) {
     v_move_camera_max = 0.05;
   } else if(m_catchTrail) {
-    v_move_camera_max = TRAIL_SPEEDREACTIVITY*m_playerToFollow->getBikeLinearVel() + 0.002;
+    // make v_move_camera_max dependent from vector player_pos - getTrailCamAimPos
+    //v_move_camera_max = TRAIL_SPEEDREACTIVITY*m_playerToFollow->getBikeLinearVel() + 0.002;
+    v_move_camera_max = fabs((m_playerToFollow->getState()->CenterP - getTrailCamAimPos()).length()) /1000;
+    if(v_move_camera_max < 0.01) v_move_camera_max = 0.01;
     if(v_move_camera_max >= TRAILCAM_MAXSPEED) v_move_camera_max = TRAILCAM_MAXSPEED;
   } else {
     v_move_camera_max = 0.01;

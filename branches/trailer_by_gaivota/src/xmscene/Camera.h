@@ -129,6 +129,7 @@ public:
   bool getTrailAvailable() { return m_trailAvailable; };
   Vector2f getTrailCamAimPos();
   float m_previousTSStepTime;
+  int m_trailCamForwardSteps;
   
 private:
   bool  m_mirrored;
