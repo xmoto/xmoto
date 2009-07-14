@@ -174,7 +174,7 @@ Vector2f Camera::updateTrailCam() {
   if( m_useTrailCam && m_catchTrail && m_trailAvailable ) {
   
     //calculate how many forward steps depending from player speed
-    m_trailCamForwardSteps = int(m_playerToFollow->getBikeLinearVel() * 0.7) ;
+    m_trailCamForwardSteps = int(m_playerToFollow->getBikeLinearVel() * 0.4) ;
     if(m_trailCamForwardSteps > TRAILCAM_MAX_FORWARDSTEPS) m_trailCamForwardSteps = TRAILCAM_MAX_FORWARDSTEPS;
   
     if(((*m_ghostTrail->getSimplifiedGhostTrailData()).size() > (m_currentNearestTrailDataPosition + m_trailCamForwardSteps)) ) {
