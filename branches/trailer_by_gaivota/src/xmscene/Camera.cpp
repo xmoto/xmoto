@@ -47,7 +47,7 @@
 #define TRAILCAM_MAX_FORWARDSTEPS 21   // better make dependent from speed
 #define TRAILCAM_SMOOTHNESS 3
 #define TRAILCAM_MAXSPEED 0.03
-#define TRAIL_SPEEDREACTIVITY 0.0006
+#define TRAILCAM_SPEEDREACTIVITY 0.0001
 #define TRAILCAM_TRACKINGSHOT_SPEED 0.008  // smaller is faster
 
 #ifdef ENABLE_OPENGL
@@ -438,7 +438,7 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   } else if(m_catchTrail) {
     // make v_move_camera_max dependent from vector player_pos - getTrailCamAimPos
     //v_move_camera_max = TRAIL_SPEEDREACTIVITY*m_playerToFollow->getBikeLinearVel() + 0.002;
-    v_move_camera_max = fabs((m_playerToFollow->getState()->CenterP - getTrailCamAimPos()).length()) /1000;
+    v_move_camera_max = fabs((m_playerToFollow->getState()->CenterP - getTrailCamAimPos()).length()) * TRAILCAM_SPEEDREACTIVITY;
     if(v_move_camera_max < 0.01) v_move_camera_max = 0.01;
     if(v_move_camera_max >= TRAILCAM_MAXSPEED) v_move_camera_max = TRAILCAM_MAXSPEED;
   } else {
