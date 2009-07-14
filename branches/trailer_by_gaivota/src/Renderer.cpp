@@ -1160,10 +1160,12 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
   std::vector<Vector2f>* v_ghostTrailData = v_ghostTrail->getGhostTrailData();
 	//setup colors and declare vars
 	TColor c = TColor(FINE_TRAIL_COLOR,FINE_TRAIL_COLOR,0,255);
-	float fSize=0;
-	float v_last_size=1;
+	float fSize=0.0;
+	float v_last_size=1.0;
 	int lines_drawn=0;
 	int v_offset=0;
+	if(i_scale<1.0){i_scale=1.0;} //we don't want it smaller
+ 	if(i_scale>10.0){i_scale=10.0;} //ax scale to not make it look bad ;-)
 	//grab rendering device
 	DrawLib* pDrawlib = GameApp::instance()->getDrawLib(); if(pDrawlib==0){return;}
 	//draw nice or ugly?
@@ -1192,7 +1194,7 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 					MAKE_COLOR(c.Red(),c.Green(),c.Blue(),c.Alpha()), //color
 					(v_last_size*FINE_TRAIL_SCALE*i_scale), 	        //start size
 					(fSize*FINE_TRAIL_SCALE*i_scale),				          //end size
-					(i_scale>0.4)                                     //toggle rounded ends
+					(i_scale>0.4) //only if scale is big enough       //toggle rounded ends
 			);
 			lines_drawn++;
 			v_last_size=fSize;
@@ -1207,7 +1209,7 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 			//get speed/size
 			float xdiff=(*v_ghostTrailData)[i-v_offset].x - (*v_ghostTrailData)[i].x;if(xdiff<0){xdiff=-xdiff;}
 			float ydiff=(*v_ghostTrailData)[i-v_offset].y - (*v_ghostTrailData)[i].y;if(ydiff<0){ydiff=-ydiff;}
-			fSize=sqrt(pow(xdiff,2)+pow(ydiff,2))/6;			
+			fSize=sqrt(pow(xdiff,2)+pow(ydiff,2))/v_offset;			
 			if(fSize>v_last_size*2){v_last_size=0.1f; continue;} //if the size has doupled then skip (must be teleport)
 			if(fSize>1){fSize=1;} if(fSize<0.1f){fSize=0.1f;}    //max and min sizes
 			//we need to check that the line is inside the screen, why to draw 2000-5000 lines when we can draw 100 by skipping non-visible ones.
@@ -1220,8 +1222,8 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 					(*v_ghostTrailData)[i-v_offset], 									//start pos
 					(*v_ghostTrailData)[i],   												//end pos
 					MAKE_COLOR(c.Red(),c.Green(),c.Blue(),c.Alpha()), //color
-					(v_last_size*UGLY_TRAIL_SCALE*(i_scale/2)), 			//start size
-					(fSize*UGLY_TRAIL_SCALE*(i_scale/2)),    					//end size
+					(v_last_size*UGLY_TRAIL_SCALE*i_scale), 			//start size
+					(fSize*UGLY_TRAIL_SCALE*i_scale),    					//end size
 					false //UGLY :')                 									//toggle rounded ends
 			);
 			v_last_size=fSize;
