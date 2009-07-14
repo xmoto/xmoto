@@ -438,8 +438,9 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   } else if(m_catchTrail) {
     // make v_move_camera_max dependent from vector player_pos - getTrailCamAimPos
     //v_move_camera_max = TRAIL_SPEEDREACTIVITY*m_playerToFollow->getBikeLinearVel() + 0.002;
-    v_move_camera_max = fabs((m_playerToFollow->getState()->CenterP - getTrailCamAimPos()).length()) * TRAILCAM_SPEEDREACTIVITY;
-    if(v_move_camera_max < 0.01) v_move_camera_max = 0.01;
+    //v_move_camera_max = fabs((m_playerToFollow->getState()->CenterP - getTrailCamAimPos()).length()) * TRAILCAM_SPEEDREACTIVITY;
+    //if(v_move_camera_max < 0.01) 
+    v_move_camera_max = 0.01;
     if(v_move_camera_max >= TRAILCAM_MAXSPEED) v_move_camera_max = TRAILCAM_MAXSPEED;
   } else {
     v_move_camera_max = 0.01;
