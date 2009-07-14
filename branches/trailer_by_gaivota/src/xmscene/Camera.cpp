@@ -43,7 +43,7 @@
 
 // declared for Trail Camera
 #define TRAIL_TRACKINGSPEED 0.3
-#define TRAILCAM_CATCHPROXIMITY 2.3
+#define TRAILCAM_CATCHPROXIMITY 2.0
 #define TRAILCAM_MAX_FORWARDSTEPS 21   // better make dependent from speed
 #define TRAILCAM_SMOOTHNESS 3
 #define TRAILCAM_MAXSPEED 0.03
@@ -325,7 +325,7 @@ void Camera::guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
   
   if(m_useTrailCam && m_catchTrail && m_trailAvailable && !m_trackingShotActivated) {     // trail cam! cowabungaaa!
   
-    normal_hoffset = 2.6;
+    normal_hoffset = 3.5;
     normal_voffset = 2.0;        
   
     Vector2f v_shiftVector = -updateTrailCam() + m_playerToFollow->getState()->CenterP; //get aim 
@@ -344,7 +344,9 @@ void Camera::guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
     if(m_playerToFollow->getState()->Dir == DD_RIGHT) {
       p_fDesiredVerticalScrollShift *= -1;
     }
-  }    /* allow maximum and maximum, means dont let the camera go out of the hoffset and voffset borders */
+  } 
+
+  /* allow maximum and maximum, means dont let the camera go out of the hoffset and voffset borders */
   if(p_fDesiredHorizontalScrollShift > normal_hoffset) {
      p_fDesiredHorizontalScrollShift = normal_hoffset;
   }
