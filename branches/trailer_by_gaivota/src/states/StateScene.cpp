@@ -86,6 +86,7 @@ void StateScene::init() {
   // message registering
   initMessageRegistering();
   
+  
 }
 
 StateScene::StateScene(const std::string& i_id, bool i_doShade, bool i_doShadeAnim)
@@ -103,7 +104,7 @@ StateScene::StateScene(Universe* i_universe, const std::string& i_id, bool i_doS
   m_universe   = i_universe;
 
   if(m_universe != NULL) {
-    if(m_universe->getScenes().size() != 0) {
+    if(m_universe->getScenes().size() != 0) {    
       if(NetClient::instance()->isConnected()) {
 	NA_playingLevel na(m_universe->getScenes()[0]->getLevelSrc()->Id());
 	NetClient::instance()->send(&na, 0);

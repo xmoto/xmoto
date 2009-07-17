@@ -609,6 +609,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     if(i_info=="WR") {  // then we ve got our ghost trail!
       m_ghostTrail = new GhostTrail();
       m_fileGhost = v_ghost;
+      m_ghostTrail->initGhostTrail(v_ghost);
     }
     return v_ghost;
   }

@@ -257,9 +257,7 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
 }
 
 void GameRenderer::initCameras(Universe* i_universe)
-{
-  loadGhostTrail(i_universe->getScenes()[0]);
- 
+{ 
   for(unsigned int j=0; j<i_universe->getScenes().size(); j++) {
     unsigned int numberCamera = i_universe->getScenes()[j]->getNumberCameras();
     if(numberCamera > 1){
@@ -666,13 +664,6 @@ void GameRenderer::calculateEdgeTexture(Block* pBlock,
     ua2.y = ub2.y = 0.99;
   }
     break;
-  }
-}
-
-void GameRenderer::loadGhostTrail(Scene* i_scene) {
-  FileGhost* v_ghost = i_scene->getFileGhost();
-  if( v_ghost != 0) {
-    i_scene->getGhostTrail()->initGhostTrail(v_ghost);
   }
 }
 

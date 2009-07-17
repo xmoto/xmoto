@@ -74,6 +74,7 @@ void StatePreplayingGame::initPlayers() {
 								      XMSession::instance()->enableEngineSound()));
       v_world->getCamera()->setScroll(false, v_world->getGravity());
     }
+        
   } else { // multiworlds
     Scene* v_world;
     
@@ -94,7 +95,6 @@ void StatePreplayingGame::initPlayers() {
   /* initreplay */
   m_universe->initReplay();
   
-//  if(!XMSession::instance()->renderGhostTrailBeforeTrackingShot()) XMSession::instance()->setGhostTrailRenderingActivated(false);
 }
 
 void StatePreplayingGame::runPlaying() {

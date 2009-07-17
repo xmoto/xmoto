@@ -286,7 +286,6 @@ private:
   void renderTimePanel(Scene* i_scene);
   void renderReplayHelpMessage(Scene* i_scene);
 
-  void loadGhostTrail(Scene* i_scene);
   Texture* loadTexture(std::string textureName);
   Texture* loadTextureEdge(std::string textureName);
   int  edgeGeomExists(Block* pBlock, std::string texture);
