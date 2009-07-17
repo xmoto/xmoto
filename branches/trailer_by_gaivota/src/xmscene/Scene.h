@@ -242,10 +242,7 @@ public:
 			const TColor& i_filterColor,
 			const TColor& i_filterUglyColor);
 
-  //for ghost trail
   inline GhostTrail* getGhostTrail() {  return m_ghostTrail; };
-  //void setFileGhost(FileGhost* i_fileGhost);
-  inline FileGhost* getFileGhost() { return m_fileGhost; };
   
   std::vector<Ghost *> &Ghosts();
   std::vector<Biker*> &Players();
@@ -311,7 +308,6 @@ private:
   bool m_showGhostTimeDiff;
   void onRewinding();
 
-  FileGhost* m_fileGhost; //for ghost trail
   GhostTrail* m_ghostTrail;
   std::vector<Ghost*> m_ghosts;
   std::vector<float> m_myLastStrawberries;

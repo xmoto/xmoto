@@ -25,8 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class GhostTrail {
  public:
-  GhostTrail(); 
-  void initGhostTrail(FileGhost* i_ghost);
+  GhostTrail(FileGhost* i_ghost); 
   ~GhostTrail();
   inline std::vector<Vector2f>* getGhostTrailData() { return &m_trailData; };
   inline std::vector<Vector2f>* getSimplifiedGhostTrailData() { return &m_simplifiedTrailData; };

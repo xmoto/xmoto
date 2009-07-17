@@ -24,17 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define TRAIL_INTERPOLATED_TRAIL_INTERNODE_LENGTH 0.3
 #define TRAIL_INTERPOLATION_STEP 0.1
 
-GhostTrail::GhostTrail() {
+GhostTrail::GhostTrail(FileGhost* i_ghost) {
   XMSession::instance()->setRenderGhostTrailTS( false );
-}
-
-GhostTrail::~GhostTrail() {
-  m_trailData.clear();
-  m_simplifiedTrailData.clear();
-  m_interpolatedTrailData.clear();
-}
-
-void GhostTrail::initGhostTrail(FileGhost* i_ghost) {
   
   if(i_ghost != 0){
   
@@ -107,6 +98,12 @@ void GhostTrail::initGhostTrail(FileGhost* i_ghost) {
   
   catch(Exception &e) {} 
  }
+}
+
+GhostTrail::~GhostTrail() {
+  m_trailData.clear();
+  m_simplifiedTrailData.clear();
+  m_interpolatedTrailData.clear();
 }
 
 void GhostTrail::toggleRenderGhostTrail() {

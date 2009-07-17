@@ -1144,7 +1144,6 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
   }
 }
 
-//by tuhoojabotti
 void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i_scale) {
 	//get trail data
   GhostTrail* v_ghostTrail = i_scene->getGhostTrail(); if(v_ghostTrail == 0){return;}

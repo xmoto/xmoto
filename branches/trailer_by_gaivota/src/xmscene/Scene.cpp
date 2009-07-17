@@ -75,7 +75,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     m_physicsSettings = NULL;
     
-    m_fileGhost = NULL;
     m_ghostTrail = NULL;
   }
   
@@ -606,10 +605,8 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     v_ghost->setReference(i_isReference);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
     m_ghosts.push_back(v_ghost);
-    if(i_info=="WR") {  // then we ve got our ghost trail!
-      m_ghostTrail = new GhostTrail();
-      m_fileGhost = v_ghost;
-      m_ghostTrail->initGhostTrail(v_ghost);
+    if(i_info == "WR") {  // then we ve got our ghost trail, because WR is always optimal path through level!
+      m_ghostTrail = new GhostTrail(v_ghost);
     }
     return v_ghost;
   }
