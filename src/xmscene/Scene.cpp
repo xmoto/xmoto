@@ -1192,6 +1192,7 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
    
   void Scene::CameraMove(float p_x, float p_y) {
     getCamera()->desactiveActionZoom();
+    getCamera()->setUseTrailCam(false);
     getCamera()->moveCamera(p_x, p_y);
   }
 
