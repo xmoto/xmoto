@@ -23,6 +23,8 @@
 #include "Bike.h"
 #include "BikeGhost.h"
 #include "helpers/Log.h"
+#include <sstream>
+#include "../SysMessage.h"
 
 #define ZOOM_DEFAULT 0.24
 #define ZOOM_DEFAULT_NO_AUTOZOOM 0.195
@@ -44,11 +46,13 @@
 // declared for Trail Camera
 #define TRAIL_TRACKINGSPEED 0.3
 #define TRAILCAM_CATCHPROXIMITY 2.0
-#define TRAILCAM_MAX_FORWARDSTEPS 21   // better make dependent from speed
-#define TRAILCAM_SMOOTHNESS 3
+#define TRAILCAM_MAX_FORWARDSTEPS 21
+#define TRAILCAM_MIN_FORWARDSTEPS 3
+#define TRAILCAM_SMOOTHNESS 2
 #define TRAILCAM_MAXSPEED 0.03
 #define TRAILCAM_SPEEDREACTIVITY 0.0001
 #define TRAILCAM_TRACKINGSHOT_SPEED 0.008  // smaller is faster
+#define TRAILCAM_DAMPING 0.1
 
 #ifdef ENABLE_OPENGL
 #include "include/xm_OpenGL.h"
@@ -68,10 +72,6 @@ Camera::Camera(Vector2i upperleft, Vector2i downright){
 }
 
 Camera::~Camera() {
-//  if(m_ghostTrail != NULL) {
-//    delete m_ghostTrail;
-//  }
-//  delete m_playerToFollow; //good??
 }
 
 void Camera::prepareForNewLevel() {
@@ -144,6 +144,7 @@ void Camera::moveCamera(float px, float py) {
 void Camera::initCameraPosition() {
   m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
   m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
+
 }
 
 void Camera::initCamera() {
@@ -168,13 +169,15 @@ void Camera::initTrailCam(Scene* i_scene) {
   m_currentNearestTrailDataPosition = 0;
   m_trackShotIndex = 0;
   m_trackShotStartIndex = 0;
+  m_dampVectorMax = Vector2f(0.0,0.0);
+  m_dampCurrent = Vector2f(0.0,0.0);
 }
 
 Vector2f Camera::updateTrailCam() {
   if( m_useTrailCam && m_catchTrail && m_trailAvailable ) {
   
     //calculate how many forward steps depending from player speed
-    m_trailCamForwardSteps = int(m_playerToFollow->getBikeLinearVel() * 0.4) ;
+    m_trailCamForwardSteps = int(m_playerToFollow->getBikeLinearVel() * 0.4) + TRAILCAM_MIN_FORWARDSTEPS;
     if(m_trailCamForwardSteps > TRAILCAM_MAX_FORWARDSTEPS) m_trailCamForwardSteps = TRAILCAM_MAX_FORWARDSTEPS;
   
     if(((*m_ghostTrail->getSimplifiedGhostTrailData()).size() > (m_currentNearestTrailDataPosition + m_trailCamForwardSteps)) ) {
@@ -185,6 +188,49 @@ Vector2f Camera::updateTrailCam() {
     }
   }
   return Vector2f(0,0);
+}
+
+Vector2f Camera::dampCam(Vector2f v_inputVec) {
+
+  float dx = fabs(m_dampVectorMax.x)-fabs(m_dampCurrent.x),
+        dy = fabs(m_dampVectorMax.y)-fabs(m_dampCurrent.y);
+
+  //get nearer to 0
+  if(m_dampVectorMax.x >= 0) m_dampVectorMax.x -= TRAILCAM_DAMPING ;
+  else m_dampVectorMax.x += TRAILCAM_DAMPING;
+  if(m_dampVectorMax.y >= 0) m_dampVectorMax.y -= TRAILCAM_DAMPING;
+  else m_dampVectorMax.y += TRAILCAM_DAMPING;
+  
+  if((v_inputVec.x > m_dampVectorMax.x) && v_inputVec.x >=0) { //set new X Peak
+    m_dampVectorMax.x = v_inputVec.x;
+  } 
+  if((v_inputVec.x < m_dampVectorMax.x) && v_inputVec.x < 0) {
+    m_dampVectorMax.x = v_inputVec.x;
+  } 
+  if((v_inputVec.y > m_dampVectorMax.y) && v_inputVec.y >=0 ) {  //set new Y peak
+    m_dampVectorMax.y = v_inputVec.y;
+  } 
+  if((v_inputVec.y < m_dampVectorMax.y) && v_inputVec.y <0 ) {
+    m_dampVectorMax.y = v_inputVec.y;
+  }
+  
+  m_dampCurrent.x = SimpleInterpolate(m_dampCurrent.x,m_dampVectorMax.x,1.1); // TRAILCAM_DAMPING * (m_dampVectorMax.x-m_dampCurrent.x);
+  m_dampCurrent.y = SimpleInterpolate(m_dampCurrent.y,m_dampVectorMax.y,1.1); // TRAILCAM_DAMPING * (m_dampVectorMax.y-m_dampCurrent.y);
+//  m_dampCurrent = (v_inputVec-m_dampCurrent)/2;
+  
+  if(XMSession::instance()->debug()) {
+    std::stringstream outX; outX << m_dampCurrent.x;
+    std::stringstream outY; outY << m_dampCurrent.y;
+    std::stringstream outMX; outMX << m_dampVectorMax.x;
+    std::stringstream outMY; outMY << m_dampVectorMax.y;
+    std::stringstream inX,inY; inX << v_inputVec.x; inY << v_inputVec.y;
+    SysMessage::instance()->displayText("Cam Damp XY: " +outX.str()+"  |  "+outY.str()+
+                                      "\nMAX XY: "+outMX.str()+"  |  "+outMY.str()+
+                                      "\nIN  XY: "+inX.str()+"  |  "+inY.str());
+  }
+  
+  return m_dampCurrent;
+  
 }
 
 Vector2f Camera::getTrailCamAimPos() {
@@ -329,10 +375,10 @@ void Camera::guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
   
   if(m_useTrailCam && m_catchTrail && m_trailAvailable && !m_trackingShotActivated) {     // trail cam! cowabungaaa!
   
-    normal_hoffset = 3.5;
+    normal_hoffset = 3.0;
     normal_voffset = 2.0;        
   
-    Vector2f v_shiftVector = -updateTrailCam() + m_playerToFollow->getState()->CenterP; //get aim 
+    Vector2f v_shiftVector = -dampCam(updateTrailCam()) + m_playerToFollow->getState()->CenterP; //get aim 
         
     p_fDesiredVerticalScrollShift = v_shiftVector.y;
     p_fDesiredHorizontalScrollShift = v_shiftVector.x;

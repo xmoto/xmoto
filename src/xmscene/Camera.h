@@ -119,6 +119,7 @@ public:
   // trail cam stuff
   void initTrailCam(Scene* i_scene);
   Vector2f updateTrailCam();
+  Vector2f dampCam(Vector2f v_inputVec);
   void trailCamTrackingShot();
   void setActivateTrackingShot(bool i_shot) {m_trackingShotActivated = i_shot;};
   void toggleTrackingShot(Scene* i_scene);
@@ -160,6 +161,8 @@ private:
   bool m_trailAvailable;
   float m_trackShotIndex; // current step on ghost trail
   unsigned int m_trackShotStartIndex;
+  Vector2f m_dampVectorMax,
+           m_dampCurrent;
   
   // basic cam control
   float m_cameraOffsetX;
