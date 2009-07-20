@@ -50,6 +50,7 @@
 #define TRAILCAM_MIN_FORWARDSTEPS 3
 #define TRAILCAM_SMOOTHNESS 2
 #define TRAILCAM_MAXSPEED 0.03
+#define TRAILCAM_MINSPEED 0.005
 #define TRAILCAM_SPEEDREACTIVITY 0.0001
 #define TRAILCAM_TRACKINGSHOT_SPEED 0.008  // smaller is faster
 #define TRAILCAM_DAMPING 0.1
@@ -214,8 +215,8 @@ Vector2f Camera::dampCam(Vector2f v_inputVec) {
     m_dampVectorMax.y = v_inputVec.y;
   }
   
-  m_dampCurrent.x = SimpleInterpolate(m_dampCurrent.x,m_dampVectorMax.x,1.1); // TRAILCAM_DAMPING * (m_dampVectorMax.x-m_dampCurrent.x);
-  m_dampCurrent.y = SimpleInterpolate(m_dampCurrent.y,m_dampVectorMax.y,1.1); // TRAILCAM_DAMPING * (m_dampVectorMax.y-m_dampCurrent.y);
+  m_dampCurrent.x = SimpleInterpolate(m_dampCurrent.x,m_dampVectorMax.x,1.0); // TRAILCAM_DAMPING * (m_dampVectorMax.x-m_dampCurrent.x);
+  m_dampCurrent.y = SimpleInterpolate(m_dampCurrent.y,m_dampVectorMax.y,1.0); // TRAILCAM_DAMPING * (m_dampVectorMax.y-m_dampCurrent.y);
 //  m_dampCurrent = (v_inputVec-m_dampCurrent)/2;
   
   if(XMSession::instance()->debug()) {
@@ -489,7 +490,7 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
     v_move_camera_max = 0.05;
   } else if(m_catchTrail) {
     // make v_move_camera_max dependent from vector player_pos - getTrailCamAimPos
-    //v_move_camera_max = TRAIL_SPEEDREACTIVITY*m_playerToFollow->getBikeLinearVel() + 0.002;
+    //v_move_camera_max = TRAIL_SPEEDREACTIVITY*m_playerToFollow->getBikeLinearVel() + TRAILCAM_MINSPEED;
     //v_move_camera_max = fabs((m_playerToFollow->getState()->CenterP - getTrailCamAimPos()).length()) * TRAILCAM_SPEEDREACTIVITY;
     //if(v_move_camera_max < 0.01) 
     v_move_camera_max = 0.01;

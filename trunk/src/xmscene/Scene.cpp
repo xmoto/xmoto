@@ -44,6 +44,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../net/NetClient.h"
 #include "../net/NetActions.h"
 #include "ScriptTimer.h"
+#include "../drawlib/DrawLib.h"
+
+#define GAMEMESSAGES_PACKTIME 40
 
 /* 
  *  Game object. Handles all of the gamestate management und so weiter.
@@ -156,6 +159,29 @@ void Scene::cleanPlayers() {
     Add game message
     ===========================================================================*/
   void Scene::gameMessage(std::string Text, bool bOnce, int duration, MessageType i_msgType) {
+
+    /* If text is longer than screen width, put \n into it to split lines */   
+    DrawLib* pDrawLib = GameApp::instance()->getDrawLib();
+    FontManager* pFM = pDrawLib->getFontMedium();
+    FontGlyph* pFG = pFM->getGlyph(Text);
+    if(pFG->realWidth() > pDrawLib->getDispWidth() ) {
+      unsigned int v_newline = 0;
+      std::string v_subtext = ("");
+      for( unsigned int i = 0; i<Text.length(); i++) {
+        pFG = pFM->getGlyph(Text.substr(v_newline,i-v_subtext.length()));
+        if(pFG->realWidth() >= pDrawLib->getDispWidth()-5) {  // our sub string length is now equal disp Width
+          for(unsigned int j=i; j>v_newline; j--) { //look for " "
+            if(!Text.compare(j,1," ")) {
+               Text.insert(j,"\n");
+               v_newline = j+1;
+               v_subtext = Text.substr(i-v_subtext.length(),j);
+               continue;  // leave this loop, to continue with rest of the string
+            }
+          }
+        }
+      }
+    }
+    
     /* "unique"? */
     GameMessage *pMsg = NULL;
     
@@ -221,12 +247,12 @@ void Scene::packGameMessages() {   //put multiple GameMessages into one, if they
 
   for( int i = m_GameMessages.size()-1 ; i > 0 ; i-- ) {
     
-    if( (m_GameMessages[i]->removeTime - m_GameMessages[i-1]->removeTime < 60) && 
+    if( (m_GameMessages[i]->removeTime - m_GameMessages[i-1]->removeTime < GAMEMESSAGES_PACKTIME) && 
         (m_GameMessages[i]->msgType == m_GameMessages[i-1]->msgType) &&
         (m_GameMessages[i]->bOnce == m_GameMessages[i-1]->bOnce) &&
         (m_GameMessages[i]->nAlpha == m_GameMessages[i-1]->nAlpha)) {                   //of same Type?
     
-      m_GameMessages[i-1]->Text = m_GameMessages[i-1]->Text + "\n" + m_GameMessages[i]->Text;
+      m_GameMessages[i-1]->Text += "\n" + m_GameMessages[i]->Text;
       m_GameMessages[i-1]->removeTime = m_GameMessages[i]->removeTime;              //set removeTime of latest Message
       m_GameMessages.pop_back();                                                    //remove last one
     
@@ -1198,6 +1224,7 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
 
   void Scene::CameraSetPos(float p_x, float p_y) {
     getCamera()->desactiveActionZoom();
+    getCamera()->setUseTrailCam(false);
     getCamera()->setCameraPosition(p_x, p_y);
   }
 
