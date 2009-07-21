@@ -160,6 +160,8 @@ void Scene::cleanPlayers() {
     ===========================================================================*/
   void Scene::gameMessage(std::string Text, bool bOnce, int duration, MessageType i_msgType) {
 
+    if(Text == "" ) return;  // eliminate empty messages
+
     /* If text is longer than screen width, put \n into it to split lines */   
     DrawLib* pDrawLib = GameApp::instance()->getDrawLib();
     FontManager* pFM = pDrawLib->getFontMedium();
