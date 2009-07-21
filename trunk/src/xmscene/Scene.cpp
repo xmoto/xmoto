@@ -169,7 +169,7 @@ void Scene::cleanPlayers() {
       std::string v_subtext = ("");
       for( unsigned int i = 0; i<Text.length(); i++) {
         pFG = pFM->getGlyph(Text.substr(v_newline,i-v_subtext.length()));
-        if(pFG->realWidth() >= pDrawLib->getDispWidth()-5) {  // our sub string length is now equal disp Width
+        if(pFG->realWidth() >= pDrawLib->getDispWidth()-15) {  // our sub string length is now equal disp Width
           for(unsigned int j=i; j>v_newline; j--) { //look for " "
             if(!Text.compare(j,1," ")) {
                Text.insert(j,"\n");
