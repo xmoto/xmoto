@@ -115,6 +115,7 @@ private:
   static int L_Game_GetPlayerSpeed(lua_State *pL);
   static int L_Game_GetPlayerAngle(lua_State *pL);
 	static int L_Game_SetCameraPosition(lua_State *pL);
+	static int L_Game_ToggleCameraFollow(lua_State *pL);
   /* Script Timer Functions*/
   static int L_Game_StartTimer(lua_State *pL);  
 	static int L_Game_SetTimerDelay(lua_State *pL);  

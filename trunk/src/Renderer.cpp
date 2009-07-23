@@ -47,6 +47,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BasicSceneStructs.h"
 #include <sstream>
 #include "states/GameState.h"
+#include "SysMessage.h"
 
 #define ABS(x) ((x) > 0.0 ? (x) : -(x))
 #define SIGNE(x) ((x) >= 0.0 ? 1.0 : -1.0)
@@ -1630,6 +1631,18 @@ int GameRenderer::nbParticlesRendered() const {
 
       /* Render debug info */
       _RenderDebugInfo();
+      
+      pDrawlib->setLineWidth(3);
+      GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
+      pDrawlib->startDraw(DRAW_MODE_LINE_LOOP);
+      pDrawlib->setColorRGB(0,0,255);
+      pDrawlib->glVertex(m_screenBBox.getBMin().x,m_screenBBox.getBMin().y);
+      pDrawlib->glVertex(m_screenBBox.getBMin().x,m_screenBBox.getBMax().y);
+      pDrawlib->glVertex(m_screenBBox.getBMax().x,m_screenBBox.getBMax().y);
+      pDrawlib->glVertex(m_screenBBox.getBMax().x,m_screenBBox.getBMin().y);
+      pDrawlib->endDraw();
+      pDrawlib->setLineWidth(2);
+  
     }
 
     pCamera->setCamera2d();
@@ -3633,15 +3646,30 @@ void GameRenderer::calculateCameraScaleAndScreenAABB(Camera* pCamera, AABB& bbox
 {
   bbox.reset();
 
-  m_xScale = pCamera->getCurrentZoom() * ((float)pCamera->getDispHeight()) / pCamera->getDispWidth();
+  m_xScale = pCamera->getCurrentZoom() * ((float)pCamera->getDispHeight()) / pCamera->getDispWidth();  //sets correct screen aspect ratio
   m_yScale = pCamera->getCurrentZoom();
 
   // depends on zoom
   float xCamOffset = 1.0 / m_xScale;
   float yCamOffset = 1.0 / m_yScale;
 
-  Vector2f v1(pCamera->getCameraPositionX()-xCamOffset, pCamera->getCameraPositionY()-yCamOffset);
-  Vector2f v2(pCamera->getCameraPositionX()+xCamOffset, pCamera->getCameraPositionY()+yCamOffset);
+  //screenBBox must be transformed by the angle of the camera
+  float r=(sqrt(pow(xCamOffset,2)+pow(yCamOffset,2))); //radius of screen edge remains constant, no matter which angle!
+  float alpha=asin(yCamOffset/r);
+  float alpha2=asin(-yCamOffset/r);
+  float newYCamOffset1=sin(alpha+pCamera->rotationAngle()) *r;
+  float newXCamOffset1=cos(alpha+pCamera->rotationAngle()) *r;
+  float newYCamOffset2=sin(alpha2+pCamera->rotationAngle()) *r;
+  float newXCamOffset2=cos(alpha2+pCamera->rotationAngle()) *r;
+  
+  float newXCamOffset=newXCamOffset1, 
+        newYCamOffset=newYCamOffset2; 
+  if(pCamera->rotationAngle()<PI/2 || (pCamera->rotationAngle() > PI && pCamera->rotationAngle() < 1.5*PI)) {
+    newXCamOffset=-newXCamOffset2;
+    newYCamOffset=-newYCamOffset1;
+  }
+  Vector2f v1=Vector2f(pCamera->getCameraPositionX()-newXCamOffset, pCamera->getCameraPositionY()-newYCamOffset);
+  Vector2f v2=Vector2f(pCamera->getCameraPositionX()+newXCamOffset, pCamera->getCameraPositionY()+newYCamOffset);
 
   bbox.addPointToAABB2f(v1);
   bbox.addPointToAABB2f(v2);
