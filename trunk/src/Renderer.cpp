@@ -1162,8 +1162,17 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
 	//draw nice or ugly?
 	if(XMSession::instance()->ugly() == false) {
 		v_offset=1; //default
-		if(i_scene->getCamera()->getCurrentZoom()<0.07){v_offset=5;} //in zoom out mode we want to reduce lagging by drawing less curvier.
-		if(i_scene->getCamera()->getCurrentZoom()<0.025){v_offset=10;} //super huge lvl
+		//different GFX setup
+		if(m_graphicsLevel == GFX_LOW){ //low gfx modes
+			if(i_scene->getCamera()->getCurrentZoom()<0.05){v_offset=9;} //in zoom out mode we want to reduce lagging by drawing less curvier.
+			if(i_scene->getCamera()->getCurrentZoom()<0.020){v_offset=18;} //super huge lvl	(like ultimative mofo challenge)		 
+		}else if(m_graphicsLevel == GFX_MEDIUM){ //medium gfx modes
+			if(i_scene->getCamera()->getCurrentZoom()<0.06){v_offset=6;}
+			if(i_scene->getCamera()->getCurrentZoom()<0.022){v_offset=12;}
+		}else if(m_graphicsLevel == GFX_HIGH){  //high gfx mode!
+			if(i_scene->getCamera()->getCurrentZoom()<0.07){v_offset=3;}
+			if(i_scene->getCamera()->getCurrentZoom()<0.025){v_offset=6;} 
+		}
 	  for(unsigned int i=0; i < (*v_ghostTrailData).size(); i=i+v_offset) {
 			if (!(i>0)){v_last_size=0.1;continue;}
 			//get speed/size
@@ -3654,17 +3663,21 @@ void GameRenderer::calculateCameraScaleAndScreenAABB(Camera* pCamera, AABB& bbox
   float yCamOffset = 1.0 / m_yScale;
 
   //screenBBox must be transformed by the angle of the camera
+  float a=pCamera->rotationAngle();
+  if(a<0){  //prevent negative angles, which are supplied by various getCamera* functions
+    a=-a;
+  }
   float r=(sqrt(pow(xCamOffset,2)+pow(yCamOffset,2))); //radius of screen edge remains constant, no matter which angle!
   float alpha=asin(yCamOffset/r);
   float alpha2=asin(-yCamOffset/r);
-  float newYCamOffset1=sin(alpha+pCamera->rotationAngle()) *r;
-  float newXCamOffset1=cos(alpha+pCamera->rotationAngle()) *r;
-  float newYCamOffset2=sin(alpha2+pCamera->rotationAngle()) *r;
-  float newXCamOffset2=cos(alpha2+pCamera->rotationAngle()) *r;
+  float newYCamOffset1=sin(alpha+a) *r;
+  float newXCamOffset1=cos(alpha+a) *r;
+  float newYCamOffset2=sin(alpha2+a) *r;
+  float newXCamOffset2=cos(alpha2+a) *r;
   
   float newXCamOffset=newXCamOffset1, 
         newYCamOffset=newYCamOffset2; 
-  if(pCamera->rotationAngle()<PI/2 || (pCamera->rotationAngle() > PI && pCamera->rotationAngle() < 1.5*PI)) {
+  if(a<PI/2 || (a > PI && a < 1.5*PI)) {
     newXCamOffset=-newXCamOffset2;
     newYCamOffset=-newYCamOffset1;
   }

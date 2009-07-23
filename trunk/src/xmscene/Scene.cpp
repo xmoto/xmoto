@@ -170,7 +170,7 @@ void Scene::cleanPlayers() {
       unsigned int v_newline = 0;
       std::string v_subtext = ("");
       for( unsigned int i = 0; i<Text.length(); i++) {
-        pFG = pFM->getGlyph(Text.substr(v_newline,i-v_subtext.length()));
+        pFG = pFM->getGlyph(Text.substr(v_newline,i-v_subtext.length()));  //substr isnt a problem for utf8, because its got a rule which prevents characters beeing in 2-byte chars
         if(pFG->realWidth() >= pDrawLib->getDispWidth()-15) {  // our sub string length is now equal disp Width
           for(unsigned int j=i; j>v_newline; j--) { //look for " "
             if(!Text.compare(j,1," ")) {
