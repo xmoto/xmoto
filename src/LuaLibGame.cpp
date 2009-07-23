@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Level.h"
 #include "xmscene/Block.h"
 #include "xmscene/ScriptTimer.h"
+#include "xmscene/Camera.h"
 #include <sstream>
 
 #define STIMER_DELAY_DEFAULT 100
@@ -94,7 +95,8 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"StartTimer",               LuaLibGame::L_Game_StartTimer},   
   {"SetTimerDelay",               LuaLibGame::L_Game_SetTimerDelay}, 
   {"StopTimer",               LuaLibGame::L_Game_StopTimer}, 
-	{"SetCameraPosition",               LuaLibGame::L_Game_SetCameraPosition}, 
+	{"SetCameraPosition",               LuaLibGame::L_Game_SetCameraPosition},
+ 	{"ToggleCameraFollow",               LuaLibGame::L_Game_ToggleCameraFollow},
   {NULL, NULL}
 };
 Scene*     LuaLibGame::m_exec_world              = NULL;
@@ -695,6 +697,19 @@ int LuaLibGame::L_Game_SetCameraPosition(lua_State *pL) {
   m_exec_world->createGameEvent(new MGE_CameraSetPos(m_exec_world->getTime(),
 						  X_luaL_check_number(pL,1),
 						  X_luaL_check_number(pL,2)));
+  return 0;
+}
+
+int LuaLibGame::L_Game_ToggleCameraFollow(lua_State *pL) {
+	/* no event for this */
+	int v_player = X_luaL_check_number(pL,1);
+	Camera*  v_Camera  = m_exec_world->Cameras()[v_player];
+	
+	if(v_Camera->getPlayerToFollow()!=NULL){
+		v_Camera->setPlayerToFollow(NULL);
+	}else{
+		v_Camera->setPlayerToFollow(m_exec_world->Players()[v_player]);
+	}
   return 0;
 }
 
