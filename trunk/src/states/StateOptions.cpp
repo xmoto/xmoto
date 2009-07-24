@@ -48,7 +48,7 @@ StateOptions::StateOptions(bool drawStateBehind, bool updateStatesBehind):
   StateMenu(drawStateBehind,
 	    updateStatesBehind) {
   m_name = "StateOptions";
-
+ 
   StateManager::instance()->registerAsObserver("UPDATEPROFILE", this);
   StateManager::instance()->registerAsObserver("THEMES_UPDATED", this);
   StateManager::instance()->registerAsObserver("ROOMS_UPDATED", this);
@@ -78,6 +78,11 @@ void StateOptions::enter()
   updateOptions();
   updateServerStrings();
   updateJoysticksStrings();
+  
+  if(XMSession::instance()->ugly()) {   // needed to show cursor on option menu while playing level
+    GameApp::instance()->displayCursor(true);
+  }
+
 }
 
 void StateOptions::clean() {
