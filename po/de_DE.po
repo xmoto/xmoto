@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-07-21 20:21+0200\n"
-"PO-Revision-Date: 2009-05-26 23:15+0100\n"
+"PO-Revision-Date: 2009-07-26 19:43+0100\n"
 "Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -116,7 +116,7 @@ msgstr "Aktiver Kamera-Zoom"
 
 #: src/GameText.h:60
 msgid "Use Trail Cam"
-msgstr ""
+msgstr "Trail Cam aktivieren"
 
 #: src/GameText.h:61
 msgid "Beating mode"
@@ -407,11 +407,11 @@ msgstr "Litauisch"
 
 #: src/GameText.h:157
 msgid "Turkish"
-msgstr ""
+msgstr "Türkisch"
 
 #: src/GameText.h:158
 msgid "Hungarian"
-msgstr ""
+msgstr "Ungarisch"
 
 #: src/GameText.h:160
 msgid "Main testers"
@@ -1391,6 +1391,10 @@ msgid ""
 "   < >\n"
 " Speed:"
 msgstr ""
+" Stop:\n"
+"   >>\n"
+"  <<\n"
+" Speed:"
 
 #: src/GameText.h:427
 msgid ""
@@ -1398,6 +1402,9 @@ msgid ""
 "[right key]\n"
 "[up/down keys]\n"
 msgstr ""
+"[Esc],[Space]\n"
+"[Rechts]\n"
+"[Hoch / Runter]\n"
 
 #: src/GameText.h:428
 msgid ""
@@ -1406,6 +1413,10 @@ msgid ""
 "   < >\n"
 " Speed:"
 msgstr ""
+"  Stop:\n"
+"<< >>\n"
+"   < >\n"
+" Speed:"
 
 #: src/GameText.h:429
 msgid ""
@@ -1413,6 +1424,9 @@ msgid ""
 "[left/right keys]\n"
 "[up/down keys]\n"
 msgstr ""
+"[Esc] , [Space]\n"
+"[Links / Rechts]\n"
+"[Hoch / Runter]\n"
 
 #: src/GameText.h:430
 msgid "The replay can't be played!"
@@ -2327,7 +2341,7 @@ msgstr "Dynamischen Zoom während des Spiels verwenden"
 
 #: src/GameText.h:664
 msgid "Use a camera that directs to the shortest path through the level"
-msgstr ""
+msgstr "Lässt die Kamera immer in die korrekte Fahrtrichtung driften"
 
 #: src/GameText.h:665
 msgid "View the X-Moto credits"
@@ -2937,27 +2951,27 @@ msgstr "Audio deaktiviert"
 
 #: src/GameText.h:827
 msgid "Trail Cam not available"
-msgstr ""
+msgstr "Trail Cam nicht verfügbar"
 
 #: src/GameText.h:828
 msgid "Trail Cam activated"
-msgstr ""
+msgstr "Trail Cam aktiviert"
 
 #: src/GameText.h:829
 msgid "Trail Cam deactivated"
-msgstr ""
+msgstr "Trail Cam deaktiviert"
 
 #: src/GameText.h:830
 msgid "Ghost Trail is not available"
-msgstr ""
+msgstr "Ghost Trail nicht verfügbar"
 
 #: src/GameText.h:831
 msgid "Ghost Trail Rendering activated"
-msgstr ""
+msgstr "Ghost Trail Rendering aktiviert"
 
 #: src/GameText.h:832
 msgid "Ghost Trail Rendering deactivated"
-msgstr ""
+msgstr "Ghost Trail Rendering deaktiviert"
 
 #: src/GameText.h:834
 msgid "No training positions stored"
