@@ -295,18 +295,18 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  ctrl+B - " + std::string(_("Toggle blacklist")) + "\n"\
 "  ctrl+S - " + std::string(_("Enable/disable audio")) +"\n"\
 "  ctrl+O - " + std::string(_("Open options menu"))  + "\n"\
+"  ctrl+G - " + std::string(_("Toggle Ghost Trail Rendering")) + "\n"\
+"  ctrl+T - " + std::string(_("Toggle Trail Cam")) + "\n"\
 "  F1 - " + std::string(_("Show this help")) + "\n"\
 "  F2 - " + std::string(_("Show the ghost if possible in the game")) + "\n"\
 "  F3 - " + std::string(_("Toggle favorite")) + "\n"\
+"  F4 - " + std::string(_("Toggle Ghost Trail Tracking Shot")) +"\n"\
 "  F7 - " + std::string(_("Enable/disable FPS display")) + "\n"\
 "  F8 - " + std::string(_("Enable/disable web")) + "\n" \
 "  F9 - " + std::string(_("Enable/disable ugly mode")) + "\n"\
 "  F10- " + std::string(_("Enable/disable theme mode")) + "\n"\
 "  F11- " + std::string(_("Enable/disable ugly over mode")) + "\n"\
-"  F12 - " + std::string(_("Take a screenshot")) + "\n" \
-"  " + "\n" \
- + std::string(_("Find all the strawberries and touch the flower to finish\nthe level.")) + "\n" \
-
+"  F12- " + std::string(_("Take a screenshot")) + "\n" \
 
 #define GAMETEXT_HIDEGHOSTS           _("Hide ghosts")
 #define GAMETEXT_HIGH                 _("High")
