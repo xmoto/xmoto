@@ -46,7 +46,7 @@ template<class T> struct ColElement;
 #define DEFAULT_EDGE_DEPTH -1.0f
 
 struct EdgeMaterial {
-  int index;
+  std::string name;
   std::string texture;
   TColor color;
   float scale, depth;
@@ -200,7 +200,7 @@ class Block {
   void setElasticity(float i_elasticity);
   void setCenter(const Vector2f& i_center);
   void setEdgeDrawMethod(EdgeDrawMethod method);
-  void addEdgeMaterial(std::string i_texture, const TColor& i_blendColor, float i_scale, float i_depth);
+  void addEdgeMaterial(std::string i_name, std::string i_texture, const TColor& i_blendColor, float i_scale, float i_depth);
   // in degres, not radian
   void setEdgeAngle(float angle);
 
@@ -249,9 +249,10 @@ class Block {
 
   void addEdgeGeom(int geomIndex);
   std::vector<int>& getEdgeGeoms();
-  const TColor& getEdgeMaterialColor( std::string i_textureName ) const;
-  float getEdgeMaterialDepth( std::string i_textureName );
-  float getEdgeMaterialScale( std::string i_textureName );
+  std::string getEdgeMaterialTexture( std::string i_materialName );
+  TColor& getEdgeMaterialColor( std::string i_materialName );
+  float getEdgeMaterialDepth( std::string i_materialName );
+  float getEdgeMaterialScale( std::string i_materialName );
   bool edgeGeomExists(std::string texture);
 
   void updatePhysics(int timeStep, CollisionSystem* io_collisionSystem);

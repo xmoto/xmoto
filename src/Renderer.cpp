@@ -60,6 +60,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define GHOST_INFO_FADE_TIME 0.5
 #define GHOST_INFO_INSCREEN_MARGE 2.0
 
+#define SUPRESS_LOGERROR true
+
 //for ScreenShadowing
 #define MENU_SHADING_TIME 0.3
 #define MENU_SHADING_VALUE 150
@@ -421,11 +423,13 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       if(lastVertex->EdgeEffect() != "" && firstVertex->EdgeEffect() != ""){
 	EdgeEffectSprite* pType = NULL;
 	pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, firstVertex->EdgeEffect());
-	if(pType == NULL) {
-	  LogWarning("Invalid edge effect %s", firstVertex->EdgeEffect().c_str());
-	  useOld = false;
-	}
-	else{
+	if(pType == NULL) {  //then our edge effect is probably a material, lets check:
+	  pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, pBlock->getEdgeMaterialTexture(firstVertex->EdgeEffect()));
+          if(pType == NULL) {
+	    LogWarning("Invalid edge effect %s", firstVertex->EdgeEffect().c_str());
+	    useOld = false;
+	  }
+	  else{
 	  Vector2f a1, b1, b2, a2, c1, c2;
 	  m_currentEdgeSprite = pType;
 	  m_currentEdgeEffect = firstVertex->EdgeEffect();
@@ -437,12 +441,13 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 	  oldC2 = c2;
 	  oldB2 = b2;
 	  useOld = true;
-	  m_currentEdgeSprite = NULL;
-	  m_currentEdgeEffect = "";
-	  m_currentEdgeBlendColor = DEFAULT_EDGE_BLENDCOLOR;
-	  m_currentEdgeMaterialScale = DEFAULT_EDGE_SCALE;
-	  m_currentEdgeMaterialDepth = DEFAULT_EDGE_DEPTH;
+	  //m_currentEdgeSprite = NULL;
+	  //m_currentEdgeEffect = "";
+	  m_currentEdgeBlendColor = pBlock->getEdgeMaterialColor(firstVertex->EdgeEffect());
+	  m_currentEdgeMaterialScale = pBlock->getEdgeMaterialScale(firstVertex->EdgeEffect());
+	  m_currentEdgeMaterialDepth = pBlock->getEdgeMaterialDepth(firstVertex->EdgeEffect());
 	}
+      }
       }
     }
 
@@ -459,32 +464,52 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 
       bool AisLast = (vertexB->EdgeEffect() == "");
 
-      Texture*     pTexture = loadTextureEdge(edgeEffect);
-      if(pTexture == NULL){
-	pScene->gameMessage(GAMETEXT_MISSINGTEXTURES, true);
-	useOld = false;
-	continue;
-      }
 
-      EdgeEffectSprite* pType = NULL;
-      if(edgeEffect != m_currentEdgeEffect) {   //if a new edge effect texture occurs, load it
-	pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, edgeEffect);
-	if(pType == NULL) {
-	  LogWarning("Invalid edge effect %s", edgeEffect.c_str());
+      //check if edge texture is in material or pure
+      std::string v_edgeMaterialTextureName = "";
+      Texture* pTexture = loadTextureEdge(edgeEffect,SUPRESS_LOGERROR);
+      if(pTexture == NULL){
+        // the edge effect is then probably in fact a material. lets check it:
+        v_edgeMaterialTextureName = pBlock->getEdgeMaterialTexture(edgeEffect);
+        pTexture = loadTextureEdge(v_edgeMaterialTextureName);
+        if(pTexture == NULL) {
+	  pScene->gameMessage(GAMETEXT_MISSINGTEXTURES, true);
 	  useOld = false;
 	  continue;
 	}
-
-	m_currentEdgeSprite = pType;
-	m_currentEdgeEffect = edgeEffect;
-	m_currentEdgeBlendColor = pBlock->getEdgeMaterialColor(m_currentEdgeEffect);
-	m_currentEdgeMaterialScale = pBlock->getEdgeMaterialScale(m_currentEdgeSprite->getName());
-        m_currentEdgeMaterialDepth = pBlock->getEdgeMaterialDepth(m_currentEdgeSprite->getName());
-
+      }
+     
+      if(edgeEffect != m_currentEdgeEffect) {   //if a new edge effect texture occurs, load it
+        EdgeEffectSprite* pType = NULL;
+        if(v_edgeMaterialTextureName == "") {  //no material defined then
+	  pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, edgeEffect);
+	  if(pType == NULL) {
+	    LogWarning("Invalid edge effect %s", edgeEffect.c_str());
+	    useOld = false;
+	    continue;
+	  }
+  	  m_currentEdgeBlendColor = DEFAULT_EDGE_BLENDCOLOR;
+	  m_currentEdgeMaterialScale = DEFAULT_EDGE_SCALE; 
+          m_currentEdgeMaterialDepth = DEFAULT_EDGE_DEPTH; 
+	}
+	else {  // seems we ve got a material!
+	  pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_edgeMaterialTextureName);
+	  if(pType == NULL) {
+	    LogWarning("Invalid edge material %s", edgeEffect.c_str());
+	    useOld = false;
+	    continue;
+	  }
+	  m_currentEdgeBlendColor = pBlock->getEdgeMaterialColor(edgeEffect);
+	  m_currentEdgeMaterialScale = pBlock->getEdgeMaterialScale(edgeEffect);
+          m_currentEdgeMaterialDepth = pBlock->getEdgeMaterialDepth(edgeEffect);
+        }
+        
+        m_currentEdgeSprite = pType;
+  	m_currentEdgeEffect = edgeEffect;
       }
       
       // if a geom for current edge effect exists, get its index number
-      int geomIndex = edgeGeomExists(pBlock, pTexture->Name); 
+      int geomIndex = edgeGeomExists(pBlock, edgeEffect); 
       if(geomIndex < 0){
 	// create a new one
 	Geom* pGeom = new Geom;
@@ -493,6 +518,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 	m_edgeGeoms.push_back(pGeom);
 	pBlock->addEdgeGeom(geomIndex);
 	pGeom->pTexture = pTexture;
+	pGeom->material = edgeEffect;
 	GeomPoly *pPoly = new GeomPoly;
 	pGeom->Polys.push_back(pPoly);
       }
@@ -686,7 +712,7 @@ Texture* GameRenderer::loadTexture(std::string textureName)
   return pTexture;
 }
 
-Texture* GameRenderer::loadTextureEdge(std::string textureName)
+Texture* GameRenderer::loadTextureEdge(std::string textureName, bool supressMessage)
 {
   EdgeEffectSprite* pSprite  = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, textureName);
   Texture* pTexture = NULL;
@@ -695,21 +721,25 @@ Texture* GameRenderer::loadTextureEdge(std::string textureName)
     try {
       pTexture = pSprite->getTexture();
     } catch(Exception &e) {
-      LogWarning("Texture '%s' not found!", textureName.c_str());
+      if(!supressMessage) {
+        LogWarning("Edge Texture '%s' not found!", textureName.c_str());
+      }
     }
   } else {
-    LogWarning("Texture '%s' not found!", textureName.c_str());
+    if(!supressMessage) {
+      LogWarning("Edge Texture '%s' not found!", textureName.c_str());
+    }
   }
 
   return pTexture;
 }
 
-int GameRenderer::edgeGeomExists(Block* pBlock, std::string texture)
+int GameRenderer::edgeGeomExists(Block* pBlock, std::string material)
 {
   std::vector<int>& edgeGeoms = pBlock->getEdgeGeoms();
 
   for(unsigned int i=0; i<edgeGeoms.size(); i++){
-    if(m_edgeGeoms[edgeGeoms[i]]->pTexture->Name == texture)
+    if(m_edgeGeoms[edgeGeoms[i]]->material == material)
       return edgeGeoms[i];
   }
 
