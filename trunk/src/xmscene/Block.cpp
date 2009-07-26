@@ -766,11 +766,11 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
     // 270 is the default one for the 'angle' edge draw method, not used for the others
     pBlock->setEdgeAngle(atof(XML::getOption(pEdgeElem, "angle", "270.0").c_str()));
     
-    //check for geoms assignments: blendColor and scale
+    //check for geoms assignments: blendColor, depth and scale
     for(TiXmlElement *pedge = pEdgeElem->FirstChildElement(); pedge!=NULL; pedge=pedge->NextSiblingElement()) {
       if( !strcmp(pedge->Value(), "material") ) {  //strcmp returns 0 in case of match, thats why the NOT means actually TRUE here
-        std::string v_edgeName = XML::getOption(pedge, "name", "not_used").c_str();
-        
+        std::string v_materialName = XML::getOption(pedge, "name", "not_used").c_str();
+        std::string v_materialTexture = XML::getOption(pedge, "edge", "").c_str();
         int blendColor_r, blendColor_g, blendColor_b, blendColor_a;
         std::string v_blendColor = XML::getOption(pedge, "color_r", "255"); blendColor_r = atoi(v_blendColor.c_str());
         v_blendColor = XML::getOption(pedge, "color_g", "255"); blendColor_g = atoi(v_blendColor.c_str());
@@ -779,7 +779,7 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
         
         float v_scale = atof(XML::getOption(pedge, "scale", "-1.0f").c_str()); //set scale default alias -1
         float v_depth = atof(XML::getOption(pedge, "depth", "-1.0f").c_str()); //det depth default alias -1
-        pBlock->addEdgeMaterial(v_edgeName, TColor(blendColor_r, blendColor_g, blendColor_b, blendColor_a), v_scale, v_depth);
+        pBlock->addEdgeMaterial(v_materialName, v_materialTexture, TColor(blendColor_r, blendColor_g, blendColor_b, blendColor_a), v_scale, v_depth);
       }
     }
     
@@ -853,6 +853,7 @@ void Block::saveBinary(FileHandle *i_pfh) {
       
       FS::writeInt_LE(i_pfh, m_edgeMaterial.size());
       for(unsigned int i=0; i<m_edgeMaterial.size(); i++) {
+        FS::writeString(i_pfh, m_edgeMaterial[i].name);
         FS::writeString(i_pfh, m_edgeMaterial[i].texture);
         FS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Red());
         FS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Green());
@@ -906,6 +907,7 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   int geomSize = FS::readInt_LE(i_pfh);  //get size of geoms and read out as many times
   for( int i=0; i<geomSize; i++) {
     EdgeMaterial v_geomMat;
+    v_geomMat.name = FS::readString(i_pfh);
     v_geomMat.texture = FS::readString(i_pfh);
     TColor v_edgeMatColor = TColor(255,255,255,255);
     v_edgeMatColor.setRed(FS::readInt_LE(i_pfh));
@@ -1145,10 +1147,11 @@ const TColor& Block::getBlendColor() const
   return m_blendColor;
 }
 
-void Block::addEdgeMaterial( std::string i_texture, const TColor& i_blendColor, float i_scale, float i_depth )
+void Block::addEdgeMaterial( std::string i_name, std::string i_texture, const TColor& i_blendColor, float i_scale, float i_depth )
 {
-  if((i_texture != "" ) && (i_texture != "not_used")) {
+  if((i_texture != "" ) && (i_name != "not_used")) {
     EdgeMaterial geomMat;
+    geomMat.name = i_name;
     geomMat.color = i_blendColor;
     geomMat.texture = i_texture;
     geomMat.scale = i_scale;
@@ -1157,30 +1160,39 @@ void Block::addEdgeMaterial( std::string i_texture, const TColor& i_blendColor, 
   };
 }
 
-const TColor& Block::getEdgeMaterialColor(std::string i_textureName) const
+std::string Block::getEdgeMaterialTexture(std::string i_materialName) {
+  for(unsigned int i=0; i<m_edgeMaterial.size(); i++) {
+     if(m_edgeMaterial[i].name == i_materialName) {
+       return m_edgeMaterial[i].texture;
+     }
+   }
+   return std::string("");
+}
+
+TColor& Block::getEdgeMaterialColor(std::string i_materialName) 
 {   
    for(unsigned int i=0; i<m_edgeMaterial.size(); i++) {
-     if(m_edgeMaterial[i].texture == i_textureName) {
+     if(m_edgeMaterial[i].name == i_materialName) {
        return m_edgeMaterial[i].color;
      }
    }
    return m_edgeDefaultColor;
 }
 
-float Block::getEdgeMaterialDepth(std::string i_textureName)
+float Block::getEdgeMaterialDepth(std::string i_materialName)
 {
   for(unsigned int i=0; i<m_edgeMaterial.size(); i++) {
-     if(m_edgeMaterial[i].texture == i_textureName) {
+     if(m_edgeMaterial[i].name == i_materialName) {
        return m_edgeMaterial[i].depth;
      }
    }
    return DEFAULT_EDGE_DEPTH;
 }
 
-float Block::getEdgeMaterialScale(std::string i_textureName)
+float Block::getEdgeMaterialScale(std::string i_materialName)
 {
   for(unsigned int i=0; i<m_edgeMaterial.size(); i++) {
-     if(m_edgeMaterial[i].texture == i_textureName) {
+     if(m_edgeMaterial[i].name == i_materialName) {
        return m_edgeMaterial[i].scale;
      }
    }

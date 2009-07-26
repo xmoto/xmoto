@@ -69,12 +69,10 @@ class Camera;
     Geom() {
       pTexture = NULL;
     }
-        
+    std::string material;
     std::vector<GeomPoly *> Polys;    
     Texture *pTexture;
-    TColor edgeBlendColor;
-    float edgeScale;
-    
+    TColor edgeBlendColor;    
     Vector2f Min,Max; /* AABB */
   };
 
@@ -287,7 +285,7 @@ private:
   void renderReplayHelpMessage(Scene* i_scene);
 
   Texture* loadTexture(std::string textureName);
-  Texture* loadTextureEdge(std::string textureName);
+  Texture* loadTextureEdge(std::string textureName, bool supressMessage = false);
   int  edgeGeomExists(Block* pBlock, std::string texture);
   void initCameras(Universe* i_universe);
   int  loadBlock(Block* pBlock, Universe* i_universe, unsigned int currentScene, int sameSceneAs, int blockIndex);
