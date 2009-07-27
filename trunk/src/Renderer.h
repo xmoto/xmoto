@@ -285,7 +285,7 @@ private:
   void renderReplayHelpMessage(Scene* i_scene);
 
   Texture* loadTexture(std::string textureName);
-  Texture* loadTextureEdge(std::string textureName, bool supressMessage = false);
+  Texture* loadTextureEdge(std::string textureName);
   int  edgeGeomExists(Block* pBlock, std::string texture);
   void initCameras(Universe* i_universe);
   int  loadBlock(Block* pBlock, Universe* i_universe, unsigned int currentScene, int sameSceneAs, int blockIndex);
