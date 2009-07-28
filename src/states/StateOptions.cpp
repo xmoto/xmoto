@@ -46,7 +46,7 @@ UIRoot*  StateOptions::m_sGUI = NULL;
 
 StateOptions::StateOptions(bool drawStateBehind, bool updateStatesBehind):
   StateMenu(drawStateBehind,
-	    updateStatesBehind) {
+	    updateStatesBehind, true, false) {
   m_name = "StateOptions";
  
   StateManager::instance()->registerAsObserver("UPDATEPROFILE", this);
@@ -198,9 +198,13 @@ void StateOptions::checkEvents() {
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:THEME_TAB:GET_SELECTED"));
+  bool v_enabled = !(StateManager::instance()->isThereASuchState("StatePlayingLocal")
+		  || StateManager::instance()->isThereASuchState("StatePreplayingGame")
+		  || StateManager::instance()->isThereASuchState("StateDeadJust")
+		  || StateManager::instance()->isThereASuchState("StatePlayingNet"));
+  v_button->enableWindow(v_enabled);
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       StateManager::instance()->pushState(new StateUpdateTheme(pEntry->Text[0]));
@@ -215,6 +219,7 @@ void StateOptions::checkEvents() {
     SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
   }
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:32BPP"));
+
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setBpp(32);
