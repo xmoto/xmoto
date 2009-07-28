@@ -446,8 +446,6 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 	  oldC2 = c2;
 	  oldB2 = b2;
 	  useOld = true;
-	  //m_currentEdgeSprite = NULL;
-	  //m_currentEdgeEffect = "";
 	  m_currentEdgeBlendColor = pBlock->getEdgeMaterialColor(firstVertex->EdgeEffect());
 	  m_currentEdgeMaterialScale = pBlock->getEdgeMaterialScale(firstVertex->EdgeEffect());
 	  m_currentEdgeMaterialDepth = pBlock->getEdgeMaterialDepth(firstVertex->EdgeEffect());
