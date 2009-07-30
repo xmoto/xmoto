@@ -53,7 +53,7 @@
 #define TRAILCAM_MINSPEED 0.005
 #define TRAILCAM_SPEEDREACTIVITY 0.0001
 #define TRAILCAM_TRACKINGSHOT_SPEED 0.008  // smaller is faster
-#define TRAILCAM_DAMPING 0.1
+#define TRAILCAM_DAMPING 0.01   // smaller damps more
 
 #ifdef ENABLE_OPENGL
 #include "include/xm_OpenGL.h"
@@ -192,15 +192,12 @@ Vector2f Camera::updateTrailCam() {
 }
 
 Vector2f Camera::dampCam(Vector2f v_inputVec) {
-
-  float dx = fabs(m_dampVectorMax.x)-fabs(m_dampCurrent.x),
-        dy = fabs(m_dampVectorMax.y)-fabs(m_dampCurrent.y);
-
-  //get nearer to 0
-  if(m_dampVectorMax.x >= 0) m_dampVectorMax.x -= TRAILCAM_DAMPING ;
-  else m_dampVectorMax.x += TRAILCAM_DAMPING;
-  if(m_dampVectorMax.y >= 0) m_dampVectorMax.y -= TRAILCAM_DAMPING;
-  else m_dampVectorMax.y += TRAILCAM_DAMPING;
+  #define SPEEDSTEP 0.002  // just to adjust the player speed to the necessary value range
+  float dampValue = TRAILCAM_DAMPING + m_playerToFollow->getBikeLinearVel()*SPEEDSTEP; //damping dependent also from player velocity
+  if(m_dampVectorMax.x >= 0) m_dampVectorMax.x -=  dampValue;
+  else m_dampVectorMax.x +=  dampValue;
+  if(m_dampVectorMax.y >= 0) m_dampVectorMax.y -=  dampValue;
+  else m_dampVectorMax.y +=  dampValue;
   
   if((v_inputVec.x > m_dampVectorMax.x) && v_inputVec.x >=0) { //set new X Peak
     m_dampVectorMax.x = v_inputVec.x;
@@ -215,9 +212,8 @@ Vector2f Camera::dampCam(Vector2f v_inputVec) {
     m_dampVectorMax.y = v_inputVec.y;
   }
   
-  m_dampCurrent.x = SimpleInterpolate(m_dampCurrent.x,m_dampVectorMax.x,1.0); // TRAILCAM_DAMPING * (m_dampVectorMax.x-m_dampCurrent.x);
-  m_dampCurrent.y = SimpleInterpolate(m_dampCurrent.y,m_dampVectorMax.y,1.0); // TRAILCAM_DAMPING * (m_dampVectorMax.y-m_dampCurrent.y);
-//  m_dampCurrent = (v_inputVec-m_dampCurrent)/2;
+  m_dampCurrent.x = SimpleInterpolate(m_dampCurrent.x,m_dampVectorMax.x,1.1); 
+  m_dampCurrent.y = SimpleInterpolate(m_dampCurrent.y,m_dampVectorMax.y,1.1); 
   
   if(XMSession::instance()->debug()) {
     std::stringstream outX; outX << m_dampCurrent.x;
@@ -225,9 +221,11 @@ Vector2f Camera::dampCam(Vector2f v_inputVec) {
     std::stringstream outMX; outMX << m_dampVectorMax.x;
     std::stringstream outMY; outMY << m_dampVectorMax.y;
     std::stringstream inX,inY; inX << v_inputVec.x; inY << v_inputVec.y;
+    std::stringstream deltaDamp; deltaDamp << dampValue;
     SysMessage::instance()->displayText("Cam Damp XY: " +outX.str()+"  |  "+outY.str()+
                                       "\nMAX XY: "+outMX.str()+"  |  "+outMY.str()+
-                                      "\nIN  XY: "+inX.str()+"  |  "+inY.str());
+                                      "\nIN  XY: "+inX.str()+"  |  "+inY.str()+
+                                      "\nDampVal: "+deltaDamp.str());
   }
   
   return m_dampCurrent;
