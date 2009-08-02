@@ -1852,17 +1852,21 @@ int GameRenderer::nbParticlesRendered() const {
 	case levelID:
 	  //put text to higher position
 	  posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight() - pDrawlib->getDispHeight()/6);
-	  pDrawlib->drawBox(Vector2f(posX- 10,posY- 5),
-			    Vector2f(posX + v_fg->realWidth() +10, posY+33),
-			    1,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,244,176,pMsg->nAlpha));
+	  if(XMSession::instance()->ugly() == false) {
+	    pDrawlib->drawBox(Vector2f(posX- 10,posY- 5),
+			      Vector2f(posX + v_fg->realWidth() +10, posY+33),
+			      1,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,244,176,pMsg->nAlpha));
+	  }
 	  break;
 	  
 	case scripted:
 	  //scripted text for display under the bike
 	  posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight() + pDrawlib->getDispHeight()/5);
-	  pDrawlib->drawBox(Vector2f(posX- 15,posY- 1),
-			    Vector2f(posX + v_fg->realWidth() +15 , posY+v_fg->realHeight()+ 2),
-			    0,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,255,255,pMsg->nAlpha));
+	  if(XMSession::instance()->ugly() == false) {
+	    pDrawlib->drawBox(Vector2f(posX- 15,posY- 1),
+			      Vector2f(posX + v_fg->realWidth() +15 , posY+v_fg->realHeight()+ 2),
+			      0,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,255,255,pMsg->nAlpha));
+	  }
 	  break;
 	  
 	case gameMsg:
