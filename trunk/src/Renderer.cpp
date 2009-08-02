@@ -1025,7 +1025,7 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
 	std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
 	for(unsigned int j=0; j<ConvexBlocks.size(); j++) {
 	  pDrawlib->startDraw(DRAW_MODE_POLYGON);
-	  pDrawlib->setColorRGB(128,128,128);
+	  pDrawlib->setColorRGB(168,168,168);
 	  /* Build rotation matrix for block */
 	  float fR[4];
 	  fR[0] = cosf(Blocks[i]->DynamicRotation()); fR[1] = -sinf(Blocks[i]->DynamicRotation());
@@ -1057,7 +1057,7 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
     for(unsigned int i=0; i<i_scene->Players().size(); i++) {
       Vector2f bikePos(LEVEL_TO_SCREEN_X(i_scene->Players()[i]->getState()->CenterP.x),
 		       LEVEL_TO_SCREEN_Y(i_scene->Players()[i]->getState()->CenterP.y));
-      pDrawlib->drawCircle(bikePos, 3, 0, MAKE_COLOR(255,255,255,255), 0);
+      pDrawlib->drawCircle(bikePos, 3, 0, MAKE_COLOR(255,238,104,255), 0);
     }
     
     /* Render ghost position too? */
@@ -1082,7 +1082,7 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
         pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(255,0,0,255), 0);
       }
       else if(Entities[i]->DoesKill()) {
-        pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(0,0,70,255), 0);
+        pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(26,26,188,255), 0);
       }
     }
     
