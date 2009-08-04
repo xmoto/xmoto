@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateSendVote.h"
 #include "../thread/SendVoteThread.h"
+#include "../XMSession.h"
 
 StateSendVote::StateSendVote(const std::string& i_idlevel,
 			     const std::string& i_difficulty_value, const std::string& i_quality_value,
@@ -27,7 +28,11 @@ StateSendVote::StateSendVote(const std::string& i_idlevel,
 			     bool updateStatesBehind)
   : StateUpdate(drawStateBehind, updateStatesBehind)
 {
-  m_pThread = new SendVoteThread(i_idlevel, i_difficulty_value, i_quality_value);
+  m_pThread = new SendVoteThread(i_idlevel, i_difficulty_value, i_quality_value,
+				 XMSession::instance()->adminMode(),
+				 XMSession::instance()->adminMode() ? XMSession::instance()->profile() : "",
+				 XMSession::instance()->adminMode() ? XMSession::instance()->wwwPassword() : ""
+				 );
   m_name    = "StateSendVote";
   
   m_messageOnSuccess      = true;

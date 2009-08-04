@@ -710,6 +710,15 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       throw Exception("Unable to update xmDb from 32: " + e.getMsg());
     }
 
+  case 33:
+    try {
+      simpleSql("ALTER TABLE weblevels ADD COLUMN vote_locked DEFAULT 0;");
+      simpleSql("CREATE INDEX weblevels_vote_locked_idx1 ON weblevels(vote_locked);");
+      updateXmDbVersion(34);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 33: " + e.getMsg());
+    }
+
     // next
   }
 }

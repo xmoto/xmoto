@@ -94,6 +94,7 @@ class XMArguments {
   bool isOptServerOnly() const;
   bool isOptUpdateLevelsOnly() const;
   bool isOptClientConnectAtStartup() const;
+  bool isOptAdminMode() const;
 
   private:
   /* pack options */
@@ -193,6 +194,9 @@ class XMArguments {
 
   /* at command line, you can pass [0-9]* for level of id _iLXX_ */
   static std::string levelArg2levelId(std::string i_arg);
+
+  /* admin */
+  bool m_opt_adminMode;
 };
 
 #endif

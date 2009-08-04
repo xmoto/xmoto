@@ -84,7 +84,7 @@ public:
   /* to load or reload levels from files */
   void makePacks(const std::string& i_playerName,
 		 const std::string& i_id_room,
-		 bool i_bDebugMode, xmDatabase *i_db);
+		 bool i_bDebugMode, bool i_bAdminMode, xmDatabase *i_db);
   void addExternalLevel(std::string i_levelFile, xmDatabase *i_db);
   void reloadLevelsFromLvl(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 

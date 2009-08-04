@@ -474,7 +474,8 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   
   /* load packs */
   LevelsManager::checkPrerequires();
-  LevelsManager::instance()->makePacks(XMSession::instance()->profile(), XMSession::instance()->idRoom(0), XMSession::instance()->debug(), xmDatabase::instance("main"));
+  LevelsManager::instance()->makePacks(XMSession::instance()->profile(), XMSession::instance()->idRoom(0),
+				       XMSession::instance()->debug(), XMSession::instance()->adminMode(), xmDatabase::instance("main"));
 
   /* Update stats */
   if(v_xmArgs.isOptServerOnly() == false) {

@@ -342,6 +342,17 @@ void StateFinished::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_v, KMOD_LCTRL)) {
+    if(XMSession::instance()->adminMode()) {
+      if(m_universe != NULL) {
+	if(m_universe->getScenes().size() == 1) {
+	  StateManager::instance()->pushState(new StateVote(StateManager::instance()->getUniqueId(),
+							    m_universe->getScenes()[0]->getLevelSrc()->Id()));
+	}
+      }
+    }
+  }
+
   else {
     StateMenu::xmKey(i_type, i_xmkey);
   }

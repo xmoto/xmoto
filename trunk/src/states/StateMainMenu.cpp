@@ -218,6 +218,7 @@ void StateMainMenu::remakePacks() {
   LevelsManager::instance()->makePacks(XMSession::instance()->profile(),
 				       XMSession::instance()->idRoom(0),
 				       XMSession::instance()->debug(),
+				       XMSession::instance()->adminMode(),
 				       xmDatabase::instance("main"));
   updateLevelsPacksList();
 }

@@ -28,7 +28,8 @@ class xmDatabase;
 
 class SendVoteThread : public XMThread, public WWWAppInterface {
   public:
-  SendVoteThread(const std::string& i_idlevel, const std::string& i_difficulty_value, const std::string& i_quality_value);
+  SendVoteThread(const std::string& i_idlevel, const std::string& i_difficulty_value, const std::string& i_quality_value,
+		 bool i_adminMode, const std::string& i_id_profile, const std::string& i_password);
   virtual ~SendVoteThread();
   std::string getMsg() const;
 
@@ -41,6 +42,9 @@ class SendVoteThread : public XMThread, public WWWAppInterface {
 private:
   std::string m_msg;
   std::string m_idlevel, m_difficulty_value, m_quality_value;
+  bool m_adminMode;
+  std::string m_id_profile;
+  std::string m_password;
 
   static bool hasPlayedEnough(xmDatabase* pDb, const std::string& i_id_level);
 };
