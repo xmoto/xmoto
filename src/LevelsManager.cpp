@@ -214,6 +214,7 @@ bool LevelsManager::doesLevelsPackExist(const std::string &i_name) const {
 void LevelsManager::makePacks(const std::string& i_playerName,
 			      const std::string& i_id_room,
 			      bool i_bDebugMode,
+			      bool i_bAdminMode,
 			      xmDatabase *i_db) {
   LevelsPack *v_pack;
   char **v_result;
@@ -719,6 +720,19 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
   v_pack->setDescription(VPACKAGENAME_DESC_HARDEST_LEVELS);
   m_levelsPacks.push_back(v_pack);
+
+  /* vote not locked levels */
+  if(i_bAdminMode) {
+    v_pack = new LevelsPack(std::string(VPACKAGENAME_VOTE_NOT_LOCKED_LEVELS),
+			    "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
+			    "FROM levels AS a INNER JOIN weblevels AS b "
+			    "ON a.id_level=b.id_level "
+			    "WHERE b.vote_locked=0 "
+			    "AND xm_userChildrenCompliant(b.children_compliant)=1"); // do not remove blacklisted levels, only children not compliant one
+    v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
+    v_pack->setDescription(VPACKAGENAME_DESC_VOTE_NOT_LOCKED_LEVELS);
+    m_levelsPacks.push_back(v_pack);
+  }
   
   /* short levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_SHORT_LEVELS),

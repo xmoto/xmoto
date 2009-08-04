@@ -209,7 +209,7 @@ void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
   const char *pc;
   std::string v_levelId, v_levelName, v_url, v_MD5sum_web;
   std::string v_difficulty, v_quality, v_creationDate;
-  std::string v_crappy, v_children_compliant;
+  std::string v_crappy, v_children_compliant, v_vote_locked;
 
   try {
     simpleSql("BEGIN TRANSACTION;");
@@ -289,9 +289,16 @@ void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
 	v_children_compliant = std::string(pc) == "true" ? "1" : "0";
       }
 
+      pc = pVarElem->Attribute("vote_locked");
+      if(pc == NULL) {
+	v_vote_locked = "0";
+      } else {
+	v_vote_locked = std::string(pc) == "true" ? "1" : "0";
+      }
+
       // add the level
       simpleSql("INSERT INTO weblevels(id_level, name, fileUrl, "
-		"checkSum, difficulty, quality, creationDate, crappy, children_compliant) VALUES (\"" +
+		"checkSum, difficulty, quality, creationDate, crappy, children_compliant, vote_locked) VALUES (\"" +
 		protectString(v_levelId)    + "\", \"" +
 		protectString(v_levelName)  + "\", \"" +
 		protectString(v_url)        + "\", \"" +
@@ -300,7 +307,8 @@ void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
 		v_quality      + ", \"" +
 		v_creationDate + "\", " +
 		v_crappy       + ", "   +
-		v_children_compliant + ");");
+		v_children_compliant + ", " +
+		v_vote_locked + ");");
 
       pVarElem = pVarElem->NextSiblingElement("level");
     }

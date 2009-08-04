@@ -133,6 +133,7 @@ void XMSession::setToDefault() {
   m_renderGhostTrailTS            = DEFAULT_GHOSTTRAILRENDERING_TS;
   m_dbsynchronizeOnQuit           = DEFAULT_DBSYNCHRONIZEONQUIT;
   m_enableJoysticks               = DEFAULT_ENABLEJOYSTICKS;
+  m_adminMode                     = DEFAULT_ADMINMODE;
   m_beatingMode                   = DEFAULT_BEATINGMODE;
   m_webForms                      = DEFAULT_WEBFORMS;
   m_serverStartAtStartup          = DEFAULT_SERVERSTARTATSTARTUP;
@@ -262,6 +263,9 @@ void XMSession::load(const XMArguments* i_xmargs) {
     m_clientConnectAtStartup = true;
   }
 
+  if(i_xmargs->isOptAdminMode()) {
+    m_adminMode = true;
+  }
 }
 
 void XMSession::load(UserConfig* m_Config) {
@@ -1183,6 +1187,14 @@ void XMSession::setChildrenCompliant(bool i_value) {
 
 bool XMSession::forceChildrenCompliant() const {
   return m_forceChildrenCompliant;
+}
+
+bool XMSession::adminMode() const {
+  return m_adminMode;
+}
+
+void XMSession::setAdminMode(bool i_value) {
+  m_adminMode = i_value;
 }
 
 bool XMSession::enableJoysticks() const {

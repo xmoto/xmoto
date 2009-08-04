@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-07-21 20:21+0200\n"
+"POT-Creation-Date: 2009-08-04 23:03+0200\n"
 "PO-Revision-Date: 2009-07-26 19:43+0100\n"
 "Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: German\n"
@@ -859,7 +859,7 @@ msgstr "Level neustarten"
 msgid "Previous/Next level"
 msgstr "Vorheriges/Nächstes Level"
 
-#: src/GameText.h:274 src/GameText.h:302
+#: src/GameText.h:274 src/GameText.h:305
 msgid "Enable/disable web"
 msgstr "Internet-Verbindung aktivieren/deaktivieren"
 
@@ -867,7 +867,7 @@ msgstr "Internet-Verbindung aktivieren/deaktivieren"
 msgid "Reload levels, themes and replays from directories"
 msgstr "Levels, Themes und Replays aus den Verzeichnissen neuladen."
 
-#: src/GameText.h:276 src/GameText.h:306
+#: src/GameText.h:276 src/GameText.h:309
 msgid "Take a screenshot"
 msgstr "Bildschirmfoto aufnehmen"
 
@@ -879,7 +879,7 @@ msgstr ""
 "Per Kickstart-Knopf wird das Spiel mit einem zufälligen Level gestartet.\n"
 "Zum Level-Manager führt der Levels-Knopf."
 
-#: src/GameText.h:280 src/GameText.h:308
+#: src/GameText.h:280
 msgid ""
 "Find all the strawberries and touch the flower to finish\n"
 "the level."
@@ -914,30 +914,42 @@ msgid "Open options menu"
 msgstr "Optionen Menü öffnen"
 
 #: src/GameText.h:298
+msgid "Toggle Ghost Trail Rendering"
+msgstr ""
+
+#: src/GameText.h:299
+msgid "Toggle Trail Cam"
+msgstr ""
+
+#: src/GameText.h:300
 msgid "Show this help"
 msgstr "Diese Hilfe anzeigen"
 
-#: src/GameText.h:299 src/GameText.h:631
+#: src/GameText.h:301 src/GameText.h:631
 msgid "Show the ghost if possible in the game"
 msgstr "Geist im Spiel anzeigen, wenn möglich"
 
-#: src/GameText.h:300
+#: src/GameText.h:302
 msgid "Toggle favorite"
 msgstr "Zu Favoriten hinzufügen oder davon entfernen"
 
-#: src/GameText.h:301
+#: src/GameText.h:303
+msgid "Toggle Ghost Trail Tracking Shot"
+msgstr ""
+
+#: src/GameText.h:304
 msgid "Enable/disable FPS display"
 msgstr "FPS-Anzeige aktivieren/ deaktivieren"
 
-#: src/GameText.h:303 src/GameText.h:457
+#: src/GameText.h:306 src/GameText.h:457
 msgid "Enable/disable ugly mode"
 msgstr "Ugly-Modus aktivieren/deaktivieren"
 
-#: src/GameText.h:304
+#: src/GameText.h:307
 msgid "Enable/disable theme mode"
 msgstr "Themen-Modus aktivieren/ deaktivieren"
 
-#: src/GameText.h:305
+#: src/GameText.h:308
 msgid "Enable/disable ugly over mode"
 msgstr "Ugly-Over-Modus aktivieren/ deaktivieren"
 
@@ -2636,7 +2648,7 @@ msgstr "Netzwerkmodus: Andere Spieler erscheinen nur als Geister"
 msgid "Levels with no highscore"
 msgstr "Levels ohne Rekord"
 
-#: src/GameText.h:745 src/GameText.h:779
+#: src/GameText.h:745 src/GameText.h:780
 msgid "Levels you have not completed"
 msgstr "Nicht abgeschlossene Levels"
 
@@ -2756,238 +2768,246 @@ msgstr "Marathon-Distanz"
 msgid "Stolen highscores"
 msgstr "Geklaute Rekorde"
 
-#: src/GameText.h:778
+#: src/GameText.h:777
+msgid "Vote unlocked levels"
+msgstr ""
+
+#: src/GameText.h:779
 msgid "Levels with no highscore in your room"
 msgstr "Levels ohne Raum-Bestzeiten"
 
-#: src/GameText.h:780
+#: src/GameText.h:781
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Jemand in dem Raum hat bereits eine bessere Bestzeit erzielt"
 
-#: src/GameText.h:781
+#: src/GameText.h:782
 msgid "All X-Moto levels"
 msgstr "Alle Level"
 
-#: src/GameText.h:782
+#: src/GameText.h:783
 msgid "New and updated levels since your last check"
 msgstr "Neue und aktualisierte Levels"
 
-#: src/GameText.h:783
+#: src/GameText.h:784
 msgid "Your favorite levels"
 msgstr "Favoriten"
 
-#: src/GameText.h:784
+#: src/GameText.h:785
 msgid "Your blacklisted levels"
 msgstr "Schwarze Liste"
 
-#: src/GameText.h:785
+#: src/GameText.h:786
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Schönste Levels (nach Web-Abstimmung)"
 
-#: src/GameText.h:786
+#: src/GameText.h:787
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Schwerste Levels (nach Web-Abstimmung)"
 
-#: src/GameText.h:787
+#: src/GameText.h:788
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Einfachste Levels (Nach Web-Abstimmung)"
 
-#: src/GameText.h:788
+#: src/GameText.h:789
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Schrottigste Levels (nach Web-Abstimmung)"
 
-#: src/GameText.h:789
+#: src/GameText.h:790
 msgid "X-Moto levels which are dynamic"
 msgstr "Levels mit Bewegungselementen"
 
-#: src/GameText.h:790
+#: src/GameText.h:791
 msgid "X-Moto levels using strongly physics"
 msgstr "Levels mit dynamischen Elementen"
 
-#: src/GameText.h:791
+#: src/GameText.h:792
 msgid "Last levels you have played"
 msgstr "Zuletzt gespielte Levels"
 
-#: src/GameText.h:792
+#: src/GameText.h:793
 msgid "X-Moto levels you never played"
 msgstr "Nie gespielte Levels"
 
-#: src/GameText.h:793
+#: src/GameText.h:794
 msgid "X-Moto levels you have played the most"
 msgstr "Meistgespielte Levels"
 
-#: src/GameText.h:794
+#: src/GameText.h:795
 msgid "X-Moto levels you have played only a few times"
 msgstr "Selten gespielte Levels"
 
-#: src/GameText.h:795
+#: src/GameText.h:796
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "Levels mit aktueller Bestzeit im Raum"
 
-#: src/GameText.h:796
+#: src/GameText.h:797
 msgid "Last created X-Moto levels"
 msgstr "Zuletzt erstellte Levels"
 
-#: src/GameText.h:797
+#: src/GameText.h:798
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "Levels mit alter Bestzeit im Raum"
 
-#: src/GameText.h:798
+#: src/GameText.h:799
 msgid "You have the room highscore"
 msgstr "Du bist Rekord-Halter im Raum"
 
-#: src/GameText.h:799
+#: src/GameText.h:800
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (95%)"
 
-#: src/GameText.h:800
+#: src/GameText.h:801
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (90%-95%)"
 
-#: src/GameText.h:801
+#: src/GameText.h:802
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (80%-90%)"
 
-#: src/GameText.h:802
+#: src/GameText.h:803
 msgid "The room highscore is really better than your own highscore"
 msgstr "Der Rekord des Raumes liegt weit über deiner Bestzeit"
 
-#: src/GameText.h:803
+#: src/GameText.h:804
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Level-Paket \"%s\""
 
-#: src/GameText.h:804
+#: src/GameText.h:805
 #, c-format
 msgid "Highscores by %s"
 msgstr "Bestzeiten von %s"
 
-#: src/GameText.h:805
+#: src/GameText.h:806
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Externe Levels (eigenständig im 'My Levels' Ordner platziert)"
 
-#: src/GameText.h:806
+#: src/GameText.h:807
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr ""
 "Diese als 'Schrott' markierten Levels bleiben für andere Pakete unsichtbar."
 
-#: src/GameText.h:807
+#: src/GameText.h:808
 msgid "The shortest levels (less than 25 seconds)"
 msgstr "Die kürzesten Levels (weniger als 25 Sekunden)"
 
-#: src/GameText.h:808
+#: src/GameText.h:809
 msgid "The medium levels (25 seconds to 60)"
 msgstr "Die mittlere Distanz (25 bis 60 Sekunden)"
 
-#: src/GameText.h:809
+#: src/GameText.h:810
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr "Lange Levels (1 bis 2 Minuten)"
 
-#: src/GameText.h:810
+#: src/GameText.h:811
 msgid "The longest levels (more than 2 minutes)"
 msgstr "Marathon Levels (länger als 2 Minuten)"
 
-#: src/GameText.h:811
+#: src/GameText.h:812
 msgid "Levels for which you owned the highscore"
 msgstr "Levels, in denen du einmal Rekordhalter warst"
 
 #: src/GameText.h:813
+msgid "Levels having votes unlocked"
+msgstr ""
+
+#: src/GameText.h:815
 msgid "Ugly mode enabled"
 msgstr "Ugly-Modus aktiviert"
 
-#: src/GameText.h:814
+#: src/GameText.h:816
 msgid "Ugly mode disabled"
 msgstr "Ugly-Modus deaktiviert"
 
-#: src/GameText.h:815
+#: src/GameText.h:817
 msgid "Theme mode enabled"
 msgstr "Themen-Modus aktiviert"
 
-#: src/GameText.h:816
+#: src/GameText.h:818
 msgid "Theme mode disabled"
 msgstr "Themen-Modus deaktiviert"
 
-#: src/GameText.h:817
+#: src/GameText.h:819
 msgid "UglyOver mode enabled"
 msgstr "Ugly-Over-Modus aktiviert"
 
-#: src/GameText.h:818
+#: src/GameText.h:820
 msgid "UglyOver mode disabled"
 msgstr "Ugly-Over-Modus deaktiviert"
 
-#: src/GameText.h:819
+#: src/GameText.h:821
 msgid "Web connection enabled"
 msgstr "Internet-Verbindung aktiviert"
 
-#: src/GameText.h:820
+#: src/GameText.h:822
 msgid "Web connection disabled"
 msgstr "Internet-Verbindung deaktiviert"
 
-#: src/GameText.h:821
+#: src/GameText.h:823
 msgid "Replay interpolation enabled"
 msgstr "Replay-Interpolation aktiviert"
 
-#: src/GameText.h:822
+#: src/GameText.h:824
 msgid "Replay interpolation disabled"
 msgstr "Replay-Interpolation deaktiviert"
 
-#: src/GameText.h:823
+#: src/GameText.h:825
 msgid "Fps enabled"
 msgstr "Frames/Sekunde-Anzeige aktiviert"
 
-#: src/GameText.h:824
+#: src/GameText.h:826
 msgid "Fps disabled"
 msgstr "Frames/Sekunde-Anzeige deaktiviert"
 
-#: src/GameText.h:825
+#: src/GameText.h:827
 msgid "Audio enabled"
 msgstr "Audio aktiviert"
 
-#: src/GameText.h:826
+#: src/GameText.h:828
 msgid "Audio disabled"
 msgstr "Audio deaktiviert"
 
-#: src/GameText.h:827
+#: src/GameText.h:829
 msgid "Trail Cam not available"
 msgstr "Trail Cam nicht verfügbar"
 
-#: src/GameText.h:828
+#: src/GameText.h:830
 msgid "Trail Cam activated"
 msgstr "Trail Cam aktiviert"
 
-#: src/GameText.h:829
+#: src/GameText.h:831
 msgid "Trail Cam deactivated"
 msgstr "Trail Cam deaktiviert"
 
-#: src/GameText.h:830
+#: src/GameText.h:832
 msgid "Ghost Trail is not available"
 msgstr "Ghost Trail nicht verfügbar"
 
-#: src/GameText.h:831
+#: src/GameText.h:833
 msgid "Ghost Trail Rendering activated"
 msgstr "Ghost Trail Rendering aktiviert"
 
-#: src/GameText.h:832
+#: src/GameText.h:834
 msgid "Ghost Trail Rendering deactivated"
 msgstr "Ghost Trail Rendering deaktiviert"
 
-#: src/GameText.h:834
+#: src/GameText.h:836
 msgid "No training positions stored"
 msgstr "Keine Trainingspositionen gespeichert"
 
-#: src/GameText.h:835
+#: src/GameText.h:837
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr "Trainingsposition %i/%i wiederhergestellt"
 
-#: src/GameText.h:836
+#: src/GameText.h:838
 #, c-format
 msgid "Stored as training position %i"
 msgstr "Gespeichert als Trainingsposition %i"
 
-#: src/GameText.h:837
+#: src/GameText.h:839
 msgid ""
 "Physic levels recording is still not implemented.\n"
 "Sorry."
@@ -2996,14 +3016,14 @@ msgstr ""
 "implementiert.\n"
 "Sorry."
 
-#: src/GameText.h:839
+#: src/GameText.h:841
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] "Kann keinen Rekord im nächsten Level finden."
 msgstr[1] "Kann keinen Rekord in den nächsten %i Levels finden."
 
-#: src/GameText.h:842
+#: src/GameText.h:844
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 

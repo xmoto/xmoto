@@ -133,6 +133,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_CLIENTSERVERPORT            DEFAULT_SERVERPORT
 #define DEFAULT_CLIENTFRAMERATEUPLOAD       10
 #define DEFAULT_MUSICONALLLEVELS            false
+#define DEFAULT_ADMINMODE                   false
 
 class XMDefault {
   public:

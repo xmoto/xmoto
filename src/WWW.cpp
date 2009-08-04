@@ -454,6 +454,9 @@ CURLcode FSWeb::performPostCurl(CURL *p_curl,
 void FSWeb::sendVote(const std::string& p_id_level,
 		     const std::string& p_difficulty_value,
 		     const std::string& p_quality_value,
+		     bool p_adminMode,
+		     const std::string& p_id_profile,
+		     const std::string& p_password,
 		     const std::string& p_url_to_transfert,
 		     WWWAppInterface *p_WebApp,
 		     const ProxySettings *p_proxy_settings,
@@ -493,6 +496,14 @@ void FSWeb::sendVote(const std::string& p_id_level,
 
   curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "quality",
          CURLFORM_PTRCONTENTS, p_quality_value.c_str(), CURLFORM_END);
+
+  if(p_adminMode) {
+    curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "login",
+		 CURLFORM_PTRCONTENTS, p_id_profile.c_str(), CURLFORM_END);
+    
+    curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "password",
+		 CURLFORM_PTRCONTENTS, p_password.c_str(), CURLFORM_END);
+  }
 
   v_res = performPostCurl(v_curl, v_post, p_url_to_transfert, v_destinationFile, p_WebApp, p_proxy_settings);
 

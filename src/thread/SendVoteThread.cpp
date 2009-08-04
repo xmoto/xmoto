@@ -29,12 +29,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define VOTE_ASK_FREQUENCY 10 // /1000
 #define PLAYED_ENOUGH_TIME 1500
 
-SendVoteThread::SendVoteThread(const std::string& i_idlevel, const std::string& i_difficulty_value, const std::string& i_quality_value)
+SendVoteThread::SendVoteThread(const std::string& i_idlevel, const std::string& i_difficulty_value, const std::string& i_quality_value,
+			       bool i_adminMode, const std::string& i_id_profile, const std::string& i_password)
   : XMThread("SVT")
 {
   m_idlevel = i_idlevel;
   m_difficulty_value = i_difficulty_value;
   m_quality_value    = i_quality_value;
+  m_adminMode = i_adminMode;
+  m_id_profile = i_id_profile;
+  m_password = i_password;
 }
 
 SendVoteThread::~SendVoteThread()
@@ -67,6 +71,11 @@ bool SendVoteThread::hasPlayedEnough(xmDatabase* pDb, const std::string& i_id_le
 bool SendVoteThread::isToPropose(xmDatabase* pDb, const std::string& i_id_level) {
   int v_rand;
 
+  // in admin mode, you must ask it explicitly
+  if(XMSession::instance()->adminMode()) {
+    return false;
+  }
+
   if(XMSession::instance()->www() == false ||  XMSession::instance()->webForms() == false) {
     return false;
   }
@@ -85,7 +94,7 @@ bool SendVoteThread::isToPropose(xmDatabase* pDb, const std::string& i_id_level)
   // if the vote has already be done, don't revote
   if(pDb->isVoted(XMSession::instance()->profile(), i_id_level)) {
     return false;
-  }
+ }
 
   // check that the level has been played a minimum
   if(hasPlayedEnough(pDb, i_id_level) == false) {
@@ -105,6 +114,7 @@ int SendVoteThread::realThreadFunction()
     FSWeb::sendVote(m_idlevel,
 		    m_difficulty_value,
 		    m_quality_value,
+		    m_adminMode, m_id_profile, m_password,
 		    DEFAULT_SENDVOTE_URL,
 		    this, XMSession::instance()->proxySettings(), v_msg_status_ok, m_msg);
     if(v_msg_status_ok == false) {

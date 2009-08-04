@@ -247,6 +247,8 @@ public:
   bool mirrorMode() const;
   void setMirrorMode(bool i_value);
   bool enableJoysticks() const;
+  bool adminMode() const;
+  void setAdminMode(bool i_value);
   void setEnableJoysticks(bool i_value);
   bool useCrappyPack() const;
   void setUseCrappyPack(bool i_value);
@@ -409,6 +411,7 @@ public:
   bool m_clientGhostMode;
   bool m_musicOnAllLevels;
   bool m_noLog;
+  bool m_adminMode;
 };
 
 #endif

@@ -74,6 +74,7 @@ XMArguments::XMArguments() {
   m_opt_serverOnly    	      	= false;
   m_opt_updateLevelsOnly        = false;
   m_opt_clientConnectAtStartup  = false;
+  m_opt_adminMode               = false;
 }
 
 void XMArguments::parse(int i_argc, char **i_argv) {
@@ -277,6 +278,8 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       }
       m_opt_default_theme_value = i_argv[i+1];
       i++;
+    } else if(v_opt == "--admin") { // hidden option to control website from the game ; keep undocumented
+      m_opt_adminMode = true;
     } else {
       /* check if the parameter is a file */
       v_arg = i_argv[i];
@@ -581,6 +584,10 @@ bool XMArguments::isOptClientConnectAtStartup() const {
 
 bool XMArguments::isOptUpdateLevelsOnly() const {
   return m_opt_updateLevelsOnly;
+}
+
+bool XMArguments::isOptAdminMode() const {
+  return m_opt_adminMode;
 }
 
 void XMArguments::help(const std::string& i_cmd) {
