@@ -91,6 +91,11 @@ bool SendVoteThread::isToPropose(xmDatabase* pDb, const std::string& i_id_level)
     return false;
   }
 
+  // must be a weblevels
+  if(pDb->isWebVoteLocked(i_id_level)) {
+    return false;
+  }
+
   // if the vote has already be done, don't revote
   if(pDb->isVoted(XMSession::instance()->profile(), i_id_level)) {
     return false;

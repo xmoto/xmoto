@@ -156,6 +156,7 @@ public:
 				const std::string& i_id_level); /* or a negativ value if not */
   void webLoadDataFirstTime();
   bool isOnTheWeb(const std::string& i_id_level);
+  bool isWebVoteLocked(const std::string& i_id_level);
   void updateMyHighscoresFromHighscores(const std::string& i_id_profile);
   void updateMyHighscoresKnownStolenBack(const std::string& i_id_profile);
   bool markMyHighscoresKnownStolen(const std::string& i_id_profile, std::string& o_stolen_msg);
