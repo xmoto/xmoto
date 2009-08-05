@@ -202,6 +202,10 @@ bool xmDatabase::isOnTheWeb(const std::string& i_id_level) {
   return checkKey("SELECT count(1) FROM weblevels WHERE id_level=\"" + protectString(i_id_level) + "\";");
 }
 
+bool xmDatabase::isWebVoteLocked(const std::string& i_id_level) {
+  return checkKey("SELECT count(1) FROM weblevels WHERE id_level=\"" + protectString(i_id_level) + "\" AND vote_locked=1;");
+}
+
 void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
   XMLDocument v_webLXml;
   TiXmlDocument *v_webLXmlData;
