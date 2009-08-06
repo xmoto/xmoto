@@ -57,7 +57,7 @@ msgstr "Poistu kentästä"
 #: src/GameText.h:43
 #, c-format
 msgid "Web account password for profile '%s':"
-msgstr "Web-tilin salasana profiilille '%s'"
+msgstr "Web-tilin salasana profiilille '%s':"
 
 #: src/GameText.h:44
 msgid "Add to favorite"
@@ -119,7 +119,7 @@ msgstr "Aktiivinen Zoom"
 
 #: src/GameText.h:60
 msgid "Use Trail Cam"
-msgstr ""
+msgstr "Käytä Reitti kameraa"
 
 #: src/GameText.h:61
 msgid "Beating mode"
@@ -194,12 +194,12 @@ msgstr "Poista"
 #, c-format
 msgid "Are you sure you want to delete %i replay"
 msgid_plural "Are you sure you want to delete %i replay"
-msgstr[0] "Tahdotko varmasti poistaa toistovideon %i ?"
+msgstr[0] "Tahdotko varmasti poistaa %i toistovideon?"
 msgstr[1] "Tahdotko varmasti poistaa %i toistovideota?"
 
 #: src/GameText.h:79
 msgid "There is no replay to clean"
-msgstr "Ei toistovideota mitä poistaa"
+msgstr "Ei ole toistovideota mitä poistaa"
 
 #: src/GameText.h:80
 msgid "Close"
@@ -337,7 +337,7 @@ msgstr "MacOS X -tuki"
 
 #: src/GameText.h:140
 msgid "Localization"
-msgstr "Internet-sivujen käännökset"
+msgstr "Käännökset"
 
 #: src/GameText.h:141
 msgid "Slovak"
@@ -495,8 +495,8 @@ msgid ""
 "places."
 msgstr ""
 "X-Moto käyttää tietokantaa tietokoneellasi johon se tallentaa kaikki parhaat "
-"suorituksesi. Voit lähettää nämä tiedot käyttämällä internet käyttäjääsi X-"
-"Moton servereille. Se on käytännöllinen tietojen tallennukseen jos pelaat "
+"suorituksesi. Voit lähettää nämä tiedot käyttämällä internet-tiliäsi X-Moton "
+"servereille. Se on käytännöllistä tietojen tallennukseen jos pelaat "
 "muillakin tietokoneilla."
 
 #: src/GameText.h:185
@@ -632,7 +632,7 @@ msgstr "Kaasu"
 
 #: src/GameText.h:215
 msgid "Enable Audio"
-msgstr "Äänet"
+msgstr "Salli Äänet"
 
 #: src/GameText.h:216
 msgid "Check new levels at startup"
@@ -2337,7 +2337,7 @@ msgstr "Käytä Dynaamista zoomia pelatessasi"
 
 #: src/GameText.h:664
 msgid "Use a camera that directs to the shortest path through the level"
-msgstr ""
+msgstr "Käytä kameraa joka ohjaa sinut kentän läpi lyhyintä reittiä"
 
 #: src/GameText.h:665
 msgid "View the X-Moto credits"
@@ -2495,7 +2495,7 @@ msgstr ""
 
 #: src/GameText.h:707
 msgid "Give your mind about this level"
-msgstr "Anna mielesi tästä kentästä"
+msgstr "Anna mielipiteesi tästä kentästä"
 
 #: src/GameText.h:708
 msgid "No idea"
@@ -2796,7 +2796,7 @@ msgstr "Web-äänestyksen mukaan helpoimmat X-Moto-kentät"
 
 #: src/GameText.h:789
 msgid "Crappiest X-Moto levels according to the web votes"
-msgstr "Huonoimmat X-Moto kentät web-äänestyksen mukaan"
+msgstr "Web-äänestyksen mukaan huonoimmat X-Moto-kentät "
 
 #: src/GameText.h:790
 msgid "X-Moto levels which are dynamic"
@@ -2804,7 +2804,7 @@ msgstr "Dynaamiset X-Moto-kentät"
 
 #: src/GameText.h:791
 msgid "X-Moto levels using strongly physics"
-msgstr "X-Moto kentät, jotka käyttävät paljon liikkyvia objekteja"
+msgstr "X-Moto kentät, jotka käyttävät palikoita joilla on fysiikat."
 
 #: src/GameText.h:792
 msgid "Last levels you have played"
@@ -2916,11 +2916,11 @@ msgstr "Teematila pois päältä"
 
 #: src/GameText.h:819
 msgid "UglyOver mode enabled"
-msgstr "Ruma päältä tila päällä"
+msgstr "Ruma-päältä tila päällä"
 
 #: src/GameText.h:820
 msgid "UglyOver mode disabled"
-msgstr "Ruma päältä tila pois päältä"
+msgstr "Ruma-päältä tila pois päältä"
 
 #: src/GameText.h:821
 msgid "Web connection enabled"
@@ -2956,27 +2956,27 @@ msgstr "Ääni pois päältä"
 
 #: src/GameText.h:829
 msgid "Trail Cam not available"
-msgstr ""
+msgstr "Reitti kameraa ei ole saatavilla"
 
 #: src/GameText.h:830
 msgid "Trail Cam activated"
-msgstr ""
+msgstr "Reitti kamera päällä"
 
 #: src/GameText.h:831
 msgid "Trail Cam deactivated"
-msgstr ""
+msgstr "Reitti kamera pois päältä"
 
 #: src/GameText.h:832
 msgid "Ghost Trail is not available"
-msgstr ""
+msgstr "Haamun reittiä ei ole saatavilla"
 
 #: src/GameText.h:833
 msgid "Ghost Trail Rendering activated"
-msgstr ""
+msgstr "Haamun reitin piirto päällä"
 
 #: src/GameText.h:834
 msgid "Ghost Trail Rendering deactivated"
-msgstr ""
+msgstr "Haamun reitin piirto pois päältä"
 
 #: src/GameText.h:836
 msgid "No training positions stored"
@@ -3077,7 +3077,7 @@ msgstr ": Pyöritä myötäpäivään"
 
 #: src/LevelsText.h:34
 msgid "Okay. The red dot on your minimap is a strawberry."
-msgstr "OK. Punainen piste pikkukartalla on mansikka."
+msgstr "Okei. Punainen piste pikkukartalla on mansikka."
 
 #: src/LevelsText.h:35
 msgid ""
@@ -3109,7 +3109,7 @@ msgstr ""
 
 #: src/LevelsText.h:39
 msgid "Welcome to X-Moto!"
-msgstr "Tervetuloa X-Motoon!"
+msgstr "Tervetuloa X-Motoon! :)"
 
 #: src/LevelsText.h:40
 msgid ""
@@ -3178,7 +3178,7 @@ msgid ""
 "That will cause the rear suspension to increase the\n"
 "length of the jump.\n"
 "Try it..."
-msgstr "Tämä saa pyörän takajousituksen pidentämään hyppyä."
+msgstr "Tämä saa pyörän takajousituksen pidentämään hyppyä. Kokeile!"
 
 #: src/LevelsText.h:51
 msgid "This tutorial will teach you the basics of jumping."
@@ -3206,11 +3206,11 @@ msgstr ""
 
 #: src/LevelsText.h:55
 msgid "Nice jump there! :)"
-msgstr "Hieno hyppy! :)"
+msgstr "Hieno hyppy! :')"
 
 #: src/LevelsText.h:56
 msgid "Congrats, you're now a master jumper!"
-msgstr "Onnittelut, olet nyt mestarihyppääjä!"
+msgstr "Onnittelut, olet nyt mestarihyppääjä! ;)"
 
 #: src/LevelsText.h:57
 msgid ""
@@ -3295,14 +3295,3 @@ msgid ""
 msgstr ""
 "Nyt viimeiselle...Se ei ole niin pitkä, mutta sen sijaan\n"
 "siellä on vielä vähemmän tilaa pääkullallesi. Onnea matkaan! :)"
-
-#~ msgid ""
-#~ "   Stop:\n"
-#~ "<< >>\n"
-#~ "   < >\n"
-#~ " Speed:"
-#~ msgstr ""
-#~ "  Stop:\n"
-#~ "<< >>\n"
-#~ "   < >\n"
-#~ "Nopeus:"
