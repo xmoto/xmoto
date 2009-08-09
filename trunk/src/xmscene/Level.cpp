@@ -161,7 +161,8 @@ bool Level::isPhysics() const {
   return m_isPhysics;
 }
 
-void Level::updatePhysics(int timeStep, CollisionSystem* p_CollisionSystem, ChipmunkWorld* i_chipmunkWorld) {
+void Level::updatePhysics(int i_time, int timeStep, CollisionSystem* p_CollisionSystem, ChipmunkWorld* i_chipmunkWorld, DBuffer* i_recorder) {
+
   if(i_chipmunkWorld == NULL) {
     return;
   }
@@ -170,7 +171,7 @@ void Level::updatePhysics(int timeStep, CollisionSystem* p_CollisionSystem, Chip
 
   // loop through all blocks, looking for chipmunky ones
   for(unsigned int i=0; i<m_blocks.size(); i++) {
-    m_blocks[i]->updatePhysics(timeStep, p_CollisionSystem);
+    m_blocks[i]->updatePhysics(i_time, timeStep, p_CollisionSystem, i_recorder);
   }
 }
 

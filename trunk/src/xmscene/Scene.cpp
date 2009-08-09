@@ -313,7 +313,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
 
     /* Update misc stuff (only when not playing a replay) */
     if(m_playEvents) {
-      getLevelSrc()->updatePhysics(timeStep, &m_Collision, m_chipmunkWorld);
+      getLevelSrc()->updatePhysics(m_time, timeStep, &m_Collision, m_chipmunkWorld, i_eventRecorder);
       _UpdateZones();
       _UpdateEntities();
     }
@@ -440,7 +440,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
       SceneEvent *pEvent = getNextGameEvent();
       if(i_recorder != NULL) {
 	/* Encode event */
-	_SerializeGameEventQueue(i_recorder, pEvent);
+	pEvent->serialize(*i_recorder);
       }
       
       /* What event? */
@@ -575,9 +575,10 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     }
 
     // load chimunk
-    if(m_pLevelSrc->isPhysics()) {
-      LogInfo("Running a physics level");
-      m_chipmunkWorld = new ChipmunkWorld(m_physicsSettings, m_pLevelSrc);
+    if(m_playEvents) {
+      if(m_pLevelSrc->isPhysics()) {
+	m_chipmunkWorld = new ChipmunkWorld(m_physicsSettings, m_pLevelSrc);
+      }
     }
 
     /* Generate extended level data to be used by the game */
@@ -1128,8 +1129,11 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
   void Scene::SetBlockPos(std::string pBlockID, float pX, float pY) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
     v_block->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
-    if(v_block->isPhysics()) {
-      v_block->setPhysicsPosition(pX, pY);
+
+    if(m_chipmunkWorld != NULL) {
+      if(v_block->isPhysics()) {
+	v_block->setPhysicsPosition(pX, pY);
+      }
     }
     m_Collision.moveDynBlock(v_block);
   }

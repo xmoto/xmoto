@@ -189,7 +189,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     readBuf_LE((char *)&nv, 4);
     n = static_cast<int>(nv);
   }
-  
+
+  void DBuffer::operator <<(unsigned char c) {
+    writeBuf((char *)&c,sizeof(c));
+  }
+
+  void DBuffer::operator >>(unsigned char &c) {
+    readBuf((char*) &c, 1);
+  }
+ 
   void DBuffer::operator <<(unsigned int n) {
     int sn;
     sn = (int) (n);

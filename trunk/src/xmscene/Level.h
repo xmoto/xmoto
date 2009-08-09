@@ -41,6 +41,7 @@ class XMLDocument;
 class ChipmunkWorld;
 class Sprite;
 class PhysicsSettings;
+class DBuffer;
 
 /*===========================================================================
   Level source object - holds all stored information about a level
@@ -99,7 +100,7 @@ class Level {
   bool isScripted() const;
   bool isPhysics() const;
 
-  void updatePhysics(int timeStep, CollisionSystem* p_CollisionSystem, ChipmunkWorld* i_chipmunkWorld);
+  void updatePhysics(int i_time, int timeStep, CollisionSystem* p_CollisionSystem, ChipmunkWorld* i_chipmunkWorld, DBuffer* i_recorder);
   float averagePhysicBlocksSize() const;
   float maxPhysicBlocksSize() const;
   int   nbPhysicBlocks() const;

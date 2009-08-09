@@ -38,6 +38,7 @@ class cpBody;
 class cpShape;
 class ChipmunkWorld;
 class PhysicsSettings;
+class DBuffer;
 template<class T> struct ColElement;
 
 #define DEFAULT_EDGE_ANGLE 270.0f
@@ -255,7 +256,7 @@ class Block {
   float getEdgeMaterialScale( std::string i_materialName );
   bool edgeGeomExists(std::string texture);
 
-  void updatePhysics(int timeStep, CollisionSystem* io_collisionSystem);
+  void updatePhysics(int i_time, int timeStep, CollisionSystem* io_collisionSystem, DBuffer* i_recorder);
 
   // calculate edge position
   void calculateEdgePosition_angle(Vector2f  i_vA, Vector2f i_vB,
@@ -337,6 +338,11 @@ private:
 
   EdgeDrawMethod  stringToEdge(std::string method);
   CollisionMethod stringToColMethod(std::string method);
+
+  /* chimpmunk save */
+  Vector2f m_previousSavedPosition;
+  float    m_previousSavedRotation;
+
 };
 
 #endif /* __BLOCK_H__ */
