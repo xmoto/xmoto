@@ -348,7 +348,6 @@ private:
   void cleanScriptDynamicObjects();
   void nextStateScriptDynamicObjects(int i_nbCents);
 
-  void _SerializeGameEventQueue(DBuffer* Buffer,SceneEvent *pEvent);      
   void _UpdateDynamicCollisionLines(void);
 };
 

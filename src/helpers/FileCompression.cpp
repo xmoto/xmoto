@@ -19,12 +19,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "FileCompression.h"
+#include <stdlib.h>
 #if defined (WIN32)
   #include "../bzip2/bzlib.h"
 #else
   #include <bzlib.h>
 #endif
 #include "VExcept.h"
+#if defined(WIN32) 
+  #include "zlib.h"
+#else
+  #include <zlib.h>
+#endif
 
 #define BUFSIZE 4096
 
@@ -141,4 +147,39 @@ void FileCompression::bzip2(std::string p_fileIN, std::string p_fileOUT) {
 
   fclose(f_in);
   fclose(f_out);
+}
+
+char* FileCompression::zcompress(const char* i_data, int i_len, int& o_outputLen) {
+  char *pcCompressedData;
+  uLongf pcCompressedDataSize;
+  int nZRet;
+
+  pcCompressedDataSize = compressBound(i_len);
+  pcCompressedData = (char*) malloc(pcCompressedDataSize);
+  if(pcCompressedData == NULL) {
+    throw Exception("Unable to malloc for compression");
+  }
+
+  nZRet = compress2((Bytef *)pcCompressedData, &pcCompressedDataSize,
+		    (Bytef *)i_data, i_len, 9);
+
+  if(nZRet != Z_OK) {
+    free(pcCompressedData);
+    throw Exception("Unable to zcompress");
+  }
+  o_outputLen = pcCompressedDataSize;
+
+  return pcCompressedData;
+}
+
+void FileCompression::zuncompress(const char* i_compressedData, int i_compressedLen, char* io_outputData, int i_outputDataLen) {
+  int nZRet;
+  uLongf v_len;
+
+  v_len = i_outputDataLen;
+  nZRet = uncompress((Bytef *)io_outputData, &v_len,
+		     (Bytef *)i_compressedData, i_compressedLen);
+  if(nZRet != Z_OK || ((int)v_len) != i_outputDataLen) {
+    throw Exception("Unable to zuncompress");
+  }
 }

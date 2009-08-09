@@ -65,6 +65,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       void operator >>(bool &n);
       void operator <<(int n);
       void operator >>(int &n);
+      void operator <<(unsigned char c);
+      void operator >>(unsigned char &c);
       void operator <<(unsigned int n);
       void operator >>(unsigned int &n);
       void operator <<(float n);

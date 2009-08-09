@@ -50,13 +50,6 @@
   }
 
   /*===========================================================================
-    Encoding of event buffer 
-    ===========================================================================*/
-  void Scene::_SerializeGameEventQueue(DBuffer* Buffer, SceneEvent *pEvent) {
-    pEvent->serialize(*Buffer);
-  }
-
-  /*===========================================================================
     Serializer
     ===========================================================================*/
 void Scene::getSerializedBikeState(BikeState *i_bikeState, int i_time, SerializedBikeState *pState, PhysicsSettings* i_physicsSettings) {

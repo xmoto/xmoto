@@ -67,7 +67,6 @@ class PhysicsSettings;
       void peekState(BikeState* state, PhysicsSettings* i_physicsSettings); /* get current state */
       
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,unsigned int nStateSize);
-      void saveReplay(void);
       std::string openReplay(const std::string &FileName, std::string &Player, bool bDisplayInformation = false);
 
       static void deleteReplay(std::string ReplayName);
@@ -77,7 +76,7 @@ class PhysicsSettings;
       void reinitialize();
       std::string getLevelId();
 
-      void finishReplay(bool bFinished,int finishTime);
+      void finishReplay(bool bFinished,int finishTime, int i_format);
       int CurrentFrame() const;
 
       void fastforward(int i_time);
@@ -124,6 +123,13 @@ class PhysicsSettings;
 
       /* Events reconstructed from replay */
       std::vector<RecordedGameEvent *> m_ReplayEvents;
+      
+      void saveReplay(int i_format);
+      void saveReplay_1(FileHandle *pfh);
+      void saveReplay_2(FileHandle *pfh);
+
+      void openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersion);
+      void openReplay_2(FileHandle *pfh, bool bDisplayInformation);
   };
 
 #endif

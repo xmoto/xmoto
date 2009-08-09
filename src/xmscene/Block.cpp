@@ -30,11 +30,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ChipmunkWorld.h"
 #include "PhysicsSettings.h"
 #include "../Theme.h"
+#include "../GameEvents.h"
 
 #define XM_DEFAULT_BLOCK_TEXTURE "default"
 #define XM_DEFAULT_PHYS_BLOCK_MASS 30.0
 #define XM_DEFAULT_PHYS_BLOCK_FRICTION 0.5
 #define XM_DEFAULT_PHYS_BLOCK_ELASTICITY 0.0
+
+#define PHYS_MOVE_POSITION_MINIMUM 0.3
+#define PHYS_MOVE_ROTATION_MINIMUM 0.1
+
 
 /* Vertex */
 ConvexBlockVertex::ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition) {
@@ -107,6 +112,9 @@ Block::Block(std::string i_id) {
   m_blendColor.setBlue(255);
   m_blendColor.setAlpha(255);
   m_edgeDefaultColor = DEFAULT_EDGE_BLENDCOLOR; // assign it or get random colors if no edge material is added
+
+  m_previousSavedPosition = DynamicPosition();
+  m_previousSavedRotation = DynamicRotation();
 }
 
 Block::~Block() {
@@ -269,29 +277,63 @@ void Block::translate(float x, float y)
   translateCollisionLines(x, y);
 }
 
-void Block::updatePhysics(int timeStep, CollisionSystem* io_collisionSystem) {
-  if(isPhysics()) {
-    // move block according to chipmunk, only if they have moved
-    bool moved = false;
+void Block::updatePhysics(int i_time, int timeStep, CollisionSystem* io_collisionSystem, DBuffer* i_recorder) {
+  Vector2f v_diffPosition;
+  float    v_diffRotation;
 
-    Vector2f newPos = Vector2f(((mBody->p.x ) / CHIP_SCALE_RATIO) , (mBody->p.y ) / CHIP_SCALE_RATIO);
-    if(DynamicPosition() != newPos) {
-      setDynamicPosition(newPos);
-      moved = true;
-    }
+  if(isPhysics() == false) {
+    return;
+  }
 
-    if(DynamicRotation() != mBody->a) {
-      setDynamicRotation(mBody->a);
-      moved = true;
-    }
+  // move block according to chipmunk, only if they have moved
+  bool moved = false;
 
-    if(moved == true){
-      // inform collision system that there has been a change
-      io_collisionSystem->moveDynBlock(this);
+  Vector2f newPos = Vector2f(((mBody->p.x ) / CHIP_SCALE_RATIO) , (mBody->p.y ) / CHIP_SCALE_RATIO);
+  if(DynamicPosition() != newPos) {
+    setDynamicPosition(newPos);
+    moved = true;
+  }
+  
+  if(DynamicRotation() != mBody->a) {
+    setDynamicRotation(mBody->a);
+    moved = true;
+  }
+  
+  if(moved == true){
+    // inform collision system that there has been a change
+    io_collisionSystem->moveDynBlock(this);
+  }
+  
+  cpBodyResetForces(mBody);
+
+  /* record */
+  /* don't save any physic event for the moment
+  if(i_recorder != NULL) {
+    v_diffPosition = m_previousSavedPosition-DynamicPosition();
+    v_diffRotation = m_previousSavedRotation-DynamicRotation();
+    
+    // save position only if the block moved
+    if(v_diffPosition.length() > PHYS_MOVE_POSITION_MINIMUM) {
+      SceneEvent *pEvent = new MGE_SetBlockPos(i_time,
+					       Id(),
+					       DynamicPosition().x,
+					       DynamicPosition().y);
+      pEvent->serialize(*i_recorder);
+      delete pEvent;
+      m_previousSavedPosition = DynamicPosition();
     }
     
-    cpBodyResetForces(mBody);
+    // save rotation only if the block moved
+    if(fabs(v_diffRotation) > PHYS_MOVE_ROTATION_MINIMUM) {
+      SceneEvent *pEvent = new MGE_SetBlockRotation(i_time,
+						    Id(),
+						    DynamicRotation());
+      pEvent->serialize(*i_recorder);
+      delete pEvent;
+      m_previousSavedRotation = DynamicRotation();
+    }
   }
+  */
 }
 
 int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings) {
