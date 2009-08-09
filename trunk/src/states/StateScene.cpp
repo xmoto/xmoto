@@ -40,6 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../net/NetClient.h"
 #include "../net/NetActions.h"
 #include "../SysMessage.h"
+#include "states/StateVote.h"
 
 #define INPLAY_ANIMATION_TIME 1.0
 #define INPLAY_ANIMATION_SPEED 10
@@ -454,6 +455,17 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 #endif
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_v, KMOD_LCTRL)) {
+    if(XMSession::instance()->adminMode()) {
+      if(m_universe != NULL) {
+	if(m_universe->getScenes().size() == 1) {
+	  StateManager::instance()->pushState(new StateVote(StateManager::instance()->getUniqueId(),
+							    m_universe->getScenes()[0]->getLevelSrc()->Id()));
+	}
+      }
+    }
+  }
 
   else {
     GameState::xmKey(i_type, i_xmkey);
