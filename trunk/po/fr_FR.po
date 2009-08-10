@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-08-04 23:03+0200\n"
+"POT-Creation-Date: 2009-08-10 20:09+0200\n"
 "PO-Revision-Date: 2008-09-14 21:46+0200\n"
 "Last-Translator: Nicolas Adenis-Lamarre\n"
 "Language-Team: X-Moto\n"
@@ -2983,11 +2983,9 @@ msgstr "Position %i stockée"
 
 #: src/GameText.h:839
 msgid ""
-"Physic levels recording is still not implemented.\n"
+"This level is not recordable (feature still not implemented).\n"
 "Sorry."
 msgstr ""
-"L'enregistrement des niveaux physiques n'est pas encore possible.\n"
-"Désolé."
 
 #: src/GameText.h:841
 #, c-format
@@ -3288,6 +3286,13 @@ msgid ""
 msgstr ""
 "Enfin, le dernier... Il n'est pas très long, mais\n"
 "il y a encore moins de place pour votre tête. Bonne chance ! :)"
+
+#~ msgid ""
+#~ "Physic levels recording is still not implemented.\n"
+#~ "Sorry."
+#~ msgstr ""
+#~ "L'enregistrement des niveaux physiques n'est pas encore possible.\n"
+#~ "Désolé."
 
 #~ msgid ""
 #~ "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"

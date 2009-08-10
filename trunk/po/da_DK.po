@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-08-04 23:03+0200\n"
+"POT-Creation-Date: 2009-08-10 20:09+0200\n"
 "PO-Revision-Date: 2009-04-25 18:04+0200\n"
 "Last-Translator: Kristian Jagd <Kristianjagd@gmail.com>\n"
 "Language-Team: Dansk <LL@li.org>\n"
@@ -2965,11 +2965,9 @@ msgstr "Gemt som træningsposition %i"
 
 #: src/GameText.h:839
 msgid ""
-"Physic levels recording is still not implemented.\n"
+"This level is not recordable (feature still not implemented).\n"
 "Sorry."
 msgstr ""
-"Replays i fysik baner er endnu ikke implementeret.\n"
-"Beklager."
 
 #: src/GameText.h:841
 #, c-format
@@ -3266,6 +3264,13 @@ msgstr ""
 "Nu til den sidste og sværeste... den er ikke særlig lang\n"
 "men til gengæld er det endnu mindre plads til dit dyrebare hoved! Held og "
 "lykke!"
+
+#~ msgid ""
+#~ "Physic levels recording is still not implemented.\n"
+#~ "Sorry."
+#~ msgstr ""
+#~ "Replays i fysik baner er endnu ikke implementeret.\n"
+#~ "Beklager."
 
 #~ msgid ""
 #~ "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"

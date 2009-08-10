@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-08-04 23:03+0200\n"
-"PO-Revision-Date: 2009-07-26 19:43+0100\n"
+"POT-Creation-Date: 2009-08-10 20:09+0200\n"
+"PO-Revision-Date: 2009-08-10 20:16+0100\n"
 "Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -899,7 +899,7 @@ msgstr ""
 
 #: src/GameText.h:294
 msgid "change mirror mode"
-msgstr "Spiegel-Modus ändern"
+msgstr "Spiegel-Modus ein- / ausschalten"
 
 #: src/GameText.h:295
 msgid "Toggle blacklist"
@@ -915,11 +915,11 @@ msgstr "Optionen Menü öffnen"
 
 #: src/GameText.h:298
 msgid "Toggle Ghost Trail Rendering"
-msgstr ""
+msgstr "Ghost Trail Rendering ein- / ausschalten"
 
 #: src/GameText.h:299
 msgid "Toggle Trail Cam"
-msgstr ""
+msgstr "Trail Cam aktivieren / deaktivieren"
 
 #: src/GameText.h:300
 msgid "Show this help"
@@ -927,7 +927,7 @@ msgstr "Diese Hilfe anzeigen"
 
 #: src/GameText.h:301 src/GameText.h:631
 msgid "Show the ghost if possible in the game"
-msgstr "Geist im Spiel anzeigen, wenn möglich"
+msgstr "Dem Geist im Spiel folgen, wenn möglich"
 
 #: src/GameText.h:302
 msgid "Toggle favorite"
@@ -935,7 +935,7 @@ msgstr "Zu Favoriten hinzufügen oder davon entfernen"
 
 #: src/GameText.h:303
 msgid "Toggle Ghost Trail Tracking Shot"
-msgstr ""
+msgstr "Ghost Trail Kamerafahrt ein- / ausschalten"
 
 #: src/GameText.h:304
 msgid "Enable/disable FPS display"
@@ -2770,7 +2770,7 @@ msgstr "Geklaute Rekorde"
 
 #: src/GameText.h:777
 msgid "Vote unlocked levels"
-msgstr ""
+msgstr "Zur Abstimmung freigegebene Levels"
 
 #: src/GameText.h:779
 msgid "Levels with no highscore in your room"
@@ -2911,7 +2911,7 @@ msgstr "Levels, in denen du einmal Rekordhalter warst"
 
 #: src/GameText.h:813
 msgid "Levels having votes unlocked"
-msgstr ""
+msgstr "Levels, die frei zur Abstimmung sind"
 
 #: src/GameText.h:815
 msgid "Ugly mode enabled"
@@ -3009,12 +3009,11 @@ msgstr "Gespeichert als Trainingsposition %i"
 
 #: src/GameText.h:839
 msgid ""
-"Physic levels recording is still not implemented.\n"
+"This level is not recordable (feature still not implemented).\n"
 "Sorry."
 msgstr ""
-"Die Replay-Funktion für Chipmunk-Levels ist leider noch nicht "
-"implementiert.\n"
-"Sorry."
+"In diesem Level können leider keine Replays aufgenommen werden (noch nicht "
+"implementiert). Sorry!"
 
 #: src/GameText.h:841
 #, c-format
@@ -3307,6 +3306,14 @@ msgid ""
 msgstr ""
 "Dies ist die letzte Hürde! Nicht so lang, dafür aber\n"
 "ist die Decke noch niedriger. Viel Glück!"
+
+#~ msgid ""
+#~ "Physic levels recording is still not implemented.\n"
+#~ "Sorry."
+#~ msgstr ""
+#~ "Die Replay-Funktion für Chipmunk-Levels ist leider noch nicht "
+#~ "implementiert.\n"
+#~ "Sorry."
 
 #~ msgid ""
 #~ "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"

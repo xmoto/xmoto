@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-08-04 23:03+0200\n"
+"POT-Creation-Date: 2009-08-10 20:09+0200\n"
 "PO-Revision-Date: 2009-06-29 14:27+0300\n"
 "Last-Translator: Anıl Özbek <ozbekanil@gmail.com>\n"
 "Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
@@ -3001,11 +3001,9 @@ msgstr ""
 
 #: src/GameText.h:839
 msgid ""
-"Physic levels recording is still not implemented.\n"
+"This level is not recordable (feature still not implemented).\n"
 "Sorry."
 msgstr ""
-"Fizik bölümlerinin kayıt desteği henüz yoktur.\n"
-"Üzgünüz."
 
 #: src/GameText.h:841
 #, c-format
@@ -3281,6 +3279,13 @@ msgid ""
 msgstr ""
 "Şimdi son bir tane... Çok uzun değil ama bunun yerine\n"
 "değerli başın için daha az yer var. İyi şanslar :)"
+
+#~ msgid ""
+#~ "Physic levels recording is still not implemented.\n"
+#~ "Sorry."
+#~ msgstr ""
+#~ "Fizik bölümlerinin kayıt desteği henüz yoktur.\n"
+#~ "Üzgünüz."
 
 #~ msgid ""
 #~ "Read the README file or check out the website at\n"
