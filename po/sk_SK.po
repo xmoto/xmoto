@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-08-04 23:03+0200\n"
+"POT-Creation-Date: 2009-08-10 20:09+0200\n"
 "PO-Revision-Date: 2008-04-14 13:54+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
@@ -2994,11 +2994,9 @@ msgstr "Uložené ako tréningová pozícia %i"
 
 #: src/GameText.h:839
 msgid ""
-"Physic levels recording is still not implemented.\n"
+"This level is not recordable (feature still not implemented).\n"
 "Sorry."
 msgstr ""
-"Nahrávanie fyzikálnych levelov ešte nie je implementované.\n"
-"Ľutujeme."
 
 #: src/GameText.h:841
 #, c-format
@@ -3297,6 +3295,13 @@ msgid ""
 msgstr ""
 "A teraz posledná... Nie je tak dlhá, ale miesto toho\n"
 "je tam ešte menej miesta na vašu vzácnu hlavu. Veľa šťastia! :)"
+
+#~ msgid ""
+#~ "Physic levels recording is still not implemented.\n"
+#~ "Sorry."
+#~ msgstr ""
+#~ "Nahrávanie fyzikálnych levelov ešte nie je implementované.\n"
+#~ "Ľutujeme."
 
 #~ msgid ""
 #~ "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"

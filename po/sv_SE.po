@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto-0.5.1-svn2777\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-08-04 23:03+0200\n"
+"POT-Creation-Date: 2009-08-10 20:09+0200\n"
 "PO-Revision-Date: 2009-02-27 17:15+0100\n"
 "Last-Translator: \n"
 "Language-Team: Svenska <sv@li.org>\n"
@@ -2978,7 +2978,7 @@ msgstr "Lagrad som träningsposition %i"
 
 #: src/GameText.h:839
 msgid ""
-"Physic levels recording is still not implemented.\n"
+"This level is not recordable (feature still not implemented).\n"
 "Sorry."
 msgstr ""
 

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-08-04 23:03+0200\n"
+"POT-Creation-Date: 2009-08-10 20:09+0200\n"
 "PO-Revision-Date: 2009-07-02 15:45+0100\n"
 "Last-Translator: Zoltán Balogh <ttapecs@gmail.com>\n"
 "Language-Team: X-moto\n"
@@ -2987,11 +2987,9 @@ msgstr "%i. edzőpozícióként mentve"
 
 #: src/GameText.h:839
 msgid ""
-"Physic levels recording is still not implemented.\n"
+"This level is not recordable (feature still not implemented).\n"
 "Sorry."
 msgstr ""
-"A visszajátszás a fizikás pályákhoz még nincs támogatva.\n"
-"Bocsi."
 
 #: src/GameText.h:841
 #, c-format
@@ -3287,3 +3285,10 @@ msgid ""
 msgstr ""
 "Most az utolsó... Ez nem olyan hosszú, de helyette\n"
 "még kevesebb hely van a drága fejednek. Sok sikert! :)"
+
+#~ msgid ""
+#~ "Physic levels recording is still not implemented.\n"
+#~ "Sorry."
+#~ msgstr ""
+#~ "A visszajátszás a fizikás pályákhoz még nincs támogatva.\n"
+#~ "Bocsi."
