@@ -69,6 +69,7 @@ class FileGhost : public Ghost {
   std::string getVeryQuickDescription() const;
   float getBikeEngineSpeed();
   float getBikeLinearVel();
+  float getTorsoVelocity();
   double getAngle();
   Replay* getReplay() { return m_replay; };
 
@@ -120,6 +121,7 @@ class NetGhost : public Ghost {
   std::string getVeryQuickDescription() const;
   float getBikeEngineSpeed();
   float getBikeLinearVel();
+  float getTorsoVelocity();
   double getAngle();
  
  private:

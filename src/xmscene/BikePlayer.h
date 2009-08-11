@@ -61,6 +61,7 @@ class PlayerLocalBiker : public Biker {
 
   float getBikeEngineSpeed();
   float getBikeLinearVel();
+ 
   bool getRenderBikeFront();
   void resetAutoDisabler();
   bool isSqueeking();
@@ -68,6 +69,8 @@ class PlayerLocalBiker : public Biker {
 
   virtual float getRearWheelVelocity();
   virtual float getFrontWheelVelocity();
+  virtual float getTorsoVelocity();
+ 
   virtual double getAngle();
 
   virtual BikeController* getControler();
@@ -180,6 +183,8 @@ class PlayerNetClient : public Biker {
   virtual bool   getRenderBikeFront();
   virtual float  getBikeEngineSpeed();
   virtual float  getBikeLinearVel();
+  virtual float getTorsoVelocity();
+ 
   virtual double getAngle();
   virtual std::string getVeryQuickDescription() const;
   virtual std::string getQuickDescription() const;

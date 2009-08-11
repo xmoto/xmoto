@@ -154,6 +154,7 @@ class Biker {
   virtual bool getRenderBikeFront() = 0; /* display the bikefront ? (for detach) */
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
   virtual float getBikeLinearVel() = 0; /* bike linear velocity */
+  virtual float getTorsoVelocity() = 0; /* Torso Velocity, to determine corpse move (e.g. for death menu popup) */
   virtual double getAngle() = 0; /* biker angle */
   virtual std::string getVeryQuickDescription() const = 0;
   virtual std::string getQuickDescription() const = 0;
