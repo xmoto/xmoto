@@ -169,6 +169,22 @@ void PlayerLocalBiker::uninitPhysics(void) {
   dWorldDestroy(m_WorldID);
 }
 
+float PlayerLocalBiker::getTorsoVelocity() {  // basically stolen from getBikeLinearVel()
+  Vector2f curpos,lastpos;
+  
+  curpos = m_bikeState->Dir == DD_RIGHT? m_bikeState->HeadP : m_bikeState->Head2P; 
+  lastpos = m_bikeState->Dir == DD_RIGHT? m_PrevHeadP : m_PrevHead2P;
+  
+  Vector2f delta = curpos - lastpos;
+  float speed = (3.6 * 100 * sqrt(delta.x * delta.x + delta.y * delta.y)) / PHYS_STEP_SIZE; /* *100 because PHYS_STEP_SIZE is in hundreaths */
+
+  /* protection against invalid values */
+  if (speed > 500)
+    return 0;
+
+  return speed;
+}
+
 void PlayerLocalBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
   /* No wheel spin per default */
   m_bWheelSpin = false;
@@ -1277,6 +1293,10 @@ float PlayerNetClient::getBikeEngineSpeed() {
 }
 
 float PlayerNetClient::getBikeLinearVel() {
+  return 0.0;
+}
+
+float PlayerNetClient::getTorsoVelocity() {
   return 0.0;
 }
 

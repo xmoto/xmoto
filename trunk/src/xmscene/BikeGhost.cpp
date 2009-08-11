@@ -343,6 +343,10 @@ float FileGhost::getBikeLinearVel() {
   return m_linearVelocity;
 }
 
+float FileGhost::getTorsoVelocity() {
+  return 0.0;
+}
+
 float FileGhost::getBikeEngineSpeed() {
   return 0.0; /* unable to know it */
 }
@@ -387,6 +391,10 @@ float NetGhost::getBikeEngineSpeed() {
 
 float NetGhost::getBikeLinearVel() {
   return 0.0; /* to do */
+}
+
+float NetGhost::getTorsoVelocity() {
+ return 0.0;
 }
 
 double NetGhost::getAngle() {
