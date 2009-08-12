@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "thread/SendVoteThread.h"
 #include "../drawlib/DrawLib.h"
 
-#define STATE_DEAD_MAX_TIME 600
+#define STATE_DEAD_MAX_TIME 140
 #define VELOCITY_UNTIL_TORSO_RIP 0.005
 
 StateDeadJust::StateDeadJust(Universe* i_universe, const std::string& i_id)
@@ -43,8 +43,8 @@ StateDeadJust::~StateDeadJust()
 void StateDeadJust::enter()
 {
   StateScene::enter();
-  m_enterTime = GameApp::getXMTimeInt();
-
+  m_enterTime = 0;
+  
   if(m_universe != NULL) {
     for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
       
@@ -89,14 +89,13 @@ void StateDeadJust::nextLevel(bool i_positifOrder) {
 }
 
 bool StateDeadJust::update() {
-  if( m_universe->getScenes()[0]->Players()[0]->getTorsoVelocity() <= VELOCITY_UNTIL_TORSO_RIP) {
-    if(GameApp::getXMTimeInt() - m_enterTime > STATE_DEAD_MAX_TIME*10 ) {
-      StateManager::instance()->pushState(new StateDeadMenu(m_universe, false, true));
-      return false;
-    } else {
-      return StateScene::update();
-    }
+  if( m_universe->getScenes()[0]->Players()[0]->getTorsoVelocity() <= VELOCITY_UNTIL_TORSO_RIP && m_enterTime == 0) {
+    m_enterTime = GameApp::getXMTimeInt();
+  }    
+  if( m_enterTime != 0 && GameApp::getXMTimeInt() - m_enterTime > STATE_DEAD_MAX_TIME*10 ) {
+    StateManager::instance()->pushState(new StateDeadMenu(m_universe, false, true));
+    return false;
   } else {
-      return StateScene::update();
-  }
+    return StateScene::update();
+  } 
 }
