@@ -61,8 +61,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_NOLOG                	    false
 #define DEFAULT_TESTTHEME           	    false
 #define DEFAULT_GHOST_MYBEST        	    true
-#define DEFAULT_GHOST_THEBEST       	    true
-#define DEFAULT_GHOSTBESTREFROOM    	    false
+#define DEFAULT_GHOST_THEBEST       	    false
+#define DEFAULT_GHOSTBESTREFROOM    	    true
 #define DEFAULT_GHOSTBESTOTHERROOMS 	    false
 #define DEFAULT_AUTOSAVEHIGHSCORESREPLAYS   true
 #define DEFAULT_ENABLEGHOSTS                true
@@ -132,7 +132,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_CLIENTGHOSTMODE             true
 #define DEFAULT_CLIENTSERVERPORT            DEFAULT_SERVERPORT
 #define DEFAULT_CLIENTFRAMERATEUPLOAD       10
-#define DEFAULT_MUSICONALLLEVELS            false
+#define DEFAULT_MUSICONALLLEVELS            true
 #define DEFAULT_ADMINMODE                   false
 
 class XMDefault {
