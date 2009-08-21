@@ -279,7 +279,6 @@ void Block::translate(float x, float y)
 
 void Block::updatePhysics(int i_time, int timeStep, CollisionSystem* io_collisionSystem, DBuffer* i_recorder) {
   Vector2f v_diffPosition;
-  float    v_diffRotation;
 
   if(isPhysics() == false) {
     return;
@@ -308,6 +307,8 @@ void Block::updatePhysics(int i_time, int timeStep, CollisionSystem* io_collisio
 
   /* record */
   /* don't save any physic event for the moment
+  float v_diffRotation;
+
   if(i_recorder != NULL) {
     v_diffPosition = m_previousSavedPosition-DynamicPosition();
     v_diffRotation = m_previousSavedRotation-DynamicRotation();

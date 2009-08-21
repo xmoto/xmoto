@@ -602,10 +602,9 @@ int ScrapTextures::allocateAndLoadTexture(unsigned int width,
 					  float* vx, float* vy,
 					  SDL_Surface* data)
 {
-  unsigned int x, y, firstAvailable, scrap;
+  unsigned int x = 0, y = 0, firstAvailable = 0, scrap = 0;
   bool useScrap = false;
 
-  scrap = 0;
   while(scrap < MAX_SCRAPS && useScrap == false) {
     for(unsigned int i=0; i<BLOCK_WIDTH-width && useScrap == false; i++){
       firstAvailable= 0;

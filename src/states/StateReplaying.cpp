@@ -119,7 +119,7 @@ bool StateReplaying::update()
   if(StateScene::update() == false)
     return false;
   
-  if(m_replayBiker->isDead() || m_replayBiker->isFinished() && m_stopToUpdate == false) {
+  if((m_replayBiker->isDead() || m_replayBiker->isFinished()) && m_stopToUpdate == false) {
     m_stopToUpdate = true;
 
     if(XMSession::instance()->benchmark()) {

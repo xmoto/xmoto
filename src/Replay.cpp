@@ -743,8 +743,8 @@ bool Replay::nextState(int p_frames) {
       ReplayInfo *pRpl = new ReplayInfo;
       std::string LevelID;
       std::string Player;
-      bool bFinished;
-      int finishTime;
+      bool bFinished = true;
+      int finishTime = 0;
 
       switch(nVersion) {
       case 0:
