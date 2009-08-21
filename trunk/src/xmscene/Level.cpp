@@ -1360,7 +1360,10 @@ void Level::loadRemplacementSprites()
 float Level::averagePhysicBlocksSize() const {
   int v_nb;
   float v_total;
-  float xmin, xmax, ymin, ymax;
+  float xmin = 0.0, 
+        xmax = 0.0, 
+        ymin = 0.0, 
+        ymax = 0.0;
 
   if(m_isPhysics == false) {
     return 0;
@@ -1412,7 +1415,10 @@ float Level::averagePhysicBlocksSize() const {
 
 float Level::maxPhysicBlocksSize() const {
   float v_max;
-  float xmin, xmax, ymin, ymax;
+  float xmin = 0.0,
+        xmax = 0.0,
+        ymin = 0.0, 
+        ymax = 0.0;
 
   if(m_isPhysics == false) {
     return 0;
