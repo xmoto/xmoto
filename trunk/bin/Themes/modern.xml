@@ -74,7 +74,7 @@
 <sprite type="Entity" name="Grass1" file="Grass1.png" width="0.5" height="0.5" centerX="0.25" centerY="0.15" sum="1edddb378a8612df66f11e2aec8a208e" />
 <sprite type="Entity" name="Grass3" file="Grass3_527.png" width="0.7" height="0.7" centerX="0.35" centerY="0.35" sum="78c206088fc50014ca986d4d2d65e6e2" />
 <sprite type="Entity" name="HStones" file="HStones.png" width="0.8" height="2" centerX="0.4" centerY="0.03" sum="797f7afbd50e659fa6c036908cb1230d" />
-<sprite type="Entity" name="Hang" file="Hang_809.png" sum="e32d301ade69b5a923828779f7638a1e" />
+<sprite type="Entity" name="Hang" file="Hang_809.png" sum="6f3a180377b67a1a0d0af937770296da" />
 <sprite type="Entity" name="HangingVines1" file="HangingVines1.png" width="3.0" height="4.0" centerX="1.5" centerY="3.6" sum="dd62bf214ad09afd033e27a8d43f413f" />
 <sprite type="Entity" name="HangingVines2" file="HangingVines2.png" width="3.0" height="4.0" centerX="1.5" centerY="3.6" sum="feb9191eb04b1fd421ac27617eff556a" />
 <sprite type="Entity" name="HellHead" file="HellHead_167.png" width="3" height="3" centerX="1.5" centerY="0.2" sum="580663bdcf09f76ea45718b4dafb4b04" />
