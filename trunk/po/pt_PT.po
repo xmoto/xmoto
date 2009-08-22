@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: X-Moto 0.51\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-08-10 20:09+0200\n"
-"PO-Revision-Date: 2009-07-21 13:08-0000\n"
+"PO-Revision-Date: 2009-08-10 18:52-0000\n"
 "Last-Translator: Sérgio Marques <smarquespt@gmail.com>\n"
 "Language-Team: Portuguese <LuisG280@hotmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -121,7 +121,7 @@ msgstr "Zoom de Câmara Activo"
 
 #: src/GameText.h:60
 msgid "Use Trail Cam"
-msgstr ""
+msgstr "Usar Câmara de Rasto"
 
 #: src/GameText.h:61
 msgid "Beating mode"
@@ -918,11 +918,11 @@ msgstr "Abrir menu de opções"
 
 #: src/GameText.h:298
 msgid "Toggle Ghost Trail Rendering"
-msgstr ""
+msgstr "Alternar Renderização do Rasto do Fantasma"
 
 #: src/GameText.h:299
 msgid "Toggle Trail Cam"
-msgstr ""
+msgstr "Alternar Câmara de Rasto"
 
 #: src/GameText.h:300
 msgid "Show this help"
@@ -938,7 +938,7 @@ msgstr "Alternar favoritos"
 
 #: src/GameText.h:303
 msgid "Toggle Ghost Trail Tracking Shot"
-msgstr ""
+msgstr "Alternar Rasto do Fantasma"
 
 #: src/GameText.h:304
 msgid "Enable/disable FPS display"
@@ -2340,7 +2340,7 @@ msgstr "Executar zoom dinâmico ao jogar"
 
 #: src/GameText.h:664
 msgid "Use a camera that directs to the shortest path through the level"
-msgstr ""
+msgstr "Usar uma câmara que indica o caminho mais curto do nível"
 
 #: src/GameText.h:665
 msgid "View the X-Moto credits"
@@ -2757,7 +2757,7 @@ msgstr "Recordes perdidos"
 
 #: src/GameText.h:777
 msgid "Vote unlocked levels"
-msgstr ""
+msgstr "Votar níveis desbloqueados"
 
 #: src/GameText.h:779
 msgid "Levels with no highscore in your room"
@@ -2897,7 +2897,7 @@ msgstr "Níveis em que deteve o recorde"
 
 #: src/GameText.h:813
 msgid "Levels having votes unlocked"
-msgstr ""
+msgstr "Níveis desbloqueados que comtêm votos"
 
 #: src/GameText.h:815
 msgid "Ugly mode enabled"
@@ -2957,27 +2957,27 @@ msgstr "Áudio desactivado"
 
 #: src/GameText.h:829
 msgid "Trail Cam not available"
-msgstr ""
+msgstr "Câmara de rasto não disponível"
 
 #: src/GameText.h:830
 msgid "Trail Cam activated"
-msgstr ""
+msgstr "Câmara de rasto activada"
 
 #: src/GameText.h:831
 msgid "Trail Cam deactivated"
-msgstr ""
+msgstr "Câmara de rasto desactivada"
 
 #: src/GameText.h:832
 msgid "Ghost Trail is not available"
-msgstr ""
+msgstr "Rasto de Fantasma não disponível"
 
 #: src/GameText.h:833
 msgid "Ghost Trail Rendering activated"
-msgstr ""
+msgstr "Renderização de Rasto de Fantasma activada"
 
 #: src/GameText.h:834
 msgid "Ghost Trail Rendering deactivated"
-msgstr ""
+msgstr "Renderização de Rasto de Fantasma desactivada"
 
 #: src/GameText.h:836
 msgid "No training positions stored"
