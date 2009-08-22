@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-08-04 23:03+0200\n"
+"POT-Creation-Date: 2009-08-10 20:09+0200\n"
 "PO-Revision-Date: 2009-05-13 18:49+0200\n"
 "Last-Translator: Ville Lahdenvuo <tuhoojabotti@gmail.com>\n"
 "Language-Team: none\n"
@@ -2994,11 +2994,9 @@ msgstr "Tallennettu harjoitus sijaintina %i"
 
 #: src/GameText.h:839
 msgid ""
-"Physic levels recording is still not implemented.\n"
+"This level is not recordable (feature still not implemented).\n"
 "Sorry."
 msgstr ""
-"Fysiikka kenttien toistovideoiden nauhoittaminen\n"
-"ei ole vieläkään mahdollista. Anteeksi."
 
 #: src/GameText.h:841
 #, c-format
@@ -3295,3 +3293,10 @@ msgid ""
 msgstr ""
 "Nyt viimeiselle...Se ei ole niin pitkä, mutta sen sijaan\n"
 "siellä on vielä vähemmän tilaa pääkullallesi. Onnea matkaan! :)"
+
+#~ msgid ""
+#~ "Physic levels recording is still not implemented.\n"
+#~ "Sorry."
+#~ msgstr ""
+#~ "Fysiikka kenttien toistovideoiden nauhoittaminen\n"
+#~ "ei ole vieläkään mahdollista. Anteeksi."
