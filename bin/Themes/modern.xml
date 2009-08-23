@@ -19,12 +19,12 @@
 <sprite type="BikerPart" name="PlayerTorso" file="PlayerTorso_330.png" sum="50b952b2fee8cb36c133a4a75b3188e7" />
 <sprite type="BikerPart" name="PlayerUpperArm" file="PlayerUpperArm_329.png" sum="3ae60c5817434b3effac4ebb78b4e511" />
 <sprite type="BikerPart" name="PlayerUpperLeg" file="PlayerUpperLeg_332.png" sum="f3042ceeb3b1d1fb44de911208ab257d" />
-<sprite type="EdgeEffect" name="Bloodeffect" file="Bloodeffect_407.png" scale="2" depth="2" sum="3e3177a79f2f0e90bd14108762c30ff7" />
+<sprite type="EdgeEffect" name="Bloodeffect" file="Bloodeffect_407.png" scale="1.1" depth="1" sum="2476a1fd30c5adcba55b25b0e012ee35" />
 <sprite type="EdgeEffect" name="BlueBricks" file="EdgeBlueBricks1.jpg" scale="0.8" depth="0.3" sum="3fbce08754aa0fff5f69136457c654a4" />
 <sprite type="EdgeEffect" name="EarthVines" file="EarthVines.png" scale="0.8" depth="0.8" sum="ccf105aa9757f3b90bfb834efedaa4be" />
 <sprite type="EdgeEffect" name="EdgeCSite1" file="EdgeCSite1_209.png" scale="0.9" depth="0.35" sum="b33420e33d8b46c7060b47c7ce0b1f2a" />
 <sprite type="EdgeEffect" name="EdgeGrass2" file="EdgeGrass1.png" scale="0.27" depth="0.75" sum="cb215c6774a9ed57c671b6bd3cf14bb2" />
-<sprite type="EdgeEffect" name="Glow" file="Glow_654.png" scale="0.5" depth="0.9" sum="f734d3dda2a2420975563dc9f236c6e4" />
+<sprite type="EdgeEffect" name="Glow" file="Glow_654.png" scale="0.5" depth="0.9" sum="48f5342b70c9ede836b1f412c79e2435" />
 <sprite type="EdgeEffect" name="GoldenEdge" file="GoldenEdge_812.png" scale="1" depth="-1" sum="9571e2d47a344cf5489952cc16fce094" />
 <sprite type="EdgeEffect" name="Grass" file="EdgeGrass1.png" scale="0.9" depth="0.7" sum="cb215c6774a9ed57c671b6bd3cf14bb2" />
 <sprite type="EdgeEffect" name="GrassAlt" file="EdgeGrassAlt1.png" scale="0.5" depth="0.6" sum="83bff245ff914e13a689e9be403956ea" />
