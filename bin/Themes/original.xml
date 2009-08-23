@@ -19,7 +19,7 @@
 <sprite type="BikerPart" name="PlayerTorso" file="Torso1.png" sum="5106870f84391baff20b2c8de1882155" />
 <sprite type="BikerPart" name="PlayerUpperArm" file="UpperArm1.png" sum="5784ed3126554d73b2ab99195788d3ec" />
 <sprite type="BikerPart" name="PlayerUpperLeg" file="UpperLeg1.png" sum="dd394ba38b2ca25a480b2b4c5931ebf1" />
-<sprite type="EdgeEffect" name="Bloodeffect" file="Bloodeffect_407.png" scale="1.1" depth="1" sum="2476a1fd30c5adcba55b25b0e012ee35" />
+<sprite type="EdgeEffect" name="Bloodeffect" file="Bloodeffect_407.png" scale="1" depth="1.1" sum="2476a1fd30c5adcba55b25b0e012ee35" />
 <sprite type="EdgeEffect" name="BlueBricks" file="EdgeBlueBricks1.jpg" scale="0.8" depth="0.3" sum="3fbce08754aa0fff5f69136457c654a4" />
 <sprite type="EdgeEffect" name="EarthVines" file="EarthVines.png" scale="0.8" depth="0.8" sum="ccf105aa9757f3b90bfb834efedaa4be" />
 <sprite type="EdgeEffect" name="EdgeCSite1" file="EdgeCSite1_209.png" scale="0.9" depth="0.35" sum="b33420e33d8b46c7060b47c7ce0b1f2a" />
@@ -86,6 +86,7 @@
 <sprite type="Entity" name="HangingVines1" file="HangingVines1.png" width="3.0" height="4.0" centerX="1.5" centerY="3.6" sum="dd62bf214ad09afd033e27a8d43f413f" />
 <sprite type="Entity" name="HangingVines2" file="HangingVines2.png" width="3.0" height="4.0" centerX="1.5" centerY="3.6" sum="feb9191eb04b1fd421ac27617eff556a" />
 <sprite type="Entity" name="HellHead" file="HellHead_167.png" width="3" height="3" centerX="1.5" centerY="0.2" sum="580663bdcf09f76ea45718b4dafb4b04" />
+<sprite type="Entity" name="InfoSign1" file="InfoSign1_771.png" sum="b7a925a2919694bd2a5526965bd50442" />
 <sprite type="Entity" name="KeyBrake" file="KeyBrake_500.png" width="1" height="1" centerX="0.5" centerY="0.5" sum="e091e738c9cfb49d5355f927eacfaa22" />
 <sprite type="Entity" name="KeyDrive" file="KeyDrive_499.png" width="1" height="1" centerX="0.5" centerY="0.5" sum="5ddeedc525089619489435ec73c494d2" />
 <sprite type="Entity" name="KeyLeft" file="KeyLeft_501.png" width="1" height="1" centerX="0.5" centerY="0.5" sum="a1fc070e3ec6e6d0fd42442b18b602a3" />
