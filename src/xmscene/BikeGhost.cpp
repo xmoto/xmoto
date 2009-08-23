@@ -95,7 +95,7 @@ FileGhost::FileGhost(std::string i_replayFile, PhysicsSettings* i_physicsSetting
   for(unsigned int i=0; i<m_ghostBikeStates.size(); i++) {
     m_replay->peekState(m_ghostBikeStates[i], m_physicsSettings);
   }
-  *m_bikeState = *(m_ghostBikeStates[0]); // copy
+  *m_bikeState = *(m_allGhostBikeStates[0]); // copy
 
   m_isActiv = i_isActiv;
   m_linearVelocity = 0.0;

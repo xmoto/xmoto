@@ -145,7 +145,6 @@ void Camera::moveCamera(float px, float py) {
 void Camera::initCameraPosition() {
   m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
   m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
-
 }
 
 void Camera::initCamera() {
@@ -170,8 +169,8 @@ void Camera::initTrailCam(Scene* i_scene) {
   m_currentNearestTrailDataPosition = 0;
   m_trackShotIndex = 0;
   m_trackShotStartIndex = 0;
-  m_dampVectorMax = Vector2f(0.0,0.0);
-  m_dampCurrent = Vector2f(0.0,0.0);
+  m_dampVectorMax = Vector2f(m_cameraOffsetX,m_cameraOffsetY);
+  m_dampCurrent = Vector2f(m_cameraOffsetX,m_cameraOffsetY);
 }
 
 Vector2f Camera::updateTrailCam() {
