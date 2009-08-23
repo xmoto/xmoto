@@ -738,7 +738,7 @@ UIWindow* StateOptions::makeWindowOptions_general(UIWindow* i_parent) {
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_SHOWCONTEXTHELP);
  
-  v_button = new UIButton(v_window, 5, 123-10, GAMETEXT_AUTOSAVEREPLAYS, (v_window->getPosition().nWidth-40)/*/2*/, 28);
+  v_button = new UIButton(v_window, 5, 123-10, GAMETEXT_AUTOSAVEREPLAYS, (v_window->getPosition().nWidth-40)/2, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("AUTOSAVEREPLAYS");
   v_button->setFont(drawlib->getFontSmall());
