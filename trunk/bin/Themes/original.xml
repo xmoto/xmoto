@@ -599,13 +599,13 @@
 <music name="madeirastew" file="MadeiraStew.ogg" sum="08532af00a74031af74b90e8d7e830dd" />
 <music name="SpeedItUp" file="speeditup.ogg" sum="5cc80ba826daa3e90413483d58e29cc9" />
 <sound name="Headcrash" file="Headcrash.ogg" sum="a07b9da0bc212a316a49a60446c5f8d3" />
-<sound name="NewHighscore" file="NewHighscore.ogg" sum="231147c825e8746b5565e7fc279ae28b" />
+<sound name="NewHighscore" file="NewHighscore.ogg" sum="c7b35614e4f1536f79a42fde559eab83" />
 <sound name="PickUpStrawberry" file="PickUpStrawberry.ogg" sum="e2f80f50b123e10266a2fc7e63523414" />
 <sound name="Squeek" file="Squeek.ogg" sum="f289b419038301d8cb0eea1094363a90" />
 <sound name="Button1" file="Button1.ogg" sum="ea03be7fc332ea068e54566ef46a480f" />
 <sound name="Button2" file="Button2.ogg" sum="ed5569f3b2f3f6445ab378b840feaab0" />
 <sound name="Button3" file="Button3.ogg" sum="2f35383c07c053ca842aa8d9347d8f87" />
-<sound name="EndOfLevel" file="EndOfLevel.ogg" sum="7d15b7abc5d8eec871e920a8dad4407e" />
+<sound name="EndOfLevel" file="EndOfLevel.ogg" sum="231147c825e8746b5565e7fc279ae28b" />
 <sound name="Engine00" file="engine_00.wav" sum="85531599be8b53c144a32b791fb6b4e9" />
 <sound name="Engine01" file="engine_01.wav" sum="5036e3146784270552f362814cdde661" />
 <sound name="Engine02" file="engine_02.wav" sum="6afa9831679dabf12143c78f465f9567" />
