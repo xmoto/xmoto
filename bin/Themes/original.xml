@@ -439,6 +439,7 @@
 <sprite type="Texture" name="ComicClouds" file="ComicClouds_213.jpg" sum="b25fded03999edf712ac457ce5b5389f" />
 <sprite type="Texture" name="DarkDirt" file="DarkDirt.jpg" sum="a2331d062481e115e6b85566249d9b55" />
 <sprite type="Texture" name="DarkFrostGround" file="DarkFrostGround.jpg" sum="f3ed5f15ec27c0b6fc5ae63bbff8ae76" />
+<sprite type="Texture" name="DarkSky" file="DarkSky_817.jpg" sum="3ea37a5aad269bc1110e150281f57935" />
 <sprite type="Texture" name="DarkWood2" file="DarkWood2_159.jpg" sum="944fdd8e18ef48716d36b1c3a7b90692" />
 <sprite type="Texture" name="DegradGreen" file="DegradGreen_169.jpg" sum="640abfa685a7601f96e1dc45bf92c0ce" />
 <sprite type="Texture" name="DegradOrange" file="DegradOrange_168.jpg" sum="eb0edffe7fad65dc03382ef99243efe8" />
