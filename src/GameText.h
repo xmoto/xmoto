@@ -113,6 +113,7 @@ Central place to keep many in-game text strings
     ":Rasmus Neckelmann;"                                                                    \
     ":Nicolas Adenis-Lamarre;"                                                               \
     ":Emmanuel Gorse;"                                                                       \
+    ":Jens Erler;"                                                                           \
     ":;"                                                                                     \
     + std::string(_("Additional Programming")) +                                             \
     ":Ville Lahdenvuo;"                                                                       \
@@ -123,7 +124,6 @@ Central place to keep many in-game text strings
     ":Frederic Huard;"                                                                       \
     ":Brice Goglin;"                                                                         \
     ":Kristian Jagd;"                                                                        \
-    ":Jens Erler;"                                                                           \
     ":;"                                                                                     \
     + std::string(_("Graphics")) +                                                           \
     ":Rasmus Neckelmann;"                                                                    \
