@@ -1125,26 +1125,32 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
   }
   
   void Scene::MoveBlock(Block* pBlock, float pX, float pY) {
-    pBlock->translate(pX, pY);
-    m_Collision.moveDynBlock(pBlock);
+    if(pBlock->isDynamic() == true) {
+      pBlock->translate(pX, pY);
+      m_Collision.moveDynBlock(pBlock);
+    }
   }
-  
+
   void Scene::SetBlockPos(std::string pBlockID, float pX, float pY) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
+    if(v_block->isDynamic() == true) {
+      v_block->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
 
-    if(m_chipmunkWorld != NULL) {
-      if(v_block->isPhysics()) {
-	v_block->setPhysicsPosition(pX, pY);
+      if(m_chipmunkWorld != NULL) {
+	if(v_block->isPhysics()) {
+	  v_block->setPhysicsPosition(pX, pY);
+	}
       }
+      m_Collision.moveDynBlock(v_block);
     }
-    m_Collision.moveDynBlock(v_block);
   }
   
   void Scene::SetBlockCenter(std::string pBlockID, float pX, float pY) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block->setCenter(Vector2f(pX, pY));
-    m_Collision.moveDynBlock(v_block);
+    if(v_block->isDynamic() == true) {
+      v_block->setCenter(Vector2f(pX, pY));
+      m_Collision.moveDynBlock(v_block);
+    }
   }
   
   void Scene::SetBlockRotation(std::string pBlockID, float pAngle) {
@@ -1153,8 +1159,10 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
   }     
   
   void Scene::SetBlockRotation(Block* pBlock, float pAngle) {
-    if(pBlock->setDynamicRotation(pAngle) == true)
-      m_Collision.moveDynBlock(pBlock);
+    if(pBlock->isDynamic() == true) {
+      if(pBlock->setDynamicRotation(pAngle) == true)
+	m_Collision.moveDynBlock(pBlock);
+    }
   }     
   
   void Scene::SetEntityDrawAngle(std::string pEntityID, float pAngle) {
