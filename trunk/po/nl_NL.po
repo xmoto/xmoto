@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XMoto Dutch\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-08-10 20:09+0200\n"
+"POT-Creation-Date: 2009-08-24 15:09+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Andre Parhan <dyingmuppet@gmail.com>\n"
 "Language-Team: \n"
@@ -318,7 +318,7 @@ msgstr "Script actie"
 msgid "Lead Programming"
 msgstr "Hoofdprogrammeur"
 
-#: src/GameText.h:117
+#: src/GameText.h:118
 msgid "Additional Programming"
 msgstr "Additionele programmeurs"
 

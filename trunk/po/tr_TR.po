@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-08-10 20:09+0200\n"
+"POT-Creation-Date: 2009-08-24 15:09+0200\n"
 "PO-Revision-Date: 2009-06-29 14:27+0300\n"
 "Last-Translator: Anıl Özbek <ozbekanil@gmail.com>\n"
 "Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
@@ -321,7 +321,7 @@ msgstr "Betik hareketi"
 msgid "Lead Programming"
 msgstr "Temel Programlama"
 
-#: src/GameText.h:117
+#: src/GameText.h:118
 msgid "Additional Programming"
 msgstr "Ek Programlama"
 
