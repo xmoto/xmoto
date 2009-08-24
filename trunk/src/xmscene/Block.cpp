@@ -393,7 +393,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
     }
 
     /* add dynamic lines */
-    if(isLayer() == false && isDynamic()) {
+    if(isDynamic() && m_layer == -1) {
       /* Define collision lines */
       Line *v_line = new Line;
       v_line->x1 = v_line->y1 = v_line->x2 = v_line->y2 = 0.0f;
@@ -436,7 +436,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   }
 
   /* define dynamic block in the collision system */
-  if(isLayer() == false && isDynamic()) {
+  if(isDynamic() && m_layer == -1) {
     updateCollisionLines(true, true);
     m_collisionElement = io_collisionSystem->addDynBlock(this);
   }
@@ -773,7 +773,7 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
     pBlock->setPhysics(XML::getOption(pPositionElem,"physics","false") == "true");
     pBlock->setIsLayer(XML::getOption(pPositionElem,"islayer","false") == "true");
     pBlock->setLayer(atoi(XML::getOption(pPositionElem,"layerid","-1").c_str()));
- }
+  }
 
   if(pPhysicsElem != NULL) {
     char str[16];
