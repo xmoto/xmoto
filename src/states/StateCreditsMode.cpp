@@ -78,5 +78,7 @@ void StateCreditsMode::abort() {
 }
 
 void StateCreditsMode::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  abort();
+  if(!i_xmkey.isDirectionnel()) {
+    abort();
+  }
 }
