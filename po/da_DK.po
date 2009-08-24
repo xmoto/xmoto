@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-08-10 20:09+0200\n"
+"POT-Creation-Date: 2009-08-24 15:09+0200\n"
 "PO-Revision-Date: 2009-04-25 18:04+0200\n"
 "Last-Translator: Kristian Jagd <Kristianjagd@gmail.com>\n"
 "Language-Team: Dansk <LL@li.org>\n"
@@ -314,7 +314,7 @@ msgstr "Script handling"
 msgid "Lead Programming"
 msgstr "hoved-udvikler"
 
-#: src/GameText.h:117
+#: src/GameText.h:118
 msgid "Additional Programming"
 msgstr "co-udvikler"
 

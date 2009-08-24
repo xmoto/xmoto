@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-08-10 20:09+0200\n"
+"POT-Creation-Date: 2009-08-24 15:09+0200\n"
 "PO-Revision-Date: 2009-05-15 12:45+0300\n"
 "Last-Translator: Tadas Masiulionis <tadzikaz@gmail.com>\n"
 "Language-Team: Lithuanian <tadzikaz@gmail.com>\n"
@@ -327,7 +327,7 @@ msgstr "Skripto veiksmas"
 msgid "Lead Programming"
 msgstr "Pagrindinis programavimas"
 
-#: src/GameText.h:117
+#: src/GameText.h:118
 msgid "Additional Programming"
 msgstr "Papildomas programavimas"
 

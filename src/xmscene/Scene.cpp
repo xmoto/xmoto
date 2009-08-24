@@ -241,7 +241,7 @@ void Scene::cleanPlayers() {
       pMsg->nAlpha = 255;
       pMsg->msgType = i_msgType;
     }
-    packGameMessages();
+//    packGameMessages();
     updateGameMessages();
   }
   
