@@ -94,6 +94,7 @@ public:
   }
   Vector2i getDispBottomLeft();
   Vector2i getDispTopLeft();
+  Vector2i getDispBottomRight();
 
   bool isMirrored();
   void setMirrored(bool i_value);

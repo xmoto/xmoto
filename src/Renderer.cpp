@@ -1480,7 +1480,9 @@ int GameRenderer::nbParticlesRendered() const {
       
       /* ... then render background sprites ... */      
     }
-    _RenderSprites(i_scene, false,true);
+    if(m_graphicsLevel != GFX_LOW) {
+      _RenderSprites(i_scene, false,true);
+    }
 
     if(m_graphicsLevel == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* Render particles (back!) */    
@@ -1582,7 +1584,9 @@ int GameRenderer::nbParticlesRendered() const {
     }
     
     /* ... and finally the foreground sprites! */
-    _RenderSprites(i_scene, true,false);
+    if(m_graphicsLevel != GFX_LOW) {
+      _RenderSprites(i_scene, true,false);
+    }
 
     /* and finally finally, front layers */
     if(m_graphicsLevel == GFX_HIGH && XMSession::instance()->ugly() == false) {
@@ -2882,7 +2886,6 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
   }
   
   void GameRenderer::_RenderScreenShadow(Scene* i_scene) {
-    //put shadow code from GameState::render() here
     //TODO:: make shading distinct for the cameras in multiplayer
     
     DrawLib* pDrawLib = GameApp::instance()->getDrawLib();
@@ -3791,3 +3794,4 @@ void GameRenderer::setScreenShade(bool i_doShade, bool i_doShadeAnim, float i_nS
   m_doShadeAnim = i_doShadeAnim; 
   m_nShadeTime = i_nShadeTime;
 }
+

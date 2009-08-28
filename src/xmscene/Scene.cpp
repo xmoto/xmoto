@@ -721,7 +721,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
 
     cleanPlayers();
     cleanGhosts();
-		cleanScriptTimers();
+    cleanScriptTimers();
 
     removeCameras();
 

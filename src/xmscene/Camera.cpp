@@ -722,6 +722,10 @@ Vector2i Camera::getDispTopLeft() {
   return m_renderSurf.upperleft();
 }
 
+Vector2i Camera::getDispBottomRight() {
+  return m_renderSurf.downright();
+}
+
 void Camera::allowActiveZoom(bool i_value) {
   m_allowActiveZoom = i_value;
 
