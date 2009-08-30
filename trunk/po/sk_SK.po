@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-08-24 15:09+0200\n"
-"PO-Revision-Date: 2008-04-14 13:54+0100\n"
+"PO-Revision-Date: 2009-08-26 22:44+0200\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -119,7 +119,7 @@ msgstr "Aktívne priblíženie kamery"
 
 #: src/GameText.h:60
 msgid "Use Trail Cam"
-msgstr ""
+msgstr "Použiť závesnú kameru"
 
 #: src/GameText.h:61
 msgid "Beating mode"
@@ -410,11 +410,11 @@ msgstr "Litovčina"
 
 #: src/GameText.h:157
 msgid "Turkish"
-msgstr ""
+msgstr "Turečtina"
 
 #: src/GameText.h:158
 msgid "Hungarian"
-msgstr ""
+msgstr "Maďarčina"
 
 #: src/GameText.h:160
 msgid "Main testers"
@@ -878,6 +878,8 @@ msgid ""
 "Use Quick Play button to immediately start a game with a random level,\n"
 "or use Levels button to select from level packs."
 msgstr ""
+"Použite tlačidlo Rýchly štart na spustenie náhodného levelu hry\n"
+"alebo kliknite na tlačidlo Levely a vyberte si level z balíka."
 
 #: src/GameText.h:280
 msgid ""
@@ -893,6 +895,8 @@ msgid ""
 "http://xmoto.tuxfamily.org\n"
 "for more information."
 msgstr ""
+"Pre viac informácii si prečítajte súbor README\n"
+"alebo sa pozrite na web http://xmoto.tuxfamily.org."
 
 #: src/GameText.h:294
 msgid "change mirror mode"
@@ -900,27 +904,27 @@ msgstr "zmeniť režim zrkadla"
 
 #: src/GameText.h:295
 msgid "Toggle blacklist"
-msgstr ""
+msgstr "Prepnutie čiernej listiny"
 
 #: src/GameText.h:296
 msgid "Enable/disable audio"
-msgstr ""
+msgstr "Vypnúť/zapnúť audio"
 
 #: src/GameText.h:297
 msgid "Open options menu"
-msgstr ""
+msgstr "Otvoriť menu s voľbami"
 
 #: src/GameText.h:298
 msgid "Toggle Ghost Trail Rendering"
-msgstr ""
+msgstr "Prepnúť renderovanie stopy ducha"
 
 #: src/GameText.h:299
 msgid "Toggle Trail Cam"
-msgstr ""
+msgstr "Prepnúť vlečnú kameru"
 
 #: src/GameText.h:300
 msgid "Show this help"
-msgstr ""
+msgstr "Zobraziť túto nápovedu"
 
 #: src/GameText.h:301 src/GameText.h:631
 msgid "Show the ghost if possible in the game"
@@ -928,7 +932,7 @@ msgstr "Zobrazovať pri hre ducha, kde je to možné"
 
 #: src/GameText.h:302
 msgid "Toggle favorite"
-msgstr ""
+msgstr "Prepnúť obľúbené"
 
 #: src/GameText.h:303
 msgid "Toggle Ghost Trail Tracking Shot"
@@ -936,7 +940,7 @@ msgstr ""
 
 #: src/GameText.h:304
 msgid "Enable/disable FPS display"
-msgstr ""
+msgstr "Zapnúť/vypnúť zobrazenie FPS"
 
 #: src/GameText.h:306 src/GameText.h:457
 msgid "Enable/disable ugly mode"
@@ -944,11 +948,11 @@ msgstr "Zapnúť/vypnúť škaredý režim"
 
 #: src/GameText.h:307
 msgid "Enable/disable theme mode"
-msgstr ""
+msgstr "Zapnúť/vypnúť režim témy"
 
 #: src/GameText.h:308
 msgid "Enable/disable ugly over mode"
-msgstr ""
+msgstr "Zapnúť/vypnúť škaredý mód"
 
 #: src/GameText.h:311
 msgid "Hide ghosts"
@@ -1404,6 +1408,10 @@ msgid ""
 "   < >\n"
 " Speed:"
 msgstr ""
+"  Zastaviť:\n"
+"    >>\n"
+"   < >\n"
+" Rýchlosť:"
 
 #: src/GameText.h:427
 msgid ""
@@ -1411,6 +1419,9 @@ msgid ""
 "[right key]\n"
 "[up/down keys]\n"
 msgstr ""
+"[esc] , [medzer]\n"
+"[šípka vpravo]\n"
+"[šípka hor/dol]\n"
 
 #: src/GameText.h:428
 msgid ""
@@ -1419,6 +1430,10 @@ msgid ""
 "   < >\n"
 " Speed:"
 msgstr ""
+"  Zastaviť:\n"
+"<< >>\n"
+"   < >\n"
+" Rýchlosť:"
 
 #: src/GameText.h:429
 msgid ""
@@ -1426,6 +1441,9 @@ msgid ""
 "[left/right keys]\n"
 "[up/down keys]\n"
 msgstr ""
+"[esc] , [medz]\n"
+"[šípka vľavo/vpravo]\n"
+"[šípka hor/dol]\n"
 
 #: src/GameText.h:430
 msgid "The replay can't be played!"
@@ -1507,7 +1525,7 @@ msgstr "ŠTATISTIKY"
 
 #: src/GameText.h:451
 msgid "You are currently disconnected"
-msgstr ""
+msgstr "Momentálne nie ste pripojený"
 
 #: src/GameText.h:452
 msgid "Stereo"
@@ -2331,7 +2349,7 @@ msgstr "Spustí dynamickú lupu počas hry"
 
 #: src/GameText.h:664
 msgid "Use a camera that directs to the shortest path through the level"
-msgstr ""
+msgstr "Použiť kameru, ktorá mieri na najkratšiu cestu levelom"
 
 #: src/GameText.h:665
 msgid "View the X-Moto credits"
@@ -2749,7 +2767,7 @@ msgstr "Ukradnuté rekordy"
 
 #: src/GameText.h:777
 msgid "Vote unlocked levels"
-msgstr ""
+msgstr "Hlasovať za nezamknuté levely"
 
 #: src/GameText.h:779
 msgid "Levels with no highscore in your room"
@@ -2896,7 +2914,7 @@ msgstr "Levely, pre ktoré ste minulosti držali rekord"
 
 #: src/GameText.h:813
 msgid "Levels having votes unlocked"
-msgstr ""
+msgstr "Levely, ktoré majú odomknuté hlasy"
 
 #: src/GameText.h:815
 msgid "Ugly mode enabled"
@@ -2956,27 +2974,27 @@ msgstr "Audio vypnuté"
 
 #: src/GameText.h:829
 msgid "Trail Cam not available"
-msgstr ""
+msgstr "Závesná kamera nie je dostupná"
 
 #: src/GameText.h:830
 msgid "Trail Cam activated"
-msgstr ""
+msgstr "Závesná kamera aktivovaná"
 
 #: src/GameText.h:831
 msgid "Trail Cam deactivated"
-msgstr ""
+msgstr "Závesná kamera deaktivovaná"
 
 #: src/GameText.h:832
 msgid "Ghost Trail is not available"
-msgstr ""
+msgstr "Stopa ducha nie je dostupná"
 
 #: src/GameText.h:833
 msgid "Ghost Trail Rendering activated"
-msgstr ""
+msgstr "Renderovanie stopy ducha aktivované"
 
 #: src/GameText.h:834
 msgid "Ghost Trail Rendering deactivated"
-msgstr ""
+msgstr "Renderovanie stopy ducha deaktivované"
 
 #: src/GameText.h:836
 msgid "No training positions stored"
@@ -2997,6 +3015,8 @@ msgid ""
 "This level is not recordable (feature still not implemented).\n"
 "Sorry."
 msgstr ""
+"Tento level nemožno nahrať (táto vlastnosť zatiaľ nie je implementovaná).\n"
+"Ľutujem."
 
 #: src/GameText.h:841
 #, c-format
