@@ -156,6 +156,7 @@ Central place to keep many in-game text strings
     ":Tadas Masiulionis (" + std::string(_("Lithuanian")) + ");"                                     \
     ":Anil Ozbek (" + std::string(_("Turkish")) + ");"                                     \
     ":Zoltán Balogh (" + std::string(_("Hungarian")) + ");"                                     \
+    ":Sérgio Marques (" + std::string(_("Portugese")) + ");"                                 \
     ":;"                                                                                     \
     + std::string(_("Main testers")) +                                                       \
     ":Jose Alberto Coelho;"                                                                  \
