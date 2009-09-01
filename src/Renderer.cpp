@@ -2900,8 +2900,10 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
       } else {
         v_nShade = MENU_SHADING_VALUE;
       }
-
-      pDrawLib->drawBox(Vector2f(0,0),
+      // TODO:: this is a very ugly workaround to prevent a still unresolved bug that comes with drawing using return values given by the camera function
+      // if second parameter is taken from camera function, it break the screen shadowing. atm its still not drawn perfectly, but better than using 0,0 as first value
+      pDrawLib->drawBox(Vector2f(float(i_scene->getCamera()->getDispTopLeft().x),
+                                 float(i_scene->getCamera()->getDispTopLeft().y)),
 		       Vector2f(pDrawLib->getDispWidth(),
 			        pDrawLib->getDispHeight()),
 		       0, MAKE_COLOR(0,0,0, v_nShade));  
