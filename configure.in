@@ -173,7 +173,7 @@ AC_ARG_WITH([default-theme],
   [AS_HELP_STRING([--with-default-theme=],
     [Default theme])],
   [CONFIGURE_DEFAULT_THEME="$withval"],
-  [CONFIGURE_DEFAULT_THEME="Classic"]
+  [CONFIGURE_DEFAULT_THEME="Modern"]
 )
 AC_SUBST([CONFIGURE_DEFAULT_THEME])
 
