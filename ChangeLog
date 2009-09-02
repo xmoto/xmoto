@@ -1,5 +1,27 @@
-X-Moto 0.5.2 2009-
+X-Moto 0.5.2 2009-09-02
 -----------------------
+ * wait for corpse lying still until dead menu pops up
+ * F1 also available while playing level
+ * new camera mode: Trail Cam + Ghost Trail View
+ * added camera smoothness
+ * added NewAge level pack
+ * graphics: improved messages rendering
+ * graphics: improved minimap colors
+ * graphics: display colored + alphaed blocks and edges
+ * graphics: two different textures for drifted sky
+ * graphics: improve display of replayHelp
+ * graphics: new particle effect (Sparkle)
+ * new script function (ScriptTimers)
+ * some new features for the console
+ * some net improvements
+ * add option --updateLevelsOnly
+ * remove sprite rendering if GFX_LOW
+ * bugfix: textures < 256 were displayed too big on blocks.
+ * bugfix: fixed screenBox according to camera angle
+ * bugfix: fixed problem with joystick input breaking levelview and credits mode
+ * bugfix: allow dyn blocks in the second main layer to work
+ * bugfix: some minor bugs and compiler warnings
+
 
 X-Moto 0.5.1 2009-04-12
 -----------------------
