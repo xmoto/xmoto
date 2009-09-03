@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-09-01 17:06+0200\n"
-"PO-Revision-Date: 2009-04-25 18:04+0200\n"
+"PO-Revision-Date: 2009-09-02 19:44+0100\n"
 "Last-Translator: Kristian Jagd <Kristianjagd@gmail.com>\n"
 "Language-Team: Dansk <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -78,7 +78,7 @@ msgid ""
 "to the Internet to look for more levels\n"
 "and best times of other players?"
 msgstr ""
-"Vil du give X-Moto lov til at slutte sig på internettet\n"
+"Vil du give X-Moto lov til at gå på internettet\n"
 "og kigge efter flere baner og rekorder?"
 
 #: src/GameText.h:53 src/GameText.h:132
@@ -111,7 +111,7 @@ msgstr "Aktivt kamera zoom"
 
 #: src/GameText.h:60
 msgid "Use Trail Cam"
-msgstr ""
+msgstr "Brug trail cam"
 
 #: src/GameText.h:61
 msgid "Beating mode"
@@ -400,11 +400,11 @@ msgstr "Litauisk"
 
 #: src/GameText.h:157
 msgid "Turkish"
-msgstr ""
+msgstr "Tyrkisk"
 
 #: src/GameText.h:158
 msgid "Hungarian"
-msgstr ""
+msgstr "Ungansk"
 
 #: src/GameText.h:159
 msgid "Portugese"
@@ -873,6 +873,8 @@ msgid ""
 "Use Quick Play button to immediately start a game with a random level,\n"
 "or use Levels button to select from level packs."
 msgstr ""
+"Brug Hurtig Start til at øjeblikkeligt start et spil i en tilfældig bane,\n"
+"eller brug Baner knappen til at vælge fra bane pakkerne."
 
 #: src/GameText.h:281
 msgid ""
@@ -888,6 +890,9 @@ msgid ""
 "http://xmoto.tuxfamily.org\n"
 "for more information."
 msgstr ""
+"Læs README filen eller se hjemmesiden på\n"
+"http://xmoto.tuxfamily.org\n"
+"for mere information."
 
 #: src/GameText.h:295
 msgid "change mirror mode"
@@ -895,27 +900,27 @@ msgstr "Skift spejling"
 
 #: src/GameText.h:296
 msgid "Toggle blacklist"
-msgstr ""
+msgstr "dårlige baner"
 
 #: src/GameText.h:297
 msgid "Enable/disable audio"
-msgstr ""
+msgstr "lyd"
 
 #: src/GameText.h:298
 msgid "Open options menu"
-msgstr ""
+msgstr "Vis indstillinger"
 
 #: src/GameText.h:299
 msgid "Toggle Ghost Trail Rendering"
-msgstr ""
+msgstr "Gengivelse af spøgelsets vej"
 
 #: src/GameText.h:300
 msgid "Toggle Trail Cam"
-msgstr ""
+msgstr "Trail kamera"
 
 #: src/GameText.h:301
 msgid "Show this help"
-msgstr ""
+msgstr "Vis denne hjælp"
 
 #: src/GameText.h:302 src/GameText.h:632
 msgid "Show the ghost if possible in the game"
@@ -923,15 +928,15 @@ msgstr "Vis spøgelset inde i spillet hvis muligt"
 
 #: src/GameText.h:303
 msgid "Toggle favorite"
-msgstr ""
+msgstr "Favorit"
 
 #: src/GameText.h:304
 msgid "Toggle Ghost Trail Tracking Shot"
-msgstr ""
+msgstr "Vis spøgelsets vej"
 
 #: src/GameText.h:305
 msgid "Enable/disable FPS display"
-msgstr ""
+msgstr "FPS visning"
 
 #: src/GameText.h:307 src/GameText.h:458
 msgid "Enable/disable ugly mode"
@@ -939,11 +944,11 @@ msgstr "Ugly mode til/fra"
 
 #: src/GameText.h:308
 msgid "Enable/disable theme mode"
-msgstr ""
+msgstr "tema mode"
 
 #: src/GameText.h:309
 msgid "Enable/disable ugly over mode"
-msgstr ""
+msgstr "ugly over mode"
 
 #: src/GameText.h:312
 msgid "Hide ghosts"
@@ -1036,7 +1041,7 @@ msgstr "Fjernet fra dårlige baner"
 
 #: src/GameText.h:334
 msgid "Level Info..."
-msgstr "Information om banen..."
+msgstr "Om banen..."
 
 #: src/GameText.h:335
 msgid "Level Name"
@@ -1393,6 +1398,10 @@ msgid ""
 "   < >\n"
 " Speed:"
 msgstr ""
+"Stop:\n"
+" >>\n"
+" <>\n"
+" Speed:"
 
 #: src/GameText.h:428
 msgid ""
@@ -1400,6 +1409,9 @@ msgid ""
 "[right key]\n"
 "[up/down keys]\n"
 msgstr ""
+"[esc] , [space]\n"
+"[højre pil]\n"
+"[op/ned pile]\n"
 
 #: src/GameText.h:429
 msgid ""
@@ -1408,6 +1420,10 @@ msgid ""
 "   < >\n"
 " Speed:"
 msgstr ""
+"  Stop:\n"
+"<< >>\n"
+"   < >\n"
+" Speed:"
 
 #: src/GameText.h:430
 msgid ""
@@ -1415,6 +1431,9 @@ msgid ""
 "[left/right keys]\n"
 "[up/down keys]\n"
 msgstr ""
+"[esc] , [space]\n"
+"[venstre/højre pile]\n"
+"[op/ned pile]\n"
 
 #: src/GameText.h:431
 msgid "The replay can't be played!"
@@ -1496,7 +1515,7 @@ msgstr "STATS"
 
 #: src/GameText.h:452
 msgid "You are currently disconnected"
-msgstr ""
+msgstr "Du er ikke tilsluttet"
 
 #: src/GameText.h:453
 msgid "Stereo"
@@ -2313,7 +2332,7 @@ msgstr "Brug dynamisk zoom når du spiller"
 
 #: src/GameText.h:665
 msgid "Use a camera that directs to the shortest path through the level"
-msgstr ""
+msgstr "Brug et camera der viser dig den korteste rute igennem banen."
 
 #: src/GameText.h:666
 msgid "View the X-Moto credits"
@@ -2603,7 +2622,7 @@ msgstr "Sætter baggrunds musik på i baner der ikke selv har deres egen musik"
 
 #: src/GameText.h:743
 msgid "Network playing mode : just see other players as ghosts"
-msgstr "Netværks mode: se de andre spiller som spøgelser"
+msgstr "Netværks mode: se de andre spillere som spøgelser"
 
 #: src/GameText.h:745
 msgid "Levels with no highscore"
@@ -2731,7 +2750,7 @@ msgstr "Stjålne rekorder"
 
 #: src/GameText.h:778
 msgid "Vote unlocked levels"
-msgstr ""
+msgstr "Stem ulåste levels"
 
 #: src/GameText.h:780
 msgid "Levels with no highscore in your room"
@@ -2871,7 +2890,7 @@ msgstr "Baner hvor du tidligere havde rekorden i"
 
 #: src/GameText.h:814
 msgid "Levels having votes unlocked"
-msgstr ""
+msgstr "Baner der har stemmer oplåst"
 
 #: src/GameText.h:816
 msgid "Ugly mode enabled"
@@ -2931,27 +2950,27 @@ msgstr "Lyd slået fra"
 
 #: src/GameText.h:830
 msgid "Trail Cam not available"
-msgstr ""
+msgstr "Trail kamera ikke tilgængeligt"
 
 #: src/GameText.h:831
 msgid "Trail Cam activated"
-msgstr ""
+msgstr "Trail kamera aktiveret"
 
 #: src/GameText.h:832
 msgid "Trail Cam deactivated"
-msgstr ""
+msgstr "Trail kamera deaktiveret"
 
 #: src/GameText.h:833
 msgid "Ghost Trail is not available"
-msgstr ""
+msgstr "Spøgelse gengivelse er ikke tilgængeligt"
 
 #: src/GameText.h:834
 msgid "Ghost Trail Rendering activated"
-msgstr ""
+msgstr "Spøgelse gengivelse aktiveret"
 
 #: src/GameText.h:835
 msgid "Ghost Trail Rendering deactivated"
-msgstr ""
+msgstr "Gengivelse af spøgelsets vej deaktiveret"
 
 #: src/GameText.h:837
 msgid "No training positions stored"
@@ -2972,6 +2991,8 @@ msgid ""
 "This level is not recordable (feature still not implemented).\n"
 "Sorry."
 msgstr ""
+"Denne bane kan ikke optages (featuren er ikke lavet endnu).\n"
+"Beklager."
 
 #: src/GameText.h:842
 #, c-format
