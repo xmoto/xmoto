@@ -156,7 +156,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     v_replay.writeBuf(pcData, nDataSize);
     
     /* Chunks */
-    v_replay << m_Chunks.size();
+    v_replay << (unsigned int) m_Chunks.size();
     for(unsigned int i=0;i<m_Chunks.size();i++) {
       v_replay << m_Chunks[i]->nNumStates;
       v_replay.writeBuf(m_Chunks[i]->pcChunkData, m_nStateSize * m_Chunks[i]->nNumStates);
