@@ -1480,7 +1480,7 @@ int GameRenderer::nbParticlesRendered() const {
       
       /* ... then render background sprites ... */      
     }
-    if(m_graphicsLevel != GFX_LOW) {
+    if(m_graphicsLevel == GFX_HIGH) {
       _RenderSprites(i_scene, false,true);
     }
 
@@ -1584,7 +1584,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
     
     /* ... and finally the foreground sprites! */
-    if(m_graphicsLevel != GFX_LOW) {
+    if(m_graphicsLevel == GFX_HIGH) {
       _RenderSprites(i_scene, true,false);
     }
 
