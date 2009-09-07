@@ -1494,7 +1494,9 @@ int GameRenderer::nbParticlesRendered() const {
     _RenderBlocks(i_scene);
 
     /* ... then render "middleground" sprites ... */
-    _RenderSprites(i_scene, false,false);
+    if(m_graphicsLevel == GFX_HIGH) {
+      _RenderSprites(i_scene, false,false);
+    }
 
     /* zones */
     if(XMSession::instance()->uglyOver()) {
