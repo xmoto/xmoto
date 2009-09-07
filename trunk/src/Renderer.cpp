@@ -1919,7 +1919,7 @@ void GameRenderer::_RenderSprites(Scene* i_scene, bool bForeground,bool bBackgro
       switch(pEnt->Speciality()) {
       case ET_NONE:
 	/* Middleground? (not foreground, not background) */
-	if(pEnt->Z() == 0.0f && !bForeground && !bBackground) {
+	if(pEnt->Z() == 0.0f && !bForeground && !bBackground && m_graphicsLevel == GFX_HIGH) {
 	  _RenderSprite(i_scene, pEnt);  
 	} 
 	else {
