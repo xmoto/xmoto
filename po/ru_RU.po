@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-09-01 17:06+0200\n"
-"PO-Revision-Date: 2009-09-04 00:01+0800\n"
+"PO-Revision-Date: 2009-09-08 23:14+0800\n"
 "Last-Translator: WhiteWind <whitearchey@gmail.com>\n"
 "Language-Team: ru\n"
 "MIME-Version: 1.0\n"
@@ -118,7 +118,7 @@ msgstr "Активный зум камеры"
 
 #: src/GameText.h:60
 msgid "Use Trail Cam"
-msgstr ""
+msgstr "Использовать следящую камеру"
 
 #: src/GameText.h:61
 msgid "Beating mode"
@@ -922,11 +922,11 @@ msgstr "Открыть меню настроек"
 
 #: src/GameText.h:299
 msgid "Toggle Ghost Trail Rendering"
-msgstr ""
+msgstr "Вкл/выкл след призрака"
 
 #: src/GameText.h:300
 msgid "Toggle Trail Cam"
-msgstr ""
+msgstr "Вкл/выкл следящую камеру"
 
 #: src/GameText.h:301
 msgid "Show this help"
@@ -942,7 +942,7 @@ msgstr "Добавить/удалить из избранных"
 
 #: src/GameText.h:304
 msgid "Toggle Ghost Trail Tracking Shot"
-msgstr ""
+msgstr "Вкл/выкл просмотр пути призрака"
 
 #: src/GameText.h:305
 msgid "Enable/disable FPS display"
@@ -958,7 +958,7 @@ msgstr "Вкл/выкл режим темы"
 
 #: src/GameText.h:309
 msgid "Enable/disable ugly over mode"
-msgstr ""
+msgstr "Вкл/выкл режим уродливого наложения"
 
 #: src/GameText.h:312
 msgid "Hide ghosts"
@@ -2917,7 +2917,7 @@ msgstr "Уровни, для которых у вас есть рекорд"
 
 #: src/GameText.h:814
 msgid "Levels having votes unlocked"
-msgstr ""
+msgstr "Уровни, доступные для голосования"
 
 #: src/GameText.h:816
 msgid "Ugly mode enabled"
@@ -2977,27 +2977,27 @@ msgstr "Звук выключен"
 
 #: src/GameText.h:830
 msgid "Trail Cam not available"
-msgstr ""
+msgstr "Следящая камера недоступна"
 
 #: src/GameText.h:831
 msgid "Trail Cam activated"
-msgstr ""
+msgstr "Следящая камера включена"
 
 #: src/GameText.h:832
 msgid "Trail Cam deactivated"
-msgstr ""
+msgstr "Следящая камера выключена"
 
 #: src/GameText.h:833
 msgid "Ghost Trail is not available"
-msgstr ""
+msgstr "След призрака недоступен"
 
 #: src/GameText.h:834
 msgid "Ghost Trail Rendering activated"
-msgstr ""
+msgstr "След призрака включен"
 
 #: src/GameText.h:835
 msgid "Ghost Trail Rendering deactivated"
-msgstr ""
+msgstr "След призрака выключен"
 
 #: src/GameText.h:837
 msgid "No training positions stored"
