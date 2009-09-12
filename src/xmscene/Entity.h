@@ -75,8 +75,11 @@ class Entity {
     return m_sprite;
   }
   bool  isAlive() const;
+  bool  isScripted() const {
+    return m_isScripted;
+  }
 
-  virtual void loadToPlay();
+  virtual void loadToPlay(const std::string& i_ScriptSource);
   virtual void unloadToPlay();
   inline void setDynamicPosition(const Vector2f& i_dynamicPosition) {
     m_dynamicPosition = i_dynamicPosition;
@@ -96,6 +99,7 @@ class Entity {
   void setZ(float i_z);
   void setSpriteName(const std::string& i_spriteName);
   void setSprite(Sprite* i_sprite);
+  void setScripted(bool i_value);
   inline void setColor(const TColor& i_color) {
     m_color = i_color;
   }
@@ -135,6 +139,7 @@ protected:
   bool        m_isToTake;
   /* Use to know if a script shall update the pos of the entity*/
   bool        m_isAlive;
+  bool        m_isScripted;   /* is it used in a script? */
   TColor      m_color;
 
   BoundingCircle m_BCircle;

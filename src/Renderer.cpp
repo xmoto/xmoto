@@ -1480,9 +1480,8 @@ int GameRenderer::nbParticlesRendered() const {
       
       /* ... then render background sprites ... */      
     }
-    if(m_graphicsLevel == GFX_HIGH) {
-      _RenderSprites(i_scene, false,true);
-    }
+    
+    _RenderSprites(i_scene, false,true);
 
     if(m_graphicsLevel == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* Render particles (back!) */    
@@ -1584,9 +1583,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
     
     /* ... and finally the foreground sprites! */
-    if(m_graphicsLevel == GFX_HIGH) {
-      _RenderSprites(i_scene, true,false);
-    }
+    _RenderSprites(i_scene, true,false);
 
     /* and finally finally, front layers */
     if(m_graphicsLevel == GFX_HIGH && XMSession::instance()->ugly() == false) {
@@ -1716,6 +1713,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
 
     renderReplayHelpMessage(i_scene);
+pDrawlib->getMenuCamera()->setCamera2d();
 
     _RenderScreenShadow(i_scene);
 
@@ -1919,17 +1917,17 @@ void GameRenderer::_RenderSprites(Scene* i_scene, bool bForeground,bool bBackgro
       switch(pEnt->Speciality()) {
       case ET_NONE:
 	/* Middleground? (not foreground, not background) */
-	if(pEnt->Z() == 0.0f && !bForeground && !bBackground && m_graphicsLevel == GFX_HIGH) {
+	if(pEnt->Z() == 0.0f && !bForeground && !bBackground && ( (m_graphicsLevel == GFX_HIGH && !XMSession::instance()->ugly()) || pEnt->isScripted()) ) {
 	  _RenderSprite(i_scene, pEnt);  
 	} 
 	else {
 	  /* In front? */
-	  if(pEnt->Z() > 0.0f && bForeground) {
+	  if(pEnt->Z() > 0.0f && bForeground && ( (m_graphicsLevel == GFX_HIGH && !XMSession::instance()->ugly()) || pEnt->isScripted())) {
 	    _RenderSprite(i_scene, pEnt);
 	  } 
 	  else {
 	    /* Those in back? */
-	    if(pEnt->Z() < 0.0f && bBackground) {
+	    if(pEnt->Z() < 0.0f && bBackground && ( (m_graphicsLevel == GFX_HIGH && !XMSession::instance()->ugly()) || pEnt->isScripted())) {
 	      _RenderSprite(i_scene, pEnt);
 	    }
 	  }

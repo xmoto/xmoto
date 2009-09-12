@@ -67,16 +67,27 @@ Entity::Entity(const std::string& i_id) {
   m_BCircle.reset();
   m_isBBoxDirty = true;
   m_speciality  = ET_NONE;
+  m_isScripted  = false;
 }
 
 Entity::~Entity() {
 }
 
-void Entity::loadToPlay() {
+void Entity::loadToPlay(const std::string& i_ScriptSource) {
   m_dynamicPosition = m_initialPosition;
   /* make every entity alive */
   setAlive(true);
   m_isBBoxDirty = true;
+  
+  //check if the entity is used in the script (for sprite rendering independently from gfx mode)  
+  //NOTE: Entity IDs, that are created dynamically in the script, wont be recognized here, but shouldt practically be a pb
+  size_t found = i_ScriptSource.find(m_id);
+  if(found != std::string::npos) {
+    this->setScripted( true ); 
+    if(XMSession::instance()->debug()) {
+      LogInfo("The mighty script parser acknowledges %s as a scripted entity.",m_id.c_str());
+    }
+  }
 }
 
 void Entity::unloadToPlay() {
@@ -334,7 +345,6 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
   v_entity->setDrawReversed(reversed);
   v_entity->setZ(z);
 
-
   return v_entity;
 }
 
@@ -465,12 +475,16 @@ Entity* Entity::readFromBinary(FileHandle *i_pfh) {
       v_typeName   = v_paramValue;
     }
   }
-
+  
   return  createEntity(v_id, v_typeId, v_speciality, v_position, v_angle,
 		       v_reversed, v_size, v_width, v_height, v_z,
 		       v_spriteName, v_typeName);
 }
 
+
+void Entity::setScripted(bool i_value) {
+  m_isScripted = i_value;
+}
 
 /*===========================================
 									Joints
@@ -552,7 +566,7 @@ std::string Joint::jointTypeToStr(jointType i_type)
 
 void Joint::loadToPlay(Level* i_level, ChipmunkWorld* i_chipmunkWorld)
 {
-  Entity::loadToPlay();
+  Entity::loadToPlay("");
 
   setStartBlock(i_level->getBlockById(getStartBlockId()));
   setEndBlock(i_level->getBlockById(getEndBlockId()));
@@ -658,7 +672,7 @@ ParticlesSource::~ParticlesSource() {
 }
 
 void ParticlesSource::loadToPlay() {
-  Entity::loadToPlay();
+  Entity::loadToPlay("");
   m_lastParticleTime = 0;
 } 
 
