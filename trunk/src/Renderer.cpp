@@ -2104,8 +2104,11 @@ void GameRenderer::_RenderSprite(Scene* i_scene, Entity *pEntity, float i_sizeMu
       case ET_ISTOTAKE:
         v_color = MAKE_COLOR(255,0,0,255);
         break;
+      case ET_ISSTART:
+        v_color = MAKE_COLOR(0,0,0,0);  /* we dont wanna have start position displayed in ugly mode */
+        break;
       default:
-        v_color = MAKE_COLOR(50,50,50,255); /* Fix: hard-to-see color because of entity's insignificance */
+        v_color = MAKE_COLOR(255,255,90,255); /* then only the entitys used in scripts get displayed */
         break;
       }
 
