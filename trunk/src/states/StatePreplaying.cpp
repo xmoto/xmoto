@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VFileIO.h"
 #include "../Renderer.h"
 #include "../net/NetClient.h"
+#include "../Sound.h"
 
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 100
 
@@ -182,6 +183,11 @@ void StatePreplaying::enter()
   } else {
     playLevelMusic();
   }
+
+  // preload sound
+  Sound::findSample(Theme::instance()->getSound("EndOfLevel")->FilePath());
+  Sound::findSample(Theme::instance()->getSound("NewHighscore")->FilePath());
+  Sound::findSample(Theme::instance()->getSound("Headcrash")->FilePath());
  
 //   m_universe->getScenes()[0]->getCamera()->getGhostTrail()->initGhostTrail(m_universe->getScenes()[0]->getFileGhost());
   /* prepare stats */

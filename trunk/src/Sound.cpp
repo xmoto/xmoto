@@ -185,7 +185,6 @@ void Sound::playSample(SoundSample *pSample,float fVolume) {
 
   if(pSample == NULL) return;
 
-  /* WHY OH WHY does this pause the game thread for 200-300 ms on linux??? :( */
   int nChannel = Mix_PlayChannel(-1,pSample->pChunk,0);
   if(nChannel >= 0) {
     Mix_Volume(nChannel,(int)(fVolume * MIX_MAX_VOLUME));
