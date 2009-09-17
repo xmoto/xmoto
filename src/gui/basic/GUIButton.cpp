@@ -120,7 +120,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  case UI_BUTTON_TYPE_CHECK:
           case UI_BUTTON_TYPE_RADIO:
             if(getChecked()) {
-              putRect(1, 1, getPosition().nWidth-2, getPosition().nHeight-2, MAKE_COLOR(80,200,80,255));
+              if(bDisabled) {
+                putRect(1, 1, getPosition().nWidth-2, getPosition().nHeight-2, MAKE_COLOR(10,80,10,255)); 
+              }
+              else {
+                putRect(1, 1, getPosition().nWidth-2, getPosition().nHeight-2, MAKE_COLOR(80,200,80,255));
+              }
             } else {
               putRect(1, 1, getPosition().nWidth-2, getPosition().nHeight-2, MAKE_COLOR(50,50,50,255));
             }
