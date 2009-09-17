@@ -79,11 +79,13 @@ void Entity::loadToPlay(const std::string& i_ScriptSource) {
   setAlive(true);
   m_isBBoxDirty = true;
   
-  //check if the entity is used in the script (for sprite rendering independently from gfx mode)  
-  //NOTE: Entity IDs, that are created dynamically in the script, wont be recognized here, but shouldt practically be a pb
+  /* check if the entity is used in the script (for sprite rendering independently from gfx mode)  
+  NOTE: Entity IDs, that are created dynamically in the script, can still be a problem! 
+  If theyre named "pathxyz", they can be mistaken for scripted, if e.g. block translations are used on blocks named pathxyz
+  Maybe its an idea for the future, to test for the "..i" string in source or look if its a "hardcoded" pathxyz in script */
   
-  std::string v_pureID = m_id; // lets use that one to put the string into it, which is stripped from numbers, that could be used in the scripts
   size_t v_pos;
+  std::string v_pureID = m_id; // lets use that one to put the string into it, which is stripped from numbers, that could be used in the scripts  size_t v_pos;
   do {
     v_pos = v_pureID.find_last_of("1234567890",v_pureID.length()-1);
     if(v_pos != std::string::npos) {
@@ -93,7 +95,7 @@ void Entity::loadToPlay(const std::string& i_ScriptSource) {
   while( v_pos != std::string::npos);
   
   size_t found = i_ScriptSource.find(v_pureID);
-  if(found != std::string::npos) {
+  if(found != std::string::npos && v_pureID != "path") {
     this->setScripted( true ); 
     if(XMSession::instance()->debug()) {
       LogInfo("The mighty script parser acknowledges %s as a scripted entity.",m_id.c_str());

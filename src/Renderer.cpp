@@ -1084,6 +1084,9 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
       else if(Entities[i]->DoesKill()) {
         pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(26,26,188,255), 0);
       }
+      else if(Entities[i]->isScripted()) {
+        pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(230,226,100,255), 0);
+      }
     }
     
 #ifdef ENABLE_OPENGL
