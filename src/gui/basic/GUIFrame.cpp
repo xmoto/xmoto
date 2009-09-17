@@ -84,13 +84,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         putImage(getPosition().nWidth/2,getPosition().nHeight/2,getPosition().nWidth/2,getPosition().nHeight/2,m_pMenuBR);
         putImage(0,getPosition().nHeight/2,getPosition().nWidth/2,getPosition().nHeight/2,m_pMenuBL);
       }
+      else {
+        putRect(80,100,240,343, UGLY_MODE_WINDOW_BG);  //To FIX? seems like getPosition isnt needed: independently from screen size the it fits
+      }
         break;
       case UI_FRAMESTYLE_TRANS:
       if(isUglyMode()) {
-	putRect(0, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
-	putRect(0, 0, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
-	putRect(getPosition().nWidth-2, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
-	putRect(0, getPosition().nHeight-2, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
+	putRect(0,0,getPosition().nWidth,getPosition().nHeight, UGLY_MODE_WINDOW_BG);
       } else {
         putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
         putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
@@ -103,12 +103,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,200));
       }
       break;
-      case UI_FRAMESTYLE_LEFTTAG: {
+      case UI_FRAMESTYLE_LEFTTAG: {  //currently only used for stats window in main menu
 	  if(isUglyMode()) {
-	    putRect(0, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
-	    putRect(0, 0, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
-	    putRect(getPosition().nWidth-2, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
-	    putRect(0, getPosition().nHeight-2, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
+	    putRect(0,0,getPosition().nWidth,getPosition().nHeight,UGLY_MODE_WINDOW_BG);
 	  } else {
 	    putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
 	    putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
@@ -118,10 +115,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    putElem(8,getPosition().nHeight-8,getPosition().nWidth-16,-1,UI_ELEM_FRAME_BM,false);
 	    putElem(0,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_ML,false);
 	    putElem(getPosition().nWidth-8,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_MR,false);
+	    
+	    putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
+	    putRect(2,2,getPosition().nWidth-4,getPosition().nHeight-4,MAKE_COLOR(0,0,70,150));
 	  }
-	  putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
-
-          putRect(2,2,getPosition().nWidth-4,getPosition().nHeight-4,MAKE_COLOR(0,0,70,150));
           
           if(m_bHover)
             setTextSolidColor(MAKE_COLOR(255,255,255,255));

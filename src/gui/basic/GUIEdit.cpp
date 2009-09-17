@@ -71,18 +71,20 @@ void UIEdit::paint(void) {
   if(bDisabled){
     putText(4, getPosition().nHeight/2, v_textToDisplay, 0.0, -0.5);
   }
-
-  putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
-  putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
-  putElem(getPosition().nWidth-8,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BR,false);
-  putElem(0,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BL,false);
-  putElem(8,0,getPosition().nWidth-16,-1,UI_ELEM_FRAME_TM,false);
-  putElem(8,getPosition().nHeight-8,getPosition().nWidth-16,-1,UI_ELEM_FRAME_BM,false);
-  putElem(0,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_ML,false);
-  putElem(getPosition().nWidth-8,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_MR,false);
-  putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
-
-  putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
+  if(isUglyMode() == false) {
+    putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
+    putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
+    putElem(getPosition().nWidth-8,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BR,false);
+    putElem(0,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BL,false);
+    putElem(8,0,getPosition().nWidth-16,-1,UI_ELEM_FRAME_TM,false);
+    putElem(8,getPosition().nHeight-8,getPosition().nWidth-16,-1,UI_ELEM_FRAME_BM,false);
+    putElem(0,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_ML,false);
+    putElem(getPosition().nWidth-8,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_MR,false);
+    putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,168));
+  }
+  else {
+    putRect(0,0,getPosition().nWidth,getPosition().nHeight,MAKE_COLOR(0,0,0,127));
+  }
 
   if(!bDisabled) {
     if(bActive) {

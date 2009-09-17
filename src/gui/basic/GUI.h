@@ -33,7 +33,7 @@ class GameApp;
 #include "../../include/xm_SDL.h"
 
 #define GUI_JOYSTICK_MINIMUM_DETECTION 3000
-
+#define UGLY_MODE_WINDOW_BG MAKE_COLOR(50,50,50,255)
 
 /*===========================================================================
   Alignments

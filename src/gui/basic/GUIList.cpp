@@ -332,13 +332,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* Draw list frame */
     if(isUglyMode()) {
-      putRect(0, 0, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
-      putRect(0, getPosition().nHeight-2, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
-      putRect(0, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
-      putRect(getPosition().nWidth-2, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
+      putRect(1,1,getPosition().nWidth-2,getPosition().nHeight-2,MAKE_COLOR(0,0,0,127));
 
-      putRect(m_lineMargeX+LinesWidth(), LinesStartY()+LinesHeight()-20,
-	      20, 20, MAKE_COLOR(188,186,67,255));
     } else {
       putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
       putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
@@ -348,8 +343,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       putElem(8,getPosition().nHeight-8,getPosition().nWidth-16,-1,UI_ELEM_FRAME_BM,false);
       putElem(0,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_ML,false);
       putElem(getPosition().nWidth-8,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_MR,false);
+      
+      putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
     }
-    putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
         
     /* Draw column headers */
     int nHX = 6, nHY = 6;
