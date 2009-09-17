@@ -36,7 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       putRect(0, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
       putRect(0, getPosition().nHeight-2, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
       putRect(getPosition().nWidth-2, nHeaderHeight,
-	      2, getPosition().nHeight-nHeaderHeight, MAKE_COLOR(188,186,67,255));
+	      2, getPosition().nHeight-nHeaderHeight, MAKE_COLOR(188,186,67,255)); 
     } else {
       /* Render bottom part (common to all tabs) */
       putElem(getPosition().nWidth-8,nHeaderHeight,-1,-1,UI_ELEM_FRAME_TR,false);
@@ -79,9 +79,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	}
 	
 	if(i == m_nSelected) {
-	  putElem(2, nHeaderHeight, nCX-8, 8, UI_ELEM_FRAME_TM, false);
-	  putElem(nCX+v_width+6, nHeaderHeight, getPosition().nWidth-nCX-v_width-6-2, 8,
-		  UI_ELEM_FRAME_TM, false);
+	  if(isUglyMode() == false) {
+	    putElem(2, nHeaderHeight, nCX-8, 8, UI_ELEM_FRAME_TM, false);
+	    putElem(nCX+v_width+6, nHeaderHeight, getPosition().nWidth-nCX-v_width-6-2, 8,
+		    UI_ELEM_FRAME_TM, false);
+	  }
+	  else {
+	    putRect(2, nHeaderHeight, nCX-8, 2,MAKE_COLOR(188,186,67,255));
+	    putRect(nCX+v_width+6, nHeaderHeight, getPosition().nWidth-nCX-v_width-6-2, 2,MAKE_COLOR(188,186,67,255));
+	  }
 	}
 	
 	if(i != m_nSelected && isUglyMode() == false) {

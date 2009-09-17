@@ -1648,7 +1648,7 @@ int GameRenderer::nbParticlesRendered() const {
 	  v_color = MAKE_COLOR(80,255,255,255); /* Fix: color changed a bit so it's easier to spot */
 	  break;
 	case ET_MAKEWIN:
-	  v_color = MAKE_COLOR(255,255,0,255); /* Fix: color not same as blocks */
+	  v_color = MAKE_COLOR(255,0,255,255); /* Fix: color not same as blocks */
 	  break;
 	case ET_ISTOTAKE:
 	  v_color = MAKE_COLOR(255,0,0,255);
@@ -2099,7 +2099,7 @@ void GameRenderer::_RenderSprite(Scene* i_scene, Entity *pEntity, float i_sizeMu
         v_color = MAKE_COLOR(80,255,255,255); /* Fix: color changed a bit so it's easier to spot */
         break;
       case ET_MAKEWIN:
-        v_color = MAKE_COLOR(255,255,0,255); /* Fix: color not same as blocks */
+        v_color = MAKE_COLOR(255,0,255,255); /* Fix: color not same as blocks */
         break;
       case ET_ISTOTAKE:
         v_color = MAKE_COLOR(255,0,0,255);
