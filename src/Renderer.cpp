@@ -954,8 +954,7 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
     Vector2i bottomLeft = pCamera->getDispBottomLeft();
 
     unsigned int y_translate = bottomLeft.y/2;
-    if((unsigned int)bottomLeft.y != pDrawlib->getDispHeight()
-       || i_scene->getNumberCameras() == 1){
+    if((unsigned int)bottomLeft.y != pDrawlib->getDispHeight() || XMSession::instance()->multiNbPlayers() == 1){
       y_translate = 0;
     }
     pDrawlib->setClipRect(bottomLeft.x + x+1,
