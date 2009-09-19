@@ -1715,11 +1715,14 @@ int GameRenderer::nbParticlesRendered() const {
     }
 
     renderReplayHelpMessage(i_scene);
-pDrawlib->getMenuCamera()->setCamera2d();
 
+    pCamera->setCamera2d();
+    
     _RenderScreenShadow(i_scene);
 
     /* And then the game messages */
+    pDrawlib->getMenuCamera()->setCamera2d();
+
     _RenderGameMessages(i_scene);            
 
     FontManager* v_fm = pDrawlib->getFontMedium();
@@ -2903,13 +2906,10 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
       } else {
         v_nShade = MENU_SHADING_VALUE;
       }
-      // TODO:: this is a very ugly workaround to prevent a still unresolved bug that comes with drawing using return values given by the camera function
-      // if second parameter is taken from camera function, it break the screen shadowing. atm its still not drawn perfectly, but better than using 0,0 as first value
-      pDrawLib->drawBox(Vector2f(float(i_scene->getCamera()->getDispTopLeft().x),
-                                 float(i_scene->getCamera()->getDispTopLeft().y)),
-		       Vector2f(pDrawLib->getDispWidth(),
-			        pDrawLib->getDispHeight()),
-		       0, MAKE_COLOR(0,0,0, v_nShade));  
+      pDrawLib->drawBox(Vector2f(0.0,0.0),
+                        Vector2f(float(pDrawLib->getDispWidth()),
+			         float(pDrawLib->getDispHeight())),  //the values make sense here, because the cam is set to 2d, where pdrawlib returns camera specific value then
+		        0, MAKE_COLOR(0,0,0, v_nShade));  
     }
   }
 
