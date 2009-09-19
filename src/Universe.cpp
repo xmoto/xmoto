@@ -153,6 +153,10 @@ void Universe::initCameras(int nbPlayer) {
 	m_scenes[3]->addCamera(Vector2i(width/2,0),
 			       Vector2i(width, height/2), v_useActiveZoom, v_useTrailCam);
       }
+      else {  //3 player then, add another cam for not having an ugly not-drawn rect in the screen
+        m_scenes[0]->addCamera(Vector2i(width/2,0),
+			       Vector2i(width, height/2), v_useActiveZoom, v_useTrailCam);
+      }
     }
     break;
   }
