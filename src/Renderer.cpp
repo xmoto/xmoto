@@ -1707,7 +1707,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
 
     pDrawlib->getMenuCamera()->setCamera2d();
-
+    
     if(m_showTimePanel) {
       renderTimePanel(i_scene);
       /* If there's strawberries in the level, tell the user how many there's left */
@@ -3017,6 +3017,7 @@ void GameRenderer::renderTimePanel(Scene* i_scene) {
   unsigned int height = pDrawlib->getDispHeight();
 
   Biker* pBiker = i_scene->getCamera()->getPlayerToFollow();
+  Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();
 
   /* render game time */
   FontManager* v_fm = pDrawlib->getFontMedium();
@@ -3035,33 +3036,23 @@ void GameRenderer::renderTimePanel(Scene* i_scene) {
     v_fg = v_fm->getGlyph(formatTime(i_scene->getTime()));
   }
 
-  switch(i_scene->getCurrentCamera()) {
-  case 0:
-    x=0; y=0;
-    break;
-  case 1:
-    if(i_scene->getNumberCameras() == 2) {
-      x=0; y=height/2;
-    } else {
-	x=width/2; y=0;
-    }
-    break;
-  case 2:
-    x=0; y=height/2;
-    break;
-  case 3:
-    x=width/2; y=height/2;
-    break;
+  //seek correct drawing positions
+  if((unsigned int) bottomLeft.x != 0) {
+      x=width/2; 
+  }
+  if((unsigned int) bottomLeft.y != height) {
+      y=height/2;
   }
 
   v_fm->printString(v_fg,
-		    x, y,
+		    x,y,
 		    MAKE_COLOR(255,255,255,255), -1.0, true);
 
   /* next things must be rendered only by the first camera */
-  if(i_scene->getCurrentCamera() != 0)
+  if((unsigned int) bottomLeft.x != 0 || (unsigned int) bottomLeft.y != height) {
     return;
-
+  }
+  
   v_fm = pDrawlib->getFontSmall();
 
   v_fg = v_fm->getGlyph(m_bestTime);
