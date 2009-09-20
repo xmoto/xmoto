@@ -939,8 +939,7 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
 
     // do not render it if it's the autozoom camera (in multi), or the player is dead (in multi), or no player is followed
     if(i_scene->isAutoZoomCamera() == true
-       || ((pBiker == NULL || (pBiker != NULL && pBiker->isDead() == true))
-	   && i_scene->getNumberCameras() > 1)){
+       || (pBiker == NULL || (pBiker != NULL && pBiker->isDead() == true))){
       return;
     }
 
@@ -1877,24 +1876,15 @@ int GameRenderer::nbParticlesRendered() const {
 	  
 	    case scripted:
 	      //scripted text for display under the bike
-	  
 	      posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight() + pDrawlib->getDispHeight()/5);
 	      if(XMSession::instance()->ugly() == false) {
 	        pDrawlib->drawBox(Vector2f(posX- 15,posY- 1),
 			          Vector2f(posX + v_fg->realWidth() +15 , posY+v_fg->realHeight()+ 2),
 			          0,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,255,255,pMsg->nAlpha));
 	      }
-	      break;
-	        
+	      break;        
 	  }
 	}
-//	case gameMsg:
-	  //without evil text background or border
-//	  if(renderGameMsg) {
-//	    posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight());
-//	  }
-//	  break;
-//        }
 
 	v_fm->printString(v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
       }
