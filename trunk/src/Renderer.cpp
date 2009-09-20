@@ -1751,19 +1751,20 @@ int GameRenderer::nbParticlesRendered() const {
 
     int nStrawberriesLeft = i_scene->getLevelSrc()->countToTakeEntities();
     int nQuantity = 0;
-    Vector2i bottomLeft(0,0);
-    if(i_scene->getNumberCameras() > 1){
-      bottomLeft = i_scene->getCamera()->getDispBottomLeft();
-    }
+    Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();
 
     // adapt to the current camera
     float x1_cam = x1 + bottomLeft.x;
     float x2_cam = x2 + bottomLeft.x;
     float y1_cam = y1;
     float y2_cam = y2;
-    if((unsigned int)bottomLeft.y != GameApp::instance()->getDrawLib()->getDispHeight()){
-      y1_cam += bottomLeft.y;
-      y2_cam += bottomLeft.y;
+
+    //seek correct drawing positions
+    unsigned int height=GameApp::instance()->getDrawLib()->getDispHeight();
+    if((unsigned int) bottomLeft.y != height) {
+      int y=height/2;
+      y1_cam += y;
+      y2_cam += y;
     }
 
     if(XMSession::instance()->ugly() == false) {
