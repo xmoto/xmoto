@@ -260,7 +260,7 @@ private:
   void _RenderLayer(Scene* i_scene, int layer);
   void _RenderSky(Scene* i_scene, float i_zoom, float i_offset, const TColor& i_color,
 		  float i_driftZoom, const TColor &i_driftColor, bool i_drifted);
-  void _RenderGameMessages(Scene* i_scene); 
+  void _RenderGameMessages(Scene* i_scene, bool renderGameMsg); 
   void _RenderGameStatus(Scene* i_scene);
   void _RenderParticles(Scene* i_scene, bool bFront=true);
   void _RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c);
