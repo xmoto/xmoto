@@ -1716,6 +1716,8 @@ int GameRenderer::nbParticlesRendered() const {
 
     renderReplayHelpMessage(i_scene);
 
+    _RenderGameMessages(i_scene,false);
+
     pCamera->setCamera2d();
     
     _RenderScreenShadow(i_scene);
@@ -1723,8 +1725,9 @@ int GameRenderer::nbParticlesRendered() const {
     /* And then the game messages */
     pDrawlib->getMenuCamera()->setCamera2d();
 
-    _RenderGameMessages(i_scene);            
+    _RenderGameMessages(i_scene,true);            
 
+    /* Render Level Name at bottom of screen, when died or pause */
     FontManager* v_fm = pDrawlib->getFontMedium();
     FontGlyph* v_fg = v_fm->getGlyph(i_scene->getInfos());
     v_fm->printString(v_fg,
@@ -1811,7 +1814,7 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Game message rendering
   ===========================================================================*/
-  void GameRenderer::_RenderGameMessages(Scene* i_scene) {
+  void GameRenderer::_RenderGameMessages(Scene* i_scene, bool renderGameMsg) {
     float v_fZoom = 60.0f;
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
@@ -1855,33 +1858,43 @@ int GameRenderer::nbParticlesRendered() const {
 	int posX = int(pDrawlib->getDispWidth()/2 - v_fg->realWidth()/2);
 	int posY = 0;
 
-	switch(i_scene->getGameMessage()[i]->msgType) {
-
-	case levelID:
-	  //put text to higher position
-	  posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight() - pDrawlib->getDispHeight()/6);
-	  if(XMSession::instance()->ugly() == false) {
-	    pDrawlib->drawBox(Vector2f(posX- 10,posY- 5),
-			      Vector2f(posX + v_fg->realWidth() +10, posY+33),
-			      1,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,244,176,pMsg->nAlpha));
-	  }
-	  break;
+        if(i_scene->getGameMessage()[i]->msgType == gameMsg && renderGameMsg) {
+          posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight());
+	} 
+	else {
+          switch(i_scene->getGameMessage()[i]->msgType) {
+            default:
+              return;
+	    case levelID:
+	      //put text to higher position
+	      posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight() - pDrawlib->getDispHeight()/6);
+	      if(XMSession::instance()->ugly() == false) {
+	      pDrawlib->drawBox(Vector2f(posX- 10,posY- 5),
+			        Vector2f(posX + v_fg->realWidth() +10, posY+33),
+			        1,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,244,176,pMsg->nAlpha));
+	      }
+	      break;
 	  
-	case scripted:
-	  //scripted text for display under the bike
-	  posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight() + pDrawlib->getDispHeight()/5);
-	  if(XMSession::instance()->ugly() == false) {
-	    pDrawlib->drawBox(Vector2f(posX- 15,posY- 1),
-			      Vector2f(posX + v_fg->realWidth() +15 , posY+v_fg->realHeight()+ 2),
-			      0,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,255,255,pMsg->nAlpha));
-	  }
-	  break;
+	    case scripted:
+	      //scripted text for display under the bike
 	  
-	case gameMsg:
+	      posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight() + pDrawlib->getDispHeight()/5);
+	      if(XMSession::instance()->ugly() == false) {
+	        pDrawlib->drawBox(Vector2f(posX- 15,posY- 1),
+			          Vector2f(posX + v_fg->realWidth() +15 , posY+v_fg->realHeight()+ 2),
+			          0,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,255,255,pMsg->nAlpha));
+	      }
+	      break;
+	        
+	  }
+	}
+//	case gameMsg:
 	  //without evil text background or border
-	  posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight());
-	  break;
-        }
+//	  if(renderGameMsg) {
+//	    posY = int(pMsg->Pos[1] * pDrawlib->getDispHeight());
+//	  }
+//	  break;
+//        }
 
 	v_fm->printString(v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
       }
