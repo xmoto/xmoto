@@ -70,7 +70,7 @@ class ScriptTimer;
 #define SER_BIKE_STATE_DIR_LEFT         0x01
 #define SER_BIKE_STATE_DIR_RIGHT        0x02
 
-enum MessageType {levelID, scripted, gameMsg};
+enum MessageType {levelID, scripted, gameTime, gameMsg};
 
 /*===========================================================================
   Arrow pointer

@@ -1190,7 +1190,7 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
       if(v_diffAvailable) {
 	char msg[256];
 	snprintf(msg, 256, "%+.2f", v_diffToGhost/100.0);
-	this->gameMessage(msg,true);
+	this->gameMessage(msg,true,MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION/2,gameTime);
       }
     }
   }
