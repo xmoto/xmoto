@@ -134,27 +134,22 @@ void StatePreplaying::enter()
     initPlayers();
 
     // if there's more camera than player (ex: 3 players and 4 cameras),
-    // then, make the remaining cameras follow the first player          singlescenes 4 player mode
+    // then, make the remaining cameras follow the first player          
     
-      m_universe->getScenes()[0]->setCurrentCamera(0);
-      if (m_universe->getScenes().size() == 1 && v_nbPlayer < m_universe->getScenes()[0]->getNumberCameras() ) {
-        m_universe->getScenes()[0]->setCurrentCamera(3); 
-      }
-      else if(m_universe->getScenes().size() != 1 && v_nbPlayer == 3) {
-      	m_universe->getScenes()[0]->setCurrentCamera(1);
-      }
-      //LogInfo("%s", v_nbPlayer);
-      m_universe->getScenes()[0]->getCamera()->setPlayerToFollow(m_universe->getScenes()[0]->Players()[0]);
-      m_universe->getScenes()[0]->getCamera()->setScroll(false, m_universe->getScenes()[0]->getGravity());
-
-    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-      if(m_universe->getScenes()[i]->getNumberCameras() > 1){
-	// make the zoom camera follow the first player
-	m_universe->getScenes()[i]->setAutoZoomCamera();
-	m_universe->getScenes()[i]->getCamera()->setPlayerToFollow(m_universe->getScenes()[i]->Players()[0]);
-	m_universe->getScenes()[i]->getCamera()->setScroll(false, m_universe->getScenes()[i]->getGravity());
-      }
+    m_universe->getScenes()[0]->setCurrentCamera(0);
+    if( m_universe->getScenes().size() == 1 && v_nbPlayer < m_universe->getScenes()[0]->getNumberCameras() ) {
+      m_universe->getScenes()[0]->setCurrentCamera(3); 
     }
+    else if(m_universe->getScenes().size() != 1 && v_nbPlayer == 3) {
+      m_universe->getScenes()[0]->setCurrentCamera(1);
+    }
+    m_universe->getScenes()[0]->getCamera()->setPlayerToFollow(m_universe->getScenes()[0]->Players()[0]);
+    m_universe->getScenes()[0]->getCamera()->setScroll(false, m_universe->getScenes()[0]->getGravity());
+
+    // make the zoom camera follow the first player
+    m_universe->getScenes()[0]->setAutoZoomCamera();
+    m_universe->getScenes()[0]->getCamera()->setPlayerToFollow(m_universe->getScenes()[0]->Players()[0]);
+    m_universe->getScenes()[0]->getCamera()->setScroll(false, m_universe->getScenes()[0]->getGravity());
 
     // reset handler, set mirror mode
     InputHandler::instance()->reset();
