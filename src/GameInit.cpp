@@ -487,6 +487,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(v_xmArgs.isOptServerOnly()) {
     try {
       m_standAloneServer = NetServer::instance();
+      NetServer::instance()->setStandAloneOptions();
       NetServer::instance()->start(false);
     } catch(Exception &e) {
       LogError((std::string("Exception: ") + e.getMsg()).c_str());
