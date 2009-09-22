@@ -113,6 +113,22 @@ void Universe::initCameras(int nbPlayer) {
     return;
   }
 
+  /* Cameras for single and multi player:
+     single player: 
+                    have just one camera (scene[0]),
+                    which can be autozoom cam at the same time 
+                    (b/c its as big as screen size)
+     multi player:
+                    have up to 4 cameras for players, and one autozoom cam: 
+           single scene (coop mode):
+                    all in the same scene (scene[0]->cameras[0..4]) with 4 players
+                    autozoom cam is scene[0]->camera[4]
+           multi scenes (normal mode):
+                    4 player cams in 4 scenes (scene[0..3]->cameras[0])
+                    autozoom cam is scene[0]->camera[1] for 2 and 4 players
+                               but  scene[0]->camera[2] for 3 players, because
+                               the camera[1] is used for duplicate player 1 cam 
+                               for 4th player field (otherwise we get ugly drawing)  */
   switch(nbPlayer){
   default:
   case 1:
