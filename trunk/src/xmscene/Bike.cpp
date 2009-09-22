@@ -32,6 +32,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Log.h"
 #include "PhysicsSettings.h"
 
+#define MINIMUM_VELOCITY_TO_GET_MAXIMUM_DEATH_SOUND 80.0
+#define MINIMUM_SOUND_VOLUME 0.2
+
 BikeState::BikeState(PhysicsSettings* i_physicsSettings) {
   m_bikeParameters = new BikeParameters(i_physicsSettings);
   m_bikeAnchors    = new BikeAnchors();
@@ -391,6 +394,25 @@ void Biker::setFinished(bool i_value, int i_finishTime) {
 void Biker::setDead(bool i_value, int i_deadTime) {
   m_dead = i_value;
   m_deadTime = i_deadTime;
+  
+  /* Play the DIE!!! sound */
+  try {
+    float v_deathVolume;
+    float v_maxVelocity = 0.0;
+
+    if(this->getBikeLinearVel() > v_maxVelocity) {
+      v_maxVelocity = this->getBikeLinearVel();
+    }
+    // make deathVolume dependant of the velocity of the fastest of the players
+    v_deathVolume = v_maxVelocity / MINIMUM_VELOCITY_TO_GET_MAXIMUM_DEATH_SOUND + MINIMUM_SOUND_VOLUME;
+    if(v_deathVolume > 1.0) {
+      v_deathVolume = 1.0;
+    }
+    Sound::playSampleByName(Theme::instance()->getSound("Headcrash")->FilePath(), v_deathVolume);
+  } 
+  catch(Exception &e) {
+  }
+
 }
 
 bool Biker::isFinished() const {

@@ -35,6 +35,7 @@ class NetServer : public Singleton<NetServer> {
   bool isStarted();
   void wait();
   bool acceptConnections();
+  void setStandAloneOptions(); 
 
   private:
   ServerThread* m_serverThread;

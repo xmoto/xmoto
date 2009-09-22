@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "NetServer.h"
 #include "thread/ServerThread.h"
 #include "../helpers/VExcept.h"
+#include "../XMSession.h"
 
 NetServer::NetServer() {
     m_isStarted = false;
@@ -77,4 +78,8 @@ bool NetServer::acceptConnections() {
     return false;
   }
   return m_serverThread->acceptConnections();
+}
+
+void NetServer::setStandAloneOptions() {
+  XMSession::instance()->setEnableAudio(false);
 }
