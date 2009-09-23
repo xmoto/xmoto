@@ -87,6 +87,9 @@ void Camera::prepareForNewLevel() {
   setScroll(false, Vector2f(0, -9.81));
   resetActiveZoom();
   initActiveZoom();
+  m_nShadeTime = GameApp::getXMTime();
+  m_doShade = false;
+  m_doShadeAnim = false;
   //trail stuff
   m_trailAvailable = false;
   m_ghostTrail = NULL;
@@ -459,6 +462,9 @@ void Camera::setPlayerDead() {
   } else {
     m_cameraDeathOffset = m_playerToFollow->getState()->CenterP - m_playerToFollow->getState()->Knee2P;
   }
+  //apply shadow
+  setShadeTime(GameApp::getXMTime());
+  setScreenShade(true,true);
 }
 
 void Camera::setScroll(bool isSmooth, const Vector2f& gravity) { 
@@ -772,3 +778,18 @@ bool Camera::isGhostIn(unsigned int i) {
   checkGhostVisibilityExists(i);
   return m_ghostVisibility[i].isIn;
 }
+
+float Camera::getShadeTime() {
+  return m_nShadeTime;
+}
+
+void Camera::setShadeTime(float i_time) {
+  m_nShadeTime = i_time;
+}
+
+void Camera::setScreenShade(bool i_doShade, bool i_doShadeAnim) 
+{ 
+  m_doShade = i_doShade; 
+  m_doShadeAnim = i_doShadeAnim; 
+}
+

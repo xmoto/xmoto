@@ -133,12 +133,25 @@ public:
   Vector2f getNearestPointOnTrailPos();
   float m_previousTSStepTime;
   int m_trailCamForwardSteps;
+ 
+  // camera-specific  screenshadowing 
+  void setScreenShade(bool i_doShade, bool i_doShadeAnim); 
+  float getShadeTime(); 
+  void setShadeTime(float i_time);
+  bool getDoShade() { return m_doShade; };
+  bool getDoShadeAnim() { return m_doShadeAnim; };
   
 private:
   bool  m_mirrored;
   float m_rotationAngle;
   float m_rotationSpeed;
   float m_desiredRotationAngle;
+
+  // for Screenshadowing, like death
+  float m_nShadeTime;
+  bool m_doShade;  
+  bool m_doShadeAnim;
+
 
   std::vector<CameraGhostVisibility> m_ghostVisibility;
   void checkGhostVisibilityExists(unsigned int i);
