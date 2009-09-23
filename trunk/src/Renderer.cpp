@@ -1715,15 +1715,16 @@ int GameRenderer::nbParticlesRendered() const {
 
     renderReplayHelpMessage(i_scene);
 
+    /* And then the game messages beyond shadow layer*/
     _RenderGameMessages(i_scene,false);
 
     pCamera->setCamera2d();
     
     _RenderScreenShadow(i_scene);
 
-    /* And then the game messages */
+    /* And then the game messages over shadow layer*/
     pDrawlib->getMenuCamera()->setCamera2d();
-
+    
     _RenderGameMessages(i_scene,true);            
 
     /* Render Level Name at bottom of screen, when died or pause */
@@ -2919,23 +2920,43 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
   }
   
   void GameRenderer::_RenderScreenShadow(Scene* i_scene) {
-    //TODO:: make shading distinct for the cameras in multiplayer
-    
     DrawLib* pDrawLib = GameApp::instance()->getDrawLib();
+    Camera* i_camera = i_scene->getCamera();
+    
+    /* Screen shadow creates the dark overlay, which is put onto the camera on player death.
+       For Multiplayer a special handling is needed, so multiple queries must be done */
+    
+    bool v_doShade, v_doShadeAnim;
+    float v_nShadeTime;
+      
+    if(m_doShade_global) {
+      v_doShade = m_doShade_global;
+      v_doShadeAnim = m_doShadeAnim_global;
+      v_nShadeTime = m_nShadeTime_global;
+      if(XMSession::instance()->multiNbPlayers() > 1 && i_camera->getPlayerToFollow()->isDead() && 
+        GameApp::getXMTime() > i_camera->getShadeTime()+MENU_SHADING_TIME ) {
+        v_doShadeAnim = false;
+      }
+    }
+    else {
+      v_doShade = i_camera->getDoShade();
+      v_doShadeAnim = i_camera->getDoShadeAnim();
+      v_nShadeTime = i_camera->getShadeTime();
+    }
 
     // shade
-    if(XMSession::instance()->ugly() == false && m_doShade) {
+    if(XMSession::instance()->ugly() == false && v_doShade) {
       float v_currentTime = GameApp::getXMTime();
       int   v_nShade;
     
-      if(v_currentTime - m_nShadeTime < MENU_SHADING_TIME && m_doShadeAnim) {
-        v_nShade = (int ) ((v_currentTime - m_nShadeTime) * (MENU_SHADING_VALUE / MENU_SHADING_TIME));
+      if(v_currentTime - v_nShadeTime < MENU_SHADING_TIME && v_doShadeAnim) {
+        v_nShade = (int ) ((v_currentTime - v_nShadeTime) * (MENU_SHADING_VALUE / MENU_SHADING_TIME));
       } else {
         v_nShade = MENU_SHADING_VALUE;
       }
       pDrawLib->drawBox(Vector2f(0.0,0.0),
-                        Vector2f(float(pDrawLib->getDispWidth()),
-			         float(pDrawLib->getDispHeight())),  //the values make sense here, because the cam is set to 2d, where pdrawlib returns camera specific value then
+                        Vector2f(float(pDrawLib->getDispWidth()), //pDrawlib returns camera specific values, as set in render()
+			         float(pDrawLib->getDispHeight())), 
 		        0, MAKE_COLOR(0,0,0, v_nShade));  
     }
   }
@@ -3811,10 +3832,9 @@ unsigned int GameRenderer::currentRegistrationStage() const
   return m_curRegistrationStage;
 }
 
-void GameRenderer::setScreenShade(bool i_doShade, bool i_doShadeAnim, float i_nShadeTime) 
+void GameRenderer::setScreenShade(bool i_doShade_global, bool i_doShadeAnim_global, float i_shadeTime_global) 
 { 
-  m_doShade = i_doShade; 
-  m_doShadeAnim = i_doShadeAnim; 
-  m_nShadeTime = i_nShadeTime;
+  m_doShade_global = i_doShade_global; 
+  m_doShadeAnim_global = i_doShadeAnim_global;
+  m_nShadeTime_global = i_shadeTime_global; 
 }
-

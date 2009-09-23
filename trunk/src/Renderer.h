@@ -117,8 +117,6 @@ class Camera;
       bool _SetShaderSource(GLhandleARB ShaderID, const std::string &File);
 #endif
       
-      
-
       int m_nOverlayWidth,m_nOverlayHeight;
       DrawLib* m_drawLib;
   };
@@ -149,7 +147,7 @@ public:
   void setWorldRecordTime(const std::string &s) {m_worldRecordTime = s;}
   void setShowMinimap(bool i_value);
   void setShowTimePanel(bool i_value);
-  void setScreenShade(bool i_doShade, bool i_doShadeAnim, float i_nShadeTime); 
+  void setScreenShade(bool i_doShade_global, bool i_doShadeAnim_global, float i_shadeTime_global); 
   void hideReplayHelp();
   bool showEngineCounter() const;
   void setShowEngineCounter(bool i_value);
@@ -197,9 +195,10 @@ private:
   bool m_showTimePanel;
   bool m_showGhostsText;
   
-  bool m_doShade;  // for Screenshadowing, like death
-  bool m_doShadeAnim;
-  float m_nShadeTime;
+  // for Screenshadowing in menus
+  bool m_doShade_global; 
+  bool m_doShadeAnim_global;
+  float m_nShadeTime_global;
 
   /* FBO overlay */
   SFXOverlay m_Overlay;
