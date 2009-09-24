@@ -1690,8 +1690,12 @@ int GameRenderer::nbParticlesRendered() const {
     /* minimap + counter */
     if(pCamera->getPlayerToFollow() != NULL) {
       if(showMinimap()) {
-	renderMiniMap(i_scene, 0, pDrawlib->getDispHeight()- (pDrawlib->getDispHeight()/6),
-		      pDrawlib->getDispWidth()/5, pDrawlib->getDispHeight()/6);
+        int multiPlayerScale = 0;
+        if(XMSession::instance()->multiNbPlayers() > 2) {  //small small screen then
+          multiPlayerScale = 2;
+        }
+	renderMiniMap(i_scene, 0, pDrawlib->getDispHeight() - (pDrawlib->getDispHeight()/(6+multiPlayerScale)),
+		      pDrawlib->getDispWidth()/(5+multiPlayerScale), pDrawlib->getDispHeight()/(6+multiPlayerScale));
       }
       if(showEngineCounter()
 	 && XMSession::instance()->ugly() == false
@@ -1725,7 +1729,7 @@ int GameRenderer::nbParticlesRendered() const {
     /* And then the game messages over shadow layer*/
     pDrawlib->getMenuCamera()->setCamera2d();
     
-    _RenderGameMessages(i_scene,true);            
+    // _RenderGameMessages(i_scene,true);  => got moved to stateScene, to have non-covered multiplayer message display
 
     /* Render Level Name at bottom of screen, when died or pause */
     FontManager* v_fm = pDrawlib->getFontMedium();
@@ -1814,7 +1818,7 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Game message rendering
   ===========================================================================*/
-  void GameRenderer::_RenderGameMessages(Scene* i_scene, bool renderGameMsg) {
+  void GameRenderer::_RenderGameMessages(Scene* i_scene, bool renderOverShadow) {
     float v_fZoom = 60.0f;
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
@@ -1863,7 +1867,7 @@ int GameRenderer::nbParticlesRendered() const {
         int posX = int(width/2 - v_fg->realWidth()/2);        
         int posY = 0;
 
-        if( (i_scene->getGameMessage()[i]->msgType == gameMsg && renderGameMsg) ||
+        if( (i_scene->getGameMessage()[i]->msgType == gameMsg && renderOverShadow) ||
             (i_scene->getGameMessage()[i]->msgType == gameTime && numPlayers == 1) ) {
           posY = int(pMsg->Pos[1] * height);
 	} 
@@ -1873,14 +1877,16 @@ int GameRenderer::nbParticlesRendered() const {
               return;
 	    case levelID:
 	      //put text to higher position
-	      posY = int(pMsg->Pos[1] * height - height/6);
-	      if(XMSession::instance()->ugly() == false) {
-	      pDrawlib->drawBox(Vector2f(posX- 10,posY- 5),
+	      if(renderOverShadow) {
+	        posY = int(pMsg->Pos[1] * height - height/6);
+	        if(XMSession::instance()->ugly() == false) {
+	        pDrawlib->drawBox(Vector2f(posX- 10,posY- 5),
 			        Vector2f(posX + v_fg->realWidth() +10, posY+33),
-			        1,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,244,176,pMsg->nAlpha));
+			        1,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,244,176,pMsg->nAlpha/2));
+	        }
 	      }
+	      else return;
 	      break;
-	  
 	    case scripted:
 	      //scripted text for display under the bike
 	      posY = int(pMsg->Pos[1] * height + height/5);
@@ -3837,4 +3843,10 @@ void GameRenderer::setScreenShade(bool i_doShade_global, bool i_doShadeAnim_glob
   m_doShade_global = i_doShade_global; 
   m_doShadeAnim_global = i_doShadeAnim_global;
   m_nShadeTime_global = i_shadeTime_global; 
+}
+
+void GameRenderer::renderGameMessages(Scene* i_scene) {
+  /* this is implemented as a non-private function to make game message callable from elsewhere
+     (needed for multiplayer, where cams may cover screenwide text displays) */
+  _RenderGameMessages(i_scene, true);
 }

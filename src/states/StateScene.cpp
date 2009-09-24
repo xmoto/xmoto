@@ -230,12 +230,15 @@ bool StateScene::render()
 	    GameRenderer::instance()->render(m_universe->getScenes()[j]);
 	  }
 	}
+	//Render the game messages for OVER the shadow layer, which is needed in multiplayer to supress ugly multiple display
+	GameRenderer::instance()->renderGameMessages(m_universe->getScenes()[0]);
       }
     } else {
       if(m_universe != NULL) {
 	if(m_universe->getScenes().size() > 0) {
 	  m_universe->getScenes()[0]->setAutoZoomCamera();
 	  GameRenderer::instance()->render(m_universe->getScenes()[0]);
+	  GameRenderer::instance()->renderGameMessages(m_universe->getScenes()[0]);
 	}
       }
     }
