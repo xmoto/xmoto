@@ -49,10 +49,10 @@ void StateDeadJust::enter()
     for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
       
       m_universe->getScenes()[i]->clearGameMessages();
-      m_universe->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 400);
-      m_universe->getScenes()[i]->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 400);
       m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name());
     }
+    m_universe->getScenes()[0]->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 260); // in multiplayer its good,
+    m_universe->getScenes()[0]->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 260); // to have it displayed only once
   }
 
   if(m_universe != NULL) {
@@ -89,10 +89,18 @@ void StateDeadJust::nextLevel(bool i_positifOrder) {
 }
 
 bool StateDeadJust::update() {
-  if( m_universe->getScenes()[0]->Players()[0]->getTorsoVelocity() <= VELOCITY_UNTIL_TORSO_RIP && m_enterTime == 0) {
+  float v_torsoVelocity = 0;
+  for(unsigned int i=0; i < m_universe->getScenes().size(); i++) {
+    for(unsigned int j=0; j < m_universe->getScenes()[i]->Players().size(); j++) {
+      if(m_universe->getScenes()[i]->Players()[j]->getTorsoVelocity() > v_torsoVelocity) {
+        v_torsoVelocity = m_universe->getScenes()[i]->Players()[j]->getTorsoVelocity();
+      }
+    }
+  }
+  if( v_torsoVelocity <= VELOCITY_UNTIL_TORSO_RIP && m_enterTime == 0) {
     m_enterTime = GameApp::getXMTimeInt();
   }    
-  if( m_enterTime != 0 && GameApp::getXMTimeInt() - m_enterTime > STATE_DEAD_MAX_TIME*10 ) {
+  if( m_enterTime != 0 && GameApp::getXMTimeInt() - m_enterTime > STATE_DEAD_MAX_TIME*23 ) {
     StateManager::instance()->pushState(new StateDeadMenu(m_universe, false, true));
     return false;
   } else {
