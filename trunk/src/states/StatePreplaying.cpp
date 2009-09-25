@@ -186,7 +186,6 @@ void StatePreplaying::enter()
   Sound::findSample(Theme::instance()->getSound("NewHighscore")->FilePath());
   Sound::findSample(Theme::instance()->getSound("Headcrash")->FilePath());
  
-//   m_universe->getScenes()[0]->getCamera()->getGhostTrail()->initGhostTrail(m_universe->getScenes()[0]->getFileGhost());
   /* prepare stats */
   makeStatsStr();
 }

@@ -1856,48 +1856,93 @@ int GameRenderer::nbParticlesRendered() const {
     if(i_scene != NULL) {
       for(unsigned int i=0;i<i_scene->getGameMessage().size();i++) {
         GameMessage *pMsg = i_scene->getGameMessage()[i];
-	FontManager* v_fm = pDrawlib->getFontMedium();
-	FontGlyph* v_fg = v_fm->getGlyph(pMsg->Text);
-
+        FontManager* v_fm = NULL;
+        FontGlyph* v_fg = NULL;
         unsigned int width  = pDrawlib->getDispWidth();
         unsigned int height = pDrawlib->getDispHeight();
         int numPlayers = XMSession::instance()->multiNbPlayers();
-        Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();
-        
-        int posX = int(width/2 - v_fg->realWidth()/2);        
+        Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();        
+        int posX = 0; 
         int posY = 0;
 
-        if( (i_scene->getGameMessage()[i]->msgType == gameMsg && renderOverShadow) ||
-            (i_scene->getGameMessage()[i]->msgType == gameTime && numPlayers == 1) ) {
+        #define GET_FONT_SMALL  v_fm = pDrawlib->getFontSmall(); \
+	                        v_fg = v_fm->getGlyph(pMsg->Text);
+        #define GET_FONT_MEDIUM v_fm = pDrawlib->getFontMedium(); \
+        			v_fg = v_fm->getGlyph(pMsg->Text);
+
+        if( (pMsg->msgType == gameMsg && renderOverShadow) ||
+            (pMsg->msgType == gameTime && numPlayers == 1) ) {
+          GET_FONT_MEDIUM    
+          posX = int(width/2 - v_fg->realWidth()/2);        
           posY = int(pMsg->Pos[1] * height);
+          v_fm->printString(v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
 	} 
 	else {
-          switch(i_scene->getGameMessage()[i]->msgType) {
+          switch(pMsg->msgType) {
             case gameMsg:
-              return;
+              continue;
 	    case levelID:
 	      //put text to higher position
 	      if(renderOverShadow) {
+	        GET_FONT_MEDIUM
+                posX = int(width/2 - v_fg->realWidth()/2);
 	        posY = int(pMsg->Pos[1] * height - height/6);
+	        
 	        if(XMSession::instance()->ugly() == false) {
 	        pDrawlib->drawBox(Vector2f(posX- 10,posY- 5),
 			        Vector2f(posX + v_fg->realWidth() +10, posY+33),
-			        1,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,244,176,pMsg->nAlpha/2));
+			        1,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,244,176,pMsg->nAlpha));
 	        }
 	      }
-	      else return;
+	      else continue;
 	      break;
 	    case scripted:
-	      //scripted text for display under the bike
-	      posY = int(pMsg->Pos[1] * height + height/5);
-	      if(XMSession::instance()->ugly() == false) {
-	        pDrawlib->drawBox(Vector2f(posX- 15,posY- 1),
-			          Vector2f(posX + v_fg->realWidth() +15 , posY+v_fg->realHeight()+ 2),
-			          0,MAKE_COLOR(0,0,0,pMsg->nAlpha/2),MAKE_COLOR(255,255,255,pMsg->nAlpha));
+	      if(renderOverShadow == false) {
+	      //scripted text for display below the bike
+	        if(numPlayers == 1) {
+	          GET_FONT_MEDIUM
+	          posX = int(width/2 - v_fg->realWidth()/2);
+	          posY = int(pMsg->Pos[1] * height + height/5);
+	        }
+	        else{
+	          GET_FONT_SMALL
+	      	  if(numPlayers > 1) {
+                    if((unsigned int) bottomLeft.x != 0 && numPlayers > 2) {
+                      posX = int(width/2 + width/4 - v_fg->realWidth()/2);
+                    }
+                    else if(numPlayers > 2) {
+                      posX = int(width/4 - v_fg->realWidth()/2);    
+                    }
+                    else {
+                      posX = int(width/2 - v_fg->realWidth()/2);
+                    }        
+                
+                    if((unsigned int) bottomLeft.y != height) {
+                      posY = int( pMsg->Pos[1] * (height/2)  + height/2 + height/10);
+	            }
+	            else {
+	              posY = int( pMsg->Pos[1] * (height/2) + height/10);
+	            }     
+	          }
+                }
+	        if(XMSession::instance()->ugly() == false) {
+	          pDrawlib->drawBox(Vector2f(posX- 15,posY- 1),
+		    	            Vector2f(posX + v_fg->realWidth() +15 , posY+v_fg->realHeight()+ 2),
+			            0,MAKE_COLOR(0,0,0,int(pMsg->nAlpha/2)));
+	        }
 	      }
+	      else continue;
 	      break;  
 	    case gameTime:
 	      //especially in multiplayer: render in according center size  
+              if(numPlayers == 1) {
+	        GET_FONT_MEDIUM
+	        posX = int(width/2 - v_fg->realWidth()/2);
+	      }
+	      else{
+	        GET_FONT_SMALL
+	      }
+	       
               if(numPlayers > 1) {
                 if((unsigned int) bottomLeft.x != 0 && numPlayers > 2) {
                   posX = int(width/2 + width/4 - v_fg->realWidth()/2);
@@ -1905,18 +1950,19 @@ int GameRenderer::nbParticlesRendered() const {
                 else if(numPlayers > 2) {
                   posX = int(width/4 - v_fg->realWidth()/2);    
                 }        
-                
+            
                 if((unsigned int) bottomLeft.y != height) {
-                  posY = int( pMsg->Pos[1] * (height/2)  + height/2);
+                  posY = int( pMsg->Pos[1] * (height/2)  + height/2 - height/10);
 	        }
 	        else {
-	          posY = int( pMsg->Pos[1] * (height/2) );
+	          posY = int( pMsg->Pos[1] * (height/2) - height/10);
 	        }     
-	      }
+	      }	      
 	      break;   
 	  }
+	  v_fm->printString(v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
 	}
-	v_fm->printString(v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
+
       }
     }
   }

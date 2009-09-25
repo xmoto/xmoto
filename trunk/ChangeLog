@@ -1,5 +1,12 @@
-X-Moto 0.5.3 2009-
------------------------
+X-Moto 0.5.3-SVN 3000 2009-09-25
+--------------------------------
+ * Ugly Mode heavily improved (Menu GFX and Scripted Sprites)
+ * bugfix: Rendering stalls no more on first load of Headcrash Sound
+ * bugfix: Multiplayer: Messages System
+ * bugfix: Multiplayer: Screen Shadow
+ * bugfix: Multiplayer: Minimap
+ * bugfix: Multiplayer: Time Panel & Game Status
+ * bugfix: Multiplayer: Death Sound for all Players
 
 
 X-Moto 0.5.2 2009-09-02
