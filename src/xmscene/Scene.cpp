@@ -164,14 +164,24 @@ void Scene::cleanPlayers() {
 
     /* If text is longer than screen width, put \n into it to split lines */   
     DrawLib* pDrawLib = GameApp::instance()->getDrawLib();
-    FontManager* pFM = pDrawLib->getFontMedium();
-    FontGlyph* pFG = pFM->getGlyph(Text);
-    if(pFG->realWidth() > pDrawLib->getDispWidth() ) {
+    //distinction for multiplayer, here diff msg types use diff fonts
+    FontManager* pFM; 
+    FontGlyph* pFG;
+    int multiScreenDivision = 1;
+    if(XMSession::instance()->multiNbPlayers() > 2 && (i_msgType == scripted || i_msgType == gameTime)) {
+      pFM = pDrawLib->getFontSmall();  
+      multiScreenDivision = 2;
+    }
+    else {
+      pFM = pDrawLib->getFontMedium();
+    }
+    pFG = pFM->getGlyph(Text);
+    if(pFG->realWidth() > int(pDrawLib->getDispWidth()/multiScreenDivision) ) {
       unsigned int v_newline = 0;
       std::string v_subtext = ("");
       for( unsigned int i = 0; i<Text.length(); i++) {
         pFG = pFM->getGlyph(Text.substr(v_newline,i-v_subtext.length()));  //substr isnt a problem for utf8, because its got a rule which prevents characters beeing in 2-byte chars
-        if(pFG->realWidth() >= pDrawLib->getDispWidth()-15) {  // our sub string length is now equal disp Width
+        if(pFG->realWidth() >= int(pDrawLib->getDispWidth()/multiScreenDivision)-15) {  // our sub string length is now equal disp Width
           for(unsigned int j=i; j>v_newline; j--) { //look for " "
             if(!Text.compare(j,1," ")) {
                Text.insert(j,"\n");
