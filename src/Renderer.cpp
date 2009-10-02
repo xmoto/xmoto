@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/GhostTrail.h"
 #include "helpers/Log.h"
 #include "helpers/Text.h"
+#include "helpers/Random.h"
 #include "drawlib/DrawLib.h"
 #include "Game.h"
 #include <algorithm>
@@ -66,11 +67,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define MENU_SHADING_TIME 0.3
 #define MENU_SHADING_VALUE 150
 
-//for ghost trail
-#define FINE_TRAIL_SCALE 0.3
-#define UGLY_TRAIL_SCALE 0.3
-#define FINE_TRAIL_COLOR 255
-#define UGLY_TRAIL_COLOR 80
+//for ghost trail rendering
+#define GT_RENDER_SCALE 0.2
+#define GT_TRAIL_COLOR 255
+//how ugly to draw depending on the camerazoom
+#define GT_GFX_LOW_RATIO 0.35
+#define GT_GFX_MED_RATIO 0.25
+#define GT_GFX_HI_RATIO 0.10
+//how much uglier in uglymode
+#define GT_UGLY_MODE_MULTIPLYER 2
 
   /* to sort blocks on their texture */
   struct AscendingTextureSort {
@@ -1176,98 +1181,106 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
 }
 
 void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i_scale) {
-	//get trail data
-  GhostTrail* v_ghostTrail = i_scene->getGhostTrail(); if(v_ghostTrail == 0){return;}
+  //get trail data
+  GhostTrail* v_ghostTrail = i_scene->getGhostTrail(); 
+  if(v_ghostTrail == 0){
+    return;
+  }
   std::vector<Vector2f>* v_ghostTrailData = v_ghostTrail->getGhostTrailData();
-	//setup colors and declare vars
-	TColor c = TColor(FINE_TRAIL_COLOR,FINE_TRAIL_COLOR,0,255);
-	float fSize=0.0;
-	float v_last_size=1.0;
-	int lines_drawn=0;
-	int v_offset=0;
-	if(i_scale<1.0){i_scale=1.0;} //we don't want it smaller
- 	if(i_scale>10.0){i_scale=10.0;} //ax scale to not make it look bad ;-)
-	//grab rendering device
-	DrawLib* pDrawlib = GameApp::instance()->getDrawLib(); if(pDrawlib==0){return;}
-	//draw nice or ugly?
-	if(XMSession::instance()->ugly() == false) {
-		v_offset=1; //default
-		//different GFX setup
-		if(m_graphicsLevel == GFX_LOW){ //low gfx modes
-			if(i_scene->getCamera()->getCurrentZoom()<0.05){v_offset=9;} //in zoom out mode we want to reduce lagging by drawing less curvier.
-			if(i_scene->getCamera()->getCurrentZoom()<0.020){v_offset=18;} //super huge lvl	(like ultimative mofo challenge)		 
-		}else if(m_graphicsLevel == GFX_MEDIUM){ //medium gfx modes
-			if(i_scene->getCamera()->getCurrentZoom()<0.06){v_offset=6;}
-			if(i_scene->getCamera()->getCurrentZoom()<0.022){v_offset=12;}
-		}else if(m_graphicsLevel == GFX_HIGH){  //high gfx mode!
-			if(i_scene->getCamera()->getCurrentZoom()<0.07){v_offset=3;}
-			if(i_scene->getCamera()->getCurrentZoom()<0.025){v_offset=6;} 
-		}
-	  for(unsigned int i=0; i < (*v_ghostTrailData).size(); i=i+v_offset) {
-			if (!(i>0)){v_last_size=0.1;continue;}
-			//get speed/size
-			float xdiff=(*v_ghostTrailData)[i-v_offset].x - (*v_ghostTrailData)[i].x;if(xdiff<0){xdiff=-xdiff;}
-			float ydiff=(*v_ghostTrailData)[i-v_offset].y - (*v_ghostTrailData)[i].y;if(ydiff<0){ydiff=-ydiff;}
-			fSize=sqrt(pow(xdiff,2)+pow(ydiff,2))/v_offset;	
-			if(fSize>v_last_size*2){v_last_size=0.1f; continue;} //if the size (=speed) has doupled then skip (must be teleport)		
-			if(fSize>1){fSize=1;} if(fSize<0.1f){fSize=0.1f;}    //max and min sizes
-			//we need to check that the line is inside the screen, why to draw 2000-5000 lines when we can draw 100 by skipping non-visible ones.
-			Vector2f scr_max = i_screenBBox->getBMax();Vector2f scr_min = i_screenBBox->getBMin();Vector2f point = (*v_ghostTrailData)[i];
-			if(scr_max.x < point.x - xdiff*2.5){v_last_size=fSize;continue;}if(scr_min.x > point.x + xdiff*2.5){v_last_size=fSize;continue;}//x-axis
-			if(scr_max.y < point.y - ydiff*2.5){v_last_size=fSize;continue;}if(scr_min.y > point.y + ydiff*2.5){v_last_size=fSize;continue;}//y-axis	
-			if(v_last_size>fSize){fSize=fSize+(v_last_size-fSize)/1.26;}//speed change? Make it smooth!
-			c.setGreen(FINE_TRAIL_COLOR-(fSize*FINE_TRAIL_COLOR));//set fancy colour
-			//render at last!
-			pDrawlib->DrawLine(
-					(*v_ghostTrailData)[i-v_offset], 									//start pos
-					(*v_ghostTrailData)[i],   												//end pos
-					MAKE_COLOR(c.Red(),c.Green(),c.Blue(),c.Alpha()), //color
-					(v_last_size*FINE_TRAIL_SCALE*i_scale), 	        //start size
-					(fSize*FINE_TRAIL_SCALE*i_scale),				          //end size
-					(i_scale>0.4) //only if scale is big enough       //toggle rounded ends
-			);
-			lines_drawn++;
-			v_last_size=fSize;
-  	}
-	}else{ //UGLY MODE
-		v_offset=5;
-		if(i_scene->getCamera()->getCurrentZoom()<0.08){v_offset=8;} //in zoom out mode we want to reduce lagging by drawing less curvier.
-		if(i_scene->getCamera()->getCurrentZoom()<0.025){v_offset=12;} //super huge lvl
-		c.setRed(UGLY_TRAIL_COLOR); //darker color in ugly mode
-		for(unsigned int i=0; i < (*v_ghostTrailData).size(); i=i+v_offset) {
-			if (!(i>0)){v_last_size=0.1;continue;}
-			//get speed/size
-			float xdiff=(*v_ghostTrailData)[i-v_offset].x - (*v_ghostTrailData)[i].x;if(xdiff<0){xdiff=-xdiff;}
-			float ydiff=(*v_ghostTrailData)[i-v_offset].y - (*v_ghostTrailData)[i].y;if(ydiff<0){ydiff=-ydiff;}
-			fSize=sqrt(pow(xdiff,2)+pow(ydiff,2))/v_offset;			
-			if(fSize>v_last_size*2){v_last_size=0.1f; continue;} //if the size has doupled then skip (must be teleport)
-			if(fSize>1){fSize=1;} if(fSize<0.1f){fSize=0.1f;}    //max and min sizes
-			//we need to check that the line is inside the screen, why to draw 2000-5000 lines when we can draw 100 by skipping non-visible ones.
-			Vector2f scr_max = i_screenBBox->getBMax();Vector2f scr_min = i_screenBBox->getBMin();Vector2f point = (*v_ghostTrailData)[i];
-			if(scr_max.x < point.x - xdiff){v_last_size=fSize;continue;}if(scr_min.x > point.x + xdiff){v_last_size=fSize;continue;}//x-axis
-			if(scr_max.y < point.y - ydiff){v_last_size=fSize;continue;}if(scr_min.y > point.y + ydiff){v_last_size=fSize;continue;}//y-axis
-			c.setGreen(UGLY_TRAIL_COLOR-(fSize*UGLY_TRAIL_COLOR));//set fancy colour
-			//finally render!
-			pDrawlib->DrawLine(
-					(*v_ghostTrailData)[i-v_offset], 									//start pos
-					(*v_ghostTrailData)[i],   												//end pos
-					MAKE_COLOR(c.Red(),c.Green(),c.Blue(),c.Alpha()), //color
-					(v_last_size*UGLY_TRAIL_SCALE*i_scale), 			//start size
-					(fSize*UGLY_TRAIL_SCALE*i_scale),    					//end size
-					false //UGLY :')                 									//toggle rounded ends
-			);
-			v_last_size=fSize;
-			lines_drawn++;
-		}	
-	} 
-	//print amount of lines drawn, usefull for testing.
-	if( XMSession::instance()->debug() ) {
-		std::stringstream out; out << lines_drawn;
-		std::stringstream out2; out2 << i_scene->getCamera()->getCurrentZoom();
-	  i_scene->gameMessage("drawed "+out.str()+" lines. Zoom is "+out2.str()+".", true, 50);
-	  _RenderCircle(20,MAKE_COLOR(10,10,255,255),i_scene->Cameras()[0]->getTrailCamAimPos(), 0.25);
-	  _RenderCircle(20,MAKE_COLOR(255,10,10,255),i_scene->Cameras()[0]->getNearestPointOnTrailPos(), 0.25);	  
-	}
+  
+  //setup colors and declare vars
+  TColor c = TColor(255,255,0,255);
+  float fSize=0.0,v_last_size=0.0,v_xdiff,v_ydiff;
+  int lines_drawn=0; //for debug mode
+  
+  //calculate nice quality
+  int v_offset=0;
+  float v_cZoom=i_scene->getCamera()->getCurrentZoom();
+  switch(m_graphicsLevel){ //calculate nice step value
+    case GFX_LOW:    
+      v_offset=GT_GFX_LOW_RATIO/v_cZoom;
+      break;//low gfx mode! 
+    case GFX_MEDIUM: 
+      v_offset=GT_GFX_MED_RATIO/v_cZoom;
+      break;//medium gfx mode! 
+    case GFX_HIGH:   
+      v_offset= GT_GFX_HI_RATIO/v_cZoom;
+      break;//high gfx mode! 
+  }
+  if(v_offset<1){  //no infinite loop, thank you.
+    v_offset=1;
+  }
+  
+  //grab rendering device
+  DrawLib* pDrawlib = GameApp::instance()->getDrawLib(); 
+  if(pDrawlib==0){
+    return;
+  }
+  //draw nice or ugly?
+  if(XMSession::instance()->ugly()) {
+    v_offset=v_offset*GT_UGLY_MODE_MULTIPLYER; //make it more uglier
+  }
+  //draw the lines!
+  for(unsigned int i=0; i < (*v_ghostTrailData).size(); i=i+v_offset) {
+      
+      if (!(i>0)){
+        v_last_size=0.1;
+        continue;
+      }
+      //get speed/size
+      v_xdiff=(*v_ghostTrailData)[i-v_offset].x - (*v_ghostTrailData)[i].x;
+      if(v_xdiff<0.0){
+        v_xdiff=-v_xdiff;
+      }
+      v_ydiff=(*v_ghostTrailData)[i-v_offset].y - (*v_ghostTrailData)[i].y;
+      if(v_ydiff<0.0){
+        v_ydiff=-v_ydiff;
+      }
+      fSize=sqrt(pow(v_xdiff,2)+pow(v_ydiff,2))/v_offset*2.0;	
+      if(fSize>10.0){   //if the size (=speed) is more than 10 then skip, you can't go that fast ;-) 		
+        v_last_size=0.1f; 
+        continue;
+      }
+      if(fSize>1.0f || fSize<0.1f){   //max and min sizes
+        fSize=1.0f;
+      } 
+      fSize=v_last_size*0.94+fSize*(1.0-0.94); //interpolate, to make it nice and smooth
+      
+      //we need to check that the line is inside the screen, why to draw 2000-5000 lines when we can draw ~100 by skipping invisible ones.
+      Vector2f scr_max = i_screenBBox->getBMax();
+      Vector2f scr_min = i_screenBBox->getBMin();
+      Vector2f point = (*v_ghostTrailData)[i];
+      
+      if(scr_max.x < point.x - v_xdiff*2.5 ||
+         scr_min.x > point.x + v_xdiff*2.5 ||
+         scr_max.y < point.y - v_ydiff*2.5 ||
+         scr_min.y > point.y + v_ydiff*2.5) {
+        v_last_size=fSize;
+        continue;
+      }
+
+      //set fancy colours
+      c.setGreen(GT_TRAIL_COLOR - fSize * GT_TRAIL_COLOR);
+      
+      //render at last!
+      pDrawlib->DrawLine((*v_ghostTrailData)[i-v_offset], 		   //start pos
+			 (*v_ghostTrailData)[i],   			   //end pos
+			 MAKE_COLOR(c.Red(),c.Green(),c.Blue(),c.Alpha()), //color
+			 (XMSession::instance()->ugly() ? v_last_size*GT_RENDER_SCALE*i_scale/2 : v_last_size*GT_RENDER_SCALE*i_scale), //start size
+			 (XMSession::instance()->ugly() ? fSize*GT_RENDER_SCALE*i_scale/2 : fSize*GT_RENDER_SCALE*i_scale),		//end size
+			 (i_scale>0.4)); //only if scale is big enough     //toggle rounded ends
+			
+      lines_drawn++;
+      v_last_size=fSize;
+  }
+  //print amount of lines drawn and the camera's zoom value, usefull for testing.
+  if( XMSession::instance()->debug() ) {
+    std::stringstream out; out << lines_drawn;
+    std::stringstream out2; out2 << v_cZoom;
+    i_scene->gameMessage("drawed "+out.str()+" lines. Zoom is "+out2.str()+".", true, 50);
+    _RenderCircle(20,MAKE_COLOR(10,10,255,255),i_scene->Cameras()[0]->getTrailCamAimPos(), 0.25);
+    _RenderCircle(20,MAKE_COLOR(255,10,10,255),i_scene->Cameras()[0]->getNearestPointOnTrailPos(), 0.25);	  
+  }
 }
 
 void GameRenderer::displayArrowIndication(Biker* i_biker, AABB *i_screenBBox) {

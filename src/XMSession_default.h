@@ -80,6 +80,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_QUICKSTARTDIFFICULTYMIN     1
 #define DEFAULT_QUICKSTARTDIFFICULTYMAX     5
 #define DEFAULT_MULTINBPLAYERS              1
+#define DEFAULT_MULTIGAMEMODE               MULTI_MODE_TIME_ATTACK
 #define DEFAULT_MULTISCENES                 true
 #define DEFAULT_ENABLECONTEXTHELP           true
 #define DEFAULT_ENABLEAUDIO                 true

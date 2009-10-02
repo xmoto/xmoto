@@ -84,6 +84,7 @@ void XMSession::setToDefault() {
   m_quickStartDifficultyMIN       = DEFAULT_QUICKSTARTDIFFICULTYMIN;
   m_quickStartDifficultyMAX       = DEFAULT_QUICKSTARTDIFFICULTYMAX;
   m_multiNbPlayers                = DEFAULT_MULTINBPLAYERS;
+  m_multiGameMode                 = DEFAULT_MULTIGAMEMODE;
   m_multiScenes                   = DEFAULT_MULTISCENES;
   m_enableContextHelp             = DEFAULT_ENABLECONTEXTHELP;
   m_theme                         = XMDefault::DefaultTheme;
@@ -905,6 +906,15 @@ void XMSession::setMultiNbPlayers(int i_value) {
 
 int XMSession::multiNbPlayers() const {
   return m_multiNbPlayers;
+}
+
+void XMSession::setMultiGameMode(MultiGameMode i_value) {
+  PROPAGATE(XMSession,setMultiGameMode, i_value, MultiGameMode);
+  m_multiGameMode = i_value;
+}
+
+MultiGameMode XMSession::multiGameMode() const {
+  return m_multiGameMode;
 }
 
 void XMSession::setMultiScenes(bool i_value) {

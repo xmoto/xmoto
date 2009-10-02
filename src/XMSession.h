@@ -28,6 +28,12 @@ enum GraphicsLevel {
   GFX_HIGH
 };
 
+enum MultiGameMode {
+  MULTI_MODE_TIME_ATTACK,
+  MULTI_MODE_RACE,
+  MULTI_MODE_TEAMPLAY
+};
+
 #include "XMSession_default.h"
 
 #include <string>
@@ -157,6 +163,8 @@ public:
   bool showMinimap() const;
   void setMultiStopWhenOneFinishes(bool i_value);
   bool MultiStopWhenOneFinishes() const;
+  void setMultiGameMode(MultiGameMode i_value);
+  MultiGameMode multiGameMode() const;
   void setEnableMenuMusic(bool i_value);
   bool enableMenuMusic() const;
   void setEnableGameMusic(bool i_value);
@@ -338,6 +346,7 @@ public:
   bool m_showEngineCounter;
   bool m_showMinimap;
   bool m_multiStopWhenOneFinishes; /* in multiplayer, stop the game when one finishes the level */
+  MultiGameMode m_multiGameMode; /* sets mode for multiplayer game: race, time attack or teamplay */
   bool m_enableMenuMusic;
   bool m_enableGameMusic;
   bool m_enableInitZoom; /* true: Perform initial level scroll/zoom */
