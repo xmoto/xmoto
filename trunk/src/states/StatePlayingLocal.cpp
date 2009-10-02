@@ -158,6 +158,8 @@ bool StatePlayingLocal::update()
       }
     }
     
+    
+    //MultiPlayer modes must be set here!
     if(m_gameIsFinished == false) {
       if(v_one_still_play == false || XMSession::instance()->MultiStopWhenOneFinishes()) { // let people continuing when one finished or not
 	if(v_one_finished) {
