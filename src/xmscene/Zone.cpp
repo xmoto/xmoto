@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Zone.h"
 #include "../VFileIO.h"
 #include "../VXml.h"
+#include <sstream>
 
 ZonePrim::ZonePrim() {
 }
@@ -75,6 +76,7 @@ float ZonePrimBox::Bottom() const {
 
 Zone::Zone(const std::string& i_id) {
   m_id = i_id;
+  m_isDeathZone = false;
 }
 
 Zone::~Zone() {
@@ -127,6 +129,32 @@ void Zone::saveBinary(FileHandle *i_pfh) {
   }
 }
 
+void Zone::setDeathZone(bool i_value) {
+  m_isDeathZone = i_value;
+}
+
+bool Zone::isDeathZone() {
+  return m_isDeathZone;
+}
+        
+void Zone::updateDeathZone(std::string i_scriptSource) {
+  /* This function parses the Script Source for death zones: zones, 
+     that typically conist of OnEnter() and Game.KillPlayer() and end */
+     
+  //determine the positions between death zone function start and end
+  std::string v_deathZoneFunctionString = m_id + ".OnEnter()";
+  size_t v_posStart = i_scriptSource.find(v_deathZoneFunctionString);
+  if(v_posStart == std::string::npos) {
+    //Zone isnt in the script? hum, strange but
+    return;
+  } 
+  size_t v_posEnd = i_scriptSource.find("end", v_posStart);
+  size_t v_found = i_scriptSource.find(".KillPlayer", v_posStart);
+  if(v_found > v_posStart && v_found < v_posEnd) {
+    //looks like we identified a death zone!
+    this->setDeathZone(true);
+  }
+}
         
 void ZonePrimBox::saveBinary(FileHandle *i_pfh) {
   FS::writeFloat_LE(i_pfh,m_left);

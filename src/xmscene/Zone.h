@@ -78,11 +78,15 @@ class Zone {
   static Zone* readFromXml(TiXmlElement *pElem);
   static Zone* readFromBinary(FileHandle *i_pfh);
   AABB& getAABB() {return m_BBox;}
+  void setDeathZone(bool i_value=true);
+  bool isDeathZone();
+  void updateDeathZone(std::string i_scriptSource);
 
  private:
   std::string m_id; /* Zone ID */
   std::vector<ZonePrim *> m_prims; /* Primitives forming zone */
   AABB m_BBox;
+  bool m_isDeathZone;  /* used for rendering in ugly mode */
 };
 
 #endif /* __ZONE_H__ */
