@@ -1241,9 +1241,13 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
         v_last_size=0.1f; 
         continue;
       }
-      if(fSize>1.0f || fSize<0.1f){   //max and min sizes
+      //max and min sizes
+      if(fSize>1.0f) {   
         fSize=1.0f;
       } 
+      if(fSize<0.1f){
+        fSize=0.1f;
+      }
       fSize=v_last_size*0.94+fSize*(1.0-0.94); //interpolate, to make it nice and smooth
       
       //we need to check that the line is inside the screen, why to draw 2000-5000 lines when we can draw ~100 by skipping invisible ones.
@@ -1512,7 +1516,12 @@ int GameRenderer::nbParticlesRendered() const {
     /* zones */
     if(XMSession::instance()->uglyOver()) {
       for(unsigned int i=0; i<i_scene->getLevelSrc()->Zones().size(); i++) {
-	_RenderZone(i_scene->getLevelSrc()->Zones()[i]);
+	_RenderZone(i_scene->getLevelSrc()->Zones()[i], false);
+      }
+    }
+    else if(XMSession::instance()->ugly() || m_graphicsLevel == GFX_LOW) {
+      for(unsigned int i=0; i<i_scene->getLevelSrc()->Zones().size(); i++) {
+	_RenderZone(i_scene->getLevelSrc()->Zones()[i], true);
       }
     }
 
@@ -2567,12 +2576,16 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
     }
   }
 
-  void GameRenderer::_RenderZone(Zone *i_zone) {
+  void GameRenderer::_RenderZone(Zone *i_zone, bool i_renderOnlyDeathZone) {
     ZonePrim *v_prim;
     ZonePrimBox *v_primbox;
 
     GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
 
+    if(i_renderOnlyDeathZone && !(i_zone->isDeathZone())) {
+      return;
+    }
+    
     for(unsigned int i=0; i<i_zone->Prims().size(); i++) {
       v_prim = i_zone->Prims()[i];
       if(v_prim->Type() == LZPT_BOX) {
