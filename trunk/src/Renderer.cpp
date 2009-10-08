@@ -994,6 +994,29 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
     std::vector<Block*> Blocks;
 
     pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
+    
+    /* Render Death Zones */
+    for(unsigned int k=0; k < i_scene->getLevelSrc()->DeathZones().size(); k++) {
+      for(unsigned int i=0; i < i_scene->getLevelSrc()->DeathZones()[k]->Prims().size(); i++) { 
+	ZonePrim* v_prim = i_scene->getLevelSrc()->DeathZones()[k]->Prims()[i];
+        if(v_prim->Type() == LZPT_BOX) {
+	  ZonePrimBox* v_primbox = static_cast<ZonePrimBox*>(v_prim);
+	  pDrawlib->startDraw(DRAW_MODE_POLYGON); 	 
+	  pDrawlib->setColorRGB(26,26,188);
+
+          pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Left() - cameraPosX)*MINIMAPZOOM,  
+                               y + nHeight/2 - (v_primbox->Top() - cameraPosY)*MINIMAPZOOM);
+          pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Right() - cameraPosX)*MINIMAPZOOM,  
+	                       y + nHeight/2 - (v_primbox->Top() - cameraPosY)*MINIMAPZOOM);
+	  pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Right() - cameraPosX)*MINIMAPZOOM,  
+	                       y + nHeight/2 - (v_primbox->Bottom() - cameraPosY)*MINIMAPZOOM);
+	  pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Left() - cameraPosX)*MINIMAPZOOM,  
+	                       y + nHeight/2 - (v_primbox->Bottom() - cameraPosY)*MINIMAPZOOM);
+	  
+	  pDrawlib->endDraw();
+        }
+      }
+    }
 
     for(int layer=-1; layer<=0; layer++){
       Blocks = i_scene->getCollisionHandler()->getStaticBlocksNearPosition(mapBBox, layer);
@@ -1007,6 +1030,8 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
 
 	    pDrawlib->startDraw(DRAW_MODE_POLYGON); 	 
 	    pDrawlib->setColorRGB(168,168,168);
+	  
+      
 	    /* TOFIX::what's THAT ??!? -->> put all the vertices in a vector and draw them in one opengl call ! */
 	    for(unsigned int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) { 	 
 	      Vector2f P = Center + ConvexBlocks[j]->Vertices()[k]->Position(); 	 
@@ -1016,7 +1041,9 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
 	  }
 	}
       }
+      
     }
+    
 
     /* Render dynamic blocks */
     /* display only visible dyn blocks */
@@ -2592,7 +2619,8 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
 	v_primbox = static_cast<ZonePrimBox*>(v_prim);
 	_RenderRectangle(Vector2f(v_primbox->Left(),  v_primbox->Top()),
 			 Vector2f(v_primbox->Right(), v_primbox->Bottom()),
-			 MAKE_COLOR(255, 0, 0, 255));
+			 i_zone->isDeathZone()? MAKE_COLOR(26,26,188,255) : MAKE_COLOR(255, 0, 0, 255),
+			 (i_zone->isDeathZone() && (m_graphicsLevel == GFX_LOW && !XMSession::instance()->ugly()))? true : false);
       }
     }
   }
@@ -2974,9 +3002,14 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
 						 MAKE_COLOR(255, 255, 255, 255), true);
   }
   
-  void GameRenderer::_RenderRectangle(const Vector2f& i_p1, const Vector2f& i_p2, const Color& i_color) {
+  void GameRenderer::_RenderRectangle(const Vector2f& i_p1, const Vector2f& i_p2, const Color& i_color, bool i_filled) {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
-    pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
+    if(i_filled) {
+      pDrawlib->startDraw(DRAW_MODE_POLYGON);
+    }
+    else {
+      pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
+    }
     pDrawlib->setColor(i_color);
     pDrawlib->glVertex(i_p1);
     pDrawlib->glVertex(Vector2f(i_p2.x, i_p1.y));

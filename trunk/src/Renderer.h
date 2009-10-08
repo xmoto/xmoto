@@ -277,7 +277,7 @@ private:
 				  const TColor& i_filterColor = TColor(255, 255, 255, 0));
   void _RenderAdditiveBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
   void _RenderAlphaBlendedSectionSP(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
-  void _RenderRectangle(const Vector2f& i_p1, const Vector2f& i_p2, const Color& i_color);
+  void _RenderRectangle(const Vector2f& i_p1, const Vector2f& i_p2, const Color& i_color, bool i_filled = false);
   void _RenderCircle(unsigned int nSteps,Color CircleColor,const Vector2f &C,float fRadius);
   void _deleteGeoms(std::vector<Geom *>& geom, bool useFree=false);
 

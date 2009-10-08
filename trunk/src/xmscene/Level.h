@@ -126,6 +126,7 @@ class Level {
   /* entities which are not part of original level, but which are generated while playing */
   std::vector<Entity*>& EntitiesExterns();
   std::vector<Zone*>& Zones();
+  std::vector<Zone*>& DeathZones(); /* DeathZones, that can destroy the biker */
   std::vector<Zone*>& TouchingZones(); /* zones that the biker is touching */
 
   void killEntity(const std::string& i_entityId);
@@ -192,6 +193,7 @@ class Level {
   Vector2f m_playerStart;           /* Player start pos */
   std::vector<Block *>  m_blocks;   /* Level blocks */
   std::vector<Zone *>   m_zones;    /* Level zones */
+  std::vector<Zone *>   m_zonesDeath; /* Levels Death Zones */
   std::vector<Entity *> m_entities; /* Level entities */
   std::vector<Entity *> m_entitiesDestroyed;
   std::vector<Entity *> m_entitiesExterns;
