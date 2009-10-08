@@ -142,7 +142,7 @@ void Zone::updateDeathZone(std::string i_scriptSource) {
      that typically conist of OnEnter() and Game.KillPlayer() and end */
      
   //determine the positions between death zone function start and end
-  std::string v_deathZoneFunctionString = m_id + ".OnEnter()";
+  std::string v_deathZoneFunctionString = m_id + ".OnEnter";  // includes also OnEnterBy()
   size_t v_posStart = i_scriptSource.find(v_deathZoneFunctionString);
   if(v_posStart == std::string::npos) {
     //Zone isnt in the script? hum, strange but
@@ -150,6 +150,9 @@ void Zone::updateDeathZone(std::string i_scriptSource) {
   } 
   size_t v_posEnd = i_scriptSource.find("end", v_posStart);
   size_t v_found = i_scriptSource.find(".KillPlayer", v_posStart);
+  if(v_found == std::string::npos) {
+    v_found = i_scriptSource.find(".KillAPlayer", v_posStart);
+  }
   if(v_found > v_posStart && v_found < v_posEnd) {
     //looks like we identified a death zone!
     this->setDeathZone(true);

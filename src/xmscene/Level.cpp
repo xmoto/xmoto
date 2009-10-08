@@ -265,6 +265,10 @@ std::vector<Zone *> &Level::Zones() {
   return m_zones;
 }
 
+std::vector<Zone *> &Level::DeathZones() {
+  return m_zonesDeath;
+}
+
 const SkyApparence* Level::Sky() const {
   return m_sky;
 }
@@ -593,6 +597,9 @@ void Level::loadXML() {
         pElem=pElem->NextSiblingElement("zone")) {
       m_zones.push_back(Zone::readFromXml(pElem));
       m_zones.back()->updateDeathZone(m_scriptSource);
+      if(m_zones.back()->isDeathZone()) {
+        m_zonesDeath.push_back(Zone::readFromXml(pElem));
+      }
     }
     
     /* determine whether the levels is physics or not */
@@ -1054,6 +1061,9 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         for(int i=0;i<nNumZones;i++) {
           m_zones.push_back(Zone::readFromBinary(pfh));
           m_zones.back()->updateDeathZone(m_scriptSource);
+          if(m_zones.back()->isDeathZone()) {
+            m_zonesDeath.push_back(m_zones.back());
+          }
         }                                                                       
       }
     }
