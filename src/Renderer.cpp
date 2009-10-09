@@ -1528,10 +1528,8 @@ int GameRenderer::nbParticlesRendered() const {
     
     _RenderSprites(i_scene, false,true);
 
-    if(m_graphicsLevel == GFX_HIGH && XMSession::instance()->ugly() == false) {
-      /* Render particles (back!) */    
-      _RenderParticles(i_scene, false);
-    }
+    /* Render particles (back!) */    
+    _RenderParticles(i_scene, false);
 
     /* ... covered by blocks ... */
     _RenderDynamicBlocks(i_scene, false);
@@ -1616,7 +1614,6 @@ int GameRenderer::nbParticlesRendered() const {
 		    pBiker->getUglyColorFilter());
 
 	if(XMSession::instance()->debug()) {
-	  GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
 	  // render collision points
 	  for(unsigned int j=0; j<pCamera->getPlayerToFollow()->CollisionPoints().size(); j++) {
 	    _RenderCircle(16, MAKE_COLOR(255,255,0,255),pCamera->getPlayerToFollow()->CollisionPoints()[j], 0.02);
@@ -1627,10 +1624,8 @@ int GameRenderer::nbParticlesRendered() const {
       }
     }
     
-    if(m_graphicsLevel == GFX_HIGH && XMSession::instance()->ugly() == false) {
-      /* Render particles (front!) */    
-      _RenderParticles(i_scene, true);
-    }
+    /* Render particles (front!) */    
+    _RenderParticles(i_scene, true);
     
     /* ... and finally the foreground sprites! */
     _RenderSprites(i_scene, true,false);
@@ -2246,7 +2241,6 @@ void GameRenderer::_RenderSprite(Scene* i_scene, Entity *pEntity, float i_sizeMu
         break;
       }
 
-      GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
       _RenderCircle(20, v_color, C, pEntity->Size() * i_sizeMult);
     }
   }
@@ -3019,12 +3013,18 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
     pDrawlib->endDraw();
   }
 
-  void GameRenderer::_RenderCircle(unsigned int nSteps,Color CircleColor,const Vector2f &C,float fRadius) {
+  void GameRenderer::_RenderCircle(unsigned int nSteps, const Color CircleColor,const Vector2f &C,float fRadius, bool i_filled) {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
-    pDrawlib->startDraw(DRAW_MODE_LINE_LOOP);
+    pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
+    if(i_filled) {
+      pDrawlib->startDraw(DRAW_MODE_POLYGON);
+    }
+    else {
+      pDrawlib->startDraw(DRAW_MODE_LINE_LOOP);
+    }
     pDrawlib->setColor(CircleColor);
     for(unsigned int i=0;i<nSteps;i++) {
-      float r = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
+      float r = (M_PI * 2.0f * (float)i)/ (float)nSteps;            
       pDrawlib->glVertex( Vector2f(C.x + fRadius*sinf(r),C.y + fRadius*cosf(r)) );
     }      
     pDrawlib->endDraw();
@@ -3271,17 +3271,23 @@ void GameRenderer::_RenderParticleDraw(Vector2f position, Texture* pTexture, flo
 
 void GameRenderer::_RenderParticle(Scene* i_scene, ParticlesSource* i_source, unsigned int sprite)
 {
-  std::vector<EntityParticle*>& v_particles = i_source->Particles();
-  unsigned int size = v_particles.size();
-
-  for(unsigned j = 0; j < size; j++) {
-    EntityParticle* v_particle = v_particles[j];
-    if(v_particle->spriteIndex() == sprite) {
-      _RenderParticleDraw(v_particle->DynamicPosition(),
-			  NULL,
-			  v_particle->Size(),
-			  v_particle->Angle(),
-			  v_particle->Color());
+  for(unsigned int j = 0; j < i_source->Particles().size(); j++) {
+    EntityParticle* v_particle = i_source->Particles()[j];
+    Color v_color = MAKE_COLOR(v_particle->Color().Red(), v_particle->Color().Green(), v_particle->Color().Blue(),v_particle->Color().Alpha());
+    if(XMSession::instance()->ugly() && i_source->isScripted() && v_particle->spriteIndex() == sprite) {
+        _RenderCircle(6, v_color, v_particle->DynamicPosition(),v_particle->Size());
+    }
+    else if(!XMSession::instance()->ugly() && m_graphicsLevel == GFX_LOW && i_source->isScripted() && v_particle->spriteIndex() == sprite) {
+        _RenderCircle(6, v_color, v_particle->DynamicPosition(),v_particle->Size(), true);
+    }
+    else {
+      if(!XMSession::instance()->ugly() && m_graphicsLevel != GFX_LOW && v_particle->spriteIndex() == sprite ) {
+        _RenderParticleDraw(v_particle->DynamicPosition(),
+			    NULL,
+			    v_particle->Size(),
+			    v_particle->Angle(),
+			    v_particle->Color());
+      }
     }
   }
 }
@@ -3334,7 +3340,8 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
 		break;
 	      _RenderParticle(i_scene, particleSources[index]);
 	    }
-	  } else {
+	  } 
+	  else {
 	    for(; index < size; index++) {
 	      if(particleSources[index]->getType() != Smoke)
 		break;
@@ -3822,9 +3829,8 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
       }
     }   
 
-		// draw the center
+    // draw the center
     if(XMSession::instance()->debug()) {
-      pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
       _RenderCircle(10, MAKE_COLOR(255, 0, 0, 255), pBike->CenterP, 0.2);
     }
   }
