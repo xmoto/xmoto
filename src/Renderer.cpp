@@ -2291,12 +2291,16 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 	    glTranslatef(-dynRotCenter.x, -dynRotCenter.y, 0);
 	  }
 
-	  pDrawlib->setTexture(m_DynamicGeoms[geom]->pTexture, BLEND_MODE_A);
-	  
-	  /* set flashy blendColor */
-	  TColor v_blendColor =  TColor(block->getBlendColor());
-	  pDrawlib->setColorRGBA(v_blendColor.Red(), v_blendColor.Green(), v_blendColor.Blue(), v_blendColor.Alpha());
-
+          if(m_graphicsLevel != GFX_LOW) {
+	    pDrawlib->setTexture(m_DynamicGeoms[geom]->pTexture, BLEND_MODE_A);
+	    /* set flashy blendColor */
+	    TColor v_blendColor =  TColor(block->getBlendColor());
+	    pDrawlib->setColorRGBA(v_blendColor.Red(), v_blendColor.Green(), v_blendColor.Blue(), v_blendColor.Alpha());
+	  }
+	  else {
+	    pDrawlib->setTexture(NULL, BLEND_MODE_A);
+	    pDrawlib->setColorRGBA(0,0,0,255);
+	  }
 
 	  /* VBO optimized? */
 	  if(pDrawlib->useVBOs()) {
@@ -2429,12 +2433,18 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
   {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
     int geom = block->getGeom();
-    pDrawlib->setTexture(m_StaticGeoms[geom]->pTexture, BLEND_MODE_A);
+    if(m_graphicsLevel != GFX_LOW) {
+      pDrawlib->setTexture(m_StaticGeoms[geom]->pTexture, BLEND_MODE_A);
+      /* set flashy blendColor */
+      TColor v_blendColor =  TColor(block->getBlendColor());
+      pDrawlib->setColorRGBA(v_blendColor.Red(), v_blendColor.Green(), v_blendColor.Blue(), v_blendColor.Alpha());
+    }
+    else {
+      pDrawlib->setTexture(NULL, BLEND_MODE_A);
+      pDrawlib->setColorRGBA(0,0,0,255);
+    }
     
-    /* set flashy blendColor */
-    TColor v_blendColor =  TColor(block->getBlendColor());
-    pDrawlib->setColorRGBA(v_blendColor.Red(), v_blendColor.Green(), v_blendColor.Blue(), v_blendColor.Alpha());
-
+    
     if(pDrawlib->getBackend() == DrawLib::backend_OpenGl) {
 #ifdef ENABLE_OPENGL
       glEnableClientState(GL_VERTEX_ARRAY);
@@ -2644,12 +2654,17 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
   if(pType != NULL && pType2 != NULL) {
     if(i_drifted) {
       pDrawlib->setTexture(pType->getTexture(), BLEND_MODE_A);
-//      pDrawlib->setTexture(pType->getTexture(), BLEND_MODE_B);
     }
     
-    pDrawlib->setTexture(pType->getTexture(),BLEND_MODE_NONE);
+    if(m_graphicsLevel != GFX_LOW) {
+      pDrawlib->setTexture(pType->getTexture(),BLEND_MODE_NONE);  
+      pDrawlib->setColorRGBA(i_color.Red() , i_color.Green(), i_color.Blue(), i_color.Alpha());
+    }
+    else {
+      pDrawlib->setTexture(NULL,BLEND_MODE_NONE);
+      pDrawlib->setColorRGBA(255,255,255,255);
+    }
     pDrawlib->startDraw(DRAW_MODE_POLYGON);
-    pDrawlib->setColorRGBA(i_color.Red() , i_color.Green(), i_color.Blue(), i_color.Alpha());
     
     if(i_drifted) {
       fDrift = GameApp::instance()->getXMTime() / 25.0f;
