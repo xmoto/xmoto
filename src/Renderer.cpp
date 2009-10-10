@@ -1531,13 +1531,6 @@ int GameRenderer::nbParticlesRendered() const {
     /* Render particles (back!) */    
     _RenderParticles(i_scene, false);
 
-    /* ... covered by blocks ... */
-    _RenderDynamicBlocks(i_scene, false);
-    _RenderBlocks(i_scene);
-
-    /* ... then render "middleground" sprites ... */
-    _RenderSprites(i_scene, false,false);
-
     /* zones */
     if(XMSession::instance()->uglyOver()) {
       for(unsigned int i=0; i<i_scene->getLevelSrc()->Zones().size(); i++) {
@@ -1550,6 +1543,14 @@ int GameRenderer::nbParticlesRendered() const {
       }
     }
 
+    /* ... covered by blocks ... */
+    _RenderDynamicBlocks(i_scene, false);
+    _RenderBlocks(i_scene);
+
+    /* ... then render "middleground" sprites ... */
+    _RenderSprites(i_scene, false,false);
+
+    
     /* ghosts */
     bool v_found = false;
     int v_found_i = 0;
