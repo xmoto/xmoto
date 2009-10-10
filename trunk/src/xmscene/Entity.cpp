@@ -78,6 +78,9 @@ void Entity::loadToPlay(const std::string& i_ScriptSource) {
   /* make every entity alive */
   setAlive(true);
   m_isBBoxDirty = true;
+  if(m_id == "") {
+    return;
+  }
   
   /* check if the entity is used in the script (for sprite rendering independently from gfx mode)  
   NOTE: Entity IDs, that are created dynamically in the script, can still be a problem! 
