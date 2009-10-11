@@ -823,9 +823,9 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define SYS_MSG_THEME_MODE_DISABLED    	_("Theme mode disabled")
 #define SYS_MSG_UGLY_OVER_MODE_ENABLED  _("UglyOver mode enabled")
 #define SYS_MSG_UGLY_OVER_MODE_DISABLED _("UglyOver mode disabled")
-#define SYS_MSG_GFX_LOW_ACTIVATED       _("Contrast Graphics Mode enabled\nRestart Level to activate!")
-#define SYS_MSG_GFX_MEDIUM_ACTIVATED    _("Light Graphics Mode enabled\nRestart Level to activate!")
-#define SYS_MSG_GFX_HIGH_ACTIVATED      _("Full Graphics Mode enabled\nRestart Level to activate!")
+#define SYS_MSG_GFX_LOW_ACTIVATED       _("Contrast Graphics Mode enabled")
+#define SYS_MSG_GFX_MEDIUM_ACTIVATED    _("Light Graphics Mode enabled")
+#define SYS_MSG_GFX_HIGH_ACTIVATED      _("Full Graphics Mode enabled")
 #define SYS_MSG_WWW_ENABLED   	       	_("Web connection enabled")
 #define SYS_MSG_WWW_DISABLED  	       	_("Web connection disabled")
 #define SYS_MSG_INTERPOLATION_ENABLED  	_("Replay interpolation enabled")
@@ -845,6 +845,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define SYS_MSG_TRAIN_RESTORING         _("Training position %i/%i restored")
 #define SYS_MSG_TRAIN_STORED            _("Stored as training position %i")
 #define SYS_MSG_UNSAVABLE_LEVEL         _("This level is not recordable (feature still not implemented).\nSorry.")
+#define SYS_MSG_RESTART_LEVEL           _("Restart Level to activate!")
 
 #define SYS_MSG_NO_NEXT_HIGHSCORE(A)    ngettext("Can't find a highscore in the next %i level", "Can't find a highscore in the next %i levels", A)
 

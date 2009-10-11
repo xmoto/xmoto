@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-10-11 16:01+0200\n"
+"POT-Creation-Date: 2009-10-11 17:48+0200\n"
 "PO-Revision-Date: 2008-01-24 01:03+0200\n"
 "Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
 "Language-Team: Latvian\n"
@@ -2949,21 +2949,15 @@ msgid "UglyOver mode disabled"
 msgstr "Neglītā režīma pārklājums deaktivizēts"
 
 #: src/GameText.h:826
-msgid ""
-"Contrast Graphics Mode enabled\n"
-"Restart Level to activate!"
+msgid "Contrast Graphics Mode enabled"
 msgstr ""
 
 #: src/GameText.h:827
-msgid ""
-"Light Graphics Mode enabled\n"
-"Restart Level to activate!"
+msgid "Light Graphics Mode enabled"
 msgstr ""
 
 #: src/GameText.h:828
-msgid ""
-"Full Graphics Mode enabled\n"
-"Restart Level to activate!"
+msgid "Full Graphics Mode enabled"
 msgstr ""
 
 #: src/GameText.h:829
@@ -3044,7 +3038,11 @@ msgid ""
 "Sorry."
 msgstr ""
 
-#: src/GameText.h:849
+#: src/GameText.h:848
+msgid "Restart Level to activate!"
+msgstr ""
+
+#: src/GameText.h:850
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
@@ -3052,7 +3050,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: src/GameText.h:852
+#: src/GameText.h:853
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 
