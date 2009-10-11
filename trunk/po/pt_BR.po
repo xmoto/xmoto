@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2009-10-11 16:01+0200\n"
+"POT-Creation-Date: 2009-10-11 17:48+0200\n"
 "PO-Revision-Date: 2009-08-26 21:11-0300\n"
 "Last-Translator: Lucas Hermann Negri <kkndrox@gmail.com>\n"
 "Language-Team: Portuguese/Brazil\n"
@@ -2959,21 +2959,15 @@ msgid "UglyOver mode disabled"
 msgstr "Modo horrível desabilitado"
 
 #: src/GameText.h:826
-msgid ""
-"Contrast Graphics Mode enabled\n"
-"Restart Level to activate!"
+msgid "Contrast Graphics Mode enabled"
 msgstr ""
 
 #: src/GameText.h:827
-msgid ""
-"Light Graphics Mode enabled\n"
-"Restart Level to activate!"
+msgid "Light Graphics Mode enabled"
 msgstr ""
 
 #: src/GameText.h:828
-msgid ""
-"Full Graphics Mode enabled\n"
-"Restart Level to activate!"
+msgid "Full Graphics Mode enabled"
 msgstr ""
 
 #: src/GameText.h:829
@@ -3054,14 +3048,18 @@ msgstr ""
 "Este nível não é gravável (a funcionalidade ainda não foi implementada).\n"
 "Desculpe."
 
-#: src/GameText.h:849
+#: src/GameText.h:848
+msgid "Restart Level to activate!"
+msgstr ""
+
+#: src/GameText.h:850
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] "Não foi possível encontrar um recorde no próximo %i nível"
 msgstr[1] "Não foi possível encontrar um recorde nos próximos %i níveis"
 
-#: src/GameText.h:852
+#: src/GameText.h:853
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 

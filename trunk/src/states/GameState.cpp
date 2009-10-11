@@ -241,15 +241,15 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     /* Toggle GFX Modes using F10 */
     if(XMSession::instance()->gameGraphics() == GFX_LOW) {
       XMSession::instance()->setGameGraphics(GFX_MEDIUM);
-      SysMessage::instance()->displayText(SYS_MSG_GFX_MEDIUM_ACTIVATED);
+      SysMessage::instance()->displayText(SYS_MSG_GFX_MEDIUM_ACTIVATED+std::string("\n")+std::string(SYS_MSG_RESTART_LEVEL));
     }
     else if(XMSession::instance()->gameGraphics() == GFX_MEDIUM) {
       XMSession::instance()->setGameGraphics(GFX_HIGH);
-      SysMessage::instance()->displayText(SYS_MSG_GFX_HIGH_ACTIVATED);
+      SysMessage::instance()->displayText(SYS_MSG_GFX_HIGH_ACTIVATED+std::string("\n")+std::string(SYS_MSG_RESTART_LEVEL));
     }
     else {
       XMSession::instance()->setGameGraphics(GFX_LOW);
-      SysMessage::instance()->displayText(SYS_MSG_GFX_LOW_ACTIVATED);
+      SysMessage::instance()->displayText(SYS_MSG_GFX_LOW_ACTIVATED+std::string("\n")+std::string(SYS_MSG_RESTART_LEVEL));
     }
     return;
   }
