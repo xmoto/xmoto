@@ -305,8 +305,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  F7 - " + std::string(_("Enable/disable FPS display")) + "\n"\
 "  F8 - " + std::string(_("Enable/disable web")) + "\n" \
 "  F9 - " + std::string(_("Enable/disable ugly mode")) + "\n"\
-"  F10- " + std::string(_("Enable/disable theme mode")) + "\n"\
-"  F11- " + std::string(_("Enable/disable ugly over mode")) + "\n"\
+"  F10- " + std::string(_("Toggle Contrast, Light and Full Graphics")) + "\n"\
+"  F11- " + std::string(_("Toggle theme and ugly over mode")) + "\n"\
 "  F12- " + std::string(_("Take a screenshot")) + "\n" \
 
 #define GAMETEXT_HIDEGHOSTS           _("Hide ghosts")
@@ -353,6 +353,9 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_TTF_MISSING          "You must install the font file for your langage:" // not translated because always displayed in english
 #define GAMETEXT_MEDIUM               _("Medium")
 #define GAMETEXT_MENUGFX              _("Menu Graphics")
+#define GAMETEXT_CONTRAST	      _("Contrast")
+#define GAMETEXT_LIGHT                _("Light")
+#define GAMETEXT_FULL                 _("Full")
 #define CONTEXTHELP_MINISTATTIMEFORPACKLEVEL _("Total time you scored / total highscore time for levels you finished")
 #define GAMETEXT_MISSINGTEXTURES      _("Level references unknown textures, it could be unplayable!")
 #define GAMETEXT_MONO                 _("Mono")
@@ -813,12 +816,16 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_DESC_LEVELS_STOLEN          _("Levels for which you owned the highscore")
 #define VPACKAGENAME_DESC_VOTE_NOT_LOCKED_LEVELS _("Levels having votes unlocked")
 
+#define SYS_MSG_NORMAL_MODE_ENABLED     _("Normal mode enabled")
 #define SYS_MSG_UGLY_MODE_ENABLED      	_("Ugly mode enabled")
 #define SYS_MSG_UGLY_MODE_DISABLED     	_("Ugly mode disabled")
 #define SYS_MSG_THEME_MODE_ENABLED     	_("Theme mode enabled")
 #define SYS_MSG_THEME_MODE_DISABLED    	_("Theme mode disabled")
 #define SYS_MSG_UGLY_OVER_MODE_ENABLED  _("UglyOver mode enabled")
 #define SYS_MSG_UGLY_OVER_MODE_DISABLED _("UglyOver mode disabled")
+#define SYS_MSG_GFX_LOW_ACTIVATED       _("Contrast Graphics Mode enabled\nRestart Level to activate!")
+#define SYS_MSG_GFX_MEDIUM_ACTIVATED    _("Light Graphics Mode enabled\nRestart Level to activate!")
+#define SYS_MSG_GFX_HIGH_ACTIVATED      _("Full Graphics Mode enabled\nRestart Level to activate!")
 #define SYS_MSG_WWW_ENABLED   	       	_("Web connection enabled")
 #define SYS_MSG_WWW_DISABLED  	       	_("Web connection disabled")
 #define SYS_MSG_INTERPOLATION_ENABLED  	_("Replay interpolation enabled")

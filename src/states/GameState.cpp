@@ -237,26 +237,41 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     return;
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F10, KMOD_NONE)) {
-    gameApp->switchTestThemeMode(XMSession::instance()->testTheme() == false);
-    if(XMSession::instance()->testTheme()) {
-      SysMessage::instance()->displayText(SYS_MSG_THEME_MODE_ENABLED);
-    } else {
-      SysMessage::instance()->displayText(SYS_MSG_THEME_MODE_DISABLED);
+   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F10, KMOD_NONE)) {
+    /* Toggle GFX Modes using F10 */
+    if(XMSession::instance()->gameGraphics() == GFX_LOW) {
+      XMSession::instance()->setGameGraphics(GFX_MEDIUM);
+      SysMessage::instance()->displayText(SYS_MSG_GFX_MEDIUM_ACTIVATED);
+    }
+    else if(XMSession::instance()->gameGraphics() == GFX_MEDIUM) {
+      XMSession::instance()->setGameGraphics(GFX_HIGH);
+      SysMessage::instance()->displayText(SYS_MSG_GFX_HIGH_ACTIVATED);
+    }
+    else {
+      XMSession::instance()->setGameGraphics(GFX_LOW);
+      SysMessage::instance()->displayText(SYS_MSG_GFX_LOW_ACTIVATED);
     }
     return;
   }
 
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F11, KMOD_NONE)) {
-    gameApp->switchUglyOverMode(XMSession::instance()->uglyOver() == false);
-    if(XMSession::instance()->uglyOver()) {
+    /* F11 toggles TestThemeMode, UglyOver Mode and Normal Mode */
+    if(XMSession::instance()->testTheme() == false && XMSession::instance()->uglyOver() == false) {
+      gameApp->switchTestThemeMode(true);
+      SysMessage::instance()->displayText(SYS_MSG_THEME_MODE_ENABLED);
+    } 
+    else if(XMSession::instance()->testTheme() == true) {
+      gameApp->switchTestThemeMode(false);
+      gameApp->switchUglyOverMode(true);
       SysMessage::instance()->displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
-    } else {
-      SysMessage::instance()->displayText(SYS_MSG_UGLY_OVER_MODE_DISABLED);
+    }
+    else {
+      gameApp->switchUglyOverMode(false);
+      SysMessage::instance()->displayText(SYS_MSG_NORMAL_MODE_ENABLED);
     }
     return;
   }
-
+ 
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_RETURN, KMOD_LALT)) {
     gameApp->getDrawLib()->toogleFullscreen();
     XMSession::instance()->setWindowed(XMSession::instance()->windowed() == false);

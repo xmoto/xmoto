@@ -892,7 +892,7 @@ UIWindow* StateOptions::makeWindowOptions_video(UIWindow* i_parent) {
   v_someText->setFont(drawlib->getFontSmall());    
 
   v_button = new UIButton(v_window, 120, v_window->getPosition().nHeight - 43 - 10 - 30,
-			  GAMETEXT_LOW,(v_window->getPosition().nWidth-120)/3, 28);
+			  GAMETEXT_CONTRAST,(v_window->getPosition().nWidth-120)/3, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setID("GAMELOW");
   v_button->setFont(drawlib->getFontSmall());
@@ -900,7 +900,7 @@ UIWindow* StateOptions::makeWindowOptions_video(UIWindow* i_parent) {
   v_button->setContextHelp(CONTEXTHELP_LOW_GAME);
 
   v_button = new UIButton(v_window, 120+(v_window->getPosition().nWidth-120)/3, v_window->getPosition().nHeight - 43 - 10 - 30,
-			  GAMETEXT_MEDIUM,(v_window->getPosition().nWidth-120)/3, 28);
+			  GAMETEXT_LIGHT,(v_window->getPosition().nWidth-120)/3, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setID("GAMEMEDIUM");
   v_button->setFont(drawlib->getFontSmall());
@@ -908,7 +908,7 @@ UIWindow* StateOptions::makeWindowOptions_video(UIWindow* i_parent) {
   v_button->setContextHelp(CONTEXTHELP_MEDIUM_GAME);
 
   v_button = new UIButton(v_window, 120+(v_window->getPosition().nWidth-120)/3*2, v_window->getPosition().nHeight - 43 - 10 - 30,
-			  GAMETEXT_HIGH, (v_window->getPosition().nWidth-120)/3, 28);
+			  GAMETEXT_FULL, (v_window->getPosition().nWidth-120)/3, 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setID("GAMEHIGH");
   v_button->setFont(drawlib->getFontSmall());
