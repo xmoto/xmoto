@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-10-11 17:48+0200\n"
-"PO-Revision-Date: 2009-08-10 20:16+0100\n"
+"PO-Revision-Date: 2009-10-11 23:58+0100\n"
 "Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -415,7 +415,7 @@ msgstr "Ungarisch"
 
 #: src/GameText.h:159
 msgid "Portugese"
-msgstr ""
+msgstr "Portugiesisch"
 
 #: src/GameText.h:161
 msgid "Main testers"
@@ -951,11 +951,11 @@ msgstr "Ugly-Modus aktivieren/deaktivieren"
 
 #: src/GameText.h:308
 msgid "Toggle Contrast, Light and Full Graphics"
-msgstr ""
+msgstr "Umschalten zw. Kontrast, reduzierten und vollen Grafix"
 
 #: src/GameText.h:309
 msgid "Toggle theme and ugly over mode"
-msgstr ""
+msgstr "Umschalten zw. Themen- und Ugly-Over Modus"
 
 #: src/GameText.h:312
 msgid "Hide ghosts"
@@ -1134,15 +1134,15 @@ msgstr "Menügrafik"
 
 #: src/GameText.h:356
 msgid "Contrast"
-msgstr ""
+msgstr "Kontrast"
 
 #: src/GameText.h:357
 msgid "Light"
-msgstr ""
+msgstr "Reduziert"
 
 #: src/GameText.h:358
 msgid "Full"
-msgstr ""
+msgstr "Voll"
 
 #: src/GameText.h:359
 msgid "Total time you scored / total highscore time for levels you finished"
@@ -2931,7 +2931,7 @@ msgstr "Levels, die frei zur Abstimmung sind"
 
 #: src/GameText.h:819
 msgid "Normal mode enabled"
-msgstr ""
+msgstr "Normaler Modus aktiviert"
 
 #: src/GameText.h:820
 msgid "Ugly mode enabled"
@@ -2959,15 +2959,15 @@ msgstr "Ugly-Over-Modus deaktiviert"
 
 #: src/GameText.h:826
 msgid "Contrast Graphics Mode enabled"
-msgstr ""
+msgstr "Kontrast-Grafikmodus eingeschalten"
 
 #: src/GameText.h:827
 msgid "Light Graphics Mode enabled"
-msgstr ""
+msgstr "Reduzierter Grafikmodus eingeschalten"
 
 #: src/GameText.h:828
 msgid "Full Graphics Mode enabled"
-msgstr ""
+msgstr "Volle Grafik eingeschalten"
 
 #: src/GameText.h:829
 msgid "Web connection enabled"
@@ -3049,7 +3049,7 @@ msgstr ""
 
 #: src/GameText.h:848
 msgid "Restart Level to activate!"
-msgstr ""
+msgstr "Zum Aktivieren bitte Level neustarten!"
 
 #: src/GameText.h:850
 #, c-format
