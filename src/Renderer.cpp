@@ -1522,10 +1522,9 @@ int GameRenderer::nbParticlesRendered() const {
       /* Background blocks */
       _RenderDynamicBlocks(i_scene, true);
       _RenderBackground(i_scene);
-      
-      /* ... then render background sprites ... */      
     }
     
+    /* ... then render background sprites ... */      
     _RenderSprites(i_scene, false,true);
 
     /* Render particles (back!) */    
@@ -1550,7 +1549,6 @@ int GameRenderer::nbParticlesRendered() const {
     /* ... then render "middleground" sprites ... */
     _RenderSprites(i_scene, false,false);
 
-    
     /* ghosts */
     bool v_found = false;
     int v_found_i = 0;
@@ -3536,8 +3534,8 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
     Vector2f Sv,Rc,Fc;
 
     /* Draw front wheel */
-    /* Ugly mode? */
-    if(XMSession::instance()->ugly()) {
+    /* Ugly mode or gfx light mode? */
+    if(XMSession::instance()->ugly() || m_graphicsLevel == GFX_LOW) {
       o0 = Vector2f(-pBikeParms->WR,0);
       o1 = Vector2f(0,pBikeParms->WR);
       o2 = Vector2f(pBikeParms->WR,0);
@@ -3563,7 +3561,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
     
     /* Ugly mode? */
 
-    if(XMSession::instance()->ugly() == false) {
+    if(XMSession::instance()->ugly() == false && m_graphicsLevel != GFX_LOW) {
       pSprite = p_theme->getWheel();
       if(pSprite != NULL) {
 	pTexture = pSprite->getTexture(false, false, FM_LINEAR);
@@ -3573,24 +3571,30 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
       }
     }
 
-    if(XMSession::instance()->ugly() || XMSession::instance()->testTheme()) {
+    if(XMSession::instance()->ugly() || XMSession::instance()->testTheme() || m_graphicsLevel == GFX_LOW) {
+      if(m_graphicsLevel == GFX_LOW) {
+        _RenderCircle(16,XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? p_theme->getUglyWheelColor() : p_theme->getGfxLowFillColor(),C,pBikeParms->WR, 
+          XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? false : true);
+        pDrawlib->setLineWidth(2);
+      }
       pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
       pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
-      pDrawlib->setColor(p_theme->getUglyWheelColor());
+      pDrawlib->setColor(XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? p_theme->getUglyWheelColor() : p_theme->getGfxLowWheelColor());
       pDrawlib->glVertex(p0+C);    
       pDrawlib->glVertex(p2+C);
       pDrawlib->endDraw();
       pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
-      pDrawlib->setColor(p_theme->getUglyWheelColor());
+      pDrawlib->setColor(XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? p_theme->getUglyWheelColor() : p_theme->getGfxLowWheelColor());
       pDrawlib->glVertex(p1+C);
       pDrawlib->glVertex(p3+C);
       pDrawlib->endDraw();
-      _RenderCircle(16,p_theme->getUglyWheelColor(),C,pBikeParms->WR);
+      _RenderCircle(16,XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? p_theme->getUglyWheelColor() : p_theme->getGfxLowWheelColor(),C,pBikeParms->WR);
+      pDrawlib->setLineWidth(1);
     }
 
     /* Draw rear wheel */        
     /* Ugly mode? */
-    if(XMSession::instance()->ugly()) {
+    if(XMSession::instance()->ugly() || m_graphicsLevel == GFX_LOW) {
       o0 = Vector2f(-pBikeParms->WR,0);
       o1 = Vector2f(0,pBikeParms->WR);
       o2 = Vector2f(pBikeParms->WR,0);
@@ -3615,7 +3619,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
     Rc = (p0 + p1 + p2 + p3) * 0.25f + C;
     
     /* Ugly mode? */
-    if(XMSession::instance()->ugly() == false) {
+    if(XMSession::instance()->ugly() == false && m_graphicsLevel != GFX_LOW) {
       pSprite = p_theme->getWheel();
       if(pSprite != NULL) {
 	pTexture = pSprite->getTexture(false, false, FM_LINEAR);
@@ -3625,22 +3629,28 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
       }
     }
 
-    if(XMSession::instance()->ugly() || XMSession::instance()->testTheme()) {
+    if(XMSession::instance()->ugly() || XMSession::instance()->testTheme() || m_graphicsLevel == GFX_LOW) {
+      if(m_graphicsLevel == GFX_LOW) {
+        _RenderCircle(16,XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? p_theme->getUglyWheelColor() : p_theme->getGfxLowFillColor(),C,pBikeParms->WR,
+          XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? false : true);
+        pDrawlib->setLineWidth(2);
+      }
       pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
       pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
-      pDrawlib->setColor(p_theme->getUglyWheelColor());
+      pDrawlib->setColor(XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? p_theme->getUglyWheelColor() : p_theme->getGfxLowWheelColor());
       pDrawlib->glVertex(p0+C);    
       pDrawlib->glVertex(p2+C);
       pDrawlib->endDraw();
       pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
-      pDrawlib->setColor(p_theme->getUglyWheelColor());
+      pDrawlib->setColor(XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? p_theme->getUglyWheelColor() : p_theme->getGfxLowWheelColor());
       pDrawlib->glVertex(p1+C);
       pDrawlib->glVertex(p3+C);
       pDrawlib->endDraw();
-      _RenderCircle(16,p_theme->getUglyWheelColor(),C,pBikeParms->WR);
+      _RenderCircle(16,XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? p_theme->getUglyWheelColor() : p_theme->getGfxLowWheelColor(),C,pBikeParms->WR);
+      pDrawlib->setLineWidth(1);
     }
 
-    if(!XMSession::instance()->ugly()) {
+    if(!XMSession::instance()->ugly() && m_graphicsLevel != GFX_LOW) {
       /* Draw swing arm */
       if(pBike->Dir == DD_RIGHT) {       
         Sv = pBike->SwingAnchorP - Rc;
@@ -3747,7 +3757,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
     }
 
       /* Draw rider */
-    if(XMSession::instance()->ugly() == false) { 
+    if(XMSession::instance()->ugly() == false && m_graphicsLevel != GFX_LOW) { 
       /* torso */
       renderBodyPart(pBike->Dir == DD_RIGHT ? pBike->ShoulderP  : pBike->Shoulder2P,
 		     pBike->Dir == DD_RIGHT ? pBike->LowerBodyP : pBike->LowerBody2P,
@@ -3811,11 +3821,12 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
     }
 
     if(pBike->Dir == DD_RIGHT) {
-      if(XMSession::instance()->ugly() || XMSession::instance()->testTheme()) {
+      if(XMSession::instance()->ugly() || XMSession::instance()->testTheme() || m_graphicsLevel == GFX_LOW) {
         /* Draw it ugly */
+        pDrawlib->setLineWidth(2);
 	pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
 	pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
-	pDrawlib->setColor(i_filterUglyColor.getColor());
+	pDrawlib->setColor(XMSession::instance()->ugly()|| XMSession::instance()->testTheme() ? i_filterUglyColor.getColor() : p_theme->getGfxLowRiderColor());
         pDrawlib->glVertex(pBike->FootP);
         pDrawlib->glVertex(pBike->KneeP);
         pDrawlib->glVertex(pBike->LowerBodyP);
@@ -3823,16 +3834,22 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
         pDrawlib->glVertex(pBike->ElbowP);
         pDrawlib->glVertex(pBike->HandP);
 	pDrawlib->endDraw();
-        _RenderCircle(10, i_filterUglyColor.getColor(),
+	if(m_graphicsLevel == GFX_LOW) {
+          _RenderCircle(10, XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? i_filterUglyColor.getColor() : p_theme->getGfxLowFillColor(),
+		      pBike->HeadP, pBikeParms->fHeadSize, XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? false : true);
+	}
+	_RenderCircle(10, XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? i_filterUglyColor.getColor() : p_theme->getGfxLowRiderColor(),
 		      pBike->HeadP, pBikeParms->fHeadSize);
+	pDrawlib->setLineWidth(1);
       }
     }
     else if(pBike->Dir == DD_LEFT) {
-      if(XMSession::instance()->ugly() || XMSession::instance()->testTheme()) {
+      if(XMSession::instance()->ugly() || XMSession::instance()->testTheme() || m_graphicsLevel == GFX_LOW) {
         /* Draw it ugly */
+        pDrawlib->setLineWidth(2);
 	pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
 	pDrawlib->startDraw(DRAW_MODE_LINE_STRIP);
-	pDrawlib->setColor(i_filterUglyColor.getColor());
+	pDrawlib->setColor(XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? i_filterUglyColor.getColor() : p_theme->getGfxLowRiderColor());
         pDrawlib->glVertex(pBike->Foot2P);
         pDrawlib->glVertex(pBike->Knee2P);
         pDrawlib->glVertex(pBike->LowerBody2P);
@@ -3840,8 +3857,13 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
         pDrawlib->glVertex(pBike->Elbow2P);
         pDrawlib->glVertex(pBike->Hand2P);
         pDrawlib->endDraw();
-        _RenderCircle(10, i_filterUglyColor.getColor(),
+        if(m_graphicsLevel == GFX_LOW) {
+          _RenderCircle(10, XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? i_filterUglyColor.getColor() : p_theme->getGfxLowFillColor(),
+		      pBike->Head2P,pBikeParms->fHeadSize, XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? false : true);
+	}
+	_RenderCircle(10, XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? i_filterUglyColor.getColor() : p_theme->getGfxLowRiderColor(),
 		      pBike->Head2P,pBikeParms->fHeadSize);
+        pDrawlib->setLineWidth(1);
       }
     }   
 

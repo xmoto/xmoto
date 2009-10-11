@@ -60,6 +60,10 @@ class xmDatabase;
 #define THEME_PLAYER_UPPERLEG "PlayerUpperLeg"
 #define THEME_PLAYER_UGLYRIDERCOLOR MAKE_COLOR(0,255,0,255)
 #define THEME_PLAYER_UGLYWHEELCOLOR MAKE_COLOR(255,0,0,255)
+#define THEME_PLAYER_GRAPHICS_LOW_BIKER MAKE_COLOR(0,0,0,255)
+#define THEME_PLAYER_GRAPHICS_LOW_FILL MAKE_COLOR(180,180,180,255)
+#define THEME_PLAYER_GRAPHICS_LOW_WHEEL MAKE_COLOR(0,0,0,255)
+
 
 #define THEME_GHOST_BODY     "GhostBikerBody"
 #define THEME_GHOST_FRONT    "GhostBikerFront"
@@ -72,6 +76,10 @@ class xmDatabase;
 #define THEME_GHOST_UPPERLEG "GhostUpperLeg"
 #define THEME_GHOST_UGLYRIDERCOLOR MAKE_COLOR(100,100,128,255)
 #define THEME_GHOST_UGLYWHEELCOLOR MAKE_COLOR(100,100,128,255)
+#define THEME_GHOST_GRAPHICS_LOW_BIKER MAKE_COLOR(120,120,120,255)
+#define THEME_GHOST_GRAPHICS_LOW_FILL MAKE_COLOR(245,245,245,255)
+#define THEME_GHOST_GRAPHICS_LOW_WHEEL MAKE_COLOR(120,120,120,255)
+
 
   enum SpriteType {
     SPRITE_TYPE_ANIMATION,
@@ -477,7 +485,10 @@ class BikerTheme {
 	     std::string p_UpperLeg,
 	     Color p_UglyRiderColor,
 	     Color p_UglyWheelColor,
-	     bool p_ghostEffect
+	     bool p_ghostEffect,
+	     Color p_gfxLowRiderColor,
+	     Color p_gfxLowFillColor,
+	     Color p_gfxLowWheelColor
 	     );
   ~BikerTheme();
 
@@ -493,6 +504,9 @@ class BikerTheme {
 
   Color getUglyRiderColor();
   Color getUglyWheelColor();
+  Color getGfxLowRiderColor();
+  Color getGfxLowFillColor();
+  Color getGfxLowWheelColor();
 
   bool getGhostEffect() const;
 
@@ -501,6 +515,9 @@ class BikerTheme {
 
   Color m_UglyRiderColor;
   Color m_UglyWheelColor;
+  Color m_gfxLowRiderColor;
+  Color m_gfxLowFillColor;
+  Color m_gfxLowWheelColor;
   
   bool m_ghostEffect;
   std::string m_Body;
