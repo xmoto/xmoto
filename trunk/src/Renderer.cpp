@@ -1192,18 +1192,19 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
       }
     }
 
-    /* ghost arrow indication */
-    if(XMSession::instance()->showBikersArrows()) {
-      displayArrowIndication(i_ghost, &m_screenBBox);
-    }
   }
     
   if(XMSession::instance()->ugly()) {
+    
     if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
       _RenderBike(i_ghost,
 		  true,
 		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
     }
+  }
+  /* ghost arrow indication */    
+  if(XMSession::instance()->showBikersArrows()) {
+      displayArrowIndication(i_ghost, &m_screenBBox);
   }
 }
 
