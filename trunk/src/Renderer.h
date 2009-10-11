@@ -160,6 +160,7 @@ public:
   void renderGameMessages(Scene* i_scene);
 
   unsigned int currentRegistrationStage() const;
+  void setGraphicsLevel();
 
 private:
   void renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHeight);
