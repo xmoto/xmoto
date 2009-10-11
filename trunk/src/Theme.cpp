@@ -49,7 +49,10 @@ Theme::Theme() {
           THEME_PLAYER_UPPERLEG,
           THEME_PLAYER_UGLYRIDERCOLOR,
 	  THEME_PLAYER_UGLYWHEELCOLOR,
-	  false
+	  false,
+	  THEME_PLAYER_GRAPHICS_LOW_BIKER,
+          THEME_PLAYER_GRAPHICS_LOW_FILL,
+          THEME_PLAYER_GRAPHICS_LOW_WHEEL
           );
 
   m_netplayer = new BikerTheme(this,
@@ -64,7 +67,10 @@ Theme::Theme() {
 			       THEME_PLAYER_UPPERLEG,
 			       THEME_PLAYER_UGLYRIDERCOLOR,
 			       THEME_PLAYER_UGLYWHEELCOLOR,
-			       false
+			       false,
+			       THEME_PLAYER_GRAPHICS_LOW_BIKER,
+        		       THEME_PLAYER_GRAPHICS_LOW_FILL,
+        		       THEME_PLAYER_GRAPHICS_LOW_WHEEL
 			       );
 
   m_ghost = new BikerTheme(this,
@@ -79,7 +85,10 @@ Theme::Theme() {
          THEME_GHOST_UPPERLEG,
          THEME_GHOST_UGLYRIDERCOLOR,
          THEME_GHOST_UGLYWHEELCOLOR,
-         true
+         true,
+         THEME_GHOST_GRAPHICS_LOW_BIKER,
+         THEME_GHOST_GRAPHICS_LOW_FILL,
+         THEME_GHOST_GRAPHICS_LOW_WHEEL
          );
 }
 
@@ -1011,7 +1020,10 @@ BikerTheme::BikerTheme(Theme* p_associated_theme,
            std::string p_UpperLeg,
            Color p_UglyRiderColor,
 	   Color p_UglyWheelColor,
-	   bool p_ghostEffect
+	   bool p_ghostEffect,
+	   Color p_gfxLowRiderColor,
+	   Color p_gfxLowFillColor,
+	   Color p_gfxLowWheelColor
            ) {
   m_associated_theme = p_associated_theme;
   m_Body           = p_Body;
@@ -1026,6 +1038,10 @@ BikerTheme::BikerTheme(Theme* p_associated_theme,
 
   m_UglyRiderColor = p_UglyRiderColor;
   m_UglyWheelColor = p_UglyWheelColor;
+  m_gfxLowRiderColor = p_gfxLowRiderColor;
+  m_gfxLowFillColor = p_gfxLowFillColor;
+  m_gfxLowWheelColor = p_gfxLowWheelColor;
+
   m_ghostEffect    = p_ghostEffect;
 }
  
@@ -1074,6 +1090,18 @@ Color BikerTheme::getUglyRiderColor() {
 
 Color BikerTheme::getUglyWheelColor() {
   return m_UglyWheelColor;
+}
+
+Color BikerTheme::getGfxLowRiderColor() {
+  return m_gfxLowRiderColor;
+}
+
+Color BikerTheme::getGfxLowFillColor() {
+  return m_gfxLowFillColor;
+}
+
+Color BikerTheme::getGfxLowWheelColor() {
+  return m_gfxLowWheelColor;
 }
 
 bool BikerTheme::getGhostEffect() const {
