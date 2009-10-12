@@ -1166,13 +1166,17 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
       }
     }
  
-    /* ghost description */
-    if(i_ghost->getDescription() != "" && showGhostsText()) {
+    
+
+  }
+  
+  /* ghost description */
+  if(i_ghost->getDescription() != "" && showGhostsText()) {
       if(XMSession::instance()->showGhostsInfos()) {
 	if(i_scene->getCamera()->isGhostIn(i)) {
 	  v_diffInfoTextTime = GameApp::getXMTime() - i_scene->getCamera()->getGhostLastIn(i);
 
-	  if(v_diffInfoTextTime < GHOST_INFO_FADE_TIME + GHOST_INFO_DURATION + GHOST_INFO_FADE_TIME) {
+	  if(i_ghost->isNetGhost() ? true : v_diffInfoTextTime < GHOST_INFO_FADE_TIME + GHOST_INFO_DURATION + GHOST_INFO_FADE_TIME) {
 
 	    if(v_diffInfoTextTime < GHOST_INFO_FADE_TIME) {
 	      v_textTrans = (int)(((v_diffInfoTextTime-GHOST_INFO_FADE_TIME)*255) / GHOST_INFO_FADE_TIME);
@@ -1184,18 +1188,20 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
 	      v_textTrans = 255 - ((int)(((v_diffInfoTextTime-GHOST_INFO_FADE_TIME-GHOST_INFO_DURATION)*255) / GHOST_INFO_FADE_TIME));
 	    }
 	    
+	    // for net ghosts, make always fully visible
+	    if(i_ghost->isNetGhost()) {
+	      v_textTrans = 255;
+	    }
+	    
 	    _RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i_textOffset, -1.0f),
 			      i_ghost->getDescription(),
 			      MAKE_COLOR(255,255,255, v_textTrans), 0.5);
 	  }
 	}
       }
-    }
-
   }
     
   if(XMSession::instance()->ugly()) {
-    
     if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
       _RenderBike(i_ghost,
 		  true,

@@ -33,6 +33,7 @@ class Ghost : public Biker {
 
   virtual bool diffToPlayerAvailable() const { return true; };
   virtual void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) = 0;
+  virtual bool isNetGhost() const { return false; };
   float diffToPlayer() const;
   virtual bool getRenderBikeFront();
   void setInfo(const std::string& i_info);
@@ -64,6 +65,7 @@ class FileGhost : public Ghost {
   virtual void updateToTime(int i_time, int i_timeStep,
 			    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			    Scene *i_motogame);
+  virtual bool isNetGhost() const { return false; };
   std::string getDescription() const;
   std::string getQuickDescription() const;
   std::string getVeryQuickDescription() const;
@@ -115,7 +117,7 @@ class NetGhost : public Ghost {
 
   virtual bool diffToPlayerAvailable() const { return false; };
   virtual void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
-
+  virtual bool isNetGhost() const { return true; };
   std::string getDescription() const;
   std::string getQuickDescription() const;
   std::string getVeryQuickDescription() const;
