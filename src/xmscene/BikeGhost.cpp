@@ -355,7 +355,6 @@ double FileGhost::getAngle() {
   return 0.0; /* to do */
 }
 
-
 NetGhost::NetGhost(PhysicsSettings* i_physicsSettings,
 		   Theme *i_theme, BikerTheme* i_bikerTheme,
 		   const TColor& i_colorFilter,

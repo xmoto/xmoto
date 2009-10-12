@@ -163,6 +163,7 @@ class Biker {
   virtual void  updateToTime(int i_time, int i_timeStep,
 			     CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			     Scene *i_motogame);
+  virtual bool isNetGhost() const { return false; };
   void setPlaySound(bool i_value);
 
   PhysicsSettings* getPhysicsSettings();
