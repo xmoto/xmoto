@@ -636,7 +636,7 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t--defaultTheme THEME\n\t\tDefault theme for new profiles created.\n");
   printf("\t--noDBDirsCheck\n\t\tDon't check that system and user dirs changed at startup.\n");
   printf("\t--server\n\t\tRun X-Moto as a server only (no gui).\n");
-  printf("\t--updateServerOnly\n\t\tOnly update levels (no gui).\n");
+  printf("\t--updateLevelsOnly\n\t\tOnly update levels (no gui).\n");
   printf("\t--connectAtStartup\n\t\tConnect the client to the server at startup.\n");
   printf("\t-h, -?, -help, --help\n\t\tDisplay this message.\n");
   printf("\t--pack [BIN] [DIR]\n\t\tBuild the BIN package from directory DIR.\n");
