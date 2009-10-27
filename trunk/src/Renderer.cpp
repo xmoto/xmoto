@@ -1017,6 +1017,29 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
         }
       }
     }
+    
+    /* Render Teleport Zones */
+    for(unsigned int k=0; k < i_scene->getLevelSrc()->TeleportZones().size(); k++) {
+      for(unsigned int i=0; i < i_scene->getLevelSrc()->TeleportZones()[k]->Prims().size(); i++) { 
+	ZonePrim* v_prim = i_scene->getLevelSrc()->TeleportZones()[k]->Prims()[i];
+        if(v_prim->Type() == LZPT_BOX) {
+	  ZonePrimBox* v_primbox = static_cast<ZonePrimBox*>(v_prim);
+	  pDrawlib->startDraw(DRAW_MODE_POLYGON); 	 
+	  pDrawlib->setColorRGB(255,200,0);
+
+          pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Left() - cameraPosX)*MINIMAPZOOM,  
+                               y + nHeight/2 - (v_primbox->Top() - cameraPosY)*MINIMAPZOOM);
+          pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Right() - cameraPosX)*MINIMAPZOOM,  
+	                       y + nHeight/2 - (v_primbox->Top() - cameraPosY)*MINIMAPZOOM);
+	  pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Right() - cameraPosX)*MINIMAPZOOM,  
+	                       y + nHeight/2 - (v_primbox->Bottom() - cameraPosY)*MINIMAPZOOM);
+	  pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Left() - cameraPosX)*MINIMAPZOOM,  
+	                       y + nHeight/2 - (v_primbox->Bottom() - cameraPosY)*MINIMAPZOOM);
+	  
+	  pDrawlib->endDraw();
+        }
+      }
+    }
 
     for(int layer=-1; layer<=0; layer++){
       Blocks = i_scene->getCollisionHandler()->getStaticBlocksNearPosition(mapBBox, layer);
@@ -1543,7 +1566,7 @@ int GameRenderer::nbParticlesRendered() const {
 	_RenderZone(i_scene->getLevelSrc()->Zones()[i], false);
       }
     }
-    else if(XMSession::instance()->ugly() || m_graphicsLevel == GFX_LOW) {
+    else if(XMSession::instance()->ugly() || m_graphicsLevel != GFX_HIGH) {
       for(unsigned int i=0; i<i_scene->getLevelSrc()->Zones().size(); i++) {
 	_RenderZone(i_scene->getLevelSrc()->Zones()[i], true);
       }
@@ -2613,13 +2636,13 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
     }
   }
 
-  void GameRenderer::_RenderZone(Zone *i_zone, bool i_renderOnlyDeathZone) {
+  void GameRenderer::_RenderZone(Zone *i_zone, bool i_renderOnlySpecialZone) {
     ZonePrim *v_prim;
     ZonePrimBox *v_primbox;
 
     GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
 
-    if(i_renderOnlyDeathZone && !(i_zone->isDeathZone())) {
+    if(i_renderOnlySpecialZone && !((i_zone->isDeathZone()) || i_zone->isTeleportZone())) {
       return;
     }
     
@@ -2627,10 +2650,19 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
       v_prim = i_zone->Prims()[i];
       if(v_prim->Type() == LZPT_BOX) {
 	v_primbox = static_cast<ZonePrimBox*>(v_prim);
+	Color v_color;
+	if(i_zone->isDeathZone()) {
+	  v_color = MAKE_COLOR(26,26,188,255);
+	}
+	else if(i_zone->isTeleportZone()) {
+	  v_color = MAKE_COLOR(255,200,0,255);
+	}
+	else v_color = MAKE_COLOR(255, 0, 0, 255);
+	
 	_RenderRectangle(Vector2f(v_primbox->Left(),  v_primbox->Top()),
 			 Vector2f(v_primbox->Right(), v_primbox->Bottom()),
-			 i_zone->isDeathZone()? MAKE_COLOR(26,26,188,255) : MAKE_COLOR(255, 0, 0, 255),
-			 (i_zone->isDeathZone() && (m_graphicsLevel == GFX_LOW && !XMSession::instance()->ugly()))? true : false);
+			 v_color ,
+			 ((i_zone->isDeathZone() || i_zone->isTeleportZone()) && (m_graphicsLevel != GFX_HIGH && !XMSession::instance()->ugly()))? true : false);
       }
     }
   }
