@@ -77,6 +77,7 @@ float ZonePrimBox::Bottom() const {
 Zone::Zone(const std::string& i_id) {
   m_id = i_id;
   m_isDeathZone = false;
+  m_isTeleportZone = false;
 }
 
 Zone::~Zone() {
