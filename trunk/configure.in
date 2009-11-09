@@ -40,6 +40,7 @@ then
   MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -mwindows -luserenv -lintl -lSDL_ttf -lSDL_mixer -lSDL_net -lode xmoto_icone.o" # -mwindows to avoid dos window
   # -MD is for gettext (see gettext faq)
   # CFLAGS="$CFLAGS"" -mthreads -MD" => produce unstable .exe
+  CFLAGS="$CFLAGS"" -DdDOUBLE"
   LDFLAGS="$LDFLAGS"" -mthreads -MD"
 
   # this one should be removed once i've found why it doesn't use it on my computer  
@@ -115,7 +116,11 @@ AC_LANG_PUSH([C++])
 
 if test "$target_os" != "mingw32" # make me crazy to detect it because it compiles
 then
-  AC_SEARCH_LIBS(dJointAttach,ode, [], [AC_MSG_ERROR(libode required)], -lstdc++)
+  AC_SEARCH_LIBS(dJointAttach,ode,
+		[ODECFLAGS=`ode-config --cflags`],
+		[AC_MSG_ERROR(libode required)], -lstdc++)
+  CXXFLAGS="$CXXFLAGS"" ""$ODECFLAGS"
+  CFLAGS="$CFLAGS"" ""$ODECFLAGS"
 fi
 
 AC_LANG_POP()
