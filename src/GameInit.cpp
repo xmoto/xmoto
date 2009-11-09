@@ -461,6 +461,20 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   // init physics
   // if(dInitODE2(0) == 0) { /* erreur */} ; // ode 0.10
   dInitODE();
+  LogInfo("Ode config: %s", dGetConfiguration());
+#ifdef dSINGLE
+  LogInfo("Ode config: X-Moto compiled with dSINGLE defined");
+  if(dCheckConfiguration("ODE_single_precision") != 1) {
+    throw Exception("XMoto compiled with ode single precision, but libode library wasn't.");
+  }
+#endif
+#ifdef dDOUBLE
+  LogInfo("Ode config: X-Moto compiled with dDOUBLE defined");
+  if(dCheckConfiguration("ODE_double_precision") != 1) {
+    throw Exception("XMoto compiled with ode as double precision, but libode library wasn't.");
+  }
+#endif
+
   m_isODEInitialized = true;
 
   if(v_xmArgs.isOptServerOnly() == false) {
