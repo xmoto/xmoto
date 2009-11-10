@@ -677,7 +677,7 @@ void FS::writeBool(FileHandle *pfh,bool v) {
   
 void FS::writeLine(FileHandle *pfh,std::string Line) {
   char cBuf[512];
-  snprintf(cBuf, 512, "%s\r\n", Line.c_str());
+  snprintf(cBuf, 512, "%s\n", Line.c_str());
   if(!writeBuf(pfh,cBuf,strlen(cBuf))) _ThrowFileError(pfh,"writeLine -> failed");
 }
   
@@ -687,7 +687,7 @@ void FS::writeLineF(FileHandle *pfh,char *pcFmt,...) {
   va_start(List,pcFmt);
   vsnprintf(cBuf, 512, pcFmt, List);
   va_end(List);
-  snprintf(cBuf2, 512, "%s\r\n", cBuf);
+  snprintf(cBuf2, 512, "%s\n", cBuf);
   if(!writeBuf(pfh,cBuf2,strlen(cBuf2))) _ThrowFileError(pfh,"writeLineF -> failed");
 }
     
