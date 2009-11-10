@@ -852,6 +852,11 @@ void xmDatabase::createUserFunctions() {
 			     user_xm_replaceStart, NULL, NULL) != SQLITE_OK) {
     throw Exception("xmDatabase::createUserFunctions() failed !");
   }
+
+  if(sqlite3_create_function(m_db, "xm_profile", 0, SQLITE_ANY, NULL,
+			     user_xm_profile, NULL, NULL) != SQLITE_OK) {
+    throw Exception("xmDatabase::createUserFunctions() failed !");
+  }
 }
 
 void xmDatabase::user_xm_floord(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {
@@ -921,4 +926,12 @@ void xmDatabase::user_xm_replaceStart(sqlite3_context* i_context, int i_nArgs, s
   v_result = v_new + v_end;
 
   sqlite3_result_text(i_context, v_result.c_str(), -1, SQLITE_TRANSIENT);
+}
+
+void xmDatabase::user_xm_profile(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {
+  if(i_nArgs != 0) {
+    throw Exception("user_xm_profile failed !");
+  }
+
+  sqlite3_result_text(i_context, XMSession::instance()->profile().c_str(), XMSession::instance()->profile().size(), NULL);
 }
