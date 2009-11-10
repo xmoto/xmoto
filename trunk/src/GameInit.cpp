@@ -474,6 +474,12 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     throw Exception("XMoto compiled with ode as double precision, but libode library wasn't.");
   }
 #endif
+#if !defined(dSINGLE) && !defined(dDOUBLE)
+  LogInfo("Ode config: X-Moto compiled with dSINGLE and dDOUBLE undefined, dSINGLE is used by default");
+  if(dCheckConfiguration("ODE_single_precision") != 1) {
+    throw Exception("XMoto compiled with ode single precision, but libode library wasn't.");
+  }
+#endif
 
   m_isODEInitialized = true;
 
