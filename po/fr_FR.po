@@ -2681,7 +2681,7 @@ msgstr "Niveaux scriptés"
 
 #: src/GameText.h:760
 msgid "Physics levels"
-msgstr "Levels physiques"
+msgstr "Niveaux physiques"
 
 #: src/GameText.h:762
 msgid "Last played levels"
