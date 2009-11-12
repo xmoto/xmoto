@@ -39,10 +39,12 @@ if test "$target_os" = "mingw32" # others libraries required by mingw32
 then
   MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -mwindows -luserenv -lintl -lSDL_ttf -lSDL_mixer -lSDL_net -lode xmoto_icone.o" # -mwindows to avoid dos window
   # -MD is for gettext (see gettext faq)
-  # CFLAGS="$CFLAGS"" -mthreads -MD" => produce unstable .exe
-  CFLAGS="$CFLAGS"" -DdDOUBLE"
-  LDFLAGS="$LDFLAGS"" -mthreads -MD"
-
+  CFLAGS="$CFLAGS"" -mthreads -MD"     # threads
+  CXXFLAGS="$CXXFLAGS"" -mthreads -MD" # threads
+  LDFLAGS="$LDFLAGS"" -mthreads -MD"   # threads
+  CFLAGS="$CFLAGS"" -DdDOUBLE"         # ode double
+  CXXFLAGS="$CXXFLAGS"" -DdDOUBLE"     # ode double
+  
   # this one should be removed once i've found why it doesn't use it on my computer  
   LDFLAGS="$LDFLAGS"" -L/usr/i586-mingw32msvc/lib"
 
