@@ -676,18 +676,18 @@ void FS::writeBool(FileHandle *pfh,bool v) {
 }
   
 void FS::writeLine(FileHandle *pfh,std::string Line) {
-  char cBuf[512];
-  snprintf(cBuf, 512, "%s\n", Line.c_str());
+  char cBuf[2048];
+  snprintf(cBuf, 2048, "%s\n", Line.c_str());
   if(!writeBuf(pfh,cBuf,strlen(cBuf))) _ThrowFileError(pfh,"writeLine -> failed");
 }
   
 void FS::writeLineF(FileHandle *pfh,char *pcFmt,...) {
-  char cBuf[512],cBuf2[512];
+  char cBuf[2048],cBuf2[2048];
   va_list List;
   va_start(List,pcFmt);
-  vsnprintf(cBuf, 512, pcFmt, List);
+  vsnprintf(cBuf, 2048, pcFmt, List);
   va_end(List);
-  snprintf(cBuf2, 512, "%s\n", cBuf);
+  snprintf(cBuf2, 2048, "%s\n", cBuf);
   if(!writeBuf(pfh,cBuf2,strlen(cBuf2))) _ThrowFileError(pfh,"writeLineF -> failed");
 }
     
