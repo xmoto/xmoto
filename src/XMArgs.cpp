@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "XMBuild.h"
 #include "VFileIO.h"
+#include "LevelsManager.h"
 #include <sstream>
 #include <stdlib.h>
 #include <cstdio>
@@ -75,6 +76,7 @@ XMArguments::XMArguments() {
   m_opt_updateLevelsOnly        = false;
   m_opt_clientConnectAtStartup  = false;
   m_opt_adminMode               = false;
+  m_opt_buildQueries            = false;
 }
 
 void XMArguments::parse(int i_argc, char **i_argv) {
@@ -280,6 +282,8 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       i++;
     } else if(v_opt == "--admin") { // hidden option to control website from the game ; keep undocumented
       m_opt_adminMode = true;
+    } else if(v_opt == "--buildQueries") { // hidden option to control website from the game ; keep undocumented
+      m_opt_buildQueries = true;
     } else {
       /* check if the parameter is a file */
       v_arg = i_argv[i];
@@ -590,6 +594,10 @@ bool XMArguments::isOptAdminMode() const {
   return m_opt_adminMode;
 }
 
+bool XMArguments::isOptBuildQueries() const {
+  return m_opt_buildQueries;
+}
+
 void XMArguments::help(const std::string& i_cmd) {
   printf("X-Moto %s\n", XMBuild::getVersionString().c_str());
   printf("usage:  %s [options]\n"
@@ -641,6 +649,7 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t-h, -?, -help, --help\n\t\tDisplay this message.\n");
   printf("\t--pack [BIN] [DIR]\n\t\tBuild the BIN package from directory DIR.\n");
   printf("\t--unpack [BIN] [DIR] [no_list]\n\t\tUnpack the BIN package into the dir DIR.\n");
+  printf("\t--buildQueries\n\t\tBuild sql queries into file " XM_SQLQUERIES_GEN_FILE ".\n");
   //If both sdlgfx and opengl are available give the user the posibility
   //to select the draw library
 #ifdef ENABLE_SDLGFX

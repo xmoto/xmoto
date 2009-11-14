@@ -206,6 +206,13 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   }
   Logger::init(FS::getUserDir() + "/xmoto.log");
 
+  /* c xmoto files */
+  if(v_xmArgs.isOptBuildQueries()) {
+    LevelsManager::writeDefaultPackages(XM_SQLQUERIES_GEN_FILE);
+    quit();
+    return;
+  }
+
   /* load config file, the session */
   XMSession::createDefaultConfig(m_userConfig);
   m_userConfig->loadFile();

@@ -95,6 +95,7 @@ class XMArguments {
   bool isOptUpdateLevelsOnly() const;
   bool isOptClientConnectAtStartup() const;
   bool isOptAdminMode() const;
+  bool isOptBuildQueries() const;
 
   private:
   /* pack options */
@@ -197,6 +198,9 @@ class XMArguments {
 
   /* admin */
   bool m_opt_adminMode;
+
+  /* c files */
+  bool m_opt_buildQueries;
 };
 
 #endif

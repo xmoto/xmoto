@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "VFileIO.h"
 #include "WWWAppInterface.h"
+#include "sqlqueries.h"
 #include <sstream>
 
 LevelsPack::LevelsPack(std::string i_name, const std::string& i_sql, bool i_ascSort) {
@@ -211,6 +212,17 @@ bool LevelsManager::doesLevelsPackExist(const std::string &i_name) const {
   return false;
 }
 
+void LevelsManager::makePacks_add(const std::string& i_pack_name, const std::string& i_sql,
+				  const std::string& i_group_name, const std::string& i_pack_description,
+				  bool i_ascSort) {
+  LevelsPack *v_pack;
+
+  v_pack = new LevelsPack(i_pack_name, i_sql, i_ascSort);
+  v_pack->setGroup(i_group_name);
+  v_pack->setDescription(i_pack_description);
+  m_levelsPacks.push_back(v_pack);
+}
+
 void LevelsManager::makePacks(const std::string& i_playerName,
 			      const std::string& i_id_room,
 			      bool i_bDebugMode,
@@ -233,7 +245,7 @@ void LevelsManager::makePacks(const std::string& i_playerName,
 			    "SELECT a.id_level AS id_level, a.name AS name, a.packNum || UPPER(a.name) AS sort_field "
 			    "FROM levels AS a "
 			    "LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level "
-			    "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
+			    "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=xm_profile()) "
 			    "WHERE a.packName=\"" +
 			    xmDatabase::protectString(i_db->getResult(v_result, 1, i, 0)) +
 			    "\" "
@@ -248,123 +260,17 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   }
   i_db->read_DB_free(v_result);
 
-  /* all levels */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_ALL_LEVELS),
-			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field FROM levels AS a "
-			  "LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level "
-			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
-			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
-			  "AND c.id_level IS NULL");
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  v_pack->setDescription(VPACKAGENAME_DESC_ALL_LEVELS);
-  m_levelsPacks.push_back(v_pack);
-
-  /* my levels */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_MY_LEVELS),
-			  "SELECT id_level, name, UPPER(name) AS sort_field FROM levels WHERE isToReload=1");
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  v_pack->setDescription(VPACKAGENAME_DESC_MY_LEVELS);
-  m_levelsPacks.push_back(v_pack);
-  
-  /* favorite levels */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_FAVORITE_LEVELS),
-			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
-			  "FROM levels AS a INNER JOIN levels_favorite AS b "
-			  "ON a.id_level=b.id_level "
-			  "WHERE b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\"");
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  v_pack->setDescription(VPACKAGENAME_DESC_FAVORITE_LEVELS);
-  m_levelsPacks.push_back(v_pack);
-
-  /* blacklisted levels */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_BLACKLIST_LEVELS),
-			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
-			  "FROM levels AS a INNER JOIN levels_blacklist AS b "
-			  "ON a.id_level=b.id_level "
-			  "WHERE b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\"");
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  v_pack->setDescription(VPACKAGENAME_DESC_BLACKLIST_LEVELS);
-  m_levelsPacks.push_back(v_pack);
-
-  /* scripted levels */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_SCRIPTED),
-			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field FROM levels AS a "
-			  "LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level "
-                          "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE a.isScripted=1 AND (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
-			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
-			  "AND c.id_level IS NULL");
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  v_pack->setDescription(VPACKAGENAME_DESC_SCRIPTED);
-  m_levelsPacks.push_back(v_pack);
-
-  /* physics */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_PHYSICS),
-			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
-			  "FROM levels AS a "
-			  "LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level "
-                          "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE a.isPhysics=1 AND (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
-			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
-			  "AND c.id_level IS NULL");
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  v_pack->setDescription(VPACKAGENAME_DESC_PHYSICS);
-  m_levelsPacks.push_back(v_pack);
-
-  /* levels i've not finished */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_INCOMPLETED_LEVELS),
-			  "SELECT a.id_level AS id_level, MIN(a.name) AS name, MIN(UPPER(a.name)) AS sort_field "
-			  "FROM levels AS a LEFT OUTER JOIN stats_profiles_levels AS b "
-			  "ON (a.id_level=b.id_level AND "
-			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
-			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE d.id_level IS NULL "
-			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
-			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
-			  "GROUP BY a.id_level, b.id_profile "
-			  "HAVING MAX(b.nbCompleted+0) = 0 OR MAX(b.nbCompleted+0) IS NULL");
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  v_pack->setDescription(VPACKAGENAME_DESC_INCOMPLETED_LEVELS);
-  m_levelsPacks.push_back(v_pack);
-
-  /* new and updated levels */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_NEW_LEVELS),
-			  "SELECT b.id_level AS id_level, "
-			  "xm_lvlUpdatedToTxt(a.isAnUpdate) || \": \" || b.name AS name, "
-			  "UPPER(b.name) AS sort_field "
-			  "FROM levels_new AS a INNER JOIN levels AS b ON a.id_level=b.id_level");
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  v_pack->setDescription(VPACKAGENAME_DESC_NEW_LEVELS);
-  m_levelsPacks.push_back(v_pack);
-
-  /* crappy levels */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_CRAPPY_LEVELS),
-			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
-			  "FROM levels AS a LEFT OUTER JOIN weblevels AS b "
-			  "ON a.id_level=b.id_level "
-			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE xm_userCrappy(b.crappy)=1 "
-			  "AND xm_userChildrenCompliant(b.children_compliant)=1 "
-			  "AND c.id_level IS NULL");
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  v_pack->setDescription(VPACKAGENAME_DESC_CRAPPY_LEVELS);
-  m_levelsPacks.push_back(v_pack);
-
-  /* last levels */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_LAST_LEVELS),
-			  "SELECT a.id_level AS id_level, a.name AS name, b.creationDate AS sort_field "
-			  "FROM levels AS a INNER JOIN "
-			  "weblevels AS b ON a.id_level = b.id_level "
-			  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
-			  "AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1) "
-			  "AND c.id_level IS NULL "
-			  "ORDER by b.creationDate DESC LIMIT 100", false);
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  v_pack->setDescription(VPACKAGENAME_DESC_LAST_LEVELS);
-  m_levelsPacks.push_back(v_pack);
+  /* add all packages */
+  makePacks_add(VPACKAGENAME_ALL_LEVELS,         QUERY_LVL_ALL,         GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_ALL_LEVELS);
+  makePacks_add(VPACKAGENAME_MY_LEVELS,          QUERY_LVL_MY,          GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_MY_LEVELS);
+  makePacks_add(VPACKAGENAME_FAVORITE_LEVELS,    QUERY_LVL_FAVORITES,   GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_FAVORITE_LEVELS);
+  makePacks_add(VPACKAGENAME_BLACKLIST_LEVELS,   QUERY_LVL_BLACKLIST,   GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_BLACKLIST_LEVELS);
+  makePacks_add(VPACKAGENAME_SCRIPTED,           QUERY_LVL_SCRIPTED,    GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_SCRIPTED);
+  makePacks_add(VPACKAGENAME_PHYSICS,            QUERY_LVL_PHYSICS,     GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_PHYSICS);
+  makePacks_add(VPACKAGENAME_INCOMPLETED_LEVELS, QUERY_LVL_INCOMPLETED, GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_INCOMPLETED_LEVELS);
+  makePacks_add(VPACKAGENAME_NEW_LEVELS,         QUERY_LVL_NEW,         GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_NEW_LEVELS);
+  makePacks_add(VPACKAGENAME_CRAPPY_LEVELS,      QUERY_LVL_CRAPPY,      GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_CRAPPY_LEVELS);
+  makePacks_add(VPACKAGENAME_LAST_LEVELS,        QUERY_LVL_LAST,        GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_LAST_LEVELS, false /* not ok */);
 
   /* rooms */
 
@@ -1303,4 +1209,338 @@ void LevelsManager::lockLevelsPacks() {
 
 void LevelsManager::unlockLevelsPacks() {
   SDL_UnlockMutex(m_levelsPackMutex);
+}
+
+void LevelsManager::writeDefaultPackagesSql(FileHandle* pfh, const std::string& i_sqlName, const std::string& i_sql) {
+  FS::writeLineF(pfh, "#define %s \"%s\"", i_sqlName.c_str(), i_sql.c_str());
+}
+
+void LevelsManager::writeDefaultPackages(const std::string& i_file) {
+  FileHandle* pfh;
+
+  pfh= FS::openOFile(i_file);
+  if(pfh == NULL) {
+    throw Exception("Unable to open file " + i_file);
+  }
+
+  FS::writeLineF(pfh, "// this file is generated automatically by \"xmoto --buildQueries\", don't edit it");
+
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_ALL",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+								  lprv_dontcare, // physics
+								  lprv_dontcare, // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_no,       // blacklisted
+								  lprv_dontcare, // to reload
+								  lprv_dontcare, // favorite
+								  lprv_dontcare, // unfinished
+								  lprv_dontcare, // new
+								  -1             // last levels
+								  ));
+
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_MY",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+								  lprv_dontcare, // physics
+								  lprv_dontcare, // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_no,       // blacklisted
+								  lprv_yes,      // to reload
+								  lprv_dontcare, // favorite
+								  lprv_dontcare, // unfinished
+								  lprv_dontcare, // new
+								  -1             // last levels
+								  ));
+
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_FAVORITES",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+								  lprv_dontcare, // physics
+								  lprv_dontcare, // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_no,       // blacklisted
+								  lprv_dontcare, // to reload
+								  lprv_yes,      // favorite
+								  lprv_dontcare, // unfinished
+								  lprv_dontcare, // new
+								  -1             // last levels
+								  ));
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_BLACKLIST",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+								  lprv_dontcare, // physics
+								  lprv_dontcare, // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_yes,      // blacklisted
+								  lprv_dontcare, // to reload
+								  lprv_dontcare, // favorite
+								  lprv_dontcare, // unfinished
+								  lprv_dontcare, // new
+								  -1             // last levels
+								  ));
+
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_SCRIPTED",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_yes,      // scripted
+								  lprv_dontcare, // physics
+								  lprv_dontcare, // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_no,       // blacklisted
+								  lprv_dontcare, // to reload
+								  lprv_dontcare, // favorite
+								  lprv_dontcare, // unfinished
+								  lprv_dontcare, // new
+								  -1             // last levels
+								  ));
+
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_PHYSICS",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+								  lprv_yes,      // physics
+								  lprv_dontcare, // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_no,       // blacklisted
+								  lprv_dontcare, // to reload
+								  lprv_dontcare, // favorite
+								  lprv_dontcare, // unfinished
+								  lprv_dontcare, // new
+								  -1             // last levels
+								  ));
+
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_INCOMPLETED",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+								  lprv_dontcare, // physics
+								  lprv_dontcare, // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_no,       // blacklisted
+								  lprv_dontcare, // to reload
+								  lprv_dontcare, // favorite
+								  lprv_no,       // finished
+								  lprv_dontcare, // new
+								  -1             // last levels
+								  ));
+
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_NEW",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+								  lprv_dontcare, // physics
+								  lprv_dontcare, // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_no,       // blacklisted
+								  lprv_dontcare, // to reload
+								  lprv_dontcare, // favorite
+								  lprv_dontcare, // finished
+								  lprv_yes,      // new
+								  -1             // last levels
+								  ));
+
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_CRAPPY",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+								  lprv_dontcare, // physics
+								  lprv_yes,      // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_no,       // blacklisted
+								  lprv_dontcare, // to reload
+								  lprv_dontcare, // favorite
+								  lprv_dontcare, // finished
+								  lprv_dontcare, // new
+								  -1             // last levels
+								  ));
+
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_LAST",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+								  lprv_dontcare, // physics
+								  lprv_dontcare, // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_no,       // blacklisted
+								  lprv_dontcare, // to reload
+								  lprv_dontcare, // favorite
+								  lprv_dontcare, // finished
+								  lprv_dontcare, // new
+								  100            // last levels
+								  ));
+
+  FS::closeFile(pfh);
+}
+
+std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i_isScripted,
+						    levelPropertyRequiredValue i_isPhysics,
+						    levelPropertyRequiredValue i_isCrappy,
+						    levelPropertyRequiredValue i_isChildrenCompliant,
+						    levelPropertyRequiredValue i_isBlacklisted,
+						    levelPropertyRequiredValue i_isToReload,
+						    levelPropertyRequiredValue i_isFavorite,
+						    levelPropertyRequiredValue i_isFinished,
+						    levelPropertyRequiredValue i_isNew,
+						    int                        i_lastLevels
+						    ) {
+  std::string v_sql, v_select, v_tables, v_where, v_group, v_order;
+  std::string v_levelNameField, v_sortField;
+  bool v_mustBeInWebLevels;
+
+  v_mustBeInWebLevels = false;
+
+  // optimisation for weblevels
+  if(i_lastLevels >= 0 || i_isCrappy == lprv_yes || i_isChildrenCompliant == lprv_no) {
+    v_mustBeInWebLevels = true; // because the information is in weblevels
+  }
+
+  if(i_lastLevels < 0) {
+    v_sortField = "UPPER(a.name)";
+  } else {
+    v_sortField = "b.creationDate";
+  }
+
+  if(i_isNew != lprv_dontcare) {
+    v_levelNameField = "xm_lvlUpdatedToTxt(f.isAnUpdate) || \\\": \\\" || a.name";
+  } else {
+    v_levelNameField = "a.name";
+  }
+
+  if(i_isFinished == lprv_dontcare) {
+    v_select = "SELECT a.id_level AS id_level, " + v_levelNameField + " AS name, " + v_sortField + " AS sort_field";
+  } else {
+    v_select = "SELECT a.id_level AS id_level, MIN(" + v_levelNameField + ") AS name, MIN(" + v_sortField + ") AS sort_field";
+  }
+
+  // FROM
+  v_tables = " FROM levels AS a";
+
+  // weblevels ?
+  // always required for children compliant
+  if(v_mustBeInWebLevels) {
+    v_tables += " INNER JOIN weblevels AS b ON a.id_level=b.id_level";
+  } else {
+    v_tables += " LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level";
+  }
+
+  // blacklist ?
+  if(i_isBlacklisted != lprv_dontcare) {
+    if(i_isBlacklisted == lprv_yes) {
+      v_tables += " INNER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=xm_profile())";
+    } else {
+      v_tables += " LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=xm_profile())";
+    }
+  }
+
+  // favorite ?
+  if(i_isFavorite != lprv_dontcare) {
+    if(i_isFavorite == lprv_yes) {
+      v_tables += " INNER JOIN levels_favorite AS d ON (a.id_level = d.id_level AND d.id_profile=xm_profile())";
+    } else {
+      v_tables += " LEFT OUTER JOIN levels_favorite AS d ON (a.id_level = d.id_level AND d.id_profile=xm_profile())";
+    }
+  }
+
+  // finnished ?
+  if(i_isFinished != lprv_dontcare) {
+    if(i_isFinished == lprv_yes) {
+      v_tables += " INNER JOIN stats_profiles_levels AS e ON (a.id_level = e.id_level AND e.id_profile=xm_profile())";
+    } else {
+      v_tables += " LEFT OUTER JOIN stats_profiles_levels AS e ON (a.id_level = e.id_level AND e.id_profile=xm_profile())";
+    }
+  }
+
+  // new ?
+  if(i_isNew != lprv_dontcare) {
+    if(i_isNew == lprv_yes) {
+      v_tables += " INNER JOIN levels_new AS f ON a.id_level = f.id_level";
+    } else {
+      v_tables += " LEFT OUTER JOIN levels_new AS f ON a.id_level = f.id_level";
+    }
+  }
+
+  // WHERE
+
+  // keep crappy "where" clause in first while one is always required
+
+  // crappy ?
+  switch(i_isCrappy) {
+  case lprv_yes:
+    v_where += " WHERE b.crappy=1";
+    break;
+  case lprv_no:
+    if(v_mustBeInWebLevels) { // optim
+      v_where += " WHERE b.crappy=0";
+    } else {
+      v_where += " WHERE (b.crappy IS NULL OR b.crappy=0)";
+    }
+    break;
+  case lprv_dontcare:
+    // if you don't care, don't force then, use options
+    if(v_mustBeInWebLevels) { // optim
+      v_where += " WHERE xm_userCrappy(b.crappy)=0";
+    } else {
+      v_where += " WHERE (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0)";
+    }
+    break;
+  }
+
+  // scripted ?
+  if(i_isScripted != lprv_dontcare) {
+    v_where += " AND a.isScripted=" + std::string(i_isScripted == lprv_yes ? "1":"0");
+  }
+
+  // physics ?
+  if(i_isPhysics != lprv_dontcare) {
+    v_where += " AND a.isPhysics=" + std::string(i_isPhysics == lprv_yes ? "1":"0");
+  }
+
+  // children compliant ?
+  switch(i_isChildrenCompliant) {
+  case lprv_yes:
+    if(v_mustBeInWebLevels) { // optim
+      v_where += " AND xm_userChildrenCompliant(b.children_compliant)=1 AND b.children_compliant=1";
+    } else {
+      v_where += " AND (b.children_compliant IS NULL OR (xm_userChildrenCompliant(b.children_compliant)=1 AND b.children_compliant=1)";
+    }
+    break;
+  case lprv_no:
+    v_where += " AND b.children_compliant=0 AND xm_userChildrenCompliant(b.children_compliant)=1";
+    break;
+  case lprv_dontcare:
+    if(v_mustBeInWebLevels) { // optim
+      v_where += " AND xm_userChildrenCompliant(b.children_compliant)=1";
+    } else {
+      v_where += " AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1)";
+    }
+    break;
+  }
+
+  // blacklisted ?
+  if(i_isBlacklisted == lprv_no) {
+    v_where += " AND c.id_level IS NULL";
+  }
+
+  // favorite ?
+  if(i_isFavorite == lprv_no) {
+    v_where += " AND d.id_level IS NULL";
+  }
+
+  // to reload ?
+  if(i_isToReload != lprv_dontcare) {
+    v_where += " AND a.isToReload = " + std::string(i_isToReload == lprv_yes ? "1" : "0");
+  }
+
+  if(i_isNew == lprv_no) {
+    v_where += " AND f.id_level IS NULL";
+  }
+
+  // GROUP
+
+  // finished ?
+  if(i_isFinished != lprv_dontcare) {
+    v_group = " GROUP BY a.id_level, e.id_profile";
+
+    if(i_isFinished == lprv_no) {
+      v_group += " HAVING MAX(e.nbCompleted+0) = 0 OR MAX(e.nbCompleted+0) IS NULL"; // MAX because of site keys
+    } else {
+      v_group += " HAVING MAX(e.nbCompleted+0) > 0";
+    }
+  }
+
+  if(i_lastLevels >= 0) {
+    std::ostringstream v_n;
+    v_n << i_lastLevels;
+    v_order = " ORDER BY b.creationDate DESC LIMIT " + v_n.str();
+  }
+
+  // finally...
+  v_sql = v_select + v_tables + v_where + v_group + v_order;
+
+  return v_sql;
 }
