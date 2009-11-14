@@ -44,10 +44,10 @@ then
   LDFLAGS="$LDFLAGS"" -mthreads -MD"   # threads
   CFLAGS="$CFLAGS"" -DdDOUBLE"         # ode double
   CXXFLAGS="$CXXFLAGS"" -DdDOUBLE"     # ode double
-  
+  HAVEDGETCONFIGURATION=1              # ode dGetConfiguration function
+
   # this one should be removed once i've found why it doesn't use it on my computer  
   LDFLAGS="$LDFLAGS"" -L/usr/i586-mingw32msvc/lib"
-
   AC_SUBST([MINGW32_LIBS])
 fi
 AM_CONDITIONAL([WIN32], test "$target_os" = "mingw32")
@@ -121,9 +121,15 @@ then
   AC_SEARCH_LIBS(dJointAttach,ode,
 		[ODECFLAGS=`ode-config --cflags`],
 		[AC_MSG_ERROR(libode required)], -lstdc++)
+
+  AC_SEARCH_LIBS(dGetConfiguration,ode,
+		[HAVEDGETCONFIGURATION=1],
+		[HAVEDGETCONFIGURATION=0], -lstdc++)
+
   CXXFLAGS="$CXXFLAGS"" ""$ODECFLAGS"
   CFLAGS="$CFLAGS"" ""$ODECFLAGS"
 fi
+AC_SUBST([HAVEDGETCONFIGURATION])
 
 AC_LANG_POP()
 

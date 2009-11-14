@@ -468,6 +468,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   // init physics
   // if(dInitODE2(0) == 0) { /* erreur */} ; // ode 0.10
   dInitODE();
+
+  // check ode configuration
+#if HAVEDGETCONFIGURATION == 1
   LogInfo("Ode config: %s", dGetConfiguration());
 #ifdef dSINGLE
   LogInfo("Ode config: X-Moto compiled with dSINGLE defined");
@@ -487,7 +490,10 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     throw Exception("XMoto compiled with ode single precision, but libode library wasn't.");
   }
 #endif
-
+#else
+  // old ode version
+  LogWarning("You've an old ode library, xmoto is not able to check whether it's compatible or not");
+#endif
   m_isODEInitialized = true;
 
   if(v_xmArgs.isOptServerOnly() == false) {
