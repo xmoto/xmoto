@@ -27,6 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMotoLoadLevelsInterface.h"
 #include "helpers/Singleton.h"
 
+#define XM_SQLQUERIES_GEN_FILE "./sqlqueries.h"
+
 class WWWAppInterface;
 
 class LevelsPack {
@@ -74,6 +76,11 @@ private:
   LevelsManager();
   ~LevelsManager();
 
+  /* helper for makePacks */
+  void makePacks_add(const std::string& i_pack_name, const std::string& i_sql,
+		     const std::string& i_group_name, const std::string& i_pack_description,
+		     bool i_ascSort = true);
+
 public:
   LevelsPack& LevelsPackByName(const std::string &i_name);
   std::string LevelByFileName(const std::string& i_fileName, xmDatabase *i_db);
@@ -118,6 +125,22 @@ public:
 					    unsigned int i_qualityMAX, unsigned int i_difficultyMAX,
 					    const std::string& i_profile, const std::string& i_id_room, xmDatabase *i_db);
   void reloadExternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
+
+  // when requesting for level, or values must be yes, or no, or yes or no, so 3 cases
+  enum levelPropertyRequiredValue {lprv_yes, lprv_no, lprv_dontcare};
+
+  static void writeDefaultPackagesSql(FileHandle* pfh, const std::string& i_sqlName, const std::string& i_sql);
+  static void writeDefaultPackages(const std::string& i_file);
+  static std::string queryLevelsAsVirtualPack(levelPropertyRequiredValue i_isScripted,
+					      levelPropertyRequiredValue i_isPhysics,
+					      levelPropertyRequiredValue i_isCrappy,
+					      levelPropertyRequiredValue i_isChildrenCompliant,
+					      levelPropertyRequiredValue i_isBlacklisted,
+					      levelPropertyRequiredValue i_isToReload,
+					      levelPropertyRequiredValue i_isFavorite,
+					      levelPropertyRequiredValue i_isFinished,
+					      levelPropertyRequiredValue i_isNew,
+					      int                        i_lastLevels); // negativ for don't care
 
   private:
   void clean();
