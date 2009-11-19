@@ -73,7 +73,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
 void DrawLib::checkFontPrerequites() {
-  if(FS::fileExists(FontManager::getDrawFontFile()) == false) {
+  if(XMFS::fileExists(FontManager::getDrawFontFile()) == false) {
     throw Exception("File " + FontManager::getDrawFontFile() + " is missing");
   }
 }

@@ -1109,7 +1109,7 @@ bool BikerTheme::getGhostEffect() const {
 }
 
 void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
-  std::vector<std::string> v_themesFiles = FS::findPhysFiles(std::string(THEMES_DIRECTORY)
+  std::vector<std::string> v_themesFiles = XMFS::findPhysFiles(std::string(THEMES_DIRECTORY)
 								   + std::string("/*.xml"), true);
   std::string v_name;
 
@@ -1186,7 +1186,7 @@ std::string ThemeMusic::FileName() const {
 }
  
 std::string ThemeMusic::FilePath() const {
-  return FS::FullPath(THEME_MUSICS_FILE_DIR + std::string("/") + m_fileName);
+  return XMFS::FullPath(THEME_MUSICS_FILE_DIR + std::string("/") + m_fileName);
 }
 
 ThemeSound::ThemeSound(Theme* p_associated_theme, std::string i_name, std::string i_fileName) {

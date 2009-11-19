@@ -31,12 +31,12 @@ bool  Logger::m_verbose       = false;
 FILE* Logger::m_fd            = NULL;
 
 void Logger::init(const std::string& i_logFile) {
-  assert(FS::isInitialized());
+  assert(XMFS::isInitialized());
 
   m_verbose = false;
 
-  if(FS::fileExists(i_logFile)) {
-    FS::deleteFile(i_logFile);
+  if(XMFS::fileExists(i_logFile)) {
+    XMFS::deleteFile(i_logFile);
   }
 
   m_fd = fopen(i_logFile.c_str(), "w");

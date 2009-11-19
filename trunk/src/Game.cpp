@@ -210,8 +210,8 @@ GameApp::GameApp() {
     int nShot=0;
     char v_val[5];
 
-    v_ShotsDir = FS::getUserDir() + std::string("/Screenshots");
-    FS::mkArborescenceDir(v_ShotsDir);
+    v_ShotsDir = XMFS::getUserDir() + std::string("/Screenshots");
+    XMFS::mkArborescenceDir(v_ShotsDir);
     v_ShotExtension = XMSession::instance()->screenshotFormat();
     
     /* User preference for format? must be either jpeg or png */
@@ -230,7 +230,7 @@ GameApp::GameApp() {
 
       snprintf(v_val, 5, "%04d", nShot);
       v_destFile = v_ShotsDir + "/screenshot" + std::string(v_val) + "." + v_ShotExtension;
-    } while(FS::fileExists(v_destFile));
+    } while(XMFS::fileExists(v_destFile));
     try {
       pShot->saveFile(v_destFile.c_str());
     } catch(Exception &e) {
@@ -371,7 +371,7 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(unsigned int i_number, st
   }
 
   v_fileUrl = v_pDb->getResult(v_result, 2, 0, 0);
-  v_replayName = FS::getFileBaseName(v_fileUrl);
+  v_replayName = XMFS::getFileBaseName(v_fileUrl);
   p_time = atoi(v_pDb->getResult(v_result, 2, 0, 1));
   v_pDb->read_DB_free(v_result);
 
@@ -497,12 +497,12 @@ void GameApp::displayCursor(bool display)
 				   XMotoLoadReplaysInterface* pLoadReplaysInterface) {
     std::vector<std::string> ReplayFiles;
 
-    ReplayFiles = FS::findPhysFiles("Replays/*.rpl");
+    ReplayFiles = XMFS::findPhysFiles("Replays/*.rpl");
     threadDb->replays_add_begin();
 
     for(unsigned int i=0; i<ReplayFiles.size(); i++) {
       try {
-	if(FS::getFileBaseName(ReplayFiles[i]) == "Latest") {
+	if(XMFS::getFileBaseName(ReplayFiles[i]) == "Latest") {
 	  continue;
 	}
 	addReplay(ReplayFiles[i], threadDb, false);
@@ -520,7 +520,7 @@ void GameApp::displayCursor(bool display)
   void GameApp::addReplay(const std::string& i_file, xmDatabase* pDb, bool sendMessage) {
     ReplayInfo* rplInfos;
     
-    rplInfos = Replay::getReplayInfos(FS::getFileBaseName(i_file));
+    rplInfos = Replay::getReplayInfos(XMFS::getFileBaseName(i_file));
     if(rplInfos == NULL) {
       throw Exception("Unable to extract data from replay file");
     }
@@ -804,7 +804,7 @@ bool GameApp::getHighscoreInfos(unsigned int i_number, const std::string& i_id_l
   pDb->read_DB_free(v_result);
 
   /* search if the replay is already downloaded */
-  if(pDb->replays_exists(FS::getFileBaseName(*o_url))) {
+  if(pDb->replays_exists(XMFS::getFileBaseName(*o_url))) {
     *o_isAccessible = true;
   } else {
     *o_isAccessible = XMSession::instance()->www();

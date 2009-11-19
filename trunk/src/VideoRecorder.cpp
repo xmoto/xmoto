@@ -35,14 +35,14 @@ VideoRecorder::VideoRecorder(const std::string& i_videoName, int i_division, int
 
     LogInfo("New video recorder: name=%s, division=%i, frame rate=%i", i_videoName.c_str(), i_division, i_frameRate);
 
-    m_directory = FS::getUserDir() + "/Videos/" + i_videoName;
+    m_directory = XMFS::getUserDir() + "/Videos/" + i_videoName;
 		v_listFile = m_directory + "/pictures.lst";
 
-    if(FS::isDir(m_directory)) {
+    if(XMFS::isDir(m_directory)) {
 			throw Exception("Video directory already exists");
 		}
 
-		FS::mkArborescenceDir(m_directory);
+		XMFS::mkArborescenceDir(m_directory);
 
     LogInfo("Video recording:");
     LogInfo("transcode -i %s -x imlist,null -y xvid,null -f %i -g %ix%i --use_rgb -z -o %s/%s.avi -H 0 # -w 500",
@@ -50,7 +50,7 @@ VideoRecorder::VideoRecorder(const std::string& i_videoName, int i_division, int
 		m_framerate,
 		GameApp::instance()->getDrawLib()->getDispWidth()/i_division,
 		GameApp::instance()->getDrawLib()->getDispHeight()/i_division,
-  	std::string(FS::getUserDir() + "/Videos").c_str(),
+  	std::string(XMFS::getUserDir() + "/Videos").c_str(),
   	m_name.c_str()
 		);
 

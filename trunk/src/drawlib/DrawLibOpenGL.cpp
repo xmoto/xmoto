@@ -150,9 +150,9 @@ DrawLibOpenGL::~DrawLibOpenGL(){
 }
 
 DrawLibOpenGL::DrawLibOpenGL() : DrawLib(){
-  m_fontSmall  = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 14);
-  m_fontMedium = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 22);
-  m_fontBig    = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 60);
+  m_fontSmall  = getFontManager(XMFS::FullPath(FontManager::getDrawFontFile()), 14);
+  m_fontMedium = getFontManager(XMFS::FullPath(FontManager::getDrawFontFile()), 22);
+  m_fontBig    = getFontManager(XMFS::FullPath(FontManager::getDrawFontFile()), 60);
 };
  
 /*===========================================================================

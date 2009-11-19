@@ -149,15 +149,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Load shader source
   ===========================================================================*/
   char **SFXOverlay::_LoadShaderSource(const std::string &File, unsigned int *pnNumLines) {
-    FileHandle *pfh = FS::openIFile(std::string("Shaders/") + File);
+    FileHandle *pfh = XMFS::openIFile(std::string("Shaders/") + File);
     if(pfh != NULL) {
       /* Load lines */
       std::string Line;
       std::vector<std::string> Lines;
-      while(FS::readNextLine(pfh,Line)) {
+      while(XMFS::readNextLine(pfh,Line)) {
         Lines.push_back(Line);
       }
-      FS::closeFile(pfh);
+      XMFS::closeFile(pfh);
       
       /* Convert line array into something OpenGL will eat */
       char **ppc = new char*[Lines.size()];

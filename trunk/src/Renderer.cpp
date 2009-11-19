@@ -2879,11 +2879,11 @@ void GameRenderer::_RenderLayers(Scene* i_scene, bool renderFront) {
   }
   
   void GameRenderer::loadDebugInfo(std::string File) {
-    FileHandle *pfh = FS::openIFile(File);
+    FileHandle *pfh = XMFS::openIFile(File);
     if(pfh != NULL) {
       std::string Line;
       std::string Type = "";
-      while(FS::readNextLine(pfh,Line)) {
+      while(XMFS::readNextLine(pfh,Line)) {
         if(!Line.empty() && Line[0] != '#') {
           if(Line[0] == '@') {
             Type = Line;
@@ -2907,7 +2907,7 @@ void GameRenderer::_RenderLayers(Scene* i_scene, bool renderFront) {
           }
         }
       }
-      FS::closeFile(pfh);
+      XMFS::closeFile(pfh);
     }
   }
   

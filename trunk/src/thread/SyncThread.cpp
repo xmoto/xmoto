@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../states/StateManager.h"
 
 #define DEFAULT_DBSYNCUPLOAD_MSGFILE "sync_down.xml"
-#define SYNC_UP_TMPFILE    FS::getUserDir() + "/sync_up.xml"
+#define SYNC_UP_TMPFILE    XMFS::getUserDir() + "/sync_up.xml"
 #define SYNC_UP_TMPFILEBZ2 SYNC_UP_TMPFILE".bz2"
 
 SyncThread::SyncThread() 
@@ -53,7 +53,7 @@ int SyncThread::realThreadFunction() {
 
   setThreadCurrentOperation(GAMETEXT_SYNC_UP);
 
-  v_syncDownFile = FS::getUserDir() + "/" + DEFAULT_DBSYNCUPLOAD_MSGFILE;
+  v_syncDownFile = XMFS::getUserDir() + "/" + DEFAULT_DBSYNCUPLOAD_MSGFILE;
 
   /* create the .xml sync file */
   try {

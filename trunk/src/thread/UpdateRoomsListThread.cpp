@@ -42,7 +42,7 @@ int UpdateRoomsListThread::realThreadFunction()
   setThreadProgress(0);
 
   try {
-    std::string v_destinationFile = FS::getUserDir() + "/" + DEFAULT_WEBROOMS_FILENAME;
+    std::string v_destinationFile = XMFS::getUserDir() + "/" + DEFAULT_WEBROOMS_FILENAME;
 
     LogInfo("WWW: Checking for rooms...");
 

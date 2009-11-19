@@ -326,7 +326,7 @@ void Universe::saveReplay(xmDatabase *pDb, const std::string &Name) {
   /* Try saving */
   std::string v_outputfile;
 
-  if(!FS::copyFile("Replays/Latest.rpl",
+  if(!XMFS::copyFile("Replays/Latest.rpl",
 		   std::string("Replays/") + Name + std::string(".rpl"),
 		   v_outputfile)) {
     throw Exception("Failed to save replay " + Name);

@@ -87,7 +87,7 @@ void xmDatabase::init(const std::string& i_dbFile,
   /* check if gameDir and userDir are the same - otherwise, the computer probably changed */  
   std::string v_oldGameDir = getXmDbGameDir();
   std::string v_oldUserDir = getXmDbUserDir();
-  bool v_areDirectoryOK = FS::areSamePath(i_gameDir, v_oldGameDir) && FS::areSamePath(i_userDir, v_oldUserDir);
+  bool v_areDirectoryOK = XMFS::areSamePath(i_gameDir, v_oldGameDir) && XMFS::areSamePath(i_userDir, v_oldUserDir);
 
   if((v_areDirectoryOK == false && i_dbDirsCheck) || i_binPackCheckSum != getXmDbBinPackCheckSum()) {
     m_requiredLevelsUpdateAfterInit  = true;

@@ -98,7 +98,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
   void Replay::saveReplay(int i_format) {
 
-    FileHandle *pfh = FS::openOFile(std::string("Replays/") + m_FileName);
+    FileHandle *pfh = XMFS::openOFile(std::string("Replays/") + m_FileName);
     if(pfh == NULL) {
       LogWarning("Failed to open replay file for output: %s",(std::string("Replays/") + m_FileName).c_str());
       return;
@@ -116,11 +116,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       break;
 
     default:
-      FS::closeFile(pfh);
+      XMFS::closeFile(pfh);
       throw Exception("Invalid replay format");
     }
 
-    FS::closeFile(pfh);
+    XMFS::closeFile(pfh);
   }
 
   void Replay::saveReplay_2(FileHandle *pfh) {
@@ -134,13 +134,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* keep header uncompressed to be faster to read just it */
 
     /* Header */
-    FS::writeByte(pfh,2); /* Version: 2 */
-    FS::writeString(pfh,m_LevelID);
-    FS::writeString(pfh,m_PlayerName);
-    FS::writeBool(pfh,m_bFinished);
-    FS::writeFloat_LE(pfh, GameApp::timeToFloat(m_finishTime));
-    FS::writeFloat_LE(pfh,m_fFrameRate);
-    FS::writeInt_LE(pfh,m_nStateSize);
+    XMFS::writeByte(pfh,2); /* Version: 2 */
+    XMFS::writeString(pfh,m_LevelID);
+    XMFS::writeString(pfh,m_PlayerName);
+    XMFS::writeBool(pfh,m_bFinished);
+    XMFS::writeFloat_LE(pfh, GameApp::timeToFloat(m_finishTime));
+    XMFS::writeFloat_LE(pfh,m_fFrameRate);
+    XMFS::writeInt_LE(pfh,m_nStateSize);
 
     /* ***** ***** ***** ***** ***** **/
     /* compress all except the header */
@@ -166,28 +166,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pcData    = v_replay.convertOutputToInput();
     nDataSize = v_replay.numRemainingBytes();
     pcCompressedData = FileCompression::zcompress(pcData, nDataSize, nCompressedDataSize);
-    FS::writeInt_LE(pfh, nDataSize);
-    FS::writeInt_LE(pfh, nCompressedDataSize);
-    FS::writeBuf(pfh, (char *)pcCompressedData, nCompressedDataSize); 
+    XMFS::writeInt_LE(pfh, nDataSize);
+    XMFS::writeInt_LE(pfh, nCompressedDataSize);
+    XMFS::writeBuf(pfh, (char *)pcCompressedData, nCompressedDataSize); 
     free(pcCompressedData);
   }
 
   void Replay::saveReplay_1(FileHandle *pfh) {
     
     /* Write header */
-    FS::writeByte(pfh,1); /* Version: 1 */
-    FS::writeInt_LE(pfh,0x12345678); /* Endianness guard */
-    FS::writeString(pfh,m_LevelID);
-    FS::writeString(pfh,m_PlayerName);
-    FS::writeFloat_LE(pfh,m_fFrameRate);
-    FS::writeInt_LE(pfh,m_nStateSize);
-    FS::writeBool(pfh,m_bFinished);
-    FS::writeFloat_LE(pfh, GameApp::timeToFloat(m_finishTime));
+    XMFS::writeByte(pfh,1); /* Version: 1 */
+    XMFS::writeInt_LE(pfh,0x12345678); /* Endianness guard */
+    XMFS::writeString(pfh,m_LevelID);
+    XMFS::writeString(pfh,m_PlayerName);
+    XMFS::writeFloat_LE(pfh,m_fFrameRate);
+    XMFS::writeInt_LE(pfh,m_nStateSize);
+    XMFS::writeBool(pfh,m_bFinished);
+    XMFS::writeFloat_LE(pfh, GameApp::timeToFloat(m_finishTime));
     
     /* Events */
     const char *pcUncompressedEvents = convertOutputToInput();
     int nUncompressedEventsSize = numRemainingBytes();
-    FS::writeInt_LE(pfh,nUncompressedEventsSize);
+    XMFS::writeInt_LE(pfh,nUncompressedEventsSize);
     
     /* Compression? */
     if(m_bEnableCompression) {
@@ -198,29 +198,29 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       int nZRet = compress2((Bytef *)pcCompressedEvents,&nDestLen,(Bytef *)pcUncompressedEvents,nSrcLen,9);
       if(nZRet != Z_OK) {
         /* Failed to compress, save raw events */
-        FS::writeBool(pfh,false); /* compression: false */
-        FS::writeBuf(pfh,(char *)pcUncompressedEvents,nUncompressedEventsSize);
+        XMFS::writeBool(pfh,false); /* compression: false */
+        XMFS::writeBuf(pfh,(char *)pcUncompressedEvents,nUncompressedEventsSize);
       }
       else {
         /* OK */        
-        FS::writeBool(pfh,true); /* compression: true */
-        FS::writeInt_LE(pfh,nDestLen);
-        FS::writeBuf(pfh,(char *)pcCompressedEvents,nDestLen);
+        XMFS::writeBool(pfh,true); /* compression: true */
+        XMFS::writeInt_LE(pfh,nDestLen);
+        XMFS::writeBuf(pfh,(char *)pcCompressedEvents,nDestLen);
       }
       delete [] pcCompressedEvents;
     }
     else {    
       /* No compression */
-      FS::writeBool(pfh,false); /* compression: false */
-      FS::writeBuf(pfh,(char *)pcUncompressedEvents,nUncompressedEventsSize);
+      XMFS::writeBool(pfh,false); /* compression: false */
+      XMFS::writeBuf(pfh,(char *)pcUncompressedEvents,nUncompressedEventsSize);
     }
     
     /* Chunks */
-    FS::writeInt_LE(pfh,m_Chunks.size());
+    XMFS::writeInt_LE(pfh,m_Chunks.size());
     
     /* Write chunks */    
     for(unsigned int i=0;i<m_Chunks.size();i++) {
-      FS::writeInt_LE(pfh,m_Chunks[i]->nNumStates);
+      XMFS::writeInt_LE(pfh,m_Chunks[i]->nNumStates);
       
       /* Compression enabled? */
       if(m_bEnableCompression) {
@@ -231,18 +231,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	int nZRet = compress2((Bytef *)pcCompressed,&nDestLen,(Bytef *)m_Chunks[i]->pcChunkData,nSrcLen,9);
 	if(nZRet != Z_OK) {
 	  /* Failed to compress... Save uncompressed chunk then */
-	  FS::writeBool(pfh,false); /* compression: false */
-	  FS::writeBuf(pfh,m_Chunks[i]->pcChunkData,m_nStateSize * m_Chunks[i]->nNumStates);
+	  XMFS::writeBool(pfh,false); /* compression: false */
+	  XMFS::writeBuf(pfh,m_Chunks[i]->pcChunkData,m_nStateSize * m_Chunks[i]->nNumStates);
 	} else {
 	  /* Compressed ok */
-	  FS::writeBool(pfh,true); /* compression: true */
-	  FS::writeInt_LE(pfh,nDestLen);
-	  FS::writeBuf(pfh,(char *)pcCompressed,nDestLen);
+	  XMFS::writeBool(pfh,true); /* compression: true */
+	  XMFS::writeInt_LE(pfh,nDestLen);
+	  XMFS::writeBuf(pfh,(char *)pcCompressed,nDestLen);
 	}
 	delete [] pcCompressed;        
       } else {
-	FS::writeBool(pfh,false); /* compression: false */
-	FS::writeBuf(pfh,m_Chunks[i]->pcChunkData,m_nStateSize * m_Chunks[i]->nNumStates);
+	XMFS::writeBool(pfh,false); /* compression: false */
+	XMFS::writeBuf(pfh,m_Chunks[i]->pcChunkData,m_nStateSize * m_Chunks[i]->nNumStates);
       }
     }
   }
@@ -255,18 +255,18 @@ void Replay::openReplay_2(FileHandle *pfh, bool bDisplayInformation) {
   char *v_pcCompressedData;
 
   /* Header */
-  m_LevelID = FS::readString(pfh);
+  m_LevelID = XMFS::readString(pfh);
   if(bDisplayInformation) {
     printf("%-30s: %s\n", "Level Id", m_LevelID.c_str());
   }
 
-  m_PlayerName = FS::readString(pfh);
+  m_PlayerName = XMFS::readString(pfh);
   if(bDisplayInformation) {
     printf("%-30s: %s\n", "Player", m_PlayerName.c_str());
   }      
       
-  m_bFinished = FS::readBool(pfh);
-  m_finishTime = GameApp::floatToTime(FS::readFloat_LE(pfh));
+  m_bFinished = XMFS::readBool(pfh);
+  m_finishTime = GameApp::floatToTime(XMFS::readFloat_LE(pfh));
   if(bDisplayInformation) {
     if(m_bFinished) {
       printf("%-30s: %.2f (%f)\n", "Finish time", m_finishTime / 100.0, m_finishTime / 100.0);
@@ -275,16 +275,16 @@ void Replay::openReplay_2(FileHandle *pfh, bool bDisplayInformation) {
     }
   }
 
-  m_fFrameRate = FS::readFloat_LE(pfh);
+  m_fFrameRate = XMFS::readFloat_LE(pfh);
 
-  m_nStateSize = FS::readInt_LE(pfh);
+  m_nStateSize = XMFS::readInt_LE(pfh);
   if(bDisplayInformation) {
     printf("%-30s: %i\n", "State size", m_nStateSize);
   } 
 
   /* zuncompressed */
-  v_nDataSize           = FS::readInt_LE(pfh);
-  v_nCompressedDataSize = FS::readInt_LE(pfh);
+  v_nDataSize           = XMFS::readInt_LE(pfh);
+  v_nCompressedDataSize = XMFS::readInt_LE(pfh);
 
   v_pcData = (char*) malloc(v_nDataSize);
   if(v_pcData == NULL) {
@@ -295,7 +295,7 @@ void Replay::openReplay_2(FileHandle *pfh, bool bDisplayInformation) {
     free(v_pcData);
     throw Exception("Unable to malloc for decompression");
   }
-  FS::readBuf(pfh, v_pcCompressedData, v_nCompressedDataSize);
+  XMFS::readBuf(pfh, v_pcCompressedData, v_nCompressedDataSize);
   try {
     FileCompression::zuncompress(v_pcCompressedData, v_nCompressedDataSize, v_pcData, v_nDataSize);
   } catch(Exception &e) {
@@ -348,35 +348,35 @@ void Replay::openReplay_2(FileHandle *pfh, bool bDisplayInformation) {
 
 void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersion) {
   /* Little/big endian safety check */
-  if(FS::readInt_LE(pfh) != 0x12345678) {
+  if(XMFS::readInt_LE(pfh) != 0x12345678) {
     LogWarning("Sorry, the replay you're trying to open are not endian-compatible with your computer!");
     throw Exception("Unable to open the replay");        
   }
   
   /* Read level ID */
-  m_LevelID = FS::readString(pfh);
+  m_LevelID = XMFS::readString(pfh);
   if(bDisplayInformation) {
     printf("%-30s: %s\n", "Level Id", m_LevelID.c_str());
   }
 
   /* Read player name */
-  m_PlayerName = FS::readString(pfh);
+  m_PlayerName = XMFS::readString(pfh);
   if(bDisplayInformation) {
     printf("%-30s: %s\n", "Player", m_PlayerName.c_str());
   }      
 
   /* Read replay frame rate */
-  m_fFrameRate = FS::readFloat_LE(pfh);
+  m_fFrameRate = XMFS::readFloat_LE(pfh);
 
   /* Read state size */
-  m_nStateSize = FS::readInt_LE(pfh);
+  m_nStateSize = XMFS::readInt_LE(pfh);
   if(bDisplayInformation) {
     printf("%-30s: %i\n", "State size", m_nStateSize);
   } 
       
   /* Read finish time if any */
-  m_bFinished = FS::readBool(pfh);
-  m_finishTime = GameApp::floatToTime(FS::readFloat_LE(pfh));
+  m_bFinished = XMFS::readBool(pfh);
+  m_finishTime = GameApp::floatToTime(XMFS::readFloat_LE(pfh));
   if(bDisplayInformation) {
     if(m_bFinished) {
       printf("%-30s: %.2f (%f)\n", "Finish time", m_finishTime / 100.0, m_finishTime / 100.0);
@@ -388,22 +388,22 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
   /* Version 1 includes event data */
   if(nVersion == 1) {
     /* Read uncompressed size */
-    m_nInputEventsDataSize = FS::readInt_LE(pfh);
+    m_nInputEventsDataSize = XMFS::readInt_LE(pfh);
     if(bDisplayInformation) {
       printf("%-30s: %i\n", "Events data size", m_nInputEventsDataSize);
     } 
     m_pcInputEventsData = new char [m_nInputEventsDataSize];
         
     /* Compressed? */
-    if(FS::readBool(pfh)) {
+    if(XMFS::readBool(pfh)) {
       /* Compressed */          
-      int nCompressedEventsSize = FS::readInt_LE(pfh);
+      int nCompressedEventsSize = XMFS::readInt_LE(pfh);
       if(bDisplayInformation) {
 	printf("%-30s: %i\n", "Compressed events data size", nCompressedEventsSize);
       } 
           
       char *pcCompressedEvents = new char [nCompressedEventsSize];
-      FS::readBuf(pfh,pcCompressedEvents,nCompressedEventsSize);
+      XMFS::readBuf(pfh,pcCompressedEvents,nCompressedEventsSize);
           
       /* Unpack */
       uLongf nDestLen = m_nInputEventsDataSize;
@@ -422,7 +422,7 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
     }
     else {
       /* Not compressed */
-      FS::readBuf(pfh,m_pcInputEventsData,m_nInputEventsDataSize);
+      XMFS::readBuf(pfh,m_pcInputEventsData,m_nInputEventsDataSize);
     }
     
     /* Set up input stream */
@@ -430,7 +430,7 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
   }
   
   /* Read chunks */
-  unsigned int nNumChunks = FS::readInt_LE(pfh);
+  unsigned int nNumChunks = XMFS::readInt_LE(pfh);
   if(bDisplayInformation) {
     printf("%-30s: %i\n", "Number of chunks", nNumChunks);
   }
@@ -446,7 +446,7 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
     }  
   
     ReplayStateChunk* Chunk = new ReplayStateChunk();
-    Chunk->nNumStates = FS::readInt_LE(pfh);
+    Chunk->nNumStates = XMFS::readInt_LE(pfh);
 
     if(bDisplayInformation) {
       printf("   %-27s: %i\n", "Number of states", Chunk->nNumStates);
@@ -455,20 +455,20 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
     Chunk->pcChunkData = new char [Chunk->nNumStates * m_nStateSize];
         
     /* Compressed or not compressed? */
-    if(FS::readBool(pfh)) {
+    if(XMFS::readBool(pfh)) {
       if(bDisplayInformation) {
 	printf("   %-27s: %s\n", "Compressed data", "true");
       } 
 
       /* Compressed! - read compressed size */
-      int nCompressedSize = FS::readInt_LE(pfh);
+      int nCompressedSize = XMFS::readInt_LE(pfh);
       if(bDisplayInformation) {
 	printf("   %-27s: %i\n", "Compressed states size", nCompressedSize);
       }
 
       /* Read compressed data */
       unsigned char *pcCompressed = new unsigned char [nCompressedSize];
-      FS::readBuf(pfh,(char *)pcCompressed,nCompressedSize);
+      XMFS::readBuf(pfh,(char *)pcCompressed,nCompressedSize);
          
       /* Uncompress it */           
       uLongf nDestLen = Chunk->nNumStates * m_nStateSize;
@@ -490,7 +490,7 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
       } 
       
       /* Not compressed! */
-      FS::readBuf(pfh,Chunk->pcChunkData,m_nStateSize*Chunk->nNumStates);
+      XMFS::readBuf(pfh,Chunk->pcChunkData,m_nStateSize*Chunk->nNumStates);
     }
         
     m_Chunks.push_back(Chunk);
@@ -499,13 +499,13 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
 
   std::string Replay::openReplay(const std::string &FileName, std::string &Player, bool bDisplayInformation) {
     /* Try opening as if it is a full path */
-    FileHandle *pfh = FS::openIFile(FileName, true);
+    FileHandle *pfh = XMFS::openIFile(FileName, true);
     if(pfh == NULL) {
       /* Open file for input */
-      pfh = FS::openIFile(std::string("Replays/") + FileName);
+      pfh = XMFS::openIFile(std::string("Replays/") + FileName);
       if(pfh == NULL) {
         /* Try adding a .rpl extension */
-        pfh = FS::openIFile(std::string("Replays/") + FileName + std::string(".rpl"));
+        pfh = XMFS::openIFile(std::string("Replays/") + FileName + std::string(".rpl"));
         if(pfh == NULL) {    
           LogWarning("Failed to open replay file for input: %s",(std::string("Replays/") + FileName).c_str());
           throw Exception("Unable to open the replay");
@@ -514,7 +514,7 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
     }
 
     /* Read header */
-    int nVersion = FS::readByte(pfh); 
+    int nVersion = XMFS::readByte(pfh); 
     if(bDisplayInformation) {
       printf("%-30s: %i\n", "Replay file version", nVersion);
     }
@@ -527,7 +527,7 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
       try {
 	openReplay_1(pfh, bDisplayInformation, nVersion);
       } catch(Exception &e) {
-	FS::closeFile(pfh);
+	XMFS::closeFile(pfh);
 	throw e;
       }
       break;
@@ -536,13 +536,13 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
       try {
 	openReplay_2(pfh, bDisplayInformation);
       } catch(Exception &e) {
-	FS::closeFile(pfh);
+	XMFS::closeFile(pfh);
 	throw e;
       }
       break;
 
     default:
-      FS::closeFile(pfh);
+      XMFS::closeFile(pfh);
       LogWarning("Unsupported replay file version (%d): %s",nVersion,(std::string("Replays/") + FileName).c_str());
       throw Exception("Unable to open the replay (unsupported version)");
 
@@ -550,7 +550,7 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
     }
 
     /* Clean up */
-    FS::closeFile(pfh);
+    XMFS::closeFile(pfh);
     
     Player = m_PlayerName;
 
@@ -718,7 +718,7 @@ bool Replay::nextState(int p_frames) {
   }
 
   void Replay::deleteReplay(std::string ReplayName) {
-    FS::deleteFile(std::string("Replays/") + ReplayName + std::string(".rpl"));
+    XMFS::deleteFile(std::string("Replays/") + ReplayName + std::string(".rpl"));
   }
 
   ReplayInfo* Replay::getReplayInfos(const std::string p_ReplayName) {
@@ -726,17 +726,17 @@ bool Replay::nextState(int p_frames) {
        want to check this again */
 
       /* Try opening it */
-      FileHandle *pfh = FS::openIFile("Replays/" + p_ReplayName + ".rpl");
+      FileHandle *pfh = XMFS::openIFile("Replays/" + p_ReplayName + ".rpl");
       if(pfh == NULL) {
-	pfh = FS::openIFile(p_ReplayName, true);
+	pfh = XMFS::openIFile(p_ReplayName, true);
 	if(pfh == NULL) {
 	  return NULL;
 	}
       }
       
-      int nVersion = FS::readByte(pfh);
+      int nVersion = XMFS::readByte(pfh);
       if(nVersion != 0 && nVersion != 1 && nVersion != 2) {
-	FS::closeFile(pfh);
+	XMFS::closeFile(pfh);
 	return NULL;
       }
       
@@ -749,24 +749,24 @@ bool Replay::nextState(int p_frames) {
       switch(nVersion) {
       case 0:
       case 1:
-	if(FS::readInt_LE(pfh) != 0x12345678) {   
-	  FS::closeFile(pfh);
+	if(XMFS::readInt_LE(pfh) != 0x12345678) {   
+	  XMFS::closeFile(pfh);
 	  return NULL;
 	}
 	
-	LevelID       =    FS::readString(pfh);
-	Player        =    FS::readString(pfh);
-	/* fFrameRate = */ FS::readFloat_LE(pfh);
-	/* nStateSize = */ FS::readInt_LE(pfh);
-	bFinished     =    FS::readBool(pfh);
-	finishTime    = GameApp::floatToTime(FS::readFloat_LE(pfh));
+	LevelID       =    XMFS::readString(pfh);
+	Player        =    XMFS::readString(pfh);
+	/* fFrameRate = */ XMFS::readFloat_LE(pfh);
+	/* nStateSize = */ XMFS::readInt_LE(pfh);
+	bFinished     =    XMFS::readBool(pfh);
+	finishTime    = GameApp::floatToTime(XMFS::readFloat_LE(pfh));
 	break;
 
       case 2:
-	LevelID       =    FS::readString(pfh);
-	Player        =    FS::readString(pfh);
-	bFinished     =    FS::readBool(pfh);
-	finishTime    = GameApp::floatToTime(FS::readFloat_LE(pfh));
+	LevelID       =    XMFS::readString(pfh);
+	Player        =    XMFS::readString(pfh);
+	bFinished     =    XMFS::readBool(pfh);
+	finishTime    = GameApp::floatToTime(XMFS::readFloat_LE(pfh));
 	break;
       }
 	
@@ -782,7 +782,7 @@ bool Replay::nextState(int p_frames) {
 	pRpl->finishTime = -1;                
       }
 
-      FS::closeFile(pfh); 
+      XMFS::closeFile(pfh); 
       return pRpl;
   }
 

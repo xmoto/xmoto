@@ -98,7 +98,7 @@ int LevelsPack::getNumberOfFinishedLevels() {
 }
 
 void LevelsPack::setHintsFromFile() {
-  std::vector<std::string> LpkFiles = FS::findPhysFiles("Levels/*.lpk", true);
+  std::vector<std::string> LpkFiles = XMFS::findPhysFiles("Levels/*.lpk", true);
 
   for(unsigned int i=0; i<LpkFiles.size(); i++) {
     XMLDocument XML; 
@@ -743,7 +743,7 @@ const std::vector<LevelsPack *>& LevelsManager::LevelsPacks() {
 
 void LevelsManager::reloadExternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface)
 {
-  std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/MyLevels/*.lvl", true);
+  std::vector<std::string> LvlFiles = XMFS::findPhysFiles("Levels/MyLevels/*.lvl", true);
   std::string v_levelName;
 
   i_db->levels_add_begin(true);
@@ -828,7 +828,7 @@ void LevelsManager::reloadLevelsFromLvl(xmDatabase* i_db, XMotoLoadLevelsInterfa
 
 void LevelsManager::reloadInternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface)
 {
-  std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl", true);
+  std::vector<std::string> LvlFiles = XMFS::findPhysFiles("Levels/*.lvl", true);
   std::string v_levelName;
 
   i_db->levels_add_begin(false);
@@ -886,22 +886,22 @@ void LevelsManager::reloadInternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterf
 }
 
 void LevelsManager::checkPrerequires() {
-  std::string LCachePath = FS::getUserDir() + std::string("/LCache");
+  std::string LCachePath = XMFS::getUserDir() + std::string("/LCache");
 
-  if(FS::isDir(LCachePath) == false) {
-    FS::mkArborescenceDir(LCachePath);
+  if(XMFS::isDir(LCachePath) == false) {
+    XMFS::mkArborescenceDir(LCachePath);
   }
 
-  if(FS::isDir(FS::getUserDir() + "/Levels/MyLevels") == false) {
-    FS::mkArborescenceDir(FS::getUserDir() + "/Levels/MyLevels");
+  if(XMFS::isDir(XMFS::getUserDir() + "/Levels/MyLevels") == false) {
+    XMFS::mkArborescenceDir(XMFS::getUserDir() + "/Levels/MyLevels");
   }
 }
 
 void LevelsManager::cleanCache() {
   /* Find all .blv-files in the directory */
-  std::vector<std::string> BlvFiles = FS::findPhysFiles("LCache/*.blv");
+  std::vector<std::string> BlvFiles = XMFS::findPhysFiles("LCache/*.blv");
   for(unsigned int i=0; i<BlvFiles.size(); i++) {
-    FS::deleteFile(BlvFiles[i]);
+    XMFS::deleteFile(BlvFiles[i]);
   }
 }
 
@@ -1212,18 +1212,18 @@ void LevelsManager::unlockLevelsPacks() {
 }
 
 void LevelsManager::writeDefaultPackagesSql(FileHandle* pfh, const std::string& i_sqlName, const std::string& i_sql) {
-  FS::writeLineF(pfh, "#define %s \"%s\"", i_sqlName.c_str(), i_sql.c_str());
+  XMFS::writeLineF(pfh, "#define %s \"%s\"", i_sqlName.c_str(), i_sql.c_str());
 }
 
 void LevelsManager::writeDefaultPackages(const std::string& i_file) {
   FileHandle* pfh;
 
-  pfh= FS::openOFile(i_file);
+  pfh= XMFS::openOFile(i_file);
   if(pfh == NULL) {
     throw Exception("Unable to open file " + i_file);
   }
 
-  FS::writeLineF(pfh, "// this file is generated automatically by \"xmoto --buildQueries\", don't edit it");
+  XMFS::writeLineF(pfh, "// this file is generated automatically by \"xmoto --buildQueries\", don't edit it");
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_ALL",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
@@ -1354,7 +1354,7 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  100            // last levels
 								  ));
 
-  FS::closeFile(pfh);
+  XMFS::closeFile(pfh);
 }
 
 std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i_isScripted,

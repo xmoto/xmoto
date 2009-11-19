@@ -76,7 +76,7 @@ struct FileHandle {
 /*===========================================================================
   File system I/O static stuff
   ===========================================================================*/
-class FS {
+class XMFS {
  public:        
   /* Methods */
   static void init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile, const std::string& i_userDirPath = "");

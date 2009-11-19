@@ -37,19 +37,19 @@ void xmDatabase::updateDB_profiles(XmDatabaseUpdateInterface *i_interface) {
   int         v_time;
   short       v_nVersion;
   /* Open binary file for input */
-  FileHandle *pfh = FS::openIFile("players.bin");
+  FileHandle *pfh = XMFS::openIFile("players.bin");
   if(pfh == NULL) {
     return;       
   }
 
   try {
-    v_nVersion = FS::readShort_LE(pfh);
+    v_nVersion = XMFS::readShort_LE(pfh);
     if(v_nVersion != 0x12) {
-      FS::closeFile(pfh);
+      XMFS::closeFile(pfh);
       throw Exception("players.bin not in 0x12 version");
     }
   } catch(Exception &e) {
-    FS::closeFile(pfh);
+    XMFS::closeFile(pfh);
     throw e;
   }
 
@@ -57,40 +57,40 @@ void xmDatabase::updateDB_profiles(XmDatabaseUpdateInterface *i_interface) {
     simpleSql("BEGIN TRANSACTION;");
 
     /* Read number of player profiles */
-    v_nNumPlayerProfiles = FS::readInt_LE(pfh);
+    v_nNumPlayerProfiles = XMFS::readInt_LE(pfh);
     
     if(v_nNumPlayerProfiles >= 0) {
       /* For each player profile */
       for(int i=0; i<v_nNumPlayerProfiles; i++) {
-	v_playerName = FS::readString(pfh);
+	v_playerName = XMFS::readString(pfh);
 	
 	if(i_interface != NULL) {
 	  i_interface->updatingDatabase(std::string(GAMETEXT_DB_UPGRADING_PROFILE)
 					+ " " + v_playerName);
 	}
 
-	v_nNumCompleted =  FS::readInt_LE(pfh);
-	v_nNumSkipped   = FS::readInt_LE(pfh);
+	v_nNumCompleted =  XMFS::readInt_LE(pfh);
+	v_nNumSkipped   = XMFS::readInt_LE(pfh);
 	
 	for(int j=0; j<v_nNumCompleted; j++) {
-	  v_id_level = FS::readString(pfh);
+	  v_id_level = XMFS::readString(pfh);
 	}      
 
 	for(int j=0; j<v_nNumSkipped; j++) {
-	  v_id_level = FS::readString(pfh);
+	  v_id_level = XMFS::readString(pfh);
 	}      
 	
-	v_id_level = FS::readString(pfh);
+	v_id_level = XMFS::readString(pfh);
 	while(v_id_level.length() != 0) {
-	  v_replay    = FS::readString(pfh);
-	  v_timeStamp = FS::readString(pfh);
+	  v_replay    = XMFS::readString(pfh);
+	  v_timeStamp = XMFS::readString(pfh);
 	  v_timeStamp = v_timeStamp.substr(9, 10) + " " + v_timeStamp.substr(0, 8);
-	  v_time     = GameApp::floatToTime(FS::readFloat_LE(pfh));
+	  v_time     = GameApp::floatToTime(XMFS::readFloat_LE(pfh));
 
 	  /* insert row */
 	  profiles_addFinishTime_nositekey(v_playerName, v_id_level, v_timeStamp, v_time);
 
-	  v_id_level = FS::readString(pfh);
+	  v_id_level = XMFS::readString(pfh);
 	}
       }
     }
@@ -100,7 +100,7 @@ void xmDatabase::updateDB_profiles(XmDatabaseUpdateInterface *i_interface) {
     throw e;
   }
 
-  FS::closeFile(pfh);
+  XMFS::closeFile(pfh);
 }
 
 void xmDatabase::profiles_addFinishTime(const std::string& i_sitekey, const std::string& i_profile, const std::string& i_id_level,

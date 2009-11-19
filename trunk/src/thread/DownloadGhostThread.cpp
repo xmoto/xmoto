@@ -70,7 +70,7 @@ int DownloadGhostThread::realThreadFunction()
 				 nrow);
 	if(nrow != 0) {
 	  v_fileUrl     = m_pDb->getResult(v_result, 1, 0, 0);
-	  v_replayName  = FS::getFileBaseName(v_fileUrl);
+	  v_replayName  = XMFS::getFileBaseName(v_fileUrl);
 	  
 	  if(m_pDb->replays_exists(v_replayName) == false) {
 	    if(XMSession::instance()->www()) {
