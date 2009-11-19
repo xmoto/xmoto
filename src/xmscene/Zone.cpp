@@ -121,11 +121,11 @@ Zone* Zone::readFromXml(TiXmlElement *pElem) {
 }
 
 void Zone::saveBinary(FileHandle *i_pfh) {
-  FS::writeString(i_pfh,Id());
-  FS::writeByte(i_pfh, Prims().size());
+  XMFS::writeString(i_pfh,Id());
+  XMFS::writeByte(i_pfh, Prims().size());
         
   for(unsigned int j=0;j<Prims().size();j++) {
-    FS::writeInt_LE(i_pfh,(int) (Prims()[j]->Type()));
+    XMFS::writeInt_LE(i_pfh,(int) (Prims()[j]->Type()));
     Prims()[j]->saveBinary(i_pfh);
   }
 }
@@ -183,20 +183,20 @@ void Zone::updateZoneSpeciality(std::string i_scriptSource) {
 }
         
 void ZonePrimBox::saveBinary(FileHandle *i_pfh) {
-  FS::writeFloat_LE(i_pfh,m_left);
-  FS::writeFloat_LE(i_pfh,m_right);
-  FS::writeFloat_LE(i_pfh,m_top);
-  FS::writeFloat_LE(i_pfh,m_bottom);
+  XMFS::writeFloat_LE(i_pfh,m_left);
+  XMFS::writeFloat_LE(i_pfh,m_right);
+  XMFS::writeFloat_LE(i_pfh,m_top);
+  XMFS::writeFloat_LE(i_pfh,m_bottom);
 }
 
 Zone* Zone::readFromBinary(FileHandle *i_pfh) {
-  Zone *v_zone = new Zone(FS::readString(i_pfh));
+  Zone *v_zone = new Zone(XMFS::readString(i_pfh));
   ZonePrimType v_zonePrimType;
   
-  int nNumPrims = FS::readByte(i_pfh);
+  int nNumPrims = XMFS::readByte(i_pfh);
   v_zone->m_prims.reserve(nNumPrims);
   for(int j=0;j<nNumPrims;j++) {
-    v_zonePrimType = (ZonePrimType) FS::readInt_LE(i_pfh);
+    v_zonePrimType = (ZonePrimType) XMFS::readInt_LE(i_pfh);
 
     switch(v_zonePrimType) {
     case LZPT_BOX:
@@ -222,10 +222,10 @@ ZonePrim* ZonePrimBox::readFromXml(TiXmlElement *i_elem) {
 ZonePrim* ZonePrimBox::readFromBinary(FileHandle *i_pfh) {
   float v_bottom, v_top, v_left, v_right;
 
-  v_left   = FS::readFloat_LE(i_pfh);
-  v_right  = FS::readFloat_LE(i_pfh);
-  v_top    = FS::readFloat_LE(i_pfh);
-  v_bottom = FS::readFloat_LE(i_pfh);
+  v_left   = XMFS::readFloat_LE(i_pfh);
+  v_right  = XMFS::readFloat_LE(i_pfh);
+  v_top    = XMFS::readFloat_LE(i_pfh);
+  v_bottom = XMFS::readFloat_LE(i_pfh);
 
   return new ZonePrimBox(v_left, v_right, v_top, v_bottom);
 }

@@ -234,7 +234,7 @@ void Texture::removeAssociatedSprites()
     Texture *pTexture = NULL;
     
     /* Name it */
-    std::string TexName = FS::getFileBaseName(Path);
+    std::string TexName = XMFS::getFileBaseName(Path);
 
     /* if the texture is already loaded, return it */
     pTexture = getTexture(TexName);

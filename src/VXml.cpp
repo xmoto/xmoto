@@ -36,18 +36,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Load */
     std::string Line,Doc = "";    
     
-    FileHandle *pfh = FS::openIFile(File, i_includeCurrentDir);
+    FileHandle *pfh = XMFS::openIFile(File, i_includeCurrentDir);
     if(pfh==NULL) return;
 
     m_pXML = new TiXmlDocument;
     
-    while(FS::readNextLine(pfh,Line)) {
+    while(XMFS::readNextLine(pfh,Line)) {
       if(Line.length() > 0) {
         Doc.append(Line);
         Doc.append("\n");
       }
     }    
-    FS::closeFile(pfh);
+    XMFS::closeFile(pfh);
     
     /* Are we just going to need the CRC? */
     if(pnCRC32 != NULL) {
@@ -68,10 +68,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void XMLDocument::writeToFile(std::string File) {
     /* Anything? */
     if(!m_pXML) return;
-    FileHandle *pfh = FS::openOFile(File);
+    FileHandle *pfh = XMFS::openOFile(File);
     if(pfh==NULL || pfh->Type!=FHT_STDIO) return;
     m_pXML->Print(pfh->fp);
-    FS::closeFile(pfh);
+    XMFS::closeFile(pfh);
   }
 
   std::string XML::str2xmlstr(std::string str) {

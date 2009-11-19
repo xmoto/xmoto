@@ -379,7 +379,7 @@ bool StatePreplaying::needToDownloadGhost()
 						    nrow);
     if(nrow != 0) {
       v_fileUrl    = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
-      v_replayName = FS::getFileBaseName(v_fileUrl);
+      v_replayName = XMFS::getFileBaseName(v_fileUrl);
 
       /* search if the replay is already downloaded */
       if(xmDatabase::instance("main")->replays_exists(v_replayName) == false) {

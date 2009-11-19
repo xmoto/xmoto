@@ -1813,7 +1813,7 @@ void StateMainMenu::checkEventsReplays() {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
-	std::string v_replayPath = FS::getUserDir() + "/Replays/" + pListEntry->Text[0] + ".rpl";
+	std::string v_replayPath = XMFS::getUserDir() + "/Replays/" + pListEntry->Text[0] + ".rpl";
 	StateManager::instance()->pushState(new StateUploadHighscore(v_replayPath));	  
       }
     }

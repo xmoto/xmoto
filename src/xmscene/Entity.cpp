@@ -417,37 +417,37 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
 }
 
 void Entity::saveBinary(FileHandle *i_pfh) {
-  FS::writeString(i_pfh,   Id());
-  FS::writeString(i_pfh,   Entity::SpecialityToStr(Speciality()));
-  FS::writeFloat_LE(i_pfh, Size());
-  FS::writeFloat_LE(i_pfh, Width());       
-  FS::writeFloat_LE(i_pfh, Height()); 
-  FS::writeFloat_LE(i_pfh, InitialPosition().x);
-  FS::writeFloat_LE(i_pfh, InitialPosition().y);
-  FS::writeFloat_LE(i_pfh, DrawAngle());
-  FS::writeBool(i_pfh,  DrawReversed());
+  XMFS::writeString(i_pfh,   Id());
+  XMFS::writeString(i_pfh,   Entity::SpecialityToStr(Speciality()));
+  XMFS::writeFloat_LE(i_pfh, Size());
+  XMFS::writeFloat_LE(i_pfh, Width());       
+  XMFS::writeFloat_LE(i_pfh, Height()); 
+  XMFS::writeFloat_LE(i_pfh, InitialPosition().x);
+  XMFS::writeFloat_LE(i_pfh, InitialPosition().y);
+  XMFS::writeFloat_LE(i_pfh, DrawAngle());
+  XMFS::writeBool(i_pfh,  DrawReversed());
   
   switch(Speciality()) {
   case ET_NONE:
   case ET_PARTICLES_SOURCE:
-    FS::writeByte(i_pfh, 0x02);
+    XMFS::writeByte(i_pfh, 0x02);
     break;
   default:
-    FS::writeByte(i_pfh, 0x01);
+    XMFS::writeByte(i_pfh, 0x01);
   }
 
   std::ostringstream v_z;
   v_z << Z();
-  FS::writeString(i_pfh, "z");
-  FS::writeString(i_pfh, v_z.str());
+  XMFS::writeString(i_pfh, "z");
+  XMFS::writeString(i_pfh, v_z.str());
 
   if(Speciality() == ET_NONE) {
-    FS::writeString(i_pfh, "name");
-    FS::writeString(i_pfh, SpriteName());
+    XMFS::writeString(i_pfh, "name");
+    XMFS::writeString(i_pfh, SpriteName());
   }
   else if(Speciality() == ET_PARTICLES_SOURCE) {
-    FS::writeString(i_pfh, "type");
-    FS::writeString(i_pfh, SpriteName());
+    XMFS::writeString(i_pfh, "type");
+    XMFS::writeString(i_pfh, SpriteName());
   }
 }
 
@@ -466,22 +466,22 @@ Entity* Entity::readFromBinary(FileHandle *i_pfh) {
   std::string v_typeName;
 
   /* read values */
-  v_id         = FS::readString(i_pfh);
-  v_typeId     = FS::readString(i_pfh);
+  v_id         = XMFS::readString(i_pfh);
+  v_typeId     = XMFS::readString(i_pfh);
   v_speciality = Entity::SpecialityFromStr(v_typeId);
-  v_size       = FS::readFloat_LE(i_pfh);
-  v_width      = FS::readFloat_LE(i_pfh);
-  v_height     = FS::readFloat_LE(i_pfh);
-  v_position.x = FS::readFloat_LE(i_pfh);
-  v_position.y = FS::readFloat_LE(i_pfh);
-  v_angle      = FS::readFloat_LE(i_pfh);
-  v_reversed   = FS::readBool(i_pfh);
+  v_size       = XMFS::readFloat_LE(i_pfh);
+  v_width      = XMFS::readFloat_LE(i_pfh);
+  v_height     = XMFS::readFloat_LE(i_pfh);
+  v_position.x = XMFS::readFloat_LE(i_pfh);
+  v_position.y = XMFS::readFloat_LE(i_pfh);
+  v_angle      = XMFS::readFloat_LE(i_pfh);
+  v_reversed   = XMFS::readBool(i_pfh);
   std::string v_paramName;
   std::string v_paramValue;
-  int nNumParams = FS::readByte(i_pfh);
+  int nNumParams = XMFS::readByte(i_pfh);
   for(int j=0;j<nNumParams;j++) {
-    v_paramName  = FS::readString(i_pfh);
-    v_paramValue = FS::readString(i_pfh);
+    v_paramName  = XMFS::readString(i_pfh);
+    v_paramValue = XMFS::readString(i_pfh);
 
     if(v_paramName == "z") {
       v_z = atof(v_paramValue.c_str());
@@ -510,24 +510,24 @@ void Joint::saveBinary(FileHandle *i_pfh)
 {
   Entity::saveBinary(i_pfh);
   
-  FS::writeByte(i_pfh, 0x03);
+  XMFS::writeByte(i_pfh, 0x03);
 
-  FS::writeString(i_pfh, "type");
-  FS::writeString(i_pfh, jointTypeToStr(getJointType()));
-  FS::writeString(i_pfh, "start");
-  FS::writeString(i_pfh, getStartBlockId());
-  FS::writeString(i_pfh, "end");
-  FS::writeString(i_pfh, getEndBlockId());
+  XMFS::writeString(i_pfh, "type");
+  XMFS::writeString(i_pfh, jointTypeToStr(getJointType()));
+  XMFS::writeString(i_pfh, "start");
+  XMFS::writeString(i_pfh, getStartBlockId());
+  XMFS::writeString(i_pfh, "end");
+  XMFS::writeString(i_pfh, getEndBlockId());
 }
 
 void Joint::readFromBinary(FileHandle *i_pfh)
 {
   std::string v_paramName;
   std::string v_paramValue;
-  int nNumParams = FS::readByte(i_pfh);
+  int nNumParams = XMFS::readByte(i_pfh);
   for(int j=0;j<nNumParams;j++) {
-    v_paramName  = FS::readString(i_pfh);
-    v_paramValue = FS::readString(i_pfh);
+    v_paramName  = XMFS::readString(i_pfh);
+    v_paramValue = XMFS::readString(i_pfh);
 
     if(v_paramName == "type") {
       setJointType(jointTypeFromStr(v_paramValue));

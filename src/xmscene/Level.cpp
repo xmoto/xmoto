@@ -671,12 +671,12 @@ void Level::loadXML() {
 bool Level::loadReducedFromFile() {
   std::string cacheFileName;
 
-  m_checkSum = FS::md5sum(FileName());
+  m_checkSum = XMFS::md5sum(FileName());
 
   // First try to load it from the cache
   bool cached = false;
   /* Determine name in cache */
-  std::string LevelFileBaseName = FS::getFileBaseName(FileName());
+  std::string LevelFileBaseName = XMFS::getFileBaseName(FileName());
   cacheFileName = getNameInCache();
     
   try {
@@ -699,7 +699,7 @@ bool Level::loadReducedFromFile() {
 }
 
 std::string Level::getNameInCache() const {
-  return "LCache/" + Checksum() + FS::getFileBaseName(FileName()) + ".blv";
+  return "LCache/" + Checksum() + XMFS::getFileBaseName(FileName()) + ".blv";
 }
 
 void Level::removeFromCache(xmDatabase *i_db, const std::string& i_id_level) {
@@ -712,7 +712,7 @@ void Level::removeFromCache(xmDatabase *i_db, const std::string& i_id_level) {
     try {
       std::string v_checkSum = i_db->getResult(v_result, 2, 0, 0);
       std::string v_filePath = i_db->getResult(v_result, 2, 0, 1);
-      FS::deleteFile("LCache/" + v_checkSum + FS::getFileBaseName(v_filePath) + ".blv");
+      XMFS::deleteFile("LCache/" + v_checkSum + XMFS::getFileBaseName(v_filePath) + ".blv");
     } catch(Exception &e) {
       /* ok, it was perhaps not in cache */
     }
@@ -728,80 +728,80 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
   if(isXMotoTooOld()) return;
   
   /* Export binary... */
-  FileHandle *pfh = FS::openOFile(FileName);
+  FileHandle *pfh = XMFS::openOFile(FileName);
   if(pfh == NULL) {
     LogWarning("Failed to export binary: %s",FileName.c_str());
   }
   else {
     exportBinaryHeader(pfh);
 
-    FS::writeString(pfh,   m_sky->Texture());
-    FS::writeFloat_LE(pfh, m_sky->Zoom());
-    FS::writeFloat_LE(pfh, m_sky->Offset());
-    FS::writeInt_LE(pfh,   m_sky->TextureColor().Red());
-    FS::writeInt_LE(pfh,   m_sky->TextureColor().Green());
-    FS::writeInt_LE(pfh,   m_sky->TextureColor().Blue());
-    FS::writeInt_LE(pfh,   m_sky->TextureColor().Alpha());
-    FS::writeBool(pfh,     m_sky->Drifted());
-    FS::writeFloat_LE(pfh, m_sky->DriftZoom());
-    FS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Red());
-    FS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Green());
-    FS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Blue());
-    FS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Alpha());
+    XMFS::writeString(pfh,   m_sky->Texture());
+    XMFS::writeFloat_LE(pfh, m_sky->Zoom());
+    XMFS::writeFloat_LE(pfh, m_sky->Offset());
+    XMFS::writeInt_LE(pfh,   m_sky->TextureColor().Red());
+    XMFS::writeInt_LE(pfh,   m_sky->TextureColor().Green());
+    XMFS::writeInt_LE(pfh,   m_sky->TextureColor().Blue());
+    XMFS::writeInt_LE(pfh,   m_sky->TextureColor().Alpha());
+    XMFS::writeBool(pfh,     m_sky->Drifted());
+    XMFS::writeFloat_LE(pfh, m_sky->DriftZoom());
+    XMFS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Red());
+    XMFS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Green());
+    XMFS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Blue());
+    XMFS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Alpha());
     
-    FS::writeString(pfh,   m_sky->BlendTexture());
+    XMFS::writeString(pfh,   m_sky->BlendTexture());
     
-    FS::writeString(pfh,m_borderTexture);
-    FS::writeString(pfh,m_scriptFileName);
+    XMFS::writeString(pfh,m_borderTexture);
+    XMFS::writeString(pfh,m_scriptFileName);
 
-    FS::writeFloat_LE(pfh,m_leftLimit);
-    FS::writeFloat_LE(pfh,m_rightLimit);
-    FS::writeFloat_LE(pfh,m_topLimit);
-    FS::writeFloat_LE(pfh,m_bottomLimit);
+    XMFS::writeFloat_LE(pfh,m_leftLimit);
+    XMFS::writeFloat_LE(pfh,m_rightLimit);
+    XMFS::writeFloat_LE(pfh,m_topLimit);
+    XMFS::writeFloat_LE(pfh,m_bottomLimit);
 
-    FS::writeString(pfh,m_rSpriteForStrawberry);
-    FS::writeString(pfh,m_rSpriteForFlower);
-    FS::writeString(pfh,m_rSpriteForWecker);
-    FS::writeString(pfh,m_rSpriteForStar);
-    FS::writeString(pfh,m_rSoundForPickUpStrawberry);
+    XMFS::writeString(pfh,m_rSpriteForStrawberry);
+    XMFS::writeString(pfh,m_rSpriteForFlower);
+    XMFS::writeString(pfh,m_rSpriteForWecker);
+    XMFS::writeString(pfh,m_rSpriteForStar);
+    XMFS::writeString(pfh,m_rSoundForPickUpStrawberry);
 
-    FS::writeInt_LE(pfh, m_numberLayer);
+    XMFS::writeInt_LE(pfh, m_numberLayer);
     for(int i=0; i<m_numberLayer; i++){
-      FS::writeFloat_LE(pfh, m_layerOffsets[i].x);
-      FS::writeFloat_LE(pfh, m_layerOffsets[i].y);
-      FS::writeBool(pfh,     m_isLayerFront[i]);
+      XMFS::writeFloat_LE(pfh, m_layerOffsets[i].x);
+      XMFS::writeFloat_LE(pfh, m_layerOffsets[i].y);
+      XMFS::writeBool(pfh,     m_isLayerFront[i]);
     }    
 
     /* Write script (if any) */
-    FS::writeInt_LE(pfh,m_scriptSource.length());
-    FS::writeBuf(pfh,(char *)m_scriptSource.c_str(),m_scriptSource.length());
+    XMFS::writeInt_LE(pfh,m_scriptSource.length());
+    XMFS::writeBuf(pfh,(char *)m_scriptSource.c_str(),m_scriptSource.length());
       
     /* Write blocks */
-    FS::writeInt_LE(pfh,m_blocks.size());
+    XMFS::writeInt_LE(pfh,m_blocks.size());
     for(unsigned int i=0;i<m_blocks.size();i++) {
       m_blocks[i]->saveBinary(pfh);
     }
       
     /* Write entities */
-    FS::writeInt_LE(pfh,m_entities.size());
+    XMFS::writeInt_LE(pfh,m_entities.size());
     for(unsigned int i=0;i<m_entities.size();i++) {
       m_entities[i]->saveBinary(pfh);
     }
 
     // write joints
-    FS::writeInt_LE(pfh, m_joints.size());
+    XMFS::writeInt_LE(pfh, m_joints.size());
     for(unsigned int i=0; i<m_joints.size(); i++) {
       m_joints[i]->saveBinary(pfh);
     }
       
     /* Write zones */
-    FS::writeInt_LE(pfh,m_zones.size());
+    XMFS::writeInt_LE(pfh,m_zones.size());
     for(unsigned int i=0;i<m_zones.size();i++) {
       m_zones[i]->saveBinary(pfh);
     }
                 
     /* clean up */
-    FS::closeFile(pfh);
+    XMFS::closeFile(pfh);
   }
 }
   
@@ -824,23 +824,23 @@ void Level::importBinaryHeader(FileHandle *pfh) {
   m_playerStart  = Vector2f(0.0, 0.0);
   m_xmotoTooOld  = false;
 
-  int nFormat = FS::readInt_LE(pfh);
+  int nFormat = XMFS::readInt_LE(pfh);
   
   if(nFormat != CACHE_LEVEL_FORMAT_VERSION) {
     throw Exception("Old file format");
   }
   
-  m_checkSum    = FS::readString(pfh);
-  m_id      	= FS::readString(pfh);
-  m_pack    	= FS::readString(pfh);
-  m_packNum 	= FS::readString(pfh);
-  m_name    	= FS::readString(pfh);
-  m_description = FS::readString(pfh);
-  m_author 	= FS::readString(pfh);
-  m_date   	= FS::readString(pfh);
-  m_music       = FS::readString(pfh);
-  m_isScripted  = FS::readBool(pfh);
-  m_isPhysics   = FS::readBool(pfh);
+  m_checkSum    = XMFS::readString(pfh);
+  m_id      	= XMFS::readString(pfh);
+  m_pack    	= XMFS::readString(pfh);
+  m_packNum 	= XMFS::readString(pfh);
+  m_name    	= XMFS::readString(pfh);
+  m_description = XMFS::readString(pfh);
+  m_author 	= XMFS::readString(pfh);
+  m_date   	= XMFS::readString(pfh);
+  m_music       = XMFS::readString(pfh);
+  m_isScripted  = XMFS::readBool(pfh);
+  m_isPhysics   = XMFS::readBool(pfh);
 }
 
 void Level::importHeader(const std::string& i_id,
@@ -879,7 +879,7 @@ void Level::importHeader(const std::string& i_id,
   ===========================================================================*/
 bool Level::importBinaryHeaderFromFile(const std::string &FileName, const std::string& pSum) {
   /* Import binary */
-  FileHandle *pfh = FS::openIFile(FileName, true);
+  FileHandle *pfh = XMFS::openIFile(FileName, true);
   if(pfh == NULL) {
     return false;
   }
@@ -888,16 +888,16 @@ bool Level::importBinaryHeaderFromFile(const std::string &FileName, const std::s
     importBinaryHeader(pfh);
     if(m_checkSum != pSum) {
       LogWarning("CRC check failed, can't import: %s",FileName.c_str());
-      FS::closeFile(pfh);
+      XMFS::closeFile(pfh);
       return false;
     }
   } catch(Exception &e) {
-    FS::closeFile(pfh);
+    XMFS::closeFile(pfh);
     return false;
   }
              
   /* clean up */
-  FS::closeFile(pfh);
+  XMFS::closeFile(pfh);
 
   return true;
 }
@@ -908,18 +908,18 @@ void Level::exportBinaryHeader(FileHandle *pfh) {
   /* 4 -> includes level pack num */
   /* 5 -> clean code */
   /* Write CRC32 of XML */
-  FS::writeInt_LE(pfh, CACHE_LEVEL_FORMAT_VERSION);
-  FS::writeString(pfh	    , m_checkSum);
-  FS::writeString(pfh	    , m_id);
-  FS::writeString(pfh	    , m_pack);
-  FS::writeString(pfh	    , m_packNum);
-  FS::writeString(pfh	    , m_name);
-  FS::writeString(pfh	    , m_description);
-  FS::writeString(pfh	    , m_author);
-  FS::writeString(pfh	    , m_date);
-  FS::writeString(pfh	    , m_music);
-  FS::writeBool(  pfh	    , m_isScripted);
-  FS::writeBool(  pfh	    , m_isPhysics);
+  XMFS::writeInt_LE(pfh, CACHE_LEVEL_FORMAT_VERSION);
+  XMFS::writeString(pfh	    , m_checkSum);
+  XMFS::writeString(pfh	    , m_id);
+  XMFS::writeString(pfh	    , m_pack);
+  XMFS::writeString(pfh	    , m_packNum);
+  XMFS::writeString(pfh	    , m_name);
+  XMFS::writeString(pfh	    , m_description);
+  XMFS::writeString(pfh	    , m_author);
+  XMFS::writeString(pfh	    , m_date);
+  XMFS::writeString(pfh	    , m_music);
+  XMFS::writeBool(  pfh	    , m_isScripted);
+  XMFS::writeBool(  pfh	    , m_isPhysics);
 }
 
 bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
@@ -931,72 +931,72 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
   m_xmotoTooOld = false;
   
   /* Import binary */
-  FileHandle *pfh = FS::openIFile(FileName, true);
+  FileHandle *pfh = XMFS::openIFile(FileName, true);
   if(pfh == NULL) {
     return false;
   }
   else {
     /* Read tag - it tells something about the format */
-    int nFormat = FS::readInt_LE(pfh);
+    int nFormat = XMFS::readInt_LE(pfh);
     
     if(nFormat == CACHE_LEVEL_FORMAT_VERSION) { /* reject other formats */
       /* Read "format 1" / "format 2" binary level */
       /* Right */
-      std::string md5sum = FS::readString(pfh);
+      std::string md5sum = XMFS::readString(pfh);
       if(md5sum != pSum) {
         LogWarning("CRC check failed, can't import: %s",FileName.c_str());
         bRet = false;
       }
       else {
         /* Read header */
-        m_id = FS::readString(pfh);
-        m_pack = FS::readString(pfh);
-        m_packNum = FS::readString(pfh);
-        m_name = FS::readString(pfh);
-        m_description = FS::readString(pfh);
-        m_author = FS::readString(pfh);
-        m_date = FS::readString(pfh);
-        m_music = FS::readString(pfh);
-	m_isScripted = FS::readBool(pfh);
-	m_isPhysics  = FS::readBool(pfh);
+        m_id = XMFS::readString(pfh);
+        m_pack = XMFS::readString(pfh);
+        m_packNum = XMFS::readString(pfh);
+        m_name = XMFS::readString(pfh);
+        m_description = XMFS::readString(pfh);
+        m_author = XMFS::readString(pfh);
+        m_date = XMFS::readString(pfh);
+        m_music = XMFS::readString(pfh);
+	m_isScripted = XMFS::readBool(pfh);
+	m_isPhysics  = XMFS::readBool(pfh);
 
 	/* sky */
-        m_sky->setTexture(FS::readString(pfh));
-	m_sky->setZoom(FS::readFloat_LE(pfh));
-	m_sky->setOffset(FS::readFloat_LE(pfh));
+        m_sky->setTexture(XMFS::readString(pfh));
+	m_sky->setZoom(XMFS::readFloat_LE(pfh));
+	m_sky->setOffset(XMFS::readFloat_LE(pfh));
         
 	int v_r, v_g, v_b, v_a;
-	v_r = FS::readInt_LE(pfh);
-	v_g = FS::readInt_LE(pfh);
-	v_b = FS::readInt_LE(pfh);
-	v_a = FS::readInt_LE(pfh);
+	v_r = XMFS::readInt_LE(pfh);
+	v_g = XMFS::readInt_LE(pfh);
+	v_b = XMFS::readInt_LE(pfh);
+	v_a = XMFS::readInt_LE(pfh);
 	m_sky->setTextureColor(TColor(v_r, v_g, v_b, v_a));
 
-	m_sky->setDrifted(FS::readBool(pfh));
-	m_sky->setDriftZoom(FS::readFloat_LE(pfh));
+	m_sky->setDrifted(XMFS::readBool(pfh));
+	m_sky->setDriftZoom(XMFS::readFloat_LE(pfh));
 
-	v_r = FS::readInt_LE(pfh);
-	v_g = FS::readInt_LE(pfh);
-	v_b = FS::readInt_LE(pfh);
-	v_a = FS::readInt_LE(pfh);
+	v_r = XMFS::readInt_LE(pfh);
+	v_g = XMFS::readInt_LE(pfh);
+	v_b = XMFS::readInt_LE(pfh);
+	v_a = XMFS::readInt_LE(pfh);
 	m_sky->setDriftTextureColor(TColor(v_r, v_g, v_b, v_a));
 	/* *** */
-        m_sky->setBlendTexture(FS::readString(pfh));
-        m_borderTexture = FS::readString(pfh);
+        m_sky->setBlendTexture(XMFS::readString(pfh));
+        m_borderTexture = XMFS::readString(pfh);
 
-        m_scriptFileName = FS::readString(pfh);
+        m_scriptFileName = XMFS::readString(pfh);
 
-        m_leftLimit = FS::readFloat_LE(pfh);
-        m_rightLimit = FS::readFloat_LE(pfh);
-        m_topLimit = FS::readFloat_LE(pfh);
-        m_bottomLimit = FS::readFloat_LE(pfh);
+        m_leftLimit = XMFS::readFloat_LE(pfh);
+        m_rightLimit = XMFS::readFloat_LE(pfh);
+        m_topLimit = XMFS::readFloat_LE(pfh);
+        m_bottomLimit = XMFS::readFloat_LE(pfh);
 
 	/* theme replacements */
-	m_rSpriteForStrawberry 	    = FS::readString(pfh);
-	m_rSpriteForFlower     	    = FS::readString(pfh);
-	m_rSpriteForWecker     	    = FS::readString(pfh);
-	m_rSpriteForStar       	    = FS::readString(pfh);
-	m_rSoundForPickUpStrawberry = FS::readString(pfh);
+	m_rSpriteForStrawberry 	    = XMFS::readString(pfh);
+	m_rSpriteForFlower     	    = XMFS::readString(pfh);
+	m_rSpriteForWecker     	    = XMFS::readString(pfh);
+	m_rSpriteForStar       	    = XMFS::readString(pfh);
+	m_rSoundForPickUpStrawberry = XMFS::readString(pfh);
 
 	if(m_rSpriteForStrawberry == "")
 	  m_rSpriteForStrawberry = "Strawberry";
@@ -1008,20 +1008,20 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
 	  m_rSpriteForStar = "Star";
 
 	/* layers */
-	m_numberLayer = FS::readInt_LE(pfh);
+	m_numberLayer = XMFS::readInt_LE(pfh);
 	for(int i=0; i<m_numberLayer; i++){
 	  Vector2f offset;
-	  offset.x = FS::readFloat_LE(pfh);
-	  offset.y = FS::readFloat_LE(pfh);
+	  offset.x = XMFS::readFloat_LE(pfh);
+	  offset.y = XMFS::readFloat_LE(pfh);
 	  m_layerOffsets.push_back(offset);
-	  m_isLayerFront.push_back(FS::readBool(pfh));
+	  m_isLayerFront.push_back(XMFS::readBool(pfh));
 	}
 
         /* Read embedded script */
-        int nScriptSourceLen = FS::readInt_LE(pfh);
+        int nScriptSourceLen = XMFS::readInt_LE(pfh);
         if(nScriptSourceLen > 0) {
           char *pcTemp = new char[nScriptSourceLen+1];
-          FS::readBuf(pfh,(char *)pcTemp,nScriptSourceLen);
+          XMFS::readBuf(pfh,(char *)pcTemp,nScriptSourceLen);
           pcTemp[nScriptSourceLen]='\0';
             
           m_scriptSource = pcTemp;
@@ -1032,14 +1032,14 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
           m_scriptSource = "";
 
         /* Read blocks */
-        int nNumBlocks = FS::readInt_LE(pfh);
+        int nNumBlocks = XMFS::readInt_LE(pfh);
         m_blocks.reserve(nNumBlocks);
         for(int i=0;i<nNumBlocks;i++) {
           m_blocks.push_back(Block::readFromBinary(pfh));
         }
 
         /* Read entities */
-        int nNumEntities = FS::readInt_LE(pfh);
+        int nNumEntities = XMFS::readInt_LE(pfh);
         m_entities.reserve(nNumEntities);
         for(int i=0;i<nNumEntities;i++) {
 	  Entity* v_entity = Entity::readFromBinary(pfh);
@@ -1053,7 +1053,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
 	  m_playerStart = Vector2f(0.0, 0.0);
 	}
 
-        int nNumJoints = FS::readInt_LE(pfh);
+        int nNumJoints = XMFS::readInt_LE(pfh);
         m_joints.reserve(nNumJoints);
         for(int i=0; i<nNumJoints; i++) {
 	  Entity* v_entity = Entity::readFromBinary(pfh);
@@ -1063,7 +1063,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         }
 
         /* Read zones */
-        int nNumZones = FS::readInt_LE(pfh);
+        int nNumZones = XMFS::readInt_LE(pfh);
         m_zones.reserve(nNumZones);
         for(int i=0;i<nNumZones;i++) {
           m_zones.push_back(Zone::readFromBinary(pfh));
@@ -1083,7 +1083,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
     }
              
     /* clean up */
-    FS::closeFile(pfh);
+    XMFS::closeFile(pfh);
   }
     
   m_isBodyLoaded = bRet;

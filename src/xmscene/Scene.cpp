@@ -537,7 +537,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     bool bGotScript = false;
     
     if(m_pLevelSrc->scriptFileName() != "") {
-      FileHandle *pfh = FS::openIFile(std::string("./Levels/") + m_pLevelSrc->scriptFileName());
+      FileHandle *pfh = XMFS::openIFile(std::string("./Levels/") + m_pLevelSrc->scriptFileName());
       if(pfh == NULL) {
         /* Well, file not found -- try encapsulated script */
         bNeedScript = true;
@@ -545,13 +545,13 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
       else {      
         std::string Line,ScriptBuf="";
         
-        while(FS::readNextLine(pfh,Line)) {
+        while(XMFS::readNextLine(pfh,Line)) {
           if(Line.length() > 0) {
             ScriptBuf.append(Line.append("\n"));
           }
         }
         
-        FS::closeFile(pfh);
+        XMFS::closeFile(pfh);
 
 	try {
 	  m_luaGame->loadScript(ScriptBuf, m_pLevelSrc->scriptFileName());

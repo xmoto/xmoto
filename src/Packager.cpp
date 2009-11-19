@@ -143,10 +143,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       std::string SubDirPath = Extra + "/" + SubDir;
       Extra = SubDirPath;
       
-      if(!FS::isDir(SubDirPath)) {
+      if(!XMFS::isDir(SubDirPath)) {
         /* Try making dir */
         printf("Making directory: %s\n",SubDirPath.c_str());
-        FS::mkDir(SubDirPath.c_str());                
+        XMFS::mkDir(SubDirPath.c_str());                
       }
       
       Rem = Rem.substr(i+1);

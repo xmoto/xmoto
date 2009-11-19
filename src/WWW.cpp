@@ -26,9 +26,9 @@
 #define DEFAULT_WWW_MSGFILE "wwwMsg.xml"
 
 void WebRoom::downloadReplay(const std::string& i_url) {
-  std::string i_rplFilename = FS::getReplaysDir()
+  std::string i_rplFilename = XMFS::getReplaysDir()
     + "/" 
-    + FS::getFileBaseName(i_url) 
+    + XMFS::getFileBaseName(i_url) 
     + ".rpl";
 
   /* download xml file */
@@ -45,7 +45,7 @@ void WebRoom::downloadReplay(const std::string& i_url) {
 
 WebRoom::WebRoom(WWWAppInterface* p_WebRoomApp)
 {
-  m_userFilename_prefix = FS::getUserDir()
+  m_userFilename_prefix = XMFS::getUserDir()
     + "/" 
     + DEFAULT_WEBHIGHSCORES_FILENAME_PREFIX;
   m_webhighscores_url = DEFAULT_WEBHIGHSCORES_URL;
@@ -139,8 +139,8 @@ void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
   bool require_dwd = true;
 
   try {
-    if(FS::isFileReadable(p_local_file) == true) {
-      std::string v_md5Local  = FS::md5sum(p_local_file);
+    if(XMFS::isFileReadable(p_local_file) == true) {
+      std::string v_md5Local  = XMFS::md5sum(p_local_file);
       if(v_md5Local != "") {
 	std::string v_md5File = p_local_file + ".md5";
   
@@ -309,7 +309,7 @@ void FSWeb::uploadReplay(const std::string& p_replayFilename,
 
   FILE *v_destinationFile;
   std::string v_local_file;
-  v_local_file = FS::getUserDir() + "/" + DEFAULT_WWW_MSGFILE;
+  v_local_file = XMFS::getUserDir() + "/" + DEFAULT_WWW_MSGFILE;
 
   struct curl_httppost *v_post, *v_last;
 
@@ -467,7 +467,7 @@ void FSWeb::sendVote(const std::string& p_id_level,
 
   FILE *v_destinationFile;
   std::string v_local_file;
-  v_local_file = FS::getUserDir() + "/" + DEFAULT_WWW_MSGFILE;
+  v_local_file = XMFS::getUserDir() + "/" + DEFAULT_WWW_MSGFILE;
 
   struct curl_httppost *v_post, *v_last;
 
@@ -704,7 +704,7 @@ void WebLevels::setWebsiteInfos(const std::string &p_url, const ProxySettings* p
 }
 
 std::string WebLevels::getXmlFileName() {
-  return FS::getUserDir() + "/" + DEFAULT_WEBLEVELS_FILENAME;
+  return XMFS::getUserDir() + "/" + DEFAULT_WEBLEVELS_FILENAME;
 }
 
 void WebLevels::downloadXml()
@@ -723,20 +723,20 @@ void WebLevels::downloadXml()
 }
 
 std::string WebLevels::getDestinationDir() {
-  return FS::getLevelsDir() + "/" + DEFAULT_WEBLEVELS_DIR;
+  return XMFS::getLevelsDir() + "/" + DEFAULT_WEBLEVELS_DIR;
 }
 
 void WebLevels::createDestinationDirIfRequired() {
   std::string v_destination_dir = getDestinationDir();
 
-  if(FS::isDir(v_destination_dir) == false) {
+  if(XMFS::isDir(v_destination_dir) == false) {
     /* no mkdir() with microsoft C */
-    FS::mkArborescence(v_destination_dir + "/file");
+    XMFS::mkArborescence(v_destination_dir + "/file");
   }
 }
 
 std::string WebLevels::getDestinationFile(std::string p_url) {
-  return getDestinationDir() + "/" + FS::getFileBaseName(p_url) + ".lvl";
+  return getDestinationDir() + "/" + XMFS::getFileBaseName(p_url) + ".lvl";
 }
 
 void WebLevels::update(xmDatabase *i_db) {
@@ -873,7 +873,7 @@ void WebLevels::upgrade(xmDatabase *i_db) {
 	std::string v_destFile;
 	
 	if(v_isAnUpdate) {
-	  if(FS::isInUserDir(v_filePath)) {
+	  if(XMFS::isInUserDir(v_filePath)) {
 	    v_destFile = v_filePath;
 	  } else {
 	    v_destFile = WebLevels::getDestinationFile(v_urlFile);
@@ -971,7 +971,7 @@ void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WW
     
     /* the destination file must be in the user dir */
     if(v_filePath != "") {
-      if(FS::isInUserDir(v_filePath)) {
+      if(XMFS::isInUserDir(v_filePath)) {
 	v_destinationFileXML = v_filePath;
       }
     }
@@ -979,8 +979,8 @@ void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WW
     if(v_destinationFileXML == "") {
       /* determine destination file */
       v_destinationFileXML = 
-	FS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
-	FS::getFileBaseName(v_fileUrl) + ".xml";
+	XMFS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
+	XMFS::getFileBaseName(v_fileUrl) + ".xml";
     }
   
     v_themeFile = v_destinationFileXML;
@@ -988,7 +988,7 @@ void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WW
     /* download the theme file */
     v_data.v_nb_files_performed   = 0;
     v_data.v_nb_files_to_download = 1;
-    FS::mkArborescence(v_destinationFileXML);
+    XMFS::mkArborescence(v_destinationFileXML);
     v_destinationFileXML_tmp = v_destinationFileXML + ".tmp";
     FSWeb::downloadFileBz2(v_destinationFileXML_tmp, v_fileUrl, FSWeb::f_curl_progress_callback_download, &v_data, XMSession::instance()->proxySettings());
     
@@ -1008,10 +1008,10 @@ void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WW
     // all files must be checked for md5sum
     int v_nb_files_to_download = 0;
     for(unsigned int i=0; i<v_required_files->size(); i++) {
-      if(FS::fileExists((*v_required_files)[i].filepath) == false) {
+      if(XMFS::fileExists((*v_required_files)[i].filepath) == false) {
 	v_nb_files_to_download++;
       } else {
-	v_md5Local = FS::md5sum((*v_required_files)[i].filepath);
+	v_md5Local = XMFS::md5sum((*v_required_files)[i].filepath);
 	v_md5Dist  = (*v_required_files)[i].filemd5;
 	if(v_md5Local != v_md5Dist && v_md5Dist != "") {
 	  v_nb_files_to_download++;
@@ -1034,21 +1034,21 @@ void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WW
 
       while(i<v_required_files->size() && i_askThreadToEnd == false) {
 	// download v_required_files[i]     
-	v_destinationFile = FS::getUserDir() + std::string("/") + (*v_required_files)[i].filepath;
+	v_destinationFile = XMFS::getUserDir() + std::string("/") + (*v_required_files)[i].filepath;
 	v_sourceFile = XMSession::instance()->webThemesURLBase() + std::string("/") + (*v_required_files)[i].filepath;
 	
 	/* check md5 sums */
 	v_md5Local = v_md5Dist = "";
-	if(FS::fileExists((*v_required_files)[i].filepath) == true) {
-	  v_md5Local = FS::md5sum((*v_required_files)[i].filepath);
+	if(XMFS::fileExists((*v_required_files)[i].filepath) == true) {
+	  v_md5Local = XMFS::md5sum((*v_required_files)[i].filepath);
 	  v_md5Dist  = (*v_required_files)[i].filemd5;
 	}
 	
 	/* if v_md5Dist == "", don't download ; it's a manually adding */
-	if(FS::fileExists((*v_required_files)[i].filepath) == false || (v_md5Local != v_md5Dist && v_md5Dist != "")) {
+	if(XMFS::fileExists((*v_required_files)[i].filepath) == false || (v_md5Local != v_md5Dist && v_md5Dist != "")) {
 	  v_data.v_nb_files_performed = v_nb_files_performed;
 
-	  if(FS::fileExists((*v_required_files)[i].filepath) == false) {
+	  if(XMFS::fileExists((*v_required_files)[i].filepath) == false) {
 	    LogInfo("The file %s must be downloaded because it is missing on the system", (*v_required_files)[i].filepath.c_str());
 	  } else {
 	    if(v_md5Local != v_md5Dist && v_md5Dist != "") {
@@ -1062,7 +1062,7 @@ void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WW
 	    i_WebLevelApp->setBeingDownloadedInformation((*v_required_files)[i].filepath);
 	  }
 
-	  FS::mkArborescence(v_destinationFile);
+	  XMFS::mkArborescence(v_destinationFile);
 	  
 	  FSWeb::downloadFile(v_destinationFile, v_sourceFile, FSWeb::f_curl_progress_callback_download, &v_data,
 			      XMSession::instance()->proxySettings());
@@ -1119,7 +1119,7 @@ void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WW
 }
 
 void WebThemes::updateThemeList(xmDatabase* i_pDb, WWWAppInterface* i_WebLevelApp) {
-  std::string v_destinationFile = FS::getUserDir() + "/" + DEFAULT_WEBTHEMES_FILENAME;
+  std::string v_destinationFile = XMFS::getUserDir() + "/" + DEFAULT_WEBTHEMES_FILENAME;
   f_curl_download_data v_data;
   
   if(i_WebLevelApp != NULL) {

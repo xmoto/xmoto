@@ -37,8 +37,8 @@ void *_image_io_open(char *pcWhere, tim_io_mode_t IOMode) {
   /* Determine mode of I/O, and open */
   try {
     switch(IOMode) {
-      case TIM_IM_READ: return (void *)FS::openIFile(pcWhere);
-      case TIM_IM_WRITE: return (void *)FS::openOFile(pcWhere);
+      case TIM_IM_READ: return (void *)XMFS::openIFile(pcWhere);
+      case TIM_IM_WRITE: return (void *)XMFS::openOFile(pcWhere);
     }
   }
   catch (Exception &e) {
@@ -50,7 +50,7 @@ void *_image_io_open(char *pcWhere, tim_io_mode_t IOMode) {
 
 void _image_io_close(void *pvHandle) {
   try {
-    FS::closeFile( (FileHandle *)pvHandle );
+    XMFS::closeFile( (FileHandle *)pvHandle );
   }
   catch (Exception &e) {
     LogWarning("_image_io_close() - exception when closing: %s\n",((FileHandle *)pvHandle)->Name.c_str());
@@ -60,9 +60,9 @@ void _image_io_close(void *pvHandle) {
 int _image_io_seek(void *pvHandle, int nOffset, tim_seek_mode_t SeekMode) {
   try {
     switch(SeekMode) {
-    case TIM_SM_ABS: FS::setOffset((FileHandle *)pvHandle,nOffset); break; /* Absolute seeking */
-    case TIM_SM_REL: FS::setOffset((FileHandle *)pvHandle,FS::getOffset((FileHandle *)pvHandle) + nOffset); break; /* Seek relatively to current pos */
-    case TIM_SM_END: FS::setOffset((FileHandle *)pvHandle,FS::getLength((FileHandle *)pvHandle) + nOffset); break; /* Seek relatively to end */
+    case TIM_SM_ABS: XMFS::setOffset((FileHandle *)pvHandle,nOffset); break; /* Absolute seeking */
+    case TIM_SM_REL: XMFS::setOffset((FileHandle *)pvHandle,XMFS::getOffset((FileHandle *)pvHandle) + nOffset); break; /* Seek relatively to current pos */
+    case TIM_SM_END: XMFS::setOffset((FileHandle *)pvHandle,XMFS::getLength((FileHandle *)pvHandle) + nOffset); break; /* Seek relatively to end */
     default: return TIM_RV_ERR_INVALID_PARAM;
     }
   }
@@ -72,15 +72,15 @@ int _image_io_seek(void *pvHandle, int nOffset, tim_seek_mode_t SeekMode) {
   }
       
   /* Return current position */
-  return FS::getLength((FileHandle *)pvHandle);
+  return XMFS::getLength((FileHandle *)pvHandle);
 }
 
 int _image_io_read(void *pvHandle, void *pvBuf, int nSize) {
   int nRet = 0;
   try {
-    int nBytesLeft = FS::getLength((FileHandle *)pvHandle) - FS::getOffset((FileHandle *)pvHandle); 
+    int nBytesLeft = XMFS::getLength((FileHandle *)pvHandle) - XMFS::getOffset((FileHandle *)pvHandle); 
     int nBytesToRead = nBytesLeft < nSize ? nBytesLeft : nSize;  
-    if(FS::readBuf((FileHandle *)pvHandle,(char *)pvBuf,nBytesToRead)) {
+    if(XMFS::readBuf((FileHandle *)pvHandle,(char *)pvBuf,nBytesToRead)) {
       nRet = nBytesToRead;
     }
   }
@@ -94,7 +94,7 @@ int _image_io_read(void *pvHandle, void *pvBuf, int nSize) {
 int _image_io_write(void *pvHandle, void *pvBuf, int nSize) {
   int nRet = 0;
   try {
-    if(FS::writeBuf((FileHandle *)pvHandle,(char *)pvBuf,nSize)) {
+    if(XMFS::writeBuf((FileHandle *)pvHandle,(char *)pvBuf,nSize)) {
       nRet = nSize;
     }
   }
@@ -107,10 +107,10 @@ int _image_io_write(void *pvHandle, void *pvBuf, int nSize) {
 
 int _image_io_eof(void *pvHandle) {
   try {
-    if(FS::isEnd( (FileHandle *)pvHandle )) return TRUE;
+    if(XMFS::isEnd( (FileHandle *)pvHandle )) return TRUE;
   }
   catch (Exception &e) {
-    LogWarning("_image_io_eof() - exception thrown by FS::isEnd() when checking: %s\n",((FileHandle *)pvHandle)->Name.c_str());
+    LogWarning("_image_io_eof() - exception thrown by XMFS::isEnd() when checking: %s\n",((FileHandle *)pvHandle)->Name.c_str());
   }
   return FALSE;
 }

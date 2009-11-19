@@ -119,22 +119,22 @@ void Sound::update(void) {
 int Sound::RWops_seek(SDL_RWops *context,int offset,int whence) {
   FileHandle *pf = (FileHandle *)context->hidden.unknown.data1;
   switch(whence) {
-  case SEEK_SET: FS::setOffset(pf,offset); break;
-  case SEEK_END: FS::setOffset(pf,FS::getLength(pf)); break;
-  case SEEK_CUR: FS::setOffset(pf,FS::getOffset(pf) + offset); break;
+  case SEEK_SET: XMFS::setOffset(pf,offset); break;
+  case SEEK_END: XMFS::setOffset(pf,XMFS::getLength(pf)); break;
+  case SEEK_CUR: XMFS::setOffset(pf,XMFS::getOffset(pf) + offset); break;
   }
-  return FS::getOffset(pf);    
+  return XMFS::getOffset(pf);    
 }
   
 int Sound::RWops_read(SDL_RWops *context,void *ptr,int size,int maxnum) {
   FileHandle *pf = (FileHandle *)context->hidden.unknown.data1;
-  if(FS::isEnd(pf)) return 0;
+  if(XMFS::isEnd(pf)) return 0;
   
-  int nRemaining = (FS::getLength(pf) - FS::getOffset(pf)) / size;
+  int nRemaining = (XMFS::getLength(pf) - XMFS::getOffset(pf)) / size;
   
     int nToRead = nRemaining < maxnum ? nRemaining : maxnum;
     
-    if(!FS::readBuf(pf,(char *)ptr,size*nToRead))
+    if(!XMFS::readBuf(pf,(char *)ptr,size*nToRead))
       return 0;
     
     return nToRead;
@@ -162,7 +162,7 @@ SoundSample *Sound::loadSample(const std::string &File) {
   pOps->type = 1000;
   
   /* Open */
-  FileHandle *pf = FS::openIFile(File);
+  FileHandle *pf = XMFS::openIFile(File);
   if(pf == NULL) {
     SDL_FreeRW(pOps);
     throw Exception("failed to open sample file " + File);
@@ -174,7 +174,7 @@ SoundSample *Sound::loadSample(const std::string &File) {
   pSample->pChunk = Mix_LoadWAV_RW(pOps,1);
   
   /* Close file */
-  FS::closeFile(pf);
+  XMFS::closeFile(pf);
   
   m_Samples.push_back(pSample);
   return pSample;            

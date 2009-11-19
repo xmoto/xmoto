@@ -62,23 +62,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/
 	void UserConfig::saveFile(void) {
 	  /* Save configuration */
-	  FileHandle *pfh = FS::openOFile("config.dat");
+	  FileHandle *pfh = XMFS::openOFile("config.dat");
 	  if(pfh != NULL) {
-	    FS::writeLine(pfh,"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-	    FS::writeLine(pfh,"");
-	    FS::writeLine(pfh,"<userconfig>");
+	    XMFS::writeLine(pfh,"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+	    XMFS::writeLine(pfh,"");
+	    XMFS::writeLine(pfh,"<userconfig>");
 	    
 	    for(unsigned int i=0;i<m_Vars.size();i++) {
 	      char cBuf[256];
 	      snprintf(cBuf, 256, "\t<var name=%-25s value=%s />",
 								 ("\"" + XML::str2xmlstr(m_Vars[i]->Name)  + "\"").c_str(),
 								 ("\"" + XML::str2xmlstr(m_Vars[i]->Value) + "\"").c_str());
-	      FS::writeLine(pfh,cBuf);
+	      XMFS::writeLine(pfh,cBuf);
 	    }
 	  
-	    FS::writeLine(pfh,"</userconfig>");
-	    FS::writeLine(pfh,"");
-	    FS::closeFile(pfh);
+	    XMFS::writeLine(pfh,"</userconfig>");
+	    XMFS::writeLine(pfh,"");
+	    XMFS::closeFile(pfh);
 	  }
 	  else
 	    LogWarning("failed to save user configuration 'config.dat'");

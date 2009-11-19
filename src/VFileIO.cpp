@@ -80,7 +80,7 @@ void strlwr(char *pc) {
 }
 #endif
 
-bool FS::m_isInitialized = false;
+bool XMFS::m_isInitialized = false;
 
 bool str_match_wildcard(char *pcMWildcard,char *pcMString, bool CaseSensitive) {
   int nPos=0;
@@ -145,7 +145,7 @@ bool str_match_wildcard(char *pcMWildcard,char *pcMString, bool CaseSensitive) {
     return false;
 }
 
-void FS::_ThrowFileError(FileHandle *pfh,std::string Description) {
+void XMFS::_ThrowFileError(FileHandle *pfh,std::string Description) {
   char cBuf[512];
   snprintf(cBuf, 512, "%s (%s%s): %s", pfh->Name.c_str(),pfh->bRead?"I":"", pfh->bWrite?"O":"", Description.c_str());
   throw Exception(cBuf);
@@ -156,7 +156,7 @@ void FS::_ThrowFileError(FileHandle *pfh,std::string Description) {
   
   FutureRasmus: well, this is probably the crappiest code in the world. Period.
   ===========================================================================*/
-void FS::_FindFilesRecursive(const std::string &DirX,const std::string &Wildcard,std::vector<std::string> &List) {
+void XMFS::_FindFilesRecursive(const std::string &DirX,const std::string &Wildcard,std::vector<std::string> &List) {
   /* Windows? */
 #ifdef WIN32
   long fh;
@@ -220,7 +220,7 @@ void FS::_FindFilesRecursive(const std::string &DirX,const std::string &Wildcard
 #endif    
 }
 
-std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
+std::vector<std::string> XMFS::findPhysFiles(std::string Files,bool bRecurse) {
   std::vector<std::string> Result;
   std::string Wildcard;
   std::string DataDirToSearch,AltDirToSearch,UDirToSearch = "";
@@ -368,7 +368,7 @@ std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
   return Result;
 }
   
-FileHandle *FS::openOFile(std::string Path) {
+FileHandle *XMFS::openOFile(std::string Path) {
   FileHandle *pfh = new FileHandle;
     
   /* Is it an absolute path? */
@@ -393,7 +393,7 @@ FileHandle *FS::openOFile(std::string Path) {
   return NULL;
 }
   
-FileHandle *FS::openIFile(std::string Path, bool i_includeCurrentDir) {
+FileHandle *XMFS::openIFile(std::string Path, bool i_includeCurrentDir) {
   FileHandle *pfh = new FileHandle;
 
   /* Okay. Absolute path? */
@@ -462,7 +462,7 @@ FileHandle *FS::openIFile(std::string Path, bool i_includeCurrentDir) {
   return pfh;
 }
     
-void FS::closeFile(FileHandle *pfh) {
+void XMFS::closeFile(FileHandle *pfh) {
   if(pfh->Type == FHT_STDIO) {
     fclose(pfh->fp);
   }
@@ -473,7 +473,7 @@ void FS::closeFile(FileHandle *pfh) {
   delete pfh;
 } 
 
-bool FS::readBuf(FileHandle *pfh,char *pcBuf, unsigned int nBufSize) {
+bool XMFS::readBuf(FileHandle *pfh,char *pcBuf, unsigned int nBufSize) {
   if(!pfh->bRead) _ThrowFileError(pfh,"readBuf -> write-only");  
   if(pfh->Type == FHT_STDIO) {
     if(fread(pcBuf,1,nBufSize,pfh->fp) != nBufSize) return false;
@@ -491,7 +491,7 @@ bool FS::readBuf(FileHandle *pfh,char *pcBuf, unsigned int nBufSize) {
   return true;
 } 
   
-bool FS::writeBuf(FileHandle *pfh, char *pcBuf, unsigned int nBufSize) {
+bool XMFS::writeBuf(FileHandle *pfh, char *pcBuf, unsigned int nBufSize) {
   if(!pfh->bWrite) _ThrowFileError(pfh,"writeBuf -> read-only");  
   if(pfh->Type == FHT_STDIO) {
     if(fwrite(pcBuf,1,nBufSize,pfh->fp) != nBufSize) return false;
@@ -500,7 +500,7 @@ bool FS::writeBuf(FileHandle *pfh, char *pcBuf, unsigned int nBufSize) {
   return true;
 } 
   
-bool FS::setOffset(FileHandle *pfh,int nOffset) {
+bool XMFS::setOffset(FileHandle *pfh,int nOffset) {
   if(pfh->Type == FHT_STDIO) {
     fseek(pfh->fp,nOffset,SEEK_SET);
   }
@@ -511,7 +511,7 @@ bool FS::setOffset(FileHandle *pfh,int nOffset) {
   return true; /* blahh, this is not right, but... */
 } 
   
-bool FS::setEnd(FileHandle *pfh) {
+bool XMFS::setEnd(FileHandle *pfh) {
   if(pfh->Type == FHT_STDIO) {
     fseek(pfh->fp,0,SEEK_END);
   }
@@ -522,7 +522,7 @@ bool FS::setEnd(FileHandle *pfh) {
   return true; /* ... */
 } 
   
-int FS::getOffset(FileHandle *pfh) {
+int XMFS::getOffset(FileHandle *pfh) {
   int nOffset=0;
   if(pfh->Type == FHT_STDIO) {
     nOffset = ftell(pfh->fp);
@@ -534,11 +534,11 @@ int FS::getOffset(FileHandle *pfh) {
   return nOffset;
 } 
   
-int FS::getLength(FileHandle *pfh) {
+int XMFS::getLength(FileHandle *pfh) {
   return pfh->nSize;
 } 
   
-bool FS::isEnd(FileHandle *pfh) {
+bool XMFS::isEnd(FileHandle *pfh) {
   bool bEnd = true;
   if(pfh->Type == FHT_STDIO) {
     if(!feof(pfh->fp)) bEnd = false;
@@ -551,7 +551,7 @@ bool FS::isEnd(FileHandle *pfh) {
   return bEnd;
 } 
     
-bool FS::readNextLine(FileHandle *pfh,std::string &Line) {
+bool XMFS::readNextLine(FileHandle *pfh,std::string &Line) {
   int c;
   char b[2];
   Line = "";
@@ -586,37 +586,37 @@ bool FS::readNextLine(FileHandle *pfh,std::string &Line) {
   return true;
 }   
   
-int FS::readByte(FileHandle *pfh) {
+int XMFS::readByte(FileHandle *pfh) {
   signed char v;
   if(!readBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"readByte -> failed");
   return v;
 } 
   
-int FS::readShort(FileHandle *pfh) {
+int XMFS::readShort(FileHandle *pfh) {
   short v;
   if(!readBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"readShort -> failed");
   return v;
 } 
   
-int FS::readInt(FileHandle *pfh) {
+int XMFS::readInt(FileHandle *pfh) {
   int32_t nv;
   if(!readBuf(pfh,(char *)&nv,sizeof(4))) _ThrowFileError(pfh,"readInt -> failed");
   return static_cast<int>(nv);
 } 
   
-float FS::readFloat(FileHandle *pfh) {
+float XMFS::readFloat(FileHandle *pfh) {
   float v;
   if(!readBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"readFloat -> failed");
   return v;
 } 
   
-double FS::readDouble(FileHandle *pfh) {
+double XMFS::readDouble(FileHandle *pfh) {
   double v;
   if(!readBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"readDouble -> failed");
   return v;
 } 
   
-std::string FS::readString(FileHandle *pfh) {
+std::string XMFS::readString(FileHandle *pfh) {
   unsigned char v;
   v=readByte(pfh);
   char cBuf[256];  
@@ -625,7 +625,7 @@ std::string FS::readString(FileHandle *pfh) {
   return std::string(cBuf);  
 }  
   
-std::string FS::readLongString(FileHandle *pfh) {
+std::string XMFS::readLongString(FileHandle *pfh) {
   unsigned short v;
   v=readShort_LE(pfh);
   char cBuf[65536];  
@@ -635,53 +635,53 @@ std::string FS::readLongString(FileHandle *pfh) {
 }
   
 // We use one-byte bools
-bool FS::readBool(FileHandle *pfh) {
+bool XMFS::readBool(FileHandle *pfh) {
   return static_cast<bool>(readByte(pfh));
 }   
 
-void FS::writeByte(FileHandle *pfh,unsigned char v) {
+void XMFS::writeByte(FileHandle *pfh,unsigned char v) {
   if(!writeBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"writeByte -> failed");
 }
   
-void FS::writeShort(FileHandle *pfh,short v) {
+void XMFS::writeShort(FileHandle *pfh,short v) {
   if(!writeBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"writeShort -> failed");
 }
   
-void FS::writeInt(FileHandle *pfh,int v) {
+void XMFS::writeInt(FileHandle *pfh,int v) {
   int32_t nv;
   nv = static_cast<int32_t>(v);
   if(!writeBuf(pfh,(char *)&nv, 4)) _ThrowFileError(pfh,"writeInt -> failed");
 }
   
-void FS::writeFloat(FileHandle *pfh,float v) {
+void XMFS::writeFloat(FileHandle *pfh,float v) {
   if(!writeBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"writeFloat -> failed");
 }
   
-void FS::writeDouble(FileHandle *pfh,double v) {
+void XMFS::writeDouble(FileHandle *pfh,double v) {
   if(!writeBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"writeDouble -> failed");
 }
   
-void FS::writeString(FileHandle *pfh,std::string v) {
+void XMFS::writeString(FileHandle *pfh,std::string v) {
   writeByte(pfh,v.length());
   if(!writeBuf(pfh,(char *)v.c_str(),v.length())) _ThrowFileError(pfh,"writeString -> failed");
 }
   
-void FS::writeLongString(FileHandle *pfh,std::string v) {
+void XMFS::writeLongString(FileHandle *pfh,std::string v) {
   writeShort_LE(pfh,v.length());
   if(!writeBuf(pfh,(char *)v.c_str(),v.length())) _ThrowFileError(pfh,"writeLongString -> failed");
 }
   
-void FS::writeBool(FileHandle *pfh,bool v) {
+void XMFS::writeBool(FileHandle *pfh,bool v) {
   writeByte(pfh,static_cast<unsigned char>(v));
 }
   
-void FS::writeLine(FileHandle *pfh,std::string Line) {
+void XMFS::writeLine(FileHandle *pfh,std::string Line) {
   char cBuf[2048];
   snprintf(cBuf, 2048, "%s\n", Line.c_str());
   if(!writeBuf(pfh,cBuf,strlen(cBuf))) _ThrowFileError(pfh,"writeLine -> failed");
 }
   
-void FS::writeLineF(FileHandle *pfh,char *pcFmt,...) {
+void XMFS::writeLineF(FileHandle *pfh,char *pcFmt,...) {
   char cBuf[2048],cBuf2[2048];
   va_list List;
   va_start(List,pcFmt);
@@ -692,7 +692,7 @@ void FS::writeLineF(FileHandle *pfh,char *pcFmt,...) {
 }
     
 /* For buffered reading: */
-int FS::readBufferedChar(FileHandle *pfh) {
+int XMFS::readBufferedChar(FileHandle *pfh) {
   /* Need to buffer? */
   if(pfh->nWrite==pfh->nRead)
     if(fillBuffer(pfh) == 0) return 0; /* end-of-file */
@@ -706,7 +706,7 @@ int FS::readBufferedChar(FileHandle *pfh) {
   return c;
 } 
   
-int FS::peekNextBufferedChar(FileHandle *pfh) {
+int XMFS::peekNextBufferedChar(FileHandle *pfh) {
   /* Need to buffer? */
   if(pfh->nWrite==pfh->nRead)
     if(fillBuffer(pfh) == 0) return 0; /* end-of-file */
@@ -718,7 +718,7 @@ int FS::peekNextBufferedChar(FileHandle *pfh) {
   return c;
 } 
   
-int FS::fillBuffer(FileHandle *pfh) {
+int XMFS::fillBuffer(FileHandle *pfh) {
   int nRemaining = getLength(pfh) - getOffset(pfh);
   int nBytes = nRemaining < 256/2 ? nRemaining : 256/2;
   int r = nBytes,t;
@@ -739,7 +739,7 @@ int FS::fillBuffer(FileHandle *pfh) {
 /*===========================================================================
   Extract directory name from path
   ===========================================================================*/
-std::string FS::getFileDir(std::string Path) {
+std::string XMFS::getFileDir(std::string Path) {
   int n = Path.find_last_of("/");
   if(n<0) n = Path.find_last_of("\\");
   if(n<0) {
@@ -756,7 +756,7 @@ std::string FS::getFileDir(std::string Path) {
 /*===========================================================================
   Extract file name (with no extension) from path
   ===========================================================================*/
-std::string FS::getFileBaseName(std::string Path) {
+std::string XMFS::getFileBaseName(std::string Path) {
   int n = Path.find_last_of("/");
   if(n<0) n = Path.find_last_of("\\");
   std::string FName;
@@ -771,7 +771,7 @@ std::string FS::getFileBaseName(std::string Path) {
   return FName.substr(0,n);
 }
 
-std::string FS::getFileExtension(std::string Path) {
+std::string XMFS::getFileExtension(std::string Path) {
   int n;
   n = Path.find_last_of(".");
   if(n<0) return "";
@@ -781,7 +781,7 @@ std::string FS::getFileExtension(std::string Path) {
 /*=========================================================================== 
   Find out how old this file thing is... (physical file system only)
   ===========================================================================*/
-int FS::getFileTimeStamp(const std::string &Path) {
+int XMFS::getFileTimeStamp(const std::string &Path) {
   struct stat S;
 
   if(stat(Path.c_str(),&S)) { 
@@ -794,7 +794,7 @@ int FS::getFileTimeStamp(const std::string &Path) {
 /*=========================================================================== 
   Is that a dir or what? - and similar stuffin'
   ===========================================================================*/
-bool FS::isDir(std::string Path) {
+bool XMFS::isDir(std::string Path) {
   struct stat S;
 
   if(stat(Path.c_str(),&S)) { 
@@ -806,7 +806,7 @@ bool FS::isDir(std::string Path) {
   return false; /* not a directory */    
 }
 
-bool FS::isPathAbsolute(std::string Path) {
+bool XMFS::isPathAbsolute(std::string Path) {
   /* Windows? */
 #ifdef WIN32
   /* Check for drive letter */
@@ -828,7 +828,7 @@ bool FS::isPathAbsolute(std::string Path) {
 /*===========================================================================
   Delete file
   ===========================================================================*/  
-void FS::deleteFile(const std::string &File) {
+void XMFS::deleteFile(const std::string &File) {
   std::string FullFile;
     
   if(m_UserDir == "") {
@@ -856,7 +856,7 @@ void FS::deleteFile(const std::string &File) {
 /*===========================================================================
   Copy file
   ===========================================================================*/
-bool FS::copyFile(const std::string &From,const std::string &To, std::string &To_really_done) {
+bool XMFS::copyFile(const std::string &From,const std::string &To, std::string &To_really_done) {
   /* All file copying must happen inside the user directory... */
   if(m_UserDir == "") {
     LogWarning("No user directory, can't copy file '%s' to '%s'",From.c_str(),To.c_str());
@@ -958,20 +958,20 @@ bool FS::copyFile(const std::string &From,const std::string &To, std::string &To
   return true;
 }
 
-bool FS::renameUserFile(const std::string &From,const std::string &To) {
+bool XMFS::renameUserFile(const std::string &From,const std::string &To) {
   return rename(From.c_str(), To.c_str()) == 0;
 }
   
 /*===========================================================================
   Initialize file system fun
   ===========================================================================*/
-std::string FS::m_UserDir="",FS::m_UserDirUTF8="",FS::m_DataDir; /* Globals */
-bool FS::m_bGotDataDir;
-std::string FS::m_BinDataFile = "";
-std::string FS::m_binCheckSum = "";
-std::vector<PackFile> FS::m_PackFiles;
+std::string XMFS::m_UserDir="",XMFS::m_UserDirUTF8="",XMFS::m_DataDir; /* Globals */
+bool XMFS::m_bGotDataDir;
+std::string XMFS::m_BinDataFile = "";
+std::string XMFS::m_binCheckSum = "";
+std::vector<PackFile> XMFS::m_PackFiles;
 
-void FS::init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile, const std::string& i_userDirPath) {
+void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile, const std::string& i_userDirPath) {
   m_bGotDataDir = false;
   m_UserDir = "";
   m_UserDirUTF8 = "";
@@ -1121,18 +1121,18 @@ void FS::init(const std::string& AppDir, const std::string& i_binFile, const std
   m_isInitialized = true;
 }     
 
-void FS::uninit() {
+void XMFS::uninit() {
   m_isInitialized = false;
 }
 
-bool FS::isInitialized() {
+bool XMFS::isInitialized() {
   return m_isInitialized;
 }
 
 /*===========================================================================
   Hmm, for some reason I have to do this. Don't ask me why.
   ===========================================================================*/
-int FS::mkDir(const char *pcPath) {
+int XMFS::mkDir(const char *pcPath) {
 #if defined(WIN32)
   return _mkdir(pcPath);
 #else
@@ -1140,56 +1140,56 @@ int FS::mkDir(const char *pcPath) {
 #endif
 }
 
-std::string FS::binCheckSum() {
-  return FS::m_binCheckSum;
+std::string XMFS::binCheckSum() {
+  return XMFS::m_binCheckSum;
 }
 
 /*===========================================================================
   Endian-safe I/O helpers
   ===========================================================================*/
-void FS::writeShort_LE(FileHandle *pfh,short v) {    
+void XMFS::writeShort_LE(FileHandle *pfh,short v) {    
   writeShort(pfh, SwapEndian::LittleShort(v));
 }
   
-void FS::writeInt_LE(FileHandle *pfh,int v) {
+void XMFS::writeInt_LE(FileHandle *pfh,int v) {
   writeInt(pfh, SwapEndian::LittleLong(v));
 }
   
-void FS::writeFloat_LE(FileHandle *pfh,float v) {
+void XMFS::writeFloat_LE(FileHandle *pfh,float v) {
   writeFloat(pfh, SwapEndian::LittleFloat(v));
 }
   
-int FS::readShort_LE(FileHandle *pfh) {
+int XMFS::readShort_LE(FileHandle *pfh) {
   short v = readShort(pfh);
   return SwapEndian::LittleShort(v);
 }
   
-int FS::readInt_LE(FileHandle *pfh) {
+int XMFS::readInt_LE(FileHandle *pfh) {
   int v = readInt(pfh);
   return SwapEndian::LittleLong(v);
 }
 
-float FS::readFloat_LE(FileHandle *pfh) {
+float XMFS::readFloat_LE(FileHandle *pfh) {
   float v = readFloat(pfh);
   return SwapEndian::LittleFloat(v);
 }  
   
-int FS::readShort_MaybeLE(FileHandle *pfh, bool big) {
+int XMFS::readShort_MaybeLE(FileHandle *pfh, bool big) {
   short v = readShort(pfh);
   return big ? SwapEndian::BigShort(v) : SwapEndian::LittleShort(v);
 }
   
-int FS::readInt_MaybeLE(FileHandle *pfh, bool big) {
+int XMFS::readInt_MaybeLE(FileHandle *pfh, bool big) {
   int v = readInt(pfh);
   return big ? SwapEndian::BigLong(v) : SwapEndian::LittleLong(v);
 }
   
-float FS::readFloat_MaybeLE(FileHandle *pfh, bool big) {
+float XMFS::readFloat_MaybeLE(FileHandle *pfh, bool big) {
   float v = readFloat(pfh);
   return big ? SwapEndian::BigFloat(v) : SwapEndian::LittleFloat(v);
 }
   
-bool FS::isFileInDir(std::string p_dirpath, std::string p_filepath) {
+bool XMFS::isFileInDir(std::string p_dirpath, std::string p_filepath) {
   std::string v_fileDir;
 
   v_fileDir = getFileDir(p_filepath);
@@ -1201,16 +1201,16 @@ bool FS::isFileInDir(std::string p_dirpath, std::string p_filepath) {
   return v_fileDir.substr(0, p_dirpath.length()) == p_dirpath;
 }
 
-bool FS::isInUserDir(std::string p_filepath) {
+bool XMFS::isInUserDir(std::string p_filepath) {
   return isFileInDir(getUserDir(), p_filepath);
 }
 
-bool FS::doesDirectoryExist(std::string p_path) {
+bool XMFS::doesDirectoryExist(std::string p_path) {
   struct stat S;
   return stat(p_path.c_str(), &S) == 0;
 }
 
-bool FS::isFileReadable(std::string p_filename) {
+bool XMFS::isFileReadable(std::string p_filename) {
   FileHandle *fh = openIFile(p_filename);
   if(fh == NULL) {
     return false;
@@ -1219,11 +1219,11 @@ bool FS::isFileReadable(std::string p_filename) {
   return true;
 }
 
-bool FS::fileExists(std::string p_filename) {
+bool XMFS::fileExists(std::string p_filename) {
   return isFileReadable(p_filename);
 }
 
-void FS::mkArborescence(std::string v_filepath) {
+void XMFS::mkArborescence(std::string v_filepath) {
   std::string v_parentDir = getFileDir(v_filepath);
 
   if(doesDirectoryExist(v_parentDir)) {
@@ -1231,20 +1231,20 @@ void FS::mkArborescence(std::string v_filepath) {
   }
 
   mkArborescence(v_parentDir);
-  if(FS::mkDir(v_parentDir.c_str()) != 0) {
+  if(XMFS::mkDir(v_parentDir.c_str()) != 0) {
     throw Exception("Can't create directory " + v_parentDir);
   }
 }
 
-void FS::mkArborescenceDir(std::string v_dirpath) {
+void XMFS::mkArborescenceDir(std::string v_dirpath) {
   mkArborescence(v_dirpath + "/file.tmp");
 }
 
-std::string FS::md5sum(std::string i_filePath) {
+std::string XMFS::md5sum(std::string i_filePath) {
   i_filePath = FullPath(i_filePath);
 
   /* is it a file from the pack or a real file ? */
-  if(FS::isFileReal(i_filePath)) {
+  if(XMFS::isFileReal(i_filePath)) {
     return md5file(i_filePath);
   }
 
@@ -1261,7 +1261,7 @@ std::string FS::md5sum(std::string i_filePath) {
 }
 
 
-bool FS::isFileReal(std::string i_filePath) {
+bool XMFS::isFileReal(std::string i_filePath) {
   FILE *fp;
 
   fp = fopen(i_filePath.c_str(), "rb");
@@ -1273,7 +1273,7 @@ bool FS::isFileReal(std::string i_filePath) {
   return true;
 }
 
-std::string FS::FullPath(const std::string& i_relative_path) {
+std::string XMFS::FullPath(const std::string& i_relative_path) {
   if(fileExists(getUserDir() + std::string("/") + i_relative_path)) {
     return getUserDir() + std::string("/") + i_relative_path;
   }
@@ -1284,7 +1284,7 @@ std::string FS::FullPath(const std::string& i_relative_path) {
   return i_relative_path;
 }
 
-bool FS::areSamePath(const std::string& i_path1, const std::string& i_path2) {
+bool XMFS::areSamePath(const std::string& i_path1, const std::string& i_path2) {
 #ifdef WIN32
   return txtToLower(i_path1) == txtToLower(i_path2);
 #else

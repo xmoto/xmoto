@@ -871,109 +871,109 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
 }
 
 void Block::saveBinary(FileHandle *i_pfh) {
-      FS::writeString(i_pfh,   Id());
-      FS::writeBool(i_pfh,     isBackground());
-      FS::writeBool(i_pfh,     isDynamic());
-      FS::writeBool(i_pfh,     isPhysics());
-      FS::writeBool(i_pfh,     isLayer());
-      FS::writeInt_LE(i_pfh,   getLayer());
-      FS::writeString(i_pfh,   getTexture());
-      FS::writeFloat_LE(i_pfh, TextureScale());
+      XMFS::writeString(i_pfh,   Id());
+      XMFS::writeBool(i_pfh,     isBackground());
+      XMFS::writeBool(i_pfh,     isDynamic());
+      XMFS::writeBool(i_pfh,     isPhysics());
+      XMFS::writeBool(i_pfh,     isLayer());
+      XMFS::writeInt_LE(i_pfh,   getLayer());
+      XMFS::writeString(i_pfh,   getTexture());
+      XMFS::writeFloat_LE(i_pfh, TextureScale());
       
-      FS::writeInt_LE(i_pfh, m_blendColor.Red());
-      FS::writeInt_LE(i_pfh, m_blendColor.Green());
-      FS::writeInt_LE(i_pfh, m_blendColor.Blue());
-      FS::writeInt_LE(i_pfh, m_blendColor.Alpha());
+      XMFS::writeInt_LE(i_pfh, m_blendColor.Red());
+      XMFS::writeInt_LE(i_pfh, m_blendColor.Green());
+      XMFS::writeInt_LE(i_pfh, m_blendColor.Blue());
+      XMFS::writeInt_LE(i_pfh, m_blendColor.Alpha());
       
-      FS::writeFloat_LE(i_pfh, InitialPosition().x);
-      FS::writeFloat_LE(i_pfh, InitialPosition().y);
-      FS::writeFloat_LE(i_pfh, GripPer20());
-      FS::writeFloat_LE(i_pfh, Mass());
-      FS::writeFloat_LE(i_pfh, Friction());
-      FS::writeFloat_LE(i_pfh, Elasticity());
-      FS::writeInt_LE(i_pfh,   getEdgeDrawMethod());
-      FS::writeFloat_LE(i_pfh, edgeAngle());
+      XMFS::writeFloat_LE(i_pfh, InitialPosition().x);
+      XMFS::writeFloat_LE(i_pfh, InitialPosition().y);
+      XMFS::writeFloat_LE(i_pfh, GripPer20());
+      XMFS::writeFloat_LE(i_pfh, Mass());
+      XMFS::writeFloat_LE(i_pfh, Friction());
+      XMFS::writeFloat_LE(i_pfh, Elasticity());
+      XMFS::writeInt_LE(i_pfh,   getEdgeDrawMethod());
+      XMFS::writeFloat_LE(i_pfh, edgeAngle());
       
-      FS::writeInt_LE(i_pfh, m_edgeMaterial.size());
+      XMFS::writeInt_LE(i_pfh, m_edgeMaterial.size());
       for(unsigned int i=0; i<m_edgeMaterial.size(); i++) {
-        FS::writeString(i_pfh, m_edgeMaterial[i].name);
-        FS::writeString(i_pfh, m_edgeMaterial[i].texture);
-        FS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Red());
-        FS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Green());
-        FS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Blue());
-        FS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Alpha());
-        FS::writeFloat_LE(i_pfh, m_edgeMaterial[i].scale);
-        FS::writeFloat_LE(i_pfh, m_edgeMaterial[i].depth);
+        XMFS::writeString(i_pfh, m_edgeMaterial[i].name);
+        XMFS::writeString(i_pfh, m_edgeMaterial[i].texture);
+        XMFS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Red());
+        XMFS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Green());
+        XMFS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Blue());
+        XMFS::writeInt_LE(i_pfh, m_edgeMaterial[i].color.Alpha());
+        XMFS::writeFloat_LE(i_pfh, m_edgeMaterial[i].scale);
+        XMFS::writeFloat_LE(i_pfh, m_edgeMaterial[i].depth);
       }
       
-      FS::writeInt_LE(i_pfh,   getCollisionMethod());
-      FS::writeFloat_LE(i_pfh, getCollisionRadius());
+      XMFS::writeInt_LE(i_pfh,   getCollisionMethod());
+      XMFS::writeFloat_LE(i_pfh, getCollisionRadius());
 
-      FS::writeShort_LE(i_pfh, Vertices().size());
+      XMFS::writeShort_LE(i_pfh, Vertices().size());
         
       for(unsigned int j=0; j<Vertices().size();j++) {
-        FS::writeFloat_LE(i_pfh, Vertices()[j]->Position().x);
-        FS::writeFloat_LE(i_pfh, Vertices()[j]->Position().y);
-        FS::writeString(i_pfh,   Vertices()[j]->EdgeEffect());
+        XMFS::writeFloat_LE(i_pfh, Vertices()[j]->Position().x);
+        XMFS::writeFloat_LE(i_pfh, Vertices()[j]->Position().y);
+        XMFS::writeString(i_pfh,   Vertices()[j]->EdgeEffect());
       }   
 }
 
 Block* Block::readFromBinary(FileHandle *i_pfh) {
-  Block *pBlock = new Block(FS::readString(i_pfh));
+  Block *pBlock = new Block(XMFS::readString(i_pfh));
 
-  pBlock->setBackground(FS::readBool(i_pfh));
-  pBlock->setDynamic(FS::readBool(i_pfh));
-  pBlock->setPhysics(FS::readBool(i_pfh));
-  pBlock->setIsLayer(FS::readBool(i_pfh));
-  pBlock->setLayer(FS::readInt_LE(i_pfh));
-  pBlock->setTexture(FS::readString(i_pfh));
-  pBlock->setTextureScale(FS::readFloat_LE(i_pfh));
+  pBlock->setBackground(XMFS::readBool(i_pfh));
+  pBlock->setDynamic(XMFS::readBool(i_pfh));
+  pBlock->setPhysics(XMFS::readBool(i_pfh));
+  pBlock->setIsLayer(XMFS::readBool(i_pfh));
+  pBlock->setLayer(XMFS::readInt_LE(i_pfh));
+  pBlock->setTexture(XMFS::readString(i_pfh));
+  pBlock->setTextureScale(XMFS::readFloat_LE(i_pfh));
 
   TColor v_blendColor = TColor(255,255,255,255);
-  v_blendColor.setRed(FS::readInt_LE(i_pfh));
-  v_blendColor.setGreen(FS::readInt_LE(i_pfh));
-  v_blendColor.setBlue(FS::readInt_LE(i_pfh));
-  v_blendColor.setAlpha(FS::readInt_LE(i_pfh));
+  v_blendColor.setRed(XMFS::readInt_LE(i_pfh));
+  v_blendColor.setGreen(XMFS::readInt_LE(i_pfh));
+  v_blendColor.setBlue(XMFS::readInt_LE(i_pfh));
+  v_blendColor.setAlpha(XMFS::readInt_LE(i_pfh));
   pBlock->setBlendColor(v_blendColor);
 
   Vector2f v_Position;
-  v_Position.x = FS::readFloat_LE(i_pfh);
-  v_Position.y = FS::readFloat_LE(i_pfh);
+  v_Position.x = XMFS::readFloat_LE(i_pfh);
+  v_Position.y = XMFS::readFloat_LE(i_pfh);
   pBlock->setInitialPosition(v_Position);
-  pBlock->setGripPer20(FS::readFloat_LE(i_pfh));
-  pBlock->setMass(FS::readFloat_LE(i_pfh));
-  pBlock->setFriction(FS::readFloat_LE(i_pfh));
-  pBlock->setElasticity(FS::readFloat_LE(i_pfh));
-  pBlock->setEdgeDrawMethod((EdgeDrawMethod)FS::readInt_LE(i_pfh));
-  pBlock->setEdgeAngle(FS::readFloat_LE(i_pfh));
+  pBlock->setGripPer20(XMFS::readFloat_LE(i_pfh));
+  pBlock->setMass(XMFS::readFloat_LE(i_pfh));
+  pBlock->setFriction(XMFS::readFloat_LE(i_pfh));
+  pBlock->setElasticity(XMFS::readFloat_LE(i_pfh));
+  pBlock->setEdgeDrawMethod((EdgeDrawMethod)XMFS::readInt_LE(i_pfh));
+  pBlock->setEdgeAngle(XMFS::readFloat_LE(i_pfh));
   
-  int geomSize = FS::readInt_LE(i_pfh);  //get size of geoms and read out as many times
+  int geomSize = XMFS::readInt_LE(i_pfh);  //get size of geoms and read out as many times
   for( int i=0; i<geomSize; i++) {
     EdgeMaterial v_geomMat;
-    v_geomMat.name = FS::readString(i_pfh);
-    v_geomMat.texture = FS::readString(i_pfh);
+    v_geomMat.name = XMFS::readString(i_pfh);
+    v_geomMat.texture = XMFS::readString(i_pfh);
     TColor v_edgeMatColor = TColor(255,255,255,255);
-    v_edgeMatColor.setRed(FS::readInt_LE(i_pfh));
-    v_edgeMatColor.setGreen(FS::readInt_LE(i_pfh));
-    v_edgeMatColor.setBlue(FS::readInt_LE(i_pfh));
-    v_edgeMatColor.setAlpha(FS::readInt_LE(i_pfh));
+    v_edgeMatColor.setRed(XMFS::readInt_LE(i_pfh));
+    v_edgeMatColor.setGreen(XMFS::readInt_LE(i_pfh));
+    v_edgeMatColor.setBlue(XMFS::readInt_LE(i_pfh));
+    v_edgeMatColor.setAlpha(XMFS::readInt_LE(i_pfh));
     v_geomMat.color = v_edgeMatColor;
-    v_geomMat.scale = FS::readFloat_LE(i_pfh);
-    v_geomMat.depth = FS::readFloat_LE(i_pfh);
+    v_geomMat.scale = XMFS::readFloat_LE(i_pfh);
+    v_geomMat.depth = XMFS::readFloat_LE(i_pfh);
     pBlock->m_edgeMaterial.push_back(v_geomMat);
   }
       
   
-  pBlock->setCollisionMethod((CollisionMethod)FS::readInt_LE(i_pfh));
-  pBlock->setCollisionRadius(FS::readFloat_LE(i_pfh));
+  pBlock->setCollisionMethod((CollisionMethod)XMFS::readInt_LE(i_pfh));
+  pBlock->setCollisionRadius(XMFS::readFloat_LE(i_pfh));
   
-  int nNumVertices = FS::readShort_LE(i_pfh);
+  int nNumVertices = XMFS::readShort_LE(i_pfh);
   pBlock->Vertices().reserve(nNumVertices);
   for(int j=0;j<nNumVertices;j++) {
     Vector2f v_Position;
-    v_Position.x = FS::readFloat_LE(i_pfh);
-    v_Position.y = FS::readFloat_LE(i_pfh);
-    std::string v_EdgeEffect = FS::readString(i_pfh);
+    v_Position.x = XMFS::readFloat_LE(i_pfh);
+    v_Position.y = XMFS::readFloat_LE(i_pfh);
+    std::string v_EdgeEffect = XMFS::readString(i_pfh);
     pBlock->Vertices().push_back(new BlockVertex(v_Position, v_EdgeEffect));
   }
 
