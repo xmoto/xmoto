@@ -2328,7 +2328,7 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 	  }
 	  else {
 	    pDrawlib->setTexture(NULL, BLEND_MODE_A);
-	    pDrawlib->setColorRGBA(0,0,0,255);
+	    pDrawlib->setColorRGBA(90,90,90,255);
 	  }
 
 	  /* VBO optimized? */
