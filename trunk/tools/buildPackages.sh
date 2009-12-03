@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BUILD_PATH="/home/nicolas/xmoto_dev/build"
+BUILD_PATH="/home/nicolas/xm/build"
 
 # require a subpath trunk with a svn working directory
 # require a subdir sources
@@ -37,9 +37,6 @@ function getVersion {
 
 function make_sources {
     SVNVERSION="$1"
-
-    # update this po file
-    cp trunk/po/remove-potcdate.sed sources/po/remove-potcdate.sed || return 1
 
     # try to build
     (
