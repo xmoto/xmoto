@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VTexture.h"
 #include "helpers/Singleton.h"
 #include "helpers/Color.h"
+#include "VFileIO_types.h"
 
 class Texture;
 class WWWAppInterface;
@@ -407,7 +408,7 @@ private:
   ~Theme();
 
 public:
-  void load(std::string p_themeFile);
+  void load(FileDataType i_fdt, std::string p_themeFile);
 
   std::string Name() const;
   Sprite* getSprite(enum SpriteType pSpriteType, std::string pName);

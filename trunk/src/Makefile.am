@@ -117,7 +117,7 @@ common_SOURCES = Image.cpp \
   VBezier.cpp PolyDraw.h PolyDraw.cpp \
   XMArgs.h XMArgs.cpp XMSession_default.h XMSession_default.cpp XMSession.h XMSession.cpp \
   XMBuild.h XMBuild.cpp XMBuild_info.h \
-  VFileIO.cpp VTexture.cpp \
+  VFileIO_types.h VFileIO.cpp VTexture.cpp \
   VXml.cpp \
   $(xminclude_SOURCES) \
   $(helpers_SOURCES) \
@@ -238,6 +238,7 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateDownloadGhost.cpp   \
 		 states/StateDownloadGhost.h
 
+xdgbasedir_SOURCES = xdgbasedir/include/basedir.h xdgbasedir/include/basedir_fs.h xdgbasedir/src/basedir.c
 
 bz2_SOURCES = bzip2/blocksort.c     \
               bzip2/bzlib.c         \
@@ -297,6 +298,7 @@ thread_SOURCES = thread/XMThread.h                 \
 
 if WIN32
 common_SOURCES += $(bz2_SOURCES)
+common_SOURCES += $(xdgbasedir_SOURCES)
 endif
 
 common_SOURCES += $(gui_basic_SOURCES)
@@ -352,6 +354,7 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   LevelsManager.cpp \
   SysMessage.h \
   SysMessage.cpp \
+  sqlqueries.h \
   db/xmDatabase.h \
   db/xmDatabase.cpp \
   db/xmDatabase_stats.cpp \

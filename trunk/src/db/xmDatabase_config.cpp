@@ -134,7 +134,7 @@ void xmDatabase::updateDB_config(const std::string& i_sitekey) {
   /* load removed values into all the profiles */
 
   XMLDocument ConfigDoc;
-  ConfigDoc.readFromFile("config.dat");
+  ConfigDoc.readFromFile(FDT_CONFIG, "config.dat");
   TiXmlDocument *pConfigData = ConfigDoc.getLowLevelAccess();
 
   unsigned int nrow;

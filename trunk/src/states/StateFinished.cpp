@@ -249,7 +249,7 @@ void StateFinished::checkEvents() {
   if(pUploadButton->isClicked()) {
     pUploadButton->setClicked(false);
 
-    std::string v_replayPath = XMFS::getUserDir() + "/Replays/Latest.rpl";
+    std::string v_replayPath = XMFS::getUserReplaysDir() + "/Latest.rpl";
 
     if(m_universe->isAnErrorOnSaving()) {
       // fake upload

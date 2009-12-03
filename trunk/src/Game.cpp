@@ -210,7 +210,7 @@ GameApp::GameApp() {
     int nShot=0;
     char v_val[5];
 
-    v_ShotsDir = XMFS::getUserDir() + std::string("/Screenshots");
+    v_ShotsDir = XMFS::getUserDir(FDT_DATA) + std::string("/Screenshots");
     XMFS::mkArborescenceDir(v_ShotsDir);
     v_ShotExtension = XMSession::instance()->screenshotFormat();
     
@@ -230,7 +230,7 @@ GameApp::GameApp() {
 
       snprintf(v_val, 5, "%04d", nShot);
       v_destFile = v_ShotsDir + "/screenshot" + std::string(v_val) + "." + v_ShotExtension;
-    } while(XMFS::fileExists(v_destFile));
+    } while(XMFS::fileExists(FDT_DATA, v_destFile));
     try {
       pShot->saveFile(v_destFile.c_str());
     } catch(Exception &e) {
@@ -486,10 +486,10 @@ void GameApp::displayCursor(bool display)
 
   void GameApp::reloadTheme() {
     try {
-      Theme::instance()->load(xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme()));
+      Theme::instance()->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme()));
     } catch(Exception &e) {
       /* unable to load the theme, load the default one */
-      Theme::instance()->load(xmDatabase::instance("main")->themes_getFileName(DEFAULT_THEME)); // no XMDefault::DefaultTheme, the DEFAULT_THEME one is included into xmoto files
+      Theme::instance()->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(DEFAULT_THEME)); // no XMDefault::DefaultTheme, the DEFAULT_THEME one is included into xmoto files
     }
   }
 
@@ -497,7 +497,7 @@ void GameApp::displayCursor(bool display)
 				   XMotoLoadReplaysInterface* pLoadReplaysInterface) {
     std::vector<std::string> ReplayFiles;
 
-    ReplayFiles = XMFS::findPhysFiles("Replays/*.rpl");
+    ReplayFiles = XMFS::findPhysFiles(FDT_DATA, "Replays/*.rpl");
     threadDb->replays_add_begin();
 
     for(unsigned int i=0; i<ReplayFiles.size(); i++) {

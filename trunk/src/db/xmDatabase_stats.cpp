@@ -35,7 +35,7 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
   std::string v_playerName, v_since, v_starts;
   std::string v_levelId, v_playedTime, v_played, v_died, v_restarted, v_completed;
 
-  XML.readFromFile("stats.xml", NULL);
+  XML.readFromFile(FDT_DATA, "stats.xml", NULL);
   TiXmlDocument *pXML = XML.getLowLevelAccess();
         
   if(pXML != NULL) {    

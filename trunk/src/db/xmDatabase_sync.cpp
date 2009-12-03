@@ -32,7 +32,7 @@ void xmDatabase::sync_buildServerFile(const std::string& i_outFile, const std::s
     char v_line[2048];
     std::ostringstream v_lastDbSync;
 
-    FileHandle *pfh = XMFS::openOFile(i_outFile);
+    FileHandle *pfh = XMFS::openOFile(FDT_CACHE, i_outFile);
 
     /*
       update dbSync:
@@ -126,7 +126,7 @@ void xmDatabase::sync_updateDB(const std::string& i_profile, const std::string& 
   try {
     simpleSql("BEGIN TRANSACTION;");
 
-    v_syncLXml.readFromFile(i_file);
+    v_syncLXml.readFromFile(FDT_CACHE, i_file);
     v_syncLXmlData = v_syncLXml.getLowLevelAccess();
 
     if(v_syncLXmlData == NULL) {

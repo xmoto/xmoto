@@ -2879,7 +2879,7 @@ void GameRenderer::_RenderLayers(Scene* i_scene, bool renderFront) {
   }
   
   void GameRenderer::loadDebugInfo(std::string File) {
-    FileHandle *pfh = XMFS::openIFile(File);
+    FileHandle *pfh = XMFS::openIFile(FDT_CACHE, File);
     if(pfh != NULL) {
       std::string Line;
       std::string Type = "";

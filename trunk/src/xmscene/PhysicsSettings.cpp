@@ -23,13 +23,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/VExcept.h"
 
 PhysicsSettings::PhysicsSettings(const std::string& i_filename) {
-    load(i_filename);
+    load(FDT_DATA, i_filename);
 }
 
 PhysicsSettings::~PhysicsSettings() {
 }
 
-void PhysicsSettings::load(const std::string& i_filename) {
+void PhysicsSettings::load(FileDataType i_fdt, const std::string& i_filename) {
   XMLDocument    v_xml;
   TiXmlDocument* v_xmlData;
   TiXmlElement*  v_xmlDataElement;
@@ -96,7 +96,7 @@ void PhysicsSettings::load(const std::string& i_filename) {
   bool v_rider_anchors_cfm_done              = false;
 
   try {
-    v_xml.readFromFile(i_filename);
+    v_xml.readFromFile(i_fdt, i_filename);
     v_xmlData = v_xml.getLowLevelAccess();
     
     if(v_xmlData == NULL) {

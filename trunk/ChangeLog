@@ -1,6 +1,8 @@
 X-Moto 0.5.3-SVN 3000 2009-09-25
 --------------------------------
  * Ugly Mode heavily improved (Menu GFX and Scripted Sprites)
+ * xdg-basedir compliant (libxdg-basedir required)
+ * bugfix: Compile with ode 0.11
  * bugfix: Rendering stalls no more on first load of Headcrash Sound
  * bugfix: Multiplayer: Messages System
  * bugfix: Multiplayer: Screen Shadow

@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "tinyxml/tinyxml.h"
 #include <string>
+#include "VFileIO_types.h"
 
   /*===========================================================================
   XML document
@@ -36,8 +37,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Methods */
       /* (if pnCRC32!=NULL, then readFromFile() should not parse XML,
           but just calculate the CRC32 of the text file) */
-      void readFromFile(std::string File,unsigned long *pnCRC32=NULL, bool i_includeCurrentDir=false);
-      void writeToFile(std::string File);      
+      void readFromFile(FileDataType i_fdt, std::string File,unsigned long *pnCRC32=NULL, bool i_includeCurrentDir=false);
+      void writeToFile(FileDataType i_fdt, std::string File);      
       
       /* Data interface */
       TiXmlDocument *getLowLevelAccess(void) {return m_pXML;}

@@ -98,7 +98,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
   void Replay::saveReplay(int i_format) {
 
-    FileHandle *pfh = XMFS::openOFile(std::string("Replays/") + m_FileName);
+    FileHandle *pfh = XMFS::openOFile(FDT_DATA, std::string("Replays/") + m_FileName);
     if(pfh == NULL) {
       LogWarning("Failed to open replay file for output: %s",(std::string("Replays/") + m_FileName).c_str());
       return;
@@ -499,13 +499,13 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
 
   std::string Replay::openReplay(const std::string &FileName, std::string &Player, bool bDisplayInformation) {
     /* Try opening as if it is a full path */
-    FileHandle *pfh = XMFS::openIFile(FileName, true);
+    FileHandle *pfh = XMFS::openIFile(FDT_DATA, FileName, true);
     if(pfh == NULL) {
       /* Open file for input */
-      pfh = XMFS::openIFile(std::string("Replays/") + FileName);
+      pfh = XMFS::openIFile(FDT_DATA, std::string("Replays/") + FileName);
       if(pfh == NULL) {
         /* Try adding a .rpl extension */
-        pfh = XMFS::openIFile(std::string("Replays/") + FileName + std::string(".rpl"));
+        pfh = XMFS::openIFile(FDT_DATA, std::string("Replays/") + FileName + std::string(".rpl"));
         if(pfh == NULL) {    
           LogWarning("Failed to open replay file for input: %s",(std::string("Replays/") + FileName).c_str());
           throw Exception("Unable to open the replay");
@@ -718,7 +718,7 @@ bool Replay::nextState(int p_frames) {
   }
 
   void Replay::deleteReplay(std::string ReplayName) {
-    XMFS::deleteFile(std::string("Replays/") + ReplayName + std::string(".rpl"));
+    XMFS::deleteFile(FDT_DATA, std::string("Replays/") + ReplayName + std::string(".rpl"));
   }
 
   ReplayInfo* Replay::getReplayInfos(const std::string p_ReplayName) {
@@ -726,9 +726,9 @@ bool Replay::nextState(int p_frames) {
        want to check this again */
 
       /* Try opening it */
-      FileHandle *pfh = XMFS::openIFile("Replays/" + p_ReplayName + ".rpl");
+      FileHandle *pfh = XMFS::openIFile(FDT_DATA, "Replays/" + p_ReplayName + ".rpl");
       if(pfh == NULL) {
-	pfh = XMFS::openIFile(p_ReplayName, true);
+	pfh = XMFS::openIFile(FDT_DATA, p_ReplayName, true);
 	if(pfh == NULL) {
 	  return NULL;
 	}

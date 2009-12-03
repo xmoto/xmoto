@@ -42,7 +42,8 @@ void xmDatabase::webrooms_addRoom(const std::string& i_id_room, const std::strin
 	    "\"" + protectString(i_highscoreUrl) + "\");");
 }
 
-std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscoresFile,
+std::string xmDatabase::webhighscores_updateDB(FileDataType i_fdt,
+					       const std::string& i_webhighscoresFile,
 					       const std::string& i_websource) {
   XMLDocument v_webHSXml;
   TiXmlDocument *v_webHSXmlData;
@@ -61,7 +62,7 @@ std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscore
   try {
     simpleSql("BEGIN TRANSACTION;");
 
-    v_webHSXml.readFromFile(i_webhighscoresFile);
+    v_webHSXml.readFromFile(i_fdt, i_webhighscoresFile);
     v_webHSXmlData = v_webHSXml.getLowLevelAccess();
 
     if(v_webHSXmlData == NULL) {
@@ -206,7 +207,7 @@ bool xmDatabase::isWebVoteLocked(const std::string& i_id_level) {
   return checkKey("SELECT count(1) FROM weblevels WHERE id_level=\"" + protectString(i_id_level) + "\" AND vote_locked=1;");
 }
 
-void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
+void xmDatabase::weblevels_updateDB(FileDataType i_fdt, const std::string& i_weblevelsFile) {
   XMLDocument v_webLXml;
   TiXmlDocument *v_webLXmlData;
   TiXmlElement *v_webLXmlDataElement;
@@ -219,7 +220,7 @@ void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
     simpleSql("BEGIN TRANSACTION;");
     simpleSql("DELETE FROM weblevels;");
 
-    v_webLXml.readFromFile(i_weblevelsFile);
+    v_webLXml.readFromFile(i_fdt, i_weblevelsFile);
     v_webLXmlData = v_webLXml.getLowLevelAccess();
 
     if(v_webLXmlData == NULL) {
@@ -323,7 +324,7 @@ void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
   }
 }
 
-void xmDatabase::webrooms_updateDB(const std::string& i_webroomsFile) {
+void xmDatabase::webrooms_updateDB(FileDataType i_fdt, const std::string& i_webroomsFile) {
   XMLDocument v_webRXml;
   TiXmlDocument *v_webRXmlData;
   TiXmlElement *v_webRXmlDataElement;
@@ -334,7 +335,7 @@ void xmDatabase::webrooms_updateDB(const std::string& i_webroomsFile) {
     simpleSql("BEGIN TRANSACTION;");
     simpleSql("DELETE FROM webrooms;");
 
-    v_webRXml.readFromFile(i_webroomsFile);
+    v_webRXml.readFromFile(i_fdt, i_webroomsFile);
     v_webRXmlData = v_webRXml.getLowLevelAccess();
 
     if(v_webRXmlData == NULL) {
@@ -373,7 +374,7 @@ void xmDatabase::webrooms_updateDB(const std::string& i_webroomsFile) {
   }
 }
 
-void xmDatabase::webthemes_updateDB(const std::string& i_webThemesFile) {
+void xmDatabase::webthemes_updateDB(FileDataType i_fdt, const std::string& i_webThemesFile) {
   XMLDocument v_webTXml;
   TiXmlDocument *v_webTXmlData;
   TiXmlElement *v_webTXmlDataElement;
@@ -384,7 +385,7 @@ void xmDatabase::webthemes_updateDB(const std::string& i_webThemesFile) {
     simpleSql("BEGIN TRANSACTION;");
     simpleSql("DELETE FROM webthemes;");
     
-    v_webTXml.readFromFile(i_webThemesFile);
+    v_webTXml.readFromFile(i_fdt, i_webThemesFile);
     v_webTXmlData = v_webTXml.getLowLevelAccess();
     
     if(v_webTXmlData == NULL) {
@@ -448,7 +449,7 @@ void xmDatabase::webLoadDataFirstTime() {
 
     if(v_update) {
       LogInfo("Loading weblevels with delivered weblevels.xml");
-      weblevels_updateDB("default/weblevels.xml");
+      weblevels_updateDB(FDT_DATA, "default/weblevels.xml"); // FDT_DATA because first loading file a really a data
     }
   } catch(Exception &e) {
     /* ok, no pb */
@@ -466,7 +467,7 @@ void xmDatabase::webLoadDataFirstTime() {
 
     if(v_update) {
       LogInfo("Loading webhighscores with delivered webhighscores.xml");
-      webhighscores_updateDB("default/webhighscores.xml", DEFAULT_WEBHIGHSCORES_URL);
+      webhighscores_updateDB(FDT_DATA, "default/webhighscores.xml", DEFAULT_WEBHIGHSCORES_URL); // FDT_DATA because first loading file a really a data
     }
   } catch(Exception &e) {
     /* ok, no pb */

@@ -149,7 +149,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Load shader source
   ===========================================================================*/
   char **SFXOverlay::_LoadShaderSource(const std::string &File, unsigned int *pnNumLines) {
-    FileHandle *pfh = XMFS::openIFile(std::string("Shaders/") + File);
+    FileHandle *pfh = XMFS::openIFile(FDT_DATA, std::string("Shaders/") + File);
     if(pfh != NULL) {
       /* Load lines */
       std::string Line;

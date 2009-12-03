@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	void UserConfig::loadFile(void) {
 	  XMLDocument ConfigDoc;
 	  
-	  ConfigDoc.readFromFile("config.dat");
+	  ConfigDoc.readFromFile(FDT_CONFIG, XM_CONFIGFILE);
 	  TiXmlDocument *pConfigData = ConfigDoc.getLowLevelAccess();
 	  if(pConfigData != NULL) {
 	    TiXmlElement *pUserConfigElem = pConfigData->FirstChildElement("userconfig");
@@ -51,10 +51,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	      }
 	    }
 	    else 
-	      LogWarning("no configuration in 'config.dat'");
+	      LogWarning("no configuration in " XM_CONFIGFILE);
 	  }
 	  else
-	    LogWarning("failed to load or parse user configuration 'config.dat'");
+	    LogWarning("failed to load or parse user configuration " XM_CONFIGFILE);
 	}
 
   /*===========================================================================
@@ -62,7 +62,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/
 	void UserConfig::saveFile(void) {
 	  /* Save configuration */
-	  FileHandle *pfh = XMFS::openOFile("config.dat");
+	  FileHandle *pfh = XMFS::openOFile(FDT_CONFIG, XM_CONFIGFILE);
 	  if(pfh != NULL) {
 	    XMFS::writeLine(pfh,"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 	    XMFS::writeLine(pfh,"");
@@ -81,7 +81,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    XMFS::closeFile(pfh);
 	  }
 	  else
-	    LogWarning("failed to save user configuration 'config.dat'");
+	    LogWarning("failed to save user configuration " XM_CONFIGFILE);
 	}
 
   /*===========================================================================

@@ -41,8 +41,8 @@ xmDatabase::xmDatabase()
 
 void xmDatabase::init(const std::string& i_dbFile,
 		      const std::string& i_profile,
-		      const std::string& i_gameDir,
-		      const std::string& i_userDir,
+		      const std::string& i_gameDataDir,
+		      const std::string& i_userDataDir,
 		      const std::string& i_binPackCheckSum,
 		      bool i_dbDirsCheck,
 		      XmDatabaseUpdateInterface *i_interface) {
@@ -84,65 +84,65 @@ void xmDatabase::init(const std::string& i_dbFile,
     upgradeXmDbToVersion(v_version, i_profile, i_interface); 
   }
 
-  /* check if gameDir and userDir are the same - otherwise, the computer probably changed */  
-  std::string v_oldGameDir = getXmDbGameDir();
-  std::string v_oldUserDir = getXmDbUserDir();
-  bool v_areDirectoryOK = XMFS::areSamePath(i_gameDir, v_oldGameDir) && XMFS::areSamePath(i_userDir, v_oldUserDir);
+  /* check if gameDir and userDataDir are the same - otherwise, the computer probably changed */  
+  std::string v_oldGameDataDir = getXmDbGameDataDir();
+  std::string v_oldUserDataDir = getXmDbUserDataDir();
+  bool v_areDirectoryOK = XMFS::areSamePath(i_gameDataDir, v_oldGameDataDir) && XMFS::areSamePath(i_userDataDir, v_oldUserDataDir);
 
   if((v_areDirectoryOK == false && i_dbDirsCheck) || i_binPackCheckSum != getXmDbBinPackCheckSum()) {
     m_requiredLevelsUpdateAfterInit  = true;
     m_requiredReplaysUpdateAfterInit = true;
     m_requiredThemesUpdateAfterInit  = true;
-    setXmDbGameDir(i_gameDir);
-    setXmDbUserDir(i_userDir);
+    setXmDbGameDataDir(i_gameDataDir);
+    setXmDbUserDataDir(i_userDataDir);
     setXmDbBinPackCheckSum(i_binPackCheckSum);
 
-    /* -- first initialisation or xmoto.bin/userdir update -- */
+    /* -- first initialisation or xmoto.bin/userdatadir update -- */
     webLoadDataFirstTime();
   } else {
     // directory are not ok, but check directory is disabled => update the directories anyway
     if(v_areDirectoryOK == false) {
-      setXmDbGameDir(i_gameDir);
-      setXmDbUserDir(i_userDir);
+      setXmDbGameDataDir(i_gameDataDir);
+      setXmDbUserDataDir(i_userDataDir);
 
       try {
-	updateXMDirectories(v_oldGameDir, i_gameDir, v_oldUserDir, i_userDir);
+	updateXMDirectories(v_oldGameDataDir, i_gameDataDir, v_oldUserDataDir, i_userDataDir);
       } catch(Exception &e) {
 	/* forcing update */
 	m_requiredLevelsUpdateAfterInit  = true;
 	m_requiredReplaysUpdateAfterInit = true;
 	m_requiredThemesUpdateAfterInit  = true;
 
-	/* -- first initialisation or xmoto.bin/userdir update -- */
+	/* -- first initialisation or xmoto.bin/userdatadir update -- */
 	webLoadDataFirstTime();
       }
     }
   }
 }
 
-void xmDatabase::updateXMDirectories(const std::string& i_oldGameDir, const std::string& i_newGameDir,
-				     const std::string& i_oldUserDir, const std::string& i_newUserDir) {
-  LogInfo("Updating XM directories from %s to %s", i_oldGameDir.c_str(), i_newGameDir.c_str());
-  LogInfo("Updating XM directories from %s to %s", i_oldUserDir.c_str(), i_newUserDir.c_str());
+void xmDatabase::updateXMDirectories(const std::string& i_oldGameDataDir, const std::string& i_newGameDataDir,
+				     const std::string& i_oldUserDataDir, const std::string& i_newUserDataDir) {
+  LogInfo("Updating XM directories from %s to %s", i_oldGameDataDir.c_str(), i_newGameDataDir.c_str());
+  LogInfo("Updating XM directories from %s to %s", i_oldUserDataDir.c_str(), i_newUserDataDir.c_str());
 
   try {
     simpleSql("BEGIN TRANSACTION;");
 
     simpleSql("UPDATE levels SET filepath ="
-	      " xm_replaceStart(filepath, \"" + protectString(i_oldGameDir) + "\", \"" + protectString(i_newGameDir) + "\")"
-	      " WHERE filepath LIKE \""  + protectString(i_oldGameDir) + "%\";");
+	      " xm_replaceStart(filepath, \"" + protectString(i_oldGameDataDir) + "\", \"" + protectString(i_newGameDataDir) + "\")"
+	      " WHERE filepath LIKE \""  + protectString(i_oldGameDataDir) + "%\";");
 
     simpleSql("UPDATE themes SET filepath ="
-	      " xm_replaceStart(filepath, \"" + protectString(i_oldGameDir) + "\", \"" + protectString(i_newGameDir) + "\")"
-	      " WHERE filepath LIKE \""  + protectString(i_oldGameDir) + "%\";");
+	      " xm_replaceStart(filepath, \"" + protectString(i_oldGameDataDir) + "\", \"" + protectString(i_newGameDataDir) + "\")"
+	      " WHERE filepath LIKE \""  + protectString(i_oldGameDataDir) + "%\";");
 
     simpleSql("UPDATE levels SET filepath ="
-	      " xm_replaceStart(filepath, \"" + protectString(i_oldUserDir) + "\", \"" + protectString(i_newUserDir) + "\")"
-	      " WHERE filepath LIKE \""  + protectString(i_oldUserDir) + "%\";");
+	      " xm_replaceStart(filepath, \"" + protectString(i_oldUserDataDir) + "\", \"" + protectString(i_newUserDataDir) + "\")"
+	      " WHERE filepath LIKE \""  + protectString(i_oldUserDataDir) + "%\";");
 
     simpleSql("UPDATE themes SET filepath ="
-	      " xm_replaceStart(filepath, \"" + protectString(i_oldUserDir) + "\", \"" + protectString(i_newUserDir) + "\")"
-	      " WHERE filepath LIKE \""  + protectString(i_oldUserDir) + "%\";");
+	      " xm_replaceStart(filepath, \"" + protectString(i_oldUserDataDir) + "\", \"" + protectString(i_newUserDataDir) + "\")"
+	      " WHERE filepath LIKE \""  + protectString(i_oldUserDataDir) + "%\";");
 
     simpleSql("COMMIT;");
   } catch(Exception &e) {
@@ -210,7 +210,7 @@ bool xmDatabase::getXmParameterKey(const std::string& i_key, std::string& o_valu
   return true;
 }
 
-std::string xmDatabase::getXmDbGameDir() {
+std::string xmDatabase::getXmDbGameDataDir() {
   std::string v_dir;
 
   if(getXmParameterKey("gameDir", v_dir)) {
@@ -219,7 +219,7 @@ std::string xmDatabase::getXmDbGameDir() {
   return "";
 }
 
-std::string xmDatabase::getXmDbUserDir() {
+std::string xmDatabase::getXmDbUserDataDir() {
   std::string v_dir;
 
   if(getXmParameterKey("userDir", v_dir)) {
@@ -244,12 +244,12 @@ void xmDatabase::setXmParameterKey(const std::string& i_key, const std::string& 
   }
 }
 
-void xmDatabase::setXmDbGameDir(const std::string& i_gameDir) {
-  setXmParameterKey("gameDir", i_gameDir);
+void xmDatabase::setXmDbGameDataDir(const std::string& i_gameDataDir) {
+  setXmParameterKey("gameDir", i_gameDataDir);
 }
 
-void xmDatabase::setXmDbUserDir(const std::string& i_userDir) {
-  setXmParameterKey("userDir", i_userDir);
+void xmDatabase::setXmDbUserDataDir(const std::string& i_userDataDir) {
+  setXmParameterKey("userDir", i_userDataDir);
 }
 
 std::string xmDatabase::getXmDbBinPackCheckSum() {

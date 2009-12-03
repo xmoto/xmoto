@@ -537,7 +537,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     bool bGotScript = false;
     
     if(m_pLevelSrc->scriptFileName() != "") {
-      FileHandle *pfh = XMFS::openIFile(std::string("./Levels/") + m_pLevelSrc->scriptFileName());
+      FileHandle *pfh = XMFS::openIFile(FDT_DATA, std::string("./Levels/") + m_pLevelSrc->scriptFileName());
       if(pfh == NULL) {
         /* Well, file not found -- try encapsulated script */
         bNeedScript = true;

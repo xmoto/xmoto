@@ -30,6 +30,7 @@
 #include "../VTexture.h"
 #include "../include/xm_hashmap.h"
 #include "../helpers/Singleton.h"
+#include "../VFileIO_types.h"
 
 #define UTF8_INTERLINE_SPACE 2
 #define UTF8_INTERCHAR_SPACE 0
@@ -150,9 +151,9 @@ DrawLibOpenGL::~DrawLibOpenGL(){
 }
 
 DrawLibOpenGL::DrawLibOpenGL() : DrawLib(){
-  m_fontSmall  = getFontManager(XMFS::FullPath(FontManager::getDrawFontFile()), 14);
-  m_fontMedium = getFontManager(XMFS::FullPath(FontManager::getDrawFontFile()), 22);
-  m_fontBig    = getFontManager(XMFS::FullPath(FontManager::getDrawFontFile()), 60);
+  m_fontSmall  = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 14);
+  m_fontMedium = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 22);
+  m_fontBig    = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 60);
 };
  
 /*===========================================================================
