@@ -35,8 +35,8 @@ then
   AC_CHECK_LIB(xdg-basedir, xdgInitHandle,[],[AC_MSG_ERROR(libxdg-basedir required)])
 else
   # on windows, include sources to xmoto
-  CXXFLAGS="$CXXFLAGS"" ""-Ixdgbasedir/include"
-  CFLAGS="$CFLAGS"" ""-Ixdgbasedir/include"
+  CXXFLAGS="$CXXFLAGS"" ""-I""$ac_abs_confdir""/src/xdgbasedir/include"
+  CFLAGS="$CFLAGS"" ""-I""$ac_abs_confdir""/src/xdgbasedir/include"
 fi
 
 # on windows, don't check ; on mac, it's included into the framework
