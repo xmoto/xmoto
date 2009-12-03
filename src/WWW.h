@@ -38,6 +38,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Theme.h"
 #include "XMSession.h"
 #include "XMBuild.h"
+#include "VFileIO_types.h"
+
 class ThemeChoice;
 
 #define DEFAULT_WEBHIGHSCORES_URL         "http://xmoto.tuxfamily.org/highscores.xml"

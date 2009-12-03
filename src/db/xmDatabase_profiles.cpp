@@ -37,7 +37,7 @@ void xmDatabase::updateDB_profiles(XmDatabaseUpdateInterface *i_interface) {
   int         v_time;
   short       v_nVersion;
   /* Open binary file for input */
-  FileHandle *pfh = XMFS::openIFile("players.bin");
+  FileHandle *pfh = XMFS::openIFile(FDT_DATA, "players.bin");
   if(pfh == NULL) {
     return;       
   }

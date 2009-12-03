@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../GameText.h"
 #include "../include/xm_SDL.h"
 #include "../VFileIO.h"
+#include "../VFileIO_types.h"
 
 #define DRAW_FONT_FILE_GENERAL "Textures/Fonts/DejaVuSans.ttf"
 
@@ -73,7 +74,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
 void DrawLib::checkFontPrerequites() {
-  if(XMFS::fileExists(FontManager::getDrawFontFile()) == false) {
+  if(XMFS::fileExists(FDT_DATA, FontManager::getDrawFontFile()) == false) {
     throw Exception("File " + FontManager::getDrawFontFile() + " is missing");
   }
 }

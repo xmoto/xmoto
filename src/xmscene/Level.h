@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 #include "BasicSceneStructs.h"
 #include "../helpers/VMath.h"
+#include "../VFileIO_types.h"
 
 class Block;
 class Entity;
@@ -227,9 +228,9 @@ class Level {
   Sprite* m_starSprite;
 
   void addLimits();
-  void exportBinary(const std::string &i_fileName, const std::string& i_sum);
-  bool importBinary(const std::string &i_fileName, const std::string& i_sum);
-  bool importBinaryHeaderFromFile(const std::string &i_fileName, const std::string& i_sum);
+  void exportBinary(FileDataType i_fdt, const std::string &i_fileName, const std::string& i_sum);
+  bool importBinary(FileDataType i_fdt, const std::string &i_fileName, const std::string& i_sum);
+  bool importBinaryHeaderFromFile(FileDataType i_fdt, const std::string &i_fileName, const std::string& i_sum);
   std::string getNameInCache() const;
 
   void loadRemplacementSprites();

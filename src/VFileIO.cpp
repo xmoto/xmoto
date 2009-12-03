@@ -39,8 +39,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/SwapEndian.h"
 #include "md5sum/md5file.h"
 
+#include "XMSession_default.h"
+#include "UserConfig.h"
+
 #ifdef WIN32
-std::string win32_getUserDir(bool i_asUtf8 = false) {
+std::string win32_getHomeDir(bool i_asUtf8 = false) {
   HANDLE hToken;
   HANDLE proc;
   std::string v_dest;
@@ -80,7 +83,8 @@ void strlwr(char *pc) {
 }
 #endif
 
-bool XMFS::m_isInitialized = false;
+bool       XMFS::m_isInitialized = false;
+xdgHandle* XMFS::m_xdgHd         = NULL;
 
 bool str_match_wildcard(char *pcMWildcard,char *pcMString, bool CaseSensitive) {
   int nPos=0;
@@ -151,6 +155,38 @@ void XMFS::_ThrowFileError(FileHandle *pfh,std::string Description) {
   throw Exception(cBuf);
 }
 
+std::string XMFS::getSystemDataDir() {
+  return m_SystemDataDir;
+}
+
+std::string XMFS::getUserDir(FileDataType i_fdt) {
+  switch(i_fdt) {
+
+  case FDT_DATA:
+    return m_UserDataDir;
+    break;
+
+  case FDT_CONFIG:
+    return m_UserConfigDir;
+    break;
+
+  case FDT_CACHE:
+    return m_UserCacheDir;
+    break;
+  }
+
+  return "";
+}
+
+std::string XMFS::getUserDirUTF8(FileDataType i_fdt) {
+  if(i_fdt != FDT_DATA) {
+    throw Exception("Allow only utf8 from user data directory");
+  }
+
+  return m_UserDataDirUTF8;
+}
+
+
 /*===========================================================================
   Code soup :)  -- this is largely copy/paste material from an earlier project
   
@@ -220,7 +256,7 @@ void XMFS::_FindFilesRecursive(const std::string &DirX,const std::string &Wildca
 #endif    
 }
 
-std::vector<std::string> XMFS::findPhysFiles(std::string Files,bool bRecurse) {
+std::vector<std::string> XMFS::findPhysFiles(FileDataType i_fdt, std::string Files,bool bRecurse) {
   std::vector<std::string> Result;
   std::string Wildcard;
   std::string DataDirToSearch,AltDirToSearch,UDirToSearch = "";
@@ -229,14 +265,14 @@ std::vector<std::string> XMFS::findPhysFiles(std::string Files,bool bRecurse) {
   int n = Files.find_last_of('/');
   if(n<0) {
     /* No directory specified */
-    DataDirToSearch = m_DataDir;
+    DataDirToSearch = m_SystemDataDir;
     AltDirToSearch = "";
     Wildcard = Files;
   }
   else {
     /* Seperate dir and wildcard */
-    DataDirToSearch = m_DataDir + std::string("/") + Files.substr(0,n+1);
-    UDirToSearch = m_UserDir + std::string("/") + Files.substr(0,n+1);
+    DataDirToSearch = m_SystemDataDir + std::string("/") + Files.substr(0,n+1);
+    UDirToSearch = getUserDir(i_fdt) + std::string("/") + Files.substr(0,n+1);
     AltDirToSearch = Files.substr(0,n+1);
     Wildcard = Files.substr(n+1);
   }    
@@ -265,21 +301,24 @@ std::vector<std::string> XMFS::findPhysFiles(std::string Files,bool bRecurse) {
     }
   }
 
-  if(bRecurse) {
-    _FindFilesRecursive(DataDirToSearch,Wildcard,Result);
-  } else {
-    long fh;
-    struct _finddata_t fd;
+  if(i_fdt == FDT_DATA) {
+    if(bRecurse) {
+      _FindFilesRecursive(DataDirToSearch,Wildcard,Result);
+    } else {
+      long fh;
+      struct _finddata_t fd;
       
-    if((fh = _findfirst((DataDirToSearch + Wildcard).c_str(),&fd)) != -1L) {
-      do {
-	if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
-	  Result.push_back(DataDirToSearch + std::string(fd.name));
-	}
+      if((fh = _findfirst((DataDirToSearch + Wildcard).c_str(),&fd)) != -1L) {
+	do {
+	  if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
+	    Result.push_back(DataDirToSearch + std::string(fd.name));
+	  }
       } while(_findnext(fh,&fd)==0);
-      _findclose(fh);
+	_findclose(fh);
+      }
     }
   }
+
 #else /* Assume linux, unix... yalla yalla... */
   if(UDirToSearch != "") {
     if(bRecurse) {
@@ -325,42 +364,46 @@ std::vector<std::string> XMFS::findPhysFiles(std::string Files,bool bRecurse) {
     }
   }
 
-  if(DataDirToSearch != AltDirToSearch && DataDirToSearch != UDirToSearch) {
-    if(bRecurse) {
-      _FindFilesRecursive(DataDirToSearch,Wildcard,Result);
-    } else {
-      /* Search directories */
-      struct dirent *dp;    
-      DIR *dirp = opendir(DataDirToSearch.c_str());
-      while(dirp) {
-	if((dp = readdir(dirp)) != NULL) {
-	  if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
-	    /* Match! */
-	    if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-	      Result.push_back(DataDirToSearch + std::string(dp->d_name));
-	    }             
+  if(i_fdt == FDT_DATA) {
+    if(DataDirToSearch != AltDirToSearch && DataDirToSearch != UDirToSearch) {
+      if(bRecurse) {
+	_FindFilesRecursive(DataDirToSearch,Wildcard,Result);
+      } else {
+	/* Search directories */
+	struct dirent *dp;    
+	DIR *dirp = opendir(DataDirToSearch.c_str());
+	while(dirp) {
+	  if((dp = readdir(dirp)) != NULL) {
+	    if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
+	      /* Match! */
+	      if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
+		Result.push_back(DataDirToSearch + std::string(dp->d_name));
+	      }             
+	    }
+	  } else {
+	    closedir(dirp);
+	    break;        
 	  }
-	} else {
-	  closedir(dirp);
-	  break;        
 	}
       }
     }
   }
 #endif
-		
-  /* Look in package */
-  for(unsigned int i=0; i<m_PackFiles.size(); i++) {
-    /* Make sure about the directory... */
-    int k = Files.find_last_of('/');
-    std::string Ds1 = Files.substr(0,k+1);
-    k = m_PackFiles[i].Name.find_last_of('/');
-    std::string Ds2 = m_PackFiles[i].Name.substr(0,k+1);
-    if(Ds1.substr(0,2) == "./") Ds1.erase(Ds1.begin(),Ds1.begin()+2);
 
-    if(Ds1 == Ds2 && str_match_wildcard((char *)Files.c_str(),(char *)m_PackFiles[i].Name.c_str(),true)) {
-      /* Match. */
-      Result.push_back(m_PackFiles[i].Name);
+  if(i_fdt == FDT_DATA) {	
+    /* Look in package */
+    for(unsigned int i=0; i<m_PackFiles.size(); i++) {
+      /* Make sure about the directory... */
+      int k = Files.find_last_of('/');
+      std::string Ds1 = Files.substr(0,k+1);
+      k = m_PackFiles[i].Name.find_last_of('/');
+      std::string Ds2 = m_PackFiles[i].Name.substr(0,k+1);
+      if(Ds1.substr(0,2) == "./") Ds1.erase(Ds1.begin(),Ds1.begin()+2);
+      
+      if(Ds1 == Ds2 && str_match_wildcard((char *)Files.c_str(),(char *)m_PackFiles[i].Name.c_str(),true)) {
+	/* Match. */
+	Result.push_back(m_PackFiles[i].Name);
+      }
     }
   }
 
@@ -368,7 +411,7 @@ std::vector<std::string> XMFS::findPhysFiles(std::string Files,bool bRecurse) {
   return Result;
 }
   
-FileHandle *XMFS::openOFile(std::string Path) {
+FileHandle *XMFS::openOFile(FileDataType i_fdt, std::string Path) {
   FileHandle *pfh = new FileHandle;
     
   /* Is it an absolute path? */
@@ -379,8 +422,8 @@ FileHandle *XMFS::openOFile(std::string Path) {
   }    
   else {
     /* Nope, try the user dir */
-    mkArborescence(m_UserDir + std::string("/") + Path);
-    pfh->fp = fopen((m_UserDir + std::string("/") + Path).c_str(),"wb");
+    mkArborescence(getUserDir(i_fdt) + std::string("/") + Path);
+    pfh->fp = fopen((getUserDir(i_fdt) + std::string("/") + Path).c_str(),"wb");
   }
     
   if(pfh->fp != NULL) { 
@@ -393,7 +436,7 @@ FileHandle *XMFS::openOFile(std::string Path) {
   return NULL;
 }
   
-FileHandle *XMFS::openIFile(std::string Path, bool i_includeCurrentDir) {
+FileHandle *XMFS::openIFile(FileDataType i_fdt, std::string Path, bool i_includeCurrentDir) {
   FileHandle *pfh = new FileHandle;
 
   /* Okay. Absolute path? */
@@ -403,18 +446,20 @@ FileHandle *XMFS::openIFile(std::string Path, bool i_includeCurrentDir) {
     pfh->Type = FHT_STDIO;
   } else {
     /* user dir ? */
-    pfh->fp = fopen((m_UserDir + std::string("/") + Path).c_str(),"rb");        
+    pfh->fp = fopen((getUserDir(i_fdt) + std::string("/") + Path).c_str(),"rb");        
 
     /* data dir ? */
-    if(pfh->fp == NULL) {
-      if(m_bGotDataDir) {
-	pfh->fp = fopen((m_DataDir + std::string("/") + Path).c_str(),"rb");        
-      }
-
-      /* current working dir ? */
+    if(i_fdt == FDT_DATA) {
       if(pfh->fp == NULL) {
-	if(i_includeCurrentDir) {
-	  pfh->fp = fopen(Path.c_str(),"rb");
+	if(m_bGotSystemDataDir) {
+	  pfh->fp = fopen((m_SystemDataDir + std::string("/") + Path).c_str(),"rb");        
+	}
+	
+	/* current working dir ? */
+	if(pfh->fp == NULL) {
+	  if(i_includeCurrentDir) {
+	    pfh->fp = fopen(Path.c_str(),"rb");
+	  }
 	}
       }
     }
@@ -425,25 +470,27 @@ FileHandle *XMFS::openIFile(std::string Path, bool i_includeCurrentDir) {
     }
   }
     
-  if(pfh->fp == NULL) {
-    /* No luck so far, look in the data package */
-    for(unsigned int i=0; i<m_PackFiles.size(); i++) {              
-      if(m_PackFiles[i].Name == Path ||
-	 (std::string("./") + m_PackFiles[i].Name) == Path) {
-	/* Found it, yeah. */
-	pfh->fp = fopen(m_BinDataFile.c_str(),"rb");
-	if(pfh->fp != NULL) {
-	  fseek(pfh->fp,m_PackFiles[i].nOffset,SEEK_SET);    
-	  pfh->Type = FHT_PACKAGE;
-	  pfh->nSize = m_PackFiles[i].nSize;
-	  pfh->nOffset = ftell(pfh->fp);
-	  //            printf("OPENED '%s' IN PACKAGE!\n",Path.c_str());
-	}          
-	else break;
-      }
-    }      
+  if(i_fdt == FDT_DATA) {
+    if(pfh->fp == NULL) {
+      /* No luck so far, look in the data package */
+      for(unsigned int i=0; i<m_PackFiles.size(); i++) {              
+	if(m_PackFiles[i].Name == Path ||
+	   (std::string("./") + m_PackFiles[i].Name) == Path) {
+	  /* Found it, yeah. */
+	  pfh->fp = fopen(m_BinDataFile.c_str(),"rb");
+	  if(pfh->fp != NULL) {
+	    fseek(pfh->fp,m_PackFiles[i].nOffset,SEEK_SET);    
+	    pfh->Type = FHT_PACKAGE;
+	    pfh->nSize = m_PackFiles[i].nSize;
+	    pfh->nOffset = ftell(pfh->fp);
+	    //            printf("OPENED '%s' IN PACKAGE!\n",Path.c_str());
+	  }
+	  else break;
+	}
+      }      
+    }
   }
-    
+
   if(pfh->fp == NULL) { 
     delete pfh;
     return NULL;
@@ -828,24 +875,24 @@ bool XMFS::isPathAbsolute(std::string Path) {
 /*===========================================================================
   Delete file
   ===========================================================================*/  
-void XMFS::deleteFile(const std::string &File) {
+void XMFS::deleteFile(FileDataType i_fdt, const std::string &File) {
   std::string FullFile;
     
-  if(m_UserDir == "") {
+  if(getUserDir(i_fdt) == "") {
     throw Exception("Unable to delete the file " + File);
   }
     
   /* Absolute file path? */
   if(isPathAbsolute(File)) {
     /* Yeah, check if file is in user directory - otherwise we won't delete it */
-    if(File.length() < m_UserDir.length() || File.substr(0, m_UserDir.length()) != m_UserDir) {
+    if(File.length() < getUserDir(i_fdt).length() || File.substr(0, getUserDir(i_fdt).length()) != getUserDir(i_fdt)) {
       throw Exception("Unable to delete the file " + File);
     }
       
     FullFile = File;
   } else {  
     /* We can only delete user files */      
-    FullFile = m_UserDir + std::string("/") + File;
+    FullFile = getUserDir(i_fdt) + std::string("/") + File;
   }
 
   if(remove(FullFile.c_str())) {
@@ -856,15 +903,15 @@ void XMFS::deleteFile(const std::string &File) {
 /*===========================================================================
   Copy file
   ===========================================================================*/
-bool XMFS::copyFile(const std::string &From,const std::string &To, std::string &To_really_done) {
+bool XMFS::copyFile(FileDataType i_fdt, const std::string &From,const std::string &To, std::string &To_really_done) {
   /* All file copying must happen inside the user directory... */
-  if(m_UserDir == "") {
+  if(getUserDir(i_fdt) == "") {
     LogWarning("No user directory, can't copy file '%s' to '%s'",From.c_str(),To.c_str());
     return false;
   }
 
-  std::string FullFrom = m_UserDir + std::string("/") + From;
-  std::string FullTo = m_UserDir + std::string("/") + To;
+  std::string FullFrom = getUserDir(i_fdt) + std::string("/") + From;
+  std::string FullTo = getUserDir(i_fdt)   + std::string("/") + To;
     
   /* Does the destination file already exist? */
   FILE *fp = fopen(FullTo.c_str(),"rb");
@@ -965,17 +1012,31 @@ bool XMFS::renameUserFile(const std::string &From,const std::string &To) {
 /*===========================================================================
   Initialize file system fun
   ===========================================================================*/
-std::string XMFS::m_UserDir="",XMFS::m_UserDirUTF8="",XMFS::m_DataDir; /* Globals */
-bool XMFS::m_bGotDataDir;
+std::string XMFS::m_UserDataDir     ="";
+std::string XMFS::m_UserConfigDir   ="";
+std::string XMFS::m_UserCacheDir    ="";
+std::string XMFS::m_UserDataDirUTF8 ="";
+std::string XMFS::m_SystemDataDir   = ""; /* Globals */
+bool XMFS::m_bGotSystemDataDir;
 std::string XMFS::m_BinDataFile = "";
 std::string XMFS::m_binCheckSum = "";
 std::vector<PackFile> XMFS::m_PackFiles;
 
-void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile, const std::string& i_userDirPath) {
-  m_bGotDataDir = false;
-  m_UserDir = "";
-  m_UserDirUTF8 = "";
-  m_DataDir = "";
+void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile, const std::string& i_userCustomDirPath) {
+  m_bGotSystemDataDir = false;
+  m_UserDataDir     = "";
+  m_UserConfigDir   = "";
+  m_UserCacheDir    = "";
+  m_UserDataDirUTF8 = "";
+  m_SystemDataDir   = "";
+
+  // xdg
+  if( (m_xdgHd = (xdgHandle*) malloc(sizeof(xdgHandle))) == NULL) {
+    throw Exception("xdgbasedir allocation failed");
+  }
+  if( (xdgInitHandle(m_xdgHd)) == 0) {
+    throw Exception("xdgbasedir initialisation failed");
+  }
   
 #if defined(WIN32) /* Windoze... */
   char cModulePath[256];
@@ -992,78 +1053,105 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
   /* Valid path? */
   if(isDir(cModulePath)) {
     /* Alright, use this dir */    
-    if(i_userDirPath != "") {
-      m_UserDir = m_UserDirUTF8 = i_userDirPath;
+    if(i_userCustomDirPath != "") {
+      m_UserDataDir   = m_UserDataDirUTF8 = i_userCustomDirPath;
+      m_UserConfigDir = i_userCustomDirPath;
+      m_UserCacheDir  = i_userCustomDirPath;
     } else {
-      m_UserDir     = win32_getUserDir()     + std::string("/.") + AppDir;
-      m_UserDirUTF8 = win32_getUserDir(true) + std::string("/.") + AppDir;
+
+      /* not used even if it works because i'm not sure it returns utf-8 chars, required for sqlite_open
+      //m_UserDataDir     = xdgDataHome(m_xdgHd)   + std::string("/") + AppDir;
+      //m_UserConfigDir   = xdgConfigHome(m_xdgHd) + std::string("/") + AppDir;
+      //m_UserCacheDir    = xdgCacheHome(m_xdgHd)  + std::string("/") + AppDir;
+      */
+
+      m_UserDataDir     = win32_getHomeDir()     + std::string("/.data/")   + AppDir;
+      m_UserConfigDir   = win32_getHomeDir()     + std::string("/.config/") + AppDir;
+      m_UserCacheDir    = win32_getHomeDir()     + std::string("/.cache/")  + AppDir;
+      m_UserDataDirUTF8 = win32_getHomeDir(true) + std::string("/.data/")   + AppDir;
     }
 
-    m_DataDir = cModulePath;     
-    m_bGotDataDir = true;
+    m_SystemDataDir = cModulePath;     
+    m_bGotSystemDataDir = true;
   } 
   else throw Exception("invalid process directory");
 #elif defined(__MORPHOS__) || defined(__amigaos4__)         
-  if(i_userDirPath != "") {
-    m_UserDir = m_UserDirUTF8 = i_userDirPath;
+  if(i_userCustomDirPath != "") {
+    m_UserDataDir   = m_UserDataDirUTF8 = i_userCustomDirPath;
+    m_UserConfigDir = i_userCustomDirPath;
+    m_UserCacheDir  = i_userCustomDirPath;
   } else {
-    m_UserDir = "PROGDIR:userdata"; /*getenv("HOME");*/
-    if(!isDir(m_UserDir))
+    m_UserDataDir = "PROGDIR:userdata"; /*getenv("HOME");*/
+    if(!isDir(m_UserDataDir))
       throw Exception("invalid user home directory");
 
-    m_UserDir = m_UserDir /*+ std::string("/.") + AppDir*/;
-    m_UserDirUTF8 = m_UserDir;
+    m_UserConfigDir   = m_UserDataDir;
+    m_UserCacheDir    = m_UserDataDir;
+    m_UserDataDirUTF8 = m_UserDataDir;
   }
 
   /* And the data dir? */
-  m_DataDir = std::string("PROGDIR:data");
-  if(isDir(m_DataDir)) {
+  m_SystemDataDir = std::string("PROGDIR:data");
+  if(isDir(m_SystemDataDir)) {
     /* Got a system-wide installation to fall back to! */
-    m_bGotDataDir = true;
+    m_bGotSystemDataDir = true;
   }
 #else /* Assume unix-like */
       /* Determine users home dir, so we can find out where to get/save user 
 	 files */
 
-  if(i_userDirPath != "") {
-    m_UserDir = m_UserDirUTF8 = i_userDirPath;
+  if(i_userCustomDirPath != "") {
+    m_UserDataDir   = m_UserDataDirUTF8 = i_userCustomDirPath;
+    m_UserConfigDir = i_userCustomDirPath;
+    m_UserCacheDir  = i_userCustomDirPath;
   } else {
-    m_UserDir = getenv("HOME");
-    if(!isDir(m_UserDir)) 
-      throw Exception("invalid user home directory");
-
-    m_UserDir = m_UserDir + std::string("/.") + AppDir;
-    m_UserDirUTF8 = m_UserDir;
+    m_UserDataDir     = xdgDataHome(m_xdgHd)   + std::string("/") + AppDir;
+    m_UserConfigDir   = xdgConfigHome(m_xdgHd) + std::string("/") + AppDir;
+    m_UserCacheDir    = xdgCacheHome(m_xdgHd)  + std::string("/") + AppDir;
+    m_UserDataDirUTF8 = m_UserDataDir;
   }
 
   /* And the data dir? */
-  m_DataDir = std::string(GAMEDATADIR);
-  if(isDir(m_DataDir)) {
+  m_SystemDataDir = std::string(GAMEDATADIR);
+  if(isDir(m_SystemDataDir)) {
     /* Got a system-wide installation to fall back to! */
-    m_bGotDataDir = true;
+    m_bGotSystemDataDir = true;
   }
 #endif    
 
+  bool v_requireMigration = false;
+
   /* If user-dir isn't there, try making it */
-  if(isDir(m_UserDir) == false) {
-    mkArborescenceDir(m_UserDir);
+  if(isDir(m_UserDataDir) == false) {
+    mkArborescenceDir(m_UserDataDir);
+    /*
+      if the user data directory, it's the first time it is used, try to migrate old data
+    */
+    v_requireMigration = true;
   }
-  if(isDir(getReplaysDir()) == false) {
-    mkArborescenceDir(getReplaysDir());
+  if(isDir(m_UserConfigDir) == false) {
+    mkArborescenceDir(m_UserConfigDir);
   }
-  if(isDir(m_UserDir + std::string("/LCache")) == false) {
-    mkArborescenceDir(m_UserDir + std::string("/LCache"));
+  if(isDir(m_UserCacheDir) == false) {
+    mkArborescenceDir(m_UserCacheDir);
+  }
+
+  if(isDir(getUserReplaysDir()) == false) {
+    mkArborescenceDir(getUserReplaysDir());
+  }
+  if(isDir(m_UserCacheDir + std::string("/LCache")) == false) {
+    mkArborescenceDir(m_UserCacheDir + std::string("/LCache"));
   } 
-  if(isDir(getLevelsDir()) == false) {
-    mkArborescenceDir(getLevelsDir());
+  if(isDir(getUserLevelsDir()) == false) {
+    mkArborescenceDir(getUserLevelsDir());
   } 
 
   /* Delete old log */    
-  remove( (m_UserDir + "/" + i_logFile).c_str() );
+  remove( (m_UserCacheDir + "/" + i_logFile).c_str() );
     
   /* Info */
-  if(m_bGotDataDir) {
-    m_BinDataFile = m_DataDir + "/" + i_binFile;
+  if(m_bGotSystemDataDir) {
+    m_BinDataFile = m_SystemDataDir + "/" + i_binFile;
   }
           
   /* Initialize binary data package if any */
@@ -1119,9 +1207,17 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
   fclose(fp);
 
   m_isInitialized = true;
+
+  if(v_requireMigration) {
+    /*
+      migrating from $HOME/.xmoto to xdg directories if necessary
+    */
+    migrateFSToXdgBaseDirIfRequired(AppDir);
+  }
 }     
 
 void XMFS::uninit() {
+  xdgWipeHandle(m_xdgHd);
   m_isInitialized = false;
 }
 
@@ -1201,17 +1297,17 @@ bool XMFS::isFileInDir(std::string p_dirpath, std::string p_filepath) {
   return v_fileDir.substr(0, p_dirpath.length()) == p_dirpath;
 }
 
-bool XMFS::isInUserDir(std::string p_filepath) {
-  return isFileInDir(getUserDir(), p_filepath);
+bool XMFS::isInUserDir(FileDataType i_fdt, std::string p_filepath) {
+  return isFileInDir(getUserDir(i_fdt), p_filepath);
 }
 
-bool XMFS::doesDirectoryExist(std::string p_path) {
+bool XMFS::doesRealFileOrDirectoryExists(std::string p_path) {
   struct stat S;
   return stat(p_path.c_str(), &S) == 0;
 }
 
-bool XMFS::isFileReadable(std::string p_filename) {
-  FileHandle *fh = openIFile(p_filename);
+bool XMFS::isFileReadable(FileDataType i_fdt, std::string p_filename) {
+  FileHandle *fh = openIFile(i_fdt, p_filename);
   if(fh == NULL) {
     return false;
   }
@@ -1219,14 +1315,14 @@ bool XMFS::isFileReadable(std::string p_filename) {
   return true;
 }
 
-bool XMFS::fileExists(std::string p_filename) {
-  return isFileReadable(p_filename);
+bool XMFS::fileExists(FileDataType i_fdt, std::string p_filename) {
+  return isFileReadable(i_fdt, p_filename);
 }
 
 void XMFS::mkArborescence(std::string v_filepath) {
   std::string v_parentDir = getFileDir(v_filepath);
 
-  if(doesDirectoryExist(v_parentDir)) {
+  if(doesRealFileOrDirectoryExists(v_parentDir)) {
     return;
   }
 
@@ -1240,23 +1336,26 @@ void XMFS::mkArborescenceDir(std::string v_dirpath) {
   mkArborescence(v_dirpath + "/file.tmp");
 }
 
-std::string XMFS::md5sum(std::string i_filePath) {
-  i_filePath = FullPath(i_filePath);
+std::string XMFS::md5sum(FileDataType i_fdt, std::string i_filePath) {
+  i_filePath = FullPath(i_fdt, i_filePath);
 
   /* is it a file from the pack or a real file ? */
   if(XMFS::isFileReal(i_filePath)) {
     return md5file(i_filePath);
   }
 
-  /* package */
-  for(unsigned int i=0; i<m_PackFiles.size(); i++) {              
-    if(m_PackFiles[i].Name == i_filePath ||
-       (std::string("./") + m_PackFiles[i].Name) == i_filePath) {
-      /* Found it, yeah. */
-      //printf("md5sum(%s) = %s\n", m_PackFiles[i].Name.c_str(), m_PackFiles[i].md5sum.c_str());
-      return m_PackFiles[i].md5sum;
+  if(i_fdt == FDT_DATA) {
+    /* package */
+    for(unsigned int i=0; i<m_PackFiles.size(); i++) {              
+      if(m_PackFiles[i].Name == i_filePath ||
+	 (std::string("./") + m_PackFiles[i].Name) == i_filePath) {
+	/* Found it, yeah. */
+	//printf("md5sum(%s) = %s\n", m_PackFiles[i].Name.c_str(), m_PackFiles[i].md5sum.c_str());
+	return m_PackFiles[i].md5sum;
+      }
     }
   }
+
   return "";
 }
 
@@ -1273,12 +1372,15 @@ bool XMFS::isFileReal(std::string i_filePath) {
   return true;
 }
 
-std::string XMFS::FullPath(const std::string& i_relative_path) {
-  if(fileExists(getUserDir() + std::string("/") + i_relative_path)) {
-    return getUserDir() + std::string("/") + i_relative_path;
+std::string XMFS::FullPath(FileDataType i_fdt, const std::string& i_relative_path) {
+  if(fileExists(i_fdt, getUserDir(i_fdt) + std::string("/") + i_relative_path)) {
+    return getUserDir(i_fdt) + std::string("/") + i_relative_path;
   }
-  if(fileExists(getDataDir() + std::string("/") + i_relative_path)) {
-    return getDataDir() + std::string("/") + i_relative_path;
+ 
+  if(i_fdt == FDT_DATA) {
+    if(fileExists(i_fdt, m_SystemDataDir + std::string("/") + i_relative_path)) {
+      return             m_SystemDataDir + std::string("/") + i_relative_path;
+    }
   }
 
   return i_relative_path;
@@ -1290,4 +1392,52 @@ bool XMFS::areSamePath(const std::string& i_path1, const std::string& i_path2) {
 #else
   return i_path1 == i_path2;
 #endif
+}
+
+void XMFS::migrateFSToXdgBaseDirFile(const std::string& i_src, const std::string& i_dest) {
+  if(doesRealFileOrDirectoryExists(i_src) == false) {
+    return;
+  }
+
+  // write in log information about the migration
+  printf("Migrate file '%s' to '%s'\n", i_src.c_str(), i_dest.c_str());
+
+  // create the directory if required
+  mkArborescence(i_dest);
+
+  // move the file
+  if(renameUserFile(i_src, i_dest) == false) {
+    throw Exception("Unable to migrate the file " + i_src + " to " + i_dest);
+  }
+
+}
+
+void XMFS::migrateFSToXdgBaseDirIfRequired(const std::string& AppDir) {
+  std::string v_oldUserDir;
+
+  v_oldUserDir = getenv("HOME") + std::string("/.") + AppDir;
+  if(isDir(v_oldUserDir) == false) {
+    // no need to do the conversion
+    return;
+  }
+
+  try {
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/xm.db",              DATABASE_FILE);
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/config.dat",         XM_CONFIGFILE);
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/players.bin",        XMFS::getUserDir(FDT_DATA)  + "/players.bin");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/favoriteLevels.xml", XMFS::getUserDir(FDT_DATA)  + "/favoriteLevels.xml");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/stats.xml",          XMFS::getUserDir(FDT_DATA)  + "/stats.xml");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/LCache",             XMFS::getUserDir(FDT_CACHE) + "/LCache");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Levels",             XMFS::getUserDir(FDT_DATA)  + "/Levels");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Replays",            XMFS::getUserDir(FDT_DATA)  + "/Replays");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Screenshots",        XMFS::getUserDir(FDT_DATA)  + "/Screenshots");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Textures",           XMFS::getUserDir(FDT_DATA)  + "/Textures");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Themes",             XMFS::getUserDir(FDT_DATA)  + "/Themes");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Physics",            XMFS::getUserDir(FDT_DATA)  + "/Physics");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Shaders",            XMFS::getUserDir(FDT_DATA)  + "/Shaders");
+
+  } catch(Exception &e) {
+    throw Exception("Unable move files for migration : " + e.getMsg());
+  }
+
 }

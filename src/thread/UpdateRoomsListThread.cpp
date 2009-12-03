@@ -42,14 +42,14 @@ int UpdateRoomsListThread::realThreadFunction()
   setThreadProgress(0);
 
   try {
-    std::string v_destinationFile = XMFS::getUserDir() + "/" + DEFAULT_WEBROOMS_FILENAME;
+    std::string v_destinationFile = XMFS::getUserDir(FDT_CACHE) + "/" + DEFAULT_WEBROOMS_FILENAME;
 
     LogInfo("WWW: Checking for rooms...");
 
     /* download xml file */
     FSWeb::downloadFileBz2UsingMd5(v_destinationFile, XMSession::instance()->webRoomsURL(), NULL, NULL, XMSession::instance()->proxySettings());
     setThreadProgress(90);
-    m_pDb->webrooms_updateDB(v_destinationFile);
+    m_pDb->webrooms_updateDB(FDT_CACHE, v_destinationFile);
     StateManager::instance()->sendAsynchronousMessage("ROOMS_UPDATED");
   } catch(Exception &e) {
     /* file probably doesn't exist */

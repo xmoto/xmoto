@@ -353,7 +353,7 @@ void Level::loadXML() {
     m_xmlSource = new XMLDocument();
   }
 
-  m_xmlSource->readFromFile(m_fileName, NULL, true);
+  m_xmlSource->readFromFile(FDT_DATA, m_fileName, NULL, true);
 
   TiXmlDocument *pDoc = m_xmlSource->getLowLevelAccess();
   if(pDoc == NULL) throw Exception("failed to load level XML " + m_fileName);
@@ -671,7 +671,7 @@ void Level::loadXML() {
 bool Level::loadReducedFromFile() {
   std::string cacheFileName;
 
-  m_checkSum = XMFS::md5sum(FileName());
+  m_checkSum = XMFS::md5sum(FDT_DATA, FileName());
 
   // First try to load it from the cache
   bool cached = false;
@@ -680,7 +680,7 @@ bool Level::loadReducedFromFile() {
   cacheFileName = getNameInCache();
     
   try {
-    cached = importBinaryHeaderFromFile(cacheFileName, m_checkSum);
+    cached = importBinaryHeaderFromFile(FDT_CACHE, cacheFileName, m_checkSum);
   } catch (Exception &e) {
     LogWarning("Exception while loading binary level, will load "
 	       "XML instead for '%s' (%s)", FileName().c_str(),
@@ -690,7 +690,7 @@ bool Level::loadReducedFromFile() {
   // If we couldn't get it from the cache, then load from (slow) XML
   if (!cached) {
     loadXML();
-    exportBinary(cacheFileName, m_checkSum); /* Cache it now */
+    exportBinary(FDT_CACHE, cacheFileName, m_checkSum); /* Cache it now */
   }
   
   unloadLevelBody(); /* remove body datas */
@@ -712,7 +712,7 @@ void Level::removeFromCache(xmDatabase *i_db, const std::string& i_id_level) {
     try {
       std::string v_checkSum = i_db->getResult(v_result, 2, 0, 0);
       std::string v_filePath = i_db->getResult(v_result, 2, 0, 1);
-      XMFS::deleteFile("LCache/" + v_checkSum + XMFS::getFileBaseName(v_filePath) + ".blv");
+      XMFS::deleteFile(FDT_CACHE, "LCache/" + v_checkSum + XMFS::getFileBaseName(v_filePath) + ".blv");
     } catch(Exception &e) {
       /* ok, it was perhaps not in cache */
     }
@@ -723,12 +723,12 @@ void Level::removeFromCache(xmDatabase *i_db, const std::string& i_id_level) {
 /*===========================================================================
   Export binary level file
   ===========================================================================*/
-void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
+void Level::exportBinary(FileDataType i_fdt, const std::string &FileName, const std::string& pSum) {
   /* Don't do this if we failed to load level from XML */
   if(isXMotoTooOld()) return;
   
   /* Export binary... */
-  FileHandle *pfh = XMFS::openOFile(FileName);
+  FileHandle *pfh = XMFS::openOFile(i_fdt, FileName);
   if(pfh == NULL) {
     LogWarning("Failed to export binary: %s",FileName.c_str());
   }
@@ -810,9 +810,9 @@ bool Level::isFullyLoaded() const {
 }
 
 void Level::loadFullyFromFile() {
-  if(importBinary(getNameInCache(), Checksum()) == false) {
+  if(importBinary(FDT_CACHE, getNameInCache(), Checksum()) == false) {
     loadXML();
-    exportBinary(getNameInCache(), m_checkSum);
+    exportBinary(FDT_CACHE, getNameInCache(), m_checkSum);
   }
   loadRemplacementSprites();
 }
@@ -877,9 +877,9 @@ void Level::importHeader(const std::string& i_id,
   /*===========================================================================
   Import binary level file
   ===========================================================================*/
-bool Level::importBinaryHeaderFromFile(const std::string &FileName, const std::string& pSum) {
+bool Level::importBinaryHeaderFromFile(FileDataType i_fdt, const std::string &FileName, const std::string& pSum) {
   /* Import binary */
-  FileHandle *pfh = XMFS::openIFile(FileName, true);
+  FileHandle *pfh = XMFS::openIFile(i_fdt, FileName, true);
   if(pfh == NULL) {
     return false;
   }
@@ -922,7 +922,7 @@ void Level::exportBinaryHeader(FileHandle *pfh) {
   XMFS::writeBool(  pfh	    , m_isPhysics);
 }
 
-bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
+bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const std::string& pSum) {
   unloadLevelBody();
   bool bRet = true;
   
@@ -931,7 +931,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
   m_xmotoTooOld = false;
   
   /* Import binary */
-  FileHandle *pfh = XMFS::openIFile(FileName, true);
+  FileHandle *pfh = XMFS::openIFile(i_fdt, FileName, true);
   if(pfh == NULL) {
     return false;
   }
@@ -1328,7 +1328,7 @@ void Level::unloadLevelBody() {
 }
 
 void Level::rebuildCache() {
-  exportBinary(getNameInCache(), m_checkSum);
+  exportBinary(FDT_CACHE, getNameInCache(), m_checkSum);
 }
 
 std::string Level::SpriteForStrawberry() const {

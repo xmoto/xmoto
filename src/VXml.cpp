@@ -29,14 +29,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Load XML document from disk
   ===========================================================================*/
-  void XMLDocument::readFromFile(std::string File,unsigned long *pnCRC32, bool i_includeCurrentDir) {
+void XMLDocument::readFromFile(FileDataType i_fdt, std::string File,unsigned long *pnCRC32, bool i_includeCurrentDir) {
     /* Clean up if a doc already is loaded */
     if(m_pXML) delete m_pXML;
     
     /* Load */
     std::string Line,Doc = "";    
     
-    FileHandle *pfh = XMFS::openIFile(File, i_includeCurrentDir);
+    FileHandle *pfh = XMFS::openIFile(i_fdt, File, i_includeCurrentDir);
     if(pfh==NULL) return;
 
     m_pXML = new TiXmlDocument;
@@ -65,10 +65,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Save XML document from disk
   ===========================================================================*/
-  void XMLDocument::writeToFile(std::string File) {
+  void XMLDocument::writeToFile(FileDataType i_fdt, std::string File) {
     /* Anything? */
     if(!m_pXML) return;
-    FileHandle *pfh = XMFS::openOFile(File);
+    FileHandle *pfh = XMFS::openOFile(i_fdt, File);
     if(pfh==NULL || pfh->Type!=FHT_STDIO) return;
     m_pXML->Print(pfh->fp);
     XMFS::closeFile(pfh);

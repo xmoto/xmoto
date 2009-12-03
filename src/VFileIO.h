@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 #include <vector>
+#include <basedir.h>
+#include "VFileIO_types.h"
 
 /*===========================================================================
   File handle types
@@ -79,21 +81,22 @@ struct FileHandle {
 class XMFS {
  public:        
   /* Methods */
-  static void init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile, const std::string& i_userDirPath = "");
+  static void init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile, const std::string& i_userCustomDirPath = "");
   static void uninit();
   static bool isInitialized();
   
-  static std::vector<std::string> findPhysFiles(std::string Files,bool bRecurse = false);
+  static std::vector<std::string> findPhysFiles(FileDataType i_fdt, std::string Files,bool bRecurse = false);
   
-  static bool copyFile(const std::string &From,const std::string &To, std::string &To_really_done); /* To_really_done is out : it is the name of the file really written */
+  static bool copyFile(FileDataType i_fdt, const std::string &From,const std::string &To, std::string &To_really_done); /* To_really_done is out : it is the name of the file really written */
 
   // you can rename only user files
   static bool renameUserFile(const std::string &From,const std::string &To);
 
-  static void deleteFile(const std::string &File);
+  static void deleteFile(FileDataType i_fdt, const std::string &File);
   
-  static FileHandle *openOFile(std::string Path);
-  static FileHandle *openIFile(std::string Path, bool i_includeCurrentDir = false);
+  static FileHandle *openOFile  (FileDataType i_fdt, std::string Path);
+  static FileHandle *openIFile  (FileDataType i_fdt, std::string Path, bool i_includeCurrentDir = false);
+
   static void closeFile(FileHandle *pfh);
   static bool areSamePath(const std::string& i_path1, const std::string& i_path2);
 
@@ -157,46 +160,54 @@ class XMFS {
   static int mkDir(const char *pcPath);
   
   /* Data interfaces */
-  static std::string getUserDir(void) {return m_UserDir;}
-  static std::string getUserDirUTF8(void) {return m_UserDirUTF8;}
-  static std::string getDataDir(void) {return m_DataDir;}
-  static bool isDataDirAvailable(void) {return m_bGotDataDir;}
+  static std::string getUserDir(FileDataType i_fdt);
+  static std::string getUserDirUTF8(FileDataType i_fdt);
+  static std::string getSystemDataDir();
+  static bool isSystemDataDirAvailable() {return m_bGotSystemDataDir;}
   
-  static std::string getReplaysDir(void) {return m_UserDir + std::string("/Replays");}
-  static std::string getLevelsDir(void) {return m_UserDir + std::string("/Levels");}
+  static std::string getUserReplaysDir() {return m_UserDataDir + std::string("/Replays");}
+  static std::string getUserLevelsDir() {return m_UserDataDir + std::string("/Levels");}
   
-  static bool doesDirectoryExist(std::string p_path);
-  static bool isFileReadable(std::string p_filename);
-  static bool fileExists(std::string p_filename);
+  static bool doesRealFileOrDirectoryExists(std::string p_path);
+  static bool isFileReadable(FileDataType i_fdt, std::string p_filename);
+  static bool fileExists(FileDataType i_fdt, std::string p_filename);
   static void mkArborescence(std::string v_filepath);
   static void mkArborescenceDir(std::string v_dirpath);
   
   // return true if p_filepath is a path from user dir
-  static bool isInUserDir(std::string p_filepath);
+  static bool isInUserDir(FileDataType i_fdt, std::string p_filepath);
   static bool isFileInDir(std::string p_dirpath, std::string p_filepath);
   
   /* return false if the file is in the package */
   static bool isFileReal(std::string i_filePath);
-  static std::string md5sum(std::string i_filePath);
+  static std::string md5sum(FileDataType i_fdt, std::string i_filePath);
   
   /* return user_dir + i_relative_path if exists or data_dir + i_relative_path */
-  static std::string FullPath(const std::string& i_relative_path);
+  static std::string FullPath(FileDataType i_fdt, const std::string& i_relative_path);
   static std::string binCheckSum();
   
  private:
   static bool m_isInitialized;
+
+  /* xdg basedir */
+  static xdgHandle* m_xdgHd;
   
   /* Helper functions */
   static void _ThrowFileError(FileHandle *pfh,std::string Description);
   static void _FindFilesRecursive(const std::string &Dir,const std::string &Wildcard,std::vector<std::string> &List);
   
   /* Data */
-  static std::string m_UserDir, m_UserDirUTF8, m_DataDir;
-  static bool m_bGotDataDir;
+  static std::string m_UserDataDir, m_UserDataDirUTF8, m_UserConfigDir, m_UserCacheDir, m_SystemDataDir;
+  static bool m_bGotSystemDataDir;
   
   static std::string m_BinDataFile;      
   static std::vector<PackFile> m_PackFiles;
   static std::string m_binCheckSum;
+
+  // migrate from .xmoto to xdg base directories
+  static void migrateFSToXdgBaseDirIfRequired(const std::string& AppDir);
+  static void migrateFSToXdgBaseDirFile(const std::string& i_src, const std::string& i_dest);
+  
 };
 
 #endif

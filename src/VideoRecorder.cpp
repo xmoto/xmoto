@@ -35,7 +35,7 @@ VideoRecorder::VideoRecorder(const std::string& i_videoName, int i_division, int
 
     LogInfo("New video recorder: name=%s, division=%i, frame rate=%i", i_videoName.c_str(), i_division, i_frameRate);
 
-    m_directory = XMFS::getUserDir() + "/Videos/" + i_videoName;
+    m_directory = XMFS::getUserDir(FDT_DATA) + "/Videos/" + i_videoName;
 		v_listFile = m_directory + "/pictures.lst";
 
     if(XMFS::isDir(m_directory)) {
@@ -50,7 +50,7 @@ VideoRecorder::VideoRecorder(const std::string& i_videoName, int i_division, int
 		m_framerate,
 		GameApp::instance()->getDrawLib()->getDispWidth()/i_division,
 		GameApp::instance()->getDrawLib()->getDispHeight()/i_division,
-  	std::string(XMFS::getUserDir() + "/Videos").c_str(),
+  	std::string(XMFS::getUserDir(FDT_DATA) + "/Videos").c_str(),
   	m_name.c_str()
 		);
 

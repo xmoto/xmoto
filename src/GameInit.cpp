@@ -204,7 +204,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   } else {
     XMFS::init("xmoto", "xmoto.bin", "xmoto.log");
   }
-  Logger::init(XMFS::getUserDir() + "/xmoto.log");
+  Logger::init("xmoto.log");
 
   /* c xmoto files */
   if(v_xmArgs.isOptBuildQueries()) {
@@ -232,8 +232,10 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   } else {
     LogInfo("Systeme is littleendien");
   }
-  LogInfo("User directory: %s", XMFS::getUserDir().c_str());
-  LogInfo("Data directory: %s", XMFS::getDataDir().c_str());
+  LogInfo("User data   directory: %s", XMFS::getUserDir(FDT_DATA).c_str());
+  LogInfo("User config directory: %s", XMFS::getUserDir(FDT_CONFIG).c_str());
+  LogInfo("User cache  directory: %s", XMFS::getUserDir(FDT_CACHE).c_str());
+  LogInfo("System data directory: %s", XMFS::getSystemDataDir().c_str());
 
   if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos() || v_xmArgs.isOptServerOnly() || v_xmArgs.isOptUpdateLevelsOnly()) {
     v_useGraphics = false;
@@ -268,7 +270,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   xmDatabase* pDb = xmDatabase::instance("main");
   pDb->init(DATABASE_FILE,
 	    XMSession::instance()->profile() == "" ? std::string("") : XMSession::instance()->profile(),
-	    XMFS::getDataDir(), XMFS::getUserDir(), XMFS::binCheckSum(),
+	    XMFS::getSystemDataDir(), XMFS::getUserDir(FDT_DATA), XMFS::binCheckSum(),
 	    v_xmArgs.isOptNoDBDirsCheck() == false,
 	    NULL); // v_useGraphics : NULL because drawlib is still not initialized
   if(XMSession::instance()->sqlTrace()) {

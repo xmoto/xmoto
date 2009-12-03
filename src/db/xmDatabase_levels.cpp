@@ -115,7 +115,7 @@ void xmDatabase::updateDB_favorite(const std::string& i_profile,
   const char *pc;
   std::string v_levelId;
   
-  v_favoriteLevelsXml.readFromFile("favoriteLevels.xml");
+  v_favoriteLevelsXml.readFromFile(FDT_DATA, "favoriteLevels.xml");
   v_favoriteLevelsXmlData = v_favoriteLevelsXml.getLowLevelAccess();
 
   if(v_favoriteLevelsXmlData == NULL) {
@@ -235,7 +235,7 @@ void xmDatabase::levels_cleanNoWWWLevels() {
   char **v_result;
   unsigned int nrow;
   std::string v_name, v_filepath, v_id_level;
-  std::string v_savePath = XMFS::getUserDir() + std::string("/Trash/Levels");
+  std::string v_savePath = XMFS::getUserDir(FDT_DATA) + std::string("/Trash/Levels");
   std::string v_basename;
 
   // make directory for levels
@@ -250,7 +250,7 @@ void xmDatabase::levels_cleanNoWWWLevels() {
     v_name     = getResult(v_result, 3, i, 1);
     v_filepath = getResult(v_result, 3, i, 2);
 
-    if(XMFS::isInUserDir(v_filepath)) { // remove only files of the user dir
+    if(XMFS::isInUserDir(FDT_DATA, v_filepath)) { // remove only files of the user dir
       LogInfo("Removing level %s (%s)", v_name.c_str(), v_filepath.c_str());
       try {
 	simpleSql("DELETE FROM levels WHERE id_level=\"" + protectString(v_id_level) + "\";");
@@ -281,7 +281,7 @@ bool xmDatabase::levels_add_fast(const std::string& i_filepath, std::string& o_l
     v_cond = "isToReload=1 AND ";
   }
 
-  v_checksum = XMFS::md5sum(i_filepath);
+  v_checksum = XMFS::md5sum(FDT_DATA, i_filepath);
 
   v_result = readDB("SELECT name FROM levels "
 		    "WHERE " + v_cond   +

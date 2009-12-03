@@ -117,7 +117,7 @@ std::vector<ThemeFile>* Theme::getRequiredFiles() {
   return &m_requiredFiles;
 }
 
-void Theme::load(std::string p_themeFile) {
+void Theme::load(FileDataType i_fdt, std::string p_themeFile) {
   LogInfo(std::string("Loading theme from file " + p_themeFile).c_str());
 
   m_requiredFiles.clear();
@@ -134,7 +134,7 @@ void Theme::load(std::string p_themeFile) {
 
   try {
     /* open the file */
-    v_ThemeXml.readFromFile(p_themeFile);
+    v_ThemeXml.readFromFile(i_fdt, p_themeFile);
     
     v_ThemeXmlData = v_ThemeXml.getLowLevelAccess();
     
@@ -1109,8 +1109,8 @@ bool BikerTheme::getGhostEffect() const {
 }
 
 void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
-  std::vector<std::string> v_themesFiles = XMFS::findPhysFiles(std::string(THEMES_DIRECTORY)
-								   + std::string("/*.xml"), true);
+  std::vector<std::string> v_themesFiles = XMFS::findPhysFiles(FDT_DATA, std::string(THEMES_DIRECTORY)
+							       + std::string("/*.xml"), true);
   std::string v_name;
 
   i_db->themes_add_begin();
@@ -1137,7 +1137,7 @@ std::string ThemeChoicer::getThemeNameFromFile(std::string p_themeFile) {
   std::string m_name;
 
   /* open the file */
-  v_ThemeXml.readFromFile(p_themeFile);   
+  v_ThemeXml.readFromFile(FDT_DATA, p_themeFile);   
   v_ThemeXmlData = v_ThemeXml.getLowLevelAccess();
   
   if(v_ThemeXmlData == NULL) {
@@ -1186,7 +1186,7 @@ std::string ThemeMusic::FileName() const {
 }
  
 std::string ThemeMusic::FilePath() const {
-  return XMFS::FullPath(THEME_MUSICS_FILE_DIR + std::string("/") + m_fileName);
+  return XMFS::FullPath(FDT_DATA, THEME_MUSICS_FILE_DIR + std::string("/") + m_fileName);
 }
 
 ThemeSound::ThemeSound(Theme* p_associated_theme, std::string i_name, std::string i_fileName) {

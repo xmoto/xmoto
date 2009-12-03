@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "helpers/VExcept.h"
 #include "helpers/Log.h"
+#include "VFileIO_types.h"
 
   /*============================================================================
     I/O driver: Callbacks
@@ -37,8 +38,8 @@ void *_image_io_open(char *pcWhere, tim_io_mode_t IOMode) {
   /* Determine mode of I/O, and open */
   try {
     switch(IOMode) {
-      case TIM_IM_READ: return (void *)XMFS::openIFile(pcWhere);
-      case TIM_IM_WRITE: return (void *)XMFS::openOFile(pcWhere);
+    case TIM_IM_READ: return (void *)XMFS::openIFile(FDT_DATA, pcWhere);
+    case TIM_IM_WRITE: return (void *)XMFS::openOFile(FDT_DATA, pcWhere);
     }
   }
   catch (Exception &e) {

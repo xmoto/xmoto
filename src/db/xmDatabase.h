@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 #include "xmDatabaseUpdateInterface.h"
 #include "../helpers/MultiSingleton.h"
+#include "../VFileIO_types.h"
 
 class Level;
 
@@ -39,8 +40,8 @@ private:
 public:
   void init(const std::string& i_dbFileUTF8,
 	    const std::string& i_profile,
-	    const std::string& i_gameDir,
-	    const std::string& i_userDir,
+	    const std::string& i_gameDataDir,
+	    const std::string& i_userDataDir,
 	    const std::string& i_binPackCheckSum,
 	    bool i_dbDirsCheck,
 	    XmDatabaseUpdateInterface *i_interface = NULL);
@@ -146,11 +147,11 @@ public:
 			      const std::string& i_timeStamp, int i_finishTime);
 
   /* web */
-  std::string webhighscores_updateDB(const std::string& i_webhighscoresFile,
+  std::string webhighscores_updateDB(FileDataType i_fdt, const std::string& i_webhighscoresFile,
 				     const std::string& i_websource);
-  void weblevels_updateDB(const std::string& i_weblevelsFile);
-  void webrooms_updateDB(const std::string& i_webroomsFile);
-  void webthemes_updateDB(const std::string& i_webThemesFile);
+  void weblevels_updateDB(FileDataType i_fdt, const std::string& i_weblevelsFile);
+  void webrooms_updateDB(FileDataType i_fdt, const std::string& i_webroomsFile);
+  void webthemes_updateDB(FileDataType i_fdt, const std::string& i_webThemesFile);
   std::string webrooms_getName(const std::string& i_id_room);
   int webrooms_getHighscoreTime(const std::string& i_id_room,
 				const std::string& i_id_level); /* or a negativ value if not */
@@ -223,16 +224,16 @@ public:
 			    const std::string& i_profile,
 			    XmDatabaseUpdateInterface *i_interface = NULL);
   void updateXmDbVersion(int i_newVersion);
-  std::string getXmDbGameDir();
-  std::string getXmDbUserDir();
+  std::string getXmDbGameDataDir();
+  std::string getXmDbUserDataDir();
   std::string getXmDbBinPackCheckSum();
-  void setXmDbGameDir(const std::string& i_gameDir);
-  void setXmDbUserDir(const std::string& i_userDir);
+  void setXmDbGameDataDir(const std::string& i_gameDataDir);
+  void setXmDbUserDataDir(const std::string& i_userDataDir);
   void setXmDbBinPackCheckSum(const std::string& i_binPackChecksum);
 
   /* update db directories without reanalysing all the files on the disk */
-  void updateXMDirectories(const std::string& i_oldGameDir, const std::string& i_newGameDir,
-			   const std::string& i_oldUserDir, const std::string& i_newUserDir);
+  void updateXMDirectories(const std::string& i_oldGameDataDir, const std::string& i_newGameDataDir,
+			   const std::string& i_oldUserDataDir, const std::string& i_newUserDataDir);
 
   std::string setXmDbSiteKey();
   

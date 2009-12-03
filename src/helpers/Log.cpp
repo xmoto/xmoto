@@ -31,15 +31,17 @@ bool  Logger::m_verbose       = false;
 FILE* Logger::m_fd            = NULL;
 
 void Logger::init(const std::string& i_logFile) {
+  std::string v_logPath = XMFS::getUserDir(FDT_CACHE) + "/" + i_logFile;
+
   assert(XMFS::isInitialized());
 
   m_verbose = false;
 
-  if(XMFS::fileExists(i_logFile)) {
-    XMFS::deleteFile(i_logFile);
+  if(XMFS::fileExists(FDT_CACHE, v_logPath)) {
+    XMFS::deleteFile(FDT_CACHE, v_logPath);
   }
 
-  m_fd = fopen(i_logFile.c_str(), "w");
+  m_fd = fopen(v_logPath.c_str(), "w");
   if(m_fd == NULL) {
     throw Exception("Unable to open log file");
   }

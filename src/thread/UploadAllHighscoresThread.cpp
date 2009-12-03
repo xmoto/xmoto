@@ -106,7 +106,7 @@ int UploadAllHighscoresThread::realThreadFunction()
 
 	  try {
 	    bool v_msg_status_ok;
-	    v_replayPath = XMFS::getUserDir() + "/Replays/" + v_replay + ".rpl";
+	    v_replayPath = XMFS::getUserReplaysDir() + "/" + v_replay + ".rpl";
 	    FSWeb::uploadReplay(v_replayPath,
 				XMSession::instance()->idRoom(m_number),
 				XMSession::instance()->profile(),
