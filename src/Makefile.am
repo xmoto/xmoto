@@ -1,6 +1,6 @@
 WANTED_WARNNING= -Wall
 
-SVNDEF = -D'SVN_REV="$(shell if test -d $(srcdir)/.svn; then svnversion -n $(srcdir); fi)"'
+SVNDEF = -D'SVN_REV="$(shell if test -d $(ac_abs_confdir)/.svn; then svnversion -n $(ac_abs_confdir); fi)"'
 
 XM_FLAGS = -DHAVEDGETCONFIGURATION=$(HAVEDGETCONFIGURATION) -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" -DLOCALESDIR=\"$(LOCALESDIR)\" -DASIAN_TTF_FILE=\"$(ASIAN_TTF_FILE)\" -DALLOW_DEV=$(ALLOW_DEV) -DCONFIGURE_DEFAULT_THEME=\"$(CONFIGURE_DEFAULT_THEME)\" $(GL_CFLAGS) $(SDL_CFLAGS) -DUSE_OPENGL=$(USE_OPENGL) -DUSE_SDLGFX=$(USE_SDLGFX) $(SVNDEF)
 
@@ -427,15 +427,15 @@ all: svnCheck
 	@echo svnCheck
 
 svnCheck:
-	if test -d $(srcdir)/.svn; then \
-	  if ! test -f svnVersion -a "`cat svnVersion`" = "`svnversion -n $(srcdir)`"; then \
-	    svnversion -n $(srcdir) > svnVersion; \
+	if test -d $(ac_abs_confdir)/.svn; then \
+	  if ! test -f svnVersion -a "`cat svnVersion`" = "`svnversion -n $(ac_abs_confdir)`"; then \
+	    svnversion -n $(ac_abs_confdir) > svnVersion; \
 	  fi; \
 	fi
 
 svnVersion:
-	if test -d $(srcdir)/.svn; then \
-	  svnversion -n $(srcdir) > svnVersion; \
+	if test -d $(ac_abs_confdir)/.svn; then \
+	  svnversion -n $(ac_abs_confdir) > svnVersion; \
 	else \
 	  echo "exported" > svnVersion; \
 	fi
