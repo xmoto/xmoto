@@ -84,7 +84,10 @@ void strlwr(char *pc) {
 #endif
 
 bool       XMFS::m_isInitialized = false;
+
+#ifndef WIN32
 xdgHandle* XMFS::m_xdgHd         = NULL;
+#endif
 
 bool str_match_wildcard(char *pcMWildcard,char *pcMString, bool CaseSensitive) {
   int nPos=0;
@@ -1030,6 +1033,7 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
   m_UserDataDirUTF8 = "";
   m_SystemDataDir   = "";
 
+#ifndef WIN32
   // xdg
   if( (m_xdgHd = (xdgHandle*) malloc(sizeof(xdgHandle))) == NULL) {
     throw Exception("xdgbasedir allocation failed");
@@ -1037,6 +1041,7 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
   if( (xdgInitHandle(m_xdgHd)) == 0) {
     throw Exception("xdgbasedir initialisation failed");
   }
+#endif
   
 #if defined(WIN32) /* Windoze... */
   char cModulePath[256];
@@ -1217,7 +1222,9 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
 }     
 
 void XMFS::uninit() {
+#ifndef WIN32
   xdgWipeHandle(m_xdgHd);
+#endif
   m_isInitialized = false;
 }
 
