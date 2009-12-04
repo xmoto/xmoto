@@ -23,7 +23,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 #include <vector>
+#ifndef WIN32
 #include <basedir.h>
+#endif
 #include "VFileIO_types.h"
 
 /*===========================================================================
@@ -189,9 +191,11 @@ class XMFS {
  private:
   static bool m_isInitialized;
 
+#ifndef WIN32
   /* xdg basedir */
   static xdgHandle* m_xdgHd;
-  
+#endif  
+
   /* Helper functions */
   static void _ThrowFileError(FileHandle *pfh,std::string Description);
   static void _FindFilesRecursive(const std::string &Dir,const std::string &Wildcard,std::vector<std::string> &List);
