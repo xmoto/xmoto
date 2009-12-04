@@ -1065,10 +1065,10 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
       //m_UserCacheDir    = xdgCacheHome(m_xdgHd)  + std::string("/") + AppDir;
       */
 
-      m_UserDataDir     = win32_getHomeDir()     + std::string("/.data/")   + AppDir;
-      m_UserConfigDir   = win32_getHomeDir()     + std::string("/.config/") + AppDir;
-      m_UserCacheDir    = win32_getHomeDir()     + std::string("/.cache/")  + AppDir;
-      m_UserDataDirUTF8 = win32_getHomeDir(true) + std::string("/.data/")   + AppDir;
+      m_UserDataDir     = win32_getHomeDir()     + std::string("/.local/share/") + AppDir;
+      m_UserConfigDir   = win32_getHomeDir()     + std::string("/.config/")      + AppDir;
+      m_UserCacheDir    = win32_getHomeDir()     + std::string("/.cache/")       + AppDir;
+      m_UserDataDirUTF8 = win32_getHomeDir(true) + std::string("/.local/share/") + AppDir;
     }
 
     m_SystemDataDir = cModulePath;     
