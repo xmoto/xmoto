@@ -24,20 +24,51 @@ AC_CHECK_LIB(z, uncompress, [], [AC_MSG_ERROR(zlib required)])
 AC_CHECK_LIB(jpeg, jpeg_CreateCompress, [], [AC_MSG_ERROR(libjpeg required)])
 AC_CHECK_LIB(png, png_read_image, [], [AC_MSG_ERROR(libpng required)])
 
-if test "$target_os" != "mingw32" # on windows, don't include libbz2
-then
-  AC_CHECK_LIB(bz2, BZ2_bzReadOpen, [], [AC_MSG_ERROR(libbz2 required)])
-fi
 
-if test "$target_os" != "mingw32"
+dnl bz2
+if test "$target_os" = "mingw32" # on windows, don't include libbz2
 then
-  # on unix, use libxdg-basedir-dev
-  AC_CHECK_LIB(xdg-basedir, xdgInitHandle,[],[AC_MSG_ERROR(libxdg-basedir required)])
+  USE_INTERNAL_BZ2="1"
 else
-  # on windows, include sources to xmoto
+  AC_ARG_WITH([internal-bz2],
+    [AS_HELP_STRING([--with-internal-bz2=0|1],
+    [internal-bz2])],
+    [USE_INTERNAL_BZ2="$withval"],
+    [USE_INTERNAL_BZ2="0"]
+  )
+fi
+AC_SUBST([USE_INTERNAL_BZ2])
+
+if test "$USE_INTERNAL_BZ2" = "0"
+then
+  AC_CHECK_LIB(bz2, BZ2_bzReadOpen, [], [AC_MSG_ERROR(libbz2 required or --with-internal-bz2=1)])
+fi
+AM_CONDITIONAL([USE_INTERNAL_BZ2], test "$USE_INTERNAL_BZ2" = "1")
+
+
+dnl xdg
+if test "$target_os" = "mingw32" # on windows, don't include libxdg
+then
+  USE_INTERNAL_XDG="1"
+else
+  AC_ARG_WITH([internal-xdg],
+    [AS_HELP_STRING([--with-internal-xdg=0|1],
+    [internal-xdg])],
+    [USE_INTERNAL_XDG="$withval"],
+    [USE_INTERNAL_XDG="0"]
+  )
+fi
+AC_SUBST([USE_INTERNAL_XDG])
+
+if test "$USE_INTERNAL_XDG" = "0"
+then
+  AC_CHECK_LIB(xdg-basedir, xdgInitHandle,[],[AC_MSG_ERROR(libxdg-basedir required or --with-internal-xdg)])
+else
   CXXFLAGS="$CXXFLAGS"" ""-I""$ac_abs_confdir""/src/xdgbasedir/include"
   CFLAGS="$CFLAGS"" ""-I""$ac_abs_confdir""/src/xdgbasedir/include"
 fi
+AM_CONDITIONAL([USE_INTERNAL_XDG], test "$USE_INTERNAL_XDG" = "1")
+
 
 # on windows, don't check ; on mac, it's included into the framework
 if test "$target_os" != "mingw32" -a "$with_apple_opengl_framework" != "yes"
@@ -276,6 +307,19 @@ displayValue "Default theme" "$CONFIGURE_DEFAULT_THEME" "--with-default-theme=""
 echo   "+------------------+------------+-----------------------------------------------------------------+"
 displayRequirement "OpenGl" "$USE_OPENGL" "1" "--with-renderer-openGl=1"
 echo   "+------------------+------------+-----------------------------------------------------------------+"
+
+if test "$USE_INTERNAL_BZ2" = "1"
+   then
+   displayVersion "bz2" "internal"
+   echo   "+------------------+------------+-----------------------------------------------------------------+"
+fi
+
+if test "$USE_INTERNAL_XDG" = "1"
+   then
+   displayVersion "xdgbasedir" "internal"
+   echo   "+------------------+------------+-----------------------------------------------------------------+"
+fi
+
 displayRequirement "SdlGfx" "$USE_SDLGFX" "1" "--with-renderer-sdlGfx=1 (unsafe)"
 echo   "+------------------+------------+-----------------------------------------------------------------+"
 

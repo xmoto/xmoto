@@ -296,8 +296,11 @@ thread_SOURCES = thread/XMThread.h                 \
 		 net/extSDL_net.h     \
 		 net/extSDL_net.cpp
 
-if WIN32
+if USE_INTERNAL_BZ2
 common_SOURCES += $(bz2_SOURCES)
+endif
+
+if USE_INTERNAL_XDG
 common_SOURCES += $(xdgbasedir_SOURCES)
 endif
 
