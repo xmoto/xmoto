@@ -1141,16 +1141,6 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
     mkArborescenceDir(m_UserCacheDir);
   }
 
-  if(isDir(getUserReplaysDir()) == false) {
-    mkArborescenceDir(getUserReplaysDir());
-  }
-  if(isDir(m_UserCacheDir + std::string("/LCache")) == false) {
-    mkArborescenceDir(m_UserCacheDir + std::string("/LCache"));
-  } 
-  if(isDir(getUserLevelsDir()) == false) {
-    mkArborescenceDir(getUserLevelsDir());
-  } 
-
   /* Delete old log */    
   remove( (m_UserCacheDir + "/" + i_logFile).c_str() );
     
@@ -1213,12 +1203,25 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
 
   m_isInitialized = true;
 
+  /* migrate old files if required */
   if(v_requireMigration) {
     /*
       migrating from $HOME/.xmoto to xdg directories if necessary
     */
     migrateFSToXdgBaseDirIfRequired(AppDir);
   }
+
+  /* create base directories if missing -- do it after migration of old files while on windows, you cannot do the move without removing the directory */
+  if(isDir(getUserReplaysDir()) == false) {
+    mkArborescenceDir(getUserReplaysDir());
+  }
+  if(isDir(m_UserCacheDir + std::string("/LCache")) == false) {
+    mkArborescenceDir(m_UserCacheDir + std::string("/LCache"));
+  } 
+  if(isDir(getUserLevelsDir()) == false) {
+    mkArborescenceDir(getUserLevelsDir());
+  } 
+
 }     
 
 void XMFS::uninit() {
@@ -1422,7 +1425,12 @@ void XMFS::migrateFSToXdgBaseDirFile(const std::string& i_src, const std::string
 void XMFS::migrateFSToXdgBaseDirIfRequired(const std::string& AppDir) {
   std::string v_oldUserDir;
 
+#ifndef WIN32
   v_oldUserDir = getenv("HOME") + std::string("/.") + AppDir;
+#else
+  v_oldUserDir =  win32_getHomeDir() + std::string("/.") + AppDir;
+#endif
+
   if(isDir(v_oldUserDir) == false) {
     // no need to do the conversion
     return;
