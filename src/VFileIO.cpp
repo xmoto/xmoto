@@ -1438,18 +1438,18 @@ void XMFS::migrateFSToXdgBaseDirIfRequired(const std::string& AppDir) {
 
   try {
     migrateFSToXdgBaseDirFile(v_oldUserDir + "/xm.db",              DATABASE_FILE);
-    migrateFSToXdgBaseDirFile(v_oldUserDir + "/config.dat",         XM_CONFIGFILE);
-    migrateFSToXdgBaseDirFile(v_oldUserDir + "/players.bin",        XMFS::getUserDir(FDT_DATA)  + "/players.bin");
-    migrateFSToXdgBaseDirFile(v_oldUserDir + "/favoriteLevels.xml", XMFS::getUserDir(FDT_DATA)  + "/favoriteLevels.xml");
-    migrateFSToXdgBaseDirFile(v_oldUserDir + "/stats.xml",          XMFS::getUserDir(FDT_DATA)  + "/stats.xml");
-    migrateFSToXdgBaseDirFile(v_oldUserDir + "/LCache",             XMFS::getUserDir(FDT_CACHE) + "/LCache");
-    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Levels",             XMFS::getUserDir(FDT_DATA)  + "/Levels");
-    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Replays",            XMFS::getUserDir(FDT_DATA)  + "/Replays");
-    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Screenshots",        XMFS::getUserDir(FDT_DATA)  + "/Screenshots");
-    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Textures",           XMFS::getUserDir(FDT_DATA)  + "/Textures");
-    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Themes",             XMFS::getUserDir(FDT_DATA)  + "/Themes");
-    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Physics",            XMFS::getUserDir(FDT_DATA)  + "/Physics");
-    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Shaders",            XMFS::getUserDir(FDT_DATA)  + "/Shaders");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/config.dat",         XMFS::getUserDir(FDT_CONFIG) + "/" + std::string(XM_CONFIGFILE));
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/players.bin",        XMFS::getUserDir(FDT_DATA)   + "/players.bin");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/favoriteLevels.xml", XMFS::getUserDir(FDT_DATA)   + "/favoriteLevels.xml");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/stats.xml",          XMFS::getUserDir(FDT_DATA)   + "/stats.xml");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/LCache",             XMFS::getUserDir(FDT_CACHE)  + "/LCache");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Levels",             XMFS::getUserDir(FDT_DATA)   + "/Levels");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Replays",            XMFS::getUserDir(FDT_DATA)   + "/Replays");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Screenshots",        XMFS::getUserDir(FDT_DATA)   + "/Screenshots");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Textures",           XMFS::getUserDir(FDT_DATA)   + "/Textures");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Themes",             XMFS::getUserDir(FDT_DATA)   + "/Themes");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Physics",            XMFS::getUserDir(FDT_DATA)   + "/Physics");
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/Shaders",            XMFS::getUserDir(FDT_DATA)   + "/Shaders");
 
   } catch(Exception &e) {
     throw Exception("Unable move files for migration : " + e.getMsg());
