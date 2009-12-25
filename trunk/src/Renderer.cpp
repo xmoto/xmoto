@@ -115,7 +115,7 @@ GameRenderer::GameRenderer() {
   m_currentEdgeSprite = NULL;
   m_curRegistrationStage = 0;
   m_showGhostsText = true;
-  m_graphicsLevel = GFX_HIGH;
+  m_graphicsLevel = GFX_HIGH;  //not used anymore
 }
 GameRenderer::~GameRenderer() {
 }
@@ -141,7 +141,7 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
   int n_sameSceneAs;
 
   // set the graphical level on time by level in case it changes while playing
-  m_graphicsLevel = XMSession::instance()->gameGraphics();
+  //m_graphicsLevel = XMSession::instance()->gameGraphics();  NOT USED ANYMORE
 
   if(i_universe == NULL) {
     return;
@@ -188,8 +188,8 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     std::vector<Block*>& Blocks = v_level->Blocks();
     int nVertexBytes = 0;
 
-    bool v_loadLayers = m_graphicsLevel == GFX_HIGH;
-    bool v_loadBackgroundBlocks = m_graphicsLevel != GFX_LOW;
+    bool v_loadLayers = true;//XMSession::instance()->gameGraphics() == GFX_HIGH;
+    bool v_loadBackgroundBlocks = true;//XMSession::instance()->gameGraphics() != GFX_LOW;
 
     for(unsigned int i=0; i<Blocks.size(); i++) {
       /* do not load into the graphic card blocks which won't be
@@ -404,7 +404,7 @@ int GameRenderer::loadBlockGeom(Block* pBlock,
 int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 {
   int nVertexBytes  = 0;
-  if(m_graphicsLevel != GFX_LOW){
+//  if(XMSession::instance()->gameGraphics() != GFX_LOW){  //lets load always all gfx, for beeing able to switch modes ingame
     m_currentEdgeEffect = "";
     m_currentEdgeBlendColor = DEFAULT_EDGE_BLENDCOLOR;
     m_currentEdgeSprite = NULL;
@@ -601,7 +601,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       }
     }
 #endif
-  }
+//  }
 
   return nVertexBytes;
 }
@@ -1253,7 +1253,7 @@ void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i
   //calculate nice quality
   int v_offset=0;
   float v_cZoom=i_scene->getCamera()->getCurrentZoom();
-  switch(m_graphicsLevel){ //calculate nice step value
+  switch(XMSession::instance()->gameGraphics()){ //calculate nice step value
     case GFX_LOW:    
       v_offset=GT_GFX_LOW_RATIO/v_cZoom;
       break;//low gfx mode! 
@@ -1540,7 +1540,7 @@ int GameRenderer::nbParticlesRendered() const {
 		 pSky->Drifted());
     }    
 
-    if(m_graphicsLevel == GFX_HIGH && XMSession::instance()->ugly() == false) {
+    if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
       /* background level blocks */
       _RenderLayers(i_scene, false);
     }
@@ -1548,7 +1548,7 @@ int GameRenderer::nbParticlesRendered() const {
     // the layers may have change the scale transformation
     setCameraTransformations(pCamera, m_xScale, m_yScale);
 
-    if(m_graphicsLevel != GFX_LOW && XMSession::instance()->ugly() == false) {
+    if(XMSession::instance()->gameGraphics() != GFX_LOW && XMSession::instance()->ugly() == false) {
       /* Background blocks */
       _RenderDynamicBlocks(i_scene, true);
       _RenderBackground(i_scene);
@@ -1566,7 +1566,7 @@ int GameRenderer::nbParticlesRendered() const {
 	_RenderZone(i_scene->getLevelSrc()->Zones()[i], false);
       }
     }
-    else if(XMSession::instance()->ugly() || m_graphicsLevel != GFX_HIGH) {
+    else if(XMSession::instance()->ugly() || XMSession::instance()->gameGraphics() != GFX_HIGH) {
       for(unsigned int i=0; i<i_scene->getLevelSrc()->Zones().size(); i++) {
 	_RenderZone(i_scene->getLevelSrc()->Zones()[i], true);
       }
@@ -1660,7 +1660,7 @@ int GameRenderer::nbParticlesRendered() const {
     _RenderSprites(i_scene, true,false);
 
     /* and finally finally, front layers */
-    if(m_graphicsLevel == GFX_HIGH && XMSession::instance()->ugly() == false) {
+    if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
       _RenderLayers(i_scene, true);
     }
 
@@ -2075,17 +2075,17 @@ void GameRenderer::_RenderSprites(Scene* i_scene, bool bForeground,bool bBackgro
       switch(pEnt->Speciality()) {
       case ET_NONE:
 	/* Middleground? (not foreground, not background) */
-	if(pEnt->Z() == 0.0f && !bForeground && !bBackground && ( (m_graphicsLevel == GFX_HIGH && !XMSession::instance()->ugly()) || pEnt->isScripted()) ) {
+	if(pEnt->Z() == 0.0f && !bForeground && !bBackground && ( (XMSession::instance()->gameGraphics() == GFX_HIGH && !XMSession::instance()->ugly()) || pEnt->isScripted()) ) {
 	  _RenderSprite(i_scene, pEnt);  
 	} 
 	else {
 	  /* In front? */
-	  if(pEnt->Z() > 0.0f && bForeground && ( (m_graphicsLevel == GFX_HIGH && !XMSession::instance()->ugly()) || pEnt->isScripted())) {
+	  if(pEnt->Z() > 0.0f && bForeground && ( (XMSession::instance()->gameGraphics() == GFX_HIGH && !XMSession::instance()->ugly()) || pEnt->isScripted())) {
 	    _RenderSprite(i_scene, pEnt);
 	  } 
 	  else {
 	    /* Those in back? */
-	    if(pEnt->Z() < 0.0f && bBackground && ( (m_graphicsLevel == GFX_HIGH && !XMSession::instance()->ugly()) || pEnt->isScripted())) {
+	    if(pEnt->Z() < 0.0f && bBackground && ( (XMSession::instance()->gameGraphics() == GFX_HIGH && !XMSession::instance()->ugly()) || pEnt->isScripted())) {
 	      _RenderSprite(i_scene, pEnt);
 	    }
 	  }
@@ -2320,7 +2320,7 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 	    glTranslatef(-dynRotCenter.x, -dynRotCenter.y, 0);
 	  }
 
-          if(m_graphicsLevel != GFX_LOW) {
+          if(XMSession::instance()->gameGraphics() != GFX_LOW) {
 	    pDrawlib->setTexture(m_DynamicGeoms[geom]->pTexture, BLEND_MODE_A);
 	    /* set flashy blendColor */
 	    TColor v_blendColor =  TColor(block->getBlendColor());
@@ -2353,7 +2353,9 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 	    }
 	  }
 
-	  _RenderBlockEdges(block);
+	  if(XMSession::instance()->gameGraphics() != GFX_LOW) {
+	    _RenderBlockEdges(block);
+	  }
 
 	  glPopMatrix();
 
@@ -2389,7 +2391,7 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
       }
       if(pDrawlib->getBackend() == DrawLib::backend_SdlGFX){
 	/* Render all special edges (if quality!=low) */
-	if(m_graphicsLevel != GFX_LOW) {
+	if(XMSession::instance()->gameGraphics() != GFX_LOW) {
 	  for(unsigned int i=0;i<Blocks.size();i++) {
 	    if(Blocks[i]->isBackground() == bBackground){
 	      _RenderBlockEdges(Blocks[i]);
@@ -2462,7 +2464,7 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
   {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
     int geom = block->getGeom();
-    if(m_graphicsLevel != GFX_LOW) {
+    if(XMSession::instance()->gameGraphics() != GFX_LOW) {
       pDrawlib->setTexture(m_StaticGeoms[geom]->pTexture, BLEND_MODE_A);
       /* set flashy blendColor */
       TColor v_blendColor =  TColor(block->getBlendColor());
@@ -2501,7 +2503,9 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 	}
       }
 
-      _RenderBlockEdges(block);
+      if(XMSession::instance()->gameGraphics() != GFX_LOW) {
+	_RenderBlockEdges(block);
+      }
 
       glDisableClientState(GL_VERTEX_ARRAY);
       glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -2587,7 +2591,7 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
 	}
 	if(pDrawlib->getBackend() == DrawLib::backend_SdlGFX){
 	  /* Render all special edges (if quality!=low) */
-	  if(m_graphicsLevel != GFX_LOW) {
+	  if(XMSession::instance()->gameGraphics() != GFX_LOW) {
 	    for(unsigned int i=0;i<Blocks.size();i++) {
 	      if(Blocks[i]->isBackground() == false) {
 		_RenderBlockEdges(Blocks[i]);
@@ -2662,7 +2666,7 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
 	_RenderRectangle(Vector2f(v_primbox->Left(),  v_primbox->Top()),
 			 Vector2f(v_primbox->Right(), v_primbox->Bottom()),
 			 v_color ,
-			 ((i_zone->isDeathZone() || i_zone->isTeleportZone()) && (m_graphicsLevel != GFX_HIGH && !XMSession::instance()->ugly()))? true : false);
+			 ((i_zone->isDeathZone() || i_zone->isTeleportZone()) && (XMSession::instance()->gameGraphics() != GFX_HIGH && !XMSession::instance()->ugly()))? true : false);
       }
     }
   }
@@ -2679,7 +2683,7 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
   float uZoom = 1.0 / i_zoom;
   float uDriftZoom = 1.0 / i_driftZoom;
 
-  if(m_graphicsLevel != GFX_HIGH) {
+  if(XMSession::instance()->gameGraphics() != GFX_HIGH) {
     i_drifted = false;
   }
 
@@ -2694,7 +2698,7 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
       pDrawlib->setTexture(pType->getTexture(), BLEND_MODE_A);
     }
     
-    if(m_graphicsLevel != GFX_LOW) {
+    if(XMSession::instance()->gameGraphics() != GFX_LOW) {
       pDrawlib->setTexture(pType->getTexture(),BLEND_MODE_NONE);  
       pDrawlib->setColorRGBA(i_color.Red() , i_color.Green(), i_color.Blue(), i_color.Alpha());
     }
@@ -2757,7 +2761,7 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
 
     if(GameApp::instance()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
       /* Render all special edges (if quality != low) */
-      if(m_graphicsLevel != GFX_LOW) {
+      if(XMSession::instance()->gameGraphics() != GFX_LOW) {
 	for(unsigned int i=0;i<Blocks.size();i++) {
 	  if(Blocks[i]->isBackground() == true) {
 	    _RenderBlockEdges(Blocks[i]);
@@ -3330,11 +3334,11 @@ void GameRenderer::_RenderParticle(Scene* i_scene, ParticlesSource* i_source, un
     if(XMSession::instance()->ugly() && i_source->isScripted() && v_particle->spriteIndex() == sprite) {
         _RenderCircle(6, v_color, v_particle->DynamicPosition(),v_particle->Size());
     }
-    else if(!XMSession::instance()->ugly() && m_graphicsLevel == GFX_LOW && i_source->isScripted() && v_particle->spriteIndex() == sprite) {
+    else if(!XMSession::instance()->ugly() && XMSession::instance()->gameGraphics() == GFX_LOW && i_source->isScripted() && v_particle->spriteIndex() == sprite) {
         _RenderCircle(6, v_color, v_particle->DynamicPosition(),v_particle->Size(), true);
     }
     else {
-      if(!XMSession::instance()->ugly() && m_graphicsLevel != GFX_LOW && v_particle->spriteIndex() == sprite ) {
+      if(!XMSession::instance()->ugly() && XMSession::instance()->gameGraphics() != GFX_LOW && v_particle->spriteIndex() == sprite ) {
         _RenderParticleDraw(v_particle->DynamicPosition(),
 			    NULL,
 			    v_particle->Size(),
@@ -3574,7 +3578,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
 
     /* Draw front wheel */
     /* Ugly mode or gfx light mode? */
-    if(XMSession::instance()->ugly() || m_graphicsLevel == GFX_LOW) {
+    if(XMSession::instance()->ugly() || XMSession::instance()->gameGraphics() == GFX_LOW) {
       o0 = Vector2f(-pBikeParms->WR,0);
       o1 = Vector2f(0,pBikeParms->WR);
       o2 = Vector2f(pBikeParms->WR,0);
@@ -3600,7 +3604,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
     
     /* Ugly mode? */
 
-    if(XMSession::instance()->ugly() == false && m_graphicsLevel != GFX_LOW) {
+    if(XMSession::instance()->ugly() == false && XMSession::instance()->gameGraphics() != GFX_LOW) {
       pSprite = p_theme->getWheel();
       if(pSprite != NULL) {
 	pTexture = pSprite->getTexture(false, false, FM_LINEAR);
@@ -3610,8 +3614,8 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
       }
     }
 
-    if(XMSession::instance()->ugly() || XMSession::instance()->testTheme() || m_graphicsLevel == GFX_LOW) {
-      if(m_graphicsLevel == GFX_LOW) {
+    if(XMSession::instance()->ugly() || XMSession::instance()->testTheme() || XMSession::instance()->gameGraphics() == GFX_LOW) {
+      if(XMSession::instance()->gameGraphics() == GFX_LOW) {
         _RenderCircle(16,XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? p_theme->getUglyWheelColor() : p_theme->getGfxLowFillColor(),C,pBikeParms->WR, 
           XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? false : true);
         pDrawlib->setLineWidth(2);
@@ -3633,7 +3637,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
 
     /* Draw rear wheel */        
     /* Ugly mode? */
-    if(XMSession::instance()->ugly() || m_graphicsLevel == GFX_LOW) {
+    if(XMSession::instance()->ugly() || XMSession::instance()->gameGraphics() == GFX_LOW) {
       o0 = Vector2f(-pBikeParms->WR,0);
       o1 = Vector2f(0,pBikeParms->WR);
       o2 = Vector2f(pBikeParms->WR,0);
@@ -3658,7 +3662,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
     Rc = (p0 + p1 + p2 + p3) * 0.25f + C;
     
     /* Ugly mode? */
-    if(XMSession::instance()->ugly() == false && m_graphicsLevel != GFX_LOW) {
+    if(XMSession::instance()->ugly() == false && XMSession::instance()->gameGraphics() != GFX_LOW) {
       pSprite = p_theme->getWheel();
       if(pSprite != NULL) {
 	pTexture = pSprite->getTexture(false, false, FM_LINEAR);
@@ -3668,8 +3672,8 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
       }
     }
 
-    if(XMSession::instance()->ugly() || XMSession::instance()->testTheme() || m_graphicsLevel == GFX_LOW) {
-      if(m_graphicsLevel == GFX_LOW) {
+    if(XMSession::instance()->ugly() || XMSession::instance()->testTheme() || XMSession::instance()->gameGraphics() == GFX_LOW) {
+      if(XMSession::instance()->gameGraphics() == GFX_LOW) {
         _RenderCircle(16,XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? p_theme->getUglyWheelColor() : p_theme->getGfxLowFillColor(),C,pBikeParms->WR,
           XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? false : true);
         pDrawlib->setLineWidth(2);
@@ -3689,7 +3693,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
       pDrawlib->setLineWidth(1);
     }
 
-    if(!XMSession::instance()->ugly() && m_graphicsLevel != GFX_LOW) {
+    if(!XMSession::instance()->ugly() && XMSession::instance()->gameGraphics() != GFX_LOW) {
       /* Draw swing arm */
       if(pBike->Dir == DD_RIGHT) {       
         Sv = pBike->SwingAnchorP - Rc;
@@ -3796,7 +3800,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
     }
 
       /* Draw rider */
-    if(XMSession::instance()->ugly() == false && m_graphicsLevel != GFX_LOW) { 
+    if(XMSession::instance()->ugly() == false && XMSession::instance()->gameGraphics() != GFX_LOW) { 
       /* torso */
       renderBodyPart(pBike->Dir == DD_RIGHT ? pBike->ShoulderP  : pBike->Shoulder2P,
 		     pBike->Dir == DD_RIGHT ? pBike->LowerBodyP : pBike->LowerBody2P,
@@ -3860,7 +3864,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
     }
 
     if(pBike->Dir == DD_RIGHT) {
-      if(XMSession::instance()->ugly() || XMSession::instance()->testTheme() || m_graphicsLevel == GFX_LOW) {
+      if(XMSession::instance()->ugly() || XMSession::instance()->testTheme() || XMSession::instance()->gameGraphics() == GFX_LOW) {
         /* Draw it ugly */
         pDrawlib->setLineWidth(2);
 	pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
@@ -3873,7 +3877,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
         pDrawlib->glVertex(pBike->ElbowP);
         pDrawlib->glVertex(pBike->HandP);
 	pDrawlib->endDraw();
-	if(m_graphicsLevel == GFX_LOW) {
+	if(XMSession::instance()->gameGraphics() == GFX_LOW) {
           _RenderCircle(10, XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? i_filterUglyColor.getColor() : p_theme->getGfxLowFillColor(),
 		      pBike->HeadP, pBikeParms->fHeadSize, XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? false : true);
 	}
@@ -3883,7 +3887,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
       }
     }
     else if(pBike->Dir == DD_LEFT) {
-      if(XMSession::instance()->ugly() || XMSession::instance()->testTheme() || m_graphicsLevel == GFX_LOW) {
+      if(XMSession::instance()->ugly() || XMSession::instance()->testTheme() || XMSession::instance()->gameGraphics() == GFX_LOW) {
         /* Draw it ugly */
         pDrawlib->setLineWidth(2);
 	pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
@@ -3896,7 +3900,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
         pDrawlib->glVertex(pBike->Elbow2P);
         pDrawlib->glVertex(pBike->Hand2P);
         pDrawlib->endDraw();
-        if(m_graphicsLevel == GFX_LOW) {
+        if(XMSession::instance()->gameGraphics() == GFX_LOW) {
           _RenderCircle(10, XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? i_filterUglyColor.getColor() : p_theme->getGfxLowFillColor(),
 		      pBike->Head2P,pBikeParms->fHeadSize, XMSession::instance()->ugly() || XMSession::instance()->testTheme() ? false : true);
 	}
