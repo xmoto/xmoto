@@ -307,14 +307,16 @@ int GameRenderer::loadBlock(Block* pBlock,
     Center = pBlock->DynamicPosition();
   }
 
-  Texture* pTexture = loadTexture(pBlock->getTexture());
-  if(pTexture == NULL){
+  if(pBlock->getSprite() != NULL) {
+    pBlock->getSprite()->loadTextures();
+  }
+  else {
     pScene->gameMessage(GAMETEXT_MISSINGTEXTURES, true);
   }
 
   // add the geom
   if(sameSceneAs == -1) {
-    nVertexBytes += loadBlockGeom(pBlock, pGeoms, pTexture, Center, pScene);
+    nVertexBytes += loadBlockGeom(pBlock, pGeoms, Center, pScene);
     nVertexBytes += loadBlockEdge(pBlock, Center, pScene);
     return nVertexBytes;
 
@@ -337,19 +339,17 @@ int GameRenderer::loadBlock(Block* pBlock,
 
 int GameRenderer::loadBlockGeom(Block* pBlock,
 				std::vector<Geom *>* pGeoms,
-				Texture* pTexture,
 				Vector2f Center,
 				Scene* pScene)
 {
   std::vector<ConvexBlock *> ConvexBlocks = pBlock->ConvexBlocks();
   int nVertexBytes  = 0;
   Geom* pSuitableGeom = new Geom;
-  pSuitableGeom->pTexture = pTexture;
-;
+
   int geomIndex = pGeoms->size();
   pGeoms->push_back(pSuitableGeom);
   pBlock->setGeom(geomIndex);
-
+  
   for(unsigned int j=0; j<ConvexBlocks.size(); j++) {
     Vector2f v_center = Vector2f(0.0, 0.0);
 
@@ -704,7 +704,7 @@ void GameRenderer::calculateEdgeTexture(Block* pBlock,
 
 Texture* GameRenderer::loadTexture(std::string textureName)
 {
-  Sprite*  pSprite  = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, textureName);
+  Sprite*  pSprite  = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, textureName);
   Texture* pTexture = NULL;
 
   if(pSprite != NULL) {
@@ -883,6 +883,7 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string material)
 					   * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
 
     Vector2f pcenterr = pcenter - Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
+		
 					   * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
 					   sinf(value / 360.0  * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
 					   * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
@@ -2321,7 +2322,12 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 	  }
 
           if(XMSession::instance()->gameGraphics() != GFX_LOW) {
-	    pDrawlib->setTexture(m_DynamicGeoms[geom]->pTexture, BLEND_MODE_A);
+            if(block->getSprite() != NULL) {
+	      pDrawlib->setTexture(block->getSprite()->getTexture() != NULL ? block->getSprite()->getTexture(): NULL, BLEND_MODE_A);
+	    }
+	    else {
+	      pDrawlib->setTexture(NULL, BLEND_MODE_A);
+	    }
 	    /* set flashy blendColor */
 	    TColor v_blendColor =  TColor(block->getBlendColor());
 	    pDrawlib->setColorRGBA(v_blendColor.Red(), v_blendColor.Green(), v_blendColor.Blue(), v_blendColor.Alpha());
@@ -2365,7 +2371,12 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 	} else if(pDrawlib->getBackend() == DrawLib::backend_SdlGFX){
 
 	  if(m_DynamicGeoms[geom]->Polys.size() > 0) {
-	    pDrawlib->setTexture(m_DynamicGeoms[geom]->pTexture,BLEND_MODE_A);
+	    if(block->getSprite() != NULL) {
+	      pDrawlib->setTexture(block->getSprite()->getTexture() != NULL ? block->getSprite()->getTexture() : NULL,BLEND_MODE_A);
+	    }
+	    else {
+	      pDrawlib->setTexture(NULL,BLEND_MODE_A);
+	    }
 	    pDrawlib->setColorRGB(255,255,255);
 
 	    for(unsigned int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
@@ -2465,7 +2476,10 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
     int geom = block->getGeom();
     if(XMSession::instance()->gameGraphics() != GFX_LOW) {
-      pDrawlib->setTexture(m_StaticGeoms[geom]->pTexture, BLEND_MODE_A);
+      if(block->getSprite() != NULL) {
+        pDrawlib->setTexture(block->getSprite()->getTexture() != NULL ? block->getSprite()->getTexture() : NULL, BLEND_MODE_A);
+      }
+      else pDrawlib->setTexture(NULL, BLEND_MODE_A);
       /* set flashy blendColor */
       TColor v_blendColor =  TColor(block->getBlendColor());
       pDrawlib->setColorRGBA(v_blendColor.Red(), v_blendColor.Green(), v_blendColor.Blue(), v_blendColor.Alpha());
@@ -2513,7 +2527,12 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
     } else if(pDrawlib->getBackend() == DrawLib::backend_SdlGFX){
 
       for(unsigned int j=0;j<m_StaticGeoms[geom]->Polys.size();j++) {
-	pDrawlib->setTexture(m_StaticGeoms[geom]->pTexture,BLEND_MODE_A);
+        if(block->getSprite() != NULL) {
+	  pDrawlib->setTexture(block->getSprite()->getTexture()!= NULL ? block->getSprite()->getTexture() : NULL,BLEND_MODE_A);
+	}
+	else {
+	  pDrawlib->setTexture(NULL,BLEND_MODE_A);
+	}
 	pDrawlib->startDraw(DRAW_MODE_POLYGON);
 	pDrawlib->setColorRGB(255,255,255);
 	for(unsigned int k=0;k<m_StaticGeoms[geom]->Polys[j]->nNumVertices;k++) {

@@ -112,6 +112,7 @@ Block::Block(std::string i_id) {
   m_blendColor.setBlue(255);
   m_blendColor.setAlpha(255);
   m_edgeDefaultColor = DEFAULT_EDGE_BLENDCOLOR; // assign it or get random colors if no edge material is added
+  m_sprite = NULL;
 
   m_previousSavedPosition = DynamicPosition();
   m_previousSavedRotation = DynamicRotation();
@@ -452,10 +453,44 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   /* Compute */
   std::vector<BSPPoly *> &v_BSPPolys = v_BSPTree.compute();      
   
+
+  /* Load Textures */  
+  //first, lets see if there are animated textures, that come with 0.5.3
+  float scale = TextureScale() * 0.25;
+  Sprite* pSprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION,
+						 this->getTexture());
+  //if there aren't, keep theme files compatible to old xmoto versions
+  if(pSprite == NULL) {
+    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
+						 this->getTexture());  
+  }
+  
+  if(pSprite != NULL) 
+  {
+    m_sprite = pSprite;
+    try{
+//      m_sprite->loadTextures();
+      Texture* v_texture = m_sprite->getTexture();
+      
+      if(v_texture != NULL) {
+	int v_textureSize = v_texture->nWidth;
+	if(v_textureSize < 256 && v_textureSize != 0)
+	  // divide by texturesize to prevent upscaling of textures < 256x256
+	  scale *= (256/v_textureSize);
+      }
+    } catch(Exception& e) {
+      ;
+    }
+  }
+  else {
+    LogWarning("Texture %s could not be loaded in class Block", this->getTexture().c_str());
+  }
+
   /* Create convex blocks */
   for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
-    addPoly(v_BSPPolys[i], io_collisionSystem);
+    addPoly(v_BSPPolys[i], io_collisionSystem, scale);
   }
+
 
   if(i_chipmunkWorld != NULL) {
     if(isPhysics()) {
@@ -534,27 +569,9 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   return v_BSPTree.getNumErrors();  
 }
 
-void Block::addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem) {
-  ConvexBlock* v_block = new ConvexBlock(this);
-  float scale = TextureScale() * 0.25;
-  Sprite* pSprite = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
-						 this->getTexture());
-  
-  if(pSprite != NULL) 
-  {
-    try{
-      Texture* v_texture = pSprite->getTexture();
-      if(v_texture != NULL) {
-	int v_textureSize = v_texture->nWidth;
-	if(v_textureSize < 256 && v_textureSize != 0)
-	  // divide by texturesize to prevent upscaling of textures < 256x256
-	  scale *= (256/v_textureSize);
-      }
-    } catch(Exception& e) {
-      ;
-    }
-  }
 
+void Block::addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem, float scale) {
+  ConvexBlock* v_block = new ConvexBlock(this);
   for(unsigned int i=0; i<i_poly->Vertices().size(); i++) {	
     v_block->addVertex(i_poly->Vertices()[i],
 		       Vector2f((InitialPosition().x + i_poly->Vertices()[i].x) * scale,
@@ -562,6 +579,7 @@ void Block::addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem) {
   }
   m_convexBlocks.push_back(v_block);
 }
+
 
 void Block::unloadToPlay() {
   for(unsigned int i=0; i<m_convexBlocks.size(); i++) {
@@ -572,17 +590,19 @@ void Block::unloadToPlay() {
   for(unsigned int i=0; i<m_collisionLines.size(); i++) {
     delete m_collisionLines[i];
   }
-  m_collisionLines.clear();
-  
+  m_collisionLines.clear();  
 }
+
 
 bool Block::isPhysics() const {
   return m_physics;
 }
 
+
 bool Block::isLayer() const {
   return m_isLayer;
 }
+
 
 void Block::setInitialPosition(const Vector2f& i_initialPosition) {
   m_initialPosition  = i_initialPosition;
