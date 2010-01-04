@@ -223,6 +223,9 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
 				      THEME_TEXTURE_SPRITE_FILE_DIR,
 				      "Texture");
     }
+    else if(v_spriteType == "AnimationTexture" && v_isAnimation == true) {
+      newAnimationSpriteFromXML(pVarElem);
+    }
     else if(v_spriteType == "UI") {
       newSpriteFromXML<UISprite>(pVarElem,
 				 THEME_UI_SPRITE_FILE_DIR,

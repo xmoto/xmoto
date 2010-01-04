@@ -71,7 +71,7 @@ class Camera;
     }
     std::string material;
     std::vector<GeomPoly *> Polys;    
-    Texture *pTexture;
+    Texture *pTexture;           // only used for edge Geoms
     TColor edgeBlendColor;    
     Vector2f Min,Max; /* AABB */
   };
@@ -290,7 +290,7 @@ private:
   int  edgeGeomExists(Block* pBlock, std::string texture);
   void initCameras(Universe* i_universe);
   int  loadBlock(Block* pBlock, Universe* i_universe, unsigned int currentScene, int sameSceneAs, int blockIndex);
-  int  loadBlockGeom(Block* pBlock, std::vector<Geom *>* pGeoms, Texture* pTexture, Vector2f Center, Scene* pScene);
+  int  loadBlockGeom(Block* pBlock, std::vector<Geom *>* pGeoms, Vector2f Center, Scene* pScene);
   int  loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene);
   void calculateEdgePosition(Block* pBlock,
 			     BlockVertex* vertexA1,

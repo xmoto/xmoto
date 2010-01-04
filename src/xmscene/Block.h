@@ -187,6 +187,9 @@ class Block {
   
   const TColor& getBlendColor() const;
 
+  inline Sprite* getSprite() {
+    return m_sprite;
+  }
   void setTexture(const std::string& i_texture);
   void setTextureScale(float i_textureScale);
   void setBlendColor(const TColor& i_blendColor);
@@ -277,6 +280,7 @@ class Block {
 private:
   std::string m_id;
   std::string m_texture;
+  Sprite*     m_sprite;
   float       m_textureScale;
   Vector2f    m_initialPosition;
   float       m_initialRotation;       
@@ -328,7 +332,7 @@ private:
   Vector2f m_dynamicPosition; /* Block position */
   std::vector<Line*> m_collisionLines; /* Line to collide against */
 
-  void addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem);
+  void addPoly(BSPPoly* i_poly, CollisionSystem* io_collisionSystem, float scale);
   // dynamic background blocks only need to compute the collision lines once.
   void updateCollisionLines(bool setDirty = false, bool forceUpdate = false);
   void translateCollisionLines(float x, float y);
