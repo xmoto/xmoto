@@ -457,7 +457,7 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   /* Load Textures */  
   //first, lets see if there are animated textures, that come with 0.5.3
   float scale = TextureScale() * 0.25;
-  Sprite* pSprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION,
+  Sprite* pSprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION_TEXTURE,
 						 this->getTexture());
   //if there aren't, keep theme files compatible to old xmoto versions
   if(pSprite == NULL) {
