@@ -224,7 +224,7 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
 				      "Texture");
     }
     else if(v_spriteType == "AnimationTexture" && v_isAnimation == true) {
-      newAnimationSpriteFromXML(pVarElem, true, THEME_ANIMATION_TEXTURE_FILE_DIR);
+      newAnimationSpriteFromXML(pVarElem, true, THEME_TEXTURE_SPRITE_FILE_DIR);
     }
     else if(v_spriteType == "UI") {
       newSpriteFromXML<UISprite>(pVarElem,
@@ -744,7 +744,7 @@ AnimationSprite::~AnimationSprite() {
 
 std::string AnimationSprite::getFileDir() {
   if(m_isTexture) {
-    return THEME_ANIMATION_TEXTURE_FILE_DIR;
+    return THEME_TEXTURE_SPRITE_FILE_DIR;
   }
   else {
     return THEME_ANIMATION_SPRITE_FILE_DIR;
