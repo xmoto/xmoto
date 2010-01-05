@@ -42,6 +42,7 @@ class xmDatabase;
 #define THEME_EFFECT_SPRITE_FILE_DIR     THEME_SPRITE_FILE_DIR"/Effects"
 #define THEME_MISC_SPRITE_FILE_DIR       THEME_SPRITE_FILE_DIR"/Misc"
 #define THEME_ANIMATION_SPRITE_FILE_DIR  THEME_SPRITE_FILE_DIR"/Anims"
+#define THEME_ANIMATION_TEXTURE_FILE_DIR THEME_SPRITE_FILE_DIR"/AnimTextures"
 #define THEME_BIKERPART_SPRITE_FILE_DIR  THEME_SPRITE_FILE_DIR"/Riders"
 #define THEME_UI_SPRITE_FILE_DIR         THEME_SPRITE_FILE_DIR"/UI"
 #define THEME_TEXTURE_SPRITE_FILE_DIR    THEME_SPRITE_FILE_DIR"/Textures"
@@ -84,6 +85,7 @@ class xmDatabase;
 
   enum SpriteType {
     SPRITE_TYPE_ANIMATION,
+    SPRITE_TYPE_ANIMATION_TEXTURE,
     SPRITE_TYPE_BIKERPART,
     SPRITE_TYPE_DECORATION,
     SPRITE_TYPE_EFFECT,
@@ -278,7 +280,7 @@ class AnimationSpriteFrame {
 
 class AnimationSprite : public Sprite {
  public:
-  AnimationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileBase, std::string p_fileExtention);
+  AnimationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileBase, std::string p_fileExtention, bool p_isTexture);
   virtual ~AnimationSprite();
   float getCenterX();
   float getCenterY();
@@ -300,6 +302,7 @@ class AnimationSprite : public Sprite {
 
   std::string m_fileBase;
   std::string m_fileExtension;
+  bool m_isTexture;
   unsigned int m_current_frame;
   void cleanFrames();
   std::vector<AnimationSpriteFrame*> m_frames;
@@ -459,7 +462,7 @@ public:
 						       const char*   fileDir,
 						       const char*   spriteTypeName);
 
-  void newAnimationSpriteFromXML(TiXmlElement *pVarElem);
+  void newAnimationSpriteFromXML(TiXmlElement *pVarElem, bool p_isTexture, const char* fileDir );
   void newDecorationSpriteFromXML(TiXmlElement *pVarElem);
 
   void newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem);

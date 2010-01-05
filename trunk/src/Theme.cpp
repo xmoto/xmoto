@@ -224,7 +224,7 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
 				      "Texture");
     }
     else if(v_spriteType == "AnimationTexture" && v_isAnimation == true) {
-      newAnimationSpriteFromXML(pVarElem);
+      newAnimationSpriteFromXML(pVarElem, true, THEME_ANIMATION_TEXTURE_FILE_DIR);
     }
     else if(v_spriteType == "UI") {
       newSpriteFromXML<UISprite>(pVarElem,
@@ -233,7 +233,7 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
     }
 
     else if(v_spriteType == "Entity" && v_isAnimation == true) {
-      newAnimationSpriteFromXML(pVarElem);
+      newAnimationSpriteFromXML(pVarElem, false, THEME_ANIMATION_SPRITE_FILE_DIR);
     }
     else if(v_spriteType == "Entity" && v_isAnimation == false) {
       newDecorationSpriteFromXML(pVarElem);
@@ -408,7 +408,7 @@ void Theme::newSpriteFromXML(TiXmlElement *pVarElem,
 }
 
 
-void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
+void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem, bool v_isTexture, const char* fileDir) {
   std::string v_name;
   std::string v_fileBase;
   std::string v_fileExtension;
@@ -457,7 +457,7 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
   pc = pVarElem->Attribute("delay");
   if(pc != NULL) {global_delay = atof(pc);}
 
-  v_anim = new AnimationSprite(this, v_name, v_fileBase, v_fileExtension);
+  v_anim = new AnimationSprite(this, v_name, v_fileBase, v_fileExtension, v_isTexture);
   v_anim->setOrder(m_sprites.size());
   m_sprites.push_back(v_anim);
 
@@ -495,14 +495,14 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
     if(n < 100) {
       snprintf(buf, 3, "%02i", n);
 
-      if(isAFileOutOfDate(THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
+      if(isAFileOutOfDate(fileDir + std::string("/") +
 			  v_fileBase + std::string(buf) + std::string(".") + v_fileExtension) == false) {
 	v_anim->addFrame(v_centerX, v_centerY, v_width, v_height, v_delay);
 
-	std::string fileName = THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
+	std::string fileName = fileDir + std::string("/") +
 	  v_fileBase + std::string(buf) + std::string(".") + v_fileExtension;
 
-	ThemeFile v_file = {THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
+	ThemeFile v_file = {fileDir + std::string("/") +
 			    v_fileBase + std::string(buf) + std::string(".") + v_fileExtension,
 			    v_sum};
 	m_requiredFiles.push_back(v_file);
@@ -590,7 +590,7 @@ void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem)
 
   v_delay = global_delay;
 
-  v_anim = new AnimationSprite(this, v_name, v_fileBase, v_fileExtension);
+  v_anim = new AnimationSprite(this, v_name, v_fileBase, v_fileExtension, false);
   v_anim->setBlendMode(strToBlendMode(v_blendmode));
   v_anim->setOrder(m_sprites.size());
 
@@ -721,13 +721,21 @@ std::string Sprite::getFileDir() {
 
 
 
-AnimationSprite::AnimationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileBase, std::string p_fileExtention) : Sprite(p_associated_theme, p_name) {
+AnimationSprite::AnimationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileBase, std::string p_fileExtention, bool p_isTexture) : Sprite(p_associated_theme, p_name) {
   m_current_frame = 0;
   m_fileBase      = p_fileBase;
   m_fileExtension = p_fileExtention;
   m_fFrameTime    = 0.0;
-  m_type          = SPRITE_TYPE_ANIMATION;
   m_animation     = false;
+  m_isTexture     = p_isTexture;
+  
+  if(p_isTexture) {
+    m_type = SPRITE_TYPE_ANIMATION_TEXTURE;
+  }
+  else {
+    m_type = SPRITE_TYPE_ANIMATION;
+  }
+
 }
 
 AnimationSprite::~AnimationSprite() {
@@ -735,7 +743,12 @@ AnimationSprite::~AnimationSprite() {
 }
 
 std::string AnimationSprite::getFileDir() {
-  return THEME_ANIMATION_SPRITE_FILE_DIR;
+  if(m_isTexture) {
+    return THEME_ANIMATION_TEXTURE_FILE_DIR;
+  }
+  else {
+    return THEME_ANIMATION_SPRITE_FILE_DIR;
+  }
 }
 
 Texture* AnimationSprite::getCurrentTexture() {
