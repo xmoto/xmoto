@@ -64,8 +64,8 @@ if test "$USE_INTERNAL_XDG" = "0"
 then
   AC_CHECK_LIB(xdg-basedir, xdgInitHandle,[],[AC_MSG_ERROR(libxdg-basedir required or --with-internal-xdg=1)])
 else
-  CXXFLAGS="$CXXFLAGS"" ""-I""$ac_abs_confdir""/src/xdgbasedir/include"
-  CFLAGS="$CFLAGS"" ""-I""$ac_abs_confdir""/src/xdgbasedir/include"
+  CXXFLAGS="$CXXFLAGS"" ""-I""$srcdir""/src/xdgbasedir/include"
+  CFLAGS="$CFLAGS"" ""-I""$srcdir""/src/xdgbasedir/include"
 fi
 AM_CONDITIONAL([USE_INTERNAL_XDG], test "$USE_INTERNAL_XDG" = "1")
 
