@@ -113,10 +113,13 @@ GameRenderer::GameRenderer() {
   m_currentEdgeEffect = "";
   m_currentEdgeBlendColor = DEFAULT_EDGE_BLENDCOLOR;
   m_currentEdgeSprite = NULL;
+  m_currentSkySprite = NULL;
+  m_currentSkySprite2 = NULL;
   m_curRegistrationStage = 0;
   m_showGhostsText = true;
   m_graphicsLevel = GFX_HIGH;  //not used anymore
 }
+
 GameRenderer::~GameRenderer() {
 }
 
@@ -223,15 +226,15 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     }
 
     // sprites remplacement stored in level and the sky
-    TextureSprite* skySprite = (TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->Texture());
-    if(skySprite != NULL)
-      skySprite->loadTextures();
+    m_currentSkySprite = (TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->Texture());
+    if(m_currentSkySprite != NULL)
+      m_currentSkySprite->loadTextures();
     else{
       LogDebug("skySprite is NULL [%s]", v_level->Sky()->Texture().c_str());
     }
-    TextureSprite* skySprite2 =(TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->BlendTexture());
-    if(skySprite2 != NULL)
-      skySprite2->loadTextures();
+    m_currentSkySprite2 = (TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->BlendTexture());
+    if(m_currentSkySprite2 != NULL)
+      m_currentSkySprite2->loadTextures();
     else{
       LogDebug("skySprite2 is NULL [%s]", v_level->Sky()->BlendTexture().c_str());
     }    
@@ -2696,8 +2699,6 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
 void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, const TColor& i_color,
 			      float i_driftZoom, const TColor& i_driftColor, bool i_drifted) {
   DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
-  TextureSprite* pType;
-  TextureSprite* pType2;
   float fDrift = 0.0;
   float uZoom = 1.0 / i_zoom;
   float uDriftZoom = 1.0 / i_driftZoom;
@@ -2705,20 +2706,14 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
   if(XMSession::instance()->gameGraphics() != GFX_HIGH) {
     i_drifted = false;
   }
-
-  pType = (TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
-							i_scene->getLevelSrc()->Sky()->Texture());
-  pType2= (TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
-                                                        i_scene->getLevelSrc()->Sky()->BlendTexture());
   
-  
-  if(pType != NULL && pType2 != NULL) {
+  if(m_currentSkySprite != NULL && m_currentSkySprite2 != NULL) {
     if(i_drifted) {
-      pDrawlib->setTexture(pType->getTexture(), BLEND_MODE_A);
+      pDrawlib->setTexture(m_currentSkySprite->getTexture(), BLEND_MODE_A);
     }
     
     if(XMSession::instance()->gameGraphics() != GFX_LOW) {
-      pDrawlib->setTexture(pType->getTexture(),BLEND_MODE_NONE);  
+      pDrawlib->setTexture(m_currentSkySprite->getTexture(),BLEND_MODE_NONE);  
       pDrawlib->setColorRGBA(i_color.Red() , i_color.Green(), i_color.Blue(), i_color.Alpha());
     }
     else {
@@ -2742,7 +2737,7 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
     pDrawlib->endDraw();
     
     if(i_drifted) {
-      pDrawlib->setTexture(pType2->getTexture(),BLEND_MODE_B);
+      pDrawlib->setTexture(m_currentSkySprite2->getTexture(),BLEND_MODE_B);
       pDrawlib->startDraw(DRAW_MODE_POLYGON);
       pDrawlib->setColorRGBA(i_driftColor.Red(), i_driftColor.Green(), i_driftColor.Blue(), i_driftColor.Alpha());
       fDrift = GameApp::instance()->getXMTime() / 15.0f;
