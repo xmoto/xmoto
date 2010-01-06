@@ -216,6 +216,9 @@ private:
   EdgeEffectSprite* m_currentEdgeSprite;
   float             m_currentEdgeMaterialScale;
   float             m_currentEdgeMaterialDepth;
+  TextureSprite*    m_currentSkySprite;
+  TextureSprite*    m_currentSkySprite2;
+  
 
   //GhostTrail* m_ghostTrail;
 
