@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Level.h"
 #include "xmscene/Block.h"
 #include "xmscene/ScriptTimer.h"
+#include "XMSession.h"
 #include <sstream>
 
 #define STIMER_DELAY_DEFAULT 100
@@ -91,10 +92,11 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"GetPlayerVelocity",            LuaLibGame::L_Game_GetPlayerVelocity},
   {"GetPlayerSpeed",               LuaLibGame::L_Game_GetPlayerSpeed},
   {"GetPlayerAngle",               LuaLibGame::L_Game_GetPlayerAngle}, 
-  {"StartTimer",               LuaLibGame::L_Game_StartTimer},   
-  {"SetTimerDelay",               LuaLibGame::L_Game_SetTimerDelay}, 
-  {"StopTimer",               LuaLibGame::L_Game_StopTimer}, 
-	{"SetCameraPosition",               LuaLibGame::L_Game_SetCameraPosition}, 
+  {"GetPlayerProfileName",         LuaLibGame::L_Game_GetPlayerProfileName},
+  {"StartTimer",                   LuaLibGame::L_Game_StartTimer},   
+  {"SetTimerDelay",                LuaLibGame::L_Game_SetTimerDelay}, 
+  {"StopTimer",                    LuaLibGame::L_Game_StopTimer}, 
+  {"SetCameraPosition",            LuaLibGame::L_Game_SetCameraPosition}, 
   {NULL, NULL}
 };
 Scene*     LuaLibGame::m_exec_world              = NULL;
@@ -898,6 +900,15 @@ int LuaLibGame::L_Game_GetPlayerAngle(lua_State *pL) {
   lua_pushnumber(pL, m_exec_world->Players()[v_player]->getAngle());
 
   return 1; //return 1 value
+}
+
+int LuaLibGame::L_Game_GetPlayerProfileName(lua_State *pl) {
+  /* no event for this */
+  std::string v_profileName;
+  v_profileName = XMSession::instance()->profile();
+  lua_pushstring(pl,v_profileName.c_str());
+  
+  return 1;
 }
 
 /*=====================================================
