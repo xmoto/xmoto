@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2009-10-11 17:48+0200\n"
-"PO-Revision-Date: 2009-08-26 22:44+0200\n"
+"PO-Revision-Date: 2010-01-07 22:14+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -418,7 +418,7 @@ msgstr "Maďarčina"
 
 #: src/GameText.h:159
 msgid "Portugese"
-msgstr ""
+msgstr "Portugalčina"
 
 #: src/GameText.h:161
 msgid "Main testers"
@@ -940,7 +940,7 @@ msgstr "Prepnúť obľúbené"
 
 #: src/GameText.h:304
 msgid "Toggle Ghost Trail Tracking Shot"
-msgstr ""
+msgstr "Prepnúť sledovanie ducha závesnou kamerou"
 
 #: src/GameText.h:305
 msgid "Enable/disable FPS display"
@@ -952,11 +952,11 @@ msgstr "Zapnúť/vypnúť škaredý režim"
 
 #: src/GameText.h:308
 msgid "Toggle Contrast, Light and Full Graphics"
-msgstr ""
+msgstr "Prepínať medzi kontrastnou, svetlou a plnou grafikou"
 
 #: src/GameText.h:309
 msgid "Toggle theme and ugly over mode"
-msgstr ""
+msgstr "Prepínanie medzi témou a škaredým režimom"
 
 #: src/GameText.h:312
 msgid "Hide ghosts"
@@ -1135,15 +1135,15 @@ msgstr "Grafika v menu"
 
 #: src/GameText.h:356
 msgid "Contrast"
-msgstr ""
+msgstr "Kontrastná"
 
 #: src/GameText.h:357
 msgid "Light"
-msgstr ""
+msgstr "Svetlá"
 
 #: src/GameText.h:358
 msgid "Full"
-msgstr ""
+msgstr "Plná"
 
 #: src/GameText.h:359
 msgid "Total time you scored / total highscore time for levels you finished"
@@ -2934,7 +2934,7 @@ msgstr "Levely, ktoré majú odomknuté hlasy"
 
 #: src/GameText.h:819
 msgid "Normal mode enabled"
-msgstr ""
+msgstr "Zapnutý normálny režim"
 
 #: src/GameText.h:820
 msgid "Ugly mode enabled"
@@ -2962,15 +2962,15 @@ msgstr "Režim UglyOver vypnutý"
 
 #: src/GameText.h:826
 msgid "Contrast Graphics Mode enabled"
-msgstr ""
+msgstr "Zapnutý kontrastný režim grafiky"
 
 #: src/GameText.h:827
 msgid "Light Graphics Mode enabled"
-msgstr ""
+msgstr "Zapnutý režim svetlej grafiky"
 
 #: src/GameText.h:828
 msgid "Full Graphics Mode enabled"
-msgstr ""
+msgstr "Zapnutý režim plnej grafiky"
 
 #: src/GameText.h:829
 msgid "Web connection enabled"
@@ -3052,7 +3052,7 @@ msgstr ""
 
 #: src/GameText.h:848
 msgid "Restart Level to activate!"
-msgstr ""
+msgstr "Pre aktiváciu reštartujte level!"
 
 #: src/GameText.h:850
 #, c-format
@@ -3262,7 +3262,7 @@ msgstr ""
 
 #: src/LevelsText.h:55
 msgid "Nice jump there! :)"
-msgstr "Hej, pekný krok! :)"
+msgstr "Hej, pekný skok! :)"
 
 #: src/LevelsText.h:56
 msgid "Congrats, you're now a master jumper!"
