@@ -469,7 +469,6 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   {
     m_sprite = pSprite;
     try{
-//      m_sprite->loadTextures();
       Texture* v_texture = m_sprite->getTexture();
       
       if(v_texture != NULL) {
