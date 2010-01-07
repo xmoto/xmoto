@@ -226,13 +226,20 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     }
 
     // sprites remplacement stored in level and the sky
-    m_currentSkySprite = (TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->Texture());
+    m_currentSkySprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION_TEXTURE, v_level->Sky()->Texture());
+    if(m_currentSkySprite == NULL) {
+      m_currentSkySprite = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->Texture());
+    }
     if(m_currentSkySprite != NULL)
       m_currentSkySprite->loadTextures();
     else{
       LogDebug("skySprite is NULL [%s]", v_level->Sky()->Texture().c_str());
     }
-    m_currentSkySprite2 = (TextureSprite*) Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->BlendTexture());
+    
+    m_currentSkySprite2 = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION_TEXTURE, v_level->Sky()->BlendTexture());
+    if(m_currentSkySprite2 == NULL) {
+      m_currentSkySprite2 = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->BlendTexture());
+    }
     if(m_currentSkySprite2 != NULL)
       m_currentSkySprite2->loadTextures();
     else{
