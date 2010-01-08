@@ -3194,11 +3194,13 @@ bool GameRenderer::showGhostsText() const {
   return m_showGhostsText;
 }
 
-  void GameRenderer::switchFollow(Scene* i_scene) {
+void GameRenderer::switchFollow(Scene* i_scene) {
     Camera*  pCamera  = i_scene->getCamera();
 
     if(pCamera->getPlayerToFollow() == NULL)
       return;
+
+    pCamera->allowTrailCam(false);
 
     std::vector<Biker*>& players = i_scene->Players();
     std::vector<Ghost*>& ghosts = i_scene->Ghosts();
@@ -3215,6 +3217,7 @@ bool GameRenderer::showGhostsText() const {
 	    pCamera->setPlayerToFollow(ghosts[0]);
 	  } else {
 	    pCamera->setPlayerToFollow(players[0]);
+	    pCamera->allowTrailCam(true);
 	  }
 	}
 	return;
@@ -3236,7 +3239,7 @@ bool GameRenderer::showGhostsText() const {
 	return;
       }
     }
-  }
+}
 
 
 void GameRenderer::renderTimePanel(Scene* i_scene) {
