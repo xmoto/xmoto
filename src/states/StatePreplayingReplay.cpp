@@ -30,18 +30,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 StatePreplayingReplay::StatePreplayingReplay(const std::string& i_id, const std::string i_replay, bool i_sameLevel)
 : StatePreplaying(i_id, "", i_sameLevel) {
+    ReplayInfo* v_info;
+
     m_name   = "StatePreplayingReplay";
     m_replay = i_replay;
     m_replayBiker = NULL;
 
-    ReplayInfo* v_info = Replay::getReplayInfos(i_replay);
-    if(v_info == NULL) {
+    try {
+      v_info = Replay::getReplayInfos(i_replay);
+
+      if(v_info == NULL) {
+	throw Exception("Unable to retrieve replay infos");
+      }
+    } catch(Exception &e) {
       LogError("Unable to retrieve infos about replays '%s'", i_replay.c_str());
       m_idlevel = "";
-    } else {
-      m_idlevel = v_info->Level;
-      delete v_info;
+      return;
     }
+
+    m_idlevel = v_info->Level;
+    delete v_info;
 }
 
 StatePreplayingReplay::~StatePreplayingReplay() {
