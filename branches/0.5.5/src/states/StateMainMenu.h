@@ -58,6 +58,7 @@ class StateMainMenu : public StateMenu {
   /* GUI */
   static UIRoot* m_sGUI;
   static void createGUIIfNeeded();
+  static UIWindow* makeWindowBike(UIWindow* i_parent);
   static UIWindow* makeWindowReplays(UIWindow* i_parent);
   static UIWindow* makeWindowLevels(UIWindow* i_parent);
   static UIWindow* makeWindowStats(UIWindow* i_parent);

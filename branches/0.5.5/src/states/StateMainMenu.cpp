@@ -361,8 +361,23 @@ void StateMainMenu::checkEventsMainWindow() {
     v_button->setClicked(false);
 
     UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
+    UIWindow* v_windowBike = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKE"));
     UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
     v_windowLevels->showWindow(v_windowLevels->isHidden());
+    v_windowBike->showWindow(false);
+    v_windowReplays->showWindow(false);
+  }
+
+  // bike
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:BIKE"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
+    UIWindow* v_windowBike = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKE"));
+    UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
+    v_windowLevels->showWindow(false);
+    v_windowBike->showWindow(v_windowBike->isHidden());
     v_windowReplays->showWindow(false);
   }
 
@@ -372,8 +387,10 @@ void StateMainMenu::checkEventsMainWindow() {
     v_button->setClicked(false);
 
     UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
+    UIWindow* v_windowBike = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKE"));
     UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
     v_windowLevels->showWindow(false);
+    v_windowBike->showWindow(false);
     v_windowReplays->showWindow(v_windowReplays->isHidden());
   }
 
@@ -397,10 +414,12 @@ void StateMainMenu::checkEventsMainWindow() {
     v_button->setClicked(false);
     
     UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
+    UIWindow* v_windowBike = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKE"));
     UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
     UITabView* v_tabView = reinterpret_cast<UITabView *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS"));
 
     v_windowLevels->showWindow(true);
+    v_windowBike->showWindow(false);
     v_windowReplays->showWindow(false);
     v_tabView->selectChildrenById("NEWLEVELS_TAB");
 
@@ -731,23 +750,28 @@ void StateMainMenu::createGUIIfNeeded() {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_LEVELS);
   v_menu->setPrimaryChild(v_button);
+  
+  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 1*57, GAMETEXT_BIKE, 177, 57);
+  v_button->setID("BIKE");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_BIKE);
 
-  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 1*57, GAMETEXT_REPLAYS, 177, 57);
+  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 2*57, GAMETEXT_REPLAYS, 177, 57);
   v_button->setID("REPLAYS");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_REPLAY_LIST);
 
-  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 2*57, GAMETEXT_OPTIONS, 177, 57);
+  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 3*57, GAMETEXT_OPTIONS, 177, 57);
   v_button->setID("OPTIONS");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_OPTIONS);
   
-  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 3*57, GAMETEXT_HELP, 177, 57);
+  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 4*57, GAMETEXT_HELP, 177, 57);
   v_button->setID("HELP");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_HELP);
 
-  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 4*57, GAMETEXT_QUIT, 177, 57);
+  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 5*57, GAMETEXT_QUIT, 177, 57);
   v_button->setID("QUIT");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
@@ -808,7 +832,8 @@ void StateMainMenu::createGUIIfNeeded() {
   v_infoButton->setID("BESTPLAYER_VIEW");
 
   // frames
-  makeWindowLevels( v_menu);
+  makeWindowLevels(v_menu);
+  makeWindowBike(v_menu);
   makeWindowReplays(v_menu);
   makeWindowStats(v_menu);
 }
@@ -993,6 +1018,83 @@ void StateMainMenu::updateStats() {
   }  
   pDb->read_DB_free(v_result);
 }
+
+UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
+  UIWindow* v_window;
+  UIStatic* v_someText;
+  UIEdit*   v_edit;
+  UIButton *v_button, *v_showButton;
+  UIList*   v_list;
+  DrawLib* drawlib = GameApp::instance()->getDrawLib();
+
+  v_window = new UIFrame(i_parent, 220, i_parent->getPosition().nHeight*7/30, "",
+			 i_parent->getPosition().nWidth -220 -20,
+			 i_parent->getPosition().nHeight -40 -i_parent->getPosition().nHeight/5 -10);
+  v_window->setID("FRAME_BIKE");
+  v_window->showWindow(false);
+   
+  v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_BIKES, v_window->getPosition().nWidth, 36);
+  v_someText->setFont(drawlib->getFontMedium());
+
+/*  v_someText = new UIStatic(v_window, 10, 35, std::string(GAMETEXT_FILTER) + ":", 90, 25);
+  v_someText->setFont(drawlib->getFontSmall());
+  v_someText->setHAlign(UI_ALIGN_RIGHT);
+  v_edit = new UIEdit(v_window, 110, 35, "", 200, 25);
+  v_edit->setFont(drawlib->getFontSmall());
+  v_edit->setID("REPLAYS_FILTER");
+  v_edit->setContextHelp(CONTEXTHELP_REPLAYS_FILTER);*/
+
+  /* show button */
+  v_button = new UIButton(v_window, 5, v_window->getPosition().nHeight-68, GAMETEXT_SHOW, 110, 57);
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setID("BIKES_SHOW_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_BIKE_SHOW);
+  v_showButton = v_button;
+
+  /* delete button */
+  v_button = new UIButton(v_window, 110, v_window->getPosition().nHeight-68, GAMETEXT_DELETE, 115, 57);
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setID("BIKES_DELETE_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_BIKE_DELETE);
+
+  /* upload button */
+/*  v_button = new UIButton(v_window, 220, v_window->getPosition().nHeight-68, GAMETEXT_UPLOAD_HIGHSCORE, 130, 57);
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setID("REPLAYS_UPLOADHIGHSCORE_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);*/
+
+  /* clean */
+  v_button = new UIButton(v_window, 220, v_window->getPosition().nHeight-68, GAMETEXT_BIKES_GET, 116, 57);
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setID("BIKES_DOWNLOAD_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_BIKE_DOWNLOAD);
+//  v_button->showWindow(false);
+
+  /* filter */
+/*  v_button = new UIButton(v_window, v_window->getPosition().nWidth-150, v_window->getPosition().nHeight-68,
+			  GAMETEXT_LISTALL, 150, 57);
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setChecked(false);
+  v_button->setID("REPLAYS_LIST_ALL");
+  v_button->setContextHelp(CONTEXTHELP_ALL_REPLAYS);/*
+
+  /* list */
+  v_list = new UIList(v_window, 20, 65, "", v_window->getPosition().nWidth-40, v_window->getPosition().nHeight-115-25);
+  v_list->setID("BIKES_LIST");
+  v_list->setFont(drawlib->getFontSmall());
+  v_list->addColumn(GAMETEXT_REPLAY, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_REPLAYCOL);
+  v_list->addColumn(GAMETEXT_LEVEL,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_REPLAYLEVELCOL);
+  v_list->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
+  v_list->setEnterButton(v_showButton);
+
+  return v_window;
+}
+
 
 UIWindow* StateMainMenu::makeWindowReplays(UIWindow* i_parent) {
   UIWindow* v_window;
