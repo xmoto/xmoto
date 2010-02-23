@@ -53,11 +53,14 @@ class Universe {
   void isTheCurrentPlayAHighscore(xmDatabase *pDb, bool& o_personal, bool& o_room);
   void TeleportationCheatTo(int i_player, Vector2f i_position);
   void switchFollowCamera();
-
+//  void initPhysicsFromDir();
+//  std::string getThemeNameFromFile(std::string p_themeFile);
+  
   private:
   std::vector<Scene*>        m_scenes; /* Game objects */
   std::vector<XMSceneHooks*> m_motoGameHooks;
   Replay *m_pJustPlayReplay;
+//  std::vector<std::string> m_availablePhysics;
 
   void removeAllWorlds();
 

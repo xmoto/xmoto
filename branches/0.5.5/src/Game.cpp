@@ -42,6 +42,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Camera.h"
 #include "xmscene/Entity.h"
 #include "UserConfig.h"
+#include "VXml.h"
 
 #include <curl/curl.h>
 #include <iomanip>
@@ -839,4 +840,63 @@ void GameApp::drawFrame(void) {
 
 NetServer* GameApp::standAloneServer() {
   return m_standAloneServer;
+}
+
+
+void GameApp::initPhysicsFromDir() {
+#define PHYSICS_DIR "Physics"
+  std::vector<std::string> v_physicsFiles = XMFS::findPhysFiles(FDT_DATA, std::string(PHYSICS_DIR)
+							       + std::string("/*.xml"), true);
+  std::string v_name;
+
+//  i_db->themes_add_begin();
+  for(unsigned int i=0; i<v_physicsFiles.size(); i++) {
+    try {
+      v_name = getThemeNameFromFile(v_physicsFiles[i]);
+     // if(i_db->themes_exists(v_name) == false) {
+//	i_db->themes_add(v_name, v_themesFiles[i]);
+      m_availablePhysics.push_back(v_physicsFiles[i]);
+      LogInfo("found physics: %s", v_physicsFiles[i].c_str() );
+     // } else {
+//	LogWarning(std::string("Theme " + v_name + " is present several times").c_str());
+//      }
+    } catch(Exception &e) {
+      /* anyway, give up this theme */
+    }
+  }
+//  i_db->themes_add_end();
+}
+
+
+std::string GameApp::getThemeNameFromFile(std::string p_themeFile) {
+  XMLDocument v_ThemeXml;
+  TiXmlDocument *v_ThemeXmlData;
+  TiXmlElement *v_ThemeXmlDataElement;
+  const char *pc;
+  std::string m_name;
+
+  /* open the file */
+  v_ThemeXml.readFromFile(FDT_DATA, p_themeFile);   
+  v_ThemeXmlData = v_ThemeXml.getLowLevelAccess();
+  
+  if(v_ThemeXmlData == NULL) {
+    throw Exception("error : unable analyse xml theme file");
+  }
+  
+  /* read the theme name */
+  v_ThemeXmlDataElement = v_ThemeXmlData->FirstChildElement("xmoto_physics");
+  if(v_ThemeXmlDataElement != NULL) {
+    pc = v_ThemeXmlDataElement->Attribute("name");
+    m_name = pc;
+  }
+  
+  if(m_name == "") {
+    throw Exception("error : the theme has no name !");
+  }
+  
+  return m_name;
+}
+
+std::vector<std::string> GameApp::getAvailablePhysics() {
+  return m_availablePhysics;
 }

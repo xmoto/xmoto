@@ -176,6 +176,7 @@ void StateMainMenu::enter()
   updateLevelsPacksList(); // update list even if computation is not done the first time to display packs
   updateLevelsLists();
   updateReplaysList();
+  updateBikesList();
   updateStats();
   updateClientStrings();
 
@@ -292,6 +293,9 @@ void StateMainMenu::checkEvents() {
   checkEventsLevelsMultiTab();
   checkEventsNetworkTab();
 
+  // bikes tab
+  checkEventsBikes();
+
   // replay tab
   checkEventsReplays();
 
@@ -361,7 +365,7 @@ void StateMainMenu::checkEventsMainWindow() {
     v_button->setClicked(false);
 
     UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
-    UIWindow* v_windowBike = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKE"));
+    UIWindow* v_windowBike = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKES"));
     UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
     v_windowLevels->showWindow(v_windowLevels->isHidden());
     v_windowBike->showWindow(false);
@@ -374,7 +378,7 @@ void StateMainMenu::checkEventsMainWindow() {
     v_button->setClicked(false);
 
     UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
-    UIWindow* v_windowBike = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKE"));
+    UIWindow* v_windowBike = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKES"));
     UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
     v_windowLevels->showWindow(false);
     v_windowBike->showWindow(v_windowBike->isHidden());
@@ -387,7 +391,7 @@ void StateMainMenu::checkEventsMainWindow() {
     v_button->setClicked(false);
 
     UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
-    UIWindow* v_windowBike = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKE"));
+    UIWindow* v_windowBike = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKES"));
     UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
     v_windowLevels->showWindow(false);
     v_windowBike->showWindow(false);
@@ -414,7 +418,7 @@ void StateMainMenu::checkEventsMainWindow() {
     v_button->setClicked(false);
     
     UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
-    UIWindow* v_windowBike = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKE"));
+    UIWindow* v_windowBike = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKES"));
     UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
     UITabView* v_tabView = reinterpret_cast<UITabView *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS"));
 
@@ -1030,7 +1034,7 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   v_window = new UIFrame(i_parent, 220, i_parent->getPosition().nHeight*7/30, "",
 			 i_parent->getPosition().nWidth -220 -20,
 			 i_parent->getPosition().nHeight -40 -i_parent->getPosition().nHeight/5 -10);
-  v_window->setID("FRAME_BIKE");
+  v_window->setID("FRAME_BIKES");
   v_window->showWindow(false);
    
   v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_BIKES, v_window->getPosition().nWidth, 36);
@@ -1087,9 +1091,9 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   v_list = new UIList(v_window, 20, 65, "", v_window->getPosition().nWidth-40, v_window->getPosition().nHeight-115-25);
   v_list->setID("BIKES_LIST");
   v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_REPLAY, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_REPLAYCOL);
-  v_list->addColumn(GAMETEXT_LEVEL,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_REPLAYLEVELCOL);
-  v_list->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
+  v_list->addColumn(GAMETEXT_BIKES, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_BIKE);
+  v_list->addColumn(GAMETEXT_IS_VALID,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_BIKE_VALID);
+//  v_list->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
   v_list->setEnterButton(v_showButton);
 
   return v_window;
@@ -1777,6 +1781,104 @@ void StateMainMenu::updateLevelsPacksList() {
     pTree->setSelectedPackByName(v_selected_packName);
   }
 
+}
+
+void StateMainMenu::updateBikesList() {
+  UIList* v_list;
+  std::string v_selected_bike;
+
+  v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKES_LIST");
+
+  /* Clear list  */
+  int v_selected = v_list->getSelected();
+  if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+    v_selected_bike = v_list->getEntries()[v_list->getSelected()]->Text[0];
+  }
+  v_list->clear();
+  
+  std::vector<std::string> v_availablePhysics = GameApp::instance()->getAvailablePhysics();
+  
+  for(unsigned int i=0; i<v_availablePhysics.size(); i++) {
+    UIListEntry *pEntry = v_list->addEntry(GameApp::instance()->getThemeNameFromFile(v_availablePhysics[i]));
+  }
+  
+  /* reselect the previous bike */
+/*  if(v_selected_bike != "") {
+    int nBike = -1;
+    for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
+      if(v_list->getEntries()[i]->Text[0] == v_selected_bike) {
+	nBike = i;
+	break;
+      }
+    }
+
+    if(nBike == -1) { // bike not found, keep the same number in the list
+      v_list->setRealSelected(v_selected);
+    } else {
+      v_list->setRealSelected(nBike);
+    }
+  }
+*/
+//  UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKES_LIST"));
+//  createBikesList(v_list);
+
+  std::string v_bikeName = GameApp::instance()->getThemeNameFromFile(XMSession::instance()->bikePhysics());
+  int nBike = 0;
+  for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
+    if(v_list->getEntries()[i]->Text[0] == v_bikeName) {
+      nBike = i;
+      break;
+    }
+  }
+  v_list->setRealSelected(nBike); 
+}
+
+void StateMainMenu::checkEventsBikes() {
+  UIEdit*      v_edit;
+  UILevelList* v_list;
+  UIButton*    v_button;
+
+  v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKES_LIST"));
+
+  /* list changed */
+  if(v_list->isChanged()) {
+    v_list->setChanged(false);
+  }
+
+  // show
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKES_SHOW_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
+      if(pListEntry != NULL) {
+	for(int i=0; i<GameApp::instance()->getAvailablePhysics().size(); i++) {
+	  if(GameApp::instance()->getThemeNameFromFile(GameApp::instance()->getAvailablePhysics()[i]) == pListEntry->Text[0]) {
+            XMSession::instance()->setBikePhysics(GameApp::instance()->getAvailablePhysics()[i]);
+            LogInfo("Physics set");
+	  }
+	}
+      }
+    }
+  }
+
+  // delete
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_DELETE_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
+      if(pListEntry != NULL) {
+/*	StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
+	v_msgboxState->setId("REPLAYS_DELETE");
+	v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
+	StateManager::instance()->pushState(v_msgboxState);	
+	updateReplaysRights();
+*/    }
+    }
+  }
 }
 
 void StateMainMenu::updateReplaysList() {

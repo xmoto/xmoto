@@ -373,6 +373,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     ThemeChoicer::initThemesFromDir(pDb);
     reloadTheme();
   }
+  
+  /* load available bike physics */
+  initPhysicsFromDir();
 
   /* load levels */
   if(pDb->levels_isIndexUptodate() == false) {

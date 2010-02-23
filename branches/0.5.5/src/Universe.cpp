@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "db/xmDatabase.h"
 #include "drawlib/DrawLib.h"
 #include "Renderer.h"
+#include "VXml.h"
 
 void XMSceneHooks::OnTakeEntity() {
     /* Play yummy-yummy sound */
@@ -339,3 +340,4 @@ void Universe::saveReplay(xmDatabase *pDb, const std::string &Name) {
 std::vector<Scene*>& Universe::getScenes() {
   return m_scenes;
 }
+

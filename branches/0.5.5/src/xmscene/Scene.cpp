@@ -510,7 +510,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     m_luaGame = new LuaLibGame(this);
 
     /* physics */
-    m_physicsSettings = new PhysicsSettings("Physics/original.xml");
+    m_physicsSettings = new PhysicsSettings(XMSession::instance()->bikePhysics());
     
     /* Clear collision system */
     m_Collision.reset();

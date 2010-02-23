@@ -146,6 +146,7 @@ void XMSession::setToDefault() {
   m_clientServerPort              = DEFAULT_CLIENTSERVERPORT;
   m_clientFramerateUpload         = DEFAULT_CLIENTFRAMERATEUPLOAD;
   m_musicOnAllLevels              = DEFAULT_MUSICONALLLEVELS;
+  m_bikePhysics                   = DEFAULT_BIKEPHYSICS;
   m_proxySettings.setDefault();
 }
 
@@ -1477,3 +1478,10 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
   v_config->createVar( "WebHighscoreUploadURL",  DEFAULT_UPLOADREPLAY_URL        );
 }
 
+std::string XMSession::bikePhysics() {
+  return m_bikePhysics;
+}
+
+void XMSession::setBikePhysics(std::string i_value) {
+  m_bikePhysics = i_value;
+}

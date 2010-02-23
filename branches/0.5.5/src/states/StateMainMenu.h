@@ -70,6 +70,7 @@ class StateMainMenu : public StateMenu {
   void updateLevelsLists();
   void updateFavoriteLevelsList();
   void updateNewLevelsList();
+  void updateBikesList();
   void updateReplaysList();
   void updateStats();
   void updateNewLevels();
@@ -93,6 +94,7 @@ class StateMainMenu : public StateMenu {
   void updateClientStrings();
   void checkEventsLevelsMultiTab();
   void checkEventsLevelsPackTab();
+  void checkEventsBikes();
   void checkEventsReplays();
   void checkEventsMainWindow();
   void updateOptions();
