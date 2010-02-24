@@ -749,33 +749,33 @@ void StateMainMenu::createGUIIfNeeded() {
   v_menu->setID("MAIN");
 
   /* buttons on left */
-  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 0*57, GAMETEXT_LEVELS, 177, 57);
+  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (6*56)/2 + 0*57, GAMETEXT_LEVELS, 177, 57);
   v_button->setID("LEVELS");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_LEVELS);
   v_menu->setPrimaryChild(v_button);
   
-  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 1*57, GAMETEXT_BIKE, 177, 57);
+  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (6*56)/2 + 1*57, GAMETEXT_BIKE, 177, 57);
   v_button->setID("BIKE");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_BIKE);
 
-  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 2*57, GAMETEXT_REPLAYS, 177, 57);
+  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (6*56)/2 + 2*57, GAMETEXT_REPLAYS, 177, 57);
   v_button->setID("REPLAYS");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_REPLAY_LIST);
 
-  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 3*57, GAMETEXT_OPTIONS, 177, 57);
+  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (6*56)/2 + 3*57, GAMETEXT_OPTIONS, 177, 57);
   v_button->setID("OPTIONS");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_OPTIONS);
   
-  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 4*57, GAMETEXT_HELP, 177, 57);
+  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (6*56)/2 + 4*57, GAMETEXT_HELP, 177, 57);
   v_button->setID("HELP");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_HELP);
 
-  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (5*57)/2 + 5*57, GAMETEXT_QUIT, 177, 57);
+  v_button = new UIButton(v_menu, 20, m_sGUI->getPosition().nHeight/2 - (6*56)/2 + 5*57, GAMETEXT_QUIT, 177, 57);
   v_button->setID("QUIT");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
@@ -826,11 +826,11 @@ void StateMainMenu::createGUIIfNeeded() {
   UIWindow* v_infoFrame = new UIWindow(v_menu, 0, m_sGUI->getPosition().nHeight/2 + (5*57)/2, "", 220, 100);
   v_infoFrame->showWindow(false);
   v_infoFrame->setID("INFO_FRAME");
-  v_someText = new UIStatic(v_infoFrame, 0, 5, "", 220, 50);
+  v_someText = new UIStatic(v_infoFrame, 0, 25, "", 220, 50);
   v_someText->setFont(drawlib->getFontSmall());
   v_someText->setHAlign(UI_ALIGN_CENTER);
   v_someText->setID("BESTPLAYER");
-  UIButton* v_infoButton = new UIButton(v_infoFrame, 22, 40, GAMETEXT_VIEWTHEHIGHSCORE, 176, 40);
+  UIButton* v_infoButton = new UIButton(v_infoFrame, 22, 60, GAMETEXT_VIEWTHEHIGHSCORE, 176, 40);
   v_infoButton->setFont(drawlib->getFontSmall());
   v_infoButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
   v_infoButton->setID("BESTPLAYER_VIEW");
