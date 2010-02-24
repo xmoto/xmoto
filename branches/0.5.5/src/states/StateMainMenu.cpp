@@ -1831,6 +1831,7 @@ void StateMainMenu::updateBikesList() {
     }
   }
   v_list->setRealSelected(nBike); 
+  
 }
 
 void StateMainMenu::checkEventsBikes() {
@@ -1853,12 +1854,8 @@ void StateMainMenu::checkEventsBikes() {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
-	for(int i=0; i<GameApp::instance()->getAvailablePhysics().size(); i++) {
-	  if(GameApp::instance()->getThemeNameFromFile(GameApp::instance()->getAvailablePhysics()[i]) == pListEntry->Text[0]) {
-            XMSession::instance()->setBikePhysics(GameApp::instance()->getAvailablePhysics()[i]);
-            LogInfo("Physics set");
-	  }
-	}
+      
+      // show bike details
       }
     }
   }
@@ -1878,6 +1875,15 @@ void StateMainMenu::checkEventsBikes() {
 	updateReplaysRights();
 */    }
     }
+  }
+  
+  // put selected bike to XMSession var
+  UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
+  for(int i=0; i<GameApp::instance()->getAvailablePhysics().size(); i++) {
+	  if(GameApp::instance()->getThemeNameFromFile(GameApp::instance()->getAvailablePhysics()[i]) == pListEntry->Text[0]) {
+            XMSession::instance()->setBikePhysics(GameApp::instance()->getAvailablePhysics()[i]);
+            LogInfo("Physics set");
+	  }
   }
 }
 
