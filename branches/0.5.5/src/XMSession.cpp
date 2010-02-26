@@ -320,7 +320,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_enableTrailCam                 = pDb->config_getBool   (i_id_profile, "CameraTrailCam"                , m_enableTrailCam   );
   m_enableDeadAnimation      	   = pDb->config_getBool   (i_id_profile, "DeathAnim"                     , m_enableDeadAnimation);
   m_checkNewLevelsAtStartup        = pDb->config_getBool   (i_id_profile, "CheckNewLevelsAtStartup"       , m_checkNewLevelsAtStartup);
-  m_checkNewHighscoresAtStartup    = pDb->config_getBool   (i_id_profile, "CheckHighscoresAtStartup"  , m_checkNewHighscoresAtStartup);
+  m_checkNewHighscoresAtStartup    = pDb->config_getBool   (i_id_profile, "CheckHighscoresAtStartup"      , m_checkNewHighscoresAtStartup);
   m_showHighscoreInGame            = pDb->config_getBool   (i_id_profile, "ShowInGameWorldRecord"         , m_showHighscoreInGame);
   m_webConfAtInit                  = pDb->config_getBool   (i_id_profile, "WebConfAtInit"                 , m_webConfAtInit);
   m_useCrappyPack                  = pDb->config_getBool   (i_id_profile, "UseCrappyPack"                 , m_useCrappyPack);
@@ -339,7 +339,8 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_dbsynchronizeOnQuit            = pDb->config_getBool   (i_id_profile, "DbSynchronizeOnQuit"           , m_dbsynchronizeOnQuit);
   m_enableJoysticks                = pDb->config_getBool   (i_id_profile, "EnableJoysticks"               , m_enableJoysticks);
   m_beatingMode                    = pDb->config_getBool   (i_id_profile, "BeatingMode"                   , m_beatingMode);
-  m_webForms                       = pDb->config_getBool   (i_id_profile, "WebForms"                   , m_webForms);
+  m_webForms                       = pDb->config_getBool   (i_id_profile, "WebForms"                      , m_webForms);
+  m_bikePhysics			   = pDb->config_getString (i_id_profile, "Bike"			  , m_bikePhysics);
 
   m_serverStartAtStartup  = pDb->config_getBool   (i_id_profile, "ServerStartAtStartup" , m_serverStartAtStartup);
   m_clientConnectAtStartup = pDb->config_getBool  (i_id_profile, "ClientConnectAtStartup" , m_clientConnectAtStartup);
@@ -460,39 +461,40 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "WebConfAtInit"                 , m_webConfAtInit);
 	pDb->config_setBool   (m_profile, "UseCrappyPack"                 , m_useCrappyPack);
 	pDb->config_setBool   (m_profile, "UseChildrenCompliant"          , m_useChildrenCompliant);
-	pDb->config_setBool   (m_profile, "EnableGhost"           	    , m_enableGhosts);
-	pDb->config_setBool   (m_profile, "GhostStrategy_MYBEST"  	    , m_ghostStrategy_MYBEST);
-	pDb->config_setBool   (m_profile, "GhostStrategy_THEBEST" 	    , m_ghostStrategy_THEBEST);
+	pDb->config_setBool   (m_profile, "EnableGhost"           	  , m_enableGhosts);
+	pDb->config_setBool   (m_profile, "GhostStrategy_MYBEST"  	  , m_ghostStrategy_MYBEST);
+	pDb->config_setBool   (m_profile, "GhostStrategy_THEBEST" 	  , m_ghostStrategy_THEBEST);
 	pDb->config_setBool   (m_profile, "GhostStrategy_BESTOFREFROOM"   , m_ghostStrategy_BESTOFREFROOM);
 	pDb->config_setBool   (m_profile, "GhostStrategy_BESTOFOTHERROOMS", m_ghostStrategy_BESTOFOTHERROOMS);
 	pDb->config_setBool   (m_profile, "ShowGhostTimeDiff"             , m_showGhostTimeDifference);
 	pDb->config_setBool   (m_profile, "DisplayGhostInfo"              , m_showGhostsInfos);
-	pDb->config_setBool   (m_profile, "DisplayBikerArrow"              , m_showBikersArrows);
+	pDb->config_setBool   (m_profile, "DisplayBikerArrow"             , m_showBikersArrows);
 	pDb->config_setBool   (m_profile, "HideGhosts"                    , m_hideGhosts);
 	pDb->config_setBool   (m_profile, "GhostMotionBlur"               , m_ghostMotionBlur);
 	pDb->config_setBool   (m_profile, "MultiStopWhenOneFinishes"      , m_multiStopWhenOneFinishes);
 	pDb->config_setBool   (m_profile, "DbSynchronizeOnQuit"           , m_dbsynchronizeOnQuit);
-	pDb->config_setBool   (m_profile, "EnableJoysticks"                 , m_enableJoysticks);
+	pDb->config_setBool   (m_profile, "EnableJoysticks"               , m_enableJoysticks);
 	pDb->config_setBool   (m_profile, "BeatingMode"                   , m_beatingMode);
 	pDb->config_setBool   (m_profile, "WebForms"                      , m_webForms);
 
-	pDb->config_setBool   (m_profile, "ServerStartAtStartup" , m_serverStartAtStartup);
+	pDb->config_setBool   (m_profile, "ServerStartAtStartup"   , m_serverStartAtStartup);
 	pDb->config_setBool   (m_profile, "ClientConnectAtStartup" , m_clientConnectAtStartup);
-	pDb->config_setInteger(m_profile, "ServerPort"           , m_serverPort);
-	pDb->config_setInteger(m_profile, "ServerMaxClients"           , m_serverMaxClients);
-	pDb->config_setString (m_profile, "ClientServerName"     , m_clientServerName);
-	pDb->config_setInteger(m_profile, "ClientServerPort"     , m_clientServerPort);
-	pDb->config_setInteger(m_profile, "ClientFramerateUpload", m_clientFramerateUpload);
-	pDb->config_setBool   (m_profile, "MusicOnAllLevels"     , m_musicOnAllLevels);
-	pDb->config_setBool   (m_profile, "ClientGhostMode"      , m_clientGhostMode);
+	pDb->config_setInteger(m_profile, "ServerPort"             , m_serverPort);
+	pDb->config_setInteger(m_profile, "ServerMaxClients"       , m_serverMaxClients);
+	pDb->config_setString (m_profile, "ClientServerName"       , m_clientServerName);
+	pDb->config_setInteger(m_profile, "ClientServerPort"       , m_clientServerPort);
+	pDb->config_setInteger(m_profile, "ClientFramerateUpload"  , m_clientFramerateUpload);
+	pDb->config_setBool   (m_profile, "MusicOnAllLevels"       , m_musicOnAllLevels);
+	pDb->config_setBool   (m_profile, "ClientGhostMode"        , m_clientGhostMode);
 
-	pDb->config_setString (m_profile, "MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium":"High");
-	pDb->config_setString (m_profile, "GameGraphics", m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium":"High");
+	pDb->config_setString (m_profile, "MenuGraphics",  m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium":"High");
+	pDb->config_setString (m_profile, "GameGraphics",  m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium":"High");
+	pDb->config_setString (m_profile, "Bike",          m_bikePhysics);
 	pDb->config_setString (m_profile, "ProxyType",     proxySettings()->getTypeStr());
 	pDb->config_setString (m_profile, "ProxyServer",   proxySettings()->getServer());
 	pDb->config_setString (m_profile, "ProxyAuthUser", proxySettings()->getAuthentificationUser());
 	pDb->config_setString (m_profile, "ProxyAuthPwd" , proxySettings()->getAuthentificationPassword());
-	pDb->config_setInteger(m_profile, "ProxyPort"                      , proxySettings()->getPort());
+	pDb->config_setInteger(m_profile, "ProxyPort"    , proxySettings()->getPort());
 
 	pDb->config_setInteger(m_profile, "WebHighscoresNbRooms"           , m_nbRoomsEnabled);
 	for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
@@ -1483,5 +1485,6 @@ std::string XMSession::bikePhysics() {
 }
 
 void XMSession::setBikePhysics(std::string i_value) {
+  PROPAGATE(XMSession,setBikePhysics,i_value,std::string);
   m_bikePhysics = i_value;
 }

@@ -37,6 +37,7 @@ class WebThemes;
 class xmDatabase;
 
 #define THEMES_DIRECTORY "Themes"
+#define THEMES_BIKE_DIRECTORY "Themes/Bikes"
 #define THEME_SPRITE_FILE_DIR "Textures"
 #define THEME_DECORATION_SPRITE_FILE_DIR THEME_SPRITE_FILE_DIR"/Sprites"
 #define THEME_EFFECT_SPRITE_FILE_DIR     THEME_SPRITE_FILE_DIR"/Effects"

@@ -37,7 +37,7 @@ std::vector<ThemeSound*>& Theme::getSoundsList() {
 }
 
 Theme::Theme() {
-  m_player = new BikerTheme(this,
+  m_player = new BikerTheme(this,  //HIER MUSS DAS AUS THEMES_BIKES rein!!!
           THEME_PLAYER_BODY,
           THEME_PLAYER_FRONT,
           THEME_PLAYER_REAR,
@@ -154,7 +154,7 @@ void Theme::load(FileDataType i_fdt, std::string p_themeFile) {
     }
     
     /* get sprites */
-    loadSpritesFromXML(v_ThemeXmlDataElement);
+    loadSpritesFromXML(v_ThemeXmlDataElement); 
 
   } catch(Exception &e) {
     throw Exception("unable to analyze xml theme file");
@@ -657,8 +657,6 @@ void Theme::newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem) {
     m_requiredFiles.push_back(v_file);
   }
 }
-
-
 
 BikerTheme* Theme::getPlayerTheme() {
   return m_player;

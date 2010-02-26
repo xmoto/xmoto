@@ -487,7 +487,7 @@ void GameApp::displayCursor(bool display)
 
   void GameApp::reloadTheme() {
     try {
-      Theme::instance()->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme()));
+      Theme::instance()->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme())/*HIER: BIKETHEME*/);
     } catch(Exception &e) {
       /* unable to load the theme, load the default one */
       Theme::instance()->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(DEFAULT_THEME)); // no XMDefault::DefaultTheme, the DEFAULT_THEME one is included into xmoto files
