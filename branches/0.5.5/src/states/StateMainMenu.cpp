@@ -1026,7 +1026,6 @@ void StateMainMenu::updateStats() {
 UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   UIWindow* v_window;
   UIStatic* v_someText;
-  UIEdit*   v_edit;
   UIButton *v_button, *v_showButton;
   UIList*   v_list;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
@@ -1039,14 +1038,6 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
    
   v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_BIKES, v_window->getPosition().nWidth, 36);
   v_someText->setFont(drawlib->getFontMedium());
-
-/*  v_someText = new UIStatic(v_window, 10, 35, std::string(GAMETEXT_FILTER) + ":", 90, 25);
-  v_someText->setFont(drawlib->getFontSmall());
-  v_someText->setHAlign(UI_ALIGN_RIGHT);
-  v_edit = new UIEdit(v_window, 110, 35, "", 200, 25);
-  v_edit->setFont(drawlib->getFontSmall());
-  v_edit->setID("REPLAYS_FILTER");
-  v_edit->setContextHelp(CONTEXTHELP_REPLAYS_FILTER);*/
 
   /* show button */
   v_button = new UIButton(v_window, 5, v_window->getPosition().nHeight-68, GAMETEXT_SHOW, 110, 57);
@@ -1063,13 +1054,6 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   v_button->setID("BIKES_DELETE_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BIKE_DELETE);
 
-  /* upload button */
-/*  v_button = new UIButton(v_window, 220, v_window->getPosition().nHeight-68, GAMETEXT_UPLOAD_HIGHSCORE, 130, 57);
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setType(UI_BUTTON_TYPE_SMALL);
-  v_button->setID("REPLAYS_UPLOADHIGHSCORE_BUTTON");
-  v_button->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);*/
-
   /* clean */
   v_button = new UIButton(v_window, 220, v_window->getPosition().nHeight-68, GAMETEXT_BIKES_GET, 116, 57);
   v_button->setFont(drawlib->getFontSmall());
@@ -1078,22 +1062,13 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   v_button->setContextHelp(CONTEXTHELP_BIKE_DOWNLOAD);
 //  v_button->showWindow(false);
 
-  /* filter */
-/*  v_button = new UIButton(v_window, v_window->getPosition().nWidth-150, v_window->getPosition().nHeight-68,
-			  GAMETEXT_LISTALL, 150, 57);
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setChecked(false);
-  v_button->setID("REPLAYS_LIST_ALL");
-  v_button->setContextHelp(CONTEXTHELP_ALL_REPLAYS);/*
-
   /* list */
   v_list = new UIList(v_window, 20, 65, "", v_window->getPosition().nWidth-40, v_window->getPosition().nHeight-115-25);
   v_list->setID("BIKES_LIST");
+  v_list->setSort(true);
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_BIKES, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_BIKE);
   v_list->addColumn(GAMETEXT_IS_VALID,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_BIKE_VALID);
-//  v_list->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
   v_list->setEnterButton(v_showButton);
 
   return v_window;
@@ -1168,6 +1143,7 @@ UIWindow* StateMainMenu::makeWindowReplays(UIWindow* i_parent) {
   v_list = new UIList(v_window, 20, 65, "", v_window->getPosition().nWidth-40, v_window->getPosition().nHeight-115-25);
   v_list->setID("REPLAYS_LIST");
   v_list->setFont(drawlib->getFontSmall());
+  v_list->setSort(true);
   v_list->addColumn(GAMETEXT_REPLAY, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_REPLAYCOL);
   v_list->addColumn(GAMETEXT_LEVEL,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_REPLAYLEVELCOL);
   v_list->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
@@ -1790,7 +1766,6 @@ void StateMainMenu::updateBikesList() {
   v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKES_LIST");
 
   /* Clear list  */
-  int v_selected = v_list->getSelected();
   if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
     v_selected_bike = v_list->getEntries()[v_list->getSelected()]->Text[0];
   }
@@ -1799,7 +1774,7 @@ void StateMainMenu::updateBikesList() {
   std::vector<std::string> v_availablePhysics = GameApp::instance()->getAvailablePhysics();
   
   for(unsigned int i=0; i<v_availablePhysics.size(); i++) {
-    UIListEntry *pEntry = v_list->addEntry(GameApp::instance()->getThemeNameFromFile(v_availablePhysics[i]));
+    v_list->addEntry(GameApp::instance()->getThemeNameFromFile(v_availablePhysics[i]));
   }
   
   /* reselect the previous bike */
@@ -1835,7 +1810,6 @@ void StateMainMenu::updateBikesList() {
 }
 
 void StateMainMenu::checkEventsBikes() {
-  UIEdit*      v_edit;
   UILevelList* v_list;
   UIButton*    v_button;
 
@@ -1879,10 +1853,10 @@ void StateMainMenu::checkEventsBikes() {
   
   // put selected bike to XMSession var
   UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
-  for(int i=0; i<GameApp::instance()->getAvailablePhysics().size(); i++) {
-	  if(GameApp::instance()->getThemeNameFromFile(GameApp::instance()->getAvailablePhysics()[i]) == pListEntry->Text[0]) {
+  for(unsigned int i=0; i<GameApp::instance()->getAvailablePhysics().size(); i++) {
+	  if(GameApp::instance()->getThemeNameFromFile(GameApp::instance()->getAvailablePhysics()[i]) == pListEntry->Text[0].c_str()) {
             XMSession::instance()->setBikePhysics(GameApp::instance()->getAvailablePhysics()[i]);
-            LogInfo("Physics set");
+            LogInfo("Physics set: %s", pListEntry->Text[0].c_str());
 	  }
   }
 }
@@ -2215,6 +2189,9 @@ void StateMainMenu::refreshStaticCaptions() {
   v_button = reinterpret_cast<UIButton *>(m_sGUI->getChild("MAIN:LEVELS"));
   v_button->setCaption(GAMETEXT_LEVELS);
 
+  v_button = reinterpret_cast<UIButton *>(m_sGUI->getChild("MAIN:BIKE"));
+  v_button->setCaption(GAMETEXT_BIKES);
+  
   v_button = reinterpret_cast<UIButton *>(m_sGUI->getChild("MAIN:REPLAYS"));
   v_button->setCaption(GAMETEXT_REPLAYS);
 
