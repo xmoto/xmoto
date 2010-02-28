@@ -1039,37 +1039,79 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_BIKES, v_window->getPosition().nWidth, 36);
   v_someText->setFont(drawlib->getFontMedium());
 
+  /* tabs */
+  UITabView *v_bikeTabs = new UITabView(v_window, 20, 40, "",
+					 v_window->getPosition().nWidth-40, v_window->getPosition().nHeight-60);
+  v_bikeTabs->setFont(drawlib->getFontSmall());
+  v_bikeTabs->setID("BIKETABS");
+  v_bikeTabs->setTabContextHelp(0, CONTEXTHELP_BIKE);
+  v_bikeTabs->setTabContextHelp(1, CONTEXTHELP_BIKE_THEME);
+  v_bikeTabs->setTabContextHelp(2, CONTEXTHELP_BIKE_LOCAL);
+
+  /* choose bikes tab */
+  UIWindow *v_bikesTab = new UIWindow(v_bikeTabs, 10, 40, GAMETEXT_SELECT,
+				     v_bikeTabs->getPosition().nWidth-20, v_bikeTabs->getPosition().nHeight);
+  v_bikesTab->setID("BIKES_TAB");
+  v_bikesTab->showWindow(true);
+
   /* show button */
-  v_button = new UIButton(v_window, 5, v_window->getPosition().nHeight-68, GAMETEXT_SHOW, 110, 57);
+  v_button = new UIButton(v_bikesTab, 5, v_bikesTab->getPosition().nHeight-108, GAMETEXT_SHOW, 110, 57);
   v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setID("BIKES_SHOW_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BIKE_SHOW);
-  v_showButton = v_button;
 
   /* delete button */
-  v_button = new UIButton(v_window, 110, v_window->getPosition().nHeight-68, GAMETEXT_DELETE, 115, 57);
+  v_button = new UIButton(v_bikesTab, 110, v_bikesTab->getPosition().nHeight-108, GAMETEXT_DELETE, 115, 57);
   v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setID("BIKES_DELETE_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BIKE_DELETE);
 
   /* clean */
-  v_button = new UIButton(v_window, 220, v_window->getPosition().nHeight-68, GAMETEXT_BIKES_GET, 116, 57);
+  v_button = new UIButton(v_bikesTab, 220, v_bikesTab->getPosition().nHeight-108, GAMETEXT_BIKES_GET, 116, 57);
   v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setID("BIKES_DOWNLOAD_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BIKE_DOWNLOAD);
-//  v_button->showWindow(false);
 
   /* list */
-  v_list = new UIList(v_window, 20, 65, "", v_window->getPosition().nWidth-40, v_window->getPosition().nHeight-115-25);
+  v_list = new UIList(v_bikesTab, 10, 10, "", v_bikesTab->getPosition().nWidth-40, v_bikesTab->getPosition().nHeight-115-25);
   v_list->setID("BIKES_LIST");
   v_list->setSort(true);
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_BIKES, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_BIKE);
   v_list->addColumn(GAMETEXT_IS_VALID,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_BIKE_VALID);
-  v_list->setEnterButton(v_showButton);
+  v_list->addColumn(GAMETEXT_ASSOCIATED_THEME, v_list->getPosition().nWidth/2 - 40, CONTEXTHELP_BIKE_THEME);
+  
+  /* bike themes tab */
+  UIWindow *v_bikeThemeTab = new UIWindow(v_bikeTabs, 20, 40, GAMETEXT_BIKE_THEME,
+					 v_bikeTabs->getPosition().nWidth-40, v_bikeTabs->getPosition().nHeight);
+  v_bikeThemeTab->setID("BIKETHEME_TAB");
+  v_bikeThemeTab->showWindow(false);
+
+  /* list */
+  v_list = new UIList(v_bikeThemeTab, 10, 10, "", v_bikeThemeTab->getPosition().nWidth-40, v_bikeThemeTab->getPosition().nHeight-115-25);
+  v_list->setID("BIKE_THEMES_LIST");
+  v_list->setSort(true);
+  v_list->setFont(drawlib->getFontSmall());
+  v_list->addColumn(GAMETEXT_BIKE_THEME, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_BIKE);
+  v_list->addColumn(GAMETEXT_IS_VALID,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_BIKE_THEME_VALID);
+
+  if(/*dev enabled*/ true) {
+    /* bike themes tab */
+    UIWindow *v_localBikesTab = new UIWindow(v_bikeTabs, 20, 40, GAMETEXT_BIKES_LOCAL,
+					 v_bikeTabs->getPosition().nWidth-40, v_bikeTabs->getPosition().nHeight);
+    v_localBikesTab->setID("BIKES_LOCAL_TAB");
+    v_localBikesTab->showWindow(false);
+
+    /* list */
+    v_list = new UIList(v_localBikesTab, 10, 10, "", v_localBikesTab->getPosition().nWidth-40, v_localBikesTab->getPosition().nHeight-25-45);
+    v_list->setID("BIKES_LOCAL_LIST");
+    v_list->setSort(true);
+    v_list->setFont(drawlib->getFontSmall());
+    v_list->addColumn(GAMETEXT_PHYSICS, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_BIKE);
+  }
 
   return v_window;
 }
@@ -1176,8 +1218,10 @@ UIWindow* StateMainMenu::makeWindowLevels(UIWindow* i_parent) {
   v_levelTabs->setFont(drawlib->getFontSmall());
   v_levelTabs->setID("TABS");
   v_levelTabs->setTabContextHelp(0, CONTEXTHELP_LEVEL_PACKS);
-  v_levelTabs->setTabContextHelp(1, CONTEXTHELP_BUILT_IN_AND_EXTERNALS);
+  v_levelTabs->setTabContextHelp(1, CONTEXTHELP_FAVORITES);
   v_levelTabs->setTabContextHelp(2, CONTEXTHELP_NEW_LEVELS);
+  v_levelTabs->setTabContextHelp(3, CONTEXTHELP_MULTI);
+  v_levelTabs->setTabContextHelp(4, CONTEXTHELP_NETWORK);
 
   /* pack tab */
   UIWindow *v_packTab = new UIWindow(v_levelTabs, 10, 40, GAMETEXT_LEVELPACKS,
@@ -1763,7 +1807,34 @@ void StateMainMenu::updateBikesList() {
   UIList* v_list;
   std::string v_selected_bike;
 
-  v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKES_LIST");
+  v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST");
+
+  /* Clear list  */
+  if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+    v_selected_bike = v_list->getEntries()[v_list->getSelected()]->Text[0];
+  }
+  v_list->clear();
+  
+  std::vector<std::string> v_availableBikes;// = GameApp::instance()->getAvailablePhysics();
+
+  
+  for(unsigned int i=0; i<v_availableBikes.size(); i++) {
+    v_list->addEntry(GameApp::instance()->getThemeNameFromFile(v_availableBikes[i]));
+  }
+
+  std::string v_bikeName = "";//GameApp::instance()->getThemeNameFromFile(XMSession::instance()->bikePhysics());
+  int nBike = 0;
+  for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
+    if(v_list->getEntries()[i]->Text[0] == v_bikeName) {
+      nBike = i;
+      break;
+    }
+  }
+  v_list->setRealSelected(nBike); 
+  
+  
+  /* Bikes local list */
+  v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_LOCAL_TAB:BIKES_LOCAL_LIST");
 
   /* Clear list  */
   if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
@@ -1776,52 +1847,78 @@ void StateMainMenu::updateBikesList() {
   for(unsigned int i=0; i<v_availablePhysics.size(); i++) {
     v_list->addEntry(GameApp::instance()->getThemeNameFromFile(v_availablePhysics[i]));
   }
-  
-  /* reselect the previous bike */
-/*  if(v_selected_bike != "") {
-    int nBike = -1;
-    for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
-      if(v_list->getEntries()[i]->Text[0] == v_selected_bike) {
-	nBike = i;
-	break;
-      }
-    }
 
-    if(nBike == -1) { // bike not found, keep the same number in the list
-      v_list->setRealSelected(v_selected);
-    } else {
-      v_list->setRealSelected(nBike);
-    }
-  }
-*/
-//  UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKES_LIST"));
-//  createBikesList(v_list);
-
-  std::string v_bikeName = GameApp::instance()->getThemeNameFromFile(XMSession::instance()->bikePhysics());
-  int nBike = 0;
+  std::string v_bikeLocalName = GameApp::instance()->getThemeNameFromFile(XMSession::instance()->bikePhysics());
+  nBike = 0;
   for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
-    if(v_list->getEntries()[i]->Text[0] == v_bikeName) {
+    if(v_list->getEntries()[i]->Text[0] == v_bikeLocalName) {
       nBike = i;
       break;
     }
   }
   v_list->setRealSelected(nBike); 
+
+
+  /* Bike themes list */
+  v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:BIKE_THEMES_LIST");
+
+  /* Clear list  */
+  if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+    v_selected_bike = v_list->getEntries()[v_list->getSelected()]->Text[0];
+  }
+  v_list->clear();
   
+  std::vector<std::string> v_availableThemes;// = GameApp::instance()->getAvailablePhysics();
+  
+  for(unsigned int i=0; i<v_availableThemes.size(); i++) {
+    v_list->addEntry(GameApp::instance()->getThemeNameFromFile(v_availableThemes[i]));
+  }
+
+  std::string v_themeName = "";//GameApp::instance()->getThemeNameFromFile(XMSession::instance()->bikePhysics());
+  nBike = 0;
+  for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
+    if(v_list->getEntries()[i]->Text[0] == v_themeName) {
+      nBike = i;
+      break;
+    }
+  }
+  v_list->setRealSelected(nBike); 
+
 }
 
 void StateMainMenu::checkEventsBikes() {
   UILevelList* v_list;
   UIButton*    v_button;
 
-  v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKES_LIST"));
+ // UIWindow* v_windowBikeTabs = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS"));  
+
+
+  v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_LOCAL_TAB:BIKES_LOCAL_LIST"));
 
   /* list changed */
   if(v_list->isChanged()) {
     v_list->setChanged(false);
   }
 
+  // put selected bike to XMSession var
+  UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
+  for(unsigned int i=0; i<GameApp::instance()->getAvailablePhysics().size(); i++) {
+	  if(GameApp::instance()->getThemeNameFromFile(GameApp::instance()->getAvailablePhysics()[i]) == pListEntry->Text[0].c_str()) {
+            XMSession::instance()->setBikePhysics(GameApp::instance()->getAvailablePhysics()[i]);
+            LogInfo("Physics set: %s", pListEntry->Text[0].c_str());
+	  }
+  }
+
+  v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST"));
+
+  /* list changed */
+  if(v_list->isChanged()) {
+    v_list->setChanged(false);
+  }
+
+
   // show
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKES_SHOW_BUTTON"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_SHOW_BUTTON"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
@@ -1835,7 +1932,7 @@ void StateMainMenu::checkEventsBikes() {
   }
 
   // delete
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_DELETE_BUTTON"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_DELETE_BUTTON"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
@@ -1851,14 +1948,7 @@ void StateMainMenu::checkEventsBikes() {
     }
   }
   
-  // put selected bike to XMSession var
-  UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
-  for(unsigned int i=0; i<GameApp::instance()->getAvailablePhysics().size(); i++) {
-	  if(GameApp::instance()->getThemeNameFromFile(GameApp::instance()->getAvailablePhysics()[i]) == pListEntry->Text[0].c_str()) {
-            XMSession::instance()->setBikePhysics(GameApp::instance()->getAvailablePhysics()[i]);
-            LogInfo("Physics set: %s", pListEntry->Text[0].c_str());
-	  }
-  }
+
 }
 
 void StateMainMenu::updateReplaysList() {

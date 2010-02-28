@@ -160,8 +160,6 @@ public:
 
   static void wait(int& io_lastFrameTimeStamp, int& io_frameLate, int i_maxFps);
   
- // inline FileGhost* getFileGhost() { return m_fileGhost; };
- 
   void initPhysicsFromDir();
   std::vector<std::string> getAvailablePhysics();
   std::string getThemeNameFromFile(std::string p_themeFile);
