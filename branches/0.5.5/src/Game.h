@@ -144,6 +144,7 @@ public:
 
   void initReplaysFromDir(xmDatabase* threadDb,
 			  XMotoLoadReplaysInterface* pLoadReplaysInterface = NULL);
+  void initBikesFromDir(xmDatabase* threadDb);
 
   void gameScreenshot();
   void enableWWW(bool bValue);
@@ -162,7 +163,7 @@ public:
   
   void initPhysicsFromDir();
   std::vector<std::string> getAvailablePhysics();
-  std::string getThemeNameFromFile(std::string p_themeFile);
+  std::string getThemeNameFromFile(std::string p_themeFile, std::string i_element);
 
 
 protected:

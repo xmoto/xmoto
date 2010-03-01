@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf8" ?>
+<xmoto_bike name="Classic">
+
+<parameter gfxTheme="classic" />
+<parameter physics="classic" />
+
+<parameter characteristic="Control" 	 value="1" />
+<parameter characteristic="Speed" 	 value="1" />
+<parameter characteristic="Overstate" 	 value="0" />
+<parameter characteristic="Stuntability" value="2" />
+
+</xmoto_bike>
+

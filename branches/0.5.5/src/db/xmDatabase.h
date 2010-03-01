@@ -114,6 +114,18 @@ public:
   void levels_add_end();
   void levels_cleanNoWWWLevels();
 
+  /* bikes */
+  bool bikes_isIndexUptodate() const;
+  void bikes_add_begin();
+  void bikes_add(const std::string& i_id_theme,
+		 const std::string& i_filepath);
+  void bikes_update(const std::string& i_id_theme,
+		    const std::string& i_filepath);
+  void bikes_add_end();
+  void bikes_delete(const std::string& i_theme);
+  bool bikes_exists(const std::string& i_id_theme);
+  std::string bikes_getFileName(const std::string& i_id_theme);
+
   /* replays */
   bool replays_isIndexUptodate() const;
   void replays_add_begin();
@@ -207,6 +219,7 @@ public:
   bool m_requiredLevelsUpdateAfterInit;
   bool m_requiredReplaysUpdateAfterInit;
   bool m_requiredThemesUpdateAfterInit;
+  bool m_requiredBikesUpdateAfterInit;
   static bool Trace;
 
   /* add user function for db */

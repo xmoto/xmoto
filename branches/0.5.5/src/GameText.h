@@ -434,6 +434,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_RELOADINGLEVELS      _("Reloading levels...")
 #define GAMETEXT_RELOADINGREPLAYS     _("Reloading replays...")
 #define GAMETEXT_RELOADINGTHEMES      _("Reloading themes...")
+#define GAMETEXT_RELOADINGBIKES       _("Reloading bikes...")
 #define GAMETEXT_REPLAY               _("Replay")
 #define GAMETEXT_REPLAYHELPTEXTNOREWIND_L _("  Stop:\n    >>\n   < >\n Speed:" )
 #define GAMETEXT_REPLAYHELPTEXTNOREWIND_R(current_speed) _("[esc] , [space]\n[right key]\n[up/down keys]\n") + current_speed + "x"

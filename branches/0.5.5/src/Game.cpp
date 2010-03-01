@@ -842,6 +842,28 @@ NetServer* GameApp::standAloneServer() {
   return m_standAloneServer;
 }
 
+void GameApp::initBikesFromDir(xmDatabase* i_db) {
+#define BIKES_DIR "Bikes"
+  std::vector<std::string> v_bikesFiles = XMFS::findPhysFiles(FDT_DATA, std::string(BIKES_DIR)
+							       + std::string("/*.xml"), true);
+  std::string v_name;
+
+  i_db->bikes_add_begin();
+  for(unsigned int i=0; i<v_bikesFiles.size(); i++) {
+    try {
+      v_name = getThemeNameFromFile(v_bikesFiles[i], "xmoto_bike");
+      if(i_db->bikes_exists(v_name) == false) {
+	i_db->bikes_add(v_name, v_bikesFiles[i]);
+      } else {
+	LogWarning(std::string("Bike " + v_name + " is present several times").c_str());
+      }
+    } catch(Exception &e) {
+      /* anyway, give up this bike */
+    }
+  }
+  i_db->bikes_add_end();		  
+}
+
 
 void GameApp::initPhysicsFromDir() {
 #define PHYSICS_DIR "Physics"
@@ -852,7 +874,7 @@ void GameApp::initPhysicsFromDir() {
 //  i_db->themes_add_begin();
   for(unsigned int i=0; i<v_physicsFiles.size(); i++) {
     try {
-      v_name = getThemeNameFromFile(v_physicsFiles[i]);
+      v_name = getThemeNameFromFile(v_physicsFiles[i], "xmoto_physics");
      // if(i_db->themes_exists(v_name) == false) {
 //	i_db->themes_add(v_name, v_themesFiles[i]);
       m_availablePhysics.push_back(v_physicsFiles[i]);
@@ -868,7 +890,7 @@ void GameApp::initPhysicsFromDir() {
 }
 
 
-std::string GameApp::getThemeNameFromFile(std::string p_themeFile) {
+std::string GameApp::getThemeNameFromFile(std::string p_themeFile, std::string i_element) {
   XMLDocument v_ThemeXml;
   TiXmlDocument *v_ThemeXmlData;
   TiXmlElement *v_ThemeXmlDataElement;
@@ -884,7 +906,7 @@ std::string GameApp::getThemeNameFromFile(std::string p_themeFile) {
   }
   
   /* read the theme name */
-  v_ThemeXmlDataElement = v_ThemeXmlData->FirstChildElement("xmoto_physics");
+  v_ThemeXmlDataElement = v_ThemeXmlData->FirstChildElement(i_element.c_str()); // "xmoto_physics");
   if(v_ThemeXmlDataElement != NULL) {
     pc = v_ThemeXmlDataElement->Attribute("name");
     m_name = pc;

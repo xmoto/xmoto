@@ -1099,18 +1099,27 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   v_list->addColumn(GAMETEXT_IS_VALID,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_BIKE_THEME_VALID);
 
   if(/*dev enabled*/ true) {
-    /* bike themes tab */
+    /* local physics tab */
+    
     UIWindow *v_localBikesTab = new UIWindow(v_bikeTabs, 20, 40, GAMETEXT_BIKES_LOCAL,
 					 v_bikeTabs->getPosition().nWidth-40, v_bikeTabs->getPosition().nHeight);
     v_localBikesTab->setID("BIKES_LOCAL_TAB");
     v_localBikesTab->showWindow(false);
 
+    /* check button */
+    v_button = new UIButton(v_localBikesTab, 0, 5,
+			  "Override Bikes", v_localBikesTab->getPosition().nWidth,28);
+    v_button->setType(UI_BUTTON_TYPE_CHECK);
+    v_button->setFont(drawlib->getFontSmall());
+    v_button->setID("OVERRIDE_BIKES");
+    v_button->setContextHelp("Disables Bikes and uses only Physics"); 
+
     /* list */
-    v_list = new UIList(v_localBikesTab, 10, 10, "", v_localBikesTab->getPosition().nWidth-40, v_localBikesTab->getPosition().nHeight-25-45);
+    v_list = new UIList(v_localBikesTab, 10, 40, "", v_localBikesTab->getPosition().nWidth-40, v_localBikesTab->getPosition().nHeight-25-75);
     v_list->setID("BIKES_LOCAL_LIST");
     v_list->setSort(true);
     v_list->setFont(drawlib->getFontSmall());
-    v_list->addColumn(GAMETEXT_PHYSICS, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_BIKE);
+    v_list->addColumn(GAMETEXT_PHYSICS, v_list->getPosition().nWidth/2 - 100, "Select your local physics setting");
   }
 
   return v_window;
@@ -1795,7 +1804,7 @@ void StateMainMenu::updateLevelsPacksList() {
     }
   }
   LevelsManager::instance()->unlockLevelsPacks();
-  
+ 
   /* reselect the previous pack */
   if(v_selected_packName != "") {
     pTree->setSelectedPackByName(v_selected_packName);
@@ -1806,7 +1815,11 @@ void StateMainMenu::updateLevelsPacksList() {
 void StateMainMenu::updateBikesList() {
   UIList* v_list;
   std::string v_selected_bike;
+  char **v_result;
+  unsigned int nrow;
+    UIListEntry *pEntry;
 
+  /* Bikes */
   v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST");
 
   /* Clear list  */
@@ -1814,14 +1827,17 @@ void StateMainMenu::updateBikesList() {
     v_selected_bike = v_list->getEntries()[v_list->getSelected()]->Text[0];
   }
   v_list->clear();
-  
-  std::vector<std::string> v_availableBikes;// = GameApp::instance()->getAvailablePhysics();
 
+  xmDatabase::instance("main")->read_DB_free(v_result);
   
-  for(unsigned int i=0; i<v_availableBikes.size(); i++) {
-    v_list->addEntry(GameApp::instance()->getThemeNameFromFile(v_availableBikes[i]));
+  std::string v_id_bike;
+  v_result = xmDatabase::instance("main")->readDB("SELECT id_bike FROM bikes;", nrow);
+  for(unsigned int i=0; i<nrow; i++) {
+    v_id_bike = xmDatabase::instance("main")->getResult(v_result, 1, i, 0);
+    pEntry = v_list->addEntry(v_id_bike.c_str(), NULL);
+    pEntry->Text.push_back("local");//GAMETEXT_THEMENOTHOSTED);
   }
-
+  
   std::string v_bikeName = "";//GameApp::instance()->getThemeNameFromFile(XMSession::instance()->bikePhysics());
   int nBike = 0;
   for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
@@ -1845,10 +1861,10 @@ void StateMainMenu::updateBikesList() {
   std::vector<std::string> v_availablePhysics = GameApp::instance()->getAvailablePhysics();
   
   for(unsigned int i=0; i<v_availablePhysics.size(); i++) {
-    v_list->addEntry(GameApp::instance()->getThemeNameFromFile(v_availablePhysics[i]));
+    v_list->addEntry(GameApp::instance()->getThemeNameFromFile(v_availablePhysics[i], "xmoto_physics"));
   }
 
-  std::string v_bikeLocalName = GameApp::instance()->getThemeNameFromFile(XMSession::instance()->bikePhysics());
+  std::string v_bikeLocalName = GameApp::instance()->getThemeNameFromFile(XMSession::instance()->bikePhysics(), "xmoto_physics");
   nBike = 0;
   for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
     if(v_list->getEntries()[i]->Text[0] == v_bikeLocalName) {
@@ -1871,7 +1887,7 @@ void StateMainMenu::updateBikesList() {
   std::vector<std::string> v_availableThemes;// = GameApp::instance()->getAvailablePhysics();
   
   for(unsigned int i=0; i<v_availableThemes.size(); i++) {
-    v_list->addEntry(GameApp::instance()->getThemeNameFromFile(v_availableThemes[i]));
+    v_list->addEntry(GameApp::instance()->getThemeNameFromFile(v_availableThemes[i], ""));
   }
 
   std::string v_themeName = "";//GameApp::instance()->getThemeNameFromFile(XMSession::instance()->bikePhysics());
@@ -1890,9 +1906,6 @@ void StateMainMenu::checkEventsBikes() {
   UILevelList* v_list;
   UIButton*    v_button;
 
- // UIWindow* v_windowBikeTabs = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS"));  
-
-
   v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_LOCAL_TAB:BIKES_LOCAL_LIST"));
 
   /* list changed */
@@ -1900,13 +1913,17 @@ void StateMainMenu::checkEventsBikes() {
     v_list->setChanged(false);
   }
 
-  // put selected bike to XMSession var
-  UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
-  for(unsigned int i=0; i<GameApp::instance()->getAvailablePhysics().size(); i++) {
-	  if(GameApp::instance()->getThemeNameFromFile(GameApp::instance()->getAvailablePhysics()[i]) == pListEntry->Text[0].c_str()) {
+  // if we use local physics settings, assign them here
+  bool v_override =((UIButton*)m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_LOCAL_TAB:OVERRIDE_BIKES"))->getChecked();
+  if(v_override) {
+    // put selected bike to XMSession var
+    UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
+    for(unsigned int i=0; i<GameApp::instance()->getAvailablePhysics().size(); i++) {
+	  if(GameApp::instance()->getThemeNameFromFile(GameApp::instance()->getAvailablePhysics()[i], "xmoto_physics") == pListEntry->Text[0].c_str()) {
             XMSession::instance()->setBikePhysics(GameApp::instance()->getAvailablePhysics()[i]);
             LogInfo("Physics set: %s", pListEntry->Text[0].c_str());
 	  }
+    }
   }
 
   v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST"));
@@ -1916,6 +1933,11 @@ void StateMainMenu::checkEventsBikes() {
     v_list->setChanged(false);
   }
 
+  // set bike physics
+  UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
+  // BIKE.cpp -> loadBike(pListEntry)
+  //  XMSession::instance()->setBike(pListEntry->Text[0].c_str());
+        
 
   // show
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_SHOW_BUTTON"));

@@ -32,6 +32,7 @@ UpdateDbThread::UpdateDbThread()
     StateManager::instance()->registerAsEmitter("LEVELS_UPDATED");
     StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
     StateManager::instance()->registerAsEmitter("THEMES_UPDATED");
+    StateManager::instance()->registerAsEmitter("BIKES_UPDATED");
   }
 }
 
@@ -55,6 +56,10 @@ int UpdateDbThread::realThreadFunction()
   setThreadCurrentOperation(GAMETEXT_RELOADINGTHEMES);
   ThemeChoicer::initThemesFromDir(m_pDb);
   StateManager::instance()->sendAsynchronousMessage("THEMES_UPDATED");
+  
+  setThreadCurrentOperation(GAMETEXT_RELOADINGBIKES);
+  GameApp::instance()->initBikesFromDir(m_pDb);
+  StateManager::instance()->sendAsynchronousMessage("BIKES_UPDATED");
 
   return 0;
 }

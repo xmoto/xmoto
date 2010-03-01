@@ -19,63 +19,67 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "xmDatabase.h"
+#include "../GameText.h"
+#include <sstream>
+#include <math.h>
 #include "../md5sum/md5file.h"
 #include "../helpers/VExcept.h"
 
-bool xmDatabase::themes_isIndexUptodate() const {
+
+bool xmDatabase::bikes_isIndexUptodate() const {
   return m_requiredBikesUpdateAfterInit == false;
 }
 
-void xmDatabase::themes_add_begin() {
+void xmDatabase::bikes_add_begin() {
   simpleSql("BEGIN TRANSACTION;");
-  simpleSql("DELETE FROM themes;");
+  simpleSql("DELETE FROM bikes;");
 }
 
-void xmDatabase::themes_add(const std::string& i_id_theme,
-			     const std::string& i_filepath) {
-  simpleSql("INSERT INTO themes(id_theme, filepath, checkSum) " 
+void xmDatabase::bikes_add(const std::string& i_id_theme,
+		 const std::string& i_filepath) {
+  simpleSql("INSERT INTO bikes(id_bike, filepath, checkSum) " 
 	    "VALUES (\"" +
 	    protectString(i_id_theme)   + "\", \"" +
 	    protectString(i_filepath)   + "\", \"" +
 	    protectString(md5file(i_filepath))   + "\");");
 }
 
-void xmDatabase::themes_update(const std::string& i_id_theme,
-			       const std::string& i_filepath) {
-  simpleSql("UPDATE themes "
+void xmDatabase::bikes_update(const std::string& i_id_theme,
+		    const std::string& i_filepath) {
+  simpleSql("UPDATE bikes "
 	    "SET filepath=\"" + protectString(i_filepath) +
 	    "\", checkSum=\"" + protectString(md5file(i_filepath)) + "\" "
-	    "WHERE id_theme=\"" + protectString(i_id_theme) + "\";");
+	    "WHERE id_bike=\"" + protectString(i_id_theme) + "\";");
 }
 
-void xmDatabase::themes_add_end() {
+void xmDatabase::bikes_add_end() {
   simpleSql("COMMIT;");
 }
 
-void xmDatabase::themes_delete(const std::string& i_id_theme) {
-  simpleSql("DELETE FROM themes WHERE id_theme=\""+ protectString(i_id_theme) + "\";");
+void xmDatabase::bikes_delete(const std::string& i_id_theme) {
+  simpleSql("DELETE FROM bikes WHERE id_bike=\""+ protectString(i_id_theme) + "\";");
 }
 
-bool xmDatabase::themes_exists(const std::string& i_id_theme) {
+bool xmDatabase::bikes_exists(const std::string& i_id_theme) {
   char **v_result;
   unsigned int nrow;
 
-  v_result = readDB("SELECT id_theme FROM themes WHERE id_theme=\"" + protectString(i_id_theme) + "\";",
+  v_result = readDB("SELECT id_bike FROM bikes WHERE id_bike=\"" + protectString(i_id_theme) + "\";",
 		    nrow);
   read_DB_free(v_result);
   return nrow == 1;
 }
 
-std::string xmDatabase::themes_getFileName(const std::string& i_id_theme) {
+std::string xmDatabase::bikes_getFileName(const std::string& i_id_theme) {
   char **v_result;
   unsigned int nrow;
   std::string v_res;
 
-  v_result = readDB("SELECT filepath FROM themes WHERE id_theme=\"" + protectString(i_id_theme) + "\";",
+  v_result = readDB("SELECT filepath FROM bikes WHERE id_bike=\"" + protectString(i_id_theme) + "\";",
 		    nrow);
   if(nrow != 1) {
     read_DB_free(v_result);
-    throw Exception("Theme not found");
+    throw Exception("Bike not found");
   }
 
   v_res = getResult(v_result, 1, 0, 0);

@@ -364,6 +364,7 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   db/xmDatabase.cpp \
   db/xmDatabase_stats.cpp \
   db/xmDatabase_levels.cpp \
+  db/xmDatabase_bikes.cpp \
   db/xmDatabase_profiles.cpp \
   db/xmDatabase_replays.cpp \
   db/xmDatabase_web.cpp \
