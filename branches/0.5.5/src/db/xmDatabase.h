@@ -143,9 +143,11 @@ public:
   bool themes_isIndexUptodate() const;
   void themes_add_begin();
   void themes_add(const std::string& i_id_theme,
-		  const std::string& i_filepath);
+		  const std::string& i_filepath,
+		  const std::string& i_type);
   void themes_update(const std::string& i_id_theme,
-		     const std::string& i_filepath);
+		     const std::string& i_filepath,
+		     const std::string& i_type);
   void themes_add_end();
   void themes_delete(const std::string& i_theme);
   bool themes_exists(const std::string& i_id_theme);

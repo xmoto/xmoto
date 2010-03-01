@@ -32,19 +32,23 @@ void xmDatabase::themes_add_begin() {
 }
 
 void xmDatabase::themes_add(const std::string& i_id_theme,
-			     const std::string& i_filepath) {
-  simpleSql("INSERT INTO themes(id_theme, filepath, checkSum) " 
+			     const std::string& i_filepath,
+			     const std::string& i_type) {
+  simpleSql("INSERT INTO themes(id_theme, filepath, checkSum, type) " 
 	    "VALUES (\"" +
 	    protectString(i_id_theme)   + "\", \"" +
 	    protectString(i_filepath)   + "\", \"" +
-	    protectString(md5file(i_filepath))   + "\");");
+	    protectString(md5file(i_filepath)) + "\", \"" +
+	    protectString(i_type)   + "\");");
 }
 
 void xmDatabase::themes_update(const std::string& i_id_theme,
-			       const std::string& i_filepath) {
+			       const std::string& i_filepath,
+			       const std::string& i_type) {
   simpleSql("UPDATE themes "
 	    "SET filepath=\"" + protectString(i_filepath) +
-	    "\", checkSum=\"" + protectString(md5file(i_filepath)) + "\" "
+	    "\", checkSum=\"" + protectString(md5file(i_filepath)) + 
+	    "\", type=\""     + protectString(i_type) + "\" "
 	    "WHERE id_theme=\"" + protectString(i_id_theme) + "\";");
 }
 

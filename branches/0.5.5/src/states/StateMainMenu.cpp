@@ -1090,8 +1090,12 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   v_bikeThemeTab->setID("BIKETHEME_TAB");
   v_bikeThemeTab->showWindow(false);
 
+  v_someText = new UIStatic(v_bikeThemeTab, 0, 5, std::string(GAMETEXT_BIKE) + ":" , 90, 25);
+  v_someText->setFont(drawlib->getFontMedium());
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+
   /* list */
-  v_list = new UIList(v_bikeThemeTab, 10, 10, "", v_bikeThemeTab->getPosition().nWidth-40, v_bikeThemeTab->getPosition().nHeight-115-25);
+  v_list = new UIList(v_bikeThemeTab, 0, 45, "", v_bikeThemeTab->getPosition().nWidth-40, v_bikeThemeTab->getPosition().nHeight-115-25);
   v_list->setID("BIKE_THEMES_LIST");
   v_list->setSort(true);
   v_list->setFont(drawlib->getFontSmall());
@@ -1883,6 +1887,16 @@ void StateMainMenu::updateBikesList() {
     v_selected_bike = v_list->getEntries()[v_list->getSelected()]->Text[0];
   }
   v_list->clear();
+  
+  xmDatabase::instance("main")->read_DB_free(v_result);
+  
+  std::string v_id_theme;
+  v_result = xmDatabase::instance("main")->readDB("SELECT id_theme FROM themes WHERE type=\"bike\";", nrow);
+  for(unsigned int i=0; i<nrow; i++) {
+    v_id_theme = xmDatabase::instance("main")->getResult(v_result, 1, i, 0);
+    pEntry = v_list->addEntry(v_id_theme.c_str(), NULL);
+    pEntry->Text.push_back("local");//GAMETEXT_THEMENOTHOSTED);
+  }
   
   std::vector<std::string> v_availableThemes;// = GameApp::instance()->getAvailablePhysics();
   

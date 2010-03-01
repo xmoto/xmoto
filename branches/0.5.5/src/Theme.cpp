@@ -1123,8 +1123,10 @@ bool BikerTheme::getGhostEffect() const {
 }
 
 void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
+
+  /* general themes */
   std::vector<std::string> v_themesFiles = XMFS::findPhysFiles(FDT_DATA, std::string(THEMES_DIRECTORY)
-							       + std::string("/*.xml"), true);
+							       + std::string("/*.xml"));
   std::string v_name;
 
   i_db->themes_add_begin();
@@ -1132,7 +1134,23 @@ void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
     try {
       v_name = getThemeNameFromFile(v_themesFiles[i]);
       if(i_db->themes_exists(v_name) == false) {
-	i_db->themes_add(v_name, v_themesFiles[i]);
+	i_db->themes_add(v_name, v_themesFiles[i],"general");
+      } else {
+	LogWarning(std::string("Theme " + v_name + " is present several times").c_str());
+      }
+    } catch(Exception &e) {
+      /* anyway, give up this theme */
+    }
+  }
+  
+  /* bike themes */
+  v_themesFiles = XMFS::findPhysFiles(FDT_DATA, std::string(THEMES_BIKE_DIRECTORY)
+							       + std::string("/*.xml"));
+  for(unsigned int i=0; i<v_themesFiles.size(); i++) {
+    try {
+      v_name = getThemeNameFromFile(v_themesFiles[i]);
+      if(i_db->themes_exists(v_name) == false) {
+	i_db->themes_add(v_name, v_themesFiles[i],"bike");
       } else {
 	LogWarning(std::string("Theme " + v_name + " is present several times").c_str());
       }
