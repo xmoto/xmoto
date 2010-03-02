@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf8" ?>
-<xmoto_bike name="Elmo">
-
-<parameter gfxTheme="elmo" />
-<parameter physics="elmo" />
-
-<parameter characteristic="Control" 	value="2" />
-<parameter characteristic="Speed" 	value="1" />
-<parameter characteristic="Overstate" 	value="0" />
-
+<xmoto_bike name="Elmo" />
+<gfxTheme name="modern" />
+<physics name="Elmo" />
+<parameter characteristic="Control" 	 value="2" />
+<parameter characteristic="Speed" 	 value="1" />
+<parameter characteristic="Overstate" 	 value="0" />
+<parameter characteristic="Stuntability" value="1" />
 </xmoto_bike>
 

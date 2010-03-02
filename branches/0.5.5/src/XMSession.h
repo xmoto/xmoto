@@ -312,8 +312,12 @@ public:
   void setDbSync(xmDatabase* pDb, const std::string& i_id_profile, int i_dbSync);
   int dbSyncServer(xmDatabase* pDb, const std::string& i_id_profile);
   void setDbSyncServer(xmDatabase* pDb, const std::string& i_id_profile, int i_dbSyncServer);
+  std::string bike();
+  void setBike(std::string i_value);
   std::string bikePhysics();
   void setBikePhysics(std::string i_value);
+  bool bikesOverride();
+  void setBikesOverride(bool i_value);
 
   private:
   bool m_verbose;
@@ -423,7 +427,9 @@ public:
   bool m_musicOnAllLevels;
   bool m_noLog;
   bool m_adminMode;
+  std::string m_bike;
   std::string m_bikePhysics;
+  bool m_bikesOverride;
 };
 
 #endif

@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf8" ?>
-<xmoto_bike name="Gnome">
-
-<parameter gfxTheme="classic" />
-<parameter physics="gnome" />
-
+<xmoto_bike name="Gnome" />
+<gfxTheme name="Red Rebel" />
+<physics  name="Gnome" />
 <parameter characteristic="Control" 	 value="1" />
 <parameter characteristic="Speed" 	 value="0" />
 <parameter characteristic="Overstate" 	 value="1" />
 <parameter characteristic="Stuntability" value="1" />
-
 </xmoto_bike>

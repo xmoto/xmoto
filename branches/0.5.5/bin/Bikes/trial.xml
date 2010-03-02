@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf8" ?>
-<xmoto_bike name="Trial">
-
-<parameter gfxTheme="classic.xml" />
-<parameter physics="trial_easy.xml" />
-
+<xmoto_bike name="Trial" />
+<gfxTheme name="Red Rebel" />
+<physics  name="Trial-easy" />
 <parameter characteristic="Control" 	 value="1" />
 <parameter characteristic="Speed" 	 value="1" />
 <parameter characteristic="Overstate" 	 value="0" />
 <parameter characteristic="Stuntability" value="2" />
-
 </xmoto_bike>

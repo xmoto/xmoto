@@ -871,22 +871,15 @@ void GameApp::initPhysicsFromDir() {
 							       + std::string("/*.xml"), true);
   std::string v_name;
 
-//  i_db->themes_add_begin();
   for(unsigned int i=0; i<v_physicsFiles.size(); i++) {
     try {
       v_name = getThemeNameFromFile(v_physicsFiles[i], "xmoto_physics");
-     // if(i_db->themes_exists(v_name) == false) {
-//	i_db->themes_add(v_name, v_themesFiles[i]);
       m_availablePhysics.push_back(v_physicsFiles[i]);
       LogInfo("found physics: %s", v_physicsFiles[i].c_str() );
-     // } else {
-//	LogWarning(std::string("Theme " + v_name + " is present several times").c_str());
-//      }
     } catch(Exception &e) {
       /* anyway, give up this theme */
     }
   }
-//  i_db->themes_add_end();
 }
 
 
@@ -902,7 +895,7 @@ std::string GameApp::getThemeNameFromFile(std::string p_themeFile, std::string i
   v_ThemeXmlData = v_ThemeXml.getLowLevelAccess();
   
   if(v_ThemeXmlData == NULL) {
-    throw Exception("error : unable analyse xml theme file");
+    throw Exception("error : unable to analyse xml theme file");
   }
   
   /* read the theme name */
@@ -921,4 +914,54 @@ std::string GameApp::getThemeNameFromFile(std::string p_themeFile, std::string i
 
 std::vector<std::string> GameApp::getAvailablePhysics() {
   return m_availablePhysics;
+}
+
+std::string GameApp::getPhysicsFromBike() {
+  char **v_result;
+  unsigned int nrow;
+  XMLDocument v_bikeXml;
+  TiXmlDocument *v_bikeXmlData;
+  TiXmlElement *v_bikeXmlDataElement;
+  const char *pc;
+  std::string v_name;
+
+  /* in physics dev mode, make a long way short */
+  if(XMSession::instance()->bikesOverride()) {
+    return XMSession::instance()->bikePhysics();
+  }
+
+  /* get file name from current bike */
+  
+  std::string v_id_bike;
+  std::string v_bikeFile;
+  v_result = xmDatabase::instance("main")->readDB("SELECT filepath FROM bikes WHERE id_bike=\"" + XMSession::instance()->bike() + "\";", nrow);
+  v_bikeFile = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
+
+  /* open the file */
+  v_bikeXml.readFromFile(FDT_DATA, v_bikeFile);   
+  v_bikeXmlData = v_bikeXml.getLowLevelAccess();
+  LogInfo("Datei:%s",v_bikeFile.c_str());
+  if(v_bikeXmlData == NULL) {
+    throw Exception("error : unable analyse xml bike file");
+  }
+  
+  /* read the theme name */
+  v_bikeXmlDataElement = v_bikeXmlData->FirstChildElement("physics"); // "xmoto_physics");
+  if(v_bikeXmlDataElement != NULL) {
+    pc = v_bikeXmlDataElement->Attribute("name");
+    v_name = pc;
+  }
+  if(v_name == "") {
+    throw Exception("error : the physics defined in the bike theme  cant be found !");
+  }
+  
+  std::string v_themeFile = "none";
+  for(unsigned int i=0; i<m_availablePhysics.size(); i++) {
+    if(getThemeNameFromFile(m_availablePhysics[i], "xmoto_physics").c_str() == v_name) {
+      v_themeFile= m_availablePhysics[i];
+      LogInfo("We get: %s",m_availablePhysics[i].c_str());
+    }
+  }
+  
+  return v_themeFile;
 }

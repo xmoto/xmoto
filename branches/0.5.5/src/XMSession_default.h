@@ -135,7 +135,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_CLIENTFRAMERATEUPLOAD       10
 #define DEFAULT_MUSICONALLLEVELS            true
 #define DEFAULT_ADMINMODE                   false
-#define DEFAULT_BIKEPHYSICS                 "Physics/original.xml"
+#define DEFAULT_BIKE			    "Trial"
+#define DEFAULT_BIKEPHYSICS                 "none"
+#define DEFAULT_BIKESOVERRIDE               false
 
 class XMDefault {
   public:

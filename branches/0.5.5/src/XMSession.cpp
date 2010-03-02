@@ -146,7 +146,9 @@ void XMSession::setToDefault() {
   m_clientServerPort              = DEFAULT_CLIENTSERVERPORT;
   m_clientFramerateUpload         = DEFAULT_CLIENTFRAMERATEUPLOAD;
   m_musicOnAllLevels              = DEFAULT_MUSICONALLLEVELS;
+  m_bike			  = DEFAULT_BIKE;
   m_bikePhysics                   = DEFAULT_BIKEPHYSICS;
+  m_bikesOverride                 = DEFAULT_BIKESOVERRIDE;
   m_proxySettings.setDefault();
 }
 
@@ -340,7 +342,8 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_enableJoysticks                = pDb->config_getBool   (i_id_profile, "EnableJoysticks"               , m_enableJoysticks);
   m_beatingMode                    = pDb->config_getBool   (i_id_profile, "BeatingMode"                   , m_beatingMode);
   m_webForms                       = pDb->config_getBool   (i_id_profile, "WebForms"                      , m_webForms);
-  m_bikePhysics			   = pDb->config_getString (i_id_profile, "Bike"			  , m_bikePhysics);
+  m_bike			   = pDb->config_getString (i_id_profile, "Bike"                          , m_bike);
+  m_bikePhysics			   = pDb->config_getString (i_id_profile, "BikePhysics"			  , m_bikePhysics);
 
   m_serverStartAtStartup  = pDb->config_getBool   (i_id_profile, "ServerStartAtStartup" , m_serverStartAtStartup);
   m_clientConnectAtStartup = pDb->config_getBool  (i_id_profile, "ClientConnectAtStartup" , m_clientConnectAtStartup);
@@ -489,7 +492,8 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 
 	pDb->config_setString (m_profile, "MenuGraphics",  m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium":"High");
 	pDb->config_setString (m_profile, "GameGraphics",  m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium":"High");
-	pDb->config_setString (m_profile, "Bike",          m_bikePhysics);
+	pDb->config_setString (m_profile, "Bike",          m_bike);
+	pDb->config_setString (m_profile, "BikePhysics",   m_bikePhysics);
 	pDb->config_setString (m_profile, "ProxyType",     proxySettings()->getTypeStr());
 	pDb->config_setString (m_profile, "ProxyServer",   proxySettings()->getServer());
 	pDb->config_setString (m_profile, "ProxyAuthUser", proxySettings()->getAuthentificationUser());
@@ -1480,6 +1484,15 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
   v_config->createVar( "WebHighscoreUploadURL",  DEFAULT_UPLOADREPLAY_URL        );
 }
 
+std::string XMSession::bike() {
+  return m_bike;
+}
+
+void XMSession::setBike(std::string i_value) {
+  PROPAGATE(XMSession,setBike,i_value,std::string);
+  m_bike = i_value;
+}
+
 std::string XMSession::bikePhysics() {
   return m_bikePhysics;
 }
@@ -1487,4 +1500,12 @@ std::string XMSession::bikePhysics() {
 void XMSession::setBikePhysics(std::string i_value) {
   PROPAGATE(XMSession,setBikePhysics,i_value,std::string);
   m_bikePhysics = i_value;
+}
+
+bool XMSession::bikesOverride() {
+  return m_bikesOverride;
+}
+
+void XMSession::setBikesOverride(bool i_value) {
+ m_bikesOverride = i_value;
 }
