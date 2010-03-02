@@ -1090,8 +1090,9 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   v_bikeThemeTab->setID("BIKETHEME_TAB");
   v_bikeThemeTab->showWindow(false);
 
-  v_someText = new UIStatic(v_bikeThemeTab, 0, 5, std::string(GAMETEXT_BIKE) + ":" , 90, 25);
+  v_someText = new UIStatic(v_bikeThemeTab, 0, 5, std::string(GAMETEXT_BIKE) + ":  " + XMSession::instance()->bike(), 190, 25);
   v_someText->setFont(drawlib->getFontMedium());
+  v_someText->setID("ACTIVEBIKE");
   v_someText->setHAlign(UI_ALIGN_LEFT);
 
   /* list */
@@ -1901,16 +1902,18 @@ void StateMainMenu::updateBikesList() {
     pEntry->Text.push_back("local");//GAMETEXT_THEMENOTHOSTED);
   }
   
-  std::string v_themeName = "";//GameApp::instance()->getThemeNameFromFile(XMSession::instance()->bikePhysics());
+  v_result = xmDatabase::instance("main")->readDB("SELECT filepath FROM bikes WHERE id_bike=\"" + XMSession::instance()->bike() + "\";", nrow);
+  std::string v_bikeFile = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
+
   nBike = 0;
   for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
+    std::string v_themeName = GameApp::instance()->getThemeNameFromFile(v_bikeFile, "gfxTheme");
     if(v_list->getEntries()[i]->Text[0] == v_themeName) {
       nBike = i;
       break;
     }
   }
   v_list->setRealSelected(nBike); 
-
 }
 
 void StateMainMenu::checkEventsBikes() {
@@ -1930,9 +1933,19 @@ void StateMainMenu::checkEventsBikes() {
 
   // set bike physics
   UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
-  // BIKE.cpp -> loadBike(pListEntry)
   XMSession::instance()->setBike(pListEntry->Text[0].c_str());
         
+
+  UIStatic* v_text = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:ACTIVEBIKE"));
+  v_text->setCaption(std::string(GAMETEXT_BIKE) + ":  " + XMSession::instance()->bike());
+
+  v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:BIKE_THEMES_LIST"));
+  /* list changed */
+  if(v_list->isChanged()) {
+    v_list->setChanged(false);
+    updateBikesList();
+//    v_text->setCaption("new");
+  }
 
   // show
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_SHOW_BUTTON"));
