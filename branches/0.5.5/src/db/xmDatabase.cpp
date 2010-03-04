@@ -51,6 +51,7 @@ void xmDatabase::init(const std::string& i_dbFile,
   m_requiredLevelsUpdateAfterInit  = false;
   m_requiredReplaysUpdateAfterInit = false;
   m_requiredThemesUpdateAfterInit  = false;
+  m_requiredBikesUpdateAfterInit   = false;
 
   //LogDebug("openDB(%X)", this);
   if(sqlite3_open(i_dbFile.c_str(), &m_db) != 0) {
@@ -93,6 +94,7 @@ void xmDatabase::init(const std::string& i_dbFile,
     m_requiredLevelsUpdateAfterInit  = true;
     m_requiredReplaysUpdateAfterInit = true;
     m_requiredThemesUpdateAfterInit  = true;
+    m_requiredBikesUpdateAfterInit   = true;
     setXmDbGameDataDir(i_gameDataDir);
     setXmDbUserDataDir(i_userDataDir);
     setXmDbBinPackCheckSum(i_binPackCheckSum);
@@ -112,6 +114,7 @@ void xmDatabase::init(const std::string& i_dbFile,
 	m_requiredLevelsUpdateAfterInit  = true;
 	m_requiredReplaysUpdateAfterInit = true;
 	m_requiredThemesUpdateAfterInit  = true;
+	m_requiredBikesUpdateAfterInit   = true;
 
 	/* -- first initialisation or xmoto.bin/userdatadir update -- */
 	webLoadDataFirstTime();
@@ -724,6 +727,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       simpleSql("CREATE TABLE bikes(id_bike PRIMARY KEY, filepath, checkSum);");
       simpleSql("ALTER TABLE themes ADD COLUMN type DEFAULT general");
       m_requiredThemesUpdateAfterInit = true;
+      m_requiredBikesUpdateAfterInit  = true;
       updateXmDbVersion(35);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 34: " + e.getMsg());

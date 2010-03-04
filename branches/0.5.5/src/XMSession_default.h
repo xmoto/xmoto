@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_CONTROLLERMODE              "Keyboard"
 #define DEFAULT_LANGUAGE                    ""
 #define DEFAULT_THEME      	    	    CONFIGURE_DEFAULT_THEME
+#define DEFAULT_THEMEBIKE                   "Red Rebel"
 #define DEFAULT_WEBROOM_ID     	    	    "1"
 #define DEFAULT_WEBCONFATINIT  	    	    true
 #define DEFAULT_PROFILE        	    	    ""
@@ -136,7 +137,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_MUSICONALLLEVELS            true
 #define DEFAULT_ADMINMODE                   false
 #define DEFAULT_BIKE			    "Trial"
-#define DEFAULT_BIKEPHYSICS                 "none"
+#define DEFAULT_BIKEPHYSICS                 "Physics/trial-easy.xml"
 #define DEFAULT_BIKESOVERRIDE               false
 
 class XMDefault {

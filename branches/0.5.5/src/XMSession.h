@@ -201,6 +201,8 @@ public:
   bool enableContextHelp() const;
   void setTheme(const std::string& i_value);
   std::string theme() const;
+  void setThemeBike(const std::string& i_value);
+  std::string themeBike() const;
   void setEnableAudio(bool i_value);
   bool enableAudio() const;
   void setAudioSampleRate(int i_value);
@@ -370,7 +372,8 @@ public:
   int m_multiNbPlayers;
   bool m_multiScenes;
   bool m_enableContextHelp;
-  std::string m_theme;
+  std::string m_themeGeneral;
+  std::string m_themeBike;
   bool m_enableAudio;
   int m_audioSampleRate;
   int m_audioSampleBits;

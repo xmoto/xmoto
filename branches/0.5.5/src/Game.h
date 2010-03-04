@@ -163,7 +163,7 @@ public:
   
   void initPhysicsFromDir();
   std::vector<std::string> getAvailablePhysics();
-  std::string getThemeNameFromFile(std::string p_themeFile, std::string i_element);
+  std::string getParameterFromFile(std::string p_themeFile, std::string i_element);
   std::string getPhysicsFromBike();
 
 

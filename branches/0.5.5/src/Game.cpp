@@ -487,7 +487,10 @@ void GameApp::displayCursor(bool display)
 
   void GameApp::reloadTheme() {
     try {
+      LogInfo("themes: %s | %s",XMSession::instance()->theme().c_str(),XMSession::instance()->themeBike().c_str());
       Theme::instance()->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme())/*HIER: BIKETHEME*/);
+    //  Theme::instance()->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->themeBike())/*HIER: BIKETHEME*/);
+
     } catch(Exception &e) {
       /* unable to load the theme, load the default one */
       Theme::instance()->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(DEFAULT_THEME)); // no XMDefault::DefaultTheme, the DEFAULT_THEME one is included into xmoto files
@@ -851,7 +854,7 @@ void GameApp::initBikesFromDir(xmDatabase* i_db) {
   i_db->bikes_add_begin();
   for(unsigned int i=0; i<v_bikesFiles.size(); i++) {
     try {
-      v_name = getThemeNameFromFile(v_bikesFiles[i], "xmoto_bike");
+      v_name = getParameterFromFile(v_bikesFiles[i], "xmoto_bike");
       if(i_db->bikes_exists(v_name) == false) {
 	i_db->bikes_add(v_name, v_bikesFiles[i]);
       } else {
@@ -873,7 +876,7 @@ void GameApp::initPhysicsFromDir() {
 
   for(unsigned int i=0; i<v_physicsFiles.size(); i++) {
     try {
-      v_name = getThemeNameFromFile(v_physicsFiles[i], "xmoto_physics");
+      v_name = getParameterFromFile(v_physicsFiles[i], "xmoto_physics");
       m_availablePhysics.push_back(v_physicsFiles[i]);
       LogInfo("found physics: %s", v_physicsFiles[i].c_str() );
     } catch(Exception &e) {
@@ -883,7 +886,7 @@ void GameApp::initPhysicsFromDir() {
 }
 
 
-std::string GameApp::getThemeNameFromFile(std::string p_themeFile, std::string i_element) {
+std::string GameApp::getParameterFromFile(std::string p_themeFile, std::string i_element) {
   XMLDocument v_ThemeXml;
   TiXmlDocument *v_ThemeXmlData;
   TiXmlElement *v_ThemeXmlDataElement;
@@ -895,7 +898,8 @@ std::string GameApp::getThemeNameFromFile(std::string p_themeFile, std::string i
   v_ThemeXmlData = v_ThemeXml.getLowLevelAccess();
   
   if(v_ThemeXmlData == NULL) {
-    throw Exception("error : unable to analyse xml theme file");
+    LogInfo("Cant find: %s in file: %s",i_element.c_str(), p_themeFile.c_str());
+    throw Exception("error : unable to analyze xml file");
   }
   
   /* read the theme name */
@@ -936,13 +940,14 @@ std::string GameApp::getPhysicsFromBike() {
   std::string v_bikeFile;
   v_result = xmDatabase::instance("main")->readDB("SELECT filepath FROM bikes WHERE id_bike=\"" + XMSession::instance()->bike() + "\";", nrow);
   v_bikeFile = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
-
+  xmDatabase::instance("main")->read_DB_free(v_result);
+  
   /* open the file */
   v_bikeXml.readFromFile(FDT_DATA, v_bikeFile);   
   v_bikeXmlData = v_bikeXml.getLowLevelAccess();
   LogInfo("Datei:%s",v_bikeFile.c_str());
   if(v_bikeXmlData == NULL) {
-    throw Exception("error : unable analyse xml bike file");
+    throw Exception("error : unable analyze xml bike file");
   }
   
   /* read the theme name */
@@ -955,11 +960,12 @@ std::string GameApp::getPhysicsFromBike() {
     throw Exception("error : the physics defined in the bike theme  cant be found !");
   }
   
-  std::string v_themeFile = "none";
+  std::string v_themeFile = XMSession::instance()->bikePhysics();  // this is a good default for first time run of this version
+  LogInfo("und: %s",v_themeFile.c_str());
   for(unsigned int i=0; i<m_availablePhysics.size(); i++) {
-    if(getThemeNameFromFile(m_availablePhysics[i], "xmoto_physics").c_str() == v_name) {
+    if(getParameterFromFile(m_availablePhysics[i], "xmoto_physics").c_str() == v_name) {
       v_themeFile= m_availablePhysics[i];
-      LogInfo("We get: %s",m_availablePhysics[i].c_str());
+      LogInfo("Physics selected: %s",m_availablePhysics[i].c_str());
     }
   }
   

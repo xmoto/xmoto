@@ -37,7 +37,7 @@ std::vector<ThemeSound*>& Theme::getSoundsList() {
 }
 
 Theme::Theme() {
-  m_player = new BikerTheme(this,  //HIER MUSS DAS AUS THEMES_BIKES rein!!!
+  m_player = new BikerTheme(this,  
           THEME_PLAYER_BODY,
           THEME_PLAYER_FRONT,
           THEME_PLAYER_REAR,
@@ -139,6 +139,7 @@ void Theme::load(FileDataType i_fdt, std::string p_themeFile) {
     v_ThemeXmlData = v_ThemeXml.getLowLevelAccess();
     
     if(v_ThemeXmlData == NULL) {
+      LogInfo("Can't find %s",p_themeFile.c_str());
       throw Exception("unable to analyze xml theme file");
     }
     
@@ -157,6 +158,7 @@ void Theme::load(FileDataType i_fdt, std::string p_themeFile) {
     loadSpritesFromXML(v_ThemeXmlDataElement); 
 
   } catch(Exception &e) {
+    LogInfo("Ouch!");
     throw Exception("unable to analyze xml theme file");
   }
 }

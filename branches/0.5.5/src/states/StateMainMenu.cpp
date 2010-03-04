@@ -1842,6 +1842,7 @@ void StateMainMenu::updateBikesList() {
     pEntry = v_list->addEntry(v_id_bike.c_str(), NULL);
     pEntry->Text.push_back("local");//GAMETEXT_THEMENOTHOSTED);
   }
+  xmDatabase::instance("main")->read_DB_free(v_result);
   
   std::string v_bikeName = XMSession::instance()->bike();
   int nBike = 0;
@@ -1869,10 +1870,10 @@ void StateMainMenu::updateBikesList() {
   std::vector<std::string> v_availablePhysics = GameApp::instance()->getAvailablePhysics();
   
   for(unsigned int i=0; i<v_availablePhysics.size(); i++) {
-    v_list->addEntry(GameApp::instance()->getThemeNameFromFile(v_availablePhysics[i], "xmoto_physics"));
+    v_list->addEntry(GameApp::instance()->getParameterFromFile(v_availablePhysics[i], "xmoto_physics"));
   }
 
-  std::string v_bikeLocalName = GameApp::instance()->getThemeNameFromFile(XMSession::instance()->bikePhysics(), "xmoto_physics");
+  std::string v_bikeLocalName = GameApp::instance()->getParameterFromFile(XMSession::instance()->bikePhysics(), "xmoto_physics");
   nBike = 0;
   for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
     if(v_list->getEntries()[i]->Text[0] == v_bikeLocalName) {
@@ -1892,7 +1893,7 @@ void StateMainMenu::updateBikesList() {
   }
   v_list->clear();
   
-  xmDatabase::instance("main")->read_DB_free(v_result);
+//  xmDatabase::instance("main")->read_DB_free(v_result);
   
   std::string v_id_theme;
   v_result = xmDatabase::instance("main")->readDB("SELECT id_theme FROM themes WHERE type=\"bike\";", nrow);
@@ -1901,14 +1902,19 @@ void StateMainMenu::updateBikesList() {
     pEntry = v_list->addEntry(v_id_theme.c_str(), NULL);
     pEntry->Text.push_back("local");//GAMETEXT_THEMENOTHOSTED);
   }
+  xmDatabase::instance("main")->read_DB_free(v_result);
   
+  std::string v_bikeFile;
   v_result = xmDatabase::instance("main")->readDB("SELECT filepath FROM bikes WHERE id_bike=\"" + XMSession::instance()->bike() + "\";", nrow);
-  std::string v_bikeFile = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
+  if(v_result!= NULL) v_bikeFile = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
+  else v_bikeFile=XMSession::instance()->bike();
+  xmDatabase::instance("main")->read_DB_free(v_result);
 
   nBike = 0;
   for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
-    std::string v_themeName = GameApp::instance()->getThemeNameFromFile(v_bikeFile, "gfxTheme");
+    std::string v_themeName = GameApp::instance()->getParameterFromFile(v_bikeFile, "gfxTheme");
     if(v_list->getEntries()[i]->Text[0] == v_themeName) {
+      XMSession::instance()->setThemeBike(v_themeName);
       nBike = i;
       break;
     }
@@ -1935,7 +1941,6 @@ void StateMainMenu::checkEventsBikes() {
   UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
   XMSession::instance()->setBike(pListEntry->Text[0].c_str());
         
-
   UIStatic* v_text = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:ACTIVEBIKE"));
   v_text->setCaption(std::string(GAMETEXT_BIKE) + ":  " + XMSession::instance()->bike());
 
@@ -1944,7 +1949,6 @@ void StateMainMenu::checkEventsBikes() {
   if(v_list->isChanged()) {
     v_list->setChanged(false);
     updateBikesList();
-//    v_text->setCaption("new");
   }
 
   // show
@@ -1992,7 +1996,7 @@ void StateMainMenu::checkEventsBikes() {
     // put selected bike to XMSession var
     UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
     for(unsigned int i=0; i<GameApp::instance()->getAvailablePhysics().size(); i++) {
-	  if(GameApp::instance()->getThemeNameFromFile(GameApp::instance()->getAvailablePhysics()[i], "xmoto_physics") == pListEntry->Text[0].c_str()) {
+	  if(GameApp::instance()->getParameterFromFile(GameApp::instance()->getAvailablePhysics()[i], "xmoto_physics") == pListEntry->Text[0]) {
             XMSession::instance()->setBikePhysics(GameApp::instance()->getAvailablePhysics()[i]);
             LogInfo("Physics set: %s", pListEntry->Text[0].c_str());
 	  }

@@ -376,6 +376,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   
   /* load available bike physics */
   initPhysicsFromDir();
+  if(pDb->bikes_isIndexUptodate() == false) {
+    initBikesFromDir(pDb);
+  }
 
   /* load levels */
   if(pDb->levels_isIndexUptodate() == false) {
