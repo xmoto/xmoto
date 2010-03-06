@@ -1000,7 +1000,7 @@ void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WW
     }
 
     /* download all the files required */
-    Theme *v_theme = Theme::instance();
+    Theme *v_theme = ThemeManager::instance()->getTheme(XMSession::instance()->theme());
     std::vector<ThemeFile> *v_required_files;
     v_theme->load(FDT_CACHE, v_destinationFileXML_tmp);
     v_required_files = v_theme->getRequiredFiles();

@@ -36,7 +36,7 @@ std::vector<ThemeSound*>& Theme::getSoundsList() {
   return m_sounds;
 }
 
-Theme::Theme() {
+Theme::Theme(FileDataType i_fdt, std::string p_themeFile) {
   m_player = new BikerTheme(this,  
           THEME_PLAYER_BODY,
           THEME_PLAYER_FRONT,
@@ -90,6 +90,7 @@ Theme::Theme() {
          THEME_GHOST_GRAPHICS_LOW_FILL,
          THEME_GHOST_GRAPHICS_LOW_WHEEL
          );
+  load(i_fdt, p_themeFile);
 }
 
 Theme::~Theme() {
@@ -1124,19 +1125,55 @@ bool BikerTheme::getGhostEffect() const {
   return m_ghostEffect;
 }
 
-void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
+  /////////////////////////
+ /*    Theme Manager    */
+/////////////////////////
+
+ThemeManager::ThemeManager() {
+
+}
+
+
+ThemeManager::~ThemeManager() {
+  for(unsigned int i=0; i<m_themes.size(); i++) {
+    delete m_themes[i];
+  }
+}
+
+void ThemeManager::init(){
+  for(unsigned int i=0; i<m_themeFiles2Activate.size(); i++) {
+    
+    Theme* v_theme = new Theme(FDT_DATA, m_themeFiles2Activate[i]);//xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme()));
+//    v_theme->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme())/*HIER: BIKETHEME*/);
+    if(v_theme != NULL) {
+      m_themes.push_back(v_theme);
+    }
+  }
+  LogInfo("No theme could be initialized");
+}
+
+void ThemeManager::loadTheme(FileDataType i_fdt, std::string p_themeFile) {
+  Theme* v_theme = new Theme(i_fdt, p_themeFile);//xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme()));
+  m_themes.push_back(v_theme);
+}
+
+void ThemeManager::pushThemeToActivate(std::string p_themeFile) {
+  m_themeFiles2Activate.push_back(p_themeFile);
+}
+
+void ThemeManager::initThemesFromDir(xmDatabase *i_db) {
 
   /* general themes */
-  std::vector<std::string> v_themesFiles = XMFS::findPhysFiles(FDT_DATA, std::string(THEMES_DIRECTORY)
-							       + std::string("/*.xml"));
+  std::vector<std::string> m_themeFiles = XMFS::findPhysFiles(FDT_DATA, std::string(THEMES_DIRECTORY)
+							       + std::string("/*.xml"),true);
   std::string v_name;
 
   i_db->themes_add_begin();
-  for(unsigned int i=0; i<v_themesFiles.size(); i++) {
+  for(unsigned int i=0; i<m_themeFiles.size(); i++) {
     try {
-      v_name = getThemeNameFromFile(v_themesFiles[i]);
+      v_name = getThemeNameFromFile(m_themeFiles[i]);
       if(i_db->themes_exists(v_name) == false) {
-	i_db->themes_add(v_name, v_themesFiles[i],"general");
+	i_db->themes_add(v_name, m_themeFiles[i],"general");
       } else {
 	LogWarning(std::string("Theme " + v_name + " is present several times").c_str());
       }
@@ -1146,7 +1183,7 @@ void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
   }
   
   /* bike themes */
-  v_themesFiles = XMFS::findPhysFiles(FDT_DATA, std::string(THEMES_BIKE_DIRECTORY)
+/*  v_themesFiles = XMFS::findPhysFiles(FDT_DATA, std::string(THEMES_BIKE_DIRECTORY)
 							       + std::string("/*.xml"));
   for(unsigned int i=0; i<v_themesFiles.size(); i++) {
     try {
@@ -1157,13 +1194,22 @@ void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
 	LogWarning(std::string("Theme " + v_name + " is present several times").c_str());
       }
     } catch(Exception &e) {
-      /* anyway, give up this theme */
+       anyway, give up this theme 
     }
-  }
+  }*/
   i_db->themes_add_end();
 }
 
-std::string ThemeChoicer::getThemeNameFromFile(std::string p_themeFile) {
+Theme* ThemeManager::getTheme(std::string i_themeName) {
+  for(unsigned int i=0; i<m_themes.size(); i++) {
+    if(m_themes[i]->Name() == i_themeName) {
+      return m_themes[i];
+    }
+  }
+  return NULL;
+};
+
+std::string ThemeManager::getThemeNameFromFile(std::string p_themeFile) {
   XMLDocument v_ThemeXml;
   TiXmlDocument *v_ThemeXmlData;
   TiXmlElement *v_ThemeXmlDataElement;

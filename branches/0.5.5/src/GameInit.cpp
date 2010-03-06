@@ -362,7 +362,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 
   /* load theme */
   if(pDb->themes_isIndexUptodate() == false) {
-    ThemeChoicer::initThemesFromDir(pDb);
+    ThemeManager::initThemesFromDir(pDb);
   }
   try {
     reloadTheme();
@@ -370,7 +370,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     /* if the theme cannot be loaded, try to reload from files */
     /* perhaps that the xm.db comes from an other computer */
     LogWarning("Theme cannot be reload, try to update themes into the database");
-    ThemeChoicer::initThemesFromDir(pDb);
+    ThemeManager::initThemesFromDir(pDb);
     reloadTheme();
   }
   
@@ -764,7 +764,7 @@ void GameApp::run_unload() {
 
   InputHandler::destroy();
   LevelsManager::destroy();
-  Theme::destroy();
+  ThemeManager::destroy();
   XMSession::destroy("live");
   XMSession::destroy("file");
 

@@ -395,7 +395,7 @@ void StateManager::drawCursor() {
 
   if(m_cursor == NULL) {
     /* load cursor */
-    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "Cursor");
+    pSprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_UI, "Cursor");
     if(pSprite != NULL) {
       m_cursor = pSprite->getTexture(false, true, FM_LINEAR);
     }

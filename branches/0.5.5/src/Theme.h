@@ -399,19 +399,18 @@ struct ThemeFile {
 };
 
 
-
-
-
-
-class Theme : public Singleton<Theme> {
-  friend class Singleton<Theme>;
-
-private:
-  Theme();
-  ~Theme();
+class Theme  {
 
 public:
+  Theme(FileDataType i_fdt, std::string p_themeFile);
+  ~Theme();
+
   void load(FileDataType i_fdt, std::string p_themeFile);
+
+  BikerTheme* getPlayerTheme();
+  BikerTheme* getNetPlayerTheme();
+  BikerTheme* getGhostTheme();
+
 
   std::string Name() const;
   Sprite* getSprite(enum SpriteType pSpriteType, std::string pName);
@@ -429,10 +428,6 @@ public:
   std::vector<ThemeSound*>& getSoundsList();
   std::vector<ThemeFile>* getRequiredFiles();
 
-  BikerTheme* getPlayerTheme();
-  BikerTheme* getNetPlayerTheme();
-  BikerTheme* getGhostTheme();
-
   TextureManager* getTextureManager() {
     return &m_texMan;
   }
@@ -444,12 +439,14 @@ public:
   std::vector<ThemeMusic*> m_musics;
   std::vector<ThemeSound*> m_sounds;
   std::vector<ThemeFile> m_requiredFiles;
-
-  bool isAFileOutOfDate(const std::string& i_file); // to not download old files for compatibilities
+//  ThemeFile* m_requiredFile;
 
   BikerTheme *m_player;
   BikerTheme *m_netplayer;
   BikerTheme *m_ghost;
+
+
+  bool isAFileOutOfDate(const std::string& i_file); // to not download old files for compatibilities
 
   void cleanSprites();
   void cleanMusics();
@@ -539,12 +536,30 @@ class BikerTheme {
 
 
 
-class ThemeChoicer {
+class ThemeManager :  public Singleton<ThemeManager> {
+  friend class Singleton<ThemeManager>;
+  
+private:
+  ThemeManager();
+  ~ThemeManager();
+  
  public:
   static void initThemesFromDir(xmDatabase *i_db);
+  void init();
+
+  
+  void pushThemeToActivate(std::string p_themeFile);
+  void loadTheme(FileDataType i_fdt, std::string p_themeFile);
+  Theme* getTheme(std::string i_theme);
 
  private:
   static std::string getThemeNameFromFile(std::string p_themeFile);
+
+  std::vector<Theme*> m_themes;
+  std::vector<ThemeFile> m_themeFiles;
+  std::vector<std::string> m_themeFiles2Activate;
+
+
 };
 
 #endif /* __THEME_H__ */

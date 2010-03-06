@@ -182,9 +182,9 @@ void StatePreplaying::enter()
   }
 
   // preload sound
-  Sound::findSample(Theme::instance()->getSound("EndOfLevel")->FilePath());
-  Sound::findSample(Theme::instance()->getSound("NewHighscore")->FilePath());
-  Sound::findSample(Theme::instance()->getSound("Headcrash")->FilePath());
+  Sound::findSample(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("EndOfLevel")->FilePath());
+  Sound::findSample(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("NewHighscore")->FilePath());
+  Sound::findSample(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("Headcrash")->FilePath());
  
   /* prepare stats */
   makeStatsStr();
@@ -289,7 +289,7 @@ void StatePreplaying::secondInitPhase()
       try {
 	if(m_universe != NULL) {
 	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	    pGame->addGhosts(m_universe->getScenes()[i], Theme::instance());
+	    pGame->addGhosts(m_universe->getScenes()[i], ThemeManager::instance()->getTheme(XMSession::instance()->theme()));
 	  }
 	}
       } catch(Exception &e) {

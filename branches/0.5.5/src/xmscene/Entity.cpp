@@ -275,9 +275,9 @@ Sprite* Entity::loadSprite(const std::string& i_spriteName)
   else
     spriteName = i_spriteName;
 
-  Sprite* sprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, spriteName);
+  Sprite* sprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_ANIMATION, spriteName);
   if(sprite == NULL){
-    sprite = Theme::instance()->getSprite(SPRITE_TYPE_EFFECT, spriteName);
+    sprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_EFFECT, spriteName);
   }
 
   return sprite;

@@ -68,7 +68,7 @@ void StatePreplayingGame::initPlayers() {
       v_world->setCurrentCamera(i);
       v_world->getCamera()->setPlayerToFollow(v_world->addPlayerLocalBiker(i, v_world->getLevelSrc()->PlayerStart(),
 								      DD_RIGHT,
-								      Theme::instance(), Theme::instance()->getPlayerTheme(),
+								      ThemeManager::instance()->getTheme(XMSession::instance()->theme()), ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getPlayerTheme(),
 								      pGame->getColorFromPlayerNumber(i),
 								      pGame->getUglyColorFromPlayerNumber(i),
 								      XMSession::instance()->enableEngineSound()));
@@ -84,7 +84,7 @@ void StatePreplayingGame::initPlayers() {
       
       v_world->getCamera()->setPlayerToFollow(v_world->addPlayerLocalBiker(i, v_world->getLevelSrc()->PlayerStart(),
 								      DD_RIGHT,
-								      Theme::instance(), Theme::instance()->getPlayerTheme(),
+								      ThemeManager::instance()->getTheme(XMSession::instance()->theme()), ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getPlayerTheme(),
 								      pGame->getColorFromPlayerNumber(i),
 								      pGame->getUglyColorFromPlayerNumber(i),
 								      XMSession::instance()->enableEngineSound()));

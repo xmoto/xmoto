@@ -371,7 +371,7 @@ void ServerThread::SP2_initPlaying() {
 	if(m_clients[j]->isMarkedToPlay()) {
 	  m_universe->getScenes()[i]->addPlayerLocalBiker(v_localNetId, m_universe->getScenes()[i]->getLevelSrc()->PlayerStart(),
 							  DD_RIGHT,
-							  Theme::instance(), Theme::instance()->getPlayerTheme(),
+							  ThemeManager::instance()->getTheme(XMSession::instance()->theme()), ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getPlayerTheme(),
 							  GameApp::getColorFromPlayerNumber(v_numPlayer),
 							  GameApp::getUglyColorFromPlayerNumber(v_numPlayer), false);
 	  m_clients[j]->markScenePlayer(0, v_numPlayer);

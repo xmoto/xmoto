@@ -54,7 +54,7 @@ int UpdateDbThread::realThreadFunction()
   StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
   
   setThreadCurrentOperation(GAMETEXT_RELOADINGTHEMES);
-  ThemeChoicer::initThemesFromDir(m_pDb);
+  ThemeManager::initThemesFromDir(m_pDb);
   StateManager::instance()->sendAsynchronousMessage("THEMES_UPDATED");
   
   setThreadCurrentOperation(GAMETEXT_RELOADINGBIKES);

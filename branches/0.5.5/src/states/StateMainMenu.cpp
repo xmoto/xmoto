@@ -68,25 +68,25 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
 
   /* Load title screen textures */
   m_pTitleBL = NULL;
-  pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "TitleBL");
+  pSprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_UI, "TitleBL");
   if(pSprite != NULL) {
     m_pTitleBL = pSprite->getTexture(false, true, FM_LINEAR);
   }
 
   m_pTitleBR = NULL;
-  pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "TitleBR");
+  pSprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_UI, "TitleBR");
   if(pSprite != NULL) {
     m_pTitleBR = pSprite->getTexture(false, true, FM_LINEAR);
   }
 
   m_pTitleTL = NULL;
-  pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "TitleTL");
+  pSprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_UI, "TitleTL");
   if(pSprite != NULL) {
     m_pTitleTL = pSprite->getTexture(false, true, FM_LINEAR);
   }
 
   m_pTitleTR = NULL;
-  pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "TitleTR");
+  pSprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_UI, "TitleTR");
   if(pSprite != NULL) {
     m_pTitleTR = pSprite->getTexture(false, true, FM_LINEAR);
   }

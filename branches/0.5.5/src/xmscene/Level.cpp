@@ -41,6 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ChipmunkWorld.h"
 #include "PhysicsSettings.h"
 #include "../Theme.h"
+#include "XMSession.h"
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -1373,10 +1374,10 @@ Sprite* Level::starSprite()
 
 void Level::loadRemplacementSprites()
 {
-  m_strawberrySprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForStrawberry());
-  m_wreckerSprite    = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForWecker());
-  m_flowerSprite     = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForFlower());
-  m_starSprite       = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForStar());
+  m_strawberrySprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_ANIMATION, SpriteForStrawberry());
+  m_wreckerSprite    = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_ANIMATION, SpriteForWecker());
+  m_flowerSprite     = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_ANIMATION, SpriteForFlower());
+  m_starSprite       = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_ANIMATION, SpriteForStar());
 }
 
 float Level::averagePhysicBlocksSize() const {

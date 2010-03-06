@@ -69,17 +69,17 @@ void StateScene::init() {
   m_quality    = -1.0;
     
   m_uncheckedTex = m_qualityTex = m_difficultyTex = NULL;
-  v_sprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "qsChoiceUnchecked");
+  v_sprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_UI, "qsChoiceUnchecked");
   if(v_sprite != NULL) {
     m_uncheckedTex = v_sprite->getTexture();
   }
   
-  v_sprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "qsChoiceQuality");
+  v_sprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_UI, "qsChoiceQuality");
   if(v_sprite != NULL) {
     m_qualityTex = v_sprite->getTexture();
   }
   
-  v_sprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "qsChoiceDifficulty");
+  v_sprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_UI, "qsChoiceDifficulty");
   if(v_sprite != NULL) {
     m_difficultyTex = v_sprite->getTexture();
   }
@@ -949,7 +949,7 @@ void StateScene::playLevelMusic() {
     if(m_universe->getScenes().size() > 0) {
       // play music of the first world
       if(m_universe->getScenes()[0]->getLevelSrc()->Music() == "" && XMSession::instance()->musicOnAllLevels()) {
-	GameApp::instance()->playGameMusic(Theme::instance()->getHashMusic(m_universe->getScenes()[0]->getLevelSrc()->Id()));
+	GameApp::instance()->playGameMusic(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getHashMusic(m_universe->getScenes()[0]->getLevelSrc()->Id()));
       } else {
 	GameApp::instance()->playGameMusic(m_universe->getScenes()[0]->getLevelSrc()->Music());
       } 

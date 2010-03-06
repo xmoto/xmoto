@@ -163,13 +163,13 @@ void StateFinished::enter()
   if(v_is_a_room_highscore) {
     try {
       GameApp::instance()->playGameMusic("");
-      Sound::playSampleByName(Theme::instance()->getSound("NewHighscore")->FilePath());
+      Sound::playSampleByName(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("NewHighscore")->FilePath());
     } catch(Exception &e) {
     }
   } else {
     try {
       GameApp::instance()->playGameMusic("");
-      Sound::playSampleByName(Theme::instance()->getSound("EndOfLevel")->FilePath());
+      Sound::playSampleByName(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("EndOfLevel")->FilePath());
     } catch(Exception &e) {
     }
   }

@@ -441,7 +441,7 @@ std::string GameApp::_getGhostReplayPath_bestOfTheRoom(unsigned int i_number, st
     switch(i_player) {
       
       case 0:
-      v_color = Theme::instance()->getPlayerTheme()->getUglyRiderColor();
+      v_color = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getPlayerTheme()->getUglyRiderColor();
       return TColor(GET_RED(v_color), GET_GREEN(v_color), GET_BLUE(v_color));      
       break;
       
@@ -487,13 +487,18 @@ void GameApp::displayCursor(bool display)
 
   void GameApp::reloadTheme() {
     try {
+      ThemeManager::instance()->pushThemeToActivate(XMSession::instance()->theme());
+      ThemeManager::instance()->pushThemeToActivate(XMSession::instance()->themeBike());
       LogInfo("themes: %s | %s",XMSession::instance()->theme().c_str(),XMSession::instance()->themeBike().c_str());
-      Theme::instance()->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme())/*HIER: BIKETHEME*/);
+
+      ThemeManager::instance()->init();
+    
+    //  Theme::instance()->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme())/*HIER: BIKETHEME*/);
     //  Theme::instance()->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->themeBike())/*HIER: BIKETHEME*/);
 
     } catch(Exception &e) {
       /* unable to load the theme, load the default one */
-      Theme::instance()->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(DEFAULT_THEME)); // no XMDefault::DefaultTheme, the DEFAULT_THEME one is included into xmoto files
+      ThemeManager::instance()->loadTheme(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(DEFAULT_THEME)); // no XMDefault::DefaultTheme, the DEFAULT_THEME one is included into xmoto files
     }
   }
 
@@ -599,7 +604,7 @@ void GameApp::addGhosts(Scene* i_motogame, Theme* i_theme) {
 
         i_motogame->addGhostFromFile(v_replay_BESTOFROOM[i],
 				     xmDatabase::instance("main")->webrooms_getName(XMSession::instance()->idRoom(i)), i==0,
-				     Theme::instance(), Theme::instance()->getGhostTheme(),
+				     ThemeManager::instance()->getTheme(XMSession::instance()->theme()), ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getGhostTheme(),
 				     TColor(255,255,255,0),
 				     TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
 					    GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
@@ -735,7 +740,7 @@ void GameApp::playMusic(const std::string& i_music) {
 	Sound::stopMusic();
       } else {
 	m_playingMusic = i_music;
-	Sound::playMusic(Theme::instance()->getMusic(i_music)->FilePath());
+	Sound::playMusic(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getMusic(i_music)->FilePath());
       }
     } catch(Exception &e) {
       LogWarning("PlayMusic(%s) failed", i_music.c_str());

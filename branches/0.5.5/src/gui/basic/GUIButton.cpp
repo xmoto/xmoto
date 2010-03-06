@@ -197,7 +197,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(m_Type == UI_BUTTON_TYPE_CHECK) {
         m_bChecked = !m_bChecked;
 	try {
-	  Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
+	  Sound::playSampleByName(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("Button3")->FilePath());
 	} catch(Exception &e) {
 	}
       }
@@ -205,13 +205,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         _UncheckGroup(getGroup());
         m_bChecked = true;
 	try {
-	  Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
+	  Sound::playSampleByName(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("Button3")->FilePath());
 	} catch(Exception &e) {
 	}
       }
       else {
 	try {
-	  Sound::playSampleByName(Theme::instance()->getSound("Button1")->FilePath());
+	  Sound::playSampleByName(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("Button1")->FilePath());
 	} catch(Exception &e) {
 	}
       }
@@ -274,20 +274,20 @@ void UIButton::actionnate() {
   if(m_Type == UI_BUTTON_TYPE_CHECK) {
     m_bChecked = !m_bChecked;
     try {
-      Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
+      Sound::playSampleByName(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("Button3")->FilePath());
     } catch(Exception &e) {
     }
   } else if(m_Type == UI_BUTTON_TYPE_RADIO) {
     _UncheckGroup(getGroup());
     m_bChecked = true;
     try {
-      Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
+      Sound::playSampleByName(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("Button3")->FilePath());
     } catch(Exception &e) {
     }
   } else {
     setClicked(true);
     try {
-      Sound::playSampleByName(Theme::instance()->getSound("Button1")->FilePath());
+      Sound::playSampleByName(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("Button1")->FilePath());
     } catch(Exception &e) {
     }
   }

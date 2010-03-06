@@ -70,8 +70,8 @@ void StatePreplayingReplay::preloadLevels() {
 void StatePreplayingReplay::initPlayers() {
   if(m_universe->getScenes().size() > 0) {
     m_replayBiker = m_universe->getScenes()[0]->addReplayFromFile(m_replay,
-								  Theme::instance(),
-								  Theme::instance()->getPlayerTheme(),
+								  ThemeManager::instance()->getTheme(XMSession::instance()->theme()),
+								  ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getPlayerTheme(),
 								  XMSession::instance()->enableEngineSound());
     m_universe->getScenes()[0]->getCamera()->setPlayerToFollow(m_replayBiker);
     m_universe->getScenes()[0]->getCamera()->setScroll(false, m_universe->getScenes()[0]->getGravity());

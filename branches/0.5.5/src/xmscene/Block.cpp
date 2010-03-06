@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "PhysicsSettings.h"
 #include "../Theme.h"
 #include "../GameEvents.h"
+#include "../XMSession.h"
 
 #define XM_DEFAULT_BLOCK_TEXTURE "default"
 #define XM_DEFAULT_PHYS_BLOCK_MASS 30.0
@@ -457,11 +458,11 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   /* Load Textures */  
   //first, lets see if there are animated textures, that come with 0.5.3
   float scale = TextureScale() * 0.25;
-  Sprite* pSprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION_TEXTURE,
+  Sprite* pSprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_ANIMATION_TEXTURE,
 						 this->getTexture());
   //if there aren't, keep theme files compatible to old xmoto versions
   if(pSprite == NULL) {
-    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
+    pSprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_TEXTURE,
 						 this->getTexture());  
   }
   

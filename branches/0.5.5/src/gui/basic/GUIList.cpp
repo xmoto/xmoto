@@ -569,7 +569,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
             m_pEnterButton->setClicked(true);
 	    m_bChanged = true;
 	    try {
-	      Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
+	      Sound::playSampleByName(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("Button3")->FilePath());
 	    } catch(Exception &e) {
 	    }
           }
@@ -758,7 +758,7 @@ void UIList::eventGo() {
     m_bChanged = true;
     
     try {
-      Sound::playSampleByName(Theme::instance()->getSound("Button3")->FilePath());
+      Sound::playSampleByName(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("Button3")->FilePath());
     } catch(Exception &e) {
     }
   }

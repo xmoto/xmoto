@@ -1067,17 +1067,17 @@ bool UIRoot::_RootJoystickButtonDownEvent(UIWindow *pWindow, Uint8 i_joyNum, Uin
   void UITexture::setApp(GameApp *pApp) {
     Sprite *pSprite;
 
-    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "Misc");
+    pSprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_UI, "Misc");
     if(pSprite != NULL) {
       m_pUIElemTexture = pSprite->getTexture(false,true, FM_NEAREST);
     }
 
-    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MiscDisabled");
+    pSprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_UI, "MiscDisabled");
     if(pSprite != NULL) {
       m_pUIElemTextureD = pSprite->getTexture(false,true, FM_NEAREST);
     }
 
-    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MiscActive");
+    pSprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_UI, "MiscActive");
     if(pSprite != NULL) {
       m_pUIElemTextureA = pSprite->getTexture(false,true, FM_NEAREST);
     }

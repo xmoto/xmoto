@@ -359,22 +359,22 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 
 	    if(v_isSlaveMode) {
 	      v_ghost = m_universe->getScenes()[i]->
-		addNetGhost(m_otherClients[v_clientId]->name(), Theme::instance(),
-			    Theme::instance()->getNetPlayerTheme(),
+		addNetGhost(m_otherClients[v_clientId]->name(), ThemeManager::instance()->getTheme(XMSession::instance()->theme()),
+			    ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getNetPlayerTheme(),
 			    TColor(0,255,255,0),
-			    TColor(GET_RED(Theme::instance()->getNetPlayerTheme()->getUglyRiderColor()),
-				   GET_GREEN(Theme::instance()->getNetPlayerTheme()->getUglyRiderColor()),
-				   GET_BLUE(Theme::instance()->getNetPlayerTheme()->getUglyRiderColor()),
+			    TColor(GET_RED(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getNetPlayerTheme()->getUglyRiderColor()),
+				   GET_GREEN(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getNetPlayerTheme()->getUglyRiderColor()),
+				   GET_BLUE(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getNetPlayerTheme()->getUglyRiderColor()),
 				   0)
 			    );
 	    } else {
 	      v_ghost = m_universe->getScenes()[i]->
-		addNetGhost(m_otherClients[v_clientId]->name(), Theme::instance(),
-			    Theme::instance()->getGhostTheme(),
+		addNetGhost(m_otherClients[v_clientId]->name(), ThemeManager::instance()->getTheme(XMSession::instance()->theme()),
+			    ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getGhostTheme(),
 			    TColor(255,255,255,0),
-			    TColor(GET_RED(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-				   GET_GREEN(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
-				   GET_BLUE(Theme::instance()->getGhostTheme()->getUglyRiderColor()),
+			    TColor(GET_RED(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getGhostTheme()->getUglyRiderColor()),
+				   GET_GREEN(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getGhostTheme()->getUglyRiderColor()),
+				   GET_BLUE(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getGhostTheme()->getUglyRiderColor()),
 				   0)
 			    );
 	    }

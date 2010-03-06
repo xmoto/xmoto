@@ -35,7 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 void XMSceneHooks::OnTakeEntity() {
     /* Play yummy-yummy sound */
     try {
-      Sound::playSampleByName(Theme::instance()->getSound(m_Scene->getLevelSrc()->SoundForPickUpStrawberry())->FilePath());
+      Sound::playSampleByName(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound(m_Scene->getLevelSrc()->SoundForPickUpStrawberry())->FilePath());
     } catch(Exception &e) {
     }
 }

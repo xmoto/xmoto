@@ -408,7 +408,7 @@ void Biker::setDead(bool i_value, int i_deadTime) {
     if(v_deathVolume > 1.0) {
       v_deathVolume = 1.0;
     }
-    Sound::playSampleByName(Theme::instance()->getSound("Headcrash")->FilePath(), v_deathVolume);
+    Sound::playSampleByName(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound("Headcrash")->FilePath(), v_deathVolume);
   } 
   catch(Exception &e) {
   }

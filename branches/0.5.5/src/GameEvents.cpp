@@ -2187,7 +2187,7 @@ MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name, float p_volume
     }
  
     try {
-      Sound::playSampleByName(Theme::instance()->getSound(m_soundName)->FilePath(), m_volume);
+      Sound::playSampleByName(ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSound(m_soundName)->FilePath(), m_volume);
     } catch(Exception &e) {
       LogWarning("PlaySound(\"%s\") failed: %s", m_soundName.c_str(), e.getMsg().c_str());
     }

@@ -226,9 +226,9 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     }
 
     // sprites remplacement stored in level and the sky
-    m_currentSkySprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION_TEXTURE, v_level->Sky()->Texture());
+    m_currentSkySprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_ANIMATION_TEXTURE, v_level->Sky()->Texture());
     if(m_currentSkySprite == NULL) {
-      m_currentSkySprite = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->Texture());
+      m_currentSkySprite = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->Texture());
     }
     if(m_currentSkySprite != NULL)
       m_currentSkySprite->loadTextures();
@@ -236,9 +236,9 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
       LogDebug("skySprite is NULL [%s]", v_level->Sky()->Texture().c_str());
     }
     
-    m_currentSkySprite2 = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION_TEXTURE, v_level->Sky()->BlendTexture());
+    m_currentSkySprite2 = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_ANIMATION_TEXTURE, v_level->Sky()->BlendTexture());
     if(m_currentSkySprite2 == NULL) {
-      m_currentSkySprite2 = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->BlendTexture());
+      m_currentSkySprite2 = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_TEXTURE, v_level->Sky()->BlendTexture());
     }
     if(m_currentSkySprite2 != NULL)
       m_currentSkySprite2->loadTextures();
@@ -262,12 +262,12 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
 
     // debris sprite
     EffectSprite* pDebrisType;
-    pDebrisType = (EffectSprite*) Theme::instance()->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
+    pDebrisType = (EffectSprite*) ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
     if(pDebrisType != NULL)
       pDebrisType->loadTextures();
 
     // and now the arrow sprite stored in the renderer
-    m_arrowSprite = (MiscSprite*)Theme::instance()->getSprite(SPRITE_TYPE_MISC, "Arrow");
+    m_arrowSprite = (MiscSprite*)ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_MISC, "Arrow");
     m_arrowSprite->loadTextures();
   }
   
@@ -439,10 +439,10 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 	EdgeEffectSprite* pType = NULL;
 	std::string v_edgeMaterialTextureName = pBlock->getEdgeMaterialTexture(firstVertex->EdgeEffect());
 	if(v_edgeMaterialTextureName == "") {
-	  pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, firstVertex->EdgeEffect());
+	  pType = (EdgeEffectSprite*)ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_EDGEEFFECT, firstVertex->EdgeEffect());
 	}
 	else {   // edge material defined then
-	   pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_edgeMaterialTextureName);
+	   pType = (EdgeEffectSprite*)ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_EDGEEFFECT, v_edgeMaterialTextureName);
         }
          
 	if(pType == NULL) {
@@ -500,7 +500,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       if(edgeEffect != m_currentEdgeEffect) {   //if a new edge effect texture occurs, load it
         EdgeEffectSprite* pType = NULL;
         if(v_edgeMaterialTextureName == "") {  //no material defined then
-	  pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, edgeEffect);
+	  pType = (EdgeEffectSprite*)ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_EDGEEFFECT, edgeEffect);
 	  if(pType == NULL) {
 	    LogWarning("Invalid edge effect %s", edgeEffect.c_str());
 	    useOld = false;
@@ -511,7 +511,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
           m_currentEdgeMaterialDepth = DEFAULT_EDGE_DEPTH; 
 	}
 	else {  // seems we ve got a material!
-	  pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_edgeMaterialTextureName);
+	  pType = (EdgeEffectSprite*)ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_EDGEEFFECT, v_edgeMaterialTextureName);
 	  if(pType == NULL) {
 	    LogWarning("Invalid edge material %s", edgeEffect.c_str());
 	    useOld = false;
@@ -714,7 +714,7 @@ void GameRenderer::calculateEdgeTexture(Block* pBlock,
 
 Texture* GameRenderer::loadTexture(std::string textureName)
 {
-  Sprite*  pSprite  = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, textureName);
+  Sprite*  pSprite  = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_ANIMATION, textureName);
   Texture* pTexture = NULL;
 
   if(pSprite != NULL) {
@@ -732,7 +732,7 @@ Texture* GameRenderer::loadTexture(std::string textureName)
 
 Texture* GameRenderer::loadTextureEdge(std::string textureName)
 {
-  EdgeEffectSprite* pSprite  = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, textureName);
+  EdgeEffectSprite* pSprite  = (EdgeEffectSprite*)ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_EDGEEFFECT, textureName);
   Texture* pTexture = NULL;
 
   if(pSprite != NULL) {
@@ -863,7 +863,7 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string material)
     p2 = Vector2f(x+nWidth, pDrawlib->getDispHeight()-y);
     p3 = Vector2f(x,        pDrawlib->getDispHeight()-y);
 
-    pSprite = (MiscSprite*) Theme::instance()->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
+    pSprite = (MiscSprite*) ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
     if(pSprite != NULL) {
       pTexture = pSprite->getTexture();
       if(pTexture != NULL) {
@@ -3491,7 +3491,7 @@ void GameRenderer::_RenderParticles(Scene* i_scene, bool bFront) {
 	  EffectSprite* pDebrisType;
 	  pDebrisType = (EffectSprite*) particleSources[index]->getSprite();
 	  if(pDebrisType == NULL)
-	    pDebrisType = (EffectSprite*) Theme::instance()->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
+	    pDebrisType = (EffectSprite*) ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
 	  if(pDebrisType != NULL) {
 	    GameApp::instance()->getDrawLib()->setTexture(pDebrisType->getTexture(), BLEND_MODE_A);
 
@@ -4004,7 +4004,7 @@ void GameRenderer::beginTexturesRegistration()
 
   if(XMSession::instance()->debug() == true) {
     LogDebug("---Begin texture registration---");
-    std::vector<Texture*> textures = Theme::instance()->getTextureManager()->getTextures();
+    std::vector<Texture*> textures = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getTextureManager()->getTextures();
     std::vector<Texture*>::iterator it = textures.begin();
     while(it != textures.end()){
       if((*it)->curRegistrationStage != PERSISTANT)
@@ -4018,7 +4018,7 @@ void GameRenderer::beginTexturesRegistration()
 void GameRenderer::endTexturesRegistration()
 {
   // remove not used textures
-  std::vector<Texture*> textures = Theme::instance()->getTextureManager()->getTextures();
+  std::vector<Texture*> textures = ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getTextureManager()->getTextures();
   std::vector<Texture*>::iterator it = textures.begin();
 
   while(it != textures.end()){
@@ -4029,7 +4029,7 @@ void GameRenderer::endTexturesRegistration()
 
 	(*it)->invalidateSpritesTexture();
 
-	Theme::instance()->getTextureManager()->destroyTexture((*it));
+	ThemeManager::instance()->getTheme(XMSession::instance()->theme())->getTextureManager()->destroyTexture((*it));
 	it = textures.erase(it);
       } else
 	++it;
