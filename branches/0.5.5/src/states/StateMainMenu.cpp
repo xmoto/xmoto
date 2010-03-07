@@ -1871,8 +1871,9 @@ void StateMainMenu::updateBikesList() {
     v_list->addEntry(GameApp::instance()->getParameterFromFile(v_availablePhysics[i], "xmoto_physics"));
   }
 
-  std::string v_bikeLocalName = GameApp::instance()->getParameterFromFile(XMSession::instance()->bikePhysics(), "xmoto_physics");
+  std::string v_bikeLocalName = xmDatabase::instance("main")->bikes_getPhysics(XMSession::instance()->bike());
   nBike = 0;
+  LogInfo("WURMSUCHE: %s", v_bikeLocalName.c_str());
   for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
     if(v_list->getEntries()[i]->Text[0] == v_bikeLocalName) {
       nBike = i;
@@ -1880,7 +1881,7 @@ void StateMainMenu::updateBikesList() {
     }
   }
   v_list->setRealSelected(nBike); 
-// }
+
 
   /* Bike themes list */
   v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:BIKE_THEMES_LIST");
@@ -1890,8 +1891,6 @@ void StateMainMenu::updateBikesList() {
     v_selected_bike = v_list->getEntries()[v_list->getSelected()]->Text[0];
   }
   v_list->clear();
-  
-//  xmDatabase::instance("main")->read_DB_free(v_result);
   
   std::string v_id_theme;
   v_result = xmDatabase::instance("main")->readDB("SELECT theme FROM bikes;", nrow);
@@ -1903,10 +1902,6 @@ void StateMainMenu::updateBikesList() {
   xmDatabase::instance("main")->read_DB_free(v_result);
   
   std::string v_bikeFile;
-//  v_result = xmDatabase::instance("main")->readDB("SELECT filepath FROM bikes WHERE id_bike=\"" + XMSession::instance()->bike() + "\";", nrow);
-//  if(v_result!= NULL) v_bikeFile = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
-//  else v_bikeFile=XMSession::instance()->bike();
-//  xmDatabase::instance("main")->read_DB_free(v_result);
   v_bikeFile = xmDatabase::instance("main")->bikes_getTheme(XMSession::instance()->bike());
 
   nBike = 0;
@@ -1918,13 +1913,7 @@ void StateMainMenu::updateBikesList() {
         
       // if a new BikeTheme gets chosen, we have to check if its loaded and get the filePath from xmDb and load the xml, if necessary
       std::string v_themefile = xmDatabase::instance("main")->themes_getFileName(v_themeName);
-      if( !ThemeManager::instance()->themeIsAlreadyLoaded(v_themefile) ) {
-      
-//      HIER IS NOCH DER WURM DRIN; WEIL THEMES_GET_FILENAME NICHT ZW GENERAL UND BIKE UNTERSCHEIDED
-      
-        //v_result = xmDatabase::instance("main")->readDB("SELECT filepath FROM themes WHERE id_theme=\"" +v_themeName +"\";", nrow);
-        //v_themefile = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
-        //xmDatabase::instance("main")->read_DB_free(v_result);
+      if( !ThemeManager::instance()->themeIsAlreadyLoaded(v_themefile) ) {      
         ThemeManager::instance()->loadTheme(FDT_DATA,v_themefile);
         break;
       }
@@ -1934,14 +1923,10 @@ void StateMainMenu::updateBikesList() {
 }
 
 void StateMainMenu::checkEventsBikes() {
-  UILevelList* v_list;
+  UIList*      v_list;
   UIButton*    v_button;
 
-  // assign physics to get from bike setting
-//  XMSession::instance()->setBikePhysics("bike");
-  
-  
-  v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST"));
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST"));
 
   /* list changed */
   if(v_list->isChanged()) {
@@ -1955,7 +1940,7 @@ void StateMainMenu::checkEventsBikes() {
   UIStatic* v_text = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:ACTIVEBIKE"));
   v_text->setCaption(std::string(GAMETEXT_BIKE) + ":  " + XMSession::instance()->bike());
 
-  v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:BIKE_THEMES_LIST"));
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:BIKE_THEMES_LIST"));
   /* list changed */
   if(v_list->isChanged()) {
     v_list->setChanged(false);
@@ -1997,11 +1982,12 @@ void StateMainMenu::checkEventsBikes() {
     }
   }
   
-  v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_LOCAL_TAB:BIKES_LOCAL_LIST"));
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_LOCAL_TAB:BIKES_LOCAL_LIST"));
 
   /* list changed */
   if(v_list->isChanged()) {
     v_list->setChanged(false);
+    updateBikesList();
   }
 
   // if we use local physics settings, assign them here and override the rest
