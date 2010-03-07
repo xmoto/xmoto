@@ -69,13 +69,13 @@ int UploadHighscoreThread::realThreadFunction()
 	
 	webRoomName  = GameApp::instance()->getWebRoomName(i, m_pDb);
 	setThreadCurrentOperation(GAMETEXT_UPLOADING_HIGHSCORE + std::string(" (") + webRoomName + ")");
-	
+	/*
 	FSWeb::uploadReplay(m_highscorePath,
 			    XMSession::instance()->idRoom(i),
 			    XMSession::instance()->profile(),
 			    XMSession::instance()->wwwPassword(),
 			    XMSession::instance()->uploadHighscoreUrl(),
-			    this, XMSession::instance()->proxySettings(), v_msg_status_ok, v_tmpMsg);
+			    this, XMSession::instance()->proxySettings(), v_msg_status_ok, v_tmpMsg); */
 	if(v_msg_status_ok) {
 	  m_msg = m_msg + webRoomName + ":\n" + v_tmpMsg + "\n \n";
 	} else {

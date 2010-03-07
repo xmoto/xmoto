@@ -922,7 +922,8 @@ std::string GameApp::getParameterFromFile(std::string p_themeFile, std::string i
   }
   
   if(m_name == "") {
-    throw Exception("error : the theme has no name !");
+    LogInfo("error : the file %s has no element with name %s !",p_themeFile.c_str(),i_element.c_str());
+    throw Exception("error : the file has no name!");
   }
   
   return m_name;

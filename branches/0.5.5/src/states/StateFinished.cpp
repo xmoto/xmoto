@@ -246,6 +246,7 @@ void StateFinished::checkEvents() {
   }
 
   UIButton *pUploadButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:UPLOAD_BUTTON"));
+  pUploadButton->enableWindow(false);
   if(pUploadButton->isClicked()) {
     pUploadButton->setClicked(false);
 

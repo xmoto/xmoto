@@ -1871,7 +1871,13 @@ void StateMainMenu::updateBikesList() {
     v_list->addEntry(GameApp::instance()->getParameterFromFile(v_availablePhysics[i], "xmoto_physics"));
   }
 
-  std::string v_bikeLocalName = xmDatabase::instance("main")->bikes_getPhysics(XMSession::instance()->bike());
+  std::string v_bikeLocalName;
+  if(!XMSession::instance()->bikesOverride()) {
+    v_bikeLocalName = xmDatabase::instance("main")->bikes_getPhysics(XMSession::instance()->bike());
+  }
+  else {
+    v_bikeLocalName = GameApp::instance()->getParameterFromFile(XMSession::instance()->bikePhysics(), "xmoto_physics");
+  }
   nBike = 0;
   LogInfo("WURMSUCHE: %s", v_bikeLocalName.c_str());
   for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
@@ -1983,6 +1989,10 @@ void StateMainMenu::checkEventsBikes() {
   }
   
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_LOCAL_TAB:BIKES_LOCAL_LIST"));
+
+  // set bike physics
+ // pListEntry = v_list->getEntries()[v_list->getSelected()];
+ // XMSession::instance()->setBikePhysics(xmDatabase::instance("main")->bikes_getFileName(pListEntry->Text[0]));
 
   /* list changed */
   if(v_list->isChanged()) {

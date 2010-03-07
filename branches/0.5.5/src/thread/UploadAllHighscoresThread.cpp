@@ -107,12 +107,12 @@ int UploadAllHighscoresThread::realThreadFunction()
 	  try {
 	    bool v_msg_status_ok;
 	    v_replayPath = XMFS::getUserReplaysDir() + "/" + v_replay + ".rpl";
-	    FSWeb::uploadReplay(v_replayPath,
+	    /* FSWeb::uploadReplay(v_replayPath,
 				XMSession::instance()->idRoom(m_number),
 				XMSession::instance()->profile(),
 				XMSession::instance()->wwwPassword(),
 				XMSession::instance()->uploadHighscoreUrl(),
-				this, XMSession::instance()->proxySettings(), v_msg_status_ok, m_msg);
+				this, XMSession::instance()->proxySettings(), v_msg_status_ok, m_msg); */
 	    if(v_msg_status_ok == false) {
 	      LogError(std::string("Failed to upload " + v_replay).c_str());
 	    }
