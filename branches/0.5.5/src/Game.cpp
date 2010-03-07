@@ -869,7 +869,9 @@ void GameApp::initBikesFromDir(xmDatabase* i_db) {
       /* anyway, give up this bike */
     }
   }
-  i_db->bikes_add_end();		  
+  i_db->bikes_add_end();	
+  
+  ////////////UUND DIE XMSESSION bikeTheme SETZEN	  
 }
 
 

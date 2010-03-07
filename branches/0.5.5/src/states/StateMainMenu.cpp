@@ -1833,8 +1833,6 @@ void StateMainMenu::updateBikesList() {
   }
   v_list->clear();
 
-  xmDatabase::instance("main")->read_DB_free(v_result);
-  
   std::string v_id_bike;
   v_result = xmDatabase::instance("main")->readDB("SELECT id_bike FROM bikes;", nrow);
   for(unsigned int i=0; i<nrow; i++) {
@@ -1916,7 +1914,19 @@ void StateMainMenu::updateBikesList() {
     if(v_list->getEntries()[i]->Text[0] == v_themeName) {
       XMSession::instance()->setThemeBike(v_themeName);
       nBike = i;
-      break;
+        
+      // if a new BikeTheme gets chosen, we have to check if its loaded and get the filePath from xmDb and load the xml, if necessary
+      std::string v_themefile = xmDatabase::instance("main")->themes_getFileName(v_themeName);
+      if( !ThemeManager::instance()->themeIsAlreadyLoaded(v_themeFile) ) {
+      
+//      HIER IS NOCH DER WURM DRIN; WEIL THEMES_GET_FILENAME NICHT ZW GENERAL UND BIKE UNTERSCHEIDED
+      
+        //v_result = xmDatabase::instance("main")->readDB("SELECT filepath FROM themes WHERE id_theme=\"" +v_themeName +"\";", nrow);
+        //v_themefile = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
+        //xmDatabase::instance("main")->read_DB_free(v_result);
+        ThemeManager::instance()->loadTheme(FDT_DATA,v_themefile);
+        break;
+      }
     }
   }
   v_list->setRealSelected(nBike); 
@@ -1950,6 +1960,10 @@ void StateMainMenu::checkEventsBikes() {
     v_list->setChanged(false);
     updateBikesList();
   }
+  pListEntry = v_list->getEntries()[v_list->getSelected()];
+  XMSession::instance()->setThemeBike(pListEntry->Text[0].c_str());
+  LogInfo("Setting themeBike: %s",pListEntry->Text[0].c_str());
+        
 
   // show
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_SHOW_BUTTON"));

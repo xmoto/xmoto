@@ -427,6 +427,8 @@ public:
   std::vector<Sprite*>& getSpritesList();
   std::vector<ThemeSound*>& getSoundsList();
   std::vector<ThemeFile>* getRequiredFiles();
+  
+  std::string getThemeFile() { return m_themeFile; };
 
   TextureManager* getTextureManager() {
     return &m_texMan;
@@ -435,6 +437,7 @@ public:
   private:
   TextureManager m_texMan;
   std::string m_name;
+  std::string m_themeFile;
   std::vector<Sprite*> m_sprites;
   std::vector<ThemeMusic*> m_musics;
   std::vector<ThemeSound*> m_sounds;
@@ -547,7 +550,7 @@ private:
   static void initThemesFromDir(xmDatabase *i_db);
   void init();
 
-  
+  bool themeIsAlreadyLoaded(std::string i_themeFile);
   void pushThemeToActivate(std::string p_themeFile);
   void loadTheme(FileDataType i_fdt, std::string p_themeFile);
   Theme* getTheme(std::string i_theme);
@@ -557,7 +560,7 @@ private:
 
   std::vector<Theme*> m_themes;
   std::vector<ThemeFile> m_themeFiles;
-  std::vector<std::string> m_themeFiles2Activate;
+  std::vector<std::string> m_themes2Activate;
 
 
 };

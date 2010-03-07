@@ -300,6 +300,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_www          	    	   = pDb->config_getBool   (i_id_profile, "WebHighscores"    	       	  , m_www         );
   m_www_password 	    	   = pDb->config_getString (i_id_profile, "WWWPassword"      	       	  , m_www_password);
   m_themeGeneral       	    	   = pDb->config_getString (i_id_profile, "Theme"            	       	  , m_themeGeneral);
+  m_themeBike       	    	   = pDb->config_getString (i_id_profile, "ThemeBike"            	  , m_themeBike);
   m_language     	    	   = pDb->config_getString (i_id_profile, "Language"         	       	  , m_language    );
   m_quickStartQualityMIN    	   = pDb->config_getInteger(i_id_profile, "QSQualityMIN"                  , m_quickStartQualityMIN);
   m_quickStartQualityMAX    	   = pDb->config_getInteger(i_id_profile, "QSQualityMAX"     	          , m_quickStartQualityMAX);
@@ -438,6 +439,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "WebHighscores"    	      	    , m_www                    );
 	pDb->config_setString (m_profile, "WWWPassword"      	      	    , m_www_password           );
 	pDb->config_setString (m_profile, "Theme"            	      	    , m_themeGeneral           );
+	pDb->config_setString (m_profile, "ThemeBike"          	      	    , m_themeBike              );	
 	pDb->config_setString (m_profile, "Language"         	      	    , m_language               );
 	pDb->config_setInteger(m_profile, "QSQualityMIN"     	      	    , m_quickStartQualityMIN   );
 	pDb->config_setInteger(m_profile, "QSQualityMAX"     	      	    , m_quickStartQualityMAX   );
@@ -953,6 +955,7 @@ std::string XMSession::theme() const {
 }
 
 void XMSession::setThemeBike(const std::string& i_value) {
+  PROPAGATE_REF(XMSession,setThemeBike,i_value,std::string);
   m_themeBike = i_value;
 }
 

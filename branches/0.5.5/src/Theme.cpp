@@ -90,6 +90,7 @@ Theme::Theme(FileDataType i_fdt, std::string p_themeFile) {
          THEME_GHOST_GRAPHICS_LOW_FILL,
          THEME_GHOST_GRAPHICS_LOW_WHEEL
          );
+  m_themeFile = p_themeFile;
   load(i_fdt, p_themeFile);
 }
 
@@ -1141,15 +1142,25 @@ ThemeManager::~ThemeManager() {
 }
 
 void ThemeManager::init(){
-  for(unsigned int i=0; i<m_themeFiles2Activate.size(); i++) {
-    
-    Theme* v_theme = new Theme(FDT_DATA, m_themeFiles2Activate[i]);//xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme()));
-//    v_theme->load(FDT_DATA, xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme())/*HIER: BIKETHEME*/);
+
+  std::string v_id_bike;
+  std::string v_bikeFile;
+  char** v_result;
+  unsigned int nrow;
+  
+  for(unsigned int i=0; i<m_themes2Activate.size(); i++) {
+    v_bikeFile = xmDatabase::instance("main")->themes_getFileName(m_themes2Activate[i]);
+    //v_result = xmDatabase::instance("main")->readDB("SELECT filepath FROM themes WHERE id_theme=\"" + m_themes2Activate[i] + "\";", nrow);
+    //v_bikeFile = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
+    LogInfo("ThemeManager tries loading %s", v_bikeFile.c_str());
+    Theme* v_theme = new Theme(FDT_DATA, v_bikeFile);
     if(v_theme != NULL) {
       m_themes.push_back(v_theme);
     }
   }
-  LogInfo("No theme could be initialized");
+  
+  //xmDatabase::instance("main")->read_DB_free(v_result);
+
 }
 
 void ThemeManager::loadTheme(FileDataType i_fdt, std::string p_themeFile) {
@@ -1157,8 +1168,19 @@ void ThemeManager::loadTheme(FileDataType i_fdt, std::string p_themeFile) {
   m_themes.push_back(v_theme);
 }
 
-void ThemeManager::pushThemeToActivate(std::string p_themeFile) {
-  m_themeFiles2Activate.push_back(p_themeFile);
+void ThemeManager::pushThemeToActivate(std::string p_themeName) {
+  m_themes2Activate.push_back(p_themeName);
+}
+
+bool ThemeManager::themeIsAlreadyLoaded(std::string i_themeFile) {
+  for(unsigned int i=0; i<m_themes.size(); i++) {
+    // We can have duplicate theme names for bikes and general themes, so we must check for the required file, which is unique
+    if(m_themes[i]->getThemeFile() == i_themeFile) {      
+          LogInfo("ALready loaded, sir");
+          return true;
+    }
+  }
+  return false;
 }
 
 void ThemeManager::initThemesFromDir(xmDatabase *i_db) {
