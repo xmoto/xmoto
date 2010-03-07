@@ -36,19 +36,27 @@ void xmDatabase::bikes_add_begin() {
 }
 
 void xmDatabase::bikes_add(const std::string& i_id_theme,
-		 const std::string& i_filepath) {
-  simpleSql("INSERT INTO bikes(id_bike, filepath, checkSum) " 
+			   const std::string& i_filepath,
+			   const std::string& i_theme,
+			   const std::string& i_physics) {
+  simpleSql("INSERT INTO bikes(id_bike, filepath, checkSum, theme, physics) " 
 	    "VALUES (\"" +
 	    protectString(i_id_theme)   + "\", \"" +
 	    protectString(i_filepath)   + "\", \"" +
-	    protectString(md5file(i_filepath))   + "\");");
+	    protectString(md5file(i_filepath)) + "\", \"" +
+	    protectString(i_theme)  + "\", \"" +
+	    protectString(i_physics) + "\");");
 }
 
 void xmDatabase::bikes_update(const std::string& i_id_theme,
-		    const std::string& i_filepath) {
+			      const std::string& i_filepath,
+			      const std::string& i_theme,
+			      const std::string& i_physics) {
   simpleSql("UPDATE bikes "
 	    "SET filepath=\"" + protectString(i_filepath) +
-	    "\", checkSum=\"" + protectString(md5file(i_filepath)) + "\" "
+	    "\", checkSum=\"" + protectString(md5file(i_filepath)) + 
+	    "\", theme=\""    + protectString(i_theme) +
+	    "\", physics=\""  + protectString(i_physics) + "\" "
 	    "WHERE id_bike=\"" + protectString(i_id_theme) + "\";");
 }
 
@@ -70,12 +78,48 @@ bool xmDatabase::bikes_exists(const std::string& i_id_theme) {
   return nrow == 1;
 }
 
-std::string xmDatabase::bikes_getFileName(const std::string& i_id_theme) {
+std::string xmDatabase::bikes_getTheme(const std::string& i_id_bike) {
   char **v_result;
   unsigned int nrow;
   std::string v_res;
 
-  v_result = readDB("SELECT filepath FROM bikes WHERE id_bike=\"" + protectString(i_id_theme) + "\";",
+  v_result = readDB("SELECT theme FROM bikes WHERE id_bike=\"" + protectString(i_id_bike) + "\";",
+		    nrow);
+  if(nrow != 1) {
+    read_DB_free(v_result);
+    throw Exception("Couldn't get Theme from Bike, because Bike not found");
+  }
+
+  v_res = getResult(v_result, 1, 0, 0);
+  read_DB_free(v_result);
+
+  return v_res;
+}
+
+std::string xmDatabase::bikes_getPhysics(const std::string& i_id_bike) {
+  char **v_result;
+  unsigned int nrow;
+  std::string v_res;
+
+  v_result = readDB("SELECT physics FROM bikes WHERE id_bike=\"" + protectString(i_id_bike) + "\";",
+		    nrow);
+  if(nrow != 1) {
+    read_DB_free(v_result);
+    throw Exception("Bike not found, couldn't get Physics");
+  }
+
+  v_res = getResult(v_result, 1, 0, 0);
+  read_DB_free(v_result);
+
+  return v_res;
+}
+
+std::string xmDatabase::bikes_getFileName(const std::string& i_id_bike) {
+  char **v_result;
+  unsigned int nrow;
+  std::string v_res;
+
+  v_result = readDB("SELECT filepath FROM bikes WHERE id_bike=\"" + protectString(i_id_bike) + "\";",
 		    nrow);
   if(nrow != 1) {
     read_DB_free(v_result);

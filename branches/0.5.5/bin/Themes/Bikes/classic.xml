@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf8" ?>
+<xmoto_theme name="Potato">
+
+<sprite type="BikerPart" name="GhostBikerBody" file="Body_Ghost.png" sum="cab5aebb25452572ca832bdda452500a" />
+<sprite type="BikerPart" name="GhostBikerFront" file="Front_Ghost.png" sum="bbf832018ea041740b73fc4a24fd73e9" />
+<sprite type="BikerPart" name="GhostBikerRear" file="Rear_Ghost.png" sum="ecb2f44b8eb4cbcc479c140f73f072bf" />
+<sprite type="BikerPart" name="GhostBikerWheel" file="Wheel_Ghost.png" sum="6baa38378c3faf9ed68235cf62b4418c" />
+<sprite type="BikerPart" name="GhostLowerArm" file="LowerArm_Ghost.png" sum="a22ca3ff5165442afff0048841476188" />
+<sprite type="BikerPart" name="GhostLowerLeg" file="LowerLeg_Ghost.png" sum="a8de2a001369e91730536724e6cfece6" />
+<sprite type="BikerPart" name="GhostTorso" file="Torso_Ghost.png" sum="1acd85efe4857cdd5d119aab7e27ec6f" />
+<sprite type="BikerPart" name="GhostUpperArm" file="UpperArm_Ghost.png" sum="27a4b8b7313eab848ebd8799e32ddc52" />
+<sprite type="BikerPart" name="GhostUpperLeg" file="UpperLeg_Ghost.png" sum="bc3e07f1194c0280d45ea812b4cd7784" />
+<sprite type="BikerPart" name="PlayerBikerBody" file="Body1.png" sum="43a64efd4ecef792e84632cbff092db2" />
+<sprite type="BikerPart" name="PlayerBikerFront" file="Front1.png" sum="6c4ab606fbdd36e089951f74a1dd83c5" />
+<sprite type="BikerPart" name="PlayerBikerRear" file="Rear1.png" sum="afc5b32aaf1603ad51c55f66916b63cd" />
+<sprite type="BikerPart" name="PlayerBikerWheel" file="Wheel1.png" sum="d24b21664a17f33123a42fd7d715d2f6" />
+<sprite type="BikerPart" name="PlayerLowerArm" file="LowerArm1.png" sum="78cf1e70e9b4e4c2e11849a989d6b574" />
+<sprite type="BikerPart" name="PlayerLowerLeg" file="LowerLeg1.png" sum="28642ba2e5cc037266b9fe26f70c1331" />
+<sprite type="BikerPart" name="PlayerTorso" file="Torso1.png" sum="5106870f84391baff20b2c8de1882155" />
+<sprite type="BikerPart" name="PlayerUpperArm" file="UpperArm1.png" sum="5784ed3126554d73b2ab99195788d3ec" />
+<sprite type="BikerPart" name="PlayerUpperLeg" file="UpperLeg1.png" sum="dd394ba38b2ca25a480b2b4c5931ebf1" />
+
+<sound name="Engine00" file="engine_00.wav" sum="85531599be8b53c144a32b791fb6b4e9" />
+<sound name="Engine01" file="engine_01.wav" sum="5036e3146784270552f362814cdde661" />
+<sound name="Engine02" file="engine_02.wav" sum="6afa9831679dabf12143c78f465f9567" />
+<sound name="Engine03" file="engine_03.wav" sum="6689ff3df3f1f3865b18fdbf7a2dc3ca" />
+<sound name="Engine04" file="engine_04.wav" sum="0317fc88f30e5b22bfb49629b31e5a48" />
+<sound name="Engine05" file="engine_05.wav" sum="d57aca610937233192cae2bd2af2d160" />
+<sound name="Engine06" file="engine_06.wav" sum="94e96778f7233093848551dc4ab33239" />
+<sound name="Engine07" file="engine_07.wav" sum="91f943141fcfc4bbbf360a479ed3f2c9" />
+<sound name="Engine08" file="engine_08.wav" sum="6551201f350eef3f305605f93e7241d9" />
+<sound name="Engine09" file="engine_09.wav" sum="29b527be424c53242b8d407e8380947a" />
+<sound name="Engine10" file="engine_10.wav" sum="ee1a6cd20158ac1565d428ffbd0e6fad" />
+<sound name="Engine11" file="engine_11.wav" sum="14e10281e16452a3182b7cca470ae862" />
+<sound name="Engine12" file="engine_12.wav" sum="235ea33c03f56a63db59747c6e233014" />
+
+</xmoto_theme>

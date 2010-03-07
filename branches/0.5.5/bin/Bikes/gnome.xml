@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf8" ?>
 <xmoto_bike name="Gnome" />
-<gfxTheme name="Red Rebel" />
+<gfxTheme name="Small" />
 <physics  name="Gnome" />
 <parameter characteristic="Control" 	 value="1" />
 <parameter characteristic="Speed" 	 value="0" />

@@ -854,14 +854,19 @@ void GameApp::initBikesFromDir(xmDatabase* i_db) {
 #define BIKES_DIR "Bikes"
   std::vector<std::string> v_bikesFiles = XMFS::findPhysFiles(FDT_DATA, std::string(BIKES_DIR)
 							       + std::string("/*.xml"), true);
-  std::string v_name;
+  std::string v_name,
+	      v_theme,
+	      v_physics;
+  
 
   i_db->bikes_add_begin();
   for(unsigned int i=0; i<v_bikesFiles.size(); i++) {
     try {
       v_name = getParameterFromFile(v_bikesFiles[i], "xmoto_bike");
+      v_theme = getParameterFromFile(v_bikesFiles[i], "gfxTheme");
+      v_physics = getParameterFromFile(v_bikesFiles[i], "physics");
       if(i_db->bikes_exists(v_name) == false) {
-	i_db->bikes_add(v_name, v_bikesFiles[i]);
+	i_db->bikes_add(v_name, v_bikesFiles[i], v_theme, v_physics);
       } else {
 	LogWarning(std::string("Bike " + v_name + " is present several times").c_str());
       }
@@ -945,9 +950,11 @@ std::string GameApp::getPhysicsFromBike() {
   
   std::string v_id_bike;
   std::string v_bikeFile;
-  v_result = xmDatabase::instance("main")->readDB("SELECT filepath FROM bikes WHERE id_bike=\"" + XMSession::instance()->bike() + "\";", nrow);
-  v_bikeFile = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
-  xmDatabase::instance("main")->read_DB_free(v_result);
+  std::string v_bikePhysics;
+//  v_result = xmDatabase::instance("main")->readDB("SELECT filepath FROM bikes WHERE id_bike=\"" + XMSession::instance()->bike() + "\";", nrow);
+//  v_bikeFile = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
+//  xmDatabase::instance("main")->read_DB_free(v_result);
+  v_bikeFile = xmDatabase::instance("main")->bikes_getFileName(XMSession::instance()->bike());
   
   /* open the file */
   v_bikeXml.readFromFile(FDT_DATA, v_bikeFile);   
@@ -958,23 +965,25 @@ std::string GameApp::getPhysicsFromBike() {
   }
   
   /* read the theme name */
-  v_bikeXmlDataElement = v_bikeXmlData->FirstChildElement("physics"); // "xmoto_physics");
+/*  v_bikeXmlDataElement = v_bikeXmlData->FirstChildElement("physics"); // "xmoto_physics");
   if(v_bikeXmlDataElement != NULL) {
     pc = v_bikeXmlDataElement->Attribute("name");
     v_name = pc;
   }
   if(v_name == "") {
     throw Exception("error : the physics defined in the bike theme  cant be found !");
-  }
+  }*/
+  v_bikePhysics = xmDatabase::instance("main")->bikes_getPhysics(XMSession::instance()->bike());
+
   
-  std::string v_themeFile = XMSession::instance()->bikePhysics();  // this is a good default for first time run of this version
-  LogInfo("und: %s",v_themeFile.c_str());
+  std::string v_physicsFile = XMSession::instance()->bikePhysics();  // this is a good default for first time run of this version
+  LogInfo("und: %s",v_physicsFile.c_str());
   for(unsigned int i=0; i<m_availablePhysics.size(); i++) {
-    if(getParameterFromFile(m_availablePhysics[i], "xmoto_physics").c_str() == v_name) {
-      v_themeFile= m_availablePhysics[i];
+    if(getParameterFromFile(m_availablePhysics[i], "xmoto_physics").c_str() == v_bikePhysics) {
+      v_physicsFile= m_availablePhysics[i];
       LogInfo("Physics selected: %s",m_availablePhysics[i].c_str());
     }
   }
   
-  return v_themeFile;
+  return v_physicsFile;
 }

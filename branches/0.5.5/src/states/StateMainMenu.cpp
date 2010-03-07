@@ -1894,7 +1894,7 @@ void StateMainMenu::updateBikesList() {
 //  xmDatabase::instance("main")->read_DB_free(v_result);
   
   std::string v_id_theme;
-  v_result = xmDatabase::instance("main")->readDB("SELECT id_theme FROM themes WHERE type=\"bike\";", nrow);
+  v_result = xmDatabase::instance("main")->readDB("SELECT theme FROM bikes;", nrow);
   for(unsigned int i=0; i<nrow; i++) {
     v_id_theme = xmDatabase::instance("main")->getResult(v_result, 1, i, 0);
     pEntry = v_list->addEntry(v_id_theme.c_str(), NULL);
@@ -1903,21 +1903,22 @@ void StateMainMenu::updateBikesList() {
   xmDatabase::instance("main")->read_DB_free(v_result);
   
   std::string v_bikeFile;
-  v_result = xmDatabase::instance("main")->readDB("SELECT filepath FROM bikes WHERE id_bike=\"" + XMSession::instance()->bike() + "\";", nrow);
-  if(v_result!= NULL) v_bikeFile = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
-  else v_bikeFile=XMSession::instance()->bike();
-  xmDatabase::instance("main")->read_DB_free(v_result);
+//  v_result = xmDatabase::instance("main")->readDB("SELECT filepath FROM bikes WHERE id_bike=\"" + XMSession::instance()->bike() + "\";", nrow);
+//  if(v_result!= NULL) v_bikeFile = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
+//  else v_bikeFile=XMSession::instance()->bike();
+//  xmDatabase::instance("main")->read_DB_free(v_result);
+  v_bikeFile = xmDatabase::instance("main")->bikes_getTheme(XMSession::instance()->bike());
 
   nBike = 0;
   for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
-    std::string v_themeName = GameApp::instance()->getParameterFromFile(v_bikeFile, "gfxTheme");
+    std::string v_themeName = xmDatabase::instance("main")->bikes_getTheme(XMSession::instance()->bike());//GameApp::instance()->getParameterFromFile(v_bikeFile, "gfxTheme");
     if(v_list->getEntries()[i]->Text[0] == v_themeName) {
       XMSession::instance()->setThemeBike(v_themeName);
       nBike = i;
         
       // if a new BikeTheme gets chosen, we have to check if its loaded and get the filePath from xmDb and load the xml, if necessary
       std::string v_themefile = xmDatabase::instance("main")->themes_getFileName(v_themeName);
-      if( !ThemeManager::instance()->themeIsAlreadyLoaded(v_themeFile) ) {
+      if( !ThemeManager::instance()->themeIsAlreadyLoaded(v_themefile) ) {
       
 //      HIER IS NOCH DER WURM DRIN; WEIL THEMES_GET_FILENAME NICHT ZW GENERAL UND BIKE UNTERSCHEIDED
       

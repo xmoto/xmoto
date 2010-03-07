@@ -1095,9 +1095,9 @@ void WebThemes::updateTheme(xmDatabase* i_pDb, const std::string& i_id_theme, WW
 	return;
       } else {
 	if(v_onDisk) {
-	  i_pDb->themes_update(i_id_theme, v_themeFile, "general");
+	  i_pDb->themes_update(i_id_theme, v_themeFile);
 	} else {
-	  i_pDb->themes_add(i_id_theme, v_themeFile, "general");
+	  i_pDb->themes_add(i_id_theme, v_themeFile);
 	}
       }
     } else {

@@ -117,14 +117,20 @@ public:
   /* bikes */
   bool bikes_isIndexUptodate() const;
   void bikes_add_begin();
-  void bikes_add(const std::string& i_id_theme,
-		 const std::string& i_filepath);
-  void bikes_update(const std::string& i_id_theme,
-		    const std::string& i_filepath);
+  void bikes_add(const std::string& i_id_bike,
+		 const std::string& i_filepath,
+		 const std::string& i_theme,
+		 const std::string& i_physics);
+  void bikes_update(const std::string& i_id_bike,
+		    const std::string& i_filepath,
+		    const std::string& i_theme,
+		    const std::string& i_physics);
   void bikes_add_end();
-  void bikes_delete(const std::string& i_theme);
-  bool bikes_exists(const std::string& i_id_theme);
-  std::string bikes_getFileName(const std::string& i_id_theme);
+  void bikes_delete(const std::string& i_bike);
+  bool bikes_exists(const std::string& i_id_bike);
+  std::string bikes_getFileName(const std::string& i_id_bike);
+  std::string bikes_getTheme(const std::string& i_id_bike);
+  std::string bikes_getPhysics(const std::string& i_id_bike);
 
   /* replays */
   bool replays_isIndexUptodate() const;
@@ -143,11 +149,9 @@ public:
   bool themes_isIndexUptodate() const;
   void themes_add_begin();
   void themes_add(const std::string& i_id_theme,
-		  const std::string& i_filepath,
-		  const std::string& i_type);
+		  const std::string& i_filepath);
   void themes_update(const std::string& i_id_theme,
-		     const std::string& i_filepath,
-		     const std::string& i_type);
+		     const std::string& i_filepath);
   void themes_add_end();
   void themes_delete(const std::string& i_theme);
   bool themes_exists(const std::string& i_id_theme);

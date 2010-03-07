@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf8" ?>
 <xmoto_bike name="Elmo" />
-<gfxTheme name="modern" />
+<gfxTheme name="Modern" />
 <physics name="Elmo" />
 <parameter characteristic="Control" 	 value="2" />
 <parameter characteristic="Speed" 	 value="1" />

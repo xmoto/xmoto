@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf8" ?>
+<xmoto_theme name="Red Rebel">
+<sprite type="Texture" name="default" file="Dirt.jpg" sum="44df1a4fd3b135149648a588ff4ebd4a" />
+<sprite type="BikerPart" name="GhostBikerBody" file="GhostBikerBody_315.png" sum="8a7cd4b3e4620c9ca3eb1328966d9614" />
+<sprite type="BikerPart" name="GhostBikerFront" file="Front_Ghost.png" sum="bbf832018ea041740b73fc4a24fd73e9" />
+<sprite type="BikerPart" name="GhostBikerRear" file="Rear_Ghost.png" sum="ecb2f44b8eb4cbcc479c140f73f072bf" />
+<sprite type="BikerPart" name="GhostBikerWheel" file="GhostBikerWheel_316.png" sum="95607888fe0a52c2116828a3bc02e0b8" />
+<sprite type="BikerPart" name="GhostLowerArm" file="GhostLowerArm_317.png" sum="afbaba0a56e14f16b22b8fd9da2a4834" />
+<sprite type="BikerPart" name="GhostLowerLeg" file="GhostLowerLeg_318.png" sum="64016e128fa6ff374436e7a8220ce67d" />
+<sprite type="BikerPart" name="GhostTorso" file="GhostTorso_319.png" sum="e52b2273834eab22e7bae3fa2b338cb8" />
+<sprite type="BikerPart" name="GhostUpperArm" file="GhostUpperArm_320.png" sum="73008a8b78ef6769e2e3e2e8a87260da" />
+<sprite type="BikerPart" name="GhostUpperLeg" file="GhostUpperLeg_321.png" sum="e4719307131fbda50979a4a97ff1c1d5" />
+<sprite type="BikerPart" name="PlayerBikerBody" file="PlayerBikerBody_322.png" sum="38d87816cc1d60aca5f210edb21f2c97" />
+<sprite type="BikerPart" name="PlayerBikerFront" file="Front1.png" sum="6c4ab606fbdd36e089951f74a1dd83c5" />
+<sprite type="BikerPart" name="PlayerBikerRear" file="Rear1.png" sum="afc5b32aaf1603ad51c55f66916b63cd" />
+<sprite type="BikerPart" name="PlayerBikerWheel" file="PlayerBikerWheel_323.png" sum="9d563af0a3a0e90e193cbcb128336113" />
+<sprite type="BikerPart" name="PlayerLowerArm" file="PlayerLowerArm_324.png" sum="3dd5da7727a8a5987ae5e66421212bae" />
+<sprite type="BikerPart" name="PlayerLowerLeg" file="PlayerLowerLeg_331.png" sum="e47f0f4ef14c7fdcb657205383c60733" />
+<sprite type="BikerPart" name="PlayerTorso" file="PlayerTorso_330.png" sum="50b952b2fee8cb36c133a4a75b3188e7" />
+<sprite type="BikerPart" name="PlayerUpperArm" file="PlayerUpperArm_329.png" sum="3ae60c5817434b3effac4ebb78b4e511" />
+<sprite type="BikerPart" name="PlayerUpperLeg" file="PlayerUpperLeg_332.png" sum="f3042ceeb3b1d1fb44de911208ab257d" />
+<sound name="Engine00" file="engine_00.wav" sum="85531599be8b53c144a32b791fb6b4e9" />
+<sound name="Engine01" file="engine_01.wav" sum="5036e3146784270552f362814cdde661" />
+<sound name="Engine02" file="engine_02.wav" sum="6afa9831679dabf12143c78f465f9567" />
+<sound name="Engine03" file="engine_03.wav" sum="6689ff3df3f1f3865b18fdbf7a2dc3ca" />
+<sound name="Engine04" file="engine_04.wav" sum="0317fc88f30e5b22bfb49629b31e5a48" />
+<sound name="Engine05" file="engine_05.wav" sum="d57aca610937233192cae2bd2af2d160" />
+<sound name="Engine06" file="engine_06.wav" sum="94e96778f7233093848551dc4ab33239" />
+<sound name="Engine07" file="engine_07.wav" sum="91f943141fcfc4bbbf360a479ed3f2c9" />
+<sound name="Engine08" file="engine_08.wav" sum="6551201f350eef3f305605f93e7241d9" />
+<sound name="Engine09" file="engine_09.wav" sum="29b527be424c53242b8d407e8380947a" />
+<sound name="Engine10" file="engine_10.wav" sum="ee1a6cd20158ac1565d428ffbd0e6fad" />
+<sound name="Engine11" file="engine_11.wav" sum="14e10281e16452a3182b7cca470ae862" />
+<sound name="Engine12" file="engine_12.wav" sum="235ea33c03f56a63db59747c6e233014" />
+
+</xmoto_theme>

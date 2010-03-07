@@ -1195,7 +1195,7 @@ void ThemeManager::initThemesFromDir(xmDatabase *i_db) {
     try {
       v_name = getThemeNameFromFile(m_themeFiles[i]);
       if(i_db->themes_exists(v_name) == false) {
-	i_db->themes_add(v_name, m_themeFiles[i],"general");
+	i_db->themes_add(v_name, m_themeFiles[i]);
       } else {
 	LogWarning(std::string("Theme " + v_name + " is present several times").c_str());
       }
