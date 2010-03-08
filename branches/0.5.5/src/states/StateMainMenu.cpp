@@ -1941,7 +1941,16 @@ void StateMainMenu::checkEventsBikes() {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       XMSession::instance()->setBike(pListEntry->Text[0]);
+      //updateBikesList();// DIES VERURSACHT DIE BLOCKADE DER AUSWAHL!!!!!!!
+      std::string v_themeName = xmDatabase::instance("main")->bikes_getTheme(XMSession::instance()->bike());
+      XMSession::instance()->setThemeBike(v_themeName);
+      std::string v_themefile = xmDatabase::instance("main")->themes_getFileName(v_themeName);
+      if( !ThemeManager::instance()->themeIsAlreadyLoaded(v_themefile) ) {      
+        ThemeManager::instance()->loadTheme(FDT_DATA,v_themefile);
+      }
+
     }
+    
   }
   
   // show
