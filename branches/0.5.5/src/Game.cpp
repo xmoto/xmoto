@@ -880,7 +880,7 @@ void GameApp::initBikesFromDir(xmDatabase* i_db) {
 }
 
 
-void GameApp::initPhysicsFromDir() {
+void GameApp::initPhysicsFromDir(xmDatabase* i_db) {
 #define PHYSICS_DIR "Physics"
   std::vector<std::string> v_physicsFiles = XMFS::findPhysFiles(FDT_DATA, std::string(PHYSICS_DIR)
 							       + std::string("/*.xml"), true);
@@ -895,6 +895,21 @@ void GameApp::initPhysicsFromDir() {
       /* anyway, give up this theme */
     }
   }
+  i_db->physics_add_begin();
+  for(unsigned int i=0; i<v_physicsFiles.size(); i++) {
+    try {
+      v_name = getParameterFromFile(v_physicsFiles[i], "xmoto_physics");
+      if(i_db->physics_exists(v_name) == false) {
+	i_db->physics_add(v_name, v_physicsFiles[i]);
+      } else {
+	LogWarning(std::string("Physics " + v_name + " is present several times").c_str());
+      }
+    } catch(Exception &e) {
+      /* anyway, give up this bike */
+    }
+  }
+  i_db->physics_add_end();	
+
 }
 
 

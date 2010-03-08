@@ -157,6 +157,19 @@ public:
   bool themes_exists(const std::string& i_id_theme);
   std::string themes_getFileName(const std::string& i_id_theme);
 
+  /* physics */
+  bool physics_isIndexUptodate() const;
+  void physics_add_begin();
+  void physics_add(const std::string& i_id_physics,
+		  const std::string& i_filepath);
+  void physics_update(const std::string& i_id_physics,
+		     const std::string& i_filepath);
+  void physics_add_end();
+  void physics_delete(const std::string& i_id_physics);
+  bool physics_exists(const std::string& i_id_physics);
+  std::string physics_getFileName(const std::string& i_id_physics);
+
+
   /* profiles */
   void profiles_addFinishTime(const std::string& i_sitekey, const std::string& i_profile, const std::string& i_id_level,
 			      const std::string& i_timeStamp, int i_finishTime);
@@ -226,6 +239,7 @@ public:
   bool m_requiredReplaysUpdateAfterInit;
   bool m_requiredThemesUpdateAfterInit;
   bool m_requiredBikesUpdateAfterInit;
+  bool m_requiredPhysicsUpdateAfterInit;
   static bool Trace;
 
   /* add user function for db */

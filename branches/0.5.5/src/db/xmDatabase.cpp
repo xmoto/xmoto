@@ -95,6 +95,7 @@ void xmDatabase::init(const std::string& i_dbFile,
     m_requiredReplaysUpdateAfterInit = true;
     m_requiredThemesUpdateAfterInit  = true;
     m_requiredBikesUpdateAfterInit   = true;
+    m_requiredPhysicsUpdateAfterInit = true;
     setXmDbGameDataDir(i_gameDataDir);
     setXmDbUserDataDir(i_userDataDir);
     setXmDbBinPackCheckSum(i_binPackCheckSum);
@@ -115,6 +116,7 @@ void xmDatabase::init(const std::string& i_dbFile,
 	m_requiredReplaysUpdateAfterInit = true;
 	m_requiredThemesUpdateAfterInit  = true;
 	m_requiredBikesUpdateAfterInit   = true;
+	m_requiredPhysicsUpdateAfterInit = true;
 
 	/* -- first initialisation or xmoto.bin/userdatadir update -- */
 	webLoadDataFirstTime();
@@ -725,6 +727,8 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
   case 34:
     try {
       simpleSql("CREATE TABLE bikes(id_bike PRIMARY KEY, filepath, checkSum, theme, physics);");
+      simpleSql("CREATE TABLE physics(id_physics PRIMARY KEY, filepath, checkSum);");
+      m_requiredPhysicsUpdateAfterInit= true;
       m_requiredThemesUpdateAfterInit = true;
       m_requiredBikesUpdateAfterInit  = true;
       updateXmDbVersion(35);

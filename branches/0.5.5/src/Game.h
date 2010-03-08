@@ -161,7 +161,7 @@ public:
 
   static void wait(int& io_lastFrameTimeStamp, int& io_frameLate, int i_maxFps);
   
-  void initPhysicsFromDir();
+  void initPhysicsFromDir(xmDatabase* threadDb);
   std::vector<std::string> getAvailablePhysics();
   std::string getParameterFromFile(std::string p_themeFile, std::string i_element);
   std::string getPhysicsFromBike();

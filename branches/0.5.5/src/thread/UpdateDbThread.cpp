@@ -33,6 +33,7 @@ UpdateDbThread::UpdateDbThread()
     StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
     StateManager::instance()->registerAsEmitter("THEMES_UPDATED");
     StateManager::instance()->registerAsEmitter("BIKES_UPDATED");
+    StateManager::instance()->registerAsEmitter("PHYSICS_UPDATED");
   }
 }
 
@@ -60,6 +61,10 @@ int UpdateDbThread::realThreadFunction()
   setThreadCurrentOperation(GAMETEXT_RELOADINGBIKES);
   GameApp::instance()->initBikesFromDir(m_pDb);
   StateManager::instance()->sendAsynchronousMessage("BIKES_UPDATED");
+
+  setThreadCurrentOperation(GAMETEXT_RELOADINGPHYSICS);
+  GameApp::instance()->initPhysicsFromDir(m_pDb);
+  StateManager::instance()->sendAsynchronousMessage("PHYSICS_UPDATED");
 
   return 0;
 }
