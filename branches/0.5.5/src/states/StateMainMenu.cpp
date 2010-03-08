@@ -1825,7 +1825,8 @@ void StateMainMenu::updateBikesList() {
     UIListEntry *pEntry;
 
   /* Bikes */
-  v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST");
+//  v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST");
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST"));
 
   /* Clear list  */
   if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
@@ -1907,12 +1908,9 @@ void StateMainMenu::updateBikesList() {
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
   
-  std::string v_bikeFile;
-  v_bikeFile = xmDatabase::instance("main")->bikes_getTheme(XMSession::instance()->bike());
-
   nBike = 0;
+  std::string v_themeName = xmDatabase::instance("main")->bikes_getTheme(XMSession::instance()->bike());
   for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
-    std::string v_themeName = xmDatabase::instance("main")->bikes_getTheme(XMSession::instance()->bike());//GameApp::instance()->getParameterFromFile(v_bikeFile, "gfxTheme");
     if(v_list->getEntries()[i]->Text[0] == v_themeName) {
       XMSession::instance()->setThemeBike(v_themeName);
       nBike = i;
@@ -1932,31 +1930,20 @@ void StateMainMenu::checkEventsBikes() {
   UIList*      v_list;
   UIButton*    v_button;
 
+
+  /********* Bikes Tab ***********/
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST"));
 
   /* list changed */
   if(v_list->isChanged()) {
     v_list->setChanged(false);
+    // set bike physics
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
+      XMSession::instance()->setBike(pListEntry->Text[0]);
+    }
   }
-
-  // set bike physics
-  UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
-  XMSession::instance()->setBike(pListEntry->Text[0].c_str());
-        
-  UIStatic* v_text = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:ACTIVEBIKE"));
-  v_text->setCaption(std::string(GAMETEXT_BIKE) + ":  " + XMSession::instance()->bike());
-
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:BIKE_THEMES_LIST"));
-  /* list changed */
-  if(v_list->isChanged()) {
-    v_list->setChanged(false);
-    updateBikesList();
-  }
-  pListEntry = v_list->getEntries()[v_list->getSelected()];
-  XMSession::instance()->setThemeBike(pListEntry->Text[0].c_str());
-  LogInfo("Setting themeBike: %s",pListEntry->Text[0].c_str());
-        
-
+  
   // show
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_SHOW_BUTTON"));
   if(v_button->isClicked()) {
@@ -1966,7 +1953,8 @@ void StateMainMenu::checkEventsBikes() {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
       
-      // show bike details
+      // TODO: show bike details
+      
       }
     }
   }
@@ -1979,28 +1967,47 @@ void StateMainMenu::checkEventsBikes() {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
-/*	StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
-	v_msgboxState->setId("REPLAYS_DELETE");
-	v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
-	StateManager::instance()->pushState(v_msgboxState);	
-	updateReplaysRights();
-*/    }
+      
+      // TODO what to do with it???
+      
+      }
     }
   }
-  
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_LOCAL_TAB:BIKES_LOCAL_LIST"));
 
-  // set bike physics
- // pListEntry = v_list->getEntries()[v_list->getSelected()];
- // XMSession::instance()->setBikePhysics(xmDatabase::instance("main")->bikes_getFileName(pListEntry->Text[0]));
+
+  /****** Bike Themes Tab *******/
+  /* display current bike name */
+  UIStatic* v_text = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:ACTIVEBIKE"));
+  v_text->setCaption(std::string(GAMETEXT_BIKE) + ":  " + XMSession::instance()->bike());
+
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:BIKE_THEMES_LIST"));
+  /* list changed */
+  if(v_list->isChanged()) {
+    v_list->setChanged(false);
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry* pListEntry = v_list->getEntries()[v_list->getSelected()];
+      XMSession::instance()->setThemeBike(pListEntry->Text[0]);
+
+      // if a new BikeTheme gets chosen, we have to check if its loaded and get the filePath from xmDb and load the xml, if necessary
+      std::string v_themefile = xmDatabase::instance("main")->themes_getFileName(pListEntry->Text[0]);
+      if( !ThemeManager::instance()->themeIsAlreadyLoaded(v_themefile) ) {      
+        ThemeManager::instance()->loadTheme(FDT_DATA,v_themefile);
+      }
+      LogInfo("Setting themeBike: %s",pListEntry->Text[0].c_str());
+    }
+//    updateBikesList();
+  }
+  
+  
+  /****** Local Physics Tab ******/
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_LOCAL_TAB:BIKES_LOCAL_LIST"));
 
   /* list changed */
   if(v_list->isChanged()) {
     v_list->setChanged(false);
-    updateBikesList();
-  }
-
-  // if we use local physics settings, assign them here and override the rest
+    
+    
+      // if we use local physics settings, assign them here and override the rest
   bool v_override =((UIButton*)m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_LOCAL_TAB:OVERRIDE_BIKES"))->getChecked();
   if(v_override) {
     XMSession::instance()->setBikesOverride(true);
@@ -2016,6 +2023,10 @@ void StateMainMenu::checkEventsBikes() {
   else {
     XMSession::instance()->setBikesOverride(false);
   }
+
+//    updateBikesList();
+  }
+
 
 }
 
