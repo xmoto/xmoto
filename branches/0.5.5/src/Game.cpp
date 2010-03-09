@@ -912,6 +912,22 @@ void GameApp::initPhysicsFromDir(xmDatabase* i_db) {
 
 }
 
+void GameApp::initPhysicsFromXmDb(xmDatabase* i_db) {
+#define PHYSICS_DIR "Physics"
+  std::vector<std::string> v_physicsFiles = XMFS::findPhysFiles(FDT_DATA, std::string(PHYSICS_DIR)
+							       + std::string("/*.xml"), true);
+  std::string v_name;
+
+  for(unsigned int i=0; i<v_physicsFiles.size(); i++) {
+    try {
+      v_name = getParameterFromFile(v_physicsFiles[i], "xmoto_physics");
+      m_availablePhysics.push_back(v_physicsFiles[i]);
+      LogInfo("found physics: %s", v_physicsFiles[i].c_str() );
+    } catch(Exception &e) {
+      /* anyway, give up this theme */
+    }
+  }
+}
 
 std::string GameApp::getParameterFromFile(std::string p_themeFile, std::string i_element) {
   XMLDocument v_ThemeXml;

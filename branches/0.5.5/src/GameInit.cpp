@@ -378,6 +378,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(pDb->physics_isIndexUptodate() == false) {
     initPhysicsFromDir(pDb);
   }
+  else {
+    initPhysicsFromXmDb(pDb);
+  }
 
   if(pDb->bikes_isIndexUptodate() == false) {
     initBikesFromDir(pDb);

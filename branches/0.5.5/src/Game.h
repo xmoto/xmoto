@@ -145,6 +145,7 @@ public:
   void initReplaysFromDir(xmDatabase* threadDb,
 			  XMotoLoadReplaysInterface* pLoadReplaysInterface = NULL);
   void initBikesFromDir(xmDatabase* threadDb);
+  void initPhysicsFromXmDb(xmDatabase* threadDb);
 
   void gameScreenshot();
   void enableWWW(bool bValue);
