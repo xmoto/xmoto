@@ -1866,12 +1866,12 @@ void StateMainMenu::updateBikesList() {
   }
   v_list->clear();
   
-  std::vector<std::string> v_availablePhysics = GameApp::instance()->getAvailablePhysics();
-  
-  for(unsigned int i=0; i<v_availablePhysics.size(); i++) {
-    v_list->addEntry(GameApp::instance()->getParameterFromFile(v_availablePhysics[i], "xmoto_physics"));
+  v_result = xmDatabase::instance("main")->readDB("SELECT id_physics FROM physics;",  nrow);
+  for(unsigned int i=0; i<nrow; i++) {
+    v_list->addEntry(xmDatabase::instance("main")->getResult(v_result,1,i,0));
   }
-
+  xmDatabase::instance("main")->read_DB_free(v_result);
+  
   std::string v_bikeLocalName;
   if(!XMSession::instance()->bikesOverride()) {
     v_bikeLocalName = xmDatabase::instance("main")->bikes_getPhysics(XMSession::instance()->bike());
@@ -1929,7 +1929,8 @@ void StateMainMenu::updateBikesList() {
 void StateMainMenu::checkEventsBikes() {
   UIList*      v_list;
   UIButton*    v_button;
-
+  char** v_result;
+  unsigned int nrow;
 
   /********* Bikes Tab ***********/
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST"));
@@ -2014,27 +2015,29 @@ void StateMainMenu::checkEventsBikes() {
   /* list changed */
   if(v_list->isChanged()) {
     v_list->setChanged(false);
-    
-    
-      // if we use local physics settings, assign them here and override the rest
-  bool v_override =((UIButton*)m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_LOCAL_TAB:OVERRIDE_BIKES"))->getChecked();
-  if(v_override) {
-    XMSession::instance()->setBikesOverride(true);
+      
     // put selected bike to XMSession var
     UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
-    for(unsigned int i=0; i<GameApp::instance()->getAvailablePhysics().size(); i++) {
-	  if(GameApp::instance()->getParameterFromFile(GameApp::instance()->getAvailablePhysics()[i], "xmoto_physics") == pListEntry->Text[0]) {
-            XMSession::instance()->setBikePhysics(GameApp::instance()->getAvailablePhysics()[i]);
+    v_result = xmDatabase::instance("main")->readDB("SELECT id_physics, filepath FROM physics;",  nrow);
+    for(unsigned int i=0; i<nrow; i++) {
+	  if(xmDatabase::instance("main")->getResult(v_result,2,i,0) == pListEntry->Text[0]) {
+            XMSession::instance()->setBikePhysics(xmDatabase::instance("main")->getResult(v_result,2,i,1));
             LogInfo("Physics set: %s", pListEntry->Text[0].c_str());
 	  }
     }
+    xmDatabase::instance("main")->read_DB_free(v_result);
+  }
+      // if we use local physics settings, assign them here and override the rest
+  bool v_override = reinterpret_cast<UIButton*>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_LOCAL_TAB:OVERRIDE_BIKES"))->getChecked();
+  if(v_override) {
+    XMSession::instance()->setBikesOverride(true);
   }
   else {
     XMSession::instance()->setBikesOverride(false);
   }
 
 //    updateBikesList();
-  }
+
 
 
 }

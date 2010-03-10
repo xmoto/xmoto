@@ -886,15 +886,6 @@ void GameApp::initPhysicsFromDir(xmDatabase* i_db) {
 							       + std::string("/*.xml"), true);
   std::string v_name;
 
-  for(unsigned int i=0; i<v_physicsFiles.size(); i++) {
-    try {
-      v_name = getParameterFromFile(v_physicsFiles[i], "xmoto_physics");
-      m_availablePhysics.push_back(v_physicsFiles[i]);
-      LogInfo("found physics: %s", v_physicsFiles[i].c_str() );
-    } catch(Exception &e) {
-      /* anyway, give up this theme */
-    }
-  }
   i_db->physics_add_begin();
   for(unsigned int i=0; i<v_physicsFiles.size(); i++) {
     try {
@@ -910,23 +901,6 @@ void GameApp::initPhysicsFromDir(xmDatabase* i_db) {
   }
   i_db->physics_add_end();	
 
-}
-
-void GameApp::initPhysicsFromXmDb(xmDatabase* i_db) {
-#define PHYSICS_DIR "Physics"
-  std::vector<std::string> v_physicsFiles = XMFS::findPhysFiles(FDT_DATA, std::string(PHYSICS_DIR)
-							       + std::string("/*.xml"), true);
-  std::string v_name;
-
-  for(unsigned int i=0; i<v_physicsFiles.size(); i++) {
-    try {
-      v_name = getParameterFromFile(v_physicsFiles[i], "xmoto_physics");
-      m_availablePhysics.push_back(v_physicsFiles[i]);
-      LogInfo("found physics: %s", v_physicsFiles[i].c_str() );
-    } catch(Exception &e) {
-      /* anyway, give up this theme */
-    }
-  }
 }
 
 std::string GameApp::getParameterFromFile(std::string p_themeFile, std::string i_element) {
@@ -960,14 +934,13 @@ std::string GameApp::getParameterFromFile(std::string p_themeFile, std::string i
   return m_name;
 }
 
-std::vector<std::string> GameApp::getAvailablePhysics() {
-  return m_availablePhysics;
-}
-
 std::string GameApp::getPhysicsFromBike() {
-
+  char** v_result;
+  unsigned int nrow;
+  
   /* in physics dev mode, make a long way short */
   if(XMSession::instance()->bikesOverride()) {
+    LogInfo("LIFE ON OVERRIDE");
     return XMSession::instance()->bikePhysics();
   }
 
@@ -975,12 +948,16 @@ std::string GameApp::getPhysicsFromBike() {
   v_bikePhysics = xmDatabase::instance("main")->bikes_getPhysics(XMSession::instance()->bike());
   
   std::string v_physicsFile = XMSession::instance()->bikePhysics();  // this is a good default for first time run of this version
-  LogInfo("und: %s",v_physicsFile.c_str());
-  for(unsigned int i=0; i<m_availablePhysics.size(); i++) {
-    if(getParameterFromFile(m_availablePhysics[i], "xmoto_physics").c_str() == v_bikePhysics) {
-      v_physicsFile= m_availablePhysics[i];
-      LogInfo("Physics selected: %s",m_availablePhysics[i].c_str());
+  LogInfo("bikePhysics: %s und physicsFile: %s",v_bikePhysics.c_str(),v_physicsFile.c_str());
+
+  v_result = xmDatabase::instance("main")->readDB("SELECT id_physics, filepath FROM physics;",  nrow);
+  for(unsigned int i=0; i<nrow; i++) {
+    if(xmDatabase::instance("main")->getResult(v_result,2,i,0) == v_bikePhysics) {
+        v_physicsFile = xmDatabase::instance("main")->getResult(v_result,2,i,1);
+        LogInfo("setting physics: %s",v_physicsFile.c_str());
     }
   }
+  xmDatabase::instance("main")->read_DB_free(v_result);
+
   return v_physicsFile;
 }

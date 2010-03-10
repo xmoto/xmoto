@@ -145,7 +145,6 @@ public:
   void initReplaysFromDir(xmDatabase* threadDb,
 			  XMotoLoadReplaysInterface* pLoadReplaysInterface = NULL);
   void initBikesFromDir(xmDatabase* threadDb);
-  void initPhysicsFromXmDb(xmDatabase* threadDb);
 
   void gameScreenshot();
   void enableWWW(bool bValue);
@@ -163,7 +162,6 @@ public:
   static void wait(int& io_lastFrameTimeStamp, int& io_frameLate, int i_maxFps);
   
   void initPhysicsFromDir(xmDatabase* threadDb);
-  std::vector<std::string> getAvailablePhysics();
   std::string getParameterFromFile(std::string p_themeFile, std::string i_element);
   std::string getPhysicsFromBike();
 
@@ -193,11 +191,6 @@ private:
   bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
   bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
 
-  
-  /* Physics */
-   std::vector<std::string> m_availablePhysics;
-
-      
   /* Sound effects */
   SoundSample *m_pEndOfLevelSFX;
   SoundSample *m_pStrawberryPickupSFX;
