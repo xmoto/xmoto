@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateLevelInfoViewer.h"
 #include "StateMessageBox.h"
 #include "StateHelp.h"
+#include "StateShowcase.h"
 #include "StateOptions.h"
 #include "StateEditProfile.h"
 #include "StateReplaying.h"
@@ -1067,6 +1068,7 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setID("BIKES_DELETE_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BIKE_DELETE);
+  v_button->enableWindow(false);
 
   /* clean */
   v_button = new UIButton(v_bikesTab, 220, v_bikesTab->getPosition().nHeight-108, GAMETEXT_BIKES_GET, 116, 57);
@@ -1074,6 +1076,7 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setID("BIKES_DOWNLOAD_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BIKE_DOWNLOAD);
+  v_button->enableWindow(false);
 
   /* list */
   v_list = new UIList(v_bikesTab, 10, 10, "", v_bikesTab->getPosition().nWidth-40, v_bikesTab->getPosition().nHeight-115-25);
@@ -1081,8 +1084,8 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   v_list->setSort(true);
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_BIKES, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_BIKE);
-  v_list->addColumn(GAMETEXT_IS_VALID,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_BIKE_VALID);
-  v_list->addColumn(GAMETEXT_ASSOCIATED_THEME, v_list->getPosition().nWidth/2 - 40, CONTEXTHELP_BIKE_THEME);
+  v_list->addColumn(GAMETEXT_IS_VALID,  v_list->getPosition().nWidth/2 - 68,  CONTEXTHELP_BIKE_VALID);
+  v_list->addColumn(GAMETEXT_ASSOCIATED_THEME, v_list->getPosition().nWidth/2 - 50, CONTEXTHELP_BIKE_THEME);
   
   /* bike themes tab */
   UIWindow *v_bikeThemeTab = new UIWindow(v_bikeTabs, 20, 40, GAMETEXT_BIKE_THEME,
@@ -1834,12 +1837,14 @@ void StateMainMenu::updateBikesList() {
   }
   v_list->clear();
 
-  std::string v_id_bike;
-  v_result = xmDatabase::instance("main")->readDB("SELECT id_bike FROM bikes;", nrow);
+  std::string v_id_bike, v_theme;
+  v_result = xmDatabase::instance("main")->readDB("SELECT id_bike, theme FROM bikes;", nrow);
   for(unsigned int i=0; i<nrow; i++) {
-    v_id_bike = xmDatabase::instance("main")->getResult(v_result, 1, i, 0);
+    v_id_bike = xmDatabase::instance("main")->getResult(v_result, 2, i, 0);
+    v_theme = xmDatabase::instance("main")->getResult(v_result, 2, i, 1);
     pEntry = v_list->addEntry(v_id_bike.c_str(), NULL);
     pEntry->Text.push_back("local");//GAMETEXT_THEMENOTHOSTED);
+    pEntry->Text.push_back(v_theme.c_str());
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
   
@@ -1958,15 +1963,16 @@ void StateMainMenu::checkEventsBikes() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_SHOW_BUTTON"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
+    StateManager::instance()->pushState(new StateShowcase());
 
-    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+/*    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
       
       // TODO: show bike details
       
       }
-    }
+    }*/
   }
 
   // delete
