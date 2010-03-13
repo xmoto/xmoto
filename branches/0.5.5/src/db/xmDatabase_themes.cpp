@@ -32,19 +32,23 @@ void xmDatabase::themes_add_begin() {
 }
 
 void xmDatabase::themes_add(const std::string& i_id_theme,
-			     const std::string& i_filepath) {
-  simpleSql("INSERT INTO themes(id_theme, filepath, checkSum) " 
+			     const std::string& i_filepath,
+			     const std::string& i_type) {
+  simpleSql("INSERT INTO themes(id_theme, filepath, checkSum, type) " 
 	    "VALUES (\"" +
 	    protectString(i_id_theme)   + "\", \"" +
 	    protectString(i_filepath)   + "\", \"" +
-	    protectString(md5file(i_filepath)) + "\");");
+	    protectString(md5file(i_filepath)) + "\", \"" +
+	    protectString(i_type) + "\");");
 }
 
 void xmDatabase::themes_update(const std::string& i_id_theme,
-			       const std::string& i_filepath) {
+			       const std::string& i_filepath,
+			       const std::string& i_type) {
   simpleSql("UPDATE themes "
 	    "SET filepath=\"" + protectString(i_filepath) +
-	    "\", checkSum=\"" + protectString(md5file(i_filepath)) + "\" "
+	    "\", checkSum=\"" + protectString(md5file(i_filepath)) +
+	    "\", type=\""     + protectString(i_type) + "\" "
 	    "WHERE id_theme=\"" + protectString(i_id_theme) + "\";");
 }
 
@@ -81,5 +85,17 @@ std::string xmDatabase::themes_getFileName(const std::string& i_id_theme) {
   v_res = getResult(v_result, 1, 0, 0);
   read_DB_free(v_result);
 
+  return v_res;
+}
+
+std::string xmDatabase::themes_getType(const std::string& i_id_theme) {
+  char **v_result;
+  unsigned int nrow;
+  std::string v_res;
+
+  v_result = readDB("SELECT type FROM themes WHERE id_theme=\"" + protectString(i_id_theme) + "\";",
+		    nrow);
+  v_res = getResult(v_result, 1,0,0);
+  read_DB_free(v_result);
   return v_res;
 }

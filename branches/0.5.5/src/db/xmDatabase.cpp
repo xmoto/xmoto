@@ -726,8 +726,9 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
 
   case 34:
     try {
-      simpleSql("CREATE TABLE bikes(id_bike PRIMARY KEY, filepath, checkSum, theme, physics);");
+      simpleSql("CREATE TABLE bikes(id_bike PRIMARY KEY, filepath, checkSum, theme, physics, customTheme);");
       simpleSql("CREATE TABLE physics(id_physics PRIMARY KEY, filepath, checkSum);");
+      simpleSql("ALTER TABLE themes ADD COLUMN type DEFAULT general");
       m_requiredPhysicsUpdateAfterInit= true;
       m_requiredThemesUpdateAfterInit = true;
       m_requiredBikesUpdateAfterInit  = true;

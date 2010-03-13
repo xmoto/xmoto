@@ -559,7 +559,6 @@ private:
   static std::string getThemeNameFromFile(std::string p_themeFile);
 
   std::vector<Theme*> m_themes;
-  std::vector<ThemeFile> m_themeFiles;
   std::vector<std::string> m_themes2Activate;
 
 

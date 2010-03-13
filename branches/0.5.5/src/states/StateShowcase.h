@@ -45,6 +45,7 @@ class StateShowcase : public StateMenu {
  private:
   /* GUI */
   void createGUI();
+  void updateWindow(UIWindow* i_window);
 
   bool m_gameShowcase;
   bool m_allowSceneOver;

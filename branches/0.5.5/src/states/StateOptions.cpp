@@ -180,6 +180,9 @@ void StateOptions::checkEvents() {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       XMSession::instance()->setTheme(pEntry->Text[0]);
+      if(!ThemeManager::instance()->themeIsAlreadyLoaded(xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme()))) {
+        ThemeManager::instance()->loadTheme(FDT_DATA,xmDatabase::instance("main")->themes_getFileName(XMSession::instance()->theme()));
+      }
       /* don't update theme, because it invalidates the relationship
 	 between sprites and textures.
       if(Theme::instance()->Name() != XMSession::instance()->theme()) {
@@ -1967,10 +1970,11 @@ void StateOptions::createThemesList(UIList *pList) {
   
   /* recreate the list */
   pList->clear();
-  
   v_result = xmDatabase::instance("main")->readDB("SELECT a.id_theme, a.checkSum, b.checkSum "
-				      "FROM themes AS a LEFT OUTER JOIN webthemes AS b "
-				      "ON a.id_theme=b.id_theme ORDER BY a.id_theme;",
+						  "FROM themes AS a LEFT OUTER JOIN webthemes AS b "
+				    		  "ON a.id_theme=b.id_theme "
+				    		  "WHERE a.type='general' "
+				    		  "ORDER BY a.id_theme;",
 			  nrow);
   for(unsigned int i=0; i<nrow; i++) {
     v_id_theme = xmDatabase::instance("main")->getResult(v_result, 3, i, 0);
@@ -1990,7 +1994,7 @@ void StateOptions::createThemesList(UIList *pList) {
   xmDatabase::instance("main")->read_DB_free(v_result);
   
   v_result = xmDatabase::instance("main")->readDB("SELECT a.id_theme FROM webthemes AS a LEFT OUTER JOIN themes AS b "
-				      "ON a.id_theme=b.id_theme WHERE b.id_theme IS NULL;",
+				      "ON a.id_theme=b.id_theme WHERE (b.id_theme IS NULL AND b.type='general');",
 				      nrow);
   for(unsigned int i=0; i<nrow; i++) {
     v_id_theme = xmDatabase::instance("main")->getResult(v_result, 1, i, 0);

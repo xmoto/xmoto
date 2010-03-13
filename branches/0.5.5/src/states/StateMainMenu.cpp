@@ -96,6 +96,7 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
   m_require_updateReplaysList        = false;
   m_require_updateLevelsList         = false;
   m_require_updateStats              = false;
+//  m_require_updateBikesList          = false;
 
   StateManager::instance()->registerAsObserver("REPLAYS_DELETE", this);
   StateManager::instance()->registerAsObserver("UPDATEPROFILE", this);
