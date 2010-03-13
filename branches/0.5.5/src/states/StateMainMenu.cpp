@@ -1849,6 +1849,7 @@ void StateMainMenu::updateBikeThemesList() {
   for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
     if(v_list->getEntries()[i]->Text[0] == v_themeName) {
       nBike = i; 
+      break;
     }
   }
   v_list->setRealSelected(nBike); 
@@ -1913,7 +1914,6 @@ void StateMainMenu::updateBikesList() {
   }
   
   nBike = 0;
-  LogInfo("updateBikesList WURMSUCHE: %s", v_bikeLocalName.c_str());
   for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
     if(v_list->getEntries()[i]->Text[0] == v_bikeLocalName) {
       nBike = i;
@@ -1921,9 +1921,6 @@ void StateMainMenu::updateBikesList() {
     }
   }
   v_list->setRealSelected(nBike); 
-
-//  updateBikeThemesList();
- 
 }
 
 void StateMainMenu::checkEventsBikes() {
@@ -2001,7 +1998,6 @@ void StateMainMenu::checkEventsBikes() {
       UIListEntry* pListEntry = v_list->getEntries()[v_list->getSelected()];
       XMSession::instance()->setThemeBike(pListEntry->Text[0]);
       xmDatabase::instance("main")->bikes_setCustomTheme(XMSession::instance()->bike(),pListEntry->Text[0]);
-//      updateBikesList();
 
       // if a new BikeTheme gets chosen, we have to check if its loaded and get the filePath from xmDb and load the xml, if necessary
       std::string v_themefile = xmDatabase::instance("main")->themes_getFileName(pListEntry->Text[0]);
@@ -2018,7 +2014,6 @@ void StateMainMenu::checkEventsBikes() {
         }
       }
     }
-//    updateBikesList();
   }
   
   
@@ -2048,8 +2043,6 @@ void StateMainMenu::checkEventsBikes() {
   else {
     XMSession::instance()->setBikesOverride(false);
   }
-
-//  updateBikesList();
 }
 
 void StateMainMenu::updateReplaysList() {
