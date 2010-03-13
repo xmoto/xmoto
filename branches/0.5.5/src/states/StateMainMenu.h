@@ -71,6 +71,7 @@ class StateMainMenu : public StateMenu {
   void updateFavoriteLevelsList();
   void updateNewLevelsList();
   void updateBikesList();
+  void updateBikeThemesList();
   void updateReplaysList();
   void updateStats();
   void updateNewLevels();

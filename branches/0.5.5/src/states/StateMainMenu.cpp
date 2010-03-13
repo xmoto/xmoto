@@ -179,6 +179,7 @@ void StateMainMenu::enter()
   updateLevelsLists();
   updateReplaysList();
   updateBikesList();
+  updateBikeThemesList();
   updateStats();
   updateClientStrings();
 
@@ -1084,9 +1085,10 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   v_list->setID("BIKES_LIST");
   v_list->setSort(true);
   v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_BIKES, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_BIKE);
-  v_list->addColumn(GAMETEXT_IS_VALID,  v_list->getPosition().nWidth/2 - 68,  CONTEXTHELP_BIKE_VALID);
-  v_list->addColumn(GAMETEXT_ASSOCIATED_THEME, v_list->getPosition().nWidth/2 - 50, CONTEXTHELP_BIKE_THEME);
+  v_list->addColumn(GAMETEXT_BIKES, v_list->getPosition().nWidth/4 - 10, CONTEXTHELP_BIKE);
+  v_list->addColumn(GAMETEXT_IS_VALID,  v_list->getPosition().nWidth/4 - 10,  CONTEXTHELP_BIKE_VALID);
+  v_list->addColumn(GAMETEXT_ASSOCIATED_THEME, v_list->getPosition().nWidth/4 + 0, CONTEXTHELP_BIKE_THEME);
+  v_list->addColumn(GAMETEXT_STANDARD_THEME, v_list->getPosition().nWidth/4 + 0, CONTEXTHELP_STANDARD_BIKE_THEME);
   
   /* bike themes tab */
   UIWindow *v_bikeThemeTab = new UIWindow(v_bikeTabs, 20, 40, GAMETEXT_BIKE_THEME,
@@ -1106,6 +1108,7 @@ UIWindow* StateMainMenu::makeWindowBike(UIWindow* i_parent) {
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_BIKE_THEME, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_BIKE);
   v_list->addColumn(GAMETEXT_IS_VALID,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_BIKE_THEME_VALID);
+
 
   if(/*dev enabled*/ true) {
     /* local physics tab */
@@ -1821,31 +1824,59 @@ void StateMainMenu::updateLevelsPacksList() {
 
 }
 
+void StateMainMenu::updateBikeThemesList() {
+  UIList* v_list;
+  char **v_result;
+  unsigned int nrow, nBike;
+  UIListEntry *pEntry;
+
+
+ /* Bike themes list */
+  v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:BIKE_THEMES_LIST");
+  v_list->clear();
+  
+  std::string v_id_theme;
+  v_result = xmDatabase::instance("main")->readDB("SELECT id_theme FROM themes WHERE type='bike';", nrow);
+  for(unsigned int i=0; i<nrow; i++) {
+    v_id_theme = xmDatabase::instance("main")->getResult(v_result, 1, i, 0);
+    pEntry = v_list->addEntry(v_id_theme);
+    pEntry->Text.push_back("local");//GAMETEXT_THEMENOTHOSTED);
+  }
+  xmDatabase::instance("main")->read_DB_free(v_result);
+  
+  nBike = 0;
+  std::string v_themeName = xmDatabase::instance("main")->bikes_getTheme(XMSession::instance()->bike());
+  for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
+    if(v_list->getEntries()[i]->Text[0] == v_themeName) {
+      nBike = i; 
+    }
+  }
+  v_list->setRealSelected(nBike); 
+}
+
 void StateMainMenu::updateBikesList() {
   UIList* v_list;
-  std::string v_selected_bike;
   char **v_result;
   unsigned int nrow;
-    UIListEntry *pEntry;
+  UIListEntry *pEntry;
 
   /* Bikes */
 //  v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST");
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST"));
-
-  /* Clear list  */
-  if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
-    v_selected_bike = v_list->getEntries()[v_list->getSelected()]->Text[0];
-  }
   v_list->clear();
 
-  std::string v_id_bike, v_theme;
-  v_result = xmDatabase::instance("main")->readDB("SELECT id_bike, theme FROM bikes;", nrow);
+  std::string v_id_bike, v_standardTheme = "", v_currentTheme;
+  v_result = xmDatabase::instance("main")->readDB("SELECT id_bike, theme, customTheme FROM bikes;", nrow);
   for(unsigned int i=0; i<nrow; i++) {
-    v_id_bike = xmDatabase::instance("main")->getResult(v_result, 2, i, 0);
-    v_theme = xmDatabase::instance("main")->getResult(v_result, 2, i, 1);
-    pEntry = v_list->addEntry(v_id_bike.c_str(), NULL);
+    v_id_bike        = xmDatabase::instance("main")->getResult(v_result, 3, i, 0);
+    v_standardTheme  = xmDatabase::instance("main")->getResult(v_result, 3, i, 1);
+    if(xmDatabase::instance("main")->getResult(v_result, 3, i, 2) != NULL) {
+      v_currentTheme = xmDatabase::instance("main")->getResult(v_result, 3, i, 2);
+    }
+    pEntry = v_list->addEntry(v_id_bike);
     pEntry->Text.push_back("local");//GAMETEXT_THEMENOTHOSTED);
-    pEntry->Text.push_back(v_theme.c_str());
+    pEntry->Text.push_back(v_currentTheme);
+    pEntry->Text.push_back(v_standardTheme);
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
   
@@ -1865,11 +1896,6 @@ void StateMainMenu::updateBikesList() {
     XMSession::instance()->setBikesOverride(true);
   }
   v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_LOCAL_TAB:BIKES_LOCAL_LIST");
-
-  /* Clear list  */
-  if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
-    v_selected_bike = v_list->getEntries()[v_list->getSelected()]->Text[0];
-  }
   v_list->clear();
   
   v_result = xmDatabase::instance("main")->readDB("SELECT id_physics FROM physics;",  nrow);
@@ -1885,8 +1911,9 @@ void StateMainMenu::updateBikesList() {
   else {
     v_bikeLocalName = GameApp::instance()->getParameterFromFile(XMSession::instance()->bikePhysics(), "xmoto_physics");
   }
+  
   nBike = 0;
-  LogInfo("WURMSUCHE: %s", v_bikeLocalName.c_str());
+  LogInfo("updateBikesList WURMSUCHE: %s", v_bikeLocalName.c_str());
   for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
     if(v_list->getEntries()[i]->Text[0] == v_bikeLocalName) {
       nBike = i;
@@ -1895,41 +1922,8 @@ void StateMainMenu::updateBikesList() {
   }
   v_list->setRealSelected(nBike); 
 
-
-  /* Bike themes list */
-  v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKETHEME_TAB:BIKE_THEMES_LIST");
-
-  /* Clear list  */
-  if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
-    v_selected_bike = v_list->getEntries()[v_list->getSelected()]->Text[0];
-  }
-  v_list->clear();
-  
-  std::string v_id_theme;
-  v_result = xmDatabase::instance("main")->readDB("SELECT theme FROM bikes;", nrow);
-  for(unsigned int i=0; i<nrow; i++) {
-    v_id_theme = xmDatabase::instance("main")->getResult(v_result, 1, i, 0);
-    pEntry = v_list->addEntry(v_id_theme.c_str(), NULL);
-    pEntry->Text.push_back("local");//GAMETEXT_THEMENOTHOSTED);
-  }
-  xmDatabase::instance("main")->read_DB_free(v_result);
-  
-  nBike = 0;
-  std::string v_themeName = xmDatabase::instance("main")->bikes_getTheme(XMSession::instance()->bike());
-  for(unsigned int i=0; i<v_list->getEntries().size(); i++) {
-    if(v_list->getEntries()[i]->Text[0] == v_themeName) {
-      XMSession::instance()->setThemeBike(v_themeName);
-      nBike = i;
-        
-      // if a new BikeTheme gets chosen, we have to check if its loaded and get the filePath from xmDb and load the xml, if necessary
-      std::string v_themefile = xmDatabase::instance("main")->themes_getFileName(v_themeName);
-      if( !ThemeManager::instance()->themeIsAlreadyLoaded(v_themefile) ) {      
-        ThemeManager::instance()->loadTheme(FDT_DATA,v_themefile);
-        break;
-      }
-    }
-  }
-  v_list->setRealSelected(nBike); 
+//  updateBikeThemesList();
+ 
 }
 
 void StateMainMenu::checkEventsBikes() {
@@ -1944,21 +1938,22 @@ void StateMainMenu::checkEventsBikes() {
   /* list changed */
   if(v_list->isChanged()) {
     v_list->setChanged(false);
-    // set bike physics
+    // set bike 
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       XMSession::instance()->setBike(pListEntry->Text[0]);
-      //updateBikesList();// DIES VERURSACHT DIE BLOCKADE DER AUSWAHL!!!!!!!
-      std::string v_themeName = xmDatabase::instance("main")->bikes_getTheme(XMSession::instance()->bike());
+      std::string v_themeName = xmDatabase::instance("main")->bikes_getTheme(pListEntry->Text[0]);
       XMSession::instance()->setThemeBike(v_themeName);
+
       std::string v_themefile = xmDatabase::instance("main")->themes_getFileName(v_themeName);
       if( !ThemeManager::instance()->themeIsAlreadyLoaded(v_themefile) ) {      
         ThemeManager::instance()->loadTheme(FDT_DATA,v_themefile);
       }
-
     }
-    
+    //updateBikesList();
+    updateBikeThemesList();
   }
+
   
   // show
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_SHOW_BUTTON"));
@@ -2001,9 +1996,12 @@ void StateMainMenu::checkEventsBikes() {
   /* list changed */
   if(v_list->isChanged()) {
     v_list->setChanged(false);
+  
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry* pListEntry = v_list->getEntries()[v_list->getSelected()];
       XMSession::instance()->setThemeBike(pListEntry->Text[0]);
+      xmDatabase::instance("main")->bikes_setCustomTheme(XMSession::instance()->bike(),pListEntry->Text[0]);
+//      updateBikesList();
 
       // if a new BikeTheme gets chosen, we have to check if its loaded and get the filePath from xmDb and load the xml, if necessary
       std::string v_themefile = xmDatabase::instance("main")->themes_getFileName(pListEntry->Text[0]);
@@ -2011,6 +2009,14 @@ void StateMainMenu::checkEventsBikes() {
         ThemeManager::instance()->loadTheme(FDT_DATA,v_themefile);
       }
       LogInfo("Setting themeBike: %s",pListEntry->Text[0].c_str());
+      
+      //change the list entry in bike tab
+      UIList* v_bikeList = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_BIKES:BIKETABS:BIKES_TAB:BIKES_LIST"));
+      for(unsigned int i=0; i<v_bikeList->getEntries().size(); i++) {
+        if(v_bikeList->getEntries()[i]->Text[0] == XMSession::instance()->bike()) {
+          v_bikeList->getEntries()[i]->Text[2] = pListEntry->Text[0];
+        }
+      }
     }
 //    updateBikesList();
   }
@@ -2043,10 +2049,7 @@ void StateMainMenu::checkEventsBikes() {
     XMSession::instance()->setBikesOverride(false);
   }
 
-//    updateBikesList();
-
-
-
+//  updateBikesList();
 }
 
 void StateMainMenu::updateReplaysList() {

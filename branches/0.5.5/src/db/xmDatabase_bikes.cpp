@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <math.h>
 #include "../md5sum/md5file.h"
 #include "../helpers/VExcept.h"
+#include "../helpers/Log.h"
 
 
 bool xmDatabase::bikes_isIndexUptodate() const {
@@ -81,19 +82,29 @@ bool xmDatabase::bikes_exists(const std::string& i_id_theme) {
 std::string xmDatabase::bikes_getTheme(const std::string& i_id_bike) {
   char **v_result;
   unsigned int nrow;
-  std::string v_res;
+  std::string v_theme, v_customTheme;
 
-  v_result = readDB("SELECT theme FROM bikes WHERE id_bike=\"" + protectString(i_id_bike) + "\";",
+  v_result = readDB("SELECT theme, customTheme FROM bikes WHERE id_bike=\"" + protectString(i_id_bike) + "\";",
 		    nrow);
   if(nrow != 1) {
     read_DB_free(v_result);
     throw Exception("Couldn't get Theme from Bike, because Bike not found");
   }
 
-  v_res = getResult(v_result, 1, 0, 0);
+  v_theme = getResult(v_result, 2, 0, 0);
+  if(getResult(v_result, 2, 0, 1) != NULL) {
+    v_customTheme = getResult(v_result, 2, 0, 1);
+  };
+  
   read_DB_free(v_result);
-
-  return v_res;
+  
+  LogInfo("%s %s", v_theme.c_str(), v_customTheme.c_str());
+  if(v_customTheme == "") {
+    return v_theme;
+  }
+  else {
+    return v_customTheme;
+  }
 }
 
 std::string xmDatabase::bikes_getPhysics(const std::string& i_id_bike) {
@@ -130,4 +141,10 @@ std::string xmDatabase::bikes_getFileName(const std::string& i_id_bike) {
   read_DB_free(v_result);
 
   return v_res;
+}
+
+void xmDatabase::bikes_setCustomTheme(const std::string& i_id_bike, const std::string& i_theme) {
+  simpleSql("UPDATE bikes "
+	    "SET customTheme=\"" + protectString(i_theme) + "\" "
+	    "WHERE id_bike=\"" +   protectString(i_id_bike) + "\";");
 }

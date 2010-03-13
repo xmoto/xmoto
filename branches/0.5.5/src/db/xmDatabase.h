@@ -128,6 +128,7 @@ public:
   void bikes_add_end();
   void bikes_delete(const std::string& i_bike);
   bool bikes_exists(const std::string& i_id_bike);
+  void bikes_setCustomTheme(const std::string& i_id_bike, const std::string& i_theme);
   std::string bikes_getFileName(const std::string& i_id_bike);
   std::string bikes_getTheme(const std::string& i_id_bike);
   std::string bikes_getPhysics(const std::string& i_id_bike);
