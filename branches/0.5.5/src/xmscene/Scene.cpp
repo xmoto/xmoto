@@ -176,12 +176,13 @@ void Scene::cleanPlayers() {
       pFM = pDrawLib->getFontMedium();
     }
     pFG = pFM->getGlyph(Text);
-    if(pFG->realWidth() > int(pDrawLib->getDispWidth()/multiScreenDivision) ) {
+    if(pFG->realWidth() > unsigned (pDrawLib->getDispWidth()/multiScreenDivision) ) {
       unsigned int v_newline = 0;
       std::string v_subtext = ("");
+
       for( unsigned int i = 0; i<Text.length(); i++) {
         pFG = pFM->getGlyph(Text.substr(v_newline,i-v_subtext.length()));  //substr isnt a problem for utf8, because its got a rule which prevents characters beeing in 2-byte chars
-        if(pFG->realWidth() >= int(pDrawLib->getDispWidth()/multiScreenDivision)-15) {  // our sub string length is now equal disp Width
+        if(pFG->realWidth() >= unsigned (pDrawLib->getDispWidth()/multiScreenDivision)-15) {  // our sub string length is now equal disp Width
           for(unsigned int j=i; j>v_newline; j--) { //look for " "
             if(!Text.compare(j,1," ")) {
                Text.insert(j,"\n");
@@ -242,6 +243,7 @@ void Scene::cleanPlayers() {
 	pMsg->bOnce = bOnce;
 	pMsg->Text = v_txtRest;
 	pMsg->msgType = i_msgType;
+
 	m_GameMessages.push_back(pMsg);
       }
     } else {
@@ -250,13 +252,15 @@ void Scene::cleanPlayers() {
       pMsg->removeTime = getTime() + duration;
       pMsg->nAlpha = 255;
       pMsg->msgType = i_msgType;
+
     }
     packGameMessages();
     updateGameMessages();
-  }
+      }
   
 void Scene::packGameMessages() {   //put multiple GameMessages into one, if they appear shortly one after another
 
+ 
   for( int i = m_GameMessages.size()-1 ; i > 0 ; i-- ) {
     
     if( (m_GameMessages[i]->removeTime - m_GameMessages[i-1]->removeTime < GAMEMESSAGES_PACKTIME) && 
@@ -272,7 +276,21 @@ void Scene::packGameMessages() {   //put multiple GameMessages into one, if they
       m_GameMessages.erase(m_GameMessages.begin() +i);
     
     }
+    
+    
   }
+  
+  /* count number of lines */
+  for( unsigned i=0; i< m_GameMessages.size(); i++ ) {
+    int v_numLines = 1;
+    for(unsigned j=0; j<m_GameMessages[i]->Text.length(); j++) {
+      if(!m_GameMessages[i]->Text.compare(j,1,"\n")) {
+         v_numLines++;
+      }
+    }
+    m_GameMessages[i]->lines = v_numLines;
+  }
+  
 }
 
 void Scene::clearGameMessages(void) {
@@ -478,7 +496,14 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
           continue;
         }
       }
-      Vector2f TargetPos = Vector2f(0.2f,0.5f - (m_GameMessages.size()*0.05f)/2.0f + 0.05f*i);
+      
+      /* detect correct target position, considering number of lines of previously displayed message */
+      int v_row = 0;
+      for(unsigned j=0; j<i; j++){
+        v_row += m_GameMessages[j]->lines;
+      }
+      Vector2f TargetPos = Vector2f(0.2f, (0.5f - (m_GameMessages.size()*0.05f)/(2.0f) + 0.049f*v_row) );
+      
       if(m_GameMessages[i]->bNew) {
         m_GameMessages[i]->Vel = Vector2f(0,0);
         m_GameMessages[i]->Pos = TargetPos;

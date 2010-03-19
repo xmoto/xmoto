@@ -104,6 +104,7 @@ struct GameMessage {
   int nAlpha;                       /* Alpha amount */
   bool bOnce;                       /* Unique message */
   MessageType msgType;
+  int lines;                        /* number of lines in the message */
 };  
 
 /*===========================================================================
