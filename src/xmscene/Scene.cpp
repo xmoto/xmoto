@@ -496,7 +496,14 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
           continue;
         }
       }
-      Vector2f TargetPos = Vector2f(0.2f, (0.5f - (m_GameMessages.size()*0.05f)/(2.0f) + 0.05f*i* m_GameMessages[i]->lines) );
+      
+      /* detect correct target position, considering number of lines of previously displayed message */
+      int v_row = 0;
+      for(unsigned j=0; j<i; j++){
+        v_row += m_GameMessages[j]->lines;
+      }
+      Vector2f TargetPos = Vector2f(0.2f, (0.5f - (m_GameMessages.size()*0.05f)/(2.0f) + 0.049f*v_row) );
+      
       if(m_GameMessages[i]->bNew) {
         m_GameMessages[i]->Vel = Vector2f(0,0);
         m_GameMessages[i]->Pos = TargetPos;
