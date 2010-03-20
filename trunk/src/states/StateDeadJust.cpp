@@ -51,8 +51,8 @@ void StateDeadJust::enter()
       m_universe->getScenes()[i]->clearGameMessages();
       m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name());
     }
-    m_universe->getScenes()[0]->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 260); // in multiplayer its good,
-    m_universe->getScenes()[0]->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 260); // to have it displayed only once
+    m_universe->getScenes()[0]->gameMessage(GAMETEXT_JUSTDEAD_RESTART + std::string("\n") +
+					    GAMETEXT_JUSTDEAD_DISPLAYMENU, true, 260, gameMsg); // in multiplayer its good, to have it displayed only once
   }
 
   if(m_universe != NULL) {
