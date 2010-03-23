@@ -253,6 +253,8 @@ class Block {
 
   void addEdgeGeom(int geomIndex);
   std::vector<int>& getEdgeGeoms();
+  void clearEdgeGeoms() { m_edgeGeoms.clear(); };
+  void setEdgeGeoms(std::vector<int> i_geomVec) { m_edgeGeoms = i_geomVec;  };
   std::string getEdgeMaterialTexture( std::string i_materialName );
   TColor& getEdgeMaterialColor( std::string i_materialName );
   float getEdgeMaterialDepth( std::string i_materialName );

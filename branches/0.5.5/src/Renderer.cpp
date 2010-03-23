@@ -591,6 +591,58 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       }
       oldC2   = c2;
     }
+    
+    /* now lets sort the edgeGeoms for we get the right drawing order:
+       upper edges must be drawn above lower edges, which we achieve by sorting the vector
+       of the block edge geoms: put lower edgegeoms first and upper edgegeoms behind  */  
+
+    std::vector<int> v_upperBlockGeomsIndex;
+    std::vector<int> v_lowerBlockGeomsIndex;
+        
+    for(unsigned int i=0; i < pBlock->getEdgeGeoms().size(); i++) {
+
+      // determine whether the normal vector of the edge heads up or down
+      // since inkscape allows only 2 edges on a block and uses an equivalent algorithm,
+      // it should be sufficient to check only a few vertices
+
+      int geom= pBlock->getEdgeGeoms()[i];
+      GeomPoly* pV0 = m_edgeGeoms[geom]->Polys[0];  
+      GeomCoord pBV0 = pV0->pVertices[0];
+      GeomCoord pBV1 = pV0->pVertices[0];
+      
+      int it = 1;
+      Vector2f v_normal;
+      
+      //if the edge is vertical, we cant tell if its an upper or lower edge, so look further then
+      do {
+        pBV0 = pBV1;
+        pBV1 = pV0->pVertices[it];
+        it ++;
+      
+        v_normal = Vector2f( pBV1.x-pBV0.x , pBV1.y-pBV0.y );
+        v_normal.normal();
+        // note our edge angle
+        v_normal.rotateXY(pBlock->edgeAngle()-270.0);
+
+    
+      } while( Vector2f(v_normal.x,0).almostEqual(v_normal));
+      
+      if(v_normal.y > 0) {  // then edge is upper
+          v_upperBlockGeomsIndex.push_back(geom);
+        }
+        else {
+          v_lowerBlockGeomsIndex.push_back(geom);
+        }
+
+    }
+    
+    // now replace the block edgeGeoms index by our sorted one
+    std::vector<int> v_tempVec;
+    v_tempVec.reserve(v_upperBlockGeomsIndex.size()+v_lowerBlockGeomsIndex.size());
+    v_tempVec.insert(v_tempVec.end(),v_lowerBlockGeomsIndex.begin(),v_lowerBlockGeomsIndex.end());
+    v_tempVec.insert(v_tempVec.end(),v_upperBlockGeomsIndex.begin(),v_upperBlockGeomsIndex.end());
+    pBlock->clearEdgeGeoms();
+    pBlock->setEdgeGeoms(v_tempVec);
 
 #ifdef ENABLE_OPENGL        
     /* Use VBO optimization? */
@@ -2560,8 +2612,8 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock)
 {
   DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
   if(pDrawlib->getBackend() == DrawLib::backend_OpenGl) {
-    for(unsigned int i=pBlock->getEdgeGeoms().size(); i>0; i--){
-      int geom = pBlock->getEdgeGeoms()[i-1];
+    for(unsigned int i=0; i<pBlock->getEdgeGeoms().size(); i++){
+      int geom = pBlock->getEdgeGeoms()[i];
       pDrawlib->setTexture(m_edgeGeoms[geom]->pTexture, BLEND_MODE_A);
       
       TColor v_blendColor = m_edgeGeoms[geom]->edgeBlendColor;
