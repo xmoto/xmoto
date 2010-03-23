@@ -468,6 +468,9 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       }
     }
 
+    bool v_cutEdge = false;
+    bool v_edgeOrientation = false;
+    bool v_oldEdgeOrientation = v_edgeOrientation;
     for(unsigned int j=0; j<vertices.size(); j++){
       BlockVertex* vertexA = vertices[j];
       std::string edgeEffect = vertexA->EdgeEffect();
@@ -481,6 +484,22 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 
       bool AisLast = (vertexB->EdgeEffect() == "");
 
+      //check if edge orientation has changed
+      Vector2f v_checkOrientation = Vector2f( vertexB->Position().x - vertexA->Position().x, vertexB->Position().y - vertexA->Position().y);
+      v_checkOrientation.normal();
+      v_checkOrientation.rotateXY(270.0-pBlock->edgeAngle());
+      v_oldEdgeOrientation = v_edgeOrientation;
+      if(v_checkOrientation.y > 0) {
+        v_edgeOrientation = true;
+      }
+      else {
+        v_edgeOrientation = false;
+      }
+
+      if(j!=0 && v_edgeOrientation != v_oldEdgeOrientation) {
+        v_cutEdge = true;
+        LogInfo("cutted");
+      }
 
       //check if edge texture is in material or pure
       std::string v_edgeMaterialTextureName = pBlock->getEdgeMaterialTexture(edgeEffect);;
@@ -528,7 +547,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       
       // if a geom for current edge effect exists, get its index number
       int geomIndex = edgeGeomExists(pBlock, edgeEffect); 
-      if(geomIndex < 0){
+      if(geomIndex < 0 || v_cutEdge){
 	// create a new one
 	Geom* pGeom = new Geom;
 	geomIndex = m_edgeGeoms.size(); 
@@ -622,7 +641,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
         v_normal = Vector2f( pBV1.x-pBV0.x , pBV1.y-pBV0.y );
         v_normal.normal();
         // note our edge angle
-        v_normal.rotateXY(pBlock->edgeAngle()-270.0);
+        v_normal.rotateXY(270.0-pBlock->edgeAngle());
 
     
       } while( Vector2f(v_normal.x,0).almostEqual(v_normal));
