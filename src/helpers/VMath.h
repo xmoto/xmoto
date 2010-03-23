@@ -147,6 +147,12 @@ class Vector2 {
     return v;
   }
   
+  inline void normal() {
+    _T v_x = x;
+    x= -y;
+    y= v_x;
+  }
+  
   inline void rotateXY(_T deg) {            
     _T rads=deg*((_T)PI/180.0f);
     _T xx=x*cos(rads)+y*sin(rads);
