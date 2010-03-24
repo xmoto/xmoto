@@ -413,7 +413,7 @@ msgstr "Hongrois"
 
 #: src/GameText.h:160
 msgid "Portugese"
-msgstr ""
+msgstr "Portugais"
 
 #: src/GameText.h:162
 msgid "Main testers"
@@ -946,11 +946,11 @@ msgstr "Activer/désactiver le mode ugly"
 
 #: src/GameText.h:309
 msgid "Toggle Contrast, Light and Full Graphics"
-msgstr ""
+msgstr "Changer entre graphique contrasté, simple et complet"
 
 #: src/GameText.h:310
 msgid "Toggle theme and ugly over mode"
-msgstr ""
+msgstr "Changer entre thème et mode ugly over"
 
 #: src/GameText.h:313
 msgid "Hide ghosts"
@@ -1129,15 +1129,15 @@ msgstr "Pour les menus"
 
 #: src/GameText.h:357
 msgid "Contrast"
-msgstr ""
+msgstr "Contrasté"
 
 #: src/GameText.h:358
 msgid "Light"
-msgstr ""
+msgstr "Simple"
 
 #: src/GameText.h:359
 msgid "Full"
-msgstr ""
+msgstr "Complet"
 
 #: src/GameText.h:360
 msgid "Total time you scored / total highscore time for levels you finished"
@@ -1379,7 +1379,8 @@ msgstr "Qualité"
 msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
-msgstr ""
+msgstr "Désolé, il n'y a pas assez de niveaux correspondants.\n"
+"Des niveaux aléatoires sont proposés"
 
 #: src/GameText.h:424
 msgid "Quick start"
@@ -1544,7 +1545,7 @@ msgstr "Synchronisation faite avec succès"
 #: src/GameText.h:462
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
-msgstr ""
+msgstr "La touche '%s' du joueur '%i' a été changée avec celle de '%s'"
 
 #: src/GameText.h:464
 msgid "Add/remove to favorite levels"
@@ -2009,11 +2010,11 @@ msgstr "Configurer les options de contrôle"
 
 #: src/GameText.h:584
 msgid "Configure controls of Player"
-msgstr ""
+msgstr "Contrôle du joueur"
 
 #: src/GameText.h:585
 msgid "Configure general controls"
-msgstr ""
+msgstr "Contrôle général"
 
 #: src/GameText.h:586
 msgid "Save options"
@@ -2919,7 +2920,7 @@ msgstr "Niveau avec votes non bloqués"
 
 #: src/GameText.h:823
 msgid "Normal mode enabled"
-msgstr ""
+msgstr "Mode normal activé"
 
 #: src/GameText.h:824
 msgid "Ugly mode enabled"
@@ -2947,15 +2948,15 @@ msgstr "Mode uglyOver désactivé"
 
 #: src/GameText.h:830
 msgid "Contrast Graphics Mode enabled"
-msgstr ""
+msgstr "Mode graphique contrasté activé"
 
 #: src/GameText.h:831
 msgid "Light Graphics Mode enabled"
-msgstr ""
+msgstr "Mode graphique simple activé"
 
 #: src/GameText.h:832
 msgid "Full Graphics Mode enabled"
-msgstr ""
+msgstr "Mode graphique complet activé"
 
 #: src/GameText.h:833
 msgid "Web connection enabled"
@@ -3037,7 +3038,7 @@ msgstr ""
 
 #: src/GameText.h:852
 msgid "Restart Level to activate!"
-msgstr ""
+msgstr "Redémarrer le niveau pour prise en compte!"
 
 #: src/GameText.h:854
 #, c-format
