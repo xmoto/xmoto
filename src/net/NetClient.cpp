@@ -275,6 +275,8 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
   case TNA_clientMode:
   case TNA_playerControl:
   case TNA_srvCmd:
+  case TNA_clientsNumber:
+  case TNA_clientsNumberQuery:
     /* should not happend */
     break;
 

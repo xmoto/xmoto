@@ -44,6 +44,8 @@ enum NetActionType {
   TNA_serverError,
   TNA_frame,
   TNA_changeName,
+  TNA_clientsNumber,
+  TNA_clientsNumberQuery,
   TNA_playingLevel,
   TNA_changeClients,
   TNA_playerControl,
@@ -234,6 +236,38 @@ class NA_changeName : public NetAction {
 
   private:
   std::string m_name;
+};
+
+class NA_clientsNumber : public NetAction {
+  public:
+  NA_clientsNumber(int i_number);
+  NA_clientsNumber(void* data, unsigned int len);
+  virtual ~NA_clientsNumber();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  int getNumber();
+
+  private:
+  int m_number;
+};
+
+// query the number of clients for the munin plugin
+class NA_clientsNumberQuery : public NetAction {
+  public:
+  NA_clientsNumberQuery();
+  NA_clientsNumberQuery(void* data, unsigned int len);
+  virtual ~NA_clientsNumberQuery();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
 };
 
 class NA_playingLevel : public NetAction {

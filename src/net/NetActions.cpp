@@ -46,6 +46,8 @@ std::string NA_changeName::ActionKey    = "changeName";
 std::string NA_playingLevel::ActionKey  = "playingLevel";
 std::string NA_serverError::ActionKey   = "serverError";
 std::string NA_changeClients::ActionKey = "changeClients";
+std::string NA_clientsNumber::ActionKey = "clientsNumber";
+std::string NA_clientsNumberQuery::ActionKey = "clientsNumberQ";
 // control : while it's sent a lot, reduce it at maximum
 std::string NA_playerControl::ActionKey = "c";
 std::string NA_clientMode::ActionKey  	= "clientMode";
@@ -63,6 +65,8 @@ NetActionType NA_clientInfos::NAType   = TNA_clientInfos;
 NetActionType NA_udpBind::NAType       = TNA_udpBind;
 NetActionType NA_udpBindQuery::NAType  = TNA_udpBindQuery;
 NetActionType NA_changeName::NAType    = TNA_changeName;
+NetActionType NA_clientsNumber::NAType = TNA_clientsNumber;
+NetActionType NA_clientsNumberQuery::NAType = TNA_clientsNumberQuery;
 NetActionType NA_playingLevel::NAType  = TNA_playingLevel;
 NetActionType NA_serverError::NAType   = TNA_serverError;
 NetActionType NA_changeClients::NAType = TNA_changeClients;
@@ -269,6 +273,14 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
 
   else if(v_cmd == NA_changeClients::ActionKey) {
     v_res = new NA_changeClients(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_clientsNumber::ActionKey) {
+    v_res = new NA_clientsNumber(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_clientsNumberQuery::ActionKey) {
+    v_res = new NA_clientsNumberQuery(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
   else if(v_cmd == NA_clientMode::ActionKey) {
@@ -492,6 +504,41 @@ void NA_changeName::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_se
 
 std::string NA_changeName::getName() {
   return m_name;
+}
+
+NA_clientsNumber::NA_clientsNumber(int i_number) {
+  m_number = i_number;
+}
+
+NA_clientsNumber::NA_clientsNumber(void* data, unsigned int len) {
+  unsigned int v_localOffset = 0;
+  m_number = atoi(getLine(data, len, &v_localOffset).c_str());
+}
+
+NA_clientsNumber::~NA_clientsNumber() {
+}
+
+void NA_clientsNumber::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  std::ostringstream v_send;
+  v_send << m_number << "\n";
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.str().c_str(), v_send.str().size()); // don't send the \0
+}
+
+int NA_clientsNumber::getNumber() {
+  return m_number;
+}
+
+NA_clientsNumberQuery::NA_clientsNumberQuery() {
+}
+
+NA_clientsNumberQuery::NA_clientsNumberQuery(void* data, unsigned int len) {
+}
+
+NA_clientsNumberQuery::~NA_clientsNumberQuery() {
+}
+
+void NA_clientsNumberQuery::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, NULL, 0);
 }
 
 NA_playingLevel::NA_playingLevel(const std::string& i_levelId) {

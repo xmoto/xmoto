@@ -964,6 +964,24 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     }
     break;
 
+  case TNA_clientsNumberQuery:
+    {
+      // only clients having a name
+      int n=0;
+      for(unsigned int i=0; i<m_clients.size(); i++) {
+	if(m_clients[i]->name() != "") {
+	  n++;
+	}
+      }
+
+      NA_clientsNumber nacn(n);
+      try {
+	sendToClient(&nacn, i_client, -1, 0);
+      } catch(Exception &e) {
+      }
+    }
+    break;
+
   case TNA_clientInfos:
     {
       // check protocol version
@@ -989,7 +1007,7 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       } catch(Exception &e) {
       }
 
-      // send the current clients list to the client only when the client has a name
+      // send the current clients list to the client only when the client has a name (or TNA_clientsNumber)
       NA_changeClients nacc;
       NetInfosClient nic;
       try {
