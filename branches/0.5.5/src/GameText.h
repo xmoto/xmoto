@@ -429,6 +429,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_PROXYSERVER          _("Proxy Server")
 #define GAMETEXT_PROXYCONFIG          _("Configure Proxy...")
 #define GAMETEXT_QUALITY              _("Quality")
+#define GAMETEXT_QUERY_WITHOUT_RESULT _("Sorry, but there aren't enough levels matching your choice.\nChoosing random levels instead")
 #define GAMETEXT_QUICKSTART           _("Quick start")
 #define GAMETEXT_QUIT                 _("Quit Game")
 #define GAMETEXT_QUITMESSAGE          _("Do you really want to quit?")

@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWWAppInterface.h"
 #include "sqlqueries.h"
 #include <sstream>
+#include "SysMessage.h"
 
 LevelsPack::LevelsPack(std::string i_name, const std::string& i_sql, bool i_ascSort) {
   m_name             = i_name;
@@ -1147,6 +1148,30 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN, uns
   std::ostringstream v_difficultyMINStr;
   std::ostringstream v_qualityMAXStr;
   std::ostringstream v_difficultyMAXStr;
+
+  // make ranges because statistics dont give round numbers anymore
+  if(i_qualityMIN == 5) {
+    i_qualityMIN = 4.5;
+  }
+  if(i_qualityMAX == 1) {
+    i_qualityMAX = 1.5;
+  }
+  if(i_qualityMIN == i_qualityMAX) {
+    i_qualityMIN -= 0.5;
+    i_qualityMAX += 0.5;
+  }
+
+  if(i_difficultyMIN == 5) {
+    i_difficultyMIN = 4.5;
+  }
+  if(i_difficultyMAX == 1) {
+    i_difficultyMAX = 1.5;
+  }
+  if(i_difficultyMIN == i_difficultyMAX) {
+    i_difficultyMIN -= 0.5;
+    i_difficultyMAX += 0.5;
+  }
+
   v_qualityMINStr    << i_qualityMIN;
   v_difficultyMINStr << i_difficultyMIN;
   v_qualityMAXStr    << i_qualityMAX;
@@ -1188,6 +1213,7 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN, uns
       "GROUP BY a.id_level ORDER BY RANDOM();";
   } else {
     /* all levels randomly */
+    SysMessage::instance()->displayInformation(GAMETEXT_QUERY_WITHOUT_RESULT);
     return
       "SELECT a.id_level, MIN(a.name), MIN(b.finishTime+0), MIN(c.finishTime+0) "
       "FROM levels AS a "
@@ -1212,7 +1238,7 @@ void LevelsManager::unlockLevelsPacks() {
 }
 
 void LevelsManager::writeDefaultPackagesSql(FileHandle* pfh, const std::string& i_sqlName, const std::string& i_sql) {
-  XMFS::writeLineF(pfh, "#define %s \"%s\"", i_sqlName.c_str(), i_sql.c_str());
+  XMFS::writeLineF(pfh,(char*) "#define %s \"%s\"", i_sqlName.c_str(), i_sql.c_str());
 }
 
 void LevelsManager::writeDefaultPackages(const std::string& i_file) {
@@ -1223,7 +1249,7 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
     throw Exception("Unable to open file " + i_file);
   }
 
-  XMFS::writeLineF(pfh, "// this file is generated automatically by \"xmoto --buildQueries\", don't edit it");
+  XMFS::writeLineF(pfh, (char*)"// this file is generated automatically by \"xmoto --buildQueries\", don't edit it");
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_ALL",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted

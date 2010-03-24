@@ -498,7 +498,6 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
 
       if(j!=0 && v_edgeOrientation != v_oldEdgeOrientation) {
         v_cutEdge = true;
-        LogInfo("cutted");
       }
 
       //check if edge texture is in material or pure
