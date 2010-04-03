@@ -121,6 +121,9 @@ GameRenderer::GameRenderer() {
 }
 
 GameRenderer::~GameRenderer() {
+  m_edgeGeoms.clear();
+  m_StaticGeoms.clear();
+  m_DynamicGeoms.clear();
 }
 
   /*===========================================================================
@@ -166,6 +169,10 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
 
   m_screenBBox.reset();
   m_layersBBox.reset();
+
+  m_edgeGeoms.clear();
+  m_StaticGeoms.clear();
+  m_DynamicGeoms.clear();
 
   m_sizeMultOfEntitiesToTake       = 1.0;
   m_sizeMultOfEntitiesWhichMakeWin = 1.0;
@@ -2909,9 +2916,7 @@ void GameRenderer::_RenderLayer(Scene* i_scene, int layer) {
     glTranslatef(translateVector.x, translateVector.y, 0);
 
     for(unsigned int i=0; i<Blocks.size(); i++) {
-      Block* block = Blocks[i];
-
-      _RenderBlock(block);
+      _RenderBlock(Blocks[i]);
     }
     glPopMatrix();
 #endif
@@ -2919,8 +2924,7 @@ void GameRenderer::_RenderLayer(Scene* i_scene, int layer) {
 
 void GameRenderer::_RenderLayers(Scene* i_scene, bool renderFront) { 
     /* Render background level blocks */
-    int nbLayer = i_scene->getLevelSrc()->getNumberLayer();
-    for(int layer=0; layer<nbLayer; layer++){
+    for(int layer=0; layer < i_scene->getLevelSrc()->getNumberLayer(); layer++){
       if(i_scene->getLevelSrc()->isLayerFront(layer) == renderFront){
 	_RenderLayer(i_scene, layer);
       }
