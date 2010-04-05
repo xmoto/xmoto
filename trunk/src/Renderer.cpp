@@ -121,9 +121,6 @@ GameRenderer::GameRenderer() {
 }
 
 GameRenderer::~GameRenderer() {
-  m_edgeGeoms.clear();
-  m_StaticGeoms.clear();
-  m_DynamicGeoms.clear();
 }
 
   /*===========================================================================
@@ -169,10 +166,6 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
 
   m_screenBBox.reset();
   m_layersBBox.reset();
-
-  m_edgeGeoms.clear();
-  m_StaticGeoms.clear();
-  m_DynamicGeoms.clear();
 
   m_sizeMultOfEntitiesToTake       = 1.0;
   m_sizeMultOfEntitiesWhichMakeWin = 1.0;
@@ -475,8 +468,13 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       }
     }
 
+    /* if the same edge effect goes around a whole block, problems with e.g. half-moon-shaped
+       blocks occur: the first is drawn under the last edge.
+       to deal with this problem, we set the cutEdge bool which indicates to start a new geom,
+       as soon as the direction of drawing is changed */
+       
     bool v_cutEdge = false;
-    bool v_edgeOrientation = false;
+    bool v_edgeOrientation = true;
     bool v_oldEdgeOrientation = v_edgeOrientation;
     for(unsigned int j=0; j<vertices.size(); j++){
       BlockVertex* vertexA = vertices[j];
@@ -497,10 +495,10 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       v_checkOrientation.rotateXY(270.0-pBlock->edgeAngle());
       v_oldEdgeOrientation = v_edgeOrientation;
       if(v_checkOrientation.y > 0) {
-        v_edgeOrientation = true;
+        v_edgeOrientation = true;  // upper edge
       }
       else {
-        v_edgeOrientation = false;
+        v_edgeOrientation = false;  // lower edge
       }
 
       if(j!=0 && v_edgeOrientation != v_oldEdgeOrientation) {
@@ -553,7 +551,9 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       
       // if a geom for current edge effect exists, get its index number
       int geomIndex = edgeGeomExists(pBlock, edgeEffect); 
-      if(geomIndex < 0 || v_cutEdge){
+      if(geomIndex < 0 || v_cutEdge){        
+        v_cutEdge = false;
+        
 	// create a new one
 	Geom* pGeom = new Geom;
 	geomIndex = m_edgeGeoms.size(); 
@@ -688,7 +688,6 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       }
     }
 #endif
-//  }
 
   return nVertexBytes;
 }
