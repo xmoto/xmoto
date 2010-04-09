@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2010-03-24 00:55+0100\n"
-"PO-Revision-Date: 2009-10-11 23:58+0100\n"
+"PO-Revision-Date: 2010-04-09 13:06+0100\n"
 "Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -1385,6 +1385,8 @@ msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
 msgstr ""
+"Sorry, aber es gibt nicht genügend Levels, die deinen Auswahlkriterien "
+"entsprechen.Die Zufallsauswahl wird verwendet."
 
 #: src/GameText.h:424
 msgid "Quick start"
@@ -1563,7 +1565,7 @@ msgstr "Synchronisierung erfolgreich"
 #: src/GameText.h:462
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
-msgstr ""
+msgstr "Die Taste '%s' von Spieler '%i' wurde umbelegt auf '%s'."
 
 #: src/GameText.h:464
 msgid "Add/remove to favorite levels"
@@ -2025,11 +2027,11 @@ msgstr "Steuerung konfigurieren"
 
 #: src/GameText.h:584
 msgid "Configure controls of Player"
-msgstr ""
+msgstr "Steuerungseinstellungen für die Spieler"
 
 #: src/GameText.h:585
 msgid "Configure general controls"
-msgstr ""
+msgstr "Generelle Tastenbelegungen"
 
 #: src/GameText.h:586
 msgid "Save options"

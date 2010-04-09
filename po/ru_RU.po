@@ -1,21 +1,21 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
+# Copyright (C).
 # This file is distributed under the same license as the PACKAGE package.
-# Mikhail Brinchuk <thecentury@gmail.com>, 2007.
 #
+# Mikhail Brinchuk <thecentury@gmail.com>, 2007, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2010-03-24 00:55+0100\n"
-"PO-Revision-Date: 2009-09-08 23:14+0800\n"
-"Last-Translator: WhiteWind <whitearchey@gmail.com>\n"
-"Language-Team: ru\n"
+"PO-Revision-Date: 2010-03-24 10:49+0800\n"
+"Last-Translator: \n"
+"Language-Team: American English <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Lokalize 0.3\n"
 
 #: src/GameText.h:33
 msgid "en_EN"
@@ -946,7 +946,7 @@ msgstr "Вкл/выкл просмотр пути призрака"
 
 #: src/GameText.h:306
 msgid "Enable/disable FPS display"
-msgstr "Вкл/выкл показ FPS"
+msgstr "Вкл/выкл показ Кдр/сек"
 
 #: src/GameText.h:308 src/GameText.h:463
 msgid "Enable/disable ugly mode"
@@ -954,11 +954,11 @@ msgstr "Вкл/выкл уродливый режим"
 
 #: src/GameText.h:309
 msgid "Toggle Contrast, Light and Full Graphics"
-msgstr ""
+msgstr "Настроить контрастную, лёгкую и полную графику"
 
 #: src/GameText.h:310
 msgid "Toggle theme and ugly over mode"
-msgstr ""
+msgstr "Вкл/выкл режим темы и показ граней"
 
 #: src/GameText.h:313
 msgid "Hide ghosts"
@@ -1137,15 +1137,15 @@ msgstr "Графика меню"
 
 #: src/GameText.h:357
 msgid "Contrast"
-msgstr ""
+msgstr "Контрастная"
 
 #: src/GameText.h:358
 msgid "Light"
-msgstr ""
+msgstr "Лёгкая"
 
 #: src/GameText.h:359
 msgid "Full"
-msgstr ""
+msgstr "Полная"
 
 #: src/GameText.h:360
 msgid "Total time you scored / total highscore time for levels you finished"
@@ -1166,7 +1166,7 @@ msgstr "Наиболее часто играемые уровни"
 
 #: src/GameText.h:364
 msgid "Motion blur ghost"
-msgstr "Нерезкий Призрак"
+msgstr "Размытие Призрака"
 
 #: src/GameText.h:365
 msgid "Multi"
@@ -1390,6 +1390,8 @@ msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
 msgstr ""
+"Извините, но уровней, подходящих условиям, слишком мало.\n"
+"Будут выбраны случайные уровни."
 
 #: src/GameText.h:424
 msgid "Quick start"
@@ -1568,7 +1570,7 @@ msgstr "Синхонизация пошла успешно"
 #: src/GameText.h:462
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
-msgstr ""
+msgstr "Клавиша '%s' игрока '%i' переключена на '%s'"
 
 #: src/GameText.h:464
 msgid "Add/remove to favorite levels"
@@ -1778,15 +1780,15 @@ msgstr "Время игры: %s"
 #, c-format
 msgid "%d play"
 msgid_plural "%d plays"
-msgstr[0] "%d игрок"
-msgstr[1] "%d игрока"
-msgstr[2] "%d игроков"
+msgstr[0] "%d игра"
+msgstr[1] "%d игры"
+msgstr[2] "%d игр"
 
 #: src/GameText.h:514
 #, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
-msgstr[0] "%d смерть"
+msgstr[0] "%d смертей"
 msgstr[1] "%d смерти"
 msgstr[2] "%d смертей"
 
@@ -1794,17 +1796,17 @@ msgstr[2] "%d смертей"
 #, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
-msgstr[0] "%d закончен"
-msgstr[1] "%d закончены"
-msgstr[2] "%d закончены"
+msgstr[0] "%d раз закончен"
+msgstr[1] "%d раза закончен"
+msgstr[2] "%d раз закончен"
 
 #: src/GameText.h:516
 #, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
-msgstr[0] "%d рестарт"
-msgstr[1] "%d рестарта"
-msgstr[2] "%d рестартов"
+msgstr[0] "%d раз перезапущен"
+msgstr[1] "%d раза перезапущен"
+msgstr[2] "%d раз перезапущен"
 
 #: src/GameText.h:518
 #, c-format
@@ -1861,7 +1863,7 @@ msgstr "Сервер не запущен"
 
 #: src/GameText.h:533
 msgid "Default port"
-msgstr "Порт по-умолчанию"
+msgstr "Порт по умолчанию"
 
 #: src/GameText.h:534
 msgid "Custom port"
@@ -2037,11 +2039,11 @@ msgstr "Настроить управление"
 
 #: src/GameText.h:584
 msgid "Configure controls of Player"
-msgstr ""
+msgstr "Настроить управление игрока"
 
 #: src/GameText.h:585
 msgid "Configure general controls"
-msgstr ""
+msgstr "Настроить общее управление"
 
 #: src/GameText.h:586
 msgid "Save options"
@@ -2264,8 +2266,7 @@ msgstr "Выберите, какого Призрака отображать"
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr ""
-"Размывать перемещнение Призрака (если поддерживается вашей графической "
-"картой)"
+"Размывать перемещение Призрака (если поддерживается вашей графической картой)"
 
 #: src/GameText.h:642
 msgid "When starting a level with a ghost, display who the ghost is of"
@@ -2281,7 +2282,7 @@ msgstr "Показывать разницу времени между Призр
 
 #: src/GameText.h:645
 msgid "If you make a highscore it will automatically be saved as a replay"
-msgstr "Если вы установить рекорд, то автоматически будет сохрана демка"
+msgstr "Если вы установили рекорд, то автоматически будет сохранена демка"
 
 #: src/GameText.h:646
 msgid "View the replay of the room's highscore"
@@ -2544,7 +2545,7 @@ msgstr "Сообщите свое мнения об этом уровне"
 
 #: src/GameText.h:716
 msgid "No idea"
-msgstr "Нет идеи"
+msgstr "Не знаю"
 
 #: src/GameText.h:717
 msgid "Beginner"
@@ -2620,7 +2621,7 @@ msgstr "Базовые блоки, нет декораций"
 
 #: src/GameText.h:736
 msgid "Basic decoration, not smooth blocks"
-msgstr "Бозовые декорации, нет гладких блоков"
+msgstr "Базовые декорации, нет гладких блоков"
 
 #: src/GameText.h:737
 msgid "Not original"
@@ -2947,7 +2948,7 @@ msgstr "Уровни, доступные для голосования"
 
 #: src/GameText.h:823
 msgid "Normal mode enabled"
-msgstr ""
+msgstr "Нормальный режим включён"
 
 #: src/GameText.h:824
 msgid "Ugly mode enabled"
@@ -2975,15 +2976,15 @@ msgstr "Показ граней выключен"
 
 #: src/GameText.h:830
 msgid "Contrast Graphics Mode enabled"
-msgstr ""
+msgstr "Режим контрастной графики включён"
 
 #: src/GameText.h:831
 msgid "Light Graphics Mode enabled"
-msgstr ""
+msgstr "Режим лёгкой графики включён"
 
 #: src/GameText.h:832
 msgid "Full Graphics Mode enabled"
-msgstr ""
+msgstr "Режим полной графики включён"
 
 #: src/GameText.h:833
 msgid "Web connection enabled"
@@ -3065,7 +3066,7 @@ msgstr ""
 
 #: src/GameText.h:852
 msgid "Restart Level to activate!"
-msgstr ""
+msgstr "Перезапустите уровень для активации!"
 
 #: src/GameText.h:854
 #, c-format

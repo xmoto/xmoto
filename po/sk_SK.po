@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2010-03-24 00:55+0100\n"
-"PO-Revision-Date: 2010-01-07 22:14+0100\n"
+"PO-Revision-Date: 2010-03-24 19:38+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1390,6 +1390,8 @@ msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
 msgstr ""
+"Ľutujem, ale neexistuje dostatok levelov, ktoré vyhovujú\n"
+"vášmu výberu. Vyberám preto náhodné levely."
 
 #: src/GameText.h:424
 msgid "Quick start"
@@ -1568,7 +1570,7 @@ msgstr "Synchronizácia úspešne dokončená"
 #: src/GameText.h:462
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
-msgstr ""
+msgstr "Kláves '%s' hráča '%i' bol zmenený na '%s'"
 
 #: src/GameText.h:464
 msgid "Add/remove to favorite levels"
@@ -2035,11 +2037,11 @@ msgstr "Nastaviť voľby ovládania"
 
 #: src/GameText.h:584
 msgid "Configure controls of Player"
-msgstr ""
+msgstr "Nastaviť ovládanie hráča"
 
 #: src/GameText.h:585
 msgid "Configure general controls"
-msgstr ""
+msgstr "Nastaviť všeobecné ovládanie"
 
 #: src/GameText.h:586
 msgid "Save options"
