@@ -468,7 +468,9 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       }
     }
 
-    /* if the same edge effect goes around a whole block, problems with e.g. half-moon-shaped
+    /* determine whether the normal vector of the edge heads up or down
+
+       if the same edge effect goes around a whole block, problems with e.g. half-moon-shaped
        blocks occur: the first is drawn under the last edge.
        to deal with this problem, we set the cutEdge bool which indicates to start a new geom,
        as soon as the direction of drawing is changed */
@@ -550,7 +552,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       }
       
       // if a geom for current edge effect exists, get its index number
-      int geomIndex = edgeGeomExists(pBlock, edgeEffect); 
+      int geomIndex = edgeGeomExists(pBlock, edgeEffect, v_edgeOrientation); 
       if(geomIndex < 0 || v_cutEdge){        
         v_cutEdge = false;
         
@@ -570,6 +572,7 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
       GeomPoly* pPoly = pGeom->Polys[0];
 
       pGeom->edgeBlendColor = m_currentEdgeBlendColor;
+      pGeom->isUpper = v_edgeOrientation;
 
       Vector2f a1, b1, b2, a2, c1, c2;
       calculateEdgePosition(pBlock,
@@ -626,41 +629,14 @@ int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
         
     for(unsigned int i=0; i < pBlock->getEdgeGeoms().size(); i++) {
 
-      // determine whether the normal vector of the edge heads up or down
-      // since inkscape allows only 2 edges on a block and uses an equivalent algorithm,
-      // it should be sufficient to check only a few vertices
-
       int geom= pBlock->getEdgeGeoms()[i];
-      GeomPoly* pV0 = m_edgeGeoms[geom]->Polys[0];  
-      GeomCoord pBV0 = pV0->pVertices[0];
-      GeomCoord pBV1 = pV0->pVertices[0];
-      
-      int it = 1;
-      Vector2f v_normal;
-      
-      //if the edge is vertical, we cant tell if its an upper or lower edge, so look further then
-      do {
-        pBV0 = pBV1;
-        pBV1 = pV0->pVertices[it];
-        it ++;
-      
-        v_normal = Vector2f( pBV1.x-pBV0.x , pBV1.y-pBV0.y );
-        v_normal.normal();
-        // note our edge angle
-        v_normal.rotateXY(270.0-pBlock->edgeAngle());
-
-    
-      } while( Vector2f(v_normal.x,0).almostEqual(v_normal));
-      
-      if(v_normal.y > 0) {  // then edge is upper
+      if(m_edgeGeoms[geom]->isUpper) {  // then edge is upper
           v_upperBlockGeomsIndex.push_back(geom);
-        }
-        else {
+      }
+      else {
           v_lowerBlockGeomsIndex.push_back(geom);
-        }
-
+      }
     }
-    
     // now replace the block edgeGeoms index by our sorted one
     std::vector<int> v_tempVec;
     v_tempVec.reserve(v_upperBlockGeomsIndex.size()+v_lowerBlockGeomsIndex.size());
@@ -824,12 +800,12 @@ Texture* GameRenderer::loadTextureEdge(std::string textureName)
   return pTexture;
 }
 
-int GameRenderer::edgeGeomExists(Block* pBlock, std::string material)
+int GameRenderer::edgeGeomExists(Block* pBlock, std::string material, bool i_isUpper)
 {
   std::vector<int>& edgeGeoms = pBlock->getEdgeGeoms();
 
   for(unsigned int i=0; i<edgeGeoms.size(); i++){
-    if(m_edgeGeoms[edgeGeoms[i]]->material == material)
+    if(m_edgeGeoms[edgeGeoms[i]]->material == material && m_edgeGeoms[edgeGeoms[i]]->isUpper == i_isUpper)
       return edgeGeoms[i];
   }
 
