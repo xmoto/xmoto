@@ -1379,7 +1379,8 @@ msgstr "Qualité"
 msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
-msgstr "Désolé, il n'y a pas assez de niveaux correspondants.\n"
+msgstr ""
+"Désolé, il n'y a pas assez de niveaux correspondants.\n"
 "Des niveaux aléatoires sont proposés"
 
 #: src/GameText.h:424

@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2010-03-24 00:55+0100\n"
-"PO-Revision-Date: 2009-08-26 21:11-0300\n"
-"Last-Translator: Lucas Hermann Negri <kkndrox@gmail.com>\n"
+"PO-Revision-Date: 2010-04-09 12:57+0100\n"
+"Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: Portuguese/Brazil\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -418,7 +418,7 @@ msgstr "Húngaro"
 
 #: src/GameText.h:160
 msgid "Portugese"
-msgstr ""
+msgstr "Português"
 
 #: src/GameText.h:162
 msgid "Main testers"
@@ -950,11 +950,11 @@ msgstr "Habilitar/disabilitar o modo feio"
 
 #: src/GameText.h:309
 msgid "Toggle Contrast, Light and Full Graphics"
-msgstr ""
+msgstr "Alternar Contraste e gráficos Leve e Completo"
 
 #: src/GameText.h:310
 msgid "Toggle theme and ugly over mode"
-msgstr ""
+msgstr "Alternar tema e modo feio"
 
 #: src/GameText.h:313
 msgid "Hide ghosts"
@@ -1133,15 +1133,15 @@ msgstr "Gráficos do menu"
 
 #: src/GameText.h:357
 msgid "Contrast"
-msgstr ""
+msgstr "Contraste"
 
 #: src/GameText.h:358
 msgid "Light"
-msgstr ""
+msgstr "Leve"
 
 #: src/GameText.h:359
 msgid "Full"
-msgstr ""
+msgstr "Completo"
 
 #: src/GameText.h:360
 msgid "Total time you scored / total highscore time for levels you finished"
@@ -1384,6 +1384,7 @@ msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
 msgstr ""
+"Desculpe, mas não existem níveis o suficiente relacionados com a sua escolha."
 
 #: src/GameText.h:424
 msgid "Quick start"
@@ -1562,7 +1563,7 @@ msgstr "Sincronização feita com sucesso"
 #: src/GameText.h:462
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
-msgstr ""
+msgstr "Tecla '%s' do Jogador '%i' foi trocada para '%s'"
 
 #: src/GameText.h:464
 msgid "Add/remove to favorite levels"
@@ -2023,11 +2024,11 @@ msgstr "Configurar opções de controles"
 
 #: src/GameText.h:584
 msgid "Configure controls of Player"
-msgstr ""
+msgstr "Configurar controles do Jogador"
 
 #: src/GameText.h:585
 msgid "Configure general controls"
-msgstr ""
+msgstr "Configurar controles gerais"
 
 #: src/GameText.h:586
 msgid "Save options"
@@ -2946,7 +2947,7 @@ msgstr "Níveis que tem a votação desbloqueada"
 
 #: src/GameText.h:823
 msgid "Normal mode enabled"
-msgstr ""
+msgstr "Modo normal ativado"
 
 #: src/GameText.h:824
 msgid "Ugly mode enabled"
@@ -2974,15 +2975,15 @@ msgstr "Modo horrível desabilitado"
 
 #: src/GameText.h:830
 msgid "Contrast Graphics Mode enabled"
-msgstr ""
+msgstr "Modo Gráfico de Contraste ativado"
 
 #: src/GameText.h:831
 msgid "Light Graphics Mode enabled"
-msgstr ""
+msgstr "Modo Gráfico Leve ativado"
 
 #: src/GameText.h:832
 msgid "Full Graphics Mode enabled"
-msgstr ""
+msgstr "Modo Gráfico Completo ativado"
 
 #: src/GameText.h:833
 msgid "Web connection enabled"
@@ -3064,7 +3065,7 @@ msgstr ""
 
 #: src/GameText.h:852
 msgid "Restart Level to activate!"
-msgstr ""
+msgstr "Reinicie o Nível para ativar!"
 
 #: src/GameText.h:854
 #, c-format
