@@ -74,6 +74,7 @@ class Camera;
     Texture *pTexture;           // only used for edge Geoms
     TColor edgeBlendColor;    
     Vector2f Min,Max; /* AABB */
+    bool isUpper;
   };
 
   /*===========================================================================
@@ -290,7 +291,7 @@ private:
 
   Texture* loadTexture(std::string textureName);
   Texture* loadTextureEdge(std::string textureName);
-  int  edgeGeomExists(Block* pBlock, std::string texture);
+  int  edgeGeomExists(Block* pBlock, std::string texture, bool isUpper);
   void initCameras(Universe* i_universe);
   int  loadBlock(Block* pBlock, Universe* i_universe, unsigned int currentScene, int sameSceneAs, int blockIndex);
   int  loadBlockGeom(Block* pBlock, std::vector<Geom *>* pGeoms, Vector2f Center, Scene* pScene);
