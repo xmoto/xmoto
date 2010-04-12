@@ -108,6 +108,8 @@ public:
   XMKey getRestartLevel() const;
   void setShowConsole(XMKey i_value);
   XMKey getShowConsole() const;
+  void setRestartCheckpoint(XMKey i_value);
+  XMKey getRestartCheckpoint() const;
 
   static float joyRawToFloat(float raw, float neg, float deadzone_neg, float deadzone_pos, float pos);
 
@@ -132,6 +134,7 @@ private:
   XMKey m_switchFavorite;
   XMKey m_restartLevel;
   XMKey m_showConsole;
+  XMKey m_restartCheckpoint;
 };
 
 

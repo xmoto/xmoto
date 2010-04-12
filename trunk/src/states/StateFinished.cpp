@@ -80,6 +80,14 @@ void StateFinished::enter()
       m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name());
     }
   }
+  
+  bool v_allowReplay = true;
+  if(pGame->getCheckpoint() != NULL) {
+    if(pGame->getCheckpoint()->wasUsed()) {
+        v_allowReplay = false;
+    }
+  }
+
 
   createGUIIfNeeded();
   m_GUI = m_sGUI;
@@ -90,7 +98,7 @@ void StateFinished::enter()
 
   if(m_universe != NULL) {
     UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:SAVEREPLAY_BUTTON"));
-    saveReplayButton->enableWindow(m_universe->isAReplayToSave());
+    saveReplayButton->enableWindow(m_universe->isAReplayToSave() && v_allowReplay);
   }
 
   UIButton* v_uploadButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:UPLOAD_BUTTON"));
@@ -122,14 +130,13 @@ void StateFinished::enter()
 
   /* replay */
   if(m_universe != NULL) {
-
-    if(m_universe->isAReplayToSave()) {
+    if(m_universe->isAReplayToSave() && v_allowReplay) {
 
       /* upload button */
       if(v_is_a_room_highscore) {
 	/* active upload button */
 	if(XMSession::instance()->www()) {
-	  v_uploadButton->enableWindow(v_is_a_room_highscore);
+	  v_uploadButton->enableWindow(v_is_a_room_highscore && v_allowReplay);
 	  v_uploadButton->makeActive(); // always preselect the upload button even in beating mode
 	}
       }
@@ -202,6 +209,9 @@ void StateFinished::enter()
       }
     }
   }
+
+  // invalidate Checkpoint
+  pGame->setCheckpoint(NULL);  
 
   StateMenu::enter();
 }

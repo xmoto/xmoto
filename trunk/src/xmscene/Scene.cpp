@@ -86,6 +86,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     cleanGhosts();
     cleanScriptTimers();
     if(m_ghostTrail != 0) delete m_ghostTrail;		
+/*    
+    for(unsigned i=0; i < m_strawberriesTaken.size(); i++) {
+      delete m_strawberriesTaken[i];
+    }
+    m_strawberriesTaken.clear();   */
   }
 
   void Scene::loadLevel(xmDatabase *i_db, const std::string& i_id_level) {
@@ -118,7 +123,6 @@ void Scene::cleanGhosts() {
     delete m_ghosts[i];
   }
   m_ghosts.clear();
-//  if(m_fileGhost != 0) delete m_fileGhost;
 }
 
 void Scene::cleanPlayers() {
@@ -499,7 +503,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
       
       /* detect correct target position, considering number of lines of previously displayed message */
       int v_row = 0;
-      for(unsigned j=0; j<i; j++){
+      for(int j=0; j<i; j++){
         v_row += m_GameMessages[j]->lines;
       }
       Vector2f TargetPos = Vector2f(0.2f, (0.5f - (m_GameMessages.size()*0.05f)/(2.0f) + 0.049f*v_row) );
@@ -721,10 +725,6 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     }
   }
   
-/*  void Scene::setFileGhost(FileGhost* i_fileGhost) {
-    m_fileGhost = i_fileGhost;
-  }
-*/
   /*===========================================================================
     Free this game object
     ===========================================================================*/
@@ -1062,7 +1062,14 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
 
       if(pEntity->IsToTake()) {
 	/* OH... nice */
+	m_strawberriesTaken.push_back(pEntity);
 	createGameEvent(new MGE_EntityDestroyed(getTime(), pEntity->Id(), pEntity->Speciality(), pEntity->DynamicPosition(), pEntity->Size()));
+      }
+      
+      if((Checkpoint*)pEntity->IsCheckpoint()) {
+        LogInfo("CHachacheckpoint");
+        Checkpoint* v_checkpoint = (Checkpoint*)pEntity;
+        v_checkpoint->activate(m_players[i_player]->getState()->Dir, getTime(), m_strawberriesTaken);
       }
     }
   }
@@ -1600,7 +1607,11 @@ bool Scene::isAutoZoomCamera(){
   std::vector<Camera*>& Scene::Cameras() {
     return m_cameras;
   }
-
+/*
+Checkpoint* Scene::getCheckpoint() {
+  return m_checkpoint;
+}
+*/
 PhysicsSettings* Scene::getPhysicsSettings() {
   return m_physicsSettings;
 }

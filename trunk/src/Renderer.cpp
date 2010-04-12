@@ -1200,6 +1200,9 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
       else if(Entities[i]->DoesKill()) {
         pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(26,26,188,255), 0);
       }
+      else if(Entities[i]->IsCheckpoint()) {
+        pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(26,188,26,255), 0);
+      }
       else if(Entities[i]->isScripted()) {
         pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(230,226,100,255), 0);
       }
@@ -1790,6 +1793,9 @@ int GameRenderer::nbParticlesRendered() const {
 	case ET_ISTOTAKE:
 	  v_color = MAKE_COLOR(255,0,0,255);
 	  break;
+	case ET_CHECKPOINT:
+	  v_color = MAKE_COLOR(0,255,0,255);
+	  break;
 	default:
 	  v_color = MAKE_COLOR(50,50,50,255); /* Fix: hard-to-see color because of entity's insignificance */
 	  break;
@@ -2204,6 +2210,9 @@ void GameRenderer::_RenderSprite(Scene* i_scene, Entity *pEntity, float i_sizeMu
 	v_spriteName = i_scene->getLevelSrc()->SpriteForStrawberry();
 	v_sprite     = (AnimationSprite*)i_scene->getLevelSrc()->strawberrySprite();
         break;
+      case ET_CHECKPOINT:
+        v_spriteName = i_scene->getLevelSrc()->SpriteForCheckpoint();
+        v_sprite     = (AnimationSprite*)i_scene->getLevelSrc()->checkpointSprite();
       default:
 	v_spriteName = pEntity->SpriteName();
       }

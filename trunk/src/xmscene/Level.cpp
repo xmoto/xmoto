@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include "Level.h"
+#include "../Game.h"
 #include "../VFileIO.h"
 #include "../XMBuild.h"
 #include "../VXml.h"
@@ -60,12 +61,14 @@ Level::Level() {
   m_rSpriteForWecker 	      = "Wrecker";
   m_rSpriteForFlower 	      = "Flower";
   m_rSpriteForStar            = "Star";
+  m_rSpriteForCheckpoint      = "Checkpoint";
   m_rSoundForPickUpStrawberry = "PickUpStrawberry";
 
   m_strawberrySprite = NULL;
   m_wreckerSprite    = NULL;
   m_flowerSprite     = NULL;
   m_starSprite       = NULL;
+  m_checkpointSprite = NULL;
 }
 
 Level::~Level() {
@@ -190,6 +193,11 @@ Entity* Level::getEntityById(const std::string& i_id) {
       return m_entities[i];
     }
   }
+  for(unsigned int i=0; i<m_entitiesCheckpoint.size(); i++) {
+    if(m_entitiesCheckpoint[i]->Id() == i_id) {
+      return m_entitiesCheckpoint[i];
+    }
+  }
   for(unsigned int i=0; i<m_entitiesDestroyed.size(); i++) {
     if(m_entitiesDestroyed[i]->Id() == i_id) {
       return m_entitiesDestroyed[i];
@@ -303,6 +311,10 @@ std::vector<Entity *>& Level::Entities() {
 
 unsigned int Level::countToTakeEntities() {
   return m_nbEntitiesToTake;
+}
+
+std::vector<Checkpoint *>& Level::Checkpoints() {
+  return m_entitiesCheckpoint;
 }
 
 void Level::revertEntityDestroyed(const std::string& i_entityId) {
@@ -635,8 +647,13 @@ void Level::loadXML() {
 	Joint* v_joint = (Joint*)v_entity;
 	v_joint->readFromXml(pElem);
 	m_joints.push_back(v_joint);
-      } else
-	m_entities.push_back(v_entity);
+      }
+      else if(v_entity->Speciality() == ET_CHECKPOINT) {
+        Checkpoint* v_checkpoint = (Checkpoint*)v_entity;
+        v_checkpoint->readFromXml(pElem);
+        m_entitiesCheckpoint.push_back(v_checkpoint);
+      }
+      else m_entities.push_back(v_entity);
     }    
 
     try {
@@ -763,6 +780,7 @@ void Level::exportBinary(FileDataType i_fdt, const std::string &FileName, const 
     XMFS::writeString(pfh,m_rSpriteForFlower);
     XMFS::writeString(pfh,m_rSpriteForWecker);
     XMFS::writeString(pfh,m_rSpriteForStar);
+    XMFS::writeString(pfh,m_rSpriteForCheckpoint);
     XMFS::writeString(pfh,m_rSoundForPickUpStrawberry);
 
     XMFS::writeInt_LE(pfh, m_numberLayer);
@@ -786,6 +804,12 @@ void Level::exportBinary(FileDataType i_fdt, const std::string &FileName, const 
     XMFS::writeInt_LE(pfh,m_entities.size());
     for(unsigned int i=0;i<m_entities.size();i++) {
       m_entities[i]->saveBinary(pfh);
+    }
+
+    /* Write checkpoints */
+    XMFS::writeInt_LE(pfh,m_entitiesCheckpoint.size());
+    for(unsigned int i=0; i<m_entitiesCheckpoint.size(); i++) {
+      m_entitiesCheckpoint[i]->saveBinary(pfh);
     }
 
     // write joints
@@ -996,6 +1020,7 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 	m_rSpriteForFlower     	    = XMFS::readString(pfh);
 	m_rSpriteForWecker     	    = XMFS::readString(pfh);
 	m_rSpriteForStar       	    = XMFS::readString(pfh);
+	m_rSpriteForCheckpoint      = XMFS::readString(pfh);
 	m_rSoundForPickUpStrawberry = XMFS::readString(pfh);
 
 	if(m_rSpriteForStrawberry == "")
@@ -1006,6 +1031,8 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 	  m_rSpriteForWecker = "Wrecker";
 	if(m_rSpriteForStar == "")
 	  m_rSpriteForStar = "Star";
+	if(m_rSpriteForCheckpoint == "")
+	  m_rSpriteForCheckpoint = "Checkpoint";
 
 	/* layers */
 	m_numberLayer = XMFS::readInt_LE(pfh);
@@ -1040,10 +1067,30 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 
         /* Read entities */
         int nNumEntities = XMFS::readInt_LE(pfh);
-        m_entities.reserve(nNumEntities);
+        Checkpoint* v_checkpoint=GameApp::instance()->getCheckpoint();
+        //m_entities.reserve(nNumEntities);
         for(int i=0;i<nNumEntities;i++) {
 	  Entity* v_entity = Entity::readFromBinary(pfh);
-	  m_entities.push_back(v_entity);
+	  
+	  // if entity[i] is a strawberry which was eaten before checkpoint activation, override it
+	  bool v_doContinue = false;
+	  LogInfo("geht los");
+          if(v_checkpoint != NULL) {
+            for(unsigned int j=0; j < v_checkpoint->getStrawberriesEaten().size(); j++) {
+              if(v_entity->Id() == v_checkpoint->getStrawberriesEaten()[j]) {
+                v_doContinue = true;
+                LogInfo("straw override");
+              }
+            }
+          }
+          // this is such an ugly way to code it. improve please!!
+          if(!v_doContinue) {
+            m_entities.push_back(v_entity);
+          }
+          else {
+           LogInfo("ausgespart: %s",v_entity->Id().c_str());
+        
+          }
         }
 
 	try {
@@ -1051,6 +1098,17 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 	} catch(Exception &e) {
 	  LogWarning("no player start entity for level %s", Id().c_str());
 	  m_playerStart = Vector2f(0.0, 0.0);
+	}
+	
+	/* Read Checkpoints */
+	int nNumCheckpoints = XMFS::readInt_LE(pfh);
+	m_entitiesCheckpoint.reserve(nNumEntities);
+	for(int i=0; i<nNumCheckpoints; i++) {
+	  Entity* v_entity = Entity::readFromBinary(pfh);
+	  Checkpoint* v_checkpoint = (Checkpoint*)v_entity;
+	  LogInfo("have checkpoint %s",v_checkpoint->Id().c_str());
+	  //v_checkpoint->readFromBinary(pfh);
+	  m_entitiesCheckpoint.push_back(v_checkpoint);
 	}
 
         int nNumJoints = XMFS::readInt_LE(pfh);
@@ -1183,6 +1241,7 @@ int Level::loadToPlay(ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physics
   }
   
   /* Spawn initial entities */
+  Checkpoint* v_checkpoint = GameApp::instance()->getCheckpoint();
   for(unsigned int i=0; i<m_entities.size(); i++) {
     m_entities[i]->loadToPlay(m_scriptSource);
     Vector2f v = m_entities[i]->DynamicPosition();
@@ -1194,6 +1253,21 @@ int Level::loadToPlay(ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physics
     }
   }
 
+  // also Checkpoints
+  for(unsigned int i=0; i<m_entitiesCheckpoint.size(); i++) {
+    m_entitiesCheckpoint[i]->loadToPlay(m_scriptSource);
+    Vector2f v = m_entitiesCheckpoint[i]->DynamicPosition();
+   
+    m_pCollisionSystem->addEntity(m_entitiesCheckpoint[i]);
+    
+    // if this is an active checkpoint, prevent re-activation
+    if(v_checkpoint != NULL) {
+      if(m_entitiesCheckpoint[i]->Id() == v_checkpoint->Id()) {
+        m_entitiesCheckpoint[i]->deflower();
+      }
+    }
+  }
+  
   // create joints
   for(unsigned int i=0; i<m_joints.size(); i++) {
     m_joints[i]->loadToPlay(this, i_chipmunkWorld);
@@ -1229,6 +1303,11 @@ void Level::unloadToPlay() {
   for(unsigned int i=0; i<m_joints.size(); i++) {
     m_joints[i]->unloadToPlay();
   }
+  
+  for(unsigned int i=0; i<m_entitiesCheckpoint.size(); i++) {
+    m_entitiesCheckpoint[i]->unloadToPlay();
+  }
+  m_entitiesCheckpoint.clear();
 }
 
 void Level::addLimits() {
@@ -1347,6 +1426,10 @@ std::string Level::SpriteForStar() const {
   return m_rSpriteForStar;
 }
 
+std::string Level::SpriteForCheckpoint() const {
+  return m_rSpriteForCheckpoint;
+}
+
 std::string Level::SoundForPickUpStrawberry() const {
   return m_rSoundForPickUpStrawberry;
 }
@@ -1371,12 +1454,18 @@ Sprite* Level::starSprite()
   return m_starSprite;
 }
 
+Sprite* Level::checkpointSprite()
+{
+  return m_checkpointSprite;
+}
+
 void Level::loadRemplacementSprites()
 {
   m_strawberrySprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForStrawberry());
   m_wreckerSprite    = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForWecker());
   m_flowerSprite     = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForFlower());
   m_starSprite       = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForStar());
+  m_checkpointSprite  = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForCheckpoint());
 }
 
 float Level::averagePhysicBlocksSize() const {

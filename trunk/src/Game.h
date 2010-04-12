@@ -114,6 +114,9 @@ public:
 
   void addGhosts(Scene* i_motogame, Theme* i_theme);
 
+  void setCheckpoint(Checkpoint* i_checkpoint);
+  Checkpoint* getCheckpoint();
+
   // to call while playing
   void toogleEnableMusic();
   void playMenuMusic(const std::string& i_music); // "" => no music
@@ -160,8 +163,6 @@ public:
 
   static void wait(int& io_lastFrameTimeStamp, int& io_frameLate, int i_maxFps);
   
- // inline FileGhost* getFileGhost() { return m_fileGhost; };
-
 protected:
   void createDefaultConfig();
 
@@ -175,6 +176,8 @@ private:
   ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
 
   std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
+
+  Checkpoint* m_checkpoint; 
 
   /* WWW */
   WebRoom *m_pWebHighscores;
@@ -192,6 +195,7 @@ private:
   SoundSample *m_pStrawberryPickupSFX;
   SoundSample *m_pWreckerTouchSFX;
   SoundSample *m_pDieSFX;
+  SoundSample *m_pCheckpointSFX;
       
   /* Various popups */
   UIMsgBox *m_pNotifyMsgBox;

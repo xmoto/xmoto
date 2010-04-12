@@ -215,7 +215,7 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 
   // TRAINER
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_BACKSPACE, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_BACKSPACE, KMOD_ALT)) {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
         if( Trainer::instance()->isRestorePositionAvailable( m_universe->getScenes()[j]->getLevelSrc()->Id() ) ) {

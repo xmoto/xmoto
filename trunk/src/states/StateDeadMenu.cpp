@@ -72,6 +72,13 @@ void StateDeadMenu::enter()
     }
   }
   
+  bool v_allowReplay = true;
+  if(gameApp->getCheckpoint() != NULL) {
+    if(gameApp->getCheckpoint()->wasUsed()) {
+       v_allowReplay = false;
+    }
+  }
+  
   createGUIIfNeeded();
   m_GUI = m_sGUI;
 
@@ -80,7 +87,7 @@ void StateDeadMenu::enter()
 
   if(m_universe != NULL) {
     UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:SAVEREPLAY_BUTTON"));
-    saveReplayButton->enableWindow(m_universe->isAReplayToSave());
+    saveReplayButton->enableWindow(m_universe->isAReplayToSave() && v_allowReplay);
   }
 
   /* activ button */
@@ -97,6 +104,9 @@ void StateDeadMenu::enter()
       }
     }
   }
+ 
+  // for now, lets "try again level" from level start and not from checkpoint, since the player didnt react in time
+  gameApp->setCheckpoint(NULL);
 
   StateMenu::enter();
 }

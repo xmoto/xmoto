@@ -292,9 +292,16 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 
   else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getRestartLevel()) {
+    GameApp::instance()->setCheckpoint(NULL);
     restartLevel();
   }
-
+  
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getRestartCheckpoint()) {
+    if(GameApp::instance()->getCheckpoint() != NULL) {
+      restartLevel();
+    }
+  }
+  
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F2, KMOD_NONE)) {
     if(m_universe != NULL) {
       m_universe->switchFollowCamera();
@@ -850,6 +857,7 @@ void StateScene::restartLevel(bool i_reloadLevel) {
 }
 
 void StateScene::nextLevel(bool i_positifOrder) {
+  GameApp::instance()->setCheckpoint(NULL);
   /* do nothing, it's depends of the scene ; often empty for animation steps */
 }
 
@@ -923,6 +931,8 @@ void StateScene::nextLevelToPlay(bool i_positifOrder) {
   GameApp*  pGame  = GameApp::instance();
   std::string v_nextLevel;
   std::string v_currentLevel;
+  
+  GameApp::instance()->setCheckpoint(NULL);
   
   // take the level id of the first world
   if(m_universe != NULL) {
