@@ -188,16 +188,20 @@ void Universe::initCameras(int nbPlayer) {
   }
 }
 
+void Universe::deleteCurrentReplay() {
+  if(m_pJustPlayReplay != NULL) {   
+      delete m_pJustPlayReplay;
+      m_pJustPlayReplay = NULL;
+  }          
+}
 
 void Universe::TeleportationCheatTo(int i_player, Vector2f i_position) {
   if(m_scenes.size() > 0) {
     m_scenes[0]->setPlayerPosition(i_player, i_position.x, i_position.y, true);
     m_scenes[0]->getCamera()->initCamera();
-    // m_scenes[0]->addPenalityTime(90000); /* 15 min of penality for that ! */
-    if(m_pJustPlayReplay != NULL) {    /* ... and no replay of course ! */
-      delete m_pJustPlayReplay;
-      m_pJustPlayReplay = NULL;
-    }          
+    //m_scenes[0]->addPenalityTime(90000); /* 15 min of penality for that ! */
+    /* ... and no replay of course ! */
+    deleteCurrentReplay();
   }
 }
 

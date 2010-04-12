@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ChipmunkWorld.h"
 #include "../XMSession.h"
 #include "PhysicsSettings.h"
+#include "../Game.h"
 #include <sstream>
 
 // don't excceed this number of particles to not reduce significantly the fps
@@ -68,6 +69,7 @@ Entity::Entity(const std::string& i_id) {
   m_isBBoxDirty = true;
   m_speciality  = ET_NONE;
   m_isScripted  = false;
+  m_isCheckpoint= false;
 }
 
 Entity::~Entity() {
@@ -121,6 +123,10 @@ bool Entity::DoesKill() const {
   return m_doesKill;
 }
 
+bool Entity::IsCheckpoint() const {
+  return false;
+}
+
 Vector2f Entity::InitialPosition() const {
   return m_initialPosition;
 }
@@ -169,6 +175,7 @@ void Entity::setSpeciality(EntitySpeciality i_speciality) {
   m_doesMakeWin = (i_speciality == ET_MAKEWIN);
   m_doesKill    = (i_speciality == ET_KILL);
   m_isToTake    = (i_speciality == ET_ISTOTAKE);
+  m_isCheckpoint= (i_speciality == ET_CHECKPOINT);
 
   m_speciality = i_speciality;
 }
@@ -238,6 +245,8 @@ EntitySpeciality Entity::SpecialityFromStr(std::string& i_typeStr) {
     return ET_PARTICLES_SOURCE;
   if(i_typeStr == "Joint")
     return ET_JOINT;
+  if(i_typeStr == "Checkpoint")
+    return ET_CHECKPOINT;
 
   return ET_NONE;
 }
@@ -261,6 +270,9 @@ std::string Entity::SpecialityToStr(EntitySpeciality i_speciality) {
       break;
     case ET_JOINT :
       return "Joint";
+      break;
+    case ET_CHECKPOINT :
+      return "Checkpoint";
       break;
   default:
       return "Sprite";
@@ -312,6 +324,9 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
   case ET_JOINT:
     v_entity = new Joint(id);
     break;
+  case ET_CHECKPOINT:
+    v_entity = new Checkpoint(id);
+    break;
   default:
     v_entity = new Entity(id);
     break;
@@ -342,6 +357,7 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
     break;
   case ET_JOINT:
     break;
+  case ET_CHECKPOINT:
   default:
     v_entity->setSpriteName(typeId);
     v_entity->setSprite(v_entity->loadSprite());
@@ -502,8 +518,51 @@ void Entity::setScripted(bool i_value) {
   m_isScripted = i_value;
 }
 
+void Entity::activate(bool i_nothing) {
+  // do nothing
+}
+
+/*==========================================
+        Checkpoints
+==========================================*/
+
+bool Checkpoint::IsCheckpoint() const {
+  return true;
+}
+
+void Checkpoint::activate(DriveDir i_direction, int i_time, std::vector<Entity*> i_strawberriesEaten) {
+  if(m_isVirgin) {
+    m_isVirgin = false;
+    m_isActive = true;
+    m_direction = i_direction;
+    m_time = i_time;
+
+    // get the IDs of the already taken strawberries
+    // this code seems also like an ugly mess, but pragmatically it seems to work...
+
+    // put the taken Strawberries Ids from former checkpoint into our private vector
+    Checkpoint* v_formerCheckpoint = GameApp::instance()->getCheckpoint();
+    if( v_formerCheckpoint != NULL) {
+      for( unsigned int i=0; i < v_formerCheckpoint->getStrawberriesEaten().size(); i++) {
+        m_eatenStrawberries.push_back(v_formerCheckpoint->getStrawberriesEaten()[i]);
+      }
+    }
+
+    // and add the new ones as well
+    for(unsigned int i=0; i< i_strawberriesEaten.size(); i++) {
+      m_eatenStrawberries.push_back(i_strawberriesEaten[i]->Id());
+    }
+    GameApp::instance()->setCheckpoint(this);
+  }
+}
+
+int Checkpoint::getTime() {
+  m_wasUsed = true;
+  return m_time;
+}
+
 /*===========================================
-									Joints
+	Joints
 ===========================================*/
 
 void Joint::saveBinary(FileHandle *i_pfh)

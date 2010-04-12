@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeGhost.h"
 #include "GhostTrail.h"
 #include <queue>
+#include "Entity.h"
 
 #define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 500
 #define REPLAY_SPEED_INCREMENT                 0.25
@@ -302,6 +303,7 @@ private:
 
   std::vector<Entity *> m_DestroyedEntities; /* destroyed entities */
   std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
+  std::vector<Entity *> m_strawberriesTaken;
   std::vector<GameMessage *> m_GameMessages;
 
   std::vector<Biker*> m_players;

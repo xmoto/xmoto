@@ -308,6 +308,7 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
     m_switchFavorite     = XMKey(SDLK_F3, KMOD_NONE);
     m_restartLevel       = XMKey(SDLK_RETURN,   KMOD_NONE);
     m_showConsole        = XMKey(SDLK_WORLD_18, KMOD_NONE);
+    m_restartCheckpoint  = XMKey(SDLK_BACKSPACE, KMOD_NONE);
   }  
 
   /*===========================================================================
@@ -472,6 +473,14 @@ void InputHandler::setShowConsole(XMKey i_value) {
 
 XMKey InputHandler::getShowConsole() const {
   return m_showConsole;
+}
+
+void InputHandler::setRestartCheckpoint(XMKey i_value) {
+  m_restartCheckpoint = i_value;
+}
+
+XMKey InputHandler::getRestartCheckpoint() const {
+  return m_restartCheckpoint;
 }
 
 bool InputHandler::isANotGameSetKey(XMKey* i_xmkey) const {

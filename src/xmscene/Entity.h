@@ -58,6 +58,7 @@ class Entity {
   bool DoesKill() const; /** have this entity the property to kill ? (like wecker) */
   bool DoesMakeWin() const; /** have this entity the property to make win ? (like flower) */
   bool IsToTake() const; /* return true is the entity must be taken by the player */
+  virtual bool IsCheckpoint() const;
   inline float Z() const {
     return m_z;
   }
@@ -104,6 +105,7 @@ class Entity {
     m_color = i_color;
   }
   void setAlive(bool alive);
+  virtual void activate(bool i_nothing);
 
   void saveBinary(FileHandle *i_pfh);
   static Entity* readFromXml(TiXmlElement *pElem);
@@ -137,6 +139,7 @@ protected:
   bool        m_doesKill;
   bool        m_doesMakeWin;
   bool        m_isToTake;
+  bool        m_isCheckpoint;
   /* Use to know if a script shall update the pos of the entity*/
   bool        m_isAlive;
   bool        m_isScripted;   /* is it used in a script? */
@@ -155,6 +158,35 @@ protected:
   Sprite* loadSprite(const std::string& i_spriteName = "");
 };
 
+
+class Checkpoint : public Entity {
+public:
+  Checkpoint(const std::string& i_id) : Entity(i_id) {
+    m_speciality = ET_CHECKPOINT;
+    m_isVirgin   = true;
+    m_isActive   = false;
+    m_wasUsed    = false;
+  }
+  virtual ~Checkpoint() { };
+  
+  virtual void activate(DriveDir i_playerFacesRight, int i_time, std::vector<Entity*> i_destroyedEntities);
+  void deActivate() { m_isActive = false; };
+  void deflower()   { m_isVirgin = false; };
+  bool isActive()   { return m_isActive;  };
+  bool wasUsed()    { return m_wasUsed;   };
+  virtual bool IsCheckpoint() const;
+  int getTime();
+  DriveDir getDirection() { return m_direction; };
+  std::vector<std::string> getStrawberriesEaten() { return m_eatenStrawberries; };
+  
+private:
+  bool m_isVirgin;
+  bool m_isActive;
+  bool m_wasUsed;
+  DriveDir m_direction;
+  std::vector<std::string> m_eatenStrawberries;  // here we got the strawberrys already taken
+  int m_time;
+};
 
 
 typedef enum jointType {JointNone, Pivot, Pin} jointType;

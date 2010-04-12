@@ -47,6 +47,7 @@ class Universe {
   Replay* getCurrentReplay();
   bool isAReplayToSave() const;
   bool isAnErrorOnSaving() const;
+  void deleteCurrentReplay();
   void initReplay();
   void finalizeReplay(bool i_finished);   /* call to close the replay */
   void saveReplay(xmDatabase *pDb, const std::string &Name);

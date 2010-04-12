@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateVote.h"
 #include "thread/SendVoteThread.h"
 #include "../drawlib/DrawLib.h"
+#include "../helpers/Log.h"
 
 #define STATE_DEAD_MAX_TIME 140
 #define VELOCITY_UNTIL_TORSO_RIP 0.005
@@ -51,7 +52,8 @@ void StateDeadJust::enter()
       m_universe->getScenes()[i]->clearGameMessages();
       m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name());
     }
-    m_universe->getScenes()[0]->gameMessage(GAMETEXT_JUSTDEAD_RESTART + std::string("\n") +
+    m_universe->getScenes()[0]->gameMessage((GameApp::instance()->getCheckpoint() != NULL ? GAMETEXT_JUSTDEAD_CHECKPOINT : std::string(""))
+					    + std::string("\n") + GAMETEXT_JUSTDEAD_RESTART + std::string("\n") +
 					    GAMETEXT_JUSTDEAD_DISPLAYMENU, true, 260, gameMsg); // in multiplayer its good, to have it displayed only once
   }
 
@@ -72,6 +74,11 @@ void StateDeadJust::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
   else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getRestartLevel()) {
     /* retart immediatly the level */
+    GameApp::instance()->setCheckpoint(NULL);
+    restartLevel();
+  }
+  
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getRestartCheckpoint()) {
     restartLevel();
   }
 

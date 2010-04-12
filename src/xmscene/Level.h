@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __LEVELSRC_H__
 #define __LEVELSRC_H__
 
-#define CACHE_LEVEL_FORMAT_VERSION 30
+#define CACHE_LEVEL_FORMAT_VERSION 31
 
 #include <string>
 #include <vector>
@@ -43,6 +43,7 @@ class ChipmunkWorld;
 class Sprite;
 class PhysicsSettings;
 class DBuffer;
+class Checkpoint;
 
 /*===========================================================================
   Level source object - holds all stored information about a level
@@ -124,6 +125,7 @@ class Level {
   std::vector<Block*>& Blocks();
   std::vector<Entity*>& Entities();
   std::vector<Joint*>& Joints();
+  std::vector<Checkpoint*>& Checkpoints();
   /* entities which are not part of original level, but which are generated while playing */
   std::vector<Entity*>& EntitiesExterns();
   std::vector<Zone*>& Zones();
@@ -150,12 +152,14 @@ class Level {
   std::string SpriteForWecker() const;
   std::string SpriteForFlower() const;
   std::string SpriteForStar() const;
+  std::string SpriteForCheckpoint() const;
   std::string SoundForPickUpStrawberry() const;
 
   Sprite* strawberrySprite();
   Sprite* wreckerSprite();
   Sprite* flowerSprite();
   Sprite* starSprite();
+  Sprite* checkpointSprite();
 
   int getNumberLayer() {
     return m_numberLayer;
@@ -200,6 +204,7 @@ class Level {
   std::vector<Entity *> m_entities; /* Level entities */
   std::vector<Entity *> m_entitiesDestroyed;
   std::vector<Entity *> m_entitiesExterns;
+  std::vector<Checkpoint *> m_entitiesCheckpoint;
   std::vector<Joint* >  m_joints;
   Entity               *m_startEntity; /* entity where the player start */
   bool m_isBodyLoaded;
@@ -220,12 +225,14 @@ class Level {
   std::string m_rSpriteForWecker;
   std::string m_rSpriteForFlower;
   std::string m_rSpriteForStar;
+  std::string m_rSpriteForCheckpoint;
   std::string m_rSoundForPickUpStrawberry;
 
   Sprite* m_strawberrySprite;
   Sprite* m_wreckerSprite;
   Sprite* m_flowerSprite;
   Sprite* m_starSprite;
+  Sprite* m_checkpointSprite;
 
   void addLimits();
   void exportBinary(FileDataType i_fdt, const std::string &i_fileName, const std::string& i_sum);
