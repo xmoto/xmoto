@@ -1068,28 +1068,22 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
         /* Read entities */
         int nNumEntities = XMFS::readInt_LE(pfh);
         Checkpoint* v_checkpoint=GameApp::instance()->getCheckpoint();
-        //m_entities.reserve(nNumEntities);
+        //m_entities.reserve(nNumEntities);  we dont need that much reserved space, since some strawberries were eaten
         for(int i=0;i<nNumEntities;i++) {
 	  Entity* v_entity = Entity::readFromBinary(pfh);
 	  
 	  // if entity[i] is a strawberry which was eaten before checkpoint activation, override it
 	  bool v_doContinue = false;
-	  LogInfo("geht los");
           if(v_checkpoint != NULL) {
             for(unsigned int j=0; j < v_checkpoint->getStrawberriesEaten().size(); j++) {
               if(v_entity->Id() == v_checkpoint->getStrawberriesEaten()[j]) {
                 v_doContinue = true;
-                LogInfo("straw override");
               }
             }
           }
           // this is such an ugly way to code it. improve please!!
           if(!v_doContinue) {
             m_entities.push_back(v_entity);
-          }
-          else {
-           LogInfo("ausgespart: %s",v_entity->Id().c_str());
-        
           }
         }
 
@@ -1106,8 +1100,6 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 	for(int i=0; i<nNumCheckpoints; i++) {
 	  Entity* v_entity = Entity::readFromBinary(pfh);
 	  Checkpoint* v_checkpoint = (Checkpoint*)v_entity;
-	  LogInfo("have checkpoint %s",v_checkpoint->Id().c_str());
-	  //v_checkpoint->readFromBinary(pfh);
 	  m_entitiesCheckpoint.push_back(v_checkpoint);
 	}
 
@@ -1372,6 +1364,10 @@ void Level::spawnEntity(Entity *v_entity) {
 
 std::vector<Entity *>& Level::EntitiesExterns() {
   return m_entitiesExterns;
+}
+
+std::vector<Entity *>& Level::EntitiesDestroyed() {
+  return m_entitiesDestroyed;
 }
 
 void Level::unloadLevelBody() {

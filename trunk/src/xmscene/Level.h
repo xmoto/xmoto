@@ -126,6 +126,7 @@ class Level {
   std::vector<Entity*>& Entities();
   std::vector<Joint*>& Joints();
   std::vector<Checkpoint*>& Checkpoints();
+  std::vector<Entity*>& EntitiesDestroyed();
   /* entities which are not part of original level, but which are generated while playing */
   std::vector<Entity*>& EntitiesExterns();
   std::vector<Zone*>& Zones();
