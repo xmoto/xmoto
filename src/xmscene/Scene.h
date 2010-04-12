@@ -303,7 +303,6 @@ private:
 
   std::vector<Entity *> m_DestroyedEntities; /* destroyed entities */
   std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
-  std::vector<Entity *> m_strawberriesTaken;
   std::vector<GameMessage *> m_GameMessages;
 
   std::vector<Biker*> m_players;

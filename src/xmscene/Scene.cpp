@@ -86,11 +86,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     cleanGhosts();
     cleanScriptTimers();
     if(m_ghostTrail != 0) delete m_ghostTrail;		
-/*    
-    for(unsigned i=0; i < m_strawberriesTaken.size(); i++) {
-      delete m_strawberriesTaken[i];
-    }
-    m_strawberriesTaken.clear();   */
   }
 
   void Scene::loadLevel(xmDatabase *i_db, const std::string& i_id_level) {
@@ -1062,14 +1057,12 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
 
       if(pEntity->IsToTake()) {
 	/* OH... nice */
-	m_strawberriesTaken.push_back(pEntity);
 	createGameEvent(new MGE_EntityDestroyed(getTime(), pEntity->Id(), pEntity->Speciality(), pEntity->DynamicPosition(), pEntity->Size()));
       }
       
       if((Checkpoint*)pEntity->IsCheckpoint()) {
-        LogInfo("CHachacheckpoint");
         Checkpoint* v_checkpoint = (Checkpoint*)pEntity;
-        v_checkpoint->activate(m_players[i_player]->getState()->Dir, getTime(), m_strawberriesTaken);
+        v_checkpoint->activate(m_players[i_player]->getState()->Dir, getTime(), m_pLevelSrc->EntitiesDestroyed());
       }
     }
   }
