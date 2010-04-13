@@ -546,12 +546,15 @@ void Checkpoint::activate(DriveDir i_direction, int i_time, std::vector<Entity*>
       for( unsigned int i=0; i < v_formerCheckpoint->getStrawberriesEaten().size(); i++) {
         m_eatenStrawberries.push_back(v_formerCheckpoint->getStrawberriesEaten()[i]);
       }
+      // deactivate the old one
+      v_formerCheckpoint->deActivate();
     }
-
+   
     // and add the new ones as well
     for(unsigned int i=0; i< i_strawberriesEaten.size(); i++) {
       m_eatenStrawberries.push_back(i_strawberriesEaten[i]->Id());
     }
+    
     GameApp::instance()->setCheckpoint(this);
   }
 }
