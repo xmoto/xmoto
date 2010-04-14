@@ -129,35 +129,42 @@ Central place to keep many in-game text strings
     + std::string(_("Graphics")) +                                                           \
     ":Rasmus Neckelmann;"                                                                    \
     ":Jens Erler;"                                                                           \
+    ":...and all supporters;"                                                                \
     ":;"                                                                                     \
-    + std::string(_("Audio")) +                                                              \
-    ":Jens Erler;"                                                                           \
+    + std::string(_("Music")) +                                                              \
+    ":'Foxrun' by Ryan Rees;"                                                                 \
+    ":'Speeditup' by Almcaeobtac;"							     \
+    ":all further musics by Jens Erler;"                             \
+    ":;"                                                                                     \
+    + std::string(_("Sound Effects")) +                                                      \
     ":Brandon Ross;"                                                                         \
+    ":Jens Erler;"                                                                           \
     ":;"                                                                                     \
     + std::string(_("MacOS X Support")) +                                                    \
     ":Dave Vasilevsky;"                                                                      \
     ":Maxime Biais;"                                                                         \
     ":;"                                                                                     \
     + std::string(_("Localization")) +                                                       \
-    ":Jozef Riha (" + std::string(_("Slovak")) + ");"                                        \
+    ":Jozef Říha (" + std::string(_("Slovak")) + ");"                                        \
     ":Nicolas Adenis-Lamarre (" + std::string(_("French")) + ");"                            \
-    ":Wilhelm Francke (" + std::string(_("Norwegian")) + ");"                                \
-    ":Jonathan Sieber, Jens Erler (" + std::string(_("German")) + ");"                    \
-    ":Maximum/Tuomo Koistinen (" + std::string(_("Finnish")) + ");"                                          \
-    ":Trullo (" + std::string(_("Catalan")) + ");"                                           \
-    ":Trullo (" + std::string(_("Spanish")) + ");"                                           \
+    ":Wilhelm Francke (" + std::string(_("Norwegian")) + " and " + std::string(_("English")) + ");"\
+    ":Jonathan Sieber, Jens Erler (" + std::string(_("German")) + ");"                       \
+    ":Maximum, Tuomo Koistinen (" + std::string(_("Finnish")) + ");"                         \
+    ":Trullo (" + std::string(_("Catalan")) + " and " + std::string(_("Spanish")) + ");"     \
     ":Mateusz Kosibowicz (" + std::string(_("Polish")) + ");"                                \
-    ":Lucas Manzari (" + std::string(_("Italian")) + ");"                                    \
-    ":Lukas Klingsbo (" + std::string(_("Swedish")) + ");"                                   \
-    ":Jan KalÃ¡b (" + std::string(_("Czech")) + ");"                                          \
+    ":Lucas Manzari, Carmine 'earcar' Paolino (" + std::string(_("Italian")) + ");"          \
+    ":Lukas Klingsbo, Nicke (" + std::string(_("Swedish")) + ");"                            \
+    ":Jan KalÃ¡b, Tomáš Chvátal (" + std::string(_("Czech")) + ");"                          \
     ":" + std::string(_("Mikhail Brinchuk")) + " (" + std::string(_("Russian")) + ");"       \
     ":Lucas Hermann Negri (" + std::string(_("Brazilian Portuguese")) + ");"                 \
     ":Jānis Rūcis (" + std::string(_("Latvian")) + ");"                                      \
     ":Kristian Jagd (" + std::string(_("Danish")) + ");"                                     \
-    ":Tadas Masiulionis (" + std::string(_("Lithuanian")) + ");"                                     \
-    ":Anil Ozbek (" + std::string(_("Turkish")) + ");"                                     \
-    ":Zoltán Balogh (" + std::string(_("Hungarian")) + ");"                                     \
-    ":Sérgio Marques (" + std::string(_("Portugese")) + ");"                                 \
+    ":Tadas Masiulionis (" + std::string(_("Lithuanian")) + ");"                             \
+    ":Anil Ozbek (" + std::string(_("Turkish")) + ");"                                       \
+    ":Zoltán Balogh (" + std::string(_("Hungarian")) + ");"                                  \
+    ":Luís Garcia, Sérgio Marques (" + std::string(_("Portugese")) + ");"                    \
+    ":Andre Parhan ("+ std::string(_("Dutch")) + ");"                                        \
+    ":KuanYen ("+ std::string(_("Taiwanese")) + ");"                                         \
     ":;"                                                                                     \
     + std::string(_("Main testers")) +                                                       \
     ":Jose Alberto Coelho;"                                                                  \
