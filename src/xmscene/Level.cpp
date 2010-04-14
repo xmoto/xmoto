@@ -60,14 +60,16 @@ Level::Level() {
   m_rSpriteForWecker 	      = "Wrecker";
   m_rSpriteForFlower 	      = "Flower";
   m_rSpriteForStar            = "Star";
-  m_rSpriteForCheckpoint      = "Checkpoint_1";
+  m_rSpriteForCheckpointDown  = "Checkpoint_1";
+  m_rSpriteForCheckpointUp    = "Wrecker";
   m_rSoundForPickUpStrawberry = "PickUpStrawberry";
 
   m_strawberrySprite = NULL;
   m_wreckerSprite    = NULL;
   m_flowerSprite     = NULL;
   m_starSprite       = NULL;
-  m_checkpointSprite = NULL;
+  m_checkpointSpriteDown = NULL;
+  m_checkpointSpriteUp = NULL;
 }
 
 Level::~Level() {
@@ -765,7 +767,8 @@ void Level::exportBinary(FileDataType i_fdt, const std::string &FileName, const 
     XMFS::writeString(pfh,m_rSpriteForFlower);
     XMFS::writeString(pfh,m_rSpriteForWecker);
     XMFS::writeString(pfh,m_rSpriteForStar);
-    XMFS::writeString(pfh,m_rSpriteForCheckpoint);
+    XMFS::writeString(pfh,m_rSpriteForCheckpointDown);
+    XMFS::writeString(pfh,m_rSpriteForCheckpointUp);
     XMFS::writeString(pfh,m_rSoundForPickUpStrawberry);
 
     XMFS::writeInt_LE(pfh, m_numberLayer);
@@ -999,7 +1002,8 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 	m_rSpriteForFlower     	    = XMFS::readString(pfh);
 	m_rSpriteForWecker     	    = XMFS::readString(pfh);
 	m_rSpriteForStar       	    = XMFS::readString(pfh);
-	m_rSpriteForCheckpoint      = XMFS::readString(pfh);
+	m_rSpriteForCheckpointDown  = XMFS::readString(pfh);
+	m_rSpriteForCheckpointUp    = XMFS::readString(pfh);
 	m_rSoundForPickUpStrawberry = XMFS::readString(pfh);
 
 	if(m_rSpriteForStrawberry == "")
@@ -1010,8 +1014,10 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 	  m_rSpriteForWecker = "Wrecker";
 	if(m_rSpriteForStar == "")
 	  m_rSpriteForStar = "Star";
-	if(m_rSpriteForCheckpoint == "")
-	  m_rSpriteForCheckpoint = "Checkpoint_1";
+	if(m_rSpriteForCheckpointDown == "")
+	  m_rSpriteForCheckpointDown = "Checkpoint_down";
+	if(m_rSpriteForCheckpointUp == "")
+	  m_rSpriteForCheckpointUp = "Checkpoint_up";
 
 	/* layers */
 	m_numberLayer = XMFS::readInt_LE(pfh);
@@ -1358,8 +1364,12 @@ std::string Level::SpriteForStar() const {
   return m_rSpriteForStar;
 }
 
-std::string Level::SpriteForCheckpoint() const {
-  return m_rSpriteForCheckpoint;
+std::string Level::SpriteForCheckpointDown() const {
+  return m_rSpriteForCheckpointDown;
+}
+
+std::string Level::SpriteForCheckpointUp() const {
+  return m_rSpriteForCheckpointUp;
 }
 
 std::string Level::SoundForPickUpStrawberry() const {
@@ -1386,9 +1396,14 @@ Sprite* Level::starSprite()
   return m_starSprite;
 }
 
-Sprite* Level::checkpointSprite()
+Sprite* Level::checkpointSpriteDown()
 {
-  return m_checkpointSprite;
+  return m_checkpointSpriteDown;
+}
+
+Sprite* Level::checkpointSpriteUp()
+{
+  return m_checkpointSpriteUp;
 }
 
 void Level::loadRemplacementSprites()
@@ -1397,7 +1412,8 @@ void Level::loadRemplacementSprites()
   m_wreckerSprite    = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForWecker());
   m_flowerSprite     = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForFlower());
   m_starSprite       = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForStar());
-  m_checkpointSprite  = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForCheckpoint());
+  m_checkpointSpriteDown  = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForCheckpointDown());
+  m_checkpointSpriteUp    = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForCheckpointUp());
 }
 
 float Level::averagePhysicBlocksSize() const {
