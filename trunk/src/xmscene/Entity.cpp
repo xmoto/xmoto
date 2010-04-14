@@ -525,6 +525,10 @@ bool Checkpoint::IsCheckpoint() const {
   return true;
 }
 
+bool Checkpoint::isActivated() const {
+  return m_isVirgin == false;
+}
+
 void Checkpoint::activate(const std::vector<Entity*>& i_destroyedEntities, DriveDir i_direction) {
   m_isVirgin = false;
   m_destroyedEntities = i_destroyedEntities;

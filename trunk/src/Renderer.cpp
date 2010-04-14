@@ -2211,8 +2211,16 @@ void GameRenderer::_RenderSprite(Scene* i_scene, Entity *pEntity, float i_sizeMu
 	v_sprite     = (AnimationSprite*)i_scene->getLevelSrc()->strawberrySprite();
         break;
       case ET_CHECKPOINT:
-        v_spriteName = i_scene->getLevelSrc()->SpriteForCheckpoint();
-        v_sprite     = (AnimationSprite*)i_scene->getLevelSrc()->checkpointSprite();
+	{
+	  Checkpoint* v_checkpoint = (Checkpoint*) pEntity;
+	  if(v_checkpoint->isActivated()) {
+	    v_spriteName = i_scene->getLevelSrc()->SpriteForCheckpointUp();
+	    v_sprite     = (AnimationSprite*)i_scene->getLevelSrc()->checkpointSpriteUp();
+	  } else {
+	    v_spriteName = i_scene->getLevelSrc()->SpriteForCheckpointDown();
+	    v_sprite     = (AnimationSprite*)i_scene->getLevelSrc()->checkpointSpriteDown();
+	  }
+	}
       default:
 	v_spriteName = pEntity->SpriteName();
       }
