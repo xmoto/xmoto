@@ -1,3 +1,4 @@
+
 /*=============================================================================
 XMOTO
 
@@ -168,8 +169,12 @@ public:
   /* player */
   void setPlayerPosition(int i_player, float x,float y,bool bFaceRight);
   const Vector2f &getPlayerPosition(int i_player);
-  bool getPlayerFaceDir(int i_player);
+  DriveDir getPlayerFaceDir(int i_player);
   void setDeathAnim(bool b) {m_bDeathAnimEnabled=b;}
+
+  void setCheckpoint(Checkpoint* i_checkpoint);
+  Checkpoint* getCheckpoint();
+  void playToCheckpoint();
 
   /* Data interface */
   Level *getLevelSrc(void) {return m_pLevelSrc;}
@@ -203,6 +208,7 @@ public:
   void CameraRotate(float i_angle);
   void CameraAdaptToGravity();
 
+  void resussitePlayer(int i_player);
   void killPlayer(int i_player);
   void playerEntersZone(int i_player, Zone *pZone);
   void playerLeavesZone(int i_player, Zone *pZone);
@@ -301,11 +307,11 @@ private:
   Level *m_pLevelSrc;              /* Source of level */            
   LuaLibGame *m_luaGame;
 
-  std::vector<Entity *> m_DestroyedEntities; /* destroyed entities */
   std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
   std::vector<GameMessage *> m_GameMessages;
 
   std::vector<Biker*> m_players;
+  Checkpoint* m_checkpoint;
 
   bool m_showGhostTimeDiff;
   void onRewinding();

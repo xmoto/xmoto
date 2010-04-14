@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../GameText.h"
 #include "../Universe.h"
 #include "states/StateVote.h"
+#include "states/StatePlayingLocal.h"
 #include "thread/SendVoteThread.h"
 #include "../drawlib/DrawLib.h"
 #include "../helpers/Log.h"
@@ -52,7 +53,7 @@ void StateDeadJust::enter()
       m_universe->getScenes()[i]->clearGameMessages();
       m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name());
     }
-    m_universe->getScenes()[0]->gameMessage((GameApp::instance()->getCheckpoint() != NULL ? GAMETEXT_JUSTDEAD_CHECKPOINT : std::string(""))
+    m_universe->getScenes()[0]->gameMessage((m_universe->getScenes()[0]->getCheckpoint() != NULL ? GAMETEXT_JUSTDEAD_CHECKPOINT : std::string(""))
 					    + std::string("\n") + GAMETEXT_JUSTDEAD_RESTART + std::string("\n") +
 					    GAMETEXT_JUSTDEAD_DISPLAYMENU, true, 260, gameMsg); // in multiplayer its good, to have it displayed only once
   }
@@ -74,12 +75,31 @@ void StateDeadJust::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
   else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getRestartLevel()) {
     /* retart immediatly the level */
-    GameApp::instance()->setCheckpoint(NULL);
     restartLevel();
   }
-  
+
   else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getRestartCheckpoint()) {
-    restartLevel();
+
+    bool v_isCheckpoint = false;
+
+    // resussite players    
+    for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+      if(m_universe->getScenes()[j]->getCheckpoint() != NULL) {
+	v_isCheckpoint = true;
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Players().size(); i++) {
+	  if(m_universe->getScenes()[j]->Players()[i]->isDead()) {
+	    m_universe->getScenes()[j]->resussitePlayer(i);
+	  }
+	}
+      }
+    }
+
+    if(v_isCheckpoint) {
+      m_universe->deleteCurrentReplay(); // because when you die, the replay is closed
+      StateScene::playToCheckpoint();
+      StateManager::instance()->replaceState(new StatePlayingLocal(m_universe, getId()), this->getId());
+    }
+
   }
 
   else {

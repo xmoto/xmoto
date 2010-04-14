@@ -267,6 +267,20 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 #endif
 
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getRestartCheckpoint()) {
+
+    bool v_isCheckpoint = false;
+
+    for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+      if(m_universe->getScenes()[j]->getCheckpoint() != NULL) {
+	v_isCheckpoint = true;
+      }
+    }
+    if(v_isCheckpoint) {
+      StateScene::playToCheckpoint();
+    }
+  }
+
   else {
     if(i_type == INPUT_DOWN) {
       if(m_autoZoom == false){

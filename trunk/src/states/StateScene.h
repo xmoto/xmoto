@@ -88,6 +88,7 @@ protected:
  Texture *m_uncheckedTex, *m_qualityTex, *m_difficultyTex;
 
  void playLevelMusic();
+ void playToCheckpoint();
 
 private:
  void init();

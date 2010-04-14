@@ -456,6 +456,13 @@ void Camera::guessDesiredCameraZoom() {
   }
 }
 
+void Camera::setPlayerResussite() { // opposite of setPlayerDead
+  m_cameraDeathOffset = Vector2f(0.0, 0.0);
+
+  //remove shadow
+  setScreenShade(false, false);  
+}
+
 void Camera::setPlayerDead() {
   if(m_playerToFollow->getState()->Dir == DD_RIGHT) {
     m_cameraDeathOffset = m_playerToFollow->getState()->CenterP - m_playerToFollow->getState()->KneeP;

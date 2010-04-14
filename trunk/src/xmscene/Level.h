@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __LEVELSRC_H__
 #define __LEVELSRC_H__
 
-#define CACHE_LEVEL_FORMAT_VERSION 31
+#define CACHE_LEVEL_FORMAT_VERSION 32
 
 #include <string>
 #include <vector>
@@ -125,7 +125,6 @@ class Level {
   std::vector<Block*>& Blocks();
   std::vector<Entity*>& Entities();
   std::vector<Joint*>& Joints();
-  std::vector<Checkpoint*>& Checkpoints();
   std::vector<Entity*>& EntitiesDestroyed();
   /* entities which are not part of original level, but which are generated while playing */
   std::vector<Entity*>& EntitiesExterns();
@@ -136,7 +135,8 @@ class Level {
 
   void killEntity(const std::string& i_entityId);
   unsigned int countToTakeEntities();
-  void revertEntityDestroyed(const std::string& i_entityId);
+
+   void revertEntityDestroyed(const std::string& i_entityId);
 
   static int compareLevel(const Level& i_lvl1, const Level& i_lvl2);    
   static int compareLevelSamePack(const Level& i_lvl1, const Level& i_lvl2);    
@@ -205,7 +205,6 @@ class Level {
   std::vector<Entity *> m_entities; /* Level entities */
   std::vector<Entity *> m_entitiesDestroyed;
   std::vector<Entity *> m_entitiesExterns;
-  std::vector<Checkpoint *> m_entitiesCheckpoint;
   std::vector<Joint* >  m_joints;
   Entity               *m_startEntity; /* entity where the player start */
   bool m_isBodyLoaded;

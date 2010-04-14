@@ -105,7 +105,6 @@ class Entity {
     m_color = i_color;
   }
   void setAlive(bool alive);
-  virtual void activate(bool i_nothing);
 
   void saveBinary(FileHandle *i_pfh);
   static Entity* readFromXml(TiXmlElement *pElem);
@@ -164,28 +163,18 @@ public:
   Checkpoint(const std::string& i_id) : Entity(i_id) {
     m_speciality = ET_CHECKPOINT;
     m_isVirgin   = true;
-    m_isActive   = false;
-    m_wasUsed    = false;
   }
   virtual ~Checkpoint() { };
-  
-  virtual void activate(DriveDir i_playerFacesRight, int i_time, std::vector<Entity*> i_destroyedEntities);
-  void deActivate() { m_isActive = false; };
-  void deflower()   { m_isVirgin = false; };
-  bool isActive()   { return m_isActive;  };
-  bool wasUsed()    { return m_wasUsed;   };
+
+  virtual void activate(const std::vector<Entity*>& i_destroyedEntities, DriveDir i_playerFacesRight);
   virtual bool IsCheckpoint() const;
-  int getTime();
-  DriveDir getDirection() { return m_direction; };
-  std::vector<std::string> getStrawberriesEaten() { return m_eatenStrawberries; };
+  const std::vector<Entity*>& getDestroyedEntities() const { return m_destroyedEntities; };
+  DriveDir getDirection() const { return m_direction; };
   
 private:
   bool m_isVirgin;
-  bool m_isActive;
-  bool m_wasUsed;
+  std::vector<Entity*> m_destroyedEntities;
   DriveDir m_direction;
-  std::vector<std::string> m_eatenStrawberries;  // here we got the strawberrys already taken
-  int m_time;
 };
 
 
