@@ -525,6 +525,10 @@ bool Checkpoint::IsCheckpoint() const {
   return true;
 }
 
+void Checkpoint::deactivate() {
+  m_isVirgin = true;
+}
+
 bool Checkpoint::isActivated() const {
   return m_isVirgin == false;
 }
