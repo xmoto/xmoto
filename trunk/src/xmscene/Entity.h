@@ -167,6 +167,7 @@ public:
   virtual ~Checkpoint() { };
 
   bool isActivated() const;
+  void deactivate();
   void activate(const std::vector<Entity*>& i_destroyedEntities, DriveDir i_playerFacesRight);
   virtual bool IsCheckpoint() const;
   const std::vector<Entity*>& getDestroyedEntities() const { return m_destroyedEntities; };

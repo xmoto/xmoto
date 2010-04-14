@@ -1059,6 +1059,9 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
       }
       
       if((Checkpoint*)pEntity->IsCheckpoint()) {
+        if(m_checkpoint != NULL) {
+          m_checkpoint->deactivate();
+        }
         Checkpoint* v_checkpoint = (Checkpoint*)pEntity;
 	v_checkpoint->activate(m_pLevelSrc->EntitiesDestroyed(), m_players[i_player]->getState()->Dir);
 	m_checkpoint = v_checkpoint;
