@@ -376,6 +376,10 @@ Vector2f Biker::getWheelSpinDir() {
   return m_WheelSpinDir;
 }
 
+void Biker::initWheelDetach() {
+  m_wheelDetach = false;
+}
+
 void Biker::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity) {
 }
 
@@ -394,7 +398,11 @@ void Biker::setFinished(bool i_value, int i_finishTime) {
 void Biker::setDead(bool i_value, int i_deadTime) {
   m_dead = i_value;
   m_deadTime = i_deadTime;
-  
+ 
+  if(m_dead == false) {
+    return;
+  }
+ 
   /* Play the DIE!!! sound */
   try {
     float v_deathVolume;

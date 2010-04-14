@@ -171,7 +171,7 @@ class Biker {
   virtual void setLocalNetId(int i_value);
 
   void setFinished(bool i_value, int i_finishTime);
-  void setDead(bool i_value, int i_deadTime);
+  void setDead(bool i_value, int i_deadTime = 0);
   bool isFinished() const;
   int finishTime() const;
   bool isDead() const;
@@ -183,6 +183,7 @@ class Biker {
   virtual Vector2f getWheelSpinDir();
   virtual float getRearWheelVelocity();
   virtual float getFrontWheelVelocity();
+  virtual void initWheelDetach();
   virtual void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
   virtual void resetAutoDisabler(); /* a player can have a disabler when nothing append */
 

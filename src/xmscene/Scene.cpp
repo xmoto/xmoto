@@ -75,10 +75,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_chipmunkWorld = NULL;
 
     m_halfUpdate = true;
-
     m_physicsSettings = NULL;
-    
     m_ghostTrail = NULL;
+    m_checkpoint = NULL;
   }
   
   Scene::~Scene() {
@@ -149,9 +148,8 @@ void Scene::cleanPlayers() {
     throw Exception("Invalid player number");
   }
   
-  bool Scene::getPlayerFaceDir(int i_player) {
-    return m_players[i_player]->getState()->Dir == DD_RIGHT;
-    throw Exception("Invalid player number");
+  DriveDir Scene::getPlayerFaceDir(int i_player) {
+    return m_players[i_player]->getState()->Dir;
   }
 
   /*===========================================================================
@@ -1062,8 +1060,10 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
       
       if((Checkpoint*)pEntity->IsCheckpoint()) {
         Checkpoint* v_checkpoint = (Checkpoint*)pEntity;
-        v_checkpoint->activate(m_players[i_player]->getState()->Dir, getTime(), m_pLevelSrc->EntitiesDestroyed());
+	v_checkpoint->activate(m_pLevelSrc->EntitiesDestroyed(), m_players[i_player]->getState()->Dir);
+	m_checkpoint = v_checkpoint;
       }
+
     }
   }
 
@@ -1286,6 +1286,19 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
    
   void Scene::CameraAdaptToGravity() {
     getCamera()->adaptRotationAngleToGravity(m_PhysGravity);
+  }
+
+  void Scene::resussitePlayer(int i_player) {
+    m_players[i_player]->setDead(false);
+
+    m_players[i_player]->initWheelDetach();
+
+    // inform camera that the player is not dead
+    for(unsigned int i=0; i<m_cameras.size(); i++){
+      if(m_cameras[i]->getPlayerToFollow() == m_players[i_player]) {
+	m_cameras[i]->setPlayerResussite();
+      }
+    }
   }
 
   void Scene::killPlayer(int i_player) {
@@ -1600,11 +1613,7 @@ bool Scene::isAutoZoomCamera(){
   std::vector<Camera*>& Scene::Cameras() {
     return m_cameras;
   }
-/*
-Checkpoint* Scene::getCheckpoint() {
-  return m_checkpoint;
-}
-*/
+
 PhysicsSettings* Scene::getPhysicsSettings() {
   return m_physicsSettings;
 }
@@ -1673,4 +1682,40 @@ void SceneOnBikerHooks::onHeadTouches() {
 		}
 		m_ScriptTimers.clear();
 	}
+
+void Scene::setCheckpoint(Checkpoint* i_checkpoint) {
+  m_checkpoint = i_checkpoint;
+}
+
+Checkpoint* Scene::getCheckpoint() {
+  return m_checkpoint;
+}
+
+void Scene::playToCheckpoint() {
+  if(m_checkpoint == NULL) {
+    return;
+  }
+
+  for(unsigned int i=0; i<Players().size(); i++) {
+    setPlayerPosition(i,
+		      m_checkpoint->InitialPosition().x,
+		      m_checkpoint->InitialPosition().y,
+		      m_checkpoint->getDirection() == DD_RIGHT);
+    getCamera()->initCamera();
+  }
+
+  // put strawberries
+  for(unsigned int i=0; i<getLevelSrc()->EntitiesDestroyed().size(); i++) {
+    bool v_found = false;
+    for(unsigned int j=0; j<m_checkpoint->getDestroyedEntities().size(); j++) {
+      if(getLevelSrc()->EntitiesDestroyed()[i] == m_checkpoint->getDestroyedEntities()[j]) {
+	v_found = true;
+      }
+    }
+
+    if(v_found == false) {
+      getLevelSrc()->revertEntityDestroyed(getLevelSrc()->EntitiesDestroyed()[i]->Id());
+    }
+  }
+}
 

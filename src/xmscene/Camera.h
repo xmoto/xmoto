@@ -100,6 +100,7 @@ public:
   void setMirrored(bool i_value);
 
   void setPlayerDead(); // inform that the player dies
+  void setPlayerResussite(); // inform that the player lives
 
   float rotationAngle();
   void setRotationAngle(float i_value);

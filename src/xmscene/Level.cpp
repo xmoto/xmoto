@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include "Level.h"
-#include "../Game.h"
 #include "../VFileIO.h"
 #include "../XMBuild.h"
 #include "../VXml.h"
@@ -193,11 +192,6 @@ Entity* Level::getEntityById(const std::string& i_id) {
       return m_entities[i];
     }
   }
-  for(unsigned int i=0; i<m_entitiesCheckpoint.size(); i++) {
-    if(m_entitiesCheckpoint[i]->Id() == i_id) {
-      return m_entitiesCheckpoint[i];
-    }
-  }
   for(unsigned int i=0; i<m_entitiesDestroyed.size(); i++) {
     if(m_entitiesDestroyed[i]->Id() == i_id) {
       return m_entitiesDestroyed[i];
@@ -311,10 +305,6 @@ std::vector<Entity *>& Level::Entities() {
 
 unsigned int Level::countToTakeEntities() {
   return m_nbEntitiesToTake;
-}
-
-std::vector<Checkpoint *>& Level::Checkpoints() {
-  return m_entitiesCheckpoint;
 }
 
 void Level::revertEntityDestroyed(const std::string& i_entityId) {
@@ -648,11 +638,6 @@ void Level::loadXML() {
 	v_joint->readFromXml(pElem);
 	m_joints.push_back(v_joint);
       }
-      else if(v_entity->Speciality() == ET_CHECKPOINT) {
-        Checkpoint* v_checkpoint = (Checkpoint*)v_entity;
-        v_checkpoint->readFromXml(pElem);
-        m_entitiesCheckpoint.push_back(v_checkpoint);
-      }
       else m_entities.push_back(v_entity);
     }    
 
@@ -804,12 +789,6 @@ void Level::exportBinary(FileDataType i_fdt, const std::string &FileName, const 
     XMFS::writeInt_LE(pfh,m_entities.size());
     for(unsigned int i=0;i<m_entities.size();i++) {
       m_entities[i]->saveBinary(pfh);
-    }
-
-    /* Write checkpoints */
-    XMFS::writeInt_LE(pfh,m_entitiesCheckpoint.size());
-    for(unsigned int i=0; i<m_entitiesCheckpoint.size(); i++) {
-      m_entitiesCheckpoint[i]->saveBinary(pfh);
     }
 
     // write joints
@@ -1067,24 +1046,10 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 
         /* Read entities */
         int nNumEntities = XMFS::readInt_LE(pfh);
-        Checkpoint* v_checkpoint=GameApp::instance()->getCheckpoint();
-        //m_entities.reserve(nNumEntities);  we dont need that much reserved space, since some strawberries were eaten
+        m_entities.reserve(nNumEntities); // we dont need that much reserved space, since some strawberries were eaten
         for(int i=0;i<nNumEntities;i++) {
 	  Entity* v_entity = Entity::readFromBinary(pfh);
-	  
-	  // if entity[i] is a strawberry which was eaten before checkpoint activation, override it
-	  bool v_doContinue = false;
-          if(v_checkpoint != NULL) {
-            for(unsigned int j=0; j < v_checkpoint->getStrawberriesEaten().size(); j++) {
-              if(v_entity->Id() == v_checkpoint->getStrawberriesEaten()[j]) {
-                v_doContinue = true;
-              }
-            }
-          }
-          // this is such an ugly way to code it. improve please!!
-          if(!v_doContinue) {
-            m_entities.push_back(v_entity);
-          }
+	  m_entities.push_back(v_entity);
         }
 
 	try {
@@ -1094,15 +1059,6 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 	  m_playerStart = Vector2f(0.0, 0.0);
 	}
 	
-	/* Read Checkpoints */
-	int nNumCheckpoints = XMFS::readInt_LE(pfh);
-	m_entitiesCheckpoint.reserve(nNumEntities);
-	for(int i=0; i<nNumCheckpoints; i++) {
-	  Entity* v_entity = Entity::readFromBinary(pfh);
-	  Checkpoint* v_checkpoint = (Checkpoint*)v_entity;
-	  m_entitiesCheckpoint.push_back(v_checkpoint);
-	}
-
         int nNumJoints = XMFS::readInt_LE(pfh);
         m_joints.reserve(nNumJoints);
         for(int i=0; i<nNumJoints; i++) {
@@ -1233,7 +1189,6 @@ int Level::loadToPlay(ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physics
   }
   
   /* Spawn initial entities */
-  Checkpoint* v_checkpoint = GameApp::instance()->getCheckpoint();
   for(unsigned int i=0; i<m_entities.size(); i++) {
     m_entities[i]->loadToPlay(m_scriptSource);
     Vector2f v = m_entities[i]->DynamicPosition();
@@ -1242,21 +1197,6 @@ int Level::loadToPlay(ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physics
 
     if(m_entities[i]->IsToTake()){
       m_nbEntitiesToTake++;
-    }
-  }
-
-  // also Checkpoints
-  for(unsigned int i=0; i<m_entitiesCheckpoint.size(); i++) {
-    m_entitiesCheckpoint[i]->loadToPlay(m_scriptSource);
-    Vector2f v = m_entitiesCheckpoint[i]->DynamicPosition();
-   
-    m_pCollisionSystem->addEntity(m_entitiesCheckpoint[i]);
-    
-    // if this is an active checkpoint, prevent re-activation
-    if(v_checkpoint != NULL) {
-      if(m_entitiesCheckpoint[i]->Id() == v_checkpoint->Id()) {
-        m_entitiesCheckpoint[i]->deflower();
-      }
     }
   }
   
@@ -1296,10 +1236,6 @@ void Level::unloadToPlay() {
     m_joints[i]->unloadToPlay();
   }
   
-  for(unsigned int i=0; i<m_entitiesCheckpoint.size(); i++) {
-    m_entitiesCheckpoint[i]->unloadToPlay();
-  }
-  m_entitiesCheckpoint.clear();
 }
 
 void Level::addLimits() {

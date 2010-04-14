@@ -31,7 +31,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ChipmunkWorld.h"
 #include "../XMSession.h"
 #include "PhysicsSettings.h"
-#include "../Game.h"
 #include <sstream>
 
 // don't excceed this number of particles to not reduce significantly the fps
@@ -518,10 +517,6 @@ void Entity::setScripted(bool i_value) {
   m_isScripted = i_value;
 }
 
-void Entity::activate(bool i_nothing) {
-  // do nothing
-}
-
 /*==========================================
         Checkpoints
 ==========================================*/
@@ -530,38 +525,10 @@ bool Checkpoint::IsCheckpoint() const {
   return true;
 }
 
-void Checkpoint::activate(DriveDir i_direction, int i_time, std::vector<Entity*> i_strawberriesEaten) {
-  if(m_isVirgin) {
-    m_isVirgin = false;
-    m_isActive = true;
-    m_direction = i_direction;
-    m_time = i_time;
-
-    // get the IDs of the already taken strawberries
-    // this code seems also like an ugly mess, but pragmatically it seems to work...
-
-    // put the taken Strawberries Ids from former checkpoint into our private vector
-    Checkpoint* v_formerCheckpoint = GameApp::instance()->getCheckpoint();
-    if( v_formerCheckpoint != NULL) {
-      for( unsigned int i=0; i < v_formerCheckpoint->getStrawberriesEaten().size(); i++) {
-        m_eatenStrawberries.push_back(v_formerCheckpoint->getStrawberriesEaten()[i]);
-      }
-      // deactivate the old one
-      v_formerCheckpoint->deActivate();
-    }
-   
-    // and add the new ones as well
-    for(unsigned int i=0; i< i_strawberriesEaten.size(); i++) {
-      m_eatenStrawberries.push_back(i_strawberriesEaten[i]->Id());
-    }
-    
-    GameApp::instance()->setCheckpoint(this);
-  }
-}
-
-int Checkpoint::getTime() {
-  m_wasUsed = true;
-  return m_time;
+void Checkpoint::activate(const std::vector<Entity*>& i_destroyedEntities, DriveDir i_direction) {
+  m_isVirgin = false;
+  m_destroyedEntities = i_destroyedEntities;
+  m_direction = i_direction;
 }
 
 /*===========================================

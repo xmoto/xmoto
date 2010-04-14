@@ -208,9 +208,6 @@ void StateMainMenu::enter()
     }
   }
   
-  // invalidate former Checkpoints
-  GameApp::instance()->setCheckpoint(NULL);
-
   GameApp::instance()->playMenuMusic("menu1");
 }
 

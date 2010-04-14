@@ -184,7 +184,6 @@ GameApp::GameApp() {
   m_bWebLevelsToDownload = false;
     
   m_currentPlayingList = NULL;
-  m_checkpoint = NULL;
 
   m_lastFrameTimeStamp = -1;
   m_frameLate          = 0;
@@ -840,12 +839,4 @@ void GameApp::drawFrame(void) {
 
 NetServer* GameApp::standAloneServer() {
   return m_standAloneServer;
-}
-
-void GameApp::setCheckpoint(Checkpoint* i_checkpoint) {
-  m_checkpoint = i_checkpoint;
-}
-
-Checkpoint* GameApp::getCheckpoint() {
-  return m_checkpoint;
 }
