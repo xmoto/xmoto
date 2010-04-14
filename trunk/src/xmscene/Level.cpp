@@ -60,8 +60,8 @@ Level::Level() {
   m_rSpriteForWecker 	      = "Wrecker";
   m_rSpriteForFlower 	      = "Flower";
   m_rSpriteForStar            = "Star";
-  m_rSpriteForCheckpointDown  = "Checkpoint_1";
-  m_rSpriteForCheckpointUp    = "Wrecker";
+  m_rSpriteForCheckpointDown  = "Checkpoint_0";
+  m_rSpriteForCheckpointUp    = "Checkpoint_1";
   m_rSoundForPickUpStrawberry = "PickUpStrawberry";
 
   m_strawberrySprite = NULL;
@@ -1015,9 +1015,9 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 	if(m_rSpriteForStar == "")
 	  m_rSpriteForStar = "Star";
 	if(m_rSpriteForCheckpointDown == "")
-	  m_rSpriteForCheckpointDown = "Checkpoint_down";
+	  m_rSpriteForCheckpointDown = "Checkpoint_0";
 	if(m_rSpriteForCheckpointUp == "")
-	  m_rSpriteForCheckpointUp = "Checkpoint_up";
+	  m_rSpriteForCheckpointUp = "Checkpoint_1";
 
 	/* layers */
 	m_numberLayer = XMFS::readInt_LE(pfh);
