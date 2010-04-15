@@ -2871,8 +2871,8 @@ void GameRenderer::_RenderLayer(Scene* i_scene, int layer) {
     AABB bbox;
     // layers with almost the same x,y offsets than the main layers
     // are drawn with it. the others are drawn using default zoom
-    if(layerOffset.x > 0.90 && layerOffset.x < 1.10
-       && layerOffset.y > 0.90 && layerOffset.y < 1.10) {
+    if(layerOffset.x > 0.30 && layerOffset.x < 1.70
+       && layerOffset.y > 0.30 && layerOffset.y < 1.70) {
       setCameraTransformations(i_scene->getCamera(), m_xScale, m_yScale);
       bbox = m_screenBBox;
     } else {
