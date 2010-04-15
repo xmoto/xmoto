@@ -39,6 +39,14 @@ void XMSceneHooks::OnTakeEntity() {
     }
 }
 
+void XMSceneHooks::OnTakeCheckpoint() {
+    /* Play yummy-yummy sound */
+    try {
+      Sound::playSampleByName(Theme::instance()->getSound(m_Scene->getLevelSrc()->SoundForCheckpoint())->FilePath());
+
+    } catch(Exception &e) {
+    }
+}
 
 void XMSceneHooks::setGameApps(Scene *i_Scene) {
   m_Scene = i_Scene;

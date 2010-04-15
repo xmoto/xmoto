@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __LEVELSRC_H__
 #define __LEVELSRC_H__
 
-#define CACHE_LEVEL_FORMAT_VERSION 33
+#define CACHE_LEVEL_FORMAT_VERSION 34
 
 #include <string>
 #include <vector>
@@ -156,6 +156,7 @@ class Level {
   std::string SpriteForCheckpointDown() const;
   std::string SpriteForCheckpointUp() const;
   std::string SoundForPickUpStrawberry() const;
+  std::string SoundForCheckpoint() const;
 
   Sprite* strawberrySprite();
   Sprite* wreckerSprite();
@@ -230,6 +231,7 @@ class Level {
   std::string m_rSpriteForCheckpointDown;
   std::string m_rSpriteForCheckpointUp;
   std::string m_rSoundForPickUpStrawberry;
+  std::string m_rSoundForCheckpoint;
 
   Sprite* m_strawberrySprite;
   Sprite* m_wreckerSprite;

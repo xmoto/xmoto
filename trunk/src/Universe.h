@@ -30,6 +30,7 @@ public:
   virtual ~XMSceneHooks();
   void setGameApps(Scene *i_Scene);
   void OnTakeEntity();
+  void OnTakeCheckpoint();
 
 private:
   Scene *m_Scene;

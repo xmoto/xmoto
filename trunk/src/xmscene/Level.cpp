@@ -63,6 +63,7 @@ Level::Level() {
   m_rSpriteForCheckpointDown  = "Checkpoint_0";
   m_rSpriteForCheckpointUp    = "Checkpoint_1";
   m_rSoundForPickUpStrawberry = "PickUpStrawberry";
+  m_rSoundForCheckpoint       = "Checkpoint";
 
   m_strawberrySprite = NULL;
   m_wreckerSprite    = NULL;
@@ -570,6 +571,8 @@ void Level::loadXML() {
 	/* for efficacity and before other are not required, only change main ones */
 	if        (v_old_name == "PickUpStrawberry") {
 	  m_rSoundForPickUpStrawberry = v_new_name;
+	} else if (v_old_name == "Checkpoint") {
+	  m_rSoundForCheckpoint = v_new_name;
 	}
       }
     }
@@ -770,6 +773,7 @@ void Level::exportBinary(FileDataType i_fdt, const std::string &FileName, const 
     XMFS::writeString(pfh,m_rSpriteForCheckpointDown);
     XMFS::writeString(pfh,m_rSpriteForCheckpointUp);
     XMFS::writeString(pfh,m_rSoundForPickUpStrawberry);
+    XMFS::writeString(pfh,m_rSoundForCheckpoint);
 
     XMFS::writeInt_LE(pfh, m_numberLayer);
     for(int i=0; i<m_numberLayer; i++){
@@ -1005,6 +1009,7 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 	m_rSpriteForCheckpointDown  = XMFS::readString(pfh);
 	m_rSpriteForCheckpointUp    = XMFS::readString(pfh);
 	m_rSoundForPickUpStrawberry = XMFS::readString(pfh);
+	m_rSoundForCheckpoint       = XMFS::readString(pfh);
 
 	if(m_rSpriteForStrawberry == "")
 	  m_rSpriteForStrawberry = "Strawberry";
@@ -1374,6 +1379,10 @@ std::string Level::SpriteForCheckpointUp() const {
 
 std::string Level::SoundForPickUpStrawberry() const {
   return m_rSoundForPickUpStrawberry;
+}
+
+std::string Level::SoundForCheckpoint() const {
+  return m_rSoundForCheckpoint;
 }
 
 Sprite* Level::strawberrySprite()
