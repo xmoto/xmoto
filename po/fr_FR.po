@@ -329,11 +329,11 @@ msgstr "Graphismes"
 
 #: src/GameText.h:134
 msgid "Music"
-msgstr ""
+msgstr "Musique"
 
 #: src/GameText.h:139
 msgid "Sound Effects"
-msgstr ""
+msgstr "Effets sonores"
 
 #: src/GameText.h:143
 msgid "MacOS X Support"
@@ -357,7 +357,7 @@ msgstr "Norvégien"
 
 #: src/GameText.h:150
 msgid "English"
-msgstr ""
+msgstr "Anglais"
 
 #: src/GameText.h:151
 msgid "German"
@@ -429,11 +429,11 @@ msgstr "Portugais"
 
 #: src/GameText.h:166
 msgid "Dutch"
-msgstr ""
+msgstr "Néerlandais"
 
 #: src/GameText.h:167
 msgid "Taiwanese"
-msgstr ""
+msgstr "Taïwanais"
 
 #: src/GameText.h:169
 msgid "Main testers"
@@ -1019,7 +1019,7 @@ msgstr "Appuyez sur ENTRER pour recommencer"
 
 #: src/GameText.h:331
 msgid "Press BACKSPACE to return to Checkpoint"
-msgstr ""
+msgstr "Appuyez sur BACKSPACE pour retourner au checkpoint"
 
 #: src/GameText.h:332
 msgid "Press ESC to display the menu"
