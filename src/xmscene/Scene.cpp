@@ -1064,6 +1064,9 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
         }
         Checkpoint* v_checkpoint = (Checkpoint*)pEntity;
 	v_checkpoint->activate(m_pLevelSrc->EntitiesDestroyed(), m_players[i_player]->getState()->Dir);
+	if(m_motoGameHooks != NULL) {
+	  m_motoGameHooks->OnTakeCheckpoint();
+	}
 	m_checkpoint = v_checkpoint;
       }
 
@@ -1685,10 +1688,6 @@ void SceneOnBikerHooks::onHeadTouches() {
 		}
 		m_ScriptTimers.clear();
 	}
-
-void Scene::setCheckpoint(Checkpoint* i_checkpoint) {
-  m_checkpoint = i_checkpoint;
-}
 
 Checkpoint* Scene::getCheckpoint() {
   return m_checkpoint;

@@ -117,6 +117,7 @@ class SceneHooks {
 public:
   virtual ~SceneHooks() {};
   virtual void OnTakeEntity() = 0;
+  virtual void OnTakeCheckpoint() = 0;
 };
 
 class Scene {
@@ -172,7 +173,6 @@ public:
   DriveDir getPlayerFaceDir(int i_player);
   void setDeathAnim(bool b) {m_bDeathAnimEnabled=b;}
 
-  void setCheckpoint(Checkpoint* i_checkpoint);
   Checkpoint* getCheckpoint();
   void playToCheckpoint();
 

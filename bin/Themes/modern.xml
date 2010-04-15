@@ -592,6 +592,7 @@
 <music name="SpeedItUp" file="speeditup.ogg" sum="5cc80ba826daa3e90413483d58e29cc9" />
 <sound name="Headcrash" file="Headcrash.ogg" sum="a07b9da0bc212a316a49a60446c5f8d3" />
 <sound name="NewHighscore" file="NewHighscore.ogg" sum="c7b35614e4f1536f79a42fde559eab83" />
+<sound name="Checkpoint" file="Glass.ogg" sum="3f1c966cf2add53e0a87168394b90e20" />
 <sound name="PickUpStrawberry" file="PickUpStrawberry.ogg" sum="e2f80f50b123e10266a2fc7e63523414" />
 <sound name="Squeek" file="Squeek.ogg" sum="f289b419038301d8cb0eea1094363a90" />
 <sound name="Button1" file="Button1.ogg" sum="ea03be7fc332ea068e54566ef46a480f" />

@@ -185,13 +185,6 @@ private:
   bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
   bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
       
-  /* Sound effects */
-  SoundSample *m_pEndOfLevelSFX;
-  SoundSample *m_pStrawberryPickupSFX;
-  SoundSample *m_pWreckerTouchSFX;
-  SoundSample *m_pDieSFX;
-  SoundSample *m_pCheckpointSFX;
-      
   /* Various popups */
   UIMsgBox *m_pNotifyMsgBox;
   UIMsgBox *m_pInfoMsgBox;
