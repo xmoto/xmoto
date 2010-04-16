@@ -1698,8 +1698,10 @@ void Scene::playToCheckpoint() {
     return;
   }
 
+  // get rid of former messages and the level restart messages
   clearGameMessages();
   gameMessage(" ", true, 0);
+  
   for(unsigned int i=0; i<Players().size(); i++) {
     setPlayerPosition(i,
 		      m_checkpoint->InitialPosition().x,
