@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2010-04-14 02:12+0200\n"
-"PO-Revision-Date: 2010-03-24 19:38+0100\n"
+"PO-Revision-Date: 2010-04-14 21:07+0200\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -338,11 +338,11 @@ msgstr "Grafika"
 
 #: src/GameText.h:134
 msgid "Music"
-msgstr ""
+msgstr "Hudba"
 
 #: src/GameText.h:139
 msgid "Sound Effects"
-msgstr ""
+msgstr "Zvukové efekty"
 
 #: src/GameText.h:143
 msgid "MacOS X Support"
@@ -366,7 +366,7 @@ msgstr "Nórština"
 
 #: src/GameText.h:150
 msgid "English"
-msgstr ""
+msgstr "Angličtina"
 
 #: src/GameText.h:151
 msgid "German"
@@ -438,11 +438,11 @@ msgstr "Portugalčina"
 
 #: src/GameText.h:166
 msgid "Dutch"
-msgstr ""
+msgstr "Holandština"
 
 #: src/GameText.h:167
 msgid "Taiwanese"
-msgstr ""
+msgstr "Tajvančina"
 
 #: src/GameText.h:169
 msgid "Main testers"
@@ -1025,7 +1025,7 @@ msgstr "Stlačte ENTER pre opätovný pokus"
 
 #: src/GameText.h:331
 msgid "Press BACKSPACE to return to Checkpoint"
-msgstr ""
+msgstr "Stlačte BACKSPACE pre návrat na kontrolné stanovište"
 
 #: src/GameText.h:332
 msgid "Press ESC to display the menu"

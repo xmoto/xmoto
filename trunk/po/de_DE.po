@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2010-04-14 02:12+0200\n"
-"PO-Revision-Date: 2010-04-09 13:12+0100\n"
+"PO-Revision-Date: 2010-04-16 10:54+0100\n"
 "Last-Translator: Gaivota <un@known.de>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -335,11 +335,11 @@ msgstr "Grafik"
 
 #: src/GameText.h:134
 msgid "Music"
-msgstr ""
+msgstr "Musik"
 
 #: src/GameText.h:139
 msgid "Sound Effects"
-msgstr ""
+msgstr "Sound Effekte"
 
 #: src/GameText.h:143
 msgid "MacOS X Support"
@@ -363,7 +363,7 @@ msgstr "Norwegisch"
 
 #: src/GameText.h:150
 msgid "English"
-msgstr ""
+msgstr "Englisch"
 
 #: src/GameText.h:151
 msgid "German"
@@ -435,11 +435,11 @@ msgstr "Portugiesisch"
 
 #: src/GameText.h:166
 msgid "Dutch"
-msgstr ""
+msgstr "Holländisch"
 
 #: src/GameText.h:167
 msgid "Taiwanese"
-msgstr ""
+msgstr "Taiwanesisch"
 
 #: src/GameText.h:169
 msgid "Main testers"
@@ -1024,7 +1024,7 @@ msgstr "Drücke ENTER für neuen Versuch"
 
 #: src/GameText.h:331
 msgid "Press BACKSPACE to return to Checkpoint"
-msgstr ""
+msgstr "Drücke BACKSPACE, um zum Checkpoint zurückzukehren"
 
 #: src/GameText.h:332
 msgid "Press ESC to display the menu"

@@ -1698,6 +1698,8 @@ void Scene::playToCheckpoint() {
     return;
   }
 
+  clearGameMessages();
+  gameMessage(" ", true, 0);
   for(unsigned int i=0; i<Players().size(); i++) {
     setPlayerPosition(i,
 		      m_checkpoint->InitialPosition().x,
