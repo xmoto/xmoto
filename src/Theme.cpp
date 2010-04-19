@@ -218,12 +218,12 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
 				   THEME_MISC_SPRITE_FILE_DIR,
 				   "Misc");
     }
-    else if(v_spriteType == "Texture") {
+    else if(v_spriteType == "Texture" && v_isAnimation == false) {
       newSpriteFromXML<TextureSprite>(pVarElem,
 				      THEME_TEXTURE_SPRITE_FILE_DIR,
 				      "Texture");
     }
-    else if(v_spriteType == "AnimationTexture" && v_isAnimation == true) {
+    else if(v_spriteType == "Texture" && v_isAnimation == true) {
       newAnimationSpriteFromXML(pVarElem, true, THEME_TEXTURE_SPRITE_FILE_DIR);
     }
     else if(v_spriteType == "UI") {
