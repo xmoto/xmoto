@@ -49,6 +49,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_finishTime = 0;
     m_pcInputEventsData = NULL;
     m_nInputEventsDataSize = 0;
+    m_saved = false;
   }
       
   Replay::~Replay() {
@@ -79,10 +80,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
   
-  void Replay::finishReplay(bool bFinished, int finishTime, int i_format) {
+  void Replay::finishReplay(bool bFinished, int finishTime) {
     m_finishTime = finishTime;
     m_bFinished = bFinished;
-    saveReplay(i_format);
   }
   
   void Replay::createReplay(const std::string &FileName, const std::string &LevelID,
@@ -96,7 +96,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     initOutput(1024);
   }
   
-  void Replay::saveReplay(int i_format) {
+  void Replay::saveReplayIfNot(int i_format) {
+
+    if(m_saved) {
+      return;
+    }
 
     FileHandle *pfh = XMFS::openOFile(FDT_DATA, std::string("Replays/") + m_FileName);
     if(pfh == NULL) {
@@ -121,6 +125,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     XMFS::closeFile(pfh);
+    m_saved = true;
   }
 
   void Replay::saveReplay_2(FileHandle *pfh) {

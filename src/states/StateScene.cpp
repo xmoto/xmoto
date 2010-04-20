@@ -41,6 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../net/NetActions.h"
 #include "../SysMessage.h"
 #include "states/StateVote.h"
+#include "../thread/XMThreadStats.h"
 
 #define INPLAY_ANIMATION_TIME 1.0
 #define INPLAY_ANIMATION_SPEED 10
@@ -878,11 +879,11 @@ void StateScene::playingNextLevel(bool i_positifOrder) {
 	if(m_universe->getScenes()[0]->Players().size() == 1) {
 	  if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
 	     m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
-	    xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->sitekey(),
-							     XMSession::instance()->profile(),
-							     v_currentLevel,
-							     m_universe->getScenes()[0]->getTime());
-	    StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
+
+	    GameApp::instance()->getDbStatsThread()->delay_abortedLevel(XMSession::instance()->profile(),
+									v_currentLevel,
+									m_universe->getScenes()[0]->getTime());
+	    GameApp::instance()->getDbStatsThread()->doJob();
 	  }
 	}
       }

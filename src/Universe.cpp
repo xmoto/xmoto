@@ -298,14 +298,7 @@ void Universe::finalizeReplay(bool i_finished) {
   SerializedBikeState BikeState;
   Scene::getSerializedBikeState(m_scenes[0]->Players()[0]->getState(), m_scenes[0]->getTime(), &BikeState, m_scenes[0]->getPhysicsSettings());
   m_pJustPlayReplay->storeState(BikeState);
-  m_pJustPlayReplay->finishReplay(i_finished, i_finished ? m_scenes[0]->Players()[0]->finishTime() : 0,
-				  1); // still always use the format 1
-				  /*
-				    use old format if level is not physics to allow people having an old version to read replays
-				    in the future (today is 28/06/2009), once everybody can read 2 version, use always 2 version
-				    
-				    m_scenes[0]->getLevelSrc()->isPhysics() ? 2 : 1);
-				  */
+  m_pJustPlayReplay->finishReplay(i_finished, i_finished ? m_scenes[0]->Players()[0]->finishTime() : 0);
 }
 
 Replay* Universe::getCurrentReplay() {
@@ -334,6 +327,15 @@ void Universe::initReplay() {
 void Universe::saveReplay(xmDatabase *pDb, const std::string &Name) {
   /* This is simply a job of copying the Replays/Latest.rpl file into 
      Replays/Name.rpl */
+
+  m_pJustPlayReplay->saveReplayIfNot(1); // still always use the format 1
+
+  /*
+    use old format if level is not physics to allow people having an old version to read replays
+    in the future (today is 28/06/2009), once everybody can read 2 version, use always 2 version
+    
+    m_scenes[0]->getLevelSrc()->isPhysics() ? 2 : 1);
+  */
 
   /* Try saving */
   std::string v_outputfile;

@@ -54,6 +54,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateMessageBox.h"
 
 #include "thread/UpgradeLevelsThread.h"
+#include "thread/XMThreadStats.h"
 
 #include "UserConfig.h"
 #include "Renderer.h"
@@ -338,6 +339,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 
   // allocate the statemanager instance so that if it fails, it's not in a thread (serverThread for example)
   StateManager::instance();
+
+  // create the db stats thread
+  m_xmtstas = new XMThreadStats(XMSession::instance()->sitekey(), StateManager::instance());
 
   /* Init sound system */
   if(v_useGraphics) {
@@ -706,6 +710,12 @@ void GameApp::run_loop() {
 }
 
 void GameApp::run_unload() {
+
+  if(m_xmtstas->waitForThreadEnd()) {
+    LogError("stats thread failed");
+  }
+  delete m_xmtstas;
+
   if(Logger::isInitialized()) {
     LogInfo("UserUnload started at %.3f", GameApp::getXMTime());
   }

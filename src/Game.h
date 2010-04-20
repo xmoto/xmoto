@@ -49,6 +49,7 @@ class UIButton;
 class UIFrame;
 class UIStatic;
 class NetServer;
+class XMThreadStats;
 
 /*===========================================================================
   Game application
@@ -160,6 +161,9 @@ public:
 
   static void wait(int& io_lastFrameTimeStamp, int& io_frameLate, int i_maxFps);
   
+  // thread to externalize db update in other thread to reduce freezes
+  XMThreadStats* getDbStatsThread();
+
 protected:
   void createDefaultConfig();
 
@@ -264,6 +268,8 @@ private:
   /* */
   void _InitWin(bool bInitGraphics);
 
+  /* db optimizer */
+  XMThreadStats *m_xmtstas;
 
   // focus
   bool m_hasMouseFocus;

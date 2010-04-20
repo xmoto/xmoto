@@ -54,6 +54,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMotoLoadReplaysInterface.h"
 #include "Replay.h"
 #include <sstream>
+#include "thread/XMThreadStats.h"
 
   bool GameApp::haveMouseMoved() {
     int nX,nY;
@@ -839,4 +840,8 @@ void GameApp::drawFrame(void) {
 
 NetServer* GameApp::standAloneServer() {
   return m_standAloneServer;
+}
+
+XMThreadStats* GameApp::getDbStatsThread() {
+  return m_xmtstas;
 }

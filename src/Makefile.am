@@ -278,6 +278,8 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/DownloadGhostThread.h      \
 		 thread/LevelsPacksCountUpdateThread.h   \
 		 thread/LevelsPacksCountUpdateThread.cpp \
+		 thread/XMThreadStats.h \
+		 thread/XMThreadStats.cpp \
 		 net/thread/ServerThread.cpp             \
 		 net/thread/ServerThread.h       \
 		 net/thread/ClientListenerThread.cpp             \
