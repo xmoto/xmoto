@@ -76,7 +76,7 @@ class PhysicsSettings;
       void reinitialize();
       std::string getLevelId();
 
-      void finishReplay(bool bFinished,int finishTime, int i_format);
+      void finishReplay(bool bFinished,int finishTime);
       int CurrentFrame() const;
 
       void fastforward(int i_time);
@@ -99,6 +99,8 @@ class PhysicsSettings;
       /* return NULL if the replay is not valid */
       static ReplayInfo* getReplayInfos(const std::string p_ReplayName);
 
+      void saveReplayIfNot(int i_format);
+
     private: 
       /* Data */ 
       std::vector<ReplayStateChunk*> m_Chunks;
@@ -117,14 +119,15 @@ class PhysicsSettings;
       void _FreeReplay(void);
       bool nextState(int p_frames); /* go to the next state */
       bool nextNormalState(); /* go to the next state */
+
+      bool m_saved;
       
       /* Static data */
       static bool m_bEnableCompression;
 
       /* Events reconstructed from replay */
       std::vector<RecordedGameEvent *> m_ReplayEvents;
-      
-      void saveReplay(int i_format);
+
       void saveReplay_1(FileHandle *pfh);
       void saveReplay_2(FileHandle *pfh);
 
