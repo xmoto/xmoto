@@ -30,7 +30,6 @@ XMThreadStats::XMThreadStats(const std::string& i_sitekey, StateManager* i_manag
 }
 
 XMThreadStats::~XMThreadStats() {
-  play(); // purge all stats if some are still present
   SDL_DestroyMutex(m_eventsMutex);
 }
 

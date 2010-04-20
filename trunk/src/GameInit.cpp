@@ -711,6 +711,10 @@ void GameApp::run_loop() {
 
 void GameApp::run_unload() {
 
+  // do the stats job to confirm there are no more jobs waiting
+  m_xmtstas->doJob();
+
+  // be sure the thread is finished before closing xmoto
   if(m_xmtstas->waitForThreadEnd()) {
     LogError("stats thread failed");
   }
