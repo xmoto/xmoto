@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../db/xmDatabase.h"
 #include "../helpers/VExcept.h"
 #include "../states/StateManager.h"
+#include "../helpers/Log.h"
 
 XMThreadStats::XMThreadStats(const std::string& i_sitekey, StateManager* i_manager) {
     m_sitekey = i_sitekey;
@@ -96,29 +97,34 @@ void XMThreadStats::play() {
 
   SDL_LockMutex(m_eventsMutex);
 
-  while(m_events_levelCompleted.size() > 0) {
-    xe = m_events_levelCompleted[0];
-    m_pDb->stats_levelCompleted(m_sitekey, xe.playerName, xe.levelId, xe.playTime);
-    m_events_levelCompleted.erase(m_events_levelCompleted.begin());
-  }
+  try {
+    while(m_events_levelCompleted.size() > 0) {
+      xe = m_events_levelCompleted[0];
+      m_pDb->stats_levelCompleted(m_sitekey, xe.playerName, xe.levelId, xe.playTime);
+      m_events_levelCompleted.erase(m_events_levelCompleted.begin());
+    }
+    
+    while(m_events_died.size() > 0) {
+      xe = m_events_died[0];
+      m_pDb->stats_died(m_sitekey, xe.playerName, xe.levelId, xe.playTime);
+      m_events_died.erase(m_events_died.begin());
+    }
+    
+    while(m_events_abortedLevel.size() > 0) {
+      xe = m_events_abortedLevel[0];
+      m_pDb->stats_abortedLevel(m_sitekey, xe.playerName, xe.levelId, xe.playTime);
+      m_events_abortedLevel.erase(m_events_abortedLevel.begin());
+    }
+    
+    while(m_events_levelRestarted.size() > 0) {
+      xe = m_events_levelRestarted[0];
+      m_pDb->stats_levelRestarted(m_sitekey, xe.playerName, xe.levelId, xe.playTime);
+      m_events_levelRestarted.erase(m_events_levelRestarted.begin());
+    }
+  } catch(Exception &e) {
+    LogError("Unable to update statistics");
+  }    
 
-  while(m_events_died.size() > 0) {
-    xe = m_events_died[0];
-    m_pDb->stats_died(m_sitekey, xe.playerName, xe.levelId, xe.playTime);
-    m_events_died.erase(m_events_died.begin());
-  }
-
-  while(m_events_abortedLevel.size() > 0) {
-    xe = m_events_abortedLevel[0];
-    m_pDb->stats_abortedLevel(m_sitekey, xe.playerName, xe.levelId, xe.playTime);
-    m_events_abortedLevel.erase(m_events_abortedLevel.begin());
-  }
-
-  while(m_events_levelRestarted.size() > 0) {
-    xe = m_events_levelRestarted[0];
-    m_pDb->stats_levelRestarted(m_sitekey, xe.playerName, xe.levelId, xe.playTime);
-    m_events_levelRestarted.erase(m_events_levelRestarted.begin());
-  }
 
   SDL_UnlockMutex(m_eventsMutex);
 
