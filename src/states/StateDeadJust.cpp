@@ -95,7 +95,6 @@ void StateDeadJust::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
 
     if(v_isCheckpoint) {
-      m_universe->deleteCurrentReplay(); // because when you die, the replay is closed
       StateScene::playToCheckpoint();
       StateManager::instance()->replaceState(new StatePlayingLocal(m_universe, getId()), this->getId());
     }
