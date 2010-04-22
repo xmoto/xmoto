@@ -196,6 +196,8 @@ GameApp::GameApp() {
 
   m_standAloneServer = NULL;
 
+  m_xmtstas = NULL;
+
   m_userConfig = new UserConfig();
 }
    

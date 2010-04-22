@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../states/StateManager.h"
 #include "../helpers/Log.h"
 
-XMThreadStats::XMThreadStats(const std::string& i_sitekey, StateManager* i_manager) {
+XMThreadStats::XMThreadStats(const std::string& i_sitekey, StateManager* i_manager) : XMThread("XMTHREADSTATS") {
     m_sitekey = i_sitekey;
     m_manager = i_manager;
     m_eventsMutex = SDL_CreateMutex();
