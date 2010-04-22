@@ -101,14 +101,14 @@ public:
 		  const std::string& i_filepath, const std::string& i_name,
 		  const std::string& i_checkSum,
 		  const std::string& i_author, const std::string& i_description,
-		  const std::string& i_date, const std::string& i_packName, const std::string& i_packNum,
+		  const std::string& i_date,
 		  const std::string& i_music, bool i_isScripted, bool i_isPhysics,
 		  bool i_isToReload);
   void levels_update(const std::string& i_id_level,
 		     const std::string& i_filepath, const std::string& i_name,
 		     const std::string& i_checkSum,
 		     const std::string& i_author, const std::string& i_description,
-		     const std::string& i_date, const std::string& i_packName, const std::string& i_packNum,
+		     const std::string& i_date,
 		     const std::string& i_music, bool i_isScripted, bool i_isPhysics,
 		     bool i_isToReload);
   void levels_add_end();
