@@ -2,7 +2,7 @@ pkgdatadir = $(datadir)/@PACKAGE@
 pkgdata_DATA = xmoto.bin
 
 pkgMusicsdir = $(pkgdatadir)/Textures/Musics
-pkgMusics_DATA = Textures/Musics/menu.ogg Textures/Musics/ridealong.ogg Textures/Musics/batcave.ogg Textures/Musics/legolodio.ogg Textures/Musics/MadeiraStew.ogg Textures/Musics/speeditup.ogg
+pkgMusics_DATA = Textures/Musics/menu.ogg Textures/Musics/ridealong.ogg Textures/Musics/batcave.ogg Textures/Musics/legolodio.ogg Textures/Musics/MadeiraStew.ogg Textures/Musics/speeditup.ogg Textures/Musics/foxrun.ogg
 
 pkgFontsdir = $(pkgdatadir)/Textures/Fonts
 pkgFonts_DATA = Textures/Fonts/DejaVuSans.ttf
