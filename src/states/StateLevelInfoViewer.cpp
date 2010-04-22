@@ -368,8 +368,8 @@ void StateLevelInfoViewer::updateGUI() {
   std::string v_levelPack;
   std::string v_levelDateStr;
 
-  v_result = xmDatabase::instance("main")->readDB("SELECT name, author, description, packName, date_str "
-				      "FROM levels WHERE id_level=\"" + 
+  v_result = xmDatabase::instance("main")->readDB("SELECT a.name, a.author, a.description, b.packName, a.date_str "
+				      "FROM levels AS a LEFT OUTER JOIN weblevels AS b ON (a.id_level=b.id_level) WHERE a.id_level=\"" + 
 				      xmDatabase::protectString(m_level) + "\";",
 				      nrow);
   if(nrow == 0) {
@@ -380,7 +380,7 @@ void StateLevelInfoViewer::updateGUI() {
   v_levelName        = xmDatabase::instance("main")->getResult(v_result, 5, 0, 0);
   v_levelAuthor      = xmDatabase::instance("main")->getResult(v_result, 5, 0, 1);
   v_levelDescription = xmDatabase::instance("main")->getResult(v_result, 5, 0, 2);
-  v_levelPack        = xmDatabase::instance("main")->getResult(v_result, 5, 0, 3);
+  v_levelPack        = xmDatabase::instance("main")->getResult(v_result, 5, 0, 3) == NULL ? "" : xmDatabase::instance("main")->getResult(v_result, 5, 0, 3);
   v_levelDateStr     = xmDatabase::instance("main")->getResult(v_result, 5, 0, 4);
   xmDatabase::instance("main")->read_DB_free(v_result);
 

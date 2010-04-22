@@ -212,9 +212,6 @@ void xmDatabase::weblevels_updateDB(FileDataType i_fdt, const std::string& i_web
   TiXmlDocument *v_webLXmlData;
   TiXmlElement *v_webLXmlDataElement;
   const char *pc;
-  std::string v_levelId, v_levelName, v_url, v_MD5sum_web;
-  std::string v_difficulty, v_quality, v_creationDate;
-  std::string v_crappy, v_children_compliant, v_vote_locked;
 
   try {
     simpleSql("BEGIN TRANSACTION;");
@@ -236,6 +233,11 @@ void xmDatabase::weblevels_updateDB(FileDataType i_fdt, const std::string& i_web
     TiXmlElement *pVarElem = v_webLXmlDataElement->FirstChildElement("level");
     while(pVarElem != NULL) {
     
+      std::string v_levelId, v_levelName, v_url, v_MD5sum_web;
+      std::string v_difficulty, v_quality, v_creationDate;
+      std::string v_crappy, v_children_compliant, v_vote_locked;
+      std::string v_packname, v_packnum;
+
       pc = pVarElem->Attribute("level_id");
       if(pc == NULL)
 	continue;
@@ -245,6 +247,20 @@ void xmDatabase::weblevels_updateDB(FileDataType i_fdt, const std::string& i_web
       if(pc == NULL)
 	continue;
       v_levelName = pc;
+
+      pc = pVarElem->Attribute("packname");
+      if(pc == NULL) {
+	v_packname = "";
+      } else {
+	v_packname = pc;
+
+	pc = pVarElem->Attribute("packnum");
+	if(pc == NULL) {
+	  v_packnum = "";
+	} else {
+	  v_packnum = pc;
+	}
+      }
 	  
       pc = pVarElem->Attribute("url");
       if(pc == NULL)
@@ -302,10 +318,12 @@ void xmDatabase::weblevels_updateDB(FileDataType i_fdt, const std::string& i_web
       }
 
       // add the level
-      simpleSql("INSERT INTO weblevels(id_level, name, fileUrl, "
+      simpleSql("INSERT INTO weblevels(id_level, name, packname, packnum, fileUrl, "
 		"checkSum, difficulty, quality, creationDate, crappy, children_compliant, vote_locked) VALUES (\"" +
 		protectString(v_levelId)    + "\", \"" +
 		protectString(v_levelName)  + "\", \"" +
+		protectString(v_packname)  + "\", \"" +
+		protectString(v_packnum)  + "\", \"" +
 		protectString(v_url)        + "\", \"" +
 		protectString(v_MD5sum_web) + "\", "   +
 		v_difficulty   + ", "   +

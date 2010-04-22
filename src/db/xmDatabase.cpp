@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VFileIO.h"
 #include <sstream>
 
-#define XMDB_VERSION         34
+#define XMDB_VERSION         35
 #define DB_MAX_SQL_RUNTIME 0.25
 #define DB_BUSY_TIMEOUT   60000 // 60 seconds
 
@@ -355,6 +355,8 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
 				      XmDatabaseUpdateInterface *i_interface) {
   std::string v_errMsg;
   std::string v_sitekey;
+  char **v_result;
+  unsigned int nrow;
 
   if(i_fromVersion != 0) { /* cannot create site key if xm_parameters doesn't exist */
     v_sitekey = getXmDbSiteKey();
@@ -717,6 +719,48 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       updateXmDbVersion(34);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 33: " + e.getMsg());
+    }
+
+  case 34:
+    try {
+      simpleSql("ALTER TABLE weblevels ADD COLUMN packname;");
+      simpleSql("ALTER TABLE weblevels ADD COLUMN packnum;");
+      simpleSql("CREATE INDEX weblevels_packname_idx1 ON weblevels(packname);");
+      simpleSql("DROP INDEX levels_packName_idx1;");
+
+      // do not use level.packname anymore
+      // update weblevels table from levels for the first time
+      
+      try {
+	std::string v_id_level, v_packname, v_packnum;
+	
+	simpleSql("BEGIN TRANSACTION;");
+	
+	v_result = readDB(std::string("SELECT id_level, packname, packnum FROM levels WHERE packname <> '';"), nrow);
+	for(unsigned int i=0; i<nrow; i++) {
+	  v_id_level = getResult(v_result, 3, i, 0);
+	  v_packname = getResult(v_result, 3, i, 1);
+	  v_packnum  = getResult(v_result, 3, i, 2);
+	  
+	  simpleSql("UPDATE weblevels SET packname=\"" + xmDatabase::protectString(v_packname) + 
+		    "\", packnum=\"" + xmDatabase::protectString(v_packnum) + 
+		    "\" WHERE id_level=\"" + xmDatabase::protectString(v_id_level) + "\";");
+	}
+	read_DB_free(v_result);
+
+	// remove information for the table levels
+	simpleSql("UPDATE levels SET packname='', packnum='';");
+	
+	simpleSql("COMMIT;");
+	
+      } catch(Exception &e) {
+	/* ok, the player will have to update weblevels via internet */
+	simpleSql("COMMIT;"); // anyway, commit what can be commited
+      }
+
+      updateXmDbVersion(35);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 34: " + e.getMsg());
     }
 
     // next

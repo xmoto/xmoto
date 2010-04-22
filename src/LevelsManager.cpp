@@ -237,17 +237,17 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   cleanPacks();
 
   /* standard packs */
-  v_result = i_db->readDB("SELECT DISTINCT packName FROM levels ORDER BY UPPER(packName);",
+  v_result = i_db->readDB("SELECT DISTINCT packName FROM weblevels WHERE packName<>'' ORDER BY UPPER(packName);",
 			  nrow);
   for(unsigned int i=0; i<nrow; i++) {
     char v_levelPackStr[256];
 
     v_pack = new LevelsPack(i_db->getResult(v_result, 1, i, 0),
-			    "SELECT a.id_level AS id_level, a.name AS name, a.packNum || UPPER(a.name) AS sort_field "
+			    "SELECT a.id_level AS id_level, a.name AS name, b.packNum || UPPER(a.name) AS sort_field "
 			    "FROM levels AS a "
-			    "LEFT OUTER JOIN weblevels AS b ON a.id_level=b.id_level "
+			    "INNER JOIN weblevels AS b ON a.id_level=b.id_level "
 			    "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND c.id_profile=xm_profile()) "
-			    "WHERE a.packName=\"" +
+			    "WHERE b.packName=\"" +
 			    xmDatabase::protectString(i_db->getResult(v_result, 1, i, 0)) +
 			    "\" "
 			    "AND (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0) "
@@ -772,8 +772,6 @@ void LevelsManager::reloadExternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterf
 			 v_level->Author(),
 			 v_level->Description(),
 			 v_level->Date(),
-			 v_level->Pack(),
-			 v_level->PackNum(),
 			 v_level->Music(),
 			 v_level->isScripted(),
 			 v_level->isPhysics(),
@@ -810,8 +808,6 @@ void LevelsManager::addExternalLevel(std::string i_levelFile, xmDatabase *i_db) 
 		     v_level->Author(),
 		     v_level->Description(),
 		     v_level->Date(),
-		     v_level->Pack(),
-		     v_level->PackNum(),
 		     v_level->Music(),
 		     v_level->isScripted(),
 		     v_level->isPhysics(),
@@ -862,8 +858,6 @@ void LevelsManager::reloadInternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterf
 			 v_level->Author(),
 			 v_level->Description(),
 			 v_level->Date(),
-			 v_level->Pack(),
-			 v_level->PackNum(),
 			 v_level->Music(),
 			 v_level->isScripted(),
 			 v_level->isPhysics(),
@@ -989,8 +983,6 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
 			 v_level->Author(),
 			 v_level->Description(),
 			 v_level->Date(),
-			 v_level->Pack(),
-			 v_level->PackNum(),
 			 v_level->Music(),
 			 v_level->isScripted(),
 			 v_level->isPhysics(),
@@ -1022,8 +1014,6 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
 			    v_level->Author(),
 			    v_level->Description(),
 			    v_level->Date(),
-			    v_level->Pack(),
-			    v_level->PackNum(),
 			    v_level->Music(),
 			    v_level->isScripted(),
 			    v_level->isPhysics(),
@@ -1133,12 +1123,12 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN, uns
     return
       "SELECT a.id_level, MIN(a.name), MIN(b.finishTime+0), MIN(c.finishTime+0) "
       "FROM levels AS a "
-      "LEFT OUTER JOIN webhighscores AS b ON (a.id_level = b.id_level AND b.id_room=" + i_id_room + ") "
+      "INNER JOIN webhighscores AS b ON (a.id_level = b.id_level AND b.id_room=" + i_id_room + ") "
       "LEFT OUTER JOIN profile_completedLevels AS c "
       "ON (a.id_level=c.id_level AND c.id_profile=\"" + xmDatabase::protectString(i_profile) + "\") "
-      "WHERE a.packName=\"Tutorials\" "
+      "WHERE b.packName=\"Tutorials\" "
       "GROUP BY a.id_level "
-      "ORDER BY a.packNum || UPPER(a.name);";
+      "ORDER BY b.packNum || UPPER(a.name);";
   }
 
   /* run the query to check wether there are at least 5 levels, else, all levels randomly */
