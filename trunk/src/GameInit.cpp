@@ -711,14 +711,18 @@ void GameApp::run_loop() {
 
 void GameApp::run_unload() {
 
-  // do the stats job to confirm there are no more jobs waiting
-  m_xmtstas->doJob();
+  /* stats */
+  // don't delete statemanager before
+  if(m_xmtstas != NULL) {
+    // do the stats job to confirm there are no more jobs waiting
+    m_xmtstas->doJob();
+    
+    // be sure the thread is finished before closing xmoto
+    if(m_xmtstas->waitForThreadEnd()) {
+      LogError("stats thread failed");
+    }
 
-  // be sure the thread is finished before closing xmoto
-  if(m_xmtstas->waitForThreadEnd()) {
-    LogError("stats thread failed");
   }
-  delete m_xmtstas;
 
   if(Logger::isInitialized()) {
     LogInfo("UserUnload started at %.3f", GameApp::getXMTime());
@@ -785,6 +789,11 @@ void GameApp::run_unload() {
     
   if(Logger::isInitialized()) {
     Logger::uninit();
+  }
+
+  // don't delete before statemanager
+  if(m_xmtstas != NULL) {
+    delete m_xmtstas;
   }
 
 }
