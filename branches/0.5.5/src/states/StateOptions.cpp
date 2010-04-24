@@ -1103,8 +1103,8 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   v_list = new UIList(v_generalControlTab, 5, 5, "", v_generalControlTab->getPosition().nWidth-10, v_generalControlTab->getPosition().nHeight -43 -5 -57 -50);
   v_list->setID("KEY_ACTION_LIST");
   v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_ACTION, 250);
-  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 250);
+  v_list->addColumn(GAMETEXT_ACTION, 400);
+  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 400);
   v_list->addColumn("", 0); // internal key name
   v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
 
@@ -1131,8 +1131,8 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   v_list = new UIList(v_player1ControlTab, 5, 5, "", v_player1ControlTab->getPosition().nWidth-10, v_player1ControlTab->getPosition().nHeight -43 -5 -57);
   v_list->setID("KEY_ACTION_LIST_P1");
   v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_ACTION, 250);
-  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 250);
+  v_list->addColumn(GAMETEXT_ACTION, 400);
+  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 400);
   v_list->addColumn("", 0); // internal key name
   v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
 
@@ -1145,8 +1145,8 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   v_list = new UIList(v_player2ControlTab, 5, 5, "", v_player2ControlTab->getPosition().nWidth-10, v_player2ControlTab->getPosition().nHeight -43 -5 -57);
   v_list->setID("KEY_ACTION_LIST_P2");
   v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_ACTION, 250);
-  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 250);
+  v_list->addColumn(GAMETEXT_ACTION, 400);
+  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 400);
   v_list->addColumn("", 0); // internal key name
   v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
 
@@ -1159,8 +1159,8 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   v_list = new UIList(v_player3ControlTab, 5, 5, "", v_player3ControlTab->getPosition().nWidth-10, v_player3ControlTab->getPosition().nHeight -43 -5 -57);
   v_list->setID("KEY_ACTION_LIST_P3");
   v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_ACTION, 250);
-  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 250);
+  v_list->addColumn(GAMETEXT_ACTION, 400);
+  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 400);
   v_list->addColumn("", 0); // internal key name
   v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
 
@@ -1173,8 +1173,8 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   v_list = new UIList(v_player4ControlTab, 5, 5, "", v_player4ControlTab->getPosition().nWidth-10, v_player4ControlTab->getPosition().nHeight -43 -5 -57);
   v_list->setID("KEY_ACTION_LIST_P4");
   v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_ACTION, 250);
-  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 250);
+  v_list->addColumn(GAMETEXT_ACTION, 400);
+  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 400);
   v_list->addColumn("", 0); // internal key name
   v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
 
@@ -2132,8 +2132,8 @@ void StateOptions::executeOneCommand(std::string cmd, std::string args) {
 
   LogDebug("cmd [%s [%s]] executed by state [%s].",
 	   cmd.c_str(), args.c_str(), getName().c_str());
-  UIList *v_activeList,
-	 *v_list;
+  UIList *v_activeList = NULL;
+  UIList *v_list;
   std::vector<UIList*> v_lists;
 
   if(cmd == "REQUESTKEY") {
