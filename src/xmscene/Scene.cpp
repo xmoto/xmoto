@@ -522,6 +522,8 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     ===========================================================================*/
   void Scene::prePlayLevel(DBuffer *i_recorder,
 			   bool i_playEvents) {
+    m_playInitLevel_done = false;
+
     m_playEvents = i_playEvents;
     /* load the level if not */
     if(m_pLevelSrc->isFullyLoaded() == false) {
@@ -699,8 +701,12 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     return m_players;
   }
 
-  void Scene::playLevel() {
-  /* Invoke the OnLoad() script function */
+  bool Scene::playInitLevelDone() const {
+    return m_playInitLevel_done;
+  }
+
+  void Scene::playInitLevel() {
+    /* Invoke the OnLoad() script function */
     if(m_playEvents) {
       bool bOnLoadSuccess;
 
@@ -716,6 +722,8 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
 	throw Exception("OnLoad script function failed !");
       }
     }
+
+    m_playInitLevel_done = true;
   }
   
   /*===========================================================================
