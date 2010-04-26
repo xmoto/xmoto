@@ -131,7 +131,7 @@ public:
   void loadLevel(xmDatabase *i_db, const std::string& i_id_level);
   void prePlayLevel(DBuffer* i_eventRecorder, bool i_playEvents);
 
-  void playLevel();
+  void playInitLevel();
   void updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder, bool i_fast = false);
   void endLevel();
 
@@ -287,6 +287,8 @@ public:
   void setAutoZoomCamera();
   bool isAutoZoomCamera();
 
+  bool playInitLevelDone() const; /* return true if init level (ie OnLoad function) is done */
+
 private:
 
   /* Data */
@@ -335,6 +337,9 @@ private:
 
   // some part of the game can be update only half on the time
   bool m_halfUpdate;
+
+  // does the playInitLevel part it done ?
+  bool m_playInitLevel_done;
 
   std::vector<Camera*> m_cameras;
   unsigned int m_currentCamera;

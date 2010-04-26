@@ -379,7 +379,7 @@ void ServerThread::SP2_initPlaying() {
 	  v_localNetId++;
 	}
       }
-      m_universe->getScenes()[i]->playLevel();
+      m_universe->getScenes()[i]->playInitLevel();
     }
   } catch(Exception &e) {
     LogWarning("Server: Unable to load level %s",  v_id_level.c_str());

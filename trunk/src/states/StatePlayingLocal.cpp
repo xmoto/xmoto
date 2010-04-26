@@ -66,14 +66,35 @@ void StatePlayingLocal::enter()
 {
   StatePlaying::enter();
 
+  /*
+    warning, this function is called when a new game start, or when the player resussite after a checkpoint restoration
+   */
+
   m_gameIsFinished = false;
 
+  // reset trainer mode use
+  bool v_onlyNewGame = true;
+  if(m_universe != NULL) {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      // if only new game are set, then, reset the trainer use
+      if(m_universe->getScenes()[i]->playInitLevelDone()) {
+	v_onlyNewGame = false;
+      }
+    }
+  }
+  if(v_onlyNewGame) { // if any game is continuing, don't reset the trainer use
+    Trainer::instance()->resetTrainerUse();
+  }
+
+  // initialiaze the level
   std::string v_level_name;
   try {
     if(m_universe != NULL) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	v_level_name = m_universe->getScenes()[i]->getLevelSrc()->Name();
-	m_universe->getScenes()[i]->playLevel();
+	if(m_universe->getScenes()[i]->playInitLevelDone() == false) {
+	  m_universe->getScenes()[i]->playInitLevel();
+	}
       }
     }
   }
@@ -90,9 +111,6 @@ void StatePlayingLocal::enter()
 
   // read keys for more reactivity
   dealWithActivedKeys();
-
-  // reset trainer mode use
-  Trainer::instance()->resetTrainerUse();
 }
 
 void StatePlayingLocal::leave()
