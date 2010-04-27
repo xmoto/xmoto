@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="checkpointtest" rversion="0.5.3">
+<level id="checkpointtest_" rversion="0.5.1">
 	<info>
 		<name>Checkpoint Test</name>
 		<description></description>
@@ -82,27 +82,22 @@
 	<entity id="path2697" typeid="Checkpoint">
 		<size r="0.4"/>
 		<position y="2.7866905975" x="-1.84704330475" angle="0.855211333477"/>
-		<param name="name" value="panel"/>
 	</entity>
 	<entity id="path2789" typeid="Checkpoint">
 		<position y="-3.4367118825" x="-12.4321492048"/>
 		<size r="0.4"/>
-		<param name="name" value="panel"/>
 	</entity>
 	<entity id="path2887" typeid="Checkpoint">
 		<position y="-3.2239463825" x="12.4082762952"/>
 		<size r="0.4"/>
-		<param name="name" value="panel"/>
 	</entity>
 	<entity id="path2991" typeid="Checkpoint">
 		<position y="-13.9686273825" x="-4.93214870475"/>
 		<size r="0.4"/>
-		<param name="name" value="panel"/>
 	</entity>
 	<entity id="path3101" typeid="Checkpoint">
 		<size r="0.4"/>
 		<position y="3.4249881175" x="3.47210529525" angle="5.5152404363"/>
-		<param name="name" value="panel"/>
 	</entity>
 	<entity id="path2468" typeid="Sprite">
 		<size r="0.4"/>
