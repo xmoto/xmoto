@@ -1731,5 +1731,8 @@ void Scene::playToCheckpoint() {
       getLevelSrc()->revertEntityDestroyed(getLevelSrc()->EntitiesDestroyed()[i]->Id());
     }
   }
+
+  // call the checkpoint.OnUse
+  m_luaGame->scriptCallTblVoid(m_checkpoint->Id(), "OnUse");
 }
 
