@@ -7,6 +7,26 @@
 		<date>2010-04-12</date>
 		<sky>sky1</sky>
 	</info>
+<script>
+
+ckpoint1 = {}
+ckpoint2 = {}
+ckpoint3 = {}
+
+function ckpoint1.OnUse()
+  Game.Message("Loading checkpoint 1");
+end
+
+function ckpoint2.OnUse()
+  Game.Message("Loading checkpoint 2");
+end
+
+function ckpoint3.OnUse()
+  Game.Message("Loading checkpoint 3");
+end
+
+
+</script>
 	<limits left="-18.602362" right="18.602362" top="26.309055" bottom="-26.309055"/>
 	<block id="rect2465">
 		<edges>
@@ -79,23 +99,23 @@
 		<position y="-3.0111808825" x="-3.28321395475"/>
 		<size r="0.5"/>
 	</entity>
-	<entity id="path2697" typeid="Checkpoint">
+	<entity id="ckpoint1" typeid="Checkpoint">
 		<size r="0.4"/>
 		<position y="2.7866905975" x="-1.84704330475" angle="0.855211333477"/>
 	</entity>
-	<entity id="path2789" typeid="Checkpoint">
+	<entity id="ckpoint2" typeid="Checkpoint">
 		<position y="-3.4367118825" x="-12.4321492048"/>
 		<size r="0.4"/>
 	</entity>
-	<entity id="path2887" typeid="Checkpoint">
+	<entity id="ckpoint3" typeid="Checkpoint">
 		<position y="-3.2239463825" x="12.4082762952"/>
 		<size r="0.4"/>
 	</entity>
-	<entity id="path2991" typeid="Checkpoint">
+	<entity id="ckpoint4" typeid="Checkpoint">
 		<position y="-13.9686273825" x="-4.93214870475"/>
 		<size r="0.4"/>
 	</entity>
-	<entity id="path3101" typeid="Checkpoint">
+	<entity id="ckpoint5" typeid="Checkpoint">
 		<size r="0.4"/>
 		<position y="3.4249881175" x="3.47210529525" angle="5.5152404363"/>
 	</entity>
