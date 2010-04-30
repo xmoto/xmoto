@@ -146,12 +146,7 @@ double PlayerLocalBiker::getAngle() {
 
   return fAngle;
 }
-/*
-void PlayerLocalBiker::setAngle(float i_angle) {
-  m_bikeState->fFrameRot[0]= 3.14;
-  LogInfo("hat beschannn");
-}
-*/
+
 void PlayerLocalBiker::initPhysics(Vector2f i_gravity) {
   m_bFirstPhysicsUpdate = true;
 
