@@ -97,6 +97,7 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"SetTimerDelay",                LuaLibGame::L_Game_SetTimerDelay}, 
   {"StopTimer",                    LuaLibGame::L_Game_StopTimer}, 
   {"SetCameraPosition",            LuaLibGame::L_Game_SetCameraPosition}, 
+  {"SetPlayerAngle",               LuaLibGame::L_Game_SetAPlayerAngle},
   {NULL, NULL}
 };
 Scene*     LuaLibGame::m_exec_world              = NULL;
@@ -900,6 +901,18 @@ int LuaLibGame::L_Game_GetPlayerAngle(lua_State *pL) {
   lua_pushnumber(pL, m_exec_world->Players()[v_player]->getAngle());
 
   return 1; //return 1 value
+}
+
+int LuaLibGame::L_Game_SetAPlayerAngle(lua_State *pL) {
+  /* event for this */
+  int v_player = (int)X_luaL_check_number(pL,1);
+
+  if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
+		luaL_error (pL, "Invalid player number");
+  }
+
+  m_exec_world->createGameEvent(new MGE_SetPlayerAngle(m_exec_world->getTime(), v_player, (float)X_luaL_check_number(pL,2)));
+  return 0;
 }
 
 int LuaLibGame::L_Game_GetPlayerProfileName(lua_State *pl) {

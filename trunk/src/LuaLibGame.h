@@ -120,7 +120,8 @@ private:
   static int L_Game_StartTimer(lua_State *pL);  
   static int L_Game_SetTimerDelay(lua_State *pL);  
   static int L_Game_StopTimer(lua_State *pL);
-	
+  
+  static int L_Game_SetAPlayerAngle(lua_State *pL);	
 
   /* get the number of arguments */
   static int args_numberOfArguments(lua_State *pL);
