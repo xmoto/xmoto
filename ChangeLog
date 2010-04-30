@@ -1,14 +1,27 @@
-X-Moto 0.5.3-SVN 3000 2009-09-25
+X-Moto 0.5.3 2010-04-30
 --------------------------------
  * Ugly Mode heavily improved (Menu GFX and Scripted Sprites)
- * xdg-basedir compliant (libxdg-basedir required)
+ * xdg-basedir implementation
  * bugfix: Compile with ode 0.11
- * bugfix: Rendering stalls no more on first load of Headcrash Sound
- * bugfix: Multiplayer: Messages System
+ * bugfix: Rendering no more stalls on level restart
+ * bugfix: Messages System (also for multiplayer)
  * bugfix: Multiplayer: Screen Shadow
  * bugfix: Multiplayer: Minimap
  * bugfix: Multiplayer: Time Panel & Game Status
  * bugfix: Multiplayer: Death Sound for all Players
+ * bugfix: libode compatibility
+ * bugfix: edge rendering order improved
+ * bugfix: better Quickstart behaviour
+ * graphics: Death Zones, Teleport Zones and Particles rendered in low level gfx modes
+ * graphics: modes toggle by using F10
+ * graphics: 3 graphics modes now: Contrast mode, light graphics, full graphics
+ * graphics: animated textures
+ * Checkpoints implementation
+ * audio: new music foxrun
+ * new level pack: Whatshisname Cup
+ * control options: separate tabs for players
+ * munin plugin
+ 
 
 
 X-Moto 0.5.2 2009-09-02
