@@ -169,6 +169,7 @@ public:
 
   /* player */
   void setPlayerPosition(int i_player, float x,float y,bool bFaceRight);
+  void setPlayerAngle(int i_player, float i_angle);
   const Vector2f &getPlayerPosition(int i_player);
   DriveDir getPlayerFaceDir(int i_player);
   void setDeathAnim(bool b) {m_bDeathAnimEnabled=b;}

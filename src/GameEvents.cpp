@@ -166,6 +166,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       v_event = new MGE_PlayMusic(v_eventTime);
     } else if(MGE_StopMusic::SgetType() == v_eventType) {
       v_event = new MGE_StopMusic(v_eventTime);
+    } else if(MGE_SetPlayerAngle::SgetType() == v_eventType) {
+      v_event = new MGE_SetPlayerAngle(v_eventTime);
 
     } else {
       std::ostringstream error_type;
@@ -2294,3 +2296,45 @@ MGE_PlaySound::MGE_PlaySound(int p_eventTime, std::string p_name, float p_volume
   std::string MGE_StopMusic::toString() {
     return "Music stopped";
   };
+
+  //////////////////////////////
+  
+  MGE_SetPlayerAngle::MGE_SetPlayerAngle(int p_eventTime) : SceneEvent(p_eventTime) {
+    m_angle = 0;
+    m_player = 1;
+  }
+  
+  MGE_SetPlayerAngle::MGE_SetPlayerAngle(int p_eventTime, int i_player, float i_angle)
+  : SceneEvent(p_eventTime) {
+    m_angle  = i_angle;
+    m_player = i_player;
+  }
+  
+  MGE_SetPlayerAngle::~MGE_SetPlayerAngle() {
+  }
+
+  void MGE_SetPlayerAngle::doAction(Scene *p_pScene) {
+    p_pScene->setPlayerAngle(m_player, m_angle);
+  }
+  
+  void MGE_SetPlayerAngle::serialize(DBuffer &Buffer) {
+     Buffer << m_angle;
+     Buffer << m_player;
+  }
+  
+  void MGE_SetPlayerAngle::unserialize(DBuffer &Buffer) {
+    Buffer << m_angle;
+    Buffer << m_player;
+  }
+  
+  GameEventType MGE_SetPlayerAngle::SgetType() {
+    return GAME_EVENT_SETPLAYERANGLE;
+  }
+  
+  GameEventType MGE_SetPlayerAngle::getType() {
+    return SgetType();
+  }
+
+  std::string MGE_SetPlayerAngle::toString() {
+    return "Set angle of player " + m_player;
+  }

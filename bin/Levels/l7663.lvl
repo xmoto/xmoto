@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="fjompencrazyblocks" rversion="0.5.1">
+<level id="fjompencrazyblocks" rversion="0.5.3">
 	<info>
 		<name>FjompeN - Crazy Block</name>
 		<description>Made by FjompeN^</description>
@@ -16,7 +16,13 @@
 	</layeroffsets>
 	<limits left="-32.336755" right="32.336755" top="6.394938" bottom="-6.394938"/>
 	<script>
+cp00 = {}
+cp01 = {}
 vikingvisited = 0
+cp00used = 0
+cp01used = 0
+st1touched = 0
+st2touched = 0
 z1 = {}
 z2 = {}
 st1 = {}
@@ -30,27 +36,31 @@ Game.Message("You have to pass the moving blocks 3 times.")
 Game.Message("When u passed them 3 times, u are a winner! Godluck!")
 end
 
+function blocksinit()
+	Game.SetBlockCenter("b1", -32.33675550, -10.96806300);
+	Game.SetBlockCenter("b2", -32.33675500, -10.96790500);
+	Game.SetBlockCenter("b3", -32.33675450, -11.00361550);
+	Game.SetBlockCenter("b4", -32.33675550, -11.00063200);
+	Game.SetBlockCenter("b5", -32.33675500, -11.03634250);
+	Game.SetBlockCenter("b6", -32.33675500, -11.03618500);
+	bx1,by1=Game.GetBlockPos("b1")
+	bx2,by2=Game.GetBlockPos("b2")
+	bx3,by3=Game.GetBlockPos("b3")
+	bx4,by4=Game.GetBlockPos("b4")
+	bx5,by5=Game.GetBlockPos("b5")
+	bx6,by6=Game.GetBlockPos("b6")
+	Game.SetDynamicBlockSelfRotation("b1", 1500, 0, 0)
+	Game.SetDynamicBlockSelfRotation("b2", -1500, 0, 0)
+	Game.SetDynamicBlockSelfRotation("b3", 1500, 0, 0)
+	Game.SetDynamicBlockSelfRotation("b4", -1500, 0, 0)
+	Game.SetDynamicBlockSelfRotation("b5", 1500, 0, 0)
+	Game.SetDynamicBlockSelfRotation("b6", -1500, 0, 0)
+end
+
 function z2.OnEnter()
 	if (vikingvisited == 0) then
 		Game.Message("Welcome! Go to left for information!")
-		Game.SetBlockCenter("b1", -32.33675550, -10.96806300);
-		Game.SetBlockCenter("b2", -32.33675500, -10.96790500);
-		Game.SetBlockCenter("b3", -32.33675450, -11.00361550);
-		Game.SetBlockCenter("b4", -32.33675550, -11.00063200);
-		Game.SetBlockCenter("b5", -32.33675500, -11.03634250);
-		Game.SetBlockCenter("b6", -32.33675500, -11.03618500);
-		bx1,by1=Game.GetBlockPos("b1")
-		bx2,by2=Game.GetBlockPos("b2")
-		bx3,by3=Game.GetBlockPos("b3")
-		bx4,by4=Game.GetBlockPos("b4")
-		bx5,by5=Game.GetBlockPos("b5")
-		bx6,by6=Game.GetBlockPos("b6")
-		Game.SetDynamicBlockSelfRotation("b1", 1500, 0, 0)
-		Game.SetDynamicBlockSelfRotation("b2", -1500, 0, 0)
-		Game.SetDynamicBlockSelfRotation("b3", 1500, 0, 0)
-		Game.SetDynamicBlockSelfRotation("b4", -1500, 0, 0)
-		Game.SetDynamicBlockSelfRotation("b5", 1500, 0, 0)
-		Game.SetDynamicBlockSelfRotation("b6", -1500, 0, 0)
+		blocksinit()
 		vikingvisited = 1
 	end
 end
@@ -85,17 +95,36 @@ function st1.Touch()
 	Game.SetDynamicBlockTranslation("b5", 0,-3,500,250,0)
 	Game.SetDynamicBlockTranslation("b6", 0,3,500,250,0)
 	Game.SetDynamicEntityTranslation("st2", -3,-3,500,250,0)
+	st1touched = 1
 end
 
 function st2.Touch()
-	Game.SetDynamicEntityTranslation("flo", -3,-3,500,250,0)
-	Game.SetDynamicBlockSelfRotation("b1", -1500, 0, 0)
-	Game.SetDynamicBlockSelfRotation("b2", 1500, 0, 0)
-	Game.SetDynamicBlockSelfRotation("b3", -1500, 0, 0)
-	Game.SetDynamicBlockSelfRotation("b4", 1500, 0, 0)
-	Game.SetDynamicBlockSelfRotation("b5", -1500, 0, 0)
-	Game.SetDynamicBlockSelfRotation("b6", 1500, 0, 0)
+	if(st2touched == 0) then
+		Game.SetDynamicEntityTranslation("flo", -3,-3,500,250,0)
+		Game.SetDynamicBlockSelfRotation("b1", -1500, 0, 0)
+		Game.SetDynamicBlockSelfRotation("b2", 1500, 0, 0)
+		Game.SetDynamicBlockSelfRotation("b3", -1500, 0, 0)
+		Game.SetDynamicBlockSelfRotation("b4", 1500, 0, 0)
+		Game.SetDynamicBlockSelfRotation("b5", -1500, 0, 0)
+		Game.SetDynamicBlockSelfRotation("b6", 1500, 0, 0)
+	end
+	st2touched = 1
 end
+
+function cp00.OnUse()
+	if (cp01used == 0 and cp00used == 0 and st1touched == 1) then
+		st1.Touch()
+	end
+	cp00used = 1
+end
+
+function cp01.OnUse()
+	if (cp00used == 1 and cp01used == 0 and st2touched == 0) then
+		cp01used = 1
+		st2.Touch()
+	end
+end
+
 	</script>
 	<block id="rect5352">
 		<position y="-2.40566756179" x="-2.98910698907" islayer="true" layerid="0"/>

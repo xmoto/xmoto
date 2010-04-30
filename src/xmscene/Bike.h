@@ -156,6 +156,7 @@ class Biker {
   virtual float getBikeLinearVel() = 0; /* bike linear velocity */
   virtual float getTorsoVelocity() = 0; /* Torso Velocity, to determine corpse move (e.g. for death menu popup) */
   virtual double getAngle() = 0; /* biker angle */
+  void setAngle(float i_angle);
   virtual std::string getVeryQuickDescription() const = 0;
   virtual std::string getQuickDescription() const = 0;
   virtual std::string getDescription() const = 0;
