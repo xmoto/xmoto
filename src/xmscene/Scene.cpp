@@ -142,12 +142,6 @@ void Scene::cleanPlayers() {
       m_players[i_player]->initToPosition(Vector2f(x,y), bFaceRight?DD_RIGHT:DD_LEFT, m_PhysGravity);
     }
   }
- 
-  void Scene::setPlayerAngle(int i_player, float i_angle) {
-    if(m_players[i_player]->isDead() == false) {
-      m_players[i_player]->setAngle(i_angle);
-    }
-  }
   
   const Vector2f &Scene::getPlayerPosition(int i_player) {
     return m_players[i_player]->getState()->CenterP;

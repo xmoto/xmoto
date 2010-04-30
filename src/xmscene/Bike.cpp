@@ -439,14 +439,6 @@ BikerTheme* Biker::getBikeTheme() {
   return m_bikerTheme;
 }
 
-void Biker::setAngle(float i_angle) {
-  m_bikeState->fFrameRot[0]= 3.14;
-  m_bikeState->fFrontWheelRot[0]= 3.14;
-  m_bikeState->fRearWheelRot[0]= 3.14;
-  
-  LogInfo("hat beschannn");
-}
-
   /*===========================================================================
     Game state interpolation for smoother replays 
     ===========================================================================*/

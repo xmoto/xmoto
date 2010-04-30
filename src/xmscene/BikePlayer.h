@@ -51,7 +51,6 @@ class PlayerLocalBiker : public Biker {
   void updateToTime(int i_time, int i_timeStep,
 		    CollisionSystem *i_collisionSystem, Vector2f i_gravity, Scene *i_motogame);
   void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
-//  void setAngle(float i_angle);
 
   std::string getVeryQuickDescription() const;
   std::string getQuickDescription() const;

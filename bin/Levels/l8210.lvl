@@ -5003,4 +5003,8 @@ end
 		<vertex x="-37.134424" y="17.931248"/>
 		<vertex x="-36.740516" y="17.958231"/>
 	</block>
+	<entity id="cp00" typeid="Checkpoint">
+		<position y="2.75" x="28.00" angle="2.50"/>
+		<size r="0.4"/>
+	</entity>
 </level>

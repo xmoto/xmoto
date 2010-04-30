@@ -76,8 +76,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /*           = 40, */
     GAME_EVENT_SETPHYSICSBLOCKSELFROTATION  = 41,
     GAME_EVENT_SETPHYSICSBLOCKTRANSLATION   = 42,
-    GAME_EVENT_CAMERASETPOS                 = 43,
-    GAME_EVENT_SETPLAYERANGLE               = 44
+		GAME_EVENT_CAMERASETPOS                 = 43
   };
 
 class SceneEvent;
@@ -978,24 +977,4 @@ class MGE_StopMusic : public SceneEvent {
    std::string toString();                                                                                       
 		                                                                                                                       
 };                                
-
-class MGE_SetPlayerAngle : public SceneEvent {
- public:
-  MGE_SetPlayerAngle(int p_eventTime);
-  MGE_SetPlayerAngle(int p_eventTime, int i_player, float i_angle);
-  ~MGE_SetPlayerAngle();
-
-  void doAction(Scene *p_pScene);
-  void serialize(DBuffer &Buffer);
-  void unserialize(DBuffer &Buffer);
-  static GameEventType SgetType();
-  GameEventType getType();
-
-  std::string toString();
-
- private:
-  float m_angle;
-  int m_player;
-};  
-
 #endif /* __MOTOGAMEEVENT_H__ */
