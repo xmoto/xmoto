@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2010-04-14 02:12+0200\n"
-"PO-Revision-Date: 2009-07-02 15:45+0100\n"
+"PO-Revision-Date: 2010-04-16 18:26+0100\n"
 "Last-Translator: Zoltán Balogh <ttapecs@gmail.com>\n"
 "Language-Team: X-moto\n"
 "MIME-Version: 1.0\n"
@@ -64,11 +64,13 @@ msgstr "Hozzáadás a feketelistához"
 msgid "Action"
 msgstr "Akció"
 
-#: src/GameText.h:47 src/GameText.h:52
+#: src/GameText.h:47
+#: src/GameText.h:52
 msgid "All (on this computer)"
 msgstr "Mind (ezen a számítógépen)"
 
-#: src/GameText.h:48 src/GameText.h:763
+#: src/GameText.h:48
+#: src/GameText.h:763
 msgid "All levels"
 msgstr "Minden pálya"
 
@@ -112,7 +114,7 @@ msgstr "Kamerafüggő Közelítés"
 
 #: src/GameText.h:60
 msgid "Use Trail Cam"
-msgstr ""
+msgstr "Nyomkamera Használata"
 
 #: src/GameText.h:61
 msgid "Beating mode"
@@ -206,7 +208,8 @@ msgstr "Joystick beállítása..."
 msgid "Controls"
 msgstr "Irányítás"
 
-#: src/GameText.h:83 src/GameText.h:255
+#: src/GameText.h:83
+#: src/GameText.h:255
 msgid "General"
 msgstr "Általános"
 
@@ -242,7 +245,8 @@ msgstr "bal meta"
 msgid "right meta"
 msgstr "jobb meta"
 
-#: src/GameText.h:93 src/GameText.h:107
+#: src/GameText.h:93
+#: src/GameText.h:107
 #, c-format
 msgid "button %i"
 msgstr "gomb %i"
@@ -329,11 +333,11 @@ msgstr "Grafika"
 
 #: src/GameText.h:134
 msgid "Music"
-msgstr ""
+msgstr "Zene"
 
 #: src/GameText.h:139
 msgid "Sound Effects"
-msgstr ""
+msgstr "Hanghatások"
 
 #: src/GameText.h:143
 msgid "MacOS X Support"
@@ -357,7 +361,7 @@ msgstr "Norvég"
 
 #: src/GameText.h:150
 msgid "English"
-msgstr ""
+msgstr "Angol"
 
 #: src/GameText.h:151
 msgid "German"
@@ -421,19 +425,19 @@ msgstr "Török"
 
 #: src/GameText.h:164
 msgid "Hungarian"
-msgstr ""
+msgstr "Magyar"
 
 #: src/GameText.h:165
 msgid "Portugese"
-msgstr ""
+msgstr "Portugál"
 
 #: src/GameText.h:166
 msgid "Dutch"
-msgstr ""
+msgstr "Holland"
 
 #: src/GameText.h:167
 msgid "Taiwanese"
-msgstr ""
+msgstr "Tajvani"
 
 #: src/GameText.h:169
 msgid "Main testers"
@@ -497,7 +501,7 @@ msgstr "Játékos"
 
 #: src/GameText.h:190
 msgid "Play music on all levels"
-msgstr "Zene játszása minden pályán"
+msgstr "Zene Minden Pályán"
 
 #: src/GameText.h:191
 msgid "Date"
@@ -508,28 +512,12 @@ msgid "Difficulty"
 msgstr "Nehézség"
 
 #: src/GameText.h:193
-msgid ""
-"X-Moto uses a database on your computer to save all your scores and "
-"statistics. You can send these data using your web account on the X-Moto "
-"server. It is useful to save your data or if you play X-Moto from different "
-"places."
-msgstr ""
-"Az X-Moto adatbázisba menti az eredményeidet és statisztikáidat ezen a "
-"számítógépen. Elküldheted ezeket az adatokat az X-Moto szerverre a a "
-"felhasználói fiókod segítségével. Ez akkor lehet hasznos ha el akarod "
-"menteni az adataid vagy ha több gépről játszol."
+msgid "X-Moto uses a database on your computer to save all your scores and statistics. You can send these data using your web account on the X-Moto server. It is useful to save your data or if you play X-Moto from different places."
+msgstr "Az X-Moto adatbázisba menti az eredményeidet és statisztikáidat ezen a számítógépen. Elküldheted ezeket az adatokat az X-Moto szerverre a a felhasználói fiókod segítségével. Ez akkor lehet hasznos ha el akarod menteni az adataid vagy ha több gépről játszol."
 
 #: src/GameText.h:194
-msgid ""
-"If you manually copied the X-Moto user files (.xmoto) on some other "
-"computers, you should not use this functionality otherwise your statistics "
-"will be duplicated/not synchronized. If you did that, you should remove the "
-"copies you did."
-msgstr ""
-"Ha kézzel másoltad fel az X-Moto felhasználói fájlokat (.xmoto), akkor nem "
-"kellene használnod ezt a funkciót, mert a statisztikáid megduplázódnak vagy "
-"nem lesznek szinkronizálva. Ha ezt tetted, akkor el kellene távolítanod a "
-"másolataidat."
+msgid "If you manually copied the X-Moto user files (.xmoto) on some other computers, you should not use this functionality otherwise your statistics will be duplicated/not synchronized. If you did that, you should remove the copies you did."
+msgstr "Ha kézzel másoltad fel az X-Moto felhasználói fájlokat (.xmoto), akkor nem kellene használnod ezt a funkciót, mert a statisztikáid megduplázódnak vagy nem lesznek szinkronizálva. Ha ezt tetted, akkor el kellene távolítanod a másolataidat."
 
 #: src/GameText.h:195
 msgid "Synchronise"
@@ -567,7 +555,8 @@ msgstr "Tényleg törölni akarod a játékost?"
 msgid "Do you really want to delete replay?"
 msgstr "Tényleg törölni akarod a visszajátszást?"
 
-#: src/GameText.h:204 src/GameText.h:207
+#: src/GameText.h:204
+#: src/GameText.h:207
 msgid "Delete"
 msgstr "Törlés"
 
@@ -653,7 +642,7 @@ msgstr "Gáz"
 
 #: src/GameText.h:224
 msgid "Enable Audio"
-msgstr "Hang engedélyezése"
+msgstr "Hang Engedélyezése"
 
 #: src/GameText.h:225
 msgid "Check new levels at startup"
@@ -799,19 +788,23 @@ msgstr "A legjobb időd"
 msgid "Type"
 msgstr "Típus"
 
-#: src/GameText.h:261 src/GameText.h:703
+#: src/GameText.h:261
+#: src/GameText.h:703
 msgid "The highscore of the reference room"
 msgstr "Az alapértelmezett szoba legjobb eredménye"
 
-#: src/GameText.h:262 src/GameText.h:704
+#: src/GameText.h:262
+#: src/GameText.h:704
 msgid "The highscore of the other rooms"
 msgstr "Más szobák legjobb eredménye"
 
-#: src/GameText.h:263 src/GameText.h:701
+#: src/GameText.h:263
+#: src/GameText.h:701
 msgid "The best of my replays (on this computer)"
 msgstr "A legjobb visszajátszásod (ezen a számítógépen)"
 
-#: src/GameText.h:264 src/GameText.h:702
+#: src/GameText.h:264
+#: src/GameText.h:702
 msgid "The best of the replays (on this computer)"
 msgstr "A legjobb visszajátszás (ezen a számítógépen)"
 
@@ -841,43 +834,54 @@ msgstr "Szellem"
 msgid "Help"
 msgstr "Súgó"
 
-#: src/GameText.h:273 src/GameText.h:293
+#: src/GameText.h:273
+#: src/GameText.h:293
 msgid "You control your bike using the keyboard"
 msgstr "Így irányítod a motorodat a billentyűzet segítségével"
 
-#: src/GameText.h:274 src/GameText.h:294
+#: src/GameText.h:274
+#: src/GameText.h:294
 msgid "Accelerates"
 msgstr "Gázt ad"
 
-#: src/GameText.h:275 src/GameText.h:295
+#: src/GameText.h:275
+#: src/GameText.h:295
 msgid "Brakes"
 msgstr "Fékez"
 
-#: src/GameText.h:276 src/GameText.h:296
+#: src/GameText.h:276
+#: src/GameText.h:296
 msgid "Rotates it counter-clockwise"
 msgstr "Óra járásával ellentétesen forgat"
 
-#: src/GameText.h:277 src/GameText.h:297
+#: src/GameText.h:277
+#: src/GameText.h:297
 msgid "Rotates it clockwise"
 msgstr "Óra járásával megegyezően forgat"
 
-#: src/GameText.h:278 src/GameText.h:298
+#: src/GameText.h:278
+#: src/GameText.h:298
 msgid "Turns around and drives in the other direction"
 msgstr "Megfordulás és vezetés a másik irányba"
 
-#: src/GameText.h:279 src/GameText.h:300 src/GameText.h:417
+#: src/GameText.h:279
+#: src/GameText.h:300
+#: src/GameText.h:417
 msgid "Pause"
 msgstr "Szünet"
 
-#: src/GameText.h:280 src/GameText.h:301
+#: src/GameText.h:280
+#: src/GameText.h:301
 msgid "Restart the level"
 msgstr "Pálya újrakezdése"
 
-#: src/GameText.h:281 src/GameText.h:302
+#: src/GameText.h:281
+#: src/GameText.h:302
 msgid "Previous/Next level"
 msgstr "Előző/Következő pálya"
 
-#: src/GameText.h:283 src/GameText.h:314
+#: src/GameText.h:283
+#: src/GameText.h:314
 msgid "Enable/disable web"
 msgstr "Internethozzáférés engedélyezése/letiltása"
 
@@ -885,7 +889,8 @@ msgstr "Internethozzáférés engedélyezése/letiltása"
 msgid "Reload levels, themes and replays from directories"
 msgstr "Pályák, témák és visszajátszások újratöltése a könyvtárakból"
 
-#: src/GameText.h:285 src/GameText.h:318
+#: src/GameText.h:285
+#: src/GameText.h:318
 msgid "Take a screenshot"
 msgstr "Képernyőkép mentése"
 
@@ -933,17 +938,18 @@ msgstr "Beállítások menü megnyitása"
 
 #: src/GameText.h:307
 msgid "Toggle Ghost Trail Rendering"
-msgstr ""
+msgstr "Szellem nyom mutatásának be-/kikapcsolása"
 
 #: src/GameText.h:308
 msgid "Toggle Trail Cam"
-msgstr ""
+msgstr "Nyomkamera be-/kikapcsolása"
 
 #: src/GameText.h:309
 msgid "Show this help"
 msgstr "Súgó mutatása"
 
-#: src/GameText.h:310 src/GameText.h:647
+#: src/GameText.h:310
+#: src/GameText.h:647
 msgid "Show the ghost if possible in the game"
 msgstr "Szellem mutatása a játékban ha lehetséges"
 
@@ -953,23 +959,24 @@ msgstr "Hozzáadás/eltávolítás a kedvencekhez"
 
 #: src/GameText.h:312
 msgid "Toggle Ghost Trail Tracking Shot"
-msgstr ""
+msgstr "Szellem nyomvonal követés be-/kikapcsolása"
 
 #: src/GameText.h:313
 msgid "Enable/disable FPS display"
 msgstr "FPS kijelzés engedélyezése/letiltása"
 
-#: src/GameText.h:315 src/GameText.h:471
+#: src/GameText.h:315
+#: src/GameText.h:471
 msgid "Enable/disable ugly mode"
 msgstr "Ronda mód engedélyezése/letiltása"
 
 #: src/GameText.h:316
 msgid "Toggle Contrast, Light and Full Graphics"
-msgstr ""
+msgstr "kontraszt, egyszerű és teljes grafikus mód közti váltás"
 
 #: src/GameText.h:317
 msgid "Toggle theme and ugly over mode"
-msgstr ""
+msgstr "Téma és felülronda mód közti váltás"
 
 #: src/GameText.h:320
 msgid "Hide ghosts"
@@ -1018,7 +1025,7 @@ msgstr "Nyomj ENTER-t az újrakezdéshez"
 
 #: src/GameText.h:331
 msgid "Press BACKSPACE to return to Checkpoint"
-msgstr ""
+msgstr "Nyomj BACKSPACE-t az előző Ellenörzőponthoz"
 
 #: src/GameText.h:332
 msgid "Press ESC to display the menu"
@@ -1108,7 +1115,7 @@ msgstr "Pályák betöltése..."
 
 #: src/GameText.h:353
 msgid "Loading menu graphics..."
-msgstr "Menü grafikák betöltése..."
+msgstr "Menü grafika betöltése..."
 
 #: src/GameText.h:354
 msgid "Loading replays..."
@@ -1138,7 +1145,8 @@ msgstr "Fő"
 msgid "Mouse"
 msgstr "Egér"
 
-#: src/GameText.h:361 src/GameText.h:474
+#: src/GameText.h:361
+#: src/GameText.h:474
 msgid "Theme"
 msgstr "Téma"
 
@@ -1148,19 +1156,19 @@ msgstr "Közepes"
 
 #: src/GameText.h:364
 msgid "Menu Graphics"
-msgstr "Menü Grafikák"
+msgstr "Menü Grafika"
 
 #: src/GameText.h:365
 msgid "Contrast"
-msgstr ""
+msgstr "Kontraszt"
 
 #: src/GameText.h:366
 msgid "Light"
-msgstr ""
+msgstr "Egyszerű"
 
 #: src/GameText.h:367
 msgid "Full"
-msgstr ""
+msgstr "Teljes"
 
 #: src/GameText.h:368
 msgid "Total time you scored / total highscore time for levels you finished"
@@ -1275,7 +1283,7 @@ msgid ""
 msgstr ""
 "Fontos!\n"
 "\n"
-"Ez egy fejlesztési változata az X-Motonak!\n"
+"Ez egy fejlesztői változata az X-Motonak!\n"
 "Minden visszajelzést szívesen fogadunk, hogy\n"
 "jobb legyen a játék.\n"
 "Hibákat, ötleteket, hozzászólásokat, új igényeket, gyűlölködő\n"
@@ -1316,7 +1324,8 @@ msgstr "Készítő alapján"
 msgid "Medals"
 msgstr "Érmék"
 
-#: src/GameText.h:410 src/GameText.h:451
+#: src/GameText.h:410
+#: src/GameText.h:451
 msgid "Room"
 msgstr "Szoba"
 
@@ -1332,11 +1341,13 @@ msgstr "Alapcsomagok"
 msgid "Web votes"
 msgstr "Internetes szavazások"
 
-#: src/GameText.h:414 src/GameText.h:463
+#: src/GameText.h:414
+#: src/GameText.h:463
 msgid "Statistics"
 msgstr "Statisztika"
 
-#: src/GameText.h:415 src/GameText.h:773
+#: src/GameText.h:415
+#: src/GameText.h:773
 msgid "By best driver"
 msgstr "Legjobb játékosok alapján"
 
@@ -1348,7 +1359,8 @@ msgstr "Hossz alapján"
 msgid "Password"
 msgstr "Jelszó"
 
-#: src/GameText.h:419 src/GameText.h:420
+#: src/GameText.h:419
+#: src/GameText.h:420
 msgid "Personal"
 msgstr "Saját"
 
@@ -1371,7 +1383,8 @@ msgstr "Játékos profilok"
 msgid "Play Next Level"
 msgstr "Következő pálya"
 
-#: src/GameText.h:425 src/GameText.h:535
+#: src/GameText.h:425
+#: src/GameText.h:535
 msgid "Port"
 msgstr "Port"
 
@@ -1402,6 +1415,8 @@ msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
 msgstr ""
+"Sajnos, nincs elég megfelelő pálya.\n"
+"Véletlen pályaválasztás"
 
 #: src/GameText.h:432
 msgid "Quick start"
@@ -1443,8 +1458,8 @@ msgid ""
 " Speed:"
 msgstr ""
 "  Megállít:\n"
-"    >>\n"
-"   < >\n"
+"         >>\n"
+"        < >\n"
 " Sebesség:"
 
 #: src/GameText.h:441
@@ -1465,8 +1480,8 @@ msgid ""
 " Speed:"
 msgstr ""
 "  Megállít:\n"
-"<< >>\n"
-"   < >\n"
+"     << >>\n"
+"        < >\n"
 " Sebesség:"
 
 #: src/GameText.h:443
@@ -1580,7 +1595,7 @@ msgstr "Sikeres szinkronizálás"
 #: src/GameText.h:470
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
-msgstr ""
+msgstr "'%s' billentyű játékos '%i'-nél '%s' billentyűre cserélve"
 
 #: src/GameText.h:472
 msgid "Add/remove to favorite levels"
@@ -1673,10 +1688,8 @@ msgid "Upload all highscores"
 msgstr "Legjobb idők feltöltése"
 
 #: src/GameText.h:494
-msgid ""
-"An unexpected error has occurred. There may be some problems with the web "
-"site."
-msgstr "Egy váratlan hiba lépett fel. Talán valami baj van a weboldallal."
+msgid "An unexpected error has occurred. There may be some problems with the web site."
+msgstr "Egy váratlan hiba lépett fel. Talán valami baj van a honlappal."
 
 #: src/GameText.h:495
 msgid "Oh no !"
@@ -2040,11 +2053,11 @@ msgstr "Irányítási beállítások"
 
 #: src/GameText.h:592
 msgid "Configure controls of Player"
-msgstr ""
+msgstr "Irányítási beállítások, játékos"
 
 #: src/GameText.h:593
 msgid "Configure general controls"
-msgstr ""
+msgstr "Általános irányítási beállítások"
 
 #: src/GameText.h:594
 msgid "Save options"
@@ -2072,8 +2085,7 @@ msgstr "A silány pályacsomag frissítése az Internetes információk alapján
 
 #: src/GameText.h:600
 msgid "Allow X-Moto to ask you your mind about levels"
-msgstr ""
-"X-Moto engedése, hogy megkérdezze a véleményed a pályákkal kapcsolatban"
+msgstr "A véleményed megkérdezésének engedélyezése a pályákkal kapcsolatban"
 
 #: src/GameText.h:601
 msgid "Enable high-color graphics"
@@ -2109,8 +2121,7 @@ msgstr "Minden grafika letiltása, ami nem szükséges a játékhoz"
 
 #: src/GameText.h:609
 msgid "Disable some of the most resource-intensive graphics, like particles"
-msgstr ""
-"Néhány nagyobb erőforrásigényű grafika letiltása, mint például a porszemek"
+msgstr "Néhány nagyobb erőforrásigényű grafika letiltása, mint például a porszemek"
 
 #: src/GameText.h:610
 msgid "Enable all graphical effects"
@@ -2221,8 +2232,7 @@ msgid "Show helpful help strings such as this one"
 msgstr "Hasznos feliratok mutatása, mint ez is"
 
 #: src/GameText.h:637
-msgid ""
-"Let X-Moto look for more levels on the net, and install them automatically"
+msgid "Let X-Moto look for more levels on the net, and install them automatically"
 msgstr "Új pályák keresése az Interneten és automatikus telepítésük"
 
 #: src/GameText.h:638
@@ -2262,8 +2272,7 @@ msgid "Choose which ghost to display"
 msgstr "Szellem kiválasztása"
 
 #: src/GameText.h:649
-msgid ""
-"Make motion blur effect for the ghost (if supported by your graphics card)"
+msgid "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr "Motion blur hatás rakása a szellemre (ha támogatja a videókártya)"
 
 #: src/GameText.h:650
@@ -2280,8 +2289,7 @@ msgstr "Időkülönbség mutatása közted és a szellem közt"
 
 #: src/GameText.h:653
 msgid "If you make a highscore it will automatically be saved as a replay"
-msgstr ""
-"A visszajátszás automatikusan el lesz mentve ha legjobb eredményt csinálsz "
+msgstr "A visszajátszás automatikusan el lesz mentve ha legjobb eredményt csinálsz "
 
 #: src/GameText.h:654
 msgid "View the replay of the room's highscore"
@@ -2329,9 +2337,7 @@ msgstr "Visszajátszás feltöltése a legjobb eredmények oldalra"
 
 #: src/GameText.h:668
 msgid "Upload your best replays to your room (useful when it is just created)"
-msgstr ""
-"A legjobb visszajátszásaid feltöltése a szobádba (hasznos ha nemrég lett "
-"készítve)"
+msgstr "A legjobb visszajátszásaid feltöltése a szobádba (hasznos ha nemrég lett készítve)"
 
 #: src/GameText.h:669
 msgid "Configure the main www options"
@@ -2342,12 +2348,8 @@ msgid "Configure the www options"
 msgstr "Internet beállítások"
 
 #: src/GameText.h:671
-msgid ""
-"Choose where to upload/download replays, highscore lists (for more "
-"information, check the website)"
-msgstr ""
-"Válaszd ki a viszajátszások feltöltésének/letöltésének és a legjobb "
-"eredményeknek a helyét (további információért nézd meg a weboldalt)"
+msgid "Choose where to upload/download replays, highscore lists (for more information, check the website)"
+msgstr "Válaszd ki a viszajátszások feltöltésének/letöltésének és a legjobb eredményeknek a helyét (további információért nézd meg a honlapot)"
 
 #: src/GameText.h:672
 msgid "Choose your room"
@@ -2383,7 +2385,7 @@ msgstr "Dinamikus közelítés játék közben"
 
 #: src/GameText.h:680
 msgid "Use a camera that directs to the shortest path through the level"
-msgstr ""
+msgstr "A pályán keresztülvezető legrövidebb utat mutató kamera használata"
 
 #: src/GameText.h:681
 msgid "View the X-Moto credits"
@@ -2462,12 +2464,8 @@ msgid "Increase or decrease the difficulty of the levels selected"
 msgstr "A pályák nehézségének növelése vagy csökkentése"
 
 #: src/GameText.h:700
-msgid ""
-"Stop the game once a player ends the level or continue while a player is "
-"running"
-msgstr ""
-"Pálya befejezése ha az egyik játékos végigér vagy pálya folytatása addig, "
-"amíg mindenki be nem fejez"
+msgid "Stop the game once a player ends the level or continue while a player is running"
+msgstr "Pálya befejezése ha az egyik játékos végigér vagy pálya folytatása addig, amíg mindenki be nem fejez"
 
 #: src/GameText.h:705
 msgid "Don't show the ghosts while playing"
@@ -2491,8 +2489,7 @@ msgstr "Nyelv kódja"
 
 #: src/GameText.h:710
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
-msgstr ""
-"Azoknak a visszajátszásoknak a törlése, amik az X-Moto szerint feleslegesek"
+msgstr "Azoknak a visszajátszásoknak a törlése, amik az X-Moto szerint feleslegesek"
 
 #: src/GameText.h:711
 msgid "Remove levels not suitable for children"
@@ -2536,8 +2533,7 @@ msgstr "Joystickok engedélyezése"
 
 #: src/GameText.h:721
 msgid "Preselect the retry button when dying or finishing a level"
-msgstr ""
-"Újrakezdő gomb előzetes kiválasztása meghaláskor vagy a pálya befejezésekor"
+msgstr "Újrakezdő gomb előzetes kiválasztása meghaláskor vagy a pálya befejezésekor"
 
 #: src/GameText.h:723
 msgid "Give your mind about this level"
@@ -2668,10 +2664,8 @@ msgid "Connect/disconnect the client to the server"
 msgstr "Csatlakozás/lecsatlakozás a szerverről"
 
 #: src/GameText.h:757
-msgid ""
-"Enables background music for levels that do not have their own music track"
-msgstr ""
-"Háttérzene engedélyezése azokra a pályákra amelyeknek nincs saját zeneszámuk"
+msgid "Enables background music for levels that do not have their own music track"
+msgstr "Háttérzene engedélyezése azokra a pályákra amelyeknek nincs saját zeneszámuk"
 
 #: src/GameText.h:758
 msgid "Network playing mode : just see other players as ghosts"
@@ -2681,7 +2675,8 @@ msgstr "Hálózati játék mód: a többiek, csak mint szellemek látása"
 msgid "Levels with no highscore"
 msgstr "Pályák legjobb eredmény nélkül"
 
-#: src/GameText.h:761 src/GameText.h:796
+#: src/GameText.h:761
+#: src/GameText.h:796
 msgid "Levels you have not completed"
 msgstr "Pályák amiket még nem fejeztél be"
 
@@ -2803,7 +2798,7 @@ msgstr "Ellopott legjobb eredmények"
 
 #: src/GameText.h:793
 msgid "Vote unlocked levels"
-msgstr ""
+msgstr "Szavazás a szavazható pályákra"
 
 #: src/GameText.h:795
 msgid "Levels with no highscore in your room"
@@ -2890,13 +2885,11 @@ msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "A saját legjobb időd majdnem a szoba legjobbja (95%)"
 
 #: src/GameText.h:817
-msgid ""
-"Your personal highscore finish time is almost the room highscore (90%-95%)"
+msgid "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "A saját legjobb időd majdnem a szoba legjobbja (90%-95%)"
 
 #: src/GameText.h:818
-msgid ""
-"Your personal highscore finish time is almost the room highscore (80%-90%)"
+msgid "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "A saját legjobb időd majdnem a szoba legjobbja (80%-90%)"
 
 #: src/GameText.h:819
@@ -2943,11 +2936,11 @@ msgstr "Pályák, amiken a tied volt a legjobb eredmény"
 
 #: src/GameText.h:829
 msgid "Levels having votes unlocked"
-msgstr ""
+msgstr "Szavazható pályák"
 
 #: src/GameText.h:831
 msgid "Normal mode enabled"
-msgstr ""
+msgstr "Normál mód engedélyezve"
 
 #: src/GameText.h:832
 msgid "Ugly mode enabled"
@@ -2975,15 +2968,15 @@ msgstr "Felülronda mód letiltva"
 
 #: src/GameText.h:838
 msgid "Contrast Graphics Mode enabled"
-msgstr ""
+msgstr "Kontraszt grafikus mód engedélyezve"
 
 #: src/GameText.h:839
 msgid "Light Graphics Mode enabled"
-msgstr ""
+msgstr "Egyszerű grafikus mód engedélyezve"
 
 #: src/GameText.h:840
 msgid "Full Graphics Mode enabled"
-msgstr ""
+msgstr "Teljes grafikus mód engedélyezve"
 
 #: src/GameText.h:841
 msgid "Web connection enabled"
@@ -3019,27 +3012,27 @@ msgstr "Hang letiltva"
 
 #: src/GameText.h:849
 msgid "Trail Cam not available"
-msgstr ""
+msgstr "Nyomkamera nem elérhető"
 
 #: src/GameText.h:850
 msgid "Trail Cam activated"
-msgstr ""
+msgstr "Nyomkamera bekapcsolva"
 
 #: src/GameText.h:851
 msgid "Trail Cam deactivated"
-msgstr ""
+msgstr "Nyomkamera kikapcsolva"
 
 #: src/GameText.h:852
 msgid "Ghost Trail is not available"
-msgstr ""
+msgstr "Szellem nyomvonal nem elérhető"
 
 #: src/GameText.h:853
 msgid "Ghost Trail Rendering activated"
-msgstr ""
+msgstr "Szellem nyomvonal mutatása bekapcsolva"
 
 #: src/GameText.h:854
 msgid "Ghost Trail Rendering deactivated"
-msgstr ""
+msgstr "Szellem nyomvonal mutatása kikapcsolva"
 
 #: src/GameText.h:856
 msgid "No training positions stored"
@@ -3060,10 +3053,12 @@ msgid ""
 "This level is not recordable (feature still not implemented).\n"
 "Sorry."
 msgstr ""
+"Ezen a pályához nem lehet visszajátszást létrehozni(még mindig nem támogatott).\n"
+"Bocsi."
 
 #: src/GameText.h:860
 msgid "Restart Level to activate!"
-msgstr ""
+msgstr "Kezd újra a pályát az aktiváláshoz!"
 
 #: src/GameText.h:862
 #, c-format
@@ -3190,8 +3185,7 @@ msgstr "Vedd fel az epret azzal, hogy megérinted"
 
 #: src/LevelsText.h:43
 msgid "Touch it to finish the level. Good luck with the rest :)"
-msgstr ""
-"Érintsd meg ahhoz, hogy befejezd a pályát. Sok sikert a továbbiakban :)"
+msgstr "Érintsd meg ahhoz, hogy befejezd a pályát. Sok sikert a továbbiakban :)"
 
 #: src/LevelsText.h:44
 msgid "The first jump you're going to perform is very easy."
@@ -3234,7 +3228,8 @@ msgstr ""
 "Megint fegyorsulsz maximum sebességre, de éppen\n"
 "mielőtt elérnéd a peremet, húzd fel a motor első kerekét."
 
-#: src/LevelsText.h:50 src/LevelsText.h:63
+#: src/LevelsText.h:50
+#: src/LevelsText.h:63
 msgid ""
 "That will cause the rear suspension to increase the\n"
 "length of the jump.\n"
@@ -3360,18 +3355,6 @@ msgstr ""
 "Most az utolsó... Ez nem olyan hosszú, de helyette\n"
 "még kevesebb hely van a drága fejednek. Sok sikert! :)"
 
-#~ msgid "Key '%s' has been switched to '%s'"
-#~ msgstr "'%s' billentyű '%s' billentyűre cserélve"
-
 #~ msgid "Enable/disable theme mode"
 #~ msgstr "Témafigyelő mód engedélyezése/letiltása"
 
-#~ msgid "Enable/disable ugly over mode"
-#~ msgstr "Felülronda mód engedélyezése/letiltása"
-
-#~ msgid ""
-#~ "Physic levels recording is still not implemented.\n"
-#~ "Sorry."
-#~ msgstr ""
-#~ "A visszajátszás a fizikás pályákhoz még nincs támogatva.\n"
-#~ "Bocsi."
