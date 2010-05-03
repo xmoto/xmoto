@@ -142,6 +142,7 @@ void StateOptions::checkEvents() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setEnableDeadAnimation(v_button->getChecked()); 
+    SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:CAMERAACTIVEZOOM"));
@@ -172,6 +173,13 @@ void StateOptions::checkEvents() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setAutosaveHighscoreReplays(v_button->getChecked()); 
+  }
+  
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:SHOWANIMATIONS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(true);
+    XMSession::instance()->setDisableAnimations(v_button->getChecked()); 
+    SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
   }
 
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:THEME_TAB:LIST"));
@@ -476,6 +484,12 @@ void StateOptions::checkEvents() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setUseCrappyPack(v_button->getChecked());
+  }
+  
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:PERMANENTCONSOLE"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setPermanentConsole(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:ALLOWWEBFORMS"));
@@ -796,6 +810,13 @@ UIWindow* StateOptions::makeWindowOptions_general(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_AUTOSAVEREPLAYS);
+
+  v_button = new UIButton(v_window, 5, 153-10, GAMETEXT_SHOWANIMATIONS, (v_window->getPosition().nWidth-40)/2, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("SHOWANIMATIONS");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(50023);
+  v_button->setContextHelp(CONTEXTHELP_SHOWANIMATIONS);
 
   v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 33-10, GAMETEXT_INITZOOM,
 			  (v_window->getPosition().nWidth-40)/2, 28);
@@ -1250,6 +1271,12 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_button->setID("USECRAPPYINFORMATION");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_USECRAPPYINFORMATION);
+  
+  v_button = new UIButton(v_window, 5, 230, GAMETEXT_PERMANENTCONSOLE, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("PERMANENTCONSOLE");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_PERMANENTCONSOLE);
 
   v_button = new UIButton(v_window, v_window->getPosition().nWidth-225, v_window->getPosition().nHeight -57 - 20 -20,
 			  GAMETEXT_PROXYCONFIG, 207, 57);
@@ -1582,6 +1609,8 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->autosaveHighscoreReplays());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:BEATINGMODE"));
   v_button->setChecked(XMSession::instance()->beatingMode());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:SHOWANIMATIONS"));
+  v_button->setChecked(XMSession::instance()->disableAnimations());
 
   // video
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:16BPP"));
@@ -1646,6 +1675,8 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->showHighscoreInGame());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:USECRAPPYINFORMATION"));
   v_button->setChecked(XMSession::instance()->useCrappyPack());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:PERMANENTCONSOLE"));
+  v_button->setChecked(XMSession::instance()->permanentConsole());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:ALLOWWEBFORMS"));
   v_button->setChecked(XMSession::instance()->webForms());
 

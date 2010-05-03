@@ -69,6 +69,7 @@ void XMSession::setToDefault() {
   m_ghostStrategy_BESTOFREFROOM   = DEFAULT_GHOSTBESTREFROOM;
   m_ghostStrategy_BESTOFOTHERROOMS = DEFAULT_GHOSTBESTOTHERROOMS;
   m_autosaveHighscoreReplays      = DEFAULT_AUTOSAVEHIGHSCORESREPLAYS;
+  m_disableAnimations             = DEFAULT_DISABLEANIMATIONS;
   m_enableGhosts                  = DEFAULT_ENABLEGHOSTS;
   m_enableEngineSound             = DEFAULT_ENABLEENGINESOUND;
   m_showEngineCounter             = DEFAULT_SHOWENGINECOUNTER;
@@ -77,6 +78,7 @@ void XMSession::setToDefault() {
   m_enableMenuMusic               = DEFAULT_ENABLEMENUMUSIC;
   m_enableGameMusic               = DEFAULT_ENABLEGAMEMUSIC;
   m_enableDeadAnimation           = DEFAULT_ENABLEDEADANIMATION;
+  m_enablePermanentConsole        = DEFAULT_PERMANENTCONSOLE;
   m_menuGraphics                  = DEFAULT_MENUGRAPHICS;
   m_gameGraphics                  = DEFAULT_GAMEGRAPHICS;
   m_quickStartQualityMIN          = DEFAULT_QUICKSTARTQUALITYMIN;
@@ -324,7 +326,9 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_webConfAtInit                  = pDb->config_getBool   (i_id_profile, "WebConfAtInit"                 , m_webConfAtInit);
   m_useCrappyPack                  = pDb->config_getBool   (i_id_profile, "UseCrappyPack"                 , m_useCrappyPack);
   m_useChildrenCompliant           = pDb->config_getBool   (i_id_profile, "UseChildrenCompliant"          , m_useChildrenCompliant);
+  m_enablePermanentConsole         = pDb->config_getBool   (i_id_profile, "enablePermanentConsole"        , m_enablePermanentConsole);
   m_enableGhosts                   = pDb->config_getBool   (i_id_profile, "EnableGhost"                   , m_enableGhosts);
+  m_disableAnimations               = pDb->config_getBool   (i_id_profile, "disableAnimations"              , m_disableAnimations);
   m_ghostStrategy_MYBEST           = pDb->config_getBool   (i_id_profile, "GhostStrategy_MYBEST"          , m_ghostStrategy_MYBEST);
   m_ghostStrategy_THEBEST          = pDb->config_getBool   (i_id_profile, "GhostStrategy_THEBEST"         , m_ghostStrategy_THEBEST);
   m_ghostStrategy_BESTOFREFROOM    = pDb->config_getBool   (i_id_profile, "GhostStrategy_BESTOFREFROOM"   , m_ghostStrategy_BESTOFREFROOM);
@@ -453,6 +457,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "CameraActiveZoom"              , m_enableActiveZoom);
 	pDb->config_setBool   (m_profile, "CameraTrailCam"                , m_enableTrailCam);
 	pDb->config_setBool   (m_profile, "DeathAnim"                     , m_enableDeadAnimation);
+	pDb->config_setBool   (m_profile, "enablePermanentConsole"        , m_enablePermanentConsole);
 	pDb->config_setBool   (m_profile, "CheckNewLevelsAtStartup"       , m_checkNewLevelsAtStartup);
 	pDb->config_setBool   (m_profile, "CheckHighscoresAtStartup"      , m_checkNewHighscoresAtStartup);
 	pDb->config_setBool   (m_profile, "ShowInGameWorldRecord"         , m_showHighscoreInGame);
@@ -460,6 +465,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "UseCrappyPack"                 , m_useCrappyPack);
 	pDb->config_setBool   (m_profile, "UseChildrenCompliant"          , m_useChildrenCompliant);
 	pDb->config_setBool   (m_profile, "EnableGhost"           	    , m_enableGhosts);
+	pDb->config_setBool   (m_profile, "disableAnimations"       	    , m_disableAnimations);
 	pDb->config_setBool   (m_profile, "GhostStrategy_MYBEST"  	    , m_ghostStrategy_MYBEST);
 	pDb->config_setBool   (m_profile, "GhostStrategy_THEBEST" 	    , m_ghostStrategy_THEBEST);
 	pDb->config_setBool   (m_profile, "GhostStrategy_BESTOFREFROOM"   , m_ghostStrategy_BESTOFREFROOM);
@@ -706,6 +712,14 @@ void XMSession::setEnableGhosts(bool i_value) {
  
 bool XMSession::enableGhosts() const {
   return m_enableGhosts;
+}
+
+bool XMSession::disableAnimations() const {
+  return m_disableAnimations;
+}
+
+bool XMSession::permanentConsole() const {
+  return m_enablePermanentConsole;
 }
 
 void XMSession::setEnableEngineSound(bool i_value) {
@@ -1219,6 +1233,16 @@ void XMSession::setEnableJoysticks(bool i_value) {
 void XMSession::setBeatingMode(bool i_value) {
   PROPAGATE(XMSession,setBeatingMode,i_value,bool);
   m_beatingMode = i_value;
+}
+
+void XMSession::setDisableAnimations(bool i_value) {
+  PROPAGATE(XMSession,setDisableAnimations,i_value,bool);
+  m_disableAnimations = i_value;
+}
+
+void XMSession::setPermanentConsole(bool i_value) {
+  PROPAGATE(XMSession,setPermanentConsole,i_value,bool);
+  m_enablePermanentConsole = i_value;
 }
 
 bool XMSession::beatingMode() const {
