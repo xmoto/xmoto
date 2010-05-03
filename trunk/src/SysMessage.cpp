@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SysMessage.h"
 #include "drawlib/DrawLib.h"
 #include "Game.h"
+#include "net/NetClient.h"
 
 #define SYSMSG_DISPLAY_TIME 1.9
 #define SYSMSG_DISPLAY_DECREASE_TIME 0.75
@@ -117,8 +118,8 @@ void SysMessage::render() {
 
   v_fm = m_drawLib->getFontSmall();
 
-  if(m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME + SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME > v_time) {
-    if(m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME > v_time) {
+  if(m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME + SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME > v_time || XMSession::instance()->permanentConsole() && NetClient::instance()->isConnected()) {
+    if(m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME > v_time || XMSession::instance()->permanentConsole() && NetClient::instance()->isConnected()) {
       v_shadow = 255;
     } else {
       v_shadow = ((m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME + SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME - v_time)

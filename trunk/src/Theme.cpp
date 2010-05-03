@@ -179,8 +179,11 @@ bool Theme::isAFileOutOfDate(const std::string& i_file) {
 void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
   std::string v_spriteType;
   bool v_isAnimation;
+  bool v_enableAnimation;
   const char *pc;
   std::string v_sum;
+  
+  v_enableAnimation = XMSession::instance()->disableAnimations();
   
   for(TiXmlElement *pVarElem = p_ThemeXmlDataElement->FirstChildElement("sprite");
       pVarElem!=NULL;
@@ -223,7 +226,12 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
 				      THEME_TEXTURE_SPRITE_FILE_DIR,
 				      "Texture");
     }
-    else if(v_spriteType == "Texture" && v_isAnimation == true) {
+    else if(v_spriteType == "Texture" && v_isAnimation == true && v_enableAnimation == true) {
+      newSpriteFromXML<TextureSprite>(pVarElem,
+				      THEME_TEXTURE_SPRITE_FILE_DIR,
+				      "Texture");
+    }
+    else if(v_spriteType == "Texture" && v_isAnimation == true && v_enableAnimation == false) {
       newAnimationSpriteFromXML(pVarElem, true, THEME_TEXTURE_SPRITE_FILE_DIR);
     }
     else if(v_spriteType == "UI") {

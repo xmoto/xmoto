@@ -155,6 +155,8 @@ public:
   void setAutosaveHighscoreReplays(bool i_value);
   void setEnableGhosts(bool i_value);
   bool enableGhosts() const;
+  bool disableAnimations() const;
+  bool permanentConsole() const;
   void setEnableEngineSound(bool i_value);
   bool enableEngineSound() const;
   void setShowEngineCounter(bool i_value);
@@ -273,6 +275,8 @@ public:
   void setDbsynchronizeOnQuit(bool i_value);
   bool dbsynchronizeOnQuit() const;
   void setBeatingMode(bool i_value);
+  void setDisableAnimations(bool i_value);
+  void setPermanentConsole(bool i_value);
   bool beatingMode() const;
   void setWebForms(bool i_value);
   bool webForms() const;
@@ -337,6 +341,7 @@ public:
   bool m_uglyOver;
   bool m_testTheme;
   bool m_autosaveHighscoreReplays;
+  bool m_disableAnimations;
   bool m_ghostStrategy_MYBEST;
   bool m_ghostStrategy_THEBEST;
   bool m_ghostStrategy_BESTOFREFROOM;
@@ -355,6 +360,7 @@ public:
   bool m_renderGhostTrail;
   bool m_renderGhostTrailTS;
   bool m_enableDeadAnimation;
+  bool m_enablePermanentConsole;
   GraphicsLevel m_menuGraphics;
   GraphicsLevel m_gameGraphics;
   int m_quickStartQualityMIN;
