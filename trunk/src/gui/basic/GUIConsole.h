@@ -45,12 +45,14 @@ class UIConsole : public UIWindow {
   void giveAnswer(const std::string& i_line);
   void reset(const std::string& i_cmd = ""); /* command to run at startup */
   void execCommand(const std::string& i_action);
+  void addCompletionCommand(const std::string& i_cmd);
 
  private:
   UIConsoleHook* m_hook;
   int m_cursorChar;
   std::vector<std::string> m_lines;
   std::vector<std::string> m_history;
+  std::vector<std::string> console_commands;
   int m_history_n;
   std::string m_lastEdit;
   bool m_waitAnswer;
@@ -61,6 +63,7 @@ class UIConsole : public UIWindow {
   void addHistory(const std::string& i_action);
   void execLine(const std::string& i_line);
   bool execInternal(const std::string& i_action);
+  void completeCommand();
 };
 
 #endif
