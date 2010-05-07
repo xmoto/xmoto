@@ -35,12 +35,15 @@ UIConsoleHook::~UIConsoleHook() {
 
 UIConsole::UIConsole(UIWindow *pParent, int x, int y, std::string Caption, int nWidth, int nHeight) {
   initW(pParent, x , y, Caption, nWidth, nHeight);
-
   m_hook = NULL;
   reset();
 }      
 
 UIConsole::~UIConsole() {
+}
+
+void UIConsole::addCompletionCommand(const std::string& i_cmd) {
+  console_commands.push_back(i_cmd);
 }
 
 void UIConsole::setHook(UIConsoleHook* i_hook) {
@@ -203,6 +206,19 @@ bool UIConsole::keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char) {
     return true;
   }
 
+  if(nKey == SDLK_TAB) {
+    completeCommand();
+    return true;
+  }
+
+  if(nKey == SDLK_END) {
+    m_cursorChar = m_lines[m_lines.size() - 1].size();
+  }
+  
+  if(nKey == SDLK_HOME) {
+    m_cursorChar = utf8::utf8_length(UIC_PROMPT);
+  }
+  
   // add the key
   if(utf8::utf8_length(i_utf8Char) == 1) { // alt/... and special keys must not be kept
     if(m_cursorChar == (int) utf8::utf8_length(m_lines[m_lines.size()-1])) {
@@ -282,4 +298,26 @@ void UIConsole::execLine(const std::string& i_line) {
   m_lastEdit = UIC_PROMPT;
 
   execCommand(v_action);
+}
+
+void UIConsole::completeCommand() {
+  int pos_find = m_lines[m_lines.size() - 1].rfind(" ") + 1;
+  std::string last_word = m_lines[m_lines.size() - 1].substr(pos_find);
+  std::vector<std::string > found_list;
+  for (int i = 0, n = console_commands.size(); i < n; i++) {
+    if (console_commands[i].find(last_word) == 0) {
+      found_list.push_back(console_commands[i]);
+    }
+  }
+  if (found_list.size() > 1) {
+    std::string found_list_str;
+    for (int i = 0, n = found_list.size(); i < n; i++) {
+      found_list_str += found_list[i] + "  ";
+    }
+    addNewLine(found_list_str);
+    addNewLine(m_lines[m_lines.size() - 2]);
+  } else if (found_list.size() != 0) {
+    m_lines[m_lines.size()-1] += found_list[0].substr(last_word.size(), 1000);
+    m_cursorChar = m_lines[m_lines.size() - 1].size();
+  }
 }

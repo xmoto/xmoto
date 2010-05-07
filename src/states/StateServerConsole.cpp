@@ -95,6 +95,19 @@ void StateServerConsole::createGUIIfNeeded()
   m_console->setHook(this);
   m_console->setID("SRVCONSOLE");
   m_console->setFont(drawLib->getFontSmall());
+
+  m_console->addCompletionCommand("help");
+  m_console->addCompletionCommand("login");
+  m_console->addCompletionCommand("logout");
+  m_console->addCompletionCommand("changepassword");
+  m_console->addCompletionCommand("lsplayers");
+  m_console->addCompletionCommand("lsbans");
+  m_console->addCompletionCommand("ban");
+  m_console->addCompletionCommand("unban");
+  m_console->addCompletionCommand("lsadmins");
+  m_console->addCompletionCommand("addadmin");
+  m_console->addCompletionCommand("rmadmin");
+  m_console->addCompletionCommand("stats");
 }
 
 void StateServerConsole::clean()
