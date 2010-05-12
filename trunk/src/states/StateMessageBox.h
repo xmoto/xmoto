@@ -40,6 +40,16 @@ public:
 		  bool drawStateBehind    = true,
 		  bool updateStatesBehind = false,
 		  bool i_verticallyLarge = false);
+  StateMessageBox(StateMessageBoxReceiver* i_receiver,
+		  std::vector<std::string>& completionList,
+  		  const std::string& i_text,
+  		  int i_buttons,
+  		  bool i_input = false,
+  		  const std::string& i_inputText = "",
+  		  bool i_query = false,
+  		  bool drawStateBehind    = true,
+  		  bool updateStatesBehind = false,
+  		  bool i_verticallyLarge = false);
   virtual ~StateMessageBox();
 
   virtual void leave();
@@ -52,6 +62,14 @@ protected:
   virtual void checkEvents();
 
 private:
+  void initStateMessageBox(StateMessageBoxReceiver* i_receiver,
+			   const std::string& i_text,
+			   int i_buttons,
+			   bool i_input,
+			   const std::string& i_inputText,
+			   bool i_query,
+			   bool i_verticallyLarge);
+
   UIMsgBox* m_msgbox;
   StateMessageBoxReceiver* m_receiver;
   UIMsgBoxButton m_clickedButton;

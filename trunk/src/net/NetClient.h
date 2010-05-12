@@ -90,6 +90,8 @@ class NetClient : public Singleton<NetClient> {
   bool isPlayInitialized();
   void endPlay();
 
+  std::vector<std::string> getOtherClientsNameList();
+
   std::vector<NetOtherClient*>& otherClients();
 
   int getOwnFrameFPS() const;
