@@ -33,17 +33,28 @@ UIConsoleHook::UIConsoleHook() {
 UIConsoleHook::~UIConsoleHook() {
 }
 
+void UIConsole::initConsole(UIWindow *pParent, int x, int y, std::string Caption, int nWidth, int nHeight) {
+   initW(pParent, x , y, Caption, nWidth, nHeight);
+   m_hook = NULL;
+   reset();
+}
+ 
 UIConsole::UIConsole(UIWindow *pParent, int x, int y, std::string Caption, int nWidth, int nHeight) {
-  initW(pParent, x , y, Caption, nWidth, nHeight);
-  m_hook = NULL;
-  reset();
-}      
+  initConsole(pParent, x, y, Caption, nWidth, nHeight);
+}
+
+UIConsole::UIConsole(UIWindow *pParent, std::vector<std::string>& completionList, int x, int y, std::string Caption, int nWidth, int nHeight) {
+  initConsole(pParent, x, y, Caption, nWidth, nHeight);
+  for (int i = 0, n = completionList.size(); i < n; i++) {
+    this->addCompletionCommand(completionList[i]);
+  }
+}
 
 UIConsole::~UIConsole() {
 }
 
 void UIConsole::addCompletionCommand(const std::string& i_cmd) {
-  console_commands.push_back(i_cmd);
+  m_completionList.push_back(i_cmd);
 }
 
 void UIConsole::setHook(UIConsoleHook* i_hook) {
@@ -304,9 +315,9 @@ void UIConsole::completeCommand() {
   int pos_find = m_lines[m_lines.size() - 1].rfind(" ") + 1;
   std::string last_word = m_lines[m_lines.size() - 1].substr(pos_find);
   std::vector<std::string > found_list;
-  for (int i = 0, n = console_commands.size(); i < n; i++) {
-    if (console_commands[i].find(last_word) == 0) {
-      found_list.push_back(console_commands[i]);
+  for (int i = 0, n = m_completionList.size(); i < n; i++) {
+    if (m_completionList[i].find(last_word) == 0) {
+      found_list.push_back(m_completionList[i]);
     }
   }
   if (found_list.size() > 1) {

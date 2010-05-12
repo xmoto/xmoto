@@ -23,6 +23,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../drawlib/DrawLib.h"
 #include "../GameText.h"
 
+void StateMessageBox::initStateMessageBox(StateMessageBoxReceiver* i_receiver,
+					  const std::string& i_text,
+					  int i_buttons,
+					  bool i_input,
+					  const std::string& i_inputText,
+					  bool i_query,
+					  bool i_verticallyLarge) {
+    m_receiver      = i_receiver;
+    m_clickedButton = UI_MSGBOX_NOTHING;
+    createGUI(i_text, i_buttons, i_input, i_inputText, i_query, i_verticallyLarge);
+    m_name          = "StateMessageBox";
+}
+
 StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
 				 const std::string& i_text,
 				 int i_buttons,
@@ -35,10 +48,23 @@ StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
   StateMenu(drawStateBehind,
 	    updateStatesBehind, true, false)
 {
-  m_receiver      = i_receiver;
-  m_clickedButton = UI_MSGBOX_NOTHING;
-  createGUI(i_text, i_buttons, i_input, i_inputText, i_query, i_verticallyLarge);
-  m_name          = "StateMessageBox";
+  initStateMessageBox(i_receiver, i_text, i_buttons, i_input, i_inputText, i_query, i_verticallyLarge);
+}
+
+StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
+		  std::vector<std::string>& completionList,
+  		  const std::string& i_text,
+  		  int i_buttons,
+  		  bool i_input,
+  		  const std::string& i_inputText,
+  		  bool i_query,
+  		  bool drawStateBehind,
+  		  bool updateStatesBehind,
+  		  bool i_verticallyLarge) :
+  		StateMenu(drawStateBehind,
+  			    updateStatesBehind, true, false) {
+ initStateMessageBox(i_receiver, i_text, i_buttons, i_input, i_inputText, i_query, i_verticallyLarge);
+ m_msgbox->addCompletionWord(completionList);
 }
 
 StateMessageBox::~StateMessageBox()
@@ -90,4 +116,5 @@ void StateMessageBox::createGUI(const std::string& i_text, int i_buttons,
     m_msgbox->setTextInputFont(drawlib->getFontMedium());
     m_msgbox->setTextInput(i_inputText);
   }
+
 }

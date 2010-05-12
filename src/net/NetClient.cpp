@@ -596,3 +596,13 @@ NetGhost* NetOtherClient::netGhost(unsigned int i_subsrc) {
 void NetOtherClient::setNetGhost(unsigned int i_subsrc, NetGhost* i_netGhost) {
   m_ghosts[i_subsrc] = i_netGhost;
 }
+
+std::vector<std::string> NetClient::getOtherClientsNameList() {
+	std::vector<std::string> vect;
+	for (int i = 0, n = m_otherClients.size(); i < n; i++) {
+		vect.push_back(m_otherClients[i]->name());
+	}
+	return vect;
+}
+
+

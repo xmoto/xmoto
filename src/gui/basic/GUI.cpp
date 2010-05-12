@@ -218,7 +218,27 @@ bool UIWindow::isUglyMode() {
   
   /*===========================================================================
   Message boxes
-  ===========================================================================*/  
+  ===========================================================================*/
+  void UIMsgBox::initMsgBox(UIWindow *pParent,int x,int y,std::string Caption,int nWidth,int nHeight) {
+    initW(pParent,x,y,Caption,nWidth,nHeight);
+
+    setStyle(UI_FRAMESTYLE_TRANS);
+    m_textInputFont = NULL;
+    m_bTextInput = false;
+    m_nNumButtons = 0;
+  }
+
+  UIMsgBox::UIMsgBox(UIWindow *pParent,int x,int y,std::string Caption,int nWidth,int nHeight) {
+    initMsgBox(pParent, x, y, Caption, nWidth, nHeight);
+  }
+
+  UIMsgBox::UIMsgBox(UIWindow *pParent, std::vector<std::string>& wordcompletionlist ,int x,int y,std::string Caption,int nWidth,int nHeight) {
+   initMsgBox(pParent, x, y, Caption, nWidth, nHeight);
+   for (int i = 0, n = wordcompletionlist.size(); i < n; i++) {
+     addCompletionWord(wordcompletionlist[i]);
+   }
+ }
+
   UIMsgBoxButton UIMsgBox::getClicked(void) {
     /* Go through buttons... anything clicked? */
     for(unsigned int i=0;i<m_nNumButtons;i++) {
@@ -299,7 +319,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
 
   void UIMsgBox::paint(void) {
     /* Should the OK button be disabled? (if any) */
-    if(m_bTextInput && m_TextInput.empty()) {
+    if(m_bTextInput && m_TextInput_real.empty()) {
       for(unsigned int i=0; i<m_nNumButtons; i++) {
         if(m_pButtons[i]->getCaption() == GAMETEXT_OK)
 	  m_pButtons[i]->enableWindow(false);
@@ -318,10 +338,11 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     /* Should we do some text? */
     if(m_bTextInput && m_textInputFont!=NULL) {      
       setFont(m_textInputFont);
-      putText(16,120,m_TextInput + std::string("|"));
+      putText(16,120,m_TextInput_fake + std::string("|"));
     }
   }
   
+
   bool UIMsgBox::keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char) {
     switch(nKey) {
       case SDLK_ESCAPE:
@@ -329,7 +350,8 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
           setClicked(GAMETEXT_NO);
         return true;
       case SDLK_RETURN:
-        if(!m_bTextInput || !m_TextInput.empty()) {
+        if(!m_bTextInput || !m_TextInput_real.empty()) {
+          m_TextInput_real = m_TextInput_fake;
           setClicked(GAMETEXT_OK);
           return true;
         }
@@ -339,13 +361,20 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
 
           switch(nKey) {
             case SDLK_BACKSPACE:
-	      if(m_TextInput != "") {
-		m_TextInput = utf8::utf8_delete(m_TextInput, utf8::utf8_length(m_TextInput));
+	      if(m_TextInput_real != "") {
+		m_TextInput_real = utf8::utf8_delete(m_TextInput_real, utf8::utf8_length(m_TextInput_real));
+		m_TextInput_fake = m_TextInput_real;
 	      }
               return true;
+            case SDLK_TAB:
+            	showMatch();
+            	return true;
+            case SDLK_SPACE:
+            	m_TextInput_real = m_TextInput_fake;
             default:
 	      if(utf8::utf8_length(i_utf8Char) == 1) { // alt/... and special keys must not be kept
-		m_TextInput = utf8::utf8_concat(m_TextInput, i_utf8Char);
+		m_TextInput_real = utf8::utf8_concat(m_TextInput_real, i_utf8Char);
+		m_TextInput_fake = m_TextInput_real;
 	      }
               return true;
           }
@@ -456,6 +485,69 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     m_bActiveMsgBox = true;
 
     return pMsgBox;                                
+  }
+
+  UIMsgBox *UIWindow::msgBox(std::string Text, std::vector<std::string>& wordcompletionlist,UIMsgBoxButton Buttons,bool bTextInput,bool bQuery,bool i_verticallyLarge) {
+	  UIMsgBox *pMsgBox = this->msgBox(Text, Buttons, bTextInput, bQuery, i_verticallyLarge);
+	  pMsgBox->addCompletionWord(wordcompletionlist);
+	  return pMsgBox;
+  }
+
+ /*
+  * overlodaed functions for adding completion words
+  */
+
+  void UIMsgBox::addCompletionWord(std::string& word) {
+	  m_completionWords.push_back(word);
+  }
+
+  void UIMsgBox::addCompletionWord(std::vector<std::string> &list) {
+	  for(int i = 0, n = list.size(); i < n; i++) {
+		  this->addCompletionWord(list[i]);
+	  }
+  }
+
+  /*
+   *
+   * completion word function
+   */
+
+  void UIMsgBox::showMatch() {
+	  int last_word_f_pos = m_TextInput_fake.rfind(" ") + 1;
+	  std::string last_word_f = m_TextInput_fake.substr(last_word_f_pos);
+	  std::vector<std::string> matches = findMatches();
+	  for (int i = 0, n = matches.size(); i < n; i++) {
+		  if(matches[i].find(last_word_f) == 0) {
+			  if(i == (n - 1)) {
+				  std::string s;
+				  s = utf8::utf8_substring(m_TextInput_fake, 0, last_word_f_pos);
+				  s += matches[0];
+				  m_TextInput_fake = s;
+				  break;
+			  } else {
+				  std::string s;
+				  s = utf8::utf8_substring(m_TextInput_fake, 0, last_word_f_pos);
+				  s += matches[i + 1];
+				  m_TextInput_fake = s;
+			  }
+		  }
+	  }
+  }
+
+  std::vector<std::string> UIMsgBox::findMatches() {
+	  std::vector<std::string> matchesList;
+	  int pos_find = m_TextInput_real.rfind(" ") + 1;
+	  std::string last_word = m_TextInput_real.substr(pos_find);
+	  if (!last_word.empty()) {
+		  for (int i = 0, n = m_completionWords.size(); i < n; i++) {
+			  if (m_completionWords[i].find(last_word) == 0) {
+				  matchesList.push_back(m_completionWords[i]);
+			  }
+		  }
+	  }
+	  std::vector<std::string> empty;
+	  empty.push_back("");
+	  return !matchesList.empty() ? matchesList : empty;
   }
 
   /*===========================================================================
