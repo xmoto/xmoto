@@ -513,7 +513,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
    */
 
   void UIMsgBox::showMatch() {
-	  int last_word_f_pos = m_TextInput_fake.rfind(" ") + 1;
+	  int last_word_f_pos = m_TextInput_real.rfind(" ") + 1;
 	  std::string last_word_f = m_TextInput_fake.substr(last_word_f_pos);
 	  std::vector<std::string> matches = findMatches();
 	  for (int i = 0, n = matches.size(); i < n; i++) {
