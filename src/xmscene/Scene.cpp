@@ -84,7 +84,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     cleanPlayers();
     cleanGhosts();
     cleanScriptTimers();
-    if(m_ghostTrail != 0) delete m_ghostTrail;		
+    if(m_ghostTrail != NULL) {
+      delete m_ghostTrail;
+    }
   }
 
   void Scene::loadLevel(xmDatabase *i_db, const std::string& i_id_level) {
@@ -670,12 +672,21 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     v_ghost->setInfo(i_info);
     v_ghost->setReference(i_isReference);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
+
+    // synchronize it to the good position (can be later if the ghost is downloaded while playing)
+    v_ghost->updateToTime(getTime(), 1 /* 1, not very important */, &m_Collision, m_PhysGravity, this);
+
     m_ghosts.push_back(v_ghost);
-    if(i_info == "WR") {  // then we ve got our ghost trail, because WR is always optimal path through level!
-      m_ghostTrail = new GhostTrail(v_ghost);
-    }
+
     return v_ghost;
   }
+
+void Scene::initGhostTrail(FileGhost* i_ghost) {
+  if(m_ghostTrail != NULL) {
+    delete m_ghostTrail;
+  }
+  m_ghostTrail = new GhostTrail(i_ghost);
+}
 
   NetGhost* Scene::addNetGhost(const std::string& i_info,
 				  Theme *i_theme,
@@ -1498,6 +1509,10 @@ PlayerNetClient* Scene::addPlayerNetClient(Vector2f i_position, DriveDir i_direc
     m_is_paused = ! m_is_paused;
   }
 
+  bool Scene::isPaused() {
+    return m_is_paused;
+  }
+
   float Scene::getSpeed() const {
     if(m_is_paused) {
       return 0.0;
@@ -1592,10 +1607,9 @@ PlayerNetClient* Scene::addPlayerNetClient(Vector2f i_position, DriveDir i_direc
   unsigned int Scene::getCurrentCamera(){
     return m_currentCamera;
   }
-  void Scene::addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom, bool i_useTrailCam){
+  void Scene::addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom){
     Camera* i_cam = new Camera(upperleft, downright);
     i_cam->allowActiveZoom(i_useActiveZoom);
-    i_cam->allowTrailCam(i_useTrailCam);
     m_cameras.push_back(i_cam);
     m_cameras.back()->initCamera();
   }
@@ -1736,3 +1750,21 @@ void Scene::playToCheckpoint() {
   m_luaGame->scriptCallTblVoid(m_checkpoint->Id(), "OnUse");
 }
 
+void Scene::addRequestedGhost(GhostsAddInfos i_ghostInfo) {
+  m_requestedGhosts.push_back(i_ghostInfo);
+}
+std::vector<GhostsAddInfos> &Scene::RequestedGhosts() {
+  return m_requestedGhosts;
+}
+
+void Scene::removeRequestedGhost(const std::string& i_ghostName) {
+  unsigned int i=0;
+
+  while(i<m_requestedGhosts.size()) {
+    if(m_requestedGhosts[i].name == i_ghostName) {
+      m_requestedGhosts.erase(m_requestedGhosts.begin() + i);
+    } else {
+      i++;
+    }
+  }
+}

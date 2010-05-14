@@ -97,7 +97,7 @@ class Camera;
       void cleanUp(void);
       void beginRendering(void);
       void endRendering(void);
-      void fade(float f);
+      void fade(float f, unsigned int i_frameNumber);
       void present(void);
     
     private:
@@ -147,6 +147,8 @@ public:
   void setBestTime(const std::string& s) {m_bestTime = s;}
   void setWorldRecordTime(const std::string &s) {m_worldRecordTime = s;}
   void setShowMinimap(bool i_value);
+  void setRenderGhostTrail(bool i_value);
+  bool renderGhostTrail();
   void setShowTimePanel(bool i_value);
   void setScreenShade(bool i_doShade_global, bool i_doShadeAnim_global, float i_shadeTime_global); 
   void hideReplayHelp();
@@ -194,6 +196,7 @@ private:
   float m_previousEngineLinVel;
 
   bool m_showMinimap;
+  bool m_renderGhostTrail;
   bool m_showEngineCounter;
   bool m_showTimePanel;
   bool m_showGhostsText;
@@ -220,9 +223,6 @@ private:
   Sprite*           m_currentSkySprite;
   Sprite*           m_currentSkySprite2;
   
-
-  //GhostTrail* m_ghostTrail;
-
   float m_xScale;
   float m_yScale;
   float m_xScaleDefault;

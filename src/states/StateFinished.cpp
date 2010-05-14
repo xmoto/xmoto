@@ -196,8 +196,7 @@ void StateFinished::enter()
   if(m_universe != NULL) {
     if(m_universe->getScenes().size() == 1) {
       if(SendVoteThread::isToPropose(xmDatabase::instance("main"), m_universe->getScenes()[0]->getLevelSrc()->Id())) {
-	StateManager::instance()->pushState(new StateVote(StateManager::instance()->getUniqueId(),
-							  m_universe->getScenes()[0]->getLevelSrc()->Id()));
+	StateManager::instance()->pushState(new StateVote(m_universe->getScenes()[0]->getLevelSrc()->Id()));
       }
     }
   }
@@ -240,7 +239,7 @@ void StateFinished::checkEvents() {
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
 							 UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, Replay::giveAutomaticName());
-    v_msgboxState->setId("SAVEREPLAY");
+    v_msgboxState->setMsgBxId("SAVEREPLAY");
     StateManager::instance()->pushState(v_msgboxState);
   }
 
@@ -272,7 +271,7 @@ void StateFinished::checkEvents() {
     pQuitButton->setClicked(false);
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
-    v_msgboxState->setId("QUIT");
+    v_msgboxState->setMsgBxId("QUIT");
     StateManager::instance()->pushState(v_msgboxState);
   }
 }

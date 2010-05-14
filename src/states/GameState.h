@@ -86,8 +86,13 @@ public:
     m_updatePeriod = (float)m_maxFps / (float)m_updateFps;
   }
 
-  std::string getId() const;
-  void setId(const std::string& i_id);
+  // usefull to be sure to replace one state by another (and not always replace the upper state)
+  void setStateId(const std::string& i_id);
+  std::string getStateId() const;
+
+  //
+  void setStateType(const std::string& i_type);
+  std::string getStateType() const;
 
   virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
   virtual void send(const std::string& i_message, const std::string& i_args);
@@ -129,7 +134,8 @@ private:
   bool        m_isHide;
   bool        m_drawStateBehind;
   bool        m_updateStatesBehind;
-  std::string m_id;
+  std::string m_stateId;
+  std::string m_stateType; // type - to be able to have only one instance of one state type (server console, chat box, ...)
 
   // shade
   bool  m_doShade;

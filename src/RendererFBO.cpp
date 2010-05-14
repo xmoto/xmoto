@@ -223,7 +223,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Fading...
   ===========================================================================*/
-  void SFXOverlay::fade(float f) {
+void SFXOverlay::fade(float f, unsigned int i_frameNumber) {
+
+  if(i_frameNumber < 5) {
+    f = 1.0; // fade 100% at the beginning of the ghost rendering to avoid bad visual effects
+  }
+
 #ifdef ENABLE_OPENGL
     if(m_drawLib->useFBOs()) {
       glMatrixMode(GL_PROJECTION);

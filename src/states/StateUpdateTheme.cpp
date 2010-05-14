@@ -68,7 +68,7 @@ bool StateUpdateTheme::callBeforeLaunchingThread()
 
   if(v_onWeb == false) { /* available on the disk, not on the web */
     StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_UNUPDATABLETHEMEONWEB, UI_MSGBOX_OK);
-    v_msgboxState->setId("ERROR");
+    v_msgboxState->setMsgBxId("ERROR");
     StateManager::instance()->pushState(v_msgboxState);
     return false;
   }

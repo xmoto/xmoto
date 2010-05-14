@@ -54,7 +54,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateMessageBox.h"
 
 #include "thread/UpgradeLevelsThread.h"
-#include "thread/XMThreadStats.h"
 
 #include "UserConfig.h"
 #include "Renderer.h"
@@ -340,9 +339,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   // allocate the statemanager instance so that if it fails, it's not in a thread (serverThread for example)
   StateManager::instance();
 
-  // create the db stats thread
-  m_xmtstas = new XMThreadStats(XMSession::instance()->sitekey(), StateManager::instance());
-
   /* Init sound system */
   if(v_useGraphics) {
     Sound::init(XMSession::instance());
@@ -552,23 +548,21 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
 
       if(XMSession::instance()->clientGhostMode() == false && NetClient::instance()->isConnected()) {
-	  StateManager::instance()->pushState(new StateWaitServerInstructions(StateManager::instance()->getUniqueId()));
+	  StateManager::instance()->pushState(new StateWaitServerInstructions());
       } else {
-	StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),
-								    m_PlaySpecificLevelId, false));
+	StateManager::instance()->pushState(new StatePreplayingGame(m_PlaySpecificLevelId, false));
       }
       LogInfo("Playing as '%s'...", XMSession::instance()->profile().c_str());
     }
     else if(m_PlaySpecificReplay != "") {
       /* ======= PLAY SPECIFIC REPLAY ======= */
-      StateManager::instance()->pushState(new StatePreplayingReplay(StateManager::instance()->getUniqueId(),
-								    m_PlaySpecificReplay, false));
+      StateManager::instance()->pushState(new StatePreplayingReplay(m_PlaySpecificReplay, false));
     }
     else {
       /* display what must be displayed */
       StateManager::instance()->pushState(new StateMainMenu());
       if(XMSession::instance()->clientGhostMode() == false && NetClient::instance()->isConnected()) {
-	  StateManager::instance()->pushState(new StateWaitServerInstructions(StateManager::instance()->getUniqueId()));
+	  StateManager::instance()->pushState(new StateWaitServerInstructions());
       }
     }
 
@@ -606,8 +600,8 @@ void GameApp::manageEvent(SDL_Event* Event) {
   /* What event? */
   switch(Event->type) {
   case SDL_KEYDOWN:
-    //printf("%i\n", Event->key.keysym.sym);
     utf8Char = unicode2utf8(Event->key.keysym.unicode);
+    //printf("%i - %i\n", Event->key.keysym.sym, utf8Char.c_str()[0]);
     StateManager::instance()->xmKey(INPUT_DOWN, XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
     break;
   case SDL_KEYUP:
@@ -711,19 +705,6 @@ void GameApp::run_loop() {
 
 void GameApp::run_unload() {
 
-  /* stats */
-  // don't delete statemanager before
-  if(m_xmtstas != NULL) {
-    // do the stats job to confirm there are no more jobs waiting
-    m_xmtstas->doJob();
-    
-    // be sure the thread is finished before closing xmoto
-    if(m_xmtstas->waitForThreadEnd()) {
-      LogError("stats thread failed");
-    }
-
-  }
-
   if(Logger::isInitialized()) {
     LogInfo("UserUnload started at %.3f", GameApp::getXMTime());
   }
@@ -789,11 +770,6 @@ void GameApp::run_unload() {
     
   if(Logger::isInitialized()) {
     Logger::uninit();
-  }
-
-  // don't delete before statemanager
-  if(m_xmtstas != NULL) {
-    delete m_xmtstas;
   }
 
 }

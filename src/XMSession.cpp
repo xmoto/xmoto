@@ -133,7 +133,6 @@ void XMSession::setToDefault() {
   m_enableActiveZoom              = DEFAULT_ENABLEACTIVEZOOM;
   m_enableTrailCam                = DEFAULT_ENABLETRAILCAM;
   m_renderGhostTrail              = DEFAULT_GHOSTTRAILRENDERING;
-  m_renderGhostTrailTS            = DEFAULT_GHOSTTRAILRENDERING_TS;
   m_dbsynchronizeOnQuit           = DEFAULT_DBSYNCHRONIZEONQUIT;
   m_enableJoysticks               = DEFAULT_ENABLEJOYSTICKS;
   m_adminMode                     = DEFAULT_ADMINMODE;
@@ -838,15 +837,6 @@ void XMSession::setRenderGhostTrail(bool i_value) {
 
 bool XMSession::renderGhostTrail() const {
   return m_renderGhostTrail;
-}
-
-void XMSession::setRenderGhostTrailTS(bool i_value) {
-  PROPAGATE(XMSession,setRenderGhostTrailTS,i_value,bool);
-  m_renderGhostTrailTS = i_value;
-}
-
-bool XMSession::renderGhostTrailTS() const {
-  return m_renderGhostTrailTS;
 }
 
 void XMSession::setEnableDeadAnimation(bool i_value) {

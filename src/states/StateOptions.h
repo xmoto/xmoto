@@ -64,6 +64,7 @@ class StateOptions : public StateMenu {
   void updateAudioOptions();
   void updateWWWOptions();
   void updateDbOptions();
+  void updateTrailCamOptions();
   void updateGhostsOptions();
   void updateProfileStrings();
   void updateJoysticksStrings();

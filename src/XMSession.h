@@ -179,8 +179,6 @@ public:
   bool enableTrailCam() const;
   void setRenderGhostTrail(bool i_value);
   bool renderGhostTrail() const;
-  void setRenderGhostTrailTS(bool i_value);
-  bool renderGhostTrailTS() const;
   void setEnableDeadAnimation(bool i_value);
   bool enableDeadAnimation() const;
   void setMenuGraphics(GraphicsLevel i_value);
@@ -358,7 +356,6 @@ public:
   bool m_enableActiveZoom;
   bool m_enableTrailCam;
   bool m_renderGhostTrail;
-  bool m_renderGhostTrailTS;
   bool m_enableDeadAnimation;
   bool m_enablePermanentConsole;
   GraphicsLevel m_menuGraphics;

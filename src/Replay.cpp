@@ -625,6 +625,31 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
     return nextState(1);
   }
 
+void Replay::rewindAtPosition(ReplayPosition i_rs) {
+  m_bEndOfFile = i_rs.bEndOfFile;
+  m_nCurChunk = i_rs.nCurChunk;
+  m_nCurState = i_rs.nCurState;
+}
+
+void Replay::rewindAtBeginning() {
+  ReplayPosition v_rs;
+  v_rs.bEndOfFile = false;
+  v_rs.nCurChunk = 0;
+  v_rs.nCurState = 0.0;
+
+  rewindAtPosition(v_rs);
+}
+
+ReplayPosition Replay::getReplayPosition() const {
+  ReplayPosition v_res;
+
+  v_res.bEndOfFile = m_bEndOfFile;
+  v_res.nCurChunk  = m_nCurChunk;
+  v_res.nCurState  = m_nCurState;
+
+  return v_res;
+}
+
 bool Replay::nextState(int p_frames) {
   m_bEndOfFile = false;
 

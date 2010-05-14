@@ -18,32 +18,29 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEDOWNLOADGHOST_H__
-#define __STATEDOWNLOADGHOST_H__
+#ifndef __STATEVIEWHIGHSCORE_H__
+#define __STATEVIEWHIGHSCORE_H__
 
-#include "StateUpdate.h"
+#include "StateWaiting.h"
 
-class StateDownloadGhost : public StateUpdate {
+class StateViewHighscore : public StateWaiting {
 public:
-StateDownloadGhost(const std::string& i_id,
-		   std::string levelId,
-		   bool launchReplaying    = false,
-		   bool drawStateBehind    = true,
-		   bool updateStatesBehind = false);
-  virtual ~StateDownloadGhost();
+  StateViewHighscore(const std::string& i_id_level,
+		     bool drawStateBehind    = true,
+		     bool updateStatesBehind = false);
+  virtual ~StateViewHighscore();
 
-  void setReplay(std::string replayName);
-
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void enter();
   virtual void executeOneCommand(std::string cmd, std::string args);
 
-protected:
-  void callAfterThreadFinished(int threadResult);
-  virtual void checkEvents() {}
+  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
   
+protected:
+  virtual void checkEvents() {}
+
 private:
-  std::string  m_replayName;
-  bool         m_launchReplaying;
+  std::string m_id_level;
+  std::string m_url;
 };
 
 #endif

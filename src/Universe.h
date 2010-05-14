@@ -56,6 +56,14 @@ class Universe {
   void TeleportationCheatTo(int i_player, Vector2f i_position);
   void switchFollowCamera();
 
+  void addDownloadingGhost(const std::string& i_replay);
+  void markDownloadedGhost(const std::string& i_replay, bool i_downloadSuccess);
+
+  void addAvailableGhosts(xmDatabase *pDb);
+  bool waitingForGhosts() const;
+  void addGhost(Scene* i_scene, GhostsAddInfos i_gai);
+  void removeRequestedGhost(const std::string& i_replay);
+
   private:
   std::vector<Scene*>        m_scenes; /* Game objects */
   std::vector<XMSceneHooks*> m_motoGameHooks;
@@ -65,4 +73,13 @@ class Universe {
 
   void initCameras(int nbPlayer); // init camera according to the number of players and the existing scenes
   void addScene();
+
+  void addAvailableGhostsToScene(xmDatabase *pDb, Scene* i_scene);
+  void updateWaitingGhosts();
+
+  std::string _getGhostReplayPath_bestOfThePlayer(xmDatabase *pDb, std::string p_levelId, int &p_time);
+  std::string _getGhostReplayPath_bestOfLocal(xmDatabase *pDb, std::string p_levelId, int &p_time);
+  std::string _getGhostReplayPath_bestOfTheRoom(xmDatabase *pDb, unsigned int i_number, std::string p_levelId, int &p_time);
+
+  bool m_waitingForGhosts;
 };

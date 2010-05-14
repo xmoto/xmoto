@@ -28,7 +28,7 @@ class ReplayBiker;
 
 class StateCreditsMode : public StateReplaying {
   public:
-  StateCreditsMode(const std::string& i_id, Universe* i_universe, const std::string& i_replay, ReplayBiker* i_replayBiker);
+  StateCreditsMode(Universe* i_universe, const std::string& i_replay, ReplayBiker* i_replayBiker);
   virtual ~StateCreditsMode();
   
   virtual void enter();

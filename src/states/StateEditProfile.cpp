@@ -30,15 +30,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StateEditProfile::m_sGUI = NULL;
 
-StateEditProfile::StateEditProfile(const std::string& i_id,
-				   bool drawStateBehind,
+StateEditProfile::StateEditProfile(bool drawStateBehind,
 				   bool updateStatesBehind
 				   ):
   StateMenu(drawStateBehind,
 	    updateStatesBehind)
 {
   m_name     = "StateEditProfile";
-  setId(i_id);
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("UPDATEPROFILE");
@@ -108,7 +106,7 @@ void StateEditProfile::checkEvents() {
 
     /* Should we jump to the web config now? */
     if(XMSession::instance()->webConfAtInit()) {
-      StateManager::instance()->replaceState(new StateEditWebConfig(), this->getId());
+      StateManager::instance()->replaceState(new StateEditWebConfig(), getStateId());
     } else{
       m_requestForEnd = true;
     }
@@ -121,7 +119,7 @@ void StateEditProfile::checkEvents() {
     
     StateMessageBox* v_msgboxState = new StateMessageBox(this, std::string(GAMETEXT_ENTERPLAYERNAME) + ":",
 							 UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, "");
-    v_msgboxState->setId("NEWPROFILE");
+    v_msgboxState->setMsgBxId("NEWPROFILE");
     StateManager::instance()->pushState(v_msgboxState);
   }
 
@@ -132,7 +130,7 @@ void StateEditProfile::checkEvents() {
     
     StateMessageBox* v_msgboxState = new StateMessageBox(this, std::string(GAMETEXT_DELETEPLAYERMESSAGE),
 							 UI_MSGBOX_YES|UI_MSGBOX_NO);
-    v_msgboxState->setId("DELETEPROFILE");
+    v_msgboxState->setMsgBxId("DELETEPROFILE");
     StateManager::instance()->pushState(v_msgboxState);
   }
 }

@@ -18,32 +18,32 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __DOWNLOADGHOSTTHREAD_H__
-#define __DOWNLOADGHOSTTHREAD_H__
+#ifndef __DOWNLOADREPLAYSTHREAD_H__
+#define __DOWNLOADREPLAYSTHREAD_H__
 
 #include "XMThread.h"
-#include "../WWWAppInterface.h"
+#include <vector>
 
-class GameState;
+class StateManager;
 class WebRoom;
 
-class DownloadGhostThread : public XMThread, public WWWAppInterface {
+class DownloadReplaysThread : public XMThread {
 public:
-  DownloadGhostThread(std::string levelId,
-		      bool i_onlyMainRoomGhost);
-  virtual ~DownloadGhostThread();
+  DownloadReplaysThread(StateManager* i_manager);
+  virtual ~DownloadReplaysThread();
 
-  void setTaskProgress(float p_percent);
-  std::string getMsg() const;
+  void add(const std::string i_url);
+  void doJob();
 
   int realThreadFunction();
 
-private:
+  private:
+  void play();
 
   WebRoom*    m_pWebRoom;
-  std::string m_msg;
-  std::string m_levelId;
-  bool m_onlyMainRoomGhost;
+  SDL_mutex* m_urlsMutex;
+  StateManager* m_manager; // for the communication
+  std::vector<std::string> m_replaysUrls;
 };
 
 #endif

@@ -28,7 +28,7 @@ class FontGlyph;
 
 class StatePreplaying : public StateScene {
   public:
-  StatePreplaying(const std::string& i_id, const std::string i_idlevel, bool i_sameLevel);
+  StatePreplaying(const std::string i_idlevel, bool i_sameLevel);
   virtual ~StatePreplaying();
   
   virtual void enter();
@@ -52,19 +52,18 @@ class StatePreplaying : public StateScene {
   virtual void initPlayers()   = 0;
   virtual void runPlaying()    = 0;
   virtual bool shouldBeAnimated() const; // return true wether the animation shoud be done
-  virtual bool needToDownloadGhost();
+
+  virtual void addLocalGhosts();
+  virtual void addWebGhosts();
   virtual bool allowGhosts();
 
   // which state to display on failure
   virtual void onLoadingFailure(const std::string& i_msg);
 
   private:
-  void executeOneCommand(std::string cmd, std::string args);
 
   void secondInitPhase();
   bool m_secondInitPhaseDone;
-  bool m_ghostDownloaded;
-  bool m_ghostDownloading_failed;
 
   bool m_playAnimation; // must the animation be played ; must be rearmed each time you play a new level
 

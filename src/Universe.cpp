@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "db/xmDatabase.h"
 #include "drawlib/DrawLib.h"
 #include "Renderer.h"
+#include "GameText.h"
 
 void XMSceneHooks::OnTakeEntity() {
     /* Play yummy-yummy sound */
@@ -61,6 +62,7 @@ XMSceneHooks::~XMSceneHooks() {
 
 Universe::Universe() {
   m_pJustPlayReplay = NULL;
+  m_waitingForGhosts = false;
 }
 
 Universe::~Universe() {
@@ -115,7 +117,6 @@ void Universe::initCameras(int nbPlayer) {
   int width  = GameApp::instance()->getDrawLib()->getDispWidth();
   int height = GameApp::instance()->getDrawLib()->getDispHeight();
   bool v_useActiveZoom = XMSession::instance()->enableActiveZoom();
-  bool v_useTrailCam = XMSession::instance()->enableTrailCam();
   
   if(m_scenes.size() <= 0) {
     return;
@@ -141,45 +142,45 @@ void Universe::initCameras(int nbPlayer) {
   default:
   case 1:
     m_scenes[0]->addCamera(Vector2i(0,0),
-			   Vector2i(width, height), v_useActiveZoom, v_useTrailCam);
+			   Vector2i(width, height), v_useActiveZoom);
     break;
   case 2:
     m_scenes[0]->addCamera(Vector2i(0,height/2),
-			   Vector2i(width, height), v_useActiveZoom, v_useTrailCam);
+			   Vector2i(width, height), v_useActiveZoom);
     if(m_scenes.size() == 1) {
       m_scenes[0]->addCamera(Vector2i(0,0),
-			     Vector2i(width, height/2), v_useActiveZoom, v_useTrailCam);
+			     Vector2i(width, height/2), v_useActiveZoom);
     } else {
       m_scenes[1]->addCamera(Vector2i(0,0),
-			     Vector2i(width, height/2), v_useActiveZoom, v_useTrailCam);
+			     Vector2i(width, height/2), v_useActiveZoom);
     }
     break;
   case 3:
   case 4:
     if(m_scenes.size() == 1) {
       m_scenes[0]->addCamera(Vector2i(0,height/2),
-			     Vector2i(width/2, height), v_useActiveZoom, v_useTrailCam);
+			     Vector2i(width/2, height), v_useActiveZoom);
       m_scenes[0]->addCamera(Vector2i(width/2,height/2),
-			     Vector2i(width, height), v_useActiveZoom, v_useTrailCam);
+			     Vector2i(width, height), v_useActiveZoom);
       m_scenes[0]->addCamera(Vector2i(0,0),
-			     Vector2i(width/2, height/2), v_useActiveZoom, v_useTrailCam);
+			     Vector2i(width/2, height/2), v_useActiveZoom);
       m_scenes[0]->addCamera(Vector2i(width/2,0),
-			     Vector2i(width, height/2), v_useActiveZoom, v_useTrailCam);
+			     Vector2i(width, height/2), v_useActiveZoom);
     } else {
       m_scenes[0]->addCamera(Vector2i(0,height/2),
-			     Vector2i(width/2, height), v_useActiveZoom, v_useTrailCam);
+			     Vector2i(width/2, height), v_useActiveZoom);
       m_scenes[1]->addCamera(Vector2i(width/2,height/2),
-			     Vector2i(width, height), v_useActiveZoom, v_useTrailCam);
+			     Vector2i(width, height), v_useActiveZoom);
       m_scenes[2]->addCamera(Vector2i(0,0),
-			     Vector2i(width/2, height/2), v_useActiveZoom, v_useTrailCam);
+			     Vector2i(width/2, height/2), v_useActiveZoom);
 
       if(nbPlayer == 4) {
 	m_scenes[3]->addCamera(Vector2i(width/2,0),
-			       Vector2i(width, height/2), v_useActiveZoom, v_useTrailCam);
+			       Vector2i(width, height/2), v_useActiveZoom);
       }
       else {  //3 player then, add another cam for not having an ugly not-drawn rect in the screen
         m_scenes[0]->addCamera(Vector2i(width/2,0),
-			       Vector2i(width, height/2), v_useActiveZoom, v_useTrailCam);
+			       Vector2i(width, height/2), v_useActiveZoom);
       }
     }
     break;
@@ -188,11 +189,18 @@ void Universe::initCameras(int nbPlayer) {
   // the autozoom camera is a special one in multi player
   if(nbPlayer > 1){
     m_scenes[0]->addCamera(Vector2i(0,0),
-			   Vector2i(width, height), v_useActiveZoom, v_useTrailCam);
+			   Vector2i(width, height), v_useActiveZoom);
   }
   // current cam is autozoom one
   for(unsigned int i=0; i<m_scenes.size(); i++) {
     m_scenes[i]->setAutoZoomCamera();
+  }
+
+  // init trailcam
+  for(unsigned int i=0; i<m_scenes.size(); i++) {
+    for(unsigned int j=0; j<m_scenes[i]->Cameras().size(); j++) {
+      m_scenes[i]->Cameras()[j]->setUseTrailCam(XMSession::instance()->enableTrailCam());
+    }
   }
 }
 
@@ -352,4 +360,321 @@ void Universe::saveReplay(xmDatabase *pDb, const std::string &Name) {
 
 std::vector<Scene*>& Universe::getScenes() {
   return m_scenes;
+}
+
+void Universe::updateWaitingGhosts() {
+  m_waitingForGhosts = false;
+
+  for(unsigned int i=0; i<m_scenes.size(); i++) {
+    if(m_scenes[i]->RequestedGhosts().size() > 0) {
+      m_waitingForGhosts = true;
+      return;
+    }
+  }
+}
+
+void Universe::markDownloadedGhost(const std::string& i_replay, bool i_downloadSuccess) {
+  for(unsigned int i=0; i<m_scenes.size(); i++) {
+    for(unsigned int j=0; j<m_scenes[i]->RequestedGhosts().size(); j++) {
+      if(m_scenes[i]->RequestedGhosts()[j].name == i_replay) {
+	if(i_downloadSuccess) {
+	  try {
+	    addGhost(m_scenes[i], m_scenes[i]->RequestedGhosts()[j]);
+	  } catch(Exception &e) {
+	    // hum, ok
+	  } 
+	} else {
+	  m_scenes[i]->removeRequestedGhost(m_scenes[i]->RequestedGhosts()[j].name);
+	}
+      }
+    }
+  }
+
+  // if case of mistake, addGhost will not update waiting ghosts
+  if(i_downloadSuccess == false) {
+    updateWaitingGhosts();
+  }
+
+}
+
+void Universe::addGhost(Scene* i_scene, GhostsAddInfos i_gai) {
+  Theme* v_theme = Theme::instance();
+  FileGhost* v_ghost = NULL;
+
+  switch(i_gai.strategyType) {
+    
+  case GAI_BESTOFROOM:
+    v_ghost = i_scene->addGhostFromFile("Replays/" + i_gai.name + ".rpl",
+					i_gai.description,
+					i_gai.isReference,
+					v_theme, v_theme->getGhostTheme(),
+					TColor(255,255,255,0),
+					TColor(GET_RED(v_theme->getGhostTheme()->getUglyRiderColor()),
+					       GET_GREEN(v_theme->getGhostTheme()->getUglyRiderColor()),
+					       GET_BLUE(v_theme->getGhostTheme()->getUglyRiderColor()),
+					       0)
+					);
+    break;
+    
+  case GAI_MYBEST:
+    v_ghost = i_scene->addGhostFromFile("Replays/" + i_gai.name + ".rpl",
+					i_gai.description,
+					i_gai.isReference,
+					v_theme, v_theme->getGhostTheme(),
+					TColor(82,255,255,0),
+					TColor(GET_RED(v_theme->getGhostTheme()->getUglyRiderColor()),
+					       GET_GREEN(v_theme->getGhostTheme()->getUglyRiderColor()),
+					       GET_BLUE(v_theme->getGhostTheme()->getUglyRiderColor()),
+					       0)
+					);
+    break;
+
+  case GAI_THEBEST:
+    v_ghost = i_scene->addGhostFromFile("Replays/" + i_gai.name + ".rpl",
+					i_gai.description,
+					i_gai.isReference,
+					v_theme, v_theme->getGhostTheme(),
+					TColor(255,200,140,0),
+					TColor(GET_RED(v_theme->getGhostTheme()->getUglyRiderColor()),
+					       GET_GREEN(v_theme->getGhostTheme()->getUglyRiderColor()),
+					       GET_BLUE(v_theme->getGhostTheme()->getUglyRiderColor()),
+					       0)
+					);
+    break;
+    
+  }
+
+  // remove from requested ghosts
+  i_scene->removeRequestedGhost(i_gai.name);
+  updateWaitingGhosts();
+
+  // init the trailer
+  // best of the 1st room
+  if(v_ghost != NULL) {
+    if(i_gai.strategyType == GAI_BESTOFROOM && i_gai.isReference) {
+      i_scene->initGhostTrail(v_ghost);
+
+      for(unsigned int i=0; i<i_scene->getNumberCameras(); i++){
+	i_scene->setCurrentCamera(i);
+	i_scene->getCamera()->initTrailCam(i_scene->getGhostTrail());
+      }
+    }
+  }
+}
+
+void Universe::addAvailableGhosts(xmDatabase *pDb) {
+   for(unsigned int i=0; i<getScenes().size(); i++) {
+     int v_alreayAdded = -1;
+
+     /* check for the previous scenes */
+     for(unsigned int j=0; j<i; j++) {
+       if(getScenes()[j]->getLevelSrc()->Id() == getScenes()[i]->getLevelSrc()->Id()) {
+	 v_alreayAdded = j;
+       }
+     }
+     if(v_alreayAdded == -1) {
+       addAvailableGhostsToScene(pDb, getScenes()[i]);
+     } else {
+       // copy levels with the same ghosts
+       for(unsigned int j=0; j<getScenes()[v_alreayAdded]->RequestedGhosts().size(); j++) {
+	 getScenes()[i]->addRequestedGhost(getScenes()[v_alreayAdded]->RequestedGhosts()[j]);
+       }
+     }
+
+     if(getScenes()[i]->RequestedGhosts().size() != 0) {
+       m_waitingForGhosts = true;
+     }
+   }
+}
+
+bool Universe::waitingForGhosts() const {
+  return m_waitingForGhosts;
+}
+
+void Universe::addAvailableGhostsToScene(xmDatabase *pDb, Scene* i_scene) {
+  std::string v_replay_MYBEST;
+  std::string v_replay_THEBEST;
+  std::string v_replay_BESTOFROOM[ROOMS_NB_MAX];
+  std::string v_replay_MYBEST_tmp;
+  int v_finishTime;
+  int v_player_finishTime;
+  bool v_exists;
+  GhostsAddInfos v_gi;
+  std::string v_replayUrl;
+
+  LogDebug("addGhosts stategy:");
+
+  v_replay_MYBEST_tmp = _getGhostReplayPath_bestOfThePlayer(pDb, i_scene->getLevelSrc()->Id(), v_player_finishTime);
+
+  /* first, add the best of the room -- because if mybest or thebest = bestofroom, i prefer to see writen bestofroom */
+  for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+    if( (XMSession::instance()->ghostStrategy_BESTOFREFROOM()    && i==0) ||
+	(XMSession::instance()->ghostStrategy_BESTOFOTHERROOMS() && i!=0) ){
+
+      LogDebug("Choosing ghost for room %i", i);
+
+      v_replayUrl = _getGhostReplayPath_bestOfTheRoom(pDb, i, i_scene->getLevelSrc()->Id(), v_finishTime);
+      v_replay_BESTOFROOM[i] = XMFS::getFileBaseName(v_replayUrl);
+      LogDebug("the room ghost: %s", v_replay_BESTOFROOM[i].c_str());
+
+      /* add MYBEST if MYBEST if better the BESTOF the other ROOM */
+      if(v_player_finishTime > 0 && (v_finishTime < 0 || v_player_finishTime < v_finishTime)) {
+	v_replay_BESTOFROOM[i] = v_replay_MYBEST_tmp;
+	LogDebug("my best time is %i ; room one is %i", v_player_finishTime, v_finishTime);
+	LogDebug("my best is better than the one of the room => choose it");
+      }
+      
+      v_exists = false;
+      for(unsigned int j=0; j<i; j++) {
+      	if(v_replay_BESTOFROOM[i] == v_replay_BESTOFROOM[j]) {
+      	  v_exists = true;
+	  LogDebug("the ghost is already set by room %i", j);
+      	}
+      }
+
+      if(v_replay_BESTOFROOM[i] != "" && v_exists == false) {
+	LogInfo("add ghost %s", v_replay_BESTOFROOM[i].c_str());
+
+	v_gi.name = v_replay_BESTOFROOM[i];
+	v_gi.description = pDb->webrooms_getName(XMSession::instance()->idRoom(i));
+	v_gi.isReference = i==0;
+	v_gi.external = true;
+	v_gi.url = v_replayUrl;
+	v_gi.strategyType = GAI_BESTOFROOM;
+
+	i_scene->addRequestedGhost(v_gi);
+      }
+    }
+  }
+
+  /* second, add your best */
+  if(XMSession::instance()->ghostStrategy_MYBEST()) {
+    LogDebug("Choosing ghost MYBEST");
+    v_replay_MYBEST = _getGhostReplayPath_bestOfThePlayer(pDb, i_scene->getLevelSrc()->Id(), v_finishTime);
+    LogDebug("MYBEST ghost is %s", v_replay_MYBEST.c_str());
+    if(v_replay_MYBEST != "") {
+      v_exists = false;
+      for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+	if(v_replay_MYBEST == v_replay_BESTOFROOM[i]) {
+	  LogDebug("the ghost is already set by room %i", i);
+	  v_exists = true;
+	}
+      }
+
+      if(v_exists == false) {
+	LogDebug("add ghost %s", v_replay_MYBEST.c_str());
+
+	v_gi.name = v_replay_MYBEST;
+	v_gi.description = GAMETEXT_GHOST_BEST;
+	v_gi.isReference = true;
+	v_gi.external = false;
+	v_gi.url = "";
+	v_gi.strategyType = GAI_MYBEST;
+
+	i_scene->addRequestedGhost(v_gi);
+      }
+    }
+  }
+
+  /* third, the best locally */
+  if(XMSession::instance()->ghostStrategy_THEBEST()) {
+    LogDebug("Choosing ghost LOCAL BEST");
+    v_replay_THEBEST = _getGhostReplayPath_bestOfLocal(pDb, i_scene->getLevelSrc()->Id(), v_finishTime);
+    if(v_replay_THEBEST != "") {
+
+      v_exists = false;
+      for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+	if(v_replay_THEBEST == v_replay_BESTOFROOM[i]) {
+	  LogDebug("the ghost is already set by room %i", i);
+	  v_exists = true;
+	}
+      }
+
+      if(v_replay_THEBEST != v_replay_MYBEST && v_exists == false) { /* don't add two times the same ghost */
+	LogDebug("add ghost %s", v_replay_THEBEST.c_str());
+
+	v_gi.name = v_replay_THEBEST;
+	v_gi.description = GAMETEXT_GHOST_LOCAL;
+	v_gi.isReference = false;
+	v_gi.external = false;
+	v_gi.url = "";
+	v_gi.strategyType = GAI_THEBEST;
+
+	i_scene->addRequestedGhost(v_gi);
+      }
+    }
+  }
+
+  LogDebug("addGhosts stategy finished");
+}
+
+std::string Universe::_getGhostReplayPath_bestOfThePlayer(xmDatabase *pDb, std::string p_levelId, int &p_time) {
+  char **v_result;
+  unsigned int nrow;
+  std::string res;
+  
+  p_time = -1;
+  
+  v_result = pDb->readDB("SELECT name, finishTime FROM replays "
+			 "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
+			 "AND   id_level=\""   + xmDatabase::protectString(p_levelId) + "\" "
+			 "AND   isFinished=1 "
+			 "ORDER BY finishTime LIMIT 1;",
+			 nrow);    
+  if(nrow == 0) {
+    pDb->read_DB_free(v_result);
+    return "";
+  }
+  
+  res = pDb->getResult(v_result, 2, 0, 0);
+  p_time = atoi(pDb->getResult(v_result, 2, 0, 1));
+  
+  pDb->read_DB_free(v_result);
+  return res;
+}
+
+std::string Universe::_getGhostReplayPath_bestOfTheRoom(xmDatabase *pDb, unsigned int i_number, std::string p_levelId, int &p_time)
+{
+  char **v_result;
+  unsigned int nrow;
+  std::string res;
+  std::string v_fileUrl;
+  
+  v_result = pDb->readDB("SELECT fileUrl, finishTime FROM webhighscores "
+			 "WHERE id_room=" + XMSession::instance()->idRoom(i_number) + " "
+			 "AND id_level=\"" + xmDatabase::protectString(p_levelId) + "\";",
+			 nrow);    
+  if(nrow == 0) {
+    p_time = -1;
+    pDb->read_DB_free(v_result);
+    return "";
+  }
+  
+  v_fileUrl = pDb->getResult(v_result, 2, 0, 0);
+  p_time = atoi(pDb->getResult(v_result, 2, 0, 1));
+  pDb->read_DB_free(v_result);
+
+  return v_fileUrl;
+}
+
+std::string Universe::_getGhostReplayPath_bestOfLocal(xmDatabase *pDb, std::string p_levelId, int &p_time) {
+  char **v_result;
+  unsigned int nrow;
+  std::string res;
+  
+  v_result = pDb->readDB("SELECT a.name, a.finishTime FROM replays AS a INNER JOIN stats_profiles AS b "
+			 "ON a.id_profile = b.id_profile "
+			 "WHERE a.id_level=\""   + xmDatabase::protectString(p_levelId) + "\" "
+			 "AND   a.isFinished=1 "
+			 "ORDER BY a.finishTime+0 LIMIT 1;",
+			 nrow);    
+  if(nrow == 0) {
+    pDb->read_DB_free(v_result);
+    return "";
+  }
+  
+  res = pDb->getResult(v_result, 2, 0, 0);
+  p_time = atoi(pDb->getResult(v_result, 2, 0, 1));
+  pDb->read_DB_free(v_result);
+  return res;
 }

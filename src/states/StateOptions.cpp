@@ -53,6 +53,7 @@ StateOptions::StateOptions(bool drawStateBehind, bool updateStatesBehind):
   StateManager::instance()->registerAsObserver("THEMES_UPDATED", this);
   StateManager::instance()->registerAsObserver("ROOMS_UPDATED", this);
   StateManager::instance()->registerAsObserver("CHANGE_WWW_ACCESS", this);
+  StateManager::instance()->registerAsObserver("CHANGE_TRAILCAM", this);
   StateManager::instance()->registerAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->registerAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->registerAsObserver("REQUESTKEY", this);
@@ -64,6 +65,7 @@ StateOptions::~StateOptions() {
   StateManager::instance()->unregisterAsObserver("THEMES_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("ROOMS_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("CHANGE_WWW_ACCESS", this);
+  StateManager::instance()->unregisterAsObserver("CHANGE_TRAILCAM", this);
   StateManager::instance()->unregisterAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->unregisterAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("REQUESTKEY", this);
@@ -104,7 +106,7 @@ void StateOptions::checkEvents() {
     v_button->setClicked(false);
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_RESETTODEFAULTS, UI_MSGBOX_YES|UI_MSGBOX_NO);
-    v_msgboxState->setId("RESETSTODEFAULTS");
+    v_msgboxState->setMsgBxId("RESETSTODEFAULTS");
     v_msgboxState->makeActiveButton(UI_MSGBOX_NO);
     StateManager::instance()->pushState(v_msgboxState);
   }
@@ -1586,6 +1588,13 @@ UIWindow* StateOptions::makeRoomTab(UIWindow* i_parent, unsigned int i_number) {
   return v_window;
 }
 
+void StateOptions::updateTrailCamOptions() {
+  UIButton* v_button;
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:CAMERATRAILCAM"));
+  v_button->setChecked(XMSession::instance()->enableTrailCam());
+}
+
 void StateOptions::updateOptions() {
   UIButton* v_button;
   UIEdit*   v_edit;
@@ -1601,8 +1610,6 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->enableDeadAnimation());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:CAMERAACTIVEZOOM"));
   v_button->setChecked(XMSession::instance()->enableActiveZoom());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:CAMERATRAILCAM"));
-  v_button->setChecked(XMSession::instance()->enableTrailCam());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:ENABLECONTEXTHELP"));
   v_button->setChecked(XMSession::instance()->enableContextHelp());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:AUTOSAVEREPLAYS"));
@@ -1611,6 +1618,9 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->beatingMode());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:SHOWANIMATIONS"));
   v_button->setChecked(XMSession::instance()->disableAnimations());
+
+  // trail
+  updateTrailCamOptions();
 
   // video
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:16BPP"));
@@ -2228,6 +2238,10 @@ void StateOptions::executeOneCommand(std::string cmd, std::string args) {
   else if(cmd == "CHANGE_WWW_ACCESS" || cmd == "CONFIGURE_WWW_ACCESS") {
     updateWWWOptions();
     updateDbOptions();
+  }
+
+  else if(cmd == "CHANGE_TRAILCAM") {
+    updateTrailCamOptions();
   }
 
   else if(cmd == "ENABLEAUDIO_CHANGED") {

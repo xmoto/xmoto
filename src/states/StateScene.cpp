@@ -85,23 +85,21 @@ void StateScene::init() {
     m_difficultyTex = v_sprite->getTexture();
   }
 
+  m_trackingShotMode = false;
+
   // message registering
   initMessageRegistering();
-  
-  
 }
 
-StateScene::StateScene(const std::string& i_id, bool i_doShade, bool i_doShadeAnim)
+StateScene::StateScene(bool i_doShade, bool i_doShadeAnim)
 : GameState(false, false, i_doShade, i_doShadeAnim)
 {
-  setId(i_id);
   init();
 }
 
-StateScene::StateScene(Universe* i_universe, const std::string& i_id, bool i_doShade, bool i_doShadeAnim)
+StateScene::StateScene(Universe* i_universe, bool i_doShade, bool i_doShadeAnim)
   : GameState(false, false, i_doShade, i_doShadeAnim)
 {
-  setId(i_id);
   init();
   m_universe   = i_universe;
 
@@ -125,6 +123,9 @@ StateScene::~StateScene()
   StateManager::instance()->unregisterAsObserver("ABORT", this);
   StateManager::instance()->unregisterAsObserver("INTERPOLATION_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("MIRRORMODE_CHANGED", this);
+  StateManager::instance()->unregisterAsObserver("REPLAY_DOWNLOADED", this);
+  StateManager::instance()->unregisterAsObserver("REPLAY_FAILEDTODOWNLOAD", this);
+  StateManager::instance()->unregisterAsObserver("CHANGE_TRAILCAM", this);
 
   if(m_cameraAnim != NULL) {
     delete m_cameraAnim;
@@ -141,6 +142,9 @@ void StateScene::initMessageRegistering()
   StateManager::instance()->registerAsObserver("ABORT", this);
   StateManager::instance()->registerAsObserver("INTERPOLATION_CHANGED", this);
   StateManager::instance()->registerAsObserver("MIRRORMODE_CHANGED", this);
+  StateManager::instance()->registerAsObserver("REPLAY_DOWNLOADED", this);
+  StateManager::instance()->registerAsObserver("REPLAY_FAILEDTODOWNLOAD", this);
+  StateManager::instance()->registerAsObserver("CHANGE_TRAILCAM", this);
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("FAVORITES_UPDATED");
@@ -206,7 +210,7 @@ bool StateScene::update()
       }
     }
   } catch(Exception &e) {
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK), this->getId());
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK), getStateId());
   }
 
   runAutoZoom();
@@ -245,8 +249,29 @@ bool StateScene::render()
     }
 
     ParticlesSource::setAllowParticleGeneration(GameRenderer::instance()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
+
+
+    // downloading ghost information
+    if(m_universe->waitingForGhosts()) {
+      FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
+      FontGlyph* v_fg   = v_fm->getGlyph(GAMETEXT_DLGHOSTS);
+      int v_border = 5;
+
+      GameApp::instance()->getDrawLib()->drawBox(Vector2f(GameApp::instance()->getDrawLib()->getDispWidth()/2 - v_fg->realWidth()/2 -v_border,
+							  GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight() - 2*v_border),
+						 Vector2f(GameApp::instance()->getDrawLib()->getDispWidth()/2 + v_fg->realWidth()/2 + v_border,
+							  GameApp::instance()->getDrawLib()->getDispHeight() + v_border),
+						 0.0f, MAKE_COLOR(255,255,255,50));
+
+      v_fm->printString(v_fg,
+			GameApp::instance()->getDrawLib()->getDispWidth()/2 - v_fg->realWidth()/2,
+			GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight() - v_border,
+			MAKE_COLOR(255,255,255,255), 0.0, true);
+    }
+
+
   } catch(Exception &e) {
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK), this->getId());
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK), this->getStateId());
   }
 
   GameState::render();
@@ -304,14 +329,34 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F4, KMOD_NONE)) {
     if(m_universe != NULL) {
-      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	  if(m_universe->getScenes()[j]->Cameras()[i]->getTrailAvailable()) {
-            m_universe->getScenes()[j]->Cameras()[i]->toggleTrackingShot(m_universe->getScenes()[j]);
-          } else {
-            SysMessage::instance()->displayText(SYS_MSG_TRAIL_NA);
-          }
-        }
+      m_trackingShotMode = ! m_trackingShotMode;
+
+      for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	if(m_trackingShotMode) {
+	  if(m_universe->getScenes()[i]->getGhostTrail() != NULL) {
+	    if(m_universe->getScenes()[i]->isPaused() == false) {
+	      // toogle cameras
+	      for(unsigned int j=0; j<m_universe->getScenes()[i]->Cameras().size(); j++) {
+		m_universe->getScenes()[i]->Cameras()[j]->setUseTrackingShot(true);
+	      }
+	      // toogle pause mode
+	      m_universe->getScenes()[i]->pause();
+	      // toogle in the renderer
+	      GameRenderer::instance()->setRenderGhostTrail(true);
+	    }
+	  }
+	} else {
+	  // toogle cameras
+	  for(unsigned int j=0; j<m_universe->getScenes()[i]->Cameras().size(); j++) {
+	    m_universe->getScenes()[i]->Cameras()[j]->setUseTrackingShot(false);
+	  }
+	  // toogle pause mode
+	  if(m_universe->getScenes()[i]->isPaused()) {
+	    m_universe->getScenes()[i]->pause(); // cause the man cause unpause while tracking shot
+	  }
+	  // toogle in the renderer
+	  GameRenderer::instance()->setRenderGhostTrail(XMSession::instance()->renderGhostTrail());
+	}
       }
     }
   }
@@ -341,41 +386,30 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_PAGEDOWN, KMOD_NONE)) {
     nextLevel(false);
   }
-  
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_t, KMOD_LCTRL)) {
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_g, KMOD_LCTRL)) {
+    
+    // toogle
+    XMSession::instance()->setRenderGhostTrail(!XMSession::instance()->renderGhostTrail());
+    GameRenderer::instance()->setRenderGhostTrail(XMSession::instance()->renderGhostTrail());
+
+    bool v_trailAvailable = false;
     if(m_universe != NULL) {
-      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	  m_universe->getScenes()[j]->Cameras()[i]->toggleTrailCam();
-	  if(m_universe->getScenes()[j]->Cameras()[i]->getTrailAvailable() == false) {
-	    SysMessage::instance()->displayText(SYS_MSG_TRAILCAM_NA);
-	  }
-	  else if(XMSession::instance()->enableTrailCam()) {
-	    SysMessage::instance()->displayText(SYS_MSG_TRAILCAM_ACTIVATED);
-	  }
-	  else SysMessage::instance()->displayText(SYS_MSG_TRAILCAM_DEACTIVATED);
+      for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	if(m_universe->getScenes()[i]->getGhostTrail() != NULL) {
+	  v_trailAvailable = true;
         }
       }
     }
-  }
-
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_g, KMOD_LCTRL)) {
-    if(m_universe != NULL) {
-      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-          if(m_universe->getScenes()[j]->getGhostTrail() != 0)
-            m_universe->getScenes()[j]->getGhostTrail()->toggleRenderGhostTrail();
-	  if(m_universe->getScenes()[j]->Cameras()[i]->getTrailAvailable() == false) {
-	    SysMessage::instance()->displayText(SYS_MSG_TRAIL_NA);
-	  }
-	  else if(m_universe->getScenes()[j]->getGhostTrail() != 0) {
-	    if(XMSession::instance()->renderGhostTrail()) 
-	        SysMessage::instance()->displayText(SYS_MSG_TRAIL_VISIBLE);
-	  
-	    else SysMessage::instance()->displayText(SYS_MSG_TRAIL_INVISIBLE);
-	  }
-        }
+    
+    if(v_trailAvailable) {
+      if(XMSession::instance()->renderGhostTrail()) {
+	SysMessage::instance()->displayText(SYS_MSG_TRAIL_VISIBLE);
+      } else {
+	SysMessage::instance()->displayText(SYS_MSG_TRAIL_INVISIBLE);
       }
+    } else {
+	    SysMessage::instance()->displayText(SYS_MSG_TRAIL_NA);
     }
   }
   
@@ -464,8 +498,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     if(XMSession::instance()->adminMode()) {
       if(m_universe != NULL) {
 	if(m_universe->getScenes().size() == 1) {
-	  StateManager::instance()->pushState(new StateVote(StateManager::instance()->getUniqueId(),
-							    m_universe->getScenes()[0]->getLevelSrc()->Id()));
+	  StateManager::instance()->pushState(new StateVote(m_universe->getScenes()[0]->getLevelSrc()->Id()));
 	}
       }
     }
@@ -625,7 +658,7 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
     // there is no other state before
     if(StateManager::instance()->numberOfStates() == 1) {
       // run the mainmenu state
-      StateManager::instance()->replaceState(new StateMainMenu(), this->getId());
+      StateManager::instance()->replaceState(new StateMainMenu(), this->getStateId());
     } else {
       m_requestForEnd = true;
     }
@@ -637,7 +670,7 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
     // there is no other state before
     if(StateManager::instance()->numberOfStates() == 1) {
       // run the mainmenu state
-      StateManager::instance()->replaceState(new StateMainMenu(), this->getId());
+      StateManager::instance()->replaceState(new StateMainMenu(), this->getStateId());
     } else {
       m_requestForEnd = true;
     }
@@ -661,7 +694,7 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
     // there is no other state before
     if(StateManager::instance()->numberOfStates() == 1) {
       // run the mainmenu state
-      StateManager::instance()->replaceState(new StateMainMenu(), this->getId());
+      StateManager::instance()->replaceState(new StateMainMenu(), this->getStateId());
     } else {
       m_requestForEnd = true;
     }
@@ -685,6 +718,25 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
 	}
       }
     }
+  }
+
+  else if(cmd == "CHANGE_TRAILCAM") {
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->setUseTrailCam(XMSession::instance()->enableTrailCam());
+	}
+      }
+    }
+  }
+
+  else if(cmd == "REPLAY_DOWNLOADED") {
+    m_universe->markDownloadedGhost(args, true);
+  }
+
+  else if(cmd == "REPLAY_FAILEDTODOWNLOAD") {
+    /* remove it from the waiting replays to be downloaded */
+    m_universe->markDownloadedGhost(args, false);
   }
 
   else {
@@ -880,10 +932,10 @@ void StateScene::playingNextLevel(bool i_positifOrder) {
 	  if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
 	     m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
 
-	    GameApp::instance()->getDbStatsThread()->delay_abortedLevel(XMSession::instance()->profile(),
-									v_currentLevel,
-									m_universe->getScenes()[0]->getTime());
-	    GameApp::instance()->getDbStatsThread()->doJob();
+	    StateManager::instance()->getDbStatsThread()->delay_abortedLevel(XMSession::instance()->profile(),
+									     v_currentLevel,
+									     m_universe->getScenes()[0]->getTime());
+	    StateManager::instance()->getDbStatsThread()->doJob();
 	  }
 	}
       }
@@ -915,8 +967,7 @@ void StateScene::restartLevelToPlay(bool i_reloadLevel) {
     }
   }
 
-  StateManager::instance()->replaceState(new StatePreplayingGame(getId(), v_level, true),
-					 this->getId());
+  StateManager::instance()->replaceState(new StatePreplayingGame(v_level, true), getStateId());
 
 }
 
@@ -940,8 +991,7 @@ void StateScene::nextLevelToPlay(bool i_positifOrder) {
 
   if(v_nextLevel != "") {
     closePlaying();
-    StateManager::instance()->replaceState(new StatePreplayingGame(getId(), v_nextLevel, v_currentLevel == v_nextLevel),
-					   this->getId());
+    StateManager::instance()->replaceState(new StatePreplayingGame(v_nextLevel, v_currentLevel == v_nextLevel), getStateId());
   }
 }
 

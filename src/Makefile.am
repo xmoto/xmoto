@@ -209,6 +209,8 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/AttractMode.h            \
 		 states/StateUpdate.cpp          \
 		 states/StateUpdate.h            \
+		 states/StateWaiting.cpp          \
+		 states/StateWaiting.h            \
 		 states/StateUpdateDb.cpp        \
 		 states/StateUpdateDb.h          \
 		 states/StateUpdateThemesList.cpp\
@@ -235,8 +237,8 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateWaitServerInstructions.cpp \
 		 states/StateUpgradeLevels.cpp   \
 		 states/StateUpgradeLevels.h     \
-		 states/StateDownloadGhost.cpp   \
-		 states/StateDownloadGhost.h
+		 states/StateViewHighscore.cpp   \
+		 states/StateViewHighscore.h
 
 xdgbasedir_SOURCES = xdgbasedir/include/basedir.h xdgbasedir/include/basedir_fs.h xdgbasedir/src/basedir.c
 
@@ -274,12 +276,12 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/SyncThread.h               \
 		 thread/UpgradeLevelsThread.cpp    \
 		 thread/UpgradeLevelsThread.h      \
-		 thread/DownloadGhostThread.cpp    \
-		 thread/DownloadGhostThread.h      \
 		 thread/LevelsPacksCountUpdateThread.h   \
 		 thread/LevelsPacksCountUpdateThread.cpp \
 		 thread/XMThreadStats.h \
 		 thread/XMThreadStats.cpp \
+		 thread/DownloadReplaysThread.h \
+		 thread/DownloadReplaysThread.cpp \
 		 net/thread/ServerThread.cpp             \
 		 net/thread/ServerThread.h       \
 		 net/thread/ClientListenerThread.cpp             \

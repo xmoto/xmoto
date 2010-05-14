@@ -27,8 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BikePlayer.h"
 #include "../Renderer.h"
 
-StatePlaying::StatePlaying(Universe* i_universe, const std::string& i_id)
-: StateScene(i_universe, i_id) {
+StatePlaying::StatePlaying(Universe* i_universe)
+: StateScene(i_universe) {
   m_displayStats = false;
 
   for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++){
@@ -46,6 +46,13 @@ void StatePlaying::enter() {
   updateWithOptions();
   setScoresTimes();
   playLevelMusic();
+
+  // update description to nothing
+  if(m_universe != NULL) {
+    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+      m_universe->getScenes()[i]->setInfos("");
+    }
+  }
 }
 
 void StatePlaying::executeOneCommand(std::string cmd, std::string args) {

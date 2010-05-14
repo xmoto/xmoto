@@ -216,6 +216,9 @@ class Biker {
 
   float changeDirPer() const;
 
+  unsigned int getNbRenderedFrames() const;
+  void addNbRenderedFrames();
+
  protected:
   BikerTheme* m_bikerTheme;
   bool m_playSound;
@@ -249,6 +252,7 @@ class Biker {
   float m_changeDirPer; // between 0.0 and 1.0, give the % of the change dir done (only for graphisms)
 
   int m_localNetId;
+  unsigned int m_nbRenderedFrames;
 };
 
 class OnBikerHooks {

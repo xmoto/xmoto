@@ -28,9 +28,9 @@ class Universe;
 
 class StateScene : public GameState {
 public:
-  StateScene(const std::string& i_id, bool i_doShade = false, bool i_doShadeAnim = false);
- StateScene(Universe* i_universe, const std::string& i_id, bool i_doShade = false, bool i_doShadeAnim = false); // for state which doesn't create the universe
- virtual ~StateScene();
+  StateScene(bool i_doShade = false, bool i_doShadeAnim = false);
+  StateScene(Universe* i_universe, bool i_doShade = false, bool i_doShadeAnim = false); // for state which doesn't create the universe
+  virtual ~StateScene();
  
  virtual void enter();
  virtual void enterAfterPop();
@@ -92,7 +92,9 @@ protected:
 
 private:
  void init();
-  void initMessageRegistering();
+ void initMessageRegistering();
+ bool m_trackingShotMode;
+
 };
 
 #endif

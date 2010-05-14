@@ -58,9 +58,10 @@ int UploadAllHighscoresThread::realThreadFunction()
     WebRoom *v_pWebRoom = new WebRoom(this);
     ProxySettings* pProxySettings = XMSession::instance()->proxySettings();
     std::string    webRoomUrl     = GameApp::instance()->getWebRoomURL(m_number, m_pDb);
-    std::string    webRoomName    = GameApp::instance()->getWebRoomName(m_number, m_pDb);
 
-    v_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);
+    v_pWebRoom->setHighscoresUrl(webRoomUrl);
+    v_pWebRoom->setProxy(pProxySettings);
+
     v_pWebRoom->update(webRoomId);
     v_pWebRoom->upgrade(webRoomId, m_pDb);
     m_pDb->updateMyHighscoresFromHighscores(XMSession::instance()->profile());
