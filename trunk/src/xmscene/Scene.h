@@ -87,6 +87,17 @@ struct ArrowPointer {
   float fArrowPointerAngle;
 };
 
+enum strategyGhostType { GAI_BESTOFROOM, GAI_MYBEST, GAI_THEBEST };
+
+struct GhostsAddInfos {
+  std::string name;
+  std::string description;
+  bool isReference; // must the time diff be displayed ?
+  bool external; // if true, this is a web replay
+  std::string url; // url is external is true
+  strategyGhostType strategyType; // BESTOFROOM MYBEST THEBEST
+};
+
 /*===========================================================================
   Requested player state
   ===========================================================================*/
@@ -251,8 +262,15 @@ public:
 			const TColor& i_filterUglyColor);
 
   inline GhostTrail* getGhostTrail() {  return m_ghostTrail; };
-  
+  void initGhostTrail(FileGhost* i_ghost);
+
   std::vector<Ghost *> &Ghosts();
+
+  // these are the ghosts available on the system -- not the one in the scene
+  void addRequestedGhost(GhostsAddInfos i_ghostInfo);
+  std::vector<GhostsAddInfos> &RequestedGhosts();
+  void removeRequestedGhost(const std::string& i_ghostName);
+
   std::vector<Biker*> &Players();
 
   bool doesPlayEvents() const;
@@ -281,7 +299,7 @@ public:
   unsigned int  getNumberCameras();
   void setCurrentCamera(unsigned int currentCamera);
   unsigned int  getCurrentCamera();
-  void addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom = true, bool i_useTraiCam = true);
+  void addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom = true);
   void resetFollow();
   void removeCameras();
   void setAutoZoomCamera();
@@ -320,6 +338,8 @@ private:
 
   GhostTrail* m_ghostTrail;
   std::vector<Ghost*> m_ghosts;
+  std::vector<GhostsAddInfos> m_requestedGhosts;
+
   std::vector<float> m_myLastStrawberries;
 
   GameRenderer* m_renderer;

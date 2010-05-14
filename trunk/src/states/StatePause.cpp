@@ -131,7 +131,7 @@ void StatePause::checkEvents() {
     pQuitButton->setClicked(false);
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
-    v_msgboxState->setId("QUIT");
+    v_msgboxState->setMsgBxId("QUIT");
     StateManager::instance()->pushState(v_msgboxState);
   }
 }

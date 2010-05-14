@@ -29,7 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BikePlayer.h"
 #include "../xmscene/BikeGhost.h"
 #include "StateMessageBox.h"
-#include "StateDownloadGhost.h"
 #include "../drawlib/DrawLib.h"
 #include "../CameraAnimation.h"
 #include "../Universe.h"
@@ -37,27 +36,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Renderer.h"
 #include "../net/NetClient.h"
 #include "../Sound.h"
+#include "thread/DownloadReplaysThread.h"
 
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 100
 
-StatePreplaying::StatePreplaying(const std::string& i_id, const std::string i_idlevel, bool i_sameLevel):
-  StateScene(i_id)
+StatePreplaying::StatePreplaying(const std::string i_idlevel, bool i_sameLevel):
+  StateScene()
 {
   m_name  = "StatePreplaying";
   m_idlevel = i_idlevel;
 
   m_secondInitPhaseDone = false;
-  m_ghostDownloaded     = false;
-  m_ghostDownloading_failed = false;
 
   m_sameLevel = i_sameLevel;
   /* if the level is not the same, ask to play the animation */
   m_playAnimation = m_sameLevel == false;
 
   m_cameraAnim = NULL;
-
-  StateManager::instance()->registerAsObserver("GHOST_DOWNLOADED", this);
-  StateManager::instance()->registerAsObserver("GHOST_DOWNLOADING_FAILED", this);
 }
 
 StatePreplaying::~StatePreplaying()
@@ -65,9 +60,6 @@ StatePreplaying::~StatePreplaying()
   if(m_cameraAnim != NULL) {
     delete m_cameraAnim;
   }
-
-  StateManager::instance()->unregisterAsObserver("GHOST_DOWNLOADED", this);
-  StateManager::instance()->unregisterAsObserver("GHOST_DOWNLOADING_FAILED", this);
 }
 
 
@@ -167,13 +159,6 @@ void StatePreplaying::enter()
     return;
   }
 
-  if(needToDownloadGhost() == true){
-    StateManager::instance()->pushState(new StateDownloadGhost(StateManager::instance()->getUniqueId(),
-							       m_idlevel));
-  } else {
-    m_ghostDownloaded = true;
-  }
-
   // music
   if(m_playAnimation) {
     pGame->playGameMusic("");
@@ -191,8 +176,7 @@ void StatePreplaying::enter()
 }
 
 void StatePreplaying::onLoadingFailure(const std::string& i_msg) {
-  StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(i_msg, 50), UI_MSGBOX_OK),
-					 this->getId());
+  StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(i_msg, 50), UI_MSGBOX_OK), getStateId());
 }
 
 bool StatePreplaying::shouldBeAnimated() const {
@@ -218,10 +202,6 @@ bool StatePreplaying::update()
 {
   if(doUpdate() == false){
     return false;
-  }
-
-  if(m_ghostDownloaded == false && m_ghostDownloading_failed == false){
-    return true;
   }
 
   if(m_secondInitPhaseDone == false){
@@ -284,18 +264,21 @@ void StatePreplaying::secondInitPhase()
   GameApp*  pGame  = GameApp::instance();
 
   try {
+
     /* add the ghosts */
     if(XMSession::instance()->enableGhosts() && allowGhosts()) {
       try {
-	if(m_universe != NULL) {
-	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	    pGame->addGhosts(m_universe->getScenes()[i], Theme::instance());
-	  }
-	}
+	m_universe->addAvailableGhosts(xmDatabase::instance("main"));
       } catch(Exception &e) {
 	/* anyway */
       }
     }
+
+    addLocalGhosts();
+
+  if(allowGhosts() && XMSession::instance()->www() && XMSession::instance()->enableGhosts()) {
+    addWebGhosts();
+  }
 
     GameRenderer::instance()->prepareForNewLevel(m_universe);
 
@@ -336,60 +319,49 @@ void StatePreplaying::secondInitPhase()
   setAutoZoom(shouldBeAnimated());
 }
 
-void StatePreplaying::executeOneCommand(std::string cmd, std::string args)
-{
-  LogDebug("cmd [%s [%s]] executed by state [%s].",
-	   cmd.c_str(), args.c_str(), getName().c_str());
-
-  if(cmd == "GHOST_DOWNLOADED"){
-    m_ghostDownloaded = true;
-  } else if (cmd == "GHOST_DOWNLOADING_FAILED") {
-    m_ghostDownloading_failed = true;
-  }
-  else {
-    StateScene::executeOneCommand(cmd, args);
+void StatePreplaying::addLocalGhosts() {
+  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+    for(unsigned j=0; j<m_universe->getScenes()[i]->RequestedGhosts().size(); j++) {
+      if(m_universe->getScenes()[i]->RequestedGhosts()[j].external == false) {
+	try {
+	  m_universe->addGhost(m_universe->getScenes()[i], m_universe->getScenes()[i]->RequestedGhosts()[j]);
+	} catch(Exception &e) {
+	  // hum, ok, not nice
+	}
+      }
+    }
   }
 }
 
-bool StatePreplaying::needToDownloadGhost()
+void StatePreplaying::addWebGhosts()
 {
-  if(XMSession::instance()->www() == false           ||
-     XMSession::instance()->enableGhosts() == false ||
-     (XMSession::instance()->ghostStrategy_BESTOFREFROOM()    == false &&
-      XMSession::instance()->ghostStrategy_BESTOFOTHERROOMS() == false)
-     ) {
-    return false;
-  }
+  bool v_need = false;
 
-  if(allowGhosts() == false) {
-    return false;
-  }
+  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 
-  char **v_result;
-  unsigned int nrow;
-  std::string res;
-  std::string v_replayName;
-  std::string v_fileUrl;
+    // copy ghosts add infos because adding ghosts can remove them inside the loop !
+    std::vector<GhostsAddInfos> v_requestedGhosts = m_universe->getScenes()[i]->RequestedGhosts();
 
-  bool v_need_one = false;
-  for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
-    v_result = xmDatabase::instance("main")->readDB("SELECT fileUrl FROM webhighscores "
-						    "WHERE id_room=" + XMSession::instance()->idRoom(i) + " "
-						    "AND id_level=\"" + xmDatabase::protectString(m_idlevel) + "\";",
-						    nrow);
-    if(nrow != 0) {
-      v_fileUrl    = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
-      v_replayName = XMFS::getFileBaseName(v_fileUrl);
-
-      /* search if the replay is already downloaded */
-      if(xmDatabase::instance("main")->replays_exists(v_replayName) == false) {
-	v_need_one = true;
+    for(unsigned j=0; j<v_requestedGhosts.size(); j++) {
+      if(v_requestedGhosts[j].external) {
+	if(xmDatabase::instance("main")->replays_exists(v_requestedGhosts[j].name)) {
+	  try {
+	    m_universe->addGhost(m_universe->getScenes()[i], v_requestedGhosts[j]);
+	  } catch(Exception &e) {
+	    // hum, ok, not nice
+	  }
+	} else {
+	  // to download
+	  StateManager::instance()->getReplayDownloaderThread()->add(v_requestedGhosts[j].url);
+	  v_need = true;
+	}
       }
     }
-    xmDatabase::instance("main")->read_DB_free(v_result);
   }
 
-  return v_need_one;
+  if(v_need) {
+    StateManager::instance()->getReplayDownloaderThread()->doJob();
+  }
 }
 
 bool StatePreplaying::allowGhosts() {

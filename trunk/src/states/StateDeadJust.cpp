@@ -32,8 +32,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define STATE_DEAD_MAX_TIME 140
 #define VELOCITY_UNTIL_TORSO_RIP 0.005
 
-StateDeadJust::StateDeadJust(Universe* i_universe, const std::string& i_id)
-: StateScene(i_universe, i_id, true, true)
+StateDeadJust::StateDeadJust(Universe* i_universe)
+: StateScene(i_universe, true, true)
 {
   m_name    = "StateDeadJust";
 }
@@ -61,8 +61,7 @@ void StateDeadJust::enter()
   if(m_universe != NULL) {
     if(m_universe->getScenes().size() == 1) {
       if(SendVoteThread::isToPropose(xmDatabase::instance("main"), m_universe->getScenes()[0]->getLevelSrc()->Id())) {
-	StateManager::instance()->pushState(new StateVote(StateManager::instance()->getUniqueId(),
-							  m_universe->getScenes()[0]->getLevelSrc()->Id()));
+	StateManager::instance()->pushState(new StateVote(m_universe->getScenes()[0]->getLevelSrc()->Id()));
       }
     }
   }
@@ -96,7 +95,7 @@ void StateDeadJust::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
     if(v_isCheckpoint) {
       StateScene::playToCheckpoint();
-      StateManager::instance()->replaceState(new StatePlayingLocal(m_universe, getId()), this->getId());
+      StateManager::instance()->replaceState(new StatePlayingLocal(m_universe), getStateId());
     }
 
   }

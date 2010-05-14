@@ -54,6 +54,9 @@ public:
 
   virtual void leave();
 
+  std::string getMsgBxId() const;
+  void setMsgBxId(const std::string& i_id);
+
   /* input */
   virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
   void makeActiveButton(UIMsgBoxButton i_button);
@@ -73,6 +76,7 @@ private:
   UIMsgBox* m_msgbox;
   StateMessageBoxReceiver* m_receiver;
   UIMsgBoxButton m_clickedButton;
+  std::string m_msgbxid;
 
   void createGUI(const std::string& i_text, int i_buttons,
 		 bool i_input, const std::string& i_inputText, bool i_query, bool i_verticallyLarge);

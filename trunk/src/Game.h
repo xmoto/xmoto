@@ -49,7 +49,6 @@ class UIButton;
 class UIFrame;
 class UIStatic;
 class NetServer;
-class XMThreadStats;
 
 /*===========================================================================
   Game application
@@ -113,8 +112,6 @@ public:
 
   std::string getWorldRecord(unsigned int i_number, const std::string &LevelID);
 
-  void addGhosts(Scene* i_motogame, Theme* i_theme);
-
   // to call while playing
   void toogleEnableMusic();
   void playMenuMusic(const std::string& i_music); // "" => no music
@@ -161,9 +158,6 @@ public:
 
   static void wait(int& io_lastFrameTimeStamp, int& io_frameLate, int i_maxFps);
   
-  // thread to externalize db update in other thread to reduce freezes
-  XMThreadStats* getDbStatsThread();
-
 protected:
   void createDefaultConfig();
 
@@ -261,15 +255,8 @@ private:
   void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
   void _DownloadExtraLevels(void);
 
-  std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, int &p_time);
-  std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, int &p_time);
-  std::string _getGhostReplayPath_bestOfTheRoom(unsigned int i_number, std::string p_levelId, int &p_time);
-
   /* */
   void _InitWin(bool bInitGraphics);
-
-  /* db optimizer */
-  XMThreadStats *m_xmtstas;
 
   // focus
   bool m_hasMouseFocus;

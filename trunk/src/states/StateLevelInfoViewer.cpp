@@ -110,8 +110,7 @@ void StateLevelInfoViewer::checkEvents()
       if(pListEntry != NULL && !pListEntry->Text.empty()) {
 	/* Do it captain */
 	std::string playSpecificReplay = pListEntry->Text[0];
-	StateManager::instance()->pushState(new StatePreplayingReplay(StateManager::instance()->getUniqueId(),
-								      playSpecificReplay, false));
+	StateManager::instance()->pushState(new StatePreplayingReplay(playSpecificReplay, false));
       }
     }
   }
@@ -126,7 +125,7 @@ void StateLevelInfoViewer::checkEvents()
 	std::string playSpecificReplay = pListEntry->Text[0];
 
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
-	v_msgboxState->setId("REPLAYS_DELETE");
+	v_msgboxState->setMsgBxId("REPLAYS_DELETE");
 	v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
 	StateManager::instance()->pushState(v_msgboxState);
       }

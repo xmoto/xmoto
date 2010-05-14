@@ -27,8 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StateVote::m_sGUI = NULL;
 
-StateVote::StateVote(const std::string& i_id,
-		     const std::string& i_idlevel,
+StateVote::StateVote(const std::string& i_idlevel,
 		     bool drawStateBehind,
 		     bool updateStatesBehind
 		     ):
@@ -124,8 +123,7 @@ void StateVote::checkEvents() {
       pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:Q_5"));
       if(pButton->getChecked()) v_quality = "5";
 
-      StateManager::instance()->replaceState(new StateSendVote(m_idlevel, v_difficulty, v_quality),
-					     this->getId());
+      StateManager::instance()->replaceState(new StateSendVote(m_idlevel, v_difficulty, v_quality), getStateId());
     }
   }
 }

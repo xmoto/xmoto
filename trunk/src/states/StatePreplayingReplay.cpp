@@ -28,8 +28,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/Camera.h"
 #include "../xmscene/BikePlayer.h"
 
-StatePreplayingReplay::StatePreplayingReplay(const std::string& i_id, const std::string i_replay, bool i_sameLevel)
-: StatePreplaying(i_id, "", i_sameLevel) {
+StatePreplayingReplay::StatePreplayingReplay(const std::string i_replay, bool i_sameLevel)
+: StatePreplaying("", i_sameLevel) {
     ReplayInfo* v_info;
 
     m_name   = "StatePreplayingReplay";
@@ -79,6 +79,5 @@ void StatePreplayingReplay::initPlayers() {
 }
 
 void StatePreplayingReplay::runPlaying() {
-  StateManager::instance()->replaceState(new StateReplaying(getId(), m_universe, m_replay, m_replayBiker),
-					 this->getId());
+  StateManager::instance()->replaceState(new StateReplaying(m_universe, m_replay, m_replayBiker), getStateId());
 }

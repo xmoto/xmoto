@@ -37,7 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateUploadHighscore.h"
 #include "StateCheckWww.h"
 #include "StateUpgradeLevels.h"
-#include "StateDownloadGhost.h"
+#include "StateViewHighscore.h"
 #include "../LevelsManager.h"
 #include "../helpers/Log.h"
 #include "../helpers/Text.h"
@@ -187,7 +187,7 @@ void StateMainMenu::enter()
   if(XMSession::instance()->profile() == "" ||
      xmDatabase::instance("main")->stats_checkKeyExists_stats_profiles(XMSession::instance()->sitekey(),
 								       XMSession::instance()->profile()) == false) {
-    StateManager::instance()->pushState(new StateEditProfile(StateManager::instance()->getUniqueId()));
+    StateManager::instance()->pushState(new StateEditProfile());
     
     /* in case there is no profile, we show a message box */
     /* Should we show a notification box? (with important one-time info) */
@@ -334,8 +334,7 @@ void StateMainMenu::checkEventsMainWindow() {
     } catch(Exception &e) {
       v_id_level = "tut1";
     }
-    StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),
-								v_id_level, false));
+    StateManager::instance()->pushState(new StatePreplayingGame(v_id_level, false));
   }
 
   // quit
@@ -343,7 +342,7 @@ void StateMainMenu::checkEventsMainWindow() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
-    v_msgboxState->setId("QUIT");
+    v_msgboxState->setMsgBxId("QUIT");
     v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
     StateManager::instance()->pushState(v_msgboxState);
   }
@@ -388,7 +387,7 @@ void StateMainMenu::checkEventsMainWindow() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:CHANGEPLAYERBUTTON"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    StateManager::instance()->pushState(new StateEditProfile(StateManager::instance()->getUniqueId()));
+    StateManager::instance()->pushState(new StateEditProfile());
   }
 
   // new levels ?
@@ -412,8 +411,7 @@ void StateMainMenu::checkEventsMainWindow() {
     v_button->setClicked(false);
 
     GameApp::instance()->setCurrentPlayingList(getInfoFrameLevelsList());
-    StateManager::instance()->pushState(new StateDownloadGhost(StateManager::instance()->getUniqueId(),
-							       getInfoFrameLevelId(), true));
+    StateManager::instance()->pushState(new StateViewHighscore(getInfoFrameLevelId(), true));
   }
 }
 
@@ -524,7 +522,7 @@ void StateMainMenu::checkEventsNetworkTab() {
 	  NetClient::instance()->changeMode(XMSession::instance()->clientGhostMode() ? NETCLIENT_GHOST_MODE : NETCLIENT_SLAVE_MODE);
 	}
 	if(XMSession::instance()->clientGhostMode() == false) {
-	  StateManager::instance()->pushState(new StateWaitServerInstructions(StateManager::instance()->getUniqueId()));
+	  StateManager::instance()->pushState(new StateWaitServerInstructions());
 	}
       } catch(Exception &e) {
 	SysMessage::instance()->displayError(GAMETEXT_UNABLETOCONNECTONTHESERVER);
@@ -568,8 +566,7 @@ void StateMainMenu::checkEventsLevelsFavoriteTab() {
 
     if(v_id_level != "") {
       GameApp::instance()->setCurrentPlayingList(v_list);
-      StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),
-								  v_id_level, false));
+      StateManager::instance()->pushState(new StatePreplayingGame(v_id_level, false));
     }
   }
 
@@ -616,8 +613,7 @@ void StateMainMenu::checkEventsLevelsNewTab() {
 
     if(v_id_level != "") {
       GameApp::instance()->setCurrentPlayingList(v_list);
-      StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),
-								  v_id_level, false));
+      StateManager::instance()->pushState(new StatePreplayingGame(v_id_level, false));
     }
   }
 
@@ -1775,8 +1771,7 @@ void StateMainMenu::checkEventsReplays() {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
-	StateManager::instance()->pushState(new StatePreplayingReplay(StateManager::instance()->getUniqueId(),
-								      pListEntry->Text[0], false));
+	StateManager::instance()->pushState(new StatePreplayingReplay(pListEntry->Text[0], false));
       }
     }
   }
@@ -1790,7 +1785,7 @@ void StateMainMenu::checkEventsReplays() {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
-	v_msgboxState->setId("REPLAYS_DELETE");
+	v_msgboxState->setMsgBxId("REPLAYS_DELETE");
 	v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
 	StateManager::instance()->pushState(v_msgboxState);	
 	updateReplaysRights();
@@ -1832,7 +1827,7 @@ void StateMainMenu::checkEventsReplays() {
     if(n > 0) {
       snprintf(v_buf, 256, GAMETEXT_CLEAN_CONFIRM(n), n);
       v_msgboxState = new StateMessageBox(this, v_buf, UI_MSGBOX_YES|UI_MSGBOX_NO);
-      v_msgboxState->setId("CLEAN_REPLAYS");
+      v_msgboxState->setMsgBxId("CLEAN_REPLAYS");
       v_msgboxState->makeActiveButton(UI_MSGBOX_NO);
     } else {
       v_msgboxState = new StateMessageBox(this, GAMETEXT_CLEAN_NOTHING_TO_DO, UI_MSGBOX_OK);

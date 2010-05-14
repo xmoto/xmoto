@@ -32,6 +32,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class VideoRecorder;
 class GameState;
 class Texture;
+class XMThreadStats;
+class DownloadReplaysThread;
 
 class StateManager : public Singleton<StateManager> {
   friend class Singleton<StateManager>;
@@ -91,7 +93,12 @@ public:
   static void refreshStaticCaptions();
 
   bool isThereASuchState(const std::string& i_name);
-  bool isThereASuchStateId(const std::string& i_id);
+  bool isThereASuchStateType(const std::string& i_type);
+
+  // thread to externalize db update in other thread to reduce freezes
+  XMThreadStats* getDbStatsThread();
+
+  DownloadReplaysThread* getReplayDownloaderThread();
 
 private:
   GameState* popState();
@@ -145,6 +152,12 @@ private:
 
   // messages and associate observer states
   std::map<std::string, std::vector<GameState*> > m_registeredStates;
+
+  // db stats thread
+  XMThreadStats *m_xmtstas;
+
+  // replays downloader
+  DownloadReplaysThread* m_drt;
 
   //
   int m_currentUniqueId;

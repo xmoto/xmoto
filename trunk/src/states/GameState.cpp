@@ -116,12 +116,20 @@ bool GameState::renderOverShadow() {
   return true;
 }
 
-std::string GameState::getId() const {
-  return m_id;
+void GameState::setStateId(const std::string& i_id) {
+  m_stateId = i_id;
 }
 
-void GameState::setId(const std::string& i_id) {
-  m_id = i_id;
+std::string GameState::getStateId() const {
+  return m_stateId;
+}
+
+void GameState::setStateType(const std::string& i_type) {
+  m_stateType = i_type;
+}
+
+std::string GameState::getStateType() const {
+  return m_stateType;
 }
 
 void GameState::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
@@ -308,19 +316,18 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
   // net chat
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_c, KMOD_LCTRL) && NetClient::instance()->isConnected()) {
-    if(StateManager::instance()->isThereASuchStateId("CHATMESSAGE") == false) { // do not open several chat box
+    if(StateManager::instance()->isThereASuchStateType("CHATMESSAGE") == false) { // do not open several chat box
       std::vector<std::string> clientList = NetClient::instance()->getOtherClientsNameList(); // forced to do cause i couldn't include in init netclient function
       StateMessageBox* v_msgboxState = new StateMessageBox(NULL, clientList, std::string(GAMETEXT_CHATMESSAGE) + ":", UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, "", false, true, false, true);
-      v_msgboxState->setId("CHATMESSAGE");
+      v_msgboxState->setStateType("CHATMESSAGE");
       StateManager::instance()->pushState(v_msgboxState);
       return; 
     }
   }
 
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_s, (SDLMod) (KMOD_LCTRL | KMOD_LALT)) && NetClient::instance()->isConnected()) {
-    if(StateManager::instance()->isThereASuchStateId("SERVERCONSOLE") == false) { // do not open several console
+    if(StateManager::instance()->isThereASuchState("StateServerConsole") == false) { // do not open several console
       StateServerConsole* v_console = new StateServerConsole(true, true);
-      v_console->setId("SERVERCONSOLE");
       StateManager::instance()->pushState(v_console);
       return; 
     }
@@ -328,5 +335,16 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
   else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getShowConsole()) {
     SysMessage::instance()->showConsole();
+  }
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_t, KMOD_LCTRL)) {
+    XMSession::instance()->setEnableTrailCam(!XMSession::instance()->enableTrailCam());
+    StateManager::instance()->sendAsynchronousMessage("CHANGE_TRAILCAM");
+
+    if(XMSession::instance()->enableTrailCam()) {
+      SysMessage::instance()->displayText(SYS_MSG_TRAILCAM_ACTIVATED);
+    } else {
+      SysMessage::instance()->displayText(SYS_MSG_TRAILCAM_DEACTIVATED);
+    }
   }
 }

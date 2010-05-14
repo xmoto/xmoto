@@ -40,8 +40,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../LuaLibGame.h"
 #include "../thread/XMThreadStats.h"
 
-StatePlayingLocal::StatePlayingLocal(Universe* i_universe, const std::string& i_id):
-StatePlaying(i_universe, i_id)
+StatePlayingLocal::StatePlayingLocal(Universe* i_universe):
+StatePlaying(i_universe)
 {
   m_name = "StatePlayingLocal";
   m_gameIsFinished = false;
@@ -105,7 +105,7 @@ void StatePlayingLocal::enter()
     snprintf(cBuf, 256, GAMETEXT_LEVELCANNOTBELOADED, v_level_name.c_str());
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, cBuf, UI_MSGBOX_OK);
-    v_msgboxState->setId("ERROR");
+    v_msgboxState->setMsgBxId("ERROR");
     StateManager::instance()->pushState(v_msgboxState);
   }
 
@@ -128,10 +128,10 @@ void StatePlayingLocal::leave()
 	if(m_universe->getScenes()[0]->Players().size() == 1) {
 	  if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
 	     m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
-	    GameApp::instance()->getDbStatsThread()->delay_abortedLevel(XMSession::instance()->profile(),
-									m_universe->getScenes()[0]->getLevelSrc()->Id(),
-									m_universe->getScenes()[0]->getTime());
-	    GameApp::instance()->getDbStatsThread()->doJob();
+	    StateManager::instance()->getDbStatsThread()->delay_abortedLevel(XMSession::instance()->profile(),
+									     m_universe->getScenes()[0]->getLevelSrc()->Id(),
+									     m_universe->getScenes()[0]->getTime());
+	    StateManager::instance()->getDbStatsThread()->doJob();
 	  }
 	}
       }
@@ -340,10 +340,10 @@ void StatePlayingLocal::onOneFinish() {
 								 v_finish_time);
         }
 
-	GameApp::instance()->getDbStatsThread()->delay_levelCompleted(XMSession::instance()->profile(),
-								      m_universe->getScenes()[0]->getLevelSrc()->Id(),
-								      m_universe->getScenes()[0]->Players()[0]->finishTime());
-	GameApp::instance()->getDbStatsThread()->doJob();
+	StateManager::instance()->getDbStatsThread()->delay_levelCompleted(XMSession::instance()->profile(),
+									   m_universe->getScenes()[0]->getLevelSrc()->Id(),
+									   m_universe->getScenes()[0]->Players()[0]->finishTime());
+	StateManager::instance()->getDbStatsThread()->doJob();
 
 	StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
       }
@@ -364,16 +364,16 @@ void StatePlayingLocal::onAllDead() {
   if(m_universe != NULL) {
     if(m_universe->getScenes().size() == 1) {
       if(m_universe->getScenes()[0]->Players().size() == 1) {
-	GameApp::instance()->getDbStatsThread()->delay_died(XMSession::instance()->profile(),
-							    m_universe->getScenes()[0]->getLevelSrc()->Id(),
-							    m_universe->getScenes()[0]->getTime());
-	GameApp::instance()->getDbStatsThread()->doJob();
+	StateManager::instance()->getDbStatsThread()->delay_died(XMSession::instance()->profile(),
+								 m_universe->getScenes()[0]->getLevelSrc()->Id(),
+								 m_universe->getScenes()[0]->getTime());
+	StateManager::instance()->getDbStatsThread()->doJob();
       }
     }
   }
   
   if(XMSession::instance()->enableDeadAnimation()) {
-    StateManager::instance()->replaceState(new StateDeadJust(m_universe, getId()), this->getId());
+    StateManager::instance()->replaceState(new StateDeadJust(m_universe), getStateId());
   } else {
     StateManager::instance()->pushState(new StateDeadMenu(m_universe, true, this));
   }
@@ -385,10 +385,10 @@ void StatePlayingLocal::abortPlaying() {
       if(m_universe->getScenes()[0]->Players().size() == 1) {
 	if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
 	   m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
-	  GameApp::instance()->getDbStatsThread()->delay_abortedLevel(XMSession::instance()->profile(),
-								      m_universe->getScenes()[0]->getLevelSrc()->Id(),
-								      m_universe->getScenes()[0]->getTime());
-	  GameApp::instance()->getDbStatsThread()->doJob();
+	  StateManager::instance()->getDbStatsThread()->delay_abortedLevel(XMSession::instance()->profile(),
+									   m_universe->getScenes()[0]->getLevelSrc()->Id(),
+									   m_universe->getScenes()[0]->getTime());
+	  StateManager::instance()->getDbStatsThread()->doJob();
 	}
       }
     }
@@ -409,10 +409,10 @@ void StatePlayingLocal::restartLevel(bool i_reloadLevel) {
 	if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
 	   m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
 
-	  GameApp::instance()->getDbStatsThread()->delay_levelRestarted(XMSession::instance()->profile(),
-									m_universe->getScenes()[0]->getLevelSrc()->Id(),
-									m_universe->getScenes()[0]->getTime());
-	  GameApp::instance()->getDbStatsThread()->doJob();
+	  StateManager::instance()->getDbStatsThread()->delay_levelRestarted(XMSession::instance()->profile(),
+									     m_universe->getScenes()[0]->getLevelSrc()->Id(),
+									     m_universe->getScenes()[0]->getTime());
+	  StateManager::instance()->getDbStatsThread()->doJob();
 	}
       }
     }

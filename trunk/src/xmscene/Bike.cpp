@@ -190,6 +190,7 @@ Biker::Biker(PhysicsSettings* i_physicsSettings,
   m_physicsSettings = i_physicsSettings;
   m_bikeState   = new BikeState(m_physicsSettings);
   m_localNetId = -1;
+  m_nbRenderedFrames = 0;
 
   /* sound engine */
   try {
@@ -697,6 +698,14 @@ float Biker::changeDirPer() const {
   return m_changeDirPer;
 }
 
+unsigned int Biker::getNbRenderedFrames() const {
+  return m_nbRenderedFrames;
+}
+
+void Biker::addNbRenderedFrames() {
+  m_nbRenderedFrames++;
+}
+
 void Biker::clearStates() {
   /* BIKE_S */
   m_bikeState->CenterP = Vector2f(0,0);
@@ -749,4 +758,5 @@ void Biker::clearStates() {
 
 BikeController* Biker::getControler() {
   return NULL;
+
 }

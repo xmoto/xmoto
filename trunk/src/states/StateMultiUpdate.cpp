@@ -88,7 +88,7 @@ bool StateMultiUpdate::update()
       pInfos->m_threadFinished = true;
       if(pThread->waitForThreadEnd() != 0) {
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, pInfos->m_errorMessage, UI_MSGBOX_OK);
-	v_msgboxState->setId("ERROR");
+	v_msgboxState->setMsgBxId("ERROR");
 	StateManager::instance()->pushState(v_msgboxState);
       }
     }

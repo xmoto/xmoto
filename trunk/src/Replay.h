@@ -51,6 +51,13 @@ class PhysicsSettings;
     int nNumStates;
   };
 
+  /* to be able to rewind exactly at the same position */
+  struct ReplayPosition {
+   bool bEndOfFile;
+   unsigned int nCurChunk;
+   float nCurState;
+  };
+
   /*===========================================================================
   Replay class
   ===========================================================================*/  
@@ -100,6 +107,11 @@ class PhysicsSettings;
       static ReplayInfo* getReplayInfos(const std::string p_ReplayName);
 
       void saveReplayIfNot(int i_format);
+
+      // store and restore replay position
+      void rewindAtPosition(ReplayPosition i_rs);
+      void rewindAtBeginning();
+      ReplayPosition getReplayPosition() const;
 
     private: 
       /* Data */ 

@@ -28,8 +28,7 @@ class UIRoot;
 
 class StateEditProfile : public StateMenu {
 public:
-  StateEditProfile(const std::string& i_id,
-		   bool drawStateBehind    = true,
+  StateEditProfile(bool drawStateBehind    = true,
 		   bool updateStatesBehind = false
 		   );
   virtual ~StateEditProfile();

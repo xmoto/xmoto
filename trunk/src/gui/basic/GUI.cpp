@@ -373,8 +373,10 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
             	m_TextInput_real = m_TextInput_fake;
             default:
 	      if(utf8::utf8_length(i_utf8Char) == 1) { // alt/... and special keys must not be kept
-		m_TextInput_real = utf8::utf8_concat(m_TextInput_real, i_utf8Char);
-		m_TextInput_fake = m_TextInput_real;
+		if(i_utf8Char[0] != '\n') { // you can generate ascii 10 with ctrl+j or keyboard having new line key
+		  m_TextInput_real = utf8::utf8_concat(m_TextInput_real, i_utf8Char);
+		  m_TextInput_fake = m_TextInput_real;
+		}
 	      }
               return true;
           }

@@ -34,9 +34,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Text.h"
 #include "../SysMessage.h"
 
-StatePreplayingNet::StatePreplayingNet(const std::string& i_id,
-				       const std::string i_idlevel, bool i_sameLevel)
-: StatePreplaying(i_id, i_idlevel, i_sameLevel) {
+StatePreplayingNet::StatePreplayingNet(const std::string i_idlevel, bool i_sameLevel)
+: StatePreplaying(i_idlevel, i_sameLevel) {
     m_name  = "StatePreplayingNet";
 
     StateManager::instance()->registerAsObserver("NET_PREPARE_PLAYING", this);
@@ -77,13 +76,13 @@ void StatePreplayingNet::initPlayers() {
 }
 
 void StatePreplayingNet::runPlaying() {
-  StateManager::instance()->replaceState(new StatePlayingNet(m_universe, getId()), this->getId());
+  StateManager::instance()->replaceState(new StatePlayingNet(m_universe), getStateId());
 }
 
 void StatePreplayingNet::executeOneCommand(std::string cmd, std::string args) {
   if(cmd == "NET_PREPARE_PLAYING") {
     closePlaying();
-    StateManager::instance()->replaceState(new StatePreplayingNet(getId(), args, true), this->getId());
+    StateManager::instance()->replaceState(new StatePreplayingNet(args, true), getStateId());
   } else {
     StateScene::executeOneCommand(cmd, args);
   }
@@ -94,7 +93,7 @@ bool StatePreplayingNet::allowGhosts() {
 }
 
 void StatePreplayingNet::onLoadingFailure(const std::string& i_msg) {
-  StateManager::instance()->replaceState(new StateWaitServerInstructions(getId()), this->getId());
+  StateManager::instance()->replaceState(new StateWaitServerInstructions(), getStateId());
 
   // display a simple error to not break the states order
   SysMessage::instance()->displayError(i_msg);

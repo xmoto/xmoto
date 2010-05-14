@@ -22,13 +22,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEUPDATE_H__
 
 #include "StateManager.h"
-#include "StateMenu.h"
+#include "StateWaiting.h"
 #include "../thread/XMThread.h"
 #include <string>
 
 class UIRoot;
 
-class StateUpdate : public StateMenu {
+class StateUpdate : public StateWaiting {
 public:
   StateUpdate(bool drawStateBehind,
 	      bool updateStatesBehind);			 
@@ -43,17 +43,9 @@ public:
   /* input */
   virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
 
-  static void clean();
-
 protected:
-  virtual void updateGUI();
   bool m_threadStarted;
   bool m_threadFinished;
-
-  // updated by the child class
-  int         m_progress;
-  std::string m_currentOperation;
-  std::string m_currentMicroOperation;
 
   // the thread
   XMThread*   m_pThread;
@@ -72,16 +64,10 @@ protected:
   virtual bool callBeforeLaunchingThread();
 
   // for the message box when a thread badly finished
-  void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
-
+  virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  
   virtual void onThreadFinishes(bool i_res);
 
-private:
-  /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded();
-
-  void init();
 };
 
 #endif

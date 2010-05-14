@@ -54,7 +54,7 @@ void StateEditWebConfig::enter()
     // show the message box
     StateMessageBox* v_msgboxState = new StateMessageBox(this, std::string(GAMETEXT_ALLOWINTERNETCONN),
 							 UI_MSGBOX_YES|UI_MSGBOX_NO);
-    v_msgboxState->setId("EDITWEBCONF");
+    v_msgboxState->setMsgBxId("EDITWEBCONF");
     StateManager::instance()->pushState(v_msgboxState);
   }
 

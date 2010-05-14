@@ -44,6 +44,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../SysMessage.h"
 #include "../xmscene/Camera.h"
 #include "../VideoRecorder.h"
+#include "thread/XMThreadStats.h"
+#include "thread/DownloadReplaysThread.h"
 #include <sstream>
 
 StateManager::StateManager()
@@ -78,6 +80,12 @@ StateManager::StateManager()
   }
 
   m_currentUniqueId = 0;
+
+  // create the db stats thread
+  m_xmtstas = new XMThreadStats(XMSession::instance()->sitekey(), this);
+
+  // create the replay downloader thread
+  m_drt = new DownloadReplaysThread(this);
 }
 
 StateManager::~StateManager()
@@ -86,6 +94,26 @@ StateManager::~StateManager()
     delete popState();
   }
 
+  /* stats */
+  if(m_xmtstas != NULL) {
+    // do the stats job to confirm there are no more jobs waiting
+    m_xmtstas->doJob();
+    
+    // be sure the thread is finished before closing xmoto
+    if(m_xmtstas->waitForThreadEnd()) {
+      LogError("stats thread failed");
+    }
+  }
+
+  /* replays */
+  if(m_drt != NULL) {
+    // be sure the thread is finished before closing xmoto
+    if(m_drt->waitForThreadEnd()) {
+      LogError("replays downloader thread failed");
+    }
+  }
+
+
   deleteToDeleteState();
 
   if(m_videoRecorder != NULL) {
@@ -93,6 +121,12 @@ StateManager::~StateManager()
   }
 
   m_registeredStates.clear();
+
+  // stats thread
+  if(m_xmtstas != NULL) {
+    delete m_xmtstas;
+  }
+
 }
 
 std::string StateManager::getUniqueId() {
@@ -109,6 +143,7 @@ void StateManager::pushState(GameState* pNewState)
   }
 
   m_statesStack.push_back(pNewState);
+  pNewState->setStateId(getUniqueId());
   (m_statesStack.back())->enter();
 
   calculateWhichStateIsRendered();
@@ -146,10 +181,11 @@ void StateManager::flush() {
 void StateManager::replaceState(GameState* pNewState, const std::string& i_parentId)
 {
   for(int i=m_statesStack.size()-1; i>=0; i--) {
-    if(m_statesStack[i]->getId() == i_parentId) {
+    if(m_statesStack[i]->getStateId() == i_parentId) {
       m_statesStack[i]->leave();
       m_toDeleteStates.push_back(m_statesStack[i]);
       m_statesStack[i] = pNewState;
+      pNewState->setStateId(i_parentId);
       pNewState->enter();
       calculateWhichStateIsRendered();
       calculateFps();
@@ -378,10 +414,10 @@ void StateManager::drawStack() {
     drawLib->drawBox(Vector2f(xoff,     yoff - (i * h)), Vector2f(xoff + w/2, yoff - ((i+1) * h)), 1.0, bg_update);
     drawLib->drawBox(Vector2f(xoff+w/2, yoff - (i * h)), Vector2f(xoff + w,   yoff - ((i+1) * h)), 1.0, bg_render);
 
-    if(m_statesStack[i]->getId() == "") {
+    if(m_statesStack[i]->getStateId() == "") {
       v_fg = v_fm->getGlyph(m_statesStack[i]->getName());
     } else {
-      v_fg = v_fm->getGlyph(m_statesStack[i]->getName() + " (" + m_statesStack[i]->getId() + ")");
+      v_fg = v_fm->getGlyph(m_statesStack[i]->getName() + " (" + m_statesStack[i]->getStateId() + ")");
     }
     v_fm->printString(v_fg, (w-v_fg->realWidth())/2 + xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, 0.0, true);
 
@@ -667,12 +703,11 @@ StateManager::sendAsynchronousMessage(std::string message, std::string args)
     }
 
     while(stateIterator != states.end()){
-      (*stateIterator)->send(message, args);
-
       LogDebug("sendAsynchronousMessage [%s [%s]] to [%s]",
 	       message.c_str(), args.c_str(),
 	       (*stateIterator)->getName().c_str());
 
+      (*stateIterator)->send(message, args);
       ++stateIterator;
     }
   } else {
@@ -702,12 +737,20 @@ bool StateManager::isThereASuchState(const std::string& i_name) {
   return false;
 }
 
-bool StateManager::isThereASuchStateId(const std::string& i_id) {
+bool StateManager::isThereASuchStateType(const std::string& i_type) {
   for(unsigned int i=0; i<m_statesStack.size(); i++) {
-    if(m_statesStack[i]->getId() == i_id) {
+    if(m_statesStack[i]->getStateType() == i_type) {
       return true;
     }
   }
 
   return false;
+}
+
+XMThreadStats* StateManager::getDbStatsThread() {
+  return m_xmtstas;
+}
+
+DownloadReplaysThread* StateManager::getReplayDownloaderThread() {
+  return m_drt;
 }

@@ -79,9 +79,9 @@ void StateMessageBox::makeActiveButton(UIMsgBoxButton i_button) {
 void StateMessageBox::leave()
 {
   if(m_receiver != NULL) {
-    m_receiver->sendFromMessageBox(getId(), m_clickedButton, m_msgbox->getTextInput());
+    m_receiver->sendFromMessageBox(getMsgBxId(), m_clickedButton, m_msgbox->getTextInput());
   } else {
-    sendFromMessageBox(getId(), m_clickedButton, m_msgbox->getTextInput());
+    sendFromMessageBox(getMsgBxId(), m_clickedButton, m_msgbox->getTextInput());
   }
 }
 
@@ -117,4 +117,12 @@ void StateMessageBox::createGUI(const std::string& i_text, int i_buttons,
     m_msgbox->setTextInput(i_inputText);
   }
 
+}
+
+std::string StateMessageBox::getMsgBxId() const {
+  return m_msgbxid;
+}
+
+void StateMessageBox::setMsgBxId(const std::string& i_id) {
+  m_msgbxid = i_id;
 }

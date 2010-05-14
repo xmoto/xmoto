@@ -107,6 +107,7 @@ GameRenderer::GameRenderer() {
   m_sizeMultOfEntitiesToTake = 1.0;
   m_sizeMultOfEntitiesWhichMakeWin = 1.0;
   m_showMinimap = true;
+  m_renderGhostTrail = false;
   m_showEngineCounter = true;
   m_showTimePanel = true;
   m_allowGhostEffect = true;
@@ -284,7 +285,6 @@ void GameRenderer::initCameras(Universe* i_universe)
     for(unsigned int i=0; i<numberCamera; i++){
       i_universe->getScenes()[j]->setCurrentCamera(i);
       i_universe->getScenes()[j]->getCamera()->prepareForNewLevel();
-      i_universe->getScenes()[j]->getCamera()->initTrailCam(i_universe->getScenes()[j]);
     }
   }
 }
@@ -1234,22 +1234,27 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
   /* Render ghost - ugly mode? */
   if(XMSession::instance()->ugly() == false) {
     if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
+
+      bool v_doEffect =
+	XMSession::instance()->ghostMotionBlur() &&
+	i_ghost->getBikeTheme()->getGhostEffect() &&
+	m_allowGhostEffect;
+
       /* No not ugly, fancy! Render into overlay? */      
-      if(XMSession::instance()->ghostMotionBlur() && i_ghost->getBikeTheme()->getGhostEffect()
-	 && m_allowGhostEffect) {
+      if(v_doEffect) {
 	m_Overlay.beginRendering();
-	m_Overlay.fade(0.15);
+	m_Overlay.fade(0.15, i_ghost->getNbRenderedFrames());
       }
 
       try {
 	_RenderBike(i_ghost, true,
 		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
+	i_ghost->addNbRenderedFrames();
       } catch(Exception &e) {
 	i_scene->gameMessage("Unable to render the ghost", true, 50);
       }
 
-      if(XMSession::instance()->ghostMotionBlur() && i_ghost->getBikeTheme()->getGhostEffect()
-	 && m_allowGhostEffect) {
+      if(v_doEffect) {
 	m_Overlay.endRendering();
 	m_Overlay.present();
       }
@@ -1306,7 +1311,7 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
 void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i_scale) {
   //get trail data
   GhostTrail* v_ghostTrail = i_scene->getGhostTrail(); 
-  if(v_ghostTrail == 0){
+  if(v_ghostTrail == NULL){
     return;
   }
   std::vector<Vector2f>* v_ghostTrailData = v_ghostTrail->getGhostTrailData();
@@ -1664,8 +1669,8 @@ int GameRenderer::nbParticlesRendered() const {
 
       if(v_ghost != pCamera->getPlayerToFollow()) {
 	_RenderGhost(i_scene, v_ghost, i, v_textOffset);
-        if(i_scene->getGhostTrail() != 0)
-          if(XMSession::instance()->renderGhostTrail() || XMSession::instance()->renderGhostTrailTS()) { 
+        if(i_scene->getGhostTrail() != NULL)
+          if(renderGhostTrail()) { 
         	_RenderGhostTrail(i_scene, &m_screenBBox, m_sizeMultOfEntitiesToTake); 
           }
       } else {
@@ -1874,12 +1879,15 @@ int GameRenderer::nbParticlesRendered() const {
     // _RenderGameMessages(i_scene,true);  => got moved to stateScene, to have non-covered multiplayer message display
 
     /* Render Level Name at bottom of screen, when died or pause */
-    FontManager* v_fm = pDrawlib->getFontMedium();
-    FontGlyph* v_fg = v_fm->getGlyph(i_scene->getInfos());
-    v_fm->printString(v_fg,
-		      5,
-		      pDrawlib->getDispHeight() - v_fg->realHeight() - 2,
-		      MAKE_COLOR(255,255,255,255), 0.0, true);
+    if(i_scene->getInfos() != "") {
+      FontManager* v_fm = pDrawlib->getFontMedium();
+      FontGlyph* v_fg = v_fm->getGlyph(i_scene->getInfos());
+      v_fm->printString(v_fg,
+			5,
+			pDrawlib->getDispHeight() - v_fg->realHeight() - 2,
+			MAKE_COLOR(255,255,255,255), 0.0, true);
+    }
+
   }
 
   /*===========================================================================
@@ -3248,6 +3256,14 @@ void GameRenderer::setShowTimePanel(bool i_value) {
     m_showMinimap = i_value;
   }
 
+  void GameRenderer::setRenderGhostTrail(bool i_value) {
+   m_renderGhostTrail = i_value;
+  }
+
+  bool GameRenderer::renderGhostTrail() {
+    return m_renderGhostTrail;
+  }
+
   void GameRenderer::setShowEngineCounter(bool i_value) {
     m_showEngineCounter = i_value;
   }
@@ -3266,8 +3282,6 @@ void GameRenderer::switchFollow(Scene* i_scene) {
     if(pCamera->getPlayerToFollow() == NULL)
       return;
 
-    pCamera->allowTrailCam(false);
-
     std::vector<Biker*>& players = i_scene->Players();
     std::vector<Ghost*>& ghosts = i_scene->Ghosts();
     unsigned int sizePlayers = players.size();
@@ -3283,7 +3297,6 @@ void GameRenderer::switchFollow(Scene* i_scene) {
 	    pCamera->setPlayerToFollow(ghosts[0]);
 	  } else {
 	    pCamera->setPlayerToFollow(players[0]);
-	    pCamera->allowTrailCam(true);
 	  }
 	}
 	return;

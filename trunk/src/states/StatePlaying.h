@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StatePlaying : public StateScene {
   public:
-  StatePlaying(Universe* i_universe, const std::string& i_id);
+  StatePlaying(Universe* i_universe);
   virtual ~StatePlaying() =0;
 
   virtual void enter();

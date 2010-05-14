@@ -57,18 +57,12 @@ WebRoom::~WebRoom()
 {
 }
 
-std::string WebRoom::getRoomId() const
-{
-  return m_roomId;
+void WebRoom::setProxy(const ProxySettings* pProxySettings) {
+  m_proxy_settings    = pProxySettings;
 }
 
-void WebRoom::setWebsiteInfos(const std::string& i_id_room,
-			      const std::string& i_webhighscores_url,
-			      const ProxySettings* pProxySettings)
-{
+void WebRoom::setHighscoresUrl(const std::string& i_webhighscores_url) {
   m_webhighscores_url = i_webhighscores_url;
-  m_roomId            = i_id_room;
-  m_proxy_settings    = pProxySettings;
 }
 
 /* use the id of the room so that if several people share the same room, it doesn't need to recheck if md5 is ok */

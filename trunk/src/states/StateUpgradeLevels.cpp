@@ -95,7 +95,7 @@ void StateUpgradeLevels::executeOneCommand(std::string cmd, std::string args)
     /* Ask user whether he want to download levels or snot */
     StateMessageBox* v_state = new StateMessageBox(this, cBuf,
 						   (UI_MSGBOX_YES|UI_MSGBOX_NO));
-    v_state->setId("DOWNLOAD_LEVELS");
+    v_state->setMsgBxId("DOWNLOAD_LEVELS");
     StateManager::instance()->pushState(v_state);
   }
   else if(cmd == "ASKINGLEVELUPDATE"){
@@ -106,7 +106,7 @@ void StateUpgradeLevels::executeOneCommand(std::string cmd, std::string args)
 
     StateMessageBox* v_state = new StateMessageBox(this, cBuf,
 						   (UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
-    v_state->setId("ASKING_LEVEL_UPDATE");
+    v_state->setMsgBxId("ASKING_LEVEL_UPDATE");
     StateManager::instance()->pushState(v_state);
   } else {
     GameState::executeOneCommand(cmd, args);
