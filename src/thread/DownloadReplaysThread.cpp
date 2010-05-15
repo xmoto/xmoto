@@ -40,6 +40,16 @@ DownloadReplaysThread::~DownloadReplaysThread() {
 
 void DownloadReplaysThread::add(const std::string i_url) {
   SDL_LockMutex(m_urlsMutex);
+
+  // prevent multiple add of the same url
+  for(unsigned int i=0; i<m_replaysUrls.size(); i++) {
+    if(m_replaysUrls[i] == i_url) {
+      SDL_UnlockMutex(m_urlsMutex);
+      return;
+    }
+  }
+
+  printf("Add %s\n", i_url.c_str());
   m_replaysUrls.push_back(i_url);
   SDL_UnlockMutex(m_urlsMutex);
 }
@@ -64,21 +74,23 @@ void DownloadReplaysThread::play() {
 
       v_replayName = XMFS::getFileBaseName(m_replaysUrls[0]);
 
-      // dwd here
-      try {	      
-	ProxySettings* pProxySettings = XMSession::instance()->proxySettings();
-
-	m_pWebRoom->setProxy(pProxySettings);
-	m_pWebRoom->downloadReplay(m_replaysUrls[0]);
-	GameApp::instance()->addReplay(v_replayName, m_pDb);
-
-	m_manager->sendAsynchronousMessage("REPLAY_DOWNLOADED", v_replayName);
-
-      } catch(Exception& e) {
-	m_manager->sendAsynchronousMessage("REPLAY_FAILEDTODOWNLOAD", v_replayName);
-	LogError("Unable to download replay : %s", e.getMsg().c_str());
+      // prevent double download just before downloading - add() duplicate check is not enough while it's done in an other thread
+      if(m_pWebRoom->downloadReplayExists(m_replaysUrls[0]) == false) {
+	// dwd here
+	try {	      
+	  ProxySettings* pProxySettings = XMSession::instance()->proxySettings();
+	  
+	  m_pWebRoom->setProxy(pProxySettings);
+	  m_pWebRoom->downloadReplay(m_replaysUrls[0]);
+	  GameApp::instance()->addReplay(v_replayName, m_pDb);
+	  
+	  m_manager->sendAsynchronousMessage("REPLAY_DOWNLOADED", v_replayName);
+	  
+	} catch(Exception& e) {
+	  m_manager->sendAsynchronousMessage("REPLAY_FAILEDTODOWNLOAD", v_replayName);
+	  LogError("Unable to download replay : %s", e.getMsg().c_str());
+	}
       }
-
       m_replaysUrls.erase(m_replaysUrls.begin());
     }
   } catch(Exception &e) {

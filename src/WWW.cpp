@@ -25,6 +25,15 @@
 
 #define DEFAULT_WWW_MSGFILE "wwwMsg.xml"
 
+bool WebRoom::downloadReplayExists(const std::string& i_url) {
+  std::string i_rplFilename = XMFS::getUserReplaysDir()
+    + "/" 
+    + XMFS::getFileBaseName(i_url) 
+    + ".rpl";
+  
+  return XMFS::fileExists(FDT_DATA, i_rplFilename);
+}
+
 void WebRoom::downloadReplay(const std::string& i_url) {
   std::string i_rplFilename = XMFS::getUserReplaysDir()
     + "/" 
