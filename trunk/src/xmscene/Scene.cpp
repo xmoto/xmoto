@@ -44,9 +44,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../net/NetClient.h"
 #include "../net/NetActions.h"
 #include "ScriptTimer.h"
-#include "../drawlib/DrawLib.h"
-
-#define GAMEMESSAGES_PACKTIME 40
 
 /* 
  *  Game object. Handles all of the gamestate management und so weiter.
@@ -160,39 +157,6 @@ void Scene::cleanPlayers() {
   void Scene::gameMessage(std::string Text, bool bOnce, int duration, MessageType i_msgType) {
 
     if(Text == "" ) return;  // eliminate empty messages
-
-    /* If text is longer than screen width, put \n into it to split lines */   
-    DrawLib* pDrawLib = GameApp::instance()->getDrawLib();
-    //distinction for multiplayer, here diff msg types use diff fonts
-    FontManager* pFM; 
-    FontGlyph* pFG;
-    int multiScreenDivision = 1;
-    if(XMSession::instance()->multiNbPlayers() > 2 && (i_msgType == scripted || i_msgType == gameTime)) {
-      pFM = pDrawLib->getFontSmall();  
-      multiScreenDivision = 2;
-    }
-    else {
-      pFM = pDrawLib->getFontMedium();
-    }
-    pFG = pFM->getGlyph(Text);
-    if(pFG->realWidth() > unsigned (pDrawLib->getDispWidth()/multiScreenDivision) ) {
-      unsigned int v_newline = 0;
-      std::string v_subtext = ("");
-
-      for( unsigned int i = 0; i<Text.length(); i++) {
-        pFG = pFM->getGlyph(Text.substr(v_newline,i-v_subtext.length()));  //substr isnt a problem for utf8, because its got a rule which prevents characters beeing in 2-byte chars
-        if(pFG->realWidth() >= unsigned (pDrawLib->getDispWidth()/multiScreenDivision)-15) {  // our sub string length is now equal disp Width
-          for(unsigned int j=i; j>v_newline; j--) { //look for " "
-            if(!Text.compare(j,1," ")) {
-               Text.insert(j,"\n");
-               v_newline = j+1;
-               v_subtext = Text.substr(i-v_subtext.length(),j);
-               continue;  // leave this loop, to continue with rest of the string
-            }
-          }
-        }
-      }
-    }
     
     /* "unique"? */
     GameMessage *pMsg = NULL;
@@ -262,7 +226,7 @@ void Scene::packGameMessages() {   //put multiple GameMessages into one, if they
  
   for( int i = m_GameMessages.size()-1 ; i > 0 ; i-- ) {
     
-    if( (m_GameMessages[i]->removeTime - m_GameMessages[i-1]->removeTime < GAMEMESSAGES_PACKTIME) && 
+    if( (m_GameMessages[i]->removeTime) && 
         (m_GameMessages[i]->removeTime != 0) &&
         (m_GameMessages[i]->msgType == m_GameMessages[i-1]->msgType) &&
         (m_GameMessages[i]->bOnce == m_GameMessages[i-1]->bOnce) &&
