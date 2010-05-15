@@ -204,6 +204,7 @@ class WebRoom {
   void setHighscoresUrl(const std::string& i_webhighscores_url);
 
   void downloadReplay(const std::string& i_url);
+  bool downloadReplayExists(const std::string& i_url);
 
  private:
   WWWAppInterface* m_WebRoomApp;
