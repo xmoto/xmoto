@@ -79,5 +79,5 @@ void StatePreplayingReplay::initPlayers() {
 }
 
 void StatePreplayingReplay::runPlaying() {
-  StateManager::instance()->replaceState(new StateReplaying(m_universe, m_replay, m_replayBiker), getStateId());
+  StateManager::instance()->replaceState(new StateReplaying(m_universe, m_renderer, m_replay, m_replayBiker), getStateId());
 }

@@ -34,8 +34,7 @@ StatePause::StatePause(Universe* i_universe,
 		       bool drawStateBehind,
 		       bool updateStatesBehind):
   StateMenu(drawStateBehind,
-	    updateStatesBehind,
-	    true)
+	    updateStatesBehind)
 {
   m_name  = "StatePause";
   m_universe = i_universe;

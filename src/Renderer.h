@@ -125,12 +125,13 @@ class Camera;
   /*===========================================================================
     Game rendering class
     ===========================================================================*/
-class GameRenderer : public Singleton<GameRenderer> {
-  friend class Singleton<GameRenderer>;
+class GameRenderer {
 
 public:
+  GameRenderer();
+  ~GameRenderer();
+
   void init(DrawLib* i_drawLib); /* only called at start-up, and not per-level */
-  void shutdown(void);
   void render(Scene* i_scene);
 
   void prepareForNewLevel(Universe* i_universe);
@@ -156,13 +157,12 @@ public:
   void setShowEngineCounter(bool i_value);
   bool showMinimap() const;
   void showReplayHelp(float p_speed, bool bAllowRewind);
-  void switchFollow(Scene* i_scene);
 
   void setShowGhostsText(bool i_value);
   bool showGhostsText() const;
   void renderGameMessages(Scene* i_scene);
 
-  unsigned int currentRegistrationStage() const;
+  static unsigned int currentRegistrationStage();
   void setGraphicsLevel();
 
 private:
@@ -172,9 +172,6 @@ private:
   Vector2f calculateChangeDirPosition(Biker* i_biker, const Vector2f i_p);
       
   std::string getBestTime(void) {return m_bestTime;}
-
-  GameRenderer();
-  ~GameRenderer();
 
   DrawLib* m_drawLib;
   std::vector<GraphDebugInfo *> m_DebugInfo;
@@ -314,7 +311,7 @@ private:
 
   void beginTexturesRegistration();
   void endTexturesRegistration();
-  unsigned int m_curRegistrationStage;
+  static unsigned int m_curRegistrationStage;
 };
 
 #endif

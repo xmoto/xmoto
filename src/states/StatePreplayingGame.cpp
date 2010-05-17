@@ -98,7 +98,7 @@ void StatePreplayingGame::initPlayers() {
 }
 
 void StatePreplayingGame::runPlaying() {
-  StateManager::instance()->replaceState(new StatePlayingLocal(m_universe), getStateId());
+  StateManager::instance()->replaceState(new StatePlayingLocal(m_universe, m_renderer), getStateId());
 }
 
 void StatePreplayingGame::nextLevel(bool i_positifOrder) {

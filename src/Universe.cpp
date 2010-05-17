@@ -70,7 +70,7 @@ Universe::~Universe() {
 
   if(m_pJustPlayReplay != NULL) {
     delete m_pJustPlayReplay;
-  }    
+  }
 }
 
 void Universe::addScene() {
@@ -221,9 +221,55 @@ void Universe::TeleportationCheatTo(int i_player, Vector2f i_position) {
   }
 }
 
+void Universe::switchFollowCameraScene(Scene* i_scene) {
+  Camera*  pCamera  = i_scene->getCamera();
+
+  if(pCamera->getPlayerToFollow() == NULL) {
+    return;
+  }
+
+  std::vector<Biker*>& players = i_scene->Players();
+  std::vector<Ghost*>& ghosts = i_scene->Ghosts();
+  unsigned int sizePlayers = players.size();
+  unsigned int sizeGhosts  = ghosts.size();
+
+  /* search into the player */
+  for(unsigned i=0; i<sizePlayers; i++) {
+    if(players[i] == pCamera->getPlayerToFollow()) {
+      if(i < sizePlayers-1) {
+	pCamera->setPlayerToFollow(players[i+1]);
+      } else {
+	if(sizeGhosts > 0) {
+	  pCamera->setPlayerToFollow(ghosts[0]);
+	} else {
+	  pCamera->setPlayerToFollow(players[0]);
+	}
+      }
+      return;
+    }
+  }
+  
+  /* search into the ghost */
+  for(unsigned i=0; i<sizeGhosts; i++) {
+    if(ghosts[i] == pCamera->getPlayerToFollow()) {
+      if(i < sizeGhosts-1) {
+	pCamera->setPlayerToFollow(ghosts[i+1]);
+	} else {
+	if(sizePlayers > 0) {
+	  pCamera->setPlayerToFollow(players[0]);
+	} else {
+	  pCamera->setPlayerToFollow(ghosts[0]);
+	}
+      }
+      return;
+    }
+  }
+
+}
+
 void Universe::switchFollowCamera() {
   if(m_scenes.size() > 0) {
-    GameRenderer::instance()->switchFollow(m_scenes[0]);
+    switchFollowCameraScene(m_scenes[0]);
 
     SysMessage::instance()->displayText(m_scenes[0]->getCamera()->
 					getPlayerToFollow()->

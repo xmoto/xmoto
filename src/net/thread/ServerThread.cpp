@@ -953,6 +953,7 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_udpBindQuery:
   case TNA_serverError:
   case TNA_changeClients:
+  case TNA_clientsNumber:
   case TNA_prepareToPlay:
   case TNA_prepareToGo:
   case TNA_killAlert:

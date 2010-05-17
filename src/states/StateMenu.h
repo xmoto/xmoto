@@ -29,9 +29,7 @@ class GameApp;
 class StateMenu : public GameState {
  public:
   StateMenu(bool drawStateBehind,
-	    bool updateStatesBehind,
-	    bool i_doShade     = false,
-	    bool i_doShadeAnim = true);
+	    bool updateStatesBehind);
   virtual ~StateMenu();
   
   virtual void enter();

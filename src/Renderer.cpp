@@ -77,6 +77,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //how much uglier in uglymode
 #define GT_UGLY_MODE_MULTIPLYER 2
 
+unsigned int GameRenderer::m_curRegistrationStage=0;
+
   /* to sort blocks on their texture */
   struct AscendingTextureSort {
     bool operator() (Block* b1, Block* b2) {
@@ -116,12 +118,13 @@ GameRenderer::GameRenderer() {
   m_currentEdgeSprite = NULL;
   m_currentSkySprite = NULL;
   m_currentSkySprite2 = NULL;
-  m_curRegistrationStage = 0;
   m_showGhostsText = true;
   m_graphicsLevel = GFX_HIGH;  //not used anymore
 }
 
 GameRenderer::~GameRenderer() {
+  unprepareForNewLevel();
+  m_Overlay.cleanUp();
 }
 
   /*===========================================================================
@@ -130,7 +133,7 @@ GameRenderer::~GameRenderer() {
   void GameRenderer::init(DrawLib* i_drawLib) { 
     /* Overlays? */
     m_drawLib = i_drawLib;
-    m_Overlay.init(GameApp::instance()->getDrawLib(),512,512);
+    m_Overlay.init(GameApp::instance()->getDrawLib(),512,512); // width height of the picture of the biker
 
     m_nParticlesRendered = 0;
     m_arrowSprite = NULL;
@@ -2931,11 +2934,6 @@ void GameRenderer::_RenderLayers(Scene* i_scene, bool renderFront) {
     }
   }
   
-  void GameRenderer::shutdown(void) {
-    /* Free overlay */
-    m_Overlay.cleanUp();
-  }  
-
   /*===========================================================================
   Debug info. Note how this is leaked into the void and nobody cares :) 
   ===========================================================================*/
@@ -3275,51 +3273,6 @@ void GameRenderer::setShowGhostsText(bool i_value) {
 bool GameRenderer::showGhostsText() const {
   return m_showGhostsText;
 }
-
-void GameRenderer::switchFollow(Scene* i_scene) {
-    Camera*  pCamera  = i_scene->getCamera();
-
-    if(pCamera->getPlayerToFollow() == NULL)
-      return;
-
-    std::vector<Biker*>& players = i_scene->Players();
-    std::vector<Ghost*>& ghosts = i_scene->Ghosts();
-    unsigned int sizePlayers = players.size();
-    unsigned int sizeGhosts  = ghosts.size();
-
-    /* search into the player */
-    for(unsigned i=0; i<sizePlayers; i++) {
-      if(players[i] == pCamera->getPlayerToFollow()) {
-	if(i < sizePlayers-1) {
-	  pCamera->setPlayerToFollow(players[i+1]);
-	} else {
-	  if(sizeGhosts > 0) {
-	    pCamera->setPlayerToFollow(ghosts[0]);
-	  } else {
-	    pCamera->setPlayerToFollow(players[0]);
-	  }
-	}
-	return;
-      }
-    }
-
-    /* search into the ghost */
-    for(unsigned i=0; i<sizeGhosts; i++) {
-      if(ghosts[i] == pCamera->getPlayerToFollow()) {
-	if(i < sizeGhosts-1) {
-	  pCamera->setPlayerToFollow(ghosts[i+1]);
-	} else {
-	  if(sizePlayers > 0) {
-	    pCamera->setPlayerToFollow(players[0]);
-	  } else {
-	    pCamera->setPlayerToFollow(ghosts[0]);
-	  }
-	}
-	return;
-      }
-    }
-}
-
 
 void GameRenderer::renderTimePanel(Scene* i_scene) {
   int x = 0;
@@ -4128,7 +4081,7 @@ void GameRenderer::endTexturesRegistration()
   }
 }
 
-unsigned int GameRenderer::currentRegistrationStage() const
+unsigned int GameRenderer::currentRegistrationStage()
 {
   return m_curRegistrationStage;
 }

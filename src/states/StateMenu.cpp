@@ -27,12 +27,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Log.h"
 
 StateMenu::StateMenu(bool drawStateBehind,
-		     bool updateStatesBehind,
-		     bool i_doShade,
-		     bool i_doShadeAnim):
+		     bool updateStatesBehind):
   GameState(drawStateBehind,
-	    updateStatesBehind,
-	    i_doShade, i_doShadeAnim)
+	    updateStatesBehind)
 {
   m_GUI        = NULL;
   m_showCursor = true;

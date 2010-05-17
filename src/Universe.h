@@ -70,6 +70,7 @@ class Universe {
   Replay *m_pJustPlayReplay;
 
   void removeAllWorlds();
+  void switchFollowCameraScene(Scene* i_scene);
 
   void initCameras(int nbPlayer); // init camera according to the number of players and the existing scenes
   void addScene();

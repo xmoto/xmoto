@@ -705,7 +705,7 @@ Texture* Sprite::getTexture(bool bSmall, bool bClamp, FilterMode eFilterMode) {
   }
 
   if(m_persistent == false)
-    v_currentTexture->curRegistrationStage = GameRenderer::instance()->currentRegistrationStage();
+    v_currentTexture->curRegistrationStage = GameRenderer::currentRegistrationStage();
 
   return v_currentTexture;
 }

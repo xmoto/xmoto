@@ -355,11 +355,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     switchTestThemeMode(XMSession::instance()->testTheme());
   }    
 
-  if(v_useGraphics) {
-    if(XMSession::instance()->gDebug())
-      GameRenderer::instance()->loadDebugInfo(XMSession::instance()->gDebugFile());
-  }
-
   /* load theme */
   if(pDb->themes_isIndexUptodate() == false) {
     ThemeChoicer::initThemesFromDir(pDb);
@@ -497,11 +492,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   LogWarning("You've an old ode library, xmoto is not able to check whether it's compatible or not");
 #endif
   m_isODEInitialized = true;
-
-  if(v_xmArgs.isOptServerOnly() == false) {
-    /* Initialize renderer */
-    GameRenderer::instance()->init(drawLib);
-  }  
 
   /* build handler */
   InputHandler::instance()->init(m_userConfig, pDb, XMSession::instance()->profile(), XMSession::instance()->enableJoysticks());
@@ -717,9 +707,7 @@ void GameApp::run_unload() {
     delete m_pWebLevels;
   }    
 
-  if(GameRenderer::instance() != NULL) {
-    GameRenderer::instance()->unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
-    GameRenderer::instance()->shutdown();
+  if(InputHandler::instance() != NULL) {
     InputHandler::instance()->uninit(); // uinit the input, but you can still save the config
   }
 
@@ -735,7 +723,6 @@ void GameApp::run_unload() {
     dCloseODE(); // uninit ODE
   }
 
-  GameRenderer::destroy();
   SysMessage::destroy();  
 
   if(Logger::isInitialized()) {

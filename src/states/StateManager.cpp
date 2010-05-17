@@ -153,6 +153,9 @@ void StateManager::pushState(GameState* pNewState)
 GameState* StateManager::popState()
 {
   (m_statesStack.back())->leave();
+  if(m_statesStack.back()->getType() != "") {
+    (m_statesStack.back())->leaveType();
+  }
   GameState* pState = m_statesStack.back();
   m_statesStack.pop_back();
   
@@ -183,6 +186,11 @@ void StateManager::replaceState(GameState* pNewState, const std::string& i_paren
   for(int i=m_statesStack.size()-1; i>=0; i--) {
     if(m_statesStack[i]->getStateId() == i_parentId) {
       m_statesStack[i]->leave();
+      if(m_statesStack[i]->getType() != "") {
+	if(pNewState->getType() != m_statesStack[i]->getType()) {
+	  m_statesStack[i]->leaveType();
+	}
+      }
       m_toDeleteStates.push_back(m_statesStack[i]);
       m_statesStack[i] = pNewState;
       pNewState->setStateId(i_parentId);

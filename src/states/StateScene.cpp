@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../CameraAnimation.h"
 #include "../Renderer.h"
 #include "../Universe.h"
+#include "../Renderer.h"
 #include "../VideoRecorder.h"
 #include "../GameText.h"
 #include "../Game.h"
@@ -52,8 +53,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define STATS_LEVELS_NOTES_SIZE 15
 
-void StateScene::init() {
+void StateScene::init(bool i_doShade, bool i_doShadeAnim) {
   Sprite *v_sprite;
+
+  m_type = "SCENE";
+
+  // shade
+  m_doShade     = i_doShade;
+  m_doShadeAnim = i_doShadeAnim;
 
   m_fLastPhysTime = -1.0;
   // while playing, we want 100 fps for the physic
@@ -61,6 +68,7 @@ void StateScene::init() {
   m_showCursor = false;
   m_cameraAnim = NULL;
   m_universe   = NULL;
+  m_renderer   = NULL;
 
   m_benchmarkNbFrame   = 0;
   m_benchmarkStartTime = GameApp::getXMTime();
@@ -92,25 +100,17 @@ void StateScene::init() {
 }
 
 StateScene::StateScene(bool i_doShade, bool i_doShadeAnim)
-: GameState(false, false, i_doShade, i_doShadeAnim)
+: GameState(false, false)
 {
-  init();
+  init(i_doShade, i_doShadeAnim);
 }
 
-StateScene::StateScene(Universe* i_universe, bool i_doShade, bool i_doShadeAnim)
-  : GameState(false, false, i_doShade, i_doShadeAnim)
+StateScene::StateScene(Universe* i_universe, GameRenderer* i_renderer, bool i_doShade, bool i_doShadeAnim)
+  : GameState(false, false)
 {
-  init();
+  init(i_doShade, i_doShadeAnim);
   m_universe   = i_universe;
-
-  if(m_universe != NULL) {
-    if(m_universe->getScenes().size() != 0) {    
-      if(NetClient::instance()->isConnected()) {
-	NA_playingLevel na(m_universe->getScenes()[0]->getLevelSrc()->Id());
-	NetClient::instance()->send(&na, 0);
-      }
-    }
-  }
+  m_renderer   = i_renderer;
 }
 
 StateScene::~StateScene()
@@ -152,9 +152,29 @@ void StateScene::initMessageRegistering()
   }
 }
 
+void StateScene::leaveAfterPush() {
+  // if the shade is set to false, force it when state receives one over
+  if(m_doShade == false) {
+    if(m_renderer != NULL) {
+      m_renderer->setScreenShade(true, true, GameApp::getXMTime());
+    }
+  }
+}
+
+void StateScene::leaveType() {
+  // violent closing of the state, closePlaying if not done (ie QUIT event)
+  if(m_universe != NULL) {
+    closePlaying();
+  }
+}
+
 void StateScene::enter()
 {
   GameState::enter();
+
+  if(m_renderer != NULL) {
+    m_renderer->setScreenShade(m_doShade, m_doShadeAnim, GameApp::getXMTime());
+  }
 
   ParticlesSource::setAllowParticleGeneration(true);
   m_isLockedScene = false;
@@ -169,6 +189,12 @@ void StateScene::enter()
 void StateScene::enterAfterPop()
 {
   GameState::enterAfterPop();
+
+  if(m_doShade == false) {
+    if(m_renderer != NULL) {
+      m_renderer->setScreenShade(false, false, GameApp::getXMTime());
+    }
+  }
 }
 
 bool StateScene::update()
@@ -228,28 +254,29 @@ bool StateScene::render()
   
   try {
     if(autoZoom() == false){
-      if(m_universe != NULL) {
+      if(m_universe != NULL && m_renderer != NULL) {
 	for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
 	  for(unsigned int i=0; i<m_universe->getScenes()[j]->getNumberCameras(); i++) {
 	    m_universe->getScenes()[j]->setCurrentCamera(i);
-	    GameRenderer::instance()->render(m_universe->getScenes()[j]);
+	    m_renderer->render(m_universe->getScenes()[j]);
 	  }
 	}
 	//Render the game messages for OVER the shadow layer, which is needed in multiplayer to supress ugly multiple display
-	GameRenderer::instance()->renderGameMessages(m_universe->getScenes()[0]);
+	m_renderer->renderGameMessages(m_universe->getScenes()[0]);
       }
     } else {
-      if(m_universe != NULL) {
+      if(m_universe != NULL && m_renderer != NULL) {
 	if(m_universe->getScenes().size() > 0) {
 	  m_universe->getScenes()[0]->setAutoZoomCamera();
-	  GameRenderer::instance()->render(m_universe->getScenes()[0]);
-	  GameRenderer::instance()->renderGameMessages(m_universe->getScenes()[0]);
+	  m_renderer->render(m_universe->getScenes()[0]);
+	  m_renderer->renderGameMessages(m_universe->getScenes()[0]);
 	}
       }
     }
 
-    ParticlesSource::setAllowParticleGeneration(GameRenderer::instance()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
-
+    if(m_renderer != NULL) {
+      ParticlesSource::setAllowParticleGeneration(m_renderer->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
+    }
 
     // downloading ghost information
     if(m_universe->waitingForGhosts()) {
@@ -328,7 +355,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
   
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F4, KMOD_NONE)) {
-    if(m_universe != NULL) {
+    if(m_universe != NULL && m_renderer != NULL) {
       m_trackingShotMode = ! m_trackingShotMode;
 
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
@@ -342,7 +369,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 	      // toogle pause mode
 	      m_universe->getScenes()[i]->pause();
 	      // toogle in the renderer
-	      GameRenderer::instance()->setRenderGhostTrail(true);
+	      m_renderer->setRenderGhostTrail(true);
 	    }
 	  }
 	} else {
@@ -355,7 +382,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 	    m_universe->getScenes()[i]->pause(); // cause the man cause unpause while tracking shot
 	  }
 	  // toogle in the renderer
-	  GameRenderer::instance()->setRenderGhostTrail(XMSession::instance()->renderGhostTrail());
+	  m_renderer->setRenderGhostTrail(XMSession::instance()->renderGhostTrail());
 	}
       }
     }
@@ -391,7 +418,9 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     
     // toogle
     XMSession::instance()->setRenderGhostTrail(!XMSession::instance()->renderGhostTrail());
-    GameRenderer::instance()->setRenderGhostTrail(XMSession::instance()->renderGhostTrail());
+    if(m_renderer != NULL) {
+      m_renderer->setRenderGhostTrail(XMSession::instance()->renderGhostTrail());
+    }
 
     bool v_trailAvailable = false;
     if(m_universe != NULL) {
@@ -556,20 +585,24 @@ void StateScene::setScoresTimes() {
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
     
-  if(XMSession::instance()->hidePlayingInformation() == false) {
-    GameRenderer::instance()->setBestTime(T1 + std::string(" / ") + T2);
-  } else {
-    GameRenderer::instance()->setBestTime("");
+  if(m_renderer != NULL) {
+    if(XMSession::instance()->hidePlayingInformation() == false) {
+      m_renderer->setBestTime(T1 + std::string(" / ") + T2);
+    } else {
+      m_renderer->setBestTime("");
+    }
   }
 
-  if(XMSession::instance()->showHighscoreInGame() && XMSession::instance()->hidePlayingInformation() == false) {
-    std::string v_strWorldRecord;
-    for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
-      v_strWorldRecord += GameApp::instance()->getWorldRecord(i, v_id_level) + "\n";
+  if(m_renderer != NULL) {
+    if(XMSession::instance()->showHighscoreInGame() && XMSession::instance()->hidePlayingInformation() == false) {
+      std::string v_strWorldRecord;
+      for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+	v_strWorldRecord += GameApp::instance()->getWorldRecord(i, v_id_level) + "\n";
+      }
+      m_renderer->setWorldRecordTime(v_strWorldRecord);
+    } else {
+      m_renderer->setWorldRecordTime("");
     }
-    GameRenderer::instance()->setWorldRecordTime(v_strWorldRecord);
-  } else {
-    GameRenderer::instance()->setWorldRecordTime("");
   }
 }
 
@@ -593,8 +626,11 @@ void StateScene::closePlaying() {
     m_universe = NULL;
   }
 
-  InputHandler::instance()->resetScriptKeyHooks();                     
-  GameRenderer::instance()->unprepareForNewLevel();
+  if(m_renderer != NULL) {
+    delete m_renderer;
+  }
+
+  InputHandler::instance()->resetScriptKeyHooks();
 }
 
 bool StateScene::isLockedScene() const {
@@ -617,11 +653,12 @@ void StateScene::setAutoZoom(bool i_value) {
     }
     GameApp*  pGame = GameApp::instance();
 
-    if(m_universe != NULL) {
+    if(m_universe != NULL && m_renderer != NULL) {
       if(m_universe->getScenes().size() > 0) { // do only for the first world for the moment
 	m_universe->getScenes()[0]->setAutoZoomCamera();
 	m_cameraAnim = new AutoZoomCameraAnimation(m_universe->getScenes()[0]->getCamera(),
 						   pGame->getDrawLib(),
+						   m_renderer,
 						   m_universe->getScenes()[0]);
 	m_cameraAnim->init();
       }
@@ -956,8 +993,6 @@ void StateScene::restartLevelToPlay(bool i_reloadLevel) {
   }
 
   closePlaying();
-
-  GameRenderer::instance()->unprepareForNewLevel();
   
   if(i_reloadLevel) {
     try {

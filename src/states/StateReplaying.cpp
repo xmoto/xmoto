@@ -38,15 +38,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define NEXTLEVEL_MAXTRY 10
 
-StateReplaying::StateReplaying(Universe* i_universe, const std::string& i_replay, ReplayBiker* i_replayBiker) :
-  StateScene()
+StateReplaying::StateReplaying(Universe* i_universe, GameRenderer* i_renderer, const std::string& i_replay, ReplayBiker* i_replayBiker) :
+  StateScene(i_universe, i_renderer)
 {
   m_name         = "StateReplaying";
-  m_universe     = i_universe;
   m_replay       = i_replay;
   m_replayBiker  = i_replayBiker;
   m_stopToUpdate = false;
-  m_updateFps = 100;
 }
 
 StateReplaying::~StateReplaying()
@@ -60,17 +58,20 @@ void StateReplaying::enter()
   StateScene::enter();
 
   m_stopToUpdate = false;
-  GameRenderer::instance()->setShowEngineCounter(false);
 
-  if(XMSession::instance()->hidePlayingInformation() == false) {
-    GameRenderer::instance()->setShowMinimap(XMSession::instance()->showMinimap());
-    GameRenderer::instance()->setShowTimePanel(true);
-  } else {
-    GameRenderer::instance()->setShowMinimap(false);
-    GameRenderer::instance()->setShowTimePanel(false);
+  if(m_renderer != NULL) {
+    m_renderer->setShowEngineCounter(false);
+    
+    if(XMSession::instance()->hidePlayingInformation() == false) {
+      m_renderer->setShowMinimap(XMSession::instance()->showMinimap());
+      m_renderer->setShowTimePanel(true);
+    } else {
+      m_renderer->setShowMinimap(false);
+      m_renderer->setShowTimePanel(false);
+    }
+    
+    m_renderer->setShowGhostsText(true);
   }
-
-  GameRenderer::instance()->setShowGhostsText(true);
 
   try {
     if(XMSession::instance()->hidePlayingInformation() == false) {
@@ -85,9 +86,11 @@ void StateReplaying::enter()
       }
     }
 
-    if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
-      GameRenderer::instance()->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
-					       m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
+    if(m_universe != NULL && m_renderer != NULL) {
+      if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
+	m_renderer->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
+				   m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
+      }
     }
 
     // music
@@ -217,21 +220,21 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_SPACE, KMOD_NONE)) {
     /* pause */
-    if(m_universe != NULL) {
+    if(m_universe != NULL && m_renderer != NULL) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	m_universe->getScenes()[i]->pause();
       }
 
       if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
-	GameRenderer::instance()->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
-						 m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
+	m_renderer->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
+				   m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
       }
     }
   }
 
   else if(i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_UP, KMOD_NONE) || i_xmkey == XMKey(SDLK_UP, KMOD_LCTRL))) {
     /* faster */
-    if(m_universe != NULL) {
+    if(m_universe != NULL && m_renderer != NULL) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	if(i_xmkey == XMKey(SDLK_UP, KMOD_NONE)) {
 	  m_universe->getScenes()[i]->faster();
@@ -240,8 +243,8 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 	}
       }
       if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
-				GameRenderer::instance()->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
-																								 m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
+	m_renderer->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
+				   m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
       }
     }
   }
@@ -257,9 +260,11 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 	}
       }
       m_stopToUpdate = false;
-      if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
-	GameRenderer::instance()->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
-						 m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
+      if(m_renderer != NULL) {
+	if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
+	  m_renderer->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
+				     m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
+	}
       }
     }
   }
@@ -288,6 +293,5 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
 void StateReplaying::restartLevel(bool i_reloadLevel) {
   closePlaying();
-  GameRenderer::instance()->unprepareForNewLevel();
   StateManager::instance()->replaceState(new StatePreplayingReplay(m_replay, true), getStateId());
 }

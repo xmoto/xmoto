@@ -46,7 +46,7 @@ StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
 				 bool updateStatesBehind,
 				 bool i_verticallyLarge):
   StateMenu(drawStateBehind,
-	    updateStatesBehind, true, false)
+	    updateStatesBehind)
 {
   initStateMessageBox(i_receiver, i_text, i_buttons, i_input, i_inputText, i_query, i_verticallyLarge);
 }
@@ -62,7 +62,7 @@ StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
   		  bool updateStatesBehind,
   		  bool i_verticallyLarge) :
   		StateMenu(drawStateBehind,
-  			    updateStatesBehind, true, false) {
+  			    updateStatesBehind) {
  initStateMessageBox(i_receiver, i_text, i_buttons, i_input, i_inputText, i_query, i_verticallyLarge);
  m_msgbox->addCompletionWord(completionList);
 }

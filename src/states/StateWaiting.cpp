@@ -34,7 +34,7 @@ UIRoot*  StateWaiting::m_sGUI = NULL;
 StateWaiting::StateWaiting(bool drawStateBehind,
 			 bool updateStatesBehind):
   StateMenu(drawStateBehind,
-	    updateStatesBehind, true, false)
+	    updateStatesBehind)
 {
   m_name             = "StateWaiting";
   init();

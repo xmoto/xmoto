@@ -33,13 +33,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 UIRoot*  StateDeadMenu::m_sGUI = NULL;
 
 StateDeadMenu::StateDeadMenu(Universe* i_universe,
-			     bool i_doShadeAnim,
 			     bool drawStateBehind,
 			     bool updateStatesBehind):
   StateMenu(drawStateBehind,
-	    updateStatesBehind,
-	    true,
-	    i_doShadeAnim)
+	    updateStatesBehind)
 {
   m_name    = "StateDeadMenu";
   m_universe = i_universe;

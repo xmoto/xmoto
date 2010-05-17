@@ -31,7 +31,7 @@ StateVote::StateVote(const std::string& i_idlevel,
 		     bool drawStateBehind,
 		     bool updateStatesBehind
 		     ):
-StateMenu(drawStateBehind, updateStatesBehind, true,false) {
+StateMenu(drawStateBehind, updateStatesBehind) {
     m_idlevel = i_idlevel;
 }
 

@@ -27,7 +27,7 @@ class ReplayBiker;
 
 class StateReplaying : public StateScene {
   public:
-  StateReplaying(Universe* i_universe, const std::string& i_replay, ReplayBiker* i_replayBiker);
+  StateReplaying(Universe* i_universe, GameRenderer* i_renderer, const std::string& i_replay, ReplayBiker* i_replayBiker);
   virtual ~StateReplaying();
   
   virtual void enter();

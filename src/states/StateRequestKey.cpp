@@ -31,9 +31,7 @@ StateRequestKey::StateRequestKey(const std::string& i_txt,
 				 bool drawStateBehind,
 				 bool updateStatesBehind):
 StateMenu(drawStateBehind,
-	  updateStatesBehind,
-	  true,
-	  false)
+	  updateStatesBehind)
 {
   m_txt   = i_txt;
   m_name  = "StateRequestKey";

@@ -46,8 +46,6 @@ StatePreplaying::StatePreplaying(const std::string i_idlevel, bool i_sameLevel):
   m_name  = "StatePreplaying";
   m_idlevel = i_idlevel;
 
-  m_secondInitPhaseDone = false;
-
   m_sameLevel = i_sameLevel;
   /* if the level is not the same, ask to play the animation */
   m_playAnimation = m_sameLevel == false;
@@ -66,17 +64,25 @@ StatePreplaying::~StatePreplaying()
 void StatePreplaying::enter()
 {
   GameApp*  pGame = GameApp::instance();
- unsigned int v_nbPlayer = XMSession::instance()->multiNbPlayers();
-
-  StateScene::enter();
-
-  GameRenderer::instance()->setShowEngineCounter(false);
-  GameRenderer::instance()->setShowMinimap(false);
-  GameRenderer::instance()->setShowTimePanel(false);
-  GameRenderer::instance()->hideReplayHelp();
-  GameRenderer::instance()->setShowGhostsText(false);
+  unsigned int v_nbPlayer = XMSession::instance()->multiNbPlayers();
 
   m_universe =  new Universe();
+  m_renderer = new GameRenderer();
+  m_renderer->init(GameApp::instance()->getDrawLib());
+
+  // must be done once the renderer is initialized
+  StateScene::enter();
+
+  if(XMSession::instance()->gDebug()) {
+    m_renderer->loadDebugInfo(XMSession::instance()->gDebugFile());
+  }
+
+  m_renderer->setShowEngineCounter(false);
+  m_renderer->setShowMinimap(false);
+  m_renderer->setShowTimePanel(false);
+  m_renderer->hideReplayHelp();
+  m_renderer->setShowGhostsText(false);
+  m_renderer->setRenderGhostTrail(XMSession::instance()->renderGhostTrail());
 
   try {
     initUniverse();
@@ -173,6 +179,8 @@ void StatePreplaying::enter()
  
   /* prepare stats */
   makeStatsStr();
+
+  secondInitPhase();
 }
 
 void StatePreplaying::onLoadingFailure(const std::string& i_msg) {
@@ -204,11 +212,6 @@ bool StatePreplaying::update()
     return false;
   }
 
-  if(m_secondInitPhaseDone == false){
-    secondInitPhase();
-    m_secondInitPhaseDone = true;
-  }
-
   if(shouldBeAnimated()) {
     if(m_cameraAnim != NULL) {
       if(m_cameraAnim->step() == false) {
@@ -233,18 +236,7 @@ bool StatePreplaying::update()
 
 bool StatePreplaying::render()
 {
-  if(m_secondInitPhaseDone == false){
-    DrawLib* drawLib = GameApp::instance()->getDrawLib();
-    int width  = drawLib->getDispWidth();
-    int height = drawLib->getDispHeight();
-
-    drawLib->drawBox(Vector2f(0,     height),
-		     Vector2f(width, 0),
-		     0.0, MAKE_COLOR(0,0,0,255));
-  } else {
-    StateScene::render();
-  }
-
+  StateScene::render();
   displayStats();
   
   return true;
@@ -280,7 +272,9 @@ void StatePreplaying::secondInitPhase()
     addWebGhosts();
   }
 
-    GameRenderer::instance()->prepareForNewLevel(m_universe);
+  if(m_renderer != NULL) {
+    m_renderer->prepareForNewLevel(m_universe);
+  }
 
   } catch(Exception &e) {
     LogWarning(std::string("failed to initialize level\n" + e.getMsg()).c_str());
@@ -299,10 +293,11 @@ void StatePreplaying::secondInitPhase()
   if(m_cameraAnim != NULL) {
     delete m_cameraAnim;
   }
-  if(m_universe != NULL) {
+  if(m_universe != NULL && m_renderer != NULL) {
     if(m_universe->getScenes().size() > 0) {
       m_universe->getScenes()[0]->setAutoZoomCamera();
-      m_cameraAnim = new ZoomingCameraAnimation(m_universe->getScenes()[0]->getCamera(), pGame->getDrawLib(), m_universe->getScenes()[0]);
+      m_cameraAnim = new ZoomingCameraAnimation(m_universe->getScenes()[0]->getCamera(), pGame->getDrawLib(), m_renderer,
+						m_universe->getScenes()[0]);
       m_cameraAnim->init();
     }
   }
