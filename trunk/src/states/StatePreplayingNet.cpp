@@ -76,7 +76,7 @@ void StatePreplayingNet::initPlayers() {
 }
 
 void StatePreplayingNet::runPlaying() {
-  StateManager::instance()->replaceState(new StatePlayingNet(m_universe), getStateId());
+  StateManager::instance()->replaceState(new StatePlayingNet(m_universe, m_renderer), getStateId());
 }
 
 void StatePreplayingNet::executeOneCommand(std::string cmd, std::string args) {

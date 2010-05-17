@@ -46,7 +46,7 @@ UIRoot*  StateOptions::m_sGUI = NULL;
 
 StateOptions::StateOptions(bool drawStateBehind, bool updateStatesBehind):
   StateMenu(drawStateBehind,
-	    updateStatesBehind, true, false) {
+	    updateStatesBehind) {
   m_name = "StateOptions";
  
   StateManager::instance()->registerAsObserver("UPDATEPROFILE", this);

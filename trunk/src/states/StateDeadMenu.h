@@ -30,7 +30,6 @@ class Universe;
 class StateDeadMenu : public StateMenu {
   public:
   StateDeadMenu(Universe* i_universe,
-		bool i_doShadeAnim,
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false
 		);

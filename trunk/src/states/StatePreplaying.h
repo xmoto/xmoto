@@ -63,7 +63,6 @@ class StatePreplaying : public StateScene {
   private:
 
   void secondInitPhase();
-  bool m_secondInitPhaseDone;
 
   bool m_playAnimation; // must the animation be played ; must be rearmed each time you play a new level
 

@@ -25,16 +25,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class CameraAnimation;
 class Universe;
+class GameRenderer;
 
 class StateScene : public GameState {
 public:
   StateScene(bool i_doShade = false, bool i_doShadeAnim = false);
-  StateScene(Universe* i_universe, bool i_doShade = false, bool i_doShadeAnim = false); // for state which doesn't create the universe
+  StateScene(Universe* i_universe, GameRenderer* i_renderer, bool i_doShade = false, bool i_doShadeAnim = false); // for state which doesn't create the universe
   virtual ~StateScene();
  
  virtual void enter();
  virtual void enterAfterPop();
- 
+ virtual void leaveAfterPush();
+ virtual void leaveType();
+
  virtual bool update();
  virtual bool render();
  virtual void onRenderFlush();
@@ -78,6 +81,7 @@ protected:
  CameraAnimation* m_cameraAnim;
 
  Universe* m_universe;
+ GameRenderer* m_renderer;
 
  int m_benchmarkNbFrame;
  float m_benchmarkStartTime;
@@ -91,9 +95,13 @@ protected:
  void playToCheckpoint();
 
 private:
- void init();
+ void init(bool i_doShade, bool i_doShadeAnim);
  void initMessageRegistering();
  bool m_trackingShotMode;
+
+  // shade
+  bool  m_doShade;
+  bool  m_doShadeAnim;
 
 };
 

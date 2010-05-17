@@ -32,8 +32,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define STATE_DEAD_MAX_TIME 140
 #define VELOCITY_UNTIL_TORSO_RIP 0.005
 
-StateDeadJust::StateDeadJust(Universe* i_universe)
-: StateScene(i_universe, true, true)
+StateDeadJust::StateDeadJust(Universe* i_universe, GameRenderer* i_renderer)
+: StateScene(i_universe, i_renderer, true, true)
 {
   m_name    = "StateDeadJust";
 }
@@ -95,7 +95,7 @@ void StateDeadJust::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
     if(v_isCheckpoint) {
       StateScene::playToCheckpoint();
-      StateManager::instance()->replaceState(new StatePlayingLocal(m_universe), getStateId());
+      StateManager::instance()->replaceState(new StatePlayingLocal(m_universe, m_renderer), getStateId());
     }
 
   }

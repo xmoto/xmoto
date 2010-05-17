@@ -27,8 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BikePlayer.h"
 #include "../Renderer.h"
 
-StatePlaying::StatePlaying(Universe* i_universe)
-: StateScene(i_universe) {
+StatePlaying::StatePlaying(Universe* i_universe, GameRenderer* i_renderer)
+: StateScene(i_universe, i_renderer) {
   m_displayStats = false;
 
   for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++){
@@ -255,17 +255,20 @@ void StatePlaying::dealWithActivedKeys() {
 }
 
 void StatePlaying::updateWithOptions() {
-  if(XMSession::instance()->hidePlayingInformation() == false) {
-    GameRenderer::instance()->setShowEngineCounter(XMSession::instance()->showEngineCounter());
-    GameRenderer::instance()->setShowMinimap(XMSession::instance()->showMinimap());
-    GameRenderer::instance()->setShowTimePanel(true);
-  } else {
-    GameRenderer::instance()->setShowEngineCounter(false);
-    GameRenderer::instance()->setShowMinimap(false);
-    GameRenderer::instance()->setShowTimePanel(false);
-  }
 
-  GameRenderer::instance()->setShowGhostsText(true);
+  if(m_renderer != NULL) {
+    if(XMSession::instance()->hidePlayingInformation() == false) {
+      m_renderer->setShowEngineCounter(XMSession::instance()->showEngineCounter());
+      m_renderer->setShowMinimap(XMSession::instance()->showMinimap());
+      m_renderer->setShowTimePanel(true);
+    } else {
+      m_renderer->setShowEngineCounter(false);
+      m_renderer->setShowMinimap(false);
+      m_renderer->setShowTimePanel(false);
+    }
+    
+    m_renderer->setShowGhostsText(true);
+  }
 
   for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
     m_universe->getScenes()[i]->setDeathAnim(XMSession::instance()->enableDeadAnimation());

@@ -38,9 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define MENU_SHADING_VALUE 150
 
 GameState::GameState(bool drawStateBehind,
-		     bool updateStatesBehind,
-		     bool i_doShade,
-		     bool i_doShadeAnim)
+		     bool updateStatesBehind)
 {
   m_isHide             = false;
   m_drawStateBehind    = drawStateBehind;
@@ -56,10 +54,6 @@ GameState::GameState(bool drawStateBehind,
 
   m_updatePeriod       = 0;
   m_updateCounter      = 0;
-
-  // shade
-  m_doShade     = i_doShade;
-  m_doShadeAnim = i_doShadeAnim;
 
   m_showCursor = true;
 
@@ -95,7 +89,6 @@ bool GameState::doUpdate()
 }
 
 void GameState::enter() {
-  m_nShadeTime = GameApp::getXMTime();
   if(XMSession::instance()->ugly() == true)
     GameApp::instance()->displayCursor(showCursor());
 }
@@ -107,8 +100,6 @@ void GameState::enterAfterPop()
 }
 
 bool GameState::render() {
-  //  left the shade call here to not do damage on other things I even not know about
-  GameRenderer::instance()->setScreenShade(m_doShade, m_doShadeAnim, m_nShadeTime);
   return renderOverShadow();
 }
 

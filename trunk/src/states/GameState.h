@@ -30,13 +30,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class GameState : public StateMessageBoxReceiver {
 public:
   GameState(bool drawStateBehind,
-	    bool updateStatesBehind,
-	    bool i_doShade     = false,
-	    bool i_doShadeAnim = false);
+	    bool updateStatesBehind);
   virtual ~GameState();
 
   virtual void enter();
   virtual void leave() {}
+  virtual void leaveType() {} // you can give a type to states ; if a state is leaved but not replaced by a state of the same type, this method is called
   /* called when a new state is pushed or poped on top of the
      current one */
   virtual void enterAfterPop();
@@ -101,6 +100,10 @@ public:
     return m_name;
   }
 
+  std::string getType() const {
+    return m_type;
+  }
+
   void simpleMessage(const std::string& msg);
 
   bool showCursor() {
@@ -126,6 +129,7 @@ protected:
   float m_updateCounter;
 
   std::string m_name;
+  std::string m_type; // some state can have the same type (exemple, all the state scene are of type scene)
   bool m_showCursor;
 
   void addCommand(std::string cmd, std::string args="");
@@ -136,11 +140,6 @@ private:
   bool        m_updateStatesBehind;
   std::string m_stateId;
   std::string m_stateType; // type - to be able to have only one instance of one state type (server console, chat box, ...)
-
-  // shade
-  bool  m_doShade;
-  bool  m_doShadeAnim;
-  float m_nShadeTime;
 
   std::queue<std::pair<std::string, std::string> > m_commands;
   SDL_mutex* m_commandsMutex;

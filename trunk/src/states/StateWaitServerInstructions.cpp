@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../drawlib/DrawLib.h"
 
 StateWaitServerInstructions::StateWaitServerInstructions():
-GameState(true, false, true, true)
+GameState(true, false)
 {
   m_name = "StateWaitServerInst";
 

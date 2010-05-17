@@ -31,7 +31,7 @@ StatePreplayingCredits::~StatePreplayingCredits() {
 }
 
 void StatePreplayingCredits::runPlaying() {
-  StateManager::instance()->replaceState(new StateCreditsMode(m_universe, m_replay, m_replayBiker), getStateId());
+  StateManager::instance()->replaceState(new StateCreditsMode(m_universe, m_renderer, m_replay, m_replayBiker), getStateId());
 }
 
 bool StatePreplayingCredits::shouldBeAnimated() const {

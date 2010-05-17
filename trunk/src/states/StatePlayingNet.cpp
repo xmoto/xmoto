@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateManager.h"
 #include "../net/NetClient.h"
 
-StatePlayingNet::StatePlayingNet(Universe* i_universe):
-StatePlaying(i_universe)
+StatePlayingNet::StatePlayingNet(Universe* i_universe, GameRenderer* i_renderer):
+StatePlaying(i_universe, i_renderer)
 {
   m_name = "StatePlayingNet";
 

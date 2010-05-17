@@ -39,9 +39,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BikeController.h"
 #include "../LuaLibGame.h"
 #include "../thread/XMThreadStats.h"
+#include "../net/NetClient.h"
 
-StatePlayingLocal::StatePlayingLocal(Universe* i_universe):
-StatePlaying(i_universe)
+StatePlayingLocal::StatePlayingLocal(Universe* i_universe, GameRenderer* i_renderer):
+StatePlaying(i_universe, i_renderer)
 {
   m_name = "StatePlayingLocal";
   m_gameIsFinished = false;
@@ -54,6 +55,15 @@ StatePlaying(i_universe)
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("STATS_UPDATED");
     StateManager::instance()->registerAsEmitter("LEVELS_UPDATED");
+  }
+
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() != 0) {    
+      if(NetClient::instance()->isConnected()) {
+	NA_playingLevel na(m_universe->getScenes()[0]->getLevelSrc()->Id());
+	NetClient::instance()->send(&na, 0);
+      }
+    }
   }
 }
 
@@ -373,7 +383,7 @@ void StatePlayingLocal::onAllDead() {
   }
   
   if(XMSession::instance()->enableDeadAnimation()) {
-    StateManager::instance()->replaceState(new StateDeadJust(m_universe), getStateId());
+    StateManager::instance()->replaceState(new StateDeadJust(m_universe, m_renderer), getStateId());
   } else {
     StateManager::instance()->pushState(new StateDeadMenu(m_universe, true, this));
   }

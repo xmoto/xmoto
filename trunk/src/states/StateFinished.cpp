@@ -42,8 +42,7 @@ StateFinished::StateFinished(Universe* i_universe,
 			     bool updateStatesBehind
 			     ) :
   StateMenu(drawStateBehind,
-	    updateStatesBehind,
-	    true)
+	    updateStatesBehind)
 {
   m_name    = "StateFinished";
   m_universe = i_universe;

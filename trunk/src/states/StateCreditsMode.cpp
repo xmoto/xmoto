@@ -26,8 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Universe.h"
 #include "../Renderer.h"
 
-StateCreditsMode::StateCreditsMode(Universe* i_universe, const std::string& i_replay, ReplayBiker* i_replayBiker):
-StateReplaying(i_universe, i_replay, i_replayBiker)
+StateCreditsMode::StateCreditsMode(Universe* i_universe, GameRenderer* i_renderer, const std::string& i_replay, ReplayBiker* i_replayBiker):
+StateReplaying(i_universe, i_renderer, i_replay, i_replayBiker)
 {
   m_credits = new Credits();
   m_name    = "StateCreditsMode";
@@ -42,11 +42,12 @@ void StateCreditsMode::enter()
 {
   StateReplaying::enter();
 
-  GameRenderer* renderer = GameRenderer::instance();
-  renderer->hideReplayHelp();
-  renderer->setShowTimePanel(false);
-  renderer->setShowMinimap(false);
-  renderer->setShowGhostsText(false);
+  if(m_universe != NULL) {
+    m_renderer->hideReplayHelp();
+    m_renderer->setShowTimePanel(false);
+    m_renderer->setShowMinimap(false);
+    m_renderer->setShowGhostsText(false);
+  }
 
   if(m_universe != NULL) {
     for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {

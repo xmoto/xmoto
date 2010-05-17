@@ -49,7 +49,6 @@ void DownloadReplaysThread::add(const std::string i_url) {
     }
   }
 
-  printf("Add %s\n", i_url.c_str());
   m_replaysUrls.push_back(i_url);
   SDL_UnlockMutex(m_urlsMutex);
 }
