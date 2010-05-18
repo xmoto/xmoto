@@ -115,20 +115,25 @@ void StateDeadJust::nextLevel(bool i_positifOrder) {
 
 bool StateDeadJust::update() {
   float v_torsoVelocity = 0;
-  for(unsigned int i=0; i < m_universe->getScenes().size(); i++) {
-    for(unsigned int j=0; j < m_universe->getScenes()[i]->Players().size(); j++) {
-      if(m_universe->getScenes()[i]->Players()[j]->getTorsoVelocity() > v_torsoVelocity) {
-        v_torsoVelocity = m_universe->getScenes()[i]->Players()[j]->getTorsoVelocity();
+
+  if(m_universe != NULL) {
+    for(unsigned int i=0; i < m_universe->getScenes().size(); i++) {
+      for(unsigned int j=0; j < m_universe->getScenes()[i]->Players().size(); j++) {
+	if(m_universe->getScenes()[i]->Players()[j]->getTorsoVelocity() > v_torsoVelocity) {
+	  v_torsoVelocity = m_universe->getScenes()[i]->Players()[j]->getTorsoVelocity();
+	}
       }
     }
+    if( v_torsoVelocity <= VELOCITY_UNTIL_TORSO_RIP && m_enterTime == 0) {
+      m_enterTime = GameApp::getXMTimeInt();
+    }    
+    if( m_enterTime != 0 && GameApp::getXMTimeInt() - m_enterTime > STATE_DEAD_MAX_TIME*23 ) {
+      StateManager::instance()->pushState(new StateDeadMenu(m_universe, false, true));
+      return false;
+    } else {
+      return StateScene::update();
+    } 
   }
-  if( v_torsoVelocity <= VELOCITY_UNTIL_TORSO_RIP && m_enterTime == 0) {
-    m_enterTime = GameApp::getXMTimeInt();
-  }    
-  if( m_enterTime != 0 && GameApp::getXMTimeInt() - m_enterTime > STATE_DEAD_MAX_TIME*23 ) {
-    StateManager::instance()->pushState(new StateDeadMenu(m_universe, false, true));
-    return false;
-  } else {
-    return StateScene::update();
-  } 
+
+  return false;
 }
