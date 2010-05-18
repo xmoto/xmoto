@@ -128,7 +128,7 @@ bool StateDeadJust::update() {
       m_enterTime = GameApp::getXMTimeInt();
     }    
     if( m_enterTime != 0 && GameApp::getXMTimeInt() - m_enterTime > STATE_DEAD_MAX_TIME*23 ) {
-      StateManager::instance()->pushState(new StateDeadMenu(m_universe, false, true));
+      StateManager::instance()->pushState(new StateDeadMenu(m_universe, true, false));
       return false;
     } else {
       return StateScene::update();
