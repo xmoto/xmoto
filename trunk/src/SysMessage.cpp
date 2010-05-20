@@ -118,7 +118,7 @@ void SysMessage::render() {
 
   v_fm = m_drawLib->getFontSmall();
 
-  if(m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME + SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME > v_time || XMSession::instance()->permanentConsole() && NetClient::instance()->isConnected()) {
+  if((m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME + SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME > v_time || XMSession::instance()->permanentConsole()) && NetClient::instance()->isConnected()) {
     if(m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME > v_time || XMSession::instance()->permanentConsole() && NetClient::instance()->isConnected()) {
       v_shadow = 255;
     } else {
