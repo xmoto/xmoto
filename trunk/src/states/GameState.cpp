@@ -311,6 +311,7 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
       std::vector<std::string> clientList = NetClient::instance()->getOtherClientsNameList(); // forced to do cause i couldn't include in init netclient function
       StateMessageBox* v_msgboxState = new StateMessageBox(NULL, clientList, std::string(GAMETEXT_CHATMESSAGE) + ":", UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, "", false, true, false, true);
       v_msgboxState->setMsgBxId("CHATMESSAGE");
+      v_msgboxState->setStateType("CHATMESSAGE");
       StateManager::instance()->pushState(v_msgboxState);
       return; 
     }
