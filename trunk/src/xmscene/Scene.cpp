@@ -45,6 +45,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../net/NetActions.h"
 #include "ScriptTimer.h"
 
+#define GAMEMESSAGES_PACKTIME 40
+
 /* 
  *  Game object. Handles all of the gamestate management und so weiter.
  */
@@ -226,7 +228,7 @@ void Scene::packGameMessages() {   //put multiple GameMessages into one, if they
  
   for( int i = m_GameMessages.size()-1 ; i > 0 ; i-- ) {
     
-    if( (m_GameMessages[i]->removeTime) && 
+    if( (m_GameMessages[i]->removeTime- m_GameMessages[i-1]->removeTime < GAMEMESSAGES_PACKTIME) && 
         (m_GameMessages[i]->removeTime != 0) &&
         (m_GameMessages[i]->msgType == m_GameMessages[i-1]->msgType) &&
         (m_GameMessages[i]->bOnce == m_GameMessages[i-1]->bOnce) &&
