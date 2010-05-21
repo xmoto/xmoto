@@ -298,7 +298,7 @@ bool StateScene::render()
 
 
   } catch(Exception &e) {
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK), this->getStateId());
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK), getStateId());
   }
 
   GameState::render();
@@ -695,7 +695,7 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
     // there is no other state before
     if(StateManager::instance()->numberOfStates() == 1) {
       // run the mainmenu state
-      StateManager::instance()->replaceState(new StateMainMenu(), this->getStateId());
+      StateManager::instance()->replaceState(new StateMainMenu(), getStateId());
     } else {
       m_requestForEnd = true;
     }
@@ -707,7 +707,7 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
     // there is no other state before
     if(StateManager::instance()->numberOfStates() == 1) {
       // run the mainmenu state
-      StateManager::instance()->replaceState(new StateMainMenu(), this->getStateId());
+      StateManager::instance()->replaceState(new StateMainMenu(), getStateId());
     } else {
       m_requestForEnd = true;
     }
@@ -731,7 +731,7 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
     // there is no other state before
     if(StateManager::instance()->numberOfStates() == 1) {
       // run the mainmenu state
-      StateManager::instance()->replaceState(new StateMainMenu(), this->getStateId());
+      StateManager::instance()->replaceState(new StateMainMenu(), getStateId());
     } else {
       m_requestForEnd = true;
     }

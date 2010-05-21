@@ -378,7 +378,7 @@ void StateOptions::checkEvents() {
 
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       snprintf(cBuf, 1024, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
-      StateManager::instance()->pushState(new StateRequestKey(cBuf, this));      
+      StateManager::instance()->pushState(new StateRequestKey(cBuf));      
     }
   }
   
@@ -391,7 +391,7 @@ void StateOptions::checkEvents() {
 
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       snprintf(cBuf, 1024, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
-      StateManager::instance()->pushState(new StateRequestKey(cBuf, this));      
+      StateManager::instance()->pushState(new StateRequestKey(cBuf));      
     }
   }
 
@@ -404,7 +404,7 @@ void StateOptions::checkEvents() {
 
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       snprintf(cBuf, 1024, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
-      StateManager::instance()->pushState(new StateRequestKey(cBuf, this));      
+      StateManager::instance()->pushState(new StateRequestKey(cBuf));      
     }
   }
   
@@ -417,7 +417,7 @@ void StateOptions::checkEvents() {
 
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       snprintf(cBuf, 1024, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
-      StateManager::instance()->pushState(new StateRequestKey(cBuf, this));      
+      StateManager::instance()->pushState(new StateRequestKey(cBuf));      
     }
   }
   
@@ -430,7 +430,7 @@ void StateOptions::checkEvents() {
 
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       snprintf(cBuf, 1024, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
-      StateManager::instance()->pushState(new StateRequestKey(cBuf, this));      
+      StateManager::instance()->pushState(new StateRequestKey(cBuf));      
     }
   }
   
