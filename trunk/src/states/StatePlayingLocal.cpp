@@ -211,7 +211,7 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     if(isLockedScene() == false) {
       /* Escape pauses */
       m_displayStats = true;
-      StateManager::instance()->pushState(new StatePause(m_universe, this));
+      StateManager::instance()->pushState(new StatePause(m_universe));
     }
   }
 
@@ -360,7 +360,7 @@ void StatePlayingLocal::onOneFinish() {
     }
   }
   
-  StateManager::instance()->pushState(new StateFinished(m_universe, this));
+  StateManager::instance()->pushState(new StateFinished(m_universe));
 }
 
 void StatePlayingLocal::onAllDead() {  
@@ -385,7 +385,7 @@ void StatePlayingLocal::onAllDead() {
   if(XMSession::instance()->enableDeadAnimation()) {
     StateManager::instance()->replaceState(new StateDeadJust(m_universe, m_renderer), getStateId());
   } else {
-    StateManager::instance()->pushState(new StateDeadMenu(m_universe, true, this));
+    StateManager::instance()->pushState(new StateDeadMenu(m_universe));
   }
 }
 
