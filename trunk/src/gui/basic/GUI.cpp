@@ -369,13 +369,11 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
             case SDLK_TAB:
             	showMatch();
             	return true;
-            case SDLK_SPACE:
-            	m_TextInput_real = m_TextInput_fake;
             default:
 	      if(utf8::utf8_length(i_utf8Char) == 1) { // alt/... and special keys must not be kept
 		if(i_utf8Char[0] != '\n') { // you can generate ascii 10 with ctrl+j or keyboard having new line key
-		  m_TextInput_real = utf8::utf8_concat(m_TextInput_real, i_utf8Char);
-		  m_TextInput_fake = m_TextInput_real;
+		  m_TextInput_fake = utf8::utf8_concat(m_TextInput_fake, i_utf8Char);
+		  m_TextInput_real = m_TextInput_fake;
 		}
 	      }
               return true;
@@ -390,7 +388,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
   
   UIMsgBox *UIWindow::msgBox(std::string Text,UIMsgBoxButton Buttons,bool bTextInput,bool bQuery, bool i_verticallyLarge) {
     unsigned int nNumButtons = 0;
-    
+
     if(Buttons & UI_MSGBOX_OK)
       nNumButtons++;
     if(Buttons & UI_MSGBOX_CANCEL)
