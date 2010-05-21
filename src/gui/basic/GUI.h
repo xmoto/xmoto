@@ -415,7 +415,7 @@ public:
   UIMsgBoxButton getClicked(void);
   void enableTextInput(void) {m_bTextInput=true;}
   std::string getTextInput(void) {return m_TextInput_real;}
-  void setTextInput(std::string s) {m_TextInput_real=s;}
+  void setTextInput(std::string s) {m_TextInput_real=s;m_TextInput_fake=s;}
   void setTextInputFont(FontManager* pFont) {m_textInputFont = pFont;}
   void addCompletionWord(std::string& word);
   void addCompletionWord(std::vector<std::string>& list);
