@@ -77,8 +77,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //how much uglier in uglymode
 #define GT_UGLY_MODE_MULTIPLYER 2
 
-unsigned int GameRenderer::m_curRegistrationStage=0;
-
   /* to sort blocks on their texture */
   struct AscendingTextureSort {
     bool operator() (Block* b1, Block* b2) {
@@ -174,7 +172,7 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
   m_sizeMultOfEntitiesToTake       = 1.0;
   m_sizeMultOfEntitiesWhichMakeWin = 1.0;
 
-  beginTexturesRegistration();
+  m_registeringValue = Theme::instance()->getTextureManager()->beginTexturesRegistration();
 
   /* Optimize scene */
   for(unsigned int u=0; u<i_universe->getScenes().size(); u++) {
@@ -275,7 +273,7 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     m_arrowSprite->loadTextures();
   }
   
-  endTexturesRegistration();
+  Theme::instance()->getTextureManager()->endTexturesRegistration();
 }
 
 void GameRenderer::initCameras(Universe* i_universe)
@@ -848,6 +846,8 @@ int GameRenderer::edgeGeomExists(Block* pBlock, std::string material, bool i_isU
     _deleteGeoms(m_StaticGeoms);
     _deleteGeoms(m_DynamicGeoms);
     _deleteGeoms(m_edgeGeoms, true);
+
+    Theme::instance()->getTextureManager()->unregister(m_registeringValue);
   }
   
   void GameRenderer::renderEngineCounter(int x, int y, int nWidth,int nHeight, float pSpeed, float pLinVel) {
@@ -4020,70 +4020,6 @@ void GameRenderer::calculateCameraScaleAndScreenAABB(Camera* pCamera, AABB& bbox
 
   bbox.addPointToAABB2f(v1);
   bbox.addPointToAABB2f(v2);
-}
-
-void GameRenderer::beginTexturesRegistration()
-{
-  // as we will remove textures, the current texture in drawlib can
-  // became invalid -> set it to NULL
-  GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
-
-  m_curRegistrationStage++;
-
-  // zero is for persistent textures
-  if(m_curRegistrationStage == PERSISTANT)
-    m_curRegistrationStage++;
-
-  if(XMSession::instance()->debug() == true) {
-    LogDebug("---Begin texture registration---");
-    std::vector<Texture*> textures = Theme::instance()->getTextureManager()->getTextures();
-    std::vector<Texture*>::iterator it = textures.begin();
-    while(it != textures.end()){
-      if((*it)->curRegistrationStage != PERSISTANT)
-	LogDebug("  begin %s %d [%x]", (*it)->Name.c_str(), (*it)->curRegistrationStage, (*it));
-      ++it;
-    }
-    LogDebug("---Begin texture registration---");
-  }
-}
-
-void GameRenderer::endTexturesRegistration()
-{
-  // remove not used textures
-  std::vector<Texture*> textures = Theme::instance()->getTextureManager()->getTextures();
-  std::vector<Texture*>::iterator it = textures.begin();
-
-  while(it != textures.end()){
-    // zero is for persistent textures
-    if((*it)->curRegistrationStage != PERSISTANT)
-      if((*it)->curRegistrationStage != m_curRegistrationStage){
-	LogDebug("remove texture [%s] [%x]", (*it)->Name.c_str(), (*it));
-
-	(*it)->invalidateSpritesTexture();
-
-	Theme::instance()->getTextureManager()->destroyTexture((*it));
-	it = textures.erase(it);
-      } else
-	++it;
-    else
-      ++it;
-  }
-
-  if(XMSession::instance()->debug() == true) {
-    LogDebug("---End texture registration---");
-    it = textures.begin();
-    while(it != textures.end()){
-      if((*it)->curRegistrationStage != PERSISTANT)
-	LogDebug("  end %s %d [%x]", (*it)->Name.c_str(), (*it)->curRegistrationStage, (*it));
-      ++it;
-    }
-    LogDebug("---End texture registration---");
-  }
-}
-
-unsigned int GameRenderer::currentRegistrationStage()
-{
-  return m_curRegistrationStage;
 }
 
 void GameRenderer::setScreenShade(bool i_doShade_global, bool i_doShadeAnim_global, float i_shadeTime_global) 

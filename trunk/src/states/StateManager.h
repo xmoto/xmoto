@@ -108,6 +108,7 @@ private:
   bool doRender();
   void drawFps();
   void drawStack();
+  void drawTexturesLoading();
   void drawCursor();
 
   void renderOverAll();
