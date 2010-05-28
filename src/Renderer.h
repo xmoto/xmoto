@@ -162,7 +162,6 @@ public:
   bool showGhostsText() const;
   void renderGameMessages(Scene* i_scene);
 
-  static unsigned int currentRegistrationStage();
   void setGraphicsLevel();
 
 private:
@@ -184,6 +183,9 @@ private:
   std::string m_replayHelp_l;
   std::string m_replayHelp_r;
   std::string m_worldRecordTime;
+
+  // registering
+  unsigned int m_registeringValue;
 
   GraphicsLevel m_graphicsLevel;
 
@@ -308,10 +310,6 @@ private:
 			    Vector2f B2,   Vector2f A2,
 			    Vector2f& ua1, Vector2f& ub1,
 			    Vector2f& ub2, Vector2f& ua2);
-
-  void beginTexturesRegistration();
-  void endTexturesRegistration();
-  static unsigned int m_curRegistrationStage;
 };
 
 #endif

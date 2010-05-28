@@ -346,6 +346,7 @@ void StateManager::render()
     // STACK
     if(XMSession::instance()->debug()) {
       drawStack();
+      drawTexturesLoading();
     }
 
     // SYSMESSAGE
@@ -388,6 +389,15 @@ void StateManager::drawFps() {
   FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg = v_fm->getGlyph(cTemp);
   v_fm->printString(v_fg, 0, 130, MAKE_COLOR(255,255,255,255), -1.0, true);
+}
+
+void StateManager::drawTexturesLoading() {
+  std::ostringstream v_n;
+  v_n << "Textures: " << Theme::instance()->getTextureManager()->getTextures().size();
+
+  FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
+  FontGlyph* v_fg = v_fm->getGlyph(v_n.str());
+  v_fm->printString(v_fg, 0, 100, MAKE_COLOR(255,255,255,255), -1.0, true);
 }
 
 void StateManager::drawStack() {
