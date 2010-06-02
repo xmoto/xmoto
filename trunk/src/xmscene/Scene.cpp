@@ -1699,6 +1699,7 @@ void Scene::playToCheckpoint() {
   }
 
   // put strawberries
+  std::vector<std::string> v_entityToRevert;
   for(unsigned int i=0; i<getLevelSrc()->EntitiesDestroyed().size(); i++) {
     bool v_found = false;
     for(unsigned int j=0; j<m_checkpoint->getDestroyedEntities().size(); j++) {
@@ -1708,8 +1709,13 @@ void Scene::playToCheckpoint() {
     }
 
     if(v_found == false) {
-      getLevelSrc()->revertEntityDestroyed(getLevelSrc()->EntitiesDestroyed()[i]->Id());
+      v_entityToRevert.push_back(getLevelSrc()->EntitiesDestroyed()[i]->Id());
     }
+  }
+
+  // revert the entity -- done in 2 times to not remove entity while beeing looping them
+  for(unsigned int i=0; i<v_entityToRevert.size(); i++) {
+    getLevelSrc()->revertEntityDestroyed(v_entityToRevert[i]);
   }
 
   // call the checkpoint.OnUse
