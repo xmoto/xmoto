@@ -37,8 +37,13 @@ class StateDeadJust : public StateScene {
   virtual void restartLevel(bool i_reloadLevel = false);
   virtual void nextLevel(bool i_positifOrder = true);
 
+  protected:
+  virtual void executeOneCommand(std::string cmd, std::string args);
+
   private:
   int m_enterTime;
+
+  void toCheckpointBeeingDead();
 };
 
 #endif

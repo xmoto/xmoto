@@ -36,10 +36,12 @@ StateDeadJust::StateDeadJust(Universe* i_universe, GameRenderer* i_renderer)
 : StateScene(i_universe, i_renderer, true, true)
 {
   m_name    = "StateDeadJust";
+  StateManager::instance()->registerAsObserver("TOCHECKPOINT", this);
 }
 
 StateDeadJust::~StateDeadJust()
 {
+  StateManager::instance()->unregisterAsObserver("TOCHECKPOINT", this);
 }
 
 void StateDeadJust::enter()
@@ -78,26 +80,7 @@ void StateDeadJust::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 
   else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getRestartCheckpoint()) {
-
-    bool v_isCheckpoint = false;
-
-    // resussite players    
-    for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-      if(m_universe->getScenes()[j]->getCheckpoint() != NULL) {
-	v_isCheckpoint = true;
-	for(unsigned int i=0; i<m_universe->getScenes()[j]->Players().size(); i++) {
-	  if(m_universe->getScenes()[j]->Players()[i]->isDead()) {
-	    m_universe->getScenes()[j]->resussitePlayer(i);
-	  }
-	}
-      }
-    }
-
-    if(v_isCheckpoint) {
-      StateScene::playToCheckpoint();
-      StateManager::instance()->replaceState(new StatePlayingLocal(m_universe, m_renderer), getStateId());
-    }
-
+    toCheckpointBeeingDead();
   }
 
   else {
@@ -140,4 +123,38 @@ bool StateDeadJust::update() {
   }
 
   return false;
+}
+
+void StateDeadJust::executeOneCommand(std::string cmd, std::string args) {
+  LogDebug("cmd [%s [%s]] executed by state [%s].",
+	   cmd.c_str(), args.c_str(), getName().c_str());
+
+  if(cmd == "TOCHECKPOINT") {
+    toCheckpointBeeingDead();
+  }
+
+  else {
+    StateScene::executeOneCommand(cmd, args);
+  }
+}
+
+void StateDeadJust::toCheckpointBeeingDead() {
+  bool v_isCheckpoint = false;
+  
+  // resussite players    
+  for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+    if(m_universe->getScenes()[j]->getCheckpoint() != NULL) {
+      v_isCheckpoint = true;
+      for(unsigned int i=0; i<m_universe->getScenes()[j]->Players().size(); i++) {
+	if(m_universe->getScenes()[j]->Players()[i]->isDead()) {
+	  m_universe->getScenes()[j]->resussitePlayer(i);
+	}
+      }
+    }
+  }
+  
+  if(v_isCheckpoint) {
+    StateScene::playToCheckpoint();
+    StateManager::instance()->replaceState(new StatePlayingLocal(m_universe, m_renderer), getStateId());
+  }
 }
