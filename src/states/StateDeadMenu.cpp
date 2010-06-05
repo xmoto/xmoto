@@ -218,6 +218,11 @@ void StateDeadMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getRestartCheckpoint()) {
+    m_requestForEnd = true;
+    StateManager::instance()->sendAsynchronousMessage("TOCHECKPOINT");
+  }
+
   else {
     StateMenu::xmKey(i_type, i_xmkey);
   }
