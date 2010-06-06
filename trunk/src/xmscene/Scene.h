@@ -182,7 +182,6 @@ public:
   void setPlayerPosition(int i_player, float x,float y,bool bFaceRight);
   const Vector2f &getPlayerPosition(int i_player);
   DriveDir getPlayerFaceDir(int i_player);
-  void setDeathAnim(bool b) {m_bDeathAnimEnabled=b;}
 
   Checkpoint* getCheckpoint();
   void playToCheckpoint();
@@ -320,7 +319,6 @@ private:
 
   SceneHooks *m_motoGameHooks;
   std::string m_infos;
-  bool m_bDeathAnimEnabled;
   Vector2f m_PhysGravity; /* gravity */
   ArrowPointer m_Arrow;               /* Arrow */  
   CollisionSystem m_Collision;        /* Collision system */
