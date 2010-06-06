@@ -382,11 +382,7 @@ void StatePlayingLocal::onAllDead() {
     }
   }
   
-  if(XMSession::instance()->enableDeadAnimation()) {
-    StateManager::instance()->replaceState(new StateDeadJust(m_universe, m_renderer), getStateId());
-  } else {
-    StateManager::instance()->pushState(new StateDeadMenu(m_universe));
-  }
+  StateManager::instance()->replaceState(new StateDeadJust(m_universe, m_renderer), getStateId());
 }
 
 void StatePlayingLocal::abortPlaying() {

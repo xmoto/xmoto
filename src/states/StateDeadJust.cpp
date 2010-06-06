@@ -99,6 +99,11 @@ void StateDeadJust::nextLevel(bool i_positifOrder) {
 bool StateDeadJust::update() {
   float v_torsoVelocity = 0;
 
+  if(XMSession::instance()->enableDeadAnimation() == false) {
+    StateManager::instance()->pushState(new StateDeadMenu(m_universe));
+    return false;
+  }
+
   if(m_universe != NULL) {
     for(unsigned int i=0; i < m_universe->getScenes().size(); i++) {
       for(unsigned int j=0; j < m_universe->getScenes()[i]->Players().size(); j++) {

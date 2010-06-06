@@ -51,7 +51,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Game object. Handles all of the gamestate management und so weiter.
  */
   Scene::Scene() {
-    m_bDeathAnimEnabled=true;
     m_lastCallToEveryHundreath = 0;
 
     m_showGhostTimeDiff = true;
@@ -1296,9 +1295,7 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
     if(m_players[i_player]->isDead() == false && m_players[i_player]->isFinished() == false) {
       m_players[i_player]->setDead(true, getTime());
 
-      if(m_bDeathAnimEnabled) {
-	m_players[i_player]->setBodyDetach(true);
-      }
+      m_players[i_player]->setBodyDetach(true);
       m_players[i_player]->getControler()->stopControls();
 
       // inform camera that the player dies (for the following point)

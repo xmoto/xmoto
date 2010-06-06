@@ -271,7 +271,6 @@ void StatePlaying::updateWithOptions() {
   }
 
   for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-    m_universe->getScenes()[i]->setDeathAnim(XMSession::instance()->enableDeadAnimation());
     m_universe->getScenes()[i]->setShowGhostTimeDiff(XMSession::instance()->showGhostTimeDifference());
   }
 }
