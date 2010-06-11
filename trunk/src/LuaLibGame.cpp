@@ -277,6 +277,30 @@ void LuaLibGame::scriptCallTblVoid(const std::string& Table, const std::string& 
   lua_settop(m_pL,0);        
 }
 
+void LuaLibGame::loadScriptFile(const std::string& i_scriptFilename) {
+  FileHandle *pfh = XMFS::openIFile(FDT_DATA, i_scriptFilename);
+
+  if(pfh == NULL) {
+    throw Exception("unable to load script " + i_scriptFilename);
+  }
+
+  std::string Line,ScriptBuf="";
+  
+  try {
+    while(XMFS::readNextLine(pfh,Line)) {
+      if(Line.length() > 0) {
+	ScriptBuf.append(Line.append("\n"));
+      }
+    }
+  } catch(Exception &e) {
+    XMFS::closeFile(pfh);
+    throw e;
+  }
+  
+  XMFS::closeFile(pfh);
+  loadScript(ScriptBuf, i_scriptFilename);
+}
+
 void LuaLibGame::loadScript(const std::string& i_scriptCode, const std::string& i_scriptFilename) {
   /* Use the Lua aux lib to load the buffer */
   int nRet;
