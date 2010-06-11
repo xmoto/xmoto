@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __LEVELSRC_H__
 #define __LEVELSRC_H__
 
-#define CACHE_LEVEL_FORMAT_VERSION 34
+#define CACHE_LEVEL_FORMAT_VERSION 35
 
 #include <string>
 #include <vector>
@@ -119,8 +119,10 @@ class Level {
   void setAuthor(const std::string& i_author);
   void setCollisionSystem(CollisionSystem* p_CollisionSystem);
 
+  const std::vector<std::string>& scriptLibraryFileNames();
   std::string scriptFileName() const;
   std::string scriptSource() const;
+  void setScriptLibraryFileNames(std::vector<std::string>& i_scriptLibraryFileNames);
   void setScriptFileName(const std::string& i_scriptFileName);
   std::vector<Block*>& Blocks();
   std::vector<Entity*>& Entities();
@@ -194,7 +196,8 @@ class Level {
   std::string m_pack;               /* In this level pack */
   std::string m_packNum;            /* value to sort levels */
   std::string m_fileName;
-  XMLDocument *m_xmlSource;    /* Plain XML source */      
+  XMLDocument *m_xmlSource;    /* Plain XML source */
+  std::vector<std::string> m_scriptLibraryFileNames; /* List of script libraries */
   std::string m_scriptFileName;     /* Script file name */      
   std::string m_scriptSource;       /* Script source code */
   std::string m_checkSum;

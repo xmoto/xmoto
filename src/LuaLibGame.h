@@ -32,6 +32,7 @@ public:
   LuaLibGame(Scene *i_pScene);
   ~LuaLibGame();
 
+  void loadScriptFile(const std::string& i_scriptFilename);
   void loadScript(const std::string& i_scriptCode, const std::string& i_scriptFilename);
   std::string getErrorMsg();
 

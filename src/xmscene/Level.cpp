@@ -250,12 +250,20 @@ void Level::setCollisionSystem(CollisionSystem* p_CollisionSystem) {
   m_pCollisionSystem = p_CollisionSystem;
 }
 
+const std::vector<std::string>& Level::scriptLibraryFileNames() {
+	return m_scriptLibraryFileNames;
+}
+
 std::string Level::scriptFileName() const {
   return m_scriptFileName;
 }
 
 std::string Level::scriptSource() const {
   return m_scriptSource;
+}
+
+void Level::setScriptLibraryFileNames(std::vector<std::string>& i_scriptLibraryFileNames){
+	m_scriptLibraryFileNames = i_scriptLibraryFileNames;
 }
 
 void Level::setScriptFileName(const std::string& i_scriptFileName) {
@@ -389,7 +397,7 @@ void Level::loadXML() {
   m_description = "";
   m_author = "";
   m_music = "";
-  
+  m_scriptLibraryFileNames.clear();
   m_scriptFileName = "";
   m_scriptSource = "";
   m_borderTexture = "";
@@ -585,6 +593,14 @@ void Level::loadXML() {
       /* External script file specified? */
       m_scriptFileName = XML::getOption(pScriptElem,"source");      
       
+      /* Specified libraries ? */
+      TiXmlElement *pLibraryScriptElem = pScriptElem->FirstChildElement("require_library");
+      if (pLibraryScriptElem != NULL) {
+    	  for (pLibraryScriptElem = pScriptElem->FirstChildElement("require_library"); pLibraryScriptElem != 0; pLibraryScriptElem = pLibraryScriptElem->NextSiblingElement("require_library")) {
+    		  m_scriptLibraryFileNames.push_back(pLibraryScriptElem->Attribute("name"));
+    	  }
+      }
+
       /* Encapsulated script? */
       for(TiXmlNode *pScript=pScriptElem->FirstChild();pScript!=NULL;
           pScript=pScript->NextSibling()) {
@@ -759,6 +775,12 @@ void Level::exportBinary(FileDataType i_fdt, const std::string &FileName, const 
     XMFS::writeString(pfh,   m_sky->BlendTexture());
     
     XMFS::writeString(pfh,m_borderTexture);
+
+    XMFS::writeInt_LE(pfh, m_scriptLibraryFileNames.size());
+    for(unsigned int i=0; i<m_scriptLibraryFileNames.size(); i++) {
+      XMFS::writeString(pfh, m_scriptLibraryFileNames[i]);
+    }
+
     XMFS::writeString(pfh,m_scriptFileName);
 
     XMFS::writeFloat_LE(pfh,m_leftLimit);
@@ -993,6 +1015,11 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 	/* *** */
         m_sky->setBlendTexture(XMFS::readString(pfh));
         m_borderTexture = XMFS::readString(pfh);
+
+	unsigned int v_nbScriptLibraryFileNames = XMFS::readInt_LE(pfh);
+	for(unsigned int i=0; i<v_nbScriptLibraryFileNames; i++) {
+	  m_scriptLibraryFileNames.push_back(XMFS::readString(pfh));
+	}
 
         m_scriptFileName = XMFS::readString(pfh);
 

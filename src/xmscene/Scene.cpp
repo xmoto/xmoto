@@ -523,61 +523,34 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     m_lastCallToEveryHundreath = 0;
 
     /* Load and parse level script */
-    bool bTryParsingEncapsulatedLevelScript = true;
-    bool bNeedScript = false;
-    bool bGotScript = false;
     
-    if(m_pLevelSrc->scriptFileName() != "") {
-      FileHandle *pfh = XMFS::openIFile(FDT_DATA, std::string("./Levels/") + m_pLevelSrc->scriptFileName());
-      if(pfh == NULL) {
-        /* Well, file not found -- try encapsulated script */
-        bNeedScript = true;
+    for(unsigned int i = 0; i < m_pLevelSrc->scriptLibraryFileNames().size(); i++) {
+      try {
+	m_luaGame->loadScriptFile("LevelsLibraries/" + m_pLevelSrc->scriptLibraryFileNames()[i]);
+      } catch(Exception &e) {
+	throw e;
       }
-      else {      
-        std::string Line,ScriptBuf="";
-        
-        while(XMFS::readNextLine(pfh,Line)) {
-          if(Line.length() > 0) {
-            ScriptBuf.append(Line.append("\n"));
-          }
-        }
-        
-        XMFS::closeFile(pfh);
+    }
 
-	try {
-	  m_luaGame->loadScript(ScriptBuf, m_pLevelSrc->scriptFileName());
-	} catch(Exception &e) {
-	  delete m_luaGame;
-	  m_luaGame = NULL;
-	  throw e;
-	}
-
-        bGotScript = true;
-        bTryParsingEncapsulatedLevelScript = false;
-      }       
+    if(m_pLevelSrc->scriptFileName() != "") {
+      try {
+	m_luaGame->loadScriptFile("./Levels/" + m_pLevelSrc->scriptFileName());
+      } catch(Exception &e) {
+	throw e;
+      }
     }    
     
-    if(bTryParsingEncapsulatedLevelScript && m_pLevelSrc->scriptSource() != "") {
+    if(m_pLevelSrc->scriptSource() != "") {
       /* Use the Lua aux lib to load the buffer */
 
       try {
 	m_luaGame->loadScript(m_pLevelSrc->scriptSource(), m_pLevelSrc->scriptFileName());
       } catch(Exception &e) {
 	std::string error_msg = m_luaGame->getErrorMsg();
-	delete m_luaGame;
-	m_luaGame = NULL;
 	throw Exception("failed to load level encapsulated script :\n" + error_msg);
-      }      
-
-      bGotScript = true;      
+      }
     }    
     
-    if(bNeedScript && !bGotScript) {
-      delete m_luaGame;
-      m_luaGame = NULL;
-      throw Exception("failed to get level script");
-    }
-
     // load chimunk
     if(m_playEvents) {
       if(m_pLevelSrc->isPhysics()) {
