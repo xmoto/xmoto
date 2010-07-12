@@ -126,10 +126,12 @@ std::string GameState::getStateType() const {
 void GameState::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "CHATMESSAGE"){
     if(i_button == UI_MSGBOX_OK) {
-      NA_chatMessage na(i_input);
+      NA_chatMessage na(i_input, XMSession::instance()->profile());
       try {
-	NetClient::instance()->send(&na, 0);
-	SysMessage::instance()->addConsoleLine(XMSession::instance()->profile() + ": " + i_input);
+	NetClient::instance()->send(&na, 0);	
+
+	/* and not i_input because na can have transformations */
+	SysMessage::instance()->addConsoleLine(NetClient::instance()->getDisplayMessage(na.getMessage(), XMSession::instance()->profile()));
       } catch(Exception &e) {
       }
     }
@@ -308,7 +310,8 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   // net chat
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_c, KMOD_LCTRL) && NetClient::instance()->isConnected()) {
     if(StateManager::instance()->isThereASuchStateType("CHATMESSAGE") == false) { // do not open several chat box
-      std::vector<std::string> clientList = NetClient::instance()->getOtherClientsNameList(); // forced to do cause i couldn't include in init netclient function
+      std::vector<std::string> clientList = NetClient::instance()->getOtherClientsNameList(" "); // forced to do cause i couldn't include in init netclient function
+      NetClient::instance()->addChatTransformations(clientList, " ");
       StateMessageBox* v_msgboxState = new StateMessageBox(NULL, clientList, std::string(GAMETEXT_CHATMESSAGE) + ":", UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, "", false, true, false, true);
       v_msgboxState->setMsgBxId("CHATMESSAGE");
       v_msgboxState->setStateType("CHATMESSAGE");

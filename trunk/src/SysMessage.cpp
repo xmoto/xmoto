@@ -115,6 +115,7 @@ void SysMessage::render() {
   /* console */
   int v_consoleBorder = 10;
   int v_consoleYOffset = 0;
+  Color c;
 
   v_fm = m_drawLib->getFontSmall();
 
@@ -127,18 +128,30 @@ void SysMessage::render() {
     }
 
     for(unsigned int i=0; i<m_console.size(); i++) {
-      v_fg = v_fm->getGlyph(m_console[i]);
+      v_fg = v_fm->getGlyph(m_console[i].cltxt);
+
+      switch(m_console[i].cltype) {
+      case CLT_NORMAL:
+	c = MAKE_COLOR(255, 255, 255, v_shadow);
+	break;
+      case CLT_INFORMATION:
+	c = MAKE_COLOR(255, 255, 55, v_shadow);
+      }
+
       v_fm->printString(v_fg,
 			m_drawLib->getDispWidth()/3,
 			v_consoleBorder+v_consoleYOffset,
-			MAKE_COLOR(255, 255, 255, v_shadow), 0.0, true);
+			c, 0.0, true);
       v_consoleYOffset += v_fg->realHeight();
     }
   }
 }
 
-void SysMessage::addConsoleLine(const std::string& i_line) {
-  m_console.push_back(i_line);
+void SysMessage::addConsoleLine(const std::string& i_line, consoleLineType i_clt) {
+  consoleLine clt;
+  clt.cltxt  = i_line;
+  clt.cltype = i_clt;
+  m_console.push_back(clt);
 
   if(m_console.size() > SYSMSG_CONSOLEDISPLAY_MAXNBLINES) {
     m_console.erase(m_console.begin());

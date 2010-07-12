@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "NetActions.h"
 #include "../helpers/VExcept.h"
 #include "../helpers/Log.h"
+#include "../helpers/Text.h"
 #include "NetClient.h"
 #include "../XMSession.h"
 #include "../DBuffer.h"
@@ -351,8 +352,9 @@ void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPa
   NetAction::send(i_tcpsd, i_udpsd, i_sendPacket, i_udpRemoteIP, NULL, 0);
 }
 
-NA_chatMessage::NA_chatMessage(const std::string& i_msg) {
+NA_chatMessage::NA_chatMessage(const std::string& i_msg, const std::string &i_me) {
   m_msg = i_msg;
+  ttransform(i_me);
 }
 
 NA_chatMessage::NA_chatMessage(void* data, unsigned int len) {
@@ -362,6 +364,10 @@ NA_chatMessage::NA_chatMessage(void* data, unsigned int len) {
 }
 
 NA_chatMessage::~NA_chatMessage() {
+}
+
+void NA_chatMessage::ttransform(const std::string& i_me) {
+  m_msg = replaceAll(m_msg, "/me", i_me);
 }
 
 void NA_chatMessage::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {

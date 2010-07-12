@@ -40,6 +40,13 @@ class SysMsg {
   SysMsgType type;
 };
 
+enum consoleLineType { CLT_NORMAL, CLT_INFORMATION };
+
+struct consoleLine {
+  std::string cltxt;
+  consoleLineType cltype;
+};
+
 class SysMessage : public Singleton<SysMessage> {
   friend class Singleton<SysMessage>;
 
@@ -52,7 +59,7 @@ public:
   void displayText(const std::string& i_msg);
   void displayError(const std::string& i_msg);
   void displayInformation(const std::string& i_msg);
-  void addConsoleLine(const std::string& i_line);
+  void addConsoleLine(const std::string& i_line, consoleLineType i_clt = CLT_NORMAL);
   void showConsole();
   void render();
 
@@ -71,7 +78,7 @@ private:
   void drawBoxMsg_one(unsigned int i, float i_time, int x_offset, int y_offset);
 
   /* console */
-  std::vector<std::string> m_console;
+  std::vector<consoleLine> m_console;
   float m_consoleLastShowTime;
 
   DrawLib* m_drawLib;

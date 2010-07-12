@@ -168,7 +168,7 @@ class NA_clientInfos : public NetAction {
 
 class NA_chatMessage : public NetAction {
   public:
-  NA_chatMessage(const std::string& i_msg);
+  NA_chatMessage(const std::string& i_msg, const std::string &i_me);
   NA_chatMessage(void* data, unsigned int len);
   virtual ~NA_chatMessage();
   std::string actionKey()    { return ActionKey; }
@@ -182,6 +182,8 @@ class NA_chatMessage : public NetAction {
 
   private:
   std::string m_msg;
+
+  void ttransform(const std::string& i_me);
 };
 
 class NA_serverError : public NetAction {
