@@ -132,7 +132,7 @@ void NetClient::connect(const std::string& i_server, int i_port) {
 
   char buf[512];
   snprintf(buf, 512, GAMETEXT_PRESSCTRLCTOCHAT, XMKey(SDLK_c, KMOD_LCTRL).toFancyString().c_str());
-  SysMessage::instance()->addConsoleLine(buf);
+  SysMessage::instance()->addConsoleLine(buf, CLT_INFORMATION);
 
   // bind udp port on server
   NA_clientInfos na(XM_NET_PROTOCOL_VERSION, m_udpBindKey);
@@ -296,9 +296,14 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
   case TNA_chatMessage:
     {
       try {
-	std::string v_str = m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name() +
-	  ": " + ((NA_chatMessage*)i_netAction)->getMessage();
-	SysMessage::instance()->addConsoleLine(v_str);
+	std::string v_str;
+	std::string v_author;
+
+	// retrieve message
+	v_str = ((NA_chatMessage*)i_netAction)->getMessage();
+	v_author = m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name();
+
+	SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author));
       } catch(Exception &e) {
       }
     }
@@ -597,12 +602,24 @@ void NetOtherClient::setNetGhost(unsigned int i_subsrc, NetGhost* i_netGhost) {
   m_ghosts[i_subsrc] = i_netGhost;
 }
 
-std::vector<std::string> NetClient::getOtherClientsNameList() {
+std::vector<std::string> NetClient::getOtherClientsNameList(const std::string& i_suffix) {
 	std::vector<std::string> vect;
 	for (int i = 0, n = m_otherClients.size(); i < n; i++) {
-		vect.push_back(m_otherClients[i]->name());
+		vect.push_back(m_otherClients[i]->name() + i_suffix);
 	}
 	return vect;
 }
 
+void NetClient::addChatTransformations(std::vector<std::string>& io_clientList, const std::string i_suffix) {
+  io_clientList.push_back("/me" + i_suffix);
+}
 
+std::string NetClient::getDisplayMessage(const std::string& i_msg, const std::string& i_author) {
+
+  if(i_author + " " == i_msg.substr(0, i_author.size()+1)) {
+    return i_msg;
+  }
+
+  // add author only the message is not starting by it
+  return i_author + ": " + i_msg;
+}

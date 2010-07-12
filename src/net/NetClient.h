@@ -90,7 +90,9 @@ class NetClient : public Singleton<NetClient> {
   bool isPlayInitialized();
   void endPlay();
 
-  std::vector<std::string> getOtherClientsNameList();
+  std::vector<std::string> getOtherClientsNameList(const std::string& i_suffix);
+  void addChatTransformations(std::vector<std::string>& io_clientList, const std::string i_suffix);
+  std::string getDisplayMessage(const std::string& i_msg, const std::string& i_author);
 
   std::vector<NetOtherClient*>& otherClients();
 
