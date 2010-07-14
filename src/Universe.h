@@ -63,6 +63,7 @@ class Universe {
   bool waitingForGhosts() const;
   void addGhost(Scene* i_scene, GhostsAddInfos i_gai);
   void removeRequestedGhost(const std::string& i_replay);
+  void updateWaitingGhosts();
 
   private:
   std::vector<Scene*>        m_scenes; /* Game objects */
@@ -76,7 +77,6 @@ class Universe {
   void addScene();
 
   void addAvailableGhostsToScene(xmDatabase *pDb, Scene* i_scene);
-  void updateWaitingGhosts();
 
   std::string _getGhostReplayPath_bestOfThePlayer(xmDatabase *pDb, std::string p_levelId, int &p_time);
   std::string _getGhostReplayPath_bestOfLocal(xmDatabase *pDb, std::string p_levelId, int &p_time);
