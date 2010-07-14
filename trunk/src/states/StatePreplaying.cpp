@@ -267,7 +267,8 @@ void StatePreplaying::secondInitPhase()
 
     addLocalGhosts();
 
-  if(allowGhosts() && XMSession::instance()->www() && XMSession::instance()->enableGhosts()) {
+  if(allowGhosts() && XMSession::instance()->enableGhosts()) {
+    // download requested ghosts available only via the web or remove it www is disabled
     addWebGhosts();
   }
 
@@ -330,7 +331,7 @@ void StatePreplaying::addLocalGhosts() {
 void StatePreplaying::addWebGhosts()
 {
   bool v_need = false;
-
+  bool v_ghostsRemoved = false; // if true, it means that some ghosts are not available, so, universe must be informed
   for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 
     // copy ghosts add infos because adding ghosts can remove them inside the loop !
@@ -346,11 +347,20 @@ void StatePreplaying::addWebGhosts()
 	  }
 	} else {
 	  // to download
-	  StateManager::instance()->getReplayDownloaderThread()->add(v_requestedGhosts[j].url);
-	  v_need = true;
+	  if(XMSession::instance()->www()) { // ok only if it's allowed to use www
+	    StateManager::instance()->getReplayDownloaderThread()->add(v_requestedGhosts[j].url);
+	    v_need = true;
+	  } else {
+	    m_universe->getScenes()[i]->removeRequestedGhost(v_requestedGhosts[j].name);
+	    v_ghostsRemoved = true;
+	  }
 	}
       }
     }
+  }
+
+  if(v_ghostsRemoved) {
+    m_universe->updateWaitingGhosts();
   }
 
   if(v_need) {
