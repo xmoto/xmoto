@@ -167,6 +167,7 @@ Central place to keep many in-game text strings
     ":Luís Garcia, Sérgio Marques (" + std::string(_("Portugese")) + ");"                    \
     ":Andre Parhan ("+ std::string(_("Dutch")) + ");"                                        \
     ":KuanYen ("+ std::string(_("Taiwanese")) + ");"                                         \
+    ":Adrián Chaves Fernández (" + std::string(_("Galician")) + ");"                         \
     ":;"                                                                                     \
     + std::string(_("Main testers")) +                                                       \
     ":Jose Alberto Coelho;"                                                                  \
