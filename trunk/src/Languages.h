@@ -32,6 +32,7 @@ const char* LANGUAGES[][3] = {
   {"Español",     "Espanol",     "es_ES"},
   {"Suomi",       "Suomi",       "fi_FI"},
   {"Français",    "Francais",    "fr_FR"},
+  {"Gallego",     "Gallego",     "gl_ES"},
   {"Magyar",      "Magyar",      "hu_HU"},
   {"Italiano",    "Italiano",    "it_IT"},
   {"Latviešu",    "Latviesu",    "lv_LV"},
@@ -45,8 +46,8 @@ const char* LANGUAGES[][3] = {
   {"Русский",     "Russian",     "ru_RU"},
   {"Slovensky",   "Slovensky",   "sk_SK"},
   {"Svenska",     "Svenska",     "sv_SE"},
-  {"Taiwanese",   "繁體中文",      "zh_TW"},
   {"Türkçe",       "Turkce",     "tr_TR"},
+  {"Taiwanese",   "繁體中文",      "zh_TW"},
   {NULL, NULL, NULL}
 };
 
