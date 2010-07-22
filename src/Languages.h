@@ -32,7 +32,7 @@ const char* LANGUAGES[][3] = {
   {"Español",     "Espanol",     "es_ES"},
   {"Suomi",       "Suomi",       "fi_FI"},
   {"Français",    "Francais",    "fr_FR"},
-  {"Gallego",     "Gallego",     "gl_ES"},
+  {"Gallego",     "Galego",      "gl_ES"},
   {"Magyar",      "Magyar",      "hu_HU"},
   {"Italiano",    "Italiano",    "it_IT"},
   {"Latviešu",    "Latviesu",    "lv_LV"},
