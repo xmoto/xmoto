@@ -378,11 +378,19 @@ void Universe::initReplay() {
   }
 }
 
+std::string Universe::getTemporaryReplayName() const {
+  return "Replays/Latest.rpl";
+}
+
+void Universe::saveReplayTemporary(xmDatabase *pDb) {
+  m_pJustPlayReplay->saveReplayIfNot(1); // still always use the format 1
+}
+
 void Universe::saveReplay(xmDatabase *pDb, const std::string &Name) {
   /* This is simply a job of copying the Replays/Latest.rpl file into 
      Replays/Name.rpl */
 
-  m_pJustPlayReplay->saveReplayIfNot(1); // still always use the format 1
+  saveReplayTemporary(pDb);
 
   /*
     use old format if level is not physics to allow people having an old version to read replays
@@ -394,7 +402,7 @@ void Universe::saveReplay(xmDatabase *pDb, const std::string &Name) {
   /* Try saving */
   std::string v_outputfile;
 
-  if(!XMFS::copyFile(FDT_DATA, "Replays/Latest.rpl",
+  if(!XMFS::copyFile(FDT_DATA, getTemporaryReplayName(),
 		   std::string("Replays/") + Name + std::string(".rpl"),
 		   v_outputfile)) {
     throw Exception("Failed to save replay " + Name);

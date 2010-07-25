@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Log.h"
 #include "states/StateVote.h"
 #include "thread/SendVoteThread.h"
+#include "StatePreplayingReplay.h"
 
 /* static members */
 UIRoot*  StateDeadMenu::m_sGUI = NULL;
@@ -78,6 +79,9 @@ void StateDeadMenu::enter()
   if(m_universe != NULL) {
     UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:SAVEREPLAY_BUTTON"));
     saveReplayButton->enableWindow(m_universe->isAReplayToSave());
+
+    UIButton* viewReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:VIEWREPLAY_BUTTON"));
+    viewReplayButton->enableWindow(m_universe->isAReplayToSave());
   }
 
   /* activ button */
@@ -123,6 +127,16 @@ void StateDeadMenu::checkEvents() {
 							 UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, Replay::giveAutomaticName());
     v_msgboxState->setMsgBxId("SAVEREPLAY");
     StateManager::instance()->pushState(v_msgboxState);
+  }
+
+  UIButton *pViewreplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:VIEWREPLAY_BUTTON"));
+  if(pViewreplayButton->isClicked()) {
+    pViewreplayButton->setClicked(false);
+
+    if(m_universe->isAReplayToSave()) {
+      m_universe->saveReplayTemporary(xmDatabase::instance("main"));
+      StateManager::instance()->pushState(new StatePreplayingReplay(m_universe->getTemporaryReplayName(), true));
+    }
   }
 
   UIButton *pPlaynextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:PLAYNEXT_BUTTON"));
@@ -250,38 +264,42 @@ void StateDeadMenu::createGUIIfNeeded() {
 		      drawLib->getDispWidth(),
 		      drawLib->getDispHeight());
 
-  v_frame = new UIFrame(m_sGUI,
-			drawLib->getDispWidth()/2  - 400/2,
-			drawLib->getDispHeight()/2 - 540/2,
-			"", 400, 540);
+  v_frame = new UIFrame(m_sGUI, drawLib->getDispWidth()/2  - 400/2, drawLib->getDispHeight()/2 - 700/2, "", 400, 700);
   v_frame->setID("DEADMENU_FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_MENU);
 
-  UIStatic *pDeadText = new UIStatic(v_frame, 0, 100, GAMETEXT_JUSTDEAD, v_frame->getPosition().nWidth, 36);
+  UIStatic *pDeadText = new UIStatic(v_frame, 0, 150, GAMETEXT_JUSTDEAD, v_frame->getPosition().nWidth, 36);
   pDeadText->setFont(drawLib->getFontMedium());
 
-  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 0*57, GAMETEXT_TRYAGAIN, 207, 57);
+  int v_halign = -20;
+
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_halign+ v_frame->getPosition().nHeight/2 - 5*57/2 + 0*57, GAMETEXT_TRYAGAIN, 207, 57);
   v_button->setID("TRYAGAIN_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_TRY_LEVEL_AGAIN);
   v_button->setFont(drawLib->getFontSmall());
   v_frame->setPrimaryChild(v_button); /* default button */
 
-  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 1*57, GAMETEXT_SAVEREPLAY, 207, 57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_halign+ v_frame->getPosition().nHeight/2 - 5*57/2 + 1*57, GAMETEXT_VIEWREPLAY, 207, 57);
+  v_button->setID("VIEWREPLAY_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_VIEW_REPLAY);
+  v_button->setFont(drawLib->getFontSmall());
+
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_halign+ v_frame->getPosition().nHeight/2 - 5*57/2 + 2*57, GAMETEXT_SAVEREPLAY, 207, 57);
   v_button->setID("SAVEREPLAY_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_SAVE_A_REPLAY);
   v_button->setFont(drawLib->getFontSmall());
 
-  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 2*57, GAMETEXT_PLAYNEXT, 207, 57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_halign+ v_frame->getPosition().nHeight/2 - 5*57/2 + 3*57, GAMETEXT_PLAYNEXT, 207, 57);
   v_button->setID("PLAYNEXT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_PLAY_NEXT_LEVEL);
   v_button->setFont(drawLib->getFontSmall());
 
-  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 3*57, GAMETEXT_ABORT, 207, 57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_halign+ v_frame->getPosition().nHeight/2 - 5*57/2 + 4*57, GAMETEXT_ABORT, 207, 57);
   v_button->setID("ABORT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
   v_button->setFont(drawLib->getFontSmall());
 
-  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 4*57, GAMETEXT_QUIT, 207, 57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_halign+ v_frame->getPosition().nHeight/2 - 5*57/2 + 5*57, GAMETEXT_QUIT, 207, 57);
   v_button->setID("QUIT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
   v_button->setFont(drawLib->getFontSmall());
