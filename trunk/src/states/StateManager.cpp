@@ -40,6 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../XMSession.h"
 #include "../drawlib/DrawLib.h"
 #include "../Game.h"
+#include "../GeomsManager.h"
 #include "../helpers/Log.h"
 #include "../SysMessage.h"
 #include "../xmscene/Camera.h"
@@ -347,6 +348,7 @@ void StateManager::render()
     if(XMSession::instance()->debug()) {
       drawStack();
       drawTexturesLoading();
+      drawGeomsLoading();
     }
 
     // SYSMESSAGE
@@ -398,6 +400,15 @@ void StateManager::drawTexturesLoading() {
   FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg = v_fm->getGlyph(v_n.str());
   v_fm->printString(v_fg, 0, 100, MAKE_COLOR(255,255,255,255), -1.0, true);
+}
+
+void StateManager::drawGeomsLoading() {
+  std::ostringstream v_n;
+  v_n << "Geoms (Blocks/Edges): " << GeomsManager::instance()->getNumberOfBlockGeoms() << "/" << GeomsManager::instance()->getNumberOfEdgeGeoms();
+
+  FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
+  FontGlyph* v_fg = v_fm->getGlyph(v_n.str());
+  v_fm->printString(v_fg, 0, 120, MAKE_COLOR(255,255,255,255), -1.0, true);
 }
 
 void StateManager::drawStack() {

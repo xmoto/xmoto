@@ -43,6 +43,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/specific/GUIXMoto.h"
 #include "Credits.h"
 #include "Replay.h"
+#include "GeomsManager.h"
 
 #include "states/StateManager.h"
 #include "states/StateEditProfile.h"
@@ -744,6 +745,7 @@ void GameApp::run_unload() {
 
   InputHandler::destroy();
   LevelsManager::destroy();
+  GeomsManager::destroy();
   Theme::destroy();
   XMSession::destroy("live");
   XMSession::destroy("file");

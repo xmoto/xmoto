@@ -109,6 +109,7 @@ private:
   void drawFps();
   void drawStack();
   void drawTexturesLoading();
+  void drawGeomsLoading();
   void drawCursor();
 
   void renderOverAll();

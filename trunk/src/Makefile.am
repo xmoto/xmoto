@@ -326,6 +326,7 @@ bin_PROGRAMS = xmoto
 xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   GUIBestTimes.cpp \
   Renderer.cpp Replay.cpp Sound.cpp \
+  GeomsManager.h GeomsManager.cpp \
   LuaLibGame.h LuaLibGame.cpp \
   UserConfig.cpp \
   BSP.h \
