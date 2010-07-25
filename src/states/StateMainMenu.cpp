@@ -32,7 +32,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateHelp.h"
 #include "StateOptions.h"
 #include "StateEditProfile.h"
-#include "StateReplaying.h"
 #include "StateLevelPackViewer.h"
 #include "StateUploadHighscore.h"
 #include "StateCheckWww.h"

@@ -85,7 +85,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         putImage(0,getPosition().nHeight/2,getPosition().nWidth/2,getPosition().nHeight/2,m_pMenuBL);
       }
       else {
-        putRect(80,100,240,343, UGLY_MODE_WINDOW_BG);  //To FIX? seems like getPosition isnt needed: independently from screen size the it fits
+	// getPosition().nWidth/3 -- arbitrary values for the shadow
+	int v_shadow = 10;
+	putRect(0+getPosition().nWidth/v_shadow, getPosition().nHeight/v_shadow,
+		getPosition().nWidth-2*getPosition().nWidth/v_shadow, getPosition().nHeight-2*getPosition().nHeight/v_shadow,
+		UGLY_MODE_WINDOW_BG);
       }
         break;
       case UI_FRAMESTYLE_TRANS:
