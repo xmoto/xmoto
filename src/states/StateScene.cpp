@@ -621,13 +621,14 @@ void StateScene::closePlaying() {
     NetClient::instance()->endPlay();
   }
 
+  if(m_renderer != NULL) {
+    m_renderer->unprepareForNewLevel(m_universe);
+    delete m_renderer;
+  }
+
   if(m_universe != NULL) {
     delete m_universe;
     m_universe = NULL;
-  }
-
-  if(m_renderer != NULL) {
-    delete m_renderer;
   }
 
   InputHandler::instance()->resetScriptKeyHooks();

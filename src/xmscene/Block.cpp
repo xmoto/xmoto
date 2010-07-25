@@ -98,7 +98,7 @@ Block::Block(std::string i_id) {
   m_dynamicPositionCenter = Vector2f(0.0, 0.0);
   m_texture          = XM_DEFAULT_BLOCK_TEXTURE;
   m_isBBoxDirty      = true;
-  m_geom             = -1;
+  m_geom             = NULL;
   m_layer            = -1;
   m_edgeDrawMethod   = angle;
   m_edgeAngle        = DEFAULT_EDGE_ANGLE;
@@ -137,8 +137,6 @@ Block::~Block() {
   }
   m_collisionLines.clear();
 
-  m_edgeGeoms.clear();
-  
  // for(unsigned int i=0; i<edgeGeomBlendColor.size(); i++) delete edgeGeomBlendColor[i];
   m_edgeMaterial.clear();
   
@@ -999,12 +997,7 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   return pBlock;
 }
 
-void Block::addEdgeGeom(int geomIndex)
-{
-  m_edgeGeoms.push_back(geomIndex);
-}
-
-std::vector<int>& Block::getEdgeGeoms()
+std::vector<Geom*>& Block::getEdgeGeoms()
 {
   return m_edgeGeoms;
 }

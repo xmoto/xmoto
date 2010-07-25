@@ -39,6 +39,7 @@ class cpShape;
 class ChipmunkWorld;
 class PhysicsSettings;
 class DBuffer;
+class Geom;
 template<class T> struct ColElement;
 
 #define DEFAULT_EDGE_ANGLE 270.0f
@@ -238,10 +239,10 @@ class Block {
     return m_collisionLines;
   }
 
-  int getGeom() {
+  Geom* getGeom() {
     return m_geom;
   }
-  void setGeom(int geom) {
+  void setGeom(Geom* geom) {
     m_geom = geom;
   }
   int getLayer() {
@@ -251,10 +252,8 @@ class Block {
     m_layer = layer;
   }
 
-  void addEdgeGeom(int geomIndex);
-  std::vector<int>& getEdgeGeoms();
-  void clearEdgeGeoms() { m_edgeGeoms.clear(); };
-  void setEdgeGeoms(std::vector<int> i_geomVec) { m_edgeGeoms = i_geomVec;  };
+  std::vector<Geom*>& getEdgeGeoms();
+  void setEdgeGeoms(std::vector<Geom*> i_geomVec) { m_edgeGeoms = i_geomVec;  };
   std::string getEdgeMaterialTexture( std::string i_materialName );
   TColor& getEdgeMaterialColor( std::string i_materialName );
   float getEdgeMaterialDepth( std::string i_materialName );
@@ -292,7 +291,7 @@ private:
   std::vector<BlockVertex*> m_vertices;
   std::vector<ConvexBlock*> m_convexBlocks;
   // one geom for each edge texture
-  std::vector<int> m_edgeGeoms;
+  std::vector<Geom*> m_edgeGeoms;
   // one Material (edge texture, blend color, scale and depth ) for each geom
   std::vector<EdgeMaterial> m_edgeMaterial;
   TColor m_edgeDefaultColor;
@@ -325,7 +324,7 @@ private:
   float              m_collisionRadius;
 
   // the geom used to render the block
-  int   m_geom;
+  Geom*   m_geom;
 
   /* properties for dynamic */
   float m_dynamicRotation;  /* Block rotation */

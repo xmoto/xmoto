@@ -35,6 +35,9 @@ class ParticlesSource;
 class Universe;
 class BlockVertex;
 class Camera;
+class Geom;
+class ConvexBlock;
+class LevelGeoms;
 
   /*===========================================================================
   Graphical debug info
@@ -42,39 +45,6 @@ class Camera;
   struct GraphDebugInfo {
     std::string Type;
     std::vector<std::string> Args;    
-  };
-
-  /*===========================================================================
-  Static geometry
-  ===========================================================================*/
-  struct GeomCoord {
-    float x,y;
-  };
-
-  struct GeomPoly {
-    GeomPoly() {
-      nNumVertices = 0;
-      pVertices = pTexCoords = NULL;
-      nVertexBufferID = nTexCoordBufferID = 0;
-    }
-    
-    unsigned int nNumVertices;
-    GeomCoord *pVertices;
-    GeomCoord *pTexCoords;
-    
-    unsigned int nVertexBufferID,nTexCoordBufferID;
-  };
-
-  struct Geom {
-    Geom() {
-      pTexture = NULL;
-    }
-    std::string material;
-    std::vector<GeomPoly *> Polys;    
-    Texture *pTexture;           // only used for edge Geoms
-    TColor edgeBlendColor;    
-    Vector2f Min,Max; /* AABB */
-    bool isUpper;
   };
 
   /*===========================================================================
@@ -135,7 +105,7 @@ public:
   void render(Scene* i_scene);
 
   void prepareForNewLevel(Universe* i_universe);
-  void unprepareForNewLevel(void);
+  void unprepareForNewLevel(Universe* i_universe);
 
   void loadDebugInfo(std::string File);
 
@@ -174,10 +144,6 @@ private:
 
   DrawLib* m_drawLib;
   std::vector<GraphDebugInfo *> m_DebugInfo;
-      
-  std::vector<Geom*> m_StaticGeoms;
-  std::vector<Geom*> m_DynamicGeoms;
-  std::vector<Geom*> m_edgeGeoms;
 
   std::string m_bestTime;
   std::string m_replayHelp_l;
@@ -214,11 +180,6 @@ private:
   float m_sizeMultOfEntitiesToTake;
   float m_sizeMultOfEntitiesWhichMakeWin;
   int   m_nParticlesRendered;
-  std::string       m_currentEdgeEffect;
-  TColor            m_currentEdgeBlendColor;
-  EdgeEffectSprite* m_currentEdgeSprite;
-  float             m_currentEdgeMaterialScale;
-  float             m_currentEdgeMaterialDepth;
   Sprite*           m_currentSkySprite;
   Sprite*           m_currentSkySprite2;
   
@@ -255,8 +216,8 @@ private:
 		      Biker* i_biker,
 		      int i_90_rotation = 0
 		      );
-  void _RenderBlocks(Scene* i_scene);
-  void _RenderBlock(Block* block);
+  void _RenderStaticBlocks(Scene* i_scene);
+  void _RenderStaticBlock(Block* block);
   void _RenderBlockEdges(Block* block);
   void _RenderDynamicBlocks(Scene* i_scene, bool bBackground=false);
   void _RenderBackground(Scene* i_scene);
@@ -283,33 +244,13 @@ private:
   void _RenderAlphaBlendedSectionSP(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
   void _RenderRectangle(const Vector2f& i_p1, const Vector2f& i_p2, const Color& i_color, bool i_filled = false);
   void _RenderCircle(unsigned int nSteps, const Color i_color,const Vector2f &C,float fRadius, bool i_filled = false);
-  void _deleteGeoms(std::vector<Geom *>& geom, bool useFree=false);
 
   void renderTimePanel(Scene* i_scene);
   void renderReplayHelpMessage(Scene* i_scene);
 
   Texture* loadTexture(std::string textureName);
-  Texture* loadTextureEdge(std::string textureName);
-  int  edgeGeomExists(Block* pBlock, std::string texture, bool isUpper);
   void initCameras(Universe* i_universe);
-  int  loadBlock(Block* pBlock, Universe* i_universe, unsigned int currentScene, int sameSceneAs, int blockIndex);
-  int  loadBlockGeom(Block* pBlock, std::vector<Geom *>* pGeoms, Vector2f Center, Scene* pScene);
-  int  loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene);
-  void calculateEdgePosition(Block* pBlock,
-			     BlockVertex* vertexA1,
-			     BlockVertex* vertexB1,
-			     BlockVertex* vertexC1,
-			     Vector2f     center,
-			     Vector2f& A1, Vector2f& B1,
-			     Vector2f& B2, Vector2f& A2,
-			     Vector2f& C1, Vector2f& C2,
-			     Vector2f oldC2, Vector2f oldB2, bool useOld,
-			     bool AisLast, bool& swapDone);
-  void calculateEdgeTexture(Block* pBlock,
-			    Vector2f A1,   Vector2f B1,
-			    Vector2f B2,   Vector2f A2,
-			    Vector2f& ua1, Vector2f& ub1,
-			    Vector2f& ub2, Vector2f& ua2);
+  unsigned int  loadBlock(LevelGeoms* i_levelGeoms, Block* pBlock, int blockIndex);
 };
 
 #endif
