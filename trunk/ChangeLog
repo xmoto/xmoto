@@ -1,5 +1,6 @@
 X-Moto 0.5.4
 --------------------------------
+ * Add a button in the network tab to join levels played by other people
  * Remove the downloading ghost screen (background download)
  * Completion for chat box and server console
  * minor bugs fixed

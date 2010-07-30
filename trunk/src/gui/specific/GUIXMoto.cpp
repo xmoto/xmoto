@@ -110,6 +110,24 @@ void UILevelList::updateLevel(const std::string& i_id_level, int i_playerHighsco
   }
 }
 
+std::string UILevelList::determineNextLevel(const std::string& i_id_level) {
+  for(unsigned int i=0;i<getEntries().size()-1;i++) {
+    if((*((std::string*)getEntries()[i]->pvUser)) == i_id_level) {
+      return *((std::string*)getEntries()[i+1]->pvUser);
+    }
+  }
+  return *((std::string*)getEntries()[0]->pvUser);
+}
+  
+std::string UILevelList::determinePreviousLevel(const std::string& i_id_level) {
+  for(unsigned int i=1;i<getEntries().size();i++) {
+    if((*((std::string*)getEntries()[i]->pvUser)) == i_id_level) {
+      return *((std::string*)getEntries()[i-1]->pvUser);
+    }
+  }
+  return *((std::string*)getEntries()[getEntries().size()-1]->pvUser);
+}
+
 UIPackTree::UIPackTree(UIWindow *pParent,
 		       int x, int y,
 		       const std::string& Caption,

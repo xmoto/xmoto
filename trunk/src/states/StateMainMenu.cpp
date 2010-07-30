@@ -49,6 +49,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../SysMessage.h"
 #include "../net/NetClient.h"
 #include "states/StateWaitServerInstructions.h"
+#include "net/VirtualNetLevelsList.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -458,6 +459,9 @@ void StateMainMenu::updateClientStrings() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CONNECTDISCONNECT"));
   v_button->setCaption(NetClient::instance()->isConnected() ?
 		       GAMETEXT_CLIENTDISCONNECT : GAMETEXT_CLIENTCONNECT);
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:PLAYSAMENETLEVELS"));
+  v_button->enableWindow(NetClient::instance()->isConnected());
 }
 
 void StateMainMenu::checkEventsNetworkTab() {
@@ -528,6 +532,21 @@ void StateMainMenu::checkEventsNetworkTab() {
 	LogError("Unable to connect to the server");
       }
     }
+  }
+
+  // play same levels of people connected
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:PLAYSAMENETLEVELS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+   
+    GameApp::instance()->setCurrentPlayingList(NetClient::instance()->getOtherClientLevelsList(xmDatabase::instance("main")));
+
+    // if nobody is playing, get a random level
+    std::string v_level = NetClient::instance()->getOtherClientLevelsList(xmDatabase::instance("main"))->determineNextLevel("");
+    if(v_level == "") {
+      v_level = LevelsManager::instance()->aRandomLevel(xmDatabase::instance("main"));
+    }
+    StateManager::instance()->pushState(new StatePreplayingGame(v_level, false)); 
   }
 }
 
@@ -913,7 +932,7 @@ void StateMainMenu::updateStats() {
   if(nrow == 0) {
     pDb->read_DB_free(v_result);
     return;
-  }  
+  }
   v_nbDiffLevels = atoi(pDb->getResult(v_result, 1, 0, 0));
   pDb->read_DB_free(v_result);
 
@@ -1289,6 +1308,13 @@ UIWindow* StateMainMenu::makeWindowLevels(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_CLIENTCONNECTDISCONNECT);
 
+  // play levels of other clients
+  v_button = new UIButton(v_netOptionsTab, v_netOptionsTab->getPosition().nWidth-220, 60+25,
+			  GAMETEXT_PLAYNOW, 207, 57);
+  v_button->setType(UI_BUTTON_TYPE_LARGE);
+  v_button->setID("PLAYSAMENETLEVELS");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_CLIENTPLAYSAMENETLEVELS);
 
   return v_window;
 }

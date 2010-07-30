@@ -190,6 +190,7 @@ Central place to keep many in-game text strings
 
 #define GAMETEXT_CREDITSBUTTON        _("Credits")
 #define GAMETEXT_PLAYER               _("Player")
+#define GAMETEXT_PLAYNOW               _("Play now !")
 #define GAMETEXT_MUSICONALLLEVELS      _("Play music on all levels")
 #define GAMETEXT_DATE                 _("Date")
 #define GAMETEXT_DIFFICULTY           _("Difficulty")
@@ -763,6 +764,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_SERVERPORT _("Port on which the server must listen to")
 #define CONTEXTHELP_SERVER _("Server on which you want to connect")
 #define CONTEXTHELP_CLIENTCONNECTDISCONNECT _("Connect/disconnect the client to the server")
+#define CONTEXTHELP_CLIENTPLAYSAMENETLEVELS _("Start to play with other connected players")
 #define CONTEXTHELP_MUSICONALLLEVELS _("Enables background music for levels that do not have their own music track")
 #define CONTEXTHELP_CLIENTGHOSTMODE _("Network playing mode : just see other players as ghosts")
 
