@@ -55,6 +55,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Replay.h"
 #include <sstream>
 #include "thread/XMThreadStats.h"
+#include "VirtualLevelsList.h"
 
   bool GameApp::haveMouseMoved() {
     int nX,nY;
@@ -258,40 +259,6 @@ GameApp::GameApp() {
       SysMessage::instance()->displayText(SYS_MSG_WWW_DISABLED);
     }
   }
-
-  std::string GameApp::determineNextLevel(const std::string& i_id_level) {
-    if(m_currentPlayingList == NULL) {
-      return "";
-    }
-
-    for(unsigned int i=0;i<m_currentPlayingList->getEntries().size()-1;i++) {
-      if((*((std::string*)m_currentPlayingList->getEntries()[i]->pvUser)) == i_id_level) {
-	return *((std::string*)m_currentPlayingList->getEntries()[i+1]->pvUser);
-      }
-    }
-    return *((std::string*)m_currentPlayingList->getEntries()[0]->pvUser);
-  }
-  
-  bool GameApp::isThereANextLevel(const std::string& i_id_level) {
-    return determineNextLevel(i_id_level) != "";
-  }
-
-  std::string GameApp::determinePreviousLevel(const std::string& i_id_level) {
-    if(m_currentPlayingList == NULL) {
-      return "";
-    }
-
-    for(unsigned int i=1;i<m_currentPlayingList->getEntries().size();i++) {
-      if((*((std::string*)m_currentPlayingList->getEntries()[i]->pvUser)) == i_id_level) {
-	return *((std::string*)m_currentPlayingList->getEntries()[i-1]->pvUser);
-      }
-    }
-    return *((std::string*)m_currentPlayingList->getEntries()[m_currentPlayingList->getEntries().size()-1]->pvUser);
-  }
-  
-  bool GameApp::isThereAPreviousLevel(const std::string& i_id_level) {
-    return determinePreviousLevel(i_id_level) != "";
-  } 
 
   std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &LevelID) {  
     char **v_result;
@@ -647,4 +614,26 @@ void GameApp::drawFrame(void) {
 
 NetServer* GameApp::standAloneServer() {
   return m_standAloneServer;
+}
+
+bool GameApp::isThereAPreviousLevel(const std::string& i_id_level) {
+  return determinePreviousLevel(i_id_level) != "";
+}
+
+bool GameApp::isThereANextLevel(const std::string& i_id_level) {
+  return determineNextLevel(i_id_level) != "";
+}
+
+std::string GameApp::determineNextLevel(const std::string& i_id_level) {
+  if(m_currentPlayingList == NULL) {
+    return "";
+  }
+  return m_currentPlayingList->determineNextLevel(i_id_level);
+}
+
+std::string GameApp::determinePreviousLevel(const std::string& i_id_level) {
+  if(m_currentPlayingList == NULL) {
+    return "";
+  }
+  return m_currentPlayingList->determinePreviousLevel(i_id_level);
 }

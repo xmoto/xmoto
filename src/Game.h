@@ -49,6 +49,7 @@ class UIButton;
 class UIFrame;
 class UIStatic;
 class NetServer;
+class VirtualLevelsList;
 
 /*===========================================================================
   Game application
@@ -107,9 +108,6 @@ public:
   void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
   void switchLevelToBlacklist(const std::string& i_levelId, bool v_displayMessage = false);
 
-  bool isThereANextLevel(const std::string& i_id_level);
-  bool isThereAPreviousLevel(const std::string& i_id_level); 
-
   std::string getWorldRecord(unsigned int i_number, const std::string &LevelID);
 
   // to call while playing
@@ -130,13 +128,15 @@ public:
   void addLevelToFavorite(const std::string& i_levelId);
 
   // list played
-  void setCurrentPlayingList(UILevelList *i_levelsList) {m_currentPlayingList = i_levelsList;}
+  void setCurrentPlayingList(VirtualLevelsList *i_levelsList) {m_currentPlayingList = i_levelsList;}
 
   void updateWebHighscores();
 
   std::string getWebRoomURL(unsigned int i_number, xmDatabase* pDb);
   std::string getWebRoomName(unsigned int i_number, xmDatabase* pDb);
     
+  bool isThereANextLevel(const std::string& i_id_level);
+  bool isThereAPreviousLevel(const std::string& i_id_level); 
   std::string determineNextLevel(const std::string& i_id_level);
   std::string determinePreviousLevel(const std::string& i_id_level);
 
@@ -196,7 +196,7 @@ private:
   UIFrame *m_pGameInfoWindow;
       
   /* LEVEL lists */
-  UILevelList *m_currentPlayingList;
+  VirtualLevelsList *m_currentPlayingList;
   UILevelList *m_pAllLevelsList;
   UILevelList *m_pPlayNewLevelsList;
 

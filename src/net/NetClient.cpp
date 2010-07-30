@@ -38,6 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../DBuffer.h"
 #include "../GameEvents.h"
 #include "../db/xmDatabase.h"
+#include "VirtualNetLevelsList.h"
 
 #define XMCLIENT_KILL_ALERT_DURATION 100
 #define XMCLIENT_PREPARE_TO_PLAY_DURATION 100
@@ -61,9 +62,13 @@ NetClient::NetClient() {
     m_lastOwnFPS = 0;
     m_currentOwnFramesNb = 0;
     m_currentOwnFramesTime = GameApp::getXMTimeInt();
+
+    m_otherClientsLevelsList = new VirtualNetLevelsList(this);
 }
 
 NetClient::~NetClient() {
+  delete m_otherClientsLevelsList;
+
   SDL_DestroyMutex(m_netActionsMutex);
 
   for(unsigned int i=0; i<m_netActions.size(); i++) {
@@ -622,4 +627,9 @@ std::string NetClient::getDisplayMessage(const std::string& i_msg, const std::st
 
   // add author only the message is not starting by it
   return i_author + ": " + i_msg;
+}
+
+VirtualNetLevelsList* NetClient::getOtherClientLevelsList(xmDatabase* pDb) {
+  m_otherClientsLevelsList->setDb(pDb);
+  return m_otherClientsLevelsList;
 }

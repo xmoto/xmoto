@@ -1560,3 +1560,26 @@ std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i
 
   return v_sql;
 }
+
+std::string LevelsManager::aRandomLevel(xmDatabase *i_db) const {
+  char **v_result;
+  unsigned int nrow;
+  std::string v_res;
+
+  v_result = i_db->readDB("SELECT id_level FROM levels ORDER BY RANDOM() LIMIT 1;", nrow);
+
+  if(nrow != 1) {
+    i_db->read_DB_free(v_result);
+    return "";
+  }
+
+  if(i_db->getResult(v_result, 1, 0, 0) == NULL) {
+    i_db->read_DB_free(v_result);
+    return "";
+  }
+
+  v_res = i_db->getResult(v_result, 1, 0, 0);
+  i_db->read_DB_free(v_result);
+
+  return v_res;
+}

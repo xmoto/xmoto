@@ -298,7 +298,9 @@ thread_SOURCES = thread/XMThread.h                 \
 		 net/ActionReader.h    \
 		 net/ActionReader.cpp \
 		 net/extSDL_net.h     \
-		 net/extSDL_net.cpp
+		 net/extSDL_net.cpp \
+		 net/VirtualNetLevelsList.h \
+		 net/VirtualNetLevelsList.cpp
 
 if USE_INTERNAL_BZ2
 common_SOURCES += $(bz2_SOURCES)
@@ -344,6 +346,8 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   Input.h \
   XMKey.cpp \
   XMKey.h \
+  VirtualLevelsList.h \
+  VirtualLevelsList.cpp \
   VideoRecorder.h \
   VideoRecorder.cpp \
   GameSerializer.cpp \

@@ -35,6 +35,7 @@ class NetAction;
 class NetGhost;
 class Universe;
 class xmDatabase;
+class VirtualNetLevelsList;
 
 class NetOtherClient {
  public:
@@ -97,6 +98,7 @@ class NetClient : public Singleton<NetClient> {
   std::vector<NetOtherClient*>& otherClients();
 
   int getOwnFrameFPS() const;
+  VirtualNetLevelsList* getOtherClientLevelsList(xmDatabase* pDb);
 
   private:
   bool m_isConnected;
@@ -125,6 +127,8 @@ class NetClient : public Singleton<NetClient> {
   int m_lastOwnFPS;
   int m_currentOwnFramesNb;
   int m_currentOwnFramesTime;
+
+  VirtualNetLevelsList* m_otherClientsLevelsList;
 };
 
 #endif
