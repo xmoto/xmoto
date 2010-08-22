@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 #include "gui/basic/GUI.h"
 #include "XMSession.h"
+#include "helpers/RenderSurface.h"
 #include "xmscene/BikeGhost.h"
 
 #ifdef ENABLE_OPENGL
@@ -54,6 +55,7 @@ class LevelGeoms;
     public:
       SFXOverlay() {
         m_drawLib = NULL;
+	m_screen = NULL;
 #ifdef ENABLE_OPENGL	
         m_bUseShaders = false;
         m_VertShaderID = m_FragShaderID = m_ProgramID = 0;
@@ -63,7 +65,7 @@ class LevelGeoms;
       }
     
       /* Methods */
-      void init(DrawLib* i_drawLib, unsigned int nWidth, unsigned int nHeight);
+      void init(DrawLib* i_drawLib, RenderSurface* i_screen, unsigned int nWidth, unsigned int nHeight);
       void cleanUp(void);
       void beginRendering(void);
       void endRendering(void);
@@ -90,6 +92,7 @@ class LevelGeoms;
       
       int m_nOverlayWidth,m_nOverlayHeight;
       DrawLib* m_drawLib;
+      RenderSurface* m_screen;
   };
 
   /*===========================================================================
@@ -101,7 +104,7 @@ public:
   GameRenderer();
   ~GameRenderer();
 
-  void init(DrawLib* i_drawLib); /* only called at start-up, and not per-level */
+  void init(DrawLib* i_drawLib, RenderSurface* i_screen); /* only called at start-up, and not per-level */
   void render(Scene* i_scene);
 
   void prepareForNewLevel(Universe* i_universe);
@@ -143,6 +146,7 @@ private:
   std::string getBestTime(void) {return m_bestTime;}
 
   DrawLib* m_drawLib;
+  RenderSurface m_screen; // this is a copy of the initial screen (in fact, a state can be changed and then, the screen deleted)
   std::vector<GraphDebugInfo *> m_DebugInfo;
 
   std::string m_bestTime;

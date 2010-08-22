@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class Scene;
 class XMSceneHooks;
+class RenderSurface;
 
 class XMSceneHooks : public SceneHooks {
 public:
@@ -42,7 +43,7 @@ class Universe {
   ~Universe();
 
   std::vector<Scene*>& getScenes();
-  void initPlay(int i_nbPlayer, bool i_multiScenes);
+  void initPlay(RenderSurface* i_screen, int i_nbPlayer, bool i_multiScenes);
   void initPlayServer();
 
   Replay* getCurrentReplay();
@@ -75,7 +76,7 @@ class Universe {
   void removeAllWorlds();
   void switchFollowCameraScene(Scene* i_scene);
 
-  void initCameras(int nbPlayer); // init camera according to the number of players and the existing scenes
+  void initCameras(RenderSurface* i_screen, int nbPlayer); // init camera according to the number of players and the existing scenes
   void addScene();
 
   void addAvailableGhostsToScene(xmDatabase *pDb, Scene* i_scene);

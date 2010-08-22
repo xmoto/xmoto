@@ -70,7 +70,7 @@ void StateDeadMenu::enter()
     }
   }
   
-  createGUIIfNeeded();
+  createGUIIfNeeded(&m_screen);
   m_GUI = m_sGUI;
 
   UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:PLAYNEXT_BUTTON"));
@@ -249,7 +249,7 @@ void StateDeadMenu::clean() {
   }
 }
 
-void StateDeadMenu::createGUIIfNeeded() {
+void StateDeadMenu::createGUIIfNeeded(RenderSurface* i_screen) {
   UIButton *v_button;
   UIFrame  *v_frame;
 
@@ -258,13 +258,14 @@ void StateDeadMenu::createGUIIfNeeded() {
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot();
+  m_sGUI = new UIRoot(i_screen);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      drawLib->getDispWidth(),
-		      drawLib->getDispHeight());
+		      i_screen->getDispWidth(),
+		      i_screen->getDispHeight());
 
-  v_frame = new UIFrame(m_sGUI, drawLib->getDispWidth()/2  - 400/2, drawLib->getDispHeight()/2 - 700/2, "", 400, 700);
+  v_frame = new UIFrame(m_sGUI, i_screen->getDispWidth()/2  - 400/2, i_screen->getDispHeight()/2 - 700/2, "", 400, 700);
+
   v_frame->setID("DEADMENU_FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_MENU);
 

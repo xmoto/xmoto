@@ -63,7 +63,7 @@ class StateFinished : public StateMenu {
 
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded();
+  static void createGUIIfNeeded(RenderSurface* i_screen);
 
   std::string m_replayName; // to save temporarly the replay name
 };

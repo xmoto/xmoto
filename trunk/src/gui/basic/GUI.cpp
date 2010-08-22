@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../Game.h"
 #include "../../helpers/Log.h"
 #include "../../helpers/utf8.h"
+#include "../../helpers/RenderSurface.h"
 
 #ifdef ENABLE_OPENGL
 #include "../../include/xm_OpenGL.h"
@@ -79,6 +80,7 @@ bool UIWindow::isUglyMode() {
   
   void UIWindow::initW(UIWindow *pParent,int x,int y,std::string Caption,int nWidth,int nHeight) {
     _InitWindow();
+    m_screen = pParent->m_screen;
 
     setPosition(x,y,nWidth,nHeight);
     setCaption(Caption);
@@ -124,6 +126,10 @@ bool UIWindow::isUglyMode() {
     for(unsigned int i=0;i<m_Children.size();i++)
       m_Children[i]->enableWindow(bState);
   }
+
+RenderSurface* UIWindow::getScreen() {
+  return m_screen;
+}
 
   void UIWindow::makeActive(void) {
     /* Find root */
@@ -593,7 +599,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     
     FontManager* v_fm = m_curFont;
     FontGlyph* v_fg = v_fm->getGlyph(Text);
-    v_fm->printStringGrad(v_fg,
+    v_fm->printStringGrad(GameApp::instance()->getDrawLib(), v_fg,
 			  getAbsPosX()+x + (int)(((float)v_fg->realWidth()) * i_xper),
 			  getAbsPosY()+y + (int)(((float)v_fg->realHeight()) * i_yper),
 			  c0, c1, c2, c3, i_perCentered);
@@ -801,12 +807,18 @@ FRAME_BR (187,198) (8x8)
   /*===========================================================================
   Root window
   ===========================================================================*/
-UIRoot::UIRoot()
+UIRoot::UIRoot(RenderSurface* i_screen)
 {
   m_pApp = GameApp::instance();
   m_bShowContextMenu = true;
   m_lastHover = NULL;
+
   _InitWindow();
+  m_screen = new RenderSurface(*i_screen); // get a copy in case the original is removed
+}
+
+UIRoot::~UIRoot() {
+  delete m_screen;
 }
 
   void UIRoot::_ClipRect(UIRect *pRect,UIRect *pClipWith) {
@@ -860,8 +872,8 @@ UIRoot::UIRoot()
     /* Clip to full screen */
     Screen.nX = 0;
     Screen.nY = 0;
-    Screen.nWidth = m_drawLib->getDispWidth();
-    Screen.nHeight = m_drawLib->getDispHeight();
+    Screen.nWidth = m_screen->getDispWidth();
+    Screen.nHeight = m_screen->getDispHeight();
       
     /* Draw root's children */
 #ifdef ENABLE_OPENGL
@@ -884,20 +896,20 @@ UIRoot::UIRoot()
       m_drawLib->startDraw(DRAW_MODE_POLYGON);
       //glColor4f(0,0,0,0);//fully transparent??
       m_drawLib->setColorRGBA(0,0,0,0);
-      m_drawLib->glVertexSP(0,m_drawLib->getDispHeight()-nContextHelpHeight);
-      m_drawLib->glVertexSP(m_drawLib->getDispWidth(),m_drawLib->getDispHeight()-nContextHelpHeight);
+      m_drawLib->glVertexSP(0,m_screen->getDispHeight()-nContextHelpHeight);
+      m_drawLib->glVertexSP(m_screen->getDispWidth(),m_screen->getDispHeight()-nContextHelpHeight);
       //glColor4f(0,0,0,0.7);
       m_drawLib->setColorRGBA(0,0,0,255 * 7 / 100);
-      m_drawLib->glVertexSP(m_drawLib->getDispWidth(),m_drawLib->getDispHeight());
-      m_drawLib->glVertexSP(0,m_drawLib->getDispHeight());
+      m_drawLib->glVertexSP(m_screen->getDispWidth(),m_screen->getDispHeight());
+      m_drawLib->glVertexSP(0,m_screen->getDispHeight());
       m_drawLib->endDraw();
         
       if(!m_CurrentContextHelp.empty()) {
         /* Print help string */
 	setFont(m_drawLib->getFontSmall());
 	setTextSolidColor(MAKE_COLOR(255,255,0,255));
-	putText(m_drawLib->getDispWidth()  -5,
-		m_drawLib->getDispHeight() -1,
+	putText(m_screen->getDispWidth()  -5,
+		m_screen->getDispHeight() -1,
 		m_CurrentContextHelp, -1.0, -1.0);
       }
     }

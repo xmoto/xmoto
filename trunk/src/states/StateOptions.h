@@ -42,7 +42,7 @@ class StateOptions : public StateMenu {
   private:
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded();
+  static void createGUIIfNeeded(RenderSurface* i_screen);
 
   static UIWindow* makeWindowOptions_general(UIWindow* i_parent);
   static UIWindow* makeWindowOptions_video(UIWindow* i_parent);

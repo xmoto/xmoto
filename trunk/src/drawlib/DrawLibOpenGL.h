@@ -38,8 +38,6 @@ class DrawLibOpenGL : public DrawLib {
   
   //texture coordinate
   virtual void glTexCoord(float x, float y);
-  virtual void screenProjVertex(float* x, float* y);
-
   virtual void setColor(Color color);
 
   /**

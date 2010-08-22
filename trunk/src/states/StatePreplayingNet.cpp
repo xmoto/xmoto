@@ -54,7 +54,7 @@ void StatePreplayingNet::abortPlaying() {
 }
 
 void StatePreplayingNet::initUniverse() {
-  m_universe->initPlay(1, 1);
+  m_universe->initPlay(&m_screen, 1, 1);
 }
 
 void StatePreplayingNet::preloadLevels() {

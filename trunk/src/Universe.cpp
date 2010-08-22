@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "Renderer.h"
 #include "GameText.h"
+#include "helpers/RenderSurface.h"
 
 void XMSceneHooks::OnTakeEntity() {
     /* Play yummy-yummy sound */
@@ -100,7 +101,7 @@ void Universe::initPlayServer() {
   addScene();
 }
 
-void Universe::initPlay(int i_nbPlayer, bool i_multiScenes) {
+void Universe::initPlay(RenderSurface* i_screen, int i_nbPlayer, bool i_multiScenes) {
   if(i_multiScenes) {
     for(int i=0; i<i_nbPlayer; i++) {
       addScene();
@@ -110,12 +111,12 @@ void Universe::initPlay(int i_nbPlayer, bool i_multiScenes) {
     addScene();
   }
 
-  initCameras(i_nbPlayer);
+  initCameras(i_screen, i_nbPlayer);
 }
 
-void Universe::initCameras(int nbPlayer) {
-  int width  = GameApp::instance()->getDrawLib()->getDispWidth();
-  int height = GameApp::instance()->getDrawLib()->getDispHeight();
+void Universe::initCameras(RenderSurface* i_screen, int nbPlayer) {
+  int width  = i_screen->getDispWidth(); // probably not the best way, but this is over screen
+  int height = i_screen->getDispHeight(); // probably not the best way, but this is over screen
   bool v_useActiveZoom = XMSession::instance()->enableActiveZoom();
   
   if(m_scenes.size() <= 0) {
@@ -141,46 +142,57 @@ void Universe::initCameras(int nbPlayer) {
   switch(nbPlayer){
   default:
   case 1:
-    m_scenes[0]->addCamera(Vector2i(0,0),
-			   Vector2i(width, height), v_useActiveZoom);
+    m_scenes[0]->addCamera(i_screen->downleft(),
+			   i_screen->upright(),
+    			   v_useActiveZoom);
     break;
   case 2:
-    m_scenes[0]->addCamera(Vector2i(0,height/2),
-			   Vector2i(width, height), v_useActiveZoom);
+    m_scenes[0]->addCamera(Vector2i(i_screen->downleft().x, i_screen->downleft().y + height/2),
+			   i_screen->upright(), v_useActiveZoom);
     if(m_scenes.size() == 1) {
-      m_scenes[0]->addCamera(Vector2i(0,0),
-			     Vector2i(width, height/2), v_useActiveZoom);
+      m_scenes[0]->addCamera(i_screen->downleft(),
+			     Vector2i(i_screen->upright().x, i_screen->upright().y - height/2), v_useActiveZoom);
     } else {
-      m_scenes[1]->addCamera(Vector2i(0,0),
-			     Vector2i(width, height/2), v_useActiveZoom);
+      m_scenes[1]->addCamera(i_screen->downleft(),
+			     Vector2i(i_screen->upright().x, i_screen->upright().y - height/2), v_useActiveZoom);
     }
     break;
   case 3:
   case 4:
     if(m_scenes.size() == 1) {
-      m_scenes[0]->addCamera(Vector2i(0,height/2),
-			     Vector2i(width/2, height), v_useActiveZoom);
-      m_scenes[0]->addCamera(Vector2i(width/2,height/2),
-			     Vector2i(width, height), v_useActiveZoom);
-      m_scenes[0]->addCamera(Vector2i(0,0),
-			     Vector2i(width/2, height/2), v_useActiveZoom);
-      m_scenes[0]->addCamera(Vector2i(width/2,0),
-			     Vector2i(width, height/2), v_useActiveZoom);
+      m_scenes[0]->addCamera(Vector2i(i_screen->downleft().x, i_screen->downleft().y + height/2),
+			     Vector2i(i_screen->downleft().x + width/2, i_screen->upright().y),
+			     v_useActiveZoom);
+      m_scenes[0]->addCamera(Vector2i(i_screen->downleft().x + width/2, i_screen->downleft().y + height/2),
+			     i_screen->upright(),
+			     v_useActiveZoom);
+      m_scenes[0]->addCamera(i_screen->downleft(),
+			     Vector2i(i_screen->downleft().x + width/2, i_screen->downleft().y + height/2),
+			     v_useActiveZoom);
+      m_scenes[0]->addCamera(Vector2i(i_screen->downleft().x + width/2, i_screen->downleft().y),
+			     Vector2i(i_screen->upright().x, i_screen->downleft().y + height/2),
+			     v_useActiveZoom);
+
     } else {
-      m_scenes[0]->addCamera(Vector2i(0,height/2),
-			     Vector2i(width/2, height), v_useActiveZoom);
-      m_scenes[1]->addCamera(Vector2i(width/2,height/2),
-			     Vector2i(width, height), v_useActiveZoom);
-      m_scenes[2]->addCamera(Vector2i(0,0),
-			     Vector2i(width/2, height/2), v_useActiveZoom);
+      m_scenes[0]->addCamera(Vector2i(i_screen->downleft().x, i_screen->downleft().y + height/2),
+			     Vector2i(i_screen->downleft().x + width/2, i_screen->upright().y),
+			     v_useActiveZoom);
+      m_scenes[1]->addCamera(Vector2i(i_screen->downleft().x + width/2, i_screen->downleft().y + height/2),
+			     i_screen->upright(),
+			     v_useActiveZoom);
+      m_scenes[2]->addCamera(i_screen->downleft(),
+			     Vector2i(i_screen->downleft().x + width/2, i_screen->downleft().y + height/2),
+			     v_useActiveZoom);
 
       if(nbPlayer == 4) {
-	m_scenes[3]->addCamera(Vector2i(width/2,0),
-			       Vector2i(width, height/2), v_useActiveZoom);
+	m_scenes[3]->addCamera(Vector2i(i_screen->downleft().x + width/2, i_screen->downleft().y),
+			       Vector2i(i_screen->upright().x, i_screen->downleft().y + height/2),
+			       v_useActiveZoom);
       }
       else {  //3 player then, add another cam for not having an ugly not-drawn rect in the screen
-        m_scenes[0]->addCamera(Vector2i(width/2,0),
-			       Vector2i(width, height/2), v_useActiveZoom);
+	m_scenes[0]->addCamera(Vector2i(i_screen->downleft().x + width/2, i_screen->downleft().y),
+			       Vector2i(i_screen->upright().x, i_screen->downleft().y + height/2),
+			       v_useActiveZoom);
       }
     }
     break;
@@ -188,8 +200,9 @@ void Universe::initCameras(int nbPlayer) {
   
   // the autozoom camera is a special one in multi player
   if(nbPlayer > 1){
-    m_scenes[0]->addCamera(Vector2i(0,0),
-			   Vector2i(width, height), v_useActiveZoom);
+    m_scenes[0]->addCamera(i_screen->downleft(),
+			   i_screen->upright(),
+    			   v_useActiveZoom);
   }
   // current cam is autozoom one
   for(unsigned int i=0; i<m_scenes.size(); i++) {

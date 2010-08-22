@@ -68,7 +68,8 @@ void StatePreplaying::enter()
 
   m_universe =  new Universe();
   m_renderer = new GameRenderer();
-  m_renderer->init(GameApp::instance()->getDrawLib());
+
+  m_renderer->init(GameApp::instance()->getDrawLib(), &m_screen);
 
   // must be done once the renderer is initialized
   StateScene::enter();
@@ -252,8 +253,6 @@ void StatePreplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
 void StatePreplaying::secondInitPhase()
 {
-  GameApp*  pGame  = GameApp::instance();
-
   try {
 
     /* add the ghosts */
@@ -296,7 +295,7 @@ void StatePreplaying::secondInitPhase()
   if(m_universe != NULL && m_renderer != NULL) {
     if(m_universe->getScenes().size() > 0) {
       m_universe->getScenes()[0]->setAutoZoomCamera();
-      m_cameraAnim = new ZoomingCameraAnimation(m_universe->getScenes()[0]->getCamera(), pGame->getDrawLib(), m_renderer,
+      m_cameraAnim = new ZoomingCameraAnimation(m_universe->getScenes()[0]->getCamera(), &m_screen, m_renderer,
 						m_universe->getScenes()[0]);
       m_cameraAnim->init();
     }
@@ -305,9 +304,9 @@ void StatePreplaying::secondInitPhase()
   /* display level name */
   if(m_sameLevel == false) {
     if(m_universe != NULL) {
-	m_universe->getScenes()[0]->gameMessage(m_universe->getScenes()[0]->getLevelSrc()->Name(),
-						false,
-						PRESTART_ANIMATION_LEVEL_MSG_DURATION, levelID);
+      m_universe->getScenes()[0]->gameMessage(m_universe->getScenes()[0]->getLevelSrc()->Name(),
+					      false,
+					      PRESTART_ANIMATION_LEVEL_MSG_DURATION, levelID);
     }
   }
   

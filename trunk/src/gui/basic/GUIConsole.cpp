@@ -76,7 +76,7 @@ void UIConsole::paint() {
   // draw the text
   for(unsigned int i=0; i<m_lines.size(); i++) {
     v_fg = v_fm->getGlyph(m_lines[i]);
-    v_fm->printString(v_fg, v_XOffset, v_YOffset,
+    v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, v_XOffset, v_YOffset,
 		      MAKE_COLOR(255, 255, 255, 255));
 
     if(m_lines.size()-1 == i) {
@@ -97,7 +97,7 @@ void UIConsole::paint() {
   if(m_waitAnswer == false) {
     if((GameApp::getXMTimeInt()/100) % 10 < 5) {
       v_fg = v_fm->getGlyph(UIC_CURSOR);
-      v_fm->printString(v_fg, v_cursorXOffset, v_cursorYOffset, MAKE_COLOR(255, 255, 255, 255));
+      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, v_cursorXOffset, v_cursorYOffset, MAKE_COLOR(255, 255, 255, 255));
     }
   }
 

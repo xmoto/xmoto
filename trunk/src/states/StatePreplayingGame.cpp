@@ -42,7 +42,7 @@ void StatePreplayingGame::initUniverse() {
   bool v_multiScenes = XMSession::instance()->multiScenes();
   unsigned int v_nbPlayer = XMSession::instance()->multiNbPlayers();
 
-  m_universe->initPlay(v_nbPlayer, v_multiScenes);
+  m_universe->initPlay(&m_screen, v_nbPlayer, v_multiScenes);
 }
 
 void StatePreplayingGame::preloadLevels() {

@@ -48,8 +48,8 @@ VideoRecorder::VideoRecorder(const std::string& i_videoName, int i_division, int
     LogInfo("transcode -i %s -x imlist,null -y xvid,null -f %i -g %ix%i --use_rgb -z -o %s/%s.avi -H 0 # -w 500",
   	v_listFile.c_str(),
 		m_framerate,
-		GameApp::instance()->getDrawLib()->getDispWidth()/i_division,
-		GameApp::instance()->getDrawLib()->getDispHeight()/i_division,
+		GameApp::instance()->getDrawLib()->getDispWidth2()/i_division,
+		GameApp::instance()->getDrawLib()->getDispHeight2()/i_division,
   	std::string(XMFS::getUserDir(FDT_DATA) + "/Videos").c_str(),
   	m_name.c_str()
 		);

@@ -125,10 +125,11 @@ GameRenderer::~GameRenderer() {
   /*===========================================================================
   Init at game start-up
   ===========================================================================*/
-  void GameRenderer::init(DrawLib* i_drawLib) { 
+void GameRenderer::init(DrawLib* i_drawLib, RenderSurface* i_screen) { 
     /* Overlays? */
     m_drawLib = i_drawLib;
-    m_Overlay.init(GameApp::instance()->getDrawLib(),512,512); // width height of the picture of the biker
+    m_screen = *i_screen;
+    m_Overlay.init(GameApp::instance()->getDrawLib(),&m_screen,512,512); // width height of the picture of the biker
 
     m_nParticlesRendered = 0;
     m_arrowSprite = NULL;
@@ -342,7 +343,7 @@ void GameRenderer::unprepareForNewLevel(Universe* i_universe) {
   }
 }
   
-  void GameRenderer::renderEngineCounter(int x, int y, int nWidth,int nHeight, float pSpeed, float pLinVel) {
+void GameRenderer::renderEngineCounter(int x, int y, int nWidth,int nHeight, float pSpeed, float pLinVel) {
 
 // coords of then center ; make it dynamic would be nice
 #define ENGINECOUNTER_CENTERX      192.0
@@ -405,10 +406,10 @@ void GameRenderer::unprepareForNewLevel(Universe* i_universe) {
     Vector2f pcenter, pdest, pcenterl, pcenterr, pbottom;
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
-    p0 = Vector2f(x,        pDrawlib->getDispHeight()-y-nHeight);
-    p1 = Vector2f(x+nWidth, pDrawlib->getDispHeight()-y-nHeight);
-    p2 = Vector2f(x+nWidth, pDrawlib->getDispHeight()-y);
-    p3 = Vector2f(x,        pDrawlib->getDispHeight()-y);
+    p0 = Vector2f(x,        m_screen.getDispHeight()-y-nHeight);
+    p1 = Vector2f(x+nWidth, m_screen.getDispHeight()-y-nHeight);
+    p2 = Vector2f(x+nWidth, m_screen.getDispHeight()-y);
+    p3 = Vector2f(x,        m_screen.getDispHeight()-y);
 
     pSprite = (MiscSprite*) Theme::instance()->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
     if(pSprite != NULL) {
@@ -516,7 +517,7 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
     Vector2i bottomLeft = pCamera->getDispBottomLeft();
 
     unsigned int y_translate = bottomLeft.y/2;
-    if((unsigned int)bottomLeft.y != pDrawlib->getDispHeight() || XMSession::instance()->multiNbPlayers() == 1){
+    if(bottomLeft.y != m_screen.getDispHeight() || XMSession::instance()->multiNbPlayers() == 1){
       y_translate = 0;
     }
     pDrawlib->setClipRect(bottomLeft.x + x+1,
@@ -707,7 +708,7 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
     glDisable(GL_SCISSOR_TEST);
 #endif
     //keesj:todo replace with setClipRect(NULL) in drawlib
-    pDrawlib->setClipRect(0,0,pDrawlib->getDispWidth(),pDrawlib->getDispHeight());
+    pDrawlib->setClipRect(0,0,m_screen.getDispWidth(),m_screen.getDispHeight());
   }
 
 void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_textOffset) {
@@ -799,7 +800,7 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
   }
   /* ghost arrow indication */    
   if(XMSession::instance()->showBikersArrows()) {
-      displayArrowIndication(i_ghost, &m_screenBBox);
+    displayArrowIndication(i_ghost, &m_screenBBox);
   }
 }
 
@@ -1072,7 +1073,7 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Main rendering function
   ===========================================================================*/
-  void GameRenderer::render(Scene* i_scene) {
+void GameRenderer::render(Scene* i_scene) {
     Camera*  pCamera  = i_scene->getCamera();
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
@@ -1336,23 +1337,21 @@ int GameRenderer::nbParticlesRendered() const {
         if(XMSession::instance()->multiNbPlayers() > 2) {  //small small screen then
           multiPlayerScale = 2;
         }
-	renderMiniMap(i_scene, 0, pDrawlib->getDispHeight() - (pDrawlib->getDispHeight()/(6+multiPlayerScale)),
-		      pDrawlib->getDispWidth()/(5+multiPlayerScale), pDrawlib->getDispHeight()/(6+multiPlayerScale));
+	renderMiniMap(i_scene, 0, m_screen.getDispHeight() - (m_screen.getDispHeight()/(6+multiPlayerScale)),
+		      m_screen.getDispWidth()/(5+multiPlayerScale), m_screen.getDispHeight()/(6+multiPlayerScale));
       }
       if(showEngineCounter()
 	 && XMSession::instance()->ugly() == false
 	 && i_scene->getNumberCameras() == 1) {
-	int v_engineCounterSize = pDrawlib->getDispWidth()/7;
-	renderEngineCounter(pDrawlib->getDispWidth()- v_engineCounterSize,
-			    pDrawlib->getDispHeight()-v_engineCounterSize,
+	int v_engineCounterSize = m_screen.getDispWidth()/7;
+	renderEngineCounter(m_screen.getDispWidth()- v_engineCounterSize,
+			    m_screen.getDispHeight()-v_engineCounterSize,
 			    v_engineCounterSize, v_engineCounterSize,
 			    pCamera->getPlayerToFollow()->getBikeEngineSpeed(),
 			    pCamera->getPlayerToFollow()->getBikeLinearVel());
       }
     }
 
-    pDrawlib->getMenuCamera()->setCamera2d();
-    
     if(m_showTimePanel) {
       renderTimePanel(i_scene);
       /* If there's strawberries in the level, tell the user how many there's left */
@@ -1365,37 +1364,31 @@ int GameRenderer::nbParticlesRendered() const {
     _RenderGameMessages(i_scene,false);
 
     pCamera->setCamera2d();
-    
-    _RenderScreenShadow(i_scene);
 
-    /* And then the game messages over shadow layer*/
-    pDrawlib->getMenuCamera()->setCamera2d();
-    
-    // _RenderGameMessages(i_scene,true);  => got moved to stateScene, to have non-covered multiplayer message display
+    _RenderScreenShadow(i_scene);
 
     /* Render Level Name at bottom of screen, when died or pause */
     if(i_scene->getInfos() != "") {
       FontManager* v_fm = pDrawlib->getFontMedium();
       FontGlyph* v_fg = v_fm->getGlyph(i_scene->getInfos());
-      v_fm->printString(v_fg,
+      v_fm->printString(pDrawlib, v_fg,
 			5,
-			pDrawlib->getDispHeight() - v_fg->realHeight() - 2,
+			pCamera->getDispUpRight().y - v_fg->realHeight() - 2,
 			MAKE_COLOR(255,255,255,255), 0.0, true);
     }
-
-  }
-
+}
   /*===========================================================================
   Game status rendering
   ===========================================================================*/
-  void GameRenderer::_RenderGameStatus(Scene* i_scene) {
+void GameRenderer::_RenderGameStatus(Scene* i_scene) {
     Sprite* pType = NULL;
 
     // do not render it if it's the autozoom camera or ...
     if(i_scene->isAutoZoomCamera() == true) {
       return;
     }
-    
+
+    // dude::where are these values from ???
     float x1 = 125;
     float y1 = 2;
     float x2 = 100;
@@ -1404,20 +1397,7 @@ int GameRenderer::nbParticlesRendered() const {
     int nStrawberriesLeft = i_scene->getLevelSrc()->countToTakeEntities();
     int nQuantity = 0;
     Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();
-
-    // adapt to the current camera
-    float x1_cam = x1 + bottomLeft.x;
-    float x2_cam = x2 + bottomLeft.x;
-    float y1_cam = y1;
-    float y2_cam = y2;
-
-    //seek correct drawing positions
-    unsigned int height=GameApp::instance()->getDrawLib()->getDispHeight();
-    if((unsigned int) bottomLeft.y != height) {
-      int y=height/2;
-      y1_cam += y;
-      y2_cam += y;
-    }
+    int height = i_scene->getCamera()->getDispHeight();
 
     if(XMSession::instance()->ugly() == false) {
       pType = i_scene->getLevelSrc()->flowerSprite();
@@ -1432,13 +1412,21 @@ int GameRenderer::nbParticlesRendered() const {
             
     if(pType != NULL) {
       if(pType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
-	_RenderAdditiveBlendedSection(pType->getTexture(), Vector2f(x2_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y2_cam),Vector2f(x1_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y2_cam),Vector2f(x1_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y1_cam),Vector2f(x2_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y1_cam));      
+	_RenderAdditiveBlendedSection(pType->getTexture(),
+				      Vector2f(x2, height-y2),
+				      Vector2f(x1, height-y2),
+				      Vector2f(x1, height-y1),
+				      Vector2f(x2, height-y1));      
       } else {
 #ifdef ENABLE_OPENGL
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GEQUAL,0.5f);      
 #endif
-	_RenderAlphaBlendedSection(pType->getTexture(), Vector2f(x2_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y2_cam),Vector2f(x1_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y2_cam),Vector2f(x1_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y1_cam),Vector2f(x2_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y1_cam));      
+	_RenderAlphaBlendedSection(pType->getTexture(),
+				   Vector2f(x2, height-y2),
+				   Vector2f(x1, height-y2),
+				   Vector2f(x1, height-y1),
+				   Vector2f(x2, height-y1));      
 #ifdef ENABLE_OPENGL
 	glDisable(GL_ALPHA_TEST);
 #endif
@@ -1450,12 +1438,13 @@ int GameRenderer::nbParticlesRendered() const {
       snprintf(cBuf, 256, "%d", nQuantity);
 
       /* Draw text */
-      FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
+      DrawLib* pDrawLib = GameApp::instance()->getDrawLib();
+      FontManager* v_fm = pDrawLib->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(cBuf);
 
-      v_fm->printString(v_fg,
-			(int)((x1_cam+x2_cam)/2 - v_fg->realWidth()/2),
-			(int)((y1_cam+y2_cam)/2 - v_fg->realHeight()/2),
+      v_fm->printString(pDrawLib, v_fg,
+			(int)((x1+x2)/2 - v_fg->realWidth()/2),
+			(int)((y1+y2)/2 - v_fg->realHeight()/2),
 			MAKE_COLOR(255,255,0,255));
     }
   }
@@ -1463,7 +1452,7 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Game message rendering
   ===========================================================================*/
-  void GameRenderer::_RenderGameMessages(Scene* i_scene, bool renderOverShadow) {
+void GameRenderer::_RenderGameMessages(Scene* i_scene, bool renderOverShadow) {
     float v_fZoom = 60.0f;
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
@@ -1472,12 +1461,12 @@ int GameRenderer::nbParticlesRendered() const {
     if(pArrow->nArrowPointerMode != 0) {
       Vector2f C;
       if(pArrow->nArrowPointerMode == 1) {          
-        C=Vector2f(pDrawlib->getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x - i_scene->getCamera()->getCameraPositionX())*v_fZoom,
-                  pDrawlib->getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y - i_scene->getCamera()->getCameraPositionY())*v_fZoom);      
+        C=Vector2f(m_screen.getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x - i_scene->getCamera()->getCameraPositionX())*v_fZoom,
+                  m_screen.getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y - i_scene->getCamera()->getCameraPositionY())*v_fZoom);      
       }
       else if(pArrow->nArrowPointerMode == 2) {          
-        C.x=(pDrawlib->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
-        C.y=(pDrawlib->getDispHeight() * pArrow->ArrowPointerPos.y) / 600.0f;
+        C.x=(m_screen.getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
+        C.y=(m_screen.getDispHeight() * pArrow->ArrowPointerPos.y) / 600.0f;
       }
 
       Vector2f p1(1,0), p2(1,0), p3(1,0), p4(1,0);
@@ -1503,8 +1492,8 @@ int GameRenderer::nbParticlesRendered() const {
         GameMessage *pMsg = i_scene->getGameMessage()[i];
         FontManager* v_fm = NULL;
         FontGlyph* v_fg = NULL;
-        unsigned int width  = pDrawlib->getDispWidth();
-        unsigned int height = pDrawlib->getDispHeight();
+        unsigned int width  = m_screen.getDispWidth();
+        unsigned int height = m_screen.getDispHeight();
         int numPlayers = XMSession::instance()->multiNbPlayers();
         Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();        
         int posX = 0; 
@@ -1520,7 +1509,7 @@ int GameRenderer::nbParticlesRendered() const {
           GET_FONT_MEDIUM    
           posX = int(width/2 - v_fg->realWidth()/2);        
           posY = int(pMsg->Pos[1] * height);
-          v_fm->printString(v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
+          v_fm->printString(pDrawlib, v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
 	} 
 	else {
           switch(pMsg->msgType) {
@@ -1605,7 +1594,7 @@ int GameRenderer::nbParticlesRendered() const {
 	      }	      
 	      break;   
 	  }
-	  v_fm->printString(v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
+	  v_fm->printString(pDrawlib, v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
 	}
 
       }
@@ -2281,6 +2270,11 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
   float uZoom = 1.0 / i_zoom;
   float uDriftZoom = 1.0 / i_driftZoom;
 
+  int dispWidth = i_scene->getCamera()->getDispWidth();
+  int dispHeight = i_scene->getCamera()->getDispHeight();
+  float camX = i_scene->getCamera()->getCameraPositionX();
+  float camY = i_scene->getCamera()->getCameraPositionY();
+
   if(XMSession::instance()->gameGraphics() != GFX_HIGH) {
     i_drifted = false;
   }
@@ -2304,14 +2298,18 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
       fDrift = GameApp::instance()->getXMTime() / 25.0f;
     }
     
-    pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+ fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset);
+    pDrawlib->glTexCoord(camX*i_offset+fDrift, -camY*i_offset);
     pDrawlib->glVertexSP(0,0);
-    pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+uZoom+ fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset);
-    pDrawlib->glVertexSP(pDrawlib->getDispWidth(),0);
-    pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+uZoom+ fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset+uZoom);
-    pDrawlib->glVertexSP(pDrawlib->getDispWidth(),pDrawlib->getDispHeight());
-    pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+ fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset+uZoom);
-    pDrawlib->glVertexSP(0,pDrawlib->getDispHeight());
+
+    pDrawlib->glTexCoord(camX*i_offset+uZoom+fDrift, -camY*i_offset);
+    pDrawlib->glVertexSP(dispWidth,0);
+
+    pDrawlib->glTexCoord(camX*i_offset+uZoom+fDrift, -camY*i_offset+uZoom);
+    pDrawlib->glVertexSP(dispWidth, dispHeight);
+
+    pDrawlib->glTexCoord(camX*i_offset+fDrift, -camY*i_offset+uZoom);
+    pDrawlib->glVertexSP(0, dispHeight);
+
     pDrawlib->endDraw();
     
     if(i_drifted) {
@@ -2319,14 +2317,19 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
       pDrawlib->startDraw(DRAW_MODE_POLYGON);
       pDrawlib->setColorRGBA(i_driftColor.Red(), i_driftColor.Green(), i_driftColor.Blue(), i_driftColor.Alpha());
       fDrift = GameApp::instance()->getXMTime() / 15.0f;
-      pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset + fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset);
+
+      pDrawlib->glTexCoord(camX*i_offset+fDrift, -camY*i_offset);
       pDrawlib->glVertexSP(0,0);
-      pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+uDriftZoom + fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset);
-      pDrawlib->glVertexSP(pDrawlib->getDispWidth(),0);
-      pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+uDriftZoom + fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset+uDriftZoom);
-      pDrawlib->glVertexSP(pDrawlib->getDispWidth(),pDrawlib->getDispHeight());
-      pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset + fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset+uDriftZoom);
-      pDrawlib->glVertexSP(0,pDrawlib->getDispHeight());
+
+      pDrawlib->glTexCoord(camX*i_offset+uDriftZoom+fDrift, -camY*i_offset);
+      pDrawlib->glVertexSP(dispWidth,0);
+
+      pDrawlib->glTexCoord(camX*i_offset+uDriftZoom+fDrift, -camY*i_offset+uDriftZoom);
+      pDrawlib->glVertexSP(dispWidth, dispHeight);
+
+      pDrawlib->glTexCoord(camX*i_offset+fDrift, -camY*i_offset+uDriftZoom);
+      pDrawlib->glVertexSP(0,dispHeight);
+
       pDrawlib->endDraw();
     }
   } else {
@@ -2589,21 +2592,23 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
     
     if(x > 0.0f && x < 1.0f && y > 0.0f && y < 1.0f) {    
       /* Map to viewport */
-      float vx = ((float)pDrawlib->getDispWidth() * x);
-      float vy = ((float)pDrawlib->getDispHeight() * y);
+      float vx = ((float)m_screen.getDispWidth() * x);
+      float vy = ((float)m_screen.getDispHeight() * y);
 #ifdef ENABLE_OPENGL
       glMatrixMode(GL_PROJECTION);
       glPushMatrix();
       glLoadIdentity();
-      glOrtho(0,pDrawlib->getDispWidth(),0,pDrawlib->getDispHeight(),-1,1);
+      glOrtho(0, pDrawlib->getRenderSurface()->size().x,
+	      0, pDrawlib->getRenderSurface()->size().y,
+	      -1, 1);
       glMatrixMode(GL_MODELVIEW);
       glPushMatrix();
       glLoadIdentity();
 #endif
-      
+
       FontManager* v_fm = pDrawlib->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(Text);
-      v_fm->printString(v_fg, (int)(vx - (v_fg->realWidth() * i_xcentering)), (int)(vy - (v_fg->realHeight() * i_ycentering)), c, 0.0, true);
+      v_fm->printString(pDrawlib, v_fg, (int)(vx - (v_fg->realWidth() * i_xcentering)), (int)(vy - (v_fg->realHeight() * i_ycentering)), c, 0.0, true);
 
 #ifdef ENABLE_OPENGL
       glPopMatrix();
@@ -2611,7 +2616,6 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
       glPopMatrix();
       glMatrixMode(GL_MODELVIEW);
 #endif
-      
     }
   }
 
@@ -2707,8 +2711,8 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
         v_nShade = MENU_SHADING_VALUE;
       }
       pDrawLib->drawBox(Vector2f(0.0,0.0),
-                        Vector2f(float(pDrawLib->getDispWidth()), //pDrawlib returns camera specific values, as set in render()
-			         float(pDrawLib->getDispHeight())), 
+                        Vector2f(float(m_screen.getDispWidth()), //pDrawlib returns camera specific values, as set in render()
+			         float(m_screen.getDispHeight())), 
 		        0, MAKE_COLOR(0,0,0, v_nShade));  
     }
   }
@@ -2776,8 +2780,7 @@ void GameRenderer::renderTimePanel(Scene* i_scene) {
   }
 
   DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
-  unsigned int width  = pDrawlib->getDispWidth();
-  unsigned int height = pDrawlib->getDispHeight();
+  unsigned int height = i_scene->getCamera()->getDispHeight();
 
   Biker* pBiker = i_scene->getCamera()->getPlayerToFollow();
   Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();
@@ -2799,30 +2802,17 @@ void GameRenderer::renderTimePanel(Scene* i_scene) {
     v_fg = v_fm->getGlyph(formatTime(i_scene->getTime()));
   }
 
-  //seek correct drawing positions
-  if((unsigned int) bottomLeft.x != 0) {
-      x=width/2; 
-  }
-  if((unsigned int) bottomLeft.y != height) {
-      y=height/2;
-  }
-
-  v_fm->printString(v_fg,
-		    x,y,
+  v_fm->printString(pDrawlib, v_fg,
+		    x, y,
 		    MAKE_COLOR(255,255,255,255), -1.0, true);
 
-  /* next things must be rendered only by the first camera */
-  if((unsigned int) bottomLeft.x != 0 || (unsigned int) bottomLeft.y != height) {
-    return;
-  }
-  
   v_fm = pDrawlib->getFontSmall();
 
   v_fg = v_fm->getGlyph(m_bestTime);
-  v_fm->printString(v_fg, x, y+28, MAKE_COLOR(255,255,255,255), -1.0, true);
+  v_fm->printString(pDrawlib, v_fg, x, y+28, MAKE_COLOR(255,255,255,255), -1.0, true);
 
   v_fg = v_fm->getGlyph(m_worldRecordTime);
-  v_fm->printString(v_fg, x, y+48, MAKE_COLOR(255,255,255,255), -1.0, true);
+  v_fm->printString(pDrawlib, v_fg, x, y+48, MAKE_COLOR(255,255,255,255), -1.0, true);
 }
 
 void GameRenderer::renderReplayHelpMessage(Scene* i_scene) {
@@ -2830,25 +2820,26 @@ void GameRenderer::renderReplayHelpMessage(Scene* i_scene) {
   if(i_scene->getCurrentCamera() != 0)
     return;
 
-  FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
+  DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
+  FontManager* v_fm = pDrawlib->getFontSmall();
   FontGlyph* v_fg_l = v_fm->getGlyph(m_replayHelp_l);
   FontGlyph* v_fg_r = v_fm->getGlyph(m_replayHelp_r);
   
   // a nice Box
-  int v_displayWidth = GameApp::instance()->getDrawLib()->getDispWidth(),
+  int v_displayWidth = m_screen.getDispWidth(),
       posX = v_displayWidth - v_fg_r->realWidth(),
       posY = 5;
   // but just in case there is replayHelp displayed
   if(m_replayHelp_l != "") {  
     Vector2f A(posX - v_fg_l->realWidth() - 20, posY - 5), B(v_displayWidth, v_fg_r->realHeight() + posY + 7);
-    GameApp::instance()->getDrawLib()->drawBox(A,B,1,MAKE_COLOR(0,0,0,118),MAKE_COLOR(255,255,255,255));
+    pDrawlib->drawBox(A,B,1,MAKE_COLOR(0,0,0,118),MAKE_COLOR(255,255,255,255));
   }
-  v_fm->printString(v_fg_l,
+  v_fm->printString(pDrawlib, v_fg_l,
 		    posX - v_fg_l->realWidth() - 12, //give some space between left and right part
 		    posY,
 		    MAKE_COLOR(255,255,255,255), -1.0, true);
   
-  v_fm->printString(v_fg_r,
+  v_fm->printString(pDrawlib, v_fg_r,
 		    posX - 7, //give some space to right side of screen
 		    posY,
 		    MAKE_COLOR(255,255,255,255), -1.0, true);

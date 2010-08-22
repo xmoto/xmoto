@@ -50,7 +50,7 @@ public:
 private:
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded();
+  static void createGUIIfNeeded(RenderSurface* i_screen);
   void updateGUI();
   void updateLevelsList();
 

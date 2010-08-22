@@ -77,6 +77,14 @@ GameState::~GameState()
   SDL_DestroyMutex(m_commandsMutex);
 }
 
+void GameState::setScreen(const RenderSurface& i_screen) {
+  m_screen = i_screen;
+}
+
+RenderSurface* GameState::getScreen() {
+  return &m_screen;
+}
+
 bool GameState::doUpdate()
 {
   m_updateCounter += 1.0;

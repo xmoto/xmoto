@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "helpers/Log.h"
 #include "drawlib/DrawLib.h"
+#include "helpers/RenderSurface.h"
 
 #ifdef ENABLE_OPENGL
 #include "drawlib/DrawLibOpenGL.h"
@@ -35,10 +36,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Init and clean up
   ===========================================================================*/
-  void SFXOverlay::init(DrawLib* i_drawLib, unsigned int nWidth, unsigned int nHeight) {
+void SFXOverlay::init(DrawLib* i_drawLib, RenderSurface* i_screen, unsigned int nWidth, unsigned int nHeight) {
 #ifdef ENABLE_OPENGL
     m_drawLib = i_drawLib;
-    
+    m_screen = i_screen;
     m_nOverlayWidth = nWidth;
     m_nOverlayHeight = nHeight;
   
@@ -139,7 +140,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifdef ENABLE_OPENGL
     if(m_drawLib->useFBOs()) {
 	    ((DrawLibOpenGL*)m_drawLib)->glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
-	    glViewport(0,0,m_drawLib->getDispWidth(),m_drawLib->getDispHeight());
+	    glViewport(m_screen->downleft().x, m_screen->downleft().y,
+		       m_screen->size().x, m_screen->size().y);
     }
 #endif
   }
@@ -264,7 +266,7 @@ void SFXOverlay::fade(float f, unsigned int i_frameNumber) {
       glMatrixMode(GL_PROJECTION);
       glPushMatrix();
       glLoadIdentity();
-      glOrtho(0,m_drawLib->getDispWidth(),0,m_drawLib->getDispHeight(),-1,1);
+      glOrtho(0,m_screen->getDispWidth(),0,m_screen->getDispHeight(),-1,1);
       glMatrixMode(GL_MODELVIEW);
       glPushMatrix();
       glLoadIdentity();
@@ -277,9 +279,9 @@ void SFXOverlay::fade(float f, unsigned int i_frameNumber) {
       glBindTexture(GL_TEXTURE_2D,m_DynamicTextureID);
 
       m_drawLib->drawImageTextureSet(Vector2f(0.0, 0.0),
-				     Vector2f(m_drawLib->getDispWidth(), 0.0),
-				     Vector2f(m_drawLib->getDispWidth(), m_drawLib->getDispHeight()),
-				     Vector2f(0.0, m_drawLib->getDispHeight()),
+				     Vector2f(m_screen->getDispWidth(), 0.0),
+				     Vector2f(m_screen->getDispWidth(), m_screen->getDispHeight()),
+				     Vector2f(0.0, m_screen->getDispHeight()),
 				     MAKE_COLOR(255,255,255,255));
       glDisable(GL_TEXTURE_2D);
 

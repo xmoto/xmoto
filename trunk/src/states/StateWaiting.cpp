@@ -53,7 +53,7 @@ StateWaiting::~StateWaiting()
 
 void StateWaiting::enter()
 {
-  createGUIIfNeeded();
+  createGUIIfNeeded(&m_screen);
   m_GUI = m_sGUI;
 
   init();
@@ -78,22 +78,22 @@ void StateWaiting::clean()
   }
 }
 
-void StateWaiting::createGUIIfNeeded()
+void StateWaiting::createGUIIfNeeded(RenderSurface* i_screen)
 {
   if(m_sGUI != NULL)
     return;
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot();
+  m_sGUI = new UIRoot(i_screen);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      drawLib->getDispWidth(),
-		      drawLib->getDispHeight());
+		      i_screen->getDispWidth(),
+		      i_screen->getDispHeight());
 
   /* Initialize level info viewer */
-  int width = drawLib->getDispWidth();
-  int height= drawLib->getDispHeight();
+  int width = i_screen->getDispWidth();
+  int height= i_screen->getDispHeight();
 
   int x = width / 8;
   int y = height / 4;

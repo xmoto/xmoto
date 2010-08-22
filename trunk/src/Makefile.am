@@ -111,7 +111,9 @@ helpers_SOURCES = helpers/VMath.h             \
 		  helpers/Random.h \
 		  helpers/Random.cpp \
 		  helpers/CmdArgumentParser.h \
-		  helpers/CmdArgumentParser.cpp
+		  helpers/CmdArgumentParser.cpp \
+		  helpers/RenderSurface.h \
+		  helpers/RenderSurface.cpp
 
 common_SOURCES = Image.cpp \
   VBezier.cpp PolyDraw.h PolyDraw.cpp \

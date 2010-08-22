@@ -31,6 +31,7 @@
 #include "../include/xm_hashmap.h"
 #include "../helpers/Singleton.h"
 #include "../VFileIO_types.h"
+#include "../helpers/RenderSurface.h"
 
 #define UTF8_INTERLINE_SPACE 2
 #define UTF8_INTERCHAR_SPACE 0
@@ -115,10 +116,10 @@ public:
   virtual ~GLFontManager();
 
   FontGlyph* getGlyph(const std::string& i_string);
-  void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, float i_perCentered = -1.0, bool i_shadowEffect = false);
-  void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
+  void printString(DrawLib* pDrawLib, FontGlyph* i_glyph, int i_x, int i_y, Color i_color, float i_perCentered = -1.0, bool i_shadowEffect = false);
+  void printStringGrad(DrawLib* pDrawLib, FontGlyph* i_glyph, int i_x, int i_y,
 		       Color c1, Color c2, Color c3, Color c4, float i_perCentered = -1.0, bool i_shadowEffect = false);
-  void printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
+  void printStringGradOne(DrawLib* pDrawLib, FontGlyph* i_glyph, int i_x, int i_y,
 			  Color c1, Color c2, Color c3, Color c4, float i_perCentered = -1.0);
 
   virtual unsigned int nbGlyphsInMemory();
@@ -159,8 +160,8 @@ DrawLibOpenGL::DrawLibOpenGL() : DrawLib(){
 /*===========================================================================
   Transform an OpenGL vertex to pure 2D 
   ===========================================================================*/
-void DrawLibOpenGL::glVertexSP(float x,float y) { 	 
-  glVertex2f(x, m_nDispHeight - y); 	 
+void DrawLibOpenGL::glVertexSP(float x,float y) {
+  glVertex2f(x, m_renderSurf->getDispHeight() - y);
 } 	 
 
 void DrawLibOpenGL::glVertex(float x,float y) { 	 
@@ -171,13 +172,10 @@ void DrawLibOpenGL::glTexCoord(float x,float y){
   glTexCoord2f(x, y); 	 
 }
 
-void DrawLibOpenGL::screenProjVertex(float *x, float *y) {
-  *y = m_nDispHeight - (*y);
-}
-
 void DrawLibOpenGL::setClipRect(int x, int y, unsigned int w, unsigned int h){
-  glScissor(x, m_nDispHeight - (y+h), w, h);
-    
+  //glScissor(x, m_nDispHeight - (y+h), w, h);
+  glScissor(x, m_renderSurf->upright().y - (y+h), w, h);
+  
   m_nLScissorX = x;
   m_nLScissorY = y;
   m_nLScissorW = w;
@@ -926,18 +924,18 @@ FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
   return v_glyph;
 }
 
-void GLFontManager::printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
+void GLFontManager::printStringGrad(DrawLib* pDrawLib, FontGlyph* i_glyph, int i_x, int i_y,
 				    Color c1, Color c2, Color c3, Color c4, float i_perCentered, bool i_shadowEffect) {
 
   if(i_shadowEffect) {
-    printStringGradOne(i_glyph, i_x,   i_y,   INVERT_COLOR(c1), INVERT_COLOR(c2), INVERT_COLOR(c3), INVERT_COLOR(c4), i_perCentered);
-    printStringGradOne(i_glyph, i_x+1, i_y+1, c1, c2, c3, c4, i_perCentered);
+    printStringGradOne(pDrawLib, i_glyph, i_x,   i_y,   INVERT_COLOR(c1), INVERT_COLOR(c2), INVERT_COLOR(c3), INVERT_COLOR(c4), i_perCentered);
+    printStringGradOne(pDrawLib, i_glyph, i_x+1, i_y+1, c1, c2, c3, c4, i_perCentered);
   } else {
-    printStringGradOne(i_glyph, i_x, i_y, c1, c2, c3, c4, i_perCentered);
+    printStringGradOne(pDrawLib, i_glyph, i_x, i_y, c1, c2, c3, c4, i_perCentered);
   }
 }
 
-void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
+void GLFontManager::printStringGradOne(DrawLib* pDrawLib, FontGlyph* i_glyph, int i_x, int i_y,
 				       Color c1, Color c2, Color c3, Color c4, float i_perCentered) {
   GLFontGlyph* v_glyph = (GLFontGlyph*) i_glyph;
   GLFontGlyphLetter* v_glyphLetter;
@@ -996,7 +994,8 @@ void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
     v_current_linesize = getLonguestLineSize(v_value, 0, 1);
     v_x = i_x + (v_longuest_linesize - v_current_linesize)/2 * (i_perCentered+1.0);
 
-    v_y = -i_y + m_drawLib->getDispHeight() - v_glyph->firstLineDrawHeight();/* la taille de la 1ere ligne */
+    /* la taille de la 1ere ligne */
+    v_y = -i_y + pDrawLib->getRenderSurface()->size().y - v_glyph->firstLineDrawHeight();
     v_lineHeight = 0;
 
     n = 0;
@@ -1090,8 +1089,8 @@ unsigned int GLFontManager::getLonguestLineSize(const std::string& i_value, unsi
   return v_longuest_linesize;
 }
 
-void GLFontManager::printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, float i_perCentered, bool i_shadowEffect) {
-  printStringGrad(i_glyph, i_x, i_y, i_color, i_color, i_color, i_color, i_perCentered, i_shadowEffect);
+void GLFontManager::printString(DrawLib* pDrawLib, FontGlyph* i_glyph, int i_x, int i_y, Color i_color, float i_perCentered, bool i_shadowEffect) {
+  printStringGrad(pDrawLib, i_glyph, i_x, i_y, i_color, i_color, i_color, i_color, i_perCentered, i_shadowEffect);
 }
 
 #endif

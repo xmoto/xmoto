@@ -33,21 +33,24 @@ StateHelp::StateHelp(bool drawStateBehind,
   m_name  = "StateHelp";
   m_gameHelp = i_gameHelp;
   m_allowSceneOver = i_allowSceneOver;
-  createGUI(); // create the gui each time because it's small and keys can change
 }
 
 StateHelp::~StateHelp()
 {
-  delete m_GUI;
 }
 
 void StateHelp::enterAfterPop() {
   StateMenu::enterAfterPop();
 }
 
+void StateHelp::enter() {
+  createGUI(); // create the gui each time because it's small and keys can change
+}
+
 void StateHelp::leave()
 {
   StateMenu::leave();
+  delete m_GUI;
 }
 
 void StateHelp::checkEvents() {
@@ -100,18 +103,18 @@ void StateHelp::createGUI() {
   GameApp* pGame = GameApp::instance();
   DrawLib* drawLib = pGame->getDrawLib();
 
-  m_GUI = new UIRoot();
+  m_GUI = new UIRoot(&m_screen);
   m_GUI->setFont(drawLib->getFontSmall()); 
   m_GUI->setPosition(0, 0,
-		     drawLib->getDispWidth(),
-		     drawLib->getDispHeight());
+		     m_screen.getDispWidth(),
+		     m_screen.getDispHeight());
   
-  int v_offsetX = drawLib->getDispWidth()  / 10;
-  int v_offsetY = drawLib->getDispHeight() / 10;
+  int v_offsetX = m_screen.getDispWidth()  / 10;
+  int v_offsetY = m_screen.getDispHeight() / 10;
 
   v_frame = new UIFrame(m_GUI, v_offsetX, m_gameHelp ? v_offsetY / 2 : v_offsetY, "",
-			drawLib->getDispWidth()  - 2*v_offsetX,
-			m_gameHelp ? drawLib->getDispHeight() - v_offsetY : drawLib->getDispHeight() - 2*v_offsetY
+			m_screen.getDispWidth()  - 2*v_offsetX,
+			m_gameHelp ? m_screen.getDispHeight() - v_offsetY : m_screen.getDispHeight() - 2*v_offsetY
 			);
   v_frame->setID("FRAME");
   

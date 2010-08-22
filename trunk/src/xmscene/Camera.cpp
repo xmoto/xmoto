@@ -25,6 +25,7 @@
 #include "helpers/Log.h"
 #include <sstream>
 #include "../SysMessage.h"
+#include "../drawlib/DrawLib.h"
 
 #define ZOOM_DEFAULT 0.24
 #define ZOOM_DEFAULT_NO_AUTOZOOM 0.195
@@ -59,12 +60,12 @@
 #include "include/xm_OpenGL.h"
 #endif
 
-Camera::Camera(Vector2i upperleft, Vector2i downright){
+Camera::Camera(Vector2i downleft, Vector2i upright){
   m_fScale         = ZOOM_DEFAULT;
   m_cameraOffsetX  = CAMERA_OFFSETX_DEFAULT;
   m_cameraOffsetY  = CAMERA_OFFSETY_DEFAULT;
   m_playerToFollow = NULL;
-  setRenderSurface(upperleft, downright);
+  setRenderSurface(downleft, upright);
   m_mirrored = false;
   m_allowActiveZoom = false;
   m_cameraDeathOffset = Vector2f(0.0, 0.0);
@@ -591,10 +592,15 @@ Biker* Camera::getPlayerToFollow() {
   return m_playerToFollow;
 }
 
+void Camera::activate() {
+  DrawLib* drawLib = GameApp::instance()->getDrawLib();
+  drawLib->setRenderSurface(&m_renderSurf);
+}
+
 void Camera::setCamera2d() {
 #ifdef ENABLE_OPENGL
-  glViewport(m_renderSurf.upperleft().x, m_renderSurf.upperleft().y,
-	     m_renderSurf.size().x,      m_renderSurf.size().y);						 
+  glViewport(m_renderSurf.downleft().x, m_renderSurf.downleft().y,
+  	     m_renderSurf.size().x, m_renderSurf.size().y);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glOrtho(0, m_renderSurf.size().x,
@@ -603,21 +609,25 @@ void Camera::setCamera2d() {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 #endif
+
+  activate();
 }
 
 void Camera::setCamera3d(){
 #ifdef ENABLE_OPENGL
-  glViewport(m_renderSurf.upperleft().x, m_renderSurf.upperleft().y,
-	     m_renderSurf.size().x,      m_renderSurf.size().y);						 
+  glViewport(m_renderSurf.downleft().x, m_renderSurf.downleft().y,
+  	     m_renderSurf.size().x, m_renderSurf.size().y);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 #endif
+
+  activate();
 }
 
-void Camera::setRenderSurface(Vector2i upperleft, Vector2i downright){
-  m_renderSurf.update(upperleft, downright);
+void Camera::setRenderSurface(Vector2i downleft, Vector2i upright){
+  m_renderSurf.update(downleft, upright);
 }
 
 bool Camera::isMirrored() {
@@ -715,15 +725,11 @@ float Camera::guessDesiredAngleRotation() {
 }
 
 Vector2i Camera::getDispBottomLeft() {
-  return Vector2i(m_renderSurf.upperleft().x, m_renderSurf.downright().y);
+  return m_renderSurf.downleft();
 }
 
-Vector2i Camera::getDispTopLeft() {
-  return m_renderSurf.upperleft();
-}
-
-Vector2i Camera::getDispBottomRight() {
-  return m_renderSurf.downright();
+Vector2i Camera::getDispUpRight() {
+  return m_renderSurf.upright();
 }
 
 void Camera::allowActiveZoom(bool i_value) {

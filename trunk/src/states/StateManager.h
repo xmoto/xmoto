@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Singleton.h"
 #include "../VCommon.h"
 #include "../XMKey.h"
+#include "../helpers/RenderSurface.h"
 #include "../include/xm_SDL.h"
 #include <string>
 #include <vector>
@@ -32,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class VideoRecorder;
 class GameState;
 class Texture;
+class RenderSurface;
 class XMThreadStats;
 class DownloadReplaysThread;
 
@@ -116,6 +118,8 @@ private:
 
   void deleteToDeleteState();
 
+  void setNewStateScreen(GameState* pNewState);
+
   bool m_isVisible;
   bool m_hasFocus;
 
@@ -163,6 +167,8 @@ private:
 
   //
   int m_currentUniqueId;
+
+  RenderSurface m_screen;
 };
 
 #endif

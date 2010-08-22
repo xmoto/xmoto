@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Camera.h"
 #include "xmscene/Scene.h"
 #include "Game.h"
-#include "drawlib/DrawLib.h"
+#include "helpers/RenderSurface.h"
 #include "Renderer.h"
 
 #define PRESTART_ANIMATION_MARGIN_SIZE   5.0
@@ -34,10 +34,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define INPLAY_ANIMATION_SPEED          10
 #define INPLAY_ANIMATION_MAX_OFFSET    0.5
 
-CameraAnimation::CameraAnimation(Camera* i_camera, DrawLib* i_drawLib, GameRenderer* i_renderer, Scene* i_motoGame) {
+CameraAnimation::CameraAnimation(Camera* i_camera, RenderSurface* i_screen, GameRenderer* i_renderer, Scene* i_motoGame) {
   m_step         = 0;
   m_camera       = i_camera;
-  m_drawLib      = i_drawLib;
+  m_screen      = i_screen;
   m_renderer     = i_renderer;
   m_motoGame     = i_motoGame;
   m_I_cameraZoom = 1.0;
@@ -98,8 +98,8 @@ bool CameraAnimation::allowNextStep() {
 }
 
 // autozoom
-AutoZoomCameraAnimation::AutoZoomCameraAnimation(Camera* i_camera, DrawLib* i_drawLib, GameRenderer* i_renderer, Scene* i_motoGame)
-: CameraAnimation(i_camera, i_drawLib, i_renderer, i_motoGame) {
+AutoZoomCameraAnimation::AutoZoomCameraAnimation(Camera* i_camera, RenderSurface* i_screen, GameRenderer* i_renderer, Scene* i_motoGame)
+: CameraAnimation(i_camera, i_screen, i_renderer, i_motoGame) {
 }
 
 AutoZoomCameraAnimation::~AutoZoomCameraAnimation() {
@@ -108,7 +108,7 @@ AutoZoomCameraAnimation::~AutoZoomCameraAnimation() {
 void AutoZoomCameraAnimation::init() {
   CameraAnimation::init();
 
-  m_zoomX = (2.0 * ((float)m_drawLib->getDispWidth() / (float)m_drawLib->getDispHeight())) / (m_motoGame->getLevelSrc()->RightLimit() - m_motoGame->getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
+  m_zoomX = (2.0 * ((float)m_screen->getDispWidth() / (float)m_screen->getDispHeight())) / (m_motoGame->getLevelSrc()->RightLimit() - m_motoGame->getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
   m_zoomY = 2.0 /(m_motoGame->getLevelSrc()->TopLimit() - m_motoGame->getLevelSrc()->BottomLimit()+2*PRESTART_ANIMATION_MARGIN_SIZE);
   
   if (m_zoomX > m_zoomY){
@@ -136,7 +136,7 @@ void AutoZoomCameraAnimation::init() {
     
     m_zoomU=m_zoomY;
     
-    visibleWidth = (2.0 * ((float)m_drawLib->getDispWidth() / (float)m_drawLib->getDispHeight()))/m_zoomU;
+    visibleWidth = (2.0 * ((float)m_screen->getDispWidth() / (float)m_screen->getDispHeight()))/m_zoomU;
     cameraStartLeft = visibleWidth/2.0;
     
     m_fPreCameraStart.x = m_motoGame->getLevelSrc()->RightLimit() - cameraStartLeft + PRESTART_ANIMATION_MARGIN_SIZE;
@@ -291,8 +291,8 @@ void AutoZoomCameraAnimation::goNextStep() {
 }
 
 // zooming
-ZoomingCameraAnimation::ZoomingCameraAnimation(Camera* i_camera, DrawLib* i_drawLib, GameRenderer* i_renderer, Scene* i_motoGame)
-: CameraAnimation(i_camera, i_drawLib, i_renderer, i_motoGame) {
+    ZoomingCameraAnimation::ZoomingCameraAnimation(Camera* i_camera, RenderSurface* i_screen, GameRenderer* i_renderer, Scene* i_motoGame)
+: CameraAnimation(i_camera, i_screen, i_renderer, i_motoGame) {
 }
 
 ZoomingCameraAnimation::~ZoomingCameraAnimation() {
@@ -301,7 +301,7 @@ ZoomingCameraAnimation::~ZoomingCameraAnimation() {
 void ZoomingCameraAnimation::init() {
   CameraAnimation::init();
   
-  m_zoomX = (2.0 * ((float)m_drawLib->getDispWidth() / (float)m_drawLib->getDispHeight())) / (m_motoGame->getLevelSrc()->RightLimit() - m_motoGame->getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
+  m_zoomX = (2.0 * ((float)m_screen->getDispWidth() / (float)m_screen->getDispHeight())) / (m_motoGame->getLevelSrc()->RightLimit() - m_motoGame->getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
   m_zoomY = 2.0 /(m_motoGame->getLevelSrc()->TopLimit() - m_motoGame->getLevelSrc()->BottomLimit()+2*PRESTART_ANIMATION_MARGIN_SIZE);
   
   if (m_zoomX > m_zoomY){
@@ -329,9 +329,9 @@ void ZoomingCameraAnimation::init() {
     float visibleWidth, cameraStartLeft;
 
     m_zoomU=m_zoomY;
-    m_static_time = (m_motoGame->getLevelSrc()->RightLimit() - m_motoGame->getLevelSrc()->LeftLimit()) / ((2.0 * ((float)m_drawLib->getDispWidth() / (float)m_drawLib->getDispHeight()))/m_zoomU);
+    m_static_time = (m_motoGame->getLevelSrc()->RightLimit() - m_motoGame->getLevelSrc()->LeftLimit()) / ((2.0 * ((float)m_screen->getDispWidth() / (float)m_screen->getDispHeight()))/m_zoomU);
     
-    visibleWidth = (2.0 * ((float)m_drawLib->getDispWidth() / (float)m_drawLib->getDispHeight()))/m_zoomU;
+    visibleWidth = (2.0 * ((float)m_screen->getDispWidth() / (float)m_screen->getDispHeight()))/m_zoomU;
     cameraStartLeft = visibleWidth/2.0;
     
     m_fPreCameraStart.x = m_motoGame->getLevelSrc()->RightLimit() - cameraStartLeft + PRESTART_ANIMATION_MARGIN_SIZE;

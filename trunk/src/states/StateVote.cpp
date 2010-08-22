@@ -35,14 +35,13 @@ StateMenu(drawStateBehind, updateStatesBehind) {
     m_idlevel = i_idlevel;
 }
 
-
 StateVote::~StateVote() {
 }
 
 void StateVote::enter() {
   UIButton *pButtonQ0, *pButtonD0;
 
-  createGUIIfNeeded();
+  createGUIIfNeeded(&m_screen);
   m_GUI = m_sGUI;
 
   pButtonD0 = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:D_0"));
@@ -135,7 +134,7 @@ bool StateVote::isToSkip() {
   return pButtonQ0->getChecked() && pButtonD0->getChecked();
 }
 
-void StateVote::createGUIIfNeeded() {
+void StateVote::createGUIIfNeeded(RenderSurface* i_screen) {
 	UIStatic* v_someText;
 	UIButton* v_button;
 	UIFrame*  v_frame;
@@ -145,13 +144,13 @@ void StateVote::createGUIIfNeeded() {
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
   
-  m_sGUI = new UIRoot();
+  m_sGUI = new UIRoot(i_screen);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      drawLib->getDispWidth(),
-		      drawLib->getDispHeight());
+		      i_screen->getDispWidth(),
+		      i_screen->getDispHeight());
 
-  v_frame = new UIFrame(m_sGUI, 0, 0, "", drawLib->getDispWidth(), drawLib->getDispHeight());
+  v_frame = new UIFrame(m_sGUI, 0, 0, "", i_screen->getDispWidth(), i_screen->getDispHeight());
   v_frame->setID("FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_MENU);
 

@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Credits.h"
 #include "drawlib/DrawLib.h"
 #include "Game.h"
+#include "helpers/RenderSurface.h"
 
 #define CREDITS_DARKNESS 0.55    /* a number between 0 (not darkened) and 
                                     1 (black) */
@@ -113,7 +114,7 @@ void Credits::init(int backgroundReplayLength,
   m_time = 0;
 }
   
-void Credits::render(int i_time) {
+void Credits::render(RenderSurface* i_screen, int i_time) {
   m_time = i_time;
   
   if(!m_bFinished) {
@@ -141,10 +142,12 @@ void Credits::render(int i_time) {
     if(nC > 255) nC = 255;
       
     if(!XMSession::instance()->ugly())
-      drawLib->drawBox(Vector2f(0,0),Vector2f(drawLib->getDispWidth(),drawLib->getDispHeight()),0,MAKE_COLOR(0,0,0,nC),0);      
+      drawLib->drawBox(Vector2f(0,0),
+		       Vector2f(i_screen->getDispWidth(),i_screen->getDispHeight()),
+		       0,MAKE_COLOR(0,0,0,nC),0);      
       
     /* Render text */
-    int nScroll = (int)(drawLib->getDispHeight() - i_time/100.0 * 15);
+    int nScroll = (int)(i_screen->getDispHeight() - i_time/100.0 * 15);
     int nY = 0;
       
     for(unsigned int i=0;i<m_Entries.size();i++) {
@@ -156,11 +159,11 @@ void Credits::render(int i_time) {
       FontGlyph* v_fg;
 
       v_fg = v_fm->getGlyph(m_Entries[i]->Left);
-      v_fm->printStringGrad(v_fg,
+      v_fm->printStringGrad(drawLib, v_fg,
 			    20, nY+nScroll,
 			    White,White,Yellow,Yellow);
       v_fg = v_fm->getGlyph(m_Entries[i]->Right);
-      v_fm->printStringGrad(v_fg,
+      v_fm->printStringGrad(drawLib, v_fg,
 			    200, nY+nScroll,
 			    White,White,Yellow,Yellow);
       nY += 30;
@@ -172,19 +175,19 @@ void Credits::render(int i_time) {
       drawLib->startDraw(DRAW_MODE_POLYGON);
       drawLib->setColorRGBA(0,0,0,255);
       drawLib->glVertexSP(0,0); 
-      drawLib->glVertexSP(drawLib->getDispWidth(),0);
+      drawLib->glVertexSP(i_screen->getDispWidth(),0);
       drawLib->setColorRGBA(0,0,0,0);
-      drawLib->glVertexSP(drawLib->getDispWidth(),drawLib->getDispHeight() / 6); drawLib->glVertexSP(0,drawLib->getDispHeight() / 6); 
+      drawLib->glVertexSP(i_screen->getDispWidth(),i_screen->getDispHeight() / 6); drawLib->glVertexSP(0,i_screen->getDispHeight() / 6); 
       drawLib->endDraw();
 
       drawLib->setBlendMode(BLEND_MODE_A);
       drawLib->startDraw(DRAW_MODE_POLYGON);
       drawLib->setColorRGBA(0,0,0,0);
-      drawLib->glVertexSP(0,drawLib->getDispHeight() - drawLib->getDispHeight() / 6); 
-      drawLib->glVertexSP(drawLib->getDispWidth(),drawLib->getDispHeight() - drawLib->getDispHeight() / 6);
+      drawLib->glVertexSP(0,i_screen->getDispHeight() - i_screen->getDispHeight() / 6); 
+      drawLib->glVertexSP(i_screen->getDispWidth(),i_screen->getDispHeight() - i_screen->getDispHeight() / 6);
       drawLib->setColorRGBA(0,0,0,255);
-      drawLib->glVertexSP(drawLib->getDispWidth(),drawLib->getDispHeight()); 
-      drawLib->glVertexSP(0,drawLib->getDispHeight()); 
+      drawLib->glVertexSP(i_screen->getDispWidth(),i_screen->getDispHeight()); 
+      drawLib->glVertexSP(0,i_screen->getDispHeight()); 
       drawLib->endDraw();
 
     }
@@ -198,7 +201,7 @@ void Credits::render(int i_time) {
       const char *pc = "X-Moto";
         
       if(!XMSession::instance()->ugly()) {
-	drawLib->drawBox(Vector2f(0,0),Vector2f(drawLib->getDispWidth(),drawLib->getDispHeight()),0,MAKE_COLOR(0,0,0,nC2),0);      
+	drawLib->drawBox(Vector2f(0,0),Vector2f(i_screen->getDispWidth(),i_screen->getDispHeight()),0,MAKE_COLOR(0,0,0,nC2),0);      
       }
         
       Color Yellow = MAKE_COLOR(220,220,0,nC2);
@@ -206,9 +209,9 @@ void Credits::render(int i_time) {
 
       FontManager* v_fm = drawLib->getFontBig();
       FontGlyph* v_fg = v_fm->getGlyph(pc);
-      v_fm->printStringGrad(v_fg,
-			    drawLib->getDispWidth()/2 - v_fg->realWidth()/2,
-			    drawLib->getDispHeight()/2 - v_fg->realHeight()/2,
+      v_fm->printStringGrad(drawLib, v_fg,
+			    i_screen->getDispWidth()/2 - v_fg->realWidth()/2,
+			    i_screen->getDispHeight()/2 - v_fg->realHeight()/2,
 			    White,White,Yellow,Yellow);
     }
   }
