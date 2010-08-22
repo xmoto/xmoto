@@ -58,7 +58,7 @@ StatePreplayingReplay::~StatePreplayingReplay() {
 }
 
 void StatePreplayingReplay::initUniverse() {
-  m_universe->initPlay(1, false);
+  m_universe->initPlay(&m_screen, 1, false);
 }
 
 void StatePreplayingReplay::preloadLevels() {

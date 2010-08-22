@@ -160,7 +160,7 @@ StateMainMenu::~StateMainMenu()
 
 void StateMainMenu::enter()
 { 
-  createGUIIfNeeded();
+  createGUIIfNeeded(&m_screen);
   m_GUI = m_sGUI;
 
   StateMenu::enter();
@@ -342,9 +342,9 @@ void StateMainMenu::checkEventsMainWindow() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
+    StateManager::instance()->pushState(v_msgboxState);
     v_msgboxState->setMsgBxId("QUIT");
     v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
-    StateManager::instance()->pushState(v_msgboxState);
   }
 
   // help
@@ -719,17 +719,17 @@ void StateMainMenu::clean() {
   }
 }
 
-void StateMainMenu::createGUIIfNeeded() {
+void StateMainMenu::createGUIIfNeeded(RenderSurface* i_screen) {
   if(m_sGUI != NULL)
     return;
 
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot();
+  m_sGUI = new UIRoot(i_screen);
   m_sGUI->setFont(drawlib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      drawlib->getDispWidth(),
-		      drawlib->getDispHeight());
+		      i_screen->getDispWidth(),
+		      i_screen->getDispHeight());
 
   UIWindow* v_menu;
   UIButton* v_button;
@@ -848,12 +848,12 @@ UIWindow* StateMainMenu::makeWindowStats(UIWindow* i_parent) {
   UIFrame* v_window;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
-  v_window = new UIFrame(i_parent, 220, drawlib->getDispHeight()*7/30, GAMETEXT_STATS, drawlib->getDispWidth()-200,
-			 drawlib->getDispHeight() -40 -drawlib->getDispHeight()/5 -10);      
+  v_window = new UIFrame(i_parent, 220, i_parent->getScreen()->getDispHeight()*7/30, GAMETEXT_STATS, i_parent->getScreen()->getDispWidth()-200,
+			 i_parent->getScreen()->getDispHeight() -40 -i_parent->getScreen()->getDispHeight()/5 -10);      
   v_window->setStyle(UI_FRAMESTYLE_LEFTTAG);
   v_window->setFont(drawlib->getFontSmall());
   v_window->setID("STATS");
-  v_window->makeMinimizable(drawlib->getDispWidth()-17, drawlib->getDispHeight()*7/30);
+  v_window->makeMinimizable(i_parent->getScreen()->getDispWidth()-17, i_parent->getScreen()->getDispHeight()*7/30);
   v_window->setMinimized(true);
   v_window->setContextHelp(CONTEXTHELP_STATS);
 
@@ -1323,8 +1323,8 @@ void StateMainMenu::drawBackground() {
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   if(XMSession::instance()->menuGraphics() != GFX_LOW && XMSession::instance()->ugly() == false) {
-    int w = drawlib->getDispWidth();
-    int h = drawlib->getDispHeight();
+    int w = m_screen.getDispWidth();
+    int h = m_screen.getDispHeight();
 
     if(m_pTitleTL != NULL)
       drawlib->drawImage(Vector2f(0, 0), Vector2f(w/2, h/2), m_pTitleTL, 0xFFFFFFFF, true);
@@ -1810,9 +1810,9 @@ void StateMainMenu::checkEventsReplays() {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
+	StateManager::instance()->pushState(v_msgboxState);	
 	v_msgboxState->setMsgBxId("REPLAYS_DELETE");
 	v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
-	StateManager::instance()->pushState(v_msgboxState);	
 	updateReplaysRights();
       }
     }
@@ -1852,12 +1852,15 @@ void StateMainMenu::checkEventsReplays() {
     if(n > 0) {
       snprintf(v_buf, 256, GAMETEXT_CLEAN_CONFIRM(n), n);
       v_msgboxState = new StateMessageBox(this, v_buf, UI_MSGBOX_YES|UI_MSGBOX_NO);
-      v_msgboxState->setMsgBxId("CLEAN_REPLAYS");
-      v_msgboxState->makeActiveButton(UI_MSGBOX_NO);
     } else {
       v_msgboxState = new StateMessageBox(this, GAMETEXT_CLEAN_NOTHING_TO_DO, UI_MSGBOX_OK);
     }
     StateManager::instance()->pushState(v_msgboxState); 
+
+    if(n>0) {
+      v_msgboxState->setMsgBxId("CLEAN_REPLAYS");
+      v_msgboxState->makeActiveButton(UI_MSGBOX_NO); // must be done after msgbox is pushed
+    }
   }
 }
 

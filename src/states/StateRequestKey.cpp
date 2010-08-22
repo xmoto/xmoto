@@ -43,7 +43,7 @@ StateRequestKey::~StateRequestKey()
 
 void StateRequestKey::enter()
 {
-  createGUIIfNeeded();
+  createGUIIfNeeded(&m_screen);
   m_GUI = m_sGUI;
   updateGUI();
 
@@ -77,7 +77,7 @@ void StateRequestKey::clean() {
   }
 }
 
-void StateRequestKey::createGUIIfNeeded() {
+void StateRequestKey::createGUIIfNeeded(RenderSurface* i_screen) {
   UIStatic *v_someText;
   UIFrame  *v_frame;
 
@@ -86,15 +86,15 @@ void StateRequestKey::createGUIIfNeeded() {
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot();
+  m_sGUI = new UIRoot(i_screen);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      drawLib->getDispWidth(),
-		      drawLib->getDispHeight());
+		      i_screen->getDispWidth(),
+		      i_screen->getDispHeight());
 
   v_frame = new UIFrame(m_sGUI,	30,
-			drawLib->getDispHeight()/2 - 20, "",
-			drawLib->getDispWidth() -30*2, 20*2);
+			i_screen->getDispHeight()/2 - 20, "",
+			i_screen->getDispWidth() -30*2, 20*2);
   v_frame->setID("FRAME");
 
   v_someText = new UIStatic(v_frame, 0, 0, "", v_frame->getPosition().nWidth, v_frame->getPosition().nHeight);

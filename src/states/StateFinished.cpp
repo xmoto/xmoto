@@ -81,7 +81,7 @@ void StateFinished::enter()
     }
   }
   
-  createGUIIfNeeded();
+  createGUIIfNeeded(&m_screen);
   m_GUI = m_sGUI;
 
   /* reset the playnext button */
@@ -365,7 +365,7 @@ void StateFinished::clean() {
   }
 }
 
-void StateFinished::createGUIIfNeeded() {
+void StateFinished::createGUIIfNeeded(RenderSurface* i_screen) {
   if(m_sGUI != NULL)
     return;
 
@@ -379,17 +379,15 @@ void StateFinished::createGUIIfNeeded() {
   UIStatic*    v_pNewHighscoreSaved_str;
   UIStatic*    v_pRoomsTimes_str;
 
-  m_sGUI = new UIRoot();
+  m_sGUI = new UIRoot(i_screen);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      drawLib->getDispWidth(),
-		      drawLib->getDispHeight());
+		      i_screen->getDispWidth(),
+		      i_screen->getDispHeight());
   
 
-  v_frame = new UIFrame(m_sGUI, 
-			drawLib->getDispWidth()/2  - 400/2,
-			drawLib->getDispHeight()/2 - 680/2,
-			"", 400, 680);
+  v_frame = new UIFrame(m_sGUI, i_screen->getDispWidth()/2  - 400/2, i_screen->getDispHeight()/2 - 680/2, "", 400, 680);
+
   v_frame->setID("FINISHED_FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_MENU);
 

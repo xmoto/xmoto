@@ -52,6 +52,7 @@ public:
   		  bool i_verticallyLarge = false);
   virtual ~StateMessageBox();
 
+  virtual void enter();
   virtual void leave();
 
   std::string getMsgBxId() const;
@@ -78,8 +79,16 @@ private:
   UIMsgBoxButton m_clickedButton;
   std::string m_msgbxid;
 
-  void createGUI(const std::string& i_text, int i_buttons,
-		 bool i_input, const std::string& i_inputText, bool i_query, bool i_verticallyLarge);
+  void createGUI();
+
+  // requirement to build the msgbox. Note that it's not directly done in the constructor while it's forbiden to use the XMScreen into the constructor (set after)
+  std::string m_text;
+  int m_buttons;
+  bool m_input;
+  std::string m_inputText;
+  bool m_query;
+  bool m_verticallyLarge;
+  std::vector<std::string> m_completionList;
 };
 
 #endif

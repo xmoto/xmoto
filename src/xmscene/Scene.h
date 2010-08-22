@@ -65,6 +65,7 @@ class Biker;
 class ChipmunkWorld;
 class PhysicsSettings;
 class ScriptTimer;
+class XMScreen;
 
 /*===========================================================================
   Serialized bike state

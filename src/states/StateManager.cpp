@@ -82,6 +82,11 @@ StateManager::StateManager()
 
   m_currentUniqueId = 0;
 
+  // the full xmoto windows it the screen of the statemanager
+  m_screen = RenderSurface(Vector2i(0, 0),
+			   Vector2i(GameApp::instance()->getDrawLib()->getDispWidth2(),
+				    GameApp::instance()->getDrawLib()->getDispHeight2()));
+
   // create the db stats thread
   m_xmtstas = new XMThreadStats(XMSession::instance()->sitekey(), this);
 
@@ -137,12 +142,27 @@ std::string StateManager::getUniqueId() {
   return v_n.str();
 }
 
+void StateManager::setNewStateScreen(GameState* pNewState) {
+  /* to test rendering a state to its own render surface, uncomment these :
+  if(pNewState->getType() == "SCENE") {
+    int offset = 100;
+    pNewState->setScreen(RenderSurface(Vector2i(offset, offset),
+    				       Vector2i(m_screen.getDispWidth()-offset, m_screen.getDispHeight()-offset)));
+  } else {
+    pNewState->setScreen(RenderSurface(Vector2i(0, 0),
+				       Vector2i(m_screen.getDispWidth(), m_screen.getDispHeight())));
+  } */
+  pNewState->setScreen(RenderSurface(Vector2i(0, 0),
+				     Vector2i(m_screen.getDispWidth(), m_screen.getDispHeight())));
+}
+
 void StateManager::pushState(GameState* pNewState)
 {
   if(m_statesStack.size() != 0){
     (m_statesStack.back())->leaveAfterPush();
   }
 
+  setNewStateScreen(pNewState);
   m_statesStack.push_back(pNewState);
   pNewState->setStateId(getUniqueId());
   (m_statesStack.back())->enter();
@@ -192,6 +212,11 @@ void StateManager::replaceState(GameState* pNewState, const std::string& i_paren
 	  m_statesStack[i]->leaveType();
 	}
       }
+      // dude::can't use the same screen size, as a scene screen may
+      // be smaller than the whole screen, and so the main menu state
+      // which replace it will inherit its screen size.
+      //      pNewState->setScreen(*(m_statesStack[i]->getScreen()));
+      setNewStateScreen(pNewState);
       m_toDeleteStates.push_back(m_statesStack[i]);
       m_statesStack[i] = pNewState;
       pNewState->setStateId(i_parentId);
@@ -285,23 +310,23 @@ void StateManager::renderOverAll() {
     int v_voffset = 0;
     
     v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_CONNECTED_PLAYERS);
-    v_fm->printString(v_fg,
-		      GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder,
+    v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
+		      m_screen.getDispWidth() - v_fg->realWidth() - vborder, vborder,
 		      MAKE_COLOR(240,240,240,255), -1.0, true);
     v_voffset += v_fg->realHeight();
     
     // you
     v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(XMSession::instance()->profile());
-    v_fm->printString(v_fg,
-		      GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
+    v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
+		      m_screen.getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
 		      MAKE_COLOR(200,200,200,255), -1.0, true);     
     v_voffset += v_fg->realHeight();
     
     for(unsigned int i=0; i<NetClient::instance()->otherClients().size(); i++) {
       v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(NetClient::instance()->otherClients()[i]->name());
 
-      v_fm->printString(v_fg,
-			GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
+      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
+			m_screen.getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
 			MAKE_COLOR(200,200,200,255), -1.0, true);     
       v_voffset += v_fg->realHeight();
     }
@@ -390,7 +415,7 @@ void StateManager::drawFps() {
 
   FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg = v_fm->getGlyph(cTemp);
-  v_fm->printString(v_fg, 0, 130, MAKE_COLOR(255,255,255,255), -1.0, true);
+  v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, 0, 130, MAKE_COLOR(255,255,255,255), -1.0, true);
 }
 
 void StateManager::drawTexturesLoading() {
@@ -399,7 +424,7 @@ void StateManager::drawTexturesLoading() {
 
   FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg = v_fm->getGlyph(v_n.str());
-  v_fm->printString(v_fg, 0, 100, MAKE_COLOR(255,255,255,255), -1.0, true);
+  v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, 0, 100, MAKE_COLOR(255,255,255,255), -1.0, true);
 }
 
 void StateManager::drawGeomsLoading() {
@@ -408,7 +433,7 @@ void StateManager::drawGeomsLoading() {
 
   FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg = v_fm->getGlyph(v_n.str());
-  v_fm->printString(v_fg, 0, 120, MAKE_COLOR(255,255,255,255), -1.0, true);
+  v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, 0, 120, MAKE_COLOR(255,255,255,255), -1.0, true);
 }
 
 void StateManager::drawStack() {
@@ -418,7 +443,7 @@ void StateManager::drawStack() {
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
   int xoff = 0;
-  int yoff = drawLib->getDispHeight();
+  int yoff = m_screen.getDispHeight();
   int w = 180;
   int h =  30;
   Color bg_none     = MAKE_COLOR(0,0,0,200);
@@ -448,7 +473,7 @@ void StateManager::drawStack() {
     } else {
       v_fg = v_fm->getGlyph(m_statesStack[i]->getName() + " (" + m_statesStack[i]->getStateId() + ")");
     }
-    v_fm->printString(v_fg, (w-v_fg->realWidth())/2 + xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, 0.0, true);
+    v_fm->printString(drawLib, v_fg, (w-v_fg->realWidth())/2 + xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, 0.0, true);
 
     i++;
     ++stateIterator;

@@ -46,7 +46,7 @@ StateEditWebConfig::~StateEditWebConfig()
 
 void StateEditWebConfig::enter()
 {
-  createGUIIfNeeded();
+  createGUIIfNeeded(&m_screen);
   m_GUI = m_sGUI;
   updateGUI();
 
@@ -118,7 +118,7 @@ void StateEditWebConfig::clean()
   }
 }
 
-void StateEditWebConfig::createGUIIfNeeded()
+void StateEditWebConfig::createGUIIfNeeded(RenderSurface* i_screen)
 {
   UIStatic *pSomeText;
   UIFrame  *v_frame;
@@ -128,15 +128,15 @@ void StateEditWebConfig::createGUIIfNeeded()
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot();
+  m_sGUI = new UIRoot(i_screen);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      drawLib->getDispWidth(),
-		      drawLib->getDispHeight());
+		      i_screen->getDispWidth(),
+		      i_screen->getDispHeight());
 
   /* Initialize internet connection configurator */
-  int x = drawLib->getDispWidth()/2-206;
-  int y = drawLib->getDispHeight()/2-385/2;
+  int x = i_screen->getDispWidth()/2-206;
+  int y = i_screen->getDispHeight()/2-385/2;
   std::string caption = "";
   int nWidth  = 412;
   int nHeight = 425;

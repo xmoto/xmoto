@@ -74,7 +74,7 @@ StateOptions::~StateOptions() {
 
 void StateOptions::enter()
 { 
-  createGUIIfNeeded();
+  createGUIIfNeeded(&m_screen);
   m_GUI = m_sGUI;
 
   updateOptions();
@@ -106,9 +106,9 @@ void StateOptions::checkEvents() {
     v_button->setClicked(false);
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_RESETTODEFAULTS, UI_MSGBOX_YES|UI_MSGBOX_NO);
+    StateManager::instance()->pushState(v_msgboxState);
     v_msgboxState->setMsgBxId("RESETSTODEFAULTS");
     v_msgboxState->makeActiveButton(UI_MSGBOX_NO);
-    StateManager::instance()->pushState(v_msgboxState);
   }
 
   // close
@@ -707,17 +707,17 @@ void StateOptions::checkEvents() {
 
 }
 
-void StateOptions::createGUIIfNeeded() {
+void StateOptions::createGUIIfNeeded(RenderSurface* i_screen) {
   if(m_sGUI != NULL)
     return;
 
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot();
+  m_sGUI = new UIRoot(i_screen);
   m_sGUI->setFont(drawlib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      drawlib->getDispWidth(),
-		      drawlib->getDispHeight());
+		      i_screen->getDispWidth(),
+		      i_screen->getDispHeight());
 
   UIWindow *v_window, *v_frame;
   UIStatic*  v_someText;

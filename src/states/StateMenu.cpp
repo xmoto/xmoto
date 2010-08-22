@@ -25,10 +25,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../drawlib/DrawLib.h"
 #include "StateUpdateDb.h"
 #include "../helpers/Log.h"
+#include "../xmscene/Camera.h"
 
 StateMenu::StateMenu(bool drawStateBehind,
 		     bool updateStatesBehind):
-  GameState(drawStateBehind,
+GameState(drawStateBehind,
 	    updateStatesBehind)
 {
   m_GUI        = NULL;
@@ -76,6 +77,8 @@ bool StateMenu::update()
 bool StateMenu::render()
 {
   GameState::render();
+  DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
+  pDrawlib->getMenuCamera()->setCamera2d();
   m_GUI->paint();
   return true;
 }

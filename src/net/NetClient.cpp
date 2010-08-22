@@ -501,7 +501,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 	std::ostringstream v_alert;
 	v_alert << ((NA_killAlert*)i_netAction)->time();
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	    m_universe->getScenes()[i]->gameMessage(v_alert.str(), true, XMCLIENT_KILL_ALERT_DURATION);
+	  m_universe->getScenes()[i]->gameMessage(v_alert.str(), true, XMCLIENT_KILL_ALERT_DURATION);
 	}
       }
     }

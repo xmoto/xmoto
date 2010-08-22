@@ -23,35 +23,13 @@
 
 #include "../VCommon.h"
 #include "Bike.h"
+#include "../helpers/RenderSurface.h"
 
 class GhostTrail;
 
 struct CameraGhostVisibility {
   bool isIn;
   float lastIn;
-};
-
-class RenderSurface {
-public:
-  void update(Vector2i upperleft, Vector2i downright){
-    m_upperleft = upperleft;
-    m_downright = downright;
-    m_size      = downright - upperleft;
-  }
-  Vector2i& size(){
-    return m_size;
-  }
-  Vector2i& upperleft(){
-    return m_upperleft;
-  }
-  Vector2i& downright(){
-    return m_downright;
-  }
-
-private:
-  Vector2i m_upperleft;
-  Vector2i m_downright;
-  Vector2i m_size;
 };
 
 class Camera {
@@ -94,8 +72,7 @@ public:
     return m_renderSurf.size().y;
   }
   Vector2i getDispBottomLeft();
-  Vector2i getDispTopLeft();
-  Vector2i getDispBottomRight();
+  Vector2i getDispUpRight();
 
   bool isMirrored();
   void setMirrored(bool i_value);
@@ -198,6 +175,9 @@ private:
   Vector2f m_cameraDeathOffset;
 
   void resetActiveZoom();
+
+  // set cam rendersurface to drawlib
+  void  activate();
 };
 
 #endif

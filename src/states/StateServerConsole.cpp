@@ -84,11 +84,11 @@ void StateServerConsole::createGUIIfNeeded()
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot();
+  m_sGUI = new UIRoot(&m_screen);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      drawLib->getDispWidth(),
-		      drawLib->getDispHeight());
+		      m_screen.getDispWidth(),
+		      m_screen.getDispHeight());
 
 
   m_console = new UIConsole(m_sGUI, 10, 10, "", m_sGUI->getPosition().nWidth-20, m_sGUI->getPosition().nHeight-20);

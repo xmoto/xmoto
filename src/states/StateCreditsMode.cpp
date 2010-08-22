@@ -66,7 +66,7 @@ bool StateCreditsMode::render()
 
   if(m_universe != NULL) {
     if(m_universe->getScenes().size() > 0) {
-      m_credits->render(m_universe->getScenes()[0]->getTime());
+      m_credits->render(&m_screen, m_universe->getScenes()[0]->getTime());
     }
   }
 

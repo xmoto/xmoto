@@ -58,7 +58,7 @@ StateLevelInfoViewer::~StateLevelInfoViewer()
 
 void StateLevelInfoViewer::enter()
 { 
-  createGUIIfNeeded();
+  createGUIIfNeeded(&m_screen);
   m_GUI = m_sGUI;
   updateGUI();
 
@@ -125,9 +125,9 @@ void StateLevelInfoViewer::checkEvents()
 	std::string playSpecificReplay = pListEntry->Text[0];
 
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
+	StateManager::instance()->pushState(v_msgboxState);
 	v_msgboxState->setMsgBxId("REPLAYS_DELETE");
 	v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
-	StateManager::instance()->pushState(v_msgboxState);
       }
     }
   }
@@ -195,22 +195,22 @@ void StateLevelInfoViewer::clean()
   }
 }
 
-void StateLevelInfoViewer::createGUIIfNeeded()
+void StateLevelInfoViewer::createGUIIfNeeded(RenderSurface* i_screen)
 {
   if(m_sGUI != NULL)
     return;
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot();
+  m_sGUI = new UIRoot(i_screen);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      drawLib->getDispWidth(),
-		      drawLib->getDispHeight());
+		      i_screen->getDispWidth(),
+		      i_screen->getDispHeight());
 
   /* Initialize level info viewer */
-  int x = drawLib->getDispWidth()/2-350;
-  int y = drawLib->getDispHeight()/2-250;
+  int x = i_screen->getDispWidth()/2-350;
+  int y = i_screen->getDispHeight()/2-250;
   std::string caption = "";
   int nWidth = 700;
   int nHeight = 500;

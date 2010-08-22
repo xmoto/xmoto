@@ -49,14 +49,15 @@ StateWaitServerInstructions::~StateWaitServerInstructions()
 bool StateWaitServerInstructions::render() {
   FontManager* v_fm;
   FontGlyph* v_fg;
+  DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
   GameState::render();
 
-  v_fm = GameApp::instance()->getDrawLib()->getFontMedium();
+  v_fm = drawLib->getFontMedium();
   v_fg = v_fm->getGlyph(GAMETEXT_WAIT_XMSERVER);
-  v_fm->printString(v_fg,
-		    (GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth())   /2,
-		    (GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight()) /2,
+  v_fm->printString(drawLib, v_fg,
+		    (m_screen.upright().x - v_fg->realWidth())   /2,
+		    (m_screen.upright().y - v_fg->realHeight()) /2,
 		    MAKE_COLOR(220,255,255,255), -0.5, true);
 
 

@@ -26,12 +26,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <utility>
 #include <string>
 #include <queue>
+#include "../helpers/RenderSurface.h"
 
 class GameState : public StateMessageBoxReceiver {
 public:
   GameState(bool drawStateBehind,
 	    bool updateStatesBehind);
   virtual ~GameState();
+
+  void setScreen(const RenderSurface& i_screen);
+  RenderSurface* getScreen();
 
   virtual void enter();
   virtual void leave() {}
@@ -127,6 +131,8 @@ protected:
   float m_updatePeriod;
   // current beat counters
   float m_updateCounter;
+
+  RenderSurface m_screen;
 
   std::string m_name;
   std::string m_type; // some state can have the same type (exemple, all the state scene are of type scene)

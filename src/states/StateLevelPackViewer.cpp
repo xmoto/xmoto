@@ -58,7 +58,7 @@ StateLevelPackViewer::~StateLevelPackViewer()
 
 void StateLevelPackViewer::enter()
 {
-  createGUIIfNeeded();
+  createGUIIfNeeded(&m_screen);
   m_GUI = m_sGUI;
 
   updateGUI();
@@ -211,17 +211,17 @@ void StateLevelPackViewer::clean()
   }
 }
 
-void StateLevelPackViewer::createGUIIfNeeded()
+void StateLevelPackViewer::createGUIIfNeeded(RenderSurface* i_screen)
 {
   if(m_sGUI != NULL)
     return;
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  unsigned int width  = drawLib->getDispWidth();
-  unsigned int height = drawLib->getDispHeight();
+  unsigned int width  = i_screen->getDispWidth();
+  unsigned int height = i_screen->getDispHeight();
 
-  m_sGUI = new UIRoot();
+  m_sGUI = new UIRoot(i_screen);
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0, width, height);
 

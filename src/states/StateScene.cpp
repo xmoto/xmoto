@@ -32,7 +32,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../CameraAnimation.h"
 #include "../Renderer.h"
 #include "../Universe.h"
-#include "../Renderer.h"
 #include "../VideoRecorder.h"
 #include "../GameText.h"
 #include "../Game.h"
@@ -284,15 +283,15 @@ bool StateScene::render()
       FontGlyph* v_fg   = v_fm->getGlyph(GAMETEXT_DLGHOSTS);
       int v_border = 5;
 
-      GameApp::instance()->getDrawLib()->drawBox(Vector2f(GameApp::instance()->getDrawLib()->getDispWidth()/2 - v_fg->realWidth()/2 -v_border,
-							  GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight() - 2*v_border),
-						 Vector2f(GameApp::instance()->getDrawLib()->getDispWidth()/2 + v_fg->realWidth()/2 + v_border,
-							  GameApp::instance()->getDrawLib()->getDispHeight() + v_border),
+      GameApp::instance()->getDrawLib()->drawBox(Vector2f(m_screen.getDispWidth()/2 - v_fg->realWidth()/2 -v_border,
+							  m_screen.getDispHeight() - v_fg->realHeight() - 2*v_border),
+						 Vector2f(m_screen.getDispWidth()/2 + v_fg->realWidth()/2 + v_border,
+							  m_screen.getDispHeight() + v_border),
 						 0.0f, MAKE_COLOR(255,255,255,50));
 
-      v_fm->printString(v_fg,
-			GameApp::instance()->getDrawLib()->getDispWidth()/2 - v_fg->realWidth()/2,
-			GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight() - v_border,
+      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
+			m_screen.getDispWidth()/2 - v_fg->realWidth()/2,
+			m_screen.getDispHeight() - v_fg->realHeight() - v_border,
 			MAKE_COLOR(255,255,255,255), 0.0, true);
     }
 
@@ -652,13 +651,12 @@ void StateScene::setAutoZoom(bool i_value) {
     if(m_cameraAnim != NULL) {
       delete m_cameraAnim;
     }
-    GameApp*  pGame = GameApp::instance();
 
     if(m_universe != NULL && m_renderer != NULL) {
       if(m_universe->getScenes().size() > 0) { // do only for the first world for the moment
 	m_universe->getScenes()[0]->setAutoZoomCamera();
 	m_cameraAnim = new AutoZoomCameraAnimation(m_universe->getScenes()[0]->getCamera(),
-						   pGame->getDrawLib(),
+						   &m_screen,
 						   m_renderer,
 						   m_universe->getScenes()[0]);
 	m_cameraAnim->init();
@@ -783,54 +781,55 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
 }
 
 void StateScene::displayStats() {
+  DrawLib* drawLib = GameApp::instance()->getDrawLib();
   FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg   = v_fm->getGlyph(m_statsStr);
-  Vector2f A = Vector2f(GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth(),
-			GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight());
-  Vector2f B= Vector2f(GameApp::instance()->getDrawLib()->getDispWidth(),
-		       GameApp::instance()->getDrawLib()->getDispHeight());
+  Vector2f A = Vector2f(m_screen.getDispWidth() - v_fg->realWidth(),
+			m_screen.getDispHeight() - v_fg->realHeight());
+  Vector2f B= Vector2f(m_screen.getDispWidth(),
+		       m_screen.getDispHeight());
   int vborder = 10;
 
   GameApp::instance()->getDrawLib()->drawBox(A - Vector2f(vborder*2, vborder*2),
 					     B,
 					     1.0f, 0xFFCCCC77, 0xFFFFFFFF);
 
-  v_fm->printString(v_fg,
-		    GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth()   - vborder,
-		    GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight() - vborder,
+  v_fm->printString(drawLib, v_fg,
+		    m_screen.getDispWidth() - v_fg->realWidth()   - vborder,
+		    m_screen.getDispHeight() - v_fg->realHeight() - vborder,
 		    MAKE_COLOR(220,255,255,255), -1.0, true);
 
   // quality
   int v_quality_yoffset = 5;
 
   if(m_quality >= 0.0) {
-    v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_QUALITY);
-    v_fm->printString(v_fg,
+    v_fg = drawLib->getFontSmall()->getGlyph(GAMETEXT_QUALITY);
+    v_fm->printString(drawLib, v_fg,
 		      A.x - vborder*2,
 		      A.y - vborder*2 - v_fg->realHeight() - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset,
 		      MAKE_COLOR(220,255,255,255), -1.0, true);
     
     if(XMSession::instance()->ugly()) {
       for(int i=0; i<(int)(m_quality); i++) {
-	GameApp::instance()->getDrawLib()->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
-							       A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_quality_yoffset),
-						      STATS_LEVELS_NOTES_SIZE/2,
-						      1.0, 0, MAKE_COLOR(255, 0, 0, 255));
+	drawLib->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
+				     A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_quality_yoffset),
+			    STATS_LEVELS_NOTES_SIZE/2,
+			    1.0, 0, MAKE_COLOR(255, 0, 0, 255));
       }
     } else {
       for(int i=0; i<5; i++) {
 	if(i<(int)(m_quality)) {
-	  GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
-								A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
-						       Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
-								A.y - vborder*2 -v_quality_yoffset),
-						       m_qualityTex, 0xFFFFFFFF, true);
+	  drawLib->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+				      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
+			     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+				      A.y - vborder*2 -v_quality_yoffset),
+			     m_qualityTex, 0xFFFFFFFF, true);
 	} else {
-	  GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
-								A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
-						       Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
-								A.y - vborder*2 -v_quality_yoffset),
-						       m_uncheckedTex, 0xFFFFFFFF, true);
+	  drawLib->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+				      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
+			     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+				      A.y - vborder*2 -v_quality_yoffset),
+			     m_uncheckedTex, 0xFFFFFFFF, true);
 	}
       }
     }
@@ -840,33 +839,33 @@ void StateScene::displayStats() {
   int v_difficulty_yoffset = v_fg->realHeight() + STATS_LEVELS_NOTES_SIZE + v_quality_yoffset;
 
   if(m_difficulty >= 0.0) {
-    v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_DIFFICULTY);
-    v_fm->printString(v_fg,
+    v_fg = drawLib->getFontSmall()->getGlyph(GAMETEXT_DIFFICULTY);
+    v_fm->printString(drawLib, v_fg,
 		      A.x - vborder*2,
 		      A.y - vborder*2 - v_fg->realHeight() - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset,
 		      MAKE_COLOR(220,255,255,255), -1.0, true);
     
     if(XMSession::instance()->ugly()) {
       for(int i=0; i<(int)(m_difficulty); i++) {
-	GameApp::instance()->getDrawLib()->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
-							       A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_difficulty_yoffset),
-						      STATS_LEVELS_NOTES_SIZE/2,
-						      1.0, 0, MAKE_COLOR(255, 0, 0, 255));
+	drawLib->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
+				     A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_difficulty_yoffset),
+			    STATS_LEVELS_NOTES_SIZE/2,
+			    1.0, 0, MAKE_COLOR(255, 0, 0, 255));
       }
     } else {
       for(int i=0; i<5; i++) {
 	if(i<(int)(m_difficulty)) {
-	  GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
-								A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
-						       Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
-							      A.y - vborder*2 -v_difficulty_yoffset),
-						       m_difficultyTex, 0xFFFFFFFF, true);
+	  drawLib->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+				      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
+			     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+				      A.y - vborder*2 -v_difficulty_yoffset),
+			     m_difficultyTex, 0xFFFFFFFF, true);
 	} else {
-	  GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
-								A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
-						       Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
-								A.y - vborder*2 -v_difficulty_yoffset),
-						       m_uncheckedTex, 0xFFFFFFFF, true);
+	  drawLib->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+				      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
+			     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+				      A.y - vborder*2 -v_difficulty_yoffset),
+			     m_uncheckedTex, 0xFFFFFFFF, true);
 	}
       }
     }

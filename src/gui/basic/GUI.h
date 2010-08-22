@@ -28,6 +28,7 @@ class DrawLib;
 class FontManager;
 class Sprite;
 class GameApp;
+class RenderSurface;
 
 #include "../../Theme.h"
 #include "../../include/xm_SDL.h"
@@ -206,6 +207,7 @@ public:
       
   UIWindow *getChild(std::string Child);
   UIRoot *getRoot(void);
+  RenderSurface* getScreen();
       
   /* Generic message boxing */
   UIMsgBox *msgBox(std::string Text,UIMsgBoxButton Buttons,bool bTextInput=false,bool bQuery=false,bool i_verticallyLarge=false);
@@ -259,6 +261,9 @@ protected:
       
   static DrawLib* m_drawLib;
     
+  // screen to draw ; the same as the parent, but copy to not get in cascade
+  RenderSurface* m_screen;
+
 private:
   /* Data */
   std::string m_ContextHelp;                /* Context help */
@@ -266,6 +271,7 @@ private:
 					       the window transists from "hidden" to "shown". 
 					       useful for specifying "default" buttons in menus */
   UIWindow *m_pParent;                      /* Parent window */
+
   std::string m_ID;                         /* Non-unique id */
   std::vector<UIWindow *> m_Children;       /* Child windows */  
   UIRect m_Pos;                             /* Position */
@@ -827,7 +833,8 @@ struct UIRootActCandidate {
   
 class UIRoot : public UIWindow {
 public:
-  UIRoot();
+  UIRoot(RenderSurface* i_screen);
+  ~UIRoot();
     
   /* Methods */
   virtual void paint(void);            

@@ -155,7 +155,7 @@ void Scene::cleanPlayers() {
   /*===========================================================================
     Add game message
     ===========================================================================*/
-  void Scene::gameMessage(std::string Text, bool bOnce, int duration, MessageType i_msgType) {
+void Scene::gameMessage(std::string Text, bool bOnce, int duration, MessageType i_msgType) {
 
     if(Text == "" ) return;  // eliminate empty messages
     
@@ -1188,7 +1188,7 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
       if(v_diffAvailable) {
 	char msg[256];
 	snprintf(msg, 256, "%+.2f", v_diffToGhost/100.0);
-	this->gameMessage(msg,true,MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION/2,gameTime);
+	gameMessage(msg,true,MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION/2,gameTime);
       }
     }
   }

@@ -57,7 +57,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "thread/UpgradeLevelsThread.h"
 
 #include "UserConfig.h"
-#include "Renderer.h"
 #include "net/NetServer.h"
 #include "net/NetClient.h"
 #include "net/NetActions.h"
@@ -325,8 +324,8 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 	    XMSession::instance()->bpp());
     drawLib->init(XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp(), XMSession::instance()->windowed());
     /* drawlib can change the final resolution if it fails, then, reinit session one's */
-    XMSession::instance()->setResolutionWidth(drawLib->getDispWidth());
-    XMSession::instance()->setResolutionHeight(drawLib->getDispHeight());
+    XMSession::instance()->setResolutionWidth(drawLib->getDispWidth2());
+    XMSession::instance()->setResolutionHeight(drawLib->getDispHeight2());
     XMSession::instance()->setBpp(drawLib->getDispBPP());
     XMSession::instance()->setWindowed(drawLib->getWindowed());
     LogInfo("Resolution: %ix%i (%i bpp)",
@@ -815,6 +814,7 @@ void GameApp::run_unload() {
     FontManager* v_fm;
     FontGlyph* v_fg;
     int v_fh;
+    RenderSurface v_screen(Vector2i(0,0), Vector2i(getDrawLib()->getDispWidth2(), getDrawLib()->getDispHeight2()));
 
     getDrawLib()->clearGraphics();
     getDrawLib()->resetGraphics();
@@ -822,17 +822,17 @@ void GameApp::run_unload() {
     v_fm = getDrawLib()->getFontBig();
     v_fg = v_fm->getGlyph(GAMETEXT_LOADING);
     v_fh = v_fg->realHeight();
-    v_fm->printString(v_fg,
-		      getDrawLib()->getDispWidth()/2 - 256,
-		      getDrawLib()->getDispHeight()/2 - 30,
+    v_fm->printString(getDrawLib(), v_fg,
+		      v_screen.getDispWidth()/2 - 256,
+		      v_screen.getDispHeight()/2 - 30,
 		      MAKE_COLOR(255,255,255, 255));
     
     if(NextTask != "") {
       v_fm = getDrawLib()->getFontSmall();
       v_fg = v_fm->getGlyph(NextTask);
-      v_fm->printString(v_fg,
-			getDrawLib()->getDispWidth()/2 - 256,
-			getDrawLib()->getDispHeight()/2 -30 + v_fh + 2,
+      v_fm->printString(getDrawLib(), v_fg,
+			v_screen.getDispWidth()/2 - 256,
+			v_screen.getDispHeight()/2 -30 + v_fh + 2,
 			MAKE_COLOR(255,255,255,255));      
     }
     getDrawLib()->flushGraphics();
