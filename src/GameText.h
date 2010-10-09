@@ -80,6 +80,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CLEAN_NOTHING_TO_DO  _("There is no replay to clean")
 #define GAMETEXT_CLOSE                _("Close")
 #define GAMETEXT_CONFIGUREJOYSTICK    _("Configure Joystick...")
+#define GAMETEXT_CONSOLEHISTORYMINUS          _("Decrease console history size")
+#define GAMETEXT_CONSOLEHISTORYPLUS           _("Increase console history size")
 #define GAMETEXT_CONTROLS             _("Controls")
 #define GAMETEXT_CONTROLS_GENERAL     _("General")
 

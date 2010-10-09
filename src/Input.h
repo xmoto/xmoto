@@ -108,6 +108,10 @@ public:
   XMKey getRestartLevel() const;
   void setShowConsole(XMKey i_value);
   XMKey getShowConsole() const;
+  void setConsoleHistoryPlus(XMKey i_value);
+  XMKey getConsoleHistoryPlus() const;
+  void setConsoleHistoryMinus(XMKey i_value);
+  XMKey getConsoleHistoryMinus() const;
   void setRestartCheckpoint(XMKey i_value);
   XMKey getRestartCheckpoint() const;
 
@@ -134,6 +138,8 @@ private:
   XMKey m_switchFavorite;
   XMKey m_restartLevel;
   XMKey m_showConsole;
+  XMKey m_consoleHistoryPlus;
+  XMKey m_consoleHistoryMinus;
   XMKey m_restartCheckpoint;
 };
 

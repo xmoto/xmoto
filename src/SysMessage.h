@@ -62,6 +62,9 @@ public:
   void displayInformation(const std::string& i_msg);
   void addConsoleLine(const std::string& i_line, consoleLineType i_clt = CLT_NORMAL);
   void showConsole();
+  void alterConsoleSize(int i_diffLines);
+  unsigned int consoleSize() const;
+  void setConsoleSize(unsigned int i_value);
   void render();
 
 private:
@@ -80,6 +83,7 @@ private:
 
   /* console */
   std::vector<consoleLine> m_console;
+  unsigned int m_consoleSize;
   float m_consoleLastShowTime;
 
   DrawLib* m_drawLib;

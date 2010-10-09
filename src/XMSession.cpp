@@ -79,6 +79,7 @@ void XMSession::setToDefault() {
   m_enableGameMusic               = DEFAULT_ENABLEGAMEMUSIC;
   m_enableDeadAnimation           = DEFAULT_ENABLEDEADANIMATION;
   m_enablePermanentConsole        = DEFAULT_PERMANENTCONSOLE;
+  m_consoleSize                   = DEFAULT_CONSOLESIZE;
   m_menuGraphics                  = DEFAULT_MENUGRAPHICS;
   m_gameGraphics                  = DEFAULT_GAMEGRAPHICS;
   m_quickStartQualityMIN          = DEFAULT_QUICKSTARTQUALITYMIN;
@@ -326,6 +327,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_useCrappyPack                  = pDb->config_getBool   (i_id_profile, "UseCrappyPack"                 , m_useCrappyPack);
   m_useChildrenCompliant           = pDb->config_getBool   (i_id_profile, "UseChildrenCompliant"          , m_useChildrenCompliant);
   m_enablePermanentConsole         = pDb->config_getBool   (i_id_profile, "enablePermanentConsole"        , m_enablePermanentConsole);
+  m_consoleSize                    = pDb->config_getInteger(i_id_profile, "consoleSize"                   , m_consoleSize);
   m_enableGhosts                   = pDb->config_getBool   (i_id_profile, "EnableGhost"                   , m_enableGhosts);
   m_disableAnimations               = pDb->config_getBool   (i_id_profile, "disableAnimations"              , m_disableAnimations);
   m_ghostStrategy_MYBEST           = pDb->config_getBool   (i_id_profile, "GhostStrategy_MYBEST"          , m_ghostStrategy_MYBEST);
@@ -457,6 +459,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "CameraTrailCam"                , m_enableTrailCam);
 	pDb->config_setBool   (m_profile, "DeathAnim"                     , m_enableDeadAnimation);
 	pDb->config_setBool   (m_profile, "enablePermanentConsole"        , m_enablePermanentConsole);
+	pDb->config_setInteger(m_profile, "consoleSize"                   , m_consoleSize);
 	pDb->config_setBool   (m_profile, "CheckNewLevelsAtStartup"       , m_checkNewLevelsAtStartup);
 	pDb->config_setBool   (m_profile, "CheckHighscoresAtStartup"      , m_checkNewHighscoresAtStartup);
 	pDb->config_setBool   (m_profile, "ShowInGameWorldRecord"         , m_showHighscoreInGame);
@@ -719,6 +722,10 @@ bool XMSession::disableAnimations() const {
 
 bool XMSession::permanentConsole() const {
   return m_enablePermanentConsole;
+}
+
+unsigned int XMSession::consoleSize() const {
+  return m_consoleSize;
 }
 
 void XMSession::setEnableEngineSound(bool i_value) {
@@ -1233,6 +1240,11 @@ void XMSession::setDisableAnimations(bool i_value) {
 void XMSession::setPermanentConsole(bool i_value) {
   PROPAGATE(XMSession,setPermanentConsole,i_value,bool);
   m_enablePermanentConsole = i_value;
+}
+
+void XMSession::setConsoleSize(unsigned int i_value) {
+  PROPAGATE(XMSession,setConsoleSize,i_value,unsigned int);
+  m_consoleSize = i_value;
 }
 
 bool XMSession::beatingMode() const {

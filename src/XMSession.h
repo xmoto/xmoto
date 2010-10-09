@@ -157,6 +157,7 @@ public:
   bool enableGhosts() const;
   bool disableAnimations() const;
   bool permanentConsole() const;
+  unsigned int consoleSize() const;
   void setEnableEngineSound(bool i_value);
   bool enableEngineSound() const;
   void setShowEngineCounter(bool i_value);
@@ -275,6 +276,7 @@ public:
   void setBeatingMode(bool i_value);
   void setDisableAnimations(bool i_value);
   void setPermanentConsole(bool i_value);
+  void setConsoleSize(unsigned int i_value);
   bool beatingMode() const;
   void setWebForms(bool i_value);
   bool webForms() const;
@@ -358,6 +360,7 @@ public:
   bool m_renderGhostTrail;
   bool m_enableDeadAnimation;
   bool m_enablePermanentConsole;
+  int m_consoleSize;
   GraphicsLevel m_menuGraphics;
   GraphicsLevel m_gameGraphics;
   int m_quickStartQualityMIN;

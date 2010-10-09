@@ -1950,6 +1950,13 @@ void StateOptions::updateControlsList() {
   p->Text.push_back(InputHandler::instance()->getShowConsole().toFancyString());
   p->Text.push_back(InputHandler::instance()->getShowConsole().toString());
 
+  p = pList->addEntry(GAMETEXT_CONSOLEHISTORYPLUS);
+  p->Text.push_back(InputHandler::instance()->getConsoleHistoryPlus().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getConsoleHistoryPlus().toString());
+
+  p = pList->addEntry(GAMETEXT_CONSOLEHISTORYMINUS);
+  p->Text.push_back(InputHandler::instance()->getConsoleHistoryMinus().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getConsoleHistoryMinus().toString());
 
   // player keys    
   for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
@@ -2183,12 +2190,15 @@ void StateOptions::executeOneCommand(std::string cmd, std::string args) {
     v_lists.push_back(v_list);
     v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_P4:KEY_ACTION_LIST_P4"));
     v_lists.push_back(v_list);
-    
+
     std::ostringstream v_activePlayerControls;
     for(unsigned int i=0; i<v_lists.size(); i++) {
       if(v_lists[i]->isActive()) {
         v_activeList = v_lists[i];
-        v_activePlayerControls << " " << i;
+
+	if(i != 0) { // start at one cause first is general
+	  v_activePlayerControls << " " << i;
+	}
       }
     }
 
@@ -2320,5 +2330,13 @@ void StateOptions::setInputKey(const std::string& i_strKey, const std::string& i
 
   if(i_strKey == GAMETEXT_SHOWCONSOLE) {
     InputHandler::instance()->setShowConsole(XMKey(i_key));
+  }
+
+  if(i_strKey == GAMETEXT_CONSOLEHISTORYPLUS) {
+    InputHandler::instance()->setConsoleHistoryPlus(XMKey(i_key));
+  }
+
+  if(i_strKey == GAMETEXT_CONSOLEHISTORYMINUS) {
+    InputHandler::instance()->setConsoleHistoryMinus(XMKey(i_key));
   }
 }
