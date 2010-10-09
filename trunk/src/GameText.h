@@ -560,6 +560,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_CLIENTCONNECTSERVER _("%s joined the game")
 #define GAMETEXT_CLIENTDISCONNECTSERVER _("%s left the game")
 #define GAMETEXT_CLIENTPLAYING _("%s is playing level %s")
+#define GAMETEXT_CLIENTSTARTUPCONNEXION _("Connexion at startup")
 #define UNTRANSLATED_GAMETEXT_TOO_MUCH_CLIENTS "Sorry, there are already too much clients connected"
 #define UNTRANSLATED_GAMETEXT_SERVER_PROTOCOL_VERSION_INCOMPATIBLE "Server protocol version incompatible"
 
@@ -767,6 +768,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_CLIENTPLAYSAMENETLEVELS _("Start to play with other connected players")
 #define CONTEXTHELP_MUSICONALLLEVELS _("Enables background music for levels that do not have their own music track")
 #define CONTEXTHELP_CLIENTGHOSTMODE _("Network playing mode : just see other players as ghosts")
+#define CONTEXTHELP_CLIENTSTARTUPCONNEXION _("Automatically connect to the server at startup")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

@@ -509,6 +509,14 @@ void StateMainMenu::checkEventsNetworkTab() {
     }
   }
 
+  // startup connexion
+  v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CLIENT_STARTUP_CONNEXION"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+  
+    XMSession::instance()->setClientConnectAtStartup(v_button->getChecked());
+  }
+
   // connect/disconnect
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CONNECTDISCONNECT"));
   if(v_button->isClicked()) {
@@ -1292,6 +1300,15 @@ UIWindow* StateMainMenu::makeWindowLevels(UIWindow* i_parent) {
   v_button->setGroup(50058);
   v_button->setContextHelp(CONTEXTHELP_CLIENTGHOSTMODE); 
 
+  // automatic connexion at startup
+  v_button = new UIButton(v_netOptionsTab, v_netOptionsTab->getPosition().nWidth-220, 90, 
+  			  GAMETEXT_CLIENTSTARTUPCONNEXION, 220, 25);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setID("CLIENT_STARTUP_CONNEXION");
+  v_button->setGroup(50059);
+  v_button->setContextHelp(CONTEXTHELP_CLIENTSTARTUPCONNEXION); 
+
   // client status
   v_someText = new UIStatic(v_netOptionsTab, 0, v_netOptionsTab->getPosition().nHeight-30-20-20, "...",
 			    v_netOptionsTab->getPosition().nWidth, 30);
@@ -1309,7 +1326,7 @@ UIWindow* StateMainMenu::makeWindowLevels(UIWindow* i_parent) {
   v_button->setContextHelp(CONTEXTHELP_CLIENTCONNECTDISCONNECT);
 
   // play levels of other clients
-  v_button = new UIButton(v_netOptionsTab, v_netOptionsTab->getPosition().nWidth-220, 60+25,
+  v_button = new UIButton(v_netOptionsTab, v_netOptionsTab->getPosition().nWidth-220, 90+25,
 			  GAMETEXT_PLAYNOW, 207, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
   v_button->setID("PLAYSAMENETLEVELS");
@@ -1879,6 +1896,8 @@ void StateMainMenu::updateOptions() {
   v_edit->setCaption(XMSession::instance()->clientServerName());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:SERVER_SIMPLE_GHOST_MODE"));
   v_button->setChecked(XMSession::instance()->clientGhostMode());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CLIENT_STARTUP_CONNEXION"));
+  v_button->setChecked(XMSession::instance()->clientConnectAtStartup());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:DEFAULT_PORT"));
   v_button->setChecked(XMSession::instance()->clientServerPort() == DEFAULT_CLIENTSERVERPORT);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CUSTOM_PORT"));
