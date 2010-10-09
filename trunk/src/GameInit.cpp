@@ -314,6 +314,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     }
 
     SysMessage::instance()->setDrawLib(drawLib);
+    SysMessage::instance()->setConsoleSize(XMSession::instance()->consoleSize());
     
     drawLib->setNoGraphics(v_useGraphics == false);
     drawLib->setDontUseGLExtensions(XMSession::instance()->glExts() == false);

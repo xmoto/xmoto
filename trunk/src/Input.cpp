@@ -214,6 +214,22 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     m_showConsole = XMKey();
   }
 
+  try {
+    m_consoleHistoryPlus = XMKey(pDb->config_getString(i_id_profile, "KeyConsoleHistoryPlus", m_consoleHistoryPlus.toString()));
+  } catch(InvalidSystemKeyException &e) {
+    /* keep default key */
+  } catch(Exception &e) {
+    m_consoleHistoryPlus = XMKey();
+  }
+
+  try {
+    m_consoleHistoryMinus = XMKey(pDb->config_getString(i_id_profile, "KeyConsoleHistoryMinus", m_consoleHistoryMinus.toString()));
+  } catch(InvalidSystemKeyException &e) {
+    /* keep default key */
+  } catch(Exception &e) {
+    m_consoleHistoryMinus = XMKey();
+  }
+
 }
   
   /*===========================================================================
@@ -308,6 +324,8 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
     m_switchFavorite     = XMKey(SDLK_F3, KMOD_NONE);
     m_restartLevel       = XMKey(SDLK_RETURN,   KMOD_NONE);
     m_showConsole        = XMKey(SDLK_WORLD_18, KMOD_NONE);
+    m_consoleHistoryPlus = XMKey(SDLK_PLUS, KMOD_LCTRL);
+    m_consoleHistoryMinus = XMKey(SDLK_MINUS, KMOD_LCTRL);
     m_restartCheckpoint  = XMKey(SDLK_BACKSPACE, KMOD_NONE);
   }  
 
@@ -382,6 +400,14 @@ void InputHandler::saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
 
   if(m_showConsole.isDefined()) {
     pDb->config_setString(i_id_profile, "KeyShowConsole", m_showConsole.toString());
+  }
+
+  if(m_consoleHistoryPlus.isDefined()) {
+    pDb->config_setString(i_id_profile, "KeyConsoleHistoryPlus", m_consoleHistoryPlus.toString());
+  }
+
+  if(m_consoleHistoryMinus.isDefined()) {
+    pDb->config_setString(i_id_profile, "KeyConsoleHistoryMinus", m_consoleHistoryMinus.toString());
   }
 
   pDb->config_setValue_end();
@@ -473,6 +499,22 @@ void InputHandler::setShowConsole(XMKey i_value) {
 
 XMKey InputHandler::getShowConsole() const {
   return m_showConsole;
+}
+
+void InputHandler::setConsoleHistoryPlus(XMKey i_value) {
+  m_consoleHistoryPlus = i_value;
+}
+
+XMKey InputHandler::getConsoleHistoryPlus() const {
+  return m_consoleHistoryPlus;
+}
+
+void InputHandler::setConsoleHistoryMinus(XMKey i_value) {
+  m_consoleHistoryMinus = i_value;
+}
+
+XMKey InputHandler::getConsoleHistoryMinus() const {
+  return m_consoleHistoryMinus;
 }
 
 void InputHandler::setRestartCheckpoint(XMKey i_value) {

@@ -32,7 +32,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define SYSMSG_CONSOLEDISPLAY_TIME 4.0
 #define SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME 1.0
-#define SYSMSG_CONSOLEDISPLAY_MAXNBLINES 5
+#define SYSMSG_CONSOLEDISPLAY_MAXNBLINES 10
+#define SYSMSG_DEFAULT_CONSOLEDISPLAY_DISPLAYNBLINES 5
 
 SysMsg::SysMsg(const std::string& i_msg, SysMsgType i_type) {
     text  = i_msg;
@@ -46,6 +47,7 @@ SysMsg::~SysMsg() {
 SysMessage::SysMessage() {
   m_startDisplay = GameApp::getXMTime() - SYSMSG_DISPLAY_TIME;
   m_consoleLastShowTime = GameApp::getXMTime() - SYSMSG_CONSOLEDISPLAY_TIME - SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME;
+  m_consoleSize = SYSMSG_DEFAULT_CONSOLEDISPLAY_DISPLAYNBLINES;
 }
 
 SysMessage::~SysMessage() {
@@ -79,6 +81,24 @@ void SysMessage::displayError(const std::string& i_msg) {
 
 void SysMessage::displayInformation(const std::string& i_msg) {
   displayMsg(i_msg, SYSMSG_INFORMATION);
+}
+
+unsigned int SysMessage::consoleSize() const {
+  return m_consoleSize;
+}
+
+void SysMessage::setConsoleSize(unsigned int i_value) {
+  m_consoleSize = i_value;
+}
+
+void SysMessage::alterConsoleSize(int i_diffLines) {
+  if(((int)m_consoleSize) + i_diffLines < 1) {
+    i_diffLines = 1;
+  } else if(((int)m_consoleSize) + i_diffLines >= SYSMSG_CONSOLEDISPLAY_MAXNBLINES) {
+    m_consoleSize = SYSMSG_CONSOLEDISPLAY_MAXNBLINES;
+  } else {
+    m_consoleSize += i_diffLines;
+  }
 }
 
 void SysMessage::render() {
@@ -116,6 +136,7 @@ void SysMessage::render() {
   /* console */
   int v_consoleBorder = 10;
   int v_consoleYOffset = 0;
+  unsigned int v_firstLine;
   Color c;
 
   v_fm = m_drawLib->getFontSmall();
@@ -128,7 +149,13 @@ void SysMessage::render() {
 		  * 255)/SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME;
     }
 
-    for(unsigned int i=0; i<m_console.size(); i++) {
+    // don't display old history of the console
+    v_firstLine = 0;
+    if(((int)m_console.size()) - ((int)m_consoleSize) > 0) {
+      v_firstLine = m_console.size() - m_consoleSize;
+    }
+
+    for(unsigned int i=v_firstLine; i<m_console.size(); i++) {
       v_fg = v_fm->getGlyph(m_console[i].cltxt);
 
       switch(m_console[i].cltype) {
