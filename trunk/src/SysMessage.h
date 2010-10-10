@@ -41,7 +41,7 @@ class SysMsg {
   SysMsgType type;
 };
 
-enum consoleLineType { CLT_NORMAL, CLT_INFORMATION };
+enum consoleLineType { CLT_NORMAL, CLT_INFORMATION, CLT_GAMEINFORMATION };
 
 struct consoleLine {
   std::string cltxt;

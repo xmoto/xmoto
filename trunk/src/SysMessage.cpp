@@ -32,7 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define SYSMSG_CONSOLEDISPLAY_TIME 4.0
 #define SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME 1.0
-#define SYSMSG_CONSOLEDISPLAY_MAXNBLINES 10
+#define SYSMSG_CONSOLEDISPLAY_MAXNBLINES 50
 #define SYSMSG_DEFAULT_CONSOLEDISPLAY_DISPLAYNBLINES 5
 
 SysMsg::SysMsg(const std::string& i_msg, SysMsgType i_type) {
@@ -164,6 +164,10 @@ void SysMessage::render() {
 	break;
       case CLT_INFORMATION:
 	c = MAKE_COLOR(255, 255, 55, v_shadow);
+	break;
+      case CLT_GAMEINFORMATION:
+	c = MAKE_COLOR(55, 255, 255, v_shadow);
+	break;
       }
 
       v_fm->printString(m_drawLib, v_fg,
