@@ -114,14 +114,14 @@ Central place to keep many in-game text strings
 
 #define GAMETEXT_CREDITS                                                                     \
   std::string(_("Lead Programming")) +                                                       \
-    ":Rasmus Neckelmann;"                                                                    \
-    ":Nicolas Adenis-Lamarre;"                                                               \
-    ":Emmanuel Gorse;"                                                                       \
-    ":Jens Erler;"                                                                           \
+    ":Nicolas Adenis-Lamarre (2006-2010);"                                                   \
+    ":Emmanuel Gorse (2007-2010);"                                                           \
+    ":Jens Erler (2009-2010);"                                                               \
+    ":Rasmus Neckelmann (2005-2006);"                                                        \
     ":;"                                                                                     \
     + std::string(_("Additional Programming")) +                                             \
     ":Ermicioi Alexandru;"																	 \
-    ":Ville Lahdenvuo;"                                                                       \
+    ":Ville Lahdenvuo;"                                                                      \
     ":Richard Franks;"                                                                       \
     ":Kees Jongenburger;"                                                                    \
     ":Eric Piel;"                                                                            \
