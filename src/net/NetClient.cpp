@@ -425,7 +425,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 	if(v_levelId != "" && v_levelId != v_client->lastPlayingLevelId()) {
 	  v_client->setPlayingLevelId(pDb, v_levelId);
 	  snprintf(buf, 512, GAMETEXT_CLIENTPLAYING, v_client->name().c_str(), v_client->playingLevelName().c_str());
-	  SysMessage::instance()->addConsoleLine(buf);
+	  SysMessage::instance()->addConsoleLine(buf, CLT_GAMEINFORMATION);
 	} else {
 	  v_client->setPlayingLevelId(pDb, v_levelId);
 	}
@@ -452,7 +452,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 	m_otherClients.push_back(new NetOtherClient(((NA_changeClients*)i_netAction)->getAddedInfosClients()[i].NetId,
 						    ((NA_changeClients*)i_netAction)->getAddedInfosClients()[i].Name));
 	snprintf(buf, 512, GAMETEXT_CLIENTCONNECTSERVER, ((NA_changeClients*)i_netAction)->getAddedInfosClients()[i].Name.c_str());
-	SysMessage::instance()->addConsoleLine(buf);
+	SysMessage::instance()->addConsoleLine(buf, CLT_GAMEINFORMATION);
       }
 
       for(unsigned int i=0; i<((NA_changeClients*)i_netAction)->getRemovedInfosClients().size(); i++) {
@@ -460,7 +460,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 	while(j<m_otherClients.size()) {
 	  if(m_otherClients[j]->id() == ((NA_changeClients*)i_netAction)->getRemovedInfosClients()[i].NetId) {
 	    snprintf(buf, 512, GAMETEXT_CLIENTDISCONNECTSERVER, m_otherClients[j]->name().c_str());
-	    SysMessage::instance()->addConsoleLine(buf);
+	    SysMessage::instance()->addConsoleLine(buf, CLT_GAMEINFORMATION);
 	    delete m_otherClients[j];
 	    m_otherClients.erase(m_otherClients.begin()+j);
 	  } else {
