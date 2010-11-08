@@ -971,7 +971,7 @@ void StateScene::playingNextLevel(bool i_positifOrder) {
 
 	    StateManager::instance()->getDbStatsThread()->delay_abortedLevel(XMSession::instance()->profile(),
 									     v_currentLevel,
-									     m_universe->getScenes()[0]->getTime());
+									     m_universe->getScenes()[0]->getTime() - m_universe->getScenes()[0]->getCheckpointStartTime());
 	    StateManager::instance()->getDbStatsThread()->doJob();
 	  }
 	}
