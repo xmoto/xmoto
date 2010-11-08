@@ -7,6 +7,7 @@ X-Moto 0.5.4
  * Add 2 configuration control keys to change the chat history
  * Completion for chat box and server console
  * Change default chineese font name from wqy-zenhei.ttf to wqy-zenhei.ttc
+ * fix played time counted 2 times when using checkpoints
  * minor bugs fixed
 
 X-Moto 0.5.3 2010-04-30
