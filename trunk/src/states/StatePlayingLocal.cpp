@@ -140,7 +140,7 @@ void StatePlayingLocal::leave()
 	     m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
 	    StateManager::instance()->getDbStatsThread()->delay_abortedLevel(XMSession::instance()->profile(),
 									     m_universe->getScenes()[0]->getLevelSrc()->Id(),
-									     m_universe->getScenes()[0]->getTime());
+									     m_universe->getScenes()[0]->getTime() - m_universe->getScenes()[0]->getCheckpointStartTime());
 	    StateManager::instance()->getDbStatsThread()->doJob();
 	  }
 	}
@@ -352,7 +352,7 @@ void StatePlayingLocal::onOneFinish() {
 
 	StateManager::instance()->getDbStatsThread()->delay_levelCompleted(XMSession::instance()->profile(),
 									   m_universe->getScenes()[0]->getLevelSrc()->Id(),
-									   m_universe->getScenes()[0]->Players()[0]->finishTime());
+									   m_universe->getScenes()[0]->Players()[0]->finishTime() - m_universe->getScenes()[0]->getCheckpointStartTime());
 	StateManager::instance()->getDbStatsThread()->doJob();
 
 	StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
@@ -376,7 +376,7 @@ void StatePlayingLocal::onAllDead() {
       if(m_universe->getScenes()[0]->Players().size() == 1) {
 	StateManager::instance()->getDbStatsThread()->delay_died(XMSession::instance()->profile(),
 								 m_universe->getScenes()[0]->getLevelSrc()->Id(),
-								 m_universe->getScenes()[0]->getTime());
+								 m_universe->getScenes()[0]->getTime() - m_universe->getScenes()[0]->getCheckpointStartTime());
 	StateManager::instance()->getDbStatsThread()->doJob();
       }
     }
@@ -393,7 +393,7 @@ void StatePlayingLocal::abortPlaying() {
 	   m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
 	  StateManager::instance()->getDbStatsThread()->delay_abortedLevel(XMSession::instance()->profile(),
 									   m_universe->getScenes()[0]->getLevelSrc()->Id(),
-									   m_universe->getScenes()[0]->getTime());
+									   m_universe->getScenes()[0]->getTime() - m_universe->getScenes()[0]->getCheckpointStartTime());
 	  StateManager::instance()->getDbStatsThread()->doJob();
 	}
       }
@@ -417,7 +417,7 @@ void StatePlayingLocal::restartLevel(bool i_reloadLevel) {
 
 	  StateManager::instance()->getDbStatsThread()->delay_levelRestarted(XMSession::instance()->profile(),
 									     m_universe->getScenes()[0]->getLevelSrc()->Id(),
-									     m_universe->getScenes()[0]->getTime());
+									     m_universe->getScenes()[0]->getTime() - m_universe->getScenes()[0]->getCheckpointStartTime());
 	  StateManager::instance()->getDbStatsThread()->doJob();
 	}
       }

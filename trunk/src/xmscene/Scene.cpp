@@ -512,6 +512,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     m_PhysGravity.y = -(m_physicsSettings->WorldGravity());
 
     m_time = 0;
+    m_checkpointStartTime = 0;
     m_floattantTimeStepDiff = 0.0;
     m_speed_factor = 1.00f;
     m_is_paused = false;
@@ -1690,6 +1691,8 @@ void Scene::playToCheckpoint() {
 
   // call the checkpoint.OnUse
   m_luaGame->scriptCallTblVoid(m_checkpoint->Id(), "OnUse");
+
+  m_checkpointStartTime = m_time;
 }
 
 void Scene::addRequestedGhost(GhostsAddInfos i_ghostInfo) {

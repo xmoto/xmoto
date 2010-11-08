@@ -192,6 +192,7 @@ public:
 
   int getTime(void) {return m_time;}
   void setTime(int t) {m_time=t;}
+  int getCheckpointStartTime(void) {return m_checkpointStartTime;}
   ArrowPointer &getArrowPointer(void) {return m_Arrow;}
   CollisionSystem *getCollisionHandler(void) {return &m_Collision;}
 
@@ -312,6 +313,7 @@ private:
   /* Data */
   std::queue<SceneEvent*> m_GameEventQueue;
   int m_time;
+  int m_checkpointStartTime; // time of used checkpoint (to make m_time - m_checkpointStartTime = playedTime)
   float m_floattantTimeStepDiff; // to play slowly replay
   int m_lastStateSerializationTime;
   int m_lastStateUploadTime;
