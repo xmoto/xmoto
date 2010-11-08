@@ -384,9 +384,14 @@ int LuaLibGame::L_Game_Message(lua_State *pL) {
 
   /* Convert all arguments to strings */
   std::string Out;
-  for(int i=0;i<lua_gettop(pL);i++) 
-    Out.append(_(luaL_checkstring(pL, i+1)));
-  
+  std::string Temp;
+  for(int i=0;i<lua_gettop(pL);i++) {
+    Temp = luaL_checkstring(pL, i+1);
+    if(Temp != "") {
+      Out.append(_(Temp.c_str()));
+    }
+  }  
+
   m_exec_world->createGameEvent(new MGE_Message(m_exec_world->getTime(), Out));
   return 0;
 }  
