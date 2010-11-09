@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2010-10-09 21:42+0200\n"
-"PO-Revision-Date: 2010-04-14 21:07+0200\n"
+"PO-Revision-Date: 2010-11-08 21:55+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
 "Language: \n"
@@ -108,7 +108,7 @@ msgstr "Automatické ukladanie záznamu"
 
 #: src/GameText.h:57
 msgid "Disable Animations"
-msgstr ""
+msgstr "Vypnúť animácie"
 
 #: src/GameText.h:58
 msgid "Auto zoom"
@@ -217,11 +217,11 @@ msgstr "Nastaviť joystick..."
 
 #: src/GameText.h:83
 msgid "Decrease console history size"
-msgstr ""
+msgstr "Zmenšiť veľkosť konzolovej histórie"
 
 #: src/GameText.h:84
 msgid "Increase console history size"
-msgstr ""
+msgstr "Zväčšiť veľkosť konzolovej histórie"
 
 #: src/GameText.h:85
 msgid "Controls"
@@ -459,7 +459,7 @@ msgstr "Tajvančina"
 
 #: src/GameText.h:172
 msgid "Galician"
-msgstr ""
+msgstr "Haličtina"
 
 #: src/GameText.h:174
 msgid "Main testers"
@@ -523,7 +523,7 @@ msgstr "Hráč"
 
 #: src/GameText.h:195
 msgid "Play now !"
-msgstr ""
+msgstr "Spustiť hru!"
 
 #: src/GameText.h:196
 msgid "Play music on all levels"
@@ -634,7 +634,7 @@ msgstr "Sťahujem ducha..."
 
 #: src/GameText.h:220
 msgid "Downloading ghosts..."
-msgstr ""
+msgstr "Sťahujem duchov..."
 
 #: src/GameText.h:221
 msgid "Downloading the highscore..."
@@ -1731,7 +1731,7 @@ msgstr "Použiť informácie o slabých leveloch"
 
 #: src/GameText.h:505
 msgid "Use permanent console"
-msgstr ""
+msgstr "Použiť permanentnú konzolu"
 
 #: src/GameText.h:506
 msgid "Use Environment Vars"
@@ -1767,7 +1767,7 @@ msgstr "Zobraziť"
 
 #: src/GameText.h:514 src/GameText.h:600
 msgid "View the replay"
-msgstr ""
+msgstr "Prezrieť záznam"
 
 #: src/GameText.h:515
 msgid "View the highscore"
@@ -1981,7 +1981,7 @@ msgstr "%s hrá level %s"
 
 #: src/GameText.h:565
 msgid "Connexion at startup"
-msgstr ""
+msgstr "Pripojenie pri spustení"
 
 #: src/GameText.h:574
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -2131,7 +2131,7 @@ msgstr ""
 
 #: src/GameText.h:611
 msgid "Make console messages not disappear"
-msgstr ""
+msgstr "Nezobrazovať konzolové hlásenia"
 
 #: src/GameText.h:612
 msgid "Allow X-Moto to ask you your mind about levels"
@@ -2348,7 +2348,7 @@ msgstr "Ak urobíte rekord, automaticky bude uložený ako záznam"
 
 #: src/GameText.h:666
 msgid "Disable block animations (if X-Moto runs slowly)"
-msgstr ""
+msgstr "Vypnúť animácie blokov (ak je X-Moto príliš pomalé)"
 
 #: src/GameText.h:667
 msgid "View the replay of the room's highscore"
@@ -2735,7 +2735,7 @@ msgstr "Pripojiť/odpojiť klienta od serveru"
 
 #: src/GameText.h:770
 msgid "Start to play with other connected players"
-msgstr ""
+msgstr "Spustenie hry s ostatnými pripojenými hráčmi"
 
 #: src/GameText.h:771
 msgid ""
@@ -2748,7 +2748,7 @@ msgstr "Režim sieťovej hry: uvidíte ostatných hráčov ako duchov"
 
 #: src/GameText.h:773
 msgid "Automatically connect to the server at startup"
-msgstr ""
+msgstr "Automaticky sa prihlásiť na server po spustení"
 
 #: src/GameText.h:775
 msgid "Levels with no highscore"
