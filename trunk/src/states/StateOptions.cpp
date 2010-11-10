@@ -493,6 +493,12 @@ void StateOptions::checkEvents() {
     XMSession::instance()->setPermanentConsole(v_button->getChecked());
   }
 
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:SHOWGAMEINFORMATIONINCONSOLE"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setShowGameInformationInConsole(v_button->getChecked());
+  }
+
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:ALLOWWEBFORMS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
@@ -1279,6 +1285,12 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_PERMANENTCONSOLE);
 
+  v_button = new UIButton(v_window, 5, 260, GAMETEXT_SHOWGAMEINFORMATIONINCONSOLE, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("SHOWGAMEINFORMATIONINCONSOLE");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_SHOWGAMEINFORMATIONINCONSOLE);
+
   v_button = new UIButton(v_window, v_window->getPosition().nWidth-225, v_window->getPosition().nHeight -57 - 20 -20,
 			  GAMETEXT_PROXYCONFIG, 207, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
@@ -1686,6 +1698,8 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->useCrappyPack());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:PERMANENTCONSOLE"));
   v_button->setChecked(XMSession::instance()->permanentConsole());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:SHOWGAMEINFORMATIONINCONSOLE"));
+  v_button->setChecked(XMSession::instance()->showGameInformationInConsole());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:ALLOWWEBFORMS"));
   v_button->setChecked(XMSession::instance()->webForms());
 
