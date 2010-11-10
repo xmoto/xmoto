@@ -138,6 +138,7 @@ void SysMessage::render() {
   int v_consoleYOffset = 0;
   unsigned int v_firstLine;
   Color c;
+  bool v_useShadow;
 
   v_fm = m_drawLib->getFontSmall();
 
@@ -160,9 +161,12 @@ void SysMessage::render() {
     for(unsigned int i=v_firstLine; i<m_console.size(); i++) {
       v_fg = v_fm->getGlyph(m_console[i].cltxt);
 
+      v_useShadow = false;
+
       switch(m_console[i].cltype) {
       case CLT_NORMAL:
 	c = MAKE_COLOR(255, 255, 255, v_shadow);
+	v_useShadow = true;
 	break;
       case CLT_INFORMATION:
 	c = MAKE_COLOR(255, 255, 55, v_shadow);
@@ -170,12 +174,15 @@ void SysMessage::render() {
       case CLT_GAMEINFORMATION:
 	c = MAKE_COLOR(55, 255, 255, v_shadow);
 	break;
+      case CLT_SERVER:
+	c = MAKE_COLOR(255, 0, 0, v_shadow);
+	break;
       }
 
       v_fm->printString(m_drawLib, v_fg,
 			m_drawLib->getDispWidth()/3,
 			v_consoleBorder+v_consoleYOffset,
-			c, 0.0, true);
+			c, 0.0, v_useShadow);
       v_consoleYOffset += v_fg->realHeight();
     }
   }
@@ -183,6 +190,12 @@ void SysMessage::render() {
 
 void SysMessage::addConsoleLine(const std::string& i_line, consoleLineType i_clt) {
   consoleLine clt;
+
+  // do not add game information in console if not wanted
+  if(i_clt == CLT_GAMEINFORMATION && XMSession::instance()->showGameInformationInConsole() == false) {
+    return;
+  }
+
   clt.cltxt  = i_line;
   clt.cltype = i_clt;
   m_console.push_back(clt);

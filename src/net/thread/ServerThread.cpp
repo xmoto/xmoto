@@ -1173,6 +1173,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "addadmin <id player> <password>: add player <id player> as admin\n";
       v_answer += "rmadmin <id admin>: remove admin\n";
       v_answer += "stats: server statistics\n";
+      v_answer += "msg <msg>: message to players\n";
     }
 
   } else if(v_args[0] == "banner") {
@@ -1355,6 +1356,17 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     } else {
       v_answer += "start time : " + m_startTimeStr + "\n";
       v_answer += NetAction::getStats() + "\n";
+    }
+
+  } else if(v_args[0] == "msg") {
+    if(v_args.size() != 2) {
+      v_answer += "msg: invalid arguments\n";
+    } else {
+      NA_chatMessage na(v_args[1].c_str(), "server");
+      try {
+	sendToAllClients(&na, -1, 0);
+      } catch(Exception &e) {
+      }
     }
 
   } else {
