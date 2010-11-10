@@ -56,7 +56,7 @@ SysMessage::~SysMessage() {
 void SysMessage::setDrawLib(DrawLib* i_drawLib)
 {
   m_drawLib = i_drawLib;  
-  m_screen = RenderSurface(Vector2i(0,0), Vector2i(m_drawLib->getDispWidth2(), m_drawLib->getDispHeight2()));
+  m_screen = RenderSurface(Vector2i(0,0), Vector2i(m_drawLib->getDispWidth(), m_drawLib->getDispHeight()));
 }
 
 void SysMessage::displayText(const std::string& i_msg) {
@@ -124,7 +124,7 @@ void SysMessage::render() {
 
     v_fg = v_fm->getGlyph(m_txt);
     v_fm->printString(m_drawLib, v_fg,
-		      m_drawLib->getDispWidth2()/2 - v_fg->realWidth()/2,
+		      m_drawLib->getDispWidth()/2 - v_fg->realWidth()/2,
 		      5,
 		      MAKE_COLOR(255, 255, 255, v_shadow), 0.0, true);
   }
@@ -155,6 +155,8 @@ void SysMessage::render() {
       v_firstLine = m_console.size() - m_consoleSize;
     }
 
+    // background box
+
     for(unsigned int i=v_firstLine; i<m_console.size(); i++) {
       v_fg = v_fm->getGlyph(m_console[i].cltxt);
 
@@ -171,7 +173,7 @@ void SysMessage::render() {
       }
 
       v_fm->printString(m_drawLib, v_fg,
-			m_drawLib->getDispWidth2()/3,
+			m_drawLib->getDispWidth()/3,
 			v_consoleBorder+v_consoleYOffset,
 			c, 0.0, true);
       v_consoleYOffset += v_fg->realHeight();
@@ -249,14 +251,14 @@ void SysMessage::drawBoxMsg_one(unsigned int i, float i_time, int x_offset, int 
   /* draw the box */
   c = m_sysMsg[i]->type == SYSMSG_INFORMATION ? MAKE_COLOR(0,0,255,255) : MAKE_COLOR(255,0,0,255);
   
-  m_drawLib->drawBox(Vector2f(x_offset, m_drawLib->getDispHeight2() - y_offset - v_boxHeight),
+  m_drawLib->drawBox(Vector2f(x_offset, m_drawLib->getDispHeight() - y_offset - v_boxHeight),
 		     Vector2f(x_offset + v_fg->realWidth() + 2*(SYSMSG_DISPLAYBOXMSG_MARGIN),
-			      m_drawLib->getDispHeight2() - y_offset),
+			      m_drawLib->getDispHeight() - y_offset),
 		     1.0, MAKE_COLOR(255,255,255,255), c);
   
   v_fs->printString(m_drawLib, v_fg,
 		    x_offset + SYSMSG_DISPLAYBOXMSG_MARGIN,
-		    m_drawLib->getDispHeight2() - y_offset - v_fg->realHeight() - SYSMSG_DISPLAYBOXMSG_MARGIN,
+		    m_drawLib->getDispHeight() - y_offset - v_fg->realHeight() - SYSMSG_DISPLAYBOXMSG_MARGIN,
 		    MAKE_COLOR(0, 0, 0, 255), 0.0);
 }
 
