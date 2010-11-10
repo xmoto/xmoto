@@ -315,7 +315,7 @@ void DrawLib::setDispWidth(unsigned int width) {
   m_nDispWidth = width;
 }
 
-unsigned int DrawLib::getDispWidth2(void) {
+unsigned int DrawLib::getDispWidth(void) {
   return m_nDispWidth;
 }
 
@@ -331,7 +331,7 @@ void DrawLib::setDispHeight(unsigned int height) {
   m_nDispHeight = height;
 }
 
-unsigned int DrawLib::getDispHeight2(void) {
+unsigned int DrawLib::getDispHeight(void) {
   return m_nDispHeight;
 }
 

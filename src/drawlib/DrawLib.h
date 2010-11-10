@@ -113,9 +113,9 @@ class DrawLib {
   virtual void unInit() = 0;
   
   void setDispWidth(unsigned int width);
-  unsigned int getDispWidth2();
+  unsigned int getDispWidth();
   void setDispHeight(unsigned int height);
-  unsigned int getDispHeight2(void);
+  unsigned int getDispHeight(void);
   void setDispBPP(unsigned int bpp);
   unsigned int getDispBPP();
   void setWindowed(bool windowed);

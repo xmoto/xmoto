@@ -325,8 +325,8 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 	    XMSession::instance()->bpp());
     drawLib->init(XMSession::instance()->resolutionWidth(), XMSession::instance()->resolutionHeight(), XMSession::instance()->bpp(), XMSession::instance()->windowed());
     /* drawlib can change the final resolution if it fails, then, reinit session one's */
-    XMSession::instance()->setResolutionWidth(drawLib->getDispWidth2());
-    XMSession::instance()->setResolutionHeight(drawLib->getDispHeight2());
+    XMSession::instance()->setResolutionWidth(drawLib->getDispWidth());
+    XMSession::instance()->setResolutionHeight(drawLib->getDispHeight());
     XMSession::instance()->setBpp(drawLib->getDispBPP());
     XMSession::instance()->setWindowed(drawLib->getWindowed());
     LogInfo("Resolution: %ix%i (%i bpp)",
@@ -815,7 +815,7 @@ void GameApp::run_unload() {
     FontManager* v_fm;
     FontGlyph* v_fg;
     int v_fh;
-    RenderSurface v_screen(Vector2i(0,0), Vector2i(getDrawLib()->getDispWidth2(), getDrawLib()->getDispHeight2()));
+    RenderSurface v_screen(Vector2i(0,0), Vector2i(getDrawLib()->getDispWidth(), getDrawLib()->getDispHeight()));
 
     getDrawLib()->clearGraphics();
     getDrawLib()->resetGraphics();

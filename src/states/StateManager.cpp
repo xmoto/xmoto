@@ -84,8 +84,8 @@ StateManager::StateManager()
 
   // the full xmoto windows it the screen of the statemanager
   m_screen = RenderSurface(Vector2i(0, 0),
-			   Vector2i(GameApp::instance()->getDrawLib()->getDispWidth2(),
-				    GameApp::instance()->getDrawLib()->getDispHeight2()));
+			   Vector2i(GameApp::instance()->getDrawLib()->getDispWidth(),
+				    GameApp::instance()->getDrawLib()->getDispHeight()));
 
   // create the db stats thread
   m_xmtstas = new XMThreadStats(XMSession::instance()->sitekey(), this);
