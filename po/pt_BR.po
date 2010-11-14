@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2010-11-10 21:49+0100\n"
-"PO-Revision-Date: 2010-04-09 12:57+0100\n"
-"Last-Translator: Gaivota <un@known.de>\n"
+"PO-Revision-Date: 2010-11-11 00:46-0300\n"
+"Last-Translator: Lucas Hermann Negri <kkndrox@gmail.com>\n"
 "Language-Team: Portuguese/Brazil\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -106,11 +106,11 @@ msgstr "Gravação automática de replays"
 
 #: src/GameText.h:57
 msgid "Disable Animations"
-msgstr ""
+msgstr "Desabilitar Animações"
 
 #: src/GameText.h:58
 msgid "Show game information in the console"
-msgstr ""
+msgstr "Mostrar informações do jogo no terminal"
 
 #: src/GameText.h:59
 msgid "Auto zoom"
@@ -218,11 +218,11 @@ msgstr "Configurar Joystick..."
 
 #: src/GameText.h:84
 msgid "Decrease console history size"
-msgstr ""
+msgstr "Diminuir o tamanho do histórico do terminal"
 
 #: src/GameText.h:85
 msgid "Increase console history size"
-msgstr ""
+msgstr "Aumentar o tamanho do histórico do terminal"
 
 #: src/GameText.h:86
 msgid "Controls"
@@ -351,11 +351,11 @@ msgstr "Gráficos"
 
 #: src/GameText.h:139
 msgid "Music"
-msgstr ""
+msgstr "Música"
 
 #: src/GameText.h:144
 msgid "Sound Effects"
-msgstr ""
+msgstr "Efeitos de Som"
 
 #: src/GameText.h:148
 msgid "MacOS X Support"
@@ -379,7 +379,7 @@ msgstr "Norueguês"
 
 #: src/GameText.h:155
 msgid "English"
-msgstr ""
+msgstr "Inglês"
 
 #: src/GameText.h:156
 msgid "German"
@@ -451,15 +451,15 @@ msgstr "Português"
 
 #: src/GameText.h:171
 msgid "Dutch"
-msgstr ""
+msgstr "Holandês"
 
 #: src/GameText.h:172
 msgid "Taiwanese"
-msgstr ""
+msgstr "Taiwanês"
 
 #: src/GameText.h:173
 msgid "Galician"
-msgstr ""
+msgstr "Galego"
 
 #: src/GameText.h:175
 msgid "Main testers"
@@ -523,7 +523,7 @@ msgstr "Jogador"
 
 #: src/GameText.h:196
 msgid "Play now !"
-msgstr ""
+msgstr "Jogar agora !"
 
 #: src/GameText.h:197
 msgid "Play music on all levels"
@@ -635,7 +635,7 @@ msgstr "Baixando o fantasma..."
 
 #: src/GameText.h:221
 msgid "Downloading ghosts..."
-msgstr ""
+msgstr "Baixando fantasmas..."
 
 #: src/GameText.h:222
 msgid "Downloading the highscore..."
@@ -1052,7 +1052,7 @@ msgstr "Pressione ENTER para tentar novamente"
 
 #: src/GameText.h:339
 msgid "Press BACKSPACE to return to Checkpoint"
-msgstr ""
+msgstr "Pressione BACKSPACE para retornar ao Ponto de Controle"
 
 #: src/GameText.h:340
 msgid "Press ESC to display the menu"
@@ -1729,7 +1729,7 @@ msgstr "Utilizar informação ruim"
 
 #: src/GameText.h:506
 msgid "Use permanent console"
-msgstr ""
+msgstr "Utilizar terminal permanente"
 
 #: src/GameText.h:507
 msgid "Use Environment Vars"
@@ -1765,7 +1765,7 @@ msgstr "Ver"
 
 #: src/GameText.h:515 src/GameText.h:601
 msgid "View the replay"
-msgstr ""
+msgstr "Ver o replay"
 
 #: src/GameText.h:516
 msgid "View the highscore"
@@ -1973,7 +1973,7 @@ msgstr "%s está jogando o nível %s"
 
 #: src/GameText.h:566
 msgid "Connexion at startup"
-msgstr ""
+msgstr "Conexão ao iniciar"
 
 #: src/GameText.h:575
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -2123,7 +2123,7 @@ msgstr ""
 
 #: src/GameText.h:612
 msgid "Make console messages not disappear"
-msgstr ""
+msgstr "Tornar persistentes as mensagens do terminal"
 
 #: src/GameText.h:613
 msgid "Allow X-Moto to ask you your mind about levels"
@@ -2271,7 +2271,7 @@ msgstr "Mostrar todos os replays para este nível"
 
 #: src/GameText.h:648
 msgid "Show information about new players and played levels in the console"
-msgstr ""
+msgstr "Mostrar informações sobre novos jogadores e níveis jogados no terminal"
 
 #: src/GameText.h:649
 msgid "Run selected replay"
@@ -2357,7 +2357,7 @@ msgstr ""
 
 #: src/GameText.h:668
 msgid "Disable block animations (if X-Moto runs slowly)"
-msgstr ""
+msgstr "Desabilitar animações de bloco (somente se o X-Moto rodar lentamente)"
 
 #: src/GameText.h:669
 msgid "View the replay of the room's highscore"
@@ -2746,7 +2746,7 @@ msgstr "Conecta/desconecta o cliente no servidor"
 
 #: src/GameText.h:772
 msgid "Start to play with other connected players"
-msgstr ""
+msgstr "Iniciar o jogo com os outros jogadores conectados"
 
 #: src/GameText.h:773
 msgid ""
@@ -2759,7 +2759,7 @@ msgstr "Modo de jogo em rede: ver os outros jogadores como fantasmas"
 
 #: src/GameText.h:775
 msgid "Automatically connect to the server at startup"
-msgstr ""
+msgstr "Conectar automaticamente ao servidor no início"
 
 #: src/GameText.h:777
 msgid "Levels with no highscore"
