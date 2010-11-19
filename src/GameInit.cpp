@@ -334,11 +334,12 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 	    XMSession::instance()->resolutionHeight(),
 	    XMSession::instance()->bpp());
     /* */
-
   }
 
-  // allocate the statemanager instance so that if it fails, it's not in a thread (serverThread for example)
-  StateManager::instance();
+  if(v_useGraphics) {
+    // allocate the statemanager instance so that if it fails, it's not in a thread (serverThread for example)
+    StateManager::instance();
+  }
 
   /* Init sound system */
   if(v_useGraphics) {

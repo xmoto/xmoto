@@ -279,7 +279,9 @@ int ServerThread::realThreadFunction() {
   }
 
   m_acceptConnections = true;
-  StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
+  if(StateManager::exists()) {
+    StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
+  }
 
   // manage server
   while(m_askThreadToEnd == false) {
@@ -316,7 +318,9 @@ int ServerThread::realThreadFunction() {
   SDLNet_FreeSocketSet(m_set);
   m_set = NULL;
 
-  StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
+  if(StateManager::exists()) {
+    StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
+  }
   LogInfo("server: ending normally");
   return 0;
 }
