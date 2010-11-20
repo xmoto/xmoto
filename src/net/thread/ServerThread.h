@@ -50,6 +50,9 @@ class NetSClient {
   void setUdpBindKey(const std::string& i_key);
   std::string udpBindKey() const;
 
+  void setXmVersion(const std::string& i_xmversion);
+  std::string xmversion() const;
+
   void setName(const std::string& i_name);
   std::string name() const;
   void setMode(NetClientMode i_mode);
@@ -92,6 +95,7 @@ class NetSClient {
   bool m_isUdpBinded;
   std::string m_udpBindKey;
   std::string m_name;
+  std::string m_xmversion;
   std::string m_playingLevelId;
   int m_lastActivTime;
   int m_lastInactivTimeAlert;

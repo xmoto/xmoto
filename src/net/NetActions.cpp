@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Text.h"
 #include "NetClient.h"
 #include "../XMSession.h"
+#include "../XMBuild.h"
 #include "../DBuffer.h"
 #include "extSDL_net.h"
 #include <sstream>
@@ -464,12 +465,18 @@ void NA_udpBindQuery::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_
 NA_clientInfos::NA_clientInfos(int i_protocolVersion, const std::string& i_udpBindKey) {
   m_protocolVersion = i_protocolVersion;
   m_udpBindKey      = i_udpBindKey;
+  m_xmversion       =  XMBuild::getVersionString(true);
 }
 
 NA_clientInfos::NA_clientInfos(void* data, unsigned int len) {
   unsigned int v_localOffset = 0;
   m_protocolVersion = atoi(getLine(data, len, &v_localOffset).c_str());
   m_udpBindKey      = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
+
+  /* since 2, client version string */
+  if(XM_NET_PROTOCOL_VERSION >= 2) {
+    m_xmversion = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
+  }
 }
 
 NA_clientInfos::~NA_clientInfos() {
@@ -478,7 +485,8 @@ NA_clientInfos::~NA_clientInfos() {
 void NA_clientInfos::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
   std::ostringstream v_send;
   v_send << m_protocolVersion << "\n";
-  v_send << m_udpBindKey;
+  v_send << m_udpBindKey      << "\n";
+  v_send << m_xmversion;
 
   // force TCP
   NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.str().c_str(), v_send.str().size()); // don't send the \0
@@ -490,6 +498,10 @@ int NA_clientInfos::protocolVersion() const {
 
 std::string NA_clientInfos::udpBindKey() const {
   return m_udpBindKey;
+}
+
+std::string NA_clientInfos::xmversion() const {
+  return m_xmversion;
 }
 
 NA_changeName::NA_changeName(const std::string& i_name) {

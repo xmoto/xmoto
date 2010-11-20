@@ -27,7 +27,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BasicSceneStructs.h"
 #include "BasicStructures.h"
 
-#define XM_NET_PROTOCOL_VERSION 1
+#define XM_NET_PROTOCOL_VERSION 2
+/*
+DELTA 1->2:
+clientInfos : add xmversion string
+
+*/
+
 #define NETACTION_MAX_PACKET_SIZE 1024 * 2 // bytes
 #define NETACTION_MAX_SUBSRC 4 // maximum 4 players by client
 #define XM_NET_MAX_EVENTS_SHOT_SIZE 1024
@@ -160,10 +166,12 @@ class NA_clientInfos : public NetAction {
 
   int protocolVersion() const;
   std::string udpBindKey() const;
+  std::string xmversion() const;
 
   private:
   int m_protocolVersion;
   std::string m_udpBindKey;
+  std::string m_xmversion;
 };
 
 class NA_chatMessage : public NetAction {
