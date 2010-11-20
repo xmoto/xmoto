@@ -74,7 +74,9 @@ bool UpgradeLevelsThread::shouldLevelBeUpdated(const std::string &LevelID)
   CmdArgumentParser::instance()->addString(v_levelName, args);
 
   // message box
-  StateManager::instance()->sendAsynchronousMessage("ASKINGLEVELUPDATE", args);
+  if(StateManager::exists()) {
+    StateManager::instance()->sendAsynchronousMessage("ASKINGLEVELUPDATE", args);
+  }
   sleepThread();
 
   if(m_wakeUpInfos == "NO"){
@@ -126,8 +128,10 @@ int UpgradeLevelsThread::realThreadFunction()
       return 2 /* 2 for no new levels to update */;
     }
     else {
-      StateManager::instance()->sendAsynchronousMessage("NEW_LEVELS_TO_DOWNLOAD");
-      StateManager::instance()->sendAsynchronousMessage("NEWLEVELAVAILABLE");
+      if(StateManager::exists()) {
+	StateManager::instance()->sendAsynchronousMessage("NEW_LEVELS_TO_DOWNLOAD");
+	StateManager::instance()->sendAsynchronousMessage("NEWLEVELAVAILABLE");
+      }
     }
   } catch (Exception& e) {
     LogWarning("Unable to check for extra levels [%s]", e.getMsg().c_str());
@@ -167,7 +171,9 @@ int UpgradeLevelsThread::realThreadFunction()
       }
       setSafeKill(false);
 
-    StateManager::instance()->sendAsynchronousMessage("THEMES_UPDATED");
+      if(StateManager::exists()) {
+	StateManager::instance()->sendAsynchronousMessage("THEMES_UPDATED");
+      }
 
     // don't safe kill here
     v_shouldBeLoadedInBase = true;
@@ -192,8 +198,10 @@ int UpgradeLevelsThread::realThreadFunction()
 						   this, m_pDb);
 
     /* Update level lists */
-    StateManager::instance()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
-    StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
+    if(StateManager::exists()) {
+      StateManager::instance()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
+      StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
+    }
   }
 
   return v_exit_code;
