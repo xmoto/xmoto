@@ -103,11 +103,14 @@ void StatePreplaying::enter()
     }
   } catch(Exception &e) {
     LogWarning("level '%s' cannot be loaded", m_idlevel.c_str());
+
+    std::string v_msg;
     char cBuf[256];
     snprintf(cBuf, 256, GAMETEXT_LEVELCANNOTBELOADED, m_idlevel.c_str());
+    v_msg = std::string(cBuf) + "\n" + e.getMsg();
     delete m_universe;
     m_universe = NULL;
-    onLoadingFailure(cBuf);
+    onLoadingFailure(v_msg);
     return;
   }
 

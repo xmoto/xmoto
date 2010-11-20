@@ -659,17 +659,19 @@ void Scene::initGhostTrail(FileGhost* i_ghost) {
     /* Invoke the OnLoad() script function */
     if(m_playEvents) {
       bool bOnLoadSuccess;
+      std::string v_error_msg = "OnLoad script function failed !";
 
       try {
 	bOnLoadSuccess = m_luaGame->scriptCallBool("OnLoad", true);
       } catch(Exception &e) {
 	bOnLoadSuccess = false;
+	v_error_msg += "\n" + e.getMsg();
       }
       /* if no OnLoad(), assume success */
       /* Success? */
       if(bOnLoadSuccess == false) {
-	LogError("OnLoad script function failed !");
-	throw Exception("OnLoad script function failed !");
+	LogError(v_error_msg.c_str());
+	throw Exception(v_error_msg);
       }
     }
 

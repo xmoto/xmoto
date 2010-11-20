@@ -111,10 +111,12 @@ void StatePlayingLocal::enter()
   catch(Exception &e) {
     LogWarning("level '%s' cannot be loaded", v_level_name.c_str());
 
+    std::string v_msg;
     char cBuf[256];
     snprintf(cBuf, 256, GAMETEXT_LEVELCANNOTBELOADED, v_level_name.c_str());
+    v_msg = std::string(cBuf) + "\n" + e.getMsg();
 
-    StateMessageBox* v_msgboxState = new StateMessageBox(this, cBuf, UI_MSGBOX_OK);
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, v_msg, UI_MSGBOX_OK);
     v_msgboxState->setMsgBxId("ERROR");
     StateManager::instance()->pushState(v_msgboxState);
   }
