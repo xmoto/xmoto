@@ -567,8 +567,11 @@ int LuaLibGame::L_Game_SetKeyHook(lua_State *pL) {
   if(m_exec_activeInputHandler != NULL) {
     try {
       m_exec_activeInputHandler->addScriptKeyHook(m_exec_world, luaL_checkstring(pL,1), luaL_checkstring(pL,2));
-    } catch(Exception &e) {  
-			luaL_error (pL, "AddScriptKeyHook failed");    
+    } catch(Exception &e) {
+      std::string v_key  = luaL_checkstring(pL,1);
+      std::string v_func = luaL_checkstring(pL,2);
+      std::string v_msg = "SetKeyHook(key=" + v_key + ", function=" + v_func + ") failed\n" + e.getMsg();
+	luaL_error (pL, v_msg.c_str());
     }
   }
   return 0;
