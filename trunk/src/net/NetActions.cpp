@@ -474,7 +474,7 @@ NA_clientInfos::NA_clientInfos(void* data, unsigned int len) {
   m_udpBindKey      = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
 
   /* since 2, client version string */
-  if(XM_NET_PROTOCOL_VERSION >= 2) {
+  if(m_protocolVersion >= 2) {
     m_xmversion = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
   }
 }
