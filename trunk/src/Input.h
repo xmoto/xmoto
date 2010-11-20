@@ -64,13 +64,13 @@ public:
   void uninit();
 
   void resetScriptKeyHooks(void) {m_nNumScriptKeyHooks = 0;}
-  void addScriptKeyHook(Scene *pGame,const std::string &basicKeyName,const std::string &FuncName);
+  void addScriptKeyHook(Scene *pGame,const std::string &keyName,const std::string &FuncName);
 
   int getNumScriptKeyHooks() const;
   InputScriptKeyHook getScriptKeyHooks(int i) const;
   XMKey getScriptActionKeys(int i_player, int i_actionScript) const;
 
-  std::string getFancyKeyByAction(const std::string &Action);
+  std::string getKeyByAction(const std::string &Action, bool i_tech = false);
   std::string* getJoyId(Uint8 i_joynum);
   Uint8 getJoyNum(const std::string& i_name);
   std::string* getJoyIdByStrId(const std::string& i_name);

@@ -55,6 +55,7 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"SetEntityPos",                 LuaLibGame::L_Game_SetEntityPos},
   {"SetKeyHook",                   LuaLibGame::L_Game_SetKeyHook},
   {"GetKeyByAction",               LuaLibGame::L_Game_GetKeyByAction},
+  {"GetKeyByActionTech",           LuaLibGame::L_Game_GetKeyByActionTech},
   {"Log",                          LuaLibGame::L_Game_Log},
   {"SetBlockCenter",               LuaLibGame::L_Game_SetBlockCenter},
   {"SetBlockRotation",             LuaLibGame::L_Game_SetBlockRotation},
@@ -581,7 +582,17 @@ int LuaLibGame::L_Game_GetKeyByAction(lua_State *pL) {
   /* no event for this */
 
   if(m_exec_activeInputHandler != NULL) {
-    lua_pushstring(pL,m_exec_activeInputHandler->getFancyKeyByAction(luaL_checkstring(pL,1)).c_str());
+    lua_pushstring(pL,m_exec_activeInputHandler->getKeyByAction(luaL_checkstring(pL,1)).c_str());
+    return 1;
+  }
+  return 0;
+}  
+
+int LuaLibGame::L_Game_GetKeyByActionTech(lua_State *pL) {
+  /* no event for this */
+
+  if(m_exec_activeInputHandler != NULL) {
+    lua_pushstring(pL,m_exec_activeInputHandler->getKeyByAction(luaL_checkstring(pL,1), true).c_str());
     return 1;
   }
   return 0;

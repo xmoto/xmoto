@@ -235,10 +235,15 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
   /*===========================================================================
   Add script key hook
   ===========================================================================*/  
-  void InputHandler::addScriptKeyHook(Scene *pGame,const std::string &basicKeyName,const std::string &FuncName) {
+  void InputHandler::addScriptKeyHook(Scene *pGame,const std::string &keyName,const std::string &FuncName) {
     if(m_nNumScriptKeyHooks < MAX_SCRIPT_KEY_HOOKS) {
       m_ScriptKeyHooks[m_nNumScriptKeyHooks].FuncName = FuncName;
-      m_ScriptKeyHooks[m_nNumScriptKeyHooks].nKey = XMKey(basicKeyName, true);
+
+      if(keyName.size() == 1) { /* old basic mode */
+	m_ScriptKeyHooks[m_nNumScriptKeyHooks].nKey = XMKey(keyName, true);
+      } else {
+	m_ScriptKeyHooks[m_nNumScriptKeyHooks].nKey = XMKey(keyName);
+      }
       m_ScriptKeyHooks[m_nNumScriptKeyHooks].pGame = pGame;
       m_nNumScriptKeyHooks++;
     }
@@ -333,18 +338,18 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
   Get key by action...
   ===========================================================================*/  
 
-  std::string InputHandler::getFancyKeyByAction(const std::string &Action) {
+std::string InputHandler::getKeyByAction(const std::string &Action, bool i_tech) {
     for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
       std::ostringstream v_n;
       
       if(i !=0) { // nothing for player 0
 	v_n << " " << (i+1);
       }
-      if(Action == "Drive"       + v_n.str()) return m_nDriveKey[i].toFancyString();
-      if(Action == "Brake"       + v_n.str()) return m_nBrakeKey[i].toFancyString();
-      if(Action == "PullBack"    + v_n.str()) return m_nPullBackKey[i].toFancyString();
-      if(Action == "PushForward" + v_n.str()) return m_nPushForwardKey[i].toFancyString();
-      if(Action == "ChangeDir"   + v_n.str()) return m_nChangeDirKey[i].toFancyString();
+      if(Action == "Drive"       + v_n.str()) return i_tech ? m_nDriveKey[i].toString()       : m_nDriveKey[i].toFancyString();
+      if(Action == "Brake"       + v_n.str()) return i_tech ? m_nBrakeKey[i].toString()       : m_nBrakeKey[i].toFancyString();
+      if(Action == "PullBack"    + v_n.str()) return i_tech ? m_nPullBackKey[i].toString()    : m_nPullBackKey[i].toFancyString();
+      if(Action == "PushForward" + v_n.str()) return i_tech ? m_nPushForwardKey[i].toString() : m_nPushForwardKey[i].toFancyString();
+      if(Action == "ChangeDir"   + v_n.str()) return i_tech ? m_nChangeDirKey[i].toString()   : m_nChangeDirKey[i].toFancyString();
     }
     return "?";
   }
