@@ -46,6 +46,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ScriptTimer.h"
 
 #define GAMEMESSAGES_PACKTIME 40
+#define XM_PHYSICS_MD5 "b6822d58d992fbb0a7ef45eed71141e4"
 
 /* 
  *  Game object. Handles all of the gamestate management und so weiter.
@@ -502,7 +503,11 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
 
     /* physics */
     m_physicsSettings = new PhysicsSettings("Physics/original.xml");
-    
+    // force people to compile to change settings
+    if(XMFS::md5sum(FDT_DATA, "Physics/original.xml") != std::string(XM_PHYSICS_MD5)) {
+      throw Exception("Invalid physics settings");
+    }
+
     /* Clear collision system */
     m_Collision.reset();
     m_pLevelSrc->setCollisionSystem(&m_Collision);

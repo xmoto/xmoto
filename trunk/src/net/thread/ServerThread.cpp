@@ -135,6 +135,14 @@ std::string NetSClient::udpBindKey() const {
   return m_udpBindKey;
 }
 
+void NetSClient::setXmVersion(const std::string& i_xmversion) {
+  m_xmversion = i_xmversion;
+}
+
+std::string NetSClient::xmversion() const {
+  return m_xmversion;
+}
+
 void NetSClient::setName(const std::string& i_name) {
   m_name = i_name;
 }
@@ -990,7 +998,7 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_clientInfos:
     {
       // check protocol version
-      if(((NA_clientInfos*)i_netAction)->protocolVersion() != XM_NET_PROTOCOL_VERSION) {
+      if(((NA_clientInfos*)i_netAction)->protocolVersion() > XM_NET_PROTOCOL_VERSION) {
 	NA_serverError na(UNTRANSLATED_GAMETEXT_SERVER_PROTOCOL_VERSION_INCOMPATIBLE);
 	na.setSource(-1, 0);
 	try {
@@ -1004,6 +1012,7 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       //LogInfo("Protocol version of client %i is %i", i_client, ((NA_clientInfos*)i_netAction)->protocolVersion());
       //LogInfo("UDP bind key of client %i is %s", i_client, ((NA_clientInfos*)i_netAction)->udpBindKey().c_str());
       m_clients[i_client]->setUdpBindKey(((NA_clientInfos*)i_netAction)->udpBindKey());
+      m_clients[i_client]->setXmVersion(((NA_clientInfos*)i_netAction)->xmversion());
       
       // query bind udp
       NA_udpBindQuery naq;
@@ -1167,6 +1176,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "logout: disconnect from the server\n";
       v_answer += "changepassword <password>: change your password\n";
       v_answer += "lsplayers: list connected players\n";
+      v_answer += "lsxmversions: list xmoto versions used by players\n";
       v_answer += "lsbans: list banned players\n";
 
       std::ostringstream v_n;
@@ -1294,6 +1304,25 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
 	snprintf(v_clientstr, 38, "%5u: %-12s %-17s",
 		 m_clients[i]->id(), m_clients[i]->name().c_str(),
 		 ("(" + XMNet::getIp(m_clients[i]->tcpRemoteIP()) + ")").c_str());
+	v_answer += v_clientstr;
+	if(i % 3 == 2) {
+	  v_answer += "\n";
+	}
+      }
+      if(m_clients.size() %3 != 2) {
+	v_answer += "\n";
+      }
+    }
+
+  } else if(v_args[0] == "lsxmversions") {
+    if(v_args.size() != 1) {
+      v_answer += "lsxmversions: invalid arguments\n";
+    } else {
+      char v_clientstr[46];
+      for(unsigned int i=0; i<m_clients.size(); i++) {
+	snprintf(v_clientstr, 46, "%5u: %-12s %-25s",
+		 m_clients[i]->id(), m_clients[i]->name().c_str(),
+		 ("(" + m_clients[i]->xmversion() + ")").c_str());
 	v_answer += v_clientstr;
 	if(i % 3 == 2) {
 	  v_answer += "\n";
