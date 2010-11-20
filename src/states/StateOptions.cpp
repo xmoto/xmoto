@@ -479,6 +479,13 @@ void StateOptions::checkEvents() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setShowHighscoreInGame(v_button->getChecked());
+    updateMedalOptions();
+  }
+  
+   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMENEXTMEDAL"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setNextMedalInGame(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:USECRAPPYINFORMATION"));
@@ -1273,19 +1280,25 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_INGAME_WORLD_RECORD);
 
-  v_button = new UIButton(v_window, 5, 200, GAMETEXT_USECRAPPYINFORMATION, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5+20, 200, GAMETEXT_ENABLEINGAMENEXTMEDAL, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("INGAMENEXTMEDAL");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_INGAME_NEXT_MEDAL);
+
+  v_button = new UIButton(v_window, 5, 230, GAMETEXT_USECRAPPYINFORMATION, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("USECRAPPYINFORMATION");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_USECRAPPYINFORMATION);
   
-  v_button = new UIButton(v_window, 5, 230, GAMETEXT_PERMANENTCONSOLE, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 260, GAMETEXT_PERMANENTCONSOLE, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("PERMANENTCONSOLE");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_PERMANENTCONSOLE);
 
-  v_button = new UIButton(v_window, 5, 260, GAMETEXT_SHOWGAMEINFORMATIONINCONSOLE, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 290, GAMETEXT_SHOWGAMEINFORMATIONINCONSOLE, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("SHOWGAMEINFORMATIONINCONSOLE");
   v_button->setFont(drawlib->getFontSmall());
@@ -1694,6 +1707,8 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->checkNewHighscoresAtStartup());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMEWORLDRECORD"));
   v_button->setChecked(XMSession::instance()->showHighscoreInGame());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMENEXTMEDAL"));
+  v_button->setChecked(XMSession::instance()->showNextMedalInGame());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:USECRAPPYINFORMATION"));
   v_button->setChecked(XMSession::instance()->useCrappyPack());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:PERMANENTCONSOLE"));
@@ -1762,6 +1777,7 @@ void StateOptions::updateOptions() {
   updateWWWOptions();
   updateDbOptions();
   updateGhostsOptions();
+  updateMedalOptions();
 
   // update lists in options
   updateThemesList();
@@ -1875,6 +1891,11 @@ void StateOptions::updateWWWOptions() {
       v_list->enableWindow(v_enabled);
 
   }
+}
+void StateOptions::updateMedalOptions(){
+  UIButton* v_button;
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMENEXTMEDAL"));
+  v_button->enableWindow(XMSession::instance()->showHighscoreInGame());
 }
 
 void StateOptions::updateGhostsOptions() {

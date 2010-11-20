@@ -412,6 +412,25 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_PAGEDOWN, KMOD_NONE)) {
     nextLevel(false);
   }
+  
+  
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_n, KMOD_LCTRL)) {
+    if(m_renderer != NULL) {
+      if(XMSession::instance()->showHighscoreInGame() == false){
+	XMSession::instance()->setShowHighscoreInGame(true);	
+      }
+      
+      else if(XMSession::instance()->showHighscoreInGame() == true && XMSession::instance()->showNextMedalInGame() == false){
+	XMSession::instance()->setNextMedalInGame(true);
+      } 
+      else if(XMSession::instance()->showHighscoreInGame() == true && XMSession::instance()->showNextMedalInGame() == true){
+	XMSession::instance()->setNextMedalInGame(false);
+	XMSession::instance()->setShowHighscoreInGame(false);
+      }
+      setScoresTimes();
+    }
+  }
+
 
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_g, KMOD_LCTRL)) {
     
@@ -550,9 +569,11 @@ void StateScene::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_bu
 void StateScene::setScoresTimes() {
   char **v_result;
   unsigned int nrow;
-  char *v_res;  
-  std::string T1 = "--:--:--", T2 = "--:--:--";
+  char *v_res;
+  int v_best_room_time = -1;
+  int v_best_player_time = -1;
 
+  std::string T1 = "--:--:--", T2 = "--:--:--", T3 = "--:--:--";
   std::string v_id_level;
   // take the level id of the first world
   if(m_universe != NULL) {
@@ -580,6 +601,7 @@ void StateScene::setScoresTimes() {
 						  nrow);
   v_res = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
   if(v_res != NULL) {
+    v_best_player_time = atoi(v_res);
     T2 = formatTime(atoi(v_res));
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
@@ -594,11 +616,32 @@ void StateScene::setScoresTimes() {
 
   if(m_renderer != NULL) {
     if(XMSession::instance()->showHighscoreInGame() && XMSession::instance()->hidePlayingInformation() == false) {
-      std::string v_strWorldRecord;
-      for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
-	v_strWorldRecord += GameApp::instance()->getWorldRecord(i, v_id_level) + "\n";
+
+      std::string v_nextMedal;
+      int         v_nextMedal_time;
+      bool        v_isNextMedal;
+
+      if(XMSession::instance()->nbRoomsEnabled() >= 1) {
+	std::string v_best_str;
+	v_best_str = GameApp::instance()->getWorldRecord(0, v_id_level, v_best_room_time);
       }
-      m_renderer->setWorldRecordTime(v_strWorldRecord);
+
+      v_isNextMedal = GameApp::instance()->getNextMedal(v_best_room_time, v_best_player_time, v_nextMedal, v_nextMedal_time);
+
+      /* won't next medal, or next medal doesn't exist */
+      if(XMSession::instance()->showNextMedalInGame() == false || v_isNextMedal == false) {
+	std::string v_strWorldRecord;
+	int v_best_time;
+	for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+	  v_strWorldRecord += GameApp::instance()->getWorldRecord(i, v_id_level, v_best_time) + "\n";
+	}
+	m_renderer->setWorldRecordTime(v_strWorldRecord);
+      } else {
+	/* want next medal and next medal exists */
+        T3 = formatTime(v_nextMedal_time); 
+        m_renderer->setWorldRecordTime(v_nextMedal + std::string(": ") + T3);
+      }
+
     } else {
       m_renderer->setWorldRecordTime("");
     }

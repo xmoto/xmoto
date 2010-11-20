@@ -5,6 +5,7 @@ X-Moto 0.5.4
  * Add a button to watch the replay just after death or finish
  * Add a configuration checkbox to be able to connect to the server at startup
  * Add 2 configuration control keys to change the chat history
+ * Display time required for the next medal in game
  * Completion for chat box and server console
  * Change default chineese font name from wqy-zenhei.ttf to wqy-zenhei.ttc
  * fix played time counted 2 times when using checkpoints

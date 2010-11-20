@@ -219,6 +219,8 @@ public:
   bool checkNewHighscoresAtStartup() const;
   void setShowHighscoreInGame(bool i_value);
   bool showHighscoreInGame() const;
+  void setNextMedalInGame(bool i_value);
+  bool showNextMedalInGame() const;
   void setIdRoom(unsigned int i_number, const std::string& i_value);
   std::string idRoom(unsigned int i_number) const;
   void setNbRoomsEnabled(unsigned int i_value);
@@ -382,6 +384,7 @@ public:
   bool m_checkNewLevelsAtStartup;
   bool m_checkNewHighscoresAtStartup;
   bool m_showHighscoreInGame;
+  bool m_showNextMedalInGame;  
   std::string m_uploadHighscoreUrl;
   std::string m_idRoom[ROOMS_NB_MAX];
   unsigned int m_nbRoomsEnabled;

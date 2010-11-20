@@ -108,7 +108,9 @@ public:
   void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
   void switchLevelToBlacklist(const std::string& i_levelId, bool v_displayMessage = false);
 
-  std::string getWorldRecord(unsigned int i_number, const std::string &LevelID);
+  std::string getWorldRecord(unsigned int i_number, const std::string &LevelID, int& o_highscore_time);
+  bool getCurrentMedal(int i_best_room_time, int i_best_player_time, std::string& o_medal);
+  bool getNextMedal(int i_best_room_time, int i_best_player_time, std::string& o_medal, int& o_medal_time);
 
   // to call while playing
   void toogleEnableMusic();
