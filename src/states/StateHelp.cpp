@@ -121,17 +121,17 @@ void StateHelp::createGUI() {
   v_someText = new UIStatic(v_frame, 0, 0, GAMETEXT_HELP, v_frame->getPosition().nWidth, 36);
   v_someText->setFont(drawLib->getFontMedium());
   v_someText = new UIStatic(v_frame, 10, 40, m_gameHelp ?
-			    GAMETEXT_HELPTEXT_PLAYINGLEVEL(InputHandler::instance()->getFancyKeyByAction("Drive"),
-					      InputHandler::instance()->getFancyKeyByAction("Brake"),
-					      InputHandler::instance()->getFancyKeyByAction("PullBack"),
-					      InputHandler::instance()->getFancyKeyByAction("PushForward"),
-					      InputHandler::instance()->getFancyKeyByAction("ChangeDir")
+			    GAMETEXT_HELPTEXT_PLAYINGLEVEL(InputHandler::instance()->getKeyByAction("Drive"),
+					      InputHandler::instance()->getKeyByAction("Brake"),
+					      InputHandler::instance()->getKeyByAction("PullBack"),
+					      InputHandler::instance()->getKeyByAction("PushForward"),
+					      InputHandler::instance()->getKeyByAction("ChangeDir")
 					      ) :
-			    GAMETEXT_HELPTEXT(InputHandler::instance()->getFancyKeyByAction("Drive"),
-					      InputHandler::instance()->getFancyKeyByAction("Brake"),
-					      InputHandler::instance()->getFancyKeyByAction("PullBack"),
-					      InputHandler::instance()->getFancyKeyByAction("PushForward"),
-					      InputHandler::instance()->getFancyKeyByAction("ChangeDir")
+			    GAMETEXT_HELPTEXT(InputHandler::instance()->getKeyByAction("Drive"),
+					      InputHandler::instance()->getKeyByAction("Brake"),
+					      InputHandler::instance()->getKeyByAction("PullBack"),
+					      InputHandler::instance()->getKeyByAction("PushForward"),
+					      InputHandler::instance()->getKeyByAction("ChangeDir")
 					      ),
 			    v_frame->getPosition().nWidth-20,
 			    m_gameHelp ? v_frame->getPosition().nHeight-46 :
