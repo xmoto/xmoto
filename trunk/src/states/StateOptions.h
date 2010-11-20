@@ -66,6 +66,7 @@ class StateOptions : public StateMenu {
   void updateDbOptions();
   void updateTrailCamOptions();
   void updateGhostsOptions();
+  void updateMedalOptions();
   void updateProfileStrings();
   void updateJoysticksStrings();
   void updateServerStrings();

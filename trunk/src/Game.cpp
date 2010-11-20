@@ -260,13 +260,99 @@ GameApp::GameApp() {
     }
   }
 
-  std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &LevelID) {  
+bool GameApp::getCurrentMedal(int i_best_room_time, int i_best_player_time, std::string& o_medal) {
+  int v_gold_time, v_silver_time, v_bronze_time;
+
+  /* no best room time, so no next medal */
+  if(i_best_room_time < 0 || i_best_player_time < 0) {
+    return false;
+  }
+
+  /* get medal times*/
+  v_gold_time   = i_best_room_time / 0.95;
+  v_silver_time = i_best_room_time / 0.90;
+  v_bronze_time = i_best_room_time / 0.80;
+
+  if(i_best_player_time > v_bronze_time) {
+    return false;
+  }
+
+  if(i_best_player_time > v_silver_time) {
+    o_medal      = GAMETEXT_MEDAL_BRONZE;
+    return true;
+  }
+
+  if(i_best_player_time > v_gold_time) {
+    o_medal      = GAMETEXT_MEDAL_SILVER;
+    return true; 
+  }
+
+  if(i_best_player_time > i_best_room_time) {
+    o_medal      = GAMETEXT_MEDAL_GOLD;
+    return true; 
+  } 
+
+  o_medal      = GAMETEXT_MEDAL_PLATINIUM;
+  return true;
+}
+
+bool GameApp::getNextMedal(int i_best_room_time, int i_best_player_time, std::string& o_medal, int& o_medal_time) {
+  int v_gold_time, v_silver_time, v_bronze_time;
+
+  /* no best room time, so no next medal */
+  if(i_best_room_time < 0) {
+    return false;
+  }
+
+  /* get medal times*/
+  v_gold_time   = i_best_room_time / 0.95;
+  v_silver_time = i_best_room_time / 0.90;
+  v_bronze_time = i_best_room_time / 0.80;
+
+  /* no player best time, then, bronze */
+  if(i_best_player_time < 0) {
+    o_medal      = GAMETEXT_MEDAL_BRONZE;
+    o_medal_time = v_bronze_time;
+    return true;
+  }
+
+  if(i_best_player_time > v_bronze_time) {
+    o_medal      = GAMETEXT_MEDAL_BRONZE;
+    o_medal_time = v_bronze_time;
+    return true; 
+  }
+
+  if(i_best_player_time > v_silver_time) {
+    o_medal      = GAMETEXT_MEDAL_SILVER;
+    o_medal_time = v_silver_time;
+    return true;
+  }
+
+  if(i_best_player_time > v_gold_time) {
+    o_medal      = GAMETEXT_MEDAL_GOLD;
+    o_medal_time = v_gold_time;
+    return true; 
+  } 
+
+  if(i_best_player_time > i_best_room_time) {
+    o_medal      = GAMETEXT_MEDAL_PLATINIUM;
+    o_medal_time = i_best_room_time;
+    return true;
+  }
+
+  /* no missing medal, you've all of them */
+  return false;
+}
+
+std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &LevelID, int& o_highscore_time) {  
     char **v_result;
     unsigned int nrow;
     std::string v_roomName;
     std::string v_id_profile;
     int       v_finishTime = 0;
     xmDatabase* v_pDb = xmDatabase::instance("main");
+
+    o_highscore_time = -1;
 
     v_result = v_pDb->readDB("SELECT a.name, b.id_profile, b.finishTime "
 			    "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
@@ -286,10 +372,13 @@ GameApp::GameApp() {
     }
     v_pDb->read_DB_free(v_result);
     
+    /* highscore found */
     if(v_id_profile != "") {
+      o_highscore_time = v_finishTime;
       return formatTime(v_finishTime) + ": " + v_roomName +  std::string(" (") + v_id_profile + std::string(")");
     }
      
+    /* no highscore */
     return GAMETEXT_WORLDRECORDNA + std::string(": ") + v_roomName;
   }
   

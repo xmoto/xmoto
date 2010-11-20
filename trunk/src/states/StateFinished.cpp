@@ -61,7 +61,8 @@ StateFinished::~StateFinished()
 
 void StateFinished::enter()
 {
-  int v_finish_time = 0;
+  int v_finish_time = -1;
+  int v_room_highscore = -1;
   std::string TimeStamp;
   bool v_is_a_room_highscore = false;
   bool v_is_a_personnal_highscore = false;
@@ -99,6 +100,9 @@ void StateFinished::enter()
   UIButton* v_uploadButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:UPLOAD_BUTTON"));
   v_uploadButton->enableWindow(false);
 
+  UIStatic* v_pMedal_str = reinterpret_cast<UIStatic *>(m_GUI->getChild("MEDALSTR_STATIC"));
+  v_pMedal_str->setCaption("");
+  
   UIStatic* v_pNewHighscore_str = reinterpret_cast<UIStatic *>(m_GUI->getChild("HIGHSCORESTR_STATIC"));
   v_pNewHighscore_str->setCaption("");
 
@@ -108,8 +112,12 @@ void StateFinished::enter()
   UIStatic* v_pRoomsTimes_str = reinterpret_cast<UIStatic *>(m_GUI->getChild("ROOMSTIMES_STATIC"));
   /* rooms times */
   v_roomsTimes = "";
+  int v_room_highscore_tmp;
   for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
-    v_roomsTimes = v_roomsTimes + GameApp::instance()->getWorldRecord(i, v_id_level) + "\n";
+    v_roomsTimes = v_roomsTimes + GameApp::instance()->getWorldRecord(i, v_id_level, v_room_highscore_tmp) + "\n";
+    if(i == 0) {
+      v_room_highscore = v_room_highscore_tmp;
+    }
   }
   v_pRoomsTimes_str->setCaption(v_roomsTimes);
 
@@ -176,6 +184,13 @@ void StateFinished::enter()
     }
   }
 
+  // finish time
+  if(m_universe != NULL) {
+    if(m_universe->getScenes()[0]->Players().size() == 1) {
+      v_finish_time = m_universe->getScenes()[0]->Players()[0]->finishTime();
+    }
+  }
+
   /* new highscores text */
   if(v_is_a_room_highscore) {
     v_pNewHighscore_str->setFont(pGame->getDrawLib()->getFontMedium());
@@ -184,16 +199,17 @@ void StateFinished::enter()
     if(v_is_a_personnal_highscore) {
       v_pNewHighscore_str->setFont(pGame->getDrawLib()->getFontSmall());
       v_pNewHighscore_str->setCaption(GAMETEXT_NEWHIGHSCOREPERSONAL);
+
+      std::string v_currentMedal;
+      if(GameApp::instance()->getCurrentMedal(v_room_highscore, v_finish_time, v_currentMedal)) {
+	char v_str[128];
+	snprintf(v_str, 128, GAMETEXT_NEW_MEDAL, v_currentMedal.c_str());
+	v_pMedal_str->setCaption(v_str);
+      }
     }
   }
 
   UIBestTimes *v_pBestTimes = reinterpret_cast<UIBestTimes *>(m_GUI->getChild("BESTTIMES"));
-
-  if(m_universe != NULL) {
-    if(m_universe->getScenes()[0]->Players().size() == 1) {
-      v_finish_time = m_universe->getScenes()[0]->Players()[0]->finishTime();
-    }
-  }
   makeBestTimesWindow(v_pBestTimes, XMSession::instance()->profile(), v_id_level, v_finish_time);
   
   if(m_universe != NULL) {
@@ -376,6 +392,7 @@ void StateFinished::createGUIIfNeeded(RenderSurface* i_screen) {
   UIButton*    v_button;
   UIStatic*    v_pFinishText;
   UIStatic*    v_pNewHighscore_str;
+  UIStatic*    v_pMedal_str;
   UIStatic*    v_pNewHighscoreSaved_str;
   UIStatic*    v_pRoomsTimes_str;
 
@@ -436,6 +453,11 @@ void StateFinished::createGUIIfNeeded(RenderSurface* i_screen) {
   v_button->setID("QUIT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
   v_button->setFont(drawLib->getFontSmall());
+
+  v_pMedal_str = new UIStatic(m_sGUI, 0, m_sGUI->getPosition().nHeight - 20 - 20 - 20, "", m_sGUI->getPosition().nWidth, 20);
+  v_pMedal_str->setID("MEDALSTR_STATIC");
+  v_pMedal_str->setFont(drawLib->getFontSmall());
+  v_pMedal_str->setHAlign(UI_ALIGN_CENTER);
 
   v_pNewHighscore_str = new UIStatic(m_sGUI, 0, m_sGUI->getPosition().nHeight - 20 - 20, "", m_sGUI->getPosition().nWidth, 20);
   v_pNewHighscore_str->setID("HIGHSCORESTR_STATIC");

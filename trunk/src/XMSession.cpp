@@ -100,6 +100,7 @@ void XMSession::setToDefault() {
   m_checkNewLevelsAtStartup       = DEFAULT_CHECKNEWLEVELSATSTARTUP;
   m_checkNewHighscoresAtStartup   = DEFAULT_CHECKNEWHIGHSCORESATSTARTUP;
   m_showHighscoreInGame           = DEFAULT_SHOWHIGHSCOREINGAME;
+  m_showNextMedalInGame           = DEFAULT_SHOWNEXTMEDALINGAME;
   for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
     m_idRoom[i]                   = DEFAULT_WEBROOM_ID;
   }
@@ -324,6 +325,7 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_checkNewLevelsAtStartup        = pDb->config_getBool   (i_id_profile, "CheckNewLevelsAtStartup"       , m_checkNewLevelsAtStartup);
   m_checkNewHighscoresAtStartup    = pDb->config_getBool   (i_id_profile, "CheckHighscoresAtStartup"  , m_checkNewHighscoresAtStartup);
   m_showHighscoreInGame            = pDb->config_getBool   (i_id_profile, "ShowInGameWorldRecord"         , m_showHighscoreInGame);
+  m_showNextMedalInGame            = pDb->config_getBool   (i_id_profile, "ShowInGameNextMedal"           , m_showNextMedalInGame);
   m_webConfAtInit                  = pDb->config_getBool   (i_id_profile, "WebConfAtInit"                 , m_webConfAtInit);
   m_useCrappyPack                  = pDb->config_getBool   (i_id_profile, "UseCrappyPack"                 , m_useCrappyPack);
   m_useChildrenCompliant           = pDb->config_getBool   (i_id_profile, "UseChildrenCompliant"          , m_useChildrenCompliant);
@@ -466,6 +468,7 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "CheckNewLevelsAtStartup"       , m_checkNewLevelsAtStartup);
 	pDb->config_setBool   (m_profile, "CheckHighscoresAtStartup"      , m_checkNewHighscoresAtStartup);
 	pDb->config_setBool   (m_profile, "ShowInGameWorldRecord"         , m_showHighscoreInGame);
+	pDb->config_setBool   (m_profile, "ShowInGameNextMedal"           , m_showNextMedalInGame);
 	pDb->config_setBool   (m_profile, "WebConfAtInit"                 , m_webConfAtInit);
 	pDb->config_setBool   (m_profile, "UseCrappyPack"                 , m_useCrappyPack);
 	pDb->config_setBool   (m_profile, "UseChildrenCompliant"          , m_useChildrenCompliant);
@@ -1030,8 +1033,17 @@ void XMSession::setShowHighscoreInGame(bool i_value) {
   m_showHighscoreInGame = i_value;
 }
 
+void XMSession::setNextMedalInGame(bool i_value) {
+  PROPAGATE(XMSession,setNextMedalInGame,i_value,bool);
+  m_showNextMedalInGame = i_value;
+}
+
 bool XMSession::showHighscoreInGame() const {
   return m_showHighscoreInGame;
+}
+
+bool XMSession::showNextMedalInGame() const {
+  return m_showNextMedalInGame;
 }
 
 unsigned int XMSession::nbRoomsEnabled() const {

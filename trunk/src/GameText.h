@@ -236,6 +236,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ENABLEENGINESOUND    _("Enable Engine Sound")
 #define GAMETEXT_ENABLEGHOST          _("Enable Ghost")
 #define GAMETEXT_ENABLEINGAMEWORLDRECORD _("Show World Record in-game")
+#define GAMETEXT_ENABLEINGAMENEXTMEDAL _("Show next medal in-game")
 #define GAMETEXT_ENABLEMENUMUSIC          _("Enable menu music")
 #define GAMETEXT_ENABLEGAMEMUSIC          _("Enable game music")
 #define GAMETEXT_ENABLEWEBHIGHSCORES  _("Enable WWW Access")
@@ -314,6 +315,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  ctrl+O - " + std::string(_("Open options menu"))  + "\n"\
 "  ctrl+G - " + std::string(_("Toggle Ghost Trail Rendering")) + "\n"\
 "  ctrl+T - " + std::string(_("Toggle Trail Cam")) + "\n"\
+"  ctrl+N - " + std::string(_("Toggle Display Medals,Display WR")) + "\n"\
 "  F1 - " + std::string(_("Show this help")) + "\n"\
 "  F2 - " + std::string(_("Show the ghost if possible in the game")) + "\n"\
 "  F3 - " + std::string(_("Toggle favorite")) + "\n"\
@@ -368,8 +370,13 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_MOUSE                _("Mouse")
 #define GAMETEXT_THEME                _("Theme")
 #define GAMETEXT_TTF_MISSING          "You must install the font file for your langage:" // not translated because always displayed in english
+#define GAMETEXT_MEDAL_BRONZE         _("Bronze")
+#define GAMETEXT_MEDAL_GOLD           _("Gold")
+#define GAMETEXT_MEDAL_SILVER         _("Silver")
+#define GAMETEXT_MEDAL_PLATINIUM      _("Platinum")
 #define GAMETEXT_MEDIUM               _("Medium")
 #define GAMETEXT_MENUGFX              _("Menu Graphics")
+#define GAMETEXT_NEW_MEDAL            _("You got a %s medal")
 #define GAMETEXT_CONTRAST	      _("Contrast")
 #define GAMETEXT_LIGHT                _("Light")
 #define GAMETEXT_FULL                 _("Full")
@@ -608,6 +615,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_MINI_MAP _("Show a map of your surroundings when playing")
 #define CONTEXTHELP_DOWNLOAD_BEST_TIMES _("Automatically download best times off the net when the game starts")
 #define CONTEXTHELP_INGAME_WORLD_RECORD _("Show the World Record for a given level when playing")
+#define CONTEXTHELP_INGAME_NEXT_MEDAL _("Show the time you need before achieving the next medal")
 #define CONTEXTHELP_USECRAPPYINFORMATION _("Use crappy information from the website to update the crappy pack")
 #define CONTEXTHELP_PERMANENTCONSOLE _("Make console messages not disappear")
 #define CONTEXTHELP_ALLOWWEBFORMS _("Allow X-Moto to ask you your mind about levels")
