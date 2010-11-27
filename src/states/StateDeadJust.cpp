@@ -23,9 +23,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateDeadMenu.h"
 #include "../GameText.h"
 #include "../Universe.h"
-#include "states/StateVote.h"
-#include "states/StatePlayingLocal.h"
-#include "thread/SendVoteThread.h"
+#include "StateVote.h"
+#include "StatePlayingLocal.h"
+#include "../thread/SendVoteThread.h"
 #include "../drawlib/DrawLib.h"
 #include "../helpers/Log.h"
 

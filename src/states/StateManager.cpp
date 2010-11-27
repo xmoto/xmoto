@@ -45,8 +45,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../SysMessage.h"
 #include "../xmscene/Camera.h"
 #include "../VideoRecorder.h"
-#include "thread/XMThreadStats.h"
-#include "thread/DownloadReplaysThread.h"
+#include "../thread/XMThreadStats.h"
+#include "../thread/DownloadReplaysThread.h"
 #include <sstream>
 
 StateManager::StateManager()

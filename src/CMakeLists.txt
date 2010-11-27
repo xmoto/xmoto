@@ -40,6 +40,7 @@ FIND_PACKAGE(OpenGL REQUIRED)
 FIND_PACKAGE(SDL REQUIRED)
 FIND_PACKAGE(SDL_ttf REQUIRED)
 FIND_PACKAGE(SDL_mixer REQUIRED)
+FIND_PACKAGE(SDL_net REQUIRED)
 
 IF(CMAKE_SYSTEM_NAME MATCHES Windows)
  set(bzip2internal_src
@@ -58,6 +59,7 @@ FIND_PACKAGE(CURL REQUIRED)
 FIND_PACKAGE(SQLITE3 REQUIRED)
 FIND_PACKAGE(ODE REQUIRED)
 FIND_PACKAGE(Gettext)
+FIND_PACKAGE(XDG REQUIRED)
 
 SET(DATADIR ${CMAKE_INSTALL_PREFIX}/share)
 SET(GAMEDATADIR ${DATADIR}/${CMAKE_PROJECT_NAME})
@@ -91,10 +93,12 @@ ENDIF(CMAKE_SYSTEM_NAME MATCHES Windows)
 
 set(xmincludes_src
  include/xm_SDL_mixer.h include/xm_ode.h include/xm_endian.h include/xm_SDL_ttf.h
- include/xm_hashmap.h include/xm_lua.h include/xm_SDL.h include/xm_OpenGL.h
+ include/xm_hashmap.h include/xm_lua.h include/xm_SDL.h include/xm_OpenGL.h include/xm_SDL_net.h
 )
 
 set(common_src
+GeomsManager.h
+GeomsManager.cpp
 SomersaultCounter.cpp
 Universe.cpp
 PolyDraw.cpp
@@ -185,6 +189,9 @@ XMotoLoadReplaysInterface.h
 VFileIO.cpp
 Credits.cpp
 GameInit.cpp
+VirtualLevelsList.h
+VirtualLevelsList.cpp
+Game.h
 )
 
 set(image_src
@@ -217,17 +224,41 @@ helpers/System.h
 helpers/Text.h
 helpers/HashTbl.h
 helpers/utf8.h
+helpers/RenderSurface.h
+helpers/RenderSurface.cpp
 )
 
 set(thread_src
- thread/UpgradeLevelsThread.h thread/XMThreads.cpp thread/UpdateThemeThread.h thread/SyncThread.cpp
- thread/DownloadGhostThread.cpp thread/XMThreads.h thread/UploadHighscoreThread.cpp thread/SyncThread.h
- thread/DownloadGhostThread.h thread/CheckWwwThread.cpp thread/UpdateThemesListThread.cpp
- thread/XMThread.cpp thread/UploadHighscoreThread.h thread/CheckWwwThread.h thread/UpdateDbThread.cpp
- thread/UpdateThemesListThread.h thread/XMThread.h thread/UploadAllHighscoresThread.cpp
- thread/UpdateDbThread.h thread/UpdateRoomsListThread.cpp thread/UploadAllHighscoresThread.h
- thread/UpgradeLevelsThread.cpp thread/UpdateRoomsListThread.h thread/UpdateThemeThread.cpp
- thread/LevelsPacksCountUpdateThread.h thread/LevelsPacksCountUpdateThread.cpp
+thread/UpgradeLevelsThread.h
+thread/XMThreads.cpp
+thread/UpdateThemeThread.h
+thread/SyncThread.cpp
+thread/XMThreads.h
+thread/UploadHighscoreThread.cpp
+thread/SyncThread.h
+thread/CheckWwwThread.cpp
+thread/UpdateThemesListThread.cpp
+thread/XMThread.cpp
+thread/UploadHighscoreThread.h
+thread/CheckWwwThread.h
+thread/UpdateDbThread.cpp
+thread/UpdateThemesListThread.h 
+thread/XMThread.h 
+thread/UploadAllHighscoresThread.cpp
+thread/UpdateDbThread.h
+thread/UpdateRoomsListThread.cpp
+thread/UploadAllHighscoresThread.h
+thread/UpgradeLevelsThread.cpp 
+thread/UpdateRoomsListThread.h
+thread/UpdateThemeThread.cpp
+thread/LevelsPacksCountUpdateThread.h
+thread/LevelsPacksCountUpdateThread.cpp
+thread/XMThreadStats.h
+thread/XMThreadStats.cpp
+thread/SendVoteThread.h
+thread/SendVoteThread.cpp
+thread/DownloadReplaysThread.h
+thread/DownloadReplaysThread.cpp
 )
 
 set(gui_src
@@ -242,6 +273,8 @@ gui/basic/GUIButtonDrawn.cpp
 gui/basic/GUIStatic.cpp
 gui/specific/GUIXMoto.h
 gui/specific/GUIXMoto.cpp
+gui/basic/GUIConsole.h
+gui/basic/GUIConsole.cpp
 )
 
 set(xmscene_src
@@ -274,6 +307,14 @@ xmscene/BasicSceneStructs.h
 xmscene/BikeAnchors.h
 xmscene/Camera.h
 xmscene/Scene.cpp
+xmscene/ScriptTimer.h
+xmscene/ScriptTimer.cpp
+xmscene/GhostTrail.h
+xmscene/GhostTrail.cpp
+xmscene/BasicSceneStructs.h
+xmscene/BasicSceneStructs.cpp
+xmscene/PhysicsSettings.cpp
+xmscene/PhysicsSettings.h
 )
 
 set(tinyxml_src
@@ -305,6 +346,8 @@ db/xmDatabase_stats.cpp
 db/xmDatabase_replays.cpp
 db/xmDatabase.cpp
 db/xmDatabase_profiles.cpp
+db/xmDatabase_votes.cpp
+db/xmDatabase_srv.cpp
 )
 
 set(drawlib_src
@@ -315,6 +358,8 @@ drawlib/DrawLibOpenGL.cpp
 )
 
 set(states_src
+states/StatePlayingLocal.h
+states/StatePlayingLocal.h
 states/StateMultiUpdate.cpp
 states/StateUpdateRoomsList.cpp
 states/StateFinished.h
@@ -326,7 +371,6 @@ states/AttractMode.cpp
 states/StateMenu.h
 states/GameState.h
 states/StateMainMenu.h
-states/StateDownloadGhost.h
 states/StateUpdateThemesList.cpp
 states/StateUpdate.h
 states/StatePreplayingReplay.cpp
@@ -341,7 +385,6 @@ states/StateDeadJust.h
 states/StatePreplayingGame.h
 states/StateEditWebConfig.cpp
 states/StateUpdateTheme.h
-states/StateDownloadGhost.cpp
 states/StatePreplaying.h
 states/StateUpdate.cpp
 states/StateMessageBoxReceiver.h
@@ -390,6 +433,24 @@ states/StateDeadMenu.cpp
 states/StateHelp.cpp
 states/StateUpdateThemesList.h
 states/StateUploadAllHighscores.cpp
+states/StateVote.h
+states/StateVote.cpp
+states/StateWaiting.cpp
+states/StateWaiting.h
+states/StateViewHighscore.cpp
+states/StateViewHighscore.h
+states/StateWaitServerInstructions.cpp
+states/StateWaitServerInstructions.h
+states/StatePlayingLocal.h
+states/StatePlayingLocal.cpp
+states/StateSendVote.h
+states/StateSendVote.cpp
+states/StateServerConsole.h
+states/StateServerConsole.cpp
+states/StatePreplayingNet.h
+states/StatePreplayingNet.cpp
+states/StatePlayingNet.cpp
+states/StatePlayingNet.h
 )
 
 set(chipmunk_src
@@ -422,6 +483,28 @@ chipmunk/cpVect.h
 chipmunk/cpPolyShape.h
 )
 
+set(net_src
+net/NetServer.cpp
+net/NetServer.h
+net/NetClient.cpp
+net/NetClient.h
+net/NetActions.cpp
+net/NetActions.h
+net/extSDL_net.cpp
+net/extSDL_net.h
+net/VirtualNetLevelsList.h
+net/thread/ClientListenerThread.h
+net/thread/ClientListenerThread.cpp
+net/thread/ServerThread.h
+net/thread/ServerThread.cpp
+net/ActionReader.cpp
+net/ActionReader.h
+net/VirtualNetLevelsList.h
+net/VirtualNetLevelsList.cpp
+net/helpers/Net.cpp
+net/helpers/Net.h
+)
+
 add_executable(xmoto
 ${xmincludes_src}
 ${common_src}
@@ -438,13 +521,18 @@ ${drawlib_src}
 ${bzip2internal_src}
 ${states_src}
 ${chipmunk_src}
+${net_src}
 )
 
 TARGET_LINK_LIBRARIES(xmoto
  ${OPENGL_LIBRARIES} ${SDL_LIBRARY}       ${SDLTTF_LIBRARY}  ${SDLMIXER_LIBRARY}
  ${PNG_LIBRARY}      ${JPEG_LIBRARIES}    ${BZIP2_LIBRARIES} ${CURL_LIBRARIES}
  ${LUA_LIBRARIES}    ${SQLITE3_LIBRARIES} ${ODE_LIBRARY}     ${ZLIB_LIBRARIES}
+ ${XDG_LIBRARY}      ${SDLNET_LIBRARY} 
 )
+
+
+INSTALL(TARGETS xmoto RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
 MESSAGE("OpenGL    libraries: "${OPENGL_LIBRARIES})
 MESSAGE("SDL       libraries: "${SDL_LIBRARY})
@@ -458,6 +546,8 @@ MESSAGE("Lua       libraries: "${LUA_LIBRARIES})
 MESSAGE("Sqlite3   libraries: "${SQLITE3_LIBRARIES})
 MESSAGE("Ode       libraries: "${ODE_LIBRARY})
 MESSAGE("Zlib      libraries: "${ZLIB_LIBRARIES})
+MESSAGE("Xdg       libraries: "${XDG_LIBRARY})
+MESSAGE("SDL_net   libraries: "${SDLNET_LIBRARY})
 
 MESSAGE("Installation path: "${CMAKE_INSTALL_PREFIX})
 MESSAGE("Game data path: "${GAMEDATADIR})

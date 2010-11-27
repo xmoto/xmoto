@@ -36,7 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Renderer.h"
 #include "../net/NetClient.h"
 #include "../Sound.h"
-#include "thread/DownloadReplaysThread.h"
+#include "../thread/DownloadReplaysThread.h"
 
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 100
 
