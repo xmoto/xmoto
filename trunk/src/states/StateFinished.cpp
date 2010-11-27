@@ -30,9 +30,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Text.h"
 #include "../Game.h"
 #include "../helpers/Log.h"
-#include "states/StateVote.h"
-#include "thread/SendVoteThread.h"
-#include "SysMessage.h"
+#include "StateVote.h"
+#include "../thread/SendVoteThread.h"
+#include "../SysMessage.h"
 #include "StatePreplayingReplay.h"
 
 /* static members */

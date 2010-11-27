@@ -48,8 +48,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../thread/LevelsPacksCountUpdateThread.h"
 #include "../SysMessage.h"
 #include "../net/NetClient.h"
-#include "states/StateWaitServerInstructions.h"
-#include "net/VirtualNetLevelsList.h"
+#include "StateWaitServerInstructions.h"
+#include "../net/VirtualNetLevelsList.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;

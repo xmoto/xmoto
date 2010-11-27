@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../net/NetClient.h"
 #include "../net/NetActions.h"
 #include "../SysMessage.h"
-#include "states/StateVote.h"
+#include "StateVote.h"
 #include "../thread/XMThreadStats.h"
 
 #define INPLAY_ANIMATION_TIME 1.0

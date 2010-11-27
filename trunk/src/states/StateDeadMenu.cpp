@@ -26,8 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Universe.h"
 #include "../Replay.h"
 #include "../helpers/Log.h"
-#include "states/StateVote.h"
-#include "thread/SendVoteThread.h"
+#include "../states/StateVote.h"
+#include "../thread/SendVoteThread.h"
 #include "StatePreplayingReplay.h"
 
 /* static members */

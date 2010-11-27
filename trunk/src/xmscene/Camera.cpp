@@ -22,7 +22,7 @@
 #include "../Game.h"
 #include "Bike.h"
 #include "BikeGhost.h"
-#include "helpers/Log.h"
+#include "../helpers/Log.h"
 #include <sstream>
 #include "../SysMessage.h"
 #include "../drawlib/DrawLib.h"
@@ -57,7 +57,7 @@
 #define TRAILCAM_DAMPING 0.01   // smaller damps more
 
 #ifdef ENABLE_OPENGL
-#include "include/xm_OpenGL.h"
+#include "../include/xm_OpenGL.h"
 #endif
 
 Camera::Camera(Vector2i downleft, Vector2i upright){

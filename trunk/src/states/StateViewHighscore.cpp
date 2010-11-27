@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VFileIO.h"
 #include "../drawlib/DrawLib.h"
 #include "StateManager.h"
-#include "thread/DownloadReplaysThread.h"
+#include "../thread/DownloadReplaysThread.h"
 
 StateViewHighscore::StateViewHighscore(const std::string& i_id_level,
 				       bool drawStateBehind,

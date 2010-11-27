@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../DBuffer.h"
 #include "extSDL_net.h"
 #include <sstream>
-#include "helpers/SwapEndian.h"
+#include "../helpers/SwapEndian.h"
 
 char NetAction::m_buffer[NETACTION_MAX_PACKET_SIZE];
 unsigned int NetAction::m_biggestTCPPacket   = 0;
