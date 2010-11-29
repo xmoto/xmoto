@@ -50,6 +50,7 @@ class UIFrame;
 class UIStatic;
 class NetServer;
 class VirtualLevelsList;
+class XMDemo;
 
 /*===========================================================================
   Game application
@@ -264,6 +265,9 @@ private:
   bool m_hasMouseFocus;
   bool m_hasKeyboardFocus;
   bool m_isIconified;
+
+  // demo
+  XMDemo* m_xmdemo;
 };
 
 #endif

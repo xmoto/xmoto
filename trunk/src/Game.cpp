@@ -198,6 +198,8 @@ GameApp::GameApp() {
   m_standAloneServer = NULL;
 
   m_userConfig = new UserConfig();
+
+  m_xmdemo = NULL;
 }
    
   /*===========================================================================

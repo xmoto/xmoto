@@ -368,6 +368,8 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   GameInit.cpp \
   LevelsManager.h \
   LevelsManager.cpp \
+  XMDemo.h \
+  XMDemo.cpp \
   SysMessage.h \
   SysMessage.cpp \
   sqlqueries.h \
