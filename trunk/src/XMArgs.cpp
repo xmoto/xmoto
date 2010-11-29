@@ -296,7 +296,7 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       } else if(v_extension == "lvl") { /* level file */
 	m_opt_levelFile = true;
 	m_levelFile_file = v_arg;
-      } else if (v_extension == "demo") {
+      } else if (v_extension == "dmo") {
 	m_opt_demo = true;
 	m_demo_file = v_arg;
       } else {
