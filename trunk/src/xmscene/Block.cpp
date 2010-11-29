@@ -449,10 +449,10 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   }
 
   // check for forbidden combinations
-  if(isDynamic() == false && m_layer != -1) {
-    // thrown exception
-    throw Exception("ERROR::Block "+this->Id()+" is dynamic but is in a layer.");
-  }
+  //if(isDynamic() == false && m_layer != -1) {
+  //  // thrown exception
+  //  throw Exception("ERROR::Block "+this->Id()+" is dynamic but is in a layer.");
+  //}
 
   /* Compute */
   std::vector<BSPPoly *> &v_BSPPolys = v_BSPTree.compute();      
