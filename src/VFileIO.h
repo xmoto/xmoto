@@ -187,6 +187,8 @@ class XMFS {
   /* return user_dir + i_relative_path if exists or data_dir + i_relative_path */
   static std::string FullPath(FileDataType i_fdt, const std::string& i_relative_path);
   static std::string binCheckSum();
+
+  static void deleteFile(const std::string& i_filepath);
   
  private:
   static bool m_isInitialized;

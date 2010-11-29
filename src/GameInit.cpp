@@ -44,6 +44,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Credits.h"
 #include "Replay.h"
 #include "GeomsManager.h"
+#include "XMDemo.h"
 
 #include "states/StateManager.h"
 #include "states/StateEditProfile.h"
@@ -412,6 +413,30 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(v_xmArgs.isOptReplay()) {
     m_PlaySpecificReplay = v_xmArgs.getOpt_replay_file();
   }
+  if(v_xmArgs.isOptDemo()) {
+    /* demo : download the level and the replay
+       load the level as external,
+       play the replay
+     */
+    try {
+      m_xmdemo = new XMDemo(v_xmArgs.getOpt_demo_file());
+      LogInfo("Loading demo file %s\n", v_xmArgs.getOpt_demo_file().c_str());
+
+      _UpdateLoadingScreen(GAMETEXT_DLLEVEL);
+      m_xmdemo->getLevel(XMSession::instance()->proxySettings());
+      _UpdateLoadingScreen(GAMETEXT_DLREPLAY);
+      m_xmdemo->getReplay(XMSession::instance()->proxySettings());
+
+      try {
+	LevelsManager::instance()->addExternalLevel(m_xmdemo->levelFile(), xmDatabase::instance("main"));
+      } catch(Exception &e) {
+	LogError("Can't add level %s as external level", m_xmdemo->levelFile().c_str());
+      }
+      m_PlaySpecificReplay = m_xmdemo->replayFile();
+    } catch(Exception &e) {
+      LogError("Unable to load the demo file");
+    }
+  }
  
   /* Should we clean the level cache? (can also be done when disabled) */
   if(v_xmArgs.isOptCleanCache()) {
@@ -714,6 +739,12 @@ void GameApp::run_unload() {
   }
 
   uninitNetwork();
+
+  // detroy the demo
+  if(m_xmdemo != NULL) {
+    m_xmdemo->destroyFiles();
+    delete m_xmdemo;
+  }
 
   StateManager::destroy();
   

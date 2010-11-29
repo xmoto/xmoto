@@ -1456,3 +1456,9 @@ void XMFS::migrateFSToXdgBaseDirIfRequired(const std::string& AppDir) {
   }
 
 }
+
+void XMFS::deleteFile(const std::string& i_filepath) {
+  if(remove(i_filepath.c_str()) != 0) {
+    throw Exception("cannot remove file " + i_filepath);
+  }
+}

@@ -54,6 +54,7 @@ XMArguments::XMArguments() {
   m_opt_levelID        = false;
   m_opt_levelFile      = false;
   m_opt_listLevels     = false;
+  m_opt_demo           = false;
   m_opt_profile        = false;
   m_opt_timedemo       = false;
   m_opt_testTheme      = false;
@@ -295,6 +296,9 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       } else if(v_extension == "lvl") { /* level file */
 	m_opt_levelFile = true;
 	m_levelFile_file = v_arg;
+      } else if (v_extension == "demo") {
+	m_opt_demo = true;
+	m_demo_file = v_arg;
       } else {
 	throw Exception("Invalid option \"" + v_opt + "\"");
       }
@@ -432,6 +436,14 @@ bool XMArguments::isOptLevelFile() const {
 
 std::string XMArguments::getOpt_levelFile_file() const {
   return m_levelFile_file;
+}
+
+bool XMArguments::isOptDemo() const {
+  return m_opt_demo;
+}
+
+std::string XMArguments::getOpt_demo_file() const {
+  return m_demo_file;
 }
 
 bool XMArguments::isOptDebug() const {
