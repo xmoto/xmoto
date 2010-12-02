@@ -1389,6 +1389,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     } else {
       v_answer += "start time : " + m_startTimeStr + "\n";
       v_answer += NetAction::getStats() + "\n";
+      v_answer += ActionReader::getStats() + "\n";
     }
 
   } else if(v_args[0] == "msg") {

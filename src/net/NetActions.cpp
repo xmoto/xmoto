@@ -29,14 +29,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "extSDL_net.h"
 #include <sstream>
 #include "../helpers/SwapEndian.h"
+#include "helpers/Net.h"
 
 char NetAction::m_buffer[NETACTION_MAX_PACKET_SIZE];
-unsigned int NetAction::m_biggestTCPPacket   = 0;
-unsigned int NetAction::m_biggestUDPPacket   = 0;
-unsigned int NetAction::m_nbTCPPacketsSent   = 0;
-unsigned int NetAction::m_nbUDPPacketsSent   = 0;
-unsigned int NetAction::m_TCPPacketsSizeSent = 0;
-unsigned int NetAction::m_UDPPacketsSizeSent = 0;
+unsigned int NetAction::m_biggestTCPPacketSent = 0;
+unsigned int NetAction::m_biggestUDPPacketSent = 0;
+unsigned int NetAction::m_nbTCPPacketsSent     = 0;
+unsigned int NetAction::m_nbUDPPacketsSent     = 0;
+unsigned int NetAction::m_TCPPacketsSizeSent   = 0;
+unsigned int NetAction::m_UDPPacketsSizeSent   = 0;
 
 std::string NA_chatMessage::ActionKey   = "message";
 // frame : while it's sent a lot, reduce it at maximum
@@ -89,41 +90,21 @@ NetAction::NetAction() {
 NetAction::~NetAction() {
 }
 
-std::string NetAction::getFancyBytes(unsigned int i_bytes) {
-  std::ostringstream v_s;
-  unsigned int v_n;
-
-  v_n = i_bytes;
-  if(v_n < 1024) {
-    v_s << v_n << " bytes";
-    return v_s.str();
-  }
-
-  v_n = v_n / 1024;
-  if(v_n < 1024) {
-    v_s << v_n << " kB";
-    return v_s.str();
-  }
-
-  v_n = v_n / 1024;
-  v_s << v_n << " mB";
-  return v_s.str();
-}
-
 /* std::string version */
 std::string NetAction::getStats() {
   std::string v_stats;
 
-  std::ostringstream v_nbTCP, v_nbUDP;
-  v_nbTCP << NetAction::m_nbTCPPacketsSent;
-  v_nbUDP << NetAction::m_nbUDPPacketsSent;
+  std::ostringstream v_nbTCPSent, v_nbUDPSent;
 
-  v_stats += "number of TCP packets sent : " + v_nbTCP.str()                                  + "\n";
-  v_stats += "biggest TCP packet sent : "    + getFancyBytes(NetAction::m_biggestTCPPacket)   + "\n";
-  v_stats += "size of TCP packets sent : "   + getFancyBytes(NetAction::m_TCPPacketsSizeSent) + "\n";
-  v_stats += "number of UDP packets sent : " + v_nbUDP.str()                                  + "\n";
-  v_stats += "biggest UDP packet sent : "    + getFancyBytes(NetAction::m_biggestUDPPacket)   + "\n";
-  v_stats += "size of UDP packets sent : "   + getFancyBytes(NetAction::m_UDPPacketsSizeSent);
+  v_nbTCPSent << NetAction::m_nbTCPPacketsSent;
+  v_nbUDPSent << NetAction::m_nbUDPPacketsSent;
+
+  v_stats += "number of TCP packets sent : " + v_nbTCPSent.str()                                       + "\n";
+  v_stats += "biggest TCP packet sent : "    + XMNet::getFancyBytes(NetAction::m_biggestTCPPacketSent) + "\n";
+  v_stats += "size of TCP packets sent : "   + XMNet::getFancyBytes(NetAction::m_TCPPacketsSizeSent)   + "\n";
+  v_stats += "number of UDP packets sent : " + v_nbUDPSent.str()                                       + "\n";
+  v_stats += "biggest UDP packet sent : "    + XMNet::getFancyBytes(NetAction::m_biggestUDPPacketSent) + "\n";
+  v_stats += "size of UDP packets sent : "   + XMNet::getFancyBytes(NetAction::m_UDPPacketsSizeSent);
 
   return v_stats;
 }
@@ -131,11 +112,11 @@ std::string NetAction::getStats() {
 /* log version */
 void NetAction::logStats() {
   LogInfo("%-31s : %u", "net: number of TCP packets sent", NetAction::m_nbTCPPacketsSent);
-  LogInfo("%-31s : %s", "net: biggest TCP packet sent"   , getFancyBytes(NetAction::m_biggestTCPPacket).c_str());
-  LogInfo("%-31s : %s", "net: size of TCP packets sent"  , getFancyBytes(NetAction::m_TCPPacketsSizeSent).c_str());
+  LogInfo("%-31s : %s", "net: biggest TCP packet sent"   , XMNet::getFancyBytes(NetAction::m_biggestTCPPacketSent).c_str());
+  LogInfo("%-31s : %s", "net: size of TCP packets sent"  , XMNet::getFancyBytes(NetAction::m_TCPPacketsSizeSent).c_str());
   LogInfo("%-31s : %u", "net: number of UDP packets sent", NetAction::m_nbUDPPacketsSent);
-  LogInfo("%-31s : %s", "net: biggest UDP packet sent"   , getFancyBytes(NetAction::m_biggestUDPPacket).c_str());
-  LogInfo("%-31s : %s", "net: size of UDP packets sent"  , getFancyBytes(NetAction::m_UDPPacketsSizeSent).c_str());
+  LogInfo("%-31s : %s", "net: biggest UDP packet sent"   , XMNet::getFancyBytes(NetAction::m_biggestUDPPacketSent).c_str());
+  LogInfo("%-31s : %s", "net: size of UDP packets sent"  , XMNet::getFancyBytes(NetAction::m_UDPPacketsSizeSent).c_str());
 }
 
 void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP,
@@ -183,8 +164,8 @@ void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPa
 	LogWarning("SDLNet_UDP_Send failed : %s", SDLNet_GetError());
       }
 
-      if(v_totalPacketSize > NetAction::m_biggestUDPPacket) {
-	NetAction::m_biggestUDPPacket = v_totalPacketSize;
+      if(v_totalPacketSize > NetAction::m_biggestUDPPacketSent) {
+	NetAction::m_biggestUDPPacketSent = v_totalPacketSize;
       }
       NetAction::m_nbUDPPacketsSent++;
       NetAction::m_UDPPacketsSizeSent += v_totalPacketSize;
@@ -196,8 +177,8 @@ void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPa
       throw Exception("TCP_Send failed");
     }
 
-    if(v_totalPacketSize > NetAction::m_biggestTCPPacket) {
-      NetAction::m_biggestTCPPacket = v_totalPacketSize;
+    if(v_totalPacketSize > NetAction::m_biggestTCPPacketSent) {
+      NetAction::m_biggestTCPPacketSent = v_totalPacketSize;
     }
     NetAction::m_nbTCPPacketsSent++;
     NetAction::m_TCPPacketsSizeSent += v_totalPacketSize;

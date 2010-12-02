@@ -85,7 +85,6 @@ class NetAction {
   static NetAction* newNetAction(void* data, unsigned int len);
   static void logStats();
   static std::string getStats();
-  static std::string getFancyBytes(unsigned int i_bytes);
 
   protected:
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP, const void* subPacketData, int subPacketLen);
@@ -107,12 +106,13 @@ class NetAction {
 
   private:
   static char m_buffer[NETACTION_MAX_PACKET_SIZE];
-  static unsigned int m_biggestTCPPacket;
-  static unsigned int m_biggestUDPPacket;
+  static unsigned int m_biggestTCPPacketSent;
+  static unsigned int m_biggestUDPPacketSent;
   static unsigned int m_nbTCPPacketsSent;
   static unsigned int m_nbUDPPacketsSent;
   static unsigned int m_TCPPacketsSizeSent;
   static unsigned int m_UDPPacketsSizeSent;
+
 };
 
 class NA_udpBind : public NetAction {

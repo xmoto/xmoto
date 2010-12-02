@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class XMNet {
   public:
   static std::string getIp(IPaddress* i_ip);
+  static std::string getFancyBytes(unsigned int i_bytes);
 };
 
 #endif
