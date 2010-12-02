@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __ACTIONREADER_H__
 
 #include "../include/xm_SDL_net.h"
+#include <string>
 
 #define XM_MAX_PACKET_SIZE 1024 * 10 // bytes
 
@@ -36,6 +37,9 @@ class ActionReader {
   bool TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction);
   static NetAction* UDPReadAction(Uint8* data, int len);
 
+  static void logStats();
+  static std::string getStats();
+
   private:
   unsigned int m_tcpPacketOffset;
   bool m_tcpNotEnoughData;
@@ -43,6 +47,14 @@ class ActionReader {
   bool m_tcpPossiblyInBuffer; // an action is possibly in the buffer
 
   static unsigned int getSubPacketSize(void* data, unsigned int len, unsigned int& o_cmdStart);
+
+  static unsigned int m_biggestTCPPacketReceived;
+  static unsigned int m_biggestUDPPacketReceived;
+  static unsigned int m_nbTCPPacketsReceived;
+  static unsigned int m_nbUDPPacketsReceived;
+  static unsigned int m_TCPPacketsSizeReceived;
+  static unsigned int m_UDPPacketsSizeReceived;
+
 };
 
 #endif

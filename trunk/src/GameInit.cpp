@@ -61,6 +61,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "net/NetServer.h"
 #include "net/NetClient.h"
 #include "net/NetActions.h"
+#include "net/ActionReader.h"
 #include "include/xm_SDL_net.h"
 
 #if !defined(WIN32)
@@ -930,6 +931,7 @@ void GameApp::uninitNetwork() {
 
   if(Logger::isInitialized()) {
     NetAction::logStats();
+    ActionReader::logStats();
   }
 
   SDLNet_Quit();

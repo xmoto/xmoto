@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Net.h"
+#include <sstream>
 
 std::string XMNet::getIp(IPaddress* i_ip) {
   Uint32 val = SDLNet_Read32(&i_ip->host);
@@ -28,4 +29,25 @@ std::string XMNet::getIp(IPaddress* i_ip) {
 	   val >> 24, (val >> 16) %256, (val >> 8) %256, val%256);
 
   return std::string(str);
+}
+
+std::string XMNet::getFancyBytes(unsigned int i_bytes) {
+  std::ostringstream v_s;
+  unsigned int v_n;
+
+  v_n = i_bytes;
+  if(v_n < 1024) {
+    v_s << v_n << " bytes";
+    return v_s.str();
+  }
+
+  v_n = v_n / 1024;
+  if(v_n < 1024) {
+    v_s << v_n << " kB";
+    return v_s.str();
+  }
+
+  v_n = v_n / 1024;
+  v_s << v_n << " mB";
+  return v_s.str();
 }
