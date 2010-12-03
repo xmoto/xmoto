@@ -90,7 +90,6 @@ bool ActionReader::TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction) {
     LogDebug("Data received (%u bytes available)", m_tcpPacketOffset);
     m_tcpNotEnoughData = false; // you don't know if the buffer is full enough
 
-
     if(nread > ActionReader::m_biggestTCPPacketReceived) {
       ActionReader::m_biggestTCPPacketReceived = nread;
     }
