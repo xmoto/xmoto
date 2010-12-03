@@ -539,10 +539,10 @@ void ServerThread::SP2_updateScenePlaying() {
       nPhysSteps++;
     }
 
-    // if the delay is too long, reinitialize
-    if(m_fLastPhysTime + PHYS_STEP_SIZE/100.0 < GameApp::getXMTime()) {
-      m_fLastPhysTime = GameApp::getXMTime();
-    }
+    // if the delay is too long, reinitialize -- don't skip in server mode
+    //if(m_fLastPhysTime + PHYS_STEP_SIZE/100.0 < GameApp::getXMTime()) {
+    //  m_fLastPhysTime = GameApp::getXMTime();
+    //}
     SP2_sendSceneEvents(m_DBuffer);
   } else {
     /* send the first frame regularly, so that the client received it once ready */
@@ -550,6 +550,8 @@ void ServerThread::SP2_updateScenePlaying() {
       m_firstFrameSent = GameApp::getXMTimeInt();
       v_firstFrame = true;
     }
+    // initialize the physics time
+    m_fLastPhysTime = GameApp::getXMTime();
   }
 
   // send to each client his frame and the frame of the others
