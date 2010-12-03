@@ -89,6 +89,13 @@ bool ActionReader::TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction) {
     m_tcpPacketOffset += nread;
     LogDebug("Data received (%u bytes available)", m_tcpPacketOffset);
     m_tcpNotEnoughData = false; // you don't know if the buffer is full enough
+
+
+    if(nread > ActionReader::m_biggestTCPPacketReceived) {
+      ActionReader::m_biggestTCPPacketReceived = nread;
+    }
+    ActionReader::m_nbTCPPacketsReceived++;
+    ActionReader::m_TCPPacketsSizeReceived += nread;
   }
 
   m_tcpPossiblyInBuffer = false;
@@ -131,12 +138,6 @@ bool ActionReader::TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction) {
 unsigned int ActionReader::getSubPacketSize(void* data, unsigned int len, unsigned int& o_cmdStart) {
   unsigned int i=0;
   unsigned int res;
-
-  if(len > ActionReader::m_biggestTCPPacketReceived) {
-    ActionReader::m_biggestTCPPacketReceived = len;
-  }
-  ActionReader::m_nbTCPPacketsReceived++;
-  ActionReader::m_TCPPacketsSizeReceived += len;
 
   while(i<len && i<XM_MAX_PACKET_SIZE_DIGITS+1) {
     if(((char*)data)[i] == '\n') {
