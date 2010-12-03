@@ -1336,6 +1336,7 @@ void PlayerNetClient::updateToTime(int i_time, int i_timeStep,
   float v_xpolation_value;
   BikeState* v_tmp;
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
+  bool v_hasBeenExternallyUpdated = m_stateExternallyUpdated;
 
   if(m_stateExternallyUpdated) {
     m_stateExternallyUpdated = false;
@@ -1389,11 +1390,14 @@ void PlayerNetClient::updateToTime(int i_time, int i_timeStep,
      if fps = 1 => desinterpolate for 0,5 seconds (very bad case)
      if fps = 10 => desinterpolate for 0,05 seconds (ok)
   */
+
   int v_deextrapolation_time = (m_previousBikeStates[1]->GameTime - m_previousBikeStates[0]->GameTime) /* / 2 -- without /2 it seems to give better results */;
 
   if(m_previousBikeStatesInitialized && m_lastFrameTimeUpdate + (v_deextrapolation_time*10) > GameApp::getXMTimeInt()) {
     // A
-    if(m_lastExtrapolateBikeState->Dir != m_previousBikeStates[1]->Dir) {
+    if(m_lastExtrapolateBikeState->Dir != m_previousBikeStates[1]->Dir
+       || v_hasBeenExternallyUpdated || true // the inter/extra polation seems not to work correctly -- disabled
+       ) {
       *m_bikeState = *(m_previousBikeStates[1]);
     } else {
       // interpolate from m_lastExtrapolateBikeState to m_previousBikeStates[1]
@@ -1405,7 +1409,9 @@ void PlayerNetClient::updateToTime(int i_time, int i_timeStep,
     }
   } else {
     /// B
-    if(m_previousBikeStates[0]->Dir != m_previousBikeStates[1]->Dir) {
+    if(m_previousBikeStates[0]->Dir != m_previousBikeStates[1]->Dir
+       || v_hasBeenExternallyUpdated || true // the inter/extra polation seems not to work correctly -- disabled
+       ) {
       *m_bikeState = *(m_previousBikeStates[1]);
     } else {
       if(m_previousBikeStates[1]->GameTime > m_previousBikeStates[0]->GameTime) {
