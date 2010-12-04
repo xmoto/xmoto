@@ -230,6 +230,14 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     m_consoleHistoryMinus = XMKey();
   }
 
+  try {
+    m_chat = XMKey(pDb->config_getString(i_id_profile, "KeyChat", m_chat.toString()));
+  } catch(InvalidSystemKeyException &e) {
+    /* keep default key */
+  } catch(Exception &e) {
+    m_chat = XMKey();
+  }
+
 }
   
   /*===========================================================================
@@ -332,6 +340,7 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
     m_consoleHistoryPlus = XMKey(SDLK_PLUS, KMOD_LCTRL);
     m_consoleHistoryMinus = XMKey(SDLK_MINUS, KMOD_LCTRL);
     m_restartCheckpoint  = XMKey(SDLK_BACKSPACE, KMOD_NONE);
+    m_chat               = XMKey(SDLK_c, KMOD_LCTRL);
   }  
 
   /*===========================================================================
@@ -413,6 +422,10 @@ void InputHandler::saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
 
   if(m_consoleHistoryMinus.isDefined()) {
     pDb->config_setString(i_id_profile, "KeyConsoleHistoryMinus", m_consoleHistoryMinus.toString());
+  }
+
+  if(m_chat.isDefined()) {
+    pDb->config_setString(i_id_profile, "KeyChat", m_chat.toString());
   }
 
   pDb->config_setValue_end();
@@ -528,6 +541,14 @@ void InputHandler::setRestartCheckpoint(XMKey i_value) {
 
 XMKey InputHandler::getRestartCheckpoint() const {
   return m_restartCheckpoint;
+}
+
+void InputHandler::setChat(XMKey i_value) {
+  m_chat = i_value;
+}
+
+XMKey InputHandler::getChat() const {
+  return m_chat;
 }
 
 bool InputHandler::isANotGameSetKey(XMKey* i_xmkey) const {

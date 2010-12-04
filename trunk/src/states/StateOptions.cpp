@@ -1985,6 +1985,10 @@ void StateOptions::updateControlsList() {
   p->Text.push_back(InputHandler::instance()->getShowConsole().toFancyString());
   p->Text.push_back(InputHandler::instance()->getShowConsole().toString());
 
+  p = pList->addEntry(GAMETEXT_CHATDIALOG);
+  p->Text.push_back(InputHandler::instance()->getChat().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getChat().toString());
+
   p = pList->addEntry(GAMETEXT_CONSOLEHISTORYPLUS);
   p->Text.push_back(InputHandler::instance()->getConsoleHistoryPlus().toFancyString());
   p->Text.push_back(InputHandler::instance()->getConsoleHistoryPlus().toString());
@@ -2373,5 +2377,9 @@ void StateOptions::setInputKey(const std::string& i_strKey, const std::string& i
 
   if(i_strKey == GAMETEXT_CONSOLEHISTORYMINUS) {
     InputHandler::instance()->setConsoleHistoryMinus(XMKey(i_key));
+  }
+
+  if(i_strKey == GAMETEXT_CHATDIALOG) {
+    InputHandler::instance()->setChat(XMKey(i_key));
   }
 }

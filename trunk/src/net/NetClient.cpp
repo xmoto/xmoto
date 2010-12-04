@@ -136,7 +136,7 @@ void NetClient::connect(const std::string& i_server, int i_port) {
   LogInfo("client: connected on %s:%d", i_server.c_str(), i_port);
 
   char buf[512];
-  snprintf(buf, 512, GAMETEXT_PRESSCTRLCTOCHAT, XMKey(SDLK_c, KMOD_LCTRL).toFancyString().c_str());
+  snprintf(buf, 512, GAMETEXT_PRESSCTRLCTOCHAT, InputHandler::instance()->getChat().toFancyString().c_str());
   SysMessage::instance()->addConsoleLine(buf, CLT_INFORMATION);
 
   // bind udp port on server

@@ -316,7 +316,7 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 
   // net chat
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_c, KMOD_LCTRL) && NetClient::instance()->isConnected()) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getChat() && NetClient::instance()->isConnected()) {
     if(StateManager::instance()->isThereASuchStateType("CHATMESSAGE") == false) { // do not open several chat box
       std::vector<std::string> clientList = NetClient::instance()->getOtherClientsNameList(" "); // forced to do cause i couldn't include in init netclient function
       NetClient::instance()->addChatTransformations(clientList, " ");

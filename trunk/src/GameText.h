@@ -73,6 +73,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CHANGE               _("Change...")
 #define GAMETEXT_CHANGEDIR            _("Change direction")
 #define GAMETEXT_CHANGEKEY            _("Change Key...")
+#define GAMETEXT_CHATDIALOG           _("Open chat dialog box")
 #define GAMETEXT_CHECKINGFORLEVELS    _("Checking for new or updated levels...")
 #define GAMETEXT_CHILDREN_COMPLIANT   _("I'm a child")
 #define GAMETEXT_CHOOSELEVEL          _("Choose Level")

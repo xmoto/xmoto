@@ -1,6 +1,7 @@
 X-Moto 0.5.5 2011-
 --------------------------------
- *
+ * improve network mode performances
+ * ctrl+c for chatting is now customizable
 
 X-Moto 0.5.4 2010-11-30
 --------------------------------
