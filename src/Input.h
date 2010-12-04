@@ -114,6 +114,8 @@ public:
   XMKey getConsoleHistoryMinus() const;
   void setRestartCheckpoint(XMKey i_value);
   XMKey getRestartCheckpoint() const;
+  void setChat(XMKey i_value);
+  XMKey getChat() const;
 
   static float joyRawToFloat(float raw, float neg, float deadzone_neg, float deadzone_pos, float pos);
 
@@ -141,6 +143,7 @@ private:
   XMKey m_consoleHistoryPlus;
   XMKey m_consoleHistoryMinus;
   XMKey m_restartCheckpoint;
+  XMKey m_chat;
 };
 
 
