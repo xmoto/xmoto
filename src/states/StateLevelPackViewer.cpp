@@ -194,7 +194,7 @@ void StateLevelPackViewer::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     m_requestForEnd = true;
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchFavorite()) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
     switchtoFavorites();
   } 
 

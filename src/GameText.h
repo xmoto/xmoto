@@ -464,6 +464,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_REPLAYS              _("Replays")
 #define GAMETEXT_RESETTODEFAULTS      _("Are you sure you want to reset config to defaults ?")
 #define GAMETEXT_RESTART              _("Restart This Level")
+#define GAMETEXT_RESTARTCHECKPOINT    _("Restart to the last checkpoint")
 #define GAMETEXT_RESTARTLEVEL         _("Restart level")
 #define GAMETEXT_RESUME               _("Resume Playing")
 #define GAMETEXT_ROOM                 _("Room")

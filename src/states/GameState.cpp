@@ -232,7 +232,7 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     return;
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchUglyMode()) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHUGLYMODE))) {
     gameApp->switchUglyMode(XMSession::instance()->ugly() == false);
     if(XMSession::instance()->ugly()) {
       SysMessage::instance()->displayText(SYS_MSG_UGLY_MODE_ENABLED);
@@ -316,7 +316,8 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 
   // net chat
-  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getChat() && NetClient::instance()->isConnected()) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_CHAT)) &&
+	  NetClient::instance()->isConnected()) {
     if(StateManager::instance()->isThereASuchStateType("CHATMESSAGE") == false) { // do not open several chat box
       std::vector<std::string> clientList = NetClient::instance()->getOtherClientsNameList(" "); // forced to do cause i couldn't include in init netclient function
       NetClient::instance()->addChatTransformations(clientList, " ");
@@ -336,17 +337,17 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getShowConsole()) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SHOWCONSOLE))) {
     SysMessage::instance()->showConsole();
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getConsoleHistoryPlus()) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_CONSOLEHISTORYPLUS))) {
     SysMessage::instance()->alterConsoleSize(+1);
     XMSession::instance()->setConsoleSize(SysMessage::instance()->consoleSize());
     SysMessage::instance()->showConsole();
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getConsoleHistoryMinus()) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_CONSOLEHISTORYMINUS))) {
     SysMessage::instance()->alterConsoleSize(-1);
     XMSession::instance()->setConsoleSize(SysMessage::instance()->consoleSize());
     SysMessage::instance()->showConsole();

@@ -2780,7 +2780,6 @@ void GameRenderer::renderTimePanel(Scene* i_scene) {
   }
 
   DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
-  unsigned int height = i_scene->getCamera()->getDispHeight();
 
   Biker* pBiker = i_scene->getCamera()->getPlayerToFollow();
   Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();

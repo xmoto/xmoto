@@ -33,6 +33,30 @@ class UserConfig;
 class Universe;
 class Scene;
 
+struct IGlobalKey {
+  IGlobalKey();
+  IGlobalKey(const std::string& i_name, const XMKey& i_key, const std::string i_help);
+
+  std::string name;
+  XMKey key;
+  std::string help;
+};
+
+// write them in the order you want to see displayed them in the options list
+enum INPUT_GLOBALKEYS {
+  INPUT_SWITCHFAVORITE = 0,
+  INPUT_SWITCHBLACKLIST,
+  INPUT_SWITCHUGLYMODE,
+  INPUT_RESTARTLEVEL,
+  INPUT_RESTARTCHECKPOINT,
+  INPUT_SHOWCONSOLE,
+  INPUT_CHAT,
+  INPUT_CONSOLEHISTORYPLUS,
+  INPUT_CONSOLEHISTORYMINUS,
+
+  INPUT_NB_GLOBALKEYS
+};
+
   /*===========================================================================
   Script hooks
   ===========================================================================*/
@@ -98,24 +122,9 @@ public:
   void setSCRIPTACTION(int i_player, int i_action, XMKey i_value);
   XMKey getSCRIPTACTION(int i_player, int i_action) const;
 
-  void setSwitchUglyMode(XMKey i_value);
-  XMKey getSwitchUglyMode() const;
-  void setSwitchBlacklist(XMKey i_value);
-  XMKey getSwitchBlacklist() const;
-  void setSwitchFavorite(XMKey i_value);
-  XMKey getSwitchFavorite() const;
-  void setRestartLevel(XMKey i_value);
-  XMKey getRestartLevel() const;
-  void setShowConsole(XMKey i_value);
-  XMKey getShowConsole() const;
-  void setConsoleHistoryPlus(XMKey i_value);
-  XMKey getConsoleHistoryPlus() const;
-  void setConsoleHistoryMinus(XMKey i_value);
-  XMKey getConsoleHistoryMinus() const;
-  void setRestartCheckpoint(XMKey i_value);
-  XMKey getRestartCheckpoint() const;
-  void setChat(XMKey i_value);
-  XMKey getChat() const;
+  void setGlobalKey(unsigned int INPUT_key, XMKey i_value);
+  const XMKey* getGlobalKey(unsigned int INPUT_key) const;
+  std::string getGlobalKeyHelp(unsigned int INPUT_key) const;
 
   static float joyRawToFloat(float raw, float neg, float deadzone_neg, float deadzone_pos, float pos);
 
@@ -135,16 +144,8 @@ private:
   XMKey m_nPushForwardKey[INPUT_NB_PLAYERS];
   XMKey m_nChangeDirKey[INPUT_NB_PLAYERS];
   XMKey m_nScriptActionKeys[INPUT_NB_PLAYERS][MAX_SCRIPT_KEY_HOOKS];
-  XMKey m_switchUglyMode;
-  XMKey m_switchBlacklist;
-  XMKey m_switchFavorite;
-  XMKey m_restartLevel;
-  XMKey m_showConsole;
-  XMKey m_consoleHistoryPlus;
-  XMKey m_consoleHistoryMinus;
-  XMKey m_restartCheckpoint;
-  XMKey m_chat;
-};
 
+  IGlobalKey m_globalKeys[INPUT_NB_GLOBALKEYS];
+};
 
 #endif
