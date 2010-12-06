@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sstream>
 #include "helpers/VExcept.h"
 #include "helpers/Log.h"
+#include "GameText.h"
 #include "db/xmDatabase.h"
 
   InputHandler::InputHandler() {
@@ -174,68 +175,14 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
   }
 
   //
-  try {
-    m_switchUglyMode = XMKey(pDb->config_getString(i_id_profile, "KeySwitchUglyMode", m_switchUglyMode.toString()));
-  } catch(InvalidSystemKeyException &e) {
-    /* keep default key */
-  } catch(Exception &e) {
-    m_switchUglyMode = XMKey();
-  }
-
-  try {
-    m_switchBlacklist = XMKey(pDb->config_getString(i_id_profile, "KeySwitchBlacklist", m_switchBlacklist.toString()));
-  } catch(InvalidSystemKeyException &e) {
-    /* keep default key */
-  } catch(Exception &e) {
-    m_switchBlacklist = XMKey();
-  }
-
-  try {
-    m_switchFavorite = XMKey(pDb->config_getString(i_id_profile, "KeySwitchFavorite", m_switchFavorite.toString()));
-  } catch(InvalidSystemKeyException &e) {
-    /* keep default key */
-  } catch(Exception &e) {
-    m_switchFavorite = XMKey();
-  }
-
-  try {
-    m_restartLevel = XMKey(pDb->config_getString(i_id_profile, "KeyRestartLevel", m_restartLevel.toString()));
-  } catch(InvalidSystemKeyException &e) {
-    /* keep default key */
-  } catch(Exception &e) {
-    m_restartLevel = XMKey();
-  }
-
-  try {
-    m_showConsole = XMKey(pDb->config_getString(i_id_profile, "KeyShowConsole", m_showConsole.toString()));
-  } catch(InvalidSystemKeyException &e) {
-    /* keep default key */
-  } catch(Exception &e) {
-    m_showConsole = XMKey();
-  }
-
-  try {
-    m_consoleHistoryPlus = XMKey(pDb->config_getString(i_id_profile, "KeyConsoleHistoryPlus", m_consoleHistoryPlus.toString()));
-  } catch(InvalidSystemKeyException &e) {
-    /* keep default key */
-  } catch(Exception &e) {
-    m_consoleHistoryPlus = XMKey();
-  }
-
-  try {
-    m_consoleHistoryMinus = XMKey(pDb->config_getString(i_id_profile, "KeyConsoleHistoryMinus", m_consoleHistoryMinus.toString()));
-  } catch(InvalidSystemKeyException &e) {
-    /* keep default key */
-  } catch(Exception &e) {
-    m_consoleHistoryMinus = XMKey();
-  }
-
-  try {
-    m_chat = XMKey(pDb->config_getString(i_id_profile, "KeyChat", m_chat.toString()));
-  } catch(InvalidSystemKeyException &e) {
-    /* keep default key */
-  } catch(Exception &e) {
-    m_chat = XMKey();
+  for(unsigned int i=0; i<INPUT_NB_GLOBALKEYS; i++) {
+    try {
+      m_globalKeys[i].key = XMKey(pDb->config_getString(i_id_profile, m_globalKeys[i].name, m_globalKeys[i].key.toString()));
+    } catch(InvalidSystemKeyException &e) {
+      /* keep default key */
+    } catch(Exception &e) {
+      m_globalKeys[i].key = XMKey();
+    }
   }
 
 }
@@ -307,7 +254,7 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
   /*===========================================================================
   Set totally default configuration - useful for when something goes wrong
   ===========================================================================*/  
-  void InputHandler::setDefaultConfig() {    
+  void InputHandler::setDefaultConfig() {
     m_nDriveKey[0]       = XMKey(SDLK_UP,    KMOD_NONE);
     m_nBrakeKey[0]       = XMKey(SDLK_DOWN,  KMOD_NONE);
     m_nPullBackKey[0]    = XMKey(SDLK_LEFT,  KMOD_NONE);
@@ -331,16 +278,25 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
     m_nPullBackKey[3]    = XMKey(SDLK_u, KMOD_NONE);
     m_nPushForwardKey[3] = XMKey(SDLK_i, KMOD_NONE);
     m_nChangeDirKey[3]   = XMKey(SDLK_n, KMOD_NONE);
-    
-    m_switchUglyMode     = XMKey(SDLK_F9, KMOD_NONE);
-    m_switchBlacklist    = XMKey(SDLK_b,  KMOD_LCTRL);
-    m_switchFavorite     = XMKey(SDLK_F3, KMOD_NONE);
-    m_restartLevel       = XMKey(SDLK_RETURN,   KMOD_NONE);
-    m_showConsole        = XMKey(SDLK_WORLD_18, KMOD_NONE);
-    m_consoleHistoryPlus = XMKey(SDLK_PLUS, KMOD_LCTRL);
-    m_consoleHistoryMinus = XMKey(SDLK_MINUS, KMOD_LCTRL);
-    m_restartCheckpoint  = XMKey(SDLK_BACKSPACE, KMOD_NONE);
-    m_chat               = XMKey(SDLK_c, KMOD_LCTRL);
+
+    m_globalKeys[INPUT_SWITCHUGLYMODE]      =
+      IGlobalKey("KeySwitchUglyMode",  	XMKey(SDLK_F9, 	      KMOD_NONE),     GAMETEXT_SWITCHUGLYMODE);
+    m_globalKeys[INPUT_SWITCHBLACKLIST]     =
+      IGlobalKey("KeySwitchBlacklist", 	XMKey(SDLK_b,  	      KMOD_LCTRL),    GAMETEXT_SWITCHBLACKLIST);
+    m_globalKeys[INPUT_SWITCHFAVORITE]      =
+      IGlobalKey("KeySwitchFavorite",  	XMKey(SDLK_F3, 	      KMOD_NONE),     GAMETEXT_SWITCHFAVORITE);
+    m_globalKeys[INPUT_RESTARTLEVEL]        =
+      IGlobalKey("KeyRestartLevel",    	XMKey(SDLK_RETURN,    KMOD_NONE),     GAMETEXT_RESTARTLEVEL);
+    m_globalKeys[INPUT_SHOWCONSOLE]         =
+      IGlobalKey("KeyShowConsole",     	XMKey(SDLK_WORLD_18,  KMOD_NONE),     GAMETEXT_SHOWCONSOLE);
+    m_globalKeys[INPUT_CONSOLEHISTORYPLUS]  =
+      IGlobalKey("KeyConsoleHistoryPlus",  XMKey(SDLK_PLUS,      KMOD_LCTRL), GAMETEXT_CONSOLEHISTORYPLUS);
+    m_globalKeys[INPUT_CONSOLEHISTORYMINUS] =
+      IGlobalKey("KeyConsoleHistoryMinus", XMKey(SDLK_MINUS,     KMOD_LCTRL), GAMETEXT_CONSOLEHISTORYMINUS);
+    m_globalKeys[INPUT_RESTARTCHECKPOINT]   =
+      IGlobalKey("KeyRestartCheckpoint",   XMKey(SDLK_BACKSPACE, KMOD_NONE),  GAMETEXT_RESTARTCHECKPOINT);
+    m_globalKeys[INPUT_CHAT]                =
+      IGlobalKey("KeyChat",                XMKey(SDLK_c,         KMOD_LCTRL), GAMETEXT_CHATDIALOG);
   }  
 
   /*===========================================================================
@@ -396,36 +352,8 @@ void InputHandler::saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     }
   }
 
-  if(m_switchUglyMode.isDefined()) {
-    pDb->config_setString(i_id_profile, "KeySwitchUglyMode", m_switchUglyMode.toString());
-  }
-
-  if(m_switchBlacklist.isDefined()) {
-    pDb->config_setString(i_id_profile, "KeySwitchBlacklist", m_switchBlacklist.toString());
-  }
-
-  if(m_switchFavorite.isDefined()) {
-    pDb->config_setString(i_id_profile, "KeySwitchFavorite", m_switchFavorite.toString());
-  }
-
-  if(m_restartLevel.isDefined()) {
-    pDb->config_setString(i_id_profile, "KeyRestartLevel", m_restartLevel.toString());
-  }
-
-  if(m_showConsole.isDefined()) {
-    pDb->config_setString(i_id_profile, "KeyShowConsole", m_showConsole.toString());
-  }
-
-  if(m_consoleHistoryPlus.isDefined()) {
-    pDb->config_setString(i_id_profile, "KeyConsoleHistoryPlus", m_consoleHistoryPlus.toString());
-  }
-
-  if(m_consoleHistoryMinus.isDefined()) {
-    pDb->config_setString(i_id_profile, "KeyConsoleHistoryMinus", m_consoleHistoryMinus.toString());
-  }
-
-  if(m_chat.isDefined()) {
-    pDb->config_setString(i_id_profile, "KeyChat", m_chat.toString());
+  for(unsigned int i=0; i<INPUT_NB_GLOBALKEYS; i++) {
+    pDb->config_setString(i_id_profile, m_globalKeys[i].name, m_globalKeys[i].key.toString());
   }
 
   pDb->config_setValue_end();
@@ -479,76 +407,16 @@ XMKey InputHandler::getSCRIPTACTION(int i_player, int i_action) const {
   return m_nScriptActionKeys[i_player][i_action];
 }
 
-void InputHandler::setSwitchUglyMode(XMKey i_value) {
-  m_switchUglyMode = i_value;
+void InputHandler::setGlobalKey(unsigned int INPUT_key, XMKey i_value) {
+  m_globalKeys[INPUT_key].key = i_value;
 }
 
-XMKey InputHandler::getSwitchUglyMode() const {
-  return m_switchUglyMode;
+const XMKey* InputHandler::getGlobalKey(unsigned int INPUT_key) const {
+  return &(m_globalKeys[INPUT_key].key);
 }
 
-void InputHandler::setSwitchBlacklist(XMKey i_value) {
-  m_switchBlacklist = i_value;
-}
-
-XMKey InputHandler::getSwitchBlacklist() const {
-  return m_switchBlacklist;
-}
-
-void InputHandler::setSwitchFavorite(XMKey i_value) {
-  m_switchFavorite = i_value;
-}
-
-XMKey InputHandler::getSwitchFavorite() const {
-  return m_switchFavorite;
-}
-
-void InputHandler::setRestartLevel(XMKey i_value) {
-  m_restartLevel = i_value;
-}
-
-XMKey InputHandler::getRestartLevel() const {
-  return m_restartLevel;
-}
-
-void InputHandler::setShowConsole(XMKey i_value) {
-  m_showConsole = i_value;
-}
-
-XMKey InputHandler::getShowConsole() const {
-  return m_showConsole;
-}
-
-void InputHandler::setConsoleHistoryPlus(XMKey i_value) {
-  m_consoleHistoryPlus = i_value;
-}
-
-XMKey InputHandler::getConsoleHistoryPlus() const {
-  return m_consoleHistoryPlus;
-}
-
-void InputHandler::setConsoleHistoryMinus(XMKey i_value) {
-  m_consoleHistoryMinus = i_value;
-}
-
-XMKey InputHandler::getConsoleHistoryMinus() const {
-  return m_consoleHistoryMinus;
-}
-
-void InputHandler::setRestartCheckpoint(XMKey i_value) {
-  m_restartCheckpoint = i_value;
-}
-
-XMKey InputHandler::getRestartCheckpoint() const {
-  return m_restartCheckpoint;
-}
-
-void InputHandler::setChat(XMKey i_value) {
-  m_chat = i_value;
-}
-
-XMKey InputHandler::getChat() const {
-  return m_chat;
+std::string InputHandler::getGlobalKeyHelp(unsigned int INPUT_key) const {
+  return m_globalKeys[INPUT_key].help;
 }
 
 bool InputHandler::isANotGameSetKey(XMKey* i_xmkey) const {
@@ -609,4 +477,13 @@ void InputHandler::recheckJoysticks() {
 
 std::vector<std::string>& InputHandler::getJoysticksNames() {
   return m_JoysticksNames;
+}
+
+IGlobalKey::IGlobalKey(const std::string& i_name, const XMKey& i_key, const std::string i_help) {
+  name = i_name;
+  key  = i_key;
+  help = i_help;
+}
+
+IGlobalKey::IGlobalKey() {
 }

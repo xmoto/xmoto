@@ -1965,37 +1965,11 @@ void StateOptions::updateControlsList() {
     
   UIListEntry *p;
 
-  p = pList->addEntry(GAMETEXT_SWITCHFAVORITE);
-  p->Text.push_back(InputHandler::instance()->getSwitchFavorite().toFancyString());
-  p->Text.push_back(InputHandler::instance()->getSwitchFavorite().toString());
-
-  p = pList->addEntry(GAMETEXT_SWITCHBLACKLIST);
-  p->Text.push_back(InputHandler::instance()->getSwitchBlacklist().toFancyString());
-  p->Text.push_back(InputHandler::instance()->getSwitchBlacklist().toString());
-
-  p = pList->addEntry(GAMETEXT_SWITCHUGLYMODE);
-  p->Text.push_back(InputHandler::instance()->getSwitchUglyMode().toFancyString());
-  p->Text.push_back(InputHandler::instance()->getSwitchUglyMode().toString());
-
-  p = pList->addEntry(GAMETEXT_RESTARTLEVEL);
-  p->Text.push_back(InputHandler::instance()->getRestartLevel().toFancyString());
-  p->Text.push_back(InputHandler::instance()->getRestartLevel().toString());
-
-  p = pList->addEntry(GAMETEXT_SHOWCONSOLE);
-  p->Text.push_back(InputHandler::instance()->getShowConsole().toFancyString());
-  p->Text.push_back(InputHandler::instance()->getShowConsole().toString());
-
-  p = pList->addEntry(GAMETEXT_CHATDIALOG);
-  p->Text.push_back(InputHandler::instance()->getChat().toFancyString());
-  p->Text.push_back(InputHandler::instance()->getChat().toString());
-
-  p = pList->addEntry(GAMETEXT_CONSOLEHISTORYPLUS);
-  p->Text.push_back(InputHandler::instance()->getConsoleHistoryPlus().toFancyString());
-  p->Text.push_back(InputHandler::instance()->getConsoleHistoryPlus().toString());
-
-  p = pList->addEntry(GAMETEXT_CONSOLEHISTORYMINUS);
-  p->Text.push_back(InputHandler::instance()->getConsoleHistoryMinus().toFancyString());
-  p->Text.push_back(InputHandler::instance()->getConsoleHistoryMinus().toString());
+  for(unsigned int i=0; i<INPUT_NB_GLOBALKEYS; i++) {
+    p = pList->addEntry(InputHandler::instance()->getGlobalKeyHelp(i));
+    p->Text.push_back(InputHandler::instance()->getGlobalKey(i)->toFancyString());
+    p->Text.push_back(InputHandler::instance()->getGlobalKey(i)->toString());
+  }
 
   // player keys    
   for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
@@ -2351,35 +2325,9 @@ void StateOptions::setInputKey(const std::string& i_strKey, const std::string& i
     }
   }
 
-  if(i_strKey == GAMETEXT_SWITCHFAVORITE) {
-    InputHandler::instance()->setSwitchFavorite(XMKey(i_key));
-  }
-
-  if(i_strKey == GAMETEXT_SWITCHBLACKLIST) {
-    InputHandler::instance()->setSwitchBlacklist(XMKey(i_key));
-  }
-
-  if(i_strKey == GAMETEXT_SWITCHUGLYMODE) {
-    InputHandler::instance()->setSwitchUglyMode(XMKey(i_key));
-  }
-
-  if(i_strKey == GAMETEXT_RESTARTLEVEL) {
-    InputHandler::instance()->setRestartLevel(XMKey(i_key));
-  }
-
-  if(i_strKey == GAMETEXT_SHOWCONSOLE) {
-    InputHandler::instance()->setShowConsole(XMKey(i_key));
-  }
-
-  if(i_strKey == GAMETEXT_CONSOLEHISTORYPLUS) {
-    InputHandler::instance()->setConsoleHistoryPlus(XMKey(i_key));
-  }
-
-  if(i_strKey == GAMETEXT_CONSOLEHISTORYMINUS) {
-    InputHandler::instance()->setConsoleHistoryMinus(XMKey(i_key));
-  }
-
-  if(i_strKey == GAMETEXT_CHATDIALOG) {
-    InputHandler::instance()->setChat(XMKey(i_key));
+  for(unsigned int i=0; i<INPUT_NB_GLOBALKEYS; i++) {
+    if(i_strKey == InputHandler::instance()->getGlobalKeyHelp(i)) {
+      InputHandler::instance()->setGlobalKey(i, XMKey(i_key));
+    }
   }
 }

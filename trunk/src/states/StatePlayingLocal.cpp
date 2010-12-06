@@ -297,7 +297,7 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 #endif
 
-  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getRestartCheckpoint()) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_RESTARTCHECKPOINT))) {
 
     bool v_isCheckpoint = false;
 
