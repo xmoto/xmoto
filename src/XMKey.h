@@ -45,7 +45,7 @@ class XMKey {
   bool operator==(const XMKey& i_other) const;
   std::string toString() const;
   std::string toFancyString() const;
-  bool isPressed(Uint8 *i_keystate, Uint8 i_mousestate);
+  bool isPressed(Uint8 *i_keystate, Uint8 i_mousestate) const;
 
   bool isDefined() const;
 

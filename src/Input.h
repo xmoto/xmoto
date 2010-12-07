@@ -33,9 +33,9 @@ class UserConfig;
 class Universe;
 class Scene;
 
-struct IGlobalKey {
-  IGlobalKey();
-  IGlobalKey(const std::string& i_name, const XMKey& i_key, const std::string i_help);
+struct IFullKey {
+  IFullKey();
+  IFullKey(const std::string& i_name, const XMKey& i_key, const std::string i_help);
 
   std::string name;
   XMKey key;
@@ -55,6 +55,16 @@ enum INPUT_GLOBALKEYS {
   INPUT_CONSOLEHISTORYMINUS,
 
   INPUT_NB_GLOBALKEYS
+};
+
+enum INPUT_PLAYERKEYS {
+  INPUT_DRIVE = 0,
+  INPUT_BRAKE,
+  INPUT_FLIPLEFT,
+  INPUT_FLIPRIGHT,
+  INPUT_CHANGEDIR,
+
+  INPUT_NB_PLAYERKEYS
 };
 
   /*===========================================================================
@@ -109,16 +119,11 @@ public:
   void saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
 
   bool isANotGameSetKey(XMKey* i_xmkey) const;
-  void setDRIVE(int i_player, XMKey i_value);
-  XMKey getDRIVE(int i_player) const;
-  void setBRAKE(int i_player, XMKey i_value);
-  XMKey getBRAKE(int i_player) const;
-  void setFLIPLEFT(int i_player, XMKey i_value);
-  XMKey getFLIPLEFT(int i_player) const;
-  void setFLIPRIGHT(int i_player, XMKey i_value);
-  XMKey getFLIPRIGHT(int i_player) const;
-  void setCHANGEDIR(int i_player, XMKey i_value);
-  XMKey getCHANGEDIR(int i_player) const;
+
+  void setPlayerKey(unsigned int INPUT_key, int i_player, XMKey i_value);
+  const XMKey* getPlayerKey(unsigned int INPUT_key, int i_player) const;
+  std::string getPlayerKeyHelp(unsigned int INPUT_key, int i_player) const;
+
   void setSCRIPTACTION(int i_player, int i_action, XMKey i_value);
   XMKey getSCRIPTACTION(int i_player, int i_action) const;
 
@@ -137,15 +142,10 @@ private:
   std::vector<SDL_Joystick *> m_Joysticks;
   std::vector<std::string>    m_JoysticksNames;
   std::vector<std::string>    m_JoysticksIds;
-      
-  XMKey m_nDriveKey[INPUT_NB_PLAYERS];
-  XMKey m_nBrakeKey[INPUT_NB_PLAYERS];
-  XMKey m_nPullBackKey[INPUT_NB_PLAYERS];
-  XMKey m_nPushForwardKey[INPUT_NB_PLAYERS];
-  XMKey m_nChangeDirKey[INPUT_NB_PLAYERS];
-  XMKey m_nScriptActionKeys[INPUT_NB_PLAYERS][MAX_SCRIPT_KEY_HOOKS];
 
-  IGlobalKey m_globalKeys[INPUT_NB_GLOBALKEYS];
+  XMKey m_nScriptActionKeys[INPUT_NB_PLAYERS][MAX_SCRIPT_KEY_HOOKS];
+  IFullKey m_playerKeys[INPUT_NB_PLAYERS][INPUT_NB_PLAYERKEYS];
+  IFullKey m_globalKeys[INPUT_NB_GLOBALKEYS];
 };
 
 #endif
