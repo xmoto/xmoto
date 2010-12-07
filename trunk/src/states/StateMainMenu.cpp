@@ -1451,46 +1451,6 @@ void StateMainMenu::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i
   }
 }
 
-void StateMainMenu::setInputKey(const std::string& i_strKey, const std::string& i_key) {
-
-  for(int i=0; i<INPUT_NB_PLAYERS; i++) {
-    std::ostringstream v_n;
-
-    if(i != 0) {
-      v_n << " " << (i+1);
-    }  
-
-    if(i_strKey == GAMETEXT_DRIVE + v_n.str()) {
-      InputHandler::instance()->setDRIVE(i, XMKey(i_key));
-    }
-    
-    if(i_strKey == GAMETEXT_BRAKE + v_n.str()) {
-      InputHandler::instance()->setBRAKE(i, XMKey(i_key));
-    }
-    
-    if(i_strKey == GAMETEXT_FLIPLEFT + v_n.str()) {
-      InputHandler::instance()->setFLIPLEFT(i, XMKey(i_key));
-    }
-    
-    if(i_strKey == GAMETEXT_FLIPRIGHT + v_n.str()) {
-      InputHandler::instance()->setFLIPRIGHT(i, XMKey(i_key));
-    }
-    
-    if(i_strKey == GAMETEXT_CHANGEDIR + v_n.str()) {
-      InputHandler::instance()->setCHANGEDIR(i, XMKey(i_key));
-    }
-
-    for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
-      std::ostringstream v_k;
-      v_k << (k+1);
-      if(i_strKey == GAMETEXT_SCRIPTACTION + v_n.str() + " " + v_k.str()) {
-	InputHandler::instance()->setSCRIPTACTION(i, k, XMKey(i_key));
-      }
-    }
-
-  }
-}
-
 void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
 {
   UIListEntry *pEntry = NULL;

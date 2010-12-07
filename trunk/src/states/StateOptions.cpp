@@ -1979,26 +1979,14 @@ void StateOptions::updateControlsList() {
     pList = (UIList *)m_GUI->getChild(std::string("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_P") +v_buf.str()+ std::string(":KEY_ACTION_LIST_P")+v_buf.str());
     pList->clear();
 
-    p = pList->addEntry(GAMETEXT_DRIVE);
-    p->Text.push_back(InputHandler::instance()->getDRIVE(i).toFancyString());
-    p->Text.push_back(InputHandler::instance()->getDRIVE(i).toString());
+    // player keys
+    for(unsigned int j=0; j<INPUT_NB_PLAYERKEYS; j++) {
+      p = pList->addEntry(InputHandler::instance()->getPlayerKeyHelp(j, i));
+      p->Text.push_back(InputHandler::instance()->getPlayerKey(j, i)->toFancyString());
+      p->Text.push_back(InputHandler::instance()->getPlayerKey(j, i)->toString());
+    }
 
-    p = pList->addEntry(GAMETEXT_BRAKE);
-    p->Text.push_back(InputHandler::instance()->getBRAKE(i).toFancyString());
-    p->Text.push_back(InputHandler::instance()->getBRAKE(i).toString());
-
-    p = pList->addEntry(GAMETEXT_FLIPLEFT);
-    p->Text.push_back(InputHandler::instance()->getFLIPLEFT(i).toFancyString());
-    p->Text.push_back(InputHandler::instance()->getFLIPLEFT(i).toString());
-
-    p = pList->addEntry(GAMETEXT_FLIPRIGHT);
-    p->Text.push_back(InputHandler::instance()->getFLIPRIGHT(i).toFancyString());
-    p->Text.push_back(InputHandler::instance()->getFLIPRIGHT(i).toString());
-
-    p = pList->addEntry(GAMETEXT_CHANGEDIR);
-    p->Text.push_back(InputHandler::instance()->getCHANGEDIR(i).toFancyString());
-    p->Text.push_back(InputHandler::instance()->getCHANGEDIR(i).toString());
-
+    // player script keys
     for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
       std::ostringstream v_k;
       v_k << (k+1);
@@ -2296,26 +2284,14 @@ void StateOptions::setInputKey(const std::string& i_strKey, const std::string& i
     std::ostringstream v_n;
     v_n << " " << (i+1);
 
-    if(i_strKey == GAMETEXT_DRIVE + v_n.str()) {
-      InputHandler::instance()->setDRIVE(i, XMKey(i_key));
-    }
-    
-    if(i_strKey == GAMETEXT_BRAKE + v_n.str()) {
-      InputHandler::instance()->setBRAKE(i, XMKey(i_key));
-    }
-    
-    if(i_strKey == GAMETEXT_FLIPLEFT + v_n.str()) {
-      InputHandler::instance()->setFLIPLEFT(i, XMKey(i_key));
-    }
-    
-    if(i_strKey == GAMETEXT_FLIPRIGHT + v_n.str()) {
-      InputHandler::instance()->setFLIPRIGHT(i, XMKey(i_key));
-    }
-    
-    if(i_strKey == GAMETEXT_CHANGEDIR + v_n.str()) {
-      InputHandler::instance()->setCHANGEDIR(i, XMKey(i_key));
+    // player keys
+    for(unsigned int j=0; j<INPUT_NB_PLAYERKEYS; j++) {
+      if(i_strKey == InputHandler::instance()->getPlayerKeyHelp(j, i) + v_n.str()) {
+	InputHandler::instance()->setPlayerKey(j, i, XMKey(i_key));
+      }
     }
 
+    // player script keys
     for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
       std::ostringstream v_k;
       v_k << (k+1);
