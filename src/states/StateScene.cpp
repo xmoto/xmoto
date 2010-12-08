@@ -329,7 +329,7 @@ void StateScene::onRenderFlush() {
 void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   GameApp* pGame = GameApp::instance();  
 
-  if(i_xmkey == XMKey(SDLK_TAB, KMOD_NONE)) {
+  if(i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_LEVELWATCHING))) {
     if(i_type == INPUT_UP) {
       if(m_cameraAnim != NULL) {
 	if(autoZoom() && m_cameraAnim->allowNextStep()) {
@@ -347,13 +347,13 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     restartLevel();
   }
   
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F2, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHPLAYER))) {
     if(m_universe != NULL) {
       m_universe->switchFollowCamera();
     }
   }
   
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F4, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHTRACKINGSHOTMODE))) {
     if(m_universe != NULL && m_renderer != NULL) {
       m_trackingShotMode = ! m_trackingShotMode;
 
@@ -405,11 +405,11 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_PAGEUP, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_NEXTLEVEL))) {
     nextLevel();
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_PAGEDOWN, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_PREVIOUSLEVEL))) {
     nextLevel(false);
   }
   
@@ -432,7 +432,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_g, KMOD_LCTRL)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHRENDERGHOSTTRAIL))) {
     
     // toogle
     XMSession::instance()->setRenderGhostTrail(!XMSession::instance()->renderGhostTrail());

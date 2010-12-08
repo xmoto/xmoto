@@ -269,6 +269,19 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
       IFullKey("KeyRestartCheckpoint",   XMKey(SDLK_BACKSPACE, KMOD_NONE),  GAMETEXT_RESTARTCHECKPOINT);
     m_globalKeys[INPUT_CHAT]                =
       IFullKey("KeyChat",                XMKey(SDLK_c,         KMOD_LCTRL), GAMETEXT_CHATDIALOG);
+    m_globalKeys[INPUT_LEVELWATCHING]          =
+      IFullKey("KeyLevelWatching",       XMKey(SDLK_TAB,       KMOD_NONE),  GAMETEXT_LEVELWATCHING);
+    m_globalKeys[INPUT_SWITCHPLAYER]           =
+      IFullKey("KeySwitchPlayer",        XMKey(SDLK_F2,        KMOD_NONE),  GAMETEXT_SWITCHPLAYER);
+    m_globalKeys[INPUT_SWITCHTRACKINGSHOTMODE] =
+      IFullKey("KeySwitchTrackingshotMode", XMKey(SDLK_F4,     KMOD_NONE),  GAMETEXT_SWITCHTRACKINGSHOTMODE);
+    m_globalKeys[INPUT_NEXTLEVEL]              =
+      IFullKey("KeyNextLevel",           XMKey(SDLK_PAGEUP,    KMOD_NONE),  GAMETEXT_NEXTLEVEL);
+    m_globalKeys[INPUT_PREVIOUSLEVEL]         =
+      IFullKey("KeyPreviousLevel",       XMKey(SDLK_PAGEDOWN,  KMOD_NONE),  GAMETEXT_PREVIOUSLEVEL);
+    m_globalKeys[INPUT_SWITCHRENDERGHOSTTRAIL] =
+      IFullKey("KeySwitchRenderGhosttrail", XMKey(SDLK_g,      KMOD_LCTRL), GAMETEXT_SWITCHREDERGHOSTTRAIL);
+
   }  
 
   /*===========================================================================
