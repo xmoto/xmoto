@@ -121,18 +121,24 @@ void StateHelp::createGUI() {
   v_someText = new UIStatic(v_frame, 0, 0, GAMETEXT_HELP, v_frame->getPosition().nWidth, 36);
   v_someText->setFont(drawLib->getFontMedium());
   v_someText = new UIStatic(v_frame, 10, 40, m_gameHelp ?
-			    GAMETEXT_HELPTEXT_PLAYINGLEVEL(InputHandler::instance()->getKeyByAction("Drive"),
-					      InputHandler::instance()->getKeyByAction("Brake"),
-					      InputHandler::instance()->getKeyByAction("PullBack"),
-					      InputHandler::instance()->getKeyByAction("PushForward"),
-					      InputHandler::instance()->getKeyByAction("ChangeDir")
-					      ) :
-			    GAMETEXT_HELPTEXT(InputHandler::instance()->getKeyByAction("Drive"),
-					      InputHandler::instance()->getKeyByAction("Brake"),
-					      InputHandler::instance()->getKeyByAction("PullBack"),
-					      InputHandler::instance()->getKeyByAction("PushForward"),
-					      InputHandler::instance()->getKeyByAction("ChangeDir")
-					      ),
+	  GAMETEXT_HELPTEXT_PLAYINGLEVEL(InputHandler::instance()->getPlayerKey(INPUT_DRIVE, 0)->toFancyString(),
+					 InputHandler::instance()->getPlayerKey(INPUT_BRAKE, 0)->toFancyString(),
+					 InputHandler::instance()->getPlayerKey(INPUT_FLIPLEFT,0)->toFancyString(),
+					 InputHandler::instance()->getPlayerKey(INPUT_FLIPRIGHT, 0)->toFancyString(),
+					 InputHandler::instance()->getPlayerKey(INPUT_CHANGEDIR, 0)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_RESTARTLEVEL)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_PREVIOUSLEVEL)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_NEXTLEVEL)->toFancyString()
+					 ) :
+	  GAMETEXT_HELPTEXT(InputHandler::instance()->getPlayerKey(INPUT_DRIVE, 0)->toFancyString(),
+			    InputHandler::instance()->getPlayerKey(INPUT_BRAKE, 0)->toFancyString(),
+			    InputHandler::instance()->getPlayerKey(INPUT_FLIPLEFT,0)->toFancyString(),
+			    InputHandler::instance()->getPlayerKey(INPUT_FLIPRIGHT, 0)->toFancyString(),
+			    InputHandler::instance()->getPlayerKey(INPUT_CHANGEDIR, 0)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_RESTARTLEVEL)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_PREVIOUSLEVEL)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_NEXTLEVEL)->toFancyString()
+			    ),
 			    v_frame->getPosition().nWidth-20,
 			    m_gameHelp ? v_frame->getPosition().nHeight-46 :
 			                 v_frame->getPosition().nHeight-56);

@@ -281,7 +281,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_HELP                 _("Help")
 
 
-#define GAMETEXT_HELPTEXT(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY) \
+#define GAMETEXT_HELPTEXT(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY, restart_level_KEY, previous_level_KEY, next_level_KEY) \
 std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  " + accelerate_KEY + " - " + _("Accelerates") + "\n" \
 "  " + brake_KEY + " - " + std::string(_("Brakes")) + "\n" \
@@ -289,8 +289,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  " + rotate_clockwise_KEY + " - " + std::string(_("Rotates it clockwise")) + "\n" \
 "  " + change_direction_KEY + " - " + std::string(_("Turns around and drives in the other direction")) + "\n" \
 "  Esc - " + std::string(_("Pause")) + "\n" \
-"  Return - " + std::string(_("Restart the level")) + "\n" \
-"  PageDown/PageUp - " + std::string(_("Previous/Next level")) + "\n" \
+"  " + restart_level_KEY + " - " + std::string(_("Restart the level")) + "\n" \
+"  " + previous_level_KEY + "/" + next_level_KEY + " - " + std::string(_("Previous/Next level")) + "\n" \
 "  " + "\n"\
 "  F8 - " + std::string(_("Enable/disable web")) + "\n" \
 "  F5 - " + std::string(_("Reload levels, themes and replays from directories")) + "\n" \
@@ -301,7 +301,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
  + std::string(_("Find all the strawberries and touch the flower to finish\nthe level.")) + "\n" \
  + std::string(_("Read the README file or check out the website at\nhttp://xmoto.tuxfamily.org\nfor more information."))
 
-#define GAMETEXT_HELPTEXT_PLAYINGLEVEL(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY) \
+#define GAMETEXT_HELPTEXT_PLAYINGLEVEL(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY, restart_level_KEY, previous_level_KEY, next_level_KEY) \
 std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  " + accelerate_KEY + " - " + _("Accelerates") + "\n" \
 "  " + brake_KEY + " - " + std::string(_("Brakes")) + "\n" \
@@ -310,8 +310,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  " + change_direction_KEY + " - " + std::string(_("Turns around and drives in the other direction")) + "\n" \
 "  " + "\n" \
 "  Esc - " + std::string(_("Pause")) + "\n" \
-"  Return - " + std::string(_("Restart the level")) + "\n" \
-"  PageDown/PageUp - " + std::string(_("Previous/Next level")) + "\n" \
+"  " + restart_level_KEY + " - " + std::string(_("Restart the level")) + "\n" \
+"  " + previous_level_KEY + "/" + next_level_KEY + " - " + std::string(_("Previous/Next level")) + "\n" \
 "  ctrl+M - " + std::string(_("change mirror mode")) + "\n"\
 "  ctrl+B - " + std::string(_("Toggle blacklist")) + "\n"\
 "  ctrl+S - " + std::string(_("Enable/disable audio")) +"\n"\
@@ -760,6 +760,13 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_REALLYNICE   _("Really nice")
 #define GAMETEXT_SENDTHISREPORT _("Send this report")
 #define GAMETEXT_SKIPTHISREPORT _("Skip this report")
+
+#define GAMETEXT_LEVELWATCHING          _("Pause to watch the level")
+#define GAMETEXT_NEXTLEVEL              _("Next level")
+#define GAMETEXT_PREVIOUSLEVEL          _("Previous level")
+#define GAMETEXT_SWITCHPLAYER           _("Switch player")
+#define GAMETEXT_SWITCHTRACKINGSHOTMODE _("Switch trackingshot mode")
+#define GAMETEXT_SWITCHREDERGHOSTTRAIL  _("Switch ghosttrail rendering")
 
 #define CONTEXTHELP_NOIDEA    	  _("You don't want to vote")
 #define CONTEXTHELP_DBEGINNER 	  _("Really easy")
