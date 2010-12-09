@@ -743,9 +743,11 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
       }
 
       try {
-	_RenderBike(i_ghost, true,
-		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
-	i_ghost->addNbRenderedFrames();
+	if(i_ghost->isStateInitialized()) {
+	  _RenderBike(i_ghost, true,
+		      i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
+	  i_ghost->addNbRenderedFrames();
+	}
       } catch(Exception &e) {
 	i_scene->gameMessage("Unable to render the ghost", true, 50);
       }
@@ -793,9 +795,11 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
     
   if(XMSession::instance()->ugly()) {
     if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
-      _RenderBike(i_ghost,
-		  true,
-		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
+      if(i_ghost->isStateInitialized()) {
+	_RenderBike(i_ghost,
+		    true,
+		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
+      }
     }
   }
   /* ghost arrow indication */    
@@ -1187,12 +1191,14 @@ void GameRenderer::render(Scene* i_scene) {
       Biker* v_player = i_scene->Players()[i];
       if(v_player != pCamera->getPlayerToFollow()) {
 	try {
-	  _RenderBike(v_player,
-		      v_player->getRenderBikeFront(),
-		      v_player->getColorFilter(),
-		      v_player->getUglyColorFilter());
-	  if(XMSession::instance()->showBikersArrows()) {
-	    displayArrowIndication(v_player, &m_screenBBox);
+	  if(v_player->isStateInitialized()) {
+	    _RenderBike(v_player,
+			v_player->getRenderBikeFront(),
+			v_player->getColorFilter(),
+			v_player->getUglyColorFilter());
+	    if(XMSession::instance()->showBikersArrows()) {
+	      displayArrowIndication(v_player, &m_screenBBox);
+	    }
 	  }
 	} catch(Exception &e) {
 	  i_scene->gameMessage("Unable to render the biker", true, 50);
@@ -1204,15 +1210,17 @@ void GameRenderer::render(Scene* i_scene) {
     if(v_found) {
       try {
 	Biker* pBiker = pCamera->getPlayerToFollow();
-	_RenderBike(pBiker,
-		    pBiker->getRenderBikeFront(),
-		    pBiker->getColorFilter(),
-		    pBiker->getUglyColorFilter());
-
-	if(XMSession::instance()->debug()) {
-	  // render collision points
-	  for(unsigned int j=0; j<pCamera->getPlayerToFollow()->CollisionPoints().size(); j++) {
-	    _RenderCircle(16, MAKE_COLOR(255,255,0,255),pCamera->getPlayerToFollow()->CollisionPoints()[j], 0.02);
+	if(pBiker->isStateInitialized()) {
+	  _RenderBike(pBiker,
+		      pBiker->getRenderBikeFront(),
+		      pBiker->getColorFilter(),
+		      pBiker->getUglyColorFilter());
+	  
+	  if(XMSession::instance()->debug()) {
+	    // render collision points
+	    for(unsigned int j=0; j<pCamera->getPlayerToFollow()->CollisionPoints().size(); j++) {
+	      _RenderCircle(16, MAKE_COLOR(255,255,0,255),pCamera->getPlayerToFollow()->CollisionPoints()[j], 0.02);
+	    }
 	  }
 	}
       } catch(Exception &e) {

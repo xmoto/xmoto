@@ -167,6 +167,7 @@ class Biker {
   void setPlaySound(bool i_value);
 
   PhysicsSettings* getPhysicsSettings();
+  virtual bool isStateInitialized() const;
   int localNetId() const; // id of the biker for the network part (must be 0, 1, 2 or 3)
   virtual void setLocalNetId(int i_value);
 

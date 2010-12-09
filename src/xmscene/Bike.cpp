@@ -706,6 +706,10 @@ void Biker::addNbRenderedFrames() {
   m_nbRenderedFrames++;
 }
 
+bool Biker::isStateInitialized() const {
+  return true; // by default, consider that the biker is iniialized
+}
+
 void Biker::clearStates() {
   /* BIKE_S */
   m_bikeState->CenterP = Vector2f(0,0);

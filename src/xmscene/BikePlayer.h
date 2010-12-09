@@ -194,11 +194,12 @@ class PlayerNetClient : public Biker {
 			     CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			     Scene *i_motogame);
   virtual BikeState* getStateForUpdate();
+  virtual bool isStateInitialized() const;
 
   virtual void setLocalNetId(int i_value);
   virtual BikeController* getControler();
   void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
-  
+
  private:
   BikeControllerNet* m_BikeC;
 
@@ -209,6 +210,8 @@ class PlayerNetClient : public Biker {
   std::vector<BikeState*> m_previousBikeStates;
   BikeState* m_lastExtrapolateBikeState;
   int m_lastFrameTimeUpdate;
+
+  bool m_isStateInitialized;
 };
 
 #endif
