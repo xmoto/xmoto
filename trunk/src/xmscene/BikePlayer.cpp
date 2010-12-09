@@ -1269,6 +1269,7 @@ PlayerNetClient::PlayerNetClient(PhysicsSettings* i_physicsSettings,
 
   m_bikeStateForUpdate = new BikeState(m_physicsSettings);
   m_stateExternallyUpdated = false;
+  m_isStateInitialized     = false;
   m_lastExtrapolateBikeState = new BikeState(i_physicsSettings);
   m_lastFrameTimeUpdate = 0;
 }
@@ -1427,9 +1428,15 @@ void PlayerNetClient::updateToTime(int i_time, int i_timeStep,
       }
     }
   }
+
+  m_isStateInitialized = true;
 }
 
 BikeState* PlayerNetClient::getStateForUpdate() {
   m_stateExternallyUpdated = true;
   return m_bikeStateForUpdate;
+}
+
+bool PlayerNetClient::isStateInitialized() const {
+  return m_isStateInitialized;
 }
