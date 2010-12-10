@@ -281,35 +281,34 @@ Central place to keep many in-game text strings
 #define GAMETEXT_HELP                 _("Help")
 
 
-#define GAMETEXT_HELPTEXT(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY, restart_level_KEY, previous_level_KEY, next_level_KEY) \
+#define GAMETEXT_HELPTEXT(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY, restart_level_KEY, previous_level_KEY, next_level_KEY, switch_wwwaccess_KEY, screenshot_KEY, fps_KEY, switch_uglymode_KEY, switch_player_KEY, toogle_favorite_KEY, help_KEY, reload_files_to_db_KEY, playing_pause_KEY, switch_trackingshot_mode_KEY, switch_gfxquality_mode_KEY, switch_gfx_mode_KEY) \
 std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  " + accelerate_KEY + " - " + _("Accelerates") + "\n" \
 "  " + brake_KEY + " - " + std::string(_("Brakes")) + "\n" \
 "  " + rotate_counter_clockwise_KEY + " - " + std::string(_("Rotates it counter-clockwise")) + "\n" \
 "  " + rotate_clockwise_KEY + " - " + std::string(_("Rotates it clockwise")) + "\n" \
 "  " + change_direction_KEY + " - " + std::string(_("Turns around and drives in the other direction")) + "\n" \
-"  Esc - " + std::string(_("Pause")) + "\n" \
+"  " + playing_pause_KEY + " - " + std::string(_("Pause")) + "\n" \
 "  " + restart_level_KEY + " - " + std::string(_("Restart the level")) + "\n" \
 "  " + previous_level_KEY + "/" + next_level_KEY + " - " + std::string(_("Previous/Next level")) + "\n" \
 "  " + "\n"\
-"  F8 - " + std::string(_("Enable/disable web")) + "\n" \
-"  F5 - " + std::string(_("Reload levels, themes and replays from directories")) + "\n" \
-"  F12 - " + std::string(_("Take a screenshot")) + "\n" \
+"  " + switch_wwwaccess_KEY + " - " + std::string(_("Enable/disable web")) + "\n" \
+"  " + reload_files_to_db_KEY + " - " + std::string(_("Reload levels, themes and replays from directories")) + "\n" \
+"  " + screenshot_KEY + " - " + std::string(_("Take a screenshot")) + "\n" \
 "  " + "\n" \
  + std::string(_("Use Quick Play button to immediately start a game with a random level,\nor use Levels button to select from level packs.")) + "\n" \
 "  " + "\n" \
  + std::string(_("Find all the strawberries and touch the flower to finish\nthe level.")) + "\n" \
  + std::string(_("Read the README file or check out the website at\nhttp://xmoto.tuxfamily.org\nfor more information."))
 
-#define GAMETEXT_HELPTEXT_PLAYINGLEVEL(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY, restart_level_KEY, previous_level_KEY, next_level_KEY) \
-std::string(_("You control your bike using the keyboard")) + ":\n" \
+#define GAMETEXT_HELPTEXT_PLAYINGLEVEL(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY, restart_level_KEY, previous_level_KEY, next_level_KEY, switch_wwwaccess_KEY, screenshot_KEY, fps_KEY, switch_uglymode_KEY, switch_player_KEY, toogle_favorite_KEY, help_KEY, reload_files_to_db_KEY, playing_pause_KEY, switch_trackingshot_mode_KEY, switch_gfxquality_mode_KEY, switch_gfx_mode_KEY) \
 "  " + accelerate_KEY + " - " + _("Accelerates") + "\n" \
 "  " + brake_KEY + " - " + std::string(_("Brakes")) + "\n" \
 "  " + rotate_counter_clockwise_KEY + " - " + std::string(_("Rotates it counter-clockwise")) + "\n" \
 "  " + rotate_clockwise_KEY + " - " + std::string(_("Rotates it clockwise")) + "\n" \
 "  " + change_direction_KEY + " - " + std::string(_("Turns around and drives in the other direction")) + "\n" \
 "  " + "\n" \
-"  Esc - " + std::string(_("Pause")) + "\n" \
+"  " + playing_pause_KEY + " - " + std::string(_("Pause")) + "\n" \
 "  " + restart_level_KEY + " - " + std::string(_("Restart the level")) + "\n" \
 "  " + previous_level_KEY + "/" + next_level_KEY + " - " + std::string(_("Previous/Next level")) + "\n" \
 "  ctrl+M - " + std::string(_("change mirror mode")) + "\n"\
@@ -319,16 +318,16 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  ctrl+G - " + std::string(_("Toggle Ghost Trail Rendering")) + "\n"\
 "  ctrl+T - " + std::string(_("Toggle Trail Cam")) + "\n"\
 "  ctrl+N - " + std::string(_("Toggle Display Medals,Display WR")) + "\n"\
-"  F1 - " + std::string(_("Show this help")) + "\n"\
-"  F2 - " + std::string(_("Show the ghost if possible in the game")) + "\n"\
-"  F3 - " + std::string(_("Toggle favorite")) + "\n"\
-"  F4 - " + std::string(_("Toggle Ghost Trail Tracking Shot")) +"\n"\
-"  F7 - " + std::string(_("Enable/disable FPS display")) + "\n"\
-"  F8 - " + std::string(_("Enable/disable web")) + "\n" \
-"  F9 - " + std::string(_("Enable/disable ugly mode")) + "\n"\
-"  F10- " + std::string(_("Toggle Contrast, Light and Full Graphics")) + "\n"\
-"  F11- " + std::string(_("Toggle theme and ugly over mode")) + "\n"\
-"  F12- " + std::string(_("Take a screenshot")) + "\n" \
+"  " + help_KEY + " - " + std::string(_("Show this help")) + "\n"\
+"  " + switch_player_KEY + " - " + std::string(_("Switch biker")) + "\n"\
+"  " + toogle_favorite_KEY + " - " + std::string(_("Toggle favorite")) + "\n"\
+"  " + switch_trackingshot_mode_KEY + " - " + std::string(_("Toggle Ghost Trail Tracking Shot")) +"\n"\
+"  " + fps_KEY + " - " + std::string(_("Enable/disable FPS display")) + "\n"\
+"  " + switch_wwwaccess_KEY + " - " + std::string(_("Enable/disable web")) + "\n" \
+"  " + switch_uglymode_KEY  + " - " + std::string(_("Enable/disable ugly mode")) + "\n"\
+"  " + switch_gfxquality_mode_KEY + " - " + std::string(_("Toggle Contrast, Light and Full Graphics")) + "\n"\
+"  " + switch_gfx_mode_KEY + " - " + std::string(_("Toggle theme and ugly over mode")) + "\n"\
+"  " + screenshot_KEY + " - " + std::string(_("Take a screenshot")) + "\n" \
 
 #define GAMETEXT_HIDEGHOSTS           _("Hide ghosts")
 #define GAMETEXT_HIGH                 _("High")
@@ -439,6 +438,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_NPLAYER(A)           ngettext("%i player", "%i players", A)
 #define GAMETEXT_PLAYERPROFILE        _("Player Profile")
 #define GAMETEXT_PLAYERPROFILES       _("Player Profiles")
+#define GAMETEXT_PLAYINGPAUSE         _("Pause when playing X-Moto")
 #define GAMETEXT_PLAYNEXT             _("Play Next Level")
 #define GAMETEXT_PORT                 _("Port")
 #define GAMETEXT_PRESSANYKEYTO        _("Press key you want to '%s' or ESC to cancel...")
@@ -451,6 +451,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_QUIT                 _("Quit Game")
 #define GAMETEXT_QUITMESSAGE          _("Do you really want to quit?")
 #define GAMETEXT_RANDOMIZE            _("Randomize")
+#define GAMETEXT_RELOADFILESTODB      _("Reload files to the database")
 #define GAMETEXT_RELOADINGLEVELS      _("Reloading levels...")
 #define GAMETEXT_RELOADINGREPLAYS     _("Reloading replays...")
 #define GAMETEXT_RELOADINGTHEMES      _("Reloading themes...")
@@ -473,6 +474,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_SAVE_AS              _("Saved as %s")
 #define GAMETEXT_SAVEREPLAY           _("Save Replay")
 #define GAMETEXT_SCREENRES            _("Screen Resolution")
+#define GAMETEXT_SCREENSHOT           _("Screenshot")
 #define GAMETEXT_SHOW                 _("Show")
 #define GAMETEXT_SHOWCONSOLE          _("Show console")
 #define GAMETEXT_SHOWENGINECOUNTER    _("Speedometer")
@@ -489,7 +491,11 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_SWITCHKEY            _("Key '%s' of Player '%i' has been switched to '%s'")
 #define GAMETEXT_SWITCHUGLYMODE       _("Enable/disable ugly mode")
 #define GAMETEXT_SWITCHFAVORITE       _("Add/remove to favorite levels")
+#define GAMETEXT_SWITCHFPS            _("Switch FPS")
 #define GAMETEXT_SWITCHBLACKLIST      _("Add/remove to blacklisted levels")
+#define GAMETEXT_SWITCHWWWACCESS      _("Switch WWW access")
+#define GAMETEXT_SWITCHGFXQUALITYMODE _("Switch graphics quality mode")
+#define GAMETEXT_SWITCHGFXMODE        _("Switch graphics mode")
 #define GAMETEXT_THEMES               _("Theme")
 #define GAMETEXT_THEMEHOSTED          _("Available")
 #define GAMETEXT_THEMENOTHOSTED       _("To download")

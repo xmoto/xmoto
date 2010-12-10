@@ -94,7 +94,7 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   SDLMod v_mod;
   std::string v_utf8Char;
 
-  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F5, KMOD_NONE)) {
+  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_RELOADFILESTODB))) {
     StateManager::instance()->pushState(new StateUpdateDb());
   }
 

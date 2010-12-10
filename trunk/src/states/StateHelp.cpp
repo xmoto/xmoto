@@ -92,7 +92,7 @@ void StateHelp::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   StateMenu::xmKey(i_type, i_xmkey);
 
   if(i_type == INPUT_DOWN && ( i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
-			       i_xmkey == XMKey(SDLK_F1,     KMOD_NONE) )) {
+			       i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_HELP)) )) {
     m_requestForEnd = true;
   }
 }
@@ -121,6 +121,7 @@ void StateHelp::createGUI() {
   v_someText = new UIStatic(v_frame, 0, 0, GAMETEXT_HELP, v_frame->getPosition().nWidth, 36);
   v_someText->setFont(drawLib->getFontMedium());
   v_someText = new UIStatic(v_frame, 10, 40, m_gameHelp ?
+
 	  GAMETEXT_HELPTEXT_PLAYINGLEVEL(InputHandler::instance()->getPlayerKey(INPUT_DRIVE, 0)->toFancyString(),
 					 InputHandler::instance()->getPlayerKey(INPUT_BRAKE, 0)->toFancyString(),
 					 InputHandler::instance()->getPlayerKey(INPUT_FLIPLEFT,0)->toFancyString(),
@@ -128,7 +129,19 @@ void StateHelp::createGUI() {
 					 InputHandler::instance()->getPlayerKey(INPUT_CHANGEDIR, 0)->toFancyString(),
 					 InputHandler::instance()->getGlobalKey(INPUT_RESTARTLEVEL)->toFancyString(),
 					 InputHandler::instance()->getGlobalKey(INPUT_PREVIOUSLEVEL)->toFancyString(),
-					 InputHandler::instance()->getGlobalKey(INPUT_NEXTLEVEL)->toFancyString()
+					 InputHandler::instance()->getGlobalKey(INPUT_NEXTLEVEL)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_SWITCHWWWACCESS)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_SCREENSHOT)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_SWITCHFPS)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_SWITCHUGLYMODE)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_SWITCHPLAYER)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_HELP)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_RELOADFILESTODB)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_PLAYINGPAUSE)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_SWITCHTRACKINGSHOTMODE)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_SWITCHGFXQUALITYMODE)->toFancyString(),
+					 InputHandler::instance()->getGlobalKey(INPUT_SWITCHGFXMODE)->toFancyString()
 					 ) :
 	  GAMETEXT_HELPTEXT(InputHandler::instance()->getPlayerKey(INPUT_DRIVE, 0)->toFancyString(),
 			    InputHandler::instance()->getPlayerKey(INPUT_BRAKE, 0)->toFancyString(),
@@ -137,11 +150,23 @@ void StateHelp::createGUI() {
 			    InputHandler::instance()->getPlayerKey(INPUT_CHANGEDIR, 0)->toFancyString(),
 			    InputHandler::instance()->getGlobalKey(INPUT_RESTARTLEVEL)->toFancyString(),
 			    InputHandler::instance()->getGlobalKey(INPUT_PREVIOUSLEVEL)->toFancyString(),
-			    InputHandler::instance()->getGlobalKey(INPUT_NEXTLEVEL)->toFancyString()
+			    InputHandler::instance()->getGlobalKey(INPUT_NEXTLEVEL)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_SWITCHWWWACCESS)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_SCREENSHOT)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_SWITCHFPS)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_SWITCHUGLYMODE)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_SWITCHPLAYER)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_HELP)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_RELOADFILESTODB)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_PLAYINGPAUSE)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_SWITCHTRACKINGSHOTMODE)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_SWITCHGFXQUALITYMODE)->toFancyString(),
+			    InputHandler::instance()->getGlobalKey(INPUT_SWITCHGFXMODE)->toFancyString()
 			    ),
 			    v_frame->getPosition().nWidth-20,
 			    m_gameHelp ? v_frame->getPosition().nHeight-46 :
-			                 v_frame->getPosition().nHeight-56);
+			    v_frame->getPosition().nHeight-56);
   v_someText->setFont(drawLib->getFontSmall());
   v_someText->setVAlign(UI_ALIGN_TOP);
   v_someText->setHAlign(UI_ALIGN_LEFT);

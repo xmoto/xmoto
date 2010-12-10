@@ -281,6 +281,24 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
       IFullKey("KeyPreviousLevel",       XMKey(SDLK_PAGEDOWN,  KMOD_NONE),  GAMETEXT_PREVIOUSLEVEL);
     m_globalKeys[INPUT_SWITCHRENDERGHOSTTRAIL] =
       IFullKey("KeySwitchRenderGhosttrail", XMKey(SDLK_g,      KMOD_LCTRL), GAMETEXT_SWITCHREDERGHOSTTRAIL);
+    m_globalKeys[INPUT_SCREENSHOT] =
+      IFullKey("KeyScreenshot", XMKey(SDLK_F12, KMOD_NONE), GAMETEXT_SCREENSHOT);
+    m_globalKeys[INPUT_SWITCHWWWACCESS] =
+      IFullKey("KeySwitchWWWAccess", XMKey(SDLK_F8, KMOD_NONE), GAMETEXT_SWITCHWWWACCESS);
+    m_globalKeys[INPUT_SWITCHFPS] =
+      IFullKey("KeySwitchFPS", XMKey(SDLK_F7, KMOD_NONE), GAMETEXT_SWITCHFPS);
+    m_globalKeys[INPUT_SWITCHGFXQUALITYMODE] =
+      IFullKey("KeySwitchGFXQualityMode", XMKey(SDLK_F10, KMOD_NONE), GAMETEXT_SWITCHGFXQUALITYMODE);
+    m_globalKeys[INPUT_SWITCHGFXMODE] =
+      IFullKey("KeySwitchGFXMode", XMKey(SDLK_F11, KMOD_NONE), GAMETEXT_SWITCHGFXMODE);
+
+    // uncustomizable keys
+    m_globalKeys[INPUT_HELP] =
+      IFullKey("KeyHelp", XMKey(SDLK_F1, KMOD_NONE), GAMETEXT_HELP, false);
+    m_globalKeys[INPUT_RELOADFILESTODB] =
+      IFullKey("KeyReloadFilesToDb", XMKey(SDLK_F5, KMOD_NONE), GAMETEXT_RELOADFILESTODB, false);
+    m_globalKeys[INPUT_PLAYINGPAUSE] =
+      IFullKey("KeyPlayingPause", XMKey(SDLK_ESCAPE, KMOD_NONE), GAMETEXT_PLAYINGPAUSE, false); // don't set it to true while ESCAPE is not setable via the option as a key
 
   }  
 
@@ -362,6 +380,10 @@ std::string InputHandler::getGlobalKeyHelp(unsigned int INPUT_key) const {
   return m_globalKeys[INPUT_key].help;
 }
 
+bool InputHandler::getGlobalKeyCustomizable(unsigned int INPUT_key) const {
+  return m_globalKeys[INPUT_key].customizable;
+}
+
 void InputHandler::setPlayerKey(unsigned int INPUT_key, int i_player, XMKey i_value) {
   m_playerKeys[i_player][INPUT_key].key = i_value;
 }
@@ -434,10 +456,11 @@ std::vector<std::string>& InputHandler::getJoysticksNames() {
   return m_JoysticksNames;
 }
 
-IFullKey::IFullKey(const std::string& i_name, const XMKey& i_key, const std::string i_help) {
+IFullKey::IFullKey(const std::string& i_name, const XMKey& i_key, const std::string i_help, bool i_customisable) {
   name = i_name;
   key  = i_key;
   help = i_help;
+  customizable = i_customisable;
 }
 
 IFullKey::IFullKey() {
