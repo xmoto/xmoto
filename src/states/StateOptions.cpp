@@ -1966,9 +1966,11 @@ void StateOptions::updateControlsList() {
   UIListEntry *p;
 
   for(unsigned int i=0; i<INPUT_NB_GLOBALKEYS; i++) {
-    p = pList->addEntry(InputHandler::instance()->getGlobalKeyHelp(i));
-    p->Text.push_back(InputHandler::instance()->getGlobalKey(i)->toFancyString());
-    p->Text.push_back(InputHandler::instance()->getGlobalKey(i)->toString());
+    if(InputHandler::instance()->getGlobalKeyCustomizable(i)) {
+      p = pList->addEntry(InputHandler::instance()->getGlobalKeyHelp(i));
+      p->Text.push_back(InputHandler::instance()->getGlobalKey(i)->toFancyString());
+      p->Text.push_back(InputHandler::instance()->getGlobalKey(i)->toString());
+    }
   }
 
   // player keys    

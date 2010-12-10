@@ -136,7 +136,7 @@ void StatePause::checkEvents() {
 }
 
 void StatePause::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
+  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_PLAYINGPAUSE))) {
     /* quit this state */
     m_requestForEnd = true;
   }

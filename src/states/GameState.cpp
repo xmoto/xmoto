@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../net/NetClient.h"
 #include "StateHelp.h"
 #include "../Renderer.h"
+#include "../Input.h"
 
 #define MENU_SHADING_TIME 0.3
 #define MENU_SHADING_VALUE 150
@@ -211,23 +212,23 @@ void GameState::addCommand(std::string cmd, std::string args)
 void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   GameApp* gameApp = GameApp::instance();
 
-  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F1, KMOD_NONE)) {
+  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_HELP))) {
     if (StateManager::instance()->isThereASuchState("StateHelp") == false) StateManager::instance()->pushState(new StateHelp(true,false,true, false));
     return;
   }
 
-  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F12, KMOD_NONE)) {
+  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SCREENSHOT))) {
     gameApp->gameScreenshot();
     return; 
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F8, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHWWWACCESS))) {
     gameApp->enableWWW(XMSession::instance()->www() == false);
     StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
     return;
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F7, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFPS))) {
     gameApp->enableFps(XMSession::instance()->fps() == false);
     return;
   }
@@ -246,8 +247,8 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     return;
   }
 
-   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F10, KMOD_NONE)) {
-    /* Toggle GFX Modes using F10 */
+   else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHGFXQUALITYMODE))) {
+    /* Toggle GFX Modes */
     if(XMSession::instance()->gameGraphics() == GFX_LOW) {
       XMSession::instance()->setGameGraphics(GFX_MEDIUM);
       SysMessage::instance()->displayText(SYS_MSG_GFX_MEDIUM_ACTIVATED);
@@ -263,7 +264,7 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     return;
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F11, KMOD_NONE)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHGFXMODE))) {
     /* F11 toggles TestThemeMode, UglyOver Mode and Normal Mode */
     if(XMSession::instance()->testTheme() == false && XMSession::instance()->uglyOver() == false) {
       gameApp->switchTestThemeMode(true);

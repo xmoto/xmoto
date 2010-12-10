@@ -35,11 +35,12 @@ class Scene;
 
 struct IFullKey {
   IFullKey();
-  IFullKey(const std::string& i_name, const XMKey& i_key, const std::string i_help);
+  IFullKey(const std::string& i_name, const XMKey& i_key, const std::string i_help, bool i_customisable = true);
 
   std::string name;
   XMKey key;
   std::string help;
+  bool customizable;
 };
 
 // write them in the order you want to see displayed them in the options list
@@ -55,10 +56,20 @@ enum INPUT_GLOBALKEYS {
   INPUT_SWITCHPLAYER,
   INPUT_SWITCHTRACKINGSHOTMODE,
   INPUT_SWITCHRENDERGHOSTTRAIL,
+  INPUT_SCREENSHOT,
+  INPUT_SWITCHWWWACCESS,
+  INPUT_SWITCHFPS,
+  INPUT_SWITCHGFXQUALITYMODE,
+  INPUT_SWITCHGFXMODE,
   INPUT_SHOWCONSOLE,
   INPUT_CHAT,
   INPUT_CONSOLEHISTORYPLUS,
   INPUT_CONSOLEHISTORYMINUS,
+
+  // uncustomizable keys
+  INPUT_HELP,
+  INPUT_RELOADFILESTODB,
+  INPUT_PLAYINGPAUSE,
 
   INPUT_NB_GLOBALKEYS
 };
@@ -136,6 +147,7 @@ public:
   void setGlobalKey(unsigned int INPUT_key, XMKey i_value);
   const XMKey* getGlobalKey(unsigned int INPUT_key) const;
   std::string getGlobalKeyHelp(unsigned int INPUT_key) const;
+  bool getGlobalKeyCustomizable(unsigned int INPUT_key) const;
 
   static float joyRawToFloat(float raw, float neg, float deadzone_neg, float deadzone_pos, float pos);
 

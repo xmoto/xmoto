@@ -677,7 +677,7 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   UILevelList* v_favoriteLevelsList;
   UILevelList* v_list;
 
-  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F1, KMOD_NONE)) {
+  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_HELP))) {
     StateManager::instance()->pushState(new StateHelp());
   }
 
