@@ -59,6 +59,7 @@ StatePreplayingReplay::~StatePreplayingReplay() {
 
 void StatePreplayingReplay::initUniverse() {
   m_universe->initPlay(&m_screen, 1, false);
+  m_universe->addGhostToExclude(m_replay);
 }
 
 void StatePreplayingReplay::preloadLevels() {

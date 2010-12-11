@@ -81,7 +81,7 @@ void StateUpdateTheme::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     m_pThread->askThreadToEnd();
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_k, KMOD_LCTRL)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
     if(m_threadStarted == true) {
       m_messageOnFailure = false;
       m_pThread->safeKill();

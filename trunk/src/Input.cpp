@@ -299,7 +299,24 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
       IFullKey("KeyReloadFilesToDb", XMKey(SDLK_F5, KMOD_NONE), GAMETEXT_RELOADFILESTODB, false);
     m_globalKeys[INPUT_PLAYINGPAUSE] =
       IFullKey("KeyPlayingPause", XMKey(SDLK_ESCAPE, KMOD_NONE), GAMETEXT_PLAYINGPAUSE, false); // don't set it to true while ESCAPE is not setable via the option as a key
-
+    m_globalKeys[INPUT_KILLPROCESS] =
+      IFullKey("KeyKillProcess", XMKey(SDLK_k, KMOD_LCTRL), GAMETEXT_KILLPROCESS, false);
+    m_globalKeys[INPUT_REPLAYINGREWIND] =
+      IFullKey("KeyReplayingRewind", XMKey(SDLK_LEFT, KMOD_NONE), GAMETEXT_REPLAYINGREWIND, false);
+    m_globalKeys[INPUT_REPLAYINGFORWARD] =
+      IFullKey("KeyReplayingForward", XMKey(SDLK_RIGHT, KMOD_NONE), GAMETEXT_REPLAYINGFORWARD, false);
+    m_globalKeys[INPUT_REPLAYINGPAUSE] =
+      IFullKey("KeyReplayingPause", XMKey(SDLK_SPACE, KMOD_NONE), GAMETEXT_REPLAYINGPAUSE, false);
+    m_globalKeys[INPUT_REPLAYINGSTOP] =
+      IFullKey("KeyReplayingStop", XMKey(SDLK_ESCAPE, KMOD_NONE), GAMETEXT_REPLAYINGSTOP, false);
+    m_globalKeys[INPUT_REPLAYINGFASTER] =
+      IFullKey("KeyReplayingFaster", XMKey(SDLK_UP, KMOD_NONE), GAMETEXT_REPLAYINGFASTER, false);
+    m_globalKeys[INPUT_REPLAYINGABITFASTER] =
+      IFullKey("KeyReplayingABitFaster", XMKey(SDLK_UP, KMOD_LCTRL), GAMETEXT_REPLAYINGABITFASTER, false);
+    m_globalKeys[INPUT_REPLAYINGSLOWER] =
+      IFullKey("KeyReplayingSlower", XMKey(SDLK_DOWN, KMOD_NONE), GAMETEXT_REPLAYINGSLOWER, false);
+    m_globalKeys[INPUT_REPLAYINGABITSLOWER] =
+      IFullKey("KeyReplayingABitSlower", XMKey(SDLK_DOWN, KMOD_LCTRL), GAMETEXT_REPLAYINGABITSLOWER, false);
   }  
 
   /*===========================================================================

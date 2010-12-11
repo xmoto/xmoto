@@ -68,6 +68,8 @@ class Universe {
   void removeRequestedGhost(const std::string& i_replay);
   void updateWaitingGhosts();
 
+  void addGhostToExclude(const std::string& i_ghostname);
+
   private:
   std::vector<Scene*>        m_scenes; /* Game objects */
   std::vector<XMSceneHooks*> m_motoGameHooks;
@@ -86,4 +88,7 @@ class Universe {
   std::string _getGhostReplayPath_bestOfTheRoom(xmDatabase *pDb, unsigned int i_number, std::string p_levelId, int &p_time);
 
   bool m_waitingForGhosts;
+
+  bool isGhostToExclude(const std::string& i_ghostname);
+  std::vector<std::string> m_ghostToExclude; // ghosts to not add (for example, to not add the replay and itself as a ghost)
 };

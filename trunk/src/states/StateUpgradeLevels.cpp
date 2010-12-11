@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../XMSession.h"
 #include "../helpers/Log.h"
 #include "../helpers/CmdArgumentParser.h"
+#include "../Input.h"
 
 StateUpgradeLevels::StateUpgradeLevels(bool drawStateBehind,
 				       bool updateStatesBehind)
@@ -123,7 +124,7 @@ void StateUpgradeLevels::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     m_pThread->askThreadToEnd();
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_k, KMOD_LCTRL)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
     if(m_threadStarted == true) {
       m_pThread->safeKill();
     }

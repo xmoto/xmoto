@@ -609,7 +609,9 @@ void Universe::addAvailableGhostsToScene(xmDatabase *pDb, Scene* i_scene) {
 	v_gi.url = v_replayUrl;
 	v_gi.strategyType = GAI_BESTOFROOM;
 
-	i_scene->addRequestedGhost(v_gi);
+	if(isGhostToExclude(v_gi.name) == false) {
+	  i_scene->addRequestedGhost(v_gi);
+	}
       }
     }
   }
@@ -638,7 +640,9 @@ void Universe::addAvailableGhostsToScene(xmDatabase *pDb, Scene* i_scene) {
 	v_gi.url = "";
 	v_gi.strategyType = GAI_MYBEST;
 
-	i_scene->addRequestedGhost(v_gi);
+	if(isGhostToExclude(v_gi.name) == false) {
+	  i_scene->addRequestedGhost(v_gi);
+	}
       }
     }
   }
@@ -667,7 +671,9 @@ void Universe::addAvailableGhostsToScene(xmDatabase *pDb, Scene* i_scene) {
 	v_gi.url = "";
 	v_gi.strategyType = GAI_THEBEST;
 
-	i_scene->addRequestedGhost(v_gi);
+	if(isGhostToExclude(v_gi.name) == false) {
+	  i_scene->addRequestedGhost(v_gi);
+	}
       }
     }
   }
@@ -744,4 +750,18 @@ std::string Universe::_getGhostReplayPath_bestOfLocal(xmDatabase *pDb, std::stri
   p_time = atoi(pDb->getResult(v_result, 2, 0, 1));
   pDb->read_DB_free(v_result);
   return res;
+}
+
+void Universe::addGhostToExclude(const std::string& i_ghostname) {
+  m_ghostToExclude.push_back(i_ghostname);
+}
+
+bool Universe::isGhostToExclude(const std::string& i_ghostname) {
+  for(unsigned int i=0; i<m_ghostToExclude.size(); i++) {
+    if(m_ghostToExclude[i] == i_ghostname) {
+      return true;
+    }
+  }
+
+  return false;
 }
