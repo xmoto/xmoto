@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateSendVote.h"
 #include "../thread/SendVoteThread.h"
 #include "../XMSession.h"
+#include "../Input.h"
 
 StateSendVote::StateSendVote(const std::string& i_idlevel,
 			     const std::string& i_difficulty_value, const std::string& i_quality_value,
@@ -52,7 +53,7 @@ void StateSendVote::callAfterThreadFinished(int threadResult)
 }
 
 void StateSendVote::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_k, KMOD_LCTRL)) {
+  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
     if(m_threadStarted == true) {
       m_pThread->safeKill();
     }
