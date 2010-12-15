@@ -343,12 +343,7 @@ bool Universe::isAReplayToSave() const {
 
 bool Universe::isAnErrorOnSaving() const {
 
-  // fake an error on physics level
-  for(unsigned int i=0; i<m_scenes.size(); i++) {
-    if(m_scenes[i]->getLevelSrc()->isPhysics()) {
-      return true;
-    }
-  }
+  // fake an error on physics level -> removed since it works now, but can happend on some new levels types
   return false;
 }
 
@@ -365,6 +360,9 @@ void Universe::finalizeReplay(bool i_finished) {
   SerializedBikeState BikeState;
   Scene::getSerializedBikeState(m_scenes[0]->Players()[0]->getState(), m_scenes[0]->getTime(), &BikeState, m_scenes[0]->getPhysicsSettings());
   m_pJustPlayReplay->storeState(BikeState);
+  if(m_scenes[0]->getLevelSrc()->isPhysics()) {
+    m_pJustPlayReplay->storeBlocks(m_scenes[0]->getTime(), m_scenes[0]->getLevelSrc()->Blocks(), m_scenes[0]->Players(), true);
+  }
   m_pJustPlayReplay->finishReplay(i_finished, i_finished ? m_scenes[0]->Players()[0]->finishTime() : 0);
 }
 
@@ -380,8 +378,7 @@ void Universe::initReplay() {
     return;
   }
 
-  if(XMSession::instance()->storeReplays() && XMSession::instance()->multiNbPlayers() == 1 &&
-     m_scenes[0]->getLevelSrc()->isPhysics() == false) {
+  if(XMSession::instance()->storeReplays() && XMSession::instance()->multiNbPlayers() == 1) {
     m_pJustPlayReplay = new Replay;
     m_pJustPlayReplay->createReplay("Latest.rpl",
 				    m_scenes[0]->getLevelSrc()->Id(),
@@ -396,7 +393,11 @@ std::string Universe::getTemporaryReplayName() const {
 }
 
 void Universe::saveReplayTemporary(xmDatabase *pDb) {
-  m_pJustPlayReplay->saveReplayIfNot(1); // still always use the format 1
+  /*
+    use old format if level is not physics to allow people having an old version to read replays
+    in the future (today is 28/06/2009), once everybody can read 3 version, use always 3 version
+  */
+  m_pJustPlayReplay->saveReplayIfNot(m_scenes[0]->getLevelSrc()->isPhysics() ? 3:1);
 }
 
 void Universe::saveReplay(xmDatabase *pDb, const std::string &Name) {
@@ -404,13 +405,6 @@ void Universe::saveReplay(xmDatabase *pDb, const std::string &Name) {
      Replays/Name.rpl */
 
   saveReplayTemporary(pDb);
-
-  /*
-    use old format if level is not physics to allow people having an old version to read replays
-    in the future (today is 28/06/2009), once everybody can read 2 version, use always 2 version
-    
-    m_scenes[0]->getLevelSrc()->isPhysics() ? 2 : 1);
-  */
 
   /* Try saving */
   std::string v_outputfile;

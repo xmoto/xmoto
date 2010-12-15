@@ -417,7 +417,9 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
 	  
 	  if(v_recordReplay && i == 0) {
 	    i_frameRecorder->storeState(BikeState);
-	    i_frameRecorder->storeBlocks(m_pLevelSrc->Blocks());
+	    if(m_pLevelSrc->isPhysics()) {
+	      i_frameRecorder->storeBlocks(getTime(), m_pLevelSrc->Blocks(), Players());
+	    }
 	  }
 	}
       }
@@ -1139,16 +1141,20 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
 
   void Scene::SetBlockPos(std::string pBlockID, float pX, float pY) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
-    if(v_block->isDynamic() == true) {
-      v_block->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
+    SetBlockPos(v_block, pX, pY);
+  }
+
+  void Scene::SetBlockPos(Block* pBlock, float pX, float pY) {
+    if(pBlock->isDynamic() == true) {
+      pBlock->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
 
       if(m_chipmunkWorld != NULL) {
-	if(v_block->isPhysics()) {
-	  v_block->setPhysicsPosition(pX, pY);
+	if(pBlock->isPhysics()) {
+	  pBlock->setPhysicsPosition(pX, pY);
 	}
       }
-      m_Collision.moveDynBlock(v_block);
-    }
+      m_Collision.moveDynBlock(pBlock);
+    }    
   }
   
   void Scene::SetBlockCenter(std::string pBlockID, float pX, float pY) {
@@ -1469,7 +1475,7 @@ PlayerNetClient* Scene::addPlayerNetClient(Vector2f i_position, DriveDir i_direc
       m_speed_factor -= i_increment;
     }
     if(getLevelSrc() != NULL) {
-      if(getLevelSrc()->isScripted()) {
+      if(getLevelSrc()->isScripted() || getLevelSrc()->isPhysics()) {
 	if(m_speed_factor < 0.0) m_speed_factor = 0.0;
       }
     }
@@ -1487,7 +1493,7 @@ PlayerNetClient* Scene::addPlayerNetClient(Vector2f i_position, DriveDir i_direc
 
   void Scene::fastrewind(int i_time) {
     if(getLevelSrc() != NULL) {
-      if(getLevelSrc()->isScripted() == false) {
+      if(getLevelSrc()->isScripted() == false && getLevelSrc()->isPhysics() == false) {
 	m_time -= i_time;
 	if(m_time < 0) m_time = 0;
 	onRewinding();

@@ -1,5 +1,6 @@
 X-Moto 0.5.5 2011-
 --------------------------------
+ * replay support for physics levels
  * improve network mode performances
  * several keys are now customizable via the options
  * some minor fixes

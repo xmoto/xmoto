@@ -58,6 +58,32 @@ class PhysicsSettings;
    float nCurState;
   };
 
+  /* moving blocks (physics) */
+  struct rmblockState {
+    int time;
+    Vector2f position;
+    float    rotation;
+  };
+
+  struct rmblock {
+    std::string name;
+    std::vector<rmblockState> states;
+    int lastMovingTime;
+  };
+
+  struct rmtimeState {
+    int      time;
+    Vector2f position;
+    float    rotation;
+  };
+
+  struct rmtime {
+    std::string name;
+    Block* block;
+    unsigned int readPos;
+    std::vector<rmtimeState> states;
+  };
+
   /*===========================================================================
   Replay class
   ===========================================================================*/  
@@ -68,7 +94,7 @@ class PhysicsSettings;
       
       /* Methods */
       void storeState(const SerializedBikeState& state);
-      void storeBlocks(const std::vector<Block *>& i_blocks);
+      void storeBlocks(int i_time, const std::vector<Block *>& i_blocks, const std::vector<Biker*>& i_players, bool i_forceSaveAll = false);
       /* go and get the next state */
       void loadState(BikeState* state, PhysicsSettings* i_physicsSettings);  
       void peekState(BikeState* state, PhysicsSettings* i_physicsSettings); /* get current state */
@@ -102,6 +128,9 @@ class PhysicsSettings;
       static std::string giveAutomaticName();
 
       std::vector<RecordedGameEvent *> *getEvents() {return &m_ReplayEvents;}
+
+      // moving blocks
+      std::vector<rmtime>* getMovingBlocks();
 
       /* return NULL if the replay is not valid */
       static ReplayInfo* getReplayInfos(const std::string p_ReplayName);
@@ -141,10 +170,17 @@ class PhysicsSettings;
       std::vector<RecordedGameEvent *> m_ReplayEvents;
 
       void saveReplay_1(FileHandle *pfh);
-      void saveReplay_2(FileHandle *pfh);
+      void saveReplay_3(FileHandle *pfh);
 
       void openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersion);
-      void openReplay_2(FileHandle *pfh, bool bDisplayInformation);
+      void openReplay_3(FileHandle *pfh, bool bDisplayInformation);
+
+      /* moving blocks (physics) */
+      std::vector<rmblock> m_movingBlocksForSaving;
+      std::vector<rmtime> m_movingBlocksForLoading;
+      bool isPhysicBlockToSave(Block* i_block, int i_time, const std::vector<rmblockState>& i_states,
+			       const std::vector<Biker*>& i_players, bool i_forceSaveAll);
+
   };
 
 #endif

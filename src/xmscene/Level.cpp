@@ -633,13 +633,6 @@ void Level::loadXML() {
     }
     
     /* determine whether the levels is physics or not */
-    //for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
-    //    pElem=pElem->NextSiblingElement("block")) {
-    //  if(Block::isPhysics_readFromXml(m_xmlSource, pElem)) {
-    //	m_isPhysics = true;
-    //  }
-    //}
-
     /* Get blocks */
     for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
         pElem=pElem->NextSiblingElement("block")) {
