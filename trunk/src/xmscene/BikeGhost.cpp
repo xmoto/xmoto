@@ -127,6 +127,58 @@ void FileGhost::execReplayEvents(int i_time, Scene *i_motogame) {
       (*v_replayEvents)[i]->bPassed = false;
     }
   }
+
+  // apply moving blocks
+  std::vector<rmtime>* v_mb = m_replay->getMovingBlocks();
+  for(unsigned int i=0; i<v_mb->size(); i++) {
+    // reference the block
+    if((*v_mb)[i].block == NULL) {
+      (*v_mb)[i].block = i_motogame->getLevelSrc()->getBlockById((*v_mb)[i].name);
+    }
+
+    //
+    if((*v_mb)[i].states.size() > 0) {
+
+      // continue to read the time
+      while((*v_mb)[i].states[(*v_mb)[i].readPos].time < i_time) {
+	(*v_mb)[i].readPos++;
+      }
+
+      // not at the end
+      if((*v_mb)[i].readPos < (*v_mb)[i].states.size()) {
+	// and time is found
+	if((*v_mb)[i].states[(*v_mb)[i].readPos].time == i_time) {
+	  // apply the state
+	  i_motogame->SetBlockPos((*v_mb)[i].block,
+				  (*v_mb)[i].states[(*v_mb)[i].readPos].position.x,
+				  (*v_mb)[i].states[(*v_mb)[i].readPos].position.y);
+	  i_motogame->SetBlockRotation((*v_mb)[i].block, (*v_mb)[i].states[(*v_mb)[i].readPos].rotation);
+	} else {
+	  // interpolation
+	  if(m_doInterpolation) {
+	    // ok between frame 2 and n-1
+	    if((*v_mb)[i].readPos > 0) {
+	      float pertime = 
+		((float)(i_time - (*v_mb)[i].states[(*v_mb)[i].readPos-1].time)) /
+		((float)((*v_mb)[i].states[(*v_mb)[i].readPos].time - (*v_mb)[i].states[(*v_mb)[i].readPos-1].time));
+	      
+	      float new_pos_x = (*v_mb)[i].states[(*v_mb)[i].readPos-1].position.x +
+		((*v_mb)[i].states[(*v_mb)[i].readPos].position.x - (*v_mb)[i].states[(*v_mb)[i].readPos-1].position.x)*pertime;
+	      
+	      float new_pos_y = (*v_mb)[i].states[(*v_mb)[i].readPos-1].position.y +
+		((*v_mb)[i].states[(*v_mb)[i].readPos].position.y - (*v_mb)[i].states[(*v_mb)[i].readPos-1].position.y)*pertime;
+	      
+	      float new_pos_r = (*v_mb)[i].states[(*v_mb)[i].readPos-1].rotation +
+		((*v_mb)[i].states[(*v_mb)[i].readPos].rotation - (*v_mb)[i].states[(*v_mb)[i].readPos-1].rotation)*pertime;
+	      
+	      i_motogame->SetBlockPos((*v_mb)[i].block, new_pos_x, new_pos_y);
+	      i_motogame->SetBlockRotation((*v_mb)[i].block, new_pos_r);
+	    }
+	  }
+	}
+      }
+    }
+  }
 }
 
 std::string FileGhost::getDescription() const {

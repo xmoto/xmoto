@@ -89,7 +89,8 @@ void StateReplaying::enter()
     if(m_universe != NULL && m_renderer != NULL) {
       if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
 	m_renderer->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
-				   m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false);
+				   m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false &&
+				   m_universe->getScenes()[0]->getLevelSrc()->isPhysics()  == false);
       }
     }
 
@@ -205,7 +206,8 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_REPLAYINGREWIND))) {
     if(m_universe != NULL) {
       if(m_universe->getScenes().size() > 0) {
-	if(m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false) {
+	if(m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false &&
+	   m_universe->getScenes()[0]->getLevelSrc()->isPhysics()  == false) {
 	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	    m_universe->getScenes()[i]->fastrewind(100);
 	  }
