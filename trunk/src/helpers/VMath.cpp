@@ -453,3 +453,43 @@ Vector2f interpolation_cubic(Vector2f i_a, Vector2f i_b, Vector2f i_c, Vector2f 
   return Vector2f(interpolation_cubic(i_a.x, i_b.x, i_c.x, i_d.x, t),
 		  interpolation_cubic(i_a.y, i_b.y, i_c.y, i_d.y, t));
 }
+
+float interpolateAngle(float r1, float r2, float t) {
+  // main case - no new revolution done
+  if(
+     (r1 - r2 >= 0 && r1 - r2 < M_PI ) ||
+     (r2 - r1 >= 0 && r2 - r1 < M_PI)
+     ) {
+    return r1 + (r2 - r1)*t;
+  }
+
+  // normalize angles between0  and 2 PI
+  while(r1 < 0.0) {
+    r1 += 2*M_PI;
+  }
+  while(r2 < 0.0) {
+    r2 += 2*M_PI;
+  }
+  while(r1 > 2*M_PI) {
+    r1 -= 2*M_PI;
+  }
+  while(r2 > 2*M_PI) {
+    r2 -= 2*M_PI;
+  }
+
+  // check for revolution
+  if(
+     (r1 - r2 >= 0 && r1 - r2 < M_PI) ||
+     (r2 - r1 >= 0 && r2 - r1 < M_PI)
+     ) {
+    return r1 + (r2 - r1)*t;
+  }
+
+  if(r1 - r2 > 0) {
+    r2 += 2*M_PI;
+    return r1 + (r2 - r1)*t;
+  }
+
+  r1 += 2*M_PI;
+  return r1 + (r2 - r1)*t;
+}

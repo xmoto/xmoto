@@ -303,37 +303,6 @@ void Block::updatePhysics(int i_time, int timeStep, CollisionSystem* io_collisio
   }
   
   cpBodyResetForces(mBody);
-
-  /* record */
-  /* don't save any physic event for the moment
-  float v_diffRotation;
-
-  if(i_recorder != NULL) {
-    v_diffPosition = m_previousSavedPosition-DynamicPosition();
-    v_diffRotation = m_previousSavedRotation-DynamicRotation();
-    
-    // save position only if the block moved
-    if(v_diffPosition.length() > PHYS_MOVE_POSITION_MINIMUM) {
-      SceneEvent *pEvent = new MGE_SetBlockPos(i_time,
-					       Id(),
-					       DynamicPosition().x,
-					       DynamicPosition().y);
-      pEvent->serialize(*i_recorder);
-      delete pEvent;
-      m_previousSavedPosition = DynamicPosition();
-    }
-    
-    // save rotation only if the block moved
-    if(fabs(v_diffRotation) > PHYS_MOVE_ROTATION_MINIMUM) {
-      SceneEvent *pEvent = new MGE_SetBlockRotation(i_time,
-						    Id(),
-						    DynamicRotation());
-      pEvent->serialize(*i_recorder);
-      delete pEvent;
-      m_previousSavedRotation = DynamicRotation();
-    }
-  }
-  */
 }
 
 int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings) {

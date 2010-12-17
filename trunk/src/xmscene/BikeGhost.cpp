@@ -167,10 +167,9 @@ void FileGhost::execReplayEvents(int i_time, Scene *i_motogame) {
 	      
 	      float new_pos_y = (*v_mb)[i].states[(*v_mb)[i].readPos-1].position.y +
 		((*v_mb)[i].states[(*v_mb)[i].readPos].position.y - (*v_mb)[i].states[(*v_mb)[i].readPos-1].position.y)*pertime;
-	      
-	      float new_pos_r = (*v_mb)[i].states[(*v_mb)[i].readPos-1].rotation +
-		((*v_mb)[i].states[(*v_mb)[i].readPos].rotation - (*v_mb)[i].states[(*v_mb)[i].readPos-1].rotation)*pertime;
-	      
+
+	      float new_pos_r = interpolateAngle((*v_mb)[i].states[(*v_mb)[i].readPos-1].rotation, (*v_mb)[i].states[(*v_mb)[i].readPos].rotation, pertime);
+
 	      i_motogame->SetBlockPos((*v_mb)[i].block, new_pos_x, new_pos_y);
 	      i_motogame->SetBlockRotation((*v_mb)[i].block, new_pos_r);
 	    }
