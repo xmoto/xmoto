@@ -1634,7 +1634,9 @@ void SceneOnBikerHooks::onWheelTouches(int i_wheel, bool i_touch) {
 }
 
 void SceneOnBikerHooks::onHeadTouches() {
-  m_motoGame->createGameEvent(new MGE_PlayerDies(m_motoGame->getTime(), false, m_playerNumber));
+  if(m_motoGame->Players()[m_playerNumber]->isDead() == false) {
+    m_motoGame->createGameEvent(new MGE_PlayerDies(m_motoGame->getTime(), false, m_playerNumber));
+  }
 }
 
 
