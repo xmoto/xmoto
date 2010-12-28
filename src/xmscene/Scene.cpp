@@ -263,6 +263,25 @@ void Scene::clearGameMessages(void) {
       m_GameMessages[i]->removeTime=0;
   }
 
+void Scene::updatePlayers(int timeStep) {
+    for(unsigned int i=0; i<m_players.size(); i++) {
+      m_players[i]->updateToTime(m_time, timeStep, &m_Collision, m_PhysGravity, this);
+
+      if(m_playEvents && timeStep > 0) {
+	/* New wheel-spin particles? */
+	if(m_players[i]->isWheelSpinning()) {
+	  if(NotSoRandom::randomNum(0,1) < 0.7f) {
+	    ParticlesSource *v_debris;
+	    v_debris = (ParticlesSource*) getLevelSrc()->getEntityById("BikeDebris");
+	    v_debris->setDynamicPosition(m_players[i]->getWheelSpinPoint());	
+	    v_debris->addParticle(m_time);
+	  }
+	}
+      }
+    }
+
+}
+
   /*===========================================================================
     Update game
     ===========================================================================*/
@@ -273,7 +292,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     bool v_uploadFrame;
     SerializedBikeState BikeState;
 
-    if(m_is_paused)
+    if(m_is_paused || (m_useTargetTime && m_time > m_targetTime)) // do nothing when m_targetTime > m_time because it would mean that the server is faster than the local host which can however be true
       return;
 
     if(m_halfUpdate == true) {
@@ -350,22 +369,8 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     for(unsigned int i=0; i<m_ghosts.size(); i++) {
       m_ghosts[i]->updateToTime(getTime(), timeStep, &m_Collision, m_PhysGravity, this);
     }
-    
-    for(unsigned int i=0; i<m_players.size(); i++) {
-      m_players[i]->updateToTime(m_time, timeStep, &m_Collision, m_PhysGravity, this);
 
-      if(m_playEvents) {
-	/* New wheel-spin particles? */
-	if(m_players[i]->isWheelSpinning()) {
-	  if(NotSoRandom::randomNum(0,1) < 0.7f) {
-	    ParticlesSource *v_debris;
-	    v_debris = (ParticlesSource*) getLevelSrc()->getEntityById("BikeDebris");
-	    v_debris->setDynamicPosition(m_players[i]->getWheelSpinPoint());	
-	    v_debris->addParticle(m_time);
-	  }
-	}
-      }
-    }
+    updatePlayers(timeStep);
 
     if(m_chipmunkWorld != NULL) {
       /* players moves, update their positions */
@@ -519,6 +524,8 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     m_PhysGravity.y = -(m_physicsSettings->WorldGravity());
 
     m_time = 0;
+    m_targetTime = 0;
+    m_useTargetTime = false;
     m_checkpointStartTime = 0;
     m_floattantTimeStepDiff = 0.0;
     m_speed_factor = 1.00f;

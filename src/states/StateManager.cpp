@@ -49,6 +49,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../thread/DownloadReplaysThread.h"
 #include <sstream>
 
+#define CURSOR_MOVE_SHOWTIME 1000
+#define NETPLAYERBOX_SHOWTIME 2000
+#define NETPLAYERBOX_REMOVETIME 1000
+#define NETPLAYERBOX_WIDTH 150
+#define NETPLAYERBOX_HEIGHT 100
+#define NETPLAYERBOX_BORDER 15
+
 StateManager::StateManager()
 {
   m_currentRenderFps = 0;
@@ -92,6 +99,14 @@ StateManager::StateManager()
 
   // create the replay downloader thread
   m_drt = new DownloadReplaysThread(this);
+
+  // mouse
+  m_isCursorVisible = false;
+  SDL_ShowCursor(SDL_DISABLE);
+  m_lastMouseMoveTime = GameApp::instance()->getXMTimeInt();
+  m_previousMouseX = 0;
+  m_previousMouseY = 0;
+  m_previousMouseOverPlayer = -2;
 }
 
 StateManager::~StateManager()
@@ -298,9 +313,22 @@ void StateManager::update()
     m_updateFpsNbFrame = 0;
     m_lastFpsTime += 1000;
   }
+
+  /* update mouse */
+  int mx, my;
+  GameApp::instance()->getMousePos(&mx, &my);
+  if(mx != m_previousMouseX || my != m_previousMouseY) {
+    m_lastMouseMoveTime = GameApp::instance()->getXMTimeInt();
+  }
+  m_previousMouseX = mx;
+  m_previousMouseY = my;
+
 }
 
 void StateManager::renderOverAll() {
+
+  int v_mouseOverPlayer; // -2 => on nobody ; -1 => on your profile ; X => on an other player
+  v_mouseOverPlayer = -2;
 
   // net infos
   if(NetClient::instance()->isConnected()) {
@@ -308,29 +336,128 @@ void StateManager::renderOverAll() {
     FontGlyph* v_fg;
     int vborder = 10;
     int v_voffset = 0;
-    
+    int v_maxwidth;
+
+    int nMX,nMY;
+    GameApp::getMousePos(&nMX, &nMY);
+
+    // header
     v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_CONNECTED_PLAYERS);
     v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
 		      m_screen.getDispWidth() - v_fg->realWidth() - vborder, vborder,
 		      MAKE_COLOR(240,240,240,255), -1.0, true);
     v_voffset += v_fg->realHeight();
-    
+    v_maxwidth = v_fg->realWidth();
+
     // you
     v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(XMSession::instance()->profile());
     v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
 		      m_screen.getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
-		      MAKE_COLOR(200,200,200,255), -1.0, true);     
+		      MAKE_COLOR(200,200,200,255), -1.0, true);       
+    // update v_mouseOverPlayer
+    if(nMX > m_screen.getDispWidth() - v_fg->realWidth() - vborder &&
+       nMX < m_screen.getDispWidth()                     - vborder &&
+       nMY > vborder+v_voffset                                     &&
+       nMY < vborder+v_voffset       + v_fg->realHeight()
+       ) {
+      v_mouseOverPlayer = -1;
+    }
     v_voffset += v_fg->realHeight();
-    
+    if(v_fg->realWidth()> v_maxwidth) {
+      v_maxwidth = v_fg->realWidth();
+    }
+
+    // others
     for(unsigned int i=0; i<NetClient::instance()->otherClients().size(); i++) {
       v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(NetClient::instance()->otherClients()[i]->name());
 
       v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
 			m_screen.getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
 			MAKE_COLOR(200,200,200,255), -1.0, true);     
+      // update v_mouseOverPlayer
+      if(nMX > m_screen.getDispWidth() - v_fg->realWidth() - vborder &&
+	 nMX < m_screen.getDispWidth()                     - vborder &&
+	 nMY > vborder+v_voffset                                     &&
+	 nMY < vborder+v_voffset       + v_fg->realHeight()
+	 ) {
+	v_mouseOverPlayer = i;
+      }
+      v_voffset += v_fg->realHeight();
+      if(v_fg->realWidth()> v_maxwidth) {
+	v_maxwidth = v_fg->realWidth();
+      }
+    }
+
+    // render the player information
+    int v_displayPlayer = -2;
+
+    // the mouse must have move recently
+    if((GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTime) < NETPLAYERBOX_SHOWTIME+NETPLAYERBOX_REMOVETIME) {
+      v_displayPlayer = v_mouseOverPlayer;
+
+      // if the mouse is over nothing, display the last displayed player
+      if(v_mouseOverPlayer == -2) {
+	v_displayPlayer = m_previousMouseOverPlayer;
+      }
+    }
+
+    // if there is something to display
+    if(v_displayPlayer != -2) {
+      int v_alpha;
+
+      if((GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTime) < NETPLAYERBOX_SHOWTIME) {
+	v_alpha = 255;
+      } else {
+	v_alpha = 255 - (int)(((GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTime) - NETPLAYERBOX_SHOWTIME) * 255.0 / NETPLAYERBOX_REMOVETIME);
+      }
+
+      // display the name of the player
+      std::string v_name, v_level;
+
+      if(v_displayPlayer == -1) {
+	v_name = XMSession::instance()->profile();
+      } else {
+	v_name  = NetClient::instance()->otherClients()[v_displayPlayer]->name();
+	v_level = NetClient::instance()->otherClients()[v_displayPlayer]->playingLevelName();
+      }
+
+      v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(v_name);
+
+      // box
+      GameApp::instance()->getDrawLib()->drawBox(Vector2f(m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER, 0),
+						 Vector2f(m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER - NETPLAYERBOX_WIDTH,
+							  NETPLAYERBOX_HEIGHT), 0.0, MAKE_COLOR(230, 230, 230, v_alpha));
+      v_voffset = 0;
+
+      // name
+      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
+			m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER - NETPLAYERBOX_WIDTH/2 - v_fg->realWidth()/2,
+			0,
+			MAKE_COLOR(200,200,200,v_alpha), -1.0, true);
+      v_voffset += v_fg->realHeight();
+
+      // level
+      v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_LEVEL + std::string(" :"));
+      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
+			m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER - NETPLAYERBOX_WIDTH,
+			v_voffset,
+			MAKE_COLOR(200,200,200,v_alpha), -1.0, true);
+      v_voffset += v_fg->realHeight();
+      v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(v_level);
+      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
+			m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER - NETPLAYERBOX_WIDTH,
+			v_voffset,
+			MAKE_COLOR(200,200,200,v_alpha), -1.0, true);
       v_voffset += v_fg->realHeight();
     }
+
+    // memorize previous value for transparency effect
+    if(v_mouseOverPlayer != -2) {
+      m_previousMouseOverPlayer = v_mouseOverPlayer;
+    }
+
   }
+
 }
 
 void StateManager::render()
@@ -381,8 +508,28 @@ void StateManager::render()
 
     // CURSOR
     if(m_statesStack.size() > 0) {
-      if(m_statesStack.back()->showCursor()) {
-	drawCursor();
+      bool m_mustCursorBeDisplayed = m_statesStack.back()->showCursor() || (GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTime) < CURSOR_MOVE_SHOWTIME;
+      
+      if(XMSession::instance()->ugly()) {
+	if(m_mustCursorBeDisplayed) {
+	  if(m_isCursorVisible == false) {
+	    SDL_ShowCursor(SDL_ENABLE);
+	    m_isCursorVisible = true;
+	  }
+	} else {
+	  if(m_isCursorVisible) {
+	    SDL_ShowCursor(SDL_DISABLE);
+	    m_isCursorVisible = false;
+	  }
+	}
+      } else {
+	if(m_mustCursorBeDisplayed) {
+	  drawCursor();
+	}
+	if(m_isCursorVisible) {
+	  SDL_ShowCursor(SDL_DISABLE); // hide the cursor to show the texture
+	  m_isCursorVisible = false;
+	}
       }
     }
 

@@ -152,6 +152,11 @@ private:
 
   // cursor
   Texture* m_cursor;
+  bool m_isCursorVisible;
+  int m_lastMouseMoveTime;
+  int m_previousMouseOverPlayer;
+  int m_previousMouseX;
+  int m_previousMouseY;
 
   // video
   VideoRecorder* m_videoRecorder;
@@ -169,6 +174,7 @@ private:
   int m_currentUniqueId;
 
   RenderSurface m_screen;
+
 };
 
 #endif

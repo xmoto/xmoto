@@ -94,7 +94,6 @@ public:
 
   void quit(void);
   static void getMousePos(int *pnX, int *pnY);
-  bool haveMouseMoved(void);
       
   Img *grabScreen(void);
 
@@ -152,8 +151,6 @@ public:
   void switchUglyMode(bool bUgly);
   void switchTestThemeMode(bool mode);
   void switchUglyOverMode(bool mode);
-
-  void displayCursor(bool display);
 
   void addReplay(const std::string& i_file, xmDatabase* pDb, bool sendMessage = true);
 
