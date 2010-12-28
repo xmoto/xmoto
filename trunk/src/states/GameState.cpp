@@ -98,14 +98,10 @@ bool GameState::doUpdate()
 }
 
 void GameState::enter() {
-  if(XMSession::instance()->ugly() == true)
-    GameApp::instance()->displayCursor(showCursor());
 }
 
 void GameState::enterAfterPop()
 {
-  if(XMSession::instance()->ugly() == true)
-    GameApp::instance()->displayCursor(showCursor());
 }
 
 bool GameState::render() {
@@ -240,9 +236,6 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     } else {
       SysMessage::instance()->displayText(SYS_MSG_UGLY_MODE_DISABLED);
     }
-    
-    if(XMSession::instance()->ugly() == true)
-      GameApp::instance()->displayCursor(showCursor());
     
     return;
   }

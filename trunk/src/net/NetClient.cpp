@@ -38,7 +38,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../DBuffer.h"
 #include "../GameEvents.h"
 #include "../db/xmDatabase.h"
+#include "../xmscene/Camera.h"
 #include "VirtualNetLevelsList.h"
+#include "../Replay.h"
 
 #define XMCLIENT_KILL_ALERT_DURATION 100
 #define XMCLIENT_PREPARE_TO_PLAY_DURATION 100
@@ -340,12 +342,18 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	  for(unsigned int j=0; j<m_universe->getScenes()[i]->Players().size(); j++) {
+	    
 	      BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(),
 						m_universe->getScenes()[i]->Players()[j]->getStateForUpdate(),
 						m_universe->getScenes()[i]->getPhysicsSettings());
 
 	      // adjust the time of the server frame to the time of the local scene
-	      m_universe->getScenes()[i]->setTime(((NA_frame*)i_netAction)->getState()->fGameTime*100.0);
+	      m_universe->getScenes()[i]->setTargetTime(((NA_frame*)i_netAction)->getState()->fGameTime*100.0);
+	  }
+
+	  // if the game is in pause, at least update the player position
+	  if(m_universe->getScenes()[i]->isPaused()) {
+	    m_universe->getScenes()[i]->updatePlayers(0 /* 0 to not update */);
 	  }
 	}
       } else {
@@ -495,6 +503,11 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 	}
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	  m_universe->getScenes()[i]->gameMessage(v_alert.str(), true, XMCLIENT_PREPARE_TO_PLAY_DURATION);
+	  if(((NA_prepareToGo*)i_netAction)->time() == 0) {
+	    if(m_universe->getScenes()[i]->isPaused()) {
+	      m_universe->getScenes()[i]->pause();
+	    }
+	  }
 	}
       }
     }

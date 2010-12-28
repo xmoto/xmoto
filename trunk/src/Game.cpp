@@ -57,12 +57,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "thread/XMThreadStats.h"
 #include "VirtualLevelsList.h"
 
-  bool GameApp::haveMouseMoved() {
-    int nX,nY;
-    SDL_GetRelativeMouseState(&nX,&nY);
-    return (nX == 0 && nY == 0);
-  }
-
   void GameApp::getMousePos(int *pnX,int *pnY) {
     SDL_GetMouseState(pnX, pnY);
   }
@@ -441,18 +435,7 @@ std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &Le
 
   void GameApp::switchUglyMode(bool bUgly) {
     XMSession::instance()->setUgly(bUgly);
-    
-    displayCursor(bUgly);
   }
-
-void GameApp::displayCursor(bool display)
-{
-  if(display == false) {
-    SDL_ShowCursor(SDL_DISABLE);        
-  } else {
-    SDL_ShowCursor(SDL_ENABLE);
-  }
-}
 
   void GameApp::switchTestThemeMode(bool mode) {
     XMSession::instance()->setTestTheme(mode);

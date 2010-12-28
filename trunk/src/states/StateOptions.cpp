@@ -80,11 +80,6 @@ void StateOptions::enter()
   updateOptions();
   updateServerStrings();
   updateJoysticksStrings();
-  
-  if(XMSession::instance()->ugly()) {   // needed to show cursor on option menu while playing level
-    GameApp::instance()->displayCursor(true);
-  }
-
 }
 
 void StateOptions::clean() {

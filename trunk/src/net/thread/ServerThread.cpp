@@ -351,7 +351,7 @@ std::string ServerThread::SP2_determineLevel() {
   // don't allow own levels (isToReload=1)
   v_result = m_pDb->readDB("SELECT id_level "
                            "FROM levels "
-                           "WHERE isToReload=0 AND isScripted=0 AND isPhysics=0 "
+                           "WHERE isToReload=0 AND isScripted=0 AND isPhysics=0 " // warning, addforcetoplayer event cannot be over network game cause player id is serialized
                            "ORDER BY RANDOM() LIMIT 1;",
 			 nrow);
   if(nrow == 0) {

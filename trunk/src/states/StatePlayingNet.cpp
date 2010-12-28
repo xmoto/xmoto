@@ -57,6 +57,10 @@ void StatePlayingNet::executeOneCommand(std::string cmd, std::string args) {
 void StatePlayingNet::enter()
 {
   StatePlaying::enter();
+
+  // pause immediatly to not move objects until the game starts
+  Scene* v_world = m_universe->getScenes()[0];
+  v_world->pause();
 }
 
 void StatePlayingNet::xmKey(InputEventType i_type, const XMKey& i_xmkey) {

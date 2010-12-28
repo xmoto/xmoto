@@ -1119,11 +1119,9 @@ bool UIRoot::_RootJoystickButtonDownEvent(UIWindow *pWindow, Uint8 i_joyNum, Uin
               
               /* By the way, does it want to offer context-help? (only 
                  if mouse have actually moved) */
-              if(getApp()->haveMouseMoved()) {
-                std::string SubCHelp = pWindow->subContextHelp(wx,wy);
-                if(SubCHelp != "") m_CurrentContextHelp = SubCHelp;
-                else m_CurrentContextHelp = pWindow->getContextHelp();
-              }
+	      std::string SubCHelp = pWindow->subContextHelp(wx,wy);
+	      if(SubCHelp != "") m_CurrentContextHelp = SubCHelp;
+	      else m_CurrentContextHelp = pWindow->getContextHelp();
               
               break;
             }
