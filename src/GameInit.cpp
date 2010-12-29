@@ -348,9 +348,16 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     Sound::init(XMSession::instance());
   }
 
+  bool v_graphicAutomaticMode;
+  v_graphicAutomaticMode = v_useGraphics && (
+  v_xmArgs.isOptLevelID()   ||
+  v_xmArgs.isOptLevelFile() ||
+  v_xmArgs.isOptReplay()    ||
+  v_xmArgs.isOptDemo());
+
   // no command line need the network for the moment
   if(v_useGraphics || v_xmArgs.isOptServerOnly()) {
-    initNetwork(v_xmArgs.isOptServerOnly(), v_xmArgs.isOptServerOnly());
+    initNetwork(v_xmArgs.isOptServerOnly(), v_xmArgs.isOptServerOnly() || v_graphicAutomaticMode);
   }
 
   /* Init renderer */

@@ -52,7 +52,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define CURSOR_MOVE_SHOWTIME 1000
 #define NETPLAYERBOX_SHOWTIME 2000
 #define NETPLAYERBOX_REMOVETIME 1000
-#define NETPLAYERBOX_WIDTH 150
+#define NETPLAYERBOX_WIDTH 250
 #define NETPLAYERBOX_HEIGHT 100
 #define NETPLAYERBOX_BORDER 15
 
@@ -103,7 +103,8 @@ StateManager::StateManager()
   // mouse
   m_isCursorVisible = false;
   SDL_ShowCursor(SDL_DISABLE);
-  m_lastMouseMoveTime = GameApp::instance()->getXMTimeInt();
+  m_lastMouseMoveTime       = GameApp::instance()->getXMTimeInt();
+  m_lastMouseMoveTimeInZone = GameApp::instance()->getXMTimeInt();
   m_previousMouseX = 0;
   m_previousMouseY = 0;
   m_previousMouseOverPlayer = -2;
@@ -388,11 +389,16 @@ void StateManager::renderOverAll() {
       }
     }
 
+    // memorize previous value for transparency effect
+    if(v_mouseOverPlayer != -2) {
+      m_lastMouseMoveTimeInZone = m_lastMouseMoveTime;
+    }
+
     // render the player information
     int v_displayPlayer = -2;
 
     // the mouse must have move recently
-    if((GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTime) < NETPLAYERBOX_SHOWTIME+NETPLAYERBOX_REMOVETIME) {
+    if((GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTimeInZone) < NETPLAYERBOX_SHOWTIME+NETPLAYERBOX_REMOVETIME) {
       v_displayPlayer = v_mouseOverPlayer;
 
       // if the mouse is over nothing, display the last displayed player
@@ -402,13 +408,13 @@ void StateManager::renderOverAll() {
     }
 
     // if there is something to display
-    if(v_displayPlayer != -2) {
+    if(v_displayPlayer != -2 && v_displayPlayer != -1 /* don't display yourself */) {
       int v_alpha;
 
-      if((GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTime) < NETPLAYERBOX_SHOWTIME) {
+      if((GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTimeInZone) < NETPLAYERBOX_SHOWTIME) {
 	v_alpha = 255;
       } else {
-	v_alpha = 255 - (int)(((GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTime) - NETPLAYERBOX_SHOWTIME) * 255.0 / NETPLAYERBOX_REMOVETIME);
+	v_alpha = 255 - (int)(((GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTimeInZone) - NETPLAYERBOX_SHOWTIME) * 255.0 / NETPLAYERBOX_REMOVETIME);
       }
 
       // display the name of the player
@@ -419,6 +425,9 @@ void StateManager::renderOverAll() {
       } else {
 	v_name  = NetClient::instance()->otherClients()[v_displayPlayer]->name();
 	v_level = NetClient::instance()->otherClients()[v_displayPlayer]->playingLevelName();
+	if(v_level == "") {
+	  v_level = "-";
+	}
       }
 
       v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(v_name);
@@ -426,7 +435,7 @@ void StateManager::renderOverAll() {
       // box
       GameApp::instance()->getDrawLib()->drawBox(Vector2f(m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER, 0),
 						 Vector2f(m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER - NETPLAYERBOX_WIDTH,
-							  NETPLAYERBOX_HEIGHT), 0.0, MAKE_COLOR(230, 230, 230, v_alpha));
+							  NETPLAYERBOX_HEIGHT), 0.0, MAKE_COLOR(41, 41, 95, v_alpha));
       v_voffset = 0;
 
       // name
@@ -441,21 +450,21 @@ void StateManager::renderOverAll() {
       v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
 			m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER - NETPLAYERBOX_WIDTH,
 			v_voffset,
-			MAKE_COLOR(200,200,200,v_alpha), -1.0, true);
+			MAKE_COLOR(200,200,200,v_alpha), -1.0, false);
       v_voffset += v_fg->realHeight();
       v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(v_level);
       v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
 			m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER - NETPLAYERBOX_WIDTH,
 			v_voffset,
-			MAKE_COLOR(200,200,200,v_alpha), -1.0, true);
+			MAKE_COLOR(200,200,200,v_alpha), -1.0, false);
       v_voffset += v_fg->realHeight();
     }
 
-    // memorize previous value for transparency effect
-    if(v_mouseOverPlayer != -2) {
+    // memorize previous value
+    if(v_mouseOverPlayer != -2  && (GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTimeInZone) < NETPLAYERBOX_SHOWTIME+NETPLAYERBOX_REMOVETIME) {
       m_previousMouseOverPlayer = v_mouseOverPlayer;
     }
-
+    
   }
 
 }
