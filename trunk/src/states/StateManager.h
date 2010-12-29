@@ -154,6 +154,7 @@ private:
   Texture* m_cursor;
   bool m_isCursorVisible;
   int m_lastMouseMoveTime;
+  int m_lastMouseMoveTimeInZone;
   int m_previousMouseOverPlayer;
   int m_previousMouseX;
   int m_previousMouseY;

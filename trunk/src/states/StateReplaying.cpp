@@ -117,6 +117,10 @@ void StateReplaying::leave()
 
 bool StateReplaying::update()
 {
+  if(m_stopToUpdate) {
+    return false;
+  }
+
   if(StateScene::update() == false)
     return false;
   
@@ -262,8 +266,11 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 	} else {
 	  m_universe->getScenes()[i]->slower(0.01);
 	}
+
+	if(m_universe->getScenes()[i]->getSpeed() < 0.0) {
+	  m_stopToUpdate = false;
+	}
       }
-      m_stopToUpdate = false;
       if(m_renderer != NULL) {
 	if(m_universe->getScenes().size() > 0 && XMSession::instance()->hidePlayingInformation() == false) {
 	  m_renderer->showReplayHelp(m_universe->getScenes()[0]->getSpeed(),
