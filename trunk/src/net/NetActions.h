@@ -71,7 +71,7 @@ struct NetInfosClient {
 
 class NetAction {
   public:
-  NetAction();
+  NetAction(bool i_forceTcp);
   virtual ~NetAction();
   virtual std::string actionKey()    = 0;
   virtual NetActionType actionType() = 0;
@@ -113,6 +113,7 @@ class NetAction {
   static unsigned int m_TCPPacketsSizeSent;
   static unsigned int m_UDPPacketsSizeSent;
 
+  bool m_forceTCP; // by default, xmoto try to use UDP when available ; for some actions, TCP can be forced
 };
 
 class NA_udpBind : public NetAction {
