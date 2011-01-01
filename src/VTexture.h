@@ -49,9 +49,6 @@ public:
 //a lot of work and because the game currently depends on SDL
 //and nID is not a openGL specific structure
 //it's
-
-enum RegistrationStageMode { RSM_PERSISTANT, RSM_NORMAL };
-
 #define PERSISTANT 0
 class Texture {
 public:
@@ -62,7 +59,7 @@ public:
     surface              = NULL;
     nSize                = 0;
     isAlpha              = false;
-    curRegistrationStageMode = RSM_PERSISTANT;
+    curRegistrationStage = PERSISTANT;
   }
 
   std::string    Name;
@@ -77,8 +74,7 @@ public:
   unsigned char* pcData;
 
   // zero for persistent textures
-  RegistrationStageMode curRegistrationStageMode;
-  std::vector<unsigned int> curRegistrationStage;
+  unsigned int curRegistrationStage;
 
   // when the texture is removed, keep the sprites informed so that
   // it invalides its pointer on the texture
@@ -97,8 +93,6 @@ public:
     m_nTexSpaceUsage=0;
   }
 
-  ~TextureManager();
-
   Texture* createTexture(std::string Name, unsigned char* pcData, int nWidth, int nHeight, bool bAlpha=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP);
   void destroyTexture(Texture* pTexture);
   Texture* loadTexture(std::string Path, bool bSmall=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP, bool persistent=false, Sprite* associatedSprite=NULL);
@@ -113,26 +107,10 @@ public:
     return m_nTexSpaceUsage;
   }
 
-  // texture registration
-  static bool registering();
-  static unsigned int currentRegistrationStage();
-  unsigned int beginTexturesRegistration();
-  void endTexturesRegistration();
-  void registerTexture(Texture* i_texture);
-  bool isRegisteredTexture(Texture* i_texture);
-  void unregister(unsigned int i_registerValue);
-
 private:
   std::vector<Texture*> m_Textures;
 
   int m_nTexSpaceUsage;
-
-  // texture registration
-  static unsigned int m_curRegistrationStage;
-  static bool m_registering;
-
-  void cleanUnregistredTextures();
-
 };
 
 #endif

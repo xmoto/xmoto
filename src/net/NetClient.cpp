@@ -38,9 +38,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../DBuffer.h"
 #include "../GameEvents.h"
 #include "../db/xmDatabase.h"
-#include "../xmscene/Camera.h"
-#include "VirtualNetLevelsList.h"
-#include "../Replay.h"
 
 #define XMCLIENT_KILL_ALERT_DURATION 100
 #define XMCLIENT_PREPARE_TO_PLAY_DURATION 100
@@ -64,13 +61,9 @@ NetClient::NetClient() {
     m_lastOwnFPS = 0;
     m_currentOwnFramesNb = 0;
     m_currentOwnFramesTime = GameApp::getXMTimeInt();
-
-    m_otherClientsLevelsList = new VirtualNetLevelsList(this);
 }
 
 NetClient::~NetClient() {
-  delete m_otherClientsLevelsList;
-
   SDL_DestroyMutex(m_netActionsMutex);
 
   for(unsigned int i=0; i<m_netActions.size(); i++) {
@@ -138,8 +131,8 @@ void NetClient::connect(const std::string& i_server, int i_port) {
   LogInfo("client: connected on %s:%d", i_server.c_str(), i_port);
 
   char buf[512];
-  snprintf(buf, 512, GAMETEXT_PRESSCTRLCTOCHAT, InputHandler::instance()->getGlobalKey(INPUT_CHAT)->toFancyString().c_str());
-  SysMessage::instance()->addConsoleLine(buf, CLT_INFORMATION);
+  snprintf(buf, 512, GAMETEXT_PRESSCTRLCTOCHAT, XMKey(SDLK_c, KMOD_LCTRL).toFancyString().c_str());
+  SysMessage::instance()->addConsoleLine(buf);
 
   // bind udp port on server
   NA_clientInfos na(XM_NET_PROTOCOL_VERSION, m_udpBindKey);
@@ -282,8 +275,6 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
   case TNA_clientMode:
   case TNA_playerControl:
   case TNA_srvCmd:
-  case TNA_clientsNumber:
-  case TNA_clientsNumberQuery:
     /* should not happend */
     break;
 
@@ -303,19 +294,9 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
   case TNA_chatMessage:
     {
       try {
-	std::string v_str;
-	std::string v_author;
-
-	// retrieve message
-	v_str = ((NA_chatMessage*)i_netAction)->getMessage();
-
-	if(i_netAction->getSource() == -1) { /* server */
-	  v_author = "server";
-	  SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author), CLT_SERVER);
-	} else {
-	  v_author = m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name();
-	  SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author));
-	}
+	std::string v_str = m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name() +
+	  ": " + ((NA_chatMessage*)i_netAction)->getMessage();
+	SysMessage::instance()->addConsoleLine(v_str);
       } catch(Exception &e) {
       }
     }
@@ -342,18 +323,12 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	  for(unsigned int j=0; j<m_universe->getScenes()[i]->Players().size(); j++) {
-	    
 	      BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(),
 						m_universe->getScenes()[i]->Players()[j]->getStateForUpdate(),
 						m_universe->getScenes()[i]->getPhysicsSettings());
 
 	      // adjust the time of the server frame to the time of the local scene
-	      m_universe->getScenes()[i]->setTargetTime(((NA_frame*)i_netAction)->getState()->fGameTime*100.0);
-	  }
-
-	  // if the game is in pause, at least update the player position
-	  if(m_universe->getScenes()[i]->isPaused()) {
-	    m_universe->getScenes()[i]->updatePlayers(0 /* 0 to not update */);
+	      m_universe->getScenes()[i]->setTime(((NA_frame*)i_netAction)->getState()->fGameTime*100.0);
 	  }
 	}
       } else {
@@ -438,7 +413,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 	if(v_levelId != "" && v_levelId != v_client->lastPlayingLevelId()) {
 	  v_client->setPlayingLevelId(pDb, v_levelId);
 	  snprintf(buf, 512, GAMETEXT_CLIENTPLAYING, v_client->name().c_str(), v_client->playingLevelName().c_str());
-	  SysMessage::instance()->addConsoleLine(buf, CLT_GAMEINFORMATION);
+	  SysMessage::instance()->addConsoleLine(buf);
 	} else {
 	  v_client->setPlayingLevelId(pDb, v_levelId);
 	}
@@ -465,7 +440,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 	m_otherClients.push_back(new NetOtherClient(((NA_changeClients*)i_netAction)->getAddedInfosClients()[i].NetId,
 						    ((NA_changeClients*)i_netAction)->getAddedInfosClients()[i].Name));
 	snprintf(buf, 512, GAMETEXT_CLIENTCONNECTSERVER, ((NA_changeClients*)i_netAction)->getAddedInfosClients()[i].Name.c_str());
-	SysMessage::instance()->addConsoleLine(buf, CLT_GAMEINFORMATION);
+	SysMessage::instance()->addConsoleLine(buf);
       }
 
       for(unsigned int i=0; i<((NA_changeClients*)i_netAction)->getRemovedInfosClients().size(); i++) {
@@ -473,7 +448,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 	while(j<m_otherClients.size()) {
 	  if(m_otherClients[j]->id() == ((NA_changeClients*)i_netAction)->getRemovedInfosClients()[i].NetId) {
 	    snprintf(buf, 512, GAMETEXT_CLIENTDISCONNECTSERVER, m_otherClients[j]->name().c_str());
-	    SysMessage::instance()->addConsoleLine(buf, CLT_GAMEINFORMATION);
+	    SysMessage::instance()->addConsoleLine(buf);
 	    delete m_otherClients[j];
 	    m_otherClients.erase(m_otherClients.begin()+j);
 	  } else {
@@ -503,11 +478,6 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 	}
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	  m_universe->getScenes()[i]->gameMessage(v_alert.str(), true, XMCLIENT_PREPARE_TO_PLAY_DURATION);
-	  if(((NA_prepareToGo*)i_netAction)->time() == 0) {
-	    if(m_universe->getScenes()[i]->isPaused()) {
-	      m_universe->getScenes()[i]->pause();
-	    }
-	  }
 	}
       }
     }
@@ -519,7 +489,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 	std::ostringstream v_alert;
 	v_alert << ((NA_killAlert*)i_netAction)->time();
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	  m_universe->getScenes()[i]->gameMessage(v_alert.str(), true, XMCLIENT_KILL_ALERT_DURATION);
+	    m_universe->getScenes()[i]->gameMessage(v_alert.str(), true, XMCLIENT_KILL_ALERT_DURATION);
 	}
       }
     }
@@ -623,31 +593,4 @@ NetGhost* NetOtherClient::netGhost(unsigned int i_subsrc) {
 
 void NetOtherClient::setNetGhost(unsigned int i_subsrc, NetGhost* i_netGhost) {
   m_ghosts[i_subsrc] = i_netGhost;
-}
-
-std::vector<std::string> NetClient::getOtherClientsNameList(const std::string& i_suffix) {
-	std::vector<std::string> vect;
-	for (int i = 0, n = m_otherClients.size(); i < n; i++) {
-		vect.push_back(m_otherClients[i]->name() + i_suffix);
-	}
-	return vect;
-}
-
-void NetClient::addChatTransformations(std::vector<std::string>& io_clientList, const std::string i_suffix) {
-  io_clientList.push_back("/me" + i_suffix);
-}
-
-std::string NetClient::getDisplayMessage(const std::string& i_msg, const std::string& i_author) {
-
-  if(i_author + " " == i_msg.substr(0, i_author.size()+1)) {
-    return i_msg;
-  }
-
-  // add author only the message is not starting by it
-  return i_author + ": " + i_msg;
-}
-
-VirtualNetLevelsList* NetClient::getOtherClientLevelsList(xmDatabase* pDb) {
-  m_otherClientsLevelsList->setDb(pDb);
-  return m_otherClientsLevelsList;
 }

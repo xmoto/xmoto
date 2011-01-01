@@ -30,13 +30,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StateEditProfile::m_sGUI = NULL;
 
-StateEditProfile::StateEditProfile(bool drawStateBehind,
+StateEditProfile::StateEditProfile(const std::string& i_id,
+				   bool drawStateBehind,
 				   bool updateStatesBehind
 				   ):
   StateMenu(drawStateBehind,
 	    updateStatesBehind)
 {
   m_name     = "StateEditProfile";
+  setId(i_id);
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("UPDATEPROFILE");
@@ -51,7 +53,7 @@ void StateEditProfile::enter()
 {
   GameApp::instance()->playMenuMusic("menu1");
   
-  createGUIIfNeeded(&m_screen);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   updateOptions();
@@ -106,7 +108,7 @@ void StateEditProfile::checkEvents() {
 
     /* Should we jump to the web config now? */
     if(XMSession::instance()->webConfAtInit()) {
-      StateManager::instance()->replaceState(new StateEditWebConfig(), getStateId());
+      StateManager::instance()->replaceState(new StateEditWebConfig(), this->getId());
     } else{
       m_requestForEnd = true;
     }
@@ -119,7 +121,7 @@ void StateEditProfile::checkEvents() {
     
     StateMessageBox* v_msgboxState = new StateMessageBox(this, std::string(GAMETEXT_ENTERPLAYERNAME) + ":",
 							 UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, "");
-    v_msgboxState->setMsgBxId("NEWPROFILE");
+    v_msgboxState->setId("NEWPROFILE");
     StateManager::instance()->pushState(v_msgboxState);
   }
 
@@ -130,7 +132,7 @@ void StateEditProfile::checkEvents() {
     
     StateMessageBox* v_msgboxState = new StateMessageBox(this, std::string(GAMETEXT_DELETEPLAYERMESSAGE),
 							 UI_MSGBOX_YES|UI_MSGBOX_NO);
-    v_msgboxState->setMsgBxId("DELETEPROFILE");
+    v_msgboxState->setId("DELETEPROFILE");
     StateManager::instance()->pushState(v_msgboxState);
   }
 }
@@ -146,7 +148,7 @@ void StateEditProfile::clean() {
   }
 }
 
-void StateEditProfile::createGUIIfNeeded(RenderSurface* i_screen) {
+void StateEditProfile::createGUIIfNeeded() {
   UIButton *v_button;
   UIFrame  *v_frame;
 
@@ -155,15 +157,15 @@ void StateEditProfile::createGUIIfNeeded(RenderSurface* i_screen) {
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot(i_screen);
+  m_sGUI = new UIRoot();
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      i_screen->getDispWidth(),
-		      i_screen->getDispHeight());
+		      drawLib->getDispWidth(),
+		      drawLib->getDispHeight());
 
   v_frame = new UIFrame(m_sGUI,
-			i_screen->getDispWidth()/2  - 350,
-			i_screen->getDispHeight()/2 - 250,
+			drawLib->getDispWidth()/2  - 350,
+			drawLib->getDispHeight()/2 - 250,
 			"", 700, 500);
   v_frame->setID("EDITPROFILE_FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_TRANS);           

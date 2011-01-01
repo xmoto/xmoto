@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "../helpers/VMath.h"
 #include "../helpers/Color.h"
-#include "../helpers/RenderSurface.h"
 #include "../include/xm_SDL_ttf.h"
 
 class Img;
@@ -32,7 +31,6 @@ class Camera;
 class DrawLib;
 class Theme;
 class Texture;
-class RenderSurface;
 
 class FontGlyph {
  public:
@@ -48,8 +46,8 @@ class FontManager {
   
   virtual FontGlyph* getGlyph(const std::string& i_string) = 0;
   
-  virtual void printString(DrawLib* pDrawLib, FontGlyph* i_glyph, int i_x, int i_y, Color i_color, float i_perCentered = -1.0, bool i_shadowEffect = false) = 0;
-  virtual void printStringGrad(DrawLib* pDrawLib, FontGlyph* i_glyph, int i_x, int i_y,
+  virtual void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, float i_perCentered = -1.0, bool i_shadowEffect = false) = 0;
+  virtual void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
 			       Color c1,Color c2,Color c3,Color c4, float i_perCentered = -1.0, bool i_shadowEffect = false) = 0;
   
 
@@ -123,9 +121,6 @@ class DrawLib {
   void setNoGraphics(bool disable_graphics);  
   bool isNoGraphics();
 
-  void setRenderSurface(RenderSurface* renderSurf);
-  RenderSurface* getRenderSurface();
-
   /* Methods - low-level */
   //add a vertex given screen coordinates
   virtual void glVertexSP(float x, float y) = 0;
@@ -138,6 +133,7 @@ class DrawLib {
 
   //texture coordinate
   virtual void glTexCoord(float x, float y) = 0;
+  virtual void screenProjVertex(float *x, float *y) = 0;
 
   virtual void setColor(Color color) = 0;
 
@@ -254,7 +250,6 @@ class DrawLib {
   
   SDL_Surface *m_screen;
   Camera* m_menuCamera;
-  RenderSurface* m_renderSurf;
 
  private:
   static backendtype m_backend;

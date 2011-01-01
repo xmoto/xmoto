@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Camera.h"
 #include "xmscene/Scene.h"
 #include "Game.h"
-#include "helpers/RenderSurface.h"
+#include "drawlib/DrawLib.h"
 #include "Renderer.h"
 
 #define PRESTART_ANIMATION_MARGIN_SIZE   5.0
@@ -34,11 +34,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define INPLAY_ANIMATION_SPEED          10
 #define INPLAY_ANIMATION_MAX_OFFSET    0.5
 
-CameraAnimation::CameraAnimation(Camera* i_camera, RenderSurface* i_screen, GameRenderer* i_renderer, Scene* i_motoGame) {
+CameraAnimation::CameraAnimation(Camera* i_camera, DrawLib* i_drawLib, Scene* i_motoGame) {
   m_step         = 0;
   m_camera       = i_camera;
-  m_screen      = i_screen;
-  m_renderer     = i_renderer;
+  m_drawLib      = i_drawLib;
   m_motoGame     = i_motoGame;
   m_I_cameraZoom = 1.0;
   m_startTime    = 0.0;
@@ -66,15 +65,15 @@ void CameraAnimation::init() {
   m_I_cameraPosition = Vector2f(m_camera->getCameraPositionX(), m_camera->getCameraPositionY());
   m_startTime        = GameApp::getXMTime();
   m_allowNextStep    = false;
-  m_I_entitiesToTakeZoom   = m_renderer->SizeMultOfEntitiesToTake();
-  m_I_entitiesWhichMakeWin = m_renderer->SizeMultOfEntitiesWhichMakeWin();
+  m_I_entitiesToTakeZoom   = GameRenderer::instance()->SizeMultOfEntitiesToTake();
+  m_I_entitiesWhichMakeWin = GameRenderer::instance()->SizeMultOfEntitiesWhichMakeWin();
 }
 
 void CameraAnimation::uninit() {
   m_camera->setAbsoluteZoom(m_I_cameraZoom);
   m_camera->setCameraPosition(m_I_cameraPosition.x, m_I_cameraPosition.y);
-  m_renderer->setSizeMultOfEntitiesToTake(m_I_entitiesToTakeZoom);
-  m_renderer->setSizeMultOfEntitiesWhichMakeWin(m_I_entitiesWhichMakeWin);
+  GameRenderer::instance()->setSizeMultOfEntitiesToTake(m_I_entitiesToTakeZoom);
+  GameRenderer::instance()->setSizeMultOfEntitiesWhichMakeWin(m_I_entitiesWhichMakeWin);
 }
 
 float CameraAnimation::initialEntitiesToTakeZoom() {
@@ -98,8 +97,8 @@ bool CameraAnimation::allowNextStep() {
 }
 
 // autozoom
-AutoZoomCameraAnimation::AutoZoomCameraAnimation(Camera* i_camera, RenderSurface* i_screen, GameRenderer* i_renderer, Scene* i_motoGame)
-: CameraAnimation(i_camera, i_screen, i_renderer, i_motoGame) {
+AutoZoomCameraAnimation::AutoZoomCameraAnimation(Camera* i_camera, DrawLib* i_drawLib, Scene* i_motoGame)
+  : CameraAnimation(i_camera, i_drawLib, i_motoGame) {
 }
 
 AutoZoomCameraAnimation::~AutoZoomCameraAnimation() {
@@ -108,7 +107,7 @@ AutoZoomCameraAnimation::~AutoZoomCameraAnimation() {
 void AutoZoomCameraAnimation::init() {
   CameraAnimation::init();
 
-  m_zoomX = (2.0 * ((float)m_screen->getDispWidth() / (float)m_screen->getDispHeight())) / (m_motoGame->getLevelSrc()->RightLimit() - m_motoGame->getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
+  m_zoomX = (2.0 * ((float)m_drawLib->getDispWidth() / (float)m_drawLib->getDispHeight())) / (m_motoGame->getLevelSrc()->RightLimit() - m_motoGame->getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
   m_zoomY = 2.0 /(m_motoGame->getLevelSrc()->TopLimit() - m_motoGame->getLevelSrc()->BottomLimit()+2*PRESTART_ANIMATION_MARGIN_SIZE);
   
   if (m_zoomX > m_zoomY){
@@ -136,7 +135,7 @@ void AutoZoomCameraAnimation::init() {
     
     m_zoomU=m_zoomY;
     
-    visibleWidth = (2.0 * ((float)m_screen->getDispWidth() / (float)m_screen->getDispHeight()))/m_zoomU;
+    visibleWidth = (2.0 * ((float)m_drawLib->getDispWidth() / (float)m_drawLib->getDispHeight()))/m_zoomU;
     cameraStartLeft = visibleWidth/2.0;
     
     m_fPreCameraStart.x = m_motoGame->getLevelSrc()->RightLimit() - cameraStartLeft + PRESTART_ANIMATION_MARGIN_SIZE;
@@ -160,8 +159,8 @@ void AutoZoomCameraAnimation::init() {
   m_fAnimPlayStartCamera.y = m_camera->getCameraPositionY();
   m_step = 1;
   m_allowNextStep = true;
-  m_entitiesToTakeZoom       = m_renderer->SizeMultOfEntitiesToTake();
-  m_entitiesWhichMakeWinZoom = m_renderer->SizeMultOfEntitiesWhichMakeWin();
+  m_entitiesToTakeZoom       = GameRenderer::instance()->SizeMultOfEntitiesToTake();
+  m_entitiesWhichMakeWinZoom = GameRenderer::instance()->SizeMultOfEntitiesWhichMakeWin();
   m_entitiesGrowing = true;
   m_previousZoomTime = -1.0;
 }
@@ -222,8 +221,8 @@ bool AutoZoomCameraAnimation::step() {
 	      m_entitiesGrowing = true;
 	    }
 	  }
-	  m_renderer->setSizeMultOfEntitiesToTake(m_entitiesToTakeZoom);
-	  m_renderer->setSizeMultOfEntitiesWhichMakeWin(m_entitiesWhichMakeWinZoom);
+	  GameRenderer::instance()->setSizeMultOfEntitiesToTake(m_entitiesToTakeZoom);
+	  GameRenderer::instance()->setSizeMultOfEntitiesWhichMakeWin(m_entitiesWhichMakeWinZoom);
 	}
       }
 
@@ -268,12 +267,12 @@ bool AutoZoomCameraAnimation::step() {
 
     if(m_entitiesWhichMakeWinZoom > initialEntitiesWhichMakeWinZoom()) {
       m_entitiesWhichMakeWinZoom -= 0.2;
-      m_renderer->setSizeMultOfEntitiesWhichMakeWin(m_entitiesWhichMakeWinZoom);
+      GameRenderer::instance()->setSizeMultOfEntitiesWhichMakeWin(m_entitiesWhichMakeWinZoom);
     }
 
     if(m_entitiesToTakeZoom > initialEntitiesToTakeZoom()) {
       m_entitiesToTakeZoom -= 0.2;
-      m_renderer->setSizeMultOfEntitiesToTake(m_entitiesToTakeZoom);
+      GameRenderer::instance()->setSizeMultOfEntitiesToTake(m_entitiesToTakeZoom);
     }
 
     return true;
@@ -291,8 +290,8 @@ void AutoZoomCameraAnimation::goNextStep() {
 }
 
 // zooming
-    ZoomingCameraAnimation::ZoomingCameraAnimation(Camera* i_camera, RenderSurface* i_screen, GameRenderer* i_renderer, Scene* i_motoGame)
-: CameraAnimation(i_camera, i_screen, i_renderer, i_motoGame) {
+ZoomingCameraAnimation::ZoomingCameraAnimation(Camera* i_camera, DrawLib* i_drawLib, Scene* i_motoGame)
+  : CameraAnimation(i_camera, i_drawLib, i_motoGame) {
 }
 
 ZoomingCameraAnimation::~ZoomingCameraAnimation() {
@@ -301,7 +300,7 @@ ZoomingCameraAnimation::~ZoomingCameraAnimation() {
 void ZoomingCameraAnimation::init() {
   CameraAnimation::init();
   
-  m_zoomX = (2.0 * ((float)m_screen->getDispWidth() / (float)m_screen->getDispHeight())) / (m_motoGame->getLevelSrc()->RightLimit() - m_motoGame->getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
+  m_zoomX = (2.0 * ((float)m_drawLib->getDispWidth() / (float)m_drawLib->getDispHeight())) / (m_motoGame->getLevelSrc()->RightLimit() - m_motoGame->getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
   m_zoomY = 2.0 /(m_motoGame->getLevelSrc()->TopLimit() - m_motoGame->getLevelSrc()->BottomLimit()+2*PRESTART_ANIMATION_MARGIN_SIZE);
   
   if (m_zoomX > m_zoomY){
@@ -329,9 +328,9 @@ void ZoomingCameraAnimation::init() {
     float visibleWidth, cameraStartLeft;
 
     m_zoomU=m_zoomY;
-    m_static_time = (m_motoGame->getLevelSrc()->RightLimit() - m_motoGame->getLevelSrc()->LeftLimit()) / ((2.0 * ((float)m_screen->getDispWidth() / (float)m_screen->getDispHeight()))/m_zoomU);
+    m_static_time = (m_motoGame->getLevelSrc()->RightLimit() - m_motoGame->getLevelSrc()->LeftLimit()) / ((2.0 * ((float)m_drawLib->getDispWidth() / (float)m_drawLib->getDispHeight()))/m_zoomU);
     
-    visibleWidth = (2.0 * ((float)m_screen->getDispWidth() / (float)m_screen->getDispHeight()))/m_zoomU;
+    visibleWidth = (2.0 * ((float)m_drawLib->getDispWidth() / (float)m_drawLib->getDispHeight()))/m_zoomU;
     cameraStartLeft = visibleWidth/2.0;
     
     m_fPreCameraStart.x = m_motoGame->getLevelSrc()->RightLimit() - cameraStartLeft + PRESTART_ANIMATION_MARGIN_SIZE;

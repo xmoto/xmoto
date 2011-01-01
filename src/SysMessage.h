@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 #include "helpers/Singleton.h"
 #include "helpers/Color.h"
-#include "helpers/RenderSurface.h"
 
 class DrawLib;
 
@@ -41,13 +40,6 @@ class SysMsg {
   SysMsgType type;
 };
 
-enum consoleLineType { CLT_NORMAL, CLT_INFORMATION, CLT_GAMEINFORMATION, CLT_SERVER };
-
-struct consoleLine {
-  std::string cltxt;
-  consoleLineType cltype;
-};
-
 class SysMessage : public Singleton<SysMessage> {
   friend class Singleton<SysMessage>;
 
@@ -60,11 +52,8 @@ public:
   void displayText(const std::string& i_msg);
   void displayError(const std::string& i_msg);
   void displayInformation(const std::string& i_msg);
-  void addConsoleLine(const std::string& i_line, consoleLineType i_clt = CLT_NORMAL);
+  void addConsoleLine(const std::string& i_line);
   void showConsole();
-  void alterConsoleSize(int i_diffLines);
-  unsigned int consoleSize() const;
-  void setConsoleSize(unsigned int i_value);
   void render();
 
 private:
@@ -82,13 +71,10 @@ private:
   void drawBoxMsg_one(unsigned int i, float i_time, int x_offset, int y_offset);
 
   /* console */
-  std::vector<consoleLine> m_console;
-  unsigned int m_consoleSize;
+  std::vector<std::string> m_console;
   float m_consoleLastShowTime;
 
   DrawLib* m_drawLib;
-
-  RenderSurface m_screen;
 };
 
 #endif

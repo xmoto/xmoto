@@ -1,6 +1,6 @@
 #!/bin/bash
 
-XMOTO_DIR="${HOME}/.local/share/xmoto"
+XMOTO_DIR="${HOME}/.xmoto"
 
 if test $# -ne 4
 then

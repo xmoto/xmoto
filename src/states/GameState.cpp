@@ -33,13 +33,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../net/NetClient.h"
 #include "StateHelp.h"
 #include "../Renderer.h"
-#include "../Input.h"
 
 #define MENU_SHADING_TIME 0.3
 #define MENU_SHADING_VALUE 150
 
 GameState::GameState(bool drawStateBehind,
-		     bool updateStatesBehind)
+		     bool updateStatesBehind,
+		     bool i_doShade,
+		     bool i_doShadeAnim)
 {
   m_isHide             = false;
   m_drawStateBehind    = drawStateBehind;
@@ -55,6 +56,10 @@ GameState::GameState(bool drawStateBehind,
 
   m_updatePeriod       = 0;
   m_updateCounter      = 0;
+
+  // shade
+  m_doShade     = i_doShade;
+  m_doShadeAnim = i_doShadeAnim;
 
   m_showCursor = true;
 
@@ -78,14 +83,6 @@ GameState::~GameState()
   SDL_DestroyMutex(m_commandsMutex);
 }
 
-void GameState::setScreen(const RenderSurface& i_screen) {
-  m_screen = i_screen;
-}
-
-RenderSurface* GameState::getScreen() {
-  return &m_screen;
-}
-
 bool GameState::doUpdate()
 {
   m_updateCounter += 1.0;
@@ -98,13 +95,20 @@ bool GameState::doUpdate()
 }
 
 void GameState::enter() {
+  m_nShadeTime = GameApp::getXMTime();
+  if(XMSession::instance()->ugly() == true)
+    GameApp::instance()->displayCursor(showCursor());
 }
 
 void GameState::enterAfterPop()
 {
+  if(XMSession::instance()->ugly() == true)
+    GameApp::instance()->displayCursor(showCursor());
 }
 
 bool GameState::render() {
+  //  left the shade call here to not do damage on other things I even not know about
+  GameRenderer::instance()->setScreenShade(m_doShade, m_doShadeAnim, m_nShadeTime);
   return renderOverShadow();
 }
 
@@ -112,31 +116,21 @@ bool GameState::renderOverShadow() {
   return true;
 }
 
-void GameState::setStateId(const std::string& i_id) {
-  m_stateId = i_id;
+std::string GameState::getId() const {
+  return m_id;
 }
 
-std::string GameState::getStateId() const {
-  return m_stateId;
-}
-
-void GameState::setStateType(const std::string& i_type) {
-  m_stateType = i_type;
-}
-
-std::string GameState::getStateType() const {
-  return m_stateType;
+void GameState::setId(const std::string& i_id) {
+  m_id = i_id;
 }
 
 void GameState::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "CHATMESSAGE"){
     if(i_button == UI_MSGBOX_OK) {
-      NA_chatMessage na(i_input, XMSession::instance()->profile());
+      NA_chatMessage na(i_input);
       try {
-	NetClient::instance()->send(&na, 0);	
-
-	/* and not i_input because na can have transformations */
-	SysMessage::instance()->addConsoleLine(NetClient::instance()->getDisplayMessage(na.getMessage(), XMSession::instance()->profile()));
+	NetClient::instance()->send(&na, 0);
+	SysMessage::instance()->addConsoleLine(XMSession::instance()->profile() + ": " + i_input);
       } catch(Exception &e) {
       }
     }
@@ -208,28 +202,28 @@ void GameState::addCommand(std::string cmd, std::string args)
 void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   GameApp* gameApp = GameApp::instance();
 
-  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_HELP))) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F1, KMOD_NONE)) {
     if (StateManager::instance()->isThereASuchState("StateHelp") == false) StateManager::instance()->pushState(new StateHelp(true,false,true, false));
     return;
   }
 
-  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SCREENSHOT))) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F12, KMOD_NONE)) {
     gameApp->gameScreenshot();
     return; 
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHWWWACCESS))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F8, KMOD_NONE)) {
     gameApp->enableWWW(XMSession::instance()->www() == false);
     StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
     return;
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFPS))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F7, KMOD_NONE)) {
     gameApp->enableFps(XMSession::instance()->fps() == false);
     return;
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHUGLYMODE))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchUglyMode()) {
     gameApp->switchUglyMode(XMSession::instance()->ugly() == false);
     if(XMSession::instance()->ugly()) {
       SysMessage::instance()->displayText(SYS_MSG_UGLY_MODE_ENABLED);
@@ -237,11 +231,14 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
       SysMessage::instance()->displayText(SYS_MSG_UGLY_MODE_DISABLED);
     }
     
+    if(XMSession::instance()->ugly() == true)
+      GameApp::instance()->displayCursor(showCursor());
+    
     return;
   }
 
-   else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHGFXQUALITYMODE))) {
-    /* Toggle GFX Modes */
+   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F10, KMOD_NONE)) {
+    /* Toggle GFX Modes using F10 */
     if(XMSession::instance()->gameGraphics() == GFX_LOW) {
       XMSession::instance()->setGameGraphics(GFX_MEDIUM);
       SysMessage::instance()->displayText(SYS_MSG_GFX_MEDIUM_ACTIVATED);
@@ -257,7 +254,7 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     return;
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHGFXMODE))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F11, KMOD_NONE)) {
     /* F11 toggles TestThemeMode, UglyOver Mode and Normal Mode */
     if(XMSession::instance()->testTheme() == false && XMSession::instance()->uglyOver() == false) {
       gameApp->switchTestThemeMode(true);
@@ -310,51 +307,26 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 
   // net chat
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_CHAT)) &&
-	  NetClient::instance()->isConnected()) {
-    if(StateManager::instance()->isThereASuchStateType("CHATMESSAGE") == false) { // do not open several chat box
-      std::vector<std::string> clientList = NetClient::instance()->getOtherClientsNameList(" "); // forced to do cause i couldn't include in init netclient function
-      NetClient::instance()->addChatTransformations(clientList, " ");
-      StateMessageBox* v_msgboxState = new StateMessageBox(NULL, clientList, std::string(GAMETEXT_CHATMESSAGE) + ":", UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, "", false, true, false, true);
-      v_msgboxState->setMsgBxId("CHATMESSAGE");
-      v_msgboxState->setStateType("CHATMESSAGE");
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_c, KMOD_LCTRL) && NetClient::instance()->isConnected()) {
+    if(StateManager::instance()->isThereASuchStateId("CHATMESSAGE") == false) { // do not open several chat box
+      StateMessageBox* v_msgboxState = new StateMessageBox(NULL, std::string(GAMETEXT_CHATMESSAGE) + ":",
+							   UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, "", false, true, false, true);
+      v_msgboxState->setId("CHATMESSAGE");
       StateManager::instance()->pushState(v_msgboxState);
       return; 
     }
   }
 
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_s, (SDLMod) (KMOD_LCTRL | KMOD_LALT)) && NetClient::instance()->isConnected()) {
-    if(StateManager::instance()->isThereASuchState("StateServerConsole") == false) { // do not open several console
+    if(StateManager::instance()->isThereASuchStateId("SERVERCONSOLE") == false) { // do not open several console
       StateServerConsole* v_console = new StateServerConsole(true, true);
+      v_console->setId("SERVERCONSOLE");
       StateManager::instance()->pushState(v_console);
       return; 
     }
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SHOWCONSOLE))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getShowConsole()) {
     SysMessage::instance()->showConsole();
-  }
-
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_CONSOLEHISTORYPLUS))) {
-    SysMessage::instance()->alterConsoleSize(+1);
-    XMSession::instance()->setConsoleSize(SysMessage::instance()->consoleSize());
-    SysMessage::instance()->showConsole();
-  }
-
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_CONSOLEHISTORYMINUS))) {
-    SysMessage::instance()->alterConsoleSize(-1);
-    XMSession::instance()->setConsoleSize(SysMessage::instance()->consoleSize());
-    SysMessage::instance()->showConsole();
-  }
-
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_t, KMOD_LCTRL)) {
-    XMSession::instance()->setEnableTrailCam(!XMSession::instance()->enableTrailCam());
-    StateManager::instance()->sendAsynchronousMessage("CHANGE_TRAILCAM");
-
-    if(XMSession::instance()->enableTrailCam()) {
-      SysMessage::instance()->displayText(SYS_MSG_TRAILCAM_ACTIVATED);
-    } else {
-      SysMessage::instance()->displayText(SYS_MSG_TRAILCAM_DEACTIVATED);
-    }
   }
 }

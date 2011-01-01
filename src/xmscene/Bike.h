@@ -167,12 +167,11 @@ class Biker {
   void setPlaySound(bool i_value);
 
   PhysicsSettings* getPhysicsSettings();
-  virtual bool isStateInitialized() const;
   int localNetId() const; // id of the biker for the network part (must be 0, 1, 2 or 3)
   virtual void setLocalNetId(int i_value);
 
   void setFinished(bool i_value, int i_finishTime);
-  void setDead(bool i_value, int i_deadTime = 0);
+  void setDead(bool i_value, int i_deadTime);
   bool isFinished() const;
   int finishTime() const;
   bool isDead() const;
@@ -184,7 +183,6 @@ class Biker {
   virtual Vector2f getWheelSpinDir();
   virtual float getRearWheelVelocity();
   virtual float getFrontWheelVelocity();
-  virtual void initWheelDetach();
   virtual void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
   virtual void resetAutoDisabler(); /* a player can have a disabler when nothing append */
 
@@ -216,9 +214,6 @@ class Biker {
   std::vector<Vector2f> &CollisionPoints();
 
   float changeDirPer() const;
-
-  unsigned int getNbRenderedFrames() const;
-  void addNbRenderedFrames();
 
  protected:
   BikerTheme* m_bikerTheme;
@@ -253,7 +248,6 @@ class Biker {
   float m_changeDirPer; // between 0.0 and 1.0, give the % of the change dir done (only for graphisms)
 
   int m_localNetId;
-  unsigned int m_nbRenderedFrames;
 };
 
 class OnBikerHooks {

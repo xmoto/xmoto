@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Singleton.h"
 #include "../VCommon.h"
 #include "../XMKey.h"
-#include "../helpers/RenderSurface.h"
 #include "../include/xm_SDL.h"
 #include <string>
 #include <vector>
@@ -33,9 +32,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class VideoRecorder;
 class GameState;
 class Texture;
-class RenderSurface;
-class XMThreadStats;
-class DownloadReplaysThread;
 
 class StateManager : public Singleton<StateManager> {
   friend class Singleton<StateManager>;
@@ -95,12 +91,7 @@ public:
   static void refreshStaticCaptions();
 
   bool isThereASuchState(const std::string& i_name);
-  bool isThereASuchStateType(const std::string& i_type);
-
-  // thread to externalize db update in other thread to reduce freezes
-  XMThreadStats* getDbStatsThread();
-
-  DownloadReplaysThread* getReplayDownloaderThread();
+  bool isThereASuchStateId(const std::string& i_id);
 
 private:
   GameState* popState();
@@ -110,15 +101,11 @@ private:
   bool doRender();
   void drawFps();
   void drawStack();
-  void drawTexturesLoading();
-  void drawGeomsLoading();
   void drawCursor();
 
   void renderOverAll();
 
   void deleteToDeleteState();
-
-  void setNewStateScreen(GameState* pNewState);
 
   bool m_isVisible;
   bool m_hasFocus;
@@ -152,12 +139,6 @@ private:
 
   // cursor
   Texture* m_cursor;
-  bool m_isCursorVisible;
-  int m_lastMouseMoveTime;
-  int m_lastMouseMoveTimeInZone;
-  int m_previousMouseOverPlayer;
-  int m_previousMouseX;
-  int m_previousMouseY;
 
   // video
   VideoRecorder* m_videoRecorder;
@@ -165,17 +146,8 @@ private:
   // messages and associate observer states
   std::map<std::string, std::vector<GameState*> > m_registeredStates;
 
-  // db stats thread
-  XMThreadStats *m_xmtstas;
-
-  // replays downloader
-  DownloadReplaysThread* m_drt;
-
   //
   int m_currentUniqueId;
-
-  RenderSurface m_screen;
-
 };
 
 #endif

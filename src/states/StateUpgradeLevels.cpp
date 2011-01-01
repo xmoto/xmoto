@@ -26,7 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../XMSession.h"
 #include "../helpers/Log.h"
 #include "../helpers/CmdArgumentParser.h"
-#include "../Input.h"
 
 StateUpgradeLevels::StateUpgradeLevels(bool drawStateBehind,
 				       bool updateStatesBehind)
@@ -96,7 +95,7 @@ void StateUpgradeLevels::executeOneCommand(std::string cmd, std::string args)
     /* Ask user whether he want to download levels or snot */
     StateMessageBox* v_state = new StateMessageBox(this, cBuf,
 						   (UI_MSGBOX_YES|UI_MSGBOX_NO));
-    v_state->setMsgBxId("DOWNLOAD_LEVELS");
+    v_state->setId("DOWNLOAD_LEVELS");
     StateManager::instance()->pushState(v_state);
   }
   else if(cmd == "ASKINGLEVELUPDATE"){
@@ -107,7 +106,7 @@ void StateUpgradeLevels::executeOneCommand(std::string cmd, std::string args)
 
     StateMessageBox* v_state = new StateMessageBox(this, cBuf,
 						   (UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
-    v_state->setMsgBxId("ASKING_LEVEL_UPDATE");
+    v_state->setId("ASKING_LEVEL_UPDATE");
     StateManager::instance()->pushState(v_state);
   } else {
     GameState::executeOneCommand(cmd, args);
@@ -124,7 +123,7 @@ void StateUpgradeLevels::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     m_pThread->askThreadToEnd();
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_k, KMOD_LCTRL)) {
     if(m_threadStarted == true) {
       m_pThread->safeKill();
     }

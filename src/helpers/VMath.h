@@ -147,12 +147,6 @@ class Vector2 {
     return v;
   }
   
-  inline void normal() {
-    _T v_x = x;
-    x= -y;
-    y= v_x;
-  }
-  
   inline void rotateXY(_T deg) {            
     _T rads=deg*((_T)PI/180.0f);
     _T xx=x*cos(rads)+y*sin(rads);
@@ -427,6 +421,5 @@ void calculatePointOnVector(Vector2f& A1, Vector2f& A2, float length, Vector2f& 
 float SimpleInterpolate(float i_old,float i_new,float i_smooth);
 float interpolation_cubic(float i_a, float i_b, float i_c, float i_d, float t);
 Vector2f interpolation_cubic(Vector2f i_a, Vector2f i_b, Vector2f i_c, Vector2f i_d, float t);
-float interpolateAngle(float r1, float r2, float t);
 
 #endif

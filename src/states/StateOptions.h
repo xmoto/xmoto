@@ -42,7 +42,7 @@ class StateOptions : public StateMenu {
   private:
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static void createGUIIfNeeded();
 
   static UIWindow* makeWindowOptions_general(UIWindow* i_parent);
   static UIWindow* makeWindowOptions_video(UIWindow* i_parent);
@@ -64,9 +64,7 @@ class StateOptions : public StateMenu {
   void updateAudioOptions();
   void updateWWWOptions();
   void updateDbOptions();
-  void updateTrailCamOptions();
   void updateGhostsOptions();
-  void updateMedalOptions();
   void updateProfileStrings();
   void updateJoysticksStrings();
   void updateServerStrings();

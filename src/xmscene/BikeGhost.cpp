@@ -73,6 +73,16 @@ FileGhost::FileGhost(std::string i_replayFile, PhysicsSettings* i_physicsSetting
   m_replay = new Replay();
   v_levelId = m_replay->openReplay(i_replayFile, v_playerName);
 
+  
+  
+  // all states for Ghost Trail
+  unsigned int i=0;
+  while( !m_replay->endOfFile()) {
+    m_allGhostBikeStates.push_back(new BikeState(m_physicsSettings));
+    m_replay->loadState(m_allGhostBikeStates[i], m_physicsSettings);
+    i++;
+  }
+  
   // 4 states for cubical interpolation
 
   // 50% of states are before the time T, 50% are after
@@ -85,16 +95,20 @@ FileGhost::FileGhost(std::string i_replayFile, PhysicsSettings* i_physicsSetting
   for(unsigned int i=0; i<m_ghostBikeStates.size(); i++) {
     m_replay->peekState(m_ghostBikeStates[i], m_physicsSettings);
   }
-  *m_bikeState = *(m_ghostBikeStates[0]); // copy
+  *m_bikeState = *(m_allGhostBikeStates[0]); // copy
 
   m_isActiv = i_isActiv;
   m_linearVelocity = 0.0;
   m_teleportationOccured = false;
+  
 }
 
 FileGhost::~FileGhost() {
   for(unsigned int i=0; i<m_ghostBikeStates.size(); i++) {
     delete m_ghostBikeStates[i];
+  }
+  for(unsigned int i=0; i<m_allGhostBikeStates.size(); i++) {
+    delete m_allGhostBikeStates[i];
   }
 }
 
@@ -125,57 +139,6 @@ void FileGhost::execReplayEvents(int i_time, Scene *i_motogame) {
       
       /* Un-pass it */
       (*v_replayEvents)[i]->bPassed = false;
-    }
-  }
-
-  // apply moving blocks
-  std::vector<rmtime>* v_mb = m_replay->getMovingBlocks();
-  for(unsigned int i=0; i<v_mb->size(); i++) {
-    // reference the block
-    if((*v_mb)[i].block == NULL) {
-      (*v_mb)[i].block = i_motogame->getLevelSrc()->getBlockById((*v_mb)[i].name);
-    }
-
-    //
-    if((*v_mb)[i].states.size() > 0) {
-
-      // continue to read the time
-      while((*v_mb)[i].states[(*v_mb)[i].readPos].time < i_time) {
-	(*v_mb)[i].readPos++;
-      }
-
-      // not at the end
-      if((*v_mb)[i].readPos < (*v_mb)[i].states.size()) {
-	// and time is found
-	if((*v_mb)[i].states[(*v_mb)[i].readPos].time == i_time) {
-	  // apply the state
-	  i_motogame->SetBlockPos((*v_mb)[i].block,
-				  (*v_mb)[i].states[(*v_mb)[i].readPos].position.x,
-				  (*v_mb)[i].states[(*v_mb)[i].readPos].position.y);
-	  i_motogame->SetBlockRotation((*v_mb)[i].block, (*v_mb)[i].states[(*v_mb)[i].readPos].rotation);
-	} else {
-	  // interpolation
-	  if(m_doInterpolation) {
-	    // ok between frame 2 and n-1
-	    if((*v_mb)[i].readPos > 0) {
-	      float pertime = 
-		((float)(i_time - (*v_mb)[i].states[(*v_mb)[i].readPos-1].time)) /
-		((float)((*v_mb)[i].states[(*v_mb)[i].readPos].time - (*v_mb)[i].states[(*v_mb)[i].readPos-1].time));
-	      
-	      float new_pos_x = (*v_mb)[i].states[(*v_mb)[i].readPos-1].position.x +
-		((*v_mb)[i].states[(*v_mb)[i].readPos].position.x - (*v_mb)[i].states[(*v_mb)[i].readPos-1].position.x)*pertime;
-	      
-	      float new_pos_y = (*v_mb)[i].states[(*v_mb)[i].readPos-1].position.y +
-		((*v_mb)[i].states[(*v_mb)[i].readPos].position.y - (*v_mb)[i].states[(*v_mb)[i].readPos-1].position.y)*pertime;
-
-	      float new_pos_r = interpolateAngle((*v_mb)[i].states[(*v_mb)[i].readPos-1].rotation, (*v_mb)[i].states[(*v_mb)[i].readPos].rotation, pertime);
-
-	      i_motogame->SetBlockPos((*v_mb)[i].block, new_pos_x, new_pos_y);
-	      i_motogame->SetBlockRotation((*v_mb)[i].block, new_pos_r);
-	    }
-	  }
-	}
-      }
     }
   }
 }
@@ -295,7 +258,6 @@ void FileGhost::updateToTime(int i_time, int i_timeStep,
     // m_ghostBikeStates.size()/2 : first state in the feature
     if(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime < i_time) {
       
-      bool v_didRead = false;
       do {
 	// move the bikestates
 	v_state = m_ghostBikeStates[0];
@@ -307,14 +269,14 @@ void FileGhost::updateToTime(int i_time, int i_timeStep,
 	if(m_replay->endOfFile()) {
 	  // copy n-1 to n
 	  *(m_ghostBikeStates[m_ghostBikeStates.size()-1]) = *(m_ghostBikeStates[m_ghostBikeStates.size()-1-1]);
-	  v_didRead = false;
 	} else {
 	  // read the replay
 	  m_replay->loadState(m_ghostBikeStates[m_ghostBikeStates.size()-1], m_physicsSettings);
 	  m_replay->loadState(m_bikeState, m_physicsSettings);
-	  v_didRead = true;
 	}
-      } while(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime < i_time && v_didRead);
+
+      } while(m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime < i_time &&
+	      m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime > m_ghostBikeStates[m_ghostBikeStates.size()/2-1]->GameTime);
 
 
       *m_bikeState = *(m_ghostBikeStates[m_ghostBikeStates.size()/2-1]); // copy
@@ -324,10 +286,8 @@ void FileGhost::updateToTime(int i_time, int i_timeStep,
       v_afterPos   = m_ghostBikeStates[m_ghostBikeStates.size()/2]->CenterP;
       v_afterTime  = m_ghostBikeStates[m_ghostBikeStates.size()/2]->GameTime;
       
-      // warning, absolutly no idea why * 2.0, but it is needed to work... (*100 because hundreadths, *3.6 for km/h)
-      if(v_afterTime - v_beforeTime > 0) {
-	m_linearVelocity = (Vector2f(v_afterPos - v_beforePos)).length()*100.0*3.6*2.0 / ((float)(v_afterTime - v_beforeTime));
-      }
+      // warning, absolutly no idea why * 10.0, but it is needed to work...
+      m_linearVelocity = (Vector2f(v_afterPos - v_beforePos)).length() * 10.0 / (v_afterTime - v_beforeTime);
 
     } else { /* interpolation */
       /* do interpolation if it doesn't seems to be a teleportation or something like that */

@@ -33,66 +33,6 @@ class UserConfig;
 class Universe;
 class Scene;
 
-struct IFullKey {
-  IFullKey();
-  IFullKey(const std::string& i_name, const XMKey& i_key, const std::string i_help, bool i_customisable = true);
-
-  std::string name;
-  XMKey key;
-  std::string help;
-  bool customizable;
-};
-
-// write them in the order you want to see displayed them in the options list
-enum INPUT_GLOBALKEYS {
-  INPUT_SWITCHFAVORITE = 0,
-  INPUT_SWITCHBLACKLIST,
-  INPUT_SWITCHUGLYMODE,
-  INPUT_RESTARTLEVEL,
-  INPUT_RESTARTCHECKPOINT,
-  INPUT_NEXTLEVEL,
-  INPUT_PREVIOUSLEVEL,
-  INPUT_LEVELWATCHING,
-  INPUT_SWITCHPLAYER,
-  INPUT_SWITCHTRACKINGSHOTMODE,
-  INPUT_SWITCHRENDERGHOSTTRAIL,
-  INPUT_SCREENSHOT,
-  INPUT_SWITCHWWWACCESS,
-  INPUT_SWITCHFPS,
-  INPUT_SWITCHGFXQUALITYMODE,
-  INPUT_SWITCHGFXMODE,
-  INPUT_SHOWCONSOLE,
-  INPUT_CHAT,
-  INPUT_CONSOLEHISTORYPLUS,
-  INPUT_CONSOLEHISTORYMINUS,
-
-  // uncustomizable keys
-  INPUT_HELP,
-  INPUT_RELOADFILESTODB,
-  INPUT_PLAYINGPAUSE,
-  INPUT_KILLPROCESS,
-  INPUT_REPLAYINGREWIND,
-  INPUT_REPLAYINGFORWARD,
-  INPUT_REPLAYINGPAUSE,
-  INPUT_REPLAYINGSTOP,
-  INPUT_REPLAYINGFASTER,
-  INPUT_REPLAYINGABITFASTER,
-  INPUT_REPLAYINGSLOWER,
-  INPUT_REPLAYINGABITSLOWER,
-
-  INPUT_NB_GLOBALKEYS
-};
-
-enum INPUT_PLAYERKEYS {
-  INPUT_DRIVE = 0,
-  INPUT_BRAKE,
-  INPUT_FLIPLEFT,
-  INPUT_FLIPRIGHT,
-  INPUT_CHANGEDIR,
-
-  INPUT_NB_PLAYERKEYS
-};
-
   /*===========================================================================
   Script hooks
   ===========================================================================*/
@@ -124,13 +64,13 @@ public:
   void uninit();
 
   void resetScriptKeyHooks(void) {m_nNumScriptKeyHooks = 0;}
-  void addScriptKeyHook(Scene *pGame,const std::string &keyName,const std::string &FuncName);
+  void addScriptKeyHook(Scene *pGame,const std::string &basicKeyName,const std::string &FuncName);
 
   int getNumScriptKeyHooks() const;
   InputScriptKeyHook getScriptKeyHooks(int i) const;
   XMKey getScriptActionKeys(int i_player, int i_actionScript) const;
 
-  std::string getKeyByAction(const std::string &Action, bool i_tech = false);
+  std::string getFancyKeyByAction(const std::string &Action);
   std::string* getJoyId(Uint8 i_joynum);
   Uint8 getJoyNum(const std::string& i_name);
   std::string* getJoyIdByStrId(const std::string& i_name);
@@ -145,18 +85,29 @@ public:
   void saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::string& i_id_profile);
 
   bool isANotGameSetKey(XMKey* i_xmkey) const;
-
-  void setPlayerKey(unsigned int INPUT_key, int i_player, XMKey i_value);
-  const XMKey* getPlayerKey(unsigned int INPUT_key, int i_player) const;
-  std::string getPlayerKeyHelp(unsigned int INPUT_key, int i_player) const;
-
+  void setDRIVE(int i_player, XMKey i_value);
+  XMKey getDRIVE(int i_player) const;
+  void setBRAKE(int i_player, XMKey i_value);
+  XMKey getBRAKE(int i_player) const;
+  void setFLIPLEFT(int i_player, XMKey i_value);
+  XMKey getFLIPLEFT(int i_player) const;
+  void setFLIPRIGHT(int i_player, XMKey i_value);
+  XMKey getFLIPRIGHT(int i_player) const;
+  void setCHANGEDIR(int i_player, XMKey i_value);
+  XMKey getCHANGEDIR(int i_player) const;
   void setSCRIPTACTION(int i_player, int i_action, XMKey i_value);
   XMKey getSCRIPTACTION(int i_player, int i_action) const;
 
-  void setGlobalKey(unsigned int INPUT_key, XMKey i_value);
-  const XMKey* getGlobalKey(unsigned int INPUT_key) const;
-  std::string getGlobalKeyHelp(unsigned int INPUT_key) const;
-  bool getGlobalKeyCustomizable(unsigned int INPUT_key) const;
+  void setSwitchUglyMode(XMKey i_value);
+  XMKey getSwitchUglyMode() const;
+  void setSwitchBlacklist(XMKey i_value);
+  XMKey getSwitchBlacklist() const;
+  void setSwitchFavorite(XMKey i_value);
+  XMKey getSwitchFavorite() const;
+  void setRestartLevel(XMKey i_value);
+  XMKey getRestartLevel() const;
+  void setShowConsole(XMKey i_value);
+  XMKey getShowConsole() const;
 
   static float joyRawToFloat(float raw, float neg, float deadzone_neg, float deadzone_pos, float pos);
 
@@ -169,10 +120,19 @@ private:
   std::vector<SDL_Joystick *> m_Joysticks;
   std::vector<std::string>    m_JoysticksNames;
   std::vector<std::string>    m_JoysticksIds;
-
+      
+  XMKey m_nDriveKey[INPUT_NB_PLAYERS];
+  XMKey m_nBrakeKey[INPUT_NB_PLAYERS];
+  XMKey m_nPullBackKey[INPUT_NB_PLAYERS];
+  XMKey m_nPushForwardKey[INPUT_NB_PLAYERS];
+  XMKey m_nChangeDirKey[INPUT_NB_PLAYERS];
   XMKey m_nScriptActionKeys[INPUT_NB_PLAYERS][MAX_SCRIPT_KEY_HOOKS];
-  IFullKey m_playerKeys[INPUT_NB_PLAYERS][INPUT_NB_PLAYERKEYS];
-  IFullKey m_globalKeys[INPUT_NB_GLOBALKEYS];
+  XMKey m_switchUglyMode;
+  XMKey m_switchBlacklist;
+  XMKey m_switchFavorite;
+  XMKey m_restartLevel;
+  XMKey m_showConsole;
 };
+
 
 #endif

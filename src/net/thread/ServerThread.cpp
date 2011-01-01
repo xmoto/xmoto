@@ -37,9 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../xmscene/Level.h"
 #include "../../xmscene/BikeController.h"
 
-#define XM_SERVER_SLAVE_MODE_MIN_PROTOCOL_VERSION 1
-
-#define XM_SERVER_UPLOADING_FPS_PLAYER   40
+#define XM_SERVER_UPLOADING_FPS_PLAYER   30
 #define XM_SERVER_UPLOADING_FPS_OPLAYERS 15
 #define XM_SERVER_PLAYER_INACTIV_TIME_MAX  1000
 #define XM_SERVER_PLAYER_INACTIV_TIME_PREV  300
@@ -135,22 +133,6 @@ void NetSClient::setUdpBindKey(const std::string& i_key) {
 
 std::string NetSClient::udpBindKey() const {
   return m_udpBindKey;
-}
-
-void NetSClient::setProtocolVersion(int i_protocolVersion) {
-  m_protocolVersion = i_protocolVersion;
-}
-
-int NetSClient::protocolVersion() const {
-  return m_protocolVersion;
-}
-
-void NetSClient::setXmVersion(const std::string& i_xmversion) {
-  m_xmversion = i_xmversion;
-}
-
-std::string NetSClient::xmversion() const {
-  return m_xmversion;
 }
 
 void NetSClient::setName(const std::string& i_name) {
@@ -297,9 +279,7 @@ int ServerThread::realThreadFunction() {
   }
 
   m_acceptConnections = true;
-  if(StateManager::exists()) {
-    StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
-  }
+  StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
 
   // manage server
   while(m_askThreadToEnd == false) {
@@ -336,9 +316,7 @@ int ServerThread::realThreadFunction() {
   SDLNet_FreeSocketSet(m_set);
   m_set = NULL;
 
-  if(StateManager::exists()) {
-    StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
-  }
+  StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
   LogInfo("server: ending normally");
   return 0;
 }
@@ -351,7 +329,7 @@ std::string ServerThread::SP2_determineLevel() {
   // don't allow own levels (isToReload=1)
   v_result = m_pDb->readDB("SELECT id_level "
                            "FROM levels "
-                           "WHERE isToReload=0 AND isScripted=0 AND isPhysics=0 " // warning, addforcetoplayer event cannot be over network game cause player id is serialized
+                           "WHERE isToReload=0 AND isScripted=0 AND isPhysics=0 "
                            "ORDER BY RANDOM() LIMIT 1;",
 			 nrow);
   if(nrow == 0) {
@@ -378,7 +356,6 @@ void ServerThread::SP2_initPlaying() {
 
   try {
     for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-
       v_numPlayer = 0;
       m_universe->getScenes()[i]->loadLevel(m_pDb, v_id_level);
       if(m_universe->getScenes()[i]->getLevelSrc()->isXMotoTooOld()) {
@@ -402,7 +379,7 @@ void ServerThread::SP2_initPlaying() {
 	  v_localNetId++;
 	}
       }
-      m_universe->getScenes()[i]->playInitLevel();
+      m_universe->getScenes()[i]->playLevel();
     }
   } catch(Exception &e) {
     LogWarning("Server: Unable to load level %s",  v_id_level.c_str());
@@ -550,10 +527,10 @@ void ServerThread::SP2_updateScenePlaying() {
       nPhysSteps++;
     }
 
-    // if the delay is too long, reinitialize -- don't skip in server mode
-    //if(m_fLastPhysTime + PHYS_STEP_SIZE/100.0 < GameApp::getXMTime()) {
-    //  m_fLastPhysTime = GameApp::getXMTime();
-    //}
+    // if the delay is too long, reinitialize
+    if(m_fLastPhysTime + PHYS_STEP_SIZE/100.0 < GameApp::getXMTime()) {
+      m_fLastPhysTime = GameApp::getXMTime();
+    }
     SP2_sendSceneEvents(m_DBuffer);
   } else {
     /* send the first frame regularly, so that the client received it once ready */
@@ -561,8 +538,6 @@ void ServerThread::SP2_updateScenePlaying() {
       m_firstFrameSent = GameApp::getXMTimeInt();
       v_firstFrame = true;
     }
-    // initialize the physics time
-    m_fLastPhysTime = GameApp::getXMTime();
   }
 
   // send to each client his frame and the frame of the others
@@ -573,21 +548,19 @@ void ServerThread::SP2_updateScenePlaying() {
 	if(m_clients[i]->isMarkedToPlay()) {
 	  v_scene = m_universe->getScenes()[m_clients[i]->getNumScene()];
 	  
-	  if(v_scene->Players()[m_clients[i]->getNumPlayer()]->isDead() == false) {
-	    v_scene->getSerializedBikeState(v_scene->Players()[m_clients[i]->getNumPlayer()]->getState(),
-					    v_scene->getTime(), &BikeState, v_scene->getPhysicsSettings());
-	    NA_frame na(&BikeState);
-	    try {
-	      if(v_firstFrame ||
-		 m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_PLAYER) == 0) {
-		sendToClient(&na, i, -1, 0);
-	      }
-	      if(v_firstFrame ||
-		 m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_OPLAYERS) == 0) {
-		sendToAllClientsMarkedToPlay(&na, m_clients[i]->id(), 0, i);
-	      }
-	    } catch(Exception &e) {
+	  v_scene->getSerializedBikeState(v_scene->Players()[m_clients[i]->getNumPlayer()]->getState(),
+					  v_scene->getTime(), &BikeState, v_scene->getPhysicsSettings());
+	  NA_frame na(&BikeState);
+	  try {
+	    if(v_firstFrame ||
+	       m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_PLAYER) == 0) {
+	      sendToClient(&na, i, -1, 0);
 	    }
+	    if(v_firstFrame ||
+	       m_currentFrame%(100/XM_SERVER_UPLOADING_FPS_OPLAYERS) == 0) {
+	      sendToAllClientsMarkedToPlay(&na, m_clients[i]->id(), 0, i);
+	    }
+	  } catch(Exception &e) {
 	  }
 	}
       }
@@ -980,7 +953,6 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_udpBindQuery:
   case TNA_serverError:
   case TNA_changeClients:
-  case TNA_clientsNumber:
   case TNA_prepareToPlay:
   case TNA_prepareToGo:
   case TNA_killAlert:
@@ -992,28 +964,10 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     }
     break;
 
-  case TNA_clientsNumberQuery:
-    {
-      // only clients having a name
-      int n=0;
-      for(unsigned int i=0; i<m_clients.size(); i++) {
-	if(m_clients[i]->name() != "") {
-	  n++;
-	}
-      }
-
-      NA_clientsNumber nacn(n);
-      try {
-	sendToClient(&nacn, i_client, -1, 0);
-      } catch(Exception &e) {
-      }
-    }
-    break;
-
   case TNA_clientInfos:
     {
       // check protocol version
-      if(((NA_clientInfos*)i_netAction)->protocolVersion() > XM_NET_PROTOCOL_VERSION) {
+      if(((NA_clientInfos*)i_netAction)->protocolVersion() != XM_NET_PROTOCOL_VERSION) {
 	NA_serverError na(UNTRANSLATED_GAMETEXT_SERVER_PROTOCOL_VERSION_INCOMPATIBLE);
 	na.setSource(-1, 0);
 	try {
@@ -1027,9 +981,7 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       //LogInfo("Protocol version of client %i is %i", i_client, ((NA_clientInfos*)i_netAction)->protocolVersion());
       //LogInfo("UDP bind key of client %i is %s", i_client, ((NA_clientInfos*)i_netAction)->udpBindKey().c_str());
       m_clients[i_client]->setUdpBindKey(((NA_clientInfos*)i_netAction)->udpBindKey());
-      m_clients[i_client]->setProtocolVersion(((NA_clientInfos*)i_netAction)->protocolVersion());
-      m_clients[i_client]->setXmVersion(((NA_clientInfos*)i_netAction)->xmversion());
-
+      
       // query bind udp
       NA_udpBindQuery naq;
       try {
@@ -1037,7 +989,7 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       } catch(Exception &e) {
       }
 
-      // send the current clients list to the client only when the client has a name (or TNA_clientsNumber)
+      // send the current clients list to the client only when the client has a name
       NA_changeClients nacc;
       NetInfosClient nic;
       try {
@@ -1155,25 +1107,6 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
 
   case TNA_clientMode:
     {
-      // 
-      if(((NA_clientMode*)i_netAction)->mode() == NETCLIENT_SLAVE_MODE) {
-	// in this mode, the client must satisfy the minimum version allowed by the server
-	if(m_clients[i_client]->protocolVersion() < XM_SERVER_SLAVE_MODE_MIN_PROTOCOL_VERSION) {
-	  std::ostringstream v_str;
-	  v_str << "Protocol version " << XM_SERVER_SLAVE_MODE_MIN_PROTOCOL_VERSION << " is required on this mode.";
-	  v_str << " Your version is " << ((NA_clientMode*)i_netAction)->mode() << ".\n";
-	  v_str << " Update X-Moto or play simple ghost mode.";
-	  
-	  NA_serverError na(v_str.str());
-	  try {
-	    sendToClient(&na, i_client, -1, 0);
-	  } catch(Exception &e) {
-	    /* ok, no pb */
-	  }
-	  
-	  return false;
-	}
-      }
       m_clients[i_client]->setMode(((NA_clientMode*)i_netAction)->mode());
     }
     break;
@@ -1211,7 +1144,6 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "logout: disconnect from the server\n";
       v_answer += "changepassword <password>: change your password\n";
       v_answer += "lsplayers: list connected players\n";
-      v_answer += "lsxmversions: list xmoto versions used by players\n";
       v_answer += "lsbans: list banned players\n";
 
       std::ostringstream v_n;
@@ -1222,7 +1154,6 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "addadmin <id player> <password>: add player <id player> as admin\n";
       v_answer += "rmadmin <id admin>: remove admin\n";
       v_answer += "stats: server statistics\n";
-      v_answer += "msg <msg>: message to players\n";
     }
 
   } else if(v_args[0] == "banner") {
@@ -1349,26 +1280,6 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       }
     }
 
-  } else if(v_args[0] == "lsxmversions") {
-    if(v_args.size() != 1) {
-      v_answer += "lsxmversions: invalid arguments\n";
-    } else {
-      char v_clientstr[55];
-      for(unsigned int i=0; i<m_clients.size(); i++) {
-	snprintf(v_clientstr, 55, "%5u: %-12s (%-26s ; %3i)",
-		 m_clients[i]->id(), m_clients[i]->name().c_str(),
-		 m_clients[i]->xmversion().c_str(),
-		 m_clients[i]->protocolVersion());
-	v_answer += v_clientstr;
-	if(i % 3 == 2) {
-	  v_answer += "\n";
-	}
-      }
-      if(m_clients.size() %3 != 2) {
-	v_answer += "\n";
-      }
-    }
-
   } else if(v_args[0] == "lsbans") {
     if(v_args.size() != 1) {
       v_answer += "lsban: invalid arguments\n";
@@ -1425,18 +1336,6 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     } else {
       v_answer += "start time : " + m_startTimeStr + "\n";
       v_answer += NetAction::getStats() + "\n";
-      v_answer += ActionReader::getStats() + "\n";
-    }
-
-  } else if(v_args[0] == "msg") {
-    if(v_args.size() != 2) {
-      v_answer += "msg: invalid arguments\n";
-    } else {
-      NA_chatMessage na(v_args[1].c_str(), "server");
-      try {
-	sendToAllClients(&na, -1, 0);
-      } catch(Exception &e) {
-      }
     }
 
   } else {

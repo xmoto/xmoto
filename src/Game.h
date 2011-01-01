@@ -49,8 +49,6 @@ class UIButton;
 class UIFrame;
 class UIStatic;
 class NetServer;
-class VirtualLevelsList;
-class XMDemo;
 
 /*===========================================================================
   Game application
@@ -94,6 +92,7 @@ public:
 
   void quit(void);
   static void getMousePos(int *pnX, int *pnY);
+  bool haveMouseMoved(void);
       
   Img *grabScreen(void);
 
@@ -108,9 +107,12 @@ public:
   void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
   void switchLevelToBlacklist(const std::string& i_levelId, bool v_displayMessage = false);
 
-  std::string getWorldRecord(unsigned int i_number, const std::string &LevelID, int& o_highscore_time);
-  bool getCurrentMedal(int i_best_room_time, int i_best_player_time, std::string& o_medal);
-  bool getNextMedal(int i_best_room_time, int i_best_player_time, std::string& o_medal, int& o_medal_time);
+  bool isThereANextLevel(const std::string& i_id_level);
+  bool isThereAPreviousLevel(const std::string& i_id_level); 
+
+  std::string getWorldRecord(unsigned int i_number, const std::string &LevelID);
+
+  void addGhosts(Scene* i_motogame, Theme* i_theme);
 
   // to call while playing
   void toogleEnableMusic();
@@ -130,15 +132,13 @@ public:
   void addLevelToFavorite(const std::string& i_levelId);
 
   // list played
-  void setCurrentPlayingList(VirtualLevelsList *i_levelsList) {m_currentPlayingList = i_levelsList;}
+  void setCurrentPlayingList(UILevelList *i_levelsList) {m_currentPlayingList = i_levelsList;}
 
   void updateWebHighscores();
 
   std::string getWebRoomURL(unsigned int i_number, xmDatabase* pDb);
   std::string getWebRoomName(unsigned int i_number, xmDatabase* pDb);
     
-  bool isThereANextLevel(const std::string& i_id_level);
-  bool isThereAPreviousLevel(const std::string& i_id_level); 
   std::string determineNextLevel(const std::string& i_id_level);
   std::string determinePreviousLevel(const std::string& i_id_level);
 
@@ -152,12 +152,16 @@ public:
   void switchTestThemeMode(bool mode);
   void switchUglyOverMode(bool mode);
 
+  void displayCursor(bool display);
+
   void addReplay(const std::string& i_file, xmDatabase* pDb, bool sendMessage = true);
 
   NetServer* standAloneServer();
 
   static void wait(int& io_lastFrameTimeStamp, int& io_frameLate, int i_maxFps);
   
+ // inline FileGhost* getFileGhost() { return m_fileGhost; };
+
 protected:
   void createDefaultConfig();
 
@@ -183,6 +187,12 @@ private:
   bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
   bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
       
+  /* Sound effects */
+  SoundSample *m_pEndOfLevelSFX;
+  SoundSample *m_pStrawberryPickupSFX;
+  SoundSample *m_pWreckerTouchSFX;
+  SoundSample *m_pDieSFX;
+      
   /* Various popups */
   UIMsgBox *m_pNotifyMsgBox;
   UIMsgBox *m_pInfoMsgBox;
@@ -196,7 +206,7 @@ private:
   UIFrame *m_pGameInfoWindow;
       
   /* LEVEL lists */
-  VirtualLevelsList *m_currentPlayingList;
+  UILevelList *m_currentPlayingList;
   UILevelList *m_pAllLevelsList;
   UILevelList *m_pPlayNewLevelsList;
 
@@ -255,16 +265,18 @@ private:
   void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
   void _DownloadExtraLevels(void);
 
+  std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, int &p_time);
+  std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, int &p_time);
+  std::string _getGhostReplayPath_bestOfTheRoom(unsigned int i_number, std::string p_levelId, int &p_time);
+
   /* */
   void _InitWin(bool bInitGraphics);
+
 
   // focus
   bool m_hasMouseFocus;
   bool m_hasKeyboardFocus;
   bool m_isIconified;
-
-  // demo
-  XMDemo* m_xmdemo;
 };
 
 #endif

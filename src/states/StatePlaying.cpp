@@ -27,8 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BikePlayer.h"
 #include "../Renderer.h"
 
-StatePlaying::StatePlaying(Universe* i_universe, GameRenderer* i_renderer)
-: StateScene(i_universe, i_renderer) {
+StatePlaying::StatePlaying(Universe* i_universe, const std::string& i_id)
+: StateScene(i_universe, i_id) {
   m_displayStats = false;
 
   for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++){
@@ -46,13 +46,6 @@ void StatePlaying::enter() {
   updateWithOptions();
   setScoresTimes();
   playLevelMusic();
-
-  // update description to nothing
-  if(m_universe != NULL) {
-    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-      m_universe->getScenes()[i]->setInfos("");
-    }
-  }
 }
 
 void StatePlaying::executeOneCommand(std::string cmd, std::string args) {
@@ -92,7 +85,7 @@ void StatePlaying::handleControllers(InputEventType Type, const XMKey& i_xmkey) 
 	v_biker = m_universe->getScenes()[j]->Players()[i];
 	
 	// if else is not valid while axis up can be a signal for two sides
-	if((*InputHandler::instance()->getPlayerKey(INPUT_DRIVE, p)) == i_xmkey) {
+	if(InputHandler::instance()->getDRIVE(p) == i_xmkey) {
 	  /* Start driving */
 	  if(i_xmkey.isAnalogic()) {
 	    v_biker->getControler()->setThrottle(fabs(i_xmkey.getAnalogicValue()));
@@ -101,15 +94,13 @@ void StatePlaying::handleControllers(InputEventType Type, const XMKey& i_xmkey) 
 	  }
 	}
 	
-	if((*InputHandler::instance()->getPlayerKey(INPUT_BRAKE, p)) == i_xmkey) {
+	if(InputHandler::instance()->getBRAKE(p) == i_xmkey) {
 	  /* Brake */
 	  v_biker->getControler()->setBreak(1.0f);
 	}
 	
-	if(((*InputHandler::instance()->getPlayerKey(INPUT_FLIPLEFT, p))
-	    == i_xmkey && XMSession::instance()->mirrorMode() == false) ||
-	   ((*InputHandler::instance()->getPlayerKey(INPUT_FLIPRIGHT, p))
-	    == i_xmkey && XMSession::instance()->mirrorMode())) {
+	if((InputHandler::instance()->getFLIPLEFT(p)    == i_xmkey && XMSession::instance()->mirrorMode() == false) ||
+	   (InputHandler::instance()->getFLIPRIGHT(p) == i_xmkey && XMSession::instance()->mirrorMode())) {
 	  /* Pull back */
 	  if(i_xmkey.isAnalogic()) {
 	    v_biker->getControler()->setPull(fabs(i_xmkey.getAnalogicValue()));
@@ -118,10 +109,8 @@ void StatePlaying::handleControllers(InputEventType Type, const XMKey& i_xmkey) 
 	  }
 	}
 	
-	if(((*InputHandler::instance()->getPlayerKey(INPUT_FLIPRIGHT, p))
-	    == i_xmkey && XMSession::instance()->mirrorMode() == false) ||
-	   ((*InputHandler::instance()->getPlayerKey(INPUT_FLIPLEFT, p))
-	    == i_xmkey && XMSession::instance()->mirrorMode())) {
+	if((InputHandler::instance()->getFLIPRIGHT(p) == i_xmkey && XMSession::instance()->mirrorMode() == false) ||
+	   (InputHandler::instance()->getFLIPLEFT(p)    == i_xmkey && XMSession::instance()->mirrorMode())) {
 	  /* Push forward */
 	  if(i_xmkey.isAnalogic()) {
 	    v_biker->getControler()->setPull(-fabs(i_xmkey.getAnalogicValue()));
@@ -130,7 +119,7 @@ void StatePlaying::handleControllers(InputEventType Type, const XMKey& i_xmkey) 
 	  }
 	}
 	
-	if((*InputHandler::instance()->getPlayerKey(INPUT_CHANGEDIR, p)) == i_xmkey) {
+	if(InputHandler::instance()->getCHANGEDIR(p) == i_xmkey) {
 	  /* Change dir */
 	  if(m_changeDirKeyAlreadyPress[p] == false){
 	    v_biker->getControler()->setChangeDir(true);
@@ -151,33 +140,29 @@ void StatePlaying::handleControllers(InputEventType Type, const XMKey& i_xmkey) 
 	v_biker = m_universe->getScenes()[j]->Players()[i];
 	
 	// if else is not valid while axis up can be a signal for two sides
-	if((*InputHandler::instance()->getPlayerKey(INPUT_DRIVE, p)) == i_xmkey) {
+	if(InputHandler::instance()->getDRIVE(p) == i_xmkey) {
 	  /* Stop driving */
 	  v_biker->getControler()->setThrottle(0.0f);
 	}
 	
-	if((*InputHandler::instance()->getPlayerKey(INPUT_BRAKE, p)) == i_xmkey) {
+	if(InputHandler::instance()->getBRAKE(p) == i_xmkey) {
 	  /* Don't brake */
 	  v_biker->getControler()->setBreak(0.0f);
 	}
 	
-	if(((*InputHandler::instance()->getPlayerKey(INPUT_FLIPLEFT, p))
-	    == i_xmkey && XMSession::instance()->mirrorMode() == false) ||
-	   ((*InputHandler::instance()->getPlayerKey(INPUT_FLIPRIGHT, p))
-	    == i_xmkey && XMSession::instance()->mirrorMode())) {
+	if((InputHandler::instance()->getFLIPLEFT(p)    == i_xmkey && XMSession::instance()->mirrorMode() == false) ||
+	   (InputHandler::instance()->getFLIPRIGHT(p) == i_xmkey && XMSession::instance()->mirrorMode())) {
 	  /* Pull back */
 	  v_biker->getControler()->setPull(0.0f);
 	}
 	
-	if(((*InputHandler::instance()->getPlayerKey(INPUT_FLIPRIGHT, p))
-	    == i_xmkey && XMSession::instance()->mirrorMode() == false) ||
-	   ((*InputHandler::instance()->getPlayerKey(INPUT_FLIPLEFT, p))
-	    == i_xmkey && XMSession::instance()->mirrorMode())) {
+	if((InputHandler::instance()->getFLIPRIGHT(p) == i_xmkey && XMSession::instance()->mirrorMode() == false) ||
+	   (InputHandler::instance()->getFLIPLEFT(p)    == i_xmkey && XMSession::instance()->mirrorMode())) {
 	  /* Push forward */
 	  v_biker->getControler()->setPull(0.0f);
 	}
 	
-	if((*InputHandler::instance()->getPlayerKey(INPUT_CHANGEDIR, p)) == i_xmkey) {
+	if(InputHandler::instance()->getCHANGEDIR(p) == i_xmkey) {
 	  m_changeDirKeyAlreadyPress[p] = false;
 	}
 	p++;
@@ -217,14 +202,14 @@ void StatePlaying::dealWithActivedKeys() {
     for(unsigned int i=0; i<m_universe->getScenes()[j]->Players().size(); i++) {
       v_biker = m_universe->getScenes()[j]->Players()[i];
       
-      if(InputHandler::instance()->getPlayerKey(INPUT_DRIVE, p)->isPressed(v_keystate, v_mousestate)) {
+      if(InputHandler::instance()->getDRIVE(p).isPressed(v_keystate, v_mousestate)) {
 	/* Start driving */
 	v_biker->getControler()->setThrottle(1.0f);
       } else {
 	v_biker->getControler()->setThrottle(0.0f);
       }
       
-      if(InputHandler::instance()->getPlayerKey(INPUT_BRAKE, p)->isPressed(v_keystate, v_mousestate)) {
+      if(InputHandler::instance()->getBRAKE(p).isPressed(v_keystate, v_mousestate)) {
 	/* Brake */
 	v_biker->getControler()->setBreak(1.0f);
       } else {
@@ -232,14 +217,14 @@ void StatePlaying::dealWithActivedKeys() {
       }
       
       // pull
-      if((InputHandler::instance()->getPlayerKey(INPUT_FLIPLEFT, p)->isPressed(v_keystate, v_mousestate) && XMSession::instance()->mirrorMode() == false) ||
-	 (InputHandler::instance()->getPlayerKey(INPUT_FLIPRIGHT, p)->isPressed(v_keystate, v_mousestate) && XMSession::instance()->mirrorMode())) {
+      if((InputHandler::instance()->getFLIPLEFT(p).isPressed(v_keystate, v_mousestate) && XMSession::instance()->mirrorMode() == false) ||
+	 (InputHandler::instance()->getFLIPRIGHT(p).isPressed(v_keystate, v_mousestate) && XMSession::instance()->mirrorMode())) {
 	/* Pull back */
 	v_biker->getControler()->setPull(1.0f);
       } else {
 	// push // must be in pull else block to not set pull to 0
-	if((InputHandler::instance()->getPlayerKey(INPUT_FLIPRIGHT, p)->isPressed(v_keystate, v_mousestate) && XMSession::instance()->mirrorMode() == false) ||
-	   (InputHandler::instance()->getPlayerKey(INPUT_FLIPLEFT, p)->isPressed(v_keystate, v_mousestate)    && XMSession::instance()->mirrorMode())) {
+	if((InputHandler::instance()->getFLIPRIGHT(p).isPressed(v_keystate, v_mousestate) && XMSession::instance()->mirrorMode() == false) ||
+	   (InputHandler::instance()->getFLIPLEFT(p).isPressed(v_keystate, v_mousestate)    && XMSession::instance()->mirrorMode())) {
 	  /* Push forward */
 	  v_biker->getControler()->setPull(-1.0f);
 	} else {
@@ -247,7 +232,7 @@ void StatePlaying::dealWithActivedKeys() {
 	}
       }
       
-      if(InputHandler::instance()->getPlayerKey(INPUT_CHANGEDIR, p)->isPressed(v_keystate, v_mousestate)) {
+      if(InputHandler::instance()->getCHANGEDIR(p).isPressed(v_keystate, v_mousestate)) {
 	/* Change dir */
 	if(m_changeDirKeyAlreadyPress[p] == false){
 	  v_biker->getControler()->setChangeDir(true);
@@ -263,22 +248,20 @@ void StatePlaying::dealWithActivedKeys() {
 }
 
 void StatePlaying::updateWithOptions() {
-
-  if(m_renderer != NULL) {
-    if(XMSession::instance()->hidePlayingInformation() == false) {
-      m_renderer->setShowEngineCounter(XMSession::instance()->showEngineCounter());
-      m_renderer->setShowMinimap(XMSession::instance()->showMinimap());
-      m_renderer->setShowTimePanel(true);
-    } else {
-      m_renderer->setShowEngineCounter(false);
-      m_renderer->setShowMinimap(false);
-      m_renderer->setShowTimePanel(false);
-    }
-    
-    m_renderer->setShowGhostsText(true);
+  if(XMSession::instance()->hidePlayingInformation() == false) {
+    GameRenderer::instance()->setShowEngineCounter(XMSession::instance()->showEngineCounter());
+    GameRenderer::instance()->setShowMinimap(XMSession::instance()->showMinimap());
+    GameRenderer::instance()->setShowTimePanel(true);
+  } else {
+    GameRenderer::instance()->setShowEngineCounter(false);
+    GameRenderer::instance()->setShowMinimap(false);
+    GameRenderer::instance()->setShowTimePanel(false);
   }
 
+  GameRenderer::instance()->setShowGhostsText(true);
+
   for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+    m_universe->getScenes()[i]->setDeathAnim(XMSession::instance()->enableDeadAnimation());
     m_universe->getScenes()[i]->setShowGhostTimeDiff(XMSession::instance()->showGhostTimeDifference());
   }
 }

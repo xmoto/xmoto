@@ -28,7 +28,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../Game.h"
 #include "../../helpers/Log.h"
 #include "../../helpers/utf8.h"
-#include "../../helpers/RenderSurface.h"
 
 #ifdef ENABLE_OPENGL
 #include "../../include/xm_OpenGL.h"
@@ -80,7 +79,6 @@ bool UIWindow::isUglyMode() {
   
   void UIWindow::initW(UIWindow *pParent,int x,int y,std::string Caption,int nWidth,int nHeight) {
     _InitWindow();
-    m_screen = pParent->m_screen;
 
     setPosition(x,y,nWidth,nHeight);
     setCaption(Caption);
@@ -126,10 +124,6 @@ bool UIWindow::isUglyMode() {
     for(unsigned int i=0;i<m_Children.size();i++)
       m_Children[i]->enableWindow(bState);
   }
-
-RenderSurface* UIWindow::getScreen() {
-  return m_screen;
-}
 
   void UIWindow::makeActive(void) {
     /* Find root */
@@ -224,27 +218,7 @@ RenderSurface* UIWindow::getScreen() {
   
   /*===========================================================================
   Message boxes
-  ===========================================================================*/
-  void UIMsgBox::initMsgBox(UIWindow *pParent,int x,int y,std::string Caption,int nWidth,int nHeight) {
-    initW(pParent,x,y,Caption,nWidth,nHeight);
-
-    setStyle(UI_FRAMESTYLE_TRANS);
-    m_textInputFont = NULL;
-    m_bTextInput = false;
-    m_nNumButtons = 0;
-  }
-
-  UIMsgBox::UIMsgBox(UIWindow *pParent,int x,int y,std::string Caption,int nWidth,int nHeight) {
-    initMsgBox(pParent, x, y, Caption, nWidth, nHeight);
-  }
-
-  UIMsgBox::UIMsgBox(UIWindow *pParent, std::vector<std::string>& wordcompletionlist ,int x,int y,std::string Caption,int nWidth,int nHeight) {
-   initMsgBox(pParent, x, y, Caption, nWidth, nHeight);
-   for (int i = 0, n = wordcompletionlist.size(); i < n; i++) {
-     addCompletionWord(wordcompletionlist[i]);
-   }
- }
-
+  ===========================================================================*/  
   UIMsgBoxButton UIMsgBox::getClicked(void) {
     /* Go through buttons... anything clicked? */
     for(unsigned int i=0;i<m_nNumButtons;i++) {
@@ -325,7 +299,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
 
   void UIMsgBox::paint(void) {
     /* Should the OK button be disabled? (if any) */
-    if(m_bTextInput && m_TextInput_real.empty()) {
+    if(m_bTextInput && m_TextInput.empty()) {
       for(unsigned int i=0; i<m_nNumButtons; i++) {
         if(m_pButtons[i]->getCaption() == GAMETEXT_OK)
 	  m_pButtons[i]->enableWindow(false);
@@ -344,11 +318,10 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     /* Should we do some text? */
     if(m_bTextInput && m_textInputFont!=NULL) {      
       setFont(m_textInputFont);
-      putText(16,120,m_TextInput_fake + std::string("|"));
+      putText(16,120,m_TextInput + std::string("|"));
     }
   }
   
-
   bool UIMsgBox::keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char) {
     switch(nKey) {
       case SDLK_ESCAPE:
@@ -356,8 +329,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
           setClicked(GAMETEXT_NO);
         return true;
       case SDLK_RETURN:
-        if(!m_bTextInput || !m_TextInput_real.empty()) {
-          m_TextInput_real = m_TextInput_fake;
+        if(!m_bTextInput || !m_TextInput.empty()) {
           setClicked(GAMETEXT_OK);
           return true;
         }
@@ -367,20 +339,13 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
 
           switch(nKey) {
             case SDLK_BACKSPACE:
-	      if(m_TextInput_real != "") {
-		m_TextInput_fake = utf8::utf8_delete(m_TextInput_fake, utf8::utf8_length(m_TextInput_fake));
-		m_TextInput_real = m_TextInput_fake;
+	      if(m_TextInput != "") {
+		m_TextInput = utf8::utf8_delete(m_TextInput, utf8::utf8_length(m_TextInput));
 	      }
               return true;
-            case SDLK_TAB:
-            	showMatch();
-            	return true;
             default:
 	      if(utf8::utf8_length(i_utf8Char) == 1) { // alt/... and special keys must not be kept
-		if(i_utf8Char[0] != '\n') { // you can generate ascii 10 with ctrl+j or keyboard having new line key
-		  m_TextInput_fake = utf8::utf8_concat(m_TextInput_fake, i_utf8Char);
-		  m_TextInput_real = m_TextInput_fake;
-		}
+		m_TextInput = utf8::utf8_concat(m_TextInput, i_utf8Char);
 	      }
               return true;
           }
@@ -394,7 +359,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
   
   UIMsgBox *UIWindow::msgBox(std::string Text,UIMsgBoxButton Buttons,bool bTextInput,bool bQuery, bool i_verticallyLarge) {
     unsigned int nNumButtons = 0;
-
+    
     if(Buttons & UI_MSGBOX_OK)
       nNumButtons++;
     if(Buttons & UI_MSGBOX_CANCEL)
@@ -493,83 +458,6 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     return pMsgBox;                                
   }
 
-  UIMsgBox *UIWindow::msgBox(std::string Text, std::vector<std::string>& wordcompletionlist,UIMsgBoxButton Buttons,bool bTextInput,bool bQuery,bool i_verticallyLarge) {
-	  UIMsgBox *pMsgBox = this->msgBox(Text, Buttons, bTextInput, bQuery, i_verticallyLarge);
-	  pMsgBox->addCompletionWord(wordcompletionlist);
-	  return pMsgBox;
-  }
-
- /*
-  * overlodaed functions for adding completion words
-  */
-
-  void UIMsgBox::addCompletionWord(std::string& word) {
-	  m_completionWords.push_back(word);
-  }
-
-  void UIMsgBox::addCompletionWord(std::vector<std::string> &list) {
-	  for(int i = 0, n = list.size(); i < n; i++) {
-		  this->addCompletionWord(list[i]);
-	  }
-  }
-
-  /*
-   *
-   * completion word function
-   */
-
-  void UIMsgBox::showMatch() {
-	  int last_word_f_pos = m_TextInput_real.rfind(" ") + 1;
-	  std::string last_word_f = m_TextInput_fake.substr(last_word_f_pos);
-	  for (int i = 0, n = last_word_f.size(); i < n; i++) {
-		  last_word_f[i] = tolower(last_word_f[i]);
-	  }
-	  std::vector<std::string> matches = findMatches();
-	  for (int i = 0, n = matches.size(); i < n; i++) {
-		  std::string match = matches[i];
-		  for (int j = 0, k = match.size(); j < k; j++) {
-			  match[j] = tolower(match[j]);
-		  }
-		  if(match.find(last_word_f) == 0) {
-			  if(i == (n - 1)) {
-				  std::string s;
-				  s = utf8::utf8_substring(m_TextInput_fake, 0, last_word_f_pos);
-				  s += matches[0];
-				  m_TextInput_fake = s;
-				  break;
-			  } else {
-				  std::string s;
-				  s = utf8::utf8_substring(m_TextInput_fake, 0, last_word_f_pos);
-				  s += matches[i + 1];
-				  m_TextInput_fake = s;
-			  }
-		  }
-	  }
-  }
-
-  std::vector<std::string> UIMsgBox::findMatches() {
-	  std::vector<std::string> matchesList;
-	  int pos_find = m_TextInput_real.rfind(" ") + 1;
-	  std::string last_word = m_TextInput_real.substr(pos_find);
-	  for (int i = 0, n = last_word.size(); i < n; i++) {
-		  last_word[i] = tolower(last_word[i]);
-	  }
-	  if (!last_word.empty()) {
-		  for (int i = 0, n = m_completionWords.size(); i < n; i++) {
-			  std::string completionWord = m_completionWords[i];
-			  for (int j = 0, k = completionWord.size(); j < k; j++) {
-				  completionWord[j] = tolower(completionWord[j]);
-			  }
-		  if (completionWord.find(last_word) == 0) {
-				  matchesList.push_back(m_completionWords[i]);
-			  }
-		  }
-	  }
-	  std::vector<std::string> empty;
-	  empty.push_back("");
-	  return !matchesList.empty() ? matchesList : empty;
-  }
-
   /*===========================================================================
   Base painting
   ===========================================================================*/
@@ -599,7 +487,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     
     FontManager* v_fm = m_curFont;
     FontGlyph* v_fg = v_fm->getGlyph(Text);
-    v_fm->printStringGrad(GameApp::instance()->getDrawLib(), v_fg,
+    v_fm->printStringGrad(v_fg,
 			  getAbsPosX()+x + (int)(((float)v_fg->realWidth()) * i_xper),
 			  getAbsPosY()+y + (int)(((float)v_fg->realHeight()) * i_yper),
 			  c0, c1, c2, c3, i_perCentered);
@@ -807,18 +695,12 @@ FRAME_BR (187,198) (8x8)
   /*===========================================================================
   Root window
   ===========================================================================*/
-UIRoot::UIRoot(RenderSurface* i_screen)
+UIRoot::UIRoot()
 {
   m_pApp = GameApp::instance();
   m_bShowContextMenu = true;
   m_lastHover = NULL;
-
   _InitWindow();
-  m_screen = new RenderSurface(*i_screen); // get a copy in case the original is removed
-}
-
-UIRoot::~UIRoot() {
-  delete m_screen;
 }
 
   void UIRoot::_ClipRect(UIRect *pRect,UIRect *pClipWith) {
@@ -872,8 +754,8 @@ UIRoot::~UIRoot() {
     /* Clip to full screen */
     Screen.nX = 0;
     Screen.nY = 0;
-    Screen.nWidth = m_screen->getDispWidth();
-    Screen.nHeight = m_screen->getDispHeight();
+    Screen.nWidth = m_drawLib->getDispWidth();
+    Screen.nHeight = m_drawLib->getDispHeight();
       
     /* Draw root's children */
 #ifdef ENABLE_OPENGL
@@ -896,20 +778,20 @@ UIRoot::~UIRoot() {
       m_drawLib->startDraw(DRAW_MODE_POLYGON);
       //glColor4f(0,0,0,0);//fully transparent??
       m_drawLib->setColorRGBA(0,0,0,0);
-      m_drawLib->glVertexSP(0,m_screen->getDispHeight()-nContextHelpHeight);
-      m_drawLib->glVertexSP(m_screen->getDispWidth(),m_screen->getDispHeight()-nContextHelpHeight);
+      m_drawLib->glVertexSP(0,m_drawLib->getDispHeight()-nContextHelpHeight);
+      m_drawLib->glVertexSP(m_drawLib->getDispWidth(),m_drawLib->getDispHeight()-nContextHelpHeight);
       //glColor4f(0,0,0,0.7);
       m_drawLib->setColorRGBA(0,0,0,255 * 7 / 100);
-      m_drawLib->glVertexSP(m_screen->getDispWidth(),m_screen->getDispHeight());
-      m_drawLib->glVertexSP(0,m_screen->getDispHeight());
+      m_drawLib->glVertexSP(m_drawLib->getDispWidth(),m_drawLib->getDispHeight());
+      m_drawLib->glVertexSP(0,m_drawLib->getDispHeight());
       m_drawLib->endDraw();
         
       if(!m_CurrentContextHelp.empty()) {
         /* Print help string */
 	setFont(m_drawLib->getFontSmall());
 	setTextSolidColor(MAKE_COLOR(255,255,0,255));
-	putText(m_screen->getDispWidth()  -5,
-		m_screen->getDispHeight() -1,
+	putText(m_drawLib->getDispWidth()  -5,
+		m_drawLib->getDispHeight() -1,
 		m_CurrentContextHelp, -1.0, -1.0);
       }
     }
@@ -1119,9 +1001,11 @@ bool UIRoot::_RootJoystickButtonDownEvent(UIWindow *pWindow, Uint8 i_joyNum, Uin
               
               /* By the way, does it want to offer context-help? (only 
                  if mouse have actually moved) */
-	      std::string SubCHelp = pWindow->subContextHelp(wx,wy);
-	      if(SubCHelp != "") m_CurrentContextHelp = SubCHelp;
-	      else m_CurrentContextHelp = pWindow->getContextHelp();
+              if(getApp()->haveMouseMoved()) {
+                std::string SubCHelp = pWindow->subContextHelp(wx,wy);
+                if(SubCHelp != "") m_CurrentContextHelp = SubCHelp;
+                else m_CurrentContextHelp = pWindow->getContextHelp();
+              }
               
               break;
             }

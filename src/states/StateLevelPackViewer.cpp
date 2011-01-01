@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../XMSession.h"
 #include "StatePreplayingGame.h"
 #include "StateLevelInfoViewer.h"
-#include "StateViewHighscore.h"
+#include "StateDownloadGhost.h"
 #include "../helpers/Log.h"
 
 /* static members */
@@ -58,7 +58,7 @@ StateLevelPackViewer::~StateLevelPackViewer()
 
 void StateLevelPackViewer::enter()
 {
-  createGUIIfNeeded(&m_screen);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   updateGUI();
@@ -120,7 +120,8 @@ void StateLevelPackViewer::checkEvents()
     std::string i_level = pList->getSelectedLevel();
     if(i_level != "") {
       GameApp::instance()->setCurrentPlayingList(pList);
-      StateManager::instance()->pushState(new StatePreplayingGame(i_level, false));
+      StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),
+								  i_level, false));
     }
   }
 
@@ -147,7 +148,8 @@ void StateLevelPackViewer::checkEvents()
   if(pShowHighscore != NULL && pShowHighscore->isClicked() == true){
     pShowHighscore->setClicked(false);
     GameApp::instance()->setCurrentPlayingList(pList);
-    StateManager::instance()->pushState(new StateViewHighscore(getInfoFrameLevelId(), true));
+    StateManager::instance()->pushState(new StateDownloadGhost(StateManager::instance()->getUniqueId(),
+							       getInfoFrameLevelId(), true));
   }
 
   if(pLevelInfoButton!=NULL && pLevelInfoButton->isClicked()) {
@@ -194,7 +196,7 @@ void StateLevelPackViewer::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     m_requestForEnd = true;
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchFavorite()) {
     switchtoFavorites();
   } 
 
@@ -211,17 +213,17 @@ void StateLevelPackViewer::clean()
   }
 }
 
-void StateLevelPackViewer::createGUIIfNeeded(RenderSurface* i_screen)
+void StateLevelPackViewer::createGUIIfNeeded()
 {
   if(m_sGUI != NULL)
     return;
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  unsigned int width  = i_screen->getDispWidth();
-  unsigned int height = i_screen->getDispHeight();
+  unsigned int width  = drawLib->getDispWidth();
+  unsigned int height = drawLib->getDispHeight();
 
-  m_sGUI = new UIRoot(i_screen);
+  m_sGUI = new UIRoot();
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0, width, height);
 

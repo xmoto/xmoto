@@ -23,13 +23,34 @@
 
 #include "../VCommon.h"
 #include "Bike.h"
-#include "../helpers/RenderSurface.h"
-
-class GhostTrail;
+#include "GhostTrail.h"
 
 struct CameraGhostVisibility {
   bool isIn;
   float lastIn;
+};
+
+class RenderSurface {
+public:
+  void update(Vector2i upperleft, Vector2i downright){
+    m_upperleft = upperleft;
+    m_downright = downright;
+    m_size      = downright - upperleft;
+  }
+  Vector2i& size(){
+    return m_size;
+  }
+  Vector2i& upperleft(){
+    return m_upperleft;
+  }
+  Vector2i& downright(){
+    return m_downright;
+  }
+
+private:
+  Vector2i m_upperleft;
+  Vector2i m_downright;
+  Vector2i m_size;
 };
 
 class Camera {
@@ -72,13 +93,13 @@ public:
     return m_renderSurf.size().y;
   }
   Vector2i getDispBottomLeft();
-  Vector2i getDispUpRight();
+  Vector2i getDispTopLeft();
+  Vector2i getDispBottomRight();
 
   bool isMirrored();
   void setMirrored(bool i_value);
 
   void setPlayerDead(); // inform that the player dies
-  void setPlayerResussite(); // inform that the player lives
 
   float rotationAngle();
   void setRotationAngle(float i_value);
@@ -87,6 +108,7 @@ public:
   void adaptRotationAngleToGravity(Vector2f& gravity);
 
   void allowActiveZoom(bool i_value);
+  void allowTrailCam(bool i_value);
 
   // assume that a ghost added is never removed and do not change of id (which is the case)
   void clearGhostsVisibility();
@@ -96,14 +118,21 @@ public:
   float getGhostLastIn(unsigned int i);
 
   // trail cam stuff
-  void initTrailCam(GhostTrail* i_ghostTrail);
-  bool useTrailCam() const;
-  void setUseTrailCam(bool i_value);
-  bool getTrailAvailable() { return m_trailAvailable; }
+  void initTrailCam(Scene* i_scene);
+  Vector2f updateTrailCam();
+  Vector2f dampCam(Vector2f v_inputVec);
+  void trailCamTrackingShot();
+  void setActivateTrackingShot(bool i_shot) {m_trackingShotActivated = i_shot;};
+  void toggleTrackingShot(Scene* i_scene);
+  void toggleTrailCam();
+  void setUseTrailCam(bool i_value) { m_useTrailCam = i_value; };
+  unsigned int locateNearestPointOnInterpolatedTrail(bool i_optimize);
+  void checkIfNearTrail();                           //updates m_catchTrail
+  bool getTrailAvailable() { return m_trailAvailable; };
   Vector2f getTrailCamAimPos();
   Vector2f getNearestPointOnTrailPos();
-  bool useTrackingShot() const;
-  void setUseTrackingShot(bool i_value);
+  float m_previousTSStepTime;
+  int m_trailCamForwardSteps;
  
   // camera-specific  screenshadowing 
   void setScreenShade(bool i_doShade, bool i_doShadeAnim); 
@@ -138,12 +167,6 @@ private:
   bool m_allowActiveZoom; // globally enable active zoom feature for this camera
 
   // trail cam stuff  
-  Vector2f updateTrailCam();
-  Vector2f dampCam(Vector2f v_inputVec);
-  void trailCamTrackingShot();
-  unsigned int locateNearestPointOnInterpolatedTrail(bool i_optimize);
-  void checkIfNearTrail();                           //updates m_catchTrail
-
   GhostTrail* m_ghostTrail;
   unsigned int m_currentNearestTrailDataPosition;
   bool m_useTrailCam;
@@ -154,9 +177,7 @@ private:
   unsigned int m_trackShotStartIndex;
   Vector2f m_dampVectorMax,
            m_dampCurrent;
-  int m_trailCamForwardSteps;  
-  float m_previousTSStepTime;
-
+  
   // basic cam control
   float m_cameraOffsetX;
   float m_cameraOffsetY;
@@ -175,9 +196,6 @@ private:
   Vector2f m_cameraDeathOffset;
 
   void resetActiveZoom();
-
-  // set cam rendersurface to drawlib
-  void  activate();
 };
 
 #endif

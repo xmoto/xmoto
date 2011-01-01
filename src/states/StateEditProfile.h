@@ -28,7 +28,8 @@ class UIRoot;
 
 class StateEditProfile : public StateMenu {
 public:
-  StateEditProfile(bool drawStateBehind    = true,
+  StateEditProfile(const std::string& i_id,
+		   bool drawStateBehind    = true,
 		   bool updateStatesBehind = false
 		   );
   virtual ~StateEditProfile();
@@ -51,7 +52,7 @@ private:
 
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static void createGUIIfNeeded();
 };
 
 #endif

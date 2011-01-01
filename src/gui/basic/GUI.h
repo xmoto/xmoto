@@ -28,7 +28,6 @@ class DrawLib;
 class FontManager;
 class Sprite;
 class GameApp;
-class RenderSurface;
 
 #include "../../Theme.h"
 #include "../../include/xm_SDL.h"
@@ -207,11 +206,9 @@ public:
       
   UIWindow *getChild(std::string Child);
   UIRoot *getRoot(void);
-  RenderSurface* getScreen();
       
   /* Generic message boxing */
   UIMsgBox *msgBox(std::string Text,UIMsgBoxButton Buttons,bool bTextInput=false,bool bQuery=false,bool i_verticallyLarge=false);
-  UIMsgBox *msgBox(std::string Text, std::vector<std::string>& wordcompletionlist,UIMsgBoxButton Buttons,bool bTextInput=false,bool bQuery=false,bool i_verticallyLarge=false);
     
   /* Data interface */
   UIWindow *getPrimaryChild(void) {return m_pPrimaryChild;}
@@ -261,9 +258,6 @@ protected:
       
   static DrawLib* m_drawLib;
     
-  // screen to draw ; the same as the parent, but copy to not get in cascade
-  RenderSurface* m_screen;
-
 private:
   /* Data */
   std::string m_ContextHelp;                /* Context help */
@@ -271,7 +265,6 @@ private:
 					       the window transists from "hidden" to "shown". 
 					       useful for specifying "default" buttons in menus */
   UIWindow *m_pParent;                      /* Parent window */
-
   std::string m_ID;                         /* Non-unique id */
   std::vector<UIWindow *> m_Children;       /* Child windows */  
   UIRect m_Pos;                             /* Position */
@@ -407,8 +400,14 @@ private:
 class UIMsgBox : public UIFrame {
 public:
   UIMsgBox() {m_bTextInput = false;m_nNumButtons=0;}
-  UIMsgBox(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0);
-  UIMsgBox(UIWindow *pParent, std::vector<std::string>& wordcompletionlist,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0);
+  UIMsgBox(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0) {
+    initW(pParent,x,y,Caption,nWidth,nHeight);
+
+    setStyle(UI_FRAMESTYLE_TRANS);
+    m_textInputFont = NULL;
+    m_bTextInput = false;
+    m_nNumButtons = 0;
+  }      
   virtual ~UIMsgBox() {_ReEnableSiblings();}
     
   /* Virtual methods */
@@ -420,11 +419,9 @@ public:
   bool setClicked(std::string Text);
   UIMsgBoxButton getClicked(void);
   void enableTextInput(void) {m_bTextInput=true;}
-  std::string getTextInput(void) {return m_TextInput_real;}
-  void setTextInput(std::string s) {m_TextInput_real=s;m_TextInput_fake=s;}
+  std::string getTextInput(void) {return m_TextInput;}
+  void setTextInput(std::string s) {m_TextInput=s;}
   void setTextInputFont(FontManager* pFont) {m_textInputFont = pFont;}
-  void addCompletionWord(std::string& word);
-  void addCompletionWord(std::vector<std::string>& list);
       
   /* Data interface */
   void addButton(UIButton *p) {m_pButtons[m_nNumButtons++] = p;}
@@ -433,8 +430,6 @@ public:
   void makeActiveButton(UIMsgBoxButton i_button);
       
 private:
-  void initMsgBox(UIWindow *pParent,int x,int y,std::string Caption,int nWidth,int nHeight);
-
   /* Data */
   std::vector<bool> m_SiblingStates;
   UIMsgBoxButton m_Clicked;
@@ -442,15 +437,11 @@ private:
   unsigned int m_nNumButtons;
       
   bool m_bTextInput;
-  std::string m_TextInput_real;
-  std::string m_TextInput_fake;
+  std::string m_TextInput;
   FontManager* m_textInputFont;
-  std::vector<std::string> m_completionWords;
       
   /* Helpers */
   void _ReEnableSiblings(void);
-  std::vector<std::string> findMatches();
-  void showMatch();
 };
 
 /*===========================================================================
@@ -833,8 +824,7 @@ struct UIRootActCandidate {
   
 class UIRoot : public UIWindow {
 public:
-  UIRoot(RenderSurface* i_screen);
-  ~UIRoot();
+  UIRoot();
     
   /* Methods */
   virtual void paint(void);            

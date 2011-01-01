@@ -58,7 +58,7 @@ StateLevelInfoViewer::~StateLevelInfoViewer()
 
 void StateLevelInfoViewer::enter()
 { 
-  createGUIIfNeeded(&m_screen);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
   updateGUI();
 
@@ -110,7 +110,8 @@ void StateLevelInfoViewer::checkEvents()
       if(pListEntry != NULL && !pListEntry->Text.empty()) {
 	/* Do it captain */
 	std::string playSpecificReplay = pListEntry->Text[0];
-	StateManager::instance()->pushState(new StatePreplayingReplay(playSpecificReplay, false));
+	StateManager::instance()->pushState(new StatePreplayingReplay(StateManager::instance()->getUniqueId(),
+								      playSpecificReplay, false));
       }
     }
   }
@@ -125,9 +126,9 @@ void StateLevelInfoViewer::checkEvents()
 	std::string playSpecificReplay = pListEntry->Text[0];
 
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
-	StateManager::instance()->pushState(v_msgboxState);
-	v_msgboxState->setMsgBxId("REPLAYS_DELETE");
+	v_msgboxState->setId("REPLAYS_DELETE");
 	v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
+	StateManager::instance()->pushState(v_msgboxState);
       }
     }
   }
@@ -195,22 +196,22 @@ void StateLevelInfoViewer::clean()
   }
 }
 
-void StateLevelInfoViewer::createGUIIfNeeded(RenderSurface* i_screen)
+void StateLevelInfoViewer::createGUIIfNeeded()
 {
   if(m_sGUI != NULL)
     return;
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot(i_screen);
+  m_sGUI = new UIRoot();
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      i_screen->getDispWidth(),
-		      i_screen->getDispHeight());
+		      drawLib->getDispWidth(),
+		      drawLib->getDispHeight());
 
   /* Initialize level info viewer */
-  int x = i_screen->getDispWidth()/2-350;
-  int y = i_screen->getDispHeight()/2-250;
+  int x = drawLib->getDispWidth()/2-350;
+  int y = drawLib->getDispHeight()/2-250;
   std::string caption = "";
   int nWidth = 700;
   int nHeight = 500;
@@ -367,8 +368,8 @@ void StateLevelInfoViewer::updateGUI() {
   std::string v_levelPack;
   std::string v_levelDateStr;
 
-  v_result = xmDatabase::instance("main")->readDB("SELECT a.name, a.author, a.description, b.packName, a.date_str "
-				      "FROM levels AS a LEFT OUTER JOIN weblevels AS b ON (a.id_level=b.id_level) WHERE a.id_level=\"" + 
+  v_result = xmDatabase::instance("main")->readDB("SELECT name, author, description, packName, date_str "
+				      "FROM levels WHERE id_level=\"" + 
 				      xmDatabase::protectString(m_level) + "\";",
 				      nrow);
   if(nrow == 0) {
@@ -379,7 +380,7 @@ void StateLevelInfoViewer::updateGUI() {
   v_levelName        = xmDatabase::instance("main")->getResult(v_result, 5, 0, 0);
   v_levelAuthor      = xmDatabase::instance("main")->getResult(v_result, 5, 0, 1);
   v_levelDescription = xmDatabase::instance("main")->getResult(v_result, 5, 0, 2);
-  v_levelPack        = xmDatabase::instance("main")->getResult(v_result, 5, 0, 3) == NULL ? "" : xmDatabase::instance("main")->getResult(v_result, 5, 0, 3);
+  v_levelPack        = xmDatabase::instance("main")->getResult(v_result, 5, 0, 3);
   v_levelDateStr     = xmDatabase::instance("main")->getResult(v_result, 5, 0, 4);
   xmDatabase::instance("main")->read_DB_free(v_result);
 

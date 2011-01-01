@@ -242,9 +242,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   } 
   
   void MGE_PlayerDies::doAction(Scene *p_pScene) {
-    if(((int)p_pScene->Players().size()) > m_player) { // action are from external data (replays, network, so basically, not sure)
-      p_pScene->killPlayer(m_player);
-    }
+    p_pScene->killPlayer(m_player);
   }
 
   void MGE_PlayerDies::serialize(DBuffer &Buffer) {
@@ -402,9 +400,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   } 
   
   void MGE_PlayerLeavesZone::doAction(Scene *p_pScene) {
-    if(((int)p_pScene->Players().size()) > m_player) { // action are from external data (replays, network, so basically, not sure)
-      p_pScene->playerLeavesZone(m_player, m_zone);
-    }
+    p_pScene->playerLeavesZone(m_player, m_zone);
   }
 
   void MGE_PlayerLeavesZone::serialize(DBuffer &Buffer) {
@@ -487,9 +483,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   } 
   
   void MGE_PlayerTouchesEntity::doAction(Scene *p_pScene) {
-    if(((int)p_pScene->Players().size()) > m_player) { // action are from external data (replays, network, so basically, not sure)
-      p_pScene->playerTouchesEntity(m_player, m_entityID, m_bTouchedWithHead);
-    }
+    p_pScene->playerTouchesEntity(m_player, m_entityID, m_bTouchedWithHead);
   }
 
   void MGE_PlayerTouchesEntity::serialize(DBuffer &Buffer) {
@@ -1008,9 +1002,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   } 
   
   void MGE_SetPlayerPosition::doAction(Scene *p_pScene) {
-    if(((int)p_pScene->Players().size()) > m_player) { // action are from external data (replays, network, so basically, not sure)
-      p_pScene->setPlayerPosition(m_player, m_x, m_y, m_bRight);
-    }
+    p_pScene->setPlayerPosition(m_player, m_x, m_y, m_bRight);
   }
 
   void MGE_SetPlayerPosition::serialize(DBuffer &Buffer) {
@@ -2101,9 +2093,7 @@ std::string MGE_SetPhysicsBlockTranslation::toString()
   } 
   
   void MGE_AddForceToPlayer::doAction(Scene *p_pScene) {
-    if(((int)p_pScene->Players().size()) > m_player) { // action are from external data (replays, network, so basically, not sure)
-      p_pScene->addForceToPlayer(m_player, m_force, m_startTime, m_endTime);
-    }
+    p_pScene->addForceToPlayer(m_player, m_force, m_startTime, m_endTime);
   }
 
   void MGE_AddForceToPlayer::serialize(DBuffer &Buffer) {

@@ -19,13 +19,11 @@
 <sprite type="BikerPart" name="PlayerTorso" file="PlayerTorso_330.png" sum="50b952b2fee8cb36c133a4a75b3188e7" />
 <sprite type="BikerPart" name="PlayerUpperArm" file="PlayerUpperArm_329.png" sum="3ae60c5817434b3effac4ebb78b4e511" />
 <sprite type="BikerPart" name="PlayerUpperLeg" file="PlayerUpperLeg_332.png" sum="f3042ceeb3b1d1fb44de911208ab257d" />
-<sprite type="EdgeEffect" name="BloodEffect_bw" file="BloodEffect_bw_878.png" scale="1" depth="1" sum="43610a1e63cce6c585aeff72cac35636" />
 <sprite type="EdgeEffect" name="Bloodeffect" file="Bloodeffect_407.png" scale="1" depth="1.1" sum="2476a1fd30c5adcba55b25b0e012ee35" />
 <sprite type="EdgeEffect" name="BlueBricks" file="EdgeBlueBricks1.jpg" scale="0.8" depth="0.3" sum="3fbce08754aa0fff5f69136457c654a4" />
 <sprite type="EdgeEffect" name="EarthVines" file="EarthVines.png" scale="0.8" depth="0.8" sum="ccf105aa9757f3b90bfb834efedaa4be" />
 <sprite type="EdgeEffect" name="EdgeCSite1" file="EdgeCSite1_209.png" scale="0.9" depth="0.35" sum="b33420e33d8b46c7060b47c7ce0b1f2a" />
-<sprite type="EdgeEffect" name="EdgeGrass2" file="EdgeGrass1.png" scale="0.4" depth="0.75" sum="cb215c6774a9ed57c671b6bd3cf14bb2" />
-<sprite type="EdgeEffect" name="EdgeGrass_bw" file="EdgeGrass_bw_876.png" scale="1" depth="1" sum="7f03db961ce7c00c4e64baa4b4ea820b" />
+<sprite type="EdgeEffect" name="EdgeGrass2" file="EdgeGrass1.png" scale="0.27" depth="0.75" sum="cb215c6774a9ed57c671b6bd3cf14bb2" />
 <sprite type="EdgeEffect" name="Glow" file="Glow_654.png" scale="0.5" depth="0.9" sum="48f5342b70c9ede836b1f412c79e2435" />
 <sprite type="EdgeEffect" name="GoldenEdge" file="GoldenEdge_812.png" scale="1" depth="-1" sum="9571e2d47a344cf5489952cc16fce094" />
 <sprite type="EdgeEffect" name="Grass" file="EdgeGrass1.png" scale="0.9" depth="0.7" sum="cb215c6774a9ed57c671b6bd3cf14bb2" />
@@ -35,17 +33,13 @@
 <sprite type="EdgeEffect" name="Green_Liquid" file="Green_Liquid_526.png" scale="0.7" depth="1.5" sum="69b6a09bbdb8d01fbb39b53447c6b072" />
 <sprite type="EdgeEffect" name="Ice1" file="EdgeIce1.png" scale="0.6" depth="1.5" sum="fa8a66a780e56acbac6b9874d7f78a66" />
 <sprite type="EdgeEffect" name="KRWBlueRockEdge" file="KRWBlueRockEdge_252.png" scale="1.0" depth="1.0" sum="97314c08d48d49bbb50bd58f89338d73" />
-<sprite type="EdgeEffect" name="KRWRockEdge_bw" file="KRWRockEdge_bw_877.png" scale="1" depth="1" sum="76a081ed798d361efd8bfead67acab87" />
-<sprite type="EdgeEffect" name="MetalTile_Edge" file="MetalTile_Edge_875.png" scale="1" depth="1" sum="3e631244e6632ff6f1b06bd877d83b50" />
 <sprite type="EdgeEffect" name="Mud_edge" file="Mud_edge_821.png" scale="1" depth="1" sum="79e6a21ed48a4c84d564a00bc26d49af" />
-<sprite type="EdgeEffect" name="PlasticEdge" file="PlasticEdge_837.png" scale="1" depth="1" sum="f9c644904dd874006ab77b54da13e299" />
 <sprite type="EdgeEffect" name="RedBricks" file="EdgeRedBricks1.jpg" scale="0.8" depth="0.3" sum="0bea858d4c239db061286dfaa46984eb" />
 <sprite type="EdgeEffect" name="bluen" file="bluen_365.png" scale="0.7" depth="0.2" sum="284d5b85851546445880bc9edaf355f8" />
 <sprite type="EdgeEffect" name="darken" file="darken_288.png" scale="0.7" depth="0.2" sum="e04d284221d557621cb3c9e8fb299f11" />
 <sprite type="EdgeEffect" name="dirt_fx" file="dirt_fx_471.png" scale="1" depth="1" sum="6c2d432ea35ee91f08fb7ef9fd830dbd" />
 <sprite type="EdgeEffect" name="lighten" file="lighten_369.png" scale="0.7" depth="0.2" sum="28df55e6e9fe856ace5b3d3ba117ad1c" />
 <sprite type="EdgeEffect" name="purplen" file="purplen_706.png" scale="0.9" depth="0.7" sum="edbc6aa149b897115e2c85dc067157ba" />
-<sprite type="EdgeEffect" name="rock_edge" file="rock_edge_932.png" sum="45556f1f7f823e4c52e608cc4a5bd952" />
 <sprite type="EdgeEffect" name="rusty" file="rusty_687.png" scale="1" depth="0.6" sum="722fd78126a8780a2fe72d5f11b70770" />
 <sprite type="EdgeEffect" name="stone_fx" file="stone_fx_483.png" scale="1" depth="1" sum="e9d18cd1a1675368bf94bc2c873302f1" />
 <sprite type="EdgeEffect" name="street" file="street_245.png" scale="1" depth="0.4" sum="271a302febf907713a947b93cbe67872" />
@@ -61,19 +55,6 @@
 <sprite type="Entity" name="Bridge" file="Bridge.png" width="4" height="1.65" centerX="2" centerY="1.65" sum="51737bbabf8762b6b318cc94aac584b0" />
 <sprite type="Entity" name="CastleDoor1" file="CastleDoor1.png" width="4" height="4" centerX="2" centerY="0.02" sum="45c14ec99ba2d8a3e7750456a50a81b2" />
 <sprite type="Entity" name="CastleWindow1" file="CastleWindow1.png" width="2" height="3" centerX="1" centerY="0.02" sum="5b7e71e41e5038aca1a0be7da145af2b" />
-<sprite type="Entity" name="Checkpoint_0" file="Checkpoint_0_959.png" width="1.8" height="1.8" centerX="0.9" centerY="0.9" sum="b677f1261b17962cd94697609132150e" />
-<sprite type="Entity" name="Checkpoint_1" fileBase="Checkpoint_1_958_" fileExtension="png" width="1.8" height="1.8" centerX="0.9" centerY="0.9" delay="0.05">
-<frame sum="1b623e91a2d350f309c5e3270839fbde" />
-<frame sum="1c30507adfb66677d500f2de581e0369" />
-<frame sum="92334a4aedd5f2941fa9f3c0ee51f718" />
-<frame sum="c77b136bf51b00fc7a0a05b1c860925b" />
-<frame sum="9d4be2745deb585fa2ddd028ebd5f484" />
-<frame sum="747ad0d0e7581d45fb1532becf32ec41" />
-<frame sum="a3844ee3f2b1e6994c4f467e36453968" />
-<frame sum="9012b9ef52b103088af392ed09450ea8" />
-<frame sum="d004b59c52c956ea4574391dcba1fbeb" />
-<frame sum="a392ff0a0185d145329061f0fb88753c" />
-</sprite>
 <sprite type="Entity" name="DJTux" file="DJTux_754.png" sum="27d599c71c5a1b59de90adfa53e22f57" />
 <sprite type="Entity" name="DangerSign" file="DangerSign_524.png" width="1.5" height="1.5" centerX="0.75" centerY="0.75" sum="cbca3926ceaa0a2c05e608c82c9a61b8" />
 <sprite type="Entity" name="Daulphin" file="Daulphin_166.png" width="3" height="3" centerX="1.5" centerY="0.2" sum="6f5b7e5a5f7f7e65ab7922f61dd24b76" />
@@ -82,7 +63,6 @@
 <sprite type="Entity" name="EleTux" file="EleTux_768.png" sum="96a004143a3e38eae6577d69ca3d0efb" />
 <sprite type="Entity" name="FinSignLeft1" file="FinSignLeft1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" sum="46567592ea1e288c00abee72532ef940" />
 <sprite type="Entity" name="FinSignRight1" file="FinSignRight1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" sum="de04dd49a551acec7512fc14f031ab81" />
-<sprite type="Entity" name="FireEx" file="FireEx_895.jpg" sum="d3721ab84566b5a2ea13f6f7f29f53e3" />
 <sprite type="Entity" name="Flower" fileBase="checkball_235_" fileExtension="png" delay="0.05">
 <frame sum="66e5360765e7b94e8a2f58f646f8ba62" />
 <frame sum="c388768a47ed622c05d9c0ab404f62a5" />
@@ -368,7 +348,6 @@
 <frame sum="b8f56ab5fdfece21eea8aaceebbff9c3" />
 <frame sum="d0901fb37317e1e736e9c55682570509" />
 </sprite>
-<sprite type="Entity" name="light" file="light_933.png" centerX="256" centerY="256" sum="cc02a3b03772774d901b9529fc3dc3d7" />
 <sprite type="Entity" name="liontux" file="liontux_788.png" sum="e368537fb0a8987482d962d850c077fd" />
 <sprite type="Entity" name="monkeytux" file="monkeytux_784.png" sum="917a80c11a3c9a36d90637e33cef9848" />
 <sprite type="Entity" name="mototux" file="mototux_581.png" sum="dc3344527ce6218c0f9e0d9a5733a132" />
@@ -400,7 +379,6 @@
 <frame sum="d6f7f0323a0c9068c0d2ea6a3cac97e1" />
 </sprite>
 <sprite type="Entity" name="spacetux" file="spacetux_588.png" sum="1dbb05a932003305feb4d2cf19422e2d" />
-<sprite type="Entity" name="spot_light" file="spot_light_934.png" centerX="256" centerY="40" sum="d8a8230b48096fd344d3ce352355e82a" />
 <sprite type="Entity" name="sunflower" fileBase="sunflower_205_" fileExtension="png" width="2.1" height="2.1" centerX="1.05" delay="1.0">
 <frame sum="f79e931cf58a94f8157d8f71b6193c7e" />
 <frame sum="7ac21b14ba5a8897fac7adbc0d9ea791" />
@@ -435,7 +413,6 @@
 <sprite type="Texture" name="ArcticsRed1" file="ArcticsRed1_420.jpg" sum="f04ab0a98716fd97726250f268b5ad34" />
 <sprite type="Texture" name="ArcticsRed2" file="ArcticsRed2_421.jpg" sum="47fe2e82e9c7f27c160bef6843c0d2b7" />
 <sprite type="Texture" name="ArcticsRed3" file="ArcticsRed3_422.jpg" sum="c79e7e7908a85d78e5c80197bad62406" />
-<sprite type="Texture" name="Arctics_bw" file="Arctics_bw_909.jpg" sum="372c91d4d00bf55781d0b0bdc17714ed" />
 <sprite type="Texture" name="Asphalt1" file="Asphalt1_197.jpg" sum="a97239df9254c896a964beb20be3a373" />
 <sprite type="Texture" name="Asphalt2" file="Asphalt2_198.jpg" sum="d55f1eb2f1a8c33d45489eb161d34828" />
 <sprite type="Texture" name="Black" file="Black.jpg" sum="ca5ea09350fc401b5c9a98ca16c2d4b7" />
@@ -451,7 +428,6 @@
 <sprite type="Texture" name="Bricks2" file="Bricks2_271.jpg" sum="53c60a8dbf6415bf9a36066b36aa48b5" />
 <sprite type="Texture" name="BubbleDark" file="BubbleDark_371.jpg" sum="27ec780498f01a8777fdb2cfb60870cb" />
 <sprite type="Texture" name="BubbleLight" file="BubbleLight_370.jpg" sum="32021edc68ff739b1e98ea1c6c6c5157" />
-<sprite type="Texture" name="Cherrywood" file="Cherrywood_882.png" sum="d9e756f45f132005155eb8fd5e203255" />
 <sprite type="Texture" name="ComicClouds" file="ComicClouds_213.jpg" sum="b25fded03999edf712ac457ce5b5389f" />
 <sprite type="Texture" name="DarkDirt" file="DarkDirt.jpg" sum="a2331d062481e115e6b85566249d9b55" />
 <sprite type="Texture" name="DarkFrostGround" file="DarkFrostGround.jpg" sum="f3ed5f15ec27c0b6fc5ae63bbff8ae76" />
@@ -460,7 +436,6 @@
 <sprite type="Texture" name="DegradGreen" file="DegradGreen_169.jpg" sum="640abfa685a7601f96e1dc45bf92c0ce" />
 <sprite type="Texture" name="DegradOrange" file="DegradOrange_168.jpg" sum="eb0edffe7fad65dc03382ef99243efe8" />
 <sprite type="Texture" name="Dirt" file="Dirt.jpg" sum="44df1a4fd3b135149648a588ff4ebd4a" />
-<sprite type="Texture" name="Dirt_bw" file="Dirt_bw_907.jpg" sum="c2fbb097b011c28c3d55d6b36255e757" />
 <sprite type="Texture" name="Dirt_fg" file="Dirt_fg_243.jpg" sum="d690288a3b57e6e579529f3661ab746c" />
 <sprite type="Texture" name="Flesh01" file="Flesh01_410.jpg" sum="f3c0696bd0e7a5dfeec9d41aba2b4a26" />
 <sprite type="Texture" name="FrostGround" file="FrostGround.jpg" sum="ff7f0f9da2bc3dee8556b61031aec322" />
@@ -473,24 +448,6 @@
 <sprite type="Texture" name="KRWNightSky" file="KRWNightSky_255.jpg" sum="706d1965ad40a77d5e18ffa1002a57f9" />
 <sprite type="Texture" name="KRWNightSkyMoon" file="KRWNightSkyMoon_256.jpg" sum="3fb313f3010747087aa9524f2d8d227e" />
 <sprite type="Texture" name="KRWNightSkyNoMoon" file="KRWNightSkyNoMoon_257.jpg" sum="59be4745ceace1fc1ff4188ee16e5dab" />
-<sprite type="Texture" name="Lava" fileBase="Lava_960_" fileExtension="png" delay="0.1">
-<frame sum="bb08d85f5f0be70c6f90b226af9c33f3" />
-<frame sum="6abb3be19c20fa20c5805d0b3eb05e36" />
-<frame sum="a9a8cb4da8361c9798776a6018c6ea30" />
-<frame sum="b8b7b83b6a073242d8174c1ccbfd74af" />
-<frame sum="e1dea94afc1e55cdf0fd9257a1fb2864" />
-<frame sum="62543133443a2b5746298285612d473f" />
-<frame sum="e5be4ef57404580c1113146228e4da7e" />
-<frame sum="957354d073c476ff30905feab34c8f2d" />
-<frame sum="ea6f1742a40f62ff80cfecb8e25500f8" />
-<frame sum="9fd3eaeed2303432381f3ab73dd0e0c2" />
-<frame sum="f62ed52eb34e2a546730b407bdd7c9ee" />
-<frame sum="1f47b269e6b4fc67260b5a12c3abd5f8" />
-<frame sum="84600c6e764a418c049a68711532081f" />
-<frame sum="2318482bc2f3a0b1563c4a36e12d04f5" />
-<frame sum="f019a4a61e49f2e662fc7a387733a8f6" />
-<frame sum="07d33adc4fd100160bba7a5b6d7656b1" />
-</sprite>
 <sprite type="Texture" name="Lava" file="Lava_372.jpg" sum="fe78d7c7449bfc2e32b70eaab8cfd809" />
 <sprite type="Texture" name="Marble" file="Marble_645.png" sum="a95ec52322950233eca873eb8d41f20e" />
 <sprite type="Texture" name="MarbleTilePurple" file="MarbleTilePurple_178.jpg" sum="8827c8bcfb579cf4539d34a179288fe6" />
@@ -498,7 +455,6 @@
 <sprite type="Texture" name="Metal" file="Metal_190.jpg" sum="da22ef4a73618c7b3f861eca4f68a184" />
 <sprite type="Texture" name="Metal2" file="Metal2_191.jpg" sum="dedcb9d9224f546c294f346ed905e955" />
 <sprite type="Texture" name="Metal3" file="Metal3_192.jpg" sum="1d20ef21fe81a91bf050b58195d891d4" />
-<sprite type="Texture" name="MetalTile_bw" file="MetalTile_bw_880.png" sum="31bd22e829c4a2580595b97ebc0cf839" />
 <sprite type="Texture" name="Metaltile" file="Metaltile_646.png" sum="19c407ea09eaf4816d41d579b9cb2487" />
 <sprite type="Texture" name="MoltenRock" file="MoltenRock.jpg" sum="db4af739a0583a434e60a147d8a7f4de" />
 <sprite type="Texture" name="Moon" file="Moon_223.png" sum="5fafe26acfb4733599bb8e415fddafac" />
@@ -511,7 +467,6 @@
 <sprite type="Texture" name="RedInRainbows" file="RedInRainbows_469.png" sum="99e08eeca14dee40fda387d61bdfb6e5" />
 <sprite type="Texture" name="Rock" file="Rock_775.png" sum="db649825fd393596dc33a51c5ab9a434" />
 <sprite type="Texture" name="Rust" file="Rust_193.jpg" sum="d4d5b19f985bd6b4ce0778433d5b7d69" />
-<sprite type="Texture" name="Rust_bw" file="Rust_bw_910.jpg" sum="f3ac39b0a2a6f62dbaf88f46c37e13a2" />
 <sprite type="Texture" name="Sand" file="Sand_310.jpg" sum="4d442b1923c98d927f5f910ee46a79d5" />
 <sprite type="Texture" name="SandDark" file="SandDark_311.jpg" sum="cca475f2f20c5874380d24ee165f63ba" />
 <sprite type="Texture" name="Sky2Drift" file="Sky2Drift.jpg" sum="a764e5e06fd3f5efb732838197d3eab4" />
@@ -520,11 +475,6 @@
 <sprite type="Texture" name="SolidOrange" file="SolidOrange_170.jpg" sum="8ac2104ef31061508d43129fdb68d3eb" />
 <sprite type="Texture" name="Space" file="Space_194.jpg" sum="a9e3fd35bc32c77e43e764c835537c61" />
 <sprite type="Texture" name="Steam" file="Steam_724.png" sum="a33a54dd2ebed9db17ce97ffda51d7b2" />
-<sprite type="Texture" name="T_Dirt" file="T_Dirt_920.jpg" sum="44b2c5a6a5ddfd7e81ea78ea7f7983a9" />
-<sprite type="Texture" name="T_Grass1" file="T_Grass1_924.jpg" sum="84f147fe71a7686410d75f8dc44162fa" />
-<sprite type="Texture" name="T_Grass2" file="T_Grass2_925.jpg" sum="ba96795e91557d2a56840cec23ddad2d" />
-<sprite type="Texture" name="T_Grass3" file="T_Grass3_944.jpg" sum="38693c6ac8030c16ec3de898e8daf93d" />
-<sprite type="Texture" name="T_Stone" file="T_Stone_922.jpg" sum="7c3526cb970d4be922f7a80f81eda46a" />
 <sprite type="Texture" name="TiZeta" file="TiZeta_278.jpg" sum="59e08ebfd92cdd023445d4ff4e710819" />
 <sprite type="Texture" name="TilesBlue" file="TilesBlue_180.jpg" sum="033335cfb540cf43cae80c1d232960bd" />
 <sprite type="Texture" name="TilesGreen" file="TilesGreen_181.jpg" sum="8f3c10008a4a6c9927a95becd7b05db5" />
@@ -532,69 +482,14 @@
 <sprite type="Texture" name="TilesRed" file="TilesRed_183.jpg" sum="4a8d40732891d6b3818b2523b60f89aa" />
 <sprite type="Texture" name="TilesTeal" file="TilesTeal_184.jpg" sum="37c8016448efa16bb7474701b7851da2" />
 <sprite type="Texture" name="TilesYellow" file="TilesYellow_185.jpg" sum="e512a6d13fbbff5493166353e21fa577" />
-<sprite type="Texture" name="Tiles_bw" file="Tiles_bw_908.jpg" sum="973b1267ce0f92a2484032a1c6ad6a55" />
 <sprite type="Texture" name="TransparentBlue1" file="TransparentBlue1_269.png" sum="73b9ac1b49cb1247a3c9a0fcf406e785" />
 <sprite type="Texture" name="Ubuntu" file="Ubuntu_171.jpg" sum="f3754abc2bea4fb4804489d65da32771" />
 <sprite type="Texture" name="VioletInRainbows" file="VioletInRainbows_718.png" sum="c9851c7a70c34ec24de28f9d6bab4ba8" />
 <sprite type="Texture" name="Vulcanic" file="Vulcanic_815.jpg" sum="5323cf3739d005645f52843bba7882a8" />
 <sprite type="Texture" name="Wallpaper1" file="Wallpaper1_195.jpg" sum="ae6e2e73d11fcce5dc9694278903cb55" />
 <sprite type="Texture" name="Wallpaper2" file="Wallpaper2_196.jpg" sum="ff0e5a63444fc30ab1ec704ab2035ad8" />
-<sprite type="Texture" name="Water1" fileBase="Water1_961_" fileExtension="png" delay="0.06">
-<frame sum="25b2d0c4d8173148d76fb167fb73c65c" />
-<frame sum="7cab9af83d3fb25335cad8abb08e8865" />
-<frame sum="a904df59c4e4350487f6edbc230c6408" />
-<frame sum="88c89f329d8bf99bc25d60a54f63418b" />
-<frame sum="d95cad4a78c98089f64316b46b52b4ef" />
-<frame sum="a453b3bb71569615b4ccd829599ad3e7" />
-<frame sum="50923d8e92c6e5d4b6a4cab7e53f1093" />
-<frame sum="4fbc5cb15fb97511edc695ce2e16f43c" />
-<frame sum="1a95856e5d0ed0dd7232e7fc20f0ee39" />
-<frame sum="b8da66a579b4fae8bf043f57fe8b5144" />
-<frame sum="2e628f365f7663581da2954dbd3dcc65" />
-<frame sum="77eec75f9205abeaef6b38c737d008be" />
-<frame sum="17a6168509908ef02731bacb824ae1e3" />
-<frame sum="2af2e486535d8fed84cfce5f2be7448e" />
-<frame sum="fc186bba3a9fbf04158aa50426fad610" />
-<frame sum="bf6e99fdcc6b4aeebe34702fe581c7a5" />
-</sprite>
 <sprite type="Texture" name="Water1" file="Water1_186.jpg" sum="47102168e805c4bddb86a6e41b39c203" />
-<sprite type="Texture" name="Water2" fileBase="Water2_962_" fileExtension="png" delay="0.06">
-<frame sum="22ec5574aba453a5a113adf475afe918" />
-<frame sum="29661ebaa20a087318d4444df51fe40c" />
-<frame sum="be180043c7f949a7182431aaf22128a5" />
-<frame sum="6e907b80674cde840137fc8c19f0b413" />
-<frame sum="395c8e52053606c907d70b5608775657" />
-<frame sum="88583c4dd5b3f1763012862adf6d9d1a" />
-<frame sum="c3ddf8d0d77a22d724160421b7d6df09" />
-<frame sum="9e0cc34cd57540e7522d21d6eaaae05c" />
-<frame sum="a39db58479f069aa923986078d5cde02" />
-<frame sum="a1c2a5e49f60feb92aed8f0b6a16ad76" />
-<frame sum="5fca52381764d70b0d01511e036e3ff5" />
-<frame sum="a953fc7621a129b1e1d3f3fa4c0e0c5d" />
-<frame sum="a097691e46b98d5f76fdd86964cc6d0d" />
-<frame sum="930d0e7d45f7711595e0750e06524140" />
-<frame sum="b44b439bddb8cb032ebec767fc4cfa9f" />
-<frame sum="df6b24882948947dda9e27b4c4584d66" />
-</sprite>
 <sprite type="Texture" name="Water2" file="Water2_187.jpg" sum="869605d2fdf7ca2acf813a1c1f1159e4" />
-<sprite type="Texture" name="Water3" fileBase="Water3_963_" fileExtension="png" delay="0.06">
-<frame sum="a9601dfb20f5e1348295db61b45b6788" />
-<frame sum="8e24174c644689ee46167fa2d89d3ac1" />
-<frame sum="8409ec7356eb4be337950bd58cf9a9b4" />
-<frame sum="9f59a8c9cfbe63328076ad18a67bc2d9" />
-<frame sum="a08510998d74619fab0708da7006c276" />
-<frame sum="775eff73fdd0611595326bb64dbe76c6" />
-<frame sum="b1f838b36b455c1799e6f27c64fda0c9" />
-<frame sum="d20e83d988e377df8216576fd9cafc9e" />
-<frame sum="cc8eeeaa056633322f31145a7c6a2578" />
-<frame sum="7652790adb250337e9a91d0b752f5b15" />
-<frame sum="7b895557b149ea20e143794fab07adb9" />
-<frame sum="ccb479d35977db24b657b69549b4f6af" />
-<frame sum="51e0da0e13a65b11568fdcdd349ff488" />
-<frame sum="6b89269574fe19b6e389e5e31e56fb67" />
-<frame sum="2b9cec0a31913aef8428eabcac0d75d1" />
-<frame sum="b6ec1e1943fee7505d7d25c663b0750d" />
-</sprite>
 <sprite type="Texture" name="Water3" file="Water3_770.png" sum="3acd2cfb1df5d34b9240721502c0c6cc" />
 <sprite type="Texture" name="WavyLines" file="WavyLines_723.jpg" sum="ebf54f955809fdf745a0b416ac56bd0e" />
 <sprite type="Texture" name="Wood2" file="Wood2_158.jpg" sum="3ae557fec46cf7122daa74e0baf827e7" />
@@ -625,7 +520,6 @@
 <sprite type="Texture" name="glass_red" file="glass_red_474.png" sum="18cdcbf0eb62c01a59fa01b4c650e484" />
 <sprite type="Texture" name="greek" file="greek_486.png" sum="73f497c366aae723be010d162c33b429" />
 <sprite type="Texture" name="green_shadow" file="green_shadow_700.png" sum="78d06e1bb154ec26d26c0d3c3ab13af2" />
-<sprite type="Texture" name="hatch_01_dark" file="hatch_01_dark_874.jpg" sum="4eb4034c8fae2666968b0adb7a4c8b63" />
 <sprite type="Texture" name="helltiles" file="helltiles_176.jpg" sum="4a90ea3fb45d93c7be0d26a837b50468" />
 <sprite type="Texture" name="hochhaus" file="hochhaus_298.jpg" sum="94a1c43967f3aa430b9f94a9d295deca" />
 <sprite type="Texture" name="hochhaus2" file="hochhaus2_299.jpg" sum="76cecbefea99c95ba0eb3d991d6e752c" />
@@ -637,19 +531,15 @@
 <sprite type="Texture" name="loupechene" file="loupechene_277.jpg" sum="6dbb92d9b3b7d9c8c33a6804f881f53e" />
 <sprite type="Texture" name="mediumgrey" file="mediumgrey_294.png" sum="7859e3ba3c696c888080c39c60a62354" />
 <sprite type="Texture" name="metal_grid" file="metal_grid_688.png" sum="de73bf134755016f918de7e1311c8651" />
-<sprite type="Texture" name="metall" file="metall_935.png" sum="5f08f8be32273939f14e5fdc95ea0c57" />
 <sprite type="Texture" name="moresand" file="moresand_484.png" sum="016111f28eee0909bead36ac655635f5" />
 <sprite type="Texture" name="moresand2" file="moresand2_485.png" sum="bfb079aeb1dd779b9a652f6d289d5853" />
-<sprite type="Texture" name="mountain" file="mountain_929.png" sum="62181088e4e3025c17e78f0ae7a5437e" />
 <sprite type="Texture" name="mud" file="mud_497.jpg" sum="6f38eac4faad8e58e3f68b074f18bd6c" />
-<sprite type="Texture" name="mud3" file="mud3_905.jpg" sum="dd6cc70cddd76d3c350590c84c944743" />
 <sprite type="Texture" name="orange_shadow" file="orange_shadow_703.png" sum="59a8a54a914532c002ba7f3bb3c33246" />
 <sprite type="Texture" name="pink_shadow" file="pink_shadow_702.png" sum="45b6619f01866fa8562f4e77b2e2f682" />
 <sprite type="Texture" name="pop_background" file="pop_background.jpg" sum="f26feccb26472838d2d89762fcd27b15" />
 <sprite type="Texture" name="pop_bricks" file="pop_bricks.jpg" sum="a02e2d59ed78b865d1912de0a5bfbc58" />
 <sprite type="Texture" name="pop_bricks_top" file="pop_bricks_top.jpg" sum="a94749578186d189270bd85f253b575c" />
 <sprite type="Texture" name="purple_shadow" file="purple_shadow_699.png" sum="58bc2bdd06de12b395f8fe816c898fda" />
-<sprite type="Texture" name="rocks_bumpmapped" file="rocks_bumpmapped_931.png" sum="6ca397852bd39f1dcddb7dab7471e15b" />
 <sprite type="Texture" name="shadow1" file="shadow1_423.png" sum="1634c36f8bd9d1a65394205f67529162" />
 <sprite type="Texture" name="shadow2" file="shadow2_424.png" sum="c382e725c6cc1e00e224169515126f13" />
 <sprite type="Texture" name="skin" file="skin_537.jpg" sum="f795d02943eea9ae7bc028077ec2f41f" />
@@ -700,7 +590,6 @@
 <music name="blockolando" file="legolodio.ogg" sum="05c4195ada9b5d50e17d147e2f8be1ae" />
 <music name="madeirastew" file="MadeiraStew.ogg" sum="08532af00a74031af74b90e8d7e830dd" />
 <music name="SpeedItUp" file="speeditup.ogg" sum="5cc80ba826daa3e90413483d58e29cc9" />
-<music name="Foxrun" file="foxrun.ogg" sum="e6db137fe143e6093ef81121d8d1841d" />
 <sound name="Headcrash" file="Headcrash.ogg" sum="a07b9da0bc212a316a49a60446c5f8d3" />
 <sound name="NewHighscore" file="NewHighscore.ogg" sum="c7b35614e4f1536f79a42fde559eab83" />
 <sound name="PickUpStrawberry" file="PickUpStrawberry.ogg" sum="e2f80f50b123e10266a2fc7e63523414" />
@@ -723,7 +612,6 @@
 <sound name="Engine11" file="engine_11.wav" sum="14e10281e16452a3182b7cca470ae862" />
 <sound name="Engine12" file="engine_12.wav" sum="235ea33c03f56a63db59747c6e233014" />
 <sound name="ring" file="ring.ogg" sum="d649f40c9c5038bd08e1a6ce850c8ed8" />
-<sound name="Checkpoint" file="Glass.ogg" sum="3f1c966cf2add53e0a87168394b90e20" />
 <sprite type="Effect" name="Sky1" file="Sky1.jpg" />
 <sprite type="Effect" name="Sky2" file="Sky2.jpg" />
 <sprite type="Effect" name="Sky2Drift" file="Sky2Drift.jpg" />

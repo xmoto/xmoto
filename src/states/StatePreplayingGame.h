@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StatePreplayingGame : public StatePreplaying {
   public:
-  StatePreplayingGame(const std::string i_idlevel, bool i_sameLevel);
+  StatePreplayingGame(const std::string& i_id, const std::string i_idlevel, bool i_sameLevel);
   virtual ~StatePreplayingGame();
 
   virtual void nextLevel(bool i_positifOrder = true);

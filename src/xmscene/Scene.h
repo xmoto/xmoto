@@ -1,4 +1,3 @@
-
 /*=============================================================================
 XMOTO
 
@@ -30,7 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeGhost.h"
 #include "GhostTrail.h"
 #include <queue>
-#include "Entity.h"
 
 #define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 500
 #define REPLAY_SPEED_INCREMENT                 0.25
@@ -65,7 +63,6 @@ class Biker;
 class ChipmunkWorld;
 class PhysicsSettings;
 class ScriptTimer;
-class XMScreen;
 
 /*===========================================================================
   Serialized bike state
@@ -88,17 +85,6 @@ struct ArrowPointer {
   float fArrowPointerAngle;
 };
 
-enum strategyGhostType { GAI_BESTOFROOM, GAI_MYBEST, GAI_THEBEST };
-
-struct GhostsAddInfos {
-  std::string name;
-  std::string description;
-  bool isReference; // must the time diff be displayed ?
-  bool external; // if true, this is a web replay
-  std::string url; // url is external is true
-  strategyGhostType strategyType; // BESTOFROOM MYBEST THEBEST
-};
-
 /*===========================================================================
   Requested player state
   ===========================================================================*/
@@ -118,7 +104,6 @@ struct GameMessage {
   int nAlpha;                       /* Alpha amount */
   bool bOnce;                       /* Unique message */
   MessageType msgType;
-  int lines;                        /* number of lines in the message */
 };  
 
 /*===========================================================================
@@ -129,7 +114,6 @@ class SceneHooks {
 public:
   virtual ~SceneHooks() {};
   virtual void OnTakeEntity() = 0;
-  virtual void OnTakeCheckpoint() = 0;
 };
 
 class Scene {
@@ -143,9 +127,8 @@ public:
   void loadLevel(xmDatabase *i_db, const std::string& i_id_level);
   void prePlayLevel(DBuffer* i_eventRecorder, bool i_playEvents);
 
-  void playInitLevel();
+  void playLevel();
   void updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder, bool i_fast = false);
-  void updatePlayers(int timeStep); // just update players positions
   void endLevel();
 
   /* entities */
@@ -183,18 +166,14 @@ public:
   /* player */
   void setPlayerPosition(int i_player, float x,float y,bool bFaceRight);
   const Vector2f &getPlayerPosition(int i_player);
-  DriveDir getPlayerFaceDir(int i_player);
-
-  Checkpoint* getCheckpoint();
-  void playToCheckpoint();
+  bool getPlayerFaceDir(int i_player);
+  void setDeathAnim(bool b) {m_bDeathAnimEnabled=b;}
 
   /* Data interface */
   Level *getLevelSrc(void) {return m_pLevelSrc;}
 
   int getTime(void) {return m_time;}
   void setTime(int t) {m_time=t;}
-  void setTargetTime(int t) {m_targetTime=t; m_useTargetTime=true;}
-  int getCheckpointStartTime(void) {return m_checkpointStartTime;}
   ArrowPointer &getArrowPointer(void) {return m_Arrow;}
   CollisionSystem *getCollisionHandler(void) {return &m_Collision;}
 
@@ -211,7 +190,6 @@ public:
   void MoveBlock(std::string pBlockID, float pX, float pY);
   void MoveBlock(Block* pBlock, float pX, float pY);
   void SetBlockPos(std::string pBlockID, float pX, float pY);
-  void SetBlockPos(Block* pBlock, float pX, float pY);
   void SetBlockCenter(std::string pBlockID, float pX, float pY);
   void SetBlockRotation(std::string pBlockID, float pAngle);
   void SetBlockRotation(Block* pBlock, float pAngle);
@@ -223,7 +201,6 @@ public:
   void CameraRotate(float i_angle);
   void CameraAdaptToGravity();
 
-  void resussitePlayer(int i_player);
   void killPlayer(int i_player);
   void playerEntersZone(int i_player, Zone *pZone);
   void playerLeavesZone(int i_player, Zone *pZone);
@@ -266,15 +243,8 @@ public:
 			const TColor& i_filterUglyColor);
 
   inline GhostTrail* getGhostTrail() {  return m_ghostTrail; };
-  void initGhostTrail(FileGhost* i_ghost);
-
+  
   std::vector<Ghost *> &Ghosts();
-
-  // these are the ghosts available on the system -- not the one in the scene
-  void addRequestedGhost(GhostsAddInfos i_ghostInfo);
-  std::vector<GhostsAddInfos> &RequestedGhosts();
-  void removeRequestedGhost(const std::string& i_ghostName);
-
   std::vector<Biker*> &Players();
 
   bool doesPlayEvents() const;
@@ -303,22 +273,17 @@ public:
   unsigned int  getNumberCameras();
   void setCurrentCamera(unsigned int currentCamera);
   unsigned int  getCurrentCamera();
-  void addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom = true);
+  void addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom = true, bool i_useTraiCam = true);
   void resetFollow();
   void removeCameras();
   void setAutoZoomCamera();
   bool isAutoZoomCamera();
-
-  bool playInitLevelDone() const; /* return true if init level (ie OnLoad function) is done */
 
 private:
 
   /* Data */
   std::queue<SceneEvent*> m_GameEventQueue;
   int m_time;
-  int m_targetTime; // to ask the scene to update near this time (used if you play in a scene which is not on your host for example -- synchronize times)
-  bool m_useTargetTime; // use or not the target time
-  int m_checkpointStartTime; // time of used checkpoint (to make m_time - m_checkpointStartTime = playedTime)
   float m_floattantTimeStepDiff; // to play slowly replay
   int m_lastStateSerializationTime;
   int m_lastStateUploadTime;
@@ -327,25 +292,24 @@ private:
 
   SceneHooks *m_motoGameHooks;
   std::string m_infos;
+  bool m_bDeathAnimEnabled;
   Vector2f m_PhysGravity; /* gravity */
   ArrowPointer m_Arrow;               /* Arrow */  
   CollisionSystem m_Collision;        /* Collision system */
   Level *m_pLevelSrc;              /* Source of level */            
   LuaLibGame *m_luaGame;
 
+  std::vector<Entity *> m_DestroyedEntities; /* destroyed entities */
   std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
   std::vector<GameMessage *> m_GameMessages;
 
   std::vector<Biker*> m_players;
-  Checkpoint* m_checkpoint;
 
   bool m_showGhostTimeDiff;
   void onRewinding();
 
   GhostTrail* m_ghostTrail;
   std::vector<Ghost*> m_ghosts;
-  std::vector<GhostsAddInfos> m_requestedGhosts;
-
   std::vector<float> m_myLastStrawberries;
 
   GameRenderer* m_renderer;
@@ -363,9 +327,6 @@ private:
 
   // some part of the game can be update only half on the time
   bool m_halfUpdate;
-
-  // does the playInitLevel part it done ?
-  bool m_playInitLevel_done;
 
   std::vector<Camera*> m_cameras;
   unsigned int m_currentCamera;

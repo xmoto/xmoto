@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sstream>
 #include "helpers/VExcept.h"
 #include "helpers/Log.h"
-#include "GameText.h"
 #include "db/xmDatabase.h"
 
   InputHandler::InputHandler() {
@@ -117,18 +116,46 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     std::ostringstream v_n;
     v_n << (i+1);
 
-    for(unsigned int j=0; j<INPUT_NB_PLAYERKEYS; j++) {
-      try {
-      m_playerKeys[i][j].key = XMKey(pDb->config_getString(i_id_profile, m_playerKeys[i][j].name + v_n.str(),
-							   m_playerKeys[i][j].key.toString()));
-      } catch(InvalidSystemKeyException &e) {
-	/* keep default key */
-      } catch(Exception &e) {
-	m_playerKeys[i][j].key = XMKey(); // load default key (undefined) to not override the key while undefined keys are not saved to avoid config brake in case you forgot to plug your joystick
-      }
+    try {
+      m_nDriveKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyDrive"     + v_n.str(), m_nDriveKey[i].toString()));
+    } catch(InvalidSystemKeyException &e) {
+      /* keep default key */
+    } catch(Exception &e) {
+      m_nDriveKey[i] = XMKey(); // load default key (undefined) to not override the key while undefined keys are not saved to avoid config brake in case you forgot to plug your joystick
     }
 
-    // script keys
+    try {
+      m_nBrakeKey[i]        = XMKey(pDb->config_getString(i_id_profile, "KeyBrake"     + v_n.str(), m_nBrakeKey[i].toString()));
+    } catch(InvalidSystemKeyException &e) {
+      /* keep default key */
+    } catch(Exception &e) {
+      m_nBrakeKey[i] = XMKey();
+    }
+
+    try {
+      m_nPullBackKey[i]     = XMKey(pDb->config_getString(i_id_profile, "KeyFlipLeft"  + v_n.str(), m_nPullBackKey[i].toString()));
+    } catch(InvalidSystemKeyException &e) {
+      /* keep default key */
+    } catch(Exception &e) {
+      m_nPullBackKey[i] = XMKey();
+    }
+
+    try {
+      m_nPushForwardKey[i]  = XMKey(pDb->config_getString(i_id_profile, "KeyFlipRight" + v_n.str(), m_nPushForwardKey[i].toString()));
+    } catch(InvalidSystemKeyException &e) {
+      /* keep default key */
+    } catch(Exception &e) {
+      m_nPushForwardKey[i] = XMKey();
+    }
+
+    try {
+      m_nChangeDirKey[i]    = XMKey(pDb->config_getString(i_id_profile, "KeyChangeDir" + v_n.str(), m_nChangeDirKey[i].toString()));
+    } catch(InvalidSystemKeyException &e) {
+      /* keep default key */
+    } catch(Exception &e) {
+      m_nChangeDirKey[i] = XMKey();
+    }
+    
     for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
       std::ostringstream v_k;
       v_k << (k);
@@ -146,15 +173,45 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     }
   }
 
-  // global keys
-  for(unsigned int i=0; i<INPUT_NB_GLOBALKEYS; i++) {
-    try {
-      m_globalKeys[i].key = XMKey(pDb->config_getString(i_id_profile, m_globalKeys[i].name, m_globalKeys[i].key.toString()));
-    } catch(InvalidSystemKeyException &e) {
-      /* keep default key */
-    } catch(Exception &e) {
-      m_globalKeys[i].key = XMKey();
-    }
+  //
+  try {
+    m_switchUglyMode = XMKey(pDb->config_getString(i_id_profile, "KeySwitchUglyMode", m_switchUglyMode.toString()));
+  } catch(InvalidSystemKeyException &e) {
+    /* keep default key */
+  } catch(Exception &e) {
+    m_switchUglyMode = XMKey();
+  }
+
+  try {
+    m_switchBlacklist = XMKey(pDb->config_getString(i_id_profile, "KeySwitchBlacklist", m_switchBlacklist.toString()));
+  } catch(InvalidSystemKeyException &e) {
+    /* keep default key */
+  } catch(Exception &e) {
+    m_switchBlacklist = XMKey();
+  }
+
+  try {
+    m_switchFavorite = XMKey(pDb->config_getString(i_id_profile, "KeySwitchFavorite", m_switchFavorite.toString()));
+  } catch(InvalidSystemKeyException &e) {
+    /* keep default key */
+  } catch(Exception &e) {
+    m_switchFavorite = XMKey();
+  }
+
+  try {
+    m_restartLevel = XMKey(pDb->config_getString(i_id_profile, "KeyRestartLevel", m_restartLevel.toString()));
+  } catch(InvalidSystemKeyException &e) {
+    /* keep default key */
+  } catch(Exception &e) {
+    m_restartLevel = XMKey();
+  }
+
+  try {
+    m_showConsole = XMKey(pDb->config_getString(i_id_profile, "KeyShowConsole", m_showConsole.toString()));
+  } catch(InvalidSystemKeyException &e) {
+    /* keep default key */
+  } catch(Exception &e) {
+    m_showConsole = XMKey();
   }
 
 }
@@ -162,15 +219,10 @@ void InputHandler::loadConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
   /*===========================================================================
   Add script key hook
   ===========================================================================*/  
-  void InputHandler::addScriptKeyHook(Scene *pGame,const std::string &keyName,const std::string &FuncName) {
+  void InputHandler::addScriptKeyHook(Scene *pGame,const std::string &basicKeyName,const std::string &FuncName) {
     if(m_nNumScriptKeyHooks < MAX_SCRIPT_KEY_HOOKS) {
       m_ScriptKeyHooks[m_nNumScriptKeyHooks].FuncName = FuncName;
-
-      if(keyName.size() == 1) { /* old basic mode */
-	m_ScriptKeyHooks[m_nNumScriptKeyHooks].nKey = XMKey(keyName, true);
-      } else {
-	m_ScriptKeyHooks[m_nNumScriptKeyHooks].nKey = XMKey(keyName);
-      }
+      m_ScriptKeyHooks[m_nNumScriptKeyHooks].nKey = XMKey(basicKeyName, true);
       m_ScriptKeyHooks[m_nNumScriptKeyHooks].pGame = pGame;
       m_nNumScriptKeyHooks++;
     }
@@ -226,121 +278,54 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
   /*===========================================================================
   Set totally default configuration - useful for when something goes wrong
   ===========================================================================*/  
-  void InputHandler::setDefaultConfig() {
-    m_playerKeys[0][INPUT_DRIVE]     = IFullKey("KeyDrive",     XMKey(SDLK_UP,    KMOD_NONE), GAMETEXT_DRIVE);
-    m_playerKeys[0][INPUT_BRAKE]     = IFullKey("KeyBrake",     XMKey(SDLK_DOWN,  KMOD_NONE), GAMETEXT_BRAKE);
-    m_playerKeys[0][INPUT_FLIPLEFT]  = IFullKey("KeyFlipLeft",  XMKey(SDLK_LEFT,  KMOD_NONE), GAMETEXT_FLIPLEFT);
-    m_playerKeys[0][INPUT_FLIPRIGHT] = IFullKey("KeyFlipRight", XMKey(SDLK_RIGHT, KMOD_NONE), GAMETEXT_FLIPRIGHT);
-    m_playerKeys[0][INPUT_CHANGEDIR] = IFullKey("KeyChangeDir", XMKey(SDLK_SPACE, KMOD_NONE), GAMETEXT_CHANGEDIR);
+  void InputHandler::setDefaultConfig() {    
+    m_nDriveKey[0]       = XMKey(SDLK_UP,    KMOD_NONE);
+    m_nBrakeKey[0]       = XMKey(SDLK_DOWN,  KMOD_NONE);
+    m_nPullBackKey[0]    = XMKey(SDLK_LEFT,  KMOD_NONE);
+    m_nPushForwardKey[0] = XMKey(SDLK_RIGHT, KMOD_NONE);
+    m_nChangeDirKey[0]   = XMKey(SDLK_SPACE, KMOD_NONE);
 
-    m_playerKeys[1][INPUT_DRIVE]     = IFullKey("KeyDrive",     XMKey(SDLK_a,    KMOD_NONE), GAMETEXT_DRIVE);
-    m_playerKeys[1][INPUT_BRAKE]     = IFullKey("KeyBrake",     XMKey(SDLK_q,    KMOD_NONE), GAMETEXT_BRAKE);
-    m_playerKeys[1][INPUT_FLIPLEFT]  = IFullKey("KeyFlipLeft",  XMKey(SDLK_z,    KMOD_NONE), GAMETEXT_FLIPLEFT);
-    m_playerKeys[1][INPUT_FLIPRIGHT] = IFullKey("KeyFlipRight", XMKey(SDLK_e,    KMOD_NONE), GAMETEXT_FLIPRIGHT);
-    m_playerKeys[1][INPUT_CHANGEDIR] = IFullKey("KeyChangeDir", XMKey(SDLK_w,    KMOD_NONE), GAMETEXT_CHANGEDIR);
+    m_nDriveKey[1]       = XMKey(SDLK_a, KMOD_NONE);
+    m_nBrakeKey[1]       = XMKey(SDLK_q, KMOD_NONE);
+    m_nPullBackKey[1]    = XMKey(SDLK_z, KMOD_NONE);
+    m_nPushForwardKey[1] = XMKey(SDLK_e, KMOD_NONE);
+    m_nChangeDirKey[1]   = XMKey(SDLK_w, KMOD_NONE);
 
-    m_playerKeys[2][INPUT_DRIVE]     = IFullKey("KeyDrive",     XMKey(SDLK_r,    KMOD_NONE), GAMETEXT_DRIVE);
-    m_playerKeys[2][INPUT_BRAKE]     = IFullKey("KeyBrake",     XMKey(SDLK_f,    KMOD_NONE), GAMETEXT_BRAKE);
-    m_playerKeys[2][INPUT_FLIPLEFT]  = IFullKey("KeyFlipLeft",  XMKey(SDLK_t,    KMOD_NONE), GAMETEXT_FLIPLEFT);
-    m_playerKeys[2][INPUT_FLIPRIGHT] = IFullKey("KeyFlipRight", XMKey(SDLK_y,    KMOD_NONE), GAMETEXT_FLIPRIGHT);
-    m_playerKeys[2][INPUT_CHANGEDIR] = IFullKey("KeyChangeDir", XMKey(SDLK_v,    KMOD_NONE), GAMETEXT_CHANGEDIR);
+    m_nDriveKey[2]       = XMKey(SDLK_r, KMOD_NONE);
+    m_nBrakeKey[2]       = XMKey(SDLK_f, KMOD_NONE);
+    m_nPullBackKey[2]    = XMKey(SDLK_t, KMOD_NONE);
+    m_nPushForwardKey[2] = XMKey(SDLK_y, KMOD_NONE);
+    m_nChangeDirKey[2]   = XMKey(SDLK_v, KMOD_NONE);
 
-    m_playerKeys[3][INPUT_DRIVE]     = IFullKey("KeyDrive",     XMKey(SDLK_u,    KMOD_NONE), GAMETEXT_DRIVE);
-    m_playerKeys[3][INPUT_BRAKE]     = IFullKey("KeyBrake",     XMKey(SDLK_j,    KMOD_NONE), GAMETEXT_BRAKE);
-    m_playerKeys[3][INPUT_FLIPLEFT]  = IFullKey("KeyFlipLeft",  XMKey(SDLK_i,    KMOD_NONE), GAMETEXT_FLIPLEFT);
-    m_playerKeys[3][INPUT_FLIPRIGHT] = IFullKey("KeyFlipRight", XMKey(SDLK_o,    KMOD_NONE), GAMETEXT_FLIPRIGHT);
-    m_playerKeys[3][INPUT_CHANGEDIR] = IFullKey("KeyChangeDir", XMKey(SDLK_k,    KMOD_NONE), GAMETEXT_CHANGEDIR);
-
-    m_globalKeys[INPUT_SWITCHUGLYMODE]      =
-      IFullKey("KeySwitchUglyMode",  	XMKey(SDLK_F9, 	      KMOD_NONE),     GAMETEXT_SWITCHUGLYMODE);
-    m_globalKeys[INPUT_SWITCHBLACKLIST]     =
-      IFullKey("KeySwitchBlacklist", 	XMKey(SDLK_b,  	      KMOD_LCTRL),    GAMETEXT_SWITCHBLACKLIST);
-    m_globalKeys[INPUT_SWITCHFAVORITE]      =
-      IFullKey("KeySwitchFavorite",  	XMKey(SDLK_F3, 	      KMOD_NONE),     GAMETEXT_SWITCHFAVORITE);
-    m_globalKeys[INPUT_RESTARTLEVEL]        =
-      IFullKey("KeyRestartLevel",    	XMKey(SDLK_RETURN,    KMOD_NONE),     GAMETEXT_RESTARTLEVEL);
-    m_globalKeys[INPUT_SHOWCONSOLE]         =
-      IFullKey("KeyShowConsole",     	XMKey(SDLK_WORLD_18,  KMOD_NONE),     GAMETEXT_SHOWCONSOLE);
-    m_globalKeys[INPUT_CONSOLEHISTORYPLUS]  =
-      IFullKey("KeyConsoleHistoryPlus",  XMKey(SDLK_PLUS,      KMOD_LCTRL), GAMETEXT_CONSOLEHISTORYPLUS);
-    m_globalKeys[INPUT_CONSOLEHISTORYMINUS] =
-      IFullKey("KeyConsoleHistoryMinus", XMKey(SDLK_MINUS,     KMOD_LCTRL), GAMETEXT_CONSOLEHISTORYMINUS);
-    m_globalKeys[INPUT_RESTARTCHECKPOINT]   =
-      IFullKey("KeyRestartCheckpoint",   XMKey(SDLK_BACKSPACE, KMOD_NONE),  GAMETEXT_RESTARTCHECKPOINT);
-    m_globalKeys[INPUT_CHAT]                =
-      IFullKey("KeyChat",                XMKey(SDLK_c,         KMOD_LCTRL), GAMETEXT_CHATDIALOG);
-    m_globalKeys[INPUT_LEVELWATCHING]          =
-      IFullKey("KeyLevelWatching",       XMKey(SDLK_TAB,       KMOD_NONE),  GAMETEXT_LEVELWATCHING);
-    m_globalKeys[INPUT_SWITCHPLAYER]           =
-      IFullKey("KeySwitchPlayer",        XMKey(SDLK_F2,        KMOD_NONE),  GAMETEXT_SWITCHPLAYER);
-    m_globalKeys[INPUT_SWITCHTRACKINGSHOTMODE] =
-      IFullKey("KeySwitchTrackingshotMode", XMKey(SDLK_F4,     KMOD_NONE),  GAMETEXT_SWITCHTRACKINGSHOTMODE);
-    m_globalKeys[INPUT_NEXTLEVEL]              =
-      IFullKey("KeyNextLevel",           XMKey(SDLK_PAGEUP,    KMOD_NONE),  GAMETEXT_NEXTLEVEL);
-    m_globalKeys[INPUT_PREVIOUSLEVEL]         =
-      IFullKey("KeyPreviousLevel",       XMKey(SDLK_PAGEDOWN,  KMOD_NONE),  GAMETEXT_PREVIOUSLEVEL);
-    m_globalKeys[INPUT_SWITCHRENDERGHOSTTRAIL] =
-      IFullKey("KeySwitchRenderGhosttrail", XMKey(SDLK_g,      KMOD_LCTRL), GAMETEXT_SWITCHREDERGHOSTTRAIL);
-    m_globalKeys[INPUT_SCREENSHOT] =
-      IFullKey("KeyScreenshot", XMKey(SDLK_F12, KMOD_NONE), GAMETEXT_SCREENSHOT);
-    m_globalKeys[INPUT_SWITCHWWWACCESS] =
-      IFullKey("KeySwitchWWWAccess", XMKey(SDLK_F8, KMOD_NONE), GAMETEXT_SWITCHWWWACCESS);
-    m_globalKeys[INPUT_SWITCHFPS] =
-      IFullKey("KeySwitchFPS", XMKey(SDLK_F7, KMOD_NONE), GAMETEXT_SWITCHFPS);
-    m_globalKeys[INPUT_SWITCHGFXQUALITYMODE] =
-      IFullKey("KeySwitchGFXQualityMode", XMKey(SDLK_F10, KMOD_NONE), GAMETEXT_SWITCHGFXQUALITYMODE);
-    m_globalKeys[INPUT_SWITCHGFXMODE] =
-      IFullKey("KeySwitchGFXMode", XMKey(SDLK_F11, KMOD_NONE), GAMETEXT_SWITCHGFXMODE);
-
-    // uncustomizable keys
-    m_globalKeys[INPUT_HELP] =
-      IFullKey("KeyHelp", XMKey(SDLK_F1, KMOD_NONE), GAMETEXT_HELP, false);
-    m_globalKeys[INPUT_RELOADFILESTODB] =
-      IFullKey("KeyReloadFilesToDb", XMKey(SDLK_F5, KMOD_NONE), GAMETEXT_RELOADFILESTODB, false);
-    m_globalKeys[INPUT_PLAYINGPAUSE] =
-      IFullKey("KeyPlayingPause", XMKey(SDLK_ESCAPE, KMOD_NONE), GAMETEXT_PLAYINGPAUSE, false); // don't set it to true while ESCAPE is not setable via the option as a key
-    m_globalKeys[INPUT_KILLPROCESS] =
-      IFullKey("KeyKillProcess", XMKey(SDLK_k, KMOD_LCTRL), GAMETEXT_KILLPROCESS, false);
-    m_globalKeys[INPUT_REPLAYINGREWIND] =
-      IFullKey("KeyReplayingRewind", XMKey(SDLK_LEFT, KMOD_NONE), GAMETEXT_REPLAYINGREWIND, false);
-    m_globalKeys[INPUT_REPLAYINGFORWARD] =
-      IFullKey("KeyReplayingForward", XMKey(SDLK_RIGHT, KMOD_NONE), GAMETEXT_REPLAYINGFORWARD, false);
-    m_globalKeys[INPUT_REPLAYINGPAUSE] =
-      IFullKey("KeyReplayingPause", XMKey(SDLK_SPACE, KMOD_NONE), GAMETEXT_REPLAYINGPAUSE, false);
-    m_globalKeys[INPUT_REPLAYINGSTOP] =
-      IFullKey("KeyReplayingStop", XMKey(SDLK_ESCAPE, KMOD_NONE), GAMETEXT_REPLAYINGSTOP, false);
-    m_globalKeys[INPUT_REPLAYINGFASTER] =
-      IFullKey("KeyReplayingFaster", XMKey(SDLK_UP, KMOD_NONE), GAMETEXT_REPLAYINGFASTER, false);
-    m_globalKeys[INPUT_REPLAYINGABITFASTER] =
-      IFullKey("KeyReplayingABitFaster", XMKey(SDLK_UP, KMOD_LCTRL), GAMETEXT_REPLAYINGABITFASTER, false);
-    m_globalKeys[INPUT_REPLAYINGSLOWER] =
-      IFullKey("KeyReplayingSlower", XMKey(SDLK_DOWN, KMOD_NONE), GAMETEXT_REPLAYINGSLOWER, false);
-    m_globalKeys[INPUT_REPLAYINGABITSLOWER] =
-      IFullKey("KeyReplayingABitSlower", XMKey(SDLK_DOWN, KMOD_LCTRL), GAMETEXT_REPLAYINGABITSLOWER, false);
+    m_nDriveKey[3]       = XMKey(SDLK_y, KMOD_NONE);
+    m_nBrakeKey[3]       = XMKey(SDLK_h, KMOD_NONE);
+    m_nPullBackKey[3]    = XMKey(SDLK_u, KMOD_NONE);
+    m_nPushForwardKey[3] = XMKey(SDLK_i, KMOD_NONE);
+    m_nChangeDirKey[3]   = XMKey(SDLK_n, KMOD_NONE);
+    
+    m_switchUglyMode     = XMKey(SDLK_F9, KMOD_NONE);
+    m_switchBlacklist    = XMKey(SDLK_b,  KMOD_LCTRL);
+    m_switchFavorite     = XMKey(SDLK_F3, KMOD_NONE);
+    m_restartLevel       = XMKey(SDLK_RETURN,   KMOD_NONE);
+    m_showConsole        = XMKey(SDLK_WORLD_18, KMOD_NONE);
   }  
 
   /*===========================================================================
   Get key by action...
   ===========================================================================*/  
 
-std::string InputHandler::getKeyByAction(const std::string &Action, bool i_tech) {
+  std::string InputHandler::getFancyKeyByAction(const std::string &Action) {
     for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
       std::ostringstream v_n;
       
       if(i !=0) { // nothing for player 0
 	v_n << " " << (i+1);
       }
-
-      if(Action == "Drive"       + v_n.str())
-	return i_tech ? m_playerKeys[i][INPUT_DRIVE].key.toString()    :m_playerKeys[i][INPUT_DRIVE].key.toFancyString();
-      if(Action == "Brake"       + v_n.str())
-	return i_tech ? m_playerKeys[i][INPUT_BRAKE].key.toString()    :m_playerKeys[i][INPUT_BRAKE].key.toFancyString();
-      if(Action == "PullBack"    + v_n.str())
-	return i_tech ? m_playerKeys[i][INPUT_FLIPLEFT].key.toString() :m_playerKeys[i][INPUT_FLIPLEFT].key.toFancyString();
-      if(Action == "PushForward" + v_n.str())
-	return i_tech ? m_playerKeys[i][INPUT_FLIPRIGHT].key.toString():m_playerKeys[i][INPUT_FLIPRIGHT].key.toFancyString();
-      if(Action == "ChangeDir"   + v_n.str())
-	return i_tech ? m_playerKeys[i][INPUT_CHANGEDIR].key.toString():m_playerKeys[i][INPUT_CHANGEDIR].key.toFancyString();
+      if(Action == "Drive"       + v_n.str()) return m_nDriveKey[i].toFancyString();
+      if(Action == "Brake"       + v_n.str()) return m_nBrakeKey[i].toFancyString();
+      if(Action == "PullBack"    + v_n.str()) return m_nPullBackKey[i].toFancyString();
+      if(Action == "PushForward" + v_n.str()) return m_nPushForwardKey[i].toFancyString();
+      if(Action == "ChangeDir"   + v_n.str()) return m_nChangeDirKey[i].toFancyString();
     }
     return "?";
   }
@@ -352,14 +337,22 @@ void InputHandler::saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     std::ostringstream v_n;
     v_n << (i+1);
 
-    // player keys
-    for(unsigned int j=0; j<INPUT_NB_PLAYERKEYS; j++) {
-      if(m_playerKeys[i][j].key.isDefined()) {
-	pDb->config_setString(i_id_profile, m_playerKeys[i][j].name + v_n.str(), m_playerKeys[i][j].key.toString() );
-      }
+    if(m_nDriveKey[i].isDefined()) {
+      pDb->config_setString(i_id_profile, "KeyDrive"     + v_n.str(), m_nDriveKey[i].toString()      );
+    }
+    if(m_nBrakeKey[i].isDefined()) {
+      pDb->config_setString(i_id_profile, "KeyBrake"     + v_n.str(), m_nBrakeKey[i].toString()      );
+    }
+    if(m_nPullBackKey[i].isDefined()) {
+      pDb->config_setString(i_id_profile, "KeyFlipLeft"  + v_n.str(), m_nPullBackKey[i].toString()   );
+    }
+    if(m_nPushForwardKey[i].isDefined()) {
+      pDb->config_setString(i_id_profile, "KeyFlipRight" + v_n.str(), m_nPushForwardKey[i].toString());
+    }
+    if(m_nChangeDirKey[i].isDefined()) {
+      pDb->config_setString(i_id_profile, "KeyChangeDir" + v_n.str(), m_nChangeDirKey[i].toString()  );
     }
 
-    // script keys
     for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
       if(m_nScriptActionKeys[i][k].isDefined()) {
 	std::ostringstream v_k;
@@ -370,11 +363,67 @@ void InputHandler::saveConfig(UserConfig *pConfig, xmDatabase* pDb, const std::s
     }
   }
 
-  for(unsigned int i=0; i<INPUT_NB_GLOBALKEYS; i++) {
-    pDb->config_setString(i_id_profile, m_globalKeys[i].name, m_globalKeys[i].key.toString());
+  if(m_switchUglyMode.isDefined()) {
+    pDb->config_setString(i_id_profile, "KeySwitchUglyMode", m_switchUglyMode.toString());
+  }
+
+  if(m_switchBlacklist.isDefined()) {
+    pDb->config_setString(i_id_profile, "KeySwitchBlacklist", m_switchBlacklist.toString());
+  }
+
+  if(m_switchFavorite.isDefined()) {
+    pDb->config_setString(i_id_profile, "KeySwitchFavorite", m_switchFavorite.toString());
+  }
+
+  if(m_restartLevel.isDefined()) {
+    pDb->config_setString(i_id_profile, "KeyRestartLevel", m_restartLevel.toString());
+  }
+
+  if(m_showConsole.isDefined()) {
+    pDb->config_setString(i_id_profile, "KeyShowConsole", m_showConsole.toString());
   }
 
   pDb->config_setValue_end();
+}
+
+void InputHandler::setDRIVE(int i_player, XMKey i_value) {
+  m_nDriveKey[i_player] = i_value;
+}
+
+XMKey InputHandler::getDRIVE(int i_player) const {
+  return m_nDriveKey[i_player];
+}
+
+void InputHandler::setBRAKE(int i_player, XMKey i_value) {
+  m_nBrakeKey[i_player] = i_value;
+}
+
+XMKey InputHandler::getBRAKE(int i_player) const {
+  return m_nBrakeKey[i_player];
+}
+
+void InputHandler::setFLIPLEFT(int i_player, XMKey i_value) {
+  m_nPullBackKey[i_player] = i_value;
+}
+
+XMKey InputHandler::getFLIPLEFT(int i_player) const {
+  return m_nPullBackKey[i_player];
+}
+
+void InputHandler::setFLIPRIGHT(int i_player, XMKey i_value) {
+  m_nPushForwardKey[i_player] = i_value;
+}
+
+XMKey InputHandler::getFLIPRIGHT(int i_player) const {
+  return m_nPushForwardKey[i_player];
+}
+
+void InputHandler::setCHANGEDIR(int i_player, XMKey i_value) {
+  m_nChangeDirKey[i_player] = i_value;
+}
+
+XMKey InputHandler::getCHANGEDIR(int i_player) const {
+  return m_nChangeDirKey[i_player];
 }
 
 void InputHandler::setSCRIPTACTION(int i_player, int i_action, XMKey i_value) {
@@ -385,41 +434,53 @@ XMKey InputHandler::getSCRIPTACTION(int i_player, int i_action) const {
   return m_nScriptActionKeys[i_player][i_action];
 }
 
-void InputHandler::setGlobalKey(unsigned int INPUT_key, XMKey i_value) {
-  m_globalKeys[INPUT_key].key = i_value;
+void InputHandler::setSwitchUglyMode(XMKey i_value) {
+  m_switchUglyMode = i_value;
 }
 
-const XMKey* InputHandler::getGlobalKey(unsigned int INPUT_key) const {
-  return &(m_globalKeys[INPUT_key].key);
+XMKey InputHandler::getSwitchUglyMode() const {
+  return m_switchUglyMode;
 }
 
-std::string InputHandler::getGlobalKeyHelp(unsigned int INPUT_key) const {
-  return m_globalKeys[INPUT_key].help;
+void InputHandler::setSwitchBlacklist(XMKey i_value) {
+  m_switchBlacklist = i_value;
 }
 
-bool InputHandler::getGlobalKeyCustomizable(unsigned int INPUT_key) const {
-  return m_globalKeys[INPUT_key].customizable;
+XMKey InputHandler::getSwitchBlacklist() const {
+  return m_switchBlacklist;
 }
 
-void InputHandler::setPlayerKey(unsigned int INPUT_key, int i_player, XMKey i_value) {
-  m_playerKeys[i_player][INPUT_key].key = i_value;
+void InputHandler::setSwitchFavorite(XMKey i_value) {
+  m_switchFavorite = i_value;
 }
 
-const XMKey* InputHandler::getPlayerKey(unsigned int INPUT_key, int i_player) const {
-  return &(m_playerKeys[i_player][INPUT_key].key);
+XMKey InputHandler::getSwitchFavorite() const {
+  return m_switchFavorite;
 }
 
-std::string InputHandler::getPlayerKeyHelp(unsigned int INPUT_key, int i_player) const {
-  return m_playerKeys[i_player][INPUT_key].help;
+void InputHandler::setRestartLevel(XMKey i_value) {
+  m_restartLevel = i_value;
+}
+
+XMKey InputHandler::getRestartLevel() const {
+  return m_restartLevel;
+}
+
+void InputHandler::setShowConsole(XMKey i_value) {
+  m_showConsole = i_value;
+}
+
+XMKey InputHandler::getShowConsole() const {
+  return m_showConsole;
 }
 
 bool InputHandler::isANotGameSetKey(XMKey* i_xmkey) const {
   for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
-    for(unsigned int j=0; j<INPUT_NB_PLAYERKEYS; j++) {
-      if((*getPlayerKey(j, i)) == *i_xmkey) {
-	return false;
-      }
-    }
+    if(getDRIVE(i)     == *i_xmkey) return false;
+    if(getBRAKE(i)     == *i_xmkey) return false;
+    if(getFLIPLEFT(i)  == *i_xmkey) return false;
+    if(getFLIPRIGHT(i) == *i_xmkey) return false;
+    if(getCHANGEDIR(i) == *i_xmkey) return false;
 
     for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
       if(m_nScriptActionKeys[i][k] == *i_xmkey) return false;
@@ -471,14 +532,4 @@ void InputHandler::recheckJoysticks() {
 
 std::vector<std::string>& InputHandler::getJoysticksNames() {
   return m_JoysticksNames;
-}
-
-IFullKey::IFullKey(const std::string& i_name, const XMKey& i_key, const std::string i_help, bool i_customisable) {
-  name = i_name;
-  key  = i_key;
-  help = i_help;
-  customizable = i_customisable;
-}
-
-IFullKey::IFullKey() {
 }

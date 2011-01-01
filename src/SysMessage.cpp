@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SysMessage.h"
 #include "drawlib/DrawLib.h"
 #include "Game.h"
-#include "net/NetClient.h"
 
 #define SYSMSG_DISPLAY_TIME 1.9
 #define SYSMSG_DISPLAY_DECREASE_TIME 0.75
@@ -32,8 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define SYSMSG_CONSOLEDISPLAY_TIME 4.0
 #define SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME 1.0
-#define SYSMSG_CONSOLEDISPLAY_MAXNBLINES 50
-#define SYSMSG_DEFAULT_CONSOLEDISPLAY_DISPLAYNBLINES 5
+#define SYSMSG_CONSOLEDISPLAY_MAXNBLINES 5
 
 SysMsg::SysMsg(const std::string& i_msg, SysMsgType i_type) {
     text  = i_msg;
@@ -47,7 +45,6 @@ SysMsg::~SysMsg() {
 SysMessage::SysMessage() {
   m_startDisplay = GameApp::getXMTime() - SYSMSG_DISPLAY_TIME;
   m_consoleLastShowTime = GameApp::getXMTime() - SYSMSG_CONSOLEDISPLAY_TIME - SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME;
-  m_consoleSize = SYSMSG_DEFAULT_CONSOLEDISPLAY_DISPLAYNBLINES;
 }
 
 SysMessage::~SysMessage() {
@@ -56,7 +53,6 @@ SysMessage::~SysMessage() {
 void SysMessage::setDrawLib(DrawLib* i_drawLib)
 {
   m_drawLib = i_drawLib;  
-  m_screen = RenderSurface(Vector2i(0,0), Vector2i(m_drawLib->getDispWidth(), m_drawLib->getDispHeight()));
 }
 
 void SysMessage::displayText(const std::string& i_msg) {
@@ -83,24 +79,6 @@ void SysMessage::displayInformation(const std::string& i_msg) {
   displayMsg(i_msg, SYSMSG_INFORMATION);
 }
 
-unsigned int SysMessage::consoleSize() const {
-  return m_consoleSize;
-}
-
-void SysMessage::setConsoleSize(unsigned int i_value) {
-  m_consoleSize = i_value;
-}
-
-void SysMessage::alterConsoleSize(int i_diffLines) {
-  if(((int)m_consoleSize) + i_diffLines < 1) {
-    i_diffLines = 1;
-  } else if(((int)m_consoleSize) + i_diffLines >= SYSMSG_CONSOLEDISPLAY_MAXNBLINES) {
-    m_consoleSize = SYSMSG_CONSOLEDISPLAY_MAXNBLINES;
-  } else {
-    m_consoleSize += i_diffLines;
-  }
-}
-
 void SysMessage::render() {
   if(m_drawLib == NULL)
     return;
@@ -123,7 +101,7 @@ void SysMessage::render() {
     }
 
     v_fg = v_fm->getGlyph(m_txt);
-    v_fm->printString(m_drawLib, v_fg,
+    v_fm->printString(v_fg,
 		      m_drawLib->getDispWidth()/2 - v_fg->realWidth()/2,
 		      5,
 		      MAKE_COLOR(255, 255, 255, v_shadow), 0.0, true);
@@ -136,69 +114,30 @@ void SysMessage::render() {
   /* console */
   int v_consoleBorder = 10;
   int v_consoleYOffset = 0;
-  unsigned int v_firstLine;
-  Color c;
-  bool v_useShadow;
 
   v_fm = m_drawLib->getFontSmall();
 
-  if((m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME + SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME > v_time || XMSession::instance()->permanentConsole()) && NetClient::instance()->isConnected()) {
-    if((m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME > v_time || XMSession::instance()->permanentConsole()) && NetClient::instance()->isConnected()) {
+  if(m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME + SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME > v_time) {
+    if(m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME > v_time) {
       v_shadow = 255;
     } else {
       v_shadow = ((m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME + SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME - v_time)
 		  * 255)/SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME;
     }
 
-    // don't display old history of the console
-    v_firstLine = 0;
-    if(((int)m_console.size()) - ((int)m_consoleSize) > 0) {
-      v_firstLine = m_console.size() - m_consoleSize;
-    }
-
-    // background box
-
-    for(unsigned int i=v_firstLine; i<m_console.size(); i++) {
-      v_fg = v_fm->getGlyph(m_console[i].cltxt);
-
-      v_useShadow = false;
-
-      switch(m_console[i].cltype) {
-      case CLT_NORMAL:
-	c = MAKE_COLOR(255, 255, 255, v_shadow);
-	v_useShadow = true;
-	break;
-      case CLT_INFORMATION:
-	c = MAKE_COLOR(255, 255, 55, v_shadow);
-	break;
-      case CLT_GAMEINFORMATION:
-	c = MAKE_COLOR(55, 255, 255, v_shadow);
-	break;
-      case CLT_SERVER:
-	c = MAKE_COLOR(255, 0, 0, v_shadow);
-	break;
-      }
-
-      v_fm->printString(m_drawLib, v_fg,
+    for(unsigned int i=0; i<m_console.size(); i++) {
+      v_fg = v_fm->getGlyph(m_console[i]);
+      v_fm->printString(v_fg,
 			m_drawLib->getDispWidth()/3,
 			v_consoleBorder+v_consoleYOffset,
-			c, 0.0, v_useShadow);
+			MAKE_COLOR(255, 255, 255, v_shadow), 0.0, true);
       v_consoleYOffset += v_fg->realHeight();
     }
   }
 }
 
-void SysMessage::addConsoleLine(const std::string& i_line, consoleLineType i_clt) {
-  consoleLine clt;
-
-  // do not add game information in console if not wanted
-  if(i_clt == CLT_GAMEINFORMATION && XMSession::instance()->showGameInformationInConsole() == false) {
-    return;
-  }
-
-  clt.cltxt  = i_line;
-  clt.cltype = i_clt;
-  m_console.push_back(clt);
+void SysMessage::addConsoleLine(const std::string& i_line) {
+  m_console.push_back(i_line);
 
   if(m_console.size() > SYSMSG_CONSOLEDISPLAY_MAXNBLINES) {
     m_console.erase(m_console.begin());
@@ -269,7 +208,7 @@ void SysMessage::drawBoxMsg_one(unsigned int i, float i_time, int x_offset, int 
 			      m_drawLib->getDispHeight() - y_offset),
 		     1.0, MAKE_COLOR(255,255,255,255), c);
   
-  v_fs->printString(m_drawLib, v_fg,
+  v_fs->printString(v_fg,
 		    x_offset + SYSMSG_DISPLAYBOXMSG_MARGIN,
 		    m_drawLib->getDispHeight() - y_offset - v_fg->realHeight() - SYSMSG_DISPLAYBOXMSG_MARGIN,
 		    MAKE_COLOR(0, 0, 0, 255), 0.0);

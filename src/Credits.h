@@ -43,7 +43,7 @@ public:
 	    int fadeInLength,
 	    int fadeOutLength,
 	    const char *pcCredits);
-  void render(RenderSurface* i_screen, int i_time);
+  void render(int i_time);
   bool isFinished(void);
       
 private:

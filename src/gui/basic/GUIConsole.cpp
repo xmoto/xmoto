@@ -33,28 +33,14 @@ UIConsoleHook::UIConsoleHook() {
 UIConsoleHook::~UIConsoleHook() {
 }
 
-void UIConsole::initConsole(UIWindow *pParent, int x, int y, std::string Caption, int nWidth, int nHeight) {
-   initW(pParent, x , y, Caption, nWidth, nHeight);
-   m_hook = NULL;
-   reset();
-}
- 
 UIConsole::UIConsole(UIWindow *pParent, int x, int y, std::string Caption, int nWidth, int nHeight) {
-  initConsole(pParent, x, y, Caption, nWidth, nHeight);
-}
+  initW(pParent, x , y, Caption, nWidth, nHeight);
 
-UIConsole::UIConsole(UIWindow *pParent, std::vector<std::string>& completionList, int x, int y, std::string Caption, int nWidth, int nHeight) {
-  initConsole(pParent, x, y, Caption, nWidth, nHeight);
-  for (int i = 0, n = completionList.size(); i < n; i++) {
-    this->addCompletionCommand(completionList[i]);
-  }
-}
+  m_hook = NULL;
+  reset();
+}      
 
 UIConsole::~UIConsole() {
-}
-
-void UIConsole::addCompletionCommand(const std::string& i_cmd) {
-  m_completionList.push_back(i_cmd);
 }
 
 void UIConsole::setHook(UIConsoleHook* i_hook) {
@@ -76,7 +62,7 @@ void UIConsole::paint() {
   // draw the text
   for(unsigned int i=0; i<m_lines.size(); i++) {
     v_fg = v_fm->getGlyph(m_lines[i]);
-    v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, v_XOffset, v_YOffset,
+    v_fm->printString(v_fg, v_XOffset, v_YOffset,
 		      MAKE_COLOR(255, 255, 255, 255));
 
     if(m_lines.size()-1 == i) {
@@ -97,7 +83,7 @@ void UIConsole::paint() {
   if(m_waitAnswer == false) {
     if((GameApp::getXMTimeInt()/100) % 10 < 5) {
       v_fg = v_fm->getGlyph(UIC_CURSOR);
-      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, v_cursorXOffset, v_cursorYOffset, MAKE_COLOR(255, 255, 255, 255));
+      v_fm->printString(v_fg, v_cursorXOffset, v_cursorYOffset, MAKE_COLOR(255, 255, 255, 255));
     }
   }
 
@@ -217,19 +203,6 @@ bool UIConsole::keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char) {
     return true;
   }
 
-  if(nKey == SDLK_TAB) {
-    completeCommand();
-    return true;
-  }
-
-  if(nKey == SDLK_END) {
-    m_cursorChar = m_lines[m_lines.size() - 1].size();
-  }
-  
-  if(nKey == SDLK_HOME) {
-    m_cursorChar = utf8::utf8_length(UIC_PROMPT);
-  }
-  
   // add the key
   if(utf8::utf8_length(i_utf8Char) == 1) { // alt/... and special keys must not be kept
     if(m_cursorChar == (int) utf8::utf8_length(m_lines[m_lines.size()-1])) {
@@ -309,26 +282,4 @@ void UIConsole::execLine(const std::string& i_line) {
   m_lastEdit = UIC_PROMPT;
 
   execCommand(v_action);
-}
-
-void UIConsole::completeCommand() {
-  int pos_find = m_lines[m_lines.size() - 1].rfind(" ") + 1;
-  std::string last_word = m_lines[m_lines.size() - 1].substr(pos_find);
-  std::vector<std::string > found_list;
-  for (int i = 0, n = m_completionList.size(); i < n; i++) {
-    if (m_completionList[i].find(last_word) == 0) {
-      found_list.push_back(m_completionList[i]);
-    }
-  }
-  if (found_list.size() > 1) {
-    std::string found_list_str;
-    for (int i = 0, n = found_list.size(); i < n; i++) {
-      found_list_str += found_list[i] + "  ";
-    }
-    addNewLine(found_list_str);
-    addNewLine(m_lines[m_lines.size() - 2]);
-  } else if (found_list.size() != 0) {
-    m_lines[m_lines.size()-1] += found_list[0].substr(last_word.size(), 1000);
-    m_cursorChar = m_lines[m_lines.size() - 1].size();
-  }
 }

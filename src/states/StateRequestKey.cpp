@@ -31,7 +31,9 @@ StateRequestKey::StateRequestKey(const std::string& i_txt,
 				 bool drawStateBehind,
 				 bool updateStatesBehind):
 StateMenu(drawStateBehind,
-	  updateStatesBehind)
+	  updateStatesBehind,
+	  false,
+	  true)
 {
   m_txt   = i_txt;
   m_name  = "StateRequestKey";
@@ -43,7 +45,7 @@ StateRequestKey::~StateRequestKey()
 
 void StateRequestKey::enter()
 {
-  createGUIIfNeeded(&m_screen);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
   updateGUI();
 
@@ -77,7 +79,7 @@ void StateRequestKey::clean() {
   }
 }
 
-void StateRequestKey::createGUIIfNeeded(RenderSurface* i_screen) {
+void StateRequestKey::createGUIIfNeeded() {
   UIStatic *v_someText;
   UIFrame  *v_frame;
 
@@ -86,15 +88,15 @@ void StateRequestKey::createGUIIfNeeded(RenderSurface* i_screen) {
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot(i_screen);
+  m_sGUI = new UIRoot();
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      i_screen->getDispWidth(),
-		      i_screen->getDispHeight());
+		      drawLib->getDispWidth(),
+		      drawLib->getDispHeight());
 
   v_frame = new UIFrame(m_sGUI,	30,
-			i_screen->getDispHeight()/2 - 20, "",
-			i_screen->getDispWidth() -30*2, 20*2);
+			drawLib->getDispHeight()/2 - 20, "",
+			drawLib->getDispWidth() -30*2, 20*2);
   v_frame->setID("FRAME");
 
   v_someText = new UIStatic(v_frame, 0, 0, "", v_frame->getPosition().nWidth, v_frame->getPosition().nHeight);

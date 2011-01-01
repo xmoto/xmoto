@@ -198,18 +198,18 @@ class WebRoom {
   void upgrade(const std::string& i_id_room, xmDatabase* i_db); /* throws exceptions */
 
   /* return NULL if no data found */
-  void setProxy(const ProxySettings* pProxySettings);
-
-  // only required for update and upgrade
-  void setHighscoresUrl(const std::string& i_webhighscores_url);
+  void setWebsiteInfos(const std::string& i_id_room,
+		       const std::string& i_webhighscores_url,
+		       const ProxySettings* pProxySettings);
+  std::string getRoomId() const;
 
   void downloadReplay(const std::string& i_url);
-  bool downloadReplayExists(const std::string& i_url);
 
  private:
   WWWAppInterface* m_WebRoomApp;
   std::string m_userFilename_prefix;
   std::string m_webhighscores_url;
+  std::string m_roomId;
   const ProxySettings* m_proxy_settings;
 };
 

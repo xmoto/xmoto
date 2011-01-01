@@ -98,7 +98,7 @@ Block::Block(std::string i_id) {
   m_dynamicPositionCenter = Vector2f(0.0, 0.0);
   m_texture          = XM_DEFAULT_BLOCK_TEXTURE;
   m_isBBoxDirty      = true;
-  m_geom             = NULL;
+  m_geom             = -1;
   m_layer            = -1;
   m_edgeDrawMethod   = angle;
   m_edgeAngle        = DEFAULT_EDGE_ANGLE;
@@ -137,6 +137,8 @@ Block::~Block() {
   }
   m_collisionLines.clear();
 
+  m_edgeGeoms.clear();
+  
  // for(unsigned int i=0; i<edgeGeomBlendColor.size(); i++) delete edgeGeomBlendColor[i];
   m_edgeMaterial.clear();
   
@@ -303,6 +305,37 @@ void Block::updatePhysics(int i_time, int timeStep, CollisionSystem* io_collisio
   }
   
   cpBodyResetForces(mBody);
+
+  /* record */
+  /* don't save any physic event for the moment
+  float v_diffRotation;
+
+  if(i_recorder != NULL) {
+    v_diffPosition = m_previousSavedPosition-DynamicPosition();
+    v_diffRotation = m_previousSavedRotation-DynamicRotation();
+    
+    // save position only if the block moved
+    if(v_diffPosition.length() > PHYS_MOVE_POSITION_MINIMUM) {
+      SceneEvent *pEvent = new MGE_SetBlockPos(i_time,
+					       Id(),
+					       DynamicPosition().x,
+					       DynamicPosition().y);
+      pEvent->serialize(*i_recorder);
+      delete pEvent;
+      m_previousSavedPosition = DynamicPosition();
+    }
+    
+    // save rotation only if the block moved
+    if(fabs(v_diffRotation) > PHYS_MOVE_ROTATION_MINIMUM) {
+      SceneEvent *pEvent = new MGE_SetBlockRotation(i_time,
+						    Id(),
+						    DynamicRotation());
+      pEvent->serialize(*i_recorder);
+      delete pEvent;
+      m_previousSavedRotation = DynamicRotation();
+    }
+  }
+  */
 }
 
 int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings) {
@@ -416,12 +449,6 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   if(isLayer() == true && m_layer != -1) {
     io_collisionSystem->addBlockInLayer(this, m_layer);
   }
-
-  // check for forbidden combinations
-  //if(isDynamic() == false && m_layer != -1) {
-  //  // thrown exception
-  //  throw Exception("ERROR::Block "+this->Id()+" is dynamic but is in a layer.");
-  //}
 
   /* Compute */
   std::vector<BSPPoly *> &v_BSPPolys = v_BSPTree.compute();      
@@ -972,7 +999,12 @@ Block* Block::readFromBinary(FileHandle *i_pfh) {
   return pBlock;
 }
 
-std::vector<Geom*>& Block::getEdgeGeoms()
+void Block::addEdgeGeom(int geomIndex)
+{
+  m_edgeGeoms.push_back(geomIndex);
+}
+
+std::vector<int>& Block::getEdgeGeoms()
 {
   return m_edgeGeoms;
 }

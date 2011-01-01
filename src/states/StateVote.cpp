@@ -27,13 +27,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static members */
 UIRoot*  StateVote::m_sGUI = NULL;
 
-StateVote::StateVote(const std::string& i_idlevel,
+StateVote::StateVote(const std::string& i_id,
+		     const std::string& i_idlevel,
 		     bool drawStateBehind,
 		     bool updateStatesBehind
 		     ):
-StateMenu(drawStateBehind, updateStatesBehind) {
+StateMenu(drawStateBehind, updateStatesBehind, true,false) {
     m_idlevel = i_idlevel;
 }
+
 
 StateVote::~StateVote() {
 }
@@ -41,7 +43,7 @@ StateVote::~StateVote() {
 void StateVote::enter() {
   UIButton *pButtonQ0, *pButtonD0;
 
-  createGUIIfNeeded(&m_screen);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   pButtonD0 = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:D_0"));
@@ -122,7 +124,8 @@ void StateVote::checkEvents() {
       pButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FRAME:Q_5"));
       if(pButton->getChecked()) v_quality = "5";
 
-      StateManager::instance()->replaceState(new StateSendVote(m_idlevel, v_difficulty, v_quality), getStateId());
+      StateManager::instance()->replaceState(new StateSendVote(m_idlevel, v_difficulty, v_quality),
+					     this->getId());
     }
   }
 }
@@ -134,7 +137,7 @@ bool StateVote::isToSkip() {
   return pButtonQ0->getChecked() && pButtonD0->getChecked();
 }
 
-void StateVote::createGUIIfNeeded(RenderSurface* i_screen) {
+void StateVote::createGUIIfNeeded() {
 	UIStatic* v_someText;
 	UIButton* v_button;
 	UIFrame*  v_frame;
@@ -144,13 +147,13 @@ void StateVote::createGUIIfNeeded(RenderSurface* i_screen) {
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
   
-  m_sGUI = new UIRoot(i_screen);
+  m_sGUI = new UIRoot();
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      i_screen->getDispWidth(),
-		      i_screen->getDispHeight());
+		      drawLib->getDispWidth(),
+		      drawLib->getDispHeight());
 
-  v_frame = new UIFrame(m_sGUI, 0, 0, "", i_screen->getDispWidth(), i_screen->getDispHeight());
+  v_frame = new UIFrame(m_sGUI, 0, 0, "", drawLib->getDispWidth(), drawLib->getDispHeight());
   v_frame->setID("FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_MENU);
 

@@ -32,11 +32,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateHelp.h"
 #include "StateOptions.h"
 #include "StateEditProfile.h"
+#include "StateReplaying.h"
 #include "StateLevelPackViewer.h"
 #include "StateUploadHighscore.h"
 #include "StateCheckWww.h"
 #include "StateUpgradeLevels.h"
-#include "StateViewHighscore.h"
+#include "StateDownloadGhost.h"
 #include "../LevelsManager.h"
 #include "../helpers/Log.h"
 #include "../helpers/Text.h"
@@ -48,8 +49,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../thread/LevelsPacksCountUpdateThread.h"
 #include "../SysMessage.h"
 #include "../net/NetClient.h"
-#include "StateWaitServerInstructions.h"
-#include "../net/VirtualNetLevelsList.h"
+#include "states/StateWaitServerInstructions.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -160,7 +160,7 @@ StateMainMenu::~StateMainMenu()
 
 void StateMainMenu::enter()
 { 
-  createGUIIfNeeded(&m_screen);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   StateMenu::enter();
@@ -187,7 +187,7 @@ void StateMainMenu::enter()
   if(XMSession::instance()->profile() == "" ||
      xmDatabase::instance("main")->stats_checkKeyExists_stats_profiles(XMSession::instance()->sitekey(),
 								       XMSession::instance()->profile()) == false) {
-    StateManager::instance()->pushState(new StateEditProfile());
+    StateManager::instance()->pushState(new StateEditProfile(StateManager::instance()->getUniqueId()));
     
     /* in case there is no profile, we show a message box */
     /* Should we show a notification box? (with important one-time info) */
@@ -207,7 +207,7 @@ void StateMainMenu::enter()
       updateLevelsPacksCountDetached();
     }
   }
-  
+
   GameApp::instance()->playMenuMusic("menu1");
 }
 
@@ -334,7 +334,8 @@ void StateMainMenu::checkEventsMainWindow() {
     } catch(Exception &e) {
       v_id_level = "tut1";
     }
-    StateManager::instance()->pushState(new StatePreplayingGame(v_id_level, false));
+    StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),
+								v_id_level, false));
   }
 
   // quit
@@ -342,9 +343,9 @@ void StateMainMenu::checkEventsMainWindow() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
-    StateManager::instance()->pushState(v_msgboxState);
-    v_msgboxState->setMsgBxId("QUIT");
+    v_msgboxState->setId("QUIT");
     v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
+    StateManager::instance()->pushState(v_msgboxState);
   }
 
   // help
@@ -387,7 +388,7 @@ void StateMainMenu::checkEventsMainWindow() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:CHANGEPLAYERBUTTON"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    StateManager::instance()->pushState(new StateEditProfile());
+    StateManager::instance()->pushState(new StateEditProfile(StateManager::instance()->getUniqueId()));
   }
 
   // new levels ?
@@ -411,7 +412,8 @@ void StateMainMenu::checkEventsMainWindow() {
     v_button->setClicked(false);
 
     GameApp::instance()->setCurrentPlayingList(getInfoFrameLevelsList());
-    StateManager::instance()->pushState(new StateViewHighscore(getInfoFrameLevelId(), true));
+    StateManager::instance()->pushState(new StateDownloadGhost(StateManager::instance()->getUniqueId(),
+							       getInfoFrameLevelId(), true));
   }
 }
 
@@ -459,9 +461,6 @@ void StateMainMenu::updateClientStrings() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CONNECTDISCONNECT"));
   v_button->setCaption(NetClient::instance()->isConnected() ?
 		       GAMETEXT_CLIENTDISCONNECT : GAMETEXT_CLIENTCONNECT);
-
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:PLAYSAMENETLEVELS"));
-  v_button->enableWindow(NetClient::instance()->isConnected());
 }
 
 void StateMainMenu::checkEventsNetworkTab() {
@@ -509,14 +508,6 @@ void StateMainMenu::checkEventsNetworkTab() {
     }
   }
 
-  // startup connexion
-  v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CLIENT_STARTUP_CONNEXION"));
-  if(v_button->isClicked()) {
-    v_button->setClicked(false);
-  
-    XMSession::instance()->setClientConnectAtStartup(v_button->getChecked());
-  }
-
   // connect/disconnect
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CONNECTDISCONNECT"));
   if(v_button->isClicked()) {
@@ -533,28 +524,13 @@ void StateMainMenu::checkEventsNetworkTab() {
 	  NetClient::instance()->changeMode(XMSession::instance()->clientGhostMode() ? NETCLIENT_GHOST_MODE : NETCLIENT_SLAVE_MODE);
 	}
 	if(XMSession::instance()->clientGhostMode() == false) {
-	  StateManager::instance()->pushState(new StateWaitServerInstructions());
+	  StateManager::instance()->pushState(new StateWaitServerInstructions(StateManager::instance()->getUniqueId()));
 	}
       } catch(Exception &e) {
 	SysMessage::instance()->displayError(GAMETEXT_UNABLETOCONNECTONTHESERVER);
 	LogError("Unable to connect to the server");
       }
     }
-  }
-
-  // play same levels of people connected
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:PLAYSAMENETLEVELS"));
-  if(v_button->isClicked()) {
-    v_button->setClicked(false);
-   
-    GameApp::instance()->setCurrentPlayingList(NetClient::instance()->getOtherClientLevelsList(xmDatabase::instance("main")));
-
-    // if nobody is playing, get a random level
-    std::string v_level = NetClient::instance()->getOtherClientLevelsList(xmDatabase::instance("main"))->determineNextLevel("");
-    if(v_level == "") {
-      v_level = LevelsManager::instance()->aRandomLevel(xmDatabase::instance("main"));
-    }
-    StateManager::instance()->pushState(new StatePreplayingGame(v_level, false)); 
   }
 }
 
@@ -592,7 +568,8 @@ void StateMainMenu::checkEventsLevelsFavoriteTab() {
 
     if(v_id_level != "") {
       GameApp::instance()->setCurrentPlayingList(v_list);
-      StateManager::instance()->pushState(new StatePreplayingGame(v_id_level, false));
+      StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),
+								  v_id_level, false));
     }
   }
 
@@ -639,7 +616,8 @@ void StateMainMenu::checkEventsLevelsNewTab() {
 
     if(v_id_level != "") {
       GameApp::instance()->setCurrentPlayingList(v_list);
-      StateManager::instance()->pushState(new StatePreplayingGame(v_id_level, false));
+      StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),
+								  v_id_level, false));
     }
   }
 
@@ -677,11 +655,11 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   UILevelList* v_favoriteLevelsList;
   UILevelList* v_list;
 
-  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_HELP))) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F1, KMOD_NONE)) {
     StateManager::instance()->pushState(new StateHelp());
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchFavorite()) {
     /* switch favorites */
     v_newLevelsList      = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST");
     v_favoriteLevelsList = (UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:FAVORITE_LIST");
@@ -727,17 +705,17 @@ void StateMainMenu::clean() {
   }
 }
 
-void StateMainMenu::createGUIIfNeeded(RenderSurface* i_screen) {
+void StateMainMenu::createGUIIfNeeded() {
   if(m_sGUI != NULL)
     return;
 
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot(i_screen);
+  m_sGUI = new UIRoot();
   m_sGUI->setFont(drawlib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      i_screen->getDispWidth(),
-		      i_screen->getDispHeight());
+		      drawlib->getDispWidth(),
+		      drawlib->getDispHeight());
 
   UIWindow* v_menu;
   UIButton* v_button;
@@ -856,12 +834,12 @@ UIWindow* StateMainMenu::makeWindowStats(UIWindow* i_parent) {
   UIFrame* v_window;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
-  v_window = new UIFrame(i_parent, 220, i_parent->getScreen()->getDispHeight()*7/30, GAMETEXT_STATS, i_parent->getScreen()->getDispWidth()-200,
-			 i_parent->getScreen()->getDispHeight() -40 -i_parent->getScreen()->getDispHeight()/5 -10);      
+  v_window = new UIFrame(i_parent, 220, drawlib->getDispHeight()*7/30, GAMETEXT_STATS, drawlib->getDispWidth()-200,
+			 drawlib->getDispHeight() -40 -drawlib->getDispHeight()/5 -10);      
   v_window->setStyle(UI_FRAMESTYLE_LEFTTAG);
   v_window->setFont(drawlib->getFontSmall());
   v_window->setID("STATS");
-  v_window->makeMinimizable(i_parent->getScreen()->getDispWidth()-17, i_parent->getScreen()->getDispHeight()*7/30);
+  v_window->makeMinimizable(drawlib->getDispWidth()-17, drawlib->getDispHeight()*7/30);
   v_window->setMinimized(true);
   v_window->setContextHelp(CONTEXTHELP_STATS);
 
@@ -940,7 +918,7 @@ void StateMainMenu::updateStats() {
   if(nrow == 0) {
     pDb->read_DB_free(v_result);
     return;
-  }
+  }  
   v_nbDiffLevels = atoi(pDb->getResult(v_result, 1, 0, 0));
   pDb->read_DB_free(v_result);
 
@@ -1300,15 +1278,6 @@ UIWindow* StateMainMenu::makeWindowLevels(UIWindow* i_parent) {
   v_button->setGroup(50058);
   v_button->setContextHelp(CONTEXTHELP_CLIENTGHOSTMODE); 
 
-  // automatic connexion at startup
-  v_button = new UIButton(v_netOptionsTab, v_netOptionsTab->getPosition().nWidth-220, 90, 
-  			  GAMETEXT_CLIENTSTARTUPCONNEXION, 220, 25);
-  v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setID("CLIENT_STARTUP_CONNEXION");
-  v_button->setGroup(50059);
-  v_button->setContextHelp(CONTEXTHELP_CLIENTSTARTUPCONNEXION); 
-
   // client status
   v_someText = new UIStatic(v_netOptionsTab, 0, v_netOptionsTab->getPosition().nHeight-30-20-20, "...",
 			    v_netOptionsTab->getPosition().nWidth, 30);
@@ -1325,13 +1294,6 @@ UIWindow* StateMainMenu::makeWindowLevels(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_CLIENTCONNECTDISCONNECT);
 
-  // play levels of other clients
-  v_button = new UIButton(v_netOptionsTab, v_netOptionsTab->getPosition().nWidth-220, 90+25,
-			  GAMETEXT_PLAYNOW, 207, 57);
-  v_button->setType(UI_BUTTON_TYPE_LARGE);
-  v_button->setID("PLAYSAMENETLEVELS");
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setContextHelp(CONTEXTHELP_CLIENTPLAYSAMENETLEVELS);
 
   return v_window;
 }
@@ -1340,8 +1302,8 @@ void StateMainMenu::drawBackground() {
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
   if(XMSession::instance()->menuGraphics() != GFX_LOW && XMSession::instance()->ugly() == false) {
-    int w = m_screen.getDispWidth();
-    int h = m_screen.getDispHeight();
+    int w = drawlib->getDispWidth();
+    int h = drawlib->getDispHeight();
 
     if(m_pTitleTL != NULL)
       drawlib->drawImage(Vector2f(0, 0), Vector2f(w/2, h/2), m_pTitleTL, 0xFFFFFFFF, true);
@@ -1448,6 +1410,46 @@ void StateMainMenu::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i
 
   else {
     StateMenu::sendFromMessageBox(i_id, i_button, i_input);
+  }
+}
+
+void StateMainMenu::setInputKey(const std::string& i_strKey, const std::string& i_key) {
+
+  for(int i=0; i<INPUT_NB_PLAYERS; i++) {
+    std::ostringstream v_n;
+
+    if(i != 0) {
+      v_n << " " << (i+1);
+    }  
+
+    if(i_strKey == GAMETEXT_DRIVE + v_n.str()) {
+      InputHandler::instance()->setDRIVE(i, XMKey(i_key));
+    }
+    
+    if(i_strKey == GAMETEXT_BRAKE + v_n.str()) {
+      InputHandler::instance()->setBRAKE(i, XMKey(i_key));
+    }
+    
+    if(i_strKey == GAMETEXT_FLIPLEFT + v_n.str()) {
+      InputHandler::instance()->setFLIPLEFT(i, XMKey(i_key));
+    }
+    
+    if(i_strKey == GAMETEXT_FLIPRIGHT + v_n.str()) {
+      InputHandler::instance()->setFLIPRIGHT(i, XMKey(i_key));
+    }
+    
+    if(i_strKey == GAMETEXT_CHANGEDIR + v_n.str()) {
+      InputHandler::instance()->setCHANGEDIR(i, XMKey(i_key));
+    }
+
+    for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
+      std::ostringstream v_k;
+      v_k << (k+1);
+      if(i_strKey == GAMETEXT_SCRIPTACTION + v_n.str() + " " + v_k.str()) {
+	InputHandler::instance()->setSCRIPTACTION(i, k, XMKey(i_key));
+      }
+    }
+
   }
 }
 
@@ -1773,7 +1775,8 @@ void StateMainMenu::checkEventsReplays() {
     if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
-	StateManager::instance()->pushState(new StatePreplayingReplay(pListEntry->Text[0], false));
+	StateManager::instance()->pushState(new StatePreplayingReplay(StateManager::instance()->getUniqueId(),
+								      pListEntry->Text[0], false));
       }
     }
   }
@@ -1787,9 +1790,9 @@ void StateMainMenu::checkEventsReplays() {
       UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
       if(pListEntry != NULL) {
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
-	StateManager::instance()->pushState(v_msgboxState);	
-	v_msgboxState->setMsgBxId("REPLAYS_DELETE");
+	v_msgboxState->setId("REPLAYS_DELETE");
 	v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
+	StateManager::instance()->pushState(v_msgboxState);	
 	updateReplaysRights();
       }
     }
@@ -1829,15 +1832,12 @@ void StateMainMenu::checkEventsReplays() {
     if(n > 0) {
       snprintf(v_buf, 256, GAMETEXT_CLEAN_CONFIRM(n), n);
       v_msgboxState = new StateMessageBox(this, v_buf, UI_MSGBOX_YES|UI_MSGBOX_NO);
+      v_msgboxState->setId("CLEAN_REPLAYS");
+      v_msgboxState->makeActiveButton(UI_MSGBOX_NO);
     } else {
       v_msgboxState = new StateMessageBox(this, GAMETEXT_CLEAN_NOTHING_TO_DO, UI_MSGBOX_OK);
     }
     StateManager::instance()->pushState(v_msgboxState); 
-
-    if(n>0) {
-      v_msgboxState->setMsgBxId("CLEAN_REPLAYS");
-      v_msgboxState->makeActiveButton(UI_MSGBOX_NO); // must be done after msgbox is pushed
-    }
   }
 }
 
@@ -1856,8 +1856,6 @@ void StateMainMenu::updateOptions() {
   v_edit->setCaption(XMSession::instance()->clientServerName());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:SERVER_SIMPLE_GHOST_MODE"));
   v_button->setChecked(XMSession::instance()->clientGhostMode());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CLIENT_STARTUP_CONNEXION"));
-  v_button->setChecked(XMSession::instance()->clientConnectAtStartup());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:DEFAULT_PORT"));
   v_button->setChecked(XMSession::instance()->clientServerPort() == DEFAULT_CLIENTSERVERPORT);
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:CUSTOM_PORT"));

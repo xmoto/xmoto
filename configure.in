@@ -1,7 +1,7 @@
 AC_INIT(src/GameInit.cpp)
 
 AC_CANONICAL_TARGET()
-AM_INIT_AUTOMAKE(xmoto,0.5.5)
+AM_INIT_AUTOMAKE(xmoto,0.5.3)
 AC_GNU_SOURCE
 
 AC_PROG_CXX
@@ -176,7 +176,7 @@ AC_LANG_POP()
 
 AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_ERROR(libcurl required)])
 
-ALL_LINGUAS="fr_FR de_DE es_ES ca_ES gl_ES ca_FR ca_AD ca_IT sk_SK nb_NO nn_NO fi_FI pl_PL ru_RU it_IT sv_SE cs_CZ pt_BR pt_PT lv_LV da_DK hu_HU nl_NL lt_LT zh_TW tr_TR"
+ALL_LINGUAS="fr_FR de_DE es_ES ca_ES ca_FR ca_AD ca_IT sk_SK nb_NO nn_NO fi_FI pl_PL ru_RU it_IT sv_SE cs_CZ pt_BR pt_PT lv_LV da_DK hu_HU nl_NL lt_LT zh_TW tr_TR"
 AM_GNU_GETTEXT()
 
 dnl Put LOCALESDIR in makefiles
@@ -234,9 +234,9 @@ AC_SUBST([CONFIGURE_DEFAULT_THEME])
 dnl asian font
 if test "$target_os" = "mingw32" # windows...
 then
-  DEFAULT_ASIAN_TTF_FILE="Textures/Fonts/wqy-zenhei.ttc"
+  DEFAULT_ASIAN_TTF_FILE="Textures/Fonts/wqy-zenhei.ttf"
 else
-  DEFAULT_ASIAN_TTF_FILE="/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+  DEFAULT_ASIAN_TTF_FILE="/usr/share/fonts/truetype/wqy/wqy-zenhei.ttf"
 fi
 
 AC_ARG_WITH([asian-ttf-file],

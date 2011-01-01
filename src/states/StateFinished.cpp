@@ -30,10 +30,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Text.h"
 #include "../Game.h"
 #include "../helpers/Log.h"
-#include "StateVote.h"
-#include "../thread/SendVoteThread.h"
-#include "../SysMessage.h"
-#include "StatePreplayingReplay.h"
+#include "states/StateVote.h"
+#include "thread/SendVoteThread.h"
+#include "SysMessage.h"
 
 /* static members */
 UIRoot* StateFinished::m_sGUI = NULL;
@@ -43,7 +42,8 @@ StateFinished::StateFinished(Universe* i_universe,
 			     bool updateStatesBehind
 			     ) :
   StateMenu(drawStateBehind,
-	    updateStatesBehind)
+	    updateStatesBehind,
+	    true)
 {
   m_name    = "StateFinished";
   m_universe = i_universe;
@@ -61,8 +61,7 @@ StateFinished::~StateFinished()
 
 void StateFinished::enter()
 {
-  int v_finish_time = -1;
-  int v_room_highscore = -1;
+  int v_finish_time = 0;
   std::string TimeStamp;
   bool v_is_a_room_highscore = false;
   bool v_is_a_personnal_highscore = false;
@@ -81,8 +80,8 @@ void StateFinished::enter()
       m_universe->getScenes()[i]->setInfos(m_universe->getScenes()[i]->getLevelSrc()->Name());
     }
   }
-  
-  createGUIIfNeeded(&m_screen);
+
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   /* reset the playnext button */
@@ -92,17 +91,11 @@ void StateFinished::enter()
   if(m_universe != NULL) {
     UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:SAVEREPLAY_BUTTON"));
     saveReplayButton->enableWindow(m_universe->isAReplayToSave());
-
-    UIButton* viewReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:VIEWREPLAY_BUTTON"));
-    viewReplayButton->enableWindow(m_universe->isAReplayToSave());
   }
 
   UIButton* v_uploadButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:UPLOAD_BUTTON"));
   v_uploadButton->enableWindow(false);
 
-  UIStatic* v_pMedal_str = reinterpret_cast<UIStatic *>(m_GUI->getChild("MEDALSTR_STATIC"));
-  v_pMedal_str->setCaption("");
-  
   UIStatic* v_pNewHighscore_str = reinterpret_cast<UIStatic *>(m_GUI->getChild("HIGHSCORESTR_STATIC"));
   v_pNewHighscore_str->setCaption("");
 
@@ -112,12 +105,8 @@ void StateFinished::enter()
   UIStatic* v_pRoomsTimes_str = reinterpret_cast<UIStatic *>(m_GUI->getChild("ROOMSTIMES_STATIC"));
   /* rooms times */
   v_roomsTimes = "";
-  int v_room_highscore_tmp;
   for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
-    v_roomsTimes = v_roomsTimes + GameApp::instance()->getWorldRecord(i, v_id_level, v_room_highscore_tmp) + "\n";
-    if(i == 0) {
-      v_room_highscore = v_room_highscore_tmp;
-    }
+    v_roomsTimes = v_roomsTimes + GameApp::instance()->getWorldRecord(i, v_id_level) + "\n";
   }
   v_pRoomsTimes_str->setCaption(v_roomsTimes);
 
@@ -133,6 +122,7 @@ void StateFinished::enter()
 
   /* replay */
   if(m_universe != NULL) {
+
     if(m_universe->isAReplayToSave()) {
 
       /* upload button */
@@ -184,13 +174,6 @@ void StateFinished::enter()
     }
   }
 
-  // finish time
-  if(m_universe != NULL) {
-    if(m_universe->getScenes()[0]->Players().size() == 1) {
-      v_finish_time = m_universe->getScenes()[0]->Players()[0]->finishTime();
-    }
-  }
-
   /* new highscores text */
   if(v_is_a_room_highscore) {
     v_pNewHighscore_str->setFont(pGame->getDrawLib()->getFontMedium());
@@ -199,23 +182,23 @@ void StateFinished::enter()
     if(v_is_a_personnal_highscore) {
       v_pNewHighscore_str->setFont(pGame->getDrawLib()->getFontSmall());
       v_pNewHighscore_str->setCaption(GAMETEXT_NEWHIGHSCOREPERSONAL);
-
-      std::string v_currentMedal;
-      if(GameApp::instance()->getCurrentMedal(v_room_highscore, v_finish_time, v_currentMedal)) {
-	char v_str[128];
-	snprintf(v_str, 128, GAMETEXT_NEW_MEDAL, v_currentMedal.c_str());
-	v_pMedal_str->setCaption(v_str);
-      }
     }
   }
 
   UIBestTimes *v_pBestTimes = reinterpret_cast<UIBestTimes *>(m_GUI->getChild("BESTTIMES"));
+
+  if(m_universe != NULL) {
+    if(m_universe->getScenes()[0]->Players().size() == 1) {
+      v_finish_time = m_universe->getScenes()[0]->Players()[0]->finishTime();
+    }
+  }
   makeBestTimesWindow(v_pBestTimes, XMSession::instance()->profile(), v_id_level, v_finish_time);
   
   if(m_universe != NULL) {
     if(m_universe->getScenes().size() == 1) {
       if(SendVoteThread::isToPropose(xmDatabase::instance("main"), m_universe->getScenes()[0]->getLevelSrc()->Id())) {
-	StateManager::instance()->pushState(new StateVote(m_universe->getScenes()[0]->getLevelSrc()->Id()));
+	StateManager::instance()->pushState(new StateVote(StateManager::instance()->getUniqueId(),
+							  m_universe->getScenes()[0]->getLevelSrc()->Id()));
       }
     }
   }
@@ -258,18 +241,8 @@ void StateFinished::checkEvents() {
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
 							 UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, Replay::giveAutomaticName());
-    v_msgboxState->setMsgBxId("SAVEREPLAY");
+    v_msgboxState->setId("SAVEREPLAY");
     StateManager::instance()->pushState(v_msgboxState);
-  }
-
-  UIButton *pViewreplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:VIEWREPLAY_BUTTON"));
-  if(pViewreplayButton->isClicked()) {
-    pViewreplayButton->setClicked(false);
-
-    if(m_universe->isAReplayToSave()) {
-      m_universe->saveReplayTemporary(xmDatabase::instance("main"));
-      StateManager::instance()->pushState(new StatePreplayingReplay(m_universe->getTemporaryReplayName(), true));
-    }
   }
 
   UIButton *pUploadButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:UPLOAD_BUTTON"));
@@ -300,7 +273,7 @@ void StateFinished::checkEvents() {
     pQuitButton->setClicked(false);
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
-    v_msgboxState->setMsgBxId("QUIT");
+    v_msgboxState->setId("QUIT");
     StateManager::instance()->pushState(v_msgboxState);
   }
 }
@@ -351,7 +324,7 @@ void StateFinished::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     StateManager::instance()->sendAsynchronousMessage("FINISH");
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchFavorite()) {
     if(m_universe != NULL) {
       if(m_universe->getScenes().size() > 0) { // just add the first world
 	GameApp::instance()->switchLevelToFavorite(m_universe->getScenes()[0]->getLevelSrc()->Id(), true);
@@ -360,7 +333,7 @@ void StateFinished::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHBLACKLIST))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchBlacklist()) {
     if(m_universe != NULL) {
       if(m_universe->getScenes().size() > 0) { // just blacklist the first world
 	GameApp::instance()->switchLevelToBlacklist(m_universe->getScenes()[0]->getLevelSrc()->Id(), true);
@@ -381,7 +354,7 @@ void StateFinished::clean() {
   }
 }
 
-void StateFinished::createGUIIfNeeded(RenderSurface* i_screen) {
+void StateFinished::createGUIIfNeeded() {
   if(m_sGUI != NULL)
     return;
 
@@ -392,23 +365,24 @@ void StateFinished::createGUIIfNeeded(RenderSurface* i_screen) {
   UIButton*    v_button;
   UIStatic*    v_pFinishText;
   UIStatic*    v_pNewHighscore_str;
-  UIStatic*    v_pMedal_str;
   UIStatic*    v_pNewHighscoreSaved_str;
   UIStatic*    v_pRoomsTimes_str;
 
-  m_sGUI = new UIRoot(i_screen);
+  m_sGUI = new UIRoot();
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      i_screen->getDispWidth(),
-		      i_screen->getDispHeight());
+		      drawLib->getDispWidth(),
+		      drawLib->getDispHeight());
   
 
-  v_frame = new UIFrame(m_sGUI, i_screen->getDispWidth()/2  - 400/2, i_screen->getDispHeight()/2 - 680/2, "", 400, 680);
-
+  v_frame = new UIFrame(m_sGUI, 
+			drawLib->getDispWidth()/2  - 400/2,
+			drawLib->getDispHeight()/2 - 540/2,
+			"", 400, 540);
   v_frame->setID("FINISHED_FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_MENU);
 
-  v_pFinishText = new UIStatic(v_frame, 0, 140, GAMETEXT_FINISH, v_frame->getPosition().nWidth, 36);
+  v_pFinishText = new UIStatic(v_frame, 0, 100, GAMETEXT_FINISH, v_frame->getPosition().nWidth, 36);
   v_pFinishText->setFont(drawLib->getFontMedium());
 
   v_pBestTimes = new UIBestTimes(m_sGUI, 10, 50, "", 250, m_sGUI->getPosition().nHeight - 50*2);
@@ -416,48 +390,36 @@ void StateFinished::createGUIIfNeeded(RenderSurface* i_screen) {
   v_pBestTimes->setFont(drawLib->getFontMedium());
   v_pBestTimes->setHFont(drawLib->getFontMedium());
 
-  int v_halign = 10;
-
-  v_button = new UIButton(v_frame, 400/2 - 207/2, v_halign+ v_frame->getPosition().nHeight/2 - 7*57/2 + 0*49 + 25, GAMETEXT_TRYAGAIN, 207, 57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 0*49 + 25, GAMETEXT_TRYAGAIN, 207, 57);
   v_button->setID("TRYAGAIN_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_PLAY_THIS_LEVEL_AGAIN);
   v_button->setFont(drawLib->getFontSmall());
   v_frame->setPrimaryChild(v_button); /* default button */
 
-  v_button = new UIButton(v_frame, 400/2 - 207/2, v_halign+ v_frame->getPosition().nHeight/2 - 7*57/2 + 1*49 + 25, GAMETEXT_PLAYNEXT, 207, 57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 1*49 + 25, GAMETEXT_PLAYNEXT, 207, 57);
   v_button->setID("PLAYNEXT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_PLAY_NEXT_LEVEL);
   v_button->setFont(drawLib->getFontSmall());
 
-  v_button = new UIButton(v_frame, 400/2 - 207/2, v_halign+ v_frame->getPosition().nHeight/2 - 7*57/2 + 2*49 + 25, GAMETEXT_VIEWREPLAY, 207, 57);
-  v_button->setID("VIEWREPLAY_BUTTON");
-  v_button->setContextHelp(CONTEXTHELP_VIEW_REPLAY);
-  v_button->setFont(drawLib->getFontSmall());
-
-  v_button = new UIButton(v_frame, 400/2 - 207/2, v_halign+ v_frame->getPosition().nHeight/2 - 7*57/2 + 3*49 + 25, GAMETEXT_SAVEREPLAY, 207, 57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 2*49 + 25, GAMETEXT_SAVEREPLAY, 207, 57);
   v_button->setID("SAVEREPLAY_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_SAVE_A_REPLAY);
   v_button->setFont(drawLib->getFontSmall());
 
-  v_button = new UIButton(v_frame, 400/2 - 207/2, v_halign+ v_frame->getPosition().nHeight/2 - 7*57/2 + 4*49 + 25, GAMETEXT_UPLOAD_HIGHSCORE, 207, 57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 3*49 + 25, GAMETEXT_UPLOAD_HIGHSCORE, 207, 57);
   v_button->setID("UPLOAD_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
   v_button->setFont(drawLib->getFontSmall());
 
-  v_button = new UIButton(v_frame, 400/2 - 207/2, v_halign+ v_frame->getPosition().nHeight/2 - 7*57/2 + 5*49 + 25, GAMETEXT_ABORT, 207, 57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 4*49 + 25, GAMETEXT_ABORT, 207, 57);
   v_button->setID("ABORT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
   v_button->setFont(drawLib->getFontSmall());
 
-  v_button = new UIButton(v_frame, 400/2 - 207/2, v_halign+ v_frame->getPosition().nHeight/2 - 7*57/2 + 6*49 + 25, GAMETEXT_QUIT, 207, 57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 5*49 + 25, GAMETEXT_QUIT, 207, 57);
   v_button->setID("QUIT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
   v_button->setFont(drawLib->getFontSmall());
-
-  v_pMedal_str = new UIStatic(m_sGUI, 0, m_sGUI->getPosition().nHeight - 20 - 20 - 20, "", m_sGUI->getPosition().nWidth, 20);
-  v_pMedal_str->setID("MEDALSTR_STATIC");
-  v_pMedal_str->setFont(drawLib->getFontSmall());
-  v_pMedal_str->setHAlign(UI_ALIGN_CENTER);
 
   v_pNewHighscore_str = new UIStatic(m_sGUI, 0, m_sGUI->getPosition().nHeight - 20 - 20, "", m_sGUI->getPosition().nWidth, 20);
   v_pNewHighscore_str->setID("HIGHSCORESTR_STATIC");

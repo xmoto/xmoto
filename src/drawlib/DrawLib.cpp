@@ -303,14 +303,6 @@ void DrawLib::checkFontPrerequites() {
      setBlendMode(BLEND_MODE_NONE);
   }
 
-void DrawLib::setRenderSurface(RenderSurface* renderSurf) {
-  m_renderSurf = renderSurf;
-}
-
-RenderSurface* DrawLib::getRenderSurface() {
-  return m_renderSurf;
-}
-
 void DrawLib::setDispWidth(unsigned int width) {
   m_nDispWidth = width;
 }

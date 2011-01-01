@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "VXml.h"
 #include "Game.h"
+#include "Renderer.h"
 #include "md5sum/md5file.h"
 #include "db/xmDatabase.h"
 #include "helpers/Log.h"
@@ -178,11 +179,8 @@ bool Theme::isAFileOutOfDate(const std::string& i_file) {
 void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
   std::string v_spriteType;
   bool v_isAnimation;
-  bool v_enableAnimation;
   const char *pc;
   std::string v_sum;
-  
-  v_enableAnimation = XMSession::instance()->disableAnimations();
   
   for(TiXmlElement *pVarElem = p_ThemeXmlDataElement->FirstChildElement("sprite");
       pVarElem!=NULL;
@@ -220,17 +218,12 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
 				   THEME_MISC_SPRITE_FILE_DIR,
 				   "Misc");
     }
-    else if(v_spriteType == "Texture" && v_isAnimation == false) {
+    else if(v_spriteType == "Texture") {
       newSpriteFromXML<TextureSprite>(pVarElem,
 				      THEME_TEXTURE_SPRITE_FILE_DIR,
 				      "Texture");
     }
-    else if(v_spriteType == "Texture" && v_isAnimation == true && v_enableAnimation == true) {
-      newSpriteFromXML<TextureSprite>(pVarElem,
-				      THEME_TEXTURE_SPRITE_FILE_DIR,
-				      "Texture");
-    }
-    else if(v_spriteType == "Texture" && v_isAnimation == true && v_enableAnimation == false) {
+    else if(v_spriteType == "AnimationTexture" && v_isAnimation == true) {
       newAnimationSpriteFromXML(pVarElem, true, THEME_TEXTURE_SPRITE_FILE_DIR);
     }
     else if(v_spriteType == "UI") {
@@ -703,14 +696,8 @@ Texture* Sprite::getTexture(bool bSmall, bool bClamp, FilterMode eFilterMode) {
     setCurrentTexture(v_currentTexture);
   }
 
-  // in register mode, register into the texture
-  if(m_persistent == false) {
-    if(m_associated_theme->getTextureManager()->registering()) {
-      if(m_associated_theme->getTextureManager()->isRegisteredTexture(v_currentTexture) == false) {
-	m_associated_theme->getTextureManager()->registerTexture(v_currentTexture);
-      }
-    }
-  }
+  if(m_persistent == false)
+    v_currentTexture->curRegistrationStage = GameRenderer::instance()->currentRegistrationStage();
 
   return v_currentTexture;
 }

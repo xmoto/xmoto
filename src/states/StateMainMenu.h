@@ -57,7 +57,7 @@ class StateMainMenu : public StateMenu {
   private:
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static void createGUIIfNeeded();
   static UIWindow* makeWindowReplays(UIWindow* i_parent);
   static UIWindow* makeWindowLevels(UIWindow* i_parent);
   static UIWindow* makeWindowStats(UIWindow* i_parent);
@@ -100,6 +100,7 @@ class StateMainMenu : public StateMenu {
 
   UILevelList* getInfoFrameLevelsList();
   std::string getInfoFrameLevelId();
+  void setInputKey(const std::string& i_strKey, const std::string& i_key);
 
   bool m_require_updateFavoriteLevelsList;
   bool m_require_updateReplaysList;

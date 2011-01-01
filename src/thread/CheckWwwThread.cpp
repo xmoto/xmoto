@@ -113,9 +113,7 @@ int CheckWwwThread::realThreadFunction()
 	  webRoomId    = XMSession::instance()->idRoom(i);
 	  webRoomUrl   = GameApp::instance()->getWebRoomURL(i, m_pDb);
 	  webRoomName  = GameApp::instance()->getWebRoomName(i, m_pDb);
-
-	  m_pWebRoom->setHighscoresUrl(webRoomUrl);
-	  m_pWebRoom->setProxy(pProxySettings);
+	  m_pWebRoom->setWebsiteInfos(webRoomName, webRoomUrl, pProxySettings);
 
 	  setThreadCurrentOperation(GAMETEXT_DLHIGHSCORES + std::string(" (") + webRoomName + ")");
 	  updateWebHighscores(webRoomId);

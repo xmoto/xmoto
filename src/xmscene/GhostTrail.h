@@ -24,19 +24,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeGhost.h"
 
 class GhostTrail {
-  public:
+ public:
   GhostTrail(FileGhost* i_ghost); 
   ~GhostTrail();
-  std::vector<Vector2f>* getGhostTrailData();
-  std::vector<Vector2f>* getSimplifiedGhostTrailData();
-  std::vector<Vector2f>* getInterpolatedGhostTrailData();
-  bool getGhostTrailAvailable();
+  inline std::vector<Vector2f>* getGhostTrailData() { return &m_trailData; };
+  inline std::vector<Vector2f>* getSimplifiedGhostTrailData() { return &m_simplifiedTrailData; };
+  inline std::vector<Vector2f>* getInterpolatedGhostTrailData() { return &m_interpolatedTrailData; };
+  void toggleRenderGhostTrail();
+  bool getGhostTrailAvailable() { return m_trailAvailable; };
   
-  private: 
-  void initialize(); // lazy mode : initialize only the first time it's used
-  
-  FileGhost* m_ghost;
-  bool m_initialized;
+ private: 
   std::vector<Vector2f> m_trailData;
   std::vector<Vector2f> m_simplifiedTrailData;
   std::vector<Vector2f> m_interpolatedTrailData;

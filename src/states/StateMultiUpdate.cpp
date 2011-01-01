@@ -54,7 +54,7 @@ StateMultiUpdate::~StateMultiUpdate()
 
 void StateMultiUpdate::enter()
 {
-  createGUIIfNeeded(&m_screen);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   StateMenu::enter();
@@ -88,7 +88,7 @@ bool StateMultiUpdate::update()
       pInfos->m_threadFinished = true;
       if(pThread->waitForThreadEnd() != 0) {
 	StateMessageBox* v_msgboxState = new StateMessageBox(this, pInfos->m_errorMessage, UI_MSGBOX_OK);
-	v_msgboxState->setMsgBxId("ERROR");
+	v_msgboxState->setId("ERROR");
 	StateManager::instance()->pushState(v_msgboxState);
       }
     }
@@ -154,21 +154,21 @@ void StateMultiUpdate::initThreadInfos(ThreadInfos* pInfos)
   pInfos->m_errorMessage          = "";
 }
 
-void StateMultiUpdate::createGUIIfNeeded(RenderSurface* i_screen)
+void StateMultiUpdate::createGUIIfNeeded()
 {
   if(m_sGUI != NULL)
     return;
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot(i_screen);
+  m_sGUI = new UIRoot();
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      i_screen->getDispWidth(),
-		      i_screen->getDispHeight());
+		      drawLib->getDispWidth(),
+		      drawLib->getDispHeight());
 
-  int width = i_screen->getDispWidth();
-  int height= i_screen->getDispHeight();
+  int width = drawLib->getDispWidth();
+  int height= drawLib->getDispHeight();
 
   int x = width / 8;
   int y = height / 4;

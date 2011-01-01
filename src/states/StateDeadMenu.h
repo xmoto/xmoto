@@ -30,6 +30,7 @@ class Universe;
 class StateDeadMenu : public StateMenu {
   public:
   StateDeadMenu(Universe* i_universe,
+		bool i_doShadeAnim,
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false
 		);
@@ -53,7 +54,7 @@ class StateDeadMenu : public StateMenu {
   private:
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static void createGUIIfNeeded();
 
   std::string m_replayName; // to save temporarly the replay name
 };

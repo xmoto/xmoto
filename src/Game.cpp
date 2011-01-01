@@ -54,8 +54,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMotoLoadReplaysInterface.h"
 #include "Replay.h"
 #include <sstream>
-#include "thread/XMThreadStats.h"
-#include "VirtualLevelsList.h"
+
+  bool GameApp::haveMouseMoved() {
+    int nX,nY;
+    SDL_GetRelativeMouseState(&nX,&nY);
+    return (nX == 0 && nY == 0);
+  }
 
   void GameApp::getMousePos(int *pnX,int *pnY) {
     SDL_GetMouseState(pnX, pnY);
@@ -192,8 +196,6 @@ GameApp::GameApp() {
   m_standAloneServer = NULL;
 
   m_userConfig = new UserConfig();
-
-  m_xmdemo = NULL;
 }
    
   /*===========================================================================
@@ -256,99 +258,47 @@ GameApp::GameApp() {
     }
   }
 
-bool GameApp::getCurrentMedal(int i_best_room_time, int i_best_player_time, std::string& o_medal) {
-  int v_gold_time, v_silver_time, v_bronze_time;
+  std::string GameApp::determineNextLevel(const std::string& i_id_level) {
+    if(m_currentPlayingList == NULL) {
+      return "";
+    }
 
-  /* no best room time, so no next medal */
-  if(i_best_room_time < 0 || i_best_player_time < 0) {
-    return false;
+    for(unsigned int i=0;i<m_currentPlayingList->getEntries().size()-1;i++) {
+      if((*((std::string*)m_currentPlayingList->getEntries()[i]->pvUser)) == i_id_level) {
+	return *((std::string*)m_currentPlayingList->getEntries()[i+1]->pvUser);
+      }
+    }
+    return *((std::string*)m_currentPlayingList->getEntries()[0]->pvUser);
+  }
+  
+  bool GameApp::isThereANextLevel(const std::string& i_id_level) {
+    return determineNextLevel(i_id_level) != "";
   }
 
-  /* get medal times*/
-  v_gold_time   = i_best_room_time / 0.95;
-  v_silver_time = i_best_room_time / 0.90;
-  v_bronze_time = i_best_room_time / 0.80;
+  std::string GameApp::determinePreviousLevel(const std::string& i_id_level) {
+    if(m_currentPlayingList == NULL) {
+      return "";
+    }
 
-  if(i_best_player_time > v_bronze_time) {
-    return false;
+    for(unsigned int i=1;i<m_currentPlayingList->getEntries().size();i++) {
+      if((*((std::string*)m_currentPlayingList->getEntries()[i]->pvUser)) == i_id_level) {
+	return *((std::string*)m_currentPlayingList->getEntries()[i-1]->pvUser);
+      }
+    }
+    return *((std::string*)m_currentPlayingList->getEntries()[m_currentPlayingList->getEntries().size()-1]->pvUser);
   }
-
-  if(i_best_player_time > v_silver_time) {
-    o_medal      = GAMETEXT_MEDAL_BRONZE;
-    return true;
-  }
-
-  if(i_best_player_time > v_gold_time) {
-    o_medal      = GAMETEXT_MEDAL_SILVER;
-    return true; 
-  }
-
-  if(i_best_player_time > i_best_room_time) {
-    o_medal      = GAMETEXT_MEDAL_GOLD;
-    return true; 
+  
+  bool GameApp::isThereAPreviousLevel(const std::string& i_id_level) {
+    return determinePreviousLevel(i_id_level) != "";
   } 
 
-  o_medal      = GAMETEXT_MEDAL_PLATINIUM;
-  return true;
-}
-
-bool GameApp::getNextMedal(int i_best_room_time, int i_best_player_time, std::string& o_medal, int& o_medal_time) {
-  int v_gold_time, v_silver_time, v_bronze_time;
-
-  /* no best room time, so no next medal */
-  if(i_best_room_time < 0) {
-    return false;
-  }
-
-  /* get medal times*/
-  v_gold_time   = i_best_room_time / 0.95;
-  v_silver_time = i_best_room_time / 0.90;
-  v_bronze_time = i_best_room_time / 0.80;
-
-  /* no player best time, then, bronze */
-  if(i_best_player_time < 0) {
-    o_medal      = GAMETEXT_MEDAL_BRONZE;
-    o_medal_time = v_bronze_time;
-    return true;
-  }
-
-  if(i_best_player_time > v_bronze_time) {
-    o_medal      = GAMETEXT_MEDAL_BRONZE;
-    o_medal_time = v_bronze_time;
-    return true; 
-  }
-
-  if(i_best_player_time > v_silver_time) {
-    o_medal      = GAMETEXT_MEDAL_SILVER;
-    o_medal_time = v_silver_time;
-    return true;
-  }
-
-  if(i_best_player_time > v_gold_time) {
-    o_medal      = GAMETEXT_MEDAL_GOLD;
-    o_medal_time = v_gold_time;
-    return true; 
-  } 
-
-  if(i_best_player_time > i_best_room_time) {
-    o_medal      = GAMETEXT_MEDAL_PLATINIUM;
-    o_medal_time = i_best_room_time;
-    return true;
-  }
-
-  /* no missing medal, you've all of them */
-  return false;
-}
-
-std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &LevelID, int& o_highscore_time) {  
+  std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &LevelID) {  
     char **v_result;
     unsigned int nrow;
     std::string v_roomName;
     std::string v_id_profile;
     int       v_finishTime = 0;
     xmDatabase* v_pDb = xmDatabase::instance("main");
-
-    o_highscore_time = -1;
 
     v_result = v_pDb->readDB("SELECT a.name, b.id_profile, b.finishTime "
 			    "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
@@ -368,16 +318,94 @@ std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &Le
     }
     v_pDb->read_DB_free(v_result);
     
-    /* highscore found */
     if(v_id_profile != "") {
-      o_highscore_time = v_finishTime;
       return formatTime(v_finishTime) + ": " + v_roomName +  std::string(" (") + v_id_profile + std::string(")");
     }
      
-    /* no highscore */
     return GAMETEXT_WORLDRECORDNA + std::string(": ") + v_roomName;
   }
   
+  std::string GameApp::_getGhostReplayPath_bestOfThePlayer(std::string p_levelId, int &p_time) {
+    char **v_result;
+    unsigned int nrow;
+    std::string res;
+    xmDatabase* v_pDb = xmDatabase::instance("main");
+
+    p_time = -1;
+
+    v_result = v_pDb->readDB("SELECT name, finishTime FROM replays "
+			    "WHERE id_profile=\"" + xmDatabase::protectString(XMSession::instance()->profile()) + "\" "
+			    "AND   id_level=\""   + xmDatabase::protectString(p_levelId) + "\" "
+			    "AND   isFinished=1 "
+			    "ORDER BY finishTime LIMIT 1;",
+			    nrow);    
+    if(nrow == 0) {
+      v_pDb->read_DB_free(v_result);
+      return "";
+    }
+
+    res = std::string("Replays/") + v_pDb->getResult(v_result, 2, 0, 0) + std::string(".rpl");
+    p_time = atoi(v_pDb->getResult(v_result, 2, 0, 1));
+
+    v_pDb->read_DB_free(v_result);
+    return res;
+  }
+
+std::string GameApp::_getGhostReplayPath_bestOfTheRoom(unsigned int i_number, std::string p_levelId, int &p_time)
+{
+  char **v_result;
+  unsigned int nrow;
+  std::string res;
+  std::string v_replayName;
+  std::string v_fileUrl;
+  xmDatabase* v_pDb = xmDatabase::instance("main");
+
+  v_result = v_pDb->readDB("SELECT fileUrl, finishTime FROM webhighscores "
+			  "WHERE id_room=" + XMSession::instance()->idRoom(i_number) + " "
+			  "AND id_level=\"" + xmDatabase::protectString(p_levelId) + "\";",
+			  nrow);    
+  if(nrow == 0) {
+    p_time = -1;
+    v_pDb->read_DB_free(v_result);
+    return "";
+  }
+
+  v_fileUrl = v_pDb->getResult(v_result, 2, 0, 0);
+  v_replayName = XMFS::getFileBaseName(v_fileUrl);
+  p_time = atoi(v_pDb->getResult(v_result, 2, 0, 1));
+  v_pDb->read_DB_free(v_result);
+
+  /* search if the replay is already downloaded */
+  if(v_pDb->replays_exists(v_replayName)) {
+    return std::string("Replays/") + v_replayName + std::string(".rpl");
+  } else {
+    return "";
+  }
+}
+
+  std::string GameApp::_getGhostReplayPath_bestOfLocal(std::string p_levelId, int &p_time) {
+    char **v_result;
+    unsigned int nrow;
+    std::string res;
+    xmDatabase* v_pDb = xmDatabase::instance("main");
+
+    v_result = v_pDb->readDB("SELECT a.name, a.finishTime FROM replays AS a INNER JOIN stats_profiles AS b "
+			    "ON a.id_profile = b.id_profile "
+			    "WHERE a.id_level=\""   + xmDatabase::protectString(p_levelId) + "\" "
+			    "AND   a.isFinished=1 "
+			    "ORDER BY a.finishTime+0 LIMIT 1;",
+			    nrow);    
+    if(nrow == 0) {
+      v_pDb->read_DB_free(v_result);
+      return "";
+    }
+
+    res = std::string("Replays/") + v_pDb->getResult(v_result, 2, 0, 0) + std::string(".rpl");
+    p_time = atoi(v_pDb->getResult(v_result, 2, 0, 1));
+    v_pDb->read_DB_free(v_result);
+    return res;
+  }
+
   TColor GameApp::getColorFromPlayerNumber(int i_player) {
     // try to find nice colors for first player, then automatic
     switch(i_player) {
@@ -435,7 +463,18 @@ std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &Le
 
   void GameApp::switchUglyMode(bool bUgly) {
     XMSession::instance()->setUgly(bUgly);
+    
+    displayCursor(bUgly);
   }
+
+void GameApp::displayCursor(bool display)
+{
+  if(display == false) {
+    SDL_ShowCursor(SDL_DISABLE);        
+  } else {
+    SDL_ShowCursor(SDL_ENABLE);
+  }
+}
 
   void GameApp::switchTestThemeMode(bool mode) {
     XMSession::instance()->setTestTheme(mode);
@@ -513,6 +552,118 @@ std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &Le
     m_PlaySpecificLevelFile = i_leveFile;
   }
 
+void GameApp::addGhosts(Scene* i_motogame, Theme* i_theme) {
+  std::string v_replay_MYBEST;
+  std::string v_replay_THEBEST;
+  std::string v_replay_BESTOFROOM[ROOMS_NB_MAX];
+  std::string v_replay_MYBEST_tmp;
+  int v_finishTime;
+  int v_player_finishTime;
+  bool v_exists;
+
+  LogDebug("addGhosts stategy:");
+
+  v_replay_MYBEST_tmp = _getGhostReplayPath_bestOfThePlayer(i_motogame->getLevelSrc()->Id(), v_player_finishTime);
+
+  /* first, add the best of the room -- because if mybest or thebest = bestofroom, i prefer to see writen bestofroom */
+  for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+    if( (XMSession::instance()->ghostStrategy_BESTOFREFROOM()    && i==0) ||
+	(XMSession::instance()->ghostStrategy_BESTOFOTHERROOMS() && i!=0) ){
+
+      LogDebug("Choosing ghost for room %i", i);
+
+      v_replay_BESTOFROOM[i] = _getGhostReplayPath_bestOfTheRoom(i, i_motogame->getLevelSrc()->Id(), v_finishTime);
+      LogDebug("the room ghost: %s", v_replay_BESTOFROOM[i].c_str());
+
+      /* add MYBEST if MYBEST if better the BESTOF the other ROOM */
+      if(v_player_finishTime > 0 && (v_finishTime < 0 || v_player_finishTime < v_finishTime)) {
+	v_replay_BESTOFROOM[i] = v_replay_MYBEST_tmp;
+	LogDebug("my best time is %i ; room one is %i", v_player_finishTime, v_finishTime);
+	LogDebug("my best is better than the one of the room => choose it");
+      }
+      
+      v_exists = false;
+      for(unsigned int j=0; j<i; j++) {
+      	if(v_replay_BESTOFROOM[i] == v_replay_BESTOFROOM[j]) {
+      	  v_exists = true;
+	  LogDebug("the ghost is already set by room %i", j);
+      	}
+      }
+
+      if(v_replay_BESTOFROOM[i] != "" && v_exists == false) {
+	LogInfo("add ghost %s", v_replay_BESTOFROOM[i].c_str());
+
+        i_motogame->addGhostFromFile(v_replay_BESTOFROOM[i],
+				     xmDatabase::instance("main")->webrooms_getName(XMSession::instance()->idRoom(i)), i==0,
+				     Theme::instance(), Theme::instance()->getGhostTheme(),
+				     TColor(255,255,255,0),
+				     TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    GET_BLUE(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    0)
+			   );
+      }
+    }
+  }
+
+  /* second, add your best */
+  if(XMSession::instance()->ghostStrategy_MYBEST()) {
+    LogDebug("Choosing ghost MYBEST");
+    v_replay_MYBEST = _getGhostReplayPath_bestOfThePlayer(i_motogame->getLevelSrc()->Id(), v_finishTime);
+    LogDebug("MYBEST ghost is %s", v_replay_MYBEST.c_str());
+    if(v_replay_MYBEST != "") {
+      v_exists = false;
+      for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+	if(v_replay_MYBEST == v_replay_BESTOFROOM[i]) {
+	  LogDebug("the ghost is already set by room %i", i);
+	  v_exists = true;
+	}
+      }
+
+      if(v_exists == false) {
+	LogDebug("add ghost %s", v_replay_MYBEST.c_str());
+	i_motogame->addGhostFromFile(v_replay_MYBEST, GAMETEXT_GHOST_BEST, true,
+				     i_theme, i_theme->getGhostTheme(),
+				     TColor(85,255,255,0),
+				     TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    GET_BLUE(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    0)
+				     );
+      }
+    }
+  }
+
+  /* third, the best locally */
+  if(XMSession::instance()->ghostStrategy_THEBEST()) {
+    LogDebug("Choosing ghost LOCAL BEST");
+    v_replay_THEBEST = _getGhostReplayPath_bestOfLocal(i_motogame->getLevelSrc()->Id(), v_finishTime);
+    if(v_replay_THEBEST != "") {
+
+      v_exists = false;
+      for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+	if(v_replay_THEBEST == v_replay_BESTOFROOM[i]) {
+	  LogDebug("the ghost is already set by room %i", i);
+	  v_exists = true;
+	}
+      }
+
+      if(v_replay_THEBEST != v_replay_MYBEST && v_exists == false) { /* don't add two times the same ghost */
+	LogDebug("add ghost %s", v_replay_THEBEST.c_str());
+	i_motogame->addGhostFromFile(v_replay_THEBEST, GAMETEXT_GHOST_LOCAL, false,
+				     i_theme, i_theme->getGhostTheme(),
+				     TColor(255,200,140,0),
+				     TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    GET_BLUE(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    0)
+				     );
+      }
+    }
+  }
+
+  LogDebug("addGhosts stategy finished");
+}
 
 void GameApp::addLevelToFavorite(const std::string& i_levelId) {
   LevelsManager::instance()->addToFavorite(XMSession::instance()->profile(), i_levelId, xmDatabase::instance("main"));
@@ -688,26 +839,4 @@ void GameApp::drawFrame(void) {
 
 NetServer* GameApp::standAloneServer() {
   return m_standAloneServer;
-}
-
-bool GameApp::isThereAPreviousLevel(const std::string& i_id_level) {
-  return determinePreviousLevel(i_id_level) != "";
-}
-
-bool GameApp::isThereANextLevel(const std::string& i_id_level) {
-  return determineNextLevel(i_id_level) != "";
-}
-
-std::string GameApp::determineNextLevel(const std::string& i_id_level) {
-  if(m_currentPlayingList == NULL) {
-    return "";
-  }
-  return m_currentPlayingList->determineNextLevel(i_id_level);
-}
-
-std::string GameApp::determinePreviousLevel(const std::string& i_id_level) {
-  if(m_currentPlayingList == NULL) {
-    return "";
-  }
-  return m_currentPlayingList->determinePreviousLevel(i_id_level);
 }

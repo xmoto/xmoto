@@ -29,14 +29,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 // max number of rooms ; set at compilation
-#define ROOMS_NB_MAX   	    	            6
+#define ROOMS_NB_MAX   	    	            4
 
 // database file
 #define DATABASE_FILE  	             	    XMFS::getUserDirUTF8(FDT_DATA) + "/" + "xm.db"
 
 #define DEFAULT_CONTROLLERMODE              "Keyboard"
 #define DEFAULT_LANGUAGE                    ""
-#define DEFAULT_THEME      	    	        CONFIGURE_DEFAULT_THEME
+#define DEFAULT_THEME      	    	    CONFIGURE_DEFAULT_THEME
 #define DEFAULT_WEBROOM_ID     	    	    "1"
 #define DEFAULT_WEBCONFATINIT  	    	    true
 #define DEFAULT_PROFILE        	    	    ""
@@ -65,7 +65,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_GHOSTBESTREFROOM    	    true
 #define DEFAULT_GHOSTBESTOTHERROOMS 	    false
 #define DEFAULT_AUTOSAVEHIGHSCORESREPLAYS   true
-#define DEFAULT_DISABLEANIMATIONS           false
 #define DEFAULT_ENABLEGHOSTS                true
 #define DEFAULT_ENABLEENGINESOUND           true
 #define DEFAULT_SHOWENGINECOUNTER           false
@@ -92,7 +91,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_CHECKNEWLEVELSATSTARTUP     true
 #define DEFAULT_CHECKNEWHIGHSCORESATSTARTUP true
 #define DEFAULT_SHOWHIGHSCOREINGAME         true
-#define DEFAULT_SHOWNEXTMEDALINGAME         false
 #define DEFAULT_NBROOMSENABLED              1
 #define DEFAULT_SHOWGHOSTTIMEDIFFERENCE     true
 #define DEFAULT_GHOSTMOTIONBLUR             true
@@ -107,9 +105,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_NOTIFYATINIT                true
 #define DEFAULT_MIRRORMODE                  false
 #define DEFAULT_USECRAPPYPACK               true
-#define DEFAULT_PERMANENTCONSOLE            false
-#define DEFAULT_SHOWGAMEINFORMATIONINCONSOLE  true
-#define DEFAULT_CONSOLESIZE                 5
 #define DEFAULT_USECHILDRENCOMPLIANT        false
 #define DEFAULT_FORCECHILDRENCOMPLIANT      false
 #define DEFAULT_ENABLEVIDEORECORDING        false
@@ -118,9 +113,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_HIDEPLAYINGINFORMATION      false
 #define DEFAULT_ENABLEINITZOOM              true
 #define DEFAULT_ENABLEACTIVEZOOM            true
-#define DEFAULT_ENABLETRAILCAM              false
+#define DEFAULT_ENABLETRAILCAM              true
 #define DEFAULT_GHOSTTRAILRENDERING         false
-#define DEFAULT_ENABLEJOYSTICKS             false
+#define DEFAULT_GHOSTTRAILRENDERING_TS      false
+#define DEFAULT_ENABLEJOYSTICKS             true
 #define DEFAULT_BEATINGMODE                 false
 #define DEFAULT_WEBFORMS                    true
 #define DEFAULT_PROXY_PORT                  -1

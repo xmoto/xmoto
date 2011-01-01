@@ -52,7 +52,7 @@ class StatePause : public StateMenu {
   private:
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static void createGUIIfNeeded();
 };
 
 #endif

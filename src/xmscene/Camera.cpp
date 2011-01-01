@@ -22,10 +22,9 @@
 #include "../Game.h"
 #include "Bike.h"
 #include "BikeGhost.h"
-#include "../helpers/Log.h"
+#include "helpers/Log.h"
 #include <sstream>
 #include "../SysMessage.h"
-#include "../drawlib/DrawLib.h"
 
 #define ZOOM_DEFAULT 0.24
 #define ZOOM_DEFAULT_NO_AUTOZOOM 0.195
@@ -57,21 +56,19 @@
 #define TRAILCAM_DAMPING 0.01   // smaller damps more
 
 #ifdef ENABLE_OPENGL
-#include "../include/xm_OpenGL.h"
+#include "include/xm_OpenGL.h"
 #endif
 
-Camera::Camera(Vector2i downleft, Vector2i upright){
+Camera::Camera(Vector2i upperleft, Vector2i downright){
   m_fScale         = ZOOM_DEFAULT;
   m_cameraOffsetX  = CAMERA_OFFSETX_DEFAULT;
   m_cameraOffsetY  = CAMERA_OFFSETY_DEFAULT;
   m_playerToFollow = NULL;
-  setRenderSurface(downleft, upright);
+  setRenderSurface(upperleft, downright);
   m_mirrored = false;
-  m_allowActiveZoom = false;
+  m_allowActiveZoom = true;
   m_cameraDeathOffset = Vector2f(0.0, 0.0);
   m_ghostTrail = NULL;
-  m_trailAvailable = false;
-  m_useTrailCam = false;
   prepareForNewLevel();
 }
 
@@ -93,6 +90,12 @@ void Camera::prepareForNewLevel() {
   m_nShadeTime = GameApp::getXMTime();
   m_doShade = false;
   m_doShadeAnim = false;
+  //trail stuff
+  m_trailAvailable = false;
+  m_ghostTrail = NULL;
+  m_trackingShotActivated = false;
+  m_catchTrail = false;
+  m_trailCamForwardSteps = 0;
 }
 
 void Camera::resetActiveZoom()
@@ -152,38 +155,30 @@ void Camera::initCamera() {
   initZoom();
 }
 
-void Camera::setUseTrailCam(bool i_value) {
-  m_useTrailCam = i_value;
-
-  if(m_useTrailCam == false && m_trailAvailable) {
-    m_catchTrail = false;
-    initCameraPosition();
+void Camera::initTrailCam(Scene* i_scene) {
+  GhostTrail* v_ghostTrail = i_scene->getGhostTrail();
+  if( v_ghostTrail != NULL ) {
+    m_ghostTrail =  v_ghostTrail; 
+    m_trailAvailable = i_scene->getGhostTrail()->getGhostTrailAvailable(); 
+    if(m_ghostTrail != 0){
+       m_trailAvailable = true;
+    }
+    else {
+      m_trailAvailable = false;
+      return;
+    }
   }
-}
-
-void Camera::initTrailCam(GhostTrail* i_ghostTrail) {
-  if(i_ghostTrail == NULL) {
-    m_trailAvailable = false;
-    m_ghostTrail = NULL;
-    return;
-  }
-
-  m_trailAvailable = true;
-  m_ghostTrail =  i_ghostTrail; 
-  m_trailAvailable = i_ghostTrail->getGhostTrailAvailable(); 
+ 
   m_currentNearestTrailDataPosition = 0;
   m_trackShotIndex = 0;
   m_trackShotStartIndex = 0;
   m_dampVectorMax = Vector2f(m_cameraOffsetX,m_cameraOffsetY);
   m_dampCurrent = Vector2f(m_cameraOffsetX,m_cameraOffsetY);
-
-  m_trackingShotActivated = false;
-  m_catchTrail = false;
-  m_trailCamForwardSteps = 0;
 }
 
 Vector2f Camera::updateTrailCam() {
   if( m_useTrailCam && m_catchTrail && m_trailAvailable ) {
+  
     //calculate how many forward steps depending from player speed
     m_trailCamForwardSteps = int(m_playerToFollow->getBikeLinearVel() * 0.4) + TRAILCAM_MIN_FORWARDSTEPS;
     if(m_trailCamForwardSteps > TRAILCAM_MAX_FORWARDSTEPS) m_trailCamForwardSteps = TRAILCAM_MAX_FORWARDSTEPS;
@@ -269,19 +264,36 @@ void Camera::trailCamTrackingShot() {
   }
 }
 
-bool Camera::useTrackingShot() const {
-  return m_trackingShotActivated;
-}
-
-void Camera::setUseTrackingShot(bool i_value) {
-  m_trackingShotActivated = i_value;
-  initCameraPosition();
-
-  if(m_trackingShotActivated == false) {
+void Camera::toggleTrackingShot(Scene *i_scene) {
+  if(m_trackingShotActivated) { 
+    m_trackingShotActivated = false;
+    XMSession::instance()->setRenderGhostTrailTS(false);
+    initCameraPosition();
+    i_scene->pause();
+  }
+  else {
+    XMSession::instance()->setRenderGhostTrailTS(true);
+    i_scene->pause();
+    m_trackingShotActivated = true;
     m_trackShotStartIndex = locateNearestPointOnInterpolatedTrail(false);  //test true here
     m_trackShotIndex = m_trackShotStartIndex;
   }
 }
+
+void Camera::toggleTrailCam() {
+ if(m_useTrailCam && m_trailAvailable) {
+   XMSession::instance()->setEnableTrailCam(false);
+   m_useTrailCam = false;
+   m_catchTrail = false;
+   initCameraPosition();
+ }
+ else if(m_trailAvailable){
+   XMSession::instance()->setEnableTrailCam(true);
+   m_useTrailCam = true; 
+ }
+}
+
+
 
 unsigned int Camera::locateNearestPointOnInterpolatedTrail(bool i_optimize) {
   // delivers the position index for m_trailData for the nearest trailpoint to camera
@@ -444,13 +456,6 @@ void Camera::guessDesiredCameraZoom() {
   }
 }
 
-void Camera::setPlayerResussite() { // opposite of setPlayerDead
-  m_cameraDeathOffset = Vector2f(0.0, 0.0);
-
-  //remove shadow
-  setScreenShade(false, false);  
-}
-
 void Camera::setPlayerDead() {
   if(m_playerToFollow->getState()->Dir == DD_RIGHT) {
     m_cameraDeathOffset = m_playerToFollow->getState()->CenterP - m_playerToFollow->getState()->KneeP;
@@ -592,15 +597,10 @@ Biker* Camera::getPlayerToFollow() {
   return m_playerToFollow;
 }
 
-void Camera::activate() {
-  DrawLib* drawLib = GameApp::instance()->getDrawLib();
-  drawLib->setRenderSurface(&m_renderSurf);
-}
-
 void Camera::setCamera2d() {
 #ifdef ENABLE_OPENGL
-  glViewport(m_renderSurf.downleft().x, m_renderSurf.downleft().y,
-  	     m_renderSurf.size().x, m_renderSurf.size().y);
+  glViewport(m_renderSurf.upperleft().x, m_renderSurf.upperleft().y,
+	     m_renderSurf.size().x,      m_renderSurf.size().y);						 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glOrtho(0, m_renderSurf.size().x,
@@ -609,25 +609,21 @@ void Camera::setCamera2d() {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 #endif
-
-  activate();
 }
 
 void Camera::setCamera3d(){
 #ifdef ENABLE_OPENGL
-  glViewport(m_renderSurf.downleft().x, m_renderSurf.downleft().y,
-  	     m_renderSurf.size().x, m_renderSurf.size().y);
+  glViewport(m_renderSurf.upperleft().x, m_renderSurf.upperleft().y,
+	     m_renderSurf.size().x,      m_renderSurf.size().y);						 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 #endif
-
-  activate();
 }
 
-void Camera::setRenderSurface(Vector2i downleft, Vector2i upright){
-  m_renderSurf.update(downleft, upright);
+void Camera::setRenderSurface(Vector2i upperleft, Vector2i downright){
+  m_renderSurf.update(upperleft, downright);
 }
 
 bool Camera::isMirrored() {
@@ -725,17 +721,25 @@ float Camera::guessDesiredAngleRotation() {
 }
 
 Vector2i Camera::getDispBottomLeft() {
-  return m_renderSurf.downleft();
+  return Vector2i(m_renderSurf.upperleft().x, m_renderSurf.downright().y);
 }
 
-Vector2i Camera::getDispUpRight() {
-  return m_renderSurf.upright();
+Vector2i Camera::getDispTopLeft() {
+  return m_renderSurf.upperleft();
+}
+
+Vector2i Camera::getDispBottomRight() {
+  return m_renderSurf.downright();
 }
 
 void Camera::allowActiveZoom(bool i_value) {
   m_allowActiveZoom = i_value;
 
   initZoom();
+}
+
+void Camera::allowTrailCam(bool i_value) {
+  m_useTrailCam = i_value;
 }
 
 void Camera::clearGhostsVisibility() {

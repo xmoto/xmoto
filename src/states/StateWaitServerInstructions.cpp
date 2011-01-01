@@ -26,10 +26,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../GameText.h"
 #include "../drawlib/DrawLib.h"
 
-StateWaitServerInstructions::StateWaitServerInstructions():
-GameState(true, false)
+StateWaitServerInstructions::StateWaitServerInstructions(const std::string& i_id):
+GameState(true, false, true, true)
 {
   m_name = "StateWaitServerInst";
+  setId(i_id);
 
   m_showCursor = false;
 
@@ -49,15 +50,14 @@ StateWaitServerInstructions::~StateWaitServerInstructions()
 bool StateWaitServerInstructions::render() {
   FontManager* v_fm;
   FontGlyph* v_fg;
-  DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
   GameState::render();
 
-  v_fm = drawLib->getFontMedium();
+  v_fm = GameApp::instance()->getDrawLib()->getFontMedium();
   v_fg = v_fm->getGlyph(GAMETEXT_WAIT_XMSERVER);
-  v_fm->printString(drawLib, v_fg,
-		    (m_screen.upright().x - v_fg->realWidth())   /2,
-		    (m_screen.upright().y - v_fg->realHeight()) /2,
+  v_fm->printString(v_fg,
+		    (GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth())   /2,
+		    (GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight()) /2,
 		    MAKE_COLOR(220,255,255,255), -0.5, true);
 
 
@@ -68,7 +68,8 @@ void StateWaitServerInstructions::executeOneCommand(std::string cmd, std::string
   if(cmd == "CLIENT_DISCONNECTED_BY_ERROR") {
     m_requestForEnd = true;
   } else if(cmd == "NET_PREPARE_PLAYING") {
-    StateManager::instance()->replaceState(new StatePreplayingNet(args, true), getStateId());
+    StateManager::instance()->replaceState(new StatePreplayingNet(getId(), args, true),
+					   this->getId());
   } else {
     GameState::executeOneCommand(cmd, args);
   }

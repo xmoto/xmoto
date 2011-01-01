@@ -46,7 +46,7 @@ StateEditWebConfig::~StateEditWebConfig()
 
 void StateEditWebConfig::enter()
 {
-  createGUIIfNeeded(&m_screen);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
   updateGUI();
 
@@ -54,7 +54,7 @@ void StateEditWebConfig::enter()
     // show the message box
     StateMessageBox* v_msgboxState = new StateMessageBox(this, std::string(GAMETEXT_ALLOWINTERNETCONN),
 							 UI_MSGBOX_YES|UI_MSGBOX_NO);
-    v_msgboxState->setMsgBxId("EDITWEBCONF");
+    v_msgboxState->setId("EDITWEBCONF");
     StateManager::instance()->pushState(v_msgboxState);
   }
 
@@ -118,7 +118,7 @@ void StateEditWebConfig::clean()
   }
 }
 
-void StateEditWebConfig::createGUIIfNeeded(RenderSurface* i_screen)
+void StateEditWebConfig::createGUIIfNeeded()
 {
   UIStatic *pSomeText;
   UIFrame  *v_frame;
@@ -128,15 +128,15 @@ void StateEditWebConfig::createGUIIfNeeded(RenderSurface* i_screen)
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot(i_screen);
+  m_sGUI = new UIRoot();
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      i_screen->getDispWidth(),
-		      i_screen->getDispHeight());
+		      drawLib->getDispWidth(),
+		      drawLib->getDispHeight());
 
   /* Initialize internet connection configurator */
-  int x = i_screen->getDispWidth()/2-206;
-  int y = i_screen->getDispHeight()/2-385/2;
+  int x = drawLib->getDispWidth()/2-206;
+  int y = drawLib->getDispHeight()/2-385/2;
   std::string caption = "";
   int nWidth  = 412;
   int nHeight = 425;

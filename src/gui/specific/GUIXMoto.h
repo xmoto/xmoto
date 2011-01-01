@@ -23,11 +23,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "../basic/GUI.h"
 #include "../../helpers/VMath.h"
-#include "../../VirtualLevelsList.h"
 
 class LevelsPack;
 
-class UILevelList : public UIList, public VirtualLevelsList {
+class UILevelList : public UIList {
   public:
   UILevelList(UIWindow *pParent,
 	      int x = 0,int y = 0,
@@ -44,9 +43,6 @@ class UILevelList : public UIList, public VirtualLevelsList {
 		const std::string& i_prefix = "");
   virtual void clear();
   void updateLevel(const std::string& i_id_level, int i_playerHighscore);
-
-  std::string determineNextLevel(const std::string& i_id_level);
-  std::string determinePreviousLevel(const std::string& i_id_level);
 
   void hideBestTime();
   void hideRoomBestTime();

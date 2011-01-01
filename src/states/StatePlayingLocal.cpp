@@ -38,11 +38,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Renderer.h"
 #include "../xmscene/BikeController.h"
 #include "../LuaLibGame.h"
-#include "../thread/XMThreadStats.h"
-#include "../net/NetClient.h"
 
-StatePlayingLocal::StatePlayingLocal(Universe* i_universe, GameRenderer* i_renderer):
-StatePlaying(i_universe, i_renderer)
+StatePlayingLocal::StatePlayingLocal(Universe* i_universe, const std::string& i_id):
+StatePlaying(i_universe, i_id)
 {
   m_name = "StatePlayingLocal";
   m_gameIsFinished = false;
@@ -56,15 +54,6 @@ StatePlaying(i_universe, i_renderer)
     StateManager::instance()->registerAsEmitter("STATS_UPDATED");
     StateManager::instance()->registerAsEmitter("LEVELS_UPDATED");
   }
-
-  if(m_universe != NULL) {
-    if(m_universe->getScenes().size() != 0) {    
-      if(NetClient::instance()->isConnected()) {
-	NA_playingLevel na(m_universe->getScenes()[0]->getLevelSrc()->Id());
-	NetClient::instance()->send(&na, 0);
-      }
-    }
-  }
 }
 
 StatePlayingLocal::~StatePlayingLocal()
@@ -76,53 +65,33 @@ void StatePlayingLocal::enter()
 {
   StatePlaying::enter();
 
-  /*
-    warning, this function is called when a new game start, or when the player resussite after a checkpoint restoration
-   */
-
   m_gameIsFinished = false;
 
-  // reset trainer mode use
-  bool v_onlyNewGame = true;
-  if(m_universe != NULL) {
-    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-      // if only new game are set, then, reset the trainer use
-      if(m_universe->getScenes()[i]->playInitLevelDone()) {
-	v_onlyNewGame = false;
-      }
-    }
-  }
-  if(v_onlyNewGame) { // if any game is continuing, don't reset the trainer use
-    Trainer::instance()->resetTrainerUse();
-  }
-
-  // initialiaze the level
   std::string v_level_name;
   try {
     if(m_universe != NULL) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	v_level_name = m_universe->getScenes()[i]->getLevelSrc()->Name();
-	if(m_universe->getScenes()[i]->playInitLevelDone() == false) {
-	  m_universe->getScenes()[i]->playInitLevel();
-	}
+	m_universe->getScenes()[i]->playLevel();
       }
     }
   }
   catch(Exception &e) {
     LogWarning("level '%s' cannot be loaded", v_level_name.c_str());
 
-    std::string v_msg;
     char cBuf[256];
     snprintf(cBuf, 256, GAMETEXT_LEVELCANNOTBELOADED, v_level_name.c_str());
-    v_msg = std::string(cBuf) + "\n" + e.getMsg();
 
-    StateMessageBox* v_msgboxState = new StateMessageBox(this, v_msg, UI_MSGBOX_OK);
-    v_msgboxState->setMsgBxId("ERROR");
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, cBuf, UI_MSGBOX_OK);
+    v_msgboxState->setId("ERROR");
     StateManager::instance()->pushState(v_msgboxState);
   }
 
   // read keys for more reactivity
   dealWithActivedKeys();
+
+  // reset trainer mode use
+  Trainer::instance()->resetTrainerUse();
 }
 
 void StatePlayingLocal::leave()
@@ -140,10 +109,11 @@ void StatePlayingLocal::leave()
 	if(m_universe->getScenes()[0]->Players().size() == 1) {
 	  if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
 	     m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
-	    StateManager::instance()->getDbStatsThread()->delay_abortedLevel(XMSession::instance()->profile(),
-									     m_universe->getScenes()[0]->getLevelSrc()->Id(),
-									     m_universe->getScenes()[0]->getTime() - m_universe->getScenes()[0]->getCheckpointStartTime());
-	    StateManager::instance()->getDbStatsThread()->doJob();
+	    
+	    xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->sitekey(),
+							     XMSession::instance()->profile(),
+							     m_universe->getScenes()[0]->getLevelSrc()->Id(),
+							     m_universe->getScenes()[0]->getTime());
 	  }
 	}
       }
@@ -209,11 +179,11 @@ bool StatePlayingLocal::update()
 }
 
 void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_PLAYINGPAUSE))) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     if(isLockedScene() == false) {
       /* Escape pauses */
       m_displayStats = true;
-      StateManager::instance()->pushState(new StatePause(m_universe));
+      StateManager::instance()->pushState(new StatePause(m_universe, this));
     }
   }
 
@@ -245,7 +215,7 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 
   // TRAINER
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_BACKSPACE, KMOD_ALT)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_BACKSPACE, KMOD_NONE)) {
     if(m_universe != NULL) {
       for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
         if( Trainer::instance()->isRestorePositionAvailable( m_universe->getScenes()[j]->getLevelSrc()->Id() ) ) {
@@ -297,20 +267,6 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 #endif
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_RESTARTCHECKPOINT))) {
-
-    bool v_isCheckpoint = false;
-
-    for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-      if(m_universe->getScenes()[j]->getCheckpoint() != NULL) {
-	v_isCheckpoint = true;
-      }
-    }
-    if(v_isCheckpoint) {
-      StateScene::playToCheckpoint();
-    }
-  }
-
   else {
     if(i_type == INPUT_DOWN) {
       if(m_autoZoom == false){
@@ -351,18 +307,17 @@ void StatePlayingLocal::onOneFinish() {
 								 TimeStamp,
 								 v_finish_time);
         }
-
-	StateManager::instance()->getDbStatsThread()->delay_levelCompleted(XMSession::instance()->profile(),
-									   m_universe->getScenes()[0]->getLevelSrc()->Id(),
-									   m_universe->getScenes()[0]->Players()[0]->finishTime() - m_universe->getScenes()[0]->getCheckpointStartTime());
-	StateManager::instance()->getDbStatsThread()->doJob();
-
+	xmDatabase::instance("main")->stats_levelCompleted(XMSession::instance()->sitekey(),
+							   XMSession::instance()->profile(),
+							   m_universe->getScenes()[0]->getLevelSrc()->Id(),
+							   m_universe->getScenes()[0]->Players()[0]->finishTime());
 	StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
+        StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
       }
     }
   }
   
-  StateManager::instance()->pushState(new StateFinished(m_universe));
+  StateManager::instance()->pushState(new StateFinished(m_universe, this));
 }
 
 void StatePlayingLocal::onAllDead() {  
@@ -376,15 +331,20 @@ void StatePlayingLocal::onAllDead() {
   if(m_universe != NULL) {
     if(m_universe->getScenes().size() == 1) {
       if(m_universe->getScenes()[0]->Players().size() == 1) {
-	StateManager::instance()->getDbStatsThread()->delay_died(XMSession::instance()->profile(),
-								 m_universe->getScenes()[0]->getLevelSrc()->Id(),
-								 m_universe->getScenes()[0]->getTime() - m_universe->getScenes()[0]->getCheckpointStartTime());
-	StateManager::instance()->getDbStatsThread()->doJob();
+	xmDatabase::instance("main")->stats_died(XMSession::instance()->sitekey(),
+						 XMSession::instance()->profile(),
+						 m_universe->getScenes()[0]->getLevelSrc()->Id(),
+						 m_universe->getScenes()[0]->getTime());
+	StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
       }
     }
   }
   
-  StateManager::instance()->replaceState(new StateDeadJust(m_universe, m_renderer), getStateId());
+  if(XMSession::instance()->enableDeadAnimation()) {
+    StateManager::instance()->replaceState(new StateDeadJust(m_universe, getId()), this->getId());
+  } else {
+    StateManager::instance()->pushState(new StateDeadMenu(m_universe, true, this));
+  }
 }
 
 void StatePlayingLocal::abortPlaying() {
@@ -393,10 +353,11 @@ void StatePlayingLocal::abortPlaying() {
       if(m_universe->getScenes()[0]->Players().size() == 1) {
 	if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
 	   m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
-	  StateManager::instance()->getDbStatsThread()->delay_abortedLevel(XMSession::instance()->profile(),
-									   m_universe->getScenes()[0]->getLevelSrc()->Id(),
-									   m_universe->getScenes()[0]->getTime() - m_universe->getScenes()[0]->getCheckpointStartTime());
-	  StateManager::instance()->getDbStatsThread()->doJob();
+	  xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->sitekey(),
+							   XMSession::instance()->profile(),
+							   m_universe->getScenes()[0]->getLevelSrc()->Id(),
+							   m_universe->getScenes()[0]->getTime());
+	  StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
 	}
       }
     }
@@ -416,11 +377,11 @@ void StatePlayingLocal::restartLevel(bool i_reloadLevel) {
       if(m_universe->getScenes()[0]->Players().size() == 1) {
 	if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
 	   m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
-
-	  StateManager::instance()->getDbStatsThread()->delay_levelRestarted(XMSession::instance()->profile(),
-									     m_universe->getScenes()[0]->getLevelSrc()->Id(),
-									     m_universe->getScenes()[0]->getTime() - m_universe->getScenes()[0]->getCheckpointStartTime());
-	  StateManager::instance()->getDbStatsThread()->doJob();
+	  xmDatabase::instance("main")->stats_levelRestarted(XMSession::instance()->sitekey(),
+							     XMSession::instance()->profile(),
+							     m_universe->getScenes()[0]->getLevelSrc()->Id(),
+							     m_universe->getScenes()[0]->getTime());
+	  StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
 	}
       }
     }

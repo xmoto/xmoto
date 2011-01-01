@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateDeadJust : public StateScene {
   public:
-  StateDeadJust(Universe* i_universe, GameRenderer* i_renderer);
+  StateDeadJust(Universe* i_universe, const std::string& i_id);
   virtual ~StateDeadJust();
   
   virtual void enter();
@@ -37,13 +37,8 @@ class StateDeadJust : public StateScene {
   virtual void restartLevel(bool i_reloadLevel = false);
   virtual void nextLevel(bool i_positifOrder = true);
 
-  protected:
-  virtual void executeOneCommand(std::string cmd, std::string args);
-
   private:
   int m_enterTime;
-
-  void toCheckpointBeeingDead();
 };
 
 #endif

@@ -111,9 +111,7 @@ helpers_SOURCES = helpers/VMath.h             \
 		  helpers/Random.h \
 		  helpers/Random.cpp \
 		  helpers/CmdArgumentParser.h \
-		  helpers/CmdArgumentParser.cpp \
-		  helpers/RenderSurface.h \
-		  helpers/RenderSurface.cpp
+		  helpers/CmdArgumentParser.cpp
 
 common_SOURCES = Image.cpp \
   VBezier.cpp PolyDraw.h PolyDraw.cpp \
@@ -211,8 +209,6 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/AttractMode.h            \
 		 states/StateUpdate.cpp          \
 		 states/StateUpdate.h            \
-		 states/StateWaiting.cpp          \
-		 states/StateWaiting.h            \
 		 states/StateUpdateDb.cpp        \
 		 states/StateUpdateDb.h          \
 		 states/StateUpdateThemesList.cpp\
@@ -239,8 +235,8 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateWaitServerInstructions.cpp \
 		 states/StateUpgradeLevels.cpp   \
 		 states/StateUpgradeLevels.h     \
-		 states/StateViewHighscore.cpp   \
-		 states/StateViewHighscore.h
+		 states/StateDownloadGhost.cpp   \
+		 states/StateDownloadGhost.h
 
 xdgbasedir_SOURCES = xdgbasedir/include/basedir.h xdgbasedir/include/basedir_fs.h xdgbasedir/src/basedir.c
 
@@ -278,12 +274,10 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/SyncThread.h               \
 		 thread/UpgradeLevelsThread.cpp    \
 		 thread/UpgradeLevelsThread.h      \
+		 thread/DownloadGhostThread.cpp    \
+		 thread/DownloadGhostThread.h      \
 		 thread/LevelsPacksCountUpdateThread.h   \
 		 thread/LevelsPacksCountUpdateThread.cpp \
-		 thread/XMThreadStats.h \
-		 thread/XMThreadStats.cpp \
-		 thread/DownloadReplaysThread.h \
-		 thread/DownloadReplaysThread.cpp \
 		 net/thread/ServerThread.cpp             \
 		 net/thread/ServerThread.h       \
 		 net/thread/ClientListenerThread.cpp             \
@@ -300,9 +294,7 @@ thread_SOURCES = thread/XMThread.h                 \
 		 net/ActionReader.h    \
 		 net/ActionReader.cpp \
 		 net/extSDL_net.h     \
-		 net/extSDL_net.cpp \
-		 net/VirtualNetLevelsList.h \
-		 net/VirtualNetLevelsList.cpp
+		 net/extSDL_net.cpp
 
 if USE_INTERNAL_BZ2
 common_SOURCES += $(bz2_SOURCES)
@@ -330,7 +322,6 @@ bin_PROGRAMS = xmoto
 xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   GUIBestTimes.cpp \
   Renderer.cpp Replay.cpp Sound.cpp \
-  GeomsManager.h GeomsManager.cpp \
   LuaLibGame.h LuaLibGame.cpp \
   UserConfig.cpp \
   BSP.h \
@@ -348,8 +339,6 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   Input.h \
   XMKey.cpp \
   XMKey.h \
-  VirtualLevelsList.h \
-  VirtualLevelsList.cpp \
   VideoRecorder.h \
   VideoRecorder.cpp \
   GameSerializer.cpp \
@@ -368,8 +357,6 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   GameInit.cpp \
   LevelsManager.h \
   LevelsManager.cpp \
-  XMDemo.h \
-  XMDemo.cpp \
   SysMessage.h \
   SysMessage.cpp \
   sqlqueries.h \

@@ -32,7 +32,6 @@ public:
   LuaLibGame(Scene *i_pScene);
   ~LuaLibGame();
 
-  void loadScriptFile(const std::string& i_scriptFilename);
   void loadScript(const std::string& i_scriptCode, const std::string& i_scriptFilename);
   std::string getErrorMsg();
 
@@ -78,7 +77,6 @@ private:
   static int L_Game_SetEntityPos(lua_State *pL);
   static int L_Game_SetKeyHook(lua_State *pL);
   static int L_Game_GetKeyByAction(lua_State *pL);
-  static int L_Game_GetKeyByActionTech(lua_State *pL);
   static int L_Game_Log(lua_State *pL);
   static int L_Game_SetBlockCenter(lua_State *pL);
   static int L_Game_SetBlockRotation(lua_State *pL);

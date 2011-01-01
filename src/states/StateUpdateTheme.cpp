@@ -68,7 +68,7 @@ bool StateUpdateTheme::callBeforeLaunchingThread()
 
   if(v_onWeb == false) { /* available on the disk, not on the web */
     StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_UNUPDATABLETHEMEONWEB, UI_MSGBOX_OK);
-    v_msgboxState->setMsgBxId("ERROR");
+    v_msgboxState->setId("ERROR");
     StateManager::instance()->pushState(v_msgboxState);
     return false;
   }
@@ -81,7 +81,7 @@ void StateUpdateTheme::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     m_pThread->askThreadToEnd();
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_k, KMOD_LCTRL)) {
     if(m_threadStarted == true) {
       m_messageOnFailure = false;
       m_pThread->safeKill();

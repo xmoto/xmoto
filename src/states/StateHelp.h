@@ -33,7 +33,6 @@ class StateHelp : public StateMenu {
 	    );
   virtual ~StateHelp();
 
-  virtual void enter();
   virtual void leave();
   virtual void enterAfterPop();
 

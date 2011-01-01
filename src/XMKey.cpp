@@ -410,7 +410,7 @@ std::string XMKey::toFancyString() const {
   return v_res.str();
 }
 
-bool XMKey::isPressed(Uint8 *i_keystate, Uint8 i_mousestate) const {
+bool XMKey::isPressed(Uint8 *i_keystate, Uint8 i_mousestate) {
   if(m_input == XMK_KEYBOARD) {
     return i_keystate[m_keyboard_sym] == 1;
   }

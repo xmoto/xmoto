@@ -55,7 +55,6 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"SetEntityPos",                 LuaLibGame::L_Game_SetEntityPos},
   {"SetKeyHook",                   LuaLibGame::L_Game_SetKeyHook},
   {"GetKeyByAction",               LuaLibGame::L_Game_GetKeyByAction},
-  {"GetKeyByActionTech",           LuaLibGame::L_Game_GetKeyByActionTech},
   {"Log",                          LuaLibGame::L_Game_Log},
   {"SetBlockCenter",               LuaLibGame::L_Game_SetBlockCenter},
   {"SetBlockRotation",             LuaLibGame::L_Game_SetBlockRotation},
@@ -278,30 +277,6 @@ void LuaLibGame::scriptCallTblVoid(const std::string& Table, const std::string& 
   lua_settop(m_pL,0);        
 }
 
-void LuaLibGame::loadScriptFile(const std::string& i_scriptFilename) {
-  FileHandle *pfh = XMFS::openIFile(FDT_DATA, i_scriptFilename);
-
-  if(pfh == NULL) {
-    throw Exception("unable to load script " + i_scriptFilename);
-  }
-
-  std::string Line,ScriptBuf="";
-  
-  try {
-    while(XMFS::readNextLine(pfh,Line)) {
-      if(Line.length() > 0) {
-	ScriptBuf.append(Line.append("\n"));
-      }
-    }
-  } catch(Exception &e) {
-    XMFS::closeFile(pfh);
-    throw e;
-  }
-  
-  XMFS::closeFile(pfh);
-  loadScript(ScriptBuf, i_scriptFilename);
-}
-
 void LuaLibGame::loadScript(const std::string& i_scriptCode, const std::string& i_scriptFilename) {
   /* Use the Lua aux lib to load the buffer */
   int nRet;
@@ -385,14 +360,9 @@ int LuaLibGame::L_Game_Message(lua_State *pL) {
 
   /* Convert all arguments to strings */
   std::string Out;
-  std::string Temp;
-  for(int i=0;i<lua_gettop(pL);i++) {
-    Temp = luaL_checkstring(pL, i+1);
-    if(Temp != "") {
-      Out.append(_(Temp.c_str()));
-    }
-  }  
-
+  for(int i=0;i<lua_gettop(pL);i++) 
+    Out.append(_(luaL_checkstring(pL, i+1)));
+  
   m_exec_world->createGameEvent(new MGE_Message(m_exec_world->getTime(), Out));
   return 0;
 }  
@@ -568,11 +538,8 @@ int LuaLibGame::L_Game_SetKeyHook(lua_State *pL) {
   if(m_exec_activeInputHandler != NULL) {
     try {
       m_exec_activeInputHandler->addScriptKeyHook(m_exec_world, luaL_checkstring(pL,1), luaL_checkstring(pL,2));
-    } catch(Exception &e) {
-      std::string v_key  = luaL_checkstring(pL,1);
-      std::string v_func = luaL_checkstring(pL,2);
-      std::string v_msg = "SetKeyHook(key=" + v_key + ", function=" + v_func + ") failed\n" + e.getMsg();
-	luaL_error (pL, v_msg.c_str());
+    } catch(Exception &e) {  
+			luaL_error (pL, "AddScriptKeyHook failed");    
     }
   }
   return 0;
@@ -582,17 +549,7 @@ int LuaLibGame::L_Game_GetKeyByAction(lua_State *pL) {
   /* no event for this */
 
   if(m_exec_activeInputHandler != NULL) {
-    lua_pushstring(pL,m_exec_activeInputHandler->getKeyByAction(luaL_checkstring(pL,1)).c_str());
-    return 1;
-  }
-  return 0;
-}  
-
-int LuaLibGame::L_Game_GetKeyByActionTech(lua_State *pL) {
-  /* no event for this */
-
-  if(m_exec_activeInputHandler != NULL) {
-    lua_pushstring(pL,m_exec_activeInputHandler->getKeyByAction(luaL_checkstring(pL,1), true).c_str());
+    lua_pushstring(pL,m_exec_activeInputHandler->getFancyKeyByAction(luaL_checkstring(pL,1)).c_str());
     return 1;
   }
   return 0;

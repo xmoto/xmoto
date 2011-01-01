@@ -55,8 +55,6 @@ class XMArguments {
   std::string getOpt_levelID_id() const;
   bool isOptLevelFile() const;
   std::string getOpt_levelFile_file() const;
-  bool isOptDemo() const;
-  std::string getOpt_demo_file() const;
   bool isOptDebug() const;
   bool isOptSqlTrace() const;
   bool isOptProfile() const;
@@ -153,10 +151,6 @@ class XMArguments {
   bool m_opt_levelFile;
   std::string m_levelFile_file;
   bool m_opt_listLevels;
-
-  /* demos */
-  bool m_opt_demo;
-  std::string m_demo_file;
 
   /* profile */
   bool m_opt_profile;

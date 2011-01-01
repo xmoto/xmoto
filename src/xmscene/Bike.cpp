@@ -190,7 +190,6 @@ Biker::Biker(PhysicsSettings* i_physicsSettings,
   m_physicsSettings = i_physicsSettings;
   m_bikeState   = new BikeState(m_physicsSettings);
   m_localNetId = -1;
-  m_nbRenderedFrames = 0;
 
   /* sound engine */
   try {
@@ -377,10 +376,6 @@ Vector2f Biker::getWheelSpinDir() {
   return m_WheelSpinDir;
 }
 
-void Biker::initWheelDetach() {
-  m_wheelDetach = false;
-}
-
 void Biker::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity) {
 }
 
@@ -399,11 +394,7 @@ void Biker::setFinished(bool i_value, int i_finishTime) {
 void Biker::setDead(bool i_value, int i_deadTime) {
   m_dead = i_value;
   m_deadTime = i_deadTime;
- 
-  if(m_dead == false) {
-    return;
-  }
- 
+  
   /* Play the DIE!!! sound */
   try {
     float v_deathVolume;
@@ -698,18 +689,6 @@ float Biker::changeDirPer() const {
   return m_changeDirPer;
 }
 
-unsigned int Biker::getNbRenderedFrames() const {
-  return m_nbRenderedFrames;
-}
-
-void Biker::addNbRenderedFrames() {
-  m_nbRenderedFrames++;
-}
-
-bool Biker::isStateInitialized() const {
-  return true; // by default, consider that the biker is iniialized
-}
-
 void Biker::clearStates() {
   /* BIKE_S */
   m_bikeState->CenterP = Vector2f(0,0);
@@ -762,5 +741,4 @@ void Biker::clearStates() {
 
 BikeController* Biker::getControler() {
   return NULL;
-
 }

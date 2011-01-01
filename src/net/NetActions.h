@@ -27,13 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BasicSceneStructs.h"
 #include "BasicStructures.h"
 
-#define XM_NET_PROTOCOL_VERSION 2
-/*
-DELTA 1->2:
-clientInfos : add xmversion string
-
-*/
-
+#define XM_NET_PROTOCOL_VERSION 1
 #define NETACTION_MAX_PACKET_SIZE 1024 * 2 // bytes
 #define NETACTION_MAX_SUBSRC 4 // maximum 4 players by client
 #define XM_NET_MAX_EVENTS_SHOT_SIZE 1024
@@ -50,8 +44,6 @@ enum NetActionType {
   TNA_serverError,
   TNA_frame,
   TNA_changeName,
-  TNA_clientsNumber,
-  TNA_clientsNumberQuery,
   TNA_playingLevel,
   TNA_changeClients,
   TNA_playerControl,
@@ -71,7 +63,7 @@ struct NetInfosClient {
 
 class NetAction {
   public:
-  NetAction(bool i_forceTcp);
+  NetAction();
   virtual ~NetAction();
   virtual std::string actionKey()    = 0;
   virtual NetActionType actionType() = 0;
@@ -85,6 +77,7 @@ class NetAction {
   static NetAction* newNetAction(void* data, unsigned int len);
   static void logStats();
   static std::string getStats();
+  static std::string getFancyBytes(unsigned int i_bytes);
 
   protected:
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP, const void* subPacketData, int subPacketLen);
@@ -106,14 +99,12 @@ class NetAction {
 
   private:
   static char m_buffer[NETACTION_MAX_PACKET_SIZE];
-  static unsigned int m_biggestTCPPacketSent;
-  static unsigned int m_biggestUDPPacketSent;
+  static unsigned int m_biggestTCPPacket;
+  static unsigned int m_biggestUDPPacket;
   static unsigned int m_nbTCPPacketsSent;
   static unsigned int m_nbUDPPacketsSent;
   static unsigned int m_TCPPacketsSizeSent;
   static unsigned int m_UDPPacketsSizeSent;
-
-  bool m_forceTCP; // by default, xmoto try to use UDP when available ; for some actions, TCP can be forced
 };
 
 class NA_udpBind : public NetAction {
@@ -167,17 +158,15 @@ class NA_clientInfos : public NetAction {
 
   int protocolVersion() const;
   std::string udpBindKey() const;
-  std::string xmversion() const;
 
   private:
   int m_protocolVersion;
   std::string m_udpBindKey;
-  std::string m_xmversion;
 };
 
 class NA_chatMessage : public NetAction {
   public:
-  NA_chatMessage(const std::string& i_msg, const std::string &i_me);
+  NA_chatMessage(const std::string& i_msg);
   NA_chatMessage(void* data, unsigned int len);
   virtual ~NA_chatMessage();
   std::string actionKey()    { return ActionKey; }
@@ -191,8 +180,6 @@ class NA_chatMessage : public NetAction {
 
   private:
   std::string m_msg;
-
-  void ttransform(const std::string& i_me);
 };
 
 class NA_serverError : public NetAction {
@@ -247,38 +234,6 @@ class NA_changeName : public NetAction {
 
   private:
   std::string m_name;
-};
-
-class NA_clientsNumber : public NetAction {
-  public:
-  NA_clientsNumber(int i_number);
-  NA_clientsNumber(void* data, unsigned int len);
-  virtual ~NA_clientsNumber();
-  std::string actionKey()    { return ActionKey; }
-  NetActionType actionType() { return NAType; }
-  static std::string ActionKey;
-  static NetActionType NAType;
-
-  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
-
-  int getNumber();
-
-  private:
-  int m_number;
-};
-
-// query the number of clients for the munin plugin
-class NA_clientsNumberQuery : public NetAction {
-  public:
-  NA_clientsNumberQuery();
-  NA_clientsNumberQuery(void* data, unsigned int len);
-  virtual ~NA_clientsNumberQuery();
-  std::string actionKey()    { return ActionKey; }
-  NetActionType actionType() { return NAType; }
-  static std::string ActionKey;
-  static NetActionType NAType;
-
-  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
 };
 
 class NA_playingLevel : public NetAction {

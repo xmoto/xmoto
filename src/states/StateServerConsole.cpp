@@ -84,32 +84,17 @@ void StateServerConsole::createGUIIfNeeded()
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot(&m_screen);
+  m_sGUI = new UIRoot();
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      m_screen.getDispWidth(),
-		      m_screen.getDispHeight());
+		      drawLib->getDispWidth(),
+		      drawLib->getDispHeight());
 
 
   m_console = new UIConsole(m_sGUI, 10, 10, "", m_sGUI->getPosition().nWidth-20, m_sGUI->getPosition().nHeight-20);
   m_console->setHook(this);
   m_console->setID("SRVCONSOLE");
   m_console->setFont(drawLib->getFontSmall());
-
-  m_console->addCompletionCommand("help");
-  m_console->addCompletionCommand("login");
-  m_console->addCompletionCommand("logout");
-  m_console->addCompletionCommand("changepassword");
-  m_console->addCompletionCommand("lsplayers");
-  m_console->addCompletionCommand("lsxmversions");
-  m_console->addCompletionCommand("lsbans");
-  m_console->addCompletionCommand("ban");
-  m_console->addCompletionCommand("unban");
-  m_console->addCompletionCommand("lsadmins");
-  m_console->addCompletionCommand("addadmin");
-  m_console->addCompletionCommand("rmadmin");
-  m_console->addCompletionCommand("stats");
-  m_console->addCompletionCommand("msg");
 }
 
 void StateServerConsole::clean()

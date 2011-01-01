@@ -26,20 +26,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <utility>
 #include <string>
 #include <queue>
-#include "../helpers/RenderSurface.h"
 
 class GameState : public StateMessageBoxReceiver {
 public:
   GameState(bool drawStateBehind,
-	    bool updateStatesBehind);
+	    bool updateStatesBehind,
+	    bool i_doShade     = false,
+	    bool i_doShadeAnim = false);
   virtual ~GameState();
-
-  void setScreen(const RenderSurface& i_screen);
-  RenderSurface* getScreen();
 
   virtual void enter();
   virtual void leave() {}
-  virtual void leaveType() {} // you can give a type to states ; if a state is leaved but not replaced by a state of the same type, this method is called
   /* called when a new state is pushed or poped on top of the
      current one */
   virtual void enterAfterPop();
@@ -89,23 +86,14 @@ public:
     m_updatePeriod = (float)m_maxFps / (float)m_updateFps;
   }
 
-  // usefull to be sure to replace one state by another (and not always replace the upper state)
-  void setStateId(const std::string& i_id);
-  std::string getStateId() const;
-
-  //
-  void setStateType(const std::string& i_type);
-  std::string getStateType() const;
+  std::string getId() const;
+  void setId(const std::string& i_id);
 
   virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
   virtual void send(const std::string& i_message, const std::string& i_args);
 
   std::string getName() const {
     return m_name;
-  }
-
-  std::string getType() const {
-    return m_type;
   }
 
   void simpleMessage(const std::string& msg);
@@ -132,10 +120,7 @@ protected:
   // current beat counters
   float m_updateCounter;
 
-  RenderSurface m_screen;
-
   std::string m_name;
-  std::string m_type; // some state can have the same type (exemple, all the state scene are of type scene)
   bool m_showCursor;
 
   void addCommand(std::string cmd, std::string args="");
@@ -144,8 +129,12 @@ private:
   bool        m_isHide;
   bool        m_drawStateBehind;
   bool        m_updateStatesBehind;
-  std::string m_stateId;
-  std::string m_stateType; // type - to be able to have only one instance of one state type (server console, chat box, ...)
+  std::string m_id;
+
+  // shade
+  bool  m_doShade;
+  bool  m_doShadeAnim;
+  float m_nShadeTime;
 
   std::queue<std::pair<std::string, std::string> > m_commands;
   SDL_mutex* m_commandsMutex;

@@ -34,7 +34,8 @@ StatePause::StatePause(Universe* i_universe,
 		       bool drawStateBehind,
 		       bool updateStatesBehind):
   StateMenu(drawStateBehind,
-	    updateStatesBehind)
+	    updateStatesBehind,
+	    true)
 {
   m_name  = "StatePause";
   m_universe = i_universe;
@@ -70,7 +71,7 @@ void StatePause::enter()
 
   Sound::togglePauseMusic();
   
-  createGUIIfNeeded(&m_screen);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   /* reset the playnext button */
@@ -130,18 +131,18 @@ void StatePause::checkEvents() {
     pQuitButton->setClicked(false);
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
-    v_msgboxState->setMsgBxId("QUIT");
+    v_msgboxState->setId("QUIT");
     StateManager::instance()->pushState(v_msgboxState);
   }
 }
 
 void StatePause::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_PLAYINGPAUSE))) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     /* quit this state */
     m_requestForEnd = true;
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchFavorite()) {
     if(m_universe != NULL) {
       if(m_universe->getScenes().size() > 0) { // just add the first world
 	GameApp::instance()->switchLevelToFavorite(m_universe->getScenes()[0]->getLevelSrc()->Id(), true);
@@ -150,7 +151,7 @@ void StatePause::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHBLACKLIST))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchBlacklist()) {
     if(m_universe != NULL) {
       if(m_universe->getScenes().size() > 0) { // just blacklist the first world
 	GameApp::instance()->switchLevelToBlacklist(m_universe->getScenes()[0]->getLevelSrc()->Id(), true);
@@ -171,7 +172,7 @@ void StatePause::clean() {
   }
 }
 
-void StatePause::createGUIIfNeeded(RenderSurface* i_screen) {
+void StatePause::createGUIIfNeeded() {
   UIButton *v_button;
   UIFrame  *v_frame;
 
@@ -180,16 +181,16 @@ void StatePause::createGUIIfNeeded(RenderSurface* i_screen) {
 
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot(i_screen);
+  m_sGUI = new UIRoot();
   m_sGUI->setFont(drawLib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      i_screen->getDispWidth(),
-		      i_screen->getDispHeight());
+		      drawLib->getDispWidth(),
+		      drawLib->getDispHeight());
   
   
   v_frame = new UIFrame(m_sGUI,
-			i_screen->getDispWidth()/2  - 400/2,
-			i_screen->getDispHeight()/2 - 540/2,
+			drawLib->getDispWidth()/2  - 400/2,
+			drawLib->getDispHeight()/2 - 540/2,
 			"", 400, 540);
   v_frame->setID("PAUSE_FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_MENU);

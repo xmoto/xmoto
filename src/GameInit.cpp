@@ -43,8 +43,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/specific/GUIXMoto.h"
 #include "Credits.h"
 #include "Replay.h"
-#include "GeomsManager.h"
-#include "XMDemo.h"
 
 #include "states/StateManager.h"
 #include "states/StateEditProfile.h"
@@ -58,10 +56,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "thread/UpgradeLevelsThread.h"
 
 #include "UserConfig.h"
+#include "Renderer.h"
 #include "net/NetServer.h"
 #include "net/NetClient.h"
 #include "net/NetActions.h"
-#include "net/ActionReader.h"
 #include "include/xm_SDL_net.h"
 
 #if !defined(WIN32)
@@ -316,7 +314,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     }
 
     SysMessage::instance()->setDrawLib(drawLib);
-    SysMessage::instance()->setConsoleSize(XMSession::instance()->consoleSize());
     
     drawLib->setNoGraphics(v_useGraphics == false);
     drawLib->setDontUseGLExtensions(XMSession::instance()->glExts() == false);
@@ -336,28 +333,20 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 	    XMSession::instance()->resolutionHeight(),
 	    XMSession::instance()->bpp());
     /* */
+
   }
 
-  if(v_useGraphics) {
-    // allocate the statemanager instance so that if it fails, it's not in a thread (serverThread for example)
-    StateManager::instance();
-  }
+  // allocate the statemanager instance so that if it fails, it's not in a thread (serverThread for example)
+  StateManager::instance();
 
   /* Init sound system */
   if(v_useGraphics) {
     Sound::init(XMSession::instance());
   }
 
-  bool v_graphicAutomaticMode;
-  v_graphicAutomaticMode = v_useGraphics && (
-  v_xmArgs.isOptLevelID()   ||
-  v_xmArgs.isOptLevelFile() ||
-  v_xmArgs.isOptReplay()    ||
-  v_xmArgs.isOptDemo());
-
   // no command line need the network for the moment
   if(v_useGraphics || v_xmArgs.isOptServerOnly()) {
-    initNetwork(v_xmArgs.isOptServerOnly(), v_xmArgs.isOptServerOnly() || v_graphicAutomaticMode);
+    initNetwork(v_xmArgs.isOptServerOnly(), v_xmArgs.isOptServerOnly());
   }
 
   /* Init renderer */
@@ -365,6 +354,11 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     switchUglyMode(XMSession::instance()->ugly());
     switchTestThemeMode(XMSession::instance()->testTheme());
   }    
+
+  if(v_useGraphics) {
+    if(XMSession::instance()->gDebug())
+      GameRenderer::instance()->loadDebugInfo(XMSession::instance()->gDebugFile());
+  }
 
   /* load theme */
   if(pDb->themes_isIndexUptodate() == false) {
@@ -420,30 +414,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   }
   if(v_xmArgs.isOptReplay()) {
     m_PlaySpecificReplay = v_xmArgs.getOpt_replay_file();
-  }
-  if(v_xmArgs.isOptDemo()) {
-    /* demo : download the level and the replay
-       load the level as external,
-       play the replay
-     */
-    try {
-      m_xmdemo = new XMDemo(v_xmArgs.getOpt_demo_file());
-      LogInfo("Loading demo file %s\n", v_xmArgs.getOpt_demo_file().c_str());
-
-      _UpdateLoadingScreen(GAMETEXT_DLLEVEL);
-      m_xmdemo->getLevel(XMSession::instance()->proxySettings());
-      _UpdateLoadingScreen(GAMETEXT_DLREPLAY);
-      m_xmdemo->getReplay(XMSession::instance()->proxySettings());
-
-      try {
-	LevelsManager::instance()->addExternalLevel(m_xmdemo->levelFile(), xmDatabase::instance("main"));
-      } catch(Exception &e) {
-	LogError("Can't add level %s as external level", m_xmdemo->levelFile().c_str());
-      }
-      m_PlaySpecificReplay = m_xmdemo->replayFile();
-    } catch(Exception &e) {
-      LogError("Unable to load the demo file");
-    }
   }
  
   /* Should we clean the level cache? (can also be done when disabled) */
@@ -528,6 +498,11 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 #endif
   m_isODEInitialized = true;
 
+  if(v_xmArgs.isOptServerOnly() == false) {
+    /* Initialize renderer */
+    GameRenderer::instance()->init(drawLib);
+  }  
+
   /* build handler */
   InputHandler::instance()->init(m_userConfig, pDb, XMSession::instance()->profile(), XMSession::instance()->enableJoysticks());
   Replay::enableCompression(XMSession::instance()->compressReplays());
@@ -573,21 +548,23 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
 
       if(XMSession::instance()->clientGhostMode() == false && NetClient::instance()->isConnected()) {
-	  StateManager::instance()->pushState(new StateWaitServerInstructions());
+	  StateManager::instance()->pushState(new StateWaitServerInstructions(StateManager::instance()->getUniqueId()));
       } else {
-	StateManager::instance()->pushState(new StatePreplayingGame(m_PlaySpecificLevelId, false));
+	StateManager::instance()->pushState(new StatePreplayingGame(StateManager::instance()->getUniqueId(),
+								    m_PlaySpecificLevelId, false));
       }
       LogInfo("Playing as '%s'...", XMSession::instance()->profile().c_str());
     }
     else if(m_PlaySpecificReplay != "") {
       /* ======= PLAY SPECIFIC REPLAY ======= */
-      StateManager::instance()->pushState(new StatePreplayingReplay(m_PlaySpecificReplay, false));
+      StateManager::instance()->pushState(new StatePreplayingReplay(StateManager::instance()->getUniqueId(),
+								    m_PlaySpecificReplay, false));
     }
     else {
       /* display what must be displayed */
       StateManager::instance()->pushState(new StateMainMenu());
       if(XMSession::instance()->clientGhostMode() == false && NetClient::instance()->isConnected()) {
-	  StateManager::instance()->pushState(new StateWaitServerInstructions());
+	  StateManager::instance()->pushState(new StateWaitServerInstructions(StateManager::instance()->getUniqueId()));
       }
     }
 
@@ -625,8 +602,8 @@ void GameApp::manageEvent(SDL_Event* Event) {
   /* What event? */
   switch(Event->type) {
   case SDL_KEYDOWN:
+    //printf("%i\n", Event->key.keysym.sym);
     utf8Char = unicode2utf8(Event->key.keysym.unicode);
-    //printf("%i - %i\n", Event->key.keysym.sym, utf8Char.c_str()[0]);
     StateManager::instance()->xmKey(INPUT_DOWN, XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
     break;
   case SDL_KEYUP:
@@ -729,7 +706,6 @@ void GameApp::run_loop() {
 }
 
 void GameApp::run_unload() {
-
   if(Logger::isInitialized()) {
     LogInfo("UserUnload started at %.3f", GameApp::getXMTime());
   }
@@ -742,17 +718,13 @@ void GameApp::run_unload() {
     delete m_pWebLevels;
   }    
 
-  if(InputHandler::instance() != NULL) {
+  if(GameRenderer::instance() != NULL) {
+    GameRenderer::instance()->unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
+    GameRenderer::instance()->shutdown();
     InputHandler::instance()->uninit(); // uinit the input, but you can still save the config
   }
 
   uninitNetwork();
-
-  // detroy the demo
-  if(m_xmdemo != NULL) {
-    m_xmdemo->destroyFiles();
-    delete m_xmdemo;
-  }
 
   StateManager::destroy();
   
@@ -764,6 +736,7 @@ void GameApp::run_unload() {
     dCloseODE(); // uninit ODE
   }
 
+  GameRenderer::destroy();
   SysMessage::destroy();  
 
   if(Logger::isInitialized()) {
@@ -785,7 +758,6 @@ void GameApp::run_unload() {
 
   InputHandler::destroy();
   LevelsManager::destroy();
-  GeomsManager::destroy();
   Theme::destroy();
   XMSession::destroy("live");
   XMSession::destroy("file");
@@ -855,7 +827,6 @@ void GameApp::run_unload() {
     FontManager* v_fm;
     FontGlyph* v_fg;
     int v_fh;
-    RenderSurface v_screen(Vector2i(0,0), Vector2i(getDrawLib()->getDispWidth(), getDrawLib()->getDispHeight()));
 
     getDrawLib()->clearGraphics();
     getDrawLib()->resetGraphics();
@@ -863,17 +834,17 @@ void GameApp::run_unload() {
     v_fm = getDrawLib()->getFontBig();
     v_fg = v_fm->getGlyph(GAMETEXT_LOADING);
     v_fh = v_fg->realHeight();
-    v_fm->printString(getDrawLib(), v_fg,
-		      v_screen.getDispWidth()/2 - 256,
-		      v_screen.getDispHeight()/2 - 30,
+    v_fm->printString(v_fg,
+		      getDrawLib()->getDispWidth()/2 - 256,
+		      getDrawLib()->getDispHeight()/2 - 30,
 		      MAKE_COLOR(255,255,255, 255));
     
     if(NextTask != "") {
       v_fm = getDrawLib()->getFontSmall();
       v_fg = v_fm->getGlyph(NextTask);
-      v_fm->printString(getDrawLib(), v_fg,
-			v_screen.getDispWidth()/2 - 256,
-			v_screen.getDispHeight()/2 -30 + v_fh + 2,
+      v_fm->printString(v_fg,
+			getDrawLib()->getDispWidth()/2 - 256,
+			getDrawLib()->getDispHeight()/2 -30 + v_fh + 2,
 			MAKE_COLOR(255,255,255,255));      
     }
     getDrawLib()->flushGraphics();
@@ -938,7 +909,6 @@ void GameApp::uninitNetwork() {
 
   if(Logger::isInitialized()) {
     NetAction::logStats();
-    ActionReader::logStats();
   }
 
   SDLNet_Quit();

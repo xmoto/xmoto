@@ -25,12 +25,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../drawlib/DrawLib.h"
 #include "StateUpdateDb.h"
 #include "../helpers/Log.h"
-#include "../xmscene/Camera.h"
 
 StateMenu::StateMenu(bool drawStateBehind,
-		     bool updateStatesBehind):
-GameState(drawStateBehind,
-	    updateStatesBehind)
+		     bool updateStatesBehind,
+		     bool i_doShade,
+		     bool i_doShadeAnim):
+  GameState(drawStateBehind,
+	    updateStatesBehind,
+	    i_doShade, i_doShadeAnim)
 {
   m_GUI        = NULL;
   m_showCursor = true;
@@ -77,8 +79,6 @@ bool StateMenu::update()
 bool StateMenu::render()
 {
   GameState::render();
-  DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
-  pDrawlib->getMenuCamera()->setCamera2d();
   m_GUI->paint();
   return true;
 }
@@ -94,7 +94,7 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   SDLMod v_mod;
   std::string v_utf8Char;
 
-  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_RELOADFILESTODB))) {
+  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F5, KMOD_NONE)) {
     StateManager::instance()->pushState(new StateUpdateDb());
   }
 

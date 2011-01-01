@@ -58,7 +58,7 @@ void xmDatabase::levels_updateDB(const std::vector<Level *>&    i_levels,
   for(unsigned int i=0; i<i_levels.size(); i++) {
     levels_add(i_levels[i]->Id()      , i_levels[i]->FileName(), i_levels[i]->Name(),
 	       i_levels[i]->Checksum(), i_levels[i]->Author()  , i_levels[i]->Description(),
-	       i_levels[i]->Date()    ,
+	       i_levels[i]->Date()    , i_levels[i]->Pack()    , i_levels[i]->PackNum(),
 	       i_levels[i]->Music()   , i_levels[i]->isScripted(), i_levels[i]->isPhysics(),
 	       i_isToReload
 	       );
@@ -177,6 +177,8 @@ void xmDatabase::levels_add(const std::string& i_id_level,
 			    const std::string& i_author,
 			    const std::string& i_description,
 			    const std::string& i_date,
+			    const std::string& i_packName,
+			    const std::string& i_packNum,
 			    const std::string& i_music,
 			    bool i_isScripted, bool i_isPhysics,
 			    bool i_isToReload) {
@@ -185,7 +187,7 @@ void xmDatabase::levels_add(const std::string& i_id_level,
 
   simpleSql("INSERT INTO levels(id_level,"
 	    "filepath, name, checkSum, author, description, "
-	    "date_str, music, isScripted, isPhysics, isToReload, loaded, loadingCacheFormatVersion) "
+	    "date_str, packName, packNum, music, isScripted, isPhysics, isToReload, loaded, loadingCacheFormatVersion) "
 	    "VALUES(\"" + protectString(i_id_level) + "\", " +
 	    "\"" + protectString(i_filepath)        + "\", " +
 	    "\"" + protectString(i_name)            + "\", " +
@@ -193,6 +195,8 @@ void xmDatabase::levels_add(const std::string& i_id_level,
 	    "\"" + protectString(i_author)          + "\", " +
 	    "\"" + protectString(i_description)     + "\", " +
 	    "\"" + protectString(i_date)            + "\", " +
+	    "\"" + protectString(i_packName)        + "\", " +
+	    "\"" + protectString(i_packNum)         + "\", " +
 	    "\"" + protectString(i_music)           + "\", " +
 	    std::string(i_isScripted  ? "1" : "0")  + ", "   +
 	    std::string(i_isPhysics   ? "1" : "0")  + ", "   +
@@ -204,7 +208,7 @@ void xmDatabase::levels_update(const std::string& i_id_level,
 			       const std::string& i_filepath, const std::string& i_name,
 			       const std::string& i_checkSum,
 			       const std::string& i_author, const std::string& i_description,
-			       const std::string& i_date,
+			       const std::string& i_date, const std::string& i_packName, const std::string& i_packNum,
 			       const std::string& i_music, bool i_isScripted, bool i_isPhysics,
 			       bool i_isToReload) {
   std::ostringstream v_cacheFV;
@@ -216,7 +220,9 @@ void xmDatabase::levels_update(const std::string& i_id_level,
 	    protectString(i_checkSum) 	 + "\", author=\"" +
 	    protectString(i_author)   	 + "\", description=\"" +
 	    protectString(i_description) + "\", date_str=\"" +
-	    protectString(i_date)        + "\", music=\"" +
+	    protectString(i_date)        + "\", packName=\"" +
+	    protectString(i_packName)    + "\", packNum=\"" +
+	    protectString(i_packNum)     + "\", music=\"" +
 	    protectString(i_music)       + "\", isScripted=" +
 	    std::string(i_isScripted  ? "1" : "0") + ", isPhysics=" +
 	    std::string(i_isPhysics   ? "1" : "0") + ", isToReload=" +

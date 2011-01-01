@@ -40,8 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../net/NetClient.h"
 #include "../net/NetActions.h"
 #include "../SysMessage.h"
-#include "StateVote.h"
-#include "../thread/XMThreadStats.h"
+#include "states/StateVote.h"
 
 #define INPLAY_ANIMATION_TIME 1.0
 #define INPLAY_ANIMATION_SPEED 10
@@ -52,14 +51,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define STATS_LEVELS_NOTES_SIZE 15
 
-void StateScene::init(bool i_doShade, bool i_doShadeAnim) {
+void StateScene::init() {
   Sprite *v_sprite;
-
-  m_type = "SCENE";
-
-  // shade
-  m_doShade     = i_doShade;
-  m_doShadeAnim = i_doShadeAnim;
 
   m_fLastPhysTime = -1.0;
   // while playing, we want 100 fps for the physic
@@ -67,7 +60,6 @@ void StateScene::init(bool i_doShade, bool i_doShadeAnim) {
   m_showCursor = false;
   m_cameraAnim = NULL;
   m_universe   = NULL;
-  m_renderer   = NULL;
 
   m_benchmarkNbFrame   = 0;
   m_benchmarkStartTime = GameApp::getXMTime();
@@ -92,24 +84,34 @@ void StateScene::init(bool i_doShade, bool i_doShadeAnim) {
     m_difficultyTex = v_sprite->getTexture();
   }
 
-  m_trackingShotMode = false;
-
   // message registering
   initMessageRegistering();
+  
+  
 }
 
-StateScene::StateScene(bool i_doShade, bool i_doShadeAnim)
-: GameState(false, false)
+StateScene::StateScene(const std::string& i_id, bool i_doShade, bool i_doShadeAnim)
+: GameState(false, false, i_doShade, i_doShadeAnim)
 {
-  init(i_doShade, i_doShadeAnim);
+  setId(i_id);
+  init();
 }
 
-StateScene::StateScene(Universe* i_universe, GameRenderer* i_renderer, bool i_doShade, bool i_doShadeAnim)
-  : GameState(false, false)
+StateScene::StateScene(Universe* i_universe, const std::string& i_id, bool i_doShade, bool i_doShadeAnim)
+  : GameState(false, false, i_doShade, i_doShadeAnim)
 {
-  init(i_doShade, i_doShadeAnim);
+  setId(i_id);
+  init();
   m_universe   = i_universe;
-  m_renderer   = i_renderer;
+
+  if(m_universe != NULL) {
+    if(m_universe->getScenes().size() != 0) {    
+      if(NetClient::instance()->isConnected()) {
+	NA_playingLevel na(m_universe->getScenes()[0]->getLevelSrc()->Id());
+	NetClient::instance()->send(&na, 0);
+      }
+    }
+  }
 }
 
 StateScene::~StateScene()
@@ -122,9 +124,6 @@ StateScene::~StateScene()
   StateManager::instance()->unregisterAsObserver("ABORT", this);
   StateManager::instance()->unregisterAsObserver("INTERPOLATION_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("MIRRORMODE_CHANGED", this);
-  StateManager::instance()->unregisterAsObserver("REPLAY_DOWNLOADED", this);
-  StateManager::instance()->unregisterAsObserver("REPLAY_FAILEDTODOWNLOAD", this);
-  StateManager::instance()->unregisterAsObserver("CHANGE_TRAILCAM", this);
 
   if(m_cameraAnim != NULL) {
     delete m_cameraAnim;
@@ -141,9 +140,6 @@ void StateScene::initMessageRegistering()
   StateManager::instance()->registerAsObserver("ABORT", this);
   StateManager::instance()->registerAsObserver("INTERPOLATION_CHANGED", this);
   StateManager::instance()->registerAsObserver("MIRRORMODE_CHANGED", this);
-  StateManager::instance()->registerAsObserver("REPLAY_DOWNLOADED", this);
-  StateManager::instance()->registerAsObserver("REPLAY_FAILEDTODOWNLOAD", this);
-  StateManager::instance()->registerAsObserver("CHANGE_TRAILCAM", this);
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("FAVORITES_UPDATED");
@@ -151,29 +147,9 @@ void StateScene::initMessageRegistering()
   }
 }
 
-void StateScene::leaveAfterPush() {
-  // if the shade is set to false, force it when state receives one over
-  if(m_doShade == false) {
-    if(m_renderer != NULL) {
-      m_renderer->setScreenShade(true, true, GameApp::getXMTime());
-    }
-  }
-}
-
-void StateScene::leaveType() {
-  // violent closing of the state, closePlaying if not done (ie QUIT event)
-  if(m_universe != NULL) {
-    closePlaying();
-  }
-}
-
 void StateScene::enter()
 {
   GameState::enter();
-
-  if(m_renderer != NULL) {
-    m_renderer->setScreenShade(m_doShade, m_doShadeAnim, GameApp::getXMTime());
-  }
 
   ParticlesSource::setAllowParticleGeneration(true);
   m_isLockedScene = false;
@@ -188,12 +164,6 @@ void StateScene::enter()
 void StateScene::enterAfterPop()
 {
   GameState::enterAfterPop();
-
-  if(m_doShade == false) {
-    if(m_renderer != NULL) {
-      m_renderer->setScreenShade(false, false, GameApp::getXMTime());
-    }
-  }
 }
 
 bool StateScene::update()
@@ -235,7 +205,7 @@ bool StateScene::update()
       }
     }
   } catch(Exception &e) {
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK), getStateId());
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK), this->getId());
   }
 
   runAutoZoom();
@@ -253,51 +223,29 @@ bool StateScene::render()
   
   try {
     if(autoZoom() == false){
-      if(m_universe != NULL && m_renderer != NULL) {
+      if(m_universe != NULL) {
 	for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
 	  for(unsigned int i=0; i<m_universe->getScenes()[j]->getNumberCameras(); i++) {
 	    m_universe->getScenes()[j]->setCurrentCamera(i);
-	    m_renderer->render(m_universe->getScenes()[j]);
+	    GameRenderer::instance()->render(m_universe->getScenes()[j]);
 	  }
 	}
 	//Render the game messages for OVER the shadow layer, which is needed in multiplayer to supress ugly multiple display
-	m_renderer->renderGameMessages(m_universe->getScenes()[0]);
+	GameRenderer::instance()->renderGameMessages(m_universe->getScenes()[0]);
       }
     } else {
-      if(m_universe != NULL && m_renderer != NULL) {
+      if(m_universe != NULL) {
 	if(m_universe->getScenes().size() > 0) {
 	  m_universe->getScenes()[0]->setAutoZoomCamera();
-	  m_renderer->render(m_universe->getScenes()[0]);
-	  m_renderer->renderGameMessages(m_universe->getScenes()[0]);
+	  GameRenderer::instance()->render(m_universe->getScenes()[0]);
+	  GameRenderer::instance()->renderGameMessages(m_universe->getScenes()[0]);
 	}
       }
     }
 
-    if(m_renderer != NULL) {
-      ParticlesSource::setAllowParticleGeneration(m_renderer->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
-    }
-
-    // downloading ghost information
-    if(m_universe->waitingForGhosts()) {
-      FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
-      FontGlyph* v_fg   = v_fm->getGlyph(GAMETEXT_DLGHOSTS);
-      int v_border = 5;
-
-      GameApp::instance()->getDrawLib()->drawBox(Vector2f(m_screen.getDispWidth()/2 - v_fg->realWidth()/2 -v_border,
-							  m_screen.getDispHeight() - v_fg->realHeight() - 2*v_border),
-						 Vector2f(m_screen.getDispWidth()/2 + v_fg->realWidth()/2 + v_border,
-							  m_screen.getDispHeight() + v_border),
-						 0.0f, MAKE_COLOR(255,255,255,50));
-
-      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
-			m_screen.getDispWidth()/2 - v_fg->realWidth()/2,
-			m_screen.getDispHeight() - v_fg->realHeight() - v_border,
-			MAKE_COLOR(255,255,255,255), 0.0, true);
-    }
-
-
+    ParticlesSource::setAllowParticleGeneration(GameRenderer::instance()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
   } catch(Exception &e) {
-    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK), getStateId());
+    StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(e.getMsg(), 50), UI_MSGBOX_OK), this->getId());
   }
 
   GameState::render();
@@ -329,7 +277,7 @@ void StateScene::onRenderFlush() {
 void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   GameApp* pGame = GameApp::instance();  
 
-  if(i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_LEVELWATCHING))) {
+  if(i_xmkey == XMKey(SDLK_TAB, KMOD_NONE)) {
     if(i_type == INPUT_UP) {
       if(m_cameraAnim != NULL) {
 	if(autoZoom() && m_cameraAnim->allowNextStep()) {
@@ -343,51 +291,31 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_RESTARTLEVEL))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getRestartLevel()) {
     restartLevel();
   }
-  
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHPLAYER))) {
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F2, KMOD_NONE)) {
     if(m_universe != NULL) {
       m_universe->switchFollowCamera();
     }
   }
   
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHTRACKINGSHOTMODE))) {
-    if(m_universe != NULL && m_renderer != NULL) {
-      m_trackingShotMode = ! m_trackingShotMode;
-
-      for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	if(m_trackingShotMode) {
-	  if(m_universe->getScenes()[i]->getGhostTrail() != NULL) {
-	    if(m_universe->getScenes()[i]->isPaused() == false) {
-	      // toogle cameras
-	      for(unsigned int j=0; j<m_universe->getScenes()[i]->Cameras().size(); j++) {
-		m_universe->getScenes()[i]->Cameras()[j]->setUseTrackingShot(true);
-	      }
-	      // toogle pause mode
-	      m_universe->getScenes()[i]->pause();
-	      // toogle in the renderer
-	      m_renderer->setRenderGhostTrail(true);
-	    }
-	  }
-	} else {
-	  // toogle cameras
-	  for(unsigned int j=0; j<m_universe->getScenes()[i]->Cameras().size(); j++) {
-	    m_universe->getScenes()[i]->Cameras()[j]->setUseTrackingShot(false);
-	  }
-	  // toogle pause mode
-	  if(m_universe->getScenes()[i]->isPaused()) {
-	    m_universe->getScenes()[i]->pause(); // cause the man cause unpause while tracking shot
-	  }
-	  // toogle in the renderer
-	  m_renderer->setRenderGhostTrail(XMSession::instance()->renderGhostTrail());
-	}
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_F4, KMOD_NONE)) {
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  if(m_universe->getScenes()[j]->Cameras()[i]->getTrailAvailable()) {
+            m_universe->getScenes()[j]->Cameras()[i]->toggleTrackingShot(m_universe->getScenes()[j]);
+          } else {
+            SysMessage::instance()->displayText(SYS_MSG_TRAIL_NA);
+          }
+        }
       }
     }
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchFavorite()) {
     if(m_universe != NULL) {
       if(m_universe->getScenes().size() > 0) { // just add the first world
 	pGame->switchLevelToFavorite(m_universe->getScenes()[0]->getLevelSrc()->Id(), true);
@@ -396,7 +324,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHBLACKLIST))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == InputHandler::instance()->getSwitchBlacklist()) {
     if(m_universe != NULL) {
       if(m_universe->getScenes().size() > 0) { // just blacklist the first world
 	pGame->switchLevelToBlacklist(m_universe->getScenes()[0]->getLevelSrc()->Id(), true);
@@ -405,58 +333,48 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_NEXTLEVEL))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_PAGEUP, KMOD_NONE)) {
     nextLevel();
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_PREVIOUSLEVEL))) {
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_PAGEDOWN, KMOD_NONE)) {
     nextLevel(false);
   }
   
-  
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_n, KMOD_LCTRL)) {
-    if(m_renderer != NULL) {
-      if(XMSession::instance()->showHighscoreInGame() == false){
-	XMSession::instance()->setShowHighscoreInGame(true);	
-      }
-      
-      else if(XMSession::instance()->showHighscoreInGame() == true && XMSession::instance()->showNextMedalInGame() == false){
-	XMSession::instance()->setNextMedalInGame(true);
-      } 
-      else if(XMSession::instance()->showHighscoreInGame() == true && XMSession::instance()->showNextMedalInGame() == true){
-	XMSession::instance()->setNextMedalInGame(false);
-	XMSession::instance()->setShowHighscoreInGame(false);
-      }
-      setScoresTimes();
-    }
-  }
-
-
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHRENDERGHOSTTRAIL))) {
-    
-    // toogle
-    XMSession::instance()->setRenderGhostTrail(!XMSession::instance()->renderGhostTrail());
-    if(m_renderer != NULL) {
-      m_renderer->setRenderGhostTrail(XMSession::instance()->renderGhostTrail());
-    }
-
-    bool v_trailAvailable = false;
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_t, KMOD_LCTRL)) {
     if(m_universe != NULL) {
-      for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	if(m_universe->getScenes()[i]->getGhostTrail() != NULL) {
-	  v_trailAvailable = true;
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+	  m_universe->getScenes()[j]->Cameras()[i]->toggleTrailCam();
+	  if(m_universe->getScenes()[j]->Cameras()[i]->getTrailAvailable() == false) {
+	    SysMessage::instance()->displayText(SYS_MSG_TRAILCAM_NA);
+	  }
+	  else if(XMSession::instance()->enableTrailCam()) {
+	    SysMessage::instance()->displayText(SYS_MSG_TRAILCAM_ACTIVATED);
+	  }
+	  else SysMessage::instance()->displayText(SYS_MSG_TRAILCAM_DEACTIVATED);
         }
       }
     }
-    
-    if(v_trailAvailable) {
-      if(XMSession::instance()->renderGhostTrail()) {
-	SysMessage::instance()->displayText(SYS_MSG_TRAIL_VISIBLE);
-      } else {
-	SysMessage::instance()->displayText(SYS_MSG_TRAIL_INVISIBLE);
-      }
-    } else {
+  }
+
+  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_g, KMOD_LCTRL)) {
+    if(m_universe != NULL) {
+      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
+	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
+          if(m_universe->getScenes()[j]->getGhostTrail() != 0)
+            m_universe->getScenes()[j]->getGhostTrail()->toggleRenderGhostTrail();
+	  if(m_universe->getScenes()[j]->Cameras()[i]->getTrailAvailable() == false) {
 	    SysMessage::instance()->displayText(SYS_MSG_TRAIL_NA);
+	  }
+	  else if(m_universe->getScenes()[j]->getGhostTrail() != 0) {
+	    if(XMSession::instance()->renderGhostTrail()) 
+	        SysMessage::instance()->displayText(SYS_MSG_TRAIL_VISIBLE);
+	  
+	    else SysMessage::instance()->displayText(SYS_MSG_TRAIL_INVISIBLE);
+	  }
+        }
+      }
     }
   }
   
@@ -545,7 +463,8 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     if(XMSession::instance()->adminMode()) {
       if(m_universe != NULL) {
 	if(m_universe->getScenes().size() == 1) {
-	  StateManager::instance()->pushState(new StateVote(m_universe->getScenes()[0]->getLevelSrc()->Id()));
+	  StateManager::instance()->pushState(new StateVote(StateManager::instance()->getUniqueId(),
+							    m_universe->getScenes()[0]->getLevelSrc()->Id()));
 	}
       }
     }
@@ -569,11 +488,9 @@ void StateScene::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_bu
 void StateScene::setScoresTimes() {
   char **v_result;
   unsigned int nrow;
-  char *v_res;
-  int v_best_room_time = -1;
-  int v_best_player_time = -1;
+  char *v_res;  
+  std::string T1 = "--:--:--", T2 = "--:--:--";
 
-  std::string T1 = "--:--:--", T2 = "--:--:--", T3 = "--:--:--";
   std::string v_id_level;
   // take the level id of the first world
   if(m_universe != NULL) {
@@ -601,50 +518,24 @@ void StateScene::setScoresTimes() {
 						  nrow);
   v_res = xmDatabase::instance("main")->getResult(v_result, 1, 0, 0);
   if(v_res != NULL) {
-    v_best_player_time = atoi(v_res);
     T2 = formatTime(atoi(v_res));
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
     
-  if(m_renderer != NULL) {
-    if(XMSession::instance()->hidePlayingInformation() == false) {
-      m_renderer->setBestTime(T1 + std::string(" / ") + T2);
-    } else {
-      m_renderer->setBestTime("");
-    }
+  if(XMSession::instance()->hidePlayingInformation() == false) {
+    GameRenderer::instance()->setBestTime(T1 + std::string(" / ") + T2);
+  } else {
+    GameRenderer::instance()->setBestTime("");
   }
 
-  if(m_renderer != NULL) {
-    if(XMSession::instance()->showHighscoreInGame() && XMSession::instance()->hidePlayingInformation() == false) {
-
-      std::string v_nextMedal;
-      int         v_nextMedal_time;
-      bool        v_isNextMedal;
-
-      if(XMSession::instance()->nbRoomsEnabled() >= 1) {
-	std::string v_best_str;
-	v_best_str = GameApp::instance()->getWorldRecord(0, v_id_level, v_best_room_time);
-      }
-
-      v_isNextMedal = GameApp::instance()->getNextMedal(v_best_room_time, v_best_player_time, v_nextMedal, v_nextMedal_time);
-
-      /* won't next medal, or next medal doesn't exist */
-      if(XMSession::instance()->showNextMedalInGame() == false || v_isNextMedal == false) {
-	std::string v_strWorldRecord;
-	int v_best_time;
-	for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
-	  v_strWorldRecord += GameApp::instance()->getWorldRecord(i, v_id_level, v_best_time) + "\n";
-	}
-	m_renderer->setWorldRecordTime(v_strWorldRecord);
-      } else {
-	/* want next medal and next medal exists */
-        T3 = formatTime(v_nextMedal_time); 
-        m_renderer->setWorldRecordTime(v_nextMedal + std::string(": ") + T3);
-      }
-
-    } else {
-      m_renderer->setWorldRecordTime("");
+  if(XMSession::instance()->showHighscoreInGame() && XMSession::instance()->hidePlayingInformation() == false) {
+    std::string v_strWorldRecord;
+    for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
+      v_strWorldRecord += GameApp::instance()->getWorldRecord(i, v_id_level) + "\n";
     }
+    GameRenderer::instance()->setWorldRecordTime(v_strWorldRecord);
+  } else {
+    GameRenderer::instance()->setWorldRecordTime("");
   }
 }
 
@@ -663,17 +554,13 @@ void StateScene::closePlaying() {
     NetClient::instance()->endPlay();
   }
 
-  if(m_renderer != NULL) {
-    m_renderer->unprepareForNewLevel(m_universe);
-    delete m_renderer;
-  }
-
   if(m_universe != NULL) {
     delete m_universe;
     m_universe = NULL;
   }
 
-  InputHandler::instance()->resetScriptKeyHooks();
+  InputHandler::instance()->resetScriptKeyHooks();                     
+  GameRenderer::instance()->unprepareForNewLevel();
 }
 
 bool StateScene::isLockedScene() const {
@@ -694,13 +581,13 @@ void StateScene::setAutoZoom(bool i_value) {
     if(m_cameraAnim != NULL) {
       delete m_cameraAnim;
     }
+    GameApp*  pGame = GameApp::instance();
 
-    if(m_universe != NULL && m_renderer != NULL) {
+    if(m_universe != NULL) {
       if(m_universe->getScenes().size() > 0) { // do only for the first world for the moment
 	m_universe->getScenes()[0]->setAutoZoomCamera();
 	m_cameraAnim = new AutoZoomCameraAnimation(m_universe->getScenes()[0]->getCamera(),
-						   &m_screen,
-						   m_renderer,
+						   pGame->getDrawLib(),
 						   m_universe->getScenes()[0]);
 	m_cameraAnim->init();
       }
@@ -737,7 +624,7 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
     // there is no other state before
     if(StateManager::instance()->numberOfStates() == 1) {
       // run the mainmenu state
-      StateManager::instance()->replaceState(new StateMainMenu(), getStateId());
+      StateManager::instance()->replaceState(new StateMainMenu(), this->getId());
     } else {
       m_requestForEnd = true;
     }
@@ -749,7 +636,7 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
     // there is no other state before
     if(StateManager::instance()->numberOfStates() == 1) {
       // run the mainmenu state
-      StateManager::instance()->replaceState(new StateMainMenu(), getStateId());
+      StateManager::instance()->replaceState(new StateMainMenu(), this->getId());
     } else {
       m_requestForEnd = true;
     }
@@ -773,7 +660,7 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
     // there is no other state before
     if(StateManager::instance()->numberOfStates() == 1) {
       // run the mainmenu state
-      StateManager::instance()->replaceState(new StateMainMenu(), getStateId());
+      StateManager::instance()->replaceState(new StateMainMenu(), this->getId());
     } else {
       m_requestForEnd = true;
     }
@@ -799,80 +686,60 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
     }
   }
 
-  else if(cmd == "CHANGE_TRAILCAM") {
-    if(m_universe != NULL) {
-      for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-	for(unsigned int i=0; i<m_universe->getScenes()[j]->Cameras().size(); i++) {
-	  m_universe->getScenes()[j]->Cameras()[i]->setUseTrailCam(XMSession::instance()->enableTrailCam());
-	}
-      }
-    }
-  }
-
-  else if(cmd == "REPLAY_DOWNLOADED") {
-    m_universe->markDownloadedGhost(args, true);
-  }
-
-  else if(cmd == "REPLAY_FAILEDTODOWNLOAD") {
-    /* remove it from the waiting replays to be downloaded */
-    m_universe->markDownloadedGhost(args, false);
-  }
-
   else {
     GameState::executeOneCommand(cmd, args);
   }
 }
 
 void StateScene::displayStats() {
-  DrawLib* drawLib = GameApp::instance()->getDrawLib();
   FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg   = v_fm->getGlyph(m_statsStr);
-  Vector2f A = Vector2f(m_screen.getDispWidth() - v_fg->realWidth(),
-			m_screen.getDispHeight() - v_fg->realHeight());
-  Vector2f B= Vector2f(m_screen.getDispWidth(),
-		       m_screen.getDispHeight());
+  Vector2f A = Vector2f(GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth(),
+			GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight());
+  Vector2f B= Vector2f(GameApp::instance()->getDrawLib()->getDispWidth(),
+		       GameApp::instance()->getDrawLib()->getDispHeight());
   int vborder = 10;
 
   GameApp::instance()->getDrawLib()->drawBox(A - Vector2f(vborder*2, vborder*2),
 					     B,
 					     1.0f, 0xFFCCCC77, 0xFFFFFFFF);
 
-  v_fm->printString(drawLib, v_fg,
-		    m_screen.getDispWidth() - v_fg->realWidth()   - vborder,
-		    m_screen.getDispHeight() - v_fg->realHeight() - vborder,
+  v_fm->printString(v_fg,
+		    GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth()   - vborder,
+		    GameApp::instance()->getDrawLib()->getDispHeight() - v_fg->realHeight() - vborder,
 		    MAKE_COLOR(220,255,255,255), -1.0, true);
 
   // quality
   int v_quality_yoffset = 5;
 
   if(m_quality >= 0.0) {
-    v_fg = drawLib->getFontSmall()->getGlyph(GAMETEXT_QUALITY);
-    v_fm->printString(drawLib, v_fg,
+    v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_QUALITY);
+    v_fm->printString(v_fg,
 		      A.x - vborder*2,
 		      A.y - vborder*2 - v_fg->realHeight() - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset,
 		      MAKE_COLOR(220,255,255,255), -1.0, true);
     
     if(XMSession::instance()->ugly()) {
       for(int i=0; i<(int)(m_quality); i++) {
-	drawLib->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
-				     A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_quality_yoffset),
-			    STATS_LEVELS_NOTES_SIZE/2,
-			    1.0, 0, MAKE_COLOR(255, 0, 0, 255));
+	GameApp::instance()->getDrawLib()->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
+							       A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_quality_yoffset),
+						      STATS_LEVELS_NOTES_SIZE/2,
+						      1.0, 0, MAKE_COLOR(255, 0, 0, 255));
       }
     } else {
       for(int i=0; i<5; i++) {
 	if(i<(int)(m_quality)) {
-	  drawLib->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
-				      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
-			     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
-				      A.y - vborder*2 -v_quality_yoffset),
-			     m_qualityTex, 0xFFFFFFFF, true);
+	  GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
+						       Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 -v_quality_yoffset),
+						       m_qualityTex, 0xFFFFFFFF, true);
 	} else {
-	  drawLib->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
-				      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
-			     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
-				      A.y - vborder*2 -v_quality_yoffset),
-			     m_uncheckedTex, 0xFFFFFFFF, true);
+	  GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_quality_yoffset),
+						       Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 -v_quality_yoffset),
+						       m_uncheckedTex, 0xFFFFFFFF, true);
 	}
       }
     }
@@ -882,33 +749,33 @@ void StateScene::displayStats() {
   int v_difficulty_yoffset = v_fg->realHeight() + STATS_LEVELS_NOTES_SIZE + v_quality_yoffset;
 
   if(m_difficulty >= 0.0) {
-    v_fg = drawLib->getFontSmall()->getGlyph(GAMETEXT_DIFFICULTY);
-    v_fm->printString(drawLib, v_fg,
+    v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_DIFFICULTY);
+    v_fm->printString(v_fg,
 		      A.x - vborder*2,
 		      A.y - vborder*2 - v_fg->realHeight() - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset,
 		      MAKE_COLOR(220,255,255,255), -1.0, true);
     
     if(XMSession::instance()->ugly()) {
       for(int i=0; i<(int)(m_difficulty); i++) {
-	drawLib->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
-				     A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_difficulty_yoffset),
-			    STATS_LEVELS_NOTES_SIZE/2,
-			    1.0, 0, MAKE_COLOR(255, 0, 0, 255));
+	GameApp::instance()->getDrawLib()->drawCircle(Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE/2 + (STATS_LEVELS_NOTES_SIZE*i),
+							       A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE/2 -v_difficulty_yoffset),
+						      STATS_LEVELS_NOTES_SIZE/2,
+						      1.0, 0, MAKE_COLOR(255, 0, 0, 255));
       }
     } else {
       for(int i=0; i<5; i++) {
 	if(i<(int)(m_difficulty)) {
-	  drawLib->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
-				      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
-			     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
-				      A.y - vborder*2 -v_difficulty_yoffset),
-			     m_difficultyTex, 0xFFFFFFFF, true);
+	  GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
+						       Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+							      A.y - vborder*2 -v_difficulty_yoffset),
+						       m_difficultyTex, 0xFFFFFFFF, true);
 	} else {
-	  drawLib->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
-				      A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
-			     Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
-				      A.y - vborder*2 -v_difficulty_yoffset),
-			     m_uncheckedTex, 0xFFFFFFFF, true);
+	  GameApp::instance()->getDrawLib()->drawImage(Vector2f(A.x - vborder*2 + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 - STATS_LEVELS_NOTES_SIZE -v_difficulty_yoffset),
+						       Vector2f(A.x - vborder*2 + STATS_LEVELS_NOTES_SIZE + (STATS_LEVELS_NOTES_SIZE*i),
+								A.y - vborder*2 -v_difficulty_yoffset),
+						       m_uncheckedTex, 0xFFFFFFFF, true);
 	}
       }
     }
@@ -1011,11 +878,11 @@ void StateScene::playingNextLevel(bool i_positifOrder) {
 	if(m_universe->getScenes()[0]->Players().size() == 1) {
 	  if(m_universe->getScenes()[0]->Players()[0]->isDead()     == false &&
 	     m_universe->getScenes()[0]->Players()[0]->isFinished() == false) {
-
-	    StateManager::instance()->getDbStatsThread()->delay_abortedLevel(XMSession::instance()->profile(),
-									     v_currentLevel,
-									     m_universe->getScenes()[0]->getTime() - m_universe->getScenes()[0]->getCheckpointStartTime());
-	    StateManager::instance()->getDbStatsThread()->doJob();
+	    xmDatabase::instance("main")->stats_abortedLevel(XMSession::instance()->sitekey(),
+							     XMSession::instance()->profile(),
+							     v_currentLevel,
+							     m_universe->getScenes()[0]->getTime());
+	    StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
 	  }
 	}
       }
@@ -1036,6 +903,8 @@ void StateScene::restartLevelToPlay(bool i_reloadLevel) {
   }
 
   closePlaying();
+
+  GameRenderer::instance()->unprepareForNewLevel();
   
   if(i_reloadLevel) {
     try {
@@ -1045,7 +914,8 @@ void StateScene::restartLevelToPlay(bool i_reloadLevel) {
     }
   }
 
-  StateManager::instance()->replaceState(new StatePreplayingGame(v_level, true), getStateId());
+  StateManager::instance()->replaceState(new StatePreplayingGame(getId(), v_level, true),
+					 this->getId());
 
 }
 
@@ -1069,7 +939,8 @@ void StateScene::nextLevelToPlay(bool i_positifOrder) {
 
   if(v_nextLevel != "") {
     closePlaying();
-    StateManager::instance()->replaceState(new StatePreplayingGame(v_nextLevel, v_currentLevel == v_nextLevel), getStateId());
+    StateManager::instance()->replaceState(new StatePreplayingGame(getId(), v_nextLevel, v_currentLevel == v_nextLevel),
+					   this->getId());
   }
 }
 
@@ -1084,18 +955,4 @@ void StateScene::playLevelMusic() {
       } 
     }
   }
-}
-
-void StateScene::playToCheckpoint() {
-
-  if(m_universe == NULL) {
-    return;
-  }
-    
-  m_universe->deleteCurrentReplay(); // delete the replay when using checkpoints
-  for(unsigned int j=0; j<m_universe->getScenes().size(); j++) {
-    m_universe->getScenes()[j]->playToCheckpoint();
-  }
-
-  return;
 }

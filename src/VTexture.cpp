@@ -25,11 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Image.h"
 #include "VFileIO.h"
 #include "helpers/Log.h"
-#include "Game.h"
-#include "drawlib/DrawLib.h"
-#ifdef ENABLE_OPENGL
-#include "include/xm_OpenGL.h"
-#endif
+#include "Renderer.h"
 #include "Theme.h"
 #include "XMSession.h"
 
@@ -67,11 +63,6 @@ void Texture::removeAssociatedSprites()
   associatedSprites.clear();
 }
 
-  unsigned int TextureManager::m_curRegistrationStage=0;
-  bool TextureManager::m_registering = false;
-
-TextureManager::~TextureManager() {
-}
 
   /*===========================================================================
   Create texture from memory
@@ -323,149 +314,6 @@ void TextureManager::removeAssociatedSpritesFromTextures()
   Unload everything in a very hateful manner
   ===========================================================================*/
   void TextureManager::unloadTextures(void) {
-
-    if(XMSession::instance()->debug() == true) {
-      LogDebug("---Texture not freed automatically---");
-
-      std::vector<Texture*> textures = getTextures();
-      std::vector<Texture*>::iterator it = textures.begin();
-
-      int i=1;
-      while(it != textures.end()){
-	if((*it)->curRegistrationStageMode != RSM_NORMAL || (*it)->curRegistrationStage.size() > 0) {
-	  LogDebug("%3i   %s (%s)", i, (*it)->Name.c_str(), (*it)->curRegistrationStageMode == RSM_NORMAL ? "NORMAL" : "PERSISTANT");
-	  i++;
-	}
-	++it;
-      }
-      LogDebug("--- --- ---");
-    }
-
-    while(!m_Textures.empty()) {
+    while(!m_Textures.empty())
       destroyTexture(m_Textures[0]);
-    }
   }
-
-unsigned int TextureManager::beginTexturesRegistration()
-{
-  // not 2 registering in parallele
-  if(m_registering) {
-    throw Exception("Already registring in progress !!!");
-  }
-
-  m_registering = true;
-  m_curRegistrationStage++;
-
-  if(XMSession::instance()->debug() == true) {
-    LogDebug("---Begin texture registration---");
-    std::vector<Texture*> textures = getTextures();
-    std::vector<Texture*>::iterator it = textures.begin();
-    while(it != textures.end()){
-      if((*it)->curRegistrationStageMode != RSM_PERSISTANT) {
-	for(unsigned int i=0; i<(*it)->curRegistrationStage.size(); i++) {
-	  LogDebug("  begin %s %d [%x]", (*it)->Name.c_str(), (*it)->curRegistrationStage[i], (*it));
-	}
-      }
-      ++it;
-    }
-    LogDebug("---Begin texture registration---");
-  }
-
-  return m_curRegistrationStage;
-}
-
-void TextureManager::endTexturesRegistration()
-{
-  // remove not used textures
-  /*
-    removal of textures is done once a new registration is finished in case the new one uses textures of the old one (good probability, mainly if levels are the same)
-  */
-  cleanUnregistredTextures();
-
-  if(XMSession::instance()->debug() == true) {
-    std::vector<Texture*> textures = getTextures();
-    std::vector<Texture*>::iterator it = textures.begin();
-
-    LogDebug("---End texture registration---");
-    while(it != textures.end()){
-      if((*it)->curRegistrationStageMode != RSM_PERSISTANT) {
-	for(unsigned int i=0; i<(*it)->curRegistrationStage.size(); i++) {
-	  LogDebug("  end %s %d [%x]", (*it)->Name.c_str(), (*it)->curRegistrationStage[i], (*it));
-	}
-      }
-      ++it;
-    }
-    LogDebug("---End texture registration---");
-  }
-
-  m_registering = false;
-}
-
-void TextureManager::cleanUnregistredTextures() {
-  // as we will remove textures, the current texture in drawlib can
-  // became invalid -> set it to NULL
-  GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
-
-  std::vector<Texture*> textures = getTextures();
-  std::vector<Texture*>::iterator it = textures.begin();
-
-  while(it != textures.end()){
-    // zero is for persistent textures
-    if((*it)->curRegistrationStageMode == RSM_NORMAL &&
-       (*it)->curRegistrationStage.size() == 0) {
-      LogDebug("remove texture [%s] [%x]", (*it)->Name.c_str(), (*it));
-      
-      (*it)->invalidateSpritesTexture();
-      
-      destroyTexture(*it);
-      it = textures.erase(it);
-    } else {
-      ++it;
-    }
-  }
-}
-
-bool TextureManager::registering(){
-  return m_registering;
-}
-
-unsigned int TextureManager::currentRegistrationStage(){
-  return m_curRegistrationStage;
-}
-
-void TextureManager::registerTexture(Texture* i_texture) {
-  i_texture->curRegistrationStageMode = RSM_NORMAL;
-  i_texture->curRegistrationStage.push_back(m_curRegistrationStage);
-}
-
-bool TextureManager::isRegisteredTexture(Texture* i_texture) {
-  if(i_texture->curRegistrationStageMode != RSM_NORMAL) {
-    return false;
-  }
-  for(unsigned int i=0; i<i_texture->curRegistrationStage.size(); i++) {
-    if(i_texture->curRegistrationStage[i] == m_curRegistrationStage) {
-      return true;
-    }
-  }
-  return false;
-}
-
-void TextureManager::unregister(unsigned int i_registerValue) {
-  std::vector<Texture*> textures = getTextures();
-  std::vector<Texture*>::iterator it = textures.begin();
-  unsigned int i;
-
-  while(it != textures.end()){
-    if((*it)->curRegistrationStageMode == RSM_NORMAL) {
-      i = 0;
-      while(i < (*it)->curRegistrationStage.size()) {
-	if((*it)->curRegistrationStage[i] == i_registerValue) {
-	  (*it)->curRegistrationStage.erase((*it)->curRegistrationStage.begin()+i);
-	} else {
-	  i++;
-	}
-      }
-    }
-    ++it;
-  }
-}

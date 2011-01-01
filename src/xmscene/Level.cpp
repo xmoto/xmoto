@@ -60,17 +60,12 @@ Level::Level() {
   m_rSpriteForWecker 	      = "Wrecker";
   m_rSpriteForFlower 	      = "Flower";
   m_rSpriteForStar            = "Star";
-  m_rSpriteForCheckpointDown  = "Checkpoint_0";
-  m_rSpriteForCheckpointUp    = "Checkpoint_1";
   m_rSoundForPickUpStrawberry = "PickUpStrawberry";
-  m_rSoundForCheckpoint       = "Checkpoint";
 
   m_strawberrySprite = NULL;
   m_wreckerSprite    = NULL;
   m_flowerSprite     = NULL;
   m_starSprite       = NULL;
-  m_checkpointSpriteDown = NULL;
-  m_checkpointSpriteUp = NULL;
 }
 
 Level::~Level() {
@@ -250,20 +245,12 @@ void Level::setCollisionSystem(CollisionSystem* p_CollisionSystem) {
   m_pCollisionSystem = p_CollisionSystem;
 }
 
-const std::vector<std::string>& Level::scriptLibraryFileNames() {
-	return m_scriptLibraryFileNames;
-}
-
 std::string Level::scriptFileName() const {
   return m_scriptFileName;
 }
 
 std::string Level::scriptSource() const {
   return m_scriptSource;
-}
-
-void Level::setScriptLibraryFileNames(std::vector<std::string>& i_scriptLibraryFileNames){
-	m_scriptLibraryFileNames = i_scriptLibraryFileNames;
 }
 
 void Level::setScriptFileName(const std::string& i_scriptFileName) {
@@ -397,7 +384,7 @@ void Level::loadXML() {
   m_description = "";
   m_author = "";
   m_music = "";
-  m_scriptLibraryFileNames.clear();
+  
   m_scriptFileName = "";
   m_scriptSource = "";
   m_borderTexture = "";
@@ -579,8 +566,6 @@ void Level::loadXML() {
 	/* for efficacity and before other are not required, only change main ones */
 	if        (v_old_name == "PickUpStrawberry") {
 	  m_rSoundForPickUpStrawberry = v_new_name;
-	} else if (v_old_name == "Checkpoint") {
-	  m_rSoundForCheckpoint = v_new_name;
 	}
       }
     }
@@ -593,14 +578,6 @@ void Level::loadXML() {
       /* External script file specified? */
       m_scriptFileName = XML::getOption(pScriptElem,"source");      
       
-      /* Specified libraries ? */
-      TiXmlElement *pLibraryScriptElem = pScriptElem->FirstChildElement("require_library");
-      if (pLibraryScriptElem != NULL) {
-    	  for (pLibraryScriptElem = pScriptElem->FirstChildElement("require_library"); pLibraryScriptElem != 0; pLibraryScriptElem = pLibraryScriptElem->NextSiblingElement("require_library")) {
-    		  m_scriptLibraryFileNames.push_back(pLibraryScriptElem->Attribute("name"));
-    	  }
-      }
-
       /* Encapsulated script? */
       for(TiXmlNode *pScript=pScriptElem->FirstChild();pScript!=NULL;
           pScript=pScript->NextSibling()) {
@@ -633,6 +610,13 @@ void Level::loadXML() {
     }
     
     /* determine whether the levels is physics or not */
+    //for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
+    //    pElem=pElem->NextSiblingElement("block")) {
+    //  if(Block::isPhysics_readFromXml(m_xmlSource, pElem)) {
+    //	m_isPhysics = true;
+    //  }
+    //}
+
     /* Get blocks */
     for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
         pElem=pElem->NextSiblingElement("block")) {
@@ -651,8 +635,8 @@ void Level::loadXML() {
 	Joint* v_joint = (Joint*)v_entity;
 	v_joint->readFromXml(pElem);
 	m_joints.push_back(v_joint);
-      }
-      else m_entities.push_back(v_entity);
+      } else
+	m_entities.push_back(v_entity);
     }    
 
     try {
@@ -768,12 +752,6 @@ void Level::exportBinary(FileDataType i_fdt, const std::string &FileName, const 
     XMFS::writeString(pfh,   m_sky->BlendTexture());
     
     XMFS::writeString(pfh,m_borderTexture);
-
-    XMFS::writeInt_LE(pfh, m_scriptLibraryFileNames.size());
-    for(unsigned int i=0; i<m_scriptLibraryFileNames.size(); i++) {
-      XMFS::writeString(pfh, m_scriptLibraryFileNames[i]);
-    }
-
     XMFS::writeString(pfh,m_scriptFileName);
 
     XMFS::writeFloat_LE(pfh,m_leftLimit);
@@ -785,10 +763,7 @@ void Level::exportBinary(FileDataType i_fdt, const std::string &FileName, const 
     XMFS::writeString(pfh,m_rSpriteForFlower);
     XMFS::writeString(pfh,m_rSpriteForWecker);
     XMFS::writeString(pfh,m_rSpriteForStar);
-    XMFS::writeString(pfh,m_rSpriteForCheckpointDown);
-    XMFS::writeString(pfh,m_rSpriteForCheckpointUp);
     XMFS::writeString(pfh,m_rSoundForPickUpStrawberry);
-    XMFS::writeString(pfh,m_rSoundForCheckpoint);
 
     XMFS::writeInt_LE(pfh, m_numberLayer);
     for(int i=0; i<m_numberLayer; i++){
@@ -1009,11 +984,6 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
         m_sky->setBlendTexture(XMFS::readString(pfh));
         m_borderTexture = XMFS::readString(pfh);
 
-	unsigned int v_nbScriptLibraryFileNames = XMFS::readInt_LE(pfh);
-	for(unsigned int i=0; i<v_nbScriptLibraryFileNames; i++) {
-	  m_scriptLibraryFileNames.push_back(XMFS::readString(pfh));
-	}
-
         m_scriptFileName = XMFS::readString(pfh);
 
         m_leftLimit = XMFS::readFloat_LE(pfh);
@@ -1026,10 +996,7 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 	m_rSpriteForFlower     	    = XMFS::readString(pfh);
 	m_rSpriteForWecker     	    = XMFS::readString(pfh);
 	m_rSpriteForStar       	    = XMFS::readString(pfh);
-	m_rSpriteForCheckpointDown  = XMFS::readString(pfh);
-	m_rSpriteForCheckpointUp    = XMFS::readString(pfh);
 	m_rSoundForPickUpStrawberry = XMFS::readString(pfh);
-	m_rSoundForCheckpoint       = XMFS::readString(pfh);
 
 	if(m_rSpriteForStrawberry == "")
 	  m_rSpriteForStrawberry = "Strawberry";
@@ -1039,10 +1006,6 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 	  m_rSpriteForWecker = "Wrecker";
 	if(m_rSpriteForStar == "")
 	  m_rSpriteForStar = "Star";
-	if(m_rSpriteForCheckpointDown == "")
-	  m_rSpriteForCheckpointDown = "Checkpoint_0";
-	if(m_rSpriteForCheckpointUp == "")
-	  m_rSpriteForCheckpointUp = "Checkpoint_1";
 
 	/* layers */
 	m_numberLayer = XMFS::readInt_LE(pfh);
@@ -1077,7 +1040,7 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 
         /* Read entities */
         int nNumEntities = XMFS::readInt_LE(pfh);
-        m_entities.reserve(nNumEntities); // we dont need that much reserved space, since some strawberries were eaten
+        m_entities.reserve(nNumEntities);
         for(int i=0;i<nNumEntities;i++) {
 	  Entity* v_entity = Entity::readFromBinary(pfh);
 	  m_entities.push_back(v_entity);
@@ -1089,7 +1052,7 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
 	  LogWarning("no player start entity for level %s", Id().c_str());
 	  m_playerStart = Vector2f(0.0, 0.0);
 	}
-	
+
         int nNumJoints = XMFS::readInt_LE(pfh);
         m_joints.reserve(nNumJoints);
         for(int i=0; i<nNumJoints; i++) {
@@ -1230,7 +1193,7 @@ int Level::loadToPlay(ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physics
       m_nbEntitiesToTake++;
     }
   }
-  
+
   // create joints
   for(unsigned int i=0; i<m_joints.size(); i++) {
     m_joints[i]->loadToPlay(this, i_chipmunkWorld);
@@ -1266,7 +1229,6 @@ void Level::unloadToPlay() {
   for(unsigned int i=0; i<m_joints.size(); i++) {
     m_joints[i]->unloadToPlay();
   }
-  
 }
 
 void Level::addLimits() {
@@ -1333,10 +1295,6 @@ std::vector<Entity *>& Level::EntitiesExterns() {
   return m_entitiesExterns;
 }
 
-std::vector<Entity *>& Level::EntitiesDestroyed() {
-  return m_entitiesDestroyed;
-}
-
 void Level::unloadLevelBody() {
   unloadToPlay();
 
@@ -1389,20 +1347,8 @@ std::string Level::SpriteForStar() const {
   return m_rSpriteForStar;
 }
 
-std::string Level::SpriteForCheckpointDown() const {
-  return m_rSpriteForCheckpointDown;
-}
-
-std::string Level::SpriteForCheckpointUp() const {
-  return m_rSpriteForCheckpointUp;
-}
-
 std::string Level::SoundForPickUpStrawberry() const {
   return m_rSoundForPickUpStrawberry;
-}
-
-std::string Level::SoundForCheckpoint() const {
-  return m_rSoundForCheckpoint;
 }
 
 Sprite* Level::strawberrySprite()
@@ -1425,24 +1371,12 @@ Sprite* Level::starSprite()
   return m_starSprite;
 }
 
-Sprite* Level::checkpointSpriteDown()
-{
-  return m_checkpointSpriteDown;
-}
-
-Sprite* Level::checkpointSpriteUp()
-{
-  return m_checkpointSpriteUp;
-}
-
 void Level::loadRemplacementSprites()
 {
   m_strawberrySprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForStrawberry());
   m_wreckerSprite    = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForWecker());
   m_flowerSprite     = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForFlower());
   m_starSprite       = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForStar());
-  m_checkpointSpriteDown  = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForCheckpointDown());
-  m_checkpointSpriteUp    = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION, SpriteForCheckpointUp());
 }
 
 float Level::averagePhysicBlocksSize() const {

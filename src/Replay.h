@@ -51,39 +51,6 @@ class PhysicsSettings;
     int nNumStates;
   };
 
-  /* to be able to rewind exactly at the same position */
-  struct ReplayPosition {
-   bool bEndOfFile;
-   unsigned int nCurChunk;
-   float nCurState;
-  };
-
-  /* moving blocks (physics) */
-  struct rmblockState {
-    int time;
-    Vector2f position;
-    float    rotation;
-  };
-
-  struct rmblock {
-    std::string name;
-    std::vector<rmblockState> states;
-    int lastMovingTime;
-  };
-
-  struct rmtimeState {
-    int      time;
-    Vector2f position;
-    float    rotation;
-  };
-
-  struct rmtime {
-    std::string name;
-    Block* block;
-    unsigned int readPos;
-    std::vector<rmtimeState> states;
-  };
-
   /*===========================================================================
   Replay class
   ===========================================================================*/  
@@ -94,7 +61,7 @@ class PhysicsSettings;
       
       /* Methods */
       void storeState(const SerializedBikeState& state);
-      void storeBlocks(int i_time, const std::vector<Block *>& i_blocks, const std::vector<Biker*>& i_players, bool i_forceSaveAll = false);
+      void storeBlocks(const std::vector<Block *>& i_blocks);
       /* go and get the next state */
       void loadState(BikeState* state, PhysicsSettings* i_physicsSettings);  
       void peekState(BikeState* state, PhysicsSettings* i_physicsSettings); /* get current state */
@@ -109,7 +76,7 @@ class PhysicsSettings;
       void reinitialize();
       std::string getLevelId();
 
-      void finishReplay(bool bFinished,int finishTime);
+      void finishReplay(bool bFinished,int finishTime, int i_format);
       int CurrentFrame() const;
 
       void fastforward(int i_time);
@@ -129,18 +96,8 @@ class PhysicsSettings;
 
       std::vector<RecordedGameEvent *> *getEvents() {return &m_ReplayEvents;}
 
-      // moving blocks
-      std::vector<rmtime>* getMovingBlocks();
-
       /* return NULL if the replay is not valid */
       static ReplayInfo* getReplayInfos(const std::string p_ReplayName);
-
-      void saveReplayIfNot(int i_format);
-
-      // store and restore replay position
-      void rewindAtPosition(ReplayPosition i_rs);
-      void rewindAtBeginning();
-      ReplayPosition getReplayPosition() const;
 
     private: 
       /* Data */ 
@@ -160,27 +117,19 @@ class PhysicsSettings;
       void _FreeReplay(void);
       bool nextState(int p_frames); /* go to the next state */
       bool nextNormalState(); /* go to the next state */
-
-      bool m_saved;
       
       /* Static data */
       static bool m_bEnableCompression;
 
       /* Events reconstructed from replay */
       std::vector<RecordedGameEvent *> m_ReplayEvents;
-
+      
+      void saveReplay(int i_format);
       void saveReplay_1(FileHandle *pfh);
-      void saveReplay_3(FileHandle *pfh);
+      void saveReplay_2(FileHandle *pfh);
 
       void openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersion);
-      void openReplay_3(FileHandle *pfh, bool bDisplayInformation);
-
-      /* moving blocks (physics) */
-      std::vector<rmblock> m_movingBlocksForSaving;
-      std::vector<rmtime> m_movingBlocksForLoading;
-      bool isPhysicBlockToSave(Block* i_block, int i_time, const std::vector<rmblockState>& i_states,
-			       const std::vector<Biker*>& i_players, bool i_forceSaveAll);
-
+      void openReplay_2(FileHandle *pfh, bool bDisplayInformation);
   };
 
 #endif

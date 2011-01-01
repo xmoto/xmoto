@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateManager.h"
 #include "../net/NetClient.h"
 
-StatePlayingNet::StatePlayingNet(Universe* i_universe, GameRenderer* i_renderer):
-StatePlaying(i_universe, i_renderer)
+StatePlayingNet::StatePlayingNet(Universe* i_universe, const std::string& i_id):
+StatePlaying(i_universe, i_id)
 {
   m_name = "StatePlayingNet";
 
@@ -48,7 +48,7 @@ void StatePlayingNet::abortPlaying() {
 void StatePlayingNet::executeOneCommand(std::string cmd, std::string args) {
   if(cmd == "NET_PREPARE_PLAYING") {
     closePlaying();
-    StateManager::instance()->replaceState(new StatePreplayingNet(args, true), getStateId());
+    StateManager::instance()->replaceState(new StatePreplayingNet(getId(), args, true), this->getId());
   } else {
     StatePlaying::executeOneCommand(cmd, args);
   }
@@ -57,10 +57,6 @@ void StatePlayingNet::executeOneCommand(std::string cmd, std::string args) {
 void StatePlayingNet::enter()
 {
   StatePlaying::enter();
-
-  // pause immediatly to not move objects until the game starts
-  Scene* v_world = m_universe->getScenes()[0];
-  v_world->pause();
 }
 
 void StatePlayingNet::xmKey(InputEventType i_type, const XMKey& i_xmkey) {

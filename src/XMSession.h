@@ -155,10 +155,6 @@ public:
   void setAutosaveHighscoreReplays(bool i_value);
   void setEnableGhosts(bool i_value);
   bool enableGhosts() const;
-  bool disableAnimations() const;
-  bool permanentConsole() const;
-  bool showGameInformationInConsole() const;
-  unsigned int consoleSize() const;
   void setEnableEngineSound(bool i_value);
   bool enableEngineSound() const;
   void setShowEngineCounter(bool i_value);
@@ -181,6 +177,8 @@ public:
   bool enableTrailCam() const;
   void setRenderGhostTrail(bool i_value);
   bool renderGhostTrail() const;
+  void setRenderGhostTrailTS(bool i_value);
+  bool renderGhostTrailTS() const;
   void setEnableDeadAnimation(bool i_value);
   bool enableDeadAnimation() const;
   void setMenuGraphics(GraphicsLevel i_value);
@@ -219,8 +217,6 @@ public:
   bool checkNewHighscoresAtStartup() const;
   void setShowHighscoreInGame(bool i_value);
   bool showHighscoreInGame() const;
-  void setNextMedalInGame(bool i_value);
-  bool showNextMedalInGame() const;
   void setIdRoom(unsigned int i_number, const std::string& i_value);
   std::string idRoom(unsigned int i_number) const;
   void setNbRoomsEnabled(unsigned int i_value);
@@ -277,10 +273,6 @@ public:
   void setDbsynchronizeOnQuit(bool i_value);
   bool dbsynchronizeOnQuit() const;
   void setBeatingMode(bool i_value);
-  void setDisableAnimations(bool i_value);
-  void setPermanentConsole(bool i_value);
-  void setShowGameInformationInConsole(bool i_value);
-  void setConsoleSize(unsigned int i_value);
   bool beatingMode() const;
   void setWebForms(bool i_value);
   bool webForms() const;
@@ -345,7 +337,6 @@ public:
   bool m_uglyOver;
   bool m_testTheme;
   bool m_autosaveHighscoreReplays;
-  bool m_disableAnimations;
   bool m_ghostStrategy_MYBEST;
   bool m_ghostStrategy_THEBEST;
   bool m_ghostStrategy_BESTOFREFROOM;
@@ -362,10 +353,8 @@ public:
   bool m_enableActiveZoom;
   bool m_enableTrailCam;
   bool m_renderGhostTrail;
+  bool m_renderGhostTrailTS;
   bool m_enableDeadAnimation;
-  bool m_enablePermanentConsole;
-  bool m_showGameInformationInConsole;
-  int m_consoleSize;
   GraphicsLevel m_menuGraphics;
   GraphicsLevel m_gameGraphics;
   int m_quickStartQualityMIN;
@@ -384,7 +373,6 @@ public:
   bool m_checkNewLevelsAtStartup;
   bool m_checkNewHighscoresAtStartup;
   bool m_showHighscoreInGame;
-  bool m_showNextMedalInGame;  
   std::string m_uploadHighscoreUrl;
   std::string m_idRoom[ROOMS_NB_MAX];
   unsigned int m_nbRoomsEnabled;

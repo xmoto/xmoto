@@ -23,26 +23,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../drawlib/DrawLib.h"
 #include "../GameText.h"
 
-void StateMessageBox::initStateMessageBox(StateMessageBoxReceiver* i_receiver,
-					  const std::string& i_text,
-					  int i_buttons,
-					  bool i_input,
-					  const std::string& i_inputText,
-					  bool i_query,
-					  bool i_verticallyLarge) {
-    m_receiver      = i_receiver;
-    m_clickedButton = UI_MSGBOX_NOTHING;
-    m_name          = "StateMessageBox";
-    m_msgbox        = NULL;
-
-    m_text            = i_text;
-    m_buttons         = i_buttons;
-    m_input           = i_input;
-    m_inputText       = i_inputText;
-    m_query           = i_query;
-    m_verticallyLarge = i_verticallyLarge;
-}
-
 StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
 				 const std::string& i_text,
 				 int i_buttons,
@@ -53,53 +33,30 @@ StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
 				 bool updateStatesBehind,
 				 bool i_verticallyLarge):
   StateMenu(drawStateBehind,
-	    updateStatesBehind)
+	    updateStatesBehind, true, false)
 {
-  initStateMessageBox(i_receiver, i_text, i_buttons, i_input, i_inputText, i_query, i_verticallyLarge);
-}
-
-StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
-		  std::vector<std::string>& completionList,
-  		  const std::string& i_text,
-  		  int i_buttons,
-  		  bool i_input,
-  		  const std::string& i_inputText,
-  		  bool i_query,
-  		  bool drawStateBehind,
-  		  bool updateStatesBehind,
-  		  bool i_verticallyLarge) :
-  		StateMenu(drawStateBehind,
-  			    updateStatesBehind) {
- initStateMessageBox(i_receiver, i_text, i_buttons, i_input, i_inputText, i_query, i_verticallyLarge);
- m_completionList = completionList;
+  m_receiver      = i_receiver;
+  m_clickedButton = UI_MSGBOX_NOTHING;
+  createGUI(i_text, i_buttons, i_input, i_inputText, i_query, i_verticallyLarge);
+  m_name          = "StateMessageBox";
 }
 
 StateMessageBox::~StateMessageBox()
 {
+  delete m_GUI;
 }
 
 void StateMessageBox::makeActiveButton(UIMsgBoxButton i_button) {
-  if(m_msgbox != NULL) {
-    m_msgbox->makeActiveButton(i_button);
-  } else {
-    throw Exception("Active buttons can be set only once the state is entered");
-  }
-}
-
-void StateMessageBox::enter() {
-  createGUI();
-  StateMenu::enter();
+  m_msgbox->makeActiveButton(i_button);
 }
 
 void StateMessageBox::leave()
 {
   if(m_receiver != NULL) {
-    m_receiver->sendFromMessageBox(getMsgBxId(), m_clickedButton, m_msgbox->getTextInput());
+    m_receiver->sendFromMessageBox(getId(), m_clickedButton, m_msgbox->getTextInput());
   } else {
-    sendFromMessageBox(getMsgBxId(), m_clickedButton, m_msgbox->getTextInput());
+    sendFromMessageBox(getId(), m_clickedButton, m_msgbox->getTextInput());
   }
-
-  delete m_GUI;
 }
 
 void StateMessageBox::checkEvents() {
@@ -117,28 +74,20 @@ void StateMessageBox::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   StateMenu::xmKey(i_type, i_xmkey);
 }
 
-void StateMessageBox::createGUI() {
+void StateMessageBox::createGUI(const std::string& i_text, int i_buttons,
+				bool i_input, const std::string& i_inputText, bool i_query,
+				bool i_verticallyLarge) {
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
-  m_GUI = new UIRoot(&m_screen);
+  m_GUI = new UIRoot();
   m_GUI->setFont(drawlib->getFontSmall()); 
   m_GUI->setPosition(0, 0,
-		     m_screen.getDispWidth(),
-		     m_screen.getDispHeight());
+		     drawlib->getDispWidth(),
+		     drawlib->getDispHeight());
 
-  m_msgbox = m_GUI->msgBox(m_text, (UIMsgBoxButton)(m_buttons), m_input, false, m_verticallyLarge);
-  if(m_input) {
+  m_msgbox = m_GUI->msgBox(i_text, (UIMsgBoxButton)(i_buttons), i_input, false, i_verticallyLarge);
+  if(i_input) {
     m_msgbox->setTextInputFont(drawlib->getFontMedium());
-    m_msgbox->setTextInput(m_inputText);
+    m_msgbox->setTextInput(i_inputText);
   }
-  m_msgbox->addCompletionWord(m_completionList);
-
-}
-
-std::string StateMessageBox::getMsgBxId() const {
-  return m_msgbxid;
-}
-
-void StateMessageBox::setMsgBxId(const std::string& i_id) {
-  m_msgbxid = i_id;
 }

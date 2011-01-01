@@ -18,27 +18,32 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __VIRTUALNETLEVELSLIST_H__
-#define __VIRTUALNETLEVELSLIST_H__
+#ifndef __STATEDOWNLOADGHOST_H__
+#define __STATEDOWNLOADGHOST_H__
 
-#include <string>
-#include "../VirtualLevelsList.h"
+#include "StateUpdate.h"
 
-class NetClient;
-class xmDatabase;
+class StateDownloadGhost : public StateUpdate {
+public:
+StateDownloadGhost(const std::string& i_id,
+		   std::string levelId,
+		   bool launchReplaying    = false,
+		   bool drawStateBehind    = true,
+		   bool updateStatesBehind = false);
+  virtual ~StateDownloadGhost();
 
-class VirtualNetLevelsList : public VirtualLevelsList {
-  public:
-  VirtualNetLevelsList(NetClient* i_client);
-  virtual ~VirtualNetLevelsList();
+  void setReplay(std::string replayName);
 
-  void setDb(xmDatabase* pDb); // must be set before used !!
-  virtual std::string determinePreviousLevel(const std::string& i_id_level);
-  virtual std::string determineNextLevel(const std::string& i_id_level);
+  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void executeOneCommand(std::string cmd, std::string args);
 
-  private:
-  NetClient* m_client;
-  xmDatabase* m_db;
+protected:
+  void callAfterThreadFinished(int threadResult);
+  virtual void checkEvents() {}
+  
+private:
+  std::string  m_replayName;
+  bool         m_launchReplaying;
 };
 
 #endif

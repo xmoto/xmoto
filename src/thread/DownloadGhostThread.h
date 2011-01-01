@@ -18,30 +18,32 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __XMDEMO_H__
-#define __XMDEMO_H__
+#ifndef __DOWNLOADGHOSTTHREAD_H__
+#define __DOWNLOADGHOSTTHREAD_H__
 
-#include <string>
+#include "XMThread.h"
+#include "../WWWAppInterface.h"
 
-class ProxySettings;
+class GameState;
+class WebRoom;
 
-class XMDemo {
-  public:
-  XMDemo(const std::string i_demoFile);
-  ~XMDemo();
+class DownloadGhostThread : public XMThread, public WWWAppInterface {
+public:
+  DownloadGhostThread(std::string levelId,
+		      bool i_onlyMainRoomGhost);
+  virtual ~DownloadGhostThread();
 
-  void getLevel(ProxySettings* i_proxy);
-  void getReplay(ProxySettings* i_proxy);
-  void destroyFiles();
+  void setTaskProgress(float p_percent);
+  std::string getMsg() const;
 
-  std::string levelFile()  const;
-  std::string replayFile() const;
+  int realThreadFunction();
 
-  private:
-  std::string m_levelUrl;
-  std::string m_replayUrl;
-  std::string m_levelFile;
-  std::string m_replayFile;
+private:
+
+  WebRoom*    m_pWebRoom;
+  std::string m_msg;
+  std::string m_levelId;
+  bool m_onlyMainRoomGhost;
 };
 
 #endif

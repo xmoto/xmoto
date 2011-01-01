@@ -32,11 +32,9 @@ std::string XMBuild::getVersionString(bool i_extended) {
   if(i_extended) {
     std::string v_svn = svn_version();
 
-    if(std::string(BUILD_EXTRAINFO) != "") {
-      v_version << " ";
-      v_version << BUILD_EXTRAINFO;
-    }    
-
+    v_version << " ";
+    v_version << BUILD_EXTRAINFO;
+    
     if(std::string(BUILD_EXTRAINFO) != "" && v_svn != "") {
       v_version << " (svn " + v_svn + ")";
     }

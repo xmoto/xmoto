@@ -196,6 +196,7 @@ void xmDatabase::updateDB_config(const std::string& i_sitekey) {
 	     Name == "MenuMusic"                      ||
 	     Name == "InitZoom"                       ||
 	     Name == "CameraActiveZoom"               ||
+	     Name == "CameraTrailCam"                 ||
 	     Name == "DeathAnim"                      ||
 	     Name == "CheckHighscoresAtStartup"       ||
 	     Name == "CheckNewLevelsAtStartup"        ||
@@ -248,6 +249,7 @@ void xmDatabase::updateDB_config(const std::string& i_sitekey) {
 		 Name == "MenuMusic"                      ||
 		 Name == "InitZoom"                       ||
 		 Name == "CameraActiveZoom"               ||
+		 Name == "CameraTrailCam"                 ||
 		 Name == "DeathAnim"                      ||
 		 Name == "CheckHighscoresAtStartup"       ||
 		 Name == "CheckNewLevelsAtStartup"        ||

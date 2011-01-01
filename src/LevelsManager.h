@@ -112,8 +112,6 @@ public:
   
   void printLevelsList(xmDatabase *i_db) const;
 
-  std::string aRandomLevel(xmDatabase *i_db) const;
-
   bool isInFavorite(std::string i_profile, const std::string& i_id_level, xmDatabase *i_db);
   void addToFavorite(std::string i_profile, const std::string& i_id_level, xmDatabase *i_db);
   void delFromFavorite(std::string i_profile, const std::string& i_id_level, xmDatabase *i_db);

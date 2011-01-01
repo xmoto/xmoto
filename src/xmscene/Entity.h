@@ -58,7 +58,6 @@ class Entity {
   bool DoesKill() const; /** have this entity the property to kill ? (like wecker) */
   bool DoesMakeWin() const; /** have this entity the property to make win ? (like flower) */
   bool IsToTake() const; /* return true is the entity must be taken by the player */
-  virtual bool IsCheckpoint() const;
   inline float Z() const {
     return m_z;
   }
@@ -138,7 +137,6 @@ protected:
   bool        m_doesKill;
   bool        m_doesMakeWin;
   bool        m_isToTake;
-  bool        m_isCheckpoint;
   /* Use to know if a script shall update the pos of the entity*/
   bool        m_isAlive;
   bool        m_isScripted;   /* is it used in a script? */
@@ -157,27 +155,6 @@ protected:
   Sprite* loadSprite(const std::string& i_spriteName = "");
 };
 
-
-class Checkpoint : public Entity {
-public:
-  Checkpoint(const std::string& i_id) : Entity(i_id) {
-    m_speciality = ET_CHECKPOINT;
-    m_isVirgin   = true;
-  }
-  virtual ~Checkpoint() { };
-
-  bool isActivated() const;
-  void deactivate();
-  void activate(const std::vector<Entity*>& i_destroyedEntities, DriveDir i_playerFacesRight);
-  virtual bool IsCheckpoint() const;
-  const std::vector<Entity*>& getDestroyedEntities() const { return m_destroyedEntities; };
-  DriveDir getDirection() const { return m_direction; };
-  
-private:
-  bool m_isVirgin;
-  std::vector<Entity*> m_destroyedEntities;
-  DriveDir m_direction;
-};
 
 
 typedef enum jointType {JointNone, Pivot, Pin} jointType;

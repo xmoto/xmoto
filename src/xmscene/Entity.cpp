@@ -68,7 +68,6 @@ Entity::Entity(const std::string& i_id) {
   m_isBBoxDirty = true;
   m_speciality  = ET_NONE;
   m_isScripted  = false;
-  m_isCheckpoint= false;
 }
 
 Entity::~Entity() {
@@ -122,10 +121,6 @@ bool Entity::DoesKill() const {
   return m_doesKill;
 }
 
-bool Entity::IsCheckpoint() const {
-  return false;
-}
-
 Vector2f Entity::InitialPosition() const {
   return m_initialPosition;
 }
@@ -174,7 +169,6 @@ void Entity::setSpeciality(EntitySpeciality i_speciality) {
   m_doesMakeWin = (i_speciality == ET_MAKEWIN);
   m_doesKill    = (i_speciality == ET_KILL);
   m_isToTake    = (i_speciality == ET_ISTOTAKE);
-  m_isCheckpoint= (i_speciality == ET_CHECKPOINT);
 
   m_speciality = i_speciality;
 }
@@ -244,8 +238,6 @@ EntitySpeciality Entity::SpecialityFromStr(std::string& i_typeStr) {
     return ET_PARTICLES_SOURCE;
   if(i_typeStr == "Joint")
     return ET_JOINT;
-  if(i_typeStr == "Checkpoint")
-    return ET_CHECKPOINT;
 
   return ET_NONE;
 }
@@ -269,9 +261,6 @@ std::string Entity::SpecialityToStr(EntitySpeciality i_speciality) {
       break;
     case ET_JOINT :
       return "Joint";
-      break;
-    case ET_CHECKPOINT :
-      return "Checkpoint";
       break;
   default:
       return "Sprite";
@@ -323,9 +312,6 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
   case ET_JOINT:
     v_entity = new Joint(id);
     break;
-  case ET_CHECKPOINT:
-    v_entity = new Checkpoint(id);
-    break;
   default:
     v_entity = new Entity(id);
     break;
@@ -356,7 +342,6 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
     break;
   case ET_JOINT:
     break;
-  case ET_CHECKPOINT:
   default:
     v_entity->setSpriteName(typeId);
     v_entity->setSprite(v_entity->loadSprite());
@@ -517,30 +502,8 @@ void Entity::setScripted(bool i_value) {
   m_isScripted = i_value;
 }
 
-/*==========================================
-        Checkpoints
-==========================================*/
-
-bool Checkpoint::IsCheckpoint() const {
-  return true;
-}
-
-void Checkpoint::deactivate() {
-  m_isVirgin = true;
-}
-
-bool Checkpoint::isActivated() const {
-  return m_isVirgin == false;
-}
-
-void Checkpoint::activate(const std::vector<Entity*>& i_destroyedEntities, DriveDir i_direction) {
-  m_isVirgin = false;
-  m_destroyedEntities = i_destroyedEntities;
-  m_direction = i_direction;
-}
-
 /*===========================================
-	Joints
+									Joints
 ===========================================*/
 
 void Joint::saveBinary(FileHandle *i_pfh)

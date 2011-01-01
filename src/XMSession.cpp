@@ -69,7 +69,6 @@ void XMSession::setToDefault() {
   m_ghostStrategy_BESTOFREFROOM   = DEFAULT_GHOSTBESTREFROOM;
   m_ghostStrategy_BESTOFOTHERROOMS = DEFAULT_GHOSTBESTOTHERROOMS;
   m_autosaveHighscoreReplays      = DEFAULT_AUTOSAVEHIGHSCORESREPLAYS;
-  m_disableAnimations             = DEFAULT_DISABLEANIMATIONS;
   m_enableGhosts                  = DEFAULT_ENABLEGHOSTS;
   m_enableEngineSound             = DEFAULT_ENABLEENGINESOUND;
   m_showEngineCounter             = DEFAULT_SHOWENGINECOUNTER;
@@ -78,9 +77,6 @@ void XMSession::setToDefault() {
   m_enableMenuMusic               = DEFAULT_ENABLEMENUMUSIC;
   m_enableGameMusic               = DEFAULT_ENABLEGAMEMUSIC;
   m_enableDeadAnimation           = DEFAULT_ENABLEDEADANIMATION;
-  m_enablePermanentConsole        = DEFAULT_PERMANENTCONSOLE;
-  m_showGameInformationInConsole  = DEFAULT_SHOWGAMEINFORMATIONINCONSOLE;
-  m_consoleSize                   = DEFAULT_CONSOLESIZE;
   m_menuGraphics                  = DEFAULT_MENUGRAPHICS;
   m_gameGraphics                  = DEFAULT_GAMEGRAPHICS;
   m_quickStartQualityMIN          = DEFAULT_QUICKSTARTQUALITYMIN;
@@ -100,7 +96,6 @@ void XMSession::setToDefault() {
   m_checkNewLevelsAtStartup       = DEFAULT_CHECKNEWLEVELSATSTARTUP;
   m_checkNewHighscoresAtStartup   = DEFAULT_CHECKNEWHIGHSCORESATSTARTUP;
   m_showHighscoreInGame           = DEFAULT_SHOWHIGHSCOREINGAME;
-  m_showNextMedalInGame           = DEFAULT_SHOWNEXTMEDALINGAME;
   for(unsigned int i=0; i<ROOMS_NB_MAX; i++) {
     m_idRoom[i]                   = DEFAULT_WEBROOM_ID;
   }
@@ -136,6 +131,7 @@ void XMSession::setToDefault() {
   m_enableActiveZoom              = DEFAULT_ENABLEACTIVEZOOM;
   m_enableTrailCam                = DEFAULT_ENABLETRAILCAM;
   m_renderGhostTrail              = DEFAULT_GHOSTTRAILRENDERING;
+  m_renderGhostTrailTS            = DEFAULT_GHOSTTRAILRENDERING_TS;
   m_dbsynchronizeOnQuit           = DEFAULT_DBSYNCHRONIZEONQUIT;
   m_enableJoysticks               = DEFAULT_ENABLEJOYSTICKS;
   m_adminMode                     = DEFAULT_ADMINMODE;
@@ -325,15 +321,10 @@ void XMSession::loadProfile(const std::string& i_id_profile, xmDatabase* pDb) {
   m_checkNewLevelsAtStartup        = pDb->config_getBool   (i_id_profile, "CheckNewLevelsAtStartup"       , m_checkNewLevelsAtStartup);
   m_checkNewHighscoresAtStartup    = pDb->config_getBool   (i_id_profile, "CheckHighscoresAtStartup"  , m_checkNewHighscoresAtStartup);
   m_showHighscoreInGame            = pDb->config_getBool   (i_id_profile, "ShowInGameWorldRecord"         , m_showHighscoreInGame);
-  m_showNextMedalInGame            = pDb->config_getBool   (i_id_profile, "ShowInGameNextMedal"           , m_showNextMedalInGame);
   m_webConfAtInit                  = pDb->config_getBool   (i_id_profile, "WebConfAtInit"                 , m_webConfAtInit);
   m_useCrappyPack                  = pDb->config_getBool   (i_id_profile, "UseCrappyPack"                 , m_useCrappyPack);
   m_useChildrenCompliant           = pDb->config_getBool   (i_id_profile, "UseChildrenCompliant"          , m_useChildrenCompliant);
-  m_enablePermanentConsole         = pDb->config_getBool   (i_id_profile, "enablePermanentConsole"        , m_enablePermanentConsole);
-  m_showGameInformationInConsole   = pDb->config_getBool   (i_id_profile, "showGameInformationInConsole"  , m_showGameInformationInConsole);
-  m_consoleSize                    = pDb->config_getInteger(i_id_profile, "consoleSize"                   , m_consoleSize);
   m_enableGhosts                   = pDb->config_getBool   (i_id_profile, "EnableGhost"                   , m_enableGhosts);
-  m_disableAnimations               = pDb->config_getBool   (i_id_profile, "disableAnimations"              , m_disableAnimations);
   m_ghostStrategy_MYBEST           = pDb->config_getBool   (i_id_profile, "GhostStrategy_MYBEST"          , m_ghostStrategy_MYBEST);
   m_ghostStrategy_THEBEST          = pDb->config_getBool   (i_id_profile, "GhostStrategy_THEBEST"         , m_ghostStrategy_THEBEST);
   m_ghostStrategy_BESTOFREFROOM    = pDb->config_getBool   (i_id_profile, "GhostStrategy_BESTOFREFROOM"   , m_ghostStrategy_BESTOFREFROOM);
@@ -462,18 +453,13 @@ void XMSession::saveProfile(xmDatabase* pDb) {
 	pDb->config_setBool   (m_profile, "CameraActiveZoom"              , m_enableActiveZoom);
 	pDb->config_setBool   (m_profile, "CameraTrailCam"                , m_enableTrailCam);
 	pDb->config_setBool   (m_profile, "DeathAnim"                     , m_enableDeadAnimation);
-	pDb->config_setBool   (m_profile, "enablePermanentConsole"        , m_enablePermanentConsole);
-	pDb->config_setBool   (m_profile, "showGameInformationInConsole"  , m_showGameInformationInConsole);
-	pDb->config_setInteger(m_profile, "consoleSize"                   , m_consoleSize);
 	pDb->config_setBool   (m_profile, "CheckNewLevelsAtStartup"       , m_checkNewLevelsAtStartup);
 	pDb->config_setBool   (m_profile, "CheckHighscoresAtStartup"      , m_checkNewHighscoresAtStartup);
 	pDb->config_setBool   (m_profile, "ShowInGameWorldRecord"         , m_showHighscoreInGame);
-	pDb->config_setBool   (m_profile, "ShowInGameNextMedal"           , m_showNextMedalInGame);
 	pDb->config_setBool   (m_profile, "WebConfAtInit"                 , m_webConfAtInit);
 	pDb->config_setBool   (m_profile, "UseCrappyPack"                 , m_useCrappyPack);
 	pDb->config_setBool   (m_profile, "UseChildrenCompliant"          , m_useChildrenCompliant);
 	pDb->config_setBool   (m_profile, "EnableGhost"           	    , m_enableGhosts);
-	pDb->config_setBool   (m_profile, "disableAnimations"       	    , m_disableAnimations);
 	pDb->config_setBool   (m_profile, "GhostStrategy_MYBEST"  	    , m_ghostStrategy_MYBEST);
 	pDb->config_setBool   (m_profile, "GhostStrategy_THEBEST" 	    , m_ghostStrategy_THEBEST);
 	pDb->config_setBool   (m_profile, "GhostStrategy_BESTOFREFROOM"   , m_ghostStrategy_BESTOFREFROOM);
@@ -722,22 +708,6 @@ bool XMSession::enableGhosts() const {
   return m_enableGhosts;
 }
 
-bool XMSession::disableAnimations() const {
-  return m_disableAnimations;
-}
-
-bool XMSession::permanentConsole() const {
-  return m_enablePermanentConsole;
-}
-
-bool XMSession::showGameInformationInConsole() const {
-  return m_showGameInformationInConsole;
-}
-
-unsigned int XMSession::consoleSize() const {
-  return m_consoleSize;
-}
-
 void XMSession::setEnableEngineSound(bool i_value) {
   PROPAGATE(XMSession,setEnableEngineSound,i_value,bool);
   m_enableEngineSound = i_value;
@@ -854,6 +824,15 @@ void XMSession::setRenderGhostTrail(bool i_value) {
 
 bool XMSession::renderGhostTrail() const {
   return m_renderGhostTrail;
+}
+
+void XMSession::setRenderGhostTrailTS(bool i_value) {
+  PROPAGATE(XMSession,setRenderGhostTrailTS,i_value,bool);
+  m_renderGhostTrailTS = i_value;
+}
+
+bool XMSession::renderGhostTrailTS() const {
+  return m_renderGhostTrailTS;
 }
 
 void XMSession::setEnableDeadAnimation(bool i_value) {
@@ -1033,17 +1012,8 @@ void XMSession::setShowHighscoreInGame(bool i_value) {
   m_showHighscoreInGame = i_value;
 }
 
-void XMSession::setNextMedalInGame(bool i_value) {
-  PROPAGATE(XMSession,setNextMedalInGame,i_value,bool);
-  m_showNextMedalInGame = i_value;
-}
-
 bool XMSession::showHighscoreInGame() const {
   return m_showHighscoreInGame;
-}
-
-bool XMSession::showNextMedalInGame() const {
-  return m_showNextMedalInGame;
 }
 
 unsigned int XMSession::nbRoomsEnabled() const {
@@ -1249,26 +1219,6 @@ void XMSession::setEnableJoysticks(bool i_value) {
 void XMSession::setBeatingMode(bool i_value) {
   PROPAGATE(XMSession,setBeatingMode,i_value,bool);
   m_beatingMode = i_value;
-}
-
-void XMSession::setDisableAnimations(bool i_value) {
-  PROPAGATE(XMSession,setDisableAnimations,i_value,bool);
-  m_disableAnimations = i_value;
-}
-
-void XMSession::setPermanentConsole(bool i_value) {
-  PROPAGATE(XMSession,setPermanentConsole,i_value,bool);
-  m_enablePermanentConsole = i_value;
-}
-
-void XMSession::setShowGameInformationInConsole(bool i_value) {
-  PROPAGATE(XMSession,setShowGameInformationInConsole,i_value,bool);
-  m_showGameInformationInConsole = i_value;
-}
-
-void XMSession::setConsoleSize(unsigned int i_value) {
-  PROPAGATE(XMSession,setConsoleSize,i_value,unsigned int);
-  m_consoleSize = i_value;
 }
 
 bool XMSession::beatingMode() const {

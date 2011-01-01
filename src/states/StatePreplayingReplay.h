@@ -27,7 +27,7 @@ class ReplayBiker;
 
 class StatePreplayingReplay : public StatePreplaying {
   public:
-  StatePreplayingReplay(const std::string i_replay, bool i_sameLevel);
+  StatePreplayingReplay(const std::string& i_id, const std::string i_replay, bool i_sameLevel);
   virtual ~StatePreplayingReplay();
   
   protected:

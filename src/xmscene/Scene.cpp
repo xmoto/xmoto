@@ -44,14 +44,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../net/NetClient.h"
 #include "../net/NetActions.h"
 #include "ScriptTimer.h"
+#include "../drawlib/DrawLib.h"
 
 #define GAMEMESSAGES_PACKTIME 40
-#define XM_PHYSICS_MD5 "b6822d58d992fbb0a7ef45eed71141e4"
 
 /* 
  *  Game object. Handles all of the gamestate management und so weiter.
  */
   Scene::Scene() {
+    m_bDeathAnimEnabled=true;
     m_lastCallToEveryHundreath = 0;
 
     m_showGhostTimeDiff = true;
@@ -74,18 +75,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_chipmunkWorld = NULL;
 
     m_halfUpdate = true;
+
     m_physicsSettings = NULL;
+    
     m_ghostTrail = NULL;
-    m_checkpoint = NULL;
   }
   
   Scene::~Scene() {
     cleanPlayers();
     cleanGhosts();
     cleanScriptTimers();
-    if(m_ghostTrail != NULL) {
-      delete m_ghostTrail;
-    }
+    if(m_ghostTrail != 0) delete m_ghostTrail;		
   }
 
   void Scene::loadLevel(xmDatabase *i_db, const std::string& i_id_level) {
@@ -118,6 +118,7 @@ void Scene::cleanGhosts() {
     delete m_ghosts[i];
   }
   m_ghosts.clear();
+//  if(m_fileGhost != 0) delete m_fileGhost;
 }
 
 void Scene::cleanPlayers() {
@@ -149,16 +150,49 @@ void Scene::cleanPlayers() {
     throw Exception("Invalid player number");
   }
   
-  DriveDir Scene::getPlayerFaceDir(int i_player) {
-    return m_players[i_player]->getState()->Dir;
+  bool Scene::getPlayerFaceDir(int i_player) {
+    return m_players[i_player]->getState()->Dir == DD_RIGHT;
+    throw Exception("Invalid player number");
   }
 
   /*===========================================================================
     Add game message
     ===========================================================================*/
-void Scene::gameMessage(std::string Text, bool bOnce, int duration, MessageType i_msgType) {
+  void Scene::gameMessage(std::string Text, bool bOnce, int duration, MessageType i_msgType) {
 
     if(Text == "" ) return;  // eliminate empty messages
+
+    /* If text is longer than screen width, put \n into it to split lines */   
+    DrawLib* pDrawLib = GameApp::instance()->getDrawLib();
+    //distinction for multiplayer, here diff msg types use diff fonts
+    FontManager* pFM; 
+    FontGlyph* pFG;
+    int multiScreenDivision = 1;
+    if(XMSession::instance()->multiNbPlayers() > 2 && (i_msgType == scripted || i_msgType == gameTime)) {
+      pFM = pDrawLib->getFontSmall();  
+      multiScreenDivision = 2;
+    }
+    else {
+      pFM = pDrawLib->getFontMedium();
+    }
+    pFG = pFM->getGlyph(Text);
+    if(pFG->realWidth() > int(pDrawLib->getDispWidth()/multiScreenDivision) ) {
+      unsigned int v_newline = 0;
+      std::string v_subtext = ("");
+      for( unsigned int i = 0; i<Text.length(); i++) {
+        pFG = pFM->getGlyph(Text.substr(v_newline,i-v_subtext.length()));  //substr isnt a problem for utf8, because its got a rule which prevents characters beeing in 2-byte chars
+        if(pFG->realWidth() >= int(pDrawLib->getDispWidth()/multiScreenDivision)-15) {  // our sub string length is now equal disp Width
+          for(unsigned int j=i; j>v_newline; j--) { //look for " "
+            if(!Text.compare(j,1," ")) {
+               Text.insert(j,"\n");
+               v_newline = j+1;
+               v_subtext = Text.substr(i-v_subtext.length(),j);
+               continue;  // leave this loop, to continue with rest of the string
+            }
+          }
+        }
+      }
+    }
     
     /* "unique"? */
     GameMessage *pMsg = NULL;
@@ -208,7 +242,6 @@ void Scene::gameMessage(std::string Text, bool bOnce, int duration, MessageType 
 	pMsg->bOnce = bOnce;
 	pMsg->Text = v_txtRest;
 	pMsg->msgType = i_msgType;
-
 	m_GameMessages.push_back(pMsg);
       }
     } else {
@@ -217,18 +250,16 @@ void Scene::gameMessage(std::string Text, bool bOnce, int duration, MessageType 
       pMsg->removeTime = getTime() + duration;
       pMsg->nAlpha = 255;
       pMsg->msgType = i_msgType;
-
     }
     packGameMessages();
     updateGameMessages();
-      }
+  }
   
 void Scene::packGameMessages() {   //put multiple GameMessages into one, if they appear shortly one after another
 
- 
   for( int i = m_GameMessages.size()-1 ; i > 0 ; i-- ) {
     
-    if( (m_GameMessages[i]->removeTime- m_GameMessages[i-1]->removeTime < GAMEMESSAGES_PACKTIME) && 
+    if( (m_GameMessages[i]->removeTime - m_GameMessages[i-1]->removeTime < GAMEMESSAGES_PACKTIME) && 
         (m_GameMessages[i]->removeTime != 0) &&
         (m_GameMessages[i]->msgType == m_GameMessages[i-1]->msgType) &&
         (m_GameMessages[i]->bOnce == m_GameMessages[i-1]->bOnce) &&
@@ -241,46 +272,13 @@ void Scene::packGameMessages() {   //put multiple GameMessages into one, if they
       m_GameMessages.erase(m_GameMessages.begin() +i);
     
     }
-    
-    
   }
-  
-  /* count number of lines */
-  for( unsigned i=0; i< m_GameMessages.size(); i++ ) {
-    int v_numLines = 1;
-    for(unsigned j=0; j<m_GameMessages[i]->Text.length(); j++) {
-      if(!m_GameMessages[i]->Text.compare(j,1,"\n")) {
-         v_numLines++;
-      }
-    }
-    m_GameMessages[i]->lines = v_numLines;
-  }
-  
 }
 
 void Scene::clearGameMessages(void) {
     for(unsigned int i=0 ;i<m_GameMessages.size() ;i++)
       m_GameMessages[i]->removeTime=0;
   }
-
-void Scene::updatePlayers(int timeStep) {
-    for(unsigned int i=0; i<m_players.size(); i++) {
-      m_players[i]->updateToTime(m_time, timeStep, &m_Collision, m_PhysGravity, this);
-
-      if(m_playEvents && timeStep > 0) {
-	/* New wheel-spin particles? */
-	if(m_players[i]->isWheelSpinning()) {
-	  if(NotSoRandom::randomNum(0,1) < 0.7f) {
-	    ParticlesSource *v_debris;
-	    v_debris = (ParticlesSource*) getLevelSrc()->getEntityById("BikeDebris");
-	    v_debris->setDynamicPosition(m_players[i]->getWheelSpinPoint());	
-	    v_debris->addParticle(m_time);
-	  }
-	}
-      }
-    }
-
-}
 
   /*===========================================================================
     Update game
@@ -292,7 +290,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     bool v_uploadFrame;
     SerializedBikeState BikeState;
 
-    if(m_is_paused || (m_useTargetTime && m_time > m_targetTime)) // do nothing when m_targetTime > m_time because it would mean that the server is faster than the local host which can however be true
+    if(m_is_paused)
       return;
 
     if(m_halfUpdate == true) {
@@ -369,8 +367,22 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     for(unsigned int i=0; i<m_ghosts.size(); i++) {
       m_ghosts[i]->updateToTime(getTime(), timeStep, &m_Collision, m_PhysGravity, this);
     }
+    
+    for(unsigned int i=0; i<m_players.size(); i++) {
+      m_players[i]->updateToTime(m_time, timeStep, &m_Collision, m_PhysGravity, this);
 
-    updatePlayers(timeStep);
+      if(m_playEvents) {
+	/* New wheel-spin particles? */
+	if(m_players[i]->isWheelSpinning()) {
+	  if(NotSoRandom::randomNum(0,1) < 0.7f) {
+	    ParticlesSource *v_debris;
+	    v_debris = (ParticlesSource*) getLevelSrc()->getEntityById("BikeDebris");
+	    v_debris->setDynamicPosition(m_players[i]->getWheelSpinPoint());	
+	    v_debris->addParticle(m_time);
+	  }
+	}
+      }
+    }
 
     if(m_chipmunkWorld != NULL) {
       /* players moves, update their positions */
@@ -422,9 +434,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
 	  
 	  if(v_recordReplay && i == 0) {
 	    i_frameRecorder->storeState(BikeState);
-	    if(m_pLevelSrc->isPhysics()) {
-	      i_frameRecorder->storeBlocks(getTime(), m_pLevelSrc->Blocks(), Players());
-	    }
+	    i_frameRecorder->storeBlocks(m_pLevelSrc->Blocks());
 	  }
 	}
       }
@@ -468,14 +478,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
           continue;
         }
       }
-      
-      /* detect correct target position, considering number of lines of previously displayed message */
-      int v_row = 0;
-      for(int j=0; j<i; j++){
-        v_row += m_GameMessages[j]->lines;
-      }
-      Vector2f TargetPos = Vector2f(0.2f, (0.5f - (m_GameMessages.size()*0.05f)/(2.0f) + 0.049f*v_row) );
-      
+      Vector2f TargetPos = Vector2f(0.2f,0.5f - (m_GameMessages.size()*0.05f)/2.0f + 0.05f*i);
       if(m_GameMessages[i]->bNew) {
         m_GameMessages[i]->Vel = Vector2f(0,0);
         m_GameMessages[i]->Pos = TargetPos;
@@ -497,8 +500,6 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     ===========================================================================*/
   void Scene::prePlayLevel(DBuffer *i_recorder,
 			   bool i_playEvents) {
-    m_playInitLevel_done = false;
-
     m_playEvents = i_playEvents;
     /* load the level if not */
     if(m_pLevelSrc->isFullyLoaded() == false) {
@@ -510,11 +511,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
 
     /* physics */
     m_physicsSettings = new PhysicsSettings("Physics/original.xml");
-    // force people to compile to change settings
-    if(XMFS::md5sum(FDT_DATA, "Physics/original.xml") != std::string(XM_PHYSICS_MD5)) {
-      throw Exception("Invalid physics settings");
-    }
-
+    
     /* Clear collision system */
     m_Collision.reset();
     m_pLevelSrc->setCollisionSystem(&m_Collision);
@@ -524,9 +521,6 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     m_PhysGravity.y = -(m_physicsSettings->WorldGravity());
 
     m_time = 0;
-    m_targetTime = 0;
-    m_useTargetTime = false;
-    m_checkpointStartTime = 0;
     m_floattantTimeStepDiff = 0.0;
     m_speed_factor = 1.00f;
     m_is_paused = false;
@@ -538,34 +532,61 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     m_lastCallToEveryHundreath = 0;
 
     /* Load and parse level script */
+    bool bTryParsingEncapsulatedLevelScript = true;
+    bool bNeedScript = false;
+    bool bGotScript = false;
     
-    for(unsigned int i = 0; i < m_pLevelSrc->scriptLibraryFileNames().size(); i++) {
-      try {
-	m_luaGame->loadScriptFile("LevelsLibraries/" + m_pLevelSrc->scriptLibraryFileNames()[i]);
-      } catch(Exception &e) {
-	throw e;
-      }
-    }
-
     if(m_pLevelSrc->scriptFileName() != "") {
-      try {
-	m_luaGame->loadScriptFile("./Levels/" + m_pLevelSrc->scriptFileName());
-      } catch(Exception &e) {
-	throw e;
+      FileHandle *pfh = XMFS::openIFile(FDT_DATA, std::string("./Levels/") + m_pLevelSrc->scriptFileName());
+      if(pfh == NULL) {
+        /* Well, file not found -- try encapsulated script */
+        bNeedScript = true;
       }
+      else {      
+        std::string Line,ScriptBuf="";
+        
+        while(XMFS::readNextLine(pfh,Line)) {
+          if(Line.length() > 0) {
+            ScriptBuf.append(Line.append("\n"));
+          }
+        }
+        
+        XMFS::closeFile(pfh);
+
+	try {
+	  m_luaGame->loadScript(ScriptBuf, m_pLevelSrc->scriptFileName());
+	} catch(Exception &e) {
+	  delete m_luaGame;
+	  m_luaGame = NULL;
+	  throw e;
+	}
+
+        bGotScript = true;
+        bTryParsingEncapsulatedLevelScript = false;
+      }       
     }    
     
-    if(m_pLevelSrc->scriptSource() != "") {
+    if(bTryParsingEncapsulatedLevelScript && m_pLevelSrc->scriptSource() != "") {
       /* Use the Lua aux lib to load the buffer */
 
       try {
 	m_luaGame->loadScript(m_pLevelSrc->scriptSource(), m_pLevelSrc->scriptFileName());
       } catch(Exception &e) {
 	std::string error_msg = m_luaGame->getErrorMsg();
+	delete m_luaGame;
+	m_luaGame = NULL;
 	throw Exception("failed to load level encapsulated script :\n" + error_msg);
-      }
+      }      
+
+      bGotScript = true;      
     }    
     
+    if(bNeedScript && !bGotScript) {
+      delete m_luaGame;
+      m_luaGame = NULL;
+      throw Exception("failed to get level script");
+    }
+
     // load chimunk
     if(m_playEvents) {
       if(m_pLevelSrc->isPhysics()) {
@@ -625,21 +646,12 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     v_ghost->setInfo(i_info);
     v_ghost->setReference(i_isReference);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
-
-    // synchronize it to the good position (can be later if the ghost is downloaded while playing)
-    v_ghost->updateToTime(getTime(), 1 /* 1, not very important */, &m_Collision, m_PhysGravity, this);
-
     m_ghosts.push_back(v_ghost);
-
+    if(i_info == "WR") {  // then we ve got our ghost trail, because WR is always optimal path through level!
+      m_ghostTrail = new GhostTrail(v_ghost);
+    }
     return v_ghost;
   }
-
-void Scene::initGhostTrail(FileGhost* i_ghost) {
-  if(m_ghostTrail != NULL) {
-    delete m_ghostTrail;
-  }
-  m_ghostTrail = new GhostTrail(i_ghost);
-}
 
   NetGhost* Scene::addNetGhost(const std::string& i_info,
 				  Theme *i_theme,
@@ -665,33 +677,29 @@ void Scene::initGhostTrail(FileGhost* i_ghost) {
     return m_players;
   }
 
-  bool Scene::playInitLevelDone() const {
-    return m_playInitLevel_done;
-  }
-
-  void Scene::playInitLevel() {
-    /* Invoke the OnLoad() script function */
+  void Scene::playLevel() {
+  /* Invoke the OnLoad() script function */
     if(m_playEvents) {
       bool bOnLoadSuccess;
-      std::string v_error_msg = "OnLoad script function failed !";
 
       try {
 	bOnLoadSuccess = m_luaGame->scriptCallBool("OnLoad", true);
       } catch(Exception &e) {
 	bOnLoadSuccess = false;
-	v_error_msg += "\n" + e.getMsg();
       }
       /* if no OnLoad(), assume success */
       /* Success? */
       if(bOnLoadSuccess == false) {
-	LogError(v_error_msg.c_str());
-	throw Exception(v_error_msg);
+	LogError("OnLoad script function failed !");
+	throw Exception("OnLoad script function failed !");
       }
     }
-
-    m_playInitLevel_done = true;
   }
   
+/*  void Scene::setFileGhost(FileGhost* i_fileGhost) {
+    m_fileGhost = i_fileGhost;
+  }
+*/
   /*===========================================================================
     Free this game object
     ===========================================================================*/
@@ -1031,19 +1039,6 @@ void Scene::initGhostTrail(FileGhost* i_ghost) {
 	/* OH... nice */
 	createGameEvent(new MGE_EntityDestroyed(getTime(), pEntity->Id(), pEntity->Speciality(), pEntity->DynamicPosition(), pEntity->Size()));
       }
-      
-      if((Checkpoint*)pEntity->IsCheckpoint()) {
-        if(m_checkpoint != NULL) {
-          m_checkpoint->deactivate();
-        }
-        Checkpoint* v_checkpoint = (Checkpoint*)pEntity;
-	v_checkpoint->activate(m_pLevelSrc->EntitiesDestroyed(), m_players[i_player]->getState()->Dir);
-	if(m_motoGameHooks != NULL) {
-	  m_motoGameHooks->OnTakeCheckpoint();
-	}
-	m_checkpoint = v_checkpoint;
-      }
-
     }
   }
 
@@ -1148,20 +1143,16 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
 
   void Scene::SetBlockPos(std::string pBlockID, float pX, float pY) {
     Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
-    SetBlockPos(v_block, pX, pY);
-  }
-
-  void Scene::SetBlockPos(Block* pBlock, float pX, float pY) {
-    if(pBlock->isDynamic() == true) {
-      pBlock->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
+    if(v_block->isDynamic() == true) {
+      v_block->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
 
       if(m_chipmunkWorld != NULL) {
-	if(pBlock->isPhysics()) {
-	  pBlock->setPhysicsPosition(pX, pY);
+	if(v_block->isPhysics()) {
+	  v_block->setPhysicsPosition(pX, pY);
 	}
       }
-      m_Collision.moveDynBlock(pBlock);
-    }    
+      m_Collision.moveDynBlock(v_block);
+    }
   }
   
   void Scene::SetBlockCenter(std::string pBlockID, float pX, float pY) {
@@ -1209,7 +1200,7 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
       if(v_diffAvailable) {
 	char msg[256];
 	snprintf(msg, 256, "%+.2f", v_diffToGhost/100.0);
-	gameMessage(msg,true,MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION/2,gameTime);
+	this->gameMessage(msg,true,MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION/2,gameTime);
       }
     }
   }
@@ -1272,24 +1263,13 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
     getCamera()->adaptRotationAngleToGravity(m_PhysGravity);
   }
 
-  void Scene::resussitePlayer(int i_player) {
-    m_players[i_player]->setDead(false);
-
-    m_players[i_player]->initWheelDetach();
-
-    // inform camera that the player is not dead
-    for(unsigned int i=0; i<m_cameras.size(); i++){
-      if(m_cameras[i]->getPlayerToFollow() == m_players[i_player]) {
-	m_cameras[i]->setPlayerResussite();
-      }
-    }
-  }
-
   void Scene::killPlayer(int i_player) {
     if(m_players[i_player]->isDead() == false && m_players[i_player]->isFinished() == false) {
       m_players[i_player]->setDead(true, getTime());
 
-      m_players[i_player]->setBodyDetach(true);
+      if(m_bDeathAnimEnabled) {
+	m_players[i_player]->setBodyDetach(true);
+      }
       m_players[i_player]->getControler()->stopControls();
 
       // inform camera that the player dies (for the following point)
@@ -1466,10 +1446,6 @@ PlayerNetClient* Scene::addPlayerNetClient(Vector2f i_position, DriveDir i_direc
     m_is_paused = ! m_is_paused;
   }
 
-  bool Scene::isPaused() {
-    return m_is_paused;
-  }
-
   float Scene::getSpeed() const {
     if(m_is_paused) {
       return 0.0;
@@ -1482,7 +1458,7 @@ PlayerNetClient* Scene::addPlayerNetClient(Vector2f i_position, DriveDir i_direc
       m_speed_factor -= i_increment;
     }
     if(getLevelSrc() != NULL) {
-      if(getLevelSrc()->isScripted() || getLevelSrc()->isPhysics()) {
+      if(getLevelSrc()->isScripted()) {
 	if(m_speed_factor < 0.0) m_speed_factor = 0.0;
       }
     }
@@ -1500,7 +1476,7 @@ PlayerNetClient* Scene::addPlayerNetClient(Vector2f i_position, DriveDir i_direc
 
   void Scene::fastrewind(int i_time) {
     if(getLevelSrc() != NULL) {
-      if(getLevelSrc()->isScripted() == false && getLevelSrc()->isPhysics() == false) {
+      if(getLevelSrc()->isScripted() == false) {
 	m_time -= i_time;
 	if(m_time < 0) m_time = 0;
 	onRewinding();
@@ -1564,9 +1540,10 @@ PlayerNetClient* Scene::addPlayerNetClient(Vector2f i_position, DriveDir i_direc
   unsigned int Scene::getCurrentCamera(){
     return m_currentCamera;
   }
-  void Scene::addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom){
+  void Scene::addCamera(Vector2i upperleft, Vector2i downright, bool i_useActiveZoom, bool i_useTrailCam){
     Camera* i_cam = new Camera(upperleft, downright);
     i_cam->allowActiveZoom(i_useActiveZoom);
+    i_cam->allowTrailCam(i_useTrailCam);
     m_cameras.push_back(i_cam);
     m_cameras.back()->initCamera();
   }
@@ -1641,9 +1618,7 @@ void SceneOnBikerHooks::onWheelTouches(int i_wheel, bool i_touch) {
 }
 
 void SceneOnBikerHooks::onHeadTouches() {
-  if(m_motoGame->Players()[m_playerNumber]->isDead() == false) {
-    m_motoGame->createGameEvent(new MGE_PlayerDies(m_motoGame->getTime(), false, m_playerNumber));
-  }
+  m_motoGame->createGameEvent(new MGE_PlayerDies(m_motoGame->getTime(), false, m_playerNumber));
 }
 
 
@@ -1670,68 +1645,3 @@ void SceneOnBikerHooks::onHeadTouches() {
 		m_ScriptTimers.clear();
 	}
 
-Checkpoint* Scene::getCheckpoint() {
-  return m_checkpoint;
-}
-
-void Scene::playToCheckpoint() {
-  if(m_checkpoint == NULL) {
-    return;
-  }
-
-  // get rid of former messages and the level restart messages
-  clearGameMessages();
-  gameMessage(" ", true, 0);
-  
-  for(unsigned int i=0; i<Players().size(); i++) {
-    setPlayerPosition(i,
-		      m_checkpoint->InitialPosition().x,
-		      m_checkpoint->InitialPosition().y,
-		      m_checkpoint->getDirection() == DD_RIGHT);
-    getCamera()->initCamera();
-  }
-
-  // put strawberries
-  std::vector<std::string> v_entityToRevert;
-  for(unsigned int i=0; i<getLevelSrc()->EntitiesDestroyed().size(); i++) {
-    bool v_found = false;
-    for(unsigned int j=0; j<m_checkpoint->getDestroyedEntities().size(); j++) {
-      if(getLevelSrc()->EntitiesDestroyed()[i] == m_checkpoint->getDestroyedEntities()[j]) {
-	v_found = true;
-      }
-    }
-
-    if(v_found == false) {
-      v_entityToRevert.push_back(getLevelSrc()->EntitiesDestroyed()[i]->Id());
-    }
-  }
-
-  // revert the entity -- done in 2 times to not remove entity while beeing looping them
-  for(unsigned int i=0; i<v_entityToRevert.size(); i++) {
-    getLevelSrc()->revertEntityDestroyed(v_entityToRevert[i]);
-  }
-
-  // call the checkpoint.OnUse
-  m_luaGame->scriptCallTblVoid(m_checkpoint->Id(), "OnUse");
-
-  m_checkpointStartTime = m_time;
-}
-
-void Scene::addRequestedGhost(GhostsAddInfos i_ghostInfo) {
-  m_requestedGhosts.push_back(i_ghostInfo);
-}
-std::vector<GhostsAddInfos> &Scene::RequestedGhosts() {
-  return m_requestedGhosts;
-}
-
-void Scene::removeRequestedGhost(const std::string& i_ghostName) {
-  unsigned int i=0;
-
-  while(i<m_requestedGhosts.size()) {
-    if(m_requestedGhosts[i].name == i_ghostName) {
-      m_requestedGhosts.erase(m_requestedGhosts.begin() + i);
-    } else {
-      i++;
-    }
-  }
-}

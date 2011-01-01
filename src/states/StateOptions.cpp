@@ -46,14 +46,13 @@ UIRoot*  StateOptions::m_sGUI = NULL;
 
 StateOptions::StateOptions(bool drawStateBehind, bool updateStatesBehind):
   StateMenu(drawStateBehind,
-	    updateStatesBehind) {
+	    updateStatesBehind, true, false) {
   m_name = "StateOptions";
  
   StateManager::instance()->registerAsObserver("UPDATEPROFILE", this);
   StateManager::instance()->registerAsObserver("THEMES_UPDATED", this);
   StateManager::instance()->registerAsObserver("ROOMS_UPDATED", this);
   StateManager::instance()->registerAsObserver("CHANGE_WWW_ACCESS", this);
-  StateManager::instance()->registerAsObserver("CHANGE_TRAILCAM", this);
   StateManager::instance()->registerAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->registerAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->registerAsObserver("REQUESTKEY", this);
@@ -65,7 +64,6 @@ StateOptions::~StateOptions() {
   StateManager::instance()->unregisterAsObserver("THEMES_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("ROOMS_UPDATED", this);
   StateManager::instance()->unregisterAsObserver("CHANGE_WWW_ACCESS", this);
-  StateManager::instance()->unregisterAsObserver("CHANGE_TRAILCAM", this);
   StateManager::instance()->unregisterAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->unregisterAsObserver("ENABLEAUDIO_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("REQUESTKEY", this);
@@ -74,12 +72,17 @@ StateOptions::~StateOptions() {
 
 void StateOptions::enter()
 { 
-  createGUIIfNeeded(&m_screen);
+  createGUIIfNeeded();
   m_GUI = m_sGUI;
 
   updateOptions();
   updateServerStrings();
   updateJoysticksStrings();
+  
+  if(XMSession::instance()->ugly()) {   // needed to show cursor on option menu while playing level
+    GameApp::instance()->displayCursor(true);
+  }
+
 }
 
 void StateOptions::clean() {
@@ -101,9 +104,9 @@ void StateOptions::checkEvents() {
     v_button->setClicked(false);
 
     StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_RESETTODEFAULTS, UI_MSGBOX_YES|UI_MSGBOX_NO);
-    StateManager::instance()->pushState(v_msgboxState);
-    v_msgboxState->setMsgBxId("RESETSTODEFAULTS");
+    v_msgboxState->setId("RESETSTODEFAULTS");
     v_msgboxState->makeActiveButton(UI_MSGBOX_NO);
+    StateManager::instance()->pushState(v_msgboxState);
   }
 
   // close
@@ -169,13 +172,6 @@ void StateOptions::checkEvents() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setAutosaveHighscoreReplays(v_button->getChecked()); 
-  }
-  
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:SHOWANIMATIONS"));
-  if(v_button->isClicked()) {
-    v_button->setClicked(true);
-    XMSession::instance()->setDisableAnimations(v_button->getChecked()); 
-    SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
   }
 
   v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:THEME_TAB:LIST"));
@@ -363,7 +359,7 @@ void StateOptions::checkEvents() {
   }
 
   // controls
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_GENERAL:KEY_ACTION_LIST"));
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:KEY_ACTION_LIST"));
   if(v_list->isItemActivated()) {
     v_list->setItemActivated(false);
 
@@ -372,63 +368,11 @@ void StateOptions::checkEvents() {
 
       UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
       snprintf(cBuf, 1024, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
-      StateManager::instance()->pushState(new StateRequestKey(cBuf));      
-    }
-  }
-  
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_P1:KEY_ACTION_LIST_P1"));
-  if(v_list->isItemActivated()) {
-    v_list->setItemActivated(false);
-
-    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
-      char cBuf[1024];                
-
-      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
-      snprintf(cBuf, 1024, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
-      StateManager::instance()->pushState(new StateRequestKey(cBuf));      
+      StateManager::instance()->pushState(new StateRequestKey(cBuf, this));      
     }
   }
 
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_P2:KEY_ACTION_LIST_P2"));
-  if(v_list->isItemActivated()) {
-    v_list->setItemActivated(false);
-
-    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
-      char cBuf[1024];                
-
-      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
-      snprintf(cBuf, 1024, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
-      StateManager::instance()->pushState(new StateRequestKey(cBuf));      
-    }
-  }
-  
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_P3:KEY_ACTION_LIST_P3"));
-  if(v_list->isItemActivated()) {
-    v_list->setItemActivated(false);
-
-    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
-      char cBuf[1024];                
-
-      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
-      snprintf(cBuf, 1024, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
-      StateManager::instance()->pushState(new StateRequestKey(cBuf));      
-    }
-  }
-  
-  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_P4:KEY_ACTION_LIST_P4"));
-  if(v_list->isItemActivated()) {
-    v_list->setItemActivated(false);
-
-    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
-      char cBuf[1024];                
-
-      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
-      snprintf(cBuf, 1024, GAMETEXT_PRESSANYKEYTO, pEntry->Text[0].c_str());
-      StateManager::instance()->pushState(new StateRequestKey(cBuf));      
-    }
-  }
-  
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_GENERAL:ENABLEJOYSTICKS"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:ENABLEJOYSTICKS"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
@@ -474,31 +418,12 @@ void StateOptions::checkEvents() {
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setShowHighscoreInGame(v_button->getChecked());
-    updateMedalOptions();
-  }
-  
-   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMENEXTMEDAL"));
-  if(v_button->isClicked()) {
-    v_button->setClicked(false);
-    XMSession::instance()->setNextMedalInGame(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:USECRAPPYINFORMATION"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
     XMSession::instance()->setUseCrappyPack(v_button->getChecked());
-  }
-  
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:PERMANENTCONSOLE"));
-  if(v_button->isClicked()) {
-    v_button->setClicked(false);
-    XMSession::instance()->setPermanentConsole(v_button->getChecked());
-  }
-
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:SHOWGAMEINFORMATIONINCONSOLE"));
-  if(v_button->isClicked()) {
-    v_button->setClicked(false);
-    XMSession::instance()->setShowGameInformationInConsole(v_button->getChecked());
   }
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:ALLOWWEBFORMS"));
@@ -715,17 +640,17 @@ void StateOptions::checkEvents() {
 
 }
 
-void StateOptions::createGUIIfNeeded(RenderSurface* i_screen) {
+void StateOptions::createGUIIfNeeded() {
   if(m_sGUI != NULL)
     return;
 
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
-  m_sGUI = new UIRoot(i_screen);
+  m_sGUI = new UIRoot();
   m_sGUI->setFont(drawlib->getFontSmall()); 
   m_sGUI->setPosition(0, 0,
-		      i_screen->getDispWidth(),
-		      i_screen->getDispHeight());
+		      drawlib->getDispWidth(),
+		      drawlib->getDispHeight());
 
   UIWindow *v_window, *v_frame;
   UIStatic*  v_someText;
@@ -819,13 +744,6 @@ UIWindow* StateOptions::makeWindowOptions_general(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_AUTOSAVEREPLAYS);
-
-  v_button = new UIButton(v_window, 5, 153-10, GAMETEXT_SHOWANIMATIONS, (v_window->getPosition().nWidth-40)/2, 28);
-  v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("SHOWANIMATIONS");
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setGroup(50023);
-  v_button->setContextHelp(CONTEXTHELP_SHOWANIMATIONS);
 
   v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth+40)/2, 33-10, GAMETEXT_INITZOOM,
 			  (v_window->getPosition().nWidth-40)/2, 28);
@@ -1096,46 +1014,25 @@ UIWindow* StateOptions::makeWindowOptions_audio(UIWindow* i_parent) {
 }
 
 UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
-  UIWindow  *v_window, 
-	    *v_generalControlTab,
-	    *v_player1ControlTab, 
-	    *v_player2ControlTab, 
-	    *v_player3ControlTab, 
-	    *v_player4ControlTab;
+  UIWindow*  v_window;
   UIList*    v_list;
   UIStatic* v_someText;
   UIButton* v_button;
-  UITabView* v_tabview;
   DrawLib* drawlib = GameApp::instance()->getDrawLib();
 
-  v_window = new UIWindow(i_parent, 0, 25, GAMETEXT_CONTROLS, i_parent->getPosition().nWidth, i_parent->getPosition().nHeight);
+  v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_CONTROLS, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
   v_window->setID("CONTROLS_TAB");
   v_window->showWindow(false);
 
-  v_tabview  = new UITabView(v_window, 0, 0, "", v_window->getPosition().nWidth, v_window->getPosition().nHeight);
-  v_tabview->setID("PLAYER_TABS");
-  v_tabview->setFont(drawlib->getFontSmall());
-  v_tabview->setTabContextHelp(0, CONTEXTHELP_CONTROLS_GENERAL);
-  v_tabview->setTabContextHelp(1, CONTEXTHELP_CONTROLS_PLAYER + std::string(" 1"));
-  v_tabview->setTabContextHelp(2, CONTEXTHELP_CONTROLS_PLAYER + std::string(" 2"));
-  v_tabview->setTabContextHelp(3, CONTEXTHELP_CONTROLS_PLAYER + std::string(" 3"));
-  v_tabview->setTabContextHelp(4, CONTEXTHELP_CONTROLS_PLAYER + std::string(" 4"));
-
-  
-  /* General Settings */
-  v_generalControlTab = new UIWindow(v_tabview, 20, 40, GAMETEXT_CONTROLS_GENERAL, v_tabview->getPosition().nWidth-40, v_tabview->getPosition().nHeight);
-  v_generalControlTab->setID("CONTROLS_TAB_GENERAL");
-  v_generalControlTab->showWindow(true);
-
-  v_list = new UIList(v_generalControlTab, 5, 5, "", v_generalControlTab->getPosition().nWidth-10, v_generalControlTab->getPosition().nHeight -43 -5 -57 -50);
+  v_list = new UIList(v_window, 5, 5, "", v_window->getPosition().nWidth-10, v_window->getPosition().nHeight -43 -5 -57);
   v_list->setID("KEY_ACTION_LIST");
   v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_ACTION, 400);
-  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 400);
+  v_list->addColumn(GAMETEXT_ACTION, 250);
+  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 250);
   v_list->addColumn("", 0); // internal key name
   v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
 
-  v_button = new UIButton(v_generalControlTab, 0, v_generalControlTab->getPosition().nHeight -43 -57 -20,
+  v_button = new UIButton(v_window, 5, v_window->getPosition().nHeight -43 -57 +10,
 			  GAMETEXT_ENABLEJOYSTICKS, 300, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("ENABLEJOYSTICKS");
@@ -1143,67 +1040,11 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   v_button->setGroup(50028);
   v_button->setContextHelp(CONTEXTHELP_ENABLEJOYSTICKS);
 
-  v_someText = new UIStatic(v_generalControlTab, 300 -5, v_generalControlTab->getPosition().nHeight -43 -57 -30,
-			    GAMETEXT_NOJOYSTICKFOUND, v_generalControlTab->getPosition().nWidth-300-5, 57);
+  v_someText = new UIStatic(v_window, 300, v_window->getPosition().nHeight -43 -57,
+			    GAMETEXT_NOJOYSTICKFOUND, v_window->getPosition().nWidth-300-5, 57);
   v_someText->setID("STATIC_JOYSTICK_FOUND");
   v_someText->setHAlign(UI_ALIGN_RIGHT);
   v_someText->setFont(drawlib->getFontSmall()); 
-  
-
-  /* Player 1 */
-  v_player1ControlTab = new UIWindow(v_tabview, 20, 40, GAMETEXT_PLAYER + std::string(" 1"), v_tabview->getPosition().nWidth-40, v_tabview->getPosition().nHeight);
-  v_player1ControlTab->setID("CONTROLS_TAB_P1");
-  v_player1ControlTab->showWindow(false);
-
-  v_list = new UIList(v_player1ControlTab, 5, 5, "", v_player1ControlTab->getPosition().nWidth-10, v_player1ControlTab->getPosition().nHeight -43 -5 -57);
-  v_list->setID("KEY_ACTION_LIST_P1");
-  v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_ACTION, 400);
-  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 400);
-  v_list->addColumn("", 0); // internal key name
-  v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
-
-  
-  /* Player 2 */
-  v_player2ControlTab = new UIWindow(v_tabview, 20, 40, GAMETEXT_PLAYER + std::string(" 2"), v_tabview->getPosition().nWidth-40, v_tabview->getPosition().nHeight);
-  v_player2ControlTab->setID("CONTROLS_TAB_P2");
-  v_player2ControlTab->showWindow(false);
-
-  v_list = new UIList(v_player2ControlTab, 5, 5, "", v_player2ControlTab->getPosition().nWidth-10, v_player2ControlTab->getPosition().nHeight -43 -5 -57);
-  v_list->setID("KEY_ACTION_LIST_P2");
-  v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_ACTION, 400);
-  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 400);
-  v_list->addColumn("", 0); // internal key name
-  v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
-
-
-  /* Player 3 */
-  v_player3ControlTab = new UIWindow(v_tabview, 20, 40, GAMETEXT_PLAYER + std::string(" 3"), v_tabview->getPosition().nWidth-40, v_tabview->getPosition().nHeight);
-  v_player3ControlTab->setID("CONTROLS_TAB_P3");
-  v_player3ControlTab->showWindow(false);
-
-  v_list = new UIList(v_player3ControlTab, 5, 5, "", v_player3ControlTab->getPosition().nWidth-10, v_player3ControlTab->getPosition().nHeight -43 -5 -57);
-  v_list->setID("KEY_ACTION_LIST_P3");
-  v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_ACTION, 400);
-  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 400);
-  v_list->addColumn("", 0); // internal key name
-  v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
-
-
-  /* Player 4 */
-  v_player4ControlTab = new UIWindow(v_tabview, 20, 40, GAMETEXT_PLAYER + std::string(" 4"), v_tabview->getPosition().nWidth-40, v_tabview->getPosition().nHeight);
-  v_player4ControlTab->setID("CONTROLS_TAB_P4");
-  v_player4ControlTab->showWindow(false);
-
-  v_list = new UIList(v_player4ControlTab, 5, 5, "", v_player4ControlTab->getPosition().nWidth-10, v_player4ControlTab->getPosition().nHeight -43 -5 -57);
-  v_list->setID("KEY_ACTION_LIST_P4");
-  v_list->setFont(drawlib->getFontSmall());
-  v_list->addColumn(GAMETEXT_ACTION, 400);
-  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 400);
-  v_list->addColumn("", 0); // internal key name
-  v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
 
   return v_window;
 }
@@ -1275,29 +1116,11 @@ UIWindow* StateOptions::makeWindowOptions_rooms(UIWindow* i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_INGAME_WORLD_RECORD);
 
-  v_button = new UIButton(v_window, 5+20, 200, GAMETEXT_ENABLEINGAMENEXTMEDAL, v_window->getPosition().nWidth-40, 28);
-  v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("INGAMENEXTMEDAL");
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setContextHelp(CONTEXTHELP_INGAME_NEXT_MEDAL);
-
-  v_button = new UIButton(v_window, 5, 230, GAMETEXT_USECRAPPYINFORMATION, v_window->getPosition().nWidth-40, 28);
+  v_button = new UIButton(v_window, 5, 200, GAMETEXT_USECRAPPYINFORMATION, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
   v_button->setID("USECRAPPYINFORMATION");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_USECRAPPYINFORMATION);
-  
-  v_button = new UIButton(v_window, 5, 260, GAMETEXT_PERMANENTCONSOLE, v_window->getPosition().nWidth-40, 28);
-  v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("PERMANENTCONSOLE");
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setContextHelp(CONTEXTHELP_PERMANENTCONSOLE);
-
-  v_button = new UIButton(v_window, 5, 290, GAMETEXT_SHOWGAMEINFORMATIONINCONSOLE, v_window->getPosition().nWidth-40, 28);
-  v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("SHOWGAMEINFORMATIONINCONSOLE");
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setContextHelp(CONTEXTHELP_SHOWGAMEINFORMATIONINCONSOLE);
 
   v_button = new UIButton(v_window, v_window->getPosition().nWidth-225, v_window->getPosition().nHeight -57 - 20 -20,
 			  GAMETEXT_PROXYCONFIG, 207, 57);
@@ -1607,13 +1430,6 @@ UIWindow* StateOptions::makeRoomTab(UIWindow* i_parent, unsigned int i_number) {
   return v_window;
 }
 
-void StateOptions::updateTrailCamOptions() {
-  UIButton* v_button;
-
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:CAMERATRAILCAM"));
-  v_button->setChecked(XMSession::instance()->enableTrailCam());
-}
-
 void StateOptions::updateOptions() {
   UIButton* v_button;
   UIEdit*   v_edit;
@@ -1629,17 +1445,14 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->enableDeadAnimation());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:CAMERAACTIVEZOOM"));
   v_button->setChecked(XMSession::instance()->enableActiveZoom());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:CAMERATRAILCAM"));
+  v_button->setChecked(XMSession::instance()->enableTrailCam());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:ENABLECONTEXTHELP"));
   v_button->setChecked(XMSession::instance()->enableContextHelp());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:AUTOSAVEREPLAYS"));
   v_button->setChecked(XMSession::instance()->autosaveHighscoreReplays());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:BEATINGMODE"));
   v_button->setChecked(XMSession::instance()->beatingMode());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:SHOWANIMATIONS"));
-  v_button->setChecked(XMSession::instance()->disableAnimations());
-
-  // trail
-  updateTrailCamOptions();
 
   // video
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:16BPP"));
@@ -1690,7 +1503,7 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->musicOnAllLevels());
 
   // controls
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_GENERAL:ENABLEJOYSTICKS"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:ENABLEJOYSTICKS"));
   v_button->setChecked(XMSession::instance()->enableJoysticks());
 
   // www
@@ -1702,14 +1515,8 @@ void StateOptions::updateOptions() {
   v_button->setChecked(XMSession::instance()->checkNewHighscoresAtStartup());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMEWORLDRECORD"));
   v_button->setChecked(XMSession::instance()->showHighscoreInGame());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMENEXTMEDAL"));
-  v_button->setChecked(XMSession::instance()->showNextMedalInGame());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:USECRAPPYINFORMATION"));
   v_button->setChecked(XMSession::instance()->useCrappyPack());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:PERMANENTCONSOLE"));
-  v_button->setChecked(XMSession::instance()->permanentConsole());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:SHOWGAMEINFORMATIONINCONSOLE"));
-  v_button->setChecked(XMSession::instance()->showGameInformationInConsole());
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:ALLOWWEBFORMS"));
   v_button->setChecked(XMSession::instance()->webForms());
 
@@ -1772,7 +1579,6 @@ void StateOptions::updateOptions() {
   updateWWWOptions();
   updateDbOptions();
   updateGhostsOptions();
-  updateMedalOptions();
 
   // update lists in options
   updateThemesList();
@@ -1887,11 +1693,6 @@ void StateOptions::updateWWWOptions() {
 
   }
 }
-void StateOptions::updateMedalOptions(){
-  UIButton* v_button;
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMENEXTMEDAL"));
-  v_button->enableWindow(XMSession::instance()->showHighscoreInGame());
-}
 
 void StateOptions::updateGhostsOptions() {
   UIButton* v_button;
@@ -1955,40 +1756,66 @@ void StateOptions::updateResolutionsList() {
 }
 
 void StateOptions::updateControlsList() {
-  UIList *pList = (UIList *)m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_GENERAL:KEY_ACTION_LIST");
+  UIList *pList = (UIList *)m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:KEY_ACTION_LIST");
   pList->clear();
     
   UIListEntry *p;
 
-  for(unsigned int i=0; i<INPUT_NB_GLOBALKEYS; i++) {
-    if(InputHandler::instance()->getGlobalKeyCustomizable(i)) {
-      p = pList->addEntry(InputHandler::instance()->getGlobalKeyHelp(i));
-      p->Text.push_back(InputHandler::instance()->getGlobalKey(i)->toFancyString());
-      p->Text.push_back(InputHandler::instance()->getGlobalKey(i)->toString());
-    }
-  }
 
-  // player keys    
+  p = pList->addEntry(GAMETEXT_SWITCHFAVORITE);
+  p->Text.push_back(InputHandler::instance()->getSwitchFavorite().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getSwitchFavorite().toString());
+
+  p = pList->addEntry(GAMETEXT_SWITCHBLACKLIST);
+  p->Text.push_back(InputHandler::instance()->getSwitchBlacklist().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getSwitchBlacklist().toString());
+
+  p = pList->addEntry(GAMETEXT_SWITCHUGLYMODE);
+  p->Text.push_back(InputHandler::instance()->getSwitchUglyMode().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getSwitchUglyMode().toString());
+
+  p = pList->addEntry(GAMETEXT_RESTARTLEVEL);
+  p->Text.push_back(InputHandler::instance()->getRestartLevel().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getRestartLevel().toString());
+
+  p = pList->addEntry(GAMETEXT_SHOWCONSOLE);
+  p->Text.push_back(InputHandler::instance()->getShowConsole().toFancyString());
+  p->Text.push_back(InputHandler::instance()->getShowConsole().toString());
+
+  // player keys
+
   for(unsigned int i=0; i<INPUT_NB_PLAYERS; i++) {
-    std::ostringstream v_buf;
-    v_buf << (i+1);
+    std::ostringstream v_n;
 
-    pList = (UIList *)m_GUI->getChild(std::string("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_P") +v_buf.str()+ std::string(":KEY_ACTION_LIST_P")+v_buf.str());
-    pList->clear();
+    if(i != 0) {
+      v_n << " " << (i+1);
+    }    
 
-    // player keys
-    for(unsigned int j=0; j<INPUT_NB_PLAYERKEYS; j++) {
-      p = pList->addEntry(InputHandler::instance()->getPlayerKeyHelp(j, i));
-      p->Text.push_back(InputHandler::instance()->getPlayerKey(j, i)->toFancyString());
-      p->Text.push_back(InputHandler::instance()->getPlayerKey(j, i)->toString());
-    }
+    p = pList->addEntry(GAMETEXT_DRIVE + v_n.str());
+    p->Text.push_back(InputHandler::instance()->getDRIVE(i).toFancyString());
+    p->Text.push_back(InputHandler::instance()->getDRIVE(i).toString());
 
-    // player script keys
+    p = pList->addEntry(GAMETEXT_BRAKE + v_n.str());
+    p->Text.push_back(InputHandler::instance()->getBRAKE(i).toFancyString());
+    p->Text.push_back(InputHandler::instance()->getBRAKE(i).toString());
+
+    p = pList->addEntry(GAMETEXT_FLIPLEFT + v_n.str());
+    p->Text.push_back(InputHandler::instance()->getFLIPLEFT(i).toFancyString());
+    p->Text.push_back(InputHandler::instance()->getFLIPLEFT(i).toString());
+
+    p = pList->addEntry(GAMETEXT_FLIPRIGHT + v_n.str());
+    p->Text.push_back(InputHandler::instance()->getFLIPRIGHT(i).toFancyString());
+    p->Text.push_back(InputHandler::instance()->getFLIPRIGHT(i).toString());
+
+    p = pList->addEntry(GAMETEXT_CHANGEDIR + v_n.str());
+    p->Text.push_back(InputHandler::instance()->getCHANGEDIR(i).toFancyString());
+    p->Text.push_back(InputHandler::instance()->getCHANGEDIR(i).toString());
+
     for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
       std::ostringstream v_k;
       v_k << (k+1);
       
-      p = pList->addEntry(GAMETEXT_SCRIPTACTION + std::string(" ") + v_k.str());
+      p = pList->addEntry(GAMETEXT_SCRIPTACTION + v_n.str() + " " + v_k.str());
       p->Text.push_back(InputHandler::instance()->getSCRIPTACTION(i, k).toFancyString());
       p->Text.push_back(InputHandler::instance()->getSCRIPTACTION(i, k).toString());
     } 
@@ -2142,7 +1969,7 @@ void StateOptions::createRoomsList(UIList *pList) {
 
 void StateOptions::updateJoysticksStrings() {
   UIStatic*  v_someText; 
-  v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_GENERAL:STATIC_JOYSTICK_FOUND"));
+  v_someText = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:STATIC_JOYSTICK_FOUND"));
   unsigned int v_nbJoy = InputHandler::instance()->getJoysticksNames().size();
 
   if(v_nbJoy == 0) {
@@ -2173,59 +2000,31 @@ void StateOptions::executeOneCommand(std::string cmd, std::string args) {
 
   LogDebug("cmd [%s [%s]] executed by state [%s].",
 	   cmd.c_str(), args.c_str(), getName().c_str());
-  UIList *v_activeList = NULL;
-  UIList *v_list;
-  std::vector<UIList*> v_lists;
 
   if(cmd == "REQUESTKEY") {
-    v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_GENERAL:KEY_ACTION_LIST"));
-    v_lists.push_back(v_list);
-    v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_P1:KEY_ACTION_LIST_P1"));
-    v_lists.push_back(v_list);
-    v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_P2:KEY_ACTION_LIST_P2"));
-    v_lists.push_back(v_list);    
-    v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_P3:KEY_ACTION_LIST_P3"));
-    v_lists.push_back(v_list);
-    v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:CONTROLS_TAB_P4:KEY_ACTION_LIST_P4"));
-    v_lists.push_back(v_list);
-
-    std::ostringstream v_activePlayerControls;
-    for(unsigned int i=0; i<v_lists.size(); i++) {
-      if(v_lists[i]->isActive()) {
-        v_activeList = v_lists[i];
-
-	if(i != 0) { // start at one cause first is general
-	  v_activePlayerControls << " " << i;
-	}
-      }
-    }
-
-    if(v_activeList->getSelected() >= 0 && v_activeList->getSelected() < v_activeList->getEntries().size()) {    
-      UIListEntry *pEntry = v_activeList->getEntries()[v_activeList->getSelected()];
+    UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:KEY_ACTION_LIST"));
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {    
+      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
 
       std::string key = CmdArgumentParser::instance()->getString(args);
 
       // is key used
-      for(unsigned int i=0; i< v_lists.size(); i++) {
-          for(unsigned int j=0; j<v_lists[i]->getEntries().size(); j++) {
-		if(v_activeList != v_lists[i] || (v_activeList == v_lists[i] && v_activeList->getSelected() != j) ) {
-			if(v_lists[i]->getEntries()[j]->Text[2] == key) {
+      for(unsigned int i=0;i<v_list->getEntries().size();i++) {
+				if(v_list->getSelected() != i) {
+					if(v_list->getEntries()[i]->Text[2] == key) {
 						// switch keys
-						v_lists[i]->getEntries()[j]->Text[1] = pEntry->Text[1];
-						v_lists[i]->getEntries()[j]->Text[2] = pEntry->Text[2];
-						std::ostringstream v_buf;
-					        v_buf << " " << i;
-						setInputKey(v_lists[i]->getEntries()[j]->Text[0]+v_buf.str(), v_lists[i]->getEntries()[j]->Text[2]);
-						int v_buf2 = i;
-						snprintf(v_tmp, 256, GAMETEXT_SWITCHKEY, v_lists[i]->getEntries()[j]->Text[0].c_str(), v_buf2, v_lists[i]->getEntries()[j]->Text[1].c_str());
+						v_list->getEntries()[i]->Text[1] = pEntry->Text[1];
+						v_list->getEntries()[i]->Text[2] = pEntry->Text[2];
+						setInputKey(v_list->getEntries()[i]->Text[0], v_list->getEntries()[i]->Text[2]);
+						
+						snprintf(v_tmp, 256, GAMETEXT_SWITCHKEY, v_list->getEntries()[i]->Text[0].c_str(), v_list->getEntries()[i]->Text[1].c_str());
 						SysMessage::instance()->displayInformation(v_tmp);
-			}
-		}
-	  }
+					}
+				}
       }
       pEntry->Text[1] = XMKey(key).toFancyString();
       pEntry->Text[2] = key;
-      setInputKey(pEntry->Text[0]+v_activePlayerControls.str(), key);
+      setInputKey(pEntry->Text[0], key);
     }
   }
 
@@ -2245,10 +2044,6 @@ void StateOptions::executeOneCommand(std::string cmd, std::string args) {
   else if(cmd == "CHANGE_WWW_ACCESS" || cmd == "CONFIGURE_WWW_ACCESS") {
     updateWWWOptions();
     updateDbOptions();
-  }
-
-  else if(cmd == "CHANGE_TRAILCAM") {
-    updateTrailCamOptions();
   }
 
   else if(cmd == "ENABLEAUDIO_CHANGED") {
@@ -2279,16 +2074,31 @@ void StateOptions::setInputKey(const std::string& i_strKey, const std::string& i
 
   for(int i=0; i<INPUT_NB_PLAYERS; i++) {
     std::ostringstream v_n;
-    v_n << " " << (i+1);
 
-    // player keys
-    for(unsigned int j=0; j<INPUT_NB_PLAYERKEYS; j++) {
-      if(i_strKey == InputHandler::instance()->getPlayerKeyHelp(j, i) + v_n.str()) {
-	InputHandler::instance()->setPlayerKey(j, i, XMKey(i_key));
-      }
+    if(i != 0) {
+      v_n << " " << (i+1);
+    }  
+
+    if(i_strKey == GAMETEXT_DRIVE + v_n.str()) {
+      InputHandler::instance()->setDRIVE(i, XMKey(i_key));
+    }
+    
+    if(i_strKey == GAMETEXT_BRAKE + v_n.str()) {
+      InputHandler::instance()->setBRAKE(i, XMKey(i_key));
+    }
+    
+    if(i_strKey == GAMETEXT_FLIPLEFT + v_n.str()) {
+      InputHandler::instance()->setFLIPLEFT(i, XMKey(i_key));
+    }
+    
+    if(i_strKey == GAMETEXT_FLIPRIGHT + v_n.str()) {
+      InputHandler::instance()->setFLIPRIGHT(i, XMKey(i_key));
+    }
+    
+    if(i_strKey == GAMETEXT_CHANGEDIR + v_n.str()) {
+      InputHandler::instance()->setCHANGEDIR(i, XMKey(i_key));
     }
 
-    // player script keys
     for(unsigned int k=0; k<MAX_SCRIPT_KEY_HOOKS; k++) {
       std::ostringstream v_k;
       v_k << (k+1);
@@ -2298,9 +2108,23 @@ void StateOptions::setInputKey(const std::string& i_strKey, const std::string& i
     }
   }
 
-  for(unsigned int i=0; i<INPUT_NB_GLOBALKEYS; i++) {
-    if(i_strKey == InputHandler::instance()->getGlobalKeyHelp(i)) {
-      InputHandler::instance()->setGlobalKey(i, XMKey(i_key));
-    }
+  if(i_strKey == GAMETEXT_SWITCHFAVORITE) {
+    InputHandler::instance()->setSwitchFavorite(XMKey(i_key));
+  }
+
+  if(i_strKey == GAMETEXT_SWITCHBLACKLIST) {
+    InputHandler::instance()->setSwitchBlacklist(XMKey(i_key));
+  }
+
+  if(i_strKey == GAMETEXT_SWITCHUGLYMODE) {
+    InputHandler::instance()->setSwitchUglyMode(XMKey(i_key));
+  }
+
+  if(i_strKey == GAMETEXT_RESTARTLEVEL) {
+    InputHandler::instance()->setRestartLevel(XMKey(i_key));
+  }
+
+  if(i_strKey == GAMETEXT_SHOWCONSOLE) {
+    InputHandler::instance()->setShowConsole(XMKey(i_key));
   }
 }

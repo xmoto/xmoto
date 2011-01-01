@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __LEVELSRC_H__
 #define __LEVELSRC_H__
 
-#define CACHE_LEVEL_FORMAT_VERSION 35
+#define CACHE_LEVEL_FORMAT_VERSION 30
 
 #include <string>
 #include <vector>
@@ -43,7 +43,6 @@ class ChipmunkWorld;
 class Sprite;
 class PhysicsSettings;
 class DBuffer;
-class Checkpoint;
 
 /*===========================================================================
   Level source object - holds all stored information about a level
@@ -119,15 +118,12 @@ class Level {
   void setAuthor(const std::string& i_author);
   void setCollisionSystem(CollisionSystem* p_CollisionSystem);
 
-  const std::vector<std::string>& scriptLibraryFileNames();
   std::string scriptFileName() const;
   std::string scriptSource() const;
-  void setScriptLibraryFileNames(std::vector<std::string>& i_scriptLibraryFileNames);
   void setScriptFileName(const std::string& i_scriptFileName);
   std::vector<Block*>& Blocks();
   std::vector<Entity*>& Entities();
   std::vector<Joint*>& Joints();
-  std::vector<Entity*>& EntitiesDestroyed();
   /* entities which are not part of original level, but which are generated while playing */
   std::vector<Entity*>& EntitiesExterns();
   std::vector<Zone*>& Zones();
@@ -137,8 +133,7 @@ class Level {
 
   void killEntity(const std::string& i_entityId);
   unsigned int countToTakeEntities();
-
-   void revertEntityDestroyed(const std::string& i_entityId);
+  void revertEntityDestroyed(const std::string& i_entityId);
 
   static int compareLevel(const Level& i_lvl1, const Level& i_lvl2);    
   static int compareLevelSamePack(const Level& i_lvl1, const Level& i_lvl2);    
@@ -155,17 +150,12 @@ class Level {
   std::string SpriteForWecker() const;
   std::string SpriteForFlower() const;
   std::string SpriteForStar() const;
-  std::string SpriteForCheckpointDown() const;
-  std::string SpriteForCheckpointUp() const;
   std::string SoundForPickUpStrawberry() const;
-  std::string SoundForCheckpoint() const;
 
   Sprite* strawberrySprite();
   Sprite* wreckerSprite();
   Sprite* flowerSprite();
   Sprite* starSprite();
-  Sprite* checkpointSpriteDown();
-  Sprite* checkpointSpriteUp();
 
   int getNumberLayer() {
     return m_numberLayer;
@@ -196,8 +186,7 @@ class Level {
   std::string m_pack;               /* In this level pack */
   std::string m_packNum;            /* value to sort levels */
   std::string m_fileName;
-  XMLDocument *m_xmlSource;    /* Plain XML source */
-  std::vector<std::string> m_scriptLibraryFileNames; /* List of script libraries */
+  XMLDocument *m_xmlSource;    /* Plain XML source */      
   std::string m_scriptFileName;     /* Script file name */      
   std::string m_scriptSource;       /* Script source code */
   std::string m_checkSum;
@@ -231,17 +220,12 @@ class Level {
   std::string m_rSpriteForWecker;
   std::string m_rSpriteForFlower;
   std::string m_rSpriteForStar;
-  std::string m_rSpriteForCheckpointDown;
-  std::string m_rSpriteForCheckpointUp;
   std::string m_rSoundForPickUpStrawberry;
-  std::string m_rSoundForCheckpoint;
 
   Sprite* m_strawberrySprite;
   Sprite* m_wreckerSprite;
   Sprite* m_flowerSprite;
   Sprite* m_starSprite;
-  Sprite* m_checkpointSpriteDown;
-  Sprite* m_checkpointSpriteUp;
 
   void addLimits();
   void exportBinary(FileDataType i_fdt, const std::string &i_fileName, const std::string& i_sum);

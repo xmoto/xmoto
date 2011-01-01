@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 #include "gui/basic/GUI.h"
 #include "XMSession.h"
-#include "helpers/RenderSurface.h"
 #include "xmscene/BikeGhost.h"
 
 #ifdef ENABLE_OPENGL
@@ -36,9 +35,6 @@ class ParticlesSource;
 class Universe;
 class BlockVertex;
 class Camera;
-class Geom;
-class ConvexBlock;
-class LevelGeoms;
 
   /*===========================================================================
   Graphical debug info
@@ -49,13 +45,44 @@ class LevelGeoms;
   };
 
   /*===========================================================================
+  Static geometry
+  ===========================================================================*/
+  struct GeomCoord {
+    float x,y;
+  };
+
+  struct GeomPoly {
+    GeomPoly() {
+      nNumVertices = 0;
+      pVertices = pTexCoords = NULL;
+      nVertexBufferID = nTexCoordBufferID = 0;
+    }
+    
+    unsigned int nNumVertices;
+    GeomCoord *pVertices;
+    GeomCoord *pTexCoords;
+    
+    unsigned int nVertexBufferID,nTexCoordBufferID;
+  };
+
+  struct Geom {
+    Geom() {
+      pTexture = NULL;
+    }
+    std::string material;
+    std::vector<GeomPoly *> Polys;    
+    Texture *pTexture;           // only used for edge Geoms
+    TColor edgeBlendColor;    
+    Vector2f Min,Max; /* AABB */
+  };
+
+  /*===========================================================================
   Special effects overlay
   ===========================================================================*/
   class SFXOverlay {
     public:
       SFXOverlay() {
         m_drawLib = NULL;
-	m_screen = NULL;
 #ifdef ENABLE_OPENGL	
         m_bUseShaders = false;
         m_VertShaderID = m_FragShaderID = m_ProgramID = 0;
@@ -65,11 +92,11 @@ class LevelGeoms;
       }
     
       /* Methods */
-      void init(DrawLib* i_drawLib, RenderSurface* i_screen, unsigned int nWidth, unsigned int nHeight);
+      void init(DrawLib* i_drawLib, unsigned int nWidth, unsigned int nHeight);
       void cleanUp(void);
       void beginRendering(void);
       void endRendering(void);
-      void fade(float f, unsigned int i_frameNumber);
+      void fade(float f);
       void present(void);
     
     private:
@@ -92,23 +119,21 @@ class LevelGeoms;
       
       int m_nOverlayWidth,m_nOverlayHeight;
       DrawLib* m_drawLib;
-      RenderSurface* m_screen;
   };
 
   /*===========================================================================
     Game rendering class
     ===========================================================================*/
-class GameRenderer {
+class GameRenderer : public Singleton<GameRenderer> {
+  friend class Singleton<GameRenderer>;
 
 public:
-  GameRenderer();
-  ~GameRenderer();
-
-  void init(DrawLib* i_drawLib, RenderSurface* i_screen); /* only called at start-up, and not per-level */
+  void init(DrawLib* i_drawLib); /* only called at start-up, and not per-level */
+  void shutdown(void);
   void render(Scene* i_scene);
 
   void prepareForNewLevel(Universe* i_universe);
-  void unprepareForNewLevel(Universe* i_universe);
+  void unprepareForNewLevel(void);
 
   void loadDebugInfo(std::string File);
 
@@ -121,8 +146,6 @@ public:
   void setBestTime(const std::string& s) {m_bestTime = s;}
   void setWorldRecordTime(const std::string &s) {m_worldRecordTime = s;}
   void setShowMinimap(bool i_value);
-  void setRenderGhostTrail(bool i_value);
-  bool renderGhostTrail();
   void setShowTimePanel(bool i_value);
   void setScreenShade(bool i_doShade_global, bool i_doShadeAnim_global, float i_shadeTime_global); 
   void hideReplayHelp();
@@ -130,11 +153,13 @@ public:
   void setShowEngineCounter(bool i_value);
   bool showMinimap() const;
   void showReplayHelp(float p_speed, bool bAllowRewind);
+  void switchFollow(Scene* i_scene);
 
   void setShowGhostsText(bool i_value);
   bool showGhostsText() const;
   void renderGameMessages(Scene* i_scene);
 
+  unsigned int currentRegistrationStage() const;
   void setGraphicsLevel();
 
 private:
@@ -145,17 +170,20 @@ private:
       
   std::string getBestTime(void) {return m_bestTime;}
 
+  GameRenderer();
+  ~GameRenderer();
+
   DrawLib* m_drawLib;
-  RenderSurface m_screen; // this is a copy of the initial screen (in fact, a state can be changed and then, the screen deleted)
   std::vector<GraphDebugInfo *> m_DebugInfo;
+      
+  std::vector<Geom*> m_StaticGeoms;
+  std::vector<Geom*> m_DynamicGeoms;
+  std::vector<Geom*> m_edgeGeoms;
 
   std::string m_bestTime;
   std::string m_replayHelp_l;
   std::string m_replayHelp_r;
   std::string m_worldRecordTime;
-
-  // registering
-  unsigned int m_registeringValue;
 
   GraphicsLevel m_graphicsLevel;
 
@@ -165,7 +193,6 @@ private:
   float m_previousEngineLinVel;
 
   bool m_showMinimap;
-  bool m_renderGhostTrail;
   bool m_showEngineCounter;
   bool m_showTimePanel;
   bool m_showGhostsText;
@@ -184,9 +211,17 @@ private:
   float m_sizeMultOfEntitiesToTake;
   float m_sizeMultOfEntitiesWhichMakeWin;
   int   m_nParticlesRendered;
+  std::string       m_currentEdgeEffect;
+  TColor            m_currentEdgeBlendColor;
+  EdgeEffectSprite* m_currentEdgeSprite;
+  float             m_currentEdgeMaterialScale;
+  float             m_currentEdgeMaterialDepth;
   Sprite*           m_currentSkySprite;
   Sprite*           m_currentSkySprite2;
   
+
+  //GhostTrail* m_ghostTrail;
+
   float m_xScale;
   float m_yScale;
   float m_xScaleDefault;
@@ -220,8 +255,8 @@ private:
 		      Biker* i_biker,
 		      int i_90_rotation = 0
 		      );
-  void _RenderStaticBlocks(Scene* i_scene);
-  void _RenderStaticBlock(Block* block);
+  void _RenderBlocks(Scene* i_scene);
+  void _RenderBlock(Block* block);
   void _RenderBlockEdges(Block* block);
   void _RenderDynamicBlocks(Scene* i_scene, bool bBackground=false);
   void _RenderBackground(Scene* i_scene);
@@ -248,13 +283,37 @@ private:
   void _RenderAlphaBlendedSectionSP(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
   void _RenderRectangle(const Vector2f& i_p1, const Vector2f& i_p2, const Color& i_color, bool i_filled = false);
   void _RenderCircle(unsigned int nSteps, const Color i_color,const Vector2f &C,float fRadius, bool i_filled = false);
+  void _deleteGeoms(std::vector<Geom *>& geom, bool useFree=false);
 
   void renderTimePanel(Scene* i_scene);
   void renderReplayHelpMessage(Scene* i_scene);
 
   Texture* loadTexture(std::string textureName);
+  Texture* loadTextureEdge(std::string textureName);
+  int  edgeGeomExists(Block* pBlock, std::string texture);
   void initCameras(Universe* i_universe);
-  unsigned int  loadBlock(LevelGeoms* i_levelGeoms, Block* pBlock, int blockIndex);
+  int  loadBlock(Block* pBlock, Universe* i_universe, unsigned int currentScene, int sameSceneAs, int blockIndex);
+  int  loadBlockGeom(Block* pBlock, std::vector<Geom *>* pGeoms, Vector2f Center, Scene* pScene);
+  int  loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene);
+  void calculateEdgePosition(Block* pBlock,
+			     BlockVertex* vertexA1,
+			     BlockVertex* vertexB1,
+			     BlockVertex* vertexC1,
+			     Vector2f     center,
+			     Vector2f& A1, Vector2f& B1,
+			     Vector2f& B2, Vector2f& A2,
+			     Vector2f& C1, Vector2f& C2,
+			     Vector2f oldC2, Vector2f oldB2, bool useOld,
+			     bool AisLast, bool& swapDone);
+  void calculateEdgeTexture(Block* pBlock,
+			    Vector2f A1,   Vector2f B1,
+			    Vector2f B2,   Vector2f A2,
+			    Vector2f& ua1, Vector2f& ub1,
+			    Vector2f& ub2, Vector2f& ua2);
+
+  void beginTexturesRegistration();
+  void endTexturesRegistration();
+  unsigned int m_curRegistrationStage;
 };
 
 #endif

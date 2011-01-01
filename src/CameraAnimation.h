@@ -24,13 +24,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VMath.h"
 
 class Camera;
-class RenderSurface;
+class DrawLib;
 class Scene;
-class GameRenderer;
 
 class CameraAnimation {
   public:
-  CameraAnimation(Camera* i_camera, RenderSurface* i_screen, GameRenderer* i_renderer, Scene* i_motoGame);
+  CameraAnimation(Camera* i_camera, DrawLib* i_drawLib, Scene* i_motoGame);
   virtual ~CameraAnimation();
 
   virtual void init();
@@ -49,8 +48,7 @@ class CameraAnimation {
 
  protected:
   Camera*   m_camera;
-  RenderSurface*  m_screen;
-  GameRenderer* m_renderer;
+  DrawLib*  m_drawLib;
   Scene* m_motoGame;
   int       m_step;
   bool      m_allowNextStep;
@@ -68,7 +66,7 @@ class CameraAnimation {
 
 class AutoZoomCameraAnimation : public CameraAnimation {
  public:
-  AutoZoomCameraAnimation(Camera* i_camera, RenderSurface* i_screen, GameRenderer* i_renderer, Scene* i_motoGame);
+  AutoZoomCameraAnimation(Camera* i_camera, DrawLib* i_drawLib, Scene* i_motoGame);
   ~AutoZoomCameraAnimation();
 
   virtual void init();
@@ -96,7 +94,7 @@ class AutoZoomCameraAnimation : public CameraAnimation {
 
 class ZoomingCameraAnimation : public CameraAnimation {
  public:
-  ZoomingCameraAnimation(Camera* i_camera, RenderSurface* i_screen, GameRenderer* i_renderer, Scene* i_motoGame);
+  ZoomingCameraAnimation(Camera* i_camera, DrawLib* i_drawLib, Scene* i_motoGame);
   ~ZoomingCameraAnimation();
 
   virtual void init();

@@ -26,7 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateVote : public StateMenu {
   public:
-  StateVote(const std::string& i_idlevel,
+  StateVote(const std::string& i_id,
+	    const std::string& i_idlevel,
 	    bool drawStateBehind    = true,
 	    bool updateStatesBehind = false
 	    );
@@ -47,7 +48,7 @@ class StateVote : public StateMenu {
 
   /* GUI */
   static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static void createGUIIfNeeded();
 
   bool isToSkip();
   void updateRights();

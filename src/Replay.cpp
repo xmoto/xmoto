@@ -22,7 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Replay recording and management.
  */
 #include "Replay.h"
-#include "helpers/Log.h"
 #if defined(WIN32) 
   #include "zlib.h"
 #else
@@ -42,24 +41,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Block.h"
 #include "db/xmDatabase.h"
 
-// minimum value to consider a block has moved
-#define RMOVINGBLOCK_MIN_DIFFMOVE             0.1
-#define RMOVINGBLOCK_MIN_DIFFROTATION         0.1
-
-// if the block has moved, save it but at a frequency depending on the distance to the player
-#define RMOVINGBLOCK_MIN_FARDIFFTIME1         15
-#define RMOVINGBLOCK_MIN_FARPLAYERLENGTH1     5.0
-#define RMOVINGBLOCK_MIN_FARDIFFTIME2         80
-#define RMOVINGBLOCK_MIN_FARPLAYERLENGTH2     10.0
-#define RMOVINGBLOCK_MIN_FARDIFFTIME3         150
-//#define RMOVINGBLOCK_MIN_FARPLAYERLENGTH3 no values while it's all what is greater
-
- // if the block has not moved a lot, but for a long time, save it
-#define MOVINGBLOCK_MIN_LONGDIFFTIME            500
-#define RMOVINGBLOCK_MIN_LONGDIFFMOVE             0.05
-#define RMOVINGBLOCK_MIN_LONGDIFFROTATION         0.05
-
-
   bool Replay::m_bEnableCompression = true;
 
   Replay::Replay() {
@@ -68,7 +49,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_finishTime = 0;
     m_pcInputEventsData = NULL;
     m_nInputEventsDataSize = 0;
-    m_saved = false;
   }
       
   Replay::~Replay() {
@@ -99,9 +79,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
   
-  void Replay::finishReplay(bool bFinished, int finishTime) {
+  void Replay::finishReplay(bool bFinished, int finishTime, int i_format) {
     m_finishTime = finishTime;
     m_bFinished = bFinished;
+    saveReplay(i_format);
   }
   
   void Replay::createReplay(const std::string &FileName, const std::string &LevelID,
@@ -115,11 +96,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     initOutput(1024);
   }
   
-  void Replay::saveReplayIfNot(int i_format) {
-
-    if(m_saved) {
-      return;
-    }
+  void Replay::saveReplay(int i_format) {
 
     FileHandle *pfh = XMFS::openOFile(FDT_DATA, std::string("Replays/") + m_FileName);
     if(pfh == NULL) {
@@ -134,8 +111,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       saveReplay_1(pfh);
       break;
 
-    case 3:
-      saveReplay_3(pfh);
+    case 2:
+      saveReplay_2(pfh);
       break;
 
     default:
@@ -144,10 +121,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     XMFS::closeFile(pfh);
-    m_saved = true;
   }
 
-  void Replay::saveReplay_3(FileHandle *pfh) {
+  void Replay::saveReplay_2(FileHandle *pfh) {
     const char *pcData;
     int nDataSize;
     char *pcCompressedData;
@@ -158,7 +134,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* keep header uncompressed to be faster to read just it */
 
     /* Header */
-    XMFS::writeByte(pfh,3); /* Version: 3 */
+    XMFS::writeByte(pfh,2); /* Version: 2 */
     XMFS::writeString(pfh,m_LevelID);
     XMFS::writeString(pfh,m_PlayerName);
     XMFS::writeBool(pfh,m_bFinished);
@@ -186,34 +162,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       v_replay.writeBuf(m_Chunks[i]->pcChunkData, m_nStateSize * m_Chunks[i]->nNumStates);
     }
 
-    /* Moving blocks */
-    int nstates = 0;
-    unsigned int nmovingBlocks = 0;
-
-    // save only moving blocks
-    for(unsigned int i=0; i<m_movingBlocksForSaving.size(); i++) {
-      if(m_movingBlocksForSaving[i].states.size() > 1) { // > 1 because if there is only one state, the block has not moved
-	nmovingBlocks++;
-      }
-    }
-    v_replay << nmovingBlocks;
-    for(unsigned int i=0; i<m_movingBlocksForSaving.size(); i++) {
-      if(m_movingBlocksForSaving[i].states.size() > 1) { // > 1 because if there is only one state, the block has not moved
-	v_replay << m_movingBlocksForSaving[i].name;
-	v_replay << m_movingBlocksForSaving[i].states.size();
-	for(unsigned int j=0; j<m_movingBlocksForSaving[i].states.size(); j++) {
-	  v_replay << m_movingBlocksForSaving[i].states[j].time;
-	  v_replay << m_movingBlocksForSaving[i].states[j].position.x;
-	  v_replay << m_movingBlocksForSaving[i].states[j].position.y;
-	  v_replay << m_movingBlocksForSaving[i].states[j].rotation;
-	  nstates++;
-	}
-      }
-    }
-
-    LogInfo("Replay moving block states size = %iKB (%i blocks, %i states, %i bytes/state)",
-	    nstates*sizeof(rmblockState)/1024, m_movingBlocksForSaving.size(), nstates, sizeof(rmblockState));
-
     /* zip and write into the file */
     pcData    = v_replay.convertOutputToInput();
     nDataSize = v_replay.numRemainingBytes();
@@ -222,8 +170,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     XMFS::writeInt_LE(pfh, nCompressedDataSize);
     XMFS::writeBuf(pfh, (char *)pcCompressedData, nCompressedDataSize); 
     free(pcCompressedData);
-    LogInfo("Replay - uncompressed = %iKB ; compressed = %iKB (ratio = %.2f%%)",
-	    nDataSize/1024, nCompressedDataSize/1024, (((float)nCompressedDataSize*100.0))/((float)nDataSize));
   }
 
   void Replay::saveReplay_1(FileHandle *pfh) {
@@ -301,7 +247,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
   
-void Replay::openReplay_3(FileHandle *pfh, bool bDisplayInformation) {
+void Replay::openReplay_2(FileHandle *pfh, bool bDisplayInformation) {
   DBuffer v_replay;
   int v_nDataSize;
   char *v_pcData;
@@ -397,31 +343,6 @@ void Replay::openReplay_3(FileHandle *pfh, bool bDisplayInformation) {
 
     v_replay.readBuf(Chunk->pcChunkData, m_nStateSize*Chunk->nNumStates);
     m_Chunks.push_back(Chunk);
-  }
-
-  /* moving blocks */
-  unsigned int v_nmovingBlocks;
-  unsigned int  v_nstates;
-  rmtime t;
-  rmtimeState s;
-
-  v_replay >> v_nmovingBlocks;
-
-  for(unsigned int i=0; i<v_nmovingBlocks; i++) {
-    v_replay >> t.name;
-    t.block = NULL; // don't initialize now, the level is not loaded
-    t.readPos = 0;
-    m_movingBlocksForLoading.push_back(t);
-
-    v_replay >> v_nstates;
-    for(unsigned int j=0; j<v_nstates; j++) {
-      v_replay >> s.time;
-      v_replay >> s.position.x;
-      v_replay >> s.position.y;
-      v_replay >> s.rotation;
-
-      m_movingBlocksForLoading[m_movingBlocksForLoading.size()-1].states.push_back(s);
-    }
   }
 }
 
@@ -611,9 +532,9 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
       }
       break;
 
-    case 3:
+    case 2:
       try {
-	openReplay_3(pfh, bDisplayInformation);
+	openReplay_2(pfh, bDisplayInformation);
       } catch(Exception &e) {
 	XMFS::closeFile(pfh);
 	throw e;
@@ -651,126 +572,17 @@ void Replay::openReplay_1(FileHandle *pfh, bool bDisplayInformation, int nVersio
     return m_LevelID;
   }
 
-bool Replay::isPhysicBlockToSave(Block* i_block, int i_time, const std::vector<rmblockState>& i_states,
-				 const std::vector<Biker*>& i_players, bool i_forceSaveAll) {
-  // the block must be physic
-  if(i_block->isPhysics() == false) {
-    return false;
+  void Replay::storeBlocks(const std::vector<Block *>& i_blocks) {
+     for(unsigned int i=0; i<i_blocks.size(); i++) {
+       if(i_blocks[i]->isPhysics() == true) {
+	 /* store this block in the .rpl if the position changed */
+	 // 
+	 // i_blocks[i]->Id();
+	 // i_blocks[i]->DynamicPosition();
+	 // i_blocks[i]->DynamicRotation();
+       }
+     }
   }
-
-  if(i_forceSaveAll) {
-    return true;
-  }
-
-  // the block must be saved the first time
-  if(i_states.size() == 0) {
-    return true;
-  }
-
-  // store only on changes and if timediff is enough
-  const rmblockState* v_previousState = &(i_states[i_states.size()-1]);
-
-  // main case : do not save under the RMOVINGBLOCK_MIN_DIFFTIME frequency
-  if(i_time < v_previousState->time + RMOVINGBLOCK_MIN_FARDIFFTIME1) {
-    return false;
-  }
-
-  // at this step the decision is taken according to the distance to the players
-  // compute the minimum distance between the block and the players
-  float v_playerDist = 0.0;
-  Vector2f plen;
-  if(i_players.size() > 0) {
-    plen = i_players[0]->getState()->CenterP - i_block->DynamicPosition();
-    v_playerDist = plen.length();
-  }
-  for(unsigned int p=1; p<i_players.size(); p++) {
-    plen = i_players[p]->getState()->CenterP - i_block->DynamicPosition();
-    if(plen.length() < v_playerDist) {
-      v_playerDist = plen.length();
-    }
-  }
-
-  // at this step, the block is stored only if it has moved
-  bool v_hasNormalMove =
-    v_previousState->position.x - i_block->DynamicPosition().x >   RMOVINGBLOCK_MIN_DIFFMOVE      ||
-    v_previousState->position.x - i_block->DynamicPosition().x < -(RMOVINGBLOCK_MIN_DIFFMOVE)     ||
-    v_previousState->position.y - i_block->DynamicPosition().y >   RMOVINGBLOCK_MIN_DIFFMOVE      ||
-    v_previousState->position.y - i_block->DynamicPosition().y < -(RMOVINGBLOCK_MIN_DIFFMOVE)     ||
-    v_previousState->rotation   - i_block->DynamicRotation()   >   RMOVINGBLOCK_MIN_DIFFROTATION  ||
-    v_previousState->rotation   - i_block->DynamicRotation()   < -(RMOVINGBLOCK_MIN_DIFFROTATION);
-
-  if(v_hasNormalMove) {
-    // save if the block is near the player
-    //
-    /* test moved higher whie it's the most current
-    if(i_time <= v_previousState->time + RMOVINGBLOCK_MIN_FARDIFFTIME1) {
-      return false;
-    }
-    */
-
-    // save if the block if far from the player, but less frequently
-    if(v_playerDist >= RMOVINGBLOCK_MIN_FARPLAYERLENGTH1 &&
-       i_time <= v_previousState->time + RMOVINGBLOCK_MIN_FARDIFFTIME2) {
-      return false;
-    }
-
-    // save if the block if very far from the player, but really less frequently
-    if(v_playerDist >= RMOVINGBLOCK_MIN_FARPLAYERLENGTH2 &&
-       i_time <= v_previousState->time + RMOVINGBLOCK_MIN_FARDIFFTIME3) {
-      return false;
-    }
-
-    return true;
-  }
-
-  // at this step normal moves are saved, but i suggest to save last block position when they have not moved from a long time
-  if(i_time <= v_previousState->time + MOVINGBLOCK_MIN_LONGDIFFTIME) {
-    return false;
-  }
-
-  bool v_hasMinimalMove =
-    v_previousState->position.x - i_block->DynamicPosition().x >   RMOVINGBLOCK_MIN_LONGDIFFMOVE      ||
-    v_previousState->position.x - i_block->DynamicPosition().x < -(RMOVINGBLOCK_MIN_LONGDIFFMOVE)     ||
-    v_previousState->position.y - i_block->DynamicPosition().y >   RMOVINGBLOCK_MIN_LONGDIFFMOVE      ||
-    v_previousState->position.y - i_block->DynamicPosition().y < -(RMOVINGBLOCK_MIN_LONGDIFFMOVE)     ||
-    v_previousState->rotation   - i_block->DynamicRotation()   >   RMOVINGBLOCK_MIN_LONGDIFFROTATION  ||
-    v_previousState->rotation   - i_block->DynamicRotation()   < -(RMOVINGBLOCK_MIN_LONGDIFFROTATION);
-  // save if the block has moved only a little from a long time
-  if(v_hasMinimalMove) {
-    return true;
-  }
-
-  return false;
-}
-
-void Replay::storeBlocks(int i_time, const std::vector<Block *>& i_blocks, const std::vector<Biker*>& i_players, bool i_forceSaveAll) {
-
-  // create a structure for each block (initialisation)
-  if(m_movingBlocksForSaving.size() < i_blocks.size()) {
-    for(unsigned int i=m_movingBlocksForSaving.size(); i<i_blocks.size(); i++) {
-      rmblock rb;
-      rb.name = i_blocks[i]->Id();
-      rb.lastMovingTime = i_time;
-      m_movingBlocksForSaving.push_back(rb);
-    }
-  }
-
-  // store the delta
-  for(unsigned int i=0; i<i_blocks.size(); i++) {
-    /* store this block in the .rpl if the position changed */
-    if(isPhysicBlockToSave(i_blocks[i], i_time, m_movingBlocksForSaving[i].states, i_players, i_forceSaveAll)) {
-      rmblockState rmbs;
-      rmbs.time = i_time;
-      rmbs.position = i_blocks[i]->DynamicPosition();
-      rmbs.rotation = i_blocks[i]->DynamicRotation();
-      m_movingBlocksForSaving[i].states.push_back(rmbs);
-    }
-  }
-}
-
-std::vector<rmtime>* Replay::getMovingBlocks() {
-  return &m_movingBlocksForLoading;
-}
 
   void Replay::storeState(const SerializedBikeState& state) {
     char *addr;
@@ -807,31 +619,6 @@ std::vector<rmtime>* Replay::getMovingBlocks() {
   bool Replay::nextNormalState() {
     return nextState(1);
   }
-
-void Replay::rewindAtPosition(ReplayPosition i_rs) {
-  m_bEndOfFile = i_rs.bEndOfFile;
-  m_nCurChunk = i_rs.nCurChunk;
-  m_nCurState = i_rs.nCurState;
-}
-
-void Replay::rewindAtBeginning() {
-  ReplayPosition v_rs;
-  v_rs.bEndOfFile = false;
-  v_rs.nCurChunk = 0;
-  v_rs.nCurState = 0.0;
-
-  rewindAtPosition(v_rs);
-}
-
-ReplayPosition Replay::getReplayPosition() const {
-  ReplayPosition v_res;
-
-  v_res.bEndOfFile = m_bEndOfFile;
-  v_res.nCurChunk  = m_nCurChunk;
-  v_res.nCurState  = m_nCurState;
-
-  return v_res;
-}
 
 bool Replay::nextState(int p_frames) {
   m_bEndOfFile = false;
@@ -948,7 +735,7 @@ bool Replay::nextState(int p_frames) {
       }
       
       int nVersion = XMFS::readByte(pfh);
-      if(nVersion != 0 && nVersion != 1 && nVersion != 3) {
+      if(nVersion != 0 && nVersion != 1 && nVersion != 2) {
 	XMFS::closeFile(pfh);
 	return NULL;
       }
@@ -975,7 +762,7 @@ bool Replay::nextState(int p_frames) {
 	finishTime    = GameApp::floatToTime(XMFS::readFloat_LE(pfh));
 	break;
 
-      case 3:
+      case 2:
 	LevelID       =    XMFS::readString(pfh);
 	Player        =    XMFS::readString(pfh);
 	bFinished     =    XMFS::readBool(pfh);

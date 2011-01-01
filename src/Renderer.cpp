@@ -35,7 +35,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Random.h"
 #include "drawlib/DrawLib.h"
 #include "Game.h"
-#include "GeomsManager.h"
 #include <algorithm>
 #include "xmscene/Camera.h"
 #include "xmscene/Block.h"
@@ -108,28 +107,29 @@ GameRenderer::GameRenderer() {
   m_sizeMultOfEntitiesToTake = 1.0;
   m_sizeMultOfEntitiesWhichMakeWin = 1.0;
   m_showMinimap = true;
-  m_renderGhostTrail = false;
   m_showEngineCounter = true;
   m_showTimePanel = true;
   m_allowGhostEffect = true;
+  m_currentEdgeEffect = "";
+  m_currentEdgeBlendColor = DEFAULT_EDGE_BLENDCOLOR;
+  m_currentEdgeSprite = NULL;
   m_currentSkySprite = NULL;
   m_currentSkySprite2 = NULL;
+  m_curRegistrationStage = 0;
   m_showGhostsText = true;
   m_graphicsLevel = GFX_HIGH;  //not used anymore
 }
 
 GameRenderer::~GameRenderer() {
-  m_Overlay.cleanUp();
 }
 
   /*===========================================================================
   Init at game start-up
   ===========================================================================*/
-void GameRenderer::init(DrawLib* i_drawLib, RenderSurface* i_screen) { 
+  void GameRenderer::init(DrawLib* i_drawLib) { 
     /* Overlays? */
     m_drawLib = i_drawLib;
-    m_screen = *i_screen;
-    m_Overlay.init(GameApp::instance()->getDrawLib(),&m_screen,512,512); // width height of the picture of the biker
+    m_Overlay.init(GameApp::instance()->getDrawLib(),512,512);
 
     m_nParticlesRendered = 0;
     m_arrowSprite = NULL;
@@ -141,6 +141,7 @@ void GameRenderer::init(DrawLib* i_drawLib, RenderSurface* i_screen) {
 void GameRenderer::prepareForNewLevel(Universe* i_universe) {
   // level of the first world
   Level* v_level;
+  int n_sameSceneAs;
 
   // set the graphical level on time by level in case it changes while playing
   //m_graphicsLevel = XMSession::instance()->gameGraphics();  NOT USED ANYMORE
@@ -169,7 +170,7 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
   m_sizeMultOfEntitiesToTake       = 1.0;
   m_sizeMultOfEntitiesWhichMakeWin = 1.0;
 
-  m_registeringValue = Theme::instance()->getTextureManager()->beginTexturesRegistration();
+  beginTexturesRegistration();
 
   /* Optimize scene */
   for(unsigned int u=0; u<i_universe->getScenes().size(); u++) {
@@ -177,14 +178,21 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
 
     LogInfo("Loading level %s", v_level->Name().c_str());
 
+    n_sameSceneAs = -1;
+    // set to the universe which has the same level to init geoms
+    // only 1 time if the level is loaded several times
+    for(unsigned int v=0; v<u; v++) {
+      if(i_universe->getScenes()[u]->getLevelSrc()->Id() == i_universe->getScenes()[v]->getLevelSrc()->Id()) {
+	n_sameSceneAs = v;
+	break;
+      }
+    }
+
     std::vector<Block*>& Blocks = v_level->Blocks();
-    unsigned int nVertexBytes = 0;
+    int nVertexBytes = 0;
 
     bool v_loadLayers = true;//XMSession::instance()->gameGraphics() == GFX_HIGH;
     bool v_loadBackgroundBlocks = true;//XMSession::instance()->gameGraphics() != GFX_LOW;
-
-    // get levelGeoms -- by scene in case scenes have different levels
-    LevelGeoms* v_lg = GeomsManager::instance()->register_begin(i_universe->getScenes()[u]);
 
     for(unsigned int i=0; i<Blocks.size(); i++) {
       /* do not load into the graphic card blocks which won't be
@@ -195,13 +203,8 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
       if(v_loadBackgroundBlocks == false && Blocks[i]->isBackground() == true)
 	continue;
 
-      try {
-	nVertexBytes += loadBlock(v_lg, Blocks[i], i);
-      } catch(Exception &e) {
-	i_universe->getScenes()[u]->gameMessage(e.getMsg(), true);
-      }
+      nVertexBytes += loadBlock(Blocks[i], i_universe, u, n_sameSceneAs, i);
     }
-    GeomsManager::instance()->register_end(i_universe->getScenes()[u]);
 
     LogInfo("GL: %d kB vertex buffers", nVertexBytes/1024);
 
@@ -268,7 +271,7 @@ void GameRenderer::prepareForNewLevel(Universe* i_universe) {
     m_arrowSprite->loadTextures();
   }
   
-  Theme::instance()->getTextureManager()->endTexturesRegistration();
+  endTexturesRegistration();
 }
 
 void GameRenderer::initCameras(Universe* i_universe)
@@ -281,40 +284,432 @@ void GameRenderer::initCameras(Universe* i_universe)
     for(unsigned int i=0; i<numberCamera; i++){
       i_universe->getScenes()[j]->setCurrentCamera(i);
       i_universe->getScenes()[j]->getCamera()->prepareForNewLevel();
+      i_universe->getScenes()[j]->getCamera()->initTrailCam(i_universe->getScenes()[j]);
     }
   }
 }
 
-unsigned int GameRenderer::loadBlock(LevelGeoms* i_levelGeoms, Block* pBlock, int blockIndex)
+int GameRenderer::loadBlock(Block* pBlock,
+			    Universe* i_universe,
+			    unsigned int currentScene,
+			    int sameSceneAs,
+			    int blockIndex)
 {
-  unsigned int nVertexBytes;
-
-  // load the geoms
-  BlockGeoms v_bg = i_levelGeoms->getBlockGeom(pBlock, blockIndex, nVertexBytes);
-  pBlock->setGeom(v_bg.gmain);
-  pBlock->setEdgeGeoms(v_bg.gedges);
-
-  // load the texture
-  if(pBlock->getSprite() != NULL) {
-    pBlock->getSprite()->loadTextures();
-  } else {
-    throw(Exception(GAMETEXT_MISSINGTEXTURES));
+  Scene* pScene  = i_universe->getScenes()[currentScene];
+  int nVertexBytes  = 0;
+  bool dynamicBlock = false;
+  std::vector<Geom *>* pGeoms;
+  
+  if(pBlock->isDynamic() == true){
+    dynamicBlock = true;
+    pGeoms = &m_DynamicGeoms;
+  }
+  else{
+    pGeoms = &m_StaticGeoms;
   }
 
-  // load/register edges Textures
-  for(unsigned int j=0; j<v_bg.gedges.size(); j++) {
-    if(v_bg.gedges[j]->pSprite == NULL) {
-      throw(Exception(GAMETEXT_MISSINGTEXTURES));
+  Vector2f Center;
+  if(dynamicBlock == true){
+    Center.x = 0.0;
+    Center.y = 0.0;
+  }
+  else{
+    Center = pBlock->DynamicPosition();
+  }
+
+  if(pBlock->getSprite() != NULL) {
+    pBlock->getSprite()->loadTextures();
+  }
+  else {
+    pScene->gameMessage(GAMETEXT_MISSINGTEXTURES, true);
+  }
+
+  // add the geom
+  if(sameSceneAs == -1) {
+    nVertexBytes += loadBlockGeom(pBlock, pGeoms, Center, pScene);
+    nVertexBytes += loadBlockEdge(pBlock, Center, pScene);
+    return nVertexBytes;
+
+  } else {
+    // the geoms already exist in level sameSceneAs
+    // assum that blocks loading of levels have the same number (i)
+    Block* pBlockFromOtherLevel = i_universe->getScenes()[sameSceneAs]->getLevelSrc()->Blocks()[blockIndex];
+    pBlock->setGeom(pBlockFromOtherLevel->getGeom());
+
+    // the edge geoms already exist too
+    for(unsigned int i=0;
+	i<pBlockFromOtherLevel->getEdgeGeoms().size();
+	i++){
+      pBlock->addEdgeGeom(pBlockFromOtherLevel->getEdgeGeoms()[i]);
     }
 
-    try {
-      v_bg.gedges[j]->pTexture = v_bg.gedges[j]->pSprite->getTexture();    
-    } catch(Exception &e) {
-      throw(Exception(GAMETEXT_MISSINGTEXTURES));
+    return 0;
+  }
+}
+
+int GameRenderer::loadBlockGeom(Block* pBlock,
+				std::vector<Geom *>* pGeoms,
+				Vector2f Center,
+				Scene* pScene)
+{
+  std::vector<ConvexBlock *> ConvexBlocks = pBlock->ConvexBlocks();
+  int nVertexBytes  = 0;
+  Geom* pSuitableGeom = new Geom;
+
+  int geomIndex = pGeoms->size();
+  pGeoms->push_back(pSuitableGeom);
+  pBlock->setGeom(geomIndex);
+  
+  for(unsigned int j=0; j<ConvexBlocks.size(); j++) {
+    Vector2f v_center = Vector2f(0.0, 0.0);
+
+    GeomPoly *pPoly = new GeomPoly;
+    pSuitableGeom->Polys.push_back(pPoly);
+
+    pPoly->nNumVertices = ConvexBlocks[j]->Vertices().size();
+    pPoly->pVertices    = new GeomCoord[ pPoly->nNumVertices ];
+    pPoly->pTexCoords   = new GeomCoord[ pPoly->nNumVertices ];
+
+    for(unsigned int k=0; k<pPoly->nNumVertices; k++) {
+      pPoly->pVertices[k].x  = Center.x + ConvexBlocks[j]->Vertices()[k]->Position().x;
+      pPoly->pVertices[k].y  = Center.y + ConvexBlocks[j]->Vertices()[k]->Position().y;
+      pPoly->pTexCoords[k].x = ConvexBlocks[j]->Vertices()[k]->TexturePosition().x;
+      pPoly->pTexCoords[k].y = ConvexBlocks[j]->Vertices()[k]->TexturePosition().y;
+
+      v_center += Vector2f(pPoly->pVertices[k].x, pPoly->pVertices[k].y);
     }
+    v_center /= pPoly->nNumVertices;
+
+    /* fix the gap problem with polygons */
+    float a = 0.003; /* seems to be a good value, put negativ value to make it worst */
+    for(unsigned int k=0; k<pPoly->nNumVertices; k++) {
+      Vector2f V = Vector2f(pPoly->pVertices[k].x - v_center.x, pPoly->pVertices[k].y - v_center.y);
+      if(V.length() != 0.0) {
+	V.normalize();
+	V *= a;
+	pPoly->pVertices[k].x += V.x;
+	pPoly->pVertices[k].y += V.y;
+      }
+    }
+
+    nVertexBytes += pPoly->nNumVertices * (4 * sizeof(float));
+#ifdef ENABLE_OPENGL        
+    /* Use VBO optimization? */
+    if(GameApp::instance()->getDrawLib()->useVBOs()) {
+      /* Copy static coordinates unto video memory */
+      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
+      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
+      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
+
+      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
+      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
+      ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
+    }
+#endif
   }
 
   return nVertexBytes;
+}
+
+int GameRenderer::loadBlockEdge(Block* pBlock, Vector2f Center, Scene* pScene)
+{
+  int nVertexBytes  = 0;
+//  if(XMSession::instance()->gameGraphics() != GFX_LOW){  //lets load always all gfx, for beeing able to switch modes ingame
+    m_currentEdgeEffect = "";
+    m_currentEdgeBlendColor = DEFAULT_EDGE_BLENDCOLOR;
+    m_currentEdgeSprite = NULL;
+    m_currentEdgeMaterialScale = DEFAULT_EDGE_SCALE;
+    m_currentEdgeMaterialDepth = DEFAULT_EDGE_DEPTH;
+
+    Vector2f oldC2, oldB2;
+    bool useOld   = false;
+    bool swapDone = false;
+
+    // create edge texture
+    std::vector<BlockVertex *>& vertices = pBlock->Vertices();
+
+    // if the last and the first vertex have edge effect, we have to
+    // calculate oldC2 and oldB2
+    if(vertices.size() > 1){
+      BlockVertex* lastVertex   = vertices[vertices.size()-1];
+      BlockVertex* firstVertex  = vertices[0];
+      BlockVertex* secondVertex = vertices[1];
+
+      if(lastVertex->EdgeEffect() != "" && firstVertex->EdgeEffect() != ""){
+	EdgeEffectSprite* pType = NULL;
+	std::string v_edgeMaterialTextureName = pBlock->getEdgeMaterialTexture(firstVertex->EdgeEffect());
+	if(v_edgeMaterialTextureName == "") {
+	  pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, firstVertex->EdgeEffect());
+	}
+	else {   // edge material defined then
+	   pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_edgeMaterialTextureName);
+        }
+         
+	if(pType == NULL) {
+	  LogWarning("Invalid edge effect %s", firstVertex->EdgeEffect().c_str());
+	  useOld = false;
+	}
+	else{
+	  Vector2f a1, b1, b2, a2, c1, c2;
+	  m_currentEdgeSprite = pType;
+	  m_currentEdgeEffect = firstVertex->EdgeEffect();
+	  calculateEdgePosition(pBlock,
+				lastVertex, firstVertex, secondVertex,
+				Center,
+				a1, b1, b2, a2, c1, c2,
+				oldC2, oldB2, useOld, false, swapDone);
+	  oldC2 = c2;
+	  oldB2 = b2;
+	  useOld = true;
+	  m_currentEdgeBlendColor = pBlock->getEdgeMaterialColor(firstVertex->EdgeEffect());
+	  m_currentEdgeMaterialScale = pBlock->getEdgeMaterialScale(firstVertex->EdgeEffect());
+	  m_currentEdgeMaterialDepth = pBlock->getEdgeMaterialDepth(firstVertex->EdgeEffect());
+	}
+      }
+    }
+
+    for(unsigned int j=0; j<vertices.size(); j++){
+      BlockVertex* vertexA = vertices[j];
+      std::string edgeEffect = vertexA->EdgeEffect();
+      if(edgeEffect == "") {
+	useOld = false;
+	continue;
+      }
+
+      BlockVertex* vertexB  = vertices[(j+1) % vertices.size()];
+      BlockVertex* vertexC  = vertices[(j+2) % vertices.size()];
+
+      bool AisLast = (vertexB->EdgeEffect() == "");
+
+
+      //check if edge texture is in material or pure
+      std::string v_edgeMaterialTextureName = pBlock->getEdgeMaterialTexture(edgeEffect);;
+      Texture* pTexture = NULL;
+      if(v_edgeMaterialTextureName == ""){  // the edge effect is then probably pure oldschool. lets load it then
+        pTexture = loadTextureEdge(edgeEffect);
+      }
+      else {  // we seem to have a material defined.
+        pTexture = loadTextureEdge(v_edgeMaterialTextureName);    
+      }
+      if(pTexture == NULL) {
+	  pScene->gameMessage(GAMETEXT_MISSINGTEXTURES, true);
+	  useOld = false;
+	  continue;
+	}
+     
+      if(edgeEffect != m_currentEdgeEffect) {   //if a new edge effect texture occurs, load it
+        EdgeEffectSprite* pType = NULL;
+        if(v_edgeMaterialTextureName == "") {  //no material defined then
+	  pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, edgeEffect);
+	  if(pType == NULL) {
+	    LogWarning("Invalid edge effect %s", edgeEffect.c_str());
+	    useOld = false;
+	    continue;
+	  }
+  	  m_currentEdgeBlendColor = DEFAULT_EDGE_BLENDCOLOR;
+	  m_currentEdgeMaterialScale = DEFAULT_EDGE_SCALE; 
+          m_currentEdgeMaterialDepth = DEFAULT_EDGE_DEPTH; 
+	}
+	else {  // seems we ve got a material!
+	  pType = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_edgeMaterialTextureName);
+	  if(pType == NULL) {
+	    LogWarning("Invalid edge material %s", edgeEffect.c_str());
+	    useOld = false;
+	    continue;
+	  }
+	  m_currentEdgeBlendColor = pBlock->getEdgeMaterialColor(edgeEffect);
+	  m_currentEdgeMaterialScale = pBlock->getEdgeMaterialScale(edgeEffect);
+          m_currentEdgeMaterialDepth = pBlock->getEdgeMaterialDepth(edgeEffect);
+        }
+        
+        m_currentEdgeSprite = pType;
+  	m_currentEdgeEffect = edgeEffect;
+      }
+      
+      // if a geom for current edge effect exists, get its index number
+      int geomIndex = edgeGeomExists(pBlock, edgeEffect); 
+      if(geomIndex < 0){
+	// create a new one
+	Geom* pGeom = new Geom;
+	geomIndex = m_edgeGeoms.size(); 
+	
+	m_edgeGeoms.push_back(pGeom);
+	pBlock->addEdgeGeom(geomIndex);
+	pGeom->pTexture = pTexture;
+	pGeom->material = edgeEffect;
+	GeomPoly *pPoly = new GeomPoly;
+	pGeom->Polys.push_back(pPoly);
+      }
+      Geom*     pGeom = m_edgeGeoms[geomIndex];
+
+      GeomPoly* pPoly = pGeom->Polys[0];
+
+      pGeom->edgeBlendColor = m_currentEdgeBlendColor;
+
+      Vector2f a1, b1, b2, a2, c1, c2;
+      calculateEdgePosition(pBlock,
+			    vertexA, vertexB, vertexC,
+			    Center,
+			    a1, b1, b2, a2, c1, c2,
+			    oldC2, oldB2, useOld, AisLast, swapDone);
+
+      Vector2f ua1, ub1, ub2, ua2;
+      
+      calculateEdgeTexture(pBlock,
+			   a1, b1, b2, a2,
+			   ua1, ub1, ub2, ua2);
+
+      pPoly->nNumVertices += 4;
+      pPoly->pVertices    = (GeomCoord*)realloc(pPoly->pVertices,
+						pPoly->nNumVertices * sizeof(GeomCoord));
+      pPoly->pTexCoords   = (GeomCoord*)realloc(pPoly->pTexCoords ,
+						pPoly->nNumVertices * sizeof(GeomCoord));
+      nVertexBytes += (4 * sizeof(float));
+
+      pPoly->pVertices[pPoly->nNumVertices-4].x  = a1.x;
+      pPoly->pVertices[pPoly->nNumVertices-4].y  = a1.y;
+      pPoly->pTexCoords[pPoly->nNumVertices-4].x = ua1.x;
+      pPoly->pTexCoords[pPoly->nNumVertices-4].y = ua1.y;
+      pPoly->pVertices[pPoly->nNumVertices-3].x  = b1.x;
+      pPoly->pVertices[pPoly->nNumVertices-3].y  = b1.y;
+      pPoly->pTexCoords[pPoly->nNumVertices-3].x = ub1.x;
+      pPoly->pTexCoords[pPoly->nNumVertices-3].y = ub1.y;
+      pPoly->pVertices[pPoly->nNumVertices-2].x  = b2.x;
+      pPoly->pVertices[pPoly->nNumVertices-2].y  = b2.y;
+      pPoly->pTexCoords[pPoly->nNumVertices-2].x = ub2.x;
+      pPoly->pTexCoords[pPoly->nNumVertices-2].y = ub2.y;
+      pPoly->pVertices[pPoly->nNumVertices-1].x  = a2.x;
+      pPoly->pVertices[pPoly->nNumVertices-1].y  = a2.y;
+      pPoly->pTexCoords[pPoly->nNumVertices-1].x = ua2.x;
+      pPoly->pTexCoords[pPoly->nNumVertices-1].y = ub2.y;
+
+      useOld = true;
+      if(swapDone == true){
+	oldB2 = a2;
+      }else{
+	oldB2 = b2;
+      }
+      oldC2   = c2;
+    }
+
+#ifdef ENABLE_OPENGL        
+    /* Use VBO optimization? */
+    if(GameApp::instance()->getDrawLib()->useVBOs()) {
+      for(unsigned int k=0; k<pBlock->getEdgeGeoms().size(); k++){
+	int geom = pBlock->getEdgeGeoms()[k];
+	for(unsigned int l=0;l<m_edgeGeoms[geom]->Polys.size();l++) {          
+	  GeomPoly *pPoly = m_edgeGeoms[geom]->Polys[l];
+
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
+
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
+	  ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
+	}
+      }
+    }
+#endif
+//  }
+
+  return nVertexBytes;
+}
+
+void GameRenderer::calculateEdgePosition(Block* pBlock,
+					 BlockVertex* vertexA1,
+					 BlockVertex* vertexB1,
+					 BlockVertex* vertexC1,
+					 Vector2f     center,
+					 Vector2f& A1, Vector2f& B1,
+					 Vector2f& B2, Vector2f& A2,
+					 Vector2f& C1, Vector2f& C2,
+					 Vector2f oldC2, Vector2f oldB2, bool useOld,
+					 bool AisLast, bool& swapDone)
+{
+  Vector2f vAPos = vertexA1->Position();
+  Vector2f vBPos = vertexB1->Position();
+  Vector2f vCPos = vertexC1->Position();
+
+  /* link A to B */
+  /*get scale value from inksmoto material, if value is set there, if not (-1), get value from theme */
+  float fDepth = m_currentEdgeMaterialDepth; 
+  if(fDepth == DEFAULT_EDGE_DEPTH) fDepth = m_currentEdgeSprite->getDepth();
+  
+  // add a small border because polygons are a bit larger to avoid gap polygon pb.
+  float v_border; 
+  if(fDepth > 0)
+    v_border = 0.01;
+  else
+    v_border = -0.01;
+
+  switch(pBlock->getEdgeDrawMethod()){
+  case Block::angle:
+    pBlock->calculateEdgePosition_angle(vAPos, vBPos, A1, B1, B2, A2, v_border, fDepth, center, pBlock->edgeAngle());
+    break;
+  case Block::inside:
+    pBlock->calculateEdgePosition_inout(vAPos, vBPos, vCPos, A1, B1, B2, A2, C1, C2, v_border, fDepth, center, oldC2, oldB2, useOld, AisLast, swapDone, true);
+    break;
+  case Block::outside:
+    pBlock->calculateEdgePosition_inout(vAPos, vBPos, vCPos, A1, B1, B2, A2, C1, C2, v_border, fDepth, center, oldC2, oldB2, useOld, AisLast, swapDone, false);
+    break;
+  }
+}
+
+void GameRenderer::calculateEdgeTexture(Block* pBlock,
+					Vector2f A1, Vector2f B1,
+					Vector2f B2, Vector2f A2,
+					Vector2f& ua1, Vector2f& ub1,
+					Vector2f& ub2, Vector2f& ua2)
+{
+  float fXScale = m_currentEdgeMaterialScale; //look if theres a inksmoto material scale defined
+  if(fXScale == DEFAULT_EDGE_SCALE) fXScale = m_currentEdgeSprite->getScale();
+
+  switch(pBlock->getEdgeDrawMethod()){
+  case Block::inside:
+  case Block::outside:{
+    Vector2f N1(-B1.y+A1.y, B1.x-A1.x);
+
+    if(N1.x == 0.0 && N1.y == 0.0){
+      LogWarning("normal is null for block %s vertex (%f,%f)", pBlock->Id().c_str(), A1.x, A1.y);
+    }
+
+    N1.normalize();
+
+    ua1.x = A1.x*fXScale*N1.y - A1.y*fXScale*N1.x;
+    ub1.x = B1.x*fXScale*N1.y - B1.y*fXScale*N1.x;
+
+    Vector2f N2(-B2.y+A2.y, B2.x-A2.x);
+
+    if(N2.x == 0.0 && N2.y == 0.0){
+      LogWarning("normal is null for block %s vertex (%f,%f)", pBlock->Id().c_str(), A2.x, A2.y);
+    }
+
+    N2.normalize();
+
+    ua2.x = A2.x*fXScale*N2.y - A2.y*fXScale*N2.x;
+    ub2.x = B2.x*fXScale*N2.y - B2.y*fXScale*N2.x;
+
+    bool drawInside = (pBlock->getEdgeDrawMethod() == Block::inside);
+    if(drawInside == true){
+      ua1.y = ub1.y = 0.01;
+      ua2.y = ub2.y = 0.99;
+    } else {
+      ua1.y = ub1.y = 0.99;
+      ua2.y = ub2.y = 0.01;
+    }
+  }
+    break;
+  case Block::angle:{
+    // all the unwanted children of cos and sin
+    float radAngle = deg2rad(pBlock->edgeAngle());
+    ua1.x = ua2.x = A1.x*fXScale*sinf(radAngle) - A1.y*fXScale*cosf(radAngle);
+    ua1.y = ub1.y = 0.01;
+    ub1.x = ub2.x = B1.x*fXScale*sinf(radAngle) - B1.y*fXScale*cosf(radAngle);
+    ua2.y = ub2.y = 0.99;
+  }
+    break;
+  }
 }
 
 Texture* GameRenderer::loadTexture(std::string textureName)
@@ -334,16 +729,73 @@ Texture* GameRenderer::loadTexture(std::string textureName)
 
   return pTexture;
 }
-  
-void GameRenderer::unprepareForNewLevel(Universe* i_universe) {
-  Theme::instance()->getTextureManager()->unregister(m_registeringValue);
-  
-  for(unsigned int u=0; u<i_universe->getScenes().size(); u++) {
-    GeomsManager::instance()->unregister(i_universe->getScenes()[u]);
+
+Texture* GameRenderer::loadTextureEdge(std::string textureName)
+{
+  EdgeEffectSprite* pSprite  = (EdgeEffectSprite*)Theme::instance()->getSprite(SPRITE_TYPE_EDGEEFFECT, textureName);
+  Texture* pTexture = NULL;
+
+  if(pSprite != NULL) {
+    try {
+      pTexture = pSprite->getTexture();
+    } catch(Exception &e) {
+        LogWarning("Edge Texture '%s' not found!", textureName.c_str());
+    }
+  } else {
+      LogWarning("Edge Texture '%s' not found!", textureName.c_str());
   }
+
+  return pTexture;
 }
+
+int GameRenderer::edgeGeomExists(Block* pBlock, std::string material)
+{
+  std::vector<int>& edgeGeoms = pBlock->getEdgeGeoms();
+
+  for(unsigned int i=0; i<edgeGeoms.size(); i++){
+    if(m_edgeGeoms[edgeGeoms[i]]->material == material)
+      return edgeGeoms[i];
+  }
+
+  return -1;
+}
+
+  /*===========================================================================
+  Called when we don't want to play the level anymore
+  ===========================================================================*/
+  void GameRenderer::_deleteGeoms(std::vector<Geom *>& geom, bool useFree)
+  {
+    /* Clean up optimized scene */
+    for(unsigned int i=0;i<geom.size();i++) { 
+      for(unsigned int j=0;j<geom[i]->Polys.size();j++) { 
+#ifdef ENABLE_OPENGL
+        if(geom[i]->Polys[j]->nVertexBufferID) {
+          ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glDeleteBuffersARB(1, (GLuint *) &geom[i]->Polys[j]->nVertexBufferID);
+          ((DrawLibOpenGL*)GameApp::instance()->getDrawLib())->glDeleteBuffersARB(1, (GLuint *) &geom[i]->Polys[j]->nTexCoordBufferID);
+        }
+#endif
+
+	if(useFree == true){
+	  free(geom[i]->Polys[j]->pTexCoords);
+	  free(geom[i]->Polys[j]->pVertices);
+	}else {
+	  delete [] geom[i]->Polys[j]->pTexCoords;
+	  delete [] geom[i]->Polys[j]->pVertices;
+	}
+	delete geom[i]->Polys[j];
+      }
+      delete geom[i];
+    }
+    geom.clear();
+  }
   
-void GameRenderer::renderEngineCounter(int x, int y, int nWidth,int nHeight, float pSpeed, float pLinVel) {
+  void GameRenderer::unprepareForNewLevel(void) {
+    _deleteGeoms(m_StaticGeoms);
+    _deleteGeoms(m_DynamicGeoms);
+    _deleteGeoms(m_edgeGeoms, true);
+  }
+  
+  void GameRenderer::renderEngineCounter(int x, int y, int nWidth,int nHeight, float pSpeed, float pLinVel) {
 
 // coords of then center ; make it dynamic would be nice
 #define ENGINECOUNTER_CENTERX      192.0
@@ -406,10 +858,10 @@ void GameRenderer::renderEngineCounter(int x, int y, int nWidth,int nHeight, flo
     Vector2f pcenter, pdest, pcenterl, pcenterr, pbottom;
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
-    p0 = Vector2f(x,        m_screen.getDispHeight()-y-nHeight);
-    p1 = Vector2f(x+nWidth, m_screen.getDispHeight()-y-nHeight);
-    p2 = Vector2f(x+nWidth, m_screen.getDispHeight()-y);
-    p3 = Vector2f(x,        m_screen.getDispHeight()-y);
+    p0 = Vector2f(x,        pDrawlib->getDispHeight()-y-nHeight);
+    p1 = Vector2f(x+nWidth, pDrawlib->getDispHeight()-y-nHeight);
+    p2 = Vector2f(x+nWidth, pDrawlib->getDispHeight()-y);
+    p3 = Vector2f(x,        pDrawlib->getDispHeight()-y);
 
     pSprite = (MiscSprite*) Theme::instance()->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
     if(pSprite != NULL) {
@@ -517,7 +969,7 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
     Vector2i bottomLeft = pCamera->getDispBottomLeft();
 
     unsigned int y_translate = bottomLeft.y/2;
-    if(bottomLeft.y != m_screen.getDispHeight() || XMSession::instance()->multiNbPlayers() == 1){
+    if((unsigned int)bottomLeft.y != pDrawlib->getDispHeight() || XMSession::instance()->multiNbPlayers() == 1){
       y_translate = 0;
     }
     pDrawlib->setClipRect(bottomLeft.x + x+1,
@@ -696,9 +1148,6 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
       else if(Entities[i]->DoesKill()) {
         pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(26,26,188,255), 0);
       }
-      else if(Entities[i]->IsCheckpoint()) {
-        pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(26,188,26,255), 0);
-      }
       else if(Entities[i]->isScripted()) {
         pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(230,226,100,255), 0);
       }
@@ -708,7 +1157,7 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
     glDisable(GL_SCISSOR_TEST);
 #endif
     //keesj:todo replace with setClipRect(NULL) in drawlib
-    pDrawlib->setClipRect(0,0,m_screen.getDispWidth(),m_screen.getDispHeight());
+    pDrawlib->setClipRect(0,0,pDrawlib->getDispWidth(),pDrawlib->getDispHeight());
   }
 
 void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_textOffset) {
@@ -730,29 +1179,22 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
   /* Render ghost - ugly mode? */
   if(XMSession::instance()->ugly() == false) {
     if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
-
-      bool v_doEffect =
-	XMSession::instance()->ghostMotionBlur() &&
-	i_ghost->getBikeTheme()->getGhostEffect() &&
-	m_allowGhostEffect;
-
       /* No not ugly, fancy! Render into overlay? */      
-      if(v_doEffect) {
+      if(XMSession::instance()->ghostMotionBlur() && i_ghost->getBikeTheme()->getGhostEffect()
+	 && m_allowGhostEffect) {
 	m_Overlay.beginRendering();
-	m_Overlay.fade(0.15, i_ghost->getNbRenderedFrames());
+	m_Overlay.fade(0.15);
       }
 
       try {
-	if(i_ghost->isStateInitialized()) {
-	  _RenderBike(i_ghost, true,
-		      i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
-	  i_ghost->addNbRenderedFrames();
-	}
+	_RenderBike(i_ghost, true,
+		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
       } catch(Exception &e) {
 	i_scene->gameMessage("Unable to render the ghost", true, 50);
       }
 
-      if(v_doEffect) {
+      if(XMSession::instance()->ghostMotionBlur() && i_ghost->getBikeTheme()->getGhostEffect()
+	 && m_allowGhostEffect) {
 	m_Overlay.endRendering();
 	m_Overlay.present();
       }
@@ -795,23 +1237,21 @@ void GameRenderer::_RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_t
     
   if(XMSession::instance()->ugly()) {
     if(XMSession::instance()->hideGhosts() == false) { /* ghosts can be hidden, but don't hide text */
-      if(i_ghost->isStateInitialized()) {
-	_RenderBike(i_ghost,
-		    true,
-		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
-      }
+      _RenderBike(i_ghost,
+		  true,
+		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
     }
   }
   /* ghost arrow indication */    
   if(XMSession::instance()->showBikersArrows()) {
-    displayArrowIndication(i_ghost, &m_screenBBox);
+      displayArrowIndication(i_ghost, &m_screenBBox);
   }
 }
 
 void GameRenderer::_RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i_scale) {
   //get trail data
   GhostTrail* v_ghostTrail = i_scene->getGhostTrail(); 
-  if(v_ghostTrail == NULL){
+  if(v_ghostTrail == 0){
     return;
   }
   std::vector<Vector2f>* v_ghostTrailData = v_ghostTrail->getGhostTrailData();
@@ -1077,7 +1517,7 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Main rendering function
   ===========================================================================*/
-void GameRenderer::render(Scene* i_scene) {
+  void GameRenderer::render(Scene* i_scene) {
     Camera*  pCamera  = i_scene->getCamera();
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
@@ -1145,7 +1585,7 @@ void GameRenderer::render(Scene* i_scene) {
 
     /* ... covered by blocks ... */
     _RenderDynamicBlocks(i_scene, false);
-    _RenderStaticBlocks(i_scene);
+    _RenderBlocks(i_scene);
 
     /* ... then render "middleground" sprites ... */
     _RenderSprites(i_scene, false,false);
@@ -1169,8 +1609,8 @@ void GameRenderer::render(Scene* i_scene) {
 
       if(v_ghost != pCamera->getPlayerToFollow()) {
 	_RenderGhost(i_scene, v_ghost, i, v_textOffset);
-        if(i_scene->getGhostTrail() != NULL)
-          if(renderGhostTrail()) { 
+        if(i_scene->getGhostTrail() != 0)
+          if(XMSession::instance()->renderGhostTrail() || XMSession::instance()->renderGhostTrailTS()) { 
         	_RenderGhostTrail(i_scene, &m_screenBBox, m_sizeMultOfEntitiesToTake); 
           }
       } else {
@@ -1191,14 +1631,12 @@ void GameRenderer::render(Scene* i_scene) {
       Biker* v_player = i_scene->Players()[i];
       if(v_player != pCamera->getPlayerToFollow()) {
 	try {
-	  if(v_player->isStateInitialized()) {
-	    _RenderBike(v_player,
-			v_player->getRenderBikeFront(),
-			v_player->getColorFilter(),
-			v_player->getUglyColorFilter());
-	    if(XMSession::instance()->showBikersArrows()) {
-	      displayArrowIndication(v_player, &m_screenBBox);
-	    }
+	  _RenderBike(v_player,
+		      v_player->getRenderBikeFront(),
+		      v_player->getColorFilter(),
+		      v_player->getUglyColorFilter());
+	  if(XMSession::instance()->showBikersArrows()) {
+	    displayArrowIndication(v_player, &m_screenBBox);
 	  }
 	} catch(Exception &e) {
 	  i_scene->gameMessage("Unable to render the biker", true, 50);
@@ -1210,17 +1648,15 @@ void GameRenderer::render(Scene* i_scene) {
     if(v_found) {
       try {
 	Biker* pBiker = pCamera->getPlayerToFollow();
-	if(pBiker->isStateInitialized()) {
-	  _RenderBike(pBiker,
-		      pBiker->getRenderBikeFront(),
-		      pBiker->getColorFilter(),
-		      pBiker->getUglyColorFilter());
-	  
-	  if(XMSession::instance()->debug()) {
-	    // render collision points
-	    for(unsigned int j=0; j<pCamera->getPlayerToFollow()->CollisionPoints().size(); j++) {
-	      _RenderCircle(16, MAKE_COLOR(255,255,0,255),pCamera->getPlayerToFollow()->CollisionPoints()[j], 0.02);
-	    }
+	_RenderBike(pBiker,
+		    pBiker->getRenderBikeFront(),
+		    pBiker->getColorFilter(),
+		    pBiker->getUglyColorFilter());
+
+	if(XMSession::instance()->debug()) {
+	  // render collision points
+	  for(unsigned int j=0; j<pCamera->getPlayerToFollow()->CollisionPoints().size(); j++) {
+	    _RenderCircle(16, MAKE_COLOR(255,255,0,255),pCamera->getPlayerToFollow()->CollisionPoints()[j], 0.02);
 	  }
 	}
       } catch(Exception &e) {
@@ -1302,9 +1738,6 @@ void GameRenderer::render(Scene* i_scene) {
 	case ET_ISTOTAKE:
 	  v_color = MAKE_COLOR(255,0,0,255);
 	  break;
-	case ET_CHECKPOINT:
-	  v_color = MAKE_COLOR(0,255,0,255);
-	  break;
 	default:
 	  v_color = MAKE_COLOR(50,50,50,255); /* Fix: hard-to-see color because of entity's insignificance */
 	  break;
@@ -1345,21 +1778,23 @@ void GameRenderer::render(Scene* i_scene) {
         if(XMSession::instance()->multiNbPlayers() > 2) {  //small small screen then
           multiPlayerScale = 2;
         }
-	renderMiniMap(i_scene, 0, m_screen.getDispHeight() - (m_screen.getDispHeight()/(6+multiPlayerScale)),
-		      m_screen.getDispWidth()/(5+multiPlayerScale), m_screen.getDispHeight()/(6+multiPlayerScale));
+	renderMiniMap(i_scene, 0, pDrawlib->getDispHeight() - (pDrawlib->getDispHeight()/(6+multiPlayerScale)),
+		      pDrawlib->getDispWidth()/(5+multiPlayerScale), pDrawlib->getDispHeight()/(6+multiPlayerScale));
       }
       if(showEngineCounter()
 	 && XMSession::instance()->ugly() == false
 	 && i_scene->getNumberCameras() == 1) {
-	int v_engineCounterSize = m_screen.getDispWidth()/7;
-	renderEngineCounter(m_screen.getDispWidth()- v_engineCounterSize,
-			    m_screen.getDispHeight()-v_engineCounterSize,
+	int v_engineCounterSize = pDrawlib->getDispWidth()/7;
+	renderEngineCounter(pDrawlib->getDispWidth()- v_engineCounterSize,
+			    pDrawlib->getDispHeight()-v_engineCounterSize,
 			    v_engineCounterSize, v_engineCounterSize,
 			    pCamera->getPlayerToFollow()->getBikeEngineSpeed(),
 			    pCamera->getPlayerToFollow()->getBikeLinearVel());
       }
     }
 
+    pDrawlib->getMenuCamera()->setCamera2d();
+    
     if(m_showTimePanel) {
       renderTimePanel(i_scene);
       /* If there's strawberries in the level, tell the user how many there's left */
@@ -1372,31 +1807,34 @@ void GameRenderer::render(Scene* i_scene) {
     _RenderGameMessages(i_scene,false);
 
     pCamera->setCamera2d();
-
+    
     _RenderScreenShadow(i_scene);
 
+    /* And then the game messages over shadow layer*/
+    pDrawlib->getMenuCamera()->setCamera2d();
+    
+    // _RenderGameMessages(i_scene,true);  => got moved to stateScene, to have non-covered multiplayer message display
+
     /* Render Level Name at bottom of screen, when died or pause */
-    if(i_scene->getInfos() != "") {
-      FontManager* v_fm = pDrawlib->getFontMedium();
-      FontGlyph* v_fg = v_fm->getGlyph(i_scene->getInfos());
-      v_fm->printString(pDrawlib, v_fg,
-			5,
-			pCamera->getDispUpRight().y - v_fg->realHeight() - 2,
-			MAKE_COLOR(255,255,255,255), 0.0, true);
-    }
-}
+    FontManager* v_fm = pDrawlib->getFontMedium();
+    FontGlyph* v_fg = v_fm->getGlyph(i_scene->getInfos());
+    v_fm->printString(v_fg,
+		      5,
+		      pDrawlib->getDispHeight() - v_fg->realHeight() - 2,
+		      MAKE_COLOR(255,255,255,255), 0.0, true);
+  }
+
   /*===========================================================================
   Game status rendering
   ===========================================================================*/
-void GameRenderer::_RenderGameStatus(Scene* i_scene) {
+  void GameRenderer::_RenderGameStatus(Scene* i_scene) {
     Sprite* pType = NULL;
 
     // do not render it if it's the autozoom camera or ...
     if(i_scene->isAutoZoomCamera() == true) {
       return;
     }
-
-    // dude::where are these values from ???
+    
     float x1 = 125;
     float y1 = 2;
     float x2 = 100;
@@ -1405,7 +1843,20 @@ void GameRenderer::_RenderGameStatus(Scene* i_scene) {
     int nStrawberriesLeft = i_scene->getLevelSrc()->countToTakeEntities();
     int nQuantity = 0;
     Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();
-    int height = i_scene->getCamera()->getDispHeight();
+
+    // adapt to the current camera
+    float x1_cam = x1 + bottomLeft.x;
+    float x2_cam = x2 + bottomLeft.x;
+    float y1_cam = y1;
+    float y2_cam = y2;
+
+    //seek correct drawing positions
+    unsigned int height=GameApp::instance()->getDrawLib()->getDispHeight();
+    if((unsigned int) bottomLeft.y != height) {
+      int y=height/2;
+      y1_cam += y;
+      y2_cam += y;
+    }
 
     if(XMSession::instance()->ugly() == false) {
       pType = i_scene->getLevelSrc()->flowerSprite();
@@ -1420,21 +1871,13 @@ void GameRenderer::_RenderGameStatus(Scene* i_scene) {
             
     if(pType != NULL) {
       if(pType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
-	_RenderAdditiveBlendedSection(pType->getTexture(),
-				      Vector2f(x2, height-y2),
-				      Vector2f(x1, height-y2),
-				      Vector2f(x1, height-y1),
-				      Vector2f(x2, height-y1));      
+	_RenderAdditiveBlendedSection(pType->getTexture(), Vector2f(x2_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y2_cam),Vector2f(x1_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y2_cam),Vector2f(x1_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y1_cam),Vector2f(x2_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y1_cam));      
       } else {
 #ifdef ENABLE_OPENGL
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GEQUAL,0.5f);      
 #endif
-	_RenderAlphaBlendedSection(pType->getTexture(),
-				   Vector2f(x2, height-y2),
-				   Vector2f(x1, height-y2),
-				   Vector2f(x1, height-y1),
-				   Vector2f(x2, height-y1));      
+	_RenderAlphaBlendedSection(pType->getTexture(), Vector2f(x2_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y2_cam),Vector2f(x1_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y2_cam),Vector2f(x1_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y1_cam),Vector2f(x2_cam,GameApp::instance()->getDrawLib()->getDispHeight()-y1_cam));      
 #ifdef ENABLE_OPENGL
 	glDisable(GL_ALPHA_TEST);
 #endif
@@ -1446,13 +1889,12 @@ void GameRenderer::_RenderGameStatus(Scene* i_scene) {
       snprintf(cBuf, 256, "%d", nQuantity);
 
       /* Draw text */
-      DrawLib* pDrawLib = GameApp::instance()->getDrawLib();
-      FontManager* v_fm = pDrawLib->getFontSmall();
+      FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(cBuf);
 
-      v_fm->printString(pDrawLib, v_fg,
-			(int)((x1+x2)/2 - v_fg->realWidth()/2),
-			(int)((y1+y2)/2 - v_fg->realHeight()/2),
+      v_fm->printString(v_fg,
+			(int)((x1_cam+x2_cam)/2 - v_fg->realWidth()/2),
+			(int)((y1_cam+y2_cam)/2 - v_fg->realHeight()/2),
 			MAKE_COLOR(255,255,0,255));
     }
   }
@@ -1460,7 +1902,7 @@ void GameRenderer::_RenderGameStatus(Scene* i_scene) {
   /*===========================================================================
   Game message rendering
   ===========================================================================*/
-void GameRenderer::_RenderGameMessages(Scene* i_scene, bool renderOverShadow) {
+  void GameRenderer::_RenderGameMessages(Scene* i_scene, bool renderOverShadow) {
     float v_fZoom = 60.0f;
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
@@ -1469,12 +1911,12 @@ void GameRenderer::_RenderGameMessages(Scene* i_scene, bool renderOverShadow) {
     if(pArrow->nArrowPointerMode != 0) {
       Vector2f C;
       if(pArrow->nArrowPointerMode == 1) {          
-        C=Vector2f(m_screen.getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x - i_scene->getCamera()->getCameraPositionX())*v_fZoom,
-                  m_screen.getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y - i_scene->getCamera()->getCameraPositionY())*v_fZoom);      
+        C=Vector2f(pDrawlib->getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x - i_scene->getCamera()->getCameraPositionX())*v_fZoom,
+                  pDrawlib->getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y - i_scene->getCamera()->getCameraPositionY())*v_fZoom);      
       }
       else if(pArrow->nArrowPointerMode == 2) {          
-        C.x=(m_screen.getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
-        C.y=(m_screen.getDispHeight() * pArrow->ArrowPointerPos.y) / 600.0f;
+        C.x=(pDrawlib->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
+        C.y=(pDrawlib->getDispHeight() * pArrow->ArrowPointerPos.y) / 600.0f;
       }
 
       Vector2f p1(1,0), p2(1,0), p3(1,0), p4(1,0);
@@ -1500,8 +1942,8 @@ void GameRenderer::_RenderGameMessages(Scene* i_scene, bool renderOverShadow) {
         GameMessage *pMsg = i_scene->getGameMessage()[i];
         FontManager* v_fm = NULL;
         FontGlyph* v_fg = NULL;
-        unsigned int width  = m_screen.getDispWidth();
-        unsigned int height = m_screen.getDispHeight();
+        unsigned int width  = pDrawlib->getDispWidth();
+        unsigned int height = pDrawlib->getDispHeight();
         int numPlayers = XMSession::instance()->multiNbPlayers();
         Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();        
         int posX = 0; 
@@ -1517,7 +1959,7 @@ void GameRenderer::_RenderGameMessages(Scene* i_scene, bool renderOverShadow) {
           GET_FONT_MEDIUM    
           posX = int(width/2 - v_fg->realWidth()/2);        
           posY = int(pMsg->Pos[1] * height);
-          v_fm->printString(pDrawlib, v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
+          v_fm->printString(v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
 	} 
 	else {
           switch(pMsg->msgType) {
@@ -1602,7 +2044,7 @@ void GameRenderer::_RenderGameMessages(Scene* i_scene, bool renderOverShadow) {
 	      }	      
 	      break;   
 	  }
-	  v_fm->printString(pDrawlib, v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
+	  v_fm->printString(v_fg, posX, posY, MAKE_COLOR(255,255,255,pMsg->nAlpha), 0.0, true);
 	}
 
       }
@@ -1710,17 +2152,6 @@ void GameRenderer::_RenderSprite(Scene* i_scene, Entity *pEntity, float i_sizeMu
 	v_spriteName = i_scene->getLevelSrc()->SpriteForStrawberry();
 	v_sprite     = (AnimationSprite*)i_scene->getLevelSrc()->strawberrySprite();
         break;
-      case ET_CHECKPOINT:
-	{
-	  Checkpoint* v_checkpoint = (Checkpoint*) pEntity;
-	  if(v_checkpoint->isActivated()) {
-	    v_spriteName = i_scene->getLevelSrc()->SpriteForCheckpointUp();
-	    v_sprite     = (AnimationSprite*)i_scene->getLevelSrc()->checkpointSpriteUp();
-	  } else {
-	    v_spriteName = i_scene->getLevelSrc()->SpriteForCheckpointDown();
-	    v_sprite     = (AnimationSprite*)i_scene->getLevelSrc()->checkpointSpriteDown();
-	  }
-	}
       default:
 	v_spriteName = pEntity->SpriteName();
       }
@@ -1868,7 +2299,6 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 
     if(XMSession::instance()->ugly() == false) {
       for(unsigned int i=0; i<Blocks.size(); i++) {
-
 	/* Are we rendering background blocks or what? */
 	if(Blocks[i]->isBackground() != bBackground)
 	  continue;
@@ -1884,7 +2314,7 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 
 	Vector2f dynRotCenter = block->DynamicRotationCenter();
 	Vector2f dynPos       = block->DynamicPosition();
-	Geom* geom = block->getGeom();
+	int geom = block->getGeom();
 
 	if(pDrawlib->getBackend() == DrawLib::backend_OpenGl) {
 #ifdef ENABLE_OPENGL
@@ -1919,8 +2349,8 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 
 	  /* VBO optimized? */
 	  if(pDrawlib->useVBOs()) {
-	    for(unsigned int j=0;j<geom->Polys.size();j++) {          
-	      GeomPoly *pPoly = geom->Polys[j];
+	    for(unsigned int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
+	      GeomPoly *pPoly = m_DynamicGeoms[geom]->Polys[j];
 
 	      ((DrawLibOpenGL*)pDrawlib)->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
 	      glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
@@ -1931,8 +2361,8 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 	      glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
 	    }      
 	  } else {
-	    for(unsigned int j=0;j<geom->Polys.size();j++) {          
-	      GeomPoly *pPoly = geom->Polys[j];
+	    for(unsigned int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
+	      GeomPoly *pPoly = m_DynamicGeoms[geom]->Polys[j];
 	      glVertexPointer(2,   GL_FLOAT, 0, pPoly->pVertices);
 	      glTexCoordPointer(2, GL_FLOAT, 0, pPoly->pTexCoords);
 	      glDrawArrays(GL_POLYGON, 0, pPoly->nNumVertices);
@@ -1949,7 +2379,8 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 	  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #endif
 	} else if(pDrawlib->getBackend() == DrawLib::backend_SdlGFX){
-	  if(geom->Polys.size() > 0) {
+
+	  if(m_DynamicGeoms[geom]->Polys.size() > 0) {
 	    if(block->getSprite() != NULL) {
 	      pDrawlib->setTexture(block->getSprite()->getTexture() != NULL ? block->getSprite()->getTexture() : NULL,BLEND_MODE_A);
 	    }
@@ -1958,18 +2389,18 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 	    }
 	    pDrawlib->setColorRGB(255,255,255);
 
-	    for(unsigned int j=0;j<geom->Polys.size();j++) {          
+	    for(unsigned int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
 	      pDrawlib->startDraw(DRAW_MODE_POLYGON);
-	      for(unsigned int k=0;k<geom->Polys[j]->nNumVertices;k++) {
-		Vector2f vertex = Vector2f(geom->Polys[j]->pVertices[k].x,
-					   geom->Polys[j]->pVertices[k].y);
+	      for(unsigned int k=0;k<m_DynamicGeoms[geom]->Polys[j]->nNumVertices;k++) {
+		Vector2f vertex = Vector2f(m_DynamicGeoms[geom]->Polys[j]->pVertices[k].x,
+					   m_DynamicGeoms[geom]->Polys[j]->pVertices[k].y);
 		/* transform vertex */
 		Vector2f transVertex = Vector2f((vertex.x-dynRotCenter.x)*fR[0] + (vertex.y-dynRotCenter.y)*fR[1],
 						(vertex.x-dynRotCenter.x)*fR[2] + (vertex.y-dynRotCenter.y)*fR[3]);
 		transVertex += dynPos + dynRotCenter;
 		
-		pDrawlib->glTexCoord(geom->Polys[j]->pTexCoords[k].x,
-				     geom->Polys[j]->pTexCoords[k].y);
+		pDrawlib->glTexCoord(m_DynamicGeoms[geom]->Polys[j]->pTexCoords[k].x,
+						      m_DynamicGeoms[geom]->Polys[j]->pTexCoords[k].y);
 		pDrawlib->glVertex(transVertex.x, transVertex.y);
 	      }
 	      pDrawlib->endDrawKeepProperties();
@@ -2050,10 +2481,10 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
     }
   }
 
-void GameRenderer::_RenderStaticBlock(Block* block)
+  void GameRenderer::_RenderBlock(Block* block)
   {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
-    Geom* geom = block->getGeom();
+    int geom = block->getGeom();
     if(XMSession::instance()->gameGraphics() != GFX_LOW) {
       if(block->getSprite() != NULL) {
         pDrawlib->setTexture(block->getSprite()->getTexture() != NULL ? block->getSprite()->getTexture() : NULL, BLEND_MODE_A);
@@ -2076,8 +2507,8 @@ void GameRenderer::_RenderStaticBlock(Block* block)
 
       /* VBO optimized? */
       if(pDrawlib->useVBOs()) {
-	for(unsigned int j=0;j<geom->Polys.size();j++) {          
-	  GeomPoly *pPoly = geom->Polys[j];
+	for(unsigned int j=0;j<m_StaticGeoms[geom]->Polys.size();j++) {          
+	  GeomPoly *pPoly = m_StaticGeoms[geom]->Polys[j];
 
 	  ((DrawLibOpenGL*)pDrawlib)->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
 	  glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
@@ -2088,8 +2519,8 @@ void GameRenderer::_RenderStaticBlock(Block* block)
 	  glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
 	}      
       } else {
-	for(unsigned int j=0;j<geom->Polys.size();j++) {          
-	  GeomPoly *pPoly = geom->Polys[j];
+	for(unsigned int j=0;j<m_StaticGeoms[geom]->Polys.size();j++) {          
+	  GeomPoly *pPoly = m_StaticGeoms[geom]->Polys[j];
 	  glVertexPointer(2,   GL_FLOAT, 0, pPoly->pVertices);
 	  glTexCoordPointer(2, GL_FLOAT, 0, pPoly->pTexCoords);
 	  glDrawArrays(GL_POLYGON, 0, pPoly->nNumVertices);
@@ -2105,7 +2536,7 @@ void GameRenderer::_RenderStaticBlock(Block* block)
 #endif
     } else if(pDrawlib->getBackend() == DrawLib::backend_SdlGFX){
 
-      for(unsigned int j=0;j<geom->Polys.size();j++) {
+      for(unsigned int j=0;j<m_StaticGeoms[geom]->Polys.size();j++) {
         if(block->getSprite() != NULL) {
 	  pDrawlib->setTexture(block->getSprite()->getTexture()!= NULL ? block->getSprite()->getTexture() : NULL,BLEND_MODE_A);
 	}
@@ -2114,31 +2545,32 @@ void GameRenderer::_RenderStaticBlock(Block* block)
 	}
 	pDrawlib->startDraw(DRAW_MODE_POLYGON);
 	pDrawlib->setColorRGB(255,255,255);
-	for(unsigned int k=0;k<geom->Polys[j]->nNumVertices;k++) {
-	  pDrawlib->glTexCoord(geom->Polys[j]->pTexCoords[k].x,
-			       geom->Polys[j]->pTexCoords[k].y);
-	  pDrawlib->glVertex(geom->Polys[j]->pVertices[k].x,
-			     geom->Polys[j]->pVertices[k].y);
+	for(unsigned int k=0;k<m_StaticGeoms[geom]->Polys[j]->nNumVertices;k++) {
+	  pDrawlib->glTexCoord(m_StaticGeoms[geom]->Polys[j]->pTexCoords[k].x,
+						m_StaticGeoms[geom]->Polys[j]->pTexCoords[k].y);
+	  pDrawlib->glVertex(m_StaticGeoms[geom]->Polys[j]->pVertices[k].x,
+					      m_StaticGeoms[geom]->Polys[j]->pVertices[k].y);
 	}
 	pDrawlib->endDraw();
       }
     }
   }
 
-void GameRenderer::_RenderBlockEdges(Block* pBlock) {
-
+void GameRenderer::_RenderBlockEdges(Block* pBlock)
+{
   DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
   if(pDrawlib->getBackend() == DrawLib::backend_OpenGl) {
-    for(unsigned int i=0; i<pBlock->getEdgeGeoms().size(); i++){
-      pDrawlib->setTexture(pBlock->getEdgeGeoms()[i]->pTexture, BLEND_MODE_A);
+    for(unsigned int i=pBlock->getEdgeGeoms().size(); i>0; i--){
+      int geom = pBlock->getEdgeGeoms()[i-1];
+      pDrawlib->setTexture(m_edgeGeoms[geom]->pTexture, BLEND_MODE_A);
       
-      TColor v_blendColor = pBlock->getEdgeGeoms()[i]->edgeBlendColor;
+      TColor v_blendColor = m_edgeGeoms[geom]->edgeBlendColor;
       pDrawlib->setColorRGBA(v_blendColor.Red(), v_blendColor.Green(), v_blendColor.Blue(), v_blendColor.Alpha());
 
       /* VBO optimized? */
       if(pDrawlib->useVBOs()) {
-	for(unsigned int j=0;j<pBlock->getEdgeGeoms()[i]->Polys.size();j++) {          
-	  GeomPoly *pPoly = pBlock->getEdgeGeoms()[i]->Polys[j];
+	for(unsigned int j=0;j<m_edgeGeoms[geom]->Polys.size();j++) {          
+	  GeomPoly *pPoly = m_edgeGeoms[geom]->Polys[j];
 
 	  ((DrawLibOpenGL*)pDrawlib)->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
 	  glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
@@ -2149,8 +2581,8 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock) {
 	  glDrawArrays(GL_QUADS, 0, pPoly->nNumVertices);
 	}      
       } else {
-	for(unsigned int j=0;j<pBlock->getEdgeGeoms()[i]->Polys.size();j++) {          
-	  GeomPoly *pPoly = pBlock->getEdgeGeoms()[i]->Polys[j];
+	for(unsigned int j=0;j<m_edgeGeoms[geom]->Polys.size();j++) {          
+	  GeomPoly *pPoly = m_edgeGeoms[geom]->Polys[j];
 	  glVertexPointer(2,   GL_FLOAT, 0, pPoly->pVertices);
 	  glTexCoordPointer(2, GL_FLOAT, 0, pPoly->pTexCoords);
 	  glDrawArrays(GL_QUADS, 0, pPoly->nNumVertices);
@@ -2165,7 +2597,7 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock) {
   /*===========================================================================
   Blocks (static)
   ===========================================================================*/
-  void GameRenderer::_RenderStaticBlocks(Scene* i_scene) {
+  void GameRenderer::_RenderBlocks(Scene* i_scene) {
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
     for(int layer=-1; layer<=0; layer++){
@@ -2183,7 +2615,7 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock) {
 	/* Static geoms... */
 	for(unsigned int i=0;i<Blocks.size();i++) {
 	  if(Blocks[i]->isBackground() == false) {
-	    _RenderStaticBlock(Blocks[i]);
+	    _RenderBlock(Blocks[i]);
 	  }
 	}
 	if(pDrawlib->getBackend() == DrawLib::backend_SdlGFX){
@@ -2278,11 +2710,6 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
   float uZoom = 1.0 / i_zoom;
   float uDriftZoom = 1.0 / i_driftZoom;
 
-  int dispWidth = i_scene->getCamera()->getDispWidth();
-  int dispHeight = i_scene->getCamera()->getDispHeight();
-  float camX = i_scene->getCamera()->getCameraPositionX();
-  float camY = i_scene->getCamera()->getCameraPositionY();
-
   if(XMSession::instance()->gameGraphics() != GFX_HIGH) {
     i_drifted = false;
   }
@@ -2306,18 +2733,14 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
       fDrift = GameApp::instance()->getXMTime() / 25.0f;
     }
     
-    pDrawlib->glTexCoord(camX*i_offset+fDrift, -camY*i_offset);
+    pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+ fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset);
     pDrawlib->glVertexSP(0,0);
-
-    pDrawlib->glTexCoord(camX*i_offset+uZoom+fDrift, -camY*i_offset);
-    pDrawlib->glVertexSP(dispWidth,0);
-
-    pDrawlib->glTexCoord(camX*i_offset+uZoom+fDrift, -camY*i_offset+uZoom);
-    pDrawlib->glVertexSP(dispWidth, dispHeight);
-
-    pDrawlib->glTexCoord(camX*i_offset+fDrift, -camY*i_offset+uZoom);
-    pDrawlib->glVertexSP(0, dispHeight);
-
+    pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+uZoom+ fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset);
+    pDrawlib->glVertexSP(pDrawlib->getDispWidth(),0);
+    pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+uZoom+ fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset+uZoom);
+    pDrawlib->glVertexSP(pDrawlib->getDispWidth(),pDrawlib->getDispHeight());
+    pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+ fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset+uZoom);
+    pDrawlib->glVertexSP(0,pDrawlib->getDispHeight());
     pDrawlib->endDraw();
     
     if(i_drifted) {
@@ -2325,19 +2748,14 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
       pDrawlib->startDraw(DRAW_MODE_POLYGON);
       pDrawlib->setColorRGBA(i_driftColor.Red(), i_driftColor.Green(), i_driftColor.Blue(), i_driftColor.Alpha());
       fDrift = GameApp::instance()->getXMTime() / 15.0f;
-
-      pDrawlib->glTexCoord(camX*i_offset+fDrift, -camY*i_offset);
+      pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset + fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset);
       pDrawlib->glVertexSP(0,0);
-
-      pDrawlib->glTexCoord(camX*i_offset+uDriftZoom+fDrift, -camY*i_offset);
-      pDrawlib->glVertexSP(dispWidth,0);
-
-      pDrawlib->glTexCoord(camX*i_offset+uDriftZoom+fDrift, -camY*i_offset+uDriftZoom);
-      pDrawlib->glVertexSP(dispWidth, dispHeight);
-
-      pDrawlib->glTexCoord(camX*i_offset+fDrift, -camY*i_offset+uDriftZoom);
-      pDrawlib->glVertexSP(0,dispHeight);
-
+      pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+uDriftZoom + fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset);
+      pDrawlib->glVertexSP(pDrawlib->getDispWidth(),0);
+      pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset+uDriftZoom + fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset+uDriftZoom);
+      pDrawlib->glVertexSP(pDrawlib->getDispWidth(),pDrawlib->getDispHeight());
+      pDrawlib->glTexCoord(i_scene->getCamera()->getCameraPositionX()*i_offset + fDrift,-i_scene->getCamera()->getCameraPositionY()*i_offset+uDriftZoom);
+      pDrawlib->glVertexSP(0,pDrawlib->getDispHeight());
       pDrawlib->endDraw();
     }
   } else {
@@ -2358,7 +2776,7 @@ void GameRenderer::_RenderSky(Scene* i_scene, float i_zoom, float i_offset, cons
 
     for(unsigned int i=0;i<Blocks.size();i++) {
       if(Blocks[i]->isBackground() == true) {
-	_RenderStaticBlock(Blocks[i]);
+	_RenderBlock(Blocks[i]);
       }
     }
 
@@ -2384,8 +2802,8 @@ void GameRenderer::_RenderLayer(Scene* i_scene, int layer) {
     AABB bbox;
     // layers with almost the same x,y offsets than the main layers
     // are drawn with it. the others are drawn using default zoom
-    if(layerOffset.x > 0.30 && layerOffset.x < 1.70
-       && layerOffset.y > 0.30 && layerOffset.y < 1.70) {
+    if(layerOffset.x > 0.90 && layerOffset.x < 1.10
+       && layerOffset.y > 0.90 && layerOffset.y < 1.10) {
       setCameraTransformations(i_scene->getCamera(), m_xScale, m_yScale);
       bbox = m_screenBBox;
     } else {
@@ -2421,7 +2839,9 @@ void GameRenderer::_RenderLayer(Scene* i_scene, int layer) {
     glTranslatef(translateVector.x, translateVector.y, 0);
 
     for(unsigned int i=0; i<Blocks.size(); i++) {
-      _RenderStaticBlock(Blocks[i]);
+      Block* block = Blocks[i];
+
+      _RenderBlock(block);
     }
     glPopMatrix();
 #endif
@@ -2429,13 +2849,19 @@ void GameRenderer::_RenderLayer(Scene* i_scene, int layer) {
 
 void GameRenderer::_RenderLayers(Scene* i_scene, bool renderFront) { 
     /* Render background level blocks */
-    for(int layer=0; layer < i_scene->getLevelSrc()->getNumberLayer(); layer++){
+    int nbLayer = i_scene->getLevelSrc()->getNumberLayer();
+    for(int layer=0; layer<nbLayer; layer++){
       if(i_scene->getLevelSrc()->isLayerFront(layer) == renderFront){
 	_RenderLayer(i_scene, layer);
       }
     }
   }
   
+  void GameRenderer::shutdown(void) {
+    /* Free overlay */
+    m_Overlay.cleanUp();
+  }  
+
   /*===========================================================================
   Debug info. Note how this is leaked into the void and nobody cares :) 
   ===========================================================================*/
@@ -2600,23 +3026,21 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
     
     if(x > 0.0f && x < 1.0f && y > 0.0f && y < 1.0f) {    
       /* Map to viewport */
-      float vx = ((float)m_screen.getDispWidth() * x);
-      float vy = ((float)m_screen.getDispHeight() * y);
+      float vx = ((float)pDrawlib->getDispWidth() * x);
+      float vy = ((float)pDrawlib->getDispHeight() * y);
 #ifdef ENABLE_OPENGL
       glMatrixMode(GL_PROJECTION);
       glPushMatrix();
       glLoadIdentity();
-      glOrtho(0, pDrawlib->getRenderSurface()->size().x,
-	      0, pDrawlib->getRenderSurface()->size().y,
-	      -1, 1);
+      glOrtho(0,pDrawlib->getDispWidth(),0,pDrawlib->getDispHeight(),-1,1);
       glMatrixMode(GL_MODELVIEW);
       glPushMatrix();
       glLoadIdentity();
 #endif
-
+      
       FontManager* v_fm = pDrawlib->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(Text);
-      v_fm->printString(pDrawlib, v_fg, (int)(vx - (v_fg->realWidth() * i_xcentering)), (int)(vy - (v_fg->realHeight() * i_ycentering)), c, 0.0, true);
+      v_fm->printString(v_fg, (int)(vx - (v_fg->realWidth() * i_xcentering)), (int)(vy - (v_fg->realHeight() * i_ycentering)), c, 0.0, true);
 
 #ifdef ENABLE_OPENGL
       glPopMatrix();
@@ -2624,6 +3048,7 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
       glPopMatrix();
       glMatrixMode(GL_MODELVIEW);
 #endif
+      
     }
   }
 
@@ -2719,8 +3144,8 @@ void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c,
         v_nShade = MENU_SHADING_VALUE;
       }
       pDrawLib->drawBox(Vector2f(0.0,0.0),
-                        Vector2f(float(m_screen.getDispWidth()), //pDrawlib returns camera specific values, as set in render()
-			         float(m_screen.getDispHeight())), 
+                        Vector2f(float(pDrawLib->getDispWidth()), //pDrawlib returns camera specific values, as set in render()
+			         float(pDrawLib->getDispHeight())), 
 		        0, MAKE_COLOR(0,0,0, v_nShade));  
     }
   }
@@ -2757,14 +3182,6 @@ void GameRenderer::setShowTimePanel(bool i_value) {
     m_showMinimap = i_value;
   }
 
-  void GameRenderer::setRenderGhostTrail(bool i_value) {
-   m_renderGhostTrail = i_value;
-  }
-
-  bool GameRenderer::renderGhostTrail() {
-    return m_renderGhostTrail;
-  }
-
   void GameRenderer::setShowEngineCounter(bool i_value) {
     m_showEngineCounter = i_value;
   }
@@ -2777,6 +3194,54 @@ bool GameRenderer::showGhostsText() const {
   return m_showGhostsText;
 }
 
+void GameRenderer::switchFollow(Scene* i_scene) {
+    Camera*  pCamera  = i_scene->getCamera();
+
+    if(pCamera->getPlayerToFollow() == NULL)
+      return;
+
+    pCamera->allowTrailCam(false);
+
+    std::vector<Biker*>& players = i_scene->Players();
+    std::vector<Ghost*>& ghosts = i_scene->Ghosts();
+    unsigned int sizePlayers = players.size();
+    unsigned int sizeGhosts  = ghosts.size();
+
+    /* search into the player */
+    for(unsigned i=0; i<sizePlayers; i++) {
+      if(players[i] == pCamera->getPlayerToFollow()) {
+	if(i < sizePlayers-1) {
+	  pCamera->setPlayerToFollow(players[i+1]);
+	} else {
+	  if(sizeGhosts > 0) {
+	    pCamera->setPlayerToFollow(ghosts[0]);
+	  } else {
+	    pCamera->setPlayerToFollow(players[0]);
+	    pCamera->allowTrailCam(true);
+	  }
+	}
+	return;
+      }
+    }
+
+    /* search into the ghost */
+    for(unsigned i=0; i<sizeGhosts; i++) {
+      if(ghosts[i] == pCamera->getPlayerToFollow()) {
+	if(i < sizeGhosts-1) {
+	  pCamera->setPlayerToFollow(ghosts[i+1]);
+	} else {
+	  if(sizePlayers > 0) {
+	    pCamera->setPlayerToFollow(players[0]);
+	  } else {
+	    pCamera->setPlayerToFollow(ghosts[0]);
+	  }
+	}
+	return;
+      }
+    }
+}
+
+
 void GameRenderer::renderTimePanel(Scene* i_scene) {
   int x = 0;
   int y = 0;
@@ -2788,6 +3253,8 @@ void GameRenderer::renderTimePanel(Scene* i_scene) {
   }
 
   DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
+  unsigned int width  = pDrawlib->getDispWidth();
+  unsigned int height = pDrawlib->getDispHeight();
 
   Biker* pBiker = i_scene->getCamera()->getPlayerToFollow();
   Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();
@@ -2809,17 +3276,30 @@ void GameRenderer::renderTimePanel(Scene* i_scene) {
     v_fg = v_fm->getGlyph(formatTime(i_scene->getTime()));
   }
 
-  v_fm->printString(pDrawlib, v_fg,
-		    x, y,
+  //seek correct drawing positions
+  if((unsigned int) bottomLeft.x != 0) {
+      x=width/2; 
+  }
+  if((unsigned int) bottomLeft.y != height) {
+      y=height/2;
+  }
+
+  v_fm->printString(v_fg,
+		    x,y,
 		    MAKE_COLOR(255,255,255,255), -1.0, true);
 
+  /* next things must be rendered only by the first camera */
+  if((unsigned int) bottomLeft.x != 0 || (unsigned int) bottomLeft.y != height) {
+    return;
+  }
+  
   v_fm = pDrawlib->getFontSmall();
 
   v_fg = v_fm->getGlyph(m_bestTime);
-  v_fm->printString(pDrawlib, v_fg, x, y+28, MAKE_COLOR(255,255,255,255), -1.0, true);
+  v_fm->printString(v_fg, x, y+28, MAKE_COLOR(255,255,255,255), -1.0, true);
 
   v_fg = v_fm->getGlyph(m_worldRecordTime);
-  v_fm->printString(pDrawlib, v_fg, x, y+48, MAKE_COLOR(255,255,255,255), -1.0, true);
+  v_fm->printString(v_fg, x, y+48, MAKE_COLOR(255,255,255,255), -1.0, true);
 }
 
 void GameRenderer::renderReplayHelpMessage(Scene* i_scene) {
@@ -2827,26 +3307,25 @@ void GameRenderer::renderReplayHelpMessage(Scene* i_scene) {
   if(i_scene->getCurrentCamera() != 0)
     return;
 
-  DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
-  FontManager* v_fm = pDrawlib->getFontSmall();
+  FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg_l = v_fm->getGlyph(m_replayHelp_l);
   FontGlyph* v_fg_r = v_fm->getGlyph(m_replayHelp_r);
   
   // a nice Box
-  int v_displayWidth = m_screen.getDispWidth(),
+  int v_displayWidth = GameApp::instance()->getDrawLib()->getDispWidth(),
       posX = v_displayWidth - v_fg_r->realWidth(),
       posY = 5;
   // but just in case there is replayHelp displayed
   if(m_replayHelp_l != "") {  
     Vector2f A(posX - v_fg_l->realWidth() - 20, posY - 5), B(v_displayWidth, v_fg_r->realHeight() + posY + 7);
-    pDrawlib->drawBox(A,B,1,MAKE_COLOR(0,0,0,118),MAKE_COLOR(255,255,255,255));
+    GameApp::instance()->getDrawLib()->drawBox(A,B,1,MAKE_COLOR(0,0,0,118),MAKE_COLOR(255,255,255,255));
   }
-  v_fm->printString(pDrawlib, v_fg_l,
+  v_fm->printString(v_fg_l,
 		    posX - v_fg_l->realWidth() - 12, //give some space between left and right part
 		    posY,
 		    MAKE_COLOR(255,255,255,255), -1.0, true);
   
-  v_fm->printString(pDrawlib, v_fg_r,
+  v_fm->printString(v_fg_r,
 		    posX - 7, //give some space to right side of screen
 		    posY,
 		    MAKE_COLOR(255,255,255,255), -1.0, true);
@@ -3509,6 +3988,70 @@ void GameRenderer::calculateCameraScaleAndScreenAABB(Camera* pCamera, AABB& bbox
 
   bbox.addPointToAABB2f(v1);
   bbox.addPointToAABB2f(v2);
+}
+
+void GameRenderer::beginTexturesRegistration()
+{
+  // as we will remove textures, the current texture in drawlib can
+  // became invalid -> set it to NULL
+  GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
+
+  m_curRegistrationStage++;
+
+  // zero is for persistent textures
+  if(m_curRegistrationStage == PERSISTANT)
+    m_curRegistrationStage++;
+
+  if(XMSession::instance()->debug() == true) {
+    LogDebug("---Begin texture registration---");
+    std::vector<Texture*> textures = Theme::instance()->getTextureManager()->getTextures();
+    std::vector<Texture*>::iterator it = textures.begin();
+    while(it != textures.end()){
+      if((*it)->curRegistrationStage != PERSISTANT)
+	LogDebug("  begin %s %d [%x]", (*it)->Name.c_str(), (*it)->curRegistrationStage, (*it));
+      ++it;
+    }
+    LogDebug("---Begin texture registration---");
+  }
+}
+
+void GameRenderer::endTexturesRegistration()
+{
+  // remove not used textures
+  std::vector<Texture*> textures = Theme::instance()->getTextureManager()->getTextures();
+  std::vector<Texture*>::iterator it = textures.begin();
+
+  while(it != textures.end()){
+    // zero is for persistent textures
+    if((*it)->curRegistrationStage != PERSISTANT)
+      if((*it)->curRegistrationStage != m_curRegistrationStage){
+	LogDebug("remove texture [%s] [%x]", (*it)->Name.c_str(), (*it));
+
+	(*it)->invalidateSpritesTexture();
+
+	Theme::instance()->getTextureManager()->destroyTexture((*it));
+	it = textures.erase(it);
+      } else
+	++it;
+    else
+      ++it;
+  }
+
+  if(XMSession::instance()->debug() == true) {
+    LogDebug("---End texture registration---");
+    it = textures.begin();
+    while(it != textures.end()){
+      if((*it)->curRegistrationStage != PERSISTANT)
+	LogDebug("  end %s %d [%x]", (*it)->Name.c_str(), (*it)->curRegistrationStage, (*it));
+      ++it;
+    }
+    LogDebug("---End texture registration---");
+  }
+}
+
+unsigned int GameRenderer::currentRegistrationStage() const
+{
+  return m_curRegistrationStage;
 }
 
 void GameRenderer::setScreenShade(bool i_doShade_global, bool i_doShadeAnim_global, float i_shadeTime_global) 

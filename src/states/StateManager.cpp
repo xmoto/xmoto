@@ -40,21 +40,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../XMSession.h"
 #include "../drawlib/DrawLib.h"
 #include "../Game.h"
-#include "../GeomsManager.h"
 #include "../helpers/Log.h"
 #include "../SysMessage.h"
 #include "../xmscene/Camera.h"
 #include "../VideoRecorder.h"
-#include "../thread/XMThreadStats.h"
-#include "../thread/DownloadReplaysThread.h"
 #include <sstream>
-
-#define CURSOR_MOVE_SHOWTIME 1000
-#define NETPLAYERBOX_SHOWTIME 2000
-#define NETPLAYERBOX_REMOVETIME 1000
-#define NETPLAYERBOX_WIDTH 250
-#define NETPLAYERBOX_HEIGHT 100
-#define NETPLAYERBOX_BORDER 15
 
 StateManager::StateManager()
 {
@@ -88,26 +78,6 @@ StateManager::StateManager()
   }
 
   m_currentUniqueId = 0;
-
-  // the full xmoto windows it the screen of the statemanager
-  m_screen = RenderSurface(Vector2i(0, 0),
-			   Vector2i(GameApp::instance()->getDrawLib()->getDispWidth(),
-				    GameApp::instance()->getDrawLib()->getDispHeight()));
-
-  // create the db stats thread
-  m_xmtstas = new XMThreadStats(XMSession::instance()->sitekey(), this);
-
-  // create the replay downloader thread
-  m_drt = new DownloadReplaysThread(this);
-
-  // mouse
-  m_isCursorVisible = false;
-  SDL_ShowCursor(SDL_DISABLE);
-  m_lastMouseMoveTime       = GameApp::instance()->getXMTimeInt();
-  m_lastMouseMoveTimeInZone = GameApp::instance()->getXMTimeInt();
-  m_previousMouseX = 0;
-  m_previousMouseY = 0;
-  m_previousMouseOverPlayer = -2;
 }
 
 StateManager::~StateManager()
@@ -116,26 +86,6 @@ StateManager::~StateManager()
     delete popState();
   }
 
-  /* stats */
-  if(m_xmtstas != NULL) {
-    // do the stats job to confirm there are no more jobs waiting
-    m_xmtstas->doJob();
-    
-    // be sure the thread is finished before closing xmoto
-    if(m_xmtstas->waitForThreadEnd()) {
-      LogError("stats thread failed");
-    }
-  }
-
-  /* replays */
-  if(m_drt != NULL) {
-    // be sure the thread is finished before closing xmoto
-    if(m_drt->waitForThreadEnd()) {
-      LogError("replays downloader thread failed");
-    }
-  }
-
-
   deleteToDeleteState();
 
   if(m_videoRecorder != NULL) {
@@ -143,12 +93,6 @@ StateManager::~StateManager()
   }
 
   m_registeredStates.clear();
-
-  // stats thread
-  if(m_xmtstas != NULL) {
-    delete m_xmtstas;
-  }
-
 }
 
 std::string StateManager::getUniqueId() {
@@ -158,29 +102,13 @@ std::string StateManager::getUniqueId() {
   return v_n.str();
 }
 
-void StateManager::setNewStateScreen(GameState* pNewState) {
-  /* to test rendering a state to its own render surface, uncomment these :
-  if(pNewState->getType() == "SCENE") {
-    int offset = 100;
-    pNewState->setScreen(RenderSurface(Vector2i(offset, offset),
-    				       Vector2i(m_screen.getDispWidth()-offset, m_screen.getDispHeight()-offset)));
-  } else {
-    pNewState->setScreen(RenderSurface(Vector2i(0, 0),
-				       Vector2i(m_screen.getDispWidth(), m_screen.getDispHeight())));
-  } */
-  pNewState->setScreen(RenderSurface(Vector2i(0, 0),
-				     Vector2i(m_screen.getDispWidth(), m_screen.getDispHeight())));
-}
-
 void StateManager::pushState(GameState* pNewState)
 {
   if(m_statesStack.size() != 0){
     (m_statesStack.back())->leaveAfterPush();
   }
 
-  setNewStateScreen(pNewState);
   m_statesStack.push_back(pNewState);
-  pNewState->setStateId(getUniqueId());
   (m_statesStack.back())->enter();
 
   calculateWhichStateIsRendered();
@@ -190,9 +118,6 @@ void StateManager::pushState(GameState* pNewState)
 GameState* StateManager::popState()
 {
   (m_statesStack.back())->leave();
-  if(m_statesStack.back()->getType() != "") {
-    (m_statesStack.back())->leaveType();
-  }
   GameState* pState = m_statesStack.back();
   m_statesStack.pop_back();
   
@@ -221,21 +146,10 @@ void StateManager::flush() {
 void StateManager::replaceState(GameState* pNewState, const std::string& i_parentId)
 {
   for(int i=m_statesStack.size()-1; i>=0; i--) {
-    if(m_statesStack[i]->getStateId() == i_parentId) {
+    if(m_statesStack[i]->getId() == i_parentId) {
       m_statesStack[i]->leave();
-      if(m_statesStack[i]->getType() != "") {
-	if(pNewState->getType() != m_statesStack[i]->getType()) {
-	  m_statesStack[i]->leaveType();
-	}
-      }
-      // dude::can't use the same screen size, as a scene screen may
-      // be smaller than the whole screen, and so the main menu state
-      // which replace it will inherit its screen size.
-      //      pNewState->setScreen(*(m_statesStack[i]->getScreen()));
-      setNewStateScreen(pNewState);
       m_toDeleteStates.push_back(m_statesStack[i]);
       m_statesStack[i] = pNewState;
-      pNewState->setStateId(i_parentId);
       pNewState->enter();
       calculateWhichStateIsRendered();
       calculateFps();
@@ -314,22 +228,9 @@ void StateManager::update()
     m_updateFpsNbFrame = 0;
     m_lastFpsTime += 1000;
   }
-
-  /* update mouse */
-  int mx, my;
-  GameApp::instance()->getMousePos(&mx, &my);
-  if(mx != m_previousMouseX || my != m_previousMouseY) {
-    m_lastMouseMoveTime = GameApp::instance()->getXMTimeInt();
-  }
-  m_previousMouseX = mx;
-  m_previousMouseY = my;
-
 }
 
 void StateManager::renderOverAll() {
-
-  int v_mouseOverPlayer; // -2 => on nobody ; -1 => on your profile ; X => on an other player
-  v_mouseOverPlayer = -2;
 
   // net infos
   if(NetClient::instance()->isConnected()) {
@@ -337,136 +238,29 @@ void StateManager::renderOverAll() {
     FontGlyph* v_fg;
     int vborder = 10;
     int v_voffset = 0;
-    int v_maxwidth;
-
-    int nMX,nMY;
-    GameApp::getMousePos(&nMX, &nMY);
-
-    // header
+    
     v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_CONNECTED_PLAYERS);
-    v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
-		      m_screen.getDispWidth() - v_fg->realWidth() - vborder, vborder,
+    v_fm->printString(v_fg,
+		      GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder,
 		      MAKE_COLOR(240,240,240,255), -1.0, true);
     v_voffset += v_fg->realHeight();
-    v_maxwidth = v_fg->realWidth();
-
+    
     // you
     v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(XMSession::instance()->profile());
-    v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
-		      m_screen.getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
-		      MAKE_COLOR(200,200,200,255), -1.0, true);       
-    // update v_mouseOverPlayer
-    if(nMX > m_screen.getDispWidth() - v_fg->realWidth() - vborder &&
-       nMX < m_screen.getDispWidth()                     - vborder &&
-       nMY > vborder+v_voffset                                     &&
-       nMY < vborder+v_voffset       + v_fg->realHeight()
-       ) {
-      v_mouseOverPlayer = -1;
-    }
+    v_fm->printString(v_fg,
+		      GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
+		      MAKE_COLOR(200,200,200,255), -1.0, true);     
     v_voffset += v_fg->realHeight();
-    if(v_fg->realWidth()> v_maxwidth) {
-      v_maxwidth = v_fg->realWidth();
-    }
-
-    // others
+    
     for(unsigned int i=0; i<NetClient::instance()->otherClients().size(); i++) {
       v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(NetClient::instance()->otherClients()[i]->name());
 
-      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
-			m_screen.getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
+      v_fm->printString(v_fg,
+			GameApp::instance()->getDrawLib()->getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
 			MAKE_COLOR(200,200,200,255), -1.0, true);     
-      // update v_mouseOverPlayer
-      if(nMX > m_screen.getDispWidth() - v_fg->realWidth() - vborder &&
-	 nMX < m_screen.getDispWidth()                     - vborder &&
-	 nMY > vborder+v_voffset                                     &&
-	 nMY < vborder+v_voffset       + v_fg->realHeight()
-	 ) {
-	v_mouseOverPlayer = i;
-      }
-      v_voffset += v_fg->realHeight();
-      if(v_fg->realWidth()> v_maxwidth) {
-	v_maxwidth = v_fg->realWidth();
-      }
-    }
-
-    // memorize previous value for transparency effect
-    if(v_mouseOverPlayer != -2) {
-      m_lastMouseMoveTimeInZone = m_lastMouseMoveTime;
-    }
-
-    // render the player information
-    int v_displayPlayer = -2;
-
-    // the mouse must have move recently
-    if((GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTimeInZone) < NETPLAYERBOX_SHOWTIME+NETPLAYERBOX_REMOVETIME) {
-      v_displayPlayer = v_mouseOverPlayer;
-
-      // if the mouse is over nothing, display the last displayed player
-      if(v_mouseOverPlayer == -2) {
-	v_displayPlayer = m_previousMouseOverPlayer;
-      }
-    }
-
-    // if there is something to display
-    if(v_displayPlayer != -2 && v_displayPlayer != -1 /* don't display yourself */) {
-      int v_alpha;
-
-      if((GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTimeInZone) < NETPLAYERBOX_SHOWTIME) {
-	v_alpha = 255;
-      } else {
-	v_alpha = 255 - (int)(((GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTimeInZone) - NETPLAYERBOX_SHOWTIME) * 255.0 / NETPLAYERBOX_REMOVETIME);
-      }
-
-      // display the name of the player
-      std::string v_name, v_level;
-
-      if(v_displayPlayer == -1) {
-	v_name = XMSession::instance()->profile();
-      } else {
-	v_name  = NetClient::instance()->otherClients()[v_displayPlayer]->name();
-	v_level = NetClient::instance()->otherClients()[v_displayPlayer]->playingLevelName();
-	if(v_level == "") {
-	  v_level = "-";
-	}
-      }
-
-      v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(v_name);
-
-      // box
-      GameApp::instance()->getDrawLib()->drawBox(Vector2f(m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER, 0),
-						 Vector2f(m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER - NETPLAYERBOX_WIDTH,
-							  NETPLAYERBOX_HEIGHT), 0.0, MAKE_COLOR(41, 41, 95, v_alpha));
-      v_voffset = 0;
-
-      // name
-      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
-			m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER - NETPLAYERBOX_WIDTH/2 - v_fg->realWidth()/2,
-			0,
-			MAKE_COLOR(200,200,200,v_alpha), -1.0, true);
-      v_voffset += v_fg->realHeight();
-
-      // level
-      v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_LEVEL + std::string(" :"));
-      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
-			m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER - NETPLAYERBOX_WIDTH,
-			v_voffset,
-			MAKE_COLOR(200,200,200,v_alpha), -1.0, false);
-      v_voffset += v_fg->realHeight();
-      v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(v_level);
-      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
-			m_screen.getDispWidth() - vborder - v_maxwidth - NETPLAYERBOX_BORDER - NETPLAYERBOX_WIDTH,
-			v_voffset,
-			MAKE_COLOR(200,200,200,v_alpha), -1.0, false);
       v_voffset += v_fg->realHeight();
     }
-
-    // memorize previous value
-    if(v_mouseOverPlayer != -2  && (GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTimeInZone) < NETPLAYERBOX_SHOWTIME+NETPLAYERBOX_REMOVETIME) {
-      m_previousMouseOverPlayer = v_mouseOverPlayer;
-    }
-    
   }
-
 }
 
 void StateManager::render()
@@ -508,8 +302,6 @@ void StateManager::render()
     // STACK
     if(XMSession::instance()->debug()) {
       drawStack();
-      drawTexturesLoading();
-      drawGeomsLoading();
     }
 
     // SYSMESSAGE
@@ -517,28 +309,8 @@ void StateManager::render()
 
     // CURSOR
     if(m_statesStack.size() > 0) {
-      bool m_mustCursorBeDisplayed = m_statesStack.back()->showCursor() || (GameApp::instance()->getXMTimeInt() - m_lastMouseMoveTime) < CURSOR_MOVE_SHOWTIME;
-      
-      if(XMSession::instance()->ugly()) {
-	if(m_mustCursorBeDisplayed) {
-	  if(m_isCursorVisible == false) {
-	    SDL_ShowCursor(SDL_ENABLE);
-	    m_isCursorVisible = true;
-	  }
-	} else {
-	  if(m_isCursorVisible) {
-	    SDL_ShowCursor(SDL_DISABLE);
-	    m_isCursorVisible = false;
-	  }
-	}
-      } else {
-	if(m_mustCursorBeDisplayed) {
-	  drawCursor();
-	}
-	if(m_isCursorVisible) {
-	  SDL_ShowCursor(SDL_DISABLE); // hide the cursor to show the texture
-	  m_isCursorVisible = false;
-	}
+      if(m_statesStack.back()->showCursor()) {
+	drawCursor();
       }
     }
 
@@ -571,25 +343,7 @@ void StateManager::drawFps() {
 
   FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
   FontGlyph* v_fg = v_fm->getGlyph(cTemp);
-  v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, 0, 130, MAKE_COLOR(255,255,255,255), -1.0, true);
-}
-
-void StateManager::drawTexturesLoading() {
-  std::ostringstream v_n;
-  v_n << "Textures: " << Theme::instance()->getTextureManager()->getTextures().size();
-
-  FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
-  FontGlyph* v_fg = v_fm->getGlyph(v_n.str());
-  v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, 0, 100, MAKE_COLOR(255,255,255,255), -1.0, true);
-}
-
-void StateManager::drawGeomsLoading() {
-  std::ostringstream v_n;
-  v_n << "Geoms (Blocks/Edges): " << GeomsManager::instance()->getNumberOfBlockGeoms() << "/" << GeomsManager::instance()->getNumberOfEdgeGeoms();
-
-  FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
-  FontGlyph* v_fg = v_fm->getGlyph(v_n.str());
-  v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, 0, 120, MAKE_COLOR(255,255,255,255), -1.0, true);
+  v_fm->printString(v_fg, 0, 130, MAKE_COLOR(255,255,255,255), -1.0, true);
 }
 
 void StateManager::drawStack() {
@@ -599,7 +353,7 @@ void StateManager::drawStack() {
   DrawLib* drawLib = GameApp::instance()->getDrawLib();
 
   int xoff = 0;
-  int yoff = m_screen.getDispHeight();
+  int yoff = drawLib->getDispHeight();
   int w = 180;
   int h =  30;
   Color bg_none     = MAKE_COLOR(0,0,0,200);
@@ -624,12 +378,12 @@ void StateManager::drawStack() {
     drawLib->drawBox(Vector2f(xoff,     yoff - (i * h)), Vector2f(xoff + w/2, yoff - ((i+1) * h)), 1.0, bg_update);
     drawLib->drawBox(Vector2f(xoff+w/2, yoff - (i * h)), Vector2f(xoff + w,   yoff - ((i+1) * h)), 1.0, bg_render);
 
-    if(m_statesStack[i]->getStateId() == "") {
+    if(m_statesStack[i]->getId() == "") {
       v_fg = v_fm->getGlyph(m_statesStack[i]->getName());
     } else {
-      v_fg = v_fm->getGlyph(m_statesStack[i]->getName() + " (" + m_statesStack[i]->getStateId() + ")");
+      v_fg = v_fm->getGlyph(m_statesStack[i]->getName() + " (" + m_statesStack[i]->getId() + ")");
     }
-    v_fm->printString(drawLib, v_fg, (w-v_fg->realWidth())/2 + xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, 0.0, true);
+    v_fm->printString(v_fg, (w-v_fg->realWidth())/2 + xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, 0.0, true);
 
     i++;
     ++stateIterator;
@@ -913,11 +667,12 @@ StateManager::sendAsynchronousMessage(std::string message, std::string args)
     }
 
     while(stateIterator != states.end()){
+      (*stateIterator)->send(message, args);
+
       LogDebug("sendAsynchronousMessage [%s [%s]] to [%s]",
 	       message.c_str(), args.c_str(),
 	       (*stateIterator)->getName().c_str());
 
-      (*stateIterator)->send(message, args);
       ++stateIterator;
     }
   } else {
@@ -947,20 +702,12 @@ bool StateManager::isThereASuchState(const std::string& i_name) {
   return false;
 }
 
-bool StateManager::isThereASuchStateType(const std::string& i_type) {
+bool StateManager::isThereASuchStateId(const std::string& i_id) {
   for(unsigned int i=0; i<m_statesStack.size(); i++) {
-    if(m_statesStack[i]->getStateType() == i_type) {
+    if(m_statesStack[i]->getId() == i_id) {
       return true;
     }
   }
 
   return false;
-}
-
-XMThreadStats* StateManager::getDbStatsThread() {
-  return m_xmtstas;
-}
-
-DownloadReplaysThread* StateManager::getReplayDownloaderThread() {
-  return m_drt;
 }

@@ -30,8 +30,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Game.h"
 #include "../xmscene/BikePlayer.h"
 
-StatePreplayingGame::StatePreplayingGame(const std::string i_idlevel, bool i_sameLevel)
-: StatePreplaying(i_idlevel, i_sameLevel) {
+StatePreplayingGame::StatePreplayingGame(const std::string& i_id, const std::string i_idlevel, bool i_sameLevel)
+: StatePreplaying(i_id, i_idlevel, i_sameLevel) {
     m_name  = "StatePreplayingGame";
 }
 
@@ -42,7 +42,7 @@ void StatePreplayingGame::initUniverse() {
   bool v_multiScenes = XMSession::instance()->multiScenes();
   unsigned int v_nbPlayer = XMSession::instance()->multiNbPlayers();
 
-  m_universe->initPlay(&m_screen, v_nbPlayer, v_multiScenes);
+  m_universe->initPlay(v_nbPlayer, v_multiScenes);
 }
 
 void StatePreplayingGame::preloadLevels() {
@@ -63,7 +63,7 @@ void StatePreplayingGame::initPlayers() {
 
   if(v_multiScenes == false) { // monoworld
     Scene* v_world = m_universe->getScenes()[0];
-
+    
     for(unsigned int i=0; i<v_nbPlayer; i++) {
       v_world->setCurrentCamera(i);
       v_world->getCamera()->setPlayerToFollow(v_world->addPlayerLocalBiker(i, v_world->getLevelSrc()->PlayerStart(),
@@ -98,7 +98,7 @@ void StatePreplayingGame::initPlayers() {
 }
 
 void StatePreplayingGame::runPlaying() {
-  StateManager::instance()->replaceState(new StatePlayingLocal(m_universe, m_renderer), getStateId());
+  StateManager::instance()->replaceState(new StatePlayingLocal(m_universe, getId()), this->getId());
 }
 
 void StatePreplayingGame::nextLevel(bool i_positifOrder) {
