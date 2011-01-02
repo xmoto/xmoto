@@ -27,11 +27,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BasicSceneStructs.h"
 #include "BasicStructures.h"
 
-#define XM_NET_PROTOCOL_VERSION 2
+#define XM_NET_PROTOCOL_VERSION 3
 /*
 DELTA 1->2:
 clientInfos : add xmversion string
-
+DELTA 2->3:
+add NA_udpBindValidation
 */
 
 #define NETACTION_MAX_PACKET_SIZE 1024 * 2 // bytes
@@ -44,8 +45,9 @@ class DBuffer;
 
 enum NetActionType {
   TNA_clientInfos,
-  TNA_udpBind,
   TNA_udpBindQuery,
+  TNA_udpBind,
+  TNA_udpBindValidation,
   TNA_chatMessage,
   TNA_serverError,
   TNA_frame,
@@ -149,9 +151,25 @@ class NA_udpBindQuery : public NetAction {
   private:
 };
 
+class NA_udpBindValidation : public NetAction {
+  public:
+  NA_udpBindValidation();
+  NA_udpBindValidation(void* data, unsigned int len);
+  virtual ~NA_udpBindValidation();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);  
+
+  private:
+};
+
 /* the client send its key by tcp (clientInfos) */
 /* then, the server ask via tcp (udpBindQuery) the client to send an udp packet (udpBind) */
 /* the server bind */
+/* the server send a validation to the client so that it starts to send via udp */
 
 class NA_clientInfos : public NetAction {
   public:

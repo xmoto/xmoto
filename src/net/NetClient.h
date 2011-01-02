@@ -75,7 +75,7 @@ class NetClient : public Singleton<NetClient> {
   void connect(const std::string& i_server, int i_port);
   void disconnect();
   bool isConnected();
-  void send(NetAction* i_netAction, int i_subsrc);
+  void send(NetAction* i_netAction, int i_subsrc, bool i_forceUdp = false);
   TCPsocket* tcpSocket();
   UDPsocket* udpSocket();
   UDPpacket* sendPacket();
@@ -103,6 +103,7 @@ class NetClient : public Singleton<NetClient> {
   private:
   bool m_isConnected;
   IPaddress serverIp;
+  bool m_serverAcceptUdp;
   TCPsocket m_tcpsd;
   UDPsocket m_udpsd;
   ClientListenerThread* m_clientListenerThread;
