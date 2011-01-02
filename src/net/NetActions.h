@@ -166,10 +166,15 @@ class NA_udpBindValidation : public NetAction {
   private:
 };
 
-/* the client send its key by tcp (clientInfos) */
-/* then, the server ask via tcp (udpBindQuery) the client to send an udp packet (udpBind) */
-/* the server bind */
-/* the server send a validation to the client so that it starts to send via udp */
+/*
+CLI : >clientInfos (send the udp key)
+SRV : >udpBindQuery
+CLI : <udpBindQuery ; >udpBind
+SRV : <udpBind (ok, i can *receive* udp from client) >udpBindValidation ; >udpBind
+CLI : <udpBindValidation (ok, i can *send* udp to the server)
+CLI : <udpBind (ok, i can *receive* udp from the server) ; >udpBindValidation
+SRV : <udpBindValidation (ok, i can *send* udp to the client)
+*/
 
 class NA_clientInfos : public NetAction {
   public:

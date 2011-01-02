@@ -61,6 +61,7 @@ NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tc
     m_tcpSocket   = i_tcpSocket;
     m_tcpRemoteIP = *i_tcpRemoteIP;
     m_isUdpBinded = false;
+    m_isUdpBindedValidated = false;
     tcpReader = new ActionReader();
     m_lastActivTime        =  0;
     m_lastInactivTimeAlert = -1;
@@ -117,12 +118,19 @@ bool NetSClient::isUdpBinded() const {
   return m_isUdpBinded;
 }
 
+bool NetSClient::isUdpBindedValidated() const {
+  return m_isUdpBindedValidated;
+}
 void NetSClient::bindUdp(IPaddress i_udpIPAdress) {
   m_udpRemoteIP = i_udpIPAdress;
 
   LogInfo("server: host binded: %s:%i (UDP)",
 	  XMNet::getIp(&m_udpRemoteIP).c_str(), SDLNet_Read16(&(m_udpRemoteIP.port)));
   m_isUdpBinded = true;
+}
+
+void NetSClient::validUdpBind() {
+  m_isUdpBindedValidated = true;
 }
 
 void NetSClient::unbindUdp() {
@@ -405,7 +413,7 @@ void ServerThread::SP2_initPlaying() {
       m_universe->getScenes()[i]->playInitLevel();
     }
   } catch(Exception &e) {
-    LogWarning("Server: Unable to load level %s",  v_id_level.c_str());
+    LogWarning("server: Unable to load level %s",  v_id_level.c_str());
     throw Exception("Unable to load level " + v_id_level);
   }
 
@@ -807,9 +815,11 @@ void ServerThread::removeClient(unsigned int i) {
   m_clients.erase(m_clients.begin() + i);
 }
 
-void ServerThread::sendToClient(NetAction* i_netAction, unsigned int i, int i_src, int i_subsrc) {
+void ServerThread::sendToClient(NetAction* i_netAction, unsigned int i, int i_src, int i_subsrc, bool i_forceUdp) {
   i_netAction->setSource(i_src, i_subsrc);
-  if(m_clients[i]->isUdpBinded()) {
+  if(i_forceUdp) {
+    i_netAction->send(NULL, &m_udpsd, m_udpPacket, m_clients[i]->udpRemoteIP());
+  } else if(m_clients[i]->isUdpBinded() && m_clients[i]->isUdpBindedValidated()) {
     i_netAction->send(m_clients[i]->tcpSocket(), &m_udpsd, m_udpPacket, m_clients[i]->udpRemoteIP());
   } else {
     i_netAction->send(m_clients[i]->tcpSocket(), NULL, NULL, NULL);
@@ -952,11 +962,19 @@ void ServerThread::manageClientUDP() {
 		//LogInfo("UDP bind key received via UDP: %s", ((NA_udpBind*)v_netAction)->key().c_str());
 		m_clients[i]->bindUdp(m_udpPacket->address);
 		if(m_clients[i]->protocolVersion() >= 3) { // don't send if the version is lower because the client will not understand -- udp could not work in that case
+		  LogInfo("server: i can receive udp from the client %i", i);
+
 		  NA_udpBindValidation nabv;
+		  try {
+		    sendToClient(&nabv, i, -1, 0);
+		  } catch(Exception &e) {
+		  }
+
+		  NA_udpBind nab("XMS");
 		  try {
 		    // send the packet 3 times to get more change it arrives
 		    for(unsigned int j=0; j<3; j++) {
-		      sendToClient(&nabv, i, -1, 0);
+		      sendToClient(&nab, i, -1, 0, true);
 		    }
 		  } catch(Exception &e) {
 		  }
@@ -988,7 +1006,6 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     break;
 
   case TNA_udpBindQuery:
-  case TNA_udpBindValidation:
   case TNA_serverError:
   case TNA_changeClients:
   case TNA_clientsNumber:
@@ -1064,7 +1081,15 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       }
     }
     break;
-      
+
+  case TNA_udpBindValidation:
+    {
+      if(m_clients[i_client]->isUdpBindedValidated() == false) {
+	LogInfo("server: the client %i can receive udp from me", i_client);
+	m_clients[i_client]->validUdpBind();
+      }
+    }
+
   case TNA_chatMessage:
     {
       sendToAllClients(i_netAction, m_clients[i_client]->id(), i_netAction->getSubSource(), i_client);
@@ -1345,11 +1370,13 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     if(v_args.size() != 1) {
       v_answer += "lsplayers: invalid arguments\n";
     } else {
-      char v_clientstr[38];
+      char v_clientstr[42];
       for(unsigned int i=0; i<m_clients.size(); i++) {
-	snprintf(v_clientstr, 38, "%5u: %-12s %-17s",
+	snprintf(v_clientstr, 42, "%5u: %-12s %-21s",
 		 m_clients[i]->id(), m_clients[i]->name().c_str(),
-		 ("(" + XMNet::getIp(m_clients[i]->tcpRemoteIP()) + ")").c_str());
+		 ("(" + XMNet::getIp(m_clients[i]->tcpRemoteIP()) + "/" + 
+		  (m_clients[i]->isUdpBindedValidated() ? "UDP" : "TCP")
+		  + ")").c_str());
 	v_answer += v_clientstr;
 	if(i % 3 == 2) {
 	  v_answer += "\n";
@@ -1440,10 +1467,17 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     }
 
   } else if(v_args[0] == "msg") {
-    if(v_args.size() != 2) {
+    if(v_args.size() < 2) {
       v_answer += "msg: invalid arguments\n";
     } else {
-      NA_chatMessage na(v_args[1].c_str(), "server");
+      std::string v_msg;
+      for(unsigned int i=1; i<v_args.size(); i++) {
+	v_msg += v_args[i];
+	if(i<v_args.size()-1) {
+	  v_msg += " ";
+	}
+      }
+      NA_chatMessage na(v_msg.c_str(), "server");
       try {
 	sendToAllClients(&na, -1, 0);
       } catch(Exception &e) {

@@ -450,18 +450,17 @@ void NA_udpBindQuery::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_
   NetAction::send(i_tcpsd, NULL, NULL, NULL, NULL, 0);
 }
 
-NA_udpBindValidation::NA_udpBindValidation() : NetAction(false) { // udp is needed
+NA_udpBindValidation::NA_udpBindValidation() : NetAction(true) { // tcp to confirm
 }
 
-NA_udpBindValidation::NA_udpBindValidation(void* data, unsigned int len) : NetAction(false) { // udp is needed
+NA_udpBindValidation::NA_udpBindValidation(void* data, unsigned int len) : NetAction(true) { // tcp to confirm
 }
 
 NA_udpBindValidation::~NA_udpBindValidation() {
 }
 
 void NA_udpBindValidation::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
-  // force UDP
-  NetAction::send(NULL, i_udpsd, i_sendPacket, i_udpRemoteIP, NULL, 0);
+  NetAction::send(i_tcpsd, i_udpsd, i_sendPacket, i_udpRemoteIP, NULL, 0);
 }
 
 NA_clientInfos::NA_clientInfos(int i_protocolVersion, const std::string& i_udpBindKey) : NetAction(true) {

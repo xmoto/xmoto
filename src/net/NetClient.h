@@ -103,7 +103,8 @@ class NetClient : public Singleton<NetClient> {
   private:
   bool m_isConnected;
   IPaddress serverIp;
-  bool m_serverAcceptUdp;
+  bool m_serverReceivesUdp;
+  bool m_serverSendsUdp;
   TCPsocket m_tcpsd;
   UDPsocket m_udpsd;
   ClientListenerThread* m_clientListenerThread;
