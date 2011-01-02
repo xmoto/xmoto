@@ -951,6 +951,16 @@ void ServerThread::manageClientUDP() {
 	      if(m_clients[i]->udpBindKey() == ((NA_udpBind*)v_netAction)->key()) {
 		//LogInfo("UDP bind key received via UDP: %s", ((NA_udpBind*)v_netAction)->key().c_str());
 		m_clients[i]->bindUdp(m_udpPacket->address);
+		if(m_clients[i]->protocolVersion() >= 3) { // don't send if the version is lower because the client will not understand -- udp could not work in that case
+		  NA_udpBindValidation nabv;
+		  try {
+		    // send the packet 3 times to get more change it arrives
+		    for(unsigned int j=0; j<3; j++) {
+		      sendToClient(&nabv, i, -1, 0);
+		    }
+		  } catch(Exception &e) {
+		  }
+		}
 		break; // stop : only one client
 	      }
 	    }
@@ -978,6 +988,7 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     break;
 
   case TNA_udpBindQuery:
+  case TNA_udpBindValidation:
   case TNA_serverError:
   case TNA_changeClients:
   case TNA_clientsNumber:

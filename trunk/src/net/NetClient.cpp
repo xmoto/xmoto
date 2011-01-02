@@ -47,6 +47,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 NetClient::NetClient() {
     m_isConnected = false;
+    m_serverAcceptUdp = false;
     m_clientListenerThread = NULL;
     m_netActionsMutex = SDL_CreateMutex();
     m_universe = NULL;
@@ -197,11 +198,17 @@ UDPsocket* NetClient::udpSocket() {
   return &m_udpsd;
 }
 
-void NetClient::send(NetAction* i_netAction, int i_subsrc) {
+void NetClient::send(NetAction* i_netAction, int i_subsrc, bool i_forceUdp) {
   i_netAction->setSource(0, i_subsrc);
 
   try {
-    i_netAction->send(&m_tcpsd, &m_udpsd, m_udpSendPacket, &m_udpSendPacket->address);
+    if(i_forceUdp) {
+      i_netAction->send(NULL, &m_udpsd, m_udpSendPacket, &m_udpSendPacket->address);
+    } else if(m_serverAcceptUdp) {
+      i_netAction->send(&m_tcpsd, &m_udpsd, m_udpSendPacket, &m_udpSendPacket->address);
+    } else {
+      i_netAction->send(&m_tcpsd, NULL, NULL, NULL);
+    }
   } catch(Exception &e) {
     disconnect();
     LogWarning("send failed : %s", e.getMsg().c_str());
@@ -293,13 +300,19 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
       try {
 	// send the packet 3 times to get more change it arrives
 	for(unsigned int i=0; i<3; i++) {
-	  send(&na, 0);
+	  send(&na, 0, true);
 	}
       } catch(Exception &e) {
       }
     }
     break;
-      
+
+  case TNA_udpBindValidation:
+    {
+      m_serverAcceptUdp = true;
+    }
+    break;
+
   case TNA_chatMessage:
     {
       try {

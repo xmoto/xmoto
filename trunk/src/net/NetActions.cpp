@@ -45,6 +45,7 @@ std::string NA_frame::ActionKey        	= "f";
 std::string NA_clientInfos::ActionKey  	= "clientInfos";
 std::string NA_udpBind::ActionKey      	= "udpbind";
 std::string NA_udpBindQuery::ActionKey 	= "udpbindingQuery";
+std::string NA_udpBindValidation::ActionKey = "udpbindingValidation";
 std::string NA_changeName::ActionKey    = "changeName";
 std::string NA_playingLevel::ActionKey  = "playingLevel";
 std::string NA_serverError::ActionKey   = "serverError";
@@ -67,6 +68,7 @@ NetActionType NA_frame::NAType         = TNA_frame;
 NetActionType NA_clientInfos::NAType   = TNA_clientInfos;
 NetActionType NA_udpBind::NAType       = TNA_udpBind;
 NetActionType NA_udpBindQuery::NAType  = TNA_udpBindQuery;
+NetActionType NA_udpBindValidation::NAType  = TNA_udpBindValidation;
 NetActionType NA_changeName::NAType    = TNA_changeName;
 NetActionType NA_clientsNumber::NAType = TNA_clientsNumber;
 NetActionType NA_clientsNumberQuery::NAType = TNA_clientsNumberQuery;
@@ -237,6 +239,10 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
 
   else if(v_cmd == NA_udpBindQuery::ActionKey) {
     v_res = new NA_udpBindQuery(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_udpBindValidation::ActionKey) {
+    v_res = new NA_udpBindValidation(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
   else if(v_cmd == NA_udpBind::ActionKey) {
@@ -430,10 +436,10 @@ std::string NA_udpBind::key() const {
   return m_key;
 }
 
-NA_udpBindQuery::NA_udpBindQuery() : NetAction(false) {
+NA_udpBindQuery::NA_udpBindQuery() : NetAction(true) { // force the client send the udpbind ; send in tcp to receive in udp
 }
 
-NA_udpBindQuery::NA_udpBindQuery(void* data, unsigned int len) : NetAction(false) {
+NA_udpBindQuery::NA_udpBindQuery(void* data, unsigned int len) : NetAction(true) { // force the client send the udpbind ; send in tcp to receive in udp
 }
 
 NA_udpBindQuery::~NA_udpBindQuery() {
@@ -442,6 +448,20 @@ NA_udpBindQuery::~NA_udpBindQuery() {
 void NA_udpBindQuery::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
   // force TCP
   NetAction::send(i_tcpsd, NULL, NULL, NULL, NULL, 0);
+}
+
+NA_udpBindValidation::NA_udpBindValidation() : NetAction(false) { // udp is needed
+}
+
+NA_udpBindValidation::NA_udpBindValidation(void* data, unsigned int len) : NetAction(false) { // udp is needed
+}
+
+NA_udpBindValidation::~NA_udpBindValidation() {
+}
+
+void NA_udpBindValidation::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  // force UDP
+  NetAction::send(NULL, i_udpsd, i_sendPacket, i_udpRemoteIP, NULL, 0);
 }
 
 NA_clientInfos::NA_clientInfos(int i_protocolVersion, const std::string& i_udpBindKey) : NetAction(true) {
