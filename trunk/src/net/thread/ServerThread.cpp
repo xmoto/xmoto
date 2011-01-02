@@ -1371,18 +1371,26 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "lsplayers: invalid arguments\n";
     } else {
       char v_clientstr[42];
+      std::string v_mode;
       for(unsigned int i=0; i<m_clients.size(); i++) {
-	snprintf(v_clientstr, 42, "%5u: %-12s %-21s",
+	switch(m_clients[i]->mode()) {
+	case NETCLIENT_GHOST_MODE:
+	  v_mode = "GHOST";
+	  break;
+	case NETCLIENT_SLAVE_MODE:
+	  v_mode = "SLAVE";
+	  break;
+	default:
+	  v_mode = "UNKWN";
+	}
+
+	snprintf(v_clientstr, 42, "%5u: %-12s %-5s %-21s",
 		 m_clients[i]->id(), m_clients[i]->name().c_str(),
+		 v_mode.c_str(),
 		 ("(" + XMNet::getIp(m_clients[i]->tcpRemoteIP()) + "/" + 
 		  (m_clients[i]->isUdpBindedValidated() ? "UDP" : "TCP")
 		  + ")").c_str());
 	v_answer += v_clientstr;
-	if(i % 3 == 2) {
-	  v_answer += "\n";
-	}
-      }
-      if(m_clients.size() %3 != 2) {
 	v_answer += "\n";
       }
     }
