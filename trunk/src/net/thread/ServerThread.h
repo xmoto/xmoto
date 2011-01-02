@@ -43,6 +43,8 @@ class NetSClient {
   IPaddress* udpRemoteIP();
   bool isUdpBinded() const;
   void bindUdp(IPaddress i_udpIPAdress);
+  void validUdpBind();
+  bool isUdpBindedValidated() const;
   void unbindUdp();
 
   ActionReader* tcpReader;
@@ -96,6 +98,7 @@ class NetSClient {
   IPaddress m_tcpRemoteIP;
   IPaddress m_udpRemoteIP;
   bool m_isUdpBinded;
+  bool m_isUdpBindedValidated;
   std::string m_udpBindKey;
   std::string m_name;
   int m_protocolVersion;
@@ -157,7 +160,7 @@ class ServerThread : public XMThread {
   void sendToAllClients(NetAction* i_netAction, int i_src, int i_subsrc, int i_except = -1);
   void sendToAllClientsHavingMode(NetClientMode i_mode, NetAction* i_netAction, int i_src, int i_subsrc, int i_except = -1);
   void sendToAllClientsMarkedToPlay(NetAction* i_netAction, int i_src, int i_subsrc, int i_except = -1);
-  void sendToClient(NetAction* i_netAction, unsigned int i, int i_src, int i_subsrc);
+  void sendToClient(NetAction* i_netAction, unsigned int i, int i_src, int i_subsrc, bool i_forceUdp = false);
   void removeClient(unsigned int i);
   unsigned int nbClientsInMode(NetClientMode i_mode);
 

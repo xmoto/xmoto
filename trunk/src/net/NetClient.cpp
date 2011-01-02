@@ -47,7 +47,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 NetClient::NetClient() {
     m_isConnected = false;
-    m_serverAcceptUdp = false;
+    m_serverReceivesUdp = false;
+    m_serverSendsUdp    =  false;
     m_clientListenerThread = NULL;
     m_netActionsMutex = SDL_CreateMutex();
     m_universe = NULL;
@@ -115,6 +116,10 @@ void NetClient::connect(const std::string& i_server, int i_port) {
   if(m_isConnected) {
     throw Exception("Already connected");
   }
+
+  // reset udp server informations
+  m_serverReceivesUdp = false;
+  m_serverSendsUdp    =  false;
 
   if (SDLNet_ResolveHost(&serverIp, i_server.c_str(), i_port) < 0) {
     throw Exception(SDLNet_GetError());
@@ -204,7 +209,7 @@ void NetClient::send(NetAction* i_netAction, int i_subsrc, bool i_forceUdp) {
   try {
     if(i_forceUdp) {
       i_netAction->send(NULL, &m_udpsd, m_udpSendPacket, &m_udpSendPacket->address);
-    } else if(m_serverAcceptUdp) {
+    } else if(m_serverReceivesUdp) {
       i_netAction->send(&m_tcpsd, &m_udpsd, m_udpSendPacket, &m_udpSendPacket->address);
     } else {
       i_netAction->send(&m_tcpsd, NULL, NULL, NULL);
@@ -284,7 +289,6 @@ void NetClient::updateOtherClientsMode(std::vector<int> i_slavePlayers) {
 void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
   switch(i_netAction->actionType()) {
 
-  case TNA_udpBind:
   case TNA_clientInfos:
   case TNA_clientMode:
   case TNA_playerControl:
@@ -307,9 +311,25 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
     }
     break;
 
+  case TNA_udpBind:
+    {
+      if(m_serverSendsUdp == false) {
+	m_serverSendsUdp = true;
+	LogInfo("client: i can receive udp from the server");
+	NA_udpBindValidation na;
+	try {
+	  send(&na, 0);
+	} catch(Exception &e) {
+	}
+      }
+    }
+
   case TNA_udpBindValidation:
     {
-      m_serverAcceptUdp = true;
+      if(m_serverReceivesUdp == false) {
+	LogInfo("client: the server can receive udp from me");
+	m_serverReceivesUdp = true;
+      }
     }
     break;
 
