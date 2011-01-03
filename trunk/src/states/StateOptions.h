@@ -53,6 +53,8 @@ class StateOptions : public StateMenu {
   static UIWindow* makeWindowOptions_db(UIWindow* i_parent);
   static UIWindow* makeWindowOptions_language(UIWindow* i_parent);
   static UIWindow* makeRoomTab(UIWindow* i_parent, unsigned int i_number);
+  static UIWindow* makeWindowOptions_infos(UIWindow* i_parent);
+  static void makeWindowOptions_infos_line(UIWindow* i_parent, const std::string& i_name, const std::string& i_value, int hpos);
 
   void updateOptions();
   void createThemesList(UIList *pList);

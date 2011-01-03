@@ -46,6 +46,7 @@ public:
 	    bool i_dbDirsCheck,
 	    XmDatabaseUpdateInterface *i_interface = NULL);
   void init(const std::string& i_dbFileUTF8, bool i_readOnly = false);
+  int  getXmDbVersion();
 
   /* RULE:
      all write access must be done from class xmDatabase
@@ -219,7 +220,6 @@ public:
   static void user_xm_profile(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
 
   /* function used to synchronise with the last xmoto version */
-  int  getXmDbVersion();
   void upgradeXmDbToVersion(int i_fromVersion,
 			    const std::string& i_profile,
 			    XmDatabaseUpdateInterface *i_interface = NULL);
