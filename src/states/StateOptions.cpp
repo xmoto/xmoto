@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "../SysMessage.h"
 #include "../net/NetServer.h"
+#include "../net/NetActions.h"
 #include <sstream>
 
 /* static members */
@@ -787,7 +788,6 @@ UIWindow* StateOptions::makeWindowOptions_general(UIWindow* i_parent) {
   v_generalTabs->setTabContextHelp(3, CONTEXTHELP_AUDIO_OPTIONS);
   v_generalTabs->setTabContextHelp(4, CONTEXTHELP_CONTROL_OPTIONS);
 
-
   /* main */
   v_window = new UIWindow(v_generalTabs, 20, 30, GAMETEXT_MAIN, v_generalTabs->getPosition().nWidth-30, v_generalTabs->getPosition().nHeight);
   v_window->setID("MAIN_TAB");
@@ -900,6 +900,7 @@ UIWindow* StateOptions::makeWindowOptions_general(UIWindow* i_parent) {
   v_window = makeWindowOptions_video(v_generalTabs);
   v_window = makeWindowOptions_audio(v_generalTabs);
   v_window = makeWindowOptions_controls(v_generalTabs);
+  v_window = makeWindowOptions_infos(v_generalTabs);
 
   return v_mainWindow;
 }
@@ -1204,6 +1205,49 @@ UIWindow* StateOptions::makeWindowOptions_controls(UIWindow* i_parent) {
   v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth - 400);
   v_list->addColumn("", 0); // internal key name
   v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
+
+  return v_window;
+}
+
+void StateOptions::makeWindowOptions_infos_line(UIWindow* i_parent, const std::string& i_name, const std::string& i_value, int hpos) {
+  UIStatic* v_someText;
+  DrawLib*  drawlib = GameApp::instance()->getDrawLib();
+  int i_name_width = 180;
+
+  v_someText = new UIStatic(i_parent, 35, hpos, i_name + " :", i_name_width, 20);
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText->setFont(drawlib->getFontSmall());
+  v_someText = new UIStatic(i_parent, 35 + i_name_width, hpos, i_value, i_parent->getPosition().nWidth-35-i_name_width, 20);
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText->setFont(drawlib->getFontSmall());
+}
+
+UIWindow* StateOptions::makeWindowOptions_infos(UIWindow* i_parent) {
+  UIWindow *v_window;
+  std::ostringstream str_net, str_db;
+  
+  v_window = new UIWindow(i_parent, 0, 26, GAMETEXT_INFOS, i_parent->getPosition().nWidth, i_parent->getPosition().nHeight-26);
+  v_window->setID("INFOS_TAB");
+  v_window->showWindow(false);
+
+  int p=25;
+  makeWindowOptions_infos_line(v_window, "Version", "X-Moto " + XMBuild::getVersionString(true), p);
+  p+=20;
+  makeWindowOptions_infos_line(v_window, "Compilation date", __DATE__ " " __TIME__, p);
+  p+=20;
+  makeWindowOptions_infos_line(v_window, "User data directory", XMFS::getUserDir(FDT_DATA), p);
+  p+=20;
+  makeWindowOptions_infos_line(v_window, "User config directory", XMFS::getUserDir(FDT_CONFIG), p);
+  p+=20;
+  makeWindowOptions_infos_line(v_window, "User cache directory", XMFS::getUserDir(FDT_CACHE), p);
+  p+=20;
+  makeWindowOptions_infos_line(v_window, "System data directory", XMFS::getSystemDataDir(), p);
+  p+=20;
+  str_db << xmDatabase::instance("main")->getXmDbVersion();
+  makeWindowOptions_infos_line(v_window, "xmDb version", str_db.str(), p);
+  p+=20;
+  str_net << XM_NET_PROTOCOL_VERSION;
+  makeWindowOptions_infos_line(v_window, "xmNet version", str_net.str(), p);
 
   return v_window;
 }
