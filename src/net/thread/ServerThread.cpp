@@ -1231,8 +1231,6 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
   char **v_result;
   unsigned int nrow;
 
-  LogInfo("server cmd: %s", i_cmd.c_str());
-
   utf8::utf8_split(i_cmd, " ", v_args);
 
   if(v_args.size() < 1) {
