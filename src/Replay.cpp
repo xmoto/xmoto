@@ -159,12 +159,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* Header */
     XMFS::writeByte(pfh,3); /* Version: 3 */
+    XMFS::writeInt_LE(pfh,0x12345678); /* Endianness guard */
     XMFS::writeString(pfh,m_LevelID);
     XMFS::writeString(pfh,m_PlayerName);
-    XMFS::writeBool(pfh,m_bFinished);
-    XMFS::writeFloat_LE(pfh, GameApp::timeToFloat(m_finishTime));
     XMFS::writeFloat_LE(pfh,m_fFrameRate);
     XMFS::writeInt_LE(pfh,m_nStateSize);
+    XMFS::writeBool(pfh,m_bFinished);
+    XMFS::writeFloat_LE(pfh, GameApp::timeToFloat(m_finishTime));
 
     /* ***** ***** ***** ***** ***** **/
     /* compress all except the header */
@@ -308,6 +309,12 @@ void Replay::openReplay_3(FileHandle *pfh, bool bDisplayInformation) {
   int v_nCompressedDataSize;
   char *v_pcCompressedData;
 
+  /* Little/big endian safety check */
+  if(XMFS::readInt_LE(pfh) != 0x12345678) {
+    LogWarning("Sorry, the replay you're trying to open are not endian-compatible with your computer!");
+    throw Exception("Unable to open the replay");        
+  }
+
   /* Header */
   m_LevelID = XMFS::readString(pfh);
   if(bDisplayInformation) {
@@ -318,6 +325,13 @@ void Replay::openReplay_3(FileHandle *pfh, bool bDisplayInformation) {
   if(bDisplayInformation) {
     printf("%-30s: %s\n", "Player", m_PlayerName.c_str());
   }      
+
+  m_fFrameRate = XMFS::readFloat_LE(pfh);
+
+  m_nStateSize = XMFS::readInt_LE(pfh);
+  if(bDisplayInformation) {
+    printf("%-30s: %i\n", "State size", m_nStateSize);
+  } 
       
   m_bFinished = XMFS::readBool(pfh);
   m_finishTime = GameApp::floatToTime(XMFS::readFloat_LE(pfh));
@@ -328,13 +342,6 @@ void Replay::openReplay_3(FileHandle *pfh, bool bDisplayInformation) {
       printf("%-30s: %s\n", "Finish time", "unfinished");
     }
   }
-
-  m_fFrameRate = XMFS::readFloat_LE(pfh);
-
-  m_nStateSize = XMFS::readInt_LE(pfh);
-  if(bDisplayInformation) {
-    printf("%-30s: %i\n", "State size", m_nStateSize);
-  } 
 
   /* zuncompressed */
   v_nDataSize           = XMFS::readInt_LE(pfh);
@@ -959,29 +966,17 @@ bool Replay::nextState(int p_frames) {
       bool bFinished = true;
       int finishTime = 0;
 
-      switch(nVersion) {
-      case 0:
-      case 1:
-	if(XMFS::readInt_LE(pfh) != 0x12345678) {   
-	  XMFS::closeFile(pfh);
-	  return NULL;
-	}
-	
-	LevelID       =    XMFS::readString(pfh);
-	Player        =    XMFS::readString(pfh);
-	/* fFrameRate = */ XMFS::readFloat_LE(pfh);
-	/* nStateSize = */ XMFS::readInt_LE(pfh);
-	bFinished     =    XMFS::readBool(pfh);
-	finishTime    = GameApp::floatToTime(XMFS::readFloat_LE(pfh));
-	break;
-
-      case 3:
-	LevelID       =    XMFS::readString(pfh);
-	Player        =    XMFS::readString(pfh);
-	bFinished     =    XMFS::readBool(pfh);
-	finishTime    = GameApp::floatToTime(XMFS::readFloat_LE(pfh));
-	break;
+      if(XMFS::readInt_LE(pfh) != 0x12345678) {   
+	XMFS::closeFile(pfh);
+	return NULL;
       }
+	
+      LevelID       =    XMFS::readString(pfh);
+      Player        =    XMFS::readString(pfh);
+      /* fFrameRate = */ XMFS::readFloat_LE(pfh);
+      /* nStateSize = */ XMFS::readInt_LE(pfh);
+      bFinished     =    XMFS::readBool(pfh);
+      finishTime    = GameApp::floatToTime(XMFS::readFloat_LE(pfh));
 	
       /* Set members */
       pRpl->Level = LevelID;
