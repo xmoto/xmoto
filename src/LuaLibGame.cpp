@@ -948,7 +948,9 @@ int LuaLibGame::L_Game_GetPlayerAngle(lua_State *pL) {
 int LuaLibGame::L_Game_GetPlayerProfileName(lua_State *pl) {
   /* no event for this */
   std::string v_profileName;
-  v_profileName = XMSession::instance()->profile();
+  // deprecated cause people used a test on it to make the level harder
+  //v_profileName = XMSession::instance()->profile();
+  v_profileName = "*deprecated*";
   lua_pushstring(pl,v_profileName.c_str());
   
   return 1;
