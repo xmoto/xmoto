@@ -126,13 +126,12 @@ void StateMessageBox::createGUI() {
 		     m_screen.getDispWidth(),
 		     m_screen.getDispHeight());
 
-  m_msgbox = m_GUI->msgBox(m_text, (UIMsgBoxButton)(m_buttons), m_input, false, m_verticallyLarge);
+  m_msgbox = m_GUI->msgBox(m_text, (UIMsgBoxButton)(m_buttons), m_custom1, m_custom2, m_input, false, m_verticallyLarge);
   if(m_input) {
     m_msgbox->setTextInputFont(drawlib->getFontMedium());
     m_msgbox->setTextInput(m_inputText);
   }
   m_msgbox->addCompletionWord(m_completionList);
-
 }
 
 std::string StateMessageBox::getMsgBxId() const {
@@ -141,4 +140,9 @@ std::string StateMessageBox::getMsgBxId() const {
 
 void StateMessageBox::setMsgBxId(const std::string& i_id) {
   m_msgbxid = i_id;
+}
+
+void StateMessageBox::setCustom(const std::string& i_custom1, const std::string& i_custom2) {
+  m_custom1 = i_custom1;
+  m_custom2 = i_custom2;
 }

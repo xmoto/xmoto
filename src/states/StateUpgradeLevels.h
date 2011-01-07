@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateUpdate.h"
 
+class UpgradeLevelsThread;
+
 class StateUpgradeLevels : public StateUpdate {
 public:
   StateUpgradeLevels(bool drawStateBehind    = true,
@@ -39,6 +41,9 @@ public:
 
 protected:
   virtual void checkEvents() {}
+
+private:
+  UpgradeLevelsThread* m_ult;
 };
 
 #endif

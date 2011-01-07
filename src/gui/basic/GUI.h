@@ -133,7 +133,9 @@ enum UIMsgBoxButton {
   UI_MSGBOX_CANCEL      = 2,
   UI_MSGBOX_YES         = 4,
   UI_MSGBOX_NO          = 8,
-  UI_MSGBOX_YES_FOR_ALL = 16
+  UI_MSGBOX_YES_FOR_ALL = 16,
+  UI_MSGBOX_CUSTOM1     = 32,
+  UI_MSGBOX_CUSTOM2     = 64
 };
   
 class UIWindow {
@@ -210,8 +212,12 @@ public:
   RenderSurface* getScreen();
       
   /* Generic message boxing */
-  UIMsgBox *msgBox(std::string Text,UIMsgBoxButton Buttons,bool bTextInput=false,bool bQuery=false,bool i_verticallyLarge=false);
-  UIMsgBox *msgBox(std::string Text, std::vector<std::string>& wordcompletionlist,UIMsgBoxButton Buttons,bool bTextInput=false,bool bQuery=false,bool i_verticallyLarge=false);
+  UIMsgBox *msgBox(std::string Text,UIMsgBoxButton Buttons,
+		   const std::string& i_custom1 = "", const std::string& i_custom2 = "",
+		   bool bTextInput=false,bool bQuery=false,bool i_verticallyLarge=false);
+  UIMsgBox *msgBox(std::string Text, std::vector<std::string>& wordcompletionlist,UIMsgBoxButton Buttons,
+		   const std::string& i_custom1 = "", const std::string& i_custom2 = "",
+		   bool bTextInput=false,bool bQuery=false,bool i_verticallyLarge=false);
     
   /* Data interface */
   UIWindow *getPrimaryChild(void) {return m_pPrimaryChild;}
@@ -425,7 +431,13 @@ public:
   void setTextInputFont(FontManager* pFont) {m_textInputFont = pFont;}
   void addCompletionWord(std::string& word);
   void addCompletionWord(std::vector<std::string>& list);
+
+  std::string getCustom1() const;
+  void setCustom1(const std::string& i_str);
       
+  std::string getCustom2() const;
+  void setCustom2(const std::string& i_str);
+
   /* Data interface */
   void addButton(UIButton *p) {m_pButtons[m_nNumButtons++] = p;}
   std::vector<bool> &getSiblingStates(void) {return m_SiblingStates;}
@@ -440,6 +452,8 @@ private:
   UIMsgBoxButton m_Clicked;
   UIButton *m_pButtons[10];
   unsigned int m_nNumButtons;
+
+  std::string m_custom1, m_custom2;
       
   bool m_bTextInput;
   std::string m_TextInput_real;

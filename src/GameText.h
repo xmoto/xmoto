@@ -550,6 +550,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 
 #define GAMETEXT_XHOURS               _("%d hours") 
 #define GAMETEXT_XMINUTES             _("%d minutes")
+#define GAMETEXT_XONLY(A)              ngettext("ony %i only", "only %i", A)
 
 #define GAMETEXT_XMOTOGLOBALSTATS_SINCE        _("Stats since: %s")
 #define GAMETEXT_XMOTOGLOBALSTATS_START(A)     ngettext("X-Moto started %d time", "X-Moto started %d times", A)

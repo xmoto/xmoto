@@ -245,6 +245,22 @@ RenderSurface* UIWindow::getScreen() {
    }
  }
 
+std::string UIMsgBox::getCustom1() const {
+  return m_custom1;
+}
+
+void UIMsgBox::setCustom1(const std::string& i_str) {
+  m_custom1 = i_str;
+}
+      
+std::string UIMsgBox::getCustom2() const {
+  return m_custom2;
+}
+
+void UIMsgBox::setCustom2(const std::string& i_str) {
+  m_custom2 = i_str;
+}
+
   UIMsgBoxButton UIMsgBox::getClicked(void) {
     /* Go through buttons... anything clicked? */
     for(unsigned int i=0;i<m_nNumButtons;i++) {
@@ -259,6 +275,10 @@ RenderSurface* UIWindow::getScreen() {
 	  return UI_MSGBOX_NO;
         if(m_pButtons[i]->getCaption() == GAMETEXT_YES_FOR_ALL)
 	  return UI_MSGBOX_YES_FOR_ALL;
+        if(m_pButtons[i]->getCaption() == m_custom1)
+	  return UI_MSGBOX_CUSTOM1;
+        if(m_pButtons[i]->getCaption() == m_custom2)
+	  return UI_MSGBOX_CUSTOM2;
       }
     }
     return UI_MSGBOX_NOTHING;
@@ -315,6 +335,20 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
 
    if(i_button == UI_MSGBOX_YES_FOR_ALL) {
       if(m_pButtons[i]->getCaption() == GAMETEXT_YES_FOR_ALL) {
+	m_pButtons[i]->makeActive();
+	return;
+      }
+    }
+
+   if(i_button == UI_MSGBOX_CUSTOM1) {
+      if(m_pButtons[i]->getCaption() == m_custom1) {
+	m_pButtons[i]->makeActive();
+	return;
+      }
+    }
+
+   if(i_button == UI_MSGBOX_CUSTOM2) {
+      if(m_pButtons[i]->getCaption() == m_custom2) {
 	m_pButtons[i]->makeActive();
 	return;
       }
@@ -392,7 +426,9 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     return false;
   }
   
-  UIMsgBox *UIWindow::msgBox(std::string Text,UIMsgBoxButton Buttons,bool bTextInput,bool bQuery, bool i_verticallyLarge) {
+  UIMsgBox *UIWindow::msgBox(std::string Text,UIMsgBoxButton Buttons,
+			     const std::string& i_custom1, const std::string& i_custom2,
+			     bool bTextInput,bool bQuery, bool i_verticallyLarge) {
     unsigned int nNumButtons = 0;
 
     if(Buttons & UI_MSGBOX_OK)
@@ -404,6 +440,10 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     if(Buttons & UI_MSGBOX_NO)
       nNumButtons++;
     if(Buttons & UI_MSGBOX_YES_FOR_ALL)
+      nNumButtons++;
+    if(Buttons & UI_MSGBOX_CUSTOM1)
+      nNumButtons++;
+    if(Buttons & UI_MSGBOX_CUSTOM2)
       nNumButtons++;
 
     /* Determine size of contents */
@@ -425,6 +465,9 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     UIMsgBox *pMsgBox;
     if(bQuery) pMsgBox = (UIMsgBox *)new UIQueryKeyBox(this,getPosition().nWidth/2 - w/2,getPosition().nHeight/2 - h/2,"",w,h);
     else pMsgBox = new UIMsgBox(this,getPosition().nWidth/2 - w/2,getPosition().nHeight/2 - h/2,"",w,h);
+
+    pMsgBox->setCustom1(i_custom1);
+    pMsgBox->setCustom2(i_custom2);
     
     pMsgBox->makeActive();    
     if(bTextInput)
@@ -446,45 +489,68 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     pText->setFont(getFont()); /* inherit font */      
     pText->setBackgroundShade(true); /* make text more easy to read */
     
-    /* Create buttons */
-    int nCX = pMsgBox->getPosition().nWidth/2 - (nNumButtons*115)/2;
-    int nCY = pMsgBox->getPosition().nHeight-16-nButtonSize;
-    
+    /* Create buttons */    
     UIButton *pButton;
+    int v_buttonWidth;
+
+    bool v_useCustom = ((Buttons & UI_MSGBOX_CUSTOM1) || (Buttons & UI_MSGBOX_CUSTOM2));
+
+    // make them a bit larger when there are custom
+    if(v_useCustom) {
+      v_buttonWidth = 150;
+    } else {
+      v_buttonWidth = 115;
+    }
+
+    int nCX = pMsgBox->getPosition().nWidth/2 - (nNumButtons*v_buttonWidth)/2;
+    int nCY = pMsgBox->getPosition().nHeight-16-nButtonSize;
+
     if(Buttons & UI_MSGBOX_OK) {
-      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_OK,115,57);
+      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_OK,v_buttonWidth,57);
       pButton->setFont(getFont());
-      pButton->setType(UI_BUTTON_TYPE_SMALL);
+      if(v_useCustom == false) pButton->setType(UI_BUTTON_TYPE_SMALL);
       pMsgBox->addButton(pButton);
-      nCX+=115;
+      nCX+=v_buttonWidth;
     }
     if(Buttons & UI_MSGBOX_CANCEL) {
-      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_CANCEL,115,57);
+      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_CANCEL,v_buttonWidth,57);
       pButton->setFont(getFont());
-      pButton->setType(UI_BUTTON_TYPE_SMALL);
+      if(v_useCustom == false) pButton->setType(UI_BUTTON_TYPE_SMALL);
       pMsgBox->addButton(pButton);
-      nCX+=115;
+      nCX+=v_buttonWidth;
     }
     if(Buttons & UI_MSGBOX_YES) {
-      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_YES,115,57);
+      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_YES,v_buttonWidth,57);
       pButton->setFont(getFont());
-      pButton->setType(UI_BUTTON_TYPE_SMALL);
+      if(v_useCustom == false) pButton->setType(UI_BUTTON_TYPE_SMALL);
       pMsgBox->addButton(pButton);
-      nCX+=115;
+      nCX+=v_buttonWidth;
+    }
+    if(Buttons & UI_MSGBOX_CUSTOM1) {
+      pButton = new UIButton(pMsgBox,nCX,nCY,pMsgBox->getCustom1(),v_buttonWidth,57);
+      pButton->setFont(getFont());
+      pMsgBox->addButton(pButton);
+      nCX+=v_buttonWidth;
+    }
+    if(Buttons & UI_MSGBOX_CUSTOM2) {
+      pButton = new UIButton(pMsgBox,nCX,nCY,pMsgBox->getCustom2(),v_buttonWidth,57);
+      pButton->setFont(getFont());
+      pMsgBox->addButton(pButton);
+      nCX+=v_buttonWidth;
     }
     if(Buttons & UI_MSGBOX_NO) {
-      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_NO,115,57);
+      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_NO,v_buttonWidth,57);
       pButton->setFont(getFont());
-      pButton->setType(UI_BUTTON_TYPE_SMALL);
+      if(v_useCustom == false) pButton->setType(UI_BUTTON_TYPE_SMALL);
       pMsgBox->addButton(pButton);
-      nCX+=115;
+      nCX+=v_buttonWidth;
     }
     if(Buttons & UI_MSGBOX_YES_FOR_ALL) {
-      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_YES_FOR_ALL,115,57);
+      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_YES_FOR_ALL,v_buttonWidth,57);
       pButton->setFont(getFont());
-      pButton->setType(UI_BUTTON_TYPE_SMALL);
+      if(v_useCustom == false) pButton->setType(UI_BUTTON_TYPE_SMALL);
       pMsgBox->addButton(pButton);
-      nCX+=115;
+      nCX+=v_buttonWidth;
     }    
 
     /* Set msgbox flag */
@@ -493,8 +559,10 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     return pMsgBox;                                
   }
 
-  UIMsgBox *UIWindow::msgBox(std::string Text, std::vector<std::string>& wordcompletionlist,UIMsgBoxButton Buttons,bool bTextInput,bool bQuery,bool i_verticallyLarge) {
-	  UIMsgBox *pMsgBox = this->msgBox(Text, Buttons, bTextInput, bQuery, i_verticallyLarge);
+  UIMsgBox *UIWindow::msgBox(std::string Text, std::vector<std::string>& wordcompletionlist,UIMsgBoxButton Buttons,
+			     const std::string& i_custom1, const std::string& i_custom2,
+			     bool bTextInput,bool bQuery,bool i_verticallyLarge) {
+    UIMsgBox *pMsgBox = this->msgBox(Text, Buttons, i_custom1, i_custom2, bTextInput, bQuery, i_verticallyLarge);
 	  pMsgBox->addCompletionWord(wordcompletionlist);
 	  return pMsgBox;
   }
