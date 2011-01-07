@@ -28,11 +28,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/CmdArgumentParser.h"
 #include "../Input.h"
 
+#define UPGRADE_LEVELS_NB_PROPOSAL 20
+
 StateUpgradeLevels::StateUpgradeLevels(bool drawStateBehind,
 				       bool updateStatesBehind)
   : StateUpdate(drawStateBehind, updateStatesBehind)
 {
-  m_pThread = new UpgradeLevelsThread(XMSession::instance()->theme());
+  m_ult     = new UpgradeLevelsThread(XMSession::instance()->theme());
+  m_pThread = m_ult;
   m_name    = "StateUpgradeLevels";
   m_messageOnFailureModal = false;
 
@@ -59,6 +62,9 @@ void StateUpgradeLevels::sendFromMessageBox(const std::string& i_id, UIMsgBoxBut
       m_pThread->askThreadToEnd();
       m_pThread->unsleepThread();
       break;
+    case UI_MSGBOX_CUSTOM1:
+      m_ult->setNbLevels(UPGRADE_LEVELS_NB_PROPOSAL);
+      m_pThread->unsleepThread();
     default:
       break;
     }
@@ -94,8 +100,16 @@ void StateUpgradeLevels::executeOneCommand(std::string cmd, std::string args)
     snprintf(cBuf, 256, GAMETEXT_NEWLEVELAVAIL(nULevels), nULevels);
 
     /* Ask user whether he want to download levels or snot */
-    StateMessageBox* v_state = new StateMessageBox(this, cBuf,
-						   (UI_MSGBOX_YES|UI_MSGBOX_NO));
+    StateMessageBox* v_state;
+
+    if(nULevels > UPGRADE_LEVELS_NB_PROPOSAL) {
+      v_state = new StateMessageBox(this, cBuf, (UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_CUSTOM1));
+      char buf[32];
+      snprintf(buf, 32, GAMETEXT_XONLY(UPGRADE_LEVELS_NB_PROPOSAL), UPGRADE_LEVELS_NB_PROPOSAL);
+      v_state->setCustom(buf);
+    } else {
+      v_state = new StateMessageBox(this, cBuf, (UI_MSGBOX_YES|UI_MSGBOX_NO));
+    }
     v_state->setMsgBxId("DOWNLOAD_LEVELS");
     StateManager::instance()->pushState(v_state);
   }

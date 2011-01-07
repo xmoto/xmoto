@@ -222,7 +222,7 @@ class WebLevels {
   void update(xmDatabase* i_db); /* throws exceptions */
 
   /* download new levels */
-  void upgrade(xmDatabase* i_db); /* throws exceptions */
+  void upgrade(xmDatabase* i_db, int i_nb_levels = -1 /* -1 for all levels */); /* throws exceptions */
   
   /* Get names of new files downloaded OK */
   const std::vector<std::string> &getNewDownloadedLevels();

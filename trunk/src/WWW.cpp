@@ -22,6 +22,7 @@
 #include "helpers/FileCompression.h"
 #include "db/xmDatabase.h"
 #include "md5sum/md5file.h"
+#include <sstream>
 
 #define DEFAULT_WWW_MSGFILE "wwwMsg.xml"
 
@@ -814,7 +815,7 @@ int WebLevels::nbLevelsToGet(xmDatabase *i_db) const {
   return i_db->levels_nbLevelsToDownload();
 }
 
-void WebLevels::upgrade(xmDatabase *i_db) {
+void WebLevels::upgrade(xmDatabase *i_db, int i_nb_levels) {
   char **v_result = NULL;
   unsigned int nrow;
   std::string v_levelId;
@@ -831,10 +832,17 @@ void WebLevels::upgrade(xmDatabase *i_db) {
 
   createDestinationDirIfRequired();
 
+  std::string v_sqlLimit;
+  std::ostringstream v_limit;
+  if(i_nb_levels != -1) {
+    v_limit << i_nb_levels;
+    v_sqlLimit = " LIMIT " + v_limit.str();
+  }
+
   v_result = i_db->readDB("SELECT a.id_level, a.name, a.fileUrl, b.filepath "
 			  "FROM weblevels AS a "
 			  "LEFT OUTER JOIN levels AS b ON a.id_level=b.id_level "
-			  "WHERE b.id_level IS NULL OR a.checkSum <> b.checkSum;",
+			  "WHERE b.id_level IS NULL OR a.checkSum <> b.checkSum order by creationDate DESC" + v_sqlLimit + ";",
 			  nrow);
   v_nb_levels_to_download = nrow;
   v_data.v_WebApp = m_WebLevelApp;

@@ -33,6 +33,7 @@ UpgradeLevelsThread::UpgradeLevelsThread(const std::string& i_id_theme, bool i_u
   m_updateAutomaticallyLevels = i_updateAutomaticallyLevels;
   m_msg = "";
   m_id_theme = i_id_theme;
+  m_nb_levels = -1;
 }
 
 UpgradeLevelsThread::~UpgradeLevelsThread()
@@ -43,6 +44,10 @@ UpgradeLevelsThread::~UpgradeLevelsThread()
 void UpgradeLevelsThread::setBeingDownloadedInformation(const std::string &p_information, bool p_isNew)
 {
   setThreadCurrentMicroOperation(p_information);
+}
+
+void UpgradeLevelsThread::setNbLevels(unsigned int i_nb_levels) {
+  m_nb_levels = i_nb_levels;
 }
 
 bool UpgradeLevelsThread::shouldLevelBeUpdated(const std::string &LevelID)
@@ -177,7 +182,7 @@ int UpgradeLevelsThread::realThreadFunction()
 
     // don't safe kill here
     v_shouldBeLoadedInBase = true;
-    m_pWebLevels->upgrade(m_pDb);
+    m_pWebLevels->upgrade(m_pDb, m_nb_levels);
   }
   catch(Exception& e) {
     m_msg = GAMETEXT_FAILEDDLLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;

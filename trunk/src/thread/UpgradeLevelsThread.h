@@ -41,12 +41,15 @@ public:
   virtual int realThreadFunction();
   virtual void askThreadToEnd();
 
+  void setNbLevels(unsigned int i_nb_levels = -1 /* -1 means all */);
+
 private:
   WebLevels*  m_pWebLevels;
 
   bool m_updateAutomaticallyLevels;
   std::string m_msg;
   std::string m_id_theme; // theme is needed to be able to update it
+  int m_nb_levels;
 };
 
 #endif
