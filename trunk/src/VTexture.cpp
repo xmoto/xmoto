@@ -296,6 +296,16 @@ TextureManager::~TextureManager() {
     return pTexture;
   }
   
+int TextureManager::getTextureSize(std::string p_fileName) {
+    image_info_t ii;
+    Img TextureImage;
+
+    if(TextureImage.checkFile(p_fileName, &ii))
+      return ii.nWidth;
+    else
+      return 0;
+}
+
   /*===========================================================================
   Get loaded texture by name
   ===========================================================================*/  
