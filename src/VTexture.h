@@ -102,6 +102,7 @@ public:
   Texture* createTexture(std::string Name, unsigned char* pcData, int nWidth, int nHeight, bool bAlpha=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP);
   void destroyTexture(Texture* pTexture);
   Texture* loadTexture(std::string Path, bool bSmall=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP, bool persistent=false, Sprite* associatedSprite=NULL);
+  int getTextureSize(std::string p_fileName);
   Texture* getTexture(std::string Name);
   void removeAssociatedSpritesFromTextures();
   void unloadTextures(void);

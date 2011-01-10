@@ -442,14 +442,10 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   {
     m_sprite = pSprite;
     try{
-      Texture* v_texture = m_sprite->getTexture();
-      
-      if(v_texture != NULL) {
-	int v_textureSize = v_texture->nWidth;
-	if(v_textureSize < 256 && v_textureSize != 0)
-	  // divide by texturesize to prevent upscaling of textures < 256x256
-	  scale *= (256/v_textureSize);
-      }
+      int v_textureSize = m_sprite->getTextureSize();
+      if(v_textureSize < 256 && v_textureSize != 0)
+	// divide by texturesize to prevent upscaling of textures < 256x256
+	scale *= (256/v_textureSize);
     } catch(Exception& e) {
       ;
     }

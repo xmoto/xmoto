@@ -167,6 +167,9 @@ class Sprite {
      only the first time that getTexture is called for a given sprite
   */
   Texture* getTexture(bool bSmall=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP);
+  // do not load the texture in opengl, just get its size.
+  // returns 0 on error
+  int getTextureSize();
 
   // prefetch textures at level loading time
   virtual void loadTextures() = 0;
@@ -423,6 +426,7 @@ public:
 		       FilterMode eFilterMode = FM_MIPMAP,
 		       bool persistent=false,
 		       Sprite* associateSprite=NULL);
+  int getTextureSize(std::string p_fileName);
 
   std::vector<Sprite*>& getSpritesList();
   std::vector<ThemeSound*>& getSoundsList();

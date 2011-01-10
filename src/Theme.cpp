@@ -112,6 +112,10 @@ Texture* Theme::loadTexture(std::string p_fileName, bool bSmall, bool bClamp, Fi
   return m_texMan.loadTexture(p_fileName.c_str(), bSmall, bClamp, eFilterMode, persistent, associateSprite);
 }
 
+int Theme::getTextureSize(std::string p_fileName) {
+  return m_texMan.getTextureSize(p_fileName);
+}
+
 std::vector<ThemeFile>* Theme::getRequiredFiles() {
   return &m_requiredFiles;
 }
@@ -713,6 +717,10 @@ Texture* Sprite::getTexture(bool bSmall, bool bClamp, FilterMode eFilterMode) {
   }
 
   return v_currentTexture;
+}
+
+int Sprite::getTextureSize() {
+  return m_associated_theme->getTextureSize(getCurrentTextureFileName());
 }
 
 void Sprite::setOrder(unsigned int order)
