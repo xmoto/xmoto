@@ -177,6 +177,9 @@ void SysMessage::render() {
       case CLT_SERVER:
 	c = MAKE_COLOR(255, 0, 0, v_shadow);
 	break;
+      case CLT_PRIVATE:
+	c = MAKE_COLOR(80, 200, 80, v_shadow);
+	break;
       }
 
       v_fm->printString(m_drawLib, v_fg,

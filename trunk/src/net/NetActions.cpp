@@ -40,6 +40,7 @@ unsigned int NetAction::m_TCPPacketsSizeSent   = 0;
 unsigned int NetAction::m_UDPPacketsSizeSent   = 0;
 
 std::string NA_chatMessage::ActionKey   = "message";
+std::string NA_chatMessagePP::ActionKey = "messagePP";
 // frame : while it's sent a lot, reduce it at maximum
 std::string NA_frame::ActionKey        	= "f";
 std::string NA_clientInfos::ActionKey  	= "clientInfos";
@@ -64,6 +65,7 @@ std::string NA_srvCmd::ActionKey        = "srvCmd";
 std::string NA_srvCmdAsw::ActionKey     = "srvCmdAsw";
 
 NetActionType NA_chatMessage::NAType   = TNA_chatMessage;
+NetActionType NA_chatMessagePP::NAType = TNA_chatMessagePP;
 NetActionType NA_frame::NAType         = TNA_frame;
 NetActionType NA_clientInfos::NAType   = TNA_clientInfos;
 NetActionType NA_udpBind::NAType       = TNA_udpBind;
@@ -225,6 +227,10 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
     v_res = new NA_chatMessage(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
+  else if(v_cmd == NA_chatMessagePP::ActionKey) {
+    v_res = new NA_chatMessagePP(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
   else if(v_cmd == NA_frame::ActionKey) {
     v_res = new NA_frame(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
@@ -343,13 +349,17 @@ void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPa
 
 NA_chatMessage::NA_chatMessage(const std::string& i_msg, const std::string &i_me) : NetAction(true) {
   m_msg = i_msg;
-  ttransform(i_me);
+  if(i_me != "") {
+    ttransform(i_me);
+  }
 }
 
 NA_chatMessage::NA_chatMessage(void* data, unsigned int len) : NetAction(true) {
-  ((char*)data)[len-1] = '\0';
-  m_msg = std::string((char*)data);
-  ((char*)data)[len-1] = '\n';
+  if(len > 0) {
+    ((char*)data)[len-1] = '\0';
+    m_msg = std::string((char*)data);
+    ((char*)data)[len-1] = '\n';
+  }
 }
 
 NA_chatMessage::~NA_chatMessage() {
@@ -367,14 +377,69 @@ std::string NA_chatMessage::getMessage() {
   return m_msg;
 }
 
+NA_chatMessagePP::NA_chatMessagePP(const std::string& i_msg, const std::string &i_me, const std::vector<int>& i_private_people) : NetAction(true) {
+  m_msg            = i_msg;
+  m_private_people = i_private_people;
+  if(i_me != "") {
+    ttransform(i_me);
+  };
+}
+
+NA_chatMessagePP::NA_chatMessagePP(void* data, unsigned int len) : NetAction(true) {
+  unsigned int v_localOffset = 0;
+  int v_nb, v_n;
+  v_nb = atoi(getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset).c_str());
+
+  // read people
+  for(unsigned int i=0; i<v_nb; i++) {
+    v_n = atoi(getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset).c_str());
+    m_private_people.push_back(v_n);
+  }
+
+  // read msg
+  if(v_localOffset < len-1) {
+    ((char*)data)[len-1] = '\0';
+    m_msg = std::string(((char*)data)+v_localOffset);
+    ((char*)data)[len-1] = '\n';
+  }
+}
+
+NA_chatMessagePP::~NA_chatMessagePP() {
+}
+
+void NA_chatMessagePP::ttransform(const std::string& i_me) {
+  m_msg = replaceAll(m_msg, "/me", i_me);
+}
+
+void NA_chatMessagePP::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  std::ostringstream v_send;
+  v_send << m_private_people.size() << "\n";
+  for(unsigned int i=0; i<m_private_people.size(); i++) {
+    v_send << m_private_people[i] << "\n";
+  }
+  v_send << m_msg;
+
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.str().c_str(), v_send.str().size()); // don't send the \0
+}
+
+std::string NA_chatMessagePP::getMessage() {
+  return m_msg;
+}
+
+const std::vector<int>& NA_chatMessagePP::privatePeople() const {
+  return m_private_people;
+}
+
 NA_serverError::NA_serverError(const std::string& i_msg) : NetAction(true) {
   m_msg = i_msg;
 }
 
 NA_serverError::NA_serverError(void* data, unsigned int len) : NetAction(true) {
-  ((char*)data)[len-1] = '\0';
-  m_msg = std::string((char*)data);
-  ((char*)data)[len-1] = '\n';
+  if(len > 0) {
+    ((char*)data)[len-1] = '\0';
+    m_msg = std::string((char*)data);
+    ((char*)data)[len-1] = '\n';
+  }
 }
 
 NA_serverError::~NA_serverError() {
@@ -837,9 +902,11 @@ NA_srvCmd::NA_srvCmd(const std::string& i_cmd) : NetAction(true) {
 }
 
 NA_srvCmd::NA_srvCmd(void* data, unsigned int len) : NetAction(true) {
-  ((char*)data)[len-1] = '\0';
-  m_cmd = std::string((char*)data);
-  ((char*)data)[len-1] = '\n';
+  if(len > 0) {
+    ((char*)data)[len-1] = '\0';
+    m_cmd = std::string((char*)data);
+    ((char*)data)[len-1] = '\n';
+  }
 }
 
 NA_srvCmd::~NA_srvCmd() {
@@ -858,9 +925,11 @@ NA_srvCmdAsw::NA_srvCmdAsw(const std::string& i_answer) : NetAction(true) {
 }
 
 NA_srvCmdAsw::NA_srvCmdAsw(void* data, unsigned int len) : NetAction(true) {
-  ((char*)data)[len-1] = '\0';
-  m_answer = std::string((char*)data);
-  ((char*)data)[len-1] = '\n';
+  if(len > 0) {
+    ((char*)data)[len-1] = '\0';
+    m_answer = std::string((char*)data);
+    ((char*)data)[len-1] = '\n';
+  }
 }
 
 NA_srvCmdAsw::~NA_srvCmdAsw() {

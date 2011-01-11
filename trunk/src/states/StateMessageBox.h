@@ -62,6 +62,7 @@ public:
   virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
   void makeActiveButton(UIMsgBoxButton i_button);
   void setCustom(const std::string& i_custom1, const std::string& i_custom2 = "");
+  void setHelp(const std::string& i_help);
 
 protected:
   virtual void checkEvents();
@@ -91,6 +92,7 @@ private:
   bool m_verticallyLarge;
   std::vector<std::string> m_completionList;
   std::string m_custom1, m_custom2;
+  std::string m_help;
 };
 
 #endif

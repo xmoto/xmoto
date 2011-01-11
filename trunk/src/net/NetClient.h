@@ -96,6 +96,8 @@ class NetClient : public Singleton<NetClient> {
   std::string getDisplayMessage(const std::string& i_msg, const std::string& i_author);
 
   std::vector<NetOtherClient*>& otherClients();
+  void fillPrivatePeople(const std::string& i_msg, const std::string& i_private_suffix, std::vector<int>& io_private_people,
+			 std::vector<std::string>& o_unknown_players);
 
   int getOwnFrameFPS() const;
   VirtualNetLevelsList* getOtherClientLevelsList(xmDatabase* pDb);
