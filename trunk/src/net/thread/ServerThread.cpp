@@ -1427,7 +1427,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     if(v_args.size() != 1) {
       v_answer += "lsplayers: invalid arguments\n";
     } else {
-      char v_clientstr[42];
+      char v_clientstr[48];
       std::string v_mode;
       for(unsigned int i=0; i<m_clients.size(); i++) {
 	switch(m_clients[i]->mode()) {
@@ -1441,7 +1441,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
 	  v_mode = "UNKWN";
 	}
 
-	snprintf(v_clientstr, 42, "%5u: %-12s %-5s %-21s",
+	snprintf(v_clientstr, 48, "%5u: %-12s %-5s %-21s",
 		 m_clients[i]->id(), m_clients[i]->name().c_str(),
 		 v_mode.c_str(),
 		 ("(" + XMNet::getIp(m_clients[i]->tcpRemoteIP()) + "/" + 
