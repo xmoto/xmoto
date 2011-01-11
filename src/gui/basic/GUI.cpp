@@ -390,8 +390,8 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
           setClicked(GAMETEXT_NO);
         return true;
       case SDLK_RETURN:
+	m_TextInput_real = m_TextInput_fake; // valid completion if in competion
         if(!m_bTextInput || !m_TextInput_real.empty()) {
-          m_TextInput_real = m_TextInput_fake;
           setClicked(GAMETEXT_OK);
           return true;
         }
@@ -401,6 +401,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
 
           switch(nKey) {
             case SDLK_BACKSPACE:
+	      m_TextInput_real = m_TextInput_fake; // valid completion if in competion
 	      if(m_TextInput_real != "") {
 		m_TextInput_fake = utf8::utf8_delete(m_TextInput_fake, utf8::utf8_length(m_TextInput_fake));
 		m_TextInput_real = m_TextInput_fake;
@@ -426,7 +427,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     return false;
   }
   
-  UIMsgBox *UIWindow::msgBox(std::string Text,UIMsgBoxButton Buttons,
+  UIMsgBox *UIWindow::msgBox(std::string Text,UIMsgBoxButton Buttons, const std::string& i_help,
 			     const std::string& i_custom1, const std::string& i_custom2,
 			     bool bTextInput,bool bQuery, bool i_verticallyLarge) {
     unsigned int nNumButtons = 0;
@@ -450,6 +451,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     FontGlyph* v_fg = m_curFont->getGlyph(Text);
 
     const unsigned int nButtonSize = 57;
+    int v_help_height = i_help == "" ? 0 : 20+8;
     int w;
 
     if(i_verticallyLarge) {
@@ -457,7 +459,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     } else {
       w = (v_fg->realWidth() > nNumButtons*115 ? (v_fg->realWidth()) : nNumButtons*115) + 16 + 100;
     }
-    int h = v_fg->realHeight() + nButtonSize + 24 + 100;
+    int h = v_fg->realHeight() + nButtonSize + 16 + v_help_height + 100;
     
     if(bTextInput) h+=40;    
     
@@ -485,7 +487,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     int nStaticY=0;
     if(bTextInput) nStaticY=40;
     UIStatic *pText = new UIStatic(pMsgBox,8,8,Text,pMsgBox->getPosition().nWidth-16,
-                                   pMsgBox->getPosition().nHeight-24-nButtonSize-nStaticY);   
+                                   pMsgBox->getPosition().nHeight-24-nButtonSize-nStaticY);
     pText->setFont(getFont()); /* inherit font */      
     pText->setBackgroundShade(true); /* make text more easy to read */
     
@@ -503,7 +505,7 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
     }
 
     int nCX = pMsgBox->getPosition().nWidth/2 - (nNumButtons*v_buttonWidth)/2;
-    int nCY = pMsgBox->getPosition().nHeight-16-nButtonSize;
+    int nCY = pMsgBox->getPosition().nHeight-16-v_help_height-nButtonSize;
 
     if(Buttons & UI_MSGBOX_OK) {
       pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_OK,v_buttonWidth,57);
@@ -553,16 +555,26 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
       nCX+=v_buttonWidth;
     }    
 
+    /* Display some help */
+    if(i_help != "") {
+      UIStatic *pText = new UIStatic(pMsgBox,
+				     8, pMsgBox->getPosition().nHeight-20-8,
+				     i_help,
+				     pMsgBox->getPosition().nWidth-16, 20);
+      pText->setFont(m_drawLib->getFontSmall());
+      pText->setNormalColor(MAKE_COLOR(255,255,0,255));
+    }
+
     /* Set msgbox flag */
     m_bActiveMsgBox = true;
 
     return pMsgBox;                                
   }
 
-  UIMsgBox *UIWindow::msgBox(std::string Text, std::vector<std::string>& wordcompletionlist,UIMsgBoxButton Buttons,
+  UIMsgBox *UIWindow::msgBox(std::string Text, std::vector<std::string>& wordcompletionlist,UIMsgBoxButton Buttons, const std::string& i_help,
 			     const std::string& i_custom1, const std::string& i_custom2,
 			     bool bTextInput,bool bQuery,bool i_verticallyLarge) {
-    UIMsgBox *pMsgBox = this->msgBox(Text, Buttons, i_custom1, i_custom2, bTextInput, bQuery, i_verticallyLarge);
+    UIMsgBox *pMsgBox = this->msgBox(Text, Buttons, i_help, i_custom1, i_custom2, bTextInput, bQuery, i_verticallyLarge);
 	  pMsgBox->addCompletionWord(wordcompletionlist);
 	  return pMsgBox;
   }
@@ -619,20 +631,22 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
 	  std::vector<std::string> matchesList;
 	  int pos_find = m_TextInput_real.rfind(" ") + 1;
 	  std::string last_word = m_TextInput_real.substr(pos_find);
+	  std::string last_word_normal = last_word;
 	  for (int i = 0, n = last_word.size(); i < n; i++) {
 		  last_word[i] = tolower(last_word[i]);
 	  }
-	  if (!last_word.empty()) {
-		  for (int i = 0, n = m_completionWords.size(); i < n; i++) {
-			  std::string completionWord = m_completionWords[i];
-			  for (int j = 0, k = completionWord.size(); j < k; j++) {
-				  completionWord[j] = tolower(completionWord[j]);
-			  }
-		  if (completionWord.find(last_word) == 0) {
-				  matchesList.push_back(m_completionWords[i]);
-			  }
-		  }
+
+	  for (int i = 0, n = m_completionWords.size(); i < n; i++) {
+	    std::string completionWord = m_completionWords[i];
+	    for (int j = 0, k = completionWord.size(); j < k; j++) {
+	      completionWord[j] = tolower(completionWord[j]);
+	    }
+	    if (completionWord.find(last_word) == 0) {
+	      matchesList.push_back(m_completionWords[i]);
+	    }
 	  }
+	  matchesList.push_back(last_word_normal); // allow to come back before completion
+
 	  std::vector<std::string> empty;
 	  empty.push_back("");
 	  return !matchesList.empty() ? matchesList : empty;

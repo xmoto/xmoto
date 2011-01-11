@@ -212,10 +212,10 @@ public:
   RenderSurface* getScreen();
       
   /* Generic message boxing */
-  UIMsgBox *msgBox(std::string Text,UIMsgBoxButton Buttons,
+  UIMsgBox *msgBox(std::string Text,UIMsgBoxButton Buttons, const std::string& i_help,
 		   const std::string& i_custom1 = "", const std::string& i_custom2 = "",
 		   bool bTextInput=false,bool bQuery=false,bool i_verticallyLarge=false);
-  UIMsgBox *msgBox(std::string Text, std::vector<std::string>& wordcompletionlist,UIMsgBoxButton Buttons,
+  UIMsgBox *msgBox(std::string Text, std::vector<std::string>& wordcompletionlist,UIMsgBoxButton Buttons, const std::string& i_help,
 		   const std::string& i_custom1 = "", const std::string& i_custom2 = "",
 		   bool bTextInput=false,bool bQuery=false,bool i_verticallyLarge=false);
     

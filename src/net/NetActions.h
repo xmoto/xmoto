@@ -27,12 +27,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BasicSceneStructs.h"
 #include "BasicStructures.h"
 
-#define XM_NET_PROTOCOL_VERSION 3
+#define XM_NET_PROTOCOL_VERSION 4
 /*
 DELTA 1->2:
 clientInfos : add xmversion string
 DELTA 2->3:
 add NA_udpBindValidation
+DELTA 3->4:
+add chatMessagePP (private/public)
 */
 
 #define NETACTION_MAX_PACKET_SIZE 1024 * 2 // bytes
@@ -49,6 +51,7 @@ enum NetActionType {
   TNA_udpBind,
   TNA_udpBindValidation,
   TNA_chatMessage,
+  TNA_chatMessagePP,
   TNA_serverError,
   TNA_frame,
   TNA_changeName,
@@ -196,6 +199,29 @@ class NA_clientInfos : public NetAction {
   int m_protocolVersion;
   std::string m_udpBindKey;
   std::string m_xmversion;
+};
+
+/* replace chatMessage ; it allows public and private messages */
+class NA_chatMessagePP : public NetAction {
+  public:
+  NA_chatMessagePP(const std::string& i_msg, const std::string &i_me /* if empty, change nothing */, const std::vector<int>& i_private_people /* empty vector for public message -- require XM_NET_PROTOCOL_VERSION */);
+  NA_chatMessagePP(void* data, unsigned int len);
+  virtual ~NA_chatMessagePP();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  std::string getMessage();
+  const std::vector<int>& privatePeople() const; // empty for public message
+
+  private:
+  std::string m_msg;
+  std::vector<int> m_private_people;
+
+  void ttransform(const std::string& i_me);
 };
 
 class NA_chatMessage : public NetAction {

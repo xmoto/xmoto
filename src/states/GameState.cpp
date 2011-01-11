@@ -131,13 +131,42 @@ std::string GameState::getStateType() const {
 void GameState::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "CHATMESSAGE"){
     if(i_button == UI_MSGBOX_OK) {
-      NA_chatMessage na(i_input, XMSession::instance()->profile());
-      try {
-	NetClient::instance()->send(&na, 0);	
+      std::vector<int> v_private_people;
+      std::vector<std::string> v_not_found_people;
+      NetClient::instance()->fillPrivatePeople(i_input, "*: ", v_private_people, v_not_found_people);
 
-	/* and not i_input because na can have transformations */
-	SysMessage::instance()->addConsoleLine(NetClient::instance()->getDisplayMessage(na.getMessage(), XMSession::instance()->profile()));
-      } catch(Exception &e) {
+      // if the message seems private (people name found) but cannot be associated to players => it becomes public ; don't sent it, just alert the sender
+      if(v_private_people.size() == 0 && v_not_found_people.size() > 0) {
+	std::string v_msg;
+	v_msg = GAMETEXT_MESSAGE_NOT_SENT_UNKNOWN_PLAYERS;
+	for(unsigned int i=0; i<v_not_found_people.size(); i++) {
+	  v_msg += " " + v_not_found_people[i] + " ;";
+	}
+	SysMessage::instance()->displayError(v_msg);
+      } else {
+	NA_chatMessagePP na(i_input, XMSession::instance()->profile(), v_private_people);
+	try {
+	  NetClient::instance()->send(&na, 0);	
+	  
+	  /* and not i_input because na can have transformations */
+	  if(v_private_people.size() == 0) { /* public */
+	    SysMessage::instance()->addConsoleLine(NetClient::instance()->getDisplayMessage(na.getMessage(), XMSession::instance()->profile()));
+	  } else { /* private */
+	    SysMessage::instance()->addConsoleLine(NetClient::instance()->getDisplayMessage(na.getMessage(), XMSession::instance()->profile()), CLT_PRIVATE);
+	  }
+	} catch(Exception &e) {
+	}
+
+	// display unknown players, but send the message to the others
+	if(v_not_found_people.size() > 0) {
+	  std::string v_msg;
+	  v_msg = GAMETEXT_UNKNOWN_PLAYERS;
+	  for(unsigned int i = 0; i<v_not_found_people.size(); i++) {
+	    v_msg += " " + v_not_found_people[i] + " ;";
+	  }
+	  SysMessage::instance()->displayError(v_msg);
+	}
+
       }
     }
   }
@@ -313,11 +342,23 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_CHAT)) &&
 	  NetClient::instance()->isConnected()) {
     if(StateManager::instance()->isThereASuchStateType("CHATMESSAGE") == false) { // do not open several chat box
-      std::vector<std::string> clientList = NetClient::instance()->getOtherClientsNameList(" "); // forced to do cause i couldn't include in init netclient function
+
+      // add player names
+      std::vector<std::string> clientList = NetClient::instance()->getOtherClientsNameList(": "); // forced to do cause i couldn't include in init netclient function
+      std::vector<std::string> clientListPrivate = NetClient::instance()->getOtherClientsNameList("*: ");
+
+      // add private clients to the list
+      for(unsigned int i=0; i<clientListPrivate.size(); i++) {
+	clientList.push_back(clientListPrivate[i]);
+      }
+
+      // add transformations like /me
       NetClient::instance()->addChatTransformations(clientList, " ");
+
       StateMessageBox* v_msgboxState = new StateMessageBox(NULL, clientList, std::string(GAMETEXT_CHATMESSAGE) + ":", UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, "", false, true, false, true);
       v_msgboxState->setMsgBxId("CHATMESSAGE");
       v_msgboxState->setStateType("CHATMESSAGE");
+      v_msgboxState->setHelp(GAMETEXT_CHATBOXHELP);
       StateManager::instance()->pushState(v_msgboxState);
       return; 
     }

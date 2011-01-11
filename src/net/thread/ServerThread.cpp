@@ -52,6 +52,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_SERVER_DEFAULT_BANNER "Welcome on this server"
 #define XM_SERVER_UNPLAYING_SLEEP 10
 
+// limit multi private message to avoid people spamming everybody and making think it's private
+#define XM_SERVER_MAXIMUM_MULTI_PRIVATE_MESSAGE 3
+
 NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
     m_id   = i_id;
     m_mode = NETCLIENT_GHOST_MODE;
@@ -68,6 +71,7 @@ NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tc
     m_points = 0;
     m_isAdminConnected = false;
     m_lastGhostFrameTime = 0;
+    m_protocolVersion = -1; // not set
 }
 
 NetSClient::~NetSClient() {
@@ -855,6 +859,22 @@ void ServerThread::sendToAllClientsMarkedToPlay(NetAction* i_netAction, int i_sr
   }
 }
 
+void ServerThread::sendToAllClientsHavingProtocol(int i_protocol, NetAction* i_netAction_lt, NetAction* i_netAction_ge, int i_src, int i_subsrc, int i_except) {
+  for(unsigned int i=0; i<m_clients.size(); i++) {
+    try {
+      if((int)i != i_except) {
+	if(m_clients[i]->protocolVersion() < i_protocol) {
+	  sendToClient(i_netAction_lt, i, i_src, i_subsrc);
+	} else {
+	  sendToClient(i_netAction_ge, i, i_src, i_subsrc);
+	}
+      }
+    } catch(Exception &e) {
+      // don't remove the client while removeclient function can call sendToAllClients ...
+    }
+  }
+}
+
 void ServerThread::acceptClient() {
   TCPsocket csd;
   IPaddress *tcpRemoteIP;
@@ -1089,10 +1109,49 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
 	m_clients[i_client]->validUdpBind();
       }
     }
+    break;
 
-  case TNA_chatMessage:
+  case TNA_chatMessage: /* old message format, convert into the new one */
     {
-      sendToAllClients(i_netAction, m_clients[i_client]->id(), i_netAction->getSubSource(), i_client);
+      // retrieve message
+      std::string v_msg = ((NA_chatMessage*)i_netAction)->getMessage();
+      std::vector<int> v_pp;
+      NA_chatMessagePP napp(v_msg, "", v_pp); 
+      sendToAllClientsHavingProtocol(4, i_netAction, &napp, m_clients[i_client]->id(), i_netAction->getSubSource(), i_client);
+    }
+    break;
+
+  case TNA_chatMessagePP:
+    {
+      NA_chatMessagePP* na = ((NA_chatMessagePP*)i_netAction);
+      NA_chatMessage na_old = NA_chatMessage(((NA_chatMessagePP*)i_netAction)->getMessage(), "");
+
+      if(na->privatePeople().size() <= XM_SERVER_MAXIMUM_MULTI_PRIVATE_MESSAGE) {
+	if(na->privatePeople().size() == 0) {
+	  // public
+	  sendToAllClientsHavingProtocol(4, &na_old, na, m_clients[i_client]->id(), i_netAction->getSubSource(), i_client);
+	} else {
+	  // private
+	  for(unsigned int i=0; i<na->privatePeople().size(); i++) {
+	    for(unsigned int j=0; j<m_clients.size(); j++) {
+	      if(((int)m_clients[j]->id()) == na->privatePeople()[i]) {
+		if(m_clients[j]->protocolVersion() < 4) {
+		  sendToClient(&na_old, j, m_clients[i_client]->id(), i_netAction->getSubSource());
+		} else {
+		  sendToClient(na, j, m_clients[i_client]->id(), i_netAction->getSubSource());
+		}
+	      }
+	    }
+	  }
+	}
+      } else {
+	std::ostringstream v_str;
+	v_str << "Private message to maximum " << XM_SERVER_MAXIMUM_MULTI_PRIVATE_MESSAGE << " people are allowed";
+	try {
+	  sendMsgToClient(i_client, v_str.str());
+	} catch(Exception &e) {
+	}
+      }
     }
     break;
     
@@ -1483,9 +1542,12 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
 	  v_msg += " ";
 	}
       }
-      NA_chatMessage na(v_msg.c_str(), "server");
+
+      std::vector<int> v_private_people;
+      NA_chatMessagePP na(v_msg.c_str(), "server", v_private_people);
+      NA_chatMessage na_old(v_msg.c_str(), "server");
       try {
-	sendToAllClients(&na, -1, 0);
+	sendToAllClientsHavingProtocol(4, &na_old, &na, -1, 0, i_client);
       } catch(Exception &e) {
       }
     }
@@ -1548,4 +1610,22 @@ void ServerThread::SP2_addPointsToClient(unsigned int i_client, unsigned int i_p
 
 bool ServerThread::acceptConnections() const {
   return m_acceptConnections;
+}
+
+void ServerThread::sendMsgToClient(unsigned int i_client, const std::string& i_msg) {
+  std::vector<int> v_private_people;
+ 
+  if(m_clients[i_client]->protocolVersion() < 4) {
+    NA_chatMessage na(i_msg, "server");
+    try {
+      sendToClient(&na, i_client, -1, 0);
+    } catch(Exception &e) {
+    }
+  } else {
+    NA_chatMessagePP na(i_msg, "server", v_private_people);
+    try {
+      sendToClient(&na, i_client, -1, 0);
+    } catch(Exception &e) {
+    }
+  }
 }

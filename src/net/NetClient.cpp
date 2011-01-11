@@ -353,6 +353,32 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
       }
     }
     break;
+
+  case TNA_chatMessagePP:
+    {
+      try {
+	std::string v_str;
+	std::string v_author;
+
+	// retrieve message
+	v_str = ((NA_chatMessagePP*)i_netAction)->getMessage();
+
+	if(i_netAction->getSource() == -1) { /* server */
+	  v_author = "server";
+	  SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author), CLT_SERVER);
+	} else {
+	  v_author = m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name();
+
+	  if(((NA_chatMessagePP*)i_netAction)->privatePeople().size() == 0) { /* public */
+	    SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author));
+	  } else { /* private */
+	    SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author), CLT_PRIVATE);
+	  }
+	}
+      } catch(Exception &e) {
+      }
+    }
+    break;
     
   case TNA_frame:
     {
@@ -683,4 +709,62 @@ std::string NetClient::getDisplayMessage(const std::string& i_msg, const std::st
 VirtualNetLevelsList* NetClient::getOtherClientLevelsList(xmDatabase* pDb) {
   m_otherClientsLevelsList->setDb(pDb);
   return m_otherClientsLevelsList;
+}
+
+void NetClient::fillPrivatePeople(const std::string& i_msg, const std::string& i_private_suffix,
+				  std::vector<int>& io_private_people,
+				  std::vector<std::string>& o_unknown_players)  {
+  unsigned int n = 0;
+  unsigned int nfound;
+  std::string v_toanalyse, v_lastWord;
+  int v_lastWordPos;
+  bool v_found, v_foundList;
+  
+  //printf("=>+%s+\n", i_msg.c_str());
+  
+  // main case : no private message
+  if(i_msg.find(i_private_suffix) == std::string::npos) {
+    return;
+  }
+
+  // get substring to the next space
+  while( (nfound = i_msg.find(i_private_suffix, n)) != std::string::npos ) {
+    v_toanalyse = i_msg.substr(n, nfound-n);
+    n = nfound+i_private_suffix.length();
+    v_lastWordPos = v_toanalyse.rfind(" ") +1;
+    v_lastWord = v_toanalyse.substr(v_lastWordPos);
+    
+    //printf("+%s+%s+(keeping+%s+)\n", v_toanalyse.c_str(), v_lastWord.c_str(), i_msg.substr(n).c_str());
+
+    // for each client, if v_tonalyse is (space|nothing before)name +
+    v_found = false;
+    for(unsigned int i=0; i<m_otherClients.size(); i++) {
+      if(m_otherClients[i]->name() == v_lastWord) {
+	v_found = true;
+	v_foundList = false;
+	for(unsigned int j=0; j<io_private_people.size(); j++) {
+	  if(io_private_people[j] == m_otherClients[i]->id()) {
+	    v_foundList = true;
+	  }
+	}
+	if(v_foundList == false) {
+	  io_private_people.push_back(m_otherClients[i]->id());
+	  //printf("add %s\n", v_lastWord.c_str());
+	}
+      }
+    }
+
+    // not found => add it into the unknown players list
+    if(v_found == false) {
+      v_foundList = false;
+      for(unsigned int i=0; i<o_unknown_players.size(); i++) {
+	if(o_unknown_players[i] == v_lastWord) {
+	  v_foundList = true;
+	}
+      }
+      if(v_foundList == false) {
+	o_unknown_players.push_back(v_lastWord);
+      }
+    }
+  }
 }
