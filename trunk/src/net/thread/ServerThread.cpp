@@ -1146,7 +1146,7 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
 	}
       } else {
 	std::ostringstream v_str;
-	v_str << "Private message to maximum " << XM_SERVER_MAXIMUM_MULTI_PRIVATE_MESSAGE << " people are allowed";
+	v_str << "Private messages to maximum " << XM_SERVER_MAXIMUM_MULTI_PRIVATE_MESSAGE << " people are allowed";
 	try {
 	  sendMsgToClient(i_client, v_str.str());
 	} catch(Exception &e) {
