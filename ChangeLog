@@ -2,6 +2,7 @@ X-Moto 0.5.5 2011-
 --------------------------------
  * replay support for physics levels
  * improve network mode performances
+ * private message support on network interface
  * several keys are now customizable via the options
  * GetPlayerProfileName script function is now deprecated
  * some minor fixes
