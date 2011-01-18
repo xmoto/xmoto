@@ -344,13 +344,9 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     if(StateManager::instance()->isThereASuchStateType("CHATMESSAGE") == false) { // do not open several chat box
 
       // add player names
-      std::vector<std::string> clientList = NetClient::instance()->getOtherClientsNameList(": "); // forced to do cause i couldn't include in init netclient function
-      std::vector<std::string> clientListPrivate = NetClient::instance()->getOtherClientsNameList("*: ");
-
-      // add private clients to the list
-      for(unsigned int i=0; i<clientListPrivate.size(); i++) {
-	clientList.push_back(clientListPrivate[i]);
-      }
+      std::vector<std::string> clientList;
+      NetClient::instance()->getOtherClientsNameList(clientList, "*: ");
+      NetClient::instance()->getOtherClientsNameList(clientList, ": ");
 
       // add transformations like /me
       NetClient::instance()->addChatTransformations(clientList, " ");

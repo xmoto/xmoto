@@ -1391,11 +1391,6 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
 		 m_pDb->getResult(v_result, 2, i, 0),
 		 m_pDb->getResult(v_result, 2, i, 1));
 	v_answer += v_adminstr;
-	if(i % 3 == 2) {
-	  v_answer += "\n";
-	}
-      }
-      if(nrow %3 != 2) {
 	v_answer += "\n";
       }
       m_pDb->read_DB_free(v_result);

@@ -684,12 +684,10 @@ void NetOtherClient::setNetGhost(unsigned int i_subsrc, NetGhost* i_netGhost) {
   m_ghosts[i_subsrc] = i_netGhost;
 }
 
-std::vector<std::string> NetClient::getOtherClientsNameList(const std::string& i_suffix) {
-	std::vector<std::string> vect;
-	for (int i = 0, n = m_otherClients.size(); i < n; i++) {
-		vect.push_back(m_otherClients[i]->name() + i_suffix);
-	}
-	return vect;
+void NetClient::getOtherClientsNameList(std::vector<std::string>& io_list, const std::string& i_suffix) {
+  for (int i = 0, n = m_otherClients.size(); i < n; i++) {
+    io_list.push_back(m_otherClients[i]->name() + i_suffix);
+  }
 }
 
 void NetClient::addChatTransformations(std::vector<std::string>& io_clientList, const std::string i_suffix) {
