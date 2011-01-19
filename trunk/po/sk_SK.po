@@ -2,14 +2,14 @@
 # Translation of X-Moto to Slovak
 # Copyright (C) 2007 Free Software Foundation, Inc.
 # This file is distributed under the same license as the xmoto package.
-# Jozef Říha <jose1711@gmail.com>, 2006, 2007, 2008.
+# Jozef Říha <jose1711@gmail.com>, 2006, 2007, 2008, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2011-01-19 19:04+0100\n"
-"PO-Revision-Date: 2010-11-08 21:55+0100\n"
+"PO-Revision-Date: 2011-01-19 20:44+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
 "Language: \n"
@@ -112,7 +112,7 @@ msgstr "Vypnúť animácie"
 
 #: src/GameText.h:58
 msgid "Show game information in the console"
-msgstr ""
+msgstr "Zobrazovať informácie o hre v konzole"
 
 #: src/GameText.h:59
 msgid "Auto zoom"
@@ -188,10 +188,12 @@ msgid ""
 "Use the tabulation key to complete player names. Use the * to send private "
 "messages."
 msgstr ""
+"Použiť tabulátor na dopĺňanie mien hráčov. Použite * na posielanie "
+"súkromných správ."
 
 #: src/GameText.h:77
 msgid "Open chat dialog box"
-msgstr ""
+msgstr "Otvoriť dialógové okno s chatom"
 
 #: src/GameText.h:78
 msgid "Checking for new or updated levels..."
@@ -279,7 +281,7 @@ msgstr "pravý meta"
 
 #: src/GameText.h:99
 msgid "Abort the process"
-msgstr ""
+msgstr "O procese"
 
 #: src/GameText.h:100 src/GameText.h:114
 #, c-format
@@ -672,7 +674,7 @@ msgstr ""
 
 #: src/GameText.h:228
 msgid "Downloading the level..."
-msgstr ""
+msgstr "Sťahujem level..."
 
 #: src/GameText.h:229
 msgid "Checking for new levels..."
@@ -680,7 +682,7 @@ msgstr "Kontrolujem nové levely..."
 
 #: src/GameText.h:230
 msgid "Downloading the replay..."
-msgstr ""
+msgstr "Sťahujem záznam..."
 
 #: src/GameText.h:231
 msgid "Loading new and updated levels..."
@@ -740,7 +742,7 @@ msgstr "Zobrazovať svetový rekord počas hry"
 
 #: src/GameText.h:244
 msgid "Show next medal in-game"
-msgstr ""
+msgstr "Zobrazovať ďalšiu medailu v hre"
 
 #: src/GameText.h:245
 msgid "Enable menu music"
@@ -995,7 +997,7 @@ msgstr "Otvoriť menu s voľbami"
 
 #: src/GameText.h:320
 msgid "Toggle Ghost Trail Rendering"
-msgstr "Prepnúť renderovanie stopy ducha"
+msgstr "Prepnúť renderovanie ducha vlečnou kamerou"
 
 #: src/GameText.h:321
 msgid "Toggle Trail Cam"
@@ -1003,7 +1005,7 @@ msgstr "Prepnúť vlečnú kameru"
 
 #: src/GameText.h:322
 msgid "Toggle Display Medals,Display WR"
-msgstr ""
+msgstr "Prepnúť zobrazenie medaily, zobrazenie svetových rekordov"
 
 #: src/GameText.h:323
 msgid "Show this help"
@@ -1011,7 +1013,7 @@ msgstr "Zobraziť túto nápovedu"
 
 #: src/GameText.h:324
 msgid "Switch biker"
-msgstr ""
+msgstr "Prepnúť motocyklistu"
 
 #: src/GameText.h:325
 msgid "Toggle favorite"
@@ -1064,7 +1066,7 @@ msgstr "Nastavenie internetu"
 
 #: src/GameText.h:340
 msgid "Infos"
-msgstr ""
+msgstr "Informácie"
 
 #: src/GameText.h:341
 msgid "View Level Initially"
@@ -1238,12 +1240,12 @@ msgstr "Grafika v menu"
 
 #: src/GameText.h:384
 msgid "Message not sent, unknown players :"
-msgstr ""
+msgstr "Správa nebola odoslaná, neznámi hráči: "
 
 #: src/GameText.h:385
 #, c-format
 msgid "You got a %s medal"
-msgstr ""
+msgstr "Získali ste %s medajlu"
 
 #: src/GameText.h:386
 msgid "Contrast"
@@ -1469,7 +1471,7 @@ msgstr "Vlastnosti hráča"
 
 #: src/GameText.h:445
 msgid "Pause when playing X-Moto"
-msgstr ""
+msgstr "Pauza počas hrania X-Moto"
 
 #: src/GameText.h:446
 msgid "Play Next Level"
@@ -1527,7 +1529,7 @@ msgstr "Náhodné"
 
 #: src/GameText.h:458
 msgid "Reload files to the database"
-msgstr ""
+msgstr "Opätovne načítať súbory do databáze"
 
 #: src/GameText.h:459
 msgid "Reloading levels..."
@@ -1604,35 +1606,35 @@ msgstr "Záznamy"
 
 #: src/GameText.h:470
 msgid "Rewind while replaying"
-msgstr ""
+msgstr "Previnúť nazad počas prehrávania"
 
 #: src/GameText.h:471
 msgid "Forward while replaying"
-msgstr ""
+msgstr "Posunúť dopredu počas prehrávania"
 
 #: src/GameText.h:472
 msgid "Pause while replaying"
-msgstr ""
+msgstr "Pauza počas prehrávania"
 
 #: src/GameText.h:473
 msgid "Stop while replaying"
-msgstr ""
+msgstr "Zastaviť počas prehrávania"
 
 #: src/GameText.h:474
 msgid "Play faster while replaying"
-msgstr ""
+msgstr "Vyššia rýchlosť pri prehrávaní"
 
 #: src/GameText.h:475
 msgid "Play a bit faster while replaying"
-msgstr ""
+msgstr "Pri prehrávaní použiť o niečo vyššiu rýchlosť"
 
 #: src/GameText.h:476
 msgid "Play slower while replaying"
-msgstr ""
+msgstr "Nižšia rýchlosť pri prehrávaní"
 
 #: src/GameText.h:477
 msgid "Play a bit slower while replaying"
-msgstr ""
+msgstr "Pri prehrávaní použiť o niečo nižšiu rýchlosť"
 
 #: src/GameText.h:478
 msgid "Are you sure you want to reset config to defaults ?"
@@ -1644,7 +1646,7 @@ msgstr "Reštartovať tento level"
 
 #: src/GameText.h:480
 msgid "Restart to the last checkpoint"
-msgstr ""
+msgstr "Reštartovať od posledného kontrolného stanovišťa"
 
 #: src/GameText.h:481
 msgid "Restart level"
@@ -1677,7 +1679,7 @@ msgstr "Rozlíšenie obrazovky"
 
 #: src/GameText.h:489
 msgid "Screenshot"
-msgstr ""
+msgstr "Snímka obrazovky"
 
 #: src/GameText.h:490
 msgid "Show"
@@ -1738,7 +1740,7 @@ msgstr "Pridať/odstrániť do/zo zoznamu obľúbených levelov"
 
 #: src/GameText.h:506
 msgid "Switch FPS"
-msgstr ""
+msgstr "Prepnúť FPS"
 
 #: src/GameText.h:507
 msgid "Add/remove to blacklisted levels"
@@ -1746,15 +1748,15 @@ msgstr "Pridať/odstrániť do/z čiernej listiny"
 
 #: src/GameText.h:508
 msgid "Switch WWW access"
-msgstr ""
+msgstr "Prepnúť prístup na WWW"
 
 #: src/GameText.h:509
 msgid "Switch graphics quality mode"
-msgstr ""
+msgstr "Prepnúť režim zobrazenia grafiky"
 
 #: src/GameText.h:510
 msgid "Switch graphics mode"
-msgstr ""
+msgstr "Prepnúť režimy grafiky"
 
 #: src/GameText.h:512
 msgid "Available"
@@ -1794,7 +1796,7 @@ msgstr "Neznámy"
 
 #: src/GameText.h:521
 msgid "Unknown players :"
-msgstr ""
+msgstr "Neznámi hráči: "
 
 #: src/GameText.h:522
 msgid "Unpacked levels"
@@ -1940,9 +1942,9 @@ msgstr "%d minút"
 #, c-format
 msgid "only %i"
 msgid_plural "only %i"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "iba %i"
+msgstr[1] "iba %i"
+msgstr[2] "iba %i"
 
 #: src/GameText.h:558
 #, c-format
@@ -2265,7 +2267,7 @@ msgstr "Zobrazovať svetový rekord pre daný level počas hry"
 
 #: src/GameText.h:642
 msgid "Show the time you need before achieving the next medal"
-msgstr ""
+msgstr "Zobazovať čas, ktorý potrebujete na získanie ďalšej medaile"
 
 #: src/GameText.h:643
 msgid "Use crappy information from the website to update the crappy pack"
@@ -2418,7 +2420,7 @@ msgstr "Zobrazovať všetky záznamy pre tento level"
 
 #: src/GameText.h:680
 msgid "Show information about new players and played levels in the console"
-msgstr ""
+msgstr "Zobrazovať informácie o nových hráčoch a zahraných leveloch v konzole"
 
 #: src/GameText.h:681
 msgid "Run selected replay"
@@ -2810,27 +2812,27 @@ msgstr "Preskočiť toto hlásenie"
 
 #: src/GameText.h:784
 msgid "Pause to watch the level"
-msgstr ""
+msgstr "Pauza pre prezretie levelu"
 
 #: src/GameText.h:785
 msgid "Next level"
-msgstr ""
+msgstr "Ďalší level"
 
 #: src/GameText.h:786
 msgid "Previous level"
-msgstr ""
+msgstr "Predchádzajúci level"
 
 #: src/GameText.h:787
 msgid "Switch player"
-msgstr ""
+msgstr "Prepnúť hráča"
 
 #: src/GameText.h:788
 msgid "Switch trackingshot mode"
-msgstr ""
+msgstr "Prepnúť režim trackingshot"
 
 #: src/GameText.h:789
 msgid "Switch ghosttrail rendering"
-msgstr ""
+msgstr "Prepnúť renderovanie stopy ducha"
 
 #: src/GameText.h:791
 msgid "You don't want to vote"
