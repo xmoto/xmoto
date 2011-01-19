@@ -1,9 +1,12 @@
+#
+# Kristian Jagd <Kristianjagd@gmail.com>, 2011.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2011-01-11 21:22+0100\n"
-"PO-Revision-Date: 2009-09-02 19:44+0100\n"
+"POT-Creation-Date: 2011-01-19 19:04+0100\n"
+"PO-Revision-Date: 2011-01-18 22:22+0100\n"
 "Last-Translator: Kristian Jagd <Kristianjagd@gmail.com>\n"
 "Language-Team: Dansk <LL@li.org>\n"
 "Language: \n"
@@ -100,11 +103,11 @@ msgstr "Gem replays automatisk"
 
 #: src/GameText.h:57
 msgid "Disable Animations"
-msgstr ""
+msgstr "Slå animationer fra"
 
 #: src/GameText.h:58
 msgid "Show game information in the console"
-msgstr ""
+msgstr "Vis infomationer om spillet in konsollen"
 
 #: src/GameText.h:59
 msgid "Auto zoom"
@@ -180,10 +183,12 @@ msgid ""
 "Use the tabulation key to complete player names. Use the * to send private "
 "messages."
 msgstr ""
+"Tryk tab for automatisk at afsluttet spillerens navn. Brug * til at sende "
+"private beskeder."
 
 #: src/GameText.h:77
 msgid "Open chat dialog box"
-msgstr ""
+msgstr "Åben chat"
 
 #: src/GameText.h:78
 msgid "Checking for new or updated levels..."
@@ -222,11 +227,11 @@ msgstr "Konfigurer Joystick"
 
 #: src/GameText.h:86
 msgid "Decrease console history size"
-msgstr ""
+msgstr "Formindsk konsol historik størrelsen"
 
 #: src/GameText.h:87
 msgid "Increase console history size"
-msgstr ""
+msgstr "Forøg konsol historik størrelsen"
 
 #: src/GameText.h:88
 msgid "Controls"
@@ -270,7 +275,7 @@ msgstr "højre meta"
 
 #: src/GameText.h:99
 msgid "Abort the process"
-msgstr ""
+msgstr "Afbryd"
 
 #: src/GameText.h:100 src/GameText.h:114
 #, c-format
@@ -359,11 +364,11 @@ msgstr "Grafik"
 
 #: src/GameText.h:142
 msgid "Music"
-msgstr ""
+msgstr "Musik"
 
 #: src/GameText.h:147
 msgid "Sound Effects"
-msgstr ""
+msgstr "Lydeffekter"
 
 #: src/GameText.h:151
 msgid "MacOS X Support"
@@ -387,7 +392,7 @@ msgstr "norsk"
 
 #: src/GameText.h:158
 msgid "English"
-msgstr ""
+msgstr "Engelsk"
 
 #: src/GameText.h:159
 msgid "German"
@@ -455,19 +460,19 @@ msgstr "Ungansk"
 
 #: src/GameText.h:173
 msgid "Portugese"
-msgstr ""
+msgstr "Portugisisk"
 
 #: src/GameText.h:174
 msgid "Dutch"
-msgstr ""
+msgstr "Hollandsk"
 
 #: src/GameText.h:175
 msgid "Taiwanese"
-msgstr ""
+msgstr "Taiwanesisk"
 
 #: src/GameText.h:176
 msgid "Galician"
-msgstr ""
+msgstr "Galicisk"
 
 #: src/GameText.h:178
 msgid "Main testers"
@@ -531,7 +536,7 @@ msgstr "Spiller"
 
 #: src/GameText.h:199
 msgid "Play now !"
-msgstr ""
+msgstr "Spil nu!"
 
 #: src/GameText.h:200
 msgid "Play music on all levels"
@@ -643,7 +648,7 @@ msgstr "Henter spøgelset..."
 
 #: src/GameText.h:224
 msgid "Downloading ghosts..."
-msgstr ""
+msgstr "Henter spøgelset"
 
 #: src/GameText.h:225
 msgid "Downloading the highscore..."
@@ -663,7 +668,7 @@ msgstr ""
 
 #: src/GameText.h:228
 msgid "Downloading the level..."
-msgstr ""
+msgstr "Henter banen..."
 
 #: src/GameText.h:229
 msgid "Checking for new levels..."
@@ -671,7 +676,7 @@ msgstr "Tjekker efter nye baner..."
 
 #: src/GameText.h:230
 msgid "Downloading the replay..."
-msgstr ""
+msgstr "Henter replay..."
 
 #: src/GameText.h:231
 msgid "Loading new and updated levels..."
@@ -731,7 +736,7 @@ msgstr "Vis verdensrekorden i spillet"
 
 #: src/GameText.h:244
 msgid "Show next medal in-game"
-msgstr ""
+msgstr "Vis næste pris inde i spillet"
 
 #: src/GameText.h:245
 msgid "Enable menu music"
@@ -995,7 +1000,7 @@ msgstr "Trail kamera"
 
 #: src/GameText.h:322
 msgid "Toggle Display Medals,Display WR"
-msgstr ""
+msgstr "Skift mellem vis priser og vis WR"
 
 #: src/GameText.h:323
 msgid "Show this help"
@@ -1003,7 +1008,7 @@ msgstr "Vis denne hjælp"
 
 #: src/GameText.h:324
 msgid "Switch biker"
-msgstr ""
+msgstr "Skift kører"
 
 #: src/GameText.h:325
 msgid "Toggle favorite"
@@ -1023,11 +1028,11 @@ msgstr "Ugly mode til/fra"
 
 #: src/GameText.h:330
 msgid "Toggle Contrast, Light and Full Graphics"
-msgstr ""
+msgstr "Skift mellem kontrast, let og fuld grafik"
 
 #: src/GameText.h:331
 msgid "Toggle theme and ugly over mode"
-msgstr ""
+msgstr "Skift mellem tema og ugly over mode"
 
 #: src/GameText.h:334
 msgid "Hide ghosts"
@@ -1056,7 +1061,7 @@ msgstr "Internet konfiguration"
 
 #: src/GameText.h:340
 msgid "Infos"
-msgstr ""
+msgstr "Infos"
 
 #: src/GameText.h:341
 msgid "View Level Initially"
@@ -1080,7 +1085,7 @@ msgstr "Tryk ENTER for at prøve igen"
 
 #: src/GameText.h:346
 msgid "Press BACKSPACE to return to Checkpoint"
-msgstr ""
+msgstr "Tryk BACKSPACE for and vende tilbage til checkpoint"
 
 #: src/GameText.h:347
 msgid "Press ESC to display the menu"
@@ -1230,24 +1235,24 @@ msgstr "Menu Grafik"
 
 #: src/GameText.h:384
 msgid "Message not sent, unknown players :"
-msgstr ""
+msgstr "Besked ikke afsendt, ukendte spillere :"
 
 #: src/GameText.h:385
 #, c-format
 msgid "You got a %s medal"
-msgstr ""
+msgstr "Du fik en %s pris"
 
 #: src/GameText.h:386
 msgid "Contrast"
-msgstr ""
+msgstr "Kontrast"
 
 #: src/GameText.h:387
 msgid "Light"
-msgstr ""
+msgstr "Let"
 
 #: src/GameText.h:388
 msgid "Full"
-msgstr ""
+msgstr "Fuld"
 
 #: src/GameText.h:389
 msgid "Total time you scored / total highscore time for levels you finished"
@@ -1400,7 +1405,7 @@ msgstr "Efter skaber"
 
 #: src/GameText.h:430
 msgid "Medals"
-msgstr "Medaljer"
+msgstr "Priser"
 
 #: src/GameText.h:431 src/GameText.h:483
 msgid "Room"
@@ -1455,7 +1460,7 @@ msgstr "Spiller profiler"
 
 #: src/GameText.h:445
 msgid "Pause when playing X-Moto"
-msgstr ""
+msgstr "Pause når der spilles X-Moto"
 
 #: src/GameText.h:446
 msgid "Play Next Level"
@@ -1492,6 +1497,8 @@ msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
 msgstr ""
+"Beklager, men der er ikke nok baner der matcher dit valg. Vælger tilfældige "
+"baner i stedet for."
 
 #: src/GameText.h:454
 msgid "Quick start"
@@ -1511,7 +1518,7 @@ msgstr "Bland"
 
 #: src/GameText.h:458
 msgid "Reload files to the database"
-msgstr ""
+msgstr "Genindlæs filer til databasen"
 
 #: src/GameText.h:459
 msgid "Reloading levels..."
@@ -1588,35 +1595,35 @@ msgstr "Replays"
 
 #: src/GameText.h:470
 msgid "Rewind while replaying"
-msgstr ""
+msgstr "Spol tilbage under replay"
 
 #: src/GameText.h:471
 msgid "Forward while replaying"
-msgstr ""
+msgstr "Forward under replay"
 
 #: src/GameText.h:472
 msgid "Pause while replaying"
-msgstr ""
+msgstr "Pause under replay"
 
 #: src/GameText.h:473
 msgid "Stop while replaying"
-msgstr ""
+msgstr "Stop ved replay"
 
 #: src/GameText.h:474
 msgid "Play faster while replaying"
-msgstr ""
+msgstr "Kør hurtigere under replay"
 
 #: src/GameText.h:475
 msgid "Play a bit faster while replaying"
-msgstr ""
+msgstr "Afspil en smule hurtigere under replay"
 
 #: src/GameText.h:476
 msgid "Play slower while replaying"
-msgstr ""
+msgstr "Afspil langsommere under replay"
 
 #: src/GameText.h:477
 msgid "Play a bit slower while replaying"
-msgstr ""
+msgstr "Afspil en smule langsommere under replay"
 
 #: src/GameText.h:478
 msgid "Are you sure you want to reset config to defaults ?"
@@ -1628,7 +1635,7 @@ msgstr "Genstart denne bane"
 
 #: src/GameText.h:480
 msgid "Restart to the last checkpoint"
-msgstr ""
+msgstr "Genstart ved seneste checkpoint"
 
 #: src/GameText.h:481
 msgid "Restart level"
@@ -1661,7 +1668,7 @@ msgstr "Skærmopløsning"
 
 #: src/GameText.h:489
 msgid "Screenshot"
-msgstr ""
+msgstr "Skærmdump"
 
 #: src/GameText.h:490
 msgid "Show"
@@ -1714,7 +1721,7 @@ msgstr "synkronisation udført"
 #: src/GameText.h:503
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
-msgstr ""
+msgstr "Spilleren '%s's tast '%i' er skiftet til '%s' "
 
 #: src/GameText.h:505
 msgid "Add/remove to favorite levels"
@@ -1722,7 +1729,7 @@ msgstr "Tilføj/fjern til favoritter"
 
 #: src/GameText.h:506
 msgid "Switch FPS"
-msgstr ""
+msgstr "Skift FPS"
 
 #: src/GameText.h:507
 msgid "Add/remove to blacklisted levels"
@@ -1730,15 +1737,15 @@ msgstr "Tilføj/fjern til dårlige baner"
 
 #: src/GameText.h:508
 msgid "Switch WWW access"
-msgstr ""
+msgstr "Skift WWW adgang"
 
 #: src/GameText.h:509
 msgid "Switch graphics quality mode"
-msgstr ""
+msgstr "Skift den grafiske kvalitet"
 
 #: src/GameText.h:510
 msgid "Switch graphics mode"
-msgstr ""
+msgstr "Skift grafik mode"
 
 #: src/GameText.h:512
 msgid "Available"
@@ -1778,7 +1785,7 @@ msgstr "Ukendt"
 
 #: src/GameText.h:521
 msgid "Unknown players :"
-msgstr ""
+msgstr "Ukendte spillere :"
 
 #: src/GameText.h:522
 msgid "Unpacked levels"
@@ -1846,7 +1853,7 @@ msgstr "Brug informationer om dårlige baner"
 
 #: src/GameText.h:536
 msgid "Use permanent console"
-msgstr ""
+msgstr "Anvend permanent konsol"
 
 #: src/GameText.h:537
 msgid "Use Environment Vars"
@@ -1882,7 +1889,7 @@ msgstr "Se"
 
 #: src/GameText.h:545 src/GameText.h:632
 msgid "View the replay"
-msgstr ""
+msgstr "Afspil replay"
 
 #: src/GameText.h:546
 msgid "View the highscore"
@@ -1922,10 +1929,10 @@ msgstr "%d minutter"
 
 #: src/GameText.h:556
 #, c-format
-msgid "ony %i only"
+msgid "only %i"
 msgid_plural "only %i"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "kun %i"
+msgstr[1] "kun %i"
 
 #: src/GameText.h:558
 #, c-format
@@ -2097,7 +2104,7 @@ msgstr "%s spiller banen %s"
 
 #: src/GameText.h:597
 msgid "Connexion at startup"
-msgstr ""
+msgstr "Forbindelse ved opstart"
 
 #: src/GameText.h:606
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -2213,11 +2220,11 @@ msgstr "Konfigurer kontrol indstillinger"
 
 #: src/GameText.h:635
 msgid "Configure controls of Player"
-msgstr ""
+msgstr "Indstil spillerens styring"
 
 #: src/GameText.h:636
 msgid "Configure general controls"
-msgstr ""
+msgstr "Indstil generel styring"
 
 #: src/GameText.h:637
 msgid "Save options"
@@ -2241,7 +2248,7 @@ msgstr "Vis verdensrekorden når du spiller"
 
 #: src/GameText.h:642
 msgid "Show the time you need before achieving the next medal"
-msgstr ""
+msgstr "Vis tiden du skal bruge for at få næste pris"
 
 #: src/GameText.h:643
 msgid "Use crappy information from the website to update the crappy pack"
@@ -2249,7 +2256,7 @@ msgstr "Brug informationer fra websiden til at opdatere den dårlige pakke"
 
 #: src/GameText.h:644
 msgid "Make console messages not disappear"
-msgstr ""
+msgstr "Lad konsol beskeder blive stående"
 
 #: src/GameText.h:645
 msgid "Allow X-Moto to ask you your mind about levels"
@@ -2394,7 +2401,7 @@ msgstr "Vis alle replays for denne bane"
 
 #: src/GameText.h:680
 msgid "Show information about new players and played levels in the console"
-msgstr ""
+msgstr "Vis information om nye spillere og spillede baner i konsollen"
 
 #: src/GameText.h:681
 msgid "Run selected replay"
@@ -2478,7 +2485,7 @@ msgstr "Hvis du laver en rekord bliver den automatisk gemt som en replay"
 
 #: src/GameText.h:700
 msgid "Disable block animations (if X-Moto runs slowly)"
-msgstr ""
+msgstr "Slå blok animationer fra (hvis X-Moto kører langsomt)"
 
 #: src/GameText.h:701
 msgid "View the replay of the room's highscore"
@@ -2786,27 +2793,27 @@ msgstr "Ignorer report"
 
 #: src/GameText.h:784
 msgid "Pause to watch the level"
-msgstr ""
+msgstr "Pause for at se banen"
 
 #: src/GameText.h:785
 msgid "Next level"
-msgstr ""
+msgstr "Næste bane"
 
 #: src/GameText.h:786
 msgid "Previous level"
-msgstr ""
+msgstr "Forrige bane"
 
 #: src/GameText.h:787
 msgid "Switch player"
-msgstr ""
+msgstr "Skift spiller"
 
 #: src/GameText.h:788
 msgid "Switch trackingshot mode"
-msgstr ""
+msgstr "Skift tracking mode"
 
 #: src/GameText.h:789
 msgid "Switch ghosttrail rendering"
-msgstr ""
+msgstr "Skift spøgelsesspor rendering"
 
 #: src/GameText.h:791
 msgid "You don't want to vote"
@@ -2886,7 +2893,7 @@ msgstr "Forbind/afbryd server forbindelsen"
 
 #: src/GameText.h:811
 msgid "Start to play with other connected players"
-msgstr ""
+msgstr "Spil med andre tilsluttede spillere"
 
 #: src/GameText.h:812
 msgid ""
@@ -2899,7 +2906,7 @@ msgstr "Netværks mode: se de andre spillere som spøgelser"
 
 #: src/GameText.h:814
 msgid "Automatically connect to the server at startup"
-msgstr ""
+msgstr "Forbind automatisk til serveren ved opstart"
 
 #: src/GameText.h:816
 msgid "Levels with no highscore"
@@ -2979,7 +2986,7 @@ msgstr "Ældste rekorder"
 
 #: src/GameText.h:841
 msgid "No medal"
-msgstr "Ingen medalje"
+msgstr "Ingen pris"
 
 #: src/GameText.h:842
 msgid "My levels"
@@ -3155,7 +3162,7 @@ msgstr "Baner der har stemmer oplåst"
 
 #: src/GameText.h:887
 msgid "Normal mode enabled"
-msgstr ""
+msgstr "Normal mode slået til"
 
 #: src/GameText.h:888
 msgid "Ugly mode enabled"
@@ -3183,15 +3190,15 @@ msgstr "UglyOver mode slået fra"
 
 #: src/GameText.h:894
 msgid "Contrast Graphics Mode enabled"
-msgstr ""
+msgstr "Kontrast grafik mode aktiveret"
 
 #: src/GameText.h:895
 msgid "Light Graphics Mode enabled"
-msgstr ""
+msgstr "Let grafik mode aktiveret"
 
 #: src/GameText.h:896
 msgid "Full Graphics Mode enabled"
-msgstr ""
+msgstr "Bedste grafik mode aktiveret"
 
 #: src/GameText.h:897
 msgid "Web connection enabled"
@@ -3269,7 +3276,7 @@ msgstr ""
 
 #: src/GameText.h:915
 msgid "Restart Level to activate!"
-msgstr ""
+msgstr "Genstart banen for at aktivere"
 
 #: src/GameText.h:917
 #, c-format

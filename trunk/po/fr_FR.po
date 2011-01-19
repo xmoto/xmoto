@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2011-01-11 21:22+0100\n"
+"POT-Creation-Date: 2011-01-19 19:04+0100\n"
 "PO-Revision-Date: 2008-09-14 21:46+0200\n"
 "Last-Translator: Nicolas Adenis-Lamarre\n"
 "Language-Team: X-Moto\n"
@@ -180,7 +180,9 @@ msgstr "Changer de touche..."
 msgid ""
 "Use the tabulation key to complete player names. Use the * to send private "
 "messages."
-msgstr "Utiliser la tabulation pour la complétion des joueurs. Utiliser * pour les messages privés."
+msgstr ""
+"Utiliser la tabulation pour la complétion des joueurs. Utiliser * pour les "
+"messages privés."
 
 #: src/GameText.h:77
 msgid "Open chat dialog box"
@@ -1930,7 +1932,7 @@ msgstr "%d minutes"
 
 #: src/GameText.h:556
 #, c-format
-msgid "ony %i only"
+msgid "only %i"
 msgid_plural "only %i"
 msgstr[0] "Seulement %i"
 msgstr[1] "Seulement %i"

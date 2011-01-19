@@ -2,13 +2,13 @@
 # Copyright (C) 2009 X-Moto Team
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Anıl Özbek <ozbekanil@gmail.com>, 2008, 2009.
+# Anıl Özbek <ozbekanil@gmail.com>, 2008, 2009, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2011-01-11 21:22+0100\n"
-"PO-Revision-Date: 2009-06-29 14:27+0300\n"
+"POT-Creation-Date: 2011-01-19 19:04+0100\n"
+"PO-Revision-Date: 2011-01-19 00:15+0200\n"
 "Last-Translator: Anıl Özbek <ozbekanil@gmail.com>\n"
 "Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
 "Language: tr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=0;\n"
-"X-Generator: KBabel 1.11.4\n"
+"X-Generator: Lokalize 1.1\n"
 
 #: src/GameText.h:33
 msgid "en_EN"
@@ -107,11 +107,11 @@ msgstr "Tekrar oynatımların otomatik saklanması"
 
 #: src/GameText.h:57
 msgid "Disable Animations"
-msgstr ""
+msgstr "Animasyonları Kapat"
 
 #: src/GameText.h:58
 msgid "Show game information in the console"
-msgstr ""
+msgstr "Oyun bilgilerini konsolda göster"
 
 #: src/GameText.h:59
 msgid "Auto zoom"
@@ -127,7 +127,7 @@ msgstr "Aktif Kamera Yakınlığı"
 
 #: src/GameText.h:62
 msgid "Use Trail Cam"
-msgstr ""
+msgstr "İzleme Kamerası Kullan"
 
 #: src/GameText.h:63
 msgid "Beating mode"
@@ -187,10 +187,12 @@ msgid ""
 "Use the tabulation key to complete player names. Use the * to send private "
 "messages."
 msgstr ""
+"Oyuncu isimlerini tamamlamak için sekme tuşunu kullanın. Özel mesajlar "
+"göndermek için de * kullanın."
 
 #: src/GameText.h:77
 msgid "Open chat dialog box"
-msgstr ""
+msgstr "Sohbet penceresini aç"
 
 #: src/GameText.h:78
 msgid "Checking for new or updated levels..."
@@ -213,7 +215,7 @@ msgstr "Temizle"
 msgid "Are you sure you want to delete %i replay"
 msgid_plural "Are you sure you want to delete %i replay"
 msgstr[0] "%i tekrar oynatımını silmek istediğinizden emin misiniz"
-msgstr[1] ""
+msgstr[1] "%i tekrar oynatımını silmek istediğinizden emin misiniz"
 
 #: src/GameText.h:83
 msgid "There is no replay to clean"
@@ -229,11 +231,11 @@ msgstr "Oyun kontrolörünü ayarla..."
 
 #: src/GameText.h:86
 msgid "Decrease console history size"
-msgstr ""
+msgstr "Konsol geçmiş boyutunu azalt"
 
 #: src/GameText.h:87
 msgid "Increase console history size"
-msgstr ""
+msgstr "Konsol geçmiş boyutunu artır"
 
 #: src/GameText.h:88
 msgid "Controls"
@@ -277,7 +279,7 @@ msgstr "sağ meta"
 
 #: src/GameText.h:99
 msgid "Abort the process"
-msgstr ""
+msgstr "İşlemi iptal et"
 
 #: src/GameText.h:100 src/GameText.h:114
 #, c-format
@@ -313,7 +315,7 @@ msgstr "Oyun kontrolörü bulanamadı"
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
 msgstr[0] "%i oyun kontrolörü bulundu"
-msgstr[1] ""
+msgstr[1] "%i oyun kontrolörü bulundu"
 
 #: src/GameText.h:108
 #, c-format
@@ -366,11 +368,11 @@ msgstr "Grafikler"
 
 #: src/GameText.h:142
 msgid "Music"
-msgstr ""
+msgstr "Müzik"
 
 #: src/GameText.h:147
 msgid "Sound Effects"
-msgstr ""
+msgstr "Ses Efektleri"
 
 #: src/GameText.h:151
 msgid "MacOS X Support"
@@ -394,7 +396,7 @@ msgstr "Norveççe"
 
 #: src/GameText.h:158
 msgid "English"
-msgstr ""
+msgstr "İngilizce"
 
 #: src/GameText.h:159
 msgid "German"
@@ -430,7 +432,7 @@ msgstr "Çekçe"
 
 #: src/GameText.h:166
 msgid "Mikhail Brinchuk"
-msgstr ""
+msgstr "Mikhail Brinchuk"
 
 #: src/GameText.h:166
 msgid "Russian"
@@ -454,27 +456,27 @@ msgstr "Litvanyaca"
 
 #: src/GameText.h:171
 msgid "Turkish"
-msgstr ""
+msgstr "Türkçe"
 
 #: src/GameText.h:172
 msgid "Hungarian"
-msgstr ""
+msgstr "Macarca"
 
 #: src/GameText.h:173
 msgid "Portugese"
-msgstr ""
+msgstr "Portekizce"
 
 #: src/GameText.h:174
 msgid "Dutch"
-msgstr ""
+msgstr "Hollandaca"
 
 #: src/GameText.h:175
 msgid "Taiwanese"
-msgstr ""
+msgstr "Tayvanca"
 
 #: src/GameText.h:176
 msgid "Galician"
-msgstr ""
+msgstr "Galiçyaca"
 
 #: src/GameText.h:178
 msgid "Main testers"
@@ -538,7 +540,7 @@ msgstr "Oyuncu"
 
 #: src/GameText.h:199
 msgid "Play now !"
-msgstr ""
+msgstr "Şimdi oyna!"
 
 #: src/GameText.h:200
 msgid "Play music on all levels"
@@ -637,7 +639,6 @@ msgid "Display Ghost Information"
 msgstr "Hayalet bilgilerini göster"
 
 #: src/GameText.h:221
-#, fuzzy
 msgid "Display bike arrow indication"
 msgstr "Yönlendirme oklarını göster"
 
@@ -651,7 +652,7 @@ msgstr "Hayalet indiriliyor..."
 
 #: src/GameText.h:224
 msgid "Downloading ghosts..."
-msgstr ""
+msgstr "Hayaletler indiriliyor..."
 
 #: src/GameText.h:225
 msgid "Downloading the highscore..."
@@ -671,7 +672,7 @@ msgstr ""
 
 #: src/GameText.h:228
 msgid "Downloading the level..."
-msgstr ""
+msgstr "Bölüm indiriliyor..."
 
 #: src/GameText.h:229
 msgid "Checking for new levels..."
@@ -679,7 +680,7 @@ msgstr "Yeni bölümler kontrol ediliyor..."
 
 #: src/GameText.h:230
 msgid "Downloading the replay..."
-msgstr ""
+msgstr "Yeniden oynatım indiriliyor..."
 
 #: src/GameText.h:231
 msgid "Loading new and updated levels..."
@@ -956,6 +957,9 @@ msgid ""
 "Use Quick Play button to immediately start a game with a random level,\n"
 "or use Levels button to select from level packs."
 msgstr ""
+"Hızlı Başlat düğmesini kullanarak hemen rastgele bir bölümü oynamaya "
+"başlayın,\n"
+"ya da Bölümler düğmesini kullanarak istediğiniz bir bölümü seçin."
 
 #: src/GameText.h:303
 msgid ""
@@ -971,6 +975,9 @@ msgid ""
 "http://xmoto.tuxfamily.org\n"
 "for more information."
 msgstr ""
+"Daha fazla bilgi için README dosyasını okuyun veya\n"
+"http://xmoto.tuxfamily.org\n"
+"internet sitesini kontrol edin."
 
 #: src/GameText.h:316
 msgid "change mirror mode"
@@ -978,23 +985,23 @@ msgstr "ayna kipini değiştir"
 
 #: src/GameText.h:317
 msgid "Toggle blacklist"
-msgstr ""
+msgstr "Karalisteyi aç / kapat"
 
 #: src/GameText.h:318
 msgid "Enable/disable audio"
-msgstr ""
+msgstr "Sesi aç / kapat"
 
 #: src/GameText.h:319
 msgid "Open options menu"
-msgstr ""
+msgstr "Seçenekler menüsünü aç"
 
 #: src/GameText.h:320
 msgid "Toggle Ghost Trail Rendering"
-msgstr ""
+msgstr "Hayalet Taramasını Aç / Kapat"
 
 #: src/GameText.h:321
 msgid "Toggle Trail Cam"
-msgstr ""
+msgstr "İzleme Kamerasını Aç / Kapat"
 
 #: src/GameText.h:322
 msgid "Toggle Display Medals,Display WR"
@@ -1002,15 +1009,15 @@ msgstr ""
 
 #: src/GameText.h:323
 msgid "Show this help"
-msgstr ""
+msgstr "Bu yardımı gösterir"
 
 #: src/GameText.h:324
 msgid "Switch biker"
-msgstr ""
+msgstr "Sürücüyü değiştir"
 
 #: src/GameText.h:325
 msgid "Toggle favorite"
-msgstr ""
+msgstr "Fovori ekle / kaldır"
 
 #: src/GameText.h:326
 msgid "Toggle Ghost Trail Tracking Shot"
@@ -1018,7 +1025,7 @@ msgstr ""
 
 #: src/GameText.h:327
 msgid "Enable/disable FPS display"
-msgstr ""
+msgstr "SBK gösterimini aç / kapat"
 
 #: src/GameText.h:329 src/GameText.h:504
 msgid "Enable/disable ugly mode"
@@ -1026,11 +1033,11 @@ msgstr "Tatsız kipi aç/kapa"
 
 #: src/GameText.h:330
 msgid "Toggle Contrast, Light and Full Graphics"
-msgstr ""
+msgstr "Karşıtlığı, Işığı ve Tüm Grafikleri Aç / Kapat"
 
 #: src/GameText.h:331
 msgid "Toggle theme and ugly over mode"
-msgstr ""
+msgstr "Temayı ve tatsız kipi aç / kapat"
 
 #: src/GameText.h:334
 msgid "Hide ghosts"
@@ -1059,12 +1066,11 @@ msgstr "İnternet Yapılandırması"
 
 #: src/GameText.h:340
 msgid "Infos"
-msgstr ""
+msgstr "Bilgiler"
 
 #: src/GameText.h:341
-#, fuzzy
 msgid "View Level Initially"
-msgstr "Bölüm Başlangıçlarına Bak"
+msgstr "Bölüm Başlangıçlarını Görüntüle"
 
 #: src/GameText.h:342
 msgid "Joystick"
@@ -1084,7 +1090,7 @@ msgstr "Tekrar denemek için ENTER'e basın"
 
 #: src/GameText.h:346
 msgid "Press BACKSPACE to return to Checkpoint"
-msgstr ""
+msgstr "Kontrol noktasına dönmek için GERİ tuşuna basın"
 
 #: src/GameText.h:347
 msgid "Press ESC to display the menu"
@@ -1234,24 +1240,24 @@ msgstr "Menü Grafikleri"
 
 #: src/GameText.h:384
 msgid "Message not sent, unknown players :"
-msgstr ""
+msgstr "Mesaj gönderilmedi, bilinmeyen oyuncular:"
 
 #: src/GameText.h:385
 #, c-format
 msgid "You got a %s medal"
-msgstr ""
+msgstr "%s madalya kazandınız"
 
 #: src/GameText.h:386
 msgid "Contrast"
-msgstr ""
+msgstr "Karşıtlık"
 
 #: src/GameText.h:387
 msgid "Light"
-msgstr ""
+msgstr "Işık"
 
 #: src/GameText.h:388
 msgid "Full"
-msgstr ""
+msgstr "Tam"
 
 #: src/GameText.h:389
 msgid "Total time you scored / total highscore time for levels you finished"
@@ -1280,7 +1286,6 @@ msgid "Multi"
 msgstr "Çoklu"
 
 #: src/GameText.h:395
-#, fuzzy
 msgid "Semi-cooperative mode"
 msgstr "Kısmi-işbirlikçi kip"
 
@@ -1314,7 +1319,7 @@ msgstr "Yeni kişisel yüksekpuan!"
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
 msgstr[0] "%i yeni veya güncellenmiş bölüm hazır. Şimdi yüklensin mi?"
-msgstr[1] ""
+msgstr[1] "%i yeni veya güncellenmiş bölüm hazır. Şimdi yüklensin mi?"
 
 #: src/GameText.h:405
 msgid "New Levels"
@@ -1450,7 +1455,7 @@ msgstr "Kişisel"
 msgid "%i player"
 msgid_plural "%i players"
 msgstr[0] "%i oyuncu"
-msgstr[1] ""
+msgstr[1] "%i oyuncu"
 
 #: src/GameText.h:443
 msgid "Player Profile"
@@ -1462,7 +1467,7 @@ msgstr "Oyuncu Profilleri"
 
 #: src/GameText.h:445
 msgid "Pause when playing X-Moto"
-msgstr ""
+msgstr "X-Moto oynarken duraklat"
 
 #: src/GameText.h:446
 msgid "Play Next Level"
@@ -1500,6 +1505,8 @@ msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
 msgstr ""
+"Üzgünüz ama seçiminizle eşleşen yeterli bölüm yok.\n"
+"Bunun yerine rastgele bölümler seçiliyor"
 
 #: src/GameText.h:454
 msgid "Quick start"
@@ -1519,7 +1526,7 @@ msgstr "Rastgele"
 
 #: src/GameText.h:458
 msgid "Reload files to the database"
-msgstr ""
+msgstr "Dosyaları veritabanına tekrar yükle"
 
 #: src/GameText.h:459
 msgid "Reloading levels..."
@@ -1544,6 +1551,10 @@ msgid ""
 "   < >\n"
 " Speed:"
 msgstr ""
+"  Dur:\n"
+"    >>\n"
+"   < >\n"
+" Hız:"
 
 #: src/GameText.h:464
 msgid ""
@@ -1551,6 +1562,9 @@ msgid ""
 "[right key]\n"
 "[up/down keys]\n"
 msgstr ""
+"[esc] , [boşluk]\n"
+"[sağ tuş]\n"
+"[yukarı / aşağı tuşları]\n"
 
 #: src/GameText.h:465
 msgid ""
@@ -1559,6 +1573,10 @@ msgid ""
 "   < >\n"
 " Speed:"
 msgstr ""
+"  Dur:\n"
+"<< >>\n"
+"   < >\n"
+" Hız:"
 
 #: src/GameText.h:466
 msgid ""
@@ -1566,6 +1584,9 @@ msgid ""
 "[left/right keys]\n"
 "[up/down keys]\n"
 msgstr ""
+"[esc] , [boşluk]\n"
+"[sol / sağ tuşları]\n"
+"[yukarı / aşağı tuşları]\n"
 
 #: src/GameText.h:467
 msgid "The replay can't be played!"
@@ -1582,35 +1603,35 @@ msgstr "Tekrar Oynatımlar"
 
 #: src/GameText.h:470
 msgid "Rewind while replaying"
-msgstr ""
+msgstr "Tekrar oynatırken geri sar"
 
 #: src/GameText.h:471
 msgid "Forward while replaying"
-msgstr ""
+msgstr "Tekrar oynatırken ileri sar"
 
 #: src/GameText.h:472
 msgid "Pause while replaying"
-msgstr ""
+msgstr "Tekrar oynatırken duraklat"
 
 #: src/GameText.h:473
 msgid "Stop while replaying"
-msgstr ""
+msgstr "Tekrar oynatırken dur"
 
 #: src/GameText.h:474
 msgid "Play faster while replaying"
-msgstr ""
+msgstr "Tekrar oynatımda hızlı oynat"
 
 #: src/GameText.h:475
 msgid "Play a bit faster while replaying"
-msgstr ""
+msgstr "Tekrar oynatımda bir parça hızlı oynat"
 
 #: src/GameText.h:476
 msgid "Play slower while replaying"
-msgstr ""
+msgstr "Tekrar oynatımda yavaş oynat"
 
 #: src/GameText.h:477
 msgid "Play a bit slower while replaying"
-msgstr ""
+msgstr "Tekrar oynatımda bir parça yavaş oynat"
 
 #: src/GameText.h:478
 msgid "Are you sure you want to reset config to defaults ?"
@@ -1622,7 +1643,7 @@ msgstr "Bu Bölümü Yeniden Başlat"
 
 #: src/GameText.h:480
 msgid "Restart to the last checkpoint"
-msgstr ""
+msgstr "Son kontrol noktasından yeniden başlat"
 
 #: src/GameText.h:481
 msgid "Restart level"
@@ -1655,7 +1676,7 @@ msgstr "Ekran Çözünürlüğü"
 
 #: src/GameText.h:489
 msgid "Screenshot"
-msgstr ""
+msgstr "Ekran görüntüsü"
 
 #: src/GameText.h:490
 msgid "Show"
@@ -1687,16 +1708,15 @@ msgstr "İSTATİSTİKLER"
 
 #: src/GameText.h:498
 msgid "You are currently disconnected"
-msgstr ""
+msgstr "Şu an çevrimdışısınız"
 
 #: src/GameText.h:499
 msgid "Stereo"
 msgstr "Stereo"
 
 #: src/GameText.h:500
-#, fuzzy
 msgid "Synchronisation down"
-msgstr "Eşzamanlamayı aşağıya kaydır"
+msgstr "Eşzamanlama başarısız"
 
 #: src/GameText.h:501
 msgid "Synchronisation up"
@@ -1711,13 +1731,15 @@ msgstr "Eşzamanlama başarıyla gerçekleşti"
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
 msgstr ""
 
+# msgid "Key '%s' of Player '%i' has been switched to '%s'"
+# msgstr "Oyuncu '%i' nin '%s' tuşu '%s' olarak değiştirildi"
 #: src/GameText.h:505
 msgid "Add/remove to favorite levels"
 msgstr "Favori bölümlere ekle/çıkar"
 
 #: src/GameText.h:506
 msgid "Switch FPS"
-msgstr ""
+msgstr "SBK Aç / Kapat"
 
 #: src/GameText.h:507
 msgid "Add/remove to blacklisted levels"
@@ -1725,15 +1747,15 @@ msgstr "Kara listeye ekle/çıkar"
 
 #: src/GameText.h:508
 msgid "Switch WWW access"
-msgstr ""
+msgstr "İnternet erişimini değiştir"
 
 #: src/GameText.h:509
 msgid "Switch graphics quality mode"
-msgstr ""
+msgstr "Grafik kalite kipini değiştir"
 
 #: src/GameText.h:510
 msgid "Switch graphics mode"
-msgstr ""
+msgstr "Grafik kipini değiştir"
 
 #: src/GameText.h:512
 msgid "Available"
@@ -1773,7 +1795,7 @@ msgstr "Bilinmeyen"
 
 #: src/GameText.h:521
 msgid "Unknown players :"
-msgstr ""
+msgstr "Bilinmeyen oyuncular:"
 
 #: src/GameText.h:522
 msgid "Unpacked levels"
@@ -1842,7 +1864,7 @@ msgstr "Niteliksiz bilgiyi kullan"
 
 #: src/GameText.h:536
 msgid "Use permanent console"
-msgstr ""
+msgstr "Kalıcı konsol kullan"
 
 #: src/GameText.h:537
 msgid "Use Environment Vars"
@@ -1878,7 +1900,7 @@ msgstr "Göster"
 
 #: src/GameText.h:545 src/GameText.h:632
 msgid "View the replay"
-msgstr ""
+msgstr "Tekrar oynatımı görüntüle"
 
 #: src/GameText.h:546
 msgid "View the highscore"
@@ -1918,7 +1940,7 @@ msgstr "%d dakika"
 
 #: src/GameText.h:556
 #, c-format
-msgid "ony %i only"
+msgid "only %i"
 msgid_plural "only %i"
 msgstr[0] ""
 msgstr[1] ""
@@ -1932,15 +1954,15 @@ msgstr "%s den sonra istatistikler"
 #, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
-msgstr[0] "X-Moto %d  kez başlatıldı"
-msgstr[1] ""
+msgstr[0] "X-Moto %d kez başlatıldı"
+msgstr[1] "X-Moto %d kez başlatıldı"
 
 #: src/GameText.h:560
 #, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
 msgstr[0] "%d farklı bölüm"
-msgstr[1] ""
+msgstr[1] "%d farklı bölüm"
 
 #: src/GameText.h:561
 #, c-format
@@ -1952,28 +1974,28 @@ msgstr "Oynanan süre: %s"
 msgid "%d play"
 msgid_plural "%d plays"
 msgstr[0] "%d oynama"
-msgstr[1] ""
+msgstr[1] "%d oynama"
 
 #: src/GameText.h:563
 #, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
 msgstr[0] "%d ölüm"
-msgstr[1] ""
+msgstr[1] "%d ölüm"
 
 #: src/GameText.h:564
 #, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
 msgstr[0] "%d bitirme"
-msgstr[1] ""
+msgstr[1] "%d bitirme"
 
 #: src/GameText.h:565
 #, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
 msgstr[0] "%d yeniden başlatma"
-msgstr[1] ""
+msgstr[1] "%d yeniden başlatma"
 
 #: src/GameText.h:567
 #, c-format
@@ -2093,7 +2115,7 @@ msgstr "%s %s bölümünü oynuyor"
 
 #: src/GameText.h:597
 msgid "Connexion at startup"
-msgstr ""
+msgstr "Başlangıçta bağlantı"
 
 #: src/GameText.h:606
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -2210,11 +2232,11 @@ msgstr "Kontrol seçeneklerini ayarla"
 
 #: src/GameText.h:635
 msgid "Configure controls of Player"
-msgstr ""
+msgstr "Oyuncunun kontrollerini yapılandır"
 
 #: src/GameText.h:636
 msgid "Configure general controls"
-msgstr ""
+msgstr "Genel kontrolleri yapılandır"
 
 #: src/GameText.h:637
 msgid "Save options"
@@ -2238,18 +2260,17 @@ msgstr "Oynarken bölümün Dünya Rekorunu göster"
 
 #: src/GameText.h:642
 msgid "Show the time you need before achieving the next medal"
-msgstr ""
+msgstr "Sonraki madalyayı kazanmak için ihtiyacınız olan zamanı göster"
 
 #: src/GameText.h:643
-#, fuzzy
 msgid "Use crappy information from the website to update the crappy pack"
 msgstr ""
-"Niteliksiz paketleri güncellemek için İnternet sitesindeki niteliksiz "
-"bilgileri kullan"
+"Niteliksiz paketi güncellemek için İnternet sitesindeki niteliksiz bilgiyi "
+"kullan"
 
 #: src/GameText.h:644
 msgid "Make console messages not disappear"
-msgstr ""
+msgstr "Konsol mesajlarını görüntüleme"
 
 #: src/GameText.h:645
 msgid "Allow X-Moto to ask you your mind about levels"
@@ -2396,7 +2417,7 @@ msgstr "Bu bölüm için tüm tekrar oynatımları göster"
 
 #: src/GameText.h:680
 msgid "Show information about new players and played levels in the console"
-msgstr ""
+msgstr "Yeni oyuncular ve oynanmış bölümler hakkında konsolda bilgi göster"
 
 #: src/GameText.h:681
 msgid "Run selected replay"
@@ -2486,7 +2507,7 @@ msgstr ""
 
 #: src/GameText.h:700
 msgid "Disable block animations (if X-Moto runs slowly)"
-msgstr ""
+msgstr "Blok animasyonlarını kapat (X-Moto yavaş çalışıyorsa)"
 
 #: src/GameText.h:701
 msgid "View the replay of the room's highscore"
@@ -2588,7 +2609,7 @@ msgstr "Oynarken dinamik yakınlaştırma kullan"
 
 #: src/GameText.h:727
 msgid "Use a camera that directs to the shortest path through the level"
-msgstr ""
+msgstr "Bölüm boyunca en kısa yola yöneltecek bir kamera kullan"
 
 #: src/GameText.h:728
 msgid "View the X-Moto credits"
@@ -2696,7 +2717,7 @@ msgstr "Dilin kodu"
 
 #: src/GameText.h:757
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
-msgstr ""
+msgstr "X-Moto'nun saklamaya lüzum görmediği yeniden oynatımları sil"
 
 #: src/GameText.h:758
 msgid "Remove levels not suitable for children"
@@ -2796,27 +2817,27 @@ msgstr "Bu raporu es geç"
 
 #: src/GameText.h:784
 msgid "Pause to watch the level"
-msgstr ""
+msgstr "Bölümü izlemeyi duraklat"
 
 #: src/GameText.h:785
 msgid "Next level"
-msgstr ""
+msgstr "Sonraki bölüm"
 
 #: src/GameText.h:786
 msgid "Previous level"
-msgstr ""
+msgstr "Önceki bölüm"
 
 #: src/GameText.h:787
 msgid "Switch player"
-msgstr ""
+msgstr "Oyuncuyu değiştir"
 
 #: src/GameText.h:788
 msgid "Switch trackingshot mode"
-msgstr ""
+msgstr "Uzun plan kipini değiştir"
 
 #: src/GameText.h:789
 msgid "Switch ghosttrail rendering"
-msgstr ""
+msgstr "Hayalet taramasını değiştir"
 
 #: src/GameText.h:791
 msgid "You don't want to vote"
@@ -2883,9 +2904,8 @@ msgid "Start/stop the server"
 msgstr "Sunucuyu Başlat/durdur"
 
 #: src/GameText.h:808
-#, fuzzy
 msgid "Port on which the server must listen to"
-msgstr "Sunucuların kontrol etmesi gereken bağlantı noktası"
+msgstr "Sunucunun kontrol etmesi gereken bağlantı noktası"
 
 #: src/GameText.h:809
 msgid "Server on which you want to connect"
@@ -2897,7 +2917,7 @@ msgstr "İstemciyi sunucuya bağla / bağlantısını kes"
 
 #: src/GameText.h:811
 msgid "Start to play with other connected players"
-msgstr ""
+msgstr "Bağlı diğer oyuncularla oynamaya başla"
 
 #: src/GameText.h:812
 msgid ""
@@ -2910,7 +2930,7 @@ msgstr "Ağdan oynama kipi: Diğer oyuncuları sadece hayalet olarak göster"
 
 #: src/GameText.h:814
 msgid "Automatically connect to the server at startup"
-msgstr ""
+msgstr "Başlangıçta otomatik olarak sunucuya bağlan"
 
 #: src/GameText.h:816
 msgid "Levels with no highscore"
@@ -3022,7 +3042,7 @@ msgstr "Çalınan yüksekpuanlar"
 
 #: src/GameText.h:849
 msgid "Vote unlocked levels"
-msgstr ""
+msgstr "Açık bölümleri oyla"
 
 #: src/GameText.h:851
 msgid "Levels with no highscore in your room"
@@ -3172,7 +3192,7 @@ msgstr ""
 
 #: src/GameText.h:887
 msgid "Normal mode enabled"
-msgstr ""
+msgstr "Normal kip aktifleştirildi"
 
 #: src/GameText.h:888
 msgid "Ugly mode enabled"
@@ -3200,15 +3220,15 @@ msgstr "ÜsteTatsız kipi kapatıldı"
 
 #: src/GameText.h:894
 msgid "Contrast Graphics Mode enabled"
-msgstr ""
+msgstr "Karşıtlık Grafik Kipi aktifleştirildi"
 
 #: src/GameText.h:895
 msgid "Light Graphics Mode enabled"
-msgstr ""
+msgstr "Hafif Grafik Kipi aktifleştirildi"
 
 #: src/GameText.h:896
 msgid "Full Graphics Mode enabled"
-msgstr ""
+msgstr "Tam Grafik Kipi aktifleştirildi"
 
 #: src/GameText.h:897
 msgid "Web connection enabled"
@@ -3244,54 +3264,56 @@ msgstr "Ses devre dışı bırakıldı"
 
 #: src/GameText.h:905
 msgid "Trail Cam activated"
-msgstr ""
+msgstr "İzleme Kamerası aktifleştirildi"
 
 #: src/GameText.h:906
 msgid "Trail Cam deactivated"
-msgstr ""
+msgstr "İzleme Kamerası kapatıldı"
 
 #: src/GameText.h:907
 msgid "Ghost Trail is not available"
-msgstr ""
+msgstr "Hayalet İzi mevcut değil"
 
 #: src/GameText.h:908
 msgid "Ghost Trail Rendering activated"
-msgstr ""
+msgstr "Hayalet İz Taraması aktifleştirildi"
 
 #: src/GameText.h:909
 msgid "Ghost Trail Rendering deactivated"
-msgstr ""
+msgstr "Hayalet İz Taraması kapatıldı"
 
 #: src/GameText.h:911
 msgid "No training positions stored"
-msgstr ""
+msgstr "Hiçbir eğitim yeri saklanmadı"
 
 #: src/GameText.h:912
 #, c-format
 msgid "Training position %i/%i restored"
-msgstr ""
+msgstr "Eğitim yeri %i/%i yeniden saklandı"
 
 #: src/GameText.h:913
 #, c-format
 msgid "Stored as training position %i"
-msgstr ""
+msgstr "Eğitim yeri %i olarak saklandı"
 
 #: src/GameText.h:914
 msgid ""
 "This level is not recordable (feature still not implemented).\n"
 "Sorry."
 msgstr ""
+"Bu bölüm kaydedilebilir değil (özellik henüz eklenmedi).\n"
+"Üzgünüz."
 
 #: src/GameText.h:915
 msgid "Restart Level to activate!"
-msgstr ""
+msgstr "Aktifleştirmek için Bölümü Yeniden Başlat!"
 
 #: src/GameText.h:917
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] "Sonraki %i bölümünün bir yüksekpuanı bulunamadı"
-msgstr[1] ""
+msgstr[1] "Sonraki %i bölümünün bir yüksekpuanı bulunamadı"
 
 #: src/GameText.h:920
 msgid "FontGroup:GENERAL"
@@ -3448,7 +3470,6 @@ msgid "This time, speed alone won't do the job..."
 msgstr "Bu sefer sadece hızlanmak işe yaramayacak..."
 
 #: src/LevelsText.h:49
-#, fuzzy
 msgid ""
 "Here's the plan:\n"
 "Again, you'll have to obtain maximum speed, but when\n"
@@ -3456,9 +3477,9 @@ msgid ""
 "wheel up."
 msgstr ""
 "İşte planımız şöyle:\n"
-"Yine, ulaşabildiğiniz en üst hıza çıkın, fakat\n"
-"atlayışı yapacağınız yere geldiğinizde motosikletin önünü çevirin\n"
-"tekerlekler üst tarafa gelsin."
+"Yine ulaşabildiğiniz en üst hıza çıkın fakat\n"
+"atlayışı yapacağınız yere geldiğinizde motosikletin\n"
+"ön tekerini havaya kaldırın."
 
 #: src/LevelsText.h:50 src/LevelsText.h:63
 msgid ""
@@ -3466,40 +3487,49 @@ msgid ""
 "length of the jump.\n"
 "Try it..."
 msgstr ""
+"Bu arka süspansiyonun atlama mesafesini\n"
+"artırmasını sağlayacak.\n"
+"Deneyin..."
 
 #: src/LevelsText.h:51
 msgid "This tutorial will teach you the basics of jumping."
-msgstr ""
+msgstr "Bu eğitsel size atlamanın temellerini öğretecek."
 
 #: src/LevelsText.h:52
 msgid ""
 "Remember you can turn around your bike\n"
 "by pressing :"
 msgstr ""
+"Motosikletinizi döndürebileceğinizi hatırlayın\n"
+"bunun şu tuşa basmanız yeterli:"
 
 #: src/LevelsText.h:53
 msgid "That was pretty easy, right?"
-msgstr ""
+msgstr "Bu oldukça kolaydı, değil mi?"
 
 #: src/LevelsText.h:54
 msgid ""
 "Accelerate NOW! Obtain maximum speed, and try to\n"
 "keep the front wheel at the ground..."
 msgstr ""
+"ŞİMDİ hızlanın. En yüksek hızınızı bulun ve\n"
+"ön tekerleğinizi yol üstünde tutmaya çalışın..."
 
 #: src/LevelsText.h:55
 msgid "Nice jump there! :)"
-msgstr ""
+msgstr "İşte güzel bir atlayış! :)"
 
 #: src/LevelsText.h:56
 msgid "Congrats, you're now a master jumper!"
-msgstr ""
+msgstr "Tebrikler, şimdi usta bir atlayıcısınız"
 
 #: src/LevelsText.h:57
 msgid ""
 "The basic idea is that when driving on the rear wheel,\n"
 "your head is lowered quite a lot..."
 msgstr ""
+"Arka tekerlek üzerinde giderken ki en önemli nokta\n"
+"başınızın yere oldukça yakın olacağıdır..."
 
 #: src/LevelsText.h:58
 msgid ""
@@ -3507,6 +3537,9 @@ msgid ""
 "When the distance you have to drive is quite short,\n"
 "you don't need to keep the balance."
 msgstr ""
+"Dengede kalmak işin zor kısmı.\n"
+"Sürmeniz gereken mesafe kısa olduğunda ise\n"
+"dengede kalma zorunluluğunuz yoktur."
 
 #: src/LevelsText.h:59
 msgid ""
@@ -3515,6 +3548,10 @@ msgid ""
 "combination, and you should be on the other side.\n"
 "Try it..."
 msgstr ""
+"Sağa doğru (yavaşça) hızlanın ve ön tekerleğiniz yükselsin.\n"
+"Başınız duvara çarpmadan hemen önce, hızlı bir sol/sağ\n"
+"kombinasyonu yapın ve böylece diğer tarafa geçmiş olmalısınız.\n"
+"Deneyin..."
 
 #: src/LevelsText.h:60
 msgid ""
@@ -3522,6 +3559,9 @@ msgid ""
 "This time keep your hands off the left and right arrow keys,\n"
 "they're not delicate enough to help you keep balance."
 msgstr ""
+"Şimdi bir parça daha zor bir tane deneyeceksiniz...\n"
+"Bu kez ellerinizi sol ve sağ ok tuşlarından çekin,\n"
+"sizi dengede tutmak için yeteri kadar hassas değiller."
 
 #: src/LevelsText.h:61
 msgid ""
@@ -3529,10 +3569,14 @@ msgid ""
 "Try to drive a bit back and forth on your rear wheel,\n"
 "keeping the bike as steady as possible..."
 msgstr ""
+"Açınızı hızlanarak veya frenleyerek düzenlemek yerine.\n"
+"Bir parça geriye gidin ve arka tekerleğinizde sürün,\n"
+"motosikletinizi mümkün olduğu kadar sabit tutun..."
 
 #: src/LevelsText.h:62
 msgid "Try getting under the next obstacle when you feel you're ready."
 msgstr ""
+"Hazır olduğunuzu hissettiğinizde sonraki engelin altından geçmeye çalışın."
 
 #: src/LevelsText.h:64
 msgid ""
@@ -3540,6 +3584,9 @@ msgid ""
 "areas where the ceiling is low.\n"
 "Beware that this can be pretty difficult :)"
 msgstr ""
+"Bu ders size alçak tavanlı yerlerden geçebilmeniz için\n"
+"arka tekerlek üzerinde gitmeyi öğretecek.\n"
+"Dikkat, bu sizin için oldukça zor olabilir :)"
 
 #: src/LevelsText.h:65
 msgid "Not that difficult, right?"
