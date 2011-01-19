@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2011-01-11 21:22+0100\n"
+"POT-Creation-Date: 2011-01-19 19:04+0100\n"
 "PO-Revision-Date: 2009-05-15 12:45+0300\n"
 "Last-Translator: Tadas Masiulionis <tadzikaz@gmail.com>\n"
 "Language-Team: Lithuanian <tadzikaz@gmail.com>\n"
@@ -1944,7 +1944,7 @@ msgstr "%d minutės"
 
 #: src/GameText.h:556
 #, c-format
-msgid "ony %i only"
+msgid "only %i"
 msgid_plural "only %i"
 msgstr[0] ""
 msgstr[1] ""

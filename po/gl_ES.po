@@ -2,20 +2,22 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Adrián Chaves Fernández <adriyetichaves@gmail.com>, 2010.
+# Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2011-01-11 21:22+0100\n"
-"PO-Revision-Date: 2010-07-21 13:53+0200\n"
-"Last-Translator: Adrián Chaves Fernández <adriyetichaves@gmail.com>\n"
+"POT-Creation-Date: 2011-01-19 19:04+0100\n"
+"PO-Revision-Date: 2011-01-18 23:54+0100\n"
+"Last-Translator: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail."
+"com>\n"
 "Language-Team: Galician <proxecto@trasno.net>\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.0\n"
+"X-Generator: Lokalize 1.2\n"
 
 #: src/GameText.h:33
 msgid "en_EN"
@@ -106,11 +108,11 @@ msgstr "Gardar as repeticións automaticamente"
 
 #: src/GameText.h:57
 msgid "Disable Animations"
-msgstr ""
+msgstr "Desactivar as animacións."
 
 #: src/GameText.h:58
 msgid "Show game information in the console"
-msgstr ""
+msgstr "Amosar información sobre o xogo no terminal."
 
 #: src/GameText.h:59
 msgid "Auto zoom"
@@ -186,10 +188,12 @@ msgid ""
 "Use the tabulation key to complete player names. Use the * to send private "
 "messages."
 msgstr ""
+"Empregar o tabulador para completar os nomes dos xogadores. Empregue o "
+"asterisco, «*», para enviar mensaxes privadas."
 
 #: src/GameText.h:77
 msgid "Open chat dialog box"
-msgstr ""
+msgstr "Abrir a xanela de conversa"
 
 #: src/GameText.h:78
 msgid "Checking for new or updated levels..."
@@ -229,11 +233,11 @@ msgstr "Configurar o mando..."
 
 #: src/GameText.h:86
 msgid "Decrease console history size"
-msgstr ""
+msgstr "Reducir o tamaño do historial do terminal"
 
 #: src/GameText.h:87
 msgid "Increase console history size"
-msgstr ""
+msgstr "Aumentar o tamaño do historial do terminal"
 
 #: src/GameText.h:88
 msgid "Controls"
@@ -277,7 +281,7 @@ msgstr "meta dereito"
 
 #: src/GameText.h:99
 msgid "Abort the process"
-msgstr ""
+msgstr "Interromper o proceso"
 
 #: src/GameText.h:100 src/GameText.h:114
 #, c-format
@@ -475,7 +479,7 @@ msgstr "Taiwanés"
 
 #: src/GameText.h:176
 msgid "Galician"
-msgstr ""
+msgstr "Galego"
 
 #: src/GameText.h:178
 msgid "Main testers"
@@ -539,7 +543,7 @@ msgstr "Xogador"
 
 #: src/GameText.h:199
 msgid "Play now !"
-msgstr ""
+msgstr "Xogar!"
 
 #: src/GameText.h:200
 msgid "Play music on all levels"
@@ -651,7 +655,7 @@ msgstr "Descargando a pantasma..."
 
 #: src/GameText.h:224
 msgid "Downloading ghosts..."
-msgstr ""
+msgstr "Descargando as pantasmas..."
 
 #: src/GameText.h:225
 msgid "Downloading the highscore..."
@@ -671,7 +675,7 @@ msgstr ""
 
 #: src/GameText.h:228
 msgid "Downloading the level..."
-msgstr ""
+msgstr "Descargando o nivel..."
 
 #: src/GameText.h:229
 msgid "Checking for new levels..."
@@ -679,7 +683,7 @@ msgstr "Buscando novos niveis..."
 
 #: src/GameText.h:230
 msgid "Downloading the replay..."
-msgstr ""
+msgstr "Descargando a repetición..."
 
 #: src/GameText.h:231
 msgid "Loading new and updated levels..."
@@ -739,7 +743,7 @@ msgstr "Amosar o récord do mundo ao xogar"
 
 #: src/GameText.h:244
 msgid "Show next medal in-game"
-msgstr ""
+msgstr "Amosar a seguinte medalla no xogo"
 
 #: src/GameText.h:245
 msgid "Enable menu music"
@@ -1004,7 +1008,7 @@ msgstr "Activar ou desactivar a cámara de seguimento"
 
 #: src/GameText.h:322
 msgid "Toggle Display Medals,Display WR"
-msgstr ""
+msgstr "Amosar medallas ou WR"
 
 #: src/GameText.h:323
 msgid "Show this help"
@@ -1012,7 +1016,7 @@ msgstr "Amosar esta axuda"
 
 #: src/GameText.h:324
 msgid "Switch biker"
-msgstr ""
+msgstr "Cambiar ao motorista"
 
 #: src/GameText.h:325
 msgid "Toggle favorite"
@@ -1066,7 +1070,7 @@ msgstr "Configuración da rede"
 
 #: src/GameText.h:340
 msgid "Infos"
-msgstr ""
+msgstr "Información"
 
 #: src/GameText.h:341
 msgid "View Level Initially"
@@ -1241,11 +1245,12 @@ msgstr "Gráficos do menú"
 #: src/GameText.h:384
 msgid "Message not sent, unknown players :"
 msgstr ""
+"Non se enviou a mensaxe porque non se recoñecen os seguintes xogadores:"
 
 #: src/GameText.h:385
 #, c-format
 msgid "You got a %s medal"
-msgstr ""
+msgstr "Conseguiu unha medalla %s"
 
 #: src/GameText.h:386
 msgid "Contrast"
@@ -1471,7 +1476,7 @@ msgstr "Perfís dos xogadores"
 
 #: src/GameText.h:445
 msgid "Pause when playing X-Moto"
-msgstr ""
+msgstr "Deter mentres se estea a xogar"
 
 #: src/GameText.h:446
 msgid "Play Next Level"
@@ -1529,7 +1534,7 @@ msgstr "Ao chou"
 
 #: src/GameText.h:458
 msgid "Reload files to the database"
-msgstr ""
+msgstr "Recargar os ficheiros na base de datos"
 
 #: src/GameText.h:459
 msgid "Reloading levels..."
@@ -1606,35 +1611,35 @@ msgstr "Repeticións"
 
 #: src/GameText.h:470
 msgid "Rewind while replaying"
-msgstr ""
+msgstr "Ir cara atrás na repetición"
 
 #: src/GameText.h:471
 msgid "Forward while replaying"
-msgstr ""
+msgstr "Ir cara adiante na repetición"
 
 #: src/GameText.h:472
 msgid "Pause while replaying"
-msgstr ""
+msgstr "Poñer en pausa a repetición"
 
 #: src/GameText.h:473
 msgid "Stop while replaying"
-msgstr ""
+msgstr "Deter a repetición"
 
 #: src/GameText.h:474
 msgid "Play faster while replaying"
-msgstr ""
+msgstr "Reproducir a repetición a máis velocidade"
 
 #: src/GameText.h:475
 msgid "Play a bit faster while replaying"
-msgstr ""
+msgstr "Reproducir a repetición algo máis rápido"
 
 #: src/GameText.h:476
 msgid "Play slower while replaying"
-msgstr ""
+msgstr "Reproducir a repetición máis lento"
 
 #: src/GameText.h:477
 msgid "Play a bit slower while replaying"
-msgstr ""
+msgstr "Reproducir a repetición algo máis lento"
 
 #: src/GameText.h:478
 msgid "Are you sure you want to reset config to defaults ?"
@@ -1646,7 +1651,7 @@ msgstr "Reiniciar este nivel"
 
 #: src/GameText.h:480
 msgid "Restart to the last checkpoint"
-msgstr ""
+msgstr "Reiniciar no último punto seguro"
 
 #: src/GameText.h:481
 msgid "Restart level"
@@ -1679,7 +1684,7 @@ msgstr "Resolución de pantalla"
 
 #: src/GameText.h:489
 msgid "Screenshot"
-msgstr ""
+msgstr "Captura de pantalla"
 
 #: src/GameText.h:490
 msgid "Show"
@@ -1740,7 +1745,7 @@ msgstr "Engadir ou borrar dos favoritos"
 
 #: src/GameText.h:506
 msgid "Switch FPS"
-msgstr ""
+msgstr "Activar ou desactivar os FPS"
 
 #: src/GameText.h:507
 msgid "Add/remove to blacklisted levels"
@@ -1748,15 +1753,15 @@ msgstr "Engadir ou borrar da lista negra"
 
 #: src/GameText.h:508
 msgid "Switch WWW access"
-msgstr ""
+msgstr "Activar ou desactivar o acceso web"
 
 #: src/GameText.h:509
 msgid "Switch graphics quality mode"
-msgstr ""
+msgstr "Cambiar o modo de cualidade gráfica"
 
 #: src/GameText.h:510
 msgid "Switch graphics mode"
-msgstr ""
+msgstr "Cambiar o modo gráfico"
 
 #: src/GameText.h:512
 msgid "Available"
@@ -1796,7 +1801,7 @@ msgstr "Descoñecido"
 
 #: src/GameText.h:521
 msgid "Unknown players :"
-msgstr ""
+msgstr "Xogadores descoñecidos:"
 
 #: src/GameText.h:522
 msgid "Unpacked levels"
@@ -1864,7 +1869,7 @@ msgstr "Utilizar información cutre"
 
 #: src/GameText.h:536
 msgid "Use permanent console"
-msgstr ""
+msgstr "Empregar un terminal permanente"
 
 #: src/GameText.h:537
 msgid "Use Environment Vars"
@@ -1900,7 +1905,7 @@ msgstr "Vir"
 
 #: src/GameText.h:545 src/GameText.h:632
 msgid "View the replay"
-msgstr ""
+msgstr "Visualizar a repetición"
 
 #: src/GameText.h:546
 msgid "View the highscore"
@@ -1940,10 +1945,10 @@ msgstr "%d minutos"
 
 #: src/GameText.h:556
 #, c-format
-msgid "ony %i only"
+msgid "only %i"
 msgid_plural "only %i"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "só %i"
+msgstr[1] "só %i"
 
 #: src/GameText.h:558
 #, c-format
@@ -2115,7 +2120,7 @@ msgstr "%s anda a xogar o nivel %s"
 
 #: src/GameText.h:597
 msgid "Connexion at startup"
-msgstr ""
+msgstr "Conectarse no inicio"
 
 #: src/GameText.h:606
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -2260,7 +2265,7 @@ msgstr "Amosar o récord mundial dos niveis ao xogalos"
 
 #: src/GameText.h:642
 msgid "Show the time you need before achieving the next medal"
-msgstr ""
+msgstr "Amosar o tempo necesario para conseguir a seguinte medalla"
 
 #: src/GameText.h:643
 msgid "Use crappy information from the website to update the crappy pack"
@@ -2268,7 +2273,7 @@ msgstr "Usar información cutre do sitio web para actualizar o grupo cutre"
 
 #: src/GameText.h:644
 msgid "Make console messages not disappear"
-msgstr ""
+msgstr "Evitar que desaparezan as mensaxes do terminal"
 
 #: src/GameText.h:645
 msgid "Allow X-Moto to ask you your mind about levels"
@@ -2414,7 +2419,7 @@ msgstr "Amosar todas as repeticións deste nivel"
 
 #: src/GameText.h:680
 msgid "Show information about new players and played levels in the console"
-msgstr ""
+msgstr "Amosar información sobre os xogadores e os niveis xogados no terminal"
 
 #: src/GameText.h:681
 msgid "Run selected replay"
@@ -2493,7 +2498,7 @@ msgstr "Se consegues un récord gardarase automaticamente a repetición"
 
 #: src/GameText.h:700
 msgid "Disable block animations (if X-Moto runs slowly)"
-msgstr ""
+msgstr "Desactivar as animacións de bloques (se X-Moto vai lento)"
 
 #: src/GameText.h:701
 msgid "View the replay of the room's highscore"
@@ -2806,27 +2811,27 @@ msgstr "Non enviar o informe"
 
 #: src/GameText.h:784
 msgid "Pause to watch the level"
-msgstr ""
+msgstr "Facer unha pausa para ver o nivel"
 
 #: src/GameText.h:785
 msgid "Next level"
-msgstr ""
+msgstr "Seguinte nivel"
 
 #: src/GameText.h:786
 msgid "Previous level"
-msgstr ""
+msgstr "Nivel anterior"
 
 #: src/GameText.h:787
 msgid "Switch player"
-msgstr ""
+msgstr "Cambiar de xogador"
 
 #: src/GameText.h:788
 msgid "Switch trackingshot mode"
-msgstr ""
+msgstr "Cambiar a cámara de seguimento"
 
 #: src/GameText.h:789
 msgid "Switch ghosttrail rendering"
-msgstr ""
+msgstr "Cambiar o renderizado da pantasma"
 
 #: src/GameText.h:791
 msgid "You don't want to vote"
@@ -2906,7 +2911,7 @@ msgstr "Conectar ou desconectar o cliente do servidor"
 
 #: src/GameText.h:811
 msgid "Start to play with other connected players"
-msgstr ""
+msgstr "Comezar a xogar con outros xogadores conectados"
 
 #: src/GameText.h:812
 msgid ""
@@ -2919,7 +2924,7 @@ msgstr "Modo de xogo en rede: mira os outros xogadores coma pantasmas"
 
 #: src/GameText.h:814
 msgid "Automatically connect to the server at startup"
-msgstr ""
+msgstr "Conectarse automaticamente ao servidor ao iniciar"
 
 #: src/GameText.h:816
 msgid "Levels with no highscore"

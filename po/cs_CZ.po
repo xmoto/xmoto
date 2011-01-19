@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto_cs_CZ\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2011-01-11 21:22+0100\n"
+"POT-Creation-Date: 2011-01-19 19:04+0100\n"
 "PO-Revision-Date: 2008-06-19 22:30+0200\n"
 "Last-Translator: Tomáš Chvátal\n"
 "Language-Team: Čeština <cs@li.org>\n"
@@ -1904,7 +1904,7 @@ msgstr "%d minut"
 
 #: src/GameText.h:556
 #, c-format
-msgid "ony %i only"
+msgid "only %i"
 msgid_plural "only %i"
 msgstr[0] ""
 msgstr[1] ""
