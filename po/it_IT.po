@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2011-01-19 19:04+0100\n"
-"PO-Revision-Date: 2010-04-15 13:07+0200\n"
+"PO-Revision-Date: 2011-01-20 16:10+0100\n"
 "Last-Translator: Carmine 'earcar' Paolino <earcar@gmail.com>\n"
 "Language-Team:  <XMoto>\n"
 "Language: \n"
@@ -101,11 +101,11 @@ msgstr "Salvataggio automatico dei replay"
 
 #: src/GameText.h:57
 msgid "Disable Animations"
-msgstr ""
+msgstr "Disabilita Animazioni"
 
 #: src/GameText.h:58
 msgid "Show game information in the console"
-msgstr ""
+msgstr "Visualizza informazioni nella console"
 
 #: src/GameText.h:59
 msgid "Auto zoom"
@@ -181,10 +181,12 @@ msgid ""
 "Use the tabulation key to complete player names. Use the * to send private "
 "messages."
 msgstr ""
+"Usa il tasto tab per completare i nomi dei giocatori. Usa * per mandare "
+"messaggi privati."
 
 #: src/GameText.h:77
 msgid "Open chat dialog box"
-msgstr ""
+msgstr "Apri finestra di chat"
 
 #: src/GameText.h:78
 msgid "Checking for new or updated levels..."
@@ -223,11 +225,11 @@ msgstr "Configura il joystick"
 
 #: src/GameText.h:86
 msgid "Decrease console history size"
-msgstr ""
+msgstr "Diminuisci dimensione della storia della console"
 
 #: src/GameText.h:87
 msgid "Increase console history size"
-msgstr ""
+msgstr "Incrementa dimensione della storia della console"
 
 #: src/GameText.h:88
 msgid "Controls"
@@ -271,7 +273,7 @@ msgstr "meta destro"
 
 #: src/GameText.h:99
 msgid "Abort the process"
-msgstr ""
+msgstr "Interrompi processo"
 
 #: src/GameText.h:100 src/GameText.h:114
 #, c-format
@@ -468,7 +470,7 @@ msgstr "Taiwanese"
 
 #: src/GameText.h:176
 msgid "Galician"
-msgstr ""
+msgstr "Galiziano"
 
 #: src/GameText.h:178
 msgid "Main testers"
@@ -532,7 +534,7 @@ msgstr "Giocatore"
 
 #: src/GameText.h:199
 msgid "Play now !"
-msgstr ""
+msgstr "Gioca ora !"
 
 #: src/GameText.h:200
 msgid "Play music on all levels"
@@ -641,7 +643,7 @@ msgstr "Scarico il fantasma..."
 
 #: src/GameText.h:224
 msgid "Downloading ghosts..."
-msgstr ""
+msgstr "Scarico i fantasmi..."
 
 #: src/GameText.h:225
 msgid "Downloading the highscore..."
@@ -661,7 +663,7 @@ msgstr ""
 
 #: src/GameText.h:228
 msgid "Downloading the level..."
-msgstr ""
+msgstr "Scarico il livello..."
 
 #: src/GameText.h:229
 msgid "Checking for new levels..."
@@ -669,7 +671,7 @@ msgstr "Cerco nuovi livelli..."
 
 #: src/GameText.h:230
 msgid "Downloading the replay..."
-msgstr ""
+msgstr "Scarico il replay..."
 
 #: src/GameText.h:231
 msgid "Loading new and updated levels..."
@@ -729,7 +731,7 @@ msgstr "Visualizza Record Mondiale durante il gioco"
 
 #: src/GameText.h:244
 msgid "Show next medal in-game"
-msgstr ""
+msgstr "Visualizza prossima medaglia durante il gioco"
 
 #: src/GameText.h:245
 msgid "Enable menu music"
@@ -991,7 +993,7 @@ msgstr "Abilita/Disabilita Trail Cam"
 
 #: src/GameText.h:322
 msgid "Toggle Display Medals,Display WR"
-msgstr ""
+msgstr "Abilita/Disabilita Medaglie/World Record"
 
 #: src/GameText.h:323
 msgid "Show this help"
@@ -999,7 +1001,7 @@ msgstr "Visualizza questo aiuto"
 
 #: src/GameText.h:324
 msgid "Switch biker"
-msgstr ""
+msgstr "Cambia pilota"
 
 #: src/GameText.h:325
 msgid "Toggle favorite"
@@ -1052,7 +1054,7 @@ msgstr "Configurazione accesso a Internet"
 
 #: src/GameText.h:340
 msgid "Infos"
-msgstr ""
+msgstr "Informazioni"
 
 #: src/GameText.h:341
 msgid "View Level Initially"
@@ -1226,12 +1228,12 @@ msgstr "Grafica Menu"
 
 #: src/GameText.h:384
 msgid "Message not sent, unknown players :"
-msgstr ""
+msgstr "Messaggio non inviato, giocatori sconosciuti :"
 
 #: src/GameText.h:385
 #, c-format
 msgid "You got a %s medal"
-msgstr ""
+msgstr "Hai ricevuto una medaglia %s"
 
 #: src/GameText.h:386
 msgid "Contrast"
@@ -1455,7 +1457,7 @@ msgstr "Profili dei giocatori"
 
 #: src/GameText.h:445
 msgid "Pause when playing X-Moto"
-msgstr ""
+msgstr "Metti in pausa quando giochi"
 
 #: src/GameText.h:446
 msgid "Play Next Level"
@@ -1514,7 +1516,7 @@ msgstr "Rimescola"
 
 #: src/GameText.h:458
 msgid "Reload files to the database"
-msgstr ""
+msgstr "Ricarica file nel database"
 
 #: src/GameText.h:459
 msgid "Reloading levels..."
@@ -1591,35 +1593,35 @@ msgstr "Replays"
 
 #: src/GameText.h:470
 msgid "Rewind while replaying"
-msgstr ""
+msgstr "Riavvolgi durante il replay"
 
 #: src/GameText.h:471
 msgid "Forward while replaying"
-msgstr ""
+msgstr "Manda avanti durante il replay"
 
 #: src/GameText.h:472
 msgid "Pause while replaying"
-msgstr ""
+msgstr "Metti in pausa durante il replay"
 
 #: src/GameText.h:473
 msgid "Stop while replaying"
-msgstr ""
+msgstr "Ferma durante il replay"
 
 #: src/GameText.h:474
 msgid "Play faster while replaying"
-msgstr ""
+msgstr "Riproduci più velocemente durante il replay"
 
 #: src/GameText.h:475
 msgid "Play a bit faster while replaying"
-msgstr ""
+msgstr "Riproduci poco più velocemente durante il replay"
 
 #: src/GameText.h:476
 msgid "Play slower while replaying"
-msgstr ""
+msgstr "Riproduci lentamente durante il replay"
 
 #: src/GameText.h:477
 msgid "Play a bit slower while replaying"
-msgstr ""
+msgstr "Riproduci poco più lentamente durante il replay"
 
 #: src/GameText.h:478
 msgid "Are you sure you want to reset config to defaults ?"
@@ -1631,7 +1633,7 @@ msgstr "Ricomincia questo livello"
 
 #: src/GameText.h:480
 msgid "Restart to the last checkpoint"
-msgstr ""
+msgstr "Riparti dall'ultimo checkpoint"
 
 #: src/GameText.h:481
 msgid "Restart level"
@@ -1664,7 +1666,7 @@ msgstr "Risoluzione dello Schermo"
 
 #: src/GameText.h:489
 msgid "Screenshot"
-msgstr ""
+msgstr "Screenshot"
 
 #: src/GameText.h:490
 msgid "Show"
@@ -1725,7 +1727,7 @@ msgstr "Aggiungi/Rimuovi il livello dalla lista dei preferiti"
 
 #: src/GameText.h:506
 msgid "Switch FPS"
-msgstr ""
+msgstr "Abilita/Disabilita FPS"
 
 #: src/GameText.h:507
 msgid "Add/remove to blacklisted levels"
@@ -1733,15 +1735,15 @@ msgstr "Aggiungi/Rimuovi il livello dalla lista nera"
 
 #: src/GameText.h:508
 msgid "Switch WWW access"
-msgstr ""
+msgstr "Abilita/Disabilita accesso WWW"
 
 #: src/GameText.h:509
 msgid "Switch graphics quality mode"
-msgstr ""
+msgstr "Cambia qualità grafica"
 
 #: src/GameText.h:510
 msgid "Switch graphics mode"
-msgstr ""
+msgstr "Cambia modalità grafica"
 
 #: src/GameText.h:512
 msgid "Available"
@@ -1781,7 +1783,7 @@ msgstr "Sconosciuti"
 
 #: src/GameText.h:521
 msgid "Unknown players :"
-msgstr ""
+msgstr "Giocatori sconosciuti :"
 
 #: src/GameText.h:522
 msgid "Unpacked levels"
@@ -1850,7 +1852,7 @@ msgstr "Scarica informazioni livelli scadenti"
 
 #: src/GameText.h:536
 msgid "Use permanent console"
-msgstr ""
+msgstr "Usa console permanente"
 
 #: src/GameText.h:537
 msgid "Use Environment Vars"
@@ -1886,7 +1888,7 @@ msgstr "Guarda"
 
 #: src/GameText.h:545 src/GameText.h:632
 msgid "View the replay"
-msgstr ""
+msgstr "Guarda il replay"
 
 #: src/GameText.h:546
 msgid "View the highscore"
@@ -2101,7 +2103,7 @@ msgstr "%s sta giocando il livello %s"
 
 #: src/GameText.h:597
 msgid "Connexion at startup"
-msgstr ""
+msgstr "Connetti all'avvio"
 
 #: src/GameText.h:606
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -2246,7 +2248,7 @@ msgstr "Mostra il Record Mondiale del livello durante il gioco"
 
 #: src/GameText.h:642
 msgid "Show the time you need before achieving the next medal"
-msgstr ""
+msgstr "Mostra il tempo che ti serve per ottenere la prossima medaglia"
 
 #: src/GameText.h:643
 msgid "Use crappy information from the website to update the crappy pack"
@@ -2254,7 +2256,7 @@ msgstr "Scarica informazioni sui livelli scadenti"
 
 #: src/GameText.h:644
 msgid "Make console messages not disappear"
-msgstr ""
+msgstr "Non far sparire i messaggi in console"
 
 #: src/GameText.h:645
 msgid "Allow X-Moto to ask you your mind about levels"
@@ -2400,7 +2402,7 @@ msgstr "Mostra tutti i replay del livello"
 
 #: src/GameText.h:680
 msgid "Show information about new players and played levels in the console"
-msgstr ""
+msgstr "Mostra informazioni su nuovi giocatori e livelli giocati in console"
 
 #: src/GameText.h:681
 msgid "Run selected replay"
@@ -2483,7 +2485,7 @@ msgstr ""
 
 #: src/GameText.h:700
 msgid "Disable block animations (if X-Moto runs slowly)"
-msgstr ""
+msgstr "Disabilita animazioni dei blocchi (se X-Moto lentamente)"
 
 #: src/GameText.h:701
 msgid "View the replay of the room's highscore"
@@ -2802,27 +2804,27 @@ msgstr "Salta questo resoconto"
 
 #: src/GameText.h:784
 msgid "Pause to watch the level"
-msgstr ""
+msgstr "Metti in pausa per guardare il livello"
 
 #: src/GameText.h:785
 msgid "Next level"
-msgstr ""
+msgstr "Prossimo livello"
 
 #: src/GameText.h:786
 msgid "Previous level"
-msgstr ""
+msgstr "Livello precedente"
 
 #: src/GameText.h:787
 msgid "Switch player"
-msgstr ""
+msgstr "Cambia giocatore"
 
 #: src/GameText.h:788
 msgid "Switch trackingshot mode"
-msgstr ""
+msgstr "Cambia modalità trackingshot"
 
 #: src/GameText.h:789
 msgid "Switch ghosttrail rendering"
-msgstr ""
+msgstr "Cambia rendering della coda del fantasma"
 
 #: src/GameText.h:791
 msgid "You don't want to vote"
@@ -2902,7 +2904,7 @@ msgstr "Connetti/Disconnetti al server"
 
 #: src/GameText.h:811
 msgid "Start to play with other connected players"
-msgstr ""
+msgstr "Gioca con altri giocatori connessi"
 
 #: src/GameText.h:812
 msgid ""
@@ -2915,7 +2917,7 @@ msgstr "Gioco in rete : guarda gli altri giocatori come fantasmi"
 
 #: src/GameText.h:814
 msgid "Automatically connect to the server at startup"
-msgstr ""
+msgstr "Connetti automaticamente al server all'avvio"
 
 #: src/GameText.h:816
 msgid "Levels with no highscore"
