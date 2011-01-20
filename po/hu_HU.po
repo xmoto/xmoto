@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2011-01-19 19:04+0100\n"
-"PO-Revision-Date: 2010-04-16 18:26+0100\n"
+"PO-Revision-Date: 2011-01-20 20:29+0100\n"
 "Last-Translator: Zoltán Balogh <ttapecs@gmail.com>\n"
 "Language-Team: X-moto\n"
 "Language: \n"
@@ -101,11 +101,11 @@ msgstr "Visszajátszások Automatikus Mentése"
 
 #: src/GameText.h:57
 msgid "Disable Animations"
-msgstr ""
+msgstr "Animációk Letiltása"
 
 #: src/GameText.h:58
 msgid "Show game information in the console"
-msgstr ""
+msgstr "Játékinformációk mutatása a konzolban"
 
 #: src/GameText.h:59
 msgid "Auto zoom"
@@ -181,10 +181,12 @@ msgid ""
 "Use the tabulation key to complete player names. Use the * to send private "
 "messages."
 msgstr ""
+"Használd a tabulátort játékosnév kiegészítéshez. Használd a *-t privát "
+"üzenet küldéséhez"
 
 #: src/GameText.h:77
 msgid "Open chat dialog box"
-msgstr ""
+msgstr "Chat párbeszédablak megnyitása"
 
 #: src/GameText.h:78
 msgid "Checking for new or updated levels..."
@@ -223,11 +225,11 @@ msgstr "Joystick beállítása..."
 
 #: src/GameText.h:86
 msgid "Decrease console history size"
-msgstr ""
+msgstr "Konzolelőzmények méretének csökkentése"
 
 #: src/GameText.h:87
 msgid "Increase console history size"
-msgstr ""
+msgstr "Konzolelőzmények méretének növelése"
 
 #: src/GameText.h:88
 msgid "Controls"
@@ -271,7 +273,7 @@ msgstr "jobb meta"
 
 #: src/GameText.h:99
 msgid "Abort the process"
-msgstr ""
+msgstr "Folyamat megszakítása"
 
 #: src/GameText.h:100 src/GameText.h:114
 #, c-format
@@ -468,7 +470,7 @@ msgstr "Tajvani"
 
 #: src/GameText.h:176
 msgid "Galician"
-msgstr ""
+msgstr "Galíciai"
 
 #: src/GameText.h:178
 msgid "Main testers"
@@ -532,7 +534,7 @@ msgstr "Játékos"
 
 #: src/GameText.h:199
 msgid "Play now !"
-msgstr ""
+msgstr "Játék!"
 
 #: src/GameText.h:200
 msgid "Play music on all levels"
@@ -644,7 +646,7 @@ msgstr "Szellem letöltése..."
 
 #: src/GameText.h:224
 msgid "Downloading ghosts..."
-msgstr ""
+msgstr "Szellemek letöltése..."
 
 #: src/GameText.h:225
 msgid "Downloading the highscore..."
@@ -664,7 +666,7 @@ msgstr ""
 
 #: src/GameText.h:228
 msgid "Downloading the level..."
-msgstr ""
+msgstr "Pálya letöltése..."
 
 #: src/GameText.h:229
 msgid "Checking for new levels..."
@@ -672,7 +674,7 @@ msgstr "Új pályák keresése..."
 
 #: src/GameText.h:230
 msgid "Downloading the replay..."
-msgstr ""
+msgstr "Visszajátszás letöltése..."
 
 #: src/GameText.h:231
 msgid "Loading new and updated levels..."
@@ -732,7 +734,7 @@ msgstr "Világrekord mutatása játékban"
 
 #: src/GameText.h:244
 msgid "Show next medal in-game"
-msgstr ""
+msgstr "Következő érem mutatása a játékban"
 
 #: src/GameText.h:245
 msgid "Enable menu music"
@@ -996,7 +998,7 @@ msgstr "Nyomkamera be-/kikapcsolása"
 
 #: src/GameText.h:322
 msgid "Toggle Display Medals,Display WR"
-msgstr ""
+msgstr "Éremidő, rekord kijelzése közti váltás"
 
 #: src/GameText.h:323
 msgid "Show this help"
@@ -1004,7 +1006,7 @@ msgstr "Súgó mutatása"
 
 #: src/GameText.h:324
 msgid "Switch biker"
-msgstr ""
+msgstr "Játékosváltás"
 
 #: src/GameText.h:325
 msgid "Toggle favorite"
@@ -1024,7 +1026,7 @@ msgstr "Ronda mód engedélyezése/letiltása"
 
 #: src/GameText.h:330
 msgid "Toggle Contrast, Light and Full Graphics"
-msgstr "kontraszt, egyszerű és teljes grafikus mód közti váltás"
+msgstr "Kontraszt, egyszerű és teljes grafikus mód közti váltás"
 
 #: src/GameText.h:331
 msgid "Toggle theme and ugly over mode"
@@ -1057,7 +1059,7 @@ msgstr "Internetbeállítás"
 
 #: src/GameText.h:340
 msgid "Infos"
-msgstr ""
+msgstr "Infó"
 
 #: src/GameText.h:341
 msgid "View Level Initially"
@@ -1231,12 +1233,12 @@ msgstr "Menü Grafika"
 
 #: src/GameText.h:384
 msgid "Message not sent, unknown players :"
-msgstr ""
+msgstr "Üzenet nincs elküldve, ismeretlen játékosok:"
 
 #: src/GameText.h:385
 #, c-format
 msgid "You got a %s medal"
-msgstr ""
+msgstr "Szereztél egy %s érmet"
 
 #: src/GameText.h:386
 msgid "Contrast"
@@ -1457,7 +1459,7 @@ msgstr "Játékos profilok"
 
 #: src/GameText.h:445
 msgid "Pause when playing X-Moto"
-msgstr ""
+msgstr "Szüneteltet játék közben"
 
 #: src/GameText.h:446
 msgid "Play Next Level"
@@ -1515,7 +1517,7 @@ msgstr "Keverés"
 
 #: src/GameText.h:458
 msgid "Reload files to the database"
-msgstr ""
+msgstr "Fájlok újrabetölrése az adatbázisba"
 
 #: src/GameText.h:459
 msgid "Reloading levels..."
@@ -1592,35 +1594,35 @@ msgstr "Visszajátszások"
 
 #: src/GameText.h:470
 msgid "Rewind while replaying"
-msgstr ""
+msgstr "Ugrás hátra a visszajátszásban"
 
 #: src/GameText.h:471
 msgid "Forward while replaying"
-msgstr ""
+msgstr "Ugrás előre a visszajátszásban"
 
 #: src/GameText.h:472
 msgid "Pause while replaying"
-msgstr ""
+msgstr "Visszajátszás megállítása"
 
 #: src/GameText.h:473
 msgid "Stop while replaying"
-msgstr ""
+msgstr "Visszajátszás leállítása"
 
 #: src/GameText.h:474
 msgid "Play faster while replaying"
-msgstr ""
+msgstr "Visszajátszás gyorsabb lejátszása"
 
 #: src/GameText.h:475
 msgid "Play a bit faster while replaying"
-msgstr ""
+msgstr "Visszajátszás kicsit gyorsabb lejátszása"
 
 #: src/GameText.h:476
 msgid "Play slower while replaying"
-msgstr ""
+msgstr "Visszajátszás lassabb lejátszása"
 
 #: src/GameText.h:477
 msgid "Play a bit slower while replaying"
-msgstr ""
+msgstr "Visszajátszás kicsit lassabb lejátszása"
 
 #: src/GameText.h:478
 msgid "Are you sure you want to reset config to defaults ?"
@@ -1632,7 +1634,7 @@ msgstr "Pálya Újrakezdése"
 
 #: src/GameText.h:480
 msgid "Restart to the last checkpoint"
-msgstr ""
+msgstr "Visszatérés az utolsó ellenörzőponthoz"
 
 #: src/GameText.h:481
 msgid "Restart level"
@@ -1665,7 +1667,7 @@ msgstr "Képernyőfelbontás"
 
 #: src/GameText.h:489
 msgid "Screenshot"
-msgstr ""
+msgstr "Képernyőkép mentése"
 
 #: src/GameText.h:490
 msgid "Show"
@@ -1726,7 +1728,7 @@ msgstr "Hozzáadás/Eltávolítás a kedvenc pályákhoz"
 
 #: src/GameText.h:506
 msgid "Switch FPS"
-msgstr ""
+msgstr "FPS mutatása/elrejtése"
 
 #: src/GameText.h:507
 msgid "Add/remove to blacklisted levels"
@@ -1734,15 +1736,15 @@ msgstr "Hozzáadás/eltávolítás a feketelistához"
 
 #: src/GameText.h:508
 msgid "Switch WWW access"
-msgstr ""
+msgstr "Internet hozzáférés engedélyezése/tiltása"
 
 #: src/GameText.h:509
 msgid "Switch graphics quality mode"
-msgstr ""
+msgstr "Grafika minőségének változtatása"
 
 #: src/GameText.h:510
 msgid "Switch graphics mode"
-msgstr ""
+msgstr "Grafikus mód váltása"
 
 #: src/GameText.h:512
 msgid "Available"
@@ -1782,7 +1784,7 @@ msgstr "Ismeretlen"
 
 #: src/GameText.h:521
 msgid "Unknown players :"
-msgstr ""
+msgstr "Ismeretlen játékosok:"
 
 #: src/GameText.h:522
 msgid "Unpacked levels"
@@ -1850,7 +1852,7 @@ msgstr "Silány pályák lekérdezése"
 
 #: src/GameText.h:536
 msgid "Use permanent console"
-msgstr ""
+msgstr "Állandó konzol használata"
 
 #: src/GameText.h:537
 msgid "Use Environment Vars"
@@ -1886,7 +1888,7 @@ msgstr "Nézet"
 
 #: src/GameText.h:545 src/GameText.h:632
 msgid "View the replay"
-msgstr ""
+msgstr "Mutasd a visszajátszást"
 
 #: src/GameText.h:546
 msgid "View the highscore"
@@ -1928,8 +1930,8 @@ msgstr "%d perc"
 #, c-format
 msgid "only %i"
 msgid_plural "only %i"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Csak %i-t"
+msgstr[1] "Csak %i-t"
 
 #: src/GameText.h:558
 #, c-format
@@ -2101,7 +2103,7 @@ msgstr "%s a(z) %s pályát játssza"
 
 #: src/GameText.h:597
 msgid "Connexion at startup"
-msgstr ""
+msgstr "Automatikus csatlakozás"
 
 #: src/GameText.h:606
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -2245,7 +2247,7 @@ msgstr "Világrekord mutatása játék közben"
 
 #: src/GameText.h:642
 msgid "Show the time you need before achieving the next medal"
-msgstr ""
+msgstr "Következő érem eléréséhez szüksége idő mutatása"
 
 #: src/GameText.h:643
 msgid "Use crappy information from the website to update the crappy pack"
@@ -2253,7 +2255,7 @@ msgstr "A silány pályacsomag frissítése az Internetes információk alapján
 
 #: src/GameText.h:644
 msgid "Make console messages not disappear"
-msgstr ""
+msgstr "Konzol folyamatos megjelenítése"
 
 #: src/GameText.h:645
 msgid "Allow X-Moto to ask you your mind about levels"
@@ -2399,6 +2401,8 @@ msgstr "Összes visszajátszás mutatása ehhez a pályához"
 #: src/GameText.h:680
 msgid "Show information about new players and played levels in the console"
 msgstr ""
+"Információ mutatása az új játékosokról és az éppen játszott pályákról a "
+"konzolban"
 
 #: src/GameText.h:681
 msgid "Run selected replay"
@@ -2477,7 +2481,7 @@ msgstr ""
 
 #: src/GameText.h:700
 msgid "Disable block animations (if X-Moto runs slowly)"
-msgstr ""
+msgstr "Tömb animációk letiltása (ha az X-Moto lassan fut)"
 
 #: src/GameText.h:701
 msgid "View the replay of the room's highscore"
@@ -2789,27 +2793,27 @@ msgstr "Jelentés kihagyása"
 
 #: src/GameText.h:784
 msgid "Pause to watch the level"
-msgstr ""
+msgstr "Szünet pálya bejárásához"
 
 #: src/GameText.h:785
 msgid "Next level"
-msgstr ""
+msgstr "Következő pálya"
 
 #: src/GameText.h:786
 msgid "Previous level"
-msgstr ""
+msgstr "Előző pálya"
 
 #: src/GameText.h:787
 msgid "Switch player"
-msgstr ""
+msgstr "Játékosváltás"
 
 #: src/GameText.h:788
 msgid "Switch trackingshot mode"
-msgstr ""
+msgstr "Követőfelvétel mód be-/kikapcsolása"
 
 #: src/GameText.h:789
 msgid "Switch ghosttrail rendering"
-msgstr ""
+msgstr "Szellem nyom mutatásának be-/kikapcsolása"
 
 #: src/GameText.h:791
 msgid "You don't want to vote"
@@ -2889,7 +2893,7 @@ msgstr "Csatlakozás/lecsatlakozás a szerverről"
 
 #: src/GameText.h:811
 msgid "Start to play with other connected players"
-msgstr ""
+msgstr "Játék más csatlakozott játékosokkal"
 
 #: src/GameText.h:812
 msgid ""
@@ -2903,7 +2907,7 @@ msgstr "Hálózati játék mód: a többiek, csak mint szellemek látása"
 
 #: src/GameText.h:814
 msgid "Automatically connect to the server at startup"
-msgstr ""
+msgstr "Automatikus csatlakozás a szerverhez játékinduláskor"
 
 #: src/GameText.h:816
 msgid "Levels with no highscore"
@@ -3465,7 +3469,7 @@ msgid ""
 "by pressing :"
 msgstr ""
 "Ne feledd, meg tudsz fordulni a motor körül\n"
-"Nyomd le :"
+"Nyomd le : "
 
 #: src/LevelsText.h:53
 msgid "That was pretty easy, right?"
