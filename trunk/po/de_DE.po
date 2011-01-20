@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
 "POT-Creation-Date: 2011-01-19 19:04+0100\n"
-"PO-Revision-Date: 2010-11-18 17:15+0100\n"
+"PO-Revision-Date: 2011-01-20 11:04+0100\n"
 "Last-Translator: Jens Erler <mothbox at gmx.net>\n"
 "Language-Team: German\n"
 "Language: \n"
@@ -105,11 +105,11 @@ msgstr "Automatisches Speichern von Replays"
 
 #: src/GameText.h:57
 msgid "Disable Animations"
-msgstr "Animationen deaktivieren"
+msgstr "Textur-Animationen deaktivieren"
 
 #: src/GameText.h:58
 msgid "Show game information in the console"
-msgstr "Spielinformationen in der Konsole zeigen"
+msgstr "Spielinformationen im Chat zeigen"
 
 #: src/GameText.h:59
 msgid "Auto zoom"
@@ -125,7 +125,7 @@ msgstr "Aktiver Kamera-Zoom"
 
 #: src/GameText.h:62
 msgid "Use Trail Cam"
-msgstr "Trail Cam aktivieren"
+msgstr "Trail-Cam aktivieren"
 
 #: src/GameText.h:63
 msgid "Beating mode"
@@ -184,11 +184,11 @@ msgstr "Taste ändern"
 msgid ""
 "Use the tabulation key to complete player names. Use the * to send private "
 "messages."
-msgstr ""
+msgstr "Spielernamen vervollständigen: Tab.  Private Nachrichten: *."
 
 #: src/GameText.h:77
 msgid "Open chat dialog box"
-msgstr ""
+msgstr "Öffnen der Chat-Dialogbox"
 
 #: src/GameText.h:78
 msgid "Checking for new or updated levels..."
@@ -275,7 +275,7 @@ msgstr "Meta rechts"
 
 #: src/GameText.h:99
 msgid "Abort the process"
-msgstr ""
+msgstr "Abbrechen"
 
 #: src/GameText.h:100 src/GameText.h:114
 #, c-format
@@ -670,7 +670,7 @@ msgstr ""
 
 #: src/GameText.h:228
 msgid "Downloading the level..."
-msgstr ""
+msgstr "Das Level wird heruntergeladen..."
 
 #: src/GameText.h:229
 msgid "Checking for new levels..."
@@ -678,7 +678,7 @@ msgstr "Suche nach neuen Levels..."
 
 #: src/GameText.h:230
 msgid "Downloading the replay..."
-msgstr ""
+msgstr "Das Replay wird heruntergeladen..."
 
 #: src/GameText.h:231
 msgid "Loading new and updated levels..."
@@ -738,7 +738,7 @@ msgstr "Zeige Weltrekord im Spiel"
 
 #: src/GameText.h:244
 msgid "Show next medal in-game"
-msgstr ""
+msgstr "Zeige die nächste Medaille im Spiel"
 
 #: src/GameText.h:245
 msgid "Enable menu music"
@@ -1002,7 +1002,7 @@ msgstr "Trail Cam aktivieren / deaktivieren"
 
 #: src/GameText.h:322
 msgid "Toggle Display Medals,Display WR"
-msgstr ""
+msgstr "Umschalten zw. Anzeige der Medaillen und WR"
 
 #: src/GameText.h:323
 msgid "Show this help"
@@ -1010,7 +1010,7 @@ msgstr "Diese Hilfe anzeigen"
 
 #: src/GameText.h:324
 msgid "Switch biker"
-msgstr ""
+msgstr "Wechsle den Fahrer"
 
 #: src/GameText.h:325
 msgid "Toggle favorite"
@@ -1063,7 +1063,7 @@ msgstr "Interneteinstellungen"
 
 #: src/GameText.h:340
 msgid "Infos"
-msgstr ""
+msgstr "Infos"
 
 #: src/GameText.h:341
 msgid "View Level Initially"
@@ -1237,12 +1237,12 @@ msgstr "Menügrafik"
 
 #: src/GameText.h:384
 msgid "Message not sent, unknown players :"
-msgstr ""
+msgstr "Nachricht nicht gesendet; unbekannte Spieler:"
 
 #: src/GameText.h:385
 #, c-format
 msgid "You got a %s medal"
-msgstr ""
+msgstr "Du hast die %s Medaille erlangt"
 
 #: src/GameText.h:386
 msgid "Contrast"
@@ -1464,7 +1464,7 @@ msgstr "Spielerprofile"
 
 #: src/GameText.h:445
 msgid "Pause when playing X-Moto"
-msgstr ""
+msgstr "Pause im Spiel"
 
 #: src/GameText.h:446
 msgid "Play Next Level"
@@ -1523,7 +1523,7 @@ msgstr "Zufalls-Levels"
 
 #: src/GameText.h:458
 msgid "Reload files to the database"
-msgstr ""
+msgstr "Die Datenbank wird neu eingelesen"
 
 #: src/GameText.h:459
 msgid "Reloading levels..."
@@ -1600,35 +1600,35 @@ msgstr "Replays"
 
 #: src/GameText.h:470
 msgid "Rewind while replaying"
-msgstr ""
+msgstr "Rückspulen während des Replays"
 
 #: src/GameText.h:471
 msgid "Forward while replaying"
-msgstr ""
+msgstr "Vorspulen während des Replays"
 
 #: src/GameText.h:472
 msgid "Pause while replaying"
-msgstr ""
+msgstr "Pausiere das Replay"
 
 #: src/GameText.h:473
 msgid "Stop while replaying"
-msgstr ""
+msgstr "Stoppen des Replays"
 
 #: src/GameText.h:474
 msgid "Play faster while replaying"
-msgstr ""
+msgstr "Replay schneller abspielen"
 
 #: src/GameText.h:475
 msgid "Play a bit faster while replaying"
-msgstr ""
+msgstr "Abspielgeschwindigkeit des Replays beschleunigen"
 
 #: src/GameText.h:476
 msgid "Play slower while replaying"
-msgstr ""
+msgstr "Abspielgeschwindigkeit des Replays reduzieren"
 
 #: src/GameText.h:477
 msgid "Play a bit slower while replaying"
-msgstr ""
+msgstr "Abspielgeschwindigkeit des Replays leicht reduzieren"
 
 #: src/GameText.h:478
 msgid "Are you sure you want to reset config to defaults ?"
@@ -1640,7 +1640,7 @@ msgstr "Level neustarten"
 
 #: src/GameText.h:480
 msgid "Restart to the last checkpoint"
-msgstr ""
+msgstr "Neustart vom letzten Checkpoint"
 
 #: src/GameText.h:481
 msgid "Restart level"
@@ -1673,7 +1673,7 @@ msgstr "Bildschirmauflösung"
 
 #: src/GameText.h:489
 msgid "Screenshot"
-msgstr ""
+msgstr "Bildschirmfoto"
 
 #: src/GameText.h:490
 msgid "Show"
@@ -1734,7 +1734,7 @@ msgstr "Level der Favoritenliste hinzufügen/entfernen"
 
 #: src/GameText.h:506
 msgid "Switch FPS"
-msgstr ""
+msgstr "FPS-Anzeige ein-/ausschalten"
 
 #: src/GameText.h:507
 msgid "Add/remove to blacklisted levels"
@@ -1742,15 +1742,15 @@ msgstr "Level der Schwarzen Liste hinzufügen/entfernen"
 
 #: src/GameText.h:508
 msgid "Switch WWW access"
-msgstr ""
+msgstr "WWW-Zugriff ein-/ausschalten"
 
 #: src/GameText.h:509
 msgid "Switch graphics quality mode"
-msgstr ""
+msgstr "Grafikqualitätsstufen umschalten"
 
 #: src/GameText.h:510
 msgid "Switch graphics mode"
-msgstr ""
+msgstr "Grafikmodi umschalten"
 
 #: src/GameText.h:512
 msgid "Available"
@@ -1790,7 +1790,7 @@ msgstr "Unbekannt"
 
 #: src/GameText.h:521
 msgid "Unknown players :"
-msgstr ""
+msgstr "Unbekannte Spieler:"
 
 #: src/GameText.h:522
 msgid "Unpacked levels"
@@ -1938,8 +1938,8 @@ msgstr "%d Minuten"
 #, c-format
 msgid "only %i"
 msgid_plural "only %i"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "nur %i"
+msgstr[1] "nur %i"
 
 #: src/GameText.h:558
 #, c-format
@@ -2256,7 +2256,7 @@ msgstr "Weltrekord beim Spielen anzeigen"
 
 #: src/GameText.h:642
 msgid "Show the time you need before achieving the next medal"
-msgstr ""
+msgstr "Zeige die zum Erreichen der nächsten Medaille benötigte Zeit"
 
 #: src/GameText.h:643
 msgid "Use crappy information from the website to update the crappy pack"
@@ -2813,27 +2813,27 @@ msgstr "Abfrage überspringen"
 
 #: src/GameText.h:784
 msgid "Pause to watch the level"
-msgstr ""
+msgstr "Pause mit Level-Übersicht"
 
 #: src/GameText.h:785
 msgid "Next level"
-msgstr ""
+msgstr "Nächstes Level"
 
 #: src/GameText.h:786
 msgid "Previous level"
-msgstr ""
+msgstr "Vorheriges Level"
 
 #: src/GameText.h:787
 msgid "Switch player"
-msgstr ""
+msgstr "Wechsel der Kamera zw. Spielern"
 
 #: src/GameText.h:788
 msgid "Switch trackingshot mode"
-msgstr ""
+msgstr "Kameramodus wechseln"
 
 #: src/GameText.h:789
 msgid "Switch ghosttrail rendering"
-msgstr ""
+msgstr "Ghosttrail-Anzeige ein-/ausschalten"
 
 #: src/GameText.h:791
 msgid "You don't want to vote"
