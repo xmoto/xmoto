@@ -107,11 +107,11 @@ msgstr "Автоматическое сохранение демок"
 
 #: src/GameText.h:57
 msgid "Disable Animations"
-msgstr ""
+msgstr "Отключить анимацию"
 
 #: src/GameText.h:58
 msgid "Show game information in the console"
-msgstr ""
+msgstr "Показать информацию об игре в консоли"
 
 #: src/GameText.h:59
 msgid "Auto zoom"
@@ -187,10 +187,12 @@ msgid ""
 "Use the tabulation key to complete player names. Use the * to send private "
 "messages."
 msgstr ""
+"Используйте клавишу табуляции для уточнения имён других игроков. Используйте "
+"клавишу * чтобы отправить конфиденциальное сообщение"
 
 #: src/GameText.h:77
 msgid "Open chat dialog box"
-msgstr ""
+msgstr "Открыть окно для чата"
 
 #: src/GameText.h:78
 msgid "Checking for new or updated levels..."
@@ -230,11 +232,11 @@ msgstr "Настроить джойстик..."
 
 #: src/GameText.h:86
 msgid "Decrease console history size"
-msgstr ""
+msgstr "Уменьшить максимальный объем информации из истории чата"
 
 #: src/GameText.h:87
 msgid "Increase console history size"
-msgstr ""
+msgstr "Увеличить максимальный объем информации из истории чата"
 
 #: src/GameText.h:88
 msgid "Controls"
@@ -278,7 +280,7 @@ msgstr "правая кнопка windows"
 
 #: src/GameText.h:99
 msgid "Abort the process"
-msgstr ""
+msgstr "Прервать процесс"
 
 #: src/GameText.h:100 src/GameText.h:114
 #, c-format
@@ -368,11 +370,11 @@ msgstr "Графика"
 
 #: src/GameText.h:142
 msgid "Music"
-msgstr ""
+msgstr "Музыка"
 
 #: src/GameText.h:147
 msgid "Sound Effects"
-msgstr ""
+msgstr "Звуковые эФФекты"
 
 #: src/GameText.h:151
 msgid "MacOS X Support"
@@ -396,7 +398,7 @@ msgstr "Норвежский"
 
 #: src/GameText.h:158
 msgid "English"
-msgstr ""
+msgstr "Английский"
 
 #: src/GameText.h:159
 msgid "German"
@@ -472,7 +474,7 @@ msgstr ""
 
 #: src/GameText.h:175
 msgid "Taiwanese"
-msgstr ""
+msgstr "Таиванский"
 
 #: src/GameText.h:176
 msgid "Galician"
@@ -540,7 +542,7 @@ msgstr "Игрок"
 
 #: src/GameText.h:199
 msgid "Play now !"
-msgstr ""
+msgstr "Играть сейчас"
 
 #: src/GameText.h:200
 msgid "Play music on all levels"
@@ -652,7 +654,7 @@ msgstr "Загрузка Призрака"
 
 #: src/GameText.h:224
 msgid "Downloading ghosts..."
-msgstr ""
+msgstr "Загрузка Призраков"
 
 #: src/GameText.h:225
 msgid "Downloading the highscore..."
@@ -672,7 +674,7 @@ msgstr ""
 
 #: src/GameText.h:228
 msgid "Downloading the level..."
-msgstr ""
+msgstr "Загрузка уровня"
 
 #: src/GameText.h:229
 msgid "Checking for new levels..."
@@ -680,7 +682,7 @@ msgstr "Поиск новых уровней"
 
 #: src/GameText.h:230
 msgid "Downloading the replay..."
-msgstr ""
+msgstr "Загрузка демки"
 
 #: src/GameText.h:231
 msgid "Loading new and updated levels..."
@@ -740,7 +742,7 @@ msgstr "Показывать мировой рекорд во время игр�
 
 #: src/GameText.h:244
 msgid "Show next medal in-game"
-msgstr ""
+msgstr "Показать следующую медаль в игре"
 
 #: src/GameText.h:245
 msgid "Enable menu music"
@@ -1005,7 +1007,7 @@ msgstr "Вкл/выкл следящую камеру"
 
 #: src/GameText.h:322
 msgid "Toggle Display Medals,Display WR"
-msgstr ""
+msgstr "Вкл/Выкл отображение медалей, WR"
 
 #: src/GameText.h:323
 msgid "Show this help"
@@ -1013,7 +1015,7 @@ msgstr "Показать эту справку"
 
 #: src/GameText.h:324
 msgid "Switch biker"
-msgstr ""
+msgstr "Сменить байкера"
 
 #: src/GameText.h:325
 msgid "Toggle favorite"
@@ -1066,7 +1068,7 @@ msgstr "Настройка интернет-соединения"
 
 #: src/GameText.h:340
 msgid "Infos"
-msgstr ""
+msgstr "Информация"
 
 #: src/GameText.h:341
 msgid "View Level Initially"
@@ -1090,7 +1092,7 @@ msgstr "Нажмите ENTER, чтобы попробовать снова"
 
 #: src/GameText.h:346
 msgid "Press BACKSPACE to return to Checkpoint"
-msgstr ""
+msgstr "Нажми BACKSPACE чтобы возвратиться к чекпойнту"
 
 #: src/GameText.h:347
 msgid "Press ESC to display the menu"
@@ -1240,12 +1242,12 @@ msgstr "Графика меню"
 
 #: src/GameText.h:384
 msgid "Message not sent, unknown players :"
-msgstr ""
+msgstr "Сообщение не отправлено, нейзвестные игроки :"
 
 #: src/GameText.h:385
 #, c-format
 msgid "You got a %s medal"
-msgstr ""
+msgstr "Вы получили %s медаль"
 
 #: src/GameText.h:386
 msgid "Contrast"
@@ -1469,7 +1471,7 @@ msgstr "Профили игроков"
 
 #: src/GameText.h:445
 msgid "Pause when playing X-Moto"
-msgstr ""
+msgstr "Пауза во время игры X-Moto"
 
 #: src/GameText.h:446
 msgid "Play Next Level"
@@ -1527,7 +1529,7 @@ msgstr "Перемешать"
 
 #: src/GameText.h:458
 msgid "Reload files to the database"
-msgstr ""
+msgstr "Перезагрузка файлов в базу данных"
 
 #: src/GameText.h:459
 msgid "Reloading levels..."
@@ -1644,7 +1646,7 @@ msgstr "Перезапустить уровень"
 
 #: src/GameText.h:480
 msgid "Restart to the last checkpoint"
-msgstr ""
+msgstr "Переиграть с последнего чекпойнта"
 
 #: src/GameText.h:481
 msgid "Restart level"
@@ -1677,7 +1679,7 @@ msgstr "Разрешение экрана"
 
 #: src/GameText.h:489
 msgid "Screenshot"
-msgstr ""
+msgstr "Скриншот"
 
 #: src/GameText.h:490
 msgid "Show"
@@ -1738,7 +1740,7 @@ msgstr "Добавить/удалить из избранных уровней"
 
 #: src/GameText.h:506
 msgid "Switch FPS"
-msgstr ""
+msgstr "Вкл/выкл отображение FPS"
 
 #: src/GameText.h:507
 msgid "Add/remove to blacklisted levels"
@@ -1746,15 +1748,15 @@ msgstr "Добавить/удалить из игнора"
 
 #: src/GameText.h:508
 msgid "Switch WWW access"
-msgstr ""
+msgstr "Вкл/выкл доступ к WWW"
 
 #: src/GameText.h:509
 msgid "Switch graphics quality mode"
-msgstr ""
+msgstr "Сменить качество графики"
 
 #: src/GameText.h:510
 msgid "Switch graphics mode"
-msgstr ""
+msgstr "Сменить графический режим"
 
 #: src/GameText.h:512
 msgid "Available"
@@ -1794,7 +1796,7 @@ msgstr "Неизвестный"
 
 #: src/GameText.h:521
 msgid "Unknown players :"
-msgstr ""
+msgstr "Неизвестные игроки :"
 
 #: src/GameText.h:522
 msgid "Unpacked levels"
@@ -1864,7 +1866,7 @@ msgstr "Использовать информацию о плохих уровн
 
 #: src/GameText.h:536
 msgid "Use permanent console"
-msgstr ""
+msgstr "Вкл/выкл постоянное отображения консоли"
 
 #: src/GameText.h:537
 msgid "Use Environment Vars"
@@ -1900,7 +1902,7 @@ msgstr "Показать"
 
 #: src/GameText.h:545 src/GameText.h:632
 msgid "View the replay"
-msgstr ""
+msgstr "Показать демку"
 
 #: src/GameText.h:546
 msgid "View the highscore"
@@ -1942,9 +1944,9 @@ msgstr "%d минут"
 #, c-format
 msgid "only %i"
 msgid_plural "only %i"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "только %i"
+msgstr[1] "только %i"
+msgstr[2] "только %i"
 
 #: src/GameText.h:558
 #, c-format
@@ -2122,7 +2124,7 @@ msgstr "%s проходит уровень %s"
 
 #: src/GameText.h:597
 msgid "Connexion at startup"
-msgstr ""
+msgstr "Подключится при запуске"
 
 #: src/GameText.h:606
 msgid "Download the latest X-Moto world records and check for new levels"
@@ -2267,7 +2269,7 @@ msgstr "Показывать мировой рекорд уровня во вр�
 
 #: src/GameText.h:642
 msgid "Show the time you need before achieving the next medal"
-msgstr ""
+msgstr "Показать необходимое время для достижения следующей медали"
 
 #: src/GameText.h:643
 msgid "Use crappy information from the website to update the crappy pack"
@@ -2275,7 +2277,7 @@ msgstr "Скачать с сервера список плохих уровне�
 
 #: src/GameText.h:644
 msgid "Make console messages not disappear"
-msgstr ""
+msgstr "Сделать консольные сообщения неисчезаимыми"
 
 #: src/GameText.h:645
 msgid "Allow X-Moto to ask you your mind about levels"
@@ -2421,7 +2423,7 @@ msgstr "Показывать все дэмки на этом уровне"
 
 #: src/GameText.h:680
 msgid "Show information about new players and played levels in the console"
-msgstr ""
+msgstr "Показывать информацию об игроках и про играемые уровни в консоли"
 
 #: src/GameText.h:681
 msgid "Run selected replay"
@@ -2502,7 +2504,7 @@ msgstr "Если вы установили рекорд, то автоматич
 
 #: src/GameText.h:700
 msgid "Disable block animations (if X-Moto runs slowly)"
-msgstr ""
+msgstr "Отключить анимацию блоков (если X-Moto работает медленно)"
 
 #: src/GameText.h:701
 msgid "View the replay of the room's highscore"
@@ -2813,27 +2815,27 @@ msgstr "Пропустить этот доклад"
 
 #: src/GameText.h:784
 msgid "Pause to watch the level"
-msgstr ""
+msgstr "Сделать паузу чтобы просмотреть уровень"
 
 #: src/GameText.h:785
 msgid "Next level"
-msgstr ""
+msgstr "Следуюший уровень"
 
 #: src/GameText.h:786
 msgid "Previous level"
-msgstr ""
+msgstr "Предыдущий уровень"
 
 #: src/GameText.h:787
 msgid "Switch player"
-msgstr ""
+msgstr "Сменить игрока"
 
 #: src/GameText.h:788
 msgid "Switch trackingshot mode"
-msgstr ""
+msgstr "Вкл/выкл trackingshot режим"
 
 #: src/GameText.h:789
 msgid "Switch ghosttrail rendering"
-msgstr ""
+msgstr "Вкл/выкл отображение ghosttrail"
 
 #: src/GameText.h:791
 msgid "You don't want to vote"
@@ -2913,7 +2915,7 @@ msgstr "Подключить/отключить клиент от сервера
 
 #: src/GameText.h:811
 msgid "Start to play with other connected players"
-msgstr ""
+msgstr "Начать играть с другими игроками"
 
 #: src/GameText.h:812
 msgid ""
@@ -2928,7 +2930,7 @@ msgstr "Режим сетевой игры: видеть других игрок
 
 #: src/GameText.h:814
 msgid "Automatically connect to the server at startup"
-msgstr ""
+msgstr "Автоматически подключиться к серверу при запуске игры"
 
 #: src/GameText.h:816
 msgid "Levels with no highscore"
