@@ -1036,11 +1036,13 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
   std::string v_mod_userCustomDirPath = i_userCustomDirPath;
 
   // make v_mod_userCustomDirPath absolute
-  if(isPathAbsolute(v_mod_userCustomDirPath) == false) {
-    std::string v_pwd = getenv("PWD");
-    v_mod_userCustomDirPath = v_pwd + "/" + v_mod_userCustomDirPath;
+  if(v_mod_userCustomDirPath != "") {
     if(isPathAbsolute(v_mod_userCustomDirPath) == false) {
-      throw Exception("Custom directory must be absolute");
+      std::string v_pwd = getenv("PWD");
+      v_mod_userCustomDirPath = v_pwd + "/" + v_mod_userCustomDirPath;
+      if(isPathAbsolute(v_mod_userCustomDirPath) == false) {
+	throw Exception("Custom directory must be absolute");
+      }
     }
   }
 
