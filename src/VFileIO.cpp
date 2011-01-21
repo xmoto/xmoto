@@ -1033,6 +1033,17 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
   m_UserDataDirUTF8 = "";
   m_SystemDataDir   = "";
 
+  std::string v_mod_userCustomDirPath = i_userCustomDirPath;
+
+  // make v_mod_userCustomDirPath absolute
+  if(isPathAbsolute(v_mod_userCustomDirPath) == false) {
+    std::string v_pwd = getenv("PWD");
+    v_mod_userCustomDirPath = v_pwd + "/" + v_mod_userCustomDirPath;
+    if(isPathAbsolute(v_mod_userCustomDirPath) == false) {
+      throw Exception("Custom directory must be absolute");
+    }
+  }
+
 #ifndef WIN32
   // xdg
   if( (m_xdgHd = (xdgHandle*) malloc(sizeof(xdgHandle))) == NULL) {
@@ -1058,10 +1069,10 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
   /* Valid path? */
   if(isDir(cModulePath)) {
     /* Alright, use this dir */    
-    if(i_userCustomDirPath != "") {
-      m_UserDataDir   = m_UserDataDirUTF8 = i_userCustomDirPath;
-      m_UserConfigDir = i_userCustomDirPath;
-      m_UserCacheDir  = i_userCustomDirPath;
+    if(v_mod_userCustomDirPath != "") {
+      m_UserDataDir   = m_UserDataDirUTF8 = v_mod_userCustomDirPath;
+      m_UserConfigDir = v_mod_userCustomDirPath;
+      m_UserCacheDir  = v_mod_userCustomDirPath;
     } else {
 
       /* not used even if it works because i'm not sure it returns utf-8 chars, required for sqlite_open
@@ -1081,10 +1092,10 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
   } 
   else throw Exception("invalid process directory");
 #elif defined(__MORPHOS__) || defined(__amigaos4__)         
-  if(i_userCustomDirPath != "") {
-    m_UserDataDir   = m_UserDataDirUTF8 = i_userCustomDirPath;
-    m_UserConfigDir = i_userCustomDirPath;
-    m_UserCacheDir  = i_userCustomDirPath;
+  if(v_mod_userCustomDirPath != "") {
+    m_UserDataDir   = m_UserDataDirUTF8 = v_mod_userCustomDirPath;
+    m_UserConfigDir = v_mod_userCustomDirPath;
+    m_UserCacheDir  = v_mod_userCustomDirPath;
   } else {
     m_UserDataDir = "PROGDIR:userdata"; /*getenv("HOME");*/
     if(!isDir(m_UserDataDir))
@@ -1105,10 +1116,10 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
       /* Determine users home dir, so we can find out where to get/save user 
 	 files */
 
-  if(i_userCustomDirPath != "") {
-    m_UserDataDir   = m_UserDataDirUTF8 = i_userCustomDirPath;
-    m_UserConfigDir = i_userCustomDirPath;
-    m_UserCacheDir  = i_userCustomDirPath;
+  if(v_mod_userCustomDirPath != "") {
+    m_UserDataDir   = m_UserDataDirUTF8 = v_mod_userCustomDirPath;
+    m_UserConfigDir = v_mod_userCustomDirPath;
+    m_UserCacheDir  = v_mod_userCustomDirPath;
   } else {
     m_UserDataDir     = xdgDataHome(m_xdgHd)   + std::string("/") + AppDir;
     m_UserConfigDir   = xdgConfigHome(m_xdgHd) + std::string("/") + AppDir;
