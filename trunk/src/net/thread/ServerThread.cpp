@@ -1458,11 +1458,6 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
 		 m_clients[i]->xmversion().c_str(),
 		 m_clients[i]->protocolVersion());
 	v_answer += v_clientstr;
-	if(i % 3 == 2) {
-	  v_answer += "\n";
-	}
-      }
-      if(m_clients.size() %3 != 2) {
 	v_answer += "\n";
       }
     }
