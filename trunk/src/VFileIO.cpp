@@ -75,7 +75,36 @@ std::string win32_getHomeDir(bool i_asUtf8 = false) {
 
   return v_dest;
 }
+
+std::string win32_getPWDDir(bool i_asUtf8 = false) {
+ std::string v_dest;
+ int v_len;
+
+ if(i_asUtf8) {
+   WCHAR szProfilePath[1024];
+   char v_tmp[1024];
+
+   v_len = GetCurrentDirectoryW(1024, szProfilePath);
+   WideCharToMultiByte(CP_UTF8, 0, szProfilePath, -1, v_tmp, 1024, NULL, NULL);
+   v_dest = v_tmp;
+
+ } else {
+   TCHAR szProfilePath[1024];
+   v_len = GetCurrentDirectory(1024, szProfilePath);
+   v_dest = szProfilePath;
+ }
+
+ return v_dest;
+}
 #endif
+
+std::string getPWDDir(bool i_asUtf8 = false) {
+#ifdef WIN32
+      return win32_getPWDDir(i_asUtf8);
+#else
+      return std::string(getenv("PWD"));
+#endif
+}
 
 #if !defined(WIN32) && !defined(__MORPHOS__) && !defined(__amigaos4__)
 void strlwr(char *pc) {
@@ -1033,13 +1062,14 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
   m_UserDataDirUTF8 = "";
   m_SystemDataDir   = "";
 
-  std::string v_mod_userCustomDirPath = i_userCustomDirPath;
+  std::string v_mod_userCustomDirPath     = i_userCustomDirPath;
+  std::string v_mod_userCustomDirPathUtf8 = i_userCustomDirPath; // the argument must be utf8 -- so it can not work on windows for example
 
   // make v_mod_userCustomDirPath absolute
   if(v_mod_userCustomDirPath != "") {
     if(isPathAbsolute(v_mod_userCustomDirPath) == false) {
-      std::string v_pwd = getenv("PWD");
-      v_mod_userCustomDirPath = v_pwd + "/" + v_mod_userCustomDirPath;
+      v_mod_userCustomDirPath     = getPWDDir()     + "/" + v_mod_userCustomDirPath;
+      v_mod_userCustomDirPathUtf8 = getPWDDir(true) + "/" + v_mod_userCustomDirPathUtf8;
       if(isPathAbsolute(v_mod_userCustomDirPath) == false) {
 	throw Exception("Custom directory must be absolute");
       }
@@ -1072,7 +1102,8 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
   if(isDir(cModulePath)) {
     /* Alright, use this dir */    
     if(v_mod_userCustomDirPath != "") {
-      m_UserDataDir   = m_UserDataDirUTF8 = v_mod_userCustomDirPath;
+      m_UserDataDir     = v_mod_userCustomDirPath;
+      m_UserDataDirUTF8 = v_mod_userCustomDirPathUtf8;
       m_UserConfigDir = v_mod_userCustomDirPath;
       m_UserCacheDir  = v_mod_userCustomDirPath;
     } else {
@@ -1095,7 +1126,8 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
   else throw Exception("invalid process directory");
 #elif defined(__MORPHOS__) || defined(__amigaos4__)         
   if(v_mod_userCustomDirPath != "") {
-    m_UserDataDir   = m_UserDataDirUTF8 = v_mod_userCustomDirPath;
+    m_UserDataDir     = v_mod_userCustomDirPath;
+    m_UserDataDirUTF8 = v_mod_userCustomDirPathUtf8;
     m_UserConfigDir = v_mod_userCustomDirPath;
     m_UserCacheDir  = v_mod_userCustomDirPath;
   } else {
@@ -1119,7 +1151,8 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
 	 files */
 
   if(v_mod_userCustomDirPath != "") {
-    m_UserDataDir   = m_UserDataDirUTF8 = v_mod_userCustomDirPath;
+    m_UserDataDir     = v_mod_userCustomDirPath;
+    m_UserDataDirUTF8 = v_mod_userCustomDirPathUtf8;
     m_UserConfigDir = v_mod_userCustomDirPath;
     m_UserCacheDir  = v_mod_userCustomDirPath;
   } else {
