@@ -166,7 +166,7 @@ int tim_png_load(tim_session_t *pSession,tim_image_t **ppImage,tim_image_info_t 
 			png_set_palette_to_rgb(PngPtr);
 			
 		if(nColorType==PNG_COLOR_TYPE_GRAY && nBitDepth<8)
-			png_set_gray_1_2_4_to_8(PngPtr);
+			png_set_expand_gray_1_2_4_to_8(PngPtr);
 
 		if(png_get_valid(PngPtr,InfoPtr,PNG_INFO_tRNS))
 			png_set_tRNS_to_alpha(PngPtr);
