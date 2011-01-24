@@ -338,8 +338,10 @@ Texture* GameRenderer::loadTexture(std::string textureName)
 void GameRenderer::unprepareForNewLevel(Universe* i_universe) {
   Theme::instance()->getTextureManager()->unregister(m_registeringValue);
   
-  for(unsigned int u=0; u<i_universe->getScenes().size(); u++) {
-    GeomsManager::instance()->unregister(i_universe->getScenes()[u]);
+  if(i_universe != NULL) {
+    for(unsigned int u=0; u<i_universe->getScenes().size(); u++) {
+      GeomsManager::instance()->unregister(i_universe->getScenes()[u]);
+    }
   }
 }
   
