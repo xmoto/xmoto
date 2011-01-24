@@ -278,21 +278,23 @@ bool StateScene::render()
     }
 
     // downloading ghost information
-    if(m_universe->waitingForGhosts()) {
-      FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
-      FontGlyph* v_fg   = v_fm->getGlyph(GAMETEXT_DLGHOSTS);
-      int v_border = 5;
+    if(m_universe != NULL) {
+      if(m_universe->waitingForGhosts()) {
+	FontManager* v_fm = GameApp::instance()->getDrawLib()->getFontSmall();
+	FontGlyph* v_fg   = v_fm->getGlyph(GAMETEXT_DLGHOSTS);
+	int v_border = 5;
 
-      GameApp::instance()->getDrawLib()->drawBox(Vector2f(m_screen.getDispWidth()/2 - v_fg->realWidth()/2 -v_border,
-							  m_screen.getDispHeight() - v_fg->realHeight() - 2*v_border),
-						 Vector2f(m_screen.getDispWidth()/2 + v_fg->realWidth()/2 + v_border,
-							  m_screen.getDispHeight() + v_border),
-						 0.0f, MAKE_COLOR(255,255,255,50));
-
-      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
-			m_screen.getDispWidth()/2 - v_fg->realWidth()/2,
-			m_screen.getDispHeight() - v_fg->realHeight() - v_border,
-			MAKE_COLOR(255,255,255,255), 0.0, true);
+	GameApp::instance()->getDrawLib()->drawBox(Vector2f(m_screen.getDispWidth()/2 - v_fg->realWidth()/2 -v_border,
+							    m_screen.getDispHeight() - v_fg->realHeight() - 2*v_border),
+						   Vector2f(m_screen.getDispWidth()/2 + v_fg->realWidth()/2 + v_border,
+							    m_screen.getDispHeight() + v_border),
+						   0.0f, MAKE_COLOR(255,255,255,50));
+	
+	v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
+			  m_screen.getDispWidth()/2 - v_fg->realWidth()/2,
+			  m_screen.getDispHeight() - v_fg->realHeight() - v_border,
+			  MAKE_COLOR(255,255,255,255), 0.0, true);
+      }
     }
 
 
@@ -310,16 +312,18 @@ void StateScene::onRenderFlush() {
   // take a screenshot
   if(XMSession::instance()->enableVideoRecording()) {
     if(StateManager::instance()->getVideoRecorder() != NULL) {
-      if(m_universe->getScenes().size() > 0) {
-	if( (XMSession::instance()->videoRecordingStartTime() < 0 ||
-	     XMSession::instance()->videoRecordingStartTime() <= m_universe->getScenes()[0]->getTime()
-	     )
-	    &&
-	    (XMSession::instance()->videoRecordingEndTime() < 0 ||
-	     XMSession::instance()->videoRecordingEndTime() >= m_universe->getScenes()[0]->getTime()
-	     )
-	    ) {
-	  StateManager::instance()->getVideoRecorder()->read(m_universe->getScenes()[0]->getTime());
+      if(m_universe != NULL) {
+	if(m_universe->getScenes().size() > 0) {
+	  if( (XMSession::instance()->videoRecordingStartTime() < 0 ||
+	       XMSession::instance()->videoRecordingStartTime() <= m_universe->getScenes()[0]->getTime()
+	       )
+	      &&
+	      (XMSession::instance()->videoRecordingEndTime() < 0 ||
+	       XMSession::instance()->videoRecordingEndTime() >= m_universe->getScenes()[0]->getTime()
+	       )
+	      ) {
+	    StateManager::instance()->getVideoRecorder()->read(m_universe->getScenes()[0]->getTime());
+	  }
 	}
       }
     }
@@ -810,12 +814,16 @@ void StateScene::executeOneCommand(std::string cmd, std::string args)
   }
 
   else if(cmd == "REPLAY_DOWNLOADED") {
-    m_universe->markDownloadedGhost(args, true);
+    if(m_universe != NULL) {
+      m_universe->markDownloadedGhost(args, true);
+    }
   }
 
   else if(cmd == "REPLAY_FAILEDTODOWNLOAD") {
     /* remove it from the waiting replays to be downloaded */
-    m_universe->markDownloadedGhost(args, false);
+    if(m_universe != NULL) {
+      m_universe->markDownloadedGhost(args, false);
+    }
   }
 
   else {
