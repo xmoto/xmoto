@@ -24,7 +24,7 @@
 #include "md5sum/md5file.h"
 #include <sstream>
 
-#define DEFAULT_WWW_MSGFILE "wwwMsg.xml"
+#define DEFAULT_WWW_MSGFILE(A) "wwwMsg" A ".xml"
 
 bool WebRoom::downloadReplayExists(const std::string& i_url) {
   std::string i_rplFilename = XMFS::getUserReplaysDir()
@@ -313,7 +313,7 @@ void FSWeb::uploadReplay(const std::string& p_replayFilename,
 
   FILE *v_destinationFile;
   std::string v_local_file;
-  v_local_file = XMFS::getUserDir(FDT_CACHE) + "/" + DEFAULT_WWW_MSGFILE;
+  v_local_file = XMFS::getUserDir(FDT_CACHE) + "/" + DEFAULT_WWW_MSGFILE("UR");
 
   struct curl_httppost *v_post, *v_last;
 
@@ -321,7 +321,7 @@ void FSWeb::uploadReplay(const std::string& p_replayFilename,
 
   /* open the file */
   if( (v_destinationFile = fopen(v_local_file.c_str(), "wb")) == false) {
-    throw Exception("error : unable to open output file " DEFAULT_WWW_MSGFILE);
+    throw Exception("error : unable to open output file " DEFAULT_WWW_MSGFILE("UR"));
   }
       
   v_curl = curl_easy_init();
@@ -471,15 +471,15 @@ void FSWeb::sendVote(const std::string& p_id_level,
 
   FILE *v_destinationFile;
   std::string v_local_file;
-  v_local_file = XMFS::getUserDir(FDT_CACHE) + "/" + DEFAULT_WWW_MSGFILE;
+  v_local_file = XMFS::getUserDir(FDT_CACHE) + "/" + DEFAULT_WWW_MSGFILE("SV");
 
   struct curl_httppost *v_post, *v_last;
 
-  LogInfo(std::string("Sending vote").c_str());
+  LogInfo("Sending vote");
 
   /* open the file */
   if( (v_destinationFile = fopen(v_local_file.c_str(), "wb")) == false) {
-    throw Exception("error : unable to open output file " DEFAULT_WWW_MSGFILE);
+    throw Exception("error : unable to open output file " DEFAULT_WWW_MSGFILE("SV"));
   }
       
   v_curl = curl_easy_init();
@@ -543,6 +543,76 @@ void FSWeb::sendVote(const std::string& p_id_level,
   }
 }
 
+void FSWeb::sendReport(const std::string& p_reportauthor,
+		       const std::string& p_reportmsg,
+		       const std::string& p_url_to_transfert,
+		       WWWAppInterface *p_WebApp,
+		       const ProxySettings *p_proxy_settings,
+		       bool &p_msg_status,
+		       std::string &p_msg) {
+  CURL *v_curl;
+  CURLcode v_res;
+
+  FILE *v_destinationFile;
+  std::string v_local_file;
+  v_local_file = XMFS::getUserDir(FDT_CACHE) + "/" + DEFAULT_WWW_MSGFILE("SR");
+
+  struct curl_httppost *v_post, *v_last;
+
+  LogInfo("Sending report");
+
+  /* open the file */
+  if( (v_destinationFile = fopen(v_local_file.c_str(), "wb")) == false) {
+    throw Exception("error : unable to open output file " DEFAULT_WWW_MSGFILE("SR"));
+  }
+      
+  v_curl = curl_easy_init();
+  if(v_curl == NULL) {
+    fclose(v_destinationFile);
+    remove(v_local_file.c_str());
+    throw Exception("error : unable to init curl"); 
+  }
+
+  v_post = NULL;
+  v_last = NULL;
+  
+  curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "author",
+         CURLFORM_PTRCONTENTS, p_reportauthor.c_str(), CURLFORM_END);
+  curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "msg",
+         CURLFORM_PTRCONTENTS, p_reportmsg.c_str(), CURLFORM_END);
+  v_res = performPostCurl(v_curl, v_post, p_url_to_transfert, v_destinationFile, p_WebApp, p_proxy_settings);
+
+  fclose(v_destinationFile);
+
+  /* CURLE_ABORTED_BY_CALLBACK is not considered as an error */
+  if(v_res != CURLE_ABORTED_BY_CALLBACK) {
+
+    if(v_res != CURLE_OK) {
+      char v_err[256];
+      
+      curl_easy_cleanup(v_curl);
+      remove(v_local_file.c_str());
+      
+      snprintf(v_err, 256, "error : unable to perform curl (curl[%i]: %s)",
+	       v_res, curl_easy_strerror(v_res));
+      
+      throw Exception(v_err);
+    }
+  }
+  curl_easy_cleanup(v_curl);
+
+  /* analyse de la réponse */
+  if(v_res == CURLE_ABORTED_BY_CALLBACK) {
+    p_msg_status = 0;
+    p_msg = "Aborted";
+  } else {
+    uploadAnalyseMsg("xmoto_sendReportResult", v_local_file, p_msg_status, p_msg);
+  }
+
+  if(XMSession::instance()->debug() == false) {
+    remove(v_local_file.c_str());
+  }
+}
 
 void FSWeb::uploadAnalyseMsg(const std::string& p_key,
 			     const std::string& p_filename,

@@ -233,6 +233,8 @@ states_SOURCES = states/StateManager.h       	  \
 		 states/StateCheckWww.h          \
 		 states/StateSendVote.cpp        \
 		 states/StateSendVote.h          \
+		 states/StateSendReport.cpp        \
+		 states/StateSendReport.h          \
 		 states/StateSync.cpp            \
 		 states/StateSync.h              \
 		 states/StateWaitServerInstructions.h   \
@@ -274,6 +276,8 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/CheckWwwThread.h           \
 		 thread/SendVoteThread.cpp         \
 		 thread/SendVoteThread.h           \
+		 thread/SendReportThread.cpp         \
+		 thread/SendReportThread.h           \
 		 thread/SyncThread.cpp             \
 		 thread/SyncThread.h               \
 		 thread/UpgradeLevelsThread.cpp    \

@@ -26,8 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Random.h"
 #include "../db/xmDatabase.h"
 
-#define VOTE_ASK_FREQUENCY 10 // /1000
-#define PLAYED_ENOUGH_TIME 1500
+#define VOTE_ASK_FREQUENCY 10 // /1000 = 1%
+#define PLAYED_ENOUGH_TIME 3000 // at least 30 seconds
 
 SendVoteThread::SendVoteThread(const std::string& i_idlevel, const std::string& i_difficulty_value, const std::string& i_quality_value,
 			       bool i_adminMode, const std::string& i_id_profile, const std::string& i_password)
@@ -113,6 +113,7 @@ int SendVoteThread::realThreadFunction()
 {
   bool v_msg_status_ok;
 
+  setThreadCurrentOperation(GAMETEXT_SENDING_VOTE);
   setThreadProgress(0);
 
   try {

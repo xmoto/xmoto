@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BikePlayer.h"
 #include "../xmscene/BikeGhost.h"
 #include "StateMessageBox.h"
+#include "StateSendReport.h"
 #include "../drawlib/DrawLib.h"
 #include "../CameraAnimation.h"
 #include "../Universe.h"
@@ -37,6 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../net/NetClient.h"
 #include "../Sound.h"
 #include "../thread/DownloadReplaysThread.h"
+#include "../SysMessage.h"
 
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 100
 
@@ -45,6 +47,7 @@ StatePreplaying::StatePreplaying(const std::string i_idlevel, bool i_sameLevel):
 {
   m_name  = "StatePreplaying";
   m_idlevel = i_idlevel;
+  m_isInitialized = false;
 
   m_sameLevel = i_sameLevel;
   /* if the level is not the same, ask to play the animation */
@@ -89,7 +92,7 @@ void StatePreplaying::enter()
     initUniverse();
   } catch(Exception &e) {
     delete m_universe;
-    onLoadingFailure("Ooops");
+    onLoadingFailure("Ooops, " + e.getMsg());
     return;
   }  
 
@@ -184,10 +187,60 @@ void StatePreplaying::enter()
   makeStatsStr();
 
   secondInitPhase();
+
+  m_isInitialized = true;
 }
 
 void StatePreplaying::onLoadingFailure(const std::string& i_msg) {
-  StateManager::instance()->replaceState(new StateMessageBox(NULL, splitText(i_msg, 50), UI_MSGBOX_OK), getStateId());
+  std::string v_globalMsg = GAMETEXT_LEVELLOADINGFAILURE + std::string("\n") + i_msg + std::string("\n \n") + GAMETEXT_SENDMSGTOADMINS;
+  StateMessageBox* v_msgboxState = new StateMessageBox(this, splitText(v_globalMsg, 70), UI_MSGBOX_YES|UI_MSGBOX_NO);
+  m_errorLoading = i_msg;
+  v_msgboxState->setMsgBxId("LOAGINGFAILUREMSG");
+  StateManager::instance()->pushState(v_msgboxState);
+}
+
+void StatePreplaying::sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+  if(i_id != "LOAGINGFAILUREMSG") {
+    m_requestForEnd = true;
+    return;
+  }
+
+  if(i_button != UI_MSGBOX_YES) {
+    m_requestForEnd = true;
+    return;
+  }
+
+  xmDatabase* i_db = xmDatabase::instance("main");
+  char **v_result;
+  unsigned int nrow;
+  std::string v_name, v_sum;
+  std::string v_rptmsg;
+
+  // retrieve level data from the database
+  v_result = i_db->readDB("SELECT name, checkSum from levels where id_level=\"" + xmDatabase::protectString(m_idlevel) + "\";", nrow);
+  if(nrow != 1) {
+    i_db->read_DB_free(v_result);
+    m_requestForEnd = true;
+    SysMessage::instance()->displayError(SYS_MSG_UNABLE_TO_BUILD_THE_REPORT);
+  }
+
+  // read data
+  if(i_db->getResult(v_result, 2, 0, 0) != NULL) {
+    v_name = i_db->getResult(v_result, 2, 0, 0);
+  }
+  if(i_db->getResult(v_result, 2, 0, 1) != NULL) {
+    v_sum = i_db->getResult(v_result, 2, 0, 1);
+  }
+  i_db->read_DB_free(v_result);
+
+  if(m_idlevel == "" || v_name == "" || v_sum == "") {
+    m_requestForEnd = true;
+    SysMessage::instance()->displayError(SYS_MSG_UNABLE_TO_BUILD_THE_REPORT);
+  }
+
+  // send the message
+  v_rptmsg = "Dear admins,\nThe level named " + m_idlevel + "\n(id=" + m_idlevel + ", md5=" + v_sum + "),\ncrashed with the following error :\n" + m_errorLoading;
+  StateManager::instance()->replaceState(new StateSendReport(XMSession::instance()->profile(), v_rptmsg), getStateId());
 }
 
 bool StatePreplaying::shouldBeAnimated() const {
@@ -211,6 +264,8 @@ void StatePreplaying::leaveAfterPush()
 
 bool StatePreplaying::update()
 {
+  if(m_isInitialized == false) { return false; }
+
   if(doUpdate() == false){
     return false;
   }
@@ -239,6 +294,11 @@ bool StatePreplaying::update()
 
 bool StatePreplaying::render()
 {
+  if(m_isInitialized == false) {
+    GameApp::instance()->getDrawLib()->clearGraphics();
+    return true;
+  }
+
   StateScene::render();
   displayStats();
   
