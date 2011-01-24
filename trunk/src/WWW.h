@@ -55,6 +55,7 @@ class ThemeChoice;
 #define DEFAULT_WEBTHEMES_SPRITESURLBASE  "http://xmoto.tuxfamily.org/sprites"
 #define DEFAULT_UPLOADREPLAY_URL          "http://xmoto.tuxfamily.org/tools/UploadReplay.php"
 #define DEFAULT_SENDVOTE_URL              "http://xmoto.tuxfamily.org/tools/SendVote.php"
+#define DEFAULT_SENDREPORT_URL            "http://xmoto.tuxfamily.org/tools/SendReport.php"
 #define DEFAULT_WEBROOMS_URL              "http://xmoto.tuxfamily.org/rooms.xml"
 #define DEFAULT_WEBROOMS_FILENAME         "webrooms.xml"
 #define DEFAULT_WEBROOM_NAME              "WR"
@@ -161,6 +162,14 @@ class FSWeb {
 		       const ProxySettings *p_proxy_settings,
 		       bool &p_msg_status,
 		       std::string &p_msg);
+
+  static void sendReport(const std::string& p_reportauthor,
+			 const std::string& p_reportmsg,
+			 const std::string& p_url_to_transfert,
+			 WWWAppInterface *p_WebApp,
+			 const ProxySettings *p_proxy_settings,
+			 bool &p_msg_status,
+			 std::string &p_msg);
 
   static int f_curl_progress_callback_upload(void *clientp,
 					     double dltotal,

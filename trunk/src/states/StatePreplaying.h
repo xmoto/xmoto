@@ -43,6 +43,10 @@ class StatePreplaying : public StateScene {
   /* input */
   virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
 
+  virtual void sendFromMessageBox(const std::string& i_id,
+				  UIMsgBoxButton i_button,
+				  const std::string& i_input);
+
  protected:
   std::string m_idlevel;
   bool m_sameLevel;
@@ -70,6 +74,9 @@ class StatePreplaying : public StateScene {
   CameraAnimation* m_cameraAnim;
 
   unsigned int m_ghostDownloadMessageType;  
+
+  bool m_isInitialized; // because you can keep this state open initialized if a msg box appears
+  std::string m_errorLoading;
 };
 
 #endif

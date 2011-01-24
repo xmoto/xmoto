@@ -358,6 +358,10 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_LEVELINFO            _("Level Info...")
 #define GAMETEXT_LEVELNAME            _("Level Name")
 #define GAMETEXT_LEVELCANNOTBELOADED  _("Level '%s' cannot be loaded")
+#define GAMETEXT_LEVELLOADINGFAILURE _("The level failed while loading with the following error :")
+#define GAMETEXT_SENDMSGTOADMINS     _("Do you want to send a report to website administrators ?")
+#define GAMETEXT_SENDING_REPORT      _("Sending the report...")
+#define GAMETEXT_SENDING_VOTE        _("Sending the vote...")
 #define GAMETEXT_LEVELPACK            _("Level Pack")
 #define GAMETEXT_LEVELPACKS           _("Level Packs")
 #define GAMETEXT_LEVELREQUIREDBYREPLAY _("Level '%s' required by replay!")
@@ -915,6 +919,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define SYS_MSG_RESTART_LEVEL           _("Restart Level to activate!")
 
 #define SYS_MSG_NO_NEXT_HIGHSCORE(A)    ngettext("Can't find a highscore in the next %i level", "Can't find a highscore in the next %i levels", A)
+#define SYS_MSG_UNABLE_TO_BUILD_THE_REPORT _("Unable to build the report")
 
 // font to use to choice the GROUP : currently, two groups, GENERAL and ASIAN
 #define FONT_GROUP _("FontGroup:GENERAL")
