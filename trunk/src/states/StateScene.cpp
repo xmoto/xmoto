@@ -670,6 +670,7 @@ void StateScene::closePlaying() {
   if(m_renderer != NULL) {
     m_renderer->unprepareForNewLevel(m_universe);
     delete m_renderer;
+    m_renderer = NULL;
   }
 
   if(m_universe != NULL) {
