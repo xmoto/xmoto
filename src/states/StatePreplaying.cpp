@@ -92,6 +92,7 @@ void StatePreplaying::enter()
     initUniverse();
   } catch(Exception &e) {
     delete m_universe;
+    m_universe = NULL;
     onLoadingFailure("Ooops, " + e.getMsg());
     return;
   }  
