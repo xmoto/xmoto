@@ -265,6 +265,10 @@ void xmDatabase::setXmDbBinPackCheckSum(const std::string& i_binPackChecksum) {
   setXmParameterKey("binPackCkSum", i_binPackChecksum);
 }
 
+int xmDatabase::getMemoryUsed() {
+  return sqlite3_memory_used();
+}
+
 int xmDatabase::getXmDbVersion() {
   char **v_result;
   int nrow;

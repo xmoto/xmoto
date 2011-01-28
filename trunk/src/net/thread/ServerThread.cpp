@@ -1519,6 +1519,11 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "start time : " + m_startTimeStr + "\n";
       v_answer += NetAction::getStats() + "\n";
       v_answer += ActionReader::getStats() + "\n";
+
+      std::ostringstream v_n;
+      v_answer += "db memory : ";
+      v_n << (xmDatabase::getMemoryUsed()) /1024/1024;
+      v_answer += v_n.str() + "mB" + "\n";
     }
 
   } else if(v_args[0] == "msg") {

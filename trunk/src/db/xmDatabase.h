@@ -47,6 +47,7 @@ public:
 	    XmDatabaseUpdateInterface *i_interface = NULL);
   void init(const std::string& i_dbFileUTF8, bool i_readOnly = false);
   int  getXmDbVersion();
+  static int getMemoryUsed();
 
   /* RULE:
      all write access must be done from class xmDatabase

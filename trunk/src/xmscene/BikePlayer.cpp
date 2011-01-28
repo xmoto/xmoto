@@ -682,8 +682,10 @@ void PlayerLocalBiker::updatePhysics(int i_time, int i_timeStep, CollisionSystem
 }
 
 bool PlayerLocalBiker::intersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp, CollisionSystem *v_collisionSystem) {
+  // check the circle
   if(v_collisionSystem->checkCircle(Cp.x,Cp.y,Cr)) return true;
 
+  // check if the line between the line of 2 head moves. (including when you change directory to not use this to go throw walls)
   if(!m_bFirstPhysicsUpdate) {
     dContact c[100];
     int nNumContacts = v_collisionSystem->collideLine(LastCp.x,LastCp.y,Cp.x,Cp.y,c,100, m_physicsSettings);
