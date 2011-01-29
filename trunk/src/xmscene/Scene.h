@@ -29,7 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Bike.h"
 #include "BikeGhost.h"
 #include "GhostTrail.h"
-#include <queue>
 #include "Entity.h"
 
 #define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 500
@@ -168,10 +167,9 @@ public:
   /* events */
   void createGameEvent(SceneEvent *p_event);
   void destroyGameEvent(SceneEvent *p_event);
-  SceneEvent* getNextGameEvent();
-  int getNumPendingGameEvents();
   void cleanEventsQueue();
   void executeEvents(DBuffer *i_recorder);
+  void executeEvents_step(SceneEvent *pEvent, DBuffer *i_recorder); // sub step of executeEvents
 
   /* Script Timer */
   ScriptTimer* getScriptTimerByName(std::string TimerName);
@@ -314,7 +312,7 @@ public:
 private:
 
   /* Data */
-  std::queue<SceneEvent*> m_GameEventQueue;
+  std::vector<SceneEvent*> m_GameEventQueue;
   int m_time;
   int m_targetTime; // to ask the scene to update near this time (used if you play in a scene which is not on your host for example -- synchronize times)
   bool m_useTargetTime; // use or not the target time

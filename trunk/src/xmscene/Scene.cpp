@@ -377,6 +377,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
       m_chipmunkWorld->updateWheelsPosition(m_players);
     }
 
+    // last thing is to execute all collected events. don't create events after here
     executeEvents(i_eventRecorder);
 
     // record the replay only if
@@ -437,20 +438,36 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
     m_DelSchedule.clear();
   }
 
-  void Scene::executeEvents(DBuffer *i_recorder) {
-    /* Handle events generated this update */
-    while(getNumPendingGameEvents() > 0) {
-      SceneEvent *pEvent = getNextGameEvent();
-      if(i_recorder != NULL) {
-	/* Encode event */
-	pEvent->serialize(*i_recorder);
-      }
-      
-      /* What event? */
-      pEvent->doAction(this);
-      destroyGameEvent(pEvent);
+void Scene::executeEvents_step(SceneEvent *pEvent, DBuffer *i_recorder) {
+  if(i_recorder != NULL) { /* Encode event */
+    pEvent->serialize(*i_recorder);
+  }
+  pEvent->doAction(this);
+  //printf("%s => %i\n", pEvent->toString().c_str(), pEvent->getEventTime());
+}
+
+void Scene::executeEvents(DBuffer *i_recorder) {
+  /* Handle events generated this update */
+  // here, we must play before order the event orders : playerDies before the others
+  // this avoid people wining by catching a flower and going throw the wall at the same time
+
+  // 1st : GAME_EVENT_PLAYER_DIES -- so that death + win forces death
+  for(unsigned int i=0; i<m_GameEventQueue.size(); i++) {
+    if(m_GameEventQueue[i]->getType() == GAME_EVENT_PLAYER_DIES) {
+      executeEvents_step(m_GameEventQueue[i], i_recorder);
     }
   }
+
+  // then : OTHERS
+  for(unsigned int i=0; i<m_GameEventQueue.size(); i++) {
+    if(m_GameEventQueue[i]->getType() != GAME_EVENT_PLAYER_DIES) {
+      executeEvents_step(m_GameEventQueue[i], i_recorder);
+    }
+  }
+
+  // clear all events
+  cleanEventsQueue();
+}
 
   void Scene::updateGameMessages() {
     /* Handle game messages (keep them in place) */
@@ -1048,37 +1065,18 @@ void Scene::initGhostTrail(FileGhost* i_ghost) {
   }
 
   void Scene::createGameEvent(SceneEvent *p_event) {
-    m_GameEventQueue.push(p_event);
+    m_GameEventQueue.push_back(p_event);
   }
   
   void Scene::destroyGameEvent(SceneEvent *p_event) {
     delete p_event;
   }
 
-  SceneEvent* Scene::getNextGameEvent() {
-    /* Anything in queue? */
-    if(getNumPendingGameEvents() > 0) {
-      SceneEvent *v_event = m_GameEventQueue.front();
-      m_GameEventQueue.pop();
-      return v_event;
-    }
-    
-    /* Nope, nothing */
-    return NULL;
-  }
-
-  int Scene::getNumPendingGameEvents(void) {
-    return m_GameEventQueue.size();
-  }
-
   void Scene::cleanEventsQueue() {
-    SceneEvent *v_event;
-
-    while(m_GameEventQueue.empty() == false) {
-      v_event = m_GameEventQueue.front();
-      m_GameEventQueue.pop();
-      destroyGameEvent(v_event);
+    for(unsigned int i=0; i<m_GameEventQueue.size(); i++) {
+      destroyGameEvent(m_GameEventQueue[i]);
     }
+    m_GameEventQueue.clear();
   }
 
   void Scene::handleEvent(SceneEvent *pEvent) {     
