@@ -5,7 +5,7 @@ pkgMusicsdir = $(pkgdatadir)/Textures/Musics
 pkgMusics_DATA = Textures/Musics/menu.ogg Textures/Musics/ridealong.ogg Textures/Musics/batcave.ogg Textures/Musics/legolodio.ogg Textures/Musics/MadeiraStew.ogg Textures/Musics/speeditup.ogg Textures/Musics/foxrun.ogg
 
 pkgFontsdir = $(pkgdatadir)/Textures/Fonts
-pkgFonts_DATA = Textures/Fonts/DejaVuSans.ttf
+pkgFonts_DATA = Textures/Fonts/DejaVuSans.ttf Textures/Fonts/DejaVuSansMono.ttf
 
 xmoto.bin: package.lst
 if CROSS_COMPILING
