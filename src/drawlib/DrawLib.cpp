@@ -27,7 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VFileIO.h"
 #include "../VFileIO_types.h"
 
-#define DRAW_FONT_FILE_GENERAL "Textures/Fonts/DejaVuSans.ttf"
+#define DRAW_FONT_FILE_GENERAL   "Textures/Fonts/DejaVuSans.ttf"
+#define DRAW_FONT_FILE_MONOSPACE "Textures/Fonts/DejaVuSansMono.ttf"
 
 #ifdef ASIAN_TTF_FILE
 #define DRAW_FONT_FILE_ASIAN ASIAN_TTF_FILE
@@ -77,6 +78,9 @@ void DrawLib::checkFontPrerequites() {
   if(XMFS::fileExists(FDT_DATA, FontManager::getDrawFontFile()) == false) {
     throw Exception("File " + FontManager::getDrawFontFile() + " is missing");
   }
+  if(XMFS::fileExists(FDT_DATA, FontManager::getMonospaceFontFile()) == false) {
+    throw Exception("File " + FontManager::getMonospaceFontFile() + " is missing");
+  }
 }
 
  DrawLib::DrawLib() {
@@ -95,6 +99,7 @@ void DrawLib::checkFontPrerequites() {
 
   m_fontSmall  = NULL;
   m_fontMedium = NULL;
+  m_fontBig    = NULL;
  };
 
  DrawLib::~DrawLib() {
@@ -124,6 +129,13 @@ void DrawLib::checkFontPrerequites() {
       throw Exception("Invalid font");
     }
     return m_fontBig;
+  }
+
+  FontManager* DrawLib::getFontMonospace() {
+    if(m_fontMonospace == NULL) {
+      throw Exception("Invalid font");
+    }
+    return m_fontMonospace;
   }
 
    /*===========================================================================
@@ -467,4 +479,8 @@ std::string FontManager::getDrawFontFile() {
   if(std::string(_("FontGroup:GENERAL")) == std::string("FontGroup:ASIAN"))   return DRAW_FONT_FILE_ASIAN;
 
   return DRAW_FONT_FILE_GENERAL;
+}
+
+std::string FontManager::getMonospaceFontFile() {
+  return DRAW_FONT_FILE_MONOSPACE;
 }

@@ -54,6 +54,7 @@ class FontManager {
   
 
   static std::string getDrawFontFile();
+  static std::string getMonospaceFontFile();
 
  protected:
   TTF_Font* m_ttf;
@@ -228,6 +229,7 @@ class DrawLib {
   FontManager* getFontSmall();
   FontManager* getFontMedium();
   FontManager* getFontBig();
+  FontManager* getFontMonospace();
   virtual FontManager* getFontManager(const std::string &i_fontFile, unsigned int i_fontSize);
   static void checkFontPrerequites();
 
@@ -240,6 +242,7 @@ class DrawLib {
   FontManager* m_fontSmall;
   FontManager* m_fontMedium;
   FontManager* m_fontBig;
+  FontManager* m_fontMonospace;
 
   bool m_bWindowed;		/* Windowed or not */
 

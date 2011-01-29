@@ -69,7 +69,7 @@ void UIConsole::paint() {
   int v_cursorXOffset = 0;
   int v_cursorYOffset = 0;
 
-  v_fm = getFont();
+  v_fm = GameApp::instance()->getDrawLib()->getFontMonospace();
 
   putRect(0, 0, getPosition().nWidth, getPosition().nHeight, MAKE_COLOR(0, 0, 0, 220));
 

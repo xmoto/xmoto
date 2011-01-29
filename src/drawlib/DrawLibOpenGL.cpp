@@ -149,12 +149,17 @@ DrawLibOpenGL::~DrawLibOpenGL(){
   if(m_fontBig != NULL) {
     delete m_fontBig;
   }
+
+  if(m_fontMonospace != NULL) {
+    delete m_fontMonospace;
+  }
 }
 
 DrawLibOpenGL::DrawLibOpenGL() : DrawLib(){
-  m_fontSmall  = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 14);
-  m_fontMedium = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 22);
-  m_fontBig    = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 60);
+  m_fontSmall     = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 14);
+  m_fontMedium    = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 22);
+  m_fontBig       = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 60);
+  m_fontMonospace = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getMonospaceFontFile()), 12);
 };
  
 /*===========================================================================
