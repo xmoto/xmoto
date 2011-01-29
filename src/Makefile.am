@@ -356,7 +356,6 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   VirtualLevelsList.cpp \
   VideoRecorder.h \
   VideoRecorder.cpp \
-  GameSerializer.cpp \
   Collision.cpp \
   Collision.h \
   RendererFBO.cpp \
@@ -405,6 +404,7 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   xmscene/Block.cpp \
   xmscene/Entity.h   \
   xmscene/Entity.cpp \
+  xmscene/Serializer.cpp \
   xmscene/PhysicsSettings.h   \
   xmscene/PhysicsSettings.cpp \
   xmscene/SkyApparence.h   \
