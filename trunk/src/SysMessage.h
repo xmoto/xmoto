@@ -81,10 +81,19 @@ private:
   void drawBoxMsg();
   void drawBoxMsg_one(unsigned int i, float i_time, int x_offset, int y_offset);
 
+  void render_basic();
+  void render_boxes();
+  void render_console();
+
   /* console */
   std::vector<consoleLine> m_console;
   unsigned int m_consoleSize;
   float m_consoleLastShowTime;
+  int m_consoleTextWidth;
+  int m_consoleTextHeight;
+
+  void resetBackgroundbox();
+  void consoleText_computeAndDraw(int i_shadow, int i_xoffset, int i_yoffset, bool i_draw);
 
   DrawLib* m_drawLib;
 

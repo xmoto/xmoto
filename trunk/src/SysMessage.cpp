@@ -48,6 +48,8 @@ SysMessage::SysMessage() {
   m_startDisplay = GameApp::getXMTime() - SYSMSG_DISPLAY_TIME;
   m_consoleLastShowTime = GameApp::getXMTime() - SYSMSG_CONSOLEDISPLAY_TIME - SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME;
   m_consoleSize = SYSMSG_DEFAULT_CONSOLEDISPLAY_DISPLAYNBLINES;
+  m_consoleTextWidth  = -1; // undefined
+  m_consoleTextHeight = -1;
 }
 
 SysMessage::~SysMessage() {
@@ -89,6 +91,7 @@ unsigned int SysMessage::consoleSize() const {
 
 void SysMessage::setConsoleSize(unsigned int i_value) {
   m_consoleSize = i_value;
+  resetBackgroundbox();
 }
 
 void SysMessage::alterConsoleSize(int i_diffLines) {
@@ -99,20 +102,19 @@ void SysMessage::alterConsoleSize(int i_diffLines) {
   } else {
     m_consoleSize += i_diffLines;
   }
+  resetBackgroundbox();
 }
 
-void SysMessage::render() {
-  if(m_drawLib == NULL)
-    return;
-
-  float v_time = GameApp::getXMTime();
+/* basic system message */
+void SysMessage::render_basic() {
   FontManager* v_fm;
   FontGlyph* v_fg;
   int v_shadow;
 
-  v_fm = m_drawLib->getFontMedium();
+  float v_time = GameApp::getXMTime();
 
-  /* basic system message */
+  v_fm = m_drawLib->getFontMedium();
+  
   if(m_startDisplay + SYSMSG_DISPLAY_TIME > v_time) {
     if(m_startDisplay + SYSMSG_DISPLAY_DECREASE_TIME > v_time) {
       v_shadow = 255;
@@ -121,26 +123,96 @@ void SysMessage::render() {
 					 * 255.0)
 					/ (SYSMSG_DISPLAY_TIME-SYSMSG_DISPLAY_DECREASE_TIME));
     }
-
+    
     v_fg = v_fm->getGlyph(m_txt);
     v_fm->printString(m_drawLib, v_fg,
 		      m_drawLib->getDispWidth()/2 - v_fg->realWidth()/2,
 		      5,
 		      MAKE_COLOR(255, 255, 255, v_shadow), 0.0, true);
   }
+}
 
+void SysMessage::render_boxes() {
   /* error/information msg */
   cleanBoxMsg();
   drawBoxMsg();
+}
 
-  /* console */
-  int v_consoleBorder = 10;
-  int v_consoleYOffset = 0;
-  unsigned int v_firstLine;
-  Color c;
+void SysMessage::resetBackgroundbox() {
+  m_consoleTextWidth = m_consoleTextHeight = -1;
+}
+
+void SysMessage::consoleText_computeAndDraw(int i_shadow, int i_xoffset, int i_yoffset, bool i_draw) {
   bool v_useShadow;
+  Color c;
+  unsigned int v_firstLine;
+  FontManager* v_fm;
+  FontGlyph* v_fg;
+  int v_yoffset = i_yoffset;
 
   v_fm = m_drawLib->getFontSmall();
+
+  // don't display old history of the console
+  v_firstLine = 0;
+  if(((int)m_console.size()) - ((int)m_consoleSize) > 0) {
+    v_firstLine = m_console.size() - m_consoleSize;
+  }
+
+  for(unsigned int i=v_firstLine; i<m_console.size(); i++) {
+    v_fg = v_fm->getGlyph(m_console[i].cltxt);
+    
+    v_useShadow = false;
+    
+    switch(m_console[i].cltype) {
+    case CLT_NORMAL:
+      c = MAKE_COLOR(255, 255, 255, i_shadow);
+      v_useShadow = true;
+      break;
+    case CLT_INFORMATION:
+      c = MAKE_COLOR(255, 255, 55, i_shadow);
+      break;
+    case CLT_GAMEINFORMATION:
+      c = MAKE_COLOR(55, 255, 255, i_shadow);
+      break;
+    case CLT_SERVER:
+      c = MAKE_COLOR(255, 0, 0, i_shadow);
+      break;
+    case CLT_PRIVATE:
+      c = MAKE_COLOR(80, 200, 80, i_shadow);
+      break;
+    }
+    
+    // print only if console dimension are set ; else, just a run for computation
+    if(i_draw) {
+      v_fm->printString(m_drawLib, v_fg,
+			i_xoffset,
+			v_yoffset,
+			c, 0.0, v_useShadow);
+    }
+    v_yoffset += v_fg->realHeight();
+
+    if(((int)v_fg->realWidth()) > m_consoleTextWidth) {
+      m_consoleTextWidth = v_fg->realWidth();
+    }
+  }
+  m_consoleTextHeight = v_yoffset - i_yoffset; // only what has been added
+}
+
+void SysMessage::render_console() {
+  int v_shadow;
+  
+  int v_consoleXOffset = m_drawLib->getDispWidth()/3;
+  int v_consoleYOffsetInit = 10;
+  int v_consoleYOffset = v_consoleYOffsetInit;
+  int v_bboxborder = 5;
+
+
+  // don't draw if nothing to draw
+  if(m_console.size() == 0) {
+    return;
+  }
+
+  float v_time = GameApp::getXMTime();
 
   if((m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME + SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME > v_time || XMSession::instance()->permanentConsole()) && NetClient::instance()->isConnected()) {
     if((m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME > v_time || XMSession::instance()->permanentConsole()) && NetClient::instance()->isConnected()) {
@@ -150,45 +222,26 @@ void SysMessage::render() {
 		  * 255)/SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME;
     }
 
-    // don't display old history of the console
-    v_firstLine = 0;
-    if(((int)m_console.size()) - ((int)m_consoleSize) > 0) {
-      v_firstLine = m_console.size() - m_consoleSize;
-    }
-
+    // compute text with for box rendering
+    consoleText_computeAndDraw(v_shadow, v_consoleXOffset, v_consoleYOffset, false);
     // background box
-
-    for(unsigned int i=v_firstLine; i<m_console.size(); i++) {
-      v_fg = v_fm->getGlyph(m_console[i].cltxt);
-
-      v_useShadow = false;
-
-      switch(m_console[i].cltype) {
-      case CLT_NORMAL:
-	c = MAKE_COLOR(255, 255, 255, v_shadow);
-	v_useShadow = true;
-	break;
-      case CLT_INFORMATION:
-	c = MAKE_COLOR(255, 255, 55, v_shadow);
-	break;
-      case CLT_GAMEINFORMATION:
-	c = MAKE_COLOR(55, 255, 255, v_shadow);
-	break;
-      case CLT_SERVER:
-	c = MAKE_COLOR(255, 0, 0, v_shadow);
-	break;
-      case CLT_PRIVATE:
-	c = MAKE_COLOR(80, 200, 80, v_shadow);
-	break;
-      }
-
-      v_fm->printString(m_drawLib, v_fg,
-			m_drawLib->getDispWidth()/3,
-			v_consoleBorder+v_consoleYOffset,
-			c, 0.0, v_useShadow);
-      v_consoleYOffset += v_fg->realHeight();
-    }
+    m_drawLib->drawBox(Vector2f(v_consoleXOffset - v_bboxborder,
+				v_consoleYOffset - v_bboxborder),
+		       Vector2f(v_consoleXOffset + m_consoleTextWidth  + v_bboxborder,
+				v_consoleYOffset + m_consoleTextHeight + v_bboxborder),
+		       0.0, MAKE_COLOR(0,0,0,110));
+    //
+    consoleText_computeAndDraw(v_shadow, v_consoleXOffset, v_consoleYOffset, true);
   }
+}
+
+void SysMessage::render() {
+  if(m_drawLib == NULL)
+    return;
+
+  render_basic();
+  render_boxes();
+  render_console();
 }
 
 void SysMessage::addConsoleLine(const std::string& i_line, consoleLineType i_clt) {
@@ -207,6 +260,7 @@ void SysMessage::addConsoleLine(const std::string& i_line, consoleLineType i_clt
     m_console.erase(m_console.begin());
   }
 
+  resetBackgroundbox();
   showConsole();
 }
 
