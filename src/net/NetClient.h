@@ -92,7 +92,7 @@ class NetClient : public Singleton<NetClient> {
   void endPlay();
 
   void getOtherClientsNameList(std::vector<std::string>& io_list, const std::string& i_suffix);
-  void addChatTransformations(std::vector<std::string>& io_clientList, const std::string i_suffix);
+  void addChatTransformations(std::vector<std::string>& io_clientList, const std::string& i_suffix);
   std::string getDisplayMessage(const std::string& i_msg, const std::string& i_author);
 
   std::vector<NetOtherClient*>& otherClients();
@@ -101,6 +101,9 @@ class NetClient : public Singleton<NetClient> {
 
   int getOwnFrameFPS() const;
   VirtualNetLevelsList* getOtherClientLevelsList(xmDatabase* pDb);
+
+  void memoriesPP(const std::vector<int>& i_private_people);
+  std::string getMemoriedPPAsString(const std::string& i_suffix);
 
   private:
   bool m_isConnected;
@@ -133,6 +136,7 @@ class NetClient : public Singleton<NetClient> {
   int m_currentOwnFramesTime;
 
   VirtualNetLevelsList* m_otherClientsLevelsList;
+  std::vector<int> m_previous_private_people;
 };
 
 #endif

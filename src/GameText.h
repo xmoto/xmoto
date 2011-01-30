@@ -75,6 +75,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CHANGEKEY            _("Change Key...")
 #define GAMETEXT_CHATBOXHELP          _("Use the tabulation key to complete player names. Use the * to send private messages.")
 #define GAMETEXT_CHATDIALOG           _("Open chat dialog box")
+#define GAMETEXT_CHATPRIVATEDIALOG    _("Open private chat dialog box")
 #define GAMETEXT_CHECKINGFORLEVELS    _("Checking for new or updated levels...")
 #define GAMETEXT_CHILDREN_COMPLIANT   _("I'm a child")
 #define GAMETEXT_CHOOSELEVEL          _("Choose Level")

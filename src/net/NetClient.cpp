@@ -690,7 +690,7 @@ void NetClient::getOtherClientsNameList(std::vector<std::string>& io_list, const
   }
 }
 
-void NetClient::addChatTransformations(std::vector<std::string>& io_clientList, const std::string i_suffix) {
+void NetClient::addChatTransformations(std::vector<std::string>& io_clientList, const std::string& i_suffix) {
   io_clientList.push_back("/me" + i_suffix);
 }
 
@@ -765,4 +765,21 @@ void NetClient::fillPrivatePeople(const std::string& i_msg, const std::string& i
       }
     }
   }
+}
+
+void NetClient::memoriesPP(const std::vector<int>& i_private_people) {
+  m_previous_private_people = i_private_people;
+}
+
+std::string NetClient::getMemoriedPPAsString(const std::string& i_suffix) {
+  std::string v_res;
+  
+  for(unsigned int i=0; i<m_previous_private_people.size(); i++) {
+    for(unsigned int j=0; j<m_otherClients.size(); j++) {
+      if(m_previous_private_people[i] == m_otherClients[j]->id()) {
+	v_res += m_otherClients[j]->name() + i_suffix;
+      }
+    }
+  }
+  return v_res;
 }
