@@ -269,6 +269,8 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
       IFullKey("KeyRestartCheckpoint",   XMKey(SDLK_BACKSPACE, KMOD_NONE),  GAMETEXT_RESTARTCHECKPOINT);
     m_globalKeys[INPUT_CHAT]                =
       IFullKey("KeyChat",                XMKey(SDLK_c,         KMOD_LCTRL), GAMETEXT_CHATDIALOG);
+    m_globalKeys[INPUT_CHATPRIVATE]         =
+      IFullKey("KeyChatPrivate",                XMKey(SDLK_p,         KMOD_LCTRL), GAMETEXT_CHATPRIVATEDIALOG);
     m_globalKeys[INPUT_LEVELWATCHING]          =
       IFullKey("KeyLevelWatching",       XMKey(SDLK_TAB,       KMOD_NONE),  GAMETEXT_LEVELWATCHING);
     m_globalKeys[INPUT_SWITCHPLAYER]           =
