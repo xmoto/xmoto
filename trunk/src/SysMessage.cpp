@@ -150,6 +150,11 @@ void SysMessage::consoleText_computeAndDraw(int i_shadow, int i_xoffset, int i_y
   FontGlyph* v_fg;
   int v_yoffset = i_yoffset;
 
+  // no need to compute
+  if(m_consoleTextWidth > 0 && m_consoleTextHeight > 0 && i_draw == false) {
+    return;
+  }
+
   v_fm = m_drawLib->getFontSmall();
 
   // don't display old history of the console
