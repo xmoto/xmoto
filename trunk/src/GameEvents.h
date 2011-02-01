@@ -76,7 +76,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /*           = 40, */
     GAME_EVENT_SETPHYSICSBLOCKSELFROTATION  = 41,
     GAME_EVENT_SETPHYSICSBLOCKTRANSLATION   = 42,
-		GAME_EVENT_CAMERASETPOS                 = 43
+    GAME_EVENT_CAMERASETPOS                 = 43,
+    GAME_EVENT_PLAYER_WINS                  = 44
   };
 
 class SceneEvent;
@@ -142,6 +143,24 @@ class MGE_PlayerDies : public SceneEvent {
 
  private:
   bool m_bKilledByWrecker;
+  int  m_player;
+};
+
+class MGE_PlayerWins : public SceneEvent {
+ public:
+  MGE_PlayerWins(int p_eventTime);
+  MGE_PlayerWins(int p_eventTime, int i_player);
+  ~MGE_PlayerWins();
+
+  void doAction(Scene *p_pScene);
+  void serialize(DBuffer &Buffer);
+  void unserialize(DBuffer &Buffer);
+  static GameEventType SgetType();
+  GameEventType getType();
+
+  std::string toString();
+
+ private:
   int  m_player;
 };
 
