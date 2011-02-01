@@ -268,6 +268,46 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   //////////////////////////////
+  MGE_PlayerWins::MGE_PlayerWins(int p_eventTime) 
+  : SceneEvent(p_eventTime) {
+    m_player = 0;
+  }
+
+  MGE_PlayerWins::MGE_PlayerWins(int p_eventTime, int i_player) 
+    : SceneEvent(p_eventTime) {
+      m_player = i_player;
+  }
+
+  MGE_PlayerWins::~MGE_PlayerWins() {
+  } 
+  
+  void MGE_PlayerWins::doAction(Scene *p_pScene) {
+    if(((int)p_pScene->Players().size()) > m_player) { // action are from external data (replays, network, so basically, not sure)
+      p_pScene->makePlayerWin(m_player);
+    }
+  }
+
+  void MGE_PlayerWins::serialize(DBuffer &Buffer) {
+  }
+  
+  void MGE_PlayerWins::unserialize(DBuffer &Buffer) {
+  }
+
+  GameEventType MGE_PlayerWins::SgetType() {
+    return GAME_EVENT_PLAYER_WINS;
+  }
+
+  GameEventType MGE_PlayerWins::getType() {
+    return SgetType();
+  }
+
+  std::string MGE_PlayerWins::toString() {
+    std::ostringstream v_txt_player;
+    v_txt_player << m_player;
+    return "Player " + v_txt_player.str() + " wins";
+  }
+
+  //////////////////////////////
   MGE_PlayersEnterZone::MGE_PlayersEnterZone(int p_eventTime) 
     : SceneEvent(p_eventTime) {
       m_zone = NULL;

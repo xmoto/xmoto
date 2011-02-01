@@ -448,25 +448,37 @@ void Scene::executeEvents_step(SceneEvent *pEvent, DBuffer *i_recorder) {
 
 void Scene::executeEvents(DBuffer *i_recorder) {
   /* Handle events generated this update */
-  // here, we must play before order the event orders : playerDies before the others
-  // this avoid people wining by catching a flower and going throw the wall at the same time
 
-  // 1st : GAME_EVENT_PLAYER_DIES -- so that death + win forces death
-  for(unsigned int i=0; i<m_GameEventQueue.size(); i++) {
-    if(m_GameEventQueue[i]->getType() == GAME_EVENT_PLAYER_DIES) {
-      executeEvents_step(m_GameEventQueue[i], i_recorder);
+  // here, we must play GAME_EVENT_PLAYER_WINS after other events
+  // this avoid people wining by catching a flower and going throw the wall or taking a wrecker at the same time
+  // we must be sure that all events are played before declaring a player winning -- so that death + win forces death
+  // note that events can create events, so, it's not just simple loops
+
+  unsigned int i;
+  bool v_found_other;
+
+  // 1st : play events until only GAME_EVENT_PLAYER_WINS are remaining
+  do {
+    v_found_other = false;
+    i=0;
+    while(i<m_GameEventQueue.size()) {
+      if(m_GameEventQueue[i]->getType() != GAME_EVENT_PLAYER_WINS) {
+	v_found_other = true;
+	executeEvents_step(m_GameEventQueue[i], i_recorder);
+	destroyGameEvent(m_GameEventQueue[i]);
+	m_GameEventQueue.erase(m_GameEventQueue.begin()+i);
+      } else {
+	i++;
+      }
     }
-  }
+  } while(v_found_other);
 
-  // then : OTHERS
-  for(unsigned int i=0; i<m_GameEventQueue.size(); i++) {
-    if(m_GameEventQueue[i]->getType() != GAME_EVENT_PLAYER_DIES) {
-      executeEvents_step(m_GameEventQueue[i], i_recorder);
-    }
+  // then when only GAME_EVENT_PLAYER_WINS are remaining, play them
+  while(m_GameEventQueue.size() > 0) {
+    executeEvents_step(m_GameEventQueue[0], i_recorder);
+    destroyGameEvent(m_GameEventQueue[0]);
+    m_GameEventQueue.erase(m_GameEventQueue.begin());
   }
-
-  // clear all events
-  cleanEventsQueue();
 }
 
   void Scene::updateGameMessages() {
@@ -1036,7 +1048,7 @@ void Scene::initGhostTrail(FileGhost* i_ghost) {
 
       if(pEntity->DoesMakeWin()) {
 	if(getNbRemainingStrawberries() == 0) {
-	  makePlayerWin(i_player);
+	  createGameEvent(new MGE_PlayerWins(getTime(), i_player));
 	}
       }
 
@@ -1397,7 +1409,7 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
 	if(m_players[j]->isDead() == false) {
 	  for(unsigned int i=0; i<m_players[j]->EntitiesTouching().size(); i++) {
 	    if(m_players[j]->EntitiesTouching()[i]->DoesMakeWin()) {
-	      makePlayerWin(j);
+	      createGameEvent(new MGE_PlayerWins(getTime(), j));
 	    }
 	  }
 	}
