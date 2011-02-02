@@ -344,7 +344,7 @@ bool GameApp::getNextMedal(const std::string& i_profile, const std::string& i_be
   return false;
 }
 
-std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &LevelID, int& o_highscore_time, std::string& o_highscores_author) {  
+std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &LevelID, int& o_highscore_time, std::string& o_highscore_author) {  
     char **v_result;
     unsigned int nrow;
     std::string v_roomName;
@@ -354,7 +354,7 @@ std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &Le
 
     o_highscore_time = -1;
 
-    v_result = v_pDb->readDB("SELECT a.name, b.id_profile, b.finishTime "
+    v_result = v_pDb->readDB("SELECT a.name, b.id_profile, b.id_profile, b.finishTime "
 			    "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
 			    "ON (a.id_room = b.id_room "
 			    "AND b.id_level=\"" + xmDatabase::protectString(LevelID) + "\") "
@@ -365,10 +365,11 @@ std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &Le
       v_pDb->read_DB_free(v_result);
       return GAMETEXT_WORLDRECORDNA + std::string(": WR");
     }
-    v_roomName = v_pDb->getResult(v_result, 3, 0, 0);
-    if(v_pDb->getResult(v_result, 3, 0, 1) != NULL) {
-      v_id_profile = v_pDb->getResult(v_result, 3, 0, 1);
-      v_finishTime = atoi(v_pDb->getResult(v_result, 3, 0, 2));
+    v_roomName = v_pDb->getResult(v_result, 4, 0, 0);
+    o_highscore_author = v_pDb->getResult(v_result, 4, 0, 1);
+    if(v_pDb->getResult(v_result, 4, 0, 1) != NULL) {
+      v_id_profile = v_pDb->getResult(v_result, 4, 0, 2);
+      v_finishTime = atoi(v_pDb->getResult(v_result, 4, 0, 3));
     }
     v_pDb->read_DB_free(v_result);
     
