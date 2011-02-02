@@ -113,8 +113,9 @@ void StateFinished::enter()
   /* rooms times */
   v_roomsTimes = "";
   int v_room_highscore_tmp;
+  std::string v_author_tmp;
   for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {
-    v_roomsTimes = v_roomsTimes + GameApp::instance()->getWorldRecord(i, v_id_level, v_room_highscore_tmp) + "\n";
+    v_roomsTimes = v_roomsTimes + GameApp::instance()->getWorldRecord(i, v_id_level, v_room_highscore_tmp, v_author_tmp) + "\n";
     if(i == 0) {
       v_room_highscore = v_room_highscore_tmp;
     }
