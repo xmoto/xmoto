@@ -72,19 +72,21 @@ void GhostTrail::initialize() {
     for(unsigned int i=1; i<m_trailData.size(); i++) {
       
       //calculate the rise of the function (m) from our current two trail points: p1 to p0
-      float dy = m_trailData[i].y - m_trailData[i-1].y,
-	dx = m_trailData[i].x - m_trailData[i-1].x;
+      float dx = m_trailData[i].x - m_trailData[i-1].x;
+      float dy = m_trailData[i].y - m_trailData[i-1].y;
       v_P_old = m_trailData[i-1];
       v_vecTmp = Vector2f(dx,dy);
       
+      // this is very ugly code, to clean, to clean
       //check if teleportation occured, lets assume that 7 is a size big enough for beeing usable as marker
       Vector2f v_checkTeleport = Vector2f(  m_trailData[i].x -  v_P_old.x, m_trailData[i].y - v_P_old.y);
       if( v_checkTeleport.length() > 5 ) {
 	continue;  
       }
       
+      // this is very ugly code, to clean, to clean
       // check if new position vector is very near the next simplifiedtrailData, else pushback vectors in its direction, assume 0.2
-      int i=0;
+      int j=0;
       do {
 	// so lets push back new vector2fsm untilk we're near the next point on the simplified trail
 	v_P_new.x = (v_vecTmp.x / v_vecTmp.length()) * v_time + v_P_old.x;
@@ -93,13 +95,13 @@ void GhostTrail::initialize() {
 	m_interpolatedTrailData.push_back(v_P_new);
 	v_P_old = v_P_new;
 	
-	i++;
-	v_checkTeleport = Vector2f( m_trailData[i].x -  v_P_old.x, m_trailData[i].y - v_P_old.y);
+	j++;
+	v_checkTeleport = Vector2f( m_trailData[j].x -  v_P_old.x, m_trailData[j].y - v_P_old.y);
 	if( v_checkTeleport.length() > 5 ) {
 	  continue;  
 	}
 	
-      } while( i<int(v_vecTmp.length()/v_time) );
+      } while( j<int(v_vecTmp.length()/v_time) );
     }
     
     // now smoothen path in time: cumulate Vector.length, every n length pushBack median
