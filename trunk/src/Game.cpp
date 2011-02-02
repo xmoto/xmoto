@@ -283,7 +283,7 @@ bool GameApp::getCurrentMedal(int i_best_room_time, int i_best_player_time, std:
     return true; 
   }
 
-  if(i_best_player_time > i_best_room_time) {
+  if(i_best_player_time >= i_best_room_time) { /* >= because, PLATINUM is when you're the owner, not the same time */
     o_medal      = GAMETEXT_MEDAL_GOLD;
     return true; 
   } 
@@ -292,8 +292,12 @@ bool GameApp::getCurrentMedal(int i_best_room_time, int i_best_player_time, std:
   return true;
 }
 
-bool GameApp::getNextMedal(int i_best_room_time, int i_best_player_time, std::string& o_medal, int& o_medal_time) {
+bool GameApp::getNextMedal(const std::string& i_profile, const std::string& i_best_room_author, int i_best_room_time, int i_best_player_time, std::string& o_medal, int& o_medal_time) {
   int v_gold_time, v_silver_time, v_bronze_time;
+
+  if(i_profile == i_best_room_author) {
+    return false;
+  }
 
   /* no best room time, so no next medal */
   if(i_best_room_time < 0) {
@@ -329,8 +333,8 @@ bool GameApp::getNextMedal(int i_best_room_time, int i_best_player_time, std::st
     o_medal_time = v_gold_time;
     return true; 
   } 
-
-  if(i_best_player_time > i_best_room_time) {
+  
+  if(i_best_player_time >= i_best_room_time) { /* hum >= depending on whether you're the owner or not, but the test is done at the first time, you're not the author */
     o_medal      = GAMETEXT_MEDAL_PLATINIUM;
     o_medal_time = i_best_room_time;
     return true;
@@ -340,7 +344,7 @@ bool GameApp::getNextMedal(int i_best_room_time, int i_best_player_time, std::st
   return false;
 }
 
-std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &LevelID, int& o_highscore_time) {  
+std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &LevelID, int& o_highscore_time, std::string& o_highscores_author) {  
     char **v_result;
     unsigned int nrow;
     std::string v_roomName;
