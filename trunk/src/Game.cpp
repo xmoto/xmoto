@@ -366,7 +366,9 @@ std::string GameApp::getWorldRecord(unsigned int i_number, const std::string &Le
       return GAMETEXT_WORLDRECORDNA + std::string(": WR");
     }
     v_roomName = v_pDb->getResult(v_result, 4, 0, 0);
-    o_highscore_author = v_pDb->getResult(v_result, 4, 0, 1);
+    if(v_pDb->getResult(v_result, 4, 0, 1) != NULL) {
+      o_highscore_author = v_pDb->getResult(v_result, 4, 0, 1);
+    }
     if(v_pDb->getResult(v_result, 4, 0, 1) != NULL) {
       v_id_profile = v_pDb->getResult(v_result, 4, 0, 2);
       v_finishTime = atoi(v_pDb->getResult(v_result, 4, 0, 3));
