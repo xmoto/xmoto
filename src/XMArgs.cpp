@@ -39,6 +39,7 @@ XMArguments::XMArguments() {
   m_opt_fs             = false;
   m_opt_win            = false;
   m_opt_noexts         = false;
+  m_opt_novobs         = false;
   m_opt_drawlib        = false;
   m_opt_ugly           = false;
   m_opt_noLog          = false;
@@ -140,6 +141,8 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       m_opt_fs = true;
     } else if(v_opt == "--noexts") {
       m_opt_noexts = true;
+    } else if(v_opt == "--novobs") {
+      m_opt_novobs = true;
     } else if(v_opt == "--drawlib") {
       m_opt_drawlib = true;
       if(i+1 >= i_argc) {
@@ -398,6 +401,10 @@ bool XMArguments::isOptNoExts() const {
   return m_opt_noexts;
 }
 
+bool XMArguments::isOptNoVOBS() const {
+  return m_opt_novobs;
+}
+
 bool XMArguments::isOptDrawlib() const {
   return m_opt_drawlib;
 }
@@ -633,6 +640,7 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t-win, --windowed\n\t\tForces windowed mode.\n");
   printf("\t-v, --verbose\n\t\tBe verbose.\n");
   printf("\t--noexts\n\t\tDon't use any OpenGL extensions.\n");
+  printf("\t--novobs\n\t\tDon't use VOB OpenGL extension (GL_ARB_vertex_buffer_object).\n");
   printf("\t--fps\n\t\tDisplay framerate.\n");
   printf("\t--ugly\n\t\tEnable 'ugly' mode, suitable for computers without\n");
   printf("\t--testTheme\n\t\tDisplay forms around the theme to check it.\n");

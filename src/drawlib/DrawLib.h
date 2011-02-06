@@ -213,6 +213,7 @@ class DrawLib {
 
   virtual bool isExtensionSupported(std::string Ext) = 0;
   void setDontUseGLExtensions(bool dont_use);
+  void setDontUseGLVOBS(bool dont_use);
   virtual Img *grabScreen(int i_reduce = 1) = 0;
 
   /*
@@ -253,6 +254,7 @@ class DrawLib {
   bool m_bFBOSupported;
   bool m_bShadersSupported;
   bool m_bDontUseGLExtensions;
+  bool m_bDontUseGLVOBS;
   bool m_bNoGraphics;		/* No-graphics mode */
   
   SDL_Surface *m_screen;

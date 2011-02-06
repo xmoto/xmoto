@@ -2054,6 +2054,12 @@ void GameRenderer::_RenderDynamicBlocks(Scene* i_scene, bool bBackground) {
 
 void GameRenderer::_RenderStaticBlock(Block* block)
   {
+    float v_begin, v_end;
+
+    if(XMSession::instance()->debug()) {
+      v_begin = GameApp::getXMTime();
+    }
+
     DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
     Geom* geom = block->getGeom();
     if(XMSession::instance()->gameGraphics() != GFX_LOW) {
@@ -2125,6 +2131,27 @@ void GameRenderer::_RenderStaticBlock(Block* block)
 	pDrawlib->endDraw();
       }
     }
+
+    // debug rendering information
+    if(XMSession::instance()->debug()) {
+      v_end = GameApp::getXMTime();
+      if(v_end-v_begin > 0.2) { // time to render the block is > 0.2 seconds
+	Geom* geom = block->getGeom();
+	unsigned int vertices_max = 0;
+	unsigned int vertices_avg = 0;
+	for(unsigned int j=0; j<geom->Polys.size(); j++) {
+	  if(geom->Polys[j]->nNumVertices > vertices_max) {
+	    vertices_max = geom->Polys[j]->nNumVertices;
+	  }
+	  vertices_avg += geom->Polys[j]->nNumVertices;
+	}
+	vertices_avg /= geom->Polys.size();
+	
+	LogDebug("static block %s ; time = %.3f ; nPoly=%i ; vertices max=%i ; vertices avg=%i",
+		 block->Id().c_str(), v_end-v_begin, geom->Polys.size(), vertices_max, vertices_avg);
+      }
+    }
+
   }
 
 void GameRenderer::_RenderBlockEdges(Block* pBlock) {
