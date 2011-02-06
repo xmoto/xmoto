@@ -51,6 +51,7 @@ void XMSession::setToDefault() {
   m_maxRenderFps                  = DEFAULT_MAXRENDERFPS;
   m_windowed         	          = DEFAULT_WINDOWED;
   m_glExts           	          = DEFAULT_GLEXTS;
+  m_glVOBS           	          = DEFAULT_GLVOBS;
   m_drawlib          	          = DEFAULT_DRAWLIB;
   m_www              	          = DEFAULT_WWW;
   m_www_password                  = DEFAULT_WWW_PASSWORD;
@@ -176,6 +177,10 @@ void XMSession::load(const XMArguments* i_xmargs) {
 
   if(i_xmargs->isOptNoExts()) {
     m_glExts = false;
+  }
+
+  if(i_xmargs->isOptNoVOBS()) {
+    m_glVOBS = false;
   }
 
   if(i_xmargs->isOptDrawlib()) {
@@ -567,6 +572,10 @@ void XMSession::setWindowed(bool i_value) {
 
 bool XMSession::glExts() const {
   return m_glExts;
+}
+
+bool XMSession::glVOBS() const {
+  return m_glVOBS;
 }
 
 std::string XMSession::drawlib() const {

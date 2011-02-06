@@ -120,6 +120,7 @@ public:
   void setBpp(int i_value);
   void setWindowed(bool i_value);
   bool glExts() const;
+  bool glVOBS() const;
   std::string drawlib() const;
   bool www() const;
   void setWWW(bool i_value);
@@ -329,6 +330,7 @@ public:
   int  m_maxRenderFps;
   bool m_windowed;
   bool m_glExts;
+  bool m_glVOBS;
   std::string m_drawlib;
   bool m_www;
   bool m_benchmark;

@@ -304,9 +304,14 @@ void DrawLibOpenGL::init(unsigned int nDispWidth, unsigned int nDispHeight, unsi
     m_bVBOSupported     = false;
     m_bFBOSupported     = false;
     m_bShadersSupported = false;
-  }
-  else {
-    m_bVBOSupported = isExtensionSupported("GL_ARB_vertex_buffer_object");
+  } else {
+
+    if(m_bDontUseGLVOBS) {
+      m_bVBOSupported = false;
+    } else {
+      m_bVBOSupported = isExtensionSupported("GL_ARB_vertex_buffer_object");
+    }
+
     m_bFBOSupported = isExtensionSupported("GL_EXT_framebuffer_object");
       
     m_bShadersSupported = isExtensionSupported("GL_ARB_fragment_shader")

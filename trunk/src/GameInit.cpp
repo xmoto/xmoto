@@ -320,6 +320,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     
     drawLib->setNoGraphics(v_useGraphics == false);
     drawLib->setDontUseGLExtensions(XMSession::instance()->glExts() == false);
+    drawLib->setDontUseGLVOBS(XMSession::instance()->glVOBS() == false);
 
     LogInfo("Wanted resolution: %ix%i (%i bpp)",
             XMSession::instance()->resolutionWidth(),

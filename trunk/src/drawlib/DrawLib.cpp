@@ -90,6 +90,7 @@ void DrawLib::checkFontPrerequites() {
   m_bWindowed=true;
   m_bNoGraphics=false;
   m_bDontUseGLExtensions=false;
+  m_bDontUseGLVOBS=false;
   m_bShadersSupported = false;
   m_bVBOSupported = false;
   m_nLScissorX = m_nLScissorY = m_nLScissorW = m_nLScissorH = 0;
@@ -380,6 +381,10 @@ void DrawLib::resetGraphics() {
 
 void DrawLib::setDontUseGLExtensions(bool dont_use) {
   m_bDontUseGLExtensions = dont_use;
+}
+
+void DrawLib::setDontUseGLVOBS(bool dont_use) {
+  m_bDontUseGLVOBS = dont_use;
 }
 
 bool DrawLib::useVBOs() {

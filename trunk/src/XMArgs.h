@@ -45,6 +45,7 @@ class XMArguments {
   bool isOptWindowed() const;
   bool isOptFs() const;
   bool isOptNoExts() const;
+  bool isOptNoVOBS() const;
   bool isOptDrawlib() const;
   std::string getOpt_drawlib_lib() const;
   bool isOptHelp() const;
@@ -118,6 +119,7 @@ class XMArguments {
   bool m_opt_fs;
   bool m_opt_win;
   bool m_opt_noexts;
+  bool m_opt_novobs;
   bool m_opt_drawlib;
   std::string m_drawlib_lib;
   bool m_opt_ugly;
