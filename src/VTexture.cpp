@@ -253,6 +253,8 @@ TextureManager::~TextureManager() {
     }
 
     if(TextureImage.checkFile( Path,&ii )) {
+      LogInfo("Texture [%s] width = %i height = %i", Path.c_str(),
+	      ii.nWidth, ii.nHeight);
       /* Valid texture size? */
       if(ii.nWidth != ii.nHeight) {
         LogWarning("TextureManager::loadTexture() : texture '%s' is not square",Path.c_str());
@@ -300,9 +302,32 @@ int TextureManager::getTextureSize(std::string p_fileName) {
     image_info_t ii;
     Img TextureImage;
 
-    if(TextureImage.checkFile(p_fileName, &ii))
+    if(TextureImage.checkFile(p_fileName, &ii)) {
+      LogInfo("Texture [%s] width = %i height = %i", p_fileName.c_str(),
+	      ii.nWidth, ii.nHeight);
+    } else {
+      LogInfo("Texture [%s] can't load infos");
+    }
+
+    if(TextureImage.checkFile(p_fileName, &ii)) {
+#if defined(__APPLE__) 
+      /* Load it into system memory */
+      TextureImage.loadFile(p_fileName, false);
+      
+      /* Copy it into video memory */
+      unsigned char *pc;
+      bool bAlpha = TextureImage.isAlpha();
+      if(bAlpha){
+        pc = TextureImage.convertToRGBA32();
+      } else {
+        pc = TextureImage.convertToRGB24();
+      }
+
+      return TextureImage.getWidth();
+#else
       return ii.nWidth;
-    else
+#endif
+    } else
       return 0;
 }
 
