@@ -304,6 +304,9 @@ int TextureManager::getTextureSize(std::string p_fileName) {
 
     if(TextureImage.checkFile(p_fileName, &ii)) {
 #if defined(__APPLE__) 
+      // on mac os x, ii.nWidth get a bad value.
+      // the loading seems to fix this value
+      
       /* Load it into system memory */
       TextureImage.loadFile(p_fileName, false);
       
