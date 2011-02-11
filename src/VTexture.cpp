@@ -303,13 +303,6 @@ int TextureManager::getTextureSize(std::string p_fileName) {
     Img TextureImage;
 
     if(TextureImage.checkFile(p_fileName, &ii)) {
-      LogInfo("Texture [%s] width = %i height = %i", p_fileName.c_str(),
-	      ii.nWidth, ii.nHeight);
-    } else {
-      LogInfo("Texture [%s] can't load infos");
-    }
-
-    if(TextureImage.checkFile(p_fileName, &ii)) {
 #if defined(__APPLE__) 
       /* Load it into system memory */
       TextureImage.loadFile(p_fileName, false);
