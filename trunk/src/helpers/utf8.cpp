@@ -41,6 +41,24 @@ int utf8::byte_size_from_utf8_first(unsigned char ch) {
   return count;
 }
 
+bool utf8::is_utf8_valid(const std::string& i_str) {
+  size_t i = 0;
+
+  try {
+    while(i < i_str.size()) {
+      const int size = byte_size_from_utf8_first(i_str[i]);
+      if(i + size > i_str.size()) {
+	throw Exception("Invalid utf-8 char");
+      }
+      i += size;
+    }
+  } catch(Exception &e) {
+    return false;
+  }
+  
+  return true;
+}
+
 std::vector<std::string> utf8::split_utf8_string(const std::string &src) {
   std::vector<std::string> ret;
   std::string v_line;

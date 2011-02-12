@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class utf8 {
   public:
+  static bool is_utf8_valid(const std::string& i_str);
   static int byte_size_from_utf8_first(unsigned char ch);
   static std::vector<std::string> split_utf8_string(const std::string &src);
   static std::string txt2vertical(const std::string& i_str);

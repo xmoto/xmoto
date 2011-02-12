@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "NetActions.h"
 #include "thread/ClientListenerThread.h"
 #include "../helpers/VExcept.h"
+#include "../helpers/utf8.h"
 #include "../helpers/Log.h"
 #include "../Game.h"
 #include "helpers/Net.h"
@@ -341,14 +342,16 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 
 	// retrieve message
 	v_str = ((NA_chatMessage*)i_netAction)->getMessage();
-
-	if(i_netAction->getSource() == -1) { /* server */
-	  v_author = "server";
-	  SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author), CLT_SERVER);
-	} else {
-	  v_author = m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name();
-	  SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author));
+	if(utf8::is_utf8_valid(v_str)) { // ignore if the message is not valid
+	  if(i_netAction->getSource() == -1) { /* server */
+	    v_author = "server";
+	    SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author), CLT_SERVER);
+	  } else {
+	    v_author = m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name();
+	    SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author));
+	  }
 	}
+
       } catch(Exception &e) {
       }
     }
@@ -362,19 +365,21 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 
 	// retrieve message
 	v_str = ((NA_chatMessagePP*)i_netAction)->getMessage();
-
-	if(i_netAction->getSource() == -1) { /* server */
-	  v_author = "server";
-	  SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author), CLT_SERVER);
-	} else {
-	  v_author = m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name();
-
-	  if(((NA_chatMessagePP*)i_netAction)->privatePeople().size() == 0) { /* public */
-	    SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author));
-	  } else { /* private */
-	    SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author), CLT_PRIVATE);
+	if(utf8::is_utf8_valid(v_str)) { // ignore if the message is not valid
+	  if(i_netAction->getSource() == -1) { /* server */
+	    v_author = "server";
+	    SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author), CLT_SERVER);
+	  } else {
+	    v_author = m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name();
+	    
+	    if(((NA_chatMessagePP*)i_netAction)->privatePeople().size() == 0) { /* public */
+	      SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author));
+	    } else { /* private */
+	      SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author), CLT_PRIVATE);
+	    }
 	  }
 	}
+
       } catch(Exception &e) {
       }
     }
