@@ -309,15 +309,6 @@ int TextureManager::getTextureSize(std::string p_fileName) {
       
       /* Load it into system memory */
       TextureImage.loadFile(p_fileName, false);
-      
-      /* Copy it into video memory */
-      unsigned char *pc;
-      bool bAlpha = TextureImage.isAlpha();
-      if(bAlpha){
-        pc = TextureImage.convertToRGBA32();
-      } else {
-        pc = TextureImage.convertToRGB24();
-      }
 
       return TextureImage.getWidth();
 #else
