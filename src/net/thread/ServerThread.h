@@ -160,7 +160,7 @@ class ServerThread : public XMThread {
   void sendToAllClients(NetAction* i_netAction, int i_src, int i_subsrc, int i_except = -1);
   void sendToAllClientsHavingMode(NetClientMode i_mode, NetAction* i_netAction, int i_src, int i_subsrc, int i_except = -1);
   void sendToAllClientsMarkedToPlay(NetAction* i_netAction, int i_src, int i_subsrc, int i_except = -1);
-  void sendToAllClientsHavingProtocol(int i_protocol, NetAction* i_netAction_lt, NetAction* i_netAction_ge, int i_src, int i_subsrc, int i_except);
+  void sendToAllClientsHavingProtocol(int i_protocol, NetAction* i_netAction_lt, NetAction* i_netAction_ge, int i_src, int i_subsrc, int i_except = -1);
   void sendToClient(NetAction* i_netAction, unsigned int i, int i_src, int i_subsrc, bool i_forceUdp = false);
   void sendMsgToClient(unsigned int i_client, const std::string& i_msg);
   void removeClient(unsigned int i);

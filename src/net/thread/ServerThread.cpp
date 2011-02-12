@@ -1542,7 +1542,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       NA_chatMessagePP na(v_msg.c_str(), "server", v_private_people);
       NA_chatMessage na_old(v_msg.c_str(), "server");
       try {
-	sendToAllClientsHavingProtocol(4, &na_old, &na, -1, 0, i_client);
+	sendToAllClientsHavingProtocol(4, &na_old, &na, -1, 0);
       } catch(Exception &e) {
       }
     }
