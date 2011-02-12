@@ -601,19 +601,12 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
   void UIMsgBox::showMatch() {
 	  int last_word_f_pos = m_TextInput_real.rfind(" ") + 1;
 	  std::string last_word_f = m_TextInput_fake.substr(last_word_f_pos);
-	  for (int i = 0, n = last_word_f.size(); i < n; i++) {
-	    //last_word_f[i] = tolower(last_word_f[i]);
-	  }
 	  std::vector<std::string> matches = findMatches();
 	  for (int i = 0, n = matches.size(); i < n; i++) {
 		  std::string match = matches[i];
-		  for (int j = 0, k = match.size(); j < k; j++) {
-		    //match[j] = tolower(match[j]);
-		  }
 		  if(match.find(last_word_f) == 0) {
 			  if(i == (n - 1)) {
 				  std::string s;
-				  //s = utf8::utf8_substring(m_TextInput_fake, 0, last_word_f_pos);
 				  s = m_TextInput_fake.substr(0, last_word_f_pos);
 				  s += matches[0];
 				  m_TextInput_fake = s;
@@ -633,15 +626,9 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
 	  int pos_find = m_TextInput_real.rfind(" ") + 1;
 	  std::string last_word = m_TextInput_real.substr(pos_find);
 	  std::string last_word_normal = last_word;
-	  for (int i = 0, n = last_word.size(); i < n; i++) {
-	    //last_word[i] = tolower(last_word[i]);
-	  }
 
 	  for (int i = 0, n = m_completionWords.size(); i < n; i++) {
 	    std::string completionWord = m_completionWords[i];
-	    for (int j = 0, k = completionWord.size(); j < k; j++) {
-	      //completionWord[j] = tolower(completionWord[j]);
-	    }
 	    if (completionWord.find(last_word) == 0) {
 	      matchesList.push_back(m_completionWords[i]);
 	    }
