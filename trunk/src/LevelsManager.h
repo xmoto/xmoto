@@ -142,6 +142,7 @@ public:
 					      levelPropertyRequiredValue i_isFavorite,
 					      levelPropertyRequiredValue i_isFinished,
 					      levelPropertyRequiredValue i_isNew,
+					      levelPropertyRequiredValue i_isStolen,
 					      int                        i_lastLevels); // negativ for don't care
 
   private:

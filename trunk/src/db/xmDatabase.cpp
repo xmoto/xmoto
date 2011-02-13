@@ -905,6 +905,11 @@ void xmDatabase::createUserFunctions() {
 			     user_xm_profile, NULL, NULL) != SQLITE_OK) {
     throw Exception("xmDatabase::createUserFunctions() failed !");
   }
+
+  if(sqlite3_create_function(m_db, "xm_idRoom", 1, SQLITE_ANY, NULL,
+			     user_xm_idRoom, NULL, NULL) != SQLITE_OK) {
+    throw Exception("xmDatabase::createUserFunctions() failed !");
+  }
 }
 
 void xmDatabase::user_xm_floord(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {
@@ -982,4 +987,16 @@ void xmDatabase::user_xm_profile(sqlite3_context* i_context, int i_nArgs, sqlite
   }
 
   sqlite3_result_text(i_context, XMSession::instance()->profile().c_str(), XMSession::instance()->profile().size(), NULL);
+}
+
+void xmDatabase::user_xm_idRoom(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {
+  int v_value;
+
+  if(i_nArgs != 1) {
+    throw Exception("user_xm_idRoom failed !");
+  }
+
+  v_value = sqlite3_value_int(i_values[0]);
+
+  sqlite3_result_int(i_context, atoi(XMSession::instance()->idRoom(v_value).c_str()));
 }
