@@ -219,6 +219,7 @@ public:
   static void user_xm_userChildrenCompliant(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
   static void user_xm_replaceStart(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
   static void user_xm_profile(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
+  static void user_xm_idRoom(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
 
   /* function used to synchronise with the last xmoto version */
   void upgradeXmDbToVersion(int i_fromVersion,
