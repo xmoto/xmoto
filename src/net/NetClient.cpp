@@ -717,8 +717,8 @@ VirtualNetLevelsList* NetClient::getOtherClientLevelsList(xmDatabase* pDb) {
 void NetClient::fillPrivatePeople(const std::string& i_msg, const std::string& i_private_suffix,
 				  std::vector<int>& io_private_people,
 				  std::vector<std::string>& o_unknown_players)  {
-  unsigned int n = 0;
-  unsigned int nfound;
+  int n = 0;
+  size_t nfound;
   std::string v_toanalyse, v_lastWord;
   int v_lastWordPos;
   bool v_found, v_foundList;
