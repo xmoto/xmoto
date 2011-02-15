@@ -143,6 +143,8 @@ class ServerThread : public XMThread {
   std::string m_banner;
   bool m_acceptConnections;
 
+  int m_unmanagedActions;
+
   SDLNet_SocketSet m_set;
   std::vector<NetSClient*> m_clients;
 

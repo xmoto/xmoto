@@ -246,6 +246,7 @@ ServerThread::ServerThread(const std::string& i_dbKey)
     m_startTimeStr       = GameApp::getTimeStamp();
     m_banner             = XM_SERVER_DEFAULT_BANNER;
     m_acceptConnections  = false;
+    m_unmanagedActions   = 0;
 
     if(!m_udpPacket) {
       throw Exception("SDLNet_AllocPacket: " + std::string(SDLNet_GetError()));
@@ -932,15 +933,26 @@ void ServerThread::acceptClient() {
 }
 
 bool ServerThread::manageClientTCP(unsigned int i) {
-  NetAction* v_netAction;
+  NetAction* v_netAction = NULL;
 
-  while(m_clients[i]->tcpReader->TCPReadAction(m_clients[i]->tcpSocket(), &v_netAction)) {
-    if(manageAction(v_netAction, i) == false) {
+  try {
+    while(m_clients[i]->tcpReader->TCPReadAction(m_clients[i]->tcpSocket(), &v_netAction)) {
+      if(manageAction(v_netAction, i) == false) {
+	delete v_netAction;
+	v_netAction = NULL;
+	return false;
+      }
       delete v_netAction;
-      return false;
+      v_netAction = NULL;
     }
-    delete v_netAction;
+  } catch(Exception &e) {
+    m_unmanagedActions++;
+    if(v_netAction != NULL) {
+      delete v_netAction;
+    }
+    throw e;
   }
+
   return true;
 }
 
@@ -955,14 +967,21 @@ void ServerThread::manageClientUDP() {
 	 m_clients[i]->udpRemoteIP()->port == m_udpPacket->address.port)  {
 	v_managedPacket = true;
 	try {
+	  v_netAction = NULL;
 	  v_netAction = ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len);
 	  if(manageAction(v_netAction, i) == false) {
 	    delete v_netAction;
+	    v_netAction = NULL;
 	    removeClient(i);
 	    return;
 	  }
 	  delete v_netAction;
 	} catch(Exception &e) {
+	  m_unmanagedActions++;
+	  if(v_netAction != NULL) {
+	    delete v_netAction;
+	  }
+
 	  // ok, a bad packet received, forget it
 	  LogWarning("server: bad UDP packet received by client %u (%s:%i) : %s", i,
 		     XMNet::getIp(&(m_udpPacket->address)).c_str(), SDLNet_Read16(&(m_udpPacket->address.port)), e.getMsg().c_str());
@@ -974,6 +993,7 @@ void ServerThread::manageClientUDP() {
     // anonym packet ? find the associated client
     if(v_managedPacket == false) {
       try {
+	v_netAction = NULL;
 	v_netAction = ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len);
 	if(v_netAction->actionType() == TNA_udpBind) {
 	  for(unsigned int i=0; i<m_clients.size(); i++) {
@@ -1006,7 +1026,13 @@ void ServerThread::manageClientUDP() {
 	} else {
 	  LogWarning("Packet of unknown client received");
 	}
+	delete v_netAction;
       } catch(Exception &e) {
+	m_unmanagedActions++;
+	if(v_netAction != NULL) {
+	  delete v_netAction;
+	}
+
 	/* forget this bad packet */
 	LogWarning("server: bad anonym UDP packet received by %s:%i",
 		   XMNet::getIp(&(m_udpPacket->address)).c_str(), SDLNet_Read16(&(m_udpPacket->address.port)));
@@ -1520,10 +1546,15 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += NetAction::getStats() + "\n";
       v_answer += ActionReader::getStats() + "\n";
 
-      std::ostringstream v_n;
+      std::ostringstream v_nup;
+      v_answer += "unmanaged packets : ";
+      v_nup << m_unmanagedActions;
+      v_answer += v_nup.str() + "\n";
+
+      std::ostringstream v_ndb;
       v_answer += "db memory : ";
-      v_n << (xmDatabase::getMemoryUsed()) /1024/1024;
-      v_answer += v_n.str() + "mB" + "\n";
+      v_ndb << (xmDatabase::getMemoryUsed()) /1024/1024;
+      v_answer += v_ndb.str() + "mB" + "\n";
     }
 
   } else if(v_args[0] == "msg") {
