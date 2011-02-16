@@ -75,9 +75,9 @@ void UIConsole::paint() {
 
   // draw the text
   for(unsigned int i=0; i<m_lines.size(); i++) {
-    v_fg = v_fm->getGlyph(m_lines[i]);
+    v_fg = v_fm->getGlyphTabExtended(m_lines[i]);
     v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, v_XOffset, v_YOffset,
-		      MAKE_COLOR(255, 255, 255, 255));
+				 MAKE_COLOR(255, 255, 255, 255));
 
     if(m_lines.size()-1 == i) {
 

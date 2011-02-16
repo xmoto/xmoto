@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../helpers/Log.h"
 #include "../../helpers/VExcept.h"
 #include "../../helpers/utf8.h"
+#include "../../helpers/System.h"
 #include <string>
 #include <sstream>
 #include "../helpers/Net.h"
@@ -1551,10 +1552,14 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_nup << m_unmanagedActions;
       v_answer += v_nup.str() + "\n";
 
+      // db memory
       std::ostringstream v_ndb;
       v_answer += "db memory : ";
       v_ndb << (xmDatabase::getMemoryUsed()) /1024/1024;
       v_answer += v_ndb.str() + "mB" + "\n";
+
+      // system memory
+      v_answer += System::getMemoryInfo();
     }
 
   } else if(v_args[0] == "msg") {

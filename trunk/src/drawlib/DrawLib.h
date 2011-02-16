@@ -47,6 +47,7 @@ class FontManager {
   virtual ~FontManager();
   
   virtual FontGlyph* getGlyph(const std::string& i_string) = 0;
+  virtual FontGlyph* getGlyphTabExtended(const std::string& i_string) = 0; // extends \t
   
   virtual void printString(DrawLib* pDrawLib, FontGlyph* i_glyph, int i_x, int i_y, Color i_color, float i_perCentered = -1.0, bool i_shadowEffect = false) = 0;
   virtual void printStringGrad(DrawLib* pDrawLib, FontGlyph* i_glyph, int i_x, int i_y,

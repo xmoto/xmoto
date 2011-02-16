@@ -116,6 +116,7 @@ public:
   virtual ~GLFontManager();
 
   FontGlyph* getGlyph(const std::string& i_string);
+  FontGlyph* getGlyphTabExtended(const std::string& i_string);
   void printString(DrawLib* pDrawLib, FontGlyph* i_glyph, int i_x, int i_y, Color i_color, float i_perCentered = -1.0, bool i_shadowEffect = false);
   void printStringGrad(DrawLib* pDrawLib, FontGlyph* i_glyph, int i_x, int i_y,
 		       Color c1, Color c2, Color c3, Color c4, float i_perCentered = -1.0, bool i_shadowEffect = false);
@@ -902,6 +903,26 @@ int GLFontGlyph::powerOf2(int i_value) {
     v_value <<= 1;
   }
   return v_value;
+}
+
+FontGlyph* GLFontManager::getGlyphTabExtended(const std::string& i_string) {
+  std::string v_extstr;
+  unsigned int v_tab_size = 5;
+
+  unsigned int n = 0;
+  std::string v_char;
+  while(n < i_string.size()) {
+    v_char = utf8::getNextChar(i_string, n);
+    if(v_char == "\t") {
+      for(unsigned int i=n%v_tab_size; i<v_tab_size; i++) {
+	v_extstr += " ";
+      }
+    } else {
+      v_extstr += v_char;
+    }
+  }
+
+  return getGlyph(v_extstr);
 }
 
 FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
