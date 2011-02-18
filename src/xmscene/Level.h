@@ -75,7 +75,7 @@ class Level {
 
   /* load level so that it is possible to play */
   /* to replay a level, unload then, reload it */
-  int loadToPlay(ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings); /* return the number of errors found */
+  int loadToPlay(ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings, bool i_loadBSP /* load or not the bsp blocks... */); /* return the number of errors found */
   void unloadToPlay();
 
   std::string Id()          const;

@@ -525,7 +525,7 @@ void Scene::executeEvents(DBuffer *i_recorder) {
     Prepare the specified level for playing through this game object
     ===========================================================================*/
   void Scene::prePlayLevel(DBuffer *i_recorder,
-			   bool i_playEvents) {
+			   bool i_playEvents, bool i_loadBSP) {
     m_playInitLevel_done = false;
 
     m_playEvents = i_playEvents;
@@ -604,7 +604,7 @@ void Scene::executeEvents(DBuffer *i_recorder) {
 
     /* Generate extended level data to be used by the game */
     try {
-      _GenerateLevel();
+      _GenerateLevel(i_loadBSP);
     } catch(Exception &e) {
       LogWarning(std::string("Level generation failed !\n" + e.getMsg()).c_str());
       throw Exception(e);
@@ -769,7 +769,7 @@ void Scene::initGhostTrail(FileGhost* i_ghost) {
   /*===========================================================================
     Level generation (i.e. parsing of level source)
     ===========================================================================*/
-  void Scene::_GenerateLevel(void) {
+  void Scene::_GenerateLevel(bool i_loadBSP) {
     if(m_pLevelSrc == NULL) {
       LogWarning("Can't generate level when no source is assigned!");
       return;
@@ -809,7 +809,7 @@ void Scene::initGhostTrail(FileGhost* i_ghost) {
     /* For each input block */
     int nTotalBSPErrors = 0;
     
-    nTotalBSPErrors = m_pLevelSrc->loadToPlay(m_chipmunkWorld, m_physicsSettings);
+    nTotalBSPErrors = m_pLevelSrc->loadToPlay(m_chipmunkWorld, m_physicsSettings, i_loadBSP);
 
     if(nTotalBSPErrors > 0) {
       LogWarning(" %d BSP error%s in total",nTotalBSPErrors,nTotalBSPErrors==1?"":"s");

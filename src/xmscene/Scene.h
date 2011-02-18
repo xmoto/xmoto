@@ -140,7 +140,7 @@ public:
 
   /* update of the structure */
   void loadLevel(xmDatabase *i_db, const std::string& i_id_level);
-  void prePlayLevel(DBuffer* i_eventRecorder, bool i_playEvents);
+  void prePlayLevel(DBuffer* i_eventRecorder, bool i_playEvents, bool i_loadBSP = true /* load or not the bsp blocks... */);
 
   void playInitLevel();
   void updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder, bool i_fast = false);
@@ -372,8 +372,7 @@ private:
   void cleanPlayers();
 
   /* Helpers */
-  void _GenerateLevel(void);          /* Called by playLevel() to 
-					 prepare the level */
+  void _GenerateLevel(bool i_loadBSP); /* Called by playLevel() to prepare the level */
   bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,Zone *pZone);
   void _KillEntity(Entity *pEnt);
   void _UpdateEntities(void);

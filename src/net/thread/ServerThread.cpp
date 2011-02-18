@@ -400,7 +400,7 @@ void ServerThread::SP2_initPlaying() {
       }
 
       m_DBuffer->clear();
-      m_universe->getScenes()[i]->prePlayLevel(m_DBuffer, true);
+      m_universe->getScenes()[i]->prePlayLevel(m_DBuffer, true, false);
       SP2_sendSceneEvents(m_DBuffer);
       
       // add the bikers

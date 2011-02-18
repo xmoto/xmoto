@@ -305,7 +305,7 @@ void Block::updatePhysics(int i_time, int timeStep, CollisionSystem* io_collisio
   cpBodyResetForces(mBody);
 }
 
-int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings) {
+int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings, bool i_loadBSP) {
 
   m_dynamicPosition       = m_initialPosition;
   m_dynamicRotation       = m_initialRotation;
@@ -374,7 +374,9 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
       tx += Vertices()[i]->Position().x;      
       ty += Vertices()[i]->Position().y;      
     } else {
-      v_BSPTree.addLineDefinition(Vertices()[i]->Position(), Vertices()[inext]->Position());
+      if(i_loadBSP) {
+	v_BSPTree.addLineDefinition(Vertices()[i]->Position(), Vertices()[inext]->Position());
+      }
     }
   }
 
@@ -390,12 +392,14 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
     }
 
     // then BSP-ify them
-    for(unsigned int i=0; i<Vertices().size(); i++) {
-      unsigned int inext = i+1;
-      if(inext == Vertices().size()) inext=0;
-
-      /* Add line to BSP generator */ 
-      v_BSPTree.addLineDefinition(Vertices()[i]->Position(), Vertices()[inext]->Position());
+    if(i_loadBSP) {
+      for(unsigned int i=0; i<Vertices().size(); i++) {
+	unsigned int inext = i+1;
+	if(inext == Vertices().size()) inext=0;
+	
+	/* Add line to BSP generator */ 
+	v_BSPTree.addLineDefinition(Vertices()[i]->Position(), Vertices()[inext]->Position());
+      }
     }
 
     // modify the object coords with the midpoint
@@ -424,41 +428,49 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
   //}
 
   /* Compute */
-  std::vector<BSPPoly *> &v_BSPPolys = v_BSPTree.compute();      
-  
+  std::vector<BSPPoly *>* v_BSPPolys;
 
-  /* Load Textures */  
-  //first, lets see if there are animated textures, that come with 0.5.3
-  float scale = TextureScale() * 0.25;
-  Sprite* pSprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION_TEXTURE,
-						 this->getTexture());
-  //if there aren't, keep theme files compatible to old xmoto versions
-  if(pSprite == NULL) {
-    pSprite = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
-						 this->getTexture());  
+  if(i_loadBSP) {
+    v_BSPPolys = v_BSPTree.compute();      
   }
-  
-  if(pSprite != NULL) 
-  {
-    m_sprite = pSprite;
-    try{
-      int v_textureSize = m_sprite->getTextureSize();
-      if(v_textureSize < 256 && v_textureSize != 0)
-	// divide by texturesize to prevent upscaling of textures < 256x256
-	scale *= (256/v_textureSize);
-    } catch(Exception& e) {
-      ;
+
+  float scale;
+
+  if(i_loadBSP) { // computing the scale is only required for bsp
+    /* Load Textures */  
+    //first, lets see if there are animated textures, that come with 0.5.3
+    scale = TextureScale() * 0.25;
+    Sprite* pSprite = Theme::instance()->getSprite(SPRITE_TYPE_ANIMATION_TEXTURE,
+						   this->getTexture());
+    //if there aren't, keep theme files compatible to old xmoto versions
+    if(pSprite == NULL) {
+      pSprite = Theme::instance()->getSprite(SPRITE_TYPE_TEXTURE,
+					     this->getTexture());  
     }
-  }
-  else {
-    LogWarning("Texture %s could not be loaded in class Block", this->getTexture().c_str());
+    
+    if(pSprite != NULL) 
+      {
+	m_sprite = pSprite;
+	try{
+	  int v_textureSize = m_sprite->getTextureSize();
+	  if(v_textureSize < 256 && v_textureSize != 0)
+	    // divide by texturesize to prevent upscaling of textures < 256x256
+	    scale *= (256/v_textureSize);
+	} catch(Exception& e) {
+	  ;
+	}
+      }
+    else {
+      LogWarning("Texture %s could not be loaded in class Block", this->getTexture().c_str());
+    }
   }
 
   /* Create convex blocks */
-  for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
-    addPoly(v_BSPPolys[i], io_collisionSystem, scale);
+  if(i_loadBSP) {
+    for(unsigned int i=0; i<v_BSPPolys->size(); i++) {
+      addPoly((*v_BSPPolys)[i], io_collisionSystem, scale);
+    }
   }
-
 
   if(i_chipmunkWorld != NULL) {
     if(isPhysics()) {
@@ -500,29 +512,31 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 	mBody = myBody;
 
 	// go through calculated BSP polys, adding one or more shape to the
-	for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
-	  unsigned int size = 2*sizeof(cpVect)*v_BSPPolys[i]->Vertices().size();
-	  myVerts = (cpVect*)malloc(size);
+	if(i_loadBSP) {
+	  for(unsigned int i=0; i<v_BSPPolys->size(); i++) {
+	    unsigned int size = 2*sizeof(cpVect)*(*v_BSPPolys)[i]->Vertices().size();
+	    myVerts = (cpVect*)malloc(size);
 
-	  // translate for chipmunk
-	  for(unsigned int j=0; j<v_BSPPolys[i]->Vertices().size(); j++) {
-	    cpVect ma = cpv(v_BSPPolys[i]->Vertices()[j].x * CHIP_SCALE_RATIO,
-			    v_BSPPolys[i]->Vertices()[j].y * CHIP_SCALE_RATIO);
-	    myVerts[j] =  ma;
+	    // translate for chipmunk
+	    for(unsigned int j=0; j<(*v_BSPPolys)[i]->Vertices().size(); j++) {
+	      cpVect ma = cpv((*v_BSPPolys)[i]->Vertices()[j].x * CHIP_SCALE_RATIO,
+			      (*v_BSPPolys)[i]->Vertices()[j].y * CHIP_SCALE_RATIO);
+	      myVerts[j] =  ma;
+	    }
+
+	    // collision shape
+	    m_shape = cpPolyShapeNew(myBody, (*v_BSPPolys)[i]->Vertices().size(), myVerts, cpvzero);
+	    m_shape->u = m_friction;
+	    m_shape->e = m_elasticity;
+	    if (isBackground()) {
+	      m_shape->group = 1;
+	    }
+
+	    cpSpaceAddShape(i_chipmunkWorld->getSpace(), m_shape);
+
+	    // free the temporary vertices array
+	    free(myVerts);
 	  }
-
-	  // collision shape
-	  m_shape = cpPolyShapeNew(myBody, v_BSPPolys[i]->Vertices().size(), myVerts, cpvzero);
-	  m_shape->u = m_friction;
-	  m_shape->e = m_elasticity;
-	  if (isBackground()) {
-	    m_shape->group = 1;
-	  }
-
-	  cpSpaceAddShape(i_chipmunkWorld->getSpace(), m_shape);
-
-	  // free the temporary vertices array
-	  free(myVerts);
 	}
       }
     }
@@ -530,11 +544,14 @@ int Block::loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chip
 
   updateCollisionLines(true);
 
-  if(v_BSPTree.getNumErrors() > 0) {
-    LogError("Error due to the block %s", Id().c_str());
+  if(i_loadBSP) {
+    if(v_BSPTree.getNumErrors() > 0) {
+      LogError("Error due to the block %s", Id().c_str());
+    }
+    return v_BSPTree.getNumErrors();  
+  } else {
+    return 0;
   }
-
-  return v_BSPTree.getNumErrors();  
 }
 
 
