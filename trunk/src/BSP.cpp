@@ -115,7 +115,7 @@ int BSP::getNumErrors() {
   return m_nNumErrors;
 }
 
-std::vector<BSPPoly *> &BSP::compute() {
+std::vector<BSPPoly *>* BSP::compute() {
   /* Start by creating the root polygon - i.e. the quad that covers
      the entire region enclosed by the input linedefs */
   AABB GlobalBox;
@@ -135,7 +135,7 @@ std::vector<BSPPoly *> &BSP::compute() {
   /* Start the recursion */
   recurse(&RootPoly, m_lines);
 
-  return m_polys;
+  return &m_polys;
 }
 
 /*===========================================================================

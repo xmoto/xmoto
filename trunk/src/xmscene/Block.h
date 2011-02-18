@@ -224,7 +224,7 @@ class Block {
   void translate(float x, float y);
   void setPhysicsPosition(float ix, float iy);
 
-  int loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings);
+  int loadToPlay(CollisionSystem* io_collisionSystem, ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings, bool i_loadBSP);
   void unloadToPlay();
 
   void saveBinary(FileHandle *i_pfh);

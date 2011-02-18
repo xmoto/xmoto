@@ -1207,13 +1207,13 @@ int Level::compareVersionNumbers(const std::string &v1,const std::string &v2) {
   return 0;    
 }
 
-int Level::loadToPlay(ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings) {
+int Level::loadToPlay(ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physicsSettings, bool i_loadBSP) {
   int v_nbErrors = 0;
 
   /* preparing blocks */
   for(unsigned int i=0; i<m_blocks.size(); i++) {
     try {
-      v_nbErrors += m_blocks[i]->loadToPlay(m_pCollisionSystem, i_chipmunkWorld, i_physicsSettings);
+      v_nbErrors += m_blocks[i]->loadToPlay(m_pCollisionSystem, i_chipmunkWorld, i_physicsSettings, i_loadBSP);
     } catch(Exception &e) {
       throw Exception("Fail to load block '" + m_blocks[i]->Id() + "' :\n" + e.getMsg());
     }

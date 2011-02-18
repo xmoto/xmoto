@@ -65,7 +65,7 @@ class BSP {
   void addLineDefinition(const Vector2f& i_p0, const Vector2f& i_p1);
 
   /* build some polygons ; don't delete the result, it's in memory in the class BSP */
-  std::vector<BSPPoly *> &compute();
+  std::vector<BSPPoly *>* compute();
       
  private:
   int m_nNumErrors;               /* Number of errors found */
