@@ -94,6 +94,11 @@ void Universe::removeAllWorlds() {
     delete m_scenes[i];
   }
   m_scenes.clear();
+
+  for(unsigned int i=0; i<m_motoGameHooks.size(); i++) {
+    delete m_motoGameHooks[i];
+  }
+  m_motoGameHooks.clear();
 }
 
 void Universe::initPlayServer() {
