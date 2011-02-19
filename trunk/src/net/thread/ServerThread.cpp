@@ -240,7 +240,7 @@ ServerThread::ServerThread(const std::string& i_dbKey)
     m_universe = NULL;
     m_DBuffer = new DBuffer();
     m_DBuffer->initOutput(XM_NET_MAX_EVENTS_SHOT_SIZE);
-    m_sp2phase           = SP2_PHASE_NONE
+    m_sp2phase           = SP2_PHASE_NONE;
     SP2_setPhase(SP2_PHASE_WAIT_CLIENTS);
     m_lastFrameTimeStamp = -1;
     m_frameLate          = 0;
