@@ -248,7 +248,10 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(v_xmArgs.isOptServerOnly()) {
     struct sigaction v_act;
 
-    v_act.sa_handler = xmexit_term;
+    v_act.sa_handler  = xmexit_term;
+    v_act.sa_restorer = NULL;
+    sigemptyset(&v_act.sa_mask);
+    v_act.sa_flags = 0;
 
     if(sigaction(SIGTERM, &v_act, NULL) != 0) {
       LogWarning("sigaction failed");

@@ -51,6 +51,11 @@ void set_environment_variable(const std::string& i_variable, const std::string& 
 
     v_buffer = i_variable + "=" + i_value.c_str();
     v_str = (char*)malloc(v_buffer.length() + 1);
+
+    if(v_str == NULL) {
+      throw Exception("Set Env failed");
+    }
+
     strncpy(v_str, v_buffer.c_str(), v_buffer.length() +1);
 
     if(putenv(v_str) != 0) {
