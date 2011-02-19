@@ -73,6 +73,8 @@ NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tc
     m_isAdminConnected = false;
     m_lastGhostFrameTime = 0;
     m_protocolVersion = -1; // not set
+    m_udpRemoteIP.host = INADDR_NONE;
+    m_udpRemoteIP.port = 0;
 }
 
 NetSClient::~NetSClient() {
@@ -238,6 +240,7 @@ ServerThread::ServerThread(const std::string& i_dbKey)
     m_universe = NULL;
     m_DBuffer = new DBuffer();
     m_DBuffer->initOutput(XM_NET_MAX_EVENTS_SHOT_SIZE);
+    m_sp2phase           = SP2_PHASE_NONE
     SP2_setPhase(SP2_PHASE_WAIT_CLIENTS);
     m_lastFrameTimeStamp = -1;
     m_frameLate          = 0;
