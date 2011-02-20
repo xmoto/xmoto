@@ -1272,7 +1272,10 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
 
 void XMFS::uninit() {
 #ifndef WIN32
-  xdgWipeHandle(m_xdgHd);
+  if(m_xdgHd != NULL) {
+    xdgWipeHandle(m_xdgHd);
+    free(m_xdgHd);
+  }
 #endif
   m_isInitialized = false;
 }

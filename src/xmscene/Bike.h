@@ -134,6 +134,7 @@ class BikeState {
 class Biker {
  public:
   Biker(PhysicsSettings* i_physicsSettings,
+	bool i_engineSound,
 	Theme *i_theme, BikerTheme* i_bikerTheme,
 	const TColor& i_colorFilter,
 	const TColor& i_uglyColorFilter);
@@ -164,7 +165,6 @@ class Biker {
 			     CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			     Scene *i_motogame);
   virtual bool isNetGhost() const { return false; };
-  void setPlaySound(bool i_value);
 
   PhysicsSettings* getPhysicsSettings();
   virtual bool isStateInitialized() const;
@@ -222,7 +222,6 @@ class Biker {
 
  protected:
   BikerTheme* m_bikerTheme;
-  bool m_playSound;
   BikeState* m_bikeState;
   EngineSoundSimulator* m_EngineSound;
   bool m_finished;

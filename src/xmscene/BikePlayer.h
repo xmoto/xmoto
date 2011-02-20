@@ -45,7 +45,9 @@ private:
 
 class PlayerLocalBiker : public Biker {
  public:
-  PlayerLocalBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_filterColor, const TColor& i_filterUglyColor);
+  PlayerLocalBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
+		   bool i_engineSound,
+		   Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_filterColor, const TColor& i_filterUglyColor);
   virtual ~PlayerLocalBiker();
 
   void updateToTime(int i_time, int i_timeStep,
@@ -175,6 +177,7 @@ class PlayerNetClient : public Biker {
  public:
   PlayerNetClient(PhysicsSettings* i_physicsSettings,
 		  Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
+		  bool i_engineSound,
 		  Theme *i_theme, BikerTheme* i_bikerTheme,
 		  const TColor& i_colorFilter,
 		  const TColor& i_uglyColorFilter);

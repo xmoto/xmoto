@@ -182,36 +182,42 @@ BikeParameters* BikeState::Parameters() {
 }
 
 Biker::Biker(PhysicsSettings* i_physicsSettings,
+	     bool i_engineSound,
 	     Theme *i_theme, BikerTheme* i_bikerTheme,
 	     const TColor& i_colorFilter,
 	     const TColor& i_uglyColorFilter) {
 
-  m_EngineSound = new EngineSoundSimulator();
+  m_EngineSound = NULL;
+  if(i_engineSound) {
+    m_EngineSound = new EngineSoundSimulator();
+  }
+
   m_physicsSettings = i_physicsSettings;
   m_bikeState   = new BikeState(m_physicsSettings);
   m_localNetId = -1;
   m_nbRenderedFrames = 0;
 
   /* sound engine */
-  try {
-    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine00")->FilePath()));
-    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine01")->FilePath()));
-    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine02")->FilePath()));
-    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine03")->FilePath()));
-    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine04")->FilePath()));
-    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine05")->FilePath()));
-    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine06")->FilePath()));
-    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine07")->FilePath()));
-    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine08")->FilePath()));
-    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine09")->FilePath()));
-    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine10")->FilePath()));
-    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine11")->FilePath()));
-    m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine12")->FilePath()));
-  } catch(Exception &e) {
-    /* hum, no nice */
+  if(m_EngineSound != NULL) {
+    try {
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine00")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine01")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine02")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine03")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine04")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine05")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine06")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine07")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine08")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine09")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine10")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine11")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine12")->FilePath()));
+    } catch(Exception &e) {
+      /* hum, no nice */
+    }
   }
 
-  m_playSound = true;
   m_dead      = false;
   m_deadTime  = 0;
   m_finished  = false;
@@ -228,8 +234,10 @@ Biker::Biker(PhysicsSettings* i_physicsSettings,
 }
 
 Biker::~Biker() { 
-	cleanCollisionPoints();
-  delete m_EngineSound;
+  cleanCollisionPoints();
+  if(m_EngineSound != NULL) {
+    delete m_EngineSound;
+  }
   delete m_bikeState;
 }
 
@@ -279,8 +287,8 @@ void Biker::updateToTime(int i_time, int i_timeStep,
   if(isFinished() || isDead()) return;
 
   /* sound */
-  m_EngineSound->setRPM(getBikeEngineRPM());
-  if(m_playSound) {
+  if(m_EngineSound != NULL) {
+    m_EngineSound->setRPM(getBikeEngineRPM());
     m_EngineSound->update(i_time);
   }
 
@@ -385,10 +393,6 @@ void Biker::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i
 }
 
 void Biker::resetAutoDisabler() {
-}
-
-void Biker::setPlaySound(bool i_value) {
-  m_playSound = i_value;
 }
 
 void Biker::setFinished(bool i_value, int i_finishTime) {
