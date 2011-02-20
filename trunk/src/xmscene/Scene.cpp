@@ -631,8 +631,7 @@ void Scene::executeEvents(DBuffer *i_recorder) {
 					   Theme *i_theme, BikerTheme* i_bikerTheme,
 					   bool i_enableEngineSound) {
     ReplayBiker* v_biker = NULL;
-    v_biker = new ReplayBiker(i_ghostFile, m_physicsSettings, i_theme, i_bikerTheme);
-    v_biker->setPlaySound(i_enableEngineSound);
+    v_biker = new ReplayBiker(i_ghostFile, m_physicsSettings, i_enableEngineSound, i_theme, i_bikerTheme);
     m_players.push_back(v_biker);
     return v_biker;
   }
@@ -648,9 +647,8 @@ void Scene::executeEvents(DBuffer *i_recorder) {
       throw Exception("No level defined");
     }
 
-    v_ghost = new FileGhost(i_ghostFile, m_physicsSettings, false, i_theme, i_bikerTheme,
+    v_ghost = new FileGhost(i_ghostFile, m_physicsSettings, false, false, i_theme, i_bikerTheme,
 			    i_filterColor, i_filterUglyColor);
-    v_ghost->setPlaySound(false);
     v_ghost->setInfo(i_info);
     v_ghost->setReference(i_isReference);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
@@ -678,9 +676,8 @@ void Scene::initGhostTrail(FileGhost* i_ghost) {
     NetGhost* v_ghost = NULL;
     LogInfo("New NetGhost");
 
-    v_ghost = new NetGhost(m_physicsSettings, i_theme, i_bikerTheme,
+    v_ghost = new NetGhost(m_physicsSettings, false, i_theme, i_bikerTheme,
 			   i_filterColor, i_filterUglyColor);
-    v_ghost->setPlaySound(false);
     v_ghost->setInfo(i_info);
     m_ghosts.push_back(v_ghost);
     return v_ghost;
@@ -1419,15 +1416,15 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
 
 
 PlayerLocalBiker* Scene::addPlayerLocalBiker(int i_localNetId, Vector2f i_position, DriveDir i_direction,
-				   Theme *i_theme, BikerTheme* i_bikerTheme,
-				   const TColor& i_filterColor,
-				   const TColor& i_filterUglyColor,
-				   bool i_enableEngineSound) {
+					     Theme *i_theme, BikerTheme* i_bikerTheme,
+					     const TColor& i_filterColor,
+					     const TColor& i_filterUglyColor,
+					     bool i_enableEngineSound) {
   PlayerLocalBiker* v_playerBiker = new PlayerLocalBiker(m_physicsSettings, i_position, i_direction, m_PhysGravity,
-					       i_theme, i_bikerTheme,
-					       i_filterColor, i_filterUglyColor);
+							 i_enableEngineSound,
+							 i_theme, i_bikerTheme,
+							 i_filterColor, i_filterUglyColor);
   v_playerBiker->setOnBikerHooks(new SceneOnBikerHooks(this, m_players.size()));
-  v_playerBiker->setPlaySound(i_enableEngineSound);
   v_playerBiker->setLocalNetId(i_localNetId);
   m_players.push_back(v_playerBiker);
   
@@ -1441,9 +1438,11 @@ PlayerLocalBiker* Scene::addPlayerLocalBiker(int i_localNetId, Vector2f i_positi
 PlayerNetClient* Scene::addPlayerNetClient(Vector2f i_position, DriveDir i_direction,
 					   Theme *i_theme, BikerTheme* i_bikerTheme,
 					   const TColor& i_filterColor,
-					   const TColor& i_filterUglyColor) {
+					   const TColor& i_filterUglyColor,
+					   bool i_enableEngineSound) {
   PlayerNetClient* v_playerNetClient = new PlayerNetClient(m_physicsSettings,
 							   i_position, i_direction, m_PhysGravity,
+							   i_enableEngineSound,
 							   i_theme, i_bikerTheme, i_filterColor, i_filterUglyColor);
   m_players.push_back(v_playerNetClient);
   

@@ -71,7 +71,8 @@ void StatePreplayingNet::initPlayers() {
   v_world->getCamera()->setPlayerToFollow(
 		  v_world->addPlayerNetClient(v_world->getLevelSrc()->PlayerStart(), DD_RIGHT,
 					      Theme::instance(), Theme::instance()->getPlayerTheme(),
-					      pGame->getColorFromPlayerNumber(0), pGame->getUglyColorFromPlayerNumber(0)));
+					      pGame->getColorFromPlayerNumber(0), pGame->getUglyColorFromPlayerNumber(0),
+					      true));
   v_world->getCamera()->setScroll(false, v_world->getGravity());
 }
 

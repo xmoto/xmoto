@@ -30,10 +30,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define INTERPOLATION_MAXIMUM_SPACE 5.0
 
 Ghost::Ghost(PhysicsSettings* i_physicsSettings,
+	     bool i_engineSound,
 	     Theme *i_theme, BikerTheme* i_bikerTheme,
 	     const TColor& i_colorFilter,
 	     const TColor& i_uglyColorFilter)
-: Biker(i_physicsSettings, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
+: Biker(i_physicsSettings, i_engineSound, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
   m_diffToPlayer = 0.0;
   m_reference = false;
 }
@@ -62,11 +63,12 @@ void Ghost::setInfo(const std::string& i_info) {
 }
 
 FileGhost::FileGhost(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
-	     bool i_isActiv,
-	     Theme *i_theme, BikerTheme* i_bikerTheme,
-	     const TColor& i_colorFilter,
-	     const TColor& i_uglyColorFilter)
-  : Ghost (i_physicsSettings, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
+		     bool i_isActiv,
+		     bool i_engineSound,
+		     Theme *i_theme, BikerTheme* i_bikerTheme,
+		     const TColor& i_colorFilter,
+		     const TColor& i_uglyColorFilter)
+: Ghost (i_physicsSettings, i_engineSound, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
   std::string v_levelId;
   std::string v_playerName;
 
@@ -396,10 +398,11 @@ double FileGhost::getAngle() {
 }
 
 NetGhost::NetGhost(PhysicsSettings* i_physicsSettings,
+		   bool i_engineSound,
 		   Theme *i_theme, BikerTheme* i_bikerTheme,
 		   const TColor& i_colorFilter,
 		   const TColor& i_uglyColorFilter) 
-  : Ghost(i_physicsSettings, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
+: Ghost(i_physicsSettings, i_engineSound, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
 }
 
 NetGhost::~NetGhost() {
@@ -441,8 +444,9 @@ double NetGhost::getAngle() {
 }
 
 ReplayBiker::ReplayBiker(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
+			 bool i_engineSound,
 			 Theme *i_theme, BikerTheme* i_bikerTheme)
-:FileGhost(i_replayFile, i_physicsSettings, true, i_theme, i_bikerTheme,
+:FileGhost(i_replayFile, i_physicsSettings, true, i_engineSound, i_theme, i_bikerTheme,
        TColor(255, 255, 255, 0),
        TColor(GET_RED(i_bikerTheme->getUglyRiderColor()),
 	      GET_GREEN(i_bikerTheme->getUglyRiderColor()),

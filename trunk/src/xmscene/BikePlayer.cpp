@@ -41,10 +41,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define PHYS_SUSP_SQUEEK_POINT 0.01
 
 PlayerLocalBiker::PlayerLocalBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
-			 Theme *i_theme, BikerTheme* i_bikerTheme,
-			 const TColor& i_filterColor,
-			 const TColor& i_filterUglyColor)
-  : Biker(i_physicsSettings, i_theme, i_bikerTheme, i_filterColor, i_filterUglyColor) {
+				   bool i_engineSound,
+				   Theme *i_theme, BikerTheme* i_bikerTheme,
+				   const TColor& i_filterColor,
+				   const TColor& i_filterUglyColor)
+: Biker(i_physicsSettings, i_engineSound, i_theme, i_bikerTheme, i_filterColor, i_filterUglyColor) {
 
   m_BikeC = new BikeControllerPlayer();
 
@@ -1258,10 +1259,11 @@ Vector2f ExternalForce::force() {
 
 PlayerNetClient::PlayerNetClient(PhysicsSettings* i_physicsSettings,
 				 Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
+				 bool i_engineSound,
 				 Theme *i_theme, BikerTheme* i_bikerTheme,
 				 const TColor& i_colorFilter,
 				 const TColor& i_uglyColorFilter) 
-  : Biker(i_physicsSettings, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
+: Biker(i_physicsSettings, i_engineSound, i_theme, i_bikerTheme, i_colorFilter, i_uglyColorFilter) {
   m_BikeC = new BikeControllerNet(0);
   initToPosition(i_position, i_direction, i_gravity);
 

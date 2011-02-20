@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class Ghost : public Biker {
   public:
   Ghost(PhysicsSettings* i_physicsSettings,
+	bool i_engineSound,
 	Theme *i_theme, BikerTheme* i_bikerTheme,
 	const TColor& i_colorFilter,
 	const TColor& i_uglyColorFilter);
@@ -50,11 +51,13 @@ class Ghost : public Biker {
 class FileGhost : public Ghost {
  public:
   FileGhost(std::string i_replayFile,
-	PhysicsSettings* i_physicsSettings,
-	bool i_isActiv, Theme *i_theme,
-	BikerTheme* i_bikerTheme,
-	const TColor& i_colorFilter,
-	const TColor& i_uglyColorFilter);
+	    PhysicsSettings* i_physicsSettings,
+	    bool i_isActiv,
+	    bool i_engineSound,
+	    Theme *i_theme,
+	    BikerTheme* i_bikerTheme,
+	    const TColor& i_colorFilter,
+	    const TColor& i_uglyColorFilter);
   ~FileGhost();
 
   std::string playerName();
@@ -98,6 +101,7 @@ class FileGhost : public Ghost {
 class ReplayBiker : public FileGhost {
  public:
   ReplayBiker(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
+	      bool i_engineSound,
 	      Theme *i_theme, BikerTheme* i_bikerTheme);
   std::string getQuickDescription() const;
   std::string getVeryQuickDescription() const;
@@ -107,6 +111,7 @@ class ReplayBiker : public FileGhost {
 class NetGhost : public Ghost {
  public:
   NetGhost(PhysicsSettings* i_physicsSettings,
+	   bool i_engineSound,
 	   Theme *i_theme, BikerTheme* i_bikerTheme,
 	   const TColor& i_colorFilter,
 	   const TColor& i_uglyColorFilter);

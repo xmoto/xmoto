@@ -109,6 +109,7 @@ int main(int nNumArgs, char **ppcArgs) {
   try {     
     /* Setup basic info */
     GameApp::instance()->run(nNumArgs, ppcArgs);
+    GameApp::destroy();
   }
   catch (Exception &e) {
     if(Logger::isInitialized()) {
