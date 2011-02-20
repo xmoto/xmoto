@@ -49,6 +49,12 @@ void NetServer::stop() {
     m_serverThread->askThreadToEnd();
     m_serverThread->waitForThreadEnd();
   }
+
+  // if the server is badly closed (ie bad event like ctrl+c broke the thread), clean connexions
+  if(m_serverThread->acceptConnections()) {
+    m_serverThread->close();
+  }
+
   delete m_serverThread;
   m_serverThread = NULL;
 
