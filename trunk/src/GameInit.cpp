@@ -137,6 +137,7 @@ void xmexit_term(int i_signal) {
     }
     GameApp::instance()->standAloneServer()->stop();
     GameApp::instance()->run_unload();
+    GameApp::destroy();
   }
   exit(0);
 }
