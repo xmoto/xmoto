@@ -118,6 +118,7 @@ class ServerThread : public XMThread {
 
   bool acceptConnections() const;
   int realThreadFunction();
+  void close(); // close the server if an event need it (ctrl+c)
 
   private:
   TCPsocket m_tcpsd;

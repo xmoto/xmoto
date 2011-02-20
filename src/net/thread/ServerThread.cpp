@@ -265,7 +265,6 @@ ServerThread::~ServerThread() {
 int ServerThread::realThreadFunction() {
   IPaddress ip;
   int ssn;
-  unsigned int i;
 
   LogInfo("server: starting");
 
@@ -328,6 +327,15 @@ int ServerThread::realThreadFunction() {
   }
 
   // close the server
+  close();
+
+  return 0;
+}
+
+void ServerThread::close() {
+  unsigned int i;
+
+  // close the server
   m_acceptConnections = false;
 
   // end the game
@@ -357,7 +365,6 @@ int ServerThread::realThreadFunction() {
     StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
   }
   LogInfo("server: ending normally");
-  return 0;
 }
 
 std::string ServerThread::SP2_determineLevel() {

@@ -131,6 +131,8 @@ int main(int nNumArgs, char **ppcArgs) {
 }
 
 void xmexit_term(int i_signal) {
+  // it seems that it doesn't help return on first line of this function to go back to the previous function
+
   if(GameApp::instance()->standAloneServer() != NULL) {
     if(Logger::isInitialized()) {
       LogInfo("signal received.");
