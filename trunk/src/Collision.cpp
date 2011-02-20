@@ -82,6 +82,7 @@ CollisionSystem::~CollisionSystem() {
     m_staticBlocksHandlerSecondLayer.reset();
 
     for(unsigned int i=0; i<m_layerBlocksHandlers.size(); i++){
+      m_layerBlocksHandlers[i]->reset();
       delete m_layerBlocksHandlers[i];
     }
     m_layerBlocksHandlers.clear();
