@@ -40,6 +40,7 @@ BikeState::BikeState(PhysicsSettings* i_physicsSettings) {
   m_bikeAnchors    = new BikeAnchors();
 
   reInitializeAnchors();
+  clear();
 
   GameTime = 0;
 }
@@ -171,6 +172,50 @@ BikeState::~BikeState() {
 
 void BikeState::reInitializeAnchors() {
   m_bikeAnchors->update(m_bikeParameters);
+}
+
+void BikeState::clear() {
+  CenterP = Vector2f(0,0);
+  Dir = DD_RIGHT;
+  fBikeEngineRPM = 0.0f;
+  Elbow2P = Vector2f(0,0);
+  ElbowP = Vector2f(0,0);
+  Foot2P = Vector2f(0,0);
+  FootP = Vector2f(0,0);
+  FrontAnchor2P = Vector2f(0,0);
+  FrontAnchorP = Vector2f(0,0);
+  FrontWheelP = Vector2f(0,0);
+  Hand2P = Vector2f(0,0);
+  HandP = Vector2f(0,0);
+  Head2P = Vector2f(0,0);
+  HeadP = Vector2f(0,0);
+  Knee2P = Vector2f(0,0);
+  KneeP = Vector2f(0,0);
+  LowerBody2P = Vector2f(0,0);
+  LowerBodyP = Vector2f(0,0);
+  PlayerLArmP = Vector2f(0,0);
+  PlayerLLegP = Vector2f(0,0);
+  PlayerTorsoP = Vector2f(0,0);
+  PlayerUArmP = Vector2f(0,0);
+  PlayerULegP = Vector2f(0,0);
+  PlayerLArm2P = Vector2f(0,0);
+  PlayerLLeg2P = Vector2f(0,0);
+  PlayerTorso2P = Vector2f(0,0);
+  PlayerUArm2P = Vector2f(0,0);
+  PlayerULeg2P = Vector2f(0,0);
+  PrevFq = Vector2f(0,0);
+  PrevRq = Vector2f(0,0);
+  PrevPFq = Vector2f(0,0);
+  PrevPHq = Vector2f(0,0);
+  PrevPFq2 = Vector2f(0,0);
+  PrevPHq2 = Vector2f(0,0);
+  RearWheelP = Vector2f(0,0);
+  RFrontWheelP = Vector2f(0,0);
+  RRearWheelP = Vector2f(0,0);
+  Shoulder2P = Vector2f(0,0);
+  ShoulderP = Vector2f(0,0);
+  SwingAnchor2P = Vector2f(0,0);
+  SwingAnchorP = Vector2f(0,0);
 }
 
 BikeAnchors* BikeState::Anchors() {
@@ -715,56 +760,16 @@ bool Biker::isStateInitialized() const {
 }
 
 void Biker::clearStates() {
-  /* BIKE_S */
-  m_bikeState->CenterP = Vector2f(0,0);
-  m_bikeState->Dir = DD_RIGHT;
-  m_bikeState->fBikeEngineRPM = 0.0f;
-  m_bikeState->Elbow2P = Vector2f(0,0);
-  m_bikeState->ElbowP = Vector2f(0,0);
-  m_bikeState->Foot2P = Vector2f(0,0);
-  m_bikeState->FootP = Vector2f(0,0);
-  m_bikeState->FrontAnchor2P = Vector2f(0,0);
-  m_bikeState->FrontAnchorP = Vector2f(0,0);
-  m_bikeState->FrontWheelP = Vector2f(0,0);
-  m_bikeState->Hand2P = Vector2f(0,0);
-  m_bikeState->HandP = Vector2f(0,0);
-  m_bikeState->Head2P = Vector2f(0,0);
-  m_bikeState->HeadP = Vector2f(0,0);
-  m_bikeState->Knee2P = Vector2f(0,0);
-  m_bikeState->KneeP = Vector2f(0,0);
-  m_bikeState->LowerBody2P = Vector2f(0,0);
-  m_bikeState->LowerBodyP = Vector2f(0,0);
-  m_bikeState->PlayerLArmP = Vector2f(0,0);
-  m_bikeState->PlayerLLegP = Vector2f(0,0);
-  m_bikeState->PlayerTorsoP = Vector2f(0,0);
-  m_bikeState->PlayerUArmP = Vector2f(0,0);
-  m_bikeState->PlayerULegP = Vector2f(0,0);
-  m_bikeState->PlayerLArm2P = Vector2f(0,0);
-  m_bikeState->PlayerLLeg2P = Vector2f(0,0);
-  m_bikeState->PlayerTorso2P = Vector2f(0,0);
-  m_bikeState->PlayerUArm2P = Vector2f(0,0);
-  m_bikeState->PlayerULeg2P = Vector2f(0,0);
-  m_bikeState->PrevFq = Vector2f(0,0);
-  m_bikeState->PrevRq = Vector2f(0,0);
-  m_bikeState->PrevPFq = Vector2f(0,0);
-  m_bikeState->PrevPHq = Vector2f(0,0);
-  m_bikeState->PrevPFq2 = Vector2f(0,0);
-  m_bikeState->PrevPHq2 = Vector2f(0,0);
-  m_bikeState->RearWheelP = Vector2f(0,0);
-  m_bikeState->RFrontWheelP = Vector2f(0,0);
-  m_bikeState->RRearWheelP = Vector2f(0,0);
-  m_bikeState->Shoulder2P = Vector2f(0,0);
-  m_bikeState->ShoulderP = Vector2f(0,0);
-  m_bikeState->SwingAnchor2P = Vector2f(0,0);
-  m_bikeState->SwingAnchorP = Vector2f(0,0);
+  m_bikeState->clear();
 
   if(isDead() == false && isFinished() == false) {
     /* BIKE_C */
-    getControler()->stopControls();
+    if(getControler() != NULL) {
+      getControler()->stopControls();
+    }
   }
 }
 
 BikeController* Biker::getControler() {
   return NULL;
-
 }

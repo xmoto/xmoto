@@ -27,7 +27,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdlib.h>
 #include <string.h>
 
-void set_environment_variable(const std::string& i_variable, const std::string& i_value) {
+std::vector<char*> Environment::m_chars;
+
+void Environment::init() {
+}
+
+void Environment::uninit() {
+  for(unsigned int i=0; i<m_chars.size(); i++) {
+    free(m_chars[i]);
+  }
+}
+
+void Environment::set_variable(const std::string& i_variable, const std::string& i_value) {
     bool v_set = false;
 
 #ifdef WIN32
@@ -63,6 +74,7 @@ void set_environment_variable(const std::string& i_variable, const std::string& 
       throw Exception("Set Env failed");
     }
     // free(v_str); MUST NOT BE FREED
+    m_chars.push_back(v_str);
     v_set = true;
 
 #elif defined(HAVE_SETENV)
@@ -77,7 +89,7 @@ void set_environment_variable(const std::string& i_variable, const std::string& 
     }
 }
 
-std::string get_environment_variable(const std::string& i_variable) {
+std::string Environment::get_variable(const std::string& i_variable) {
 #ifdef WIN32
   return "";
 #else

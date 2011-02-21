@@ -43,9 +43,9 @@ std::string Locales::changeLocale(const std::string& i_locale) {
   try {
     if(i_locale != "") {
       // this var is looked by gettext in priority (and it is set on most environment, then change it to change the lang)
-      set_environment_variable("LANGUAGE", i_locale);
+      Environment::set_variable("LANGUAGE", i_locale);
     } else {
-      set_environment_variable("LANGUAGE", default_LANGUAGE);
+      Environment::set_variable("LANGUAGE", default_LANGUAGE);
     }
   } catch(Exception &e) {
     /* hum, ok */
@@ -73,7 +73,7 @@ std::string Locales::init(std::string i_locale) {
   char* btd;
   char* cs;
 
-  default_LANGUAGE = get_environment_variable("LANGUAGE");
+  default_LANGUAGE = Environment::get_variable("LANGUAGE");
 
   locale = changeLocale(i_locale);
 

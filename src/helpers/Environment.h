@@ -22,8 +22,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __ENVIRONMENT_H__
 
 #include <string>
+#include <vector>
 
-void set_environment_variable(const std::string& i_variable, const std::string& i_value);
-std::string get_environment_variable(const std::string& i_variable);
+class Environment {
+  public:
+  static void init();
+  static void uninit();
+
+  static void set_variable(const std::string& i_variable, const std::string& i_value);
+  static std::string get_variable(const std::string& i_variable);
+
+  private:
+  static std::vector<char*> m_chars;
+};
 
 #endif
