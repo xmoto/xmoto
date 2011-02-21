@@ -110,6 +110,7 @@ class BikeState {
   BikeState& operator=(const BikeState& i_copy);
 
   void reInitializeAnchors();
+  void clear();
 
   BikeAnchors* Anchors();
   BikeParameters* Parameters();

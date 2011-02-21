@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Input.h"
 #include "db/xmDatabase.h"
 #include "helpers/Log.h"
+#include "helpers/Environment.h"
 #include "helpers/Random.h"
 
 #include <curl/curl.h>
@@ -161,6 +162,8 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   bool v_useGraphics = true;
   bool v_missingFont = false;
   std::string v_missingFontError;
+
+  Environment::init();
 
   /* check args */
   try {
@@ -813,6 +816,11 @@ void GameApp::run_unload() {
     Logger::uninit();
   }
 
+  Environment::uninit();
+
+  if(XMFS::isInitialized()) {
+    XMFS::uninit();
+  }
 }
 
 
