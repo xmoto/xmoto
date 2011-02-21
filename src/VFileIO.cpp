@@ -1054,7 +1054,7 @@ std::string XMFS::m_BinDataFile = "";
 std::string XMFS::m_binCheckSum = "";
 std::vector<PackFile> XMFS::m_PackFiles;
 
-void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile, const std::string& i_userCustomDirPath) {
+void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile, bool i_graphics, const std::string& i_userCustomDirPath) {
   m_bGotSystemDataDir = false;
   m_UserDataDir     = "";
   m_UserConfigDir   = "";
@@ -1208,6 +1208,8 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
     int nNameLen;
     int md5sumLen;
     PackFile v_packFile;
+    size_t v_extension_place;
+    std::string v_extension;
 
     /* get bin checksum of the package.list */
     md5sumLen = fgetc(fp);
@@ -1235,11 +1237,29 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
       nSize = nSizeBuf[0] | nSizeBuf[1] << 8 | nSizeBuf[2] << 16 | nSizeBuf[3] << 24;
 				
       v_packFile.Name = cBuf;
-      v_packFile.md5sum = md5sum;
-      v_packFile.nOffset = ftell(fp);
-      v_packFile.nSize = nSize;
-      m_PackFiles.push_back(v_packFile);
-    
+
+      v_extension = "";
+      v_extension_place = v_packFile.Name.rfind(".");
+      if(v_extension_place != std::string::npos) {
+	v_extension = v_packFile.Name.substr(v_extension_place+1);
+      }
+
+      // don't add unusefull graphics files
+      if(i_graphics ||
+	 (
+	  v_extension != "png"  && // picture
+	  v_extension != "jpg"  && // picture
+	  v_extension != "frag" && // graphical card files
+	  v_extension != "vert" && // graphical card files
+	  v_extension != "ogg"  && // music
+	  v_extension != "wav"     // sound
+	  )) {
+	v_packFile.md5sum = md5sum;
+	v_packFile.nOffset = ftell(fp);
+	v_packFile.nSize = nSize;
+	m_PackFiles.push_back(v_packFile);
+      }
+
       fseek(fp,nSize,SEEK_CUR);
     }
   } else {

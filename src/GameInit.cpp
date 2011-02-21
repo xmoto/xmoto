@@ -209,9 +209,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   /* ***** */
 
   if(v_xmArgs.isOptConfigPath()) {
-    XMFS::init("xmoto", "xmoto.bin", "xmoto.log", v_xmArgs.getOpt_configPath_path());
+    XMFS::init("xmoto", "xmoto.bin", "xmoto.log", v_xmArgs.isOptServerOnly() == false, v_xmArgs.getOpt_configPath_path());
   } else {
-    XMFS::init("xmoto", "xmoto.bin", "xmoto.log");
+    XMFS::init("xmoto", "xmoto.bin", "xmoto.log", v_xmArgs.isOptServerOnly() == false);
   }
   Logger::init("xmoto.log");
 
@@ -381,14 +381,17 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   if(pDb->themes_isIndexUptodate() == false) {
     ThemeChoicer::initThemesFromDir(pDb);
   }
-  try {
-    reloadTheme();
-  } catch(Exception &e) {
-    /* if the theme cannot be loaded, try to reload from files */
-    /* perhaps that the xm.db comes from an other computer */
-    LogWarning("Theme cannot be reload, try to update themes into the database");
-    ThemeChoicer::initThemesFromDir(pDb);
-    reloadTheme();
+
+  if(v_xmArgs.isOptServerOnly() == false) {
+    try {
+      reloadTheme();
+    } catch(Exception &e) {
+      /* if the theme cannot be loaded, try to reload from files */
+      /* perhaps that the xm.db comes from an other computer */
+      LogWarning("Theme cannot be reload, try to update themes into the database");
+      ThemeChoicer::initThemesFromDir(pDb);
+      reloadTheme();
+    }
   }
 
   /* load levels */

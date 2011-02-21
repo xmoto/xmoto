@@ -83,7 +83,7 @@ struct FileHandle {
 class XMFS {
  public:        
   /* Methods */
-  static void init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile, const std::string& i_userCustomDirPath = "");
+  static void init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile, bool i_graphics, const std::string& i_userCustomDirPath = "");
   static void uninit();
   static bool isInitialized();
   
