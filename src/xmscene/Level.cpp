@@ -340,7 +340,7 @@ void Level::revertEntityDestroyed(const std::string& i_entityId) {
   throw Exception("Entity '" + i_entityId + "' can't be reverted");
 }
 
-void Level::updateToTime(Scene& i_scene, PhysicsSettings* i_physicsSettings) {
+void Level::updateToTime(Scene& i_scene, PhysicsSettings* i_physicsSettings, bool i_allowParticules) {
   int      v_time    = i_scene.getTime();
   Vector2f v_gravity = i_scene.getGravity();
 
@@ -348,14 +348,14 @@ void Level::updateToTime(Scene& i_scene, PhysicsSettings* i_physicsSettings) {
   unsigned int         size       = v_entities.size();
 
   for(unsigned int i=0; i<size; i++) {
-    v_entities[i]->updateToTime(v_time, v_gravity, i_physicsSettings);
+    v_entities[i]->updateToTime(v_time, v_gravity, i_physicsSettings, i_allowParticules);
   }
 
   std::vector<Entity*> v_externalEntities = EntitiesExterns();
   size                                    = v_externalEntities.size();
 
   for(unsigned int i=0; i<size; i++) {
-    v_externalEntities[i]->updateToTime(v_time, v_gravity, i_physicsSettings);
+    v_externalEntities[i]->updateToTime(v_time, v_gravity, i_physicsSettings, i_allowParticules);
   }
 }
 
