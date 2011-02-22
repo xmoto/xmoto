@@ -285,7 +285,7 @@ void Scene::updatePlayers(int timeStep) {
   /*===========================================================================
     Update game
     ===========================================================================*/
-void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder, bool i_fast) {
+void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder, bool i_fast, bool i_allowParticules) {
     float v_diff;
     int v_previousTime;
     bool v_recordReplay;
@@ -296,7 +296,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
       return;
 
     if(m_halfUpdate == true) {
-      getLevelSrc()->updateToTime(*this, m_physicsSettings);
+      getLevelSrc()->updateToTime(*this, m_physicsSettings, i_allowParticules);
       m_halfUpdate = false;
     } else
       m_halfUpdate = true;

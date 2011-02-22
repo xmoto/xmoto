@@ -118,7 +118,7 @@ class Entity {
   }
   void setSpeciality(EntitySpeciality i_speciality);
 
-  virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
+  virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings, bool i_allowParticules);
 
   AABB& getAABB();
 
@@ -257,7 +257,7 @@ class ParticlesSource : public Entity {
 
   virtual void loadToPlay();
   virtual void unloadToPlay();
-  virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
+  virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings, bool i_allowParticules);
   inline std::vector<EntityParticle*>& Particles() {
     return m_particles;
   }
@@ -313,7 +313,7 @@ class ParticlesSourceSmoke : public ParticlesSourceMultiple {
   ParticlesSourceSmoke(const std::string& i_id);
   virtual ~ParticlesSourceSmoke();
 
-  bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
+  bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings, bool i_allowParticules);
   void addParticle(int i_curTime);
 };
 
@@ -324,7 +324,7 @@ class ParticlesSourceFire : public ParticlesSource {
   ParticlesSourceFire(const std::string& i_id);
   virtual ~ParticlesSourceFire();
 
-  bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
+  bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings, bool i_allowParticules);
   void addParticle(int i_curTime);
 };
 
@@ -341,7 +341,7 @@ class ParticlesSourceDebris : public ParticlesSource {
   ParticlesSourceDebris(const std::string& i_id);
   virtual ~ParticlesSourceDebris();
 
-  bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
+  bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings, bool i_allowParticules);
   void addParticle(int i_curTime);
 };
 
@@ -350,7 +350,7 @@ class ParticlesSourceSparkle : public ParticlesSource {
   ParticlesSourceSparkle(const std::string& i_id);
   virtual ~ParticlesSourceSparkle();
 	int m_last_time;
-  bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
+  bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings, bool i_allowParticules);
   void addParticle(int i_curTime);
 };
 
@@ -363,7 +363,7 @@ class EntityParticle : public Entity {
   EntityParticle();
   virtual ~EntityParticle();
 
-  virtual  bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
+  virtual  bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings, bool i_allowParticules);
   inline   int  KillTime() const {
     return m_killTime;
   }
@@ -397,7 +397,7 @@ class SmokeParticle : public EntityParticle {
   virtual ~SmokeParticle();
   void init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
 
-  virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
+  virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings, bool i_allowParticules);
 
  private:
 };
@@ -408,7 +408,7 @@ class FireParticle : public EntityParticle {
   virtual ~FireParticle();
   void init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
 
-  virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
+  virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings, bool i_allowParticules);
 
  private:
   float m_fireSeed;
@@ -429,7 +429,7 @@ class DebrisParticle : public EntityParticle {
   virtual ~DebrisParticle();
   void init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
 
-  virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
+  virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings, bool i_allowParticules);
 
  private:
 };
@@ -440,7 +440,7 @@ class SparkleParticle : public EntityParticle {
   virtual ~SparkleParticle();
   void init(const Vector2f& i_position, const Vector2f& i_velocity, int i_killTime, std::string i_spriteName);
 
-  virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings);
+  virtual bool updateToTime(int i_time, Vector2f& i_gravity, PhysicsSettings* i_physicsSettings, bool i_allowParticules);
 
  private:
   float m_SparkleSeed;

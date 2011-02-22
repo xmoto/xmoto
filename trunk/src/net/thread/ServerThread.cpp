@@ -567,7 +567,7 @@ void ServerThread::SP2_updateScenePlaying() {
     while (m_fLastPhysTime + (PHYS_STEP_SIZE)/100.0 <= GameApp::getXMTime() && nPhysSteps < 10) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	v_scene = m_universe->getScenes()[i];
-	v_scene->updateLevel(PHYS_STEP_SIZE, NULL, m_DBuffer, nPhysSteps!=0);
+	v_scene->updateLevel(PHYS_STEP_SIZE, NULL, m_DBuffer, nPhysSteps!=0, false /* no particles */);
       }
       v_updateDone = true;
       m_fLastPhysTime += PHYS_STEP_SIZE/100.0;
