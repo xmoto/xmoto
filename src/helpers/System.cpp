@@ -80,7 +80,8 @@ std::vector<std::string>* System::getDisplayModes(int windowed) {
 std::string System::getMemoryInfo() {
   std::string v_res;
 
-#if defined(WIN32)
+// note that apple don't know getline
+#if defined(WIN32) || defined(APPLE)
   return "No available information";
 #else
   // grep -E '^Vm' /proc/2532/status
