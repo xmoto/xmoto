@@ -143,8 +143,8 @@ public:
   void prePlayLevel(DBuffer* i_eventRecorder, bool i_playEvents, bool i_loadBSP = true /* load or not the bsp blocks... */);
 
   void playInitLevel();
-  void updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder, bool i_fast = false, bool i_allowParticules = true);
-  void updatePlayers(int timeStep); // just update players positions
+  void updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder, bool i_fast = false, bool i_allowParticules = true, bool i_updateDiedPlayers = true /* continue for the death animation except on the server */);
+  void updatePlayers(int timeStep, bool i_updateDiedPlayers); // just update players positions
   void endLevel();
 
   /* entities */

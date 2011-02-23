@@ -263,18 +263,20 @@ void Scene::clearGameMessages(void) {
       m_GameMessages[i]->removeTime=0;
   }
 
-void Scene::updatePlayers(int timeStep) {
+void Scene::updatePlayers(int timeStep, bool i_updateDiedPlayers) {
     for(unsigned int i=0; i<m_players.size(); i++) {
-      m_players[i]->updateToTime(m_time, timeStep, &m_Collision, m_PhysGravity, this);
+      if(i_updateDiedPlayers || m_players[i]->isDead() == false) {
+	m_players[i]->updateToTime(m_time, timeStep, &m_Collision, m_PhysGravity, this);
 
-      if(m_playEvents && timeStep > 0) {
-	/* New wheel-spin particles? */
-	if(m_players[i]->isWheelSpinning()) {
-	  if(NotSoRandom::randomNum(0,1) < 0.7f) {
-	    ParticlesSource *v_debris;
-	    v_debris = (ParticlesSource*) getLevelSrc()->getEntityById("BikeDebris");
-	    v_debris->setDynamicPosition(m_players[i]->getWheelSpinPoint());	
-	    v_debris->addParticle(m_time);
+	if(m_playEvents && timeStep > 0) {
+	  /* New wheel-spin particles? */
+	  if(m_players[i]->isWheelSpinning()) {
+	    if(NotSoRandom::randomNum(0,1) < 0.7f) {
+	      ParticlesSource *v_debris;
+	      v_debris = (ParticlesSource*) getLevelSrc()->getEntityById("BikeDebris");
+	      v_debris->setDynamicPosition(m_players[i]->getWheelSpinPoint());	
+	      v_debris->addParticle(m_time);
+	    }
 	  }
 	}
       }
@@ -285,7 +287,7 @@ void Scene::updatePlayers(int timeStep) {
   /*===========================================================================
     Update game
     ===========================================================================*/
-void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder, bool i_fast, bool i_allowParticules) {
+void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder, bool i_fast, bool i_allowParticules, bool i_updateDiedPlayers) {
     float v_diff;
     int v_previousTime;
     bool v_recordReplay;
@@ -370,7 +372,7 @@ void Scene::updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventR
       m_ghosts[i]->updateToTime(getTime(), timeStep, &m_Collision, m_PhysGravity, this);
     }
 
-    updatePlayers(timeStep);
+    updatePlayers(timeStep, i_updateDiedPlayers);
 
     if(m_chipmunkWorld != NULL) {
       /* players moves, update their positions */

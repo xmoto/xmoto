@@ -417,7 +417,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 
 	  // if the game is in pause, at least update the player position
 	  if(m_universe->getScenes()[i]->isPaused()) {
-	    m_universe->getScenes()[i]->updatePlayers(0 /* 0 to not update */);
+	    m_universe->getScenes()[i]->updatePlayers(0 /* 0 to not update */, true);
 	  }
 	}
       } else {
