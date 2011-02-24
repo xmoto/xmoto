@@ -71,6 +71,9 @@ void Texture::removeAssociatedSprites()
   bool TextureManager::m_registering = false;
 
 TextureManager::~TextureManager() {
+  for(unsigned int i=0; i<m_textureSizeCacheList.size(); i++) {
+    free(m_textureSizeCacheList[i]);
+  }
 }
 
   /*===========================================================================
@@ -301,6 +304,13 @@ TextureManager::~TextureManager() {
 int TextureManager::getTextureSize(std::string p_fileName) {
     image_info_t ii;
     Img TextureImage;
+    int* v_val;
+
+    // cache
+    v_val = m_textureSizeCache[p_fileName.c_str()];
+    if(v_val != NULL) {
+      return *v_val;
+    }
 
     if(TextureImage.checkFile(p_fileName, &ii)) {
 #if defined(__APPLE__) 
@@ -309,11 +319,21 @@ int TextureManager::getTextureSize(std::string p_fileName) {
       
       /* Load it into system memory */
       TextureImage.loadFile(p_fileName, false);
-
-      return TextureImage.getWidth();
-#else
-      return ii.nWidth;
 #endif
+      v_val = (int*) malloc(sizeof(int));
+      if(v_val == NULL) {
+	return 0;
+      } else {
+#if defined(__APPLE__)
+	*v_val = TextureImage.getWidth();
+#else
+	*v_val = ii.nWidth;
+#endif
+	m_textureSizeCache[p_fileName.c_str()] = v_val;
+	m_textureSizeCacheList.push_back(v_val);
+      }
+
+      return *v_val;
     } else
       return 0;
 }
