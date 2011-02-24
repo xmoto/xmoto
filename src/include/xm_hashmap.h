@@ -1,3 +1,6 @@
+#ifndef __XMHASHMAP_H__
+#define __XMHASHMAP_H__
+
 #ifdef __GNUC__
 #if (__GNUC__ >= 3)
 #include <ext/hash_map>
@@ -15,3 +18,5 @@ struct hashcmp_str {
     return s1 == s2;
   }
 };
+
+#endif

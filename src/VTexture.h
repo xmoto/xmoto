@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "include/xm_SDL.h"
 #include <vector>
+#include "include/xm_hashmap.h"
 
 class Sprite;
 
@@ -133,6 +134,9 @@ private:
   static bool m_registering;
 
   void cleanUnregistredTextures();
+
+  HashNamespace::hash_map<const char*, int*, HashNamespace::hash<const char*>, hashcmp_str> m_textureSizeCache;
+  std::vector<int*> m_textureSizeCacheList;
 
 };
 
