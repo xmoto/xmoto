@@ -590,6 +590,7 @@ SDL_Surface* createSDLSurface(unsigned int width,
 
 ScrapTextures::ScrapTextures()
 {
+  m_dirty = false;
   memset(m_scrapsAllocated, 0, sizeof(unsigned int) * BLOCK_WIDTH * MAX_SCRAPS);
   for(unsigned int i=0; i<MAX_SCRAPS; i++){
     m_scrapsTexels[i] = createSDLSurface(BLOCK_WIDTH, BLOCK_HEIGHT);
