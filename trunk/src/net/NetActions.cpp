@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sstream>
 #include "../helpers/SwapEndian.h"
 #include "helpers/Net.h"
+#include "helpers/utf8.h"
 
 char NetAction::m_buffer[NETACTION_MAX_PACKET_SIZE];
 unsigned int NetAction::m_biggestTCPPacketSent = 0;
@@ -343,6 +344,17 @@ std::string NetAction::getLine(void* data, unsigned int len, unsigned int* o_loc
   return v_res;
 }
 
+std::string NetAction::getLineCheckUTF8(void* data, unsigned int len, unsigned int* o_local_offset) {
+  std::string v_res;
+
+  v_res = getLine(data, len, o_local_offset);
+  if(utf8::is_utf8_valid(v_res) == false) {
+    throw Exception("Invalid decoded strings (utf-8)");
+  }
+
+  return v_res;
+}
+
 void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
   NetAction::send(i_tcpsd, i_udpsd, i_sendPacket, i_udpRemoteIP, NULL, 0);
 }
@@ -359,6 +371,10 @@ NA_chatMessage::NA_chatMessage(void* data, unsigned int len) : NetAction(true) {
     ((char*)data)[len-1] = '\0';
     m_msg = std::string((char*)data);
     ((char*)data)[len-1] = '\n';
+
+    if(utf8::is_utf8_valid(m_msg) == false) {
+      throw Exception("Invalid decoded strings (utf-8)");
+    }
   }
 }
 
@@ -401,6 +417,10 @@ NA_chatMessagePP::NA_chatMessagePP(void* data, unsigned int len) : NetAction(tru
     ((char*)data)[len-1] = '\0';
     m_msg = std::string(((char*)data)+v_localOffset);
     ((char*)data)[len-1] = '\n';
+
+    if(utf8::is_utf8_valid(m_msg) == false) {
+      throw Exception("Invalid decoded strings (utf-8)");
+    }
   }
 }
 
@@ -439,6 +459,10 @@ NA_serverError::NA_serverError(void* data, unsigned int len) : NetAction(true) {
     ((char*)data)[len-1] = '\0';
     m_msg = std::string((char*)data);
     ((char*)data)[len-1] = '\n';
+
+    if(utf8::is_utf8_valid(m_msg) == false) {
+      throw Exception("Invalid decoded strings (utf-8)");
+    }
   }
 }
 
@@ -541,7 +565,7 @@ NA_clientInfos::NA_clientInfos(void* data, unsigned int len) : NetAction(true) {
 
   /* since 2, client version string */
   if(m_protocolVersion >= 2) {
-    m_xmversion = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
+    m_xmversion = getLineCheckUTF8(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
   }
 }
 
@@ -576,7 +600,7 @@ NA_changeName::NA_changeName(const std::string& i_name) : NetAction(true) {
 
 NA_changeName::NA_changeName(void* data, unsigned int len) : NetAction(true) {
   unsigned int v_localOffset = 0;
-  m_name = getLine(data, len, &v_localOffset);
+  m_name = getLineCheckUTF8(data, len, &v_localOffset);
 }
 
 NA_changeName::~NA_changeName() {
@@ -631,7 +655,7 @@ NA_playingLevel::NA_playingLevel(const std::string& i_levelId) : NetAction(true)
 
 NA_playingLevel::NA_playingLevel(void* data, unsigned int len) : NetAction(true) {
   unsigned int v_localOffset = 0;
-  m_levelId = getLine(data, len, &v_localOffset);
+  m_levelId = getLineCheckUTF8(data, len, &v_localOffset);
 }
 
 NA_playingLevel::~NA_playingLevel() {
@@ -662,7 +686,7 @@ NA_changeClients::NA_changeClients(void* data, unsigned int len) : NetAction(tru
     v_infosClient.NetId = atoi(getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset).c_str());
 
     if(v_symbol == "+") {
-      v_infosClient.Name  = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
+      v_infosClient.Name  = getLineCheckUTF8(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
       m_netAddedInfosClients.push_back(v_infosClient);
     } else if(v_symbol == "-") {
       m_netRemovedInfosClients.push_back(v_infosClient);
@@ -796,7 +820,7 @@ NA_prepareToPlay::NA_prepareToPlay(void* data, unsigned int len) : NetAction(tru
   unsigned int v_localOffset = 0;
   unsigned int v_nplayers;
 
-  m_id_level = getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
+  m_id_level = getLineCheckUTF8(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset);
   v_nplayers = atoi(getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset).c_str());
   for(unsigned int i=0; i<v_nplayers; i++) {
     m_players.push_back(atoi(getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset).c_str()));
@@ -906,6 +930,10 @@ NA_srvCmd::NA_srvCmd(void* data, unsigned int len) : NetAction(true) {
     ((char*)data)[len-1] = '\0';
     m_cmd = std::string((char*)data);
     ((char*)data)[len-1] = '\n';
+
+    if(utf8::is_utf8_valid(m_cmd) == false) {
+      throw Exception("Invalid decoded strings (utf-8)");
+    }
   }
 }
 
@@ -929,6 +957,10 @@ NA_srvCmdAsw::NA_srvCmdAsw(void* data, unsigned int len) : NetAction(true) {
     ((char*)data)[len-1] = '\0';
     m_answer = std::string((char*)data);
     ((char*)data)[len-1] = '\n';
+
+    if(utf8::is_utf8_valid(m_answer) == false) {
+      throw Exception("Invalid decoded strings (utf-8)");
+    }
   }
 }
 
