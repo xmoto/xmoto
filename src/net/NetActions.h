@@ -107,7 +107,8 @@ class NetAction {
   // the server transfering a packet from a client x to others clients
   // => (x, [0,1,2,3])
 
-  static std::string getLine(void* data, unsigned int len, unsigned int* o_local_offset);
+  static std::string getLine         (void* data, unsigned int len, unsigned int* o_local_offset);
+  static std::string getLineCheckUTF8(void* data, unsigned int len, unsigned int* o_local_offset);
 
   private:
   static char m_buffer[NETACTION_MAX_PACKET_SIZE];

@@ -342,16 +342,13 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 
 	// retrieve message
 	v_str = ((NA_chatMessage*)i_netAction)->getMessage();
-	if(utf8::is_utf8_valid(v_str)) { // ignore if the message is not valid
-	  if(i_netAction->getSource() == -1) { /* server */
-	    v_author = "server";
-	    SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author), CLT_SERVER);
-	  } else {
-	    v_author = m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name();
-	    SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author));
-	  }
+	if(i_netAction->getSource() == -1) { /* server */
+	  v_author = "server";
+	  SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author), CLT_SERVER);
+	} else {
+	  v_author = m_otherClients[getOtherClientNumberById(i_netAction->getSource())]->name();
+	  SysMessage::instance()->addConsoleLine(getDisplayMessage(v_str, v_author));
 	}
-
       } catch(Exception &e) {
       }
     }
