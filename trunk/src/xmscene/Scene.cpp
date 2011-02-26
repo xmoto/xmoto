@@ -88,7 +88,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
 
-  void Scene::loadLevel(xmDatabase *i_db, const std::string& i_id_level) {
+  void Scene::loadLevel(xmDatabase *i_db, const std::string& i_id_level, bool i_loadMainLayerOnly) {
     char **v_result;
     unsigned int nrow;
 
@@ -104,7 +104,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_pLevelSrc->setFileName(i_db->getResult(v_result, 1, 0, 0));
       i_db->read_DB_free(v_result);
 
-      m_pLevelSrc->loadReducedFromFile();
+      m_pLevelSrc->loadReducedFromFile(i_loadMainLayerOnly);
       
     } catch(Exception &e) {
       delete m_pLevelSrc;
@@ -527,13 +527,13 @@ void Scene::executeEvents(DBuffer *i_recorder) {
     Prepare the specified level for playing through this game object
     ===========================================================================*/
   void Scene::prePlayLevel(DBuffer *i_recorder,
-			   bool i_playEvents, bool i_loadBSP) {
+			   bool i_playEvents, bool i_loadMainLayerOnly, bool i_loadBSP) {
     m_playInitLevel_done = false;
 
     m_playEvents = i_playEvents;
     /* load the level if not */
     if(m_pLevelSrc->isFullyLoaded() == false) {
-      m_pLevelSrc->loadFullyFromFile();
+      m_pLevelSrc->loadFullyFromFile(i_loadMainLayerOnly);
     }
     
     /* Create Lua state */

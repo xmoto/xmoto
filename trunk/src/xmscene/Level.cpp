@@ -359,7 +359,7 @@ void Level::updateToTime(Scene& i_scene, PhysicsSettings* i_physicsSettings, boo
   }
 }
 
-void Level::loadXML() {
+void Level::loadXML(bool i_loadMainLayerOnly) {
   /* Load XML document and fetch tinyxml handle */
   unloadLevelBody();
   if(m_xmlSource == NULL) {
@@ -536,7 +536,7 @@ void Level::loadXML() {
 
     /* background level offsets */
     TiXmlElement* pLayerOffsets = XML::findElement(*m_xmlSource, NULL, std::string("layeroffsets"));
-    if(pLayerOffsets == NULL){
+    if(pLayerOffsets == NULL || i_loadMainLayerOnly){
       m_numberLayer = 0;
     }
     else {
@@ -636,11 +636,13 @@ void Level::loadXML() {
     /* Get blocks */
     for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
         pElem=pElem->NextSiblingElement("block")) {
-      Block* v_block = Block::readFromXml(m_xmlSource, pElem);
-      if(v_block->isPhysics()) {
-	m_isPhysics = true;
+      Block* v_block = Block::readFromXml(m_xmlSource, pElem, i_loadMainLayerOnly);
+      if(v_block != NULL) { // NULL means that the block should not been loaded (for the server for example)
+	if(v_block->isPhysics()) {
+	  m_isPhysics = true;
+	}
+	m_blocks.push_back(v_block);
       }
-      m_blocks.push_back(v_block);
     }
 
     /* Get entities */
@@ -684,7 +686,7 @@ void Level::loadXML() {
 
 /* Load using the best way possible. File name must already be set!
   *  Return whether or not it was loaded from the cache. */
-bool Level::loadReducedFromFile() {
+bool Level::loadReducedFromFile(bool i_loadMainLayerOnly) {
   std::string cacheFileName;
 
   m_checkSum = XMFS::md5sum(FDT_DATA, FileName());
@@ -693,10 +695,10 @@ bool Level::loadReducedFromFile() {
   bool cached = false;
   /* Determine name in cache */
   std::string LevelFileBaseName = XMFS::getFileBaseName(FileName());
-  cacheFileName = getNameInCache();
+  cacheFileName = getNameInCache(i_loadMainLayerOnly);
     
   try {
-    cached = importBinaryHeaderFromFile(FDT_CACHE, cacheFileName, m_checkSum);
+    cached = importBinaryHeaderFromFile(FDT_CACHE, cacheFileName, m_checkSum, i_loadMainLayerOnly);
   } catch (Exception &e) {
     LogWarning("Exception while loading binary level, will load "
 	       "XML instead for '%s' (%s)", FileName().c_str(),
@@ -705,8 +707,8 @@ bool Level::loadReducedFromFile() {
   
   // If we couldn't get it from the cache, then load from (slow) XML
   if (!cached) {
-    loadXML();
-    exportBinary(FDT_CACHE, cacheFileName, m_checkSum); /* Cache it now */
+    loadXML(i_loadMainLayerOnly);
+    exportBinary(FDT_CACHE, cacheFileName, m_checkSum, i_loadMainLayerOnly); /* Cache it now */
   }
   
   unloadLevelBody(); /* remove body datas */
@@ -714,8 +716,13 @@ bool Level::loadReducedFromFile() {
   return cached;
 }
 
-std::string Level::getNameInCache() const {
-  return "LCache/" + Checksum() + XMFS::getFileBaseName(FileName()) + ".blv";
+std::string Level::getNameInCache(bool i_loadMainLayerOnly) const {
+  std::string v_suffix;
+
+  if(i_loadMainLayerOnly) {
+    v_suffix = "mlo";
+  }
+  return "LCache/" + Checksum() + XMFS::getFileBaseName(FileName()) + v_suffix + ".blv";
 }
 
 void Level::removeFromCache(xmDatabase *i_db, const std::string& i_id_level) {
@@ -739,7 +746,7 @@ void Level::removeFromCache(xmDatabase *i_db, const std::string& i_id_level) {
 /*===========================================================================
   Export binary level file
   ===========================================================================*/
-void Level::exportBinary(FileDataType i_fdt, const std::string &FileName, const std::string& pSum) {
+void Level::exportBinary(FileDataType i_fdt, const std::string &FileName, const std::string& pSum, bool i_loadMainLayerOnly) {
   /* Don't do this if we failed to load level from XML */
   if(isXMotoTooOld()) return;
   
@@ -749,7 +756,7 @@ void Level::exportBinary(FileDataType i_fdt, const std::string &FileName, const 
     LogWarning("Failed to export binary: %s",FileName.c_str());
   }
   else {
-    exportBinaryHeader(pfh);
+    exportBinaryHeader(pfh, i_loadMainLayerOnly);
 
     XMFS::writeString(pfh,   m_sky->Texture());
     XMFS::writeFloat_LE(pfh, m_sky->Zoom());
@@ -834,15 +841,15 @@ bool Level::isFullyLoaded() const {
   return m_isBodyLoaded;
 }
 
-void Level::loadFullyFromFile() {
-  if(importBinary(FDT_CACHE, getNameInCache(), Checksum()) == false) {
-    loadXML();
-    exportBinary(FDT_CACHE, getNameInCache(), m_checkSum);
+void Level::loadFullyFromFile(bool i_loadMainLayerOnly) {
+  if(importBinary(FDT_CACHE, getNameInCache(i_loadMainLayerOnly), Checksum(), i_loadMainLayerOnly) == false) {
+    loadXML(i_loadMainLayerOnly);
+    exportBinary(FDT_CACHE, getNameInCache(i_loadMainLayerOnly), m_checkSum, i_loadMainLayerOnly);
   }
   loadRemplacementSprites();
 }
 
-void Level::importBinaryHeader(FileHandle *pfh) {
+void Level::importBinaryHeader(FileHandle *pfh, bool i_loadMainLayerOnly) {
   unloadLevelBody();
 
   m_isBodyLoaded = false;  
@@ -854,7 +861,12 @@ void Level::importBinaryHeader(FileHandle *pfh) {
   if(nFormat != CACHE_LEVEL_FORMAT_VERSION) {
     throw Exception("Old file format");
   }
-  
+
+  bool v_loadMainLayerOnly = XMFS::readBool(pfh);
+  if(i_loadMainLayerOnly != v_loadMainLayerOnly) {
+    throw Exception("Not the same main layer mode");
+  }
+
   m_checkSum    = XMFS::readString(pfh);
   m_id      	= XMFS::readString(pfh);
   m_pack    	= XMFS::readString(pfh);
@@ -902,7 +914,7 @@ void Level::importHeader(const std::string& i_id,
   /*===========================================================================
   Import binary level file
   ===========================================================================*/
-bool Level::importBinaryHeaderFromFile(FileDataType i_fdt, const std::string &FileName, const std::string& pSum) {
+bool Level::importBinaryHeaderFromFile(FileDataType i_fdt, const std::string &FileName, const std::string& pSum, bool i_loadMainLayerOnly) {
   /* Import binary */
   FileHandle *pfh = XMFS::openIFile(i_fdt, FileName, true);
   if(pfh == NULL) {
@@ -910,7 +922,7 @@ bool Level::importBinaryHeaderFromFile(FileDataType i_fdt, const std::string &Fi
   }
 
   try {
-    importBinaryHeader(pfh);
+    importBinaryHeader(pfh, i_loadMainLayerOnly);
     if(m_checkSum != pSum) {
       LogWarning("CRC check failed, can't import: %s",FileName.c_str());
       XMFS::closeFile(pfh);
@@ -927,13 +939,14 @@ bool Level::importBinaryHeaderFromFile(FileDataType i_fdt, const std::string &Fi
   return true;
 }
 
-void Level::exportBinaryHeader(FileHandle *pfh) {
+void Level::exportBinaryHeader(FileHandle *pfh, bool i_loadMainLayerOnly) {
   /* version two includes dynamic information about blocks */
   /* 3 -> includes now the grip of the block, width and height of the sprites */      
   /* 4 -> includes level pack num */
   /* 5 -> clean code */
   /* Write CRC32 of XML */
   XMFS::writeInt_LE(pfh, CACHE_LEVEL_FORMAT_VERSION);
+  XMFS::writeBool(  pfh, i_loadMainLayerOnly);
   XMFS::writeString(pfh	    , m_checkSum);
   XMFS::writeString(pfh	    , m_id);
   XMFS::writeString(pfh	    , m_pack);
@@ -947,7 +960,7 @@ void Level::exportBinaryHeader(FileHandle *pfh) {
   XMFS::writeBool(  pfh	    , m_isPhysics);
 }
 
-bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const std::string& pSum) {
+bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const std::string& pSum, bool i_loadMainLayerOnly) {
   unloadLevelBody();
   bool bRet = true;
   
@@ -967,6 +980,9 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
     if(nFormat == CACHE_LEVEL_FORMAT_VERSION) { /* reject other formats */
       /* Read "format 1" / "format 2" binary level */
       /* Right */
+
+      bool v_loadMainLayerOnly = XMFS::readBool(pfh);
+      if(i_loadMainLayerOnly == v_loadMainLayerOnly) {
       std::string md5sum = XMFS::readString(pfh);
       if(md5sum != pSum) {
         LogWarning("CRC check failed, can't import: %s",FileName.c_str());
@@ -1113,8 +1129,11 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
           }
         }                                                                       
       }
-    }
-    else {
+      } else {
+	LogWarning("Different main layer mode, can't import: %s",nFormat,FileName.c_str());
+	bRet = false;
+      }
+    } else {
       LogWarning("Invalid binary format (%d), can't import: %s",nFormat,FileName.c_str());
       bRet = false;
     }
@@ -1369,8 +1388,8 @@ void Level::unloadLevelBody() {
   m_isLayerFront.clear();
 }
 
-void Level::rebuildCache() {
-  exportBinary(FDT_CACHE, getNameInCache(), m_checkSum);
+void Level::rebuildCache(bool i_loadMainLayerOnly) {
+  exportBinary(FDT_CACHE, getNameInCache(i_loadMainLayerOnly), m_checkSum, i_loadMainLayerOnly);
 }
 
 std::string Level::SpriteForStrawberry() const {

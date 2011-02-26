@@ -29,7 +29,7 @@ class GameState;
 
 class UpgradeLevelsThread : public XMThread, public WWWAppInterface {
 public:
-  UpgradeLevelsThread(const std::string& i_id_theme, bool i_updateAutomaticallyLevels = false);
+  UpgradeLevelsThread(const std::string& i_id_theme, bool i_loadMainLayerOnly, bool i_updateAutomaticallyLevels = false);
   virtual ~UpgradeLevelsThread();
 
   void setTaskProgress(float p_percent);
@@ -50,6 +50,7 @@ private:
   std::string m_msg;
   std::string m_id_theme; // theme is needed to be able to update it
   int m_nb_levels;
+  bool m_loadMainLayerOnly;
 };
 
 #endif

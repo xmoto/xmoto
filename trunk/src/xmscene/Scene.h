@@ -139,8 +139,8 @@ public:
   void setHooks(SceneHooks *i_motoGameHooks);
 
   /* update of the structure */
-  void loadLevel(xmDatabase *i_db, const std::string& i_id_level);
-  void prePlayLevel(DBuffer* i_eventRecorder, bool i_playEvents, bool i_loadBSP = true /* load or not the bsp blocks... */);
+  void loadLevel(xmDatabase *i_db, const std::string& i_id_level, bool i_loadMainLayerOnly = false);
+  void prePlayLevel(DBuffer* i_eventRecorder, bool i_playEvents, bool i_loadMainLayerOnly = false, bool i_loadBSP = true /* load or not the bsp blocks... */);
 
   void playInitLevel();
   void updateLevel(int timeStep, Replay* i_frameRecorder, DBuffer* i_eventRecorder, bool i_fast = false, bool i_allowParticules = true, bool i_updateDiedPlayers = true /* continue for the death animation except on the server */);

@@ -229,7 +229,7 @@ class Block {
 
   void saveBinary(FileHandle *i_pfh);
   static bool isPhysics_readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem);
-  static Block* readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem);
+  static Block* readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem, bool i_loadMainLayerOnly); // return NULL if the block must not be loaded
   static Block* readFromBinary(FileHandle *i_pfh);
   AABB& getAABB();
   BoundingCircle& getBCircle() {
