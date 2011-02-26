@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __LEVELSRC_H__
 #define __LEVELSRC_H__
 
-#define CACHE_LEVEL_FORMAT_VERSION 35
+#define CACHE_LEVEL_FORMAT_VERSION 36
 
 #include <string>
 #include <vector>
@@ -53,11 +53,11 @@ class Level {
   Level();
   ~Level();
 
-  bool loadReducedFromFile();
-  void loadFullyFromFile();
+  bool loadReducedFromFile(bool i_loadMainLayerOnly);
+  void loadFullyFromFile(bool i_loadMainLayerOnly);
   bool isFullyLoaded() const;
-  void exportBinaryHeader(FileHandle *pfh);
-  void importBinaryHeader(FileHandle *pfh);
+  void exportBinaryHeader(FileHandle *pfh, bool i_loadMainLayerOnly);
+  void importBinaryHeader(FileHandle *pfh, bool i_loadMainLayerOnly);
   void importHeader(const std::string& i_id,
 		    const std::string& i_checkSum,
 		    const std::string& i_pack,
@@ -69,9 +69,9 @@ class Level {
 		    const std::string& i_music,
 		    bool i_isScripted,
 		    bool i_isPhysics);
-  void rebuildCache();
+  void rebuildCache(bool i_loadMainLayerOnly);
 
-  void loadXML();
+  void loadXML(bool i_loadMainLayerOnly);
 
   /* load level so that it is possible to play */
   /* to replay a level, unload then, reload it */
@@ -244,10 +244,10 @@ class Level {
   Sprite* m_checkpointSpriteUp;
 
   void addLimits();
-  void exportBinary(FileDataType i_fdt, const std::string &i_fileName, const std::string& i_sum);
-  bool importBinary(FileDataType i_fdt, const std::string &i_fileName, const std::string& i_sum);
-  bool importBinaryHeaderFromFile(FileDataType i_fdt, const std::string &i_fileName, const std::string& i_sum);
-  std::string getNameInCache() const;
+  void exportBinary(FileDataType i_fdt, const std::string &i_fileName, const std::string& i_sum, bool i_loadMainLayerOnly);
+  bool importBinary(FileDataType i_fdt, const std::string &i_fileName, const std::string& i_sum, bool i_loadMainLayerOnly);
+  bool importBinaryHeaderFromFile(FileDataType i_fdt, const std::string &i_fileName, const std::string& i_sum, bool i_loadMainLayerOnly);
+  std::string getNameInCache(bool i_loadMainLayerOnly) const;
 
   void loadRemplacementSprites();
 

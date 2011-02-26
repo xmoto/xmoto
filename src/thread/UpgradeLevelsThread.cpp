@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../states/StateUpgradeLevels.h"
 #include "../helpers/CmdArgumentParser.h"
 
-UpgradeLevelsThread::UpgradeLevelsThread(const std::string& i_id_theme, bool i_updateAutomaticallyLevels)
+UpgradeLevelsThread::UpgradeLevelsThread(const std::string& i_id_theme, bool i_loadMainLayerOnly, bool i_updateAutomaticallyLevels)
   : XMThread("ULT")
 {
   m_pWebLevels    = new WebLevels(this);
@@ -34,6 +34,7 @@ UpgradeLevelsThread::UpgradeLevelsThread(const std::string& i_id_theme, bool i_u
   m_msg = "";
   m_id_theme = i_id_theme;
   m_nb_levels = -1;
+  m_loadMainLayerOnly = i_loadMainLayerOnly;
 }
 
 UpgradeLevelsThread::~UpgradeLevelsThread()
@@ -200,6 +201,7 @@ int UpgradeLevelsThread::realThreadFunction()
 
     LevelsManager::instance()->updateLevelsFromLvl(m_pWebLevels->getNewDownloadedLevels(),
 						   m_pWebLevels->getUpdatedDownloadedLevels(),
+						   m_loadMainLayerOnly,
 						   this, m_pDb);
 
     /* Update level lists */

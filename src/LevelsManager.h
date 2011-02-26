@@ -92,7 +92,7 @@ public:
   void makePacks(const std::string& i_playerName,
 		 const std::string& i_id_room,
 		 bool i_bDebugMode, bool i_bAdminMode, xmDatabase *i_db);
-  void addExternalLevel(std::string i_levelFile, xmDatabase *i_db);
+  void addExternalLevel(std::string i_levelFile, xmDatabase *i_db, bool i_loadMainLayerOnly);
   void reloadLevelsFromLvl(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 
   /* to load news levels */
@@ -100,6 +100,7 @@ public:
   /* create the newLevels.xml file */
   void updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
 			   const std::vector<std::string> &UpdatedLvl,
+			   bool i_loadMainLayerOnly,
 			   WWWAppInterface* pCaller,
 			   xmDatabase* i_db);
 
@@ -126,7 +127,7 @@ public:
   static std::string getQuickStartPackQuery(unsigned int i_qualityMIN, unsigned int i_difficultyMIN,
 					    unsigned int i_qualityMAX, unsigned int i_difficultyMAX,
 					    const std::string& i_profile, const std::string& i_id_room, xmDatabase *i_db);
-  void reloadExternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
+  void reloadExternalLevels(xmDatabase* i_db, bool i_loadMainLayerOnly, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 
   // when requesting for level, or values must be yes, or no, or yes or no, so 3 cases
   enum levelPropertyRequiredValue {lprv_yes, lprv_no, lprv_dontcare};
@@ -148,7 +149,7 @@ public:
   private:
   void clean();
   void cleanPacks();
-  void reloadInternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
+  void reloadInternalLevels(xmDatabase* i_db, bool i_loadMainLayerOnly, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 
   std::vector<LevelsPack *> m_levelsPacks;
   SDL_mutex* m_levelsPackMutex;

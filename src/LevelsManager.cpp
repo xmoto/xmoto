@@ -747,10 +747,15 @@ const std::vector<LevelsPack *>& LevelsManager::LevelsPacks() {
   return m_levelsPacks;
 }
 
-void LevelsManager::reloadExternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface)
+void LevelsManager::reloadExternalLevels(xmDatabase* i_db, bool i_loadMainLayerOnly, XMotoLoadLevelsInterface *i_loadLevelsInterface)
 {
   std::vector<std::string> LvlFiles = XMFS::findPhysFiles(FDT_DATA, "Levels/MyLevels/*.lvl", true);
   std::string v_levelName;
+
+  // main case : no external level
+  if(LvlFiles.size() == 0) {
+    return;
+  }
 
   i_db->levels_add_begin(true);
   for(unsigned int i=0; i<LvlFiles.size(); i++) {
@@ -762,7 +767,7 @@ void LevelsManager::reloadExternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterf
 
       try {
 	v_level->setFileName(LvlFiles[i]);
-	bCached = v_level->loadReducedFromFile();
+	bCached = v_level->loadReducedFromFile(i_loadMainLayerOnly);
 	
 	v_levelName = v_level->Name();
 
@@ -794,13 +799,13 @@ void LevelsManager::reloadExternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterf
   i_db->levels_add_end();
 }
 
-void LevelsManager::addExternalLevel(std::string i_levelFile, xmDatabase *i_db) {
+void LevelsManager::addExternalLevel(std::string i_levelFile, xmDatabase *i_db, bool i_loadMainLayerOnly) {
   Level *v_level = new Level();
   try {
     bool bCached = false;
 
     v_level->setFileName(i_levelFile);
-    bCached = v_level->loadReducedFromFile();
+    bCached = v_level->loadReducedFromFile(i_loadMainLayerOnly);
       
     // Check for ID conflict
     if(doesLevelExist(v_level->Id(), i_db)) {
@@ -828,7 +833,7 @@ void LevelsManager::reloadLevelsFromLvl(xmDatabase* i_db, XMotoLoadLevelsInterfa
   reloadExternalLevels(i_db, i_loadLevelsInterface);
 }
 
-void LevelsManager::reloadInternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface)
+void LevelsManager::reloadInternalLevels(xmDatabase* i_db, bool i_loadMainLayerOnly, XMotoLoadLevelsInterface *i_loadLevelsInterface)
 {
   std::vector<std::string> LvlFiles = XMFS::findPhysFiles(FDT_DATA, "Levels/*.lvl", true);
   std::string v_levelName;
@@ -850,7 +855,7 @@ void LevelsManager::reloadInternalLevels(xmDatabase* i_db, XMotoLoadLevelsInterf
 
       try {
 	v_level->setFileName(LvlFiles[i]);
-	bCached = v_level->loadReducedFromFile();
+	bCached = v_level->loadReducedFromFile(i_loadMainLayerOnly);
 	
 	// Check for ID conflict
 	if(doesLevelExist(v_level->Id(), i_db)) {
@@ -955,6 +960,7 @@ void LevelsManager::printLevelsList(xmDatabase *i_db) const {
 
 void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
 					const std::vector<std::string> &UpdatedLvl,
+					bool i_loadMainLayerOnly,
 					WWWAppInterface* pCaller,
 					xmDatabase* i_db) {
   Level *v_level;
@@ -975,7 +981,7 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
 	current++;
 	
 	v_level->setFileName(NewLvl[i]);
-	bCached = v_level->loadReducedFromFile();
+	bCached = v_level->loadReducedFromFile(i_loadMainLayerOnly);
 	
 	// Check for ID conflict
 	if(doesLevelExist(v_level->Id(), i_db)) {
@@ -1006,7 +1012,7 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
       
       try {
 	v_level->setFileName(UpdatedLvl[i]);
-	bCached = v_level->loadReducedFromFile();
+	bCached = v_level->loadReducedFromFile(i_loadMainLayerOnly);
 	
 	pCaller->setTaskProgress(current * total);
 	pCaller->setBeingDownloadedInformation(v_level->Name());

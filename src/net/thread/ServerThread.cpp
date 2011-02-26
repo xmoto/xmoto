@@ -404,13 +404,13 @@ void ServerThread::SP2_initPlaying() {
     for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 
       v_numPlayer = 0;
-      m_universe->getScenes()[i]->loadLevel(m_pDb, v_id_level);
+      m_universe->getScenes()[i]->loadLevel(m_pDb, v_id_level, true);
       if(m_universe->getScenes()[i]->getLevelSrc()->isXMotoTooOld()) {
 	throw Exception("Level " + v_id_level + " is too old");
       }
 
       m_DBuffer->clear();
-      m_universe->getScenes()[i]->prePlayLevel(m_DBuffer, true, false);
+      m_universe->getScenes()[i]->prePlayLevel(m_DBuffer, true, true, false);
       SP2_sendSceneEvents(m_DBuffer);
       
       // add the bikers

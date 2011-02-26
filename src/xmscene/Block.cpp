@@ -735,17 +735,22 @@ bool Block::isPhysics_readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem)
 }
 
 
-Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
-  
-  Block *pBlock = new Block(XML::getOption(pElem, "id"));
-  pBlock->setTexture("default");
+Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem, bool i_loadMainLayerOnly) {
+  TiXmlElement* pPositionElem   = XML::findElement(*i_xmlSource, pElem, std::string("position"));
+  //
+  if(i_loadMainLayerOnly) {
+    if(atoi(XML::getOption(pPositionElem,"layerid","-1").c_str()) != -1) { // -1 is for the main layer
+      return NULL;
+    }
+  }
 
   TiXmlElement* pUseTextureElem = XML::findElement(*i_xmlSource, pElem, std::string("usetexture"));
-  TiXmlElement* pPositionElem   = XML::findElement(*i_xmlSource, pElem, std::string("position"));
   TiXmlElement* pPhysicsElem    = XML::findElement(*i_xmlSource, pElem, std::string("physics"));
   TiXmlElement* pEdgeElem       = XML::findElement(*i_xmlSource, pElem, std::string("edges"));
   TiXmlElement* pColElem        = XML::findElement(*i_xmlSource, pElem, std::string("collision"));
 
+  Block *pBlock = new Block(XML::getOption(pElem, "id"));
+  pBlock->setTexture("default");
 
   if(pUseTextureElem != NULL) {
     pBlock->setTexture(XML::getOption(pUseTextureElem,"id", "default"));

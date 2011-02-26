@@ -452,7 +452,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
       m_xmdemo->getReplay(XMSession::instance()->proxySettings());
 
       try {
-	LevelsManager::instance()->addExternalLevel(m_xmdemo->levelFile(), xmDatabase::instance("main"));
+	LevelsManager::instance()->addExternalLevel(m_xmdemo->levelFile(), xmDatabase::instance("main"), v_xmArgs.isOptServerOnly());
       } catch(Exception &e) {
 	LogError("Can't add level %s as external level", m_xmdemo->levelFile().c_str());
       }
@@ -583,7 +583,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     /* What to do? */
     if(m_PlaySpecificLevelFile != "") {
       try {
-	LevelsManager::instance()->addExternalLevel(m_PlaySpecificLevelFile, xmDatabase::instance("main"));
+	LevelsManager::instance()->addExternalLevel(m_PlaySpecificLevelFile, xmDatabase::instance("main"), v_xmArgs.isOptServerOnly());
 	m_PlaySpecificLevelId = LevelsManager::instance()->LevelByFileName(m_PlaySpecificLevelFile, xmDatabase::instance("main"));
       } catch(Exception &e) {
 	m_PlaySpecificLevelId = m_PlaySpecificLevelFile;
