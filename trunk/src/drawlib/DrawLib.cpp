@@ -101,6 +101,7 @@ void DrawLib::checkFontPrerequites() {
   m_fontSmall  = NULL;
   m_fontMedium = NULL;
   m_fontBig    = NULL;
+  m_fontMonospace = NULL;
  };
 
  DrawLib::~DrawLib() {
