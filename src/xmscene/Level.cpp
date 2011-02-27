@@ -278,14 +278,6 @@ std::vector<Zone *> &Level::Zones() {
   return m_zones;
 }
 
-std::vector<Zone *> &Level::DeathZones() {
-  return m_zonesDeath;
-}
-
-std::vector<Zone *> &Level::TeleportZones() {
-  return m_zonesTeleport;
-}
-
 const SkyApparence* Level::Sky() const {
   return m_sky;
 }
@@ -623,13 +615,6 @@ void Level::loadXML(bool i_loadMainLayerOnly) {
     for(TiXmlElement *pElem = pLevelElem->FirstChildElement("zone"); pElem!=NULL;
         pElem=pElem->NextSiblingElement("zone")) {
       m_zones.push_back(Zone::readFromXml(pElem));
-      m_zones.back()->updateZoneSpeciality(m_scriptSource);
-      if(m_zones.back()->isDeathZone()) {
-        m_zonesDeath.push_back(Zone::readFromXml(pElem));
-      }
-      else if(m_zones.back()->isTeleportZone()) {
-        m_zonesTeleport.push_back(Zone::readFromXml(pElem)); 
-      }
     }
     
     /* determine whether the levels is physics or not */
@@ -1120,13 +1105,6 @@ bool Level::importBinary(FileDataType i_fdt, const std::string &FileName, const 
         m_zones.reserve(nNumZones);
         for(int i=0;i<nNumZones;i++) {
           m_zones.push_back(Zone::readFromBinary(pfh));
-          m_zones.back()->updateZoneSpeciality(m_scriptSource);
-          if(m_zones.back()->isDeathZone()) {
-            m_zonesDeath.push_back(m_zones.back());
-          }
-          else if(m_zones.back()->isTeleportZone()) {
-            m_zonesTeleport.push_back(m_zones.back());
-          }
         }                                                                       
       }
       } else {

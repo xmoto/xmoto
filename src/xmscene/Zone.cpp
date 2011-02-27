@@ -76,8 +76,6 @@ float ZonePrimBox::Bottom() const {
 
 Zone::Zone(const std::string& i_id) {
   m_id = i_id;
-  m_isDeathZone = false;
-  m_isTeleportZone = false;
 }
 
 Zone::~Zone() {
@@ -127,58 +125,6 @@ void Zone::saveBinary(FileHandle *i_pfh) {
   for(unsigned int j=0;j<Prims().size();j++) {
     XMFS::writeInt_LE(i_pfh,(int) (Prims()[j]->Type()));
     Prims()[j]->saveBinary(i_pfh);
-  }
-}
-
-void Zone::setDeathZone(bool i_value) {
-  m_isDeathZone = i_value;
-}
-
-bool Zone::isDeathZone() {
-  return m_isDeathZone;
-}
-
-void Zone::setTeleportZone(bool i_value) {
-  m_isTeleportZone = i_value;
-}
-
-bool Zone::isTeleportZone() {
-  return m_isTeleportZone;
-}
-
-void Zone::updateZoneSpeciality(std::string i_scriptSource) {
-  /* This function parses the Script Source for death zones: zones, 
-     that typically consist of OnEnter() and Game.KillPlayer() and end
-     AND
-     for teleport zones, using setPlayerPosition() function  */
-     
-  //determine the positions between special zone function start and end
-  std::string v_specialZoneFunctionString = m_id + ".OnEnter";  // includes also OnEnterBy()
-  size_t v_posStart = i_scriptSource.find(v_specialZoneFunctionString);
-  if(v_posStart == std::string::npos) {
-    //Zone isnt in the script? hum, strange but
-    return;
-  } 
-  size_t v_posEnd = i_scriptSource.find("end", v_posStart);
-
-  // check for deathzone
-  size_t v_found_death = i_scriptSource.find(".KillPlayer", v_posStart);
-  if(v_found_death == std::string::npos) {
-    v_found_death = i_scriptSource.find(".KillAPlayer", v_posStart);
-  }
-  if(v_found_death != std::string::npos && (v_found_death > v_posStart && v_found_death < v_posEnd)) {
-    //looks like we identified a death zone!
-    this->setDeathZone(true);
-    return;
-  }
-  // check for teleport zone
-  size_t v_found_teleport = i_scriptSource.find(".SetPlayerPosition", v_posStart);
-  if(v_found_teleport == std::string::npos) {
-    v_found_teleport = i_scriptSource.find(".SetAPlayerPosition", v_posStart);
-  }
-  if(v_found_teleport != std::string::npos && (v_found_teleport > v_posStart && v_found_teleport < v_posEnd)) {
-    //looks like we identified a teleport zone!
-    this->setTeleportZone(true);
   }
 }
         

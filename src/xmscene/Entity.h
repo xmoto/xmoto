@@ -76,9 +76,6 @@ class Entity {
     return m_sprite;
   }
   bool  isAlive() const;
-  bool  isScripted() const {
-    return m_isScripted;
-  }
 
   virtual void loadToPlay(const std::string& i_ScriptSource);
   virtual void unloadToPlay();
@@ -141,7 +138,6 @@ protected:
   bool        m_isCheckpoint;
   /* Use to know if a script shall update the pos of the entity*/
   bool        m_isAlive;
-  bool        m_isScripted;   /* is it used in a script? */
   TColor      m_color;
 
   BoundingCircle m_BCircle;

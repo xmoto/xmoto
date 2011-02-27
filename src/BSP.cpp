@@ -28,40 +28,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define T_LIMIT_VALUE     0.0001
 
 BSPLine::BSPLine(const Vector2f& i_p0, const Vector2f& i_p1) {
-  m_p0 = i_p0;
-  m_p1 = i_p1;
+  P0 = i_p0;
+  P1 = i_p1;
 
   computeNormal();
 }
 
 BSPLine::BSPLine(const BSPLine& i_line) {
-  m_p0 	   = i_line.m_p0;
-  m_p1 	   = i_line.m_p1;
-  m_normal = i_line.m_normal;
+  P0 	   = i_line.P0;
+  P1 	   = i_line.P1;
+  Normal   = i_line.Normal;
 }
 
 BSPLine::~BSPLine() {
 }
 
-Vector2f BSPLine::P0() {
-  return m_p0;
-}
-
-Vector2f BSPLine::P1() {
-  return m_p1;
-}
-
-Vector2f BSPLine::Normal() {
-  return m_normal;
-}
-
 void BSPLine::computeNormal() {
   Vector2f v;
 
-  v = m_p1 - m_p0;
-  m_normal.x =  v.y;
-  m_normal.y = -v.x;
-  m_normal.normalize();
+  v = P1 - P0;
+  Normal.x =  v.y;
+  Normal.y = -v.x;
+  Normal.normalize();
 }
 
 BSPPoly::BSPPoly() {
@@ -121,15 +109,15 @@ std::vector<BSPPoly *>* BSP::compute() {
   AABB GlobalBox;
 
   for(unsigned int i=0;i<m_lines.size();i++) {
-    GlobalBox.addPointToAABB2f(m_lines[i]->P0());
-    GlobalBox.addPointToAABB2f(m_lines[i]->P1());
+    GlobalBox.addPointToAABB2f(m_lines[i]->P0);
+    GlobalBox.addPointToAABB2f(m_lines[i]->P1);
   }
     
   BSPPoly RootPoly;
 
   // try this root polygon to see if it fixes the graphic problem due to the AABB one
   for(unsigned int i=0; i<m_lines.size(); i++) {
-    RootPoly.addVertice(m_lines[i]->P0());
+    RootPoly.addVertice(m_lines[i]->P0);
   }
 
   /* Start the recursion */
@@ -159,7 +147,7 @@ void BSP::recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines) {
 	if(pPoly->Vertices().empty()) {
 	  LogWarning("recurse(), try to split an empty poly (no BestSplitter)");
 	  LogWarning("Line causing the trouble is (%.5f %.5f ; %.5f %.5f)",
-	      Lines[i]->P0().x, Lines[i]->P0().y, Lines[i]->P1().x, Lines[i]->P1().y);
+	      Lines[i]->P0.x, Lines[i]->P0.y, Lines[i]->P1.x, Lines[i]->P1.y);
 	} else {
 	  splitPoly(pPoly, NULL, pTempPoly, &Splitter);
 	}
@@ -174,7 +162,7 @@ void BSP::recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines) {
 	LogWarning("Lines causing the trouble are :");
 	for(unsigned int i=0;i<Lines.size();i++) {
 	  LogInfo("%.5f %.5f ; %.5f %.5f",
-		      Lines[i]->P0().x, Lines[i]->P0().y, Lines[i]->P1().x, Lines[i]->P1().y);
+		      Lines[i]->P0.x, Lines[i]->P0.y, Lines[i]->P1.x, Lines[i]->P1.y);
 	}
 
         delete pPoly;
@@ -262,7 +250,7 @@ void BSP::splitPoly(BSPPoly *pPoly, BSPPoly *pFront, BSPPoly *pBack, BSPLine *pL
   int nNumInFront=0, nNumInBack=0, nNumOnPlane=0;
   
   for(unsigned int i=0; i<pPoly->Vertices().size(); i++) {
-    double d = pLine->Normal().dot(pLine->P0() - pPoly->Vertices()[i]);
+    double d = pLine->Normal.dot(pLine->P0 - pPoly->Vertices()[i]);
     
     if(fabs(d) < PLANE_LIMIT_VALUE) {
       Rels.push_back( SPR_ON_PLANE );
@@ -337,7 +325,7 @@ void BSP::splitPoly(BSPPoly *pPoly, BSPPoly *pFront, BSPPoly *pBack, BSPLine *pL
       if(bSplit) {        
 	/* Calculate */
 	Vector2f v = pPoly->Vertices()[j] - pPoly->Vertices()[i];
-	float den = v.dot(pLine->Normal());
+	float den = v.dot(pLine->Normal);
 	if(den == 0.0f) { 
 	  /* This should REALLY not be the case... warning! */
 	  LogError("BSP::splitPoly() - impossible case (1)");
@@ -347,7 +335,7 @@ void BSP::splitPoly(BSPPoly *pPoly, BSPPoly *pFront, BSPPoly *pBack, BSPLine *pL
 	  continue;
 	}
 	
-	float t = -(pLine->Normal().dot(pPoly->Vertices()[i] - pLine->P0())) / den;
+	float t = -(pLine->Normal.dot(pPoly->Vertices()[i] - pLine->P0)) / den;
 	
 	if(t>-(T_LIMIT_VALUE) && t<1.0+(T_LIMIT_VALUE)) {
 	  Vector2f Sect = pPoly->Vertices()[i] + v*t;            
@@ -377,10 +365,11 @@ void BSP::splitLines(std::vector<BSPLine *> &Lines,std::vector<BSPLine *> &Front
   }
   
   /* Try splitting all the lines -- and collect a bunch of stats about it */
-  for(unsigned int i=0;i<Lines.size();i++) {
+  unsigned int v_size = Lines.size(); // perf cause a high number of calls
+  for(unsigned int i=0;i<v_size;i++) {
     /* Look at this... determined the signed point-plane distance for each ends of the line to split */
-    double d0 = pLine->Normal().dot(pLine->P0() - Lines[i]->P0());
-    double d1 = pLine->Normal().dot(pLine->P0() - Lines[i]->P1());
+    double d0 = pLine->Normal.dot(pLine->P0 - Lines[i]->P0);
+    double d1 = pLine->Normal.dot(pLine->P0 - Lines[i]->P1);
       
     /* Now decide how it relates to the splitter */
     SplitLineRel r0, r1;
@@ -410,7 +399,7 @@ void BSP::splitLines(std::vector<BSPLine *> &Lines,std::vector<BSPLine *> &Front
       }
     } else if(r0 == SLR_ON_PLANE && r1 == SLR_ON_PLANE) {
         /* The line is approximately on the plane... find out which way it faces */
-      if(Lines[i]->Normal().almostEqual(pLine->Normal())) {
+      if(Lines[i]->Normal.almostEqual(pLine->Normal)) {
 	/* In back then */
 	if(bProbe) {
 	  *pnNumBack = *pnNumBack + 1;
@@ -434,8 +423,8 @@ void BSP::splitLines(std::vector<BSPLine *> &Lines,std::vector<BSPLine *> &Front
 	*pnNumBack   = *pnNumBack   + 1;
 	*pnNumSplits = *pnNumSplits + 1;
       } else {
-	Vector2f v = Lines[i]->P1() - Lines[i]->P0();
-	float den = v.dot(pLine->Normal());
+	Vector2f v = Lines[i]->P1 - Lines[i]->P0;
+	float den = v.dot(pLine->Normal);
 	if(den == 0.0f) { 
 	  /* This should REALLY not be the case... warning! */
 	  LogError("BSP::_SplitLines() - impossible case (1)");
@@ -445,23 +434,23 @@ void BSP::splitLines(std::vector<BSPLine *> &Lines,std::vector<BSPLine *> &Front
 	  continue;
 	}
           
-	double t = -(pLine->Normal().dot(Lines[i]->P0() - pLine->P0())) / den;
+	double t = -(pLine->Normal.dot(Lines[i]->P0 - pLine->P0)) / den;
           
 	if(t>-(T_LIMIT_VALUE) && t<1.0+(T_LIMIT_VALUE)) {
-	  Vector2f Sect = Lines[i]->P0() + v*t;
+	  Vector2f Sect = Lines[i]->P0 + v*t;
 	  
 	  if(r0 == SLR_IN_FRONT) {
-	    Front.push_back(new BSPLine(Lines[i]->P0(), Sect));
+	    Front.push_back(new BSPLine(Lines[i]->P0, Sect));
 	  }
 	  else {
-	    Front.push_back(new BSPLine(Sect, Lines[i]->P1()));
+	    Front.push_back(new BSPLine(Sect, Lines[i]->P1));
 	  }
 
 	  if(r0 == SLR_IN_FRONT) {
-	    Back.push_back(new BSPLine(Sect, Lines[i]->P1()));
+	    Back.push_back(new BSPLine(Sect, Lines[i]->P1));
 	  }
 	  else {
-	    Back.push_back(new BSPLine(Lines[i]->P0(), Sect));
+	    Back.push_back(new BSPLine(Lines[i]->P0, Sect));
 	  }
 	}
 	else {

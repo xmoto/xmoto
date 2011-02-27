@@ -999,7 +999,8 @@ void CollisionSystem::_SetWheelContactParams(dContact *pc,const Vector2f &Pos,co
   template <class T> struct ColElement<T>*
   ElementHandler<T>::_getColElement(T* id)
   {
-    for(unsigned int i=0; i<m_ColElements.size(); i++){
+    unsigned int v_size = m_ColElements.size(); // perf -- because size is called a lot of times
+    for(unsigned int i=0; i<v_size; i++){
       if(m_ColElements[i]->id == id){
 	return m_ColElements[i];
       }

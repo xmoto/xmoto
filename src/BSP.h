@@ -30,16 +30,12 @@ class BSPLine {
   BSPLine(const BSPLine& i_line);
   ~BSPLine();
 
-  Vector2f P0();
-  Vector2f P1();
-  Vector2f Normal();
+  // public, for avoiding calls (perf)
+  Vector2f P0, P1; /* Line */
+  Vector2f Normal;   /* Linenormal (meaningless, but hey :P)*/
 
   private:
-
   void computeNormal();
-
-  Vector2f m_p0, m_p1; /* Line */
-  Vector2f m_normal;   /* Linenormal (meaningless, but hey :P)*/
 };  
 
 class BSPPoly {
