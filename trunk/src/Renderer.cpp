@@ -555,52 +555,6 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
     std::vector<Block*> Blocks;
 
     pDrawlib->setTexture(NULL, BLEND_MODE_NONE);
-    
-    /* Render Death Zones */
-    for(unsigned int k=0; k < i_scene->getLevelSrc()->DeathZones().size(); k++) {
-      for(unsigned int i=0; i < i_scene->getLevelSrc()->DeathZones()[k]->Prims().size(); i++) { 
-	ZonePrim* v_prim = i_scene->getLevelSrc()->DeathZones()[k]->Prims()[i];
-        if(v_prim->Type() == LZPT_BOX) {
-	  ZonePrimBox* v_primbox = static_cast<ZonePrimBox*>(v_prim);
-	  pDrawlib->startDraw(DRAW_MODE_POLYGON); 	 
-	  pDrawlib->setColorRGB(26,26,188);
-
-          pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Left() - cameraPosX)*MINIMAPZOOM,  
-                               y + nHeight/2 - (v_primbox->Top() - cameraPosY)*MINIMAPZOOM);
-          pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Right() - cameraPosX)*MINIMAPZOOM,  
-	                       y + nHeight/2 - (v_primbox->Top() - cameraPosY)*MINIMAPZOOM);
-	  pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Right() - cameraPosX)*MINIMAPZOOM,  
-	                       y + nHeight/2 - (v_primbox->Bottom() - cameraPosY)*MINIMAPZOOM);
-	  pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Left() - cameraPosX)*MINIMAPZOOM,  
-	                       y + nHeight/2 - (v_primbox->Bottom() - cameraPosY)*MINIMAPZOOM);
-	  
-	  pDrawlib->endDraw();
-        }
-      }
-    }
-    
-    /* Render Teleport Zones */
-    for(unsigned int k=0; k < i_scene->getLevelSrc()->TeleportZones().size(); k++) {
-      for(unsigned int i=0; i < i_scene->getLevelSrc()->TeleportZones()[k]->Prims().size(); i++) { 
-	ZonePrim* v_prim = i_scene->getLevelSrc()->TeleportZones()[k]->Prims()[i];
-        if(v_prim->Type() == LZPT_BOX) {
-	  ZonePrimBox* v_primbox = static_cast<ZonePrimBox*>(v_prim);
-	  pDrawlib->startDraw(DRAW_MODE_POLYGON); 	 
-	  pDrawlib->setColorRGB(255,200,0);
-
-          pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Left() - cameraPosX)*MINIMAPZOOM,  
-                               y + nHeight/2 - (v_primbox->Top() - cameraPosY)*MINIMAPZOOM);
-          pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Right() - cameraPosX)*MINIMAPZOOM,  
-	                       y + nHeight/2 - (v_primbox->Top() - cameraPosY)*MINIMAPZOOM);
-	  pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Right() - cameraPosX)*MINIMAPZOOM,  
-	                       y + nHeight/2 - (v_primbox->Bottom() - cameraPosY)*MINIMAPZOOM);
-	  pDrawlib->glVertexSP(x + nWidth/2  + (v_primbox->Left() - cameraPosX)*MINIMAPZOOM,  
-	                       y + nHeight/2 - (v_primbox->Bottom() - cameraPosY)*MINIMAPZOOM);
-	  
-	  pDrawlib->endDraw();
-        }
-      }
-    }
 
     for(int layer=-1; layer<=0; layer++){
       Blocks = i_scene->getCollisionHandler()->getStaticBlocksNearPosition(mapBBox, layer);
@@ -701,7 +655,7 @@ void GameRenderer::renderMiniMap(Scene* i_scene, int x,int y,int nWidth,int nHei
       else if(Entities[i]->IsCheckpoint()) {
         pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(26,188,26,255), 0);
       }
-      else if(Entities[i]->isScripted()) {
+      else {
         pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(230,226,100,255), 0);
       }
     }
@@ -1130,18 +1084,15 @@ void GameRenderer::render(Scene* i_scene) {
     /* ... then render background sprites ... */      
     _RenderSprites(i_scene, false,true);
 
-    /* Render particles (back!) */    
-    _RenderParticles(i_scene, false);
+    /* Render particles (back!) */
+    if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
+      _RenderParticles(i_scene, false);
+    }
 
     /* zones */
-    if(XMSession::instance()->uglyOver()) {
+    if(XMSession::instance()->debug() || XMSession::instance()->testTheme()) {
       for(unsigned int i=0; i<i_scene->getLevelSrc()->Zones().size(); i++) {
-	_RenderZone(i_scene->getLevelSrc()->Zones()[i], false);
-      }
-    }
-    else if(XMSession::instance()->ugly() || XMSession::instance()->gameGraphics() != GFX_HIGH) {
-      for(unsigned int i=0; i<i_scene->getLevelSrc()->Zones().size(); i++) {
-	_RenderZone(i_scene->getLevelSrc()->Zones()[i], true);
+	_RenderZone(i_scene->getLevelSrc()->Zones()[i]);
       }
     }
 
@@ -1231,7 +1182,9 @@ void GameRenderer::render(Scene* i_scene) {
     }
     
     /* Render particles (front!) */    
-    _RenderParticles(i_scene, true);
+    if(XMSession::instance()->gameGraphics() == GFX_HIGH && XMSession::instance()->ugly() == false) {
+      _RenderParticles(i_scene, true);
+    }
     
     /* ... and finally the foreground sprites! */
     _RenderSprites(i_scene, true,false);
@@ -1646,17 +1599,17 @@ void GameRenderer::_RenderSprites(Scene* i_scene, bool bForeground,bool bBackgro
       switch(pEnt->Speciality()) {
       case ET_NONE:
 	/* Middleground? (not foreground, not background) */
-	if(pEnt->Z() == 0.0f && !bForeground && !bBackground && ( (XMSession::instance()->gameGraphics() == GFX_HIGH && !XMSession::instance()->ugly()) || pEnt->isScripted()) ) {
+	if(pEnt->Z() == 0.0f && !bForeground && !bBackground) {
 	  _RenderSprite(i_scene, pEnt);  
 	} 
 	else {
 	  /* In front? */
-	  if(pEnt->Z() > 0.0f && bForeground && ( (XMSession::instance()->gameGraphics() == GFX_HIGH && !XMSession::instance()->ugly()) || pEnt->isScripted())) {
+	  if(pEnt->Z() > 0.0f && bForeground) {
 	    _RenderSprite(i_scene, pEnt);
 	  } 
 	  else {
 	    /* Those in back? */
-	    if(pEnt->Z() < 0.0f && bBackground && ( (XMSession::instance()->gameGraphics() == GFX_HIGH && !XMSession::instance()->ugly()) || pEnt->isScripted())) {
+	    if(pEnt->Z() < 0.0f && bBackground) {
 	      _RenderSprite(i_scene, pEnt);
 	    }
 	  }
@@ -2266,33 +2219,23 @@ void GameRenderer::_RenderBlockEdges(Block* pBlock) {
     }
   }
 
-  void GameRenderer::_RenderZone(Zone *i_zone, bool i_renderOnlySpecialZone) {
+  void GameRenderer::_RenderZone(Zone *i_zone) {
     ZonePrim *v_prim;
     ZonePrimBox *v_primbox;
 
     GameApp::instance()->getDrawLib()->setTexture(NULL, BLEND_MODE_NONE);
-
-    if(i_renderOnlySpecialZone && !((i_zone->isDeathZone()) || i_zone->isTeleportZone())) {
-      return;
-    }
     
     for(unsigned int i=0; i<i_zone->Prims().size(); i++) {
       v_prim = i_zone->Prims()[i];
       if(v_prim->Type() == LZPT_BOX) {
 	v_primbox = static_cast<ZonePrimBox*>(v_prim);
 	Color v_color;
-	if(i_zone->isDeathZone()) {
-	  v_color = MAKE_COLOR(26,26,188,255);
-	}
-	else if(i_zone->isTeleportZone()) {
-	  v_color = MAKE_COLOR(255,200,0,255);
-	}
-	else v_color = MAKE_COLOR(255, 0, 0, 255);
+	v_color = MAKE_COLOR(255, 0, 0, 255);
 	
 	_RenderRectangle(Vector2f(v_primbox->Left(),  v_primbox->Top()),
 			 Vector2f(v_primbox->Right(), v_primbox->Bottom()),
 			 v_color ,
-			 ((i_zone->isDeathZone() || i_zone->isTeleportZone()) && (XMSession::instance()->gameGraphics() != GFX_HIGH && !XMSession::instance()->ugly()))? true : false);
+			 true);
       }
     }
   }
@@ -2905,21 +2848,13 @@ void GameRenderer::_RenderParticle(Scene* i_scene, ParticlesSource* i_source, un
   for(unsigned int j = 0; j < i_source->Particles().size(); j++) {
     EntityParticle* v_particle = i_source->Particles()[j];
     Color v_color = MAKE_COLOR(v_particle->Color().Red(), v_particle->Color().Green(), v_particle->Color().Blue(),v_particle->Color().Alpha());
-    if(XMSession::instance()->ugly() && i_source->isScripted() && v_particle->spriteIndex() == sprite) {
-        _RenderCircle(6, v_color, v_particle->DynamicPosition(),v_particle->Size());
-    }
-    else if(!XMSession::instance()->ugly() && XMSession::instance()->gameGraphics() == GFX_LOW && i_source->isScripted() && v_particle->spriteIndex() == sprite) {
-        _RenderCircle(6, v_color, v_particle->DynamicPosition(),v_particle->Size(), true);
-    }
-    else {
-      if(!XMSession::instance()->ugly() && XMSession::instance()->gameGraphics() != GFX_LOW && v_particle->spriteIndex() == sprite ) {
+      if(v_particle->spriteIndex() == sprite) {
         _RenderParticleDraw(v_particle->DynamicPosition(),
 			    NULL,
 			    v_particle->Size(),
 			    v_particle->Angle(),
 			    v_particle->Color());
       }
-    }
   }
 }
   

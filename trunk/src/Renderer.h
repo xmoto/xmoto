@@ -235,7 +235,7 @@ private:
   void _RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c);
   void _RenderParticle(Scene* i_scene, ParticlesSource *i_source, unsigned int sprite=0);
   void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff, float i_xcentering = 0.0, float i_ycentering = 0.0);
-  void _RenderZone(Zone *i_zone, bool i_renderOnlyDeathZone);
+  void _RenderZone(Zone *i_zone);
 
   void _RenderGhost(Scene* i_scene, Biker* i_ghost, int i, float i_textOffset);
   void _RenderGhostTrail(Scene* i_scene, AABB* i_screenBBox, float i_scale);
