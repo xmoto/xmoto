@@ -781,16 +781,18 @@ bool ServerThread::manageNetwork() {
 	      } else {
 		i++;
 	      }
-	    } catch(DisconnectedException &e) {
-	      LogInfo("server: client %u disconnected (%s:%d) : %s", i,
-		      XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
-		      SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
-	      removeClient(i);
 	    } catch(Exception &e) {
-	      LogInfo("server: bad TCP packet received by client %u (%s:%d) : %s", i,
-		      XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
-		      SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
-	      removeClient(i);
+	      if(e.getMsg() == "Disconnected") {// catch(DisconnectedException &e) won't work, i don't understand why
+		LogInfo("server: client %u disconnected (%s:%d) : %s", i,
+			XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
+			SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
+		removeClient(i);
+	      } else {
+		LogInfo("server: bad TCP packet received by client %u (%s:%d) : %s", i,
+			XMNet::getIp(m_clients[i]->tcpRemoteIP()).c_str(),
+			SDLNet_Read16(&(m_clients[i]->tcpRemoteIP())->port), e.getMsg().c_str());
+		removeClient(i);
+	      }
 	    }
 	  } else {
 	    i++;
