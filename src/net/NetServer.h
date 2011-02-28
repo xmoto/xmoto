@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __XMNETSERVER_H__
 
 #include "../helpers/Singleton.h"
+#include <string>
 
 class ServerThread;
 
@@ -30,7 +31,7 @@ class NetServer : public Singleton<NetServer> {
   NetServer();
   ~NetServer();
 
-  void start(bool i_deamon);
+  void start(bool i_deamon, int i_port, const std::string& i_adminPassword = "");
   void stop();
   bool isStarted();
   void wait();

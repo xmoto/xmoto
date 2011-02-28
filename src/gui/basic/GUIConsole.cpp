@@ -68,12 +68,14 @@ void UIConsole::paint() {
   int v_YOffset = getPosition().nY;
   int v_cursorXOffset = 0;
   int v_cursorYOffset = 0;
+  int v_nbToRemove;
 
   v_fm = GameApp::instance()->getDrawLib()->getFontMonospace();
 
   putRect(0, 0, getPosition().nWidth, getPosition().nHeight, MAKE_COLOR(0, 0, 0, 220));
 
   // draw the text
+  v_nbToRemove = 0;
   for(unsigned int i=0; i<m_lines.size(); i++) {
     v_fg = v_fm->getGlyphTabExtended(m_lines[i]);
     v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, v_XOffset, v_YOffset,
@@ -91,6 +93,9 @@ void UIConsole::paint() {
     }
 
     v_YOffset += v_fg->realHeight();
+    if(v_YOffset > getPosition().nY + getPosition().nHeight) {
+      v_nbToRemove++;
+    }
   }
  
   // draw cursor
@@ -103,7 +108,7 @@ void UIConsole::paint() {
 
   // remove lines if on bottom
   if(v_YOffset > getPosition().nY + getPosition().nHeight) {
-    m_lines.erase(m_lines.begin());
+    m_lines.erase(m_lines.begin(), m_lines.begin()+v_nbToRemove);
   }
 }
 

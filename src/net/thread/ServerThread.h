@@ -113,7 +113,7 @@ class NetSClient {
 
 class ServerThread : public XMThread {
   public:
-  ServerThread(const std::string& i_dbKey);
+  ServerThread(const std::string& i_dbKey, int i_port, const std::string& i_adminPassword = "" /* empty to disable this feature */);
   virtual ~ServerThread();
 
   bool acceptConnections() const;
@@ -125,6 +125,9 @@ class ServerThread : public XMThread {
   UDPsocket m_udpsd;
   UDPpacket* m_udpPacket;
   unsigned int m_nextClientId;
+
+  int m_port;
+  std::string m_adminPassword;
 
   Universe* m_universe;
   DBuffer* m_DBuffer;
@@ -143,7 +146,6 @@ class ServerThread : public XMThread {
   std::string m_startTimeStr;
   std::string m_banner;
   bool m_acceptConnections;
-
   int m_unmanagedActions;
 
   SDLNet_SocketSet m_set;

@@ -38,7 +38,15 @@ class ActionReader {
   static NetAction* UDPReadAction(Uint8* data, int len);
 
   static void logStats();
-  static std::string getStats();
+
+  /* stats */
+  static unsigned int m_biggestTCPPacketReceived;
+  static unsigned int m_biggestUDPPacketReceived;
+  static unsigned int m_nbTCPPacketsReceived;
+  static unsigned int m_nbUDPPacketsReceived;
+  static unsigned int m_TCPPacketsSizeReceived;
+  static unsigned int m_UDPPacketsSizeReceived;
+  /* ***** */
 
   private:
   unsigned int m_tcpPacketOffset;
@@ -47,14 +55,6 @@ class ActionReader {
   bool m_tcpPossiblyInBuffer; // an action is possibly in the buffer
 
   static unsigned int getSubPacketSize(void* data, unsigned int len, unsigned int& o_cmdStart);
-
-  static unsigned int m_biggestTCPPacketReceived;
-  static unsigned int m_biggestUDPPacketReceived;
-  static unsigned int m_nbTCPPacketsReceived;
-  static unsigned int m_nbUDPPacketsReceived;
-  static unsigned int m_TCPPacketsSizeReceived;
-  static unsigned int m_UDPPacketsSizeReceived;
-
 };
 
 #endif

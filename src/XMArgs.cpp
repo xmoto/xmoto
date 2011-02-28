@@ -75,6 +75,8 @@ XMArguments::XMArguments() {
   m_opt_default_theme           = false;
   m_opt_noDBDirsCheck 	      	= false;
   m_opt_serverOnly    	      	= false;
+  m_opt_serverPort              = false;
+  m_opt_serverAdminPassword     = false;
   m_opt_updateLevelsOnly        = false;
   m_opt_clientConnectAtStartup  = false;
   m_opt_adminMode               = false;
@@ -273,6 +275,20 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       m_opt_noDBDirsCheck = true;
     } else if(v_opt == "--server") {
       m_opt_serverOnly = true;
+    } else if(v_opt == "--serverPort") {
+      m_opt_serverPort = true;
+      if(i+1 >= i_argc) {
+        throw SyntaxError("missing value");
+      }
+      m_opt_serverPort_value = atoi(i_argv[i+1]);
+      i++;
+    } else if(v_opt == "--serverAdminPassword") {
+      m_opt_serverAdminPassword = true;
+      if(i+1 >= i_argc) {
+        throw SyntaxError("missing value");
+      }
+      m_opt_serverAdminPassword_value = i_argv[i+1];
+      i++;
     } else if(v_opt == "--updateLevelsOnly") {
       m_opt_updateLevelsOnly = true;
     } else if(v_opt == "--connectAtStartup") {
@@ -601,6 +617,22 @@ bool XMArguments::isOptServerOnly() const {
   return m_opt_serverOnly;
 }
 
+bool XMArguments::isOptServerPort() const {
+  return m_opt_serverPort;
+}
+
+int XMArguments::getOptServerPort_value() const {
+  return m_opt_serverPort_value;
+}
+
+bool XMArguments::isOptServerAdminPassword() const {
+  return m_opt_serverAdminPassword;
+}
+
+std::string XMArguments::getOptServerAdminPassword_value() const {
+  return m_opt_serverAdminPassword_value;
+}
+
 bool XMArguments::isOptClientConnectAtStartup() const {
   return m_opt_clientConnectAtStartup;
 }
@@ -664,6 +696,8 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t--defaultTheme THEME\n\t\tDefault theme for new profiles created.\n");
   printf("\t--noDBDirsCheck\n\t\tDon't check that system and user dirs changed at startup.\n");
   printf("\t--server\n\t\tRun X-Moto as a server only (no gui).\n");
+  printf("\t--serverPort PORT\n\t\tSpecify the server port (with --server only).\n");
+  printf("\t--serverAdminPassword PASSWORD\n\t\tSpecify a server admin password which is always valid (with --server only).\n");
   printf("\t--updateLevelsOnly\n\t\tOnly update levels (no gui).\n");
   printf("\t--connectAtStartup\n\t\tConnect the client to the server at startup.\n");
   printf("\t-h, -?, -help, --help\n\t\tDisplay this message.\n");

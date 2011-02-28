@@ -95,6 +95,10 @@ class XMArguments {
   bool isOptForceChildrenCompliant() const;
   bool isOptNoDBDirsCheck() const;
   bool isOptServerOnly() const;
+  bool isOptServerPort() const;
+  int getOptServerPort_value() const;
+  bool isOptServerAdminPassword() const;
+  std::string getOptServerAdminPassword_value() const;
   bool isOptUpdateLevelsOnly() const;
   bool isOptClientConnectAtStartup() const;
   bool isOptAdminMode() const;
@@ -190,6 +194,10 @@ class XMArguments {
 
   /* server */
   bool m_opt_serverOnly;
+  bool m_opt_serverPort;
+  int  m_opt_serverPort_value;
+  bool m_opt_serverAdminPassword;
+  std::string m_opt_serverAdminPassword_value;
 
   /* net */
   bool m_opt_clientConnectAtStartup;

@@ -31,8 +31,8 @@ NetServer::NetServer() {
 NetServer::~NetServer() {
 }
 
-void NetServer::start(bool i_deamon) {
-  m_serverThread = new ServerThread("NETSERVER");
+void NetServer::start(bool i_deamon, int i_port, const std::string& i_adminPassword) {
+  m_serverThread = new ServerThread("NETSERVER", i_port, i_adminPassword);
 
   if(i_deamon) {
     m_serverThread->startThread();

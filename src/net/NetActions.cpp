@@ -96,33 +96,14 @@ NetAction::NetAction(bool i_forceTcp) {
 NetAction::~NetAction() {
 }
 
-/* std::string version */
-std::string NetAction::getStats() {
-  std::string v_stats;
-
-  std::ostringstream v_nbTCPSent, v_nbUDPSent;
-
-  v_nbTCPSent << NetAction::m_nbTCPPacketsSent;
-  v_nbUDPSent << NetAction::m_nbUDPPacketsSent;
-
-  v_stats += "number of TCP packets sent : " + v_nbTCPSent.str()                                       + "\n";
-  v_stats += "biggest TCP packet sent : "    + XMNet::getFancyBytes(NetAction::m_biggestTCPPacketSent) + "\n";
-  v_stats += "size of TCP packets sent : "   + XMNet::getFancyBytes(NetAction::m_TCPPacketsSizeSent)   + "\n";
-  v_stats += "number of UDP packets sent : " + v_nbUDPSent.str()                                       + "\n";
-  v_stats += "biggest UDP packet sent : "    + XMNet::getFancyBytes(NetAction::m_biggestUDPPacketSent) + "\n";
-  v_stats += "size of UDP packets sent : "   + XMNet::getFancyBytes(NetAction::m_UDPPacketsSizeSent);
-
-  return v_stats;
-}
-
 /* log version */
 void NetAction::logStats() {
-  LogInfo("%-31s : %u", "net: number of TCP packets sent", NetAction::m_nbTCPPacketsSent);
-  LogInfo("%-31s : %s", "net: biggest TCP packet sent"   , XMNet::getFancyBytes(NetAction::m_biggestTCPPacketSent).c_str());
-  LogInfo("%-31s : %s", "net: size of TCP packets sent"  , XMNet::getFancyBytes(NetAction::m_TCPPacketsSizeSent).c_str());
-  LogInfo("%-31s : %u", "net: number of UDP packets sent", NetAction::m_nbUDPPacketsSent);
-  LogInfo("%-31s : %s", "net: biggest UDP packet sent"   , XMNet::getFancyBytes(NetAction::m_biggestUDPPacketSent).c_str());
-  LogInfo("%-31s : %s", "net: size of UDP packets sent"  , XMNet::getFancyBytes(NetAction::m_UDPPacketsSizeSent).c_str());
+  LogInfo("%-36s : %u", "net: number of TCP packets sent", NetAction::m_nbTCPPacketsSent);
+  LogInfo("%-36s : %s", "net: biggest TCP packet sent"   , XMNet::getFancyBytes(NetAction::m_biggestTCPPacketSent).c_str());
+  LogInfo("%-36s : %s", "net: size of TCP packets sent"  , XMNet::getFancyBytes(NetAction::m_TCPPacketsSizeSent).c_str());
+  LogInfo("%-36s : %u", "net: number of UDP packets sent", NetAction::m_nbUDPPacketsSent);
+  LogInfo("%-36s : %s", "net: biggest UDP packet sent"   , XMNet::getFancyBytes(NetAction::m_biggestUDPPacketSent).c_str());
+  LogInfo("%-36s : %s", "net: size of UDP packets sent"  , XMNet::getFancyBytes(NetAction::m_UDPPacketsSizeSent).c_str());
 }
 
 void NetAction::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP,

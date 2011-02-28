@@ -44,33 +44,14 @@ ActionReader::ActionReader() {
 ActionReader::~ActionReader() {
 }
 
-/* std::string version */
-std::string ActionReader::getStats() {
-  std::string v_stats;
-
-  std::ostringstream v_nbTCPReceived, v_nbUDPReceived;
-
-  v_nbTCPReceived << ActionReader::m_nbTCPPacketsReceived;
-  v_nbUDPReceived << ActionReader::m_nbUDPPacketsReceived;
-
-  v_stats += "number of TCP packets received : " + v_nbTCPReceived.str()                                          + "\n";
-  v_stats += "biggest TCP packet received : "    + XMNet::getFancyBytes(ActionReader::m_biggestTCPPacketReceived) + "\n";
-  v_stats += "size of TCP packets received : "   + XMNet::getFancyBytes(ActionReader::m_TCPPacketsSizeReceived)   + "\n";
-  v_stats += "number of UDP packets received : " + v_nbUDPReceived.str()                                       	  + "\n";
-  v_stats += "biggest UDP packet received : "    + XMNet::getFancyBytes(ActionReader::m_biggestUDPPacketReceived) + "\n";
-  v_stats += "size of UDP packets received : "   + XMNet::getFancyBytes(ActionReader::m_UDPPacketsSizeReceived);
-
-  return v_stats;
-}
-
 /* log version */
 void ActionReader::logStats() {
-  LogInfo("%-31s : %u", "net: number of TCP packets received", ActionReader::m_nbTCPPacketsReceived);
-  LogInfo("%-31s : %s", "net: biggest TCP packet received"   , XMNet::getFancyBytes(ActionReader::m_biggestTCPPacketReceived).c_str());
-  LogInfo("%-31s : %s", "net: size of TCP packets received"  , XMNet::getFancyBytes(ActionReader::m_TCPPacketsSizeReceived).c_str());
-  LogInfo("%-31s : %u", "net: number of UDP packets received", ActionReader::m_nbUDPPacketsReceived);
-  LogInfo("%-31s : %s", "net: biggest UDP packet received"   , XMNet::getFancyBytes(ActionReader::m_biggestUDPPacketReceived).c_str());
-  LogInfo("%-31s : %s", "net: size of UDP packets received"  , XMNet::getFancyBytes(ActionReader::m_UDPPacketsSizeReceived).c_str());
+  LogInfo("%-36s : %u", "net: number of TCP packets received", ActionReader::m_nbTCPPacketsReceived);
+  LogInfo("%-36s : %s", "net: biggest TCP packet received"   , XMNet::getFancyBytes(ActionReader::m_biggestTCPPacketReceived).c_str());
+  LogInfo("%-36s : %s", "net: size of TCP packets received"  , XMNet::getFancyBytes(ActionReader::m_TCPPacketsSizeReceived).c_str());
+  LogInfo("%-36s : %u", "net: number of UDP packets received", ActionReader::m_nbUDPPacketsReceived);
+  LogInfo("%-36s : %s", "net: biggest UDP packet received"   , XMNet::getFancyBytes(ActionReader::m_biggestUDPPacketReceived).c_str());
+  LogInfo("%-36s : %s", "net: size of UDP packets received"  , XMNet::getFancyBytes(ActionReader::m_UDPPacketsSizeReceived).c_str());
 }
 
 bool ActionReader::TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction) {
