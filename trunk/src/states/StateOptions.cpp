@@ -620,7 +620,7 @@ void StateOptions::checkEvents() {
     if(NetServer::instance()->isStarted()) {
       NetServer::instance()->stop();
     } else {
-      NetServer::instance()->start(true);
+      NetServer::instance()->start(true, XMSession::instance()->serverPort()); // in graphics mode, use the port of the options
     }
   }
 

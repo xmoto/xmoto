@@ -2,8 +2,10 @@ X-Moto 0.5.6 2011-
 --------------------------------
  * dark background behind the chat messages
  * add ctrl+p to prefill chat box with previous private recipients
+ * new options : --serverPort and --serverAdminPassword
  * possibility to send a report on the website when a level crashes
  * monospace font for the admin console (DejaVuSansMono.ttf)
+ * performances improvements (mainly for the server)
  * fix some bugs (if you win and lost at exactly the same time, you lost)
 
 X-Moto 0.5.5 2011-01-21

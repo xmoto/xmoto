@@ -231,8 +231,11 @@ std::string NetSClient::playingLevelId() const {
   return m_playingLevelId;
 }
 
-ServerThread::ServerThread(const std::string& i_dbKey) 
+ServerThread::ServerThread(const std::string& i_dbKey, int i_port, const std::string& i_adminPassword) 
   : XMThread(i_dbKey) {
+    m_port = i_port;
+    m_adminPassword = i_adminPassword;
+
     m_set = NULL;
     m_nextClientId = 0;
     m_udpPacket = SDLNet_AllocPacket(XM_SERVER_MAX_UDP_PACKET_SIZE);
@@ -267,9 +270,10 @@ int ServerThread::realThreadFunction() {
   int ssn;
 
   LogInfo("server: starting");
+  LogInfo("server: ports %i UDP & TCP", m_port);
 
   /* Resolving the host using NULL make network interface to listen */
-  if(SDLNet_ResolveHost(&ip, NULL, XMSession::instance()->serverPort()) < 0) {
+  if(SDLNet_ResolveHost(&ip, NULL, m_port) < 0) {
     LogError("server: SDLNet_ResolveHost: %s", SDLNet_GetError());
     return 1;
   }
@@ -288,7 +292,7 @@ int ServerThread::realThreadFunction() {
     return 1;
   }
 
-  if((m_udpsd = SDLNet_UDP_Open(XMSession::instance()->serverPort())) == 0) {
+  if((m_udpsd = SDLNet_UDP_Open(m_port)) == 0) {
     LogError("server: SDLNet_UDP_Open: %s", SDLNet_GetError());
     SDLNet_FreeSocketSet(m_set);
     SDLNet_TCP_Close(m_tcpsd);
@@ -1386,7 +1390,9 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     } else  if(m_clients[i_client]->isAdminConnected()) {
       v_answer += "Already connected\n";
     } else {
-      if(m_pDb->srv_isAdmin(m_clients[i_client]->name(), v_args[1])) {
+      if( (m_adminPassword != "" && m_adminPassword == std::string(v_args[1])) ||   // master admin password
+	  (m_pDb->srv_isAdmin(m_clients[i_client]->name(), v_args[1])) // normal admin password
+	  ) {
 	m_clients[i_client]->setAdminConnected(true);
 	v_answer += "Connected\n";
       } else {
@@ -1553,9 +1559,49 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     if(v_args.size() != 1) {
       v_answer += "stats: invalid arguments\n";
     } else {
+      char v_line[256];
       v_answer += "start time : " + m_startTimeStr + "\n";
-      v_answer += NetAction::getStats() + "\n";
-      v_answer += ActionReader::getStats() + "\n";
+
+      //         | bytes | packets | biggest | 
+      // --------+-------+---------+---------|
+      //  in TCP |
+      //  in UDP |
+      // --------+
+      // out TCP |
+      // out UDP |
+
+      snprintf(v_line, 256, "+%9s+%13s+%13s+%13s+\n", "---------", "-------------", "-------------", "-------------");
+      v_answer += v_line;
+      snprintf(v_line, 256, "| %7s | %11s | %11s | %11s |\n", "       ", "   bytes   ", "  packets  ", "  biggest  ");
+      v_answer += v_line;
+      snprintf(v_line, 256, "+%9s+%13s+%13s+%13s+\n", "---------", "-------------", "-------------", "-------------");
+      v_answer += v_line;
+      snprintf(v_line, 256, "| %7s + %11s + %11i + %11s |\n", "in TCP ",
+	       XMNet::getFancyBytes(ActionReader::m_TCPPacketsSizeReceived).c_str(),
+	       ActionReader::m_nbTCPPacketsReceived,
+	       XMNet::getFancyBytes(ActionReader::m_biggestTCPPacketReceived).c_str()
+	       );
+      v_answer += v_line;
+      snprintf(v_line, 256, "| %7s + %11s + %11i + %11s |\n", "in UDP ",
+	       XMNet::getFancyBytes(ActionReader::m_UDPPacketsSizeReceived).c_str(),
+	       ActionReader::m_nbUDPPacketsReceived,
+	       XMNet::getFancyBytes(ActionReader::m_biggestUDPPacketReceived).c_str()
+	       );
+      v_answer += v_line;
+      snprintf(v_line, 256, "| %7s + %11s + %11i + %11s |\n", "out TCP",
+	       XMNet::getFancyBytes(NetAction::m_TCPPacketsSizeSent).c_str(),
+	       NetAction::m_nbTCPPacketsSent,
+	       XMNet::getFancyBytes(NetAction::m_biggestTCPPacketSent).c_str()
+	       );
+      v_answer += v_line;
+      snprintf(v_line, 256, "| %7s + %11s + %11i + %11s |\n", "out UDP",
+	       XMNet::getFancyBytes(NetAction::m_UDPPacketsSizeSent).c_str(),
+	       NetAction::m_nbUDPPacketsSent,
+	       XMNet::getFancyBytes(NetAction::m_biggestUDPPacketSent).c_str()
+	       );
+      v_answer += v_line;
+      snprintf(v_line, 256, "+%9s+%13s+%13s+%13s+\n", "---------", "-------------", "-------------", "-------------");
+      v_answer += v_line;
 
       std::ostringstream v_nup;
       v_answer += "unmanaged packets : ";

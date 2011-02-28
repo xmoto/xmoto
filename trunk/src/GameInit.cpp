@@ -368,6 +368,11 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   v_xmArgs.isOptReplay()    ||
   v_xmArgs.isOptDemo());
 
+  // network requires the input informations (to display the chat command)
+  if(v_useGraphics) {
+    InputHandler::instance()->init(m_userConfig, pDb, XMSession::instance()->profile(), XMSession::instance()->enableJoysticks());
+  }
+
   // no command line need the network for the moment
   if(v_useGraphics || v_xmArgs.isOptServerOnly()) {
     initNetwork(v_xmArgs.isOptServerOnly(), v_xmArgs.isOptServerOnly() || v_graphicAutomaticMode);
@@ -544,8 +549,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 #endif
   m_isODEInitialized = true;
 
-  /* build handler */
-  InputHandler::instance()->init(m_userConfig, pDb, XMSession::instance()->profile(), XMSession::instance()->enableJoysticks());
   Replay::enableCompression(XMSession::instance()->compressReplays());
   
   /* load packs */
@@ -568,7 +571,9 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     try {
       m_standAloneServer = NetServer::instance();
       NetServer::instance()->setStandAloneOptions();
-      NetServer::instance()->start(false);
+      NetServer::instance()->start(false,
+				   v_xmArgs.isOptServerPort()          ? v_xmArgs.getOptServerPort_value()          : XMSession::instance()->serverPort(),
+				   v_xmArgs.isOptServerAdminPassword() ? v_xmArgs.getOptServerAdminPassword_value() : "" /* else, no password */);
     } catch(Exception &e) {
       LogError((std::string("Exception: ") + e.getMsg()).c_str());
     }
@@ -913,7 +918,7 @@ void GameApp::run_unload() {
   // start server if gui
   if(i_forceNoServerStarted == false) {
     if(XMSession::instance()->serverStartAtStartup()) {
-      NetServer::instance()->start(true);
+      NetServer::instance()->start(true, XMSession::instance()->serverPort()); // in graphics mode, use the port of the options
     }
   }
 
