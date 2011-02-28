@@ -78,11 +78,15 @@ void UIConsole::paint() {
   v_nbToRemove = 0;
   for(unsigned int i=0; i<m_lines.size(); i++) {
     v_fg = v_fm->getGlyphTabExtended(m_lines[i]);
-    v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, v_XOffset, v_YOffset,
-				 MAKE_COLOR(255, 255, 255, 255));
 
+    // print the line only if that not to much at the bottom
+    if(v_YOffset+ v_fg->realHeight() < getPosition().nY + getPosition().nHeight) {
+      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg, v_XOffset, v_YOffset,
+			MAKE_COLOR(255, 255, 255, 255));
+    }
+
+    // compute the cursor for the last line
     if(m_lines.size()-1 == i) {
-
       if(m_cursorChar == (int) utf8::utf8_length(m_lines[i])) {
 	v_cursorXOffset = v_XOffset + v_fg->realWidth();
       } else {
@@ -92,6 +96,7 @@ void UIConsole::paint() {
       v_cursorYOffset = v_YOffset;
     }
 
+    // update the offset
     v_YOffset += v_fg->realHeight();
     if(v_YOffset > getPosition().nY + getPosition().nHeight) {
       v_nbToRemove++;
