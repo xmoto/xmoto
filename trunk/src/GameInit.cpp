@@ -490,7 +490,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     bool v_currentVerbosity = Logger::isVerbose();
     int v_res;
 
-    m_upgradeLevelsThread = new UpgradeLevelsThread(XMSession::instance()->theme(), true);
+    m_upgradeLevelsThread = new UpgradeLevelsThread(XMSession::instance()->theme(), false, true);
 
     // force verbosity while updating levels
     Logger::setVerbose(true);
