@@ -34,7 +34,7 @@ StateUpgradeLevels::StateUpgradeLevels(bool drawStateBehind,
 				       bool updateStatesBehind)
   : StateUpdate(drawStateBehind, updateStatesBehind)
 {
-  m_ult     = new UpgradeLevelsThread(XMSession::instance()->theme(), false);
+  m_ult     = new UpgradeLevelsThread(XMSession::instance()->theme(), false, false);
   m_pThread = m_ult;
   m_name    = "StateUpgradeLevels";
   m_messageOnFailureModal = false;
