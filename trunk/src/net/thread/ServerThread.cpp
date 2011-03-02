@@ -1578,13 +1578,13 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += v_line;
       snprintf(v_line, 256, "+%9s+%13s+%13s+%13s+\n", "---------", "-------------", "-------------", "-------------");
       v_answer += v_line;
-      snprintf(v_line, 256, "| %7s + %11s + %11i + %11s |\n", "in TCP ",
+      snprintf(v_line, 256, "| %7s + %11s + %11i + %11s |\n", " in TCP",
 	       XMNet::getFancyBytes(ActionReader::m_TCPPacketsSizeReceived).c_str(),
 	       ActionReader::m_nbTCPPacketsReceived,
 	       XMNet::getFancyBytes(ActionReader::m_biggestTCPPacketReceived).c_str()
 	       );
       v_answer += v_line;
-      snprintf(v_line, 256, "| %7s + %11s + %11i + %11s |\n", "in UDP ",
+      snprintf(v_line, 256, "| %7s + %11s + %11i + %11s |\n", " in UDP",
 	       XMNet::getFancyBytes(ActionReader::m_UDPPacketsSizeReceived).c_str(),
 	       ActionReader::m_nbUDPPacketsReceived,
 	       XMNet::getFancyBytes(ActionReader::m_biggestUDPPacketReceived).c_str()
