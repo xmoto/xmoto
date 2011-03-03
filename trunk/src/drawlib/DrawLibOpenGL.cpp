@@ -746,7 +746,7 @@ GLFontGlyphLetter::GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf
   m_realWidth = (unsigned int) v_realWidth;
   m_realHeight = (unsigned int) v_realHeight;
 
-  m_drawWidth  = powerOf2(m_realWidth);
+  m_drawWidth  = m_realWidth;
   m_drawHeight = powerOf2(m_realHeight);
   m_firstLineDrawHeight = m_drawHeight;
 
@@ -767,6 +767,7 @@ GLFontGlyphLetter::GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf
   dont_use_crap:
     m_useScrap = false;
 
+    m_drawWidth  = powerOf2(m_realWidth);
     v_image = createSDLSurface(m_drawWidth, m_drawHeight);
 
     /* Copy the surface into the GL texture image */
