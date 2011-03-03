@@ -57,6 +57,8 @@ class FontManager {
   static std::string getDrawFontFile();
   static std::string getMonospaceFontFile();
 
+  virtual void displayScrap(DrawLib* pDrawLib) = 0;
+
  protected:
   TTF_Font* m_ttf;
   DrawLib* m_drawLib;

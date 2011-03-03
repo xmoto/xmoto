@@ -52,7 +52,7 @@ public:
   bool isDirty();
   void update();
 
-  void drawDebug();
+  void display(DrawLib* pDrawLib);
 
 private:
   #define MAX_SCRAPS   4
@@ -124,6 +124,7 @@ public:
 			  Color c1, Color c2, Color c3, Color c4, float i_perCentered = -1.0);
 
   virtual unsigned int nbGlyphsInMemory();
+  virtual void displayScrap(DrawLib* pDrawLib);
 
 private:
   std::vector<GLFontGlyph*> m_glyphsList;
@@ -700,6 +701,24 @@ void ScrapTextures::update()
   }
 }
 
+void ScrapTextures::display(DrawLib* pDrawLib)
+{
+    for(unsigned int i=0; i<MAX_SCRAPS; i++){
+      if(m_scrapsUsed[i] == false)
+	continue;
+
+      glEnable(GL_TEXTURE_2D);
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glBindTexture(GL_TEXTURE_2D, m_scrapsTextures[i]);
+      pDrawLib->drawImageTextureSet(Vector2f(0.0 + i*BLOCK_WIDTH, 200.0),
+				    Vector2f(BLOCK_WIDTH + i*BLOCK_WIDTH, 200.0),
+				    Vector2f(BLOCK_WIDTH + i*BLOCK_WIDTH, 200+BLOCK_HEIGHT),
+				    Vector2f(0.0 + i*BLOCK_WIDTH, 200+BLOCK_HEIGHT),
+				    MAKE_COLOR(255,255,255,255), true);
+    }
+}
+
 FontManager* DrawLibOpenGL::getFontManager(const std::string &i_fontFile, unsigned int i_fontSize) {
   return new GLFontManager(this, i_fontFile, i_fontSize);
 }
@@ -876,6 +895,10 @@ GLFontManager::GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, 
 
 unsigned int GLFontManager::nbGlyphsInMemory() {
   return m_glyphsLettersList.size();
+}
+
+void GLFontManager::displayScrap(DrawLib* pDrawLib) {
+  ScrapTextures::instance()->display(pDrawLib);
 }
 
 GLFontManager::~GLFontManager() {
