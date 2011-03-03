@@ -512,6 +512,13 @@ void StateManager::render()
       drawGeomsLoading();
     }
 
+    // scraps
+    if(XMSession::instance()->debug()) {
+      // render scraps
+      FontManager* v_fm = drawLib->getFontSmall(); // any in fact while it's shared
+      v_fm->displayScrap(drawLib);
+    }
+
     // SYSMESSAGE
     SysMessage::instance()->render();
 
