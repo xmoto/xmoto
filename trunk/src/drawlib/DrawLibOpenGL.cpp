@@ -56,9 +56,12 @@ public:
 
 private:
   #define MAX_SCRAPS   4
+  // we need 3dfx first gen compatibility, which has only 256x256 max
+  // texture size
   #define BLOCK_WIDTH  256
   #define BLOCK_HEIGHT 256
 
+  // store the first available y
   unsigned int m_scrapsAllocated[MAX_SCRAPS][BLOCK_WIDTH];
   SDL_Surface* m_scrapsTexels[MAX_SCRAPS];
   bool         m_scrapsUsed[MAX_SCRAPS];
@@ -623,7 +626,7 @@ int ScrapTextures::allocateAndLoadTexture(unsigned int width,
 
       unsigned int j;
       for(j=0; j<width; j++){
-	if(m_scrapsAllocated[scrap][i+j] >= BLOCK_HEIGHT){
+	if(m_scrapsAllocated[scrap][i+j] + height >= BLOCK_HEIGHT){
 	  break;
 	}
 	if(m_scrapsAllocated[scrap][i+j] > firstAvailable)
@@ -638,11 +641,8 @@ int ScrapTextures::allocateAndLoadTexture(unsigned int width,
       }
     }
 
-    if(useScrap == true
-       && firstAvailable + height <= BLOCK_HEIGHT)
-      break;
-
-    scrap++;
+    if(useScrap == false)
+      scrap++;
   }
 
   if(useScrap == true){
