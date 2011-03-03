@@ -1288,7 +1288,12 @@ void GameRenderer::render(Scene* i_scene) {
       pDrawlib->glVertex(m_screenBBox.getBMax().x,m_screenBBox.getBMin().y);
       pDrawlib->endDraw();
       pDrawlib->setLineWidth(2);
-  
+
+      // render scraps
+      pCamera->setCamera2d();
+      FontManager* v_fm = pDrawlib->getFontMedium();
+      v_fm->displayScrap(pDrawlib);
+      pCamera->setCamera3d();
     }
 
     pCamera->setCamera2d();
