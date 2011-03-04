@@ -747,10 +747,11 @@ GLFontGlyphLetter::GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf
   m_realHeight = (unsigned int) v_realHeight;
 
   m_drawWidth  = m_realWidth;
-  m_drawHeight = powerOf2(m_realHeight);
+  m_drawHeight = m_realHeight;
   m_firstLineDrawHeight = m_drawHeight;
 
-  if(m_drawWidth < 64 && m_drawHeight < 64) {
+  // maximum width/heigth allowed, 80, when bigger, create a texture
+  if(m_drawWidth < 80 && m_drawHeight < 80) {
     try{
       m_GLID = ScrapTextures::instance()->allocateAndLoadTexture(m_drawWidth, m_drawHeight,
 								 &m_u.x, &m_u.y,
@@ -768,6 +769,7 @@ GLFontGlyphLetter::GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf
     m_useScrap = false;
 
     m_drawWidth  = powerOf2(m_realWidth);
+    m_drawHeight = powerOf2(m_realHeight);
     v_image = createSDLSurface(m_drawWidth, m_drawHeight);
 
     /* Copy the surface into the GL texture image */
@@ -856,9 +858,9 @@ GLFontGlyph::GLFontGlyph(const std::string& i_value,
     m_firstLineDrawHeight = v_maxHeight;
   }
 
-  m_drawWidth  = powerOf2(m_realWidth);
-  m_drawHeight = powerOf2(m_realHeight);
-  m_firstLineDrawHeight = powerOf2(m_firstLineDrawHeight);
+  m_drawWidth  = m_realWidth;
+  m_drawHeight = m_realHeight;
+  m_firstLineDrawHeight = m_firstLineDrawHeight;
 }
 
 GLFontGlyph::~GLFontGlyph() {
