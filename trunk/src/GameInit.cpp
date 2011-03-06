@@ -316,10 +316,10 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   }
 #endif
 
+  _InitWin(v_useGraphics); // initwin inits sdl (and only sdl if initwin is false)
+
   /* drawlib */
   if(v_useGraphics) {
-    _InitWin(v_useGraphics);
-
     /* init drawLib */
     drawLib = DrawLib::DrawLibFromName(XMSession::instance()->drawlib());
 
