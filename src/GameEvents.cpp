@@ -557,21 +557,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   MGE_EntityDestroyed::MGE_EntityDestroyed(int p_eventTime) 
   : SceneEvent(p_eventTime) {
     m_entitySize = 0.0;
+    m_takenByPlayer = -1; // unknown
   }
 
-  MGE_EntityDestroyed::MGE_EntityDestroyed(int p_eventTime, std::string i_entityId, EntitySpeciality i_entityType, Vector2f i_entityPosition, float i_entitySize)
+  MGE_EntityDestroyed::MGE_EntityDestroyed(int p_eventTime, std::string i_entityId, EntitySpeciality i_entityType, Vector2f i_entityPosition, float i_entitySize, int i_takenByPlayer)
     : SceneEvent(p_eventTime) {
       m_entityId       = i_entityId;
       m_entityType     = i_entityType;
       m_entityPosition = i_entityPosition;
       m_entitySize     = i_entitySize;
+      m_takenByPlayer  = i_takenByPlayer;
     }
 
   MGE_EntityDestroyed::~MGE_EntityDestroyed() {
   }
   
   void MGE_EntityDestroyed::doAction(Scene *p_pScene) {
-    p_pScene->entityDestroyed(m_entityId, m_eventTime);
+    p_pScene->entityDestroyed(m_entityId, m_eventTime, m_takenByPlayer);
   }
 
   void MGE_EntityDestroyed::serialize(DBuffer &Buffer) {
@@ -630,6 +632,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   std::string MGE_EntityDestroyed::EntityId() {
     return m_entityId;
+  }
+
+  int MGE_EntityDestroyed::takenByPlayer() {
+    return m_takenByPlayer;
   }
 
   //////////////////////////////

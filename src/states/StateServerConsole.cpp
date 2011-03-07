@@ -102,6 +102,7 @@ void StateServerConsole::createGUIIfNeeded()
   m_console->addCompletionCommand("changepassword");
   m_console->addCompletionCommand("lsplayers");
   m_console->addCompletionCommand("lsxmversions");
+  m_console->addCompletionCommand("lsscores");
   m_console->addCompletionCommand("lsbans");
   m_console->addCompletionCommand("ban");
   m_console->addCompletionCommand("unban");

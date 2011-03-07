@@ -30,8 +30,8 @@ public:
   XMSceneHooks();
   virtual ~XMSceneHooks();
   void setGameApps(Scene *i_Scene);
-  void OnTakeEntity();
-  void OnTakeCheckpoint();
+  void OnEntityToTakeDestroyed();
+  void OnTakeCheckpoint(unsigned int i_player);
 
 private:
   Scene *m_Scene;

@@ -1057,7 +1057,7 @@ void Scene::initGhostTrail(FileGhost* i_ghost) {
 
       if(pEntity->IsToTake()) {
 	/* OH... nice */
-	createGameEvent(new MGE_EntityDestroyed(getTime(), pEntity->Id(), pEntity->Speciality(), pEntity->DynamicPosition(), pEntity->Size()));
+	createGameEvent(new MGE_EntityDestroyed(getTime(), pEntity->Id(), pEntity->Speciality(), pEntity->DynamicPosition(), pEntity->Size(), i_player));
       }
       
       if((Checkpoint*)pEntity->IsCheckpoint()) {
@@ -1067,7 +1067,7 @@ void Scene::initGhostTrail(FileGhost* i_ghost) {
         Checkpoint* v_checkpoint = (Checkpoint*)pEntity;
 	v_checkpoint->activate(m_pLevelSrc->EntitiesDestroyed(), m_players[i_player]->getState()->Dir);
 	if(m_motoGameHooks != NULL) {
-	  m_motoGameHooks->OnTakeCheckpoint();
+	  m_motoGameHooks->OnTakeCheckpoint(i_player);
 	}
 	m_checkpoint = v_checkpoint;
       }
@@ -1297,7 +1297,9 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
   void Scene::killPlayer(int i_player) {
     if(m_players[i_player]->isDead() == false && m_players[i_player]->isFinished() == false) {
       m_players[i_player]->setDead(true, getTime());
-
+      if(m_motoGameHooks != NULL) {
+	m_motoGameHooks->OnPlayerDies(i_player);
+      }
       m_players[i_player]->setBodyDetach(true);
       m_players[i_player]->getControler()->stopControls();
 
@@ -1332,7 +1334,7 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
     touchEntity(i_player, getLevelSrc()->getEntityById(p_entityID), p_bTouchedWithHead);
   }
 
-  void Scene::entityDestroyed(const std::string& i_entityId, int i_time) {
+  void Scene::entityDestroyed(const std::string& i_entityId, int i_time, int i_takenByPlayer /* -1 if taken by an external event */) {
     Entity *v_entity;
     v_entity = getLevelSrc()->getEntityById(i_entityId);
 
@@ -1347,7 +1349,13 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
       getLevelSrc()->spawnEntity(v_stars);
 
       if(m_motoGameHooks != NULL) {
-	m_motoGameHooks->OnTakeEntity();
+	m_motoGameHooks->OnEntityToTakeDestroyed();
+
+	if(i_takenByPlayer == -1) {
+	  m_motoGameHooks->OnEntityToTakeTakenExternal();
+	} else  {
+	  m_motoGameHooks->OnEntityToTakeTakenByPlayer(i_takenByPlayer);
+	}
       }
 
       /* update timediff */
@@ -1370,14 +1378,14 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
     m_SDynamicObjects.push_back(p_obj);
   }
 
-  void Scene::createKillEntityEvent(std::string p_entityID) {
+  void Scene::createExternalKillEntityEvent(std::string p_entityID) {
     Entity *v_entity;
     v_entity = m_pLevelSrc->getEntityById(p_entityID);
     createGameEvent(new MGE_EntityDestroyed(getTime(),
                                             v_entity->Id(),
                                             v_entity->Speciality(),
                                             v_entity->DynamicPosition(),
-                                            v_entity->Size()));
+                                            v_entity->Size(), -1));
   }
 
   unsigned int Scene::getNbRemainingStrawberries() {
@@ -1387,6 +1395,9 @@ void Scene::translateEntity(Entity* pEntity, float x, float y)
   void Scene::makePlayerWin(int i_player) {
     if(m_players[i_player]->isDead() == false && m_players[i_player]->isFinished() == false) {
       m_players[i_player]->setFinished(true, getTime());
+      if(m_motoGameHooks != NULL) {
+	m_motoGameHooks->OnPlayerWins(i_player);
+      }
     }
   }
 
@@ -1614,6 +1625,15 @@ PhysicsSettings* Scene::getPhysicsSettings() {
   return m_physicsSettings;
 }
 
+void Scene::onSomersaultDone(unsigned int i_player, bool i_counterclock) {
+  if(doesPlayEvents() == false) {
+    return;
+  }
+  getLuaLibGame()->scriptCallVoidNumberArg("OnSomersault",   i_counterclock ? 1:0);
+  getLuaLibGame()->scriptCallVoidNumberArg("OnSomersaultBy", i_counterclock ? 1:0, i_player);
+  m_motoGameHooks->OnPlayerSomersault(i_player,              i_counterclock);
+}
+
 SceneOnBikerHooks::SceneOnBikerHooks(Scene* i_motoGame, int i_playerNumber) {
   m_motoGame = i_motoGame;
   m_playerNumber = i_playerNumber;
@@ -1623,10 +1643,7 @@ SceneOnBikerHooks::~SceneOnBikerHooks() {
 }
 
 void SceneOnBikerHooks::onSomersaultDone(bool i_counterclock) {
-  if(m_motoGame->doesPlayEvents() == false) return;
-  m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnSomersault", i_counterclock ? 1:0);
-  m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnSomersaultBy",
-						       i_counterclock ? 1:0, m_playerNumber);
+  m_motoGame->onSomersaultDone(m_playerNumber, i_counterclock);
 }
 
 void SceneOnBikerHooks::onWheelTouches(int i_wheel, bool i_touch) {
