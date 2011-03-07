@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../db/xmDatabase.h"
 #include "../../xmscene/Level.h"
 #include "../../xmscene/BikeController.h"
+#include "../ServerRules.h"
 
 #define XM_SERVER_SLAVE_MODE_MIN_PROTOCOL_VERSION 1
 
@@ -95,6 +96,10 @@ unsigned int NetSClient::id() const {
 
 int NetSClient::points() {
   return m_points;
+}
+
+void NetSClient::setPoints(int i_points) {
+  m_points = i_points;
 }
 
 void NetSClient::addPoints(int i_points) {
@@ -201,7 +206,17 @@ void NetSClient::setLastInactivTimeAlert(int i_time) {
   m_lastInactivTimeAlert = i_time;
 }
 
-void NetSClient::markToPlay(bool i_value) {
+void NetSClient::markToPlay(ServerRules* i_rules, bool i_value) {
+
+  // do a rule action only if the value changes
+  if(i_value != m_isMarkedToPlay) {
+    if(i_value) {
+      i_rules->scriptCallVoidNumberArg("Global_whenPlayer_added",   id());
+    } else {
+      i_rules->scriptCallVoidNumberArg("Global_whenPlayer_removed", id());
+    }
+  }
+
   m_isMarkedToPlay = i_value;
 }
 
@@ -254,6 +269,8 @@ ServerThread::ServerThread(const std::string& i_dbKey, int i_port, const std::st
     m_banner             = XM_SERVER_DEFAULT_BANNER;
     m_acceptConnections  = false;
     m_unmanagedActions   = 0;
+    m_rules = new ServerRules(this);
+    m_sceneHook = new XMServerSceneHooks(this);
 
     if(!m_udpPacket) {
       throw Exception("SDLNet_AllocPacket: " + std::string(SDLNet_GetError()));
@@ -263,6 +280,8 @@ ServerThread::ServerThread(const std::string& i_dbKey, int i_port, const std::st
 ServerThread::~ServerThread() {
   SDLNet_FreePacket(m_udpPacket);
   delete m_DBuffer;
+  delete m_rules;
+  delete m_sceneHook;
 }
 
 int ServerThread::realThreadFunction() {
@@ -270,6 +289,16 @@ int ServerThread::realThreadFunction() {
   int ssn;
 
   LogInfo("server: starting");
+
+  // init rules
+  try {
+    m_rules->loadScriptFile("Rules/classical.rules");
+    m_rules->scriptCallVoid("Global_init");
+  } catch(Exception &e) {
+    LogError((e.getMsg() + "\n" + m_rules->getErrorMsg()).c_str());
+    return 1;
+  }
+
   LogInfo("server: ports %i UDP & TCP", m_port);
 
   /* Resolving the host using NULL make network interface to listen */
@@ -380,6 +409,7 @@ std::string ServerThread::SP2_determineLevel() {
   v_result = m_pDb->readDB("SELECT id_level "
                            "FROM levels "
                            "WHERE isToReload=0 AND isScripted=0 AND isPhysics=0 " // warning, addforcetoplayer event cannot be over network game cause player id is serialized
+			   //"WHERE id_level='_iL00_' " // for tests
                            "ORDER BY RANDOM() LIMIT 1;",
 			 nrow);
   if(nrow == 0) {
@@ -403,6 +433,11 @@ void ServerThread::SP2_initPlaying() {
 
   m_universe = new Universe();
   m_universe->initPlayServer();
+
+  // set hooks for the scenes
+  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+    m_universe->getScenes()[i]->setHooks(m_sceneHook);
+  }
 
   try {
     for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
@@ -562,6 +597,13 @@ void ServerThread::SP2_updateScenePlaying() {
   bool v_firstFrame = false;
 
   if(SP2_managePreplayTime() == false) {
+
+    // manage the first time the update is done
+    if(m_sp2_gameStarted == false) {
+      m_sp2_gameStarted = true;
+      m_rules->scriptCallVoid("Round_whenRound_new");
+    }
+
     SP2_manageInactivity();
 
     /* update the scene */
@@ -658,6 +700,7 @@ void ServerThread::SP2_setPhase(ServerP2Phase i_sp2phase) {
   case SP2_PHASE_PLAYING:
     m_firstFrameSent = GameApp::getXMTimeInt();
     m_wantedSleepingFramerate = 200;
+    m_sp2_gameStarted = false;
     try {
       SP2_initPlaying();
     } catch(Exception &e) {
@@ -711,7 +754,7 @@ void ServerThread::run_loop() {
       // mark clients as to play
       for(unsigned int i=0; i<m_clients.size(); i++) {
 	if(m_clients[i]->mode() == NETCLIENT_SLAVE_MODE) {
-	  m_clients[i]->markToPlay(true);
+	  m_clients[i]->markToPlay(m_rules, true);
 	}
       }
       SP2_setPhase(SP2_PHASE_PLAYING);
@@ -821,6 +864,9 @@ void ServerThread::removeClient(unsigned int i) {
   if(m_clients[i]->isUdpBinded()) {
     m_clients[i]->unbindUdp();
   }
+
+  // trigger the rules actions by removing the player of the sp2
+  m_clients[i]->markToPlay(m_rules, false);
 
   // send new client to other clients
   NA_changeClients nacc;
@@ -1348,6 +1394,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "changepassword <password>: change your password\n";
       v_answer += "lsplayers: list connected players\n";
       v_answer += "lsxmversions: list xmoto versions used by players\n";
+      v_answer += "lsscores: give scores of players in slave mode\n";
       v_answer += "lsbans: list banned players\n";
 
       std::ostringstream v_n;
@@ -1507,6 +1554,23 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       }
     }
 
+  } else if(v_args[0] == "lsscores") {
+    if(v_args.size() != 1) {
+      v_answer += "lsscores: invalid arguments\n";
+    } else {
+      char v_clientstr[48];
+      std::string v_mode;
+      for(unsigned int i=0; i<m_clients.size(); i++) {
+	if(m_clients[i]->mode() == NETCLIENT_SLAVE_MODE) {
+
+	  snprintf(v_clientstr, 48, "%5u: %-12s %6i",
+		   m_clients[i]->id(), m_clients[i]->name().c_str(), m_clients[i]->points());
+	  v_answer += v_clientstr;
+	  v_answer += "\n";
+	}
+      }
+    }
+
   } else if(v_args[0] == "lsbans") {
     if(v_args.size() != 1) {
       v_answer += "lsban: invalid arguments\n";
@@ -1654,6 +1718,10 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
   }
 }
 
+NetSClient* ServerThread::getNetSClientById(unsigned int i_id) const {
+  return m_clients[getClientById(i_id)];
+}
+
 unsigned int ServerThread::getClientById(unsigned int i_id) const {
   for(unsigned int i=0; i<m_clients.size(); i++) {
     if(m_clients[i]->id() == i_id) {
@@ -1661,6 +1729,19 @@ unsigned int ServerThread::getClientById(unsigned int i_id) const {
     }
   }
   throw Exception("Client not found");
+}
+
+NetSClient* ServerThread::getNetSClientByScenePlayer(unsigned int i_numScene, unsigned int i_numPlayer) const {
+  for(unsigned int i=0; i<m_clients.size(); i++) {
+    if(m_clients[i]->isMarkedToPlay()) {
+      if(m_clients[i]->getNumScene() == i_numScene) {
+	if(m_clients[i]->getNumPlayer() == i_numPlayer) {
+	  return m_clients[i];
+	}
+      }
+    }
+  }
+  return NULL;
 }
 
 void ServerThread::cleanClientsMarkedToBeRemoved() {
@@ -1716,5 +1797,56 @@ void ServerThread::sendMsgToClient(unsigned int i_client, const std::string& i_m
       sendToClient(&na, i_client, -1, 0);
     } catch(Exception &e) {
     }
+  }
+}
+
+ServerRules* ServerThread::getRules() {
+  return m_rules;
+}
+
+XMServerSceneHooks::XMServerSceneHooks(ServerThread* i_st) {
+  m_server = i_st;
+}
+
+XMServerSceneHooks::~XMServerSceneHooks() {
+}
+
+void XMServerSceneHooks::OnEntityToTakeTakenByPlayer(unsigned int i_player) {
+  // only one scene is managed on the server -- for the moment
+  NetSClient* v_client = m_server->getNetSClientByScenePlayer(0, i_player);
+
+  if(v_client != NULL) {
+    m_server->getRules()->scriptCallVoidNumberArg("Round_whenPlayer_onEntityToTakeTaken", v_client->id());
+  }
+}
+
+void XMServerSceneHooks::OnEntityToTakeTakenExternal() {
+  m_server->getRules()->scriptCallVoid("Round_whenExternal_onEntityToTakeTaken");
+}
+
+void XMServerSceneHooks::OnPlayerWins(unsigned int i_player) {
+  // only one scene is managed on the server -- for the moment
+  NetSClient* v_client = m_server->getNetSClientByScenePlayer(0, i_player);
+
+  if(v_client != NULL) {
+    m_server->getRules()->scriptCallVoidNumberArg("Round_whenPlayer_wins", v_client->id());
+  }
+}
+
+void XMServerSceneHooks::OnPlayerDies(unsigned int i_player) {
+  // only one scene is managed on the server -- for the moment
+  NetSClient* v_client = m_server->getNetSClientByScenePlayer(0, i_player);
+
+  if(v_client != NULL) {
+    m_server->getRules()->scriptCallVoidNumberArg("Round_whenPlayer_dies", v_client->id());
+  }
+}
+
+void XMServerSceneHooks::OnPlayerSomersault(unsigned int i_player, bool i_counterclock) {
+  // only one scene is managed on the server -- for the moment
+  NetSClient* v_client = m_server->getNetSClientByScenePlayer(0, i_player);
+
+  if(v_client != NULL) {
+    m_server->getRules()->scriptCallVoidNumberArg("Round_whenPlayer_DoesASomersault", v_client->id(), i_counterclock ? 1:0);
   }
 }

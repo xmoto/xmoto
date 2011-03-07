@@ -1,0 +1,77 @@
+---------------------------------
+-- Begining of classical rules --
+---------------------------------
+
+------------------------
+-- Callable functions --
+------------------------
+-- Rules.Log(msg)                        -- log a message on the server
+-- x = Rules.Player_getPoints(playerId); -- get the currrent number of points of a player
+-- Rules.Player_setPoints(playerId, x);  -- set the number of points of a player
+-- Rules.Player_addPoints(playerId, x);  -- add points to a player
+------------------------
+------------------------
+-- Called functions ----
+------------------------
+-- Global_init()                       		  	    -- rules initialisation function / called once at the server start
+-- Global_whenPlayer_added(playerId)   		  	    -- a new player joins
+-- Global_whenPlayer_removed(playerId) 		  	    -- a player go out
+-- Round_whenRound_new()               		  	    -- a new level start
+-- Round_whenPlayer_onEntityToTakeTaken(playerId) 	    -- the player takes a strawberry
+-- Round_whenExternal_onEntityToTakeTaken()       	    -- something external (ie script) takes a strawberry
+-- Round_whenPlayer_wins(playerId)                	    -- a player wins
+-- Round_whenPlayer_dies(playerId)                	    -- a player dies
+-- Round_whenPlayer_DoesASomersault(playerId, counterclock) -- a player does a somersault ; counterclock is 0 or 1
+
+function Global_init()
+  Rules.Log("Classical rules initialisation");
+  -- maximum number of points to distributes
+  g_bank = 10000
+end
+
+function Global_whenPlayer_added(playerId)
+  -- players starts with 0 points
+  Rules.Player_setPoints(playerId, 0);
+end
+
+function Global_whenPlayer_removed(playerId)
+  -- returns the points to the bank
+  p = Rules.Player_getPoints(playerId);
+  g_bank = g_bank + p;
+end
+
+function Round_whenRound_new()
+end
+
+function Round_whenPlayer_onEntityToTakeTaken(playerId)
+  Rules.Player_addPoints(playerId, 10);
+end
+
+function Round_whenExternal_onEntityToTakeTaken()
+end
+
+function Round_whenPlayer_wins(playerId)
+end
+
+function Round_whenPlayer_dies(playerId)
+end
+
+function Round_whenPlayer_DoesASomersault(playerId, counterclock)
+end
+
+----------------------------
+-- End of classical rules --
+----------------------------
+
+-- todo
+-- g_pot
+-- 10% of players points + 10% of the bank
+-- no point when only 1 player
+--
+--// round_nbPlayers doesn't consider the players waiting which are still not in the round
+--// Rules.round_nbPlayers()
+--// Rules.round_nbPlayersLiving()
+--// Rules.round_nbPlayersDead()
+--// Rules.round_nbRemainingEntitiesToTake(playerId, nbPoints)
+--// Rules.round_time()
+-- reload rules without restarting the server

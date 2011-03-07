@@ -25,11 +25,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 #include "../../include/xm_SDL_net.h"
 #include "../BasicStructures.h"
+#include "../../xmscene/Scene.h"
 
 class ActionReader;
 class NetAction;
 class Universe;
 class DBuffer;
+class ServerRules;
+class XMServerSceneHooks;
 
 enum ServerP2Phase { SP2_PHASE_NONE, SP2_PHASE_WAIT_CLIENTS, SP2_PHASE_PLAYING };
 
@@ -64,7 +67,7 @@ class NetSClient {
   NetClientMode mode() const;
 
   // indicates whether the client is in the current SP2 party
-  void markToPlay(bool i_value);
+  void markToPlay(ServerRules* i_rules, bool i_value);
   bool isMarkedToPlay();
   void markScenePlayer(unsigned int i_numScene, unsigned int i_numPlayer);
   unsigned int getNumScene() const;
@@ -80,6 +83,7 @@ class NetSClient {
   unsigned int id() const;
   int points();
   void addPoints(int i_points);
+  void setPoints(int i_points);
 
   // admin connexion
   bool isAdminConnected() const;
@@ -120,6 +124,10 @@ class ServerThread : public XMThread {
   int realThreadFunction();
   void close(); // close the server if an event need it (ctrl+c)
 
+  NetSClient* getNetSClientByScenePlayer(unsigned int i_numScene, unsigned int i_numPlayer) const;
+  NetSClient* getNetSClientById(unsigned int i_id) const;
+  ServerRules* getRules();
+
   private:
   TCPsocket m_tcpsd;
   UDPsocket m_udpsd;
@@ -150,6 +158,8 @@ class ServerThread : public XMThread {
 
   SDLNet_SocketSet m_set;
   std::vector<NetSClient*> m_clients;
+  ServerRules* m_rules;
+  XMServerSceneHooks* m_sceneHook;
 
   void acceptClient();
   bool manageClientTCP(unsigned int i);
@@ -183,6 +193,7 @@ class ServerThread : public XMThread {
   std::string SP2_determineLevel();
   void SP2_sendSceneEvents(DBuffer* i_buffer);
   void SP2_addPointsToClient(unsigned int i_client, unsigned int i_points);
+  bool m_sp2_gameStarted;
 
   // server cmd
   unsigned int getClientById(unsigned int i_id) const;
@@ -190,6 +201,21 @@ class ServerThread : public XMThread {
 
   std::vector<unsigned int> m_clientMarkToBeRemoved;
   void cleanClientsMarkedToBeRemoved();
+};
+
+class XMServerSceneHooks : public SceneHooks {
+public:
+  XMServerSceneHooks(ServerThread* i_st);
+  virtual ~XMServerSceneHooks();
+
+  void OnEntityToTakeTakenByPlayer(unsigned int i_player);
+  void OnEntityToTakeTakenExternal();
+  void OnPlayerWins(unsigned int i_player);
+  void OnPlayerDies(unsigned int i_player);
+  void OnPlayerSomersault(unsigned int i_player, bool i_counterclock);
+
+private:
+  ServerThread* m_server;
 };
 
 #endif

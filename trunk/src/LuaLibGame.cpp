@@ -20,16 +20,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "LuaLibGame.h"
 #include "helpers/VExcept.h"
-#include "xmscene/Scene.h"
 #include "GameEvents.h"
 #include "Input.h"
 #include "Locales.h"
+#include "xmscene/Scene.h"
 #include "helpers/Log.h"
 #include "xmscene/Level.h"
 #include "xmscene/Block.h"
 #include "xmscene/ScriptTimer.h"
 #include "XMSession.h"
-#include <sstream>
 
 #define STIMER_DELAY_DEFAULT 100
 #define STIMER_LOOPS_DEFAULT 0
@@ -100,225 +99,21 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"SetCameraPosition",            LuaLibGame::L_Game_SetCameraPosition}, 
   {NULL, NULL}
 };
-Scene*     LuaLibGame::m_exec_world              = NULL;
+
+Scene*        LuaLibGame::m_exec_world              = NULL;
 InputHandler* LuaLibGame::m_exec_activeInputHandler = NULL;
 
-/*===========================================================================
-  Lua 5.1 compatibility code (Following is from lua 5.0.2)
-  ===========================================================================*/
-static void X_tag_error (lua_State *L, int narg, int tag) {
-  luaL_typerror(L, narg, lua_typename(L, tag)); 
-}
-
-lua_Number X_luaL_check_number(lua_State *L,int narg) {
-  lua_Number d = lua_tonumber(L, narg);
-  if (d == 0 && !lua_isnumber(L, narg))  /* avoid extra test when d is not 0 */
-    X_tag_error(L, narg, LUA_TNUMBER);
-  return d;    
-}
-
-LuaLibGame::LuaLibGame(Scene *i_pScene) {
-  m_pL = lua_open();
-  luaopen_base(m_pL);   
-  luaopen_math(m_pL);
-  luaopen_table(m_pL);
-  luaL_openlib(m_pL, "Game", m_gameFuncs, 0);
-
-  m_pScene           = i_pScene;
+LuaLibGame::LuaLibGame(Scene *i_pScene) : LuaLibBase("Game", m_gameFuncs) {
+  m_pScene              = i_pScene;
   m_pActiveInputHandler = InputHandler::instance();
 }
 
 LuaLibGame::~LuaLibGame() {
-  lua_close(m_pL);
 }
 
-void LuaLibGame::setWorld() {
+void LuaLibGame::setInstance() {
   m_exec_world              = m_pScene;
   m_exec_activeInputHandler = m_pActiveInputHandler;
-}
-
-/*===========================================================================
-  Simple lua interaction
-  ===========================================================================*/
-bool LuaLibGame::scriptCallBool(const std::string& FuncName,bool bDefault) {
-  setWorld();
-  
-  bool bRet = bDefault;
-  
-  /* Fetch global function */
-  lua_getglobal(m_pL,FuncName.c_str());
-  
-  /* Is it really a function and not just a pile of ****? */
-  if(lua_isfunction(m_pL,-1)) {
-    /* Call! */
-    if(lua_pcall(m_pL,0,1,0) != 0) {
-      throw Exception("failed to invoke (bool) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
-    }
-    
-    /* Retrieve return value */
-    if(!lua_toboolean(m_pL,-1)) {      
-      bRet = false;
-    }
-    else {
-      bRet = true;
-    }
-  }
-  
-  /* Reset Lua VM */
-  lua_settop(m_pL,0);        
-  
-  return bRet;
-}
-
-void LuaLibGame::scriptCallVoid(const std::string& FuncName) {
-  setWorld();
-  
-  /* Fetch global function */
-  lua_getglobal(m_pL,FuncName.c_str());
-  
-  /* Is it really a function and not just a pile of ****? */
-  if(lua_isfunction(m_pL,-1)) {
-    /* Call! */
-    if(lua_pcall(m_pL,0,0,0) != 0) {
-      throw Exception("failed to invoke (void) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
-    }      
-  }
-  
-  /* Reset Lua VM */
-  lua_settop(m_pL,0);        
-}
-
-void LuaLibGame::scriptCallVoidNumberArg(const std::string& FuncName, int n) {
-  setWorld();
-  
-  /* Fetch global function */
-  lua_getglobal(m_pL,FuncName.c_str());
-  
-  /* Is it really a function and not just a pile of ****? */
-  if(lua_isfunction(m_pL,-1)) {
-    /* Call! */
-    lua_pushnumber(m_pL, n);
-    if(lua_pcall(m_pL,1,0,0) != 0) {
-      throw Exception("failed to invoke (void) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
-    }      
-  }
-  
-  /* Reset Lua VM */
-  lua_settop(m_pL,0);        
-}
-
-void LuaLibGame::scriptCallVoidNumberArg(const std::string& FuncName, int n1, int n2) {
-  setWorld();
-  
-  /* Fetch global function */
-  lua_getglobal(m_pL,FuncName.c_str());
-  
-  /* Is it really a function and not just a pile of ****? */
-  if(lua_isfunction(m_pL,-1)) {
-    /* Call! */
-    lua_pushnumber(m_pL, n1);
-    lua_pushnumber(m_pL, n2);
-    if(lua_pcall(m_pL,2,0,0) != 0) {
-      throw Exception("failed to invoke (void) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
-    }      
-  }
-  
-  /* Reset Lua VM */
-  lua_settop(m_pL,0);        
-}
-
-void LuaLibGame::scriptCallTblVoid(const std::string& Table, const std::string& FuncName) {
-  setWorld();
-  
-  /* Fetch global table */        
-  lua_getglobal(m_pL,Table.c_str());
-  
-  //    printf("[%s.%s]\n",Table.c_str(),FuncName.c_str());
-  
-  if(lua_istable(m_pL,-1)) {
-    lua_pushstring(m_pL,FuncName.c_str());
-    lua_gettable(m_pL,-2);
-    
-    if(lua_isfunction(m_pL,-1)) {
-      /* Call! */
-      if(lua_pcall(m_pL,0,0,0) != 0) {
-	throw Exception("failed to invoke (tbl,void) " + Table + std::string(".") + 
-			FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
-      }              
-    }
-  }
-  
-  /* Reset Lua VM */
-  lua_settop(m_pL,0);        
-}
-
-void LuaLibGame::scriptCallTblVoid(const std::string& Table, const std::string& FuncName, int n) {
-  setWorld();
-  
-  /* Fetch global table */        
-  lua_getglobal(m_pL,Table.c_str());
-  
-  //    printf("[%s.%s]\n",Table.c_str(),FuncName.c_str());
-  
-  if(lua_istable(m_pL,-1)) {
-    lua_pushstring(m_pL,FuncName.c_str());
-    lua_gettable(m_pL,-2);
-    
-    if(lua_isfunction(m_pL,-1)) {
-      /* Call! */
-      lua_pushnumber(m_pL, n);
-      if(lua_pcall(m_pL,1,0,0) != 0) {
-	throw Exception("failed to invoke (tbl,void) " + Table + std::string(".") + 
-			FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
-      }              
-    }
-  }
-  
-  /* Reset Lua VM */
-  lua_settop(m_pL,0);        
-}
-
-void LuaLibGame::loadScriptFile(const std::string& i_scriptFilename) {
-  FileHandle *pfh = XMFS::openIFile(FDT_DATA, i_scriptFilename);
-
-  if(pfh == NULL) {
-    throw Exception("unable to load script " + i_scriptFilename);
-  }
-
-  std::string Line,ScriptBuf="";
-  
-  try {
-    while(XMFS::readNextLine(pfh,Line)) {
-      if(Line.length() > 0) {
-	ScriptBuf.append(Line.append("\n"));
-      }
-    }
-  } catch(Exception &e) {
-    XMFS::closeFile(pfh);
-    throw e;
-  }
-  
-  XMFS::closeFile(pfh);
-  loadScript(ScriptBuf, i_scriptFilename);
-}
-
-void LuaLibGame::loadScript(const std::string& i_scriptCode, const std::string& i_scriptFilename) {
-  /* Use the Lua aux lib to load the buffer */
-  int nRet;
-
-  setWorld();
-
-  nRet = luaL_loadbuffer(m_pL, i_scriptCode.c_str(), i_scriptCode.length(),
-			 i_scriptFilename.c_str()) || lua_pcall(m_pL, 0, 0, 0);    
-
-  /* Returned WHAT? */
-  if(nRet != 0) {
-    throw Exception("failed to load level script");
-  }
-}
-
-std::string LuaLibGame::getErrorMsg() {
-  return lua_tostring(m_pL,-1);
 }
 
 /*===========================================================================
@@ -749,7 +544,7 @@ int LuaLibGame::L_Game_KillPlayer(lua_State *pL) {
 }
 
 int LuaLibGame::L_Game_KillEntity(lua_State *pL) {
-  m_exec_world->createKillEntityEvent(luaL_checkstring(pL,1));
+  m_exec_world->createExternalKillEntityEvent(luaL_checkstring(pL,1));
   return 0;
 }
 
@@ -912,7 +707,7 @@ int LuaLibGame::L_Game_StopMusic(lua_State *pL) {
 int LuaLibGame::L_Game_GetPlayerVelocity(lua_State *pL) {
   /* no event for this */
   int v_player = (int)X_luaL_check_number(pL,1);
-
+  
   if(v_player < 0 || (unsigned int)v_player >= m_exec_world->Players().size()) {
 		luaL_error (pL, "Invalid player number");
   }
@@ -1017,25 +812,4 @@ int LuaLibGame::L_Game_StopTimer(lua_State *pL) {
 		luaL_error (pL, "An error occured, timer doesn't exist!"); 
 	}
   return 0; //return no values to the script
-}
-/*=====================================================
-            Script Helpers
-=====================================================*/
-
-int LuaLibGame::args_numberOfArguments(lua_State *pL) {
-  return lua_gettop(pL);
-}
-
-void LuaLibGame::args_CheckNumberOfArguments(lua_State *pL, int i_from, int i_to) {
-  int n = args_numberOfArguments(pL);
-
-  if(i_to == -1) {
-    if(n != i_from) {
-      luaL_error (pL, "Invalid number of arguments");  
-    }
-  } else {
-    if(n < i_from || n > i_to) {
-      luaL_error (pL, "Invalid number of arguments");  
-    }
-  }
 }

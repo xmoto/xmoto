@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "helpers/RenderSurface.h"
 
-void XMSceneHooks::OnTakeEntity() {
+void XMSceneHooks::OnEntityToTakeDestroyed() {
     /* Play yummy-yummy sound */
     try {
       Sound::playSampleByName(Theme::instance()->getSound(m_Scene->getLevelSrc()->SoundForPickUpStrawberry())->FilePath());
@@ -41,7 +41,7 @@ void XMSceneHooks::OnTakeEntity() {
     }
 }
 
-void XMSceneHooks::OnTakeCheckpoint() {
+void XMSceneHooks::OnTakeCheckpoint(unsigned int i_player) {
     /* Play yummy-yummy sound */
     try {
       Sound::playSampleByName(Theme::instance()->getSound(m_Scene->getLevelSrc()->SoundForCheckpoint())->FilePath());

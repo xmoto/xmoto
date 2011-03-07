@@ -296,6 +296,8 @@ thread_SOURCES = thread/XMThread.h                 \
 		 net/NetClient.h               \
 		 net/NetServer.cpp             \
 		 net/NetServer.h               \
+		 net/ServerRules.cpp             \
+		 net/ServerRules.h               \
 		 net/helpers/Net.cpp             \
 		 net/helpers/Net.h   \
 		 net/BasicStructures.h    \
@@ -336,6 +338,7 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   Renderer.cpp Replay.cpp Sound.cpp \
   GeomsManager.h GeomsManager.cpp \
   LuaLibGame.h LuaLibGame.cpp \
+  LuaLibBase.h LuaLibBase.cpp \
   UserConfig.cpp \
   BSP.h \
   Game.h \

@@ -22,41 +22,30 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __LUALIBGAME_H__
 
 #include <string>
-#include "include/xm_lua.h"
+#include "LuaLibBase.h"
 
 class Scene;
 class InputHandler;
 
-class LuaLibGame {
+class LuaLibGame : public LuaLibBase {
 public:
   LuaLibGame(Scene *i_pScene);
   ~LuaLibGame();
 
-  void loadScriptFile(const std::string& i_scriptFilename);
-  void loadScript(const std::string& i_scriptCode, const std::string& i_scriptFilename);
-  std::string getErrorMsg();
-
-  bool scriptCallBool(const std::string& FuncName, bool bDefault=false);
-  void scriptCallVoid(const std::string& FuncName);
-  void scriptCallTblVoid(const std::string& Table, const std::string& FuncName);
-  void scriptCallTblVoid(const std::string& Table, const std::string& FuncName, int n);
-  void scriptCallVoidNumberArg(const std::string& FuncName, int n);
-  void scriptCallVoidNumberArg(const std::string& FuncName, int n1, int n2);
+protected:
+  /*
+    static lua lib calls are share between the lulibgame instances
+    then, setInstance must be set before lua call
+  */
+  void setInstance();
 
 private:
-  lua_State *m_pL;
   Scene* m_pScene;
   InputHandler *m_pActiveInputHandler;
 
   static InputHandler* m_exec_activeInputHandler;
-  static Scene*     m_exec_world;
+  static Scene*        m_exec_world;
   static luaL_reg      m_gameFuncs[];
-
-  /*
-    static lua lib calls are share between the lulibgame instances
-    then, setWorld must be set before lua call
-  */
-  void setWorld();
 
   /* Lua library prototypes */
   static int L_Game_GetTime(lua_State *pL);
@@ -122,14 +111,6 @@ private:
   static int L_Game_StartTimer(lua_State *pL);  
   static int L_Game_SetTimerDelay(lua_State *pL);  
   static int L_Game_StopTimer(lua_State *pL);
-	
-
-  /* get the number of arguments */
-  static int args_numberOfArguments(lua_State *pL);
-
-  /* arguments checks ; throw exception on failure */
-  static void args_CheckNumberOfArguments(lua_State *pL, int i_from, int i_to = -1);
-
 };
 
 

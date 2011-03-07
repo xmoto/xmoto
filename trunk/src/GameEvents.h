@@ -280,7 +280,7 @@ class MGE_PlayerTouchesEntity : public SceneEvent {
 class MGE_EntityDestroyed : public SceneEvent {
  public:
   MGE_EntityDestroyed(int p_eventTime);
-  MGE_EntityDestroyed(int p_eventTime, std::string i_entityId, EntitySpeciality i_entityType, Vector2f i_entityPosition, float i_entitySize);
+  MGE_EntityDestroyed(int p_eventTime, std::string i_entityId, EntitySpeciality i_entityType, Vector2f i_entityPosition, float i_entitySize, int i_takenByPlayer /* -1 if taken by an external event */);
   ~MGE_EntityDestroyed();
 
   void doAction(Scene *p_pScene);
@@ -293,12 +293,14 @@ class MGE_EntityDestroyed : public SceneEvent {
   std::string toString();
 
   std::string EntityId();
+  int takenByPlayer(); // -1 if taken by an external event
 
  private:
   std::string m_entityId;
   EntitySpeciality m_entityType;
   Vector2f    m_entityPosition;
   float       m_entitySize;
+  int         m_takenByPlayer; // -1 if taken by an external event
 };
 
 class MGE_ClearMessages : public SceneEvent {

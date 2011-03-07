@@ -127,8 +127,14 @@ struct GameMessage {
 class SceneHooks {
 public:
   virtual ~SceneHooks() {};
-  virtual void OnTakeEntity() = 0;
-  virtual void OnTakeCheckpoint() = 0;
+  // some entity are destroyed by scripts for example, not by a player
+  virtual void OnEntityToTakeDestroyed()                                      {}; // for each destroyed entity
+  virtual void OnEntityToTakeTakenByPlayer(unsigned int i_player)             {};
+  virtual void OnEntityToTakeTakenExternal()                                  {};
+  virtual void OnTakeCheckpoint(unsigned int i_player)                        {};
+  virtual void OnPlayerWins(unsigned int i_player)                            {};
+  virtual void OnPlayerDies(unsigned int i_player)                            {};
+  virtual void OnPlayerSomersault(unsigned int i_player, bool i_counterclock) {};
 };
 
 class Scene {
@@ -227,15 +233,17 @@ public:
   void playerLeavesZone(int i_player, Zone *pZone);
   void playerTouchesEntity(int i_player, std::string p_entityID, bool p_bTouchedWithHead);
   void addForceToPlayer(int i_player, const Vector2f& i_force, int i_startTime, int i_endTime);
-  void entityDestroyed(const std::string& i_entityId, int i_time);
+  void entityDestroyed(const std::string& i_entityId, int i_time, int i_takenByPlayer /* -1 if taken by an external event */);
   void addDynamicObject(SDynamicObject* p_obj);
   void removeSDynamicOfObject(std::string pObject);
   void addPenalityTime(int i_time);
 
-  void createKillEntityEvent(std::string p_entityID);
+  void createExternalKillEntityEvent(std::string p_entityID);
 
   unsigned int getNbRemainingStrawberries();
   void makePlayerWin(int i_player);
+
+  void onSomersaultDone(unsigned int i_player, bool i_counterclock);
 
   void setGravity(float x,float y);
   const Vector2f &getGravity(void);
