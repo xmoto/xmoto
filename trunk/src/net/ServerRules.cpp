@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 luaL_reg ServerRules::m_rulesFuncs[] = {
     {"Log",              ServerRules::L_Rules_Log},
-    {"Player_getPoints", ServerRules::L_Rules_player_getPoints},
     {"Player_setPoints", ServerRules::L_Rules_player_setPoints},
     {"Player_addPoints", ServerRules::L_Rules_player_addPoints},
     {NULL, NULL}
@@ -53,15 +52,6 @@ int ServerRules::L_Rules_Log(lua_State *pL) {
   LogInfo((char *)Out.c_str());
 
   return 0;    
-}
-
-int ServerRules::L_Rules_player_getPoints(lua_State *pL) {
-  int v_playerId;
-
-  args_CheckNumberOfArguments(pL, 1);
-  v_playerId = (int) luaL_checknumber(pL,1);
-  lua_pushnumber(pL, m_exec_server->getNetSClientById(v_playerId)->points());
-  return 1;
 }
 
 int ServerRules::L_Rules_player_setPoints(lua_State *pL) {

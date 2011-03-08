@@ -5,17 +5,17 @@
 ------------------------
 -- Callable functions --
 ------------------------
--- Rules.Log(msg)                        -- log a message on the server
--- x = Rules.Player_getPoints(playerId); -- get the currrent number of points of a player
--- Rules.Player_setPoints(playerId, x);  -- set the number of points of a player
--- Rules.Player_addPoints(playerId, x);  -- add points to a player
+-- Rules.Log(msg)                       -- log a message on the server
+-- x = Rules.Player_getPoints(playerId) -- get the currrent number of points of a player
+-- Rules.Player_setPoints(playerId, x)  -- set the number of points of a player
+-- Rules.Player_addPoints(playerId, x)  -- add points to a player
 ------------------------
 ------------------------
 -- Called functions ----
 ------------------------
 -- Global_init()                       		  	    -- rules initialisation function / called once at the server start
 -- Global_whenPlayer_added(playerId)   		  	    -- a new player joins
--- Global_whenPlayer_removed(playerId) 		  	    -- a player go out
+-- Global_whenPlayer_removed(playerId) 		  	    -- a player go out -- as consequence, he will die too
 -- Round_whenRound_new()               		  	    -- a new level start
 -- Round_whenPlayer_onEntityToTakeTaken(playerId) 	    -- the player takes a strawberry
 -- Round_whenExternal_onEntityToTakeTaken()       	    -- something external (ie script) takes a strawberry
@@ -24,39 +24,86 @@
 -- Round_whenPlayer_DoesASomersault(playerId, counterclock) -- a player does a somersault ; counterclock is 0 or 1
 
 function Global_init()
-  Rules.Log("Classical rules initialisation");
+  Rules.Log("Classical rules initialisation")
   -- maximum number of points to distributes
-  g_bank = 10000
+  g_bank    = 10000
+  g_players = {} -- keep information about players
+  g_nPlayer = 0  -- number of players
 end
 
 function Global_whenPlayer_added(playerId)
   -- players starts with 0 points
-  Rules.Player_setPoints(playerId, 0);
+  g_nPlayer = g_nPlayer + 1
+  g_players[playerId]       = {}
+  g_players[playerId].score = 0
+  Rules.Player_setPoints(playerId, g_players[playerId].score) -- update score
 end
 
 function Global_whenPlayer_removed(playerId)
   -- returns the points to the bank
-  p = Rules.Player_getPoints(playerId);
-  g_bank = g_bank + p;
+  g_bank = g_bank + g_players[playerId].score
+  g_players[playerId] = nil -- eats server memory ?!? find how to free
+  g_nPlayer = g_nPlayer - 1
 end
 
 function Round_whenRound_new()
+  -- every player + the bank must participate in the pot
+  r_pot          = 0
+  r_livingPlayer = g_nPlayer
+
+  -- bank participation : 10%
+  if g_bank > 0 and g_bank < 10 -- minimum participation
+  then
+    p = 1
+  else
+    p = g_bank / 10 -- compute to be sure you remove exactly what you add
+  end
+  g_bank = g_bank - p
+  r_pot  = r_pot  + p
+
+  -- players participation : 10%
+  for i,v in pairs(g_players) do
+    if g_players[i].score > 0 and g_players[i].score < 10 -- minimum participation
+    then
+      g_players[i].pot = 1
+    else
+      g_players[i].pot = g_players[i].score / 10
+    end
+    g_players[i].score = g_players[i].score - g_players[i].pot
+    r_pot              = r_pot              + g_players[i].pot
+  end
 end
 
 function Round_whenPlayer_onEntityToTakeTaken(playerId)
-  Rules.Player_addPoints(playerId, 10);
+  -- todo
+  --Rules.Player_addPoints(playerId, 10)
 end
 
 function Round_whenExternal_onEntityToTakeTaken()
+  -- nothing
 end
 
 function Round_whenPlayer_wins(playerId)
+  -- todo
+  -- close the round
+  if r_pot ~= 0 then
+    g_bank = g_bank + r_pot
+  end
 end
 
 function Round_whenPlayer_dies(playerId)
+  r_livingPlayer = r_livingPlayer -1
 end
 
 function Round_whenPlayer_DoesASomersault(playerId, counterclock)
+  if r_livingPlayer > 1 -- points are distributed only when there are at least 2 players
+  then
+    if r_pot > 0 then -- give 1 point by somersault
+      r_pot = r_pot -1
+      g_players[playerId].score = g_players[playerId].score + 1
+      Rules.Player_setPoints(playerId, g_players[playerId].score) -- update the score
+    end
+  end
 end
 
 ----------------------------
@@ -64,14 +111,6 @@ end
 ----------------------------
 
 -- todo
--- g_pot
--- 10% of players points + 10% of the bank
--- no point when only 1 player
---
---// round_nbPlayers doesn't consider the players waiting which are still not in the round
---// Rules.round_nbPlayers()
---// Rules.round_nbPlayersLiving()
---// Rules.round_nbPlayersDead()
 --// Rules.round_nbRemainingEntitiesToTake(playerId, nbPoints)
 --// Rules.round_time()
 -- reload rules without restarting the server
