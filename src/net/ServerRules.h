@@ -44,7 +44,6 @@ private:
   static int L_Rules_Log(lua_State *pL);
 
   // global
-  static int L_Rules_player_getPoints(lua_State *pL);
   static int L_Rules_player_setPoints(lua_State *pL);
   static int L_Rules_player_addPoints(lua_State *pL);
 
