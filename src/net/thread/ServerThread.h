@@ -201,6 +201,9 @@ class ServerThread : public XMThread {
 
   std::vector<unsigned int> m_clientMarkToBeRemoved;
   void cleanClientsMarkedToBeRemoved();
+
+  // rules
+  void reloadRules(const std::string& i_rulesFile);
 };
 
 class XMServerSceneHooks : public SceneHooks {

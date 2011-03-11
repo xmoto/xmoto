@@ -57,6 +57,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // limit multi private message to avoid people spamming everybody and making think it's private
 #define XM_SERVER_MAXIMUM_MULTI_PRIVATE_MESSAGE 3
 
+#define XM_SERVER_DEFAULT_RULES "Rules/classical.rules"
+
 NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tcpRemoteIP) {
     m_id   = i_id;
     m_mode = NETCLIENT_GHOST_MODE;
@@ -269,7 +271,7 @@ ServerThread::ServerThread(const std::string& i_dbKey, int i_port, const std::st
     m_banner             = XM_SERVER_DEFAULT_BANNER;
     m_acceptConnections  = false;
     m_unmanagedActions   = 0;
-    m_rules = new ServerRules(this);
+    m_rules = NULL;
     m_sceneHook = new XMServerSceneHooks(this);
 
     if(!m_udpPacket) {
@@ -280,7 +282,9 @@ ServerThread::ServerThread(const std::string& i_dbKey, int i_port, const std::st
 ServerThread::~ServerThread() {
   SDLNet_FreePacket(m_udpPacket);
   delete m_DBuffer;
-  delete m_rules;
+  if(m_rules != NULL) {
+    delete m_rules;
+  }
   delete m_sceneHook;
 }
 
@@ -292,8 +296,7 @@ int ServerThread::realThreadFunction() {
 
   // init rules
   try {
-    m_rules->loadScriptFile("Rules/classical.rules");
-    m_rules->scriptCallVoid("Global_init");
+    reloadRules(XM_SERVER_DEFAULT_RULES);
   } catch(Exception &e) {
     LogError((e.getMsg() + "\n" + m_rules->getErrorMsg()).c_str());
     return 1;
@@ -1404,6 +1407,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "lsadmins: list admins\n";
       v_answer += "addadmin <id player> <password>: add player <id player> as admin\n";
       v_answer += "rmadmin <id admin>: remove admin\n";
+      v_answer += "reloadrules: reload server rules\n"; 
       v_answer += "stats: server statistics\n";
       v_answer += "msg <msg>: message to players\n";
     }
@@ -1621,6 +1625,20 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "ban removed\n";
     }
 
+  } else if(v_args[0] == "reloadrules") {
+    if(v_args.size() != 1) {
+      v_answer += "reloadrules: invalid arguments\n";
+    } else {
+      try {
+	reloadRules(XM_SERVER_DEFAULT_RULES);
+	v_answer += "Rules reloaded\n";
+      } catch(Exception &e) {
+	v_answer += e.getMsg() + "\n" + m_rules->getErrorMsg();
+	LogError((e.getMsg() + "\n" + m_rules->getErrorMsg()).c_str());
+	v_answer += "Error while reloading rules\n";
+      }
+    }
+
   } else if(v_args[0] == "stats") {
     if(v_args.size() != 1) {
       v_answer += "stats: invalid arguments\n";
@@ -1802,6 +1820,21 @@ void ServerThread::sendMsgToClient(unsigned int i_client, const std::string& i_m
 
 ServerRules* ServerThread::getRules() {
   return m_rules;
+}
+
+void ServerThread::reloadRules(const std::string& i_rulesFile) {
+  if(m_rules != NULL) {
+    delete m_rules;
+  }
+  m_rules = new ServerRules(this);
+
+  // init player points
+  for(unsigned int i=0; i<m_clients.size(); i++) {
+    m_clients[i]->setPoints(0);
+  }
+
+  m_rules->loadScriptFile(i_rulesFile);
+  m_rules->scriptCallVoid("Global_init");
 }
 
 XMServerSceneHooks::XMServerSceneHooks(ServerThread* i_st) {
