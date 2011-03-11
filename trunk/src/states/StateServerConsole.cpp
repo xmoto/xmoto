@@ -109,6 +109,7 @@ void StateServerConsole::createGUIIfNeeded()
   m_console->addCompletionCommand("lsadmins");
   m_console->addCompletionCommand("addadmin");
   m_console->addCompletionCommand("rmadmin");
+  m_console->addCompletionCommand("reloadrules");
   m_console->addCompletionCommand("stats");
   m_console->addCompletionCommand("msg");
 }
