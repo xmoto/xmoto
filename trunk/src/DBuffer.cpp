@@ -262,8 +262,9 @@ void DBuffer::clear() {
 
   if(m_Parts.size() == 1) {
     m_Parts[0]->nPtr = 0; // clear the first part
-    m_nCurPart = 0;
   }
+
+  m_nCurPart = 0;
 }
 
 int DBuffer::copyTo(char* i_str, int maxLen) {
