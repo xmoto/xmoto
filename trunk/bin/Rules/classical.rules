@@ -42,11 +42,13 @@ end
 function Global_whenPlayer_removed(playerId)
   -- returns the points to the bank
   g_bank = g_bank + g_players[playerId].score
-  g_players[playerId] = nil -- eats server memory ?!? find how to free
+  g_players[playerId] = nil
   g_nPlayer = g_nPlayer - 1
 end
 
 function Round_whenRound_new()
+  local p
+
   -- every player + the bank must participate in the pot
   r_pot          = 0
   r_livingPlayer = g_nPlayer
