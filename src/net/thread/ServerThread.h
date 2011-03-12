@@ -126,6 +126,7 @@ class ServerThread : public XMThread {
 
   NetSClient* getNetSClientByScenePlayer(unsigned int i_numScene, unsigned int i_numPlayer) const;
   NetSClient* getNetSClientById(unsigned int i_id) const;
+  Universe*   getUniverse(); // NULL if no party is currently playing
   ServerRules* getRules();
 
   private:

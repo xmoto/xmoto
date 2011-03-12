@@ -9,14 +9,17 @@
 -- x = Rules.Player_getPoints(playerId) -- get the currrent number of points of a player
 -- Rules.Player_setPoints(playerId, x)  -- set the number of points of a player
 -- Rules.Player_addPoints(playerId, x)  -- add points to a player
+-- Rules.GetTime()                      -- return the time in the scene
+-- Rules.GetNbRemainingEntitiesToTake() -- return the number of entities remaining to take
 ------------------------
 ------------------------
 -- Called functions ----
 ------------------------
 -- Global_init()                       		  	    -- rules initialisation function / called once at the server start
--- Global_whenPlayer_added(playerId)   		  	    -- a new player joins
+-- Global_whenPlayer_added(playerId)   		  	    -- a new player joins -- players are never added between Round_whenRound_begin and Round_whenRound_end
 -- Global_whenPlayer_removed(playerId) 		  	    -- a player go out -- as consequence, he will die too
--- Round_whenRound_new()               		  	    -- a new level start
+-- Round_whenRound_begins()           		  	    -- the level begins
+-- Round_whenRound_ends()              		  	    -- the level ends -- called after all players died or a player win
 -- Round_whenPlayer_onEntityToTakeTaken(playerId) 	    -- the player takes a strawberry
 -- Round_whenExternal_onEntityToTakeTaken()       	    -- something external (ie script) takes a strawberry
 -- Round_whenPlayer_wins(playerId)                	    -- a player wins
@@ -46,7 +49,7 @@ function Global_whenPlayer_removed(playerId)
   g_nPlayer = g_nPlayer - 1
 end
 
-function Round_whenRound_new()
+function Round_whenRound_begins()
   local p
 
   -- every player + the bank must participate in the pot
@@ -76,6 +79,14 @@ function Round_whenRound_new()
   end
 end
 
+function Round_whenRound_ends()
+  -- todo
+  -- close the round
+  if r_pot ~= 0 then
+    g_bank = g_bank + r_pot
+  end
+end
+
 function Round_whenPlayer_onEntityToTakeTaken(playerId)
   -- todo
   --Rules.Player_addPoints(playerId, 10)
@@ -86,11 +97,6 @@ function Round_whenExternal_onEntityToTakeTaken()
 end
 
 function Round_whenPlayer_wins(playerId)
-  -- todo
-  -- close the round
-  if r_pot ~= 0 then
-    g_bank = g_bank + r_pot
-  end
 end
 
 function Round_whenPlayer_dies(playerId)
@@ -111,8 +117,3 @@ end
 ----------------------------
 -- End of classical rules --
 ----------------------------
-
--- todo
---// Rules.round_nbRemainingEntitiesToTake(playerId, nbPoints)
---// Rules.round_time()
--- reload rules without restarting the server

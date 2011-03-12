@@ -20,12 +20,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "ServerRules.h"
 #include "../helpers/Log.h"
+#include "../Universe.h"
 #include "thread/ServerThread.h"
 
 luaL_reg ServerRules::m_rulesFuncs[] = {
-    {"Log",              ServerRules::L_Rules_Log},
-    {"Player_setPoints", ServerRules::L_Rules_player_setPoints},
-    {"Player_addPoints", ServerRules::L_Rules_player_addPoints},
+    {"Log",              	     ServerRules::L_Rules_Log},
+    {"Player_setPoints", 	     ServerRules::L_Rules_player_setPoints},
+    {"Player_addPoints", 	     ServerRules::L_Rules_player_addPoints},
+    {"GetTime",          	     ServerRules::L_Rules_Round_getTime},
+    {"GetNbRemainingEntitiesToTake", ServerRules::L_Rules_Round_getNbRemainingEntitiesToTake},
     {NULL, NULL}
 };
 
@@ -74,4 +77,40 @@ int ServerRules::L_Rules_player_addPoints(lua_State *pL) {
   v_points   = (int) luaL_checknumber(pL,2);
   m_exec_server->getNetSClientById(v_playerId)->addPoints(v_points);
   return 0;
+}
+
+int ServerRules::L_Rules_Round_getTime(lua_State *pL) {
+  args_CheckNumberOfArguments(pL, 0);
+
+  Universe* v_universe;
+  v_universe = m_exec_server->getUniverse();
+  if(v_universe == NULL) {
+    lua_pushnumber(pL, 0);
+    return 1;
+  }
+
+  if(v_universe->getScenes().size() != 1) {
+    throw Exception("Server universe have only 1 scene");
+  }
+
+  lua_pushnumber(pL, v_universe->getScenes()[0]->getTime() / 100.0);
+  return 1;
+}
+
+int ServerRules::L_Rules_Round_getNbRemainingEntitiesToTake(lua_State *pL) {
+  args_CheckNumberOfArguments(pL, 0);
+
+  Universe* v_universe;
+  v_universe = m_exec_server->getUniverse();
+  if(v_universe == NULL) {
+    lua_pushnumber(pL, 0);
+    return 1;
+  }
+
+  if(v_universe->getScenes().size() != 1) {
+    throw Exception("Server universe have only 1 scene");
+  }
+
+  lua_pushnumber(pL, v_universe->getScenes()[0]->getNbRemainingStrawberries());
+  return 1;
 }

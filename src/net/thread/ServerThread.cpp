@@ -494,6 +494,7 @@ void ServerThread::SP2_initPlaying() {
 }
 
 void ServerThread::SP2_uninitPlaying() {
+  m_rules->scriptCallVoid("Round_whenRound_ends");
   delete m_universe;
   m_universe = NULL;
 }
@@ -604,7 +605,7 @@ void ServerThread::SP2_updateScenePlaying() {
     // manage the first time the update is done
     if(m_sp2_gameStarted == false) {
       m_sp2_gameStarted = true;
-      m_rules->scriptCallVoid("Round_whenRound_new");
+      m_rules->scriptCallVoid("Round_whenRound_begins");
     }
 
     SP2_manageInactivity();
@@ -1820,6 +1821,10 @@ void ServerThread::sendMsgToClient(unsigned int i_client, const std::string& i_m
 
 ServerRules* ServerThread::getRules() {
   return m_rules;
+}
+
+Universe* ServerThread::getUniverse() {
+  return m_universe;
 }
 
 void ServerThread::reloadRules(const std::string& i_rulesFile) {
