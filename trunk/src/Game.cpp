@@ -109,17 +109,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* Init SDL */
     if(bInitGraphics == false) {
-      /* SDL_INIT_TIMER is not initialized while
-	 it's not required for SDL_Delay and SDL_GetTicks according to the
-	 code + it's not precised in the doc that it's required
-       */
-      if(SDL_Init(0) < 0)
+      if(SDL_Init(SDL_INIT_TIMER) < 0)
         throw Exception("(1) SDL_Init : " + std::string(SDL_GetError()));
       
       /* No graphics mojo here, thank you */
       return;
     } else {
-      if(SDL_Init(SDL_INIT_VIDEO) < 0)
+      if(SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO) < 0)
         throw Exception("(2) SDL_Init : " + std::string(SDL_GetError()));
     }
     /* Set window title */
