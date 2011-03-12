@@ -52,6 +52,8 @@ private:
   static int L_Rules_Round_whenPlayer_takesEntityToTake(lua_State *pL);
   static int L_Rules_Round_whenPlayer_wins(lua_State *pL);
   static int L_Rules_Round_whenPlayer_dies(lua_State *pL);
+  static int L_Rules_Round_getTime(lua_State *pL);
+  static int L_Rules_Round_getNbRemainingEntitiesToTake(lua_State *pL);
 };
 
 #endif
