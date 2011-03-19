@@ -240,7 +240,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     char c[512];
     *this >> n;
 
-    if(n <= 0) {
+    if(n < 0) { // string of size 0 are allowed
       throw Exception("Unable to read the string !");
     }
     if(n >= 512) {
