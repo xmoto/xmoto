@@ -150,7 +150,7 @@ void NetClient::connect(const std::string& i_server, int i_port) {
   SysMessage::instance()->addConsoleLine(buf, CLT_INFORMATION);
 
   // bind udp port on server
-  NA_clientInfos na(4, m_udpBindKey);
+  NA_clientInfos na(XM_NET_PROTOCOL_VERSION, m_udpBindKey);
   try {
     NetClient::instance()->send(&na, 0);
   } catch(Exception &e) {
