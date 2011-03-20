@@ -229,7 +229,11 @@ void LuaLibBase::loadScript(const std::string& i_scriptCode, const std::string& 
 }
 
 std::string LuaLibBase::getErrorMsg() {
-  return lua_tostring(m_pL,-1);
+  const char *msg = lua_tostring(m_pL,-1);
+  if(msg == NULL) {
+    return "No error available";
+  }
+  return std::string(msg);
 }
 
 /*=====================================================
