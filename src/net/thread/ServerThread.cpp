@@ -261,7 +261,6 @@ ServerThread::ServerThread(const std::string& i_dbKey, int i_port, const std::st
     m_DBuffer = new DBuffer();
     m_DBuffer->initOutput(XM_NET_MAX_EVENTS_SHOT_SIZE);
     m_sp2phase           = SP2_PHASE_NONE;
-    SP2_setPhase(SP2_PHASE_WAIT_CLIENTS);
     m_lastFrameTimeStamp = -1;
     m_frameLate          = 0;
     m_currentFrame       = 0;
@@ -272,6 +271,7 @@ ServerThread::ServerThread(const std::string& i_dbKey, int i_port, const std::st
     m_acceptConnections  = false;
     m_unmanagedActions   = 0;
     m_rules = NULL;
+    m_needToReloadRules  = false;
     m_sceneHook = new XMServerSceneHooks(this);
 
     if(!m_udpPacket) {
@@ -294,6 +294,7 @@ int ServerThread::realThreadFunction() {
 
   LogInfo("server: starting");
 
+  // this is not really required here, but it will not start the server if an error occured
   // init rules
   try {
     reloadRules(XM_SERVER_DEFAULT_RULES);
@@ -352,6 +353,9 @@ int ServerThread::realThreadFunction() {
   if(StateManager::exists()) {
     StateManager::instance()->sendAsynchronousMessage("SERVER_STATUS_CHANGED");
   }
+
+  // SP2 phase initialisation
+  SP2_setPhase(SP2_PHASE_WAIT_CLIENTS);
 
   // manage server
   while(m_askThreadToEnd == false) {
@@ -699,6 +703,15 @@ void ServerThread::SP2_setPhase(ServerP2Phase i_sp2phase) {
 
   case SP2_PHASE_WAIT_CLIENTS:
     m_wantedSleepingFramerate = 10;
+    // load rules if they changed
+    try {
+      if(m_needToReloadRules) {
+	m_needToReloadRules = false;
+	reloadRules(XM_SERVER_DEFAULT_RULES);
+      }
+    } catch(Exception &e) {
+      LogError((e.getMsg() + "\n" + m_rules->getErrorMsg()).c_str());
+    }
     break;
     
   case SP2_PHASE_PLAYING:
@@ -725,6 +738,9 @@ void ServerThread::SP2_unsetPhase() {
     
   case SP2_PHASE_PLAYING:
     SP2_uninitPlaying();
+
+    /* update scores */
+    sendPointsToSlavePlayers();
     break;
   }
 }
@@ -932,14 +948,68 @@ void ServerThread::sendToAllClientsHavingProtocol(int i_protocol, NetAction* i_n
     try {
       if((int)i != i_except) {
 	if(m_clients[i]->protocolVersion() < i_protocol) {
-	  sendToClient(i_netAction_lt, i, i_src, i_subsrc);
+	  if(i_netAction_lt != NULL) {
+	    sendToClient(i_netAction_lt, i, i_src, i_subsrc);
+	  }
 	} else {
-	  sendToClient(i_netAction_ge, i, i_src, i_subsrc);
+	  if(i_netAction_ge != NULL) {
+	    sendToClient(i_netAction_ge, i, i_src, i_subsrc);
+	  }
 	}
       }
     } catch(Exception &e) {
       // don't remove the client while removeclient function can call sendToAllClients ...
     }
+  }
+}
+
+void ServerThread::sendToAllClientsHavingModeAndProtocol(NetClientMode i_mode, int i_protocol, NetAction* i_netAction_lt, NetAction* i_netAction_ge, int i_src, int i_subsrc, int i_except) {
+  for(unsigned int i=0; i<m_clients.size(); i++) {
+    if((int)i != i_except && (i_mode == NETCLIENT_ANY_MODE || i_mode == m_clients[i]->mode())) {
+      try {
+	if((int)i != i_except) {
+	  if(m_clients[i]->protocolVersion() < i_protocol) {
+	    if(i_netAction_lt != NULL) {
+	      sendToClient(i_netAction_lt, i, i_src, i_subsrc);
+	    }
+	  } else {
+	    if(i_netAction_ge != NULL) {
+	      sendToClient(i_netAction_ge, i, i_src, i_subsrc);
+	    }
+	  }
+	}
+      } catch(Exception &e) {
+	// don't remove the client while removeclient function can call sendToAllClients ...
+      }
+    }
+  }
+}
+
+void ServerThread::sendPointsToSlavePlayers() {
+  for(unsigned int i=0; i<m_clients.size(); i++) {
+    if(m_clients[i]->mode() == NETCLIENT_SLAVE_MODE) {
+      sendPointsToClient(i);
+    }
+  }
+}
+
+void ServerThread::sendPointsToClient(unsigned int i_client) {
+  NA_slaveClientsPoints nascp;
+  NetPointsClient npc;
+  try {
+    for(unsigned int i=0; i<m_clients.size(); i++) {
+      if(m_clients[i]->mode() == NETCLIENT_SLAVE_MODE) {
+	if(i == i_client) {
+	  npc.NetId  = -1;
+	} else {
+	  npc.NetId  = m_clients[i]->id();
+	}
+	npc.Points = m_clients[i]->points();
+	nascp.add(&npc);
+      }
+    }
+    sendToClient(&nascp, i_client, -1, 0);
+  } catch(Exception &e) {
   }
 }
 
@@ -1121,6 +1191,7 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_udpBindQuery:
   case TNA_serverError:
   case TNA_changeClients:
+  case TNA_slaveClientsPoints:
   case TNA_clientsNumber:
   case TNA_prepareToPlay:
   case TNA_prepareToGo:
@@ -1183,7 +1254,7 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       NetInfosClient nic;
       try {
 	for(unsigned int i=0; i<m_clients.size(); i++) {
-	  if(m_clients[i]->name() != "") {
+	  if(m_clients[i]->name() != "") { // remove still unset clients
 	    nic.NetId = m_clients[i]->id();
 	    nic.Name  = m_clients[i]->name();
 	    nacc.add(&nic);
@@ -1362,7 +1433,16 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
 	  return false;
 	}
       }
+
       m_clients[i_client]->setMode(((NA_clientMode*)i_netAction)->mode());
+
+      // require that the mode of the player is set (the line before)
+      if(((NA_clientMode*)i_netAction)->mode() == NETCLIENT_SLAVE_MODE) {
+	// send current scores to the player
+	if(m_clients[i_client]->protocolVersion() >= 5) {
+	  sendPointsToClient(i_client);
+	}
+      }
     }
     break;
 
@@ -1630,14 +1710,8 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     if(v_args.size() != 1) {
       v_answer += "reloadrules: invalid arguments\n";
     } else {
-      try {
-	reloadRules(XM_SERVER_DEFAULT_RULES);
-	v_answer += "Rules reloaded\n";
-      } catch(Exception &e) {
-	v_answer += e.getMsg() + "\n" + m_rules->getErrorMsg();
-	LogError((e.getMsg() + "\n" + m_rules->getErrorMsg()).c_str());
-	v_answer += "Error while reloading rules\n";
-      }
+      m_needToReloadRules = true;
+      v_answer += "Rules will be reloaded just before the next round\n";
     }
 
   } else if(v_args[0] == "stats") {
@@ -1786,17 +1860,6 @@ void ServerThread::cleanClientsMarkedToBeRemoved() {
   m_clientMarkToBeRemoved.clear();
 }
 
-void ServerThread::SP2_addPointsToClient(unsigned int i_client, unsigned int i_points) {
-//  NA_points na(m_clients[i_client]->id(), m_clients[i_client]->points());
-//
-//  try {
-//    sendToClient(&na, i_client, -1, 0);
-//    sendToAllClientsHavingMode(NETCLIENT_SLAVE_MODE, &na, m_clients[i]->id(), 0, i_client);
-//  } catch(Exception &e) {
-//    /* ok, no pb */
-//  }
-}
-
 bool ServerThread::acceptConnections() const {
   return m_acceptConnections;
 }
@@ -1840,6 +1903,13 @@ void ServerThread::reloadRules(const std::string& i_rulesFile) {
 
   m_rules->loadScriptFile(i_rulesFile);
   m_rules->scriptCallVoid("Global_init");
+
+  // simulate the Global_whenPlayer_added for players as the rule ignore these players
+  for(unsigned int i=0; i<m_clients.size(); i++) {
+    if(m_clients[i]->mode() == NETCLIENT_SLAVE_MODE) {
+      m_rules->scriptCallVoidNumberArg("Global_whenPlayer_added", m_clients[i]->id());
+    }
+  }
 }
 
 XMServerSceneHooks::XMServerSceneHooks(ServerThread* i_st) {

@@ -46,6 +46,7 @@ private:
   // global
   static int L_Rules_player_setPoints(lua_State *pL);
   static int L_Rules_player_addPoints(lua_State *pL);
+  static int L_Rules_sendPointsToPlayers(lua_State *pL);
 
   // on a round
   static int L_Rules_Round_whenRound_new(lua_State *pL);

@@ -128,6 +128,7 @@ class ServerThread : public XMThread {
   NetSClient* getNetSClientById(unsigned int i_id) const;
   Universe*   getUniverse(); // NULL if no party is currently playing
   ServerRules* getRules();
+  void sendPointsToSlavePlayers();
 
   private:
   TCPsocket m_tcpsd;
@@ -160,6 +161,7 @@ class ServerThread : public XMThread {
   SDLNet_SocketSet m_set;
   std::vector<NetSClient*> m_clients;
   ServerRules* m_rules;
+  bool         m_needToReloadRules; // rules are reloaded only when out of a round, not immediatly when requested
   XMServerSceneHooks* m_sceneHook;
 
   void acceptClient();
@@ -177,12 +179,14 @@ class ServerThread : public XMThread {
   void sendToAllClientsHavingMode(NetClientMode i_mode, NetAction* i_netAction, int i_src, int i_subsrc, int i_except = -1);
   void sendToAllClientsMarkedToPlay(NetAction* i_netAction, int i_src, int i_subsrc, int i_except = -1);
   void sendToAllClientsHavingProtocol(int i_protocol, NetAction* i_netAction_lt, NetAction* i_netAction_ge, int i_src, int i_subsrc, int i_except = -1);
+  void sendToAllClientsHavingModeAndProtocol(NetClientMode i_mode, int i_protocol, NetAction* i_netAction_lt, NetAction* i_netAction_ge, int i_src, int i_subsrc, int i_except = -1);
   void sendToClient(NetAction* i_netAction, unsigned int i, int i_src, int i_subsrc, bool i_forceUdp = false);
   void sendMsgToClient(unsigned int i_client, const std::string& i_msg);
   void removeClient(unsigned int i);
   unsigned int nbClientsInMode(NetClientMode i_mode);
 
   /* SP2 */
+  void sendPointsToClient(unsigned int i_client);
   void SP2_initPlaying();
   void SP2_uninitPlaying();
   void SP2_updateScenePlaying();
@@ -193,7 +197,6 @@ class ServerThread : public XMThread {
   bool SP2_managePreplayTime();
   std::string SP2_determineLevel();
   void SP2_sendSceneEvents(DBuffer* i_buffer);
-  void SP2_addPointsToClient(unsigned int i_client, unsigned int i_points);
   bool m_sp2_gameStarted;
 
   // server cmd

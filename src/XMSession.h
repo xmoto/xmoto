@@ -246,7 +246,6 @@ public:
   void setWebConfAtInit(bool i_value);
   bool webConfAtInit() const;
   bool storeReplays() const;
-  bool compressReplays() const;
   bool enableReplayInterpolation() const;
   void setEnableReplayInterpolation(bool i_value);
   std::string uploadHighscoreUrl() const;
@@ -402,7 +401,6 @@ public:
   ProxySettings m_proxySettings;
   bool m_webConfAtInit;
   bool m_storeReplays;
-  bool m_compressReplays;
   bool m_enableReplayInterpolation;
   std::string m_screenshotFormat;
   std::string m_language;

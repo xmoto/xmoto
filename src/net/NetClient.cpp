@@ -54,6 +54,7 @@ NetClient::NetClient() {
     m_netActionsMutex = SDL_CreateMutex();
     m_universe = NULL;
     m_mode = NETCLIENT_GHOST_MODE;
+    m_points = 0;
     m_udpSendPacket = SDLNet_AllocPacket(XM_CLIENT_MAX_UDP_PACKET_SIZE);
 
     if(!m_udpSendPacket) {
@@ -251,6 +252,10 @@ void NetClient::changeMode(NetClientMode i_mode) {
 
 NetClientMode NetClient::mode() const {
   return m_mode;
+}
+
+int NetClient::points() const {
+  return m_points;
 }
 
 std::vector<NetOtherClient*>& NetClient::otherClients() {
@@ -544,6 +549,23 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
       }
     }
     break;
+    
+  case TNA_slaveClientsPoints:
+    {
+      for(unsigned int i=0; i<((NA_slaveClientsPoints*)i_netAction)->getPointsClients().size(); i++) {
+	if(((NA_slaveClientsPoints*)i_netAction)->getPointsClients()[i].NetId == -1) { // self
+	  m_points = ((NA_slaveClientsPoints*)i_netAction)->getPointsClients()[i].Points;
+	} else { // find the associated player
+	  for(unsigned int j=0; j<m_otherClients.size(); j++) {
+	    // don't check the mode while the mode can be still not received (it's set via marked to play)
+	    if(m_otherClients[j]->id() == ((NA_slaveClientsPoints*)i_netAction)->getPointsClients()[i].NetId) {
+	      m_otherClients[j]->setPoints(((NA_slaveClientsPoints*)i_netAction)->getPointsClients()[i].Points);
+	    }
+	  }
+	}
+      }
+    }
+    break;
 
   case TNA_prepareToPlay:
     {
@@ -684,6 +706,14 @@ NetGhost* NetOtherClient::netGhost(unsigned int i_subsrc) {
 
 void NetOtherClient::setNetGhost(unsigned int i_subsrc, NetGhost* i_netGhost) {
   m_ghosts[i_subsrc] = i_netGhost;
+}
+
+int NetOtherClient::points() const {
+  return m_points;
+}
+
+void NetOtherClient::setPoints(int i_points) {
+  m_points = i_points;
 }
 
 void NetClient::getOtherClientsNameList(std::vector<std::string>& io_list, const std::string& i_suffix) {

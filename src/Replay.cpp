@@ -59,9 +59,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define RMOVINGBLOCK_MIN_LONGDIFFMOVE             0.05
 #define RMOVINGBLOCK_MIN_LONGDIFFROTATION         0.05
 
-
-  bool Replay::m_bEnableCompression = true;
-
   Replay::Replay() {
     m_bFinished = false;
     m_bEndOfFile = false;
@@ -244,31 +241,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     int nUncompressedEventsSize = numRemainingBytes();
     XMFS::writeInt_LE(pfh,nUncompressedEventsSize);
     
-    /* Compression? */
-    if(m_bEnableCompression) {
-      /* Compress events with zlib */
-      char *pcCompressedEvents = new char [nUncompressedEventsSize * 2 + 12];
-      uLongf nDestLen = nUncompressedEventsSize * 2 + 12;
-      uLongf nSrcLen = nUncompressedEventsSize;
-      int nZRet = compress2((Bytef *)pcCompressedEvents,&nDestLen,(Bytef *)pcUncompressedEvents,nSrcLen,9);
-      if(nZRet != Z_OK) {
-        /* Failed to compress, save raw events */
-        XMFS::writeBool(pfh,false); /* compression: false */
-        XMFS::writeBuf(pfh,(char *)pcUncompressedEvents,nUncompressedEventsSize);
-      }
-      else {
-        /* OK */        
-        XMFS::writeBool(pfh,true); /* compression: true */
-        XMFS::writeInt_LE(pfh,nDestLen);
-        XMFS::writeBuf(pfh,(char *)pcCompressedEvents,nDestLen);
-      }
-      delete [] pcCompressedEvents;
-    }
-    else {    
-      /* No compression */
+    /* Compress events with zlib */
+    char *pcCompressedEvents = new char [nUncompressedEventsSize * 2 + 12];
+    uLongf nDestLen = nUncompressedEventsSize * 2 + 12;
+    uLongf nSrcLen = nUncompressedEventsSize;
+    int nZRet = compress2((Bytef *)pcCompressedEvents,&nDestLen,(Bytef *)pcUncompressedEvents,nSrcLen,9);
+    if(nZRet != Z_OK) {
+      /* Failed to compress, save raw events */
       XMFS::writeBool(pfh,false); /* compression: false */
       XMFS::writeBuf(pfh,(char *)pcUncompressedEvents,nUncompressedEventsSize);
+    } else {
+      /* OK */        
+      XMFS::writeBool(pfh,true); /* compression: true */
+      XMFS::writeInt_LE(pfh,nDestLen);
+      XMFS::writeBuf(pfh,(char *)pcCompressedEvents,nDestLen);
     }
+    delete [] pcCompressedEvents;
     
     /* Chunks */
     XMFS::writeInt_LE(pfh,m_Chunks.size());
@@ -277,31 +265,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     for(unsigned int i=0;i<m_Chunks.size();i++) {
       XMFS::writeInt_LE(pfh,m_Chunks[i]->nNumStates);
       
-      /* Compression enabled? */
-      if(m_bEnableCompression) {
-	/* Try compressing the chunk with zlib */        
-	unsigned char *pcCompressed = new unsigned char[m_nStateSize * m_Chunks[i]->nNumStates * 2 + 12];
-	uLongf nDestLen = m_nStateSize * m_Chunks[i]->nNumStates * 2 + 12;
-	uLongf nSrcLen = m_nStateSize * m_Chunks[i]->nNumStates;
-	int nZRet = compress2((Bytef *)pcCompressed,&nDestLen,(Bytef *)m_Chunks[i]->pcChunkData,nSrcLen,9);
-	if(nZRet != Z_OK) {
-	  /* Failed to compress... Save uncompressed chunk then */
-	  XMFS::writeBool(pfh,false); /* compression: false */
-	  XMFS::writeBuf(pfh,m_Chunks[i]->pcChunkData,m_nStateSize * m_Chunks[i]->nNumStates);
-	} else {
-	  /* Compressed ok */
-	  XMFS::writeBool(pfh,true); /* compression: true */
-	  XMFS::writeInt_LE(pfh,nDestLen);
-	  XMFS::writeBuf(pfh,(char *)pcCompressed,nDestLen);
-	}
-	delete [] pcCompressed;        
-      } else {
+      /* Try compressing the chunk with zlib */        
+      unsigned char *pcCompressed = new unsigned char[m_nStateSize * m_Chunks[i]->nNumStates * 2 + 12];
+      uLongf nDestLen = m_nStateSize * m_Chunks[i]->nNumStates * 2 + 12;
+      uLongf nSrcLen = m_nStateSize * m_Chunks[i]->nNumStates;
+      int nZRet = compress2((Bytef *)pcCompressed,&nDestLen,(Bytef *)m_Chunks[i]->pcChunkData,nSrcLen,9);
+      if(nZRet != Z_OK) {
+	/* Failed to compress... Save uncompressed chunk then */
 	XMFS::writeBool(pfh,false); /* compression: false */
 	XMFS::writeBuf(pfh,m_Chunks[i]->pcChunkData,m_nStateSize * m_Chunks[i]->nNumStates);
+      } else {
+	/* Compressed ok */
+	XMFS::writeBool(pfh,true); /* compression: true */
+	XMFS::writeInt_LE(pfh,nDestLen);
+	XMFS::writeBuf(pfh,(char *)pcCompressed,nDestLen);
       }
+      delete [] pcCompressed;        
     }
   }
-  
+
 void Replay::openReplay_3(FileHandle *pfh, bool bDisplayInformation) {
   DBuffer v_replay;
   int v_nDataSize;
