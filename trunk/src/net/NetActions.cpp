@@ -52,6 +52,7 @@ std::string NA_changeName::ActionKey    = "changeName";
 std::string NA_playingLevel::ActionKey  = "playingLevel";
 std::string NA_serverError::ActionKey   = "serverError";
 std::string NA_changeClients::ActionKey = "changeClients";
+std::string NA_slaveClientsPoints::ActionKey = "scpoints";
 std::string NA_clientsNumber::ActionKey = "clientsNumber";
 std::string NA_clientsNumberQuery::ActionKey = "clientsNumberQ";
 // control : while it's sent a lot, reduce it at maximum
@@ -78,6 +79,7 @@ NetActionType NA_clientsNumberQuery::NAType = TNA_clientsNumberQuery;
 NetActionType NA_playingLevel::NAType  = TNA_playingLevel;
 NetActionType NA_serverError::NAType   = TNA_serverError;
 NetActionType NA_changeClients::NAType = TNA_changeClients;
+NetActionType NA_slaveClientsPoints::NAType = TNA_slaveClientsPoints;
 NetActionType NA_playerControl::NAType = TNA_playerControl;
 NetActionType NA_clientMode::NAType    = TNA_clientMode;
 NetActionType NA_prepareToPlay::NAType = TNA_prepareToPlay;
@@ -251,6 +253,10 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
 
   else if(v_cmd == NA_changeClients::ActionKey) {
     v_res = new NA_changeClients(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_slaveClientsPoints::ActionKey) {
+    v_res = new NA_slaveClientsPoints(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
   else if(v_cmd == NA_clientsNumber::ActionKey) {
@@ -687,7 +693,7 @@ void NA_changeClients::remove(NetInfosClient* i_infoClient) {
 }
 
 void NA_changeClients::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
-  std::ostringstream v_send;  
+  std::ostringstream v_send;
 
   for(unsigned int i=0; i<m_netAddedInfosClients.size(); i++) {
     v_send << "+" << "\n";
@@ -954,4 +960,48 @@ void NA_srvCmdAsw::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sen
 
 std::string NA_srvCmdAsw::getAnswer() {
   return m_answer;
+}
+
+NA_slaveClientsPoints::NA_slaveClientsPoints() : NetAction(true) {
+}
+
+NA_slaveClientsPoints::NA_slaveClientsPoints(void* data, unsigned int len) : NetAction(true) {
+  unsigned int v_localOffset = 0;
+  NetPointsClient v_pointsClient;
+
+  if(len == 1) { // no client (only \n)
+    return;
+  }
+
+  while(v_localOffset < len) {
+    v_pointsClient.NetId  = atoi(getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset).c_str());
+    v_pointsClient.Points = atoi(getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset).c_str());
+    m_netPointsClients.push_back(v_pointsClient);
+  }
+}
+
+NA_slaveClientsPoints::~NA_slaveClientsPoints() {
+}
+
+void NA_slaveClientsPoints::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  std::ostringstream v_send;
+
+  for(unsigned int i=0; i<m_netPointsClients.size(); i++) {
+    v_send << m_netPointsClients[i].NetId  << "\n";
+    v_send << m_netPointsClients[i].Points << "\n";
+  }
+
+  if(m_netPointsClients.size() > 0) {
+    NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.str().c_str(), v_send.str().size()-1); // don't send the \0 and the last \n
+  } else {
+    NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.str().c_str(), v_send.str().size()); // don't send the \0
+  }
+}
+
+const std::vector<NetPointsClient>& NA_slaveClientsPoints::getPointsClients() const {
+  return m_netPointsClients;
+}
+
+void NA_slaveClientsPoints::add(NetPointsClient* i_npc) {
+  m_netPointsClients.push_back(*i_npc);
 }

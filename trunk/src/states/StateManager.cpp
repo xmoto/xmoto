@@ -341,6 +341,8 @@ void StateManager::renderOverAll() {
 
     int nMX,nMY;
     GameApp::getMousePos(&nMX, &nMY);
+    int v_nameWidth;
+    int v_nameBorder = 10;
 
     // header
     v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(GAMETEXT_CONNECTED_PLAYERS);
@@ -350,11 +352,24 @@ void StateManager::renderOverAll() {
     v_voffset += v_fg->realHeight();
     v_maxwidth = v_fg->realWidth();
 
-    // you
+    // you : name
     v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(XMSession::instance()->profile());
     v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
 		      m_screen.getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
-		      MAKE_COLOR(200,200,200,255), -1.0, true);       
+		      MAKE_COLOR(200,200,200,255), -1.0, true);
+    v_nameWidth = v_fg->realWidth();
+
+    // you : points
+    if(NetClient::instance()->mode() == NETCLIENT_SLAVE_MODE) {
+      std::ostringstream v_npoints;
+      v_npoints << "[ " << NetClient::instance()->points() << " ]";
+      v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(v_npoints.str());
+      v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
+			m_screen.getDispWidth() - v_fg->realWidth() - vborder - v_nameWidth - v_nameBorder,
+			vborder+v_voffset,
+			MAKE_COLOR(255,150,150,255), -1.0, true);
+    }
+
     // update v_mouseOverPlayer
     if(nMX > m_screen.getDispWidth() - v_fg->realWidth() - vborder &&
        nMX < m_screen.getDispWidth()                     - vborder &&
@@ -372,9 +387,23 @@ void StateManager::renderOverAll() {
     for(unsigned int i=0; i<NetClient::instance()->otherClients().size(); i++) {
       v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(NetClient::instance()->otherClients()[i]->name());
 
+      // others : name
       v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
 			m_screen.getDispWidth() - v_fg->realWidth() - vborder, vborder+v_voffset,
 			MAKE_COLOR(200,200,200,255), -1.0, true);     
+      v_nameWidth = v_fg->realWidth();
+
+      // others : points
+      if(NetClient::instance()->mode() == NETCLIENT_SLAVE_MODE) {
+	std::ostringstream v_npoints;
+	v_npoints << "[ " << NetClient::instance()->points() << " ]";
+	v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(v_npoints.str());
+	v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
+			  m_screen.getDispWidth() - v_fg->realWidth() - vborder - v_nameWidth - v_nameBorder,
+			  vborder+v_voffset,
+			  MAKE_COLOR(255,150,150,255), -1.0, true);
+      }
+
       // update v_mouseOverPlayer
       if(nMX > m_screen.getDispWidth() - v_fg->realWidth() - vborder &&
 	 nMX < m_screen.getDispWidth()                     - vborder &&

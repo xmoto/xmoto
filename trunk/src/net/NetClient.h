@@ -56,6 +56,8 @@ class NetOtherClient {
   NetGhost* netGhost(unsigned int i_subsrc);
   void setNetGhost(unsigned int i_subsrc, NetGhost* i_netGhost);
 
+  int points() const;
+  void setPoints(int i_points);
 
  private:
   int m_id;
@@ -65,6 +67,7 @@ class NetOtherClient {
   std::string m_playingLevelId;
   std::string m_playingLevelName;
   std::string m_lastPlayingLevelId;
+  int m_points;
 };
 
 class NetClient : public Singleton<NetClient> {
@@ -86,6 +89,7 @@ class NetClient : public Singleton<NetClient> {
 
   void changeMode(NetClientMode i_mode);
   NetClientMode mode() const;
+  int points() const;
 
   void startPlay(Universe* i_universe);
   bool isPlayInitialized();
@@ -125,6 +129,7 @@ class NetClient : public Singleton<NetClient> {
   NetClientMode m_mode;
 
   std::vector<NetOtherClient*> m_otherClients;
+  int m_points;
 
   void updateOtherClientsMode(std::vector<int> i_slavePlayers);
 

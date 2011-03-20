@@ -116,7 +116,6 @@ void XMSession::setToDefault() {
   m_webThemesURLBase              = DEFAULT_WEBTHEMES_SPRITESURLBASE;
   m_webRoomsURL                   = DEFAULT_WEBROOMS_URL;
   m_storeReplays                  = DEFAULT_STOREREPLAYS;
-  m_compressReplays               = DEFAULT_COMPRESSREPLAYS;
   m_enableReplayInterpolation     = DEFAULT_ENABLEREPLAYINTERPOLATION;
   m_uploadHighscoreUrl            = DEFAULT_UPLOADREPLAY_URL;
   m_screenshotFormat              = DEFAULT_SCREENSHOTFORMAT;
@@ -290,7 +289,6 @@ void XMSession::load(UserConfig* m_Config) {
   m_screenshotFormat   = m_Config->getString("ScreenshotFormat");
   m_storeReplays       = m_Config->getBool("StoreReplays");
   m_replayFrameRate    = m_Config->getFloat("ReplayFrameRate");
-  m_compressReplays    = m_Config->getBool("CompressReplays");
 
   m_uploadHighscoreUrl = m_Config->getString("WebHighscoreUploadURL");
   m_webThemesURL       = m_Config->getString("WebThemesURL");
@@ -431,7 +429,6 @@ void XMSession::save(UserConfig* v_config, xmDatabase* pDb) {
 
   v_config->setFloat  ("ReplayFrameRate",       m_replayFrameRate);
   v_config->setBool   ("StoreReplays",          m_storeReplays);
-  v_config->setBool   ("CompressReplays",       m_compressReplays);
 
   saveProfile(pDb);
 }
@@ -1156,10 +1153,6 @@ bool XMSession::storeReplays() const {
   return m_storeReplays;
 }
 
-bool XMSession::compressReplays() const {
-  return m_compressReplays;
-}
-
 bool XMSession::enableReplayInterpolation() const {
   return m_enableReplayInterpolation;
 }
@@ -1526,7 +1519,6 @@ void XMSession::createDefaultConfig(UserConfig* v_config) {
   v_config->createVar( "ScreenshotFormat",       DEFAULT_SCREENSHOTFORMAT);
   v_config->createVar( "StoreReplays",           "true" );
   v_config->createVar( "ReplayFrameRate",        "25"   );
-  v_config->createVar( "CompressReplays",        "true" );
 
   /* server url, keep them easy to modify */
   v_config->createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL           );

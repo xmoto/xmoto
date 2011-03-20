@@ -27,6 +27,7 @@ luaL_reg ServerRules::m_rulesFuncs[] = {
     {"Log",              	     ServerRules::L_Rules_Log},
     {"Player_setPoints", 	     ServerRules::L_Rules_player_setPoints},
     {"Player_addPoints", 	     ServerRules::L_Rules_player_addPoints},
+    {"SendPointsToPlayers",          ServerRules::L_Rules_sendPointsToPlayers},
     {"GetTime",          	     ServerRules::L_Rules_Round_getTime},
     {"GetNbRemainingEntitiesToTake", ServerRules::L_Rules_Round_getNbRemainingEntitiesToTake},
     {NULL, NULL}
@@ -76,6 +77,11 @@ int ServerRules::L_Rules_player_addPoints(lua_State *pL) {
   v_playerId = (int) luaL_checknumber(pL,1);
   v_points   = (int) luaL_checknumber(pL,2);
   m_exec_server->getNetSClientById(v_playerId)->addPoints(v_points);
+  return 0;
+}
+
+int ServerRules::L_Rules_sendPointsToPlayers(lua_State *pL) {
+  m_exec_server->sendPointsToSlavePlayers();
   return 0;
 }
 

@@ -95,96 +95,13 @@ your needs.
 Additionally, some other keys can be pressed while playing:
 
 Escape - Pauses the game, and opens the in-game menu
-F12 - Takes a screenshot (saved in the game directory on Windows,
-  otherwise in the ~/.xmoto directory)
+F12 - Takes a screenshot (saved in the ~/.local/share/xmoto directory)
 
 Command-line Options
 ====================
 
 X-Moto supports a range of options you can specify on the command
-line when starting the program:
-
- -res WIDTHxHEIGHT  This forces X-Moto to use a resolution of 
-                    WIDTHxHEIGHT. Note that this resolution must be
-                    supported by your video card and monitor if -res
-                    isn't combined with -win, in which case you can
-                    specify any weird resolution you'd like.
-                    Note that this option overrides the settings you
-                    have specified inside the game.
- 
- -bpp BITS          Sets the display bits per pixel to BITS. When
-                    running in windowed mode this option has no 
-                    effect at all. If BITS is 0 the current display
-                    setting is used.
-                    Like with -res, this option overrides the 
-                    in-game setting.
-                    
- -fs                Forces the game to run in fullscreen mode
-                    regardless of the setting specified inside the
-                    game.
- 
- -win               Like -fs, but forces windowed mode instead.
- 
- -q                 Enables quiet mode, in which no messages is 
-                    written in the log or to the console. This 
-                    overrides the -v option.
- 
- -v                 Enables verbose mode.
- 
- -noexts            Disables the use of OpenGL extensions. Try this
-                    option if you experience weird graphical errors 
-                    inside the game. Expect the use of this option to
-                    lower the framerate a bit, especially when 
-                    playing large levels.
-                    
- -level ID          Jumps directly into a specific level identified
-                    by ID. Built-in levels are identified by their
-                    number, i.e. use -level 16 to play level #16.
-                    External levels are identified by their IDs.
-         
- -replay NAME       Plays the given stored replay. NAME is the name
-                    of the replay file in the Replays/ sub-directory,
-                    with or without the .rpl extension.
-                    
- -profile NAME      Play the game using the given player profile. 
-                    This is useful when combined with the -level 
-                    option.
-
- -listlevels        Outputs a list of all available levels, and then
-                    quits. Useful if you want to use -level to jump
-                    right into a level, but you don't want to go into
-                    the game to see what the level IDs are.
- 
- -listreplays       Like -listlevels, but with replays instead.
- 
- -timedemo          Disables framerate throttling, i.e. the game will
-                    run at maximum framerate. 
- 
- -fps               This will display the current framerate in the 
-                    upper left corner of the screen.
- 
- -ugly              Enables "ugly" mode. This will increase the game's
-                    framerate significantly, but it will also make 
-                    the graphics look very ugly - most things inside 
-                    the game will be drawn with lines, the rider for
-                    instance being a simple stick figure.
-                    This option is very useful if your system doesn't
-                    have a proper OpenGL-capable video card (like
-                    for instance if you have a laptop with on-board
-                    video card).
-                    If you have the right amount of CPU power, it 
-                    should even be possible to run X-Moto in OpenGL
-                    software emulation mode (MesaGL on linux, Windows' 
-                    OpenGL fallback driver, etc).
- 
- -benchmark         When combined with -timedemo and -replay, the game
-                    will simply run the replay as fast as possible, 
-                    write the average framerate to stdout, and then 
-                    quit.
-                     
-Note that this list is not complete, several obscure ones have been 
-left out. This is mostly due to not all of them being completely 
-implemented and workable.
+line when starting the program. Run xmoto --help to get details on these options.
 
 Letting X-Moto Access The Web
 =============================
@@ -204,36 +121,25 @@ Replays
 =======
 
 As of alpha version 0.1.8, X-Moto supports recording and playback of
-replays. These are always stored in the Replays/ directory, which on
-Windows is located in the game installation directory, and on 
-Linux-like systems is located in the .xmoto/ in the user directory.
+replays. These are always stored in the Replays/ directory, which is
+located in the .local/share/xmoto in the user directory.
 One should be aware that replays can take up quite a large amount of
 harddisk space - on average you can expect a single minute of replay
 to equal around 50 kilobytes. If you want to disable recording of 
 replays, you can set the 'StoreReplays' variable to 'false' in
-config.dat, which on Windows is located in the game directory, and
-on Linux is located in .xmoto/. 
+config.dat, which is located in .local/share/xmoto. 
 
 Other things to be aware of regarding X-Moto replays:
 
  - Due to the way they are stored, they seem a bit less smooth
    than the actual game.
- - If you want to exchange replays with other people, you should 
-   keep in mind that the replays are already automatically 
-   compressed, so doing it again will probably just add extra 
-   overhead to the file size.
- - Replay can't be recorded if the level make use of scripting.
- - Don't expect exchange of replays between computers with 
-   different endianness, i.e. X-Moto on PPC (Mac, etc) won't be
-   able to run replays crated by X-Moto on x86 (Intel, etc). This
-   will probably be fixed in the future.
  - No fancy dirt particles from rear wheel spinning.
 
 Advanced Configuration Options
 ==============================
 
-Options are saved in a file called config.dat. On Windows the file is 
-saved in the game directory, while on Linux it is saved in ~/.xmoto. 
+Options are saved in a file called config.dat. The file is saved
+in ~/.config/xmoto. 
 It is a plain XML text file, so it should be straight-forward to modify 
 in any text editor. In addition to the options accessible from inside 
 the game, there's a couple more, which is not interesting enough to 
@@ -251,10 +157,6 @@ get included in the menus:
                     
  ScreenshotFormat   The format in which screenshots should be saved 
                     in. Can be either jpg or png.                  
-                    
- NotifyAtInit       If true, a message about the game release is 
-                    shown at startup. Automatically set to false 
-                    afterwards.
 
  StoreReplays       If true, replays will be automatically recorded
                     during the game. When the player dies or 
@@ -273,18 +175,6 @@ get included in the menus:
                     could cause unforeseen consequenses.
                     The default value of 25 seems to be a good 
                     compromise between smoothness and file size.   
-                    
- CompressReplays    If true, replays will be compressed with zlib.
-                    This is the default behaviour. Set this to false
-                    if you experience replay saving to take too long.      
-                    
- LevelCache         Levels are cached in the LCache/ directory for
-                    faster loading. If this variable is set to false,
-                    the feature will be disabled.      
- 
-You'll also find a number of obscure controller configuration 
-options in config.dat, but I'll leave them undocumented as the plan
-is they're going to be modifiable from inside the game.
  
 Bugs
 ====
@@ -292,7 +182,7 @@ Bugs
 If you experiences any bugs, please submit them using the "Bugs" 
 interface found on the X-Moto page:
    
-   http://todo.xmoto.tuxfamily.org
+   http://todo.xmoto.tuxfamily.org.
 
 License
 =======
@@ -311,4 +201,3 @@ Authors
 =======
 
 See the in-game credits under "Help".
- 

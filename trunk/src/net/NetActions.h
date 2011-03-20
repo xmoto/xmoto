@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BasicSceneStructs.h"
 #include "BasicStructures.h"
 
-#define XM_NET_PROTOCOL_VERSION 4
+#define XM_NET_PROTOCOL_VERSION 5
 /*
 DELTA 1->2:
 clientInfos : add xmversion string
@@ -35,6 +35,8 @@ DELTA 2->3:
 add NA_udpBindValidation
 DELTA 3->4:
 add chatMessagePP (private/public)
+DELTA 4->5
+add slaveClientsPoints
 */
 
 #define NETACTION_MAX_PACKET_SIZE 1024 * 2 // bytes
@@ -59,6 +61,7 @@ enum NetActionType {
   TNA_clientsNumberQuery,
   TNA_playingLevel,
   TNA_changeClients,
+  TNA_slaveClientsPoints,
   TNA_playerControl,
   TNA_clientMode,
   TNA_prepareToPlay,
@@ -72,6 +75,11 @@ enum NetActionType {
 struct NetInfosClient {
   int NetId;
   std::string Name;
+};
+
+struct NetPointsClient {
+  int NetId;
+  int Points;
 };
 
 class NetAction {
@@ -523,6 +531,25 @@ class NA_srvCmdAsw : public NetAction {
 
   private:
   std::string m_answer;
+};
+
+class NA_slaveClientsPoints : public NetAction {
+  public:
+  NA_slaveClientsPoints();
+  NA_slaveClientsPoints(void* data, unsigned int len);
+  virtual ~NA_slaveClientsPoints();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  const std::vector<NetPointsClient>& getPointsClients() const;
+  void add(NetPointsClient* i_npc);
+
+  private:
+  std::vector<NetPointsClient> m_netPointsClients;
 };
 
 #endif

@@ -549,8 +549,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 #endif
   m_isODEInitialized = true;
 
-  Replay::enableCompression(XMSession::instance()->compressReplays());
-  
   /* load packs */
   LevelsManager::checkPrerequires();
 

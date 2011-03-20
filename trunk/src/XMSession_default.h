@@ -102,7 +102,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_HIDEGHOSTS                  false
 #define DEFAULT_REPLAYFRAMERATE             25.0
 #define DEFAULT_STOREREPLAYS                true
-#define DEFAULT_COMPRESSREPLAYS             true
 #define DEFAULT_ENABLEREPLAYINTERPOLATION   true
 #define DEFAULT_SCREENSHOTFORMAT            "png"
 #define DEFAULT_NOTIFYATINIT                true

@@ -121,9 +121,6 @@ class PhysicsSettings;
       float getFrameRate(void) {return m_fFrameRate;} 
       const std::string &getPlayerName(void) {return m_PlayerName;}
       bool endOfFile(void) {return m_bEndOfFile;}
-      
-      /* Static data interface */
-      static void enableCompression(bool b) {m_bEnableCompression = b;}
     
       static std::string giveAutomaticName();
 
@@ -162,9 +159,6 @@ class PhysicsSettings;
       bool nextNormalState(); /* go to the next state */
 
       bool m_saved;
-      
-      /* Static data */
-      static bool m_bEnableCompression;
 
       /* Events reconstructed from replay */
       std::vector<RecordedGameEvent *> m_ReplayEvents;

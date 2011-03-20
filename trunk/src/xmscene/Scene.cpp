@@ -803,7 +803,7 @@ void Scene::initGhostTrail(FileGhost* i_ghost) {
 			m_pLevelSrc->getNumberLayer(),
 			m_pLevelSrc->getLayerOffsets());
 
-    LogInfo("Generating level from %d block%s...",InBlocks.size(),InBlocks.size()==1?"":"s");
+    LogDebug("Generating level from %d block%s...",InBlocks.size(),InBlocks.size()==1?"":"s");
     
     /* For each input block */
     int nTotalBSPErrors = 0;
@@ -834,10 +834,10 @@ void Scene::initGhostTrail(FileGhost* i_ghost) {
       /* Show stats about the collision system */
       CollisionSystemStats CStats;
       m_Collision.getStats(&CStats);
-      LogInfo(" %dx%d grid with %.1fx%.1f cells (%.0f%% empty)",
+      LogDebug(" %dx%d grid with %.1fx%.1f cells (%.0f%% empty)",
 	  CStats.nGridWidth,CStats.nGridHeight,CStats.fCellWidth,CStats.fCellHeight,
 	  CStats.fPercentageOfEmptyCells);
-      LogInfo(" %d total blocking lines",CStats.nTotalLines);
+      LogDebug(" %d total blocking lines",CStats.nTotalLines);
     }
   }
 
