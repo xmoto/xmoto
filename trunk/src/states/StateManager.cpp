@@ -394,9 +394,9 @@ void StateManager::renderOverAll() {
       v_nameWidth = v_fg->realWidth();
 
       // others : points
-      if(NetClient::instance()->mode() == NETCLIENT_SLAVE_MODE) {
+      if(NetClient::instance()->otherClients()[i]->mode() == NETCLIENT_SLAVE_MODE) {
 	std::ostringstream v_npoints;
-	v_npoints << "[ " << NetClient::instance()->points() << " ]";
+	v_npoints << "[ " << NetClient::instance()->otherClients()[i]->points() << " ]";
 	v_fg = GameApp::instance()->getDrawLib()->getFontSmall()->getGlyph(v_npoints.str());
 	v_fm->printString(GameApp::instance()->getDrawLib(), v_fg,
 			  m_screen.getDispWidth() - v_fg->realWidth() - vborder - v_nameWidth - v_nameBorder,
