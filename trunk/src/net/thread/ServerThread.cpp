@@ -212,10 +212,15 @@ void NetSClient::markToPlay(ServerRules* i_rules, bool i_value) {
 
   // do a rule action only if the value changes
   if(i_value != m_isMarkedToPlay) {
-    if(i_value) {
-      i_rules->scriptCallVoidNumberArg("Global_whenPlayer_added",   id());
-    } else {
-      i_rules->scriptCallVoidNumberArg("Global_whenPlayer_removed", id());
+    try {
+      if(i_value) {
+	i_rules->scriptCallVoidNumberArg("Global_whenPlayer_added",   id());
+      } else {
+	i_rules->scriptCallVoidNumberArg("Global_whenPlayer_removed", id());
+      }
+    } catch(Exception &e) {
+      // continue the game even if the rules are badly written
+      LogError(std::string("Rules: " + e.getMsg()).c_str());
     }
   }
 
@@ -498,7 +503,12 @@ void ServerThread::SP2_initPlaying() {
 }
 
 void ServerThread::SP2_uninitPlaying() {
-  m_rules->scriptCallVoid("Round_whenRound_ends");
+  try {
+    m_rules->scriptCallVoid("Round_whenRound_ends");
+  } catch(Exception &e) {
+    // continue the game even if the rules are badly written
+    LogError(std::string("Rules: " + e.getMsg()).c_str());
+  }
   delete m_universe;
   m_universe = NULL;
 }
@@ -609,7 +619,13 @@ void ServerThread::SP2_updateScenePlaying() {
     // manage the first time the update is done
     if(m_sp2_gameStarted == false) {
       m_sp2_gameStarted = true;
-      m_rules->scriptCallVoid("Round_whenRound_begins");
+
+      try {
+	m_rules->scriptCallVoid("Round_whenRound_begins");
+      } catch(Exception &e) {
+	// continue the game even if the rules are badly written
+	LogError(std::string("Rules: " + e.getMsg()).c_str());
+      }
     }
 
     SP2_manageInactivity();
@@ -1924,12 +1940,22 @@ void XMServerSceneHooks::OnEntityToTakeTakenByPlayer(unsigned int i_player) {
   NetSClient* v_client = m_server->getNetSClientByScenePlayer(0, i_player);
 
   if(v_client != NULL) {
-    m_server->getRules()->scriptCallVoidNumberArg("Round_whenPlayer_onEntityToTakeTaken", v_client->id());
+    try {
+      m_server->getRules()->scriptCallVoidNumberArg("Round_whenPlayer_onEntityToTakeTaken", v_client->id());
+    } catch(Exception &e) {
+      // continue the game even if the rules are badly written
+      LogError(std::string("Rules: " + e.getMsg()).c_str());
+    }
   }
 }
 
 void XMServerSceneHooks::OnEntityToTakeTakenExternal() {
-  m_server->getRules()->scriptCallVoid("Round_whenExternal_onEntityToTakeTaken");
+  try {
+    m_server->getRules()->scriptCallVoid("Round_whenExternal_onEntityToTakeTaken");
+  } catch(Exception &e) {
+    // continue the game even if the rules are badly written
+    LogError(std::string("Rules: " + e.getMsg()).c_str());
+  }
 }
 
 void XMServerSceneHooks::OnPlayerWins(unsigned int i_player) {
@@ -1937,7 +1963,12 @@ void XMServerSceneHooks::OnPlayerWins(unsigned int i_player) {
   NetSClient* v_client = m_server->getNetSClientByScenePlayer(0, i_player);
 
   if(v_client != NULL) {
-    m_server->getRules()->scriptCallVoidNumberArg("Round_whenPlayer_wins", v_client->id());
+    try {
+      m_server->getRules()->scriptCallVoidNumberArg("Round_whenPlayer_wins", v_client->id());
+    } catch(Exception &e) {
+      // continue the game even if the rules are badly written
+      LogError(std::string("Rules: " + e.getMsg()).c_str());
+    }
   }
 }
 
@@ -1946,7 +1977,12 @@ void XMServerSceneHooks::OnPlayerDies(unsigned int i_player) {
   NetSClient* v_client = m_server->getNetSClientByScenePlayer(0, i_player);
 
   if(v_client != NULL) {
-    m_server->getRules()->scriptCallVoidNumberArg("Round_whenPlayer_dies", v_client->id());
+    try {
+      m_server->getRules()->scriptCallVoidNumberArg("Round_whenPlayer_dies", v_client->id());
+    } catch(Exception &e) {
+      // continue the game even if the rules are badly written
+      LogError(std::string("Rules: " + e.getMsg()).c_str());
+    }
   }
 }
 
@@ -1955,6 +1991,11 @@ void XMServerSceneHooks::OnPlayerSomersault(unsigned int i_player, bool i_counte
   NetSClient* v_client = m_server->getNetSClientByScenePlayer(0, i_player);
 
   if(v_client != NULL) {
-    m_server->getRules()->scriptCallVoidNumberArg("Round_whenPlayer_DoesASomersault", v_client->id(), i_counterclock ? 1:0);
+    try {
+      m_server->getRules()->scriptCallVoidNumberArg("Round_whenPlayer_DoesASomersault", v_client->id(), i_counterclock ? 1:0);
+    } catch(Exception &e) {
+      // continue the game even if the rules are badly written
+      LogError(std::string("Rules: " + e.getMsg()).c_str());
+    }
   }
 }
