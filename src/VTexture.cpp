@@ -256,7 +256,7 @@ TextureManager::~TextureManager() {
     }
 
     if(TextureImage.checkFile( Path,&ii )) {
-      LogInfo("Texture [%s] width = %i height = %i", Path.c_str(),
+      LogDebug("Texture [%s] width = %i height = %i", Path.c_str(),
 	      ii.nWidth, ii.nHeight);
       /* Valid texture size? */
       if(ii.nWidth != ii.nHeight) {

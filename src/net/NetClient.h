@@ -142,6 +142,8 @@ class NetClient : public Singleton<NetClient> {
 
   VirtualNetLevelsList* m_otherClientsLevelsList;
   std::vector<int> m_previous_private_people;
+
+  NetPing m_lastPing;
 };
 
 #endif
