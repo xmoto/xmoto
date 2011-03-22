@@ -23,4 +23,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 enum NetClientMode { NETCLIENT_ANY_MODE = 1, NETCLIENT_GHOST_MODE = 2, NETCLIENT_SLAVE_MODE = 3 };
 
+struct NetPing {
+  int id;
+  int pingTime;
+  int pongTime;
+};
+
  #endif

@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/BasicSceneStructs.h"
 #include "BasicStructures.h"
 
-#define XM_NET_PROTOCOL_VERSION 5
+#define XM_NET_PROTOCOL_VERSION 6
 /*
 DELTA 1->2:
 clientInfos : add xmversion string
@@ -37,6 +37,8 @@ DELTA 3->4:
 add chatMessagePP (private/public)
 DELTA 4->5
 add slaveClientsPoints
+DELTA 5->6
+add pings
 */
 
 #define NETACTION_MAX_PACKET_SIZE 1024 * 2 // bytes
@@ -69,7 +71,8 @@ enum NetActionType {
   TNA_killAlert,
   TNA_gameEvents,
   TNA_srvCmd,
-  TNA_srvCmdAsw
+  TNA_srvCmdAsw,
+  TNA_ping
 };
 
 struct NetInfosClient {
@@ -550,6 +553,29 @@ class NA_slaveClientsPoints : public NetAction {
 
   private:
   std::vector<NetPointsClient> m_netPointsClients;
+};
+
+class NA_ping : public NetAction {
+  public:
+  NA_ping(NA_ping* i_ping = NULL); // NULL if that's a ping, the ping for a pong
+  NA_ping(void* data, unsigned int len);
+  virtual ~NA_ping();
+  std::string actionKey()    { return ActionKey; }
+  NetActionType actionType() { return NAType; }
+  static std::string ActionKey;
+  static NetActionType NAType;
+
+  void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
+
+  int id() const;
+  bool isPong() const;
+  
+  private:
+  static int m_currentId; // shared id
+
+  int  m_id;   // unique identifier
+  bool m_isPong; // is it an answer of a ping ?
+
 };
 
 #endif

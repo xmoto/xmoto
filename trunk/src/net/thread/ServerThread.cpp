@@ -78,6 +78,11 @@ NetSClient::NetSClient(unsigned int i_id, TCPsocket i_tcpSocket, IPaddress *i_tc
     m_protocolVersion = -1; // not set
     m_udpRemoteIP.host = INADDR_NONE;
     m_udpRemoteIP.port = 0;
+
+    // last ping information
+    m_lastPing.id = -1;
+    m_lastPing.pingTime = -1;
+    m_lastPing.pongTime = -1;
 }
 
 NetSClient::~NetSClient() {
@@ -251,6 +256,10 @@ void NetSClient::setPlayingLevelId(const std::string& i_levelId) {
 
 std::string NetSClient::playingLevelId() const {
   return m_playingLevelId;
+}
+
+NetPing* NetSClient::lastPing() {
+  return &m_lastPing;
 }
 
 ServerThread::ServerThread(const std::string& i_dbKey, int i_port, const std::string& i_adminPassword) 
@@ -1468,6 +1477,25 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
     }
     break;
 
+  case TNA_ping:
+    {
+      if(((NA_ping*)i_netAction)->isPong()) {
+	if(m_clients[i_client]->lastPing()->id == ((NA_ping*)i_netAction)->id()) {
+	  // same id, update the rcv time
+	  m_clients[i_client]->lastPing()->pongTime = GameApp::getXMTimeInt();
+	} else {
+	  // not the same last id, so, it means that an other ping has been send. Ignore this pong.
+	}
+      } else { // receive a ping
+	NA_ping na(((NA_ping*)i_netAction)); // send the pong as answer to the ping
+	try {
+	  sendToClient(&na, i_client, -1, 0);
+	} catch(Exception &e) {
+	}
+      }
+    }
+    break;
+
   }
 
   return true;
@@ -1493,7 +1521,6 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "logout: disconnect from the server\n";
       v_answer += "changepassword <password>: change your password\n";
       v_answer += "lsplayers: list connected players\n";
-      v_answer += "lsxmversions: list xmoto versions used by players\n";
       v_answer += "lsscores: give scores of players in slave mode\n";
       v_answer += "lsbans: list banned players\n";
 
@@ -1505,6 +1532,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       v_answer += "addadmin <id player> <password>: add player <id player> as admin\n";
       v_answer += "rmadmin <id admin>: remove admin\n";
       v_answer += "reloadrules: reload server rules\n"; 
+      v_answer += "ping <all|id player>: information about player network connection to the server\n";
       v_answer += "stats: server statistics\n";
       v_answer += "msg <msg>: message to players\n";
     }
@@ -1615,8 +1643,13 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     if(v_args.size() != 1) {
       v_answer += "lsplayers: invalid arguments\n";
     } else {
-      char v_clientstr[48];
+      char v_clientstr[90];
       std::string v_mode;
+
+      v_answer += "+----+-----------------+----+----------------+---+------------------------+-----+--------+\n";
+      v_answer += "|  id|login            |mode|              ip|prt|version                 |xmprt|ping(mS)|\n";
+      v_answer += "+----+-----------------+----+----------------+---+------------------------+-----+--------+\n";
+
       for(unsigned int i=0; i<m_clients.size(); i++) {
 	switch(m_clients[i]->mode()) {
 	case NETCLIENT_GHOST_MODE:
@@ -1628,28 +1661,16 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
 	default:
 	  v_mode = "UNKWN";
 	}
-
-	snprintf(v_clientstr, 48, "%5u: %-12s %-5s %-21s",
+	snprintf(v_clientstr, 90, "%5u %-17s %-5s %15s %3s %-26s %3i %8i",
 		 m_clients[i]->id(), m_clients[i]->name().c_str(),
 		 v_mode.c_str(),
-		 ("(" + XMNet::getIp(m_clients[i]->tcpRemoteIP()) + "/" + 
-		  (m_clients[i]->isUdpBindedValidated() ? "UDP" : "TCP")
-		  + ")").c_str());
-	v_answer += v_clientstr;
-	v_answer += "\n";
-      }
-    }
-
-  } else if(v_args[0] == "lsxmversions") {
-    if(v_args.size() != 1) {
-      v_answer += "lsxmversions: invalid arguments\n";
-    } else {
-      char v_clientstr[55];
-      for(unsigned int i=0; i<m_clients.size(); i++) {
-	snprintf(v_clientstr, 55, "%5u: %-12s (%-26s ; %3i)",
-		 m_clients[i]->id(), m_clients[i]->name().c_str(),
+		 (XMNet::getIp(m_clients[i]->tcpRemoteIP())).c_str(),
+		 m_clients[i]->isUdpBindedValidated() ? "UDP" : "TCP",
 		 m_clients[i]->xmversion().c_str(),
-		 m_clients[i]->protocolVersion());
+		 m_clients[i]->protocolVersion(),
+		 m_clients[i_client]->lastPing()->pongTime != -1 ? 
+		 m_clients[i_client]->lastPing()->pongTime - m_clients[i_client]->lastPing()->pingTime : -1 /* unknown */
+		 );
 	v_answer += v_clientstr;
 	v_answer += "\n";
       }
@@ -1811,6 +1832,31 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
       try {
 	sendToAllClientsHavingProtocol(4, &na_old, &na, -1, 0);
       } catch(Exception &e) {
+      }
+    }
+
+  } else if(v_args[0] == "ping") {
+    if(v_args.size() != 2) {
+      v_answer += "ping: invalid arguments\n";
+    } else {
+      NA_ping na;
+      int v_arg_client;
+
+      if(v_args[1] == "all") {
+	v_arg_client = -1;
+      } else {
+	v_arg_client = (int) atoi(v_args[1].c_str());
+      }
+
+      for(unsigned int i=0; i<m_clients.size(); i++) {
+	if(m_clients[i]->protocolVersion() >= 6) {
+	  if(m_clients[i]->id() == v_arg_client || v_arg_client == -1) {
+	    m_clients[i]->lastPing()->id = na.id();
+	    m_clients[i]->lastPing()->pingTime = GameApp::getXMTimeInt();
+	    m_clients[i]->lastPing()->pongTime = -1; // reset the pong time
+	    sendToClient(&na, i, -1, 0);
+	  }
+	}
       }
     }
 

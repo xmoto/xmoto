@@ -101,7 +101,6 @@ void StateServerConsole::createGUIIfNeeded()
   m_console->addCompletionCommand("logout");
   m_console->addCompletionCommand("changepassword");
   m_console->addCompletionCommand("lsplayers");
-  m_console->addCompletionCommand("lsxmversions");
   m_console->addCompletionCommand("lsscores");
   m_console->addCompletionCommand("lsbans");
   m_console->addCompletionCommand("ban");
@@ -112,6 +111,7 @@ void StateServerConsole::createGUIIfNeeded()
   m_console->addCompletionCommand("reloadrules");
   m_console->addCompletionCommand("stats");
   m_console->addCompletionCommand("msg");
+  m_console->addCompletionCommand("ping");
 }
 
 void StateServerConsole::clean()

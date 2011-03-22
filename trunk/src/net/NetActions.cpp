@@ -65,6 +65,7 @@ std::string NA_prepareToGo::ActionKey   = "prepareToGo";
 std::string NA_gameEvents::ActionKey    = "e";
 std::string NA_srvCmd::ActionKey        = "srvCmd";
 std::string NA_srvCmdAsw::ActionKey     = "srvCmdAsw";
+std::string NA_ping::ActionKey          = "ping";
 
 NetActionType NA_chatMessage::NAType   = TNA_chatMessage;
 NetActionType NA_chatMessagePP::NAType = TNA_chatMessagePP;
@@ -88,6 +89,7 @@ NetActionType NA_prepareToGo::NAType   = TNA_prepareToGo;
 NetActionType NA_gameEvents::NAType    = TNA_gameEvents;
 NetActionType NA_srvCmd::NAType        = TNA_srvCmd;
 NetActionType NA_srvCmdAsw::NAType     = TNA_srvCmdAsw;
+NetActionType NA_ping::NAType          = TNA_ping;
 
 NetAction::NetAction(bool i_forceTcp) {
   m_source    = -2; // < -1 => undefined
@@ -293,6 +295,10 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
 
   else if(v_cmd == NA_srvCmdAsw::ActionKey) {
     v_res = new NA_srvCmdAsw(((char*)data)+v_totalOffset, len-v_totalOffset);
+  }
+
+  else if(v_cmd == NA_ping::ActionKey) {
+    v_res = new NA_ping(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
   else {
@@ -1004,4 +1010,48 @@ const std::vector<NetPointsClient>& NA_slaveClientsPoints::getPointsClients() co
 
 void NA_slaveClientsPoints::add(NetPointsClient* i_npc) {
   m_netPointsClients.push_back(*i_npc);
+}
+
+//
+// ping / pong
+//
+
+int NA_ping::m_currentId = 5;
+
+NA_ping::NA_ping(NA_ping* i_ping) : NetAction(false) {
+  if(i_ping == NULL) {
+    m_isPong   = false;
+    m_id       = m_currentId++;
+  } else {
+    m_isPong = true;
+    m_id     = i_ping->m_id;
+  }
+}
+
+NA_ping::NA_ping(void* data, unsigned int len) : NetAction(false) {
+  unsigned int v_localOffset = 0;
+
+  m_isPong = atoi(getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset).c_str()) == 1;
+  m_id     = atoi(getLine(((char*)data)+v_localOffset, len-v_localOffset, &v_localOffset).c_str());
+}
+
+NA_ping::~NA_ping() {
+}
+
+void NA_ping::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
+  std::ostringstream v_send;
+  int n = m_isPong ? 1:0;
+
+  v_send << n << "\n";
+  v_send << m_id;
+
+  NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.str().c_str(), v_send.str().size()); // don't send the \0
+}
+
+int NA_ping::id() const {
+  return m_id;
+}
+
+bool NA_ping::isPong() const {
+  return m_isPong;
 }

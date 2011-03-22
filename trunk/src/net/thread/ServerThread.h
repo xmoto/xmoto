@@ -92,6 +92,8 @@ class NetSClient {
   int lastGhostFrameTime() const;
   void setLastGhostFrameTime(int v_time);
 
+  NetPing* lastPing();
+
   private:
   unsigned int m_id;    // uniq id of the client
   NetClientMode m_mode; // playing mode (simple ghost or slave)
@@ -113,6 +115,7 @@ class NetSClient {
   int m_points;
   bool m_isAdminConnected;
   int m_lastGhostFrameTime;
+  NetPing m_lastPing;
 };
 
 class ServerThread : public XMThread {

@@ -70,6 +70,11 @@ NetClient::NetClient() {
     m_currentOwnFramesTime = GameApp::getXMTimeInt();
 
     m_otherClientsLevelsList = new VirtualNetLevelsList(this);
+
+    // ping information
+    m_lastPing.id = -1;
+    m_lastPing.pingTime = -1;
+    m_lastPing.pongTime = -1;
 }
 
 NetClient::~NetClient() {
@@ -628,6 +633,25 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
   case TNA_srvCmdAsw:
     {
       StateManager::instance()->sendAsynchronousMessage("NET_SRVCMDASW", ((NA_srvCmdAsw*)i_netAction)->getAnswer());
+    }
+    break;
+
+  case TNA_ping:
+    {
+      if(((NA_ping*)i_netAction)->isPong()) {
+        if(m_lastPing.id == ((NA_ping*)i_netAction)->id()) {
+          // same id, update the rcv time
+	  m_lastPing.pongTime = GameApp::getXMTimeInt();
+        } else {
+          // not the same last id, so, it means that an other ping has been send. Ignore this pong.
+	}
+      } else { // receive a ping
+	NA_ping na(((NA_ping*)i_netAction)); // send the pong as answer to the ping
+	try {
+	  send(&na, 0);
+	} catch(Exception &e) {
+	}
+      }
     }
     break;
 
