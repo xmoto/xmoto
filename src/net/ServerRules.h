@@ -28,7 +28,7 @@ class ServerThread;
 class ServerRules : public LuaLibBase {
 public:
   ServerRules(ServerThread* i_st);
-  virtual ~ServerRules();
+  ~ServerRules();
 
 protected:
   void setInstance();

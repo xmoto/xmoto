@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class LuaLibBase {
 public:
   LuaLibBase(const std::string& i_libname, luaL_reg i_reg[]);
-  ~LuaLibBase();
+  virtual ~LuaLibBase();
 
   void loadScriptFile(const std::string& i_scriptFilename);
   void loadScript(const std::string& i_scriptCode, const std::string& i_scriptFilename);
