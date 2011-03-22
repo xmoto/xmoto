@@ -1668,8 +1668,8 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
 		 m_clients[i]->isUdpBindedValidated() ? "UDP" : "TCP",
 		 m_clients[i]->xmversion().c_str(),
 		 m_clients[i]->protocolVersion(),
-		 m_clients[i_client]->lastPing()->pongTime != -1 ? 
-		 m_clients[i_client]->lastPing()->pongTime - m_clients[i_client]->lastPing()->pingTime : -1 /* unknown */
+		 m_clients[i]->lastPing()->pongTime != -1 ? 
+		 m_clients[i]->lastPing()->pongTime - m_clients[i]->lastPing()->pingTime : -1 /* unknown */
 		 );
 	v_answer += v_clientstr;
 	v_answer += "\n";
