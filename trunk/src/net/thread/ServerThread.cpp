@@ -1645,6 +1645,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     } else {
       char v_clientstr[90];
       std::string v_mode;
+      std::ostringstream v_ping;
 
       v_answer += "+----+-----------------+----+----------------+---+------------------------+-----+--------+\n";
       v_answer += "|  id|login            |mode|              ip|prt|version                 |xmprt|ping(mS)|\n";
@@ -1661,15 +1662,20 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
 	default:
 	  v_mode = "UNKWN";
 	}
-	snprintf(v_clientstr, 90, "%5u %-17s %-5s %15s %3s %-26s %3i %8i",
+	if(m_clients[i]->lastPing()->pongTime == -1) {
+	  v_ping << "-";
+	} else {
+	  v_ping << (m_clients[i]->lastPing()->pongTime - m_clients[i]->lastPing()->pingTime);
+	}
+
+	snprintf(v_clientstr, 90, "%5u %-17s %-5s %15s %3s %-26s %3i %8s",
 		 m_clients[i]->id(), m_clients[i]->name().c_str(),
 		 v_mode.c_str(),
 		 (XMNet::getIp(m_clients[i]->tcpRemoteIP())).c_str(),
 		 m_clients[i]->isUdpBindedValidated() ? "UDP" : "TCP",
 		 m_clients[i]->xmversion().c_str(),
 		 m_clients[i]->protocolVersion(),
-		 m_clients[i]->lastPing()->pongTime != -1 ? 
-		 m_clients[i]->lastPing()->pongTime - m_clients[i]->lastPing()->pingTime : -1 /* unknown */
+		 v_ping.str().c_str()
 		 );
 	v_answer += v_clientstr;
 	v_answer += "\n";

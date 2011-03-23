@@ -43,7 +43,7 @@ class FontGlyph {
 
 class FontManager {
  public:
-  FontManager(DrawLib* i_drawLib, const std::string &i_fontFile, unsigned int i_fontSize);
+  FontManager(DrawLib* i_drawLib, const std::string &i_fontFile, unsigned int i_fontSize, unsigned int i_fixedFontSize = 0 /* if > 0, force width */);
   virtual ~FontManager();
   
   virtual FontGlyph* getGlyph(const std::string& i_string) = 0;
@@ -62,6 +62,7 @@ class FontManager {
  protected:
   TTF_Font* m_ttf;
   DrawLib* m_drawLib;
+  unsigned int m_fixedFontSize;
 };
 
 
@@ -234,7 +235,7 @@ class DrawLib {
   FontManager* getFontMedium();
   FontManager* getFontBig();
   FontManager* getFontMonospace();
-  virtual FontManager* getFontManager(const std::string &i_fontFile, unsigned int i_fontSize);
+  virtual FontManager* getFontManager(const std::string &i_fontFile, unsigned int i_fontSize, unsigned int i_fixedFontSize = 0 /* if > 0, force width */);
   static void checkFontPrerequites();
 
   Camera* getMenuCamera();

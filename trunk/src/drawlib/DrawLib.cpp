@@ -108,7 +108,7 @@ void DrawLib::checkFontPrerequites() {
  }
 
 
-  FontManager* DrawLib::getFontManager(const std::string &i_fontFile, unsigned int i_fontSize) {
+  FontManager* DrawLib::getFontManager(const std::string &i_fontFile, unsigned int i_fontSize, unsigned int i_fixedFontSize) {
     throw Exception("Your DrawLib doesn't manage FontManager");
   }
 
@@ -467,13 +467,14 @@ void DrawLib::drawImageTextureSet(const Vector2f &a,const Vector2f &b, const Vec
     }
   }
 
-FontManager::FontManager(DrawLib* i_drawLib, const std::string &i_fontFile, unsigned int i_fontSize) {
+FontManager::FontManager(DrawLib* i_drawLib, const std::string &i_fontFile, unsigned int i_fontSize, unsigned int i_fixedFontSize) {
   m_drawLib = i_drawLib;
   m_ttf = TTF_OpenFont(i_fontFile.c_str(), i_fontSize);
   if (m_ttf == NULL) {
     throw Exception("FontManager: " + std::string(TTF_GetError()));
   }
   TTF_SetFontStyle(m_ttf, TTF_STYLE_NORMAL);
+  m_fixedFontSize = i_fixedFontSize;
 }
 
 FontManager::~FontManager() {

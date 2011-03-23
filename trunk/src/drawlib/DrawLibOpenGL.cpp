@@ -101,7 +101,7 @@ protected:
 
 class GLFontGlyphLetter : public GLFontGlyph {
 public:
-  GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf);
+  GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf, unsigned int i_fixedFontSize);
   virtual ~GLFontGlyphLetter();
   GLuint GLID() const;  
 
@@ -115,7 +115,7 @@ private:
 
 class GLFontManager : public FontManager {
 public:
-  GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, unsigned int i_fontSize);
+  GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, unsigned int i_fontSize, unsigned int i_fixedFontSize = 0);
   virtual ~GLFontManager();
 
   FontGlyph* getGlyph(const std::string& i_string);
@@ -164,7 +164,7 @@ DrawLibOpenGL::DrawLibOpenGL() : DrawLib(){
   m_fontSmall     = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 14);
   m_fontMedium    = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 22);
   m_fontBig       = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 60);
-  m_fontMonospace = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getMonospaceFontFile()), 12);
+  m_fontMonospace = getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getMonospaceFontFile()), 12, 7);
 };
  
 /*===========================================================================
@@ -719,11 +719,11 @@ void ScrapTextures::display(DrawLib* pDrawLib)
     }
 }
 
-FontManager* DrawLibOpenGL::getFontManager(const std::string &i_fontFile, unsigned int i_fontSize) {
-  return new GLFontManager(this, i_fontFile, i_fontSize);
+FontManager* DrawLibOpenGL::getFontManager(const std::string &i_fontFile, unsigned int i_fontSize, unsigned int i_fixedFontSize) {
+  return new GLFontManager(this, i_fontFile, i_fontSize, i_fixedFontSize);
 }
 
-GLFontGlyphLetter::GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf)
+GLFontGlyphLetter::GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf, unsigned int i_fixedFontSize)
   : GLFontGlyph(i_value) {
   SDL_Surface* v_surf;
   SDL_Surface* v_image;
@@ -749,6 +749,13 @@ GLFontGlyphLetter::GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf
   m_drawWidth  = m_realWidth;
   m_drawHeight = m_realHeight;
   m_firstLineDrawHeight = m_drawHeight;
+
+  // hack because ttf even width fixed fonts return not perfectly fixed fonts
+  if(i_fixedFontSize != 0) {
+    if(TTF_FontFaceIsFixedWidth(i_ttf)) {
+      m_drawWidth = m_realWidth = i_fixedFontSize;
+    }
+  }
 
   // maximum width/heigth allowed, 80, when bigger, create a texture
   if(m_drawWidth < 80 && m_drawHeight < 80) {
@@ -892,8 +899,8 @@ unsigned int GLFontGlyph::firstLineDrawHeight() const {
 
 
 
-GLFontManager::GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, unsigned int i_fontSize)
-  : FontManager(i_drawLib, i_fontFile, i_fontSize) {
+GLFontManager::GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, unsigned int i_fontSize, unsigned int i_fixedFontSize)
+: FontManager(i_drawLib, i_fontFile, i_fontSize, i_fixedFontSize) {
 }
 
 unsigned int GLFontManager::nbGlyphsInMemory() {
@@ -966,7 +973,7 @@ FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
     v_char = utf8::getNextChar(i_string, n);
     if(v_char != "\n") {
       if(m_glyphsLetters[v_char.c_str()] == NULL) {
-	v_glyphLetter = new GLFontGlyphLetter(v_char, m_ttf);
+	v_glyphLetter = new GLFontGlyphLetter(v_char, m_ttf, m_fixedFontSize);
 	m_glyphsLetters[v_char.c_str()] = v_glyphLetter;
 	m_glyphsLettersList.push_back(v_glyphLetter);
       }
