@@ -87,7 +87,7 @@ class DrawLibOpenGL : public DrawLib {
    **/
   virtual void flushGraphics();
   
-  virtual FontManager* getFontManager(const std::string &i_fontFile, unsigned int i_fontSize);
+  virtual FontManager* getFontManager(const std::string &i_fontFile, unsigned int i_fontSize, unsigned int i_fixedFontSize = 0);
   
   virtual Img *grabScreen(int i_reduce = 1);
   virtual bool isExtensionSupported(std::string Ext);
