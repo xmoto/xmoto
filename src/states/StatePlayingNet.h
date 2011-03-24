@@ -27,6 +27,8 @@ class StatePlayingNet : public StatePlaying {
   public:
   StatePlayingNet(Universe* i_universe, GameRenderer* i_renderer);
   virtual ~StatePlayingNet();
+
+  virtual bool updateWhenUnvisible() {return true;}
   
   virtual void enter();
   virtual void abortPlaying();

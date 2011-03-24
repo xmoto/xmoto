@@ -247,6 +247,8 @@ void StateManager::replaceState(GameState* pNewState, const std::string& i_paren
 }
 
 bool StateManager::needUpdateOrRender() {
+  int i;
+
   if(m_hasFocus) { // m_isVisible is not needed while xmoto is rendered after each event (including expose event)
     return true;
   }
@@ -255,7 +257,19 @@ bool StateManager::needUpdateOrRender() {
     return false;
   }
 
-  return m_statesStack[m_statesStack.size()-1]->updateWhenUnvisible();
+  // continue to find the upper state to update when unvisible
+  // or if the upper state is not to update when unvisible, perhaps
+  // its child is
+  i = m_statesStack.size()-1;
+  while(m_statesStack[i]->updateWhenUnvisible() == false &&
+	m_statesStack[i]->updateStatesBehind()) {
+    // down to the state 0
+    if(i == 0) {
+      return false; // no such state found
+    }
+    i--;
+  }
+  return m_statesStack[i]->updateWhenUnvisible();
 }
 
 void StateManager::update()

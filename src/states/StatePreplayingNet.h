@@ -27,6 +27,9 @@ class StatePreplayingNet : public StatePreplaying {
   public:
   StatePreplayingNet(const std::string i_idlevel, bool i_sameLevel);
   virtual ~StatePreplayingNet();
+
+  virtual bool updateWhenUnvisible() {return true;}
+
   virtual void executeOneCommand(std::string cmd, std::string args);
   virtual void abortPlaying();
 
