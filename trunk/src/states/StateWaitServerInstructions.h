@@ -28,6 +28,8 @@ public:
   StateWaitServerInstructions();
   virtual ~StateWaitServerInstructions();
 
+  virtual bool updateWhenUnvisible() {return true;}
+
   virtual bool render();
   virtual void executeOneCommand(std::string cmd, std::string args);
 
