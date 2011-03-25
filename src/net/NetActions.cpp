@@ -607,13 +607,19 @@ std::string NA_changeName::getName() {
   return m_name;
 }
 
-NA_clientsNumber::NA_clientsNumber(int i_number) : NetAction(true) {
-  m_number = i_number;
+NA_clientsNumber::NA_clientsNumber(int i_ntcp, int i_nudp, int i_nghosts, int i_nslaves) : NetAction(true) {
+  m_ntcp    = i_ntcp;
+  m_nudp    = i_nudp;
+  m_nghosts = i_nghosts;
+  m_nslaves = i_nslaves;
 }
 
 NA_clientsNumber::NA_clientsNumber(void* data, unsigned int len) : NetAction(true) {
   unsigned int v_localOffset = 0;
-  m_number = atoi(getLine(data, len, &v_localOffset).c_str());
+  m_ntcp    = atoi(getLine(data, len, &v_localOffset).c_str());
+  m_nudp    = atoi(getLine(data, len, &v_localOffset).c_str());
+  m_nghosts = atoi(getLine(data, len, &v_localOffset).c_str());
+  m_nslaves = atoi(getLine(data, len, &v_localOffset).c_str());
 }
 
 NA_clientsNumber::~NA_clientsNumber() {
@@ -621,12 +627,27 @@ NA_clientsNumber::~NA_clientsNumber() {
 
 void NA_clientsNumber::send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP) {
   std::ostringstream v_send;
-  v_send << m_number << "\n";
+  v_send << m_ntcp    << "\n";
+  v_send << m_nudp    << "\n";
+  v_send << m_nghosts << "\n";
+  v_send << m_nslaves;
   NetAction::send(i_tcpsd, NULL, NULL, NULL, v_send.str().c_str(), v_send.str().size()); // don't send the \0
 }
 
-int NA_clientsNumber::getNumber() {
-  return m_number;
+int NA_clientsNumber::getNumberTCP() const {
+  return m_ntcp;
+}
+
+int NA_clientsNumber::getNumberUDP() const {
+  return m_nudp;
+}
+
+int NA_clientsNumber::getNumberGhosts() const {
+  return m_nghosts;
+}
+
+int NA_clientsNumber::getNumberSlaves() const {
+  return m_nslaves;
 }
 
 NA_clientsNumberQuery::NA_clientsNumberQuery() : NetAction(true) {

@@ -14,15 +14,17 @@ plug_getNumberOfXMPlayers() {
 clientsNumberQ
 EOF
 	) |
-    nc -q "$XMTIMEOUT" "$XMSERVER" "$XMPORT" | sed -n "5p"
+    nc -q "$XMTIMEOUT" "$XMSERVER" "$XMPORT" | sed -n "7,8p"
 }
 
 plug_config() {
     cat <<EOF
 graph_category games
-graph_title X-Moto players (port ${XMPORT})
+graph_title X-Moto player modes (port ${XMPORT})
 graph_vlabel players
-players.label players
+graph_total total
+ghost.label ghost
+slave.label slave
 EOF
 }
 
@@ -32,13 +34,5 @@ then
     exit 0
 fi
 
-N=$(plug_getNumberOfXMPlayers)
-
-if ! echo "$N" | grep -qe '^[0-9][0-9]*$'
-then
-    exit 1
-fi
-
-# result
-echo "players.value ""$N"
+plug_getNumberOfXMPlayers | sed -e '1 s+^+ghost.value +' -e '2 s+^+slave.value +'
 exit 0

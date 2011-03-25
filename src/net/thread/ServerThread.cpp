@@ -1232,14 +1232,34 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
   case TNA_clientsNumberQuery:
     {
       // only clients having a name
-      int n=0;
+      int ntcp    = 0;
+      int nudp    = 0;
+      int nghosts = 0;
+      int nslaves = 0;
+
       for(unsigned int i=0; i<m_clients.size(); i++) {
 	if(m_clients[i]->name() != "") {
-	  n++;
+	  if(m_clients[i_client]->isUdpBindedValidated()) {
+	    nudp++;
+	  } else {
+	    ntcp++;
+	  }
+
+	  switch(m_clients[i_client]->mode()) {
+	  case NETCLIENT_GHOST_MODE:
+	    nghosts++;
+	    break;
+	  case NETCLIENT_SLAVE_MODE:
+	    nslaves++;
+	    break;
+	  case NETCLIENT_ANY_MODE:
+	    /* not a mode */
+	    break;
+	  }
 	}
       }
 
-      NA_clientsNumber nacn(n);
+      NA_clientsNumber nacn(ntcp, nudp, nghosts, nslaves);
       try {
 	sendToClient(&nacn, i_client, -1, 0);
       } catch(Exception &e) {
