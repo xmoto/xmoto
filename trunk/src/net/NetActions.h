@@ -314,7 +314,7 @@ class NA_changeName : public NetAction {
 
 class NA_clientsNumber : public NetAction {
   public:
-  NA_clientsNumber(int i_number);
+  NA_clientsNumber(int i_ntcp, int i_nudp, int i_nghosts, int i_nslaves);
   NA_clientsNumber(void* data, unsigned int len);
   virtual ~NA_clientsNumber();
   std::string actionKey()    { return ActionKey; }
@@ -324,10 +324,16 @@ class NA_clientsNumber : public NetAction {
 
   void send(TCPsocket* i_tcpsd, UDPsocket* i_udpsd, UDPpacket* i_sendPacket, IPaddress* i_udpRemoteIP);
 
-  int getNumber();
+  int getNumberTCP() const;
+  int getNumberUDP() const;
+  int getNumberGhosts() const;
+  int getNumberSlaves() const;
 
   private:
-  int m_number;
+  int m_ntcp;
+  int m_nudp;
+  int m_nghosts;
+  int m_nslaves;
 };
 
 // query the number of clients for the munin plugin
