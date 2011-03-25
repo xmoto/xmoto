@@ -1239,13 +1239,13 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
 
       for(unsigned int i=0; i<m_clients.size(); i++) {
 	if(m_clients[i]->name() != "") {
-	  if(m_clients[i_client]->isUdpBindedValidated()) {
+	  if(m_clients[i]->isUdpBindedValidated()) {
 	    nudp++;
 	  } else {
 	    ntcp++;
 	  }
 
-	  switch(m_clients[i_client]->mode()) {
+	  switch(m_clients[i]->mode()) {
 	  case NETCLIENT_GHOST_MODE:
 	    nghosts++;
 	    break;
@@ -1665,13 +1665,14 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     } else {
       char v_clientstr[90];
       std::string v_mode;
-      std::ostringstream v_ping;
 
       v_answer += "+----+-----------------+----+----------------+---+------------------------+-----+--------+\n";
       v_answer += "|  id|login            |mode|              ip|prt|version                 |xmprt|ping(mS)|\n";
       v_answer += "+----+-----------------+----+----------------+---+------------------------+-----+--------+\n";
 
       for(unsigned int i=0; i<m_clients.size(); i++) {
+	std::ostringstream v_ping;
+
 	switch(m_clients[i]->mode()) {
 	case NETCLIENT_GHOST_MODE:
 	  v_mode = "GHOST";
