@@ -1,0 +1,236 @@
+FirstZone = {}
+SecondZone = {}
+ThirdZone = {}
+
+TutorialStage = 0
+ArrowMode = 0
+ArrowX = 0
+ArrowY = 0
+ArrowAngle = 90
+
+vArrowX = 0
+vArrowY = 0
+vArrowAngle = 0
+
+TargetArrowX = 0
+TargetArrowY = 0
+TargetArrowAngle = 90
+
+Zone2Time = 0
+
+function Tick() 	
+	-- Stages
+	if TutorialStage == 1 then
+		if Game.GetTime() > 6 then
+			TutorialStage = 2
+			
+			Game.Message("First let's take a look at the user interface...")
+		end
+	elseif TutorialStage == 2 then
+		if Game.GetTime() > 10 then
+			TutorialStage = 3
+			
+			Game.Message("In the upper left corner, you've got your timers")
+			ArrowMode = 1
+		end	
+	elseif TutorialStage == 3 then
+		if Game.GetTime() > 14 then
+			TutorialStage = 4
+									
+			Game.Message("The big one is your current time")
+			
+			ArrowMode = 2
+			TargetArrowAngle = 45
+			TargetArrowX = 125
+			TargetArrowY = 10
+		end	
+	elseif TutorialStage == 4 then
+		if Game.GetTime() > 19 then
+			TutorialStage = 5
+
+			Game.Message("The small one to the right is your own best time\nfor the current level...")
+
+			ArrowMode = 2
+			TargetArrowAngle = 135
+			TargetArrowX = 120
+			TargetArrowY = 80
+		end	
+	elseif TutorialStage == 5 then
+		if Game.GetTime() > 24 then
+			TutorialStage = 6
+									
+			Game.Message("... and the one to the left is the best of all\non this computer.")
+			
+			ArrowMode = 2
+			TargetArrowAngle = 135
+			TargetArrowX = 30
+			TargetArrowY = 80
+		end	
+	elseif TutorialStage == 6 then
+		if Game.GetTime() > 29 then
+			TutorialStage = 7
+									
+			Game.Message("Down here there's the minimap, which shows the level\naround you, so you know where you're heading.")
+			ArrowMode = 2
+			TargetArrowAngle = -20
+			TargetArrowX = 140
+			TargetArrowY = 440
+		end	
+	elseif TutorialStage == 7 then
+		if Game.GetTime() > 35 then
+			TutorialStage = 8
+									
+			Game.Message("Now let's look at your controls.")
+			
+			ArrowMode = 2
+			TargetArrowAngle = 200
+			TargetArrowX = -80
+			TargetArrowY = 200
+		end	
+	elseif TutorialStage == 8 then
+		if Game.GetTime() > 39 then
+			TutorialStage = 9
+			
+			DriveControl = Game.GetKeyByAction("Drive")
+			BrakeControl = Game.GetKeyByAction("Brake")
+			ChangeDirControl = Game.GetKeyByAction("ChangeDir")
+			PullBackwardControl = Game.GetKeyByAction("PullBack")
+			PushForwardControl = Game.GetKeyByAction("PushForward")
+			
+			if DriveControl=="?" or BrakeControl=="?" or ChangeDirControl=="?" or 
+			   PullBackwardControl=="?" or PushForwardControl=="?" then
+				Game.Message("(You seem to be using a joystick, can't help with that :P)")
+			else 
+				Game.Message(DriveControl,": Drive forward")
+				Game.Message(BrakeControl,": Brake")
+				Game.Message(ChangeDirControl,": Change direction")
+				Game.Message(PullBackwardControl,": Rotate anti-clockwise")
+				Game.Message(PushForwardControl,": Rotate clockwise")
+			end			   
+												
+			ArrowMode = 0
+		end	
+	elseif TutorialStage == 9 then
+		if Game.GetTime() > 46 then
+			TutorialStage = 10
+									
+			Game.Message("Okay. The red dot on your minimap is a strawberry.")
+			Game.Message("The primary objective of the game is for you\nto collect all of them, and then find the flower.")
+		end	
+	elseif TutorialStage == 10 then
+		if Game.GetTime() > 52 then
+			TutorialStage = 11
+									
+			Game.Message("The icon to the right of your time,\nindicates how many strawberries still left.")
+
+			ArrowMode = 2
+			TargetArrowAngle = 45
+			TargetArrowX = 150
+			TargetArrowY = 10
+		end	
+	elseif TutorialStage == 11 then
+		if Game.GetTime() > 56 then
+			TutorialStage = 12
+									
+			Game.Message("Drive in its direction...")
+			
+			ArrowMode = 2
+			TargetArrowAngle = 200
+			TargetArrowX = -80
+			TargetArrowY = 200
+		end	
+	elseif TutorialStage == 13 then
+		if (Game.GetTime() - Zone2Time) > 8 then
+			TutorialStage = 14
+									
+			Game.Message("When done, head for the flower.\nIt's the purple dot on your minimap.")
+
+			ArrowMode = 0
+		end	
+	end
+	
+	-- Arrow fun
+	if ArrowMode == 1 then
+		t = (Game.GetTime()-10)
+		ArrowX = 170 + 30 * math.sin(t*2)
+		ArrowY = 150 + 30 * math.sin(t*2)
+		Game.PlaceScreenArrow(ArrowX,ArrowY,ArrowAngle)
+	elseif ArrowMode == 2 then
+		
+		wx = TargetArrowX - ArrowX
+		wy = TargetArrowY - ArrowY
+		wa = TargetArrowAngle - ArrowAngle
+		
+		if math.abs(wx) > 1 then
+			vArrowX = wx * 0.015
+		else
+			vArrowX = 0			
+		end
+		
+		if math.abs(wy) > 1 then
+			vArrowY = wy * 0.015
+		else
+			vArrowY = 0			
+		end
+
+		if math.abs(wa) > 1 then
+			vArrowAngle = wa * 0.015
+		else
+			vArrowAngle = 0			
+		end
+		
+		ArrowX = ArrowX + vArrowX
+		ArrowY = ArrowY + vArrowY
+		ArrowAngle = ArrowAngle + vArrowAngle
+
+		Game.PlaceScreenArrow(ArrowX,ArrowY,ArrowAngle)
+	end
+	
+	return true
+end
+
+function OnLoad()
+	return true
+end		
+
+function FirstZone.OnEnter()
+	if TutorialStage < 1 then
+		-- First part of tutorial...
+		TutorialStage = 1
+		Game.ClearMessages()
+		Game.Message("Welcome to X-Moto!")
+		Game.Message("This level is a short tutorial of\nhow you play the game.")
+		Game.Message("Please stay put and follow the instructions! :)")
+	end
+end
+
+function FirstZone.OnLeave()
+end
+
+function SecondZone.OnEnter()
+	if TutorialStage < 13 then
+		-- Second part of tutorial...
+		TutorialStage = 13
+
+		Game.ClearMessages()
+		Game.Message("Pick up the strawberry by touching it")
+		Zone2Time = Game.GetTime()
+	end
+end
+
+function SecondZone.OnLeave()
+end
+
+function ThirdZone.OnEnter()
+	if TutorialStage < 15 then
+		-- Third and last part of tutorial...
+		TutorialStage = 16
+
+		Game.ClearMessages()
+		Game.Message("Touch it to finish the level. Good luck with the rest :)")
+	end
+end
+
+function ThirdZone.OnLeave()
+end
+

@@ -1,0 +1,15 @@
+xmoto (0.2.2-2) unstable; urgency=low
+
+ X-Moto is now hosted on http://tuxfamily.org.
+
+ So that X-Moto can connect to this new server, you have to update the file
+ config.dat located at ~/.xmoto/config.dat. You can open this file and replace
+ all the occurences of xmoto.free.fr by xmoto.tuxfamily.org or if you don't
+ know how to do just replace the file config.dat by the located at
+
+ http://xmoto.tuxfamily.org/dev/config.dat
+
+ (you will lose your configuration, but not your highscores). Moreover, you
+ should remove the file rooms.xml next to this one.
+
+ -- Samuel Mimram <smimram@debian.org>  Sun, 10 Dec 2006 23:39:46 +0000
