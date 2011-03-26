@@ -147,6 +147,7 @@ void NetClient::connect(const std::string& i_server, int i_port) {
   m_clientListenerThread->startThread();
 
   m_isConnected = true;
+  m_mode = NETCLIENT_GHOST_MODE; // reset the default mode
 
   LogInfo("client: connected on %s:%d", i_server.c_str(), i_port);
 
