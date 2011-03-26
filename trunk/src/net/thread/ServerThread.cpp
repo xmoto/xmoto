@@ -1896,7 +1896,13 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
   try {
     sendToClient(&na, i_client, -1, 0);
   } catch(Exception &e) {
-    /* ok, no pb */
+    /* ok, no pb retry with the error */
+    try {
+      NA_srvCmdAsw na("An error occured: " + e.getMsg());
+      sendToClient(&na, i_client, -1, 0);
+    } catch(Exception &e2) {
+      /* ok, no pb */
+    }
   }
 }
 

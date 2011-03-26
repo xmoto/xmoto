@@ -41,9 +41,9 @@ DELTA 5->6
 add pings
 */
 
-#define NETACTION_MAX_PACKET_SIZE 1024 * 2 // bytes
+#define NETACTION_MAX_PACKET_SIZE 1024 * 8 // bytes
 #define NETACTION_MAX_SUBSRC 4 // maximum 4 players by client
-#define XM_NET_MAX_EVENTS_SHOT_SIZE 1024
+#define XM_NET_MAX_EVENTS_SHOT_SIZE 1024 * 8
 
 class NetClient;
 class ServerThread;
