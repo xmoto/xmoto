@@ -24,7 +24,9 @@ graph_title X-Moto player modes (port ${XMPORT})
 graph_vlabel players
 graph_total total
 ghost.label ghost
+ghost.draw AREASTACK
 slave.label slave
+slave.draw AREASTACK
 EOF
 }
 
