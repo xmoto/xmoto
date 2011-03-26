@@ -24,7 +24,9 @@ graph_title X-Moto connexions (port ${XMPORT})
 graph_vlabel connexions
 graph_total total
 udp.label udp
+udp.draw AREASTACK
 tcp.label tcp
+tcp.draw AREASTACK
 EOF
 }
 
