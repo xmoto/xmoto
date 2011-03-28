@@ -126,6 +126,7 @@ class ServerThread : public XMThread {
   bool acceptConnections() const;
   int realThreadFunction();
   void close(); // close the server if an event need it (ctrl+c)
+  int port() const;
 
   NetSClient* getNetSClientByScenePlayer(unsigned int i_numScene, unsigned int i_numPlayer) const;
   NetSClient* getNetSClientById(unsigned int i_id) const;
@@ -145,17 +146,15 @@ class ServerThread : public XMThread {
   Universe* m_universe;
   DBuffer* m_DBuffer;
   ServerP2Phase m_sp2phase;
-  double m_fLastPhysTime;
+  int m_lastPhysTime;
   int m_lastFrameTimeStamp;
   int m_frameLate;
-  int m_wantedSleepingFramerate;
   int m_currentFrame;
   int m_sceneStartTime;
   int m_lastPrepareToGoAlert;
   int m_firstFrameSent; // send the first frame only one time before the game starts
 
   unsigned int m_nFollowingUdp; // to avoid tcp famine
-  unsigned int m_nInactivNetLoop; // number of loop without traffic
   std::string m_startTimeStr;
   std::string m_banner;
   bool m_acceptConnections;
@@ -175,7 +174,10 @@ class ServerThread : public XMThread {
   bool manageAction(NetAction* i_netAction, unsigned int i_client);
 
   void run_loop();
-  bool manageNetwork(); // return true if there is possibly something else to manage on network
+  
+  void manageNetwork(int i_timeout); // 0 for no timeout ; -1 for the maximum
+  // manageNetwork helper : 
+  bool manageNetworkOnePacket(int i_timeout); // return true if there is possibly something else to manage on network
 
   // if i_execpt >= 0, send to all exept him
   void sendToAllClients(NetAction* i_netAction, int i_src, int i_subsrc, int i_except = -1);
@@ -201,6 +203,8 @@ class ServerThread : public XMThread {
   std::string SP2_determineLevel();
   void SP2_sendSceneEvents(DBuffer* i_buffer);
   bool m_sp2_gameStarted;
+  int m_sp2_lastLoopTime;
+  int m_sp2_lastLoopDelta;
 
   // server cmd
   unsigned int getClientById(unsigned int i_id) const;

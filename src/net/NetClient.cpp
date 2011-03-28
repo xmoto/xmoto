@@ -118,6 +118,21 @@ void NetClient::addNetAction(NetAction* i_act) {
   SDL_UnlockMutex(m_netActionsMutex);
 }
 
+void NetClient::fastConnectDisconnect(const std::string& i_server, int i_port) {
+  IPaddress v_ip;
+  TCPsocket v_tcpsd;
+
+  if (SDLNet_ResolveHost(&v_ip, i_server.c_str(), i_port) < 0) {
+    throw Exception(SDLNet_GetError());
+  }
+
+  if (!(v_tcpsd = SDLNet_TCP_Open(&v_ip))) {
+    throw Exception(SDLNet_GetError());
+  }
+
+  SDLNet_TCP_Close(v_tcpsd);
+}
+
 void NetClient::connect(const std::string& i_server, int i_port) {
 
   if(m_isConnected) {
