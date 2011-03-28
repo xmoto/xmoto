@@ -929,9 +929,11 @@ void GameApp::run_unload() {
        */
       if(XMSession::instance()->serverStartAtStartup()) {
 	// wait that server is started
-	while(NetServer::instance()->acceptConnections() == false) {
-	  LogInfo("Server still not accepting connections, wait");
+	unsigned int v_delay = 0;
+	while(NetServer::instance()->acceptConnections() == false && v_delay < 5000 /* wait maximum 5 seconds the server */) {
+	  LogInfo("Server still not accepting connections, wait (%.2f seconds)", v_delay/1000.0);
 	  SDL_Delay(100);
+	  v_delay += 100;
 	}
       }
 
