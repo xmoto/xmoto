@@ -75,6 +75,9 @@ class NetClient : public Singleton<NetClient> {
   NetClient();
   ~NetClient();
 
+  // wake up the server ; don't abuse of this function
+  static void fastConnectDisconnect(const std::string& i_server, int i_port);
+
   void connect(const std::string& i_server, int i_port);
   void disconnect();
   bool isConnected();

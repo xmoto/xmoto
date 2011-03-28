@@ -50,7 +50,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_SERVER_PREPLAYING_TIME 300
 #define XM_SERVER_DEFAULT_BAN_NBDAYS 30
 #define XM_SERVER_MAX_FOLLOWING_UDP 100
-#define XM_SERVER_MIN_INACTIVITY_LOOP_TO_SLEEP 1000
 #define XM_SERVER_DEFAULT_BANNER "Welcome on this server"
 #define XM_SERVER_UNPLAYING_SLEEP 10
 
@@ -279,7 +278,6 @@ ServerThread::ServerThread(const std::string& i_dbKey, int i_port, const std::st
     m_frameLate          = 0;
     m_currentFrame       = 0;
     m_nFollowingUdp      = 0;
-    m_nInactivNetLoop    = 0;
     m_startTimeStr       = GameApp::getTimeStamp();
     m_banner             = XM_SERVER_DEFAULT_BANNER;
     m_acceptConnections  = false;
@@ -386,6 +384,10 @@ int ServerThread::realThreadFunction() {
   return 0;
 }
 
+int ServerThread::port() const {
+  return m_port;
+}
+
 void ServerThread::close() {
   unsigned int i;
 
@@ -448,7 +450,7 @@ void ServerThread::SP2_initPlaying() {
   unsigned int v_numPlayer;
   unsigned int v_localNetId = 0;
   std::string v_id_level;
-  m_fLastPhysTime = GameApp::getXMTime();
+  m_lastPhysTime = GameApp::getXMTimeInt();
 
   v_id_level = SP2_determineLevel();
 
@@ -641,15 +643,15 @@ void ServerThread::SP2_updateScenePlaying() {
 
     /* update the scene */
     m_DBuffer->clear();
-    nPhysSteps =0;
+    nPhysSteps = 0;
 
-    while (m_fLastPhysTime + (PHYS_STEP_SIZE)/100.0 <= GameApp::getXMTime() && nPhysSteps < 10) {
+    while (m_lastPhysTime + (PHYS_STEP_SIZE*10) <= GameApp::getXMTimeInt() && nPhysSteps < 10) {
       for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
 	v_scene = m_universe->getScenes()[i];
 	v_scene->updateLevel(PHYS_STEP_SIZE, NULL, m_DBuffer, nPhysSteps!=0, false /* no particles */, false /* don't update died players */);
       }
       v_updateDone = true;
-      m_fLastPhysTime += PHYS_STEP_SIZE/100.0;
+      m_lastPhysTime += PHYS_STEP_SIZE*10;
       nPhysSteps++;
     }
 
@@ -665,7 +667,7 @@ void ServerThread::SP2_updateScenePlaying() {
       v_firstFrame = true;
     }
     // initialize the physics time
-    m_fLastPhysTime = GameApp::getXMTime();
+    m_lastPhysTime = GameApp::getXMTimeInt();
   }
 
   // send to each client his frame and the frame of the others
@@ -723,11 +725,9 @@ void ServerThread::SP2_setPhase(ServerP2Phase i_sp2phase) {
 
   switch(m_sp2phase) {
   case SP2_PHASE_NONE:
-    m_wantedSleepingFramerate = 1;
     break;
 
   case SP2_PHASE_WAIT_CLIENTS:
-    m_wantedSleepingFramerate = 10;
     // load rules if they changed
     try {
       if(m_needToReloadRules) {
@@ -741,8 +741,8 @@ void ServerThread::SP2_setPhase(ServerP2Phase i_sp2phase) {
     
   case SP2_PHASE_PLAYING:
     m_firstFrameSent = GameApp::getXMTimeInt();
-    m_wantedSleepingFramerate = 200;
     m_sp2_gameStarted = false;
+    m_sp2_lastLoopTime = -1;
     try {
       SP2_initPlaying();
     } catch(Exception &e) {
@@ -783,15 +783,10 @@ unsigned int ServerThread::nbClientsInMode(NetClientMode i_mode) {
 }
 
 void ServerThread::run_loop() {
-  if(manageNetwork()) {
-    m_nInactivNetLoop = 0; // reset net activity
-  } else {
-    m_nInactivNetLoop++;
-  }
-
   switch(m_sp2phase) {
 
   case SP2_PHASE_NONE:
+    manageNetwork(-1); // wait a network event
     break;
 
   case SP2_PHASE_WAIT_CLIENTS:
@@ -803,38 +798,60 @@ void ServerThread::run_loop() {
 	}
       }
       SP2_setPhase(SP2_PHASE_PLAYING);
+    } else {
+      manageNetwork(-1); // wait a network event
     }
     break;
     
   case SP2_PHASE_PLAYING:
+    // update the delta time to the reality
+    if(m_sp2_lastLoopTime == -1) {
+      m_sp2_lastLoopDelta = 0; // initialize the delta
+    } else {
+      m_sp2_lastLoopDelta += (GameApp::getXMTimeInt() - m_sp2_lastLoopTime) - 10; // update the delta
+    }
+    // too much delta, reset the delta
+    if(m_sp2_lastLoopDelta > 100 || m_sp2_lastLoopDelta < -100) {
+      m_sp2_lastLoopDelta = 0;
+    }
+    m_sp2_lastLoopTime = GameApp::getXMTimeInt();
+
     SP2_updateScenePlaying();
     SP2_updateCheckScenePlaying();
-    break;
-    
-  }
 
-  if(m_sp2phase == SP2_PHASE_PLAYING) {
-    /* that's not normal that if you comment the wait, it's not smooth, find why */
-    if(m_nInactivNetLoop > XM_SERVER_MIN_INACTIVITY_LOOP_TO_SLEEP) {
-      GameApp::wait(m_lastFrameTimeStamp, m_frameLate, m_wantedSleepingFramerate);
-    }
-  } else {
-    /* sleep only if network is not active */
-    if(m_nInactivNetLoop > XM_SERVER_MIN_INACTIVITY_LOOP_TO_SLEEP) {
-      SDL_Delay(XM_SERVER_UNPLAYING_SLEEP);
+    // mange the network according to time spent
+    // what is the remaing time on the 0.01s allowed
+    int v_remainingTime = 10 - (GameApp::getXMTimeInt() - m_sp2_lastLoopTime) - m_sp2_lastLoopDelta;
+    if(v_remainingTime > 0) {
+      manageNetwork(v_remainingTime);
     } else {
-      SDL_Delay(1); // always sleep the minimum time to limit the cpu usage
+      manageNetwork(0); // do at least one loop
     }
-  }
+    break;
 
+  }
 }
 
-bool ServerThread::manageNetwork() {
+/* 0 for no timeout, -1 for the maximum */
+void ServerThread::manageNetwork(int i_timeout) {
+  int v_start;
+  int v_timeout_remaining;
+
+  v_start             = GameApp::getXMTimeInt();
+  v_timeout_remaining = i_timeout;
+
+  do { // do at least one time, even for i_timeout = 0
+    manageNetworkOnePacket(v_timeout_remaining);
+    v_timeout_remaining = i_timeout - (GameApp::getXMTimeInt() - v_start /* = time spent */);
+  } while(v_timeout_remaining > 0);
+}
+
+bool ServerThread::manageNetworkOnePacket(int i_timeout) {
   int n_activ;
   unsigned int i;
   bool v_needMore = false;
 
-  n_activ = SDLNet_CheckSockets(m_set, 0);
+  n_activ = SDLNet_CheckSockets(m_set, i_timeout);
   if(n_activ == -1) {
     LogError("SDLNet_CheckSockets: %s", SDLNet_GetError());
     m_askThreadToEnd = true;

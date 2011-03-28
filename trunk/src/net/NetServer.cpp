@@ -21,7 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "NetServer.h"
 #include "thread/ServerThread.h"
 #include "../helpers/VExcept.h"
+#include "../helpers/Log.h"
 #include "../XMSession.h"
+#include "NetClient.h"
 
 NetServer::NetServer() {
     m_isStarted = false;
@@ -47,6 +49,12 @@ void NetServer::start(bool i_deamon, int i_port, const std::string& i_adminPassw
 void NetServer::stop() {
   if(m_serverThread->isThreadRunning()) {
     m_serverThread->askThreadToEnd();
+    // the server can be sleeping. send him a packet to wake it up, and stop it
+    try {
+      NetClient::fastConnectDisconnect("localhost", m_serverThread->port());
+    } catch(Exception &e) {
+      LogWarning(e.getMsg().c_str());
+    }
     m_serverThread->waitForThreadEnd();
   }
 
