@@ -100,11 +100,11 @@ public:
 
   ~TextureManager();
 
-  Texture* createTexture(std::string Name, unsigned char* pcData, int nWidth, int nHeight, bool bAlpha=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP);
+  Texture* createTexture(const std::string& Name, unsigned char* pcData, int nWidth, int nHeight, bool bAlpha=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP);
   void destroyTexture(Texture* pTexture);
-  Texture* loadTexture(std::string Path, bool bSmall=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP, bool persistent=false, Sprite* associatedSprite=NULL);
-  int getTextureSize(std::string p_fileName);
-  Texture* getTexture(std::string Name);
+  Texture* loadTexture(const std::string& Path, bool bSmall=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP, bool persistent=false, Sprite* associatedSprite=NULL);
+  int getTextureSize(const std::string& p_fileName);
+  Texture* getTexture(const std::string& Name);
   void removeAssociatedSpritesFromTextures();
   void unloadTextures(void);
 
@@ -136,7 +136,8 @@ private:
   void cleanUnregistredTextures();
 
   HashNamespace::hash_map<const char*, int*, HashNamespace::hash<const char*>, hashcmp_str> m_textureSizeCache;
-  std::vector<int*> m_textureSizeCacheList;
+  std::vector<std::string> m_textureSizeCacheKeys;
+  std::vector<int*> m_textureSizeCacheValues;
 
 };
 

@@ -130,10 +130,12 @@ public:
   virtual void displayScrap(DrawLib* pDrawLib);
 
 private:
-  std::vector<GLFontGlyph*> m_glyphsList;
+  std::vector<std::string> m_glyphsKeys;
+  std::vector<GLFontGlyph*> m_glyphsValues;
   HashNamespace::hash_map<const char*, GLFontGlyph*, HashNamespace::hash<const char*>, hashcmp_str> m_glyphs;
 
-  std::vector<GLFontGlyphLetter*> m_glyphsLettersList;
+  std::vector<std::string> m_glyphsLettersKeys;
+  std::vector<GLFontGlyphLetter*> m_glyphsLettersValues;
   HashNamespace::hash_map<const char*, GLFontGlyphLetter*, HashNamespace::hash<const char*>, hashcmp_str> m_glyphsLetters;
 
   unsigned int getLonguestLineSize(const std::string& i_value, unsigned int i_start = 0, unsigned int i_nbLinesToRead = -1);
@@ -904,7 +906,7 @@ GLFontManager::GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, 
 }
 
 unsigned int GLFontManager::nbGlyphsInMemory() {
-  return m_glyphsLettersList.size();
+  return m_glyphsLettersValues.size();
 }
 
 void GLFontManager::displayScrap(DrawLib* pDrawLib) {
@@ -912,12 +914,12 @@ void GLFontManager::displayScrap(DrawLib* pDrawLib) {
 }
 
 GLFontManager::~GLFontManager() {
-  for(unsigned int i=0; i<m_glyphsList.size(); i++) {
-    delete m_glyphsList[i];
+  for(unsigned int i=0; i<m_glyphsValues.size(); i++) {
+    delete m_glyphsValues[i];
   }
 
-  for(unsigned int i=0; i<m_glyphsLettersList.size(); i++) {
-    delete m_glyphsLettersList[i];
+  for(unsigned int i=0; i<m_glyphsLettersValues.size(); i++) {
+    delete m_glyphsLettersValues[i];
   }
 
   /* i added the m_glyphsList because the iterator on the hashmap
@@ -974,17 +976,18 @@ FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
     if(v_char != "\n") {
       if(m_glyphsLetters[v_char.c_str()] == NULL) {
 	v_glyphLetter = new GLFontGlyphLetter(v_char, m_ttf, m_fixedFontSize);
-	m_glyphsLetters[v_char.c_str()] = v_glyphLetter;
-	m_glyphsLettersList.push_back(v_glyphLetter);
+	m_glyphsLettersKeys.push_back(v_char);
+	m_glyphsLettersValues.push_back(v_glyphLetter);
+	m_glyphsLetters[m_glyphsLettersKeys[m_glyphsLettersKeys.size()-1].c_str()] = v_glyphLetter;
       }
     }
   }
   /* */
 
   v_glyph = new GLFontGlyph(i_string, m_glyphsLetters);
-  
-  m_glyphs[i_string.c_str()] = v_glyph;
-  m_glyphsList.push_back(v_glyph);
+  m_glyphsKeys.push_back(i_string);
+  m_glyphsValues.push_back(v_glyph);  
+  m_glyphs[m_glyphsKeys[m_glyphsKeys.size()-1].c_str()] = v_glyph;
 
   return v_glyph;
 }
