@@ -71,15 +71,15 @@ void Texture::removeAssociatedSprites()
   bool TextureManager::m_registering = false;
 
 TextureManager::~TextureManager() {
-  for(unsigned int i=0; i<m_textureSizeCacheList.size(); i++) {
-    free(m_textureSizeCacheList[i]);
+  for(unsigned int i=0; i<m_textureSizeCacheValues.size(); i++) {
+    free(m_textureSizeCacheValues[i]);
   }
 }
 
   /*===========================================================================
   Create texture from memory
   ===========================================================================*/
-  Texture *TextureManager::createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha,bool bClamp, FilterMode eFilterMode) {
+  Texture *TextureManager::createTexture(const std::string& Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha,bool bClamp, FilterMode eFilterMode) {
     /* Name free? */
     if(getTexture(Name) != NULL) {
       LogWarning("TextureManager::createTexture() : Name '%s' already in use",Name.c_str());
@@ -237,7 +237,7 @@ TextureManager::~TextureManager() {
   /*===========================================================================
   Shortcut to loading textures from image files
   ===========================================================================*/  
-  Texture* TextureManager::loadTexture(std::string Path,bool bSmall,bool bClamp,
+  Texture* TextureManager::loadTexture(const std::string& Path,bool bSmall,bool bClamp,
 				       FilterMode eFilterMode, bool persistent,
 				       Sprite* associatedSprite) {
     /* Check file validity */
@@ -301,7 +301,7 @@ TextureManager::~TextureManager() {
     return pTexture;
   }
   
-int TextureManager::getTextureSize(std::string p_fileName) {
+int TextureManager::getTextureSize(const std::string& p_fileName) {
     image_info_t ii;
     Img TextureImage;
     int* v_val;
@@ -329,8 +329,10 @@ int TextureManager::getTextureSize(std::string p_fileName) {
 #else
 	*v_val = ii.nWidth;
 #endif
-	m_textureSizeCache[p_fileName.c_str()] = v_val;
-	m_textureSizeCacheList.push_back(v_val);
+	m_textureSizeCacheKeys.push_back(p_fileName);
+	m_textureSizeCacheValues.push_back(v_val);
+	m_textureSizeCache[m_textureSizeCacheKeys[m_textureSizeCacheKeys.size()-1].c_str()] = v_val;
+
       }
 
       return *v_val;
@@ -341,7 +343,7 @@ int TextureManager::getTextureSize(std::string p_fileName) {
   /*===========================================================================
   Get loaded texture by name
   ===========================================================================*/  
-  Texture* TextureManager::getTexture(std::string Name) {
+  Texture* TextureManager::getTexture(const std::string& Name) {
     for(unsigned int i=0; i<m_Textures.size(); i++)
       if(m_Textures[i]->Name == Name)
 	return m_Textures[i];
