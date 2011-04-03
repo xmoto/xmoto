@@ -192,11 +192,10 @@ int NetAction::getSubSource() const {
   return m_subsource;
 }
 
-NetAction* NetAction::newNetAction(void* data, unsigned int len) {
+void NetAction::getNetAction(NetActionU* o_netAction, void* data, unsigned int len) {
   std::string v_cmd;
   int v_src, v_subsrc;
   unsigned int v_totalOffset = 0;
-  NetAction* v_res;
 
   v_src = atoi(getLine(((char*)data)+v_totalOffset, len-v_totalOffset, &v_totalOffset).c_str());
   v_subsrc = atoi(getLine(((char*)data+v_totalOffset), len-v_totalOffset, &v_totalOffset).c_str());
@@ -209,96 +208,118 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
 
   //printf("cmd = %s (%i/%i)\n", v_cmd.c_str(), v_totalOffset, len-v_totalOffset);
 
-  if(v_cmd == NA_chatMessage::ActionKey) {
-    v_res = new NA_chatMessage(((char*)data)+v_totalOffset, len-v_totalOffset);
-  }
-
-  else if(v_cmd == NA_chatMessagePP::ActionKey) {
-    v_res = new NA_chatMessagePP(((char*)data)+v_totalOffset, len-v_totalOffset);
-  }
-
-  else if(v_cmd == NA_frame::ActionKey) {
-    v_res = new NA_frame(((char*)data)+v_totalOffset, len-v_totalOffset);
+  if(v_cmd == NA_frame::ActionKey) {
+    o_netAction->frame = NA_frame(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->frame);
   }
 
   else if(v_cmd == NA_playerControl::ActionKey) {
-    v_res = new NA_playerControl(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->playerControl = NA_playerControl(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->playerControl);
+  }
+
+  else if(v_cmd == NA_chatMessage::ActionKey) {
+    o_netAction->chatMessage = NA_chatMessage(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->chatMessage);
+  }
+
+  else if(v_cmd == NA_chatMessagePP::ActionKey) {
+    o_netAction->chatMessagePP = NA_chatMessagePP(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->chatMessagePP);
   }
 
   else if(v_cmd == NA_clientInfos::ActionKey) {
-    v_res = new NA_clientInfos(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->clientInfos = NA_clientInfos(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->clientInfos);
   }
 
   else if(v_cmd == NA_udpBindQuery::ActionKey) {
-    v_res = new NA_udpBindQuery(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->udpBindQuery = NA_udpBindQuery(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->udpBindQuery);
   }
 
   else if(v_cmd == NA_udpBindValidation::ActionKey) {
-    v_res = new NA_udpBindValidation(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->udpBindValidation = NA_udpBindValidation(((char*)data)+v_totalOffset, len-v_totalOffset);
   }
 
   else if(v_cmd == NA_udpBind::ActionKey) {
-    v_res = new NA_udpBind(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->udpBind = NA_udpBind(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->udpBind);
   }
 
   else if(v_cmd == NA_changeName::ActionKey) {
-    v_res = new NA_changeName(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->changeName = NA_changeName(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->changeName);
   }
 
   else if(v_cmd == NA_playingLevel::ActionKey) {
-    v_res = new NA_playingLevel(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->playingLevel = NA_playingLevel(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->playingLevel);
   }
 
   else if(v_cmd == NA_serverError::ActionKey) {
-    v_res = new NA_serverError(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->serverError = NA_serverError(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->serverError);
   }
 
   else if(v_cmd == NA_changeClients::ActionKey) {
-    v_res = new NA_changeClients(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->changeClients = NA_changeClients(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->changeClients);
   }
 
   else if(v_cmd == NA_slaveClientsPoints::ActionKey) {
-    v_res = new NA_slaveClientsPoints(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->slaveClientsPoints = NA_slaveClientsPoints(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->slaveClientsPoints);
   }
 
   else if(v_cmd == NA_clientsNumber::ActionKey) {
-    v_res = new NA_clientsNumber(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->clientsNumber = NA_clientsNumber(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->clientsNumber);
   }
 
   else if(v_cmd == NA_clientsNumberQuery::ActionKey) {
-    v_res = new NA_clientsNumberQuery(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->clientsNumberQuery = NA_clientsNumberQuery(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->clientsNumberQuery);
   }
 
   else if(v_cmd == NA_clientMode::ActionKey) {
-    v_res = new NA_clientMode(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->clientMode = NA_clientMode(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->clientMode);
   }
 
   else if(v_cmd == NA_prepareToPlay::ActionKey) {
-    v_res = new NA_prepareToPlay(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->prepareToPlay = NA_prepareToPlay(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->prepareToPlay);
   }
 
   else if(v_cmd == NA_killAlert::ActionKey) {
-    v_res = new NA_killAlert(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->killAlert = NA_killAlert(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->killAlert);
   }
 
   else if(v_cmd == NA_prepareToGo::ActionKey) {
-    v_res = new NA_prepareToGo(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->prepareToGo = NA_prepareToGo(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->prepareToGo);
   }
 
   else if(v_cmd == NA_gameEvents::ActionKey) {
-    v_res = new NA_gameEvents(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->gameEvents = NA_gameEvents(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->gameEvents);
   }
 
   else if(v_cmd == NA_srvCmd::ActionKey) {
-    v_res = new NA_srvCmd(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->srvCmd = NA_srvCmd(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->srvCmd);
   }
 
   else if(v_cmd == NA_srvCmdAsw::ActionKey) {
-    v_res = new NA_srvCmdAsw(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->srvCmdAsw = NA_srvCmdAsw(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->srvCmdAsw);
   }
 
   else if(v_cmd == NA_ping::ActionKey) {
-    v_res = new NA_ping(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->ping = NA_ping(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->ping);
   }
 
   else {
@@ -307,8 +328,7 @@ NetAction* NetAction::newNetAction(void* data, unsigned int len) {
     throw Exception("net: invalid command");
   }
 
-  v_res->setSource(v_src, v_subsrc);
-  return v_res;
+  o_netAction->master->setSource(v_src, v_subsrc);
 }
 
 std::string NetAction::getLine(void* data, unsigned int len, unsigned int* o_local_offset) {
@@ -471,7 +491,9 @@ std::string NA_serverError::getMessage() {
 }
 
 NA_frame::NA_frame(SerializedBikeState* i_state) : NetAction(false) {
-  m_state = *i_state;
+  if(i_state != NULL) {
+    m_state = *i_state;
+  }
 }
 
 NA_frame::NA_frame(void* data, unsigned int len) : NetAction(false) {
@@ -911,7 +933,11 @@ int NA_prepareToGo::time() const {
 }
 
 NA_gameEvents::NA_gameEvents(DBuffer* i_buffer) : NetAction(true) {
-  m_bufferLength = i_buffer->copyTo(m_buffer, XM_NET_MAX_EVENTS_SHOT_SIZE);
+  if(i_buffer == NULL) {
+    m_bufferLength = 0;
+  } else {
+    m_bufferLength = i_buffer->copyTo(m_buffer, XM_NET_MAX_EVENTS_SHOT_SIZE);
+  }
 }
 
 NA_gameEvents::NA_gameEvents(void* data, unsigned int len) : NetAction(true) {

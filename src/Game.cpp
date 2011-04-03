@@ -177,8 +177,10 @@ GameApp::GameApp() {
     
   m_currentPlayingList = NULL;
 
-  m_lastFrameTimeStamp = -1;
-  m_frameLate          = 0;
+  m_lastFrameTimeStamp   = -1;
+  m_frameLate            = 0;
+  m_loopWithoutNetwork   = 0;
+  m_loopWithoutRendering = 0;
 
   // assume all focus at startup
   m_hasMouseFocus    = true;
@@ -681,12 +683,6 @@ void GameApp::updatingDatabase(std::string i_message) {
 
   /* pump events to so that windows don't think the appli is crashed */
   SDL_PumpEvents();
-}
-
-void GameApp::drawFrame(void) {
-  Sound::update();
-  StateManager::instance()->update();
-  StateManager::instance()->render(); 
 }
 
 NetServer* GameApp::standAloneServer() {

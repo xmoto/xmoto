@@ -54,12 +54,10 @@ void ActionReader::logStats() {
   LogInfo("%-36s : %s", "net: size of UDP packets received"  , XMNet::getFancyBytes(ActionReader::m_UDPPacketsSizeReceived).c_str());
 }
 
-bool ActionReader::TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction) {
+bool ActionReader::TCPReadAction(TCPsocket* i_tcpsd, NetActionU* o_netAction) {
   int nread;
   unsigned int v_cmdStart;
   unsigned int v_packetSize;
-
-  *i_netAction = NULL;
 
   if(m_tcpPossiblyInBuffer == false) { // don't read from the socket if there is possibly still packets in the buffer
     if( (nread = SDLNet_TCP_Recv(*(i_tcpsd),
@@ -85,7 +83,7 @@ bool ActionReader::TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction) {
     try {
       if(m_tcpPacketOffset-v_cmdStart >= v_packetSize) {
 	LogDebug("One packet to manage");
-	*i_netAction = NetAction::newNetAction(((char*)m_tcpBuffer)+v_cmdStart, v_packetSize);
+	NetAction::getNetAction(o_netAction, ((char*)m_tcpBuffer)+v_cmdStart, v_packetSize);
 	
 	// remove the managed packet
 	// main case : the buffer contains exactly one command
@@ -146,7 +144,7 @@ unsigned int ActionReader::getSubPacketSize(void* data, unsigned int len, unsign
   return 0;
 }
 
-NetAction* ActionReader::UDPReadAction(Uint8* data, int len) {
+void ActionReader::UDPReadAction(Uint8* data, int len, NetActionU* o_netAction) {
   unsigned int v_size;
   unsigned int v_cmdStart;
 
@@ -157,8 +155,8 @@ NetAction* ActionReader::UDPReadAction(Uint8* data, int len) {
   ActionReader::m_UDPPacketsSizeReceived += len;
 
   if( (v_size = ActionReader::getSubPacketSize(data, len, v_cmdStart)) > 0) {
-    return NetAction::newNetAction(((char*)data)+v_cmdStart, v_size);
+    NetAction::getNetAction(o_netAction, ((char*)data)+v_cmdStart, v_size);
+  } else {
+    throw Exception("net: nasty client detected (3)");
   }
-
-  throw Exception("net: nasty client detected (3)");
 }

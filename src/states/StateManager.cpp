@@ -317,9 +317,6 @@ void StateManager::update()
     m_updateFpsNbFrame++;
   }
 
-  /* update net */
-  NetClient::instance()->executeNetActions(xmDatabase::instance("main"));
-
   /* update fps */
   if(m_lastFpsTime + 1000 < GameApp::getXMTimeInt()) {
     m_currentRenderFps = m_renderFpsNbFrame;

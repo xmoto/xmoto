@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_MAX_PACKET_SIZE 1024 * 10 // bytes
 
 class NetAction;
+struct NetActionU;
 
 class ActionReader {
   public:
@@ -34,8 +35,8 @@ class ActionReader {
   ~ActionReader();
 
   // return true if a packet is returned ; you should reread to get more action (socket in not read while true is returned)
-  bool TCPReadAction(TCPsocket* i_tcpsd, NetAction** i_netAction);
-  static NetAction* UDPReadAction(Uint8* data, int len);
+  bool TCPReadAction(TCPsocket* i_tcpsd, NetActionU* o_netAction);
+  static void UDPReadAction(Uint8* data, int len, NetActionU* o_netAction);
 
   static void logStats();
 

@@ -71,6 +71,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define MOUSE_DBCLICK_TIME 0.250f
 
+#define XM_MAX_NB_LOOPS_WITH_NONETWORK 3
+#define XM_MAX_NB_LOOPS_WITH_NORENDERING 5
+#define XM_MAX_FRAMELATE_TO_FORCE_NORENDERING 10
+
 #ifdef __amigaos4__
 #include <dos/dos.h>
 #include <proto/exec.h>
@@ -723,8 +727,39 @@ void GameApp::manageEvent(SDL_Event* Event) {
 
 void GameApp::run_loop() {
   SDL_Event Event;
+  int v_frameTime = 0;
 
   while(m_bQuit == false) {
+
+    /* strategie :
+       no network :
+         update // done on the same computer as rendering, so, if update is late, rendering is late and so on
+         render
+         wait(so that 0.01 seconds by loop happend)
+
+       network:
+         update
+	 render // skip rendering if late to let others tasks happend (rendering is the biggest cost)
+         update network (wait for network if nothing to do so that 0.01 seconds by loop happend or skip if no time)
+    */
+
+    // computer the delta
+    if(NetClient::instance()->isConnected()) {
+      v_frameTime = 1000/StateManager::instance()->getMaxFps();
+
+      // update the delta time to the reality
+      m_frameLate += (GameApp::getXMTimeInt() - m_lastFrameTimeStamp) - v_frameTime; // update the delta
+
+      // too much delta, reset the delta
+      if(m_frameLate > 100 || m_frameLate < -100) {
+	m_frameLate = 0;
+      }
+      m_lastFrameTimeStamp = GameApp::getXMTimeInt();
+    }
+    //
+
+    // update the game
+
     /* Handle SDL events */            
     SDL_PumpEvents();
 
@@ -743,10 +778,48 @@ void GameApp::run_loop() {
     }
 
     /* Update user app */
-    drawFrame();
-    
-    if(XMSession::instance()->timedemo() == false) {
-      GameApp::wait(m_lastFrameTimeStamp, m_frameLate, StateManager::instance()->getMaxFps());
+    // update sound
+    Sound::update();
+
+    // update game
+    StateManager::instance()->update();
+
+    // update graphics
+    // skip rendering if too much late (network mode)
+    if(NetClient::instance()->isConnected()) {
+      if(m_frameLate < XM_MAX_FRAMELATE_TO_FORCE_NORENDERING || m_loopWithoutRendering > XM_MAX_NB_LOOPS_WITH_NORENDERING) {
+	StateManager::instance()->render();
+	m_loopWithoutRendering = 0;
+      } else {
+	m_loopWithoutRendering++;
+	//printf("skip rendering (%i)\n", m_loopWithoutRendering);
+      }
+    } else {
+      StateManager::instance()->render();
+    }
+
+    // update network
+    // skip network update if not the time
+    if(NetClient::instance()->isConnected()) {
+      int v_timeout = v_frameTime - (GameApp::getXMTimeInt() - m_lastFrameTimeStamp) - m_frameLate;
+
+      if(m_loopWithoutNetwork > XM_MAX_NB_LOOPS_WITH_NONETWORK) {
+	v_timeout = 1; // force a minimum network
+	//printf("force networking\n");
+      }
+
+      // manage network
+      if(v_timeout > 0 || XMSession::instance()->timedemo()) { // only when you've time to do it
+	NetClient::instance()->manageNetwork(v_timeout, xmDatabase::instance("main"));
+	m_loopWithoutNetwork = 0;
+      } else {
+	m_loopWithoutNetwork++;
+      }
+    } else {
+      /* pause system without having to wait for the net at the same time */
+      if(XMSession::instance()->timedemo() == false) {
+	GameApp::wait(m_lastFrameTimeStamp, m_frameLate, StateManager::instance()->getMaxFps());
+      }
     }
   }
 }

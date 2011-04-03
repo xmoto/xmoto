@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../include/xm_SDL_net.h"
 #include "../BasicStructures.h"
 #include "../../xmscene/Scene.h"
+#include "../NetActions.h"
 
 class ActionReader;
 class NetAction;
@@ -139,6 +140,7 @@ class ServerThread : public XMThread {
   UDPsocket m_udpsd;
   UDPpacket* m_udpPacket;
   unsigned int m_nextClientId;
+  NetActionU m_preAllocatedNA;
 
   int m_port;
   std::string m_adminPassword;
