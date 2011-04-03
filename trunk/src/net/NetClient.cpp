@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "NetClient.h"
 #include "NetActions.h"
-#include "thread/ClientListenerThread.h"
 #include "../helpers/VExcept.h"
 #include "../helpers/utf8.h"
 #include "../helpers/Log.h"
@@ -42,6 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../xmscene/Camera.h"
 #include "VirtualNetLevelsList.h"
 #include "../Replay.h"
+#include "ActionReader.h"
 
 #define XMCLIENT_KILL_ALERT_DURATION 100
 #define XMCLIENT_PREPARE_TO_PLAY_DURATION 100
@@ -50,8 +50,6 @@ NetClient::NetClient() {
     m_isConnected = false;
     m_serverReceivesUdp = false;
     m_serverSendsUdp    =  false;
-    m_clientListenerThread = NULL;
-    m_netActionsMutex = SDL_CreateMutex();
     m_universe = NULL;
     m_mode = NETCLIENT_GHOST_MODE;
     m_points = 0;
@@ -60,6 +58,8 @@ NetClient::NetClient() {
     if(!m_udpSendPacket) {
       throw Exception("SDLNet_AllocPacket: " + std::string(SDLNet_GetError()));
     }
+
+    m_tcpReader = new ActionReader();
 
     std::ostringstream v_rd;
     v_rd << randomIntNum(1, RAND_MAX);
@@ -79,13 +79,7 @@ NetClient::NetClient() {
 
 NetClient::~NetClient() {
   delete m_otherClientsLevelsList;
-
-  SDL_DestroyMutex(m_netActionsMutex);
-
-  for(unsigned int i=0; i<m_netActions.size(); i++) {
-    delete m_netActions[i];
-  }
-
+  delete m_tcpReader;
   SDLNet_FreePacket(m_udpSendPacket);
 }
 
@@ -97,25 +91,107 @@ UDPpacket* NetClient::sendPacket() {
   return m_udpSendPacket;
 }
 
-void NetClient::executeNetActions(xmDatabase* pDb) {
-  if(m_netActions.size() == 0) {
-    return; // try to not lock via mutex if not needed
+void NetClient::openListenConnectionGroup() {
+  int scn;
+
+  // use a set to get the timeout
+  m_listenSet = SDLNet_AllocSocketSet(2); // tcp + udp
+  if(!m_listenSet) {
+    LogError("client: SDLNet_AllocSocketSet: %s", SDLNet_GetError());
+    StateManager::instance()->sendAsynchronousMessage("CLIENT_DISCONNECTED_BY_ERROR");
+    throw Exception("openListenConnectionGroup failed");
   }
 
-  SDL_LockMutex(m_netActionsMutex);
-  for(unsigned int i=0; i<m_netActions.size(); i++) {
-    //LogInfo("Execute NetAction (%s)", m_netActions[i]->actionKey().c_str());
-    manageAction(pDb, m_netActions[i]);
-    delete m_netActions[i];
+  scn = SDLNet_TCP_AddSocket(m_listenSet, m_tcpsd);
+  if(scn == -1) {
+    SDLNet_FreeSocketSet(m_listenSet);
+    LogError("client: SDLNet_TCP_AddSocket: %s", SDLNet_GetError());
+    StateManager::instance()->sendAsynchronousMessage("CLIENT_DISCONNECTED_BY_ERROR");
+    throw Exception("openListenConnectionGroup failed");
   }
-  m_netActions.clear();
-  SDL_UnlockMutex(m_netActionsMutex);
+
+  scn = SDLNet_UDP_AddSocket(m_listenSet, m_udpsd);
+  if(scn == -1) {
+    SDLNet_TCP_DelSocket(m_listenSet, m_tcpsd);
+    LogError("client: SDLNet_UDP_AddSocket: %s", SDLNet_GetError());
+    StateManager::instance()->sendAsynchronousMessage("CLIENT_DISCONNECTED_BY_ERROR");
+    throw Exception("openListenConnectionGroup failed");
+  }
+
+  m_udpReceiptPacket = SDLNet_AllocPacket(XM_CLIENT_MAX_UDP_PACKET_SIZE);
+  if(!m_udpReceiptPacket) {
+    SDLNet_TCP_DelSocket(m_listenSet, m_tcpsd);
+    SDLNet_UDP_DelSocket(m_listenSet, m_udpsd);
+    LogError("client: SDLNet_AllocPacket: %s", SDLNet_GetError());
+    StateManager::instance()->sendAsynchronousMessage("CLIENT_DISCONNECTED_BY_ERROR");
+    throw Exception("openListenConnectionGroup failed");
+  }
 }
 
-void NetClient::addNetAction(NetAction* i_act) {
-  SDL_LockMutex(m_netActionsMutex);
-  m_netActions.push_back(i_act);
-  SDL_UnlockMutex(m_netActionsMutex);
+void NetClient::closeListenConnectionGroup() {
+  SDLNet_TCP_DelSocket(m_listenSet, m_tcpsd);
+  SDLNet_UDP_DelSocket(m_listenSet, m_udpsd);
+  SDLNet_FreeSocketSet(m_listenSet);
+
+  SDLNet_FreePacket(m_udpReceiptPacket);
+}
+
+void NetClient::manageNetwork(int i_timeout, xmDatabase* pDb) {
+  int v_start;
+  int v_timeout_remaining;
+
+  v_start             = GameApp::getXMTimeInt();
+  v_timeout_remaining = i_timeout;
+
+  try {
+    do { // do at least one time, even for i_timeout = 0
+      manageNetworkOneStep(v_timeout_remaining, pDb);
+      v_timeout_remaining = i_timeout - (GameApp::getXMTimeInt() - v_start /* = time spent */);
+    } while(v_timeout_remaining > 0);
+  } catch(Exception &e) {
+    disconnect();
+    StateManager::instance()->sendAsynchronousMessage("CLIENT_STATUS_CHANGED");
+  }
+}
+
+// eat all activities on connections
+void NetClient::manageNetworkOneStep(int i_timeout, xmDatabase* pDb) {
+  int n_activ;
+
+  n_activ = SDLNet_CheckSockets(m_listenSet, i_timeout);
+  if(n_activ == -1) {
+    LogError("SDLNet_CheckSockets: %s", SDLNet_GetError());
+    throw Exception("CheckSockets failed");
+  }
+
+  // no activity
+  if(n_activ == 0) {
+    return;
+  }
+
+  while(SDLNet_SocketReady(m_udpsd)) {
+    if(SDLNet_UDP_Recv(m_udpsd, m_udpReceiptPacket) == 1) {
+      try {
+	ActionReader::UDPReadAction(m_udpReceiptPacket->data, m_udpReceiptPacket->len, &m_preAllocatedNA);
+	manageAction(pDb, m_preAllocatedNA.master);
+      } catch(Exception &e) {
+	// ok, forget it, probably a bad packet received
+	LogError("client: bad UDP packet received (%s)", e.getMsg().c_str());
+	// don't need to disconnect for udp, forget this packet
+      }
+    }
+  } 
+
+  while(SDLNet_SocketReady(m_tcpsd)) {
+    try {
+      while(m_tcpReader->TCPReadAction(&m_tcpsd, &m_preAllocatedNA)) {
+	manageAction(pDb, m_preAllocatedNA.master);
+      }
+    } catch(Exception &e) {
+      LogError("client: bad TCP packet received (%s)", e.getMsg().c_str());
+      throw Exception("TCP action failed");
+    }
+  }
 }
 
 void NetClient::fastConnectDisconnect(const std::string& i_server, int i_port) {
@@ -158,11 +234,17 @@ void NetClient::connect(const std::string& i_server, int i_port) {
   }
   m_udpSendPacket->address = serverIp;
 
-  m_clientListenerThread = new ClientListenerThread(this);
-  m_clientListenerThread->startThread();
+  try {
+    openListenConnectionGroup();
+  } catch(Exception &e) {
+    SDLNet_TCP_Close(m_tcpsd);
+    SDLNet_UDP_Close(m_udpsd);
+    throw e;
+  }
 
   m_isConnected = true;
   m_mode = NETCLIENT_GHOST_MODE; // reset the default mode
+  StateManager::instance()->sendAsynchronousMessage("CLIENT_STATUS_CHANGED");
 
   LogInfo("client: connected on %s:%d", i_server.c_str(), i_port);
 
@@ -190,11 +272,7 @@ void NetClient::disconnect() {
     return;
   }
 
-  if(m_clientListenerThread->isThreadRunning()) {
-    m_clientListenerThread->askThreadToEnd();
-    m_clientListenerThread->waitForThreadEnd();
-  }
-  delete m_clientListenerThread;
+  closeListenConnectionGroup();
 
   LogInfo("client: disconnected")
   SDLNet_TCP_Close(m_tcpsd);
@@ -206,15 +284,10 @@ void NetClient::disconnect() {
   }
 
   m_isConnected = false;
+  StateManager::instance()->sendAsynchronousMessage("CLIENT_STATUS_CHANGED");
 }
 
 bool NetClient::isConnected() {
-  // check that the client has not finished
-  if(m_isConnected) {
-    if(m_clientListenerThread->isThreadRunning() == false) {
-      disconnect();
-    }
-  }
   return m_isConnected;
 }
 

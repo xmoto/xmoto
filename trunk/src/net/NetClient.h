@@ -30,12 +30,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define XM_CLIENT_MAX_UDP_PACKET_SIZE 1024 // bytes
 
-class ClientListenerThread;
 class NetAction;
 class NetGhost;
 class Universe;
 class xmDatabase;
 class VirtualNetLevelsList;
+class ActionReader;
 
 class NetOtherClient {
  public:
@@ -87,8 +87,7 @@ class NetClient : public Singleton<NetClient> {
   UDPpacket* sendPacket();
   std::string udpBindKey() const;
 
-  void executeNetActions(xmDatabase* pDb);
-  void addNetAction(NetAction* i_act);
+  void manageNetwork(int i_timeout, xmDatabase* pDb);
 
   void changeMode(NetClientMode i_mode);
   NetClientMode mode() const;
@@ -119,20 +118,24 @@ class NetClient : public Singleton<NetClient> {
   bool m_serverSendsUdp;
   TCPsocket m_tcpsd;
   UDPsocket m_udpsd;
-  ClientListenerThread* m_clientListenerThread;
   UDPpacket* m_udpSendPacket;
   std::string m_udpBindKey;
+  NetActionU m_preAllocatedNA;
 
   unsigned int getOtherClientNumberById(int i_id) const;
-
-  std::vector<NetAction*> m_netActions;
-  SDL_mutex* m_netActionsMutex;
 
   Universe* m_universe;
   NetClientMode m_mode;
 
   std::vector<NetOtherClient*> m_otherClients;
   int m_points;
+
+  void manageNetworkOneStep(int i_timeout, xmDatabase* pDb);
+  void openListenConnectionGroup();
+  void closeListenConnectionGroup();
+  SDLNet_SocketSet m_listenSet;
+  UDPpacket* m_udpReceiptPacket;
+  ActionReader* m_tcpReader;
 
   void updateOtherClientsMode(std::vector<int> i_slavePlayers);
 

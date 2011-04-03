@@ -85,6 +85,8 @@ struct NetPointsClient {
   int Points;
 };
 
+struct NetActionU;
+
 class NetAction {
   public:
   NetAction(bool i_forceTcp);
@@ -98,7 +100,8 @@ class NetAction {
   int getSource() const;
   int getSubSource() const;
 
-  static NetAction* newNetAction(void* data, unsigned int len);
+  static void getNetAction(NetActionU* o_netAction, void* data, unsigned int len);
+
   static void logStats();
 
   /* stats */
@@ -137,7 +140,7 @@ class NetAction {
 
 class NA_udpBind : public NetAction {
   public:
-  NA_udpBind(const std::string& i_key);
+  NA_udpBind(const std::string& i_key = "");
   NA_udpBind(void* data, unsigned int len);
   virtual ~NA_udpBind();
   std::string actionKey()    { return ActionKey; }
@@ -195,7 +198,7 @@ SRV : <udpBindValidation (ok, i can *send* udp to the client)
 
 class NA_clientInfos : public NetAction {
   public:
-  NA_clientInfos(int i_protocolVersion, const std::string& i_udpBindKey);
+  NA_clientInfos(int i_protocolVersion = -1, const std::string& i_udpBindKey = "");
   NA_clientInfos(void* data, unsigned int len);
   virtual ~NA_clientInfos();
   std::string actionKey()    { return ActionKey; }
@@ -218,6 +221,7 @@ class NA_clientInfos : public NetAction {
 /* replace chatMessage ; it allows public and private messages */
 class NA_chatMessagePP : public NetAction {
   public:
+  NA_chatMessagePP() : NetAction(true) {} // for preallocation
   NA_chatMessagePP(const std::string& i_msg, const std::string &i_me /* if empty, change nothing */, const std::vector<int>& i_private_people /* empty vector for public message -- require XM_NET_PROTOCOL_VERSION */);
   NA_chatMessagePP(void* data, unsigned int len);
   virtual ~NA_chatMessagePP();
@@ -240,7 +244,7 @@ class NA_chatMessagePP : public NetAction {
 
 class NA_chatMessage : public NetAction {
   public:
-  NA_chatMessage(const std::string& i_msg, const std::string &i_me);
+  NA_chatMessage(const std::string& i_msg = "", const std::string &i_me = "");
   NA_chatMessage(void* data, unsigned int len);
   virtual ~NA_chatMessage();
   std::string actionKey()    { return ActionKey; }
@@ -260,7 +264,7 @@ class NA_chatMessage : public NetAction {
 
 class NA_serverError : public NetAction {
  public:
-  NA_serverError(const std::string& i_msg);
+  NA_serverError(const std::string& i_msg = "");
   NA_serverError(void* data, unsigned int len);
   virtual ~NA_serverError();
   std::string actionKey()    { return ActionKey; }
@@ -278,7 +282,7 @@ class NA_serverError : public NetAction {
 
 class NA_frame : public NetAction {
   public:
-  NA_frame(SerializedBikeState* i_state);
+  NA_frame(SerializedBikeState* i_state = NULL);
   NA_frame(void* data, unsigned int len);
   virtual ~NA_frame();
   std::string actionKey()    { return ActionKey; }
@@ -296,7 +300,7 @@ class NA_frame : public NetAction {
 
 class NA_changeName : public NetAction {
   public:
-  NA_changeName(const std::string& i_name);
+  NA_changeName(const std::string& i_name = "");
   NA_changeName(void* data, unsigned int len);
   virtual ~NA_changeName();
   std::string actionKey()    { return ActionKey; }
@@ -314,7 +318,7 @@ class NA_changeName : public NetAction {
 
 class NA_clientsNumber : public NetAction {
   public:
-  NA_clientsNumber(int i_ntcp, int i_nudp, int i_nghosts, int i_nslaves);
+  NA_clientsNumber(int i_ntcp = 0, int i_nudp = 0, int i_nghosts = 0, int i_nslaves = 0);
   NA_clientsNumber(void* data, unsigned int len);
   virtual ~NA_clientsNumber();
   std::string actionKey()    { return ActionKey; }
@@ -352,7 +356,7 @@ class NA_clientsNumberQuery : public NetAction {
 
 class NA_playingLevel : public NetAction {
   public:
-  NA_playingLevel(const std::string& i_levelId);
+  NA_playingLevel(const std::string& i_levelId = "");
   NA_playingLevel(void* data, unsigned int len);
   virtual ~NA_playingLevel();
   std::string actionKey()    { return ActionKey; }
@@ -393,7 +397,7 @@ class NA_changeClients : public NetAction {
 class NA_playerControl : public NetAction {
   public:
   NA_playerControl(PlayerControl i_control, float i_value);
-  NA_playerControl(PlayerControl i_control, bool i_value);
+  NA_playerControl(PlayerControl i_control = PC_CHANGEDIR, bool i_value = true);
   NA_playerControl(void* data, unsigned int len);
   virtual ~NA_playerControl();
   std::string actionKey()    { return ActionKey; }
@@ -414,7 +418,7 @@ class NA_playerControl : public NetAction {
 
 class NA_clientMode : public NetAction {
   public:
-  NA_clientMode(NetClientMode i_mode);
+  NA_clientMode(NetClientMode i_mode = NETCLIENT_GHOST_MODE);
   NA_clientMode(void* data, unsigned int len);
   virtual ~NA_clientMode();
   std::string actionKey()    { return ActionKey; }
@@ -432,6 +436,7 @@ class NA_clientMode : public NetAction {
 
 class NA_prepareToPlay : public NetAction {
   public:
+  NA_prepareToPlay() : NetAction(false) {}
   NA_prepareToPlay(const std::string& i_id_level, std::vector<int>& i_players);
   NA_prepareToPlay(void* data, unsigned int len);
   virtual ~NA_prepareToPlay();
@@ -452,7 +457,7 @@ class NA_prepareToPlay : public NetAction {
 
 class NA_killAlert : public NetAction {
   public:
-  NA_killAlert(int i_time);
+  NA_killAlert(int i_time = 0);
   NA_killAlert(void* data, unsigned int len);
   virtual ~NA_killAlert();
   std::string actionKey()    { return ActionKey; }
@@ -470,7 +475,7 @@ class NA_killAlert : public NetAction {
 
 class NA_prepareToGo : public NetAction {
   public:
-  NA_prepareToGo(int i_time);
+  NA_prepareToGo(int i_time = 0);
   NA_prepareToGo(void* data, unsigned int len);
   virtual ~NA_prepareToGo();
   std::string actionKey()    { return ActionKey; }
@@ -488,7 +493,7 @@ class NA_prepareToGo : public NetAction {
 
 class NA_gameEvents : public NetAction {
   public:
-  NA_gameEvents(DBuffer* i_buffer);
+  NA_gameEvents(DBuffer* i_buffer = NULL);
   NA_gameEvents(void* data, unsigned int len);
   virtual ~NA_gameEvents();
   std::string actionKey()    { return ActionKey; }
@@ -508,7 +513,7 @@ class NA_gameEvents : public NetAction {
 
 class NA_srvCmd : public NetAction {
   public:
-  NA_srvCmd(const std::string& i_cmd);
+  NA_srvCmd(const std::string& i_cmd = "");
   NA_srvCmd(void* data, unsigned int len);
   virtual ~NA_srvCmd();
   std::string actionKey()    { return ActionKey; }
@@ -526,7 +531,7 @@ class NA_srvCmd : public NetAction {
 
 class NA_srvCmdAsw : public NetAction {
   public:
-  NA_srvCmdAsw(const std::string& i_answer);
+  NA_srvCmdAsw(const std::string& i_answer = "");
   NA_srvCmdAsw(void* data, unsigned int len);
   virtual ~NA_srvCmdAsw();
   std::string actionKey()    { return ActionKey; }
@@ -582,6 +587,37 @@ class NA_ping : public NetAction {
   int  m_id;   // unique identifier
   bool m_isPong; // is it an answer of a ping ?
 
+};
+
+/* structure to avoid allocation of the NetAction while netaction are read and manage one by one */
+struct NetActionU {
+public:
+  NetActionU() {}
+
+  NetAction*            master;
+  NA_clientInfos       	clientInfos;
+  NA_udpBindQuery      	udpBindQuery;
+  NA_udpBind           	udpBind;
+  NA_udpBindValidation 	udpBindValidation;
+  NA_chatMessage       	chatMessage;
+  NA_chatMessagePP     	chatMessagePP;
+  NA_serverError       	serverError;
+  NA_frame             	frame;
+  NA_changeName    	changeName;
+  NA_clientsNumber 	clientsNumber;
+  NA_clientsNumberQuery clientsNumberQuery;
+  NA_playingLevel  	playingLevel;
+  NA_changeClients 	changeClients;
+  NA_slaveClientsPoints slaveClientsPoints;
+  NA_playerControl 	playerControl;
+  NA_clientMode    	clientMode;
+  NA_prepareToPlay 	prepareToPlay;
+  NA_prepareToGo   	prepareToGo;
+  NA_killAlert     	killAlert;
+  NA_gameEvents    	gameEvents;
+  NA_srvCmd    	   	srvCmd;
+  NA_srvCmdAsw 	   	srvCmdAsw;
+  NA_ping      	   	ping;
 };
 
 #endif

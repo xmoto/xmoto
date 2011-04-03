@@ -74,9 +74,6 @@ public:
   void loadLevelHook(std::string i_level, int i_percentage);
   void updatingDatabase(std::string i_message);
 
-  /* ** */
-  void drawFrame(void);
-
   void reloadTheme();
 
   void setSpecificReplay(const std::string& i_replay);
@@ -247,6 +244,8 @@ private:
   // calculate sleeping time
   int m_lastFrameTimeStamp;
   int m_frameLate;
+  int m_loopWithoutNetwork;
+  int m_loopWithoutRendering;
 
   /* Helpers */
 

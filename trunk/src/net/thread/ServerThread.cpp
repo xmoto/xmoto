@@ -1112,23 +1112,14 @@ void ServerThread::acceptClient() {
 }
 
 bool ServerThread::manageClientTCP(unsigned int i) {
-  NetAction* v_netAction = NULL;
-
   try {
-    while(m_clients[i]->tcpReader->TCPReadAction(m_clients[i]->tcpSocket(), &v_netAction)) {
-      if(manageAction(v_netAction, i) == false) {
-	delete v_netAction;
-	v_netAction = NULL;
+    while(m_clients[i]->tcpReader->TCPReadAction(m_clients[i]->tcpSocket(), &m_preAllocatedNA)) {
+      if(manageAction(m_preAllocatedNA.master, i) == false) {
 	return false;
       }
-      delete v_netAction;
-      v_netAction = NULL;
     }
   } catch(Exception &e) {
     m_unmanagedActions++;
-    if(v_netAction != NULL) {
-      delete v_netAction;
-    }
     throw e;
   }
 
@@ -1137,7 +1128,6 @@ bool ServerThread::manageClientTCP(unsigned int i) {
 
 void ServerThread::manageClientUDP() {
   bool v_managedPacket;
-  NetAction* v_netAction;
 
   if(SDLNet_UDP_Recv(m_udpsd, m_udpPacket) == 1) {
     v_managedPacket = false;
@@ -1146,20 +1136,13 @@ void ServerThread::manageClientUDP() {
 	 m_clients[i]->udpRemoteIP()->port == m_udpPacket->address.port)  {
 	v_managedPacket = true;
 	try {
-	  v_netAction = NULL;
-	  v_netAction = ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len);
-	  if(manageAction(v_netAction, i) == false) {
-	    delete v_netAction;
-	    v_netAction = NULL;
+	  ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len, &m_preAllocatedNA);
+	  if(manageAction(m_preAllocatedNA.master, i) == false) {
 	    removeClient(i);
 	    return;
 	  }
-	  delete v_netAction;
 	} catch(Exception &e) {
 	  m_unmanagedActions++;
-	  if(v_netAction != NULL) {
-	    delete v_netAction;
-	  }
 
 	  // ok, a bad packet received, forget it
 	  LogWarning("server: bad UDP packet received by client %u (%s:%i) : %s", i,
@@ -1172,12 +1155,11 @@ void ServerThread::manageClientUDP() {
     // anonym packet ? find the associated client
     if(v_managedPacket == false) {
       try {
-	v_netAction = NULL;
-	v_netAction = ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len);
-	if(v_netAction->actionType() == TNA_udpBind) {
+	ActionReader::UDPReadAction(m_udpPacket->data, m_udpPacket->len, &m_preAllocatedNA);
+	if(m_preAllocatedNA.master->actionType() == TNA_udpBind) {
 	  for(unsigned int i=0; i<m_clients.size(); i++) {
 	    if(m_clients[i]->isUdpBinded() == false) {
-	      if(m_clients[i]->udpBindKey() == ((NA_udpBind*)v_netAction)->key()) {
+	      if(m_clients[i]->udpBindKey() == ((NA_udpBind*)m_preAllocatedNA.master)->key()) {
 		//LogInfo("UDP bind key received via UDP: %s", ((NA_udpBind*)v_netAction)->key().c_str());
 		m_clients[i]->bindUdp(m_udpPacket->address);
 		if(m_clients[i]->protocolVersion() >= 3) { // don't send if the version is lower because the client will not understand -- udp could not work in that case
@@ -1205,12 +1187,8 @@ void ServerThread::manageClientUDP() {
 	} else {
 	  LogWarning("Packet of unknown client received");
 	}
-	delete v_netAction;
       } catch(Exception &e) {
 	m_unmanagedActions++;
-	if(v_netAction != NULL) {
-	  delete v_netAction;
-	}
 
 	/* forget this bad packet */
 	LogWarning("server: bad anonym UDP packet received by %s:%i",

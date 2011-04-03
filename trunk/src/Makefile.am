@@ -290,8 +290,6 @@ thread_SOURCES = thread/XMThread.h                 \
 		 thread/DownloadReplaysThread.cpp \
 		 net/thread/ServerThread.cpp             \
 		 net/thread/ServerThread.h       \
-		 net/thread/ClientListenerThread.cpp             \
-		 net/thread/ClientListenerThread.h       \
 		 net/NetClient.cpp             \
 		 net/NetClient.h               \
 		 net/NetServer.cpp             \
