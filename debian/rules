@@ -1,16 +1,7 @@
 #!/usr/bin/make -f
-# -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-# This file was originally written by Joey Hess and Craig Small.
-# As a special exception, when this file is copied by dh-make into a
-# dh-make output file, you may use that output file without restriction.
-# This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
-
-# We want to use dpatch
-include /usr/share/dpatch/dpatch.make
 
 # These are used for cross-compiling and for saving the configure script
 # from having to guess our platform (since we know it already)
@@ -32,15 +23,21 @@ else
 	CFLAGS += -O2
 endif
 
-config.status: configure
+patch-stamp: patch
+patch:
+	$(MAKE) -f /usr/share/quilt/quilt.make patch
+	touch patch-stamp
+
+config.status: configure patch
 	dh_testdir
-	CFLAGS="$(CFLAGS) -Wl,-z,defs"; \
+	CFLAGS="$(CFLAGS) -Wl,-z,defs -DdDOUBLE"; \
+	CXXFLAGS="$(CFLAGS) -Wl,-z,defs -DdDOUBLE"; \
 	    if ! ./configure $(confflags) \
 	    	--prefix=/usr \
 	    	--bindir=\$${prefix}/games \
 	    	--datadir=\$${prefix}/share/games \
 	    	--mandir=\$${prefix}/share/man \
-                --localedir=\$${prefix}/share/games/locale; \
+		--localedir=\$${prefix}/share/games/locale; \
 	    then \
 		cat config.log; \
 		exit 1; \
@@ -53,14 +50,15 @@ build-stamp: config.status
 	$(MAKE)
 	touch build-stamp
 
-clean: unpatch
+clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp
+	rm -f build-stamp patch-stamp
 
 	[ ! -f Makefile ] || $(MAKE) distclean
 	rm -f config.log
 
+	$(MAKE) -f /usr/share/quilt/quilt.make unpatch
 	dh_clean
 
 install: build
@@ -70,13 +68,8 @@ install: build
 	dh_installdirs
 
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
-	# Recompress manpages
-	cd debian/tmp/usr/share/man/mang; \
-	for i in *; do \
-		gunzip $$i; \
-		gzip -9 `basename $$i .gz`; \
-	done
 	dh_install --sourcedir=debian/tmp --list-missing
+	rm -f debian/xmoto/usr/share/games/xmoto/Textures/Fonts/DejaVuSans.ttf
 	cp extra/xmoto.desktop debian/xmoto/usr/share/applications/
 	cp extra/xmoto.xpm debian/xmoto/usr/share/pixmaps/
 
@@ -106,7 +99,6 @@ binary-arch: build install
 	dh_installexamples -a
 	dh_installmenu -a
 	dh_installmime -a
-	dh_desktop -a
 	dh_installman -a
 	dh_link -a
 	dh_strip -a

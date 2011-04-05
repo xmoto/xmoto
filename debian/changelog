@@ -1,3 +1,183 @@
+xmoto (0.5.6-1~getdeb1) lucid; urgency=low
+
+  * New upstream version
+    * dark background behind the chat messages
+    * add ctrl+p to prefill chat box with previous private recipients
+    * new options : --serverPort and --serverAdminPassword
+    * server rules system (points in slave mode)
+    * possibility to send a report on the website when a level crashes
+    * monospace font for the admin console (DejaVuSansMono.ttf)
+    * performances improvements (mainly for the server)
+    * update munin plugins
+    * fix some bugs (if you win and lost at exactly the same time, you lost)
+
+ -- Christoph Korn <christoph.korn@getdeb.net>  Sat, 26 Mar 2011 21:40:37 +0100
+
+xmoto (0.5.5-1~getdeb1) lucid; urgency=low
+
+  * New upstream version
+    * replay support for physics levels
+    * improve network mode performances
+    * private message support on network interface
+    * several keys are now customizable via the options
+    * GetPlayerProfileName script function is now deprecated
+    * some minor fixes
+
+ -- Christoph Korn <christoph.korn@getdeb.net>  Thu, 17 Feb 2011 16:25:31 +0100
+
+xmoto (0.5.4-1~getdeb1) lucid; urgency=low
+
+  * New upstream version
+    * Add a button in the network tab to join
+      levels played by other people
+    * Remove the downloading ghost screen
+      (background download)
+    * Add a button to watch the replay just after
+      death or finish
+    * Add a configuration checkbox to be able to
+      connect to the server at startup
+    * Add 2 configuration control keys to change the chat history
+    * Display time required for the next medal in game
+    * Completion for chat box and server console
+    * Change default chineese font name from
+      wqy-zenhei.ttf to wqy-zenhei.ttc
+    * fix played time counted 2 times when using checkpoints
+    * minor bugs fixed
+
+ -- Christoph Korn <christoph.korn@getdeb.net>  Sat, 11 Dec 2010 20:25:39 +0100
+
+xmoto (0.5.3-1~getdeb1) lucid; urgency=low
+
+  * New upstream version
+    - Dropped patches: fix_segfault.patch, 64bit-ftbfs.patch
+    - Added libxdg-basedir-dev to build-depends
+
+ -- Joao Pinto <joao.pinto@getdeb.net>  Sat, 17 Jul 2010 15:34:09 +0000
+
+xmoto (0.5.2-2) unstable; urgency=low
+
+  [ Barry deFreese ]
+  * 64bit-ftbfs.diff - Fix FTBFS on 64bit. (Closes: #548511).
+    + Thanks to Peter De Wachter for the patch!
+
+ -- Barry deFreese <bdefreese@debian.org>  Sun, 27 Sep 2009 11:57:06 -0400
+
+xmoto (0.5.2-1) unstable; urgency=low
+
+  [ Barry deFreese ]
+  * New upstream release.
+    + Remove desktop and gcc-4.4 patches as they are fixed upstream.
+  * Add README.source for quilt package.
+  * Bump debhelper build-dep to 5 to match compat.
+  * Bump Standards Version to 3.8.3. (No changes needed).
+
+ -- Barry deFreese <bdefreese@debian.org>  Sat, 26 Sep 2009 10:01:44 -0400
+
+xmoto (0.5.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Samuel Mimram <smimram@debian.org>  Fri, 17 Apr 2009 10:28:00 +0200
+
+xmoto (0.5.0-3) unstable; urgency=low
+
+  [ Samuel Mimram ]
+  * Remove obsolete Suggests to xmoto-edit.
+
+  [ Barry deFreese ]
+  * Change libode0-dev build-depeds to libode-dev. (Closes: #520734).
+  * Bump Standards Version to 3.8.1. (No changes needed).
+
+  [ Gonéri Le Bouder ]
+  * Pass -DdDOUBLE to gcc, this should be done by pkg-config but xmoto
+    doesn't use it yet (Closes: #521013)
+  * Add myself in uploaders
+
+ -- Gonéri Le Bouder <goneri@rulezlan.org>  Tue, 24 Mar 2009 12:27:21 +0100
+
+xmoto (0.5.0-2) unstable; urgency=low
+
+  * Upload to unstable.
+  * Use DejaVuSans.ttf from the package ttf-dejavu-core.
+
+ -- Samuel Mimram <smimram@debian.org>  Sun, 15 Feb 2009 22:10:00 +0100
+
+xmoto (0.5.0-1) experimental; urgency=low
+
+  [ Miriam Ruiz ]
+  * New Upstream Release (Closes: #508286)
+  * Added patch to fix FTBFS in gcc 4.4 (Closes: #505414)
+    + Thanks to Martin Michlmayr for the patch.
+  * Refreshed patches
+  * Removed patch fix_segfault2.patch: Already fixed in upstream code
+
+  [ Samuel Mimram ]
+  * Add missing dependency on libsdl-net1.2-dev.
+
+ -- Samuel Mimram <smimram@debian.org>  Tue, 23 Dec 2008 15:55:40 +0100
+
+xmoto (0.4.2-3) unstable; urgency=medium
+
+  [ Barry deFreese ]
+  * Don't segfault on NULL db values. (Closes: #492414).
+    + Thanks to Gustavo Noronha Silva for the patch.
+  * Add patch-stamp target.
+  * Add myself to uploaders.
+
+ -- Barry deFreese <bdefreese@debian.org>  Sat, 11 Oct 2008 09:34:05 -0400
+
+xmoto (0.4.2-2) unstable; urgency=low
+
+  [ Miriam Ruiz ]
+  * Upgraded Standards-Version to 3.8.0. No changes needed.
+  * Don't call atoi(NULL), fixes segfault on upgrade from etch
+    (Closes: #492414). Thanks to Julien Cristau <jcristau@debian.org>
+  * Added Homepage field to debian/control
+  * Added Suggests: xmoto to package xmoto-data
+  * Added ArcadeGame to desktop categories. Closes: #478974
+    Thanks to Daniel Dickinson <cshore@wightman.ca>
+  * Replaced dpatch by quilt for patch management
+  * Replaced build dependency on the obsolete xlibmesa-gl-dev
+    by libgl1-mesa-dev
+  * The Debian Games Team is taking care for this package from now on
+
+  [ Ansgar Burchardt ]
+  * Add Vcs-* fields
+
+ -- Miriam Ruiz <little_miry@yahoo.es>  Tue, 26 Aug 2008 21:42:52 +0200
+
+xmoto (0.4.2-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Samuel Mimram <smimram@debian.org>  Tue, 18 Mar 2008 20:27:10 +0100
+
+xmoto (0.4.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Removed build-dependency on subversion.
+  * Builds with gcc 4.3, closes: #462050.
+
+ -- Samuel Mimram <smimram@debian.org>  Thu, 14 Feb 2008 21:36:29 +0100
+
+xmoto (0.4.0-2) unstable; urgency=low
+
+  * Add missing build-dependency on subversion, closes: #463224.
+
+ -- Samuel Mimram <smimram@debian.org>  Fri, 01 Feb 2008 08:49:09 +0100
+
+xmoto (0.4.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Should build cleanly with gcc 4.3, closes: #462050.
+  * Manpage is now up-to-date, closes: #449333.
+  * --nogfx option was removed, closes: #450685.
+  * Correcly set CXXFLAGS in rules, closes: #450682.
+  * Build with lua 5.1.
+  * Don't build with experimental configure option --with-enable-zooming=1.
+
+ -- Samuel Mimram <smimram@debian.org>  Tue, 29 Jan 2008 23:15:49 +0100
+
 xmoto (0.3.4-1) unstable; urgency=low
 
   * New upstream release.

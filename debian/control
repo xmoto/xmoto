@@ -1,14 +1,23 @@
 Source: xmoto
 Section: games
 Priority: optional
-Maintainer: Samuel Mimram <smimram@debian.org>
-Build-Depends: debhelper (>= 4.0.0), dpkg-dev (>= 1.13.19), dpatch, autotools-dev, libsdl1.2-dev, libsdl-ttf2.0-dev, libsdl-mixer1.2-dev, libjpeg62-dev, libpng12-dev, zlib1g-dev, xlibmesa-gl-dev | libgl-dev, libode0-dev, liblua5.1-0, liblua5.1-0-dev, libcurl4-gnutls-dev, libbz2-dev, libsqlite3-dev
-Standards-Version: 3.7.2
+Maintainer: GetDeb Package Ninjas <package.ninjas@getdeb.net>
+Uploaders: Miriam Ruiz <little_miry@yahoo.es>, Samuel Mimram <smimram@debian.org>,
+ Barry deFreese <bdefreese@debian.org>,
+ Gonéri Le Bouder <goneri@rulezlan.org>
+Build-Depends: debhelper (>= 5.0.0), dpkg-dev (>= 1.13.19), autotools-dev, quilt,
+ libsdl1.2-dev, libsdl-ttf2.0-dev, libsdl-mixer1.2-dev, libsdl-net1.2-dev,
+ libjpeg62-dev, libpng12-dev, zlib1g-dev, libgl1-mesa-dev | libgl-dev,
+ libode-dev, liblua5.1-0-dev, libcurl4-gnutls-dev, libbz2-dev, libsqlite3-dev,
+ libxdg-basedir-dev
+Standards-Version: 3.9.1
+Homepage: http://xmoto.tuxfamily.org/
+Vcs-Browser: http://svn.debian.org/wsvn/pkg-games/packages/trunk/xmoto/?op=log
+Vcs-Svn: svn://svn.debian.org/svn/pkg-games/packages/trunk/xmoto/
 
 Package: xmoto
 Architecture: any
-Depends: ${shlibs:Depends}, xmoto-data (= ${source:Version})
-Suggests: xmoto-edit
+Depends: ${shlibs:Depends}, ${misc:Depends}, xmoto-data (= ${source:Version})
 Description: 2D motocross platform game
  X-Moto is a challenging 2D motocross platform game, where physics play
  an all important role in the gameplay. You need to control your bike to
@@ -17,7 +26,9 @@ Description: 2D motocross platform game
 
 Package: xmoto-data
 Architecture: all
-Description: 2D motocross platform game
+Depends: ${misc:Depends}
+Suggests: xmoto (>= ${source:Version}), ttf-dejavu-core
+Description: 2D motocross platform game - data files
  X-Moto is a challenging 2D motocross platform game, where physics play
  an all important role in the gameplay. You need to control your bike to
  its limit, if you want to have a chance finishing the more difficult of
