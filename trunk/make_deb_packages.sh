@@ -39,33 +39,43 @@ then
     exit 1
 fi
 
+#
+VERSION="`getVersion .`"
+XDIR="xmoto-""$VERSION"
+TARFILE="xmoto-""$VERSION"".tar.gz"
+CHLOG="$TMPDIR""/""$XDIR""/""debian/changelog"
+CHLOG_TMP="$CHLOG"".tmp"
+
 # make gzip package
-if ! make dist-gzip
+echo "make dist-gzip"
+if ! make dist-gzip > /dev/null
 then
     exit 1
 fi
 
-#
-VERSION="`getVersion .`"
-TARFILE="xmoto-""$VERSION"".tar.gz"
-
 # get tar
+echo "cp ""$TARFILE"" ""$TMPDIR""/""$TARFILE"
 if ! cp "$TARFILE" "$TMPDIR""/""$TARFILE"
 then
     exit 1
 fi
 
 # untar
+echo "tar zxf ""$TARFILE"" -C ""$TMPDIR"
 if ! tar zxf "$TARFILE" -C "$TMPDIR"
 then
     exit 1
 fi
 
-XDIR="xmoto-""$VERSION"
+# add debian directory
+echo "cp -r debian ""$TMPDIR""/""$XDIR"
+if ! cp -r debian "$TMPDIR""/""$XDIR"
+then
+    exit 1
+fi
 
 # add changelog
-CHLOG="$TMPDIR""/""$XDIR""/""debian/changelog"
-CHLOG_TMP="$CHLOG"".tmp"
+echo "create changelog"
 if ! getLog "$VERSION" > "$CHLOG_TMP"
 then
     exit 1
@@ -81,6 +91,8 @@ then
     exit 1
 fi
 
+# debuild
+echo debuild
 if ! (cd "$TMPDIR""/""$XDIR" && debuild --no-tgz-check)
 then
     exit 1
