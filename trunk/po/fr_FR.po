@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2011-03-26 10:11+0100\n"
+"POT-Creation-Date: 2011-04-05 20:51+0200\n"
 "PO-Revision-Date: 2008-09-14 21:46+0200\n"
 "Last-Translator: Nicolas Adenis-Lamarre\n"
 "Language-Team: X-Moto\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 
 #: src/GameText.h:33
@@ -186,11 +186,11 @@ msgstr ""
 
 #: src/GameText.h:77
 msgid "Open chat dialog box"
-msgstr "Ouvir la fenêtre de chat"
+msgstr "Ouvrir la fenêtre de chat"
 
 #: src/GameText.h:78
 msgid "Open private chat dialog box"
-msgstr ""
+msgstr "Ouvrir la fenête de chat privé"
 
 #: src/GameText.h:79
 msgid "Checking for new or updated levels..."
