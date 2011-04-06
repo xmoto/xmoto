@@ -28,7 +28,6 @@ getDistribution() {
 TMPDIR="debian_tmp"
 VERSION=$(getVersion .)
 SVN=$(getSvnVersion .)
-SVN=3363
 DISTRIBUTION=$(getDistribution)
 XDIR="xmoto-""$VERSION"
 TARFILE="xmoto-""$VERSION"".tar.gz"
