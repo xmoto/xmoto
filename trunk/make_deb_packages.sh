@@ -1,12 +1,10 @@
 #!/bin/bash
 
-TMPDIR="debian_tmp"
-
 getVersion() {
     RELATIVE_TRUNK_DIR="$1"
-    
+
     if ! test -e ./"$RELATIVE_TRUNK_DIR"/configure.in
-    then
+	then
 	return 1
     fi
 
@@ -14,21 +12,42 @@ getVersion() {
     sed -e s+".*AM_INIT_AUTOMAKE(\(.*\),\(.*\)).*"+"\\2"+
 }
 
-getLog() {
-    VERSION="$1"
-    DATE="`date -R`"
+getSvnVersion() {
+    RELATIVE_TRUNK_DIR="$1"
 
-    cat  <<EOF
-xmoto (${VERSION}~svn-1) unstable; urgency=low
-
-  * Svn version.
-
- -- X-Moto <xmoto@tuxfamily.org>  ${DATE}
-
-EOF
-
+    if ! svnversion "$RELATIVE_TRUNK_DIR"
+    then
+	return 1
+    fi
 }
 
+getDistribution() {
+    grep -E '^DISTRIB_CODENAME=' /etc/lsb-release | sed -e s+'^DISTRIB_CODENAME='++
+}
+
+TMPDIR="debian_tmp"
+VERSION=$(getVersion .)
+SVN=$(getSvnVersion .)
+SVN=3363
+DISTRIBUTION=$(getDistribution)
+XDIR="xmoto-""$VERSION"
+TARFILE="xmoto-""$VERSION"".tar.gz"
+
+# check that the svn version is only an integer
+if ! echo "$SVN" | grep -qE '^[1-9][0-9]*$'
+    then
+    echo "Svn version is not an integer" >&2
+    exit 1
+fi
+
+# check the distribution
+if test -z "$DISTRIBUTION"
+then
+    echo "Disribution not found" >&2
+    exit 1
+fi
+
+# temporary directory
 if test -e "$TMPDIR"
 then
     rm -rf "$TMPDIR"
@@ -39,13 +58,6 @@ then
     exit 1
 fi
 
-#
-VERSION="`getVersion .`"
-XDIR="xmoto-""$VERSION"
-TARFILE="xmoto-""$VERSION"".tar.gz"
-CHLOG="$TMPDIR""/""$XDIR""/""debian/changelog"
-CHLOG_TMP="$CHLOG"".tmp"
-
 # make gzip package
 echo "make dist-gzip"
 if ! make dist-gzip > /dev/null
@@ -53,7 +65,7 @@ then
     exit 1
 fi
 
-# get tar
+# get tar (needed as orig.tar)
 echo "cp ""$TARFILE"" ""$TMPDIR""/""$TARFILE"
 if ! cp "$TARFILE" "$TMPDIR""/""$TARFILE"
 then
@@ -61,7 +73,7 @@ then
 fi
 
 # untar
-echo "tar zxf ""$TARFILE"" -C ""$TMPDIR"
+echo "tar zxf "$TMPDIR""/"""$TARFILE"" -C ""$TMPDIR"
 if ! tar zxf "$TARFILE" -C "$TMPDIR"
 then
     exit 1
@@ -74,25 +86,13 @@ then
     exit 1
 fi
 
-# add changelog
-echo "create changelog"
-if ! getLog "$VERSION" > "$CHLOG_TMP"
-then
-    exit 1
-fi
-
-if ! cat "$CHLOG" >> "$CHLOG_TMP"
-then
-    exit 1
-fi
-
-if ! mv "$CHLOG_TMP" "$CHLOG"
+# changelog
+if ! (cd "$TMPDIR""/""$XDIR" && dch --create --newversion "$VERSION"~"$SVN" --package xmoto --distribution "$DISTRIBUTION" "svn version")
 then
     exit 1
 fi
 
 # debuild
-echo debuild
 if ! (cd "$TMPDIR""/""$XDIR" && debuild --no-tgz-check)
 then
     exit 1
