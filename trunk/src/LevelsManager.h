@@ -144,6 +144,8 @@ public:
 					      levelPropertyRequiredValue i_isFinished,
 					      levelPropertyRequiredValue i_isNew,
 					      levelPropertyRequiredValue i_isStolen,
+					      levelPropertyRequiredValue i_setHighscoreDriver,
+					      const std::string&         i_highscoreDriver,
 					      int                        i_lastLevels); // negativ for don't care
 
   private:

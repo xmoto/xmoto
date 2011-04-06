@@ -262,21 +262,23 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   i_db->read_DB_free(v_result);
 
   /* add all packages */
-  makePacks_add(VPACKAGENAME_ALL_LEVELS,         QUERY_LVL_ALL,         GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_ALL_LEVELS);
-  makePacks_add(VPACKAGENAME_MY_LEVELS,          QUERY_LVL_MY,          GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_MY_LEVELS);
-  makePacks_add(VPACKAGENAME_FAVORITE_LEVELS,    QUERY_LVL_FAVORITES,   GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_FAVORITE_LEVELS);
-  makePacks_add(VPACKAGENAME_BLACKLIST_LEVELS,   QUERY_LVL_BLACKLIST,   GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_BLACKLIST_LEVELS);
-  makePacks_add(VPACKAGENAME_SCRIPTED,           QUERY_LVL_SCRIPTED,    GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_SCRIPTED);
-  makePacks_add(VPACKAGENAME_PHYSICS,            QUERY_LVL_PHYSICS,     GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_PHYSICS);
-  makePacks_add(VPACKAGENAME_INCOMPLETED_LEVELS, QUERY_LVL_INCOMPLETED, GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_INCOMPLETED_LEVELS);
-  makePacks_add(VPACKAGENAME_NEW_LEVELS,         QUERY_LVL_NEW,         GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_NEW_LEVELS);
-  makePacks_add(VPACKAGENAME_CRAPPY_LEVELS,      QUERY_LVL_CRAPPY,      GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_CRAPPY_LEVELS);
-  makePacks_add(VPACKAGENAME_LAST_LEVELS,        QUERY_LVL_LAST,        GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_LAST_LEVELS,         false /* not ok */);
-  makePacks_add(VPACKAGENAME_LEVELS_STOLEN,      QUERY_LVL_STOLEN,      GAMETEXT_PACK_ROOM,    VPACKAGENAME_DESC_LEVELS_STOLEN,       false /* not ok */);
+  makePacks_add(VPACKAGENAME_ALL_LEVELS,               	 QUERY_LVL_ALL,               GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_ALL_LEVELS);
+  makePacks_add(VPACKAGENAME_MY_LEVELS,                	 QUERY_LVL_MY,                GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_MY_LEVELS);
+  makePacks_add(VPACKAGENAME_FAVORITE_LEVELS,          	 QUERY_LVL_FAVORITES,         GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_FAVORITE_LEVELS);
+  makePacks_add(VPACKAGENAME_BLACKLIST_LEVELS,         	 QUERY_LVL_BLACKLIST,         GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_BLACKLIST_LEVELS);
+  makePacks_add(VPACKAGENAME_SCRIPTED,                 	 QUERY_LVL_SCRIPTED,          GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_SCRIPTED);
+  makePacks_add(VPACKAGENAME_PHYSICS,                  	 QUERY_LVL_PHYSICS,           GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_PHYSICS);
+  makePacks_add(VPACKAGENAME_INCOMPLETED_LEVELS,       	 QUERY_LVL_INCOMPLETED,       GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_INCOMPLETED_LEVELS);
+  makePacks_add(VPACKAGENAME_NEW_LEVELS,               	 QUERY_LVL_NEW,               GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_NEW_LEVELS);
+  makePacks_add(VPACKAGENAME_CRAPPY_LEVELS,            	 QUERY_LVL_CRAPPY,            GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_CRAPPY_LEVELS);
+  makePacks_add(VPACKAGENAME_LAST_LEVELS,              	 QUERY_LVL_LAST,              GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_LAST_LEVELS,              false /* not ok */);
+  makePacks_add(VPACKAGENAME_LEVELS_STOLEN,            	 QUERY_LVL_STOLEN,            GAMETEXT_PACK_ROOM,    VPACKAGENAME_DESC_LEVELS_STOLEN,            false /* not ok */);
+  makePacks_add(VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE, 	 QUERY_LVL_NO_HIGHSCORE,      GAMETEXT_PACK_ROOM,    VPACKAGENAME_DESC_LEVELS_WITH_NO_HIGHSCORE);
+
+  //makePacks_add(VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE, QUERY_LVL_NOT_THE_HIGHSCORE, GAMETEXT_PACK_ROOM,    VPACKAGENAME_DESC_YOU_HAVE_NOT_THE_HIGHSCORE);
 
   // STD PACKNAME
-  // VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE
-  // VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE
+  // VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE #
   // VPACKAGENAME_LAST_HIGHSCORES
   // VPACKAGENAME_OLDEST_HIGHSCORES
   // VPACKAGENAME_MEDAL_PLATINIUM
@@ -300,22 +302,6 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   // BY PROFILE
 
   /* rooms */
-
-  /* levels with no highscore */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE),
-			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
-			  "FROM levels AS a LEFT OUTER JOIN "
-			  "webhighscores AS b ON (a.id_level = b.id_level "
-			  "AND b.id_room=" + i_id_room + ") "
-			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
-			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE b.id_level IS NULL "
-			  "AND d.id_level IS NULL "
-			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
-			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1)");
-  v_pack->setGroup(GAMETEXT_PACK_ROOM);
-  v_pack->setDescription(VPACKAGENAME_DESC_LEVELS_WITH_NO_HIGHSCORE);
-  m_levelsPacks.push_back(v_pack);
 
   /* levels i've not the highscore */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE),
@@ -1263,6 +1249,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // unfinished
 								  lprv_dontcare, // new
 								  lprv_dontcare, // stolen
+								  lprv_dontcare, // highscore driver
+								  "",            // highscore driver name
 								  -1             // last levels
 								  ));
 
@@ -1277,6 +1265,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // unfinished
 								  lprv_dontcare, // new
 								  lprv_dontcare, // stolen
+								  lprv_dontcare, // highscore driver
+								  "",            // highscore driver name
 								  -1             // last levels
 								  ));
 
@@ -1291,6 +1281,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // unfinished
 								  lprv_dontcare, // new
 								  lprv_dontcare, // stolen
+								  lprv_dontcare, // highscore driver
+								  "",            // highscore driver name
 								  -1             // last levels
 								  ));
   writeDefaultPackagesSql(pfh, "QUERY_LVL_BLACKLIST",
@@ -1304,6 +1296,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // unfinished
 								  lprv_dontcare, // new
 								  lprv_dontcare, // stolen
+								  lprv_dontcare, // highscore driver
+								  "",            // highscore driver name
 								  -1             // last levels
 								  ));
 
@@ -1318,6 +1312,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // unfinished
 								  lprv_dontcare, // new
 								  lprv_dontcare, // stolen
+								  lprv_dontcare, // highscore driver
+								  "",            // highscore driver name
 								  -1             // last levels
 								  ));
 
@@ -1332,6 +1328,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // unfinished
 								  lprv_dontcare, // new
 								  lprv_dontcare, // stolen
+								  lprv_dontcare, // highscore driver
+								  "",            // highscore driver name
 								  -1             // last levels
 								  ));
 
@@ -1346,6 +1344,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_no,       // finished
 								  lprv_dontcare, // new
 								  lprv_dontcare, // stolen
+								  lprv_dontcare, // highscore driver
+								  "",            // highscore driver name
 								  -1             // last levels
 								  ));
 
@@ -1360,6 +1360,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // finished
 								  lprv_yes,      // new
 								  lprv_dontcare, // stolen
+								  lprv_dontcare, // highscore driver
+								  "",            // highscore driver name
 								  -1             // last levels
 								  ));
 
@@ -1374,6 +1376,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // finished
 								  lprv_dontcare, // new
 								  lprv_dontcare, // stolen
+								  lprv_dontcare, // highscore driver
+								  "",            // highscore driver name
 								  -1             // last levels
 								  ));
 
@@ -1388,6 +1392,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // finished
 								  lprv_dontcare, // new
 								  lprv_dontcare, // stolen
+								  lprv_dontcare, // highscore driver
+								  "",            // highscore driver name
 								  100            // last levels
 								  ));
 
@@ -1402,8 +1408,42 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // finished
 								  lprv_dontcare, // new
 								  lprv_yes,      // stolen
+								  lprv_dontcare, // highscore driver
+								  "",            // highscore driver name
 								  -1             // last levels
 								  ));
+
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_NO_HIGHSCORE",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+								  lprv_dontcare, // physics
+								  lprv_dontcare, // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_no,       // blacklisted
+								  lprv_dontcare, // to reload
+								  lprv_dontcare, // favorite
+								  lprv_dontcare, // finished
+								  lprv_dontcare, // new
+								  lprv_dontcare, // stolen
+								  lprv_yes,      // highscore driver
+								  "",            // highscore driver name
+								  -1             // last levels
+								  ));
+
+//  writeDefaultPackagesSql(pfh, "QUERY_LVL_NOT_THE_HIGHSCORE",
+//			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+//								  lprv_dontcare, // physics
+//								  lprv_dontcare, // crappy
+//								  lprv_dontcare, // children compliant
+//								  lprv_no,       // blacklisted
+//								  lprv_dontcare, // to reload
+//								  lprv_dontcare, // favorite
+//								  lprv_dontcare, // finished
+//								  lprv_dontcare, // new
+//								  lprv_dontcare, // stolen
+//								  lprv_no,       // highscore driver
+//								  "",            // highscore driver name
+//								  -1             // last levels
+//								  ));
 
   XMFS::closeFile(pfh);
 }
@@ -1418,6 +1458,8 @@ std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i
 						    levelPropertyRequiredValue i_isFinished,
 						    levelPropertyRequiredValue i_isNew,
 						    levelPropertyRequiredValue i_isStolen,
+						    levelPropertyRequiredValue i_setHighscoreDriver,
+						    const std::string&         i_highscoreDriver,
 						    int                        i_lastLevels
 						    ) {
   std::string v_sql, v_select, v_tables, v_where, v_group, v_order;
@@ -1505,10 +1547,18 @@ std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i
 
   // stolen ? (2/2) -- h = webhighscores of the stolen levels
   if(i_isStolen != lprv_dontcare) {
-    v_tables += " LEFT OUTER JOIN webhighscores h";
+    v_tables += " LEFT OUTER JOIN webhighscores AS h";
     v_tables += "     ON (    g.id_room    = h.id_room";
     v_tables += "         AND g.id_level   = h.id_level";
     v_tables += "         AND g.id_profile = h.id_profile)";
+  }
+
+  // highscore informations ? -- i = webhighscores of levels
+  // highscore driver 1/2
+  if(i_setHighscoreDriver != lprv_dontcare) {
+    v_tables += " LEFT OUTER JOIN webhighscores AS i";
+    v_tables += "     ON (    i.id_level   = a.id_level";
+    v_tables += "         AND i.id_room    = xm_idRoom(0))"; // 1st room
   }
 
   //
@@ -1595,6 +1645,23 @@ std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i
     v_where += " AND g.id_profile=xm_profile()";
     v_where += " AND g.id_room=xm_idRoom(0)"; // main room
     v_where += " AND h.id_profile IS NULL";   // you don't have the highscore
+  }
+
+  // highscore driver 2/2
+  if(i_setHighscoreDriver != lprv_dontcare) {
+    if(i_setHighscoreDriver == lprv_yes) {
+      if(i_highscoreDriver == "") {
+	v_where += " AND i.id_profile IS NULL";
+      } else {
+	v_where += " AND i.id_profile = \"" + xmDatabase::protectString(i_highscoreDriver) + "\"";
+      }
+    } else /* no */ {
+      if(i_highscoreDriver == "") {
+	v_where += " AND i.id_profile IS NOT NULL";
+      } else {
+	v_where += " AND i.id_profile <> \"" + xmDatabase::protectString(i_highscoreDriver) + "\"";
+      }
+    }
   }
 
   // GROUP
