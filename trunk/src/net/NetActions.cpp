@@ -240,6 +240,7 @@ void NetAction::getNetAction(NetActionU* o_netAction, void* data, unsigned int l
 
   else if(v_cmd == NA_udpBindValidation::ActionKey) {
     o_netAction->udpBindValidation = NA_udpBindValidation(((char*)data)+v_totalOffset, len-v_totalOffset);
+    o_netAction->master = &(o_netAction->udpBindValidation);
   }
 
   else if(v_cmd == NA_udpBind::ActionKey) {
