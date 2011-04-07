@@ -58,9 +58,9 @@ then
 fi
 
 # make gzip package
-echo "make dist-gzip"
-if ! make dist-gzip > /dev/null
+if test -z "$TARFILE"
 then
+    echo "$TARFILE"" missing" >&2
     exit 1
 fi
 
