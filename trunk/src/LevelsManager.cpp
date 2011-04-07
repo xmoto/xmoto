@@ -274,11 +274,9 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   makePacks_add(VPACKAGENAME_LAST_LEVELS,              	 QUERY_LVL_LAST,              GAMETEXT_PACK_SPECIAL, VPACKAGENAME_DESC_LAST_LEVELS,              false /* not ok */);
   makePacks_add(VPACKAGENAME_LEVELS_STOLEN,            	 QUERY_LVL_STOLEN,            GAMETEXT_PACK_ROOM,    VPACKAGENAME_DESC_LEVELS_STOLEN,            false /* not ok */);
   makePacks_add(VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE, 	 QUERY_LVL_NO_HIGHSCORE,      GAMETEXT_PACK_ROOM,    VPACKAGENAME_DESC_LEVELS_WITH_NO_HIGHSCORE);
-
-  //makePacks_add(VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE, QUERY_LVL_NOT_THE_HIGHSCORE, GAMETEXT_PACK_ROOM,    VPACKAGENAME_DESC_YOU_HAVE_NOT_THE_HIGHSCORE);
+  makePacks_add(VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE, QUERY_LVL_NOT_THE_HIGHSCORE, GAMETEXT_PACK_ROOM,    VPACKAGENAME_DESC_YOU_HAVE_NOT_THE_HIGHSCORE);
 
   // STD PACKNAME
-  // VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE #
   // VPACKAGENAME_LAST_HIGHSCORES
   // VPACKAGENAME_OLDEST_HIGHSCORES
   // VPACKAGENAME_MEDAL_PLATINIUM
@@ -302,22 +300,6 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   // BY PROFILE
 
   /* rooms */
-
-  /* levels i've not the highscore */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE),
-			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
-			  "FROM levels AS a INNER JOIN "
-			  "webhighscores AS b ON (a.id_level = b.id_level "
-			  "AND b.id_room=" + i_id_room + ") "
-			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
-			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE b.id_profile<>\"" + xmDatabase::protectString(i_playerName) + "\" "
-			  "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
-			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
-			  "AND d.id_level IS NULL");
-  v_pack->setGroup(GAMETEXT_PACK_ROOM);
-  v_pack->setDescription(VPACKAGENAME_DESC_YOU_HAVE_NOT_THE_HIGHSCORE);
-  m_levelsPacks.push_back(v_pack);
 
   /* last highscores */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_LAST_HIGHSCORES),
@@ -1429,21 +1411,21 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  -1             // last levels
 								  ));
 
-//  writeDefaultPackagesSql(pfh, "QUERY_LVL_NOT_THE_HIGHSCORE",
-//			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-//								  lprv_dontcare, // physics
-//								  lprv_dontcare, // crappy
-//								  lprv_dontcare, // children compliant
-//								  lprv_no,       // blacklisted
-//								  lprv_dontcare, // to reload
-//								  lprv_dontcare, // favorite
-//								  lprv_dontcare, // finished
-//								  lprv_dontcare, // new
-//								  lprv_dontcare, // stolen
-//								  lprv_no,       // highscore driver
-//								  "",            // highscore driver name
-//								  -1             // last levels
-//								  ));
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_NOT_THE_HIGHSCORE",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+								  lprv_dontcare, // physics
+								  lprv_dontcare, // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_no,       // blacklisted
+								  lprv_dontcare, // to reload
+								  lprv_dontcare, // favorite
+								  lprv_dontcare, // finished
+								  lprv_dontcare, // new
+								  lprv_dontcare, // stolen
+								  lprv_no,       // highscore driver
+								  "<SELF>",      // highscore driver name
+								  -1             // last levels
+								  ));
 
   XMFS::closeFile(pfh);
 }
@@ -1652,12 +1634,16 @@ std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i
     if(i_setHighscoreDriver == lprv_yes) {
       if(i_highscoreDriver == "") {
 	v_where += " AND i.id_profile IS NULL";
+      } else if(i_highscoreDriver == "<SELF>") { /* special <SELF> value */
+	v_where += " AND i.id_profile = xm_profile()";
       } else {
 	v_where += " AND i.id_profile = \"" + xmDatabase::protectString(i_highscoreDriver) + "\"";
       }
     } else /* no */ {
       if(i_highscoreDriver == "") {
 	v_where += " AND i.id_profile IS NOT NULL";
+      } else if(i_highscoreDriver == "<SELF>") { /* special <SELF> value */
+	v_where += " AND i.id_profile <> xm_profile()";
       } else {
 	v_where += " AND i.id_profile <> \"" + xmDatabase::protectString(i_highscoreDriver) + "\"";
       }
