@@ -58,7 +58,7 @@ then
 fi
 
 # make gzip package
-if test -z "$TARFILE"
+if ! test -f "$TARFILE"
 then
     echo "$TARFILE"" missing" >&2
     exit 1
