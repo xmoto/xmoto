@@ -1,5 +1,7 @@
-X-Moto 0.5.7 2011-
+X-Moto 0.5.7 2011-04-08
 --------------------------------
+ * fix a bug that make xmoto crashes
+ * improve network performances
 
 X-Moto 0.5.6 2011-03-26
 --------------------------------
