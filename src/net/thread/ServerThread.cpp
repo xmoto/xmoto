@@ -52,6 +52,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_SERVER_MAX_FOLLOWING_UDP 100
 #define XM_SERVER_DEFAULT_BANNER "Welcome on this server"
 #define XM_SERVER_UNPLAYING_SLEEP 10
+#define XM_SERVER_NICK_LENGTH_MAX 16
 
 // limit multi private message to avoid people spamming everybody and making think it's private
 #define XM_SERVER_MAXIMUM_MULTI_PRIVATE_MESSAGE 3
@@ -1387,6 +1388,17 @@ bool ServerThread::manageAction(NetAction* i_netAction, unsigned int i_client) {
       m_clients[i_client]->setName(((NA_changeName*)i_netAction)->getName());
       if(m_clients[i_client]->name() == "") {
 	throw Exception("Invalid name provided");
+      }
+
+      // length
+      if(utf8::utf8_length(m_clients[i_client]->name()) > XM_SERVER_NICK_LENGTH_MAX) {
+	NA_serverError na("Connexion refused : player name too long");
+	try {
+	  sendToClient(&na, i_client, -1, 0);
+	} catch(Exception &e) {
+	  /* ok, no pb */
+	}
+	return false;
       }
 
       // check bans
