@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level id="OnWheelTouches" levelpack="Test Levels">
+<info>
+<name>OnWheelTouches</name>
+<description></description>
+<author></author>
+<date></date>
+<sky>sky1</sky>
+</info>
+<script>
+max_jump_time = 1.0 -- start at 1 to not count smaller jumps
+jump_begin    = 0.0
+touch_1  = false
+touch_2 = false
+
+function OnWheel1Touchs(bStatus)
+  if(bStatus == 1)  
+  then
+    updateMax()
+    touch_1 = true
+  else
+    touch_1 = false
+    jump_begin = Game.GetTime()
+  end
+end
+
+function OnWheel2Touchs(bStatus)
+  if(bStatus == 1)  
+  then
+    updateMax()
+    touch_2 = true
+  else
+    touch_2 = false
+    jump_begin = Game.GetTime()
+  end
+end
+
+function updateMax()
+  if(touch_1 == false and touch_2 == false)
+  then
+    if(Game.GetTime() - jump_begin > max_jump_time)
+    then
+      max_jump_time = Game.GetTime() - jump_begin
+      Game.Message("New high jump: "..max_jump_time)
+    end
+  end
+end
+
+</script>
+<limits left="0" right="50" top="30" bottom="0"/>
+<block id="Block0">
+<position x="0" y="0"/>
+<usetexture id="default"/>
+<vertex x="5" y="5"/>
+<vertex x="5" y="10"/>
+<vertex x="10" y="10"/>
+<vertex x="10" y="5"/>
+</block>
+<entity id="MyPlayerStart0" typeid="PlayerStart">
+<size r="0.4"/>
+<position x="7.5" y="10"/>
+</entity>
+<entity id="Strawberry0" typeid="Strawberry">
+<size r="0.4"/>
+<position x="46" y="0.5"/>
+</entity>
+<entity id="mybird" typeid="Sprite">
+	<size r="0.4"/>
+	<position x="48" y="0"/>
+	<param name="z" value="-1"/>
+	<param name="name" value="bird"/>
+	<param name="style" value="default"/>
+</entity>
+<zone id="Zone0">
+<box left="40" right="50" top="5" bottom="0"/>
+</zone>
+</level>
