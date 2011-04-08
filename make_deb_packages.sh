@@ -31,12 +31,13 @@ SVN=$(getSvnVersion .)
 DISTRIBUTION=$(getDistribution)
 XDIR="xmoto-""$VERSION"
 TARFILE="xmoto-""$VERSION"".tar.gz"
+export DEBEMAIL="nicolas.adenis.lamarre@gmail.com"
+export DEBFULLNAME="Nicolas Adenis-Lamarre"
 
 # check that the svn version is only an integer
 if ! echo "$SVN" | grep -qE '^[1-9][0-9]*$'
     then
     echo "Svn version is not an integer" >&2
-    exit 1
 fi
 
 # check the distribution
@@ -92,11 +93,19 @@ then
 fi
 
 # debuild
-if ! (cd "$TMPDIR""/""$XDIR" && debuild --no-tgz-check)
+if ! (cd "$TMPDIR""/""$XDIR" && debuild --no-tgz-check -uc -us)
 then
     exit 1
 fi
 
-find "$TMPDIR" -maxdepth 1 -name "*.deb"
+# move debian packages to the main dir
+find "$TMPDIR" -maxdepth 1 -name "*.deb" |
+while read FILE
+do
+    if ! mv "$FILE" .
+	then
+	return 1
+    fi
+done || exit 1
 
 exit 0
