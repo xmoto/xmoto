@@ -60,6 +60,15 @@ function make_sources {
     return 1
 }
 
+function make_deb {
+    (
+	cd sources       &&
+	make dist-gzip > /dev/null &&
+	../trunk/make_deb_packages.sh &&
+	mv *.deb "../builds/"
+    ) && return 0
+}
+
 function make_windows {
     SVNVERSION="$1"
 
@@ -119,6 +128,14 @@ SVNVERSION="`svnVersion`"
 # make unix package
 echo "Make sources package..."
 if ! make_sources "$SVNVERSION"
+    then
+    echo "Erreur" >&2
+    exit 1
+fi
+
+# make unix package
+echo "Make deb packages..."
+if ! make_deb
     then
     echo "Erreur" >&2
     exit 1
