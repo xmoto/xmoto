@@ -26,8 +26,16 @@ getDistribution() {
 }
 
 TMPDIR="debian_tmp"
-VERSION=$(getVersion .)
-SVN=$(getSvnVersion .)
+
+RELATIVE_TRUNK_DIR="`dirname "$0"`"
+if echo "$RELATIVE_TRUNK_DIR" | grep -E "^/"
+    then
+    echo "$0"" must be called with a relative path" 1>&2
+    exit 1
+fi
+
+VERSION=`getVersion "$RELATIVE_TRUNK_DIR"`
+SVN=$(getSvnVersion "$RELATIVE_TRUNK_DIR")
 DISTRIBUTION=$(getDistribution)
 XDIR="xmoto-""$VERSION"
 TARFILE="xmoto-""$VERSION"".tar.gz"
@@ -80,8 +88,8 @@ then
 fi
 
 # add debian directory
-echo "cp -r debian ""$TMPDIR""/""$XDIR"
-if ! cp -r debian "$TMPDIR""/""$XDIR"
+echo "cp -r "$RELATIVE_TRUNK_DIR""/"debian ""$TMPDIR""/""$XDIR"
+if ! cp -r "$RELATIVE_TRUNK_DIR""/"debian "$TMPDIR""/""$XDIR"
 then
     exit 1
 fi
