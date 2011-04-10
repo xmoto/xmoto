@@ -23,12 +23,8 @@ else
 	CFLAGS += -O2
 endif
 
-patch-stamp: patch
-patch:
-	$(MAKE) -f /usr/share/quilt/quilt.make patch
-	touch patch-stamp
 
-config.status: configure patch
+config.status: configure
 	dh_testdir
 	CFLAGS="$(CFLAGS) -Wl,-z,defs -DdDOUBLE"; \
 	CXXFLAGS="$(CFLAGS) -Wl,-z,defs -DdDOUBLE"; \
@@ -44,7 +40,7 @@ config.status: configure patch
 	fi
 
 
-build: patch-stamp build-stamp
+build: build-stamp
 build-stamp: config.status
 	dh_testdir
 	$(MAKE)
@@ -53,12 +49,11 @@ build-stamp: config.status
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp patch-stamp
+	rm -f build-stamp
 
 	[ ! -f Makefile ] || $(MAKE) distclean
 	rm -f config.log
 
-	$(MAKE) -f /usr/share/quilt/quilt.make unpatch
 	dh_clean
 
 install: build
