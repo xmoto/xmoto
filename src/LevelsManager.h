@@ -146,7 +146,8 @@ public:
 					      levelPropertyRequiredValue i_isStolen,
 					      levelPropertyRequiredValue i_setHighscoreDriver,
 					      const std::string&         i_highscoreDriver,
-					      int                        i_lastLevels); // negativ for don't care
+					      int                        i_limitToLastLevels,      // 0 for don't care, negativ for oldest -- only 1 limit allowed
+					      int                        i_limitTolastHighscores); // 0 for don't care, negativ for oldest -- only 1 limit allowed
 
   private:
   void clean();
