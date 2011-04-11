@@ -275,10 +275,10 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   makePacks_add(VPACKAGENAME_LEVELS_STOLEN,            	 QUERY_LVL_STOLEN,            GAMETEXT_PACK_ROOM,    VPACKAGENAME_DESC_LEVELS_STOLEN,            false /* not ok */);
   makePacks_add(VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE, 	 QUERY_LVL_NO_HIGHSCORE,      GAMETEXT_PACK_ROOM,    VPACKAGENAME_DESC_LEVELS_WITH_NO_HIGHSCORE);
   makePacks_add(VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE, QUERY_LVL_NOT_THE_HIGHSCORE, GAMETEXT_PACK_ROOM,    VPACKAGENAME_DESC_YOU_HAVE_NOT_THE_HIGHSCORE);
+  makePacks_add(VPACKAGENAME_LAST_HIGHSCORES,            QUERY_LVL_LAST_HIGHSCORES,   GAMETEXT_PACK_ROOM,    VPACKAGENAME_DESC_LAST_HIGHSCORES,         false /* not ok */);
+  makePacks_add(VPACKAGENAME_OLDEST_HIGHSCORES,          QUERY_LVL_OLDEST_HIGHSCORES, GAMETEXT_PACK_ROOM,    VPACKAGENAME_DESC_OLDEST_HIGHSCORES);
 
   // STD PACKNAME
-  // VPACKAGENAME_LAST_HIGHSCORES
-  // VPACKAGENAME_OLDEST_HIGHSCORES
   // VPACKAGENAME_MEDAL_PLATINIUM
   // VPACKAGENAME_MEDAL_GOLD
   // VPACKAGENAME_MEDAL_SILVER
@@ -300,38 +300,6 @@ void LevelsManager::makePacks(const std::string& i_playerName,
   // BY PROFILE
 
   /* rooms */
-
-  /* last highscores */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_LAST_HIGHSCORES),
-			  "SELECT a.id_level AS id_level, a.name AS name, b.date AS sort_field "
-			  "FROM levels AS a INNER JOIN "
-			  "webhighscores AS b ON (a.id_level = b.id_level "
-			  "AND b.id_room=" + i_id_room + ") "
-			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
-			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
-			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
-			  "AND d.id_level IS NULL "
-			  "ORDER by b.date DESC LIMIT 100", false);
-  v_pack->setDescription(VPACKAGENAME_DESC_LAST_HIGHSCORES);
-  m_levelsPacks.push_back(v_pack);
-  v_pack->setGroup(GAMETEXT_PACK_ROOM);
-
-  /* oldest highscores */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_OLDEST_HIGHSCORES),
-			  "SELECT a.id_level AS id_level, a.name AS name, b.date AS sort_field "
-			  "FROM levels AS a INNER JOIN "
-			  "webhighscores AS b ON (a.id_level = b.id_level "
-			  "AND b.id_room=" + i_id_room + ") "
-			  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
-			  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
-			  "WHERE (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0)"
-			  "AND (c.children_compliant IS NULL OR xm_userChildrenCompliant(c.children_compliant)=1) "
-			  " AND d.id_level IS NULL "
-			  "ORDER by b.date ASC LIMIT 100");
-  v_pack->setGroup(GAMETEXT_PACK_ROOM);
-  v_pack->setDescription(VPACKAGENAME_DESC_OLDEST_HIGHSCORES);
-  m_levelsPacks.push_back(v_pack);
 
   /* medals */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_MEDAL_PLATINIUM),
@@ -1233,7 +1201,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // stolen
 								  lprv_dontcare, // highscore driver
 								  "",            // highscore driver name
-								  -1             // last levels
+								  0,             // last levels
+								  0              // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_MY",
@@ -1249,7 +1218,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // stolen
 								  lprv_dontcare, // highscore driver
 								  "",            // highscore driver name
-								  -1             // last levels
+								  0,             // last levels
+								  0              // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_FAVORITES",
@@ -1265,7 +1235,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // stolen
 								  lprv_dontcare, // highscore driver
 								  "",            // highscore driver name
-								  -1             // last levels
+								  0,             // last levels
+								  0              // last highscores
 								  ));
   writeDefaultPackagesSql(pfh, "QUERY_LVL_BLACKLIST",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
@@ -1280,7 +1251,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // stolen
 								  lprv_dontcare, // highscore driver
 								  "",            // highscore driver name
-								  -1             // last levels
+								  0,             // last levels
+								  0              // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_SCRIPTED",
@@ -1296,7 +1268,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // stolen
 								  lprv_dontcare, // highscore driver
 								  "",            // highscore driver name
-								  -1             // last levels
+								  0,             // last levels
+								  0              // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_PHYSICS",
@@ -1312,7 +1285,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // stolen
 								  lprv_dontcare, // highscore driver
 								  "",            // highscore driver name
-								  -1             // last levels
+								  0,             // last levels
+								  0              // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_INCOMPLETED",
@@ -1328,7 +1302,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // stolen
 								  lprv_dontcare, // highscore driver
 								  "",            // highscore driver name
-								  -1             // last levels
+								  0,             // last levels
+								  0              // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_NEW",
@@ -1344,7 +1319,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // stolen
 								  lprv_dontcare, // highscore driver
 								  "",            // highscore driver name
-								  -1             // last levels
+								  0,             // last levels
+								  0              // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_CRAPPY",
@@ -1360,7 +1336,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // stolen
 								  lprv_dontcare, // highscore driver
 								  "",            // highscore driver name
-								  -1             // last levels
+								  0,             // last levels
+								  0              // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_LAST",
@@ -1376,7 +1353,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // stolen
 								  lprv_dontcare, // highscore driver
 								  "",            // highscore driver name
-								  100            // last levels
+								  100,           // last levels
+								  0              // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_STOLEN",
@@ -1392,7 +1370,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_yes,      // stolen
 								  lprv_dontcare, // highscore driver
 								  "",            // highscore driver name
-								  -1             // last levels
+								  0,             // last levels
+								  0              // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_NO_HIGHSCORE",
@@ -1408,7 +1387,8 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // stolen
 								  lprv_yes,      // highscore driver
 								  "",            // highscore driver name
-								  -1             // last levels
+								  0,             // last levels
+								  0              // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_NOT_THE_HIGHSCORE",
@@ -1424,7 +1404,42 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 								  lprv_dontcare, // stolen
 								  lprv_no,       // highscore driver
 								  "<SELF>",      // highscore driver name
-								  -1             // last levels
+								  0,             // last levels
+								  0              // last highscores
+								  ));
+
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_LAST_HIGHSCORES",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+								  lprv_dontcare, // physics
+								  lprv_dontcare, // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_no,       // blacklisted
+								  lprv_dontcare, // to reload
+								  lprv_dontcare, // favorite
+								  lprv_dontcare, // finished
+								  lprv_dontcare, // new
+								  lprv_dontcare, // stolen
+								  lprv_dontcare, // highscore driver
+								  "",            // highscore driver name
+								  0,             // last levels
+								  100            // last highscores
+								  ));
+
+  writeDefaultPackagesSql(pfh, "QUERY_LVL_OLDEST_HIGHSCORES",
+			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
+								  lprv_dontcare, // physics
+								  lprv_dontcare, // crappy
+								  lprv_dontcare, // children compliant
+								  lprv_no,       // blacklisted
+								  lprv_dontcare, // to reload
+								  lprv_dontcare, // favorite
+								  lprv_dontcare, // finished
+								  lprv_dontcare, // new
+								  lprv_dontcare, // stolen
+								  lprv_dontcare, // highscore driver
+								  "",            // highscore driver name
+								  0,             // last levels
+								  -100           // last highscores
 								  ));
 
   XMFS::closeFile(pfh);
@@ -1442,20 +1457,37 @@ std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i
 						    levelPropertyRequiredValue i_isStolen,
 						    levelPropertyRequiredValue i_setHighscoreDriver,
 						    const std::string&         i_highscoreDriver,
-						    int                        i_lastLevels
+						    int                        i_limitToLastLevels,
+						    int                        i_limitToLastHighscores
 						    ) {
   std::string v_sql, v_select, v_tables, v_where, v_group, v_order;
   std::string v_levelNameField, v_sortField;
   bool v_mustBeInWebLevels;
+  bool v_mustBeInWebHighscores;
+  std::ostringstream v_n;
 
-  v_mustBeInWebLevels = false;
+  // args checks
+  if(i_limitToLastLevels != 0 && i_limitToLastHighscores != 0) {
+    throw Exception("virtual pack: cannot set lastLevels and lastHighscores");
+  }
+  //
+
+  v_mustBeInWebLevels     = false;
+  v_mustBeInWebHighscores = false;
 
   // optimisation for weblevels
-  if(i_lastLevels > 0 || i_isCrappy == lprv_yes || i_isChildrenCompliant == lprv_no || i_isStolen != lprv_dontcare) {
+  if(i_limitToLastLevels != 0 || i_isCrappy == lprv_yes || i_isChildrenCompliant == lprv_no || i_isStolen != lprv_dontcare) {
     v_mustBeInWebLevels = true; // because the information is in weblevels
   }
 
-  if(i_lastLevels > 0) {
+  // optimisations for webhighscores
+  if( !(i_setHighscoreDriver == lprv_yes && i_highscoreDriver == "") || i_limitToLastHighscores != 0) {
+    v_mustBeInWebHighscores = true;
+  }
+
+  if(i_limitToLastHighscores != 0) {
+    v_sortField = "i.date";
+  } else if(i_limitToLastLevels != 0) {
     v_sortField = "b.creationDate";
   } else if(i_isStolen != lprv_dontcare) {
     v_sortField = "g.known_stolen_date";
@@ -1537,8 +1569,13 @@ std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i
 
   // highscore informations ? -- i = webhighscores of levels
   // highscore driver 1/2
-  if(i_setHighscoreDriver != lprv_dontcare) {
-    v_tables += " LEFT OUTER JOIN webhighscores AS i";
+  if(i_setHighscoreDriver != lprv_dontcare || i_limitToLastHighscores != 0) {
+    if(v_mustBeInWebHighscores) {
+      v_tables += " INNER JOIN webhighscores AS i";
+    } else {
+      v_tables += " LEFT OUTER JOIN webhighscores AS i";
+    }
+
     v_tables += "     ON (    i.id_level   = a.id_level";
     v_tables += "         AND i.id_room    = xm_idRoom(0))"; // 1st room
   }
@@ -1641,7 +1678,7 @@ std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i
       }
     } else /* no */ {
       if(i_highscoreDriver == "") {
-	v_where += " AND i.id_profile IS NOT NULL";
+	//v_where += " AND i.id_profile IS NOT NULL"; // not required while there is an inner join
       } else if(i_highscoreDriver == "<SELF>") { /* special <SELF> value */
 	v_where += " AND i.id_profile <> xm_profile()";
       } else {
@@ -1663,10 +1700,12 @@ std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i
     }
   }
 
-  if(i_lastLevels > 0) {
-    std::ostringstream v_n;
-    v_n << i_lastLevels;
-    v_order = " ORDER BY b.creationDate DESC LIMIT " + v_n.str();
+  if(i_limitToLastHighscores != 0) {
+    v_n << abs(i_limitToLastHighscores);
+    v_order = " ORDER BY i.date " + std::string((i_limitToLastHighscores > 0 ? "DESC" : "ASC")) + " LIMIT " + v_n.str();
+  } else if(i_limitToLastLevels != 0) {
+    v_n << abs(i_limitToLastLevels);
+    v_order = " ORDER BY b.creationDate " + std::string((i_limitToLastLevels > 0 ? "DESC" : "ASC")) + " LIMIT " + v_n.str();
   }
 
   // finally...
