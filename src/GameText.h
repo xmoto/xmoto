@@ -510,6 +510,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_SWITCHFAVORITE       _("Add/remove to favorite levels")
 #define GAMETEXT_SWITCHFPS            _("Switch FPS")
 #define GAMETEXT_SWITCHBLACKLIST      _("Add/remove to blacklisted levels")
+#define GAMETEXT_SWITCHNETMODE        _("Switch net game mode")
+#define GAMETEXT_SWITCHHIGHSCOREINFORMATION _("Switch highscore information")
 #define GAMETEXT_SWITCHWWWACCESS      _("Switch WWW access")
 #define GAMETEXT_SWITCHGFXQUALITYMODE _("Switch graphics quality mode")
 #define GAMETEXT_SWITCHGFXMODE        _("Switch graphics mode")

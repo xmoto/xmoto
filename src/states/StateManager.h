@@ -77,8 +77,8 @@ public:
   void registerAsEmitter(std::string message);
 
   // send the message to registered states
-  void sendSynchronousMessage( std::string message, std::string args="");
-  void sendAsynchronousMessage(std::string message, std::string args="");
+  void sendSynchronousMessage( std::string message, std::string args="", const std::string& i_parentId = "");
+  void sendAsynchronousMessage(std::string message, std::string args="", const std::string& i_parentId = "");
 
   bool isTopOfTheStates(GameState* i_state);
   int numberOfStates();

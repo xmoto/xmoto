@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 UIRoot* StateFinished::m_sGUI = NULL;
 
 StateFinished::StateFinished(Universe* i_universe,
+			     const std::string& i_parentId,
 			     bool drawStateBehind,
 			     bool updateStatesBehind
 			     ) :
@@ -47,6 +48,7 @@ StateFinished::StateFinished(Universe* i_universe,
 {
   m_name    = "StateFinished";
   m_universe = i_universe;
+  m_parentId = i_parentId;
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("RESTART");
@@ -242,7 +244,7 @@ void StateFinished::checkEvents() {
     pTryAgainButton->setClicked(false);
 
     m_requestForEnd = true;
-    StateManager::instance()->sendAsynchronousMessage("RESTART");
+    StateManager::instance()->sendAsynchronousMessage("RESTART", m_parentId);
   }
 
   UIButton *pPlaynextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:PLAYNEXT_BUTTON"));
@@ -250,7 +252,7 @@ void StateFinished::checkEvents() {
     pPlaynextButton->setClicked(false);
 
     m_requestForEnd = true;
-    StateManager::instance()->sendAsynchronousMessage("NEXTLEVEL");
+    StateManager::instance()->sendAsynchronousMessage("NEXTLEVEL", m_parentId);
   }
 
   UIButton *pSavereplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:SAVEREPLAY_BUTTON"));
@@ -293,7 +295,7 @@ void StateFinished::checkEvents() {
     pAbortButton->setClicked(false);
 
     m_requestForEnd = true;
-    StateManager::instance()->sendAsynchronousMessage("FINISH");
+    StateManager::instance()->sendAsynchronousMessage("FINISH", m_parentId);
   }
 
   UIButton *pQuitButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:QUIT_BUTTON"));
@@ -349,7 +351,7 @@ void StateFinished::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     /* quit this state */
     m_requestForEnd = true;
-    StateManager::instance()->sendAsynchronousMessage("FINISH");
+    StateManager::instance()->sendAsynchronousMessage("FINISH", m_parentId);
   }
 
   else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {

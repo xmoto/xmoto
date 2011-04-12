@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 UIRoot*  StateDeadMenu::m_sGUI = NULL;
 
 StateDeadMenu::StateDeadMenu(Universe* i_universe,
+			     const std::string& i_parentId,
 			     bool drawStateBehind,
 			     bool updateStatesBehind):
   StateMenu(drawStateBehind,
@@ -41,6 +42,7 @@ StateDeadMenu::StateDeadMenu(Universe* i_universe,
 {
   m_name    = "StateDeadMenu";
   m_universe = i_universe;
+  m_parentId = i_parentId;
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("RESTART");
@@ -116,7 +118,7 @@ void StateDeadMenu::checkEvents() {
     pTryAgainButton->setClicked(false);
 
     m_requestForEnd = true;
-    StateManager::instance()->sendAsynchronousMessage("RESTART");
+    StateManager::instance()->sendAsynchronousMessage("RESTART", m_parentId);
   }
 
   UIButton *pSavereplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:SAVEREPLAY_BUTTON"));
@@ -144,7 +146,7 @@ void StateDeadMenu::checkEvents() {
     pPlaynextButton->setClicked(false);
 
     m_requestForEnd = true;
-    StateManager::instance()->sendAsynchronousMessage("NEXTLEVEL");
+    StateManager::instance()->sendAsynchronousMessage("NEXTLEVEL", m_parentId);
   }
 
   UIButton *pAbortButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:ABORT_BUTTON"));
@@ -152,7 +154,7 @@ void StateDeadMenu::checkEvents() {
     pAbortButton->setClicked(false);
 
     m_requestForEnd = true;
-    StateManager::instance()->sendAsynchronousMessage("ABORT");
+    StateManager::instance()->sendAsynchronousMessage("ABORT", m_parentId);
   }
 
   UIButton *pQuitButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:QUIT_BUTTON"));
@@ -210,7 +212,7 @@ void StateDeadMenu::executeOneCommand(std::string cmd, std::string args)
 void StateDeadMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     /* quit this state */
-    StateManager::instance()->sendAsynchronousMessage("ABORT");
+    StateManager::instance()->sendAsynchronousMessage("ABORT", m_parentId);
     m_requestForEnd = true;
   }
 
@@ -234,7 +236,7 @@ void StateDeadMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
   else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_RESTARTCHECKPOINT))) {
     m_requestForEnd = true;
-    StateManager::instance()->sendAsynchronousMessage("TOCHECKPOINT");
+    StateManager::instance()->sendAsynchronousMessage("TOCHECKPOINT", m_parentId);
   }
 
   else {

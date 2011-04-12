@@ -336,6 +336,7 @@ void NetClient::endPlay() {
 
 void NetClient::changeMode(NetClientMode i_mode) {
   m_mode = i_mode;
+  m_universe = NULL; // changing the mode forces to reset the link between the client and the universe. (otherwise, some universe could get some frames from others)
 
   NA_clientMode na(i_mode);
   try {
@@ -493,29 +494,32 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
       /* the server sending us our own frame */
       if(i_netAction->getSource() == -1) {
 
-	if(GameApp::getXMTimeInt() - m_currentOwnFramesTime > 1000) {
-	  m_lastOwnFPS = (m_currentOwnFramesNb*1000) / (GameApp::getXMTimeInt() - m_currentOwnFramesTime);
-	  m_currentOwnFramesTime = GameApp::getXMTimeInt();
-	  m_currentOwnFramesNb = 0;
-	}
-	m_currentOwnFramesNb++;
-
-	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
-	  for(unsigned int j=0; j<m_universe->getScenes()[i]->Players().size(); j++) {
-	    
+	if(m_mode == NETCLIENT_SLAVE_MODE) { /* ONLY IN SLAVE MODE */
+	  if(GameApp::getXMTimeInt() - m_currentOwnFramesTime > 1000) {
+	    m_lastOwnFPS = (m_currentOwnFramesNb*1000) / (GameApp::getXMTimeInt() - m_currentOwnFramesTime);
+	    m_currentOwnFramesTime = GameApp::getXMTimeInt();
+	    m_currentOwnFramesNb = 0;
+	  }
+	  m_currentOwnFramesNb++;
+	  
+	  for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+	    for(unsigned int j=0; j<m_universe->getScenes()[i]->Players().size(); j++) {
+	      
 	      BikeState::convertStateFromReplay(((NA_frame*)i_netAction)->getState(),
 						m_universe->getScenes()[i]->Players()[j]->getStateForUpdate(),
 						m_universe->getScenes()[i]->getPhysicsSettings());
-
+	      
 	      // adjust the time of the server frame to the time of the local scene
 	      m_universe->getScenes()[i]->setTargetTime(((NA_frame*)i_netAction)->getState()->fGameTime*100.0);
-	  }
-
-	  // if the game is in pause, at least update the player position
-	  if(m_universe->getScenes()[i]->isPaused()) {
-	    m_universe->getScenes()[i]->updatePlayers(0 /* 0 to not update */, true);
+	    }
+	    
+	    // if the game is in pause, at least update the player position
+	    if(m_universe->getScenes()[i]->isPaused()) {
+	      m_universe->getScenes()[i]->updatePlayers(0 /* 0 to not update */, true);
+	    }
 	  }
 	}
+
       } else {
 
 	// search the client
@@ -670,7 +674,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 
   case TNA_prepareToGo:
     {
-      if(m_universe != NULL) {
+      if(m_universe != NULL && m_mode == NETCLIENT_SLAVE_MODE) {
 	std::ostringstream v_alert;
 
 	if(((NA_prepareToGo*)i_netAction)->time() == 0) {
@@ -692,7 +696,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 
   case TNA_killAlert:
     {
-      if(m_universe != NULL) {
+      if(m_universe != NULL && m_mode == NETCLIENT_SLAVE_MODE) {
 	std::ostringstream v_alert;
 	v_alert << ((NA_killAlert*)i_netAction)->time();
 	for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
@@ -704,7 +708,7 @@ void NetClient::manageAction(xmDatabase* pDb, NetAction* i_netAction) {
 
   case TNA_gameEvents:
     {
-      if(m_universe != NULL) {
+      if(m_universe != NULL && m_mode == NETCLIENT_SLAVE_MODE) {
 	DBuffer v_buffer;
 	v_buffer.initInput(((NA_gameEvents*)i_netAction)->buffer(), ((NA_gameEvents*)i_netAction)->bufferSize());
 

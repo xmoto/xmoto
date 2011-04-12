@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Universe.h"
 #include "StateManager.h"
 #include "../net/NetClient.h"
+#include "../XMSession.h"
 
 StatePlayingNet::StatePlayingNet(Universe* i_universe, GameRenderer* i_renderer):
 StatePlaying(i_universe, i_renderer)
@@ -41,7 +42,10 @@ void StatePlayingNet::abortPlaying() {
   StateScene::abortPlaying();
 
   if(NetClient::instance()->isConnected()) {
-    NetClient::instance()->disconnect();
+    /* switch ghost mode */
+    XMSession::instance()->setClientGhostMode(NETCLIENT_GHOST_MODE);
+    StateManager::instance()->sendAsynchronousMessage("CLIENT_MODE_CHANGED");
+    NetClient::instance()->changeMode(XMSession::instance()->clientGhostMode() ? NETCLIENT_GHOST_MODE : NETCLIENT_SLAVE_MODE);
   }
 }
 
@@ -64,8 +68,9 @@ void StatePlayingNet::enter()
 }
 
 void StatePlayingNet::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
-    StateManager::instance()->sendAsynchronousMessage("ABORT");
+  if(i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+			      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHNETMODE)))) {
+    StateManager::instance()->sendAsynchronousMessage("ABORT", "", getStateId()); /* self sending */
   } else {
     handleControllers(i_type, i_xmkey);
     StateScene::xmKey(i_type, i_xmkey);

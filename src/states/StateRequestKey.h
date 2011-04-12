@@ -25,7 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateRequestKey : public StateMenu {
 public:
-  StateRequestKey(const std::string& i_txt, 
+  StateRequestKey(const std::string& i_txt,
+		  const std::string& i_parentId,
 		  bool drawStateBehind    = true,
 		  bool updateStatesBehind = false);
   virtual ~StateRequestKey();
@@ -40,6 +41,7 @@ protected:
 
 private:
   std::string m_txt;
+  std::string m_parentId;
 
   /* GUI */
   static UIRoot* m_sGUI;

@@ -75,11 +75,14 @@ void StateWaitServerInstructions::executeOneCommand(std::string cmd, std::string
 }
 
 void StateWaitServerInstructions::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
+  if(i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+			      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHNETMODE)))) {
     /* quit this state */
     m_requestForEnd = true;
     if(NetClient::instance()->isConnected()) {
-      NetClient::instance()->disconnect();
+      /* switch ghost mode */
+      XMSession::instance()->setClientGhostMode(NETCLIENT_GHOST_MODE);
+      NetClient::instance()->changeMode(XMSession::instance()->clientGhostMode() ? NETCLIENT_GHOST_MODE : NETCLIENT_SLAVE_MODE);
     }
   }
 

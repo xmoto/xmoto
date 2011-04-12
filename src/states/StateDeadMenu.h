@@ -30,6 +30,7 @@ class Universe;
 class StateDeadMenu : public StateMenu {
   public:
   StateDeadMenu(Universe* i_universe,
+		const std::string& i_parentId,
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false
 		);
@@ -51,6 +52,8 @@ class StateDeadMenu : public StateMenu {
   Universe* m_universe;
 
   private:
+  std::string m_parentId;
+
   /* GUI */
   static UIRoot* m_sGUI;
   static void createGUIIfNeeded(RenderSurface* i_screen);
