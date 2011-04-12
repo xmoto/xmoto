@@ -213,7 +213,7 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     if(isLockedScene() == false) {
       /* Escape pauses */
       m_displayStats = true;
-      StateManager::instance()->pushState(new StatePause(m_universe));
+      StateManager::instance()->pushState(new StatePause(m_universe, getStateId()));
     }
   }
 
@@ -362,7 +362,7 @@ void StatePlayingLocal::onOneFinish() {
     }
   }
   
-  StateManager::instance()->pushState(new StateFinished(m_universe));
+  StateManager::instance()->pushState(new StateFinished(m_universe, getStateId()));
 }
 
 void StatePlayingLocal::onAllDead() {  

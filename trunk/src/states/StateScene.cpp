@@ -418,7 +418,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
   
   
-  else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_n, KMOD_LCTRL)) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHHIGHSCOREINFORMATION))) {
     if(m_renderer != NULL) {
       if(XMSession::instance()->showHighscoreInGame() == false){
 	XMSession::instance()->setShowHighscoreInGame(true);	

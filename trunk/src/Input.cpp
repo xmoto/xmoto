@@ -293,6 +293,10 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
       IFullKey("KeySwitchGFXQualityMode", XMKey(SDLK_F10, KMOD_NONE), GAMETEXT_SWITCHGFXQUALITYMODE);
     m_globalKeys[INPUT_SWITCHGFXMODE] =
       IFullKey("KeySwitchGFXMode", XMKey(SDLK_F11, KMOD_NONE), GAMETEXT_SWITCHGFXMODE);
+    m_globalKeys[INPUT_SWITCHNETMODE] =
+      IFullKey("KeySwitchNetMode", XMKey(SDLK_n, KMOD_LCTRL), GAMETEXT_SWITCHNETMODE);
+    m_globalKeys[INPUT_SWITCHHIGHSCOREINFORMATION] =
+      IFullKey("KeySwitchHighscoreInformation", XMKey(SDLK_w, KMOD_LCTRL), GAMETEXT_SWITCHHIGHSCOREINFORMATION);
 
     // uncustomizable keys
     m_globalKeys[INPUT_HELP] =

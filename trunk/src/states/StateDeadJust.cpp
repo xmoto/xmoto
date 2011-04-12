@@ -71,7 +71,7 @@ void StateDeadJust::enter()
 
 void StateDeadJust::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
-    StateManager::instance()->pushState(new StateDeadMenu(m_universe));
+    StateManager::instance()->pushState(new StateDeadMenu(m_universe, getStateId()));
   }
 
   else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_RESTARTLEVEL))) {
@@ -100,7 +100,7 @@ bool StateDeadJust::update() {
   float v_torsoVelocity = 0;
 
   if(XMSession::instance()->enableDeadAnimation() == false) {
-    StateManager::instance()->pushState(new StateDeadMenu(m_universe));
+    StateManager::instance()->pushState(new StateDeadMenu(m_universe, getStateId()));
     return false;
   }
 
@@ -117,7 +117,7 @@ bool StateDeadJust::update() {
     }    
     if( m_enterTime != 0 && GameApp::getXMTimeInt() - m_enterTime > STATE_DEAD_MAX_TIME*23 ) {
       if(StateManager::instance()->isTopOfTheStates(this)) { // only if not already recovered
-	StateManager::instance()->pushState(new StateDeadMenu(m_universe));
+	StateManager::instance()->pushState(new StateDeadMenu(m_universe, getStateId()));
 	return false;
       } else {
 	return StateScene::update();

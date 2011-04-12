@@ -28,13 +28,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 UIRoot*  StateRequestKey::m_sGUI = NULL;
 
 StateRequestKey::StateRequestKey(const std::string& i_txt,
+                                 const std::string& i_parentId,
 				 bool drawStateBehind,
 				 bool updateStatesBehind):
 StateMenu(drawStateBehind,
 	  updateStatesBehind)
 {
-  m_txt   = i_txt;
-  m_name  = "StateRequestKey";
+  m_txt      = i_txt;
+  m_name     = "StateRequestKey";
+  m_parentId = i_parentId;
 }
 
 StateRequestKey::~StateRequestKey()
@@ -64,7 +66,7 @@ void StateRequestKey::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 	m_requestForEnd = true;
 	std::string args = "";
 	CmdArgumentParser::instance()->addString(v_msg, args);
-	StateManager::instance()->sendAsynchronousMessage("REQUESTKEY", args);
+	StateManager::instance()->sendAsynchronousMessage("REQUESTKEY", args, m_parentId);
       }
     }
   }

@@ -49,7 +49,9 @@ void StatePreplayingNet::abortPlaying() {
   StateScene::abortPlaying();
 
   if(NetClient::instance()->isConnected()) {
-    NetClient::instance()->disconnect();
+    /* switch ghost mode */
+    XMSession::instance()->setClientGhostMode(NETCLIENT_GHOST_MODE);
+    NetClient::instance()->changeMode(XMSession::instance()->clientGhostMode() ? NETCLIENT_GHOST_MODE : NETCLIENT_SLAVE_MODE);
   }
 }
 

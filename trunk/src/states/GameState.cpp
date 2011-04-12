@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateHelp.h"
 #include "../Renderer.h"
 #include "../Input.h"
+#include "StateWaitServerInstructions.h"
 
 #define MENU_SHADING_TIME 0.3
 #define MENU_SHADING_VALUE 150
@@ -341,6 +342,19 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
 
   else if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_s, KMOD_LCTRL)) {
     GameApp::instance()->toogleEnableMusic();
+  }
+
+  // net switch from ghost mode to slave mode
+  else if(i_type == INPUT_DOWN && 
+	  i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHNETMODE)) &&
+	  NetClient::instance()->isConnected() &&
+	  XMSession::instance()->clientGhostMode()) {
+    XMSession::instance()->setClientGhostMode(! XMSession::instance()->clientGhostMode());
+    NetClient::instance()->changeMode(XMSession::instance()->clientGhostMode() ? NETCLIENT_GHOST_MODE : NETCLIENT_SLAVE_MODE);
+    StateManager::instance()->sendAsynchronousMessage("CLIENT_MODE_CHANGED");
+    if(XMSession::instance()->clientGhostMode() == false) {
+      StateManager::instance()->pushState(new StateWaitServerInstructions());
+    }
   }
 
   // net chat

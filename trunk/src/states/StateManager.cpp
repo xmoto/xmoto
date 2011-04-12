@@ -910,7 +910,7 @@ StateManager::registerAsEmitter(std::string message)
 }
 
 void
-StateManager::sendSynchronousMessage(std::string message, std::string args)
+StateManager::sendSynchronousMessage(std::string message, std::string args, const std::string& i_parentId)
 {
   std::map<std::string, std::vector<GameState*> >::iterator itFind;
 
@@ -927,10 +927,12 @@ StateManager::sendSynchronousMessage(std::string message, std::string args)
     }
 
     while(stateIterator != states.end()){
-      (*stateIterator)->executeOneCommand(message, args);
+      if(i_parentId == "" || (*stateIterator)->getStateId() == i_parentId) {
+	(*stateIterator)->executeOneCommand(message, args);
 
-      LogDebug("sendSynchronousMessage [%s [%s]] to [%s]",
-	       message.c_str(), args.c_str(), (*stateIterator)->getName().c_str());
+	LogDebug("sendSynchronousMessage [%s [%s]] to [%s] /* parent_id = '%s' */",
+		 message.c_str(), args.c_str(), (*stateIterator)->getName().c_str(), i_parentId.c_str());
+      }
 
       ++stateIterator;
     }
@@ -943,7 +945,7 @@ StateManager::sendSynchronousMessage(std::string message, std::string args)
 }
 
 void
-StateManager::sendAsynchronousMessage(std::string message, std::string args)
+StateManager::sendAsynchronousMessage(std::string message, std::string args, const std::string& i_parentId)
 {
   std::map<std::string, std::vector<GameState*> >::iterator itFind;
 
@@ -960,11 +962,15 @@ StateManager::sendAsynchronousMessage(std::string message, std::string args)
     }
 
     while(stateIterator != states.end()){
-      LogDebug("sendAsynchronousMessage [%s [%s]] to [%s]",
-	       message.c_str(), args.c_str(),
-	       (*stateIterator)->getName().c_str());
-
-      (*stateIterator)->send(message, args);
+ 
+      if(i_parentId == "" || (*stateIterator)->getStateId() == i_parentId) {
+	LogDebug("sendAsynchronousMessage [%s [%s]] to [%s] /* parent_id = '%s' */",
+		 message.c_str(), args.c_str(),
+		 (*stateIterator)->getName().c_str(),
+		 i_parentId.c_str());
+	
+	(*stateIterator)->send(message, args);
+      }
       ++stateIterator;
     }
   } else {

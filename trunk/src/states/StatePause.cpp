@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 UIRoot*  StatePause::m_sGUI = NULL;
 
 StatePause::StatePause(Universe* i_universe,
+		       const std::string& i_parentId,
 		       bool drawStateBehind,
 		       bool updateStatesBehind):
   StateMenu(drawStateBehind,
@@ -38,6 +39,7 @@ StatePause::StatePause(Universe* i_universe,
 {
   m_name  = "StatePause";
   m_universe = i_universe;
+  m_parentId = i_parentId;
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("RESTART");
@@ -106,7 +108,7 @@ void StatePause::checkEvents() {
     pRestartButton->setClicked(false);
 
     m_requestForEnd = true;
-    StateManager::instance()->sendAsynchronousMessage("RESTART");
+    StateManager::instance()->sendAsynchronousMessage("RESTART", m_parentId);
   }
 
   UIButton *pPlayNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:PLAYNEXT_BUTTON"));
@@ -114,7 +116,7 @@ void StatePause::checkEvents() {
     pPlayNextButton->setClicked(false);
 
     m_requestForEnd = true;    
-    StateManager::instance()->sendAsynchronousMessage("NEXTLEVEL");
+    StateManager::instance()->sendAsynchronousMessage("NEXTLEVEL", m_parentId);
   }
 
   UIButton *pAbortButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:ABORT_BUTTON"));
@@ -122,7 +124,7 @@ void StatePause::checkEvents() {
     pAbortButton->setClicked(false);
 
     m_requestForEnd = true;
-    StateManager::instance()->sendAsynchronousMessage("ABORT");
+    StateManager::instance()->sendAsynchronousMessage("ABORT", m_parentId);
   }
 
   UIButton *pQuitButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:QUIT_BUTTON"));

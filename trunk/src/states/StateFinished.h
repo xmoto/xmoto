@@ -32,6 +32,7 @@ class Universe;
 class StateFinished : public StateMenu {
   public:
   StateFinished(Universe* i_universe,
+		const std::string& i_parentId,
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false
 		);
@@ -56,6 +57,8 @@ class StateFinished : public StateMenu {
   std::string m_roomsTimes;
 
   private:
+  std::string m_parentId;
+
   void makeBestTimesWindow(UIBestTimes* pWindow,
 			   const std::string& PlayerName,
 			   const std::string& LevelID,

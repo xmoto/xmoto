@@ -111,6 +111,7 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
   StateManager::instance()->registerAsObserver("CHECKWWWW_DONE", this);
   StateManager::instance()->registerAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->registerAsObserver("CLIENT_STATUS_CHANGED", this);
+  StateManager::instance()->registerAsObserver("CLIENT_MODE_CHANGED", this);
 
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
@@ -155,6 +156,7 @@ StateMainMenu::~StateMainMenu()
   StateManager::instance()->unregisterAsObserver("CHECKWWWW_DONE", this);
   StateManager::instance()->unregisterAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->unregisterAsObserver("CLIENT_STATUS_CHANGED", this);
+  StateManager::instance()->unregisterAsObserver("CLIENT_MODE_CHANGED", this);
 }
 
 
@@ -462,6 +464,9 @@ void StateMainMenu::updateClientStrings() {
 
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:PLAYSAMENETLEVELS"));
   v_button->enableWindow(NetClient::instance()->isConnected());
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NET_TAB:SERVER_SIMPLE_GHOST_MODE"));
+  v_button->setChecked(XMSession::instance()->clientGhostMode());
 }
 
 void StateMainMenu::checkEventsNetworkTab() {
@@ -503,9 +508,13 @@ void StateMainMenu::checkEventsNetworkTab() {
     v_button->setClicked(false);
   
     XMSession::instance()->setClientGhostMode(v_button->getChecked());
-  
+    StateManager::instance()->sendAsynchronousMessage("CLIENT_MODE_CHANGED");  
+
     if(NetClient::instance()->isConnected()) {
-      SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_SERVERRECONNECT);
+      NetClient::instance()->changeMode(XMSession::instance()->clientGhostMode() ? NETCLIENT_GHOST_MODE : NETCLIENT_SLAVE_MODE);
+      if(XMSession::instance()->clientGhostMode() == false) {
+	StateManager::instance()->pushState(new StateWaitServerInstructions());
+      }
     }
   }
 
@@ -528,10 +537,7 @@ void StateMainMenu::checkEventsNetworkTab() {
       try {
 	NetClient::instance()->connect(XMSession::instance()->clientServerName(),
 				       XMSession::instance()->clientServerPort());
-	// don't send in ghost mode to be compatible with old servers
-	if(XMSession::instance()->clientGhostMode() == false) {
-	  NetClient::instance()->changeMode(XMSession::instance()->clientGhostMode() ? NETCLIENT_GHOST_MODE : NETCLIENT_SLAVE_MODE);
-	}
+	NetClient::instance()->changeMode(XMSession::instance()->clientGhostMode() ? NETCLIENT_GHOST_MODE : NETCLIENT_SLAVE_MODE);
 	if(XMSession::instance()->clientGhostMode() == false) {
 	  StateManager::instance()->pushState(new StateWaitServerInstructions());
 	}
@@ -1590,6 +1596,10 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args)
   }
 
   else if(cmd == "CLIENT_STATUS_CHANGED") {
+    updateClientStrings();
+  }
+
+  else if(cmd == "CLIENT_MODE_CHANGED") {
     updateClientStrings();
   }
 
