@@ -1302,6 +1302,13 @@ void GameRenderer::render(Scene* i_scene) {
 	renderMiniMap(i_scene, 0, m_screen.getDispHeight() - (m_screen.getDispHeight()/(6+multiPlayerScale)),
 		      m_screen.getDispWidth()/(5+multiPlayerScale), m_screen.getDispHeight()/(6+multiPlayerScale));
       }
+    }
+
+    if(pCamera->isMirrored() == true) {
+      pDrawlib->setMirrorY();
+    }
+
+    if(pCamera->getPlayerToFollow() != NULL) {
       if(showEngineCounter()
 	 && XMSession::instance()->ugly() == false
 	 && i_scene->getNumberCameras() == 1) {
@@ -1313,7 +1320,7 @@ void GameRenderer::render(Scene* i_scene) {
 			    pCamera->getPlayerToFollow()->getBikeLinearVel());
       }
     }
-
+    
     if(m_showTimePanel) {
       renderTimePanel(i_scene);
       /* If there's strawberries in the level, tell the user how many there's left */
@@ -2846,14 +2853,13 @@ void GameRenderer::_RenderParticle(Scene* i_scene, ParticlesSource* i_source, un
 {
   for(unsigned int j = 0; j < i_source->Particles().size(); j++) {
     EntityParticle* v_particle = i_source->Particles()[j];
-    Color v_color = MAKE_COLOR(v_particle->Color().Red(), v_particle->Color().Green(), v_particle->Color().Blue(),v_particle->Color().Alpha());
-      if(v_particle->spriteIndex() == sprite) {
-        _RenderParticleDraw(v_particle->DynamicPosition(),
-			    NULL,
-			    v_particle->Size(),
-			    v_particle->Angle(),
-			    v_particle->Color());
-      }
+    if(v_particle->spriteIndex() == sprite) {
+      _RenderParticleDraw(v_particle->DynamicPosition(),
+			  NULL,
+			  v_particle->Size(),
+			  v_particle->Angle(),
+			  v_particle->Color());
+    }
   }
 }
   
