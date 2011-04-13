@@ -23,14 +23,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateDeadMenu.h"
 #include "../GameText.h"
 #include "../Universe.h"
+#include "../xmscene/Camera.h"
 #include "StateVote.h"
 #include "StatePlayingLocal.h"
 #include "../thread/SendVoteThread.h"
 #include "../drawlib/DrawLib.h"
 #include "../helpers/Log.h"
 
-#define STATE_DEAD_MAX_TIME 140
-#define VELOCITY_UNTIL_TORSO_RIP 0.005
+#define STATE_DEAD_MAX_TIME 2000
+#define VELOCITY_UNTIL_TORSO_RIP 0.05
 
 StateDeadJust::StateDeadJust(Universe* i_universe, GameRenderer* i_renderer)
 : StateScene(i_universe, i_renderer, true, true)
@@ -97,34 +98,60 @@ void StateDeadJust::nextLevel(bool i_positifOrder) {
 }
 
 bool StateDeadJust::update() {
-  float v_torsoVelocity = 0;
+  float v_torsoVelocity = 0.0;
 
   if(XMSession::instance()->enableDeadAnimation() == false) {
     StateManager::instance()->pushState(new StateDeadMenu(m_universe, getStateId()));
     return false;
   }
 
-  if(m_universe != NULL) {
-    for(unsigned int i=0; i < m_universe->getScenes().size(); i++) {
-      for(unsigned int j=0; j < m_universe->getScenes()[i]->Players().size(); j++) {
-	if(m_universe->getScenes()[i]->Players()[j]->getTorsoVelocity() > v_torsoVelocity) {
-	  v_torsoVelocity = m_universe->getScenes()[i]->Players()[j]->getTorsoVelocity();
-	}
+  if(m_universe == NULL) {
+    return false;
+  }
+
+  // compute the max velocity of the biker
+  //for(unsigned int i=0; i < m_universe->getScenes().size(); i++) {
+  //  for(unsigned int j=0; j < m_universe->getScenes()[i]->Players().size(); j++) {
+  //    if(m_universe->getScenes()[i]->Players()[j]->getTorsoVelocity() > v_torsoVelocity) {
+  //      v_torsoVelocity = m_universe->getScenes()[i]->Players()[j]->getTorsoVelocity();
+  //    }
+  //  }
+  //}
+  // instead of taking the max of the players, take the max of the cameras, take the one on the camera
+  for(unsigned int i=0; i < m_universe->getScenes().size(); i++) {
+    for(unsigned int j=0; j<m_universe->getScenes()[i]->Cameras().size(); j++) {
+      if(m_universe->getScenes()[i]->Cameras()[j]->getPlayerToFollow() != NULL) {
+        if(m_universe->getScenes()[i]->Cameras()[j]->getPlayerToFollow()->getTorsoVelocity() > v_torsoVelocity) {
+          v_torsoVelocity = m_universe->getScenes()[i]->Cameras()[j]->getPlayerToFollow()->getTorsoVelocity();
+        }
       }
     }
-    if( v_torsoVelocity <= VELOCITY_UNTIL_TORSO_RIP && m_enterTime == 0) {
-      m_enterTime = GameApp::getXMTimeInt();
-    }    
-    if( m_enterTime != 0 && GameApp::getXMTimeInt() - m_enterTime > STATE_DEAD_MAX_TIME*23 ) {
-      if(StateManager::instance()->isTopOfTheStates(this)) { // only if not already recovered
-	StateManager::instance()->pushState(new StateDeadMenu(m_universe, getStateId()));
-	return false;
-      } else {
-	return StateScene::update();
-      }
-    } else {
+  }
+
+  if(m_enterTime == 0) {
+    // continue if the velocity is still too much
+    if(v_torsoVelocity >= VELOCITY_UNTIL_TORSO_RIP) {
       return StateScene::update();
-    } 
+    }
+    // initialize the no movement time
+    m_enterTime = GameApp::getXMTimeInt();
+  } else {
+    // reset if the biker followed takes some speed or change
+    //if(v_torsoVelocity >= VELOCITY_UNTIL_TORSO_RIP) {
+    //  m_enterTime = 0;
+    //  return StateScene::update();
+    //}
+  }
+
+  // still some time to update
+  if(GameApp::getXMTimeInt() - m_enterTime <= STATE_DEAD_MAX_TIME) {
+    return StateScene::update();
+  }
+
+  // no more update allowed
+  if(StateManager::instance()->isTopOfTheStates(this)) { // only if not already recovered
+    StateManager::instance()->pushState(new StateDeadMenu(m_universe, getStateId()));
+    return false;
   }
 
   return false;
