@@ -504,10 +504,17 @@ FileHandle *XMFS::openIFile(FileDataType i_fdt, std::string Path, bool i_include
     
   if(i_fdt == FDT_DATA) {
     if(pfh->fp == NULL) {
+      int v_packsize = m_PackFiles.size();
+
+      // remove all ./ of the Path
+      std::string v_path = Path;
+      while(v_path.substr(0,2) == "./") {
+	    v_path = v_path.substr(2, v_path.length() -2);
+      }
+
       /* No luck so far, look in the data package */
-      for(unsigned int i=0; i<m_PackFiles.size(); i++) {              
-	if(m_PackFiles[i].Name == Path ||
-	   (std::string("./") + m_PackFiles[i].Name) == Path) {
+      for(unsigned int i=0; i<v_packsize; i++) {              
+	if(m_PackFiles[i].Name == v_path) {
 	  /* Found it, yeah. */
 	  pfh->fp = fopen(m_BinDataFile.c_str(),"rb");
 	  if(pfh->fp != NULL) {
@@ -629,6 +636,28 @@ bool XMFS::isEnd(FileHandle *pfh) {
   else _ThrowFileError(pfh,"isEnd -> invalid type");
   return bEnd;
 } 
+
+std::string XMFS::readFileToEnd(FileHandle *pfh) {
+  std::string v_res;
+  char v_buffer[16384+1];
+  int v_remaining = getLength(pfh);
+  int v_toread;
+
+  v_res = "";
+
+  while(v_remaining > 0) {
+    v_toread = v_remaining > 16384 ? 16384 : v_remaining;
+    if(readBuf(pfh, v_buffer, v_toread) == false) {
+      _ThrowFileError(pfh,"readFileToEnd -> read failed");
+    }
+    v_buffer[v_toread] = '\0';
+    v_res += v_buffer;
+    v_remaining -= v_toread;
+  }
+
+  return v_res;
+}
+
     
 bool XMFS::readNextLine(FileHandle *pfh,std::string &Line) {
   int c;
