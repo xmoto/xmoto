@@ -40,13 +40,7 @@ void XMLDocument::readFromFile(FileDataType i_fdt, std::string File,unsigned lon
     if(pfh==NULL) return;
 
     m_pXML = new TiXmlDocument;
-    
-    while(XMFS::readNextLine(pfh,Line)) {
-      if(Line.length() > 0) {
-        Doc.append(Line);
-        Doc.append("\n");
-      }
-    }    
+    Doc.append(XMFS::readFileToEnd(pfh));
     XMFS::closeFile(pfh);
     
     /* Are we just going to need the CRC? */

@@ -109,6 +109,7 @@ class XMFS {
   static int getOffset(FileHandle *pfh);
   static int getLength(FileHandle *pfh);
   static bool isEnd(FileHandle *pfh);
+  static std::string readFileToEnd(FileHandle *pfh);
   static bool readNextLine(FileHandle *pfh,std::string &Line); /* uses buffered reading */
   static int readByte(FileHandle *pfh);
   static int readShort(FileHandle *pfh);
