@@ -566,7 +566,8 @@ const char* TiXmlBase::ReadText(	const char* p,
 		 || !condenseWhiteSpace )	// if true, whitespace is always kept
 	{
 		// Keep all the white space.
-                int all_len = 0;
+	        char buf[1024];
+		int  bufpos = 0;
 
 		while (	   p_mod && *p_mod
 				&& !StringEqual( p_mod, endTag, caseInsensitive, encoding )
@@ -575,9 +576,19 @@ const char* TiXmlBase::ReadText(	const char* p,
 			int len;
 			char cArr[4] = { 0, 0, 0, 0 };
 			p_mod = GetChar( p_mod, cArr, &len, encoding );
-                        all_len += len;
+
+			// fill the buffer
+			strncpy(buf+bufpos, cArr, len);
+			bufpos+=len;
+			if(bufpos >= 1024 - 4) {
+			  text->append(buf, bufpos);
+			  bufpos = 0;
+			}
 		}
-                text->append(p, all_len);
+		// copy the end
+		if(bufpos > 0) {
+		  text->append(buf, bufpos);
+		}
 	}
 	else
 	{
