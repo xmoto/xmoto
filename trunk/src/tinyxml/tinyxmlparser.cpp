@@ -390,8 +390,10 @@ const char* TiXmlBase::SkipWhiteSpace( const char* p, TiXmlEncoding encoding )
 
 const char* TiXmlBase::ReadName( const char* p, TIXML_STRING * name, TiXmlEncoding encoding )
 {
+        const char* p_mod = p;
+	int n = 0;
 	*name = "";
-	assert( p );
+	assert( p_mod );
 
 	// Names start with letters or underscores.
 	// Of course, in unicode, tinyxml has no idea what a letter *is*. The
@@ -400,20 +402,22 @@ const char* TiXmlBase::ReadName( const char* p, TIXML_STRING * name, TiXmlEncodi
 	// After that, they can be letters, underscores, numbers,
 	// hyphens, or colons. (Colons are valid ony for namespaces,
 	// but tinyxml can't tell namespaces from names.)
-	if (    p && *p 
-		 && ( IsAlpha( (unsigned char) *p, encoding ) || *p == '_' ) )
+	if (    p_mod && *p_mod
+		 && ( IsAlpha( (unsigned char) *p_mod, encoding ) || *p_mod == '_' ) )
 	{
-		while(		p && *p
-				&&	(		IsAlphaNum( (unsigned char ) *p, encoding ) 
-						 || *p == '_'
-						 || *p == '-'
-						 || *p == '.'
-						 || *p == ':' ) )
+		while(		p_mod && *p_mod
+				&&	(		IsAlphaNum( (unsigned char ) *p_mod, encoding ) 
+						 || *p_mod == '_'
+						 || *p_mod == '-'
+						 || *p_mod == '.'
+						 || *p_mod == ':' ) )
 		{
-			(*name) += *p;
-			++p;
+		  n++;
+		  p_mod++;
 		}
-		return p;
+		name->append(p, n);
+
+		return p_mod;
 	}
 	return 0;
 }
