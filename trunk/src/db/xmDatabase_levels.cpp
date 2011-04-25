@@ -269,27 +269,43 @@ void xmDatabase::levels_cleanNoWWWLevels() {
 bool xmDatabase::levels_add_fast(const std::string& i_filepath, std::string& o_levelName, bool i_isToReload) {
   char **v_result;
   unsigned int nrow;
-  std::string v_checksum;
+  unsigned int i;
+  bool v_found;
+  std::string v_checksum, v_dbchecksum;
   std::string v_cond;
   if(i_isToReload) {
     v_cond = "isToReload=1 AND ";
   }
 
-  v_checksum = XMFS::md5sum(FDT_DATA, i_filepath);
-
-  v_result = readDB("SELECT name FROM levels "
+  v_result = readDB("SELECT name, checkSum FROM levels "
 		    "WHERE " + v_cond   +
-		    "filepath=\"" + protectString(i_filepath) + "\" "
-		    "AND checkSum=\"" + protectString(v_checksum) + "\";",
+		    "filepath=\"" + protectString(i_filepath) + "\";",
 		    nrow);
 
-  if(nrow != 1) {
+  // no result, no need to compute checksum
+  if(nrow == 0) {
     read_DB_free(v_result);
     return false;
   }
 
-  o_levelName = getResult(v_result, 1, 0, 0);
+  // checksum
+  v_checksum = XMFS::md5sum(FDT_DATA, i_filepath);
+  i = 0;
+  v_found = false;
+  while(i<nrow && v_found == false) {
+    v_dbchecksum = getResult(v_result, 2, i, 1);
+    if(v_dbchecksum == v_checksum) {
+      v_found = true;
+      o_levelName  = getResult(v_result, 2, i, 0);
+    }
+    i++;
+  }
   read_DB_free(v_result);
+
+  // no level with the same checksum found
+  if(v_found == false) {
+    return false;
+  }
 
   // found it in the database
   simpleSql("UPDATE levels SET loaded=1 WHERE " + v_cond +
