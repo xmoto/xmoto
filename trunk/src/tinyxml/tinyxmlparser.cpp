@@ -22,7 +22,7 @@ must not be misrepresented as being the original software.
 distribution.
 */
 
-/* 2006-04-09, Rasmus Neckelmann
+/* 2006-04-09, Rasmus Neckelmann / Nicolas Adenis-Lamarre 25/04/2011
    
    IMPORTANT NOTE: This file is not the original from the tinyxml package!
    
@@ -560,38 +560,43 @@ const char* TiXmlBase::ReadText(	const char* p,
 									TiXmlEncoding encoding )
 {
     *text = "";
+    const char* p_mod = p;
+
 	if (    !trimWhiteSpace			// certain tags always keep whitespace
 		 || !condenseWhiteSpace )	// if true, whitespace is always kept
 	{
 		// Keep all the white space.
-		while (	   p && *p
-				&& !StringEqual( p, endTag, caseInsensitive, encoding )
+                int all_len = 0;
+
+		while (	   p_mod && *p_mod
+				&& !StringEqual( p_mod, endTag, caseInsensitive, encoding )
 			  )
 		{
 			int len;
 			char cArr[4] = { 0, 0, 0, 0 };
-			p = GetChar( p, cArr, &len, encoding );
-			text->append( cArr, len );
+			p_mod = GetChar( p_mod, cArr, &len, encoding );
+                        all_len += len;
 		}
+                text->append(p, all_len);
 	}
 	else
 	{
 		bool whitespace = false;
 
 		// Remove leading white space:
-		p = SkipWhiteSpace( p, encoding );
-		while (	   p && *p
-				&& !StringEqual( p, endTag, caseInsensitive, encoding ) )
+		p_mod = SkipWhiteSpace( p_mod, encoding );
+		while (	   p_mod && *p_mod
+				&& !StringEqual( p_mod, endTag, caseInsensitive, encoding ) )
 		{
-			if ( *p == '\r' || *p == '\n' )
+			if ( *p_mod == '\r' || *p_mod == '\n' )
 			{
 				whitespace = true;
-				++p;
+				++p_mod;
 			}
-			else if ( IsWhiteSpace( *p ) )
+			else if ( IsWhiteSpace( *p_mod ) )
 			{
 				whitespace = true;
-				++p;
+				++p_mod;
 			}
 			else
 			{
@@ -604,7 +609,7 @@ const char* TiXmlBase::ReadText(	const char* p,
 				}
 				int len;
 				char cArr[4] = { 0, 0, 0, 0 };
-				p = GetChar( p, cArr, &len, encoding );
+				p_mod = GetChar( p_mod, cArr, &len, encoding );
 				if ( len == 1 )
 					(*text) += cArr[0];	// more efficient
 				else
@@ -612,7 +617,7 @@ const char* TiXmlBase::ReadText(	const char* p,
 			}
 		}
 	}
-	return p + strlen( endTag );
+	return p_mod + strlen( endTag );
 }
 
 #ifdef TIXML_USE_STL
