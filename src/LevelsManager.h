@@ -93,7 +93,7 @@ public:
 		 const std::string& i_id_room,
 		 bool i_bDebugMode, bool i_bAdminMode, xmDatabase *i_db);
   void addExternalLevel(std::string i_levelFile, xmDatabase *i_db, bool i_loadMainLayerOnly);
-  void reloadLevelsFromLvl(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
+  void reloadLevelsFromLvl(xmDatabase* i_db, bool i_loadMainLayerOnly, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 
   /* to load news levels */
   /* to reload levels already loaded (it will put them into the updateLevels list) */

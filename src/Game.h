@@ -169,6 +169,9 @@ private:
 
   std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
 
+  // loading
+  int m_loadLevelHook_per;
+
   /* WWW */
   WebRoom *m_pWebHighscores;
   WebLevels *m_pWebLevels;

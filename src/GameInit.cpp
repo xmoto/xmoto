@@ -407,7 +407,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 
   /* load levels */
   if(pDb->levels_isIndexUptodate() == false) {
-      LevelsManager::instance()->reloadLevelsFromLvl(pDb, v_useGraphics ? this : NULL);
+    LevelsManager::instance()->reloadLevelsFromLvl(pDb, v_xmArgs.isOptServerOnly(), v_useGraphics ? this : NULL);
   }
   LevelsManager::instance()->reloadExternalLevels(pDb, v_useGraphics ? this : NULL);
   

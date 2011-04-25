@@ -29,13 +29,16 @@ class UpdateDbThread : public XMThread ,
 		       public XMotoLoadLevelsInterface,
 		       public XMotoLoadReplaysInterface {
 public:
-  UpdateDbThread();
+  UpdateDbThread(bool i_loadMainLayerOnly);
   virtual ~UpdateDbThread();
 
   virtual void loadLevelHook(std::string i_level, int i_percentage);
   virtual void loadReplayHook(std::string i_replay, int i_percentage);
 
   virtual int realThreadFunction();
+
+private:
+  bool m_loadMainLayerOnly;
 };
 
 #endif
