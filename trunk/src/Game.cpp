@@ -192,6 +192,7 @@ GameApp::GameApp() {
   m_userConfig = new UserConfig();
 
   m_xmdemo = NULL;
+  m_loadLevelHook_per = 0;
 }
    
   /*===========================================================================
@@ -669,13 +670,19 @@ bool GameApp::getHighscoreInfos(unsigned int i_number, const std::string& i_id_l
 
 void GameApp::loadLevelHook(std::string i_level, int i_percentage)
 {
-  std::ostringstream v_percentage;
-  v_percentage << i_percentage;
-  v_percentage << "%";
-  _UpdateLoadingScreen(std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str() + std::string(" ") + i_level);
+  // percentage updated
+  if(m_loadLevelHook_per != i_percentage) {
+    std::ostringstream v_percentage;
+    v_percentage << i_percentage;
+    v_percentage << "%";
+    _UpdateLoadingScreen(std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str());
+    
+    /* pump events to so that windows don't think the appli is crashed */
+    SDL_PumpEvents();
 
-  /* pump events to so that windows don't think the appli is crashed */
-  SDL_PumpEvents();
+    // update percentage
+    m_loadLevelHook_per = i_percentage;
+  }
 }
 
 void GameApp::updatingDatabase(std::string i_message) {

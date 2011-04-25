@@ -26,7 +26,7 @@ StateUpdateDb::StateUpdateDb(bool drawStateBehind,
 			     bool updateStatesBehind)
   : StateUpdate(drawStateBehind, updateStatesBehind)
 {
-  m_pThread          = new UpdateDbThread();
+  m_pThread          = new UpdateDbThread(false);
   m_name             = "StateUpdateDb";
 }
 

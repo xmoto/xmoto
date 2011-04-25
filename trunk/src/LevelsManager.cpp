@@ -764,9 +764,9 @@ void LevelsManager::addExternalLevel(std::string i_levelFile, xmDatabase *i_db, 
   delete v_level;
 }
 
-void LevelsManager::reloadLevelsFromLvl(xmDatabase* i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface) {
-  reloadInternalLevels(i_db, i_loadLevelsInterface);
-  reloadExternalLevels(i_db, i_loadLevelsInterface);
+void LevelsManager::reloadLevelsFromLvl(xmDatabase* i_db, bool i_loadMainLayerOnly, XMotoLoadLevelsInterface *i_loadLevelsInterface) {
+  reloadInternalLevels(i_db, i_loadMainLayerOnly, i_loadLevelsInterface);
+  reloadExternalLevels(i_db, i_loadMainLayerOnly, i_loadLevelsInterface);
 }
 
 void LevelsManager::reloadInternalLevels(xmDatabase* i_db, bool i_loadMainLayerOnly, XMotoLoadLevelsInterface *i_loadLevelsInterface)

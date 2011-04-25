@@ -25,9 +25,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../states/StateManager.h"
 #include "../Theme.h"
 
-UpdateDbThread::UpdateDbThread()
+UpdateDbThread::UpdateDbThread(bool i_loadMainLayerOnly)
   : XMThread("UDT")
 {
+  m_loadMainLayerOnly = i_loadMainLayerOnly;
+
   if(XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("LEVELS_UPDATED");
     StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
@@ -45,7 +47,7 @@ int UpdateDbThread::realThreadFunction()
   // initialize to -1, so we put it to 0 so that the current operation
   // text is update in the state
   setThreadProgress(0);
-  LevelsManager::instance()->reloadLevelsFromLvl(m_pDb, this);
+  LevelsManager::instance()->reloadLevelsFromLvl(m_pDb, m_loadMainLayerOnly, this);
   StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
 
   setThreadCurrentOperation(GAMETEXT_RELOADINGREPLAYS);
