@@ -388,9 +388,13 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     switchTestThemeMode(XMSession::instance()->testTheme());
   }    
 
+  //
+  bool v_updateAfterInitDone = false;
+
   /* load theme */
   if(pDb->themes_isIndexUptodate() == false) {
     ThemeChoicer::initThemesFromDir(pDb);
+    v_updateAfterInitDone = true;
   }
 
   if(v_xmArgs.isOptServerOnly() == false) {
@@ -408,14 +412,21 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   /* load levels */
   if(pDb->levels_isIndexUptodate() == false) {
     LevelsManager::instance()->reloadLevelsFromLvl(pDb, v_xmArgs.isOptServerOnly(), v_useGraphics ? this : NULL);
+    v_updateAfterInitDone = true;
   }
   LevelsManager::instance()->reloadExternalLevels(pDb, v_useGraphics ? this : NULL);
   
   /* Update replays */
   if(pDb->replays_isIndexUptodate() == false) {
     initReplaysFromDir(pDb);
+    v_updateAfterInitDone = true;
   }
   
+  // levels_isIndexUptodate() && replays_isIndexUptodate() && themes_isIndexUptodate() done
+  if(v_updateAfterInitDone) {
+    pDb->setUpdateAfterInitDone(); // confirm to the database that the job is done
+  }
+
   /* List replays? */  
   if(v_xmArgs.isOptListReplays()) {
     pDb->replays_print();

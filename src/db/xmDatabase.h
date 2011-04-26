@@ -46,6 +46,7 @@ public:
 	    bool i_dbDirsCheck,
 	    XmDatabaseUpdateInterface *i_interface = NULL);
   void init(const std::string& i_dbFileUTF8, bool i_readOnly = false);
+  void setUpdateAfterInitDone(); // call once, update after init are done
   int  getXmDbVersion();
   static int getMemoryUsed();
 
