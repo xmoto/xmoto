@@ -39,6 +39,10 @@ xmDatabase::xmDatabase()
   m_db = NULL;
 }
 
+void xmDatabase::setUpdateAfterInitDone() {
+  setXmParameterKey("requireUpdateAfterInit", "0");
+}
+
 void xmDatabase::init(const std::string& i_dbFile,
 		      const std::string& i_profile,
 		      const std::string& i_gameDataDir,
@@ -71,6 +75,23 @@ void xmDatabase::init(const std::string& i_dbFile,
   v_version = getXmDbVersion();
   LogInfo("XmDb version is %i", v_version);
 
+  // mark all objects as requiring an update
+  // will be set off - aims to allow people killing xmoto while updating
+
+  // if the previous value was not 0, force update
+  std::string v_previousRequireUpdateAfterInit;
+  if(getXmParameterKey("requireUpdateAfterInit", v_previousRequireUpdateAfterInit) == false) {
+    m_requiredLevelsUpdateAfterInit  = true;
+    m_requiredReplaysUpdateAfterInit = true;
+    m_requiredThemesUpdateAfterInit  = true;
+  } else {
+    if(v_previousRequireUpdateAfterInit == "1") {
+      m_requiredLevelsUpdateAfterInit  = true;
+      m_requiredReplaysUpdateAfterInit = true;
+      m_requiredThemesUpdateAfterInit  = true;
+    }
+  }
+
   if(v_version > XMDB_VERSION) {
     throw Exception("Your XM database required a newer version of xmoto");
   }
@@ -81,6 +102,8 @@ void xmDatabase::init(const std::string& i_dbFile,
     if(i_interface != NULL) {
       i_interface->updatingDatabase(GAMETEXT_DB_UPGRADING);
     }
+    // now, mark it as required in any case if case the player kills xmoto
+    setXmParameterKey("requireUpdateAfterInit", "1");
     upgradeXmDbToVersion(v_version, i_profile, i_interface); 
   }
 
@@ -93,6 +116,10 @@ void xmDatabase::init(const std::string& i_dbFile,
     m_requiredLevelsUpdateAfterInit  = true;
     m_requiredReplaysUpdateAfterInit = true;
     m_requiredThemesUpdateAfterInit  = true;
+
+    // now, mark it as required in any case if case the player kills xmoto
+    setXmParameterKey("requireUpdateAfterInit", "1");
+
     setXmDbGameDataDir(i_gameDataDir);
     setXmDbUserDataDir(i_userDataDir);
     setXmDbBinPackCheckSum(i_binPackCheckSum);
@@ -102,6 +129,10 @@ void xmDatabase::init(const std::string& i_dbFile,
   } else {
     // directory are not ok, but check directory is disabled => update the directories anyway
     if(v_areDirectoryOK == false) {
+
+      // now, mark it as required in any case if case the player kills xmoto
+      setXmParameterKey("requireUpdateAfterInit", "1");
+
       setXmDbGameDataDir(i_gameDataDir);
       setXmDbUserDataDir(i_userDataDir);
 
@@ -118,6 +149,7 @@ void xmDatabase::init(const std::string& i_dbFile,
       }
     }
   }
+
 }
 
 void xmDatabase::updateXMDirectories(const std::string& i_oldGameDataDir, const std::string& i_newGameDataDir,
