@@ -98,42 +98,6 @@ int LevelsPack::getNumberOfFinishedLevels() {
   return m_nbFinishedLevels;
 }
 
-void LevelsPack::setHintsFromFile() {
-  std::vector<std::string> LpkFiles = XMFS::findPhysFiles(FDT_DATA, "Levels/*.lpk", true);
-
-  for(unsigned int i=0; i<LpkFiles.size(); i++) {
-    XMLDocument XML; 
-    XML.readFromFile(FDT_DATA, LpkFiles[i]);
-    TiXmlDocument *pDoc = XML.getLowLevelAccess();
-          
-    if(pDoc != NULL) {
-      TiXmlElement *pLpkHintsElem = pDoc->FirstChildElement("lpkhints");
-      if(pLpkHintsElem != NULL) {
-	/* For this level pack? */
-	const char *pcFor = pLpkHintsElem->Attribute("for");
-	if(pcFor != NULL && m_name == pcFor) {
-	  /* Yup. Extract hints */
-	  for(TiXmlElement *pHintElem = pLpkHintsElem->FirstChildElement("hint");
-	      pHintElem != NULL; pHintElem=pHintElem->NextSiblingElement("hint")) {
-	    /* Check for known hints... */
-	    const char *pc;
-	    
-	    pc = pHintElem->Attribute("show_times");
-	    if(pc != NULL) {
-	      m_showTimes = atoi(pc)==1;
-	    }
-	    
-	    pc = pHintElem->Attribute("show_wtimes");
-	    if(pc != NULL) {
-	      m_showWebTimes = atoi(pc)==1;
-	    }
-	  }
-	}              
-      }
-    }
-  }
-}
-
 std::string LevelsPack::Name() const {
   return m_name;
 }

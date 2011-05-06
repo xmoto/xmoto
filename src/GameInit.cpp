@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <curl/curl.h>
 #include "XMSession.h"
 #include "XMArgs.h"
+#include "VXml.h"
 #include "drawlib/DrawLib.h"
 #include "Packager.h"
 #include "helpers/SwapEndian.h"
@@ -228,7 +229,12 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 
   /* load config file, the session */
   XMSession::createDefaultConfig(m_userConfig);
-  m_userConfig->loadFile();
+
+  try {
+    m_userConfig->loadFile();
+  } catch(Exception &e) {
+    LogWarning("failed to load or parse user configuration file");
+  }
 
   XMSession::setDefaultInstance("live");  
   XMSession::instance()->load(m_userConfig); /* overload default session by userConfig */
@@ -291,11 +297,13 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 	    XMFS::getSystemDataDir(), XMFS::getUserDir(FDT_DATA), XMFS::binCheckSum(),
 	    v_xmArgs.isOptNoDBDirsCheck() == false,
 	    NULL); // v_useGraphics : NULL because drawlib is still not initialized
+
+  // db trace
   if(XMSession::instance()->sqlTrace()) {
     pDb->setTrace(XMSession::instance()->sqlTrace());
   }
 
-  XMSession::instance("file")->load(m_userConfig);  
+  XMSession::instance("file")->load(m_userConfig);
   XMSession::instance("file")->loadProfile(XMSession::instance("file")->profile(), pDb);
   (* XMSession::instance()) = (* XMSession::instance("file"));
 
@@ -903,6 +911,8 @@ void GameApp::run_unload() {
 
   /* Shutdown SDL */
   SDL_Quit();
+
+  XMLDocument::clean();
     
   if(Logger::isInitialized()) {
     Logger::uninit();
@@ -963,7 +973,7 @@ void GameApp::run_unload() {
   /*===========================================================================
   Update loading screen
   ===========================================================================*/
-  void GameApp::_UpdateLoadingScreen(const std::string &NextTask) {
+  void GameApp::_UpdateLoadingScreen(const std::string &NextTask, int i_percentage) {
     FontManager* v_fm;
     FontGlyph* v_fg;
     int v_fh;
@@ -988,6 +998,15 @@ void GameApp::run_unload() {
 			v_screen.getDispHeight()/2 -30 + v_fh + 2,
 			MAKE_COLOR(255,255,255,255));      
     }
+
+    if(i_percentage != -1) {
+      getDrawLib()->drawBox(Vector2f(0,
+				     v_screen.getDispHeight() - 5),
+			    Vector2f(((int)(v_screen.getDispWidth()*((float)(i_percentage))/100.0)),
+				     v_screen.getDispHeight()),
+			    0,MAKE_COLOR(255,255,255,255));
+    }
+
     getDrawLib()->flushGraphics();
   }
 

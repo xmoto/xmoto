@@ -194,7 +194,6 @@ class Level {
   std::string m_pack;               /* In this level pack */
   std::string m_packNum;            /* value to sort levels */
   std::string m_fileName;
-  XMLDocument *m_xmlSource;    /* Plain XML source */
   std::vector<std::string> m_scriptLibraryFileNames; /* List of script libraries */
   std::string m_scriptFileName;     /* Script file name */      
   std::string m_scriptSource;       /* Script source code */

@@ -18,188 +18,179 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-/* 
- *  XML support through the tinyxml library.
- */
 #include "VXml.h"
 #include "VFileIO.h"
-#include "CRCHash.h"
+#include "helpers/VExcept.h"
 #include "helpers/Log.h"
 
-  /*===========================================================================
-  Load XML document from disk
-  ===========================================================================*/
-void XMLDocument::readFromFile(FileDataType i_fdt, std::string File,unsigned long *pnCRC32, bool i_includeCurrentDir) {
-    /* Clean up if a doc already is loaded */
-    if(m_pXML) delete m_pXML;
-    
-    /* Load */
-    std::string Line,Doc = "";    
-    
-    FileHandle *pfh = XMFS::openIFile(i_fdt, File, i_includeCurrentDir);
-    if(pfh==NULL) return;
+XMLDocument::XMLDocument() {
+    m_doc = NULL;
+    xmlSetGenericErrorFunc(this, XMLDocument::XMLDocumentErrorFunc);
+}
 
-    m_pXML = new TiXmlDocument;
-    Doc.append(XMFS::readFileToEnd(pfh));
+XMLDocument::~XMLDocument() {
+  if(m_doc != NULL) {
+    xmlFreeDoc(m_doc);
+  }
+}
+
+void XMLDocument::clean() {
+  xmlCleanupParser();
+}
+
+void XMLDocument::XMLDocumentErrorFunc(void* ctx, const char* msg, ...) {
+  XMLDocument* v_xml = (XMLDocument*) ctx;
+  va_list List;
+  char cBuf[2048];
+
+  va_start(List,msg);
+  vsnprintf(cBuf, 2048, msg, List);
+  va_end(List);
+
+  LogError(cBuf);
+}
+
+void XMLDocument::readFromFile(FileDataType i_fdt, std::string File, bool i_includeCurrentDir) {
+  /* Clean up if a doc already is loaded */
+  if(m_doc != NULL) {
+    xmlFreeDoc(m_doc);
+    m_doc = NULL;
+  }
+
+  // directly open the file
+  if(XMFS::doesRealFileOrDirectoryExists(File)) {
+    m_doc = xmlParseFile(File.c_str());
+  } else {
+    FileHandle *pfh;
+    std::string v_xmlstr;
+
+    pfh = XMFS::openIFile(i_fdt, File, i_includeCurrentDir);
+    if(pfh==NULL) {
+      throw Exception("failed to load XML " + File);
+    }
+    v_xmlstr = XMFS::readFileToEnd(pfh);
     XMFS::closeFile(pfh);
-    
-    /* Are we just going to need the CRC? */
-    if(pnCRC32 != NULL) {
-      *pnCRC32 = CRC32::computeCRC32((const unsigned char *)Doc.c_str(),Doc.length());
-    }
-    else {
-      /* Parse XML */
-      m_pXML->Parse(Doc.c_str());
-      if(m_pXML->Error()) {
-        LogWarning("XML-parsing error in '%s' : %s",File.c_str(),m_pXML->ErrorDesc());
-      }
-    }
-  }
-      
-  /*===========================================================================
-  Save XML document from disk
-  ===========================================================================*/
-  void XMLDocument::writeToFile(FileDataType i_fdt, std::string File) {
-    /* Anything? */
-    if(!m_pXML) return;
-    FileHandle *pfh = XMFS::openOFile(i_fdt, File);
-    if(pfh==NULL || pfh->Type!=FHT_STDIO) return;
-    m_pXML->Print(pfh->fp);
-    XMFS::closeFile(pfh);
+
+    m_doc = xmlParseMemory(v_xmlstr.c_str(), v_xmlstr.length());
   }
 
-  std::string XML::str2xmlstr(std::string str) {
-    std::string v_res = "";
-    for(unsigned int i=0; i<str.length(); i++) {
-      switch(str[i]) {
-      case '&':
-  v_res.append("&amp;");
-  break;
-      case '<':
-  v_res.append("&lt;");
-  break;
-      case '>':
-  v_res.append("&gt;");
-  break;
-      case '\"':
-  v_res.append("&quot;");
-  break;
-      case '\'':
-  v_res.append("&apos;");
-  break;
-      default:
-  char c[2] = {str[i], '\0'};
-  v_res.append(c);
-      }
-    }
-    return v_res;
+  if (m_doc == NULL) {
+    throw Exception("failed to load XML " + File);
   }
-    
+}
 
-  /*===========================================================================
-    Find element option/attribute
-    ===========================================================================*/
-  std::string XML::getOption(TiXmlElement *pElem,std::string Name,std::string Default) {
-    const char *pc = pElem->Attribute(Name.c_str());
-    if(pc == NULL) return Default;
-    return std::string(pc);
-  }
+xmlNodePtr XMLDocument::getRootNode(const char* rootNameToCheck) {
+  char*     vc = (char*) rootNameToCheck;
+  xmlChar* xvc = (xmlChar*) vc;
 
-  /*===========================================================================
-    Find element in document object model
-    ===========================================================================*/
-  TiXmlElement* XML::findElement(XMLDocument& i_source, TiXmlElement *pRoot,const std::string &Name) {
-    TiXmlElement *pFirst;
-    
-    /* Find out where to start */
-    if(pRoot == NULL) pFirst = i_source.getLowLevelAccess()->FirstChildElement();
-    else pFirst = pRoot->FirstChildElement();
-    
-    /* Scan through elements */
-    for(TiXmlElement *pElem = pFirst;pElem!=NULL;pElem=pElem->NextSiblingElement()) {
-      if(!strcmp(pElem->Value(),Name.c_str())) {
-        /* This is the one */
-        return pElem;
-      }
-      
-      /* Recurse */
-      if(pElem->FirstChildElement() != NULL) {
-        TiXmlElement *pRet = findElement(i_source, pElem,Name);
-        if(pRet != NULL) return pRet;
-      }
+  xmlNodePtr r = xmlDocGetRootElement(m_doc);
+  if(xvc != NULL) {
+    if(r == NULL) {
+      throw Exception("Invalid root name");
+    } else if(xmlStrcmp(r->name, xvc) != 0) {
+      throw Exception("Invalid root name");
     }
-    
-    /* Found nothing */
+  }
+  return r;
+}
+
+xmlNodePtr XMLDocument::subElement(xmlNodePtr node, const char* name) {
+  xmlNodePtr child;
+  char*    cname = (char*)     name;
+  xmlChar* xname = (xmlChar*) cname;
+
+  // search he children
+  if(node->children == NULL) {
     return NULL;
   }
+  child = node->children;
 
-
-/*===========================================================================
-  Get formatted element text
-  ===========================================================================*/
-  std::string XML::getElementText(XMLDocument& i_source, TiXmlElement *pRoot,std::string Name) {
-    TiXmlElement *pFirst;
-    std::string Text = "";
-    
-    /* Find out where to start */
-    if(pRoot == NULL) pFirst = i_source.getLowLevelAccess()->FirstChildElement();
-    else pFirst = pRoot->FirstChildElement();
-    
-    /* Scan through elements */
-    for(TiXmlElement *pElem = pFirst;pElem!=NULL;pElem=pElem->NextSiblingElement()) {
-      if(!strcmp(pElem->Value(),Name.c_str())) {
-        /* This is the one -- format text*/
-        for(TiXmlNode *pNode = pElem->FirstChild();pNode!=NULL;pNode=pNode->NextSibling()) {
-          if(pNode->Type() == TiXmlNode::TEXT) {
-            /* Ohh... text. Append it */
-            appendText(Text,std::string(pNode->Value()));
-          }
-          else if(pNode->Type() == TiXmlNode::ELEMENT) {
-            /* Hmm, some kind of formatting element */
-            if(!strcmp(pNode->Value(),"br")) {
-              /* HTML-style line break */
-              Text.append( "\n" );              
-            }
-          }
-        }
-        if(Text.length() > 0) {
-          if(Text[ Text.length()-1 ] == ' ') {
-            Text = Text.substr(0,Text.length()-1);
-          }
-        }
-        return Text;
-      }
+  // is it the direct child ?
+  if(child->type == XML_ELEMENT_NODE) {
+    if(xmlStrcmp(child->name, xname) == 0) {
+      return child;
     }
-    
-    /* Nothing */
-    return "";
   }
 
-  /*===========================================================================
-    Append. yeah.
-    ===========================================================================*/
-  void XML::appendText(std::string &Text,const std::string &Append) {
-    const char *pc = Append.c_str();
-    int i=0;
-    std::string A = "";
-    char c[2];
-    
-    while(1) {
-      if(pc[i] == '\0' || pc[i] == ' ' || pc[i] == '\t') {
-        if(A != "") {
-          Text.append( A );
-          Text.append( " " );
-          A = "";
-        }
-        if(pc[i] == '\0') break;
-    }
-      else {
-        c[0] = pc[i];
-        c[1] = '\0';
-        A.append( c );
-      }
-      
-      i++;
-    }
-  }  
+  return nextElement(child, name); // go throw the child level to find a browser
+}
 
+xmlNodePtr XMLDocument::nextElement(xmlNodePtr node, const char* name) {
+  xmlNodePtr n;
+  char*    cname = (char*)     name;
+  xmlChar* xname = (xmlChar*) cname;
+
+  n = node->next;
+  while(n != NULL) {
+    if(n->type == XML_ELEMENT_NODE) {
+      if(xmlStrcmp(n->name, name == NULL ? node->name : xname) == 0) { // searched node ?
+	return n;
+      }
+    }
+    n = n->next;
+  }
+
+  // nothing found
+  return NULL;
+}
+
+std::string XMLDocument::getOption(xmlNodePtr node, const char* name, std::string Default) {
+  char* v = (char *) name;
+  return getOption(node, (xmlChar*) v, Default);
+}
+
+std::string XMLDocument::getOption(xmlNodePtr node, xmlChar* name, std::string Default) {
+  xmlChar* value;
+  std::string res;
+
+  value = xmlGetProp(node, name);
+  if(value == NULL) {
+    return Default;
+  }
+  res = std::string((char*) value);
+  xmlFree(value);
+
+  return res; 
+}
+
+std::string XMLDocument::getElementText(xmlNodePtr node) {
+  xmlChar* value;
+  std::string res;
+
+  // get the value
+  value = xmlNodeGetContent(node);
+  if(value == NULL) {
+    return "";
+  }
+  res = std::string((char*) value);
+  xmlFree(value);
+
+  return res;
+}
+
+std::string XMLDocument::str2xmlstr(std::string str) {
+  std::string v_res = "";
+  for(unsigned int i=0; i<str.length(); i++) {
+    switch(str[i]) {
+    case '&':
+      v_res.append("&amp;");
+      break;
+    case '<':
+      v_res.append("&lt;");
+      break;
+    case '>':
+      v_res.append("&gt;");
+      break;
+    case '\"':
+      v_res.append("&quot;");
+      break;
+    case '\'':
+      v_res.append("&apos;");
+      break;
+    default:
+      char c[2] = {str[i], '\0'};
+      v_res.append(c);
+    }
+  }
+  return v_res;
+}

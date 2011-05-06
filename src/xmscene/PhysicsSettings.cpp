@@ -31,9 +31,7 @@ PhysicsSettings::~PhysicsSettings() {
 
 void PhysicsSettings::load(FileDataType i_fdt, const std::string& i_filename) {
   XMLDocument    v_xml;
-  TiXmlDocument* v_xmlData;
-  TiXmlElement*  v_xmlDataElement;
-  const char*    pc;
+  xmlNodePtr v_xmlElt;
   std::string v_name, v_value;
 
   bool v_world_erp_done                      = false;
@@ -97,34 +95,27 @@ void PhysicsSettings::load(FileDataType i_fdt, const std::string& i_filename) {
 
   try {
     v_xml.readFromFile(i_fdt, i_filename);
-    v_xmlData = v_xml.getLowLevelAccess();
-    
-    if(v_xmlData == NULL) {
+
+    v_xmlElt = v_xml.getRootNode("xmoto_physics");
+    if(v_xmlElt == NULL) {
       throw Exception("unable to analyze xml file");
     }
 
-    v_xmlDataElement = v_xmlData->FirstChildElement("xmoto_physics");
-    if(v_xmlDataElement != NULL) {
-      pc = v_xmlDataElement->Attribute("name");
-      m_name = pc;
-    }
-    
+    m_name = XMLDocument::getOption(v_xmlElt, "name");
     if(m_name == "") {
       throw Exception("unnamed physics");
     }
     
     /* get parameters */
-    for(TiXmlElement *pVarElem = v_xmlDataElement->FirstChildElement("parameter");
-	pVarElem!=NULL;
-	pVarElem = pVarElem->NextSiblingElement("parameter")
-	) {
-      pc = pVarElem->Attribute("name");
-      if(pc == NULL) { continue; }
-      v_name = pc;
+    for(xmlNodePtr pSubElem = XMLDocument::subElement(v_xmlElt, "parameter");
+	pSubElem != NULL;
+	pSubElem = XMLDocument::nextElement(pSubElem)) {
 
-      pc = pVarElem->Attribute("value");
-      if(pc == NULL) { continue; }
-      v_value = pc;
+      v_name = XMLDocument::getOption(pSubElem, "name");
+      if(v_name == "") { continue; }
+
+      v_value = XMLDocument::getOption(pSubElem, "value");
+      if(v_value == "") { continue; }
 
       if(v_name == "world_erp") {
 	m_world_erp      = atof(v_value.c_str());

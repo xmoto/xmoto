@@ -25,21 +25,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 
 XMDemo::XMDemo(const std::string i_demoFile) {
-    XMLDocument i_xmlSource;
-    TiXmlDocument *pDoc;
+    XMLDocument v_xml;
+    xmlNodePtr  v_xmlElt;
 
-    i_xmlSource.readFromFile(FDT_DATA, i_demoFile, NULL, true);
+    v_xml.readFromFile(FDT_DATA, i_demoFile, true);
 
-    pDoc = i_xmlSource.getLowLevelAccess();
-    if(pDoc == NULL) throw Exception("failed to load demo XML " + i_demoFile);
-  
-    TiXmlElement *pDemoElem = XML::findElement(i_xmlSource, NULL, std::string("demo"));    
-    if(pDemoElem == NULL) throw Exception("<demo> tag not found in XML");
+    v_xmlElt = v_xml.getRootNode("demo");
+    if(v_xmlElt == NULL) {
+      throw Exception("failed to load demo XML " + i_demoFile);
+    }
 
     /* Get URLs */
-    m_levelUrl = XML::getOption(pDemoElem,"level_url");
+    m_levelUrl = XMLDocument::getOption(v_xmlElt, "level_url");
     if(m_levelUrl == "") throw Exception("no level URL specified in XML");
-    m_replayUrl = XML::getOption(pDemoElem,"replay_url");
+
+    m_replayUrl = XMLDocument::getOption(v_xmlElt, "replay_url");
     if(m_replayUrl == "") throw Exception("no replay URL specified in XML");
 
     m_levelFile  = XMFS::getUserDir(FDT_CACHE) + "/demo/" + XMFS::getFileBaseName(m_levelUrl) + ".lvl";

@@ -618,54 +618,33 @@ void FSWeb::uploadAnalyseMsg(const std::string& p_key,
 			     const std::string& p_filename,
 			     bool &p_msg_status_ok,
 			     std::string &p_msg) {
-  XMLDocument v_Xml;
-  TiXmlDocument *v_XmlData;
-  TiXmlElement *v_XmlDataElement;
-  TiXmlElement *v_XmlDataElementMsg;
+  XMLDocument v_xml;
+  xmlNodePtr  v_xmlElt;
   std::string v_success;
-  const char *pc;
-  TiXmlNode * pChild;
   
   /* open the file */
-  v_Xml.readFromFile(FDT_CACHE, p_filename);   
-  v_XmlData = v_Xml.getLowLevelAccess();
-  
-  if(v_XmlData == NULL) {
+  v_xml.readFromFile(FDT_CACHE, p_filename);
+
+  v_xmlElt = v_xml.getRootNode(p_key.c_str());
+  if(v_xmlElt == NULL) {
     throw Exception("unable to analyze xml file result");
   }
   
   /* read the res and msg */
-  v_XmlDataElement = v_XmlData->FirstChildElement(p_key.c_str());
-  if(v_XmlDataElement == NULL) {
+  v_success = XMLDocument::getOption(v_xmlElt, "success");
+  if(v_success == "") {
     throw Exception("unable to analyze xml file result");
   }
-
-  pc = v_XmlDataElement->Attribute("success");
-  if(pc == NULL) {
-    throw Exception("unable to analyze xml file result");
-  }
-  v_success = pc;
   p_msg_status_ok = v_success == "1";
 
-  v_XmlDataElementMsg = v_XmlDataElement->FirstChildElement("message");
-  if(v_XmlDataElementMsg == NULL) {
+  v_xmlElt = XMLDocument::subElement(v_xmlElt, "message");
+  if(v_xmlElt == NULL) {
     throw Exception("unable to analyze xml file result");
   }
-
-  pChild = v_XmlDataElementMsg->FirstChild();
-  if(pChild == NULL) {
+  p_msg = XMLDocument::getElementText(v_xmlElt);
+  if(p_msg == "") {
     throw Exception("unable to analyze xml file result");
   }
-
-  if(pChild->ToText() == NULL) {
-    throw Exception("unable to analyze xml file result");
-  }
-
-  pc = pChild->ToText()->Value();
-  if(pc == NULL) {
-    throw Exception("unable to analyze xml file result");
-  }
-  p_msg = pc;
 }
 
 /* could be factorized with uploadReplay */

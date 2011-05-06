@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/VExcept.h"
 #include "../XMSession.h"
 #include <sstream>
+#include <string.h>
+#include <stdlib.h>
 #include "NetActions.h"
 #include "helpers/Net.h"
 

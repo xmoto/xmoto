@@ -45,10 +45,8 @@ void xmDatabase::webrooms_addRoom(const std::string& i_id_room, const std::strin
 std::string xmDatabase::webhighscores_updateDB(FileDataType i_fdt,
 					       const std::string& i_webhighscoresFile,
 					       const std::string& i_websource) {
-  XMLDocument v_webHSXml;
-  TiXmlDocument *v_webHSXmlData;
-  TiXmlElement *v_webHSXmlDataElement;
-  const char *pc;
+  XMLDocument v_xml;
+  xmlNodePtr  v_xmlElt;
   std::string v_roomName;
   std::string v_roomId;
   std::string v_levelId;
@@ -62,27 +60,17 @@ std::string xmDatabase::webhighscores_updateDB(FileDataType i_fdt,
   try {
     simpleSql("BEGIN TRANSACTION;");
 
-    v_webHSXml.readFromFile(i_fdt, i_webhighscoresFile);
-    v_webHSXmlData = v_webHSXml.getLowLevelAccess();
+    v_xml.readFromFile(i_fdt, i_webhighscoresFile);
 
-    if(v_webHSXmlData == NULL) {
-      throw Exception("error : unable to analyze xml highscore file");
-    }
-
-    v_webHSXmlDataElement = v_webHSXmlData->FirstChildElement("xmoto_worldrecords");
-    if(v_webHSXmlDataElement == NULL) {
-      throw Exception("error : unable to analyze xml highscore file");
+    v_xmlElt = v_xml.getRootNode("xmoto_worldrecords");
+    if(v_xmlElt == NULL) {
+      throw Exception("unable to analyze xml highscore file");
     }
 
     /* get Room informations */
-    pc = v_webHSXmlDataElement->Attribute("roomname");
-    if(pc != NULL) {
-      v_roomName = pc;
-    }
-    pc = v_webHSXmlDataElement->Attribute("roomid");
-    if(pc != NULL) {
-      v_roomId = pc;
-    }
+    v_roomName = XMLDocument::getOption(v_xmlElt, "roomname");
+    v_roomId   = XMLDocument::getOption(v_xmlElt, "roomid");
+
     if(v_roomId == "") {
       throw Exception("error : unable to analyze xml highscore file");
     }
@@ -93,29 +81,26 @@ std::string xmDatabase::webhighscores_updateDB(FileDataType i_fdt,
     }
 
     simpleSql("DELETE FROM webhighscores WHERE id_room=" + v_roomId + ";");
-    for(TiXmlElement *pVarElem = v_webHSXmlDataElement->FirstChildElement("worldrecord");
-	pVarElem!=NULL;
-	pVarElem = pVarElem->NextSiblingElement("worldrecord")
-	) {
-      
-      pc = pVarElem->Attribute("level_id");
-      if(pc == NULL) {
-	continue;
-      }
-      v_levelId = pc;
 
-      pc = pVarElem->Attribute("player");
-      if(pc == NULL) {
+    for(xmlNodePtr pSubElem = XMLDocument::subElement(v_xmlElt, "worldrecord");
+	pSubElem != NULL;
+	pSubElem = XMLDocument::nextElement(pSubElem)) {
+
+      v_levelId = XMLDocument::getOption(pSubElem, "level_id");
+      if(v_levelId == "") {
 	continue;
       }
-      v_player = pc;
+
+      v_player = XMLDocument::getOption(pSubElem, "player");
+      if(v_player == "") {
+	continue;
+      }
 
       /* time */
-      pc = pVarElem->Attribute("time");
-      if(pc == NULL) {
+      v_strtime = XMLDocument::getOption(pSubElem, "time");
+      if(v_strtime == "") {
 	continue;
       }
-      v_strtime = pc;
 
       pos_1 = v_strtime.find(":", 0);
       if(pos_1 == std::string::npos || pos_1 == v_strtime.length()-1)
@@ -130,18 +115,16 @@ std::string xmDatabase::webhighscores_updateDB(FileDataType i_fdt,
         atoi(v_strtime.substr(pos_2+1, v_strtime.length()-pos_2-1).c_str());
 
       /* replay */
-      pc = pVarElem->Attribute("replay");
-      if(pc == NULL) {
+      v_rplUrl = XMLDocument::getOption(pSubElem, "replay");
+      if(v_rplUrl == "") {
 	continue;
       }
-      v_rplUrl = pc;
 
       /* date */
-      pc = pVarElem->Attribute("date");
-      if(pc == NULL) {
+      v_date = XMLDocument::getOption(pSubElem, "date");
+      if(v_date == "") {
 	continue;
       }
-      v_date = pc;
 
       std::ostringstream v_secondTime;
       v_secondTime << v_time;
@@ -208,113 +191,90 @@ bool xmDatabase::isWebVoteLocked(const std::string& i_id_level) {
 }
 
 void xmDatabase::weblevels_updateDB(FileDataType i_fdt, const std::string& i_weblevelsFile) {
-  XMLDocument v_webLXml;
-  TiXmlDocument *v_webLXmlData;
-  TiXmlElement *v_webLXmlDataElement;
-  const char *pc;
-
+  XMLDocument v_xml;
+  xmlNodePtr  v_xmlElt;
+  
   try {
     simpleSql("BEGIN TRANSACTION;");
     simpleSql("DELETE FROM weblevels;");
 
-    v_webLXml.readFromFile(i_fdt, i_weblevelsFile);
-    v_webLXmlData = v_webLXml.getLowLevelAccess();
+    v_xml.readFromFile(i_fdt, i_weblevelsFile);
 
-    if(v_webLXmlData == NULL) {
-      throw Exception("error : unable to analyze xml level file");
+    v_xmlElt = v_xml.getRootNode("xmoto_levels");
+    if(v_xmlElt == NULL) {
+      throw Exception("unable to analyze xml file");
     }
 
-    v_webLXmlDataElement = v_webLXmlData->FirstChildElement("xmoto_levels");
-  
-    if(v_webLXmlDataElement == NULL) {
-      throw Exception("error : unable to analyze xml level file");
-    }
+    for(xmlNodePtr pSubElem = XMLDocument::subElement(v_xmlElt, "level");
+	pSubElem != NULL;
+	pSubElem = XMLDocument::nextElement(pSubElem)) {
 
-    TiXmlElement *pVarElem = v_webLXmlDataElement->FirstChildElement("level");
-    while(pVarElem != NULL) {
-    
       std::string v_levelId, v_levelName, v_url, v_MD5sum_web;
       std::string v_difficulty, v_quality, v_creationDate;
       std::string v_crappy, v_children_compliant, v_vote_locked;
       std::string v_packname, v_packnum;
 
-      pc = pVarElem->Attribute("level_id");
-      if(pc == NULL)
+      v_levelId = XMLDocument::getOption(pSubElem, "level_id");
+      if(v_levelId == "")
 	continue;
-      v_levelId = pc;
-	
-      pc = pVarElem->Attribute("name");
-      if(pc == NULL)
+
+      v_levelName = XMLDocument::getOption(pSubElem, "name");
+      if(v_levelName == "")
 	continue;
-      v_levelName = pc;
 
-      pc = pVarElem->Attribute("packname");
-      if(pc == NULL) {
-	v_packname = "";
-      } else {
-	v_packname = pc;
-
-	pc = pVarElem->Attribute("packnum");
-	if(pc == NULL) {
-	  v_packnum = "";
-	} else {
-	  v_packnum = pc;
-	}
+      v_packname = XMLDocument::getOption(pSubElem, "packname");
+      if(v_packname != "") {
+	v_packnum = XMLDocument::getOption(pSubElem, "packnum");
       }
-	  
-      pc = pVarElem->Attribute("url");
-      if(pc == NULL)
+
+      v_url = XMLDocument::getOption(pSubElem, "url");
+      if(v_url == "")
 	continue;
-      v_url = pc;  
-	    
-      pc = pVarElem->Attribute("sum");
-      if(pc == NULL)
+
+      v_MD5sum_web = XMLDocument::getOption(pSubElem, "sum");
+      if(v_MD5sum_web == "")
 	continue;
-      v_MD5sum_web = pc;
 	      
       /* web informations */
-      pc = pVarElem->Attribute("web_difficulty");
-      if(pc == NULL)
+      v_difficulty = XMLDocument::getOption(pSubElem, "web_difficulty");
+      if(v_difficulty == "")
 	continue;
-      v_difficulty = pc;
       for(unsigned int i=0; i<v_difficulty.length(); i++) {
 	if(v_difficulty[i] == ',')
 	  v_difficulty[i] = '.';
       }
 
-      pc = pVarElem->Attribute("web_quality");
-      if(pc == NULL)
+      v_quality = XMLDocument::getOption(pSubElem, "web_quality");
+      if(v_quality == "")
 	continue;
-      v_quality = pc;
       for(unsigned int i=0; i<v_quality.length(); i++) {
 	if(v_quality[i] == ',')
 	  v_quality[i] = '.';
       }
 
-      pc = pVarElem->Attribute("creation_date");
-      if(pc == NULL)
+      v_creationDate = XMLDocument::getOption(pSubElem, "creation_date");
+      if(v_creationDate == "")
 	continue;
-      v_creationDate = pc;
 
-      pc = pVarElem->Attribute("crappy");
-      if(pc == NULL) {
+      v_crappy = XMLDocument::getOption(pSubElem, "crappy");
+      if(v_crappy == "") {
 	v_crappy = "0";
       } else {
-	v_crappy = std::string(pc) == "true" ? "1" : "0";
+	v_crappy = v_crappy == "true" ? "1" : "0";
       }
 
-      pc = pVarElem->Attribute("children_compliant");
-      if(pc == NULL) {
+      v_children_compliant = XMLDocument::getOption(pSubElem, "children_compliant");
+      if(v_children_compliant == "") {
 	v_children_compliant = "1";
       } else {
-	v_children_compliant = std::string(pc) == "true" ? "1" : "0";
+	v_children_compliant = v_children_compliant == "true" ? "1" : "0";
       }
 
-      pc = pVarElem->Attribute("vote_locked");
-      if(pc == NULL) {
+      v_vote_locked = XMLDocument::getOption(pSubElem, "vote_locked");
+      if(v_vote_locked == "") {
 	v_vote_locked = "0";
       } else {
-	v_vote_locked = std::string(pc) == "true" ? "1" : "0";
+	v_vote_locked = v_vote_locked == "true" ? "1" : "0";
       }
 
       // add the level
@@ -333,7 +293,6 @@ void xmDatabase::weblevels_updateDB(FileDataType i_fdt, const std::string& i_web
 		v_children_compliant + ", " +
 		v_vote_locked + ");");
 
-      pVarElem = pVarElem->NextSiblingElement("level");
     }
     simpleSql("COMMIT;");
   } catch(Exception &e) {
@@ -343,47 +302,36 @@ void xmDatabase::weblevels_updateDB(FileDataType i_fdt, const std::string& i_web
 }
 
 void xmDatabase::webrooms_updateDB(FileDataType i_fdt, const std::string& i_webroomsFile) {
-  XMLDocument v_webRXml;
-  TiXmlDocument *v_webRXmlData;
-  TiXmlElement *v_webRXmlDataElement;
-  const char *pc;
+  XMLDocument v_xml;
+  xmlNodePtr  v_xmlElt;
+
   std::string v_RoomName, v_RoomHighscoreUrl, v_RoomId;
 
   try {
     simpleSql("BEGIN TRANSACTION;");
     simpleSql("DELETE FROM webrooms;");
 
-    v_webRXml.readFromFile(i_fdt, i_webroomsFile);
-    v_webRXmlData = v_webRXml.getLowLevelAccess();
+    v_xml.readFromFile(i_fdt, i_webroomsFile);
 
-    if(v_webRXmlData == NULL) {
-      throw Exception("error : unable to analyze xml rooms list file");
+    v_xmlElt = v_xml.getRootNode("xmoto_rooms");
+    if(v_xmlElt == NULL) {
+      throw Exception("unable to analyze xml file");
     }
-
-    v_webRXmlDataElement = v_webRXmlData->FirstChildElement("xmoto_rooms");
-    
-    if(v_webRXmlDataElement == NULL) {
-      throw Exception("error : unable to analyze xml rooms list file");
-    }
-    
-    TiXmlElement *pVarElem = v_webRXmlDataElement->FirstChildElement("room");
-    while(pVarElem != NULL) {
-      
-      pc = pVarElem->Attribute("name");
-      if(pc == NULL) continue; // hehe it feels the unlimited loop, too tired to fix that tonight
-      v_RoomName = pc;
   
-      pc = pVarElem->Attribute("highscores_url");
-      if(pc == NULL) continue;
-      v_RoomHighscoreUrl = pc;   
-    
-      pc = pVarElem->Attribute("id");
-      if(pc == NULL) continue;
-      v_RoomId = pc;
+    for(xmlNodePtr pSubElem = XMLDocument::subElement(v_xmlElt, "room");
+	pSubElem != NULL;
+	pSubElem = XMLDocument::nextElement(pSubElem)) {
+
+      v_RoomName = XMLDocument::getOption(pSubElem, "name");
+      if(v_RoomName == "") continue;
+  
+      v_RoomHighscoreUrl = XMLDocument::getOption(pSubElem, "highscores_url");
+      if(v_RoomName == "") continue;
+
+      v_RoomId = XMLDocument::getOption(pSubElem, "id");
+      if(v_RoomId == "") continue;
 
       webrooms_addRoom(v_RoomId, v_RoomName, v_RoomHighscoreUrl);
-
-      pVarElem = pVarElem->NextSiblingElement("room");
     }
     simpleSql("COMMIT;");
   } catch(Exception &e) {
@@ -393,47 +341,35 @@ void xmDatabase::webrooms_updateDB(FileDataType i_fdt, const std::string& i_webr
 }
 
 void xmDatabase::webthemes_updateDB(FileDataType i_fdt, const std::string& i_webThemesFile) {
-  XMLDocument v_webTXml;
-  TiXmlDocument *v_webTXmlData;
-  TiXmlElement *v_webTXmlDataElement;
-  const char *pc;
+  XMLDocument v_xml;
+  xmlNodePtr  v_xmlElt;
   std::string v_themeName, v_url, v_MD5sum_web;
 
   try {
     simpleSql("BEGIN TRANSACTION;");
     simpleSql("DELETE FROM webthemes;");
     
-    v_webTXml.readFromFile(i_fdt, i_webThemesFile);
-    v_webTXmlData = v_webTXml.getLowLevelAccess();
-    
-    if(v_webTXmlData == NULL) {
-      throw Exception("error : unable to analyze xml theme file");
+    v_xml.readFromFile(i_fdt, i_webThemesFile);
+
+    v_xmlElt = v_xml.getRootNode("xmoto_themes");
+    if(v_xmlElt == NULL) {
+      throw Exception("unable to analyze xml file");
     }
-    
-    v_webTXmlDataElement = v_webTXmlData->FirstChildElement("xmoto_themes");
-    
-    if(v_webTXmlDataElement == NULL) {
-      throw Exception("error : unable to analyze xml theme file");
-    }
-    
-    TiXmlElement *pVarElem = v_webTXmlDataElement->FirstChildElement("theme");
-    while(pVarElem != NULL) {
-      
-      pc = pVarElem->Attribute("name");
-      if(pc == NULL) continue;
-      v_themeName = pc;
-      
-      pc = pVarElem->Attribute("url");
-      if(pc == NULL) continue;
-      v_url = pc;  
-      
-      pc = pVarElem->Attribute("sum");
-      if(pc == NULL) continue;
-      v_MD5sum_web = pc;
+
+    for(xmlNodePtr pSubElem = XMLDocument::subElement(v_xmlElt, "theme");
+        pSubElem != NULL;
+        pSubElem = XMLDocument::nextElement(pSubElem)) {
+
+      v_themeName = XMLDocument::getOption(pSubElem, "name");
+      if(v_themeName == "") continue;
+
+      v_url = XMLDocument::getOption(pSubElem, "url");
+      if(v_url == "") continue;
+
+      v_MD5sum_web = XMLDocument::getOption(pSubElem, "sum");
+      if(v_MD5sum_web == "") continue;
       
       webthemes_addTheme(v_themeName, v_url, v_MD5sum_web);
-      
-      pVarElem = pVarElem->NextSiblingElement("theme");
     }
     simpleSql("COMMIT;");
   } catch(Exception &e) {

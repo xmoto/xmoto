@@ -107,13 +107,15 @@ bool Zone::doesCircleTouch(const Vector2f& i_cp, float i_cr) {
   return false;
 }
 
-Zone* Zone::readFromXml(TiXmlElement *pElem) {
-  Zone *v_zone = new Zone(XML::getOption(pElem,"id"));
+Zone* Zone::readFromXml(xmlNodePtr pElem) {
+  Zone *v_zone = new Zone(XMLDocument::getOption(pElem, "id"));
   
   /* Get primitives */
-  for(TiXmlElement *pj = pElem->FirstChildElement("box"); pj!=NULL; pj=pj->NextSiblingElement("box")) {
-    v_zone->m_prims.push_back(ZonePrimBox::readFromXml(pj));
-  }  
+  for(xmlNodePtr pSubElem = XMLDocument::subElement(pElem, "box");
+      pSubElem != NULL;
+      pSubElem = XMLDocument::nextElement(pSubElem)) {
+	v_zone->m_prims.push_back(ZonePrimBox::readFromXml(pSubElem));
+  }
   
   return v_zone;
 }
@@ -154,13 +156,13 @@ Zone* Zone::readFromBinary(FileHandle *i_pfh) {
   return v_zone;
 }
 
-ZonePrim* ZonePrimBox::readFromXml(TiXmlElement *i_elem) {
+ZonePrim* ZonePrimBox::readFromXml(xmlNodePtr pElem) {
   float v_bottom, v_top, v_left, v_right;
 
-  v_bottom = atof( XML::getOption(i_elem,"bottom","0").c_str() );
-  v_top    = atof( XML::getOption(i_elem,"top","0").c_str() );
-  v_left   = atof( XML::getOption(i_elem,"left","0").c_str() );
-  v_right  = atof( XML::getOption(i_elem,"right","0").c_str() );
+  v_bottom = atof( XMLDocument::getOption(pElem,"bottom","0").c_str() );
+  v_top    = atof( XMLDocument::getOption(pElem,"top","0").c_str() );
+  v_left   = atof( XMLDocument::getOption(pElem,"left","0").c_str() );
+  v_right  = atof( XMLDocument::getOption(pElem,"right","0").c_str() );
   
   return new ZonePrimBox(v_left, v_right, v_top, v_bottom);
 }

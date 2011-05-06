@@ -24,6 +24,18 @@ AC_CHECK_LIB(z, uncompress, [], [AC_MSG_ERROR(zlib required)])
 AC_CHECK_LIB(jpeg, jpeg_CreateCompress, [], [AC_MSG_ERROR(libjpeg required)])
 AC_CHECK_LIB(png, png_read_image, [], [AC_MSG_ERROR(libpng required)])
 
+dnl libxml2
+if test "$target_os" != "mingw32"
+then
+AM_PATH_XML2([], 
+             AC_DEFINE(HAVE_XML2, 1),
+             [AC_MSG_ERROR([*** cannot find the libxml2 library ])])
+AC_SUBST(XML_CPPFLAGS)
+AC_SUBST(XML_LIBS)
+CPPFLAGS="$CPPFLAGS"" ""$XML_CPPFLAGS"
+CFLAGS="$CFLAGS"" ""$XML_CPPFLAGS"
+LDFLAGS="$LDFLAGS"" ""$XML_LIBS"
+fi
 
 dnl bz2
 if test "$target_os" = "mingw32" # on windows, don't include libbz2
@@ -86,6 +98,13 @@ then
   CFLAGS="$CFLAGS"" -DdDOUBLE"         # ode double
   CXXFLAGS="$CXXFLAGS"" -DdDOUBLE"     # ode double
   HAVEDGETCONFIGURATION=1              # ode dGetConfiguration function
+
+  # libxml
+  CFLAGS="$CFLAGS"" "" -I/usr/i586-mingw32msvc/include/libxml"
+  CXXFLAGS="$CXXFLAGS"" "" -I/usr/i586-mingw32msvc/include/libxml"
+  CFLAGS="$CFLAGS"" ""-DLIBXML_STATIC"
+  CXXFLAGS="$CXXFLAGS"" ""-DLIBXML_STATIC"
+  MINGW32_LIBS="$MINGW32_LIBS"" -lxml2"
 
   # this one should be removed once i've found why it doesn't use it on my computer  
   LDFLAGS="$LDFLAGS"" -L/usr/i586-mingw32msvc/lib"

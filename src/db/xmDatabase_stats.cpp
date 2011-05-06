@@ -30,55 +30,48 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   you must change the query to take case of it if you want to reuse it
 */
 void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
-  XMLDocument XML;
-  const char *tag, *tagv;
+  XMLDocument v_xml;
+  xmlNodePtr  v_xmlElt;
+  std::string v_tag, v_tagv;
   std::string v_playerName, v_since, v_starts;
   std::string v_levelId, v_playedTime, v_played, v_died, v_restarted, v_completed;
 
-  XML.readFromFile(FDT_DATA, "stats.xml", NULL);
-  TiXmlDocument *pXML = XML.getLowLevelAccess();
-        
-  if(pXML != NULL) {    
-    /* Start eating the XML */
-    TiXmlElement *pStatsElem = pXML->FirstChildElement("stats");
-    if(pStatsElem != NULL) {
 
+  v_xml.readFromFile(FDT_DATA, "stats.xml");
+  v_xmlElt = v_xml.getRootNode("stats");
+  if(v_xmlElt == NULL) {
+    throw Exception("Unable to read xml file");
+  }
+        
+  if(v_xmlElt != NULL) {    
+    /* Start eating the XML */
       try {
      
 	simpleSql("BEGIN TRANSACTION;");
  
 	/* Get players */
-	for(TiXmlElement *pPlayerElem = pStatsElem->FirstChildElement("player");
-	    pPlayerElem!=NULL;pPlayerElem=pPlayerElem->NextSiblingElement("player")) {
+	for(xmlNodePtr pSubElem = XMLDocument::subElement(v_xmlElt, "player");
+	    pSubElem != NULL;
+	    pSubElem = XMLDocument::nextElement(pSubElem)) {
 
-	  tag = pPlayerElem->Attribute("name");
+	  v_playerName = XMLDocument::getOption(pSubElem, "name");
 
-	  if(tag != NULL) {
-	    v_playerName = tag;
-
-	    tag = pPlayerElem->Attribute("since");
-	    if(tag == NULL) {
+	  if(v_playerName != "") {
+	    v_since = XMLDocument::getOption(pSubElem, "since");
+	    if(v_since == "") {
 	      v_since = "2000-01-01 00:00:00";
 	    } else {
-	      if(std::string(tag) == "") {
-		v_since = "2000-01-01 00:00:00";
-	      } else {
-		std::string v_tmp = tag;
-		v_since = v_tmp.substr(6, 10) + " " + v_tmp.substr(0, 5) + ":00";
-	      }
+	      v_since = v_since.substr(6, 10) + " " + v_since.substr(0, 5) + ":00";
 	    }
 
 	    v_starts = "";
-	    for(TiXmlElement *pStatElem = pPlayerElem->FirstChildElement("stat");
-		pStatElem!=NULL;pStatElem=pStatElem->NextSiblingElement("stat")) {
-	      tag = pStatElem->Attribute("tag");
-	      if(tag != NULL) {
-		if(std::string(tag) == "xmotostarts") {
-		  tag = pStatElem->Attribute("v");
-		  if(tag != NULL) {
-		    v_starts = tag;
-		  }
-		}
+	    for(xmlNodePtr pSubSubElem = XMLDocument::subElement(pSubElem, "stat");
+		pSubSubElem != NULL;
+		pSubSubElem = XMLDocument::nextElement(pSubSubElem)) {
+
+	      v_tag = XMLDocument::getOption(pSubSubElem, "tag");
+	      if(v_tag == "xmotostarts") {
+		v_starts = XMLDocument::getOption(pSubSubElem, "v");
 	      }
 	    }
 
@@ -93,13 +86,12 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 	    }
 
 	    /* Read per-level stats */
-	    for(TiXmlElement *pLevelElem = pPlayerElem->FirstChildElement("level");
-		pLevelElem!=NULL;pLevelElem=pLevelElem->NextSiblingElement("level")) {
+	    for(xmlNodePtr pSubSubElem = XMLDocument::subElement(pSubElem, "level");
+		pSubSubElem != NULL;
+		pSubSubElem = XMLDocument::nextElement(pSubSubElem)) {
 
-	      tag = pLevelElem->Attribute("id");
-	      if(tag != NULL) {
-		v_levelId = tag;
-
+	      v_levelId = XMLDocument::getOption(pSubSubElem, "id");
+	      if(v_levelId != "") {
 		v_playedTime = "0";
 		v_played     = "0";
 		v_died       = "0";
@@ -107,17 +99,19 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 		v_completed  = "0";
 
 		/* Read stats */
-		for(TiXmlElement *pStatElem = pLevelElem->FirstChildElement("stat");
-		    pStatElem!=NULL;pStatElem=pStatElem->NextSiblingElement("stat")) {
-		  tag = pStatElem->Attribute("tag");
-		  if(tag != NULL) {
-		    tagv = pStatElem->Attribute("v");
-		    if(tagv != NULL) {
-		      if(std::string(tag)      == "playtime")  v_playedTime = tagv;
-		      else if(std::string(tag) == "played")    v_played     = tagv;
-		      else if(std::string(tag) == "died")      v_died       = tagv;
-		      else if(std::string(tag) == "restarts")  v_restarted  = tagv;
-		      else if(std::string(tag) == "completed") v_completed  = tagv;
+		for(xmlNodePtr pSubSubSubElem = XMLDocument::subElement(pSubSubElem, "stat");
+		    pSubSubSubElem != NULL;
+		    pSubSubSubElem = XMLDocument::nextElement(pSubSubSubElem)) {
+
+		  v_tag = XMLDocument::getOption(pSubSubSubElem, "tag");
+		  if(v_tag != "") {
+		    v_tagv = XMLDocument::getOption(pSubSubSubElem, "v");
+		    if(v_tagv != "") {
+		      if(     v_tag == "playtime")  v_playedTime = v_tagv;
+		      else if(v_tag == "played")    v_played     = v_tagv;
+		      else if(v_tag == "died")      v_died       = v_tagv;
+		      else if(v_tag == "restarts")  v_restarted  = v_tagv;
+		      else if(v_tag == "completed") v_completed  = v_tagv;
 		    }
 		  }
 		}
@@ -143,7 +137,6 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 	simpleSql("ROLLBACK;");
 	throw e;
       }
-    }
   }
 }
 

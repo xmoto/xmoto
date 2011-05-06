@@ -20,9 +20,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "xmDatabase.h"
 #include "../xmscene/Level.h"
-#include "../VXml.h"
 #include "../helpers/Log.h"
 #include "../VFileIO.h"
+#include "../VXml.h"
 #include <sstream>
 
 void xmDatabase::levels_add_begin(bool i_isToReload) {
@@ -109,42 +109,30 @@ void xmDatabase::levels_delToBlacklist(const std::string& i_profile, const std::
 
 void xmDatabase::updateDB_favorite(const std::string& i_profile,
 				   XmDatabaseUpdateInterface *i_interface) {
-  XMLDocument v_favoriteLevelsXml;
-  TiXmlDocument *v_favoriteLevelsXmlData;
-  TiXmlElement *v_favoriteLevelsXmlDataElement;
-  const char *pc;
+  XMLDocument v_xml;
+  xmlNodePtr  v_xmlElt;
   std::string v_levelId;
-  
-  v_favoriteLevelsXml.readFromFile(FDT_DATA, "favoriteLevels.xml");
-  v_favoriteLevelsXmlData = v_favoriteLevelsXml.getLowLevelAccess();
 
-  if(v_favoriteLevelsXmlData == NULL) {
-    throw Exception("error : unable to analyze xml favoriteLevels file");
+  v_xml.readFromFile(FDT_DATA, "favoriteLevels.xml");
+  v_xmlElt = v_xml.getRootNode("favoriteLevels");
+  if(v_xmlElt == NULL) {
+    throw Exception("Unable to read xml file");
   }
-
-  v_favoriteLevelsXmlDataElement = v_favoriteLevelsXmlData->FirstChildElement("favoriteLevels");
   
-  if(v_favoriteLevelsXmlDataElement == NULL) {
-    throw Exception("error : unable to analyze xml favoriteLevels file");
-  }
-    
   try {
     simpleSql("BEGIN TRANSACTION;");
 
-    TiXmlElement *pVarElem = v_favoriteLevelsXmlDataElement->FirstChildElement("level");
-    while(pVarElem != NULL) {
-      v_levelId = "";
+    for(xmlNodePtr pSubElem = XMLDocument::subElement(v_xmlElt, "level");
+	pSubElem != NULL;
+	pSubElem = XMLDocument::nextElement(pSubElem)) {
       
-      pc = pVarElem->Attribute("id");
-      if(pc != NULL) {
-	v_levelId = pc;
-	
+      v_levelId = XMLDocument::getOption(pSubElem, "id");
+      if(v_levelId != "") {
 	/* add the level into the list */
 	simpleSql("INSERT INTO levels_favorite(id_profile, id_level) "
 		  "VALUES(\"" + protectString(i_profile)
 		  + "\", \""  + protectString(v_levelId)+ "\");");
       }
-      pVarElem = pVarElem->NextSiblingElement("level");
     }
     simpleSql("COMMIT;");
   } catch(Exception &e) {

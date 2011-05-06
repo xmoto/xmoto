@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <level id="hanging" rversion="0.2.7"  levelpack="New Age" levelpackNum="12">
 	<info>
-		<script>
+                <name>Moglis - The Hanging World</name>
+		<description></description>
+		<author>lukaaaaas</author>
+		<date>2008-06-23</date>
+		<sky driftColor_b="216" driftColor_a="255" driftColor_g="124" driftZoom="2.0" color_g="216" zoom="2.0" color_a="255" color_b="166" driftColor_r="116" offset="0.015" drifted="true" color_r="213">sky1</sky>
+		<border texture="Black"/>
+	</info>
+	<layeroffsets>
+		<layeroffset x="1.09" y="1.0" frontlayer="false"/>
+		<layeroffset x="0.88" y="1.0" frontlayer="false"/>
+		<layeroffset x="1.06" y="1.0" frontlayer="false"/>
+		<layeroffset x="0.91" y="1.0" frontlayer="false"/>
+		<layeroffset x="1.06" y="1.0" frontlayer="false"/>
+	</layeroffsets>
+	<limits left="-62.500000" right="62.500000" top="20.000000" bottom="-20.000000"/>
+<script>
 zone0 = {}
 zone2 = {}
 zone3 = {}
@@ -37,21 +52,6 @@ function zone3.OnEnter()
   return true
 end
 </script>
-                               <name>Moglis - The Hanging World</name>
-		<description></description>
-		<author>lukaaaaas</author>
-		<date>2008-06-23</date>
-		<sky driftColor_b="216" driftColor_a="255" driftColor_g="124" driftZoom="2.0" color_g="216" zoom="2.0" color_a="255" color_b="166" driftColor_r="116" offset="0.015" drifted="true" color_r="213">sky1</sky>
-		<border texture="Black"/>
-	</info>
-	<layeroffsets>
-		<layeroffset x="1.09" y="1.0" frontlayer="false"/>
-		<layeroffset x="0.88" y="1.0" frontlayer="false"/>
-		<layeroffset x="1.06" y="1.0" frontlayer="false"/>
-		<layeroffset x="0.91" y="1.0" frontlayer="false"/>
-		<layeroffset x="1.06" y="1.0" frontlayer="false"/>
-	</layeroffsets>
-	<limits left="-62.500000" right="62.500000" top="20.000000" bottom="-20.000000"/>
 	<block id="path3202">
 		<position y="35.614368" x="34.517959" islayer="true" background="true" layerid="0"/>
 		<usetexture id="Water1"/>

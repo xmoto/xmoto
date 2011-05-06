@@ -352,7 +352,7 @@ Entity* Entity::createEntity(const std::string& id, const std::string& typeId,
   return v_entity;
 }
 
-Entity* Entity::readFromXml(TiXmlElement *pElem) {
+Entity* Entity::readFromXml(xmlNodePtr pElem) {
   std::string v_id;
   std::string v_typeId;
   EntitySpeciality  v_speciality;
@@ -367,29 +367,31 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
   std::string v_typeName;
 
   /* read xml information */
-  v_id         = XML::getOption(pElem,"id");
-  v_typeId     = XML::getOption(pElem,"typeid");
+  v_id         = XMLDocument::getOption(pElem,"id");
+  v_typeId     = XMLDocument::getOption(pElem,"typeid");
   v_speciality = Entity::SpecialityFromStr(v_typeId);
-  TiXmlElement *pPosElem = pElem->FirstChildElement("position");
+
+  xmlNodePtr pPosElem = XMLDocument::subElement(pElem, "position");
   if(pPosElem != NULL) {
-    v_position.x = atof(XML::getOption(pPosElem,"x","0").c_str());
-    v_position.y = atof(XML::getOption(pPosElem,"y","0").c_str());
-    v_angle      = atof(XML::getOption(pPosElem,"angle","-1.0").c_str());
-    v_reversed   = XML::getOption(pPosElem,"reversed","false") == "true";
+    v_position.x = atof(XMLDocument::getOption(pPosElem,"x","0").c_str());
+    v_position.y = atof(XMLDocument::getOption(pPosElem,"y","0").c_str());
+    v_angle      = atof(XMLDocument::getOption(pPosElem,"angle","-1.0").c_str());
+    v_reversed   = XMLDocument::getOption(pPosElem,"reversed","false") == "true";
   }
-  TiXmlElement *pSizeElem = pElem->FirstChildElement("size");
+  xmlNodePtr pSizeElem = XMLDocument::subElement(pElem, "size");
   if(pSizeElem != NULL) {
-    v_size = (atof(XML::getOption(pSizeElem,"r","0.2").c_str()));
-    v_width = atof(XML::getOption(pSizeElem,"width","-1.0").c_str());
-    v_height = atof(XML::getOption(pSizeElem,"height","-1.0").c_str());
+    v_size = (atof(XMLDocument::getOption(pSizeElem,"r","0.2").c_str()));
+    v_width = atof(XMLDocument::getOption(pSizeElem,"width","-1.0").c_str());
+    v_height = atof(XMLDocument::getOption(pSizeElem,"height","-1.0").c_str());
   }
   /* Get parameters */
   std::string v_paramName;
   std::string v_paramValue;
-  for(TiXmlElement *pParamElem = pElem->FirstChildElement("param"); pParamElem!=NULL;
-      pParamElem=pParamElem->NextSiblingElement("param")) {   
-    v_paramName  = XML::getOption(pParamElem,"name");
-    v_paramValue = XML::getOption(pParamElem,"value");
+  for(xmlNodePtr pSubElem = XMLDocument::subElement(pElem, "param");
+      pSubElem != NULL;
+      pSubElem = XMLDocument::nextElement(pSubElem)) {
+    v_paramName  = XMLDocument::getOption(pSubElem, "name");
+    v_paramValue = XMLDocument::getOption(pSubElem, "value");
     if(v_paramName == "z") {
       v_z = (atof(v_paramValue.c_str()));
     } else if(v_paramName == "name") {
@@ -544,13 +546,14 @@ void Joint::readFromBinary(FileHandle *i_pfh)
   }
 }
 
-void Joint::readFromXml(TiXmlElement *pElem)
+void Joint::readFromXml(xmlNodePtr pElem)
 {
-  TiXmlElement *pJointElem = pElem->FirstChildElement("joint");
+  xmlNodePtr pJointElem = XMLDocument::subElement(pElem, "joint");
+
   if(pJointElem != NULL) {
-    std::string v_type  = XML::getOption(pJointElem, "type", "");
-    std::string v_start = XML::getOption(pJointElem, "connection-start", "");
-    std::string v_end   = XML::getOption(pJointElem, "connection-end", "");
+    std::string v_type  = XMLDocument::getOption(pJointElem, "type", "");
+    std::string v_start = XMLDocument::getOption(pJointElem, "connection-start", "");
+    std::string v_end   = XMLDocument::getOption(pJointElem, "connection-end", "");
     if(v_type != "" && v_start != "" && v_end != ""){
       setJointType(Joint::jointTypeFromStr(v_type));
       setStartBlockId(v_start);

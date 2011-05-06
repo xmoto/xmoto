@@ -62,7 +62,7 @@ void xmDatabase::sync_buildServerFile(const std::string& i_outFile, const std::s
 
     snprintf(v_line, 2048,
 	     "<xmoto_sync fileformat=\"1\" sitekey=\"%s\" profile=\"%s\" nbStarts=\"%i\" since=\"%s\">",
-	     XML::str2xmlstr(i_sitekey).c_str(), XML::str2xmlstr(i_profile).c_str(),
+	     XMLDocument::str2xmlstr(i_sitekey).c_str(), XMLDocument::str2xmlstr(i_profile).c_str(),
 	     atoi(getResult(v_result, 2, 0, 0)), getResult(v_result, 2, 0, 1));
     XMFS::writeLine(pfh, v_line);
     read_DB_free(v_result);
@@ -76,7 +76,7 @@ void xmDatabase::sync_buildServerFile(const std::string& i_outFile, const std::s
     for(unsigned int i=0; i<nrow; i++) {
       snprintf(v_line, 2048, "<stats_level dbSync=\"%i\" id_level=\"%s\" nbPlayed=\"%i\" nbDied=\"%i\" nbCompleted=\"%i\" nbRestarted=\"%i\" playedTime=\"%i\" last_play_date=\"%s\" />",
 	       atoi(getResult(v_result, 8, i, 0)),
-	       XML::str2xmlstr(getResult(v_result, 8, i, 1)).c_str(),
+	       XMLDocument::str2xmlstr(getResult(v_result, 8, i, 1)).c_str(),
 	       atoi(getResult(v_result, 8, i, 2)), atoi(getResult(v_result, 8, i, 3)),
 	       atoi(getResult(v_result, 8, i, 4)), atoi(getResult(v_result, 8, i, 5)),
 	       getResult(v_result, 8, i, 6) == NULL ? 0 : atoi(getResult(v_result, 8, i, 6)),
@@ -94,7 +94,7 @@ void xmDatabase::sync_buildServerFile(const std::string& i_outFile, const std::s
     for(unsigned int i=0; i<nrow; i++) {
       snprintf(v_line, 2048, "<stats_completedLevel dbSync=\"%i\" id_level=\"%s\" timeStamp=\"%s\" finishTime=\"%i\" />",
 	       atoi(getResult(v_result, 4, i, 0)),
-	       XML::str2xmlstr(getResult(v_result, 4, i, 1)).c_str(),
+	       XMLDocument::str2xmlstr(getResult(v_result, 4, i, 1)).c_str(),
 	       getResult(v_result, 4, i, 2), atoi(getResult(v_result, 4, i, 3)));
       XMFS::writeLine(pfh, v_line);
     }
@@ -111,74 +111,63 @@ void xmDatabase::setSynchronized() {
 }
 
 void xmDatabase::sync_updateDB(const std::string& i_profile, const std::string& i_sitekey, const std::string& i_file, int i_newDbSyncServer) {
-
-  XMLDocument v_syncLXml;
-  TiXmlDocument *v_syncLXmlData;
-  TiXmlElement *v_syncLXmlDataElement, *v_syncLXmlDataElement2, *v_syncLXmlDataElement3;
-  const char *pc;
-  TiXmlElement *pVarElem;
-
+  XMLDocument v_xml;
+  xmlNodePtr  v_xmlElt;
+  xmlNodePtr  v_syncElt;
+  
   std::string v_siteKey, v_id_level, v_timeStamp, v_finishTime;
   std::string v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestarted, v_playedTime, v_lastPlayDate, v_since, v_nbStarts;
+  std::string v_tmp;
 
   int v_newDbSyncServer;
 
   try {
     simpleSql("BEGIN TRANSACTION;");
 
-    v_syncLXml.readFromFile(FDT_CACHE, i_file);
-    v_syncLXmlData = v_syncLXml.getLowLevelAccess();
-
-    if(v_syncLXmlData == NULL) {
-      throw Exception("error : unable to analyze sync file");
+    /* open the file */
+    v_xml.readFromFile(FDT_CACHE, i_file);
+    
+    v_xmlElt = v_xml.getRootNode("xmoto_uploadDbSyncResult");
+    if(v_xmlElt == NULL) {
+      throw Exception("Unable to analyze xml file");
     }
 
-    v_syncLXmlDataElement = v_syncLXmlData->FirstChildElement("xmoto_uploadDbSyncResult");
-  
-    if(v_syncLXmlDataElement == NULL) {
-      throw Exception("error : unable to analyze sync file");
+    v_syncElt = XMLDocument::subElement(v_xmlElt, "xmoto_sync");
+    if(v_syncElt == NULL) {
+      throw Exception("Unable to analyze xml file");
     }
 
-    v_syncLXmlDataElement2 = v_syncLXmlDataElement->FirstChildElement("xmoto_sync");
-  
-    if(v_syncLXmlDataElement2 == NULL) {
-      throw Exception("error : unable to analyze sync file");
-    }
-
-    pc = v_syncLXmlDataElement2->Attribute("dbSyncServer");
-    if(pc == NULL) {
+    v_tmp = XMLDocument::getOption(v_syncElt, "dbSyncServer");
+    if(v_tmp == "") {
       throw Exception("Invalid xml");
     }
     // get the last dbsyncserver
-    v_newDbSyncServer = atoi(pc);
+    v_newDbSyncServer = atoi(v_tmp.c_str());
 
     /* sites */
-    v_syncLXmlDataElement3 = v_syncLXmlDataElement2->FirstChildElement("sites");
-  
-    if(v_syncLXmlDataElement3 == NULL) {
+    xmlNodePtr v_xmlSitesElt = XMLDocument::subElement(v_syncElt, "sites");
+    if(v_xmlSitesElt == NULL) {
       throw Exception("error : unable to analyze sync file");
     }
 
-    pVarElem = v_syncLXmlDataElement3->FirstChildElement("site");
-    while(pVarElem != NULL) {
+    for(xmlNodePtr pSubElem = XMLDocument::subElement(v_xmlSitesElt, "site");
+        pSubElem != NULL;
+        pSubElem = XMLDocument::nextElement(pSubElem)) {
 
-      pc = pVarElem->Attribute("sitekey");
-      if(pc == NULL) {
+      v_siteKey = XMLDocument::getOption(pSubElem, "sitekey");
+      if(v_siteKey == "") {
 	throw Exception("Invalid xml");
       }
-      v_siteKey = pc;
 
-      pc = pVarElem->Attribute("nbStarts");
-      if(pc == NULL) {
+      v_nbStarts = XMLDocument::getOption(pSubElem, "nbStarts");
+      if(v_nbStarts == "") {
 	throw Exception("Invalid xml");
       }
-      v_nbStarts = pc;
 
-      pc = pVarElem->Attribute("since");
-      if(pc == NULL) {
+      v_since= XMLDocument::getOption(pSubElem, "since");
+      if(v_since == "") {
 	throw Exception("Invalid xml");
       }
-      v_since = pc;
 
       // add or update the level stats
       if(checkKey("SELECT COUNT(1) FROM stats_profiles WHERE sitekey=\"" + protectString(v_siteKey) + "\""
@@ -195,111 +184,95 @@ void xmDatabase::sync_updateDB(const std::string& i_profile, const std::string& 
 	simpleSql("INSERT INTO stats_profiles (sitekey, id_profile, nbStarts, since)"
 		  " VALUES (\"" + protectString(v_siteKey) + "\", \"" + protectString(i_profile) + "\", \"" + protectString(v_nbStarts) + "\", \"" + protectString(v_since) + "\");");
       }
-
-      pVarElem = pVarElem->NextSiblingElement("site");
     }
 
-    // stats_completedLevels
-    v_syncLXmlDataElement3 = v_syncLXmlDataElement2->FirstChildElement("stats_completedLevels");
-  
-    if(v_syncLXmlDataElement3 == NULL) {
+    /* stats_completedLevels */
+    xmlNodePtr v_xmlCLevelsElt = XMLDocument::subElement(v_syncElt, "stats_completedLevels");
+    if(v_xmlCLevelsElt == NULL) {
       throw Exception("error : unable to analyze sync file");
     }
 
-    pVarElem = v_syncLXmlDataElement3->FirstChildElement("stats_completedLevel");
-    while(pVarElem != NULL) {
+    for(xmlNodePtr pSubElem = XMLDocument::subElement(v_xmlCLevelsElt, "stats_completedLevel");
+        pSubElem != NULL;
+        pSubElem = XMLDocument::nextElement(pSubElem)) {
 
-      pc = pVarElem->Attribute("sitekey");
-      if(pc == NULL) {
+      v_siteKey = XMLDocument::getOption(pSubElem, "sitekey");
+      if(v_siteKey == "") {
 	throw Exception("Invalid xml");
       }
-      v_siteKey = pc;
 
-      pc = pVarElem->Attribute("id_level");
-      if(pc == NULL) {
+      v_id_level = XMLDocument::getOption(pSubElem, "id_level");
+      if(v_id_level == "") {
 	throw Exception("Invalid xml");
       }
-      v_id_level = pc;
 
-      pc = pVarElem->Attribute("timeStamp");
-      if(pc == NULL) {
+      v_timeStamp = XMLDocument::getOption(pSubElem, "timeStamp");
+      if(v_timeStamp == "") {
 	throw Exception("Invalid xml");
       }
-      v_timeStamp = pc;
 
-      pc = pVarElem->Attribute("finishTime");
-      if(pc == NULL) {
+      v_finishTime = XMLDocument::getOption(pSubElem, "finishTime");
+      if(v_finishTime == "") {
 	throw Exception("Invalid xml");
       }
-      v_finishTime = pc;
 
       // add the completed level
       simpleSql("INSERT INTO profile_completedLevels(id_profile, id_level, timeStamp, finishTime, sitekey, synchronized, dbSync)"
 		" VALUES (\"" + protectString(i_profile) + "\", \"" + protectString(v_id_level) + "\", "
 		"\"" + protectString(v_timeStamp) + "\", \"" + protectString(v_finishTime) + "\", "
 		"\"" + protectString(v_siteKey) + "\", 1, NULL);");
-
-      pVarElem = pVarElem->NextSiblingElement("stats_completedLevel");
     }
 
 
     /* stats levels */
-    v_syncLXmlDataElement3 = v_syncLXmlDataElement2->FirstChildElement("stats_levels");
-  
-    if(v_syncLXmlDataElement3 == NULL) {
+    xmlNodePtr v_xmlLevelsElt = XMLDocument::subElement(v_syncElt, "stats_levels");
+    if(v_xmlLevelsElt == NULL) {
       throw Exception("error : unable to analyze sync file");
     }
 
-    pVarElem = v_syncLXmlDataElement3->FirstChildElement("stats_level");
-    while(pVarElem != NULL) {
+    for(xmlNodePtr pSubElem = XMLDocument::subElement(v_xmlLevelsElt, "stats_level");
+        pSubElem != NULL;
+        pSubElem = XMLDocument::nextElement(pSubElem)) {
 
-      pc = pVarElem->Attribute("sitekey");
-      if(pc == NULL) {
+      v_siteKey = XMLDocument::getOption(pSubElem, "sitekey");
+      if(v_siteKey == "") {
 	throw Exception("Invalid xml");
       }
-      v_siteKey = pc;
-
-      pc = pVarElem->Attribute("id_level");
-      if(pc == NULL) {
+      
+      v_id_level = XMLDocument::getOption(pSubElem, "id_level");
+      if(v_id_level == "") {
 	throw Exception("Invalid xml");
       }
-      v_id_level = pc;
 
-      pc = pVarElem->Attribute("nbPlayed");
-      if(pc == NULL) {
+      v_nbPlayed = XMLDocument::getOption(pSubElem, "nbPlayed");
+      if(v_nbPlayed == "") {
 	throw Exception("Invalid xml");
       }
-      v_nbPlayed = pc;
 
-      pc = pVarElem->Attribute("nbDied");
-      if(pc == NULL) {
+      v_nbDied = XMLDocument::getOption(pSubElem, "nbDied");
+      if(v_nbDied == "") {
 	throw Exception("Invalid xml");
       }
-      v_nbDied = pc;
 
-      pc = pVarElem->Attribute("nbCompleted");
-      if(pc == NULL) {
+      v_nbCompleted = XMLDocument::getOption(pSubElem, "nbCompleted");
+      if(v_nbCompleted == "") {
 	throw Exception("Invalid xml");
       }
-      v_nbCompleted = pc;
 
-      pc = pVarElem->Attribute("nbRestarted");
-      if(pc == NULL) {
+      v_nbRestarted = XMLDocument::getOption(pSubElem, "nbRestarted");
+      if(v_nbRestarted == "") {
 	throw Exception("Invalid xml");
       }
-      v_nbRestarted = pc;
 
-      pc = pVarElem->Attribute("playedTime");
-      if(pc == NULL) {
+      v_playedTime = XMLDocument::getOption(pSubElem, "playedTime");
+      if(v_playedTime == "") {
 	throw Exception("Invalid xml");
       }
-      v_playedTime = pc;
 
-      pc = pVarElem->Attribute("last_play_date");
-      if(pc == NULL) {
+      v_lastPlayDate = XMLDocument::getOption(pSubElem, "last_play_date");
+      if(v_lastPlayDate == "") {
 	throw Exception("Invalid xml");
       }
-      v_lastPlayDate = pc;
 
       // add or update the level stats
       if(checkKey("SELECT COUNT(1) FROM stats_profiles_levels WHERE sitekey=\"" + protectString(v_siteKey) + "\""
@@ -317,8 +290,6 @@ void xmDatabase::sync_updateDB(const std::string& i_profile, const std::string& 
 	simpleSql("INSERT INTO stats_profiles_levels (sitekey, id_profile, id_level, nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime, last_play_date, synchronized, dbSync)"
 		  " VALUES (\"" + protectString(v_siteKey) + "\", \"" + protectString(i_profile) + "\", \"" + protectString(v_id_level) + "\", \"" + protectString(v_nbPlayed) + "\", \"" + protectString(v_nbDied) + "\", \"" + protectString(v_nbCompleted) + "\", \"" + protectString(v_nbRestarted) + "\", \"" + protectString(v_playedTime) + "\", \"" + protectString(v_lastPlayDate) + "\", 1, NULL);");
       }
-
-      pVarElem = pVarElem->NextSiblingElement("stats_level");
     }
 
     XMSession::instance()->setDbSyncServer(this, i_profile, v_newDbSyncServer);

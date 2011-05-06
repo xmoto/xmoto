@@ -25,13 +25,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 
 #include "VTexture.h"
+#include "VXml.h"
 #include "helpers/Singleton.h"
 #include "helpers/Color.h"
 #include "VFileIO_types.h"
 
 class Texture;
 class WWWAppInterface;
-class TiXmlElement;
 class ProxySettings;
 class WebThemes;
 class xmDatabase;
@@ -458,17 +458,17 @@ public:
   void cleanMusics();
   void cleanSounds();
 
-  void loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement);
+  void loadSpritesFromXML(xmlNodePtr pElem);
 
   // use template instead of duplicate code
-  template <typename SpriteType> void newSpriteFromXML(TiXmlElement *pVarElem,
+  template <typename SpriteType> void newSpriteFromXML(xmlNodePtr pElem,
 						       const char*   fileDir,
 						       const char*   spriteTypeName);
 
-  void newAnimationSpriteFromXML(TiXmlElement *pVarElem, bool p_isTexture, const char* fileDir );
-  void newDecorationSpriteFromXML(TiXmlElement *pVarElem);
+  void newAnimationSpriteFromXML(xmlNodePtr pElem, bool p_isTexture, const char* fileDir );
+  void newDecorationSpriteFromXML(xmlNodePtr pElem);
 
-  void newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem);
+  void newEdgeEffectSpriteFromXML(xmlNodePtr pElem);
 
   SpriteBlendMode strToBlendMode(const std::string &s);
   std::string blendModeToStr(SpriteBlendMode Mode);
