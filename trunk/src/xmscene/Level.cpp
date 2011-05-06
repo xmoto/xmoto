@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Color.h"
 #include "../helpers/Log.h"
 #include "../db/xmDatabase.h"
+#include "../helpers/Text.h"
 #include "Block.h"
 #include "Entity.h"
 #include "Zone.h"
@@ -48,7 +49,6 @@ Level::Level() {
   m_rightLimit  = 0.0;
   m_topLimit    = 0.0;
   m_bottomLimit = 0.0;
-  m_xmlSource   = NULL;
   m_nbEntitiesToTake = 0;
   m_borderTexture = "";
   m_numberLayer   = 0;
@@ -352,35 +352,31 @@ void Level::updateToTime(Scene& i_scene, PhysicsSettings* i_physicsSettings, boo
 }
 
 void Level::loadXML(bool i_loadMainLayerOnly) {
-  /* Load XML document and fetch tinyxml handle */
+  XMLDocument v_xml;
+
+  /* Load XML document */
   unloadLevelBody();
-  if(m_xmlSource == NULL) {
-    m_xmlSource = new XMLDocument();
+
+  v_xml.readFromFile(FDT_DATA, m_fileName, true);
+
+  /* Start the fantastic parsing by fetching the <level> element */
+  xmlNodePtr v_levelElt = v_xml.getRootNode("level");
+  if(v_levelElt == NULL) {
+    throw Exception("unable to analyze xml file");
   }
 
-  m_xmlSource->readFromFile(FDT_DATA, m_fileName, NULL, true);
-
-  TiXmlDocument *pDoc = m_xmlSource->getLowLevelAccess();
-  if(pDoc == NULL) throw Exception("failed to load level XML " + m_fileName);
-  
-  /* Start the fantastic parsing by fetching the <level> element */
-  TiXmlElement *pLevelElem = XML::findElement(*m_xmlSource, NULL,std::string("level"));    
-  if(pLevelElem == NULL) throw Exception("<level> tag not found in XML");
-  
   /* Get level ID */
-  m_id = XML::getOption(pLevelElem,"id");
+  m_id = XMLDocument::getOption(v_levelElt, "id");
   if(m_id == "") throw Exception("no ID specified in level XML");
 
   /* Get required xmoto version */
-  m_requiredVersion = XML::getOption(pLevelElem,"rversion");
+  m_requiredVersion = XMLDocument::getOption(v_levelElt, "rversion");
   m_xmotoTooOld = false;
-  if(m_id != "") {
-    /* Check version */
-    if(compareVersionNumbers(XMBuild::getVersionString(),m_requiredVersion) < 0) {
-      /* Our version is too low to load this */
-      m_xmotoTooOld = true;
-      LogWarning("Level '%s' requires a newer version (%s) to load!",m_id.c_str(),m_requiredVersion.c_str());
-    }
+  /* Check version */
+  if(compareVersionNumbers(XMBuild::getVersionString(), m_requiredVersion) < 0) {
+    /* Our version is too low to load this */
+    m_xmotoTooOld = true;
+    LogWarning("Level '%s' requires a newer version (%s) to load!",m_id.c_str(),m_requiredVersion.c_str());
   }
   
   /* Set default info */
@@ -405,62 +401,71 @@ void Level::loadXML(bool i_loadMainLayerOnly) {
 
   m_sky->reInit();
 
-  if(!m_xmotoTooOld) {    
+  if(m_xmotoTooOld == false) {    
     /* Get level pack */
-    m_pack = XML::getOption(pLevelElem,"levelpack");
-    m_packNum = XML::getOption(pLevelElem,"levelpackNum");      
+    m_pack = XMLDocument::getOption(v_levelElt, "levelpack");
+    m_packNum = XMLDocument::getOption(v_levelElt,"levelpackNum");      
     
     /* Get level <info> element */
-    TiXmlElement *pInfoElem = XML::findElement(*m_xmlSource, pLevelElem,std::string("info"));
+    xmlNodePtr pInfoElem = XMLDocument::subElement(v_levelElt, "info");
     if(pInfoElem != NULL) {
+      xmlNodePtr v_node;
+
       /* Name */
-      std::string Tmp = XML::getElementText(*m_xmlSource, pInfoElem,"name");
-      if(Tmp != "") m_name = Tmp;
+      v_node = XMLDocument::subElement(pInfoElem, "name");
+      if(v_node != NULL)
+	m_name = XMLDocument::getElementText(v_node);
 
       /* Author */
-      Tmp = XML::getElementText(*m_xmlSource, pInfoElem,"author");
-      if(Tmp != "") m_author = Tmp;
-      
+      v_node = XMLDocument::subElement(pInfoElem, "author");
+      if(v_node != NULL)
+	m_author = XMLDocument::getElementText(v_node);
+
       /* Description */
-      Tmp = XML::getElementText(*m_xmlSource, pInfoElem,"description");
-      if(Tmp != "") m_description = Tmp;
-      
+      v_node = XMLDocument::subElement(pInfoElem, "description");
+      if(v_node != NULL)
+	m_description = XMLDocument::getElementText(v_node);
+
       /* Date */
-      Tmp = XML::getElementText(*m_xmlSource, pInfoElem,"date");
-      if(Tmp != "") m_date = Tmp;
+      v_node = XMLDocument::subElement(pInfoElem, "date");
+      if(v_node != NULL)
+	m_date = XMLDocument::getElementText(v_node);
       
       /* Sky */
-      Tmp = XML::getElementText(*m_xmlSource, pInfoElem,"sky");
-      if(Tmp != "") {
-        m_sky->setTexture(Tmp);
-        m_sky->setBlendTexture(Tmp);
+      v_node = XMLDocument::subElement(pInfoElem, "sky");
+      if(v_node != NULL) {
+	std::string v_sky = XMLDocument::getElementText(v_node);
+	if(v_sky != "") {
+	  m_sky->setTexture(v_sky);
+	  m_sky->setBlendTexture(v_sky);
+	}
       }
-      
 
       /* advanced sky parameters ? */
       bool v_useAdvancedOptions = false;
-      TiXmlElement *pSkyElem = XML::findElement(*m_xmlSource, NULL, std::string("sky"));
+      xmlNodePtr pSkyElem = XMLDocument::subElement(pInfoElem, "sky");
+
       std::string v_skyValue;
       if(pSkyElem != NULL) {
-	v_skyValue = XML::getOption(pSkyElem, "zoom");
+	v_skyValue = XMLDocument::getOption(pSkyElem, "zoom");
 	if(v_skyValue != "") {
 	  m_sky->setZoom(atof(v_skyValue.c_str()));
 	  v_useAdvancedOptions = true;
 	}
-	v_skyValue = XML::getOption(pSkyElem, "offset");
+	v_skyValue = XMLDocument::getOption(pSkyElem, "offset");
 	if(v_skyValue != "") {
 	  m_sky->setOffset(atof(v_skyValue.c_str()));
 	  v_useAdvancedOptions = true;
 	}
 
 	int v_r = -1, v_g = -1, v_b = -1, v_a = -1;
-	v_skyValue = XML::getOption(pSkyElem, "color_r");
+	v_skyValue = XMLDocument::getOption(pSkyElem, "color_r");
 	if(v_skyValue != "") v_r = atoi(v_skyValue.c_str());
-	v_skyValue = XML::getOption(pSkyElem, "color_g");
+	v_skyValue = XMLDocument::getOption(pSkyElem, "color_g");
 	if(v_skyValue != "") v_g = atoi(v_skyValue.c_str());
-	v_skyValue = XML::getOption(pSkyElem, "color_b");
+	v_skyValue = XMLDocument::getOption(pSkyElem, "color_b");
 	if(v_skyValue != "") v_b = atoi(v_skyValue.c_str());
-	v_skyValue = XML::getOption(pSkyElem, "color_a");
+	v_skyValue = XMLDocument::getOption(pSkyElem, "color_a");
 	if(v_skyValue != "") v_a = atoi(v_skyValue.c_str());
 	if(v_r != -1 || v_g != -1 || v_b != -1 || v_a != -1) {
 	  if(v_r == -1) v_r = 0;
@@ -471,22 +476,22 @@ void Level::loadXML(bool i_loadMainLayerOnly) {
 	  v_useAdvancedOptions = true;
 	}
 
-	v_skyValue = XML::getOption(pSkyElem, "drifted");
+	v_skyValue = XMLDocument::getOption(pSkyElem, "drifted");
 	if(v_skyValue == "true") {
 	  m_sky->setDrifted(true);
 	  v_useAdvancedOptions = true;
-
-	  v_skyValue = XML::getOption(pSkyElem, "driftZoom");
+	  
+	  v_skyValue = XMLDocument::getOption(pSkyElem, "driftZoom");
 	  if(v_skyValue != "") m_sky->setDriftZoom(atof(v_skyValue.c_str()));
 
 	  int v_r = -1, v_g = -1, v_b = -1, v_a = -1;
-	  v_skyValue = XML::getOption(pSkyElem, "driftColor_r");
+	  v_skyValue = XMLDocument::getOption(pSkyElem, "driftColor_r");
 	  if(v_skyValue != "") v_r = atoi(v_skyValue.c_str());
-	  v_skyValue = XML::getOption(pSkyElem, "driftColor_g");
+	  v_skyValue = XMLDocument::getOption(pSkyElem, "driftColor_g");
 	  if(v_skyValue != "") v_g = atoi(v_skyValue.c_str());
-	  v_skyValue = XML::getOption(pSkyElem, "driftColor_b");
+	  v_skyValue = XMLDocument::getOption(pSkyElem, "driftColor_b");
 	  if(v_skyValue != "") v_b = atoi(v_skyValue.c_str());
-	  v_skyValue = XML::getOption(pSkyElem, "driftColor_a");
+	  v_skyValue = XMLDocument::getOption(pSkyElem, "driftColor_a");
 	  if(v_skyValue != "") v_a = atoi(v_skyValue.c_str());
 	  if(v_r != -1 || v_g != -1 || v_b != -1 || v_a != -1) {
 	    if(v_r == -1) v_r = 0;
@@ -498,28 +503,28 @@ void Level::loadXML(bool i_loadMainLayerOnly) {
 	}
 	
 	/* Sky Blend texture */
-        v_skyValue = XML::getOption(pSkyElem, "BlendTexture");
+        v_skyValue = XMLDocument::getOption(pSkyElem, "BlendTexture");
 	if(v_skyValue != "") {
 	  m_sky->setBlendTexture(v_skyValue.c_str());
 	  v_useAdvancedOptions = true;
 	}
-	
       }
+
       if(v_useAdvancedOptions == false) {
 	/* set old values in case no option is used */
 	m_sky->setOldXmotoValuesFromTextureName();
       }
-
+      
       /* Border */
-      TiXmlElement *pBorderElem = XML::findElement(*m_xmlSource, NULL, std::string("border"));
+      xmlNodePtr pBorderElem = XMLDocument::subElement(pInfoElem, "border");
       if(pBorderElem != NULL) {
-	m_borderTexture = XML::getOption(pBorderElem, "texture");  
+	m_borderTexture = XMLDocument::getOption(pBorderElem, "texture");  
       }
-
+      
       /* Music */
-      TiXmlElement *pMusicElem = XML::findElement(*m_xmlSource, NULL, std::string("music"));
+      xmlNodePtr pMusicElem = XMLDocument::subElement(pInfoElem, "music");
       if(pMusicElem != NULL) {
-	m_music = XML::getOption(pMusicElem, "name");
+	m_music = XMLDocument::getOption(pMusicElem, "name");
 	if(m_music == "None") {
 	  m_music = "";
 	}
@@ -527,31 +532,31 @@ void Level::loadXML(bool i_loadMainLayerOnly) {
     }
 
     /* background level offsets */
-    TiXmlElement* pLayerOffsets = XML::findElement(*m_xmlSource, NULL, std::string("layeroffsets"));
-    if(pLayerOffsets == NULL || i_loadMainLayerOnly){
+    xmlNodePtr pLayerOffsets = XMLDocument::subElement(v_levelElt, "layeroffsets");
+    if(pLayerOffsets == NULL || i_loadMainLayerOnly) {
       m_numberLayer = 0;
     }
     else {
-      for(TiXmlElement* pElem = pLayerOffsets->FirstChildElement("layeroffset");
-	  pElem!=NULL;
-	  pElem=pElem->NextSiblingElement("layeroffset")) {
+      for(xmlNodePtr pSubElem = XMLDocument::subElement(pLayerOffsets, "layeroffset");
+	  pSubElem != NULL;
+	  pSubElem = XMLDocument::nextElement(pSubElem)) {
 	Vector2f offset;
-	offset.x = atof(XML::getOption(pElem, "x").c_str());
-	offset.y = atof(XML::getOption(pElem, "y").c_str());
+	offset.x = atof(XMLDocument::getOption(pSubElem, "x").c_str());
+	offset.y = atof(XMLDocument::getOption(pSubElem, "y").c_str());
 	m_numberLayer++;
 	m_layerOffsets.push_back(offset);
-	m_isLayerFront.push_back(XML::getOption(pElem, "frontlayer", "false") == "true");
+	m_isLayerFront.push_back(XMLDocument::getOption(pSubElem, "frontlayer", "false") == "true");
       }
     }
 
-    TiXmlElement *pThemeReplaceElem = XML::findElement(*m_xmlSource, pLevelElem,std::string("theme_replacements"));
+    xmlNodePtr pThemeReplaceElem = XMLDocument::subElement(v_levelElt, "theme_replacements");
     if(pThemeReplaceElem != NULL) {
       /* Get replacements  for sprites */
-      for(TiXmlElement *pElem = pThemeReplaceElem->FirstChildElement("sprite_replacement");
-	  pElem!=NULL;
-	  pElem=pElem->NextSiblingElement("sprite_replacement")) {
-	std::string v_old_name = XML::getOption(pElem, "old_name");
-	std::string v_new_name = XML::getOption(pElem, "new_name");
+      for(xmlNodePtr pSubElem = XMLDocument::subElement(pThemeReplaceElem, "sprite_replacement");
+          pSubElem != NULL;
+          pSubElem = XMLDocument::nextElement(pSubElem)) {
+	std::string v_old_name = XMLDocument::getOption(pSubElem, "old_name");
+	std::string v_new_name = XMLDocument::getOption(pSubElem, "new_name");
 	/* for efficacity and before other are not required, only change main ones */
 	if        (v_old_name == "Strawberry" && v_new_name != "") {
 	  m_rSpriteForStrawberry = v_new_name;
@@ -564,10 +569,11 @@ void Level::loadXML(bool i_loadMainLayerOnly) {
 	}
       }
       /* Get replacements  for sounds */
-      for(TiXmlElement *pElem = pThemeReplaceElem->FirstChildElement("sound_replacement"); pElem!=NULL;
-	  pElem=pElem->NextSiblingElement("sound_replacement")) {
-	std::string v_old_name = XML::getOption(pElem, "old_name");
-	std::string v_new_name = XML::getOption(pElem, "new_name");
+      for(xmlNodePtr pSubElem = XMLDocument::subElement(pThemeReplaceElem, "sound_replacement");
+          pSubElem != NULL;
+          pSubElem = XMLDocument::nextElement(pSubElem)) {
+	std::string v_old_name = XMLDocument::getOption(pSubElem, "old_name");
+	std::string v_new_name = XMLDocument::getOption(pSubElem, "new_name");
 	/* for efficacity and before other are not required, only change main ones */
 	if        (v_old_name == "PickUpStrawberry") {
 	  m_rSoundForPickUpStrawberry = v_new_name;
@@ -578,51 +584,56 @@ void Level::loadXML(bool i_loadMainLayerOnly) {
     }
 
     /* Get script */
-    TiXmlElement *pScriptElem = XML::findElement(*m_xmlSource, pLevelElem,std::string("script"));
+    xmlNodePtr pScriptElem = XMLDocument::subElement(v_levelElt, "script");
+
+    if(pScriptElem == NULL && pInfoElem != NULL) {
+      pScriptElem = XMLDocument::subElement(pInfoElem, "script");
+      if(pScriptElem != NULL) {
+	printf("xxx %s (%s)\n", m_id.c_str(), m_fileName.c_str());
+      }
+    }
+
     if(pScriptElem != NULL) {
       m_isScripted = true;
-        
+
       /* External script file specified? */
-      m_scriptFileName = XML::getOption(pScriptElem,"source");      
+      m_scriptFileName = XMLDocument::getOption(pScriptElem,"source");      
       
       /* Specified libraries ? */
-      TiXmlElement *pLibraryScriptElem = pScriptElem->FirstChildElement("require_library");
-      if (pLibraryScriptElem != NULL) {
-    	  for (pLibraryScriptElem = pScriptElem->FirstChildElement("require_library"); pLibraryScriptElem != 0; pLibraryScriptElem = pLibraryScriptElem->NextSiblingElement("require_library")) {
-    		  m_scriptLibraryFileNames.push_back(pLibraryScriptElem->Attribute("name"));
-    	  }
+      for(xmlNodePtr pSubElem = XMLDocument::subElement(pScriptElem, "require_library");
+          pSubElem != NULL;
+          pSubElem = XMLDocument::nextElement(pSubElem)) {
+	m_scriptLibraryFileNames.push_back(XMLDocument::getOption(pSubElem, "name"));
       }
 
       /* Encapsulated script? */
-      for(TiXmlNode *pScript=pScriptElem->FirstChild();pScript!=NULL;
-          pScript=pScript->NextSibling()) {
-        if(pScript->Type() == TiXmlNode::TEXT) {
-          m_scriptSource.append(pScript->Value());
-        }
-      }
+      m_scriptSource.append(XMLDocument::getElementText(pScriptElem));
     }    
     
     /* Get level limits */
-    TiXmlElement *pLimitsElem = XML::findElement(*m_xmlSource, pLevelElem,std::string("limits"));
+    xmlNodePtr pLimitsElem = XMLDocument::subElement(v_levelElt, "limits");
+
     if(pLimitsElem != NULL) {
-      m_bottomLimit = atof( XML::getOption(pLimitsElem,"bottom","-50").c_str() );
-      m_leftLimit = atof( XML::getOption(pLimitsElem,"left","-50").c_str() );
-      m_topLimit = atof( XML::getOption(pLimitsElem,"top","50").c_str() );
-      m_rightLimit = atof( XML::getOption(pLimitsElem,"right","50").c_str() );
+      m_bottomLimit = atof( XMLDocument::getOption(pLimitsElem,"bottom","-50").c_str() );
+      m_leftLimit = atof( XMLDocument::getOption(pLimitsElem,"left","-50").c_str() );
+      m_topLimit = atof( XMLDocument::getOption(pLimitsElem,"top","50").c_str() );
+      m_rightLimit = atof( XMLDocument::getOption(pLimitsElem,"right","50").c_str() );
     }
 
     /* Get zones */
-    for(TiXmlElement *pElem = pLevelElem->FirstChildElement("zone"); pElem!=NULL;
-        pElem=pElem->NextSiblingElement("zone")) {
-      m_zones.push_back(Zone::readFromXml(pElem));
+    for(xmlNodePtr pSubElem = XMLDocument::subElement(v_levelElt, "zone");
+	pSubElem != NULL;
+	pSubElem = XMLDocument::nextElement(pSubElem)) {
+      m_zones.push_back(Zone::readFromXml(pSubElem));
     }
     
     /* determine whether the levels is physics or not */
     /* Get blocks */
-    for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
-        pElem=pElem->NextSiblingElement("block")) {
-      Block* v_block = Block::readFromXml(m_xmlSource, pElem, i_loadMainLayerOnly);
-      if(v_block != NULL) { // NULL means that the block should not been loaded (for the server for example)
+    for(xmlNodePtr pSubElem = XMLDocument::subElement(v_levelElt, "block");
+        pSubElem != NULL;
+        pSubElem = XMLDocument::nextElement(pSubElem)) {
+      Block* v_block = Block::readFromXml(pSubElem, i_loadMainLayerOnly);
+      if(v_block != NULL) { // NULL means that the block should not be loaded (for the server for example)
 	if(v_block->isPhysics()) {
 	  m_isPhysics = true;
 	}
@@ -631,12 +642,13 @@ void Level::loadXML(bool i_loadMainLayerOnly) {
     }
 
     /* Get entities */
-    for(TiXmlElement *pElem = pLevelElem->FirstChildElement("entity"); pElem!=NULL; 
-        pElem=pElem->NextSiblingElement("entity")) {
-      Entity* v_entity = Entity::readFromXml(pElem);
+    for(xmlNodePtr pSubElem = XMLDocument::subElement(v_levelElt, "entity");
+        pSubElem != NULL;
+        pSubElem = XMLDocument::nextElement(pSubElem)) {
+      Entity* v_entity = Entity::readFromXml(pSubElem);
       if(v_entity->Speciality() == ET_JOINT) {
 	Joint* v_joint = (Joint*)v_entity;
-	v_joint->readFromXml(pElem);
+	v_joint->readFromXml(pSubElem);
 	m_joints.push_back(v_joint);
       }
       else m_entities.push_back(v_entity);
@@ -662,9 +674,6 @@ void Level::loadXML(bool i_loadMainLayerOnly) {
   }
 
   addLimits();
-
-  delete m_xmlSource;
-  m_xmlSource = NULL;
 
   m_isBodyLoaded = true;
 }
@@ -1356,10 +1365,6 @@ void Level::unloadLevelBody() {
     delete m_entities[i];
   }
   m_entities.clear();
-
-  if(m_xmlSource != NULL) {
-    delete m_xmlSource;
-  }
 
   m_numberLayer = 0;
   m_layerOffsets.clear();

@@ -132,62 +132,114 @@ void xmDatabase::config_setFloat(const std::string& i_id_profile, const std::str
 
 void xmDatabase::updateDB_config(const std::string& i_sitekey) {
   /* load removed values into all the profiles */
+  XMLDocument v_xml;
+  xmlNodePtr  v_xmlElt;
 
-  XMLDocument ConfigDoc;
-  ConfigDoc.readFromFile(FDT_CONFIG, "config.dat");
-  TiXmlDocument *pConfigData = ConfigDoc.getLowLevelAccess();
+  v_xml.readFromFile(FDT_CONFIG, "config.dat");
+  v_xmlElt = v_xml.getRootNode("userconfig");
+  if(v_xmlElt == NULL) {
+    throw Exception("Unable to read xml file");
+  }
 
   unsigned int nrow;
   char **v_result;
   std::string v_id_profile;
 
-  if(pConfigData != NULL) {
-    TiXmlElement *pUserConfigElem = pConfigData->FirstChildElement("userconfig");
-    if(pUserConfigElem != NULL) {
-      for(TiXmlElement *pVarElem = pUserConfigElem->FirstChildElement("var"); pVarElem!=NULL;
-	  pVarElem = pVarElem->NextSiblingElement("var")) {
-	std::string Name,Value;
-	const char *pc;
-	pc = pVarElem->Attribute("name");
-	if(pc!=NULL) Name = pc;
-	pc = pVarElem->Attribute("value");
-	if(pc!=NULL) Value = pc;	        
-
-	try {
+  for(xmlNodePtr pSubElem = XMLDocument::subElement(v_xmlElt, "var");
+      pSubElem != NULL;
+      pSubElem = XMLDocument::nextElement(pSubElem)) {
+    std::string Name,Value;
+    
+    Name  = XMLDocument::getOption(pSubElem, "name");
+    Value = XMLDocument::getOption(pSubElem, "value");
+    
+    try {
+      if(
+	 Name == "WebHighscores"                  ||
+	 Name == "WWWPassword"                    ||
+	 Name == "Language"                       ||
+	 Name == "Theme"                          ||
+	 Name == "QSQualityMIN"                   ||
+	 Name == "QSQualityMAX"                   ||
+	 Name == "QSDifficultyMIN"                ||
+	 Name == "QSDifficultyMAX"                ||
+	 Name == "AudioEnable"                    ||
+	 Name == "AudioSampleRate"                ||
+	 Name == "AudioSampleBits"                ||
+	 Name == "AudioChannels"                  ||
+	 Name == "EngineSoundEnable"              ||
+	 Name == "KeyDrive1"                      ||
+	 Name == "KeyBrake1"                      ||
+	 Name == "KeyFlipLeft1"                   ||
+	 Name == "KeyFlipRight1"                  ||
+	 Name == "KeyChangeDir1"                  ||
+	 Name == "KeyDrive2"                      ||
+	 Name == "KeyBrake2"                      ||
+	 Name == "KeyFlipLeft2"                   ||
+	 Name == "KeyFlipRight2"                  ||
+	 Name == "KeyChangeDir2"                  ||
+	 Name == "KeyDrive3"                      ||
+	 Name == "KeyBrake3"                      ||
+	 Name == "KeyFlipLeft3"                   ||
+	 Name == "KeyFlipRight3"                  ||
+	 Name == "KeyChangeDir3"                  ||
+	 Name == "KeyDrive4"                      ||
+	 Name == "KeyBrake4"                      ||
+	 Name == "KeyFlipLeft4"                   ||
+	 Name == "KeyFlipRight4"                  ||
+	 Name == "KeyChangeDir4"                  ||
+	 Name == "AutosaveHighscoreReplays"       ||
+	 Name == "NotifyAtInit"                   ||
+	 Name == "ShowMiniMap"                    ||
+	 Name == "ShowEngineCounter"              ||
+	 Name == "ContextHelp"                    ||
+	 Name == "MenuMusic"                      ||
+	 Name == "InitZoom"                       ||
+	 Name == "CameraActiveZoom"               ||
+	 Name == "DeathAnim"                      ||
+	 Name == "CheckHighscoresAtStartup"       ||
+	 Name == "CheckNewLevelsAtStartup"        ||
+	 Name == "ShowInGameWorldRecord"          ||
+	 Name == "WebConfAtInit"                  ||
+	 Name == "UseCrappyPack"                  ||
+	 Name == "UseChildrenCompliant"           ||
+	 Name == "EnableGhost"                    ||
+	 Name == "GhostStrategy_MYBEST"           ||
+	 Name == "GhostStrategy_THEBEST"          ||
+	 Name == "GhostStrategy_BESTOFREFROOM"    ||
+	 Name == "GhostStrategy_BESTOFOTHERROOMS" ||
+	 Name == "ShowGhostTimeDiff"              ||
+	 Name == "DisplayGhostInfo"               ||
+	 Name == "HideGhosts"                     ||
+	 Name == "GhostMotionBlur"                ||
+	 Name == "MultiStopWhenOneFinishes"       ||
+	 Name == "ProxyType"                      ||
+	 Name == "ProxyServer"                    ||
+	 Name == "ProxyAuthUser"                  ||
+	 Name == "ProxyAuthPwd"                   ||
+	 Name == "MenuGraphics"                   ||
+	 Name == "GameGraphics"                   ||
+	 Name == "ProxyPort"                      ||
+	 Name == "WebHighscoresNbRooms"           ||
+	 Name == "WebHighscoresIdRoom"            ||
+	 Name == "WebHighscoresIdRoom1"           ||
+	 Name == "WebHighscoresIdRoom2"           ||
+	 Name == "WebHighscoresIdRoom3"
+	 ) {
+	
+	if(i_sitekey == "") {
+	  v_result = readDB("SELECT id_profile FROM stats_profiles;", nrow);
+	} else {
+	  v_result = readDB("SELECT id_profile FROM stats_profiles WHERE sitekey=\"" + xmDatabase::protectString(i_sitekey) +"\";", nrow);
+	}
+	for(unsigned int i=0; i<nrow; i++) {
+	  v_id_profile = getResult(v_result, 1, i, 0);
+	  
+	  /* boolean values */	      
 	  if(
 	     Name == "WebHighscores"                  ||
-	     Name == "WWWPassword"                    ||
-	     Name == "Language"                       ||
-	     Name == "Theme"                          ||
-	     Name == "QSQualityMIN"                   ||
-	     Name == "QSQualityMAX"                   ||
-	     Name == "QSDifficultyMIN"                ||
-	     Name == "QSDifficultyMAX"                ||
 	     Name == "AudioEnable"                    ||
-	     Name == "AudioSampleRate"                ||
-	     Name == "AudioSampleBits"                ||
-	     Name == "AudioChannels"                  ||
 	     Name == "EngineSoundEnable"              ||
-	     Name == "KeyDrive1"                      ||
-	     Name == "KeyBrake1"                      ||
-	     Name == "KeyFlipLeft1"                   ||
-	     Name == "KeyFlipRight1"                  ||
-	     Name == "KeyChangeDir1"                  ||
-	     Name == "KeyDrive2"                      ||
-	     Name == "KeyBrake2"                      ||
-	     Name == "KeyFlipLeft2"                   ||
-	     Name == "KeyFlipRight2"                  ||
-	     Name == "KeyChangeDir2"                  ||
-	     Name == "KeyDrive3"                      ||
-	     Name == "KeyBrake3"                      ||
-	     Name == "KeyFlipLeft3"                   ||
-	     Name == "KeyFlipRight3"                  ||
-	     Name == "KeyChangeDir3"                  ||
-	     Name == "KeyDrive4"                      ||
-	     Name == "KeyBrake4"                      ||
-	     Name == "KeyFlipLeft4"                   ||
-	     Name == "KeyFlipRight4"                  ||
-	     Name == "KeyChangeDir4"                  ||
 	     Name == "AutosaveHighscoreReplays"       ||
 	     Name == "NotifyAtInit"                   ||
 	     Name == "ShowMiniMap"                    ||
@@ -212,125 +264,67 @@ void xmDatabase::updateDB_config(const std::string& i_sitekey) {
 	     Name == "DisplayGhostInfo"               ||
 	     Name == "HideGhosts"                     ||
 	     Name == "GhostMotionBlur"                ||
-	     Name == "MultiStopWhenOneFinishes"       ||
-	     Name == "ProxyType"                      ||
-	     Name == "ProxyServer"                    ||
-	     Name == "ProxyAuthUser"                  ||
-	     Name == "ProxyAuthPwd"                   ||
-	     Name == "MenuGraphics"                   ||
-	     Name == "GameGraphics"                   ||
-	     Name == "ProxyPort"                      ||
-	     Name == "WebHighscoresNbRooms"           ||
-	     Name == "WebHighscoresIdRoom"            ||
-	     Name == "WebHighscoresIdRoom1"           ||
-	     Name == "WebHighscoresIdRoom2"           ||
-	     Name == "WebHighscoresIdRoom3"
+	     Name == "MultiStopWhenOneFinishes"
 	     ) {
-
-	    if(i_sitekey == "") {
-	      v_result = readDB("SELECT id_profile FROM stats_profiles;", nrow);
-	    } else {
-	      v_result = readDB("SELECT id_profile FROM stats_profiles WHERE sitekey=\"" + xmDatabase::protectString(i_sitekey) +"\";", nrow);
-	    }
-	    for(unsigned int i=0; i<nrow; i++) {
-	      v_id_profile = getResult(v_result, 1, i, 0);
-
-	      /* boolean values */	      
-	      if(
-		 Name == "WebHighscores"                  ||
-		 Name == "AudioEnable"                    ||
-		 Name == "EngineSoundEnable"              ||
-		 Name == "AutosaveHighscoreReplays"       ||
-		 Name == "NotifyAtInit"                   ||
-		 Name == "ShowMiniMap"                    ||
-		 Name == "ShowEngineCounter"              ||
-		 Name == "ContextHelp"                    ||
-		 Name == "MenuMusic"                      ||
-		 Name == "InitZoom"                       ||
-		 Name == "CameraActiveZoom"               ||
-		 Name == "DeathAnim"                      ||
-		 Name == "CheckHighscoresAtStartup"       ||
-		 Name == "CheckNewLevelsAtStartup"        ||
-		 Name == "ShowInGameWorldRecord"          ||
-		 Name == "WebConfAtInit"                  ||
-		 Name == "UseCrappyPack"                  ||
-		 Name == "UseChildrenCompliant"           ||
-		 Name == "EnableGhost"                    ||
-		 Name == "GhostStrategy_MYBEST"           ||
-		 Name == "GhostStrategy_THEBEST"          ||
-		 Name == "GhostStrategy_BESTOFREFROOM"    ||
-		 Name == "GhostStrategy_BESTOFOTHERROOMS" ||
-		 Name == "ShowGhostTimeDiff"              ||
-		 Name == "DisplayGhostInfo"               ||
-		 Name == "HideGhosts"                     ||
-		 Name == "GhostMotionBlur"                ||
-		 Name == "MultiStopWhenOneFinishes"
-		 ) {
-		config_setBool(v_id_profile, Name, Value == "true" ? 1:0);
-
-		/* string values */
-	      } else if(
-			Name == "WWWPassword"          ||
-			Name == "Language"             ||
-			Name == "Theme"                ||
-			Name == "AudioChannels"        ||
-			Name == "KeyDrive1"            ||
-			Name == "KeyBrake1"            ||
-			Name == "KeyFlipLeft1"         ||
-			Name == "KeyFlipRight1"        ||
-			Name == "KeyChangeDir1"        ||
-			Name == "KeyDrive2"            ||
-			Name == "KeyBrake2"            ||
-			Name == "KeyFlipLeft2"         ||
-			Name == "KeyFlipRight2"        ||
-			Name == "KeyChangeDir2"        ||
-			Name == "KeyDrive3"            ||
-			Name == "KeyBrake3"            ||
-			Name == "KeyFlipLeft3"         ||
-			Name == "KeyFlipRight3"        ||
-			Name == "KeyChangeDir3"        ||
-			Name == "KeyDrive4"            ||
-			Name == "KeyBrake4"            ||
-			Name == "KeyFlipLeft4"         ||
-			Name == "KeyFlipRight4"        ||
-			Name == "KeyChangeDir4"        ||
-			Name == "ProxyType"            ||
-			Name == "ProxyServer"          ||
-			Name == "ProxyAuthUser"        ||
-			Name == "ProxyAuthPwd"         ||
-			Name == "MenuGraphics"         ||
-			Name == "GameGraphics"         ||
-			Name == "WebHighscoresIdRoom"  ||
-			Name == "WebHighscoresIdRoom1" ||
-			Name == "WebHighscoresIdRoom2" ||
-			Name == "WebHighscoresIdRoom3"
-			) {
-		config_setString(v_id_profile, Name, Value);
-
-		/* Integers */
-	      } else if(Name == "QSQualityMIN"    ||
-			Name == "QSQualityMAX"    ||
-			Name == "QSDifficultyMIN" ||
-			Name == "QSDifficultyMAX" ||
-			Name == "AudioSampleRate" ||
-			Name == "AudioSampleBits" ||
-			Name == "ProxyPort"       ||
-			Name == "WebHighscoresNbRooms"
-			) {
-		config_setInteger(v_id_profile, Name, atoi(Value.c_str()));
-	      }
-
-	    }
-	    read_DB_free(v_result);
+	    config_setBool(v_id_profile, Name, Value == "true" ? 1:0);
+	    
+	    /* string values */
+	  } else if(
+		    Name == "WWWPassword"          ||
+		    Name == "Language"             ||
+		    Name == "Theme"                ||
+		    Name == "AudioChannels"        ||
+		    Name == "KeyDrive1"            ||
+		    Name == "KeyBrake1"            ||
+		    Name == "KeyFlipLeft1"         ||
+		    Name == "KeyFlipRight1"        ||
+		    Name == "KeyChangeDir1"        ||
+		    Name == "KeyDrive2"            ||
+		    Name == "KeyBrake2"            ||
+		    Name == "KeyFlipLeft2"         ||
+		    Name == "KeyFlipRight2"        ||
+		    Name == "KeyChangeDir2"        ||
+		    Name == "KeyDrive3"            ||
+		    Name == "KeyBrake3"            ||
+		    Name == "KeyFlipLeft3"         ||
+		    Name == "KeyFlipRight3"        ||
+		    Name == "KeyChangeDir3"        ||
+		    Name == "KeyDrive4"            ||
+		    Name == "KeyBrake4"            ||
+		    Name == "KeyFlipLeft4"         ||
+		    Name == "KeyFlipRight4"        ||
+		    Name == "KeyChangeDir4"        ||
+		    Name == "ProxyType"            ||
+		    Name == "ProxyServer"          ||
+		    Name == "ProxyAuthUser"        ||
+		    Name == "ProxyAuthPwd"         ||
+		    Name == "MenuGraphics"         ||
+		    Name == "GameGraphics"         ||
+		    Name == "WebHighscoresIdRoom"  ||
+		    Name == "WebHighscoresIdRoom1" ||
+		    Name == "WebHighscoresIdRoom2" ||
+		    Name == "WebHighscoresIdRoom3"
+		    ) {
+	    config_setString(v_id_profile, Name, Value);
+	    
+	    /* Integers */
+	  } else if(Name == "QSQualityMIN"    ||
+		    Name == "QSQualityMAX"    ||
+		    Name == "QSDifficultyMIN" ||
+		    Name == "QSDifficultyMAX" ||
+		    Name == "AudioSampleRate" ||
+		    Name == "AudioSampleBits" ||
+		    Name == "ProxyPort"       ||
+		    Name == "WebHighscoresNbRooms"
+		    ) {
+	    config_setInteger(v_id_profile, Name, atoi(Value.c_str()));
 	  }
-	} catch(Exception &e) {
-	  LogWarning("%s", e.getMsg().c_str());
+	  
 	}
+	read_DB_free(v_result);
       }
-    } else {
-      LogWarning("no configuration in 'config.dat'");
+    } catch(Exception &e) {
+      LogWarning("%s", e.getMsg().c_str());
     }
-  } else {
-    LogWarning("failed to load or parse user configuration 'config.dat'");
   }
 }

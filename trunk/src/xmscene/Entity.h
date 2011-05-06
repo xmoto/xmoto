@@ -24,11 +24,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 #include "../helpers/Color.h"
 #include "../helpers/VMath.h"
+#include "../VXml.h"
 #include "BasicSceneStructs.h"
 #include <vector>
 
 class EntityParticle;
-class TiXmlElement;
 class FileHandle;
 class Sprite;
 class Block;
@@ -104,7 +104,7 @@ class Entity {
   void setAlive(bool alive);
 
   void saveBinary(FileHandle *i_pfh);
-  static Entity* readFromXml(TiXmlElement *pElem);
+  static Entity* readFromXml(xmlNodePtr pElem);
   static Entity* readFromBinary(FileHandle *i_pfh);
 
   static EntitySpeciality  SpecialityFromStr(std::string& i_typeStr);
@@ -221,7 +221,7 @@ public:
 
   void saveBinary(FileHandle *i_pfh);
   void readFromBinary(FileHandle *i_pfh);
-  void readFromXml(TiXmlElement *pElem);
+  void readFromXml(xmlNodePtr pElem);
 
   void loadToPlay(Level* i_level, ChipmunkWorld* i_chipmunkWorld);
   void unloadToPlay();

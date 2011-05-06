@@ -724,74 +724,73 @@ void BlockVertex::setColor(const TColor &i_color) {
 }
 
 
-bool Block::isPhysics_readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
-  TiXmlElement* pPositionElem   = XML::findElement(*i_xmlSource, pElem, std::string("position"));
+bool Block::isPhysics_readFromXml(xmlNodePtr pElem) {
+  xmlNodePtr pPositionElem = XMLDocument::subElement(pElem, "position");
 
   if(pPositionElem == NULL) {
     return false;
   }
 
-  return XML::getOption(pPositionElem,"physics","false") == "true";
+  return XMLDocument::getOption(pPositionElem, "physics", "false") == "true";
 }
 
 
-Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem, bool i_loadMainLayerOnly) {
-  TiXmlElement* pPositionElem   = XML::findElement(*i_xmlSource, pElem, std::string("position"));
+Block* Block::readFromXml(xmlNodePtr pElem, bool i_loadMainLayerOnly) {
+  xmlNodePtr pPositionElem = XMLDocument::subElement(pElem, "position");
   //
   if(i_loadMainLayerOnly) {
-    if(atoi(XML::getOption(pPositionElem,"layerid","-1").c_str()) != -1) { // -1 is for the main layer
+    if(atoi(XMLDocument::getOption(pPositionElem, "layerid", "-1").c_str()) != -1) { // -1 is for the main layer
       return NULL;
     }
   }
 
-  TiXmlElement* pUseTextureElem = XML::findElement(*i_xmlSource, pElem, std::string("usetexture"));
-  TiXmlElement* pPhysicsElem    = XML::findElement(*i_xmlSource, pElem, std::string("physics"));
-  TiXmlElement* pEdgeElem       = XML::findElement(*i_xmlSource, pElem, std::string("edges"));
-  TiXmlElement* pColElem        = XML::findElement(*i_xmlSource, pElem, std::string("collision"));
+  xmlNodePtr pUseTextureElem = XMLDocument::subElement(pElem, "usetexture");
+  xmlNodePtr pPhysicsElem    = XMLDocument::subElement(pElem, "physics");
+  xmlNodePtr pEdgeElem       = XMLDocument::subElement(pElem, "edges");
+  xmlNodePtr pColElem        = XMLDocument::subElement(pElem, "collision");
 
-  Block *pBlock = new Block(XML::getOption(pElem, "id"));
+  Block *pBlock = new Block(XMLDocument::getOption(pElem, "id"));
   pBlock->setTexture("default");
 
   if(pUseTextureElem != NULL) {
-    pBlock->setTexture(XML::getOption(pUseTextureElem,"id", "default"));
-    pBlock->setTextureScale(atof(XML::getOption(pUseTextureElem,"scale","1").c_str()));
-    
+    pBlock->setTexture(XMLDocument::getOption(pUseTextureElem, "id", "default"));
+    pBlock->setTextureScale(atof(XMLDocument::getOption(pUseTextureElem, "scale", "1").c_str()));
     
     /* Color blending for blocks */
     int blendColor_r = 255, blendColor_g = 255, blendColor_b = 255, blendColor_a = 255;
-    std::string v_blendColor = XML::getOption(pUseTextureElem,"color_r");
+    std::string v_blendColor = XMLDocument::getOption(pUseTextureElem,"color_r");
     if(v_blendColor != "") blendColor_r = atoi(v_blendColor.c_str());
-    v_blendColor = XML::getOption(pUseTextureElem,"color_g");
+    v_blendColor = XMLDocument::getOption(pUseTextureElem,"color_g");
     if(v_blendColor != "") blendColor_g = atoi(v_blendColor.c_str());
-    v_blendColor = XML::getOption(pUseTextureElem,"color_b");
+    v_blendColor = XMLDocument::getOption(pUseTextureElem,"color_b");
     if(v_blendColor != "") blendColor_b = atoi(v_blendColor.c_str());
-    v_blendColor = XML::getOption(pUseTextureElem,"color_a");
+    v_blendColor = XMLDocument::getOption(pUseTextureElem,"color_a");
     if(v_blendColor != "") blendColor_a = atoi(v_blendColor.c_str());
     pBlock->setBlendColor(TColor(blendColor_r,blendColor_g,blendColor_b,blendColor_a));
     
   }
 
   if(pPositionElem != NULL) {
-    pBlock->setInitialPosition(Vector2f(atof( XML::getOption(pPositionElem,"x","0").c_str() ),
-                                        atof( XML::getOption(pPositionElem,"y","0").c_str() )
+    pBlock->setInitialPosition(Vector2f(atof( XMLDocument::getOption(pPositionElem,"x","0").c_str() ),
+                                        atof( XMLDocument::getOption(pPositionElem,"y","0").c_str() )
                                         )
                                );
 
-    pBlock->setBackground(XML::getOption(pPositionElem,"background","false") == "true");
-    pBlock->setDynamic(XML::getOption(pPositionElem,"dynamic","false") == "true");
+    pBlock->setBackground(XMLDocument::getOption(pPositionElem,"background","false") == "true");
+    pBlock->setDynamic(XMLDocument::getOption(pPositionElem,"dynamic","false") == "true");
     /* setDynamic must be done before setPhysics - physics implies dynamic */
-    pBlock->setPhysics(XML::getOption(pPositionElem,"physics","false") == "true");
-    pBlock->setIsLayer(XML::getOption(pPositionElem,"islayer","false") == "true");
-    pBlock->setLayer(atoi(XML::getOption(pPositionElem,"layerid","-1").c_str()));
+    pBlock->setPhysics(XMLDocument::getOption(pPositionElem,"physics","false") == "true");
+    pBlock->setIsLayer(XMLDocument::getOption(pPositionElem,"islayer","false") == "true");
+    pBlock->setLayer(atoi(XMLDocument::getOption(pPositionElem,"layerid","-1").c_str()));
   }
 
   if(pPhysicsElem != NULL) {
     char str[16];
 
-    pBlock->setGripPer20(atof(XML::getOption(pPhysicsElem, "grip", "20.0").c_str()));
+    pBlock->setGripPer20(atof(XMLDocument::getOption(pPhysicsElem, "grip", "20.0").c_str()));
 
     snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_MASS);
-    std::string mass = XML::getOption(pPhysicsElem, "mass", str);
+    std::string mass = XMLDocument::getOption(pPhysicsElem, "mass", str);
     if(mass == "INFINITY"){
       // Chipmunk's INFINITY is too big (make blocks disapear), so put a big value instead
       float bigValue = 5000000000000000.0;
@@ -801,10 +800,10 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem, bool i_
       pBlock->setMass(atof(mass.c_str()));
 
     snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_FRICTION);
-    pBlock->setFriction(atof(XML::getOption(pPhysicsElem, "friction", str).c_str()));
+    pBlock->setFriction(atof(XMLDocument::getOption(pPhysicsElem, "friction", str).c_str()));
 
     snprintf(str, 16, "%f", XM_DEFAULT_PHYS_BLOCK_ELASTICITY);
-    pBlock->setElasticity(atof(XML::getOption(pPhysicsElem, "elasticity", str).c_str()));
+    pBlock->setElasticity(atof(XMLDocument::getOption(pPhysicsElem, "elasticity", str).c_str()));
   } else {
     pBlock->setGripPer20(20.0);
     pBlock->setMass(XM_DEFAULT_PHYS_BLOCK_MASS);
@@ -814,26 +813,26 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem, bool i_
 
   if(pEdgeElem != NULL) {
     // angle is the default one
-    std::string methodStr = XML::getOption(pEdgeElem, "drawmethod", "angle");
+    std::string methodStr = XMLDocument::getOption(pEdgeElem, "drawmethod", "angle");
     pBlock->setEdgeDrawMethod(pBlock->stringToEdge(methodStr));
     // 270 is the default one for the 'angle' edge draw method, not used for the others
-    pBlock->setEdgeAngle(atof(XML::getOption(pEdgeElem, "angle", "270.0").c_str()));
+    pBlock->setEdgeAngle(atof(XMLDocument::getOption(pEdgeElem, "angle", "270.0").c_str()));
     
     //check for geoms assignments: blendColor, depth and scale
-    for(TiXmlElement *pedge = pEdgeElem->FirstChildElement(); pedge!=NULL; pedge=pedge->NextSiblingElement()) {
-      if( !strcmp(pedge->Value(), "material") ) {  //strcmp returns 0 in case of match, thats why the NOT means actually TRUE here
-        std::string v_materialName = XML::getOption(pedge, "name", "not_used").c_str();
-        std::string v_materialTexture = XML::getOption(pedge, "edge", "").c_str();
-        int blendColor_r, blendColor_g, blendColor_b, blendColor_a;
-        std::string v_blendColor = XML::getOption(pedge, "color_r", "255"); blendColor_r = atoi(v_blendColor.c_str());
-        v_blendColor = XML::getOption(pedge, "color_g", "255"); blendColor_g = atoi(v_blendColor.c_str());
-        v_blendColor = XML::getOption(pedge, "color_b", "255"); blendColor_b = atoi(v_blendColor.c_str());
-        v_blendColor = XML::getOption(pedge, "color_a", "255"); blendColor_a = atoi(v_blendColor.c_str());
-        
-        float v_scale = atof(XML::getOption(pedge, "scale", "-1.0f").c_str()); //set scale default alias -1
-        float v_depth = atof(XML::getOption(pedge, "depth", "-1.0f").c_str()); //det depth default alias -1
-        pBlock->addEdgeMaterial(v_materialName, v_materialTexture, TColor(blendColor_r, blendColor_g, blendColor_b, blendColor_a), v_scale, v_depth);
-      }
+    for(xmlNodePtr pSubElem = XMLDocument::subElement(pEdgeElem, "material");
+	pSubElem != NULL;
+	pSubElem = XMLDocument::nextElement(pSubElem)) {
+      std::string v_materialName = XMLDocument::getOption(pSubElem, "name", "not_used").c_str();
+      std::string v_materialTexture = XMLDocument::getOption(pSubElem, "edge", "").c_str();
+      int blendColor_r, blendColor_g, blendColor_b, blendColor_a;
+      std::string v_blendColor = XMLDocument::getOption(pSubElem, "color_r", "255"); blendColor_r = atoi(v_blendColor.c_str());
+      v_blendColor = XMLDocument::getOption(pSubElem, "color_g", "255"); blendColor_g = atoi(v_blendColor.c_str());
+      v_blendColor = XMLDocument::getOption(pSubElem, "color_b", "255"); blendColor_b = atoi(v_blendColor.c_str());
+      v_blendColor = XMLDocument::getOption(pSubElem, "color_a", "255"); blendColor_a = atoi(v_blendColor.c_str());
+      
+      float v_scale = atof(XMLDocument::getOption(pSubElem, "scale", "-1.0f").c_str()); //set scale default alias -1
+      float v_depth = atof(XMLDocument::getOption(pSubElem, "depth", "-1.0f").c_str()); //det depth default alias -1
+      pBlock->addEdgeMaterial(v_materialName, v_materialTexture, TColor(blendColor_r, blendColor_g, blendColor_b, blendColor_a), v_scale, v_depth);
     }
     
   } else {
@@ -842,9 +841,9 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem, bool i_
   }
 
   if(pColElem != NULL) {
-    std::string methodStr = XML::getOption(pColElem, "type", "None");
+    std::string methodStr = XMLDocument::getOption(pColElem, "type", "None");
     pBlock->setCollisionMethod(pBlock->stringToColMethod(methodStr));
-    pBlock->setCollisionRadius(atof(XML::getOption(pColElem, "radius", "0.0").c_str()));    
+    pBlock->setCollisionRadius(atof(XMLDocument::getOption(pColElem, "radius", "0.0").c_str()));    
   }
 
   float lastX = 0.0;
@@ -852,29 +851,29 @@ Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem, bool i_
   bool  firstVertex = true;
   
   /* Get vertices */
-  for(TiXmlElement *pj = pElem->FirstChildElement(); pj!=NULL; pj=pj->NextSiblingElement()) {
-    if(!strcmp(pj->Value(),"vertex")) {
-      /* Alloc */
-      BlockVertex *pVertex = new BlockVertex(Vector2f(atof( XML::getOption(pj, "x", "0").c_str()),
-                                                      atof( XML::getOption(pj, "y", "0").c_str())),
-                                             XML::getOption(pj, "edge", ""));
-
-      if(firstVertex == true){
-	firstVertex = false;	
-      }
-      else {
-	if(lastX == pVertex->Position().x
-	   && lastY == pVertex->Position().y){
-	  delete pVertex;
-	  continue;
-	}
-      }
-
-      /* Add it */
-      pBlock->Vertices().push_back( pVertex );
-      lastX = pVertex->Position().x;
-      lastY = pVertex->Position().y;
+  for(xmlNodePtr pSubElem = XMLDocument::subElement(pElem, "vertex");
+      pSubElem != NULL;
+      pSubElem = XMLDocument::nextElement(pSubElem)) {
+    /* Alloc */
+    BlockVertex *pVertex = new BlockVertex(Vector2f(atof( XMLDocument::getOption(pSubElem, "x", "0").c_str()),
+						    atof( XMLDocument::getOption(pSubElem, "y", "0").c_str())),
+					   XMLDocument::getOption(pSubElem, "edge", ""));
+    
+    if(firstVertex == true){
+      firstVertex = false;	
     }
+    else {
+      if(lastX == pVertex->Position().x
+	 && lastY == pVertex->Position().y){
+	delete pVertex;
+	continue;
+      }
+    }
+    
+    /* Add it */
+    pBlock->Vertices().push_back( pVertex );
+    lastX = pVertex->Position().x;
+    lastY = pVertex->Position().y;
   }
 
   return pBlock;

@@ -130,35 +130,26 @@ void Theme::load(FileDataType i_fdt, std::string p_themeFile) {
   cleanMusics();
   cleanSounds();
 
-  XMLDocument v_ThemeXml;
-  TiXmlDocument *v_ThemeXmlData;
-  TiXmlElement *v_ThemeXmlDataElement;
-  const char *pc;
+  XMLDocument v_xml;
+  xmlNodePtr  v_xmlElt;
 
   try {
     /* open the file */
-    v_ThemeXml.readFromFile(i_fdt, p_themeFile);
-    
-    v_ThemeXmlData = v_ThemeXml.getLowLevelAccess();
-    
-    if(v_ThemeXmlData == NULL) {
-      throw Exception("unable to analyze xml theme file");
+    v_xml.readFromFile(i_fdt, p_themeFile);
+
+    v_xmlElt = v_xml.getRootNode("xmoto_theme");
+    if(v_xmlElt == NULL) {
+      throw Exception("unable to analyze xml file");
     }
-    
-    /* read the theme name */
-    v_ThemeXmlDataElement = v_ThemeXmlData->FirstChildElement("xmoto_theme");
-    if(v_ThemeXmlDataElement != NULL) {
-      pc = v_ThemeXmlDataElement->Attribute("name");
-      m_name = pc;
-    }
+
+    m_name = XMLDocument::getOption(v_xmlElt, "name");
     
     if(m_name == "") {
       throw Exception("unnamed theme");
     }
-    
-    /* get sprites */
-    loadSpritesFromXML(v_ThemeXmlDataElement);
 
+    /* get sprites */
+    loadSpritesFromXML(v_xmlElt);
   } catch(Exception &e) {
     throw Exception("unable to analyze xml theme file");
   }
@@ -179,79 +170,78 @@ bool Theme::isAFileOutOfDate(const std::string& i_file) {
   return false;
 }
 
-void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
+void Theme::loadSpritesFromXML(xmlNodePtr pElem) {
   std::string v_spriteType;
   bool v_isAnimation;
   bool v_enableAnimation;
-  const char *pc;
   std::string v_sum;
   
   v_enableAnimation = XMSession::instance()->disableAnimations();
-  
-  for(TiXmlElement *pVarElem = p_ThemeXmlDataElement->FirstChildElement("sprite");
-      pVarElem!=NULL;
-      pVarElem = pVarElem->NextSiblingElement("sprite")
-      ) {
-    pc = pVarElem->Attribute("type");
-    if(pc == NULL) { continue; }
-    v_spriteType = pc;
+
+  for(xmlNodePtr pSubElem = XMLDocument::subElement(pElem, "sprite");
+      pSubElem != NULL;
+      pSubElem = XMLDocument::nextElement(pSubElem)) {
+
+    v_spriteType = XMLDocument::getOption(pSubElem, "type");
+    if(v_spriteType == "") {
+      continue;
+    }
 
     /* this is not the nice method to allow animation,
        but initially, animation was an entire type,
        in the future i want to make it only a method of display
        so that all sprite type can be animated
     */
-    pc = pVarElem->Attribute("fileBase");
-    v_isAnimation = (pc != NULL);
+    v_isAnimation = XMLDocument::getOption(pSubElem, "fileBase") != "";
 
     if(v_spriteType == "BikerPart") {
-      newSpriteFromXML<BikerPartSprite>(pVarElem,
+      newSpriteFromXML<BikerPartSprite>(pSubElem,
 					THEME_BIKERPART_SPRITE_FILE_DIR,
 					"BikerPart");
     }
     else if(v_spriteType == "Effect") {
-      newSpriteFromXML<EffectSprite>(pVarElem,
+      newSpriteFromXML<EffectSprite>(pSubElem,
 				     THEME_EFFECT_SPRITE_FILE_DIR,
 				     "Effect");
     }
     else if(v_spriteType == "Font") {
-      newSpriteFromXML<FontSprite>(pVarElem,
+      newSpriteFromXML<FontSprite>(pSubElem,
 				   THEME_FONT_SPRITE_FILE_DIR,
 				   "Font");
     }
     else if(v_spriteType == "Misc") {
-      newSpriteFromXML<MiscSprite>(pVarElem,
+      newSpriteFromXML<MiscSprite>(pSubElem,
 				   THEME_MISC_SPRITE_FILE_DIR,
 				   "Misc");
     }
     else if(v_spriteType == "Texture" && v_isAnimation == false) {
-      newSpriteFromXML<TextureSprite>(pVarElem,
+      newSpriteFromXML<TextureSprite>(pSubElem,
 				      THEME_TEXTURE_SPRITE_FILE_DIR,
 				      "Texture");
     }
     else if(v_spriteType == "Texture" && v_isAnimation == true && v_enableAnimation == true) {
-      newSpriteFromXML<TextureSprite>(pVarElem,
+      newSpriteFromXML<TextureSprite>(pSubElem,
 				      THEME_TEXTURE_SPRITE_FILE_DIR,
 				      "Texture");
     }
     else if(v_spriteType == "Texture" && v_isAnimation == true && v_enableAnimation == false) {
-      newAnimationSpriteFromXML(pVarElem, true, THEME_TEXTURE_SPRITE_FILE_DIR);
+      newAnimationSpriteFromXML(pSubElem, true, THEME_TEXTURE_SPRITE_FILE_DIR);
     }
     else if(v_spriteType == "UI") {
-      newSpriteFromXML<UISprite>(pVarElem,
+      newSpriteFromXML<UISprite>(pSubElem,
 				 THEME_UI_SPRITE_FILE_DIR,
 				 "UI");
     }
 
     else if(v_spriteType == "Entity" && v_isAnimation == true) {
-      newAnimationSpriteFromXML(pVarElem, false, THEME_ANIMATION_SPRITE_FILE_DIR);
+      newAnimationSpriteFromXML(pSubElem, false, THEME_ANIMATION_SPRITE_FILE_DIR);
     }
     else if(v_spriteType == "Entity" && v_isAnimation == false) {
-      newDecorationSpriteFromXML(pVarElem);
+      newDecorationSpriteFromXML(pSubElem);
     }
 
     else if(v_spriteType == "EdgeEffect") {
-      newEdgeEffectSpriteFromXML(pVarElem);
+      newEdgeEffectSpriteFromXML(pSubElem);
     }
 
     else {
@@ -264,21 +254,17 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
   std::string v_musicFile;
   v_sum = "";
 
-  for(TiXmlElement *pVarElem = p_ThemeXmlDataElement->FirstChildElement("music");
-      pVarElem!=NULL;
-      pVarElem = pVarElem->NextSiblingElement("music")
-      ) {
+  for(xmlNodePtr pSubElem = XMLDocument::subElement(pElem, "music");
+      pSubElem != NULL;
+      pSubElem = XMLDocument::nextElement(pSubElem)) {
 
-    pc = pVarElem->Attribute("name");
-    if(pc == NULL) { continue; }
-    v_musicName = pc;
+    v_musicName = XMLDocument::getOption(pSubElem, "name");
+    if(v_musicName == "") { continue; }
 
-    pc = pVarElem->Attribute("file");
-    if(pc == NULL) { continue; }
-    v_musicFile = pc;
+    v_musicFile = XMLDocument::getOption(pSubElem, "file");
+    if(v_musicFile == "") { continue; }
 
-    pc = pVarElem->Attribute("sum");
-    if(pc != NULL) { v_sum = pc; };
+    v_sum = XMLDocument::getOption(pSubElem, "sum");
 
     if(isAFileOutOfDate(THEME_MUSICS_FILE_DIR + std::string("/") + v_musicFile) == false) {
       m_musics.push_back(new ThemeMusic(this, v_musicName, v_musicFile));
@@ -293,21 +279,17 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
   std::string v_soundFile;
   v_sum = "";
 
-  for(TiXmlElement *pVarElem = p_ThemeXmlDataElement->FirstChildElement("sound");
-      pVarElem!=NULL;
-      pVarElem = pVarElem->NextSiblingElement("sound")
-      ) {
+  for(xmlNodePtr pSubElem = XMLDocument::subElement(pElem, "sound");
+      pSubElem != NULL;
+      pSubElem = XMLDocument::nextElement(pSubElem)) {
 
-    pc = pVarElem->Attribute("name");
-    if(pc == NULL) { continue; }
-    v_soundName = pc;
+    v_soundName = XMLDocument::getOption(pSubElem, "name");
+    if(v_soundName == "") { continue; }
 
-    pc = pVarElem->Attribute("file");
-    if(pc == NULL) { continue; }
-    v_soundFile = pc;
+    v_soundFile = XMLDocument::getOption(pSubElem, "file");
+    if(v_soundFile == "") { continue; }
 
-    pc = pVarElem->Attribute("sum");
-    if(pc != NULL) { v_sum = pc; };
+    v_sum =  XMLDocument::getOption(pSubElem, "sum");
 
     if(isAFileOutOfDate(THEME_SOUNDS_FILE_DIR + std::string("/") + v_soundFile) == false) {
       m_sounds.push_back(new ThemeSound(this, v_soundName, v_soundFile));
@@ -380,32 +362,27 @@ void Theme::cleanSounds() {
 
 
 template <typename SpriteType>
-void Theme::newSpriteFromXML(TiXmlElement *pVarElem,
+void Theme::newSpriteFromXML(xmlNodePtr pElem,
 			     const char*   fileDir,
 			     const char*   spriteTypeName)
 {
   std::string v_name;
   std::string v_fileName;
-  const char *pc;
   std::string v_sum;
 
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {
+  v_name = XMLDocument::getOption(pElem, "name");
+  if(v_name == "") {
     LogWarning("%s with no name", spriteTypeName);
     return;
   }
-  v_name = pc;
 
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {
+  v_fileName = XMLDocument::getOption(pElem, "file");
+  if(v_fileName == "") {
     LogWarning("%s with no file", spriteTypeName);
     return;
   }
-  v_fileName = pc;
 
-  pc = pVarElem->Attribute("sum");
-  if(pc != NULL)
-    v_sum = pc;
+  v_sum = XMLDocument::getOption(pElem, "sum");
 
   if(isAFileOutOfDate(fileDir + std::string("/") + v_fileName) == false) {
     Sprite* pSprite = new SpriteType(this, v_name, v_fileName);
@@ -419,11 +396,11 @@ void Theme::newSpriteFromXML(TiXmlElement *pVarElem,
 }
 
 
-void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem, bool v_isTexture, const char* fileDir) {
+void Theme::newAnimationSpriteFromXML(xmlNodePtr pElem, bool v_isTexture, const char* fileDir) {
   std::string v_name;
   std::string v_fileBase;
   std::string v_fileExtension;
-  const char *pc;
+  std::string v_tmp;
   AnimationSprite *v_anim;
 
   float global_centerX = 0.5;
@@ -432,41 +409,38 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem, bool v_isTexture, 
   float global_height  = 1.0;
   float global_delay   = 0.1;
 
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {
+  v_name = XMLDocument::getOption(pElem, "name");
+  if(v_name == "") {
     LogWarning("Animation with no name");
     return;
   }
-  v_name = pc;
   
-  pc = pVarElem->Attribute("fileBase");
-  if(pc == NULL) {
+  v_fileBase = XMLDocument::getOption(pElem, "fileBase");
+  if(v_fileBase == "") {
     LogWarning("Animation with no fileBase");
     return;
   }
-  v_fileBase = pc;
 
-  pc = pVarElem->Attribute("fileExtension");
-  if(pc == NULL) {
+  v_fileExtension = XMLDocument::getOption(pElem, "fileExtension");
+  if(v_fileExtension == "") {
     LogWarning("Animation with no fileExtension");
     return;
   }
-  v_fileExtension = pc;
 
-  pc = pVarElem->Attribute("centerX");
-  if(pc != NULL) {global_centerX = atof(pc);}
+  v_tmp = XMLDocument::getOption(pElem, "centerX");
+  if(v_tmp != "") {global_centerX = atof(v_tmp.c_str());}
 
-  pc = pVarElem->Attribute("centerY");
-  if(pc != NULL) {global_centerY = atof(pc);}
+  v_tmp = XMLDocument::getOption(pElem, "centerY");
+  if(v_tmp != "") {global_centerY = atof(v_tmp.c_str());}
 
-  pc = pVarElem->Attribute("width");
-  if(pc != NULL) {global_width = atof(pc);}
+  v_tmp = XMLDocument::getOption(pElem, "width");
+  if(v_tmp != "") {global_width = atof(v_tmp.c_str());}
 
-  pc = pVarElem->Attribute("height");
-  if(pc != NULL) {global_height = atof(pc);}
+  v_tmp = XMLDocument::getOption(pElem, "height");
+  if(v_tmp != "") {global_height = atof(v_tmp.c_str());}
 
-  pc = pVarElem->Attribute("delay");
-  if(pc != NULL) {global_delay = atof(pc);}
+  v_tmp = XMLDocument::getOption(pElem, "delay");
+  if(v_tmp != "") {global_delay = atof(v_tmp.c_str());}
 
   v_anim = new AnimationSprite(this, v_name, v_fileBase, v_fileExtension, v_isTexture);
   v_anim->setOrder(m_sprites.size());
@@ -474,10 +448,10 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem, bool v_isTexture, 
 
   int n = 0;
   char buf[3];
-  for(TiXmlElement *pVarSubElem = pVarElem->FirstChildElement("frame");
-      pVarSubElem!=NULL;
-      pVarSubElem = pVarSubElem->NextSiblingElement("frame")
-      ) {
+
+  for(xmlNodePtr pSubElem = XMLDocument::subElement(pElem, "frame");
+      pSubElem != NULL;
+      pSubElem = XMLDocument::nextElement(pSubElem)) {
     float v_centerX;
     float v_centerY;
     float v_width;
@@ -485,23 +459,22 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem, bool v_isTexture, 
     float v_delay;
     std::string v_sum;
 
-    pc = pVarSubElem->Attribute("centerX");
-    if(pc != NULL) {v_centerX = atof(pc);} else {v_centerX = global_centerX;}
-    
-    pc = pVarSubElem->Attribute("centerY");
-    if(pc != NULL) {v_centerY = atof(pc);} else {v_centerY = global_centerY;}
-    
-    pc = pVarSubElem->Attribute("width");
-    if(pc != NULL) {v_width = atof(pc);} else {v_width = global_width;}
-    
-    pc = pVarSubElem->Attribute("height");
-    if(pc != NULL) {v_height = atof(pc);} else {v_height = global_height;}
+    v_tmp = XMLDocument::getOption(pSubElem, "centerX");
+    if(v_tmp != "") {v_centerX = atof(v_tmp.c_str());} else {v_centerX = global_centerX;}
 
-    pc = pVarSubElem->Attribute("delay");
-    if(pc != NULL) {v_delay = atof(pc);} else {v_delay = global_delay;}
+    v_tmp = XMLDocument::getOption(pSubElem, "centerY");
+    if(v_tmp != "") {v_centerY = atof(v_tmp.c_str());} else {v_centerY = global_centerY;}
 
-    pc = pVarSubElem->Attribute("sum");
-    if(pc != NULL) { v_sum = pc; };
+    v_tmp = XMLDocument::getOption(pSubElem, "width");
+    if(v_tmp != "") {v_width = atof(v_tmp.c_str());} else {v_width = global_width;}    
+
+    v_tmp = XMLDocument::getOption(pSubElem, "height");
+    if(v_tmp != "") {v_height = atof(v_tmp.c_str());} else {v_height = global_height;}
+
+    v_tmp = XMLDocument::getOption(pSubElem, "delay");
+    if(v_tmp != "") {v_delay = atof(v_tmp.c_str());} else {v_delay = global_delay;}
+
+    v_sum = XMLDocument::getOption(pSubElem, "sum");
 
     if(n < 100) {
       snprintf(buf, 3, "%02i", n);
@@ -523,7 +496,7 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem, bool v_isTexture, 
   }
 }
 
-void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem)
+void Theme::newDecorationSpriteFromXML(xmlNodePtr pElem)
 {
   // create decoration sprites as an animation sprite with one frame
   std::string v_name;
@@ -531,8 +504,8 @@ void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem)
   std::string v_fileBase;
   std::string v_fileExtension;
   std::string v_blendmode;
-  const char *pc;
   std::string v_sum = "";
+  std::string v_tmp;
   AnimationSprite *v_anim;
   float v_width;
   float v_height;
@@ -546,58 +519,52 @@ void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem)
   float global_height  = 1.0;
   float global_delay   = 0.1;
 
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {
+  v_name = XMLDocument::getOption(pElem, "name");
+  if(v_name == "") {
     LogWarning("Sprite with no name");
     return;
   }
-  v_name = pc;
   
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {
+  v_fileName = XMLDocument::getOption(pElem, "file");
+  if(v_fileName == "") {
     LogWarning("Sprite with no name");
     return;
   }
-  v_fileName = pc;
 
   // split fileName in fileBase and fileExtension to mimic an animation sprite
   unsigned int dotPos = v_fileName.find_last_of('.');
   v_fileBase = v_fileName.substr(0, dotPos);
   v_fileExtension = v_fileName.substr(dotPos+1);
 
-  pc = pVarElem->Attribute("width");
-  if(pc != NULL)
-    v_width = atof(pc);
+  v_tmp = XMLDocument::getOption(pElem, "width");
+  if(v_tmp != "")
+    v_width = atof(v_tmp.c_str());
   else
     v_width = global_width;
 
-  pc = pVarElem->Attribute("height");
-  if(pc != NULL)
-    v_height = atof(pc);
+  v_tmp = XMLDocument::getOption(pElem, "height");
+  if(v_tmp != "")
+    v_height = atof(v_tmp.c_str());
   else
     v_height = global_height;
 
-  pc = pVarElem->Attribute("centerX");
-  if(pc != NULL)
-    v_centerX = atof(pc);
+  v_tmp = XMLDocument::getOption(pElem, "centerX");
+  if(v_tmp != "")
+    v_centerX = atof(v_tmp.c_str());
   else
     v_centerX = global_centerX;
 
-  pc = pVarElem->Attribute("centerY");
-  if(pc != NULL)
-    v_centerY = atof(pc);
+  v_tmp = XMLDocument::getOption(pElem, "centerY");
+  if(v_tmp != "")
+    v_centerY = atof(v_tmp.c_str());
   else
     v_centerY = global_centerY;
 
-  pc = pVarElem->Attribute("blendmode");
-  if(pc != NULL)
-    v_blendmode = pc;
-  else
+  v_blendmode = XMLDocument::getOption(pElem, "blendmode");
+  if(v_blendmode == "")
     v_blendmode = "default";
 
-  pc = pVarElem->Attribute("sum");
-  if(pc != NULL)
-    v_sum = pc;
+  v_sum = XMLDocument::getOption(pElem, "sum");
 
   v_delay = global_delay;
 
@@ -617,44 +584,38 @@ void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem)
   }
 }
 
-void Theme::newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem) {
+void Theme::newEdgeEffectSpriteFromXML(xmlNodePtr pElem) {
   std::string v_name;
   std::string v_fileName;
   std::string v_scale;
   std::string v_depth;
-  const char *pc;
   std::string v_sum;
 
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {
+  v_name = XMLDocument::getOption(pElem, "name");
+  if(v_name == "") {
     LogWarning("Edge with no name");
     return;
   }
-  v_name = pc;
 
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {
+  v_fileName = XMLDocument::getOption(pElem, "file");
+  if(v_fileName == "") {
     LogWarning("Edge with no file");
     return;
   }
-  v_fileName = pc;
 
-  pc = pVarElem->Attribute("scale");
-  if(pc == NULL) {
+  v_scale = XMLDocument::getOption(pElem, "scale");
+  if(v_scale == "") {
     LogWarning("Edge with no scale");
     return;
   }
-  v_scale = pc;
 
-  pc = pVarElem->Attribute("depth");
-  if(pc == NULL) {
+  v_depth = XMLDocument::getOption(pElem, "depth");
+  if(v_depth == "") {
     LogWarning("Edge with no depth");
     return;
   }
-  v_depth = pc;
 
-  pc = pVarElem->Attribute("sum");
-  if(pc != NULL) { v_sum = pc; };
+  v_sum = XMLDocument::getOption(pElem, "sum");
 
   if(isAFileOutOfDate(THEME_EDGEEFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
     Sprite* pSprite = new EdgeEffectSprite(this, v_name, v_fileName,
@@ -1167,27 +1128,19 @@ void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
 }
 
 std::string ThemeChoicer::getThemeNameFromFile(std::string p_themeFile) {
-  XMLDocument v_ThemeXml;
-  TiXmlDocument *v_ThemeXmlData;
-  TiXmlElement *v_ThemeXmlDataElement;
-  const char *pc;
+  XMLDocument v_xml;
+  xmlNodePtr  v_xmlElt;
   std::string m_name;
 
   /* open the file */
-  v_ThemeXml.readFromFile(FDT_DATA, p_themeFile);   
-  v_ThemeXmlData = v_ThemeXml.getLowLevelAccess();
-  
-  if(v_ThemeXmlData == NULL) {
-    throw Exception("error : unable analyse xml theme file");
+  v_xml.readFromFile(FDT_DATA, p_themeFile);
+
+  v_xmlElt = v_xml.getRootNode("xmoto_theme");
+  if(v_xmlElt == NULL) {
+    throw Exception("unable to analyze xml file");
   }
-  
-  /* read the theme name */
-  v_ThemeXmlDataElement = v_ThemeXmlData->FirstChildElement("xmoto_theme");
-  if(v_ThemeXmlDataElement != NULL) {
-    pc = v_ThemeXmlDataElement->Attribute("name");
-    m_name = pc;
-  }
-  
+
+  m_name = XMLDocument::getOption(v_xmlElt, "name");
   if(m_name == "") {
     throw Exception("error : the theme has no name !");
   }

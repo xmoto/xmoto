@@ -25,37 +25,32 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VXml.h"
 #include "UserConfig.h"
 #include "helpers/Log.h"
-
+#include "helpers/VExcept.h"
 
   /*===========================================================================
   Load from XML
   ===========================================================================*/
 	void UserConfig::loadFile(void) {
-	  XMLDocument ConfigDoc;
-	  
-	  ConfigDoc.readFromFile(FDT_CONFIG, XM_CONFIGFILE);
-	  TiXmlDocument *pConfigData = ConfigDoc.getLowLevelAccess();
-	  if(pConfigData != NULL) {
-	    TiXmlElement *pUserConfigElem = pConfigData->FirstChildElement("userconfig");
-	    if(pUserConfigElem != NULL) {
-	      for(TiXmlElement *pVarElem = pUserConfigElem->FirstChildElement("var"); pVarElem!=NULL;
-	          pVarElem = pVarElem->NextSiblingElement("var")) {
-	        std::string Name,Value;
-	        const char *pc;
-	        pc = pVarElem->Attribute("name");
-	        if(pc!=NULL) Name = pc;
-	        pc = pVarElem->Attribute("value");
-	        if(pc!=NULL) Value = pc;	        
-	        
-	        setValue(Name,Value);
-	      }
-	    }
-	    else 
-	      LogWarning("no configuration in " XM_CONFIGFILE);
+	  XMLDocument v_xml;
+	  xmlNodePtr  v_xmlElt;
+
+	  v_xml.readFromFile(FDT_CONFIG, XM_CONFIGFILE);
+	  v_xmlElt = v_xml.getRootNode("userconfig");
+	  if(v_xmlElt == NULL) {
+	    throw Exception("Unable to parse configuration file");
 	  }
-	  else
-	    LogWarning("failed to load or parse user configuration " XM_CONFIGFILE);
-	}
+
+	  for(xmlNodePtr pSubElem = XMLDocument::subElement(v_xmlElt, "var");
+	      pSubElem != NULL;
+	      pSubElem = XMLDocument::nextElement(pSubElem)) {
+	    std::string Name,Value;
+
+	    Name = XMLDocument::getOption(pSubElem, "name");
+	    Value = XMLDocument::getOption(pSubElem, "value");
+	    
+	    setValue(Name,Value);
+	  }
+  }
 
   /*===========================================================================
   Save to XML
@@ -71,8 +66,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    for(unsigned int i=0;i<m_Vars.size();i++) {
 	      char cBuf[256];
 	      snprintf(cBuf, 256, "\t<var name=%-25s value=%s />",
-								 ("\"" + XML::str2xmlstr(m_Vars[i]->Name)  + "\"").c_str(),
-								 ("\"" + XML::str2xmlstr(m_Vars[i]->Value) + "\"").c_str());
+						 ("\"" + XMLDocument::str2xmlstr(m_Vars[i]->Name)  + "\"").c_str(),
+						 ("\"" + XMLDocument::str2xmlstr(m_Vars[i]->Value) + "\"").c_str());
 	      XMFS::writeLine(pfh,cBuf);
 	    }
 	  

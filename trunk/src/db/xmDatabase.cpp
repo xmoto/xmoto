@@ -80,15 +80,18 @@ void xmDatabase::init(const std::string& i_dbFile,
 
   // if the previous value was not 0, force update
   std::string v_previousRequireUpdateAfterInit;
-  if(getXmParameterKey("requireUpdateAfterInit", v_previousRequireUpdateAfterInit) == false) {
-    m_requiredLevelsUpdateAfterInit  = true;
-    m_requiredReplaysUpdateAfterInit = true;
-    m_requiredThemesUpdateAfterInit  = true;
-  } else {
-    if(v_previousRequireUpdateAfterInit == "1") {
+
+  if(v_version > 0) { // the version 0 is special => xm_parameters still doesn't exist
+    if(getXmParameterKey("requireUpdateAfterInit", v_previousRequireUpdateAfterInit) == false) {
       m_requiredLevelsUpdateAfterInit  = true;
       m_requiredReplaysUpdateAfterInit = true;
       m_requiredThemesUpdateAfterInit  = true;
+    } else {
+      if(v_previousRequireUpdateAfterInit == "1") {
+	m_requiredLevelsUpdateAfterInit  = true;
+	m_requiredReplaysUpdateAfterInit = true;
+	m_requiredThemesUpdateAfterInit  = true;
+      }
     }
   }
 
@@ -103,7 +106,10 @@ void xmDatabase::init(const std::string& i_dbFile,
       i_interface->updatingDatabase(GAMETEXT_DB_UPGRADING);
     }
     // now, mark it as required in any case if case the player kills xmoto
-    setXmParameterKey("requireUpdateAfterInit", "1");
+    if(v_version > 0) { // the version 0 is special => xm_parameters still doesn't exist
+      setXmParameterKey("requireUpdateAfterInit", "1");
+    }
+
     upgradeXmDbToVersion(v_version, i_profile, i_interface); 
   }
 
@@ -405,6 +411,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     try {
       simpleSql("CREATE TABLE xm_parameters(param PRIMARY KEY, value);"
 		"INSERT INTO xm_parameters(param, value) VALUES(\"xmdb_version\", 1);");
+      setXmParameterKey("requireUpdateAfterInit", "1");
       v_sitekey = getXmDbSiteKey();
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 0: " + e.getMsg());
@@ -619,7 +626,11 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
 
   case 21:
     try {
-      updateDB_config("" /* site key still does exist */);
+      try {
+	updateDB_config("" /* site key still does exist */);
+      } catch(Exception &e) {
+	// ok, no upgrade
+      }
       updateXmDbVersion(22);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 21: " + e.getMsg());

@@ -27,11 +27,11 @@ class Line;
 #include "../helpers/VMath.h"
 #include "../helpers/Color.h"
 #include "../VTexture.h"
+#include "../VXml.h"
 #include <vector>
 
 class FileHandle;
 class XMLDocument;
-class TiXmlElement;
 class BSPPoly;
 class Block;
 class cpBody;
@@ -228,8 +228,8 @@ class Block {
   void unloadToPlay();
 
   void saveBinary(FileHandle *i_pfh);
-  static bool isPhysics_readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem);
-  static Block* readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem, bool i_loadMainLayerOnly); // return NULL if the block must not be loaded
+  static bool isPhysics_readFromXml(xmlNodePtr pElem);
+  static Block* readFromXml(xmlNodePtr pElem, bool i_loadMainLayerOnly); // return NULL if the block must not be loaded
   static Block* readFromBinary(FileHandle *i_pfh);
   AABB& getAABB();
   BoundingCircle& getBCircle() {

@@ -22,10 +22,6 @@ image_SOURCES = image/tim.cpp image/tim_io_stdio.cpp \
   image/tim_jpeg.cpp image/tim_memory_crt.cpp \
   image/tim_png.cpp image/tim.h
 
-tinyxml_SOURCES = tinyxml/tinystr.cpp tinyxml/tinyxml.cpp \
-  tinyxml/tinyxmlerror.cpp tinyxml/tinyxmlparser.cpp \
-  tinyxml/tinystr.h tinyxml/tinyxml.h
-
 md5_SOURCES = md5sum/md5.h md5sum/md5.c \
   md5sum/md5file.h md5sum/md5file.cpp
 
@@ -123,7 +119,7 @@ common_SOURCES = Image.cpp \
   VXml.cpp \
   $(xminclude_SOURCES) \
   $(helpers_SOURCES) \
-  $(image_SOURCES) $(tinyxml_SOURCES) \
+  $(image_SOURCES) \
   $(md5_SOURCES) \
   $(chipmunk_SOURCES) \
   Image.h \

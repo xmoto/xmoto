@@ -22,11 +22,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __ZONE_H__
 
 #include "../helpers/VMath.h"
+#include "../VXml.h"
 #include "BasicSceneStructs.h"
 #include <vector>
 
 class FileHandle;
-class TiXmlElement;
 
 /*===========================================================================
   Zone primitive
@@ -51,7 +51,7 @@ class ZonePrimBox : public ZonePrim {
   virtual bool doesCircleTouch(const Vector2f& i_cp, float i_cr);
   virtual void saveBinary(FileHandle *i_pfh);
   virtual ZonePrimType Type() const;
-  static ZonePrim* readFromXml(TiXmlElement *pElem);
+  static ZonePrim* readFromXml(xmlNodePtr pElem);
   static ZonePrim* readFromBinary(FileHandle *i_pfh);
 
   float Left()   const;
@@ -75,7 +75,7 @@ class Zone {
 
   bool doesCircleTouch(const Vector2f& i_cp, float i_cr);
   void saveBinary(FileHandle *i_pfh);
-  static Zone* readFromXml(TiXmlElement *pElem);
+  static Zone* readFromXml(xmlNodePtr pElem);
   static Zone* readFromBinary(FileHandle *i_pfh);
   AABB& getAABB() {return m_BBox;}
 

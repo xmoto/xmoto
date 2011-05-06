@@ -21,42 +21,38 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __VXML_H__
 #define __VXML_H__
 
-#include "VCommon.h"
-#include "tinyxml/tinyxml.h"
 #include <string>
 #include "VFileIO_types.h"
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 
-  /*===========================================================================
-  XML document
-  ===========================================================================*/
-  class XMLDocument {
-    public:
-      XMLDocument() {m_pXML = NULL;}
-      ~XMLDocument() {if(m_pXML) delete m_pXML;}
-    
-      /* Methods */
-      /* (if pnCRC32!=NULL, then readFromFile() should not parse XML,
-          but just calculate the CRC32 of the text file) */
-      void readFromFile(FileDataType i_fdt, std::string File,unsigned long *pnCRC32=NULL, bool i_includeCurrentDir=false);
-      void writeToFile(FileDataType i_fdt, std::string File);      
-      
-      /* Data interface */
-      TiXmlDocument *getLowLevelAccess(void) {return m_pXML;}
-    
-    private:
-      /* Data */
-      TiXmlDocument *m_pXML;
-  };
-
-
-  class XML {
+class XMLDocument {
   public:
-    static std::string str2xmlstr(std::string str);
-    static std::string getOption(TiXmlElement *pElem,std::string Name,std::string Default="");
-    static TiXmlElement *findElement(XMLDocument& i_source, TiXmlElement *pRoot,const std::string &Name); 
-    static std::string getElementText(XMLDocument& i_source, TiXmlElement *pRoot,std::string Name);
-    static void appendText(std::string &Text,const std::string &Append);
-  };
+  XMLDocument();
+  ~XMLDocument();
+
+  // clean the class
+  static void clean();
+  
+  /* Methods */
+  void readFromFile(FileDataType i_fdt, std::string File, bool i_includeCurrentDir=false);
+
+  xmlNodePtr getRootNode(const char* rootNameToCheck = NULL);
+
+  static xmlNodePtr subElement (xmlNodePtr node, const char* name);
+  static xmlNodePtr nextElement(xmlNodePtr node, const char* name = NULL);
+
+  static std::string getOption(xmlNodePtr node, const char* name, std::string Default = "");
+  static std::string getOption(xmlNodePtr node, xmlChar*    name, std::string Default = "");
+  static std::string getElementText(xmlNodePtr node);
+
+  static std::string str2xmlstr(std::string str);
+  
+  private:
+  static void XMLDocumentErrorFunc(void* ctx, const char* msg, ...);
+
+  xmlDocPtr m_doc;
+};
 
 #endif
 

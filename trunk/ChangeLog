@@ -2,6 +2,7 @@ X-Moto 0.5.8 2011-
 --------------------------------
  * no more need to disconnect/reconnect to change net mode
  * ctrl+n to change from ghost mode to slave mode and so on (or the checkbox)
+ * replace tinyxml by libxml2 (new dependancy)
 
 X-Moto 0.5.7 2011-04-08
 --------------------------------

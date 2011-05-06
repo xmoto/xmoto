@@ -56,7 +56,6 @@ class LevelsPack {
   void updateCount(xmDatabase *i_db, const std::string& i_profile);
 
   private:
-  void setHintsFromFile();
 
   std::string m_name;
   std::string m_group;
