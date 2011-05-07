@@ -72,7 +72,7 @@ public:
 
   /* load level */
   void loadLevelHook(std::string i_level, int i_percentage);
-  void updatingDatabase(std::string i_message);
+  void updatingDatabase(const std::string& i_message, int i_percentage);
 
   void reloadTheme();
 

@@ -82,7 +82,7 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 	  
 	    if(i_interface != NULL) {
 	      i_interface->updatingDatabase(std::string(GAMETEXT_DB_UPGRADING_STATS_PROFILE)
-					    + " " + v_playerName);
+					    + " " + v_playerName, -1);
 	    }
 
 	    /* Read per-level stats */

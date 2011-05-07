@@ -37,43 +37,67 @@ bool xmDatabase::Trace = false;
 xmDatabase::xmDatabase()
 {
   m_db = NULL;
+  m_openingVersion = -1;
 }
 
 void xmDatabase::setUpdateAfterInitDone() {
   setXmParameterKey("requireUpdateAfterInit", "0");
 }
 
-void xmDatabase::init(const std::string& i_dbFile,
+void xmDatabase::openIfNot(const std::string& i_dbFileUTF8) {
+  if(m_db != NULL) return;
+
+  //LogDebug("openDB(%X)", this);
+  if(sqlite3_open(i_dbFileUTF8.c_str(), &m_db) != 0) {
+    throw Exception("Unable to open the database (" + i_dbFileUTF8 + ") : " + sqlite3_errmsg(m_db));
+  }
+  
+  sqlite3_busy_timeout(m_db, DB_BUSY_TIMEOUT);
+  sqlite3_trace(m_db, sqlTrace, NULL);
+  createUserFunctions();
+
+  //  if(sqlite3_threadsafe() == 0) {
+  //    LogWarning("Sqlite is not threadSafe !!!");
+  //  } else {
+  //    LogInfo("Sqlite is threadSafe");
+  //  }
+
+  m_openingVersion = getXmDbVersion();
+}
+
+void xmDatabase::preInitForProfileLoading(const std::string& i_dbFileUTF8) {
+  openIfNot(i_dbFileUTF8);
+
+  // in case your db structure is not exactly the same, add some additionnal checks
+  if(m_openingVersion == XMDB_VERSION) {
+    return;
+  }
+
+  // be sure upgrade of xm_parameters table is done -- xm_parameters is required cause to the siteKey required for the profile
+  if(doesTableExists("xm_parameters") == false) {
+    simpleSql("CREATE TABLE xm_parameters(param PRIMARY KEY, value);");
+  }
+
+  // be sure upgrade of profiles_configs_configs is done -- profiles_configs is required to query values of profile config
+  if(doesTableExists("profiles_configs") == false) {
+    simpleSql("CREATE TABLE profiles_configs(id_profile, key, value, PRIMARY KEY(id_profile, key));");
+  }
+}
+
+void xmDatabase::init(const std::string& i_dbFileUTF8,
 		      const std::string& i_profile,
 		      const std::string& i_gameDataDir,
 		      const std::string& i_userDataDir,
 		      const std::string& i_binPackCheckSum,
 		      bool i_dbDirsCheck,
 		      XmDatabaseUpdateInterface *i_interface) {
-  int v_version;
 
   m_requiredLevelsUpdateAfterInit  = false;
   m_requiredReplaysUpdateAfterInit = false;
   m_requiredThemesUpdateAfterInit  = false;
 
-  //LogDebug("openDB(%X)", this);
-  if(sqlite3_open(i_dbFile.c_str(), &m_db) != 0) {
-    throw Exception("Unable to open the database (" + i_dbFile
-		    + ") : " + sqlite3_errmsg(m_db));
-  }
-
-  sqlite3_busy_timeout(m_db, DB_BUSY_TIMEOUT);
-  sqlite3_trace(m_db, sqlTrace, NULL);
-  createUserFunctions();
-
-//  if(sqlite3_threadsafe() == 0) {
-//    LogWarning("Sqlite is not threadSafe !!!");
-//  } else {
-//    LogInfo("Sqlite is threadSafe");
-//  }
-
-  v_version = getXmDbVersion();
-  LogInfo("XmDb version is %i", v_version);
+  openIfNot(i_dbFileUTF8);
+  LogInfo("XmDb version is %i", m_openingVersion);
 
   // mark all objects as requiring an update
   // will be set off - aims to allow people killing xmoto while updating
@@ -81,7 +105,7 @@ void xmDatabase::init(const std::string& i_dbFile,
   // if the previous value was not 0, force update
   std::string v_previousRequireUpdateAfterInit;
 
-  if(v_version > 0) { // the version 0 is special => xm_parameters still doesn't exist
+  if(m_openingVersion > 0) { // the version 0 is special => xm_parameters still doesn't exist
     if(getXmParameterKey("requireUpdateAfterInit", v_previousRequireUpdateAfterInit) == false) {
       m_requiredLevelsUpdateAfterInit  = true;
       m_requiredReplaysUpdateAfterInit = true;
@@ -95,22 +119,22 @@ void xmDatabase::init(const std::string& i_dbFile,
     }
   }
 
-  if(v_version > XMDB_VERSION) {
+  if(m_openingVersion > XMDB_VERSION) {
     throw Exception("Your XM database required a newer version of xmoto");
   }
 
-  if(v_version < XMDB_VERSION) {
-    LogInfo("Update XmDb version from %i to %i", v_version, XMDB_VERSION);
+  if(m_openingVersion < XMDB_VERSION) {
+    LogInfo("Update XmDb version from %i to %i", m_openingVersion, XMDB_VERSION);
 
     if(i_interface != NULL) {
-      i_interface->updatingDatabase(GAMETEXT_DB_UPGRADING);
+      i_interface->updatingDatabase(GAMETEXT_DB_UPGRADING, 0);
     }
     // now, mark it as required in any case if case the player kills xmoto
-    if(v_version > 0) { // the version 0 is special => xm_parameters still doesn't exist
+    if(m_openingVersion > 0) { // the version 0 is special => xm_parameters still doesn't exist
       setXmParameterKey("requireUpdateAfterInit", "1");
     }
 
-    upgradeXmDbToVersion(v_version, i_profile, i_interface); 
+    upgradeXmDbToVersion(m_openingVersion, i_profile, i_interface); 
   }
 
   /* check if gameDir and userDataDir are the same - otherwise, the computer probably changed */  
@@ -203,22 +227,14 @@ void xmDatabase::init(const std::string& i_dbFile, bool i_readOnly)
 //    }
 //  } else {
 //
-    if(sqlite3_open(i_dbFile.c_str(), &m_db) != 0){
-      if(m_db != NULL) {
-	sqlite3_close(m_db); // close even if it fails as requested in the documentation
-	m_db = NULL;
-      }
-      throw Exception("Unable to open the database (" + i_dbFile + ") : " + sqlite3_errmsg(m_db));
-    }
-//  }
 
-  sqlite3_busy_timeout(m_db, DB_BUSY_TIMEOUT);
-  sqlite3_trace(m_db, sqlTrace, NULL);
-  createUserFunctions();
+  openIfNot(i_dbFile);
 }
  
 xmDatabase::~xmDatabase() {
-  sqlite3_close(m_db);
+  if(m_db != NULL) {
+    sqlite3_close(m_db);
+  }
 }
 
 void xmDatabase::setTrace(bool i_value) {
@@ -307,6 +323,10 @@ int xmDatabase::getMemoryUsed() {
   return sqlite3_memory_used();
 }
 
+bool xmDatabase::doesTableExists(const std::string& i_table) {
+  return checkKey("SELECT count(1) FROM sqlite_master WHERE type='table' AND name='" + i_table + "';");
+}
+
 int xmDatabase::getXmDbVersion() {
   char **v_result;
   int nrow;
@@ -316,8 +336,7 @@ int xmDatabase::getXmDbVersion() {
   int v_version;
 
   /* check if table xm_parameters exists */
-  if(checkKey("SELECT count(1) FROM sqlite_master WHERE type='table' AND name='xm_parameters';")
-     == false) {
+  if(doesTableExists("xm_parameters") == false) {
     return 0;
   }
 
@@ -341,7 +360,7 @@ int xmDatabase::getXmDbVersion() {
   return v_version;
 }
 
-void xmDatabase::updateXmDbVersion(int i_newVersion) {
+void xmDatabase::updateXmDbVersion(int i_newVersion, XmDatabaseUpdateInterface *i_interface) {
   std::ostringstream v_newVersion;
   std::string v_errMsg;
 
@@ -349,6 +368,8 @@ void xmDatabase::updateXmDbVersion(int i_newVersion) {
 
   simpleSql("UPDATE xm_parameters SET value="+ v_newVersion.str() +
 	    " WHERE param=\"xmdb_version\";");
+
+  i_interface->updatingDatabase(GAMETEXT_DB_UPGRADING, (int)((i_newVersion*100) / XMDB_VERSION));
 }
 
 std::string xmDatabase::getXmDbSiteKey() {
@@ -409,8 +430,10 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
 
   case 0:
     try {
-      simpleSql("CREATE TABLE xm_parameters(param PRIMARY KEY, value);"
-		"INSERT INTO xm_parameters(param, value) VALUES(\"xmdb_version\", 1);");
+      if(doesTableExists("xm_parameters") == false) { // be carefull of preinit
+	simpleSql("CREATE TABLE xm_parameters(param PRIMARY KEY, value);");
+      }
+      simpleSql("INSERT INTO xm_parameters(param, value) VALUES(\"xmdb_version\", 1);");
       setXmParameterKey("requireUpdateAfterInit", "1");
       v_sitekey = getXmDbSiteKey();
     } catch(Exception &e) {
@@ -423,7 +446,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
 		"CREATE TABLE stats_profiles_levels("
 		"id_profile, id_level, nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime,"
 		"PRIMARY KEY(id_profile, id_level));");
-      updateXmDbVersion(2);
+      updateXmDbVersion(2, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 1: " + e.getMsg());
     }
@@ -439,7 +462,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       simpleSql("CREATE TABLE levels(id_level PRIMARY KEY,"
 		"filepath, name, checkSum, author, description, "
 		"date_str, packName, packNum, music, isScripted, isToReload);");
-      updateXmDbVersion(3);
+      updateXmDbVersion(3, i_interface);
       m_requiredLevelsUpdateAfterInit = true;
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 2: " + e.getMsg());
@@ -454,7 +477,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       } catch(Exception &e) {
 	LogError(std::string("Oups, updateDB_favorite() failed: " + e.getMsg()).c_str());
       }
-      updateXmDbVersion(4);
+      updateXmDbVersion(4, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 3: " + e.getMsg());
     }
@@ -470,7 +493,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       } catch(Exception &e) {
 	LogError(std::string("Oups, updateDB_profiles() failed: " + e.getMsg()).c_str());
       }
-      updateXmDbVersion(5);
+      updateXmDbVersion(5, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 4: " + e.getMsg());
     }
@@ -478,7 +501,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
   case 5:
     try {
       simpleSql("CREATE INDEX levels_packName_idx1 ON levels(packName);");
-      updateXmDbVersion(6);
+      updateXmDbVersion(6, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 5: " + e.getMsg());
     }
@@ -489,7 +512,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       simpleSql("CREATE INDEX replays_id_level_idx1   ON replays(id_level);");
       simpleSql("CREATE INDEX replays_id_profile_idx1 ON replays(id_profile);");
       m_requiredReplaysUpdateAfterInit = true;
-      updateXmDbVersion(7);
+      updateXmDbVersion(7, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 6: " + e.getMsg());
     }
@@ -499,7 +522,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       simpleSql("CREATE table webhighscores(id_room, id_level, id_profile, finishTime, date, fileUrl, PRIMARY KEY(id_room, id_level));");
       simpleSql("CREATE INDEX webhighscores_id_profile_idx1 ON webhighscores(id_profile);");
       simpleSql("CREATE INDEX webhighscores_date_idx1       ON webhighscores(date);");
-      updateXmDbVersion(8);
+      updateXmDbVersion(8, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 7: " + e.getMsg());
     }
@@ -510,7 +533,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       simpleSql("CREATE INDEX weblevels_difficulty_idx1 ON weblevels(difficulty);");
       simpleSql("CREATE INDEX weblevels_quality_idx1 ON weblevels(quality);");
       simpleSql("CREATE INDEX weblevels_creationDate_idx1 ON weblevels(creationDate);");
-      updateXmDbVersion(9);
+      updateXmDbVersion(9, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 8: " + e.getMsg());
     }
@@ -523,7 +546,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
 		DEFAULT_WEBROOM_ID ", \"" +
 		protectString(DEFAULT_WEBROOM_NAME) + "\", \"" +
 		protectString(DEFAULT_WEBHIGHSCORES_URL) + "\");");
-      updateXmDbVersion(10);
+      updateXmDbVersion(10, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 9: " + e.getMsg());
     }
@@ -532,7 +555,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     try {
       simpleSql("CREATE table themes(id_theme PRIMARY KEY, filepath, checkSum);");
       m_requiredThemesUpdateAfterInit = true;
-      updateXmDbVersion(11);
+      updateXmDbVersion(11, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 10: " + e.getMsg());
     }
@@ -540,7 +563,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
   case 11:
     try {
       simpleSql("CREATE table webthemes(id_theme PRIMARY KEY, fileUrl, checkSum);");
-      updateXmDbVersion(12);
+      updateXmDbVersion(12, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 11: " + e.getMsg());
     }
@@ -549,7 +572,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     try {
       simpleSql("ALTER TABLE stats_profiles_levels ADD COLUMN last_play_date DEFAULT NULL;");
       simpleSql("CREATE INDEX stats_profiles_levels_last_play_date_idx1 ON stats_profiles_levels(last_play_date);");
-      updateXmDbVersion(13);
+      updateXmDbVersion(13, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 12: " + e.getMsg());
     }
@@ -558,7 +581,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     try {
       simpleSql("ALTER TABLE weblevels ADD COLUMN crappy DEFAULT 0;");
       simpleSql("CREATE INDEX weblevels_crappy_idx1 ON weblevels(crappy);");
-      updateXmDbVersion(14);
+      updateXmDbVersion(14, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 13: " + e.getMsg());
     }
@@ -566,7 +589,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
   case 14:
     try {
       simpleSql("CREATE INDEX webhighscores_finishTime_idx1 ON webhighscores(finishTime);");
-      updateXmDbVersion(15);
+      updateXmDbVersion(15, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 14: " + e.getMsg());
     }
@@ -574,7 +597,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
   case 15:
     try {
       simpleSql("CREATE TABLE levels_blacklist(id_profile, id_level, PRIMARY KEY(id_profile, id_level));");
-      updateXmDbVersion(16);
+      updateXmDbVersion(16, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 15: " + e.getMsg());
     }
@@ -582,7 +605,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
   case 16:
     try {
       simpleSql("CREATE INDEX webhighscores_id_level_idx1 ON webhighscores(id_level);");
-      updateXmDbVersion(17);
+      updateXmDbVersion(17, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 16: " + e.getMsg());
     }
@@ -591,7 +614,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     try {
       // fix stats_profiles_levels due to old old old xmoto versions
       fixStatsProfilesLevelsNbCompleted();
-      updateXmDbVersion(18);
+      updateXmDbVersion(18, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 17: " + e.getMsg());
     }
@@ -602,7 +625,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       simpleSql("DELETE from webhighscores;");
       simpleSql("UPDATE profile_completedLevels SET finishTime=finishTime*100;");
       simpleSql("UPDATE stats_profiles_levels   SET playedTime=playedTime*100;");
-      updateXmDbVersion(19);
+      updateXmDbVersion(19, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 18: " + e.getMsg());
     }
@@ -611,15 +634,17 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     try {
       simpleSql("ALTER TABLE weblevels ADD COLUMN children_compliant DEFAULT 1;");
       simpleSql("CREATE INDEX weblevels_children_compliant_idx1 ON weblevels(children_compliant);");
-      updateXmDbVersion(20);
+      updateXmDbVersion(20, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 19: " + e.getMsg());
     }
 
   case 20:
     try {
-      simpleSql("CREATE TABLE profiles_configs(id_profile, key, value, PRIMARY KEY(id_profile, key));");
-      updateXmDbVersion(21);
+      if(doesTableExists("profiles_configs") == false) { // be carefull of preinit
+	simpleSql("CREATE TABLE profiles_configs(id_profile, key, value, PRIMARY KEY(id_profile, key));");
+      }
+      updateXmDbVersion(21, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 20: " + e.getMsg());
     }
@@ -631,7 +656,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       } catch(Exception &e) {
 	// ok, no upgrade
       }
-      updateXmDbVersion(22);
+      updateXmDbVersion(22, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 21: " + e.getMsg());
     }
@@ -644,7 +669,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       simpleSql("INSERT INTO  stats_profiles SELECT \"" + protectString(v_sitekey) + "\", id_profile, nbStarts, since FROM stats_profiles_old;");
       simpleSql("DROP   TABLE stats_profiles_old;");
 
-      updateXmDbVersion(23);
+      updateXmDbVersion(23, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 22: " + e.getMsg());
     }
@@ -661,7 +686,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       // index not redondante with the key while it is choiced when sitekey is not set ; make xmoto really faster
       simpleSql("CREATE INDEX stats_profiles_levels_id_profile_id_level_idx1 ON stats_profiles_levels(id_profile, id_level);");
 
-      updateXmDbVersion(24);
+      updateXmDbVersion(24, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 23: " + e.getMsg());
     }
@@ -680,7 +705,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       simpleSql("CREATE INDEX profile_completedLevels_idx2 "
 		"ON profile_completedLevels(id_profile, id_level);");
 
-      updateXmDbVersion(25);
+      updateXmDbVersion(25, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 24: " + e.getMsg());
     }
@@ -689,7 +714,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     try {
       simpleSql("ALTER TABLE levels ADD COLUMN isPhysics DEFAULT 0;");
       simpleSql("CREATE INDEX levels_isPhysics_idx1 ON levels(isPhysics);");
-      updateXmDbVersion(26);
+      updateXmDbVersion(26, i_interface);
       m_requiredLevelsUpdateAfterInit = true;
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 25: " + e.getMsg());
@@ -701,7 +726,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       simpleSql("CREATE INDEX profile_completedLevels_dbSync_idx1 ON profile_completedLevels(dbSync);");
       simpleSql("ALTER TABLE stats_profiles_levels ADD COLUMN dbSync DEFAULT NULL;");
       simpleSql("CREATE INDEX stats_profiles_levels_dbSync_idx1 ON stats_profiles_levels(dbSync);");
-      updateXmDbVersion(27);
+      updateXmDbVersion(27, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 26: " + e.getMsg());
     }
@@ -709,7 +734,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
   case 27:
     try {
       simpleSql("CREATE TABLE profiles_votes(id_profile, id_level, PRIMARY KEY(id_profile, id_level));");
-      updateXmDbVersion(28);
+      updateXmDbVersion(28, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 27: " + e.getMsg());
     }
@@ -719,7 +744,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       simpleSql("ALTER TABLE levels ADD COLUMN loadingCacheFormatVersion DEFAULT NULL;");
       simpleSql("ALTER TABLE levels ADD COLUMN loaded DEFAULT NULL;");
       simpleSql("CREATE INDEX levels_checkSum_idx1 ON levels(checkSum);");
-      updateXmDbVersion(29);
+      updateXmDbVersion(29, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 28: " + e.getMsg());
     }
@@ -727,7 +752,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
   case 29:
     try {
       simpleSql("CREATE TABLE levels_mywebhighscores(id_profile, id_room, id_level, PRIMARY KEY(id_profile, id_room, id_level));");
-      updateXmDbVersion(30);
+      updateXmDbVersion(30, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 29: " + e.getMsg());
     }
@@ -738,7 +763,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       simpleSql("ALTER TABLE levels_mywebhighscores ADD COLUMN known_stolen_date;");
       simpleSql("CREATE INDEX levels_mywebhighscores_idx1 ON levels_mywebhighscores(known_stolen);");
       simpleSql("CREATE INDEX levels_mywebhighscores_idx2 ON levels_mywebhighscores(known_stolen_date);");
-      updateXmDbVersion(31);
+      updateXmDbVersion(31, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 30: " + e.getMsg());
     }
@@ -746,7 +771,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
   case 31:
     try {
       simpleSql("CREATE TABLE srv_admins(id INTEGER PRIMARY KEY AUTOINCREMENT, id_profile UNIQUE, password);");
-      updateXmDbVersion(32);
+      updateXmDbVersion(32, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 31: " + e.getMsg());
     }
@@ -754,7 +779,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
   case 32:
     try {
       simpleSql("CREATE TABLE srv_bans(id INTEGER PRIMARY KEY AUTOINCREMENT, id_profile, ip, from_date, nb_days);");
-      updateXmDbVersion(33);
+      updateXmDbVersion(33, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 32: " + e.getMsg());
     }
@@ -763,7 +788,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     try {
       simpleSql("ALTER TABLE weblevels ADD COLUMN vote_locked DEFAULT 0;");
       simpleSql("CREATE INDEX weblevels_vote_locked_idx1 ON weblevels(vote_locked);");
-      updateXmDbVersion(34);
+      updateXmDbVersion(34, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 33: " + e.getMsg());
     }
@@ -805,7 +830,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
 	simpleSql("COMMIT;"); // anyway, commit what can be commited
       }
 
-      updateXmDbVersion(35);
+      updateXmDbVersion(35, i_interface);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 34: " + e.getMsg());
     }

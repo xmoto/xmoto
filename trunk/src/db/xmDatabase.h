@@ -38,6 +38,8 @@ private:
   virtual ~xmDatabase();
 
 public:
+  void preInitForProfileLoading(const std::string& i_dbFileUTF8);
+  // global init (upgrade data model)
   void init(const std::string& i_dbFileUTF8,
 	    const std::string& i_profile,
 	    const std::string& i_gameDataDir,
@@ -45,6 +47,7 @@ public:
 	    const std::string& i_binPackCheckSum,
 	    bool i_dbDirsCheck,
 	    XmDatabaseUpdateInterface *i_interface = NULL);
+  // simple init (for subthreads)
   void init(const std::string& i_dbFileUTF8, bool i_readOnly = false);
   void setUpdateAfterInitDone(); // call once, update after init are done
   int  getXmDbVersion();
@@ -212,6 +215,10 @@ public:
   bool m_requiredThemesUpdateAfterInit;
   static bool Trace;
 
+  // internal opening
+  void openIfNot(const std::string& i_dbFileUTF8);
+  int m_openingVersion;
+
   /* add user function for db */
   void createUserFunctions();
   static void user_xm_floord(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
@@ -226,7 +233,7 @@ public:
   void upgradeXmDbToVersion(int i_fromVersion,
 			    const std::string& i_profile,
 			    XmDatabaseUpdateInterface *i_interface = NULL);
-  void updateXmDbVersion(int i_newVersion);
+  void updateXmDbVersion(int i_newVersion, XmDatabaseUpdateInterface *i_interface);
   std::string getXmDbGameDataDir();
   std::string getXmDbUserDataDir();
   std::string getXmDbBinPackCheckSum();
@@ -258,6 +265,7 @@ public:
   /* i_sql must be of form select count() from */
   bool checkKey(const std::string& i_sql);
   void simpleSql(const std::string& i_sql);
+  bool doesTableExists(const std::string& i_table);
 
   /* conversion of old files */
   void updateDB_stats(XmDatabaseUpdateInterface *i_interface = NULL);    /* statistics */
