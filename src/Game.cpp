@@ -685,8 +685,8 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
   }
 }
 
-void GameApp::updatingDatabase(std::string i_message) {
-  _UpdateLoadingScreen(i_message);
+void GameApp::updatingDatabase(const std::string& i_message, int i_percentage) {
+  _UpdateLoadingScreen(i_message, i_percentage);
 
   /* pump events to so that windows don't think the appli is crashed */
   SDL_PumpEvents();

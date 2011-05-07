@@ -292,11 +292,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   /* database */
   /* thus, resolution/bpp/windowed parameters cannot be stored in the db (or some minor modifications are required) */
   xmDatabase* pDb = xmDatabase::instance("main");
-  pDb->init(DATABASE_FILE,
-	    XMSession::instance()->profile() == "" ? std::string("") : XMSession::instance()->profile(),
-	    XMFS::getSystemDataDir(), XMFS::getUserDir(FDT_DATA), XMFS::binCheckSum(),
-	    v_xmArgs.isOptNoDBDirsCheck() == false,
-	    NULL); // v_useGraphics : NULL because drawlib is still not initialized
+  pDb->preInitForProfileLoading(DATABASE_FILE);
 
   // db trace
   if(XMSession::instance()->sqlTrace()) {
@@ -362,6 +358,13 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 	    XMSession::instance()->bpp());
     /* */
   }
+
+  /* init the database (fully, including upgrades) */
+  pDb->init(DATABASE_FILE,
+	    XMSession::instance()->profile() == "" ? std::string("") : XMSession::instance()->profile(),
+	    XMFS::getSystemDataDir(), XMFS::getUserDir(FDT_DATA), XMFS::binCheckSum(),
+	    v_xmArgs.isOptNoDBDirsCheck() == false,
+	    v_useGraphics ? this : NULL);
 
   if(v_useGraphics) {
     // allocate the statemanager instance so that if it fails, it's not in a thread (serverThread for example)

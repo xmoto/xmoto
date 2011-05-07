@@ -66,7 +66,7 @@ void xmDatabase::updateDB_profiles(XmDatabaseUpdateInterface *i_interface) {
 	
 	if(i_interface != NULL) {
 	  i_interface->updatingDatabase(std::string(GAMETEXT_DB_UPGRADING_PROFILE)
-					+ " " + v_playerName);
+					+ " " + v_playerName, -1);
 	}
 
 	v_nNumCompleted =  XMFS::readInt_LE(pfh);
