@@ -586,13 +586,6 @@ void Level::loadXML(bool i_loadMainLayerOnly) {
     /* Get script */
     xmlNodePtr pScriptElem = XMLDocument::subElement(v_levelElt, "script");
 
-    if(pScriptElem == NULL && pInfoElem != NULL) {
-      pScriptElem = XMLDocument::subElement(pInfoElem, "script");
-      if(pScriptElem != NULL) {
-	printf("xxx %s (%s)\n", m_id.c_str(), m_fileName.c_str());
-      }
-    }
-
     if(pScriptElem != NULL) {
       m_isScripted = true;
 
