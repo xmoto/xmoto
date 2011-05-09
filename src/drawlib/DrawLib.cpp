@@ -44,6 +44,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "DrawLibSDLgfx.h"
 #endif
 
+bool DrawLib::m_initialized = false;
+
   DrawLib::backendtype DrawLib::m_backend = DrawLib::backend_None;
 
   DrawLib* DrawLib::DrawLibFromName(std::string i_drawLibName) {
@@ -73,6 +75,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_backend = backend_None;
     return NULL;
   }
+
+void DrawLib::init(unsigned int nDispWidth, unsigned int nDispHeight, unsigned int nDispBPP, bool bWindowed) {
+  m_initialized = true;
+}
+
+bool DrawLib::isInitialized() {
+  return m_initialized;
+}
 
 void DrawLib::checkFontPrerequites() {
   if(XMFS::fileExists(FDT_DATA, FontManager::getDrawFontFile()) == false) {

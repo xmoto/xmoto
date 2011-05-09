@@ -76,6 +76,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_MAX_NB_LOOPS_WITH_NORENDERING 5
 #define XM_MAX_FRAMELATE_TO_FORCE_NORENDERING 10
 
+#define XMSERVER_BUF     80
+#define XMSERVER_STRBUF "80"
+
 #ifdef __amigaos4__
 #include <dos/dos.h>
 #include <proto/exec.h>
@@ -364,7 +367,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 	    XMSession::instance()->profile() == "" ? std::string("") : XMSession::instance()->profile(),
 	    XMFS::getSystemDataDir(), XMFS::getUserDir(FDT_DATA), XMFS::binCheckSum(),
 	    v_xmArgs.isOptNoDBDirsCheck() == false,
-	    v_useGraphics ? this : NULL);
+	    this);
 
   if(v_useGraphics) {
     // allocate the statemanager instance so that if it fails, it's not in a thread (serverThread for example)
@@ -422,10 +425,10 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 
   /* load levels */
   if(pDb->levels_isIndexUptodate() == false) {
-    LevelsManager::instance()->reloadLevelsFromLvl(pDb, v_xmArgs.isOptServerOnly(), v_useGraphics ? this : NULL);
+    LevelsManager::instance()->reloadLevelsFromLvl(pDb, v_xmArgs.isOptServerOnly(), this);
     v_updateAfterInitDone = true;
   }
-  LevelsManager::instance()->reloadExternalLevels(pDb, v_useGraphics ? this : NULL);
+  LevelsManager::instance()->reloadExternalLevels(pDb, this);
   
   /* Update replays */
   if(pDb->replays_isIndexUptodate() == false) {
@@ -591,8 +594,14 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     }
   }
 
+  // reset the loading screen
+  if(DrawLib::isInitialized() == false) {
+    _UpdateLoadingShell(); // no more loading screen
+  }
+
   if(v_xmArgs.isOptServerOnly()) {
     try {
+      // start the server
       m_standAloneServer = NetServer::instance();
       NetServer::instance()->setStandAloneOptions();
       NetServer::instance()->start(false,
@@ -976,6 +985,19 @@ void GameApp::run_unload() {
   /*===========================================================================
   Update loading screen
   ===========================================================================*/
+ void GameApp::_UpdateLoadingShell(const std::string &NextTask, int i_percentage) {
+   char buf[XMSERVER_BUF]; // max line size allowed
+
+   printf("\r%" XMSERVER_STRBUF "s", ""); // erase
+   if(i_percentage >= 0) {
+     snprintf(buf, XMSERVER_BUF, "%s (%i%%)", NextTask.c_str(), i_percentage);
+   } else {
+     snprintf(buf, XMSERVER_BUF, "%s", NextTask.c_str());
+   }
+   printf("\r%s", buf);
+   fflush(stdout);
+ }
+
   void GameApp::_UpdateLoadingScreen(const std::string &NextTask, int i_percentage) {
     FontManager* v_fm;
     FontGlyph* v_fg;

@@ -675,10 +675,14 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
     std::ostringstream v_percentage;
     v_percentage << i_percentage;
     v_percentage << "%";
-    _UpdateLoadingScreen(std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str(), i_percentage);
-    
-    /* pump events to so that windows don't think the appli is crashed */
-    SDL_PumpEvents();
+
+    if(DrawLib::isInitialized()) {
+      _UpdateLoadingScreen(std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str(), i_percentage);
+      /* pump events to so that windows don't think the appli is crashed */
+      SDL_PumpEvents();
+    } else {
+      _UpdateLoadingShell(std::string(GAMETEXT_LOAD_LEVEL_HOOK), i_percentage);
+    }
 
     // update percentage
     m_loadLevelHook_per = i_percentage;
@@ -686,10 +690,13 @@ void GameApp::loadLevelHook(std::string i_level, int i_percentage)
 }
 
 void GameApp::updatingDatabase(const std::string& i_message, int i_percentage) {
-  _UpdateLoadingScreen(i_message, i_percentage);
-
-  /* pump events to so that windows don't think the appli is crashed */
-  SDL_PumpEvents();
+  if(DrawLib::isInitialized()) {
+    _UpdateLoadingScreen(i_message, i_percentage);
+    /* pump events to so that windows don't think the appli is crashed */
+    SDL_PumpEvents();
+  } else {
+    _UpdateLoadingShell(i_message, i_percentage);
+  }
 }
 
 NetServer* GameApp::standAloneServer() {

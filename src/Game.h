@@ -253,6 +253,7 @@ private:
   /* Helpers */
 
   void _UpdateLoadingScreen(const std::string &NextTask = "", int i_percentage = -1);
+  void _UpdateLoadingShell(const std::string &NextTask = "", int i_percentage = -1);
       
   void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
   void _DownloadExtraLevels(void);
