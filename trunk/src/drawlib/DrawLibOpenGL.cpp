@@ -228,7 +228,9 @@ void DrawLibOpenGL::setLineWidth(float width){
   glLineWidth(width);
 }
  
-void DrawLibOpenGL::init(unsigned int nDispWidth, unsigned int nDispHeight, unsigned int nDispBPP, bool bWindowed){
+void DrawLibOpenGL::init(unsigned int nDispWidth, unsigned int nDispHeight, unsigned int nDispBPP, bool bWindowed) {
+  DrawLib::init(nDispWidth, nDispHeight, nDispBPP, bWindowed);
+
   /* Set suggestions */
   m_nDispWidth  = nDispWidth;
   m_nDispHeight = nDispHeight;

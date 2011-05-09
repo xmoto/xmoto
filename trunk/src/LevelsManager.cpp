@@ -692,7 +692,7 @@ void LevelsManager::reloadExternalLevels(xmDatabase* i_db, bool i_loadMainLayerO
     }
 
     if(i_loadLevelsInterface != NULL) {
-      i_loadLevelsInterface->loadLevelHook(v_levelName, (i*100) / LvlFiles.size());
+      i_loadLevelsInterface->loadLevelHook(v_levelName, ((i+1)*100) / LvlFiles.size());
     }
   }
 
@@ -783,7 +783,7 @@ void LevelsManager::reloadInternalLevels(xmDatabase* i_db, bool i_loadMainLayerO
     }
 
     if(i_loadLevelsInterface != NULL) {
-      i_loadLevelsInterface->loadLevelHook(v_levelName, (i*100) / LvlFiles.size());
+      i_loadLevelsInterface->loadLevelHook(v_levelName, ((i+1)*100) / LvlFiles.size());
     }
   }
 

@@ -112,8 +112,9 @@ class DrawLib {
   /**
    * initialize the screen
    **/
+  static bool isInitialized();
   virtual void init(unsigned int nDispWidth, unsigned int nDispHeight,
-		    unsigned int nDispBPP, bool bWindowed) = 0;
+		    unsigned int nDispBPP, bool bWindowed);
   
   virtual void unInit() = 0;
   
@@ -267,6 +268,7 @@ class DrawLib {
 
  private:
   static backendtype m_backend;
+  static bool m_initialized;
 };
 
 #endif
