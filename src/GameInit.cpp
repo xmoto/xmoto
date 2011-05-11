@@ -269,7 +269,7 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
     struct sigaction v_act;
 
     v_act.sa_handler  = xmexit_term;
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(__FreeBSD__)
     v_act.sa_restorer = NULL;
 #endif
     sigemptyset(&v_act.sa_mask);
