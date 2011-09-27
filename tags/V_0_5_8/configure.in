@@ -1,0 +1,345 @@
+AC_INIT(src/GameInit.cpp)
+
+AC_CANONICAL_TARGET()
+AM_INIT_AUTOMAKE(xmoto,0.5.8)
+AC_GNU_SOURCE
+
+AC_PROG_CXX
+AC_PROG_CPP
+AC_PROG_INSTALL
+
+dnl endianness
+dnl libkern/OSByteOrder.h for macosx
+AC_CHECK_HEADERS(libkern/OSByteOrder.h)
+AC_C_BIGENDIAN(AC_DEFINE([XMOTO_BIG_ENDIAN]),
+AC_DEFINE([XMOTO_LITTLE_ENDIAN]))
+
+dnl sqlite
+AC_CHECK_HEADERS([sqlite3.h],[SQLITE_LIBS=-lsqlite3],[AC_MSG_ERROR("sqlite3 required")])
+AC_CHECK_LIB(sqlite3, main,[],[AC_MSG_ERROR("Linking against sqlite3 failed.")])
+AC_SUBST(SQLITE_LIBS)
+
+dnl libz before png
+AC_CHECK_LIB(z, uncompress, [], [AC_MSG_ERROR(zlib required)])
+AC_CHECK_LIB(jpeg, jpeg_CreateCompress, [], [AC_MSG_ERROR(libjpeg required)])
+AC_CHECK_LIB(png, png_read_image, [], [AC_MSG_ERROR(libpng required)])
+
+dnl libxml2
+if test "$target_os" != "mingw32"
+then
+AM_PATH_XML2([], 
+             AC_DEFINE(HAVE_XML2, 1),
+             [AC_MSG_ERROR([*** cannot find the libxml2 library ])])
+AC_SUBST(XML_CPPFLAGS)
+AC_SUBST(XML_LIBS)
+CPPFLAGS="$CPPFLAGS"" ""$XML_CPPFLAGS"
+CFLAGS="$CFLAGS"" ""$XML_CPPFLAGS"
+LDFLAGS="$LDFLAGS"" ""$XML_LIBS"
+fi
+
+dnl bz2
+if test "$target_os" = "mingw32" # on windows, don't include libbz2
+then
+  USE_INTERNAL_BZ2="1"
+else
+  AC_ARG_WITH([internal-bz2],
+    [AS_HELP_STRING([--with-internal-bz2=0|1],
+    [internal-bz2])],
+    [USE_INTERNAL_BZ2="$withval"],
+    [USE_INTERNAL_BZ2="0"]
+  )
+fi
+AC_SUBST([USE_INTERNAL_BZ2])
+
+if test "$USE_INTERNAL_BZ2" = "0"
+then
+  AC_CHECK_LIB(bz2, BZ2_bzReadOpen, [], [AC_MSG_ERROR(libbz2 required or --with-internal-bz2=1)])
+fi
+AM_CONDITIONAL([USE_INTERNAL_BZ2], test "$USE_INTERNAL_BZ2" = "1")
+
+
+dnl xdg
+if test "$target_os" = "mingw32" # on windows, don't include libxdg
+then
+  USE_INTERNAL_XDG="1"
+else
+  AC_ARG_WITH([internal-xdg],
+    [AS_HELP_STRING([--with-internal-xdg=0|1],
+    [internal-xdg])],
+    [USE_INTERNAL_XDG="$withval"],
+    [USE_INTERNAL_XDG="0"]
+  )
+fi
+AC_SUBST([USE_INTERNAL_XDG])
+
+if test "$USE_INTERNAL_XDG" = "0"
+then
+  AC_CHECK_LIB(xdg-basedir, xdgInitHandle,[],[AC_MSG_ERROR(libxdg-basedir required or --with-internal-xdg=1)])
+else
+  CXXFLAGS="$CXXFLAGS"" ""-I""$ac_abs_confdir""/src/xdgbasedir/include"
+  CFLAGS="$CFLAGS"" ""-I""$ac_abs_confdir""/src/xdgbasedir/include"
+fi
+AM_CONDITIONAL([USE_INTERNAL_XDG], test "$USE_INTERNAL_XDG" = "1")
+
+
+# on windows, don't check ; on mac, it's included into the framework
+if test "$target_os" != "mingw32" -a "$with_apple_opengl_framework" != "yes"
+then
+  AC_CHECK_LIB(GLU, gluBuild2DMipmaps, [], [AC_MSG_ERROR(glu required)])
+fi
+
+if test "$target_os" = "mingw32" # others libraries required by mingw32
+then
+  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -mwindows -luserenv -lintl -lSDL_ttf -lSDL_mixer -lSDL_net -lode xmoto_icone.o" # -mwindows to avoid dos window
+  # -MD is for gettext (see gettext faq)
+  CFLAGS="$CFLAGS"" -mthreads -MD"     # threads
+  CXXFLAGS="$CXXFLAGS"" -mthreads -MD" # threads
+  LDFLAGS="$LDFLAGS"" -mthreads -MD"   # threads
+  CFLAGS="$CFLAGS"" -DdDOUBLE"         # ode double
+  CXXFLAGS="$CXXFLAGS"" -DdDOUBLE"     # ode double
+  HAVEDGETCONFIGURATION=1              # ode dGetConfiguration function
+
+  # libxml
+  CFLAGS="$CFLAGS"" "" -I/usr/i586-mingw32msvc/include/libxml"
+  CXXFLAGS="$CXXFLAGS"" "" -I/usr/i586-mingw32msvc/include/libxml"
+  CFLAGS="$CFLAGS"" ""-DLIBXML_STATIC"
+  CXXFLAGS="$CXXFLAGS"" ""-DLIBXML_STATIC"
+  MINGW32_LIBS="$MINGW32_LIBS"" -lxml2"
+
+  # this one should be removed once i've found why it doesn't use it on my computer  
+  LDFLAGS="$LDFLAGS"" -L/usr/i586-mingw32msvc/lib"
+  AC_SUBST([MINGW32_LIBS])
+fi
+AM_CONDITIONAL([WIN32], test "$target_os" = "mingw32")
+
+if test "$target_os" != "mingw32"
+then
+  dnl SDL on OS X wants HAVE_ICONV_H defined if the header exists
+  AC_CHECK_HEADERS(iconv.h)
+  
+  AM_PATH_SDL(1.0.0, [], [AC_MSG_ERROR(SDL required)])
+  AC_SDL_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
+  AC_SDL_CHECK_LIB(SDL_net, SDLNet_TCP_Open, [], [AC_MSG_ERROR(SDL_net required)])
+
+  dnl sdl_ttf
+  #AC_CHECK_HEADERS([SDL/SDL_ttf.h],[],[AC_MSG_ERROR(SDL_ttf headers required)])
+  AC_SDL_CHECK_LIB(SDL_ttf, TTF_OpenFont, [], [AC_MSG_ERROR(SDL_ttf lib required)])
+fi
+
+dnl openGl
+AC_ARG_WITH([renderer-openGl],
+  [AS_HELP_STRING([--with-renderer-openGl=0|1],
+    [RendererOpenGl])],
+  [USE_OPENGL="$withval"],
+  [USE_OPENGL="1"]
+)
+AC_SUBST([USE_OPENGL])
+
+if test "$USE_OPENGL" = "1"
+then
+  AX_CHECK_GL()
+fi
+AM_CONDITIONAL([USE_OPENGL], test "$USE_OPENGL" = "1")
+
+dnl sdlGfx
+AC_ARG_WITH([renderer-sdlGfx],
+  [AS_HELP_STRING([--with-renderer-sdlGfx=0|1],
+    [RendererSdlGfx])],
+  [USE_SDLGFX="$withval"],
+  [USE_SDLGFX="0"]
+)
+AC_SUBST([USE_SDLGFX])
+
+if test "$USE_SDLGFX" = "1"
+then
+  AC_SDL_CHECK_LIB(SDL_gfx, pixelColor, [], [AC_MSG_ERROR(SDL_gfx required)])
+fi
+AM_CONDITIONAL([USE_SDLGFX], test "$USE_SDLGFX" = "1")
+
+AC_SEARCH_LIBS(lua_pushboolean,lua lua5.1 lua50, [], [AC_MSG_ERROR(liblua5.1, liblua50, or liblua required)])
+AC_SEARCH_LIBS(luaopen_math,lualib lualib5.1 lualib50, [], [AC_MSG_ERROR(liblualib5.1, liblualib50, or liblualib required)])
+
+dnl ***** Check lua headers, as they are prone to be located random places on random systems! *****
+dnl The following three lines where suggested by Eric Piel, but they don't seem to work on my system
+dnl AC_CHECK_HEADERS(lua.h lua/lua.h lua50/lua.h, [break], [AC_MSG_ERROR(Could not find lua.h)])
+dnl AC_CHECK_HEADERS(lauxlib.h lua/lauxlib.h lua50/lauxlib.h, [break], [AC_MSG_ERROR(Could not find luaxlib.h)])
+dnl AC_CHECK_HEADERS(lualib.h lua/lualib.h lua50/lualib.h, [break], [AC_MSG_ERROR(Could not find lualib.h)])
+
+dnl search in this order to put in USE_LUA_VERSION the recenter version
+dnl in .h inclusion, order is reversed to include the recenter version
+USE_LUA_VERSION="unknown"
+AC_CHECK_HEADER(lua.h,        AC_DEFINE(HAVE_LUA_H)       [USE_LUA_VERSION="unknown"])
+AC_CHECK_HEADER(lua/lua.h,    AC_DEFINE(HAVE_LUA_LUA_H)   [USE_LUA_VERSION="unknown"])
+AC_CHECK_HEADER(lua50/lua.h,  AC_DEFINE(HAVE_LUA50_LUA_H) [USE_LUA_VERSION="5.0"])
+AC_CHECK_HEADER(lua51/lua.h,  AC_DEFINE(HAVE_LUA51_LUA_H) [USE_LUA_VERSION="5.1"])
+AC_CHECK_HEADER(lua5.1/lua.h, AC_DEFINE(HAVE_LUA5_1_LUA_H)[USE_LUA_VERSION="5.1"])
+
+AC_LANG_PUSH([C++])
+
+if test "$target_os" != "mingw32" # make me crazy to detect it because it compiles
+then
+  AC_SEARCH_LIBS(dJointAttach,ode,
+		[ODECFLAGS=`ode-config --cflags`],
+		[AC_MSG_ERROR(libode required)], -lstdc++)
+
+  AC_SEARCH_LIBS(dGetConfiguration,ode,
+		[HAVEDGETCONFIGURATION=1],
+		[HAVEDGETCONFIGURATION=0], -lstdc++)
+
+  CXXFLAGS="$CXXFLAGS"" ""$ODECFLAGS"
+  CFLAGS="$CFLAGS"" ""$ODECFLAGS"
+fi
+AC_SUBST([HAVEDGETCONFIGURATION])
+
+AC_LANG_POP()
+
+AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_ERROR(libcurl required)])
+
+ALL_LINGUAS="fr_FR de_DE es_ES ca_ES gl_ES ca_FR ca_AD ca_IT sk_SK nb_NO nn_NO fi_FI pl_PL ru_RU it_IT sv_SE cs_CZ pt_BR pt_PT lv_LV da_DK hu_HU nl_NL lt_LT zh_TW tr_TR"
+AM_GNU_GETTEXT()
+
+dnl Put LOCALESDIR in makefiles
+AC_ARG_WITH([localesdir],
+  [AS_HELP_STRING([--with-localesdir=DIR],
+    [Override the default directory for locales])],
+  [LOCALESDIR="$withval"],
+  [LOCALESDIR="$localedir"]
+)
+if test "$target_os" = "mingw32"
+then
+  LOCALESDIR="locale"
+fi
+AC_SUBST([LOCALESDIR])
+
+dnl Put GAMEDATADIR in makefiles
+AC_ARG_WITH([gamedatadir],
+  [AS_HELP_STRING([--with-gamedatadir=DIR],
+    [Override the default directory for game data])],
+  [GAMEDATADIR="$withval"],
+  [GAMEDATADIR="$datadir/$PACKAGE"]
+)
+AC_SUBST([GAMEDATADIR])
+
+dnl Put ALLOW_ZOOMING in makefiles
+AC_ARG_WITH([enable-dev],
+  [AS_HELP_STRING([--with-enable-dev=0|1],
+    [Enable dev])],
+  [ALLOW_DEV="$withval"],
+  [ALLOW_DEV="0"]
+)
+AC_SUBST([ALLOW_DEV])
+
+# instead of -g -O2
+UNOPTIMIZED_CFLAGS=`echo "$CFLAGS" | sed -e s+"\-O2"++`
+UNOPTIMIZED_CXXFLAGS=`echo "$CXXFLAGS" | sed -e s+"\-O2"++`
+
+AC_ARG_WITH([unoptimized],
+  [AS_HELP_STRING([--with-unoptimized=0|1],
+    [Enable unoptimized])],
+  [CXXFLAGS=$UNOPTIMIZED_CXXFLAGS]
+  [CFLAGS=$UNOPTIMIZED_CFLAGS]
+)
+AC_SUBST([ALLOW_DEV])
+
+dnl Put DEFAULT_THEME in makefiles
+AC_ARG_WITH([default-theme],
+  [AS_HELP_STRING([--with-default-theme=],
+    [Default theme])],
+  [CONFIGURE_DEFAULT_THEME="$withval"],
+  [CONFIGURE_DEFAULT_THEME="Modern"]
+)
+AC_SUBST([CONFIGURE_DEFAULT_THEME])
+
+dnl asian font
+if test "$target_os" = "mingw32" # windows...
+then
+  DEFAULT_ASIAN_TTF_FILE="Textures/Fonts/wqy-zenhei.ttc"
+else
+  DEFAULT_ASIAN_TTF_FILE="/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+fi
+
+AC_ARG_WITH([asian-ttf-file],
+  [AS_HELP_STRING([--with-asian-ttf-file=],
+    [Asian ttf file])],
+  [ASIAN_TTF_FILE="$withval"],
+  [ASIAN_TTF_FILE="$DEFAULT_ASIAN_TTF_FILE"]
+)
+AC_SUBST([ASIAN_TTF_FILE])
+
+dnl Can't build xmoto.bin if we're cross-compiling
+AM_CONDITIONAL(CROSS_COMPILING,test "$cross_compiling" = yes)
+
+AC_OUTPUT(Makefile bin/Makefile po/Makefile.in src/Makefile extra/Makefile intl/Makefile)
+
+# display is something is missing
+displayRequirement() {
+  STUFF="$1"
+  VAR="$2"
+  GOOD_RES="$3"
+  REQ="$4"
+
+  if test "$VAR" = "$GOOD_RES"; then
+    printf "| %16s | %10s | %63s |\n" "$STUFF" "enabled" "(""$REQ"")"
+  else
+    printf "| %16s | %10s | %63s |\n" "$STUFF" "disabled" "(""$REQ"" missing)"
+  fi
+}
+
+displayValue() {
+  STUFF="$1"
+  VAR="$2"
+  COMMENT="$3"
+
+  printf "| %16s | %10s | %63s |\n" "$STUFF" "$VAR" "(""$COMMENT"")"
+}
+
+
+displayVersion() {
+  LIB="$1"
+  VERSION="$2"
+  printf "| %16s | %10s | %63s |\n" "$LIB" "$VERSION" ""
+}
+
+use_gettext=no
+if test "$gt_cv_func_gnugettext1_libc" = "yes"
+then
+  use_gettext="yes"
+fi
+if test "$gt_cv_func_gnugettext1_libintl" = "yes"
+then
+  use_gettext="yes"
+fi
+
+echo
+echo   "+------------------+------------+-----------------------------------------------------------------+"
+displayRequirement "Locales" "$use_gettext" "yes" "gettext"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
+displayRequirement "Asian ttf file" "$ASIAN_TTF_FILE" "$ASIAN_TTF_FILE" "$ASIAN_TTF_FILE"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
+displayVersion "Lua" "$USE_LUA_VERSION"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
+displayRequirement "Dev" "$with_enable_dev" "1" "--with-enable-dev=1 (for non official packages)"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
+displayRequirement "Fast compilation" "$with_unoptimized" "1" "--with-unoptimized=1"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
+displayValue "Default theme" "$CONFIGURE_DEFAULT_THEME" "--with-default-theme=""$CONFIGURE_DEFAULT_THEME"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
+displayRequirement "OpenGl" "$USE_OPENGL" "1" "--with-renderer-openGl=1"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
+
+if test "$USE_INTERNAL_BZ2" = "1"
+   then
+   displayVersion "bz2" "internal"
+   echo   "+------------------+------------+-----------------------------------------------------------------+"
+fi
+
+if test "$USE_INTERNAL_XDG" = "1"
+   then
+   displayVersion "xdgbasedir" "internal"
+   echo   "+------------------+------------+-----------------------------------------------------------------+"
+fi
+
+displayRequirement "SdlGfx" "$USE_SDLGFX" "1" "--with-renderer-sdlGfx=1 (unsafe)"
+echo   "+------------------+------------+-----------------------------------------------------------------+"
+
+echo "target os: ""$target_os"

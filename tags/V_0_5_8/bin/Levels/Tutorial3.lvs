@@ -1,0 +1,208 @@
+FirstZone = {}
+SecondZone = {}
+ThirdZone = {}
+FourthZone = {}
+FifthZone = {}
+
+TutorialStage = 0
+
+function Tick() 	
+	if TutorialStage < 0 then
+		-- No messages when we have teleported
+		return true
+	end
+	
+	-- Stages
+	if TutorialStage == 1 then
+		if Game.GetTime() > 7 then
+			TutorialStage = 2
+
+			Game.ClearMessages()			
+			Game.Message("The basic idea is that when driving on the rear wheel,\nyour head is lowered quite a lot...")
+		end
+	elseif TutorialStage == 2 then
+		if Game.GetTime() > 17 then
+			TutorialStage = 3			
+
+			Game.ClearMessages()			
+			Game.Message("The difficult part is to keep the balance.\nWhen the distance you have to drive is quite short,\nyou don't need to keep the balance.")
+		end
+	elseif TutorialStage == 3 then
+		if Game.GetTime() > 27 then
+			TutorialStage = 4			
+			Game.ClearMessages()
+			Game.Message("Accelerate (slowly) to the right with the front wheel raising.\nJust before your head hit the block, make a quick left/right\ncombination, and you should be on the other side.\nTry it...")
+		end
+	elseif TutorialStage == 5 then
+		if (Game.GetTime() - Zone2Time) > 4 then
+			TutorialStage = 6
+			Game.ClearMessages()
+			Game.Message("Now you'll try a bit more difficult one...\nThis time keep your hands off the left and right arrow keys,\nthey're not delicate enough to help you keep balance.")
+		end
+	elseif TutorialStage == 6 then
+		if (Game.GetTime() - Zone2Time) > 13 then
+			TutorialStage = 7
+			Game.ClearMessages()
+			Game.Message("Instead regulate your angle by accelerating and braking.\nTry to drive a bit back and forth on your rear wheel,\nkeeping the bike as steady as possible...")
+		end
+	elseif TutorialStage == 7 then
+		if (Game.GetTime() - Zone2Time) > 23 then
+			TutorialStage = 8
+			Game.ClearMessages()
+			Game.Message("Try getting under the next obstacle when you feel you're ready.")
+		end
+	elseif TutorialStage == 10 then
+		if (Game.GetTime() - Zone4Time) > 24 then
+			TutorialStage = 11
+			Game.ClearMessages()
+			Game.Message("That will cause the rear suspension to increase the\nlength of the jump.\nTry it...")
+		end
+	end
+		
+	return true
+end
+
+function TUT3_JumpToPart1()
+        Game.AddPenaltyTime(10)
+	x,y = Game.GetEntityPos("Part1")
+	Game.SetPlayerPosition(x,y,1)
+	TutorialStage = -1
+	Game.ClearMessages()
+end
+
+function TUT3_JumpToPart2()
+        Game.AddPenaltyTime(20)
+	x,y = Game.GetEntityPos("Part2")
+	Game.SetPlayerPosition(x,y,1)
+	TutorialStage = -1
+	Game.ClearMessages()
+end
+
+function TUT3_JumpToPart3()
+        Game.AddPenaltyTime(30)
+	x,y = Game.GetEntityPos("Part3")
+	Game.SetPlayerPosition(x,y,1)
+	TutorialStage = -1
+	Game.ClearMessages()
+end
+
+function TUT3_JumpToPart4()
+        Game.AddPenaltyTime(40)
+	x,y = Game.GetEntityPos("Part4")
+	Game.SetPlayerPosition(x,y,1)
+	TutorialStage = -1
+	Game.ClearMessages()
+end
+
+function TUT3_JumpToPart5()
+        Game.AddPenaltyTime(50)
+	x,y = Game.GetEntityPos("Part5")
+	Game.SetPlayerPosition(x,y,1)
+	TutorialStage = -1
+	Game.ClearMessages()
+end
+
+function OnLoad()
+	-- Set up key hooks (shortcuts to different parts of the tutorial)
+	Game.SetKeyHook("1","TUT3_JumpToPart1")
+	Game.SetKeyHook("2","TUT3_JumpToPart2")
+	Game.SetKeyHook("3","TUT3_JumpToPart3")
+	Game.SetKeyHook("4","TUT3_JumpToPart4")
+	Game.SetKeyHook("5","TUT3_JumpToPart5")
+	
+	return true
+end		
+
+function FirstZone.OnEnter()
+	if TutorialStage < 0 then
+		-- No messages when we have teleported
+		return
+	end
+
+	if TutorialStage < 1 then
+		-- First part of tutorial...
+		TutorialStage = 1
+		
+		Game.ClearMessages()
+		Game.Message("This tutorial will teach you to rear-wheel through\nareas where the ceiling is low.\nBeware that this can be pretty difficult :)")
+	end
+end
+
+function FirstZone.OnLeave()
+end
+
+function SecondZone.OnEnter()
+	if TutorialStage < 0 then
+		-- No messages when we have teleported
+		return
+	end
+
+	if TutorialStage <= 4 then
+		-- Second part of tutorial...
+		TutorialStage = 5
+		Zone2Time = Game.GetTime()
+
+		Game.ClearMessages()
+		Game.Message("Not that difficult, right?")
+	end
+end
+
+function SecondZone.OnLeave()
+end
+
+function ThirdZone.OnEnter()
+	if TutorialStage < 0 then
+		-- No messages when we have teleported
+		return
+	end
+
+	if TutorialStage <= 8 then
+		-- Third part of tutorial...
+		TutorialStage = 9
+		Zone3Time = Game.GetTime()
+
+		Game.ClearMessages()
+		Game.Message("Nice! Now try the next one, it's a bit more difficult...")
+	end
+end
+
+function ThirdZone.OnLeave()
+end
+
+function FourthZone.OnEnter()
+	if TutorialStage < 0 then
+		-- No messages when we have teleported
+		return
+	end
+
+	if TutorialStage <= 9 then
+		-- Fourth part of tutorial...
+		TutorialStage = 10
+		Zone4Time = Game.GetTime()
+
+		Game.ClearMessages()
+		Game.Message("Good job! The next one is even more difficult...")
+	end
+end
+
+function FourthZone.OnLeave()
+end
+
+function FifthZone.OnEnter()
+	if TutorialStage < 0 then
+		-- No messages when we have teleported
+		return
+	end
+
+	if TutorialStage <= 10 then
+		-- Last part of tutorial...
+		TutorialStage = 11
+
+		Game.ClearMessages()
+		Game.Message("Now for the final one... It's not that long, but instead\nthere's even less room for your precious head. Good luck! :)")
+	end
+end
+
+function FifthZone.OnLeave()
+end
+

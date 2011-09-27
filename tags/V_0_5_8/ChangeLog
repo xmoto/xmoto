@@ -1,0 +1,645 @@
+X-Moto 0.5.8 2011-09-27
+--------------------------------
+ * no more need to disconnect/reconnect to change net mode
+ * ctrl+n to change from ghost mode to slave mode and so on (or the checkbox)
+ * replace tinyxml by libxml2 (new dependancy)
+ * xmoto 0.5.8 doesn't support microsoft windows (xmoto.exe crashes at startup since libxml2 integration is done, i don't know why).
+
+X-Moto 0.5.7 2011-04-08
+--------------------------------
+ * fix a bug that make xmoto crashes
+ * improve network performances
+
+X-Moto 0.5.6 2011-03-26
+--------------------------------
+ * dark background behind the chat messages
+ * add ctrl+p to prefill chat box with previous private recipients
+ * new options : --serverPort and --serverAdminPassword
+ * server rules system (points in slave mode)
+ * possibility to send a report on the website when a level crashes
+ * monospace font for the admin console (DejaVuSansMono.ttf)
+ * performances improvements (mainly for the server)
+ * update munin plugins
+ * fix some bugs (if you win and lost at exactly the same time, you lost)
+
+X-Moto 0.5.5 2011-01-21
+--------------------------------
+ * replay support for physics levels
+ * improve network mode performances
+ * private message support on network interface
+ * several keys are now customizable via the options
+ * GetPlayerProfileName script function is now deprecated
+ * some minor fixes
+
+X-Moto 0.5.4 2010-11-30
+--------------------------------
+ * Add a button in the network tab to join levels played by other people
+ * Remove the downloading ghost screen (background download)
+ * Add a button to watch the replay just after death or finish
+ * Add a configuration checkbox to be able to connect to the server at startup
+ * Add 2 configuration control keys to change the chat history
+ * Display time required for the next medal in game
+ * Completion for chat box and server console
+ * Change default chineese font name from wqy-zenhei.ttf to wqy-zenhei.ttc
+ * fix played time counted 2 times when using checkpoints
+ * minor bugs fixed
+
+X-Moto 0.5.3 2010-04-30
+--------------------------------
+ * Ugly Mode heavily improved (Menu GFX and Scripted Sprites)
+ * xdg-basedir implementation
+ * bugfix: Compile with ode 0.11
+ * bugfix: Rendering no more stalls on level restart
+ * bugfix: Messages System (also for multiplayer)
+ * bugfix: Multiplayer: Screen Shadow
+ * bugfix: Multiplayer: Minimap
+ * bugfix: Multiplayer: Time Panel & Game Status
+ * bugfix: Multiplayer: Death Sound for all Players
+ * bugfix: libode compatibility
+ * bugfix: edge rendering order improved
+ * bugfix: better Quickstart behaviour
+ * graphics: Death Zones, Teleport Zones and Particles rendered in low level gfx modes
+ * graphics: modes toggle by using F10
+ * graphics: 3 graphics modes now: Contrast mode, light graphics, full graphics
+ * graphics: animated textures
+ * Checkpoints implementation
+ * audio: new music foxrun
+ * new level pack: Whatshisname Cup
+ * control options: separate tabs for players
+ * munin plugin
+
+X-Moto 0.5.2 2009-09-02
+-----------------------
+ * wait for corpse lying still until dead menu pops up
+ * F1 also available while playing level
+ * new camera mode: Trail Cam + Ghost Trail View
+ * added camera smoothness
+ * added NewAge level pack
+ * graphics: improved messages rendering
+ * graphics: improved minimap colors
+ * graphics: display colored + alphaed blocks and edges
+ * graphics: two different textures for drifted sky
+ * graphics: improve display of replayHelp
+ * graphics: new particle effect (Sparkle)
+ * new script function (ScriptTimers)
+ * some new features for the console
+ * some net improvements
+ * add option --updateLevelsOnly
+ * remove sprite rendering if GFX_LOW
+ * bugfix: textures < 256 were displayed too big on blocks.
+ * bugfix: fixed screenBox according to camera angle
+ * bugfix: fixed problem with joystick input breaking levelview and credits mode
+ * bugfix: allow dyn blocks in the second main layer to work
+ * bugfix: some minor bugs and compiler warnings
+
+X-Moto 0.5.1 2009-04-12
+-----------------------
+ * Track stolen levels (new pack + info box)
+ * Change restart button (enter by default) and show console (world_18)
+ * After changing the game settings, the game must be restarted (info box)
+ * Chineese language support
+ * Chipmunk hash functions to improve performances
+ * Make levels/replays db load faster
+ * Filter on rooms lists
+ *  --server option to run the server only (without the gui)
+ * After death, display the menu after a few seconds
+ * bugfix: Pushing the "Backspace" key will crash/close Xmoto
+ * bugfix: Segmentation fault on gfx quality change
+ * bugfix: Load downloded levels into the database after a levels download failure 
+ * bugfix: Xmoto crashes with unknown block in scripting.
+ * bugfix: Segmentation fault in replays
+ * bugfix: change reference room doenst update the player name @xxx
+ * bugfix: Replay Strawberry Time Glitch
+ * bugfix: Replays Menu glitch.
+ * bugfix: chat box can be opened many times at the same time
+ * bugfix: proxy configuration bug
+
+X-Moto 0.5.0 2008-11-28
+-----------------------
+ * added dependency for SDL_net
+ * first network support (proof of concept)
+ * synchronisation of the database with the webserver to share it among the places you play X-Moto
+ * chipmunk integration. Blocks reacts to physics, joints and scripts calls (require special levels) - replay saving still unsupported
+ * save config separatly for each profile
+ * --noDBDirsCheck command line options added. It disables the files find when X-Moto detects that you changed your configuration directory (usefull if you use X-Moto on a USB key)
+ * --defaultTheme option to change the default theme for new profiles (and --with-default-theme= at compilation time) ; so that packager can change it.
+ * optimisations for particles handling
+ * joystick support improved
+ * special chars (unicode) is now allowed in the edit controls
+ * input handling improvement (better keys configuration)
+ * ingame voting system
+ * show ghost time difference while watching replays
+ * make next/previous level buttons work with highscores
+ * make it possible to pause the game and change config
+ * When dead animation: Follow the driver instead of the backwheel
+ * optimize dynamic blocks, particle sources and entities handling
+ * optimize string printing in opengl
+ * new script functions : GetPlayerVelocity, GetPlayerSpeed, GetPlayerAngle
+ * add a scale factor to block textures
+ * add an arrow pointing the off-screen ghosts
+ * fix: mirror mode : the minimap is not mirrored
+ * fix: remove unused textures from memory
+ * fix: display the last frame of replays
+ * fix: levels and drivers names with weird symbols are not shown correctly
+ * fix: show the exact time of death while playing a replay
+ * fix: Scale LevelPackViewer window to full screen size
+ * fix: xmoto crashed with SIGSEGV in atoi at startup
+ * fix: xmoto crash due to invalid utf-8 char splitting
+ * fix: ODE INTERNAL ERROR 1: assertion "g_bODEInitialized" failed in dCloseODE()
+ * fix: make keyboard key interface algorithm switch better
+ * fix: button and frame blinking sometimes
+ * fix: menu buttons are grey after playing
+ * fix: f5 doesn't recompute the numbers of levels made
+ * fix: commanline options alter config
+
+X-Moto 0.4.2 2008-03-18
+-----------------------
+ * several rooms possible in configuration
+ * option to remove levels not suitable for children
+ * man page is no more gunzipped
+ * AddPenaltyTime(), PlaySound(), PlayMusic(), StopMusic(), AddForceToPlayer(), SetCameraRotationSpeed() script functions (patches by gaivota)
+ * ctrl + down/up in replays to adjust speed
+ * --cleanNoWWWLevels to clean levels which are no longer available on the website (move them into ~/.xmoto/Trash)
+ * some other minor modifications
+
+X-Moto 0.4.1 2008-02-13
+-----------------------
+ * remove svnversion dependency for compilation
+ * fix .desktop file
+ * fix sqlite troubles
+ * some new options to make videos
+ * ctrl+s : enable/disable sound
+
+X-Moto 0.4.0 2008-01-27
+-----------------------
+ * lot of code rewritten/cleaned
+ * multi-threading (mainling for www connexions ; require that g++ uses posix thread model (g++ -v to check))
+ * chineese translation, ttf font is "/usr/share/fonts/truetype/arphic/bkai00mp.ttf", it can be changed via the configure script (--with-asian-ttf-file) ; (this font is required to be able to play if locale is cn_CN) => chineese translation is finally reported for 0.4.1
+ * patch by Antti Harri and Lasse Collin (extracted from extreme tuxracer) to manage maximum texture size load
+ * filter on list is for all columns
+ * multiscenes mode for multiplayers (each player has his own scene)
+ * ctrl+b to add/remove from blacklisted levels list
+ * ctrl+m to use mirror mode
+ * resource use reduced when xmoto is iconified or focus is lost
+ * tab to autozoom
+ * smoother replay interpolation
+ * some command line options to generate pictures (so that you can convert easily replays to videos (transcode command line is written in the log))
+ * new "length" packs by Mig
+
+X-Moto 0.3.4 2007-10-17
+-----------------------
+ * add a shadow to some text to make it more readable
+ * crappy flag : crappy levels are hidden in the packs (but are visible in the crappy pack)
+ * danish translation
+ * bugs fixed
+
+X-Moto 0.3.3 2007-08-28
+-----------------------
+ * a directory specially for screenshots
+ * check md5sum for theme update
+ * Portuguese translation
+ * command line options changed
+ * pageup/pagedown to play next/previous level
+ * new command line option to choose the config dir (on a usb key for example)
+   xmoto --configpath /media/usbkey/xmoto (or e:/xmoto on windows)
+ * multi ghosts
+ * minor improvements
+ * some bugs fixed
+
+X-Moto 0.3.2 2007-07-29
+-----------------------
+ * Brazilian Portuguese and Latvian translations
+ * some important bugs fixed for windows and mac os x
+
+X-Moto 0.3.1 2007-07-03
+-----------------------
+ * some important bugs fixed
+
+X-Moto 0.3.0 2007-06-13
+-----------------------
+ * libsqlite integration (for a better and faster data managing)
+ * libcurl is now mandatory
+ * sdl_ttf integration (DejaVuSans.ttf is used)
+ * utf-8 integration
+ * full translation for : en sk fr no de fi ca es pl ru it sv
+ * windows user dir is now %APPDIR%/.xmoto
+ * mode multi players on the same computer (mono world)
+ * code cleaning
+ * favorite levels are saved by profile
+ * new virtual packs (last played levels, medals, ...)
+ * a quick play button to directly play at xmoto start
+ * smoother interpolation for replays (ctrl+i to enable/disable it)
+ * F8 to disable automatic web connexion (for ghost for example)
+ * xmoto toto.lvl or xmoto -levelFile toto.lvl to directly start from an lvl
+ * ~/.xmoto/Levels/MyLevels for levels developpers : this directory is reloaded at each startup
+ * alt+enter to switch fullscreen/not fullscreen (doesn't work on windows)
+ * new script functions (SetDynamicBlockSelfRotation, addForceToPlayer, ...)
+ * "New available levels" can now be clicked
+ * some graphic bugs fixed
+ * some minor bugs fixed
+
+X-Moto 0.2.7 2007-03-14
+ * add ghost while replaying
+ * bug fixed:
+ ** correct the second layer of static blocks
+ ** particle sources are no longer clipped out of the screen
+ ** windows specific bugs : music
+ ** man page fixed
+ ** and more bug fixed...
+
+X-Moto 0.2.6 2007-03-03
+ * performances improved (better framerate)
+ * SDL-GFX rendering in option (instead of OpenGL, beta code, 16 bpp only)
+ * a randomize button to puzzle any package list
+ * you can associate a rpl to xmoto (ie xmoto replay.rpl play the rpl file)
+ * filter on lists
+ * problem with 64bits architecture should be fixed
+ * texture of the level border can be changed
+ * more options to draw the sky
+ * you can associate a music to a level
+ * mingw supported ; visual studio c++ no longer supported
+ * votes from the website as packs (pack easiest levels, hardest levels, nicest levels)
+ * Sprites of flowers, strawberries and wreckers can be changed specially for a level
+ * sounds are themable
+ * add support for multi layer (parallax scrolling) rendering
+ * gettext for windows
+ * adding levels and sprites from the website
+ * some important bugs fixed
+
+X-Moto 0.2.4 2006-12-22
+-----------------------
+ * Correcting a bug which made some scripted levels unplayable
+
+X-Moto 0.2.3 2006-12-22
+-----------------------
+ * Significantly lowered load times due to new level and replay index.
+   (Press F5 in the main menu to reload the levels if you make your
+   own levels or install any manually)
+ * Built-in levels are now bundled as a level pack.
+ * Some patches from FreeBSD port applied.
+ * Spanish and catalan translations (for unix only).
+ * New -unpack command-line option for xmoto. See top of src/Packager.cpp
+   for details about its usage or check the wiki.
+ * xmoto-edit is no longer part of the main xmoto package, and will
+   eventually have its own package. The -pack command-line option have been
+   moved from xmoto-edit to xmoto.
+ * Some changes on the user interface: Tabs reorganised and scrollbars.
+ * Virtual packages
+ * New levels list is now saved when you quit xmoto
+ * Favorites levels tab
+
+X-Moto 0.2.2 2006-10-03
+-----------------------
+ * IMPORTANT: People with big-endian CPUs (PowerPC, etc) should clean their
+   level cache when upgrading; that is, the first time you start the game,
+   use the -cleancache command-line argument. Alternatively delete all files
+   in your LCache/ directory.
+ * Minimap now visible in -ugly mode again.
+ * Entity colors in -ugly mode adjusted.
+ * F9 to toggle -ugly mode from inside the game, F10 to toggle
+   theme testing mode.
+ * More in-game options.
+ * German translation (for unix only).
+ * New built-in level.
+ * Bug about undisplayed entities on big-endian computers corrected.
+ * Some other bugs fixed.
+
+X-Moto 0.2.1 2006-09-14
+-----------------------
+ * X-Moto is no more ALPHA!
+ * ppc computer can now read and write x86 replays (patch by Dave Vasilevsky)
+ * upload highscores from the game
+ * webrooms configuration
+ * Man pages (from debian package)
+ * desktop files and icon for kde/gnome (by SnowBear)
+ * -nowww option to force xmoto to not connect on the web
+ * -testTheme option to test your themes
+ * new functions for scripted levels
+ * grip parameter for blocks (to make ice blocks for example)
+ * auto-adaptation of the camera (depending on the gravity/wind)
+ * uglier ugly mode (for slower computer; press F1 to switch ugly mode)
+ * translations [french] (for unix only)
+ * collision between body and sprites
+ * level preview animation before playing (patch by Frederic Huard)
+ * Some minor improvements
+ * Several bugs fixed.
+
+X-Moto 0.2.0 (alpha) 2006-07-28
+-------------------------------
+ * Yet a new version numbering policy: Last number incremented for
+   bug-fix releases, middle one is even for official releases and
+   uneven for development (CVS) versions.
+ * No longer fancy ghost graphics in -ugly mode.
+ * Ghost now visible on minimap.
+ * New optional "rversion" <level> attribute, which allows level
+   designers to specify the X-Moto version required to play a level.
+ * Bug with in-game ghost information display fixed.
+ * Player statistics.
+ * New textures, sprites, and edge effects (RedBricks, GrayBricks,
+   and BlueBricks).
+ * You can now keep the up and down arrows of lists pressed to list
+   the levels.
+ * Various new script functions (see MotoGameL.cpp for details).
+ * Added dependency for libbz2 (for web transfer compression).
+ * Menu music and new sound effects by Jens Erler.
+ * More graphics.
+ * Better collision detection. Bike behaviour is affected slightly.
+ * Custom themes (replacable graphics).
+ * Press character keys to quickly navigate through level lists.
+ * Several minor improvements and some bugs fixed.
+ * Joystick patch by Christoph Sommer applied.
+
+X-Moto 0.1.16 (alpha) 2006-06-16
+--------------------------------
+ * Ghost replays while playing.
+ * Game should work with AMD64 again now. The long standing corrupted
+   fonts in editor-bug on AMD64 has also been fixed.
+ * Automatic list of screen resolutions (patch by Emmanuel Gorse).
+ * Scripted levels are now recordable.
+ * PreDraw() in script is not good because it depends on framerate,
+   use Tick() instead.
+ * Hitting "return" while playing now restarts the level immediately.
+ * A sound is played when you make a new highscore.
+ * Optional automatic saving of replays if it's a highscore.
+ * Mouse buttons can now be used to control the bike.
+ * A button to view a highscore's replay easily, and downloads it if
+   it is missing.
+ * Updated to support the new Lua 5.1.
+ * Faster scanning of replays.
+ * Game no longer crashes if a level is using an unknown texture.
+ * Some bugs fixed.
+ * Editor: Supports use of &lt; and &gt; instead of < and > in
+   embedded scripts.
+
+X-Moto 0.1.14 (alpha) 2006-05-19
+--------------------------------
+ * New version numbering policy: If the last number is even it's
+   a stable X-Moto release, otherwise it's an unstable development
+   version (from CVS).
+ * Major bug in the player head/entity collision detection code fixed.
+ * Level files are now cached for much faster loading time.
+ * Integration with Nicolas Adenis-Lamarre's website; World records
+   can now be seen inside the game, and new levels can be downloaded
+   automatically.
+ * New (optional) library dependency: libcurl. If library isn't found
+   by ./configure, the online high-score system is disabled, so please
+   install libcurl (version 3) before upgrading to X-Moto 0.1.14.
+   (This does not affect X-Moto on Windows, libcurl is included with
+   the game there).
+ * Slight physics adjustment: It should no longer be possible to fall
+   through the ground when standing still. Stay calm, this should NOT
+   affect the gameplay.
+ * Alpha-testing enabled for sprites; which are less fuzzy looking
+   now. Also looks better with anti-aliasing.
+ * Lots of new UI stuff, including context help.
+ * It's now possible to see what level you're playing.
+ * Less retarded usage of SDL_Delay(), UI more responsive.
+ * Fixed bug that made it difficult to click tabs in level info
+   viewer.
+ * "Next Level" button also for external levels now.
+ * 8 new built-in levels, including 4 by Torben Green, and one by
+   Thomas Kjaerulff.
+ * More control over playback of replays: Up/down to increase/decrease
+   speed and space to pause.
+ * External levels ordered alphabetically.
+ * Automatic replay naming.
+ * Various minor changes and several other small bugs fixed.
+ * Windows specific: Upgraded to SDL 1.2.10 and SDL_mixer 1.2.7.
+
+X-Moto 0.1.12 (alpha) 2006-04-09
+--------------------------------
+ * Fixed a bug that prevented the game from compiling with g++ 4.1.
+ * Removed unfinished joystick configuration interface from the menu.
+ * New LUA (script) functions. See src/MotoGameL.cpp for details.
+ * Files in xmoto.bin are now prioritized lower when loading.
+ * Tutorials updated.
+ * New built-in levels.
+ * Scripts can now be encapsulated directly in .lvl-files.
+ * Now you'll see an icon beside the clock, indicating the the current
+   objective.
+ * Added a "Next Level" button to the in-game menus.
+ * You can now have several levels of sub-directories in your Levels/
+   directory.
+ * Introduced the concept of "level packs", i.e. logical groupings of
+   levels. The tutorials are now considered a level pack. Note that
+   levels which are in a level pack can't be seen in the "External
+   Levels" list.
+ * Various minor changes and some small bugs fixed.
+
+X-Moto 0.1.11 (alpha) 2006-02-05
+--------------------------------
+ * Major optimization of collision detection. The framerate should be
+   many-doubled when playing geometry-heavy levels.
+ * Game no longer quits if a level specified by the user or a replay
+   isn't found.
+ * Made a change that hopefully should make mouse movement less
+   inresponsive on some systems.
+ * Integrated a patch by Eric Piel that makes the game play more
+   smooth, most notable on lower end systems.
+ * Added a (hopefully) better set of build configuration scripts, also
+   by Eric Piel. Please notify me if some compatibility is broken by
+   this, and I'll try to fix it as fast as possible.
+ * New -benchmark option to play with.
+ * The user is now warned if he's entering a level with geometrical
+   errors.
+ * The -replay option now accepts replays regardless of their
+   location.
+ * It should now longer be possible to move head through level
+   geometry at high speed or by flipping.
+ * A couple of new built-in levels.
+ * Level limits are now not invisible when using -ugly.
+ * Various minor changes and several small bugs fixed.
+
+X-Moto 0.1.10 (alpha) 2005-12-03
+--------------------------------
+ * Nasty (and very stupid) bug that prevented new replays from being
+   shown, has been fixed.
+ * Spamming your console is no longer default behaviour. If you want
+   to enable it, use the new -v command-line option.
+ * Log messages are now written to xmoto.log (also on Windows, so
+   there's no longer a stdout.txt).
+ * Fixed an bug that prevented the game from compiling on Mac OS X
+   (thanks again Maxime Biais).
+ * The game now defaults to listing all replays, not only the ones
+   made by the current player.
+
+X-Moto 0.1.9 (alpha)  2005-12-01
+--------------------------------
+ * Added a level information viewing user interface, including in-menu
+   shortcuts to best times and replays for a specific level.
+ * Fixed a bug that caused the game to misbehave if escape was pressed
+   while entering the name of a replay to save.
+ * Better handling of events in replays (for instance, picked-up
+   strawberries are no longer gone when rewinding).
+ * Applied MacOS X patch by Maxime Biais.
+ * Replays can no longer be recorded for levels that include
+   scripting.
+ * Older releases will not be able to read the new replays, but this
+   version can read old replays without any problems (in which case
+   the new event features will be missing).
+ * Faster building procedure on Windows.
+ * New built-in levels, one of them by Clive Crous.
+ * New tutorial levels. These are now considered external levels, so
+   you'll find them under that tab.
+ * Smoother playback of replays.
+ * Note that I have given up ordering the built-in levels by
+   difficulty. The current order will be kept until beta.
+ * Thanks to Petter Reinholdtsen for pointing out that
+   SDL/SDL_opengl.h fixes all of the OpenGL problems. :)
+
+X-Moto 0.1.8 (alpha)  2005-11-06
+--------------------------------
+ * 6 new (difficult) built-in levels by CoW.
+ * Very limited sounds (only menu buttons, when picking up
+   strawberries, and a very minimalistic bike engine sound).
+ * Uses SDL_mixer for sound playback.
+ * No longer directly dependant on the Ogg Vorbis
+   libraries.
+ * Now direclty dependant on zlib, although that propably won't mean
+   much, as X-Moto have used zlib indirectly through libpng all the
+   time.
+ * Replays supported.
+ * Non-windows release with a more intelligent configure script.
+ * New -ugly option for computers without a proper OpenGL video card.
+ * Custom mouse cursor, the standard SDL one caused some problems for
+   some people.
+ * Major code clean up and several bug-fixes.
+ * Much more program documentation in README.
+ * List columns are now clipped properly.
+
+X-Moto 0.1.7 (alpha)  2005-10-27
+--------------------------------
+ * Game is no longer slow if Vertical Sync limits the
+   framerate.
+ * 5 new (easier) built-in levels by Pasi Kallinen.
+ * Configurable controls.
+ * Experimental (!) joystick support.
+ * Double-clicking in lists to activate items.
+ * Non-windows release now dynamically linked with ODE and
+   LUA libraries.
+ * Paul Nettle's MMGR no longer included in the non-windows release.
+   Apparantly its (custom) license conflicted with the Debian Free
+   Software Guideline #6 (No Discrimination Against Fields of
+   Endeavor) by stating:
+
+    - "You may not use this software to directly or indirectly cause
+       harm to others."
+
+   So this is good news if you want to burn X-Moto unto a CD and kill
+   someone with it! :)
+ * Main menu no longer eats all of the CPU cycles.
+
+X-Moto 0.1.6 (alpha)  2005-10-05
+--------------------------------
+ * New built-in levels.
+ * Now with sound back on (still no effects, though).
+ * Fixed bug that allowed disabled user interface buttons to be
+   selected with the keyboard.
+ * PgUp/PgDown now works in scroll lists.
+ * Clearified some error messages.
+ * Slight user interface adjustments.
+ * Removed GLU dependency.
+ * User interface scaling is now disabled, enabling better support of
+   resolutions higher than 800x600.
+ * Resolutions below 800x600 are no longer supported.
+ * Updated particle effects.
+
+X-Moto 0.1.5 (alpha)  2005-10-03
+--------------------------------
+Game:
+
+ * Loading screen at start-up.
+ * New particle effects.
+ * Built-in level 15 is now less difficult.
+ * Mouse wheel support.
+ * Fixed bug that caused most mouse events to be processed as left
+   button clicks.
+ * Updated user interface.
+ * Some code clean-up.
+
+X-Moto 0.1.4 (alpha)  2005-09-29
+--------------------------------
+Game:
+
+ * The -level option is now handled right.
+ * New -fps option.
+ * Built-in level 14 is no longer impossible.
+ * New built-in levels.
+ * New graphics.
+ * Scroll lists can actually scroll now.
+ * Nicer menu font.
+ * Minor changes and bug-fixes.
+
+Windows specific:
+
+ * Fewer statically linked libraries, more DLLs instead.
+
+X-Moto 0.1.3 (alpha)  2005-08-21
+--------------------------------
+Game:
+
+ * Partial sound support disabled.
+ * Higher framerate in built-in level "Burning Caves".
+ * Mouse cursor now hidden when playing.
+ * Internal data file packaging.
+ * New built-in levels.
+ * Minor changes and bug-fixes.
+
+Editor:
+
+ * Minor changes and bug-fixes.
+
+Windows specific:
+
+ * DLLs no longer packed with UPX, as it caused problems for some
+   people.
+
+X-Moto 0.1.2 (alpha)  2005-06-13
+--------------------------------
+Game:
+
+ * Major rendering pipeline optimizations.
+ * Replay support is only partially implemented, so it is now hidden.
+ * Renderer now obeys graphical quality settings.
+ * New configuration options.
+ * New built-in levels.
+
+X-Moto 0.1.1 (alpha)  2005-06-08
+--------------------------------
+Game:
+
+ * Now possible to control the menus by keyboard.
+ * Screenshot by pressing F12. The image is then saved in the user
+   directory as a .png file.
+ * New built-in levels.
+ * Built-in level "Floating Bricks" is no longer impossible.
+ * Larger flower/strawberry radius (i.e. you touch them from a longer
+   distance).
+ * Minor driving model adjustments: Left and right keys more
+   effective, less wheel rolling resistance, and more brake power.
+ * Two new command-line options for xmoto: -listreplays lists all
+   stored replays, and -listlevels lists all installed levels.
+ * No longer sound in -nogfx mode.
+ * Bug in UI code that could cause memory corruption fixed.
+ * Many minor bugs fixed.
+
+Editor:
+
+ * Levels are now saved in the right directory regardless of where
+   the program is run from.
+
+Linux specific:
+
+ * Now you can install the game locally by using the --prefix option
+   for ./configure.
+ * No longer dependant on access to /dev/dsp.
+ * Various compatibility issues fixed.
+
+Windows specific:
+
+ * Uninstall now also removes the start menu items proberly.
+ * Added missing run-time DLL to distribution.
+
+X-Moto 0.1.0 (alpha)  2005-05-29
+--------------------------------
+First official release.
