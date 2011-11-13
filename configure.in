@@ -1,7 +1,7 @@
 AC_INIT(src/GameInit.cpp)
 
 AC_CANONICAL_TARGET()
-AM_INIT_AUTOMAKE(xmoto,0.5.8)
+AM_INIT_AUTOMAKE(xmoto,0.5.9)
 AC_GNU_SOURCE
 
 AC_PROG_CXX
@@ -30,11 +30,9 @@ then
 AM_PATH_XML2([], 
              AC_DEFINE(HAVE_XML2, 1),
              [AC_MSG_ERROR([*** cannot find the libxml2 library ])])
-AC_SUBST(XML_CPPFLAGS)
-AC_SUBST(XML_LIBS)
 CPPFLAGS="$CPPFLAGS"" ""$XML_CPPFLAGS"
 CFLAGS="$CFLAGS"" ""$XML_CPPFLAGS"
-LDFLAGS="$LDFLAGS"" ""$XML_LIBS"
+LIBS="$LIBS""$XML_LIBS"
 fi
 
 dnl bz2
