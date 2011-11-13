@@ -1,3 +1,7 @@
+X-Moto 0.5.9 2011-11-13
+--------------------------------
+ * fix a compilation error with libxml
+
 X-Moto 0.5.8 2011-09-27
 --------------------------------
  * no more need to disconnect/reconnect to change net mode
