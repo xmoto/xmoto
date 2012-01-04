@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define STIMER_DELAY_DEFAULT 100
 #define STIMER_LOOPS_DEFAULT 0
 
-luaL_reg LuaLibGame::m_gameFuncs[] = {
+luaL_Reg LuaLibGame::m_gameFuncs[] = {
   {"GetTime",                      LuaLibGame::L_Game_GetTime},
   {"Message",                      LuaLibGame::L_Game_Message},
   {"IsPlayerInZone",               LuaLibGame::L_Game_IsPlayerInZone},

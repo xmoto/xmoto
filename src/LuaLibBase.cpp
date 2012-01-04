@@ -22,22 +22,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "VFileIO.h"
 
-/*===========================================================================
-  Lua 5.1 compatibility code (Following is from lua 5.0.2)
-  ===========================================================================*/
-static void X_tag_error (lua_State *L, int narg, int tag) {
-  luaL_typerror(L, narg, lua_typename(L, tag)); 
-}
-
 lua_Number LuaLibBase::X_luaL_check_number(lua_State *L,int narg) {
   lua_Number d = lua_tonumber(L, narg);
-  if (d == 0 && !lua_isnumber(L, narg))  /* avoid extra test when d is not 0 */
-    X_tag_error(L, narg, LUA_TNUMBER);
-  return d;    
+  if (d == 0)  /* avoid extra test when d is not 0 */
+    luaL_checktype(L, narg, LUA_TNUMBER);
+  return d;
 }
 
-LuaLibBase::LuaLibBase(const std::string& i_libname, luaL_reg i_reg[]) {
-  m_pL = lua_open();
+LuaLibBase::LuaLibBase(const std::string& i_libname, luaL_Reg i_reg[]) {
+  m_pL = luaL_newstate();
   luaopen_base(m_pL);
   luaopen_math(m_pL);
   luaopen_table(m_pL);

@@ -119,7 +119,7 @@ Central place to keep many in-game text strings
 
 #define GAMETEXT_CREDITS                                                                     \
   std::string(_("Lead Programming")) +                                                       \
-    ":Nicolas Adenis-Lamarre (2006-2011);"                                                   \
+    ":Nicolas Adenis-Lamarre (2006-2012);"                                                   \
     ":Emmanuel Gorse (2007-2011);"                                                           \
     ":Jens Erler (2009-2010);"                                                               \
     ":Rasmus Neckelmann (2005-2006);"                                                        \

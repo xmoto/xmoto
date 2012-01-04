@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Universe.h"
 #include "thread/ServerThread.h"
 
-luaL_reg ServerRules::m_rulesFuncs[] = {
+luaL_Reg ServerRules::m_rulesFuncs[] = {
     {"Log",              	     ServerRules::L_Rules_Log},
     {"Player_setPoints", 	     ServerRules::L_Rules_player_setPoints},
     {"Player_addPoints", 	     ServerRules::L_Rules_player_addPoints},

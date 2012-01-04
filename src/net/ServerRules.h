@@ -36,7 +36,7 @@ protected:
 private:
   ServerThread* m_server;
 
-  static luaL_reg m_rulesFuncs[];
+  static luaL_Reg m_rulesFuncs[];
   static ServerThread* m_exec_server;
 
   /* Lua library prototypes */
