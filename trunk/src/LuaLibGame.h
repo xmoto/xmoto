@@ -45,7 +45,7 @@ private:
 
   static InputHandler* m_exec_activeInputHandler;
   static Scene*        m_exec_world;
-  static luaL_reg      m_gameFuncs[];
+  static luaL_Reg      m_gameFuncs[];
 
   /* Lua library prototypes */
   static int L_Game_GetTime(lua_State *pL);
