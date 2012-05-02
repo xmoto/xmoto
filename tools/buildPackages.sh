@@ -133,17 +133,17 @@ if ! make_sources "$SVNVERSION"
     exit 1
 fi
 
-# make unix package
-echo "Make deb packages..."
-if ! make_deb
+# make windows packages
+echo "Building windows packages..."
+if ! make_windows "$SVNVERSION"
     then
     echo "Erreur" >&2
     exit 1
 fi
 
-# make windows packages
-echo "Building windows packages..."
-if ! make_windows "$SVNVERSION"
+# make unix package
+echo "Make deb packages..."
+if ! make_deb
     then
     echo "Erreur" >&2
     exit 1

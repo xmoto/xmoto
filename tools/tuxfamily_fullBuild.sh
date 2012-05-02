@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/nicolas/xm/build || return 1
+cd ~/xm/build || return 1
 
 SSHDIR="aspegic500@ssh.tuxfamily.org:~/xmoto/xmoto-repository/xmoto/dev"
 
