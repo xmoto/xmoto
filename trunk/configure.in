@@ -88,7 +88,7 @@ fi
 
 if test "$target_os" = "mingw32" # others libraries required by mingw32
 then
-  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -mwindows -luserenv -lintl -lSDL_ttf -lSDL_mixer -lSDL_net -lode xmoto_icone.o" # -mwindows to avoid dos window
+  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -mwindows -luserenv -lintl -lSDL_ttf -lSDL_mixer -lSDL_net xmoto_icone.o" # -mwindows to avoid dos window
   # -MD is for gettext (see gettext faq)
   CFLAGS="$CFLAGS"" -mthreads -MD"     # threads
   CXXFLAGS="$CXXFLAGS"" -mthreads -MD" # threads
