@@ -1,6 +1,7 @@
 X-Moto 0.5.10 2012-
 --------------------------------
  * libpng & liblua patch by Kelly Anderson
+ * include ode/ccd integrated in sources for windows to avoid crashes due to ode.dll when linked to other dll (root cause still not found) (microsoft windows support again)
 
 X-Moto 0.5.9 2011-11-13
 --------------------------------

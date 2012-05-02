@@ -8,14 +8,14 @@ AM_CFLAGS =   $(CFLAGS)   $(XM_FLAGS)
 AM_CXXFLAGS = $(CXXFLAGS) $(XM_FLAGS) 
 
 xminclude_SOURCES = include/xm_endian.h    \
-           	    include/xm_hashmap.h   \
-           	    include/xm_lua.h       \
-           	    include/xm_ode.h       \
-           	    include/xm_OpenGL.h    \
-           	    include/xm_SDL.h       \
-           	    include/xm_SDL_mixer.h \
-           	    include/xm_SDL_net.h   \
-           	    include/xm_SDL_ttf.h
+                    include/xm_hashmap.h   \
+                    include/xm_lua.h       \
+                    include/xm_ode.h       \
+                    include/xm_OpenGL.h    \
+                    include/xm_SDL.h       \
+                    include/xm_SDL_mixer.h \
+                    include/xm_SDL_net.h   \
+	            include/xm_SDL_ttf.h
 
 
 image_SOURCES = image/tim.cpp image/tim_io_stdio.cpp \
@@ -252,6 +252,154 @@ bz2_SOURCES = bzip2/blocksort.c     \
               bzip2/huffman.c       \
               bzip2/randtable.c
 
+libccd_SOURCES = ccd/alloc.h    \
+		 ccd/ccd.h      \
+		 ccd/compiler.h \
+		 ccd/config.h   \
+		 ccd/dbg.h      \
+		 ccd/list.h     \
+		 ccd/polytope.h \
+		 ccd/quat.h     \
+		 ccd/simplex.h  \
+		 ccd/support.h  \
+		 ccd/vec3.h     \
+		 libccd/ccd.c          \
+		 libccd/alloc.c        \
+		 libccd/mpr.c	       \
+		 libccd/polytope.c     \
+		 libccd/support.c      \
+		 libccd/vec3.c
+
+ode_SOURCES = ode/src/config.h	                  \
+	      ode/collision.h                     \
+	      ode/collision_space.h               \
+	      ode/collision_trimesh.h             \
+	      ode/common.h	                  \
+	      ode/compatibility.h                 \
+	      ode/contact.h	                  \
+	      ode/error.h	                  \
+	      ode/export-dif.h	                  \
+	      ode/mass.h			  \
+	      ode/matrix.h			  \
+	      ode/memory.h			  \
+	      ode/misc.h			  \
+	      ode/objects.h			  \
+	      ode/odeconfig.h			  \
+	      ode/odecpp_collision.h              \
+	      ode/odecpp.h                        \
+	      ode/ode.h			          \
+	      ode/odeinit.h		          \
+	      ode/odemath.h		          \
+	      ode/odemath_legacy.h	          \
+	      ode/rotation.h		          \
+	      ode/timer.h		          \
+	      ode/src/util.h		          \
+	      ode/src/array.h                     \
+	      ode/src/mat.h			  \
+	      ode/src/obstack.h			  \
+	      ode/src/odeou.h		          \
+	      ode/src/odetls.h		          \
+	      ode/src/quickstep.h		  \
+	      ode/src/step.h		          \
+	      ode/src/heightfield.h	          \
+	      ode/src/joints/amotor.h             \
+	      ode/src/joints/ball.h	          \
+	      ode/src/joints/contact.h            \
+	      ode/src/joints/fixed.h              \
+	      ode/src/joints/hinge2.h		  \
+	      ode/src/joints/hinge.h		  \
+	      ode/src/joints/joint.h		  \
+	      ode/src/joints/joint_internal.h	  \
+	      ode/src/joints/joints.h		  \
+	      ode/src/joints/lmotor.h		  \
+	      ode/src/joints/null.h		  \
+	      ode/src/joints/piston.h		  \
+	      ode/src/joints/plane2d.h		  \
+	      ode/src/joints/pr.h		  \
+	      ode/src/joints/pu.h		  \
+	      ode/src/joints/slider.h		  \
+	      ode/src/joints/universal.h	  \
+	      ode/src/lcp.h			  \
+	      ode/src/collision_kernel.h              \
+	      ode/src/collision_libccd.h              \
+	      ode/src/collision_space_internal.h      \
+	      ode/src/collision_std.h                 \
+	      ode/src/collision_transform.h           \
+	      ode/src/collision_trimesh_colliders.h   \
+	      ode/src/collision_trimesh_internal.h    \
+	      ode/src/collision_util.h                \
+	      ode/src/objects.h		          \
+	      ode/src/fastdot.c		          \
+	      ode/src/fastldlt.c		  \
+	      ode/src/fastlsolve.c		  \
+	      ode/src/fastltsolve.c		  \
+	      ode/src/nextafterf.c		  \
+	      ode/src/array.cpp		          \
+	      ode/src/box.cpp		          \
+	      ode/src/capsule.cpp		  \
+	      ode/src/collision_cylinder_box.cpp      \
+	      ode/src/collision_cylinder_plane.cpp    \
+	      ode/src/collision_cylinder_sphere.cpp   \
+	      ode/src/collision_cylinder_trimesh.cpp  \
+	      ode/src/collision_kernel.cpp	      \
+	      ode/src/collision_libccd.cpp	      \
+	      ode/src/collision_quadtreespace.cpp     \
+	      ode/src/collision_sapspace.cpp	      \
+	      ode/src/collision_space.cpp	      \
+	      ode/src/collision_transform.cpp	      \
+	      ode/src/collision_trimesh_box.cpp	      \
+	      ode/src/collision_trimesh_ccylinder.cpp \
+	      ode/src/collision_trimesh_disabled.cpp  \
+	      ode/src/collision_trimesh_distance.cpp  \
+	      ode/src/collision_trimesh_gimpact.cpp   \
+	      ode/src/collision_trimesh_opcode.cpp    \
+	      ode/src/collision_trimesh_plane.cpp     \
+	      ode/src/collision_trimesh_ray.cpp	      \
+	      ode/src/collision_trimesh_sphere.cpp    \
+	      ode/src/collision_trimesh_trimesh.cpp   \
+	      ode/src/collision_trimesh_trimesh_new.cpp \
+	      ode/src/collision_util.cpp              \
+	      ode/src/convex.cpp		      \
+	      ode/src/cylinder.cpp		      \
+	      ode/src/error.cpp			  \
+	      ode/src/export-dif.cpp		  \
+	      ode/src/heightfield.cpp		  \
+	      ode/src/joints/amotor.cpp		  \
+	      ode/src/joints/ball.cpp		  \
+	      ode/src/joints/contact.cpp	  \
+	      ode/src/joints/fixed.cpp		  \
+	      ode/src/joints/hinge2.cpp		  \
+	      ode/src/joints/hinge.cpp		  \
+	      ode/src/joints/joint.cpp		  \
+	      ode/src/joints/lmotor.cpp		  \
+	      ode/src/joints/null.cpp		  \
+	      ode/src/joints/piston.cpp		  \
+	      ode/src/joints/plane2d.cpp	  \
+	      ode/src/joints/pr.cpp		  \
+	      ode/src/joints/pu.cpp		  \
+	      ode/src/joints/slider.cpp		  \
+	      ode/src/joints/universal.cpp	  \
+	      ode/src/lcp.cpp			  \
+	      ode/src/mass.cpp			  \
+	      ode/src/mat.cpp			  \
+	      ode/src/matrix.cpp		  \
+	      ode/src/memory.cpp		  \
+	      ode/src/misc.cpp			  \
+	      ode/src/obstack.cpp		  \
+	      ode/src/ode.cpp			  \
+	      ode/src/odeinit.cpp		  \
+	      ode/src/odemath.cpp		  \
+	      ode/src/odeou.cpp			  \
+	      ode/src/odetls.cpp		  \
+	      ode/src/plane.cpp			  \
+	      ode/src/quickstep.cpp		  \
+	      ode/src/ray.cpp			  \
+	      ode/src/rotation.cpp		  \
+	      ode/src/sphere.cpp		  \
+	      ode/src/step.cpp			  \
+	      ode/src/timer.cpp			  \
+	      ode/src/util.cpp
+
 thread_SOURCES = thread/XMThread.h                 \
 		 thread/XMThread.cpp               \
 		 thread/UpdateDbThread.h           \
@@ -312,6 +460,11 @@ if ! WIN32
 if USE_INTERNAL_XDG
 common_SOURCES += $(xdgbasedir_SOURCES)
 endif
+endif
+
+if WIN32
+common_SOURCES += $(ode_SOURCES)
+common_SOURCES += $(libccd_SOURCES)
 endif
 
 common_SOURCES += $(gui_basic_SOURCES)
