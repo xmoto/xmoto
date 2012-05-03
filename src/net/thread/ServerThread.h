@@ -89,6 +89,7 @@ class NetSClient {
   // admin connexion
   bool isAdminConnected() const;
   void setAdminConnected(bool i_value);
+  std::string adminLoginName() const;
 
   int lastGhostFrameTime() const;
   void setLastGhostFrameTime(int v_time);
@@ -115,6 +116,7 @@ class NetSClient {
   int m_lastInactivTimeAlert;
   int m_points;
   bool m_isAdminConnected;
+  std::string m_adminLoginName; // because you can change your name later, so this is your name at the moment you login
   int m_lastGhostFrameTime;
   NetPing m_lastPing;
 };
