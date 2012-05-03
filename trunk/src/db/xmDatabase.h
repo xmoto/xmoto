@@ -199,7 +199,7 @@ public:
   bool srv_isAdmin(const std::string& i_profile, const std::string& i_password);
   void srv_addAdmin(const std::string& i_profile, const std::string& i_password);
   void srv_removeAdmin(int id);
-  void srv_addBan(const std::string& i_profile, const std::string& i_ip, unsigned int i_nbDays);
+  void srv_addBan(const std::string& i_profile, const std::string& i_ip, unsigned int i_nbDays, const std::string& i_admin_banner);
   void srv_removeBan(int id);
   bool srv_isBanned(const std::string& i_profile, const std::string& i_ip);
   void srv_cleanBans();

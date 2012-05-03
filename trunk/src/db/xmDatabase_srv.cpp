@@ -50,15 +50,15 @@ void xmDatabase::srv_removeAdmin(int id) {
   simpleSql("DELETE FROM srv_admins WHERE id=" + v_n.str() + ";");
 }
 
-void xmDatabase::srv_addBan(const std::string& i_profile, const std::string& i_ip, unsigned int i_nbDays) {
+void xmDatabase::srv_addBan(const std::string& i_profile, const std::string& i_ip, unsigned int i_nbDays, const std::string& i_admin_banner) {
   std::ostringstream v_n;
   v_n << i_nbDays;
 
   if(checkKey("SELECT count(1) FROM srv_bans WHERE id_profile=\"" + protectString(i_profile) + "\" AND ip=\"" + protectString(i_ip) + "\";")) {
-    simpleSql("UPDATE srv_bans SET from_date=datetime('now'), nb_days=" + v_n.str() + " "
+    simpleSql("UPDATE srv_bans SET from_date=datetime('now'), nb_days=" + v_n.str() + ", id_admin_banner=\"" + protectString(i_admin_banner) + "\" "
 	      "WHERE id_profile=\"" + protectString(i_profile) + "\" AND ip=\"" + protectString(i_ip) + "\";");
   } else {
-    simpleSql("INSERT INTO srv_bans(id_profile, ip, from_date, nb_days) VALUES (\"" + protectString(i_profile) + "\", \"" + protectString(i_ip) + "\", datetime('now'), " + v_n.str() + ");");
+    simpleSql("INSERT INTO srv_bans(id_profile, ip, from_date, nb_days, id_admin_banner) VALUES (\"" + protectString(i_profile) + "\", \"" + protectString(i_ip) + "\", datetime('now'), " + v_n.str() + ", \"" + protectString(i_admin_banner) + "\");");
   }
 }
 

@@ -44,6 +44,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ADDTOFAVORITE        _("Add to favorite")
 #define GAMETEXT_ADDTOBLACKLIST       _("Add to blacklist")
 #define GAMETEXT_ACTION               _("Action")
+#define GAMETEXT_ADMINCONSOLE         _("Admin console")
 #define GAMETEXT_ALL                  _("All (on this computer)")
 #define GAMETEXT_ALL_LEVELS           _("All levels")
 #define GAMETEXT_ALLOWINTERNETCONN    _("Do you want to allow X-Moto connecting\n" \

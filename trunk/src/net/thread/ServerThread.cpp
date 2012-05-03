@@ -95,6 +95,11 @@ bool NetSClient::isAdminConnected() const {
 
 void NetSClient::setAdminConnected(bool i_value) {
   m_isAdminConnected = i_value;
+  m_adminLoginName = i_value ? m_name : "";
+}
+
+std::string NetSClient::adminLoginName() const {
+  return m_adminLoginName;
 }
 
 unsigned int NetSClient::id() const {
@@ -1731,20 +1736,31 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
     if(v_args.size() != 1) {
       v_answer += "lsban: invalid arguments\n";
     } else {
+      char v_banstr[100];
+
       // clean old bans before reading them
       m_pDb->srv_cleanBans();
 
-      v_result = m_pDb->readDB("SELECT id, id_profile, ip, ROUND(nb_days - (julianday('now')-julianday(from_date)), 1) remaining "
+      v_result = m_pDb->readDB("SELECT id, id_profile, ip, from_date, ROUND(nb_days - (julianday('now')-julianday(from_date)), 1) remaining, id_admin_banner "
 			       "FROM srv_bans "
 			       "ORDER BY id;",
 			       nrow);
+
+      v_answer += "+----+-----------------+----------------+-------------------+----------------+-----------------+\n";
+      v_answer += "|  id|login            |ip              | ban date          | remaining days | banner          |\n";
+      v_answer += "+----+-----------------+----------------+-------------------+----------------+-----------------+\n";
+
       for(unsigned int i=0; i<nrow; i++) {
-	std::ostringstream v_n;
-	v_n << atof(m_pDb->getResult(v_result, 4, i, 3));
-	v_answer += m_pDb->getResult(v_result, 4, i, 0);
-	v_answer += ": " + std::string(m_pDb->getResult(v_result, 4, i, 1)) + ", " + std::string(m_pDb->getResult(v_result, 4, i, 2)) + " -> ";
-	v_answer += v_n.str() + std::string(" days remaining");
-	v_answer += "\n";
+	snprintf(v_banstr, 100, "%5s %-17s %-16s %19s %16s %17s",
+		 std::string(m_pDb->getResult(v_result, 6, i, 0)).c_str(),
+		 std::string(m_pDb->getResult(v_result, 6, i, 1)).c_str(),
+		 std::string(m_pDb->getResult(v_result, 6, i, 2)).c_str(),
+		 std::string(m_pDb->getResult(v_result, 6, i, 3)).c_str(),
+		 std::string(m_pDb->getResult(v_result, 6, i, 4)).c_str(),
+		 (m_pDb->getResult(v_result, 6, i, 5) == NULL) ? "Unknown" : std::string(m_pDb->getResult(v_result, 6, i, 5)).c_str()
+		 );
+	v_answer += v_banstr;
+	v_answer += "\n"; // cause 100 could not include the \n
       }
       m_pDb->read_DB_free(v_result);
     }
@@ -1760,7 +1776,8 @@ void ServerThread::manageSrvCmd(unsigned int i_client, const std::string& i_cmd)
 	unsigned int v_nclient = getClientById(atoi(v_args[1].c_str()));
 	m_pDb->srv_addBan(v_args[2] == "profile" ? m_clients[v_nclient]->name() : "*",
 			  v_args[2] == "ip"      ? XMNet::getIp(m_clients[v_nclient]->tcpRemoteIP()) : "*",
-			  v_args.size() == 4     ? atoi(v_args[3].c_str()) : XM_SERVER_DEFAULT_BAN_NBDAYS);
+			  v_args.size() == 4     ? atoi(v_args[3].c_str()) : XM_SERVER_DEFAULT_BAN_NBDAYS,
+			  m_clients[i_client]->adminLoginName());
 	m_clientMarkToBeRemoved.push_back(atoi(v_args[1].c_str()));
 	v_answer += "ban added\n";
       } catch(Exception &e) {
