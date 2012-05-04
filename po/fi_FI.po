@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2012-05-03 22:50+0200\n"
+"POT-Creation-Date: 2012-05-04 19:14+0200\n"
 "PO-Revision-Date: 2009-05-13 18:49+0200\n"
 "Last-Translator: Ville Lahdenvuo <tuhoojabotti@gmail.com>\n"
 "Language-Team: none\n"
@@ -72,19 +72,15 @@ msgstr "Lisää mustalle listalle"
 msgid "Action"
 msgstr "Toiminto"
 
-#: src/GameText.h:47
-msgid "Admin console"
-msgstr ""
-
-#: src/GameText.h:48 src/GameText.h:53
+#: src/GameText.h:47 src/GameText.h:52
 msgid "All (on this computer)"
 msgstr "Kaikki (tällä tietokoneella)"
 
-#: src/GameText.h:49 src/GameText.h:827
+#: src/GameText.h:48 src/GameText.h:827
 msgid "All levels"
 msgstr "Kaikki kentät"
 
-#: src/GameText.h:50
+#: src/GameText.h:49
 msgid ""
 "Do you want to allow X-Moto connecting\n"
 "to the Internet to look for more levels\n"
@@ -94,475 +90,475 @@ msgstr ""
 "etsiäkseen uusia kenttiä ja\n"
 "muiden pelaajien parhaita aikoja?"
 
-#: src/GameText.h:54
+#: src/GameText.h:53
 msgid "Audio"
 msgstr "Ääni"
 
-#: src/GameText.h:55
+#: src/GameText.h:54
 msgid "Author"
 msgstr "Tekijä"
 
-#: src/GameText.h:56
+#: src/GameText.h:55
 msgid "Automatic"
 msgstr "Automaattinen"
 
-#: src/GameText.h:57
+#: src/GameText.h:56
 msgid "Automatic saving of replays"
 msgstr "Tallenna automaattisesti toistovideot"
 
-#: src/GameText.h:58
+#: src/GameText.h:57
 msgid "Disable Animations"
 msgstr ""
 
-#: src/GameText.h:59
+#: src/GameText.h:58
 msgid "Show game information in the console"
 msgstr ""
 
-#: src/GameText.h:60
+#: src/GameText.h:59
 msgid "Auto zoom"
 msgstr "Automaattinen zoom"
 
-#: src/GameText.h:61
+#: src/GameText.h:60
 msgid "Database"
 msgstr "Tietokanta"
 
-#: src/GameText.h:62
+#: src/GameText.h:61
 msgid "Camera Active Zoom"
 msgstr "Aktiivinen Zoom"
 
-#: src/GameText.h:63
+#: src/GameText.h:62
 msgid "Use Trail Cam"
 msgstr "Käytä Reitti kameraa"
 
-#: src/GameText.h:64
+#: src/GameText.h:63
 msgid "Beating mode"
 msgstr "Hakkaus moodi"
 
-#: src/GameText.h:65
+#: src/GameText.h:64
 msgid "Best Times"
 msgstr "Parhaat ajat"
 
-#: src/GameText.h:66
+#: src/GameText.h:65
 msgid "Best player"
 msgstr "Paras pelaaja"
 
-#: src/GameText.h:67
+#: src/GameText.h:66
 msgid "Brake"
 msgstr "Jarru"
 
-#: src/GameText.h:68
+#: src/GameText.h:67
 #, c-format
 msgid "(by %s)"
 msgstr "%s:lla"
 
-#: src/GameText.h:69
+#: src/GameText.h:68
 msgid "Move Camera to left"
 msgstr "Liikuta kameraa vasemmalle"
 
-#: src/GameText.h:70
+#: src/GameText.h:69
 msgid "Move Camera to right"
 msgstr "Liikuta kameraa oikealle"
 
-#: src/GameText.h:71
+#: src/GameText.h:70
 msgid "Move Camera down"
 msgstr "Liikuta kameraa alas"
 
-#: src/GameText.h:72
+#: src/GameText.h:71
 msgid "Move Camera up"
 msgstr "Liikuta kameraa ylös"
 
-#: src/GameText.h:73
+#: src/GameText.h:72
 msgid "Cancel"
 msgstr "Peruuta"
 
-#: src/GameText.h:74
+#: src/GameText.h:73
 msgid "Change..."
 msgstr "Muuta..."
 
-#: src/GameText.h:75
+#: src/GameText.h:74
 msgid "Change direction"
 msgstr "Vaihda suuntaa"
 
-#: src/GameText.h:76
+#: src/GameText.h:75
 msgid "Change Key..."
 msgstr "Vaihda näppäintä..."
 
-#: src/GameText.h:77
+#: src/GameText.h:76
 msgid ""
 "Use the tabulation key to complete player names. Use the * to send private "
 "messages."
 msgstr ""
 
-#: src/GameText.h:78
+#: src/GameText.h:77
 msgid "Open chat dialog box"
 msgstr ""
 
-#: src/GameText.h:79
+#: src/GameText.h:78
 msgid "Open private chat dialog box"
 msgstr ""
 
-#: src/GameText.h:80
+#: src/GameText.h:79
 msgid "Checking for new or updated levels..."
 msgstr "Etsitään uusia tai päivitettyjä kenttiä..."
 
-#: src/GameText.h:81
+#: src/GameText.h:80
 msgid "I'm a child"
 msgstr "Olen lapsi"
 
-#: src/GameText.h:82
+#: src/GameText.h:81
 msgid "Choose Level"
 msgstr "Valitse kenttä"
 
-#: src/GameText.h:83
+#: src/GameText.h:82
 msgid "Clean"
 msgstr "Poista"
 
-#: src/GameText.h:84
+#: src/GameText.h:83
 #, c-format
 msgid "Are you sure you want to delete %i replay"
 msgid_plural "Are you sure you want to delete %i replay"
 msgstr[0] "Tahdotko varmasti poistaa %i toistovideon?"
 msgstr[1] "Tahdotko varmasti poistaa %i toistovideota?"
 
-#: src/GameText.h:85
+#: src/GameText.h:84
 msgid "There is no replay to clean"
 msgstr "Ei ole toistovideota mitä poistaa"
 
-#: src/GameText.h:86
+#: src/GameText.h:85
 msgid "Close"
 msgstr "Sulje"
 
-#: src/GameText.h:87
+#: src/GameText.h:86
 msgid "Configure Joystick..."
 msgstr "Säädä joystick..."
 
-#: src/GameText.h:88
+#: src/GameText.h:87
 msgid "Decrease console history size"
 msgstr ""
 
-#: src/GameText.h:89
+#: src/GameText.h:88
 msgid "Increase console history size"
 msgstr ""
 
-#: src/GameText.h:90
+#: src/GameText.h:89
 msgid "Controls"
 msgstr "Näppäimet"
 
-#: src/GameText.h:91 src/GameText.h:271
+#: src/GameText.h:90 src/GameText.h:270
 msgid "General"
 msgstr "Yleiset"
 
-#: src/GameText.h:93
+#: src/GameText.h:92
 msgid "left control"
 msgstr "vasen Control"
 
-#: src/GameText.h:94
+#: src/GameText.h:93
 msgid "right control"
 msgstr "Oikea Control"
 
-#: src/GameText.h:95
+#: src/GameText.h:94
 msgid "left shift"
 msgstr "Vasen Shift"
 
-#: src/GameText.h:96
+#: src/GameText.h:95
 msgid "right shift"
 msgstr "Oikea Shift"
 
-#: src/GameText.h:97
+#: src/GameText.h:96
 msgid "left alt"
 msgstr "vasen Alt"
 
-#: src/GameText.h:98
+#: src/GameText.h:97
 msgid "right alt"
 msgstr "Oikea Alt"
 
-#: src/GameText.h:99
+#: src/GameText.h:98
 msgid "left meta"
 msgstr "vasen Meta"
 
-#: src/GameText.h:100
+#: src/GameText.h:99
 msgid "right meta"
 msgstr "oikea Meta"
 
-#: src/GameText.h:101
+#: src/GameText.h:100
 msgid "Abort the process"
 msgstr ""
 
-#: src/GameText.h:102 src/GameText.h:116
+#: src/GameText.h:101 src/GameText.h:115
 #, c-format
 msgid "button %i"
 msgstr "nappi %i"
 
-#: src/GameText.h:103
+#: src/GameText.h:102
 msgid "left button"
 msgstr "vasen nappi"
 
-#: src/GameText.h:104
+#: src/GameText.h:103
 msgid "middle button"
 msgstr "keskimmäinen nappi"
 
-#: src/GameText.h:105
+#: src/GameText.h:104
 msgid "right button"
 msgstr "oikea nappi"
 
-#: src/GameText.h:106
+#: src/GameText.h:105
 msgid "wheel up"
 msgstr "pyörä ylös"
 
-#: src/GameText.h:107
+#: src/GameText.h:106
 msgid "wheel down"
 msgstr "pyörä alas"
 
-#: src/GameText.h:108
+#: src/GameText.h:107
 msgid "No joystick found"
 msgstr "Joystickiä ei havaittu"
 
-#: src/GameText.h:109
+#: src/GameText.h:108
 #, c-format
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
 msgstr[0] "%i joysticki löydetty"
 msgstr[1] "%i joystickiä löydetty"
 
-#: src/GameText.h:110
+#: src/GameText.h:109
 #, c-format
 msgid "axis %i"
 msgstr "akseli %i"
 
-#: src/GameText.h:111
+#: src/GameText.h:110
 msgid "left"
 msgstr "vasen"
 
-#: src/GameText.h:112
+#: src/GameText.h:111
 msgid "right"
 msgstr "oikea"
 
-#: src/GameText.h:113
+#: src/GameText.h:112
 msgid "up"
 msgstr "ylös"
 
-#: src/GameText.h:114
+#: src/GameText.h:113
 msgid "down"
 msgstr "alas"
 
-#: src/GameText.h:115
+#: src/GameText.h:114
 msgid "none"
 msgstr "none"
 
-#: src/GameText.h:117
+#: src/GameText.h:116
 msgid "You must restart so that this option takes effect"
 msgstr "Sinun pitää uudelleenkäynnistää, jotta tämä valinta hyväksytään"
 
-#: src/GameText.h:118
+#: src/GameText.h:117
 msgid "You must reconnect to the server so that this option takes effect"
 msgstr ""
 "Sinun pitää yhdistään uudestaan serverille, jotta tämä valinta hyväksytään"
 
-#: src/GameText.h:119
+#: src/GameText.h:118
 msgid "Script action"
 msgstr "Skripti toiminto"
 
-#: src/GameText.h:122
+#: src/GameText.h:121
 msgid "Lead Programming"
 msgstr "Pääohjelmointi"
 
-#: src/GameText.h:128
+#: src/GameText.h:127
 msgid "Additional Programming"
 msgstr "Avustava ohjelmointi"
 
-#: src/GameText.h:139
+#: src/GameText.h:138
 msgid "Graphics"
 msgstr "Grafiikka"
 
-#: src/GameText.h:144
+#: src/GameText.h:143
 msgid "Music"
 msgstr ""
 
-#: src/GameText.h:149
+#: src/GameText.h:148
 msgid "Sound Effects"
 msgstr ""
 
-#: src/GameText.h:153
+#: src/GameText.h:152
 msgid "MacOS X Support"
 msgstr "MacOS X -tuki"
 
-#: src/GameText.h:157
+#: src/GameText.h:156
 msgid "Localization"
 msgstr "Käännökset"
 
-#: src/GameText.h:158
+#: src/GameText.h:157
 msgid "Slovak"
 msgstr "slovakia"
 
-#: src/GameText.h:159
+#: src/GameText.h:158
 msgid "French"
 msgstr "ranska"
 
-#: src/GameText.h:160
+#: src/GameText.h:159
 msgid "Norwegian"
 msgstr "norja"
 
-#: src/GameText.h:160
+#: src/GameText.h:159
 msgid "English"
 msgstr ""
 
-#: src/GameText.h:161
+#: src/GameText.h:160
 msgid "German"
 msgstr "saksa"
 
-#: src/GameText.h:162
+#: src/GameText.h:161
 msgid "Finnish"
 msgstr "suomi"
 
-#: src/GameText.h:163
+#: src/GameText.h:162
 msgid "Catalan"
 msgstr "katalaani"
 
-#: src/GameText.h:163
+#: src/GameText.h:162
 msgid "Spanish"
 msgstr "espanja"
 
-#: src/GameText.h:164
+#: src/GameText.h:163
 msgid "Polish"
 msgstr "puola"
 
-#: src/GameText.h:165
+#: src/GameText.h:164
 msgid "Italian"
 msgstr "italia"
 
-#: src/GameText.h:166
+#: src/GameText.h:165
 msgid "Swedish"
 msgstr "ruotsi"
 
-#: src/GameText.h:167
+#: src/GameText.h:166
 msgid "Czech"
 msgstr "tsekki"
 
-#: src/GameText.h:168
+#: src/GameText.h:167
 msgid "Mikhail Brinchuk"
 msgstr "Mikhail Brinchuk"
 
-#: src/GameText.h:168
+#: src/GameText.h:167
 msgid "Russian"
 msgstr "venäjä"
 
-#: src/GameText.h:169
+#: src/GameText.h:168
 msgid "Brazilian Portuguese"
 msgstr "brasilialainen portugali"
 
-#: src/GameText.h:170
+#: src/GameText.h:169
 msgid "Latvian"
 msgstr "latvia"
 
-#: src/GameText.h:171
+#: src/GameText.h:170
 msgid "Danish"
 msgstr "tanska"
 
-#: src/GameText.h:172
+#: src/GameText.h:171
 msgid "Lithuanian"
 msgstr "liettua"
 
-#: src/GameText.h:173
+#: src/GameText.h:172
 msgid "Turkish"
 msgstr "turkki"
 
-#: src/GameText.h:174
+#: src/GameText.h:173
 msgid "Hungarian"
 msgstr "unkari"
 
-#: src/GameText.h:175
+#: src/GameText.h:174
 msgid "Portugese"
 msgstr ""
 
-#: src/GameText.h:176
+#: src/GameText.h:175
 msgid "Dutch"
 msgstr ""
 
-#: src/GameText.h:177
+#: src/GameText.h:176
 msgid "Taiwanese"
 msgstr ""
 
-#: src/GameText.h:178
+#: src/GameText.h:177
 msgid "Galician"
 msgstr ""
 
-#: src/GameText.h:180
+#: src/GameText.h:179
 msgid "Main testers"
 msgstr "Päätestaajat"
 
-#: src/GameText.h:185
+#: src/GameText.h:184
 msgid "Thanks to"
 msgstr "Kiitokset"
 
-#: src/GameText.h:186
+#: src/GameText.h:185
 msgid "for KDE/gnome integration"
 msgstr "KDE/Gnome-integraatiosta"
 
-#: src/GameText.h:187
+#: src/GameText.h:186
 msgid "for Debian packaging"
 msgstr "Debian-paketoinnista"
 
-#: src/GameText.h:188
+#: src/GameText.h:187
 msgid "for Gentoo packaging"
 msgstr "Gentoo-paketoinnista"
 
-#: src/GameText.h:189
+#: src/GameText.h:188
 msgid "for Mandriva packaging"
 msgstr "Mandriva-paketoinnista"
 
-#: src/GameText.h:190
+#: src/GameText.h:189
 msgid "for FreeBSD packaging"
 msgstr "FreeBSD-paketoinnista"
 
-#: src/GameText.h:191
+#: src/GameText.h:190
 msgid "for across/elma"
 msgstr "acrossista/elmasta"
 
-#: src/GameText.h:192
+#: src/GameText.h:191
 msgid "for making tinyxml"
 msgstr "tinyxml-teosta"
 
-#: src/GameText.h:193
+#: src/GameText.h:192
 msgid "for the MD5 code"
 msgstr "MD5-koodista"
 
-#: src/GameText.h:195
+#: src/GameText.h:194
 msgid "Everyone who have made levels"
 msgstr "Kaikille, jotka ovat tehneet kenttiä"
 
-#: src/GameText.h:196
+#: src/GameText.h:195
 msgid "People who have provided bug reports"
 msgstr "Ihmisille, jotka ovat tehneet vikailmoituksia"
 
-#: src/GameText.h:197
+#: src/GameText.h:196
 msgid "Anyone who has helped in any way"
 msgstr "Kaikille, jotka ovat muuten vain auttaneet"
 
-#: src/GameText.h:199
+#: src/GameText.h:198
 msgid "Credits"
 msgstr "Tekijät"
 
-#: src/GameText.h:200
+#: src/GameText.h:199
 msgid "Player"
 msgstr "Pelaaja"
 
-#: src/GameText.h:201
+#: src/GameText.h:200
 msgid "Play now !"
 msgstr ""
 
-#: src/GameText.h:202
+#: src/GameText.h:201
 msgid "Play music on all levels"
 msgstr "Soita musiikkia joka kentässä"
 
-#: src/GameText.h:203
+#: src/GameText.h:202
 msgid "Date"
 msgstr "Päiväys"
 
-#: src/GameText.h:204
+#: src/GameText.h:203
 msgid "Difficulty"
 msgstr "Vaikeus"
 
-#: src/GameText.h:205
+#: src/GameText.h:204
 msgid ""
 "X-Moto uses a database on your computer to save all your scores and "
 "statistics. You can send these data using your web account on the X-Moto "
@@ -574,7 +570,7 @@ msgstr ""
 "servereille. Se on käytännöllistä tietojen tallennukseen jos pelaat "
 "muillakin tietokoneilla."
 
-#: src/GameText.h:206
+#: src/GameText.h:205
 msgid ""
 "If you manually copied the X-Moto user files (.xmoto) on some other "
 "computers, you should not use this functionality otherwise your statistics "
@@ -585,91 +581,91 @@ msgstr ""
 "sinun ei pitäisi käyttää tätä toimintoa, muutoin menetät kaikki "
 "statistiikkasi. Sinun tulisi poistaa kaikki kopiot mitkä olet tehnyt."
 
-#: src/GameText.h:207
+#: src/GameText.h:206
 msgid "Synchronise"
 msgstr "Synkronisoi"
 
-#: src/GameText.h:208
+#: src/GameText.h:207
 msgid "Synchronize when X-Moto ends"
 msgstr "Synkronisoi kun lopetat X-Moton"
 
-#: src/GameText.h:209
+#: src/GameText.h:208
 msgid "Upgrading database"
 msgstr "Päivitetään tietoja"
 
-#: src/GameText.h:210
+#: src/GameText.h:209
 msgid "Upgrading database stats for the profile"
 msgstr "Päivitetään tietoja profiilia varten"
 
-#: src/GameText.h:211
+#: src/GameText.h:210
 msgid "Upgrading database profile"
 msgstr "Päivitetään profiilien tietoja"
 
-#: src/GameText.h:212
+#: src/GameText.h:211
 msgid "Death Animation"
 msgstr "Kuolema-animaatio"
 
-#: src/GameText.h:213
+#: src/GameText.h:212
 msgid "Defaults"
 msgstr "Oletukset"
 
-#: src/GameText.h:214
+#: src/GameText.h:213
 msgid "Do you really want to delete player?"
 msgstr "Tahdotko varmasti poistaa pelaajan?"
 
-#: src/GameText.h:215
+#: src/GameText.h:214
 msgid "Do you really want to delete replay?"
 msgstr "Tahdotko varmasti poistaa toistovideon?"
 
-#: src/GameText.h:216 src/GameText.h:219
+#: src/GameText.h:215 src/GameText.h:218
 msgid "Delete"
 msgstr "Poista"
 
-#: src/GameText.h:217
+#: src/GameText.h:216
 msgid "Delete from favorite"
 msgstr "Poista suosikeista"
 
-#: src/GameText.h:218
+#: src/GameText.h:217
 msgid "Delete from blacklist"
 msgstr "Poista mustalta listalta"
 
-#: src/GameText.h:220
+#: src/GameText.h:219
 msgid "Description"
 msgstr "Kuvaus"
 
-#: src/GameText.h:221
+#: src/GameText.h:220
 msgid "Display Ghost time difference"
 msgstr "Näytä haamun aikaero"
 
-#: src/GameText.h:222
+#: src/GameText.h:221
 msgid "Display Ghost Information"
 msgstr "Näytä haamun tiedot"
 
-#: src/GameText.h:223
+#: src/GameText.h:222
 msgid "Display bike arrow indication"
 msgstr "Näytä pyörän nuoli"
 
-#: src/GameText.h:224
+#: src/GameText.h:223
 msgid "Direct Connection"
 msgstr "Suora yhteys"
 
-#: src/GameText.h:225
+#: src/GameText.h:224
 msgid "Downloading the ghost..."
 msgstr "Ladataan haamua..."
 
-#: src/GameText.h:226
+#: src/GameText.h:225
 msgid "Downloading ghosts..."
 msgstr ""
 
-#: src/GameText.h:227
+#: src/GameText.h:226
 msgid "Downloading the highscore..."
 msgstr "Ladataan huipputulokset..."
 
-#: src/GameText.h:228
+#: src/GameText.h:227
 msgid "Downloading high-scores..."
 msgstr "Ladataan huipputuloksia..."
 
-#: src/GameText.h:229
+#: src/GameText.h:228
 msgid ""
 "Downloading extra levels...\n"
 "Press ESC to abort."
@@ -677,27 +673,27 @@ msgstr ""
 "Ladataan lisäkenttiä...\n"
 "Paina ESCiä keskeyttääksesi."
 
-#: src/GameText.h:230
+#: src/GameText.h:229
 msgid "Downloading the level..."
 msgstr ""
 
-#: src/GameText.h:231
+#: src/GameText.h:230
 msgid "Checking for new levels..."
 msgstr "Etsitään uusia kenttiä..."
 
-#: src/GameText.h:232
+#: src/GameText.h:231
 msgid "Downloading the replay..."
 msgstr ""
 
-#: src/GameText.h:233
+#: src/GameText.h:232
 msgid "Loading new and updated levels..."
 msgstr "Ladataan uusia ja päivitettyjä kenttiä..."
 
-#: src/GameText.h:234
+#: src/GameText.h:233
 msgid "Checking for existing rooms..."
 msgstr "Etsitään olemassaolevia kenttiä..."
 
-#: src/GameText.h:235
+#: src/GameText.h:234
 msgid ""
 "Downloading theme data required by new levels...\n"
 "Press ESC to abort."
@@ -705,111 +701,111 @@ msgstr ""
 "Ladataan teemadataa uusiin kenttiin...\n"
 "Paina ESCiä keskeyttääksesi."
 
-#: src/GameText.h:236
+#: src/GameText.h:235
 msgid "Checking for new themes..."
 msgstr "Etsitään uusia teemoja..."
 
-#: src/GameText.h:237
+#: src/GameText.h:236
 msgid "Get More Levels!"
 msgstr "Hae lisää kenttiä!"
 
-#: src/GameText.h:238
+#: src/GameText.h:237
 msgid "Drive"
 msgstr "Kaasu"
 
-#: src/GameText.h:239
+#: src/GameText.h:238
 msgid "Enable Audio"
 msgstr "Salli Äänet"
 
-#: src/GameText.h:240
+#: src/GameText.h:239
 msgid "Check new levels at startup"
 msgstr "Hae uusia kenttiä käynnistyksessä"
 
-#: src/GameText.h:241
+#: src/GameText.h:240
 msgid "Check new highscores at startup"
 msgstr "Hae uusia huipputuloksia käynnistyksessä"
 
-#: src/GameText.h:242
+#: src/GameText.h:241
 msgid "Enable Context Help"
 msgstr "Asiayhteysapu"
 
-#: src/GameText.h:243
+#: src/GameText.h:242
 msgid "Enable Engine Sound"
 msgstr "Salli moottorin ääni"
 
-#: src/GameText.h:244
+#: src/GameText.h:243
 msgid "Enable Ghost"
 msgstr "Salli Haamu"
 
-#: src/GameText.h:245
+#: src/GameText.h:244
 msgid "Show World Record in-game"
 msgstr "Näytä maailmanennätykset pelissä"
 
-#: src/GameText.h:246
+#: src/GameText.h:245
 msgid "Show next medal in-game"
 msgstr ""
 
-#: src/GameText.h:247
+#: src/GameText.h:246
 msgid "Enable menu music"
 msgstr "Salli valikko musiikki"
 
-#: src/GameText.h:248
+#: src/GameText.h:247
 msgid "Enable game music"
 msgstr "Salli peli musiikki"
 
-#: src/GameText.h:249
+#: src/GameText.h:248
 msgid "Enable WWW Access"
 msgstr "Salli WWW-pääsy"
 
-#: src/GameText.h:250
+#: src/GameText.h:249
 msgid "Enter player name"
 msgstr "Anna pelaajan nimi"
 
-#: src/GameText.h:251
+#: src/GameText.h:250
 msgid "Enter name of replay"
 msgstr "Anna toistovideon nimi"
 
-#: src/GameText.h:252
+#: src/GameText.h:251
 msgid "There are errors in the level, don't expect it to be playable!"
 msgstr "Kentässä on virheitä, se ei välttämättä ole pelattava!"
 
-#: src/GameText.h:253
+#: src/GameText.h:252
 msgid "Check your Internet connection !"
 msgstr "Tarkista Internet-yhteytesi!"
 
-#: src/GameText.h:254
+#: src/GameText.h:253
 msgid "Failed to check for levels."
 msgstr "Kenttien haku epäonnistui."
 
-#: src/GameText.h:255
+#: src/GameText.h:254
 msgid "Failed to download high-scores."
 msgstr "Huipputulosten haku epäonnistui."
 
-#: src/GameText.h:256
+#: src/GameText.h:255
 msgid "Failed to download levels."
 msgstr "Kenttien lataus epäonnistui."
 
-#: src/GameText.h:257
+#: src/GameText.h:256
 msgid "Failed to download the replay."
 msgstr "Toistovideon lataus epäonnistui."
 
-#: src/GameText.h:258
+#: src/GameText.h:257
 msgid "Failed to download the rooms list."
 msgstr "Huonelistan lataus epäonnstui."
 
-#: src/GameText.h:259
+#: src/GameText.h:258
 msgid "Failed to get the selected theme"
 msgstr "Valitun teeman saanti epäonnistui"
 
-#: src/GameText.h:260
+#: src/GameText.h:259
 msgid "Failed to initialize level!"
 msgstr "Kentän alustaminen epäonnistui!"
 
-#: src/GameText.h:261
+#: src/GameText.h:260
 msgid "Failed to load replay!"
 msgstr "Toistovideon lataus epäonnistui!"
 
-#: src/GameText.h:262
+#: src/GameText.h:261
 msgid ""
 "Failed to save replay!\n"
 "Maybe you should try with another name?"
@@ -817,80 +813,80 @@ msgstr ""
 "Toistovideon tallennus epäonnistui!\n"
 "Kokeile eri nimellä."
 
-#: src/GameText.h:263
+#: src/GameText.h:262
 msgid "Failed to update the theme list"
 msgstr "Teemalistan päivitys epäonnistui"
 
-#: src/GameText.h:264
+#: src/GameText.h:263
 msgid "File"
 msgstr "Tiedosto"
 
-#: src/GameText.h:265
+#: src/GameText.h:264
 msgid "Filter"
 msgstr "Suodatin"
 
-#: src/GameText.h:266
+#: src/GameText.h:265
 msgid "Finished!"
 msgstr "Suoritettu!"
 
-#: src/GameText.h:267
+#: src/GameText.h:266
 msgid "Finish Time"
 msgstr "Aika"
 
-#: src/GameText.h:268
+#: src/GameText.h:267
 msgid "Flip left"
 msgstr "Pyörähdys vasemmalle"
 
-#: src/GameText.h:269
+#: src/GameText.h:268
 msgid "Flip right"
 msgstr "Pyörähdys oikealle"
 
-#: src/GameText.h:270
+#: src/GameText.h:269
 msgid "Game Graphics"
 msgstr "Pelin grafiikka"
 
-#: src/GameText.h:272
+#: src/GameText.h:271
 msgid "General Info"
 msgstr "Yleinen Tieto"
 
-#: src/GameText.h:273
+#: src/GameText.h:272
 msgid "Get this theme"
 msgstr "Hae tämä teema"
 
-#: src/GameText.h:274
+#: src/GameText.h:273
 msgid "Local best"
 msgstr "Paikallinen paras"
 
-#: src/GameText.h:275
+#: src/GameText.h:274
 msgid "Your best"
 msgstr "Oma parhaasi"
 
-#: src/GameText.h:276
+#: src/GameText.h:275
 msgid "Type"
 msgstr "Tyyppi"
 
-#: src/GameText.h:277 src/GameText.h:758
+#: src/GameText.h:276 src/GameText.h:758
 msgid "The highscore of the reference room"
 msgstr "Vertailu huoneen huipputulos"
 
-#: src/GameText.h:278 src/GameText.h:759
+#: src/GameText.h:277 src/GameText.h:759
 msgid "The highscore of the other rooms"
 msgstr "Toisten huoneiden huipputulos"
 
-#: src/GameText.h:279 src/GameText.h:756
+#: src/GameText.h:278 src/GameText.h:756
 msgid "The best of my replays (on this computer)"
 msgstr "Paras omista toistovideoistani (tällä koneella)"
 
-#: src/GameText.h:280 src/GameText.h:757
+#: src/GameText.h:279 src/GameText.h:757
 msgid "The best of the replays (on this computer)"
 msgstr "Paras toistovideo (tällä koneella)"
 
-#: src/GameText.h:281
+#: src/GameText.h:280
 #, c-format
 msgid "Ghost of %s"
 msgstr "%s:n haamu"
 
-#: src/GameText.h:282
+#: src/GameText.h:281
 msgid ""
 "Please wait the next party\n"
 "Or press escape to disconnect"
@@ -898,68 +894,68 @@ msgstr ""
 "Ole hyvä ja odota seuraavaa ryhmää\n"
 "Tai paina escape -näppäintä katkaistaksesi yhteyden"
 
-#: src/GameText.h:283
+#: src/GameText.h:282
 #, c-format
 msgid "Web ghost of %s"
 msgstr "%s:n web haamu"
 
-#: src/GameText.h:284
+#: src/GameText.h:283
 msgid "Ghost"
 msgstr "Haamu"
 
-#: src/GameText.h:285
+#: src/GameText.h:284
 msgid "Help"
 msgstr "Ohje"
 
-#: src/GameText.h:289
+#: src/GameText.h:288
 msgid "You control your bike using the keyboard"
 msgstr "Pyörää ohjataan näppäimistöllä"
 
-#: src/GameText.h:290 src/GameText.h:309
+#: src/GameText.h:289 src/GameText.h:308
 msgid "Accelerates"
 msgstr "Kiihdyttää"
 
-#: src/GameText.h:291 src/GameText.h:310
+#: src/GameText.h:290 src/GameText.h:309
 msgid "Brakes"
 msgstr "Jarruttaa"
 
-#: src/GameText.h:292 src/GameText.h:311
+#: src/GameText.h:291 src/GameText.h:310
 msgid "Rotates it counter-clockwise"
 msgstr "Pyörittää vastapäivään"
 
-#: src/GameText.h:293 src/GameText.h:312
+#: src/GameText.h:292 src/GameText.h:311
 msgid "Rotates it clockwise"
 msgstr "Pyörittää myötäpäivään"
 
-#: src/GameText.h:294 src/GameText.h:313
+#: src/GameText.h:293 src/GameText.h:312
 msgid "Turns around and drives in the other direction"
 msgstr "Kääntää ympäri ja ajaa toiseen suuntaan"
 
-#: src/GameText.h:295 src/GameText.h:315 src/GameText.h:444
+#: src/GameText.h:294 src/GameText.h:314 src/GameText.h:443
 msgid "Pause"
 msgstr "Tauko"
 
-#: src/GameText.h:296 src/GameText.h:316
+#: src/GameText.h:295 src/GameText.h:315
 msgid "Restart the level"
 msgstr "Aloita kenttä alusta"
 
-#: src/GameText.h:297 src/GameText.h:317
+#: src/GameText.h:296 src/GameText.h:316
 msgid "Previous/Next level"
 msgstr "Edellinen/Seuraava kenttä"
 
-#: src/GameText.h:299 src/GameText.h:330
+#: src/GameText.h:298 src/GameText.h:329
 msgid "Enable/disable web"
 msgstr "Salli/estä web"
 
-#: src/GameText.h:300
+#: src/GameText.h:299
 msgid "Reload levels, themes and replays from directories"
 msgstr "Uudelleenlataa kentät, teemat ja toistovideot tietokannasta."
 
-#: src/GameText.h:301 src/GameText.h:334
+#: src/GameText.h:300 src/GameText.h:333
 msgid "Take a screenshot"
 msgstr "Kaappaa kuva"
 
-#: src/GameText.h:303
+#: src/GameText.h:302
 msgid ""
 "Use Quick Play button to immediately start a game with a random level,\n"
 "or use Levels button to select from level packs."
@@ -967,13 +963,13 @@ msgstr ""
 "käytä Pika-aloitus nappia käynnistääksesi pelin satunnaiseen kenttään,\n"
 "tai käytä Kentät nappia valitaksesi kenttä paketeista."
 
-#: src/GameText.h:305
+#: src/GameText.h:304
 msgid ""
 "Find all the strawberries and touch the flower to finish\n"
 "the level."
 msgstr "Löydä kaikki mansikat ja kosketa kukkaa päästäksesi maaliin"
 
-#: src/GameText.h:306
+#: src/GameText.h:305
 msgid ""
 "Read the README file or check out the website at\n"
 "http://xmoto.tuxfamily.org\n"
@@ -983,382 +979,382 @@ msgstr ""
 "http://xmoto.tuxfamily.org\n"
 "jos haluat tietää enemmän."
 
-#: src/GameText.h:318
+#: src/GameText.h:317
 msgid "change mirror mode"
 msgstr "muuta peilitila"
 
-#: src/GameText.h:319
+#: src/GameText.h:318
 msgid "Toggle blacklist"
 msgstr "Lisää/Poista mustaan listaan"
 
-#: src/GameText.h:320
+#: src/GameText.h:319
 msgid "Enable/disable audio"
 msgstr "Salli/estä audio"
 
-#: src/GameText.h:321
+#: src/GameText.h:320
 msgid "Open options menu"
 msgstr "Avaa asetukset"
 
-#: src/GameText.h:322
+#: src/GameText.h:321
 msgid "Toggle Ghost Trail Rendering"
 msgstr ""
 
-#: src/GameText.h:323
+#: src/GameText.h:322
 msgid "Toggle Trail Cam"
 msgstr ""
 
-#: src/GameText.h:324
+#: src/GameText.h:323
 msgid "Toggle Display Medals,Display WR"
 msgstr ""
 
-#: src/GameText.h:325
+#: src/GameText.h:324
 msgid "Show this help"
 msgstr "Näytä tämä apu"
 
-#: src/GameText.h:326
+#: src/GameText.h:325
 msgid "Switch biker"
 msgstr ""
 
-#: src/GameText.h:327
+#: src/GameText.h:326
 msgid "Toggle favorite"
 msgstr "Lisää/Poista suosikki"
 
-#: src/GameText.h:328
+#: src/GameText.h:327
 msgid "Toggle Ghost Trail Tracking Shot"
 msgstr ""
 
-#: src/GameText.h:329
+#: src/GameText.h:328
 msgid "Enable/disable FPS display"
 msgstr "Salli/estä FPS tiedot"
 
-#: src/GameText.h:331 src/GameText.h:510
+#: src/GameText.h:330 src/GameText.h:509
 msgid "Enable/disable ugly mode"
 msgstr "Salli/estä ruma -tila"
 
-#: src/GameText.h:332
+#: src/GameText.h:331
 msgid "Toggle Contrast, Light and Full Graphics"
 msgstr ""
 
-#: src/GameText.h:333
+#: src/GameText.h:332
 msgid "Toggle theme and ugly over mode"
 msgstr ""
 
-#: src/GameText.h:336
+#: src/GameText.h:335
 msgid "Hide ghosts"
 msgstr "Piilota haamut"
 
-#: src/GameText.h:337
+#: src/GameText.h:336
 msgid "High"
 msgstr "Korkea"
 
-#: src/GameText.h:338
+#: src/GameText.h:337
 msgid "Highscore of the room"
 msgstr "Huoneen huipputulos"
 
-#: src/GameText.h:339
+#: src/GameText.h:338
 #, c-format
 msgid "%s: %s beat your highscore for level '%s'"
 msgstr "%s: %s hakkasi sinun parhaan aikasi kentälle '%s'"
 
-#: src/GameText.h:340
+#: src/GameText.h:339
 msgid "Levels are being added into the database. Please wait."
 msgstr "Kenttiä lisätään tietokantaa. Odota hetki."
 
-#: src/GameText.h:341
+#: src/GameText.h:340
 msgid "Internet Configuration"
 msgstr "Internet-asetukset"
 
-#: src/GameText.h:342
+#: src/GameText.h:341
 msgid "Infos"
 msgstr ""
 
-#: src/GameText.h:343
+#: src/GameText.h:342
 msgid "View Level Initially"
 msgstr "Näytä kenttä pelin alussa"
 
-#: src/GameText.h:344
+#: src/GameText.h:343
 msgid "Joystick"
 msgstr "Joystick"
 
-#: src/GameText.h:345
+#: src/GameText.h:344
 msgid "Enable joysticks"
 msgstr "Salli Joystickit"
 
-#: src/GameText.h:346
+#: src/GameText.h:345
 msgid "Oops!"
 msgstr "Hups!"
 
-#: src/GameText.h:347
+#: src/GameText.h:346
 msgid "Press ENTER to try again"
 msgstr "Paina ENTER yrittääksesi uudestaan"
 
-#: src/GameText.h:348
+#: src/GameText.h:347
 msgid "Press BACKSPACE to return to Checkpoint"
 msgstr ""
 
-#: src/GameText.h:349
+#: src/GameText.h:348
 msgid "Press ESC to display the menu"
 msgstr "Paina ESC näyttääksesi valikon"
 
-#: src/GameText.h:350
+#: src/GameText.h:349
 msgid "Key"
 msgstr "Näppäin"
 
-#: src/GameText.h:351
+#: src/GameText.h:350
 msgid "Keyboard"
 msgstr "Näppäimistö"
 
-#: src/GameText.h:352
+#: src/GameText.h:351
 msgid "Language"
 msgstr "Kieli"
 
-#: src/GameText.h:353
+#: src/GameText.h:352
 msgid "Language name"
 msgstr "Kielen nimi"
 
-#: src/GameText.h:354
+#: src/GameText.h:353
 msgid "Language code"
 msgstr "Kielen koodi"
 
-#: src/GameText.h:355
+#: src/GameText.h:354
 msgid "Level"
 msgstr "Kenttä"
 
-#: src/GameText.h:356
+#: src/GameText.h:355
 msgid "Added to favorites"
 msgstr "Lisätty suosikeihin"
 
-#: src/GameText.h:357
+#: src/GameText.h:356
 msgid "Deleted from favorites"
 msgstr "Poistettu suosikeista"
 
-#: src/GameText.h:358
+#: src/GameText.h:357
 msgid "Added to blacklist"
 msgstr "Lisätty mustalle listalle"
 
-#: src/GameText.h:359
+#: src/GameText.h:358
 msgid "Deleted from blacklist"
 msgstr "Poistettu mustalta listalta"
 
-#: src/GameText.h:360
+#: src/GameText.h:359
 msgid "Level Info..."
 msgstr "Kentän tiedot..."
 
-#: src/GameText.h:361
+#: src/GameText.h:360
 msgid "Level Name"
 msgstr "Kentän nimi"
 
-#: src/GameText.h:362
+#: src/GameText.h:361
 #, c-format
 msgid "Level '%s' cannot be loaded"
 msgstr "Kenttää '%s' ei voida avata."
 
-#: src/GameText.h:363
+#: src/GameText.h:362
 msgid "The level failed while loading with the following error :"
 msgstr ""
 
-#: src/GameText.h:364
+#: src/GameText.h:363
 msgid "Do you want to send a report to website administrators ?"
 msgstr ""
 
-#: src/GameText.h:365
+#: src/GameText.h:364
 msgid "Sending the report..."
 msgstr ""
 
-#: src/GameText.h:366
+#: src/GameText.h:365
 msgid "Sending the vote..."
 msgstr ""
 
-#: src/GameText.h:367
+#: src/GameText.h:366
 msgid "Level Pack"
 msgstr "Kenttäpaketti"
 
-#: src/GameText.h:368
+#: src/GameText.h:367
 msgid "Level Packs"
 msgstr "Kenttäpaketit"
 
-#: src/GameText.h:369
+#: src/GameText.h:368
 #, c-format
 msgid "Level '%s' required by replay!"
 msgstr "Toistovideo vaatii kentän '%s'!"
 
-#: src/GameText.h:370
+#: src/GameText.h:369
 msgid "Levels"
 msgstr "Kentät"
 
-#: src/GameText.h:371
+#: src/GameText.h:370
 msgid "List All"
 msgstr "Kaikki"
 
-#: src/GameText.h:372
+#: src/GameText.h:371
 msgid "Loading..."
 msgstr "Ladataan..."
 
-#: src/GameText.h:373
+#: src/GameText.h:372
 msgid "Loading levels..."
 msgstr "Ladataan kenttiä..."
 
-#: src/GameText.h:374
+#: src/GameText.h:373
 msgid "Loading menu graphics..."
 msgstr "Ladataan valikon grafiikkaa..."
 
-#: src/GameText.h:375
+#: src/GameText.h:374
 msgid "Loading replays..."
 msgstr "Ladataan toistovideoita..."
 
-#: src/GameText.h:376
+#: src/GameText.h:375
 msgid "Loading sounds..."
 msgstr "Ladataan ääniä..."
 
-#: src/GameText.h:377
+#: src/GameText.h:376
 msgid "Loading textures..."
 msgstr "Ladataan tekstuureja..."
 
-#: src/GameText.h:378
+#: src/GameText.h:377
 msgid "Login"
 msgstr "Käyttäjätunnus"
 
-#: src/GameText.h:379
+#: src/GameText.h:378
 msgid "Low"
 msgstr "Matala"
 
-#: src/GameText.h:380
+#: src/GameText.h:379
 msgid "Main"
 msgstr "Main"
 
-#: src/GameText.h:381
+#: src/GameText.h:380
 msgid "Mouse"
 msgstr "Hiiri"
 
-#: src/GameText.h:382 src/GameText.h:519
+#: src/GameText.h:381 src/GameText.h:518
 msgid "Theme"
 msgstr "Teema"
 
-#: src/GameText.h:384 src/GameText.h:848
+#: src/GameText.h:383 src/GameText.h:848
 msgid "Bronze"
 msgstr "Pronssi"
 
-#: src/GameText.h:385 src/GameText.h:846
+#: src/GameText.h:384 src/GameText.h:846
 msgid "Gold"
 msgstr "Kulta"
 
-#: src/GameText.h:386 src/GameText.h:847
+#: src/GameText.h:385 src/GameText.h:847
 msgid "Silver"
 msgstr "Hopea"
 
-#: src/GameText.h:387 src/GameText.h:845
+#: src/GameText.h:386 src/GameText.h:845
 msgid "Platinum"
 msgstr "Platina"
 
-#: src/GameText.h:388
+#: src/GameText.h:387
 msgid "Medium"
 msgstr "Keskiverto"
 
-#: src/GameText.h:389
+#: src/GameText.h:388
 msgid "Menu Graphics"
 msgstr "Valikon grafiikka"
 
-#: src/GameText.h:390
+#: src/GameText.h:389
 msgid "Message not sent, unknown players :"
 msgstr ""
 
-#: src/GameText.h:391
+#: src/GameText.h:390
 #, c-format
 msgid "You got a %s medal"
 msgstr ""
 
-#: src/GameText.h:392
+#: src/GameText.h:391
 msgid "Contrast"
 msgstr ""
 
-#: src/GameText.h:393
+#: src/GameText.h:392
 msgid "Light"
 msgstr ""
 
-#: src/GameText.h:394
+#: src/GameText.h:393
 msgid "Full"
 msgstr ""
 
-#: src/GameText.h:395
+#: src/GameText.h:394
 msgid "Total time you scored / total highscore time for levels you finished"
 msgstr ""
 "Kokonaisaika pisteistäsi / kokonaishuipputulokset kentistä jotka olet "
 "suorittanut"
 
-#: src/GameText.h:396
+#: src/GameText.h:395
 msgid "Level references unknown textures, it could be unplayable!"
 msgstr ""
 "Kentässä on tuntemattomia tekstuureja, se ei välttämättä ole pelattava!"
 
-#: src/GameText.h:397
+#: src/GameText.h:396
 msgid "Mono"
 msgstr "Mono"
 
-#: src/GameText.h:398
+#: src/GameText.h:397
 msgid "Following are your most played levels"
 msgstr "Seuraavat ovat eniten pelaamiasi kenttiä"
 
-#: src/GameText.h:399
+#: src/GameText.h:398
 msgid "Motion blur ghost"
 msgstr "Liikesumennettu haamu"
 
-#: src/GameText.h:400
+#: src/GameText.h:399
 msgid "Multi"
 msgstr "Moninpeli"
 
-#: src/GameText.h:401
+#: src/GameText.h:400
 msgid "Semi-cooperative mode"
 msgstr "Semi-yhteistyöllinen tila"
 
-#: src/GameText.h:402
+#: src/GameText.h:401
 msgid "Stop the game once a player ends the level"
 msgstr "Lopeta peli, kun pelaaja on päässyt pelin loppuun"
 
-#: src/GameText.h:403
+#: src/GameText.h:402
 msgid "Number of players"
 msgstr "Pelaajien lukumäärä"
 
-#: src/GameText.h:404
+#: src/GameText.h:403
 msgid "New"
 msgstr "Uusi"
 
-#: src/GameText.h:405
+#: src/GameText.h:404
 #, c-format
 msgid "X-Moto %s or newer required to load level"
 msgstr "Kenttä vaatii vähintään X-Moton version %s"
 
-#: src/GameText.h:406
+#: src/GameText.h:405
 msgid "New highscore!"
 msgstr "Uusi huipputulos!"
 
-#: src/GameText.h:407
+#: src/GameText.h:406
 msgid "New personal highscore!"
 msgstr "Uusi henkilökohtainen huipputulos!"
 
-#: src/GameText.h:408
+#: src/GameText.h:407
 #, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
 msgstr[0] "%i uusi tai päivitetty kenttä saatavilla. Ladataanko nyt?"
 msgstr[1] "%i uutta tai päivitettyä kenttää saatavilla. Ladataanko nyt?"
 
-#: src/GameText.h:411
+#: src/GameText.h:410
 msgid "New Levels"
 msgstr "Uusia kenttiä"
 
-#: src/GameText.h:412
+#: src/GameText.h:411
 msgid "New levels available!"
 msgstr "Uusia kenttiä saatavilla!"
 
-#: src/GameText.h:413
+#: src/GameText.h:412
 msgid "New Profile..."
 msgstr "Uusi profiili..."
 
-#: src/GameText.h:414
+#: src/GameText.h:413
 msgid "No"
 msgstr "Ei"
 
-#: src/GameText.h:415
+#: src/GameText.h:414
 msgid ""
 "No new or updated levels available.\n"
 "\n"
@@ -1368,19 +1364,19 @@ msgstr ""
 "\n"
 "Yritä myöhemmin uudelleen."
 
-#: src/GameText.h:416
+#: src/GameText.h:415
 msgid "No level following this one, sorry."
 msgstr "Ei seuraavaa kenttää."
 
-#: src/GameText.h:417
+#: src/GameText.h:416
 msgid "No statistics for this profile."
 msgstr "Ei tilastoja tälle profiilille."
 
-#: src/GameText.h:418
+#: src/GameText.h:417
 msgid "Not finished"
 msgstr "Ei suoritettu"
 
-#: src/GameText.h:419
+#: src/GameText.h:418
 msgid ""
 "Important note!\n"
 "\n"
@@ -1405,166 +1401,166 @@ msgstr ""
 "Käy myös osoitteessa http://xmoto.tuxfamily.org varmistaaksesi, että\n"
 "sinulla on uusin versio. :)"
 
-#: src/GameText.h:429
+#: src/GameText.h:428
 msgid "# Levels"
 msgstr "# Kentät"
 
-#: src/GameText.h:430
+#: src/GameText.h:429
 msgid "OK"
 msgstr "OK"
 
-#: src/GameText.h:431
+#: src/GameText.h:430
 msgid "Open"
 msgstr "Avaa"
 
-#: src/GameText.h:432
+#: src/GameText.h:431
 msgid "Operation completed"
 msgstr "Toimenpide suoritettu"
 
-#: src/GameText.h:433
+#: src/GameText.h:432
 msgid "Options"
 msgstr "Asetukset"
 
-#: src/GameText.h:434
+#: src/GameText.h:433
 msgid "Some options will not take effect before next restart!"
 msgstr "Jotkut asetukset eivät tule käyttöön ennen seuraavaa käynnistystä!"
 
-#: src/GameText.h:435
+#: src/GameText.h:434
 msgid "By author"
 msgstr "Tekijältä"
 
-#: src/GameText.h:436
+#: src/GameText.h:435
 msgid "Medals"
 msgstr "Mitalit"
 
-#: src/GameText.h:437 src/GameText.h:489
+#: src/GameText.h:436 src/GameText.h:488
 msgid "Room"
 msgstr "Huone"
 
-#: src/GameText.h:438
+#: src/GameText.h:437
 msgid "Special"
 msgstr "Erityiset"
 
-#: src/GameText.h:439
+#: src/GameText.h:438
 msgid "Standard"
 msgstr "Kenttäpaketit"
 
-#: src/GameText.h:440
+#: src/GameText.h:439
 msgid "Web votes"
 msgstr "Web-äänestys"
 
-#: src/GameText.h:441 src/GameText.h:502
+#: src/GameText.h:440 src/GameText.h:501
 msgid "Statistics"
 msgstr "Tilastot"
 
-#: src/GameText.h:442 src/GameText.h:837
+#: src/GameText.h:441 src/GameText.h:837
 msgid "By best driver"
 msgstr "Parhaan ajajan mukaan"
 
-#: src/GameText.h:443
+#: src/GameText.h:442
 msgid "By length"
 msgstr "Pituuden mukaan"
 
-#: src/GameText.h:445
+#: src/GameText.h:444
 msgid "Password"
 msgstr "Salasana"
 
-#: src/GameText.h:446 src/GameText.h:447
+#: src/GameText.h:445 src/GameText.h:446
 msgid "Personal"
 msgstr "Henkilökohtainen"
 
-#: src/GameText.h:448
+#: src/GameText.h:447
 #, c-format
 msgid "%i player"
 msgid_plural "%i players"
 msgstr[0] "%i pelaaja"
 msgstr[1] "%i pelaajat"
 
-#: src/GameText.h:449
+#: src/GameText.h:448
 msgid "Player Profile"
 msgstr "Pelaajan profiili"
 
-#: src/GameText.h:450
+#: src/GameText.h:449
 msgid "Player Profiles"
 msgstr "Pelaajien profiilit"
 
-#: src/GameText.h:451
+#: src/GameText.h:450
 msgid "Pause when playing X-Moto"
 msgstr ""
 
-#: src/GameText.h:452
+#: src/GameText.h:451
 msgid "Play Next Level"
 msgstr "Seuraava kenttä"
 
-#: src/GameText.h:453 src/GameText.h:584
+#: src/GameText.h:452 src/GameText.h:583
 msgid "Port"
 msgstr "Portti"
 
-#: src/GameText.h:454
+#: src/GameText.h:453
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
 msgstr "Paina näppäintä, jonka haluat '%s' tai ESC peruaksesi..."
 
-#: src/GameText.h:455
+#: src/GameText.h:454
 #, c-format
 msgid "Press %s to chat"
 msgstr "Paina %s jutellaksesi"
 
-#: src/GameText.h:456
+#: src/GameText.h:455
 msgid "Proxy Server"
 msgstr "Välityspalvelin"
 
-#: src/GameText.h:457
+#: src/GameText.h:456
 msgid "Configure Proxy..."
 msgstr "Säädä välityspalvelin..."
 
-#: src/GameText.h:458
+#: src/GameText.h:457
 msgid "Quality"
 msgstr "Laatu"
 
-#: src/GameText.h:459
+#: src/GameText.h:458
 msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
 msgstr ""
 
-#: src/GameText.h:460
+#: src/GameText.h:459
 msgid "Quick start"
 msgstr "Pika-aloitus"
 
-#: src/GameText.h:461
+#: src/GameText.h:460
 msgid "Quit Game"
 msgstr "Lopeta peli"
 
-#: src/GameText.h:462
+#: src/GameText.h:461
 msgid "Do you really want to quit?"
 msgstr "Tahdotko varmasti lopettaa?"
 
-#: src/GameText.h:463
+#: src/GameText.h:462
 msgid "Randomize"
 msgstr "Sekoita"
 
-#: src/GameText.h:464
+#: src/GameText.h:463
 msgid "Reload files to the database"
 msgstr ""
 
-#: src/GameText.h:465
+#: src/GameText.h:464
 msgid "Reloading levels..."
 msgstr "Uudelleenladataan kenttiä..."
 
-#: src/GameText.h:466
+#: src/GameText.h:465
 msgid "Reloading replays..."
 msgstr "Uudelleenladataan toistovideoita..."
 
-#: src/GameText.h:467
+#: src/GameText.h:466
 msgid "Reloading themes..."
 msgstr "Uudelleenladataan teemoja..."
 
-#: src/GameText.h:468
+#: src/GameText.h:467
 msgid "Replay"
 msgstr "Toistovideo"
 
-#: src/GameText.h:469
+#: src/GameText.h:468
 msgid ""
 "  Stop:\n"
 "    >>\n"
@@ -1576,7 +1572,7 @@ msgstr ""
 "   < >\n"
 "Nopeus:"
 
-#: src/GameText.h:470
+#: src/GameText.h:469
 msgid ""
 "[esc] , [space]\n"
 "[right key]\n"
@@ -1586,7 +1582,7 @@ msgstr ""
 "[oikea nappi]\n"
 "[ylös/alas napit]\n"
 
-#: src/GameText.h:471
+#: src/GameText.h:470
 msgid ""
 "  Stop:\n"
 "<< >>\n"
@@ -1598,7 +1594,7 @@ msgstr ""
 "<< >>\n"
 "Nopeus:"
 
-#: src/GameText.h:472
+#: src/GameText.h:471
 msgid ""
 "[esc] , [space]\n"
 "[left/right keys]\n"
@@ -1608,226 +1604,226 @@ msgstr ""
 "[oikea nappi]\n"
 "[ylös/alas napit]\n"
 
-#: src/GameText.h:473
+#: src/GameText.h:472
 msgid "The replay can't be played!"
 msgstr "Toistovideota ei voida toistaa!"
 
-#: src/GameText.h:474
+#: src/GameText.h:473
 #, c-format
 msgid "Replay of %s"
 msgstr "%s:n toistovideo"
 
-#: src/GameText.h:475
+#: src/GameText.h:474
 msgid "Replays"
 msgstr "Toistovideot"
 
-#: src/GameText.h:476
+#: src/GameText.h:475
 msgid "Rewind while replaying"
 msgstr ""
 
-#: src/GameText.h:477
+#: src/GameText.h:476
 msgid "Forward while replaying"
 msgstr ""
 
-#: src/GameText.h:478
+#: src/GameText.h:477
 msgid "Pause while replaying"
 msgstr ""
 
-#: src/GameText.h:479
+#: src/GameText.h:478
 msgid "Stop while replaying"
 msgstr ""
 
-#: src/GameText.h:480
+#: src/GameText.h:479
 msgid "Play faster while replaying"
 msgstr ""
 
-#: src/GameText.h:481
+#: src/GameText.h:480
 msgid "Play a bit faster while replaying"
 msgstr ""
 
-#: src/GameText.h:482
+#: src/GameText.h:481
 msgid "Play slower while replaying"
 msgstr ""
 
-#: src/GameText.h:483
+#: src/GameText.h:482
 msgid "Play a bit slower while replaying"
 msgstr ""
 
-#: src/GameText.h:484
+#: src/GameText.h:483
 msgid "Are you sure you want to reset config to defaults ?"
 msgstr "Oletko varma että haluat palauttaa oletus asetukset?"
 
-#: src/GameText.h:485
+#: src/GameText.h:484
 msgid "Restart This Level"
 msgstr "Yritä uudestaan"
 
-#: src/GameText.h:486
+#: src/GameText.h:485
 msgid "Restart to the last checkpoint"
 msgstr ""
 
-#: src/GameText.h:487
+#: src/GameText.h:486
 msgid "Restart level"
 msgstr "Aloita kenttä uudelleen"
 
-#: src/GameText.h:488
+#: src/GameText.h:487
 msgid "Resume Playing"
 msgstr "Jatka"
 
-#: src/GameText.h:490
+#: src/GameText.h:489
 msgid "Run Windowed"
 msgstr "Käynnistä ikkunatilassa"
 
-#: src/GameText.h:491
+#: src/GameText.h:490
 msgid "Save"
 msgstr "Tallenna"
 
-#: src/GameText.h:492
+#: src/GameText.h:491
 #, c-format
 msgid "Saved as %s"
 msgstr "Tallenna %s:na"
 
-#: src/GameText.h:493
+#: src/GameText.h:492
 msgid "Save Replay"
 msgstr "Tallenna toistovideo"
 
-#: src/GameText.h:494
+#: src/GameText.h:493
 msgid "Screen Resolution"
 msgstr "Näytön resoluutio"
 
-#: src/GameText.h:495
+#: src/GameText.h:494
 msgid "Screenshot"
 msgstr ""
 
-#: src/GameText.h:496
+#: src/GameText.h:495
 msgid "Show"
 msgstr "Näytä"
 
-#: src/GameText.h:497
+#: src/GameText.h:496
 msgid "Show console"
 msgstr "Näytä Console"
 
-#: src/GameText.h:498
+#: src/GameText.h:497
 msgid "Speedometer"
 msgstr "Nopeusmittari"
 
-#: src/GameText.h:499
+#: src/GameText.h:498
 msgid "Info..."
 msgstr "Info..."
 
-#: src/GameText.h:500
+#: src/GameText.h:499
 msgid "Show Mini Map"
 msgstr "Näytä pikkukartta"
 
-#: src/GameText.h:501
+#: src/GameText.h:500
 msgid "Play!"
 msgstr "Pelaa!"
 
-#: src/GameText.h:503
+#: src/GameText.h:502
 msgid "STATS"
 msgstr "TILASTOT"
 
-#: src/GameText.h:504
+#: src/GameText.h:503
 msgid "You are currently disconnected"
 msgstr "Yhteytesi on tällä hetkellä katkaistu"
 
-#: src/GameText.h:505
+#: src/GameText.h:504
 msgid "Stereo"
 msgstr "Stereo"
 
-#: src/GameText.h:506
+#: src/GameText.h:505
 msgid "Synchronisation down"
 msgstr "Syknronisaatio alas"
 
-#: src/GameText.h:507
+#: src/GameText.h:506
 msgid "Synchronisation up"
 msgstr "Syknronisaatio ylös"
 
-#: src/GameText.h:508
+#: src/GameText.h:507
 msgid "Synchronisation done successfully"
 msgstr "Syknronisaatio valmis"
 
-#: src/GameText.h:509
+#: src/GameText.h:508
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
 msgstr ""
 
-#: src/GameText.h:511
+#: src/GameText.h:510
 msgid "Add/remove to favorite levels"
 msgstr "Lisää/poista suosikeista"
 
-#: src/GameText.h:512
+#: src/GameText.h:511
 msgid "Switch FPS"
 msgstr ""
 
-#: src/GameText.h:513
+#: src/GameText.h:512
 msgid "Add/remove to blacklisted levels"
 msgstr "Lisää/poista mustan listan kentistä"
 
-#: src/GameText.h:514
+#: src/GameText.h:513
 msgid "Switch net game mode"
 msgstr ""
 
-#: src/GameText.h:515
+#: src/GameText.h:514
 msgid "Switch highscore information"
 msgstr ""
 
-#: src/GameText.h:516
+#: src/GameText.h:515
 msgid "Switch WWW access"
 msgstr ""
 
-#: src/GameText.h:517
+#: src/GameText.h:516
 msgid "Switch graphics quality mode"
 msgstr ""
 
-#: src/GameText.h:518
+#: src/GameText.h:517
 msgid "Switch graphics mode"
 msgstr ""
 
-#: src/GameText.h:520
+#: src/GameText.h:519
 msgid "Available"
 msgstr "Käytettävissä"
 
-#: src/GameText.h:521
+#: src/GameText.h:520
 msgid "To download"
 msgstr "Ladattavissa"
 
-#: src/GameText.h:522
+#: src/GameText.h:521
 msgid "To be updated"
 msgstr "Päivitys saatavilla"
 
-#: src/GameText.h:523
+#: src/GameText.h:522
 msgid "The theme is now up to date"
 msgstr "Teema on nyt päivitetty"
 
-#: src/GameText.h:524
+#: src/GameText.h:523
 msgid "Time"
 msgstr "Aika"
 
-#: src/GameText.h:525
+#: src/GameText.h:524
 msgid "Try This Level Again"
 msgstr "Yritä uudestaan"
 
-#: src/GameText.h:526
+#: src/GameText.h:525
 msgid "Tutorial"
 msgstr "Opastus"
 
-#: src/GameText.h:527
+#: src/GameText.h:526
 msgid "Undefined"
 msgstr "Määrittelemätön"
 
-#: src/GameText.h:528
+#: src/GameText.h:527
 msgid "Unknown"
 msgstr "Tuntematon"
 
-#: src/GameText.h:529
+#: src/GameText.h:528
 msgid "Unknown players :"
 msgstr ""
 
-#: src/GameText.h:530
+#: src/GameText.h:529
 msgid "Unpacked levels"
 msgstr "Paketoimattomat kentät"
 
-#: src/GameText.h:531
+#: src/GameText.h:530
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
@@ -1837,255 +1833,259 @@ msgstr ""
 "Teemaa ei ole saatavilla Internetissä\n"
 "tai teemalistasi ei ole päivitetty"
 
-#: src/GameText.h:532
+#: src/GameText.h:531
 msgid "Update"
 msgstr "Päivitä"
 
-#: src/GameText.h:533
+#: src/GameText.h:532
 msgid "Updated"
 msgstr "Päivitetty"
 
-#: src/GameText.h:534
+#: src/GameText.h:533
 msgid "Check WWW"
 msgstr "Tarkista WWW"
 
-#: src/GameText.h:535
+#: src/GameText.h:534
 msgid "Update the rooms list"
 msgstr "Päivitä huonelista"
 
-#: src/GameText.h:536
+#: src/GameText.h:535
 msgid "Update the theme list"
 msgstr "Päivitä teemalista"
 
-#: src/GameText.h:537
+#: src/GameText.h:536
 msgid "Updating level lists..."
 msgstr "Päivitetään kenttälistaa..."
 
-#: src/GameText.h:538
+#: src/GameText.h:537
 msgid "Upload"
 msgstr "Lähetä"
 
-#: src/GameText.h:539
+#: src/GameText.h:538
 msgid "Upload all highscores"
 msgstr "Lähetä kaikki huipputulokset"
 
-#: src/GameText.h:540
+#: src/GameText.h:539
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr "Odottamaton virhe ilmennyt. Web-sivulla saattaa olla ongelmia."
 
-#: src/GameText.h:541
+#: src/GameText.h:540
 msgid "Oh no !"
 msgstr "Voi ei!"
 
-#: src/GameText.h:542
+#: src/GameText.h:541
 msgid "Uploading the highscore..."
 msgstr "Lähetetään huipputulosta..."
 
-#: src/GameText.h:543
+#: src/GameText.h:542
 msgid "Use crappy information"
 msgstr "Käytä huonoa tietoa"
 
-#: src/GameText.h:544
+#: src/GameText.h:543
 msgid "Use permanent console"
 msgstr ""
 
-#: src/GameText.h:545
+#: src/GameText.h:544
 msgid "Use Environment Vars"
 msgstr "Käytä ympäristömuuttujia"
 
-#: src/GameText.h:546
+#: src/GameText.h:545
 msgid "Use Profile"
 msgstr "Käytä profiilia"
 
-#: src/GameText.h:547
+#: src/GameText.h:546
 msgid "Allow web forms"
 msgstr "Salli web lomakkeet"
 
-#: src/GameText.h:548
+#: src/GameText.h:547
 msgid "Using HTTP Proxy"
 msgstr "Käytetään HTTP-välityspalvelinta"
 
-#: src/GameText.h:549
+#: src/GameText.h:548
 msgid "Using SOCKS4 Proxy"
 msgstr "Käytetään SOCKS4-välityspalvelinta"
 
-#: src/GameText.h:550
+#: src/GameText.h:549
 msgid "Using SOCKS5 Proxy"
 msgstr "Käytetään SOCKS5-välityspalvelinta"
 
-#: src/GameText.h:551
+#: src/GameText.h:550
 msgid "Video"
 msgstr "Video"
 
-#: src/GameText.h:552
+#: src/GameText.h:551
 msgid "View"
 msgstr "Näytä"
 
-#: src/GameText.h:553 src/GameText.h:640
+#: src/GameText.h:552 src/GameText.h:640
 msgid "View the replay"
 msgstr ""
 
-#: src/GameText.h:554
+#: src/GameText.h:553
 msgid "View the highscore"
 msgstr "Näytä huipputulos"
 
-#: src/GameText.h:555
+#: src/GameText.h:554
 #, c-format
 msgid "Do you want to update level \"%s\"?"
 msgstr "Tahdotko päivittää kentän \"%s\"?"
 
-#: src/GameText.h:556
+#: src/GameText.h:555
 msgid "Warning"
 msgstr "Varoitus"
 
-#: src/GameText.h:558
+#: src/GameText.h:557
 msgid "WWW"
 msgstr "WWW"
 
-#: src/GameText.h:559
+#: src/GameText.h:558
 msgid "Reference room"
 msgstr "Vertailu huone"
 
-#: src/GameText.h:560
+#: src/GameText.h:559
 #, c-format
 msgid "Room %i"
 msgstr "Huone %i"
 
-#: src/GameText.h:562
+#: src/GameText.h:561
 #, c-format
 msgid "%d hours"
 msgstr "%d tuntia"
 
-#: src/GameText.h:563
+#: src/GameText.h:562
 #, c-format
 msgid "%d minutes"
 msgstr "%d minuuttia"
 
-#: src/GameText.h:564
+#: src/GameText.h:563
 #, c-format
 msgid "only %i"
 msgid_plural "only %i"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/GameText.h:566
+#: src/GameText.h:565
 #, c-format
 msgid "Stats since: %s"
 msgstr "Tilastot alkaen: %s"
 
-#: src/GameText.h:567
+#: src/GameText.h:566
 #, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
 msgstr[0] "X-Moto aloitettu %d kerran"
 msgstr[1] "X-Moto aloitettu %d kertaa"
 
-#: src/GameText.h:568
+#: src/GameText.h:567
 #, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
 msgstr[0] "%d eri kenttä"
 msgstr[1] "%d eri kentät"
 
-#: src/GameText.h:569
+#: src/GameText.h:568
 #, c-format
 msgid "Time played: %s"
 msgstr "Pelattu aika: %s"
 
-#: src/GameText.h:570
+#: src/GameText.h:569
 #, c-format
 msgid "%d play"
 msgid_plural "%d plays"
 msgstr[0] "%d pelaus kertaa"
 msgstr[1] "%d pelaus kertaa"
 
-#: src/GameText.h:571
+#: src/GameText.h:570
 #, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
 msgstr[0] "%d kuolema"
 msgstr[1] "%d kuolemaa"
 
-#: src/GameText.h:572
+#: src/GameText.h:571
 #, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
 msgstr[0] "%d suoritus"
 msgstr[1] "%d suoritusta"
 
-#: src/GameText.h:573
+#: src/GameText.h:572
 #, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
 msgstr[0] "%d uudelleen aloitus"
 msgstr[1] "%d uudelleen aloitusta"
 
-#: src/GameText.h:575
+#: src/GameText.h:574
 #, c-format
 msgid "%d seconds"
 msgstr "%d sekuntia"
 
-#: src/GameText.h:576
+#: src/GameText.h:575
 msgid "Yes"
 msgstr "Kyllä"
 
-#: src/GameText.h:577
+#: src/GameText.h:576
 msgid "Yes to all"
 msgstr "Kyllä kaikkiin"
 
-#: src/GameText.h:578
+#: src/GameText.h:577
 msgid "Your best time"
 msgstr "Paras aikasi"
 
-#: src/GameText.h:579
+#: src/GameText.h:578
 msgid "Zoom in"
 msgstr "Zoomaa lähemmäs"
 
-#: src/GameText.h:580
+#: src/GameText.h:579
 msgid "Reinitialize zoom"
 msgstr "Uudelleenalusta zoomi"
 
-#: src/GameText.h:581
+#: src/GameText.h:580
 msgid "Zoom out"
 msgstr "Zoomaa kauemmas"
 
-#: src/GameText.h:583
+#: src/GameText.h:582
 msgid "Server"
 msgstr "Serveri"
 
-#: src/GameText.h:585
+#: src/GameText.h:584
 msgid "Launch at startup"
 msgstr "Avaa tietokoneen käynnistyessä"
 
-#: src/GameText.h:586
+#: src/GameText.h:585
 msgid "Start the server"
 msgstr "Käynnistä serveri"
 
-#: src/GameText.h:587
+#: src/GameText.h:586
 msgid "Stop the server"
 msgstr "Lopeta serveri"
 
-#: src/GameText.h:588
+#: src/GameText.h:587
 msgid "Server is currently started"
 msgstr "Serveri on päällä"
 
-#: src/GameText.h:589
+#: src/GameText.h:588
 msgid "Server is currently stopped"
 msgstr "Serveri ei ole päällä"
 
-#: src/GameText.h:590
+#: src/GameText.h:589
 msgid "Default port"
 msgstr "Oletus portti"
 
-#: src/GameText.h:591
+#: src/GameText.h:590
 msgid "Custom port"
 msgstr "Muokattu portti"
 
-#: src/GameText.h:592
+#: src/GameText.h:591
 msgid "Network"
 msgstr "Netti-peli"
+
+#: src/GameText.h:592
+msgid "Network admin console"
+msgstr ""
 
 #: src/GameText.h:593
 msgid "Simple ghost mode"

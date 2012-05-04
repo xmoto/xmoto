@@ -390,7 +390,7 @@ void GameState::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
     }
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_ADMINCONSOLE)) && NetClient::instance()->isConnected()) {
+  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_NETWORKADMINCONSOLE)) && NetClient::instance()->isConnected()) {
     if(StateManager::instance()->isThereASuchState("StateServerConsole") == false) { // do not open several console
       StateServerConsole* v_console = new StateServerConsole(true, true);
       StateManager::instance()->pushState(v_console);

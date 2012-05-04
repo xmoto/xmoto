@@ -297,8 +297,8 @@ InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
       IFullKey("KeySwitchNetMode", XMKey(SDLK_n, KMOD_LCTRL), GAMETEXT_SWITCHNETMODE);
     m_globalKeys[INPUT_SWITCHHIGHSCOREINFORMATION] =
       IFullKey("KeySwitchHighscoreInformation", XMKey(SDLK_w, KMOD_LCTRL), GAMETEXT_SWITCHHIGHSCOREINFORMATION);
-    m_globalKeys[INPUT_ADMINCONSOLE] =
-      IFullKey("KeyAdminConsole", XMKey(SDLK_s, (SDLMod) (KMOD_LCTRL | KMOD_LALT)), GAMETEXT_ADMINCONSOLE);
+    m_globalKeys[INPUT_NETWORKADMINCONSOLE] =
+      IFullKey("KeyNetworkAdminConsole", XMKey(SDLK_s, (SDLMod) (KMOD_LCTRL | KMOD_LALT)), GAMETEXT_NETWORKADMINCONSOLE);
 
     // uncustomizable keys
     m_globalKeys[INPUT_HELP] =

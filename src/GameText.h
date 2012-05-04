@@ -44,7 +44,6 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ADDTOFAVORITE        _("Add to favorite")
 #define GAMETEXT_ADDTOBLACKLIST       _("Add to blacklist")
 #define GAMETEXT_ACTION               _("Action")
-#define GAMETEXT_ADMINCONSOLE         _("Admin console")
 #define GAMETEXT_ALL                  _("All (on this computer)")
 #define GAMETEXT_ALL_LEVELS           _("All levels")
 #define GAMETEXT_ALLOWINTERNETCONN    _("Do you want to allow X-Moto connecting\n" \
@@ -590,6 +589,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_DEFAULT_PORT _("Default port")
 #define GAMETEXT_CUSTOM_PORT _("Custom port")
 #define GAMETEXT_NETWORK _("Network")
+#define GAMETEXT_NETWORKADMINCONSOLE _("Network admin console")
 #define GAMETEXT_CLIENTGHOSTMODE _("Simple ghost mode")
 #define GAMETEXT_CLIENTSTATUSON _("You're currently connected")
 #define GAMETEXT_CLIENTSTATUSOFF _("You're currently disconnected")

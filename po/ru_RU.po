@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
-"POT-Creation-Date: 2012-05-03 22:50+0200\n"
+"POT-Creation-Date: 2012-05-04 19:14+0200\n"
 "PO-Revision-Date: 2010-03-24 10:49+0800\n"
 "Last-Translator: \n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -71,19 +71,15 @@ msgstr "Добавить в игнор-лист"
 msgid "Action"
 msgstr "Действие"
 
-#: src/GameText.h:47
-msgid "Admin console"
-msgstr ""
-
-#: src/GameText.h:48 src/GameText.h:53
+#: src/GameText.h:47 src/GameText.h:52
 msgid "All (on this computer)"
 msgstr "Все (на этом компьютере)"
 
-#: src/GameText.h:49 src/GameText.h:827
+#: src/GameText.h:48 src/GameText.h:827
 msgid "All levels"
 msgstr "Все уровни"
 
-#: src/GameText.h:50
+#: src/GameText.h:49
 msgid ""
 "Do you want to allow X-Moto connecting\n"
 "to the Internet to look for more levels\n"
@@ -93,100 +89,100 @@ msgstr ""
 "к интернету для поиска дополнительных уровней\n"
 "и лучшего времени других игроков?"
 
-#: src/GameText.h:54
+#: src/GameText.h:53
 msgid "Audio"
 msgstr "Звук"
 
-#: src/GameText.h:55
+#: src/GameText.h:54
 msgid "Author"
 msgstr "Автор"
 
-#: src/GameText.h:56
+#: src/GameText.h:55
 msgid "Automatic"
 msgstr "Автоматически"
 
-#: src/GameText.h:57
+#: src/GameText.h:56
 msgid "Automatic saving of replays"
 msgstr "Автоматическое сохранение демок"
 
-#: src/GameText.h:58
+#: src/GameText.h:57
 msgid "Disable Animations"
 msgstr "Отключить анимацию"
 
-#: src/GameText.h:59
+#: src/GameText.h:58
 msgid "Show game information in the console"
 msgstr "Показать информацию об игре в консоли"
 
-#: src/GameText.h:60
+#: src/GameText.h:59
 msgid "Auto zoom"
 msgstr "Авто приближение"
 
-#: src/GameText.h:61
+#: src/GameText.h:60
 msgid "Database"
 msgstr "База данных"
 
-#: src/GameText.h:62
+#: src/GameText.h:61
 msgid "Camera Active Zoom"
 msgstr "Активный зум камеры"
 
-#: src/GameText.h:63
+#: src/GameText.h:62
 msgid "Use Trail Cam"
 msgstr "Использовать следящую камеру"
 
-#: src/GameText.h:64
+#: src/GameText.h:63
 msgid "Beating mode"
 msgstr "Режим побития"
 
-#: src/GameText.h:65
+#: src/GameText.h:64
 msgid "Best Times"
 msgstr "Лучшее время"
 
-#: src/GameText.h:66
+#: src/GameText.h:65
 msgid "Best player"
 msgstr "Лучший игрок"
 
-#: src/GameText.h:67
+#: src/GameText.h:66
 msgid "Brake"
 msgstr "Тормоз"
 
-#: src/GameText.h:68
+#: src/GameText.h:67
 #, c-format
 msgid "(by %s)"
 msgstr "(%s)"
 
-#: src/GameText.h:69
+#: src/GameText.h:68
 msgid "Move Camera to left"
 msgstr "Переместить камеру налево"
 
-#: src/GameText.h:70
+#: src/GameText.h:69
 msgid "Move Camera to right"
 msgstr "Переместить камеру направо"
 
-#: src/GameText.h:71
+#: src/GameText.h:70
 msgid "Move Camera down"
 msgstr "Переместить камеру вниз"
 
-#: src/GameText.h:72
+#: src/GameText.h:71
 msgid "Move Camera up"
 msgstr "Переместить камеру вверх"
 
-#: src/GameText.h:73
+#: src/GameText.h:72
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/GameText.h:74
+#: src/GameText.h:73
 msgid "Change..."
 msgstr "Изменить..."
 
-#: src/GameText.h:75
+#: src/GameText.h:74
 msgid "Change direction"
 msgstr "Изменить направление"
 
-#: src/GameText.h:76
+#: src/GameText.h:75
 msgid "Change Key..."
 msgstr "Изменить клавишу..."
 
-#: src/GameText.h:77
+#: src/GameText.h:76
 msgid ""
 "Use the tabulation key to complete player names. Use the * to send private "
 "messages."
@@ -194,31 +190,31 @@ msgstr ""
 "Используйте клавишу табуляции для уточнения имён других игроков. Используйте "
 "клавишу * чтобы отправить конфиденциальное сообщение"
 
-#: src/GameText.h:78
+#: src/GameText.h:77
 msgid "Open chat dialog box"
 msgstr "Открыть окно для чата"
 
-#: src/GameText.h:79
+#: src/GameText.h:78
 msgid "Open private chat dialog box"
 msgstr ""
 
-#: src/GameText.h:80
+#: src/GameText.h:79
 msgid "Checking for new or updated levels..."
 msgstr "Поиск новых или обновленных уровней"
 
-#: src/GameText.h:81
+#: src/GameText.h:80
 msgid "I'm a child"
 msgstr "Я ребёнок"
 
-#: src/GameText.h:82
+#: src/GameText.h:81
 msgid "Choose Level"
 msgstr "Выберите уровень"
 
-#: src/GameText.h:83
+#: src/GameText.h:82
 msgid "Clean"
 msgstr "Очистить"
 
-#: src/GameText.h:84
+#: src/GameText.h:83
 #, c-format
 msgid "Are you sure you want to delete %i replay"
 msgid_plural "Are you sure you want to delete %i replay"
@@ -226,100 +222,100 @@ msgstr[0] "Вы действительно хотите удалить %i дем
 msgstr[1] "Вы действительно хотите удалить %i демки?"
 msgstr[2] "Вы действительно хотите удалить %i демок?"
 
-#: src/GameText.h:85
+#: src/GameText.h:84
 msgid "There is no replay to clean"
 msgstr "Нет повторов для удаления"
 
-#: src/GameText.h:86
+#: src/GameText.h:85
 msgid "Close"
 msgstr "Закрыть"
 
-#: src/GameText.h:87
+#: src/GameText.h:86
 msgid "Configure Joystick..."
 msgstr "Настроить джойстик..."
 
-#: src/GameText.h:88
+#: src/GameText.h:87
 msgid "Decrease console history size"
 msgstr "Уменьшить максимальный объем информации из истории чата"
 
-#: src/GameText.h:89
+#: src/GameText.h:88
 msgid "Increase console history size"
 msgstr "Увеличить максимальный объем информации из истории чата"
 
-#: src/GameText.h:90
+#: src/GameText.h:89
 msgid "Controls"
 msgstr "Управление"
 
-#: src/GameText.h:91 src/GameText.h:271
+#: src/GameText.h:90 src/GameText.h:270
 msgid "General"
 msgstr "Основные"
 
-#: src/GameText.h:93
+#: src/GameText.h:92
 msgid "left control"
 msgstr "левый ctrl"
 
-#: src/GameText.h:94
+#: src/GameText.h:93
 msgid "right control"
 msgstr "правый ctrl"
 
-#: src/GameText.h:95
+#: src/GameText.h:94
 msgid "left shift"
 msgstr "левый shift"
 
-#: src/GameText.h:96
+#: src/GameText.h:95
 msgid "right shift"
 msgstr "правый shift"
 
-#: src/GameText.h:97
+#: src/GameText.h:96
 msgid "left alt"
 msgstr "левый alt"
 
-#: src/GameText.h:98
+#: src/GameText.h:97
 msgid "right alt"
 msgstr "правый alt"
 
-#: src/GameText.h:99
+#: src/GameText.h:98
 msgid "left meta"
 msgstr "левая кнопка windows"
 
-#: src/GameText.h:100
+#: src/GameText.h:99
 msgid "right meta"
 msgstr "правая кнопка windows"
 
-#: src/GameText.h:101
+#: src/GameText.h:100
 msgid "Abort the process"
 msgstr "Прервать процесс"
 
-#: src/GameText.h:102 src/GameText.h:116
+#: src/GameText.h:101 src/GameText.h:115
 #, c-format
 msgid "button %i"
 msgstr "Клавиш %i"
 
-#: src/GameText.h:103
+#: src/GameText.h:102
 msgid "left button"
 msgstr "левая кнопка"
 
-#: src/GameText.h:104
+#: src/GameText.h:103
 msgid "middle button"
 msgstr "средняя кнопка"
 
-#: src/GameText.h:105
+#: src/GameText.h:104
 msgid "right button"
 msgstr "правая кнопка"
 
-#: src/GameText.h:106
+#: src/GameText.h:105
 msgid "wheel up"
 msgstr "колесо вверх"
 
-#: src/GameText.h:107
+#: src/GameText.h:106
 msgid "wheel down"
 msgstr "колесо вниз"
 
-#: src/GameText.h:108
+#: src/GameText.h:107
 msgid "No joystick found"
 msgstr "Джойстик не найден"
 
-#: src/GameText.h:109
+#: src/GameText.h:108
 #, c-format
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
@@ -327,244 +323,244 @@ msgstr[0] "Найден %i джойстик"
 msgstr[1] "Найдены %i джойстика"
 msgstr[2] "Найдено %i джойстиков"
 
-#: src/GameText.h:110
+#: src/GameText.h:109
 #, c-format
 msgid "axis %i"
 msgstr "ось %i"
 
-#: src/GameText.h:111
+#: src/GameText.h:110
 msgid "left"
 msgstr "налево"
 
-#: src/GameText.h:112
+#: src/GameText.h:111
 msgid "right"
 msgstr "направо"
 
-#: src/GameText.h:113
+#: src/GameText.h:112
 msgid "up"
 msgstr "вверх"
 
-#: src/GameText.h:114
+#: src/GameText.h:113
 msgid "down"
 msgstr "вниз"
 
-#: src/GameText.h:115
+#: src/GameText.h:114
 msgid "none"
 msgstr "нет"
 
-#: src/GameText.h:117
+#: src/GameText.h:116
 msgid "You must restart so that this option takes effect"
 msgstr "Для применения этой опции необходим перезапуск"
 
-#: src/GameText.h:118
+#: src/GameText.h:117
 msgid "You must reconnect to the server so that this option takes effect"
 msgstr "Для применения этой опции необходимо переподключение к серверу"
 
-#: src/GameText.h:119
+#: src/GameText.h:118
 msgid "Script action"
 msgstr "Действие скрипта"
 
-#: src/GameText.h:122
+#: src/GameText.h:121
 msgid "Lead Programming"
 msgstr "Основное программирование"
 
-#: src/GameText.h:128
+#: src/GameText.h:127
 msgid "Additional Programming"
 msgstr "Дополнительное программирование"
 
-#: src/GameText.h:139
+#: src/GameText.h:138
 msgid "Graphics"
 msgstr "Графика"
 
-#: src/GameText.h:144
+#: src/GameText.h:143
 msgid "Music"
 msgstr "Музыка"
 
-#: src/GameText.h:149
+#: src/GameText.h:148
 msgid "Sound Effects"
 msgstr "Звуковые эФФекты"
 
-#: src/GameText.h:153
+#: src/GameText.h:152
 msgid "MacOS X Support"
 msgstr "Поддержка MacOS X"
 
-#: src/GameText.h:157
+#: src/GameText.h:156
 msgid "Localization"
 msgstr "Перевод"
 
-#: src/GameText.h:158
+#: src/GameText.h:157
 msgid "Slovak"
 msgstr "Словацкий"
 
-#: src/GameText.h:159
+#: src/GameText.h:158
 msgid "French"
 msgstr "Французский"
 
-#: src/GameText.h:160
+#: src/GameText.h:159
 msgid "Norwegian"
 msgstr "Норвежский"
 
-#: src/GameText.h:160
+#: src/GameText.h:159
 msgid "English"
 msgstr "Английский"
 
-#: src/GameText.h:161
+#: src/GameText.h:160
 msgid "German"
 msgstr "Немецкий"
 
-#: src/GameText.h:162
+#: src/GameText.h:161
 msgid "Finnish"
 msgstr "Финский"
 
-#: src/GameText.h:163
+#: src/GameText.h:162
 msgid "Catalan"
 msgstr "Каталонский"
 
-#: src/GameText.h:163
+#: src/GameText.h:162
 msgid "Spanish"
 msgstr "Испанский"
 
-#: src/GameText.h:164
+#: src/GameText.h:163
 msgid "Polish"
 msgstr "Польский"
 
-#: src/GameText.h:165
+#: src/GameText.h:164
 msgid "Italian"
 msgstr "Итальянский"
 
-#: src/GameText.h:166
+#: src/GameText.h:165
 msgid "Swedish"
 msgstr "Шведский"
 
-#: src/GameText.h:167
+#: src/GameText.h:166
 msgid "Czech"
 msgstr "Чешский"
 
-#: src/GameText.h:168
+#: src/GameText.h:167
 msgid "Mikhail Brinchuk"
 msgstr "Михаил Бринчук"
 
-#: src/GameText.h:168
+#: src/GameText.h:167
 msgid "Russian"
 msgstr "Русский"
 
-#: src/GameText.h:169
+#: src/GameText.h:168
 msgid "Brazilian Portuguese"
 msgstr "Бразильский Португальский"
 
-#: src/GameText.h:170
+#: src/GameText.h:169
 msgid "Latvian"
 msgstr "Латвийский"
 
-#: src/GameText.h:171
+#: src/GameText.h:170
 msgid "Danish"
 msgstr "Датский"
 
-#: src/GameText.h:172
+#: src/GameText.h:171
 msgid "Lithuanian"
 msgstr "Литовский"
 
-#: src/GameText.h:173
+#: src/GameText.h:172
 msgid "Turkish"
 msgstr "Турецкий"
 
-#: src/GameText.h:174
+#: src/GameText.h:173
 msgid "Hungarian"
 msgstr "Венгерский"
 
-#: src/GameText.h:175
+#: src/GameText.h:174
 msgid "Portugese"
 msgstr "Португальский"
 
-#: src/GameText.h:176
+#: src/GameText.h:175
 msgid "Dutch"
 msgstr ""
 
-#: src/GameText.h:177
+#: src/GameText.h:176
 msgid "Taiwanese"
 msgstr "Таиванский"
 
-#: src/GameText.h:178
+#: src/GameText.h:177
 msgid "Galician"
 msgstr ""
 
-#: src/GameText.h:180
+#: src/GameText.h:179
 msgid "Main testers"
 msgstr "Основные тестеры"
 
-#: src/GameText.h:185
+#: src/GameText.h:184
 msgid "Thanks to"
 msgstr "Благодарности"
 
-#: src/GameText.h:186
+#: src/GameText.h:185
 msgid "for KDE/gnome integration"
 msgstr "за интеграцию с KDE/gnome"
 
-#: src/GameText.h:187
+#: src/GameText.h:186
 msgid "for Debian packaging"
 msgstr "за пакет Debian"
 
-#: src/GameText.h:188
+#: src/GameText.h:187
 msgid "for Gentoo packaging"
 msgstr "за пакет Gentoo"
 
-#: src/GameText.h:189
+#: src/GameText.h:188
 msgid "for Mandriva packaging"
 msgstr "за пакет Mandriva"
 
-#: src/GameText.h:190
+#: src/GameText.h:189
 msgid "for FreeBSD packaging"
 msgstr "за пакет для FreeBSD"
 
-#: src/GameText.h:191
+#: src/GameText.h:190
 msgid "for across/elma"
 msgstr "за across/elma"
 
-#: src/GameText.h:192
+#: src/GameText.h:191
 msgid "for making tinyxml"
 msgstr "за создание tinyxml"
 
-#: src/GameText.h:193
+#: src/GameText.h:192
 msgid "for the MD5 code"
 msgstr "за MD5 код"
 
-#: src/GameText.h:195
+#: src/GameText.h:194
 msgid "Everyone who have made levels"
 msgstr "Всем, кто создавал уровни"
 
-#: src/GameText.h:196
+#: src/GameText.h:195
 msgid "People who have provided bug reports"
 msgstr "Людям, которые отправляли отчеты об ошибках"
 
-#: src/GameText.h:197
+#: src/GameText.h:196
 msgid "Anyone who has helped in any way"
 msgstr "Всем, кто помогал"
 
-#: src/GameText.h:199
+#: src/GameText.h:198
 msgid "Credits"
 msgstr "Создатели"
 
-#: src/GameText.h:200
+#: src/GameText.h:199
 msgid "Player"
 msgstr "Игрок"
 
-#: src/GameText.h:201
+#: src/GameText.h:200
 msgid "Play now !"
 msgstr "Играть сейчас"
 
-#: src/GameText.h:202
+#: src/GameText.h:201
 msgid "Play music on all levels"
 msgstr "Играть музыку на всех уровнях"
 
-#: src/GameText.h:203
+#: src/GameText.h:202
 msgid "Date"
 msgstr "Дата"
 
-#: src/GameText.h:204
+#: src/GameText.h:203
 msgid "Difficulty"
 msgstr "Трудность"
 
-#: src/GameText.h:205
+#: src/GameText.h:204
 msgid ""
 "X-Moto uses a database on your computer to save all your scores and "
 "statistics. You can send these data using your web account on the X-Moto "
@@ -576,7 +572,7 @@ msgstr ""
 "используя ваш интернет-аккаунт. Это будет полезным, чтобы сохранитьваши "
 "данные или если вы играете в X-Moto из разных мест."
 
-#: src/GameText.h:206
+#: src/GameText.h:205
 msgid ""
 "If you manually copied the X-Moto user files (.xmoto) on some other "
 "computers, you should not use this functionality otherwise your statistics "
@@ -588,91 +584,91 @@ msgstr ""
 "статистика будет дублирована или не синхронизирована. Если вывсе же сделали "
 "это, удалите копии, которые вы создали."
 
-#: src/GameText.h:207
+#: src/GameText.h:206
 msgid "Synchronise"
 msgstr "Синхронизировать"
 
-#: src/GameText.h:208
+#: src/GameText.h:207
 msgid "Synchronize when X-Moto ends"
 msgstr "Синхронизировать, когда X-Moto закрывается"
 
-#: src/GameText.h:209
+#: src/GameText.h:208
 msgid "Upgrading database"
 msgstr "Обновление базы данных"
 
-#: src/GameText.h:210
+#: src/GameText.h:209
 msgid "Upgrading database stats for the profile"
 msgstr "Обновление базы данных статистики профиля"
 
-#: src/GameText.h:211
+#: src/GameText.h:210
 msgid "Upgrading database profile"
 msgstr "Обновление базы данных профиля"
 
-#: src/GameText.h:212
+#: src/GameText.h:211
 msgid "Death Animation"
 msgstr "Анимация смерти"
 
-#: src/GameText.h:213
+#: src/GameText.h:212
 msgid "Defaults"
 msgstr "Сбросить"
 
-#: src/GameText.h:214
+#: src/GameText.h:213
 msgid "Do you really want to delete player?"
 msgstr "Вы действительно хотите удалить игрока?"
 
-#: src/GameText.h:215
+#: src/GameText.h:214
 msgid "Do you really want to delete replay?"
 msgstr "Вы действительно хотите удалить эту демку?"
 
-#: src/GameText.h:216 src/GameText.h:219
+#: src/GameText.h:215 src/GameText.h:218
 msgid "Delete"
 msgstr "Удалить"
 
-#: src/GameText.h:217
+#: src/GameText.h:216
 msgid "Delete from favorite"
 msgstr "Удалить из избранных"
 
-#: src/GameText.h:218
+#: src/GameText.h:217
 msgid "Delete from blacklist"
 msgstr "Удалить из игнор-листа"
 
-#: src/GameText.h:220
+#: src/GameText.h:219
 msgid "Description"
 msgstr "Описание"
 
-#: src/GameText.h:221
+#: src/GameText.h:220
 msgid "Display Ghost time difference"
 msgstr "Показывать разницу времени Призрака"
 
-#: src/GameText.h:222
+#: src/GameText.h:221
 msgid "Display Ghost Information"
 msgstr "Показывать информацию о Призраке"
 
-#: src/GameText.h:223
+#: src/GameText.h:222
 msgid "Display bike arrow indication"
 msgstr "Показывать стрелку на мотоцикл"
 
-#: src/GameText.h:224
+#: src/GameText.h:223
 msgid "Direct Connection"
 msgstr "Прямое соединение"
 
-#: src/GameText.h:225
+#: src/GameText.h:224
 msgid "Downloading the ghost..."
 msgstr "Загрузка Призрака"
 
-#: src/GameText.h:226
+#: src/GameText.h:225
 msgid "Downloading ghosts..."
 msgstr "Загрузка Призраков"
 
-#: src/GameText.h:227
+#: src/GameText.h:226
 msgid "Downloading the highscore..."
 msgstr "Загрузка рекорда"
 
-#: src/GameText.h:228
+#: src/GameText.h:227
 msgid "Downloading high-scores..."
 msgstr "Загрузка рекордов"
 
-#: src/GameText.h:229
+#: src/GameText.h:228
 msgid ""
 "Downloading extra levels...\n"
 "Press ESC to abort."
@@ -680,27 +676,27 @@ msgstr ""
 "Загружаются дополнительные уровни...\n"
 "Нажмите ESC, чтобы отменить загрузку."
 
-#: src/GameText.h:230
+#: src/GameText.h:229
 msgid "Downloading the level..."
 msgstr "Загрузка уровня"
 
-#: src/GameText.h:231
+#: src/GameText.h:230
 msgid "Checking for new levels..."
 msgstr "Поиск новых уровней"
 
-#: src/GameText.h:232
+#: src/GameText.h:231
 msgid "Downloading the replay..."
 msgstr "Загрузка демки"
 
-#: src/GameText.h:233
+#: src/GameText.h:232
 msgid "Loading new and updated levels..."
 msgstr "Загрузка новых и обновленных уровней"
 
-#: src/GameText.h:234
+#: src/GameText.h:233
 msgid "Checking for existing rooms..."
 msgstr "Поиск существующих комнат"
 
-#: src/GameText.h:235
+#: src/GameText.h:234
 msgid ""
 "Downloading theme data required by new levels...\n"
 "Press ESC to abort."
@@ -708,111 +704,111 @@ msgstr ""
 "Загрузка темы, необходимой для новых уровней...\n"
 "Нажмите ECS, чтобы отменить загрузку."
 
-#: src/GameText.h:236
+#: src/GameText.h:235
 msgid "Checking for new themes..."
 msgstr "Поиск новых тем"
 
-#: src/GameText.h:237
+#: src/GameText.h:236
 msgid "Get More Levels!"
 msgstr "Скачать ещё уровней!"
 
-#: src/GameText.h:238
+#: src/GameText.h:237
 msgid "Drive"
 msgstr "Газ"
 
-#: src/GameText.h:239
+#: src/GameText.h:238
 msgid "Enable Audio"
 msgstr "Включить звук"
 
-#: src/GameText.h:240
+#: src/GameText.h:239
 msgid "Check new levels at startup"
 msgstr "Искать новые уровни при запуске"
 
-#: src/GameText.h:241
+#: src/GameText.h:240
 msgid "Check new highscores at startup"
 msgstr "Искать новые рекорды при запуске"
 
-#: src/GameText.h:242
+#: src/GameText.h:241
 msgid "Enable Context Help"
 msgstr "Включить контекстную справку"
 
-#: src/GameText.h:243
+#: src/GameText.h:242
 msgid "Enable Engine Sound"
 msgstr "Проигрывать звук двигателя"
 
-#: src/GameText.h:244
+#: src/GameText.h:243
 msgid "Enable Ghost"
 msgstr "Показывать Призрака"
 
-#: src/GameText.h:245
+#: src/GameText.h:244
 msgid "Show World Record in-game"
 msgstr "Показывать мировой рекорд во время игры"
 
-#: src/GameText.h:246
+#: src/GameText.h:245
 msgid "Show next medal in-game"
 msgstr "Показать следующую медаль в игре"
 
-#: src/GameText.h:247
+#: src/GameText.h:246
 msgid "Enable menu music"
 msgstr "Включить музыку меню"
 
-#: src/GameText.h:248
+#: src/GameText.h:247
 msgid "Enable game music"
 msgstr "Включить музыку игры"
 
-#: src/GameText.h:249
+#: src/GameText.h:248
 msgid "Enable WWW Access"
 msgstr "Позволять доступ в интернет"
 
-#: src/GameText.h:250
+#: src/GameText.h:249
 msgid "Enter player name"
 msgstr "Введите имя игрока"
 
-#: src/GameText.h:251
+#: src/GameText.h:250
 msgid "Enter name of replay"
 msgstr "Введите название демки"
 
-#: src/GameText.h:252
+#: src/GameText.h:251
 msgid "There are errors in the level, don't expect it to be playable!"
 msgstr "В уровне есть ошибки, не надейтесь, что его можно проехать"
 
-#: src/GameText.h:253
+#: src/GameText.h:252
 msgid "Check your Internet connection !"
 msgstr "Проверьте ваше Интернет соединение!"
 
-#: src/GameText.h:254
+#: src/GameText.h:253
 msgid "Failed to check for levels."
 msgstr "Ошибка при поиске уровней"
 
-#: src/GameText.h:255
+#: src/GameText.h:254
 msgid "Failed to download high-scores."
 msgstr "Ошибка при скачивании рекордов."
 
-#: src/GameText.h:256
+#: src/GameText.h:255
 msgid "Failed to download levels."
 msgstr "Ошибка при скачивании уровней."
 
-#: src/GameText.h:257
+#: src/GameText.h:256
 msgid "Failed to download the replay."
 msgstr "Не удалось загрузить демку."
 
-#: src/GameText.h:258
+#: src/GameText.h:257
 msgid "Failed to download the rooms list."
 msgstr "Не удалось загрузить список комнат."
 
-#: src/GameText.h:259
+#: src/GameText.h:258
 msgid "Failed to get the selected theme"
 msgstr "Не удалось скачать выбранную тему"
 
-#: src/GameText.h:260
+#: src/GameText.h:259
 msgid "Failed to initialize level!"
 msgstr "Ошибка при инициализации уровня!"
 
-#: src/GameText.h:261
+#: src/GameText.h:260
 msgid "Failed to load replay!"
 msgstr "Не удалось загрузить демку!"
 
-#: src/GameText.h:262
+#: src/GameText.h:261
 msgid ""
 "Failed to save replay!\n"
 "Maybe you should try with another name?"
@@ -820,80 +816,80 @@ msgstr ""
 "Не удалось сохранить демку!\n"
 "Попробуйте изменить название"
 
-#: src/GameText.h:263
+#: src/GameText.h:262
 msgid "Failed to update the theme list"
 msgstr "Не удалось обновить список тем"
 
-#: src/GameText.h:264
+#: src/GameText.h:263
 msgid "File"
 msgstr "Файл"
 
-#: src/GameText.h:265
+#: src/GameText.h:264
 msgid "Filter"
 msgstr "Фильтр"
 
-#: src/GameText.h:266
+#: src/GameText.h:265
 msgid "Finished!"
 msgstr "Финиш!"
 
-#: src/GameText.h:267
+#: src/GameText.h:266
 msgid "Finish Time"
 msgstr "Финишное время"
 
-#: src/GameText.h:268
+#: src/GameText.h:267
 msgid "Flip left"
 msgstr "Наклониться налево"
 
-#: src/GameText.h:269
+#: src/GameText.h:268
 msgid "Flip right"
 msgstr "Наклониться направо"
 
-#: src/GameText.h:270
+#: src/GameText.h:269
 msgid "Game Graphics"
 msgstr "Графика в игре"
 
-#: src/GameText.h:272
+#: src/GameText.h:271
 msgid "General Info"
 msgstr "Общая информация"
 
-#: src/GameText.h:273
+#: src/GameText.h:272
 msgid "Get this theme"
 msgstr "Загрузить эту тему"
 
-#: src/GameText.h:274
+#: src/GameText.h:273
 msgid "Local best"
 msgstr "Лучшее время на этом компьютере"
 
-#: src/GameText.h:275
+#: src/GameText.h:274
 msgid "Your best"
 msgstr "Ваше лучшее время"
 
-#: src/GameText.h:276
+#: src/GameText.h:275
 msgid "Type"
 msgstr "Тип"
 
-#: src/GameText.h:277 src/GameText.h:758
+#: src/GameText.h:276 src/GameText.h:758
 msgid "The highscore of the reference room"
 msgstr "Лучшее время комнаты-образца"
 
-#: src/GameText.h:278 src/GameText.h:759
+#: src/GameText.h:277 src/GameText.h:759
 msgid "The highscore of the other rooms"
 msgstr "Лучшее время остальных комнат"
 
-#: src/GameText.h:279 src/GameText.h:756
+#: src/GameText.h:278 src/GameText.h:756
 msgid "The best of my replays (on this computer)"
 msgstr "Лучшая из моих демок (на этом компьютере)"
 
-#: src/GameText.h:280 src/GameText.h:757
+#: src/GameText.h:279 src/GameText.h:757
 msgid "The best of the replays (on this computer)"
 msgstr "Лучшая из демок, записанных на этом компьютере"
 
-#: src/GameText.h:281
+#: src/GameText.h:280
 #, c-format
 msgid "Ghost of %s"
 msgstr "Призрак %s"
 
-#: src/GameText.h:282
+#: src/GameText.h:281
 msgid ""
 "Please wait the next party\n"
 "Or press escape to disconnect"
@@ -901,68 +897,68 @@ msgstr ""
 "Подождите следующего участника\n"
 "Или нажмите Esc для отсоединения"
 
-#: src/GameText.h:283
+#: src/GameText.h:282
 #, c-format
 msgid "Web ghost of %s"
 msgstr "Веб призрак %s"
 
-#: src/GameText.h:284
+#: src/GameText.h:283
 msgid "Ghost"
 msgstr "Призрак"
 
-#: src/GameText.h:285
+#: src/GameText.h:284
 msgid "Help"
 msgstr "Справка"
 
-#: src/GameText.h:289
+#: src/GameText.h:288
 msgid "You control your bike using the keyboard"
 msgstr "Вы управляете мотоциклом клавиатурой"
 
-#: src/GameText.h:290 src/GameText.h:309
+#: src/GameText.h:289 src/GameText.h:308
 msgid "Accelerates"
 msgstr "Газ"
 
-#: src/GameText.h:291 src/GameText.h:310
+#: src/GameText.h:290 src/GameText.h:309
 msgid "Brakes"
 msgstr "Тормоз"
 
-#: src/GameText.h:292 src/GameText.h:311
+#: src/GameText.h:291 src/GameText.h:310
 msgid "Rotates it counter-clockwise"
 msgstr "Наклон влево"
 
-#: src/GameText.h:293 src/GameText.h:312
+#: src/GameText.h:292 src/GameText.h:311
 msgid "Rotates it clockwise"
 msgstr "Наклон вправо"
 
-#: src/GameText.h:294 src/GameText.h:313
+#: src/GameText.h:293 src/GameText.h:312
 msgid "Turns around and drives in the other direction"
 msgstr "Изменить направление движения"
 
-#: src/GameText.h:295 src/GameText.h:315 src/GameText.h:444
+#: src/GameText.h:294 src/GameText.h:314 src/GameText.h:443
 msgid "Pause"
 msgstr "Пауза"
 
-#: src/GameText.h:296 src/GameText.h:316
+#: src/GameText.h:295 src/GameText.h:315
 msgid "Restart the level"
 msgstr "Перезапустить"
 
-#: src/GameText.h:297 src/GameText.h:317
+#: src/GameText.h:296 src/GameText.h:316
 msgid "Previous/Next level"
 msgstr "Предыдущий/Следующий уровень"
 
-#: src/GameText.h:299 src/GameText.h:330
+#: src/GameText.h:298 src/GameText.h:329
 msgid "Enable/disable web"
 msgstr "Включить/выключить доступ в Интернет"
 
-#: src/GameText.h:300
+#: src/GameText.h:299
 msgid "Reload levels, themes and replays from directories"
 msgstr "Перезагрузить уровни, темы и демки c диска"
 
-#: src/GameText.h:301 src/GameText.h:334
+#: src/GameText.h:300 src/GameText.h:333
 msgid "Take a screenshot"
 msgstr "Снять снимок экрана"
 
-#: src/GameText.h:303
+#: src/GameText.h:302
 msgid ""
 "Use Quick Play button to immediately start a game with a random level,\n"
 "or use Levels button to select from level packs."
@@ -971,7 +967,7 @@ msgstr ""
 "случайного уровня,\n"
 "или используйте кнопку Уровни, чтобы выбрать из наборов уровней"
 
-#: src/GameText.h:305
+#: src/GameText.h:304
 msgid ""
 "Find all the strawberries and touch the flower to finish\n"
 "the level."
@@ -979,7 +975,7 @@ msgstr ""
 "Найдите все клубнички и дотроньтесь до цветка, чтобы завершить\n"
 "уровень"
 
-#: src/GameText.h:306
+#: src/GameText.h:305
 msgid ""
 "Read the README file or check out the website at\n"
 "http://xmoto.tuxfamily.org\n"
@@ -989,357 +985,357 @@ msgstr ""
 "http://xmoto.tuxfamily.org\n"
 "для дополнительной информации"
 
-#: src/GameText.h:318
+#: src/GameText.h:317
 msgid "change mirror mode"
 msgstr "переключить  зеркальный режим"
 
-#: src/GameText.h:319
+#: src/GameText.h:318
 msgid "Toggle blacklist"
 msgstr "Включить чёрный список"
 
-#: src/GameText.h:320
+#: src/GameText.h:319
 msgid "Enable/disable audio"
 msgstr "Включить/выключить звук"
 
-#: src/GameText.h:321
+#: src/GameText.h:320
 msgid "Open options menu"
 msgstr "Открыть меню настроек"
 
-#: src/GameText.h:322
+#: src/GameText.h:321
 msgid "Toggle Ghost Trail Rendering"
 msgstr "Вкл/выкл след призрака"
 
-#: src/GameText.h:323
+#: src/GameText.h:322
 msgid "Toggle Trail Cam"
 msgstr "Вкл/выкл следящую камеру"
 
-#: src/GameText.h:324
+#: src/GameText.h:323
 msgid "Toggle Display Medals,Display WR"
 msgstr "Вкл/Выкл отображение медалей, WR"
 
-#: src/GameText.h:325
+#: src/GameText.h:324
 msgid "Show this help"
 msgstr "Показать эту справку"
 
-#: src/GameText.h:326
+#: src/GameText.h:325
 msgid "Switch biker"
 msgstr "Сменить байкера"
 
-#: src/GameText.h:327
+#: src/GameText.h:326
 msgid "Toggle favorite"
 msgstr "Добавить/удалить из избранных"
 
-#: src/GameText.h:328
+#: src/GameText.h:327
 msgid "Toggle Ghost Trail Tracking Shot"
 msgstr "Вкл/выкл просмотр пути призрака"
 
-#: src/GameText.h:329
+#: src/GameText.h:328
 msgid "Enable/disable FPS display"
 msgstr "Вкл/выкл показ Кдр/сек"
 
-#: src/GameText.h:331 src/GameText.h:510
+#: src/GameText.h:330 src/GameText.h:509
 msgid "Enable/disable ugly mode"
 msgstr "Вкл/выкл уродливый режим"
 
-#: src/GameText.h:332
+#: src/GameText.h:331
 msgid "Toggle Contrast, Light and Full Graphics"
 msgstr "Настроить контрастную, лёгкую и полную графику"
 
-#: src/GameText.h:333
+#: src/GameText.h:332
 msgid "Toggle theme and ugly over mode"
 msgstr "Вкл/выкл режим темы и показ граней"
 
-#: src/GameText.h:336
+#: src/GameText.h:335
 msgid "Hide ghosts"
 msgstr "Не показываль Призраков"
 
-#: src/GameText.h:337
+#: src/GameText.h:336
 msgid "High"
 msgstr "Высокое"
 
-#: src/GameText.h:338
+#: src/GameText.h:337
 msgid "Highscore of the room"
 msgstr "Рекорд комнаты"
 
-#: src/GameText.h:339
+#: src/GameText.h:338
 #, c-format
 msgid "%s: %s beat your highscore for level '%s'"
 msgstr "%s: %s побил ваш рекорд для уровня '%s'"
 
-#: src/GameText.h:340
+#: src/GameText.h:339
 msgid "Levels are being added into the database. Please wait."
 msgstr "Уровни добавляются в базу данных. Пожалуйста, подождите."
 
-#: src/GameText.h:341
+#: src/GameText.h:340
 msgid "Internet Configuration"
 msgstr "Настройка интернет-соединения"
 
-#: src/GameText.h:342
+#: src/GameText.h:341
 msgid "Infos"
 msgstr "Информация"
 
-#: src/GameText.h:343
+#: src/GameText.h:342
 msgid "View Level Initially"
 msgstr "Просмотр уровня"
 
-#: src/GameText.h:344
+#: src/GameText.h:343
 msgid "Joystick"
 msgstr "Джойстик"
 
-#: src/GameText.h:345
+#: src/GameText.h:344
 msgid "Enable joysticks"
 msgstr "Включить джойстики"
 
-#: src/GameText.h:346
+#: src/GameText.h:345
 msgid "Oops!"
 msgstr "Ой!"
 
-#: src/GameText.h:347
+#: src/GameText.h:346
 msgid "Press ENTER to try again"
 msgstr "Нажмите ENTER, чтобы попробовать снова"
 
-#: src/GameText.h:348
+#: src/GameText.h:347
 msgid "Press BACKSPACE to return to Checkpoint"
 msgstr "Нажми BACKSPACE чтобы возвратиться к чекпойнту"
 
-#: src/GameText.h:349
+#: src/GameText.h:348
 msgid "Press ESC to display the menu"
 msgstr "Нажмите ESC, чтобы отобразить меню"
 
-#: src/GameText.h:350
+#: src/GameText.h:349
 msgid "Key"
 msgstr "Клавиша"
 
-#: src/GameText.h:351
+#: src/GameText.h:350
 msgid "Keyboard"
 msgstr "Клавиатура"
 
-#: src/GameText.h:352
+#: src/GameText.h:351
 msgid "Language"
 msgstr "Язык"
 
-#: src/GameText.h:353
+#: src/GameText.h:352
 msgid "Language name"
 msgstr "Язык"
 
-#: src/GameText.h:354
+#: src/GameText.h:353
 msgid "Language code"
 msgstr "Код языка"
 
-#: src/GameText.h:355
+#: src/GameText.h:354
 msgid "Level"
 msgstr "Уровень"
 
-#: src/GameText.h:356
+#: src/GameText.h:355
 msgid "Added to favorites"
 msgstr "Добавлен в избранные"
 
-#: src/GameText.h:357
+#: src/GameText.h:356
 msgid "Deleted from favorites"
 msgstr "Удалён из избранных"
 
-#: src/GameText.h:358
+#: src/GameText.h:357
 msgid "Added to blacklist"
 msgstr "Добавлен в игнор"
 
-#: src/GameText.h:359
+#: src/GameText.h:358
 msgid "Deleted from blacklist"
 msgstr "Удалён из игнора"
 
-#: src/GameText.h:360
+#: src/GameText.h:359
 msgid "Level Info..."
 msgstr "Инфо об уровне..."
 
-#: src/GameText.h:361
+#: src/GameText.h:360
 msgid "Level Name"
 msgstr "Название уровня"
 
-#: src/GameText.h:362
+#: src/GameText.h:361
 #, c-format
 msgid "Level '%s' cannot be loaded"
 msgstr "Уровень '%s' не может быть загружен"
 
-#: src/GameText.h:363
+#: src/GameText.h:362
 msgid "The level failed while loading with the following error :"
 msgstr ""
 
-#: src/GameText.h:364
+#: src/GameText.h:363
 msgid "Do you want to send a report to website administrators ?"
 msgstr ""
 
-#: src/GameText.h:365
+#: src/GameText.h:364
 msgid "Sending the report..."
 msgstr ""
 
-#: src/GameText.h:366
+#: src/GameText.h:365
 msgid "Sending the vote..."
 msgstr ""
 
-#: src/GameText.h:367
+#: src/GameText.h:366
 msgid "Level Pack"
 msgstr "Набор уровней"
 
-#: src/GameText.h:368
+#: src/GameText.h:367
 msgid "Level Packs"
 msgstr "Наборы уровней"
 
-#: src/GameText.h:369
+#: src/GameText.h:368
 #, c-format
 msgid "Level '%s' required by replay!"
 msgstr "Для этой демки требуется уровень '%s'!"
 
-#: src/GameText.h:370
+#: src/GameText.h:369
 msgid "Levels"
 msgstr "Уровни"
 
-#: src/GameText.h:371
+#: src/GameText.h:370
 msgid "List All"
 msgstr "все демки"
 
-#: src/GameText.h:372
+#: src/GameText.h:371
 msgid "Loading..."
 msgstr "Загрузка..."
 
-#: src/GameText.h:373
+#: src/GameText.h:372
 msgid "Loading levels..."
 msgstr "Загрузка уровней..."
 
-#: src/GameText.h:374
+#: src/GameText.h:373
 msgid "Loading menu graphics..."
 msgstr "Загрузка графики меню..."
 
-#: src/GameText.h:375
+#: src/GameText.h:374
 msgid "Loading replays..."
 msgstr "Загрузка демок..."
 
-#: src/GameText.h:376
+#: src/GameText.h:375
 msgid "Loading sounds..."
 msgstr "Загрузка звуков..."
 
-#: src/GameText.h:377
+#: src/GameText.h:376
 msgid "Loading textures..."
 msgstr "Загруза текстур..."
 
-#: src/GameText.h:378
+#: src/GameText.h:377
 msgid "Login"
 msgstr "Логин"
 
-#: src/GameText.h:379
+#: src/GameText.h:378
 msgid "Low"
 msgstr "Низкое"
 
-#: src/GameText.h:380
+#: src/GameText.h:379
 msgid "Main"
 msgstr "Основные"
 
-#: src/GameText.h:381
+#: src/GameText.h:380
 msgid "Mouse"
 msgstr "Мышь"
 
-#: src/GameText.h:382 src/GameText.h:519
+#: src/GameText.h:381 src/GameText.h:518
 msgid "Theme"
 msgstr "Тема"
 
-#: src/GameText.h:384 src/GameText.h:848
+#: src/GameText.h:383 src/GameText.h:848
 msgid "Bronze"
 msgstr "Бронза"
 
-#: src/GameText.h:385 src/GameText.h:846
+#: src/GameText.h:384 src/GameText.h:846
 msgid "Gold"
 msgstr "Золото"
 
-#: src/GameText.h:386 src/GameText.h:847
+#: src/GameText.h:385 src/GameText.h:847
 msgid "Silver"
 msgstr "Серебро"
 
-#: src/GameText.h:387 src/GameText.h:845
+#: src/GameText.h:386 src/GameText.h:845
 msgid "Platinum"
 msgstr "Платина"
 
-#: src/GameText.h:388
+#: src/GameText.h:387
 msgid "Medium"
 msgstr "Среднее"
 
-#: src/GameText.h:389
+#: src/GameText.h:388
 msgid "Menu Graphics"
 msgstr "Графика меню"
 
-#: src/GameText.h:390
+#: src/GameText.h:389
 msgid "Message not sent, unknown players :"
 msgstr "Сообщение не отправлено, нейзвестные игроки :"
 
-#: src/GameText.h:391
+#: src/GameText.h:390
 #, c-format
 msgid "You got a %s medal"
 msgstr "Вы получили %s медаль"
 
-#: src/GameText.h:392
+#: src/GameText.h:391
 msgid "Contrast"
 msgstr "Контрастная"
 
-#: src/GameText.h:393
+#: src/GameText.h:392
 msgid "Light"
 msgstr "Лёгкая"
 
-#: src/GameText.h:394
+#: src/GameText.h:393
 msgid "Full"
 msgstr "Полная"
 
-#: src/GameText.h:395
+#: src/GameText.h:394
 msgid "Total time you scored / total highscore time for levels you finished"
 msgstr "Суммарное ваше время / суммарный рекорд для пройденных уровней "
 
-#: src/GameText.h:396
+#: src/GameText.h:395
 msgid "Level references unknown textures, it could be unplayable!"
 msgstr ""
 "Уровень ссылается на неизвестную текстуру, возможно, его нельзя будет пройти!"
 
-#: src/GameText.h:397
+#: src/GameText.h:396
 msgid "Mono"
 msgstr "Моно"
 
-#: src/GameText.h:398
+#: src/GameText.h:397
 msgid "Following are your most played levels"
 msgstr "Наиболее часто играемые уровни"
 
-#: src/GameText.h:399
+#: src/GameText.h:398
 msgid "Motion blur ghost"
 msgstr "Размытие Призрака"
 
-#: src/GameText.h:400
+#: src/GameText.h:399
 msgid "Multi"
 msgstr "Мульти"
 
-#: src/GameText.h:401
+#: src/GameText.h:400
 msgid "Semi-cooperative mode"
 msgstr "Полу-кооперативный режим"
 
-#: src/GameText.h:402
+#: src/GameText.h:401
 msgid "Stop the game once a player ends the level"
 msgstr "Заканчивать игру если кто-то финишировал"
 
-#: src/GameText.h:403
+#: src/GameText.h:402
 msgid "Number of players"
 msgstr "Число игроков"
 
-#: src/GameText.h:404
+#: src/GameText.h:403
 msgid "New"
 msgstr "Новый"
 
-#: src/GameText.h:405
+#: src/GameText.h:404
 #, c-format
 msgid "X-Moto %s or newer required to load level"
 msgstr "X-Moto %s или новее требуется, чтобы загрузить уровень"
 
-#: src/GameText.h:406
+#: src/GameText.h:405
 msgid "New highscore!"
 msgstr "Новый рекорд!"
 
-#: src/GameText.h:407
+#: src/GameText.h:406
 msgid "New personal highscore!"
 msgstr "Новый личный рекорд!"
 
-#: src/GameText.h:408
+#: src/GameText.h:407
 #, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
@@ -1347,23 +1343,23 @@ msgstr[0] "Доступен %d новый или обновленный уров
 msgstr[1] "Доступно %d новых или обновленных уровня. Загрузить ?"
 msgstr[2] "Доступно %d новых или обновленных уровней. Загрузить ?"
 
-#: src/GameText.h:411
+#: src/GameText.h:410
 msgid "New Levels"
 msgstr "Новые уровни"
 
-#: src/GameText.h:412
+#: src/GameText.h:411
 msgid "New levels available!"
 msgstr "Доступны новые уровни!"
 
-#: src/GameText.h:413
+#: src/GameText.h:412
 msgid "New Profile..."
 msgstr "Новый профиль..."
 
-#: src/GameText.h:414
+#: src/GameText.h:413
 msgid "No"
 msgstr "Нет"
 
-#: src/GameText.h:415
+#: src/GameText.h:414
 msgid ""
 "No new or updated levels available.\n"
 "\n"
@@ -1373,19 +1369,19 @@ msgstr ""
 "\n"
 "Попробуйте в другой раз."
 
-#: src/GameText.h:416
+#: src/GameText.h:415
 msgid "No level following this one, sorry."
 msgstr "Простите, но следующего уровня нет."
 
-#: src/GameText.h:417
+#: src/GameText.h:416
 msgid "No statistics for this profile."
 msgstr "Для этого профиля нет статистики"
 
-#: src/GameText.h:418
+#: src/GameText.h:417
 msgid "Not finished"
 msgstr "Не завершен"
 
-#: src/GameText.h:419
+#: src/GameText.h:418
 msgid ""
 "Important note!\n"
 "\n"
@@ -1409,75 +1405,75 @@ msgstr ""
 "\n"
 "Также посетите http://xmoto.tuxfamily.org чтобы скачать последнюю версию."
 
-#: src/GameText.h:429
+#: src/GameText.h:428
 msgid "# Levels"
 msgstr "Уровни"
 
-#: src/GameText.h:430
+#: src/GameText.h:429
 msgid "OK"
 msgstr "OK"
 
-#: src/GameText.h:431
+#: src/GameText.h:430
 msgid "Open"
 msgstr "Открыть"
 
-#: src/GameText.h:432
+#: src/GameText.h:431
 msgid "Operation completed"
 msgstr "Операция завершена"
 
-#: src/GameText.h:433
+#: src/GameText.h:432
 msgid "Options"
 msgstr "Настройки"
 
-#: src/GameText.h:434
+#: src/GameText.h:433
 msgid "Some options will not take effect before next restart!"
 msgstr "Некоторые изменения вступят в силу только после перезапуска игры!"
 
-#: src/GameText.h:435
+#: src/GameText.h:434
 msgid "By author"
 msgstr "Автором"
 
-#: src/GameText.h:436
+#: src/GameText.h:435
 msgid "Medals"
 msgstr "Медали"
 
-#: src/GameText.h:437 src/GameText.h:489
+#: src/GameText.h:436 src/GameText.h:488
 msgid "Room"
 msgstr "Комната"
 
-#: src/GameText.h:438
+#: src/GameText.h:437
 msgid "Special"
 msgstr "Специальные"
 
-#: src/GameText.h:439
+#: src/GameText.h:438
 msgid "Standard"
 msgstr "Стандартные"
 
-#: src/GameText.h:440
+#: src/GameText.h:439
 msgid "Web votes"
 msgstr "Интернет голосования"
 
-#: src/GameText.h:441 src/GameText.h:502
+#: src/GameText.h:440 src/GameText.h:501
 msgid "Statistics"
 msgstr "Статистика"
 
-#: src/GameText.h:442 src/GameText.h:837
+#: src/GameText.h:441 src/GameText.h:837
 msgid "By best driver"
 msgstr "Лучшие водители"
 
-#: src/GameText.h:443
+#: src/GameText.h:442
 msgid "By length"
 msgstr "По продолжительности"
 
-#: src/GameText.h:445
+#: src/GameText.h:444
 msgid "Password"
 msgstr "Пароль"
 
-#: src/GameText.h:446 src/GameText.h:447
+#: src/GameText.h:445 src/GameText.h:446
 msgid "Personal"
 msgstr "Личный"
 
-#: src/GameText.h:448
+#: src/GameText.h:447
 #, c-format
 msgid "%i player"
 msgid_plural "%i players"
@@ -1485,49 +1481,49 @@ msgstr[0] "%i игрок"
 msgstr[1] "%i игрока"
 msgstr[2] "%i игроков"
 
-#: src/GameText.h:449
+#: src/GameText.h:448
 msgid "Player Profile"
 msgstr "Профиль игрока"
 
-#: src/GameText.h:450
+#: src/GameText.h:449
 msgid "Player Profiles"
 msgstr "Профили игроков"
 
-#: src/GameText.h:451
+#: src/GameText.h:450
 msgid "Pause when playing X-Moto"
 msgstr "Пауза во время игры X-Moto"
 
-#: src/GameText.h:452
+#: src/GameText.h:451
 msgid "Play Next Level"
 msgstr "Следующий уровень"
 
-#: src/GameText.h:453 src/GameText.h:584
+#: src/GameText.h:452 src/GameText.h:583
 msgid "Port"
 msgstr "Порт"
 
-#: src/GameText.h:454
+#: src/GameText.h:453
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
 msgstr "Выберите клавишу для '%s' или ESC для отмены..."
 
-#: src/GameText.h:455
+#: src/GameText.h:454
 #, c-format
 msgid "Press %s to chat"
 msgstr "Нажмите %s для чата"
 
-#: src/GameText.h:456
+#: src/GameText.h:455
 msgid "Proxy Server"
 msgstr "Прокси сервер"
 
-#: src/GameText.h:457
+#: src/GameText.h:456
 msgid "Configure Proxy..."
 msgstr "Настроить прокси..."
 
-#: src/GameText.h:458
+#: src/GameText.h:457
 msgid "Quality"
 msgstr "Качество"
 
-#: src/GameText.h:459
+#: src/GameText.h:458
 msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
@@ -1535,43 +1531,43 @@ msgstr ""
 "Извините, но уровней, подходящих условиям, слишком мало.\n"
 "Будут выбраны случайные уровни."
 
-#: src/GameText.h:460
+#: src/GameText.h:459
 msgid "Quick start"
 msgstr "Сразу играть"
 
-#: src/GameText.h:461
+#: src/GameText.h:460
 msgid "Quit Game"
 msgstr "Выход"
 
-#: src/GameText.h:462
+#: src/GameText.h:461
 msgid "Do you really want to quit?"
 msgstr "Вы действительно хотите выйти?"
 
-#: src/GameText.h:463
+#: src/GameText.h:462
 msgid "Randomize"
 msgstr "Перемешать"
 
-#: src/GameText.h:464
+#: src/GameText.h:463
 msgid "Reload files to the database"
 msgstr "Перезагрузка файлов в базу данных"
 
-#: src/GameText.h:465
+#: src/GameText.h:464
 msgid "Reloading levels..."
 msgstr "Перезагрузка уровней"
 
-#: src/GameText.h:466
+#: src/GameText.h:465
 msgid "Reloading replays..."
 msgstr "Перезагрузка демок"
 
-#: src/GameText.h:467
+#: src/GameText.h:466
 msgid "Reloading themes..."
 msgstr "Перезагрузка тем"
 
-#: src/GameText.h:468
+#: src/GameText.h:467
 msgid "Replay"
 msgstr "Запись игры"
 
-#: src/GameText.h:469
+#: src/GameText.h:468
 msgid ""
 "  Stop:\n"
 "    >>\n"
@@ -1583,7 +1579,7 @@ msgstr ""
 "   < >\n"
 " Скорость:"
 
-#: src/GameText.h:470
+#: src/GameText.h:469
 msgid ""
 "[esc] , [space]\n"
 "[right key]\n"
@@ -1593,7 +1589,7 @@ msgstr ""
 "[вправо]\n"
 "[вверх/вниз]\n"
 
-#: src/GameText.h:471
+#: src/GameText.h:470
 msgid ""
 "  Stop:\n"
 "<< >>\n"
@@ -1605,7 +1601,7 @@ msgstr ""
 "   < >\n"
 " Скорость:"
 
-#: src/GameText.h:472
+#: src/GameText.h:471
 msgid ""
 "[esc] , [space]\n"
 "[left/right keys]\n"
@@ -1615,226 +1611,226 @@ msgstr ""
 "[lвлево/вправо]\n"
 "[вверх/вниз]\n"
 
-#: src/GameText.h:473
+#: src/GameText.h:472
 msgid "The replay can't be played!"
 msgstr "Эта демка не может быть показана!"
 
-#: src/GameText.h:474
+#: src/GameText.h:473
 #, c-format
 msgid "Replay of %s"
 msgstr "Демка %s"
 
-#: src/GameText.h:475
+#: src/GameText.h:474
 msgid "Replays"
 msgstr "Демки"
 
-#: src/GameText.h:476
+#: src/GameText.h:475
 msgid "Rewind while replaying"
 msgstr ""
 
-#: src/GameText.h:477
+#: src/GameText.h:476
 msgid "Forward while replaying"
 msgstr ""
 
-#: src/GameText.h:478
+#: src/GameText.h:477
 msgid "Pause while replaying"
 msgstr ""
 
-#: src/GameText.h:479
+#: src/GameText.h:478
 msgid "Stop while replaying"
 msgstr ""
 
-#: src/GameText.h:480
+#: src/GameText.h:479
 msgid "Play faster while replaying"
 msgstr ""
 
-#: src/GameText.h:481
+#: src/GameText.h:480
 msgid "Play a bit faster while replaying"
 msgstr ""
 
-#: src/GameText.h:482
+#: src/GameText.h:481
 msgid "Play slower while replaying"
 msgstr ""
 
-#: src/GameText.h:483
+#: src/GameText.h:482
 msgid "Play a bit slower while replaying"
 msgstr ""
 
-#: src/GameText.h:484
+#: src/GameText.h:483
 msgid "Are you sure you want to reset config to defaults ?"
 msgstr "Уверены ли, что хотите сбросить конфигурации по умолчанию?"
 
-#: src/GameText.h:485
+#: src/GameText.h:484
 msgid "Restart This Level"
 msgstr "Перезапустить уровень"
 
-#: src/GameText.h:486
+#: src/GameText.h:485
 msgid "Restart to the last checkpoint"
 msgstr "Переиграть с последнего чекпойнта"
 
-#: src/GameText.h:487
+#: src/GameText.h:486
 msgid "Restart level"
 msgstr "Перезапустить уровень"
 
-#: src/GameText.h:488
+#: src/GameText.h:487
 msgid "Resume Playing"
 msgstr "Продолжить игру"
 
-#: src/GameText.h:490
+#: src/GameText.h:489
 msgid "Run Windowed"
 msgstr "Запускать в окне"
 
-#: src/GameText.h:491
+#: src/GameText.h:490
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/GameText.h:492
+#: src/GameText.h:491
 #, c-format
 msgid "Saved as %s"
 msgstr "Сохранён как %s"
 
-#: src/GameText.h:493
+#: src/GameText.h:492
 msgid "Save Replay"
 msgstr "Сохранить демку"
 
-#: src/GameText.h:494
+#: src/GameText.h:493
 msgid "Screen Resolution"
 msgstr "Разрешение экрана"
 
-#: src/GameText.h:495
+#: src/GameText.h:494
 msgid "Screenshot"
 msgstr "Скриншот"
 
-#: src/GameText.h:496
+#: src/GameText.h:495
 msgid "Show"
 msgstr "Показать"
 
-#: src/GameText.h:497
+#: src/GameText.h:496
 msgid "Show console"
 msgstr "Показать консоль"
 
-#: src/GameText.h:498
+#: src/GameText.h:497
 msgid "Speedometer"
 msgstr "Спидометр"
 
-#: src/GameText.h:499
+#: src/GameText.h:498
 msgid "Info..."
 msgstr "Инфо..."
 
-#: src/GameText.h:500
+#: src/GameText.h:499
 msgid "Show Mini Map"
 msgstr "Показывать мини-карту"
 
-#: src/GameText.h:501
+#: src/GameText.h:500
 msgid "Play!"
 msgstr "Играть!"
 
-#: src/GameText.h:503
+#: src/GameText.h:502
 msgid "STATS"
 msgstr "Статистика"
 
-#: src/GameText.h:504
+#: src/GameText.h:503
 msgid "You are currently disconnected"
 msgstr "Вы сейчас отключены"
 
-#: src/GameText.h:505
+#: src/GameText.h:504
 msgid "Stereo"
 msgstr "Стерео"
 
-#: src/GameText.h:506
+#: src/GameText.h:505
 msgid "Synchronisation down"
 msgstr "Синхронизация с сервера"
 
-#: src/GameText.h:507
+#: src/GameText.h:506
 msgid "Synchronisation up"
 msgstr "Синхронизация на сервер"
 
-#: src/GameText.h:508
+#: src/GameText.h:507
 msgid "Synchronisation done successfully"
 msgstr "Синхонизация пошла успешно"
 
-#: src/GameText.h:509
+#: src/GameText.h:508
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
 msgstr "Клавиша '%s' игрока '%i' переключена на '%s'"
 
-#: src/GameText.h:511
+#: src/GameText.h:510
 msgid "Add/remove to favorite levels"
 msgstr "Добавить/удалить из избранных уровней"
 
-#: src/GameText.h:512
+#: src/GameText.h:511
 msgid "Switch FPS"
 msgstr "Вкл/выкл отображение FPS"
 
-#: src/GameText.h:513
+#: src/GameText.h:512
 msgid "Add/remove to blacklisted levels"
 msgstr "Добавить/удалить из игнора"
 
-#: src/GameText.h:514
+#: src/GameText.h:513
 msgid "Switch net game mode"
 msgstr ""
 
-#: src/GameText.h:515
+#: src/GameText.h:514
 msgid "Switch highscore information"
 msgstr ""
 
-#: src/GameText.h:516
+#: src/GameText.h:515
 msgid "Switch WWW access"
 msgstr "Вкл/выкл доступ к WWW"
 
-#: src/GameText.h:517
+#: src/GameText.h:516
 msgid "Switch graphics quality mode"
 msgstr "Сменить качество графики"
 
-#: src/GameText.h:518
+#: src/GameText.h:517
 msgid "Switch graphics mode"
 msgstr "Сменить графический режим"
 
-#: src/GameText.h:520
+#: src/GameText.h:519
 msgid "Available"
 msgstr "Доступно"
 
-#: src/GameText.h:521
+#: src/GameText.h:520
 msgid "To download"
 msgstr "Скачать"
 
-#: src/GameText.h:522
+#: src/GameText.h:521
 msgid "To be updated"
 msgstr "Обновить"
 
-#: src/GameText.h:523
+#: src/GameText.h:522
 msgid "The theme is now up to date"
 msgstr "Тема не нуждается в обновлении"
 
-#: src/GameText.h:524
+#: src/GameText.h:523
 msgid "Time"
 msgstr "Время"
 
-#: src/GameText.h:525
+#: src/GameText.h:524
 msgid "Try This Level Again"
 msgstr "Играть заново"
 
-#: src/GameText.h:526
+#: src/GameText.h:525
 msgid "Tutorial"
 msgstr "Обучение"
 
-#: src/GameText.h:527
+#: src/GameText.h:526
 msgid "Undefined"
 msgstr "Неуказанный"
 
-#: src/GameText.h:528
+#: src/GameText.h:527
 msgid "Unknown"
 msgstr "Неизвестный"
 
-#: src/GameText.h:529
+#: src/GameText.h:528
 msgid "Unknown players :"
 msgstr "Неизвестные игроки :"
 
-#: src/GameText.h:530
+#: src/GameText.h:529
 msgid "Unpacked levels"
 msgstr "Незапакованные уровни"
 
-#: src/GameText.h:531
+#: src/GameText.h:530
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
@@ -1844,39 +1840,39 @@ msgstr ""
 "Эта тема не доступна в интернете\n"
 "или ваш список тем не обновлен"
 
-#: src/GameText.h:532
+#: src/GameText.h:531
 msgid "Update"
 msgstr "Обновить"
 
-#: src/GameText.h:533
+#: src/GameText.h:532
 msgid "Updated"
 msgstr "Обновлено"
 
-#: src/GameText.h:534
+#: src/GameText.h:533
 msgid "Check WWW"
 msgstr "Проверить Интернет"
 
-#: src/GameText.h:535
+#: src/GameText.h:534
 msgid "Update the rooms list"
 msgstr "Обновить список комнат"
 
-#: src/GameText.h:536
+#: src/GameText.h:535
 msgid "Update the theme list"
 msgstr "Обновить список тем"
 
-#: src/GameText.h:537
+#: src/GameText.h:536
 msgid "Updating level lists..."
 msgstr "Обновление списка уровней..."
 
-#: src/GameText.h:538
+#: src/GameText.h:537
 msgid "Upload"
 msgstr "Загрузить"
 
-#: src/GameText.h:539
+#: src/GameText.h:538
 msgid "Upload all highscores"
 msgstr "Загрузить все рекорды"
 
-#: src/GameText.h:540
+#: src/GameText.h:539
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
@@ -1884,95 +1880,95 @@ msgstr ""
 "Произошла неожиданная ошибка\n"
 "Сайт, возможно, работает неправильно."
 
-#: src/GameText.h:541
+#: src/GameText.h:540
 msgid "Oh no !"
 msgstr "О, нет!"
 
-#: src/GameText.h:542
+#: src/GameText.h:541
 msgid "Uploading the highscore..."
 msgstr "Загрузка рекорда на сервер..."
 
-#: src/GameText.h:543
+#: src/GameText.h:542
 msgid "Use crappy information"
 msgstr "Использовать информацию о плохих уровнях"
 
-#: src/GameText.h:544
+#: src/GameText.h:543
 msgid "Use permanent console"
 msgstr "Вкл/выкл постоянное отображения консоли"
 
-#: src/GameText.h:545
+#: src/GameText.h:544
 msgid "Use Environment Vars"
 msgstr "Использовать переменные окружения"
 
-#: src/GameText.h:546
+#: src/GameText.h:545
 msgid "Use Profile"
 msgstr "Использовать профиль"
 
-#: src/GameText.h:547
+#: src/GameText.h:546
 msgid "Allow web forms"
 msgstr "Разрешить веб-формах"
 
-#: src/GameText.h:548
+#: src/GameText.h:547
 msgid "Using HTTP Proxy"
 msgstr "Используя HTTP прокси"
 
-#: src/GameText.h:549
+#: src/GameText.h:548
 msgid "Using SOCKS4 Proxy"
 msgstr "Используя SOCKS5 прокси"
 
-#: src/GameText.h:550
+#: src/GameText.h:549
 msgid "Using SOCKS5 Proxy"
 msgstr "Используя SOCKS5 прокси"
 
-#: src/GameText.h:551
+#: src/GameText.h:550
 msgid "Video"
 msgstr "Видео"
 
-#: src/GameText.h:552
+#: src/GameText.h:551
 msgid "View"
 msgstr "Показать"
 
-#: src/GameText.h:553 src/GameText.h:640
+#: src/GameText.h:552 src/GameText.h:640
 msgid "View the replay"
 msgstr "Показать демку"
 
-#: src/GameText.h:554
+#: src/GameText.h:553
 msgid "View the highscore"
 msgstr "Показать рекорд"
 
-#: src/GameText.h:555
+#: src/GameText.h:554
 #, c-format
 msgid "Do you want to update level \"%s\"?"
 msgstr "Хотите обновить уровень \"%s\"?"
 
-#: src/GameText.h:556
+#: src/GameText.h:555
 msgid "Warning"
 msgstr "Предостережение"
 
-#: src/GameText.h:558
+#: src/GameText.h:557
 msgid "WWW"
 msgstr "Сеть"
 
-#: src/GameText.h:559
+#: src/GameText.h:558
 msgid "Reference room"
 msgstr "Указаное комната"
 
-#: src/GameText.h:560
+#: src/GameText.h:559
 #, c-format
 msgid "Room %i"
 msgstr "%i комната"
 
-#: src/GameText.h:562
+#: src/GameText.h:561
 #, c-format
 msgid "%d hours"
 msgstr "%d часов"
 
-#: src/GameText.h:563
+#: src/GameText.h:562
 #, c-format
 msgid "%d minutes"
 msgstr "%d минут"
 
-#: src/GameText.h:564
+#: src/GameText.h:563
 #, c-format
 msgid "only %i"
 msgid_plural "only %i"
@@ -1980,12 +1976,12 @@ msgstr[0] "только %i"
 msgstr[1] "только %i"
 msgstr[2] "только %i"
 
-#: src/GameText.h:566
+#: src/GameText.h:565
 #, c-format
 msgid "Stats since: %s"
 msgstr "Статистика от: %s"
 
-#: src/GameText.h:567
+#: src/GameText.h:566
 #, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
@@ -1993,7 +1989,7 @@ msgstr[0] "X-Moto был запущен %d раз"
 msgstr[1] "X-Moto был запущен %d раза"
 msgstr[2] "X-Moto был запущен %d раз"
 
-#: src/GameText.h:568
+#: src/GameText.h:567
 #, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
@@ -2001,12 +1997,12 @@ msgstr[0] "%d различный уровень"
 msgstr[1] "%d различных уровня"
 msgstr[2] "%d различных уровней"
 
-#: src/GameText.h:569
+#: src/GameText.h:568
 #, c-format
 msgid "Time played: %s"
 msgstr "Время игры: %s"
 
-#: src/GameText.h:570
+#: src/GameText.h:569
 #, c-format
 msgid "%d play"
 msgid_plural "%d plays"
@@ -2014,7 +2010,7 @@ msgstr[0] "%d игра"
 msgstr[1] "%d игры"
 msgstr[2] "%d игр"
 
-#: src/GameText.h:571
+#: src/GameText.h:570
 #, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
@@ -2022,7 +2018,7 @@ msgstr[0] "%d смертей"
 msgstr[1] "%d смерти"
 msgstr[2] "%d смертей"
 
-#: src/GameText.h:572
+#: src/GameText.h:571
 #, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
@@ -2030,7 +2026,7 @@ msgstr[0] "%d раз закончен"
 msgstr[1] "%d раза закончен"
 msgstr[2] "%d раз закончен"
 
-#: src/GameText.h:573
+#: src/GameText.h:572
 #, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
@@ -2038,70 +2034,74 @@ msgstr[0] "%d раз перезапущен"
 msgstr[1] "%d раза перезапущен"
 msgstr[2] "%d раз перезапущен"
 
-#: src/GameText.h:575
+#: src/GameText.h:574
 #, c-format
 msgid "%d seconds"
 msgstr "%d секунд"
 
-#: src/GameText.h:576
+#: src/GameText.h:575
 msgid "Yes"
 msgstr "Да"
 
-#: src/GameText.h:577
+#: src/GameText.h:576
 msgid "Yes to all"
 msgstr "Да для всех"
 
-#: src/GameText.h:578
+#: src/GameText.h:577
 msgid "Your best time"
 msgstr "Ваше лучшее время"
 
-#: src/GameText.h:579
+#: src/GameText.h:578
 msgid "Zoom in"
 msgstr "Приблизить"
 
-#: src/GameText.h:580
+#: src/GameText.h:579
 msgid "Reinitialize zoom"
 msgstr "Вернуть исходный масштаб"
 
-#: src/GameText.h:581
+#: src/GameText.h:580
 msgid "Zoom out"
 msgstr "Отдалить"
 
-#: src/GameText.h:583
+#: src/GameText.h:582
 msgid "Server"
 msgstr "Сервер"
 
-#: src/GameText.h:585
+#: src/GameText.h:584
 msgid "Launch at startup"
 msgstr "Запускать при старте"
 
-#: src/GameText.h:586
+#: src/GameText.h:585
 msgid "Start the server"
 msgstr "Запустить сервер"
 
-#: src/GameText.h:587
+#: src/GameText.h:586
 msgid "Stop the server"
 msgstr "Остановить сервер"
 
-#: src/GameText.h:588
+#: src/GameText.h:587
 msgid "Server is currently started"
 msgstr "Сервер запущен"
 
-#: src/GameText.h:589
+#: src/GameText.h:588
 msgid "Server is currently stopped"
 msgstr "Сервер не запущен"
 
-#: src/GameText.h:590
+#: src/GameText.h:589
 msgid "Default port"
 msgstr "Порт по умолчанию"
 
-#: src/GameText.h:591
+#: src/GameText.h:590
 msgid "Custom port"
 msgstr "Другой порт"
 
-#: src/GameText.h:592
+#: src/GameText.h:591
 msgid "Network"
 msgstr "Сеть"
+
+#: src/GameText.h:592
+msgid "Network admin console"
+msgstr ""
 
 #: src/GameText.h:593
 msgid "Simple ghost mode"
