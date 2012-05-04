@@ -37,9 +37,9 @@ CheckWwwThread::CheckWwwThread(bool forceUpdate)
   m_realHighscoresUpdate = false;
 
   if(XMSession::instance()->debug() == true) {
-    StateManager::instance()->registerAsEmitter("HIGHSCORES_UPDATED");
-    StateManager::instance()->registerAsEmitter("NEW_LEVELS_TO_DOWNLOAD");
-    StateManager::instance()->registerAsEmitter("NO_NEW_LEVELS_TO_DOWNLOAD");
+    StateManager::instance()->registerAsEmitter(std::string("HIGHSCORES_UPDATED"));
+    StateManager::instance()->registerAsEmitter(std::string("NEW_LEVELS_TO_DOWNLOAD"));
+    StateManager::instance()->registerAsEmitter(std::string("NO_NEW_LEVELS_TO_DOWNLOAD"));
   }
 }
 
@@ -78,9 +78,9 @@ void CheckWwwThread::updateWebLevels()
   setSafeKill(false);
 
   if(m_pWebLevels->nbLevelsToGet(m_pDb) != 0){
-    StateManager::instance()->sendAsynchronousMessage("NEW_LEVELS_TO_DOWNLOAD");
+    StateManager::instance()->sendAsynchronousMessage(std::string("NEW_LEVELS_TO_DOWNLOAD"));
   } else {
-    StateManager::instance()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
+    StateManager::instance()->sendAsynchronousMessage(std::string("NO_NEW_LEVELS_TO_DOWNLOAD"));
   }
 }
 
@@ -126,19 +126,19 @@ int CheckWwwThread::realThreadFunction()
       m_pDb->updateMyHighscoresFromHighscores(XMSession::instance()->profile());
 
       if(m_pDb->markMyHighscoresKnownStolen(XMSession::instance()->profile(), v_stolen_msg)) {
-	StateManager::instance()->sendAsynchronousMessage("MYHIGHSCORES_STOLEN", v_stolen_msg);
+	StateManager::instance()->sendAsynchronousMessage(std::string("MYHIGHSCORES_STOLEN"), v_stolen_msg);
       }
 
       if(m_realHighscoresUpdate) {
-	StateManager::instance()->sendAsynchronousMessage("HIGHSCORES_UPDATED");
+	StateManager::instance()->sendAsynchronousMessage(std::string("HIGHSCORES_UPDATED"));
       }
     } catch (Exception& e) {
       if(m_realHighscoresUpdate) {
-	StateManager::instance()->sendAsynchronousMessage("HIGHSCORES_UPDATED");
+	StateManager::instance()->sendAsynchronousMessage(std::string("HIGHSCORES_UPDATED"));
       }
       LogWarning("Failed to update web-highscores [%s]",e.getMsg().c_str());
       m_msg = GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
-      StateManager::instance()->sendAsynchronousMessage("CHECKWWWW_DONE");
+      StateManager::instance()->sendAsynchronousMessage(std::string("CHECKWWWW_DONE"));
       return 1;
     }
     setThreadProgress(100);
@@ -157,14 +157,14 @@ int CheckWwwThread::realThreadFunction()
       } catch (Exception& e){
 	LogWarning("Failed to update web-levels [%s]",e.getMsg().c_str());
 	m_msg = GAMETEXT_FAILEDCHECKLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
-	StateManager::instance()->sendAsynchronousMessage("CHECKWWWW_DONE");
+	StateManager::instance()->sendAsynchronousMessage(std::string("CHECKWWWW_DONE"));
 	return 1;
       }
     }
   }
 
   setThreadProgress(100);
-  StateManager::instance()->sendAsynchronousMessage("CHECKWWWW_DONE");
+  StateManager::instance()->sendAsynchronousMessage(std::string("CHECKWWWW_DONE"));
 
   return 0;
 }

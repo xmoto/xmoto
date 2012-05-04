@@ -71,14 +71,14 @@ public:
 
   // in order to receive a message, you have to first register
   // yourself as an observer of this message
-  void registerAsObserver(std::string message,   GameState* self);
-  void unregisterAsObserver(std::string message, GameState* self);
+  void registerAsObserver(const std::string& message,   GameState* self);
+  void unregisterAsObserver(const std::string& message, GameState* self);
   // register as emitter only for debug informations
-  void registerAsEmitter(std::string message);
+  void registerAsEmitter(const std::string& message);
 
   // send the message to registered states
-  void sendSynchronousMessage( std::string message, std::string args="", const std::string& i_parentId = "");
-  void sendAsynchronousMessage(std::string message, std::string args="", const std::string& i_parentId = "");
+  void sendSynchronousMessage(const std::string& message, const std::string& args="", const std::string& i_parentId = "");
+  void sendAsynchronousMessage(const std::string& message, const std::string& args="", const std::string& i_parentId = "");
 
   bool isTopOfTheStates(GameState* i_state);
   int numberOfStates();

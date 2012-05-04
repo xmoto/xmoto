@@ -128,7 +128,7 @@ void XMThreadStats::play() {
 
   SDL_UnlockMutex(m_eventsMutex);
 
-  m_manager->sendAsynchronousMessage("STATS_UPDATED");
+  m_manager->sendAsynchronousMessage(std::string("STATS_UPDATED"));
 }
 
 void XMThreadStats::doJob() {

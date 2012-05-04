@@ -841,7 +841,7 @@ bool StateManager::doRender()
 }
 
 void
-StateManager::registerAsObserver(std::string message,
+StateManager::registerAsObserver(const std::string& message,
 				 GameState* self)
 {
   std::map<std::string, std::vector<GameState*> >::iterator itFind;
@@ -878,7 +878,7 @@ StateManager::registerAsObserver(std::string message,
 }
 
 void
-StateManager::unregisterAsObserver(std::string message, GameState* self)
+StateManager::unregisterAsObserver(const std::string& message, GameState* self)
 {
   std::map<std::string, std::vector<GameState*> >::iterator itFind;
 
@@ -903,14 +903,14 @@ StateManager::unregisterAsObserver(std::string message, GameState* self)
 }
 
 void
-StateManager::registerAsEmitter(std::string message)
+StateManager::registerAsEmitter(const std::string& message)
 {
   // TODO::show debug informations
   return registerAsObserver(message, NULL);
 }
 
 void
-StateManager::sendSynchronousMessage(std::string message, std::string args, const std::string& i_parentId)
+StateManager::sendSynchronousMessage(const std::string& message, const std::string& args, const std::string& i_parentId)
 {
   std::map<std::string, std::vector<GameState*> >::iterator itFind;
 
@@ -945,7 +945,7 @@ StateManager::sendSynchronousMessage(std::string message, std::string args, cons
 }
 
 void
-StateManager::sendAsynchronousMessage(std::string message, std::string args, const std::string& i_parentId)
+StateManager::sendAsynchronousMessage(const std::string& message, const std::string& args, const std::string& i_parentId)
 {
   std::map<std::string, std::vector<GameState*> >::iterator itFind;
 
