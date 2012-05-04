@@ -35,11 +35,11 @@ StateServerConsole::StateServerConsole(bool drawStateBehind,
 	    updateStatesBehind) {
   m_name          = "StateServerConsole";
 
-  StateManager::instance()->registerAsObserver("NET_SRVCMDASW", this);
+  StateManager::instance()->registerAsObserver(std::string("NET_SRVCMDASW"), this);
 }
 
 StateServerConsole::~StateServerConsole() {
-  StateManager::instance()->unregisterAsObserver("NET_SRVCMDASW", this);
+  StateManager::instance()->unregisterAsObserver(std::string("NET_SRVCMDASW"), this);
 }
 
 void StateServerConsole::enter()

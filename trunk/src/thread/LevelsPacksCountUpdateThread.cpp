@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 LevelsPacksCountUpdateThread::LevelsPacksCountUpdateThread() : XMThread("LPCU", true) {
   if(XMSession::instance()->debug() == true) {
-    StateManager::instance()->registerAsEmitter("LEVELSPACKS_COUNT_UPDATED");
+    StateManager::instance()->registerAsEmitter(std::string("LEVELSPACKS_COUNT_UPDATED"));
   }
 }
 
@@ -46,11 +46,11 @@ int LevelsPacksCountUpdateThread::realThreadFunction() {
   } catch(Exception &e) {
     /* some packs could have been updated */
     v_lm->unlockLevelsPacks();
-    StateManager::instance()->sendAsynchronousMessage("LEVELSPACKS_COUNT_UPDATED");
+    StateManager::instance()->sendAsynchronousMessage(std::string("LEVELSPACKS_COUNT_UPDATED"));
     return 1;
   }
   v_lm->unlockLevelsPacks();
 
-  StateManager::instance()->sendAsynchronousMessage("LEVELSPACKS_COUNT_UPDATED");  
+  StateManager::instance()->sendAsynchronousMessage(std::string("LEVELSPACKS_COUNT_UPDATED"));  
   return 0;
 }

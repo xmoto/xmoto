@@ -38,14 +38,14 @@ StateViewHighscore::StateViewHighscore(const std::string& i_id_level,
   m_name            = "StateViewHighscore";
   m_id_level        = i_id_level;
 
-  StateManager::instance()->registerAsObserver("REPLAY_DOWNLOADED", this);
-  StateManager::instance()->registerAsObserver("REPLAY_FAILEDTODOWNLOAD", this);
+  StateManager::instance()->registerAsObserver(std::string("REPLAY_DOWNLOADED"), this);
+  StateManager::instance()->registerAsObserver(std::string("REPLAY_FAILEDTODOWNLOAD"), this);
 }
 
 StateViewHighscore::~StateViewHighscore()
 {
-  StateManager::instance()->unregisterAsObserver("REPLAY_DOWNLOADED", this);
-  StateManager::instance()->unregisterAsObserver("REPLAY_FAILEDTODOWNLOAD", this);
+  StateManager::instance()->unregisterAsObserver(std::string("REPLAY_DOWNLOADED"), this);
+  StateManager::instance()->unregisterAsObserver(std::string("REPLAY_FAILEDTODOWNLOAD"), this);
 }
 
 void StateViewHighscore::enter() {
@@ -101,7 +101,7 @@ void StateViewHighscore::executeOneCommand(std::string cmd, std::string args)
   } else if(cmd == "REPLAY_FAILEDTODOWNLOAD") {
     GameApp::instance()->enableWWW(false);
     SysMessage::instance()->displayError(GAMETEXT_FAILEDDLREPLAY + std::string("\n") + SYS_MSG_WWW_DISABLED);
-    StateManager::instance()->sendAsynchronousMessage("CHANGE_WWW_ACCESS");
+    StateManager::instance()->sendAsynchronousMessage(std::string("CHANGE_WWW_ACCESS"));
   } else {
     GameState::executeOneCommand(cmd, args);
   }

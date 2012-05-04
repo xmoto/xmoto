@@ -37,7 +37,7 @@ SyncThread::SyncThread()
 : XMThread("ST")
 {
   if(XMSession::instance()->debug() == true) {
-    StateManager::instance()->registerAsEmitter("STATS_UPDATED");
+    StateManager::instance()->registerAsEmitter(std::string("STATS_UPDATED"));
   }
 
 }
@@ -129,7 +129,7 @@ int SyncThread::realThreadFunction() {
 
   setThreadCurrentOperation(GAMETEXT_SYNC_DONE);
   setThreadProgress(100);
-  StateManager::instance()->sendAsynchronousMessage("STATS_UPDATED");
+  StateManager::instance()->sendAsynchronousMessage(std::string("STATS_UPDATED"));
   
   return 0;
 }

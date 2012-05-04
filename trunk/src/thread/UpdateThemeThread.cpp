@@ -48,7 +48,7 @@ int UpdateThemeThread::realThreadFunction()
     WebThemes::updateThemeList(m_pDb, this);
     WebThemes::updateTheme(m_pDb, m_id_theme, this);
     setSafeKill(false);
-    StateManager::instance()->sendAsynchronousMessage("THEMES_UPDATED");
+    StateManager::instance()->sendAsynchronousMessage(std::string("THEMES_UPDATED"));
   } catch(Exception &e) {
     LogError(e.getMsg().c_str());
     return 1;

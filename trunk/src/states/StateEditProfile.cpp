@@ -39,7 +39,7 @@ StateEditProfile::StateEditProfile(bool drawStateBehind,
   m_name     = "StateEditProfile";
 
   if(XMSession::instance()->debug() == true) {
-    StateManager::instance()->registerAsEmitter("UPDATEPROFILE");
+    StateManager::instance()->registerAsEmitter(std::string("UPDATEPROFILE"));
   }
 }
 
@@ -101,7 +101,7 @@ void StateEditProfile::checkEvents() {
       xmDatabase::instance("main")->stats_xmotoStarted(XMSession::instance()->sitekey(), pEntry->Text[0]);
 
       // tell the menu to update the displayed profile
-      StateManager::instance()->sendAsynchronousMessage("UPDATEPROFILE");
+      StateManager::instance()->sendAsynchronousMessage(std::string("UPDATEPROFILE"));
     }
 
     /* Should we jump to the web config now? */

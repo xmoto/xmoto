@@ -83,10 +83,10 @@ void DownloadReplaysThread::play() {
 	  m_pWebRoom->downloadReplay(m_replaysUrls[0]);
 	  GameApp::instance()->addReplay(v_replayName, m_pDb);
 	  
-	  m_manager->sendAsynchronousMessage("REPLAY_DOWNLOADED", v_replayName);
+	  m_manager->sendAsynchronousMessage(std::string("REPLAY_DOWNLOADED"), v_replayName);
 	  
 	} catch(Exception& e) {
-	  m_manager->sendAsynchronousMessage("REPLAY_FAILEDTODOWNLOAD", v_replayName);
+	  m_manager->sendAsynchronousMessage(std::string("REPLAY_FAILEDTODOWNLOAD"), v_replayName);
 	  LogError("Unable to download replay : %s", e.getMsg().c_str());
 	}
       }

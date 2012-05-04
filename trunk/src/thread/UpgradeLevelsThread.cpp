@@ -81,7 +81,7 @@ bool UpgradeLevelsThread::shouldLevelBeUpdated(const std::string &LevelID)
 
   // message box
   if(StateManager::exists()) {
-    StateManager::instance()->sendAsynchronousMessage("ASKINGLEVELUPDATE", args);
+    StateManager::instance()->sendAsynchronousMessage(std::string("ASKINGLEVELUPDATE"), args);
   }
   sleepThread();
 
@@ -135,8 +135,8 @@ int UpgradeLevelsThread::realThreadFunction()
     }
     else {
       if(StateManager::exists()) {
-	StateManager::instance()->sendAsynchronousMessage("NEW_LEVELS_TO_DOWNLOAD");
-	StateManager::instance()->sendAsynchronousMessage("NEWLEVELAVAILABLE");
+	StateManager::instance()->sendAsynchronousMessage(std::string("NEW_LEVELS_TO_DOWNLOAD"));
+	StateManager::instance()->sendAsynchronousMessage(std::string("NEWLEVELAVAILABLE"));
       }
     }
   } catch (Exception& e) {
@@ -178,7 +178,7 @@ int UpgradeLevelsThread::realThreadFunction()
       setSafeKill(false);
 
       if(StateManager::exists()) {
-	StateManager::instance()->sendAsynchronousMessage("THEMES_UPDATED");
+	StateManager::instance()->sendAsynchronousMessage(std::string("THEMES_UPDATED"));
       }
 
     // don't safe kill here
@@ -206,8 +206,8 @@ int UpgradeLevelsThread::realThreadFunction()
 
     /* Update level lists */
     if(StateManager::exists()) {
-      StateManager::instance()->sendAsynchronousMessage("NO_NEW_LEVELS_TO_DOWNLOAD");
-      StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
+      StateManager::instance()->sendAsynchronousMessage(std::string("NO_NEW_LEVELS_TO_DOWNLOAD"));
+      StateManager::instance()->sendAsynchronousMessage(std::string("LEVELS_UPDATED"));
     }
   }
 
