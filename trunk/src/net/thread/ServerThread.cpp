@@ -195,6 +195,7 @@ std::string NetSClient::name() const {
 
 void NetSClient::setMode(NetClientMode i_mode) {
   m_mode = i_mode;
+  m_playingLevelId = ""; // reset
 }
 
 NetClientMode NetSClient::mode() const {
@@ -459,6 +460,7 @@ void ServerThread::SP2_initPlaying() {
   m_lastPhysTime = GameApp::getXMTimeInt();
 
   v_id_level = SP2_determineLevel();
+  NA_playingLevel v_napl(v_id_level);
 
   m_universe = new Universe();
   m_universe->initPlayServer();
@@ -490,6 +492,11 @@ void ServerThread::SP2_initPlaying() {
 							  GameApp::getColorFromPlayerNumber(v_numPlayer),
 							  GameApp::getUglyColorFromPlayerNumber(v_numPlayer), false);
 	  m_clients[j]->markScenePlayer(0, v_numPlayer);
+
+	  // mark the player as playing the level
+	  m_clients[j]->setPlayingLevelId(v_id_level);
+	  sendToAllClients(&v_napl, m_clients[j]->id(), 0, j);
+
 	  v_numPlayer++;
 	  v_localNetId++;
 	}
