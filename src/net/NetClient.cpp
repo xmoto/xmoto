@@ -336,7 +336,8 @@ void NetClient::endPlay() {
 
 void NetClient::changeMode(NetClientMode i_mode) {
   m_mode = i_mode;
-  m_universe = NULL; // changing the mode forces to reset the link between the client and the universe. (otherwise, some universe could get some frames from others)
+
+  endPlay(); // changing the mode forces to reset the link between the client and the universe. (otherwise, some universe could get some frames from others)
 
   NA_clientMode na(i_mode);
   try {
